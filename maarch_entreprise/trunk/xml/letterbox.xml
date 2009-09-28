@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ROOT>
+	<categories>
+		<category> <!-- DO NOT MODIFY CATEGORY ID -->
+			<id>incoming</id>
+			<label>_INCOMING</label>
+		</category>
+		<category>
+			<id>outgoing</id>
+			<label>_OUTGOING</label>
+		</category>
+		<category>
+			<id>internal</id>
+			<label>_INTERNAL</label>
+		</category>
+		<category>
+			<id>market_document</id>
+			<label>_MARKET_DOCUMENT</label>
+		</category>
+		<default_category>incoming</default_category>
+	</categories>
+	<mail_natures>
+		<nature>
+			<id>simple_mail</id>
+			<label>_SIMPLE_MAIL</label>
+		</nature>
+		<nature>
+			<id>email</id>
+			<label>_EMAIL</label>
+		</nature>
+		<nature>
+			<id>fax</id>
+			<label>_FAX</label>
+		</nature>
+		<nature>
+			<id>chronopost</id>
+			<label>_CHRONOPOST</label>
+		</nature>
+		<nature>
+			<id>fedex</id>
+			<label>_FEDEX</label>
+		</nature>
+		<nature>
+			<id>registered_mail</id>
+			<label>_REGISTERED_MAIL</label>
+		</nature>
+		<nature>
+			<id>courier</id>
+			<label>_COURIER</label>
+		</nature>
+		<nature>
+			<id>other</id>
+			<label>_OTHER</label>
+		</nature>
+		<default_nature>simple_mail</default_nature>
+	</mail_natures>
+	<priorities>
+		<priority>_VERY_HIGH</priority> <!-- 0 -->
+		<priority>_HIGH</priority><!-- 1 -->
+		<priority>_NORMAL</priority> <!-- 2 -->
+		<!--<priority>_LOW</priority>  3 -->
+		<!--<priority>_VERY_LOW</priority>  4 -->
+		<default_priority>2</default_priority>
+	</priorities>
+	<titles>
+		<title>
+			<id>title1</id>
+			<label>Monsieur</label>
+		</title>
+		<title>
+			<id>title2</id>
+			<label>Madame</label>
+		</title>
+		<title>
+			<id>title3</id>
+			<label>Mademoiselle</label>
+		</title>
+		<title>
+			<id>title4</id>
+			<label>Avocat</label>
+		</title>
+		<title>
+			<id>title5</id>
+			<label>Notaire</label>
+		</title>
+		<title>
+			<id>title6</id>
+			<label>Mairie</label>
+		</title>
+		<title>
+			<id>title7</id>
+			<label>Ecole</label>
+		</title>
+		<default_title>title1</default_title>
+	</titles>
+</ROOT>

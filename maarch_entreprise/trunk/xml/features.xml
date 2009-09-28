@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ROOT>
+<!--
+		TO DO
+		############################
+		enable_mail_redirection : Permet l'envoi de mail lors de la redirection des documents
+		mail_for_new_note : Envoi d'un mail lors de l'ajout d'une annotation
+		#############################
+		-->
+	<FEATURES>
+		<personal_contact>true</personal_contact> <!-- If true, each user can add new contact visible only by him. If you set to false, do not forget to comment the my_contacts service to avoid the my_contacts menu item -->
+		<search_notes>true</search_notes> <!-- If true, activates the search on notes (warning : join in the query, must be desactivate the search takes too much time) -->
+		<dest_to_copy_during_redirection>false</dest_to_copy_during_redirection> <!-- If true, the dest of the mail is automatically put in copy during redirection to another user or entity -->
+	</FEATURES>
+</ROOT>
