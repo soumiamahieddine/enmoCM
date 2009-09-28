@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ROOT>
+	<INDEX>
+		<COLUMN>custom_t1</COLUMN> <!-- Do Not modify this index, you can move it but not delete it otherwise the application will not work properly (Integration) !-->
+		<LABEL>_FOLDERNAME</LABEL>
+	</INDEX>
+	<INDEX>
+		<COLUMN>custom_d1</COLUMN><!-- Do Not modify this index, you can move it but not delete it otherwise the application will not work properly (Integration) !-->
+		<LABEL>_FOLDERDATE</LABEL>
+	</INDEX>
+</ROOT>
