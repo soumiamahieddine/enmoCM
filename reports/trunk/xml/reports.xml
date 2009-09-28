@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ROOT>
+	<REPORT>
+		<ID>apa_print_inventory_list_customer_nat</ID>
+		<LABEL>_APA_PRINT_INVENTORY_LIST_CUSTOMER_NAT</LABEL>
+		<DESCRIPTION>_APA_PRINT_INVENTORY_LIST_CUSTOMER_NAT_DESC</DESCRIPTION>
+		<URL>apa_print_form_report.php?id=cust_nat</URL>
+		<IN_MENU_REPORTS>true</IN_MENU_REPORTS><!-- is the report cant be accessed by the menu report -->
+		<ENABLED>true</ENABLED>
+		<ORIGIN>module</ORIGIN> <!-- apps or module -->
+		<MODULE>advanced_physical_archive</MODULE>
+		<MODULE_LABEL>_APA</MODULE_LABEL>
+	</REPORT>
+	<REPORT>
+		<ID>apa_print_inventory_list_customer_uc</ID>
+		<LABEL>_APA_PRINT_INVENTORY_LIST_CUSTOMER_UC</LABEL>
+		<DESCRIPTION>_APA_PRINT_INVENTORY_LIST_CUSTOMER_UC_DESC</DESCRIPTION>
+		<URL>apa_print_form_report.php?id=cust_uc</URL>
+		<IN_MENU_REPORTS>true</IN_MENU_REPORTS>
+		<ENABLED>true</ENABLED>
+		<ORIGIN>module</ORIGIN> <!-- apps or module -->
+		<MODULE>advanced_physical_archive</MODULE>
+		<MODULE_LABEL>_APA</MODULE_LABEL>
+	</REPORT>
+	<REPORT>
+		<ID>apa_print_return_by_period</ID>
+		<LABEL>_APA_PRINT_RETURN_BY_PERIOD</LABEL>
+		<DESCRIPTION>_APA_PRINT_RETURN_BY_PERIOD_DESC</DESCRIPTION>
+		<URL>apa_print_form_report.php?id=ret_date</URL>
+		<IN_MENU_REPORTS>true</IN_MENU_REPORTS>
+		<ENABLED>true</ENABLED>
+		<ORIGIN>module</ORIGIN> <!-- apps or module -->
+		<MODULE>advanced_physical_archive</MODULE>
+		<MODULE_LABEL>_APA</MODULE_LABEL>
+    </REPORT>
+	<REPORT>
+		<ID>apa_print_out_not_return</ID>
+		<LABEL>_APA_PRINT_OUT_NOT_RETURN</LABEL>
+		<DESCRIPTION>_APA_PRINT_OUT_NOT_RETURN_DESC</DESCRIPTION>
+		<URL>apa_print_form_report.php?id=out_date</URL>
+		<IN_MENU_REPORTS>true</IN_MENU_REPORTS>
+		<ENABLED>true</ENABLED>
+		<ORIGIN>module</ORIGIN> <!-- apps or module -->
+		<MODULE>advanced_physical_archive</MODULE>
+		<MODULE_LABEL>_APA</MODULE_LABEL>
+	</REPORT>
+	<REPORT>
+		<ID>apa_print_uc_destruction</ID>
+		<LABEL>_APA_PRINT_UC_DESTRUCTION</LABEL>
+		<DESCRIPTION>_APA_PRINT_UC_DESTRUCTION_DESC</DESCRIPTION>
+		<URL>apa_print_form_report.php?id=del_uc</URL>
+		<IN_MENU_REPORTS>true</IN_MENU_REPORTS>
+		<ENABLED>true</ENABLED>
+		<ORIGIN>module</ORIGIN> <!-- apps or module -->
+		<MODULE>advanced_physical_archive</MODULE>
+		<MODULE_LABEL>_APA</MODULE_LABEL>
+	</REPORT>
+	<REPORT>
+		<ID>apa_print_reservation_by_customer_date</ID>
+		<LABEL>_APA_PRINT_RESERVATION_BY_CUSTOMER_DATE</LABEL>
+		<DESCRIPTION>_APA_PRINT_RESERVATION_BY_CUSTOMER_DATE_DESC</DESCRIPTION>
+		<URL>apa_print_form_report.php?id=nbr_res</URL>
+		<IN_MENU_REPORTS>true</IN_MENU_REPORTS>
+		<ENABLED>true</ENABLED>
+		<ORIGIN>module</ORIGIN> <!-- apps or module -->
+		<MODULE>advanced_physical_archive</MODULE>
+		<MODULE_LABEL>_APA</MODULE_LABEL>
+	</REPORT>
+	<REPORT>
+		<ID>apa_print_ratio_by_site_box</ID>
+		<LABEL>_APA_PRINT_RATIO_BY_SITE_BOX</LABEL>
+		<DESCRIPTION>_APA_PRINT_RATIO_BY_SITE_BOX_DESC</DESCRIPTION>
+		<URL>apa_print_form_report.php?id=ratio_site</URL>
+		<IN_MENU_REPORTS>true</IN_MENU_REPORTS>
+		<ENABLED>true</ENABLED>
+		<ORIGIN>module</ORIGIN> <!-- apps or module -->
+		<MODULE>advanced_physical_archive</MODULE>
+		<MODULE_LABEL>_APA</MODULE_LABEL>
+	</REPORT>
+	<REPORT>
+		<ID>apa_print_in_out_by_customer_date</ID>
+		<LABEL>_APA_PRINT_IN_OUT_BY_CUSTOMER_DATE</LABEL>
+		<DESCRIPTION>_APA_PRINT_IN_OUT_BY_CUSTOMER_DATE_DESC</DESCRIPTION>
+		<URL>apa_print_form_report.php?id=in_out_date</URL>
+		<IN_MENU_REPORTS>true</IN_MENU_REPORTS>
+		<ENABLED>true</ENABLED>
+		<ORIGIN>module</ORIGIN> <!-- apps or module -->
+		<MODULE>advanced_physical_archive</MODULE>
+		<MODULE_LABEL>_APA</MODULE_LABEL>
+	</REPORT>
+	<REPORT>
+		<ID>apa_print_docket_reservation</ID>
+		<LABEL>_APA_PRINT_DOCKET_RESERVATION</LABEL>
+		<DESCRIPTION>_APA_PRINT_DOCKET_RESERVATION_DESC</DESCRIPTION>
+		<URL>apa_print_form_report.php?id=docket_rsv</URL>
+		<IN_MENU_REPORTS>true</IN_MENU_REPORTS>
+		<ENABLED>true</ENABLED>
+		<ORIGIN>module</ORIGIN> <!-- apps or module -->
+		<MODULE>advanced_physical_archive</MODULE>
+		<MODULE_LABEL>_APA</MODULE_LABEL>
+	</REPORT>
+	<REPORT>
+		<ID>folder_view_stat</ID>
+		<LABEL>_FOLDER_VIEW_STAT</LABEL>
+		<DESCRIPTION>_FOLDER_VIEW_STAT_DESC</DESCRIPTION>
+		<URL>folder_view_stats.php</URL>
+		<IN_MENU_REPORTS>true</IN_MENU_REPORTS>
+		<ENABLED>true</ENABLED>
+		<ORIGIN>module</ORIGIN> <!-- apps or module -->
+		<MODULE>folder</MODULE>
+		<MODULE_LABEL>_FOLDERS_COMMENT</MODULE_LABEL>
+	</REPORT>
+	<REPORT>
+		<ID>folder_history_stat</ID>
+		<LABEL>_FOLDER_HISTORY_STAT</LABEL>
+		<DESCRIPTION>_FOLDER_HISTORY_STAT_DESC</DESCRIPTION>
+		<URL>folder_history_stats.php</URL>
+		<IN_MENU_REPORTS>true</IN_MENU_REPORTS>
+		<ENABLED>true</ENABLED>
+		<ORIGIN>module</ORIGIN> <!-- apps or module -->
+		<MODULE>folder</MODULE>
+		<MODULE_LABEL>_FOLDERS_COMMENT</MODULE_LABEL>
+	</REPORT>
+	<REPORT>
+		<ID>users_logs</ID>
+		<LABEL>_USERS_LOGS</LABEL>
+		<DESCRIPTION>_USERS_LOGS_DESC</DESCRIPTION>
+		<URL>users_logs.php</URL>
+		<IN_MENU_REPORTS>true</IN_MENU_REPORTS>
+		<ENABLED>true</ENABLED>
+		<ORIGIN>apps</ORIGIN> <!-- apps or module -->
+		<MODULE>application</MODULE>
+		<MODULE_LABEL>_APPS_COMMENT</MODULE_LABEL>
+	</REPORT>
+	<REPORT>
+		<ID>process_delay</ID>
+		<LABEL>_PROCESS_DELAY_REPORT</LABEL>
+		<DESCRIPTION>_PROCESS_DELAY_REPORT_DESC</DESCRIPTION>
+		<URL>report_by_period.php?id=process_delay</URL>
+		<IN_MENU_REPORTS>true</IN_MENU_REPORTS>
+		<ENABLED>true</ENABLED>
+		<ORIGIN>apps</ORIGIN> <!-- apps or module -->
+		<MODULE>application</MODULE>
+		<MODULE_LABEL>_APPS_COMMENT</MODULE_LABEL>
+	</REPORT>
+	<REPORT>
+		<ID>mail_typology</ID>
+		<LABEL>_MAIL_TYPOLOGY_REPORT</LABEL>
+		<DESCRIPTION>_MAIL_TYPOLOGY_REPORT_DESC</DESCRIPTION>
+		<URL>report_by_period.php?id=mail_typology</URL>
+		<IN_MENU_REPORTS>true</IN_MENU_REPORTS>
+		<ENABLED>true</ENABLED>
+		<ORIGIN>apps</ORIGIN> <!-- apps or module -->
+		<MODULE>application</MODULE>
+		<MODULE_LABEL>_APPS_COMMENT</MODULE_LABEL>
+	</REPORT>
+	<REPORT>
+		<ID>mail_vol_by_cat</ID>
+		<LABEL>_MAIL_VOL_BY_CAT_REPORT</LABEL>
+		<DESCRIPTION>_MAIL_VOL_BY_CAT_REPORT_DESC</DESCRIPTION>
+		<URL>report_by_period.php?id=mail_vol_by_cat</URL>
+		<IN_MENU_REPORTS>true</IN_MENU_REPORTS>
+		<ENABLED>true</ENABLED>
+		<ORIGIN>apps</ORIGIN> <!-- apps or module -->
+		<MODULE>application</MODULE>
+		<MODULE_LABEL>_APPS_COMMENT</MODULE_LABEL>
+	</REPORT>
+</ROOT>
