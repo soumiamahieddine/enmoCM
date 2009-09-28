@@ -1,0 +1,19 @@
+/* menu */
+#menunav li#exploit_template_answer span span {
+	background-image: url(../../templateanswer/img/exploit_template_answer_off.gif);
+}
+#menunav li#exploit_template_answer.on span span {
+	background-image: url(../../templateanswer/img/exploit_template_answer_on.gif);
+}
+
+/* admin modules board */
+#admin_template_answer {
+	background:  url(../../templates/img/manage_template_answer.gif) 2px center no-repeat;
+	height:80px;
+}
+
+#temp_admin_templates{
+	background:  url(../img/templates.gif) 2px center no-repeat;
+	height:63px;
+	padding-bottom: 25px;
+}
