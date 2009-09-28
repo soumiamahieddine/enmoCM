@@ -366,7 +366,7 @@ input, select, textarea, .forms img {
 }
 
 .forms select {
-	width: 196px;
+	width: 206px;
 }
 
 input.small {
@@ -3367,9 +3367,9 @@ margin-top:10px;
 
 
 .listing td.picto {
-    width: 50px; 
-    margin: 0px; 
-    padding: 5px 0px; 
+    width: 50px;
+    margin: 0px;
+    padding: 5px 0px;
 }
 
 td.picto, th.picto,  td.action {

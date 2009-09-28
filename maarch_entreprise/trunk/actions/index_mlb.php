@@ -124,9 +124,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 		{
 			array_push($boxes, array( 'ID' => $res->arbox_id, 'LABEL' => $db->show_string($res->title)));
 		}
-
 	}
-
 	$frm_str .= '<div id="validleft">';
 		$frm_str .= '<div id="index_div" style="display:none;";>';
 		$frm_str .= '<h1 class="tit" id="action_title"><img src="'.$_SESSION['config']['img'].'/file_index_b.gif"  align="middle" alt="" />'._INDEXATION_TITLE;

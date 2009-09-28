@@ -72,6 +72,7 @@ class business_app_tools extends dbquery
 		$_SESSION['tablename']['doctypes_first_level'] = (string) $TABLENAME->doctypes_first_level;
 		$_SESSION['tablename']['doctypes_second_level'] = (string) $TABLENAME->doctypes_second_level;
 		$_SESSION['tablename']['mlb_doctype_ext'] = (string) $TABLENAME->mlb_doctype_ext;
+		$_SESSION['tablename']['doctypes_indexes'] = (string) $TABLENAME->doctypes_indexes;
 		$_SESSION['tablename']['saved_queries'] = (string) $TABLENAME->saved_queries;
 		$_SESSION['tablename']['contacts'] = (string) $TABLENAME->contacts;
 		$i=0;
@@ -308,7 +309,7 @@ class business_app_tools extends dbquery
 
 
 	/* TO DO : refaire la gestion des index dynamiques */
-	public function load_index()
+/*	public function load_index()
 	{
 		$func = new functions();
 		$_SESSION['index'] = array();
@@ -316,7 +317,7 @@ class business_app_tools extends dbquery
 		for($j=0; $j < count($_SESSION['collections']); $j++)
 		{
 			$_SESSION['index'][$_SESSION['collections'][$j]['id']] = array();
-			$xmlfile = simplexml_load_file($_SESSION['pathtomodules']."indexing_searching".DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR.$_SESSION['collections'][$j]['index_file']);
+			$xmlfile = simplexml_load_file($_SESSION['config']['businessapppath']."xml".DIRECTORY_SEPARATOR.$_SESSION['collections'][$j]['index_file']);
 			$path_lang = $_SESSION['pathtomodules']."indexing_searching".DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php';
 			$i = 0;
 
@@ -368,7 +369,7 @@ class business_app_tools extends dbquery
 				$i++;
 			}
 		}
-	}
+	}*/
 
 	private function load_status()
 	{

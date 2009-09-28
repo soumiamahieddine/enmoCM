@@ -7,7 +7,7 @@
 		<databaseserverport>5432</databaseserverport>
 		<databasetype>POSTGRESQL</databasetype>
 		<!--<databasetype>MYSQL</databasetype>-->
-		<databasename>DGGT</databasename>
+		<databasename>maarch_entreprise</databasename>
 		<databaseuser>postgres</databaseuser>
 		<databasepassword>maarch</databasepassword>
 		<databasesearchlimit>500</databasesearchlimit>
@@ -158,10 +158,10 @@
    		<moduleid>advanced_physical_archive</moduleid>
 		<comment>_APA_COMMENT</comment>
 	</MODULES>
-	<MODULES>
+<!--	<MODULES>
    		<moduleid>alert_diffusion</moduleid>
 		<comment>_ALERT_DIFFUSION_COMMENT</comment>
-	</MODULES>
+	</MODULES>-->
 	<MODULES>
    		<moduleid>attachments</moduleid>
 		<comment>_ATTACHMENTS_COMMENT</comment>

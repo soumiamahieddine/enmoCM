@@ -1,5 +1,4 @@
 <!--
-var isAlreadyClick = false;
 // Adding prototype and other js scripts
 document.write('<script type="text/javascript" src="'+app_path+'js/prototype.js"></script>');
 document.write('<script type="text/javascript" src="'+app_path+'js/scriptaculous.js?load=effects,slider"></script>');
@@ -12,6 +11,8 @@ document.write('<script type="text/javascript" src="'+app_path+'js/protohuds.js"
 document.write('<script type="text/javascript" src="'+app_path+'js/tabricator.js"></script>');
 
 document.write('<script type="text/javascript" src="'+app_path+'js/indexing.js"></script>');
+
+var isAlreadyClick = false;
 
 function repost(php_file,update_divs,fields,action,timeout)
 	{
@@ -1823,6 +1824,28 @@ function launch_autocompleter(path_script, id_text, id_div)
 		{
 			alert('error parameters launch_autocompleter function');
 		}
+	}
+}
+
+function get_opt_index(url, id_coll)
+{
+	if(url && id_coll)
+	{
+		new Ajax.Request(url,
+		{
+			method:'post',
+			parameters: {
+				coll_id : id_coll
+					},
+					onSuccess: function(answer){
+						var div_to_fill = $('opt_index');
+					//	console.log(div_to_fill);
+						if(div_to_fill)
+						{
+							div_to_fill.innerHTML = answer.responseText;
+						}
+					}
+		});
 	}
 }
 -->
