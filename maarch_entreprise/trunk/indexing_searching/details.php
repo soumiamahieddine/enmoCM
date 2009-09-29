@@ -24,6 +24,7 @@ require_once($_SESSION['pathtocoreclass']."class_security.php");
 require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_list_show.php");
 require_once($_SESSION['pathtocoreclass']."class_history.php");
 require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_indexing_searching_app.php");
+require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_types.php");
 include($_SESSION['config']['businessapppath'].'definition_mail_categories.php');
 $_SESSION['doc_convert'] = array();
 /****************Management of the location bar  ************/
@@ -50,6 +51,7 @@ $users = new history();
 $security = new security();
 $func = new functions();
 $request= new request;
+$type = new types();
 $s_id = "";
 $_SESSION['req'] ='details';
 $_SESSION['indexing'] = array();
@@ -127,23 +129,11 @@ $delete_doc = $security->collection_user_right($coll_id, "can_delete");
 //update index with the doctype
 if(isset($_POST['submit_index_doc']))
 {
-	/*$db->query("select type_id  from ".$table." where res_id = ".$s_id."");
-	$res_type_id = $db->fetch_array();
-	$type_id = $res_type_id['type_id'];
-	$db->query("select * from ".$_SESSION['tablename']['doctypes']." where type_id = ".$type_id);
-	$res_type = $db->fetch_array();
-	$type_id = $res_type['type_id'];*/
 	$is->update_mail($_POST, "POST", $s_id, $coll_id);
 }
 //delete the doctype
 if(isset($_POST['delete_doc']))
 {
-	/*$db->query("select type_id  from ".$table." where res_id = ".$s_id."");
-	$res_type_id = $db->fetch_array();
-	$type_id = $res_type_id['type_id'];
-	$db->query("select * from ".$_SESSION['tablename']['doctypes']." where type_id = ".$type_id);
-	$res_type = $db->fetch_array();
-	$type_id = $res_type['type_id'];*/
 	$is ->delete_doc( $s_id, $coll_id);
 	?>
 		<script language="javascript" type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?page=search_adv&dir=indexing_searching';?>';</script>
@@ -154,7 +144,22 @@ $db = new dbquery();
 $db->connect();
 if(empty($_SESSION['error']) || $_SESSION['indexation'])
 {
-	$db->query("select status, format, typist, creation_date,  fingerprint,  filesize, res_id, work_batch,  page_count, is_paper, scan_date, scan_user, scan_location, scan_wkstation, scan_batch, source, doc_language, description, closing_date, alt_identifier from ".$table." where res_id = ".$s_id."");
+	$comp_fields = '';
+	$db->query("select type_id from ".$table." where res_id = ".$s_id);
+	if($db->nb_result() > 0)
+	{
+		$res = $db->fetch_object();
+		$type_id = $res->type_id;
+		$indexes = $type->get_indexes($type_id, $coll_id, 'minimal');
+
+		for($i=0; $i<count($indexes);$i++)
+		{
+			$comp_field .= ', doc_'.$indexes[$i];
+		}
+	}
+
+	$db->query("select status, format, typist, creation_date,  fingerprint,  filesize, res_id, work_batch,  page_count, is_paper, scan_date, scan_user, scan_location, scan_wkstation, scan_batch, source, doc_language, description, closing_date, alt_identifier ".$comp_field." from ".$table." where res_id = ".$s_id."");
+	//$db->show();
 }
 ?>
 <div id="details_div" style="display:none;">
@@ -671,7 +676,7 @@ else
 							</th>
 							<td align="left"><?php  echo _MD5; ?> :</td>
 							<td><input type="text" class="readonly" readonly="readonly" value="<?php  echo $fingerprint; ?>"  title="<?php  echo $fingerprint; ?>" alt="<?php  echo $fingerprint; ?>" /></td>
-							
+
 							<th align="left" class="picto">
 								<img alt="<?php echo _WORK_BATCH; ?>" src="<?php echo $_SESSION['config']['businessappurl'];?>img/lot.gif" />
 							</th>

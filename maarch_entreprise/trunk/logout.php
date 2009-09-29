@@ -29,8 +29,8 @@ if($_SESSION['history']['userlogout'] == "true")
 	$hist = new history();
 	$ip = $_SERVER['REMOTE_ADDR'];
 	$navigateur = addslashes($_SERVER['HTTP_USER_AGENT']);
-	$host = gethostbyaddr($_SERVER['REMOTE_ADDR']);
-
+	//$host = gethostbyaddr($_SERVER['REMOTE_ADDR']);
+	$host = $_SERVER['REMOTE_ADDR'];
 	$hist->add($_SESSION['tablename']['users'],$_SESSION['user']['UserId'],"LOGOUT","IP : ".$ip.", BROWSER : ".$navigateur.", HOST : ".$host, $_SESSION['config']['databasetype']);
 }
 

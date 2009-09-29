@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ROOT>
+	<INDEX>
+		<column>custom_t1</column>
+		<label>_PO_NUMBER</label>
+		<type>string</type>
+		<readonly>false</readonly>
+		<img>default_string.gif</img>
+	</INDEX>
+	<INDEX>
+		<column>custom_t2</column>
+		<label>_STRING_2</label>
+		<type>string</type>
+		<readonly>true</readonly>
+		<img>default_string.gif</img>
+	</INDEX>
+	<INDEX>
+		<column>custom_d1</column>
+		<label>_DATE</label>
+		<type>date</type>
+		<readonly>false</readonly>
+		<img>default_date.gif</img>
+	</INDEX>
+	<INDEX>
+		<column>custom_n1</column>
+		<label>_INTEGER</label>
+		<type>integer</type>
+		<readonly>false</readonly>
+		<img>default_number.gif</img>
+	</INDEX>
+	<INDEX>
+		<column>custom_f1</column>
+		<label>_FLOAT</label>
+		<type>float</type>
+		<readonly>false</readonly>
+		<img>default_number.gif</img>
+	</INDEX>
+</ROOT>

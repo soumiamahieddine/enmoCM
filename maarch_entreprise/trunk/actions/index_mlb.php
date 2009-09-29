@@ -147,7 +147,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 					$frm_str .= '<iframe src="'.$_SESSION['config']['businessappurl'].'indexing_searching/choose_file.php" name="choose_file" id="choose_file" frameborder="0" scrolling="no" width="100%" height="40"></iframe>';
                  $frm_str .= '</div>';
 			}
-			$frm_str .= '<table width="100%" align="center" border="0">';
+			$frm_str .= '<table width="100%" align="center" border="0" >';
 
 				  /*** Category ***/
 				  $frm_str .= '<tr id="category_tr" style="display:'.$display_value.';">';
@@ -349,6 +349,9 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 			$frm_str .= '</tr>';
 		}
 			$frm_str .= '</table>';
+
+		$frm_str .= '<div id="comp_indexes">';
+		$frm_str .= '</div>';
 		$frm_str .= '</div>';
 		/*** Actions ***/
 		$frm_str .= '<hr width="90%"/>';
@@ -840,7 +843,7 @@ function process_category_check($cat_id, $values)
 		$_SESSION['error'] = _CATEGORY.' '._UNKNOWN.': '.$cat_id;
 		return false;
 	}
-//print_r($values);
+
 	// Simple cases
 	for($i=0; $i<count($values); $i++)
 	{
@@ -864,6 +867,22 @@ function process_category_check($cat_id, $values)
 			$_SESSION['error'] = $_ENV['categories'][$cat_id][$values[$i]['ID']]['label']." "._WRONG_FORMAT."";
 			return false;
 		}
+	}
+	///// Checks the complementary indexes depending on the doctype
+	require_once($_SESSION['config']['businessapppath'].'class'.DIRECTORY_SEPARATOR.'class_types.php');
+	$type = new types();
+	$type_id =  get_value_fields($values, 'type_id');
+	$coll_id =  get_value_fields($values, 'coll_id');
+	$indexes = $type->get_indexes( $type_id,$coll_id, 'minimal');
+	$val_indexes = array();
+	for($i=0; $i<count($indexes);$i++)
+	{
+		$val_indexes[$indexes[$i]] =  get_value_fields($values, $indexes[$i]);
+	}
+	$test_type = $type->check_indexes($type_id, $coll_id,$val_indexes );
+	if(!$test_type)
+	{
+		return false;
 	}
 	//print_r($values);
 	///////////////////////// Other cases
@@ -1198,7 +1217,18 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
 			}
 		}
 	}
-
+	///// Manages the complementary indexes depending on the doctype
+	require_once($_SESSION['config']['businessapppath'].'class'.DIRECTORY_SEPARATOR.'class_types.php');
+	$type = new types();
+	$type_id =  get_value_fields($values_form, 'type_id');
+	$indexes = $type->get_indexes( $type_id,$coll_id, 'minimal');
+	$val_indexes = array();
+	for($i=0; $i<count($indexes);$i++)
+	{
+		$val_indexes[$indexes[$i]] =  get_value_fields($values_form, $indexes[$i]);
+	}
+	$_SESSION['data'] = $type->fill_data_array($type_id, $coll_id, $val_indexes, $_SESSION['data']);
+	//print_r($_SESSION['data']);
 	///////////////////////// Other cases
 	// Process limit Date
 	if(isset($_ENV['categories'][$cat_id]['other_cases']['process_limit_date']))

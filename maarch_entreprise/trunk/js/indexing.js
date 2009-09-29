@@ -27,6 +27,13 @@ function change_doctype(doctype_id, path_manage_script, error_empty_type, action
 					{
 						process_date.value = response.process_date;
 					}
+
+					var indexes = response.opt_indexes;
+					var div_indexes = $('comp_indexes');
+					if(div_indexes )
+					{
+						div_indexes.update(indexes);
+					}
 					var services_to_exec = response.services;
 					var path_scripts = '';
 					var call_func = '';

@@ -80,6 +80,7 @@ class types extends dbquery
 				$_SESSION['m_admin']['doctypes']['TABLE'] = $line->coll_id;
 				$_SESSION['m_admin']['doctypes']['ACTUAL_COLL_ID'] = $line->coll_id;
 				$_SESSION['m_admin']['doctypes']['indexes'] = $this->get_indexes($line->type_id, $line->coll_id, 'minimal');
+			//	$this->show_array($_SESSION['m_admin']['doctypes']['indexes']);
 				$_SESSION['m_admin']['doctypes']['mandatory_indexes'] = $this->get_mandatory_indexes($line->type_id, $line->coll_id);
 
 				$_SESSION['service_tag'] = 'doctype_up';
@@ -253,11 +254,11 @@ class types extends dbquery
 
 			for($i=0; $i<count($_REQUEST['fields']);$i++)
 			{
-				array_push($_SESSION['m_admin']['doctypes']['indexes'], $_REQUEST['fields']);
+				array_push($_SESSION['m_admin']['doctypes']['indexes'], $_REQUEST['fields'][$i]);
 			}
 			for($i=0; $i<count($_REQUEST['mandatory_fields']);$i++)
 			{
-				array_push($_SESSION['m_admin']['doctypes']['mandatory_indexes'], $_REQUEST['mandatory_fields']);
+				array_push($_SESSION['m_admin']['doctypes']['mandatory_indexes'], $_REQUEST['mandatory_fields'][$i]);
 			}
 		}
 		if(!isset($_REQUEST['sous_dossier']) || empty($_REQUEST['sous_dossier']))
@@ -313,8 +314,11 @@ class types extends dbquery
 			if($_REQUEST['mode'] <> "prop" && $_REQUEST['mode'] <> "add")
 			{
 				$this->query("update ".$_SESSION['tablename']['doctypes']." set description = '".$this->protect_string_db($_SESSION['m_admin']['doctypes']['LABEL'])."' , doctypes_first_level_id = ".$_SESSION['m_admin']['doctypes']['STRUCTURE'].", doctypes_second_level_id = ".$_SESSION['m_admin']['doctypes']['SUB_FOLDER'].", enabled = 'Y', coll_id = '".$this->protect_string_db($_SESSION['m_admin']['doctypes']['COLL_ID'])."' where type_id = ".$_SESSION['m_admin']['doctypes']['TYPE_ID']."");
+				//$this->show_array($_SESSION['m_admin']['doctypes']['indexes']);
 
 				$this->query("delete from ".$_SESSION['tablename']['doctypes_indexes']." where coll_id = '".$this->protect_string_db($_SESSION['m_admin']['doctypes']['COLL_ID'])."' and type_id = ".$_SESSION['m_admin']['doctypes']['TYPE_ID']);
+				//$this->show();
+
 
 				for($i=0; $i<count($_SESSION['m_admin']['doctypes']['indexes']);$i++)
 				{
@@ -362,6 +366,16 @@ class types extends dbquery
 					//$this->show();
 					$res = $this->fetch_object();
 					$_SESSION['m_admin']['doctypes']['TYPE_ID'] = $res->type_id;
+
+					for($i=0; $i<count($_SESSION['m_admin']['doctypes']['indexes']);$i++)
+					{
+						$mandatory = 'N';
+						if(in_array($_SESSION['m_admin']['doctypes']['indexes'][$i], $_SESSION['m_admin']['doctypes']['mandatory_indexes'] ))
+						{
+							$mandatory = 'Y';
+						}
+						$this->query("insert into ".$_SESSION['tablename']['doctypes_indexes']." (coll_id, type_id, field_name, mandatory) values('".$this->protect_string_db($_SESSION['m_admin']['doctypes']['COLL_ID'])."', ".$_SESSION['m_admin']['doctypes']['TYPE_ID'].", '".$_SESSION['m_admin']['doctypes']['indexes'][$i]."', '".$mandatory."')");
+					}
 
 					$_SESSION['service_tag'] = "doctype_insertdb";
 					echo $core_tools->execute_modules_services($_SESSION['modules_services'], 'doctype_load_db', "include");
@@ -520,6 +534,7 @@ class types extends dbquery
 		$fields = array();
 		$this->connect();
 		$this->query("select field_name from ".$_SESSION['tablename']['doctypes_indexes']." where coll_id = '".$coll_id."' and type_id = ".$type_id);
+		//$this->show();
 
 		while($res = $this->fetch_object())
 		{
@@ -549,9 +564,15 @@ class types extends dbquery
 				$label = $tmp;
 			}
 			$col = (STRING) $item->column;
+			$img = (STRING) $item->img;
+			$readonly = false;
+			if((STRING) $item->readonly == 'true')
+			{
+				$readonly = true;
+			}
 			if(in_array($col, $fields))
 			{
-				$indexes[$col] = array( 'label' => $label, 'type' => (STRING) $item->type);
+				$indexes[$col] = array( 'label' => $label, 'type' => (STRING) $item->type, 'readonly' =>$readonly, 'img' => $_SESSION['config']['businessappurl'].'img/'.$img);
 			}
 		}
 		return $indexes;
@@ -568,6 +589,118 @@ class types extends dbquery
 			array_push($fields,$res->field_name );
 		}
 		return $fields;
+	}
+
+	public function check_indexes($type_id, $coll_id, $values)
+	{
+		$indexes = $this->get_indexes($type_id, $coll_id);
+		require_once($_SESSION['pathtocoreclass'].'class_security.php');
+		$sec = new security();
+		$ind_coll = $sec->get_ind_collection($coll_id);
+		$indexes = $this->get_indexes($type_id, $coll_id);
+		$mandatory_indexes = $this->get_mandatory_indexes($type_id, $coll_id);
+
+		// Checks the manadatory indexes
+		for($i=0; $i<count($mandatory_indexes);$i++)
+		{
+			if(!isset($values[$mandatory_indexes[$i]]) || empty($values[$mandatory_indexes[$i]]))
+			{
+				$_SESSION['error'] .= $indexes[$mandatory_indexes[$i]]['label']._IS_EMPTY;
+				return false;
+			}
+		}
+
+		// Checks type indexes
+		$date_pattern = "/^[0-3][0-9]-[0-1][0-9]-[1-2][0-9][0-9][0-9]$/";
+		foreach(array_keys($values)as $key)
+		{
+			if(!empty($_SESSION['error']))
+			{
+				return false;
+			}
+			if($indexes[$key]['type'] == 'date')
+			{
+				if(preg_match( $date_pattern,$values[$key])== 0)
+				{
+					$_SESSION['error'] .= $indexes[$key]['label']." "._WRONG_FORMAT.".<br/>";
+					return false;
+				}
+			}
+			else if($indexes[$key]['type'] == 'string')
+			{
+				$field_value = $this->wash($value[$key],"no",$indexes[$key]['label']);
+			}
+			else if($indexes[$key]['type'] == 'float')
+			{
+				$field_value = $this->wash($value[$key],"float",$indexes[$key]['label']);
+			}
+			else if($indexes[$key]['type'] == 'integer')
+			{
+				$field_value = $this->wash($value[$key],"num",$indexes[$key]['label']);
+			}
+		}
+		return true;
+	}
+
+	public function get_sql_insert($type_id, $coll_id, $values)
+	{
+		$indexes = $this->get_indexes($type_id, $coll_id);
+		require_once($_SESSION['pathtocoreclass'].'class_security.php');
+		$sec = new security();
+		$ind_coll = $sec->get_ind_collection($coll_id);
+		$indexes = $this->get_indexes($type_id, $coll_id);
+
+		$req = '';
+		foreach(array_keys($values)as $key)
+		{
+			if($indexes[$key]['type'] == 'date')
+			{
+				$req .= ", ".$key." = '".$this->format_date_db($values[$key])."'";
+			}
+			else if($indexes[$key]['type'] == 'string')
+			{
+				$req .= ", ".$key." = '".$this->protect_string_db($values[$key])."'";
+			}
+			else if($indexes[$key]['type'] == 'float')
+			{
+				$req .= ", ".$key." = ".$values[$key]."";
+			}
+			else if($indexes[$key]['type'] == 'integer')
+			{
+				$req .= ", ".$key." = ".$values[$key]."";
+			}
+		}
+		return $req;
+	}
+
+	public function fill_data_array($type_id, $coll_id, $values, $data = array())
+	{
+		$indexes = $this->get_indexes($type_id, $coll_id);
+		require_once($_SESSION['pathtocoreclass'].'class_security.php');
+		$sec = new security();
+		$ind_coll = $sec->get_ind_collection($coll_id);
+		$indexes = $this->get_indexes($type_id, $coll_id);
+
+		foreach(array_keys($values)as $key)
+		{
+			if($indexes[$key]['type'] == 'date')
+			{
+				array_push($data, array('column' => $key, 'value' => $this->format_date_db($values[$key]), 'type' => "date"));
+			}
+			else if($indexes[$key]['type'] == 'string')
+			{
+				array_push($data, array('column' => $key, 'value' => $this->protect_string_db($values[$key]), 'type' => "string"));
+			}
+			else if($indexes[$key]['type'] == 'float')
+			{
+				array_push($data, array('column' => $key, 'value' => $values[$key], 'type' => "float"));
+			}
+			else if($indexes[$key]['type'] == 'integer')
+			{
+				array_push($data, array('column' => $key, 'value' => $values[$key], 'type' => "integer"));
+			}
+		}
+		return $data;
 	}
 }
 ?>
