@@ -15,7 +15,8 @@ function change_doctype(doctype_id, path_manage_script, error_empty_type, action
 		new Ajax.Request(path_manage_script,
 		{
 		    method:'post',
-		    parameters: { type_id : doctype_id
+		    parameters: { type_id : doctype_id,
+		    			  id_action : action_id
 						},
 		        onSuccess: function(answer){
 				eval("response = "+answer.responseText);

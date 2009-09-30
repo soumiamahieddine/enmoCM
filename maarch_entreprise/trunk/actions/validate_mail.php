@@ -329,7 +329,6 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 				   $frm_str .='<td class="indexing_label"><label for="contact" class="form_title" ><span id="exp_contact">'._SHIPPER.'</span><span id="dest_contact">'._DEST.'</span>';
 				   if($_SESSION['features']['personal_contact'] == "true"  && $core_tools->test_service('my_contacts','apps', false))
 				   {
-				   		//$frm_str .=' <a href="#" id="create_contact" title="'._CREATE_CONTACT.'" onclick="create_contact(\''.$_SESSION ['config']['businessappurl'].'contact_info.php\');" style="display:inline;" ><img src="'.$_SESSION['config']['businessappurl'].'img/modif_liste.png" alt="'._CREATE_CONTACT.'"/></a>';
 						$frm_str .=' <a href="#" id="create_contact" title="'._CREATE_CONTACT.'" onclick="new Effect.toggle(\'create_contact_div\', \'blind\', {delay:0.2});return false;" style="display:inline;" ><img src="'.$_SESSION['config']['businessappurl'].'img/modif_liste.png" alt="'._CREATE_CONTACT.'"/></a>';
 					}
 					 $frm_str .= '</label></td>';
@@ -401,72 +400,10 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 					$frm_str .= '</h2>';
 					$frm_str .= '<div id="diff_list_div"  style="display:none">';
 						$frm_str .= '<div>ici</div>';
-						//$frm_str .= '<div id="diff_list_div" class="scroll_div" style="height:150px;"></div>';
+						$frm_str .= '<div id="diff_list_div" class="scroll_div" style="height:150px;"></div>';
 						$frm_str .= '</td>';
 				  $frm_str .= '</tr>';
 				}
-				/*if($core_tools->is_module_loaded('entities'))
-				{
-					 // Displays the diffusion list (only copies)
-					require_once($_SESSION['pathtomodules']."entities".DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_listdiff.php');
-					$diff_list = new diffusion_list();
-					$_SESSION['process']['diff_list'] = $diff_list->get_listinstance($res_id);
-					$frm_str .= '<h2 onclick="new Effect.toggle(\'diff_list_div\', \'blind\', {delay:0.2});return false;"  class="categorie" style="width:90%;">';
-								$frm_str .= '<img src="'.$_SESSION['config']['businessappurl'].$_SESSION['config']['img'].'/plus.png" alt="" id="img_diff_list" />&nbsp;<b>'._DIFF_LIST_COPY.' :</b>';
-						$frm_str .= '<span class="lb1-details">&nbsp;</span>';
-					$frm_str .= '</h2>';
-					$frm_str .= '<div id="diff_list_div"  style="display:none">';
-						$frm_str .= '<div>';
-					if(count($_SESSION['process']['diff_list']['copy']['users']) == 0 && count($_SESSION['process']['diff_list']['copy']['entities']) == 0)
-					{
-						$frm_str .= _NO_COPY;
-					}
-					else
-					{
-						$frm_str .= '<table cellpadding="0" cellspacing="0" border="0" class="listing3">';
-						$color = ' class="col"';
-						for($i=0;$i<count($_SESSION['process']['diff_list']['copy']['entities']);$i++)
-						{
-							if($color == ' class="col"')
-							{
-								$color = '';
-							}
-							else
-							{
-								$color = ' class="col"';
-							}
-							$frm_str .= '<tr '.$color.' >';
-							$frm_str .= '<td><img src="'.$_SESSION['urltomodules'].'entities/img/manage_entities_b_small.gif" alt="'._ENTITY.'" title="'._ENTITY.'" /></td>';
-							$frm_str .= '<td >'.$_SESSION['process']['diff_list']['copy']['entities'][$i]['entity_id'].'</td>';
-							$frm_str .= '<td colspan="2">'.$_SESSION['process']['diff_list']['copy']['entities'][$i]['entity_label'].'</td>';
-						$frm_str .= '</tr>';
-						}
-						for($i=0;$i<count($_SESSION['process']['diff_list']['copy']['users']);$i++)
-						{
-							if($color == ' class="col"')
-							{
-								$color = '';
-							}
-							else
-							{
-								$color = ' class="col"';
-							}
-							$frm_str .= '<tr '.$color.' >';
-								$frm_str .= '<td><img src="'.$_SESSION['urltomodules'].'entities/img/manage_users_entities_b_small.gif" alt="'._USER.'" title="'._USER.'" /></td>';
-								$frm_str .= '<td >'.$_SESSION['process']['diff_list']['copy']['users'][$i]['firstname'].'</td>';
-								$frm_str .= '<td >'.$_SESSION['process']['diff_list']['copy']['users'][$i]['lastname'].'</td>';
-								$frm_str .= '<td>'.$_SESSION['process']['diff_list']['copy']['users'][$i]['entity_label'].'</td>';
-							$frm_str .= '</tr>';
-						}
-						$frm_str .= '</table>';
-					}
-					if($core_tools->test_service('add_copy_in_process', 'entities', false))
-					{
-						$frm_str .= '<a href="#" onclick="window.open(\''.$_SESSION['urltomodules'].'entities/manage_listinstance.php?origin=process&only_cc\', \'\', \'scrollbars=yes,menubar=no,toolbar=no,status=no,resizable=yes,width=1024,height=650,location=no\');" title="'._ADD_COPIES.'"><img src="'.$_SESSION['config']['businessappurl'].'img/modif_liste.png" alt="'._ADD_COPIES.'" />'._ADD_COPIES.'</a>';
-					}
-					$frm_str .= '</div>';
-				 	$frm_str .= '</div>';
-				}*/
 				/*** Physical_archive : Arbox ***/
 				if($core_tools->is_module_loaded('physical_archive'))
 				{
@@ -517,6 +454,14 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 			$frm_str .= '<td><span class="red_asterisk" id="process_limit_date_mandatory" style="display:inline;">*</span>&nbsp;</td>';
 	    $frm_str .= '</tr>';
 
+	    		/*** Chrono number ***/
+	/*	$frm_str .= '<tr id="chrono_number_tr" style="display:'.$display_value.';">';
+			$frm_str .='<td><label for="chrono_number" class="form_title" >'._CHRONO_NUMBER.'</label></td>';
+			$frm_str .='<td>&nbsp;</td>';
+			$frm_str .='<td class="indexing_field"><input type="text" name="chrono_number" id="chrono_number" onchange="clear_error(\'frm_error_'.$id_action.'\');"/></td>';
+			$frm_str .='<td><span class="red_asterisk" id="chrono_number_mandatory" style="display:inline;">*</span>&nbsp;</td>';
+	    $frm_str .= '</tr>';*/
+
 		/*** Folder : Market & Project ***/
 		if($core_tools->is_module_loaded('folder'))
 		{
@@ -544,6 +489,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 			$frm_str .= '</tr>';
 		}
 			$frm_str .= '</table>';
+			$frm_str .= '<div id="comp_indexes">';
+		$frm_str .= '</div>';
 		$frm_str .= '</div>';
 		/*** Actions ***/
 		$frm_str .= '<hr width="90%" align="center"/>';
@@ -711,12 +658,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 					$frm_str .='<input name="mail" type="text" id="mail" value="'.$core_tools->show($contact_info['MAIL']).'" />';
 		 		$frm_str .= '</td>';
 			$frm_str .= '</tr>';
-/*
-		 	$frm_str .='<p >';
-				$frm_str .='<label><b>'._ADDRESS.' </b></label>';
-		 	$frm_str .='</p>';
-*/
-		 	//$frm_str .='<br/>';
+
 		  	$frm_str .= '<tr>';
 				$frm_str .= '<td>';
 					$frm_str .='<label for="num">'._NUM.' : </label>';
@@ -732,17 +674,6 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 		 		$frm_str .= '</td>';
 			$frm_str .= '</tr>';
 
-/*
-		 	$frm_str .= '<tr>';
-				$frm_str .= '<td>';
-					$frm_str .='<label for="label">'._STREET.' : </label>';
-				$frm_str .= '</td>';
-				$frm_str .= '<td>';
-					$frm_str .='<input name="street" type="text"  id="street" value="'.$core_tools->show($contact_info['ADD_STREET']).'" />';
-		 		$frm_str .= '</td>';
-			$frm_str .= '</tr>';
-*/
-
 		 	$frm_str .= '<tr>';
 				$frm_str .= '<td colspan="2">';
 					$frm_str .='<label for="add_comp">'._COMPLEMENT.' : </label>';
@@ -751,17 +682,6 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 					$frm_str .='<input name="add_comp" type="text"  id="add_comp" value="'.$core_tools->show($contact_info['ADD_COMP']).'" />';
 		 		$frm_str .= '</td>';
 			$frm_str .= '</tr>';
-
-/*
-			$frm_str .= '<tr>';
-				$frm_str .= '<td>';
-					$frm_str .='<label for="label">'._TOWN.' : </label>';
-				$frm_str .= '</td>';
-				$frm_str .= '<td>';
-					$frm_str .='<input name="town" type="text" id="town" value="'.$core_tools->show($contact_info['ADD_TOWN']).'" />';
-		 		$frm_str .= '</td>';
-			$frm_str .= '</tr>';
-*/
 
 		 	$frm_str .= '<tr>';
 				$frm_str .= '<td>';
@@ -786,11 +706,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 					$frm_str .='<input name="country" type="text"  id="country" value="'.$core_tools->show($contact_info['ADD_COUNTRY']).'" />';
 				$frm_str .= '</td>';
 			$frm_str .= '</tr>';
-/*
-		 	$frm_str .='</p>';
-		 	$frm_str .='<p><label><b>'._COMP.' </b></label></p>';
-		 	$frm_str .='<br/>';
-*/
+
 		 	$frm_str .= '<tr>';
 				$frm_str .= '<td colspan="2">';
 					$frm_str .='<label for="comp_data">'._COMP_DATA.' : </label>';
@@ -907,22 +823,25 @@ function process_category_check($cat_id, $values)
 		}
 	}
 
+	///// Checks the complementary indexes depending on the doctype
+	require_once($_SESSION['config']['businessapppath'].'class'.DIRECTORY_SEPARATOR.'class_types.php');
+	$type = new types();
+	$type_id =  get_value_fields($values, 'type_id');
+	$coll_id =  get_value_fields($values, 'coll_id');
+	$indexes = $type->get_indexes( $type_id,$coll_id, 'minimal');
+	$val_indexes = array();
+	for($i=0; $i<count($indexes);$i++)
+	{
+		$val_indexes[$indexes[$i]] =  get_value_fields($values, $indexes[$i]);
+	}
+	$test_type = $type->check_indexes($type_id, $coll_id,$val_indexes );
+	if(!$test_type)
+	{
+		return false;
+	}
+
 	///////////////////////// Other cases
 	// Process limit Date
-	/*if(isset($_ENV['categories'][$cat_id]['other_cases']['process_limit_date'])  )
-	{
-		$process_limit_date_use = get_value_fields($values, 'process_limit_date_use');
-		if($process_limit_date_use == 'Y')
-		{
-			$process_limit_date = get_value_fields($values, 'process_limit_date');
-			if( empty($process_limit_date) || preg_match($_ENV['date_pattern'],$process_limit_date)== 0)
-			{
-				$_SESSION['error'] = $_ENV['categories'][$cat_id]['other_cases']['process_limit_date']['label']." "._WRONG_FORMAT."";
-				return false;
-			}
-		}
-	}*/
-
 	$_SESSION['store_process_limit_date'] = "";
 	if(isset($_ENV['categories'][$cat_id]['other_cases']['process_limit_date']))
 	{
@@ -1087,6 +1006,29 @@ function process_category_check($cat_id, $values)
 			}
 		}
 	}
+
+		//For specific case => chrono number
+/*	$chrono_out = get_value_fields($values, 'chrono_number');
+	if(isset($_ENV['categories'][$cat_id]['other_cases']['chrono_number']) && $_ENV['categories'][$cat_id]['other_cases']['arbox_id']['mandatory'] == true)
+	{
+		if($chrono_out == false)
+		{
+			$_SESSION['error'] = _NO_CHRONO_NUMBER_DEFINED.' ';
+			return false;
+		}
+	}
+	if($chrono_out != false && preg_match('/^[0-9]+$/', $chrono_out))
+	{
+		require_once($_SESSION['pathtomodules'].'physical_archive'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php');
+		$physical_archive = new physical_archive();
+		$pa_return_value = $physical_archive->load_box_db($box_id, $cat_id, $_SESSION['user']['UserId']);
+		if ($pa_return_value == false)
+		{
+			$_SESSION['error'] = _ERROR_TO_INDEX_NEW_BATCH_WITH_PHYSICAL_ARCHIVE;
+			return false;
+		}
+	}*/
+
 	return true;
 }
 
@@ -1198,26 +1140,26 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
 	}
 
 	///////////////////////// Other cases
-	// Process limit Date
-	/*if(isset($_ENV['categories'][$cat_id]['other_cases']['process_limit_date']))
+	require_once($_SESSION['config']['businessapppath'].'class'.DIRECTORY_SEPARATOR.'class_types.php');
+	$type = new types();
+	$type_id =  get_value_fields($values_form, 'type_id');
+	$indexes = $type->get_indexes( $type_id,$coll_id, 'minimal');
+	$val_indexes = array();
+	for($i=0; $i<count($indexes);$i++)
 	{
-		$process_limit_date = get_value_fields($values_form, 'process_limit_date');
-		if($_ENV['categories'][$cat_id]['other_cases']['process_limit_date']['table'] == 'res')
-		{
-			$query_res .= ", process_limit_date = '".$db->format_date_db($process_limit_date)."'";
-		}
-		else if($_ENV['categories'][$cat_id]['other_cases']['process_limit_date']['table'] == 'coll_ext')
-		{
-			$query_ext .= ", process_limit_date = '".$db->format_date_db($process_limit_date)."'";
-		}
-	}*/
+		$val_indexes[$indexes[$i]] =  get_value_fields($values_form, $indexes[$i]);
+	}
+	$query_ext .=  $type->get_sql_update($type_id, $coll_id, $val_indexes);
+
+
+	// Process limit Date
 
 	if(isset($_ENV['categories'][$cat_id]['other_cases']['process_limit_date']))
 	{
 		$process_limit_date = get_value_fields($values_form, 'process_limit_date');
 		if($_ENV['categories'][$cat_id]['other_cases']['process_limit_date']['table'] == 'res')
 		{
-			array_push($_SESSION['data'], array('column' => 'process_limit_date', 'value' => $db->format_date_db($process_limit_date), 'type' => "date"));
+			$query_res .= ", process_limit_date = '".$db->format_date_db($process_limit_date)."'";
 		}
 		else if($_ENV['categories'][$cat_id]['other_cases']['process_limit_date']['table'] == 'coll_ext')
 		{

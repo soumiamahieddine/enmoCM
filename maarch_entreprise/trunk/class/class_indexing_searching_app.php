@@ -474,29 +474,6 @@ class indexing_searching_app extends dbquery
 		{
 			 $_SESSION['date_pattern'] = "/^[0-3][0-9]-[0-1][0-9]-[1-2][0-9][0-9][0-9]$/";
 		}
-	/*	foreach(array_keys($post) as $value)
-		{
-			$tmp = preg_replace('/^doc_/', '', $value);
-			if($value <> "submit" && $value <> "submit_index_doc" && value <> "delete_doc" && !$this->is_mandatory_field($value) && !$this->is_doctype_field($value))
-			{
-				//echo $value." ".$post[$value]."<br/>";
-				if($this->is_mandatory($value, $typeform))
-				{
-					if(empty($post[$value]))
-					{
-						$_SESSION['error'] .= $this->retrieve_index_label($tmp, $coll_id)." "._MANDATORY.".<br/>";
-						$_SESSION['field_error'][$value] = true;
-						//echo $_SESSION['error'];
-					}
-				}
-
-				if(!empty($post[$value]))
-				{
-					$data = $this->user_exit($coll_id, $value, $data, $typeform);
-				}
-				$_SESSION['indexing'][$tmp] = $post[$value];
-			}
-		}*/
 
 		$table = $sec->retrieve_table_from_coll($coll_id);
 		$view = $sec->retrieve_view_from_coll_id($coll_id);
@@ -580,6 +557,21 @@ class indexing_searching_app extends dbquery
 					array_push($data_ext, array('column' => $key, 'value' => $func->protect_string_db($post[$key]), 'type' => "string"));
 				}
 			}
+		}
+
+		require_once($_SESSION['config']['businessapppath'].'class'.DIRECTORY_SEPARATOR.'class_types.php');
+		$type = new types();
+		$type_id =  $post['type_id'];
+		$indexes = $type->get_indexes( $type_id,$coll_id, 'minimal');
+		$val_indexes = array();
+		for($i=0; $i<count($indexes);$i++)
+		{
+			$val_indexes[$indexes[$i]] =  $post[$indexes[$i]];
+		}
+		$test_type = $type->check_indexes($type_id, $coll_id,$val_indexes );
+		if($test_type)
+		{
+			$data_res = $type->fill_data_array($type_id, $coll_id, $val_indexes, $data_res);
 		}
 
 		///////////////////////// Other cases

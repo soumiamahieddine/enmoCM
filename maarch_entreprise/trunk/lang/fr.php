@@ -924,4 +924,6 @@ define('_REOPEN_THIS_MAIL', 'R&eacute;ouverture du courrier');
 
 define('_OWNER', 'Propri&eacute;taire');
 define('_CONTACT_OWNER_COMMENT', 'Laisser vide pour rendre ce contact public.');
+
+define('_OPT_INDEXES', 'Informations compl&eacute;mentaires');
 ?>

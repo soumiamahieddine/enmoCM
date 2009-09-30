@@ -642,6 +642,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
  **/
 function check_form($form_id,$values)
 {
+	$_SESSION['error'] = '';
 	if(count($values) < 1 || empty($form_id))
 	{
 		$_SESSION['error'] =  _FORM_ERROR;
@@ -884,7 +885,7 @@ function process_category_check($cat_id, $values)
 	{
 		return false;
 	}
-	//print_r($values);
+
 	///////////////////////// Other cases
 	// Process limit Date
 	$_SESSION['store_process_limit_date'] = "";

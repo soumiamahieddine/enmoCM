@@ -603,9 +603,9 @@ class types extends dbquery
 		// Checks the manadatory indexes
 		for($i=0; $i<count($mandatory_indexes);$i++)
 		{
-			if(!isset($values[$mandatory_indexes[$i]]) || empty($values[$mandatory_indexes[$i]]))
+			if( empty($values[$mandatory_indexes[$i]]) && ($values[$mandatory_indexes[$i]] == 0 && $indexes[$mandatory_indexes[$i]]['type'] <> 'float' && $indexes[$mandatory_indexes[$i]]['type'] <> 'integer'))  // Pb 0
 			{
-				$_SESSION['error'] .= $indexes[$mandatory_indexes[$i]]['label']._IS_EMPTY;
+				$_SESSION['error'] = $indexes[$mandatory_indexes[$i]]['label']._IS_EMPTY.'kkk';
 				return false;
 			}
 		}
@@ -618,7 +618,7 @@ class types extends dbquery
 			{
 				return false;
 			}
-			if($indexes[$key]['type'] == 'date')
+			if($indexes[$key]['type'] == 'date' && !empty($value[$key]))
 			{
 				if(preg_match( $date_pattern,$values[$key])== 0)
 				{
@@ -626,23 +626,37 @@ class types extends dbquery
 					return false;
 				}
 			}
-			else if($indexes[$key]['type'] == 'string')
+			else if($indexes[$key]['type'] == 'string'  && !empty($value[$key]))
 			{
 				$field_value = $this->wash($value[$key],"no",$indexes[$key]['label']);
 			}
-			else if($indexes[$key]['type'] == 'float')
+			else if($indexes[$key]['type'] == 'float'  && $value[$key] >= 0)
 			{
-				$field_value = $this->wash($value[$key],"float",$indexes[$key]['label']);
+				if($value[$key] == 0)
+				{
+					$field_value = 0;
+				}
+				else
+				{
+					$field_value = $this->wash($value[$key],"float",$indexes[$key]['label']);
+				}
 			}
-			else if($indexes[$key]['type'] == 'integer')
+			else if($indexes[$key]['type'] == 'integer' && $value[$key] >= 0)
 			{
-				$field_value = $this->wash($value[$key],"num",$indexes[$key]['label']);
+				if($value[$key] == 0)
+				{
+					$field_value = 0;
+				}
+				else
+				{
+					$field_value = $this->wash($value[$key],"num",$indexes[$key]['label']);
+				}
 			}
 		}
 		return true;
 	}
 
-	public function get_sql_insert($type_id, $coll_id, $values)
+	public function get_sql_update($type_id, $coll_id, $values)
 	{
 		$indexes = $this->get_indexes($type_id, $coll_id);
 		require_once($_SESSION['pathtocoreclass'].'class_security.php');

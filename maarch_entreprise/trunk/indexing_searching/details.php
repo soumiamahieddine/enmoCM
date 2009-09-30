@@ -154,7 +154,14 @@ if(empty($_SESSION['error']) || $_SESSION['indexation'])
 
 		for($i=0; $i<count($indexes);$i++)
 		{
-			$comp_field .= ', doc_'.$indexes[$i];
+			if(preg_match('/^custom_/', $indexes[$i])) // In the view all custom from res table begin with doc_
+			{
+				$comp_field .= ', doc_'.$indexes[$i];
+			}
+			else
+			{
+				$comp_field .= ', '.$indexes[$i];
+			}
 		}
 	}
 
@@ -218,6 +225,15 @@ else
 			$scan_batch = $res->scan_batch;
 			$doc_language = $res->doc_language;
 			$closing_date = $db->format_date_db($res->closing_date, false);
+			$indexes = $type->get_indexes($type_id, $coll_id);
+			//$db->show_array($indexes);
+			foreach(array_keys($indexes) as $key)
+			{
+				$tmp = 'doc_'.$key;
+				$indexes[$key]['value'] = $res->$tmp;
+				$indexes[$key]['show_value'] = $res->$tmp;
+			}
+		//	$db->show_array($indexes);
 			$process_data = $is->get_process_data($coll_id, $s_id);
 			$status = $res->status;
 			if(!empty($status))
@@ -238,64 +254,32 @@ else
 			{
 				$mode_data = 'form';
 			}
-			$data = get_general_data($coll_id, $s_id, $mode_data, $param_data );
-			//$db->show_array($data);
-			/*
-			$details = $db->fetch_object();
-			//$title = $details->title;
-			//$description = $details->description;
-			//$doc_date = $details->doc_date;
-			//$ref = $details->identifier;
-			$tmp = "";
-			//$type = $details->type_id;
-			$type_id = $details->type_id;
-			//$_SESSION['type'] = $type_id;
-			$res_id = $details->res_id;
-			//$arbatch_id = $details->arbatch_id;
-			//$arbox_id = $details->arbox_id;
-			$source = $details->source;
-			$doc_date = $details->doc_date;
-			$desc = $details->description;
-			*/
-			//$folders_system_id = $details->folders_system_id;
-			//$folder_id = $details->folder_id;
-			/*
-			$select[$table] = array();
-			array_push($select[$table], "res_id", 'creation_date');
-			$where = " relation = ".$s_id." and status = 'REP'";
-			$request= new request;
-			$tab=$request->select($select,$where,"",$_SESSION['config']['databasetype']);
-			for($cpt_documents_1=0;$cpt_documents_1<count($tab);$cpt_documents_1++)
+			foreach(array_keys($indexes) as $key)
 			{
-				for ($cpt_documents_j_1=0;$cpt_documents_j_1<count($tab[$cpt_documents_1]);$cpt_documents_j_1++)
+				$indexes[$key]['display'] = 'textinput';
+				$indexes[$key]['opt_index'] = true;
+				if(!$modify_doc)
 				{
-					foreach(array_keys($tab[$cpt_documents_1][$cpt_documents_j_1]) as $value)
+					$indexes[$key]['readonly'] = true;
+				}
+				else
+				{
+					if(	$indexes[$key]['readonly']  == false)
 					{
-						if($tab[$cpt_documents_1][$cpt_documents_j_1][$value]=='res_id')
+						if($indexes[$key]['type'] == 'date')
 						{
-							$tab[$cpt_documents_1][$cpt_documents_j_1]['res_id']=$tab[$cpt_documents_1][$cpt_documents_j_1]['value'];
-							$tab[$cpt_documents_1][$cpt_documents_j_1]["label"]=_GED_NUM;
-							$tab[$cpt_documents_1][$cpt_documents_j_1]["size"]="30";
-							$tab[$cpt_documents_1][$cpt_documents_j_1]["label_align"]="center";
-							$tab[$cpt_documents_1][$cpt_documents_j_1]["align"]="center";
-							$tab[$cpt_documents_1][$cpt_documents_j_1]["valign"]="bottom";
-							$tab[$cpt_documents_1][$cpt_documents_j_1]["show"]=true;
+							$indexes[$key]['field_type'] = 'date';
 						}
-						if($tab[$cpt_documents_1][$cpt_documents_j_1][$value]=='creation_date')
+						else
 						{
-							$tab[$cpt_documents_1][$cpt_documents_j_1]['creation_date']=$tab[$cpt_documents_1][$cpt_documents_j_1]['value'];
-							$tab[$cpt_documents_1][$cpt_documents_j_1]["label"]=_SAVE_DATE;
-							$tab[$cpt_documents_1][$cpt_documents_j_1]["size"]="30";
-							$tab[$cpt_documents_1][$cpt_documents_j_1]["label_align"]="left";
-							$tab[$cpt_documents_1][$cpt_documents_j_1]["align"]="left";
-							$tab[$cpt_documents_1][$cpt_documents_j_1]["valign"]="bottom";
-							$tab[$cpt_documents_1][$cpt_documents_j_1]["show"]=true;
+							$indexes[$key]['field_type'] = 'textfield';
 						}
 					}
 				}
 			}
-			*/
-			//$db->show_array($data);
+			$data = get_general_data($coll_id, $s_id, $mode_data, $param_data );
+			//$data = array_merge($data, $indexes);
+		//	$db->show_array($data);
 			$detailsExport = "";
 			$detailsExport = "<html lang='fr' xmlns='http://www.w3.org/1999/xhtml' xml:lang='fr'>";
 			$detailsExport = "<head><title>Maarch Details</title><meta content='text/html; charset=UTF-8' http-equiv='Content-Type'/><meta content='fr' http-equiv='Content-Language'/>";
@@ -317,9 +301,7 @@ else
 					}
 					?>
 				</p>
-				<!--<p id="viewfolder">
-					<a href="<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=show_folder&id=<?php  echo $folders_system_id ;?>&module=folder"</a>
-				</p>-->
+
 				<p id="viewdoc">
 					<a href="<?php  echo $_SESSION['config']['businessappurl'];?>indexing_searching/view.php?id=<?php  echo $s_id; ?>" target="_blank"><?php  echo _VIEW_DOC; ?></a> &nbsp;| &nbsp;
 				</p></b>&nbsp;
@@ -363,7 +345,7 @@ else
 
 							$detailsExport .= "<th align='left' width='50px'>";
 							?>
-							<th align="left" class="picto">
+							<th align="left" class="picto" >
 								<?php
 								if(isset($data[$key]['addon']))
 								{
@@ -444,7 +426,7 @@ else
 								else if($data[$key]['field_type'] == 'select')
 								{
 									?>
-									<select id="<?php echo $key;?>" name="<?php echo $key;?>">
+									<select id="<?php echo $key;?>" name="<?php echo $key;?>" <?php if($key == 'type_id'){echo 'onchange="change_doctype_details(this.options[this.options.selectedIndex].value, \''.$_SESSION['config']['businessappurl'].'indexing_searching/change_doctype_details.php\' , \''._DOCTYPE.' '._MISSING.'\');"';}?>>
 									<?php
 										if($key == 'type_id')
 										{
@@ -490,16 +472,6 @@ else
 									}
 								}
 							}
-								/*
-								elseif($data[$key]['display'] == 'textarea')
-								{
-								?>
-								<teaxtarea name="<?php echo $key;?>" id="<?php echo $key;?>"  readonly="readonly" class="readonly" style="display:block;width:504px;" ><?php echo $data[$key]['show_value'];?></teaxtarea><?php
-									if ($i%2 != 1 || $i==0) // pair
-									{
-										$i++;
-									}
-								}*/
 								$detailsExport .=  "</td>";
 								?>
 							</td>
@@ -534,12 +506,6 @@ else
 						$detailsExport .=  "<th align='left' width='50px'>";
 						$detailsExport .=  "<img alt='"._CREATION_DATE." : ".$res_status['LABEL']." src='".$_SESSION['config']['businessappurl']."img/small_calend.gif' />";
 						$detailsExport .=  "</th>";
-						/*$detailsExport .=  "<td align='left' width='200px'>";
-						$detailsExport .=  _CREATION_DATE." : ";
-						$detailsExport .=  "</td>";
-						$detailsExport .=  "<td>";
-						$detailsExport .=  $func->format_date_db($creation_date, false);
-						$detailsExport .=  "</td>";*/
 						$detailsExport .=  "</tr>";
 
 						$detailsExport .=  "<tr class='col'>";
@@ -565,15 +531,6 @@ else
 							<td>
 								<input type="text" class="readonly" readonly="readonly" value="<?php  echo $res_status['LABEL']; ?>" size="40"  />
 							</td>
-							<!--<th align="left" width="50px">
-								<img alt="<?php echo _CREATION_DATE;?>" src="<?php echo $_SESSION['config']['businessappurl'];?>img/small_calend.gif" />
-							</th>
-							<td align="left" width="200px">
-								<?php  echo _CREATION_DATE; ?> :
-							</td>
-							<td>
-								<input type="text" class="readonly" readonly="readonly" value="<?php  echo $func->format_date_db($creation_date, false); ?>"/>
-							</td> -->
 						</tr>
 						<tr class="col">
 							<th align="left" class="picto">
@@ -638,7 +595,114 @@ else
 					$detailsExport .=  "</table>";
 					$detailsExport .= "<br><br><br><br><br><br><br><br><br><br><br><br><br><br>";
 					?>
-					<br>
+					<div id="opt_indexes">
+					<?php if(count($indexes) > 0)
+					{
+						?><br/>
+						<h2>
+			            <span class="date">
+			            	<b><?php  echo _OPT_INDEXES;?></b>
+			            </span>
+			        	</h2>
+						<br/>
+						<table cellpadding="2" cellspacing="2" border="0" class="block forms details" width="100%">
+							<?php
+							$i=0;
+							foreach(array_keys($indexes) as $key)
+							{
+
+								if($i%2 != 1 || $i==0) // pair
+								{
+									$detailsExport .= "<tr class='col'>";
+									?>
+									<tr class="col">
+									<?php
+								}
+								$detailsExport .= "<th align='left' width='50px'>";
+								?>
+								<th align="left" class="picto" >
+									<?php
+									if(isset($indexes[$key]['img']))
+									{
+										$detailsExport .= "<img alt='".$indexes[$key]['label']."' title='".$indexes[$key]['label']."' src='".$indexes[$key]['img']."'  />";
+										?>
+										<img alt="<?php echo $indexes[$key]['label'];?>" title="<?php echo $indexes[$key]['label'];?>" src="<?php echo $indexes[$key]['img'];?>"  /></a>
+										<?php
+									}
+									$detailsExport .= "</th>";
+									?>
+								</th>
+								<?php
+								$detailsExport .= "<td align='left' width='200px'>";
+								?>
+								<td align="left" width="200px">
+									<?php
+									$detailsExport .= $indexes[$key]['label'];
+									echo $indexes[$key]['label'];?> :
+								</td>
+								<?php
+								$detailsExport .=  "</td>";
+								$detailsExport .=  "<td>";
+								?>
+								<td>
+									<?php
+									$detailsExport .=  $indexes[$key]['show_value'];
+								if(!isset($indexes[$key]['readonly']) || $indexes[$key]['readonly'] == true)
+								{
+									if($indexes[$key]['display'] == 'textinput')
+									{
+										?>
+										<input type="text" name="<?php echo $key;?>" id="<?php echo $key;?>" value="<?php echo $indexes[$key]['show_value'];?>" readonly="readonly" class="readonly" size="40"  title="<?php  echo $indexes[$key]['show_value']; ?>" alt="<?php  echo $indexes[$key]['show_value']; ?>" />
+										<?php
+									}
+									else
+									{
+										?>
+										<input type="text" name="<?php echo $key;?>" id="<?php echo $key;?>" value="<?php echo $indexes[$key]['show_value'];?>" readonly="readonly" class="readonly" size="40" title="<?php  echo $indexes[$key]['show_value']; ?>" alt="<?php  echo $indexes[$key]['show_value']; ?>" />
+										<?php
+									}
+								}
+								else
+								{
+									if($indexes[$key]['field_type'] == 'textfield')
+									{
+										?>
+										<input type="text" name="<?php echo $key;?>" id="<?php echo $key;?>" value="<?php echo $indexes[$key]['show_value'];?>" size="40"  title="<?php  echo $indexes[$key]['show_value']; ?>" alt="<?php  echo $indexes[$key]['show_value']; ?>" />
+										<?php
+									}
+									else if($indexes[$key]['field_type'] == 'date')
+									{
+										?>
+										<input type="text" name="<?php echo $key;?>" id="<?php echo $key;?>" value="<?php echo $indexes[$key]['show_value'];?>" size="40"  title="<?php  echo $indexes[$key]['show_value']; ?>" alt="<?php  echo $indexes[$key]['show_value']; ?>" onclick="showCalender(this);" />
+										<?php
+									}
+								}
+									$detailsExport .=  "</td>";
+									?>
+								</td>
+								<?php
+								if($i%2 == 1 && $i!=0) // impair
+								{
+									$detailsExport .=  "</td>";
+									?>
+									</tr>
+									<?php
+								}
+								else
+								{
+									if($i+1 == count($indexes))
+									{
+										$detailsExport .= "<td  colspan='2'>&nbsp;</td></tr>";
+										echo '<td  colspan="2">&nbsp;</td></tr>';
+									}
+								}
+								$i++;
+							}
+							?>
+						</table>
+						<?php  } ?>
+					</div>
+					<br/>
 					<h2>
 			            <span class="date">
 			            	<b><?php  echo _FILE_PROPERTIES;?></b>

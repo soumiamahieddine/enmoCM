@@ -47,6 +47,14 @@ if(!isset($_REQUEST['type_id']) || empty($_REQUEST['type_id']))
 	exit();
 }
 
+if(!isset($_REQUEST['id_action']) || empty($_REQUEST['id_action']))
+{
+	$_SESSION['error'] = _ACTION_ID.' '._IS_EMPTY;
+	echo "{status : 1, error_txt : '".addslashes($_SESSION['error'])."'}";
+	exit();
+}
+$id_action = $_REQUEST['id_action'];
+
 // Process limit date calcul
 $db->connect();
 $db->query("select process_delay from ".$_SESSION['tablename']['mlb_doctype_ext']." where type_id = ".$_REQUEST['type_id']);
@@ -101,11 +109,11 @@ if(count($indexes) > 0)
 			$opt_indexes .='<td class="indexing_field">';
 			if($indexes[$key]['type'] == 'date')
 			{
-				$opt_indexes .='<input name="'.$key.'" type="text" id="'.$key.'" value="'.$today.'" onclick="showCalender(this);"/>';
+				$opt_indexes .='<input name="'.$key.'" type="text" id="'.$key.'" value="'.$today.'" onclick="clear_error(\'frm_error_'.$id_action.'\');showCalender(this);"/>';
 			}
 			else
 			{
-				$opt_indexes .= '<input name="'.$key.'" type="text" id="'.$key.'" value="" />';
+				$opt_indexes .= '<input name="'.$key.'" type="text" id="'.$key.'" value="" onclick="clear_error(\'frm_error_'.$id_action.'\');" />';
 			}
 			$opt_indexes .='</td>';
 			$opt_indexes .='<td><span class="red_asterisk" id="'.$key.'_mandatory" style="display:';

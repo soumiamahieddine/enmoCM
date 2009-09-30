@@ -32,6 +32,7 @@
 		<doctypes_first_level>doctypes_first_level</doctypes_first_level>
 		<doctypes_second_level>doctypes_second_level</doctypes_second_level>
 		<mlb_doctype_ext>mlb_doctype_ext</mlb_doctype_ext>
+		<doctypes_indexes>doctypes_indexes</doctypes_indexes>
 		<saved_queries>saved_queries</saved_queries>
 		<contacts>contacts</contacts>
 	</TABLENAME>

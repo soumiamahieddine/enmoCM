@@ -1848,4 +1848,46 @@ function get_opt_index(url, id_coll)
 		});
 	}
 }
+
+function change_doctype_details(doctype_id, url, error_empty_type)
+{
+
+	if(doctype_id != null && doctype_id != '' && doctype_id != NaN)
+	{
+		new Ajax.Request(url,
+		{
+		    method:'post',
+		    parameters: { type_id : doctype_id
+						},
+		        onSuccess: function(answer){
+				eval("response = "+answer.responseText);
+			//	alert(answer.responseText);
+				if(response.status == 0 )
+				{
+					var indexes = response.new_opt_indexes;
+					var div_indexes = $('opt_indexes');
+					if(div_indexes )
+					{
+						div_indexes.update(indexes);
+					}
+
+				}
+				else
+				{
+					try{
+					//	$('main_error').innerHTML = response.error_txt;
+						}
+					catch(e){}
+				}
+			}
+		});
+	}
+	else
+	{
+		try{
+			//$('main_error').innerHTML = error_empty_type;
+			}
+		catch(e){}
+	}
+}
 -->
