@@ -926,4 +926,7 @@ define('_OWNER', 'Propri&eacute;taire');
 define('_CONTACT_OWNER_COMMENT', 'Laisser vide pour rendre ce contact public.');
 
 define('_OPT_INDEXES', 'Informations compl&eacute;mentaires');
+define('_NUM_BETWEEN', 'Compris entre');
+define('_MUST_CORRECT_ERRORS', 'Vous devez corriger les erreurs suivantes ');
+define('_CLICK_HERE_TO_CORRECT', 'Cliquez ici pour les corriger');
 ?>

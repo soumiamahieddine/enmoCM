@@ -35,6 +35,7 @@ require_once($_SESSION['pathtocoreclass']."class_core_tools.php");
 require_once($_SESSION['pathtocoreclass']."class_security.php");
 require_once($_SESSION['pathtocoreclass']."class_request.php");
 require_once($_SESSION['config']['businessapppath'].'class'.DIRECTORY_SEPARATOR."class_indexing_searching_app.php");
+require_once($_SESSION['config']['businessapppath'].'class'.DIRECTORY_SEPARATOR."class_types.php");
 $core_tools = new core_tools();
 $core_tools->test_user();
 $core_tools->load_lang();
@@ -42,9 +43,13 @@ $core_tools->test_service('adv_search_mlb', 'apps');
 $is = new indexing_searching_app();
 $func = new functions();
 $req = new request();
+$type = new types();
 $fields = "";
 $orderby = "";
 $copies = "";
+$coll_id = 'letterbox_coll';
+$indexes = $type->get_all_indexes($coll_id);
+//$func->show_array($indexes);
 $_SESSION['copies'] = "false";
 $_SESSION['searching']['where_clause_bis'] = "";
 // define the row of the start
@@ -72,9 +77,10 @@ $json_txt = '{';
     [5] => doc_date#doc_date_from,doc_date_to#date_range
 )
 **/
+//$func->show_array($_REQUEST['meta']);
 if(count($_REQUEST['meta']) > 0)
 {
-	//Verif for parm sended by url
+	//Verif for parms sended by url
 	if($_GET['meta'])
 	{
 		for($m=0; $m<count($_REQUEST['meta']);$m++)
@@ -85,7 +91,7 @@ if(count($_REQUEST['meta']) > 0)
 			}
 		}
 	}
-
+	$opt_indexes = array();
 	$_SESSION['meta_search'] = $_REQUEST['meta'];
 	for($i=0; $i<count($_REQUEST['meta']);$i++)
 	{
@@ -93,7 +99,7 @@ if(count($_REQUEST['meta']) > 0)
 		$id_val = $tab[0];
 		$json_txt .= "'".$tab[0]."' : { 'type' : '".$tab[2]."', 'fields' : {";
 		$tab_id_fields = explode(',', $tab[1]);
-		//print_r($tab_id_fields);
+		//$func->show_array($tab_id_fields);
 		for($j=0; $j<count($tab_id_fields);$j++)
 		{
 			// ENTITIES
@@ -165,13 +171,6 @@ if(count($_REQUEST['meta']) > 0)
 					$where_request .= " (process_notes LIKE '%".$func->protect_string_db($s_process_notes)."%' ) and ";
 				}
 			}
-			/*else if($tab_id_fields[$j] == 'numcourrier' && !empty($_REQUEST['numcourrier']))
-			{
-				$json_txt .= " 'numcourrier' : ['".addslashes(trim($_REQUEST['numcourrier']))."'],";
-				$s_numcourrier = $func->wash($_REQUEST['numcourrier'], "no", _MAIL_IDENTIFIER,"no");
-				$_SESSION['numcourrier'] = $s_numcourrier;
-				$where_request .= "r.IDENTIFIER LIKE '%".$s_numcourrier."%' and ";
-			}*/
 			// NOTES
 			else if($tab_id_fields[$j] == 'doc_notes' && !empty($_REQUEST['doc_notes']))
 			{
@@ -246,8 +245,6 @@ if(count($_REQUEST['meta']) > 0)
 			else if($tab_id_fields[$j] == 'numged' && !empty($_REQUEST['numged']))
 			{
 				$json_txt .= " 'numged' : ['".addslashes(trim($_REQUEST['numged']))."'],";
-				//$s_numged = $func->wash($_REQUEST['numged'], "num", _N_GED,"no");
-				//$_SESSION['numged'] = $s_numged;
 				$where_request .= "res_id = ".$func->wash($_REQUEST['numged'], "num", _N_GED,"no")." and ";
 			}
 			// DEST_USER
@@ -272,7 +269,14 @@ if(count($_REQUEST['meta']) > 0)
 			else if($tab_id_fields[$j] == 'subject' && !empty($_REQUEST['subject']))
 			{
 				$json_txt .= " 'subject' : ['".addslashes(trim($_REQUEST['subject']))."'],";
-				$where_request .= " subject ilike '%".$func->protect_string_db($_REQUEST['subject'])."%' and ";
+				if($_SESSION['config']['databasetype'] == "POSTGRESQL")
+				{
+					$where_request .= " subject ilike '%".$func->protect_string_db($_REQUEST['subject'])."%' and ";
+				}
+				else
+				{
+					$where_request .= " subject like '%".$func->protect_string_db($_REQUEST['subject'])."%' and ";
+				}
 			}
 			// FULLTEXT
 			else if($tab_id_fields[$j] == 'fulltext' && !empty($_REQUEST['fulltext']))
@@ -576,12 +580,9 @@ if(count($_REQUEST['meta']) > 0)
 			// COPY
 			else if($tab_id_fields[$j] == 'copies_true'  && $_REQUEST['copies'] == "true" )
 			{
-				//$where_clause_bis = "res_id in (select res_id from ".$_SESSION['tablename']['bask_listinstance']." where user_id = '".$_SESSION['user']['UserId']."' and sequence > 0)";
 				$_SESSION['searching']['where_clause_bis'] = "res_id in (select res_id from ".$_SESSION['tablename']['ent_listinstance']." where item_id = '".$_SESSION['user']['UserId']."' and item_type = 'user_id' and item_mode = 'cc')";
-				//$core_tools->show_array($_SESSION['user']['entities']);
 				for($cptEntities=0;$cptEntities<count($_SESSION['user']['entities']);$cptEntities++)
 				{
-					//echo $_SESSION['user']['entities'][$cptEntities]['ENTITY_ID']."<br>";
 					if($_SESSION['user']['entities'][$cptEntities]['ENTITY_ID'] <> "")
 					{
 						$whereEntities .= "item_id = '".$_SESSION['user']['entities'][$cptEntities]['ENTITY_ID']."' or ";
@@ -655,6 +656,14 @@ if(count($_REQUEST['meta']) > 0)
 					$json_txt .= " 'doc_date_to' : ['".trim($_REQUEST['doc_date_to'])."'],";
 				}
 			}
+			else  // opt indexes check
+			{
+				//echo $tab_id_fields[$j].' : '.$_REQUEST[$tab_id_fields[$j]].'<br/>';
+				$tmp = $type->search_checks($indexes, $tab_id_fields[$j], $_REQUEST[$tab_id_fields[$j]] );
+				//$func->show_array($tmp);
+				$json_txt .= $tmp['json_txt'];
+				$where_request .= $tmp['where'];
+			}
 		}
 		$json_txt = preg_replace('/,$/', '', $json_txt);
 		$json_txt .= "}},";
@@ -663,6 +672,12 @@ if(count($_REQUEST['meta']) > 0)
 }
 $json_txt = preg_replace("/,$/", "", $json_txt);
 $json_txt .= '}';
+/*
+echo $json_txt;
+echo '<br/>'.$where_request;
+exit();
+*/
+
 $_SESSION['current_search_query'] = $json_txt;
 if(!empty($_SESSION['error']))
 {

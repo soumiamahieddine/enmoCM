@@ -1142,6 +1142,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
 	///////////////////////// Other cases
 	require_once($_SESSION['config']['businessapppath'].'class'.DIRECTORY_SEPARATOR.'class_types.php');
 	$type = new types();
+	$type->inits_opt_indexes($coll_id, $res_id);
 	$type_id =  get_value_fields($values_form, 'type_id');
 	$indexes = $type->get_indexes( $type_id,$coll_id, 'minimal');
 	$val_indexes = array();

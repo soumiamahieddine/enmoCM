@@ -264,16 +264,14 @@ else
 				}
 				else
 				{
-					if(	$indexes[$key]['readonly']  == false)
+					$indexes[$key]['readonly'] = false;
+					if($indexes[$key]['type'] == 'date')
 					{
-						if($indexes[$key]['type'] == 'date')
-						{
-							$indexes[$key]['field_type'] = 'date';
-						}
-						else
-						{
-							$indexes[$key]['field_type'] = 'textfield';
-						}
+						$indexes[$key]['field_type'] = 'date';
+					}
+					else
+					{
+						$indexes[$key]['field_type'] = 'textfield';
 					}
 				}
 			}

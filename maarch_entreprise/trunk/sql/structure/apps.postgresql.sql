@@ -398,4 +398,13 @@ CREATE OR REPLACE VIEW res_view_apa AS
 
 ALTER TABLE res_view_apa OWNER TO postgres;
 
-
+CREATE TABLE doctypes_indexes
+(
+  type_id bigint NOT NULL,
+  coll_id character varying(32) NOT NULL,
+  field_name character varying(255) NOT NULL,
+  mandatory character(1) NOT NULL DEFAULT 'N'::bpchar,
+  CONSTRAINT doctypes_indexes_pkey PRIMARY KEY (type_id, coll_id, field_name)
+)
+WITH (OIDS=FALSE);
+ALTER TABLE doctypes_indexes OWNER TO postgres;

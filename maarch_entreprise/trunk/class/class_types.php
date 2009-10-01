@@ -524,7 +524,8 @@ class types extends dbquery
 			{
 				$label = $tmp;
 			}
-			array_push($indexes, array('column' => (STRING) $item->column, 'label' => $label, 'type' => (STRING) $item->type));
+			$img = (STRING) $item->img;
+			array_push($indexes, array('column' => (STRING) $item->column, 'label' => $label, 'type' => (STRING) $item->type, 'img' => $_SESSION['config']['businessappurl'].'img/'.$img));
 		}
 		return $indexes;
 	}
@@ -565,14 +566,10 @@ class types extends dbquery
 			}
 			$col = (STRING) $item->column;
 			$img = (STRING) $item->img;
-			$readonly = false;
-			if((STRING) $item->readonly == 'true')
-			{
-				$readonly = true;
-			}
+
 			if(in_array($col, $fields))
 			{
-				$indexes[$col] = array( 'label' => $label, 'type' => (STRING) $item->type, 'readonly' =>$readonly, 'img' => $_SESSION['config']['businessappurl'].'img/'.$img);
+				$indexes[$col] = array( 'label' => $label, 'type' => (STRING) $item->type, 'img' => $_SESSION['config']['businessappurl'].'img/'.$img);
 			}
 		}
 		return $indexes;
@@ -659,10 +656,6 @@ class types extends dbquery
 	public function get_sql_update($type_id, $coll_id, $values)
 	{
 		$indexes = $this->get_indexes($type_id, $coll_id);
-		require_once($_SESSION['pathtocoreclass'].'class_security.php');
-		$sec = new security();
-		$ind_coll = $sec->get_ind_collection($coll_id);
-		$indexes = $this->get_indexes($type_id, $coll_id);
 
 		$req = '';
 		foreach(array_keys($values)as $key)
@@ -690,10 +683,6 @@ class types extends dbquery
 	public function fill_data_array($type_id, $coll_id, $values, $data = array())
 	{
 		$indexes = $this->get_indexes($type_id, $coll_id);
-		require_once($_SESSION['pathtocoreclass'].'class_security.php');
-		$sec = new security();
-		$ind_coll = $sec->get_ind_collection($coll_id);
-		$indexes = $this->get_indexes($type_id, $coll_id);
 
 		foreach(array_keys($values)as $key)
 		{
@@ -715,6 +704,89 @@ class types extends dbquery
 			}
 		}
 		return $data;
+	}
+
+	public function inits_opt_indexes($coll_id, $res_id)
+	{
+		require_once($_SESSION['pathtocoreclass'].'class_security.php');
+		$sec = new security();
+		$table = $sec->retrieve_table_from_coll($coll_id);
+
+		$indexes = $this->get_all_indexes( $coll_id);
+		$query = "update ".$table." set ";
+		for($i=0; $i<count($indexes);$i++)
+		{
+			$query .= $indexes[$i]['column']." = NULL, ";
+		}
+		$query = preg_replace('/, $/', ' where res_id = '.$res_id, $query);
+
+		$this->connect();
+		$this->query($query);
+	}
+
+	public function search_checks($indexes, $field_name, $val )
+	{
+		$where_request = '';
+		$json_txt = '';
+		$date_pattern = "/^[0-3][0-9]-[0-1][0-9]-[1-2][0-9][0-9][0-9]$/";
+		for($j=0; $j<count($indexes);$j++)
+		{
+			$column = $indexes[$j]['column'] ;
+			if(preg_match('/^doc_/', $field_name))
+			{
+				$column = 'doc_'.$column;
+			}
+			if($indexes[$j]['column'] == $field_name || 'doc_'.$indexes[$j]['column'] == $field_name) // type == 'string'
+			{
+				if(!empty($val))
+				{
+					$json_txt .= " '".$field_name."' : ['".addslashes(trim($val))."'],";
+					if($_SESSION['config']['databasetype'] == "POSTGRESQL")
+					{
+						$where_request .= " ".$column." ilike '%".$this->protect_string_db($val)."%' and ";
+					}
+					else
+					{
+						$where_request .= " ".$column." like '%".$this->protect_string_db($val)."%' and ";
+					}
+				}
+				break;
+			}
+			else if(($indexes[$j]['column'].'_from' == $field_name || $indexes[$j]['column'].'_to' == $field_name || 'doc_'.$indexes[$j]['column'].'_from' == $field_name ||  'doc_'.$indexes[$j]['column'].'_to' == $field_name) && !empty($val))
+			{ // type == 'date'
+				if( preg_match($date_pattern,$val)==false )
+				{
+					$_SESSION['error'] .= _WRONG_DATE_FORMAT.' : '.$val;
+				}
+				else
+				{
+					$where_request .= " (".$column." >= '".$this->format_date_db($val)."') and ";
+					$json_txt .= " '".$field_name."' : ['".trim($val)."'],";
+				}
+				break;
+			}
+			else if($indexes[$j]['column'].'min' == $field_name || $indexes[$j]['column'].'max' == $field_name || 'doc_'.$indexes[$j]['column'].'min' == $field_name || 'doc_'.$indexes[$j]['column'].'max' == $field_name)
+			{
+				if($indexes[$j]['type'] == 'integer' || $indexes[$j]['type'] == 'float')
+				{
+					if($indexes[$j]['type'] == 'integer')
+					{
+						$val_check = $func->wash($val,"num",$indexes[$j]['label'],"no");
+					}
+					else
+					{
+						$val_check = $func->wash($val,"float",$indexes[$j]['label'],"no");
+					}
+					if(empty($_SESSION['error']))
+					{
+						$where_request .= " (".$column." >= ".$val_check.") and ";
+						$json_txt .= " '".$field_name."' : ['".$val_check."'],";
+					}
+				}
+				break;
+			}
+		}
+		return array('json_txt' => $json_txt, 'where' => $where_request);
 	}
 }
 ?>

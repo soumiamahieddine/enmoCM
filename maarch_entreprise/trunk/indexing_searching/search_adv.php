@@ -37,10 +37,12 @@ require_once($_SESSION['pathtocoreclass']."class_core_tools.php");
 require_once($_SESSION['pathtocoreclass']."class_security.php");
 require_once($_SESSION['pathtocoreclass']."class_manage_status.php");
 require_once($_SESSION['config']['businessapppath'].'class'.DIRECTORY_SEPARATOR."class_indexing_searching_app.php");
+require_once($_SESSION['config']['businessapppath'].'class'.DIRECTORY_SEPARATOR."class_types.php");
 $core_tools = new core_tools();
 $core_tools->test_user();
 $core_tools->load_lang();
 $core_tools->test_service('adv_search_mlb', 'apps');
+$type = new types();
 $_SESSION['indexation'] = false;
 /****************Management of the location bar  ************/
 $init = false;
@@ -113,6 +115,30 @@ else
 // building of the parameters array used to pre-load the category list and the search elements
 $param = array();
 
+// Indexes specific to doctype
+$indexes = $type->get_all_indexes($coll_id);
+for($i=0;$i<count($indexes);$i++)
+{
+	$field = $indexes[$i]['column'];
+	if(preg_match('/^custom_/', $field))
+	{
+		$field = 'doc_'.$field;
+	}
+	if($indexes[$i]['type'] == 'date')
+	{
+		$arr_tmp2 = array('label' => $indexes[$i]['label'], 'type' => 'date_range', 'param' => array('field_label' => $indexes[$i]['label'], 'id1' => $field.'_from', 'id2' =>$field.'_to'));
+	}
+	else if($indexes[$i]['type'] == 'string')
+	{
+		$arr_tmp2 = array('label' => $indexes[$i]['label'], 'type' => 'input_text', 'param' => array('field_label' => $indexes[$i]['label'], 'other' => $size));
+	}
+	else  // integer or float
+	{
+		$arr_tmp2 = array('label' => $indexes[$i]['label'], 'type' => 'num_range', 'param' => array('field_label' => $indexes[$i]['label'], 'id1' => $field.'_min', 'id2' =>$field.'_max'));
+	}
+	$param[$field] = $arr_tmp2;
+}
+
 //Coming date
 $arr_tmp2 = array('label' => _DATE_START, 'type' => 'date_range', 'param' => array('field_label' => _DATE_START, 'id1' => 'admission_date_from', 'id2' =>'admission_date_to'));
 $param['admission_date'] = $arr_tmp2;
@@ -160,12 +186,6 @@ foreach(array_keys($_SESSION['mail_priorities']) as $priority)
 }
 $arr_tmp2 = array('label' => _PRIORITY, 'type' => 'select_simple', 'param' => array('field_label' => _MAIL_PRIORITY,'default_label' => addslashes(_CHOOSE_PRIORITY), 'options' => $arr_tmp));
 $param['priority'] = $arr_tmp2;
-
-//identifier
-/*$arr_tmp2 = array('label' => _MAIL_IDENTIFIER, 'type' => 'input_text', 'param' => array('field_label' => _MAIL_IDENTIFIER, 'other' => $size));
-$param['numcourrier'] = $arr_tmp2;
-
-*/
 
 // dest
 $arr_tmp2 = array('label' => _DEST, 'type' => 'input_text', 'param' => array('field_label' => _DEST, 'other' => $size));

@@ -122,7 +122,7 @@ $_SESSION['error_page'] = '';
 
 //Manage of template list
 	//###################
-	
+
 	//Defines template allowed for this list
 	$template_list=array();
 	array_push($template_list, array( "name"=>"search_adv", "img"=>"extend_list.gif", "label"=> _ACCESS_LIST_EXTEND));
@@ -132,11 +132,11 @@ $_SESSION['error_page'] = '';
 		$template_to_use = '';
 	if($_REQUEST['template'])
 		$template_to_use = $_REQUEST['template'];
-	
+
 	//For status icon
 	$extension_icon = '';
 	if($template_to_use <> '')
-		$extension_icon = "_big";	
+		$extension_icon = "_big";
 	//###################
 
 //build the tab with right format for list_doc function
