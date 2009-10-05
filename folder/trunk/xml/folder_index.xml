@@ -1,11 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ROOT>
 	<INDEX>
-		<COLUMN>custom_t1</COLUMN> <!-- Do Not modify this index, you can move it but not delete it otherwise the application will not work properly (Integration) !-->
-		<LABEL>_FOLDERNAME</LABEL>
+		<column>custom_t1</column><!-- Do Not modify this index, you can move it but not delete it otherwise the application will not work properly (Integration) !-->
+		<label>_FOLDERNAME</label>
+		<type>string</type>
+		<img>default_string.gif</img>
 	</INDEX>
 	<INDEX>
-		<COLUMN>custom_d1</COLUMN><!-- Do Not modify this index, you can move it but not delete it otherwise the application will not work properly (Integration) !-->
-		<LABEL>_FOLDERDATE</LABEL>
+		<column>custom_t2</column>
+		<label>_CUSTOM_T2</label>
+		<type>string</type>
+		<img>default_string.gif</img>
+	</INDEX>
+	<INDEX>
+		<column>custom_d1</column><!-- Do Not modify this index, you can move it but not delete it otherwise the application will not work properly (Integration) !-->
+		<label>_FOLDERDATE</label>
+		<type>date</type>
+		<img>default_date.gif</img>
+	</INDEX>
+	<INDEX>
+		<column>custom_n1</column>
+		<label>_CUSTOM_N1</label>
+		<type>integer</type>
+		<img>default_number.gif</img>
+	</INDEX>
+	<INDEX>
+		<column>custom_f1</column>
+		<label>_CUSTOM_F1</label>
+		<type>float</type>
+		<img>default_number.gif</img>
 	</INDEX>
 </ROOT>

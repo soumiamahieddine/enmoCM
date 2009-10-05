@@ -1,11 +1,12 @@
 <?php
 class foldertype extends dbquery
 {
-/**
+	/**
 	* Load data from the foldertypes_doctypes table in the session ( $_SESSION['m_admin']['foldertype']['doctypes']  array)
 	*
 	* @param 	string  $id  foldertype identifier
 	*/
+
 	private function load_doctypes($id)
 	{
 		$this->connect();
@@ -41,6 +42,7 @@ class foldertype extends dbquery
 		$_SESSION['m_admin']['load_doctypes'] = false;
 	}
 
+
 	/**
 	* Form for the management of the foldertype.
 	*
@@ -53,7 +55,7 @@ class foldertype extends dbquery
 		$state = true;
 		require_once($_SESSION['pathtocoreclass']."class_security.php");
 		$sec = new security();
-		$_SESSION['m_admin']['doctypes']['COLL_ID']= "";
+		$_SESSION['m_admin']['foldertype']['COLL_ID']= "";
 		if($mode == "up")
 		{
 			$_SESSION['m_admin']['mode'] = "up";
@@ -72,50 +74,18 @@ class foldertype extends dbquery
 					$line = $this->fetch_object();
 					$_SESSION['m_admin']['foldertype']['desc'] = $this->show_string($line->foldertype_label);
 					$_SESSION['m_admin']['foldertype']['comment'] = $this->show_string($line->maarch_comment);
-					//$_SESSION['m_admin']['foldertype']['nationality'] = $line->custom_t1;
-					$_SESSION['m_admin']['foldertype']['custom_t1'] = $line->custom_t1;
-					$_SESSION['m_admin']['foldertype']['custom_t2'] = $line->custom_t2;
-					$_SESSION['m_admin']['foldertype']['custom_t3'] = $line->custom_t3;
-					$_SESSION['m_admin']['foldertype']['custom_t4'] = $line->custom_t4;
-					$_SESSION['m_admin']['foldertype']['custom_t5'] = $line->custom_t5;
-					$_SESSION['m_admin']['foldertype']['custom_t6'] = $line->custom_t6;
-					$_SESSION['m_admin']['foldertype']['custom_t7'] = $line->custom_t7;
-					$_SESSION['m_admin']['foldertype']['custom_t8'] = $line->custom_t8;
-					$_SESSION['m_admin']['foldertype']['custom_t9'] = $line->custom_t9;
-					$_SESSION['m_admin']['foldertype']['custom_t10'] = $line->custom_t10;
-					$_SESSION['m_admin']['foldertype']['custom_t11'] = $line->custom_t11;
-					$_SESSION['m_admin']['foldertype']['custom_t12'] = $line->custom_t12;
-					$_SESSION['m_admin']['foldertype']['custom_t13'] = $line->custom_t13;
-					$_SESSION['m_admin']['foldertype']['custom_t14'] = $line->custom_t14;
-					$_SESSION['m_admin']['foldertype']['custom_t15'] = $line->custom_t15;
-					$_SESSION['m_admin']['foldertype']['custom_d1'] = $line->custom_d1;
-					$_SESSION['m_admin']['foldertype']['custom_d2'] = $line->custom_d2;
-					$_SESSION['m_admin']['foldertype']['custom_d3'] = $line->custom_d3;
-					$_SESSION['m_admin']['foldertype']['custom_d4'] = $line->custom_d4;
-					$_SESSION['m_admin']['foldertype']['custom_d5'] = $line->custom_d5;
-					$_SESSION['m_admin']['foldertype']['custom_d6'] = $line->custom_d6;
-					$_SESSION['m_admin']['foldertype']['custom_d7'] = $line->custom_d7;
-					$_SESSION['m_admin']['foldertype']['custom_d8'] = $line->custom_d8;
-					$_SESSION['m_admin']['foldertype']['custom_d9'] = $line->custom_d9;
-					$_SESSION['m_admin']['foldertype']['custom_d10'] = $line->custom_d10;
-					$_SESSION['m_admin']['foldertype']['custom_n1'] = $line->custom_n1;
-					$_SESSION['m_admin']['foldertype']['custom_n2'] = $line->custom_n2;
-					$_SESSION['m_admin']['foldertype']['custom_n3'] = $line->custom_n3;
-					$_SESSION['m_admin']['foldertype']['custom_n4'] = $line->custom_n4;
-					$_SESSION['m_admin']['foldertype']['custom_n5'] = $line->custom_n5;
-					$_SESSION['m_admin']['foldertype']['custom_f1'] = $line->custom_f1;
-					$_SESSION['m_admin']['foldertype']['custom_f2'] = $line->custom_f2;
-					$_SESSION['m_admin']['foldertype']['custom_f3'] = $line->custom_f3;
-					$_SESSION['m_admin']['foldertype']['custom_f4'] = $line->custom_f4;
-					$_SESSION['m_admin']['foldertype']['custom_f5'] = $line->custom_f5;
+
+					$_SESSION['m_admin']['foldertype']['indexes'] = $this->get_indexes($id,  'minimal');
+					$_SESSION['m_admin']['foldertype']['mandatory_indexes'] = $this->get_mandatory_indexes($id);
+
 					if (!isset($_SESSION['m_admin']['load_doctypes']) || $_SESSION['m_admin']['load_doctypes'] == true)
 					{
 						$this->load_doctypes($id);
 						$_SESSION['m_admin']['load_doctypes'] = false;
 					}
-					$_SESSION['m_admin']['doctypes']['COLL_ID'] = $line->coll_id;
 
-					$table_view = $sec->retrieve_view_from_coll_id($_SESSION['m_admin']['doctypes']['COLL_ID']);
+					$_SESSION['m_admin']['foldertype']['COLL_ID'] = $line->coll_id;
+					$table_view = $sec->retrieve_view_from_coll_id($_SESSION['m_admin']['foldertype']['COLL_ID']);
 					$this->query("select count(*) as total_doc from ".$table_view." where foldertype_id = ".$_SESSION['m_admin']['foldertype']['foldertypeId']);
 					//$this->show();
 					$line = $this->fetch_object();
@@ -123,6 +93,12 @@ class foldertype extends dbquery
 				}
 			}
 		}
+		else
+		{
+			$_SESSION['m_admin']['foldertype']['indexes'] = array();
+			$_SESSION['m_admin']['foldertype']['mandatory_indexes'] = array();
+		}
+		//$this->show_array($_SESSION['m_admin']);
 		if($mode == "add")
 		{
 			echo '<h1><img src="'.$_SESSION['urltomodules'].'folder/img/manage_foldertypes_b.gif" alt="" /> '._FOLDERTYPE_ADDITION.'</h1>';
@@ -159,7 +135,7 @@ class foldertype extends dbquery
 						</p>
 						<?php
 					}
-					//echo $_SESSION['m_admin']['doctypes']['COLL_ID'];
+
 					if($mode == "up")
 					{
 						if($total_doc > 0)
@@ -167,7 +143,7 @@ class foldertype extends dbquery
 							?>
 							<p>
 								<label><?php  echo _COLLECTION; ?> : </label>
-								<input name="foldertypeId" id="foldertypeId" type="text" value="<?php  echo $func->show($sec->retrieve_coll_label_from_coll_id($_SESSION['m_admin']['doctypes']['COLL_ID'])); ?>" readonly />
+								<input name="collection" id="collection" type="text" value="<?php  echo $func->show($sec->retrieve_coll_label_from_coll_id($_SESSION['m_admin']['foldertype']['COLL_ID'])); ?>" readonly />
 							</p>
 							<p align="center">
 								<?php
@@ -180,8 +156,18 @@ class foldertype extends dbquery
 						{
 							?>
 							<p>
-								<iframe name="choose_coll" id="choose_coll" scrolling="no" width="100%" height="20" src="<?php  echo $_SESSION['urltomodules'].'folder/choose_coll.php';?>" frameborder="0"></iframe>
-							</p>
+								<label for="collection"><?php  echo _COLLECTION;?> : </label>
+								<select name="collection" id="collection">
+									<option value="" ><?php  echo _CHOOSE_COLLECTION;?></option>
+								<?php  for($i=0; $i<count($_SESSION['collections']);$i++)
+								{
+								?>
+									<option value="<?php  echo $_SESSION['collections'][$i]['id'];?>" <?php  if($_SESSION['m_admin']['foldertype']['COLL_ID'] == $_SESSION['collections'][$i]['id']){ echo 'selected="selected"';}?> ><?php  echo $_SESSION['collections'][$i]['label'];?></option>
+								<?php
+								}
+								?>
+							 	</select>
+                   			 </p>
 							<?php
 						}
 					}
@@ -189,8 +175,18 @@ class foldertype extends dbquery
 					{
 					?>
 						<p>
-							<iframe name="choose_coll" id="choose_coll" scrolling="no" width="100%" height="20" src="<?php  echo $_SESSION['urltomodules'].'folder/choose_coll.php';?>" frameborder="0"></iframe>
-						</p>
+								<label for="collection"><?php  echo _COLLECTION;?> : </label>
+								<select name="collection" id="collection" >
+									<option value="" ><?php  echo _CHOOSE_COLLECTION;?></option>
+								<?php  for($i=0; $i<count($_SESSION['collections']);$i++)
+								{
+								?>
+									<option value="<?php  echo $_SESSION['collections'][$i]['id'];?>" <?php  if($_SESSION['m_admin']['foldertype']['COLL_ID'] == $_SESSION['collections'][$i]['id']){ echo 'selected="selected"';}?> ><?php  echo $_SESSION['collections'][$i]['label'];?></option>
+								<?php
+								}
+								?>
+							 	</select>
+                   			 </p>
 						<?php
 					}
 					?>
@@ -202,59 +198,45 @@ class foldertype extends dbquery
 						<label><?php  echo _COMMENTS; ?> : </label>
 						<textarea  cols="30" rows="4"  name="comment"  id="comment" ><?php  echo $func->show($_SESSION['m_admin']['foldertype']['comment']); ?></textarea>
 					</p>
+				<?php
+				$indexes = $this->get_all_indexes();
 
-					<div class="block" align="center">
-					<p><h3><?php  echo _INDEX_FOR_FOLDERTYPES;?> : </h3></p><br/>
-					<table>
+				if(count($indexes) > 0)
+				{?>
+				<div  class="block" align="center" >
+				<table>
+        			<tr>
+            			<th width="150px"><?php echo _FIELD;?></th>
+           				<th align="center" width="100px"><?php echo _USED;?></th>
+            			<th align="center" width="100px"><?php echo _MANDATORY;?></th>
+        			</tr>
+					<?php
+					for($i=0;$i<count($indexes);$i++)
+					{?>
 						<tr>
-							<td width='150'>
-								<em><?php  echo _FIELD;?></em>
-							</td>
-							<td align="center" width='100'>
-								<em><?php  echo _USED;?></em>
-							</td>
-							<td align="center" width='100'>
-								<em><?php  echo _MANDATORY;?></em>
-							</td>
-						</tr>
-						<?php
-						for($i=0;$i<count($_SESSION['folder_index']);$i++)
-						{
-							echo "<tr>";
-							echo "<td width='150'>";
-							echo "	".$_SESSION['folder_index'][$i]['LABEL'];
-							echo "</td>";
-							echo "<td align='center'>";
-							?>
-							<input name="field_<?php  echo $_SESSION['folder_index'][$i]['COLUMN'];?>" type="checkbox"  value="Y"
-							<?php
-							if ($_SESSION['m_admin']['foldertype'][$_SESSION['folder_index'][$i]['COLUMN']] == '1100000000' || $_SESSION['m_admin']['foldertype'][$_SESSION['folder_index'][$i]['COLUMN']] == '1000000000')
+							<td width="150px"><?php echo $indexes[$i]['label'];?></td>
+							<td align="center">
+							<input name="fields[]" type="checkbox" class="check" value="<?php echo $indexes[$i]['column'];?>" <?php
+							if (in_array($indexes[$i]['column'], $_SESSION['m_admin']['foldertype']['indexes']))
 							{
-								echo "checked=\"checked\"";
-							}
-							?>
-							/>
-							</td>
-							<td align="center" width='100'>
-								<input name="mandatory_<?php  echo $_SESSION['folder_index'][$i]['COLUMN'];?>" type="checkbox"  value="Y"
-								<?php
-								if ($_SESSION['m_admin']['foldertype'][$_SESSION['folder_index'][$i]['COLUMN']] == '1100000000')
-								{
-									echo "checked=\"checked\"";
-								}
-								?>
-								/>
-							</td>
+								echo 'checked="checked"';
+							}?> /></td>
+							<td align="center" width="100px">
+								<input name="mandatory_fields[]" type="checkbox" class="check" value="<?php echo $indexes[$i]['column'];?>" <?php
+						if (in_array($indexes[$i]['column'], $_SESSION['m_admin']['foldertype']['mandatory_indexes']) && in_array($indexes[$i]['column'], $_SESSION['m_admin']['foldertype']['indexes']))
+						{
+							echo ' checked="checked"';
+						}?> /></td>
 						</tr>
-						<?php
-					}
-					?>
-					</table>
+			<?php 	} ?>
+    			</table>
+
 					</div>
-					<div class="block_end"></div>
+					<div  class="block_end"></div>
+			<?php } ?>
 					<div align="center">
 					 <p><h3><?php  echo _MANDATORY_DOCTYPES_COMP;?> : </h3></p><br/>
-					<iframe name="doctypes_frame" src="<?php  echo $_SESSION['urltomodules'];?>folder/choose_doctypes.php" frameborder="0" width="700" height="320"></iframe>
+					<iframe name="doctypes_frame" src="<?php  echo $_SESSION['urltomodules'];?>folder/choose_doctypes.php" frameborder="0" width="900px" height="250px" scrolling="no"></iframe>
 					</div>
 					<p class="buttons">
 						<input type="submit" name="Submit" value="<?php  echo _VALIDATE; ?>" class="button" />
@@ -269,16 +251,14 @@ class foldertype extends dbquery
 	}
 
 	/**
-	* Treats the information returned by the form of formgroups()
+	* Processes data returned by formgroups()
 	*
 	* @param 	string  $mode administrator mode (modification, suspension, authorization, delete)
 	*/
 	private function foldertypeinfo($mode)
 	{
 		$func = new functions();
-		$_SESSION['m_admin']['foldertype']['custom_query_colums'] = "";
-		$_SESSION['m_admin']['foldertype']['custom_query_values'] = "";
-		$_SESSION['m_admin']['foldertype']['custom_query_update'] = "";
+
 		if($mode == "up")
 		{
 			if(empty($_REQUEST['id']) || !isset($_REQUEST['id']))
@@ -298,59 +278,27 @@ class foldertype extends dbquery
 		{
 			$_SESSION['error'].= _DESC_MISSING."<br/>";
 		}
-		if(!isset($_SESSION['m_admin']['doctypes']['COLL_ID']) && empty($_SESSION['m_admin']['doctypes']['COLL_ID']))
+		if(isset($_REQUEST['collection']) && !empty($_REQUEST['collection']))
 		{
-			$_SESSION['error'].= _COLLECTION_MISSING."<br/>";
+			$_SESSION['m_admin']['foldertype']['COLL_ID'] = $func->wash($_REQUEST['collection'], "no", _COLLECTION);
 		}
 		else
 		{
-			$_SESSION['m_admin']['doctypes']['COLL_ID'] = $func->wash($_SESSION['m_admin']['doctypes']['COLL_ID'], "no", _COLLECTION);
+			$_SESSION['error'].= _COLLECTION_MISSING."<br/>";
 		}
 		if(isset($_REQUEST['comment']) && !empty($_REQUEST['comment']))
 		{
 			$_SESSION['m_admin']['foldertype']['comment'] = $_REQUEST['comment'];
 		}
-		for($i=0;$i <count($_SESSION['folder_index']);$i++)
+		$_SESSION['m_admin']['foldertype']['indexes'] = array();
+		$_SESSION['m_admin']['foldertype']['mandatory_indexes'] = array();
+		for($i=0; $i<count($_REQUEST['fields']);$i++)
 		{
-			if($_REQUEST["field_".$_SESSION['folder_index'][$i]['COLUMN']] == "Y")
-			{
-				if($_REQUEST["mandatory_".$_SESSION['folder_index'][$i]['COLUMN']] == "Y")
-				{
-					$_SESSION['m_admin']['foldertype'][$_SESSION['folder_index'][$i]['COLUMN']] = "1100000000";
-					$_SESSION['m_admin']['foldertype']['custom_query_insert_colums'] .= $_SESSION['folder_index'][$i]['COLUMN'].", ";
-					$_SESSION['m_admin']['foldertype']['custom_query_insert_values'] .= "'1100000000', ";
-					$_SESSION['m_admin']['foldertype']['custom_query_update'] .= $_SESSION['folder_index'][$i]['COLUMN']." = "."'1100000000', ";
-				}
-				else
-				{
-					$_SESSION['m_admin']['foldertype'][$_SESSION['folder_index'][$i]['COLUMN']] = "1000000000";
-					$_SESSION['m_admin']['foldertype']['custom_query_insert_colums'] .= $_SESSION['folder_index'][$i]['COLUMN'].", ";
-					$_SESSION['m_admin']['foldertype']['custom_query_insert_values'] .= "'1000000000', ";
-					$_SESSION['m_admin']['foldertype']['custom_query_update'] .= $_SESSION['folder_index'][$i]['COLUMN']." = "."'1000000000', ";
-				}
-			}
-			elseif($_REQUEST["field_".$_SESSION['folder_index'][$i]['COLUMN']] == "")
-			{
-				$_SESSION['m_admin']['foldertype'][$_SESSION['folder_index'][$i]['COLUMN']] = "0000000000";
-				$_SESSION['m_admin']['foldertype']['custom_query_insert_colums'] .= $_SESSION['folder_index'][$i]['COLUMN'].", ";
-				$_SESSION['m_admin']['foldertype']['custom_query_insert_values'] .= "'0000000000', ";
-				$_SESSION['m_admin']['foldertype']['custom_query_update'] .= $_SESSION['folder_index'][$i]['COLUMN']." = '0000000000', ";
-			}
+			array_push($_SESSION['m_admin']['foldertype']['indexes'], $_REQUEST['fields'][$i]);
 		}
-		if($_SESSION['m_admin']['foldertype']['custom_query_insert_colums'] <> "")
+		for($i=0; $i<count($_REQUEST['mandatory_fields']);$i++)
 		{
-			$_SESSION['m_admin']['foldertype']['custom_query_insert_colums'] = ", ".$_SESSION['m_admin']['foldertype']['custom_query_insert_colums'];
-			$_SESSION['m_admin']['foldertype']['custom_query_insert_colums'] = substr($_SESSION['m_admin']['foldertype']['custom_query_insert_colums'],0,strlen($_SESSION['m_admin']['foldertype']['custom_query_insert_colums'])-2);
-		}
-		if($_SESSION['m_admin']['foldertype']['custom_query_insert_values'] <> "")
-		{
-			$_SESSION['m_admin']['foldertype']['custom_query_insert_values'] = ", ".$_SESSION['m_admin']['foldertype']['custom_query_insert_values'];
-			$_SESSION['m_admin']['foldertype']['custom_query_insert_values'] = substr($_SESSION['m_admin']['foldertype']['custom_query_insert_values'],0,strlen($_SESSION['m_admin']['foldertype']['custom_query_insert_values'])-2);
-		}
-		if($_SESSION['m_admin']['foldertype']['custom_query_update'] <> "")
-		{
-			$_SESSION['m_admin']['foldertype']['custom_query_update'] = ", ".$_SESSION['m_admin']['foldertype']['custom_query_update'];
-			$_SESSION['m_admin']['foldertype']['custom_query_update'] = substr($_SESSION['m_admin']['foldertype']['custom_query_update'],0,strlen($_SESSION['m_admin']['foldertype']['custom_query_update'])-2);
+			array_push($_SESSION['m_admin']['foldertype']['mandatory_indexes'], $_REQUEST['mandatory_fields'][$i]);
 		}
 	}
 
@@ -401,11 +349,22 @@ class foldertype extends dbquery
 				{
 					$this->connect();
 					//echo $_SESSION['m_admin']['foldertype']['custom_query_insert_colums'];
-					$this->query("INSERT INTO ".$_SESSION['tablename']['fold_foldertypes']." (foldertype_label, maarch_comment ".$_SESSION['m_admin']['foldertype']['custom_query_insert_colums'].", coll_id) VALUES ('".$this->show_string($_SESSION['m_admin']['foldertype']['desc'])."', '".$this->show_string($_SESSION['m_admin']['foldertype']['comment'])."' ".$_SESSION['m_admin']['foldertype']['custom_query_insert_values'].", '".$_SESSION['m_admin']['doctypes']['COLL_ID']."')");
-					$this->query('select foldertype_id from '.$_SESSION['tablename']['fold_foldertypes']." where foldertype_label = '".$this->show_string($_SESSION['m_admin']['foldertype']['desc'])."' and maarch_comment = '".$this->show_string($_SESSION['m_admin']['foldertype']['comment'])."'");
+					$this->query("INSERT INTO ".$_SESSION['tablename']['fold_foldertypes']." (foldertype_label, maarch_comment ".$_SESSION['m_admin']['foldertype']['custom_query_insert_colums'].", coll_id) VALUES ('".$this->show_string($_SESSION['m_admin']['foldertype']['desc'])."', '".$this->show_string($_SESSION['m_admin']['foldertype']['comment'])."',  '".$_SESSION['m_admin']['foldertype']['COLL_ID']."');");
+					$this->query('select foldertype_id from '.$_SESSION['tablename']['fold_foldertypes']." where foldertype_label = '".$this->show_string($_SESSION['m_admin']['foldertype']['desc'])."' and maarch_comment = '".$this->show_string($_SESSION['m_admin']['foldertype']['comment'])."';");
 					$res = $this->fetch_object();
 					$_SESSION['m_admin']['foldertype']['foldertypeId'] = $res->foldertype_id;
 					$this->load_db();
+
+					for($i=0; $i<count($_SESSION['m_admin']['foldertype']['indexes']);$i++)
+					{
+						$mandatory = 'N';
+						if(in_array($_SESSION['m_admin']['foldertype']['indexes'][$i], $_SESSION['m_admin']['foldertype']['mandatory_indexes'] ))
+						{
+							$mandatory = 'Y';
+						}
+						$this->query("insert into ".$_SESSION['tablename']['fold_foldertypes_indexes']." (foldertype_id, field_name, mandatory) values(".$_SESSION['m_admin']['foldertype']['foldertypeId'].", '".$_SESSION['m_admin']['foldertype']['indexes'][$i]."', '".$mandatory."')");
+					}
+
 					if($_SESSION['history']['foldertypeadd'] == "true")
 					{
 						require($_SESSION['pathtocoreclass']."class_history.php");
@@ -422,8 +381,21 @@ class foldertype extends dbquery
 			elseif($mode == "up")
 			{
 				$this->connect();
-				$this->query("UPDATE ".$_SESSION['tablename']['fold_foldertypes']." set foldertype_label = '".$this->show_string($_SESSION['m_admin']['foldertype']['desc'])."' , maarch_comment = '".$this->show_string($_SESSION['m_admin']['foldertype']['comment'])."' ".$_SESSION['m_admin']['foldertype']['custom_query_update'].", coll_id = '".$_SESSION['m_admin']['doctypes']['COLL_ID']."' where foldertype_id= '".$_SESSION['m_admin']['foldertype']['foldertypeId'] ."'");
+				$this->query("UPDATE ".$_SESSION['tablename']['fold_foldertypes']." set foldertype_label = '".$this->show_string($_SESSION['m_admin']['foldertype']['desc'])."' , maarch_comment = '".$this->show_string($_SESSION['m_admin']['foldertype']['comment'])."' , coll_id = '".$_SESSION['m_admin']['foldertype']['COLL_ID']."' where foldertype_id= '".$_SESSION['m_admin']['foldertype']['foldertypeId'] ."'");
 				$this->load_db();
+
+				$this->query("delete from ".$_SESSION['tablename']['fold_foldertypes_indexes']." where foldertype_id = ".$_SESSION['m_admin']['foldertype']['foldertypeId']);
+				//$this->show_array($_SESSION['m_admin']['foldertype']['indexes']);
+
+				for($i=0; $i<count($_SESSION['m_admin']['foldertype']['indexes']);$i++)
+				{
+					$mandatory = 'N';
+					if(in_array($_SESSION['m_admin']['foldertype']['indexes'][$i], $_SESSION['m_admin']['foldertype']['mandatory_indexes'] ))
+					{
+						$mandatory = 'Y';
+					}
+					$this->query("insert into ".$_SESSION['tablename']['fold_foldertypes_indexes']." ( foldertype_id, field_name, mandatory) values( ".$_SESSION['m_admin']['foldertype']['foldertypeId'].", '".$_SESSION['m_admin']['foldertype']['indexes'][$i]."', '".$mandatory."')");
+				}
 				if($_SESSION['history']['foldertypeup'] == "true")
 				{
 					require($_SESSION['pathtocoreclass']."class_history.php");
@@ -440,18 +412,10 @@ class foldertype extends dbquery
 	}
 
 	/**
-	* Clean the $_SESSION['m_admin']['foldertype'] array
+	* Clear the session variable for the foldertypes
 	*/
 	private function clearfoldertypeinfos()
 	{
-		// clear the users add or modification vars
-		/*
-		$_SESSION['m_admin']['foldertype'] = array();
-		$_SESSION['m_admin']['foldertype']['foldertypeId']  = "";
-		$_SESSION['m_admin']['foldertype']['desc'] = "";
-		$_SESSION['m_admin']['foldertype']['comment'] = "";
-		$_SESSION['m_admin']['foldertype']['nationality'] = "";
-		$_SESSION['m_admin']['foldertype']['doctypes'] = array();*/
 		unset($_SESSION['m_admin']);
 	}
 
@@ -499,6 +463,7 @@ class foldertype extends dbquery
 				{
 					$this->query("delete from ".$_SESSION['tablename']['fold_foldertypes']."  where foldertype_id = ".$id."");
 					$this->query("delete from ".$_SESSION['tablename']['fold_foldertypes_doctypes']."  where foldertype_id = ".$id."");
+					$this->query("delete from ".$_SESSION['tablename']['fold_foldertypes_indexes']."  where foldertype_id = ".$id."");
 
 					if($_SESSION['history']['foldertypedel'] == "true")
 					{
@@ -513,4 +478,333 @@ class foldertype extends dbquery
 			}
 		}
 	}
+
+	/**
+	* Returns in an array all indexes possible
+	*
+	* @return array $indexes[$i]
+	* 					['column'] : database field of the index
+	* 					['label'] : Index label
+	* 					['type'] : Index type ('date', 'string', 'integer' or 'float')
+	* 					['img'] : url to the image index
+	*/
+	public function get_all_indexes()
+	{
+
+		$xmlfile = simplexml_load_file($_SESSION['pathtomodules'].'folder'.DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR.'folder_index.xml');
+		$path_lang = $_SESSION['pathtomodules'].'folder'.DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php';
+		$indexes = array();
+		foreach($xmlfile->INDEX as $item)
+		{
+			$tmp = (string) $item->label;
+			//echo $tmp;
+			$tmp2 = $this->retrieve_constant_lang($tmp, $path_lang);
+			if($tmp2 <> false)
+			{
+				$label = $tmp2;
+			}
+			else
+			{
+				$label = $tmp;
+			}
+			$img = (STRING) $item->img;
+			array_push($indexes, array('column' => (STRING) $item->column, 'label' => $label, 'type' => (STRING) $item->type, 'img' => $_SESSION['urltomodules'].'folder/img/'.$img));
+		}
+		return $indexes;
+	}
+
+	/**
+	* Returns in an array all indexes for a doctype
+	*
+	* @param string $foldertype_id Document type identifier
+	* @param string $mode Mode 'full' or 'minimal', 'full' by default
+	* @return array array of the indexes, depends on the chosen mode :
+	*  		1) mode = 'full' : $indexes[field_name] :  the key is the field name in the database
+	* 										['label'] : Index label
+	* 										['type'] : Index type ('date', 'string', 'integer' or 'float')
+	* 										['img'] : url to the image index
+	* 		2) mode = 'minimal' : $indexes[$i] = field name in the database
+	*/
+	public function get_indexes($foldertype_id, $mode= 'full')
+	{
+		$fields = array();
+		$this->connect();
+		$this->query("select field_name from ".$_SESSION['tablename']['fold_foldertypes_indexes']." where  foldertype_id = ".$foldertype_id);
+		//$this->show();
+
+		while($res = $this->fetch_object())
+		{
+			array_push($fields,$res->field_name );
+		}
+		if($mode == 'minimal')
+		{
+			return $fields;
+		}
+
+		$indexes = array();
+		$xmlfile = simplexml_load_file($_SESSION['pathtomodules'].'folder'.DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR.'folder_index.xml');
+		$path_lang = $_SESSION['pathtomodules'].'folder'.DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php';
+		foreach($xmlfile->INDEX as $item)
+		{
+			$tmp = (string) $item->label;
+			$tmp2 = $this->retrieve_constant_lang($tmp, $path_lang );
+			if($tmp2 <> false)
+			{
+				$label = $tmp2;
+			}
+			else
+			{
+				$label = $tmp;
+			}
+			$col = (STRING) $item->column;
+			$img = (STRING) $item->img;
+
+			if(in_array($col, $fields))
+			{
+				$indexes[$col] = array( 'label' => $label, 'type' => (STRING) $item->type, 'img' => $_SESSION['urltomodules'].'folder/img/'.$img);
+			}
+		}
+		return $indexes;
+	}
+
+	/**
+	* Returns in an array all manadatory indexes possible for a given type
+	*
+	* @param string $foldertype_id Document type identifier
+	* @return array Array of the manadatory indexes, $indexes[$i] = field name in the db
+	*/
+	public function get_mandatory_indexes($foldertype_id)
+	{
+		$fields = array();
+		$this->connect();
+		$this->query("select field_name from ".$_SESSION['tablename']['fold_foldertypes_indexes']." where foldertype_id = ".$foldertype_id." and mandatory = 'Y'");
+
+		while($res = $this->fetch_object())
+		{
+			array_push($fields,$res->field_name );
+		}
+		return $fields;
+	}
+
+	/**
+	* Checks validity of indexes
+	*
+	* @param string $foldertype_id Folder type identifier
+	* @param array $values Values to check
+	* @return bool true if checks is ok, false if an error occurs
+	*/
+	public function check_indexes($foldertype_id, $values)
+	{
+		$indexes = $this->get_indexes($foldertype_id);
+		$mandatory_indexes = $this->get_mandatory_indexes($foldertype_id);
+
+		// Checks the manadatory indexes
+		for($i=0; $i<count($mandatory_indexes);$i++)
+		{
+			if( empty($values[$mandatory_indexes[$i]]) && ($values[$mandatory_indexes[$i]] == 0 && $indexes[$mandatory_indexes[$i]]['type'] <> 'float' && $indexes[$mandatory_indexes[$i]]['type'] <> 'integer'))  // Pb 0
+			{
+				$_SESSION['error'] = $indexes[$mandatory_indexes[$i]]['label']._IS_EMPTY;
+				return false;
+			}
+		}
+
+		// Checks type indexes
+		$date_pattern = "/^[0-3][0-9]-[0-1][0-9]-[1-2][0-9][0-9][0-9]$/";
+		foreach(array_keys($values)as $key)
+		{
+			if(!empty($_SESSION['error']))
+			{
+				return false;
+			}
+			if($indexes[$key]['type'] == 'date' && !empty($value[$key]))
+			{
+				if(preg_match( $date_pattern,$values[$key])== 0)
+				{
+					$_SESSION['error'] .= $indexes[$key]['label']." "._WRONG_FORMAT.".<br/>";
+					return false;
+				}
+			}
+			else if($indexes[$key]['type'] == 'string'  && !empty($value[$key]))
+			{
+				$field_value = $this->wash($value[$key],"no",$indexes[$key]['label']);
+			}
+			else if($indexes[$key]['type'] == 'float'  && $value[$key] >= 0)
+			{
+				if($value[$key] == 0)
+				{
+					$field_value = 0;
+				}
+				else
+				{
+					$field_value = $this->wash($value[$key],"float",$indexes[$key]['label']);
+				}
+			}
+			else if($indexes[$key]['type'] == 'integer' && $value[$key] >= 0)
+			{
+				if($value[$key] == 0)
+				{
+					$field_value = 0;
+				}
+				else
+				{
+					$field_value = $this->wash($value[$key],"num",$indexes[$key]['label']);
+				}
+			}
+		}
+		return true;
+	}
+
+	/**
+	* Returns a string to use in an sql update query
+	*
+	* @param string $foldertype_id Folder type identifierer
+	* @param array $values Values to update
+	* @return string Part of the update sql query
+	*/
+	public function get_sql_update($foldertype_id, $values)
+	{
+		$indexes = $this->get_indexes($type_id, $coll_id);
+
+		$req = '';
+		foreach(array_keys($values)as $key)
+		{
+			if($indexes[$key]['type'] == 'date')
+			{
+				$req .= ", ".$key." = '".$this->format_date_db($values[$key])."'";
+			}
+			else if($indexes[$key]['type'] == 'string')
+			{
+				$req .= ", ".$key." = '".$this->protect_string_db($values[$key])."'";
+			}
+			else if($indexes[$key]['type'] == 'float')
+			{
+				$req .= ", ".$key." = ".$values[$key]."";
+			}
+			else if($indexes[$key]['type'] == 'integer')
+			{
+				$req .= ", ".$key." = ".$values[$key]."";
+			}
+		}
+		return $req;
+	}
+
+	/**
+	* Returns an array used to insert data in the database
+	*
+	* @param string $foldertype_id Folder type identifier
+	* @param array $values Values to update
+	* @param array $data Return array
+	* @return array
+	*/
+	public function fill_data_array($foldertype_id, $values, $data = array())
+	{
+		$indexes = $this->get_indexes($foldertype_id);
+
+		foreach(array_keys($values)as $key)
+		{
+			if($indexes[$key]['type'] == 'date')
+			{
+				array_push($data, array('column' => $key, 'value' => $this->format_date_db($values[$key]), 'type' => "date"));
+			}
+			else if($indexes[$key]['type'] == 'string')
+			{
+				array_push($data, array('column' => $key, 'value' => $this->protect_string_db($values[$key]), 'type' => "string"));
+			}
+			else if($indexes[$key]['type'] == 'float')
+			{
+				array_push($data, array('column' => $key, 'value' => $values[$key], 'type' => "float"));
+			}
+			else if($indexes[$key]['type'] == 'integer')
+			{
+				array_push($data, array('column' => $key, 'value' => $values[$key], 'type' => "integer"));
+			}
+		}
+		return $data;
+	}
+
+	/**
+	* Inits in the database the indexes for a given folder id to null
+	*
+	* @param string $folder_sys_id Folder identifier
+	*/
+	public function inits_opt_indexes($folder_sys_id)
+	{
+		$indexes = $this->get_all_indexes( );
+		$query = "update ".$_SESSION['tablename']['fold_folders']." set ";
+		for($i=0; $i<count($indexes);$i++)
+		{
+			$query .= $indexes[$i]['column']." = NULL, ";
+		}
+		$query = preg_replace('/, $/', ' where folders_system_id = '.$folder_sys_id, $query);
+
+		$this->connect();
+		$this->query($query);
+	}
+
+/*
+	public function search_checks($indexes, $field_name, $val )
+	{
+		$where_request = '';
+		$json_txt = '';
+		$date_pattern = "/^[0-3][0-9]-[0-1][0-9]-[1-2][0-9][0-9][0-9]$/";
+		for($j=0; $j<count($indexes);$j++)
+		{
+			$column = $indexes[$j]['column'] ;
+			if(preg_match('/^doc_/', $field_name))
+			{
+				$column = 'doc_'.$column;
+			}
+			if($indexes[$j]['column'] == $field_name || 'doc_'.$indexes[$j]['column'] == $field_name) // type == 'string'
+			{
+				if(!empty($val))
+				{
+					$json_txt .= " '".$field_name."' : ['".addslashes(trim($val))."'],";
+					if($_SESSION['config']['databasetype'] == "POSTGRESQL")
+					{
+						$where_request .= " ".$column." ilike '%".$this->protect_string_db($val)."%' and ";
+					}
+					else
+					{
+						$where_request .= " ".$column." like '%".$this->protect_string_db($val)."%' and ";
+					}
+				}
+				break;
+			}
+			else if(($indexes[$j]['column'].'_from' == $field_name || $indexes[$j]['column'].'_to' == $field_name || 'doc_'.$indexes[$j]['column'].'_from' == $field_name ||  'doc_'.$indexes[$j]['column'].'_to' == $field_name) && !empty($val))
+			{ // type == 'date'
+				if( preg_match($date_pattern,$val)==false )
+				{
+					$_SESSION['error'] .= _WRONG_DATE_FORMAT.' : '.$val;
+				}
+				else
+				{
+					$where_request .= " (".$column." >= '".$this->format_date_db($val)."') and ";
+					$json_txt .= " '".$field_name."' : ['".trim($val)."'],";
+				}
+				break;
+			}
+			else if($indexes[$j]['column'].'min' == $field_name || $indexes[$j]['column'].'max' == $field_name || 'doc_'.$indexes[$j]['column'].'min' == $field_name || 'doc_'.$indexes[$j]['column'].'max' == $field_name)
+			{
+				if($indexes[$j]['type'] == 'integer' || $indexes[$j]['type'] == 'float')
+				{
+					if($indexes[$j]['type'] == 'integer')
+					{
+						$val_check = $func->wash($val,"num",$indexes[$j]['label'],"no");
+					}
+					else
+					{
+						$val_check = $func->wash($val,"float",$indexes[$j]['label'],"no");
+					}
+					if(empty($_SESSION['error']))
+					{
+						$where_request .= " (".$column." >= ".$val_check.") and ";
+						$json_txt .= " '".$field_name."' : ['".$val_check."'],";
+					}
+				}
+				break;
+			}
+		}
+		return array('json_txt' => $json_txt, 'where' => $where_request);
+	}
+*/
 }

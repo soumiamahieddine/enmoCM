@@ -139,3 +139,10 @@ CREATE TABLE foldertypes_doctypes_level1
 )
 WITH (OIDS=FALSE);
 ALTER TABLE foldertypes_doctypes_level1 OWNER TO postgres;
+
+CREATE TABLE foldertypes_doctypes
+(
+  foldertype_id integer NOT NULL,
+  doctype_id integer NOT NULL,
+  CONSTRAINT foldertypes_doctypes_pkey PRIMARY KEY (foldertype_id, doctype_id)
+)

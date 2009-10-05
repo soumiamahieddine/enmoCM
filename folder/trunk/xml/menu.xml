@@ -6,4 +6,10 @@
 		<url>index.php?page=search_adv_folder&amp;module=folder</url>
 		<style>folder_search</style>
 	</MENU>
+	<MENU>
+		<id>create_folder</id>
+		<libconst>_CREATE_FOLDER</libconst>
+		<url>index.php?page=create_folder_form&amp;module=folder</url>
+		<style>create_folder</style>
+	</MENU>
 </root>

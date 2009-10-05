@@ -8,37 +8,6 @@
     <system_service>false</system_service>
    <enabled>true</enabled>
  </SERVICE>
-<!-- <SERVICE>
-   <id>salary_sheet</id> 
-   <name>_SALARY_SHEET</name>
-   <comment>_SALARY_SHEET</comment>
-   <servicetype>menu</servicetype>
-   <enabled>true</enabled>
- </SERVICE>-->
- <!-- <SERVICE>
-   <id>folder_out</id>  
-   <name>_FOLDER_OUT</name>
-   <comment>_FOLDER_OUT</comment>
-   <servicetype>menu</servicetype>
-   <enabled>true</enabled>
- </SERVICE>-->
- <!--<SERVICE>
-   <id>create_folder</id>
-   <name>_CREATE_FOLDER</name>
-   <comment>_CREATE_FOLDER</comment>
-   <servicetype>menu</servicetype>
-   <enabled>true</enabled>
- <servicepage>create_folder_form.php</servicepage>
-   <servicetype>use</servicetype>
-   <enabled>true</enabled>
-   <WHEREAMIUSED>
-     <page>index_file.php</page>
-     <nature>button</nature>
-	 <button_label>_CREATE_FOLDER</button_label>
-     <width>1020</width>
-     <height>750</height>
-   </WHEREAMIUSED>
- </SERVICE>-->
  <SERVICE>
    <id>select_folder</id>
    <name>_SELECT_FOLDER</name>
@@ -53,35 +22,17 @@
      <tab_label>_STEP_ONE</tab_label>
 	 <tab_order>1</tab_order>
    </WHEREAMIUSED>
-   <WHEREAMIUSED>
+  <!-- <WHEREAMIUSED>
      <page>index_documents.php</page>
      <nature>tab</nature>
 	 <tab_label>_FOLDER</tab_label>
 	 <tab_order>1</tab_order>
    </WHEREAMIUSED>
- <!--  <WHEREAMIUSED>
-     <page>store_file.php</page>
-     <nature>tab</nature>
-	 <tab_label>_FOLDER</tab_label>
-	 <tab_order>1</tab_order>
-   </WHEREAMIUSED>
-   <WHEREAMIUSED>
-     <page>qualify_doc.php</page>
-     <nature>tab</nature>
-	 <tab_label>_FOLDER</tab_label>
-	 <tab_order>1</tab_order>
-   </WHEREAMIUSED>-->
    <PROCESSINBACKGROUND>
      <page>file_index.php</page>
 	 <preprocess>select_folder_result_preprocess.php</preprocess>
 	 <postprocess>select_folder_result_postprocess.php</postprocess>
 	 <processorder>1</processorder>
-   </PROCESSINBACKGROUND>
-  <!-- <PROCESSINBACKGROUND>
-     <page>qualify_doc_result.php</page>
-	 <preprocess>select_folder_result_preprocess.php</preprocess>
-	 <postprocess>select_folder_result_postprocess.php</postprocess>
-	 <processorder>2</processorder>
    </PROCESSINBACKGROUND>-->
  </SERVICE>
   <SERVICE>
@@ -92,20 +43,8 @@
    <servicetype>use</servicetype>
     <system_service>true</system_service>
    <enabled>true</enabled>
-   <WHEREAMIUSED>
-     <page>index_documents.php</page>
-     <nature>tab</nature>
-	 <tab_label>_MISSING_DOC</tab_label>
-	 <tab_order>4</tab_order>
-   </WHEREAMIUSED>
  <!--  <WHEREAMIUSED>
-     <page>store_file.php</page>
-     <nature>tab</nature>
-	 <tab_label>_MISSING_DOC</tab_label>
-	 <tab_order>2</tab_order>
-   </WHEREAMIUSED>
-   <WHEREAMIUSED>
-     <page>qualify_doc.php</page>
+     <page>index_documents.php</page>
      <nature>tab</nature>
 	 <tab_label>_MISSING_DOC</tab_label>
 	 <tab_order>4</tab_order>
@@ -123,20 +62,8 @@
    <servicetype>use</servicetype>
     <system_service>true</system_service>
    <enabled>true</enabled>
-   <WHEREAMIUSED>
-     <page>index_documents.php</page>
-     <nature>tab</nature>
-	 <tab_label>_FOLDER_HISTORY</tab_label>
-	 <tab_order>5</tab_order>
-   </WHEREAMIUSED>
  <!--  <WHEREAMIUSED>
-     <page>store_file.php</page>
-     <nature>tab</nature>
-	 <tab_label>_FOLDER_HISTORY</tab_label>
-	 <tab_order>3</tab_order>
-   </WHEREAMIUSED>
-   <WHEREAMIUSED>
-     <page>qualify_doc.php</page>
+     <page>index_documents.php</page>
      <nature>tab</nature>
 	 <tab_label>_FOLDER_HISTORY</tab_label>
 	 <tab_order>5</tab_order>
@@ -170,14 +97,7 @@
      <width>550</width>
      <height>200</height>
    </WHEREAMIUSED>
-    <WHEREAMIUSED>
-     <page>index.php?page=salary_sheet</page>
-     <nature>button</nature>
-	 <button_label>_DEL_FOLDER</button_label>
-     <width>550</width>
-     <height>200</height>
-   </WHEREAMIUSED>
-  </SERVICE>  
+  </SERVICE>
   <SERVICE>
    <id>admin_foldertypes</id>
    <name>_ADMIN_FOLDERTYPES</name>
@@ -191,5 +111,13 @@
      <page>admin.php</page>
      <nature>listelement</nature>
    </WHEREAMIUSED>
+ </SERVICE>
+  <SERVICE>
+   <id>create_folder</id>
+   <name>_CREATE_FOLDER</name>
+   <comment>_CREATE_FOLDER</comment>
+   <servicetype>menu</servicetype>
+   <system_service>false</system_service>
+   <enabled>true</enabled>
  </SERVICE>
 </root>

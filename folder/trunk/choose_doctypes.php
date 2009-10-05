@@ -1,11 +1,11 @@
-<?php 
-  session_name('PeopleBox'); 
+<?php
+  session_name('PeopleBox');
 session_start();
 
 require_once($_SESSION['pathtocoreclass']."class_functions.php");
 require_once($_SESSION['pathtocoreclass']."class_db.php");
 require_once($_SESSION['pathtocoreclass']."class_request.php");
-require_once($_SESSION['pathtocoreclass']."class_core_tools.php"); 
+require_once($_SESSION['pathtocoreclass']."class_core_tools.php");
 $core_tools = new core_tools();
 $core_tools->load_lang();
  $core_tools->load_html();
@@ -13,57 +13,44 @@ $core_tools->load_lang();
 $core_tools->load_header( );
 
 if($_SESSION['m_admin']['mode'] == "up" && $_SESSION['m_admin']['init'] == true)
+{
+	$_SESSION['m_admin']['chosen_doctypes'] = array();
+	$_SESSION['m_admin']['chosen_doctypes'] = $_SESSION['m_admin']['foldertype']['doctypes'];
+	$_SESSION['m_admin']['init'] = false;
+}
+
+if(isset($_REQUEST['doctypes']) && count($_REQUEST['doctypes']) > 0)
+{
+	for($i=0; $i < count($_REQUEST['doctypes']); $i++)
 	{
-		$_SESSION['m_admin']['chosen_doctypes'] = array();
-		/*$where = "";
-		$db = new dbquery();
-		$db->connect();
-		$db->query("select doctype_id from ".$_SESSION['tablename']['fold_foldertypes_doctypes']." where foldertype_id = ".$_SESSION['m_admin']['foldertype']['foldertypeId']);
-		
-		while($res = $db->fetch_object())
+		if(!in_array(trim($_REQUEST['doctypes'][$i]), $_SESSION['m_admin']['chosen_doctypes']))
 		{
-			array_push($_SESSION['m_admin']['chosen_doctypes'], $res->doctype_id);
-		}*/
-		$_SESSION['m_admin']['chosen_doctypes'] = $_SESSION['m_admin']['foldertype']['doctypes'];
-		$_SESSION['m_admin']['init'] = false;
+			array_push($_SESSION['m_admin']['chosen_doctypes'], trim($_REQUEST['doctypes'][$i]));
+		}
 	}
-	
- 	if(isset($_REQUEST['doctypes']) && count($_REQUEST['doctypes']) > 0)
-	{	
-
-			//$_SESSION['m_admin']['chosen_doctypes'] = array();
-			for($i=0; $i < count($_REQUEST['doctypes']); $i++)
-			{
-				if(!in_array(trim($_REQUEST['doctypes'][$i]), $_SESSION['m_admin']['chosen_doctypes']))
-				{
-					array_push($_SESSION['m_admin']['chosen_doctypes'], trim($_REQUEST['doctypes'][$i]));
-				}
-			}	
-			$_SESSION['m_admin']['foldertype']['doctypes'] = $_SESSION['m_admin']['chosen_doctypes'];
-	}
-	else if(isset($_REQUEST['doctypeslist']) && count($_REQUEST['doctypeslist']) > 0)
+	$_SESSION['m_admin']['foldertype']['doctypes'] = $_SESSION['m_admin']['chosen_doctypes'];
+}
+else if(isset($_REQUEST['doctypeslist']) && count($_REQUEST['doctypeslist']) > 0)
+{
+	for($i=0; $i < count($_SESSION['m_admin']['chosen_doctypes']); $i++)
 	{
 
-			for($i=0; $i < count($_SESSION['m_admin']['chosen_doctypes']); $i++)
+		for($j=0; $j < count($_REQUEST['doctypeslist']); $j++)
+		{
+			if(trim($_REQUEST['doctypeslist'][$j]) == trim($_SESSION['m_admin']['chosen_doctypes'][$i]))
 			{
-	
-				for($j=0; $j < count($_REQUEST['doctypeslist']); $j++)
-				{
-					if(trim($_REQUEST['doctypeslist'][$j]) == trim($_SESSION['m_admin']['chosen_doctypes'][$i]))
-					{
-						unset($_SESSION['m_admin']['chosen_doctypes'][$i]);
-					}
-				}
-			}	
-			$_SESSION['m_admin']['chosen_doctypes'] = array_values($_SESSION['m_admin']['chosen_doctypes']);
-			$_SESSION['m_admin']['foldertype']['doctypes'] = $_SESSION['m_admin']['chosen_doctypes'];
+				unset($_SESSION['m_admin']['chosen_doctypes'][$i]);
+			}
+		}
 	}
-	elseif(isset($_REQUEST['doctypes']) && count($_REQUEST['doctypes']) <= 0)
-	{
-	
-		$_SESSION['m_admin']['chosen_doctypes'] = array();
-		$_SESSION['m_admin']['foldertype']['doctypes'] = $_SESSION['m_admin']['chosen_doctypes'];
-	}
+	$_SESSION['m_admin']['chosen_doctypes'] = array_values($_SESSION['m_admin']['chosen_doctypes']);
+	$_SESSION['m_admin']['foldertype']['doctypes'] = $_SESSION['m_admin']['chosen_doctypes'];
+}
+elseif(isset($_REQUEST['doctypes']) && count($_REQUEST['doctypes']) <= 0)
+{
+	$_SESSION['m_admin']['chosen_doctypes'] = array();
+	$_SESSION['m_admin']['foldertype']['doctypes'] = $_SESSION['m_admin']['chosen_doctypes'];
+}
 ?>
 <body>
 
@@ -76,15 +63,15 @@ if($_SESSION['m_admin']['mode'] == "up" && $_SESSION['m_admin']['init'] == true)
 			<td width="5%" >&nbsp;</td>
 			<td valign="top" width="47%"><b class="tit"><?php  echo _SELECTED_DOCTYPES;?></b></td>
 		</tr>
-	
+
 		<tr>
 		 <td width="45%" align="center" valign="top">
 			<select name="doctypeslist[]" class="multiple_list" ondblclick='moveclick(document.choose_doctypes.elements["doctypeslist[]"],document.choose_doctypes.elements["doctypes[]"]);this.form.submit();' multiple="multiple">
-			<?php 
+			<?php
 			for($i=0;$i<count($_SESSION['m_admin']['doctypes']);$i++)
 			{
 			$state_doctypes = false;
-			
+
 			for($j=0;$j<count($_SESSION['m_admin']['chosen_doctypes']);$j++)
 			{
 				if(trim($_SESSION['m_admin']['doctypes'][$i]['ID']) == trim($_SESSION['m_admin']['chosen_doctypes'][$j]))
@@ -92,12 +79,12 @@ if($_SESSION['m_admin']['mode'] == "up" && $_SESSION['m_admin']['init'] == true)
 					$state_doctypes = true;
 				}
 			}
-			
+
 			if($state_doctypes == false)
 			{
 				?>
 				<option value="<?php  echo $_SESSION['m_admin']['doctypes'][$i]['ID']; ?>"><?php  echo $_SESSION['m_admin']['doctypes'][$i]['COMMENT']; ?></option>
-				<?php 
+				<?php
 			}
 		}
 		?>
@@ -112,11 +99,11 @@ if($_SESSION['m_admin']['mode'] == "up" && $_SESSION['m_admin']['init'] == true)
 	</td>
     <td width="45%" align="center" valign="top">
 	<select name="doctypes[]" class="multiple_list" ondblclick='moveclick(document.choose_doctypes.elements["doctypes[]"],document.choose_doctypes.elements["doctypeslist"])this.form.submit();' multiple="multiple" >
-		<?php 
+		<?php
 		for($i=0;$i<count($_SESSION['m_admin']['doctypes']);$i++)
 		{
 			$state_doctypes = false;
-			
+
 			for($j=0;$j<count($_SESSION['m_admin']['chosen_doctypes']);$j++)
 			{
 				if(trim($_SESSION['m_admin']['doctypes'][$i]['ID']) == trim($_SESSION['m_admin']['chosen_doctypes'][$j]))
@@ -124,13 +111,13 @@ if($_SESSION['m_admin']['mode'] == "up" && $_SESSION['m_admin']['init'] == true)
 					$state_doctypes = true;
 				}
 			}
-			
-			
+
+
 			if($state_doctypes == true)
 			{
 				?>
 				<option value="<?php  echo $_SESSION['m_admin']['doctypes'][$i]['ID']; ?>" ><?php  echo $_SESSION['m_admin']['doctypes'][$i]['COMMENT']; ?></option>
-				<?php 
+				<?php
 			}
 		}
 		?>
@@ -145,7 +132,7 @@ if($_SESSION['m_admin']['mode'] == "up" && $_SESSION['m_admin']['init'] == true)
 <?php  }
 else
 {
-	echo _NO_STRUCTURE_ATTACHED;
+	echo _NO_STRUCTURE_ATTACHED2;
 }?>
 </body>
 </html>

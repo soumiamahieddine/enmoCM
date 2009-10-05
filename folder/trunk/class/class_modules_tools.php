@@ -167,6 +167,7 @@ class folder extends request
 			$_SESSION['tablename']['fold_folders_out'] = (string) $TABLENAME->fold_folders_out;
 			$_SESSION['tablename']['fold_foldertypes'] = (string) $TABLENAME->fold_foldertypes;
 			$_SESSION['tablename']['fold_foldertypes_doctypes'] = (string) $TABLENAME->fold_foldertypes_doctypes;
+			$_SESSION['tablename']['fold_foldertypes_indexes'] = (string) $TABLENAME->fold_foldertypes_indexes;
 			$_SESSION['tablename']['fold_foldertypes_doctypes_level1'] = (string) $TABLENAME->fold_foldertypes_doctypes_level1;
 		//}
 		$HISTORY = $xmlconfig->HISTORY;
@@ -298,7 +299,7 @@ class folder extends request
 	{
 		$this->connect();
 		$this->query("select foldertype_id from ".$table." where folder_id = '".$id."'");
-		 $this->show();
+		 //$this->show();
 		$res = $this->fetch_object();
 		$this->foldertype_id = $res->foldertype_id;
 		$this->folder_id = $id;
