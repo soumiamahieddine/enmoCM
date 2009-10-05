@@ -65,6 +65,7 @@ else
 {
 	$info = $db->fetch_object();
 	$db->query("delete from ".$_SESSION['tablename']['doctypes']." where type_id = ".$s_id."");
+	$db->query("delete from ".$_SESSION['tablename']['doctypes_indexes']." where type_id = ".$s_id."");
 
 	$_SESSION['service_tag'] = "doctype_delete";
 	$_SESSION['m_admin']['doctypes']['TYPE_ID'] = $s_id;

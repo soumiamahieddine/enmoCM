@@ -250,6 +250,7 @@ else
 					}
 				}
 			}
+			$mode_data = 'full';
 			if($modify_doc)
 			{
 				$mode_data = 'form';

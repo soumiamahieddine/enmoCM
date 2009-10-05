@@ -495,6 +495,7 @@ function get_general_data($coll_id, $res_id, $mode, $params = array())
 	$db->query("select category_id,".$fields." from ".$view." where res_id = ".$res_id);
 	//$db->show();
 	//$db->show_array($arr);
+
 	$line = $db->fetch_object();
 	// We fill the array with the query result
 	for($i=0; $i < count($arr);$i++)
@@ -722,7 +723,7 @@ function get_img_cat($cat_id)
 	$default =  $_SESSION['config']['businessappurl'].'img/picto_delete.gif';
 	if(empty($cat_id))
 	{
-		
+
 		return $default;
 	}
 	else

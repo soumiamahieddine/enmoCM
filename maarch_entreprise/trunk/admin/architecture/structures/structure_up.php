@@ -100,6 +100,7 @@ if( isset($_REQUEST['valid']))
 
 	if(empty($erreur))
 	{
+		$db->connect();
 		$db->query("select * from ".$_SESSION['tablename']['doctypes_first_level']." where doctypes_first_level_label = '".$desc."' and enabled = 'Y'");
 
 		if($db->nb_result() > 0 && $mode <> 'up')
@@ -110,7 +111,7 @@ if( isset($_REQUEST['valid']))
 		{
 			if($mode == "up")
 			{
-
+				$db->connect();
 				if( isset($_REQUEST['ID_structure']) && !empty($_REQUEST['ID_structure']))
 				{
 					$id = $_REQUEST['ID_structure'];
@@ -138,6 +139,7 @@ if( isset($_REQUEST['valid']))
 
 			else
 			{
+				$db->connect();
 				$desc = $_REQUEST['desc_structure'];
 				$db->query("INSERT INTO ".$_SESSION['tablename']['doctypes_first_level']." ( doctypes_first_level_label) VALUES ( '".$desc."')");
 				$db->query("select doctypes_first_level_id from ".$_SESSION['tablename']['doctypes_first_level']." where doctypes_first_level_label = '".$desc."'");

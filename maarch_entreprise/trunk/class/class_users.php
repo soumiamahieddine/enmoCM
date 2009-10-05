@@ -119,6 +119,8 @@ class users extends dbquery
 	*/
 	public function adminuser($id,$mode)
 	{
+		require_once($_SESSION['pathtocoreclass'].'class_core_tools.php');
+		$core = new core_tools();
 		// To allow administrator to admin users
 		if(!empty($_SESSION['error']))
 		{
@@ -128,9 +130,7 @@ class users extends dbquery
 		}
 		else
 		{
-
 			$this->connect();
-
 			$this->query("select user_id, firstname, lastname from ".$_SESSION['tablename']['users']." where user_id = '".$id."'");
 
 			if($this->nb_result() == 0)
@@ -172,6 +172,10 @@ class users extends dbquery
 				elseif($mode == "del" )
 				{
 					$this->query("delete from ".$_SESSION['tablename']['users']."  where user_id = '".$id."'");
+					if($core->is_module_loaded('basket'))
+					{
+						$this->query("delete from ".$_SESSION['tablename']['bask_users_abs']." where user_abs = '".$id."' or new_user = '".$id."' or basket_owner = '".$id."'");
+					}
 					if($_SESSION['history']['usersdel'])
 					{
 						require_once($_SESSION['pathtocoreclass']."class_history.php");

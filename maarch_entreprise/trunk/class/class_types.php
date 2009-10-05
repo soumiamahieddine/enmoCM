@@ -8,7 +8,6 @@
 * @version 2.0
 * @since 10/2005
 * @license GPL
-* @author  Nicolas Gualtieri
 * @author  Claire Figueras  <dev@maarch.org>
 *
 */
@@ -16,7 +15,6 @@
 /**
 * Class types: Contains all the function to manage the doctypes
 *
-* @author  Nicolas Gualtieri
 * @author  Claire Figueras  <dev@maarch.org>
 * @license GPL
 * @package Maarch LetterBox 1.0
@@ -24,13 +22,6 @@
 */
 class types extends dbquery
 {
-	/**
-	* Redefinition of the types object constructor : configure the sql argument order by
-	*/
-	function __construct()
-	{
-		parent::__construct();
-	}
 
 	/**
 	* Form to add, modify or propose a doc type
@@ -80,7 +71,6 @@ class types extends dbquery
 				$_SESSION['m_admin']['doctypes']['TABLE'] = $line->coll_id;
 				$_SESSION['m_admin']['doctypes']['ACTUAL_COLL_ID'] = $line->coll_id;
 				$_SESSION['m_admin']['doctypes']['indexes'] = $this->get_indexes($line->type_id, $line->coll_id, 'minimal');
-			//	$this->show_array($_SESSION['m_admin']['doctypes']['indexes']);
 				$_SESSION['m_admin']['doctypes']['mandatory_indexes'] = $this->get_mandatory_indexes($line->type_id, $line->coll_id);
 
 				$_SESSION['service_tag'] = 'doctype_up';
@@ -184,21 +174,18 @@ class types extends dbquery
 					?>
 
 	                <div id="opt_index"></div>
-					<?php // To DO : index dynamiques ?>
-					<!--	<iframe name="choose_index" id="choose_index" scrolling="auto" width="100%" height="350" src="<? echo $_SESSION['config']['businessappurl'].'admin/architecture/types/choose_index.php';?>" frameborder="0"></iframe>-->
-
 					<p class="buttons">
 						<?
 						if($mode == "up")
 						{
 							?>
-							<input class="button" type="submit" name="Submit" value="<? echo _MODIFY_DOCTYPE; ?>"/> <!--onclick="window.frames['choose_index'].document.forms[0].submit();" -->
+							<input class="button" type="submit" name="Submit" value="<? echo _MODIFY_DOCTYPE; ?>"/>
 							<?
 						}
 						elseif($mode == "add")
 						{
 							?>
-							<input type="submit" class="button"  name="Submit" value="<? echo _ADD_DOCTYPE; ?>" /><!--onclick="window.frames['choose_index'].document.forms[0].submit();"-->
+							<input type="submit" class="button"  name="Submit" value="<? echo _ADD_DOCTYPE; ?>" />
 							<?
 						}
 						?>
@@ -217,14 +204,12 @@ class types extends dbquery
 	}
 
 	/**
-	* Clean the type info
+	* Checks the formtype data
 	*/
 	private function typesinfo()
 	{
-		// clean the type info
 		$core_tools = new core_tools();
 		$func = new functions();
-		//$func->show_array($_REQUEST);
 		if(!isset($_REQUEST['mode']))
 		{
 			$_SESSION['error'] = _UNKNOWN_PARAM."<br />";
@@ -250,8 +235,8 @@ class types extends dbquery
 		else
 		{
 			$_SESSION['m_admin']['doctypes']['COLL_ID'] = $_REQUEST['collection'];
-			//$this->show_array($_REQUEST);
-
+			$_SESSION['m_admin']['doctypes']['indexes'] = array();
+			$_SESSION['m_admin']['doctypes']['mandatory_indexes'] = array();
 			for($i=0; $i<count($_REQUEST['fields']);$i++)
 			{
 				array_push($_SESSION['m_admin']['doctypes']['indexes'], $_REQUEST['fields'][$i]);
@@ -386,7 +371,6 @@ class types extends dbquery
 					{
 						$users->add($_SESSION['tablename']['doctypes'],$res->type_id,"ADD", _DOCTYPE_ADDED." : ".$_SESSION['m_admin']['doctypes']['LABEL'],$_SESSION['config']['databasetype']);
 					}
-					//$url = "index.php?page=types";
 				}
 				$this->cleartypeinfos();
 				//header("location: ".$url);
@@ -406,43 +390,6 @@ class types extends dbquery
 		unset($_SESSION['m_admin']);
 	}
 
-	/**
-	* Delete a doc type
-	*
-	* @param integer $id doctype indentifier
-	*/
-/*	public function deltypes($id)
-	{
-		// delete a doc type
-		$core_tools = new core_tools();
-		$this->connect();
-		$this->query("select description from ".$_SESSION['tablename']['doctypes']." where type_id = ".$id."");
-		if($this->nb_result() == 0)
-		{
-			$_SESSION['error'] = _DOCTYPE.' '._UNKNOWN;
-			header("location: ".$_SESSION['config']['businessappurl']."index.php?page=types");
-			exit();
-		}
-		else
-		{
-			$info = $this->fetch_object();
-			$this->query("delete from ".$_SESSION['tablename']['doctypes']." where type_id = ".$id."");
-
-
-			$_SESSION['service_tag'] = "doctype_delete";
-			$_SESSION['m_admin']['doctypes']['TYPE_ID'] = $id;
-			$core_tools->execute_modules_services($_SESSION['modules_services'], 'doctype_del', "include");
-			$core_tools->execute_app_services($_SESSION['app_services'], 'doctype_del', 'include');
-			$_SESSION['service_tag'] = '';
-
-			require($_SESSION['pathtocoreclass']."class_history.php");
-			$users = new history();
-			$users->add($_SESSION['tablename']['doctypes'], $id,"DEL",_DOCTYPE_DELETION." : ".$info->DESCRIPTION, $_SESSION['config']['databasetype']);
-			$_SESSION['error'] = _DELETED_DOCTYPE;
-			header("location: ".$_SESSION['config']['businessappurl']."index.php?page=types");
-			exit();
-		}
-	}*/
 
 	/**
 	* Return in an array all enabled doctypes for a given collection
@@ -466,6 +413,11 @@ class types extends dbquery
 		return $types;
 	}
 
+	/**
+	* Returns in an array all enabled doctypes for a given collection with the structure
+	*
+	* @param string $coll_id Collection identifier
+	*/
 	public function getArrayStructTypes($coll_id)
 	{
 		$this->connect();
@@ -502,6 +454,16 @@ class types extends dbquery
 		return $level1;
 	}
 
+	/**
+	* Returns in an array all indexes possible for a given collection
+	*
+	* @param string $coll_id Collection identifier
+	* @return array $indexes[$i]
+	* 					['column'] : database field of the index
+	* 					['label'] : Index label
+	* 					['type'] : Index type ('date', 'string', 'integer' or 'float')
+	* 					['img'] : url to the image index
+	*/
 	public function get_all_indexes($coll_id)
 	{
 		require_once($_SESSION['pathtocoreclass'].'class_security.php');
@@ -530,6 +492,19 @@ class types extends dbquery
 		return $indexes;
 	}
 
+	/**
+	* Returns in an array all indexes for a doctype
+	*
+	* @param string $type_id Document type identifier
+	* @param string $coll_id Collection identifier
+	* @param string $mode Mode 'full' or 'minimal', 'full' by default
+	* @return array array of the indexes, depends on the chosen mode :
+	*  		1) mode = 'full' : $indexes[field_name] :  the key is the field name in the database
+	* 										['label'] : Index label
+	* 										['type'] : Index type ('date', 'string', 'integer' or 'float')
+	* 										['img'] : url to the image index
+	* 		2) mode = 'minimal' : $indexes[$i] = field name in the database
+	*/
 	public function get_indexes($type_id, $coll_id, $mode= 'full')
 	{
 		$fields = array();
@@ -575,6 +550,13 @@ class types extends dbquery
 		return $indexes;
 	}
 
+	/**
+	* Returns in an array all manadatory indexes possible for a given type
+	*
+	* @param string $type_id Document type identifier
+	* @param string $coll_id Collection identifier
+	* @return array Array of the manadatory indexes, $indexes[$i] = field name in the db
+	*/
 	public function get_mandatory_indexes($type_id, $coll_id)
 	{
 		$fields = array();
@@ -588,9 +570,16 @@ class types extends dbquery
 		return $fields;
 	}
 
+	/**
+	* Checks validity of indexes
+	*
+	* @param string $type_id Document type identifier
+	* @param string $coll_id Collection identifier
+	* @param array $values Values to check
+	* @return bool true if checks is ok, false if an error occurs
+	*/
 	public function check_indexes($type_id, $coll_id, $values)
 	{
-		$indexes = $this->get_indexes($type_id, $coll_id);
 		require_once($_SESSION['pathtocoreclass'].'class_security.php');
 		$sec = new security();
 		$ind_coll = $sec->get_ind_collection($coll_id);
@@ -602,7 +591,7 @@ class types extends dbquery
 		{
 			if( empty($values[$mandatory_indexes[$i]]) && ($values[$mandatory_indexes[$i]] == 0 && $indexes[$mandatory_indexes[$i]]['type'] <> 'float' && $indexes[$mandatory_indexes[$i]]['type'] <> 'integer'))  // Pb 0
 			{
-				$_SESSION['error'] = $indexes[$mandatory_indexes[$i]]['label']._IS_EMPTY.'kkk';
+				$_SESSION['error'] = $indexes[$mandatory_indexes[$i]]['label']._IS_EMPTY;
 				return false;
 			}
 		}
@@ -653,6 +642,15 @@ class types extends dbquery
 		return true;
 	}
 
+
+	/**
+	* Returns a string to use in an sql update query
+	*
+	* @param string $type_id Document type identifier
+	* @param string $coll_id Collection identifier
+	* @param array $values Values to update
+	* @return string Part of the update sql query
+	*/
 	public function get_sql_update($type_id, $coll_id, $values)
 	{
 		$indexes = $this->get_indexes($type_id, $coll_id);
@@ -680,6 +678,15 @@ class types extends dbquery
 		return $req;
 	}
 
+	/**
+	* Returns an array used to insert data in the database
+	*
+	* @param string $type_id Document type identifier
+	* @param string $coll_id Collection identifier
+	* @param array $values Values to update
+	* @param array $data Return array
+	* @return array
+	*/
 	public function fill_data_array($type_id, $coll_id, $values, $data = array())
 	{
 		$indexes = $this->get_indexes($type_id, $coll_id);
@@ -706,6 +713,12 @@ class types extends dbquery
 		return $data;
 	}
 
+	/**
+	* Inits in the database the indexes for a given res id to null
+	*
+	* @param string $coll_id Collection identifier
+	* @param string $res_id Resource identifier
+	*/
 	public function inits_opt_indexes($coll_id, $res_id)
 	{
 		require_once($_SESSION['pathtocoreclass'].'class_security.php');
@@ -724,6 +737,15 @@ class types extends dbquery
 		$this->query($query);
 	}
 
+	/**
+	* Makes the search checks for a given index, and builds the where query and json
+	*
+	* @param array $indexes Array of the possible indexes (used to check)
+	* @param string $field_name Field name, index identifier
+	* @param string $val Value to check
+	* @return array ['json_txt'] : json used in the search
+	*  				['where'] : where query
+	*/
 	public function search_checks($indexes, $field_name, $val )
 	{
 		$where_request = '';
