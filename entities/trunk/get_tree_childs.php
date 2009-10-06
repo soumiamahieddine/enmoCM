@@ -16,19 +16,9 @@ if(isset($_POST['branch_id'])) {
 	$ent->connect();
 	$children = array();
 
-	$ent->query("select entity_id, entity_label from ".$_SESSION['tablename']['ent_entities']." where parent_entity_id = '".$_POST['branch_id']."' order by entity_label");
-	//$ent->show();
+	$ent->query("select u.user_id, u.lastname, u.firstname from ".$_SESSION['tablename']['ent_users_entities']." ue,".$_SESSION['tablename']['ent_entities']." e, ".$_SESSION['tablename']['users']." u where e.parent_entity_id = '".$_POST['branch_id']."' and e.parent_entity_id = ue.entity_id and u.user_id = ue.user_id order by u.lastname, u.firstname");
 	if($ent->nb_result() > 0)
 	{
-		while($res = $ent->fetch_object())
-		{
-			$canhavechildren = '';
-			$canhavechildren = 'canhavechildren:true, ';
-			array_push($children, array('id' => $res->entity_id, 'tree' => $_SESSION['entities_chosen_tree'], 'key_value' => $res->entity_id, 'label_value' => $ent->show_string($res->entity_id.' - '.$res->entity_label), 'canhavechildren' => $canhavechildren, 'is_entity' => 'true'));
-
-		}
-		$ent->query("select u.user_id, u.lastname, u.firstname from ".$_SESSION['tablename']['ent_users_entities']." ue,".$_SESSION['tablename']['ent_entities']." e, ".$_SESSION['tablename']['users']." u where e.parent_entity_id = '".$_POST['branch_id']."' and e.parent_entity_id = ue.entity_id and u.user_id = ue.user_id order by u.lastname, u.firstname");
-
 		while($res = $ent->fetch_object())
 		{
 			$canhavechildren = 'canhavechildren:false, ';
@@ -50,6 +40,20 @@ if(isset($_POST['branch_id'])) {
 			}
 		}
 	}
+	$ent->query("select entity_id, entity_label from ".$_SESSION['tablename']['ent_entities']." where parent_entity_id = '".$_POST['branch_id']."' order by entity_label");
+	//$ent->show();
+	if($ent->nb_result() > 0)
+	{
+		while($res = $ent->fetch_object())
+		{
+			$canhavechildren = '';
+			$canhavechildren = 'canhavechildren:true, ';
+			array_push($children, array('id' => $res->entity_id, 'tree' => $_SESSION['entities_chosen_tree'], 'key_value' => $res->entity_id, 'label_value' => $ent->show_string($res->entity_id.' - '.$res->entity_label), 'canhavechildren' => $canhavechildren, 'is_entity' => 'true'));
+
+		}
+
+	}
+
 
 	if(count($children) > 0)
 	{
