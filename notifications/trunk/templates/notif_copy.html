@@ -48,7 +48,7 @@ Mods :
 	##func_bool_detail_doc## : Activate func to view documents detail's page
 	
 Defines :  
-	_NAME_OF_LANG_INSTANCE : u se constant define in lang.php
+	{{_NAME_OF_LANG_INSTANCE}} : u se constant define in lang.php
 	
 	
 ###############################
@@ -66,23 +66,23 @@ Defines :
  	 -->
 	</style>
 	<body>
-			<div align=\"center\" class=\"titre\" ><b>_MAIL_COPIES_TO ##day_date##</b></div><br/>
-			<p>_HELLO ##display_full_name_for_dest_mail##, _MAIL_COPIES_LIST :</p>
+			<div align=\"center\" class=\"titre\" ><b>{{_MAIL_COPIES_TO}} ##day_date##</b></div><br/>
+			<p>{{_HELLO}} ##display_full_name_for_dest_mail##, {{_MAIL_COPIES_LIST}} :</p>
 			<ul>
 				
 
 
 #!#LIST
 <!-------------------------------------------------------------------------->
-<li>_THE_MAIL_NUM ##load_value|res_id## _OF_TYPE ##load_value|type_label##  ( _OBJECT  : ##load_value|subject##) _RECEIVED_THE ##load_value|creation_date## ##load_value|contact_full## _WAS_SENT_TO ##load_value|full_dest_user##  _DEPARTMENT ##load_value|entity_label##  _WHO_MUST_PROCESS_BEFORE ##load_value|process_limit_date##  :
-<a href='##maarch_url##index.php?page=details&id=##load_value|res_id##'>_SEE_MAIL</a> </li>
+<li>{{_THE_MAIL_NUM}} ##load_value|res_id## {{_OF_TYPE}} ##load_value|type_label##  ( {{_OBJECT}}  : ##load_value|subject##) {{_RECEIVED_THE}} ##load_value|creation_date## ##load_value|contact_full## {{_WAS_SENT_TO}} ##load_value|full_dest_user##  {{_DEPARTMENT}} ##load_value|entity_label##  {{_WHO_MUST_PROCESS_BEFORE}} ##load_value|process_limit_date##  :
+<a href='##maarch_url##index.php?page=details&id=##load_value|res_id##'>{{_SEE_MAIL}}</a> </li>
 
 #!#FOOTER
 <!-------------------------------------------------------------------------->
 				</ul>
 
 				<br/>
-				<p>( _WARNING  :  _YOU_MUST_BE_LOGGED )</p>
+				<p>( {{_WARNING}}  :  {{_YOU_MUST_BE_LOGGED}} )</p>
 		</body>
 </html>
 

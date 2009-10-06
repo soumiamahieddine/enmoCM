@@ -48,7 +48,7 @@ Mods :
 	##func_bool_detail_doc## : Activate func to view documents detail's page
 	
 Defines :  
-	_NAME_OF_LANG_INSTANCE : u se constant define in lang.php
+	{{_NAME_OF_LANG_INSTANCE}} : u se constant define in lang.php
 	
 	
 ###############################
@@ -66,15 +66,15 @@ Defines :
  	 -->
 	</style>
 	<body>
-			<div align=\"center\" class=\"titre\" ><b>_FIRST_WARNING : _MAIL_TO_PROCESS ##day_date##</b></div><br/>
-			<p>_HELLO ##display_full_name_for_dest_mail##, _THIS_IS_FIRST_WARNING :</p>
+			<div align=\"center\" class=\"titre\" ><b>{{_FIRST_WARNING}} : {{_MAIL_TO_PROCESS}} ##day_date##</b></div><br/>
+			<p>{{_HELLO}} ##display_full_name_for_dest_mail##, {{_THIS_IS_FIRST_WARNING}} :</p>
 			<ul>
 				
 
 
 #!#LIST
 <!-------------------------------------------------------------------------->
-<li>_THE_MAIL_NUM ##load_value|res_id## _OF_TYPE ##load_value|type_label##  ( _OBJECT  : ##load_value|subject##) _RECEIVED_THE ##load_value|creation_date## ##load_value|contact_full##   _MUST_BE_PROCESSED_BEFORE ##load_value|process_limit_date##  :
+<li>{{_THE_MAIL_NUM}} ##load_value|res_id## {{_OF_TYPE}} ##load_value|type_label##  ( {{_OBJECT}}  : ##load_value|subject##) {{_RECEIVED_THE}} ##load_value|creation_date## ##load_value|contact_full##   {{_MUST_BE_PROCESSED_BEFORE}} ##load_value|process_limit_date##  :
 <a href='##maarch_url##index.php?page=details&id=##load_value|res_id##'>_SEE_MAIL</a> </li>
 
 #!#FOOTER
@@ -82,7 +82,7 @@ Defines :
 				</ul>
 
 				<br/>
-				<p>_MUST_BE_ADDED_TO_PRIORITY</p>
+				<p>{{_MUST_BE_ADDED_TO_PRIORITY}}</p>
 		</body>
 </html>
 

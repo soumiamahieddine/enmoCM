@@ -77,7 +77,7 @@ class notifications extends request
 		
 		$mail_trait = $head.$content_list.$footer;
 		//replace definition un the template by constants
-		$mail_trait = preg_replace_callback('/(_[A-Z_]*)/',create_function('$match', 'return constant($match[1]);'),$mail_trait);	
+		$mail_trait = preg_replace_callback('/\{\{(_[A-Z_]*)\}\}/',create_function('$match', 'return constant($match[1]);'),$mail_trait);	
 		
 		
 		//Reset the content_list for next instance!
@@ -104,7 +104,7 @@ class notifications extends request
 			//Load entities allowed for this user
 			$ent = new entity();
 			$allowed_entities = array();
-			$allowed_entities = $ent->get_entities_of_user($res->user_id);
+			//$allowed_entities = $ent->get_entities_of_user($res->user_id);
 		
 			//Check for abs user
 			$db2->query("select u.mail, ua.new_user from ".$_SESSION['tablename']['users']." u, ".$_SESSION['tablename']['user_abs']." ua where u.user_id = ua.new_user and ua.user_abs = '".htmlentities($res->user_id)."'");
@@ -501,7 +501,8 @@ class notifications extends request
 		$db->connect();
 
 		//Get ressources information
-		$db->query("select r.res_id, r.type_id, date_format(date(r.creation_date) , '%d/%m/%Y') as creation_date, r.category_id, r.type_label,  r.dest_user, r.destination,  date_format(date(r.process_limit_date), '%d-%m-%Y') as process_limit_date, r.category_id, r.subject, u.firstname as ufirstname, u.lastname as ulastname, e.entity_label
+		//$db->query("select r.res_id, r.type_id, date_format(date(r.creation_date) , '%d/%m/%Y') as creation_date, r.category_id, r.type_label,  r.dest_user, r.destination,  date_format(date(r.process_limit_date), '%d-%m-%Y') as process_limit_date, r.category_id, r.subject, u.firstname as ufirstname, u.lastname as ulastname, e.entity_label
+		$db->query("select r.res_id, r.type_id, r.creation_date as creation_date, r.category_id, r.type_label,  r.dest_user, r.destination,  r.process_limit_date as process_limit_date, r.category_id, r.subject, u.firstname as ufirstname, u.lastname as ulastname, e.entity_label
 						    from ".$_SESSION['ressources']['letterbox_view']." r , ".$_SESSION['tablename']['users']." u , ".$_SESSION['tablename']['entities']." e
 							where res_id = '".$res_id."' and r.dest_user = u.user_id and r.destination = e.entity_id ");
 		
