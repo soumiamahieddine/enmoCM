@@ -1243,7 +1243,7 @@ function action_send_first_request( path_manage_script, mode_req,  id_action, re
 					modal_txt += '<input type="button" name="submit" id="submit" value="'+response.validate+'" class="button" onclick="action_send_form_confirm_result( \''+path_manage_script+'\', \''+mode_req+'\',\''+id_action+'\', \''+res_id_values+'\', \''+tablename+'\', \''+modulename+'\', \''+id_coll+'\');"/>';
 					modal_txt += ' <input type="button" name="cancel" id="cancel" value="'+response.cancel+'" class="button" onclick="destroyModal(\'modal_'+id_action+'\');"/></p>';
 					//console.log(modal_txt);
-					window.top.createModal(modal_txt, 'modal_'+id_action, '200', '300');
+					window.top.createModal(modal_txt, 'modal_'+id_action, '150px', '300px');
 				}
 				else if(response.status == 3) // Form to fill by the user
 				{

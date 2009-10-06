@@ -153,13 +153,13 @@ if($core->is_module_loaded('entities'))
 if($core->is_module_loaded('physical_archive'))
 {
 	//Physical Archive (incoming)
-	$_ENV['categories']['incoming']['other_cases']['arbox_id'] = array( 'type_form' => 'interger', 'type_field' => 'integer', 'mandatory' => true, 'label' => _BOX_ID, 'table' => 'res', 'img' => $_SESSION['urltomodules'].'physical_archive/img/pa_boxes.gif', 'modify' => true, 'form_show' => 'select');
+	$_ENV['categories']['incoming']['other_cases']['arbox_id'] = array( 'type_form' => 'interger', 'type_field' => 'integer', 'mandatory' => true, 'label' => _BOX_ID, 'table' => 'res', 'img' => $_SESSION['urltomodules'].'physical_archive/img/pa_boxes.gif', 'modify' => false, 'form_show' => 'select');
 	// Physical Archive (outgoing)
-	$_ENV['categories']['outgoing']['other_cases']['arbox_id'] = array( 'type_form' => 'interger', 'type_field' => 'integer', 'mandatory' => true, 'label' => _BOX_ID, 'table' => 'res', 'img' => $_SESSION['urltomodules'].'physical_archive/img/pa_boxes.gif', 'modify' => true, 'form_show' => 'select');
+	$_ENV['categories']['outgoing']['other_cases']['arbox_id'] = array( 'type_form' => 'interger', 'type_field' => 'integer', 'mandatory' => true, 'label' => _BOX_ID, 'table' => 'res', 'img' => $_SESSION['urltomodules'].'physical_archive/img/pa_boxes.gif', 'modify' => false, 'form_show' => 'select');
 	// Physical Archive (internal)
-	$_ENV['categories']['internal']['other_cases']['arbox_id'] = array( 'type_form' => 'interger', 'type_field' => 'integer', 'mandatory' => true, 'label' => _BOX_ID, 'table' => 'res', 'img' => $_SESSION['urltomodules'].'physical_archive/img/pa_boxes.gif', 'modify' => true, 'form_show' => 'select');
+	$_ENV['categories']['internal']['other_cases']['arbox_id'] = array( 'type_form' => 'interger', 'type_field' => 'integer', 'mandatory' => true, 'label' => _BOX_ID, 'table' => 'res', 'img' => $_SESSION['urltomodules'].'physical_archive/img/pa_boxes.gif', 'modify' => false, 'form_show' => 'select');
 	// Physical Archive (market_document)
-	$_ENV['categories']['market_document']['other_cases']['arbox_id'] = array( 'type_form' => 'interger', 'type_field' => 'integer', 'mandatory' => true, 'label' => _BOX_ID, 'table' => 'res', 'img' => $_SESSION['urltomodules'].'physical_archive/img/pa_boxes.gif', 'modify' => true, 'form_show' => 'select');
+	$_ENV['categories']['market_document']['other_cases']['arbox_id'] = array( 'type_form' => 'interger', 'type_field' => 'integer', 'mandatory' => true, 'label' => _BOX_ID, 'table' => 'res', 'img' => $_SESSION['urltomodules'].'physical_archive/img/pa_boxes.gif', 'modify' => false, 'form_show' => 'select');
 }
 
 if($core->is_module_loaded('folder'))
@@ -560,7 +560,7 @@ function get_general_data($coll_id, $res_id, $mode, $params = array())
 			{
 				if(!empty($line->$arr[$i]))
 				{
-					$db2->query('select is_corporate_person, lastname, firstname, society from '.$_SESSION['tablename']['contacts']." where enabled = 'Y' and contact_id = ".$line->$arr[$i]."");
+					$db2->query('select is_corporate_person, lastname, firstname, society from '.$_SESSION['tablename']['contacts']." where  contact_id = ".$line->$arr[$i]."");
 					$res = $db2->fetch_object();
 					if($res->is_corporate_person == 'Y')
 					{
