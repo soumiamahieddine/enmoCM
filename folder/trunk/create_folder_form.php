@@ -81,13 +81,20 @@ while($res = $db->fetch_object())
 				?><option value="<?php  echo $foldertypes[$i]['id'];?>" <?php  if($_SESSION['foldertype'] == $foldertypes[$i]['id']){ echo 'selected="selected"'; }?>><?php  echo $foldertypes[$i]['label'];?></option>
 				<?php
 				}?>
-			</select>
+			</select> <span class="red_asterisk">*</span>
+		</p>
+		<p>
+			<label for="folder_id"><?php echo _ID;?></label>
+			<input name="folder_id" id="folder_id" value="" /> <span class="red_asterisk">*</span>
+		</p>
+		<p>
+			<label for="desc"><?php echo _DESC;?></label>
+			<textarea name="desc" id="desc"></textarea>
+		</p>
+		<div id="folder_indexes"></div>
+		<p class="buttons">
+			<input type="submit" name="validate" id="validate" value="<?php echo _VALIDATE;?>" class="button"/>
+			<input type="button" name="cancel" id="cancel" value="<?php echo _CANCEL;?>" class="button" onclick="" />
 		</p>
 	</form>
-  <!-- 	<div align="center">
-    	<iframe name="choose_foldertype" id="choose_foldertype" src="<?php  echo $_SESSION['urltomodules']."folder/";?>choose_foldertype.php" frameborder="0" width="340" height="45"></iframe>
-    </div>
-    <div align="center">
-    	<iframe name="frm_create_folder" id="frm_create_folder" src="<?php  echo $_SESSION['urltomodules']."folder/";  ?>frm_create_folder.php" frameborder="0" width="500" height="600"></iframe>
-    </div>-->
 </div>

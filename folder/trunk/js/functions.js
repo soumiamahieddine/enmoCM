@@ -251,3 +251,31 @@ function valid_histfolder(url)
 		});
 	}
 }
+
+/**
+ * Gets the indexes for a given folder type and fills a div with it
+ *
+ * @param url String Url to the Ajax script
+ * @param foldertype String Folder type identifier
+ **/
+function get_folder_index(url, foldertype)
+{
+	if(url && foldertype)
+	{
+		new Ajax.Request(url,
+		{
+			method:'post',
+			parameters: {
+				foldertype_id : foldertype
+					},
+					onSuccess: function(answer){
+						var div_to_fill = $('folder_indexes');
+					//	console.log(div_to_fill);
+						if(div_to_fill)
+						{
+							div_to_fill.innerHTML = answer.responseText;
+						}
+					}
+		});
+	}
+}

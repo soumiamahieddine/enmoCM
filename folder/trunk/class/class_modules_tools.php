@@ -160,16 +160,15 @@ class folder extends request
 	public function build_modules_tables()
 	{
 		$xmlconfig = simplexml_load_file($_SESSION['pathtomodules']."folder/xml/config.xml");
-		//for*each($xmlconfig->TABLENAME as $TABLENAME)
-		//{
+
 		$TABLENAME = $xmlconfig->TABLENAME;
-			$_SESSION['tablename']['fold_folders'] = (string) $TABLENAME->fold_folders;
-			$_SESSION['tablename']['fold_folders_out'] = (string) $TABLENAME->fold_folders_out;
-			$_SESSION['tablename']['fold_foldertypes'] = (string) $TABLENAME->fold_foldertypes;
-			$_SESSION['tablename']['fold_foldertypes_doctypes'] = (string) $TABLENAME->fold_foldertypes_doctypes;
-			$_SESSION['tablename']['fold_foldertypes_indexes'] = (string) $TABLENAME->fold_foldertypes_indexes;
-			$_SESSION['tablename']['fold_foldertypes_doctypes_level1'] = (string) $TABLENAME->fold_foldertypes_doctypes_level1;
-		//}
+		$_SESSION['tablename']['fold_folders'] = (string) $TABLENAME->fold_folders;
+		$_SESSION['tablename']['fold_folders_out'] = (string) $TABLENAME->fold_folders_out;
+		$_SESSION['tablename']['fold_foldertypes'] = (string) $TABLENAME->fold_foldertypes;
+		$_SESSION['tablename']['fold_foldertypes_doctypes'] = (string) $TABLENAME->fold_foldertypes_doctypes;
+		$_SESSION['tablename']['fold_foldertypes_indexes'] = (string) $TABLENAME->fold_foldertypes_indexes;
+		$_SESSION['tablename']['fold_foldertypes_doctypes_level1'] = (string) $TABLENAME->fold_foldertypes_doctypes_level1;
+
 		$HISTORY = $xmlconfig->HISTORY;
 		$_SESSION['history']['folderdel'] = (string) $HISTORY->folderdel;
 		$_SESSION['history']['folderadd'] = (string) $HISTORY->folderadd;
@@ -411,6 +410,7 @@ class folder extends request
 	* @param string $table_folder folder table
 	* @param array $data array which contains the data necessary to create a new folder
 	*/
+/*
 	public function create_folder($table_param, $table_folder, $data, $databasetype)
 	{
 		$today = date("Y/m/d");
@@ -463,6 +463,115 @@ class folder extends request
 		//exit;
 		return $folder_id;
 	}
+*/
+	/**
+	* Creates a folder
+	*/
+	public function create_folder()
+	{
+		require_once($_SESSION['pathtocoreclass']."class_request.php");
+		echo $_SESSION['pathtocoreclass']."class_request.php";
+		$req = new request();
+		$this->checks_folder_data();
+		if(!empty($_SESSION['error']))
+		{
+			header("location: ".$_SESSION['config']['businessappurl']."index.php?page=create_folder_form&module=folder");
+			exit();
+		}
+		else
+		{
+			$this->connect();
+			$this->query("select folder_id from ".$_SESSION['tablename']['fold_folders']." where folder_id= '".$_SESSION['m_admin']['folder']['folder_id'] ."'");
+			if($this->nb_result() > 0)
+			{
+				$_SESSION['error'] = $_SESSION['m_admin']['folder']['folder_id'] ." "._ALREADY_EXISTS."<br />";
+				header("location: ".$_SESSION['config']['businessappurl']."index.php?page=create_folder_form&module=folder");
+				exit();
+			}
+			else
+			{
+
+
+				$this->connect();
+				$this->query("INSERT INTO ".$_SESSION['tablename']['fold_folders']." (folder_id, foldertype_id, description, creation_date, typist) VALUES ('".$this->show_string($_SESSION['m_admin']['folder']['folder_id'])."', ".$_SESSION['m_admin']['folder']['foldertype_id'].", '".$this->show_string($_SESSION['m_admin']['folder']['desc'])."', ".$req->current_datetime().", '".$_SESSION['user']['UserId']."');");
+				$this->query('select folders_system_id from '.$_SESSION['tablename']['fold_folders']." where folderid = '".$this->show_string($_SESSION['m_admin']['folder']['folder_id'])."';");
+				$res = $this->fetch_object();
+				$id = $res->folders_system_id;
+
+				require_once($_SESSION['pathtomodules'].'folder'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR."class_admin_foldertypes.php");
+				$foldertype = new foldertype();
+
+				$query = $foldertype->get_sql_update($_SESSION['m_admin']['folder']['foldertype_id'], $_SESSION['m_admin']['folder']['indexes']);
+				if(!empty($query))
+				{
+					$query = "update ".$_SESSION['tablename']['fold_folders']." set ".$query." where folders_system_id = ".$id;
+					$this->query($query);
+				}
+				if($_SESSION['history']['folderadd'] == "true")
+				{
+					require($_SESSION['pathtocoreclass']."class_history.php");
+					$hist = new history();
+					$hist->add($_SESSION['tablename']['fold_folders'], $id ,"ADD",_FOLDER_ADDED." : ".$_SESSION['m_admin']['folder']['folder_id'] , $_SESSION['config']['databasetype'], 'folder');
+				}
+
+				$_SESSION['error'] = _FOLDER_ADDED;
+				unset($_SESSION['m_admin']);
+				header("location: ".$_SESSION['config']['businessappurl']."index.php");
+				exit();
+			}
+
+		}
+	}
+
+	/**
+	* Processes data during folder creation
+	*/
+	private function checks_folder_data()
+	{
+		require_once($_SESSION['pathtomodules'].'folder'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR."class_admin_foldertypes.php");
+		$foldertype = new foldertype();
+
+		$_SESSION['m_admin']['folder']['desc'] = '';
+		if(isset($_REQUEST['desc']) && !empty($_REQUEST['desc']))
+		{
+			$_SESSION['m_admin']['folder']['desc'] = $this->wash($_REQUEST['desc'], "no", _THE_DESC);
+		}
+
+		if(isset($_REQUEST['folder_id']) && !empty($_REQUEST['folder_id']))
+		{
+			$_SESSION['m_admin']['folder']['folder_id'] = $this->wash($_REQUEST['folder_id'], "no", _FOLDER_ID);
+		}
+		else
+		{
+			$_SESSION['m_admin']['folder']['folder_id'] = '';
+			$_SESSION['error'] .= _FOLDER_ID.' '._IS_EMPTY;
+		}
+
+		if(isset($_REQUEST['foldertype']) && !empty($_REQUEST['foldertype']))
+		{
+			$_SESSION['m_admin']['folder']['foldertype'] = $this->wash($_REQUEST['foldertype'], "no", _FOLDERTYPE);
+
+			$_SESSION['m_admin']['folder']['indexes'] = array();
+			foreach( array_keys($indexes) as $key)
+			{
+				if(isset($_REQUEST[$key]))
+				{
+					$_SESSION['m_admin']['folder']['indexes'][$key] = $_REQUEST[$key];
+				}
+				else
+				{
+					$_SESSION['m_admin']['folder']['indexes'][$key] = '';
+				}
+			}
+			$foldertype->check_indexes($_SESSION['m_admin']['folder']['foldertype'], $_SESSION['m_admin']['folder']['indexes']);
+		}
+		else
+		{
+			$_SESSION['m_admin']['folder']['foldertype'] = '';
+			$_SESSION['error'] .= _FOLDERTYPE.' '._IS_EMPTY;
+		}
+	}
+
 
 	/**
 	* get all data from the current folder object
