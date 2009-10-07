@@ -1827,6 +1827,12 @@ function launch_autocompleter(path_script, id_text, id_div)
 	}
 }
 
+/**
+ * Gets the indexes for a given collection and fills a div with it
+ *
+ * @param url String Url to the Ajax script
+ * @param id_coll String Collection identifier
+ **/
 function get_opt_index(url, id_coll)
 {
 	if(url && id_coll)
@@ -1849,9 +1855,15 @@ function get_opt_index(url, id_coll)
 	}
 }
 
+/**
+ * Gets the indexes for a given document type (used in details page)
+ *
+ * @param doctype_id String Document type identifier
+ * @param url String Url to the Ajax script
+ * @param error_empty_type Message to displays if the type is empty
+ **/
 function change_doctype_details(doctype_id, url, error_empty_type)
 {
-
 	if(doctype_id != null && doctype_id != '' && doctype_id != NaN)
 	{
 		new Ajax.Request(url,
