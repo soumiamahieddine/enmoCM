@@ -1,0 +1,151 @@
+<!--
+
+* basket_list and search_adv_list template
+*
+*
+* @package  Maarch LetterBox 3.0
+* @version 3.0
+* @since 10/2005
+* @license GPL
+* @author  Loïc Vinet  <dev@maarch.org>
+*
+
+
+
+
+Parts : 
+	##HEAD< : Begining of the head part
+	##HEAD> : End of the head part
+	
+	##RESULT< : Begining of result list
+	##RESULT> : End fo result list
+	
+Functions : 
+	##load_css|arg1## : load css style - arg1= name of this class
+	##css_line|coll|nonecoll## : load css style for line arg1,arg2 : switch beetwin style on line one or line two
+	##css_line_reload## : reload last css style loaded by css_line
+	##order_link|arg1|arg2## : reload list and change order;  arg1=type; arg2=sort
+	
+	##url_docview## : open view of document; 
+	##url_docdetail## : open detail of document; 
+	##url_download## : download document;
+	
+	##load_img|arg1## : show loaded image; arg1= name of img file
+	
+	##load_value|arg|##: load value in the db; arg1= column's value  identifier
+	
+	
+	
+Mods :
+
+	##func_bool_radio_form## : Activate bool_radio_form in class_list_show.php
+	##func_bool_check_form## : Activate bool_check_form in class_list_show.php
+	##func_bool_view_doc## : Activate func to view documents
+	##func_bool_detail_doc## : Activate func to view documents detail's page
+	##func_display_category_img## : Return icon defined in the category
+	
+Defines :  
+	_NAME_OF_LANG_INSTANCE : u se constant define in lang.php
+	
+	
+	 
+-->
+
+
+#!#TABLE
+<!-- ------------------------------------------------------------------------->
+<table border="0" cellspacing="0" class="##load_css|listing spec zero_padding ##" id='test'  style = "padding: 0px;">
+
+
+#!#HEAD
+<!-- ------------------------------------------------------------------------->
+             <thead border ="1">
+				<tr>
+									<th  width="100%" colspan="2">
+										<div align="center" style="border:1px solid; height:20px;margin-bottom:10px;padding-top:10px;vertical-align:middle;font-size:8px;">
+									
+									##define_lang|_SORT_BY## :
+												##define_lang|_NUM_GED##
+												<a href="##order_link|res_id|desc##" title="##define_lang|_DESC_SORT##"><img src="##load_img|tri_down.gif##" border="0" alt="##define_lang|_DESC_SORT##" /> </a> <a href="##order_link|res_id|asc##" title="##define_lang|_ASC_SORT##"> <img src="##load_img|tri_up.gif##" border="0" alt="##define_lang|_ASC_SORT##" /></a> 
+												&nbsp;
+												##define_lang|_TYPE## 
+												<a href="##order_link|type_id|desc##" title="##define_lang|_DESC_SORT##"><img src="##load_img|tri_down.gif##" border="0" alt="##define_lang|_DESC_SORT##" /> </a> <a href="##order_link|type_id|asc##" title="##define_lang|_ASC_SORT##"> <img src="##load_img|tri_up.gif##" border="0" alt="##define_lang|_ASC_SORT##" /></a> 
+												&nbsp;
+												##define_lang|_SUBJECT## 
+												<a href="##order_link|subject|desc##" title="##define_lang|_DESC_SORT##"><img src="##load_img|tri_down.gif##" border="0" alt="##define_lang|_DESC_SORT##" /> </a> <a href="##order_link|subject|asc##" title="##define_lang|_ASC_SORT##"> <img src="##load_img|tri_up.gif##" border="0" alt="##define_lang|_ASC_SORT##" /></a> 
+												&nbsp;
+												##define_lang|_DEST_USER## 
+												<a href="##order_link|dest_user|desc##" title="##define_lang|_DESC_SORT##"><img src="##load_img|tri_down.gif##" border="0" alt="##define_lang|_DESC_SORT##" /> </a> <a href="##order_link|dest_user|asc##" title="##define_lang|_ASC_SORT##"> <img src="##load_img|tri_up.gif##" border="0" alt="##define_lang|_ASC_SORT##" /></a> 
+												&nbsp;
+												##define_lang|_REG_DATE## 
+												<a href="##order_link|creation_date|desc##" title="##define_lang|_DESC_SORT##"><img src="##load_img|tri_down.gif##" border="0" alt="##define_lang|_DESC_SORT##" /> </a> <a href="##order_link|creation_date|asc##" title="##define_lang|_ASC_SORT##"> <img src="##load_img|tri_up.gif##" border="0" alt="##define_lang|_ASC_SORT##" /></a> 
+												&nbsp;##define_lang|_PROCESS_LIMIT_DATE## 
+												<a href="##order_link|process_limit_date|desc##" title="##define_lang|_DESC_SORT##"><img src="##load_img|tri_down.gif##" border="0" alt="##define_lang|_DESC_SORT##" /> </a> <a href="##order_link|process_limit_date|asc##" title="##define_lang|_ASC_SORT##"> <img src="##load_img|tri_up.gif##" border="0" alt="##define_lang|_ASC_SORT##" /></a> 
+												&nbsp;
+												##define_lang|_ENTITY## 
+												<a href="##order_link|destination|desc##" title="##define_lang|_DESC_SORT##"><img src="##load_img|tri_down.gif##" border="0" alt="##define_lang|_DESC_SORT##" /> </a> <a href="##order_link|destination|asc##" title="##define_lang|_ASC_SORT##"> <img src="##load_img|tri_up.gif##" border="0" alt="##define_lang|_ASC_SORT##" /></a> 
+												&nbsp;
+												##define_lang|_CATEGORY## 
+												<a href="##order_link|category_id|desc##" title="##define_lang|_DESC_SORT##"><img src="##load_img|tri_down.gif##" border="0" alt="##define_lang|_DESC_SORT##" /> </a> <a href="##order_link|category_id|asc##" title="##define_lang|_ASC_SORT##"> <img src="##load_img|tri_up.gif##" border="0" alt="##define_lang|_ASC_SORT##" /></a> 
+									</div>		
+								</th>			
+					</tr>
+			</thead>
+			
+			<tbody> 
+#!#RESULT
+<!-- ------------------------------------------------------------------------->
+			
+			   <tr  class="##css_line|col|white ##" >
+			
+					<td width="10%"  ##func_click_form##>
+						<!--<div align="center"><img src="##load_img|contact_maarch.gif##" alt="##load_value|status##" title="##load_value|status##"> </div>-->
+						<div align="center">##load_value|status## </div>
+					</td>
+					<td width="90%" align="center" style="padding : 0px; vertical-align:top" colspan="3"  ##func_click_form##>
+						<table width="100%" border="0" cellspacing="0" cellpadding="0" >
+								<tr>
+									<td width="68%"   style="font-size:12px;"><b><!--##define_lang|_SUBJECT## :--></b><em>##load_value|subject##</em> </td>
+									<td width="32%">
+										<table width="100%" border="0" cellspacing="0" cellpadding="0">
+											<tr>
+												<td width="40%" style="text-align:right">##define_lang|_CONTACT## :</td><td  style="text-align:right">##load_value|exp_user_id##</td>
+											</tr>
+											<tr><td> </td><td></td></tr>
+											<tr>
+												<td style="text-align:right">##define_lang|_ENTITY## :</td><td  style="text-align:right">##load_value|destination##</td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+						</table>
+					</td>
+				</tr>	
+				<tr class="##css_line_reload##">
+						<td style="text-align:center" style="font-size:13px;"> ##func_bool_check_form##<b>##load_value|res_id##</b></td>
+						<td style="text-align:center"  ##func_click_form##>
+							<table width="100%" border="0" cellspacing="0" cellpadding="0" >
+									<tr>
+										<td width ="30px" alt="##define_lang|_CATEGORY##" title="##define_lang|_CATEGORY##">##load_value|category_img##</td>
+										<td width ="150px">##load_value|category_id##</td>
+										<td width ="30px" alt="##define_lang|_ADMISSION_DATE##" title="##define_lang|_ADMISSION_DATE##"><img src="##load_img|date_arriv.gif##"> </td>
+										<td width ="100px">##load_value|admission_date##</td>
+										<td width ="30px" alt="##define_lang|_PROCESS_LIMIT_DATE##" title="##define_lang|_PROCESS_LIMIT_DATE##"><img src="##load_img|date_limit.gif##"> </td>
+										<td width ="100px">##load_value|process_limit_date##</td>
+										<td width ="30px" style="text-align:right" alt="##define_lang|_DEST_USER##" title="##define_lang|_DEST_USER##"><img src="##load_img|manage_users_entities_b_small.gif##"></td>
+										<td width ="110px" > ##load_value|dest_user##</td>
+										<td width ="30px"  alt="##define_lang|_TYPE##" title="##define_lang|_TYPE##" style="text-align:right"><img src="##load_img|mini_type.gif##">
+										<td  style="text-align:left">##load_value|type_label##</td>	
+									</tr>
+							</table>
+						</td>
+				</tr >
+				<tr><td colspan="6" style="background-color: white;"></td></tr>
+		      
+              
+ 
+ #!#FOOTER        
+ <!-- 	------------------------------------------------------------------------->
+            </tbody>
+        </table>
+
