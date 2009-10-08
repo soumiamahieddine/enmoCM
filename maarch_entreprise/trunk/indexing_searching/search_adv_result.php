@@ -282,7 +282,7 @@ if(count($_REQUEST['meta']) > 0)
 			else if($tab_id_fields[$j] == 'fulltext' && !empty($_REQUEST['fulltext']))
 			{
 				$json_txt .= " 'fulltext' : ['".addslashes(trim($_REQUEST['fulltext']))."'],";
-				set_include_path($_SESSION['config']['businessapppath']."tools".$_SESSION['slash_env'].PATH_SEPARATOR.get_include_path());
+				set_include_path($_SESSION['config']['businessapppath']."tools".DIRECTORY_SEPARATOR.PATH_SEPARATOR.get_include_path());
 				require_once('Zend/Search/Lucene.php');
 				$path_to_lucene_index = $_SESSION['collections'][0]['path_to_lucene_index'];
 				if(is_dir($path_to_lucene_index))

@@ -526,8 +526,8 @@ class indexing_searching_app extends dbquery
 		}
 		elseif($field_type == 'date_range')
 		{
-			$str = $init.addslashes(_SINCE).' : <input type="text" name="'.$param['id1'].'" id="'.$param['id1'].'" value=""/ onclick="showCalender(this);"> '
-			.addslashes(_FOR).' : <input type="text" name="'.$param['id2'].'" id="'.$param['id2'].'" value="" / onclick="showCalender(this);">';
+			$str = $init.addslashes(_SINCE).' : <input type="text" name="'.$param['id1'].'" id="'.$param['id1'].'" value="" onclick="showCalender(this);" /> '
+			.addslashes(_FOR).' : <input type="text" name="'.$param['id2'].'" id="'.$param['id2'].'" value=""  onclick="showCalender(this);" />';
 			$str .= '<input type="hidden" name="meta[]" value="'.$id.'#'.$param['id1'].','.$param['id2'].'#date_range" />'.$end;
 		}
 		elseif($field_type == 'num_range')
