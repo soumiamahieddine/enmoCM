@@ -50,12 +50,22 @@ if(count($indexes) > 0)
 
 		if($indexes[$key]['type'] == 'string' || $indexes[$key]['type'] == 'integer' || $indexes[$key]['type'] == 'float')
 		{
-			$content .= '<input type="text" name="'.$key.'" id="'.$key.'" value=""  />';
+			$content .= '<input type="text" name="'.$key.'" id="'.$key.'"';
+			if(isset($_SESSION['m_admin']['folder']['indexes'][$key]) && !empty($_SESSION['m_admin']['folder']['indexes'][$key]))
+			{
+			 	$content .= 'value="'.$_SESSION['m_admin']['folder']['indexes'][$key].'"';
+			}
+			$content .= ' />';
 		}
 		else if($indexes[$key]['type'] == 'date')
 		{
 
-			$content .= '<input type="text" name="'.$key.'" id="'.$key.'" value=""  onclick="showCalender(this);" />';
+			$content .= '<input type="text" name="'.$key.'" id="'.$key.'" ';
+			if(isset($_SESSION['m_admin']['folder']['indexes'][$key]) && !empty($_SESSION['m_admin']['folder']['indexes'][$key]))
+			{
+			 	$content .= 'value="'.$_SESSION['m_admin']['folder']['indexes'][$key].'"';
+			}
+			$content .= ' onclick="showCalender(this);" />';
 		}
 		if(in_array($key, $mandatory))
 		{

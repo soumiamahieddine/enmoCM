@@ -258,7 +258,7 @@ function valid_histfolder(url)
  * @param url String Url to the Ajax script
  * @param foldertype String Folder type identifier
  **/
-function get_folder_index(url, foldertype)
+function get_folder_index(url, foldertype, id_div)
 {
 	if(url && foldertype)
 	{
@@ -269,11 +269,43 @@ function get_folder_index(url, foldertype)
 				foldertype_id : foldertype
 					},
 					onSuccess: function(answer){
-						var div_to_fill = $('folder_indexes');
+						var div_to_fill = $(id_div);
 					//	console.log(div_to_fill);
 						if(div_to_fill)
 						{
 							div_to_fill.innerHTML = answer.responseText;
+						}
+					}
+		});
+	}
+}
+
+function search_change_coll(url, id_coll)
+{
+	if(url && id_coll)
+	{
+		var search_div = $('folder_search_div');
+		if(search_div)
+		{
+			search_div.style.display = 'block';
+		}
+
+		var indexes_div = $('opt_indexes');
+		if(indexes_div);
+		{
+			indexes_div.innerHTML = '';
+		}
+		new Ajax.Request(url,
+		{
+			method:'post',
+			parameters: {
+				coll_id : id_coll
+					},
+					onSuccess: function(answer){
+						var select_item = $('foldertype_id');
+						if(select_item)
+						{
+							select_item.update(answer.responseText);
 						}
 					}
 		});

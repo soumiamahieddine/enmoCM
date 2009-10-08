@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
 * File : search_adv.php
 *
@@ -10,17 +10,17 @@
 * @license GPL
 * @author  Claire Figueras  <dev@maarch.org>
 */
-session_name('PeopleBox'); 
+session_name('PeopleBox');
 session_start();
 require_once($_SESSION['pathtocoreclass']."class_functions.php");
+require_once($_SESSION['pathtocoreclass']."class_db.php");
 require_once($_SESSION['pathtocoreclass']."class_request.php");
 require_once($_SESSION['pathtocoreclass']."class_core_tools.php");
 $core_tools = new core_tools();
 $core_tools->test_user();
 //$core_tools->load_lang();
 $core_tools->test_service('folder_search', 'folder');
-//lgi
-//$_SESSION['current_foldertype_coll_id'] = "coll_1";
+
 /****************Management of the location bar  ************/
 $init = false;
 if($_REQUEST['reinit'] == "true")
@@ -31,106 +31,107 @@ $level = "";
 if($_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1)
 {
 	$level = $_REQUEST['level'];
-}   
+}
 $page_path = $_SESSION['config']['businessappurl'].'index.php?page=search_adv_folder&module=folder';
 $page_label = _SEARCH_ADV_FOLDER;
-$page_id = "is_search_folder_adv";
+$page_id = "search_folder_adv";
 $core_tools->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
-require_once($_SESSION['pathtomodules'].'folder'.$_SESSION['slash_env'].'class'.$_SESSION['slash_env']."class_modules_tools.php");
-$fold = new folder();
-require_once($_SESSION['pathtomodules'].'indexing_searching'.$_SESSION['slash_env'].'class'.$_SESSION['slash_env']."class_modules_tools.php");
-$is = new indexing_searching();
-$request = new request();
-if ($_GET['erase'] == 'true')
-{
-	unset($_SESSION['folder_search']);
-}
+
+$foldertypes = array();
+$choose_coll = true;
 $db = new dbquery;
 $db->connect();
-$db->query("select doctypes_first_level_id, doctypes_first_level_label from ".$_SESSION['tablename']['doctypes_first_level']." where enabled= 'Y' order by doctypes_first_level_label");
-$structures = array();
-while($res = $db->fetch_object())
+if(count($_SESSION['user']['collections']) == 1 )
 {
-	array_push($structures , array('id' => $res->doctypes_first_level_id, 'label' => $res->doctypes_first_level_label));
-}
-$subfolders = array();
-$db->query("select doctypes_second_level_id, doctypes_second_level_label from ".$_SESSION['tablename']['doctypes_second_level']." where enabled= 'Y' order by doctypes_second_level_label");
-while($res = $db->fetch_object())
-{
-	array_push($subfolders , array('id' => $res->doctypes_second_level_id, 'label' => $res->doctypes_second_level_label));
-}
-$doctypes = array();
-$db->query("select type_id, description from ".$_SESSION['tablename']['doctypes']." where enabled= 'Y' order by description");
-while($res = $db->fetch_object())
-{
-	array_push($doctypes , array('id' => $res->type_id, 'label' => $res->description));
-}
-$foldertypes = array();
-$db->query("select foldertype_id, foldertype_label from ".$_SESSION['tablename']['fold_foldertypes']." order by foldertype_label");
-while($res = $db->fetch_object())
-{
-	array_push($foldertypes , array('id' => $res->foldertype_id, 'label' => $res->foldertype_label));
+	$choose_coll = false;
+
+	$db->query("select foldertype_id, foldertype_label from ".$_SESSION['tablename']['fold_foldertypes']." where coll_id = '".$_SESSION['user']['collections'][0]."'  order by foldertype_label");
+	while($res = $db->fetch_object())
+	{
+		array_push($foldertypes , array('id' => $res->foldertype_id, 'label' => $res->foldertype_label));
+	}
 }
 ?>
-<h1><img src="<?php  echo $_SESSION['urltomodules']."indexing_searching/img/picto_search_b.gif";?>" alt="" /> <?php  echo _ADV_SEARCH_FOLDER_TITLE; ?></h1>
-<br>
-<div class="clearsearch">
-	<a href="index.php?page=search_adv_folder&module=folder&reinit=true&erase=true"><img src="<?php  echo $_SESSION['urltomodules']."indexing_searching/img/reset.gif";?>" alt="" /> <?php  echo _NEW_SEARCH; ?></a>
-</div>
-<br>
-<br>
-<br>
-<!--<div class="newTipbox">
-	<div class="newTipContentbox">-->
+<h1><img src="<?php  echo $_SESSION['urltomodules']."folder/img/picto_search_b.gif";?>" alt="" /> <?php  echo _ADV_SEARCH_FOLDER_TITLE; ?></h1>
+<br/>
+<form name="search_folder_frm" method="get" action="<?php  echo $_SESSION['config']['businessappurl'];?>index.php" id="search_folder_frm" class="forms2">
+<?php
+if($choose_coll)
+{
+	?>
+	<div align="center">
+		<p>
+			<label for="coll_id"><?php echo _COLLECTION;?> :</label>
+			<select name="coll_id" id="coll_id" onchange="search_change_coll('<?php echo $_SESSION['urltomodules'];?>folder/get_foldertypes.php', this.options[this.options.selectedIndex].value)">
+				<option value=""><?php echo _CHOOSE_COLLECTION;?></option>
+				<?php for($i=0; $i<count($_SESSION['user']['security']);$i++)
+				{
+					?><option value="<?php echo $_SESSION['user']['security'][$i]['coll_id'];?>"><?php echo $_SESSION['user']['security'][$i]['label_coll'];?></option><?php
+				}?>
+			</select>
+		</p>
+	</div>
+	<?
+}
+else
+{
+	?><input type="hidden" name="coll_id" id="coll_id" value="<?php echo $_SESSION['user']['security'][0]['coll_id'];?>" /><?php
+}
+?>
+<div id="folder_search_div" style="display:<?php if($choose_coll){echo "none";}else{echo "block";}?>">
+	<div class="clearsearch">
+		<a href="index.php?page=search_adv_folder&module=folder&reinit=true&erase=true"><img src="<?php  echo $_SESSION['config']['businessappurl']."img/reset.gif";?>" alt="" /> <?php  echo _NEW_SEARCH; ?></a>
+	</div>
+	<br/>
+	<br/>
+	<br/>
 	<div class="block">
-		<br>
+		<br/>
 		<h2><?php  echo _INFOS_FOLDERS;?></h2>
-		<form name="frmsearch2" method="get" action="<?php  echo $_SESSION['config']['businessappurl'];?>index.php" id="frmsearch2" class="forms2">
-			<input type="hidden" name="page" value="search_adv_folder_result" />
-			<input type="hidden" name="module" value="folder" />
-			<input type="hidden" name="foldertype_id" id="foldertype_id" value="1" />
-			<table width="90%" border="0">
-				<tr>
-					<td width="25%" align="right"><label for="folder_id"><?php  echo _FOLDERID;?> :</label></td>
-					<td width="24%">
-						<input type="text" name="folder_id" id="folder_id" value="<?php  echo $_SESSION['folder_search']['folder_id'] ;?>" />
-						<div id="foldersListById" class="autocomplete"></div>
-						<script type="text/javascript">
-							initList('folder_id', 'foldersListById', '<?php  echo $_SESSION['urltomodules'];?>folder/folders_list_by_id.php', 'folder', '3');
-						</script>
-					</td>
-					<td width="2%">&nbsp;</td>
-					<td width="25%" align="right"><label for="folder_name"><?php  echo _FOLDERNAME;?> :</label></td>
-					<td width="24%">
-						<input type="text" name="folder_name" id="folder_name" value="<?php  echo $_SESSION['folder_search']['folder_name'] ;?>" />
-						<div id="foldersListByName" class="autocomplete"></div>
-						<script type="text/javascript">
-							initList('folder_name', 'foldersListByName', '<?php  echo $_SESSION['urltomodules'];?>folder/folders_list_by_name.php', 'folder', '3');
-						</script>
-					</td>
-					<?php
-					$_SESSION['folder_search']['foldertype_id'] = 1;
-					?>
-				</tr>
-				<tr>
-					<td width="25%" align="right"><label for="start_archive_date"><?php  echo _FOLDERDATE_START;?> :<label></td>
-					<td width="24%">
-						<input name="start_archive_date" type="text" id="start_archive_date" value="<?php  echo $_SESSION['folder_search']['start_archive_date'] ;?>" onclick='showCalender(this)'/>
-					</td>
-					<td width="2%">&nbsp;</td>
-					<td width="25%" align="right"><label for="end_archive_date"><?php  echo _FOLDERDATE_END;?>:<label></td>
-					<td width="24%">
-						<input name="end_archive_date" type="text" id="end_archive_date" value="<?php  echo $_SESSION['folder_search']['end_archive_date'] ;?>" onclick='showCalender(this)'/>
-					</td>
-				</tr>
-			</table>
-			<br/>
-			<p class="buttons">
-				<input class="button" name="imageField" type="submit" value="<?php  echo _SEARCH; ?>" onclick="javascript:return(verif_search(this.form));"  />
-			</p>
-		</form>
+		<input type="hidden" name="page" value="search_adv_folder_result" />
+		<input type="hidden" name="module" value="folder" />
+		<table width="90%" border="0">
+			<tr>
+				<td width="25%" align="right"><label for="foldertype_id"><?php  echo _FOLDERTYPE;?> :</label></td>
+				<td width="24%">
+					<select name="foldertype_id" id="foldertype_id" onchange="get_folder_index('<?php echo $_SESSION['urltomodules'];?>folder/get_folder_search_index.php', this.options[this.options.selectedIndex].value, 'opt_indexes')">
+						<option value=""><?php echo _CHOOSE_FOLDERTYPE;?></option>
+						<?php for($i=0; $i<count($foldertypes);$i++)
+						{
+							?><option value="<?php echo $foldertypes[$i]['id'];?>"><?php echo $foldertypes[$i]['label'];?></option><?php
+						}?>
+					</select>
+				</td>
+				<td width="2%">&nbsp;</td>
+				<td width="25%" align="right"><label for="folder_id"><?php  echo _FOLDERID;?> :</label></td>
+				<td width="24%">
+					<input type="text" name="folder_id" id="folder_id" value="<?php  echo $_SESSION['folder_search']['folder_id'] ;?>" />
+					<div id="foldersListById" class="autocomplete"></div>
+					<script type="text/javascript">
+						initList('folder_id', 'foldersListById', '<?php  echo $_SESSION['urltomodules'];?>folder/folders_list_by_id.php', 'Input', '2');
+					</script>
+				</td>
+			</tr>
+			<tr>
+				<td width="25%" align="right"><label for="creation_date_start"><?php echo _CREATION_DATE.' '._START;?> :<label></td>
+				<td width="24%">
+					<input name="creation_date_start" type="text" id="creation_date_start" value="<?php  echo $_SESSION['folder_search']['creation_date_start'] ;?>" onclick='showCalender(this)'/>
+				</td>
+				<td width="2%">&nbsp;</td>
+				<td width="25%" align="right"><label for="creation_date_end"><?php  echo _CREATION_DATE.' '._END;?>:<label></td>
+				<td width="24%">
+					<input name="creation_date_end" type="text" id="creation_date_end" value="<?php  echo $_SESSION['folder_search']['creation_date_end'] ;?>" onclick='showCalender(this)'/>
+				</td>
+			</tr>
+		</table>
+		<div id="opt_indexes"></div>
+		<br/>
+		<p class="buttons">
+			<input class="button" name="imageField" type="submit" value="<?php  echo _SEARCH; ?>" onclick="javascript:return(verif_search(this.form));"  />
+		</p>
+
 	</div>
 	<div class="block_end"></div>
-	<!--</div>
-</div>-->
+</div>
+</form>

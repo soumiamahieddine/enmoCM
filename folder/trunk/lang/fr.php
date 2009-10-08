@@ -164,4 +164,6 @@ define('_TITLE_STATS_CHOICE_ACTION','par type d&rsquo;action');
 define('_ACTION_TYPE', 'Type d&rsquo;action');
 
 define('_NO_STRUCTURE_ATTACHED2', 'Ce type de dossier n&rsquo;est attach&eacute; &agrave; aucune chemise');
+
+define('_FOLDER_ADDED', 'Nouveau dossier cr&eacute;&eacute;');
 ?>

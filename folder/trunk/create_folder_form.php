@@ -37,25 +37,6 @@ $page_label = _CREATE_FOLDER;
 $page_id = "fold_create_folder_form";
 $core_tools->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
-/*
-$_SESSION['res_folder'] = "";
-$_SESSION['search_res_folder'] = "";
-
-if(isset($_REQUEST['submit2']))
-{
-	if(isset($_REQUEST['matricule'])and !empty($_REQUEST['matricule']))
-	{
-		 $_SESSION['res_folder'] = "matricule";
-		  $_SESSION['search_res_folder'] =$_REQUEST['matricule'];
-	}
-	elseif( isset($_REQUEST['nom']) and !empty($_REQUEST['nom']))
-	{
-		 $_SESSION['res_folder'] = "nom";
-		  $_SESSION['search_res_folder'] = $_REQUEST['nom'];
-	}
-}
-*/
-
 $core_tools->load_html();
 
 $db = new dbquery();
@@ -74,27 +55,33 @@ while($res = $db->fetch_object())
 	<form name="create_folder" id="create_folder" action="<?php echo $_SESSION['urltomodules'];?>folder/manage_create_folder.php" method="post" class="forms">
 		<p>
 			<label for="foldertype"><?php echo _FOLDERTYPE;?> :</label>
-			<select name="foldertype" id="foldertype" onchange="get_folder_index('<?php echo $_SESSION['urltomodules'];?>folder/create_folder_get_folder_index.php', this.options[this.options.selectedIndex].value);">
+			<select name="foldertype" id="foldertype" onchange="get_folder_index('<?php echo $_SESSION['urltomodules'];?>folder/create_folder_get_folder_index.php', this.options[this.options.selectedIndex].value, 'folder_indexes');">
 				<option value=""><?php  echo _CHOOSE_FOLDERTYPE;?></option>
 				<?php  for($i=0; $i< count($foldertypes);$i++)
 				{
-				?><option value="<?php  echo $foldertypes[$i]['id'];?>" <?php  if($_SESSION['foldertype'] == $foldertypes[$i]['id']){ echo 'selected="selected"'; }?>><?php  echo $foldertypes[$i]['label'];?></option>
+				?><option value="<?php  echo $foldertypes[$i]['id'];?>" <?php  if($_SESSION['m_admin']['folder']['foldertype_id'] == $foldertypes[$i]['id']){ echo 'selected="selected"'; }?>><?php  echo $foldertypes[$i]['label'];?></option>
 				<?php
 				}?>
 			</select> <span class="red_asterisk">*</span>
 		</p>
 		<p>
 			<label for="folder_id"><?php echo _ID;?></label>
-			<input name="folder_id" id="folder_id" value="" /> <span class="red_asterisk">*</span>
-		</p>
-		<p>
-			<label for="desc"><?php echo _DESC;?></label>
-			<textarea name="desc" id="desc"></textarea>
+			<input name="folder_id" id="folder_id" value="<?php echo $_SESSION['m_admin']['folder']['folder_id'];?>" /> <span class="red_asterisk">*</span>
 		</p>
 		<div id="folder_indexes"></div>
 		<p class="buttons">
 			<input type="submit" name="validate" id="validate" value="<?php echo _VALIDATE;?>" class="button"/>
-			<input type="button" name="cancel" id="cancel" value="<?php echo _CANCEL;?>" class="button" onclick="" />
+			<input type="button" name="cancel" id="cancel" value="<?php echo _CANCEL;?>" class="button" onclick="window.top.location='<?php echo $_SESSION['config']['businessappurl'];?>index.php';" />
 		</p>
 	</form>
+	<?php if(isset($_SESSION['m_admin']['folder']['foldertype_id']) && !empty($_SESSION['m_admin']['folder']['foldertype_id']))
+	{?>
+	<script>
+	var ft_list = $('foldertype');
+	if(ft_list)
+	{
+		get_folder_index('<?php echo $_SESSION['urltomodules'];?>folder/create_folder_get_folder_index.php', ft_list.options[ft_list.options.selectedIndex].value, 'folder_indexes');
+	}
+	</script>
+	<?php } ?>
 </div>

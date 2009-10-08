@@ -595,17 +595,9 @@ class foldertype extends dbquery
 	*/
 	public function check_indexes($foldertype_id, $values)
 	{
-		$indexes = $this->get_indexes($foldertype_id);
-		$mandatory_indexes = $this->get_mandatory_indexes($foldertype_id);
-
-		// Checks the manadatory indexes
-		for($i=0; $i<count($mandatory_indexes);$i++)
+		if(empty($foldertype_id))
 		{
-			if( empty($values[$mandatory_indexes[$i]]) && ($values[$mandatory_indexes[$i]] == 0 && $indexes[$mandatory_indexes[$i]]['type'] <> 'float' && $indexes[$mandatory_indexes[$i]]['type'] <> 'integer'))  // Pb 0
-			{
-				$_SESSION['error'] = $indexes[$mandatory_indexes[$i]]['label']._IS_EMPTY;
-				return false;
-			}
+			return false;
 		}
 
 		// Checks type indexes
@@ -651,6 +643,19 @@ class foldertype extends dbquery
 				}
 			}
 		}
+
+		// Checks the manadatory indexes
+		$indexes = $this->get_indexes($foldertype_id);
+		$mandatory_indexes = $this->get_mandatory_indexes($foldertype_id);
+
+		for($i=0; $i<count($mandatory_indexes);$i++)
+		{
+			if( empty($values[$mandatory_indexes[$i]]))  // Pb 0
+			{
+				$_SESSION['error'] .= $values[$mandatory_indexes[$i]].' '.$indexes[$mandatory_indexes[$i]]['label'].' '._IS_EMPTY;
+				return false;
+			}
+		}
 		return true;
 	}
 
@@ -663,7 +668,7 @@ class foldertype extends dbquery
 	*/
 	public function get_sql_update($foldertype_id, $values)
 	{
-		$indexes = $this->get_indexes($type_id, $coll_id);
+		$indexes = $this->get_indexes($foldertype_id, $coll_id);
 
 		$req = '';
 		foreach(array_keys($values)as $key)
@@ -741,36 +746,30 @@ class foldertype extends dbquery
 		$this->query($query);
 	}
 
-/*
+
 	public function search_checks($indexes, $field_name, $val )
 	{
 		$where_request = '';
-		$json_txt = '';
 		$date_pattern = "/^[0-3][0-9]-[0-1][0-9]-[1-2][0-9][0-9][0-9]$/";
 		for($j=0; $j<count($indexes);$j++)
 		{
 			$column = $indexes[$j]['column'] ;
-			if(preg_match('/^doc_/', $field_name))
-			{
-				$column = 'doc_'.$column;
-			}
-			if($indexes[$j]['column'] == $field_name || 'doc_'.$indexes[$j]['column'] == $field_name) // type == 'string'
+			if($indexes[$j]['column'] == $field_name) // type == 'string'
 			{
 				if(!empty($val))
 				{
-					$json_txt .= " '".$field_name."' : ['".addslashes(trim($val))."'],";
 					if($_SESSION['config']['databasetype'] == "POSTGRESQL")
 					{
-						$where_request .= " ".$column." ilike '%".$this->protect_string_db($val)."%' and ";
+						$where_request .= " ".$_SESSION['tablename']['fold_folders'].".".$column." ilike '%".$this->protect_string_db($val)."%' and ";
 					}
 					else
 					{
-						$where_request .= " ".$column." like '%".$this->protect_string_db($val)."%' and ";
+						$where_request .= " ".$_SESSION['tablename']['fold_folders'].".".$column." like '%".$this->protect_string_db($val)."%' and ";
 					}
 				}
 				break;
 			}
-			else if(($indexes[$j]['column'].'_from' == $field_name || $indexes[$j]['column'].'_to' == $field_name || 'doc_'.$indexes[$j]['column'].'_from' == $field_name ||  'doc_'.$indexes[$j]['column'].'_to' == $field_name) && !empty($val))
+			else if($indexes[$j]['column'].'_from' == $field_name || $indexes[$j]['column'].'_to' == $field_name)
 			{ // type == 'date'
 				if( preg_match($date_pattern,$val)==false )
 				{
@@ -778,12 +777,11 @@ class foldertype extends dbquery
 				}
 				else
 				{
-					$where_request .= " (".$column." >= '".$this->format_date_db($val)."') and ";
-					$json_txt .= " '".$field_name."' : ['".trim($val)."'],";
+					$where_request .= " (".$_SESSION['tablename']['fold_folders'].".".$column." >= '".$this->format_date_db($val)."') and ";
 				}
 				break;
 			}
-			else if($indexes[$j]['column'].'min' == $field_name || $indexes[$j]['column'].'max' == $field_name || 'doc_'.$indexes[$j]['column'].'min' == $field_name || 'doc_'.$indexes[$j]['column'].'max' == $field_name)
+			else if($indexes[$j]['column'].'min' == $field_name || $indexes[$j]['column'].'max' == $field_name )
 			{
 				if($indexes[$j]['type'] == 'integer' || $indexes[$j]['type'] == 'float')
 				{
@@ -797,14 +795,13 @@ class foldertype extends dbquery
 					}
 					if(empty($_SESSION['error']))
 					{
-						$where_request .= " (".$column." >= ".$val_check.") and ";
-						$json_txt .= " '".$field_name."' : ['".$val_check."'],";
+						$where_request .= " (".$_SESSION['tablename']['fold_folders'].".".$column." >= ".$val_check.") and ";
 					}
 				}
 				break;
 			}
 		}
-		return array('json_txt' => $json_txt, 'where' => $where_request);
+		return  $where_request;
 	}
-*/
+
 }

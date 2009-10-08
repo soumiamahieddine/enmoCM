@@ -469,9 +469,6 @@ class folder extends request
 	*/
 	public function create_folder()
 	{
-		require_once($_SESSION['pathtocoreclass']."class_request.php");
-		echo $_SESSION['pathtocoreclass']."class_request.php";
-		$req = new request();
 		$this->checks_folder_data();
 		if(!empty($_SESSION['error']))
 		{
@@ -493,8 +490,8 @@ class folder extends request
 
 
 				$this->connect();
-				$this->query("INSERT INTO ".$_SESSION['tablename']['fold_folders']." (folder_id, foldertype_id, description, creation_date, typist) VALUES ('".$this->show_string($_SESSION['m_admin']['folder']['folder_id'])."', ".$_SESSION['m_admin']['folder']['foldertype_id'].", '".$this->show_string($_SESSION['m_admin']['folder']['desc'])."', ".$req->current_datetime().", '".$_SESSION['user']['UserId']."');");
-				$this->query('select folders_system_id from '.$_SESSION['tablename']['fold_folders']." where folderid = '".$this->show_string($_SESSION['m_admin']['folder']['folder_id'])."';");
+				$this->query("INSERT INTO ".$_SESSION['tablename']['fold_folders']." (folder_id, foldertype_id, description, creation_date, typist) VALUES ('".$this->show_string($_SESSION['m_admin']['folder']['folder_id'])."', ".$_SESSION['m_admin']['folder']['foldertype_id'].", '".$this->show_string($_SESSION['m_admin']['folder']['desc'])."', ".$this->current_datetime().", '".$_SESSION['user']['UserId']."');");
+				$this->query('select folders_system_id from '.$_SESSION['tablename']['fold_folders']." where folder_id = '".$this->show_string($_SESSION['m_admin']['folder']['folder_id'])."';");
 				$res = $this->fetch_object();
 				$id = $res->folders_system_id;
 
@@ -504,6 +501,7 @@ class folder extends request
 				$query = $foldertype->get_sql_update($_SESSION['m_admin']['folder']['foldertype_id'], $_SESSION['m_admin']['folder']['indexes']);
 				if(!empty($query))
 				{
+					$query = preg_replace('/^,/', '', $query);
 					$query = "update ".$_SESSION['tablename']['fold_folders']." set ".$query." where folders_system_id = ".$id;
 					$this->query($query);
 				}
@@ -516,7 +514,7 @@ class folder extends request
 
 				$_SESSION['error'] = _FOLDER_ADDED;
 				unset($_SESSION['m_admin']);
-				header("location: ".$_SESSION['config']['businessappurl']."index.php");
+				header("location: ".$_SESSION['config']['businessappurl']."index.php?page=show_folder&module=folder&id=".$id);
 				exit();
 			}
 
@@ -531,12 +529,6 @@ class folder extends request
 		require_once($_SESSION['pathtomodules'].'folder'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR."class_admin_foldertypes.php");
 		$foldertype = new foldertype();
 
-		$_SESSION['m_admin']['folder']['desc'] = '';
-		if(isset($_REQUEST['desc']) && !empty($_REQUEST['desc']))
-		{
-			$_SESSION['m_admin']['folder']['desc'] = $this->wash($_REQUEST['desc'], "no", _THE_DESC);
-		}
-
 		if(isset($_REQUEST['folder_id']) && !empty($_REQUEST['folder_id']))
 		{
 			$_SESSION['m_admin']['folder']['folder_id'] = $this->wash($_REQUEST['folder_id'], "no", _FOLDER_ID);
@@ -549,21 +541,25 @@ class folder extends request
 
 		if(isset($_REQUEST['foldertype']) && !empty($_REQUEST['foldertype']))
 		{
-			$_SESSION['m_admin']['folder']['foldertype'] = $this->wash($_REQUEST['foldertype'], "no", _FOLDERTYPE);
+			$_SESSION['m_admin']['folder']['foldertype_id'] = $this->wash($_REQUEST['foldertype'], "no", _FOLDERTYPE);
+			$indexes = $foldertype->get_indexes($_SESSION['m_admin']['folder']['foldertype_id']);
 
-			$_SESSION['m_admin']['folder']['indexes'] = array();
+			$values = array();
 			foreach( array_keys($indexes) as $key)
 			{
 				if(isset($_REQUEST[$key]))
 				{
-					$_SESSION['m_admin']['folder']['indexes'][$key] = $_REQUEST[$key];
+					$values [$key] = $_REQUEST[$key];
 				}
 				else
 				{
-					$_SESSION['m_admin']['folder']['indexes'][$key] = '';
+					$values [$key] = '';
 				}
 			}
-			$foldertype->check_indexes($_SESSION['m_admin']['folder']['foldertype'], $_SESSION['m_admin']['folder']['indexes']);
+
+			$_SESSION['m_admin']['folder']['indexes'] = $values ;
+			$foldertype->check_indexes($_SESSION['m_admin']['folder']['foldertype_id'], $values );
+
 		}
 		else
 		{
