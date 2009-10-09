@@ -1,4 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+ You can use all fields in the folder table excepts these :
+  * folders_system_id
+  * folder_id
+  * foldertype_id
+  * parent_id
+  * typist
+  * status
+  * folder_level
+  * creation_date
+  * folder_out_id
+  * is_complete
+  * is_folder_out
+  * last_modified_date
+-->
 <ROOT>
 	<INDEX>
 		<column>custom_t1</column><!-- Do Not modify this index, you can move it but not delete it otherwise the application will not work properly (Integration) !-->

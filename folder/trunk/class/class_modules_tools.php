@@ -48,12 +48,6 @@ class folder extends request
     */
 	private $parent_id;
 
-	/**
-	* Folder name
-    * @access private
-    * @var string
-    */
-	private $folder_name;
 
 	/**
 	* Identifier of the folder creator
@@ -77,26 +71,6 @@ class folder extends request
 	private $level;
 
 
-	/**
-	* subject
-    * @access private
-    * @var integer
-    */
-	private $subject;
-
-	/**
-	* description
-    * @access private
-    * @var integer
-    */
-	private $description;
-
-	/**
-	* author
-    * @access private
-    * @var integer
-    */
-	private $author;
 	/**
 	* Time of the folder retention
     * @access private
@@ -181,6 +155,7 @@ class folder extends request
 
 	public function load_module_var_session()
 	{
+/*
 		$func = new functions();
 		$_SESSION['folder_index'] = array();
 		$xmlfile = simplexml_load_file($_SESSION['pathtomodules']."folder".DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."folder_index.xml");
@@ -233,8 +208,8 @@ class folder extends request
 				}
 			$i++;
 		}
+*/
 	}
-
 
 
 	/**
@@ -245,27 +220,26 @@ class folder extends request
 	*/
 	function load_folder1($id, $table)
 	{
+		require_once($_SESSION['urltomodules'].'folder'.DIRECTORY_SEPARATOR.'class_admin_foldertypes.php');
+		$ft = new foldertype();
 		$this->connect();
 		$this->query("select foldertype_id from ".$table." where folders_system_id = ".$id."");
 		$res = $this->fetch_object();
 		$this->foldertype_id = $res->foldertype_id;
 		$this->system_id = $id;
-		$tab_index = $this->get_folder_index($this->foldertype_id);
+		$tab_index = $ft->get_indexes($this->foldertype_id);
+		//$tab_index = $this->get_folder_index($this->foldertype_id);
 
 		$fields = " folder_id, parent_id, folder_name, subject, description, author, typist, status, folder_level, creation_date,folder_out_id, is_complete, is_folder_out";
-		for($i=0; $i<count($tab_index);$i++)
+		foreach(array_keys($tab_index) as $key)
 		{
-			$fields .= ", ".$tab_index[$i]['column'];
+			$fields .= ", ".$key;
 		}
 		$this->query("select ".$fields." from ".$_SESSION['tablename']['fold_folders']." where folders_system_id = ".$id."");
 		$res = $this->fetch_object();
 
 		$this->folder_id = $this->show_string($res->folder_id);
 		$this->parent_id = $res->parent_id;
-		$this->folder_name = $this->show_string($res->folder_name);
-		$this->subject = $this->show_string($res->subject);
-		$this->description = $this->show_string($res->description);
-		$this->author = $this->show_string($res->author);
 		$this->typist = $this->show_string($res->typist);
 		$this->status = $res->status;
 		$this->level = $res->folder_level;
@@ -274,9 +248,9 @@ class folder extends request
 		$this->complete = $res->is_complete;
 		$this->desarchive = $res->is_folder_out;
 
-		for($i=0; $i<count($tab_index);$i++)
+		foreach(array_keys($tab_index) as $key)
 		{
-			$tab_index[$i]['value'] = $res->$tab_index[$i]['column'];
+			$tab_index[$key]['value'] = $res->$key;
 		}
 		$this->index = array();
 		$this->index = $tab_index;
@@ -296,6 +270,8 @@ class folder extends request
 	*/
 	function load_folder2($id, $table)
 	{
+		require_once($_SESSION['urltomodules'].'folder'.DIRECTORY_SEPARATOR.'class_admin_foldertypes.php');
+		$ft = new foldertype();
 		$this->connect();
 		$this->query("select foldertype_id from ".$table." where folder_id = '".$id."'");
 		 //$this->show();
@@ -303,22 +279,19 @@ class folder extends request
 		$this->foldertype_id = $res->foldertype_id;
 		$this->folder_id = $id;
 
-		$tab_index = $this->get_folder_index($this->foldertype_id);
+		$tab_index = $ft->get_indexes($this->foldertype_id);
+		//$tab_index = $this->get_folder_index($this->foldertype_id);
 
 		$fields = " folders_system_id, parent_id, folder_name, subject, description, author, typist, status, folder_level, creation_date,folder_out_id, is_complete, is_folder_out";
-		for($i=0; $i<count($tab_index);$i++)
+		foreach(array_keys($tab_index) as $key)
 		{
-			$fields .= ", ".$tab_index[$i]['column'];
+			$fields .= ", ".$key;
 		}
 		$this->query("select ".$fields." from ".$_SESSION['tablename']['fold_folders']." where folder_id = '".$id."'");
 		$res = $this->fetch_object();
 
 		$this->system_id = $res->folders_system_id;
 		$this->parent_id = $res->parent_id;
-		$this->folder_name = $this->show_string($res->folder_name);
-		$this->subject = $this->show_string($res->subject);
-		$this->description = $this->show_string($res->description);
-		$this->author = $this->show_string($res->author);
 		$this->typist = $this->show_string($res->typist);
 		$this->status = $res->status;
 		$this->level = $res->folder_level;
@@ -327,9 +300,9 @@ class folder extends request
 		$this->complete = $res->is_complete;
 		$this->desarchive = $res->is_folder_out;
 
-		for($i=0; $i<count($tab_index);$i++)
+		foreach(array_keys($tab_index) as $key)
 		{
-			$tab_index[$i]['value'] = $res->$tab_index[$i]['column'];
+			$tab_index[$key]['value'] = $res->$key;
 		}
 		$this->index = array();
 		$this->index = $tab_index;
@@ -341,6 +314,7 @@ class folder extends request
 
 	}
 
+/*
 	private function get_folder_index( $foldertype_id)
 	{
 		$folder_index = array();
@@ -402,68 +376,9 @@ class folder extends request
 		}
 		return $folder_index;
 	}
-
-	/**
-	* create and insert a new folder into table_folder (create a temporary folder id using table_param)
-	*
-	* @param string $table_param parameters table
-	* @param string $table_folder folder table
-	* @param array $data array which contains the data necessary to create a new folder
-	*/
-/*
-	public function create_folder($table_param, $table_folder, $data, $databasetype)
-	{
-		$today = date("Y/m/d");
-		$this->connect();
-
-		// temporary folder_id
-		$this->query("select param_value_int from ".$table_param." where id = 'folder_id_increment'");
-
-		$res = $this->fetch_object();
-		$num = (string)$res->param_value_int;
-
-		$len = strlen($num);
-		if($len < 6)
-		{
-			while(strlen($num) < 6)
-			{
-				$num = '0'.$num;
-			}
-		}
-
-		// after 9999 we restart at 1
-		if($num == "9999" )
-		{
-			$num = "1";
-			$folder_id = "T_000001";
-
-			$this->query("update ".$table_param." set param_value_int = 2 where id = 'folder_id_increment'");
-		}
-		else
-		{
-			$folder_id = 'T_'.$num;
-			$this->query("update ".$table_param." set param_value_int = (param_value_int + 1) where id = 'folder_id_increment'");
-		}
-
-		array_push($data, array('column' => "folder_id", 'value' => $folder_id, 'type' => "string"));
-		array_push($data, array('column' => "status", 'value' => 'NEW', 'type' => "string"));
-
-		if($databasetype == "SQLSERVER")
-		{
-			$func_date = 'getdate()';
-		}
-		else // MYSQL & POSTGRESQL
-		{
-			$func_date = 'now()';
-		}
-		array_push($data, array('column' => 'creation_date', 'value' => $func_date, 'type' => "function"));
-
-		$this->insert($table_folder, $data, $_SESSION['config']['databasetype']);
-		//echo "ici";
-		//exit;
-		return $folder_id;
-	}
 */
+
+
 	/**
 	* Creates a folder
 	*/
@@ -822,27 +737,6 @@ class folder extends request
 		return $history;
 	}
 
-	/**
-	* get the history data about contracts of the current folder
-	*
-	* @param string $table_history history table
-	* @param string $table_folder folders table
-	*/
-	public function get_contract_history($table_history, $table_folder)
-	{
-		$this->connect();
-
-		$history = array();
-
-		$this->query("select event_date, info from ".$table_history." where table_name = '".$table_folder."' and record_id = '".$this->system_id."' and event_type = 'UP_CONTRACT' order by event_date desc ");
-
-		while($res = $this->fetch_object())
-		{
-			array_push($history, array( 'DATE' => $res->event_date, 'EVENT' => $this->show_string($res->info)));
-		}
-
-		return $history;
-	}
 
 	/**
 	* modify the folder in the users table
@@ -857,6 +751,7 @@ class folder extends request
 		$this->query('update '.$table." set custom_t1 = '".$id."' where user_id = '".$user_id."'");
 	}
 
+/*
 	public function retrieve_index($array)
 	{
 		$z = 0;
@@ -910,6 +805,7 @@ class folder extends request
 		}
 
 	}
+*/
 
 	public function retrieve_index_label($column)
 	{
@@ -922,6 +818,7 @@ class folder extends request
 		}
 	}
 
+/*
 	public function user_exit($value, $data, $data_is_array = true)
 	{
 
@@ -1090,6 +987,7 @@ class folder extends request
 		return $find;
 	}
 
+*/
 	public function is_folder_exists($folder_system_id)
 	{
 		if($folder_system_id <> "")
