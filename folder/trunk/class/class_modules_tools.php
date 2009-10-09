@@ -262,57 +262,6 @@ class folder extends request
 
 	}
 
-	/**
-	* load folder object from the folder id
-	*
-	* @param int $id folder id
-	* @param string $table folder table
-	*/
-	function load_folder2($id, $table)
-	{
-		require_once($_SESSION['urltomodules'].'folder'.DIRECTORY_SEPARATOR.'class_admin_foldertypes.php');
-		$ft = new foldertype();
-		$this->connect();
-		$this->query("select foldertype_id from ".$table." where folder_id = '".$id."'");
-		 //$this->show();
-		$res = $this->fetch_object();
-		$this->foldertype_id = $res->foldertype_id;
-		$this->folder_id = $id;
-
-		$tab_index = $ft->get_indexes($this->foldertype_id);
-		//$tab_index = $this->get_folder_index($this->foldertype_id);
-
-		$fields = " folders_system_id, parent_id, folder_name, subject, description, author, typist, status, folder_level, creation_date,folder_out_id, is_complete, is_folder_out";
-		foreach(array_keys($tab_index) as $key)
-		{
-			$fields .= ", ".$key;
-		}
-		$this->query("select ".$fields." from ".$_SESSION['tablename']['fold_folders']." where folder_id = '".$id."'");
-		$res = $this->fetch_object();
-
-		$this->system_id = $res->folders_system_id;
-		$this->parent_id = $res->parent_id;
-		$this->typist = $this->show_string($res->typist);
-		$this->status = $res->status;
-		$this->level = $res->folder_level;
-		$this->creation_date = $res->creation_date;
-		$this->folder_out_id = $res->folder_out_id;
-		$this->complete = $res->is_complete;
-		$this->desarchive = $res->is_folder_out;
-
-		foreach(array_keys($tab_index) as $key)
-		{
-			$tab_index[$key]['value'] = $res->$key;
-		}
-		$this->index = array();
-		$this->index = $tab_index;
-
-		$this->query("select foldertype_label, coll_id from ".$_SESSION['tablename']['fold_foldertypes']." where foldertype_id = ".$this->foldertype_id);
-		$res = $this->fetch_object();
-		$this->foldertype_label = $this->show_string($res->foldertype_label);
-		$this->coll_id = $this->show_string($res->coll_id);
-
-	}
 
 /*
 	private function get_folder_index( $foldertype_id)

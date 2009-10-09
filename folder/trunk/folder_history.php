@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
 * File : folder_history.php
 *
@@ -9,14 +9,14 @@
 * @since 06/2006
 * @license GPL
 * @author  Claire Figueras  <dev@maarch.org>
-*/ 
-session_name('PeopleBox'); 
+*/
+session_name('PeopleBox');
 session_start();
 require_once($_SESSION['pathtocoreclass']."class_functions.php");
 require_once($_SESSION['pathtocoreclass']."class_db.php");
 require_once($_SESSION['pathtocoreclass']."class_request.php");
 $func = new functions;
-require_once($_SESSION['pathtocoreclass']."class_core_tools.php"); 
+require_once($_SESSION['pathtocoreclass']."class_core_tools.php");
 $core_tools = new core_tools();
 $core_tools->load_lang();
 $hist = array();
@@ -33,7 +33,7 @@ $core_tools->load_html();
 $core_tools->load_header();
 ?>
 <body id="hist_iframe">
-<?php  
+<?php
 if(count($hist) < 1)
 {
 	echo _PLEASE_SELECT_FOLDER.".";
@@ -50,7 +50,7 @@ else
             </tr>
         </thead>
         <tbody>
-	<?php 
+	<?php
 		$color = "";
 		for($cpt_folder_hist=0;$cpt_folder_hist<count($hist);$cpt_folder_hist++)
 		{
@@ -63,16 +63,16 @@ else
 				$color = ' class="col"';
 			}
 			?>
-			<tr<?php  echo $color; ?>>
+			<tr <?php  echo $color; ?> >
 				<td><?php  echo $func->dateformat($hist[$cpt_folder_hist]['DATE']); ?></td>
                 <td><?php  echo $func->show_string($hist[$cpt_folder_hist]['USER']); ?></td>
 				<td><?php  echo $func->show_string($hist[$cpt_folder_hist]['EVENT']); ?></td>
 			</tr>
-			<?php 
+			<?php
 		}
 	?></tbody>
 	</table>
-	<?php 
+	<?php
 }
 ?>
 </body>
