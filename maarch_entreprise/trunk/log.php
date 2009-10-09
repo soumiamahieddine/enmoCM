@@ -77,7 +77,7 @@ if(!empty($_SESSION['error']))
 }
 else
 {
-	if ($_SESSION['config']['ldap'] == "true")
+	if ($_SESSION['config']['ldap'] == "true" && $s_login <> "superadmin")
 	{
 		//Extraction de /root/config dans le fichier de conf
 		$ldap_conf = new DomDocument();

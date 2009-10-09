@@ -189,7 +189,7 @@ if($core->is_module_loaded('folder'))
 * @param $mode string  'full' : fills the array with maximum data (id, value, show_value,etc...), 'minimal' the array contains only the value or 'form" the array contains the data to be displayed in a form
 * @param $params array optional parameters
 * 			$params['img_'.field_id] = true (gets the img url in the 'full' mode array for the field_id), false (no img for the field_id )
-* @return Array Structure different in 'full' mode or in 'minimal' mode
+* @return Array Structure different in 'full' mode, 'form' and 'minimal' mode
 * 			mode 'full' : $data[field_id] field_id exemple: 'priority'
 * 										['value'] : value of the field in the database
 * 										['show_value'] : value to display

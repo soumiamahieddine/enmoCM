@@ -61,21 +61,15 @@ if($_REQUEST['name_folder'] <> "")
 	<div class="block">
 		<table width="100%" border="0">
 			<tr>
-				<td align="right"><label><?php  echo _FOLDER_NUM;?> :</td>
-				<td>
-					<input name="num_folder" type="text" id="num_folder" onchange="javascript:submitForm();" onKeyPress="if(event.keyCode == 13)submitForm();" value="<?php echo $_SESSION['search']['chosen_num_folder'];?>" size="40" />
-					<div id="foldersListById" class="autocomplete"></div>
-					<script type="text/javascript">
-						initList('num_folder', 'foldersListById', '<?php  echo $_SESSION['urltomodules'];?>folder/folders_list_by_id.php', 'folder', '2');
-					</script>
+				<td align="right"><label><?php  echo _PROJECT;?> :</td>
+				<td class="indexing_field">
+					<input type="text" name="project" id="project" size="60" />
+					<div id="show_project" class="autocomplete"></div>
 				</td>
-				<td align="right"><?php  echo _FOLDERNAME;?> :</td>
+				<td align="right"><?php  echo _MARKET;?> :</td>
 				<td>
-					<input type="text" name="name_folder" id="name_folder" onsubmit="javascript:submitForm();" onKeyPress="if(event.keyCode == 13)submitForm();" value="<?php echo $_SESSION['search']['chosen_name_folder'];?>" size="40" />
-					<div id="foldersListByName" class="autocomplete"></div>
-					<script type="text/javascript">
-						initList('name_folder', 'foldersListByName', '<?php  echo $_SESSION['urltomodules'];?>folder/folders_list_by_name.php', 'folder', '2');
-					</script>
+					<input type="text" name="market" id="market" size="60" />
+					<div id="show_market" class="autocomplete"></div>
 				</td>
 				<td>
 					<input type="button" value="<?php echo _SEARCH;?>" onclick="javascript:submitForm();" class="button">
@@ -84,9 +78,11 @@ if($_REQUEST['name_folder'] <> "")
 		</table>
 	</div>
 	<script language="javascript">
+		launch_autocompleter_folders('<?php echo $_SESSION['urltomodules']?>folder/autocomplete_folders.php?mode=project', 'project');
+		launch_autocompleter_folders('<?php echo $_SESSION['urltomodules']?>folder/autocomplete_folders.php?mode=market', 'market');
 		function submitForm()
 		{
-			window.frames['show_trees'].location.href='<?php echo $_SESSION['config']['businessappurl'];?>indexing_searching/show_trees.php?num_folder='+window.document.getElementById("num_folder").value+'&name_folder='+window.document.getElementById("name_folder").value;
+			window.frames['show_trees'].location.href='<?php echo $_SESSION['config']['businessappurl'];?>indexing_searching/show_trees.php?project='+window.document.getElementById("project").value+'&market='+window.document.getElementById("market").value;
 		}
 	</script>
 	<div class="clearsearch">

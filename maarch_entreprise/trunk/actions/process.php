@@ -130,16 +130,19 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 	require_once($_SESSION['pathtocoreclass']."class_request.php");
 	require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_types.php");
 	require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_indexing_searching_app.php");
+	require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_chrono.php");
 	$type = new types();
 	$sec =new security();
 	$core_tools =new core_tools();
 	$doctypes = $type->getArrayTypes($coll_id);
 	$b = new basket();
 	$is = new indexing_searching_app();
+	$cr = new chrono();
 	$data = array();
 	$params_data = array('show_market' => false, 'show_project' => false);
 	$data = get_general_data($coll_id, $res_id, 'full', $params_data);
 	$process_data = $is->get_process_data($coll_id, $res_id);
+	$chrono_number = $cr->get_chrono_number($res_id, $sec->retrieve_view_from_table($table));
 	$_SESSION['doc_id'] = $res_id;
 	//  to activate locking decomment these lines
 	/*if($b->reserve_doc( $_SESSION['user']['UserId'], $res_id, $coll_id) == false )
@@ -191,13 +194,30 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 					}
 					elseif($data[$key]['display'] == 'textarea')
 					{
-						$frm_str .= '<teaxtarea name="'.$key.'" id="'.$key.'"  readonly="readonly" class="readonly" style="border:none;display:block;width:204px;"  >'.$data[$key]['show_value'].'</teaxtarea>';
+						$frm_str .= '<input type="text" name="'.$key.'" id="'.$key.'" value="'.$data[$key]['show_value'].'" readonly="readonly" class="readonly" style="border:none;" alt="'.$data[$key]['show_value'].'" title="'.$data[$key]['show_value'].'" /> ';
+						if(isset($data[$key]['addon']))
+						{
+							$frm_str .= $data[$key]['addon'];
+						}
+						//$frm_str .= '<teaxtarea name="'.$key.'" id="'.$key.'"  readonly="readonly" class="readonly" style="border:none;display:block;width:204px;"  >'.$data[$key]['show_value'].'</teaxtarea>';
 					}
 					$frm_str .= '</td >';
 					$frm_str .= '</tr>';
 				}
-				$frm_str .= '</table>';
-				$frm_str .= '</div>';
+				if ($chrono_number <> '')
+				{
+					$frm_str .= '<tr>';
+					$frm_str .= '<td width="33%" align="left"><span class="form_title" >'._CHRONO_NUMBER.' :</span></td>';
+					$frm_str .= '<td >';
+					$frm_str .= '<input type="text" name="alt_identifier" id="alt_identifier" value="'.$chrono_number.'" readonly="readonly" class="readonly" style="border:none;" />';
+
+					$frm_str .= '</td >';
+					$frm_str .= '</tr>';
+					$frm_str .= '</table>';
+					$frm_str .= '</div>';
+				}
+
+
 		 $frm_str .= '</div><br/>';
 
 		if($core_tools->is_module_loaded('entities'))
@@ -563,19 +583,22 @@ function check_form($form_id,$values)
 			$_SESSION['error'] = _PROJECT.' '._IS_EMPTY;
 			return false;
 		}
-		if(!preg_match('/\([0-9]+\)$/', $project))
+*/
+		if(!empty($project))
 		{
-			$_SESSION['error'] = _PROJECT." "._WRONG_FORMAT."";
-			return false;
+			if(!preg_match('/\([0-9]+\)$/', $project))
+			{
+				$_SESSION['error'] = _PROJECT." "._WRONG_FORMAT."";
+				return false;
+			}
+			$project_id = str_replace(')', '', substr($project, strrpos($project,'(')+1));
+			$db->query("select folders_system_id from ".$_SESSION['tablename']['fold_folders']." where folders_system_id = ".$project_id);
+			if($db->nb_result() == 0)
+			{
+				$_SESSION['error'] = _PROJECT.' '.$project_id.' '._UNKNOWN;
+				return false;
+			}
 		}
-		$project_id = str_replace(')', '', substr($project, strrpos($project,'(')+1));
-		$db->query("select folders_system_id from ".$_SESSION['tablename']['fold_folders']." where folders_system_id = ".$project_id);
-		if($db->nb_result() == 0)
-		{
-			$_SESSION['error'] = _PROJECT.' '.$project_id.' '._UNKNOWN;
-			return false;
-		}
-
 		if(!empty($folder_id) && !empty($market_id))
 		{
 			$db->query("select folders_system_id from ".$_SESSION['tablename']['fold_folders']." where folders_system_id = ".$market_id." and parent_id = ".$folder_id);
@@ -698,13 +721,13 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
 		$bitmask = $other.$fax.$email.$contact.$AR_mail.$simple_mail;
 	}
 
-	if($core->is_module_loaded('folder'))
+	if($core->is_module_loaded('folder') && !empty($market) && !empty($project))
 	{
 		if(!empty($market))
 		{
 			$folder_id = str_replace(')', '', substr($market, strrpos($market,'(')+1));
 		}
-		else
+		else if(!empty($project))
 		{
 			$folder_id = str_replace(')', '', substr($project, strrpos($project,'(')+1));
 		}
@@ -752,14 +775,25 @@ function manage_status($arr_id, $history, $id_action, $label_action, $status)
 	for($i=0; $i<count($arr_id );$i++)
 	{
 		$result .= $arr_id[$i].'#';
-		$db->query("select status from ".$_POST['table']." where res_id = ".$arr_id[$i]);
+		$db->query("select status, folders_system_id from ".$_POST['table']." where res_id = ".$arr_id[$i]);
 		$res = $db->fetch_object();
+		$folder_id = $res->folders_system_id;
 		if($res->status == 'NEW')
 		{
 			$req = $db->query("update ".$_POST['table']. " set status = '".$status."' where res_id = ".$arr_id[$i], true);
 			if(!$req)
 			{
 				$_SESSION['error'] = _SQL_ERROR;
+				return false;
+			}
+		}
+		else
+		{
+			$core = new core_tools();
+			if($core->is_module_loaded('folder') && empty($folder_id ))
+			{
+				$db->query("update ".$_POST['table']. " set status = 'NEW' where res_id = ".$arr_id[$i], true);
+				$_SESSION['error'] = _NUM.$arr_id[$i].' : '._FOLDER_MISSING;
 				return false;
 			}
 		}

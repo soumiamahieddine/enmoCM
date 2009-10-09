@@ -49,41 +49,44 @@ if(!empty($_SESSION['nc']))
 unset($_SESSION['nc']);
 unset($_SESSION['chosen_num_folder']);
 unset($_SESSION['chosen_name_folder']);
-if($_REQUEST['name_folder'] <> '' && $_REQUEST['num_folder'] <> '')
+if(!empty($_REQUEST['project']) && empty($_REQUEST['market']))
 {
-	$_SESSION['chosen_num_folder'] = $_REQUEST['num_folder'];
-	$db->query("select distinct folder_id, folder_name, fold_subject from ".$res_view." where (folder_name = '".$_REQUEST['name_folder']."' and folder_id = '".$_SESSION['chosen_num_folder']."') and (".$where_clause.")");
-	//$db->show();
+	if(substr($_REQUEST['project'], strlen($_REQUEST['project']) -1, strlen($_REQUEST['project'])) == ")")
+	{
+		$folderSystemId = str_replace(')', '', substr($_REQUEST['project'], strrpos($_REQUEST['project'],'(')+1));
+	}
 }
-elseif($_REQUEST['num_folder'] <> '')
+if(!empty($_REQUEST['market']))
 {
-	$_SESSION['chosen_num_folder'] = $_REQUEST['num_folder'];
-	$db->query("select distinct folder_id, folder_name, fold_subject from ".$res_view." where folder_id = '".$_SESSION['chosen_num_folder']."' and (".$where_clause.")");
-	//$db->show();
+	if(substr($_REQUEST['market'], strlen($_REQUEST['market']) -1, strlen($_REQUEST['market'])) == ")")
+	{
+		$folderSystemId = str_replace(')', '', substr($_REQUEST['market'], strrpos($_REQUEST['market'],'(')+1));
+	}
 }
-elseif($_REQUEST['name_folder'] <> '')
+//echo $folderSystemId;exit;
+if($folderSystemId <> '')
 {
-	$_SESSION['chosen_name_folder'] = $_REQUEST['name_folder'];
-	$dbTmp->query("select distinct folder_id, folder_name, subject, folder_level, folders_system_id from ".$_SESSION['tablename']['fold_folders']." where folder_name = '".$_REQUEST['name_folder']."'");
+	$_SESSION['chosen_name_folder'] = $folderSystemId;
+	$dbTmp->query("select distinct folder_id, folder_name, subject, folder_level, folders_system_id from ".$_SESSION['tablename']['fold_folders']." where folders_system_id = ".$folderSystemId);
 	//$dbTmp->show();
 	while($resTmp = $dbTmp->fetch_object())
 	{
 		if($resTmp->folder_level == '1')
 		{
-			$db->query("select distinct folder_id, folder_name, subject, folder_level, folders_system_id from ".$_SESSION['tablename']['fold_folders']." where parent_id = ".$resTmp->folders_system_id."");
+			$db->query("select distinct folder_id, folder_name, subject, folder_level, folders_system_id from ".$_SESSION['tablename']['fold_folders']." where parent_id = ".$resTmp->folders_system_id." or folders_system_id = ".$folderSystemId." ");
 			$flagProject = true;
 			//$db->show();
 		}
 		else
 		{
-			$db->query("select distinct folder_id, folder_name, subject, folder_level, folders_system_id, parent_id from ".$_SESSION['tablename']['fold_folders']." where folder_name = '".$_REQUEST['name_folder']."'");
+			$db->query("select distinct folder_id, folder_name, subject, folder_level, folders_system_id, parent_id from ".$_SESSION['tablename']['fold_folders']." where folders_system_id = ".$folderSystemId);
 			//$db->show();
 		}
 	}
 }
 //$actual_custom_result = $db->fetch_object();
 //$actual_custom_t1 = $actual_custom_result->folder_id; 
-if((isset($_SESSION['chosen_num_folder']) && !empty($_SESSION['chosen_num_folder'])) || (isset($_SESSION['chosen_name_folder']) && !empty($_SESSION['chosen_name_folder'])))
+if(isset($_SESSION['chosen_name_folder']) && !empty($_SESSION['chosen_name_folder']))
 {
 	?>
 	<script type="text/javascript" src="<?php echo $_SESSION['config']['businessappurl'].'tools/tafelTree/';?>js/prototype.js"></script>

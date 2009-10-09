@@ -725,6 +725,38 @@ function resize_frame_process(id_modal, id_frame, resize_width, resize_height)
 	}
 }
 
+
+/**
+* Resize frames in a modal
+*
+* @param  id_modal String Modal identifier
+* @param  id_frame String Frame identifier of the frame to resize
+* @param  resize_width Integer New width
+* @param  resize_height Integer New Height
+*/
+function resize_frame_view(id_modal, id_frame, resize_width, resize_height)
+{
+	var modal = $(id_modal);
+	if(modal)
+	{
+		var newwidth = modal.getWidth();
+		var newheight = modal.getHeight() - 30;
+		var frame2 = $(id_frame);
+		var windowSize = new Array();
+		if(frame2 != null)
+		{
+			windowSize = getWindowSize();
+			newwidth = windowSize[0] - 40;
+			frame2.style.width = newwidth + "px";
+		}
+		if(resize_height == true && frame2 != null)
+		{
+			newheight = windowSize[1] - 90;
+			frame2.style.height = newheight + "px";
+		}
+	}
+}
+
 function getWindowSize(){
 	if (window.innerWidth || window.innerHeight){
 		var width = window.innerWidth;

@@ -67,7 +67,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 	$frm_str .= '	<center><input name="close" id="close" type="button" value="'._CLOSE.'" class="button" onClick="javascript:$(\'baskets\').style.visibility=\'visible\';destroyModal(\'modal_'.$id_action.'\');reinit();"/></center>';
 	$frm_str .= '	<iframe src="'.$_SESSION['config']['businesappurl'].'indexing_searching/view.php?id='.$res_id.'" name="viewframe" id="viewframe"  scrolling="auto" frameborder="0" ></iframe>';
 	$frm_str .= '</div>';
-	$frm_str .= '<script type="text/javascript">resize_frame_process("modal_'.$id_action.'", "viewframe", true, true);resize_frame_process("modal_'.$id_action.'", "hist_doc", true, false);window.scrollTo(0,0);</script>';
+	$frm_str .= '<script type="text/javascript">resize_frame_view("modal_'.$id_action.'", "viewframe", true, true);window.scrollTo(0,0);</script>';
 	return addslashes($frm_str);
 }
 ?>

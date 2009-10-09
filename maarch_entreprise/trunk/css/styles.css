@@ -333,6 +333,11 @@ form, fieldset {
 .indexingform{
 	width: 450px;
 }
+
+.physicalform{
+	width: 900px;
+}
+
 .addforms3{
 	width: 520px;
 }
@@ -359,16 +364,28 @@ input, select, textarea, .forms img {
 	text-align:left;
 }
 
-
+.physicalform input, .physicalform select, .physicalform textarea {
+	background-color: White;
+	border: 1px solid #999;
+	color: #666;
+	width: 500px;
+	text-align:left;
+}
 
 .forms input, .forms textarea {
+	padding: 0.1em 0.2em;
+}
+
+.physicalform input, .physicalform textarea {
 	padding: 0.1em 0.2em;
 }
 
 .forms select {
 	width: 206px;
 }
-
+.physicalform select {
+	width: 196px;
+}
 input.small {
 	width: 20px;
 }
@@ -484,11 +501,29 @@ input.button {
 	vertical-align: middle;
 }
 
+
+.physicalform label, .physicalform .label {
+	float: left;
+	display: block;
+	text-align: left;
+	width: 40%;
+	margin-right: 1em;
+	vertical-align: middle;
+}
+
 .forms p {
 	clear: left;
 }
 
+.physicalform p {
+	clear: left;
+}
+
 .forms p.buttons {
+	margin-left: 41.3%;
+}
+
+.physicalform p.buttons {
 	margin-left: 41.3%;
 }
 
@@ -1027,7 +1062,7 @@ left: -100em;
 
 #menu {
 	position: absolute;
-	width: 240px;
+	width: 250px;
 	margin-left: 10px;
 	margin-top: 40px;
 }
@@ -2611,6 +2646,7 @@ font-weight: bold;
 font-size: 1.2em;
 text-align: center;
 letter-spacing: 0.1em;
+cursor:pointer;
 }
 
 .bighome_userinfo{
@@ -2622,6 +2658,7 @@ font-weight: bold;
 font-size: 1.2em;
 text-align: center;
 letter-spacing: 0.1em;
+cursor:pointer;
 }
 
 .bighome_physical_archive{
@@ -2633,6 +2670,7 @@ font-weight: bold;
 font-size: 1.2em;
 text-align: center;
 letter-spacing: 0.1em;
+cursor:pointer;
 }
 
 .bighome_workflow{
@@ -2644,6 +2682,7 @@ font-weight: bold;
 font-size: 1.2em;
 text-align: center;
 letter-spacing: 0.1em;
+cursor:pointer;
 }
 .bighome_indexing{
 background:  url(../img/big_home_indexing.gif) no-repeat top;
@@ -2654,6 +2693,7 @@ font-weight: bold;
 font-size: 1.2em;
 text-align: center;
 letter-spacing: 0.1em;
+cursor:pointer;
 }
 .label_for_bighome_search_adv{
 

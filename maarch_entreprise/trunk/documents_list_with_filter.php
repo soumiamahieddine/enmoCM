@@ -74,22 +74,22 @@ $where = $_SESSION['current_basket']['clause'];
 $where = str_replace("and status <> 'VAL'", " ", $where);
 if(!empty($where))
 {
-	$where_tmp = ' and '.$where;
+	$where_tmp = ' where '.$where;
 }
 if($_SESSION['current_basket']['id'] == "DepartmentBasket")
 {
-	$db->query("select distinct(r.destination) as entity_id, count(distinct r.res_id) as total  from ".$table." r, ".$_SESSION['tablename']['ent_entities']." e where e.entity_id = r.destination ".$where_tmp." group by e.entity_label, r.destination");
+	$db->query("select distinct(r.destination) as entity_id, count(distinct r.res_id) as total  from ".$table." r join ".$_SESSION['tablename']['ent_entities']." e on e.entity_id = r.destination ".$where_tmp." group by e.entity_label, r.destination");
 }
 else
 {
-	$db->query("select distinct(r.destination) as entity_id, count(distinct r.res_id) as total  from ".$table." r, ".$_SESSION['tablename']['ent_entities']." e where e.entity_id = r.destination and ".$where." group by e.entity_label, r.destination");
+	$db->query("select distinct(r.destination) as entity_id, count(distinct r.res_id) as total  from ".$table." r join  ".$_SESSION['tablename']['ent_entities']." e on e.entity_id = r.destination  ".$where_tmp." group by e.entity_label, r.destination");
 }
 //$db->show();
 while($res = $db->fetch_object())
 {
-	$db2->query("select entity_label from ".$_SESSION['tablename']['ent_entities']." e where e.entity_id = '".$res->entity_id."'");
+	$db2->query("select entity_label, short_label from ".$_SESSION['tablename']['ent_entities']." e where e.entity_id = '".$res->entity_id."'");
 	$res2 = $db2->fetch_object();
-	array_push($entities, array('ID' => $res->entity_id, 'LABEL' => $res2->entity_label, 'IN_ENTITY' => $ent->is_user_in_entity($_SESSION['user']['UserId'], $res->entity_id), 'TOTAL' => $res->total));
+	array_push($entities, array('ID' => $res->entity_id, 'LABEL' => $res2->entity_label, 'SHORT_LABEL' => $res2->short_label, 'IN_ENTITY' => $ent->is_user_in_entity($_SESSION['user']['UserId'], $res->entity_id), 'TOTAL' => $res->total));
 }
 ?>
 <div align="center">
@@ -306,7 +306,7 @@ while($res = $db->fetch_object())
 			for($i=0;$i<count($entities);$i++)
 			{
 				?>
-				<option value="<?php echo $entities[$i]['ID'];?>"<?php if($_SESSION['auth_dep']['bask_chosen_entity'] == $entities[$i]['ID']){echo ' selected="selected"';}?><?php if($entities[$i]['IN_ENTITY']){echo ' style="font-weight:bold;"';}?>><?php echo $entities[$i]['LABEL'].' ('.$entities[$i]['TOTAL'].')';?></option>
+				<option value="<?php echo $entities[$i]['ID'];?>"<?php if($_SESSION['auth_dep']['bask_chosen_entity'] == $entities[$i]['ID']){echo ' selected="selected"';}?><?php if($entities[$i]['IN_ENTITY']){echo ' style="font-weight:bold;"';}?>><?php echo $entities[$i]['SHORT_LABEL'].' ('.$entities[$i]['TOTAL'].')';?></option>
 				<?php
 			}
 			?>

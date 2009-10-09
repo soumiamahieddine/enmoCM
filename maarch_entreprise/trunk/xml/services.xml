@@ -247,4 +247,17 @@
      <nature>listelement</nature>
    </WHEREAMIUSED>
  </SERVICE>
+  <!--<SERVICE>
+   <id>view_process_data</id> <!-- if servicetype = menu, this id must be equal to the id of the menu item -->
+   <name>_VIEW_PROCESS_DATA</name>
+   <comment>_VIEW_PROCESS_DATA_DESC</comment>
+  <servicepage>view_process_data.php</servicepage>
+   <servicetype>use</servicetype>
+   <system_service>false</system_service>
+   <enabled>true</enabled>
+   <WHEREAMIUSED>
+     <page>details.php</page>
+     <nature>include</nature>
+   </WHEREAMIUSED>
+ </SERVICE>-->
 </root>

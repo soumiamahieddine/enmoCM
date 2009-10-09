@@ -105,10 +105,10 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 		$db->connect();
 		if(!empty($_SESSION['user']['redirect_groupbasket'][$_SESSION['current_basket']['id']][$id_action]['entities']))
 		{
-			$db->query("select entity_id, entity_label from ".$_SESSION['tablename']['ent_entities']." where entity_id in (".$_SESSION['user']['redirect_groupbasket'][$_SESSION['current_basket']['id']][$id_action]['entities'].") and enabled= 'Y' order by entity_label");
+			$db->query("select entity_id, entity_label, short_label from ".$_SESSION['tablename']['ent_entities']." where entity_id in (".$_SESSION['user']['redirect_groupbasket'][$_SESSION['current_basket']['id']][$id_action]['entities'].") and enabled= 'Y' order by entity_label");
 			while($res = $db->fetch_object())
 			{
-				array_push($services, array( 'ID' => $res->entity_id, 'LABEL' => $db->show_string($res->entity_label)));
+				array_push($services, array( 'ID' => $res->entity_id, 'LABEL' => $db->show_string($res->entity_label), 'SHORT_LABEL' => $db->show_string($res->short_label)));
 			}
 		}
 	}
@@ -282,7 +282,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 						$frm_str .='<option value="">'._CHOOSE_DEPARTMENT.'</option>';
 					   for($i=0; $i < count($services); $i++)
 					   {
-							$frm_str .='<option value="'.$services[$i]['ID'].'" >'.$db->show_string($services[$i]['LABEL']).'</option>';
+							$frm_str .='<option value="'.$services[$i]['ID'].'" >'.$db->show_string($services[$i]['SHORT_LABEL']).'</option>';
 					   }
 					$frm_str .='</select></td>';
 					$frm_str .='<td><span class="red_asterisk" id="destination_mandatory" style="display:inline;">*</span>&nbsp;</td>';

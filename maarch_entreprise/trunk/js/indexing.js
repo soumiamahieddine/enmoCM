@@ -497,7 +497,12 @@ function get_contacts_params(name_radio)
 		{
 			params = 'table=contacts';
 		}
+		else
+		{
+			params = 'table=contacts';
+		}
 	}
+	//window.alert(params);
 	return params;
 }
 
@@ -510,6 +515,10 @@ function update_contact_autocompleter()
 	var params = get_contacts_params();
 	if( contact_autocompleter  )
 	{
+		if(contact_autocompleter.options.defaultParams == null)
+		{
+			contact_autocompleter.options.defaultParams = 'table=contacts';
+		}
 		var old_param = contact_autocompleter.options.defaultParams;
 		var new_param =old_param.substring(0, old_param.indexOf('table=') -1) ;
 		if(new_param && new_param !='')
@@ -684,7 +693,7 @@ function init_validation(path_autocomplete_contact, display_value_tr, path_manag
 	change_contact_type(path_autocomplete_contact, false);
 	$('contact').onchange();
 	$('destination').onchange();
-	$('market').onchange();
+	//$('market').onchange();
 }
 
 function clear_error(id_error)
