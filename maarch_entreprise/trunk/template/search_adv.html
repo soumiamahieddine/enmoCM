@@ -42,6 +42,8 @@ Mods :
 	##func_bool_check_form## : Activate bool_check_form in class_list_show.php
 	##func_bool_view_doc## : Activate func to view documents
 	##func_bool_detail_doc## : Activate func to view documents detail's page
+	##func_include_by_module|arg1## : Include template from specific module (arg1 : module id)
+	
 	
 Defines :  
 	_NAME_OF_LANG_INSTANCE : u se constant define in lang.php
@@ -84,6 +86,7 @@ Defines :
 												&nbsp;
 												##define_lang|_CATEGORY## 
 												<a href="##order_link|category_id|desc##" title="##define_lang|_DESC_SORT##"><img src="##load_img|tri_down.gif##" border="0" alt="##define_lang|_DESC_SORT##" /> </a> <a href="##order_link|category_id|asc##" title="##define_lang|_ASC_SORT##"> <img src="##load_img|tri_up.gif##" border="0" alt="##define_lang|_ASC_SORT##" /></a> 
+												##func_include_by_module|cases##
 									</div>			
 								</th>			
 					</tr>
@@ -112,6 +115,7 @@ Defines :
 											<tr>
 												<td style="text-align:right">##define_lang|_ENTITY## :</td><td  style="text-align:right">##load_value|destination##</td>
 											</tr>
+											##func_include_by_module|cases##
 										</table>
 									</td>
 								</tr>
