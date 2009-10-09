@@ -72,6 +72,13 @@ $select = array();
 $select[$view]= array();
 $where_request = $_SESSION['searching']['where_request'];
 array_push($select[$view], "res_id", "status", "subject", "dest_user", "type_label", "creation_date", "destination", "category_id, exp_user_id", "category_id as category_img" );
+
+if($core_tools->is_module_loaded("cases") == true)
+{
+	array_push($select[$view], "case_id", "case_label"); 
+}
+
+
 $status = $status_obj->get_not_searchable_status();
 $status_str = '';
 for($i=0; $i<count($status);$i++)
@@ -139,148 +146,194 @@ $_SESSION['error_page'] = '';
 		$extension_icon = "_big";
 	//###################
 
-//build the tab with right format for list_doc function
-if (count($tab) > 0)
-{
-	for ($i=0;$i<count($tab);$i++)
-	{
-		for ($j=0;$j<count($tab[$i]);$j++)
-		{
-			foreach(array_keys($tab[$i][$j]) as $value)
-			{
-				if($tab[$i][$j][$value]=='res_id')
-				{
-					$tab[$i][$j]['res_id']=$tab[$i][$j]['value'];
-					$tab[$i][$j]["label"]=_GED_NUM;
-					$tab[$i][$j]["size"]="4";
-					$tab[$i][$j]["label_align"]="left";
-					$tab[$i][$j]["align"]="center";
-					$tab[$i][$j]["valign"]="bottom";
-					$tab[$i][$j]["show"]=true;
-					$tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
-					$tab[$i][$j]["order"]='res_id';
-					$_SESSION['mlb_search_current_res_id'] = $tab[$i][$j]['value'];
-				}
-				if($tab[$i][$j][$value]=="type_label")
-				{
-					$tab[$i][$j]["label"]=_TYPE;
-					$tab[$i][$j]['value'] = $request->show_string($tab[$i][$j]['value']);
-					$tab[$i][$j]["size"]="15";
-					$tab[$i][$j]["label_align"]="left";
-					$tab[$i][$j]["align"]="left";
-					$tab[$i][$j]["valign"]="bottom";
-					$tab[$i][$j]["show"]=true;
-					$tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
-					$tab[$i][$j]["order"]="type_label";
-				}
-				if($tab[$i][$j][$value]=="status")
-				{
-					$tab[$i][$j]["label"]=_STATUS;
-					$res_status = $status_obj->get_status_data($tab[$i][$j]['value'],$extension_icon);
-					$tab[$i][$j]['value'] = "<img src = '".$res_status['IMG_SRC']."' alt = '".$res_status['LABEL']."' title = '".$res_status['LABEL']."'>";
-					$tab[$i][$j]["size"]="5";
-					$tab[$i][$j]["label_align"]="left";
-					$tab[$i][$j]["align"]="left";
-					$tab[$i][$j]["valign"]="bottom";
-					$tab[$i][$j]["show"]=true;
-					$tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
-					$tab[$i][$j]["order"]="status";
-				}
-				if($tab[$i][$j][$value]=="subject")
-				{
-					$tab[$i][$j]["label"]=_SUBJECT;
-					$tab[$i][$j]['value'] = $request->show_string($tab[$i][$j]['value']);
-					$tab[$i][$j]["size"]="25";
-					$tab[$i][$j]["label_align"]="left";
-					$tab[$i][$j]["align"]="left";
-					$tab[$i][$j]["valign"]="bottom";
-					$tab[$i][$j]["show"]=true;
-					$tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
-					$tab[$i][$j]["order"]="subject";
-				}
-				if($tab[$i][$j][$value]=="dest_user")
-				{
-					$tab[$i][$j]["label"]=_DEST_USER;
-					$tab[$i][$j]["size"]="10";
-					$tab[$i][$j]["label_align"]="left";
-					$tab[$i][$j]["align"]="left";
-					$tab[$i][$j]["valign"]="bottom";
-					$tab[$i][$j]["show"]=true;
-					$tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
-					$tab[$i][$j]["order"]="dest_user";
-				}
-				if($tab[$i][$j][$value]=="creation_date")
-				{
-					$tab[$i][$j]["label"]=_REG_DATE;
-					$tab[$i][$j]["size"]="10";
-					$tab[$i][$j]["label_align"]="left";
-					$tab[$i][$j]["align"]="left";
-					$tab[$i][$j]["valign"]="bottom";
-					$tab[$i][$j]["show"]=true;
-					$tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
-					$tab[$i][$j]["value"] = $request->format_date_db($tab[$i][$j]['value'], false);
-					$tab[$i][$j]["order"]="creation_date";
-				}
-				if($tab[$i][$j][$value]=="destination")
-				{
-					$tab[$i][$j]["label"]=_ENTITY;
-					$tab[$i][$j]['value'] = $request->show_string($tab[$i][$j]['value']);
-					$tab[$i][$j]["size"]="10";
-					$tab[$i][$j]["label_align"]="left";
-					$tab[$i][$j]["align"]="left";
-					$tab[$i][$j]["valign"]="bottom";
-					$tab[$i][$j]["show"]=false;
-					$tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
-					$tab[$i][$j]["order"]="destination";
-				}
-				if($tab[$i][$j][$value]=="category_id")
-				{
-					$_SESSION['mlb_search_current_category_id'] = $tab[$i][$j]['value'];
-					$tab[$i][$j]["label"]=_CATEGORY;
-					$tab[$i][$j]["size"]="10";
-					$tab[$i][$j]["label_align"]="left";
-					$tab[$i][$j]["align"]="left";
-					$tab[$i][$j]["valign"]="bottom";
-					$tab[$i][$j]["show"]=true;
-					$tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
-					$tab[$i][$j]["value"] = $_SESSION['mail_categories'][$tab[$i][$j]['value']];
-					$tab[$i][$j]["order"]="category_id";
+	
+	
+	//#########################
 
-				}
-				if($tab[$i][$j][$value]=="category_img")
+		//build the tab with right format for list_doc function
+		if (count($tab) > 0)
+		{
+
+			//Specific View for group_case_template, we don' need to load the standard list_result_mlb
+			//#########################
+			if(($_REQUEST['template']== 'group_case')&& ($core_tools->is_module_loaded('cases')))
+			{
+				include($_SESSION['pathtomodules']."cases".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR.'mlb_list_group_case_addon.php');
+			}
+			else
+			{
+			for ($i=0;$i<count($tab);$i++)
+			{
+				for ($j=0;$j<count($tab[$i]);$j++)
 				{
-					$tab[$i][$j]["label"]=_CATEGORY;
-					$tab[$i][$j]["size"]="10";
-					$tab[$i][$j]["label_align"]="left";
-					$tab[$i][$j]["align"]="left";
-					$tab[$i][$j]["valign"]="bottom";
-					$tab[$i][$j]["show"]=false;
-					$tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
-					$my_imgcat = get_img_cat($tab[$i][$j]['value'],$extension_icon);
-					$tab[$i][$j]['value'] = "<img src = '".$my_imgcat."' alt = '' title = ''>";
-					$tab[$i][$j]["value"] = $tab[$i][$j]['value'];
-					$tab[$i][$j]["order"]="category_id";
-				}
-				if($tab[$i][$j][$value]=="exp_user_id")
-				{
-					$tab[$i][$j]["label"]=_CONTACT;
-					$tab[$i][$j]["size"]="10";
-					$tab[$i][$j]["label_align"]="left";
-					$tab[$i][$j]["align"]="left";
-					$tab[$i][$j]["valign"]="bottom";
-					$tab[$i][$j]["show"]=false;
-					$tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
-					$tab[$i][$j]["value"] = $contact->get_contact_information($_SESSION['mlb_search_current_res_id'],$_SESSION['mlb_search_current_category_id'],$view);
-					$tab[$i][$j]["order"]=false;
+					foreach(array_keys($tab[$i][$j]) as $value)
+					{
+						if($tab[$i][$j][$value]=='res_id')
+						{
+							$tab[$i][$j]['res_id']=$tab[$i][$j]['value'];
+							$tab[$i][$j]["label"]=_GED_NUM;
+							$tab[$i][$j]["size"]="4";
+							$tab[$i][$j]["label_align"]="left";
+							$tab[$i][$j]["align"]="center";
+							$tab[$i][$j]["valign"]="bottom";
+							$tab[$i][$j]["show"]=true;
+							$tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
+							$tab[$i][$j]["order"]='res_id';
+							$_SESSION['mlb_search_current_res_id'] = $tab[$i][$j]['value'];
+						}
+						if($tab[$i][$j][$value]=="type_label")
+						{
+							$tab[$i][$j]["label"]=_TYPE;
+							$tab[$i][$j]['value'] = $request->show_string($tab[$i][$j]['value']);
+							$tab[$i][$j]["size"]="15";
+							$tab[$i][$j]["label_align"]="left";
+							$tab[$i][$j]["align"]="left";
+							$tab[$i][$j]["valign"]="bottom";
+							$tab[$i][$j]["show"]=true;
+							$tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
+							$tab[$i][$j]["order"]="type_label";
+						}
+						if($tab[$i][$j][$value]=="status")
+						{
+							$tab[$i][$j]["label"]=_STATUS;
+							$res_status = $status_obj->get_status_data($tab[$i][$j]['value'],$extension_icon);
+							$tab[$i][$j]['value'] = "<img src = '".$res_status['IMG_SRC']."' alt = '".$res_status['LABEL']."' title = '".$res_status['LABEL']."'>";
+							$tab[$i][$j]["size"]="5";
+							$tab[$i][$j]["label_align"]="left";
+							$tab[$i][$j]["align"]="left";
+							$tab[$i][$j]["valign"]="bottom";
+							$tab[$i][$j]["show"]=true;
+							$tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
+							$tab[$i][$j]["order"]="status";
+						}
+						if($tab[$i][$j][$value]=="subject")
+						{
+							$tab[$i][$j]["label"]=_SUBJECT;
+							$tab[$i][$j]['value'] = $request->show_string($tab[$i][$j]['value']);
+							$tab[$i][$j]["size"]="25";
+							$tab[$i][$j]["label_align"]="left";
+							$tab[$i][$j]["align"]="left";
+							$tab[$i][$j]["valign"]="bottom";
+							$tab[$i][$j]["show"]=true;
+							$tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
+							$tab[$i][$j]["order"]="subject";
+						}
+						if($tab[$i][$j][$value]=="dest_user")
+						{
+							$tab[$i][$j]["label"]=_DEST_USER;
+							$tab[$i][$j]["size"]="10";
+							$tab[$i][$j]["label_align"]="left";
+							$tab[$i][$j]["align"]="left";
+							$tab[$i][$j]["valign"]="bottom";
+							$tab[$i][$j]["show"]=true;
+							$tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
+							$tab[$i][$j]["order"]="dest_user";
+						}
+						if($tab[$i][$j][$value]=="creation_date")
+						{
+							$tab[$i][$j]["label"]=_REG_DATE;
+							$tab[$i][$j]["size"]="10";
+							$tab[$i][$j]["label_align"]="left";
+							$tab[$i][$j]["align"]="left";
+							$tab[$i][$j]["valign"]="bottom";
+							$tab[$i][$j]["show"]=true;
+							$tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
+							$tab[$i][$j]["value"] = $request->format_date_db($tab[$i][$j]['value'], false);
+							$tab[$i][$j]["order"]="creation_date";
+						}
+						if($tab[$i][$j][$value]=="destination")
+						{
+							$tab[$i][$j]["label"]=_ENTITY;
+							$tab[$i][$j]['value'] = $request->show_string($tab[$i][$j]['value']);
+							$tab[$i][$j]["size"]="10";
+							$tab[$i][$j]["label_align"]="left";
+							$tab[$i][$j]["align"]="left";
+							$tab[$i][$j]["valign"]="bottom";
+							$tab[$i][$j]["show"]=false;
+							$tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
+							$tab[$i][$j]["order"]="destination";
+						}
+						if($tab[$i][$j][$value]=="category_id")
+						{
+							$_SESSION['mlb_search_current_category_id'] = $tab[$i][$j]['value'];
+							$tab[$i][$j]["label"]=_CATEGORY;
+							$tab[$i][$j]["size"]="10";
+							$tab[$i][$j]["label_align"]="left";
+							$tab[$i][$j]["align"]="left";
+							$tab[$i][$j]["valign"]="bottom";
+							$tab[$i][$j]["show"]=true;
+							$tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
+							$tab[$i][$j]["value"] = $_SESSION['mail_categories'][$tab[$i][$j]['value']];
+							$tab[$i][$j]["order"]="category_id";
+
+						}
+						if($tab[$i][$j][$value]=="category_img")
+						{
+							$tab[$i][$j]["label"]=_CATEGORY;
+							$tab[$i][$j]["size"]="10";
+							$tab[$i][$j]["label_align"]="left";
+							$tab[$i][$j]["align"]="left";
+							$tab[$i][$j]["valign"]="bottom";
+							$tab[$i][$j]["show"]=false;
+							$tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
+							$my_imgcat = get_img_cat($tab[$i][$j]['value'],$extension_icon);
+							$tab[$i][$j]['value'] = "<img src = '".$my_imgcat."' alt = '' title = ''>";
+							$tab[$i][$j]["value"] = $tab[$i][$j]['value'];
+							$tab[$i][$j]["order"]="category_id";
+						}
+						if($tab[$i][$j][$value]=="exp_user_id")
+						{
+							$tab[$i][$j]["label"]=_CONTACT;
+							$tab[$i][$j]["size"]="10";
+							$tab[$i][$j]["label_align"]="left";
+							$tab[$i][$j]["align"]="left";
+							$tab[$i][$j]["valign"]="bottom";
+							$tab[$i][$j]["show"]=false;
+							$tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
+							$tab[$i][$j]["value"] = $contact->get_contact_information($_SESSION['mlb_search_current_res_id'],$_SESSION['mlb_search_current_category_id'],$view);
+							$tab[$i][$j]["order"]=false;
+						}
+						if($tab[$i][$j][$value]=="case_id" && $core_tools->is_module_loaded("cases") == true)
+						{
+							$tab[$i][$j]["label"]=_CASE_NUM;
+							$tab[$i][$j]["size"]="10";
+							$tab[$i][$j]["label_align"]="left";
+							$tab[$i][$j]["align"]="left";
+							$tab[$i][$j]["valign"]="bottom";
+							$tab[$i][$j]["show"]=true;
+							$tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
+							$tab[$i][$j]["value"] = "<a href='".$_SESSION['config']['businessappurl']."index.php?page=details_cases&module=cases&id=".$tab[$i][$j]['value']."'>".$tab[$i][$j]['value']."</a>";
+							$tab[$i][$j]["order"]="case_id";
+						}
+						if($tab[$i][$j][$value]=="case_label" && $core_tools->is_module_loaded("cases") == true)
+						{
+							$tab[$i][$j]["label"]=_CASE_NUM;
+							$tab[$i][$j]["size"]="10";
+							$tab[$i][$j]["label_align"]="left";
+							$tab[$i][$j]["align"]="left";
+							$tab[$i][$j]["valign"]="bottom";
+							$tab[$i][$j]["show"]=true;
+							$tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
+							//$tab[$i][$j]["value"] = $contact->get_contact_information($_SESSION['mlb_search_current_res_id'],$_SESSION['mlb_search_current_category_id'],$view);
+							$tab[$i][$j]["order"]="case_id";
+						}
+					}
 				}
 			}
+		
+		
+		
 		}
-	}
+	
+
+
+
+		
+		
 ?>
 
 <h1><img src="<?php  echo $_SESSION['config']['businessappurl']."img/picto_search_b.gif";?>" alt="" /> <?php  echo _SEARCH_RESULTS." - ".count($tab)." "._FOUND_DOC;?></h1>
     <div id="inner_content"><?php
-
 
 
 $details = 'details';
