@@ -196,7 +196,7 @@ if(empty($_SESSION['error']))
 				{
 					if($tab[$i][$j][$value]=='folders_system_id')
 					{
-						$tab[$i][$j]['res_id']=$tab[$i][$j]['value'];
+						$tab[$i][$j]['folders_system_id']=$tab[$i][$j]['value'];
 						$tab[$i][$j]["label"]='';
 						$tab[$i][$j]["size"]="4";
 						$tab[$i][$j]["label_align"]="left";

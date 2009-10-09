@@ -52,6 +52,11 @@ if(count($_SESSION['user']['collections']) == 1 )
 		array_push($foldertypes , array('id' => $res->foldertype_id, 'label' => $res->foldertype_label));
 	}
 }
+
+if($_REQUEST['erase'] == 'true')
+{
+	$_SESSION['folder_search'] = array();
+}
 ?>
 <h1><img src="<?php  echo $_SESSION['urltomodules']."folder/img/picto_search_b.gif";?>" alt="" /> <?php  echo _ADV_SEARCH_FOLDER_TITLE; ?></h1>
 <br/>
@@ -135,3 +140,10 @@ else
 	<div class="block_end"></div>
 </div>
 </form>
+<script type="text/javascript">
+var foldertypes = $('foldertype_id');
+if(foldertypes)
+{
+	get_folder_index('<?php echo $_SESSION['urltomodules'];?>folder/get_folder_search_index.php', foldertypes.options[foldertypes.options.selectedIndex].value, 'opt_indexes');
+}
+</script>

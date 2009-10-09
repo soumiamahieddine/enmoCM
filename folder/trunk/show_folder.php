@@ -41,11 +41,10 @@ $core_tools->manage_location_bar($page_path, $page_label,$page_id, $init, $level
 /***********************************************************/
 require_once($_SESSION['pathtomodules']."folder".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
 require_once($_SESSION['pathtomodules']."folder".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_folders_show.php");
-require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_types.php");
-//require_once($_SESSION['pathtocoreclass']."class_docserver.php");
 require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_list_show.php");
 $folder_show=new folders_show();
 $folder_object=new folder();
+$request= new request;
 $func = new functions();
 require_once($_SESSION['pathtocoreclass']."class_history.php");
 $users = new history();
@@ -53,15 +52,10 @@ $users->connect();
 $status = '';
 $_SESSION['current_foldertype'] = '';
 $_SESSION['origin'] = "show_folder";
-if($database_type == "SQLSERVER")
-{
-	$_SESSION['date_pattern'] = "/^[0-3][0-9]-[0-1][0-9]-[1-2][0-9][0-9][0-9]$/";
-}
-else // MYSQL & POSTGRESQL
-{
-	 $_SESSION['date_pattern'] = "/^[0-3][0-9]-[0-1][0-9]-[1-2][0-9][0-9][0-9]$/";
-}
+$date_pattern = "/^[0-3][0-9]-[0-1][0-9]-[1-2][0-9][0-9][0-9]$/";
+
 $view = '';
+/*
 if(trim($_REQUEST['field']) <> "")
 {
 	$_SESSION['FOLDER']['SEARCH']['FOLDER_ID'] = $_REQUEST['field'];
@@ -81,12 +75,14 @@ if(isset($_SESSION['current_folder_id']) && !empty($_SESSION['current_folder_id'
 	//$folder_object->query("select folder_id from ".$_SESSION['tablename']['fold_folders']." where folders_system_id = ".$_SESSION['current_folder_id']);
 	//$res = $folder_object->fetch_object();
 	$_SESSION['FOLDER']['SEARCH']['FOLDER_ID'] = $_SESSION['current_folder_id'];
-}
-//$docserver = new docserver($_SESSION['tablename']['docservers'],'fr');
-$type = new types();
-$request= new request;
-$select[$_SESSION['tablename']['fold_folders']] = array();
+
+}*/
+
+
+/*$select[$_SESSION['tablename']['fold_folders']] = array();
 array_push($select[$_SESSION['tablename']['fold_folders']],"folders_system_id","folder_id","custom_t1","custom_t2","custom_d1", "custom_t10");
+$tab=$request->select($select,$where," order by custom_t1",$_SESSION['config']['databasetype'],"10");
+
 if(isset($_SESSION['FOLDER']['SEARCH']['FOLDER_NUM']) && !empty($_SESSION['FOLDER']['SEARCH']['FOLDER_NUM'] ))
 {
 	if($_SESSION['config']['databasetype']== "POSTGRESQL")
@@ -113,7 +109,9 @@ elseif(isset($_SESSION['FOLDER']['SEARCH']['CUSTOM_T1']) && !empty($_SESSION['FO
 	}
 	$tab=$request->select($select,$where," order by custom_t1",$_SESSION['config']['databasetype'],"10");
 	$flagsearch = true;
-}
+
+}*/
+/*
 if($flagsearch)
 {
 	for ($cpt_folder_1=0;$cpt_folder_1<count($tab);$cpt_folder_1++)
@@ -179,9 +177,11 @@ if($flagsearch)
 	{
 		$_SESSION['FOLDER']['SEARCH']['FOLDER_ID'] = $tab[0][0]["folders_system_id"];
 	}
-}
-$tmp_contrat = "";
+
+}*/
+
 //get the var to update the folder
+/*
 if(trim($_REQUEST['mode'])=='up')
 {
 	$data = array();
@@ -209,23 +209,7 @@ if(trim($_REQUEST['mode'])=='up')
 	$folder_object->load_folder1($_SESSION['FOLDER']['SEARCH']['FOLDER_ID'], $_SESSION['tablename']['fold_folders']);
 	$_SESSION['current_foldertype_coll_id'] =$folder_object->get_field('coll_id');
 	$view = $sec->retrieve_view_from_coll_id($_SESSION['current_foldertype_coll_id']);
-	if(isset($_REQUEST['custom_t4']) && !empty($_REQUEST['custom_t4']))
-	{
-		$tmp_contrat = $folder_object->get_field('custom_t4', true);
-		$users->query('select contract_label from '.$_SESSION['tablename']['contracts']." where contract_id = ".$tmp_contrat);
-		$res = $users->fetch_object();
-		$old_contract = $users->show_string($res->contract_label);
-		//$old_contrat = $folder_object->get_contract_label();
-		$contrat_label = '';
-		$users->query("select contract_label as label from ".$_SESSION['tablename']['contracts']." where contract_id = ".$_REQUEST['custom_t4']);
-		$res = $users->fetch_object();
-		$contrat_label = $res->label;
-		if($tmp_contrat <> $_REQUEST['custom_t4'])
-		{
-			$users->add($_SESSION['tablename']['fold_folders'],$folder_object->get_field('folders_system_id')  ,"UP", _MODIF_CONTRACT." : ".$contrat_label, $_SESSION['config']['databasetype'],'folder');
-			$users->add($_SESSION['tablename']['fold_folders'],$folder_object->get_field('folders_system_id')  ,"UP", _MODIF_CONTRACT." : ".$old_contrat." -> ".$contrat_label, $_SESSION['config']['databasetype'], 'folder');
-		}
-	}
+
 	$request->update($_SESSION['tablename']['fold_folders'], $data,$where, $_SESSION['config']['databasetpe']);
 	if($_SESSION['history']['folderup'] == 'true')
 	{
@@ -238,10 +222,11 @@ else
 	{
 		echo _MISSING_FIELDS.".";
 	}
-}
+
+}*/
 ?>
 <div id="details_div" style="display:none;">
-<h1><img src="<?php  echo $_SESSION['config']['img'];?>/manage_structures.gif" alt="logo" width="35" height="30"/> <?php  echo _SHOW_FOLDER;?></h1>
+<h1><img src="<?php  echo $_SESSION['config']['img'];?>/manage_structures.gif" alt="<?php _FOLDER;?>" width="35px" height="30px"/> <?php  echo _SHOW_FOLDER;?></h1>
 <div id="inner_content">
 	<?php
 	if($_REQUEST['id']<>"")
@@ -249,7 +234,7 @@ else
 		?>
 		<div class="viewfolder">
 		<?php
-			if($_REQUEST['id'] <> "" && $show_list <> "ok" && $notfound <> "ok")
+			if($_REQUEST['id'] <> "") // && $show_list <> "ok" && $notfound <> "ok")
 			{
 				$folder_object->load_folder1($_REQUEST['id'],$_SESSION['tablename']['fold_folders']);
 				$status = $folder_object->get_field('status');
@@ -263,7 +248,6 @@ else
 				{
 					$folder_array = array();
 					$folder_array = $folder_object->get_folder_info();
-					//$folder_object->show_array($folder_array);
 					$lastname = '';
 					for($cpt_folder_3=0;$cpt_folder_3<count($folder_array['index']);$cpt_folder_3++)
 					{
@@ -273,37 +257,19 @@ else
 							break;
 						}
 					}
-					//if($lastname <>"")
-					if(1==1)
+
+					$_SESSION['current_folder_id'] = $folder_array['system_id'];
+					$id = $_SESSION['current_folder_id'];
+					$folder_object->modify_default_folder_in_db($_SESSION['current_folder_id'], $_SESSION['user']['UserId'], $_SESSION['tablename']['users']);
+					if($_SESSION['history']['folderview'] == true)
 					{
-						//$folder_show->view_folder_info_details($folder_array,$_SESSION['config']['businessappurl']."index.php?page=salary_sheet&amp;module=folder");
-						$_SESSION['current_folder_id'] = $folder_array['system_id'];
-						$id = $_SESSION['current_folder_id'];
-						$folder_object->modify_default_folder_in_db($_SESSION['current_folder_id'], $_SESSION['user']['UserId'], $_SESSION['tablename']['users']);
-						if($_SESSION['history']['folderview'] == true)
-						{
-							$users->add($_SESSION['tablename']['fold_folders'], $id ,"VIEW", _VIEW_FOLDER." ".strtolower(_NUM).$folder_array['folder_id'], $_SESSION['config']['databasetype'], 'folder');
-						}
-						//echo '<hr/>';
+						$users->add($_SESSION['tablename']['fold_folders'], $id ,"VIEW", _VIEW_FOLDER." ".strtolower(_NUM).$folder_array['folder_id'], $_SESSION['config']['databasetype'], 'folder');
 					}
-					else
-					{
-						echo _NO_FOLDER_FOUND.".";
-					}
+
 				}
 			}
 		}
-		/*
-		if(trim($_SESSION['FOLDER']['SEARCH']['CUSTOM_T1'])<>"" || trim($_SESSION['FOLDER']['SEARCH']['FOLDER_NUM'])<>"")
-		{
-			if($show_list == "ok")
-			{
 
-				$list=new list_show();
-				$list->list_doc($tab,$i,_SEARCH_RESULTS." : ".$i." "._FOUND_FOLDERS,"folder_id","salary_sheet","folder_id","folder_detail",false,true,"post",$_SESSION['config']['businessappurl']."index.php?page=salary_sheet&module=folder",_CHOOSE, false, false, false,false,false,false);
-			}
-		}
-		*/
 		?>
 		<div class="block">
 			<h4><a href="#" onclick="history.go(-1);" class="back">
