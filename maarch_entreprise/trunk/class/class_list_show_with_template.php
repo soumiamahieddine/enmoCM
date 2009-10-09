@@ -189,6 +189,47 @@ class list_show_with_template extends list_show
 	}
 	
 	
+	
+	
+	//Ldpohjidfojfhodhopfsdpofhofdjsp ############################################oad check form if this parameters is loaded in list_show and list_show_with_template
+	public function tmplt_include_by_module($actual_string, $theline, $result, $key, $string_to_module)
+	{
+		$my_explode= explode ("|", $actual_string);
+		if (count($my_explode) <> 2)
+		{
+
+			return  _WRONG_PARAM_FOR_LOAD_VALUE;
+		}
+		else
+		{
+			$core_tools = new core_tools();
+			$module_id = $my_explode[1];
+			if($core_tools->is_module_loaded($module_id) == true)
+			{
+				
+				$temp = $string_to_module;
+				preg_match_all('/##(.*?)##/', $temp, $out);
+
+				for($i=0;$i<count($out[0]);$i++)
+				{
+					$remplacement = $this->load_var_sys($out[1][$i], $theline,$result, $key);
+					$temp = str_replace($out[0][$i],$remplacement,$temp);
+				}
+				$string_to_module = $temp;
+			
+				return $string_to_module;
+				
+			}
+			else
+			{
+				return '';
+			}
+		}
+		
+		
+	}
+	
+	
 
 
 
@@ -264,7 +305,7 @@ class list_show_with_template extends list_show
 
 
 	//Load string ans search all function defined in this string
-	 public function load_var_sys($actual_string, $theline, $result = array(), $key = 'empty' )
+	 public function load_var_sys($actual_string, $theline, $result = array(), $key = 'empty' , $include_by_module= '')
 	{
 
 		##load_value|arg1##: load value in the db; arg1= column's value identifier
@@ -340,6 +381,10 @@ class list_show_with_template extends list_show
 		elseif (preg_match("/^func_click_form$/", $actual_string))
 		{
 			$my_var = $this->tmplt_func_click_form($actual_string, $theline, $result, $key);
+		}
+		elseif (preg_match("/^func_include_by_module\|/", $actual_string))
+		{
+			$my_var = $this->tmplt_include_by_module($actual_string, $theline, $result, $key,$include_by_module);
 		}
 		else
 		{
@@ -455,10 +500,33 @@ class list_show_with_template extends list_show
 
 
 		$file = $_SESSION['config']['businessapppath']."template".DIRECTORY_SEPARATOR.$actual_template.".html";
+	
+	
+		//To load including values template Use for case by exemple
+		//##############################################################
+		if($core_tools->is_module_loaded("cases") == true)
+		{
+				$case_file = $_SESSION['pathtomodules']."cases".DIRECTORY_SEPARATOR."template_addon".DIRECTORY_SEPARATOR.$actual_template.".html";
+				
+				$addon_list_trait = $this->get_template($case_file);
+				$addon_tmp = explode("#!#", $addon_list_trait);
+				foreach($addon_tmp as $including_file)
+				{
+					if (substr($including_file , 0, 5) == "TABLE")
+						$including_table = substr($including_file, 5);
+					if (substr($including_file , 0, 4) == "HEAD")
+						$including_head = substr($including_file, 4);
+					if (substr($including_file , 0, 6) == "RESULT")
+						$including_result = substr($including_file, 6);
+					if (substr($including_file , 0, 6) == "FOOTER")
+						$including_footer = substr($including_file, 6);						
+				}		
+		}
+		//##############################################################
 		$list_trait = $this->get_template($file);
 		$tmp = explode("#!#", $list_trait);
 
-
+		
 
 		//Generate link for reloading file
 
@@ -649,7 +717,7 @@ class list_show_with_template extends list_show
 
 				for($i=0;$i<count($out[0]);$i++)
 				{
-					$remplacement_table = $this->load_var_sys($out[1][$i], $theline);
+					$remplacement_table = $this->load_var_sys($out[1][$i], $theline, '', '', $including_table);
 					$table = str_replace($out[0][$i],$remplacement_table,$true_table);
 				}
 			}
@@ -658,10 +726,10 @@ class list_show_with_template extends list_show
 				$head = substr($ac_tmp, 4);
 				$true_head = $head;
 				preg_match_all('/##(.*?)##/', $true_head, $out);
-
+				
 				for($i=0;$i<count($out[0]);$i++)
 				{
-					$remplacement_head = $this->load_var_sys($out[1][$i], $theline);
+					$remplacement_head = $this->load_var_sys($out[1][$i], $theline, '', '', $including_head);
 					$true_head = str_replace($out[0][$i],$remplacement_head,$true_head);
 				}
 				$head = $true_head;
@@ -696,7 +764,7 @@ class list_show_with_template extends list_show
 
 			for($i=0;$i<count($out[0]);$i++)
 			{
-				$remplacement = $this->load_var_sys($out[1][$i], $theline, $result, $key);
+				$remplacement = $this->load_var_sys($out[1][$i], $theline, $result, $key,$including_result);
 				$true_content = str_replace($out[0][$i],$remplacement,$true_content);
 			}
 

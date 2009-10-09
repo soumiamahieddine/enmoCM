@@ -15,6 +15,19 @@
 //class AdminActions extends dbquery
 class chrono
 {
+	function get_chrono_number($res_id, $view)
+	{
+		require_once($_SESSION['pathtocoreclass']."class_db.php");
+		$db = new dbquery();
+		$db->connect();
+	
+		$db->query("select alt_identifier from ".$view." where res_id = ".$res_id." ");
+		$res = $db->fetch_object();
+		
+		$chrono_number = $res->alt_identifier;
+		
+		return $chrono_number;
+	}
 	/**
 	* Return an array with all structure readed in chorno.xml
 	*
