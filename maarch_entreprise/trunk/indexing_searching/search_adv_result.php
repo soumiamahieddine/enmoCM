@@ -135,6 +135,13 @@ if(count($_REQUEST['meta']) > 0)
 
 				$where_request .=" and  ";
 			}
+			// CASE_NUMBER 
+			else if($tab_id_fields[$j] == 'numcase' && !empty($_REQUEST['numcase']))
+			{
+				$json_txt .= "'numcase' : ['".addslashes(trim($_REQUEST['numcase']))."'],";
+				$where_request .= "case_id = ".$func->wash($_REQUEST['numcase'], "num", _N_CASE,"no")." and ";
+
+			}
 			else if($tab_id_fields[$j] == 'chrono' && !empty($_REQUEST['chrono']))
 			{
 				$json_txt .= " 'chrono' : ['".addslashes(trim($_REQUEST['chrono']))."'],";
