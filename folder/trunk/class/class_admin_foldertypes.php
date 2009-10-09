@@ -751,25 +751,24 @@ class foldertype extends dbquery
 	{
 		$where_request = '';
 		$date_pattern = "/^[0-3][0-9]-[0-1][0-9]-[1-2][0-9][0-9][0-9]$/";
-		for($j=0; $j<count($indexes);$j++)
+		foreach(array_keys($indexes) as $key)
 		{
-			$column = $indexes[$j]['column'] ;
-			if($indexes[$j]['column'] == $field_name) // type == 'string'
+			if($key == $field_name) // type == 'string'
 			{
 				if(!empty($val))
 				{
 					if($_SESSION['config']['databasetype'] == "POSTGRESQL")
 					{
-						$where_request .= " ".$_SESSION['tablename']['fold_folders'].".".$column." ilike '%".$this->protect_string_db($val)."%' and ";
+						$where_request .= " ".$_SESSION['tablename']['fold_folders'].".".$key." ilike '%".$this->protect_string_db($val)."%' and ";
 					}
 					else
 					{
-						$where_request .= " ".$_SESSION['tablename']['fold_folders'].".".$column." like '%".$this->protect_string_db($val)."%' and ";
+						$where_request .= " ".$_SESSION['tablename']['fold_folders'].".".$key." like '%".$this->protect_string_db($val)."%' and ";
 					}
 				}
 				break;
 			}
-			else if($indexes[$j]['column'].'_from' == $field_name || $indexes[$j]['column'].'_to' == $field_name)
+			else if($key.'_from' == $field_name || $key.'_to' == $field_name)
 			{ // type == 'date'
 				if( preg_match($date_pattern,$val)==false )
 				{
@@ -777,25 +776,25 @@ class foldertype extends dbquery
 				}
 				else
 				{
-					$where_request .= " (".$_SESSION['tablename']['fold_folders'].".".$column." >= '".$this->format_date_db($val)."') and ";
+					$where_request .= " (".$_SESSION['tablename']['fold_folders'].".".$key." >= '".$this->format_date_db($val)."') and ";
 				}
 				break;
 			}
-			else if($indexes[$j]['column'].'min' == $field_name || $indexes[$j]['column'].'max' == $field_name )
+			else if($key.'_min' == $field_name || $key.'_max' == $field_name )
 			{
-				if($indexes[$j]['type'] == 'integer' || $indexes[$j]['type'] == 'float')
+				if($indexes[$key]['type'] == 'integer' || $indexes[$key]['type'] == 'float')
 				{
-					if($indexes[$j]['type'] == 'integer')
+					if($indexes[$key]['type'] == 'integer')
 					{
-						$val_check = $func->wash($val,"num",$indexes[$j]['label'],"no");
+						$val_check = $this->wash($val,"num",$indexes[$key]['label'],"no");
 					}
 					else
 					{
-						$val_check = $func->wash($val,"float",$indexes[$j]['label'],"no");
+						$val_check = $this->wash($val,"float",$indexes[$key]['label'],"no");
 					}
 					if(empty($_SESSION['error']))
 					{
-						$where_request .= " (".$_SESSION['tablename']['fold_folders'].".".$column." >= ".$val_check.") and ";
+						$where_request .= " (".$_SESSION['tablename']['fold_folders'].".".$key." >= ".$val_check.") and ";
 					}
 				}
 				break;

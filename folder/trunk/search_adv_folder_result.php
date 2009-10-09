@@ -112,19 +112,36 @@ if(!empty($_REQUEST['creation_date_end']) && isset($_REQUEST['creation_date_end'
 ///////////// Optional indexes
 if(isset($_SESSION['folder_search']['foldertype_id']) && !empty($_SESSION['folder_search']['foldertype_id']))
 {
-	$indexes = $foldertype->get_indexes($_SESSION['folder_search']['foldertype_id'], 'minimal') ;
-	//$req->show_array($indexes);
-	//$req->show_array($_REQUEST);
-	for($i=0; $i<count($indexes); $i++)
-	{
+	$indexes = $foldertype->get_indexes($_SESSION['folder_search']['foldertype_id']) ;
 
-		if(isset($_REQUEST[$indexes[$i]]) || isset($_REQUEST[$indexes[$i].'_from']) || isset($_REQUEST[$indexes[$i].'_to']) || isset($_REQUEST[$indexes[$i].'_max']) || isset($_REQUEST[$indexes[$i].'_min']))
+	foreach( array_keys($indexes) as $key)
+	{
+		if(isset($_REQUEST[$key]) && !empty($_REQUEST[$key]))
 		{
-		//	echo '<br/>'.$indexes[$i].' : '.$_REQUEST[$indexes[$i]];
-			$where_request .= $foldertype->search_checks($indexes, $indexes[$i], $_REQUEST[$indexes[$i]]);
+			$_SESSION['folder_search'][$key] = $_REQUEST[$key];
+			$where_request .= $foldertype->search_checks($indexes, $key, $_REQUEST[$key]);
+		}
+		elseif(isset($_REQUEST[$key.'_from']) && !empty($_REQUEST[$key.'_from']))
+		{
+			$_SESSION['folder_search'][$key.'_from'] = $_REQUEST[$key.'_from'];
+			$where_request .= $foldertype->search_checks($indexes, $key.'_from', $_REQUEST[$key.'_from']);
+		}
+		elseif( isset($_REQUEST[$key.'_to']) && !empty($_REQUEST[$key.'_to']))
+		{
+			$_SESSION['folder_search'][$key.'_to'] = $_REQUEST[$key.'_to'];
+			$where_request .= $foldertype->search_checks($indexes, $key.'_to', $_REQUEST[$key.'_to']);
+		}
+		elseif( isset($_REQUEST[$key.'_max'])  && !empty($_REQUEST[$key.'_max']))
+		{
+			$_SESSION['folder_search'][$key.'_max'] = $_REQUEST[$key.'_max'];
+			$where_request .= $foldertype->search_checks($indexes, $key.'_max', $_REQUEST[$key.'_max']);
+		}
+		elseif(isset($_REQUEST[$key.'_min']) && !empty($_REQUEST[$key.'_min']))
+		{
+			$_SESSION['folder_search'][$key.'_min'] = $_REQUEST[$key.'_min'];
+			$where_request .= $foldertype->search_checks($indexes, $key.'_min', $_REQUEST[$key.'_min']);
 		}
 	}
-//echo $where_request;
 }
 
 if(!empty($_SESSION['error']))
@@ -166,7 +183,7 @@ if(empty($_SESSION['error']))
 	$orderstr = $list->define_order($order, $field);
 
 	$tab=$req->select($select,$where_request,$orderstr,$_SESSION['config']['databasetype']);
-	//$req->show();exit;
+	//$req->show();
 	$_SESSION['error_page'] = '';
 	//build the tab with right forma for list_doc function
 	if (count($tab) > 0)
@@ -192,7 +209,7 @@ if(empty($_SESSION['error']))
 					if ($tab[$i][$j][$value] == "folder_id")
 					{
 						$tab[$i][$j]["label"]=_FOLDERID;
-						$tab[$i][$j]["size"]="4";
+						$tab[$i][$j]["size"]="20";
 						$tab[$i][$j]["label_align"]="left";
 						$tab[$i][$j]["align"]="center";
 						$tab[$i][$j]["valign"]="bottom";

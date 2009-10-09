@@ -99,7 +99,7 @@ else
 						<option value=""><?php echo _CHOOSE_FOLDERTYPE;?></option>
 						<?php for($i=0; $i<count($foldertypes);$i++)
 						{
-							?><option value="<?php echo $foldertypes[$i]['id'];?>"><?php echo $foldertypes[$i]['label'];?></option><?php
+							?><option value="<?php echo $foldertypes[$i]['id'];?>" <?php if($foldertypes[$i]['id'] == $_SESSION['folder_search']['foldertype_id']){ echo 'selected="selected"';}?>><?php echo $foldertypes[$i]['label'];?></option><?php
 						}?>
 					</select>
 				</td>

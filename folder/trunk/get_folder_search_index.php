@@ -56,14 +56,12 @@ if(count($indexes) > 0)
 
 			$content .= '<td width="25%" align="right"><label for="'.$key.'">'.$indexes[$key]['label'].' :</label></td>';
 			$content .= '<td  width="24%">';
-			if($indexes[$key]['type'] == 'date')
-			{
-				$content .= '<input type="text" name="'.$key.'" id="'.$key.'" value="" onclick="showCalender(this);" />';
-			}
-			else
-			{
-				$content .= '<input type="text" name="'.$key.'" id="'.$key.'" value="" />';
-			}
+				$content .= '<input type="text" name="'.$key.'" id="'.$key.'" ';
+				if(isset($_SESSION['folder_search'][$key]) && !empty($_SESSION['folder_search'][$key]))
+				{
+					$content .= 'value="'.$_SESSION['folder_search'][$key].'" ';
+				}
+				$content .= ' />';
 			$content .= '</td>';
 			$content .= '<td width="2%">&nbsp;</td>';
 			if($i%2 == 1 && $i!=0) // impair
@@ -96,12 +94,22 @@ if(count($indexes) > 0)
 			{
 					$content .= '<td width="25%" align="right"><label for="'.$key.'_start">'.$indexes[$key]['label'].' '._SINCE.':</label></td>';
 					$content .= '<td  width="24%">';
-						$content .= '<input type="text" name="'.$key.'_start" id="'.$key.'_start" value="" onclick="showCalender(this);" />';
+						$content .= '<input type="text" name="'.$key.'_start" id="'.$key.'_start" ';
+						if(isset($_SESSION['folder_search'][$key.'_start']) && !empty($_SESSION['folder_search'][$key.'_start']))
+						{
+							$content .= 'value="'.$_SESSION['folder_search'][$key.'_start'].'" ';
+						}
+						$content .= 'onclick="showCalender(this);" />';
 					$content .= '</td>';
 					$content .= '<td width="2%">&nbsp;</td>';
 					$content .= '<td width="25%" align="right"><label for="'.$key.'_end">'.$indexes[$key]['label'].' '._FOR.' :</label></td>';
 					$content .= '<td  width="24%">';
-						$content .= '<input type="text" name="'.$key.'_end" id="'.$key.'_end" value="" onclick="showCalender(this);" />';
+						$content .= '<input type="text" name="'.$key.'_end" id="'.$key.'_end" ';
+						if(isset($_SESSION['folder_search'][$key.'_end']) && !empty($_SESSION['folder_search'][$key.'_end']))
+						{
+							$content .= 'value="'.$_SESSION['folder_search'][$key.'_end'].'" ';
+						}
+						$content .= 'onclick="showCalender(this);" />';
 					$content .= '</td>';
 				$content .= '</tr>';
 			}
@@ -109,20 +117,27 @@ if(count($indexes) > 0)
 			{
 				$content .= '<td width="25%" align="right"><label for="'.$key.'_min">'.$indexes[$key]['label'].' '._MIN.':</label></td>';
 					$content .= '<td  width="24%">';
-						$content .= '<input type="text" name="'.$key.'_min" id="'.$key.'_min" value=""  />';
+						$content .= '<input type="text" name="'.$key.'_min" id="'.$key.'_min" ';
+						if(isset($_SESSION['folder_search'][$key.'_min']) && !empty($_SESSION['folder_search'][$key.'_min']))
+						{
+							$content .= 'value="'.$_SESSION['folder_search'][$key.'_min'].'" ';
+						}
+						$content .= ' />';
 					$content .= '</td>';
 					$content .= '<td width="2%">&nbsp;</td>';
 					$content .= '<td width="25%" align="right"><label for="'.$key.'_max">'.$indexes[$key]['label'].' '._MAX.' :</label></td>';
 					$content .= '<td  width="24%">';
-						$content .= '<input type="text" name="'.$key.'_max" id="'.$key.'_max" value=""  />';
+						$content .= '<input type="text" name="'.$key.'_max" id="'.$key.'_max" ';
+						if(isset($_SESSION['folder_search'][$key.'_max']) && !empty($_SESSION['folder_search'][$key.'_max']))
+						{
+							$content .= 'value="'.$_SESSION['folder_search'][$key.'_max'].'" ';
+						}
+						$content .= ' />';
 					$content .= '</td>';
 				$content .= '</tr>';
 			}
-
-
 		}
 	}
-
 }
 echo $content;
 
