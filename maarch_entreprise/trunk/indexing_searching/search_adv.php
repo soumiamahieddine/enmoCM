@@ -411,6 +411,18 @@ function del_query_confirm()
 				</td>
 				<td><em><?php echo _MULTI_FIELD_HELP; ?></em></td>
 			</tr>
+			<?php 
+			if($core_tools->is_module_loaded("cases") == true)
+			{ ?>
+				<tr>
+					<td width="70%"><label for="numcase" class="bold" ><?php echo _CASE_NUMBER;?>:</label>
+						<input type="text" name="numcase" id="numcase" <?php echo $size; ?>  />
+						<input type="hidden" name="meta[]" value="numcase#numcase#input_text" />
+					</td>
+					<td><em><?php echo _CASE_NUMBER_HELP; ?></em></td>
+				</tr>
+				<?php 
+			}	 ?>
 			</table>
     	</td>
     	<td>
@@ -440,7 +452,7 @@ function del_query_confirm()
 </form>
 <br/>
 <div align="right">
-<input class="button" name="submit" type="button" value="<?php echo _SEARCH;?>" onclick="valid_search_form('frmsearch2');document.getElementById('frmsearch2').submit();"  />
+<!--<input class="button" name="submit" type="button" value="<?php echo _SEARCH;?>" onclick="valid_search_form('frmsearch2');document.getElementById('frmsearch2').submit();"  />-->
  <!--<input class="button" name="clear" type="button" value="<?php echo _CLEAR_SEARCH;?>" onclick="clear_search_form('frmsearch2','select_criteria');clear_q_list();"  />-->
 </div>
  </div>
