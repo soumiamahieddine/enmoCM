@@ -248,7 +248,7 @@
    </WHEREAMIUSED>
  </SERVICE>
   <!--<SERVICE>
-   <id>view_process_data</id> <!-- if servicetype = menu, this id must be equal to the id of the menu item -->
+   <id>view_process_data</id>
    <name>_VIEW_PROCESS_DATA</name>
    <comment>_VIEW_PROCESS_DATA_DESC</comment>
   <servicepage>view_process_data.php</servicepage>
