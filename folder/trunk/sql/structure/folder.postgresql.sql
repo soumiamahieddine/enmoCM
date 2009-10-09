@@ -54,7 +54,7 @@ CREATE TABLE folders
   custom_t15 character varying(255) DEFAULT NULL::character varying,
   is_complete character(1) DEFAULT 'N'::bpchar,
   is_folder_out character(1) DEFAULT 'N'::bpchar,
-  last_modified_date timestamp without time zone NOT NULL
+  last_modified_date timestamp without time zone NOT NULL,
   CONSTRAINT folders_pkey PRIMARY KEY (folders_system_id)
 )
 WITH (OIDS=FALSE);
