@@ -79,7 +79,8 @@ function loginCreation()
 		mkdir(dirname($_SERVER["PHP_SELF"]).DIRECTORY_SEPARATOR."log".DIRECTORY_SEPARATOR."".date("Y")."_".date("m")."_".date("d")."".DIRECTORY_SEPARATOR."",0777);
 	}
 	$folderLogName = dirname($_SERVER["PHP_SELF"]).DIRECTORY_SEPARATOR."log".DIRECTORY_SEPARATOR."".date("Y")."_".date("m")."_".date("d")."".DIRECTORY_SEPARATOR."";
-	$_ENV['log'] = $folderLogName."full_text_".date("Y")."_".date("m")."_".date("d")." ".date("H")."-".date("i")."-".date("s").".log";
+	//$_ENV['log'] = $folderLogName."full_text_".date("Y")."_".date("m")."_".date("d")." ".date("H")."-".date("i")."-".date("s").".log";
+	$_ENV['log'] = $folderLogName."full_text_".date("Y")."_".date("m")."_".date("d").".log";
 	writeLog("Application start with : ".$_SERVER['SCRIPT_FILENAME']);
 }
 
@@ -172,6 +173,7 @@ Function indexFullTextPdf($pathToFile, $indexFileDirectory, $Id)
 		if($_ENV['osname'] == "WINDOWS")
 		{
 			$resultExtraction = exec("\""."\"".$_ENV['maarch_tools_path']."pdftotext".DIRECTORY_SEPARATOR.$_ENV['pdftotext']."\" \"".$pathToFile."\" \"".$tmpFile."\""."\"");
+			writeLog("\""."\"".$_ENV['maarch_tools_path']."pdftotext".DIRECTORY_SEPARATOR.$_ENV['pdftotext']."\" \"".$pathToFile."\" \"".$tmpFile."\""."\"");
 		}
 		elseif($_ENV['osname'] == "UNIX")
 		{
