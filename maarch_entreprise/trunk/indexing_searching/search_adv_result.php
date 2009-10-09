@@ -291,6 +291,7 @@ if(count($_REQUEST['meta']) > 0)
 				$json_txt .= " 'fulltext' : ['".addslashes(trim($_REQUEST['fulltext']))."'],";
 				set_include_path($_SESSION['config']['businessapppath']."tools".DIRECTORY_SEPARATOR.PATH_SEPARATOR.get_include_path());
 				require_once('Zend/Search/Lucene.php');
+				$_SESSION['search']['plain_text'] = $_REQUEST['fulltext'];
 				$path_to_lucene_index = $_SESSION['collections'][0]['path_to_lucene_index'];
 				if(is_dir($path_to_lucene_index))
 				{
