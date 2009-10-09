@@ -143,7 +143,8 @@ class foldertype extends dbquery
 							?>
 							<p>
 								<label><?php  echo _COLLECTION; ?> : </label>
-								<input name="collection" id="collection" type="text" value="<?php  echo $func->show($sec->retrieve_coll_label_from_coll_id($_SESSION['m_admin']['foldertype']['COLL_ID'])); ?>" readonly />
+								<input name="collection_show" id="collection_show" type="text" value="<?php  echo $func->show($sec->retrieve_coll_label_from_coll_id($_SESSION['m_admin']['foldertype']['COLL_ID'])); ?>" readonly="readonly" />
+								<input name="collection" id="collection" type="hidden" value="<?php  echo $_SESSION['m_admin']['foldertype']['COLL_ID']; ?>" />
 							</p>
 							<p align="center">
 								<?php
