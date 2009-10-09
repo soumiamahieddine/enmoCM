@@ -24,6 +24,26 @@ $_SESSION['origin_folder'] = "select_folder";
 $_SESSION['select_folder'] = true;
 $_SESSION['res_folder'] = "";
 $_SESSION['search_res_folder'] = "";
+$_SESSION['folderSystemId'] = "";
+$_SESSION['stringSearch'] = "";
+//if(!empty($_REQUEST['project']) && empty($_REQUEST['market']))
+if(!empty($_REQUEST['project']))
+{
+	$_SESSION['stringSearch'] = $_REQUEST['project'];
+	/*if(substr($_REQUEST['project'], strlen($_REQUEST['project']) -1, strlen($_REQUEST['project'])) == ")")
+	{
+		$_SESSION['folderSystemId'] = str_replace(')', '', substr($_REQUEST['project'], strrpos($_REQUEST['project'],'(')+1));
+	}*/
+}
+/*
+if(!empty($_REQUEST['market']))
+{
+	if(substr($_REQUEST['market'], strlen($_REQUEST['market']) -1, strlen($_REQUEST['market'])) == ")")
+	{
+		$_SESSION['folderSystemId'] = str_replace(')', '', substr($_REQUEST['market'], strrpos($_REQUEST['market'],'(')+1));
+	}
+}
+*/
 if(isset($_REQUEST['matricule'])and !empty($_REQUEST['matricule']))
 {
 	$_SESSION['res_folder'] = "matricule";
@@ -34,6 +54,7 @@ elseif( isset($_REQUEST['nom']) and !empty($_REQUEST['nom']))
 	$_SESSION['res_folder'] = "nom";
 	$_SESSION['search_res_folder'] = $_REQUEST['nom'];
 }
+//echo $_SESSION['stringSearch'];
 $core_tools->load_html();
 //here we building the header
 $core_tools->load_header(_SELECT_FOLDER_TITLE);
@@ -102,24 +123,24 @@ else
 <br/>
 <!--<img src="img/<?php  echo $file_trombi;?>" style="float:left; position:absolute; top:40px; left:10px" alt="" />-->
 <div class="block">
-<form name="frm1" class="forms" action="<?php  echo $_SESSION['urltomodules'];?>indexing_searching/file_index.php">
-    <b><?php  echo _SELECTED_FOLDER;?></b>
-    <br/>
-    <br/>
-    <p>
-        <label><?php  echo _FOLDERID;?> :</label>
-        <input type="text" value="<?php  echo $folder_data['folder_id'];?>" name="matricule_view" readonly="readonly" class="readonly "/>
-    </p>
-     <p>
-        <label><?php  echo _FOLDERTYPE;?> :</label>
-        <input type="text" value="<?php  echo $folder_data['foldertype_label'];?>" name="foldertype" readonly="readonly" class="readonly "/>
-    </p>
-    <p>
-        <label><?php  echo _FOLDERNAME;?> :</label>
-        <input type="text" value="<?php  echo $folder_data['folder_name'];?>" name="nom_view" readonly="readonly" class="readonly "/>
-    </p>
-  
-</form>
+	<form name="frm1" class="physicalform" action="<?php  echo $_SESSION['urltomodules'];?>indexing_searching/file_index.php">
+		<b><?php  echo _SELECTED_FOLDER;?></b>
+		<br/>
+		<br/>
+		<p>
+			<label><?php  echo _FOLDERTYPE;?> :</label>
+			<input type="text" value="<?php  echo $folder_data['foldertype_label'];?>" name="foldertype" readonly="readonly" class="readonly"/>
+		</p>
+		<p>
+			<label><?php  echo _FOLDERID;?> :</label>
+			<input type="text" value="<?php  echo $folder_data['folder_name'];?>" name="nom_view" readonly="readonly" class="readonly "/>
+		</p>
+		<p>
+			<label><?php  echo _FOLDERNAME;?> :</label>
+			<input type="text" value="<?php  echo $folder_data['subject'];?>" name="nom_view" readonly="readonly" class="readonly "/>
+		</p>
+
+	</form>
 </div>
 <div class="block_end">&nbsp;</div>
 <div class="blank_space">&nbsp;</div>
@@ -132,45 +153,38 @@ if($_SESSION['origin'] <> "qualify")
     <b><?php  echo _SEARCH_FOLDER;?></b>
     <br/>
     <br/>
-    
-    <form name="select_folder" method="get" action="<?php  echo $_SESSION["urltomodules"];?>folder/select_folder.php" class="forms">
+    <form name="select_folder" method="get" action="<?php  echo $_SESSION["urltomodules"];?>folder/select_folder.php" class="physicalform">
         <p>
-            <label><?php  echo _FOLDERID;?> :</label>
-            <input type="text" name="matricule" id="matricule"/>
-			<!--<div id="foldersListById" class="autocomplete"></div>
-			<script type="text/javascript">
-				//initList('matricule', 'foldersListById', '<?php  echo $_SESSION['urltomodules'];?>folder/folders_list_by_id.php', 'folder', '1');
-				launch_autocompleter('<?php  echo $_SESSION['urltomodules'];?>folder/folders_list_by_id.php', 'matricule', 'foldersListById');
-			</script>-->
+            <label><?php  echo _PROJECT." / "._MARKET;?> :</label>
+            <input type="text" name="project" id="project"/>
+			<!--<div id="show_project" class="autocomplete"></div>-->
         </p>
-        <p>
-            <label><?php  echo _FOLDERNAME;?> :</label>
-            <input type="text" name="nom" id="nom" class=""/>
-            <!--<div id="foldersListByName" class="autocomplete"></div>
-			<script type="text/javascript">
-				initList('nom', 'foldersListByName', '<?php  echo $_SESSION['urltomodules'];?>folder/folders_list_by_name.php', 'folder', '1');
-			</script>-->
-        </p>
+        <!--<p>
+            <label><?php  echo _MARKET;?> :</label>
+			<input type="text" name="market" id="market"/>
+			<div id="show_market" class="autocomplete"></div>
+        </p>-->
 		<p>
 			<label>&nbsp;</label>
 			<input type="submit" name="submit2" value="<?php  echo _SEARCH_FOLDER;?>" class="button"/>
 		</p>
     </form>
 	</div><div class="block_end">&nbsp;</div>
-    <?php  
-    if(isset($_SESSION['res_folder'])and !empty($_SESSION['res_folder']))
+    <?php
+    //if(isset($_SESSION['folderSystemId'])and !empty($_SESSION['folderSystemId']))
+    if(isset($_SESSION['stringSearch'])and !empty($_SESSION['stringSearch']))
     {
-    ?>
-    <div align="center">
-        <iframe name="result_folder" src="<?php  echo $_SESSION["urltomodules"];?>folder/result_folder.php" frameborder="0" width="98%" height="600" scrolling="no"></iframe>
-    </div>
-    <?php  
+		?>
+		<div align="center">
+			<iframe name="result_folder" src="<?php  echo $_SESSION["urltomodules"];?>folder/result_folder.php" frameborder="0" width="98%" height="1000" scrolling="no"></iframe>
+		</div>
+		<?php
     }
     else
     {
-    ?>
+		?>
         <!--<div align="center"><input type="button" name="cancel" value="<?php  echo _CLOSE_WINDOW;?>" onclick="self.close();" class="button" /></div>   -->
-    <?php 
+		<?php
     }
     ?>  <?php 
 }

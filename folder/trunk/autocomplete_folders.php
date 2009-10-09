@@ -28,11 +28,11 @@ else
 }
 if($_SESSION['config']['databasetype'] == "POSTGRESQL")
 {
-	$where .= " (folder_name ilike '".$req->protect_string_db($_REQUEST['Input'])."%' or subject ilike '".$req->protect_string_db($_REQUEST['Input'])."%' ) and status <> 'DEL'";
+	$where .= " (folder_name ilike '%".$req->protect_string_db($_REQUEST['Input'])."%' or subject ilike '%".$req->protect_string_db($_REQUEST['Input'])."%' ) and status <> 'DEL'";
 }
 else
 {
-		$where .= " (folder_name like '".$req->protect_string_db($_REQUEST['Input'])."%' or subject like '".$req->protect_string_db($_REQUEST['Input'])."%' ) and status <> 'DEL'";
+	$where .= " (folder_name like '%".$req->protect_string_db($_REQUEST['Input'])."%' or subject like '%".$req->protect_string_db($_REQUEST['Input'])."%' ) and status <> 'DEL'";
 }
 $other = 'order by subject, folder_name';
 
