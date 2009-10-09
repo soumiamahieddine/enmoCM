@@ -34,6 +34,20 @@ $sec = new security();
 $cases = new cases();
 $db = new dbquery();
 $status_obj = new manage_status();
+
+
+
+if($_POST['update'] == true)
+{
+	$update_id = $_POST['id'];	
+	$update_field = array();
+	$update_field['case_label'] = $_POST['case_label'];
+	$update_field['case_description'] = $_POST['case_description'];
+	
+	$cases->update_case($update_id, $update_field);
+}
+
+
 //Before display this page, we need to control if this case can be viewed for the user.
 //A case can be viewed only if one ressouce is allowed for this user
 
@@ -56,6 +70,7 @@ else
 
 ?>
 <body id="tabricator_frame">
+<form method="post" name="update_case" id="update_case" action="#">
 <div>
 	
 
@@ -100,7 +115,11 @@ else
 					<?php  echo _CASE_LABEL; ?> :
 				</td>
 				<td>
-					<input type="text" class="readonly" readonly="readonly" value="<?php  echo $db->show_string($case_indexes['case_label']); ?>" size="40"  />
+					<?php 
+					if ($core_tools->test_service('update_case', 'cases') == 0) 
+						echo '<input type="text"  class="readonly" readonly="readonly" value="'.$db->show_string($case_indexes['case_label']).'" size="40"  />'; 
+					else
+						echo '<input type="text" name="case_label" id="case_label" class=""  value="'.$db->show_string($case_indexes['case_label']).'" size="40"  />';  ?>
 				</td>
 			</tr>
 			
@@ -112,8 +131,12 @@ else
 					<?php  echo _CASE_DESCRIPTION; ?> :
 				</td>
 				<td>
-					<textarea name="case_description" id="case_description" readonly="readonly" rows="4" ><?php echo $db->show_string($case_indexes['case_description']);?></textarea>
-				
+				<?php
+				if ($core_tools->test_service('update_case', 'cases') == 0) 
+					echo '<textarea name="case_description" id="case_description" class ="readonly" readonly="readonly" rows="4" >'.$db->show_string($case_indexes['case_description']).'</textarea>';
+				else
+					echo '<textarea name="case_description" id="case_description"  rows="4" >'.$db->show_string($case_indexes['case_description']).'</textarea>';	
+				?>
 				</td>
 			</tr>
 			
@@ -192,7 +215,9 @@ else
 			</tr>
 		</table>
 	</div>
-	
-
+	<input type="hidden" name="update" id="update" value="true" />
+	<input type="hidden" name="id" id="id" value="<?php echo $case_id; ?>" />
+	<p align="center"><input type="submit" class="button"  value="<?php  echo _MODIFY_DOC;?>" name="submit_index_doc" /></p>
+</form>
 </div>
 

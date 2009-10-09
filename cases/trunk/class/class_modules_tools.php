@@ -133,19 +133,51 @@ class cases extends dbquery
 		if ($_SESSION['history']['casesadd'] == "true")
 		{
 			$hist = new history();
-			$hist->add($_SESSION['tablename']['cases'], $_SESSION['m_admin']['users']['UserId'],"NEW",_NEW_CASE." ".$desc, $_SESSION['config']['databasetype']);
+			$hist->add($_SESSION['tablename']['cases'], $case_id,"NEW",_NEW_CASE." ".$desc, $_SESSION['config']['databasetype']);
 		}
 		//History adds
 		if ($_SESSION['history']['caseslink'] == "true")
 		{
 			$hist = new history();
-			$hist->add($_SESSION['tablename']['cases'], $_SESSION['m_admin']['users']['UserId'],"LINK",_RES_ATTACH_ON_CASE." ".$res_id, $_SESSION['config']['databasetype']);
+			$hist->add($_SESSION['tablename']['cases'], $case_id,"LINK",_RES_ATTACH_ON_CASE." ".$res_id, $_SESSION['config']['databasetype']);
 		}
 		
 		return $case_id;
 	}
 
 
+	/**
+	 *Update indexes from the case
+	 * 
+	 * @param $case_id   int   			int	        Description: Id of selected case
+	 * @param $update_values    	 array 		    Description: Id of selected ressource
+	 */
+	public function update_case($case_id, $update_values)
+	{
+		if (empty($case_id))
+			echo "update_case ::arg1 error!</br>";
+			
+		if (empty($update_values))
+			echo "update_case ::arg2 error!</br>";	
+		// -------
+
+		$replace_values = array();
+		
+		$request = new request();
+		//$db -> connect();		
+		$table=$_SESSION['tablename']['cases'];
+		$where='case_id = '.$case_id;
+
+		if ($update_values['case_label'] <> '')
+			array_push($replace_values, array('column' => 'case_label', 'value' => addslashes($update_values['case_label']), 'type' => "string"));
+		if ($update_values['case_label'] <> '')
+			array_push($replace_values, array('column' => 'case_description', 'value' => addslashes($update_values['case_description']), 'type' => "string"));
+		
+		
+		$request->update($table, $replace_values, $where, $_SESSION['config']['databasetype']);
+		$this->change_last_update($case_id);
+
+	}
 	/**
 	 *Join a new ressource to a case
 	 * 
@@ -185,7 +217,7 @@ class cases extends dbquery
 		if ($_SESSION['history']['caseslink'] == "true")
 		{
 			$hist = new history();
-			$hist->add($_SESSION['tablename']['cases'], $_SESSION['m_admin']['users']['UserId'],"LINK",_RES_ATTACH_ON_CASE." ".$res_id, $_SESSION['config']['databasetype']);
+			$hist->add($_SESSION['tablename']['cases'], $case_id,"LINK",_RES_ATTACH_ON_CASE." ".$res_id, $_SESSION['config']['databasetype']);
 		}
 		return true;
 	}
@@ -336,6 +368,21 @@ class cases extends dbquery
 			array_push($my_return,array( "status"=>$result->status, "nb_docs"=>$result->nb));
 		}
 		return $my_return;
+	}
+
+	private function change_last_update($case_id)
+	{
+		$table = $_SESSION['tablename']['cases'];
+		$request = new request();
+		$current_date = $request->current_datetime();
+		$data = array();
+		$where = "case_id = ".$case_id;
+		array_push($data, array('column' => "case_last_update_date", 'value' => $current_date, "type" => ""));
+		$request->update($table, $data, $where, $_SESSION['config']['databasetype']);
+		
+
+
+		
 	}
 
 }

@@ -67,6 +67,9 @@ else
 
 //Listing only document in this case...
 
+//Get the case information
+$case_limitation = " and record_id = '".$_SESSION['cases']['actual_case_id']."' ";
+
 //Get the entire doc library
 $docs_library = $cases->get_res_id($_SESSION['cases']['actual_case_id']);
 $docs_limitation = ' and record_id in( ';
@@ -85,18 +88,8 @@ $docs_limitation .= ' ) ';
 
 
 
-if((empty($table)|| !$table) && (!empty($view) && $view <> false))
-{
-	$query = "select info, event_date, user_id  from ".$_SESSION['tablename']['history']." WHERE table_name= '".$view.$docs_limitation." ORDER  BY event_date desc";
-}
-elseif((empty($view) || !$view) && (!empty($table)&& $table <> false))
-{
-	$query = "select info, event_date, user_id  from ".$_SESSION['tablename']['history']." WHERE table_name= '".$table.$docs_limitation." ORDER  BY event_date desc";
-}
-elseif(!empty($view) && !empty($table)&& $view <> false && $table <> false)
-{
-	$query = "select info, event_date, user_id  from ".$_SESSION['tablename']['history']." WHERE (table_name= '".$table."' OR table_name = '".$view."') ".$docs_limitation." ORDER  BY event_date desc";
-}
+$query = "select info, event_date, user_id  from ".$_SESSION['tablename']['history']." WHERE (table_name in ('".$table."', '".$view."') ".$docs_limitation.") OR (table_name= '".$_SESSION['tablename']['cases']."' ".$case_limitation.") ORDER  BY event_date desc";
+
 $db_hist->query($query);
 //$db_hist->show();
 ?>

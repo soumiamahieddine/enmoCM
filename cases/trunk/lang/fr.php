@@ -21,6 +21,10 @@
 
 /*********************** CASES ***********************************/
 
+define('_CASES_COMMENT', 'Affaires');
+
+
+
 define('_CASE_NUM', 'Num Affaire');
 define('_NUM_CASE', 'Affaire num&eacute;ro');
 define('_CASE_DETAIL', 'Fiche d&eacute;taill&eacute;e de l&rsquo;affaire');
@@ -50,6 +54,12 @@ define('_CASE_CLOSING_DATE','Date de cl&ocirc;ture');
 define('_CASES_INDEXES','Index de l&rsquo;affaire');
 define('_RESSOURCES_REPORTS','Contenu de l&rsquo;affaire');
 
+
+define('_UPDATE_CASE','Mise &agrave; jour d&rsquo;affaire');
+
+define('_NEW_CASE','Nouvelle affaire');
+define('_RES_ATTACH_ON_CASE','Courrier attach&eacute; &agrave; l&rsquo;affaire');
+define('_RES_DETTACH_ON_CASE','Courrier dettach&eacute; &agrave; l&rsquo;affaire');
 
 
 ?>
