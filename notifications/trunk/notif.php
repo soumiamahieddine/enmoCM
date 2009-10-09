@@ -122,7 +122,7 @@ else
 				//Replace developped fiel in template by the good value
 				$mail_trait = $notification->execute_engine($working_template,$my_docs,$users[$ui]);				
 				$verif = $notification->send_mail($users[$ui]['MAIL'], _MAIL_TO_PROCESS_LIST, $mail_trait);
-					
+				echo $users[$ui]['MAIL']." send mail\r\n";
 			}
 			
 			if ($_SESSION['features']['copy_for_notif'] == 'true')
@@ -151,7 +151,7 @@ else
 					//Replace developped field in template by the good value
 					$mail_copy = $notification->execute_engine($working_template_copy,$copy_docs,$users[$ui]);	
 					$verif = $notification->send_mail($users[$ui]['MAIL'], _COPIES_MAIL_LIST, $mail_copy);
-					
+					echo $users[$ui]['MAIL']." send mail\r\n";
 				}
 			}
 		}

@@ -63,7 +63,7 @@ Defines :
  	 -->
 	</style>
 	<body>
-			<div align=\"center\" class=\"titre\" ><b>{{BONJOUR}} ##display_full_name_for_dest_mail##, {{_MAIL_TO_PROCESS _DU}} ##day_date##</b></div><br/>
+			<div align=\"center\" class=\"titre\" ><b>{{_HELLO}} ##display_full_name_for_dest_mail##, {{_MAIL_TO_PROCESS}} {{_DU}} ##day_date##</b></div><br/>
 			<p>{{_HELLO}}, {{_LIST_OF_MAIL_TO_PROCESS}} :</p>
 			<ul>
 				
@@ -71,7 +71,7 @@ Defines :
 
 #!#LIST
 <!-------------------------------------------------------------------------->
-<li>{{_THE_MAIL_NUM}} ##load_value|res_id## {{_OF_TYPE}} ##load_value|type_label##  ( {{_OBJECT}}  : ##load_value|subject##) {{_RECEIVED_THE}} ##load_value|creation_date## ##load_value|contact_full## {{_MUST_BE_PROCESSED_BEFORE}} ##load_value|process_limit_date## {{_BY _DEPARTMENT}} ##load_value|entity_label##  :
+<li>{{_THE_MAIL_NUM}} ##load_value|res_id## {{_OF_TYPE}} ##load_value|type_label##  ( {{_OBJECT}}  : ##load_value|subject##) {{_RECEIVED_THE}} ##load_value|creation_date## ##load_value|contact_full## {{_MUST_BE_PROCESSED_BEFORE}} ##load_value|process_limit_date## {{_BY}} {{_DEPARTMENT}} ##load_value|entity_label##  :
 <a href='##maarch_url##apps/maarch_entreprise/indexing_searching/view.php?id=##load_value|res_id##'>{{_ACCESS_TO_MAIL_TO_PROCESS}}</a> </li>
 #!#FOOTER
 <!-------------------------------------------------------------------------->
