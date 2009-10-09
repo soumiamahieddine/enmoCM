@@ -3,6 +3,7 @@ CREATE TABLE entities
 (
   entity_id character varying(32) NOT NULL,
   entity_label character varying(255),
+  short_label character varying(50),
   enabled character(1) NOT NULL DEFAULT 'Y'::bpchar,
   adrs_1 character varying(255),
   adrs_2 character varying(255),

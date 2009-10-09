@@ -31,6 +31,12 @@ else
 		$ent = new entity();
 		$ent->connect();
 		//$where = "";
+		$level1 = array();
+		$ent->query("select u.user_id, u.lastname, u.firstname from  ".$_SESSION['tablename']['ent_users_entities']." ue, ".$_SESSION['tablename']['users']." u where ue.entity_id  = '".$_SESSION['entities_chosen_tree']."' and ue.user_id = u.user_id  order by u.lastname, u.firstname");
+		while($res = $ent->fetch_object())
+		{
+			array_push($level1, array('id' => $res->user_id, 'tree' => $_SESSION['entities_chosen_tree'], 'key_value' => $res->user_id, 'label_value' => $ent->show_string($res->lastname.' '.$res->firstname), 'is_entity' => false));
+		}
 		$ent->query("select entity_id, entity_label from ".$_SESSION['tablename']['ent_entities']." where parent_entity_id = '".$_SESSION['entities_chosen_tree']."' and enabled ='Y' order by entity_label");
 		//$ent->show();
 		$level1 = array();

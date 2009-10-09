@@ -29,6 +29,7 @@ class entity extends dbquery
 					$_SESSION['m_admin']['entity']['entityId'] = $this->show_string($id);
 					$line = $this->fetch_object();
 					$_SESSION['m_admin']['entity']['label'] = $this->show_string($line->entity_label);
+					$_SESSION['m_admin']['entity']['short_label'] = $this->show_string($line->short_label);
 					$_SESSION['m_admin']['entity']['enabled'] = $this->show_string($line->enabled);
 					$_SESSION['m_admin']['entity']['adrs1'] = $this->show_string($line->adrs_1);
 					$_SESSION['m_admin']['entity']['adrs2'] = $this->show_string($line->adrs_2);
@@ -106,6 +107,10 @@ class entity extends dbquery
 					<p>
 						<label><?php  echo _ENTITY_LABEL; ?> : </label>
 						<input name="label"  type="text" id="label" value="<?php  echo $_SESSION['m_admin']['entity']['label']; ?>" /><span class="red_asterisk">*</span>
+					</p>
+					<p>
+						<label><?php  echo _SHORT_LABEL; ?> : </label>
+						<input name="short_label"  type="text" id="short_label" value="<?php  echo $_SESSION['m_admin']['entity']['short_label']; ?>" /><span class="red_asterisk">*</span>
 					</p>
 					<p>
 						<label><?php  echo _ENTITY_ADR_1; ?> : </label>
@@ -271,6 +276,29 @@ class entity extends dbquery
 			return $labelreturn;
 		}
 	}
+	/**
+	* Returns entity label
+	*
+	* @param string $entity_id entity selected
+	*/
+	public function getentityshortlabel($entity_id)
+	{
+		$labelreturn = false;
+
+		$this->connect();
+
+		$this->query("select short_label from ".$_SESSION['tablename']['ent_entities']." where entity_id = '".$entity_id."'");
+		//$this->show();
+		if($this->nb_result() > 0)
+		{
+			$line = $this->fetch_object();
+			return $line->short_label;
+		}
+		else
+		{
+			return $labelreturn;
+		}
+	}
 
 
 	/**
@@ -281,7 +309,7 @@ class entity extends dbquery
 	public function isEnabledEntity($entity_id)
 	{
 		$this->connect();
-		$this->query('select entity_id, entity_label from '.$_SESSION['tablename']['ent_entities']." where enabled = 'Y' and entity_id = '".$entity_id."'");
+		$this->query('select entity_id, entity_label, short_label from '.$_SESSION['tablename']['ent_entities']." where enabled = 'Y' and entity_id = '".$entity_id."'");
 		if($this->nb_result() > 0)
 		{
 			$line = $this->fetch_object();
@@ -305,7 +333,7 @@ class entity extends dbquery
 	public function getEntityChildrenTree($entities, $parent = '', $tabspace = '', $except = array(), $where = '')
 	{
 		$this->connect();
-		$this->query('select entity_id, entity_label from '.$_SESSION['tablename']['ent_entities']." where enabled = 'Y' and parent_entity_id = '".$parent."'".$where);
+		$this->query('select entity_id, entity_label, short_label from '.$_SESSION['tablename']['ent_entities']." where enabled = 'Y' and parent_entity_id = '".$parent."'".$where);
 
 		if($this->nb_result() > 0)
 		{
@@ -315,7 +343,7 @@ class entity extends dbquery
 			{
 				if (!in_array($line->entity_id, $except))
 				{
-					 array_push($entities, array('ID' =>$line->entity_id, 'LABEL' =>  $espace.$this->show_string($line->entity_label), 'KEYWORD' => false));
+					 array_push($entities, array('ID' =>$line->entity_id, 'LABEL' =>  $espace.$this->show_string($line->entity_label), 'SHORT_LABEL' =>$espace.$this->show_string($line->short_label), 'KEYWORD' => false));
 
 					$db2 = new entity();
 					$db2->connect();
@@ -491,10 +519,10 @@ class entity extends dbquery
 		$entities = array();
 		$db = new dbquery();
 		$db->connect();
-		$db->query("select e.entity_id,e.entity_label, ue.primary_entity, ue.user_role from ".$_SESSION['tablename']['ent_entities']." e, ".$_SESSION['tablename']['ent_users_entities']." ue where ue.entity_id = e.entity_id and ue.user_id = '".$db->protect_string_db($user_id)."' order by e.entity_label");
+		$db->query("select e.entity_id,e.entity_label,e.short_label, ue.primary_entity, ue.user_role from ".$_SESSION['tablename']['ent_entities']." e, ".$_SESSION['tablename']['ent_users_entities']." ue where ue.entity_id = e.entity_id and ue.user_id = '".$db->protect_string_db($user_id)."' order by e.entity_label");
 		while($res = $db->fetch_object())
 		{
-			array_push($entities, array('ID' => $res->entity_id, 'LABEL' => $res->entity_label, 'PRIMARY' => $res->entity_label, 'ROLE' => $res->user_role ));
+			array_push($entities, array('ID' => $res->entity_id, 'LABEL' => $res->entity_label, 'SHORT_LABEL' => $res->short_label,'PRIMARY' => $res->entity_label, 'ROLE' => $res->user_role ));
 		}
 		return $entities;
 	}
@@ -682,6 +710,14 @@ class entity extends dbquery
 		{
 			$_SESSION['error'].= _LABEL_MISSING."<br/>";
 		}
+		if(isset($_REQUEST['short_label']) && !empty($_REQUEST['short_label']))
+		{
+			$_SESSION['m_admin']['entity']['short_label'] = $this->wash($_REQUEST['short_label'], "no", _SHORT_LABEL, 'yes', 0, 255);
+		}
+		else
+		{
+			$_SESSION['error'].= _SHORT_LABEL_MISSING."<br/>";
+		}
 
 		if(isset($_REQUEST['adrs1']) && !empty($_REQUEST['adrs1']))
 		{
@@ -790,7 +826,7 @@ class entity extends dbquery
 				}
 				else
 				{
-					$this->query('INSERT INTO '.$_SESSION['tablename']['ent_entities']." (entity_id, entity_label, adrs_1, adrs_2, adrs_3, zipcode, city, country, email, business_id, parent_entity_id, entity_type) VALUES ('".$_SESSION['m_admin']['entity']['entityId']."', '".$this->protect_string_db($_SESSION['m_admin']['entity']['label'])."', '".$this->protect_string_db($_SESSION['m_admin']['entity']['adrs1'])."', '".$this->protect_string_db($_SESSION['m_admin']['entity']['adrs2'])."', '".$this->protect_string_db($_SESSION['m_admin']['entity']['adrs3'])."', '".$this->protect_string_db($_SESSION['m_admin']['entity']['zcode'])."', '".$this->protect_string_db($_SESSION['m_admin']['entity']['city'])."', '".$this->protect_string_db($_SESSION['m_admin']['entity']['country'])."', '".$this->protect_string_db($_SESSION['m_admin']['entity']['email'])."', '".$this->protect_string_db($_SESSION['m_admin']['entity']['business'])."', '".$_SESSION['m_admin']['entity']['parent']."', '".$_SESSION['m_admin']['entity']['type']."')");
+					$this->query('INSERT INTO '.$_SESSION['tablename']['ent_entities']." (entity_id, entity_label, short_label, adrs_1, adrs_2, adrs_3, zipcode, city, country, email, business_id, parent_entity_id, entity_type) VALUES ('".$_SESSION['m_admin']['entity']['entityId']."', '".$this->protect_string_db($_SESSION['m_admin']['entity']['label'])."', '".$this->protect_string_db($_SESSION['m_admin']['entity']['short_label'])."', '".$this->protect_string_db($_SESSION['m_admin']['entity']['adrs1'])."', '".$this->protect_string_db($_SESSION['m_admin']['entity']['adrs2'])."', '".$this->protect_string_db($_SESSION['m_admin']['entity']['adrs3'])."', '".$this->protect_string_db($_SESSION['m_admin']['entity']['zcode'])."', '".$this->protect_string_db($_SESSION['m_admin']['entity']['city'])."', '".$this->protect_string_db($_SESSION['m_admin']['entity']['country'])."', '".$this->protect_string_db($_SESSION['m_admin']['entity']['email'])."', '".$this->protect_string_db($_SESSION['m_admin']['entity']['business'])."', '".$_SESSION['m_admin']['entity']['parent']."', '".$_SESSION['m_admin']['entity']['type']."')");
 					$_SESSION['service_tag'] = 'entity_add_db';
 					$core->execute_modules_services($_SESSION['modules_services'], 'entity_add_db', "include");
 					$core->execute_app_services($_SESSION['app_services'], 'entity_add_db', 'include');
@@ -811,7 +847,7 @@ class entity extends dbquery
 			}
 			elseif($mode == 'up')
 			{
-				$this->query('UPDATE '.$_SESSION['tablename']['ent_entities']." set entity_label = '".$this->protect_string_db($_SESSION['m_admin']['entity']['label'])."' , adrs_1 = '".$this->protect_string_db($_SESSION['m_admin']['entity']['adrs1'])."', adrs_2 = '".$this->protect_string_db($_SESSION['m_admin']['entity']['adrs2'])."', adrs_3 = '".$this->protect_string_db($_SESSION['m_admin']['entity']['adrs3'])."', zipcode = '".$this->protect_string_db($_SESSION['m_admin']['entity']['zcode'])."', city = '".$this->protect_string_db($_SESSION['m_admin']['entity']['city'])."', country = '".$this->protect_string_db($_SESSION['m_admin']['entity']['country'])."', email = '".$this->protect_string_db($_SESSION['m_admin']['entity']['email'])."', business_id = '".$this->protect_string_db($_SESSION['m_admin']['entity']['business'])."', parent_entity_id = '".$_SESSION['m_admin']['entity']['parent']."', entity_type = '".$_SESSION['m_admin']['entity']['type']."' where entity_id = '".$_SESSION['m_admin']['entity']['entityId'] ."'");
+				$this->query('UPDATE '.$_SESSION['tablename']['ent_entities']." set entity_label = '".$this->protect_string_db($_SESSION['m_admin']['entity']['label'])."' , short_label = '".$this->protect_string_db($_SESSION['m_admin']['entity']['short_label'])."' , adrs_1 = '".$this->protect_string_db($_SESSION['m_admin']['entity']['adrs1'])."', adrs_2 = '".$this->protect_string_db($_SESSION['m_admin']['entity']['adrs2'])."', adrs_3 = '".$this->protect_string_db($_SESSION['m_admin']['entity']['adrs3'])."', zipcode = '".$this->protect_string_db($_SESSION['m_admin']['entity']['zcode'])."', city = '".$this->protect_string_db($_SESSION['m_admin']['entity']['city'])."', country = '".$this->protect_string_db($_SESSION['m_admin']['entity']['country'])."', email = '".$this->protect_string_db($_SESSION['m_admin']['entity']['email'])."', business_id = '".$this->protect_string_db($_SESSION['m_admin']['entity']['business'])."', parent_entity_id = '".$_SESSION['m_admin']['entity']['parent']."', entity_type = '".$_SESSION['m_admin']['entity']['type']."' where entity_id = '".$_SESSION['m_admin']['entity']['entityId'] ."'");
 					$_SESSION['service_tag'] = 'entity_up_db';
 					$core->execute_modules_services($_SESSION['modules_services'], 'entity_up_db', "include");
 					$core->execute_app_services($_SESSION['app_services'], 'entity_up_db', 'include');
@@ -886,7 +922,7 @@ class entity extends dbquery
 		$type_level = "";
 		$found_type_level = false;
 		$this->connect();
-		$this->query('select entity_id, entity_label, entity_type from '.$_SESSION['tablename']['ent_entities']." where entity_id  = '".$entity_id."'");
+		$this->query('select entity_id, entity_label, short_label, entity_type from '.$_SESSION['tablename']['ent_entities']." where entity_id  = '".$entity_id."'");
 		//$this->show();
 		$line = $this->fetch_object();
 		$entity_type = $line->entity_type;
@@ -987,9 +1023,9 @@ class entity extends dbquery
 			return false;
 		}
 		$this->connect();
-		$this->query("select ue.entity_id, ue.user_role, e.entity_label from ".$_SESSION['tablename']['ent_entities']." e, ".$_SESSION['tablename']['ent_users_entities']." ue where ue.user_id = '".$this->protect_string_db($user_id)."' and ue.entity_id = e.entity_id and ue.primary_entity = 'Y'");
+		$this->query("select ue.entity_id, ue.user_role, e.entity_label, e.short_label from ".$_SESSION['tablename']['ent_entities']." e, ".$_SESSION['tablename']['ent_users_entities']." ue where ue.user_id = '".$this->protect_string_db($user_id)."' and ue.entity_id = e.entity_id and ue.primary_entity = 'Y'");
 		$res = $this->fetch_object();
-		return array('ID' => $res->entity_id, 'LABEL' => $res->entity_label, 'ROLE' => $res->user_role);
+		return array('ID' => $res->entity_id, 'LABEL' => $res->entity_label, 'SHORT_LABEL' => $res->short_label, 'ROLE' => $res->user_role);
 	}
 }
 ?>

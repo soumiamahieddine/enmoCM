@@ -8,11 +8,11 @@
 	<TYPE>
 		<id>Service</id>
 		<label>Service</label>
-		<typelevel>node</typelevel>
+		<typelevel>root</typelevel>
 	</TYPE>
 	<TYPE>
 		<id>Bureau</id>
 		<label>Bureau</label>
-		<typelevel>node</typelevel>
+		<typelevel>root</typelevel>
 	</TYPE>
 </root>

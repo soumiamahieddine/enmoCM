@@ -62,6 +62,7 @@ define('_NO_ENTITY_SELECTED', 'Aucune entit&eacute; s&eacute;lectionn&eacute;e')
 define('_NO_PRIMARY_ENTITY', 'L&rsquo;entit&eacute; primaire est obligatoire');
 define('_NO_ENTITIES_DEFINED_FOR_YOU', 'Aucune entit&eacute; d&eacute;finie pour cet utilisateur');
 define('_LABEL_MISSING', 'Il manque le nom de l&rsquo;entit&eacute;');
+define('_SHORT_LABEL_MISSING', 'Il manque le nom court de l&rsquo;entit&eacute;');
 define('_ID_MISSING', 'Il manque l&rsquo;indentifiant de l&rsquo;entit&eacute;');
 define('_TYPE_MISSING', 'Le type de l&rsquo;entit&eacute; est obligatoire');
 define('_PARENT_MISSING', 'L&rsquo;entit&eacute; parente est obligatoire');
@@ -69,6 +70,7 @@ define('_ENTITY_UNKNOWN', 'Entit&eacute; Inconnue');
 
 /*************************** Entites form *****************/
 define('_ENTITY_LABEL', 'Nom');
+define('_SHORT_LABEL', 'Nom court');
 define('_ENTITY_ADR_1', 'Adresse 1');
 define('_ENTITY_ADR_2', 'Adresse 2');
 define('_ENTITY_ADR_3', 'Adresse 3');
