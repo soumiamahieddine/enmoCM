@@ -601,54 +601,10 @@ class foldertype extends dbquery
 			return false;
 		}
 
-		// Checks type indexes
-		$date_pattern = "/^[0-3][0-9]-[0-1][0-9]-[1-2][0-9][0-9][0-9]$/";
-		foreach(array_keys($values)as $key)
-		{
-			if(!empty($_SESSION['error']))
-			{
-				return false;
-			}
-			if($indexes[$key]['type'] == 'date' && !empty($value[$key]))
-			{
-				if(preg_match( $date_pattern,$values[$key])== 0)
-				{
-					$_SESSION['error'] .= $indexes[$key]['label']." "._WRONG_FORMAT.".<br/>";
-					return false;
-				}
-			}
-			else if($indexes[$key]['type'] == 'string'  && !empty($value[$key]))
-			{
-				$field_value = $this->wash($value[$key],"no",$indexes[$key]['label']);
-			}
-			else if($indexes[$key]['type'] == 'float'  && $value[$key] >= 0)
-			{
-				if($value[$key] == 0)
-				{
-					$field_value = 0;
-				}
-				else
-				{
-					$field_value = $this->wash($value[$key],"float",$indexes[$key]['label']);
-				}
-			}
-			else if($indexes[$key]['type'] == 'integer' && $value[$key] >= 0)
-			{
-				if($value[$key] == 0)
-				{
-					$field_value = 0;
-				}
-				else
-				{
-					$field_value = $this->wash($value[$key],"num",$indexes[$key]['label']);
-				}
-			}
-		}
-
 		// Checks the manadatory indexes
 		$indexes = $this->get_indexes($foldertype_id);
 		$mandatory_indexes = $this->get_mandatory_indexes($foldertype_id);
-
+		//$this->show_array($indexes);
 		for($i=0; $i<count($mandatory_indexes);$i++)
 		{
 			if( empty($values[$mandatory_indexes[$i]]))  // Pb 0
@@ -657,6 +613,36 @@ class foldertype extends dbquery
 				return false;
 			}
 		}
+		// Checks type indexes
+		$date_pattern = "/^[0-3][0-9]-[0-1][0-9]-[1-2][0-9][0-9][0-9]$/";
+		foreach(array_keys($values)as $key)
+		{
+			if(!empty($_SESSION['error']))
+			{
+				return false;
+			}
+			if($indexes[$key]['type'] == 'date' && !empty($values[$key]))
+			{
+				if(preg_match( $date_pattern,$values[$key])== 0)
+				{
+					$_SESSION['error'] .= $indexes[$key]['label']." "._WRONG_FORMAT.".<br/>";
+					return false;
+				}
+			}
+			else if($indexes[$key]['type'] == 'string'  && !empty($values[$key]))
+			{
+				$field_value = $this->wash($values[$key],"no",$indexes[$key]['label']);
+			}
+			else if($indexes[$key]['type'] == 'float' )
+			{
+				$field_value = $this->wash($values[$key],"float",$indexes[$key]['label']);
+			}
+			else if($indexes[$key]['type'] == 'integer'  )
+			{
+				$field_value = $this->wash($values[$key],"num",$indexes[$key]['label']);
+			}
+		}
+
 		return true;
 	}
 

@@ -110,7 +110,7 @@ class folder extends request
     * @access private
     * @var string
     */
-	private $last_modification_date;
+	private $last_modified_date;
 
 	/**
 	* Last modification date
@@ -159,62 +159,8 @@ class folder extends request
 
 	public function load_module_var_session()
 	{
-/*
-		$func = new functions();
-		$_SESSION['folder_index'] = array();
-		$xmlfile = simplexml_load_file($_SESSION['pathtomodules']."folder".DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."folder_index.xml");
-		$i = 0;
-		$path_lang = $_SESSION['pathtomodules']."folder".DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php';
-		foreach($xmlfile->INDEX as $INDEX)
-		{
-			$_SESSION['folder_index'][$i]['COLUMN'] = (string) $INDEX->COLUMN;
-				$tmp = (string) $INDEX->LABEL;
-				$tmp2 = $this->retrieve_constant_lang($tmp, $path_lang);
-				if($tmp2 <> false)
-				{
-					$_SESSION['folder_index'][$i]['LABEL'] = $tmp2;
-				}
-				else
-				{
-					$_SESSION['folder_index'][$i]['LABEL']= $tmp;
-				}
-				if(isset($INDEX->FOREIGN_KEY) && !empty($INDEX->FOREIGN_KEY))
-				{
-					$_SESSION['folder_index'][$i]['FOREIGN_KEY']= (string) $INDEX->FOREIGN_KEY;
-				}
-				if(isset($INDEX->FOREIGN_LABEL) && !empty($INDEX->FOREIGN_LABEL))
-				{
-					$_SESSION['folder_index'][$i]['FOREIGN_LABEL']= (string) $INDEX->FOREIGN_LABEL;
-				}
-				if(isset($INDEX->TABLENAME) && !empty($INDEX->TABLENAME))
-				{
-					$_SESSION['folder_index'][$i]['TABLENAME']= (string) $INDEX->TABLENAME;
-				}
-				if(isset($INDEX->ORDER) && !empty($INDEX->ORDER))
-				{
-					$_SESSION['folder_index'][$i]['ORDER']= (string) $INDEX->ORDER;
-				}
-				if(isset($INDEX->WHERE) && !empty($INDEX->WHERE))
-				{
-					$_SESSION['folder_index'][$i]['WHERE']= (string) $INDEX->WHERE;
-				}
 
-				if(count($INDEX->VALUES) > 0)
-				{
-					$_SESSION['folder_index'][$i]['VALUES'] = array();
-					$k=0;
-					foreach($INDEX->VALUES as $value)
-					{
-						//$_SESSION['folder_index'][$i]['VALUES'][$k]['id'] = (string) $value->ID;
-						$_SESSION['folder_index'][$i]['VALUES'][$k]['label'] = (string) $value->LABEL;
-						$k++;
-					}
-				}
-			$i++;
-		}
-*/
 	}
-
 
 	/**
 	* load folder object from the folder system id
@@ -239,6 +185,7 @@ class folder extends request
 			$fields .= ", ".$key;
 		}
 		$this->query("select ".$fields." from ".$_SESSION['tablename']['fold_folders']." where folders_system_id = ".$id."");
+		//$this->show();
 		$res = $this->fetch_object();
 
 		$this->folder_id = $this->show_string($res->folder_id);
@@ -250,7 +197,7 @@ class folder extends request
 		$this->folder_out_id = $res->folder_out_id;
 		$this->complete = $res->is_complete;
 		$this->desarchive = $res->is_folder_out;
-		$this->last_modification_date = $this->format_date_db($res->last_modified_date, true);
+		$this->last_modified_date = $this->format_date_db($res->last_modified_date, true);
 
 		foreach(array_keys($tab_index) as $key)
 		{
@@ -269,72 +216,6 @@ class folder extends request
 		$this->coll_id = $this->show_string($res->coll_id);
 
 	}
-
-
-/*
-	private function get_folder_index( $foldertype_id)
-	{
-		$folder_index = array();
-		$array = array();
-		$this->connect();
-
-		$this->query('select * from '.$_SESSION['tablename']['fold_foldertypes']." where foldertype_id = ".$foldertype_id);
-		$array = $this->fetch_array();
-		$z = 0;
-		for($i=0;$i<count($_SESSION['folder_index']);$i++)
-		{
-			foreach(array_keys($array) as $value)
-			{
-				if($value <> "folders_system_id" && $value <> "folder_id" && $value <> "comment" && $value <> "retention_time" && !is_numeric($value))
-				{
-					if($array[$value] == '1000000000' || $array[$value] == '1100000000')
-					{
-
-						if($_SESSION['folder_index'][$i]['COLUMN'] == $value)
-						{
-							$folder_index[$z]['column'] = $_SESSION['folder_index'][$i]['COLUMN'];
-							$folder_index[$z]['label'] = $_SESSION['folder_index'][$i]['LABEL'];
-
-							$folder_index[$z]['date'] = $this->is_date_column($_SESSION['folder_index'][$i]['COLUMN']);
-							if($array[$value] == '1100000000')
-							{
-								$folder_index[$z]['mandatory'] = true;
-							}
-							if(isset($_SESSION['folder_index'][$i]['FOREIGN_KEY']) && !empty($_SESSION['folder_index'][$i]['FOREIGN_KEY']))
-							{
-								$folder_index[$z]['foreign_key'] = $_SESSION['folder_index'][$i]['FOREIGN_KEY'];
-							}
-							if(isset($_SESSION['folder_index'][$i]['FOREIGN_LABEL']) && !empty($_SESSION['folder_index'][$i]['FOREIGN_LABEL']))
-							{
-								$folder_index[$z]['foreign_label'] = $_SESSION['folder_index'][$i]['FOREIGN_LABEL'];
-							}
-							if(isset($_SESSION['folder_index'][$i]['TABLENAME']) && !empty($_SESSION['folder_index'][$i]['TABLENAME']))
-							{
-								$folder_index[$z]['tablename'] = $_SESSION['folder_index'][$i]['TABLENAME'];
-							}
-							if(isset($_SESSION['folder_index'][$i]['WHERE']) && !empty($_SESSION['folder_index'][$i]['WHERE']))
-							{
-								$folder_index[$z]['where'] = $_SESSION['folder_index'][$i]['WHERE'];
-							}
-							if(isset($_SESSION['folder_index'][$i]['ORDER']) && !empty($_SESSION['folder_index'][$i]['ORDER']))
-							{
-								$folder_index[$z]['order'] = $_SESSION['folder_index'][$i]['ORDER'];
-							}
-
-							if(isset($_SESSION['folder_index'][$i]['VALUES']) && count($_SESSION['folder_index'][$i]['VALUES']) > 0)
-							{
-								$folder_index[$z]['values'] = $_SESSION['folder_index'][$i]['VALUES'];
-							}
-							$z++;
-						}
-					}
-				}
-			}
-		}
-		return $folder_index;
-	}
-*/
-
 
 	/**
 	* Creates a folder
@@ -452,9 +333,6 @@ class folder extends request
 		$folder['folder_id'] = $this->folder_id ;
 		$folder['parent_id'] = $this->parent_id ;
 		$folder['folder_name'] = $this->folder_name;
-		$folder['subject'] = $this->subject ;
-		$folder['description'] = $this->description;
-		$folder['author'] = $this->author ;
 		$folder['typist'] = $this->typist ;
 		$folder['status'] = $this->status;
 		$folder['level'] = $this->level ;
@@ -463,6 +341,7 @@ class folder extends request
 		$folder['complete'] = $this->complete ;
 		$folder['desarchive'] = $this->desarchive ;
 		$folder['coll_id'] = $this->coll_id ;
+		$folder['last_modified_date'] = $this->last_modified_date ;
 		$folder['index'] = array();
 		$folder['index'] = $this->index;
 
@@ -487,21 +366,9 @@ class folder extends request
 		{
 			return $this->parent_id;
 		}
-		elseif($field_name == 'folder_name')
-		{
-			return $this->folder_name;
-		}
 		elseif($field_name == 'subject')
 		{
 			return $this->subject;
-		}
-		elseif($field_name == 'description')
-		{
-			return $this->description;
-		}
-		elseif($field_name == 'author')
-		{
-			return $this->author;
 		}
 		elseif($field_name == 'typist')
 		{
@@ -707,243 +574,78 @@ class folder extends request
 		$this->query('update '.$table." set custom_t1 = '".$id."' where user_id = '".$user_id."'");
 	}
 
-/*
-	public function retrieve_index($array)
+	public function update_folder($values, $id_to_update)
 	{
-		$z = 0;
-		for($i=0;$i<count($_SESSION['folder_index']);$i++)
+		require_once($_SESSION['pathtomodules'].'folder'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_admin_foldertypes.php');
+		require_once($_SESSION['pathtocoreclass'].'class_request.php');
+		$data = array();
+		$foldertype = new foldertype();
+		$request = new request();
+		$foldertype_id =  $values['foldertype_id'];
+		if(!empty($foldertype_id))
 		{
-
-			foreach(array_keys($array) as $value)
+			$indexes = $foldertype->get_indexes( $foldertype_id,'minimal');
+			$val_indexes = array();
+			for($i=0; $i<count($indexes);$i++)
 			{
-				if($value <> "folders_system_id" && $value <> "folder_id" && $value <> "comment" && $value <> "retention_time" && !is_numeric($value) && ($array[$value] == '1000000000' || $array[$value] == '1100000000'))
-				{
-					if($_SESSION['folder_index'][$i]['COLUMN'] == $value)
-					{
-						$_SESSION['folder_index_to_use'][$z]['column'] = $_SESSION['folder_index'][$i]['COLUMN'];
-						$_SESSION['folder_index_to_use'][$z]['label'] = $_SESSION['folder_index'][$i]['LABEL'];
-
-						$_SESSION['folder_index_to_use'][$z]['date'] = $this->is_date_column($_SESSION['folder_index'][$i]['COLUMN']);
-						if($array[$value] == '1100000000')
-						{
-							$_SESSION['folder_index_to_use'][$z]['mandatory'] = true;
-						}
-						if(isset($_SESSION['folder_index'][$i]['FOREIGN_KEY']) && !empty($_SESSION['folder_index'][$i]['FOREIGN_KEY']))
-						{
-							$_SESSION['folder_index_to_use'][$z]['foreign_key'] = $_SESSION['folder_index'][$i]['FOREIGN_KEY'];
-						}
-						if(isset($_SESSION['folder_index'][$i]['FOREIGN_LABEL']) && !empty($_SESSION['folder_index'][$i]['FOREIGN_LABEL']))
-						{
-							$_SESSION['folder_index_to_use'][$z]['foreign_label'] = $_SESSION['folder_index'][$i]['FOREIGN_LABEL'];
-						}
-						if(isset($_SESSION['folder_index'][$i]['TABLENAME']) && !empty($_SESSION['folder_index'][$i]['TABLENAME']))
-						{
-							$_SESSION['folder_index_to_use'][$z]['tablename'] = $_SESSION['folder_index'][$i]['TABLENAME'];
-						}
-						if(isset($_SESSION['folder_index'][$i]['WHERE']) && !empty($_SESSION['folder_index'][$i]['WHERE']))
-						{
-							$_SESSION['folder_index_to_use'][$z]['where'] = $_SESSION['folder_index'][$i]['WHERE'];
-						}
-						if(isset($_SESSION['folder_index'][$i]['ORDER']) && !empty($_SESSION['folder_index'][$i]['ORDER']))
-						{
-							$_SESSION['folder_index_to_use'][$z]['order'] = $_SESSION['folder_index'][$i]['ORDER'];
-						}
-
-						if(isset($_SESSION['folder_index'][$i]['VALUES']) && count($_SESSION['folder_index'][$i]['VALUES']) > 0)
-						{
-							$_SESSION['folder_index_to_use'][$z]['values'] = $_SESSION['folder_index'][$i]['VALUES'];
-						}
-							$z++;
-					}
-
-				}
+				$val_indexes[$indexes[$i]] =  $values[$indexes[$i]];
 			}
-		}
-
-	}
-*/
-
-	public function retrieve_index_label($column)
-	{
-		for($i=0;$i<count($_SESSION['folder_index']);$i++)
-		{
-			if($_SESSION['folder_index'][$i]['COLUMN'] == $column)
+			$test_type = $foldertype->check_indexes($foldertype_id, $val_indexes );
+			if($test_type)
 			{
-				return $_SESSION['folder_index'][$i]['LABEL'];
+				$data = $foldertype->fill_data_array($foldertype_id, $val_indexes, $data);
 			}
-		}
-	}
-
-/*
-	public function user_exit($value, $data, $data_is_array = true)
-	{
-
-		if($this->is_date_column($value))
-		{
-			if(preg_match($_SESSION['date_pattern'],$_REQUEST[$value])== false)
-			{
-				$_SESSION['error'] .= $this->retrieve_index_label($value)." "._WRONG_FORMAT.".<br/>";
-				$_SESSION['field_error'][$value] = true;
-			}
-			else
-			{
-				$_SESSION['field_error'][$value] = false;
-			}
-
-			 $tmp = $this->format_date_db($_REQUEST[$value]);
-			if($data_is_array)
-			{
-				array_push($data, array('column' => $value, 'value' => $tmp, 'type' => 'date'));
-			}
-			else
-			{
-				$data .= $value." >= '".$tmp."' and ";
-			}
-		}
-		if($this->is_text_column($value))
-		{
-			$field_value = $this->wash($_REQUEST[$value],"no",$this->retrieve_index_label($value));
-			if($data_is_array)
-			{
-				array_push($data, array('column' => $value, 'value' => $this->protect_string_db($_REQUEST[$value]), 'type' => 'string'));
-				if($field_value == "")
-				{
-					$_SESSION['field_error'][$value] = true;
-				}
-				else
-				{
-					$_SESSION['field_error'][$value] = false;
-				}
-			}
-			else
-			{
-				if($_SESSION['config']['databasetype'] == "POSTGRESQL")
-				{
-					$data .= $value." ilike '".$this->protect_string_db($field_value)."%' and ";
-				}
-				else
-				{
-					$data .= $value." like '".$this->protect_string_db($field_value)."%' and ";
-				}
-			}
-		}
-		if($this->is_numeric_column($value))
-		{
-			$field_value = $this->wash($_REQUEST[$value],"num",$this->retrieve_index_label($value));
-			if($data_is_array)
-			{
-				array_push($data, array('column' => $value, 'value' => $_REQUEST[$value], 'type' => 'int'));
-				if($field_value == "")
-				{
-					$_SESSION['field_error'][$value] = true;
-				}
-				else
-				{
-					$_SESSION['field_error'][$value] = false;
-				}
-			}
-			else
-			{
-				$data .= $value.' ='.$field_value.' and ';;
-			}
-		}
-		if($this->is_float_column($value))
-		{
-			$field_value = $this->wash($_REQUEST[$value],"float",$this->retrieve_index_label($value));
-			if($data_is_array)
-			{
-				array_push($data, array('column' => $value, 'value' => $_REQUEST[$value], 'type' => 'float'));
-				if($field_value == "")
-				{
-					$_SESSION['field_error'][$value] = true;
-				}
-				else
-				{
-					$_SESSION['field_error'][$value] = false;
-				}
-			}
-			else
-			{
-				$data .= $value.' ='.$field_value.' and ';;
-			}
-		}
-		return $data;
-	}
-
-
-
-	public function is_date_column($column)
-	{
-		if(preg_match('/custom_d/', $column))
-		{
-			return true;
 		}
 		else
 		{
-			return false;
+			$_SESSION['error'] .= _FOLDERTYPE.' '._IS_EMPTY;
 		}
+		if(empty($_SESSION['error']))
+		{
+			$where = " folders_system_id = ".$id_to_update;
+			array_push($data, array('column' => 'last_modified_date', 'value' => $request->current_datetime(), 'type' => "date"));
+			$request->update($_SESSION['tablename']['fold_folders'], $data, $where, $_SESSION['config']['databasetype']);
+
+			$_SESSION['error'] = _FOLDER_INDEX_UPDATED." (".strtolower(_NUM).$values['folder_id'].")";
+			if($_SESSION['history']['folderup'])
+			{
+				require_once($_SESSION['pathtocoreclass']."class_history.php");
+				$hist = new history();
+				$hist->add($_SESSION['tablename']['fold_folders'], $id_to_update, "UP", $_SESSION['error'], $_SESSION['config']['databasetype'],'apps');
+			}
+
+		}
+		$_SESSION['error_page'] = $_SESSION['error'];
+		$_SESSION['error']= '';
+			?>
+			<script language="javascript" type="text/javascript">
+               // window.opener.reload();
+              	var error_div = $('main_error');
+               	if(error_div)
+               	{
+				 	error_div.innerHTML = '<?php echo $_SESSION['error_page'];?>';
+				}
+            </script>
+			<?php
 	}
 
-	public function is_text_column($column)
+	public function delete_folder($folder_sys_id, $foldertype)
 	{
+		$this->connect();
+		$this->query("select coll_id from ".$_SESSION['tablename']['fold_foldertypes']." where foldertype = ".$foldertype);
+		$res = $this->fetch_object();
+		$coll_id = $res->coll_id;
+		require_once($_SESSION['pathtocoreclass'].'class_security.php');
+		$sec = new security();
+		$table = $sec->retrieve_table_from_coll($coll_id);
 
-		if(preg_match('/custom_t/', $column) )
+		if(!empty($table) && !empty($folder_sys_id))
 		{
-			return true;
-		}
-		else
-		{
-			return false;
+			$this->query("update ".$table." set status = 'DEL' where folders_system_id = ".$folder_sys_id);
+			$this->query("update ".$_SESSION['tablename']['fold_folders']."where folders_system_id = ".$folder_sys_id);
 		}
 	}
 
-	public function is_numeric_column($column)
-	{
-		if(preg_match('/custom_n/', $column))
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
-
-	public function is_float_column($column)
-	{
-		if(preg_match('/custom_f/', $column))
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
-
-	public function is_mandatory_field($column)
-	{
-		$string = $column;
-		$search="'mandatory_'";
-		preg_match($search,$string,$out);
-		$count=count($out[0]);
-		if($count == 1)
-		{
-			$find = true;
-		}
-		return $find;
-	}
-
-	public function is_mandatory($column)
-	{
-		if($_REQUEST['mandatory_'.$column] == "true")
-		{
-			$find = true;
-		}
-		return $find;
-	}
-
-*/
 	public function is_folder_exists($folder_system_id)
 	{
 		if($folder_system_id <> "")

@@ -170,4 +170,7 @@ define('_FOLDER_DETAILLED_PROPERTIES', 'Informations sur le dossier');
 define('_FOLDER_PROPERTIES', 'Propri&eacute;t&eacute;s du dossier');
 define('_SYSTEM_ID', 'ID Syst&egrave;me');
 define('_MODIFICATION_DATE', 'Date de modification');
+define('_UPDATE_FOLDER', 'Modifier des informations');
+define('_FOLDER_INDEX_UPDATED', 'Index du dossier modifi&eacute;s');
+define('_ALL_DOCS_WILL_BE_DELETED', 'tous les documents de ce dossier seront &eacute;lement supprim&eacute;s !');
 ?>

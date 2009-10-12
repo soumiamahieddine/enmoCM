@@ -40,10 +40,8 @@ $page_id = "fold_show_folder";
 $core_tools->manage_location_bar($page_path, $page_label,$page_id, $init, $level);
 /***********************************************************/
 require_once($_SESSION['pathtomodules']."folder".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
-require_once($_SESSION['pathtomodules']."folder".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_folders_show.php");
 require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_list_show.php");
-$folder_show=new folders_show();
-$folder_object=new folder();
+$folder_object = new folder();
 $request= new request;
 $func = new functions();
 require_once($_SESSION['pathtocoreclass']."class_history.php");
@@ -55,130 +53,23 @@ $_SESSION['origin'] = "show_folder";
 $date_pattern = "/^[0-3][0-9]-[0-1][0-9]-[1-2][0-9][0-9][0-9]$/";
 
 $view = '';
-/*
-if(trim($_REQUEST['field']) <> "")
+$update_right = $core_tools->test_service('modify_folder', 'folder', false);
+$delete_right = $core_tools->test_service('delete_folder', 'folder', false);
+
+//update folder index
+if(isset($_POST['update_folder']))
 {
-	$_SESSION['FOLDER']['SEARCH']['FOLDER_ID'] = $_REQUEST['field'];
-	$folder_object->load_folder1($_SESSION['FOLDER']['SEARCH']['FOLDER_ID'],$_SESSION['tablename']['fold_folders']);
-	$folder_array = array();
-	$folder_array = $folder_object->get_folder_info();
-	$_SESSION['current_folder_id'] = $folder_object->get_field('folders_system_id');
-	$_SESSION['current_folder_typeid'] = $folder_object->get_field('folders_typeid');
-	$_SESSION['FOLDER']['SEARCH']['FOLDER_NUM'] = '';
-	$_SESSION['FOLDER']['SEARCH']['CUSTOM_T1'] = '';
-	$_SESSION['current_foldertype_coll_id'] = $folder_array['coll_id'];
-	$view = $sec->retrieve_view_from_coll_id($folder_array['coll_id']);
+	$folder_object->update_folder($_REQUEST, $_REQUEST['id']);
 }
-if(isset($_SESSION['current_folder_id']) && !empty($_SESSION['current_folder_id']) && !isset($_SESSION['FOLDER']['SEARCH']['FOLDER_NUM']) && !isset($_SESSION['FOLDER']['SEARCH']['CUSTOM_T1']))
+//delete the folder
+if(isset($_POST['delete_folder']))
 {
-	//$folder_object->connect();
-	//$folder_object->query("select folder_id from ".$_SESSION['tablename']['fold_folders']." where folders_system_id = ".$_SESSION['current_folder_id']);
-	//$res = $folder_object->fetch_object();
-	$_SESSION['FOLDER']['SEARCH']['FOLDER_ID'] = $_SESSION['current_folder_id'];
-
-}*/
-
-
-/*$select[$_SESSION['tablename']['fold_folders']] = array();
-array_push($select[$_SESSION['tablename']['fold_folders']],"folders_system_id","folder_id","custom_t1","custom_t2","custom_d1", "custom_t10");
-$tab=$request->select($select,$where," order by custom_t1",$_SESSION['config']['databasetype'],"10");
-
-if(isset($_SESSION['FOLDER']['SEARCH']['FOLDER_NUM']) && !empty($_SESSION['FOLDER']['SEARCH']['FOLDER_NUM'] ))
-{
-	if($_SESSION['config']['databasetype']== "POSTGRESQL")
-	{
-		$where .= "folder_id ilike '".$func->protect_string_db($_SESSION['FOLDER']['SEARCH']['FOLDER_NUM'],$_SESSION['config']['databasetype'])."%' and status <> 'DEL'";
-	}
-	else
-	{
-		$where .= " folder_id like '".$func->protect_string_db($_SESSION['FOLDER']['SEARCH']['FOLDER_NUM'],$_SESSION['config']['databasetype'])."%' and status <> 'DEL' ";
-	}
-	$tab=$request->select($select,$where," order by custom_t1",$_SESSION['config']['databasetype'],"10");
-	//$request->show();
-	$flagsearch = true;
+	$folder_object->delete_folder($_REQUEST['id'], $_REQUEST['foldertype_id']);
+	?>
+		<script language="javascript" type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?page=search_adv_folder&module=folder';?>';</script>
+    <?php
+	exit();
 }
-elseif(isset($_SESSION['FOLDER']['SEARCH']['CUSTOM_T1']) && !empty($_SESSION['FOLDER']['SEARCH']['CUSTOM_T1'] ))
-{
-	if($_SESSION['config']['databasetype'] == "POSTGRESQL")
-	{
-		$where .= " custom_t1 ilike '".$func->protect_string_db($_SESSION['FOLDER']['SEARCH']['CUSTOM_T1'],$_SESSION['config']['databasetype'])."%' and status <> 'DEL' and status <> 'IMP'";
-	}
-	else
-	{
-		$where .= " custom_t1 like '".$func->protect_string_db($_SESSION['FOLDER']['SEARCH']['CUSTOM_T1'],$_SESSION['config']['databasetype'])."%' and status <> 'DEL' and status <> 'IMP'";
-	}
-	$tab=$request->select($select,$where," order by custom_t1",$_SESSION['config']['databasetype'],"10");
-	$flagsearch = true;
-
-}*/
-/*
-if($flagsearch)
-{
-	for ($cpt_folder_1=0;$cpt_folder_1<count($tab);$cpt_folder_1++)
-	{
-		for ($cpt_folder_j_1=0;$cpt_folder_j_1<count($tab[$cpt_folder_1]);$cpt_folder_j_1++)
-		{
-			foreach(array_keys($tab[$cpt_folder_1][$cpt_folder_j_1]) as $value)
-			{
-				if($tab[$cpt_folder_1][$cpt_folder_j_1][$value]=="folder_id")
-				{
-					$tab[$cpt_folder_1][$cpt_folder_j_1]["folder_id"]=$tab[$cpt_folder_1][$cpt_folder_j_1]['value'];
-					$tab[$cpt_folder_1][$cpt_folder_j_1]["label"]=_ID;
-					$tab[$cpt_folder_1][$cpt_folder_j_1]["size"]="10";
-					$tab[$cpt_folder_1][$cpt_folder_j_1]["label_align"]="left";
-					$tab[$cpt_folder_1][$cpt_folder_j_1]["align"]="center";
-					$tab[$cpt_folder_1][$cpt_folder_j_1]["valign"]="bottom";
-					$tab[$cpt_folder_1][$cpt_folder_j_1]["show"]=true;
-				}
-				if($tab[$cpt_folder_1][$cpt_folder_j_1][$value]=="folders_system_id")
-				{
-					$tab[$cpt_folder_1][$cpt_folder_j_1]["folders_system_id"]=$tab[$cpt_folder_1][$cpt_folder_j_1]['value'];
-					$tab[$cpt_folder_1][$cpt_folder_j_1]["label"]="folders_system_id";
-					$tab[$cpt_folder_1][$cpt_folder_j_1]["size"]="4";
-					$tab[$cpt_folder_1][$cpt_folder_j_1]["label_align"]="left";
-					$tab[$cpt_folder_1][$cpt_folder_j_1]["align"]="center";
-					$tab[$cpt_folder_1][$cpt_folder_j_1]["valign"]="bottom";
-					$tab[$cpt_folder_1][$cpt_folder_j_1]["show"]=false;
-				}
-				if($tab[$cpt_folder_1][$cpt_folder_j_1][$value]=="custom_t1")
-				{
-					$tab[$cpt_folder_1][$cpt_folder_j_1]["value"]=$request->show_string($tab[$cpt_folder_1][$cpt_folder_j_1]["value"]);
-					$tab[$cpt_folder_1][$cpt_folder_j_1]["label"]=_LASTNAME;
-					$tab[$cpt_folder_1][$cpt_folder_j_1]["size"]="15";
-					$tab[$cpt_folder_1][$cpt_folder_j_1]["label_align"]="left";
-					$tab[$cpt_folder_1][$cpt_folder_j_1]["align"]="left";
-					$tab[$cpt_folder_1][$cpt_folder_j_1]["valign"]="bottom";
-					$tab[$cpt_folder_1][$cpt_folder_j_1]["show"]=true;
-				}
-				if($tab[$cpt_folder_1][$cpt_folder_j_1][$value]=="custom_t2")
-				{
-					$tab[$cpt_folder_1][$cpt_folder_j_1]["value"]=$request->show_string($tab[$cpt_folder_1][$cpt_folder_j_1]["value"]);
-					$tab[$cpt_folder_1][$cpt_folder_j_1]["label"]=_FIRSTNAME;
-					$tab[$cpt_folder_1][$cpt_folder_j_1]["size"]="15";
-					$tab[$cpt_folder_1][$cpt_folder_j_1]["label_align"]="left";
-					$tab[$cpt_folder_1][$cpt_folder_j_1]["align"]="left";
-					$tab[$cpt_folder_1][$cpt_folder_j_1]["valign"]="bottom";
-					$tab[$cpt_folder_1][$cpt_folder_j_1]["show"]=true;
-				}
-			}
-		}
-	}
-	if($cpt_folder_1>1)
-	{
-		$show_list = "ok";
-		//print_r($tab);
-	}
-	elseif($cpt_folder_1==0)
-	{
-		$notfound = "ok";
-		//echo _NO_RESULTS;
-	}
-	else
-	{
-		$_SESSION['FOLDER']['SEARCH']['FOLDER_ID'] = $tab[0][0]["folders_system_id"];
-	}
-
-}*/
 
 //get the var to update the folder
 /*
@@ -224,8 +115,9 @@ else
 	}
 
 }*/
+
 ?>
-<div id="details_div" style="display:block;">
+<div id="details_div" style="display:none;">
 <h1><img src="<?php  echo $_SESSION['config']['img'];?>/manage_structures.gif" alt="<?php _FOLDER;?>" width="35px" height="30px"/> <?php  echo _SHOW_FOLDER;?></h1>
 <div id="inner_content">
 	<?php
@@ -234,7 +126,7 @@ else
 		?>
 		<div class="viewfolder">
 		<?php
-		if($_REQUEST['id'] <> "") // && $show_list <> "ok" && $notfound <> "ok")
+		if($_REQUEST['id'] <> "")
 		{
 			$folder_object->load_folder1($_REQUEST['id'],$_SESSION['tablename']['fold_folders']);
 			$status = $folder_object->get_field('status');
@@ -246,20 +138,8 @@ else
 			}
 			else
 			{
-
 				$folder_array = array();
 				$folder_array = $folder_object->get_folder_info();
-				//$lastname = '';
-/*
-				for($cpt_folder_3=0;$cpt_folder_3<count($folder_array['index']);$cpt_folder_3++)
-				{
-					if($folder_array['index'][$cpt_folder_3]['column'] == 'custom_t1')
-					{
-						$lastname = $folder_array['index'][$cpt_folder_3]['value'];
-						break;
-					}
-				}
-*/
 
 				$_SESSION['current_folder_id'] = $folder_array['system_id'];
 				$id = $_SESSION['current_folder_id'];
@@ -269,11 +149,9 @@ else
 				{
 					$users->add($_SESSION['tablename']['fold_folders'], $id ,"VIEW", _VIEW_FOLDER." ".strtolower(_NUM).$folder_array['folder_id'], $_SESSION['config']['databasetype'], 'folder');
 				}
-
 			}
 		}
 	}
-
 		?>
 		<div class="block">
 			<h4><a href="#" onclick="history.go(-1);" class="back"></a></h4>
@@ -282,6 +160,7 @@ else
 		<dl id="tabricator1">
 			<dt><?php  echo _FOLDER_DETAILLED_PROPERTIES;?></dt>
 			<dd>
+			<form method="post" name="index_folder" id="index_folder" action="index.php?page=show_folder&module=folder&id=<?php  echo $_SESSION['current_folder_id'] ?>">
 				<h2><span class="date"><b><?php  echo _FOLDER_DETAILLED_PROPERTIES;?></b></span></h2>
 				<br/>
 				<table cellpadding="2" cellspacing="2" border="0" class="block forms details" width="100%">
@@ -289,19 +168,21 @@ else
 						<th align="left" class="picto" >&nbsp;</th>
 						<th ><?php  echo _FOLDERID_LONG; ?> :</th>
 						<td colspan="4"><input type="text" class="readonly" readonly="readonly" value="<?php  echo $folder_array['folder_id'] ; ?>" size="40" id="folder_id" name="folder_id" /></td>
-
 					</tr>
 					<tr>
 						<th align="left" class="picto" >&nbsp;</th>
 						<th ><?php  echo _FOLDERTYPE; ?> :</th>
-						<td><input type="text" class="readonly" readonly="readonly" value="<?php  echo $folder_array['foldertype_label']; ?>" id="foldertype"  name="foldertype" /></td>
+						<td><input type="text" class="readonly" readonly="readonly" value="<?php  echo $folder_array['foldertype_label']; ?>" id="foldertype"  name="foldertype" />
+						<input type="hidden" name="foldertype_id" id="foldertype_id" value="<?php  echo $folder_array['foldertype_id']; ?>" />
+						</td>
 						<th align="left" class="picto" >&nbsp;</th>
 						<th ><?php  echo _STATUS; ?> :</th>
 						<td><input type="text" class="readonly" readonly="readonly" value="<?php  echo $folder_array['status']; ?>" id="status" name="status" /></td>
 					</tr>
 				</table>
 				<?php if(count($folder_array['index']) > 0)
-				{?>
+				{
+					?>
 					<br/>
 						<h2>
 			            <span class="date">
@@ -335,16 +216,25 @@ else
 								</th>
 								<td>
 									<?php
-									if($folder_array['index'][$key]['type'] == 'date')
+									if($update_right)
 									{
-										?>
-										<input type="text" name="<?php echo $key;?>" id="<?php echo $key;?>" value="<?php echo $folder_array['index'][$key]['value'];?>" size="40"  title="<?php  echo $folder_array['index'][$key]['value']; ?>" alt="<?php  echo $folder_array['index'][$key]['value']; ?>" onclick="showCalender(this);" />
-										<?php
+										if($folder_array['index'][$key]['type'] == 'date')
+										{
+											?>
+											<input type="text" name="<?php echo $key;?>" id="<?php echo $key;?>" value="<?php echo $folder_array['index'][$key]['value'];?>" size="40"  title="<?php  echo $folder_array['index'][$key]['value']; ?>" alt="<?php  echo $folder_array['index'][$key]['value']; ?>" onclick="showCalender(this);" />
+											<?php
+										}
+										else
+										{
+											?>
+											<input type="text" name="<?php echo $key;?>" id="<?php echo $key;?>" value="<?php echo $folder_array['index'][$key]['value'];?>" size="40"  title="<?php  echo $folder_array['index'][$key]['value']; ?>" alt="<?php  echo $folder_array['index'][$key]['value']; ?>" />
+											<?php
+										}
 									}
 									else
 									{
-										?>
-										<input type="text" name="<?php echo $key;?>" id="<?php echo $key;?>" value="<?php echo $folder_array['index'][$key]['value'];?>" size="40"  title="<?php  echo $folder_array['index'][$key]['value']; ?>" alt="<?php  echo $folder_array['index'][$key]['value']; ?>" />
+									?>
+										<input type="text" name="<?php echo $key;?>" id="<?php echo $key;?>" value="<?php echo $folder_array['index'][$key]['value'];?>" size="40"  title="<?php  echo $folder_array['index'][$key]['value']; ?>" alt="<?php  echo $folder_array['index'][$key]['value']; ?>" readonly="readonly" class="readonly" />
 										<?php
 									}
 								?>
@@ -363,7 +253,6 @@ else
 									}
 								}
 								$i++;
-					//$func->show_array($folder_array['index']);
 						}
 				?></table><?php
 				 } ?>
@@ -387,32 +276,36 @@ else
 						<td><input type="text" class="readonly" readonly="readonly" value="<?php  echo $folder_array['system_id']; ?>" name="system_id" id="system_id" /></td>
 						<th align="left" class="picto" >&nbsp;</th>
 						<th ><?php  echo _MODIFICATION_DATE; ?> :</th>
-						<td><input type="text" class="readonly" readonly="readonly" value="<?php  echo $folder_array['last_modification_date']; ?>" id="modification_date" name="modification_date"  /></td>
+						<td><input type="text" class="readonly" readonly="readonly" value="<?php  echo $folder_array['last_modified_date']; ?>" id="modification_date" name="modification_date"  /></td>
 					</tr>
 				</table>
+				<br/>
+				<p class="buttons" align="center">
+					<?php if($update_right && count($folder_array['index']) > 0)
+					{
+						?><input type="submit" class="button" name="update_folder" id="update_folder" value="<?php echo _UPDATE_FOLDER;?>" /><?php
+					}?>
+					<?php if($delete_right)
+						{?>
+						<input type="submit" class="button"  value="<?php  echo _DELETE_FOLDER;?>" name="delete_folder" onclick="return(confirm('<?php  echo _REALLY_DELETE.' '._THIS_FOLDER.'?\n\r\n\r'._WARNING.' '._ALL_DOCS_WILL_BE_DELETED; ?>'));" />
+						<?php } ?>
+				</p>
+				</form>
 			</dd>
 			<dt><?php  echo _ARCHIVED_DOC;?></dt>
 			<dd>
-				<?php
-				if((!$flagsearch || $cpt_folder_3==1) && $status <> 'DEL')
-				{
-					?>
-					<table width="100%" border="0">
-						<tr>
-							<td valign="top">
-								<div align="left">
-									<?php
-									if(trim($_SESSION['current_folder_id'])<>'' && !empty($view))
-									{
-										$select2 = array();
-										$select2[$view]= array();
-										//$select2[$_SESSION['tablename']['doctypes']]= array();
-									 	$tab2 = array();
-									 	array_push($select2[$view],"res_id", "type_label");
-										//array_push($select2[$_SESSION['tablename']['doctypes']],"description");
-										//$tab2=$request->select($select2,"folders_system_id = ".$_SESSION['current_folder_id']." and status <> 'DEL'"," order by ".$_SESSION['tablename']['doctypes'].".description ",$_SESSION['config']['databasetype'],"500",true,$_SESSION['collection'][0]['table'],$_SESSION['tablename']['doctypes'],"type_id");
-										$tab2=$request->select($select2,"folders_system_id = '".$_SESSION['current_folder_id']."' and status <> 'DEL'"," order by type_label ",$_SESSION['config']['databasetype'],"500",false);
-										//$request->show();
+				<table width="100%" border="0">
+					<tr>
+						<td valign="top">
+							<div align="left">
+								<?php
+								if(trim($_SESSION['current_folder_id'])<>'' && !empty($view))
+								{
+									$select2 = array();
+									$select2[$view]= array();
+									 $tab2 = array();
+									 array_push($select2[$view],"res_id", "type_label");
+									$tab2=$request->select($select2,"folders_system_id = '".$_SESSION['current_folder_id']."' and status <> 'DEL'"," order by type_label ",$_SESSION['config']['databasetype'],"500",false);
 										for ($cpt_folder_2=0;$cpt_folder_2<count($tab2);$cpt_folder_2++)
 										{
 											for ($cpt_folder_j_2=0;$cpt_folder_j_2<count($tab2[$cpt_folder_2]);$cpt_folder_j_2++)
@@ -459,8 +352,7 @@ else
 										$_SESSION['FILLING_RES']['PARAM']['BOOL_DETAIL']=true;
 										$_SESSION['FILLING_RES']['PARAM']['BOOL_ORDER']=false;
 										$_SESSION['FILLING_RES']['PARAM']['BOOL_FRAME']=true;
-										//$request->show_array($_SESSION['FILLING_RES']['PARAM']);
-										//exit;
+
 										?>
 										<iframe name="filling_res" id="filling_res" src="<?php  echo $_SESSION['urltomodules']."folder/filling_res.php";?>" frameborder="0" scrolling="auto" width="400px" height="580px"></iframe>
 										<?php
@@ -477,8 +369,6 @@ else
 									<tr valign="top">
 										<td>
 										<iframe name="view_doc" id="view_doc" src="<?php  echo $_SESSION['urltomodules']."folder/list_doc.php";?>" frameborder="0" scrolling="no" width="570px" height="580px"></iframe>
-										<?php  //echo $core_tools->execute_app_services($_SESSION['app_services'], 'index.php?page=salary_sheet', "frame");?>
-										 <?php  //echo $core_tools->execute_modules_services($_SESSION['modules_services'], 'index.php?page=salary_sheet', "frame");?>
 										</td>
 									</tr>
 								</table>
@@ -494,15 +384,7 @@ else
 				<?php  //echo $core_tools->execute_modules_services($_SESSION['modules_services'], 'index.php?page=show_folder', "include","show_missing_doc_in_folder", "folder");?>
 			</dd>-->
 		</dl>
-		<?php
-	}
-	/*else
-	{
-		?><div>
-		<?php  echo _PLEASE_SELECT_FOLDER;?>.</div>
-		<?php
-	}*/
-	?>
+
 </div>
 </div>
 </div>

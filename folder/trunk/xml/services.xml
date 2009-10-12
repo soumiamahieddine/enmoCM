@@ -35,7 +35,7 @@
 	 <processorder>1</processorder>
    </PROCESSINBACKGROUND>-->
  </SERVICE>
-  <SERVICE>
+ <!-- <SERVICE>
    <id>show_missing_doc_in_folder</id>
    <name>_MISSING_DOC</name>
    <comment>_MISSING_DOC</comment>
@@ -43,17 +43,11 @@
    <servicetype>use</servicetype>
     <system_service>true</system_service>
    <enabled>true</enabled>
- <!--  <WHEREAMIUSED>
-     <page>index_documents.php</page>
-     <nature>tab</nature>
-	 <tab_label>_MISSING_DOC</tab_label>
-	 <tab_order>4</tab_order>
-   </WHEREAMIUSED>-->
     <WHEREAMIUSED>
      <page>index.php?page=show_folder</page>
      <nature>include</nature>
    </WHEREAMIUSED>
- </SERVICE>
+ </SERVICE>-->
   <SERVICE>
    <id>show_history_folder</id>
    <name>_FOLDER_HISTORY</name>
@@ -62,12 +56,6 @@
    <servicetype>use</servicetype>
     <system_service>true</system_service>
    <enabled>true</enabled>
- <!--  <WHEREAMIUSED>
-     <page>index_documents.php</page>
-     <nature>tab</nature>
-	 <tab_label>_FOLDER_HISTORY</tab_label>
-	 <tab_order>5</tab_order>
-   </WHEREAMIUSED>-->
    <WHEREAMIUSED>
      <page>index.php?page=show_folder</page>
      <nature>include</nature>
