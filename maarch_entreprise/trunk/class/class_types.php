@@ -604,7 +604,7 @@ class types extends dbquery
 			{
 				return false;
 			}
-			if($indexes[$key]['type'] == 'date' && !empty($value[$key]))
+			if($indexes[$key]['type'] == 'date' && !empty($values[$key]))
 			{
 				if(preg_match( $date_pattern,$values[$key])== 0)
 				{
@@ -612,31 +612,17 @@ class types extends dbquery
 					return false;
 				}
 			}
-			else if($indexes[$key]['type'] == 'string'  && !empty($value[$key]))
+			else if($indexes[$key]['type'] == 'string'  && !empty($values[$key]))
 			{
 				$field_value = $this->wash($value[$key],"no",$indexes[$key]['label']);
 			}
-			else if($indexes[$key]['type'] == 'float'  && $value[$key] >= 0)
+			else if($indexes[$key]['type'] == 'float' ) // && $values[$key] >= 0
 			{
-				if($value[$key] == 0)
-				{
-					$field_value = 0;
-				}
-				else
-				{
-					$field_value = $this->wash($value[$key],"float",$indexes[$key]['label']);
-				}
+				$field_value = $this->wash($values[$key],"float",$indexes[$key]['label']);
 			}
-			else if($indexes[$key]['type'] == 'integer' && $value[$key] >= 0)
+			else if($indexes[$key]['type'] == 'integer') // && $values[$key] >= 0
 			{
-				if($value[$key] == 0)
-				{
-					$field_value = 0;
-				}
-				else
-				{
-					$field_value = $this->wash($value[$key],"num",$indexes[$key]['label']);
-				}
+				$field_value = $this->wash($values[$key],"num",$indexes[$key]['label']);
 			}
 		}
 		return true;

@@ -931,4 +931,5 @@ define('_MUST_CORRECT_ERRORS', 'Vous devez corriger les erreurs suivantes ');
 define('_CLICK_HERE_TO_CORRECT', 'Cliquez ici pour les corriger');
 
 define('_FILETYPE', 'Type de fichier');
+define('_WARNING', 'Attention ');
 ?>

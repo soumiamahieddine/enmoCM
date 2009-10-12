@@ -189,15 +189,6 @@ class indexing_searching_app extends dbquery
 		$request = new request();
 		$core = new core_tools();
 
-		if($_SESSION['config']['databasetype'] == "SQLSERVER")
-		{
-			 $_SESSION['date_pattern'] = "/^[0-3][0-9]-[0-1][0-9]-[1-2][0-9][0-9][0-9]$/";
-		}
-		else // MYSQL & POSTGRESQL
-		{
-			 $_SESSION['date_pattern'] = "/^[0-3][0-9]-[0-1][0-9]-[1-2][0-9][0-9][0-9]$/";
-		}
-
 		$table = $sec->retrieve_table_from_coll($coll_id);
 		$view = $sec->retrieve_view_from_coll_id($coll_id);
 		$ind_coll = $sec->get_ind_collection($coll_id);

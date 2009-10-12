@@ -16,13 +16,13 @@
    <system_service>false</system_service>
    <enabled>true</enabled>
  </SERVICE>
- <SERVICE>
+<!-- <SERVICE>
    <id>search_customer</id>
    <name>_SEARCH_CUSTOMER</name>
    <servicetype>menu</servicetype>
    <system_service>false</system_service>
    <enabled>true</enabled>
-  </SERVICE>
+  </SERVICE>-->
 <SERVICE>
    <id>index_mlb</id> <!-- if servicetype = menu, this id must be equal to the id of the menu item -->
    <name>_INDEXING_MLB</name>
@@ -113,23 +113,6 @@
    <WHEREAMIUSED>
      <page>admin.php</page>
      <nature>listelement</nature>
-   </WHEREAMIUSED>
- </SERVICE>
-  <SERVICE>
-   <id>show_contract_history</id>
-   <name>_CONTRACT_HISTORY</name>
-   <comment>_CONTRACT_HISTORY</comment>
-   <servicepage>contract_history.php</servicepage>
-   <servicetype>use</servicetype>
-   <system_service>true</system_service>
-   <enabled>true</enabled>
-   <WHEREAMIUSED>
-     <page>index.php?page=salary_sheet</page>
-     <nature>frame</nature>
-     <width>400</width>
-     <height>100</height>
-	 <scrolling>auto</scrolling>
-	 <border>0</border>
    </WHEREAMIUSED>
  </SERVICE>
  <SERVICE>
@@ -247,17 +230,4 @@
      <nature>listelement</nature>
    </WHEREAMIUSED>
  </SERVICE>
-  <!--<SERVICE>
-   <id>view_process_data</id>
-   <name>_VIEW_PROCESS_DATA</name>
-   <comment>_VIEW_PROCESS_DATA_DESC</comment>
-  <servicepage>view_process_data.php</servicepage>
-   <servicetype>use</servicetype>
-   <system_service>false</system_service>
-   <enabled>true</enabled>
-   <WHEREAMIUSED>
-     <page>details.php</page>
-     <nature>include</nature>
-   </WHEREAMIUSED>
- </SERVICE>-->
 </root>
