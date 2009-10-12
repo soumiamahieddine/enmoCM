@@ -166,4 +166,8 @@ define('_ACTION_TYPE', 'Type d&rsquo;action');
 define('_NO_STRUCTURE_ATTACHED2', 'Ce type de dossier n&rsquo;est attach&eacute; &agrave; aucune chemise');
 
 define('_FOLDER_ADDED', 'Nouveau dossier cr&eacute;&eacute;');
+define('_FOLDER_DETAILLED_PROPERTIES', 'Informations sur le dossier');
+define('_FOLDER_PROPERTIES', 'Propri&eacute;t&eacute;s du dossier');
+define('_SYSTEM_ID', 'ID Syst&egrave;me');
+define('_MODIFICATION_DATE', 'Date de modification');
 ?>

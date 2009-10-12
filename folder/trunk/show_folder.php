@@ -225,7 +225,7 @@ else
 
 }*/
 ?>
-<div id="details_div" style="display:none;">
+<div id="details_div" style="display:block;">
 <h1><img src="<?php  echo $_SESSION['config']['img'];?>/manage_structures.gif" alt="<?php _FOLDER;?>" width="35px" height="30px"/> <?php  echo _SHOW_FOLDER;?></h1>
 <div id="inner_content">
 	<?php
@@ -234,68 +234,160 @@ else
 		?>
 		<div class="viewfolder">
 		<?php
-			if($_REQUEST['id'] <> "") // && $show_list <> "ok" && $notfound <> "ok")
+		if($_REQUEST['id'] <> "") // && $show_list <> "ok" && $notfound <> "ok")
+		{
+			$folder_object->load_folder1($_REQUEST['id'],$_SESSION['tablename']['fold_folders']);
+			$status = $folder_object->get_field('status');
+			$_SESSION['current_foldertype_coll_id'] = $folder_object->get_field('coll_id');
+			$view = $sec->retrieve_view_from_coll_id($_SESSION['current_foldertype_coll_id']);
+			if($status == 'DEL')
 			{
-				$folder_object->load_folder1($_REQUEST['id'],$_SESSION['tablename']['fold_folders']);
-				$status = $folder_object->get_field('status');
-				$_SESSION['current_foldertype_coll_id'] = $folder_object->get_field('coll_id');
-				$view = $sec->retrieve_view_from_coll_id($_SESSION['current_foldertype_coll_id']);
-				if($status == 'DEL')
-				{
-					echo _NO_FOLDER_FOUND.".";
-				}
-				else
-				{
-					$folder_array = array();
-					$folder_array = $folder_object->get_folder_info();
-					$lastname = '';
-					for($cpt_folder_3=0;$cpt_folder_3<count($folder_array['index']);$cpt_folder_3++)
-					{
-						if($folder_array['index'][$cpt_folder_3]['column'] == 'custom_t1')
-						{
-							$lastname = $folder_array['index'][$cpt_folder_3]['value'];
-							break;
-						}
-					}
+				echo _NO_FOLDER_FOUND.".";
+			}
+			else
+			{
 
-					$_SESSION['current_folder_id'] = $folder_array['system_id'];
-					$id = $_SESSION['current_folder_id'];
-					$folder_object->modify_default_folder_in_db($_SESSION['current_folder_id'], $_SESSION['user']['UserId'], $_SESSION['tablename']['users']);
-					if($_SESSION['history']['folderview'] == true)
+				$folder_array = array();
+				$folder_array = $folder_object->get_folder_info();
+				//$lastname = '';
+/*
+				for($cpt_folder_3=0;$cpt_folder_3<count($folder_array['index']);$cpt_folder_3++)
+				{
+					if($folder_array['index'][$cpt_folder_3]['column'] == 'custom_t1')
 					{
-						$users->add($_SESSION['tablename']['fold_folders'], $id ,"VIEW", _VIEW_FOLDER." ".strtolower(_NUM).$folder_array['folder_id'], $_SESSION['config']['databasetype'], 'folder');
+						$lastname = $folder_array['index'][$cpt_folder_3]['value'];
+						break;
 					}
-
 				}
+*/
+
+				$_SESSION['current_folder_id'] = $folder_array['system_id'];
+				$id = $_SESSION['current_folder_id'];
+				$folder_object->modify_default_folder_in_db($_SESSION['current_folder_id'], $_SESSION['user']['UserId'], $_SESSION['tablename']['users']);
+
+				if($_SESSION['history']['folderview'] == true)
+				{
+					$users->add($_SESSION['tablename']['fold_folders'], $id ,"VIEW", _VIEW_FOLDER." ".strtolower(_NUM).$folder_array['folder_id'], $_SESSION['config']['databasetype'], 'folder');
+				}
+
 			}
 		}
+	}
 
 		?>
 		<div class="block">
-			<h4><a href="#" onclick="history.go(-1);" class="back">
-					<!--<img src="<?php  echo $_SESSION['urltomodules']."indexing_searching/img/but_prev_off.gif";?>" alt="" />--> <?php  echo _BACK; ?>
-				</a></h4>
+			<h4><a href="#" onclick="history.go(-1);" class="back"></a></h4>
 		</div>
 		<div class=blank_space>&nbsp;</div>
 		<dl id="tabricator1">
-			<dt><?php  echo _DETAILLED_PROPERTIES;?></dt>
+			<dt><?php  echo _FOLDER_DETAILLED_PROPERTIES;?></dt>
 			<dd>
+				<h2><span class="date"><b><?php  echo _FOLDER_DETAILLED_PROPERTIES;?></b></span></h2>
+				<br/>
 				<table cellpadding="2" cellspacing="2" border="0" class="block forms details" width="100%">
 					<tr>
-						<th align="right"><?php  echo _FOLDERTYPE; ?> :</th>
-						<td><input type="text" class="readonly" readonly="readonly" value="<?php  echo $folder_array['foldertype_label']; ?>" size="40"  /></td>
+						<th align="left" class="picto" >&nbsp;</th>
+						<th ><?php  echo _FOLDERID_LONG; ?> :</th>
+						<td colspan="4"><input type="text" class="readonly" readonly="readonly" value="<?php  echo $folder_array['folder_id'] ; ?>" size="40" id="folder_id" name="folder_id" /></td>
+
 					</tr>
 					<tr>
-						<th align="right"><?php  echo _FOLDERID_LONG; ?> :</th>
-						<td><input type="text" class="readonly" readonly="readonly" value="<?php  echo $folder_array['folder_id'] ; ?>"  /></td>
-						<th align="right"><?php  echo _STATUS; ?> :</th>
-						<td><input type="text" class="readonly" readonly="readonly" value="<?php  echo $folder_array['status']; ?>"  /></td>
+						<th align="left" class="picto" >&nbsp;</th>
+						<th ><?php  echo _FOLDERTYPE; ?> :</th>
+						<td><input type="text" class="readonly" readonly="readonly" value="<?php  echo $folder_array['foldertype_label']; ?>" id="foldertype"  name="foldertype" /></td>
+						<th align="left" class="picto" >&nbsp;</th>
+						<th ><?php  echo _STATUS; ?> :</th>
+						<td><input type="text" class="readonly" readonly="readonly" value="<?php  echo $folder_array['status']; ?>" id="status" name="status" /></td>
+					</tr>
+				</table>
+				<?php if(count($folder_array['index']) > 0)
+				{?>
+					<br/>
+						<h2>
+			            <span class="date">
+			            	<b><?php  echo _OPT_INDEXES;?></b>
+			            </span>
+			        	</h2>
+			        	<br/>
+			        <table cellpadding="2" cellspacing="2" border="0" class="block forms details" width="100%">
+					<?php
+							$i=0;
+							foreach(array_keys($folder_array['index']) as $key)
+							{
+								if($i%2 != 1 || $i==0) // pair
+								{
+									?>
+									<tr class="col">
+									<?php
+								}?>
+								<th align="left" class="picto" >
+									<?php
+									if(isset($indexes[$key]['img']))
+									{
+										?>
+										<img alt="<?php echo $folder_array['index'][$key]['label'];?>" title="<?php echo $folder_array['index'][$key]['label'];?>" src="<?php echo $folder_array['index'][$key]['img'];?>"  /></a>
+										<?php
+									}
+									?>&nbsp;
+								</th>
+								<th align="left" >
+									<?php echo $folder_array['index'][$key]['label'];?> :
+								</th>
+								<td>
+									<?php
+									if($folder_array['index'][$key]['type'] == 'date')
+									{
+										?>
+										<input type="text" name="<?php echo $key;?>" id="<?php echo $key;?>" value="<?php echo $folder_array['index'][$key]['value'];?>" size="40"  title="<?php  echo $folder_array['index'][$key]['value']; ?>" alt="<?php  echo $folder_array['index'][$key]['value']; ?>" onclick="showCalender(this);" />
+										<?php
+									}
+									else
+									{
+										?>
+										<input type="text" name="<?php echo $key;?>" id="<?php echo $key;?>" value="<?php echo $folder_array['index'][$key]['value'];?>" size="40"  title="<?php  echo $folder_array['index'][$key]['value']; ?>" alt="<?php  echo $folder_array['index'][$key]['value']; ?>" />
+										<?php
+									}
+								?>
+								</td>
+								<?php
+								if($i%2 == 1 && $i!=0) // impair
+								{?>
+									</tr>
+									<?php
+								}
+								else
+								{
+									if($i+1 == count($folder_array['index']))
+									{
+										echo '<td  colspan="2">&nbsp;</td></tr>';
+									}
+								}
+								$i++;
+					//$func->show_array($folder_array['index']);
+						}
+				?></table><?php
+				 } ?>
+				<br/>
+				<h2>
+			        <span class="date"><b><?php  echo _FOLDER_PROPERTIES;?></b></span>
+			    </h2>
+				<br/>
+				<table cellpadding="2" cellspacing="2" border="0" class="block forms details" width="100%">
+					<tr>
+						<th align="left" class="picto" >&nbsp;</th>
+						<th ><?php  echo _TYPIST; ?> :</th>
+						<td><input type="text" class="readonly" readonly="readonly" value="<?php  echo $folder_array['typist']; ?>" name="typîst" id="typist" /></td>
+						<th align="left" class="picto" >&nbsp;</th>
+						<th ><?php  echo _CREATION_DATE; ?> :</th>
+						<td><input type="text" class="readonly" readonly="readonly" value="<?php  echo $folder_array['creation_date']; ?>" id="creation_date" name="creation_date"  /></td>
 					</tr>
 					<tr>
-						<th align="right"><?php  echo _FOLDERNAME; ?> :</th>
-						<td><input type="text" class="readonly" readonly="readonly" value="<?php  echo $folder_array['folder_name']; ?>" size="40"  /></td>
-						<th align="right"><?php  echo _CREATION_DATE; ?> :</th>
-						<td><input type="text" class="readonly" readonly="readonly" value="<?php  echo $func->format_date($folder_array['creation_date']); ?>"/></td>
+						<th align="left" class="picto" >&nbsp;</th>
+						<th ><?php  echo _SYSTEM_ID; ?> :</th>
+						<td><input type="text" class="readonly" readonly="readonly" value="<?php  echo $folder_array['system_id']; ?>" name="system_id" id="system_id" /></td>
+						<th align="left" class="picto" >&nbsp;</th>
+						<th ><?php  echo _MODIFICATION_DATE; ?> :</th>
+						<td><input type="text" class="readonly" readonly="readonly" value="<?php  echo $folder_array['last_modification_date']; ?>" id="modification_date" name="modification_date"  /></td>
 					</tr>
 				</table>
 			</dd>

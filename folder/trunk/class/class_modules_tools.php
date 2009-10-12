@@ -100,18 +100,23 @@ class folder extends request
 	private $complete;
 
 	/**
-	* true if the folder is out, false otherwise
+	* Collection identifier
     * @access private
-    * @var boolean
+    * @var string
     */
 	private $coll_id;
-
 	/**
 	* Collection identifier
     * @access private
     * @var string
     */
+	private $last_modification_date;
 
+	/**
+	* Last modification date
+    * @access private
+    * @var date
+    */
 	private $desarchive;
 
 	/**
@@ -119,7 +124,6 @@ class folder extends request
     * @access private
     * @var array
     */
-
 	private $index;
 
 	function __construct()
@@ -220,7 +224,7 @@ class folder extends request
 	*/
 	function load_folder1($id, $table)
 	{
-		require_once($_SESSION['urltomodules'].'folder'.DIRECTORY_SEPARATOR.'class_admin_foldertypes.php');
+		require_once($_SESSION['pathtomodules'].'folder'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_admin_foldertypes.php');
 		$ft = new foldertype();
 		$this->connect();
 		$this->query("select foldertype_id from ".$table." where folders_system_id = ".$id."");
@@ -228,9 +232,8 @@ class folder extends request
 		$this->foldertype_id = $res->foldertype_id;
 		$this->system_id = $id;
 		$tab_index = $ft->get_indexes($this->foldertype_id);
-		//$tab_index = $this->get_folder_index($this->foldertype_id);
 
-		$fields = " folder_id, parent_id, folder_name, subject, description, author, typist, status, folder_level, creation_date,folder_out_id, is_complete, is_folder_out";
+		$fields = " folder_id, parent_id, folder_name, subject, description, author, typist, status, folder_level, creation_date,folder_out_id, is_complete, is_folder_out, last_modified_date";
 		foreach(array_keys($tab_index) as $key)
 		{
 			$fields .= ", ".$key;
@@ -243,14 +246,19 @@ class folder extends request
 		$this->typist = $this->show_string($res->typist);
 		$this->status = $res->status;
 		$this->level = $res->folder_level;
-		$this->creation_date = $res->creation_date;
+		$this->creation_date = $this->format_date_db($res->creation_date, true);
 		$this->folder_out_id = $res->folder_out_id;
 		$this->complete = $res->is_complete;
 		$this->desarchive = $res->is_folder_out;
+		$this->last_modification_date = $this->format_date_db($res->last_modified_date, true);
 
 		foreach(array_keys($tab_index) as $key)
 		{
 			$tab_index[$key]['value'] = $res->$key;
+			if($tab_index[$key]['type'] == 'date')
+			{
+				$tab_index[$key]['value'] = $this->format_date_db($tab_index[$key]['value'], true);
+			}
 		}
 		$this->index = array();
 		$this->index = $tab_index;
@@ -352,9 +360,8 @@ class folder extends request
 			else
 			{
 
-
 				$this->connect();
-				$this->query("INSERT INTO ".$_SESSION['tablename']['fold_folders']." (folder_id, foldertype_id, description, creation_date, typist) VALUES ('".$this->show_string($_SESSION['m_admin']['folder']['folder_id'])."', ".$_SESSION['m_admin']['folder']['foldertype_id'].", '".$this->show_string($_SESSION['m_admin']['folder']['desc'])."', ".$this->current_datetime().", '".$_SESSION['user']['UserId']."');");
+				$this->query("INSERT INTO ".$_SESSION['tablename']['fold_folders']." (folder_id, foldertype_id, description, creation_date, typist, last_modified_date) VALUES ('".$this->show_string($_SESSION['m_admin']['folder']['folder_id'])."', ".$_SESSION['m_admin']['folder']['foldertype_id'].", '".$this->show_string($_SESSION['m_admin']['folder']['desc'])."', ".$this->current_datetime().", '".$_SESSION['user']['UserId']."', ".$this->current_datetime().",);");
 				$this->query('select folders_system_id from '.$_SESSION['tablename']['fold_folders']." where folder_id = '".$this->show_string($_SESSION['m_admin']['folder']['folder_id'])."';");
 				$res = $this->fetch_object();
 				$id = $res->folders_system_id;
