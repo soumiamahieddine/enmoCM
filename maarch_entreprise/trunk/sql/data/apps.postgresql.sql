@@ -476,12 +476,12 @@ INSERT INTO ar_container_types (ctype_id, ctype_desc, size_x, size_y, size_z) VA
 
 INSERT INTO ar_sites (site_id, site_desc, entity_id) VALUES
 ('FR01', 'Site de Paris', 'ARC'),
-('FR02', 'Site de Nanterre', 'ARC');
+('FR02', 'Site de Londres', 'ARC');
 
-INSERT INTO ar_natures (arnature_id, arnature_desc, arnature_retention, entity_id, enabled) VALUES ('DOSPROJ', 'Dossiers de projet DGS', 10, 'COARCDGS', 'Y');
-INSERT INTO ar_natures (arnature_id, arnature_desc, arnature_retention, entity_id, enabled) VALUES ('DOSTECH', 'Dossiers techniques DGS', 10, 'COARCDGS', 'Y');
-INSERT INTO ar_natures (arnature_id, arnature_desc, arnature_retention, entity_id, enabled) VALUES ('DOSRH', 'Dossiers RH DGA', 30, 'COARCDGA', 'Y');
-INSERT INTO ar_natures (arnature_id, arnature_desc, arnature_retention, entity_id, enabled) VALUES ('DOSACC', 'Dossiers comptables DGA', 10, 'COARCDGA', 'Y');
+INSERT INTO ar_natures (arnature_id, arnature_desc, arnature_retention, entity_id, enabled) VALUES ('DOSPROJ', 'Dossiers de projet', 10, 'COR', 'Y');
+INSERT INTO ar_natures (arnature_id, arnature_desc, arnature_retention, entity_id, enabled) VALUES ('DOSTECH', 'Dossiers techniques', 10, 'COR', 'Y');
+INSERT INTO ar_natures (arnature_id, arnature_desc, arnature_retention, entity_id, enabled) VALUES ('DOSRH', 'Dossiers RH', 30, 'COR', 'Y');
+INSERT INTO ar_natures (arnature_id, arnature_desc, arnature_retention, entity_id, enabled) VALUES ('DOSACC', 'Dossiers comptables', 10, 'COR', 'Y');
 
 INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (1, 'FR01', 'A', 1, 1, 4, 4);
 INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (2, 'FR01', 'A', 1, 2, 4, 4);
