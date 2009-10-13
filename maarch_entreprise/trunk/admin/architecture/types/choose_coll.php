@@ -61,7 +61,7 @@ if(isset($_REQUEST['collection']) && !empty($_REQUEST['collection']) )
 }
 ?>
 <body id="iframe">
-<form name="choose_coll" method="get" action="choose_coll.php" class="forms" >
+<form name="choose_coll" method="get" action="<?php echo $_SESSION['config']['businessappurl'];?>admin/architecture/types/choose_coll.php" class="forms" >
   <p>
 	<label for="coll_id"><?php  echo _COLLECTION;?> : </label>
 	<select name="collection" onChange="this.form.submit();">

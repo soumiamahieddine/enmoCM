@@ -102,7 +102,7 @@ $core_tools->load_html();
 $core_tools->load_header();
 ?>
 <body>
-<form name="choose_coll" action="choose_coll.php" method="get" class="forms">
+<form name="choose_coll" action="<?php echo $_SESSION['config']['businessappurl'];?>admin/groups/choose_coll.php" method="get" class="forms">
 	<p>
 		<label><?php  echo _COLLECTION;?> :</label>
 		<select name="collselect" id="collselect" onchange="this.form.submit();return false;">

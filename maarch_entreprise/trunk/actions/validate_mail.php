@@ -1,4 +1,4 @@
-<?
+<?php
 /*
 *    Copyright 2008,2009 Maarch
 *
@@ -92,6 +92,23 @@ function get_file_path($res_id, $coll_id)
 	return $docserver_path.$path.$filename;
 }
 
+function check_category($coll_id, $res_id)
+{
+	require_once($_SESSION['pathtocoreclass']."class_security.php");
+	$sec =new security();
+	$view = $sec->retrieve_view_from_coll_id($coll_id);
+
+	$db = new dbquery();
+	$db->connect();
+	$db->query("select category_id from ".$view." where res_id = ".$res_id);
+	if($db->nb_result() == 0)
+	{
+		$ind_coll = $sec->get_ind_collection($coll_id);
+		$table_ext = $_SESSION['collections'][$ind_coll]['extensions'][0];
+		$db->query("insert into ".$table_ext." (res_id, category_id) VALUES (".$res_id.", '".$_SESSION['default_category']."');");
+	}
+}
+
 /**
  * Returns the validation form text
  *
@@ -174,7 +191,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 			array_push($boxes, array( 'ID' => $res->arbox_id, 'LABEL' => $db->show_string($res->title)));
 		}
 	}
-
+	check_category($coll_id, $res_id);
 	$data = get_general_data($coll_id, $res_id, 'minimal');
 	//print_r($data);
 	$frm_str .= '<div id="validleft">';

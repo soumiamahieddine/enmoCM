@@ -1021,6 +1021,26 @@ function process_category_check($cat_id, $values)
 				return false;
 			}
 		}
+		if(!empty($type_id ) &&  (!empty($project_id) || !empty($market_id)))
+		{
+			$foldertype_id = '';
+			if(!empty($market_id))
+			{
+				$db->query("select foldertype_id from ".$_SESSION['tablename']['fold_folders']." where folders_system_id = ".$market_id);
+			}
+			else //!empty($project_id)
+			{
+				$db->query("select foldertype_id from ".$_SESSION['tablename']['fold_folders']." where folders_system_id = ".$project_id);
+			}
+			$res = $db->fetch_object();
+			$foldertype_id = $res->foldertype_id;
+			$db->query("select fdl.foldertype_id from ".$_SESSION['tablename']['fold_foldertypes_doctypes_level1']." fdl, ".$_SESSION['tablename']['doctypes']." d where d.doctypes_first_level_id = fdl.doctypes_first_level_id and fdl.foldertype_id = ".$foldertype_id." and d.type_id = ".$type_id);
+			if($db->nb_result() == 0)
+			{
+				$_SESSION['error'] .= _ERROR_COMPATIBILITY_FOLDER;
+				return false;
+			}
+		}
 	}
 
 	if($core->is_module_loaded('physical_archive'))
@@ -1304,6 +1324,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
 		if(!empty($folder_id))
 		{
 			array_push($_SESSION['data'], array('column' => 'folders_system_id', 'value' => $folder_id, 'type' => "integer"));
+
 		}
 	}
 
@@ -1360,6 +1381,12 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
 
 		$db->connect();
 		$db->query($query_ext);
+		if($core->is_module_loaded('folder') && !empty($folder_id) && $_SESSION['history']['folderup'])
+		{
+			require_once($_SESSION['pathtocoreclass']."class_history.php");
+			$hist = new history();
+			$hist->add($_SESSION['tablename']['fold_folders'], $folder_id, "UP", _DOC_NUM.$res_id._ADDED_TO_FOLDER, $_SESSION['config']['databasetype'],'apps');
+		}
 		//$db->show();
 		if($core->is_module_loaded('entities'))
 		{

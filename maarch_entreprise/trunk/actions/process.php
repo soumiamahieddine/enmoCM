@@ -308,6 +308,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 					$frm_str .= '</table>';
 				$frm_str .= '</div>';
 		 	$frm_str .= '</div>';
+		 	 $frm_str .='<input type="hidden" name="res_id" id="res_id"  value="'.$res_id.'" />';
 		}
 		$frm_str .= '<h2 onclick="new Effect.toggle(\'history_div\', \'blind\', {delay:0.2});return false;" class="categorie" style="width:90%;">';
 			$frm_str .= '<img src="'.$_SESSION['config']['businessappurl'].$_SESSION['config']['img'].'/plus.png" alt="" />&nbsp;<b>'. _DOC_HISTORY.' :</b>';
@@ -507,6 +508,7 @@ function check_form($form_id,$values)
 	$market = '';
 	$project = '';
 	$core = new core_tools();
+//	print_r($values);
 	for($i=0; $i<count($values); $i++)
 	{
 		if($values[$i]['ID'] == "direct_contact" && $values[$i]['VALUE'] == "true" )
@@ -550,6 +552,14 @@ function check_form($form_id,$values)
 		{
 			$project = $values[$i]['VALUE'];
 		}
+		if($values[$i]['ID'] == "coll_id"  )
+		{
+			$coll_id = $values[$i]['VALUE'];
+		}
+		if($values[$i]['ID'] == "res_id"  )
+		{
+			$res_id = $values[$i]['VALUE'];
+		}
 	}
 	if($core->is_module_loaded('folder'))
 	{
@@ -557,7 +567,6 @@ function check_form($form_id,$values)
 		$db->connect();
 		$project_id = '';
 		$market_id = '';
-
 		/*if(empty($market))
 		{
 			$_SESSION['error'] = _MARKET.' '._IS_EMPTY;
@@ -599,12 +608,45 @@ function check_form($form_id,$values)
 				return false;
 			}
 		}
-		if(!empty($folder_id) && !empty($market_id))
+		if(!empty($project_id) && !empty($market_id))
 		{
-			$db->query("select folders_system_id from ".$_SESSION['tablename']['fold_folders']." where folders_system_id = ".$market_id." and parent_id = ".$folder_id);
+			$db->query("select folders_system_id from ".$_SESSION['tablename']['fold_folders']." where folders_system_id = ".$market_id." and parent_id = ".$project_id);
 			if($db->nb_result() == 0)
 			{
 				$_SESSION['error'] = _INCOMPATIBILITY_MARKET_PROJECT;
+				return false;
+			}
+		}
+
+		if(!empty($res_id) && !empty($coll_id) && (!empty($project_id) || !empty($market_id)))
+		{
+			require_once($_SESSION['pathtocoreclass'].'class_security.php');
+			$sec = new security();
+			$table = $sec->retrieve_table_from_coll($coll_id);
+			if(empty($table))
+			{
+				$_SESSION['error'] .= _COLLECTION.' '._UNKNOWN;
+				return false;
+			}
+
+			$db->query("select type_id from ".$table." where res_id = ".$res_id );
+			$res = $db->fetch_object();
+			$type_id = $res->type_id;
+			$foldertype_id = '';
+			if(!empty($market_id))
+			{
+				$db->query("select foldertype_id from ".$_SESSION['tablename']['fold_folders']." where folders_system_id = ".$market_id);
+			}
+			else //!empty($project_id)
+			{
+				$db->query("select foldertype_id from ".$_SESSION['tablename']['fold_folders']." where folders_system_id = ".$project_id);
+			}
+			$res = $db->fetch_object();
+			$foldertype_id = $res->foldertype_id;
+			$db->query("select fdl.foldertype_id from ".$_SESSION['tablename']['fold_foldertypes_doctypes_level1']." fdl, ".$_SESSION['tablename']['doctypes']." d where d.doctypes_first_level_id = fdl.doctypes_first_level_id and fdl.foldertype_id = ".$foldertype_id." and d.type_id = ".$type_id);
+			if($db->nb_result() == 0)
+			{
+				$_SESSION['error'] .= _ERROR_COMPATIBILITY_FOLDER;
 				return false;
 			}
 		}
@@ -721,8 +763,13 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
 		$bitmask = $other.$fax.$email.$contact.$AR_mail.$simple_mail;
 	}
 
-	if($core->is_module_loaded('folder') && !empty($market) && !empty($project))
+	if($core->is_module_loaded('folder') && (!empty($market) || !empty($project)))
 	{
+		$folder_id = '';
+		$db->connect();
+		$db->query("select folders_system_id from ".$res_table." where res_id = ".$arr_id[0]);
+		$res = $db->fetch_object();
+		$old_folder_id = $res->folders_system_id;
 		if(!empty($market))
 		{
 			$folder_id = str_replace(')', '', substr($market, strrpos($market,'(')+1));
@@ -731,10 +778,16 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
 		{
 			$folder_id = str_replace(')', '', substr($project, strrpos($project,'(')+1));
 		}
+		if($folder_id <> $old_folder_id && $_SESSION['history']['folderup'])
+		{
+			require_once($_SESSION['pathtocoreclass']."class_history.php");
+			$hist = new history();
+			$hist->add($_SESSION['tablename']['fold_folders'], $folder_id, "UP", _DOC_NUM.$arr_id[0]._ADDED_TO_FOLDER, $_SESSION['config']['databasetype'],'apps');
+		}
+		$db->connect();
 		$db->query("update ".$res_table." set folders_system_id =".$folder_id." where res_id =".$arr_id[0]);
 	}
 
-//$db->show_array($_SESSION['process']['diff_list']);
 	if($core->is_module_loaded('entities') )
 	{
 		require_once($_SESSION['pathtomodules'].'entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_listdiff.php');
