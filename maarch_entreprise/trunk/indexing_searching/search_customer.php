@@ -1,6 +1,6 @@
 <?php
 /**
-* File : search_adv.php
+* File : search_customer.php
 *
 * Advanced search form
 *
@@ -63,12 +63,12 @@ if($_REQUEST['name_folder'] <> "")
 			<tr>
 				<td align="right"><label><?php  echo _PROJECT;?> :</td>
 				<td class="indexing_field">
-					<input type="text" name="project" id="project" size="60" />
+					<input type="text" name="project" id="project" size="50" />
 					<div id="show_project" class="autocomplete"></div>
 				</td>
 				<td align="right"><?php  echo _MARKET;?> :</td>
 				<td>
-					<input type="text" name="market" id="market" size="60" />
+					<input type="text" name="market" id="market" size="50" />
 					<div id="show_market" class="autocomplete"></div>
 				</td>
 				<td>

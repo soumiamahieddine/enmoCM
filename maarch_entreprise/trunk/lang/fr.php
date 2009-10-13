@@ -932,4 +932,7 @@ define('_CLICK_HERE_TO_CORRECT', 'Cliquez ici pour les corriger');
 
 define('_FILETYPE', 'Type de fichier');
 define('_WARNING', 'Attention ');
+define('_STRING', 'Chaine de caract&egrave;res');
+define('_INTEGER', 'Entier');
+define('_FLOAT', 'Flottant');
 ?>
