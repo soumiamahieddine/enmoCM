@@ -646,7 +646,7 @@ define('_DEPARTMENT_EXP', 'Service exp&eacute;diteur');
 define('_INCOMING', 'Courrier Arriv&eacute;e');
 define('_OUTGOING', 'Courrier D&eacute;part');
 define('_INTERNAL', 'Courrier Interne');
-define('_MARKET_DOCUMENT', 'Document de March&eacute;');
+define('_MARKET_DOCUMENT', 'Document de Sous-dossier');
 
 // Mail Natures
 define('_SIMPLE_MAIL', 'Courrier simple');
@@ -890,11 +890,11 @@ define('_FOR_MONTH', 'pour le mois de');
 define('_N_DAYS','NB JOURS');
 
 /******************** Specific DGGT ************/
-define('_PROJECT', 'Projet');
-define('_MARKET', 'March&eacute;');
-define('_SEARCH_CUSTOMER', 'Consultation Projets March&eacute;s');
-define('_SEARCH_CUSTOMER_TITLE', 'Recherche Projets March&eacute;s');
-define('_TO_SEARCH_DEFINE_A_SEARCH_ADV', 'Pour lancer une recherche vous devez saisir un n&deg; de dossier ou un nom de projet ou de march&eacute;');
+define('_PROJECT', 'Dossier');
+define('_MARKET', 'Sous-dossier');
+define('_SEARCH_CUSTOMER', 'Consultation Dossiers Sous-dossiers');
+define('_SEARCH_CUSTOMER_TITLE', 'Recherche Dossiers Sous-dossiers');
+define('_TO_SEARCH_DEFINE_A_SEARCH_ADV', 'Pour lancer une recherche vous devez saisir un n&deg; de dossier ou un nom de Dossier ou de Sous-dossier');
 define('_DAYS', 'jours');
 define('_LAST_DAY', 'Dernier jour');
 
