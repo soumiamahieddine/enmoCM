@@ -1,4 +1,15 @@
 <?php
+/**
+* File : autocomplete_folders.php
+*
+* Autocompletion list on market or project
+*
+* @package  maarch
+* @version 1
+* @since 10/2005
+* @license GPL v3
+* @author  Claire Figueras  <dev@maarch.org>
+*/
 session_name('PeopleBox');
 session_start();
 require_once($_SESSION['pathtocoreclass']."class_functions.php");

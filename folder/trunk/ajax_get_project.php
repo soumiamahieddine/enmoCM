@@ -2,7 +2,7 @@
 /**
 * File : ajax_get_project.php
 *
-* Script called by an ajax object to get the project id (index_mlb.php)
+* Script called by an ajax object to get the project id  given a market id (index_mlb.php)
 *
 * @package  maarch
 * @version 1
