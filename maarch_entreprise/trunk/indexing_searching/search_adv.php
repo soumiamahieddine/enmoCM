@@ -367,7 +367,7 @@ function del_query_confirm()
 </div>
 </form>
 <?php } ?>
-<form name="frmsearch2" method="get" action="index.php"  id="frmsearch2" class="<?php echo $class_for_form; ?>">
+<form name="frmsearch2" method="get" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php"  id="frmsearch2" class="<?php echo $class_for_form; ?>">
 <input type="hidden" name="page" value="search_adv_result" />
 <input type="hidden" name="dir" value="indexing_searching" />
 <table align="center" border="0" width="100%">
@@ -415,7 +415,7 @@ function del_query_confirm()
 				</td>
 				<td><em><?php echo _MULTI_FIELD_HELP; ?></em></td>
 			</tr>
-			<?php 
+			<?php
 			if($core_tools->is_module_loaded("cases") == true)
 			{ ?>
 				<tr>
@@ -425,7 +425,7 @@ function del_query_confirm()
 					</td>
 					<td><em><?php echo _CASE_NUMBER_HELP; ?></em></td>
 				</tr>
-				<?php 
+				<?php
 			}	 ?>
 			</table>
     	</td>

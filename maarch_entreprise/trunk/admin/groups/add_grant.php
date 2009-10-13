@@ -224,7 +224,7 @@ $time = $core_tools->get_session_time_expire();
 		{
 			?>
 	    	<div align="center">
-			<iframe name="choose_coll" id="choose_coll" scrolling="auto" width="100%" height="25" frameborder="0" src="choose_coll.php"></iframe></div>
+			<iframe name="choose_coll" id="choose_coll" scrolling="auto" width="100%" height="25" frameborder="0" src="<?php echo $_SESSION['config']['businessappurl'];?>admin/groups/choose_coll.php"></iframe></div>
 			<?php
 		}
 		?>
@@ -276,7 +276,7 @@ $time = $core_tools->get_session_time_expire();
 </td>
 
 <td width='400px'>
-	<?php 
+	<?php
 	$incl = $_SESSION['config']['businessapppath']."keywords_help.php";
 	include ($incl); ?>
 </td>
