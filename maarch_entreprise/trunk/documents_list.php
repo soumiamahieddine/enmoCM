@@ -86,15 +86,15 @@ $orderstr = $list->define_order($order, $order_field);
 $bask->connect();
 $do_actions_arr = array();
 $tab=$request->select($select,$where,$orderstr,$_SESSION['config']['databasetype'], '1000');
-
+//$request->show();
 
 	//Manage of template list
 	//###################
-	
+
 	//Defines template allowed for this list
 	$template_list=array();
 	array_push($template_list, array( "name"=>"document_list_extend", "img"=>"extend_list.gif", "label"=> _ACCESS_LIST_EXTEND));
-	
+
 	if(!$_REQUEST['template'])
 		$template_to_use = $template_list[0]["name"];
 
@@ -103,8 +103,8 @@ $tab=$request->select($select,$where,$orderstr,$_SESSION['config']['databasetype
 
 	if($_REQUEST['template'])
 		$template_to_use = $_REQUEST['template'];
-		
-	
+
+
 	//For status icon
 	$extension_icon = '';
 	if($template_to_use <> '')

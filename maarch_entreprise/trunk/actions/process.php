@@ -783,6 +783,10 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
 			require_once($_SESSION['pathtocoreclass']."class_history.php");
 			$hist = new history();
 			$hist->add($_SESSION['tablename']['fold_folders'], $folder_id, "UP", _DOC_NUM.$arr_id[0]._ADDED_TO_FOLDER, $_SESSION['config']['databasetype'],'apps');
+			if(isset($old_folder_id) && !empty($old_folder_id))
+			{
+				$hist->add($_SESSION['tablename']['fold_folders'], $old_folder_id, "UP", _DOC_NUM.$arr_id[0]._DELETED_FROM_FOLDER, $_SESSION['config']['databasetype'],'apps');
+			}
 		}
 		$db->connect();
 		$db->query("update ".$res_table." set folders_system_id =".$folder_id." where res_id =".$arr_id[0]);

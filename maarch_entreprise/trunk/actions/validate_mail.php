@@ -101,11 +101,14 @@ function check_category($coll_id, $res_id)
 	$db = new dbquery();
 	$db->connect();
 	$db->query("select category_id from ".$view." where res_id = ".$res_id);
-	if($db->nb_result() == 0)
+	$res = $db->fetch_object();
+
+	if(!isset($res->category_id))
 	{
 		$ind_coll = $sec->get_ind_collection($coll_id);
 		$table_ext = $_SESSION['collections'][$ind_coll]['extensions'][0];
 		$db->query("insert into ".$table_ext." (res_id, category_id) VALUES (".$res_id.", '".$_SESSION['default_category']."');");
+		//$db->show();
 	}
 }
 
@@ -250,7 +253,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 										if(!in_array($doctypes[$i]['level2'][$j]['types'][$k]['id'],$hidden_doctypes))
 										{
 											$frm_str .='<option value="'.$doctypes[$i]['level2'][$j]['types'][$k]['id'].'" ';
-											if(isset($data['type_id']) && !empty($data['type_id']))
+											if(isset($data['type_id']) && !empty($data['type_id']) && $data['type_id'] == $doctypes[$i]['level2'][$j]['types'][$k]['id'])
 											{
 												$frm_str .= ' selected="selected" ';
 											}
@@ -424,20 +427,29 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 				/*** Physical_archive : Arbox ***/
 				if($core_tools->is_module_loaded('physical_archive'))
 				{
-						$frm_str .= '<tr id="box_id_tr" style="display:'.$display_value.';">';
-				 		$frm_str .='<td class="indexing_label"><label for="arbox_id" class="form_title" id="label_box" style="display:inline;" >'._BOX_ID.'</label></td>';
-						$frm_str .='<td>&nbsp;</td>';
-						$frm_str .='<td class="indexing_field"><select name="arbox_id" id="arbox_id" onchange="clear_error(\'frm_error_'.$id_action.'\');" >';
-						$frm_str .='<option value="">'._CHOOSE_BOX.'</option>';
-					   for($i=0; $i < count($boxes); $i++)
-					   {
-							$frm_str .='<option value="'.$boxes[$i]['ID'].'"';
-							if(isset($data['arbox_id'])&& $data['arbox_id'] == $boxes[$i]['ID'])
-							{
-								$frm_str .='selected="selected"';
-							}
-							$frm_str .= ' >'.$db->show_string($boxes[$i]['LABEL']).'</option>';
-					   }
+					$frm_str .= '<tr id="box_id_tr" style="display:'.$display_value.';">';
+					$frm_str .='<td class="indexing_label"><label for="arbox_id" class="form_title" id="label_box" style="display:inline;" >'._BOX_ID.'</label></td>';
+					$frm_str .='<td>&nbsp;</td>';
+					$frm_str .='<td class="indexing_field"><select name="arbox_id" id="arbox_id" onchange="clear_error(\'frm_error_'.$id_action.'\');" ';
+					if($data['arbox_id'] <> "" && $data['arbox_id'] <> 1 )
+					{
+						$frm_str .='disabled="disabled">';
+					}
+					else
+					{
+						$frm_str .='>';
+					}
+					$frm_str .='<option value="">'._CHOOSE_BOX.'</option>';
+
+					for($i=0; $i < count($boxes); $i++)
+					{
+						$frm_str .='<option value="'.$boxes[$i]['ID'].'"';
+						if(isset($data['arbox_id'])&& $data['arbox_id'] == $boxes[$i]['ID'])
+						{
+							$frm_str .= ' selected="selected" ';
+						}
+						$frm_str .= ' >'.$db->show_string($boxes[$i]['LABEL']).'</option>';
+					}
 					$frm_str .='</select></td>';
 					$frm_str .= '<td><span class="red_asterisk" id="arbox_id_mandatory" style="display:inline;">*</span>&nbsp;</td>';
 				  $frm_str .= '</tr>';
@@ -910,7 +922,8 @@ function process_category_check($cat_id, $values)
 				$_SESSION['error'] = $_ENV['categories'][$cat_id]['other_cases']['contact']['label']." "._WRONG_FORMAT.".<br/>"._USE_AUTOCOMPLETION;
 				return false;
 			}
-			elseif($contact_type == 'internal' && preg_match('/\([A-Za-Z0-9-_ ]+\)$/', $contact) == 0)
+			//elseif($contact_type == 'internal' && preg_match('/\([A-Za-Z0-9-_ ]+\)$/', $contact) == 0)
+			elseif($contact_type == 'internal' && preg_match('/\((\s|\d|\h|\w)+\)$/i', $contact) == 0)
 			{
 				$_SESSION['error'] = $_ENV['categories'][$cat_id]['other_cases']['contact']['label']." "._WRONG_FORMAT.".<br/>"._USE_AUTOCOMPLETION;
 				return false;
@@ -990,6 +1003,26 @@ function process_category_check($cat_id, $values)
 			if($db->nb_result() == 0)
 			{
 				$_SESSION['error'] = _INCOMPATIBILITY_MARKET_PROJECT;
+				return false;
+			}
+		}
+		if(!empty($type_id ) &&  (!empty($project_id) || !empty($market_id)))
+		{
+			$foldertype_id = '';
+			if(!empty($market_id))
+			{
+				$db->query("select foldertype_id from ".$_SESSION['tablename']['fold_folders']." where folders_system_id = ".$market_id);
+			}
+			else //!empty($project_id)
+			{
+				$db->query("select foldertype_id from ".$_SESSION['tablename']['fold_folders']." where folders_system_id = ".$project_id);
+			}
+			$res = $db->fetch_object();
+			$foldertype_id = $res->foldertype_id;
+			$db->query("select fdl.foldertype_id from ".$_SESSION['tablename']['fold_foldertypes_doctypes_level1']." fdl, ".$_SESSION['tablename']['doctypes']." d where d.doctypes_first_level_id = fdl.doctypes_first_level_id and fdl.foldertype_id = ".$foldertype_id." and d.type_id = ".$type_id);
+			if($db->nb_result() == 0)
+			{
+				$_SESSION['error'] .= _ERROR_COMPATIBILITY_FOLDER;
 				return false;
 			}
 		}
@@ -1183,8 +1216,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
 		{
 			if($_SESSION['store_process_limit_date'] == "ok")
 			{
-				$query_ext_fields .= 'process_limit_date,';
-				$query_ext_values .= "'".$db->format_date_db($process_limit_date)."',";
+				$query_ext .= ", process_limit_date = '".$db->format_date_db($process_limit_date)."'";
 			}
 			$_SESSION['store_process_limit_date'] = "";
 		}
@@ -1228,6 +1260,10 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
 	{
 		$folder_id = '';
 		$market = get_value_fields($values_form, 'market');
+		$db->connect();
+		$db->query("select folders_system_id from ".$table ." where res_id = ".$res_id);
+		$res = $db->fetch_object();
+		$old_folder_id = $res->folders_system_id;
 		if(!empty($market))
 		{
 			$folder_id = str_replace(')', '', substr($market, strrpos($market,'(')+1));
@@ -1240,6 +1276,17 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
 		if(!empty($folder_id))
 		{
 			$query_res .= ", folders_system_id = ".$folder_id."";
+		}
+
+		if($folder_id <> $old_folder_id && $_SESSION['history']['folderup'])
+		{
+			require_once($_SESSION['pathtocoreclass']."class_history.php");
+			$hist = new history();
+			$hist->add($_SESSION['tablename']['fold_folders'], $folder_id, "UP", _DOC_NUM.$res_id._ADDED_TO_FOLDER, $_SESSION['config']['databasetype'],'apps');
+			if(isset($old_folder_id) && !empty($old_folder_id))
+			{
+				$hist->add($_SESSION['tablename']['fold_folders'], $old_folder_id, "UP", _DOC_NUM.$res_id._DELETED_FROM_FOLDER, $_SESSION['config']['databasetype'],'apps');
+			}
 		}
 	}
 
@@ -1257,7 +1304,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
 		}
 	}
 
-	if($core->is_module_loaded('physical_archive'))
+	if($core->is_module_loaded('physical_archive') && ($_SESSION['arbox_id'] == "1" || $_SESSION['arbox_id'] == ""))
 	{
 		// Arbox_id + Arbatch_id
 		$box_id = get_value_fields($values_form, 'arbox_id');
@@ -1265,9 +1312,9 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
 		require_once($_SESSION['pathtomodules'].'physical_archive'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php');
 		$physical_archive = new physical_archive();
 		$pa_return_value = $physical_archive->load_box_db($box_id, $cat_id, $_SESSION['user']['UserId']);
-		$query_res .= ", arbatch_id = ".$box_id."";
+		$query_res .= ", arbatch_id = ".$pa_return_value."";
 	}
-
+	$_SESSION['arbox_id'] = "";
 	$db->connect();
 	$db->query($query_res." where res_id =".$res_id);
 	$db->query($query_ext." where res_id =".$res_id);
