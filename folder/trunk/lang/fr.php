@@ -42,10 +42,10 @@ define('_CREATE_FOLDER', 'Cr&eacute;ation Dossier');
 define('_CREATE_FOLDER2', 'Cr&eacute;er Dossier');
 define('_FOLDER', 'Dossier');
 define('_MODIFY_FOLDER', 'Droit de modification des index d&rsquo;un dossier');
-define('_FOLDERID', 'Num&eacute;ro du Projet/March&eacute;');
+define('_FOLDERID', 'Num&eacute;ro du Dossier/Sous-dossier');
 define('_FOLDERSYSTEMID', 'Num&eacute;ro syst&egrave;me Maarch');
 define('_FOLDERID_LONG', 'Num&eacute;ro de dossier');
-define('_FOLDERNAME', 'Nom du Projet/March&eacute;');
+define('_FOLDERNAME', 'Nom du Dossier/Sous-dossier');
 define('_FOLDERDATE', 'Date de cr&eacute;ation');
 define('_FOLDERDATE_START', 'Date de cr&eacute;ation d&eacute;but ');
 define('_FOLDERDATE_END', 'Date de cr&eacute;ation fin ');
@@ -141,7 +141,7 @@ define('_SHOW_FOLDER', 'Fiche dossier');
 define('_FOLDERTYPE_UPDATE', 'Type de dossier modifi&eacute;');
 
 define('_FOLDER_ATTACH', 'Rattachement &agrave; un dossier');
-define('_INCOMPATIBILITY_MARKET_PROJECT', 'Incompatibilit&eacute; entre le projet et le march&eacute;');
+define('_INCOMPATIBILITY_MARKET_PROJECT', 'Incompatibilit&eacute; entre le Dossier et le Sous-dossier');
 
 define('_FOLDER_VIEW_STAT', 'Nombre de dossiers consult&eacute;s');
 define('_FOLDER_VIEW_STAT_DESC', 'Nombre de dossiers consult&eacute;s');
