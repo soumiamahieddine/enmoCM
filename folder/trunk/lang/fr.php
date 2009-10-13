@@ -182,4 +182,5 @@ define('_MAX', 'maximum');
 define('_MIN', 'minimum');
 define('_ERROR_COMPATIBILITY_FOLDER', 'Probl&egrave;me de compatibilit&eacute; entre<br/>le dossier et le type de document');
 define('_ADDED_TO_FOLDER', ' ajout&eacute; au dossier');
+define('_DELETED_FROM_FOLDER', ' supprim&eacute; du dossier');
 ?>
