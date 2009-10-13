@@ -1,5 +1,15 @@
 <?php
-  session_name('PeopleBox');
+/**
+* File : choose_doctypes.php
+*
+* Form to choose doctypes (used in foldertypes admin)
+*
+* @package  Maarch PeopleBox 1.0
+* @version 2.1
+* @since 06/2006
+* @license GPL
+*/
+ session_name('PeopleBox');
 session_start();
 
 require_once($_SESSION['pathtocoreclass']."class_functions.php");

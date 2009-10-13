@@ -180,4 +180,6 @@ define('_FLOAT', 'Flottant');
 define('_DATE', 'Date');
 define('_MAX', 'maximum');
 define('_MIN', 'minimum');
+define('_ERROR_COMPATIBILITY_FOLDER', 'Probl&egrave;me de compatibilit&eacute; entre<br/>le dossier et le type de document');
+define('_ADDED_TO_FOLDER', ' ajout&eacute; au dossier');
 ?>

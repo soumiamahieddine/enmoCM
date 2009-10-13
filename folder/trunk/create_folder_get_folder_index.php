@@ -18,7 +18,17 @@
 *    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
+/**
+* File : create_folder_get_folder_index.php
+*
+* Ajax script used to get folder index during folder creation
+*
+* @package  Folder
+* @version 1.0
+* @since 06/2007
+* @license GPL
+* @author  Claire Figueras  <dev@maarch.org>
+*/
 session_name('PeopleBox');
 session_start();
 

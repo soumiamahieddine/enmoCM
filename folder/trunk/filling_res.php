@@ -216,14 +216,16 @@ else
 										?>
 
 												<?php
+/*
 												foreach(array_keys($_SESSION['array_struct_final']['level_1'][$value_1]['level_2'][$value_2]['level_3'][$value_3]['level_4']) as $value_4)
 												{
 													echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 													<a href=javascript:view_doc('".$res_id_list."');><img src='".$_SESSION['config']['businessappurl'].$_SESSION['config']['img']."/page.gif'alt='' />".$_SESSION['array_struct_final']['level_1'][$value_1]['level_2'][$value_2]['level_3'][$value_3]['level_4'][$value_4]['label']."</a><br>";
 												}
+*/
 												?>
 											</div>
-										</div>-->
+										</div>
 										<?php
 									}
 									?>
