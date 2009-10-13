@@ -185,7 +185,7 @@ class admin_reports extends dbquery
 	{
 		require_once($_SESSION['pathtocoreclass']."class_security.php");
 		require_once($_SESSION['pathtocoreclass']."class_core_tools.php");
-		require_once('class_modules_tools.php');
+		require_once($_SESSION['pathtomodules'].'reports'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php');
 		$rep = new reports();
 		$enabled_reports = $rep->get_reports_from_xml();
 		$sec = new security();
@@ -244,13 +244,13 @@ class admin_reports extends dbquery
 					$j++;
 					$last_val = $enabled_reports[$key]['module'];
 				}
-
+			//	$this->show_array($enabled_reports_sort_by_parent);
 				$_SESSION['cpt']=0;
 				foreach(array_keys($enabled_reports_sort_by_parent) as $value)
 				{
 					?>
 					<h5 onclick="change(<?php  echo $_SESSION['cpt'];?>);" id="h2<?php  echo $_SESSION['cpt'];?>" class="categorie">
-						<img src="<?php  echo $_SESSION['config']['businessappurl'].$_SESSION['config']['img'];?>/plus.png" alt="" />&nbsp;<b><?php  echo $value;?></b>
+						<img src="<?php  echo $_SESSION['config']['businessappurl'].$_SESSION['config']['img'];?>/plus.png" alt="" />&nbsp;<b><?php  echo $enabled_reports_sort_by_parent[$value][0]['module_label'];?></b>
 						<span class="lb1-details">&nbsp;</span>
 					</h5>
 					<br/>
