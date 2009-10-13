@@ -16,12 +16,12 @@
 -->
 <ROOT>
 	<INDEX>
-		<column>custom_t1</column><!-- Do Not modify this index, you can move it but not delete it otherwise the application will not work properly (Integration) !-->
+		<column>folder_name</column><!-- Do Not modify this index, you can move it but not delete it otherwise the application will not work properly (Integration) !-->
 		<label>_FOLDERNAME</label>
 		<type>string</type>
 		<img>default_string.gif</img>
 	</INDEX>
-	<INDEX>
+<!--	<INDEX>
 		<column>custom_t2</column>
 		<label>_CUSTOM_T2</label>
 		<type>string</type>
@@ -45,4 +45,5 @@
 		<type>float</type>
 		<img>default_number.gif</img>
 	</INDEX>
+-->
 </ROOT>
