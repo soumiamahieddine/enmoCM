@@ -19,6 +19,7 @@
  *    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/*********************** SERVICES ***********************************/
 define('_ADMIN_BASKETS', 'Basket');
 define('_ADMIN_BASKETS_DESC', 'Define basket contents and associate them with user groups. List available redirectionfor a user group. Associate the basket with result pages.');
 define('_USE_BASKETS', 'Utiliser les corbeilles');
@@ -26,7 +27,8 @@ define('_DIFFUSION_LIST', 'Liste de diffusion');
 
 //class basket
 define('_BASKET', 'Basket');
-define('_THE_BASKET', 'The basket ');
+define('_THE_BASKET', 'The basket ');*
+define('_BASKETS_COMMENT', 'Baskets');
 define('_THE_ID', 'the ID ');
 define('_THE_DESC', 'The description ');
 define('_BELONGS_TO_NO_GROUP', 'is not associated with any group');
@@ -49,6 +51,8 @@ define('_BASKETS_LIST', 'Basket list');
 /////// frame corbeilles
 define('_BASKETS', 'Baskets');
 define('_CHOOSE_BASKET', 'Select a basket');
+define('_PROCESS_BASKET', 'Mail to Process');
+define('_VALIDATION_BASKET', 'Mail to validate');
 
 define('_MANAGE_BASKETS', 'Baskets');
 define('_MANAGE_BASKETS_APP', 'Manage baskets');
@@ -68,7 +72,7 @@ define('_BASKET_NOT_USABLE', 'No group associated (the basket cannot be used)');
 define('_ASSOCIATED_GROUP', 'Groups associated to the basket');
 define('_BASKETS', 'Basket(s)');
 
-define('_TITLE_GROUP_BASKET', 'Associate a group to the b asket');
+define('_TITLE_GROUP_BASKET', 'Associate a group to the basket');
 define('_ADD_TO_BASKET', 'Associate a group');
 define('_TO_THE_GROUP', 'to the basket');
 define('_ALLOWED_ACTIONS', 'Enabled actions');
@@ -81,116 +85,116 @@ define('_DEFAULT_ACTION_LIST', 'Default action on the list<br/><i>(clic on the l
 define('_NO_ACTION_DEFINED', 'No define action');
 
 //BASKETS
-define('_PROCESS_FOLDER_LIST', 'Processed folder list');
-define('_INCOMPLETE_FOLDERS_LIST', 'Incomplete folder list');
+define('_PROCESS_FOLDER_LIST', 'List of processed files');
+define('_INCOMPLETE_FOLDERS_LIST', 'List of incomplete files');
 define('_WAITING_VAL_LIST', 'List of document awaiting approval');
 define('_WAITING_QUAL_LIST', 'List of document awaiting qualification');
-define('_WAITING_DISTRIB_LIST', 'list of mail awaiting distribution');
+define('_WAITING_DISTRIB_LIST', 'List of mail awaiting distribution');
 define('_NO_REDIRECT_RIGHT', 'You have no redirection right on this basket');
-define('_CLICK_LINE_BASKET1', 'Clic on a line to qualify a document');
+define('_CLICK_LINE_BASKET1', 'Click on a line to qualify a document');
 
 //ENTITY
-define('_SELECT_ENTITY', 'Select an entity');
-define('_ENTITY', 'Entity');
+define('_SELECT_ENTITY', 'Select a department');
+define('_ENTITY', 'Department');
 define('_LABEL', 'Label');
-define('_THE_ENTITY', 'The entity');
-define('_ENTITIES', 'Entities');
-define('_ALL_ENTITIES', 'All entities');
-define('_ENTITY_LIST', 'List of entities');
-define('_SELECTED_ENTITIES', 'Selected entities');
-define('_CHOOSE_ENTITY', 'Select an entity');
-define('_MUST_CHOOSE_AN_ENTITY', 'You must select an entity');
-define('_ADMIN_ENTITIES', 'Manage entities');
-define('_ADMIN_ENTITIES_DESC', 'Administration des services et des listes de diffusion associ&eacute;es');
-define('_ENTITIES_LIST', 'Liste des services');
-define('_ENTITY_ADDITION', 'Ajout d&rsquo;un service');
-define('_ENTITY_MODIFICATION', 'Modification d&rsquo;un service');
-define('_ENTITY_MISSING', 'Le service n&rsquo;existe pas');
-define('_ENTITY_DELETION', 'Suppression d&rsquo;un service');
-define('_ENTITY_ADDITION', 'Ajout d&rsquo;un service');
-define('_ENTITY_ADDED', 'Service ajout&eacute;');
-define('_ENTITY_UPDATED', 'Service modifi&eacute;');
-define('_ENTITY_BASKETS','Services disponibles');
-define('_PRINT_ENTITY_SEP','Imprimer le s&eacute;parateur de documents');
-define('_PRINT_SEP_WILL_BE_START','L&rsquo;impression va d&eacute;marrer');
-define('_PRINT_SEP_TITLE','SEPARATEUR DE DOCUMENTS');
-define('_INGOING_UP','ARRIVEE');
-define('_ONGOING_UP','DEPART');
+define('_THE_ENTITY', 'The department');
+define('_ENTITIES', 'Departments');
+define('_ALL_ENTITIES', 'All department');
+define('_ENTITY_LIST', 'List of departments');
+define('_SELECTED_ENTITIES', 'Selected departments');
+define('_CHOOSE_ENTITY', 'Select a department');
+define('_MUST_CHOOSE_AN_ENTITY', 'You must select a department');
+define('_ADMIN_ENTITIES', 'Manage departments');
+define('_ADMIN_ENTITIES_DESC', 'Manage departments and associated mailing lists');
+define('_ENTITIES_LIST', 'List of departments');
+define('_ENTITY_ADDITION', 'Add a department');
+define('_ENTITY_MODIFICATION', 'Modify a department');
+define('_ENTITY_MISSING', 'The department does not exist');
+define('_ENTITY_DELETION', 'Delete an entity');
+define('_ENTITY_ADDITION', 'Add a department');
+define('_ENTITY_ADDED', 'Department added');
+define('_ENTITY_UPDATED', 'Department modified');
+define('_ENTITY_BASKETS','Available departments');
+define('_PRINT_ENTITY_SEP','Print the barcode separator');
+define('_PRINT_SEP_WILL_BE_START','Print will begin in a few seconds');
+define('_PRINT_SEP_TITLE','DOCUMENT SEPARATOR');
+define('_INGOING_UP','INCOMING');
+define('_ONGOING_UP','OUTGOING');
 
 //DIFFUSION LIST
-define('_CHOOSE_DEPARTMENT_FIRST', 'Vous devez d&rsquo;abord choisir un service avant de pouvoir acc&eacute;der &agrave; la liste diffusion');
-define('_NO_LIST_DEFINED__FOR_THIS_MAIL', 'Aucune liste n&rsquo;est d&eacute;finie pour ce courrier');
-define('_NO_LIST_DEFINED__FOR_THIS_DEPARTMENT', 'Aucune liste n&rsquo;est d&eacute;finie pour ce service');
-define('_NO_LIST_DEFINED', 'Pas de liste d&eacute;finie');
-define('_REDIRECT_MAIL', 'Redirection du document');
-define('_DISTRIBUTE_MAIL', 'Ventilation du document');
-define('_REDIRECT_TO_OTHER_DEP', 'Rediriger vers un autre service');
-define('_REDIRECT_TO_USER', 'Rediriger vers un utilisateur');
-define('_LETTER_SERVICE_REDIRECT','Rediriger vers le service &eacute;metteur');
-define('_LETTER_SERVICE_REDIRECT_VALIDATION','Souhaitez-vous vraiment rediriger vers le service &eacute;metteur');
-define('_DOC_REDIRECT_TO_SENDER_ENTITY', 'Document redirig&eacute; vers service &eacute;metteur');
-define('_DOC_REDIRECT_TO_ENTITY', 'Document redirig&eacute; vers service');
-define('_DOC_REDIRECT_TO_USER', 'Document redirig&eacute; vers utilisateur');
+define('_CHOOSE_DEPARTMENT_FIRST', 'You must select a department befor you can edit the mailing list');
+define('_NO_LIST_DEFINED__FOR_THIS_MAIL', 'No mailing list defined for this mail');
+define('_NO_LIST_DEFINED__FOR_THIS_DEPARTMENT', 'No mailing list defined for this department');
+define('_NO_LIST_DEFINED', 'No mailing list');
+define('_REDIRECT_MAIL', 'Redirect document');
+define('_DISTRIBUTE_MAIL', 'Distribute mail');
+define('_REDIRECT_TO_OTHER_DEP', 'Redirect to another department');
+define('_REDIRECT_TO_USER', 'Rediriger to another user');
+define('_LETTER_SERVICE_REDIRECT','Redirect to sender department');
+define('_LETTER_SERVICE_REDIRECT_VALIDATION','Do you really want to redirect this document to sender department?');
+define('_DOC_REDIRECT_TO_SENDER_ENTITY', 'Document redirected to sender department');
+define('_DOC_REDIRECT_TO_ENTITY', 'Document redirected to the department ');
+define('_DOC_REDIRECT_TO_USER', 'Document redirected to the department the user');
 
-define('_WELCOME_DIFF_LIST', 'Bienvenue dans l&rsquo;outil de diffusion de courrier');
-define('_START_DIFF_EXPLANATION', 'Pour demarrer la diffusion, utilisez la navigation par service ou par utilisateur ci-dessus');
-define('_CLICK_ON', 'cliquez sur');
-define('_ADD_USER_TO_LIST_EXPLANATION', 'Pour ajouter un utilisateur &agrave; la liste de diffusion');
-define('_REMOVE_USER_FROM_LIST_EXPLANATION', 'Pour retirer l&rsquo;utilisateur &agrave; cette liste de diffusion');
-define('_TO_MODIFY_LIST_ORDER_EXPLANATION', 'Pour modifier l&rsquo;ordre d&rsquo;attribution d&rsquo;un courrier aux utilisateurs, utilisez les ic&ocirc;nes');
-define('_AND', ' et ' );
-define('_LINKED_DIFF_LIST', 'Liste de diffusion associ&eacute;e');
-define('_NO_LINKED_DIFF_LIST', 'Pas de liste associ&eacute;e');
-define('_CREATE_LIST', 'Cr&eacute;er une liste de diffusion');
-define('_MODIFY_LIST', 'Modifier la liste');
-define('_THE_ENTITY_DO_NOT_CONTAIN_DIFF_LIST', 'Le service s&eacute;lectionn&eacute; n&rsquo;a pas de mod&egrave;le de liste de diffusion associ&eacute;e');
+define('_WELCOME_DIFF_LIST', 'Welcome on the mailing list editor');
+define('_START_DIFF_EXPLANATION', 'To begin distribution, select a user or a department above.');
+define('_CLICK_ON', 'click on');
+define('_ADD_USER_TO_LIST_EXPLANATION', 'To add a user to the mailing list');
+define('_REMOVE_USER_FROM_LIST_EXPLANATION', 'To remove a user to the mailing list');
+define('_TO_MODIFY_LIST_ORDER_EXPLANATION', 'To modify the order of the users in the mailing list click on');
+define('_AND', ' and ' );
+define('_LINKED_DIFF_LIST', 'Associated mailing list');
+define('_NO_LINKED_DIFF_LIST', 'No mailing list associated');
+define('_CREATE_LIST', 'Create a mailing list');
+define('_MODIFY_LIST', 'Modify the list');
+define('_THE_ENTITY_DO_NOT_CONTAIN_DIFF_LIST', 'This department has no mailing list associated');
 
 //LIST MODEL
-define('_MANAGE_MODEL_LIST_TITLE', 'Cr&eacute;ation / Modification Mod&egrave;le de liste de diffusion');
-define('_SORT_BY', 'Trier par');
-define('_WELCOME_MODEL_LIST_TITLE', 'Bienvenue dans l&rsquo;outil de cr&eacute;tion de mod&egrave;le de liste de diffusion');
-define('_MODEL_LIST_EXPLANATION1', 'Pour d&eacute;marrer la cr&eacute;tion, utilisez la navigation par service ou par utilisateur cidessus');
-define('_VALID_LIST', 'Valider la liste');
+define('_MANAGE_MODEL_LIST_TITLE', 'Manage mailing list');
+define('_SORT_BY', 'Sort by');
+define('_WELCOME_MODEL_LIST_TITLE', 'Welcome on the mailing list editor');
+define('_MODEL_LIST_EXPLANATION1', 'To begin distribution, select a user or a department above.');
+define('_VALID_LIST', 'Save the list');
 
 //LIST
-define('_COPY_LIST', 'Liste des documents en copie');
-define('_PROCESS_LIST', 'Liste des documents &agrave; traiter');
-define('_CLICK_LINE_TO_VIEW', 'Cliquez sur une ligne pour visualiser');
-define('_CLICK_LINE_TO_PROCESS', 'Cliquez sur une ligne pour traiter');
+define('_COPY_LIST', 'Department in copy');
+define('_PROCESS_LIST', 'Document to process');
+define('_CLICK_LINE_TO_VIEW', 'Click on a line to view');
+define('_CLICK_LINE_TO_PROCESS', 'Click on a line to process');
 
-define('_REDIRECT_TO_SENDER_ENTITY', 'Redirection vers le service &eacute;metteur');
-define('_CHOOSE_DEPARTMENT', 'Choisissez un service');
+define('_REDIRECT_TO_SENDER_ENTITY', 'Redirect to sender department');
+define('_CHOOSE_DEPARTMENT', 'Select a department');
 define('_REDIRECTION', 'Redirection');
-define('_ENTITY_UPDATE', 'Service mis &agrave; jour');
+define('_ENTITY_UPDATE', 'Department updated');
 // USER ABS
-define('_MY_ABS', 'G&eacute;rer mes absences');
-define('_MY_ABS_TXT', 'Permet de rediriger votre courrier en attente en cas de d&eacute;part en cong&eacute;.');
-define('_MY_ABS_REDIRECT', 'Vos courriers sont actuellement redirig&eacute;s vers');
-define('_MY_ABS_DEL', 'Pour supprimer la redirection, cliquez ici pour stopper');
-define('_ADMIN_ABS', 'G&eacute;rer les absences.');
-define('_ADMIN_ABS_TXT', 'Permet de rediriger le courrier de l&rsquo;utilisateur en attente en cas de d&eacute;part en cong&eacute;.');
-define('_ADMIN_ABS_REDIRECT', 'Redirection d&rsquo;absence en cours.');
-define('_ADMIN_ABS_FIRST_PART', 'Les courrier de');
-define('_ADMIN_ABS_SECOND_PART', 'sont actuellement redirig&eacute;s vers ');
-define('_ADMIN_ABS_THIRD_PART', '. Cliquez ici pour supprimer la redirection.');
-define('_ACTIONS_DONE', 'Actions effectu&eacute;es le');
-define('_PROCESSED_MAIL', 'Courriers trait&eacute;s');
-define('_INDEXED_MAIL', 'Courriers index&eacute;s');
-define('_REDIRECTED_MAIL', 'Courriers redirig&eacute;s');
-define('_PROCESS_MAIL_OF', 'Courrier &agrave; traiter de');
-define('_MISSING', 'Absent');
-define('_BACK_FROM_VACATION', ' de retour');
-define('_MISSING_ADVERT_TITLE','Gestion des absences');
-define('_MISSING_ADVERT_01','Ce compte est actuellement d&eacute;finit en mode &rsquo;absent&rsquo; et les courriers sont redirig&eacute;s vers un autre utilisateur.');
-define('_MISSING_ADVERT_02','Si vous desirez vous connecter avec ce compte, le mode &rsquo;absent&rsquo; sera alors supprim&eacute;.<br/> La redirection des courriers arrivera &agrave; son terme et l&rsquo;application sera r&eacute;activ&eacute;e');
-define('_MISSING_CHOOSE','Souhaitez-vous continuer?');
+define('_MY_ABS', 'Manage my leave');
+define('_MY_ABS_TXT', 'Allows you to redirect your baskets while on leave');
+define('_MY_ABS_REDIRECT', 'Your mail are currently redirected to');
+define('_MY_ABS_DEL', 'To cancel the redirection, click here');
+define('_ADMIN_ABS', 'Manage my leaves.');
+define('_ADMIN_ABS_TXT', 'Allows you to redirect this user baskets while on leave');
+define('_ADMIN_ABS_REDIRECT', 'Redirection for leave enabled');
+define('_ADMIN_ABS_FIRST_PART', 'Mail of');
+define('_ADMIN_ABS_SECOND_PART', 'is currently redirected to ');
+define('_ADMIN_ABS_THIRD_PART', '. Click here to cancel.');
+define('_ACTIONS_DONE', 'Actions on');
+define('_PROCESSED_MAIL', 'Processed mail');
+define('_INDEXED_MAIL', 'Recorded mail');
+define('_REDIRECTED_MAIL', 'Redirected mails');
+define('_PROCESS_MAIL_OF', 'Mail to process for');
+define('_MISSING', 'absent');
+define('_BACK_FROM_VACATION', ' back');
+define('_MISSING_ADVERT_TITLE','Leave management');
+define('_MISSING_ADVERT_01','This account is in leave mode and its mail are currently redirected to another user.');
+define('_MISSING_ADVERT_02','If you log in this account, this mode will be disabled.<br/>');
+define('_MISSING_CHOOSE','Do you want to continue?');
 
 
-define('_CHOOSE_PERSON_TO_REDIRECT', 'Choisissez la personne vers qui vous souhaitez rediriger ce courrier dans la liste ci-dessus');
-define('_CLICK_ON_THE_LINE_OR_ICON', 'Il vous suffit de cliquer sur la ligne ou sur l&rsquo;ic&ocirc;ne');
-define('_TO_SELECT_USER', 'pour s&eacute;lectionner un utilisateur');
+define('_CHOOSE_PERSON_TO_REDIRECT', 'Choose the user you want to redirect this email to');
+define('_CLICK_ON_THE_LINE_OR_ICON', 'click on the line or on the icone');
+define('_TO_SELECT_USER', 'to select a user');
 
-define('_DIFFUSION_DISTRIBUTION', 'Diffusion et distribution du courrier');
+define('_DIFFUSION_DISTRIBUTION', 'Mail Distribution');
 define('_VALIDATED_ANSWERS', 'DGS R&eacute;ponses valid&eacute;es');
 define('_REJECTED_ANSWERS', 'DGS R&eacute;ponses rejet&eacute;es');
 define('_MUST_HAVE_DIFF_LIST', 'Vous devez d&eacute;finir une liste de diffusion');
