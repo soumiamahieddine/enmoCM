@@ -292,6 +292,10 @@ class indexing_searching_app extends dbquery
 		///////////////////////// Other cases
 		if($core->is_module_loaded('folder'))
 		{
+			$request->connect();
+			$request->query("select folders_system_id from ".$table." where res_id = ".$id_to_update);
+			$res = $request->fetch_object();
+			$old_folder_id = $res->folders_system_id;
 			$market = '';
 			if(isset($post['market']))
 			{
@@ -367,6 +371,16 @@ class indexing_searching_app extends dbquery
 				if(!empty($folder_id))
 				{
 					array_push($data_res, array('column' => 'folders_system_id', 'value' => $folder_id, 'type' => "integer"));
+				}
+				if($folder_id <> $old_folder_id && $_SESSION['history']['folderup'])
+				{
+					require_once($_SESSION['pathtocoreclass']."class_history.php");
+					$hist = new history();
+					$hist->add($_SESSION['tablename']['fold_folders'], $folder_id, "UP", _DOC_NUM.$id_to_update._ADDED_TO_FOLDER, $_SESSION['config']['databasetype'],'apps');
+					if(isset($old_folder_id) && !empty($old_folder_id))
+					{
+						$hist->add($_SESSION['tablename']['fold_folders'], $old_folder_id, "UP", _DOC_NUM.$id_to_update._DELETED_FROM_FOLDER, $_SESSION['config']['databasetype'],'apps');
+					}
 				}
 			}
 		}

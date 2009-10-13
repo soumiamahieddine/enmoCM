@@ -425,8 +425,9 @@ function get_general_data($coll_id, $res_id, $mode, $params = array())
 		{
 
 			$fields .= 'folders_system_id,';
-			array_push($arr, 'project');
+			//array_push($arr, 'project');
 		}
+		array_push($arr, 'project');
 		if($mode == 'full' || $mode == 'form')
 		{
 			if($params['img_project'] == true)
@@ -504,7 +505,10 @@ function get_general_data($coll_id, $res_id, $mode, $params = array())
 		{
 			// Normal Cases
 			$data[$arr[$i]]['value'] = $line->$arr[$i];
-			$data[$arr[$i]]['show_value'] = $line->$arr[$i];
+			if($arr[$i] <> 'project')
+			{
+				$data[$arr[$i]]['show_value'] = $line->$arr[$i];
+			}
 			if($_ENV['categories'][$cat_id][$arr[$i]]['type_field'] == 'date')
 			{
 				$data[$arr[$i]]['show_value'] = $db->format_date_db($line->$arr[$i], false);
@@ -603,7 +607,7 @@ function get_general_data($coll_id, $res_id, $mode, $params = array())
 				}
 			}
 			// Folder : project
-			elseif($arr[$i] == 'project' && $line->folders_system_id <> ''  && isset($line->folders_system_id) && empty($data['project']['show_value']))
+			elseif($arr[$i] == 'project' && $line->folders_system_id <> ''  && isset($line->folders_system_id) && empty($data['market']['show_value']))
 			{
 				$db2->query('select folder_name, subject, folders_system_id, parent_id from '.$_SESSION['tablename']['fold_folders']." where status <> 'DEL' and folders_system_id = ".$line->folders_system_id." and folder_level = 1");
 
@@ -695,7 +699,7 @@ function get_general_data($coll_id, $res_id, $mode, $params = array())
 
 			}
 			// Folder : project
-			elseif($arr[$i] == 'project' && $line->folders_system_id <> ''  && isset($line->folders_system_id) && empty($data['project']))
+			elseif($arr[$i] == 'project' && $line->folders_system_id <> ''  && isset($line->folders_system_id) && empty($data['market']))
 			{
 				$db2->query('select folder_name, subject, folders_system_id, parent_id from '.$_SESSION['tablename']['fold_folders']." where status <> 'DEL' and folders_system_id = ".$line->folders_system_id." and folder_level = 1");
 				//$db2->show();
