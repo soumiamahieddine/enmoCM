@@ -578,7 +578,7 @@ function check_form($form_id,$values)
 				return false;
 			}
 		}
-		if(empty($project))
+/*		if(empty($project))
 		{
 			$_SESSION['error'] = _PROJECT.' '._IS_EMPTY;
 			return false;

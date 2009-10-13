@@ -24,10 +24,10 @@
 		<url>index.php?page=search_adv&amp;dir=indexing_searching</url>
 		<style>searching</style>
 	</MENU>
-<!--	<MENU>
+	<MENU>
 		<id>search_customer</id>
 		<libconst>_SEARCH_CUSTOMER</libconst>
 		<url>index.php?page=search_customer&amp;dir=indexing_searching</url>
 		<style>market_search</style>
-	</MENU>-->
+	</MENU>
 </ROOT>
