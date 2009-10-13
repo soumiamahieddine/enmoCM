@@ -568,7 +568,7 @@ class users extends dbquery
 
 		if(isset($_POST['Mail']) && !empty($_POST['Mail']))
 		{
-			$_SESSION['m_admin']['users']['Mail']  = $this->wash($_POST['Mail'], "no", _MAIL, 'yes', 0, 255);
+			$_SESSION['m_admin']['users']['Mail']  = $this->wash($_POST['Mail'], "mail", _MAIL, 'yes', 0, 255);
 		}
 
 		if($_SESSION['m_admin']['users']['UserId'] <> "superadmin")
