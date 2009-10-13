@@ -341,12 +341,13 @@ class users extends dbquery
 					  	<label for="FirstName"><?php  echo _FIRSTNAME; ?> : </label>
 						<input name="FirstName"  type="text" id="FirstName" size="45" value="<?php  echo $this->show_string($_SESSION['user']['FirstName']); ?>" />
 					 </p>
+					 <?php if(!$core_tools->is_module_loaded("entities") )
+						{?>
 					  <p>
 						<label for="Department"><?php  echo _DEPARTMENT;?> : </label>
 							<input name="Department" id="Department" type="text"  disabled size="45" value="<?php  echo $this->show_string($_SESSION['user']['department']); ?>" />
-
-					</p>
-
+						</p>
+						<?php }?>
 					  <p>
 						<label for="Phone"><?php  echo _PHONE_NUMBER; ?> : </label>
 						<input name="Phone"  type="text" id="Phone" value="<?php  echo $_SESSION['user']['Phone']; ?>" />

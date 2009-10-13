@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
 * File : change_pass.php
 *
@@ -38,7 +38,7 @@ $time = $core_tools->get_session_time_expire();
 
 <h3> <?php  echo _YOUR_FIRST_CONNEXION.", "._PLEASE_CHANGE_PSW.".<br/>"._ASKED_ONLY_ONCE.".";?>  </h3>
 <div class="blank_space">&nbsp;</div>
-<form name="frmuser" method="post"  action="verif_pass.php" class="forms" >
+<form name="frmuser" method="post"  action="<?php echo $_SESSION['config']['businessappurl'];?>verif_pass.php" class="forms" >
 	<p>
 		<label><?php  echo _ID; ?> : </label>
 		<input type="text" readonly="readonly" class="readonly" value="<?php  echo $_SESSION['user']['UserId']; ?>"/>
@@ -59,11 +59,13 @@ $time = $core_tools->get_session_time_expire();
 		<label><?php  echo _FIRSTNAME; ?> : </label>
 		<input name="FirstName" type="text" id="FirstName" value="<?php  echo $_SESSION['user']['FirstName']; ?>" /><span class="red_asterisk">*</span>
 	</p>
+	<?php if($core_tools->is_module_loaded("entities") )
+	{?>
 	<p>
 		<label ><?php  echo _DEPARTMENT;?> : </label>
-		<!--<input name="department"  type="text" id="department" readonly="readonly" class="readonly"  value="<?php  echo $service; ?>" />-->
 		<input name="Department"  type="text" id="Department"  value="<?php  echo $_SESSION['user']['department']; ?>" />
 	</p>
+	<?php } ?>
 	<p>
 		<label><?php  echo _PHONE_NUMBER; ?> : </label>
 		<input name="Phone"  type="text" id="Phone" value="<?php  echo $_SESSION['user']['Phone']; ?>" />
@@ -73,9 +75,8 @@ $time = $core_tools->get_session_time_expire();
 		<input name="Mail"   type="text" id="Mail"  value="<?php  echo $_SESSION['user']['Mail']; ?>" /><span class="red_asterisk">*</span>
 	</p>
 	<p class="buttons">
-
-				<input type="submit" name="Submit" value="<?php  echo _VALIDATE;?>" class="button" />
-                <input type="button" name="cancel" value="<?php  echo _CANCEL;?>" class="button" onclick="window.location.href='login.php?coreurl=<?php  echo $_SESSION['config']['coreurl'];?>';" />
+		<input type="submit" name="Submit" value="<?php  echo _VALIDATE;?>" class="button" />
+        <input type="button" name="cancel" value="<?php  echo _CANCEL;?>" class="button" onclick="window.location.href='login.php?coreurl=<?php  echo $_SESSION['config']['coreurl'];?>';" />
 	</p>
 
 </form>
