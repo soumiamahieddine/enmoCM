@@ -129,6 +129,12 @@ else
 					<input name="creation_date_end" type="text" id="creation_date_end" value="<?php  echo $_SESSION['folder_search']['creation_date_end'] ;?>" onclick='showCalender(this)'/>
 				</td>
 			</tr>
+			<tr>
+				<td width="25%" align="right"><label for="folder_name"><?php echo _FOLDERNAME;?> :<label></td>
+				<td colspan="3">
+					<input name="folder_name" type="text" id="folder_name" value="<?php  echo $_SESSION['folder_search']['folder_name'] ;?>" />
+				</td>
+			</tr>
 		</table>
 		<div id="opt_indexes"></div>
 		<br/>

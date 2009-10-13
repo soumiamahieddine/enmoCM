@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
 * File : select_folder.php
 *
@@ -10,7 +10,7 @@
 * @license GPL
 * @author  Claire Figueras  <dev@maarch.org>
 */
-session_name('PeopleBox'); 
+session_name('PeopleBox');
 session_start();
 require_once($_SESSION['pathtocoreclass']."class_functions.php");
 require_once($_SESSION['pathtocoreclass']."class_core_tools.php");
@@ -101,7 +101,7 @@ require_once($_SESSION['pathtomodules']."folder".$_SESSION['slash_env']."class".
 $folder = new folder();
 if($_SESSION['current_folder_id'] <> "" && $folder->is_folder_exists($_SESSION['current_folder_id']))
 {
-	$folder->load_folder1($_SESSION['current_folder_id'], $_SESSION['tablename']['fold_folders']);
+	$folder->load_folder($_SESSION['current_folder_id'], $_SESSION['tablename']['fold_folders']);
 	$folder_data = $folder->get_folder_info();
 	//$func->show_array($folder_data);
 	if(file_exists($path_trombi."00".$folder_data['folder_id'].".jpg"))
@@ -144,7 +144,7 @@ else
 </div>
 <div class="block_end">&nbsp;</div>
 <div class="blank_space">&nbsp;</div>
-<?php 
+<?php
 if($_SESSION['origin'] <> "qualify")
 {
 ?>
@@ -186,7 +186,7 @@ if($_SESSION['origin'] <> "qualify")
         <!--<div align="center"><input type="button" name="cancel" value="<?php  echo _CLOSE_WINDOW;?>" onclick="self.close();" class="button" /></div>   -->
 		<?php
     }
-    ?>  <?php 
+    ?>  <?php
 }
 ?>
 </body>

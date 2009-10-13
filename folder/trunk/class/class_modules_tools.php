@@ -42,6 +42,13 @@ class folder extends request
 	private $folder_id;
 
 	/**
+	* Folder Name
+    * @access private
+    * @var integer
+    */
+	private $folder_name;
+
+	/**
 	* System Identifier of the parent folder
     * @access private
     * @var integer
@@ -168,7 +175,7 @@ class folder extends request
 	* @param int $id folder system id
 	* @param string $table folder table
 	*/
-	function load_folder1($id, $table)
+	function load_folder($id, $table)
 	{
 		require_once($_SESSION['pathtomodules'].'folder'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_admin_foldertypes.php');
 		$ft = new foldertype();
@@ -179,7 +186,7 @@ class folder extends request
 		$this->system_id = $id;
 		$tab_index = $ft->get_indexes($this->foldertype_id);
 
-		$fields = " folder_id, parent_id, folder_name, subject, description, author, typist, status, folder_level, creation_date,folder_out_id, is_complete, is_folder_out, last_modified_date";
+		$fields = " folder_id, parent_id, folder_name, subject, description, author, typist, status, folder_level, creation_date,folder_out_id, is_complete, is_folder_out, last_modified_date, folder_name";
 		foreach(array_keys($tab_index) as $key)
 		{
 			$fields .= ", ".$key;
@@ -189,6 +196,7 @@ class folder extends request
 		$res = $this->fetch_object();
 
 		$this->folder_id = $this->show_string($res->folder_id);
+		$this->folder_name = $this->show_string($res->folder_name);
 		$this->parent_id = $res->parent_id;
 		$this->typist = $this->show_string($res->typist);
 		$this->status = $res->status;
@@ -242,7 +250,7 @@ class folder extends request
 			{
 
 				$this->connect();
-				$this->query("INSERT INTO ".$_SESSION['tablename']['fold_folders']." (folder_id, foldertype_id, description, creation_date, typist, last_modified_date) VALUES ('".$this->show_string($_SESSION['m_admin']['folder']['folder_id'])."', ".$_SESSION['m_admin']['folder']['foldertype_id'].", '".$this->show_string($_SESSION['m_admin']['folder']['desc'])."', ".$this->current_datetime().", '".$_SESSION['user']['UserId']."', ".$this->current_datetime().",);");
+				$this->query("INSERT INTO ".$_SESSION['tablename']['fold_folders']." (folder_id, foldertype_id,folder_name, description, creation_date, typist, last_modified_date) VALUES ('".$this->show_string($_SESSION['m_admin']['folder']['folder_id'])."', '".$this->show_string($_SESSION['m_admin']['folder']['folder_name'])."',".$_SESSION['m_admin']['folder']['foldertype_id'].", '".$this->show_string($_SESSION['m_admin']['folder']['desc'])."', ".$this->current_datetime().", '".$_SESSION['user']['UserId']."', ".$this->current_datetime().",);");
 				$this->query('select folders_system_id from '.$_SESSION['tablename']['fold_folders']." where folder_id = '".$this->show_string($_SESSION['m_admin']['folder']['folder_id'])."';");
 				$res = $this->fetch_object();
 				$id = $res->folders_system_id;
@@ -291,6 +299,16 @@ class folder extends request
 			$_SESSION['error'] .= _FOLDER_ID.' '._IS_EMPTY;
 		}
 
+		if(isset($_REQUEST['folder_name']) && !empty($_REQUEST['folder_name']))
+		{
+			$_SESSION['m_admin']['folder']['folder_name'] = $this->wash($_REQUEST['folder_name'], "no", _FOLDERNAME);
+		}
+		else
+		{
+			$_SESSION['m_admin']['folder']['folder_name'] = '';
+			$_SESSION['error'] .= _FOLDERNAME.' '._IS_EMPTY;
+		}
+
 		if(isset($_REQUEST['foldertype']) && !empty($_REQUEST['foldertype']))
 		{
 			$_SESSION['m_admin']['folder']['foldertype_id'] = $this->wash($_REQUEST['foldertype'], "no", _FOLDERTYPE);
@@ -329,6 +347,7 @@ class folder extends request
 		$folder = array();
 		$folder['system_id'] = $this->system_id ;
 		$folder['foldertype_id'] = $this->foldertype_id ;
+		$folder['folder_name'] = $this->folder_name ;
 		$folder['foldertype_label'] = $this->foldertype_label ;
 		$folder['folder_id'] = $this->folder_id ;
 		$folder['parent_id'] = $this->parent_id ;
@@ -357,6 +376,10 @@ class folder extends request
 		elseif($field_name == 'foldertype_id')
 		{
 			return $this->foldertype_id;
+		}
+		elseif($field_name == 'folder_name')
+		{
+			return $this->folder_name;
 		}
 		elseif($field_name == 'folder_id')
 		{

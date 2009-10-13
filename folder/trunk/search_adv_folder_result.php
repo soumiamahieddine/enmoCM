@@ -160,7 +160,7 @@ if(empty($_SESSION['error']))
 	$select[$_SESSION['tablename']['fold_folders']]= array();
 	$select[$_SESSION['tablename']['fold_foldertypes']] = array();
 
-	array_push($select[$_SESSION['tablename']['fold_folders']],"folders_system_id", "folder_id", "creation_date");
+	array_push($select[$_SESSION['tablename']['fold_folders']],"folders_system_id", "folder_id", "folder_name", "creation_date");
 
 	$where_request .= " ".$_SESSION['tablename']['fold_folders'].".foldertype_id = ".$_SESSION['tablename']['fold_foldertypes'].".foldertype_id ";
 
@@ -217,6 +217,18 @@ if(empty($_SESSION['error']))
 						$tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
 						$tab[$i][$j]['value']=$tab[$i][$j]['value'];
 						$tab[$i][$j]["order"]="folder_id";
+					}
+					if ($tab[$i][$j][$value] == "folder_name")
+					{
+						$tab[$i][$j]["label"]=_FOLDERNAME;
+						$tab[$i][$j]["size"]="20";
+						$tab[$i][$j]["label_align"]="left";
+						$tab[$i][$j]["align"]="center";
+						$tab[$i][$j]["valign"]="bottom";
+						$tab[$i][$j]["show"]=true;
+						$tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
+						$tab[$i][$j]['value']=$tab[$i][$j]['value'];
+						$tab[$i][$j]["order"]="folder_name";
 					}
 					if($tab[$i][$j][$value]=="creation_date")
 					{

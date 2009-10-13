@@ -15,35 +15,30 @@
   * last_modified_date
 -->
 <ROOT>
+
 	<INDEX>
-		<column>folder_name</column><!-- Do Not modify this index, you can move it but not delete it otherwise the application will not work properly (Integration) !-->
-		<label>_FOLDERNAME</label>
-		<type>string</type>
-		<img>default_string.gif</img>
-	</INDEX>
-<!--	<INDEX>
 		<column>custom_t2</column>
-		<label>_CUSTOM_T2</label>
+		<label>_STRING</label>
 		<type>string</type>
 		<img>default_string.gif</img>
 	</INDEX>
 	<INDEX>
 		<column>custom_d1</column>
-		<label>_FOLDERDATE</label>
+		<label>_DATE</label>
 		<type>date</type>
 		<img>default_date.gif</img>
 	</INDEX>
 	<INDEX>
 		<column>custom_n1</column>
-		<label>_CUSTOM_N1</label>
+		<label>_INTEGER</label>
 		<type>integer</type>
 		<img>default_number.gif</img>
 	</INDEX>
 	<INDEX>
 		<column>custom_f1</column>
-		<label>_CUSTOM_F1</label>
+		<label>_FLOAT</label>
 		<type>float</type>
 		<img>default_number.gif</img>
 	</INDEX>
--->
+
 </ROOT>

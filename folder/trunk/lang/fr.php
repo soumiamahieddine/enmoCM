@@ -173,4 +173,11 @@ define('_MODIFICATION_DATE', 'Date de modification');
 define('_UPDATE_FOLDER', 'Modifier des informations');
 define('_FOLDER_INDEX_UPDATED', 'Index du dossier modifi&eacute;s');
 define('_ALL_DOCS_WILL_BE_DELETED', 'tous les documents de ce dossier seront &eacute;lement supprim&eacute;s !');
+
+define('_STRING', 'Chaine de caract&egrave;res');
+define('_INTEGER', 'Entier');
+define('_FLOAT', 'Flottant');
+define('_DATE', 'Date');
+define('_MAX', 'maximum');
+define('_MIN', 'minimum');
 ?>

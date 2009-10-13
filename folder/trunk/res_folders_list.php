@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
 * File : res_folders_list.php
 *
@@ -10,7 +10,7 @@
 * @license GPL
 * @author  Claire Figueras  <dev@maarch.org>
 */
-session_name('PeopleBox'); 
+session_name('PeopleBox');
 session_start();
 require_once($_SESSION['pathtocoreclass']."class_functions.php");
 require_once($_SESSION['pathtocoreclass']."class_db.php");
@@ -34,13 +34,13 @@ if(!isset($_REQUEST['field']) || empty($_REQUEST['field']))
 else
 {
 	$folder = new folder();
-	$folder->load_folder1($_REQUEST['field'], $_SESSION['tablename']['fold_folders']);
+	$folder->load_folder($_REQUEST['field'], $_SESSION['tablename']['fold_folders']);
 	$_SESSION['current_folder_id'] = $folder->get_field('folders_system_id');
 	$_SESSION['current_foldertype_coll_id'] = $folder->get_field('foldertype_coll_id');
 	?>
 	<script language="JavaScript" type="text/javascript" >
 	window.top.location ='<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=salary_sheet&module=folder&id=<?php  echo $_SESSION['current_folder_id'];?>';
 	</script>
-	<?php 
+	<?php
 }
 ?>

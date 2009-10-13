@@ -71,51 +71,6 @@ if(isset($_POST['delete_folder']))
 	exit();
 }
 
-//get the var to update the folder
-/*
-if(trim($_REQUEST['mode'])=='up')
-{
-	$data = array();
-	foreach(array_keys($_REQUEST) as $value)
-	{
-		if($value <> "submit" && !$folder_object->is_mandatory_field($value))
-		{
-			//echo $value." ".$_GET[$value]."<br/>";
-			if($folder_object->is_mandatory($value))
-			{
-				if(empty($_REQUEST[$value]))
-				{
-					$_SESSION['error'] .= $folder_object->retrieve_index_label($value)." "._MANDATORY.".<br/>";
-					$_SESSION['field_error'][$value] = true;
-					//echo $_SESSION['error'];
-				}
-			}
-			if(!empty($_REQUEST[$value]))
-			{
-				$data = $folder_object->user_exit($value, $data);
-			}
-		}
-	}
-	$where = "folders_system_id = '".$_SESSION['FOLDER']['SEARCH']['FOLDER_ID']."'";
-	$folder_object->load_folder1($_SESSION['FOLDER']['SEARCH']['FOLDER_ID'], $_SESSION['tablename']['fold_folders']);
-	$_SESSION['current_foldertype_coll_id'] =$folder_object->get_field('coll_id');
-	$view = $sec->retrieve_view_from_coll_id($_SESSION['current_foldertype_coll_id']);
-
-	$request->update($_SESSION['tablename']['fold_folders'], $data,$where, $_SESSION['config']['databasetpe']);
-	if($_SESSION['history']['folderup'] == 'true')
-	{
-		$users->add($_SESSION['tablename']['fold_folders'],$folder_object->get_field('folders_system_id')  ,"UP", _FOLDER_INDEX_MODIF, $_SESSION['config']['databasetype'],'folder');
-	}
-}
-else
-{
-	if($_REQUEST['up_folder_boolean'])
-	{
-		echo _MISSING_FIELDS.".";
-	}
-
-}*/
-
 ?>
 <div id="details_div" style="display:none;">
 <h1><img src="<?php  echo $_SESSION['config']['img'];?>/manage_structures.gif" alt="<?php _FOLDER;?>" width="35px" height="30px"/> <?php  echo _SHOW_FOLDER;?></h1>
@@ -128,7 +83,7 @@ else
 		<?php
 		if($_REQUEST['id'] <> "")
 		{
-			$folder_object->load_folder1($_REQUEST['id'],$_SESSION['tablename']['fold_folders']);
+			$folder_object->load_folder($_REQUEST['id'],$_SESSION['tablename']['fold_folders']);
 			$status = $folder_object->get_field('status');
 			$_SESSION['current_foldertype_coll_id'] = $folder_object->get_field('coll_id');
 			$view = $sec->retrieve_view_from_coll_id($_SESSION['current_foldertype_coll_id']);
@@ -167,7 +122,10 @@ else
 					<tr>
 						<th align="left" class="picto" >&nbsp;</th>
 						<th ><?php  echo _FOLDERID_LONG; ?> :</th>
-						<td colspan="4"><input type="text" class="readonly" readonly="readonly" value="<?php  echo $folder_array['folder_id'] ; ?>" size="40" id="folder_id" name="folder_id" /></td>
+						<td ><input type="text" class="readonly" readonly="readonly" value="<?php  echo $folder_array['folder_id'] ; ?>" size="40" id="folder_id" name="folder_id" /></td>
+						<th align="left" class="picto" >&nbsp;</th>
+						<th ><?php  echo _FOLDERNAME; ?> :</th>
+						<td><input type="text" class="readonly" readonly="readonly" value="<?php  echo $folder_array['folder_name']; ?>" id="folder_name" name="folder_name" /></td>
 					</tr>
 					<tr>
 						<th align="left" class="picto" >&nbsp;</th>

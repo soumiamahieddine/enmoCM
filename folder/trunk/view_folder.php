@@ -258,7 +258,7 @@ if($_REQUEST['folder_index'] == "true")
 		}
 	}
 	//print_r($data);
-	$folder_object->load_folder1($_SESSION['FOLDER']['SEARCH']['FOLDER_ID'], $_SESSION['tablename']['fold_folders']);
+	$folder_object->load_folder($_SESSION['FOLDER']['SEARCH']['FOLDER_ID'], $_SESSION['tablename']['fold_folders']);
 	$status = $folder_object->get_field('status');
 	if(isset($_REQUEST['custom_t4']) && !empty($_REQUEST['custom_t4']))
 	{
@@ -377,7 +377,7 @@ if(isset($_REQUEST['delete_doc']) && !empty($_REQUEST['coll_id']))
                         if($_SESSION['FOLDER']['SEARCH']['FOLDER_ID']<>"")
                         {
 
-							$folder_object->load_folder1($_SESSION['FOLDER']['SEARCH']['FOLDER_ID'],$_SESSION['tablename']['fold_folders']);
+							$folder_object->load_folder($_SESSION['FOLDER']['SEARCH']['FOLDER_ID'],$_SESSION['tablename']['fold_folders']);
                             $status = $folder_object->get_field('status');
                             if($status == 'DEL')
                             {

@@ -24,7 +24,7 @@ require_once($_SESSION['pathtomodules']."folder".$_SESSION['slash_env']."class".
 if(isset($_SESSION['current_folder_id']) && !empty($_SESSION['current_folder_id']))
 {
 	$folder = new folder();
-	$folder->load_folder1($_SESSION['current_folder_id'],$_SESSION['tablename']['fold_folders'] );
+	$folder->load_folder($_SESSION['current_folder_id'],$_SESSION['tablename']['fold_folders'] );
 	//print_r($folder);
 	$hist = $folder->get_history();
 }

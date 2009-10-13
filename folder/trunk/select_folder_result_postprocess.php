@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
 * File : select_folder_result_postprocess.php
 *
@@ -35,7 +35,7 @@ else
 //*************** UPDATING THE FOLDER ***************//
 $folder = new folder();
 //echo "folder ".$_SESSION['current_folder_id'];
-$folder->load_folder1($_SESSION['current_folder_id'], $_SESSION['tablename']['fold_folders']);
+$folder->load_folder($_SESSION['current_folder_id'], $_SESSION['tablename']['fold_folders']);
 $bool_complete = $folder->is_complete($_SESSION['collections'][$_SESSION['indexing2']['ind_coll']]['table'], $_SESSION['tablename']['fold_foldertypes_doctypes'],$_SESSION['tablename']['doctypes'],$_SESSION['current_folder_id']);
 if($bool_complete)
 {

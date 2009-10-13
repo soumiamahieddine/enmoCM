@@ -74,17 +74,10 @@
    <id>delete_folder</id>
    <name>_DELETE_FOLDER</name>
    <comment>_DELETE_FOLDER</comment>
-   <servicepage>delete_popup.php</servicepage>
+   <servicepage>none</servicepage>
    <servicetype>use</servicetype>
     <system_service>false</system_service>
    <enabled>true</enabled>
-   <WHEREAMIUSED>
-     <page>index.php?page=view_folder</page>
-     <nature>button</nature>
-	 <button_label>_DEL_FOLDER</button_label>
-     <width>550</width>
-     <height>200</height>
-   </WHEREAMIUSED>
   </SERVICE>
   <SERVICE>
    <id>admin_foldertypes</id>

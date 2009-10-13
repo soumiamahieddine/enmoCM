@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
 * File : result_folder.php
 *
@@ -15,7 +15,7 @@ session_start();
 require_once($_SESSION['pathtocoreclass']."class_functions.php");
 require_once($_SESSION['pathtocoreclass']."class_db.php");
 require_once($_SESSION['pathtocoreclass']."class_request.php");
-require_once($_SESSION['pathtocoreclass']."class_core_tools.php"); 
+require_once($_SESSION['pathtocoreclass']."class_core_tools.php");
 $core_tools = new core_tools();
 $core_tools->load_lang();
 require_once($_SESSION['pathtomodules']."folder".$_SESSION['slash_env']."class".$_SESSION['slash_env']."class_modules_tools.php");
@@ -26,7 +26,7 @@ $core_tools->load_html();
 $core_tools->load_header();
 ?>
 <body>
-<?php 
+<?php
 //if(isset($_SESSION['folderSystemId'])and !empty($_SESSION['folderSystemId']))
 if(isset($_SESSION['stringSearch'])and !empty($_SESSION['stringSearch']))
 {
@@ -34,8 +34,8 @@ if(isset($_SESSION['stringSearch'])and !empty($_SESSION['stringSearch']))
 	array_push($select[$_SESSION['tablename']['fold_folders']],"folders_system_id","folder_id","folder_name","subject","folder_level");
 	$select[$_SESSION['tablename']['fold_foldertypes']]= array();
 	array_push($select[$_SESSION['tablename']['fold_foldertypes']],"foldertype_label");
-	
-	
+
+
 	if($_SESSION['config']['databasetype'] == "POSTGRESQL")
 	{
 		$where = " ".$_SESSION['tablename']['fold_folders'].".foldertype_id = ".$_SESSION['tablename']['fold_foldertypes'].".foldertype_id ";
@@ -44,7 +44,7 @@ if(isset($_SESSION['stringSearch'])and !empty($_SESSION['stringSearch']))
 	{
 		$where = " ".$_SESSION['tablename']['fold_folders'].".foldertype_id = ".$_SESSION['tablename']['fold_foldertypes'].".foldertype_id ";
 	}
-	$where .= " and subject ilike '%".$_SESSION['stringSearch']."%' and status <> 'DEL'";	
+	$where .= " and subject ilike '%".$_SESSION['stringSearch']."%' and status <> 'DEL'";
 	$request= new request;
 	$tab=$request->select($select,$where," order by folder_name ",$_SESSION['config']['databasetype']);
 	//$request->show();
@@ -110,13 +110,13 @@ if(isset($_SESSION['stringSearch'])and !empty($_SESSION['stringSearch']))
 		for ($j=0;$j<count($tab[$i]);$j++)
 		{
 			foreach(array_keys($tab[$i][$j]) as $value)
-			{	
+			{
 				if($value == 'column' and $tab[$i][$j][$value]=="folders_system_id")
-				{		
+				{
 					$tmp = array();
 					$id = $tab[$i][$j]['value'];
-					
-					$folder_tmp->load_folder1($id,$_SESSION['tablename']['fold_folders']);
+
+					$folder_tmp->load_folder($id,$_SESSION['tablename']['fold_folders']);
 					array_push($tab[$i], $tmp);
 				}
 			}
@@ -125,7 +125,7 @@ if(isset($_SESSION['stringSearch'])and !empty($_SESSION['stringSearch']))
 	//$request->show_array($tab);
 	$list=new list_show();
 	$ind = count($tab);
-	$list->list_doc($tab,$ind,_SEARCH_RESULTS." : ".$ind." "._FOUND_FOLDERS,"folders_system_id","result_folder","folders_system_id","folder_detail",false,true,"get",$_SESSION['urltomodules']."folder/res_select_folder.php",_CHOOSE, false, false, true, false, false, false,  false, false, '', '', false, '', '', 'listing spec');	
+	$list->list_doc($tab,$ind,_SEARCH_RESULTS." : ".$ind." "._FOUND_FOLDERS,"folders_system_id","result_folder","folders_system_id","folder_detail",false,true,"get",$_SESSION['urltomodules']."folder/res_select_folder.php",_CHOOSE, false, false, true, false, false, false,  false, false, '', '', false, '', '', 'listing spec');
 }
 ?>
 </body>

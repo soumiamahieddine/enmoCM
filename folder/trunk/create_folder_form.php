@@ -68,6 +68,10 @@ while($res = $db->fetch_object())
 			<label for="folder_id"><?php echo _ID;?></label>
 			<input name="folder_id" id="folder_id" value="<?php echo $_SESSION['m_admin']['folder']['folder_id'];?>" /> <span class="red_asterisk">*</span>
 		</p>
+		<p>
+			<label for="folder_name"><?php echo _FOLDERNAME;?></label>
+			<input name="folder_name" id="folder_name" value="<?php echo $_SESSION['m_admin']['folder']['folder_name'];?>" /> <span class="red_asterisk">*</span>
+		</p>
 		<div id="folder_indexes"></div>
 		<p class="buttons">
 			<input type="submit" name="validate" id="validate" value="<?php echo _VALIDATE;?>" class="button"/>
