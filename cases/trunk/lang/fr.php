@@ -23,7 +23,7 @@
 
 define('_CASES_COMMENT', 'Affaires');
 
-
+define('_JOIN_RES_CASE','Attacher des courriers aux affaires');
 
 define('_CASE_NUM', 'Num Affaire');
 define('_NUM_CASE', 'Affaire num&eacute;ro');
@@ -31,7 +31,7 @@ define('_CASE_DETAIL', 'Fiche d&eacute;taill&eacute;e de l&rsquo;affaire');
 define('_DETAILS_CASES', 'Fiche d&eacute;taill&eacute;e de l&rsquo;affaire');
 define('_INDEX_CASES', 'Index de l&rsquo;affaire');
 define('_DOCUMENTS_LIST_IN_THIS_CASE', 'Liste des documents de l&rsquo;affaire');
-define('_NOTES_FOR_THIS_CASES', 'Annotation de cette affaire');
+define('_NOTES_FOR_THIS_CASES', 'Annotations de cette affaire');
 define('_HISTORY_CASES', 'Historique de l&rsquo;affaire');
 
 
@@ -60,6 +60,10 @@ define('_UPDATE_CASE','Mise &agrave; jour d&rsquo;affaire');
 define('_NEW_CASE','Nouvelle affaire');
 define('_RES_ATTACH_ON_CASE','Courrier attach&eacute; &agrave; l&rsquo;affaire');
 define('_RES_DETTACH_ON_CASE','Courrier dettach&eacute; &agrave; l&rsquo;affaire');
+
+define('_JOIN_RES_ON_THIS_CASE','Attacher un courrier &agrave; l&rsquo;affaire');
+define('_RESSOURCES_LINKED','Courrier attach&eacute;');
+define('_RESSOURCES_NOT_LINKED','Ce courrier est d&eacute;j&agrave; attach&eacute;');
 
 
 ?>

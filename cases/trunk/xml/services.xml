@@ -4,7 +4,20 @@
    <id>update_case</id>
    <name>_UPDATE_CASE</name>
    <comment>_UPDATE_CASE</comment>
-   <servicepage>index.php?page=basket&amp;module=basket</servicepage>
+   <servicepage></servicepage>
+   <servicetype>use</servicetype>
+   <system_service>false</system_service>
+   <enabled>true</enabled>
+   <WHEREAMIUSED>
+     <page>detail_index_cases.php</page>
+     <nature>include</nature>
+   </WHEREAMIUSED>
+ </SERVICE>
+ <SERVICE>
+   <id>join_res_case</id>
+   <name>_JOIN_RES_CASE</name>
+   <comment>_JOIN_RES_CASE</comment>
+   <servicepage></servicepage>
    <servicetype>use</servicetype>
    <system_service>false</system_service>
    <enabled>true</enabled>

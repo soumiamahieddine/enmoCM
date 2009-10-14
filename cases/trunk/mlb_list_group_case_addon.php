@@ -33,7 +33,7 @@
 						if($tab[$i][$j][$value]=="case_creation_date")
 						{
 							$tab[$i][$j]["label"]=_CASE_CREATION_DATE;
-							$tab[$i][$j]['value'] = $request->show_string($tab[$i][$j]['value']);;
+							$tab[$i][$j]['value'] = $request->format_date_db($tab[$i][$j]['value'], false);
 							$tab[$i][$j]["size"]="5";
 							$tab[$i][$j]["label_align"]="left";
 							$tab[$i][$j]["align"]="left";
