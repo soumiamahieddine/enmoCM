@@ -227,7 +227,7 @@ else
 	<?php 
 	if ($core_tools->test_service('join_res_case', 'cases') == 1) 
 	{ ?>	
-		<input type="button" class="button"  value="<?php  echo _JOIN_RES_ON_THIS_CASE;?>" name="join_res" onclick="window.open('search_adv_for_cases.php?searched_item=case&searched_value=<? echo $case_indexes['case_id'];?>','', 'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=850,height=700');"/>
+		<input type="button" class="button"  value="<?php  echo _JOIN_RES_ON_THIS_CASE;?>" name="join_res" onclick="window.open('search_adv_for_cases.php?searched_item=case&searched_value=<? echo $case_indexes['case_id'];?>','', 'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=1020,height=500');"/>
 	<?php 
 	} ?>
 	</p>

@@ -219,8 +219,8 @@ if($core_tools->is_module_loaded('entities'))
 	{
 		$where = ' and '.$where;
 	}
-	$conn->query("select distinct r.destination as entity_id, e.entity_label from ".$table." r, ".$_SESSION['tablename']['ent_entities']." e where e.entity_id = r.destination ".$where." group by e.entity_label, r.destination");
-	//$conn->query("select distinct r.destination, e.short_label from ".$table." r join ".$_SESSION['tablename']['ent_entities']." e on e.entity_id = r.destination ".$where." group by e.short_label, r.destination ");
+	//$conn->query("select distinct r.destination as entity_id, e.entity_label from ".$table." r, ".$_SESSION['tablename']['ent_entities']." e where e.entity_id = r.destination ".$where." group by e.entity_label, r.destination");
+	$conn->query("select distinct r.destination, e.short_label from ".$table." r join ".$_SESSION['tablename']['ent_entities']." e on e.entity_id = r.destination ".$where." group by e.short_label, r.destination ");
 	$arr_tmp = array();
 	while($res = $conn->fetch_object())
 	{
@@ -348,7 +348,8 @@ function del_query_confirm()
 -->
 </script>
 
-<h1><img src="<?php echo $_SESSION['config']['businessappurl'];?>img/picto_search_b.gif" alt="" /> <?php echo _ADV_SEARCH_TITLE; ?></h1>
+<h4><p align="center"><img src="<?php echo $_SESSION['config']['businessappurl'];?>img/picto_search_b.gif" alt="" /> <?php echo _ADV_SEARCH_TITLE; ?></h4></p>
+<hr/>
 <div id="inner_content">
 
 <?php if (count($queries) > 0)
@@ -370,9 +371,8 @@ function del_query_confirm()
 <?php } ?>
 <!--<form name="frmsearch2" method="get" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=search_adv_result&dir=indexing_searching"  id="frmsearch2" class="<?php echo $class_for_form; ?>">-->
 <form name="frmsearch2" method="get" action="<?php echo $_SESSION['config']['businessappurl'];?>indexing_searching/search_adv_result.php"  id="frmsearch2" class="<?php echo $class_for_form; ?>">
-<!--<input type="hidden" name="page" value="search_adv_result" />
-<input type="hidden" name="dir" value="indexing_searching" />-->
-<input type="hidden" name="body_iframe" value="iframe" />
+
+<input type="hidden" name="specific_case" value="attach_to_case" />
 
 
 
@@ -469,8 +469,6 @@ function del_query_confirm()
 </form>
 <br/>
 <div align="right">
-<!--<input class="button" name="submit" type="button" value="<?php echo _SEARCH;?>" onclick="valid_search_form('frmsearch2');document.getElementById('frmsearch2').submit();"  />-->
- <!--<input class="button" name="clear" type="button" value="<?php echo _CLEAR_SEARCH;?>" onclick="clear_search_form('frmsearch2','select_criteria');clear_q_list();"  />-->
 </div>
  </div>
 <script type="text/javascript">
