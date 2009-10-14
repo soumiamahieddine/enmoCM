@@ -86,6 +86,27 @@ class list_show_with_template extends list_show
 		}
 	}
 
+
+	//Load radio form if this parameters is loaded in list_show and list_show_with_template
+	public function tmplt_load_external_script($actual_string, $theline, $result, $key)
+	{
+		
+		$my_explode= explode ("|", $actual_string);
+		if (count($my_explode) <> 3)
+		{
+
+			return  _WRONG_PARAM_FOR_LOAD_VALUE;
+		}
+	
+		$module_id = $my_explode[1];
+		$file_name = $my_explode[2];
+		
+		include($_SESSION['pathtomodules'].$module_id.DIRECTORY_SEPARATOR.$file_name);
+		return $external;
+		
+	}
+
+
 	//Load function order from templated list
 	public function tmplt_order_link($actual_string)
 	{
@@ -131,6 +152,7 @@ class list_show_with_template extends list_show
 
 	}
 
+	
 
 	//Load check form if this parameters is loaded in list_show and list_show_with_template
 	public function tmplt_func_bool_check_form($actual_string, $theline, $result, $key)
@@ -166,6 +188,19 @@ class list_show_with_template extends list_show
 		{
 
 			$return = "<a href='".$_SESSION['config']['businessappurl']."index.php?page=".$this->detail_destination."&amp;id=".$result[$theline][0][$key]."' title='". _DETAILS."'>
+			<img src='".$_SESSION['config']['businessappurl']."img/picto_infos.gif'  alt='"._DETAILS."'  width='25' height='25' border='0' /></a>";
+
+			return $return;
+		}
+
+	}
+	
+	//Load view_doc if this parameters is loaded in list_show and list_show_with_template
+	public function tmplt_func_bool_detail_cases($actual_string, $theline, $result, $key)
+	{
+		if ($this->bool_detail == true)
+		{
+			$return = "<a href='".$_SESSION['config']['businessappurl']."index.php?page=details_cases&module=cases&amp;id=".$result[$theline][0]['case_id']."' title='". _DETAILS_CASES."'>
 			<img src='".$_SESSION['config']['businessappurl']."img/picto_infos.gif'  alt='"._DETAILS."'  width='25' height='25' border='0' /></a>";
 
 			return $return;
@@ -386,6 +421,14 @@ class list_show_with_template extends list_show
 		{
 			$my_var = $this->tmplt_include_by_module($actual_string, $theline, $result, $key,$include_by_module);
 		}
+		elseif (preg_match("/^func_load_external_script\|/", $actual_string))
+		{
+			$my_var = $this->tmplt_load_external_script($actual_string, $theline, $result, $key,$include_by_module);
+		}
+		elseif (preg_match("/^func_bool_detail_case$/", $actual_string))
+		{
+			$my_var = $this->tmplt_func_bool_detail_cases($actual_string, $theline, $result, $key,$include_by_module);
+		}
 		else
 		{
 			$my_var = _WRONG_FUNCTION_OR_WRONG_PARAMETERS;
@@ -507,20 +550,22 @@ class list_show_with_template extends list_show
 		if($core_tools->is_module_loaded("cases") == true)
 		{
 				$case_file = $_SESSION['pathtomodules']."cases".DIRECTORY_SEPARATOR."template_addon".DIRECTORY_SEPARATOR.$actual_template.".html";
-				
-				$addon_list_trait = $this->get_template($case_file);
-				$addon_tmp = explode("#!#", $addon_list_trait);
-				foreach($addon_tmp as $including_file)
+				if (file_exists($case_file))
 				{
-					if (substr($including_file , 0, 5) == "TABLE")
-						$including_table = substr($including_file, 5);
-					if (substr($including_file , 0, 4) == "HEAD")
-						$including_head = substr($including_file, 4);
-					if (substr($including_file , 0, 6) == "RESULT")
-						$including_result = substr($including_file, 6);
-					if (substr($including_file , 0, 6) == "FOOTER")
-						$including_footer = substr($including_file, 6);						
-				}		
+					$addon_list_trait = $this->get_template($case_file);
+					$addon_tmp = explode("#!#", $addon_list_trait);
+					foreach($addon_tmp as $including_file)
+					{
+						if (substr($including_file , 0, 5) == "TABLE")
+							$including_table = substr($including_file, 5);
+						if (substr($including_file , 0, 4) == "HEAD")
+							$including_head = substr($including_file, 4);
+						if (substr($including_file , 0, 6) == "RESULT")
+							$including_result = substr($including_file, 6);
+						if (substr($including_file , 0, 6) == "FOOTER")
+							$including_footer = substr($including_file, 6);						
+					}		
+			}
 		}
 		//##############################################################
 		$list_trait = $this->get_template($file);
