@@ -50,7 +50,7 @@ class entities extends dbquery
 					where ue.user_id = u.user_id
 					and ue.entity_id = e.entity_id
 					and e.enabled = 'Y'
-					and ue.user_id = '".$_SESSION['user']['UserId']."'");
+					and ue.user_id = '".$this->protect_string_db(trim($_SESSION['user']['UserId']))."'");
 
 		while($line = $this->fetch_object())
 		{
@@ -97,7 +97,7 @@ class entities extends dbquery
 			}
 			else
 			{
-				$db->query("select entity_id from ".$_SESSION['tablename']['ent_users_entities']." where user_id = '".$this->protect_string_db($user_id)."'");
+				$db->query("select entity_id from ".$_SESSION['tablename']['ent_users_entities']." where user_id = '".$this->protect_string_db(trim($user_id))."'");
 				while($res = $db->fetch_object())
 				{
 					$entities .= "'".$res->entity_id."', ";
@@ -131,7 +131,7 @@ class entities extends dbquery
 			}
 			else
 			{
-				$db->query("select entity_id from ".$_SESSION['tablename']['ent_users_entities']." where user_id = '".$this->protect_string_db($user_id)."' and primary_entity = 'Y'");
+				$db->query("select entity_id from ".$_SESSION['tablename']['ent_users_entities']." where user_id = '".$this->protect_string_db(trim($user_id))."' and primary_entity = 'Y'");
 				$res = $db->fetch_object();
 				$prim_entity = "'".$res->entity_id."'";
 			}
@@ -263,7 +263,7 @@ class entities extends dbquery
 	{
 		//$this->show_array($users_entities);
 		$this->connect();
-		$this->query("DELETE FROM ".$_SESSION['tablename']['ent_groupbasket_redirect'] ." where basket_id= '".$basket_id."' and group_id = '".$group_id."' and action_id = ".$action_id);
+		$this->query("DELETE FROM ".$_SESSION['tablename']['ent_groupbasket_redirect'] ." where basket_id= '".$this->protect_string_db(trim($basket_id))."' and group_id = '".$this->protect_string_db(trim($group_id))."' and action_id = ".$action_id);
 		$redirect_mode = 'ENTITY';
 		for($i=0; $i<count($entities);$i++)
 		{
@@ -278,7 +278,7 @@ class entities extends dbquery
 				$keyword = '';
 				$entity_id = $entities[$i]['ID'];
 			}
-			$this->query("INSERT INTO ".$_SESSION['tablename']['ent_groupbasket_redirect']." (group_id, basket_id, action_id, entity_id, keyword, redirect_mode ) values ( '".$group_id."', '".$basket_id."', ".$action_id.", '".$entity_id."', '".$keyword."', '".$redirect_mode."')" );
+			$this->query("INSERT INTO ".$_SESSION['tablename']['ent_groupbasket_redirect']." (group_id, basket_id, action_id, entity_id, keyword, redirect_mode ) values ( '".$this->protect_string_db(trim($group_id))."', '".$this->protect_string_db(trim($basket_id))."', ".$action_id.", '".$this->protect_string_db(trim($entity_id))."', '".$this->protect_string_db(trim($keyword))."', '".$redirect_mode."')" );
 		}
 
 		$redirect_mode = 'USERS';
@@ -295,7 +295,7 @@ class entities extends dbquery
 				$keyword = '';
 				$entity_id = $users_entities[$i]['ID'];
 			}
-			$this->query("INSERT INTO ".$_SESSION['tablename']['ent_groupbasket_redirect']." (group_id, basket_id, action_id, entity_id, keyword, redirect_mode ) values ( '".$group_id."', '".$basket_id."', ".$action_id.", '".$entity_id."', '".$keyword."', '".$redirect_mode."')" );
+			$this->query("INSERT INTO ".$_SESSION['tablename']['ent_groupbasket_redirect']." (group_id, basket_id, action_id, entity_id, keyword, redirect_mode ) values ( '".$this->protect_string_db(trim($group_id))."', '".$this->protect_string_db(trim($basket_id))."', ".$action_id.", '".$this->protect_string_db(trim($entity_id))."', '".$this->protect_string_db(trim($keyword))."', '".$redirect_mode."')" );
 		}
 	}
 
@@ -306,13 +306,13 @@ class entities extends dbquery
 		$db->connect();
 
 		$arr['ENTITY'] = array();
-		$this->query("select entity_id, keyword from ".$_SESSION['tablename']['ent_groupbasket_redirect']."  where  group_id = '".$group_id."' and basket_id = '".$basket_id."' and redirect_mode = 'ENTITY' and action_id = ".$action_id);
+		$this->query("select entity_id, keyword from ".$_SESSION['tablename']['ent_groupbasket_redirect']."  where  group_id = '".$group_id."' and basket_id = '".$this->protect_string_db(trim($basket_id))."' and redirect_mode = 'ENTITY' and action_id = ".$action_id);
 
 		while($res = $this->fetch_object())
 		{
 			if($res->entity_id <> '')
 			{
-				$db->query("select entity_label from ".$_SESSION['tablename']['ent_entities']." where entity_id = '".$res_entity_id."'");
+				$db->query("select entity_label from ".$_SESSION['tablename']['ent_entities']." where entity_id = '".$this->protect_string_db(trim($res_entity_id))."'");
 				$line = $db->fetch_object();
 				$label = $db->show_string($line->entity_label);
 				$tab = array('ID' => $res->entity_id, 'LABEL' => $label, 'KEYWORD' => false);
@@ -335,14 +335,14 @@ class entities extends dbquery
 		}
 
 		$arr['USERS'] = array();
-		$this->query("select entity_id, keyword from ".$_SESSION['tablename']['ent_groupbasket_redirect']."  where  group_id = '".$group_id."' and basket_id = '".$basket_id."' and redirect_mode = 'USERS' and action_id = ".$action_id);
+		$this->query("select entity_id, keyword from ".$_SESSION['tablename']['ent_groupbasket_redirect']."  where  group_id = '".$this->protect_string_db(trim($group_id))."' and basket_id = '".$this->protect_string_db(trim($basket_id))."' and redirect_mode = 'USERS' and action_id = ".$action_id);
 
 
 		while($res = $this->fetch_object())
 		{
 			if($res->entity_id <> '')
 			{
-				$db->query("select entity_label from ".$_SESSION['tablename']['ent_entities']." where entity_id = '".$res_entity_id."'");
+				$db->query("select entity_label from ".$_SESSION['tablename']['ent_entities']." where entity_id = '".$this->protect_string_db(trim($res_entity_id))."'");
 				$line = $db->fetch_object();
 				$label = $db->show_string($line->entity_label);
 				$tab = array('ID' => $res->entity_id, 'LABEL' => $label, 'KEYWORD' => false);
@@ -391,7 +391,7 @@ class entities extends dbquery
 	{
 		$_SESSION['user']['redirect_groupbasket'] = array();
 		$this->connect();
-		$this->query('select distinct basket_id from '.$_SESSION['tablename']['ent_groupbasket_redirect']." where group_id = '".$_SESSION['user']['primarygroup']."'");
+		$this->query('select distinct basket_id from '.$_SESSION['tablename']['ent_groupbasket_redirect']." where group_id = '".$this->protect_string_db(trim($_SESSION['user']['primarygroup']))."'");
 
 		$db = new dbquery();
 		$db->connect();
@@ -401,7 +401,7 @@ class entities extends dbquery
 			$basket_id = $res->basket_id;
 			$_SESSION['user']['redirect_groupbasket'][$basket_id] = array();
 
-			$db->query("select distinct action_id from ".$_SESSION['tablename']['ent_groupbasket_redirect']." where group_id = '".$_SESSION['user']['primarygroup']."' and basket_id = '".$basket_id."'");
+			$db->query("select distinct action_id from ".$_SESSION['tablename']['ent_groupbasket_redirect']." where group_id = '".$this->protect_string_db(trim($_SESSION['user']['primarygroup']))."' and basket_id = '".$this->protect_string_db(trim($basket_id))."'");
 			while($line = $db->fetch_object())
 			{
 				$action_id = $line->action_id;
@@ -419,7 +419,7 @@ class entities extends dbquery
 		$arr = array();
 		$db = new dbquery();
 		$db->connect();
-		$db->query("select entity_id, keyword from ".$_SESSION['tablename']['ent_groupbasket_redirect']." where basket_id = '".$basket_id."' and group_id = '".$group_id."' and redirect_mode = 'ENTITY' and action_id = ".$action_id);
+		$db->query("select entity_id, keyword from ".$_SESSION['tablename']['ent_groupbasket_redirect']." where basket_id = '".$this->protect_string_db(trim($basket_id))."' and group_id = '".$this->protect_string_db(trim($group_id))."' and redirect_mode = 'ENTITY' and action_id = ".$action_id);
 		//$db->show();
 		$entities = '';
 		while($line = $db->fetch_object())
@@ -438,7 +438,7 @@ class entities extends dbquery
 		$entities = preg_replace("/^,/", '', $entities);
 		$entities = preg_replace("/, ,/", ',', $entities);
 
-		$db->query("select entity_id, keyword from ".$_SESSION['tablename']['ent_groupbasket_redirect']." where basket_id = '".$basket_id."' and group_id = '".$group_id."' and redirect_mode = 'USERS' and action_id = ".$action_id);
+		$db->query("select entity_id, keyword from ".$_SESSION['tablename']['ent_groupbasket_redirect']." where basket_id = '".$this->protect_string_db(trim($basket_id))."' and group_id = '".$this->protect_string_db(trim($group_id))."' and redirect_mode = 'USERS' and action_id = ".$action_id);
 		//$db->show();
 		$users = '';
 		while($line = $db->fetch_object())

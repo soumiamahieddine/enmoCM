@@ -77,7 +77,7 @@ class diffusion_list extends dbquery
 		}
 		$entity_id = $this->protect_string_db($entity_id);
 		$this->connect();
-		$this->query("select  l.item_id, u.firstname, u.lastname, e.entity_id, e.entity_label  from ".$_SESSION['tablename']['ent_listmodels']." l, ".$_SESSION['tablename']['users']." u, ".$_SESSION['tablename']['ent_entities']." e, ".$_SESSION['tablename']['ent_users_entities']." ue where l.coll_id = '".$coll_id."' and l.listmodel_type = 'DOC' and l.item_mode = 'dest' and l.item_type = 'user_id' and l.object_type = 'entity_id' and l.sequence = 0 and l.object_id = '".$entity_id."' and l.item_id = u.user_id and u.user_id = ue.user_id and e.entity_id = ue.entity_id ");
+		$this->query("select  l.item_id, u.firstname, u.lastname, e.entity_id, e.entity_label  from ".$_SESSION['tablename']['ent_listmodels']." l, ".$_SESSION['tablename']['users']." u, ".$_SESSION['tablename']['ent_entities']." e, ".$_SESSION['tablename']['ent_users_entities']." ue where l.coll_id = '".$this->protect_string_db(trim($coll_id))."' and l.listmodel_type = 'DOC' and l.item_mode = 'dest' and l.item_type = 'user_id' and l.object_type = 'entity_id' and l.sequence = 0 and l.object_id = '".$this->protect_string_db(trim($entity_id))."' and l.item_id = u.user_id and u.user_id = ue.user_id and e.entity_id = ue.entity_id ");
 
 		$res = $this->fetch_object();
 		$listmodel['dest']['user_id'] = $this->show_string($res->item_id);
@@ -86,14 +86,14 @@ class diffusion_list extends dbquery
 		$listmodel['dest']['entity_id'] = $this->show_string($res->entity_id);
 		$listmodel['dest']['entity_label'] = $this->show_string($res->entity_label);
 
-		$this->query("select  l.item_id, u.firstname, u.lastname, e.entity_id, e.entity_label  from ".$_SESSION['tablename']['ent_listmodels']." l, ".$_SESSION['tablename']['users']." u, ".$_SESSION['tablename']['ent_entities']." e, ".$_SESSION['tablename']['ent_users_entities']." ue where l.coll_id = '".$coll_id."' and l.listmodel_type = 'DOC' and l.item_mode = 'cc' and l.item_type = 'user_id' and l.object_type = 'entity_id' and l.object_id = '".$entity_id."' and l.item_id = u.user_id and l.item_id = ue.user_id and e.entity_id = ue.entity_id order by u.lastname ");
+		$this->query("select  l.item_id, u.firstname, u.lastname, e.entity_id, e.entity_label  from ".$_SESSION['tablename']['ent_listmodels']." l, ".$_SESSION['tablename']['users']." u, ".$_SESSION['tablename']['ent_entities']." e, ".$_SESSION['tablename']['ent_users_entities']." ue where l.coll_id = '".$this->protect_string_db(trim($coll_id))."' and l.listmodel_type = 'DOC' and l.item_mode = 'cc' and l.item_type = 'user_id' and l.object_type = 'entity_id' and l.object_id = '".$this->protect_string_db(trim($entity_id))."' and l.item_id = u.user_id and l.item_id = ue.user_id and e.entity_id = ue.entity_id order by u.lastname ");
 
 		while($res = $this->fetch_object())
 		{
 			array_push($listmodel['copy']['users'], array('user_id' =>  $this->show_string($res->item_id), 'lastname' => $this->show_string($res->lastname), 'firstname' => $this->show_string($res->firstname), 'entity_id' =>  $this->show_string($res->entity_id), 'entity_label' => $this->show_string($res->entity_label)));
 		}
 
-		$this->query("select  l.item_id,  e.entity_label  from ".$_SESSION['tablename']['ent_listmodels']." l, ".$_SESSION['tablename']['ent_entities']." e where l.coll_id = '".$coll_id."' and l.listmodel_type = 'DOC' and l.item_mode = 'cc' and l.item_type = 'entity_id' and l.object_type = 'entity_id' and l.object_id = '".$entity_id."' and l.item_id = e.entity_id order by e.entity_label ");
+		$this->query("select  l.item_id,  e.entity_label  from ".$_SESSION['tablename']['ent_listmodels']." l, ".$_SESSION['tablename']['ent_entities']." e where l.coll_id = '".$this->protect_string_db(trim($coll_id))."' and l.listmodel_type = 'DOC' and l.item_mode = 'cc' and l.item_type = 'entity_id' and l.object_type = 'entity_id' and l.object_id = '".$this->protect_string_db(trim($entity_id))."' and l.item_id = e.entity_id order by e.entity_label ");
 
 		while($res = $this->fetch_object())
 		{
@@ -142,20 +142,20 @@ class diffusion_list extends dbquery
 		//print_r($params);
 		if($params['mode'] == 'listmodel' && isset($params['object_id']) && !empty($params['object_id']))
 		{
-			$this->query("delete from ".$params['table']." where coll_id = '".$this->protect_string_db($params['coll_id'])."' and object_type = '".$this->protect_string_db($object_type)."' and object_id = '".$this->protect_string_db($params['object_id'])."' and listmodel_type = '".$this->protect_string_db($list_type)."'");
+			$this->query("delete from ".$params['table']." where coll_id = '".$this->protect_string_db(trim($params['coll_id']))."' and object_type = '".$this->protect_string_db(trim($object_type))."' and object_id = '".$this->protect_string_db(trim($params['object_id']))."' and listmodel_type = '".$this->protect_string_db(trim($list_type))."'");
 			//$this->show();
 			if(isset($diff_list['dest']['user_id']) && !empty($diff_list['dest']['user_id']))
 			{
-				$this->query("insert into ".$params['table']." (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type ) values ('".$this->protect_string_db($params['coll_id'])."', '".$this->protect_string_db($params['object_id'])."' , '".$this->protect_string_db($object_type)."', 0, '".$this->protect_string_db($diff_list['dest']['user_id'])."', 'user_id' , 'dest', '".$this->protect_string_db($list_type)."')");
+				$this->query("insert into ".$params['table']." (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type ) values ('".$this->protect_string_db(trim($params['coll_id']))."', '".$this->protect_string_db(trim($params['object_id']))."' , '".$this->protect_string_db(trim($object_type))."', 0, '".$this->protect_string_db(trim($diff_list['dest']['user_id']))."', 'user_id' , 'dest', '".$this->protect_string_db(trim($list_type))."')");
 				//$this->show();
 				for($i=0; $i<count($diff_list['copy']['users']);$i++)
 				{
-					$this->query("insert into ".$params['table']." (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type ) values ('".$this->protect_string_db($params['coll_id'])."', '".$this->protect_string_db($params['object_id'])."' , '".$this->protect_string_db($object_type)."', ".$i.", '".$this->protect_string_db($diff_list['copy']['users'][$i]['user_id'])."', 'user_id' , 'cc', '".$this->protect_string_db($list_type)."')");
+					$this->query("insert into ".$params['table']." (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type ) values ('".$this->protect_string_db(trim($params['coll_id']))."', '".$this->protect_string_db(trim($params['object_id']))."' , '".$this->protect_string_db(trim($object_type))."', ".$i.", '".$this->protect_string_db(trim($diff_list['copy']['users'][$i]['user_id']))."', 'user_id' , 'cc', '".$this->protect_string_db(trim($list_type))."')");
 					//$this->show();
 				}
 				for($i=0; $i<count($diff_list['copy']['entities']);$i++)
 				{
-					$this->query("insert into ".$params['table']." (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type ) values ('".$this->protect_string_db($params['coll_id'])."', '".$this->protect_string_db($params['object_id'])."' , '".$this->protect_string_db($object_type)."', ".$i.", '".$this->protect_string_db($diff_list['copy']['entities'][$i]['entity_id'])."', 'entity_id' , 'cc', '".$this->protect_string_db($list_type)."')");
+					$this->query("insert into ".$params['table']." (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type ) values ('".$this->protect_string_db(trim($params['coll_id']))."', '".$this->protect_string_db(trim($params['object_id']))."' , '".$this->protect_string_db(trim($object_type))."', ".$i.", '".$this->protect_string_db(trim($diff_list['copy']['entities'][$i]['entity_id']))."', 'entity_id' , 'cc', '".$this->protect_string_db(trim($list_type))."')");
 					//$this->show();
 				}
 			}
@@ -183,30 +183,30 @@ class diffusion_list extends dbquery
 			// If not in concat mode, deletes all copies
 			if(!$concat)
 			{
-				$this->query("delete from ".$params['table']." where coll_id = '".$this->protect_string_db($params['coll_id'])."'  and listinstance_type = '".$this->protect_string_db($list_type)."' and res_id = ".$params['res_id']." and item_mode = 'cc'");
+				$this->query("delete from ".$params['table']." where coll_id = '".$this->protect_string_db(trim($params['coll_id']))."'  and listinstance_type = '".$this->protect_string_db(trim($list_type))."' and res_id = ".$params['res_id']." and item_mode = 'cc'");
 			}
 			if(isset($diff_list['dest']['user_id']) && !empty($diff_list['dest']['user_id']))
 			{
 				// If dest_user is set , deletes the dest_user (concat or not concat)
-				$this->query("delete from ".$params['table']." where coll_id = '".$this->protect_string_db($params['coll_id'])."'  and listinstance_type = '".$this->protect_string_db($list_type)."' and res_id = ".$params['res_id']." and item_mode = 'dest'");
+				$this->query("delete from ".$params['table']." where coll_id = '".$this->protect_string_db(trim($params['coll_id']))."'  and listinstance_type = '".$this->protect_string_db(trim($list_type))."' and res_id = ".$params['res_id']." and item_mode = 'dest'");
 
 				if($concat)
 				{
 					// Deletes the dest user if he is in copy to avoid duplicate entry
-					$this->query("delete from ".$params['table']." where coll_id = '".$this->protect_string_db($params['coll_id'])."'  and listinstance_type = '".$this->protect_string_db($list_type)."' and res_id = ".$params['res_id']." and item_mode = 'cc' and item_type = 'user_id' and item_id = '".$diff_list['dest']['user_id']."'");
+					$this->query("delete from ".$params['table']." where coll_id = '".$this->protect_string_db(trim($params['coll_id']))."'  and listinstance_type = '".$this->protect_string_db(trim($list_type))."' and res_id = ".trim($params['res_id'])." and item_mode = 'cc' and item_type = 'user_id' and item_id = '".$this->protect_string_db(trim($diff_list['dest']['user_id']))."'");
 				}
 			}
 			//$this->show();
 			if(isset($diff_list['dest']['user_id']) && !empty($diff_list['dest']['user_id']))
 			{
-				$this->query("insert into ".$params['table']." (coll_id, res_id, listinstance_type,  sequence, item_id, item_type, item_mode, added_by_user, added_by_entity  ) values ('".$this->protect_string_db($params['coll_id'])."', ".$params['res_id']." , '".$this->protect_string_db($list_type)."', 0, '".$this->protect_string_db($diff_list['dest']['user_id'])."', 'user_id' , 'dest', '".$creator_user."', '".$creator_entity ."' )");
+				$this->query("insert into ".$params['table']." (coll_id, res_id, listinstance_type,  sequence, item_id, item_type, item_mode, added_by_user, added_by_entity  ) values ('".$this->protect_string_db(trim($params['coll_id']))."', ".$params['res_id']." , '".$this->protect_string_db(trim($list_type))."', 0, '".$this->protect_string_db(trim($diff_list['dest']['user_id']))."', 'user_id' , 'dest', '".$this->protect_string_db(trim($creator_user))."', '".$this->protect_string_db(trim($creator_entity))."' )");
 			//	$this->show();
 			}
 
 			$max_seq = 0;
 			if($concat)
 			{
-				$this->query("select max(sequence) as max_seq from ".$params['table']." where coll_id = '".$this->protect_string_db($params['coll_id'])."' and res_id = ".$params['res_id']." and listinstance_type = '".$this->protect_string_db($list_type)."' and item_type = 'user_id' and item_mode= 'cc'");
+				$this->query("select max(sequence) as max_seq from ".$params['table']." where coll_id = '".$this->protect_string_db(trim($params['coll_id']))."' and res_id = ".$params['res_id']." and listinstance_type = '".$this->protect_string_db(trim($list_type))."' and item_type = 'user_id' and item_mode= 'cc'");
 				//$this->show();
 				$res = $this->fetch_object();
 				if($res->max_seq > -1)
@@ -219,7 +219,7 @@ class diffusion_list extends dbquery
 				$insert = true;
 				if($concat)
 				{
-					$this->query("select res_id from ".$params['table']." where coll_id = '".$this->protect_string_db($params['coll_id'])."' and res_id = ".$params['res_id']." and listinstance_type = '".$this->protect_string_db($list_type)."'  and item_id = '".$this->protect_string_db($diff_list['copy']['users'][$i]['user_id'])."' and item_type = 'user_id' and item_mode= 'cc'");
+					$this->query("select res_id from ".$params['table']." where coll_id = '".$this->protect_string_db(trim($params['coll_id']))."' and res_id = ".$params['res_id']." and listinstance_type = '".$this->protect_string_db(trim($list_type))."'  and item_id = '".$this->protect_string_db(trim($diff_list['copy']['users'][$i]['user_id']))."' and item_type = 'user_id' and item_mode= 'cc'");
 				//	$this->show();
 					if($this->nb_result() == 0)
 					{
@@ -233,7 +233,7 @@ class diffusion_list extends dbquery
 				if($insert && $diff_list['dest']['user_id'] <> $diff_list['copy']['users'][$i]['user_id'])
 				{
 					$seq = $i + $max_seq;
-					$this->query("insert into ".$params['table']." (coll_id, res_id, listinstance_type,  sequence, item_id, item_type, item_mode, added_by_user, added_by_entity ) values ('".$this->protect_string_db($params['coll_id'])."', ".$params['res_id']." , '".$this->protect_string_db($list_type)."', ".$seq.", '".$this->protect_string_db($diff_list['copy']['users'][$i]['user_id'])."', 'user_id' , 'cc', '".$creator_user."', '".$creator_entity."' )");
+					$this->query("insert into ".$params['table']." (coll_id, res_id, listinstance_type,  sequence, item_id, item_type, item_mode, added_by_user, added_by_entity ) values ('".$this->protect_string_db(trim($params['coll_id']))."', ".$params['res_id']." , '".$this->protect_string_db(trim($list_type))."', ".$seq.", '".$this->protect_string_db(trim($diff_list['copy']['users'][$i]['user_id']))."', 'user_id' , 'cc', '".$this->protect_string_db(trim($creator_user))."', '".$this->protect_string_db(trim($creator_entity))."' )");
 					//$this->show();
 				}
 
@@ -241,7 +241,7 @@ class diffusion_list extends dbquery
 			$max_seq = 0;
 			if($concat)
 			{
-				$this->query("select max(sequence) as max_seq from ".$params['table']." where coll_id = '".$this->protect_string_db($params['coll_id'])."' and res_id = ".$params['res_id']." and listinstance_type = '".$this->protect_string_db($list_type)."' and item_type = 'entity_id' and item_mode= 'cc'");
+				$this->query("select max(sequence) as max_seq from ".$params['table']." where coll_id = '".$this->protect_string_db(trim($params['coll_id']))."' and res_id = ".$params['res_id']." and listinstance_type = '".$this->protect_string_db(trim($list_type))."' and item_type = 'entity_id' and item_mode= 'cc'");
 			//	$this->show();
 				$res = $this->fetch_object();
 				if($res->max_seq > -1)
@@ -254,7 +254,7 @@ class diffusion_list extends dbquery
 				$insert = true;
 				if($concat)
 				{
-					$this->query("select res_id from ".$params['table']." where coll_id = '".$this->protect_string_db($params['coll_id'])."' and res_id = ".$params['res_id']." and listinstance_type = '".$this->protect_string_db($list_type)."'  and item_id = '".$this->protect_string_db($diff_list['copy']['entities'][$i]['entity_id'])."' and item_type = 'entity_id' and item_mode= 'cc'");
+					$this->query("select res_id from ".$params['table']." where coll_id = '".$this->protect_string_db(trim($params['coll_id']))."' and res_id = ".$params['res_id']." and listinstance_type = '".$this->protect_string_db(trim($list_type))."'  and item_id = '".$this->protect_string_db(trim($diff_list['copy']['entities'][$i]['entity_id']))."' and item_type = 'entity_id' and item_mode= 'cc'");
 				//	$this->show();
 					if($this->nb_result() == 0)
 					{
@@ -268,7 +268,7 @@ class diffusion_list extends dbquery
 				if($insert)
 				{
 					$seq = $i + $max_seq;
-					$this->query("insert into ".$params['table']." (coll_id, res_id, listinstance_type,  sequence, item_id, item_type, item_mode ,added_by_user, added_by_entity  ) values ('".$this->protect_string_db($params['coll_id'])."', ".$params['res_id']." ,'".$this->protect_string_db($list_type)."', ".$seq.", '".$this->protect_string_db($diff_list['copy']['entities'][$i]['entity_id'])."', 'entity_id' , 'cc',  '".$creator_user."', '".$creator_entity."')");
+					$this->query("insert into ".$params['table']." (coll_id, res_id, listinstance_type,  sequence, item_id, item_type, item_mode ,added_by_user, added_by_entity  ) values ('".$this->protect_string_db(trim($params['coll_id']))."', ".$params['res_id']." ,'".$this->protect_string_db(trim($list_type))."', ".$seq.", '".$this->protect_string_db(trim($diff_list['copy']['entities'][$i]['entity_id']))."', 'entity_id' , 'cc',  '".$creator_user."', '".$creator_entity."')");
 					//$this->show();
 				}
 				//$this->show();
@@ -313,7 +313,7 @@ class diffusion_list extends dbquery
 		$this->connect();
 		if(!$mode_cc)
 		{
-			$this->query("select  l.item_id, u.firstname, u.lastname, e.entity_id, e.entity_label  from ".$_SESSION['tablename']['ent_listinstance']." l, ".$_SESSION['tablename']['users']." u, ".$_SESSION['tablename']['ent_entities']." e, ".$_SESSION['tablename']['ent_users_entities']." ue where l.coll_id = '".$coll_id ."' and l.listinstance_type = 'DOC' and l.item_mode = 'dest' and l.item_type = 'user_id' and l.sequence = 0 and l.item_id = u.user_id and u.user_id = ue.user_id and e.entity_id = ue.entity_id and l.res_id = ".$res_id);
+			$this->query("select  l.item_id, u.firstname, u.lastname, e.entity_id, e.entity_label  from ".$_SESSION['tablename']['ent_listinstance']." l, ".$_SESSION['tablename']['users']." u, ".$_SESSION['tablename']['ent_entities']." e, ".$_SESSION['tablename']['ent_users_entities']." ue where l.coll_id = '".$this->protect_string_db(trim($coll_id))."' and l.listinstance_type = 'DOC' and l.item_mode = 'dest' and l.item_type = 'user_id' and l.sequence = 0 and l.item_id = u.user_id and u.user_id = ue.user_id and e.entity_id = ue.entity_id and l.res_id = ".$res_id);
 
 			$res = $this->fetch_object();
 			$listinstance['dest']['user_id'] = $this->show_string($res->item_id);

@@ -45,7 +45,7 @@ class users_entities extends dbquery
 
 		$this->connect();
 		//$this->query("select ue.user_id, ue.entity_id, ue.primary_entity, ue.user_role, e.entity_label from ".$_SESSION['tablename']['ent_users_entities']." ue, ".$_SESSION['tablename']['ent_entities']." e where ue.user_id = '".$user_id."' and ue.entity_id = e.entity_id");
-		$this->query("select  ue.entity_id, ue.primary_entity, ue.user_role, e.entity_label from ".$_SESSION['tablename']['ent_users_entities']." ue, ".$_SESSION['tablename']['ent_entities']." e where ue.user_id = '".$user_id."' and ue.entity_id = e.entity_id");
+		$this->query("select  ue.entity_id, ue.primary_entity, ue.user_role, e.entity_label from ".$_SESSION['tablename']['ent_users_entities']." ue, ".$_SESSION['tablename']['ent_entities']." e where ue.user_id = '".$this->protect_string_db(trim($user_id))."' and ue.entity_id = e.entity_id");
 		if($this->nb_result() == 0)
 		{
 			$_SESSION['m_admin']['entity']['entities'] = array();
@@ -141,7 +141,7 @@ class users_entities extends dbquery
 		$this->connect();
 		static $tmparray = array();
 
-		$this->query('select entity_id from '.$_SESSION['tablename']['ent_entities']." where parent_entity_id = '".$entity_id."'");
+		$this->query('select entity_id from '.$_SESSION['tablename']['ent_entities']." where parent_entity_id = '".$this->protect_string_db(trim($entity_id))."'");
 		if($this->nb_result() > 0)
 		{
 			while($line = $this->fetch_object())
@@ -151,7 +151,7 @@ class users_entities extends dbquery
 
 				$userEnt = new users_entities();
 				$userEnt->connect();
-				$userEnt->query('select entity_id from '.$_SESSION['tablename']['ent_entities']." where parent_entity_id = '".$line->entity_id."'");
+				$userEnt->query('select entity_id from '.$_SESSION['tablename']['ent_entities']." where parent_entity_id = '".$this->protect_string_db(trim($line->entity_id))."'");
 				if($userEnt->nb_result() > 0)
 				{
 					$userEnt->getEntityChildren($line->entity_id, $tmparray);
@@ -187,7 +187,7 @@ class users_entities extends dbquery
 			if(empty($_SESSION['error']))
 			{
 				$this->connect();
-				$this->query("select * from ".$_SESSION['tablename']['users']." where user_id = '".$id."'");
+				$this->query("select * from ".$_SESSION['tablename']['users']." where user_id = '".$this->protect_string_db(trim($id))."'");
 
 				if($this->nb_result() == 0)
 				{
@@ -289,11 +289,11 @@ class users_entities extends dbquery
 
 		if(!$from_module_entities_page)
 		{
-			$this->query("DELETE FROM ".$_SESSION['tablename']['ent_users_entities'] ." where user_id = '".$_SESSION['m_admin']['users']['UserId']."'");
+			$this->query("DELETE FROM ".$_SESSION['tablename']['ent_users_entities'] ." where user_id = '".$this->protect_string_db(trim($_SESSION['m_admin']['users']['UserId']))."'");
 		}
 		else
 		{
-			$this->query("DELETE FROM ".$_SESSION['tablename']['ent_users_entities'] ." where user_id = '".$_SESSION['m_admin']['entity']['user_UserId']."'");
+			$this->query("DELETE FROM ".$_SESSION['tablename']['ent_users_entities'] ." where user_id = '".$this->protect_string_db(tim($_SESSION['m_admin']['entity']['user_UserId']))."'");
 		}
 		for($i=0; $i < count($_SESSION['m_admin']['entity']['entities'] ); $i++)
 		{

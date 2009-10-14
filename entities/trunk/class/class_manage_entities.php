@@ -18,7 +18,7 @@ class entity extends dbquery
 			if(empty($_SESSION['error']))
 			{
 				$this->connect();
-				$this->query('select * from '.$_SESSION['tablename']['ent_entities']." where entity_id = '".$id."'");
+				$this->query('select * from '.$_SESSION['tablename']['ent_entities']." where entity_id = '".$this->protect_string_db(trim($id))."'");
 				if($this->nb_result() == 0)
 				{
 					$_SESSION['error'] = _ENTITY_MISSING;
@@ -207,7 +207,7 @@ class entity extends dbquery
 	{
 		$this->connect();
 
-		$this->query('select entity_id from '.$_SESSION['tablename']['ent_entities']." where parent_entity_id = '".$id."'");
+		$this->query('select entity_id from '.$_SESSION['tablename']['ent_entities']." where parent_entity_id = '".$this->protect_string_db(trim($id))."'");
 
 		if($this->nb_result() == 0){ return false; }
 		else{ return true; }
@@ -222,7 +222,7 @@ class entity extends dbquery
 	{
 		$this->connect();
 
-		$this->query('select ue.entity_id from '.$_SESSION['tablename']['ent_users_entities']." ue, ".$_SESSION['tablename']['users']." u where ue.user_id = u.user_id and ue.entity_id = '".$id."'");
+		$this->query('select ue.entity_id from '.$_SESSION['tablename']['ent_users_entities']." ue, ".$_SESSION['tablename']['users']." u where ue.user_id = u.user_id and ue.entity_id = '".$this->protect_string_db(trim($id))."'");
 
 		if($this->nb_result() == 0){ return false; }
 		else{ return true; }
@@ -264,7 +264,7 @@ class entity extends dbquery
 
 		$this->connect();
 
-		$this->query("select entity_label from ".$_SESSION['tablename']['ent_entities']." where entity_id = '".$entity_id."'");
+		$this->query("select entity_label from ".$_SESSION['tablename']['ent_entities']." where entity_id = '".$this->protect_string_db(trim($entity_id))."'");
 		//$this->show();
 		if($this->nb_result() > 0)
 		{
@@ -287,7 +287,7 @@ class entity extends dbquery
 
 		$this->connect();
 
-		$this->query("select short_label from ".$_SESSION['tablename']['ent_entities']." where entity_id = '".$entity_id."'");
+		$this->query("select short_label from ".$_SESSION['tablename']['ent_entities']." where entity_id = '".$this->protect_string_db(trim($entity_id))."'");
 		//$this->show();
 		if($this->nb_result() > 0)
 		{
@@ -309,7 +309,7 @@ class entity extends dbquery
 	public function isEnabledEntity($entity_id)
 	{
 		$this->connect();
-		$this->query('select entity_id, entity_label, short_label from '.$_SESSION['tablename']['ent_entities']." where enabled = 'Y' and entity_id = '".$entity_id."'");
+		$this->query('select entity_id, entity_label, short_label from '.$_SESSION['tablename']['ent_entities']." where enabled = 'Y' and entity_id = '".$this->protect_string_db(trim($entity_id))."'");
 		if($this->nb_result() > 0)
 		{
 			$line = $this->fetch_object();
@@ -333,7 +333,7 @@ class entity extends dbquery
 	public function getEntityChildrenTree($entities, $parent = '', $tabspace = '', $except = array(), $where = '')
 	{
 		$this->connect();
-		$this->query('select entity_id, entity_label, short_label from '.$_SESSION['tablename']['ent_entities']." where enabled = 'Y' and parent_entity_id = '".$parent."'".$where);
+		$this->query('select entity_id, entity_label, short_label from '.$_SESSION['tablename']['ent_entities']." where enabled = 'Y' and parent_entity_id = '".$this->protect_string_db(trim($parent))."'".$where);
 
 		if($this->nb_result() > 0)
 		{
@@ -347,7 +347,7 @@ class entity extends dbquery
 
 					$db2 = new entity();
 					$db2->connect();
-					$db2->query('select entity_id from '.$_SESSION['tablename']['ent_entities']." where enabled = 'Y' and parent_entity_id = '".$line->entity_id."'".$where);
+					$db2->query('select entity_id from '.$_SESSION['tablename']['ent_entities']." where enabled = 'Y' and parent_entity_id = '".$this->protect_string_db(trim($line->entity_id))."'".$where);
 					$tmp = array();
 					if($db2->nb_result() > 0)
 					{
@@ -434,19 +434,19 @@ class entity extends dbquery
 
 		$this->connect();
 
-		$this->query('select entity_id from '.$_SESSION['tablename']['ent_entities']." where parent_entity_id = '".$parent."'".$where);
+		$this->query('select entity_id from '.$_SESSION['tablename']['ent_entities']." where parent_entity_id = '".$this->protect_string_db(trim($parent))."'".$where);
 
 		if($this->nb_result() > 0)
 		{
 			while($line = $this->fetch_object())
 			{
-				$tab_children_id[] = "'".$line->entity_id."'";
+				$tab_children_id[] = "'".$this->protect_string_db(trim($line->entity_id))."'";
 
 				if($immediate_children_only == false)
 				{
 					$db2 = new entity();
 					$db2->connect();
-					$db2->query('select entity_id from '.$_SESSION['tablename']['ent_entities']." where parent_entity_id = '".$line->entity_id."'".$where);
+					$db2->query('select entity_id from '.$_SESSION['tablename']['ent_entities']." where parent_entity_id = '".$this->protect_string_db(trim($line->entity_id))."'".$where);
 					if($db2->nb_result() > 0)
 					{
 						$db2->getTabChildrenId($line->entity_id, $where);
@@ -519,27 +519,13 @@ class entity extends dbquery
 		$entities = array();
 		$db = new dbquery();
 		$db->connect();
-		$db->query("select e.entity_id,e.entity_label,e.short_label, ue.primary_entity, ue.user_role from ".$_SESSION['tablename']['ent_entities']." e, ".$_SESSION['tablename']['ent_users_entities']." ue where ue.entity_id = e.entity_id and ue.user_id = '".$db->protect_string_db($user_id)."' order by e.entity_label");
+		$db->query("select e.entity_id,e.entity_label,e.short_label, ue.primary_entity, ue.user_role from ".$_SESSION['tablename']['ent_entities']." e, ".$_SESSION['tablename']['ent_users_entities']." ue where ue.entity_id = e.entity_id and ue.user_id = '".$db->protect_string_db(trim($user_id))."' order by e.entity_label");
 		while($res = $db->fetch_object())
 		{
 			array_push($entities, array('ID' => $res->entity_id, 'LABEL' => $res->entity_label, 'SHORT_LABEL' => $res->short_label,'PRIMARY' => $res->entity_label, 'ROLE' => $res->user_role ));
 		}
 		return $entities;
 	}
-	/**
-	* Checks if an user can update an entity
-	*
-	* @param string $user_id user identifier
-	* @param string $entity_id entity identifier
-	*/
-	/*public function access_user_entity($user_id, $entity_id)
-	{
-		if($user_id != 'superadmin')
-		{
-
-		}
-	}*/
-
 
 	/**
 	* Allows or denies an entity and its children
@@ -567,7 +553,7 @@ class entity extends dbquery
 		}
 
 		$this->connect();
-		$this->query('Update '.$_SESSION['tablename']['ent_entities']." set enabled = '".$action."' where entity_id = '".$id."'");
+		$this->query('Update '.$_SESSION['tablename']['ent_entities']." set enabled = '".$this->protect_string_db(trim($action))."' where entity_id = '".$this->protect_string_db(trim($id))."'");
 
 		if($_SESSION['history'][$hist] == "true")
 		{
@@ -576,7 +562,7 @@ class entity extends dbquery
 			$users->add($_SESSION['tablename']['ent_entities'], $id, $histKey, $histLabel." : ".$id, $_SESSION['config']['databasetype']);
 		}
 
-		$this->query('select entity_id from '.$_SESSION['tablename']['ent_entities']." where parent_entity_id = '".$id."'");
+		$this->query('select entity_id from '.$_SESSION['tablename']['ent_entities']." where parent_entity_id = '".$this->protect_string_db(trim($id))."'");
 
 		if($this->nb_result() > 0)
 		{
@@ -585,7 +571,7 @@ class entity extends dbquery
 				$db2 = new entity();
 				$db2->connect();
 
-				$db2->query('Update '.$_SESSION['tablename']['ent_entities']." set enabled = '".$action."' where entity_id = '".$line->entity_id."'");
+				$db2->query('Update '.$_SESSION['tablename']['ent_entities']." set enabled = '".$this->protect_string_db(trim($action))."' where entity_id = '".$this->protect_string_db(trim($line->entity_id))."'");
 				if($_SESSION['history'][hist] == "true")
 				{
 					require_once($_SESSION['pathtocoreclass']."class_history.php");
@@ -595,7 +581,7 @@ class entity extends dbquery
 
 				$count++;
 
-				$db2->query('select entity_id from '.$_SESSION['tablename']['ent_entities']." where parent_entity_id = '".$line->entity_id."'");
+				$db2->query('select entity_id from '.$_SESSION['tablename']['ent_entities']." where parent_entity_id = '".$this->protect_string_db(trim($line->entity_id))."'");
 				if($db2->nb_result() > 0)
 				{
 					$db2->allowbanentity($line->entity_id, $mode, $nbrEntity);
@@ -623,7 +609,7 @@ class entity extends dbquery
 		{
 			$this->connect();
 
-			$this->query('select entity_id from '.$_SESSION['tablename']['ent_entities']." where entity_id = '".$id."'");
+			$this->query('select entity_id from '.$_SESSION['tablename']['ent_entities']." where entity_id = '".$this->protect_string_db(trim($id))."'");
 
 			if($this->nb_result() == 0)
 			{
@@ -653,12 +639,12 @@ class entity extends dbquery
 						$_SESSION['error'] = _ENTITY_IS_RELATED;
 					}
 					else{
-						$this->query("delete from ".$_SESSION['tablename']['ent_entities']." where entity_id = '".$id."'");
+						$this->query("delete from ".$_SESSION['tablename']['ent_entities']." where entity_id = '".$this->protect_string_db(trim($id))."'");
 						if($_SESSION['history']['entitydel'] == "true")
 						{
 							require_once($_SESSION['pathtocoreclass'].'class_history.php');
 							$users = new history();
-							$users->add($_SESSION['tablename']['ent_entities'], $id,'DEL',_ENTITY_DELETION." : ".$id, $_SESSION['config']['databasetype']);
+							$users->add($_SESSION['tablename']['ent_entities'], $id,'DEL',_ENTITY_DELETION." : ".$this->protect_string_db(trim($id)), $_SESSION['config']['databasetype']);
 						}
 						$_SESSION['error'] = _ENTITY_DELETED;
 					}
@@ -817,7 +803,7 @@ class entity extends dbquery
 			$this->connect();
 			if($mode == 'add')
 			{
-				$this->query('select entity_id from '.$_SESSION['tablename']['ent_entities']." where entity_id = '".$_SESSION['m_admin']['entity']['entityId'] ."'");
+				$this->query('select entity_id from '.$_SESSION['tablename']['ent_entities']." where entity_id = '".$this->protect_string_db(trim($_SESSION['m_admin']['entity']['entityId'])) ."'");
 				if($this->nb_result() > 0)
 				{
 					$_SESSION['error'] = $_SESSION['m_admin']['entity']['entityId'] .' '._ALREADY_EXISTS.'<br />';
@@ -922,7 +908,7 @@ class entity extends dbquery
 		$type_level = "";
 		$found_type_level = false;
 		$this->connect();
-		$this->query('select entity_id, entity_label, short_label, entity_type from '.$_SESSION['tablename']['ent_entities']." where entity_id  = '".$entity_id."'");
+		$this->query('select entity_id, entity_label, short_label, entity_type from '.$_SESSION['tablename']['ent_entities']." where entity_id  = '".$this->protect_string_db(trim($entity_id))."'");
 		//$this->show();
 		$line = $this->fetch_object();
 		$entity_type = $line->entity_type;
@@ -959,7 +945,7 @@ class entity extends dbquery
 		if(!empty($entity_id))
 		{
 			$this->connect();
-			$this->query("select parent_entity_id from ".$_SESSION['tablename']['ent_entities']." where entity_id = '".$entity_id."'");
+			$this->query("select parent_entity_id from ".$_SESSION['tablename']['ent_entities']." where entity_id = '".$this->protect_string_db(trim($entity_id))."'");
 			$res = $this->fetch_object();
 			return $res->parent_entity_id;
 		}
@@ -978,7 +964,7 @@ class entity extends dbquery
 			$this->connect();
 			if(!empty($parent))
 			{
-				$this->query('select entity_id from '.$_SESSION['tablename']['ent_entities']." where parent_entity_id = '".$parent."' and entity_id <> '".$entity_id."'");
+				$this->query('select entity_id from '.$_SESSION['tablename']['ent_entities']." where parent_entity_id = '".$this->protect_string_db(trim($parent))."' and entity_id <> '".$this->protect_string_db(trim($entity_id))."'");
 				while($res = $this->fetch_object())
 				{
 					array_push($sisters, "'".$res->entity_id."'");
@@ -1004,7 +990,7 @@ class entity extends dbquery
 		else
 		{
 			$this->connect();
-			$this->query("select entity_id from ".$_SESSION['tablename']['ent_users_entities']." where user_id = '".$this->protect_string_db($user_id)." and entity_id = '".$this->protect_string_db($entity_id)."'");
+			$this->query("select entity_id from ".$_SESSION['tablename']['ent_users_entities']." where user_id = '".$this->protect_string_db(trim($user_id))." and entity_id = '".$this->protect_string_db(trim($entity_id))."'");
 			if($this->nb_result() == 1)
 			{
 				return true	;
@@ -1023,7 +1009,7 @@ class entity extends dbquery
 			return false;
 		}
 		$this->connect();
-		$this->query("select ue.entity_id, ue.user_role, e.entity_label, e.short_label from ".$_SESSION['tablename']['ent_entities']." e, ".$_SESSION['tablename']['ent_users_entities']." ue where ue.user_id = '".$this->protect_string_db($user_id)."' and ue.entity_id = e.entity_id and ue.primary_entity = 'Y'");
+		$this->query("select ue.entity_id, ue.user_role, e.entity_label, e.short_label from ".$_SESSION['tablename']['ent_entities']." e, ".$_SESSION['tablename']['ent_users_entities']." ue where ue.user_id = '".$this->protect_string_db(trim($user_id))."' and ue.entity_id = e.entity_id and ue.primary_entity = 'Y'");
 		$res = $this->fetch_object();
 		return array('ID' => $res->entity_id, 'LABEL' => $res->entity_label, 'SHORT_LABEL' => $res->short_label, 'ROLE' => $res->user_role);
 	}
