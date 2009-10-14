@@ -191,7 +191,7 @@ class admin_basket extends dbquery
 				</p>
 				<p>
 					<label><?php echo _BASKET_VIEW;?> : </label>
-					<textarea  cols="30" rows="4"  name="basketclause" <?php if($_SESSION['m_admin']['basket']['basketId'] == 'CopyMailBasket' || $_SESSION['m_admin']['basket']['basketId'] == 'DepartmentBasket') { echo 'readonly="readonly" class="readonly"';} ?> id="basketclause" ><?php echo $_SESSION['m_admin']['basket']['clause']; ?></textarea> <a href="javascript::" onclick="window.open('<?php  echo $_SESSION['config']['businessappurl'];?>keywords_help.php','modify','toolbar=no,status=no,width=400,height=450,left=500,top=300,scrollbars=auto,location=no,menubar=no,resizable=yes');"><img src = "<?php  echo $_SESSION['config']['businessappurl'].$_SESSION['config']['img'];?>/picto_menu_help.gif" alt="<? echo _HELP_KEYWORDS; ?>" title="<? echo _HELP_KEYWORDS; ?>"></a>
+					<textarea  cols="30" rows="4"  name="basketclause" <?php if($_SESSION['m_admin']['basket']['basketId'] == 'CopyMailBasket' || $_SESSION['m_admin']['basket']['basketId'] == 'DepartmentBasket') { echo 'readonly="readonly" class="readonly"';} ?> id="basketclause" ><?php echo $_SESSION['m_admin']['basket']['clause']; ?></textarea> <a href="javascript::" onclick="window.open('<?php  echo $_SESSION['config']['businessappurl'];?>keywords_help.php','modify','toolbar=no,status=no,width=400,height=450,left=500,top=300,scrollbars=auto,location=no,menubar=no,resizable=yes');"><img src = "<?php  echo $_SESSION['config']['businessappurl'].$_SESSION['config']['img'];?>/picto_menu_help.gif" alt="<? echo _HELP_KEYWORDS; ?>" title="<? echo _HELP_KEYWORDS; ?>" /></a>
 				</p>
 				<p class="buttons">
 					<input type="submit" name="Submit" value="<?php echo _VALIDATE; ?>" class="button" />
