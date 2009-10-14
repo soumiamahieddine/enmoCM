@@ -84,5 +84,30 @@ if(count($indexes) > 0)
 		$content .= '</p>';
 	}
 }
+
+$db = new dbquery();
+$db->connect();
+$db->query("select folders_system_id, folder_id, folder_name from ".$_SESSION['tablename']['fold_folders']." where foldertype_id = ".$_REQUEST['foldertype_id']." and folder_level = 1");
+
+$folders = array();
+while($res = $db->fetch_object())
+{
+	array_push($folders, array('SYS_ID' => $res->folders_system_id, 'ID' => $res->folder_id, 'NAME' => $res->folder_name));
+}
+
+if(count($folders) > 0)
+{
+	$content .= '<p>';
+		$content .= '<label for="folder_parent">'._CHOOSE_PARENT_FOLDER.' :</label>';
+		$content .= '<select name="folder_parent" id="folder_parent">';
+			$content .= '<option value=""></option>';
+			for($i=0; $i< count($folders);$i++)
+			{
+				$content .= '<option value="'.$folders[$i]['SYS_ID'].'">'.$folders[$i]['ID'].' - '.$folders[$i]['NAME'].'</option>';
+			}
+		$content .= '</select>';
+		$content .= ' <img src = "'.$_SESSION['config']['businessappurl'].$_SESSION['config']['img'].'/picto_menu_help.gif" alt="'._FOLDER_PARENT_DESC.'" title="'._FOLDER_PARENT_DESC.'"/>';
+	$content .= '</p>';
+}
 echo $content;
 

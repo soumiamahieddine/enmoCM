@@ -183,4 +183,7 @@ define('_MIN', 'minimum');
 define('_ERROR_COMPATIBILITY_FOLDER', 'Probl&egrave;me de compatibilit&eacute; entre<br/>le dossier et le type de document');
 define('_ADDED_TO_FOLDER', ' ajout&eacute; au dossier');
 define('_DELETED_FROM_FOLDER', ' supprim&eacute; du dossier');
+define('_CHOOSE_PARENT_FOLDER', 'Associer ce dossier &agrave; un dossier existant');
+define('_FOLDER_PARENT', 'Dossier parent');
+define('_FOLDER_PARENT_DESC', 'Vous pouvez choisir de cr&eacute;er un dous-dossier en le rattachant &agrave; un dossier du m&ecirc;me type. Il y a seulement 2 niveaux : dossier et sous-dossier.');
 ?>
