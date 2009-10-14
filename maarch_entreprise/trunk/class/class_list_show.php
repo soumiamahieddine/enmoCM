@@ -819,7 +819,15 @@ class list_show extends functions
 		{
 			$orderfield = '';
 		}
-		$link .= "&amp;order_field=".$orderfield;
+		if(isset($_GET['what']))
+		{
+			$get_what = strip_tags($_GET['what']);
+		}
+		else
+		{
+			$get_what = '';
+		}
+		$link .= "&amp;order=".$orderby."&amp;what=".$get_what;
 		//$link = "index.php?page=".$name."&amp;search=".$expr."&amp;admin=".$admin;
 
 		// define the defaults values
