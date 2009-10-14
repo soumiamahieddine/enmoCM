@@ -30,6 +30,7 @@
 session_name('PeopleBox');
 session_start();
 require_once($_SESSION['pathtocoreclass']."class_functions.php");
+require_once($_SESSION['pathtocoreclass']."class_db.php");
 require_once($_SESSION['pathtocoreclass']."class_request.php");
 require_once($_SESSION['pathtocoreclass']."class_core_tools.php");
 require_once($_SESSION['pathtocoreclass']."class_security.php");
@@ -139,7 +140,8 @@ if(count($_REQUEST['meta']) > 0)
 			else if($tab_id_fields[$j] == 'numcase' && !empty($_REQUEST['numcase']))
 			{
 				$json_txt .= "'numcase' : ['".addslashes(trim($_REQUEST['numcase']))."'],";
-				$where_request .= "case_id = ".$func->wash($_REQUEST['numcase'], "num", _N_CASE,"no")." and ";
+				//$where_request .= "res_view_letterbox.case_id = ".$func->wash($_REQUEST['numcase'], "num", _N_CASE,"no")." and ";
+				$where_request .= " ".$_SESSION['collections'][0]['view'].".case_id = ".$func->wash($_REQUEST['numcase'], "num", _N_CASE,"no")." and ";
 
 			}
 			else if($tab_id_fields[$j] == 'chrono' && !empty($_REQUEST['chrono']))
@@ -289,7 +291,7 @@ if(count($_REQUEST['meta']) > 0)
 			else if($tab_id_fields[$j] == 'fulltext' && !empty($_REQUEST['fulltext']))
 			{
 				$json_txt .= " 'fulltext' : ['".addslashes(trim($_REQUEST['fulltext']))."'],";
-				set_include_path($_SESSION['config']['businessapppath']."tools".DIRECTORY_SEPARATOR.PATH_SEPARATOR.get_include_path());
+				set_include_path($_SESSION['config']['businessapppath']."tools".$_SESSION['slash_env'].PATH_SEPARATOR.get_include_path());
 				require_once('Zend/Search/Lucene.php');
 				$_SESSION['search']['plain_text'] = $_REQUEST['fulltext'];
 				$path_to_lucene_index = $_SESSION['collections'][0]['path_to_lucene_index'];
@@ -699,6 +701,18 @@ else
 	$where_request = trim($where_request);
 	$_SESSION['searching']['where_request'] = $where_request;
 }
+if($_REQUEST['specific_case'] == "attach_to_case")
+{
+	
+	$page = 'list_results_mlb_frame';
+	?>
+	
+	<!--<script language="javascript" type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'].'indexing_searching/'.$page.'.php?searched_item='.$_REQUEST['searched_item'].'&searched_value='.$_REQUEST['searched_value'];?>';</script>-->
+	<script language="javascript" type="text/javascript">window.top.location.href='<?php  echo $_SESSION['urltomodules'].'cases/'.$page.'.php?searched_item='.$_REQUEST['searched_item'].'&searched_value='.$_REQUEST['searched_value'];?>';</script>
+	<?php
+	exit();
+}
+
 if(empty($_SESSION['error_search']))
 {
 	$page = 'list_results_mlb';

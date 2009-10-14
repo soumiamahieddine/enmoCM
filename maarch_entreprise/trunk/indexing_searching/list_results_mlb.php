@@ -23,6 +23,7 @@
 *
 * @file list_results_mlb.php
 * @author Claire Figueras <dev@maarch.org>
+* @author Loïc Vinet <dev@maarch.org>
 * @date $date$
 * @version $Revision$
 * @ingroup indexing_searching_mlb
@@ -120,10 +121,25 @@ if(isset($_REQUEST['order_field']) && !empty($_REQUEST['order_field']))
 
 $orderstr = $list->define_order($order, $field);
 
-$request = new request();
-$tab=$request->select($select,$where_request,$orderstr,$_SESSION['config']['databasetype']);
-//$request->show();exit;
+if(($_REQUEST['template']== 'group_case')&& ($core_tools->is_module_loaded('cases')))
+{
+	unset($select);
+	$select = array();
+	$select[$_SESSION['tablename']['cases']]= array();
+	$select[$view]= array();
+	array_push($select[$_SESSION['tablename']['cases']], "case_id", "case_label", "case_description", "case_typist", "case_creation_date");
+	$where = " ".$_SESSION['tablename']['cases'].".case_id = ".$view.".case_id  and ";
+	$request = new request();
+	$tab=$request->select($select,$where.$where_request,$orderstr,$_SESSION['config']['databasetype'], "default", false, "", "", "", true, false, true);
 
+}
+else
+{
+	$request = new request();
+	$tab=$request->select($select,$where_request,$orderstr,$_SESSION['config']['databasetype']);
+	
+}
+//$request->show();
 $_SESSION['error_page'] = '';
 
 
@@ -133,6 +149,8 @@ $_SESSION['error_page'] = '';
 	//Defines template allowed for this list
 	$template_list=array();
 	array_push($template_list, array( "name"=>"search_adv", "img"=>"extend_list.gif", "label"=> _ACCESS_LIST_EXTEND));
+	if($core_tools->is_module_loaded('cases'))	
+		array_push($template_list, array( "name"=>"group_case", "img"=>"arrow_up.gif", "label"=> _ACCESS_LIST_CASE));
 	if(!$_REQUEST['template'])
 		$template_to_use = $template_list[0]["name"];
 	if(isset($_REQUEST['template']) && empty($_REQUEST['template']))
@@ -158,7 +176,7 @@ $_SESSION['error_page'] = '';
 			//#########################
 			if(($_REQUEST['template']== 'group_case')&& ($core_tools->is_module_loaded('cases')))
 			{
-				include($_SESSION['pathtomodules']."cases".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR.'mlb_list_group_case_addon.php');
+				include($_SESSION['pathtomodules']."cases".DIRECTORY_SEPARATOR.'mlb_list_group_case_addon.php');
 			}
 			else
 			{

@@ -43,7 +43,7 @@ Mods :
 	##func_bool_view_doc## : Activate func to view documents
 	##func_bool_detail_doc## : Activate func to view documents detail's page
 	##func_include_by_module|arg1## : Include template from specific module (arg1 : module id)
-	
+	##func_load_external_script## : Load an external script in this template (arg1: module_id, arg2: php file)
 	
 Defines :  
 	_NAME_OF_LANG_INSTANCE : u se constant define in lang.php
@@ -62,31 +62,24 @@ Defines :
 <!-- ------------------------------------------------------------------------->
              <thead border ="1">
 				<tr>
-									<th  width="100%" colspan="2">
+									<th  width="100%" colspan="3">
 									<div align="center" style="border:1px solid; height:20px;margin-bottom:10px;padding-top:10px;vertical-align:middle;">
 									
 									##define_lang|_SORT_BY## :
-												##define_lang|_NUM_GED##
+												##define_lang|_NUM_CASE##
 												<a href="##order_link|res_id|desc##" title="##define_lang|_DESC_SORT##"><img src="##load_img|tri_down.gif##" border="0" alt="##define_lang|_DESC_SORT##" /> </a> <a href="##order_link|res_id|asc##" title="##define_lang|_ASC_SORT##"> <img src="##load_img|tri_up.gif##" border="0" alt="##define_lang|_ASC_SORT##" /></a> 
 												&nbsp;
-												##define_lang|_TYPE## 
+												##define_lang|_CASE_LABEL## 
 												<a href="##order_link|type_id|desc##" title="##define_lang|_DESC_SORT##"><img src="##load_img|tri_down.gif##" border="0" alt="##define_lang|_DESC_SORT##" /> </a> <a href="##order_link|type_id|asc##" title="##define_lang|_ASC_SORT##"> <img src="##load_img|tri_up.gif##" border="0" alt="##define_lang|_ASC_SORT##" /></a> 
 												&nbsp;
-												##define_lang|_SUBJECT## 
+												##define_lang|_CASE_DESCRIPTION## 
 												<a href="##order_link|subject|desc##" title="##define_lang|_DESC_SORT##"><img src="##load_img|tri_down.gif##" border="0" alt="##define_lang|_DESC_SORT##" /> </a> <a href="##order_link|subject|asc##" title="##define_lang|_ASC_SORT##"> <img src="##load_img|tri_up.gif##" border="0" alt="##define_lang|_ASC_SORT##" /></a> 
 												&nbsp;
-												##define_lang|_DEST_USER## 
+												##define_lang|_CASE_CREATION_DATE## 
 												<a href="##order_link|dest_user|desc##" title="##define_lang|_DESC_SORT##"><img src="##load_img|tri_down.gif##" border="0" alt="##define_lang|_DESC_SORT##" /> </a> <a href="##order_link|dest_user|asc##" title="##define_lang|_ASC_SORT##"> <img src="##load_img|tri_up.gif##" border="0" alt="##define_lang|_ASC_SORT##" /></a> 
 												&nbsp;
-												##define_lang|_REG_DATE## 
-												<a href="##order_link|creation_date|desc##" title="##define_lang|_DESC_SORT##"><img src="##load_img|tri_down.gif##" border="0" alt="##define_lang|_DESC_SORT##" /> </a> <a href="##order_link|creation_date|asc##" title="##define_lang|_ASC_SORT##"> <img src="##load_img|tri_up.gif##" border="0" alt="##define_lang|_ASC_SORT##" /></a> 
-												&nbsp;
-												##define_lang|_ENTITY## 
-												<a href="##order_link|destination|desc##" title="##define_lang|_DESC_SORT##"><img src="##load_img|tri_down.gif##" border="0" alt="##define_lang|_DESC_SORT##" /> </a> <a href="##order_link|destination|asc##" title="##define_lang|_ASC_SORT##"> <img src="##load_img|tri_up.gif##" border="0" alt="##define_lang|_ASC_SORT##" /></a> 
-												&nbsp;
-												##define_lang|_CATEGORY## 
-												<a href="##order_link|category_id|desc##" title="##define_lang|_DESC_SORT##"><img src="##load_img|tri_down.gif##" border="0" alt="##define_lang|_DESC_SORT##" /> </a> <a href="##order_link|category_id|asc##" title="##define_lang|_ASC_SORT##"> <img src="##load_img|tri_up.gif##" border="0" alt="##define_lang|_ASC_SORT##" /></a> 
-												##func_include_by_module|cases##
+												##define_lang|_CASE_TYPIST## 
+												<a href="##order_link|creation_date|desc##" title="##define_lang|_DESC_SORT##"><img src="##load_img|tri_down.gif##" border="0" alt="##define_lang|_DESC_SORT##" /> </a> <a href="##order_link|creation_date|asc##" title="##define_lang|_ASC_SORT##"> <img src="##load_img|tri_up.gif##" border="0" alt="##define_lang|_ASC_SORT##" /></a> 	
 									</div>			
 								</th>			
 					</tr>
@@ -96,51 +89,43 @@ Defines :
 #!#RESULT
 <!-- ------------------------------------------------------------------------->
 			
-			   <tr  class="##css_line|col|white ##" >
+			   <tr  class="##css_line|col| ##" >
 			
-					<td width="10%">
-						<!--<div align="center"><img src="##load_img|contact_maarch.gif##" alt="##load_value|status##" title="##load_value|status##"> </div>-->
-						<div align="center">##load_value|status##</div>
+					<td width="10%" align="center"style="text-align:center"  >
+						<h2>##load_value|case_id##</h2>
+						<!--<div align="center">##load_value|status##</div>-->
 					</td>
-					<td width="90%" align="center" style="padding : 0px; vertical-align:top" colspan="3" >
-						<table width="100%" border="0" cellspacing="0" cellpadding="0" >
-								<tr>
-									<td width="68%"   style="font-size:12px;"><b><!--##define_lang|_SUBJECT## :--></b><em>##load_value|subject##</em> </td>
-									<td width="32%">
-										<table width="100%" border="0" cellspacing="0" cellpadding="0">
-											<tr>
-												<td width="40%" style="text-align:right">##define_lang|_CONTACT## :</td><td  style="text-align:right">##load_value|exp_user_id##</td>
-											</tr>
-											<tr><td> </td><td></td></tr>
-											<tr>
-												<td style="text-align:right">##define_lang|_ENTITY## :</td><td  style="text-align:right">##load_value|destination##</td>
-											</tr>
-											##func_include_by_module|cases##
-										</table>
-									</td>
-								</tr>
-						</table>
+					
+						
+									<td width="70%"   style="font-size:12px;"><b><!--##define_lang|_SUBJECT## :--></b><b>##load_value|case_label##</b> </td>
+									<td width="20%" style="text-align:right">
+										##define_lang|_CASE_CREATION_DATE## : ##load_value|case_creation_date##
+				
+						
 					</td>
 				</tr>	
 				<tr class="##css_line_reload##">
-						<td style="text-align:center" style="font-size:13px;">##func_bool_radio_form## <b>##load_value|res_id##</b></td>
-						<td style="text-align:center">
-							<table width="100%" border="0" cellspacing="0" cellpadding="0" >
-									<tr>
-										<td width ="30px">##load_value|category_img##</td>
-										<td width ="170px">##load_value|category_id##</td>
-										<td width ="30px"><img src="##load_img|date_arriv.gif##"> </td>
-										<td width ="100px">##load_value|creation_date##</td>
-										<td width ="30px" style="text-align:right"><img src="##load_img|manage_users_entities_b_small.gif##"></td>
-										<td width ="190px"> ##load_value|dest_user##</td>
-										<td width ="30px"  style="text-align:right"><img src="##load_img|mini_type.gif##">
-										<td  style="text-align:left">##load_value|type_label##</td>
-										<td width ="60px">##func_bool_view_doc## ##func_bool_detail_doc##</td>
-									</tr>
-							</table>
+						<td style="text-align:center" style="font-size:13px;">
+							<div align="center">	
+								<img src="##load_img|contact_maarch.gif##" alt="##load_value|status##" title="##load_value|status##" width="40px"> 				</div>
+							</td>
+						<td style="text-align:left">
+								<em>##load_value|case_description##</em>
+						</td>
+						<td><p align="right">
+							##func_include_by_module|cases##
+							<img src="##load_img|tri_down.gif##" width="30px" onclick="new Effect.toggle('info##load_value|case_id##', 'blind');" onmouseover="document.body.style.cursor='pointer';" onmouseout="document.body.style.cursor='auto';" id="h23">
+							</p>
 						</td>
 				</tr >
-				<tr><td colspan="6" style="background-color: white;"></td></tr>
+				<tr  class="##css_line_reload##"  >
+				<td colspan="3" class="white">
+				<div class="more ressources" id="info##load_value|case_id##" style="display:none">
+					##func_load_external_script|cases|case_extend_list.php##
+				</div>
+				</td>
+				</tr>
+				<tr><td colspan="6" style="background-color: white;">&nbsp;</td></tr>
 		      
               
  

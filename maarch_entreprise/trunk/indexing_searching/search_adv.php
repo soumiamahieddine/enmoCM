@@ -217,8 +217,9 @@ if($core_tools->is_module_loaded('entities'))
 	{
 		$where = ' where '.$where;
 	}
+	//$conn->query("select distinct r.destination from ".$table." r join ".$_SESSION['tablename']['ent_entities']." e on e.entity_id = r.destination ".$where." group by r.destination ");
 	$conn->query("select distinct r.destination, e.short_label from ".$table." r join ".$_SESSION['tablename']['ent_entities']." e on e.entity_id = r.destination ".$where." group by e.short_label, r.destination ");
-//	$conn->show();
+	//	$conn->show();
 	$arr_tmp = array();
 	while($res = $conn->fetch_object())
 	{
