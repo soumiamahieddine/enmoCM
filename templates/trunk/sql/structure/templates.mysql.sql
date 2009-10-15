@@ -1,5 +1,6 @@
+
 CREATE TABLE IF NOT EXISTS templates (
-  id int(8) NOT NULL auto_increment,
+  id bigint(8) NOT NULL auto_increment,
   label varchar(50) collate utf8_unicode_ci default NULL,
   creation_date datetime default NULL,
   template_comment varchar(255) collate utf8_unicode_ci default NULL,

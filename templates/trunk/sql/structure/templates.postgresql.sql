@@ -1,6 +1,14 @@
+
+CREATE SEQUENCE templates_seq
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 20
+  CACHE 1;
+
 CREATE TABLE templates
 (
-  id serial NOT NULL,
+  id bigint NOT NULL DEFAULT nextval('templates_seq'::regclass),
   label character varying(50) DEFAULT NULL::character varying,
   creation_date timestamp without time zone,
   "template_comment" character varying(255) DEFAULT NULL::character varying,
