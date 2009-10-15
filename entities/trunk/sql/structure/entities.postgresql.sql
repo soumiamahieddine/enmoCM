@@ -64,9 +64,8 @@ CREATE SEQUENCE groupbasket_redirect_system_id_seq
   INCREMENT 1
   MINVALUE 1
   MAXVALUE 9223372036854775807
-  START 102
+  START 100
   CACHE 1;
-ALTER TABLE groupbasket_redirect_system_id_seq OWNER TO postgres;
 
 CREATE TABLE groupbasket_redirect
 (
