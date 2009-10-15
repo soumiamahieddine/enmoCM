@@ -391,21 +391,14 @@ class basket extends dbquery
 		{
 			for($i=0; $i<count($actions);$i++)
 			{
-				//$actions_json .= "'".$actions[$i]['ID']."' : { 'where' : '".addslashes($actions[$i]['WHERE'])."',";
-				//$actions_json .= "'id_status' : '".$actions[$i]['ID_STATUS']."', 'confirm' : '".$actions[$i]['CONFIRM']."', ";
-				//$actions_json .= "'id_action_page' : '".$actions[$i]['ACTION_PAGE']."'}, ";
 				if($actions[$i]['MASS_USE'] == 'Y')
 				{
 					array_push($actions_list, array('VALUE' => $actions[$i]['ID'], 'LABEL' => addslashes($actions[$i]['LABEL'])));
 				}
 			}
-			//$actions_json = preg_replace('/, $/', '}', $actions_json);
+
 		}
 
-		/*if($actions_json == '{')
-		{
-			$actions_json = '{}';
-		}*/
 		$actions_json = $this->translates_actions_to_json($actions);
 
 		if(count($actions_list) > 0)
@@ -437,26 +430,32 @@ class basket extends dbquery
 		{
 			 $param_list['actual_template'] = '';
 		}
-		if(!isset( $param_list['mode_string']))
-		{
-			 $param_list['mode_string'] = false;
-		}
+
 		if(!isset( $param_list['bool_export']))
 		{
 			 $param_list['bool_export'] = false;
 		}
 
+		$str = '';
 		// Displays the list using list_doc method from class_list_shows
-		$list->list_doc($param_list['values'],count($param_list['values']),$param_list['title'],$param_list['what'],$param_list['page_name'],
+		$str .= $list->list_doc($param_list['values'],count($param_list['values']),$param_list['title'],$param_list['what'],$param_list['page_name'],
 		$param_list['key'],$param_list['detail_destination'],$param_list['view_doc'],false,$method,
 		$action_form ,'', $param_list['bool_details'], $param_list['bool_order'], $param_list['bool_frame'], $param_list['bool_export'], false, false ,
-		true, $bool_check_form, '', $param_list['module'],false, '', '', $param_list['css'], '', $param_list['link_in_line'], true, $actions_list,
-		$param_list['hidden_fields'], $actions_json,$do_action , $_SESSION['current_basket']['default_action'], $param_list['open_details_popup'], $param_list['do_actions_arr'],  $param_list['template'], $param_list['template_list'], $param_list['actual_template'],  $param_list['mode_string'] );
+		true, $bool_check_form, '', $param_list['module'],false, '', '', $param_list['css'], $param_list['comp_link'], $param_list['link_in_line'], true, $actions_list,
+		$param_list['hidden_fields'], $actions_json,$do_action , $_SESSION['current_basket']['default_action'], $param_list['open_details_popup'], $param_list['do_actions_arr'],  $param_list['template'] = false, $param_list['template_list'], $param_list['actual_template'],  true );
 
 		// Displays the text line if needed
 		if(count($param_list['values']) > 0 && ($param_list['link_in_line'] || $do_action ) )
 		{
-			echo "<em>".$line_txt."</em>";
+			$str .= "<em>".$line_txt."</em>";
+		}
+		if(!isset( $param_list['mode_string']) || param_list['mode_string'] == false)
+		{
+			echo $str;
+		}
+		else
+		{
+			return $str;
 		}
 	}
 
