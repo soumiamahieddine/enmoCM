@@ -1,58 +1,472 @@
-INSERT INTO doctypes_first_level VALUES (1, 'Courriers', 'Y');
+-- Maarch LetterBox v3 sample data : Application
 
-INSERT INTO doctypes_second_level VALUES (1, 'Attribution', 1, 'Y');
-INSERT INTO doctypes_second_level VALUES (2, 'Avis', 1, 'Y');
-INSERT INTO doctypes_second_level VALUES (3, 'Décaissement', 1, 'Y');
-INSERT INTO doctypes_second_level VALUES (4, 'Divers', 1, 'Y');
-INSERT INTO doctypes_second_level VALUES (5, 'Suivi', 1, 'Y');
+-- USERS, GROUPS and ENTITIES
+INSERT INTO usergroups (group_id, group_desc, administrator, custom_right1, custom_right2, custom_right3, custom_right4, enabled) VALUES ('ADMINS', 'Administrateurs fonctionnels', ' ', ' ', ' ', ' ', ' ', 'Y');
+INSERT INTO usergroups (group_id, group_desc, administrator, custom_right1, custom_right2, custom_right3, custom_right4, enabled) VALUES ('ARCHIVISTS', 'Archivistes et operateurs de scan', ' ', ' ', ' ', ' ', ' ', 'Y');
+INSERT INTO usergroups (group_id, group_desc, administrator, custom_right1, custom_right2, custom_right3, custom_right4, enabled) VALUES ('EMPLOYEES', 'Employés', ' ', ' ', ' ', ' ', ' ', 'Y');
+INSERT INTO usergroups (group_id, group_desc, administrator, custom_right1, custom_right2, custom_right3, custom_right4, enabled) VALUES ('MANAGERS', 'Directeurs et personnes habilitees', ' ', ' ', ' ', ' ', ' ', 'Y');
+INSERT INTO usergroups (group_id, group_desc, administrator, custom_right1, custom_right2, custom_right3, custom_right4, enabled) VALUES ('VISORS', 'Valideurs de courrier', ' ', ' ', ' ', ' ', ' ', 'Y');
+INSERT INTO usergroups (group_id, group_desc, administrator, custom_right1, custom_right2, custom_right3, custom_right4, enabled) VALUES ('TYPISTS', 'Groupe des createurs de courriers', ' ', ' ', ' ', ' ', ' ', 'Y');
+INSERT INTO usergroups (group_id, group_desc, administrator, custom_right1, custom_right2, custom_right3, custom_right4, enabled) VALUES ('CORRESPONDANTS', 'Correspondants Archive', ' ', ' ', ' ', ' ', ' ', 'Y');
 
-INSERT INTO `contacts` (`contact_id`, `lastname`, `firstname`, `society`, `function`, `address_num`, `address_street`, `address_complement`, `address_town`, `address_postal_code`, `address_country`, `email`, `phone`, `other_data`, `is_corporate_person`, `user_id`, `title`, `enabled`) VALUES
-(1, 'Chaplin', 'Charlie', 'Maarch', 'Directeur artistique', '65', 'rue de la croix', 'test', 'nanterre', '92000', 'France', 'test@maarch.org', '01010101', 'khjohpuief', 'N', '', 'Monsieur', 'Y'),
-(3, '', '', 'Maarch', '', '', '', '', '', '', 'France', '', '', '', 'Y', '', '', 'Y'),
-(4, '', '', 'Warner', '', '', '', '', '', '', 'USA', '', '', '', 'Y', '', '', 'Y'),
-(5, 'Majestrix', 'Diana', 'Warner', 'Directeur artistique', '', '', '', '', '', 'USA', '', '', '', 'N', '', 'Madame', 'Y'),
-(7, '', '', 'Maarch', '', '65', 'rue de la croix', 'test', 'nanterre', '92000', 'France', 'test@maarch.org', '01010101', 'autre', 'Y', 'pparker', '', 'Y'),
-(8, 'Carlin', 'Bruno', 'Maarch', 'Directeur Marketing', '65', 'rue de la croix', 'test', 'nanterre', '92000', 'France', 'test@maarch.org', '01010101', 'auykiu', 'N', 'pparker', 'Monsieur', 'Y'),
-(9, '', '', 'Adorateurs du Froid', '', '43', 'rue du froid', 'fait trop chaud', 'coldcity', '11111', 'coldcountry', 'Adorateurs@froid.cold', '01010101', 'fait vraiment trop chaud', 'Y', 'pparker', '', 'Y'),
-(10, '', '', 'TOTO', '', '', '', '', '', '', '', '', '', '', 'Y', 'pparker', '', 'Y'),
-(11, '', '', 'fggdgg', '', '', '', '', '', '', '', '', '', '', 'Y', 'pparker', '', 'Y'),
-(12, '', '', 'yuiop', '', '', '', '', '', '', '', '', '', 'dffff', 'Y', 'pparker', '', 'Y'),
-(13, '', '', 'ffff', '', '', '', '', '', '', '', '', '', 'fff', 'Y', 'pparker', '', 'Y');
+INSERT INTO users (user_id, password, firstname, lastname, phone, mail, department, custom_t1, custom_t2, custom_t3, cookie_key, cookie_date, enabled, change_password, delay, status) VALUES ('ccharles', 'ef9689be896dacd901cae4f13593e90d', 'Charlotte', 'CHARLES', '+33 1 47 24 51', 'info@maarch.org', '', NULL, NULL, NULL, '2b67f8017119d7de32f300be3e97ccb4', '2008-09-10 15:09:23', 'Y', 'N', NULL, 'OK');
+INSERT INTO users (user_id, password, firstname, lastname, phone, mail, department, custom_t1, custom_t2, custom_t3, cookie_key, cookie_date, enabled, change_password, delay, status) VALUES ('ppetit', 'ef9689be896dacd901cae4f13593e90d', 'Patricia', 'PETIT', '+33 1 47 24 51', 'info@maarch.org', '', NULL, NULL, NULL, '', NULL, 'Y', 'N', NULL, 'OK');
+INSERT INTO users (user_id, password, firstname, lastname, phone, mail, department, custom_t1, custom_t2, custom_t3, cookie_key, cookie_date, enabled, change_password, delay, status) VALUES ('pparker', 'ef9689be896dacd901cae4f13593e90d', 'Peter', 'PARKER', '+33 1 47 24 51', 'info@maarch.org', '', '0', NULL, NULL, '', NULL, 'Y', 'N', NULL, 'OK');
+INSERT INTO users (user_id, password, firstname, lastname, phone, mail, department, custom_t1, custom_t2, custom_t3, cookie_key, cookie_date, enabled, change_password, delay, status) VALUES ('eerina', 'ef9689be896dacd901cae4f13593e90d', 'Edith', 'ERINA', '+33 1 47 24 51', 'info@maarch.org', '', '0', NULL, NULL, '', NULL, 'Y', 'N', NULL, 'OK');
+INSERT INTO users (user_id, password, firstname, lastname, phone, mail, department, custom_t1, custom_t2, custom_t3, cookie_key, cookie_date, enabled, change_password, delay, status) VALUES ('ttong', 'ef9689be896dacd901cae4f13593e90d', 'Tony', 'TONG', '+33 1 47 24 51', 'info@maarch.org', '', '0', NULL, NULL, '', NULL, 'Y', 'N', NULL, 'OK');
+INSERT INTO users (user_id, password, firstname, lastname, phone, mail, department, custom_t1, custom_t2, custom_t3, cookie_key, cookie_date, enabled, change_password, delay, status) VALUES ('bboule', 'ef9689be896dacd901cae4f13593e90d', 'Bruno', 'BOULE', '+33 1 47 24 51', 'info@maarch.org', '', '0', NULL, NULL, '', NULL, 'Y', 'N', NULL, 'OK');
+INSERT INTO users (user_id, password, firstname, lastname, phone, mail, department, custom_t1, custom_t2, custom_t3, cookie_key, cookie_date, enabled, change_password, delay, status) VALUES ('bbain', 'ef9689be896dacd901cae4f13593e90d', 'Barbara', 'BAIN', '+33 1 47 24 51', 'info@maarch.org', '', '0', NULL, NULL, '', NULL, 'Y', 'N', NULL, 'OK');
+INSERT INTO users (user_id, password, firstname, lastname, phone, mail, department, custom_t1, custom_t2, custom_t3, cookie_key, cookie_date, enabled, change_password, delay, status) VALUES ('ssaporta', 'ef9689be896dacd901cae4f13593e90d', 'Sabrina', 'SAPORTA', '+33 1 47 24 51', 'info@maarch.org', '', '0', NULL, NULL, '', NULL, 'Y', 'N', NULL, 'OK');
+INSERT INTO users (user_id, password, firstname, lastname, phone, mail, department, custom_t1, custom_t2, custom_t3, cookie_key, cookie_date, enabled, change_password, delay, status) VALUES ('sstarr', 'ef9689be896dacd901cae4f13593e90d', 'Suzanne', 'STARR', '+33 1 47 24 51', 'info@maarch.org', '', '0', NULL, NULL, '', NULL, 'Y', 'N', NULL, 'OK');
+INSERT INTO users (user_id, password, firstname, lastname, phone, mail, department, custom_t1, custom_t2, custom_t3, cookie_key, cookie_date, enabled, change_password, delay, status) VALUES ('ssissoko', 'ef9689be896dacd901cae4f13593e90d', 'Sessime', 'SISSOKO', '+33 1 47 24 51', 'info@maarch.org', '', '0', NULL, NULL, '', NULL, 'Y', 'N', NULL, 'OK');
+INSERT INTO users (user_id, password, firstname, lastname, phone, mail, department, custom_t1, custom_t2, custom_t3, cookie_key, cookie_date, enabled, change_password, delay, status) VALUES ('ddogem', 'ef9689be896dacd901cae4f13593e90d', 'Dina', 'DOGEM', '+33 1 47 24 51', 'info@maarch.org', '', '0', NULL, NULL, '', NULL, 'Y', 'N', NULL, 'OK');
+INSERT INTO users (user_id, password, firstname, lastname, phone, mail, department, custom_t1, custom_t2, custom_t3, cookie_key, cookie_date, enabled, change_password, delay, status) VALUES ('superadmin', '17c4520f6cfd1ab53d8745e84681eb49', 'Super', 'ADMIN', '+33 1 47 24 51', 'admin@maarch.org', 'Maarch', '11', NULL, NULL, '764759df274008fc4cffd89ced0449d8', '2009-09-14 10:09:52', 'Y', 'N', NULL, 'OK');
+INSERT INTO users (user_id, password, firstname, lastname, phone, mail, department, custom_t1, custom_t2, custom_t3, cookie_key, cookie_date, enabled, change_password, delay, status) VALUES ('bblier', 'ef9689be896dacd901cae4f13593e90d', 'Bernard', 'BLIER', '+33 1 47 24 51 ', 'info@maarch.org', '', NULL, NULL, NULL, '053123818f126439a94ce074acf71b92', '2009-09-14 11:09:04', 'Y', 'N', NULL, 'OK');
 
-INSERT INTO `docservers` (`docserver_id`, `device_type`, `device_label`, `is_readonly`, `enabled`, `size_limit`, `actual_size`, `path_template`, `ext_docserver_info`, `chain_before`, `chain_after`, `creation_date`, `closing_date`, `coll_id`, `priority`) VALUES
-('documents', NULL, NULL, 'N', 'Y', 1000000000, 17890777, '/docservers/DGGT/res_x/', NULL, NULL, NULL, '2007-11-19 11:41:22', NULL, 'coll_1', 10),
-('documents_ai', NULL, NULL, 'N', 'Y', 1000000000, 17890777, '/docservers/DGGT/res_x_ai/', NULL, NULL, NULL, '2007-11-19 11:41:22', NULL, 'coll_1', 20),
-('letterbox', NULL, NULL, 'N', 'Y', 100000000, 7613406, 'C:\\Maarch\\DocServer\\DGGT\\letterbox\\', NULL, NULL, NULL, '2007-11-19 11:41:22', NULL, 'letterbox_coll', 10),
-('letterbox_ai', NULL, NULL, 'N', 'Y', 100000000, 3271717, 'C:\\Maarch\\DocServer\\DGGT\\letterbox_ai\\', NULL, NULL, NULL, '2007-11-19 11:41:22', NULL, 'letterbox_coll', 20);
+INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('ppetit', 'MANAGERS', 'Y', 'Directrice Générale');
+INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('eerina', 'EMPLOYEES', 'Y', 'Assistante');
+INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('bbain', 'MANAGERS', 'Y', 'Responsable des Opérations');
+INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('ccharles', 'MANAGERS', 'Y', 'Directrice financière');
+INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('pparker', 'MANAGERS', 'Y', 'Responsable RH');
+INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('ddogem', 'EMPLOYEES', 'Y', 'Chargée de clientèle');
+INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('ttong', 'EMPLOYEES', 'Y', 'Superviseur');
+INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('sstarr', 'EMPLOYEES', 'Y', 'Gestionnaire');
+INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('ssaporta', 'EMPLOYEES', 'Y', 'Gestionnaire');
+INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('ssissoko', 'EMPLOYEES', 'Y', 'Directeur Informatique');
+INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('ssissoko', 'ADMINS', 'N', 'Administrateur du système');
+INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('bblier', 'TYPISTS', 'Y', 'Responsable service Courrier');
+INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('bblier', 'ARCHIVISTS', 'N', 'Archiviste');
+INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('bboule', 'EMPLOYEES', 'Y', 'Comptable');
+INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('bboule', 'CORRESPONDANTS', 'N', 'Correspondant Archives');
 
-INSERT INTO `actions` (`id`, `keyword`, `label_action`, `id_status`, `is_system`, `enabled`, `action_page`, `history`, `origin`, `create_id`) VALUES
-(2, 'to_validate', 'A valider', 'VAL', 'Y', 'N', 'confirm_status', 'N', 'apps', 'N'),
-(20, '', 'ClÃ´turer', 'END', 'N', 'Y', 'confirm_status', 'Y', 'apps', 'N'),
-(21, 'indexing', 'Indexation', 'NEW', 'N', 'Y', 'index_mlb', 'Y', 'apps', 'Y'),
-(18, '', 'A valider', 'NEW', 'N', 'Y', '', 'Y', 'apps', 'N'),
-(19, '', 'Traiter document', 'COU', 'N', 'Y', 'process', 'Y', 'apps', 'N'),
-(1, 'redirect', 'Redirection', 'NONE', 'Y', 'Y', 'redirect', 'Y', 'entities', 'N'),
-(22, '', 'En attente de validation', 'VAL', 'N', 'Y', '', 'Y', 'apps', 'N'),
-(23, 'indexing', 'Valider courrier', 'NEW', 'N', 'Y', 'validate_mail', 'Y', 'apps', 'N');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINS', 'admin');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINS', 'admin_users');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINS', 'admin_groups');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINS', 'admin_architecture');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINS', 'view_history');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINS', 'view_history_batch');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINS', 'xml_param_services');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINS', 'admin_status');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINS', 'admin_actions');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINS', 'admin_contacts');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINS', 'admin_apa');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINS', 'admin_baskets');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINS', 'manage_entities');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINS', 'admin_foldertypes');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINS', 'admin_templates');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('ARCHIVISTS', 'admin');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('ARCHIVISTS', 'admin_apa');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('ARCHIVISTS', 'manage_apa');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('ARCHIVISTS', 'view_baskets');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('ARCHIVISTS', 'physical_archive');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('ARCHIVISTS', 'physical_archive_box_read');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('ARCHIVISTS', 'physical_archive_box_manage');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('ARCHIVISTS', 'physical_archive_batch_read');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('ARCHIVISTS', 'physical_archive_batch_manage');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('ARCHIVISTS', '_print_sep');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('EMPLOYEES', 'adv_search_mlb');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('EMPLOYEES', 'search_customer');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('EMPLOYEES', 'my_alerts');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('EMPLOYEES', 'use_alerts_on_doc');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('EMPLOYEES', 'use_alerts_on_folder');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('EMPLOYEES', 'view_baskets');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('EMPLOYEES', 'add_copy_in_process');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('EMPLOYEES', 'folder_search');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('EMPLOYEES', 'modify_folder');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('MANAGERS', 'adv_search_mlb');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('MANAGERS', 'search_customer');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('MANAGERS', 'my_alerts');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('MANAGERS', 'use_alerts_on_doc');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('MANAGERS', 'use_alerts_on_folder');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('MANAGERS', 'view_baskets');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('MANAGERS', 'add_copy_in_process');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('MANAGERS', 'folder_search');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('MANAGERS', 'modify_folder');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('MANAGERS', 'delete_folder');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('VISORS', 'view_baskets');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('TYPISTS', 'index_mlb');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('TYPISTS', 'my_contacts');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('TYPISTS', 'view_baskets');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('TYPISTS', 'add_copy_in_process');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('CORRESPONDANTS', 'reserve_apa');
 
-INSERT INTO `actions_groupbaskets` (`id_action`, `where_clause`, `group_id`, `basket_id`, `used_in_basketlist`, `used_in_action_page`, `default_action_list`) VALUES
-(19, '', 'Recovery', 'MyBasket', 'N', 'N', 'Y'),
-(23, '', 'Recovery', 'ValidationBasket', 'N', 'N', 'Y'),
-(21, '', 'Recovery', 'IndexingBasket', 'N', 'N', 'Y'),
-(1, '', 'Recovery', 'MyBasket', 'N', 'Y', 'N'),
-(22, '', 'Recovery', 'IndexingBasket', 'N', 'Y', 'N'),
-(20, '', 'Recovery', 'MyBasket', 'N', 'Y', 'N');
+INSERT INTO entities (entity_id, entity_label, short_label, enabled, adrs_1, adrs_2, adrs_3, zipcode, city, country, email, business_id, parent_entity_id, entity_type) VALUES ('DIR', 'Organisation ACME', 'ACME', 'Y', '', '', '', '', '', '', '', '', '', 'Direction');
+INSERT INTO entities (entity_id, entity_label, short_label, enabled, adrs_1, adrs_2, adrs_3, zipcode, city, country, email, business_id, parent_entity_id, entity_type) VALUES ('OPE', 'Direction des Opérations Grands Comptes et Particuliers', 'Direction Opérations', 'Y', '', '', '', '', '', '', '', '', 'DIR', 'Direction');
+INSERT INTO entities (entity_id, entity_label, short_label, enabled, adrs_1, adrs_2, adrs_3, zipcode, city, country, email, business_id, parent_entity_id, entity_type) VALUES ('FIN', 'Direction Financière', 'Direction Financière', 'Y', '', '', '', '', '', '', '', '', 'DIR', 'Direction');
+INSERT INTO entities (entity_id, entity_label, short_label, enabled, adrs_1, adrs_2, adrs_3, zipcode, city, country, email, business_id, parent_entity_id, entity_type) VALUES ('DRH', 'Direction des Ressources Humaines', 'Direction RH', 'Y', '', '', '', '', '', '', '', '', 'DIR', 'Direction');
+INSERT INTO entities (entity_id, entity_label, short_label, enabled, adrs_1, adrs_2, adrs_3, zipcode, city, country, email, business_id, parent_entity_id, entity_type) VALUES ('MNG', 'Service de Gestion et des Sinistres', 'Service Gestion', 'Y', '', '', '', '', '', '', '', '', 'OPE', 'Service');
+INSERT INTO entities (entity_id, entity_label, short_label, enabled, adrs_1, adrs_2, adrs_3, zipcode, city, country, email, business_id, parent_entity_id, entity_type) VALUES ('SLS', 'Service Commercial Grands Comptes et Particuliers', 'Service Commercial', 'Y', '', '', '', '', '', '', '', '', 'OPE', 'Service');
+INSERT INTO entities (entity_id, entity_label, short_label, enabled, adrs_1, adrs_2, adrs_3, zipcode, city, country, email, business_id, parent_entity_id, entity_type) VALUES ('ITI', 'Service des Systèmes d''Information', 'Service Informatique', 'Y', '', '', '', '', '', '', '', '', 'FIN', 'Service');
+INSERT INTO entities (entity_id, entity_label, short_label, enabled, adrs_1, adrs_2, adrs_3, zipcode, city, country, email, business_id, parent_entity_id, entity_type) VALUES ('ACC', 'Service Comptabilité et Finances', 'Service Comptabilité', 'Y', '', '', '', '', '', '', '', '', 'FIN', 'Service');
+INSERT INTO entities (entity_id, entity_label, short_label, enabled, adrs_1, adrs_2, adrs_3, zipcode, city, country, email, business_id, parent_entity_id, entity_type) VALUES ('COU', 'Service du Courrier', 'Service du Courrier', 'Y', '', '', '', '', '', '', '', '', 'FIN', 'Service');
+INSERT INTO entities (entity_id, entity_label, short_label, enabled, adrs_1, adrs_2, adrs_3, zipcode, city, country, email, business_id, parent_entity_id, entity_type) VALUES ('EQ1', 'Equipe 1 : Grands Comptes et Entreprises', 'Equipe 1', 'Y', '', '', '', '', '', '', '', '', 'MNG', 'Bureau');
+INSERT INTO entities (entity_id, entity_label, short_label, enabled, adrs_1, adrs_2, adrs_3, zipcode, city, country, email, business_id, parent_entity_id, entity_type) VALUES ('EQ2', 'Equipe 2 : Particuliers et Internet', 'Equipe 2', 'Y', '', '', '', '', '', '', '', '', 'MNG', 'Bureau');
+INSERT INTO entities (entity_id, entity_label, short_label, enabled, adrs_1, adrs_2, adrs_3, zipcode, city, country, email, business_id, parent_entity_id, entity_type) VALUES ('COR', 'Correspondant Archive', 'Correspondant Archive', 'Y', '', '', '', '', '', '', '', '', 'COU', 'Bureau');
 
-INSERT INTO `ar_batch` (`arbatch_id`, `title`, `subject`, `description`, `arbox_id`, `status`, `creation_date`, `retention_time`, `custom_t1`, `custom_n1`, `custom_f1`, `custom_d1`, `custom_t2`, `custom_n2`, `custom_f2`, `custom_d2`, `custom_t3`, `custom_n3`, `custom_f3`, `custom_d3`, `custom_t4`, `custom_n4`, `custom_f4`, `custom_d4`, `custom_t5`, `custom_n5`, `custom_f5`, `custom_d5`, `custom_t6`, `custom_t7`, `custom_t8`, `custom_t9`, `custom_t10`, `custom_t11`) VALUES
-(1, '1', 'Lot 0 - Scan batch 0', 'Pas de description pour ce lot - No description for this batch', 3, 'NEW', '2008-09-22 19:31:46', NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(60, '2', 'Lot de numerisation 60 - Scan batch 60', 'Pas de description pour ce lot - No description for this batch', 3, 'NEW', '2008-09-22 19:31:46', NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(61, '3', NULL, NULL, 3, 'NEW', '2009-08-03 10:10:52', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'pparker', NULL, NULL, NULL, NULL, NULL, NULL, '2009-08-03 10:10:52', NULL, NULL, NULL, NULL, 'LETTERBOX', NULL, NULL, NULL, NULL, NULL);
+INSERT INTO users_entities (user_id, entity_id, user_role, primary_entity) VALUES ('ppetit', 'DIR', 'Directrice Générale', 'Y');
+INSERT INTO users_entities (user_id, entity_id, user_role, primary_entity) VALUES ('eerina', 'DIR', 'Particulière de la Directrice Générale', 'Y');
+INSERT INTO users_entities (user_id, entity_id, user_role, primary_entity) VALUES ('bbain', 'OPE', 'Directrice des Opérations', 'Y');
+INSERT INTO users_entities (user_id, entity_id, user_role, primary_entity) VALUES ('ccharles', 'FIN', 'Directrice Financière', 'Y');
+INSERT INTO users_entities (user_id, entity_id, user_role, primary_entity) VALUES ('pparker', 'DRH', 'Directeur RH', 'Y');
+INSERT INTO users_entities (user_id, entity_id, user_role, primary_entity) VALUES ('ddogem', 'SLS', 'Responsable Commerciale', 'Y');
+INSERT INTO users_entities (user_id, entity_id, user_role, primary_entity) VALUES ('ttong', 'MNG', 'Responsable de Gestion', 'Y');
+INSERT INTO users_entities (user_id, entity_id, user_role, primary_entity) VALUES ('sstarr', 'EQ1', 'Gestionnaire Grands Comptes', 'Y');
+INSERT INTO users_entities (user_id, entity_id, user_role, primary_entity) VALUES ('ssaporta', 'EQ2', 'Gestionnaires Particuliers et Internet', 'Y');
+INSERT INTO users_entities (user_id, entity_id, user_role, primary_entity) VALUES ('ssissoko', 'ITI', 'Responsable Informatique', 'Y');
+INSERT INTO users_entities (user_id, entity_id, user_role, primary_entity) VALUES ('bblier', 'COU', 'Chef du Courrier', 'Y');
+INSERT INTO users_entities (user_id, entity_id, user_role, primary_entity) VALUES ('bboule', 'ACC', 'Comptable', 'Y');
+INSERT INTO users_entities (user_id, entity_id, user_role, primary_entity) VALUES ('bboule', 'COR', 'Correspondant Archive', 'N');
 
-INSERT INTO `ar_boxes` (`arbox_id`, `title`, `subject`, `description`, `entity_id`, `arcontainer_id`, `status`, `creation_date`, `retention_time`, `custom_t1`, `custom_n1`, `custom_f1`, `custom_d1`, `custom_t2`, `custom_n2`, `custom_f2`, `custom_d2`, `custom_t3`, `custom_n3`, `custom_f3`, `custom_d3`, `custom_t4`, `custom_n4`, `custom_f4`, `custom_d4`, `custom_t5`, `custom_n5`, `custom_f5`, `custom_d5`, `custom_t6`, `custom_t7`, `custom_t8`, `custom_t9`, `custom_t10`, `custom_t11`) VALUES
-(3, 'Boite d archive 3 - Archive box 3', 'Divers documents - Miscellaneous docs', 'Pas de description pour cette boite - No description for this archive box', '0', 0, 'NEW', '2008-09-22 19:30:26', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+
+INSERT INTO security (group_id, coll_id, where_clause, maarch_comment, can_insert, can_update, can_delete) VALUES ('EMPLOYEES', 'letterbox_coll', 'DESTINATION = @my_primary_entity
+', '', 'Y', 'Y', 'N');
+INSERT INTO security (group_id, coll_id, where_clause, maarch_comment, can_insert, can_update, can_delete) VALUES ('MANAGERS', 'letterbox_coll', '(DESTINATION = @my_primary_entity or DESTINATION in (@subentities[@my_primary_entity])) or DESTINATION is NULL', '', 'Y', 'Y', 'Y');
+INSERT INTO security (group_id, coll_id, where_clause, maarch_comment, can_insert, can_update, can_delete) VALUES ('TYPISTS', 'letterbox_coll', 'DESTINATION = @my_primary_entity or TYPIST=@user', '', 'Y', 'Y', 'Y');
+INSERT INTO security (group_id, coll_id, where_clause, maarch_comment, can_insert, can_update, can_delete) VALUES ('CORRESPONDANTS', 'letterbox_coll', '(DESTINATION = @my_primary_entity or DESTINATION in (@subentities[@my_primary_entity])) or DESTINATION is NULL', '', 'N', 'N', 'N');
+
+-- DOCSERVERS
+INSERT INTO docservers (docserver_id, device_type, device_label, is_readonly, enabled, size_limit, actual_size, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority) VALUES ('letterbox_ai', NULL, NULL, 'N', 'Y', 100000000, 3271717, 'C:\\Maarch\\Docserver\\DGGT_ai\\', NULL, NULL, NULL, '2007-11-19 11:41:22', NULL, 'letterbox_coll', 20);
+INSERT INTO docservers (docserver_id, device_type, device_label, is_readonly, enabled, size_limit, actual_size, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority) VALUES ('letterbox', NULL, NULL, 'N', 'Y', 100000000, 7949134, 'C:\\Maarch\\Docserver\\DGGT\\', NULL, NULL, NULL, '2007-11-19 11:41:22', NULL, 'letterbox_coll', 10);
+
+-- ACTIONS and BASKETS
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (15, '', 'Prelever une archive', 'OUT', 'N', 'Y', 'confirm_status', 'Y', 'advanced_physical_archive', 'N');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (16, '', 'Reintegrer une archive', 'POS', 'N', 'Y', 'confirm_status', 'Y', 'advanced_physical_archive', 'N');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (2, 'to_validate', 'A valider', 'VAL', 'Y', 'N', 'confirm_status', 'N', 'apps', 'N');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (21, 'indexing', 'Indexation', 'NEW', 'N', 'Y', 'index_mlb', 'Y', 'apps', 'Y');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (18, '', 'A valider', 'NEW', 'N', 'Y', '', 'Y', 'apps', 'N');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (19, '', 'Traiter document', 'COU', 'N', 'Y', 'process', 'Y', 'apps', 'N');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (1, 'redirect', 'Redirection', 'NONE', 'Y', 'Y', 'redirect', 'Y', 'entities', 'N');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (22, '', 'En attente de validation', 'VAL', 'N', 'Y', '', 'Y', 'apps', 'N');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (23, 'indexing', 'Valider courrier', 'NEW', 'N', 'Y', 'validate_mail', 'Y', 'apps', 'N');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (20, '', 'Cloturer', 'END', 'N', 'Y', 'close_mail', 'Y', 'apps', 'N');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (3, '', 'Retourner au service Courrier', 'RET', 'N', 'Y', 'confirm_status', 'Y', 'apps', 'N');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (100, '', 'Voir le document', '', 'N', 'Y', 'view', 'N', 'apps', 'N');
+
+INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched) VALUES ('OUT', 'Prelevee', 'N', '', 'advanced_physical_archive', 'N');
+INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched) VALUES ('POS', 'Reintegree', 'N', '', 'advanced_physical_archive', 'N');
+INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched) VALUES ('COU', 'En cours', 'Y', 'mail.gif', 'apps', 'Y');
+INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched) VALUES ('NEW', 'Nouveau courrier', 'Y', 'mail_new.gif', 'apps', 'Y');
+INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched) VALUES ('RSV', 'Reserve', 'N', '', 'apps', 'N');
+INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched) VALUES ('DEL', 'Supprime', 'Y', NULL, 'apps', 'N');
+INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched) VALUES ('END', 'Clos', 'Y', 'mail_end.gif', 'apps', 'Y');
+INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched) VALUES ('VAL', 'A valider', 'Y', NULL, 'apps', 'N');
+INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched) VALUES ('RET', 'Retour courrier', 'N', '', 'apps', 'Y');
+
+INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, enabled) VALUES ('apa_coll', 'APA_reservation', 'Archives reservees', 'Corbeille des archives reservees', 'res_view_apa.status = ''RSV'' and (ORIGIN= @my_primary_entity or ORIGIN in (@subentities[@my_primary_entity]))', 'NO', 'Y');
+INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, enabled) VALUES ('apa_coll', 'APA_picking', 'Archives prelevees', 'Corbeille des archives prelevees', 'res_view_apa.status = ''OUT'' and (ORIGIN= @my_primary_entity or ORIGIN in (@subentities[@my_primary_entity]))', 'NO', 'Y');
+INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, enabled) VALUES ('letterbox_coll', 'CopyMailBasket', 'Mes courriers en copie', 'Mes courriers en copie', 'res_id in (select res_id from listinstance WHERE coll_id = ''letterbox_coll'' and item_type = ''user_id'' and item_id = @user and item_mode = ''cc'') or res_id in (select res_id from listinstance WHERE coll_id = ''letterbox_coll'' and item_type = ''entity_id'' and item_mode = ''cc'' and item_id in (@my_entities))', 'N', 'Y');
+INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, enabled) VALUES ('letterbox_coll', 'LateMailBasket', 'Mes courriers en retard', 'Mes courriers en retard', '1=1', 'N', 'Y');
+INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, enabled) VALUES ('letterbox_coll', 'RetourCourrier', 'Retours Courrier', 'Courriers retournes au service Courrier', 'STATUS=''RET'' ', 'N', 'Y');
+INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, enabled) VALUES ('letterbox_coll', 'IndexingBasket', 'Corbeille d''indexation', 'Corbeille d''indexation', ' ', 'N', 'Y');
+INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, enabled) VALUES ('letterbox_coll', 'MyBasket', 'Mes courriers a traiter', 'Mes courriers a traiter', '(status =''NEW'' or status =''COU'') and dest_user = @user', 'N', 'Y');
+INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, enabled) VALUES ('letterbox_coll', 'ValidationBasket', 'Mes courriers a valider', 'Mes courriers a valider', 'status = ''VAL''', 'N', 'Y');
+INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, enabled) VALUES ('letterbox_coll', 'DepartmentBasket', 'Corbeille de supervision', 'Corbeille de supervision', 'destination in (@my_entities, @subentities[@my_primary_entity]) and (status <> ''DEL'' AND status <> ''REP'')', 'N', 'Y');
+
+INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('TYPISTS', 'IndexingBasket', 2, NULL, NULL, 'redirect_to_action', 'N', 'N', 'N');
+INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('EMPLOYEES', 'MyBasket', 1, NULL, NULL, 'auth_dep', 'N', 'N', 'N');
+INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('MANAGERS', 'MyBasket', 1, NULL, NULL, 'auth_dep', 'N', 'N', 'N');
+INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('VISORS', 'ValidationBasket', 1, NULL, NULL, 'auth_dep', 'N', 'N', 'N');
+INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('VISORS', 'MyBasket', 2, NULL, NULL, 'auth_dep', 'N', 'N', 'N');
+INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('MANAGERS', 'DepartmentBasket', 2, NULL, NULL, 'auth_dep', 'N', 'N', 'N');
+INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('MANAGERS', 'CopyMailBasket', 4, NULL, NULL, 'auth_dep', 'N', 'N', 'N');
+INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('EMPLOYEES', 'CopyMailBasket', 5, NULL, NULL, 'auth_dep', 'N', 'N', 'N');
+INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('VISORS', 'CopyMailBasket', 6, NULL, NULL, 'auth_dep', 'N', 'N', 'N');
+INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('TYPISTS', 'CopyMailBasket', 7, NULL, NULL, 'auth_dep', 'N', 'N', 'N');
+INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('ARCHIVISTS', 'APA_reservation', 1, NULL, NULL, 'apa_basket_list', 'N', 'N', 'N');
+INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('ARCHIVISTS', 'APA_picking', 2, NULL, NULL, 'apa_basket_list', 'N', 'N', 'N');
+
+INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (22, '', 'TYPISTS', 'IndexingBasket', 'N', 'Y', 'N');
+INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (21, '', 'TYPISTS', 'IndexingBasket', 'N', 'N', 'Y');
+INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (23, '', 'VISORS', 'ValidationBasket', 'N', 'N', 'Y');
+INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (20, '', 'MANAGERS', 'MyBasket', 'N', 'Y', 'N');
+INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (1, '', 'MANAGERS', 'MyBasket', 'N', 'Y', 'N');
+INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (19, '', 'MANAGERS', 'MyBasket', 'N', 'N', 'Y');
+INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (20, '', 'EMPLOYEES', 'MyBasket', 'N', 'Y', 'N');
+INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (1, '', 'EMPLOYEES', 'MyBasket', 'N', 'Y', 'N');
+INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (19, '', 'EMPLOYEES', 'MyBasket', 'N', 'N', 'Y');
+INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (20, '', 'VISORS', 'MyBasket', 'N', 'Y', 'N');
+INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (1, '', 'VISORS', 'MyBasket', 'N', 'Y', 'N');
+INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (19, '', 'VISORS', 'MyBasket', 'N', 'N', 'Y');
+INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (100, '', 'MANAGERS', 'DepartmentBasket', 'N', 'N', 'Y');
+INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (100, '', 'MANAGERS', 'CopyMailBasket', 'N', 'N', 'Y');
+INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (100, '', 'EMPLOYEES', 'CopyMailBasket', 'N', 'N', 'Y');
+INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (100, '', 'VISORS', 'CopyMailBasket', 'N', 'N', 'Y');
+INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (100, '', 'TYPISTS', 'CopyMailBasket', 'N', 'N', 'Y');
+INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (15, '', 'ARCHIVISTS', 'APA_reservation', 'Y', 'Y', 'N');
+INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (16, '', 'ARCHIVISTS', 'APA_picking', 'Y', 'Y', 'N');
+
+INSERT INTO groupbasket_redirect (system_id, group_id, basket_id, action_id, entity_id, keyword, redirect_mode) VALUES (5, 'TYPISTS', 'IndexingBasket', 21, '', 'ALL_ENTITIES', 'ENTITY');
+INSERT INTO groupbasket_redirect (system_id, group_id, basket_id, action_id, entity_id, keyword, redirect_mode) VALUES (2, 'MANAGERS', 'MyBasket', 1, '', 'ALL_ENTITIES', 'ENTITY');
+INSERT INTO groupbasket_redirect (system_id, group_id, basket_id, action_id, entity_id, keyword, redirect_mode) VALUES (3, 'EMPLOYEES', 'MyBasket', 1, '', 'MY_ENTITIES', 'ENTITY');
+INSERT INTO groupbasket_redirect (system_id, group_id, basket_id, action_id, entity_id, keyword, redirect_mode) VALUES (8, 'VISORS', 'ValidationBasket', 23, '', 'ALL_ENTITIES', 'ENTITY');
+INSERT INTO groupbasket_redirect (system_id, group_id, basket_id, action_id, entity_id, keyword, redirect_mode) VALUES (100, 'MANAGERS', 'DepartmentBasket', 1, '', 'MY_ENTITIES', 'ENTITY');
+INSERT INTO groupbasket_redirect (system_id, group_id, basket_id, action_id, entity_id, keyword, redirect_mode) VALUES (101, 'MANAGERS', 'DepartmentBasket', 1, '', 'MY_ENTITIES', 'USERS');
+
+INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type) VALUES ('letterbox_coll', 'DIR', 'entity_id', 0, 'eerina', 'user_id', 'dest', 'DOC');
+INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type) VALUES ('letterbox_coll', 'DIR', 'entity_id', 0, 'ppetit', 'user_id', 'cc', 'DOC');
+INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type) VALUES ('letterbox_coll', 'OPE', 'entity_id', 0, 'bbain', 'user_id', 'dest', 'DOC');
+INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type) VALUES ('letterbox_coll', 'FIN', 'entity_id', 0, 'ccharles', 'user_id', 'dest', 'DOC');
+INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type) VALUES ('letterbox_coll', 'FIN', 'entity_id', 1, 'ppetit', 'user_id', 'cc', 'DOC');
+INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type) VALUES ('letterbox_coll', 'DRH', 'entity_id', 0, 'pparker', 'user_id', 'dest', 'DOC');
+INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type) VALUES ('letterbox_coll', 'SLS', 'entity_id', 0, 'ddogem', 'user_id', 'dest', 'DOC');
+INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type) VALUES ('letterbox_coll', 'MNG', 'entity_id', 0, 'ttong', 'user_id', 'dest', 'DOC');
+INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type) VALUES ('letterbox_coll', 'MNG', 'entity_id', 1, 'bbain', 'user_id', 'cc', 'DOC');
+INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type) VALUES ('letterbox_coll', 'ITI', 'entity_id', 0, 'ssissoko', 'user_id', 'dest', 'DOC');
+INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type) VALUES ('letterbox_coll', 'COU', 'entity_id', 0, 'bblier', 'user_id', 'dest', 'DOC');
+INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type) VALUES ('letterbox_coll', 'ACC', 'entity_id', 0, 'bboule', 'user_id', 'dest', 'DOC');
+INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type) VALUES ('letterbox_coll', 'EQ1', 'entity_id', 0, 'sstarr', 'user_id', 'dest', 'DOC');
+INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type) VALUES ('letterbox_coll', 'EQ2', 'entity_id', 0, 'ssaporta', 'user_id', 'dest', 'DOC');
 
 
-INSERT INTO `ar_container_types` (`ctype_id`, `ctype_desc`, `size_x`, `size_y`, `size_z`) VALUES
+-- FOLDERS
+INSERT INTO folders (folders_system_id, folder_id, foldertype_id, parent_id, folder_name, subject, description, author, typist, status, folder_level, creation_date, folder_out_id, custom_t1, custom_n1, custom_f1, custom_d1, custom_t2, custom_n2, custom_f2, custom_d2, custom_t3, custom_n3, custom_f3, custom_d3, custom_t4, custom_n4, custom_f4, custom_d4, custom_t5, custom_n5, custom_f5, custom_d5, custom_t6, custom_d6, custom_t7, custom_d7, custom_t8, custom_d8, custom_t9, custom_d9, custom_t10, custom_d10, custom_t11, custom_d11, custom_t12, custom_d12, custom_t13, custom_d13, custom_t14, custom_d14, custom_t15, is_complete, is_folder_out, last_modified_date) VALUES
+(1, 'F_000001', 1, 0, 'Eric SPRITZ', NULL, NULL, NULL, NULL, 'NEW', 1, '2008-04-23 18:03:14', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Y', 'N', '2008-04-23 18:03:14'),
+(2, 'F_000002', 1, 0, 'Thomas BECK', NULL, NULL, NULL, NULL, 'NEW', 1, '2008-04-23 16:55:05', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Y', 'N', '2008-04-23 18:03:14'),
+(3, 'F_000003', 1, 0, 'Teresa CRISTINA', NULL, NULL, NULL, NULL, 'NEW', 1, '2008-04-23 17:56:15', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Y', 'N', '2008-04-23 18:03:14'),
+(4, 'F_000004', 1, 0, 'Tom JOBIM', NULL, NULL, NULL, NULL, 'NEW', 1, '2008-04-23 17:58:15', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Y', 'N', '2008-04-23 18:03:14'),
+(5, 'F_000005', 1, 0, 'Joao GILBERTO', NULL, NULL, NULL, NULL, 'NEW', 1, '2008-04-23 18:00:26', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Y', 'N', '2008-04-23 18:03:14'),
+(6, 'F_000006', 1, 0, 'Luciano PAVAROTTI', NULL, NULL, NULL, NULL, 'NEW', 1, '2008-04-23 18:02:01', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Y', 'N', '2008-04-23 18:03:14'),
+(7, 'F_000007', 1, 0, 'Maria BETHANIA', NULL, NULL, NULL, NULL, 'NEW', 1, '2008-04-24 01:31:38', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Y', 'N', '2008-04-23 18:03:14'),
+(8, 'F_000008', 1, 0, 'Edith PIAF', NULL, NULL, NULL, NULL, 'NEW', 1, '2008-04-24 16:36:55', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Y', 'N', '2008-04-23 18:03:14'),
+(9, 'F_000009', 1, 0, 'Compay SEGUNDO', NULL, NULL, NULL, NULL, 'NEW', 1, '2008-04-24 16:55:39', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Y', 'N', '2008-04-23 18:03:14'),
+(10, 'SF_0101', 1, 1, 'Contrat 1 pour Eric SPRITZ : Assurance Décès-Invalidité', NULL, NULL, NULL, NULL, 'NEW', 2, '2008-05-22 17:26:48', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Y', 'N', '2008-04-23 18:03:14'),
+(11, 'SF_0102', 1, 1, 'Contrat 2 pour Eric SPRITZ : Assurance Habitation', NULL, NULL, NULL, NULL, 'NEW', 2, '2008-05-22 17:26:48', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Y', 'N', '2008-04-23 18:03:14'),
+(12, 'SF_0103', 1, 1, 'Contrat 3 pour Eric SPRITZ : Assurance Véhicule', NULL, NULL, NULL, NULL, 'NEW', 2, '2008-05-22 17:26:48', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Y', 'N', '2008-04-23 18:03:14'),
+(13, 'SF_0201', 1, 2, 'Contrat 1 pour Thomas BECK : Assurance Décès-Invalidité', NULL, NULL, NULL, NULL, 'NEW', 2, '2008-05-22 17:26:48', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Y', 'N', '2008-04-23 18:03:14'),
+(14, 'SF_0202', 1, 2, 'Contrat 2 pour Thomas BECK : Assurance Habitation', NULL, NULL, NULL, NULL, 'NEW', 2, '2008-05-22 17:26:48', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Y', 'N', '2008-04-23 18:03:14'),
+(15, 'SF_0203', 1, 2, 'Contrat 3 pour Thomas BECK : Assurance Véhicule', NULL, NULL, NULL, NULL, 'NEW', 2, '2008-05-22 17:26:48', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Y', 'N', '2008-04-23 18:03:14');
+
+INSERT INTO foldertypes (foldertype_id, foldertype_label, maarch_comment, retention_time, custom_d1, custom_f1, custom_n1, custom_t1, custom_d2, custom_f2, custom_n2, custom_t2, custom_d3, custom_f3, custom_n3, custom_t3, custom_d4, custom_f4, custom_n4, custom_t4, custom_d5, custom_f5, custom_n5, custom_t5, custom_d6, custom_t6, custom_d7, custom_t7, custom_d8, custom_t8, custom_d9, custom_t9, custom_d10, custom_t10, custom_t11, custom_t12, custom_t13, custom_t14, custom_t15, coll_id) VALUES
+(1, 'Documents Métier', 'Documents Métier', NULL, '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', 'letterbox_coll');
+
+INSERT INTO foldertypes_doctypes_level1 (foldertype_id, doctypes_first_level_id) VALUES (1, 1);
+
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention, custom_t1, custom_n1, custom_f1, custom_d1, custom_t2, custom_n2, custom_f2, custom_d2, custom_t3, custom_n3, custom_f3, custom_d3, custom_t4, custom_n4, custom_f4, custom_d4, custom_t5, custom_n5, custom_f5, custom_d5, custom_t6, custom_d6, custom_t7, custom_d7, custom_t8, custom_d8, custom_t9, custom_d9, custom_t10, custom_d10, custom_t11, custom_t12, custom_t13, custom_t14, custom_t15, is_master) VALUES ('letterbox_coll', 10, 'Courrier divers', 'Y', 1, 13, NULL, NULL, '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', 'N');
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention, custom_t1, custom_n1, custom_f1, custom_d1, custom_t2, custom_n2, custom_f2, custom_d2, custom_t3, custom_n3, custom_f3, custom_d3, custom_t4, custom_n4, custom_f4, custom_d4, custom_t5, custom_n5, custom_f5, custom_d5, custom_t6, custom_d6, custom_t7, custom_d7, custom_t8, custom_d8, custom_t9, custom_d9, custom_t10, custom_d10, custom_t11, custom_t12, custom_t13, custom_t14, custom_t15, is_master) VALUES ('letterbox_coll', 15, 'Demande de modification', 'Y', 1, 11, NULL, NULL, '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', 'N');
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention, custom_t1, custom_n1, custom_f1, custom_d1, custom_t2, custom_n2, custom_f2, custom_d2, custom_t3, custom_n3, custom_f3, custom_d3, custom_t4, custom_n4, custom_f4, custom_d4, custom_t5, custom_n5, custom_f5, custom_d5, custom_t6, custom_d6, custom_t7, custom_d7, custom_t8, custom_d8, custom_t9, custom_d9, custom_t10, custom_d10, custom_t11, custom_t12, custom_t13, custom_t14, custom_t15, is_master) VALUES ('letterbox_coll', 20, 'Avenant', 'Y', 1, 11, NULL, NULL, '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', 'N');
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention, custom_t1, custom_n1, custom_f1, custom_d1, custom_t2, custom_n2, custom_f2, custom_d2, custom_t3, custom_n3, custom_f3, custom_d3, custom_t4, custom_n4, custom_f4, custom_d4, custom_t5, custom_n5, custom_f5, custom_d5, custom_t6, custom_d6, custom_t7, custom_d7, custom_t8, custom_d8, custom_t9, custom_d9, custom_t10, custom_d10, custom_t11, custom_t12, custom_t13, custom_t14, custom_t15, is_master) VALUES ('letterbox_coll', 25, 'Contrat', 'Y', 1, 10, NULL, NULL, '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', 'N');
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention, custom_t1, custom_n1, custom_f1, custom_d1, custom_t2, custom_n2, custom_f2, custom_d2, custom_t3, custom_n3, custom_f3, custom_d3, custom_t4, custom_n4, custom_f4, custom_d4, custom_t5, custom_n5, custom_f5, custom_d5, custom_t6, custom_d6, custom_t7, custom_d7, custom_t8, custom_d8, custom_t9, custom_d9, custom_t10, custom_d10, custom_t11, custom_t12, custom_t13, custom_t14, custom_t15, is_master) VALUES ('letterbox_coll', 30, 'Pièce d''identité', 'Y', 1, 10, NULL, NULL, '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', 'N');
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention, custom_t1, custom_n1, custom_f1, custom_d1, custom_t2, custom_n2, custom_f2, custom_d2, custom_t3, custom_n3, custom_f3, custom_d3, custom_t4, custom_n4, custom_f4, custom_d4, custom_t5, custom_n5, custom_f5, custom_d5, custom_t6, custom_d6, custom_t7, custom_d7, custom_t8, custom_d8, custom_t9, custom_d9, custom_t10, custom_d10, custom_t11, custom_t12, custom_t13, custom_t14, custom_t15, is_master) VALUES ('letterbox_coll', 35, 'Justificatifs', 'Y', 1, 10, NULL, NULL, '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', 'N');
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention, custom_t1, custom_n1, custom_f1, custom_d1, custom_t2, custom_n2, custom_f2, custom_d2, custom_t3, custom_n3, custom_f3, custom_d3, custom_t4, custom_n4, custom_f4, custom_d4, custom_t5, custom_n5, custom_f5, custom_d5, custom_t6, custom_d6, custom_t7, custom_d7, custom_t8, custom_d8, custom_t9, custom_d9, custom_t10, custom_d10, custom_t11, custom_t12, custom_t13, custom_t14, custom_t15, is_master) VALUES ('letterbox_coll', 40, 'Constat', 'Y', 1, 12, NULL, NULL, '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', 'N');
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention, custom_t1, custom_n1, custom_f1, custom_d1, custom_t2, custom_n2, custom_f2, custom_d2, custom_t3, custom_n3, custom_f3, custom_d3, custom_t4, custom_n4, custom_f4, custom_d4, custom_t5, custom_n5, custom_f5, custom_d5, custom_t6, custom_d6, custom_t7, custom_d7, custom_t8, custom_d8, custom_t9, custom_d9, custom_t10, custom_d10, custom_t11, custom_t12, custom_t13, custom_t14, custom_t15, is_master) VALUES ('letterbox_coll', 45, 'Rapport d''expertise', 'Y', 1, 12, NULL, NULL, '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', 'N');
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention, custom_t1, custom_n1, custom_f1, custom_d1, custom_t2, custom_n2, custom_f2, custom_d2, custom_t3, custom_n3, custom_f3, custom_d3, custom_t4, custom_n4, custom_f4, custom_d4, custom_t5, custom_n5, custom_f5, custom_d5, custom_t6, custom_d6, custom_t7, custom_d7, custom_t8, custom_d8, custom_t9, custom_d9, custom_t10, custom_d10, custom_t11, custom_t12, custom_t13, custom_t14, custom_t15, is_master) VALUES ('letterbox_coll', 50, 'Lettre de réclamation', 'Y', 1, 13, NULL, NULL, '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', 'N');
+
+INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2) VALUES (10, 21, 14, 1);
+INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2) VALUES (15, 21, 14, 1);
+INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2) VALUES (20, 21, 14, 1);
+INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2) VALUES (25, 21, 14, 1);
+INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2) VALUES (30, 21, 14, 1);
+INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2) VALUES (35, 21, 14, 1);
+INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2) VALUES (40, 21, 14, 1);
+INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2) VALUES (45, 21, 14, 1);
+INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2) VALUES (50, 21, 14, 1);
+
+INSERT INTO doctypes_first_level (doctypes_first_level_id, doctypes_first_level_label, enabled) VALUES (1, 'Courriers', 'Y');
+INSERT INTO doctypes_first_level (doctypes_first_level_id, doctypes_first_level_label, enabled) VALUES (2, 'Autres', 'Y');
+
+INSERT INTO doctypes_second_level (doctypes_second_level_id, doctypes_second_level_label, doctypes_first_level_id, enabled) VALUES (10, 'Ouverture de compte', 1, 'Y');
+INSERT INTO doctypes_second_level (doctypes_second_level_id, doctypes_second_level_label, doctypes_first_level_id, enabled) VALUES (11, 'Avenants', 1, 'Y');
+INSERT INTO doctypes_second_level (doctypes_second_level_id, doctypes_second_level_label, doctypes_first_level_id, enabled) VALUES (12, 'Sinistres', 1, 'Y');
+INSERT INTO doctypes_second_level (doctypes_second_level_id, doctypes_second_level_label, doctypes_first_level_id, enabled) VALUES (13, 'Autres', 1, 'Y');
+
+
+-- OTHER
+
+INSERT INTO parameters (id, param_value_string, param_value_int) VALUES
+('workbatch_rec', '', 7),
+('folder_id_increment', '', 152),
+('work_batch_autoimport_id', NULL, 1),
+('ar_index__', NULL, 3),
+('ar_index_pparker_incoming', NULL, 3),
+('ar_index_pparker_outgoing', NULL, 3),
+('ar_index_pparker_internal', NULL, 3),
+('ar_index_pparker_market_document', NULL, 3);
+
+INSERT INTO templates (id, label, creation_date, template_comment, content) VALUES (2, 'AR_MAARCH', '2009-08-20 16:01:00', 'Accusé de réception Maarch', '<p style="TEXT-ALIGN: left"><img src="img/default_maarch.gif" alt="" width="278" height="80" />&nbsp;</p>
+<p><em><font face="Arial Black" size="2" color="#3366ff">La gestion de courriers Open source !</font></em><br />Mail : info@maarch.org<br />Web : http://www.maarch.org</p>
+<p style="TEXT-ALIGN: right"><font size="2">Nanterre, le [NOW]</font></p>
+<p><font size="2">Cher&nbsp;&nbsp;[CONTACT_LASTNAME]</font></p>
+<p><font size="2">Nous accusons r&eacute;ception de votre courrier du <strong>BLABLA</strong>, et mettons tout en oeuvre pour vous r&eacute;pondre dans les plus brefs d&eacute;lais.</font></p>
+<p><font size="2">Sachez qu''en cas de besoin urgent nos bureaux sont ouverts de 8h00 &agrave; 15h00, du lundi au samedi.</font></p>
+<p><font size="2">Le num&eacute;ro vert o&ugrave; vous pouvez nous appeler est le 0800 455 24.</font></p>
+<p><font size="2">Votre n&deg; de dossier &agrave; rappeler dans toute correspondance est le : [CHRONO]</font></p>
+<p>&nbsp;</p>
+<p><font size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Cordialement,</font></p>
+<p><font size="2"><em>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [CURRENT_USER_FIRSTNAME] [CURRENT_USER_LASTNAME]<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [DESTINATION]<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; T&eacute;l : [CURRENT_USER_PHONE]<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Courriel : [CURRENT_USER_EMAIL]</em></font></p>
+<p>&nbsp;</p>');
+INSERT INTO templates (id, label, creation_date, template_comment, content) VALUES (1, 'TEST', '2009-08-20 16:01:00', 'Test des mots-clés', '<h1>Liste des mots-cl&eacute;s utilisables dans les mod&egrave;les de reponse</h1>
+<p>&nbsp;</p>
+<table border="0">
+<tbody>
+<tr>
+<td><font size="2">Contact externe: Civilit&eacute;&nbsp;</font></td>
+<td><strong><font size="2">[CONTACT_TITLE]</font></strong></td>
+</tr>
+<tr>
+<td><font size="2">Contact externe: Nom</font></td>
+<td><strong><font size="2">[CONTACT_LASTNAME]</font></strong></td>
+</tr>
+<tr>
+<td><font size="2">Contact externe: Pr&eacute;nom</font></td>
+<td><strong><font size="2">[CONTACT_FIRSTNAME]</font></strong></td>
+</tr>
+<tr>
+<td><font size="2">Contact externe : Organisation</font></td>
+<td><strong><font size="2">[CONTACT_SOCIETY]</font></strong></td>
+</tr>
+<tr>
+<td><font size="2">Contact externe : Adresse N&deg;</font></td>
+<td><strong><font size="2">[CONTACT_ADRS_NUM]</font></strong></td>
+</tr>
+<tr>
+<td><font size="2">Contact externe : Adresse Rue</font></td>
+<td><strong><font size="2">[CONTACT_ADRS_STREET]</font></strong></td>
+</tr>
+<tr>
+<td><font size="2">Contact externe : Adresse Complement</font></td>
+<td><strong><font size="2">[CONTACT_ADRS_COMP]</font></strong></td>
+</tr>
+<tr>
+<td><font size="2">Contact externe : Adresse Ville</font></td>
+<td><strong><font size="2">[CONTACT_ADRS_TOWN]</font></strong></td>
+</tr>
+<tr>
+<td><font size="2">Contact externe : Adresse CP</font></td>
+<td><strong><font size="2">[CONTACT_ADRS_PC]</font></strong></td>
+</tr>
+<tr>
+<td><font size="2">Contact externe : Adresse Pays</font></td>
+<td><strong><font size="2">[CONTACT_ADRS_COUNTRY]</font></strong></td>
+</tr>
+<tr>
+<td><font size="2">Contact interne: Nom</font></td>
+<td><strong><font size="2">[USER_LASTNAME]</font></strong></td>
+</tr>
+<tr>
+<td><font size="2">Contact interne: Pr&eacute;nom</font></td>
+<td><strong><font size="2">[USER_FIRSTNAME]</font></strong></td>
+</tr>
+<tr>
+<td><font size="2">Courrier: Service Traitant</font></td>
+<td><strong><font size="2">[DESTINATION]</font></strong></td>
+</tr>
+<tr>
+<td><font size="2">Courrier: Type de document</font></td>
+<td><strong><font size="2">[DOCTYPE]</font></strong></td>
+</tr>
+<tr>
+<td><font size="2">Courrier: Cat&eacute;gorie</font></td>
+<td><strong><font size="2">[CAT_ID]</font></strong></td>
+</tr>
+<tr>
+<td><font size="2">Courrier: Nature</font></td>
+<td><strong><font size="2">[NATURE]</font></strong></td>
+</tr>
+<tr>
+<td><font size="2">Courrier: Date d''arriv&eacute;e&nbsp;&nbsp;</font></td>
+<td><strong><font size="2">[ADMISSION_DATE]</font></strong></td>
+</tr>
+<tr>
+<td><font size="2">Courrier: Date du courrier&nbsp;&nbsp;</font></td>
+<td><strong><font size="2">[DOC_DATE]</font></strong></td>
+</tr>
+<tr>
+<td><font size="2">Courrier: Date limite de traitement&nbsp;&nbsp;</font></td>
+<td><strong><font size="2">[PROCESS_LIMIT_DATE]</font></strong></td>
+</tr>
+<tr>
+<td><font size="2">Courrier: Notes de traitement&nbsp;&nbsp;</font></td>
+<td><strong><font size="2">[PROCESS_NOTES]</font></strong></td>
+</tr>
+<tr>
+<td><font size="2">Courrier: Date de cl&ocirc;ture&nbsp;&nbsp;</font></td>
+<td><strong><font size="2">[CLOSING_DATE]</font></strong></td>
+</tr>
+<tr>
+<td><font size="2">Courrier: Objet</font></td>
+<td><strong><font size="2">[SUBJECT]</font></strong></td>
+</tr>
+<tr>
+<td><font size="2">Courrier: Num&eacute;ro chrono</font></td>
+<td><strong><font size="2">[CHRONO]</font></strong></td>
+</tr>
+<tr>
+<td><font size="2">Document: Auteur</font></td>
+<td><strong><font size="2">[AUTHOR]</font></strong></td>
+</tr>
+<tr>
+<td><font size="2">Document: Date d''enregistrement</font></td>
+<td><strong><font size="2">[CREATION_DATE]</font></strong></td>
+</tr>
+<tr>
+<td><font size="2">Sp&eacute;cial: Date du jour</font></td>
+<td><strong><font size="2">[NOW]</font></strong></td>
+</tr>
+<tr>
+<td><font size="2">Sp&eacute;cial: Nom du destinataire traitant</font></td>
+<td><strong><font size="2">[CURRENT_USER_LASTNAME]</font></strong></td>
+</tr>
+<tr>
+<td><font size="2">Sp&eacute;cial: Pr&eacute;nom du destinataire traitant</font></td>
+<td><strong><font size="2">[CURRENT_USER_FIRSTNAME]</font></strong></td>
+</tr>
+<tr>
+<td><font size="2">Sp&eacute;cial: T&eacute;l&eacute;phone du destinataire traitant</font></td>
+<td><strong><font size="2">[CURRENT_USER_PHONE]</font></strong></td>
+</tr>
+<tr>
+<td><font size="2">Sp&eacute;cial: Mail du destinataire traitant</font></td>
+<td><strong><font size="2">[CURRENT_USER_EMAIL]</font></strong></td>
+</tr>
+</tbody>
+</table>
+<p><font size="2">&nbsp;</font></p>');
+
+
+--
+-- TOC entry 2326 (class 0 OID 39180)
+-- Dependencies: 1461
+-- Data for Name: templates_association; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO templates_association (template_id, what, value_field, system_id, maarch_module) VALUES (2, 'destination', 'EQ1', 1, 'entities');
+INSERT INTO templates_association (template_id, what, value_field, system_id, maarch_module) VALUES (1, 'destination', 'DIR', 2, 'entities');
+INSERT INTO templates_association (template_id, what, value_field, system_id, maarch_module) VALUES (1, 'destination', 'OPE', 3, 'entities');
+INSERT INTO templates_association (template_id, what, value_field, system_id, maarch_module) VALUES (1, 'destination', 'FIN', 4, 'entities');
+INSERT INTO templates_association (template_id, what, value_field, system_id, maarch_module) VALUES (1, 'destination', 'DRH', 5, 'entities');
+INSERT INTO templates_association (template_id, what, value_field, system_id, maarch_module) VALUES (1, 'destination', 'SLS', 6, 'entities');
+INSERT INTO templates_association (template_id, what, value_field, system_id, maarch_module) VALUES (1, 'destination', 'MNG', 7, 'entities');
+INSERT INTO templates_association (template_id, what, value_field, system_id, maarch_module) VALUES (1, 'destination', 'ITI', 8, 'entities');
+INSERT INTO templates_association (template_id, what, value_field, system_id, maarch_module) VALUES (1, 'destination', 'COU', 9, 'entities');
+INSERT INTO templates_association (template_id, what, value_field, system_id, maarch_module) VALUES (1, 'destination', 'ACC', 10, 'entities');
+INSERT INTO templates_association (template_id, what, value_field, system_id, maarch_module) VALUES (1, 'destination', 'EQ1', 11, 'entities');
+INSERT INTO templates_association (template_id, what, value_field, system_id, maarch_module) VALUES (1, 'destination', 'EQ2', 12, 'entities');
+INSERT INTO templates_association (template_id, what, value_field, system_id, maarch_module) VALUES (1, 'destination', 'COR', 13, 'entities');
+
+
+INSERT INTO templates_doctype_ext (template_id, type_id, is_generated) VALUES (NULL, 60, 'N');
+INSERT INTO templates_doctype_ext (template_id, type_id, is_generated) VALUES (NULL, 61, 'N');
+INSERT INTO templates_doctype_ext (template_id, type_id, is_generated) VALUES (NULL, 62, 'N');
+INSERT INTO templates_doctype_ext (template_id, type_id, is_generated) VALUES (NULL, 63, 'N');
+INSERT INTO templates_doctype_ext (template_id, type_id, is_generated) VALUES (NULL, 64, 'N');
+INSERT INTO templates_doctype_ext (template_id, type_id, is_generated) VALUES (NULL, 65, 'N');
+INSERT INTO templates_doctype_ext (template_id, type_id, is_generated) VALUES (NULL, 66, 'N');
+INSERT INTO templates_doctype_ext (template_id, type_id, is_generated) VALUES (NULL, 67, 'N');
+INSERT INTO templates_doctype_ext (template_id, type_id, is_generated) VALUES (NULL, 68, 'N');
+
+-- DOCS
+-- TBC
+
+-- PHYSICAL ARCHIVING
+INSERT INTO ar_boxes (arbox_id, title, subject, description, entity_id, arcontainer_id, status, creation_date, retention_time, custom_t1, custom_n1, custom_f1, custom_d1, custom_t2, custom_n2, custom_f2, custom_d2, custom_t3, custom_n3, custom_f3, custom_d3, custom_t4, custom_n4, custom_f4, custom_d4, custom_t5, custom_n5, custom_f5, custom_d5, custom_t6, custom_t7, custom_t8, custom_t9, custom_t10, custom_t11) VALUES (1, 'Boite ENTRANT 001', NULL, NULL, NULL, 0, 'NEW', '2009-09-16 15:59:34.436', NULL, NULL, NULL, NULL, NULL, 'PA', NULL, NULL, NULL, 'superadmin', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO ar_boxes (arbox_id, title, subject, description, entity_id, arcontainer_id, status, creation_date, retention_time, custom_t1, custom_n1, custom_f1, custom_d1, custom_t2, custom_n2, custom_f2, custom_d2, custom_t3, custom_n3, custom_f3, custom_d3, custom_t4, custom_n4, custom_f4, custom_d4, custom_t5, custom_n5, custom_f5, custom_d5, custom_t6, custom_t7, custom_t8, custom_t9, custom_t10, custom_t11) VALUES (2, 'Boite ENTRANT 002', NULL, NULL, NULL, 0, 'NEW', '2009-09-16 15:59:54.176', NULL, NULL, NULL, NULL, NULL, 'PA', NULL, NULL, NULL, 'superadmin', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO ar_boxes (arbox_id, title, subject, description, entity_id, arcontainer_id, status, creation_date, retention_time, custom_t1, custom_n1, custom_f1, custom_d1, custom_t2, custom_n2, custom_f2, custom_d2, custom_t3, custom_n3, custom_f3, custom_d3, custom_t4, custom_n4, custom_f4, custom_d4, custom_t5, custom_n5, custom_f5, custom_d5, custom_t6, custom_t7, custom_t8, custom_t9, custom_t10, custom_t11) VALUES (3, 'Boite SORTANT 001', NULL, NULL, NULL, 0, 'NEW', '2009-09-16 16:00:07.569', NULL, NULL, NULL, NULL, NULL, 'PA', NULL, NULL, NULL, 'superadmin', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO ar_boxes (arbox_id, title, subject, description, entity_id, arcontainer_id, status, creation_date, retention_time, custom_t1, custom_n1, custom_f1, custom_d1, custom_t2, custom_n2, custom_f2, custom_d2, custom_t3, custom_n3, custom_f3, custom_d3, custom_t4, custom_n4, custom_f4, custom_d4, custom_t5, custom_n5, custom_f5, custom_d5, custom_t6, custom_t7, custom_t8, custom_t9, custom_t10, custom_t11) VALUES (4, 'Boite INTERNE 001', NULL, NULL, NULL, 0, 'NEW', '2009-09-16 16:00:29.896', NULL, NULL, NULL, NULL, NULL, 'PA', NULL, NULL, NULL, 'superadmin', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO ar_boxes (arbox_id, title, subject, description, entity_id, arcontainer_id, status, creation_date, retention_time, custom_t1, custom_n1, custom_f1, custom_d1, custom_t2, custom_n2, custom_f2, custom_d2, custom_t3, custom_n3, custom_f3, custom_d3, custom_t4, custom_n4, custom_f4, custom_d4, custom_t5, custom_n5, custom_f5, custom_d5, custom_t6, custom_t7, custom_t8, custom_t9, custom_t10, custom_t11) VALUES (5, 'Boite PROJET 001', NULL, NULL, NULL, 0, 'NEW', '2009-09-16 16:01:00.765', NULL, NULL, NULL, NULL, NULL, 'PA', NULL, NULL, NULL, 'superadmin', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+
+INSERT INTO ar_batch (arbatch_id, title, subject, description, arbox_id, status, creation_date, retention_time, custom_t1, custom_n1, custom_f1, custom_d1, custom_t2, custom_n2, custom_f2, custom_d2, custom_t3, custom_n3, custom_f3, custom_d3, custom_t4, custom_n4, custom_f4, custom_d4, custom_t5, custom_n5, custom_f5, custom_d5, custom_t6, custom_t7, custom_t8, custom_t9, custom_t10, custom_t11) VALUES (1, '1', NULL, NULL, 1, 'NEW', '2009-09-16 18:26:27.979', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'bblier', NULL, NULL, NULL, NULL, NULL, NULL, '2009-09-16 18:26:27.979', NULL, NULL, NULL, NULL, 'LETTERBOX', NULL, NULL, NULL, NULL, NULL);
+
+INSERT INTO ar_container_types (ctype_id, ctype_desc, size_x, size_y, size_z) VALUES
 ('CAF20', 'Conteneur aere ferme 20 pieds', 6, 2.32, 2.37),
 ('CAF40', 'Conteneur aere ferme 40 pieds', 12, 2.32, 2.37),
 ('CPF20', 'Conteneur plate-forme 20 pieds', 6, 2.32, 2.37),
@@ -60,1139 +474,165 @@ INSERT INTO `ar_container_types` (`ctype_id`, `ctype_desc`, `size_x`, `size_y`, 
 ('CTH40', 'Conteneur a caracteristiques thermiques 40 pieds', 12, 2.32, 2.37),
 ('CTH20', 'Conteneur a caracteristiques thermiques 20 pieds', 6, 2.32, 2.37);
 
-INSERT INTO `ar_natures` (`arnature_id`, `arnature_desc`, `arnature_retention`, `entity_id`, `enabled`) VALUES
-('LIVREPAYE', 'Livre de paie', 120, 'WARNER', 'Y'),
-('REGPERS', 'Registre du personnel', 120, 'WARNER', 'N'),
-('DOSSACC', 'Dossiers accident', 100, 'WARNER', 'Y'),
-('CCPM', 'Contrats commerciaux et pieces de marches en vue d''un recours', 30, 'LAFARGE', 'Y'),
-('CC', 'Correspondances commerciales', 10, 'LAFARGE', 'Y'),
-('LC', 'Livre comptable', 6, 'LAFARGE', 'Y');
+INSERT INTO ar_sites (site_id, site_desc, entity_id) VALUES
+('FR01', 'Site de Paris', 'ARC'),
+('FR02', 'Site de Londres', 'ARC');
+
+INSERT INTO ar_natures (arnature_id, arnature_desc, arnature_retention, entity_id, enabled) VALUES ('DOSPROJ', 'Dossiers de projet', 10, 'COR', 'Y');
+INSERT INTO ar_natures (arnature_id, arnature_desc, arnature_retention, entity_id, enabled) VALUES ('DOSTECH', 'Dossiers techniques', 10, 'COR', 'Y');
+INSERT INTO ar_natures (arnature_id, arnature_desc, arnature_retention, entity_id, enabled) VALUES ('DOSRH', 'Dossiers RH', 30, 'COR', 'Y');
+INSERT INTO ar_natures (arnature_id, arnature_desc, arnature_retention, entity_id, enabled) VALUES ('DOSACC', 'Dossiers comptables', 10, 'COR', 'Y');
+
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (1, 'FR01', 'A', 1, 1, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (2, 'FR01', 'A', 1, 2, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (3, 'FR01', 'A', 1, 3, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (4, 'FR01', 'A', 2, 1, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (5, 'FR01', 'A', 2, 2, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (6, 'FR01', 'A', 2, 3, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (7, 'FR01', 'A', 3, 1, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (8, 'FR01', 'A', 3, 2, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (9, 'FR01', 'A', 3, 3, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (10, 'FR01', 'A', 4, 1, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (11, 'FR01', 'A', 4, 2, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (12, 'FR01', 'A', 4, 3, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (13, 'FR01', 'A', 5, 1, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (14, 'FR01', 'A', 5, 2, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (15, 'FR01', 'A', 5, 3, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (16, 'FR01', 'A', 6, 1, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (17, 'FR01', 'A', 6, 2, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (18, 'FR01', 'A', 6, 3, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (19, 'FR01', 'A', 7, 1, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (20, 'FR01', 'A', 7, 2, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (21, 'FR01', 'A', 7, 3, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (22, 'FR01', 'A', 8, 1, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (23, 'FR01', 'A', 8, 2, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (24, 'FR01', 'A', 8, 3, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (25, 'FR01', 'A', 9, 1, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (26, 'FR01', 'A', 9, 2, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (27, 'FR01', 'A', 9, 3, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (28, 'FR01', 'A', 10, 1, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (29, 'FR01', 'A', 10, 2, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (30, 'FR01', 'A', 10, 3, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (31, 'FR01', 'B', 1, 1, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (32, 'FR01', 'B', 1, 2, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (33, 'FR01', 'B', 1, 3, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (34, 'FR01', 'B', 2, 1, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (35, 'FR01', 'B', 2, 2, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (36, 'FR01', 'B', 2, 3, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (37, 'FR01', 'B', 3, 1, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (38, 'FR01', 'B', 3, 2, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (39, 'FR01', 'B', 3, 3, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (40, 'FR01', 'B', 4, 1, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (41, 'FR01', 'B', 4, 2, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (42, 'FR01', 'B', 4, 3, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (43, 'FR01', 'B', 5, 1, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (44, 'FR01', 'B', 5, 2, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (45, 'FR01', 'B', 5, 3, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (46, 'FR01', 'B', 6, 1, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (47, 'FR01', 'B', 6, 2, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (48, 'FR01', 'B', 6, 3, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (49, 'FR01', 'B', 7, 1, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (50, 'FR01', 'B', 7, 2, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (51, 'FR01', 'B', 7, 3, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (52, 'FR01', 'B', 8, 1, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (53, 'FR01', 'B', 8, 2, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (54, 'FR01', 'B', 8, 3, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (55, 'FR01', 'B', 9, 1, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (56, 'FR01', 'B', 9, 2, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (57, 'FR01', 'B', 9, 3, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (58, 'FR01', 'B', 10, 1, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (59, 'FR01', 'B', 10, 2, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (60, 'FR01', 'B', 10, 3, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (61, 'FR01', 'C', 1, 1, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (62, 'FR01', 'C', 1, 2, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (63, 'FR01', 'C', 1, 3, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (64, 'FR01', 'C', 2, 1, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (65, 'FR01', 'C', 2, 2, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (66, 'FR01', 'C', 2, 3, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (67, 'FR01', 'C', 3, 1, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (68, 'FR01', 'C', 3, 2, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (69, 'FR01', 'C', 3, 3, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (70, 'FR01', 'C', 4, 1, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (71, 'FR01', 'C', 4, 2, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (72, 'FR01', 'C', 4, 3, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (73, 'FR01', 'C', 5, 1, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (74, 'FR01', 'C', 5, 2, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (75, 'FR01', 'C', 5, 3, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (76, 'FR01', 'C', 6, 1, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (77, 'FR01', 'C', 6, 2, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (78, 'FR01', 'C', 6, 3, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (79, 'FR01', 'C', 7, 1, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (80, 'FR01', 'C', 7, 2, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (81, 'FR01', 'C', 7, 3, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (82, 'FR01', 'C', 8, 1, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (83, 'FR01', 'C', 8, 2, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (84, 'FR01', 'C', 8, 3, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (85, 'FR01', 'C', 9, 1, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (86, 'FR01', 'C', 9, 2, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (87, 'FR01', 'C', 9, 3, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (88, 'FR01', 'C', 10, 1, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (89, 'FR01', 'C', 10, 2, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (90, 'FR01', 'C', 10, 3, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (91, 'FR01', 'D', 1, 1, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (92, 'FR01', 'D', 1, 2, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (93, 'FR01', 'D', 1, 3, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (94, 'FR01', 'D', 2, 1, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (95, 'FR01', 'D', 2, 2, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (96, 'FR01', 'D', 2, 3, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (97, 'FR01', 'D', 3, 1, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (98, 'FR01', 'D', 3, 2, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (99, 'FR01', 'D', 3, 3, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (100, 'FR01', 'D', 4, 1, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (101, 'FR01', 'D', 4, 2, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (102, 'FR01', 'D', 4, 3, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (103, 'FR01', 'D', 5, 1, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (104, 'FR01', 'D', 5, 2, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (105, 'FR01', 'D', 5, 3, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (106, 'FR01', 'D', 6, 1, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (107, 'FR01', 'D', 6, 2, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (108, 'FR01', 'D', 6, 3, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (109, 'FR01', 'D', 7, 1, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (110, 'FR01', 'D', 7, 2, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (111, 'FR01', 'D', 7, 3, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (112, 'FR01', 'D', 8, 1, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (113, 'FR01', 'D', 8, 2, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (114, 'FR01', 'D', 8, 3, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (115, 'FR01', 'D', 9, 1, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (116, 'FR01', 'D', 9, 2, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (117, 'FR01', 'D', 9, 3, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (118, 'FR01', 'D', 10, 1, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (119, 'FR01', 'D', 10, 2, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (120, 'FR01', 'D', 10, 3, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (121, 'FR01', 'E', 1, 1, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (122, 'FR01', 'E', 1, 2, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (123, 'FR01', 'E', 1, 3, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (124, 'FR01', 'E', 2, 1, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (125, 'FR01', 'E', 2, 2, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (126, 'FR01', 'E', 2, 3, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (127, 'FR01', 'E', 3, 1, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (128, 'FR01', 'E', 3, 2, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (129, 'FR01', 'E', 3, 3, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (130, 'FR01', 'E', 4, 1, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (131, 'FR01', 'E', 4, 2, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (132, 'FR01', 'E', 4, 3, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (133, 'FR01', 'E', 5, 1, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (134, 'FR01', 'E', 5, 2, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (135, 'FR01', 'E', 5, 3, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (136, 'FR01', 'E', 6, 1, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (137, 'FR01', 'E', 6, 2, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (138, 'FR01', 'E', 6, 3, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (139, 'FR01', 'E', 7, 1, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (140, 'FR01', 'E', 7, 2, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (141, 'FR01', 'E', 7, 3, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (142, 'FR01', 'E', 8, 1, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (143, 'FR01', 'E', 8, 2, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (144, 'FR01', 'E', 8, 3, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (145, 'FR01', 'E', 9, 1, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (146, 'FR01', 'E', 9, 2, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (147, 'FR01', 'E', 9, 3, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (148, 'FR01', 'E', 10, 1, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (149, 'FR01', 'E', 10, 2, 4, 4);
+INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (150, 'FR01', 'E', 10, 3, 4, 4);
 
 
-INSERT INTO `ar_positions` (`position_id`, `site_id`, `pos_row`, `pos_col`, `pos_level`, `pos_max_uc`, `pos_available_uc`) VALUES
-(1, 'FR01', 'A', 1, 1, 4, 4),
-(2, 'FR01', 'A', 1, 2, 4, 4),
-(3, 'FR01', 'A', 1, 3, 4, 4),
-(4, 'FR01', 'A', 2, 1, 4, 4),
-(5, 'FR01', 'A', 2, 2, 4, 4),
-(6, 'FR01', 'A', 2, 3, 4, 4),
-(7, 'FR01', 'A', 3, 1, 4, 4),
-(8, 'FR01', 'A', 3, 2, 4, 4),
-(9, 'FR01', 'A', 3, 3, 4, 4),
-(10, 'FR01', 'A', 4, 1, 4, 4),
-(11, 'FR01', 'A', 4, 2, 4, 4),
-(12, 'FR01', 'A', 4, 3, 4, 4),
-(13, 'FR01', 'A', 5, 1, 4, 4),
-(14, 'FR01', 'A', 5, 2, 4, 4),
-(15, 'FR01', 'A', 5, 3, 4, 4),
-(16, 'FR01', 'A', 6, 1, 4, 4),
-(17, 'FR01', 'A', 6, 2, 4, 4),
-(18, 'FR01', 'A', 6, 3, 4, 4),
-(19, 'FR01', 'A', 7, 1, 4, 4),
-(20, 'FR01', 'A', 7, 2, 4, 4),
-(21, 'FR01', 'A', 7, 3, 4, 4),
-(22, 'FR01', 'A', 8, 1, 4, 4),
-(23, 'FR01', 'A', 8, 2, 4, 4),
-(24, 'FR01', 'A', 8, 3, 4, 4),
-(25, 'FR01', 'A', 9, 1, 4, 4),
-(26, 'FR01', 'A', 9, 2, 4, 4),
-(27, 'FR01', 'A', 9, 3, 4, 4),
-(28, 'FR01', 'A', 10, 1, 4, 4),
-(29, 'FR01', 'A', 10, 2, 4, 4),
-(30, 'FR01', 'A', 10, 3, 4, 4),
-(31, 'FR01', 'B', 1, 1, 4, 4),
-(32, 'FR01', 'B', 1, 2, 4, 4),
-(33, 'FR01', 'B', 1, 3, 4, 4),
-(34, 'FR01', 'B', 2, 1, 4, 4),
-(35, 'FR01', 'B', 2, 2, 4, 4),
-(36, 'FR01', 'B', 2, 3, 4, 4),
-(37, 'FR01', 'B', 3, 1, 4, 4),
-(38, 'FR01', 'B', 3, 2, 4, 4),
-(39, 'FR01', 'B', 3, 3, 4, 4),
-(40, 'FR01', 'B', 4, 1, 4, 4),
-(41, 'FR01', 'B', 4, 2, 4, 4),
-(42, 'FR01', 'B', 4, 3, 4, 4),
-(43, 'FR01', 'B', 5, 1, 4, 4),
-(44, 'FR01', 'B', 5, 2, 4, 4),
-(45, 'FR01', 'B', 5, 3, 4, 4),
-(46, 'FR01', 'B', 6, 1, 4, 4),
-(47, 'FR01', 'B', 6, 2, 4, 4),
-(48, 'FR01', 'B', 6, 3, 4, 4),
-(49, 'FR01', 'B', 7, 1, 4, 4),
-(50, 'FR01', 'B', 7, 2, 4, 4),
-(51, 'FR01', 'B', 7, 3, 4, 4),
-(52, 'FR01', 'B', 8, 1, 4, 4),
-(53, 'FR01', 'B', 8, 2, 4, 4),
-(54, 'FR01', 'B', 8, 3, 4, 4),
-(55, 'FR01', 'B', 9, 1, 4, 4),
-(56, 'FR01', 'B', 9, 2, 4, 4),
-(57, 'FR01', 'B', 9, 3, 4, 4),
-(58, 'FR01', 'B', 10, 1, 4, 4),
-(59, 'FR01', 'B', 10, 2, 4, 4),
-(60, 'FR01', 'B', 10, 3, 4, 4),
-(61, 'FR01', 'C', 1, 1, 4, 4),
-(62, 'FR01', 'C', 1, 2, 4, 4),
-(63, 'FR01', 'C', 1, 3, 4, 4),
-(64, 'FR01', 'C', 2, 1, 4, 4),
-(65, 'FR01', 'C', 2, 2, 4, 4),
-(66, 'FR01', 'C', 2, 3, 4, 4),
-(67, 'FR01', 'C', 3, 1, 4, 4),
-(68, 'FR01', 'C', 3, 2, 4, 4),
-(69, 'FR01', 'C', 3, 3, 4, 4),
-(70, 'FR01', 'C', 4, 1, 4, 4),
-(71, 'FR01', 'C', 4, 2, 4, 4),
-(72, 'FR01', 'C', 4, 3, 4, 4),
-(73, 'FR01', 'C', 5, 1, 4, 4),
-(74, 'FR01', 'C', 5, 2, 4, 4),
-(75, 'FR01', 'C', 5, 3, 4, 4),
-(76, 'FR01', 'C', 6, 1, 4, 4),
-(77, 'FR01', 'C', 6, 2, 4, 4),
-(78, 'FR01', 'C', 6, 3, 4, 4),
-(79, 'FR01', 'C', 7, 1, 4, 4),
-(80, 'FR01', 'C', 7, 2, 4, 4),
-(81, 'FR01', 'C', 7, 3, 4, 4),
-(82, 'FR01', 'C', 8, 1, 4, 4),
-(83, 'FR01', 'C', 8, 2, 4, 4),
-(84, 'FR01', 'C', 8, 3, 4, 4),
-(85, 'FR01', 'C', 9, 1, 4, 4),
-(86, 'FR01', 'C', 9, 2, 4, 4),
-(87, 'FR01', 'C', 9, 3, 4, 4),
-(88, 'FR01', 'C', 10, 1, 4, 4),
-(89, 'FR01', 'C', 10, 2, 4, 4),
-(90, 'FR01', 'C', 10, 3, 4, 4),
-(91, 'FR01', 'D', 1, 1, 4, 4),
-(92, 'FR01', 'D', 1, 2, 4, 4),
-(93, 'FR01', 'D', 1, 3, 4, 4),
-(94, 'FR01', 'D', 2, 1, 4, 4),
-(95, 'FR01', 'D', 2, 2, 4, 4),
-(96, 'FR01', 'D', 2, 3, 4, 4),
-(97, 'FR01', 'D', 3, 1, 4, 4),
-(98, 'FR01', 'D', 3, 2, 4, 4),
-(99, 'FR01', 'D', 3, 3, 4, 4),
-(100, 'FR01', 'D', 4, 1, 4, 4),
-(101, 'FR01', 'D', 4, 2, 4, 4),
-(102, 'FR01', 'D', 4, 3, 4, 4),
-(103, 'FR01', 'D', 5, 1, 4, 4),
-(104, 'FR01', 'D', 5, 2, 4, 4),
-(105, 'FR01', 'D', 5, 3, 4, 4),
-(106, 'FR01', 'D', 6, 1, 4, 4),
-(107, 'FR01', 'D', 6, 2, 4, 4),
-(108, 'FR01', 'D', 6, 3, 4, 4),
-(109, 'FR01', 'D', 7, 1, 4, 4),
-(110, 'FR01', 'D', 7, 2, 4, 4),
-(111, 'FR01', 'D', 7, 3, 4, 4),
-(112, 'FR01', 'D', 8, 1, 4, 4),
-(113, 'FR01', 'D', 8, 2, 4, 4),
-(114, 'FR01', 'D', 8, 3, 4, 4),
-(115, 'FR01', 'D', 9, 1, 4, 4),
-(116, 'FR01', 'D', 9, 2, 4, 4),
-(117, 'FR01', 'D', 9, 3, 4, 4),
-(118, 'FR01', 'D', 10, 1, 4, 4),
-(119, 'FR01', 'D', 10, 2, 4, 4),
-(120, 'FR01', 'D', 10, 3, 4, 4),
-(121, 'FR01', 'E', 1, 1, 4, 4),
-(122, 'FR01', 'E', 1, 2, 4, 4),
-(123, 'FR01', 'E', 1, 3, 4, 4),
-(124, 'FR01', 'E', 2, 1, 4, 4),
-(125, 'FR01', 'E', 2, 2, 4, 4),
-(126, 'FR01', 'E', 2, 3, 4, 4),
-(127, 'FR01', 'E', 3, 1, 4, 4),
-(128, 'FR01', 'E', 3, 2, 4, 4),
-(129, 'FR01', 'E', 3, 3, 4, 4),
-(130, 'FR01', 'E', 4, 1, 4, 4),
-(131, 'FR01', 'E', 4, 2, 4, 4),
-(132, 'FR01', 'E', 4, 3, 4, 4),
-(133, 'FR01', 'E', 5, 1, 4, 4),
-(134, 'FR01', 'E', 5, 2, 4, 4),
-(135, 'FR01', 'E', 5, 3, 4, 4),
-(136, 'FR01', 'E', 6, 1, 4, 4),
-(137, 'FR01', 'E', 6, 2, 4, 4),
-(138, 'FR01', 'E', 6, 3, 4, 4),
-(139, 'FR01', 'E', 7, 1, 4, 4),
-(140, 'FR01', 'E', 7, 2, 4, 4),
-(141, 'FR01', 'E', 7, 3, 4, 4),
-(142, 'FR01', 'E', 8, 1, 4, 4),
-(143, 'FR01', 'E', 8, 2, 4, 4),
-(144, 'FR01', 'E', 8, 3, 4, 4),
-(145, 'FR01', 'E', 9, 1, 4, 4),
-(146, 'FR01', 'E', 9, 2, 4, 4),
-(147, 'FR01', 'E', 9, 3, 4, 4),
-(148, 'FR01', 'E', 10, 1, 4, 4),
-(149, 'FR01', 'E', 10, 2, 4, 4),
-(150, 'FR01', 'E', 10, 3, 4, 4);
-
-
-INSERT INTO `ar_sites` (`site_id`, `site_desc`, `entity_id`) VALUES
-('FR01', 'Site de Paris', 'ARCHIVECO'),
-('FR02', 'Site de Nanterre', 'ARCHIVECO'),
-('SN01', 'Site de Dakar', 'DAKARCHIV'),
-('SN02', 'Site de Saint Louis', 'DAKARCHIV');
-
-INSERT INTO `baskets` (`coll_id`, `basket_id`, `basket_name`, `basket_desc`, `basket_clause`, `is_generic`, `enabled`) VALUES
-('letterbox_coll', 'IndexingBasket', 'Corbeille d\\''indexation', 'Corbeille d\\''indexation', ' ', 'N', 'Y'),
-('letterbox_coll', 'ValidationBasket', 'Mes courriers Ã  valider', 'Mes courriers Ã  valider', 'status = ''VAL''', 'N', 'Y'),
-('letterbox_coll', 'CopyMailBasket', 'Mes courriers en copie', 'Mes courriers en copie', ' ', 'N', 'Y'),
-('letterbox_coll', 'LateMailBasket', 'Mes courriers en retard', 'Mes courriers en retard', '1=1', 'N', 'Y'),
-('letterbox_coll', 'MyBasket', 'Mes courriers Ã  traiter', 'Mes courriers Ã  traiter', '(status =''NEW'' or status =''COU'') and dest_user = @user', 'N', 'Y');
-
-INSERT INTO `contacts` (`contact_id`, `lastname`, `firstname`, `society`, `function`, `address_num`, `address_street`, `address_complement`, `address_town`, `address_postal_code`, `address_country`, `email`, `phone`, `other_data`, `is_corporate_person`, `user_id`, `title`, `enabled`) VALUES
-(1, 'Chaplin', 'Charlie', 'Maarch', 'Directeur artistique', '65', 'rue de la croix', 'test', 'nanterre', '92000', 'France', 'test@maarch.org', '01010101', 'khjohpuief', 'N', '', 'Monsieur', 'Y'),
-(3, '', '', 'Maarch', '', '', '', '', '', '', 'France', '', '', '', 'Y', '', '', 'Y'),
-(4, '', '', 'Warner', '', '', '', '', '', '', 'USA', '', '', '', 'Y', '', '', 'Y'),
-(5, 'Majestrix', 'Diana', 'Warner', 'Directeur artistique', '', '', '', '', '', 'USA', '', '', '', 'N', '', 'Madame', 'Y'),
-(7, '', '', 'Maarch', '', '65', 'rue de la croix', 'test', 'nanterre', '92000', 'France', 'test@maarch.org', '01010101', 'autre', 'Y', 'pparker', '', 'Y'),
-(8, 'Carlin', 'Bruno', 'Maarch', 'Directeur Marketing', '65', 'rue de la croix', 'test', 'nanterre', '92000', 'France', 'test@maarch.org', '01010101', 'auykiu', 'N', 'pparker', 'Monsieur', 'Y'),
-(9, '', '', 'Adorateurs du Froid', '', '43', 'rue du froid', 'fait trop chaud', 'coldcity', '11111', 'coldcountry', 'Adorateurs@froid.cold', '01010101', 'fait vraiment trop chaud', 'Y', 'pparker', '', 'Y'),
-(10, '', '', 'TOTO', '', '', '', '', '', '', '', '', '', '', 'Y', 'pparker', '', 'Y'),
-(11, '', '', 'fggdgg', '', '', '', '', '', '', '', '', '', '', 'Y', 'pparker', '', 'Y'),
-(12, '', '', 'yuiop', '', '', '', '', '', '', '', '', '', 'dffff', 'Y', 'pparker', '', 'Y'),
-(13, '', '', 'ffff', '', '', '', '', '', '', '', '', '', 'fff', 'Y', 'pparker', '', 'Y');
-
-INSERT INTO `doctypes` (`coll_id`, `type_id`, `description`, `enabled`, `doctypes_first_level_id`, `doctypes_second_level_id`, `primary_retention`, `secondary_retention`, `custom_t1`, `custom_n1`, `custom_f1`, `custom_d1`, `custom_t2`, `custom_n2`, `custom_f2`, `custom_d2`, `custom_t3`, `custom_n3`, `custom_f3`, `custom_d3`, `custom_t4`, `custom_n4`, `custom_f4`, `custom_d4`, `custom_t5`, `custom_n5`, `custom_f5`, `custom_d5`, `custom_t6`, `custom_d6`, `custom_t7`, `custom_d7`, `custom_t8`, `custom_d8`, `custom_t9`, `custom_d9`, `custom_t10`, `custom_d10`, `custom_t11`, `custom_t12`, `custom_t13`, `custom_t14`, `custom_t15`, `is_master`) VALUES
-('letterbox_coll', 47, 'MAR - MarchÃ©', 'Y', 2, 1, NULL, NULL, '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', 'N'),
-('letterbox_coll', 43, 'LCO - Lettre de commande', 'Y', 2, 1, NULL, NULL, '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', 'N'),
-('letterbox_coll', 44, 'ATR - Attribution de marchÃ©', 'Y', 2, 1, NULL, NULL, '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', 'N'),
-('letterbox_coll', 45, 'OFT - Offre Technique', 'Y', 2, 1, NULL, NULL, '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', 'N'),
-('letterbox_coll', 46, 'OFI - Offre financiÃ¨re', 'Y', 2, 1, NULL, NULL, '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', 'N'),
-('letterbox_coll', 48, 'PVO - ProcÃ¨s Verbal d\\''Ouverture des offres', 'Y', 2, 1, NULL, NULL, '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', 'N'),
-('letterbox_coll', 49, 'PVD -ProcÃ¨s Verbal de DÃ©pouillement des offres', 'Y', 2, 1, NULL, NULL, '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', 'N'),
-('letterbox_coll', 50, 'PVC - ProcÃ¨s Verbal de Commission Centrale des MarchÃ©s et Contrat de l\\''Etat', 'Y', 2, 1, NULL, NULL, '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', 'N'),
-('letterbox_coll', 51, 'OSD - Ordre de Service de DÃ©marrage', 'Y', 2, 1, NULL, NULL, '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', 'N'),
-('letterbox_coll', 52, 'DAO - Dossier d\\''Appel D\\''Offres', 'Y', 2, 2, NULL, NULL, '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', 'N'),
-('letterbox_coll', 53, 'AAO - Avis d\\''Appel d\\''offre', 'Y', 2, 2, NULL, NULL, '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', 'N'),
-('letterbox_coll', 54, 'test modÃ¨le', 'Y', 2, 1, NULL, NULL, '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', 'N');
-
-
-INSERT INTO `doctypes_first_level` (`doctypes_first_level_id`, `doctypes_first_level_label`, `enabled`) VALUES
-(1, 'Pret immobilier - Real estate loan', 'N'),
-(2, 'Courriers', 'Y'),
-(3, 'test', 'Y');
-
-
-INSERT INTO `doctypes_second_level` (`doctypes_second_level_id`, `doctypes_second_level_label`, `doctypes_first_level_id`, `enabled`) VALUES
-(3, 'DÃ©caissement', 2, 'Y'),
-(2, 'Avis', 2, 'Y'),
-(1, 'Attribution', 2, 'Y'),
-(4, 'Divers', 2, 'Y'),
-(5, 'Suivi', 2, 'Y');
-
-INSERT INTO `entities` (`entity_id`, `entity_label`, `enabled`, `adrs_1`, `adrs_2`, `adrs_3`, `zipcode`, `city`, `country`, `email`, `business_id`, `parent_entity_id`, `entity_type`) VALUES
-('ARCHIVECO', 'Archiveco SARL', 'Y', '1 rue du Bois', '', '', '44630', 'Villedieu la Blouï¿½re', 'France', 'archiveco@wanadoo.fr', '9876 5432 4321', 'ECONOMBOX', 'Level1'),
-('ECONOMBOX', 'EconomBox SAS', 'Y', '65 rue de la Croix', '', '', '92000', 'Nanterre', 'France', 'info@econombox.com', '1234 5678 9012', '', 'Level0'),
-('WARNER', 'Warner Music France', 'Y', '29 Avenue Mac Mahon', '', '', '75017', 'Paris 17', 'France', 'arnaud.duval@warnermusic.fr', '712029370 00129', 'ARCHIVECO', 'Level1'),
-('LAFARGE', 'Lafarge Ciments', 'Y', 'BP 302', '', '', '92214', 'ST CLOUD CEDEX', 'France', 'caroline.caumes@lafarge-ciments.fr', '302135561 00421', 'ARCHIVECO', 'Level1'),
-('DAKARCHIV', 'Dakarchiv SA', 'Y', '49 Machallah VDN', 'BP 430', '', '', 'Dakar', 'Senegal', 'mamadou.diallo@dakarchiv.sn', '8765432543 5433', 'ECONOMBOX', 'Level1'),
-('APIX', 'APIX SA', 'Y', '52-54 rue Mohammed V', 'BP 430', '', '18524', 'Dakar', 'Senegal', 'moussdiallo@apix.sn', '5432345 454 98765', 'DAKARCHIV', 'Level1'),
-('test', 'test', 'Y', '', '', '', '', '', '', '', '', 'WARNER', 'Level1');
-
-
-INSERT INTO `folders` (`folders_system_id`, `folder_id`, `foldertype_id`, `parent_id`, `folder_name`, `subject`, `description`, `author`, `typist`, `status`, `folder_level`, `creation_date`, `folder_out_id`, `custom_t1`, `custom_n1`, `custom_f1`, `custom_d1`, `custom_t2`, `custom_n2`, `custom_f2`, `custom_d2`, `custom_t3`, `custom_n3`, `custom_f3`, `custom_d3`, `custom_t4`, `custom_n4`, `custom_f4`, `custom_d4`, `custom_t5`, `custom_n5`, `custom_f5`, `custom_d5`, `custom_t6`, `custom_d6`, `custom_t7`, `custom_d7`, `custom_t8`, `custom_d8`, `custom_t9`, `custom_d9`, `custom_t10`, `custom_d10`, `custom_t11`, `custom_d11`, `custom_t12`, `custom_d12`, `custom_t13`, `custom_d13`, `custom_t14`, `custom_d14`, `custom_t15`, `is_complete`, `is_folder_out`) VALUES
-(1, 'F_000001', 1, 0, 'Eric SPRITZ', NULL, NULL, NULL, NULL, 'NEW', 1, '2008-04-23 18:03:14', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Y', 'N'),
-(2, 'F_000002', 1, 0, 'Thomas BECK', NULL, NULL, NULL, NULL, 'NEW', 1, '2008-04-23 16:55:05', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Y', 'N'),
-(4, 'F_000004', 1, 0, 'Tom JOBIM', NULL, NULL, NULL, NULL, 'NEW', 1, '2008-04-23 17:58:15', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Y', 'N'),
-(9, 'F_000009', 1, 0, 'Compay SEGUNDO', NULL, NULL, NULL, NULL, 'NEW', 1, '2008-04-24 16:55:39', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Y', 'N'),
-(7, 'F_000007', 1, 0, 'Maria BETHANIA', NULL, NULL, NULL, NULL, 'NEW', 1, '2008-04-24 01:31:38', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Y', 'N'),
-(3, 'F_000003', 1, 0, 'Teresa CRISTINA', NULL, NULL, NULL, NULL, 'NEW', 1, '2008-04-23 17:56:15', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Y', 'N'),
-(8, 'F_000008', 1, 0, 'Edith PIAF', NULL, NULL, NULL, NULL, 'NEW', 1, '2008-04-24 16:36:55', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Y', 'N'),
-(6, 'F_000006', 1, 0, 'Luciano PAVAROTTI', NULL, NULL, NULL, NULL, 'NEW', 1, '2008-04-23 18:02:01', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Y', 'N'),
-(5, 'F_000005', 1, 0, 'Joao GILBERTO', NULL, NULL, NULL, NULL, 'NEW', 1, '2008-04-23 18:00:26', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Y', 'N'),
-(10, 'F_000010', 1, 0, 'Angelo BRANDUARDI', NULL, NULL, NULL, NULL, 'NEW', 1, '2008-05-22 17:26:48', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Y', 'N'),
-(11, 'F_000011', 1, 0, 'code_projet1', 'Projet 1', NULL, NULL, NULL, 'NEW', 1, '2008-05-22 17:27:22', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Y', 'N'),
-(12, 'F_000012', 1, 11, 'code_marche1', 'Marché 1', NULL, NULL, NULL, 'NEW', 2, '2008-05-19 12:07:51', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Y', 'N'),
-(13, 'F_000013', 1, 0, 'code_projet2', 'Projet 2', NULL, NULL, NULL, 'NEW', 1, '2008-05-19 12:07:51', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Y', 'N'),
-(14, 'F_000014', 1, 13, 'code_marche2', 'Marché2', NULL, NULL, NULL, 'NEW', 2, '2008-05-19 12:07:51', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Y', 'N'),
-(15, 'F_000015', 1, 0, 'code_projet3', 'Projet 3', NULL, NULL, NULL, 'NEW', 1, '2008-05-19 12:07:51', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Y', 'N'),
-(16, 'F_000016', 1, 15, 'code_marche3', 'Marché 3', NULL, NULL, NULL, 'NEW', 2, '2008-06-17 11:00:28', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Y', 'N');
-
-INSERT INTO `foldertypes` (`foldertype_id`, `foldertype_label`, `maarch_comment`, `retention_time`, `custom_d1`, `custom_f1`, `custom_n1`, `custom_t1`, `custom_d2`, `custom_f2`, `custom_n2`, `custom_t2`, `custom_d3`, `custom_f3`, `custom_n3`, `custom_t3`, `custom_d4`, `custom_f4`, `custom_n4`, `custom_t4`, `custom_d5`, `custom_f5`, `custom_n5`, `custom_t5`, `custom_d6`, `custom_t6`, `custom_d7`, `custom_t7`, `custom_d8`, `custom_t8`, `custom_d9`, `custom_t9`, `custom_d10`, `custom_t10`, `custom_t11`, `custom_t12`, `custom_t13`, `custom_t14`, `custom_t15`, `coll_id`) VALUES
-(1, 'Projets marchés', 'Projets marchés', NULL, '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', 'letterbox_coll');
-
-INSERT INTO `foldertypes_doctypes_level1` (`foldertype_id`, `doctypes_first_level_id`) VALUES
-(1, 16),
-(1, 23),
-(6, 25);
-
-INSERT INTO `groupbasket` (`group_id`, `basket_id`, `sequence`, `redirect_basketlist`, `redirect_grouplist`, `can_redirect`, `can_delete`, `can_insert`, `result_page`) VALUES
-('Recovery', 'MyBasket', 50, NULL, NULL, 'Y', 'N', 'N', 'documents_list'),
-('Recovery', 'ValidationBasket', 52, NULL, NULL, 'Y', 'N', 'N', 'documents_list'),
-('Recovery', 'IndexingBasket', 13, NULL, NULL, 'Y', 'N', 'N', 'redirect_to_action'),
-('Recovery', 'CopyMailBasket', 3, NULL, NULL, 'Y', 'N', 'N', 'documents_list'),
-('Recovery', 'LateMailBasket', 2, NULL, NULL, 'Y', 'N', 'N', 'documents_list'),
-('Admin', 'MyBasket', 1, NULL, NULL, 'Y', 'N', 'N', 'documents_list');
-
-INSERT INTO `groupbasket_redirect` (`system_id`, `group_id`, `basket_id`, `action_id`, `entity_id`, `keyword`, `redirect_mode`) VALUES
-(13, 'Recovery', 'IndexingBasket', 21, '', 'ALL_ENTITIES', 'ENTITY'),
-(82, 'Recovery', 'ValidationBasket', 23, '', 'ALL_ENTITIES', 'ENTITY'),
-(81, 'Recovery', 'MyBasket', 1, '', 'ALL_ENTITIES', 'USERS'),
-(80, 'Recovery', 'MyBasket', 1, '', 'ALL_ENTITIES', 'ENTITY');
-
-
-INSERT INTO `listinstance` (`coll_id`, `res_id`, `listinstance_type`, `sequence`, `item_id`, `item_type`, `item_mode`, `added_by_user`, `added_by_entity`) VALUES
-('letterbox_coll', 1, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 1, 'DOC', 0, 'ccharles', 'user_id', 'cc', '', ''),
-('letterbox_coll', 1, 'DOC', 0, 'DAKARCHIV', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 2, 'DOC', 0, 'pparker', 'user_id', 'dest', '', ''),
-('letterbox_coll', 2, 'DOC', 0, 'bsaporta', 'user_id', 'cc', '', ''),
-('letterbox_coll', 2, 'DOC', 0, 'ARCHIVECO', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 3, 'DOC', 0, 'pparker', 'user_id', 'dest', '', ''),
-('letterbox_coll', 3, 'DOC', 0, 'bsaporta', 'user_id', 'cc', '', ''),
-('letterbox_coll', 3, 'DOC', 0, 'ARCHIVECO', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 4, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 4, 'DOC', 0, 'DAKARCHIV', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 4, 'DOC', 1, 'ECONOMBOX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 5, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 5, 'DOC', 0, 'DAKARCHIV', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 5, 'DOC', 1, 'ECONOMBOX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 6, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 6, 'DOC', 0, 'ccharles', 'user_id', 'cc', '', ''),
-('letterbox_coll', 6, 'DOC', 0, 'DAKARCHIV', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 8, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 8, 'DOC', 0, 'DAKARCHIV', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 8, 'DOC', 1, 'ECONOMBOX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 9, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 9, 'DOC', 0, 'pparker', 'user_id', 'cc', 'pparker', 'ECONOMBOX'),
-('letterbox_coll', 9, 'DOC', 0, 'ARCHIVECO', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 10, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 10, 'DOC', 0, 'DAKARCHIV', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 10, 'DOC', 1, 'ECONOMBOX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 11, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 11, 'DOC', 0, 'ccharles', 'user_id', 'cc', '', ''),
-('letterbox_coll', 11, 'DOC', 0, 'DAKARCHIV', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 12, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 12, 'DOC', 0, 'DAKARCHIV', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 12, 'DOC', 1, 'ECONOMBOX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 13, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 13, 'DOC', 0, 'DAKARCHIV', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 13, 'DOC', 1, 'ECONOMBOX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 14, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 14, 'DOC', 0, 'DAKARCHIV', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 14, 'DOC', 1, 'ECONOMBOX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 15, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 15, 'DOC', 0, 'pparker', 'user_id', 'cc', '', ''),
-('letterbox_coll', 15, 'DOC', 0, 'APIX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 15, 'DOC', 1, 'ECONOMBOX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 16, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 16, 'DOC', 0, 'pparker', 'user_id', 'cc', '', ''),
-('letterbox_coll', 16, 'DOC', 0, 'APIX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 16, 'DOC', 1, 'ECONOMBOX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 17, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 17, 'DOC', 0, 'ccharles', 'user_id', 'cc', '', ''),
-('letterbox_coll', 17, 'DOC', 0, 'DAKARCHIV', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 18, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 18, 'DOC', 0, 'pparker', 'user_id', 'cc', '', ''),
-('letterbox_coll', 18, 'DOC', 0, 'APIX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 18, 'DOC', 1, 'ECONOMBOX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 19, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 19, 'DOC', 0, 'DAKARCHIV', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 19, 'DOC', 1, 'ECONOMBOX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 20, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 20, 'DOC', 0, 'DAKARCHIV', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 20, 'DOC', 1, 'ECONOMBOX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 21, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 21, 'DOC', 0, 'pparker', 'user_id', 'cc', '', ''),
-('letterbox_coll', 21, 'DOC', 0, 'APIX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 21, 'DOC', 1, 'ECONOMBOX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 22, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 22, 'DOC', 0, 'pparker', 'user_id', 'cc', '', ''),
-('letterbox_coll', 22, 'DOC', 0, 'APIX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 22, 'DOC', 1, 'ECONOMBOX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 23, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 23, 'DOC', 0, 'pparker', 'user_id', 'cc', '', ''),
-('letterbox_coll', 23, 'DOC', 0, 'APIX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 23, 'DOC', 1, 'ECONOMBOX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 24, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 24, 'DOC', 0, 'pparker', 'user_id', 'cc', '', ''),
-('letterbox_coll', 24, 'DOC', 0, 'APIX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 24, 'DOC', 1, 'ECONOMBOX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 25, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 25, 'DOC', 0, 'ccharles', 'user_id', 'cc', '', ''),
-('letterbox_coll', 25, 'DOC', 0, 'DAKARCHIV', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 26, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 26, 'DOC', 0, 'pparker', 'user_id', 'cc', '', ''),
-('letterbox_coll', 26, 'DOC', 0, 'APIX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 26, 'DOC', 1, 'ECONOMBOX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 27, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 27, 'DOC', 0, 'DAKARCHIV', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 27, 'DOC', 1, 'ECONOMBOX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 28, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 28, 'DOC', 0, 'pparker', 'user_id', 'cc', '', ''),
-('letterbox_coll', 28, 'DOC', 0, 'APIX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 28, 'DOC', 1, 'ECONOMBOX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 29, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 29, 'DOC', 0, 'DAKARCHIV', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 29, 'DOC', 1, 'ECONOMBOX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 30, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 30, 'DOC', 0, 'pparker', 'user_id', 'cc', '', ''),
-('letterbox_coll', 30, 'DOC', 0, 'APIX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 30, 'DOC', 1, 'ECONOMBOX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 31, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 31, 'DOC', 0, 'pparker', 'user_id', 'cc', 'pparker', 'ECONOMBOX'),
-('letterbox_coll', 31, 'DOC', 0, 'ARCHIVECO', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 32, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 32, 'DOC', 1, 'pparker', 'user_id', 'cc', 'pparker', 'ECONOMBOX'),
-('letterbox_coll', 32, 'DOC', 0, 'ARCHIVECO', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 33, 'DOC', 0, 'pparker', 'user_id', 'cc', 'pparker', 'ECONOMBOX'),
-('letterbox_coll', 33, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 33, 'DOC', 0, 'ARCHIVECO', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 34, 'DOC', 0, 'pparker', 'user_id', 'cc', 'pparker', 'ECONOMBOX'),
-('letterbox_coll', 34, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 34, 'DOC', 0, 'ARCHIVECO', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 35, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 35, 'DOC', 0, 'ARCHIVECO', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 36, 'DOC', 0, 'pparker', 'user_id', 'cc', 'pparker', 'ECONOMBOX'),
-('letterbox_coll', 36, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 37, 'DOC', 0, 'pparker', 'user_id', 'dest', '', ''),
-('letterbox_coll', 37, 'DOC', 0, 'bsaporta', 'user_id', 'cc', '', ''),
-('letterbox_coll', 37, 'DOC', 0, 'ARCHIVECO', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 38, 'DOC', 0, 'pparker', 'user_id', 'dest', '', ''),
-('letterbox_coll', 38, 'DOC', 0, 'bsaporta', 'user_id', 'cc', '', ''),
-('letterbox_coll', 38, 'DOC', 0, 'ARCHIVECO', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 39, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 39, 'DOC', 0, 'pparker', 'user_id', 'cc', '', ''),
-('letterbox_coll', 39, 'DOC', 0, 'APIX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 39, 'DOC', 1, 'ECONOMBOX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 40, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 40, 'DOC', 0, 'pparker', 'user_id', 'cc', '', ''),
-('letterbox_coll', 40, 'DOC', 0, 'APIX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 40, 'DOC', 1, 'ECONOMBOX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 41, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 41, 'DOC', 0, 'pparker', 'user_id', 'cc', '', ''),
-('letterbox_coll', 41, 'DOC', 0, 'APIX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 41, 'DOC', 1, 'ECONOMBOX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 42, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 42, 'DOC', 0, 'pparker', 'user_id', 'cc', '', ''),
-('letterbox_coll', 42, 'DOC', 0, 'APIX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 42, 'DOC', 1, 'ECONOMBOX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 43, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 43, 'DOC', 0, 'pparker', 'user_id', 'cc', '', ''),
-('letterbox_coll', 43, 'DOC', 0, 'APIX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 43, 'DOC', 1, 'ECONOMBOX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 44, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 44, 'DOC', 0, 'pparker', 'user_id', 'cc', '', ''),
-('letterbox_coll', 44, 'DOC', 0, 'APIX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 44, 'DOC', 1, 'ECONOMBOX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 45, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 45, 'DOC', 0, 'DAKARCHIV', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 45, 'DOC', 1, 'ECONOMBOX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 46, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 46, 'DOC', 0, 'DAKARCHIV', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 46, 'DOC', 1, 'ECONOMBOX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 47, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 47, 'DOC', 0, 'DAKARCHIV', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 47, 'DOC', 1, 'ECONOMBOX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 48, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 48, 'DOC', 0, 'pparker', 'user_id', 'cc', '', ''),
-('letterbox_coll', 48, 'DOC', 0, 'APIX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 48, 'DOC', 1, 'ECONOMBOX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 49, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 49, 'DOC', 0, 'pparker', 'user_id', 'cc', '', ''),
-('letterbox_coll', 49, 'DOC', 0, 'APIX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 49, 'DOC', 1, 'ECONOMBOX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 50, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 50, 'DOC', 0, 'pparker', 'user_id', 'cc', '', ''),
-('letterbox_coll', 50, 'DOC', 0, 'APIX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 50, 'DOC', 1, 'ECONOMBOX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 51, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 51, 'DOC', 0, 'pparker', 'user_id', 'cc', '', ''),
-('letterbox_coll', 51, 'DOC', 0, 'APIX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 51, 'DOC', 1, 'ECONOMBOX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 52, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 52, 'DOC', 0, 'DAKARCHIV', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 52, 'DOC', 1, 'ECONOMBOX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 53, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 53, 'DOC', 0, 'DAKARCHIV', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 53, 'DOC', 1, 'ECONOMBOX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 54, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 54, 'DOC', 0, 'DAKARCHIV', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 54, 'DOC', 1, 'ECONOMBOX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 55, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 55, 'DOC', 0, 'DAKARCHIV', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 55, 'DOC', 1, 'ECONOMBOX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 56, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 56, 'DOC', 0, 'DAKARCHIV', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 56, 'DOC', 1, 'ECONOMBOX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 57, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 57, 'DOC', 0, 'DAKARCHIV', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 57, 'DOC', 1, 'ECONOMBOX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 58, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 58, 'DOC', 0, 'DAKARCHIV', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 58, 'DOC', 1, 'ECONOMBOX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 59, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 59, 'DOC', 0, 'pparker', 'user_id', 'cc', '', ''),
-('letterbox_coll', 59, 'DOC', 0, 'APIX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 59, 'DOC', 1, 'ECONOMBOX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 60, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 60, 'DOC', 0, 'pparker', 'user_id', 'cc', '', ''),
-('letterbox_coll', 60, 'DOC', 0, 'APIX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 60, 'DOC', 1, 'ECONOMBOX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 61, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 61, 'DOC', 0, 'pparker', 'user_id', 'cc', '', ''),
-('letterbox_coll', 61, 'DOC', 0, 'APIX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 61, 'DOC', 1, 'ECONOMBOX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 62, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 62, 'DOC', 0, 'ccharles', 'user_id', 'cc', '', ''),
-('letterbox_coll', 62, 'DOC', 0, 'DAKARCHIV', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 65, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 65, 'DOC', 0, 'pparker', 'user_id', 'cc', '', ''),
-('letterbox_coll', 65, 'DOC', 0, 'APIX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 65, 'DOC', 1, 'ECONOMBOX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 72, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 72, 'DOC', 0, 'DAKARCHIV', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 72, 'DOC', 1, 'ECONOMBOX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 73, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 73, 'DOC', 0, 'pparker', 'user_id', 'cc', '', ''),
-('letterbox_coll', 73, 'DOC', 0, 'APIX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 73, 'DOC', 1, 'ECONOMBOX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 75, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 75, 'DOC', 0, 'pparker', 'user_id', 'cc', '', ''),
-('letterbox_coll', 75, 'DOC', 0, 'APIX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 75, 'DOC', 1, 'ECONOMBOX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 76, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 76, 'DOC', 0, 'pparker', 'user_id', 'cc', '', ''),
-('letterbox_coll', 76, 'DOC', 0, 'APIX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 76, 'DOC', 1, 'ECONOMBOX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 77, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 77, 'DOC', 0, 'pparker', 'user_id', 'cc', '', ''),
-('letterbox_coll', 77, 'DOC', 0, 'APIX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 77, 'DOC', 1, 'ECONOMBOX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 78, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 78, 'DOC', 0, 'pparker', 'user_id', 'cc', '', ''),
-('letterbox_coll', 78, 'DOC', 0, 'APIX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 78, 'DOC', 1, 'ECONOMBOX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 79, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 80, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 80, 'DOC', 0, 'pparker', 'user_id', 'cc', '', ''),
-('letterbox_coll', 80, 'DOC', 0, 'APIX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 80, 'DOC', 1, 'ECONOMBOX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 81, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 81, 'DOC', 0, 'pparker', 'user_id', 'cc', '', ''),
-('letterbox_coll', 81, 'DOC', 0, 'APIX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 81, 'DOC', 1, 'ECONOMBOX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 82, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 82, 'DOC', 0, 'pparker', 'user_id', 'cc', '', ''),
-('letterbox_coll', 82, 'DOC', 0, 'APIX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 82, 'DOC', 1, 'ECONOMBOX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 83, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 83, 'DOC', 0, 'pparker', 'user_id', 'cc', '', ''),
-('letterbox_coll', 83, 'DOC', 0, 'APIX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 83, 'DOC', 1, 'ECONOMBOX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 84, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 84, 'DOC', 0, 'pparker', 'user_id', 'cc', '', ''),
-('letterbox_coll', 84, 'DOC', 0, 'APIX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 84, 'DOC', 1, 'ECONOMBOX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 85, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 85, 'DOC', 0, 'pparker', 'user_id', 'cc', '', ''),
-('letterbox_coll', 85, 'DOC', 0, 'APIX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 85, 'DOC', 1, 'ECONOMBOX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 87, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 87, 'DOC', 0, 'pparker', 'user_id', 'cc', '', ''),
-('letterbox_coll', 87, 'DOC', 0, 'APIX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 87, 'DOC', 1, 'ECONOMBOX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 88, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 88, 'DOC', 0, 'DAKARCHIV', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 88, 'DOC', 1, 'ECONOMBOX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 89, 'DOC', 0, 'ccharles', 'user_id', 'cc', 'pparker', 'ECONOMBOX'),
-('letterbox_coll', 89, 'DOC', 2, 'pparker', 'user_id', 'cc', 'pparker', 'ECONOMBOX'),
-('letterbox_coll', 90, 'DOC', 0, 'pparker', 'user_id', 'cc', 'pparker', 'ECONOMBOX'),
-('letterbox_coll', 90, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 102, 'DOC', 0, 'pparker', 'user_id', 'dest', '', ''),
-('letterbox_coll', 91, 'DOC', 0, 'pparker', 'user_id', 'cc', 'pparker', 'ECONOMBOX'),
-('letterbox_coll', 91, 'DOC', 0, 'ARCHIVECO', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 92, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 92, 'DOC', 0, 'ccharles', 'user_id', 'cc', '', ''),
-('letterbox_coll', 92, 'DOC', 0, 'DAKARCHIV', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 93, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 93, 'DOC', 0, 'pparker', 'user_id', 'cc', '', ''),
-('letterbox_coll', 93, 'DOC', 0, 'APIX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 93, 'DOC', 1, 'ECONOMBOX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 94, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 94, 'DOC', 0, 'DAKARCHIV', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 94, 'DOC', 1, 'ECONOMBOX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 95, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 95, 'DOC', 1, 'APIX', 'entity_id', 'cc', 'pparker', 'ECONOMBOX'),
-('letterbox_coll', 95, 'DOC', 0, 'ARCHIVECO', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 96, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 96, 'DOC', 0, 'pparker', 'user_id', 'cc', '', ''),
-('letterbox_coll', 96, 'DOC', 0, 'APIX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 96, 'DOC', 1, 'ECONOMBOX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 97, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 97, 'DOC', 0, 'DAKARCHIV', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 97, 'DOC', 1, 'ECONOMBOX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 98, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 98, 'DOC', 0, 'pparker', 'user_id', 'cc', 'pparker', 'ECONOMBOX'),
-('letterbox_coll', 98, 'DOC', 0, 'ARCHIVECO', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 99, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 99, 'DOC', 0, 'DAKARCHIV', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 99, 'DOC', 1, 'ECONOMBOX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 100, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 100, 'DOC', 0, 'DAKARCHIV', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 100, 'DOC', 1, 'ECONOMBOX', 'entity_id', 'cc', '', ''),
-('letterbox_coll', 101, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 101, 'DOC', 0, 'pparker', 'user_id', 'cc', 'pparker', 'ECONOMBOX'),
-('letterbox_coll', 101, 'DOC', 0, 'APIX', 'entity_id', 'cc', 'pparker', 'ECONOMBOX'),
-('letterbox_coll', 79, 'DOC', 0, 'pparker', 'user_id', 'cc', 'pparker', 'ECONOMBOX'),
-('letterbox_coll', 79, 'DOC', 1, 'pparker', 'user_id', 'cc', 'pparker', 'ECONOMBOX'),
-('letterbox_coll', 79, 'DOC', 2, 'pparker', 'user_id', 'cc', 'pparker', 'ECONOMBOX'),
-('letterbox_coll', 79, 'DOC', 3, 'pparker', 'user_id', 'cc', 'pparker', 'ECONOMBOX'),
-('letterbox_coll', 79, 'DOC', 0, 'APIX', 'entity_id', 'cc', 'pparker', 'ECONOMBOX'),
-('letterbox_coll', 79, 'DOC', 1, 'ECONOMBOX', 'entity_id', 'cc', 'pparker', 'ECONOMBOX'),
-('letterbox_coll', 79, 'DOC', 2, 'WARNER', 'entity_id', 'cc', 'pparker', 'ECONOMBOX'),
-('letterbox_coll', 89, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 89, 'DOC', 0, 'APIX', 'entity_id', 'cc', 'pparker', 'ECONOMBOX'),
-('letterbox_coll', 89, 'DOC', 1, 'ARCHIVECO', 'entity_id', 'cc', 'pparker', 'ECONOMBOX'),
-('letterbox_coll', 89, 'DOC', 2, 'ECONOMBOX', 'entity_id', 'cc', 'pparker', 'ECONOMBOX'),
-('letterbox_coll', 33, 'DOC', 0, 'APIX', 'entity_id', 'cc', 'pparker', 'ECONOMBOX'),
-('letterbox_coll', 33, 'DOC', 1, 'ECONOMBOX', 'entity_id', 'cc', 'pparker', 'ECONOMBOX'),
-('letterbox_coll', 32, 'DOC', 1, 'APIX', 'entity_id', 'cc', 'pparker', 'ECONOMBOX'),
-('letterbox_coll', 32, 'DOC', 2, 'ECONOMBOX', 'entity_id', 'cc', 'pparker', 'ECONOMBOX'),
-('letterbox_coll', 34, 'DOC', 1, 'APIX', 'entity_id', 'cc', 'pparker', 'ECONOMBOX'),
-('letterbox_coll', 34, 'DOC', 2, 'ECONOMBOX', 'entity_id', 'cc', 'pparker', 'ECONOMBOX'),
-('letterbox_coll', 9, 'DOC', 1, 'APIX', 'entity_id', 'cc', 'pparker', 'ECONOMBOX'),
-('letterbox_coll', 9, 'DOC', 2, 'ECONOMBOX', 'entity_id', 'cc', 'pparker', 'ECONOMBOX'),
-('letterbox_coll', 95, 'DOC', 2, 'ECONOMBOX', 'entity_id', 'cc', 'pparker', 'ECONOMBOX'),
-('letterbox_coll', 7, 'DOC', 0, 'ccharles', 'user_id', 'cc', 'pparker', 'ECONOMBOX'),
-('letterbox_coll', 7, 'DOC', 1, 'pparker', 'user_id', 'cc', 'pparker', 'ECONOMBOX'),
-('letterbox_coll', 7, 'DOC', 1, 'ECONOMBOX', 'entity_id', 'cc', 'pparker', 'ECONOMBOX'),
-('letterbox_coll', 7, 'DOC', 2, 'LAFARGE', 'entity_id', 'cc', 'pparker', 'ECONOMBOX'),
-('letterbox_coll', 98, 'DOC', 1, 'APIX', 'entity_id', 'cc', 'pparker', 'ECONOMBOX'),
-('letterbox_coll', 98, 'DOC', 2, 'ECONOMBOX', 'entity_id', 'cc', 'pparker', 'ECONOMBOX'),
-('letterbox_coll', 97, 'DOC', 0, 'pparker', 'user_id', 'cc', 'pparker', 'ECONOMBOX'),
-('letterbox_coll', 97, 'DOC', 2, 'APIX', 'entity_id', 'cc', 'pparker', 'ECONOMBOX'),
-('letterbox_coll', 91, 'DOC', 1, 'APIX', 'entity_id', 'cc', 'pparker', 'ECONOMBOX'),
-('letterbox_coll', 91, 'DOC', 2, 'ECONOMBOX', 'entity_id', 'cc', 'pparker', 'ECONOMBOX'),
-('letterbox_coll', 101, 'DOC', 1, 'ECONOMBOX', 'entity_id', 'cc', 'pparker', 'ECONOMBOX'),
-('letterbox_coll', 103, 'DOC', 0, 'pparker', 'user_id', 'dest', '', ''),
-('letterbox_coll', 103, 'DOC', 0, 'bsaporta', 'user_id', 'cc', 'pparker', 'ECONOMBOX'),
-('letterbox_coll', 103, 'DOC', 0, 'ARCHIVECO', 'entity_id', 'cc', 'pparker', 'ECONOMBOX'),
-('letterbox_coll', 105, 'DOC', 0, 'pparker', 'user_id', 'dest', '', ''),
-('letterbox_coll', 105, 'DOC', 0, 'bsaporta', 'user_id', 'cc', 'pparker', 'ECONOMBOX'),
-('letterbox_coll', 102, 'DOC', 0, 'ARCHIVECO', 'entity_id', 'cc', 'pparker', 'ECONOMBOX'),
-('letterbox_coll', 102, 'DOC', 0, 'bsaporta', 'user_id', 'cc', 'pparker', 'ECONOMBOX'),
-('letterbox_coll', 104, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 104, 'DOC', 0, 'pparker', 'user_id', 'cc', 'pparker', 'ECONOMBOX'),
-('letterbox_coll', 104, 'DOC', 0, 'APIX', 'entity_id', 'cc', 'pparker', 'ECONOMBOX'),
-('letterbox_coll', 104, 'DOC', 1, 'ECONOMBOX', 'entity_id', 'cc', 'pparker', 'ECONOMBOX'),
-('letterbox_coll', 105, 'DOC', 0, 'ARCHIVECO', 'entity_id', 'cc', 'pparker', 'ECONOMBOX'),
-('letterbox_coll', 106, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 106, 'DOC', 0, 'ccharles', 'user_id', 'cc', 'pparker', 'ECONOMBOX'),
-('letterbox_coll', 106, 'DOC', 0, 'DAKARCHIV', 'entity_id', 'cc', 'pparker', 'ECONOMBOX'),
-('letterbox_coll', 109, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 109, 'DOC', 0, 'pparker', 'user_id', 'cc', 'pparker', 'ECONOMBOX'),
-('letterbox_coll', 109, 'DOC', 0, 'APIX', 'entity_id', 'cc', 'pparker', 'ECONOMBOX'),
-('letterbox_coll', 109, 'DOC', 1, 'ECONOMBOX', 'entity_id', 'cc', 'pparker', 'ECONOMBOX'),
-('letterbox_coll', 110, 'DOC', 0, 'pparker', 'user_id', 'dest', '', ''),
-('letterbox_coll', 110, 'DOC', 0, 'bsaporta', 'user_id', 'cc', 'pparker', 'ECONOMBOX'),
-('letterbox_coll', 110, 'DOC', 0, 'ARCHIVECO', 'entity_id', 'cc', 'pparker', 'ECONOMBOX'),
-('letterbox_coll', 111, 'DOC', 0, 'pparker', 'user_id', 'dest', '', ''),
-('letterbox_coll', 111, 'DOC', 0, 'bsaporta', 'user_id', 'cc', 'pparker', 'ECONOMBOX'),
-('letterbox_coll', 111, 'DOC', 0, 'ARCHIVECO', 'entity_id', 'cc', 'pparker', 'ECONOMBOX'),
-('letterbox_coll', 112, 'DOC', 0, 'bsaporta', 'user_id', 'dest', '', ''),
-('letterbox_coll', 112, 'DOC', 0, 'DAKARCHIV', 'entity_id', 'cc', 'pparker', 'ECONOMBOX'),
-('letterbox_coll', 112, 'DOC', 1, 'ECONOMBOX', 'entity_id', 'cc', 'pparker', 'ECONOMBOX'),
-('letterbox_coll', 113, 'DOC', 0, 'pparker', 'user_id', 'dest', '', ''),
-('letterbox_coll', 113, 'DOC', 0, 'bsaporta', 'user_id', 'cc', 'pparker', 'ECONOMBOX'),
-('letterbox_coll', 113, 'DOC', 0, 'ARCHIVECO', 'entity_id', 'cc', 'pparker', 'ECONOMBOX');
-
-
-
-INSERT INTO `listmodels` (`coll_id`, `object_id`, `object_type`, `sequence`, `item_id`, `item_type`, `item_mode`, `listmodel_type`) VALUES
-('letterbox_coll', 'test', 'entity_id', 0, 'bsaporta', 'user_id', 'dest', 'DOC'),
-('letterbox_coll', 'test', 'entity_id', 0, 'ARCHIVECO', 'entity_id', 'cc', 'DOC'),
-('letterbox_coll', 'test', 'entity_id', 1, 'DAKARCHIV', 'entity_id', 'cc', 'DOC'),
-('letterbox_coll', 'ARCHIVECO', 'entity_id', 0, 'bsaporta', 'user_id', 'dest', 'DOC'),
-('letterbox_coll', 'ARCHIVECO', 'entity_id', 0, 'ECONOMBOX', 'entity_id', 'cc', 'DOC'),
-('letterbox_coll', 'ARCHIVECO', 'entity_id', 1, 'DAKARCHIV', 'entity_id', 'cc', 'DOC'),
-('letterbox_coll', 'ECONOMBOX', 'entity_id', 0, 'pparker', 'user_id', 'dest', 'DOC'),
-('letterbox_coll', 'ECONOMBOX', 'entity_id', 0, 'bsaporta', 'user_id', 'cc', 'DOC'),
-('letterbox_coll', 'ECONOMBOX', 'entity_id', 0, 'ARCHIVECO', 'entity_id', 'cc', 'DOC'),
-('letterbox_coll', 'APIX', 'entity_id', 0, 'APIX', 'entity_id', 'cc', 'DOC'),
-('letterbox_coll', 'APIX', 'entity_id', 1, 'ECONOMBOX', 'entity_id', 'cc', 'DOC'),
-('letterbox_coll', 'APIX', 'entity_id', 0, 'pparker', 'user_id', 'cc', 'DOC'),
-('letterbox_coll', 'APIX', 'entity_id', 0, 'bsaporta', 'user_id', 'dest', 'DOC'),
-('letterbox_coll', 'LAFARGE', 'entity_id', 0, 'bsaporta', 'user_id', 'dest', 'DOC'),
-('letterbox_coll', 'LAFARGE', 'entity_id', 0, 'ccharles', 'user_id', 'cc', 'DOC'),
-('letterbox_coll', 'LAFARGE', 'entity_id', 0, 'DAKARCHIV', 'entity_id', 'cc', 'DOC');
-
-
-INSERT INTO `mlb_coll_ext` (`res_id`, `category_id`, `exp_contact_id`, `exp_user_id`, `dest_contact_id`, `dest_user_id`, `nature_id`, `alt_identifier`, `admission_date`, `answer_type_bitmask`, `other_answer_desc`, `process_limit_date`, `process_notes`, `closing_date`, `alarm1_date`, `alarm2_date`, `flag_notif`, `flag_alarm1`, `flag_alarm2`) VALUES
-(1, 'incoming', NULL, NULL, NULL, NULL, 'simple_mail', '', '2009-07-20 00:00:00', '', NULL, '0000-00-00 00:00:00', NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(2, 'incoming', NULL, NULL, NULL, NULL, 'simple_mail', '', '2009-07-20 00:00:00', '32767', 'test', '0000-00-00 00:00:00', '', NULL, NULL, NULL, 'N', 'N', 'N'),
-(3, 'incoming', NULL, NULL, NULL, NULL, 'simple_mail', '', '2009-07-20 00:00:00', '101100', 'test', '0000-00-00 00:00:00', '', NULL, NULL, NULL, 'N', 'N', 'N'),
-(4, 'incoming', NULL, NULL, NULL, NULL, 'simple_mail', '', '2009-07-20 00:00:00', '', NULL, '0000-00-00 00:00:00', NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(5, 'incoming', NULL, NULL, NULL, NULL, 'simple_mail', '', '2009-07-20 00:00:00', '', NULL, '0000-00-00 00:00:00', NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(6, 'incoming', NULL, NULL, NULL, NULL, 'simple_mail', '', '2009-07-20 00:00:00', '', NULL, '0000-00-00 00:00:00', NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(7, 'incoming', NULL, NULL, NULL, NULL, 'simple_mail', '', '2009-07-20 00:00:00', '100000', 'tuyil', '0000-00-00 00:00:00', '', NULL, NULL, NULL, 'N', 'N', 'N'),
-(8, 'incoming', NULL, NULL, NULL, NULL, 'simple_mail', '', '2009-07-20 00:00:00', '', NULL, '0000-00-00 00:00:00', NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(9, 'outgoing', NULL, NULL, NULL, NULL, 'simple_mail', '', '0000-00-00 00:00:00', '000000', '[PrÃ©ciser]', '0000-00-00 00:00:00', '', NULL, NULL, NULL, 'N', 'N', 'N'),
-(10, 'internal', NULL, NULL, NULL, NULL, 'simple_mail', '', '0000-00-00 00:00:00', '', NULL, '0000-00-00 00:00:00', NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(11, 'internal', NULL, NULL, NULL, NULL, 'simple_mail', '', '0000-00-00 00:00:00', '', NULL, '0000-00-00 00:00:00', NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(12, 'incoming', NULL, NULL, NULL, NULL, 'simple_mail', '', '2009-07-20 00:00:00', '', NULL, '0000-00-00 00:00:00', NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(13, 'incoming', NULL, NULL, NULL, NULL, 'simple_mail', '', '2009-07-20 00:00:00', '', NULL, '0000-00-00 00:00:00', NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(14, 'incoming', NULL, NULL, NULL, NULL, 'simple_mail', '', '2009-07-20 00:00:00', '', NULL, '0000-00-00 00:00:00', NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(15, 'incoming', NULL, NULL, NULL, NULL, 'simple_mail', '', '2009-07-20 00:00:00', '', NULL, '0000-00-00 00:00:00', NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(16, 'incoming', NULL, NULL, NULL, NULL, 'simple_mail', '', '2009-07-20 00:00:00', '', NULL, '0000-00-00 00:00:00', NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(17, 'incoming', NULL, NULL, NULL, NULL, 'simple_mail', '', '2009-07-20 00:00:00', '', NULL, '0000-00-00 00:00:00', NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(18, 'incoming', NULL, NULL, NULL, NULL, 'simple_mail', '', '2009-07-20 00:00:00', '', NULL, '0000-00-00 00:00:00', NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(19, 'incoming', NULL, NULL, NULL, NULL, 'simple_mail', '', '2009-07-20 00:00:00', '', NULL, '0000-00-00 00:00:00', NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(20, 'incoming', NULL, NULL, NULL, NULL, 'simple_mail', '', '2009-07-21 00:00:00', '', NULL, '0000-00-00 00:00:00', NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(21, 'incoming', NULL, NULL, NULL, NULL, 'simple_mail', '', '2009-07-21 00:00:00', '', NULL, '0000-00-00 00:00:00', NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(22, 'incoming', NULL, NULL, NULL, NULL, 'simple_mail', '', '2009-07-21 00:00:00', '', NULL, '0000-00-00 00:00:00', NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(23, 'incoming', NULL, NULL, NULL, NULL, 'simple_mail', '', '2009-07-21 00:00:00', '', NULL, '0000-00-00 00:00:00', NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(24, 'incoming', NULL, NULL, NULL, NULL, 'simple_mail', '', '2009-07-21 00:00:00', '', NULL, '0000-00-00 00:00:00', NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(25, 'incoming', NULL, NULL, NULL, NULL, 'simple_mail', '', '2009-07-21 00:00:00', '', NULL, '0000-00-00 00:00:00', NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(26, 'incoming', NULL, NULL, NULL, NULL, 'simple_mail', '', '2009-07-21 00:00:00', '', NULL, '0000-00-00 00:00:00', NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(27, 'incoming', NULL, NULL, NULL, NULL, 'simple_mail', '', '2009-07-21 00:00:00', '', NULL, '0000-00-00 00:00:00', NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(28, 'incoming', NULL, NULL, NULL, NULL, 'simple_mail', '', '2009-07-21 00:00:00', '', NULL, '0000-00-00 00:00:00', NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(29, 'incoming', NULL, NULL, NULL, NULL, 'simple_mail', '', '2009-07-21 00:00:00', '', NULL, '0000-00-00 00:00:00', NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(30, 'incoming', NULL, NULL, NULL, NULL, 'simple_mail', '', '2009-07-21 00:00:00', '', NULL, '0000-00-00 00:00:00', 'test notes 1', NULL, NULL, NULL, 'N', 'N', 'N'),
-(31, 'incoming', NULL, NULL, NULL, NULL, 'simple_mail', '', '2009-07-21 00:00:00', '100000', 'test', '0000-00-00 00:00:00', '', NULL, NULL, NULL, 'N', 'N', 'N'),
-(32, 'incoming', NULL, NULL, NULL, NULL, 'simple_mail', '', '2009-07-21 00:00:00', '000001', '[PrÃ©ciser]', '0000-00-00 00:00:00', '', NULL, NULL, NULL, 'N', 'N', 'N'),
-(33, 'incoming', NULL, NULL, NULL, NULL, 'simple_mail', '', '2009-07-21 00:00:00', '000001', '[PrÃ©ciser]', '0000-00-00 00:00:00', '', NULL, NULL, NULL, 'N', 'N', 'N'),
-(34, 'incoming', NULL, NULL, NULL, NULL, 'simple_mail', '', '2009-07-21 00:00:00', '100000', 'test lgi', '0000-00-00 00:00:00', 'ertetr', NULL, NULL, NULL, 'N', 'N', 'N'),
-(35, 'incoming', NULL, NULL, NULL, NULL, 'simple_mail', '', '2009-07-21 00:00:00', '000000', '[PrÃ©ciser]', '0000-00-00 00:00:00', '', NULL, NULL, NULL, 'N', 'N', 'N'),
-(36, 'incoming', NULL, NULL, NULL, NULL, 'simple_mail', '', '2009-07-21 00:00:00', '', NULL, '0000-00-00 00:00:00', NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(37, 'incoming', NULL, NULL, NULL, NULL, 'simple_mail', '', '2009-07-21 00:00:00', '10000', '[PrÃ©ciser]', '0000-00-00 00:00:00', '', NULL, NULL, NULL, 'N', 'N', 'N'),
-(38, 'incoming', NULL, NULL, NULL, NULL, 'simple_mail', '', '2009-07-21 00:00:00', '100', '[PrÃ©ciser]', '0000-00-00 00:00:00', '', NULL, NULL, NULL, 'N', 'N', 'N'),
-(39, 'incoming', NULL, NULL, NULL, NULL, 'simple_mail', '', '2009-07-21 00:00:00', '', NULL, '0000-00-00 00:00:00', NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(40, 'incoming', NULL, NULL, NULL, NULL, 'simple_mail', '', '2009-07-21 00:00:00', '', NULL, '0000-00-00 00:00:00', NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(41, 'incoming', NULL, NULL, NULL, NULL, 'simple_mail', '', '2009-07-21 00:00:00', '', NULL, '0000-00-00 00:00:00', NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(42, 'incoming', NULL, NULL, NULL, NULL, 'simple_mail', '', '2009-07-21 00:00:00', '', NULL, '0000-00-00 00:00:00', NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(43, 'incoming', NULL, NULL, NULL, NULL, 'simple_mail', '', '2009-07-21 00:00:00', '', NULL, '0000-00-00 00:00:00', NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(44, 'incoming', NULL, NULL, NULL, NULL, 'simple_mail', '', '2009-07-21 00:00:00', '', NULL, '0000-00-00 00:00:00', NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(45, 'incoming', NULL, NULL, NULL, NULL, 'simple_mail', '', '2009-07-21 00:00:00', '', NULL, '0000-00-00 00:00:00', NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(46, 'incoming', NULL, NULL, NULL, NULL, 'simple_mail', '', '2009-07-21 00:00:00', '', NULL, '0000-00-00 00:00:00', NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(47, 'incoming', NULL, NULL, NULL, NULL, 'simple_mail', '', '2009-07-21 00:00:00', '', NULL, '0000-00-00 00:00:00', NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(48, 'incoming', NULL, NULL, NULL, NULL, 'simple_mail', '', '2009-07-21 00:00:00', '', NULL, '0000-00-00 00:00:00', NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(49, 'incoming', NULL, NULL, NULL, NULL, 'simple_mail', '', '2009-07-21 00:00:00', '', NULL, '0000-00-00 00:00:00', NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(50, 'incoming', NULL, NULL, NULL, NULL, 'simple_mail', '', '2009-07-21 00:00:00', '', NULL, '0000-00-00 00:00:00', NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(51, 'incoming', NULL, NULL, NULL, NULL, 'simple_mail', '', '2009-07-21 00:00:00', '', NULL, '0000-00-00 00:00:00', NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(52, 'incoming', NULL, NULL, NULL, NULL, 'simple_mail', '', '2009-07-21 00:00:00', '', NULL, '0000-00-00 00:00:00', NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(53, 'incoming', NULL, NULL, NULL, NULL, 'simple_mail', '', '2009-07-21 00:00:00', '', NULL, '0000-00-00 00:00:00', NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(54, 'incoming', NULL, NULL, NULL, NULL, 'simple_mail', '', '2009-07-21 00:00:00', '', NULL, '0000-00-00 00:00:00', NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(55, 'incoming', NULL, NULL, NULL, NULL, 'simple_mail', '', '2009-07-21 00:00:00', '', NULL, '0000-00-00 00:00:00', NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(56, 'incoming', NULL, NULL, NULL, NULL, 'simple_mail', '', '2009-07-21 00:00:00', '', NULL, '0000-00-00 00:00:00', NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(57, 'incoming', NULL, NULL, NULL, NULL, 'simple_mail', '', '2009-07-21 00:00:00', '', NULL, '0000-00-00 00:00:00', NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(58, 'incoming', NULL, NULL, NULL, NULL, 'simple_mail', '', '2009-07-21 00:00:00', '', NULL, '0000-00-00 00:00:00', NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(59, 'incoming', NULL, NULL, NULL, NULL, 'simple_mail', '', '2009-07-21 00:00:00', '', NULL, '0000-00-00 00:00:00', NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(60, 'incoming', NULL, NULL, NULL, NULL, 'simple_mail', '', '2009-07-21 00:00:00', '', NULL, '0000-00-00 00:00:00', NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(61, 'incoming', NULL, NULL, NULL, NULL, 'simple_mail', '', '2009-07-21 00:00:00', '', NULL, '0000-00-00 00:00:00', NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(62, 'outgoing', NULL, NULL, NULL, NULL, 'simple_mail', '', '0000-00-00 00:00:00', '', NULL, '0000-00-00 00:00:00', NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(63, 'incoming', NULL, NULL, NULL, NULL, 'simple_mail', '', '2009-07-21 00:00:00', '', NULL, '0000-00-00 00:00:00', NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(64, 'incoming', NULL, NULL, NULL, NULL, 'simple_mail', '', '2009-07-21 00:00:00', '', NULL, '0000-00-00 00:00:00', NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(65, 'internal', NULL, NULL, NULL, NULL, 'simple_mail', '', '0000-00-00 00:00:00', '', NULL, '0000-00-00 00:00:00', NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(66, 'market_document', NULL, NULL, NULL, NULL, '', '', '0000-00-00 00:00:00', '', NULL, NULL, NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(67, 'market_document', NULL, NULL, NULL, NULL, '', '', '0000-00-00 00:00:00', '', NULL, NULL, NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(68, 'market_document', NULL, NULL, NULL, NULL, '', '', '0000-00-00 00:00:00', '', NULL, NULL, NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(69, 'market_document', NULL, NULL, NULL, NULL, '', '', '0000-00-00 00:00:00', '', NULL, NULL, NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(70, 'market_document', NULL, NULL, NULL, NULL, '', '', '0000-00-00 00:00:00', '', NULL, NULL, NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(71, 'market_document', NULL, NULL, NULL, NULL, '', '', '0000-00-00 00:00:00', '', NULL, NULL, NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(72, 'incoming', NULL, NULL, NULL, NULL, 'simple_mail', '', '2009-07-27 00:00:00', '', NULL, '0000-00-00 00:00:00', NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(73, 'incoming', NULL, NULL, NULL, NULL, 'simple_mail', '', '2009-07-27 00:00:00', '', NULL, '0000-00-00 00:00:00', NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(74, 'market_document', NULL, NULL, NULL, NULL, '', '', '0000-00-00 00:00:00', '', NULL, NULL, NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(75, 'incoming', NULL, NULL, NULL, NULL, 'simple_mail', '', '2009-07-27 00:00:00', '', NULL, '0000-00-00 00:00:00', NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(76, 'incoming', NULL, NULL, NULL, NULL, 'simple_mail', '', '2009-07-27 00:00:00', '', NULL, '0000-00-00 00:00:00', NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(77, 'outgoing', NULL, NULL, NULL, NULL, 'simple_mail', '', '0000-00-00 00:00:00', '', NULL, '0000-00-00 00:00:00', NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(78, 'incoming', NULL, NULL, NULL, NULL, 'simple_mail', '', '2009-07-27 00:00:00', '', NULL, '2009-08-25 00:00:00', NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(79, 'incoming', NULL, NULL, NULL, NULL, 'simple_mail', '', '2009-07-27 00:00:00', '000000', '[PrÃ©ciser]', '2009-08-25 00:00:00', '', NULL, NULL, NULL, 'N', 'N', 'N'),
-(80, 'incoming', NULL, NULL, NULL, NULL, 'simple_mail', '', '2009-08-03 00:00:00', '', NULL, '2009-09-01 00:00:00', NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(81, 'incoming', NULL, NULL, NULL, NULL, 'simple_mail', '', '2009-08-06 00:00:00', '', NULL, '2009-09-04 00:00:00', NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(82, 'incoming', NULL, NULL, NULL, NULL, 'simple_mail', '', '2009-08-06 00:00:00', '', NULL, '2009-09-04 00:00:00', NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(83, 'incoming', NULL, NULL, NULL, NULL, 'simple_mail', '', '2009-08-06 00:00:00', '', NULL, '2009-09-04 00:00:00', NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(84, 'incoming', NULL, NULL, NULL, NULL, 'simple_mail', '', '2009-08-06 00:00:00', '', NULL, '2009-09-04 00:00:00', NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(85, 'incoming', NULL, NULL, NULL, NULL, 'simple_mail', '', '2009-08-06 00:00:00', '', NULL, '2009-09-04 00:00:00', NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(87, 'incoming', 5, NULL, NULL, NULL, 'simple_mail', '', '2009-08-06 00:00:00', '', NULL, '2009-09-04 00:00:00', NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(88, 'incoming', 3, NULL, NULL, NULL, 'simple_mail', '', '2009-08-06 00:00:00', '', NULL, '2009-09-04 00:00:00', NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(89, 'incoming', NULL, '0', NULL, NULL, 'simple_mail', '', '2009-08-06 00:00:00', '001000', '[PrÃ©ciser]', '2009-09-04 00:00:00', '', NULL, NULL, NULL, 'N', 'N', 'N'),
-(90, 'incoming', NULL, '0', NULL, NULL, 'simple_mail', '', '2009-08-06 00:00:00', '000000', '[PrÃ©ciser]', '2009-09-04 00:00:00', '', NULL, NULL, NULL, 'N', 'N', 'N'),
-(91, 'incoming', NULL, 'pparker', NULL, NULL, 'simple_mail', '', '2009-08-06 00:00:00', '000000', '[PrÃ©ciser]', '2009-09-04 00:00:00', '', NULL, NULL, NULL, 'N', 'N', 'N'),
-(92, 'incoming', NULL, 'pparker', NULL, NULL, 'simple_mail', '', '2009-08-06 00:00:00', '', NULL, '2009-09-04 00:00:00', NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(93, 'outgoing', NULL, NULL, NULL, 'pparker', 'simple_mail', '', '0000-00-00 00:00:00', '', NULL, '2009-09-04 00:00:00', NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(94, 'outgoing', NULL, NULL, 1, NULL, 'simple_mail', '', '0000-00-00 00:00:00', '', NULL, '2009-09-04 00:00:00', NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(95, 'internal', NULL, NULL, NULL, 'ccharles', 'simple_mail', '', '0000-00-00 00:00:00', '000000', '[PrÃ©ciser]', '2009-09-04 00:00:00', '', NULL, NULL, NULL, 'N', 'N', 'N'),
-(96, 'internal', NULL, NULL, 4, NULL, 'simple_mail', '', '0000-00-00 00:00:00', '', NULL, '2009-09-04 00:00:00', NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(97, 'incoming', 9, NULL, NULL, NULL, 'simple_mail', '', '2009-08-06 00:00:00', '000000', '[PrÃ©ciser]', '2009-09-04 00:00:00', '', NULL, NULL, NULL, 'N', 'N', 'N'),
-(98, 'incoming', 8, NULL, NULL, NULL, 'simple_mail', '', '2009-08-10 00:00:00', '000000', '[PrÃ©ciser]', '2009-09-08 00:00:00', '', NULL, NULL, NULL, 'N', 'N', 'N'),
-(99, 'incoming', 5, NULL, NULL, NULL, 'simple_mail', '', '2009-08-10 00:00:00', '', NULL, '2009-09-08 00:00:00', NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(100, 'incoming', 5, NULL, NULL, NULL, 'simple_mail', '', '2009-08-10 00:00:00', '', NULL, '2009-09-08 00:00:00', NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(101, 'incoming', 1, NULL, NULL, NULL, 'simple_mail', '', '2009-08-11 00:00:00', '', NULL, '2009-09-09 00:00:00', NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(102, 'incoming', 1, NULL, NULL, NULL, 'simple_mail', '', '2009-08-13 00:00:00', '000000', '[PrÃ©ciser]', '2009-09-11 00:00:00', '', NULL, NULL, NULL, 'N', 'N', 'N'),
-(103, 'incoming', 5, NULL, NULL, NULL, 'simple_mail', '', '2009-08-13 00:00:00', '000000', '[PrÃ©ciser]', '2009-09-11 00:00:00', '', NULL, NULL, NULL, 'N', 'N', 'N'),
-(104, 'incoming', 5, NULL, NULL, NULL, 'simple_mail', '', '2009-08-14 00:00:00', '000000', NULL, '2009-09-14 00:00:00', NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(105, 'incoming', 5, NULL, NULL, NULL, 'simple_mail', '', '2009-08-18 00:00:00', '000000', '[PrÃ©ciser]', '2009-09-16 00:00:00', '', NULL, NULL, NULL, 'N', 'N', 'N'),
-(106, 'incoming', 5, NULL, NULL, NULL, 'simple_mail', '', '2009-08-18 00:00:00', '000000', NULL, '2009-09-16 00:00:00', NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(107, 'market_document', NULL, NULL, NULL, NULL, '', '', '0000-00-00 00:00:00', '000000', NULL, NULL, NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(108, 'market_document', NULL, NULL, NULL, NULL, '', '', '0000-00-00 00:00:00', '000000', NULL, NULL, NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(109, 'incoming', 8, NULL, NULL, NULL, 'simple_mail', '', '2009-08-21 00:00:00', '000000', NULL, '2009-09-21 00:00:00', NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(110, 'incoming', 3, NULL, NULL, NULL, 'simple_mail', '', '2009-08-28 00:00:00', '000000', NULL, '2009-09-28 00:00:00', NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(111, 'incoming', 8, NULL, NULL, NULL, 'other', '', '2009-08-28 00:00:00', '000000', NULL, '2009-09-11 00:00:00', NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(112, 'incoming', 8, NULL, NULL, NULL, 'simple_mail', '', '2009-08-28 00:00:00', '000000', NULL, '2009-09-28 00:00:00', NULL, NULL, NULL, NULL, 'N', 'N', 'N'),
-(113, 'incoming', 8, NULL, NULL, NULL, 'simple_mail', '', '2009-08-31 00:00:00', '000000', NULL, '2009-09-29 00:00:00', NULL, NULL, NULL, NULL, 'N', 'N', 'N');
-
-
-
-INSERT INTO `mlb_doctype_ext` (`type_id`, `process_delay`, `delay1`, `delay2`) VALUES
-(44, 21, 14, 1),
-(43, 21, 14, 1),
-(45, 21, 14, 1),
-(46, 21, 14, 1),
-(47, 21, 14, 1),
-(48, 21, 14, 1),
-(49, 21, 14, 1),
-(50, 10, 14, 1),
-(51, 21, 14, 1),
-(52, 21, 14, 1),
-(53, 21, 14, 1),
-(54, 21, 14, 1);
-
-
-INSERT INTO `notes` (`id`, `identifier`, `tablename`, `user_id`, `date`, `note_text`, `coll_id`) VALUES
-(1, 79, '', 'pparker', '2009-07-28', 'test note', 'letterbox_coll'),
-(2, 3, '', 'pparker', '2009-07-28', 'test note', 'letterbox_coll'),
-(3, 3, '', 'pparker', '2009-07-28', 'test 2', 'letterbox_coll'),
-(4, 91, '', 'pparker', '2009-08-18', 'test note1jhyuui', 'letterbox_coll'),
-(5, 102, '', 'pparker', '2009-08-18', 'Ã¢kiuzÄÃ©Ã¹', 'letterbox_coll'),
-(6, 89, '', 'pparker', '2009-08-20', 'hello', 'letterbox_coll'),
-(7, 32, '', 'pparker', '2009-08-20', 'test2', 'letterbox_coll'),
-(8, 105, '', 'pparker', '2009-08-21', 'ceci est une note', 'letterbox_coll'),
-(9, 110, '', 'pparker', '2009-08-28', 'dsf sdfdsf sdf sfdsf', 'letterbox_coll');
-
-
-INSERT INTO `parameters` (`id`, `param_value_string`, `param_value_int`) VALUES
-('workbatch_rec', '', 7),
-('folder_id_increment', '', 152),
-('work_batch_autoimport_id', NULL, 1),
-('apa_reservation_batch', NULL, 1),
-('ar_index__', NULL, 3),
-('ar_index_pparker_incoming', NULL, 3),
-('ar_index_pparker_outgoing', NULL, 3),
-('ar_index_pparker_internal', NULL, 3),
-('ar_index_pparker_market_document', NULL, 3);
-
-
-INSERT INTO `res_attachments` (`res_id`, `title`, `subject`, `description`, `publisher`, `contributor`, `type_id`, `format`, `typist`, `creation_date`, `fulltext_result`, `ocr_result`, `author`, `author_name`, `identifier`, `source`, `doc_language`, `relation`, `coverage`, `doc_date`, `docserver_id`, `folders_system_id`, `arbox_id`, `path`, `filename`, `offset_doc`, `logical_adr`, `fingerprint`, `filesize`, `is_paper`, `page_count`, `scan_date`, `scan_user`, `scan_location`, `scan_wkstation`, `scan_batch`, `burn_batch`, `scan_postmark`, `envelop_id`, `status`, `destination`, `approver`, `validation_date`, `work_batch`, `origin`, `is_ingoing`, `priority`, `initiator`, `dest_user`, `coll_id`, `res_id_master`) VALUES
-(1, 'test ', NULL, NULL, NULL, NULL, 0, 'txt', 'pparker', '2009-07-28 17:31:24', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'letterbox', NULL, NULL, '1#', '94.txt', ' ', ' ', 'e997752d4cb825b26152c804085107c9', 830, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'letterbox_coll', 31),
-(2, 'test', NULL, NULL, NULL, NULL, 0, 'txt', 'pparker', '2009-08-03 10:14:23', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'letterbox', NULL, NULL, '1#', '96.txt', ' ', ' ', '8f0e2cd40e05189ec81232da84bd6e1a', 35148, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'letterbox_coll', 7),
-(3, 'test', NULL, NULL, NULL, NULL, 0, 'PDF', 'pparker', '2009-08-20 12:14:56', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'letterbox', NULL, NULL, '1#', '150.PDF', ' ', ' ', '4eeb91472fec776be9eb6284561738f2', 354039, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'letterbox_coll', 89),
-(4, 'test2', NULL, NULL, NULL, NULL, 0, 'PDF', 'pparker', '2009-08-20 12:15:57', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'letterbox', NULL, NULL, '1#', '151.PDF', ' ', ' ', '6e6bdb3b8e2f3080ca3376db357a4581', 88384, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'letterbox_coll', 32),
-(5, 'test3', NULL, NULL, NULL, NULL, 0, 'PDF', 'pparker', '2009-08-20 12:16:32', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'letterbox', NULL, NULL, '1#', '152.PDF', ' ', ' ', 'ede161763ba3fcab980f6d080d433ca6', 77584, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'letterbox_coll', 33),
-(6, 'test4', NULL, NULL, NULL, NULL, 0, 'PDF', 'pparker', '2009-08-20 12:17:22', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'letterbox', NULL, NULL, '1#', '153.PDF', ' ', ' ', 'ede161763ba3fcab980f6d080d433ca6', 77584, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'letterbox_coll', 34),
-(7, '_test2_20082009', NULL, NULL, NULL, NULL, 0, 'maarch', 'pparker', '2009-08-20 16:07:13', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'letterbox', NULL, NULL, '1#', '154.maarch', ' ', ' ', '9fbed89d721a65f4d5e6dd311df86eaf', 163, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'letterbox_coll', 105);
-
-
-
-INSERT INTO `res_letterbox` (`res_id`, `title`, `subject`, `description`, `publisher`, `contributor`, `type_id`, `format`, `typist`, `creation_date`, `fulltext_result`, `ocr_result`, `converter_result`, `author`, `author_name`, `identifier`, `source`, `doc_language`, `relation`, `coverage`, `doc_date`, `docserver_id`, `folders_system_id`, `arbox_id`, `path`, `filename`, `offset_doc`, `logical_adr`, `fingerprint`, `filesize`, `is_paper`, `page_count`, `scan_date`, `scan_user`, `scan_location`, `scan_wkstation`, `scan_batch`, `burn_batch`, `scan_postmark`, `envelop_id`, `status`, `destination`, `approver`, `validation_date`, `work_batch`, `origin`, `is_ingoing`, `priority`, `arbatch_id`, `custom_t1`, `custom_n1`, `custom_f1`, `custom_d1`, `custom_t2`, `custom_n2`, `custom_f2`, `custom_d2`, `custom_t3`, `custom_n3`, `custom_f3`, `custom_d3`, `custom_t4`, `custom_n4`, `custom_f4`, `custom_d4`, `custom_t5`, `custom_n5`, `custom_f5`, `custom_d5`, `custom_t6`, `custom_d6`, `custom_t7`, `custom_d7`, `custom_t8`, `custom_d8`, `custom_t9`, `custom_d9`, `custom_t10`, `custom_d10`, `custom_t11`, `custom_t12`, `custom_t13`, `custom_t14`, `custom_t15`, `tablename`, `initiator`, `dest_user`, `video_batch`, `video_time`, `video_user`) VALUES
-(1, NULL, 'aaaaaaaaaaaaaaa', NULL, NULL, NULL, 51, 'txt', 'pparker', '2009-07-20 17:12:02', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-07-20 00:00:00', 'letterbox', NULL, NULL, '1#', '9.txt', ' ', ' ', 'bcdaabfc634c499a9ccf657a66df15a1', 1668, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'VAL', 'LAFARGE', NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'bsaporta', NULL, NULL, NULL),
-(2, NULL, 'ccccccccccccccccc', NULL, NULL, NULL, 44, 'txt', 'pparker', '2009-07-20 17:14:59', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-07-20 00:00:00', 'letterbox', NULL, NULL, '1#', '10.txt', ' ', ' ', '8f0e2cd40e05189ec81232da84bd6e1a', 35148, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'VAL', 'ECONOMBOX', NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'pparker', NULL, NULL, NULL),
-(3, NULL, 'ddddddddddddd\r\nkjyti\r\nkykguç thyrtio ghtyuiopp frtyuio drftgyuiojp^sdfghjkl dertyuio dsfgtyuio sdfghjkl dertyuiop^sdfghjk\r\n', NULL, NULL, NULL, 45, 'txt', 'pparker', '2009-07-20 17:15:59', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-07-20 00:00:00', 'letterbox', 11, NULL, '1#', '11.txt', ' ', ' ', 'bcdaabfc634c499a9ccf657a66df15a1', 1668, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'VAL', 'ECONOMBOX', NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'pparker', NULL, NULL, NULL),
-(4, NULL, 'eeeeeeeeeee', NULL, NULL, NULL, 49, 'txt', 'pparker', '2009-07-20 17:19:12', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-07-20 00:00:00', 'letterbox', NULL, NULL, '1#', '12.txt', ' ', ' ', 'bcdaabfc634c499a9ccf657a66df15a1', 1668, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'VAL', 'ARCHIVECO', NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'bsaporta', NULL, NULL, NULL),
-(5, NULL, 'ffffffffffffffffff', NULL, NULL, NULL, 51, 'txt', 'pparker', '2009-07-20 17:20:57', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-07-20 00:00:00', 'letterbox', NULL, NULL, '1#', '13.txt', ' ', ' ', 'bcdaabfc634c499a9ccf657a66df15a1', 1668, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'VAL', 'ARCHIVECO', NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'bsaporta', NULL, NULL, NULL),
-(6, NULL, 'gggggggggggg', NULL, NULL, NULL, 46, 'txt', 'pparker', '2009-07-20 17:23:01', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-07-20 00:00:00', 'letterbox', NULL, NULL, '1#', '14.txt', ' ', ' ', '8f0e2cd40e05189ec81232da84bd6e1a', 35148, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'VAL', 'LAFARGE', NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'bsaporta', NULL, NULL, NULL),
-(7, NULL, 'hhhhhhhhhhhhhhhhhhhhhhhhhhh', NULL, NULL, NULL, 49, 'txt', 'pparker', '2009-07-20 17:25:26', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-07-20 00:00:00', 'letterbox', 13, NULL, '1#', '15.txt', ' ', ' ', 'bcdaabfc634c499a9ccf657a66df15a1', 1668, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'VAL', 'APIX', NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'pparker', NULL, NULL, NULL),
-(8, NULL, 'iiiiiiiiiiiiiiiiiiiiiii', NULL, NULL, NULL, 50, 'txt', 'pparker', '2009-07-20 17:28:26', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-07-20 00:00:00', 'letterbox', NULL, NULL, '1#', '16.txt', ' ', ' ', 'bcdaabfc634c499a9ccf657a66df15a1', 1668, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'VAL', 'ARCHIVECO', NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'bsaporta', NULL, NULL, NULL),
-(9, NULL, 'rrrrrrrrrrrrrrrr', NULL, NULL, NULL, 47, 'txt', 'pparker', '2009-07-20 17:30:19', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-07-20 00:00:00', 'letterbox', 11, NULL, '1#', '17.txt', ' ', ' ', '8f0e2cd40e05189ec81232da84bd6e1a', 35148, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'VAL', 'APIX', NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'pparker', NULL, NULL, NULL),
-(10, NULL, 'kkkkkkkkkkkk', NULL, NULL, NULL, 43, 'txt', 'pparker', '2009-07-20 17:33:23', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-07-20 00:00:00', 'letterbox', NULL, NULL, '1#', '18.txt', ' ', ' ', 'e997752d4cb825b26152c804085107c9', 830, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'VAL', 'ARCHIVECO', NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'bsaporta', NULL, NULL, NULL),
-(11, NULL, 'lllllllllllll', NULL, NULL, NULL, 47, 'txt', 'pparker', '2009-07-20 17:35:35', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-07-20 00:00:00', 'letterbox', NULL, NULL, '1#', '19.txt', ' ', ' ', '8f0e2cd40e05189ec81232da84bd6e1a', 35148, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'VAL', 'LAFARGE', NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'bsaporta', NULL, NULL, NULL),
-(12, NULL, 'mmmmmmmmmmm', NULL, NULL, NULL, 50, 'txt', 'pparker', '2009-07-20 17:40:07', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-07-20 00:00:00', 'letterbox', NULL, NULL, '1#', '20.txt', ' ', ' ', 'bcdaabfc634c499a9ccf657a66df15a1', 1668, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'VAL', 'ARCHIVECO', NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'bsaporta', NULL, NULL, NULL),
-(13, NULL, 'nnnnnnnnnnnnnn', NULL, NULL, NULL, 50, 'txt', 'pparker', '2009-07-20 17:41:14', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-07-20 00:00:00', 'letterbox', NULL, NULL, '1#', '21.txt', ' ', ' ', '8f0e2cd40e05189ec81232da84bd6e1a', 35148, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'VAL', 'ARCHIVECO', NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'bsaporta', NULL, NULL, NULL),
-(14, NULL, 'oooooooooooooooooooooo', NULL, NULL, NULL, 43, 'txt', 'pparker', '2009-07-20 17:43:42', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-07-20 00:00:00', 'letterbox', NULL, NULL, '1#', '22.txt', ' ', ' ', '8f0e2cd40e05189ec81232da84bd6e1a', 35148, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'VAL', 'ARCHIVECO', NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'bsaporta', NULL, NULL, NULL),
-(15, NULL, 'dddd', NULL, NULL, NULL, 46, 'txt', 'pparker', '2009-07-20 17:46:24', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-07-20 00:00:00', 'letterbox', NULL, NULL, '1#', '23.txt', ' ', ' ', '8f0e2cd40e05189ec81232da84bd6e1a', 35148, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'VAL', 'APIX', NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'bsaporta', NULL, NULL, NULL),
-(16, NULL, 'yyyyyyyyyyyyyyyyyyy', NULL, NULL, NULL, 46, 'txt', 'pparker', '2009-07-20 17:54:09', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-07-20 00:00:00', 'letterbox', NULL, NULL, '1#', '24.txt', ' ', ' ', 'bcdaabfc634c499a9ccf657a66df15a1', 1668, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'VAL', 'APIX', NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'bsaporta', NULL, NULL, NULL),
-(17, NULL, 'rfrrrr', NULL, NULL, NULL, 50, 'txt', 'pparker', '2009-07-20 17:55:08', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-07-20 00:00:00', 'letterbox', NULL, NULL, '1#', '25.txt', ' ', ' ', 'bcdaabfc634c499a9ccf657a66df15a1', 1668, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'VAL', 'LAFARGE', NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'bsaporta', NULL, NULL, NULL),
-(18, NULL, 'cccc', NULL, NULL, NULL, 46, 'txt', 'pparker', '2009-07-20 17:56:25', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-07-20 00:00:00', 'letterbox', NULL, NULL, '1#', '26.txt', ' ', ' ', 'bcdaabfc634c499a9ccf657a66df15a1', 1668, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'VAL', 'APIX', NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'bsaporta', NULL, NULL, NULL),
-(19, NULL, 'wwwwwwwww', NULL, NULL, NULL, 45, 'txt', 'pparker', '2009-07-20 17:58:23', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-07-20 00:00:00', 'letterbox', NULL, NULL, '1#', '27.txt', ' ', ' ', 'bcdaabfc634c499a9ccf657a66df15a1', 1668, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'VAL', 'ARCHIVECO', NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'bsaporta', NULL, NULL, NULL),
-(20, NULL, 'ddddd', NULL, NULL, NULL, 46, 'txt', 'pparker', '2009-07-21 10:13:19', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-07-21 00:00:00', 'letterbox', NULL, NULL, '1#', '28.txt', ' ', ' ', '8f0e2cd40e05189ec81232da84bd6e1a', 35148, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', 'ARCHIVECO', NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'bsaporta', NULL, NULL, NULL),
-(21, NULL, 'eeeeeeeeeeeee', NULL, NULL, NULL, 50, 'txt', 'pparker', '2009-07-21 10:24:43', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-07-21 00:00:00', 'letterbox', NULL, NULL, '1#', '29.txt', ' ', ' ', 'bcdaabfc634c499a9ccf657a66df15a1', 1668, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', 'APIX', NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'bsaporta', NULL, NULL, NULL),
-(22, NULL, 'sss', NULL, NULL, NULL, 47, 'txt', 'pparker', '2009-07-21 10:30:01', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-07-21 00:00:00', 'letterbox', NULL, NULL, '1#', '30.txt', ' ', ' ', 'e997752d4cb825b26152c804085107c9', 830, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', 'APIX', NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'bsaporta', NULL, NULL, NULL),
-(23, NULL, 'ffff', NULL, NULL, NULL, 45, 'txt', 'pparker', '2009-07-21 10:31:51', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-07-21 00:00:00', 'letterbox', NULL, NULL, '1#', '31.txt', ' ', ' ', '8f0e2cd40e05189ec81232da84bd6e1a', 35148, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', 'APIX', NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'bsaporta', NULL, NULL, NULL),
-(24, NULL, 'eee', NULL, NULL, NULL, 46, 'txt', 'pparker', '2009-07-21 10:34:33', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-07-21 00:00:00', 'letterbox', NULL, NULL, '1#', '32.txt', ' ', ' ', '8f0e2cd40e05189ec81232da84bd6e1a', 35148, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', 'APIX', NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'bsaporta', NULL, NULL, NULL),
-(25, NULL, 'rrr', NULL, NULL, NULL, 45, 'txt', 'pparker', '2009-07-21 10:36:31', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-07-21 00:00:00', 'letterbox', NULL, NULL, '1#', '33.txt', ' ', ' ', 'bcdaabfc634c499a9ccf657a66df15a1', 1668, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', 'LAFARGE', NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'bsaporta', NULL, NULL, NULL),
-(26, NULL, 'dfdd', NULL, NULL, NULL, 46, 'txt', 'pparker', '2009-07-21 10:40:20', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-07-21 00:00:00', 'letterbox', NULL, NULL, '1#', '34.txt', ' ', ' ', 'bcdaabfc634c499a9ccf657a66df15a1', 1668, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', 'APIX', NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'bsaporta', NULL, NULL, NULL),
-(27, NULL, 'dddd', NULL, NULL, NULL, 50, 'txt', 'pparker', '2009-07-21 10:41:12', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-07-21 00:00:00', 'letterbox', NULL, NULL, '1#', '35.txt', ' ', ' ', 'bcdaabfc634c499a9ccf657a66df15a1', 1668, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', 'ARCHIVECO', NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'bsaporta', NULL, NULL, NULL),
-(28, NULL, 'ddd', NULL, NULL, NULL, 43, 'txt', 'pparker', '2009-07-21 10:53:20', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-07-21 00:00:00', 'letterbox', NULL, NULL, '1#', '36.txt', ' ', ' ', 'bcdaabfc634c499a9ccf657a66df15a1', 1668, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', 'APIX', NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'bsaporta', NULL, NULL, NULL),
-(29, NULL, 'eee', NULL, NULL, NULL, 46, 'txt', 'pparker', '2009-07-21 10:59:01', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-07-21 00:00:00', 'letterbox', NULL, NULL, '1#', '38.txt', ' ', ' ', 'bcdaabfc634c499a9ccf657a66df15a1', 1668, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', 'ARCHIVECO', NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'bsaporta', NULL, NULL, NULL),
-(30, NULL, 'ddd', NULL, NULL, NULL, 44, 'txt', 'pparker', '2009-07-21 11:01:02', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-07-21 00:00:00', 'letterbox', NULL, NULL, '1#', '39.txt', ' ', ' ', 'e997752d4cb825b26152c804085107c9', 830, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', 'APIX', NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'bsaporta', NULL, NULL, NULL),
-(31, NULL, 'ddd', NULL, NULL, NULL, 44, 'txt', 'pparker', '2009-07-21 11:01:49', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-07-21 00:00:00', 'letterbox', 11, NULL, '1#', '40.txt', ' ', ' ', 'bcdaabfc634c499a9ccf657a66df15a1', 1668, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', 'ECONOMBOX', NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'bsaporta', NULL, NULL, NULL),
-(32, NULL, 'ss', NULL, NULL, NULL, 44, 'txt', 'pparker', '2009-07-21 11:02:50', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-07-21 00:00:00', 'letterbox', 12, NULL, '1#', '41.txt', ' ', ' ', 'bcdaabfc634c499a9ccf657a66df15a1', 1668, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'COU', 'APIX', NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'pparker', NULL, NULL, NULL),
-(33, NULL, 'ss', NULL, NULL, NULL, 44, 'txt', 'pparker', '2009-07-21 11:03:38', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-07-21 00:00:00', 'letterbox', 13, NULL, '1#', '42.txt', ' ', ' ', 'bcdaabfc634c499a9ccf657a66df15a1', 1668, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'DIS', 'APIX', NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'pparker', NULL, NULL, NULL),
-(34, NULL, 'ss', NULL, NULL, NULL, 44, 'txt', 'pparker', '2009-07-21 11:04:43', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-07-21 00:00:00', 'letterbox', 7, NULL, '1#', '43.txt', ' ', ' ', 'e997752d4cb825b26152c804085107c9', 830, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', 'APIX', NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'pparker', NULL, NULL, NULL),
-(35, NULL, 'ss', NULL, NULL, NULL, 44, 'txt', 'pparker', '2009-07-21 11:05:24', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-07-21 00:00:00', 'letterbox', 11, NULL, '1#', '44.txt', ' ', ' ', '8f0e2cd40e05189ec81232da84bd6e1a', 35148, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'COU', 'APIX', NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'pparker', NULL, NULL, NULL),
-(36, NULL, 'ss', NULL, NULL, NULL, 44, 'txt', 'pparker', '2009-07-21 11:06:03', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-07-21 00:00:00', 'letterbox', NULL, NULL, '1#', '45.txt', ' ', ' ', 'e997752d4cb825b26152c804085107c9', 830, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', 'ECONOMBOX', NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'bsaporta', NULL, NULL, NULL),
-(37, NULL, 'ss', NULL, NULL, NULL, 44, 'txt', 'pparker', '2009-07-21 11:07:23', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-07-21 00:00:00', 'letterbox', NULL, NULL, '1#', '46.txt', ' ', ' ', '8f0e2cd40e05189ec81232da84bd6e1a', 35148, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'END', 'ECONOMBOX', NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'pparker', NULL, NULL, NULL),
-(38, NULL, 'ss', NULL, NULL, NULL, 44, 'txt', 'pparker', '2009-07-21 11:08:21', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-07-21 00:00:00', 'letterbox', NULL, NULL, '1#', '47.txt', ' ', ' ', '8f0e2cd40e05189ec81232da84bd6e1a', 35148, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'END', 'ECONOMBOX', NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'pparker', NULL, NULL, NULL),
-(39, NULL, 'ddd', NULL, NULL, NULL, 47, 'txt', 'pparker', '2009-07-21 11:09:17', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-07-21 00:00:00', 'letterbox', NULL, NULL, '1#', '48.txt', ' ', ' ', 'bcdaabfc634c499a9ccf657a66df15a1', 1668, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', 'APIX', NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'bsaporta', NULL, NULL, NULL),
-(40, NULL, 'ddd', NULL, NULL, NULL, 47, 'txt', 'pparker', '2009-07-21 11:09:47', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-07-21 00:00:00', 'letterbox', NULL, NULL, '1#', '49.txt', ' ', ' ', 'bcdaabfc634c499a9ccf657a66df15a1', 1668, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', 'APIX', NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'bsaporta', NULL, NULL, NULL),
-(41, NULL, 'ddd', NULL, NULL, NULL, 47, 'txt', 'pparker', '2009-07-21 11:11:01', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-07-21 00:00:00', 'letterbox', NULL, NULL, '1#', '50.txt', ' ', ' ', '8f0e2cd40e05189ec81232da84bd6e1a', 35148, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', 'APIX', NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'bsaporta', NULL, NULL, NULL),
-(42, NULL, 'ddd', NULL, NULL, NULL, 47, 'txt', 'pparker', '2009-07-21 11:17:50', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-07-21 00:00:00', 'letterbox', NULL, NULL, '1#', '51.txt', ' ', ' ', 'bcdaabfc634c499a9ccf657a66df15a1', 1668, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', 'APIX', NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'bsaporta', NULL, NULL, NULL),
-(43, NULL, 'ddd', NULL, NULL, NULL, 47, 'txt', 'pparker', '2009-07-21 11:20:02', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-07-21 00:00:00', 'letterbox', NULL, NULL, '1#', '52.txt', ' ', ' ', 'e997752d4cb825b26152c804085107c9', 830, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', 'APIX', NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'bsaporta', NULL, NULL, NULL),
-(44, NULL, 'ddd', NULL, NULL, NULL, 43, 'txt', 'pparker', '2009-07-21 11:20:22', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-07-21 00:00:00', 'letterbox', NULL, NULL, '1#', '53.txt', ' ', ' ', 'bcdaabfc634c499a9ccf657a66df15a1', 1668, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', 'APIX', NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'bsaporta', NULL, NULL, NULL),
-(45, NULL, 'ddd', NULL, NULL, NULL, 45, 'txt', 'pparker', '2009-07-21 11:21:24', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-07-21 00:00:00', 'letterbox', NULL, NULL, '1#', '54.txt', ' ', ' ', '8f0e2cd40e05189ec81232da84bd6e1a', 35148, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', 'ARCHIVECO', NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'bsaporta', NULL, NULL, NULL),
-(46, NULL, 'ddd', NULL, NULL, NULL, 45, 'txt', 'pparker', '2009-07-21 11:22:04', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-07-21 00:00:00', 'letterbox', NULL, NULL, '1#', '55.txt', ' ', ' ', 'bcdaabfc634c499a9ccf657a66df15a1', 1668, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', 'ARCHIVECO', NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'bsaporta', NULL, NULL, NULL),
-(47, NULL, 'eeee', NULL, NULL, NULL, 47, 'txt', 'pparker', '2009-07-21 11:23:19', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-07-21 00:00:00', 'letterbox', NULL, NULL, '1#', '56.txt', ' ', ' ', '8f0e2cd40e05189ec81232da84bd6e1a', 35148, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', 'ARCHIVECO', NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'bsaporta', NULL, NULL, NULL),
-(48, NULL, ';lkkk', NULL, NULL, NULL, 47, 'txt', 'pparker', '2009-07-21 11:24:18', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-07-21 00:00:00', 'letterbox', NULL, NULL, '1#', '57.txt', ' ', ' ', 'bcdaabfc634c499a9ccf657a66df15a1', 1668, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', 'APIX', NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'bsaporta', NULL, NULL, NULL),
-(49, NULL, ';lkkk', NULL, NULL, NULL, 47, 'txt', 'pparker', '2009-07-21 11:24:43', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-07-21 00:00:00', 'letterbox', NULL, NULL, '1#', '58.txt', ' ', ' ', 'e997752d4cb825b26152c804085107c9', 830, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', 'APIX', NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'bsaporta', NULL, NULL, NULL),
-(50, NULL, 'kjhup', NULL, NULL, NULL, 47, 'txt', 'pparker', '2009-07-21 11:26:20', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-07-21 00:00:00', 'letterbox', NULL, NULL, '1#', '59.txt', ' ', ' ', 'bcdaabfc634c499a9ccf657a66df15a1', 1668, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', 'APIX', NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'bsaporta', NULL, NULL, NULL),
-(51, NULL, 'fff', NULL, NULL, NULL, 43, 'txt', 'pparker', '2009-07-21 11:27:18', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-07-21 00:00:00', 'letterbox', NULL, NULL, '1#', '60.txt', ' ', ' ', 'e997752d4cb825b26152c804085107c9', 830, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', 'APIX', NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'bsaporta', NULL, NULL, NULL),
-(52, NULL, 'fgfgfggf', NULL, NULL, NULL, 44, 'txt', 'pparker', '2009-07-21 11:27:52', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-07-21 00:00:00', 'letterbox', NULL, NULL, '1#', '61.txt', ' ', ' ', '8f0e2cd40e05189ec81232da84bd6e1a', 35148, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', 'ARCHIVECO', NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'bsaporta', NULL, NULL, NULL),
-(53, NULL, 'fgfgfggf', NULL, NULL, NULL, 44, 'txt', 'pparker', '2009-07-21 11:29:34', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-07-21 00:00:00', 'letterbox', NULL, NULL, '1#', '62.txt', ' ', ' ', 'e997752d4cb825b26152c804085107c9', 830, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', 'ARCHIVECO', NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'bsaporta', NULL, NULL, NULL),
-(54, NULL, 'fgfgfggf', NULL, NULL, NULL, 44, 'txt', 'pparker', '2009-07-21 11:30:39', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-07-21 00:00:00', 'letterbox', NULL, NULL, '1#', '63.txt', ' ', ' ', 'bcdaabfc634c499a9ccf657a66df15a1', 1668, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', 'ARCHIVECO', NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'bsaporta', NULL, NULL, NULL),
-(55, NULL, 'fgfgfggf', NULL, NULL, NULL, 44, 'txt', 'pparker', '2009-07-21 11:31:29', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-07-21 00:00:00', 'letterbox', NULL, NULL, '1#', '64.txt', ' ', ' ', 'bcdaabfc634c499a9ccf657a66df15a1', 1668, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', 'ARCHIVECO', NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'bsaporta', NULL, NULL, NULL),
-(56, NULL, 'fgfgfggf', NULL, NULL, NULL, 44, 'txt', 'pparker', '2009-07-21 11:31:59', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-07-21 00:00:00', 'letterbox', NULL, NULL, '1#', '65.txt', ' ', ' ', '8f0e2cd40e05189ec81232da84bd6e1a', 35148, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', 'ARCHIVECO', NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'bsaporta', NULL, NULL, NULL),
-(57, NULL, 'fgfgfggf', NULL, NULL, NULL, 44, 'txt', 'pparker', '2009-07-21 11:33:40', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-07-21 00:00:00', 'letterbox', NULL, NULL, '1#', '66.txt', ' ', ' ', 'bcdaabfc634c499a9ccf657a66df15a1', 1668, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', 'ARCHIVECO', NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'bsaporta', NULL, NULL, NULL),
-(58, NULL, 'fgfgfggf', NULL, NULL, NULL, 44, 'txt', 'pparker', '2009-07-21 11:40:51', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-07-21 00:00:00', 'letterbox', NULL, NULL, '1#', '67.txt', ' ', ' ', 'bcdaabfc634c499a9ccf657a66df15a1', 1668, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', 'ARCHIVECO', NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'bsaporta', NULL, NULL, NULL),
-(59, NULL, 'ddd', NULL, NULL, NULL, 45, 'txt', 'pparker', '2009-07-21 11:41:55', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-07-21 00:00:00', 'letterbox', NULL, NULL, '1#', '68.txt', ' ', ' ', '8f0e2cd40e05189ec81232da84bd6e1a', 35148, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', 'APIX', NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'bsaporta', NULL, NULL, NULL),
-(60, NULL, 'eee', NULL, NULL, NULL, 46, 'txt', 'pparker', '2009-07-21 11:48:39', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-07-21 00:00:00', 'letterbox', NULL, NULL, '1#', '69.txt', ' ', ' ', 'bcdaabfc634c499a9ccf657a66df15a1', 1668, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', 'APIX', NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'bsaporta', NULL, NULL, NULL),
-(61, NULL, 'sxsss', NULL, NULL, NULL, 44, 'txt', 'pparker', '2009-07-21 12:20:08', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-07-21 00:00:00', 'letterbox', NULL, NULL, '1#', '70.txt', ' ', ' ', 'bcdaabfc634c499a9ccf657a66df15a1', 1668, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', 'APIX', NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'bsaporta', NULL, NULL, NULL),
-(62, NULL, 'ddddd', NULL, NULL, NULL, 43, 'txt', 'pparker', '2009-07-21 16:03:16', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-07-21 00:00:00', 'letterbox', NULL, NULL, '1#', '71.txt', ' ', ' ', '8f0e2cd40e05189ec81232da84bd6e1a', 35148, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', 'LAFARGE', NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'bsaporta', NULL, NULL, NULL),
-(63, NULL, 'ddd', NULL, NULL, NULL, 45, 'txt', 'pparker', '2009-07-21 16:20:42', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-07-21 00:00:00', 'letterbox', NULL, NULL, '1#', '72.txt', ' ', ' ', 'bcdaabfc634c499a9ccf657a66df15a1', 1668, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', 'DAKARCHIV', NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, NULL, NULL, NULL, NULL),
-(64, NULL, 'ddd', NULL, NULL, NULL, 51, 'txt', 'pparker', '2009-07-21 16:22:14', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-07-21 00:00:00', 'letterbox', NULL, NULL, '1#', '73.txt', ' ', ' ', 'bcdaabfc634c499a9ccf657a66df15a1', 1668, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', 'DAKARCHIV', NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, NULL, NULL, NULL, NULL),
-(65, NULL, 'dddd', NULL, NULL, NULL, 50, 'txt', 'pparker', '2009-07-21 16:29:20', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-07-21 00:00:00', 'letterbox', NULL, NULL, '1#', '74.txt', ' ', ' ', 'e997752d4cb825b26152c804085107c9', 830, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', 'APIX', NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'bsaporta', NULL, NULL, NULL),
-(66, NULL, 'ssss', NULL, NULL, NULL, 52, 'txt', 'pparker', '2009-07-21 16:31:40', '-2', NULL, NULL, 'toto', NULL, NULL, NULL, NULL, NULL, NULL, '2009-07-21 00:00:00', 'letterbox', NULL, NULL, '1#', '75.txt', ' ', ' ', 'bcdaabfc634c499a9ccf657a66df15a1', 1668, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, NULL, NULL, NULL, NULL),
-(67, NULL, 'dddd', NULL, NULL, NULL, 43, 'txt', 'pparker', '2009-07-21 16:33:53', '-2', NULL, NULL, 'dddd', NULL, NULL, NULL, NULL, NULL, NULL, '2009-07-21 00:00:00', 'letterbox', NULL, NULL, '1#', '76.txt', ' ', ' ', 'e997752d4cb825b26152c804085107c9', 830, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, NULL, NULL, NULL, NULL),
-(68, NULL, 'ddd', NULL, NULL, NULL, 43, 'txt', 'pparker', '2009-07-21 16:38:13', '-2', NULL, NULL, 'ddd', NULL, NULL, NULL, NULL, NULL, NULL, '2009-07-21 00:00:00', 'letterbox', NULL, NULL, '1#', '77.txt', ' ', ' ', 'bcdaabfc634c499a9ccf657a66df15a1', 1668, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, NULL, NULL, NULL, NULL),
-(69, NULL, 'ddd', NULL, NULL, NULL, 43, 'txt', 'pparker', '2009-07-21 17:01:59', '-2', NULL, NULL, 'ddd', NULL, NULL, NULL, NULL, NULL, NULL, '2009-07-21 00:00:00', 'letterbox', NULL, NULL, '1#', '78.txt', ' ', ' ', 'bcdaabfc634c499a9ccf657a66df15a1', 1668, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, NULL, NULL, NULL, NULL),
-(70, NULL, 'ttttttt', NULL, NULL, NULL, 45, 'txt', 'pparker', '2009-07-21 17:02:53', '-2', NULL, NULL, 'sddd', NULL, NULL, NULL, NULL, NULL, NULL, '2009-07-21 00:00:00', 'letterbox', NULL, NULL, '1#', '79.txt', ' ', ' ', 'bcdaabfc634c499a9ccf657a66df15a1', 1668, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, NULL, NULL, NULL, NULL),
-(71, NULL, 'fff', NULL, NULL, NULL, 51, 'txt', 'pparker', '2009-07-21 17:04:35', '-2', NULL, NULL, 'dff', NULL, NULL, NULL, NULL, NULL, NULL, '2009-07-21 00:00:00', 'letterbox', NULL, NULL, '1#', '80.txt', ' ', ' ', '8f0e2cd40e05189ec81232da84bd6e1a', 35148, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, NULL, NULL, NULL, NULL),
-(72, NULL, 'eee', NULL, NULL, NULL, 54, 'maarch', 'pparker', '2009-07-27 10:39:55', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-07-27 00:00:00', 'letterbox', NULL, NULL, '1#', '82.maarch', ' ', ' ', '3099e6cfc58eb0f75b7efc117495b245', 39, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', 'ARCHIVECO', NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'bsaporta', NULL, NULL, NULL),
-(73, NULL, 'zzzz', NULL, NULL, NULL, 54, 'maarch', 'pparker', '2009-07-27 10:42:00', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-07-27 00:00:00', 'letterbox', NULL, NULL, '1#', '84.maarch', ' ', ' ', '3099e6cfc58eb0f75b7efc117495b245', 39, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', 'APIX', NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'bsaporta', NULL, NULL, NULL),
-(74, NULL, 'azzzz', NULL, NULL, NULL, 44, 'txt', 'pparker', '2009-07-27 11:44:35', '-2', NULL, NULL, 'cccc', NULL, NULL, NULL, NULL, NULL, NULL, '2009-07-27 00:00:00', 'letterbox', NULL, NULL, '1#', '85.txt', ' ', ' ', '8f0e2cd40e05189ec81232da84bd6e1a', 35148, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, NULL, NULL, NULL, NULL),
-(75, NULL, 'sss', NULL, NULL, NULL, 44, 'txt', 'pparker', '2009-07-27 15:03:28', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-07-27 00:00:00', 'letterbox', NULL, NULL, '1#', '88.txt', ' ', ' ', '8f0e2cd40e05189ec81232da84bd6e1a', 35148, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', 'APIX', NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'bsaporta', NULL, NULL, NULL),
-(76, NULL, 'ddd', NULL, NULL, NULL, 47, 'txt', 'pparker', '2009-07-27 15:11:43', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-07-27 00:00:00', 'letterbox', NULL, NULL, '1#', '89.txt', ' ', ' ', '8f0e2cd40e05189ec81232da84bd6e1a', 35148, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', 'APIX', NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'bsaporta', NULL, NULL, NULL);
-INSERT INTO `res_letterbox` (`res_id`, `title`, `subject`, `description`, `publisher`, `contributor`, `type_id`, `format`, `typist`, `creation_date`, `fulltext_result`, `ocr_result`, `converter_result`, `author`, `author_name`, `identifier`, `source`, `doc_language`, `relation`, `coverage`, `doc_date`, `docserver_id`, `folders_system_id`, `arbox_id`, `path`, `filename`, `offset_doc`, `logical_adr`, `fingerprint`, `filesize`, `is_paper`, `page_count`, `scan_date`, `scan_user`, `scan_location`, `scan_wkstation`, `scan_batch`, `burn_batch`, `scan_postmark`, `envelop_id`, `status`, `destination`, `approver`, `validation_date`, `work_batch`, `origin`, `is_ingoing`, `priority`, `arbatch_id`, `custom_t1`, `custom_n1`, `custom_f1`, `custom_d1`, `custom_t2`, `custom_n2`, `custom_f2`, `custom_d2`, `custom_t3`, `custom_n3`, `custom_f3`, `custom_d3`, `custom_t4`, `custom_n4`, `custom_f4`, `custom_d4`, `custom_t5`, `custom_n5`, `custom_f5`, `custom_d5`, `custom_t6`, `custom_d6`, `custom_t7`, `custom_d7`, `custom_t8`, `custom_d8`, `custom_t9`, `custom_d9`, `custom_t10`, `custom_d10`, `custom_t11`, `custom_t12`, `custom_t13`, `custom_t14`, `custom_t15`, `tablename`, `initiator`, `dest_user`, `video_batch`, `video_time`, `video_user`) VALUES
-(77, NULL, 'ccc', NULL, NULL, NULL, 43, 'txt', 'pparker', '2009-07-27 15:13:04', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-07-27 00:00:00', 'letterbox', NULL, NULL, '1#', '90.txt', ' ', ' ', '8f0e2cd40e05189ec81232da84bd6e1a', 35148, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', 'APIX', NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'bsaporta', NULL, NULL, NULL),
-(78, NULL, 'dddd', NULL, NULL, NULL, 47, 'txt', 'pparker', '2009-07-27 15:14:04', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-07-27 00:00:00', 'letterbox', NULL, NULL, '1#', '91.txt', ' ', ' ', '8f0e2cd40e05189ec81232da84bd6e1a', 35148, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', 'APIX', NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'bsaporta', NULL, NULL, NULL),
-(79, NULL, 'ddd', NULL, NULL, NULL, 43, 'txt', 'pparker', '2009-07-27 15:19:32', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-07-27 00:00:00', 'letterbox', 14, NULL, '1#', '93.txt', ' ', ' ', '8f0e2cd40e05189ec81232da84bd6e1a', 35148, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', 'APIX', NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'pparker', NULL, NULL, NULL),
-(80, NULL, 'ddd', NULL, NULL, NULL, 43, 'txt', 'pparker', '2009-08-03 10:10:52', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-08-03 00:00:00', 'letterbox', NULL, '3', '1#', '95.txt', ' ', ' ', 'e997752d4cb825b26152c804085107c9', 830, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', 'APIX', NULL, NULL, NULL, NULL, NULL, 2, '61', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'bsaporta', NULL, NULL, NULL),
-(81, NULL, 'test contact arrivÃ©e', NULL, NULL, NULL, 44, 'txt', 'pparker', '2009-08-06 11:02:46', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-08-06 00:00:00', 'letterbox', NULL, '3', '1#', '97.txt', ' ', ' ', 'bcdaabfc634c499a9ccf657a66df15a1', 1668, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', 'APIX', NULL, NULL, NULL, NULL, NULL, 2, '61', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'bsaporta', NULL, NULL, NULL),
-(82, NULL, 'test contact arrivÃ©e 2', NULL, NULL, NULL, 47, 'txt', 'pparker', '2009-08-06 11:05:38', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-08-06 00:00:00', 'letterbox', NULL, '3', '1#', '98.txt', ' ', ' ', '8f0e2cd40e05189ec81232da84bd6e1a', 35148, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', 'APIX', NULL, NULL, NULL, NULL, NULL, 2, '61', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'bsaporta', NULL, NULL, NULL),
-(83, NULL, 'test contact arrivÃ©e 2', NULL, NULL, NULL, 47, 'txt', 'pparker', '2009-08-06 11:06:49', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-08-06 00:00:00', 'letterbox', NULL, '3', '1#', '99.txt', ' ', ' ', 'bcdaabfc634c499a9ccf657a66df15a1', 1668, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', 'APIX', NULL, NULL, NULL, NULL, NULL, 2, '61', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'bsaporta', NULL, NULL, NULL),
-(84, NULL, 'test contact arrivÃ©e 2', NULL, NULL, NULL, 47, 'txt', 'pparker', '2009-08-06 11:07:47', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-08-06 00:00:00', 'letterbox', NULL, '3', '1#', '100.txt', ' ', ' ', '8f0e2cd40e05189ec81232da84bd6e1a', 35148, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', 'APIX', NULL, NULL, NULL, NULL, NULL, 2, '61', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'bsaporta', NULL, NULL, NULL),
-(85, NULL, 'test contact arrivÃ©e 2', NULL, NULL, NULL, 47, 'txt', 'pparker', '2009-08-06 11:09:17', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-08-06 00:00:00', 'letterbox', NULL, '3', '1#', '101.txt', ' ', ' ', 'bcdaabfc634c499a9ccf657a66df15a1', 1668, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', 'APIX', NULL, NULL, NULL, NULL, NULL, 2, '61', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'bsaporta', NULL, NULL, NULL),
-(86, NULL, 'test contact arrivÃ©e 2', NULL, NULL, NULL, 47, 'txt', 'pparker', '2009-08-06 11:11:09', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-08-06 00:00:00', 'letterbox', NULL, '3', '1#', '102.txt', ' ', ' ', 'bcdaabfc634c499a9ccf657a66df15a1', 1668, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', 'APIX', NULL, NULL, NULL, NULL, NULL, 2, '61', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'bsaporta', NULL, NULL, NULL),
-(87, NULL, 'test contact arrivÃ©e 2', NULL, NULL, NULL, 47, 'txt', 'pparker', '2009-08-06 11:11:54', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-08-06 00:00:00', 'letterbox', NULL, '3', '1#', '103.txt', ' ', ' ', '8f0e2cd40e05189ec81232da84bd6e1a', 35148, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', 'APIX', NULL, NULL, NULL, NULL, NULL, 2, '61', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'bsaporta', NULL, NULL, NULL),
-(88, NULL, 'arrivÃ©e externe', NULL, NULL, NULL, 44, 'txt', 'pparker', '2009-08-06 11:15:02', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-08-06 00:00:00', 'letterbox', NULL, '3', '1#', '104.txt', ' ', ' ', '8f0e2cd40e05189ec81232da84bd6e1a', 35148, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', 'ARCHIVECO', NULL, NULL, NULL, NULL, NULL, 2, '61', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'bsaporta', NULL, NULL, NULL),
-(89, NULL, 'arrivÃ©e interne', NULL, NULL, NULL, 43, 'txt', 'pparker', '2009-08-06 11:16:13', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-08-06 00:00:00', 'letterbox', 11, '3', '1#', '105.txt', ' ', ' ', '8f0e2cd40e05189ec81232da84bd6e1a', 35148, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'DIS', 'APIX', NULL, NULL, NULL, NULL, NULL, 2, '61', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'pparker', NULL, NULL, NULL),
-(90, NULL, 'arrivÃ©e interne', NULL, NULL, NULL, 47, 'txt', 'pparker', '2009-08-06 11:17:34', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-08-06 00:00:00', 'letterbox', 16, '3', '1#', '106.txt', ' ', ' ', '8f0e2cd40e05189ec81232da84bd6e1a', 35148, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', 'ECONOMBOX', NULL, NULL, NULL, NULL, NULL, 2, '61', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'bsaporta', NULL, NULL, NULL),
-(91, NULL, 'arrivÃ©e interne', NULL, NULL, NULL, 47, 'txt', 'pparker', '2009-08-06 11:18:40', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-08-06 00:00:00', 'letterbox', 12, '3', '1#', '107.txt', ' ', ' ', 'bcdaabfc634c499a9ccf657a66df15a1', 1668, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', 'APIX', NULL, NULL, NULL, NULL, NULL, 2, '61', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'pparker', NULL, NULL, NULL),
-(92, NULL, 'arrivÃ©e interne', NULL, NULL, NULL, 46, 'txt', 'pparker', '2009-08-06 11:19:54', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-08-06 00:00:00', 'letterbox', NULL, '3', '1#', '108.txt', ' ', ' ', 'bcdaabfc634c499a9ccf657a66df15a1', 1668, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', 'LAFARGE', NULL, NULL, NULL, NULL, NULL, 2, '61', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'bsaporta', NULL, NULL, NULL),
-(93, NULL, 'depart interne', NULL, NULL, NULL, 47, 'txt', 'pparker', '2009-08-06 15:12:01', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-08-06 00:00:00', 'letterbox', NULL, '3', '1#', '109.txt', ' ', ' ', '8f0e2cd40e05189ec81232da84bd6e1a', 35148, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', 'APIX', NULL, NULL, NULL, NULL, NULL, 2, '61', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'bsaporta', NULL, NULL, NULL),
-(94, NULL, 'depart externe', NULL, NULL, NULL, 44, 'txt', 'pparker', '2009-08-06 15:12:57', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-08-06 00:00:00', 'letterbox', NULL, '3', '1#', '110.txt', ' ', ' ', 'bcdaabfc634c499a9ccf657a66df15a1', 1668, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', 'ARCHIVECO', NULL, NULL, NULL, NULL, NULL, 2, '61', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'bsaporta', NULL, NULL, NULL),
-(95, NULL, 'interne interne', NULL, NULL, NULL, 44, 'txt', 'pparker', '2009-08-06 15:14:41', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-08-06 00:00:00', 'letterbox', 13, '3', '1#', '112.txt', ' ', ' ', 'e997752d4cb825b26152c804085107c9', 830, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', 'APIX', NULL, NULL, NULL, NULL, NULL, 2, '61', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'pparker', NULL, NULL, NULL),
-(96, NULL, 'interne externe', NULL, NULL, NULL, 45, 'txt', 'pparker', '2009-08-06 15:21:27', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-08-06 00:00:00', 'letterbox', NULL, '3', '1#', '116.txt', ' ', ' ', 'bcdaabfc634c499a9ccf657a66df15a1', 1668, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'VAL', 'APIX', NULL, NULL, NULL, NULL, NULL, 2, '61', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'bsaporta', NULL, NULL, NULL),
-(97, NULL, 'test', NULL, NULL, NULL, 46, 'txt', 'pparker', '2009-08-06 16:49:29', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-08-06 00:00:00', 'letterbox', 13, '3', '1#', '120.txt', ' ', ' ', '8f0e2cd40e05189ec81232da84bd6e1a', 35148, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'VAL', 'APIX', NULL, NULL, NULL, NULL, NULL, 2, '61', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'pparker', NULL, NULL, NULL),
-(98, NULL, 'test folder', NULL, NULL, NULL, 47, 'txt', 'pparker', '2009-08-10 17:15:44', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-08-10 00:00:00', 'letterbox', 16, '3', '1#', '121.txt', ' ', ' ', '8f0e2cd40e05189ec81232da84bd6e1a', 35148, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'VAL', 'APIX', NULL, NULL, NULL, NULL, NULL, 2, '61', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'pparker', NULL, NULL, NULL),
-(99, NULL, 'eee', NULL, NULL, NULL, 47, 'txt', 'pparker', '2009-08-10 17:40:09', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-08-10 00:00:00', 'letterbox', 15, '3', '1#', '122.txt', ' ', ' ', '8f0e2cd40e05189ec81232da84bd6e1a', 35148, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'VAL', 'ARCHIVECO', NULL, NULL, NULL, NULL, NULL, 2, '61', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'bsaporta', NULL, NULL, NULL),
-(100, NULL, 'eee', NULL, NULL, NULL, 47, 'txt', 'pparker', '2009-08-10 17:40:34', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-08-10 00:00:00', 'letterbox', 15, '3', '1#', '123.txt', ' ', ' ', '8f0e2cd40e05189ec81232da84bd6e1a', 35148, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'VAL', 'ARCHIVECO', NULL, NULL, NULL, NULL, NULL, 2, '61', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'bsaporta', NULL, NULL, NULL),
-(101, NULL, 'testyufkli', NULL, NULL, NULL, 52, 'txt', 'pparker', '2009-08-11 09:47:11', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-08-11 00:00:00', 'letterbox', 13, '3', '1#', '124.txt', ' ', ' ', '8f0e2cd40e05189ec81232da84bd6e1a', 35148, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', 'APIX', NULL, NULL, NULL, NULL, NULL, 2, '3', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'bsaporta', NULL, NULL, NULL),
-(102, NULL, 'dddd', NULL, NULL, NULL, 52, 'txt', 'pparker', '2009-08-13 15:59:05', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-08-13 00:00:00', 'letterbox', 11, '3', '1#', '125.txt', ' ', ' ', 'e997752d4cb825b26152c804085107c9', 830, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', 'ECONOMBOX', NULL, NULL, NULL, NULL, NULL, 2, '3', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'pparker', NULL, NULL, NULL),
-(103, NULL, 'rererer', NULL, NULL, NULL, 43, 'txt', 'pparker', '2009-08-13 16:00:23', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-08-13 00:00:00', 'letterbox', 12, '3', '1#', '126.txt', ' ', ' ', '8f0e2cd40e05189ec81232da84bd6e1a', 35148, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', 'ECONOMBOX', NULL, NULL, NULL, NULL, NULL, 0, '3', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'pparker', NULL, NULL, NULL),
-(104, NULL, 'test  validation', NULL, NULL, NULL, 52, 'txt', 'pparker', '2009-08-14 17:01:57', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-08-11 00:00:00', 'letterbox', 16, '3', '1#', '127.txt', ' ', ' ', 'e997752d4cb825b26152c804085107c9', 830, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', 'APIX', NULL, NULL, NULL, NULL, NULL, 2, '3', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'bsaporta', NULL, NULL, NULL),
-(105, NULL, 'sddd', NULL, NULL, NULL, 46, 'txt', 'pparker', '2009-08-18 11:44:27', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-08-18 00:00:00', 'letterbox', 7, '3', '1#', '136.txt', ' ', ' ', '8f0e2cd40e05189ec81232da84bd6e1a', 35148, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'COU', 'ECONOMBOX', NULL, NULL, NULL, NULL, NULL, 2, '61', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'pparker', NULL, NULL, NULL),
-(106, NULL, '&Ã©\\\\\\"\\\\\\''(-Ã¨_Ã§Ã )=}{', NULL, NULL, NULL, 47, 'txt', 'pparker', '2009-08-18 11:45:34', '-2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-08-18 00:00:00', 'letterbox', NULL, '3', '1#', '137.txt', ' ', ' ', '8f0e2cd40e05189ec81232da84bd6e1a', 35148, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', 'LAFARGE', NULL, NULL, NULL, NULL, NULL, 2, '61', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'bsaporta', NULL, NULL, NULL),
-(107, NULL, '&Ã©\\\\\\"\\\\\\''(-Ã¨_Ã§Ã )=~', NULL, NULL, NULL, 51, 'txt', 'pparker', '2009-08-18 11:48:41', '-2', NULL, NULL, 'ddd', NULL, NULL, NULL, NULL, NULL, NULL, '2009-08-18 00:00:00', 'letterbox', 13, '3', '1#', '138.txt', ' ', ' ', '8f0e2cd40e05189ec81232da84bd6e1a', 35148, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '61', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, NULL, NULL, NULL, NULL),
-(108, NULL, '&Ã©\\\\\\"\\\\\\''(-Ã¨_Ã§Ã )=', NULL, NULL, NULL, 44, 'txt', 'pparker', '2009-08-18 11:55:12', '-2', NULL, NULL, 'ddd', NULL, NULL, NULL, NULL, NULL, NULL, '2009-08-18 00:00:00', 'letterbox', 13, '3', '1#', '139.txt', ' ', ' ', '8f0e2cd40e05189ec81232da84bd6e1a', 35148, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '61', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, NULL, NULL, NULL, NULL),
-(109, NULL, 'test', NULL, NULL, NULL, 45, 'pdf', 'pparker', '2009-08-21 15:37:01', '1', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-08-21 00:00:00', 'letterbox', NULL, '3', '1#', '155.pdf', ' ', ' ', '0477792eceecee7adf512f4f6329796e', 247367, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', 'APIX', NULL, NULL, NULL, NULL, NULL, 2, '61', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'bsaporta', NULL, NULL, NULL),
-(110, NULL, 'test', NULL, NULL, NULL, 44, 'pdf', 'pparker', '2009-08-28 16:07:10', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-08-28 00:00:00', 'letterbox', NULL, '3', '1#', '156.pdf', ' ', ' ', '0477792eceecee7adf512f4f6329796e', 247367, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', 'ECONOMBOX', NULL, NULL, NULL, NULL, NULL, 2, '61', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'pparker', NULL, NULL, NULL),
-(111, NULL, 'test', NULL, NULL, NULL, 50, 'pdf', 'pparker', '2009-08-28 18:24:09', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-08-28 00:00:00', 'letterbox', NULL, '3', '1#', '157.pdf', ' ', ' ', '0477792eceecee7adf512f4f6329796e', 247367, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', 'ECONOMBOX', NULL, NULL, NULL, NULL, NULL, 2, '61', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'pparker', NULL, NULL, NULL),
-(112, NULL, 'test', NULL, NULL, NULL, 47, 'pdf', 'pparker', '2009-08-28 18:25:35', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-08-28 00:00:00', 'letterbox', NULL, '3', '1#', '158.pdf', ' ', ' ', '0477792eceecee7adf512f4f6329796e', 247367, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', 'ARCHIVECO', NULL, NULL, NULL, NULL, NULL, 2, '61', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'bsaporta', NULL, NULL, NULL),
-(113, NULL, 'test', NULL, NULL, NULL, 49, 'pdf', 'pparker', '2009-08-31 15:37:13', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2009-08-31 00:00:00', 'letterbox', 7, '3', '1#', '159.pdf', ' ', ' ', '0477792eceecee7adf512f4f6329796e', 247367, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'NEW', 'ECONOMBOX', NULL, NULL, NULL, NULL, NULL, 2, '61', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_invoices', NULL, 'pparker', NULL, NULL, NULL);
-
-INSERT INTO `saved_queries` (`query_id`, `user_id`, `query_name`, `creation_date`, `created_by`, `query_type`, `query_txt`, `last_modification_date`) VALUES
-(12, 'pparker', 'fulltext1', '2009-08-21 15:46:32', 'pparker', 'my_search', '{''copies'' : { ''type'' : ''radio'', ''fields'' : {''copies_false'' : [''false'']}},''subject'' : { ''type'' : ''input_text'', ''fields'' : {}},''fulltext'' : { ''type'' : ''input_text'', ''fields'' : { ''fulltext'' : [''test'']}},''numged'' : { ''type'' : ''input_text'', ''fields'' : {}},''multifield'' : { ''type'' : ''input_text'', ''fields'' : {}}}', NULL);
-
-INSERT INTO `security` (`group_id`, `coll_id`, `where_clause`, `maarch_comment`, `can_insert`, `can_update`, `can_delete`) VALUES
-('Recovery', 'letterbox_coll', ' ', '', 'Y', 'Y', 'Y'),
-('Accountants', 'coll_2', ' ', '', 'Y', 'Y', 'N');
-
-INSERT INTO `status` (`id`, `label_status`, `is_system`, `img_filename`, `maarch_module`, `can_be_searched`) VALUES
-('COU', 'En cours', 'Y', 'mail.gif', 'apps', 'Y'),
-('NEW', 'Nouveau courrier', 'Y', 'mail_new.gif', 'apps', 'Y'),
-('RSV', 'Reserve', 'N', '', 'apps', 'N'),
-('DEL', 'Supprime', 'Y', NULL, 'apps', 'N'),
-('END', 'Clos', 'Y', 'mail_end.gif', 'apps', 'Y'),
-('VAL', 'A valider', 'Y', NULL, 'apps', 'N'),
-('OUT', 'Prelevee', 'N', '', 'advanced_physical_archive', 'N'),
-('POS', 'Reintegree', 'N', '', 'advanced_physical_archive', 'N');
-
-INSERT INTO `templates` (`id`, `label`, `creation_date`, `template_comment`, `content`) VALUES
-(1, 'test', '2009-07-02 11:34:25', 'test', '<p>qsdqsdsd [DOCTYPE]</p>\r\n<p>[NOW]</p>'),
-(2, 'test2', '2009-08-20 16:01:00', 'test2', '<p>Bonjour,</p>\r\n<p>&nbsp;</p>\r\n<p>veuillez... [CONTACT_LASTNAME]</p>\r\n<p>&nbsp;</p>\r\n<p><font face="&quot;arial">[USER_LASTNAME]</font></p>\r\n<p>&nbsp;</p>\r\n<p>[ADMISSION_DATE]</p>\r\n<p>&nbsp;</p>\r\n<p>[CHRONO][CURRENT_USER_EMAIL]</p>');
-
-INSERT INTO `templates_association` (`template_id`, `what`, `value_field`, `system_id`, `maarch_module`) VALUES
-(2, 'destination', 'ECONOMBOX', 1, 'entities'),
-(2, 'destination', 'ARCHIVECO', 2, 'entities'),
-(2, 'destination', 'WARNER', 3, 'entities'),
-(2, 'destination', 'test', 4, 'entities'),
-(2, 'destination', 'LAFARGE', 5, 'entities'),
-(2, 'destination', 'DAKARCHIV', 6, 'entities'),
-(2, 'destination', 'APIX', 7, 'entities');
-
-INSERT INTO `templates_doctype_ext` (`template_id`, `type_id`, `is_generated`) VALUES
-(NULL, 47, 'N'),
-(NULL, 46, 'N'),
-(NULL, 45, 'N'),
-(NULL, 48, 'N'),
-(NULL, 44, 'N'),
-(NULL, 43, 'N'),
-(NULL, 49, 'N'),
-(NULL, 50, 'N'),
-(NULL, 51, 'N'),
-(NULL, 52, 'N'),
-(NULL, 53, 'N'),
-(1, 54, 'Y');
-
-INSERT INTO `usergroups` (`group_id`, `group_desc`, `administrator`, `custom_right1`, `custom_right2`, `custom_right3`, `custom_right4`, `enabled`) VALUES
-('Recovery', 'Recovery - Recouvrement', '', '', '', '', '', 'Y'),
-('Admin', 'Administration', 'N', 'N', 'N', 'N', 'N', 'Y'),
-('Accountants', 'Accountants - Comptables', 'N', 'N', 'N', 'N', 'N', 'Y'),
-('Managers', 'Customer managers - Gestionnaires de comptes', 'N', 'N', 'N', 'N', 'N', 'Y'),
-('Clients', 'Clients', '', '', '', '', '', 'Y'),
-('Operator', 'Operateur - Operator', 'N', 'N', 'N', 'N', 'N', 'Y'),
-('Archivists', 'Archivistes - Archivists', 'N', 'N', 'N', 'N', 'N', 'Y');
-
-
-INSERT INTO `usergroups_services` (`group_id`, `service_id`) VALUES
-('Accountants', '_print_sep'),
-('Accountants', 'admin'),
-('Accountants', 'admin_architecture'),
-('Accountants', 'admin_baskets'),
-('Accountants', 'admin_foldertypes'),
-('Accountants', 'admin_groups'),
-('Accountants', 'admin_tree_autofoldering'),
-('Accountants', 'admin_users'),
-('Accountants', 'adv_search'),
-('Accountants', 'delete_folder'),
-('Accountants', 'delete_res'),
-('Accountants', 'folder_search'),
-('Accountants', 'indexing'),
-('Accountants', 'launch_workflow'),
-('Accountants', 'modify_folder'),
-('Accountants', 'modify_res'),
-('Accountants', 'physical_archive'),
-('Accountants', 'physical_archive_box_manage'),
-('Accountants', 'physical_archive_box_read'),
-('Accountants', 'view_attached_files'),
-('Accountants', 'view_baskets'),
-('Accountants', 'view_history'),
-('Accountants', 'view_trees'),
-('Admin', '_print_sep'),
-('Admin', 'admin'),
-('Admin', 'admin_architecture'),
-('Admin', 'admin_baskets'),
-('Admin', 'admin_foldertypes'),
-('Admin', 'admin_groups'),
-('Admin', 'admin_tree_autofoldering'),
-('Admin', 'admin_users'),
-('Admin', 'adv_search'),
-('Admin', 'create_folder'),
-('Admin', 'delete_folder'),
-('Admin', 'delete_res'),
-('Admin', 'folder_search'),
-('Admin', 'index_file'),
-('Admin', 'index_file2'),
-('Admin', 'indexing'),
-('Admin', 'modify_folder'),
-('Admin', 'modify_res'),
-('Admin', 'physical_archive'),
-('Admin', 'physical_archive_box_manage'),
-('Admin', 'physical_archive_box_read'),
-('Admin', 'physical_archive_lot_manage'),
-('Admin', 'physical_archive_lot_read'),
-('Admin', 'salary_sheet'),
-('Admin', 'select_doctype'),
-('Admin', 'select_doctype2'),
-('Admin', 'select_folder'),
-('Admin', 'show_contract_history'),
-('Admin', 'show_history_folder'),
-('Admin', 'show_missing_doc_in_folder'),
-('Admin', 'use_baskets'),
-('Admin', 'view_history'),
-('Admin', 'view_stats'),
-('Admin', 'view_trees'),
-('Archivists', 'admin_apa'),
-('Archivists', 'manage_apa'),
-('Archivists', 'manage_entities'),
-('Clients', 'reserve_apa'),
-('Managers', '_print_sep'),
-('Managers', 'admin'),
-('Managers', 'admin_architecture'),
-('Managers', 'admin_baskets'),
-('Managers', 'admin_foldertypes'),
-('Managers', 'admin_groups'),
-('Managers', 'admin_tree_autofoldering'),
-('Managers', 'admin_users'),
-('Managers', 'adv_search'),
-('Managers', 'delete_folder'),
-('Managers', 'delete_res'),
-('Managers', 'folder_search'),
-('Managers', 'indexing'),
-('Managers', 'modify_folder'),
-('Managers', 'modify_res'),
-('Managers', 'physical_archive'),
-('Managers', 'physical_archive_batch_manage'),
-('Managers', 'physical_archive_batch_read'),
-('Managers', 'physical_archive_box_manage'),
-('Managers', 'physical_archive_box_read'),
-('Managers', 'view_attached_files'),
-('Managers', 'view_history'),
-('Managers', 'view_trees'),
-('Operator', 'admin'),
-('Operator', 'admin_actions'),
-('Operator', 'admin_apa'),
-('Operator', 'admin_architecture'),
-('Operator', 'admin_baskets'),
-('Operator', 'admin_groups'),
-('Operator', 'admin_status'),
-('Operator', 'admin_users'),
-('Operator', 'adv_search'),
-('Operator', 'delete_res'),
-('Operator', 'indexing'),
-('Operator', 'manage_apa'),
-('Operator', 'manage_entities'),
-('Operator', 'modify_res'),
-('Operator', 'reserve_apa'),
-('Operator', 'view_history'),
-('Operator', 'xml_param_services'),
-('Recovery', 'add_copy_in_process'),
-('Recovery', 'admin'),
-('Recovery', 'admin_actions'),
-('Recovery', 'admin_architecture'),
-('Recovery', 'admin_baskets'),
-('Recovery', 'admin_contacts'),
-('Recovery', 'admin_foldertypes'),
-('Recovery', 'admin_groups'),
-('Recovery', 'admin_status'),
-('Recovery', 'admin_templates'),
-('Recovery', 'admin_users'),
-('Recovery', 'adv_search_mlb'),
-('Recovery', 'delete_folder'),
-('Recovery', 'folder_search'),
-('Recovery', 'index_mlb'),
-('Recovery', 'manage_entities'),
-('Recovery', 'modify_folder'),
-('Recovery', 'search_customer'),
-('Recovery', 'view_history');
-
-INSERT INTO `usergroup_content` (`user_id`, `group_id`, `primary_group`, `role`) VALUES
-('pparker', 'Recovery', 'Y', 'Service manager'),
-('ccharles', 'Accountants', 'Y', 'Clerck'),
-('bsaporta', 'Managers', 'Y', 'Account manager'),
-('ccharles', 'Archivists', 'N', 'Clerck'),
-('bblier', 'Clients', 'Y', 'Archiviste client Warner'),
-('ppetit', 'Clients', 'Y', 'Archiviste client Apix'),
-('bsaporta', 'Archivists', 'N', 'Account manager'),
-('pparker', 'Operator', 'N', 'Service manager');
-
-INSERT INTO `users` (`user_id`, `password`, `firstname`, `lastname`, `phone`, `mail`, `department`, `custom_t1`, `custom_t2`, `custom_t3`, `cookie_key`, `cookie_date`, `enabled`, `change_password`, `delay`, `status`) VALUES
-('pparker', 'ef9689be896dacd901cae4f13593e90d', 'Peter', 'Parker', '+33 1 47 24 51 ', 'info@maarch.org', 'Financial - DFI', '7', NULL, NULL, '53f65875519cbf89caa3d99453138b76', '2009-08-31 15:08:44', 'Y', 'N', NULL, 'OK'),
-('ccharles', 'ef9689be896dacd901cae4f13593e90d', 'Charlotte', 'Charles', '+33 1 47 24 51 ', 'info@maarch.org', 'Accounting department - DFI', NULL, NULL, NULL, '2b67f8017119d7de32f300be3e97ccb4', '2008-09-10 15:09:23', 'Y', 'N', NULL, 'OK'),
-('bsaporta', 'ef9689be896dacd901cae4f13593e90d', 'Barbara', 'Saporta', '+33 1 47 24 51 ', 'info@maarch.org', 'Sales - Commercial', NULL, NULL, NULL, '35286c2c7b64e9ae8dc1d88ef78814d4', '2008-09-10 15:09:23', 'Y', 'N', NULL, 'OK'),
-('superadmin', '17c4520f6cfd1ab53d8745e84681eb49', 'Super', 'Admin', '', 'admin@maarch.org', 'Maarch', '1', NULL, NULL, '01d762d294e06dea731e15403b039902', '2009-08-31 14:08:04', 'Y', 'N', NULL, 'OK'),
-('bblier', 'ef9689be896dacd901cae4f13593e90d', 'Bernard', 'Blier', '+33 1 47 24 51 ', 'info@maarch.org', '', NULL, NULL, NULL, '', NULL, 'Y', 'Y', NULL, 'OK'),
-('ppetit', 'ef9689be896dacd901cae4f13593e90d', 'Patricia', 'Petit', '+33 1 47 24 51 ', 'info@maarch.org', '', NULL, NULL, NULL, '', NULL, 'Y', 'Y', NULL, 'OK');
-
-
-INSERT INTO `users_entities` (`user_id`, `entity_id`, `user_role`, `primary_entity`) VALUES
-('pparker', 'ECONOMBOX', 'Manager EconomBox', 'Y'),
-('ccharles', 'ARCHIVECO', 'Responsable Archiveco', 'Y'),
-('bsaporta', 'DAKARCHIV', 'Responsable Dakarchiv', 'Y');
 

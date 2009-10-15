@@ -4,7 +4,6 @@ CREATE SEQUENCE contact_id_seq
   MAXVALUE 9223372036854775807
   START 100
   CACHE 1;
-ALTER TABLE contact_id_seq OWNER TO postgres;
 
 CREATE TABLE contacts (
 contact_id bigint NOT NULL DEFAULT nextval('contact_id_seq'::regclass),
@@ -29,9 +28,16 @@ CONSTRAINT contacts_pkey PRIMARY KEY  (contact_id)
 ) WITH (OIDS=FALSE);
 ALTER TABLE contacts OWNER TO postgres;
 
+CREATE SEQUENCE query_id_seq
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 10
+  CACHE 1;
+
 
 CREATE TABLE saved_queries (
-  query_id bigserial NOT NULL ,
+  query_id bigint NOT NULL DEFAULT nextval('query_id_seq'::regclass),
   user_id character varying(32)  default NULL,
   query_name character varying(255) NOT NULL,
   creation_date timestamp without time zone NOT NULL,
@@ -49,7 +55,6 @@ CREATE SEQUENCE doctypes_first_level_id_seq
   MAXVALUE 9223372036854775807
   START 10
   CACHE 1;
-ALTER TABLE doctypes_first_level_id_seq OWNER TO postgres;
 
 CREATE TABLE doctypes_first_level
 (
@@ -67,7 +72,6 @@ CREATE SEQUENCE doctypes_second_level_id_seq
   MAXVALUE 9223372036854775807
   START 10
   CACHE 1;
-ALTER TABLE doctypes_second_level_id_seq OWNER TO postgres;
 
 CREATE TABLE doctypes_second_level
 (
@@ -86,7 +90,6 @@ CREATE SEQUENCE res_id_seq
   MAXVALUE 9223372036854775807
   START 100
   CACHE 1;
-ALTER TABLE res_id_seq OWNER TO postgres;
 
 CREATE TABLE res_x
 (
@@ -191,7 +194,6 @@ CREATE SEQUENCE res_id_mlb_seq
   MAXVALUE 9223372036854775807
   START 100
   CACHE 1;
-ALTER TABLE res_id_mlb_seq OWNER TO postgres;
 
 CREATE TABLE res_letterbox
 (
@@ -313,6 +315,17 @@ CREATE TABLE mlb_coll_ext (
   flag_alarm2 char(1) default 'N'::character varying
 )WITH (OIDS=FALSE);
 ALTER TABLE mlb_coll_ext OWNER TO postgres;
+
+CREATE TABLE mlb_doctype_ext (
+  type_id bigint NOT NULL,
+  process_delay bigint NOT NULL DEFAULT '21',
+  delay1 bigint NOT NULL DEFAULT '14',
+  delay2 bigint NOT NULL DEFAULT '1',
+  CONSTRAINT type_id PRIMARY KEY (type_id)
+)
+WITH (OIDS=FALSE);
+ALTER TABLE mlb_doctype_ext OWNER TO postgres;
+
 
 CREATE OR REPLACE VIEW res_view AS
  SELECT r.tablename, r.res_id, r.title, r.page_count, r.identifier, r.doc_date, r.type_id,
