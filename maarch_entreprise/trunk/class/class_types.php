@@ -644,19 +644,19 @@ class types extends dbquery
 		$req = '';
 		foreach(array_keys($values)as $key)
 		{
-			if($indexes[$key]['type'] == 'date')
+			if($indexes[$key]['type'] == 'date' && !empty($values[$key]))
 			{
 				$req .= ", ".$key." = '".$this->format_date_db($values[$key])."'";
 			}
-			else if($indexes[$key]['type'] == 'string')
+			else if($indexes[$key]['type'] == 'string' && !empty($values[$key]))
 			{
 				$req .= ", ".$key." = '".$this->protect_string_db($values[$key])."'";
 			}
-			else if($indexes[$key]['type'] == 'float')
+			else if($indexes[$key]['type'] == 'float' && !empty($values[$key]))
 			{
 				$req .= ", ".$key." = ".$values[$key]."";
 			}
-			else if($indexes[$key]['type'] == 'integer')
+			else if($indexes[$key]['type'] == 'integer' && !empty($values[$key]))
 			{
 				$req .= ", ".$key." = ".$values[$key]."";
 			}
@@ -679,19 +679,19 @@ class types extends dbquery
 
 		foreach(array_keys($values)as $key)
 		{
-			if($indexes[$key]['type'] == 'date')
+			if($indexes[$key]['type'] == 'date' && !empty($values[$key]))
 			{
 				array_push($data, array('column' => $key, 'value' => $this->format_date_db($values[$key]), 'type' => "date"));
 			}
-			else if($indexes[$key]['type'] == 'string')
+			else if($indexes[$key]['type'] == 'string' && !empty($values[$key]))
 			{
 				array_push($data, array('column' => $key, 'value' => $this->protect_string_db($values[$key]), 'type' => "string"));
 			}
-			else if($indexes[$key]['type'] == 'float')
+			else if($indexes[$key]['type'] == 'float' && !empty($values[$key]))
 			{
 				array_push($data, array('column' => $key, 'value' => $values[$key], 'type' => "float"));
 			}
-			else if($indexes[$key]['type'] == 'integer')
+			else if($indexes[$key]['type'] == 'integer' && !empty($values[$key]))
 			{
 				array_push($data, array('column' => $key, 'value' => $values[$key], 'type' => "integer"));
 			}

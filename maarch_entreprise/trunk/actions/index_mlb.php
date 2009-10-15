@@ -519,12 +519,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 					$frm_str .='<input name="mail" type="text" id="mail" value="'.$core_tools->show($contact_info['MAIL']).'" />';
 		 		$frm_str .= '</td>';
 			$frm_str .= '</tr>';
-/*
-		 	$frm_str .='<p >';
-				$frm_str .='<label><b>'._ADDRESS.' </b></label>';
-		 	$frm_str .='</p>';
-*/
-		 	//$frm_str .='<br/>';
+
 		  	$frm_str .= '<tr>';
 				$frm_str .= '<td>';
 					$frm_str .='<label for="num">'._NUM.' : </label>';
@@ -539,18 +534,6 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 					$frm_str .='<input name="street" type="text" class="medium"  id="street" value="'.$core_tools->show($contact_info['ADD_STREET']).'" />';
 		 		$frm_str .= '</td>';
 			$frm_str .= '</tr>';
-
-/*
-		 	$frm_str .= '<tr>';
-				$frm_str .= '<td>';
-					$frm_str .='<label for="label">'._STREET.' : </label>';
-				$frm_str .= '</td>';
-				$frm_str .= '<td>';
-					$frm_str .='<input name="street" type="text"  id="street" value="'.$core_tools->show($contact_info['ADD_STREET']).'" />';
-		 		$frm_str .= '</td>';
-			$frm_str .= '</tr>';
-*/
-
 		 	$frm_str .= '<tr>';
 				$frm_str .= '<td colspan="2">';
 					$frm_str .='<label for="add_comp">'._COMPLEMENT.' : </label>';
@@ -559,18 +542,6 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 					$frm_str .='<input name="add_comp" type="text"  id="add_comp" value="'.$core_tools->show($contact_info['ADD_COMP']).'" />';
 		 		$frm_str .= '</td>';
 			$frm_str .= '</tr>';
-
-/*
-			$frm_str .= '<tr>';
-				$frm_str .= '<td>';
-					$frm_str .='<label for="label">'._TOWN.' : </label>';
-				$frm_str .= '</td>';
-				$frm_str .= '<td>';
-					$frm_str .='<input name="town" type="text" id="town" value="'.$core_tools->show($contact_info['ADD_TOWN']).'" />';
-		 		$frm_str .= '</td>';
-			$frm_str .= '</tr>';
-*/
-
 		 	$frm_str .= '<tr>';
 				$frm_str .= '<td>';
 					$frm_str .='<label for="cp">'._POSTAL_CODE.' : </label>';
@@ -594,11 +565,6 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 					$frm_str .='<input name="country" type="text"  id="country" value="'.$core_tools->show($contact_info['ADD_COUNTRY']).'" />';
 				$frm_str .= '</td>';
 			$frm_str .= '</tr>';
-/*
-		 	$frm_str .='</p>';
-		 	$frm_str .='<p><label><b>'._COMP.' </b></label></p>';
-		 	$frm_str .='<br/>';
-*/
 		 	$frm_str .= '<tr>';
 				$frm_str .= '<td colspan="2">';
 					$frm_str .='<label for="comp_data">'._COMP_DATA.' : </label>';
