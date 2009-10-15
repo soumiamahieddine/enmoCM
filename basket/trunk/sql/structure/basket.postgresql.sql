@@ -42,10 +42,17 @@ CREATE TABLE groupbasket
 WITH (OIDS=FALSE);
 ALTER TABLE groupbasket OWNER TO postgres;
 
+CREATE SEQUENCE user_abs_seq
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+
 CREATE TABLE user_abs
 (
+  system_id bigint NOT NULL DEFAULT nextval('user_abs_seq'::regclass),
   user_abs character varying(32) NOT NULL,
-  system_id bigserial NOT NULL,
   new_user character varying(32) NOT NULL,
   basket_id character varying(255) NOT NULL,
   basket_owner character varying(255),

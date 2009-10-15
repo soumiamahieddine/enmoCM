@@ -36,12 +36,12 @@ default_action_list char( 1 ) NOT NULL DEFAULT 'N',
 PRIMARY KEY ( id_action, group_id, basket_id )
 )ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-CREATE TABLE `user_abs` (
-  `system_id` bigint(20) NOT NULL AUTO_INCREMENT ,
-  `user_abs` varchar(32) collate utf8_unicode_ci NOT NULL,
-  `new_user` varchar(32) collate utf8_unicode_ci default NULL,
-  `basket_id` varchar(255) collate utf8_unicode_ci NOT NULL,
-  `basket_owner` varchar(255) collate utf8_unicode_ci default NULL,
-  `is_virtual` char(1) collate utf8_unicode_ci NOT NULL default 'N',
-  PRIMARY KEY  (`system_id`)
+CREATE TABLE user_abs (
+  system_id bigint(20) NOT NULL AUTO_INCREMENT ,
+  user_abs varchar(32) collate utf8_unicode_ci NOT NULL,
+  new_user varchar(32) collate utf8_unicode_ci default NULL,
+  basket_id varchar(255) collate utf8_unicode_ci NOT NULL,
+  basket_owner varchar(255) collate utf8_unicode_ci default NULL,
+  is_virtual char(1) collate utf8_unicode_ci NOT NULL default 'N',
+  PRIMARY KEY  (system_id)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
