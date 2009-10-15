@@ -1,6 +1,14 @@
+CREATE SEQUENCE notes_seq
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 20
+  CACHE 1;
+
+
 CREATE TABLE notes
 (
-  id bigserial NOT NULL ,
+  id bigint NOT NULL DEFAULT nextval('notes_seq'::regclass),
   identifier bigint NOT NULL,
   tablename character varying(50),
   user_id character varying(50) NOT NULL,
