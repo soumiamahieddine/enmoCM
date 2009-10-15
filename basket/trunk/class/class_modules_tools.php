@@ -449,7 +449,7 @@ class basket extends dbquery
 		{
 			$str .= "<em>".$line_txt."</em>";
 		}
-		if(!isset( $param_list['mode_string']) || param_list['mode_string'] == false)
+		if(!isset( $param_list['mode_string']) || $param_list['mode_string'] == false)
 		{
 			echo $str;
 		}
