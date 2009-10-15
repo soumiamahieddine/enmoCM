@@ -172,7 +172,7 @@ define('_SYSTEM_ID', 'ID Syst&egrave;me');
 define('_MODIFICATION_DATE', 'Date de modification');
 define('_UPDATE_FOLDER', 'Modifier des informations');
 define('_FOLDER_INDEX_UPDATED', 'Index du dossier modifi&eacute;s');
-define('_ALL_DOCS_WILL_BE_DELETED', 'tous les documents de ce dossier seront &eacute;lement supprim&eacute;s !');
+define('_ALL_DOCS_AND_SUFOLDERS_WILL_BE_DELETED', 'tous les documents de ce dossier, ainsi que tous les sous-dossiers seront &eacute;galement supprim&eacute;s !');
 
 define('_STRING', 'Chaine de caract&egrave;res');
 define('_INTEGER', 'Entier');
@@ -186,4 +186,5 @@ define('_DELETED_FROM_FOLDER', ' supprim&eacute; du dossier');
 define('_CHOOSE_PARENT_FOLDER', 'Associer ce dossier &agrave; un dossier existant');
 define('_FOLDER_PARENT', 'Dossier parent');
 define('_FOLDER_PARENT_DESC', 'Vous pouvez choisir de cr&eacute;er un dous-dossier en le rattachant &agrave; un dossier du m&ecirc;me type. Il y a seulement 2 niveaux : dossier et sous-dossier.');
+define('_THIS_FOLDER', 'ce dossier');
 ?>

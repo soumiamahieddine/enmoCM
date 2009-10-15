@@ -604,21 +604,27 @@ class foldertype extends dbquery
 		// Checks the manadatory indexes
 		$indexes = $this->get_indexes($foldertype_id);
 		$mandatory_indexes = $this->get_mandatory_indexes($foldertype_id);
+
 		//$this->show_array($indexes);
+		//$this->show_array($mandatory_indexes);
+		//$this->show_array($values);
+
 		for($i=0; $i<count($mandatory_indexes);$i++)
 		{
 			if( empty($values[$mandatory_indexes[$i]]))  // Pb 0
 			{
-				$_SESSION['error'] .= $values[$mandatory_indexes[$i]].' '.$indexes[$mandatory_indexes[$i]]['label'].' '._IS_EMPTY;
+				$_SESSION['error'] .= $indexes[$mandatory_indexes[$i]]['label'].' '._IS_EMPTY;
 				return false;
 			}
 		}
+
 		// Checks type indexes
 		$date_pattern = "/^[0-3][0-9]-[0-1][0-9]-[1-2][0-9][0-9][0-9]$/";
 		foreach(array_keys($values)as $key)
 		{
 			if(!empty($_SESSION['error']))
 			{
+				//echo 'error '.$_SESSION['error'];
 				return false;
 			}
 			if($indexes[$key]['type'] == 'date' && !empty($values[$key]))
@@ -633,11 +639,11 @@ class foldertype extends dbquery
 			{
 				$field_value = $this->wash($values[$key],"no",$indexes[$key]['label']);
 			}
-			else if($indexes[$key]['type'] == 'float' )
+			else if($indexes[$key]['type'] == 'float' && !empty($values[$key]) )
 			{
 				$field_value = $this->wash($values[$key],"float",$indexes[$key]['label']);
 			}
-			else if($indexes[$key]['type'] == 'integer'  )
+			else if($indexes[$key]['type'] == 'integer' && !empty($values[$key]) )
 			{
 				$field_value = $this->wash($values[$key],"num",$indexes[$key]['label']);
 			}
@@ -660,19 +666,19 @@ class foldertype extends dbquery
 		$req = '';
 		foreach(array_keys($values)as $key)
 		{
-			if($indexes[$key]['type'] == 'date')
+			if($indexes[$key]['type'] == 'date' && !empty($values[$key]))
 			{
 				$req .= ", ".$key." = '".$this->format_date_db($values[$key])."'";
 			}
-			else if($indexes[$key]['type'] == 'string')
+			else if($indexes[$key]['type'] == 'string' && !empty($values[$key]))
 			{
 				$req .= ", ".$key." = '".$this->protect_string_db($values[$key])."'";
 			}
-			else if($indexes[$key]['type'] == 'float')
+			else if($indexes[$key]['type'] == 'float' && !empty($values[$key]))
 			{
 				$req .= ", ".$key." = ".$values[$key]."";
 			}
-			else if($indexes[$key]['type'] == 'integer')
+			else if($indexes[$key]['type'] == 'integer' && !empty($values[$key]))
 			{
 				$req .= ", ".$key." = ".$values[$key]."";
 			}
@@ -694,19 +700,19 @@ class foldertype extends dbquery
 
 		foreach(array_keys($values)as $key)
 		{
-			if($indexes[$key]['type'] == 'date')
+			if($indexes[$key]['type'] == 'date' && !empty($values[$key]))
 			{
 				array_push($data, array('column' => $key, 'value' => $this->format_date_db($values[$key]), 'type' => "date"));
 			}
-			else if($indexes[$key]['type'] == 'string')
+			else if($indexes[$key]['type'] == 'string' && !empty($values[$key]))
 			{
 				array_push($data, array('column' => $key, 'value' => $this->protect_string_db($values[$key]), 'type' => "string"));
 			}
-			else if($indexes[$key]['type'] == 'float')
+			else if($indexes[$key]['type'] == 'float' && !empty($values[$key]))
 			{
 				array_push($data, array('column' => $key, 'value' => $values[$key], 'type' => "float"));
 			}
-			else if($indexes[$key]['type'] == 'integer')
+			else if($indexes[$key]['type'] == 'integer' && !empty($values[$key]))
 			{
 				array_push($data, array('column' => $key, 'value' => $values[$key], 'type' => "integer"));
 			}

@@ -337,7 +337,6 @@ class folder extends request
 
 			$_SESSION['m_admin']['folder']['indexes'] = $values ;
 			$foldertype->check_indexes($_SESSION['m_admin']['folder']['foldertype_id'], $values );
-
 		}
 		else
 		{
@@ -663,7 +662,7 @@ class folder extends request
 	public function delete_folder($folder_sys_id, $foldertype)
 	{
 		$this->connect();
-		$this->query("select coll_id from ".$_SESSION['tablename']['fold_foldertypes']." where foldertype = ".$foldertype);
+		$this->query("select coll_id from ".$_SESSION['tablename']['fold_foldertypes']." where foldertype_id = ".$foldertype);
 		$res = $this->fetch_object();
 		$coll_id = $res->coll_id;
 		require_once($_SESSION['pathtocoreclass'].'class_security.php');
@@ -672,8 +671,24 @@ class folder extends request
 
 		if(!empty($table) && !empty($folder_sys_id))
 		{
-			$this->query("update ".$table." set status = 'DEL' where folders_system_id = ".$folder_sys_id);
-			$this->query("update ".$_SESSION['tablename']['fold_folders']."where folders_system_id = ".$folder_sys_id);
+			$this->query("select folder_level from ".$_SESSION['tablename']['fold_folders']." where folders_system_id = ".$folder_sys_id);
+			$res = $this->fetch_object();
+			$level = $res->folder_level;
+			$where = '';
+
+			if($level == 1)
+			{
+				$this->query("select folders_system_id from ".$_SESSION['tablename']['fold_folders']." where parent_id = ".$folder_sys_id." and folder_level = 2");
+				if($this->nb_result() > 0)
+				{
+					while($res = $this->fetch_object())
+					{
+						$where .= " or folders_system_id = ".$res->folders_system_id;
+					}
+				}
+			}
+			$this->query("update ".$table." set status = 'DEL' where folders_system_id = ".$folder_sys_id.$where);
+			$this->query("update ".$_SESSION['tablename']['fold_folders']." set status = 'DEL' where folders_system_id = ".$folder_sys_id.$where);
 		}
 	}
 

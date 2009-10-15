@@ -27,7 +27,7 @@ $mode = $_REQUEST['mode'];
 $table = $_SESSION['tablename']['fold_folders'];
 $where = '';
 $select = array();
-$select[$table]= array( 'folder_name', 'subject', 'folders_system_id');
+$select[$table]= array( 'folder_id', 'folder_name',  'folders_system_id');
 if($mode == 'market')
 {
 	$where = " folder_level = 2 and ";
@@ -39,11 +39,11 @@ else
 }
 if($_SESSION['config']['databasetype'] == "POSTGRESQL")
 {
-	$where .= " (folder_name ilike '%".$req->protect_string_db($_REQUEST['Input'])."%' or subject ilike '%".$req->protect_string_db($_REQUEST['Input'])."%' ) and status <> 'DEL'";
+	$where .= " (folder_name ilike '%".$req->protect_string_db($_REQUEST['Input'])."%' or folder_id ilike '%".$req->protect_string_db($_REQUEST['Input'])."%' ) and status <> 'DEL'";
 }
 else
 {
-	$where .= " (folder_name like '%".$req->protect_string_db($_REQUEST['Input'])."%' or subject like '%".$req->protect_string_db($_REQUEST['Input'])."%' ) and status <> 'DEL'";
+	$where .= " (folder_name like '%".$req->protect_string_db($_REQUEST['Input'])."%' or folder_id like '%".$req->protect_string_db($_REQUEST['Input'])."%' ) and status <> 'DEL'";
 }
 $other = 'order by subject, folder_name';
 
