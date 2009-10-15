@@ -1,6 +1,13 @@
+CREATE SEQUENCE folders_system_id_seq
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 20
+  CACHE 1;
+
 CREATE TABLE folders
 (
-  folders_system_id serial NOT NULL,
+  folders_system_id bigint NOT NULL DEFAULT nextval('folders_system_id_seq'::regclass),
   folder_id character varying(255) NOT NULL,
   foldertype_id integer,
   parent_id bigint DEFAULT (0)::bigint,
@@ -76,9 +83,16 @@ CREATE TABLE folders_out (
 WITH (OIDS=FALSE);
 ALTER TABLE folders OWNER TO postgres;
 
+CREATE SEQUENCE foldertype_id_id_seq
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 5
+  CACHE 1;
+
 CREATE TABLE foldertypes
 (
-  foldertype_id serial NOT NULL,
+  foldertype_id  bigint NOT NULL DEFAULT nextval('foldertype_id_id_seq'::regclass),
   foldertype_label character varying(255) NOT NULL,
   maarch_comment text,
   retention_time character varying(50),

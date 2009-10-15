@@ -4,11 +4,11 @@ CREATE TABLE IF NOT EXISTS folders (
   foldertype_id int(8) default NULL,
   parent_id int(8) default '0',
   folder_name varchar(255) collate utf8_unicode_ci default NULL,
-  `subject` varchar(255) collate utf8_unicode_ci default NULL,
+  subject varchar(255) collate utf8_unicode_ci default NULL,
   description varchar(255) collate utf8_unicode_ci default NULL,
   author varchar(255) collate utf8_unicode_ci default NULL,
   typist varchar(255) collate utf8_unicode_ci default NULL,
-  `status` varchar(50) collate utf8_unicode_ci NOT NULL default 'NEW',
+  status varchar(50) collate utf8_unicode_ci NOT NULL default 'NEW',
   folder_level int(2) default '1',
   creation_date datetime NOT NULL,
   folder_out_id int(8) default NULL,
@@ -53,6 +53,7 @@ CREATE TABLE IF NOT EXISTS folders (
   custom_t15 varchar(255) collate utf8_unicode_ci default NULL,
   is_complete char(1) collate utf8_unicode_ci default 'N',
   is_folder_out char(1) collate utf8_unicode_ci default 'N',
+   last_modified_date datetime default NULL,
   PRIMARY KEY  (folders_system_id),
   UNIQUE KEY folder_id (folder_id)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci  ;
@@ -126,3 +127,10 @@ CREATE TABLE IF NOT EXISTS foldertypes_doctypes_level1 (
   doctypes_first_level_id int(8) NOT NULL,
   PRIMARY KEY  (foldertype_id,doctypes_first_level_id)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+CREATE TABLE entreprise.foldertypes_indexes (
+foldertype_id BIGINT NULL ,
+field_name VARCHAR( 255 ) NULL ,
+mandatory CHAR( 1 ) NOT NULL ,
+PRIMARY KEY ( foldertype_id , field_name )
+) ENGINE = MYISAM ;
