@@ -243,7 +243,7 @@ if(count($_REQUEST['meta']) > 0)
 				$shipper = $func->wash($_REQUEST['shipper'], "no", _SHIPPER,"no");
 				if($_SESSION['config']['databasetype'] == "POSTGRESQL")
 				{
-					$where_request .= " (exp_contact_id in(select contact_id from ".$_SESSION['tablename']['contacts']." where lastname  ILIKE '".$func->protect_string_db($shipper)."%' or  firstname ILIKE '".$func->protect_string_db($shipper)."%' or  society ILIKE '".$func->protect_string_db($shipper)."%' or  function ILIKE '".$func->protect_string_db($shipper)."%') or exp_user_id in (select user_id from ".$_SESSION['tablename']['users']." where lastname  ILIKE '".$func->protect_string_db($shipper)."%' or  firstname ILIKE '".$func->protect_string_db($shipper)."%'  or  user_id LIKE '".$func->protect_string_db($shipper)."%')) and ";
+					$where_request .= " (exp_contact_id in(select contact_id from ".$_SESSION['tablename']['contacts']." where lastname  ILIKE '".$func->protect_string_db($shipper)."%' or  firstname ILIKE '".$func->protect_string_db($shipper)."%' or  society ILIKE '".$func->protect_string_db($shipper)."%' or  function ILIKE '".$func->protect_string_db($shipper)."%') or exp_user_id in (select user_id from ".$_SESSION['tablename']['users']." where lastname  ILIKE '".$func->protect_string_db($shipper)."%' or  firstname ILIKE '".$func->protect_string_db($shipper)."%'  or  user_id ILIKE '".$func->protect_string_db($shipper)."%')) and ";
 				}
 				else
 				{
