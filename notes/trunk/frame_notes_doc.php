@@ -1,7 +1,7 @@
 <?php  /**
 * File : frame_notes_doc.php
 *
-* Frame, shows the notes of a document 
+* Frame, shows the notes of a document
 *
 * @package Maarch LetterBox 2.3
 * @version 1.0
@@ -9,7 +9,7 @@
 * @license GPL
 * @author  Claire Figueras  <dev@maarch.org>
 */
-session_name('PeopleBox'); 
+session_name('PeopleBox');
 session_start();
 require_once($_SESSION['pathtocoreclass']."class_functions.php");
 require_once($_SESSION['pathtocoreclass']."class_core_tools.php");
@@ -28,7 +28,7 @@ if(empty($_SESSION['collection_id_choice']))
 //$db->query("select i.id, i.note_text, i.date, i.user_id,  u.lastname, u.firstname from ".$_SESSION['tablename']['not_notes']." i
 //inner join ".$_SESSION['tablename']['users']." u on i.user_id  = u.user_id  WHERE identifier = ".$_SESSION['doc_id']." and i.coll_id = '".$_SESSION['collection_id_choice']."' ORDER  BY date desc");
 require_once($_SESSION['pathtocoreclass']."class_request.php");
-require_once($_SESSION['config']['businessapppath']."class".$_SESSION['slash_env']."class_list_show.php");
+require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_list_show.php");
 $func = new functions();
 $select[$_SESSION['tablename']['users']] = array();
 array_push($select[$_SESSION['tablename']['users']],"user_id","lastname","firstname");
@@ -96,7 +96,7 @@ for ($ind_notes1=0;$ind_notes1<count($tabNotes);$ind_notes1++)
 				$tabNotes[$ind_notes1][$ind_notes2]["size"]=$size_small ;
 				$tabNotes[$ind_notes1][$ind_notes2]["label_align"]="left";
 				$tabNotes[$ind_notes1][$ind_notes2]["align"]="left";
-				$tabNotes[$ind_notes1][$ind_notes2]["valign"]="bottom"; 
+				$tabNotes[$ind_notes1][$ind_notes2]["valign"]="bottom";
 				$tabNotes[$ind_notes1][$ind_notes2]["show"]=true;
 			}
 			if($tabNotes[$ind_notes1][$ind_notes2][$value]=="date")
@@ -137,10 +137,10 @@ for ($ind_notes1=0;$ind_notes1<count($tabNotes);$ind_notes1++)
 //$request->show_array($tabNotes);
 $core_tools->load_html();
 //here we building the header
-$core_tools->load_header();	
+$core_tools->load_header();
 ?>
 <body id="<? echo $body; ?>">
-<?php 
+<?php
 $title = '';
 $list_notes = new list_show();
 $list_notes->list_simple($tabNotes, count($tabNotes), $title,'id','id', false, '',$css);

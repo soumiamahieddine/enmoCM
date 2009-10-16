@@ -1,7 +1,7 @@
 <?php  /**
 * File : frame_notes_doc.php
 *
-* Frame, shows the notes of a document 
+* Frame, shows the notes of a document
 *
 * @package Maarch LetterBox 2.3
 * @version 1.0
@@ -9,7 +9,7 @@
 * @license GPL
 * @author  Loïc Vinet  <dev@maarch.org>
 */
-session_name('PeopleBox'); 
+session_name('PeopleBox');
 session_start();
 require_once($_SESSION['pathtocoreclass']."class_functions.php");
 require_once($_SESSION['pathtocoreclass']."class_core_tools.php");
@@ -28,7 +28,7 @@ if(empty($_SESSION['collection_id_choice']))
 }
 
 require_once($_SESSION['pathtocoreclass']."class_request.php");
-require_once($_SESSION['config']['businessapppath']."class".$_SESSION['slash_env']."class_list_show.php");
+require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_list_show.php");
 
 /*
 $func = new functions();
@@ -115,10 +115,10 @@ for ($ind_notes1=0;$ind_notes1<count($tabNotes);$ind_notes1++)
 
 $core_tools->load_html();
 
-$core_tools->load_header();	
+$core_tools->load_header();
 ?>
 
-<?php 
+<?php
 $title = '';
 $list_notes = new list_show();
 $list_notes->list_simple($tabNotes, count($tabNotes), $title,'id','id', false, '','listing2');
