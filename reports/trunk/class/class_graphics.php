@@ -11,9 +11,9 @@
 * @author  Claire Figueras  <dev@maarch.org>
 *
 */
-require_once($_SESSION['config']['businessapppath']."tools".$_SESSION['slash_env']."graphic_lib".$_SESSION['slash_env']."LinePlot.class.php");
-require_once($_SESSION['config']['businessapppath']."tools".$_SESSION['slash_env']."graphic_lib".$_SESSION['slash_env']."BarPlot.class.php");
-require_once($_SESSION['config']['businessapppath']."tools".$_SESSION['slash_env']."graphic_lib".$_SESSION['slash_env']."Pie.class.php");
+require_once($_SESSION['config']['businessapppath']."tools".DIRECTORY_SEPARATOR."graphic_lib".DIRECTORY_SEPARATOR."LinePlot.class.php");
+require_once($_SESSION['config']['businessapppath']."tools".DIRECTORY_SEPARATOR."graphic_lib".DIRECTORY_SEPARATOR."BarPlot.class.php");
+require_once($_SESSION['config']['businessapppath']."tools".DIRECTORY_SEPARATOR."graphic_lib".DIRECTORY_SEPARATOR."Pie.class.php");
 /**
 * Class graphics : Contains the functions to create graphics
 *
@@ -134,7 +134,7 @@ class graphics
 	* @param string  $Ylabel  label of the Y axis
 	*/
 	public function courbe($width = 400, $height = 400, $values, $title, $labels, $XLabel = "", $YLabel = "" )
-	{	
+	{
 
  		$graph = new Graph($width,$height);
 		$graph->setAntiAliasing(TRUE);
@@ -147,7 +147,7 @@ class graphics
 		 $plot->title->setFont(new TuffyBold(10));
 
 	     $plot->setBackgroundColor($this->background_color);
-	
+
 		$plot->yAxis->title->set($YLabel);
 		$plot->yAxis->title->setColor($this->typo_color);
 		$plot->yAxis->title->setFont(new TuffyBold(10));
@@ -186,9 +186,9 @@ class graphics
 
 	 $graph->draw();
 	}
-	
+
 	/**
-	* Constructs a bars graphic 
+	* Constructs a bars graphic
 	*
 	* @param integer  $width  general width of the graphic
 	* @param integer  $height  general height of the graphic
@@ -217,7 +217,7 @@ class graphics
 	   );
 	   $plot->setSpace(5, 5, 5, NULL);
 	   $plot->setPadding(NULL, NULL, 50, $bottom_margin);
-	   
+
 	   $plot->setBackgroundColor($this->background_color);
 		//$plot->setYMax(400);
 	   $plot->barShadow->setSize(3);
@@ -263,7 +263,7 @@ class graphics
 	* @param string  $plot2_legend  legend for the second line
 	*/
 	public function groupe_courbes($width = 400, $height = 400, $values, $title, $labels, $XLabel = "", $YLabel = "", $val2, $plot1_legend, $plot2_legend )
-	{	
+	{
 
  		$graph = new Graph($width,$height);
 		 $graph->setAntiAliasing(TRUE);
@@ -329,9 +329,9 @@ class graphics
 
 		 $graph->draw();
 	}
-	
+
 	/**
-	* Constructs a pie graphic 
+	* Constructs a pie graphic
 	*
 	* @param integer  $width  general width of the graphic
 	* @param integer  $height  general height of the graphic
