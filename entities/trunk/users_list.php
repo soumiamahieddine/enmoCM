@@ -29,8 +29,8 @@ $page_id = "users_list";
 $admin->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
 require_once($_SESSION['pathtocoreclass']."class_request.php");
-require_once($_SESSION['pathtomodules'].'entities'.$_SESSION['slash_env'].'class'.$_SESSION['slash_env'].'class_manage_entities.php');
-require_once($_SESSION['config']['businessapppath']."class".$_SESSION['slash_env'].'class_list_show.php');
+require_once($_SESSION['pathtomodules'].'entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_entities.php');
+require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR.'class_list_show.php');
 $func = new functions();
 $ent = new entity();
 

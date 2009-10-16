@@ -24,7 +24,7 @@ $admin->test_admin('manage_entities', 'entities');
 
 require_once($_SESSION['pathtocoreclass']."class_db.php");
 
-$path = $_SESSION['pathtomodules'].'entities'.$_SESSION['slash_env'].'class'.$_SESSION['slash_env'].'class_manage_entities.php';
+$path = $_SESSION['pathtomodules'].'entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_entities.php';
 
 require($path);
 

@@ -42,8 +42,8 @@ $admin->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
 require_once($_SESSION['pathtocoreclass']."class_request.php");
 require_once($_SESSION['pathtocoreclass']."class_functions.php");
-require_once($_SESSION['config']['businessapppath']."class".$_SESSION['slash_env']."class_list_show.php");
-require_once($_SESSION['pathtomodules'].'entities'.$_SESSION['slash_env'].'class'.$_SESSION['slash_env'].'class_manage_entities.php');
+require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_list_show.php");
+require_once($_SESSION['pathtomodules'].'entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_entities.php');
 $ent = new entity();
 $func = new functions();
 $request = new request;
@@ -65,7 +65,14 @@ if(isset($_REQUEST['order_field']) && !empty($_REQUEST['order_field']))
 if(isset($_REQUEST['what']) && !empty($_REQUEST['what']))
 {
 	$what = $func->protect_string_db($_REQUEST['what']);
-	$where = "(entity_label like '".strtolower($what)."%' or entity_label like '".strtoupper($what)."%') ";
+	if($_SESSION['config']['databasetype'] == 'POSTGRESQL')
+	{
+		$where = "(entity_label ilike '".strtolower($what)."%' or entity_label ilike '".strtoupper($what)."%') ";
+	}
+	else
+	{
+		$where = "(entity_label like '".strtolower($what)."%' or entity_label like '".strtoupper($what)."%') ";
+	}
 }
 
 if($_SESSION['user']['UserId'] != 'superadmin')

@@ -32,8 +32,8 @@ $page_id = "entity_up";
 $admin->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
 //require_once($_SESSION['pathtocoreclass']."class_db.php");
-//require_once($_SESSION['pathtomodules']."folder".$_SESSION['slash_env'].'class'.$_SESSION['slash_env'].'class_admin_foldertypes.php');
-require_once($_SESSION['pathtomodules'].'entities'.$_SESSION['slash_env'].'class'.$_SESSION['slash_env'].'class_manage_entities.php');
+//require_once($_SESSION['pathtomodules']."folder".DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_admin_foldertypes.php');
+require_once($_SESSION['pathtomodules'].'entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_entities.php');
 
 $func = new functions();
 $ent = new entity();

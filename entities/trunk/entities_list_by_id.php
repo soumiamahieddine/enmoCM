@@ -15,14 +15,18 @@ session_start();
 require_once($_SESSION['pathtocoreclass']."class_functions.php");
 require_once($_SESSION['pathtocoreclass']."class_db.php");
 require_once($_SESSION['pathtocoreclass']."class_request.php");
-require_once($_SESSION['pathtomodules'].'entities'.$_SESSION['slash_env'].'class'.$_SESSION['slash_env'].'class_manage_entities.php');
+require_once($_SESSION['pathtomodules'].'entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_entities.php');
 $ent = new entity();
-//$db = new dbquery();
-//$db->connect();
 
-//$db->query("select entity_id from ".$_SESSION['tablename']['ent_entities']." where entity_id like '".$_REQUEST['what']."%' order by entity_id");
 $select = "select entity_id from ".$_SESSION['tablename']['ent_entities'];
-$where = " where entity_id like '".$_REQUEST['what']."%' ";
+if($_SESSION['config']['databasetype'] == 'POSTGRESQL')
+{
+	$where = " where entity_id ilike '".$_REQUEST['what']."%' ";
+}
+else
+{
+	$where = " where entity_id like '".$_REQUEST['what']."%' ";
+}
 if($_SESSION['user']['UserId'] != 'superadmin')
 {
 	$my_tab_entities_id = $ent->get_all_entities_id_user($_SESSION['user']['entities']);

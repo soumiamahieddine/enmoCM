@@ -16,7 +16,7 @@ session_start();
 require_once($_SESSION['pathtocoreclass']."class_functions.php");
 
 require_once($_SESSION['pathtocoreclass']."class_db.php");
-require_once($_SESSION['pathtomodules'].'entities'.$_SESSION['slash_env'].'class'.$_SESSION['slash_env'].'class_manage_entities.php');
+require_once($_SESSION['pathtomodules'].'entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_entities.php');
 
 require_once($_SESSION['pathtocoreclass']."class_core_tools.php");
 $admin = new core_tools();
