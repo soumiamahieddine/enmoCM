@@ -1,7 +1,7 @@
 <?php  /**
 * File : cases_notes_list.php
 *
-* Frame, shows the notes of a document 
+* Frame, shows the notes of a document
 *
 * @package Maarch Entreprise 1.0
 * @version 1.0
@@ -9,14 +9,14 @@
 * @license GPL
 * @author  Loïc Vinet  <dev@maarch.org>
 */
-session_name('PeopleBox'); 
+session_name('PeopleBox');
 session_start();
 require_once($_SESSION['pathtocoreclass']."class_functions.php");
 require_once($_SESSION['pathtocoreclass']."class_core_tools.php");
 require_once($_SESSION['pathtocoreclass']."class_db.php");
 require_once($_SESSION['pathtocoreclass']."class_request.php");
 require_once($_SESSION['pathtocoreclass']."class_security.php");
-require_once($_SESSION['config']['businessapppath']."class".$_SESSION['slash_env']."class_list_show.php");
+require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_list_show.php");
 require_once($_SESSION['pathtocoreclass']."class_manage_status.php");
 
 require_once($_SESSION['pathtomodules']."cases".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR.'class_modules_tools.php');
@@ -176,7 +176,7 @@ for ($ind_notes1=0;$ind_notes1<count($tabNotes);$ind_notes1++)
 				$tabNotes[$ind_notes1][$ind_notes2]["size"]=$size_small ;
 				$tabNotes[$ind_notes1][$ind_notes2]["label_align"]="left";
 				$tabNotes[$ind_notes1][$ind_notes2]["align"]="left";
-				$tabNotes[$ind_notes1][$ind_notes2]["valign"]="bottom"; 
+				$tabNotes[$ind_notes1][$ind_notes2]["valign"]="bottom";
 				$tabNotes[$ind_notes1][$ind_notes2]["show"]=true;
 			}
 			if($tabNotes[$ind_notes1][$ind_notes2][$value]=="date")
@@ -217,10 +217,10 @@ for ($ind_notes1=0;$ind_notes1<count($tabNotes);$ind_notes1++)
 //$request->show_array($tabNotes);
 $core_tools->load_html();
 //here we building the header
-$core_tools->load_header();	
+$core_tools->load_header();
 ?>
 <body id="<? echo $body; ?>">
-<?php 
+<?php
 $title = '';
 $list_notes = new list_show();
 $list_notes->list_simple($tabNotes, count($tabNotes), $title,'id','id', false, '',$css);
