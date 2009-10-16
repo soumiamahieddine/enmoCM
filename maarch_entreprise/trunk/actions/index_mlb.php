@@ -382,10 +382,11 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 	$frm_str .= '</div>';
 		$frm_str .= '</div>';
 
+
 		/*** Frame to display the doc ***/
 		$frm_str .= '<div id="validright">';
 		$frm_str .= '<div id="create_contact_div" style="display:none">';
-			$frm_str .= '<div>';
+			$frm_str .= '<div >';
 	$frm_str .= '<form name="indexingfrmcontact" id="indexingfrmcontact" method="post" action="'.$_SESSION['config']['businessappurl'].'contact_info.php" >';
 
 			$frm_str .= '<table>';
