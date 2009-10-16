@@ -15,7 +15,7 @@ session_start();
 
 $admin = new core_tools();
 $admin->test_admin('admin_templates', 'templates');
-require_once($_SESSION['pathtomodules']."templates".$_SESSION['slash_env']."class".$_SESSION['slash_env']."class_admin_templates.php");
+require_once($_SESSION['pathtomodules']."templates".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_admin_templates.php");
 /****************Management of the location bar  ************/
 $init = false;
 if($_REQUEST['reinit'] == "true")
