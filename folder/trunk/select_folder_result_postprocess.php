@@ -20,7 +20,7 @@ require_once($_SESSION['pathtocoreclass']."class_core_tools.php");
 $func = new functions();
 $core_tools = new core_tools();
 $core_tools->load_lang();
-require_once($_SESSION['pathtomodules']."folder".$_SESSION['slash_env']."class".$_SESSION['slash_env']."class_modules_tools.php");
+require_once($_SESSION['pathtomodules']."folder".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
 require_once($_SESSION['pathtocoreclass']."class_history.php");
 //*************** HISTORY ***************//
 $users = new history();

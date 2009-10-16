@@ -1,7 +1,7 @@
-<?php 
+<?php
 /*
 *
-*    Copyright 2008,2009 Maarch    
+*    Copyright 2008,2009 Maarch
 *
 *  This file is part of Maarch Framework.
 *
@@ -22,7 +22,7 @@
 /*
 * Deprecated file : to adapt to the new basket modifications
 */
-session_name('PeopleBox'); 
+session_name('PeopleBox');
 session_start();
 
 
@@ -30,10 +30,10 @@ require_once($_SESSION['pathtocoreclass']."class_functions.php");
 require_once($_SESSION['pathtocoreclass']."class_db.php");
 require_once($_SESSION['pathtocoreclass']."class_request.php");
 require_once($_SESSION['pathtocoreclass']."class_core_tools.php");
-require_once($_SESSION['pathtomodules']."folder".$_SESSION['slash_env']."class".$_SESSION['slash_env']."class_modules_tools.php");require_once($_SESSION['config']['businessapppath']."class".$_SESSION['slash_env']."class_list_show.php");
-	
+require_once($_SESSION['pathtomodules']."folder".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_list_show.php");
+
 $core_tools = new core_tools();
- 
+
 if(!$core_tools->is_module_loaded("folder"))
 {
 	echo "Folder module missing !<br/>Please install this module.";
@@ -42,11 +42,11 @@ if(!$core_tools->is_module_loaded("folder"))
 
 $core_tools->load_lang();
 $core_tools->load_html();
-$core_tools->load_header();	
+$core_tools->load_header();
  ?>
 <body>
 <br/><br/>
-<?php 
+<?php
 
 	$select[$_SESSION['current_basket']['table']]= array();
 	$where = " status <> 'DEL' and status <> 'IMP' and ".$_SESSION['current_basket']['clause'];
@@ -70,7 +70,7 @@ $core_tools->load_header();
 					$tab[$i][$j]["align"]="left";
 					$tab[$i][$j]["valign"]="bottom";
 					$tab[$i][$j]["show"]=false;
-					
+
 				}
 				if($tab[$i][$j][$value]=="folder_id")
 				{
@@ -102,12 +102,12 @@ $core_tools->load_header();
 					$tab[$i][$j]["valign"]="bottom";
 					$tab[$i][$j]["show"]=true;
 				}
-				
+
 			}
 		}
 	}
 	$title = "";
-	
+
 	if($_SESSION['current_basket']['id'] == "CompleteFolders")
 	{
 		$title = _PROCESS_FOLDER_LIST." : ".$i." "._FOUND_FOLDERS;
@@ -121,7 +121,7 @@ $core_tools->load_header();
 		$title = _RESULTS." : ".$i." "._FOUND_FOLDERS;
 	}
 	$list=new list_show();
-	$list->list_doc($tab,$i,$title,"folder_system_id","folders_list","folder_system_id","folder_detail",false,true,"get","res_folders_list.php",_CHOOSE, false, false, true);	
+	$list->list_doc($tab,$i,$title,"folder_system_id","folders_list","folder_system_id","folder_detail",false,true,"get","res_folders_list.php",_CHOOSE, false, false, true);
 ?>
 </body>
 </html>

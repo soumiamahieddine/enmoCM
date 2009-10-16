@@ -13,7 +13,7 @@
 session_name('PeopleBox');
 session_start();
 require_once($_SESSION['pathtocoreclass']."class_request.php");
-require_once($_SESSION['config']['businessapppath']."class".$_SESSION['slash_env']."class_list_show.php");
+require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_list_show.php");
 require_once($_SESSION['pathtocoreclass']."class_core_tools.php");
 $core_tools = new core_tools();
 $lastname = '';
@@ -44,9 +44,9 @@ $page_label = _SEARCH_FOLDER;
 $page_id = "fold_view_folder";
 $core_tools->manage_location_bar($page_path, $page_label,$page_id, $init, $level);
 /***********************************************************/
-require_once($_SESSION['pathtomodules']."folder".$_SESSION['slash_env']."class".$_SESSION['slash_env']."class_modules_tools.php");
-require_once($_SESSION['pathtomodules']."indexing_searching".$_SESSION['slash_env']."class".$_SESSION['slash_env']."class_modules_tools.php");
-require_once($_SESSION['pathtomodules']."folder".$_SESSION['slash_env']."class".$_SESSION['slash_env']."class_folders_show.php");
+require_once($_SESSION['pathtomodules']."folder".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
+require_once($_SESSION['pathtomodules']."indexing_searching".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
+require_once($_SESSION['pathtomodules']."folder".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_folders_show.php");
 require_once($_SESSION['pathtocoreclass']."class_history.php");
 require_once($_SESSION['pathtocoreclass']."class_security.php");
 $security = new security();

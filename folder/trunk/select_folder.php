@@ -97,7 +97,7 @@ if($_SESSION['origin'] == "qualify")
 	}
 }
 //echo "<br/>folder ".$_SESSION['current_folder_id'];
-require_once($_SESSION['pathtomodules']."folder".$_SESSION['slash_env']."class".$_SESSION['slash_env']."class_modules_tools.php");
+require_once($_SESSION['pathtomodules']."folder".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
 $folder = new folder();
 if($_SESSION['current_folder_id'] <> "" && $folder->is_folder_exists($_SESSION['current_folder_id']))
 {

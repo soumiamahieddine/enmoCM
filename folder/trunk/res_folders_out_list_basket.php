@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
 * File : res_folders_out_list.php
 *
@@ -10,7 +10,7 @@
 * @license GPL
 * @author  Claire Figueras  <dev@maarch.org>
 */
-  session_name('PeopleBox'); 
+  session_name('PeopleBox');
 session_start();
 
  require_once($_SESSION['pathtocoreclass']."class_functions.php");
@@ -23,7 +23,7 @@ session_start();
  	echo "Folder module missing !<br/>Please install this module.";
 	exit();
  }
- require_once($_SESSION['pathtomodules']."folder".$_SESSION['slash_env']."class".$_SESSION['slash_env']."class_modules_tools.php");
+ require_once($_SESSION['pathtomodules']."folder".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
 
 //here we loading the lang vars
 $core_tools->load_lang();
@@ -31,9 +31,9 @@ $core_tools->load_lang();
 
  if(!isset($_REQUEST['field']) || empty($_REQUEST['field']))
  {
- 
+
  	$page = "folders_out_list.php";
- 	
+
  	header("location: ".$page);
  	exit;
  }
@@ -44,7 +44,7 @@ $core_tools->load_lang();
 	 	<script language="JavaScript" type="text/javascript" >
 	 	window.top.location = 'index.php?page=details_folder_out&origin=welcome&module=folder';
 	 	</script>
-	 	<?php 
- 	
+	 	<?php
+
  }
 ?>

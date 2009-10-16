@@ -1,7 +1,7 @@
-<?php 
+<?php
 /*
 *
-*    Copyright 2008,2009 Maarch    
+*    Copyright 2008,2009 Maarch
 *
 *  This file is part of Maarch Framework.
 *
@@ -22,36 +22,36 @@
 /*
 * Deprecated file : to adapt to the new basket modifications
 */
-session_name('PeopleBox'); 
+session_name('PeopleBox');
 session_start();
 
 require_once($_SESSION['pathtocoreclass']."class_functions.php");
 require_once($_SESSION['pathtocoreclass']."class_db.php");
 require_once($_SESSION['pathtocoreclass']."class_request.php");
 require_once($_SESSION['pathtocoreclass']."class_core_tools.php");
-require_once($_SESSION['pathtomodules']."folder".$_SESSION['slash_env']."class".$_SESSION['slash_env']."class_modules_tools.php");
-require_once($_SESSION['config']['businessapppath']."class".$_SESSION['slash_env']."class_list_show.php");
-	
+require_once($_SESSION['pathtomodules']."folder".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
+require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_list_show.php");
+
 $core_tools = new core_tools();
 if(!$core_tools->is_module_loaded("folder"))
 {
 	echo "Folder module missing !<br/>Please install this module.";
 	exit();
 }
- 
+
 $core_tools->load_lang();
 $core_tools->load_html();
-$core_tools->load_header();	
+$core_tools->load_header();
  ?>
 <body>
 <br/><br/>
-<?php 
+<?php
 
 	$select[$_SESSION['current_basket']['table']]= array();
 	$select[$_SESSION['tablename']['fold_folders']]= array();
 
 	array_push($select[$_SESSION['current_basket']['table']],"folder_out_id","folder_system_id", "last_name", "last_name_folder_out", "put_out_date", "return_date");
-	array_push($select[$_SESSION['tablename']['fold_folders']],"folders_system_id", "folder_id");	
+	array_push($select[$_SESSION['tablename']['fold_folders']],"folders_system_id", "folder_id");
 	$where = $_SESSION['current_basket']['table'].".folder_system_id = ".$_SESSION['tablename']['fold_folders'].".folders_system_id and ".$_SESSION['current_basket']['clause'];
 	$request= new request;
 	$tab=$request->select($select,$where,"",$_SESSION['config']['databasetype']);
@@ -65,12 +65,12 @@ $core_tools->load_header();
 				if($tab[$i][$j][$value]=="folders_system_id")
 				{
 					$tab[$i][$j]["folders_system_id"]=$tab[$i][$j]['value'];
-					$tab[$i][$j]["show"]=false;				
+					$tab[$i][$j]["show"]=false;
 				}
 				if($tab[$i][$j][$value]=="folder_system_id")
 				{
 					$tab[$i][$j]["folder_system_id"]=$tab[$i][$j]['value'];
-					$tab[$i][$j]["show"]=false;	
+					$tab[$i][$j]["show"]=false;
 				}
 				if($tab[$i][$j][$value]=="folder_id")
 				{
@@ -137,10 +137,10 @@ $core_tools->load_header();
 		}
 	}
 	$title = _FILE_OUT_LIST." : ".$i." "._FOUND_FOLDERS;
-	
+
 	$list=new list_show();
 	$list->list_doc($tab,$i,$title,"folder_out_id","folders_out_list","folder_out_id","folder_detail",false,true,"get","res_folders_out_list.php",_CHOOSE, false, false, true);
-	
+
 ?>
 </body>
 </html>
