@@ -90,7 +90,7 @@ if(!isset($_REQUEST['noinit']))
 {
 	$_SESSION['current_basket'] = array();
 }
-require_once($_SESSION['pathtomodules']."basket".$_SESSION['slash_env']."class".$_SESSION['slash_env']."class_modules_tools.php");
+require_once($_SESSION['pathtomodules']."basket".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
 /****************Management of the location bar  ************/
 $init = false;
 if($_REQUEST['reinit'] == "true")
@@ -161,13 +161,13 @@ if(isset($_SESSION['current_basket']['page_include']) && !empty($_SESSION['curre
 }
 else
 {
-	
+
 	if(count($_SESSION['user']['baskets'])> 0)
 	{
-		$core_tools->execute_modules_services($_SESSION['modules_services'], 'view_basket', "include");	
+		$core_tools->execute_modules_services($_SESSION['modules_services'], 'view_basket', "include");
 		echo '<p style="border:0px solid;padding-left:250px;"><img src="'.$_SESSION['config']['businessappurl'].'img/arrow_up.gif"></p>';
 		?><div align="left"  style="width:500px;"><?php
-		 
+
 		 echo "<p align = 'justify'>
 		 <table width='100%'>
 			 <tr>
@@ -177,7 +177,7 @@ else
 		 </table>
 		 </p>";
 		 ?></div><?
-		
+
 	}
 }
 

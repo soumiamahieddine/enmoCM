@@ -52,7 +52,7 @@ $page_id = "basket_add";
 $admin->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
 
-require_once($_SESSION['pathtomodules']."basket".$_SESSION['slash_env']."class".$_SESSION['slash_env']."class_admin_basket.php");
+require_once($_SESSION['pathtomodules']."basket".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_admin_basket.php");
 
 $_SESSION['origin'] = 'basket_add';
 $bask = new admin_basket();

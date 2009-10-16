@@ -34,7 +34,7 @@ require_once($_SESSION['pathtocoreclass']."class_functions.php");
 require_once($_SESSION['pathtocoreclass']."class_db.php");
 require_once($_SESSION['pathtocoreclass']."class_request.php");
 require_once($_SESSION['pathtocoreclass']."class_core_tools.php");
-require_once($_SESSION['config']['businessapppath']."class".$_SESSION['slash_env']."class_list_show.php");
+require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_list_show.php");
 require_once($_SESSION['pathtocoreclass']."class_security.php");
 $security = new security();
 $core_tools = new core_tools();
@@ -42,7 +42,7 @@ $core_tools->load_lang();
 $core_tools->load_html();
 $core_tools->load_header();
 $request= new request();
-require_once($_SESSION['pathtomodules']."basket".$_SESSION['slash_env']."class".$_SESSION['slash_env']."class_modules_tools.php");
+require_once($_SESSION['pathtomodules']."basket".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
 
 $bask = new basket();
 if(!empty($_REQUEST['id']))

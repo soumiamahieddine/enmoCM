@@ -41,7 +41,7 @@ if(!isset($_REQUEST['noinit']))
 {
 	$_SESSION['current_basket'] = array();
 }
-require_once($_SESSION['pathtomodules']."basket".$_SESSION['slash_env']."class".$_SESSION['slash_env']."class_modules_tools.php");
+require_once($_SESSION['pathtomodules']."basket".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
 /************/
 $bask = new basket();
 $db = new dbquery();
@@ -60,7 +60,7 @@ $db->connect();
 			<div class="blank_space">&nbsp;</div>
 			<?
 		}
-		?> <ul class="basket_elem"><? 
+		?> <ul class="basket_elem"><?
 		$abs_basket = false;
 		for ($i=0;$i<count($_SESSION['user']['baskets']);$i++)
 		{
@@ -83,7 +83,7 @@ $db->connect();
 					$nb = $db->nb_result();
 				}
 			}
-			
+
 			if ($nb <> 0)
 				$nb = "(".$nb.")";
 			else

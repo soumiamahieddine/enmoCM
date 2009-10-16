@@ -25,7 +25,7 @@ if(!isset($_REQUEST['noinit']))
 {
 	$_SESSION['current_basket'] = array();
 }
-require_once($_SESSION['pathtomodules']."basket".$_SESSION['slash_env']."class".$_SESSION['slash_env']."class_modules_tools.php");
+require_once($_SESSION['pathtomodules']."basket".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
 $bask = new basket();
 $bask->load_basket();
 if(isset($_REQUEST['baskets']) && !empty($_REQUEST['baskets']))
