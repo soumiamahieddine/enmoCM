@@ -165,7 +165,7 @@ else
 	if(count($_SESSION['user']['baskets'])> 0)
 	{
 		$core_tools->execute_modules_services($_SESSION['modules_services'], 'view_basket', "include");
-		echo '<p style="border:0px solid;padding-left:250px;"><img src="'.$_SESSION['config']['businessappurl'].'img/arrow_up.gif"></p>';
+		echo '<p style="border:0px solid;padding-left:250px;"><img src="'.$_SESSION['config']['businessappurl'].'img/arrow_up.gif" /></p>';
 		?><div align="left"  style="width:500px;"><?php
 
 		 echo "<p align = 'justify'>

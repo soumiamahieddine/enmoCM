@@ -19,7 +19,7 @@
 */
 
 /*
-* @brief  Access to the baskets
+* @brief  Lists the baskets for the current user (service)
 *
 *
 * @file
