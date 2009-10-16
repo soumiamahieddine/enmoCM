@@ -119,7 +119,7 @@ $core_tools->load_header(_MANAGE_RIGHTS);
 <div class="block" >
 <?php  //$func->show_array($_SESSION['m_admin']['groups']['security']);
 ?>
-<h2 class="tit"><?php  echo _MANAGE_RIGHTS;?> : </h2>
+<h2 class="tit"><small><?php  echo _MANAGE_RIGHTS;?> : </small></h2>
 <form name="security_form" method="get">
 	<?php
 	if(count($_SESSION['m_admin']['groups']['security']) < 1 )
