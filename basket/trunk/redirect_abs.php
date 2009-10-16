@@ -74,7 +74,14 @@ if(isset($_GET['what']) && !empty($_GET['what']))
 		}
 		else
 		{
-			$where = "where user_id <> '".$this_user."' and department like '".strtolower($what)."%' or department like '".strtoupper($what)."%' order by department, lastname  ";
+			if($_SESSION('config']['databasetype'] == 'POSTGRESQL')
+			{
+				$where = "where user_id <> '".$this_user."' and department ilike '".strtolower($what)."%' or department ilike '".strtoupper($what)."%' order by department, lastname  ";
+			}
+			else
+			{
+				$where = "where user_id <> '".$this_user."' and department like '".strtolower($what)."%' or department like '".strtoupper($what)."%' order by department, lastname  ";
+			}
 		}
 	}
 	else
@@ -85,7 +92,14 @@ if(isset($_GET['what']) && !empty($_GET['what']))
 		}
 		else
 		{
-			$where = "where user_id <> '".$this_user."' and lastname like '".strtolower($what)."%' or lastname like '".strtoupper($what)."%' order by  lastname";
+			if($_SESSION('config']['databasetype'] == 'POSTGRESQL')
+			{
+				$where = "where user_id <> '".$this_user."' and lastname ilike '".strtolower($what)."%' or lastname ilike '".strtoupper($what)."%' order by  lastname";
+			}
+			else
+			{
+				$where = "where user_id <> '".$this_user."' and lastname like '".strtolower($what)."%' or lastname like '".strtoupper($what)."%' order by  lastname";
+			}
 		}
 	}
 }
