@@ -60,7 +60,14 @@ $core_tools->load_header( );
 	}
 	else
 	{
-		$where = " folder_id like 'T_%' and status <> 'DEL'";
+		if($_SESSION['config']['databasetype'] == "POSTGRESQL")
+		{
+			$where = " folder_id ilike 'T_%' and status <> 'DEL'";
+		}
+		else
+		{
+			$where = " folder_id like 'T_%' and status <> 'DEL'";
+		}
 	}
 	$request= new request;
 	$tab=$request->select($select,$where,"",$_SESSION['config']['databasetype']);

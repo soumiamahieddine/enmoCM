@@ -26,7 +26,14 @@ if(isset($_GET['what']) && !empty($_GET['what']))
 	else
 	{
 		$what = addslashes($func->wash($_GET['what'], "no", "", "no"));
-		$where = "(".$_SESSION['tablename']['users'].".lastname like '".strtolower($what)."%' or ".$_SESSION['tablename']['users'].".lastname like '".strtoupper($what)."%') ";
+		if($_SESSION['config']['databasetype'] == 'POSTGRESQL')
+		{
+			$where = "(".$_SESSION['tablename']['users'].".lastname ilike '".strtolower($what)."%' or ".$_SESSION['tablename']['users'].".lastname ilike '".strtoupper($what)."%') ";
+		}
+		else
+		{
+			$where = "(".$_SESSION['tablename']['users'].".lastname like '".strtolower($what)."%' or ".$_SESSION['tablename']['users'].".lastname like '".strtoupper($what)."%') ";
+		}
 	}
 }
 	$db = new dbquery();
