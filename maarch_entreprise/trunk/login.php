@@ -78,15 +78,15 @@ if(trim($_SERVER['argv'][0]) <> "")
 //$path_server = $_SERVER['DOCUMENT_ROOT'];
 if(strtoupper(substr(PHP_OS, 0, 3)) != "WIN" && strtoupper(substr(PHP_OS, 0, 3)) != "WINNT")
 {
-	$_SESSION['slash_env'] = "/";
+	//$_SESSION['slash_env'] = "/";
 	$path_server = str_replace("\\",DIRECTORY_SEPARATOR, $path_server);
 }
 else
 {
-	$_SESSION['slash_env'] = "\\";
+	//$_SESSION['slash_env'] = "\\";
 	$path_server = str_replace("/",DIRECTORY_SEPARATOR, $path_server);
 }
-
+$_SESSION['slash_env'] = DIRECTORY_SEPARATOR;
 $path_tmp = explode(DIRECTORY_SEPARATOR, str_replace('/', DIRECTORY_SEPARATOR,$_SERVER['SCRIPT_FILENAME']));
 $path_server = implode(DIRECTORY_SEPARATOR,array_slice($path_tmp,0,array_search('apps',$path_tmp))).DIRECTORY_SEPARATOR;
 

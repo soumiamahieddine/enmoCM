@@ -136,7 +136,7 @@ if(count($_REQUEST['meta']) > 0)
 
 				$where_request .=" and  ";
 			}
-			// CASE_NUMBER 
+			// CASE_NUMBER
 			else if($tab_id_fields[$j] == 'numcase' && !empty($_REQUEST['numcase']))
 			{
 				$json_txt .= "'numcase' : ['".addslashes(trim($_REQUEST['numcase']))."'],";
@@ -291,7 +291,7 @@ if(count($_REQUEST['meta']) > 0)
 			else if($tab_id_fields[$j] == 'fulltext' && !empty($_REQUEST['fulltext']))
 			{
 				$json_txt .= " 'fulltext' : ['".addslashes(trim($_REQUEST['fulltext']))."'],";
-				set_include_path($_SESSION['config']['businessapppath']."tools".$_SESSION['slash_env'].PATH_SEPARATOR.get_include_path());
+				set_include_path($_SESSION['config']['businessapppath']."tools".DIRECTORY_SEPARATOR.PATH_SEPARATOR.get_include_path());
 				require_once('Zend/Search/Lucene.php');
 				$_SESSION['search']['plain_text'] = $_REQUEST['fulltext'];
 				$path_to_lucene_index = $_SESSION['collections'][0]['path_to_lucene_index'];
@@ -703,10 +703,10 @@ else
 }
 if($_REQUEST['specific_case'] == "attach_to_case")
 {
-	
+
 	$page = 'list_results_mlb_frame';
 	?>
-	
+
 	<!--<script language="javascript" type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'].'indexing_searching/'.$page.'.php?searched_item='.$_REQUEST['searched_item'].'&searched_value='.$_REQUEST['searched_value'];?>';</script>-->
 	<script language="javascript" type="text/javascript">window.top.location.href='<?php  echo $_SESSION['urltomodules'].'cases/'.$page.'.php?searched_item='.$_REQUEST['searched_item'].'&searched_value='.$_REQUEST['searched_value'];?>';</script>
 	<?php

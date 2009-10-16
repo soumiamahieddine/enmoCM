@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
 * File : admin.php
 *
@@ -13,12 +13,12 @@
 */
 
 /**
-* include the test admin page 
+* include the test admin page
 *
 * this page tests the user access level, and if the user is an admin or not
 */
 require_once($_SESSION['pathtocoreclass']."class_functions.php");
-require($_SESSION['config']['businessapppath']."class".$_SESSION['slash_env']."class_admin.php");
+require($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_admin.php");
 $admin = new admin();
 
 $core_tools2 = new core_tools();
@@ -33,7 +33,7 @@ $level = "";
 if($_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1)
 {
 	$level = $_REQUEST['level'];
-}  
+}
 $page_path = $_SESSION['config']['businessappurl'].'index.php?page=admin';
 $page_label = _ADMIN;
 $page_id = "admin";
@@ -42,12 +42,12 @@ $core_tools2->manage_location_bar($page_path, $page_label, $page_id, $init, $lev
 unset($_SESSION['m_admin']);
 ?>
 <h1><img src="<?php  echo $_SESSION['config']['img'];?>/picto_admin_b.gif" alt="" /> <?php  echo _ADMIN;?></h1>
-<div id="inner_content" class="clearfix">	
-<?php 
+<div id="inner_content" class="clearfix">
+<?php
 $admin->retrieve_app_admin_services($_SESSION['app_services']);
 ?>
 <!--<hr />-->
-<?php 
+<?php
 $admin->retrieve_modules_admin_services($_SESSION['modules_services']);
 ?>
 </div>

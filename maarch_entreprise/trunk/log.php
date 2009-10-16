@@ -27,12 +27,13 @@ $s_login = $func->wash($_REQUEST['login'],"no",_THE_ID,"yes");
 $s_pass =$func->wash($_REQUEST['pass'],"no",_PASSWORD_FOR_USER,"yes");
 require($_SESSION['pathtocoreclass']."class_security.php");
 require($_SESSION['pathtocoreclass']."class_request.php");
-require($_SESSION['config']['businessapppath']."class".$_SESSION['slash_env']."class_business_app_tools.php");
+require($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
 $sec = new security();
 $business_app_tools = new business_app_tools();
 
 if(count($_SESSION['config']) <= 0)
 {
+/*
 	if( strtoupper(substr(PHP_OS, 0, 3)) != "WIN")
 	{
 		$_SESSION['slash_env'] = "/";
@@ -41,7 +42,8 @@ if(count($_SESSION['config']) <= 0)
 	{
 		$_SESSION['slash_env'] = "\\";
 	}
-
+*/
+$_SESSION['slash_env'] = DIRECTORY_SEPARATOR;
 	/*$path_server = $_SERVER['DOCUMENT_ROOT'];
 	if(!preg_match("/[/\\]$/",$path_server))
 	{
@@ -51,7 +53,7 @@ if(count($_SESSION['config']) <= 0)
 	$path_tmp = explode(DIRECTORY_SEPARATOR, str_replace('/', DIRECTORY_SEPARATOR,$_SERVER['SCRIPT_FILENAME']));
 	$path_server = implode(DIRECTORY_SEPARATOR,array_slice($path_tmp,0,array_search('apps',$path_tmp))).DIRECTORY_SEPARATOR;
 
-	$core_tools->build_core_config($path_server."core".$_SESSION['slash_env']."xml".$_SESSION['slash_env']."config.xml");
+	$core_tools->build_core_config($path_server."core".DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."config.xml");
 	$business_app_tools->build_business_app_config();
 	$core_tools->load_modules_config($_SESSION['modules']);
 	$core_tools->load_menu($_SESSION['modules']);
@@ -108,19 +110,19 @@ else
 
 		//Try to create a new ldap instance
 		try
-		{	
+		{
 			$ad = new LDAP($domain,$login_admin,$pass,$ssl);
 		}
 		catch(Exception $con_failure)
-		{ 
+		{
 			echo $con_failure->getMessage();
 			exit;
 		}
-		
+
 		if($ad -> authenticate($s_login, $s_pass))
 		{
 			$db = new dbquery();
-			$db->connect();	
+			$db->connect();
 			$db->query("SELECT * From users WHERE user_id ='".$s_login."'");
 			if($db->fetch_object())
 			{
@@ -134,7 +136,7 @@ else
 				exit;
 			}
 		}
-		else 
+		else
 		{
 			$_SESSION['error'] =  _BAD_LOGIN_OR_PSW."...";
 			header("location: login.php");

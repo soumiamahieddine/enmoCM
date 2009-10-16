@@ -15,7 +15,7 @@ $_SESSION['modules_calling_scripts'] = array();
 $_SESSION['apps_calling_scripts'] = array();
 function create_reports_file_php($report_text)
 {
-	$modules_services = $_SESSION['config']['businessapppath'].$_SESSION['slash_env']."admin".$_SESSION['slash_env']."maarch_config_tool".$_SESSION['slash_env']."modules_services_config.php";
+	$modules_services = $_SESSION['config']['businessapppath'].DIRECTORY_SEPARATOR."admin".DIRECTORY_SEPARATOR."maarch_config_tool".DIRECTORY_SEPARATOR."modules_services_config.php";
 	echo $modules_services;
 	if(file_exists($modules_services))
 	{
@@ -32,7 +32,7 @@ function create_reports_file_php($report_text)
 
 function create_reports_file_html($report_text)
 {
-	$modules_services = $_SESSION['config']['businessapppath'].$_SESSION['slash_env']."admin".$_SESSION['slash_env']."maarch_config_tool".$_SESSION['slash_env']."modules_services_config.html";
+	$modules_services = $_SESSION['config']['businessapppath'].DIRECTORY_SEPARATOR."admin".DIRECTORY_SEPARATOR."maarch_config_tool".DIRECTORY_SEPARATOR."modules_services_config.html";
 	echo $modules_services;
 	if(file_exists($modules_services))
 	{
@@ -385,6 +385,7 @@ foreach($xmlconfig->MODULES as $MODULES)
 	$_SESSION['modules'][$i] = array("moduleid" => (string) $MODULES->moduleid);
 	$i++;
 }
+/*
 if(strtoupper(substr(PHP_OS, 0, 3)) != "WIN" && strtoupper(substr(PHP_OS, 0, 3)) != "WINNT")
 {
 	$_SESSION['slash_env'] = "/";
@@ -392,15 +393,16 @@ if(strtoupper(substr(PHP_OS, 0, 3)) != "WIN" && strtoupper(substr(PHP_OS, 0, 3))
 else
 {
 	$_SESSION['slash_env'] = "\\";
+*/
 }
 if(!preg_match("/[/\\]$/",$path_server))
 {
-	$path_server = $path_server.$_SESSION['slash_env'];
+	$path_server = $path_server.DIRECTORY_SEPARATOR;
 }
 $_SESSION['history_keywords'] = array();
-$_SESSION['pathtocore'] = $path_server.$_SESSION['slash_env']."core".$_SESSION['slash_env'];
-$_SESSION['pathtocoreclass'] = $path_server.$_SESSION['slash_env']."core".$_SESSION['slash_env']."class".$_SESSION['slash_env'];
-$_SESSION['pathtomodules'] = $path_server.$_SESSION['slash_env']."modules".$_SESSION['slash_env'];
+$_SESSION['pathtocore'] = $path_server.DIRECTORY_SEPARATOR."core".DIRECTORY_SEPARATOR;
+$_SESSION['pathtocoreclass'] = $path_server.DIRECTORY_SEPARATOR."core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR;
+$_SESSION['pathtomodules'] = $path_server.DIRECTORY_SEPARATOR."modules".DIRECTORY_SEPARATOR;
 require_once($_SESSION['pathtocoreclass']."class_functions.php");
 require_once($_SESSION['pathtocoreclass']."class_core_tools.php");
 require_once($_SESSION['pathtocoreclass']."class_db.php");

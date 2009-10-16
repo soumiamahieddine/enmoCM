@@ -23,7 +23,7 @@ require_once($_SESSION['pathtocoreclass']."class_db.php");
 require_once($_SESSION['pathtocoreclass']."class_request.php");
 require_once($_SESSION['pathtocoreclass']."class_docserver.php");
 require_once($_SESSION['pathtocoreclass']."class_security.php");
-require_once($_SESSION['config']['businessapppath']."class".$_SESSION['slash_env']."class_list_show.php");
+require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_list_show.php");
 require_once($_SESSION['pathtocoreclass']."class_history.php");
 /****************Management of the location bar  ************/
 $init = false;
@@ -254,7 +254,7 @@ else
 						$doctypes_second_level_id = $res['doctypes_second_level_id'];
 						$_SESSION['multidoc'] = true;
 					}
-					require_once($_SESSION['pathtomodules']."indexing_searching".$_SESSION['slash_env']."class".$_SESSION['slash_env']."class_modules_tools.php");
+					require_once($_SESSION['pathtomodules']."indexing_searching".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
 					$indexing_searching = new indexing_searching();
 					$indexing_searching->retrieve_index($res,$_SESSION['collection_id_choice'] );
 					?>

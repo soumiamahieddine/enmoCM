@@ -7,7 +7,7 @@ require_once($_SESSION['pathtocoreclass']."class_request.php");
 require_once($_SESSION['pathtocoreclass']."class_security.php");
 //require_once("class/class_folder.php");
 require_once($_SESSION['pathtocoreclass']."class_core_tools.php");
-require_once($_SESSION['config']['businessapppath']."class".$_SESSION['slash_env'].'class_business_app_tools.php');
+require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR.'class_business_app_tools.php');
 $appTools = new business_app_tools();
 $core_tools = new core_tools();
 $core_tools->load_lang();
@@ -28,7 +28,7 @@ $db4->connect();
 $nb_trees = count($_SESSION['user']['trees']);
 $core_tools->load_html();
 $core_tools->load_header();
-//Définition de la collection en dur  
+//Définition de la collection en dur
 //print_r($_REQUEST);exit;
 $res_view = $_SESSION['user']['security'][0]['view'];
 $coll_id = $_SESSION['user']['security'][0]['coll_id'];
@@ -85,7 +85,7 @@ if($folderSystemId <> '')
 	}
 }
 //$actual_custom_result = $db->fetch_object();
-//$actual_custom_t1 = $actual_custom_result->folder_id; 
+//$actual_custom_t1 = $actual_custom_result->folder_id;
 if(isset($_SESSION['chosen_name_folder']) && !empty($_SESSION['chosen_name_folder']))
 {
 	?>
@@ -185,7 +185,7 @@ if(isset($_SESSION['chosen_name_folder']) && !empty($_SESSION['chosen_name_folde
 			//MyClick(branch);
 			return true;
 		}
-		
+
 		/*
 		function MyClick (branch)
 		 {
@@ -195,22 +195,22 @@ if(isset($_SESSION['chosen_name_folder']) && !empty($_SESSION['chosen_name_folde
 				parents = branch.getParents();
 				 var str = '';
 				for(var i=0; i < (parents.length -1) ;i++)
-				{	
+				{
 					str = str + '&parent_id[]=' + parents[i].getId();
 				}
 				window.top.frames['show_res_trees'].location.href='<?php  // echo $_SESSION['urltomodules']."autofoldering/";?>show_res_trees.php?script='+branch.struct.script+'&id='+branch.getId()+"&tree_id="+branch.getAncestor().getId()+str;
 			}
 		}
 		*/
-		
+
 		function myClick(branch) {
 			//window.top.frames['view'].location.href='<?php echo $_SESSION['urltomodules']."indexing_searching/view_type_folder.php?id="; ?>'+branch.getId());;
-			//window.top.frames['view'].location.href='<?php echo $_SESSION['urltomodules']."indexing_searching/view_type_folder.php?id="; ?>'+branch.getId()); 
+			//window.top.frames['view'].location.href='<?php echo $_SESSION['urltomodules']."indexing_searching/view_type_folder.php?id="; ?>'+branch.getId());
 			window.top.frames['view'].location.href='<?php echo $_SESSION['config']['businessappurl'];?>indexing_searching/little_details_invoices.php?id='+branch.getId();
 			//alert(branch.getId());
 			//branch.setText('<b>'+branch.getText()+'</b>');
 		}
-		
+
 		function MyOpen(branch)
 		{
 			if(branch.struct.script != '' && branch.struct.script != 'default')
@@ -232,7 +232,7 @@ if(isset($_SESSION['chosen_name_folder']) && !empty($_SESSION['chosen_name_folde
 			}
 			return true;
 		}
-		
+
 		function MyClose(branch)
 		{
 			var parents = branch.getParents();
@@ -271,20 +271,20 @@ if(isset($_SESSION['chosen_name_folder']) && !empty($_SESSION['chosen_name_folde
 				return true;
 			}
 		}
-		
+
 		function myMouseOver (branch)
 		{
 			document.body.style.cursor='pointer';
 		}
-		
+
 		function myMouseOut (branch)
 		{
 			document.body.style.cursor='auto';
 		}
-		
+
 		var tree = null;
 		var current_branch_id = null;
-		
+
 		function TafelTreeInit ()
 		{
 			var struct = [
@@ -292,7 +292,7 @@ if(isset($_SESSION['chosen_name_folder']) && !empty($_SESSION['chosen_name_folde
 							for($i=0;$i<count($search_customer_results);$i++)
 							{
 								?>
-								{ 
+								{
 									'id':'<?php  echo $search_customer_results[$i]['folder_id'];?>',
 									'txt':'<b><?php  echo addslashes($search_customer_results[$i]['folder_subject'])."</b><br><small>(".$search_customer_results[$i]['folder_name'].")</small>";?>',
 									'items':[
@@ -334,9 +334,9 @@ if(isset($_SESSION['chosen_name_folder']) && !empty($_SESSION['chosen_name_folde
 																									<?php
 																								}
 																								?>
-																								
+
 																								'items':[
-																											<?php 
+																											<?php
 																											for($m=0;$m<count($search_customer_results[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['results']);$m++)
 																											{
 																												?>
@@ -379,34 +379,34 @@ if(isset($_SESSION['chosen_name_folder']) && !empty($_SESSION['chosen_name_folde
 																													"onmouseout" : myMouseOut
 																												}
 																												<?php
-																												if ($m <> count($search_customer_results[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['results']) - 1) 
+																												if ($m <> count($search_customer_results[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['results']) - 1)
 																													echo ',';
 																											}
 																											?>
 																										]
 																							}
-																							<?php  
-																							if ($l <> count($search_customer_results[$i]['content'][$j]['second_level'][$k]['doctypes']) - 1) 
+																							<?php
+																							if ($l <> count($search_customer_results[$i]['content'][$j]['second_level'][$k]['doctypes']) - 1)
 																							echo ',';
 																						} ?>
 																					]
-																		}	
-																		<?php  
-																		if($k <> count($search_customer_results[$i]['content'][$j]['second_level']) - 1) 
+																		}
+																		<?php
+																		if($k <> count($search_customer_results[$i]['content'][$j]['second_level']) - 1)
 																		echo ',';
 																	}
 																	?>
 																]
 													}
 													<?php
-													if ($j <> count($search_customer_results[$i]['content']) - 1) 
+													if ($j <> count($search_customer_results[$i]['content']) - 1)
 														echo ',';
 												}
 												?>
 											]
 								}
-								<?php 
-								if ($i <> count($search_customer_results) - 1) 
+								<?php
+								if ($i <> count($search_customer_results) - 1)
 									echo ',';
 							}
 							?>
@@ -420,7 +420,7 @@ if(isset($_SESSION['chosen_name_folder']) && !empty($_SESSION['chosen_name_folde
 				'defaultImgClose' : 'folder.gif',
 				'onOpenPopulate' : [funcOpen, 'get_tree_children.php?IdTree=<?php  echo $_SESSION['chosen_tree'];?>']
 			});
-			
+
 			//open all branches
 			tree.expend();
 		};
@@ -442,7 +442,7 @@ if(isset($_SESSION['chosen_name_folder']) && !empty($_SESSION['chosen_name_folde
 		</script>
 		<?php
 	}
-	?>	
+	?>
 	<div id="trees_div"></div>
 	<?php
 	if($actual_custom_t1 == "")

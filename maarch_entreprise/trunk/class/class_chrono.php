@@ -20,12 +20,12 @@ class chrono
 		require_once($_SESSION['pathtocoreclass']."class_db.php");
 		$db = new dbquery();
 		$db->connect();
-	
+
 		$db->query("select alt_identifier from ".$view." where res_id = ".$res_id." ");
 		$res = $db->fetch_object();
-		
+
 		$chrono_number = $res->alt_identifier;
-		
+
 		return $chrono_number;
 	}
 	/**
@@ -38,9 +38,9 @@ class chrono
 		$globality = array();
 		$parameters_tab = array();
 		$chrono_tab = array();
-		
-		
-		$chrono_config = simplexml_load_file($_SESSION['config']['businessapppath']."xml".$_SESSION['slash_env']."chrono.xml");
+
+
+		$chrono_config = simplexml_load_file($_SESSION['config']['businessapppath']."xml".DIRECTORY_SEPARATOR."chrono.xml");
 		if($chrono_config)
 		{
 			foreach($chrono_config ->CHRONO as $CHRONO)
@@ -50,7 +50,7 @@ class chrono
 					$chrono_id = (string) $CHRONO->id;
 					$separator = (string) $CHRONO->separator;
 					array_push($parameters_tab, array("ID"=> $chrono_id , "SEPARATOR"=>$separator));
-					
+
 					foreach($CHRONO->ELEMENT as $ELEMENT)
 					{
 						$type = $ELEMENT->type;
@@ -60,20 +60,20 @@ class chrono
 				}
 			}
 			array_push($globality, array("PARAMETERS"=>$parameters_tab, "ELEMENTS"=>$chrono_tab));
-			
+
 			return $globality;
-		}	
+		}
 		else
 		{
 			echo "chrono::get_structure error";
 		}
-		
+
 	}
 
 	function convert_date_field($chrono_array)
 	{
 		//$new_chrono_array = array();
-	
+
 		for($i = 0;$i <= count($chrono_array); $i++)
 		{
 				if ($chrono_array[$i]['TYPE'] == "date")
@@ -97,14 +97,14 @@ class chrono
 				}
 		}
 		return $chrono_array;
-		
+
 	}
-	
-	
-	
+
+
+
 	function convert_maarch_var($chrono_array, $php_var)
 	{
-		
+
 		for($i = 0;$i <= count($chrono_array); $i++)
 		{
 				if ($chrono_array[$i]['TYPE'] == "maarch_var")
@@ -124,20 +124,20 @@ class chrono
 				}
 		}
 		return $chrono_array;
-		
+
 	}
-	
-	
+
+
 	function convert_maarch_forms($chrono_array, $forms)
 	{
-		
-		
+
+
 		for($i = 0;$i <= count($chrono_array); $i++)
 		{
 			if($chrono_array[$i]['TYPE'] == "maarch_form")
-			{ 
+			{
 					foreach ($forms as $key => $value)
-					{	
+					{
 						if ($chrono_array[$i]['VALUE'] == $key)
 						{
 							$chrono_array[$i]['VALUE'] = $value;
@@ -148,13 +148,13 @@ class chrono
 		}
 		return $chrono_array;
 	}
-		
-	
+
+
 	function convert_maarch_functions($chrono_array, $php_var = 'false')
 	{
 		for($i = 0;$i <= count($chrono_array); $i++)
 		{
-				
+
 				if ($chrono_array[$i]['TYPE'] == "maarch_functions")
 				{
 					if ($chrono_array[$i]['VALUE'] == "chr_global")
@@ -173,20 +173,20 @@ class chrono
 					{
 						$chrono_array[$i]['VALUE'] = $this->execute_category_char($php_var);
 					}
-					
+
 			}
 		}
 		return $chrono_array;
-		
+
 	}
-	
-	
+
+
 	function execute_chrono_for_this_year()
 	{
 		require_once($_SESSION['pathtocoreclass']."class_db.php");
 		$db = new dbquery();
 		$db->connect();
-		
+
 		//Get the crono key for this year
 		$db->query("SELECT param_value_int from ".$_SESSION['tablename']['param']." where id = 'chrono_global_".date('Y')."' ");
 		if ($db->nb_result() == 0)
@@ -196,20 +196,20 @@ class chrono
 		else
 		{
 				$fetch = $db->fetch_object();
-				$chrono = $fetch->param_value_int; 
+				$chrono = $fetch->param_value_int;
 		}
 		$this->update_chrono_for_this_year($chrono, $db);
 		return $chrono;
 	}
-	
-	
+
+
 	function execute_chrono_by_entity($entity)
 	{
 		require_once($_SESSION['pathtocoreclass']."class_db.php");
 		$db = new dbquery();
 		$db->connect();
-		
-		//Get the crono key for this year  
+
+		//Get the crono key for this year
 		$db->query("SELECT param_value_int from ".$_SESSION['tablename']['param']." where id = 'chrono_".$entity."_".date('Y')."' ");
 		if ($db->nb_result() == 0)
 		{
@@ -218,19 +218,19 @@ class chrono
 		else
 		{
 				$fetch = $db->fetch_object();
-				$chrono = $fetch->param_value_int; 
+				$chrono = $fetch->param_value_int;
 		}
 		$this->update_chrono_for_entity($chrono, $db, $entity);
 		return $chrono;
 	}
-	
+
 	function execute_chrono_by_category($category)
 	{
 		require_once($_SESSION['pathtocoreclass']."class_db.php");
 		$db = new dbquery();
 		$db->connect();
-		
-		//Get the crono key for this year  
+
+		//Get the crono key for this year
 		$db->query("SELECT param_value_int from ".$_SESSION['tablename']['param']." where id = 'chrono_".$category."_".date('Y')."' ");
 		if ($db->nb_result() == 0)
 		{
@@ -239,12 +239,12 @@ class chrono
 		else
 		{
 				$fetch = $db->fetch_object();
-				$chrono = $fetch->param_value_int; 
+				$chrono = $fetch->param_value_int;
 		}
 		$this->update_chrono_for_category($chrono, $db, $category);
 		return $chrono;
 	}
-	
+
 	private function execute_category_char($php_var)
 	{
 		if (!$php_var['category_id'])
@@ -267,22 +267,22 @@ class chrono
 			}
 		}
 	}
-	
+
 	//For global chrono
 	private function update_chrono_for_this_year($actual_chrono, $db)
 	{
 		$actual_chrono++;
 		$db->query("UPDATE ".$_SESSION['tablename']['param']." SET param_value_int = '".$actual_chrono."'  WHERE id = 'chrono_global_".date('Y')."' " );
 	}
-	
+
 	private function create_new_chrono_global($db)
 	{
 		$db->query("INSERT INTO ".$_SESSION['tablename']['param']." (id, param_value_int) VALUES ('chrono_global_".date('Y')."', '1')" );
 		return 1;
 	}
-	
-	
-	
+
+
+
 	//For specific chrono =>category
 	private function update_chrono_for_category($actual_chrono, $db, $category)
 	{
@@ -294,8 +294,8 @@ class chrono
 		$db->query("INSERT INTO ".$_SESSION['tablename']['param']." (id, param_value_int) VALUES ('chrono_".$category."_".date('Y')."', '1')" );
 		return 1;
 	}
-	
-	
+
+
 	//For specific chrono =>entity
 	private function update_chrono_for_entity($actual_chrono, $db, $entity)
 	{
@@ -307,34 +307,34 @@ class chrono
 		$db->query("INSERT INTO ".$_SESSION['tablename']['param']." (id, param_value_int) VALUES ('chrono_".$entity."_".date('Y')."', '1')" );
 		return 1;
 	}
-	
+
 	function generate_chrono($chrono_id, $php_var = 'false', $form= 'false')
 	{
-		
+
 		$tmp = $this->get_structure($chrono_id);
 		$elements = $tmp[0]['ELEMENTS'];
-		$parameters = $tmp[0]['PARAMETERS'];		
-	
-	
+		$parameters = $tmp[0]['PARAMETERS'];
+
+
 		//Launch any conversion needed for value in the chrono array
 		$elements = $this->convert_date_field($elements); //For type date
 		$elements = $this->convert_maarch_var($elements, $php_var); //For php var in maarch
-		$elements = $this->convert_maarch_functions($elements, $php_var); 	
+		$elements = $this->convert_maarch_functions($elements, $php_var);
 		$elements = $this->convert_maarch_forms($elements, $form); //For values used in forms
-		
-		
-		
+
+
+
 		//Generate chrono string
 		$string = $this->convert_in_string($elements, $parameters);
 		return $string;
 	}
-	
-	
+
+
 	function convert_in_string($elements, $parameters)
 	{
-		
-		$separator = $parameters[0]['SEPARATOR']; 
-		
+
+		$separator = $parameters[0]['SEPARATOR'];
+
 		$this_string = '';
 		//Explode each elements of this array
 		foreach($elements as $array)
@@ -342,11 +342,11 @@ class chrono
 			$this_string .= $separator;
 			$this_string .= $array['VALUE'];
 		}
-		
+
 		//$this_string = substr($this_string, 1);
-		return $this_string; 
-		
+		return $this_string;
+
 	}
-	
+
 
 }
