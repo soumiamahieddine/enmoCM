@@ -283,7 +283,7 @@ else if(isset($_GET['action']) && $_GET['action'] == "copy_to_dest" )
 															'entity_label' =>$_SESSION[$origin]['diff_list']['dest']['entity_label'],
 												));
 		unset( $_SESSION[$origin]['diff_list']['dest'] );
-		usort($_SESSION[$origin]['diff_list']['copy']['users'], "cmp_users");
+
 	}
 	$rank = $_GET['rank'];
 	if(isset($_SESSION[$origin]['diff_list']['copy']['users'][$rank]['user_id']) && !empty($_SESSION[$origin]['diff_list']['copy']['users'][$rank]['user_id']))
@@ -296,6 +296,7 @@ else if(isset($_GET['action']) && $_GET['action'] == "copy_to_dest" )
 		unset( $_SESSION[$origin]['diff_list']['copy']['users'][$rank]);
 		$_SESSION[$origin]['diff_list']['copy']['users'] = array_values($_SESSION[$origin]['diff_list']['copy']['users']);
 	}
+	usort($_SESSION[$origin]['diff_list']['copy']['users'], "cmp_users");
 }
 
 $core_tools->load_html();
