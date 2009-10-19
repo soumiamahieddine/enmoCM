@@ -116,7 +116,7 @@ else
 				</td>
 				<td>
 					<?php 
-					if ($core_tools->test_service('update_case', 'cases') == 0) 
+					if ($core_tools->test_service('update_case', 'cases',false) == 0) 
 						echo '<input type="text"  class="readonly" readonly="readonly" value="'.$db->show_string($case_indexes['case_label']).'" size="40"  />'; 
 					else
 						echo '<input type="text" name="case_label" id="case_label" class=""  value="'.$db->show_string($case_indexes['case_label']).'" size="40"  />';  ?>
@@ -132,7 +132,7 @@ else
 				</td>
 				<td>
 				<?php
-				if ($core_tools->test_service('update_case', 'cases') == 0) 
+				if ($core_tools->test_service('update_case', 'cases',false) == 0) 
 					echo '<textarea name="case_description" id="case_description" class ="readonly" readonly="readonly" rows="4" >'.$db->show_string($case_indexes['case_description']).'</textarea>';
 				else
 					echo '<textarea name="case_description" id="case_description"  rows="4" >'.$db->show_string($case_indexes['case_description']).'</textarea>';	
@@ -161,7 +161,7 @@ else
 					<?php  echo _CASE_CREATION_DATE; ?> :
 				</td>
 				<td>
-					<input type="text" class="readonly" readonly="readonly" value="<?php  echo $case_indexes['case_creation_date']; ?>" size="40"  />
+					<input type="text" class="readonly" readonly="readonly" value="<?php  echo $db->format_date_db($case_indexes['case_creation_date']); ?>" size="40"  />
 				</td>
 			</tr>
 			
@@ -174,7 +174,7 @@ else
 					<?php  echo _CASE_LAST_UPDATE_DATE; ?> :
 				</td>
 				<td>
-					<input type="text" class="readonly" readonly="readonly" value="<?php  echo $case_indexes['case_last_update_date']; ?>" size="40"  />
+					<input type="text" class="readonly" readonly="readonly" value="<?php  echo $db->format_date_db($case_indexes['case_last_update_date']); ?>" size="40"  />
 				</td>
 			</tr>
 			
@@ -187,7 +187,7 @@ else
 					<?php  echo _CASE_CLOSING_DATE; ?> :
 				</td>
 				<td>
-					<input type="text" class="readonly" readonly="readonly" value="<?php  echo $case_indexes['case_closing_date']; ?>" size="40"  />
+					<input type="text" class="readonly" readonly="readonly" value="<?php  echo $db->format_date_db($case_indexes['case_closing_date']); ?>" size="40"  />
 				</td>
 			</tr>
 			
@@ -219,15 +219,20 @@ else
 	<input type="hidden" name="id" id="id" value="<?php echo $case_id; ?>" />
 	<p align="center">
 	<?php 
-	if ($core_tools->test_service('update_case', 'cases') == 1) 
+	if ($core_tools->test_service('update_case', 'cases',false) == 1) 
 	{ ?>
 		<input type="submit" class="button"  value="<?php  echo _MODIFY_DOC;?>" name="submit_index_doc" />
 	<?php 
 	} ?> 	
 	<?php 
-	if ($core_tools->test_service('join_res_case', 'cases') == 1) 
+	if ($core_tools->test_service('join_res_case', 'cases',false) == 1) 
 	{ ?>	
-		<input type="button" class="button"  value="<?php  echo _JOIN_RES_ON_THIS_CASE;?>" name="join_res" onclick="window.open('search_adv_for_cases.php?searched_item=case&searched_value=<? echo $case_indexes['case_id'];?>','', 'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=1020,height=500');"/>
+		<input type="button" class="button"  value="<?php  echo _JOIN_RES_ON_THIS_CASE;?>" name="join_res" onclick="window.open('search_adv_for_cases.php?searched_item=case&searched_value=<? echo $case_indexes['case_id'];?>','', 'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=1020,height=685');"/>
+	<?php 
+	} 
+	if ($core_tools->test_service('close_case', 'cases',false) == 1) 
+	{ ?>	
+		<input type="button" class="button"  value="<?php  echo _CLOSE_THIS_CASE;?>" name="join_res" onclick="window.location.href='db_close_case.php?case_id=<? echo $case_indexes['case_id'];?>' "/>
 	<?php 
 	} ?>
 	</p>

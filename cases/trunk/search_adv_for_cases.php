@@ -347,130 +347,269 @@ function del_query_confirm()
 }
 -->
 </script>
+<div id="case_div" style="display:none;">
 
-<h4><p align="center"><img src="<?php echo $_SESSION['config']['businessappurl'];?>img/picto_search_b.gif" alt="" /> <?php echo _ADV_SEARCH_TITLE; ?></h4></p>
-<hr/>
+
 <div id="inner_content">
-
-<?php if (count($queries) > 0)
-{?>
-<form name="choose_query" id="choose_query" action="#" method="post" >
-<div align="center" style="display:block;" id="div_query">
-
-<label for="query"><?php echo _MY_SEARCHES;?> : </label>
-<select name="query" id="query" onchange="load_query_db(this.options[this.selectedIndex].value, 'select_criteria', 'frmsearch2', '<?php echo _SQL_ERROR;?>', '<?php echo _SERVER_ERROR;?>', '<?php echo $_SESSION['config']['businessappurl'].'indexing_searching/manage_query.php';?>');return false;" >
-	<option id="default_query" value=""><?php echo _CHOOSE_SEARCH;?></option>
-	<?php for($i=0; $i< count($queries);$i++)
-	{
-	?><option value="<?php echo $queries[$i]['ID'];?>" id="query_<?php echo $queries[$i]['ID'];?>"><?php echo $queries[$i]['LABEL'];?></option><?php }?>
-</select>
-
-<input name="del_query" id="del_query" value="<?php echo _DELETE_QUERY;?>" type="button"  onclick="del_query_confirm();" class="button" style="display:none" />
-</div>
-</form>
-<?php } ?>
-<!--<form name="frmsearch2" method="get" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=search_adv_result&dir=indexing_searching"  id="frmsearch2" class="<?php echo $class_for_form; ?>">-->
-<form name="frmsearch2" method="get" action="<?php echo $_SESSION['config']['businessappurl'];?>indexing_searching/search_adv_result.php"  id="frmsearch2" class="<?php echo $class_for_form; ?>">
-
-<input type="hidden" name="specific_case" value="attach_to_case" />
+<dl id="tabricator2">
+	<?php if ($_GET['searched_item'] <> 'case')
+	{ ?>
+	<dt><?php echo _CREATE_NEW_CASE; ?></dt>
+			<dd>
 
 
+			<h4><p align="center"><img src="<?php echo $_SESSION['config']['businessappurl'];?>img/picto_add_b.gif" alt="" /> <?php echo _CREATE_NEW_CASE; ?><p></h4>
+			<div class="blank_space">&nbsp;</div>
+			<form name="create_case" id="create_case" action="<?php echo $_SESSION['urltomodules'];?>cases/create_case.php" method="post" >
 
-<!-- #########################To search a ressource for this res############################-->
-<input type="hidden" name="searched_item" value="<?php echo $_GET['searched_item']; ?>" />
-<input type="hidden" name="searched_value" value="<?php echo $_GET['searched_value']; ?>" />
-<!-- #############################################################################-->
+				<input type="hidden" name="searched_item" value="<?php echo $_GET['searched_item']; ?>" />
+				<input type="hidden" name="searched_value" value="<?php echo $_GET['searched_value']; ?>" />
+
+				<div align="center" style="display:block;" id="div_query">
+					<table align="center" border="0" width="100%" class="<?php echo $class_for_form; ?>">
+						
+						<tr >
+							<td >
+								<table border = "0" width="100%">
+								<tr>
+									<td width="70%"><label for="subject" class="bold" ><?php echo _CASE_LABEL;?>:</label>
+										<input type="text" name="case_label" id="case_label" size="40"  />		
+									</td>
+								</tr>
+								<tr >
+									<td width="70%"><label for="subject" class="bold" ><?php echo _CASE_DESCRIPTION;?>:</label>
+										<textarea name="case_description" id="case_description"  rows="4" ></textarea>		
+									</td>
+									<td>
+										<p align="center">
+										<input class="button" name="imageField" type="button" value="<?php echo _CREATE_CASE; ?>" onclick="this.form.submit();" /></p>
+									 </td>
+								</tr>
+								</table>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</form>
+		</dd>
+	<?php 
+	} ?> 
+
+
+<!-- ##########################-->
+
+		<?php 
+		if($_GET['searched_item']=="res_id") 
+			$title_search = _SEARCH_A_CASE;
+			
+		elseif($_GET['searched_item']=="case")
+			$title_search = _SEARCH_A_RES;			
+		
+		else
+			$title_search = _ERROR
+		?>
+
+		<dt><? echo $title_search ; ?></dt>
+		<dd>
+
+
+		<h4><p align="center"><img src="<?php echo $_SESSION['config']['businessappurl'];?>img/picto_search_b.gif" alt="" /> <?php  echo $title_search ; ?></h4></p>
+		<hr/>
+
+
+		<?php if (count($queries) > 0)
+		{?>
+		<form name="choose_query" id="choose_query" action="#" method="post" >
+		<div align="center" style="display:block;" id="div_query">
+
+		<label for="query"><?php echo _MY_SEARCHES;?> : </label>
+		<select name="query" id="query" onchange="load_query_db(this.options[this.selectedIndex].value, 'select_criteria', 'frmsearch2', '<?php echo _SQL_ERROR;?>', '<?php echo _SERVER_ERROR;?>', '<?php echo $_SESSION['config']['businessappurl'].'indexing_searching/manage_query.php';?>');return false;" >
+			<option id="default_query" value=""><?php echo _CHOOSE_SEARCH;?></option>
+			<?php for($i=0; $i< count($queries);$i++)
+			{
+			?><option value="<?php echo $queries[$i]['ID'];?>" id="query_<?php echo $queries[$i]['ID'];?>"><?php echo $queries[$i]['LABEL'];?></option><?php }?>
+		</select>
+
+		<input name="del_query" id="del_query" value="<?php echo _DELETE_QUERY;?>" type="button"  onclick="del_query_confirm();" class="button" style="display:none" />
+		</div>
+		</form>
+		<?php } ?>
+		<!--<form name="frmsearch2" method="get" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=search_adv_result&dir=indexing_searching"  id="frmsearch2" class="<?php echo $class_for_form; ?>">-->
+		<form name="frmsearch2" method="get" action="<?php echo $_SESSION['config']['businessappurl'];?>indexing_searching/search_adv_result.php"  id="frmsearch2" class="<?php echo $class_for_form; ?>">
+
+		<input type="hidden" name="specific_case" value="attach_to_case" />
 
 
 
-<table align="center" border="0" width="100%">
-    <tr>
-    	<td align="left"><a href="#" onclick="clear_search_form('frmsearch2','select_criteria');clear_q_list();"><img src="<?php  echo $_SESSION['config']['businessappurl']."img/reset.gif";?>" alt="<?php echo _CLEAR_SEARCH;?>" /> <?php  echo _CLEAR_SEARCH; ?></a></td>
-    	<td  width="75%" align="right" ><span class="bold"><?php echo _SEARCH_COPY_MAIL;?></span>
-			<input type="hidden" name="meta[]" value="copies#copies_false,copies_true#radio" />
-			<input type="radio" name="copies" id="copies_false" class="check"  value="false" checked="checked" /><?php echo _NO;?>
-			<input type="radio" name="copies" id="copies_true" class="check"  value="true"  /><?php echo _YES;?>
-        </td>
-    </tr>
-</table>
-<table align="center" border="0" width="100%">
-    <tr>
-    	<td colspan="2" ><h2><?php echo _LETTER_INFO; ?></h2></td>
-    </tr>
-    <tr >
-    	<td >
-			<table border = "0" width="100%">
+		<!-- #########################To search a ressource for this res############################-->
+		<input type="hidden" name="searched_item" value="<?php echo $_GET['searched_item']; ?>" />
+		<input type="hidden" name="searched_value" value="<?php echo $_GET['searched_value']; ?>" />
+
+
+		<?php
+
+		if ($_GET['searched_item'] == "res_id")
+		{
+
+			echo '<input type="hidden" name="template" value="group_case" />';
+		}
+		?>
+
+		<!-- #############################################################################-->
+
+
+
+		<table align="center" border="0" width="100%">
 			<tr>
-				<td width="70%"><label for="subject" class="bold" ><?php echo _MAIL_OBJECT;?>:</label>
-					<input type="text" name="subject" id="subject" <?php echo $size; ?>  />
-					<input type="hidden" name="meta[]" value="subject#subject#input_text" />
+				<td align="left"><a href="#" onclick="clear_search_form('frmsearch2','select_criteria');clear_q_list();"><img src="<?php  echo $_SESSION['config']['businessappurl']."img/reset.gif";?>" alt="<?php echo _CLEAR_SEARCH;?>" /> <?php  echo _CLEAR_SEARCH; ?></a></td>
+				<td  width="75%" align="right" ><span class="bold"><?php echo _SEARCH_COPY_MAIL;?></span>
+					<input type="hidden" name="meta[]" value="copies#copies_false,copies_true#radio" />
+					<input type="radio" name="copies" id="copies_false" class="check"  value="false" checked="checked" /><?php echo _NO;?>
+					<input type="radio" name="copies" id="copies_true" class="check"  value="true"  /><?php echo _YES;?>
 				</td>
-				<td><em><?php echo _MAIL_OBJECT_HELP; ?></em></td>
 			</tr>
-			<tr>
-				<td width="70%"><label for="fulltext" class="bold" ><?php echo _FULLTEXT;?>:</label>
-					<input type="text" name="fulltext" id="fulltext" <?php echo $size; ?>  />
-					<input type="hidden" name="meta[]" value="fulltext#fulltext#input_text" />
-				</td>
-				<td><em><?php echo _FULLTEXT_HELP; ?></em></td>
-			</tr>
-			<tr>
-			<td width="70%"><label for="numged" class="bold"><?php echo _N_GED;?>:</label>
-				<input type="text" name="numged" id="numged" <?php echo $size; ?>  />
-				<input type="hidden" name="meta[]" value="numged#numged#input_text" />
-				</td>
-				<td><em><?php echo _N_GED_HELP; ?></em></td>
-			</tr>
-			<tr>
-				<td width="70%"><label for="multifield" class="bold" ><?php echo _MULTI_FIELD;?>:</label>
-					<input type="text" name="multifield" id="multifield" <?php echo $size; ?>  />
-					<input type="hidden" name="meta[]" value="multifield#multifield#input_text" />
-				</td>
-				<td><em><?php echo _MULTI_FIELD_HELP; ?></em></td>
-			</tr>
-			<?php 
+		</table>
+		<table align="center" border="0" width="100%">
+		
+			<?php
 			if($core_tools->is_module_loaded("cases") == true)
 			{ ?>
-				<tr>
-					<td width="70%"><label for="numcase" class="bold" ><?php echo _CASE_NUMBER;?>:</label>
-						<input type="text" name="numcase" id="numcase" <?php echo $size; ?>  />
-						<input type="hidden" name="meta[]" value="numcase#numcase#input_text" />
-					</td>
-					<td><em><?php echo _CASE_NUMBER_HELP; ?></em></td>
+			 <tr>
+				<td colspan="2" ><h2><?php echo _CASE_INFO; ?></h2></td>
+			</tr>
+			<tr>
+				<td>
+					<div class="block">
+					<table border="0" width="100%">
+						
+						<tr>
+							<td width="70%"><label for="numcase" class="bold" ><?php echo _CASE_NUMBER;?>:</label>
+								<input type="text" name="numcase" id="numcase" <?php echo $size; ?>  />
+								<input type="hidden" name="meta[]" value="numcase#numcase#input_text" />
+							</td>
+							<td><em><?php echo _CASE_NUMBER_HELP; ?></em></td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr>
+							<td width="70%"><label for="labelcase" class="bold" ><?php echo _CASE_LABEL;?>:</label>
+								<input type="text" name="labelcase" id="labelcase" <?php echo $size; ?>  />
+								<input type="hidden" name="meta[]" value="labelcase#labelcase#input_text" />
+							</td>
+							<td><em><?php echo _CASE_LABEL_HELP; ?></em></td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr>
+							<td width="70%"><label for="descriptioncase" class="bold" ><?php echo _CASE_DESCRIPTION;?>:</label>
+								<input type="text" name="descriptioncase" id="descriptioncase" <?php echo $size; ?>  />
+								<input type="hidden" name="meta[]" value="descriptioncase#descriptioncase#input_text" />
+							</td>
+							<td><em><?php echo _CASE_DESCRIPTION_HELP; ?></em></td>
+							<td>&nbsp;</td>
+						</tr>
+					</table>
+					</div>
+					<div class ="block_end">&nbsp;</div>
+				</td>
+				<td>
+					<p align="center">
+					</p>	
+				</td>
+			</tr>
+		<?php
+	}	 ?>
+	
+		
+		
+		
+		
+			<tr>
+				<td colspan="2" ><h2><?php echo _LETTER_INFO; ?></h2></td>
+			</tr>
+			<tr >
+				<td >
+				<div class="block">
+					<table border = "0" width="100%">
+					<tr>
+						<td width="70%"><label for="subject" class="bold" ><?php echo _MAIL_OBJECT;?>:</label>
+							<input type="text" name="subject" id="subject" <?php echo $size; ?>  />
+							<input type="hidden" name="meta[]" value="subject#subject#input_text" />
+						</td>
+						<td><em><?php echo _MAIL_OBJECT_HELP; ?></em></td>
+					</tr>
+					<tr>
+						<td width="70%"><label for="fulltext" class="bold" ><?php echo _FULLTEXT;?>:</label>
+							<input type="text" name="fulltext" id="fulltext" <?php echo $size; ?>  />
+							<input type="hidden" name="meta[]" value="fulltext#fulltext#input_text" />
+						</td>
+						<td><em><?php echo _FULLTEXT_HELP; ?></em></td>
+					</tr>
+					<tr>
+					<td width="70%"><label for="numged" class="bold"><?php echo _N_GED;?>:</label>
+						<input type="text" name="numged" id="numged" <?php echo $size; ?>  />
+						<input type="hidden" name="meta[]" value="numged#numged#input_text" />
+						</td>
+						<td><em><?php echo _N_GED_HELP; ?></em></td>
+					</tr>
+					<tr>
+						<td width="70%"><label for="multifield" class="bold" ><?php echo _MULTI_FIELD;?>:</label>
+							<input type="text" name="multifield" id="multifield" <?php echo $size; ?>  />
+							<input type="hidden" name="meta[]" value="multifield#multifield#input_text" />
+						</td>
+						<td><em><?php echo _MULTI_FIELD_HELP; ?></em></td>
+					</tr>
+
+					</table>
+					</div>
+					<div class="block_end">&nbsp;</div>
+				</td>
+				<td>
+					<p align="center">
+					<input class="button_search_adv" name="imageField" type="button" value="" onclick="valid_search_form('frmsearch2');this.form.submit();"  />
+					<input class="button_search_adv_text" name="imageField" type="button" value="<?php echo _SEARCH; ?>" onclick="valid_search_form('frmsearch2');this.form.submit();" /></p>
+				 </td>
+			</tr>
+			<tr><td colspan="2"><hr/></td></tr>
+		<tr>
+		<td  >
+		<div class="block">
+		 <table border = "0" width="100%">
+			   <tr>
+			 <td width="70%">
+				<label class="bold"><?php echo _ADD_PARAMETERS; ?>:</label>
+				<select name="select_criteria" id="select_criteria" style="display:inline;" onchange="add_criteria(this.options[this.selectedIndex].id, 'frmsearch2', <?php echo $browser_ie;?>, '<?php echo _ERROR_IE_SEARCH;?>');">
+					<?php echo $src_tab; ?>
+				</select>
+			 </td>
+
+				<td width="30%"><em><?php echo _ADD_PARAMETERS_HELP; ?></em></td>
 				</tr>
-				<?php 
-			}	 ?>
-			</table>
-    	</td>
-    	<td>
-			<p align="center">
-			<input class="button_search_adv" name="imageField" type="button" value="" onclick="valid_search_form('frmsearch2');this.form.submit();"  />
-			<input class="button_search_adv_text" name="imageField" type="button" value="<?php echo _SEARCH; ?>" onclick="valid_search_form('frmsearch2');this.form.submit();" /></p>
-   		 </td>
-    </tr>
-    <tr><td colspan="2"><hr/></td></tr>
-<tr>
-<td  >
- <table border = "0" width="100%">
-       <tr>
-   	 <td width="70%">
- 		<label class="bold"><?php echo _ADD_PARAMETERS; ?>:</label>
- 		<select name="select_criteria" id="select_criteria" style="display:inline;" onchange="add_criteria(this.options[this.selectedIndex].id, 'frmsearch2', <?php echo $browser_ie;?>, '<?php echo _ERROR_IE_SEARCH;?>');">
-			<?php echo $src_tab; ?>
-		</select>
-   	 </td>
-
-		<td width="30%"><em><?php echo _ADD_PARAMETERS_HELP; ?></em></td>
-		</tr>
- </table>
-</td></tr>
-</table>
-
-</form>
-<br/>
-<div align="right">
+		 </table>
+		 </div>
+		 <div class="block_end">&nbsp;</div>
+		</td></tr>
+		</table>
+		
+		</form>
+		
+				
+		<br/>
+		<div align="right">
+		</div>
+	
+		<script type="text/javascript">
+		load_query(valeurs, loaded_query, 'frmsearch2', '<?php echo $browser_ie;?>, <?php echo _ERROR_IE_SEARCH;?>');
+		</script>
+		
+	</dd>
+</dl>
 </div>
- </div>
+</div>
+
 <script type="text/javascript">
-load_query(valeurs, loaded_query, 'frmsearch2', '<?php echo $browser_ie;?>, <?php echo _ERROR_IE_SEARCH;?>');
+ var item  = $('case_div');
+  var tabricator1 = new Tabricator('tabricator2', 'DT');
+  if(item)
+  	{
+	 item.style.display='block';
+	}
 </script>

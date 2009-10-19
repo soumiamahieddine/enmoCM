@@ -77,12 +77,20 @@ $db_external->query("select res_id, status, subject, dest_user, type_label, crea
 
 if ($db_external->nb_result() >0)
 {
+	require_once($_SESSION['pathtocoreclass']."class_security.php");
+	$security = new security();
 	 $external = '<table border="0" style="font-size:9px; margin:0px;" width="100%"  cellspacing="0">';
 	 while ($ext_result=$db_external->fetch_object())
 	 {
 		 $res_status = $status_obj->get_status_data($ext_result->status);
 		 
-					$external .='<tr class="col"  onmouseover="document.body.style.cursor=\'pointer\';" onmouseout="document.body.style.cursor=\'auto\';"><a href="'.$_SESSION['config']['businessappurl'].'index.php?page='.$this->detail_destination.'&amp;id='.$ext_result->res_id.'" title="'. _DETAILS.'">';
+					$right = $security->test_right_doc($_SESSION['collections'][0]['id'],$ext_result->res_id);
+					if($right==false)
+						$external .='<tr class="col"  style="color:#BBBBBB;"> <a href="'.$_SESSION['config']['businessappurl'].'index.php?page='.$this->detail_destination.'&amp;id='.$ext_result->res_id.'" title="'. _DETAILS.'">';
+					else
+						$external .='<tr class="col"  onmouseover="document.body.style.cursor=\'pointer\';" onmouseout="document.body.style.cursor=\'auto\';"><a href="'.$_SESSION['config']['businessappurl'].'index.php?page='.$this->detail_destination.'&amp;id='.$ext_result->res_id.'" title="'. _DETAILS.'">';
+					
+					
 					$external .='<td width="8%" >&nbsp;</td>';
 					$external .='<td width="40px"><img src="'.$res_status['IMG_SRC'].'" alt = "'.$res_status['LABEL'].'" title = "'.$res_status['LABEL'].'"></td>';
 					$external .='<td width="40px"><p><img src="'. get_img_cat($ext_result->category_id,$extension_icon).'" title="'.$_SESSION['mail_categories'][$ext_result->category_id].'" alt="'.$_SESSION['mail_categories'][$ext_result->category_id].'"></p></td>';

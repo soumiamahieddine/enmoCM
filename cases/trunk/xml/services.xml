@@ -26,4 +26,17 @@
      <nature>include</nature>
    </WHEREAMIUSED>
  </SERVICE>
+ <SERVICE>
+   <id>close_case</id>
+   <name>_CLOSE_CASE</name>
+   <comment>_CLOSE_CASE</comment>
+   <servicepage></servicepage>
+   <servicetype>use</servicetype>
+   <system_service>false</system_service>
+   <enabled>true</enabled>
+   <WHEREAMIUSED>
+     <page>detail_index_cases.php</page>
+     <nature>include</nature>
+   </WHEREAMIUSED>
+ </SERVICE>
 </root>

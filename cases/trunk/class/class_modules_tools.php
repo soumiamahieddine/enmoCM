@@ -77,7 +77,7 @@ class cases extends dbquery
 	 * @param $res_id     		 int        Description: id of first ressource to add
 	 * @param $parent_case     int        Description: id of his parent case
 	 */
-	public function create_case($res_id, $desc = '', $parent_case = '', $type = 'standard')
+	public function create_case($res_id, $label, $desc = '', $parent_case = '', $type = 'standard')
 	{
 		if (empty($res_id))
 			echo "create_case ::arg2 error!</br>";
@@ -98,13 +98,13 @@ class cases extends dbquery
 		$current_date = $request->current_datetime();
 		$data = array();
 		//Create a new batch when this box is empty
-		array_push($data, array('column' => "case_description", 'value' => $desc, "type" => "string"));
-		//array_push($data, array('column' => "case_label", 'value' => $this_label, "type" => "string"));
+		array_push($data, array('column' => "case_description", 'value' => addslashes($desc), "type" => "string"));
+		array_push($data, array('column' => "case_label", 'value' => addslashes($label), "type" => "string"));
 		array_push($data, array('column' => "case_creation_date", 'value' => $current_date, "type" => ""));
 		array_push($data, array('column' => "case_last_update_date", 'value' => $current_date, "type" => ""));
 		array_push($data, array('column' => "case_typist", 'value' => $_SESSION['user']['UserId'], "type" => "string"));
 		array_push($data, array('column' => "case_type", 'value' => $type, "type" => "string"));
-		array_push($data, array('column' => "case_parent", 'value' => $parent_case, "type" => "string"));
+		//array_push($data, array('column' => "case_parent", 'value' => $parent_case, "type" => "int"));
 		if(!$request->insert($_SESSION['tablename']['cases'], $data, $_SESSION['config']['databasetype']))
 		{
 			$request->show();
@@ -120,6 +120,8 @@ class cases extends dbquery
 		
 		
 		//Now we can attach the first document at this case
+		
+		
 		$data_relation = array();
 		array_push($data_relation, array('column' => "case_id", 'value' => $case_id, "type" => "int"));
 		array_push($data_relation, array('column' => "res_id", 'value' => $res_id, "type" => "int"));
@@ -141,6 +143,9 @@ class cases extends dbquery
 			$hist = new history();
 			$hist->add($_SESSION['tablename']['cases'], $case_id,"LINK",_RES_ATTACH_ON_CASE." ".$res_id, $_SESSION['config']['databasetype']);
 		}
+		
+		//Limitation (1,1) Cases V1
+		$this->detach_all_from_cases($res_id,$case_id);
 		
 		return $case_id;
 	}
@@ -219,6 +224,8 @@ class cases extends dbquery
 			$hist = new history();
 			$hist->add($_SESSION['tablename']['cases'], $case_id,"LINK",_RES_ATTACH_ON_CASE." ".$res_id, $_SESSION['config']['databasetype']);
 		}
+		//Limitation (1,1) Cases V1
+		$this->detach_all_from_cases($res_id,$case_id);
 		return true;
 	}
 	
@@ -380,10 +387,32 @@ class cases extends dbquery
 		array_push($data, array('column' => "case_last_update_date", 'value' => $current_date, "type" => ""));
 		$request->update($table, $data, $where, $_SESSION['config']['databasetype']);
 		
+	}
+	
+	
+	public function close_case($case_id)
+	{
+		if (empty($case_id))
+			echo "close_case ::arg1 error!</br>";
+	
+		$db = new dbquery();
+		$db->connect();
 
-
+		$query="UPDATE ".$_SESSION['tablename']['cases']." SET case_closing_date = now() where case_id = ".$case_id." ";
 		
+		if ($db->query($query))
+			return true;
+		else
+			return false;
 	}
 
+	private function detach_all_from_cases($res_id,$case_id)
+	{
+		$db = new dbquery();
+		$db->connect();
+
+		$query="DELETE FROM ".$_SESSION['tablename']['cases_res']." WHERE res_id = '".$res_id."' and case_id <> '".$case_id."' ";
+		$db->query($query);
+	}
 }
 ?>

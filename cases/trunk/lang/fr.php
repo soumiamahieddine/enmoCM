@@ -22,6 +22,7 @@
 /*********************** CASES ***********************************/
 
 define('_CASES_COMMENT', 'Affaires');
+define('_CASE_INFO', 'Information sur l&rsquo;affaire');
 
 define('_JOIN_RES_CASE','Attacher des courriers aux affaires');
 
@@ -38,7 +39,7 @@ define('_HISTORY_CASES', 'Historique de l&rsquo;affaire');
 
 define('_CASE_NUMBER', 'Num&eacute;ro de l&rsquo;affaire');
 define('_CASE_NUMBER_HELP', 'Recherche sur une affaire comprenant plusieurs courriers...');
-define('_N_CASE', 'num&eacute;ro de l&rsquoaffaire');
+define('_N_CASE', 'num&eacute;ro de l&rsquo;affaire');
 
 
 define('_CANT_SHOW_THIS_CASE', 'Impossible d\'afficher cette affaire');
@@ -60,10 +61,28 @@ define('_UPDATE_CASE','Mise &agrave; jour d&rsquo;affaire');
 define('_NEW_CASE','Nouvelle affaire');
 define('_RES_ATTACH_ON_CASE','Courrier attach&eacute; &agrave; l&rsquo;affaire');
 define('_RES_DETTACH_ON_CASE','Courrier dettach&eacute; &agrave; l&rsquo;affaire');
-
+define('_JOIN_CASE','Attacher &agrave; une affaire');
+define('_MODIFY_CASE','Attacher &agrave; une autre affaire');
 define('_JOIN_RES_ON_THIS_CASE','Attacher un courrier &agrave; l&rsquo;affaire');
 define('_RESSOURCES_LINKED','Courrier attach&eacute;');
 define('_RESSOURCES_NOT_LINKED','Ce courrier est d&eacute;j&agrave; attach&eacute;');
+
+
+
+define('_SEARCH_A_CASE','Rechercher une affaire');
+define('_SEARCH_A_RES','Rechercher une courrier');
+define('_CREATE_NEW_CASE','Cr&eacute;er une nouvelle affaire');
+
+define('_CASE_DESCRIPTION_HELP','Saisissez les mots cl&eacute;s de la description de l&rsquo;affaire...');
+define('_CASE_LABEL_HELP','Recherchez sur le libell&eacute; de l&rsquo;affaire...');
+define('_FOUND_CASE','affaire(s) trouv&eacute;e(s)');
+define('_CREATE_CASE','Cr&eacute;er l&rsquo;affaire');
+define('_LINKED_TO_CASE','Attach&eacute; &agrave; l&rsquo;affaire');
+define('_CLOSE_THIS_CASE','Cloturer cette affaire');
+define('_THIS_CASE_IS_CLOSED','Affaire clotur&eacute;e');
+define('_CASE_CREATED','Affaire cr&eacute;e');
+define('_CLOSE_CASE','Cloturer des affaires');
+
 
 
 ?>

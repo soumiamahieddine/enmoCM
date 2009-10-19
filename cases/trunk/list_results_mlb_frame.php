@@ -78,7 +78,7 @@ array_push($select[$view], "res_id", "status", "subject", "dest_user", "type_lab
 
 if($core_tools->is_module_loaded("cases") == true)
 {
-	array_push($select[$view], "case_id", "case_label"); 
+	array_push($select[$view], "case_id", "case_label", "case_description"); 
 }
 
 
@@ -150,9 +150,13 @@ $_SESSION['error_page'] = '';
 
 	//Defines template allowed for this list
 	$template_list=array();
+	
+	
 	array_push($template_list, array( "name"=>"attach_to_case", "img"=>"extend_list.gif", "label"=> _ACCESS_LIST_EXTEND));
-	/*if($core_tools->is_module_loaded('cases'))	
-		array_push($template_list, array( "name"=>"group_case", "img"=>"arrow_up.gif", "label"=> _ACCESS_LIST_CASE));*/
+	
+	if($_REQUEST['template'] == 'group_case')
+		array_push($template_list, array( "name"=>"group_case", "img"=>"arrow_up.gif", "label"=> _ACCESS_LIST_CASE));
+	
 	if(!$_REQUEST['template'])
 		$template_to_use = $template_list[0]["name"];
 	if(isset($_REQUEST['template']) && empty($_REQUEST['template']))
@@ -327,7 +331,7 @@ $_SESSION['error_page'] = '';
 						}
 						if($tab[$i][$j][$value]=="case_label" && $core_tools->is_module_loaded("cases") == true)
 						{
-							$tab[$i][$j]["label"]=_CASE_NUM;
+							$tab[$i][$j]["label"]=_CASE_LABEL;
 							$tab[$i][$j]["size"]="10";
 							$tab[$i][$j]["label_align"]="left";
 							$tab[$i][$j]["align"]="left";

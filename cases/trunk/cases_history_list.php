@@ -78,7 +78,7 @@ if(count($docs_library) >1)
 {
 	foreach($docs_library as $tmp_implode)
 	{
-		$docs_limitation .= $tmp_implode.',';
+		$docs_limitation .= '\''.$tmp_implode.'\',';
 	}
 	$docs_limitation = substr($docs_limitation, 0,-1);
 }

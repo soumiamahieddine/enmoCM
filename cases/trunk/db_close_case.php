@@ -1,4 +1,13 @@
 <?php
+/**
+*
+*
+* @package  Maarch Entreprise 1.0
+* @version 1.0
+* @since 10/2005
+* @license GPL
+* @author  Loïc Vinet  <dev@maarch.org>
+*/
 
 session_name('PeopleBox');
 session_start();
@@ -18,26 +27,34 @@ $core_tools->test_user();
 $core_tools->load_lang();
 $core_tools->test_service('join_res_case', 'cases');
 $cases = new cases();
+$security = new security();
 
-if ($_GET['searched_item'] == "case")
+if ($_GET['case_id'])
 {
 
-		$res_id_to_insert = $_POST['field'];
-		$actual_case_id = $_GET['searched_value']; 
+		$case_id = $_GET['case_id']; 
 		
-		if (!empty($res_id_to_insert ) && !empty($actual_case_id))
+		$array_res = array();
+		$array_res = $cases->get_res_id($case_id);
+		
+		$rights = false;
+		foreach ($array_res as $res)
 		{
-			if($cases->join_res($actual_case_id, $res_id_to_insert)==true)
+			$right = $security->test_right_doc($coll_id, $s_id);
+			if ($right == false)
 			{
-				$_SESSION['error'] = _RESSOURCES_LINKED;
+				$rights = true;
 			}
-			else
-			{
-				$_SESSION['error'] = _RESSOURCES_NOT_LINKED;
-			}
+		}
+		
+		if ($rights ==true)
+		{
+			//Lanching closing date
+			$cases->close_case($case_id);
+			$_SESSION['error'] =  _THIS_CASE_IS_CLOSED;
 			?>
 			<script language="javascript">
-			window.opener.top.location.reload();self.close();
+			window.parent.top.location.reload();self.close();
 			</script>
 			<?php
 		}
@@ -46,30 +63,8 @@ if ($_GET['searched_item'] == "case")
 			echo _ERROR_WITH_CASES_ATTACHEMENT;
 		}
 }
-elseif ($_GET['searched_item'] == "res_id")
+else
 {
-
-		$case_id_to_insert = $_POST['field'];
-		$actual_res_id = $_GET['searched_value']; 
-		
-		if (!empty($case_id_to_insert ) && !empty($actual_res_id))
-		{
-			if($cases->join_res($case_id_to_insert, $actual_res_id)==true)
-			{
-				$_SESSION['error'] = _RESSOURCES_LINKED;
-			}
-			else
-			{
-				$_SESSION['error'] = _RESSOURCES_NOT_LINKED;
-			}
-			?>
-			<script language="javascript">
-			window.opener.top.location.reload();self.close();
-			</script>
-			<?php
-		}
-		else
-		{
-			echo _ERROR_WITH_CASES_ATTACHEMENT;
-		}
+	echo _ERROR_TO_CLOSING_DATE;
+	
 }
