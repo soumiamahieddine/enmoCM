@@ -205,7 +205,6 @@ function repost(php_file,update_divs,fields,action,timeout)
 			basis.id='basis';
 			newElement('div', [['id','calender',1]], false, basis);
 			calender();
-
 		}
 	}
 

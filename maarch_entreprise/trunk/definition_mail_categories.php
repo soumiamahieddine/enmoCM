@@ -169,13 +169,13 @@ if($core->is_module_loaded('folder'))
 	$_ENV['categories']['incoming']['other_cases']['project'] = array( 'type_form' => 'string', 'type_field' => 'string', 'mandatory' => false, 'label' => _PROJECT, 'table' => 'none', 'img' => $_SESSION['config']['businessappurl'].'img/doc_project.gif', 'modify' => true, 'form_show' => 'autocomplete');
 	//Folder (outgoing)
 	$_ENV['categories']['outgoing']['other_cases']['market'] = array( 'type_form' => 'string', 'type_field' => 'string', 'mandatory' => false, 'label' => _MARKET, 'table' => 'none', 'img' => $_SESSION['config']['businessappurl'].'img/market.gif', 'modify' => true, 'form_show' => 'autocomplete');
-	$_ENV['categories']['outgoing']['other_cases']['project'] = array( 'type_form' => 'string', 'type_field' => 'string', 'mandatory' => true, 'label' => _PROJECT, 'table' => 'none', 'img' => $_SESSION['config']['businessappurl'].'img/doc_project.gif', 'modify' => true, 'form_show' => 'autocomplete');
+	$_ENV['categories']['outgoing']['other_cases']['project'] = array( 'type_form' => 'string', 'type_field' => 'string', 'mandatory' => false, 'label' => _PROJECT, 'table' => 'none', 'img' => $_SESSION['config']['businessappurl'].'img/doc_project.gif', 'modify' => true, 'form_show' => 'autocomplete');
 	//Folder (internal)
 	$_ENV['categories']['internal']['other_cases']['market'] = array( 'type_form' => 'string', 'type_field' => 'string', 'mandatory' => false, 'label' => _MARKET, 'table' => 'none', 'img' => $_SESSION['config']['businessappurl'].'img/market.gif', 'modify' => true, 'form_show' => 'autocomplete');
 	$_ENV['categories']['internal']['other_cases']['project'] = array( 'type_form' => 'string', 'type_field' => 'string', 'mandatory' => false, 'label' => _PROJECT, 'table' => 'none', 'img' => $_SESSION['config']['businessappurl'].'img/doc_project.gif', 'modify' => true, 'form_show' => 'autocomplete');
 	//Folder (market_document)
 	$_ENV['categories']['market_document']['other_cases']['market'] = array( 'type_form' => 'string', 'type_field' => 'string', 'mandatory' => false, 'label' => _MARKET, 'table' => 'none', 'img' => $_SESSION['config']['businessappurl'].'img/market.gif', 'modify' => true, 'form_show' => 'autocomplete');
-	$_ENV['categories']['market_document']['other_cases']['project'] = array( 'type_form' => 'string', 'type_field' => 'string', 'mandatory' => true, 'label' => _PROJECT, 'table' => 'none', 'img' => $_SESSION['config']['businessappurl'].'img/doc_project.gif', 'modify' => true, 'form_show' => 'autocomplete');
+	$_ENV['categories']['market_document']['other_cases']['project'] = array( 'type_form' => 'string', 'type_field' => 'string', 'mandatory' => false, 'label' => _PROJECT, 'table' => 'none', 'img' => $_SESSION['config']['businessappurl'].'img/doc_project.gif', 'modify' => true, 'form_show' => 'autocomplete');
 }
 
 
@@ -507,7 +507,7 @@ function get_general_data($coll_id, $res_id, $mode, $params = array())
 			$data[$arr[$i]]['value'] = $line->$arr[$i];
 			if($arr[$i] <> 'project')
 			{
-				$data[$arr[$i]]['show_value'] = $line->$arr[$i];
+				$data[$arr[$i]]['show_value'] = $db->show_string($line->$arr[$i]);
 			}
 			if($_ENV['categories'][$cat_id][$arr[$i]]['type_field'] == 'date')
 			{

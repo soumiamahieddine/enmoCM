@@ -211,4 +211,8 @@
    		<moduleid>reports</moduleid>
 		<comment>_REPORTS_COMMENT</comment>
 	</MODULES>
+	<MODULES>
+		<moduleid>cases</moduleid>
+		<comment>_CASES_COMMENT</comment>
+	</MODULES>
 </ROOT>
