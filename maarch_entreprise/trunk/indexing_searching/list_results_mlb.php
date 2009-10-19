@@ -76,7 +76,7 @@ array_push($select[$view], "res_id", "status", "subject", "dest_user", "type_lab
 
 if($core_tools->is_module_loaded("cases") == true)
 {
-	array_push($select[$view], "case_id", "case_label"); 
+	array_push($select[$view], "case_id", "case_label", "case_description"); 
 }
 
 
@@ -137,7 +137,7 @@ else
 {
 	$request = new request();
 	$tab=$request->select($select,$where_request,$orderstr,$_SESSION['config']['databasetype']);
-	
+	//$request->show();
 }
 //$request->show();
 $_SESSION['error_page'] = '';
@@ -325,7 +325,7 @@ $_SESSION['error_page'] = '';
 						}
 						if($tab[$i][$j][$value]=="case_label" && $core_tools->is_module_loaded("cases") == true)
 						{
-							$tab[$i][$j]["label"]=_CASE_NUM;
+							$tab[$i][$j]["label"]=_CASE_LABEL;
 							$tab[$i][$j]["size"]="10";
 							$tab[$i][$j]["label_align"]="left";
 							$tab[$i][$j]["align"]="left";
@@ -346,11 +346,13 @@ $_SESSION['error_page'] = '';
 
 
 
-		
-		
+		if($_GET['template'] == "group_case")
+			$found_type = _FOUND_CASE;
+		else
+			$found_type = _FOUND_DOC;
 ?>
 
-<h1><img src="<?php  echo $_SESSION['config']['businessappurl']."img/picto_search_b.gif";?>" alt="" /> <?php  echo _SEARCH_RESULTS." - ".count($tab)." "._FOUND_DOC;?></h1>
+<h1><img src="<?php  echo $_SESSION['config']['businessappurl']."img/picto_search_b.gif";?>" alt="" /> <?php  echo _SEARCH_RESULTS." - ".count($tab)." ".$found_type;?></h1>
     <div id="inner_content"><?php
 
 

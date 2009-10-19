@@ -382,11 +382,65 @@ function del_query_confirm()
     </tr>
 </table>
 <table align="center" border="0" width="100%">
-    <tr>
-    	<td colspan="2" ><h2><?php echo _LETTER_INFO; ?></h2></td>
+	
+	
+	
+			<?php
+			if($core_tools->is_module_loaded("cases") == true)
+			{ ?>
+			 <tr>
+				<td colspan="2" ><h2><?php echo _CASE_INFO; ?></h2></td>
+			</tr>
+			<tr>
+				<td>
+					<div class="block">
+					<table border="0" width="100%">
+						
+						<tr>
+							<td width="70%"><label for="numcase" class="bold" ><?php echo _CASE_NUMBER;?>:</label>
+								<input type="text" name="numcase" id="numcase" <?php echo $size; ?>  />
+								<input type="hidden" name="meta[]" value="numcase#numcase#input_text" />
+							</td>
+							<td><em><?php echo _CASE_NUMBER_HELP; ?></em></td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr>
+							<td width="70%"><label for="labelcase" class="bold" ><?php echo _CASE_LABEL;?>:</label>
+								<input type="text" name="labelcase" id="labelcase" <?php echo $size; ?>  />
+								<input type="hidden" name="meta[]" value="labelcase#labelcase#input_text" />
+							</td>
+							<td><em><?php echo _CASE_LABEL_HELP; ?></em></td>
+							<td>&nbsp;</td>
+						</tr>
+						<tr>
+							<td width="70%"><label for="descriptioncase" class="bold" ><?php echo _CASE_DESCRIPTION;?>:</label>
+								<input type="text" name="descriptioncase" id="descriptioncase" <?php echo $size; ?>  />
+								<input type="hidden" name="meta[]" value="descriptioncase#descriptioncase#input_text" />
+							</td>
+							<td><em><?php echo _CASE_DESCRIPTION_HELP; ?></em></td>
+							<td>&nbsp;</td>
+						</tr>
+					</table>
+					</div>
+					<div class ="block_end">&nbsp;</div>
+				</td>
+				<td>
+					<p align="center">
+					</p>	
+				</td>
+			</tr>
+		<?php
+	}	 ?>
+	
+	
+	
+	
+	<tr>
+		<td colspan="2" ><h2><?php echo _LETTER_INFO; ?></h2></td>
     </tr>
     <tr >
     	<td >
+		<div class="block">
 			<table border = "0" width="100%">
 			<tr>
 				<td width="70%"><label for="subject" class="bold" ><?php echo _MAIL_OBJECT;?>:</label>
@@ -416,19 +470,10 @@ function del_query_confirm()
 				</td>
 				<td><em><?php echo _MULTI_FIELD_HELP; ?></em></td>
 			</tr>
-			<?php
-			if($core_tools->is_module_loaded("cases") == true)
-			{ ?>
-				<tr>
-					<td width="70%"><label for="numcase" class="bold" ><?php echo _CASE_NUMBER;?>:</label>
-						<input type="text" name="numcase" id="numcase" <?php echo $size; ?>  />
-						<input type="hidden" name="meta[]" value="numcase#numcase#input_text" />
-					</td>
-					<td><em><?php echo _CASE_NUMBER_HELP; ?></em></td>
-				</tr>
-				<?php
-			}	 ?>
+		
 			</table>
+			</div>
+			<div class="block_end">&nbsp;</div>
     	</td>
     	<td>
 			<p align="center">
@@ -439,6 +484,7 @@ function del_query_confirm()
     <tr><td colspan="2"><hr/></td></tr>
 <tr>
 <td  >
+<div class="block">
  <table border = "0" width="100%">
        <tr>
    	 <td width="70%">
@@ -451,6 +497,8 @@ function del_query_confirm()
 		<td width="30%"><em><?php echo _ADD_PARAMETERS_HELP; ?></em></td>
 		</tr>
  </table>
+ </div>
+ <div class="block_end">&nbsp;</div>
 </td></tr>
 </table>
 

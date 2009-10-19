@@ -164,9 +164,14 @@ if(empty($_SESSION['error']) || $_SESSION['indexation'])
 			}
 		}
 	}
-
-	$db->query("select status, format, typist, creation_date,  fingerprint,  filesize, res_id, work_batch,  page_count, is_paper, scan_date, scan_user, scan_location, scan_wkstation, scan_batch, source, doc_language, description, closing_date, alt_identifier ".$comp_field." from ".$table." where res_id = ".$s_id."");
+	$case_sql_complementary = '';
+	if($core_tools->is_module_loaded('cases') == true)
+	{
+		$case_sql_complementary = " , case_id";
+	}
+	$db->query("select status, format, typist, creation_date,  fingerprint,  filesize, res_id, work_batch,  page_count, is_paper, scan_date, scan_user, scan_location, scan_wkstation, scan_batch, source, doc_language, description, closing_date, alt_identifier ".$comp_field.$case_sql_complementary." from ".$table." where res_id = ".$s_id."");
 	//$db->show();
+	
 }
 ?>
 <div id="details_div" style="display:none;">
@@ -226,6 +231,15 @@ else
 			$doc_language = $res->doc_language;
 			$closing_date = $db->format_date_db($res->closing_date, false);
 			$indexes = $type->get_indexes($type_id, $coll_id);
+			
+			if($core_tools->is_module_loaded('cases') == true)
+			{
+				require_once($_SESSION['pathtomodules']."cases".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR.'class_modules_tools.php');
+				$case = new cases();
+				if ($res->case_id <> '')
+					$case_properties = $case->get_case_info($res->case_id);
+			}
+			
 			//$db->show_array($indexes);
 			foreach(array_keys($indexes) as $key)
 			{
@@ -541,6 +555,7 @@ else
 							<td>
 								<input type="text" class="readonly" readonly="readonly" value="<?php  echo $chrono_number; ?>" size="40" title="<?php  echo $chrono_number; ?>" alt="<?php  echo $chrono_number; ?>" />
 							</td>
+						
 						</tr>
 
 					</table>
@@ -702,12 +717,22 @@ else
 						<?php  } ?>
 					</div>
 					<br/>
+				
+					
+				<?php if($core_tools->is_module_loaded('cases') == true)
+					{
+						include($_SESSION['pathtomodules'].'cases'.DIRECTORY_SEPARATOR.'including_detail_cases.php');
+					} 
+					?>
+					
+					
 					<h2>
-			            <span class="date">
-			            	<b><?php  echo _FILE_PROPERTIES;?></b>
-			            </span>
+					<span class="date">
+						<b><?php  echo _FILE_PROPERTIES;?></b>
+					</span>
 			        </h2>
 					<br/>
+					
 		        	<table cellpadding="2" cellspacing="2" border="0" class="block forms details" width="100%">
 						<tr>
 							<th align="left" class="picto">
@@ -784,8 +809,13 @@ else
 						<input type="submit" class="button"  value="<?php  echo _MODIFY_DOC;?>" name="submit_index_doc" />
 						<?php  } ?>
 							<input type="button" class="button" name="back_welcome" id="back_welcome" value="<?php echo _BACK_TO_WELCOME;?>" onclick="window.top.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php';" />
+						<?php if ($core_tools->test_service('join_res_case', 'cases',false) == 1) 
+						{
+						?> 	<input type="button" class="button" name="back_welcome" id="back_welcome" value="<?php if($res->case_id<>'') echo _MODIFY_CASE; else echo _JOIN_CASE;?>" onclick="window.open('<?php echo $_SESSION['urltomodules'];?>cases/search_adv_for_cases.php?searched_item=res_id&searched_value=<? echo $s_id;?>','', 'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=1020,height=685');"/><?php
+						}
+						?>
 					</div>
-				</form>
+					</form>
 					<?php
 					//echo $detailsExport;
 					/*

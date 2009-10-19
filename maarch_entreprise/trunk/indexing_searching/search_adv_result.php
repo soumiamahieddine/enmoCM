@@ -63,7 +63,7 @@ else
 	$start = 0;
 }
 $where_request = "";
-
+$case_view = false;
  $_ENV['date_pattern'] = "/^[0-3][0-9]-[0-1][0-9]-[1-2][0-9][0-9][0-9]$/";
 $json_txt = '{';
 
@@ -142,7 +142,23 @@ if(count($_REQUEST['meta']) > 0)
 				$json_txt .= "'numcase' : ['".addslashes(trim($_REQUEST['numcase']))."'],";
 				//$where_request .= "res_view_letterbox.case_id = ".$func->wash($_REQUEST['numcase'], "num", _N_CASE,"no")." and ";
 				$where_request .= " ".$_SESSION['collections'][0]['view'].".case_id = ".$func->wash($_REQUEST['numcase'], "num", _N_CASE,"no")." and ";
-
+				$case_view=true;
+			}
+			// CASE_LABEL 
+			else if($tab_id_fields[$j] == 'labelcase' && !empty($_REQUEST['labelcase']))
+			{
+				$json_txt .= "'labelcase' : ['".addslashes(trim($_REQUEST['labelcase']))."'],";
+				//$where_request .= "res_view_letterbox.case_id = ".$func->wash($_REQUEST['numcase'], "num", _N_CASE,"no")." and ";
+				$where_request .= " ".$_SESSION['collections'][0]['view'].".case_label ilike '%".$func->wash($_REQUEST['labelcase'], "no", _CASE_LABEL,"no")."%' and ";
+				$case_view=true;
+			}
+			// CASE_DESCRIPTION 
+			else if($tab_id_fields[$j] == 'descriptioncase' && !empty($_REQUEST['descriptioncase']))
+			{
+				$json_txt .= "'descriptioncase' : ['".addslashes(trim($_REQUEST['descriptioncase']))."'],";
+				//$where_request .= "res_view_letterbox.case_id = ".$func->wash($_REQUEST['numcase'], "num", _N_CASE,"no")." and ";
+				$where_request .= " ".$_SESSION['collections'][0]['view'].".case_description ilike '%".$func->wash($_REQUEST['descriptioncase'], "no", _CASE_DESCRIPTION,"no")."%' and ";
+				$case_view=true;
 			}
 			else if($tab_id_fields[$j] == 'chrono' && !empty($_REQUEST['chrono']))
 			{
@@ -708,16 +724,23 @@ if($_REQUEST['specific_case'] == "attach_to_case")
 	?>
 
 	<!--<script language="javascript" type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'].'indexing_searching/'.$page.'.php?searched_item='.$_REQUEST['searched_item'].'&searched_value='.$_REQUEST['searched_value'];?>';</script>-->
-	<script language="javascript" type="text/javascript">window.top.location.href='<?php  echo $_SESSION['urltomodules'].'cases/'.$page.'.php?searched_item='.$_REQUEST['searched_item'].'&searched_value='.$_REQUEST['searched_value'];?>';</script>
+	<script language="javascript" type="text/javascript">window.top.location.href='<?php  echo $_SESSION['urltomodules'].'cases/'.$page.'.php?searched_item='.$_REQUEST['searched_item'].'&searched_value='.$_REQUEST['searched_value'].'&template='.$_REQUEST['template'];?>';</script>
 	<?php
 	exit();
 }
 
 if(empty($_SESSION['error_search']))
 {
+	//specific string for search_adv cases
+	$extend_link_case = "";
+	if($case_view == true)
+	{
+		$extend_link_case = "&template=group_case";
+	}
+	//##################
 	$page = 'list_results_mlb';
 	?>
-	<script language="javascript" type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?page='.$page.'&dir=indexing_searching';?>';</script>
+	<script language="javascript" type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?page='.$page.'&dir=indexing_searching'.$extend_link_case;?>';</script>
 	<?php
 	exit();
 }
