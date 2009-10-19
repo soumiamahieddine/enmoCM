@@ -22,11 +22,12 @@ CREATE TABLE cases
   case_custom_t3 character varying(255),
   case_custom_t4 character varying(255),
   CONSTRAINT cases_pkey PRIMARY KEY (case_id)
-)
+);
+
 CREATE TABLE cases_res
 (
   case_id integer NOT NULL,
   res_id integer NOT NULL,
   CONSTRAINT cases_res_pkey PRIMARY KEY (case_id,res_id)
-)
+);
 
