@@ -899,12 +899,14 @@ function manage_status($arr_id, $history, $id_action, $label_action, $status)
 		else
 		{
 			$core = new core_tools();
+/*
 			if($core->is_module_loaded('folder') && empty($folder_id ))
 			{
 				$db->query("update ".$_POST['table']. " set status = 'NEW' where res_id = ".$arr_id[$i], true);
 				$_SESSION['error'] = _NUM.$arr_id[$i].' : '._FOLDER_MISSING;
 				return false;
 			}
+*/
 		}
 	}
 	return array('result' => $result, 'history_msg' => '');

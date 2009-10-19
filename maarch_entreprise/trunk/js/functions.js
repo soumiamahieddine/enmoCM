@@ -1076,13 +1076,26 @@ function close_action(id_action, page)
  * @param coll_id String  Collection identifier
  * @param mode String Action mode : mass or page
  */
-function valid_action_form(current_form_id, path_manage_script, id_action, values, table, module, coll_id, mode)
+function valid_action_form(current_form_id, path_manage_script, id_action, values, table, module, coll_id, mode, protect_string)
 {
 	var frm_values = get_form_values(current_form_id);
-	frm_values = frm_values.replace("\'", "\\'", 'g');
-	frm_values = frm_values.replace('\"', '\\"', 'g');
+	if(protect_string == false)
+	{
+		var protect = false;
+	}
+	else
+	{
+		var protect = true;
+	}
+	//alert(frm_values);
+	if(protect)
+	{
+		frm_values = frm_values.replace("\'", "\\'", 'g');
+		frm_values = frm_values.replace('\"', '\\"', 'g');
+	}
+	//alert(frm_values);
 	var chosen_action_id = get_chosen_action(current_form_id);
-	//console.log('values : '+values+', table : '+table+', module : '+module+', coll_id : '+coll_id+', chosen_action_id : '+chosen_action_id+' frm_values : '+frm_values);
+	console.log('values : '+values+', table : '+table+', module : '+module+', coll_id : '+coll_id+', chosen_action_id : '+chosen_action_id+', frm_values : '+frm_values);
 	if(values &&  table && module && coll_id && chosen_action_id != '')
 	{
 		new Ajax.Request(path_manage_script,
