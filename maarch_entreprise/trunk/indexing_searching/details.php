@@ -171,7 +171,7 @@ if(empty($_SESSION['error']) || $_SESSION['indexation'])
 	}
 	$db->query("select status, format, typist, creation_date,  fingerprint,  filesize, res_id, work_batch,  page_count, is_paper, scan_date, scan_user, scan_location, scan_wkstation, scan_batch, source, doc_language, description, closing_date, alt_identifier ".$comp_field.$case_sql_complementary." from ".$table." where res_id = ".$s_id."");
 	//$db->show();
-	
+
 }
 ?>
 <div id="details_div" style="display:none;">
@@ -231,7 +231,7 @@ else
 			$doc_language = $res->doc_language;
 			$closing_date = $db->format_date_db($res->closing_date, false);
 			$indexes = $type->get_indexes($type_id, $coll_id);
-			
+
 			if($core_tools->is_module_loaded('cases') == true)
 			{
 				require_once($_SESSION['pathtomodules']."cases".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR.'class_modules_tools.php');
@@ -239,7 +239,7 @@ else
 				if ($res->case_id <> '')
 					$case_properties = $case->get_case_info($res->case_id);
 			}
-			
+
 			//$db->show_array($indexes);
 			foreach(array_keys($indexes) as $key)
 			{
@@ -555,7 +555,7 @@ else
 							<td>
 								<input type="text" class="readonly" readonly="readonly" value="<?php  echo $chrono_number; ?>" size="40" title="<?php  echo $chrono_number; ?>" alt="<?php  echo $chrono_number; ?>" />
 							</td>
-						
+
 						</tr>
 
 					</table>
@@ -717,22 +717,14 @@ else
 						<?php  } ?>
 					</div>
 					<br/>
-				
-					
-				<?php if($core_tools->is_module_loaded('cases') == true)
-					{
-						include($_SESSION['pathtomodules'].'cases'.DIRECTORY_SEPARATOR.'including_detail_cases.php');
-					} 
-					?>
-					
-					
+
 					<h2>
 					<span class="date">
 						<b><?php  echo _FILE_PROPERTIES;?></b>
 					</span>
 			        </h2>
 					<br/>
-					
+
 		        	<table cellpadding="2" cellspacing="2" border="0" class="block forms details" width="100%">
 						<tr>
 							<th align="left" class="picto">
@@ -809,255 +801,10 @@ else
 						<input type="submit" class="button"  value="<?php  echo _MODIFY_DOC;?>" name="submit_index_doc" />
 						<?php  } ?>
 							<input type="button" class="button" name="back_welcome" id="back_welcome" value="<?php echo _BACK_TO_WELCOME;?>" onclick="window.top.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php';" />
-						<?php if ($core_tools->test_service('join_res_case', 'cases',false) == 1) 
-						{
-						?> 	<input type="button" class="button" name="back_welcome" id="back_welcome" value="<?php if($res->case_id<>'') echo _MODIFY_CASE; else echo _JOIN_CASE;?>" onclick="window.open('<?php echo $_SESSION['urltomodules'];?>cases/search_adv_for_cases.php?searched_item=res_id&searched_value=<? echo $s_id;?>','', 'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=1020,height=685');"/><?php
-						}
-						?>
+
 					</div>
 					</form>
 					<?php
-					//echo $detailsExport;
-					/*
-					<h2>
-				            <span class="date">
-				            	<b><?php  echo _DOC_PROPERTIES;?></b>
-				            </span>
-				        </h2>
-					<form method="post" name="index_doc" action="index.php?page=detailss&dir=indexing_searching&id=<?php  echo $s_id; ?>&coll_id=<?php echo $coll_id;?>" class="forms">
-						<div align="center">
-					        <?php
-							if($type_id <> "0" && $type_id <> "")
-							{
-								$db->query("select * from ".$_SESSION['tablename']['doctypes']." where type_id = ".$type_id);
-
-								$res = $db->fetch_array();
-								$desc = str_replace("\\","",$res['description']);
-								$type_id = $res['type_id'];
-								$indexing_searching = new indexing_searching();
-								$indexing_searching->retrieve_index($res,$coll_id );
-
-								?>
-								<form method="post" name="index_doc" action="index.php?page=details_documents&module=indexing_searching&id=<?php  echo $_SESSION['id_to_view']; ?>" class="forms">
-								<p>&nbsp;</p>
-								<p>
-									<label><?php  echo _PIECE_TYPE;?> :</label>
-									<input type="text" readonly="readonly" class="readonly" value="<?php  echo $desc; ?>" />
-								</p>
-								<?php
-								$db = new dbquery();
-								$db->connect();
-								for($cpt_documents_5=0;$cpt_documents_5<=count($_SESSION['index_to_use']);$cpt_documents_5++)
-								{
-										if($_SESSION['index_to_use'][$cpt_documents_5]['label'] <> "")
-										{
-											$field = $_SESSION['index_to_use'][$cpt_documents_5]['column'];
-											if($is_view)
-											{
-												$field = "doc_".$field;
-											}
-											$connexion->query("select ".$field." from ".$table." where res_id = ".$_SESSION['id_to_view']);
-											$res_mastertype = $connexion->fetch_array();
-											//$connexion->show_array($res_mastertype);
-											$_SESSION['indexing'][$_SESSION['index_to_use'][$cpt_documents_5]['column']] = $res_mastertype[$field];
-											if($_SESSION['index_to_use'][$cpt_documents_5]['date'])
-											{
-												$_SESSION['indexing'][$_SESSION['index_to_use'][$cpt_documents_5]['column']] = $func->format_date_db($_SESSION['indexing'][$_SESSION['index_to_use'][$cpt_documents_5]['column']], false);
-											}
-											if((isset($_SESSION['index_to_use'][$cpt_documents_5]['foreign_key']) && !empty($_SESSION['index_to_use'][$cpt_documents_5]['foreign_key']) && isset($_SESSION['index_to_use'][$cpt_documents_5]['foreign_label']) && !empty($_SESSION['index_to_use'][$cpt_documents_5]['foreign_label']) && isset($_SESSION['index_to_use'][$cpt_documents_5]['tablename']) && !empty($_SESSION['index_to_use'][$cpt_documents_5]['tablename'])) || (isset($_SESSION['index_to_use'][$cpt_documents_5]['values']) && count($_SESSION['index_to_use'][$cpt_documents_5]['values']) > 0))
-											{
-												?>
-												<p>
-													<label>
-														<?php
-														if($_SESSION['index_to_use'][$cpt_documents_5]['mandatory'])
-														{
-															echo "<b>".$_SESSION['index_to_use'][$cpt_documents_5]['label']."</b> : ";
-														}
-														else
-														{
-															echo $_SESSION['index_to_use'][$cpt_documents_5]['label']." : ";
-														}
-														?>
-													</label>
-					                                <?php  if(!$modify_doc)
-													{
-													?>
-													<input type="text" class="readonly" readonly="readonly" value="<?php
-													if(isset($_SESSION['index_to_use'][$cpt_documents_5]['values']) && count($_SESSION['index_to_use'][$cpt_documents_5]['values']) > 0)
-													{
-														for($k=0; $k < count($_SESSION['index_to_use'][$cpt_documents_5]['values']); $k++)
-														{
-															if($_SESSION['indexing'][$_SESSION['index_to_use'][$cpt_documents_5]['column']] == $_SESSION['index_to_use'][$cpt_documents_5]['values'][$k]['label']){  $_SESSION['index_to_use'][$cpt_documents_5]['values'][$k]['label'];
-															break;
-															}
-														}
-													}
-													else
-													{
-														$query = "select ".$_SESSION['index_to_use'][$cpt_documents_5]['foreign_key'].", ".$_SESSION['index_to_use'][$cpt_documents_5]['foreign_label']." from ".$_SESSION['index_to_use'][$cpt_documents_5]['tablename'];
-														if(isset($_SESSION['index_to_use'][$cpt_documents_5]['where']) && !empty($_SESSION['index_to_use'][$cpt_documents_5]['where']))
-														{
-															$query .= " where ".$_SESSION['index_to_use'][$cpt_documents_5]['where'];
-														}
-														if(isset($_SESSION['index_to_use'][$cpt_documents_5]['order']) && !empty($_SESSION['index_to_use'][$cpt_documents_5]['order']))
-														{
-															$query .= ' '.$_SESSION['index_to_use'][$cpt_documents_5]['order'];
-														}
-														$db->query($query);
-														while($res = $db->fetch_object())
-														{
-															if($_SESSION['indexing'][$_SESSION['index_to_use'][$cpt_documents_5]['column']] == $res->$_SESSION['index_to_use'][$cpt_documents_5]['foreign_key'])
-															{
-																 echo $db->show_string($res->$_SESSION['index_to_use'][$cpt_documents_5]['foreign_label']);
-																break;
-															}
-														}
-													}
-													?>" />
-					                                <?php
-													}
-													else
-													{?>
-													<select name="<?php  echo $_SESSION['index_to_use'][$cpt_documents_5]['column'];?>" id="<?php  echo $_SESSION['index_to_use'][$cpt_documents_5]['column'];?>">
-													<option value=""><?php  echo _CHOOSE;?></option>
-													<?php
-													if(isset($_SESSION['index_to_use'][$cpt_documents_5]['values']) && count($_SESSION['index_to_use'][$cpt_documents_5]['values']) > 0)
-													{
-														for($k=0; $k < count($_SESSION['index_to_use'][$cpt_documents_5]['values']); $k++)
-														{
-														?>
-															<option value="<?php  echo $_SESSION['index_to_use'][$cpt_documents_5]['values'][$k]['label'];?>" <?php  if($_SESSION['indexing'][$_SESSION['index_to_use'][$cpt_documents_5]['column']] == $_SESSION['index_to_use'][$cpt_documents_5]['values'][$k]['label']){ echo 'selected="selected"'; } ?>><?php  echo $_SESSION['index_to_use'][$cpt_documents_5]['values'][$k]['label'];?></option>
-														<?php
-														}
-													}
-													else
-													{
-														$query = "select ".$_SESSION['index_to_use'][$cpt_documents_5]['foreign_key'].", ".$_SESSION['index_to_use'][$cpt_documents_5]['foreign_label']." from ".$_SESSION['index_to_use'][$cpt_documents_5]['tablename'];
-														if(isset($_SESSION['index_to_use'][$cpt_documents_5]['where']) && !empty($_SESSION['index_to_use'][$cpt_documents_5]['where']))
-														{
-															$query .= " where ".$_SESSION['index_to_use'][$cpt_documents_5]['where'];
-														}
-														if(isset($_SESSION['index_to_use'][$cpt_documents_5]['order']) && !empty($_SESSION['index_to_use'][$cpt_documents_5]['order']))
-														{
-															$query .= ' '.$_SESSION['index_to_use'][$cpt_documents_5]['order'];
-														}
-														$db->query($query);
-														while($res = $db->fetch_object())
-														{
-															?>
-															<option value="<?php  echo $res->$_SESSION['index_to_use'][$cpt_documents_5]['foreign_key'];?>" <?php  if($_SESSION['indexing'][$_SESSION['index_to_use'][$cpt_documents_5]['column']] == $res->$_SESSION['index_to_use'][$cpt_documents_5]['foreign_key']){ echo 'selected="selected"'; } ?>><?php  echo $db->show_string($res->$_SESSION['index_to_use'][$cpt_documents_5]['foreign_label']);?></option>
-															<?php
-														}
-													}
-													?>
-													</select>
-					                             <?php  } ?>
-												</p>
-											<?php
-											}
-											else
-											{
-												?>
-												<p>
-													<label>
-														<?php
-														if($_SESSION['index_to_use'][$cpt_documents_5]['mandatory'])
-														{
-															echo "<b>".$_SESSION['index_to_use'][$cpt_documents_5]['label']."</b> : ";
-														}
-														else
-														{
-															echo $_SESSION['index_to_use'][$cpt_documents_5]['label']." : ";
-														}
-														?>
-													</label>
-													<?php
-													if($_SESSION['index_to_use'][$cpt_documents_5]['date'])
-													{
-												?>
-														<input type="text" name="<?php  echo $_SESSION['index_to_use'][$cpt_documents_5]['column'];?>" id="<?php  echo $_SESSION['index_to_use'][$cpt_documents_5]['column'];?>" value="<?php  echo $func->format_date_db($_SESSION['indexing'][$_SESSION['index_to_use'][$cpt_documents_5]['column']], false);?>" <?php  if($_SESSION['field_error'][$_SESSION['index_to_use'][$cpt_documents_5]['column']]){?>style="background-color:#FF0000"<?php  }?> <?php  if(!$modify_doc){?> class="readonly" readonly="readonly" <?php  }if($_SESSION['index_to_use'][$cpt_documents_5]['date'])
-													{?> onclick="showCalender(this);"<?php  } ?>/>
-														<?php
-													}
-													else
-													{
-														?>
-														<input type="text" name="<?php  echo $_SESSION['index_to_use'][$cpt_documents_5]['column'];?>" id="<?php  echo $_SESSION['index_to_use'][$cpt_documents_5]['column'];?>" value="<?php  echo $_SESSION['indexing'][$_SESSION['index_to_use'][$cpt_documents_5]['column']];?>" <?php  if($_SESSION['field_error'][$_SESSION['index_to_use'][$cpt_documents_5]['column']]){?>style="background-color:#FF0000"<?php  }?> <?php  if(!$modify_doc){?> class="readonly" readonly="readonly" <?php  } ?> />
-														<?php
-													}
-
-													if($_SESSION['index_to_use'][$cpt_documents_5]['mandatory'] && $modify_doc)
-													{
-														?>
-														<input type="hidden" name="mandatory_<?php  echo $_SESSION['index_to_use'][$cpt_documents_5]['column'];?>" id="mandatory_<?php  echo $_SESSION['index_to_use'][$cpt_documents_5]['column'];?>" value="true" />
-														<?php
-													}
-													if($_SESSION['index_to_use'][$cpt_documents_5]['date'])
-													{
-													?>
-														&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-													<?php
-													}
-													?>
-												</p>
-												<?php
-											}
-										}
-									}
-								?>
-								<p >
-									<?php
-					                if($modify_doc && count($_SESSION['index_to_use']) > 0)
-					                {
-										?>
-										<input type="submit" class="button"  value="<?php  echo _MODIFY_DOC;?>" name="submit_index_doc" />
-					                	<?php
-					                }
-					                if($security->collection_user_right($_SESSION['collection_id_choice'], "can_delete"))
-					                {
-										?>
-										<input type="submit" class="button"  value="<?php  echo _DELETE_THE_DOC;?>" name="delete_doc" onclick="return(confirm('<?php  echo _REALLY_DELETE.' '._THIS_DOC;?> ?\n\r\n\r'));" />
-					                	<?php
-					                }
-									?>
-								 </p>
-							</form>
-					 	<?php
-						}
-						else
-						{
-							echo _DOC_NOT_QUALIFIED."<br/>";
-							if($security->collection_user_right($_SESSION['collection_id_choice'], "can_delete"))
-							{
-								?>
-					            <form method="post" name="index_doc" action="index.php?page=details_documents&module=indexing_searching&id=<?php  echo $_SESSION['id_to_view']; ?>" class="forms">
-									<input type="submit" class="button"  value="<?php  echo _DELETE_THE_DOC;?>" name="delete_doc" onclick="return(confirm('<?php  echo _REALLY_DELETE.' '._THIS_DOC;?> ?\n\r\n\r'));"/>
-					            </form>
-								<?php
-							}
-						}
-						if(!empty($_SESSION['error_page']))
-						{
-							?>
-							<script language="javascript" type="text/javascript">
-								alert("<?php  echo $func->wash_html($_SESSION['error_page']);?>");
-								<?php
-								if(isset($_POST['delete_doc']))
-								{
-									?>
-									window.location.href = 'index.php';
-									<?php
-								}
-								?>
-							</script>
-							<?php
-							$_SESSION['error'] = "";
-							$_SESSION['error_page'] = "";
-						}
-						?>
-						</div>
-						*/
 		}
 		?>
 				</dd>
@@ -1337,7 +1084,21 @@ else
 					</dd>
 					<?php
 				}
-				?>
+				if($core_tools->is_module_loaded('cases') == true)
+				{
+					?>
+					<dt><?php  echo _CASE;?></dt>
+					<dd>
+				<?php
+						include($_SESSION['pathtomodules'].'cases'.DIRECTORY_SEPARATOR.'including_detail_cases.php');
+						 if ($core_tools->test_service('join_res_case', 'cases',false) == 1)
+						{
+						?><div align="center">
+							<input type="button" class="button" name="back_welcome" id="back_welcome" value="<?php if($res->case_id<>'') echo _MODIFY_CASE; else echo _JOIN_CASE;?>" onclick="window.open('<?php echo $_SESSION['urltomodules'];?>cases/search_adv_for_cases.php?searched_item=res_id&searched_value=<? echo $s_id;?>','', 'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=1020,height=685');"/></div><?php
+						}
+						?>
+					</dd>
+				<?php } ?>
 			</dl>
 	<?php
 }
