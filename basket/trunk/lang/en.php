@@ -21,13 +21,13 @@
 
 /*********************** SERVICES ***********************************/
 define('_ADMIN_BASKETS', 'Basket');
-define('_ADMIN_BASKETS_DESC', 'Define basket contents and associate them with user groups. List available redirectionfor a user group. Associate the basket with result pages.');
-define('_USE_BASKETS', 'Utiliser les corbeilles');
-define('_DIFFUSION_LIST', 'Liste de diffusion');
+define('_ADMIN_BASKETS_DESC', 'Define basket contents and associate them with user groups. List available redirection for a user group. Associate the basket with result pages.');
+define('_USE_BASKETS', 'Use baskets');
+define('_DIFFUSION_LIST', 'Mailing list');
 
 //class basket
 define('_BASKET', 'Basket');
-define('_THE_BASKET', 'The basket ');*
+define('_THE_BASKET', 'The basket ');
 define('_BASKETS_COMMENT', 'Baskets');
 define('_THE_ID', 'the ID ');
 define('_THE_DESC', 'The description ');
@@ -228,4 +228,40 @@ define('_VIEW_BASKETS_TITLE', 'My baskets');
 define('_INVOICE_LIST_TO_VAL', 'Invoices to approve');
 define('_POSTINDEXING_LIST', 'Documents to check');
 define('_MY_BASKETS', 'My baskets');
+
+
+define('_INVOICE_LIST_TO_VAL', 'Invoices to validate');
+define('_POSTINDEXING_LIST', 'Documents to validate');
+define('_MY_BASKETS', 'My baskets');
+define('_REDIRECT_MY_BASKETS', 'Redirect the baskets');
+define('_NAME', 'Name');
+define('_CHOOSE_USER_TO_REDIRECT', 'You must redirect at least One basket to another user.');
+define('_FORMAT_ERROR_ON_USER_FIELD', 'one of the field is incorrect. Good format is: Surname, Firstname (Identifier)');
+define('_BASKETS_OWNER_MISSING', 'Basket owner is not set.');
+define('_FORM_ERROR', 'An error occured while saving the form');
+define('_USER_ABS', 'The user is already set on leave.');
+define('_ABS_LOG_OUT', 'If you continue, the leave mode will be disabled');
+define('_ABS_USER', 'User on vacation');
+define('_ABSENCE', 'Absent');
+define('_BASK_BACK', 'Back');
+
+define('_CANCEL_ABS', 'Disable leave mode');
+define('_REALLY_CANCEL_ABS', 'Do you really want to disable leave mode?');
+define('_ABS_MODE', 'Leave management');
+define('_REALLY_ABS_MODE', 'Do you want to enablme leave mode?');
+
+define('_REDIRECT_TO_ACTION', 'Redirect to an action');
+define('_DOCUMENTS_LIST', 'Simple list');
+define('_DOCUMENTS_LIST_WITH_FILTERS', 'List with filters');
+define('_AUTHORISED_ENTITIES', 'List of available departments');
+define('_ARCHIVE_LIST', 'List of archives unit');
+
+define('_FILTER_BY_ENTITY', 'filter by department');
+define('_FILTER_BY', 'filter by');
+define('_OTHER_BASKETS', 'Other baskets');
+
+
+define('_BASKET_WELCOME_TXT1', 'While browsing your baskets,');
+define('_BASKET_WELCOME_TXT2', 'you can click on the menu above to change basket');
+
 ?>
