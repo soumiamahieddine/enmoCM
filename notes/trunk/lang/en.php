@@ -1,7 +1,7 @@
-<?php 
+<?php
 /*
  *
- *    Copyright 2008,2009 Maarch    
+ *    Copyright 2008,2009 Maarch
  *
  *  This file is part of Maarch Framework.
  *
@@ -26,5 +26,7 @@ define('_NOTES_DELETED', 'Note deleted');
 define('_NOTES_MODIFIED', 'Note modified');
 define('_NOTE_UPDATED', 'Note modified');
 define('_NOTES', 'Notes');
+define('_NOTES_COMMENT', 'Notes');
+define('_OF', 'of');
 
 ?>
