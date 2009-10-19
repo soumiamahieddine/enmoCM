@@ -336,7 +336,7 @@ class cases extends dbquery
 		
 		$my_return = array();
 		
-		$query = " select res_id FROM ".$_SESSION['tablename']['cases_res']." WHERE  CASE_ID = '".$case_id."' ";
+		$query = " select res_id FROM ".$_SESSION['tablename']['cases_res']." WHERE  case_id = '".$case_id."' ";
 		$db->query($query);
 		
 		while ($res = $db->fetch_object())
@@ -413,6 +413,19 @@ class cases extends dbquery
 
 		$query="DELETE FROM ".$_SESSION['tablename']['cases_res']." WHERE res_id = '".$res_id."' and case_id <> '".$case_id."' ";
 		$db->query($query);
+	}
+	
+	public function get_case_id($res_id, $coll_id = "")
+	{
+		if (empty($res_id))
+			echo "get_case_id ::arg1 error!<br/>";
+	
+		$db = new dbquery();
+		$db->connect();
+		$query="select  case_id from  ".$_SESSION['collections'][0]['view']." where res_id = ".$res_id." ";
+		$db->query($query);
+		$res = $db->fetch_object();
+		return $res->case_id;
 	}
 }
 ?>

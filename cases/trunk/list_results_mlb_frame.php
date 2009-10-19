@@ -341,6 +341,19 @@ $_SESSION['error_page'] = '';
 							//$tab[$i][$j]["value"] = $contact->get_contact_information($_SESSION['mlb_search_current_res_id'],$_SESSION['mlb_search_current_category_id'],$view);
 							$tab[$i][$j]["order"]="case_id";
 						}
+						if($tab[$i][$j][$value]=="case_closing_date" && $core_tools->is_module_loaded("cases") == true)
+						{
+							$tab[$i][$j]["label"]=_CASE_CLOSING_DATE;
+							$tab[$i][$j]["size"]="10";
+							$tab[$i][$j]["label_align"]="left";
+							$tab[$i][$j]["align"]="left";
+							$tab[$i][$j]["valign"]="bottom";
+							$tab[$i][$j]["show"]=false;
+							if ($tab[$i][$j]['value']<> '')
+								$tab[$i][$j]['value'] = "("._CASE_CLOSED.")";
+							$tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
+							$tab[$i][$j]["order"]="case_id";
+						}
 					}
 				}
 			}
@@ -357,7 +370,6 @@ $_SESSION['error_page'] = '';
 
 <h4><p align="center"><img src="<?php  echo $_SESSION['config']['businessappurl']."img/picto_search_b.gif";?>" alt="" /> <?php  echo _SEARCH_RESULTS." - ".count($tab)." "._FOUND_DOC;?></h4></p>
     <div id="inner_content"><?php
-
 
 $details = 'details';
 	$list->list_doc($tab,$i,'','res_id','list_results_mlb_frame','res_id',$details.'&dir=indexing_searching',true,true,'post',$_SESSION['urltomodules']."cases/execute_attachement.php?searched_item=".$_GET['searched_item']."&searched_value=".$_GET['searched_value'],'Attacher &agrave; l&rsquo;affaire',false,true,true, false,false,false,true,true,'', '',false,'','','listing spec', '', false, false, null, '', '{}', true, '', true, array(), true, $template_list, $template_to_use );

@@ -34,7 +34,7 @@ define('_INDEX_CASES', 'Index de l&rsquo;affaire');
 define('_DOCUMENTS_LIST_IN_THIS_CASE', 'Liste des documents de l&rsquo;affaire');
 define('_NOTES_FOR_THIS_CASES', 'Annotations de cette affaire');
 define('_HISTORY_CASES', 'Historique de l&rsquo;affaire');
-define('_CASE', 'Affaire');
+
 
 
 define('_CASE_NUMBER', 'Num&eacute;ro de l&rsquo;affaire');
@@ -70,8 +70,9 @@ define('_RESSOURCES_NOT_LINKED','Ce courrier est d&eacute;j&agrave; attach&eacut
 
 
 
+define('_CASE','Affaire');
 define('_SEARCH_A_CASE','Rechercher une affaire');
-define('_CLOSED_CASE','Clotur&eacute;e');
+define('_CLOSED_CASE','Cl&ocirc;tur&eacute;e');
 define('_SEARCH_A_RES','Rechercher une courrier');
 define('_CREATE_NEW_CASE','Cr&eacute;er une nouvelle affaire');
 
@@ -81,8 +82,9 @@ define('_FOUND_CASE','affaire(s) trouv&eacute;e(s)');
 define('_CREATE_CASE','Cr&eacute;er l&rsquo;affaire');
 define('_LINKED_TO_CASE','Attach&eacute; &agrave; l&rsquo;affaire');
 define('_CLOSE_THIS_CASE','Cl&ocirc;turer cette affaire');
-define('_THIS_CASE_IS_CLOSED','Affaire clotur&eacute;e');
-define('_CASE_CREATED','Affaire cr&eacute;&eacute;e');
+define('_THIS_CASE_IS_CLOSED','Affaire cl&ocirc;tur&eacute;e');
+define('_CASE_CREATED','Affaire cr&eacute;e');
+define('_JOIN_RES_CASE_IN_PROCESS','Attacher des courriers aux affaires (corbeille de traitement)');
 define('_CLOSE_CASE','Cl&ocirc;turer des affaires');
 
 

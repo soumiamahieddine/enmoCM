@@ -399,7 +399,7 @@ function del_query_confirm()
 <!-- ##########################-->
 
 		<?php 
-		if($_GET['searched_item']=="res_id") 
+		if($_GET['searched_item']=="res_id" || $_GET['searched_item']=="res_id_in_process") 
 			$title_search = _SEARCH_A_CASE;
 			
 		elseif($_GET['searched_item']=="case")
@@ -437,10 +437,13 @@ function del_query_confirm()
 		<!--<form name="frmsearch2" method="get" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=search_adv_result&dir=indexing_searching"  id="frmsearch2" class="<?php echo $class_for_form; ?>">-->
 		<form name="frmsearch2" method="get" action="<?php echo $_SESSION['config']['businessappurl'];?>indexing_searching/search_adv_result.php"  id="frmsearch2" class="<?php echo $class_for_form; ?>">
 
+		<?php if ($_GET['schema'] <> '')
+		{ ?>
+			<input type="hidden" name="schema" value="<?php echo $_GET['schema']; ?>" />
+		<?php
+		}
+		?>
 		<input type="hidden" name="specific_case" value="attach_to_case" />
-
-
-
 		<!-- #########################To search a ressource for this res############################-->
 		<input type="hidden" name="searched_item" value="<?php echo $_GET['searched_item']; ?>" />
 		<input type="hidden" name="searched_value" value="<?php echo $_GET['searched_value']; ?>" />
@@ -448,7 +451,7 @@ function del_query_confirm()
 
 		<?php
 
-		if ($_GET['searched_item'] == "res_id")
+		if ($_GET['searched_item'] == "res_id" || $_GET['searched_item'] == "res_id_in_process")
 		{
 
 			echo '<input type="hidden" name="template" value="group_case" />';

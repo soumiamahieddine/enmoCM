@@ -35,7 +35,7 @@ $cases = new cases();
 $db = new dbquery();
 $status_obj = new manage_status();
 
-if ($core_tools->test_service('join_res_case', 'cases') == 1) 
+if (($core_tools->test_service('join_res_case', 'cases') == 1) || ($core_tools->test_service('join_res_case_in_process', 'cases') == 1))
 {
 
 
@@ -51,16 +51,56 @@ if ($core_tools->test_service('join_res_case', 'cases') == 1)
 		if (!$cases->create_case($actual_res_id, $case_label, $case_description))
 		{
 			echo 'CASES ATTACHEMENT ERROR';
-			exit();
+			
 		}
 		else
 		{ 
-			$_SESSION['error'] = _CASE_CREATED;
-		?>
-			<script language="javascript">
-			window.opener.top.location.reload();self.close();
-			</script>
-		<?php 
+			
+			if($_POST['searched_item'] == 'res_id_in_process')
+			{
+				$case_redemption = new cases();
+				$case_id_newest = $case_redemption->get_case_id($actual_res_id);
+				
+				
+				?>
+				<script language="javascript">
+					
+				var case_id = window.opener.$('case_id');
+				var case_label = window.opener.$('case_label');
+				var case_description = window.opener.$('case_description');
+				
+				if(case_id)
+				{
+					case_id.value = '<?php echo $case_id_newest ;?>';
+					case_label.value = '<?php echo $case_label ;?>';
+					case_description.value = '<?php echo $case_description ;?>';
+					
+				}
+				self.close();
+			
+				</script>
+				<?php	
+			
+			}
+			else
+			{	
+				$error = _CASE_CREATED;
+				
+				?>
+				<script language="javascript">
+				window.opener.top.location.reload();
+				var error_div = window.opener.$('main_error');
+				if(error_div)
+				{
+					error_div.update('<?php echo $error ;?>');
+				}
+				self.close();
+				</script>
+							
+				<?php 
+		
+			}
+		
 		}
 	}
 
