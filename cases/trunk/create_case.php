@@ -35,17 +35,14 @@ $cases = new cases();
 $db = new dbquery();
 $status_obj = new manage_status();
 
-if (($core_tools->test_service('join_res_case', 'cases') == 1) || ($core_tools->test_service('join_res_case_in_process', 'cases') == 1))
+if (($core_tools->test_service('join_res_case', 'cases', false) == 1) || ($core_tools->test_service('join_res_case_in_process', 'cases', false) == 1))
 {
 
 
-	$case_label = $_POST['case_label'];
-	$case_description = $_POST['case_description'];
-	$actual_res_id = $_POST['searched_value'];
+	$case_label = $db->protect_string_db($_POST['case_label']);
+	$case_description = $db->protect_string_db($_POST['case_description']);
+	$actual_res_id = $db->protect_string_db($_POST['searched_value']);
 	
-	// Mettre du wash
-
-
 	if ($case_label <> '' && $actual_res_id <> '')
 	{
 		if (!$cases->create_case($actual_res_id, $case_label, $case_description))

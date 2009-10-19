@@ -135,7 +135,7 @@ class cases extends dbquery
 		if ($_SESSION['history']['casesadd'] == "true")
 		{
 			$hist = new history();
-			$hist->add($_SESSION['tablename']['cases'], $case_id,"NEW",_NEW_CASE." ".$desc, $_SESSION['config']['databasetype']);
+			$hist->add($_SESSION['tablename']['cases'], $case_id,"NEW",_NEW_CASE." ", $_SESSION['config']['databasetype']);
 		}
 		//History adds
 		if ($_SESSION['history']['caseslink'] == "true")

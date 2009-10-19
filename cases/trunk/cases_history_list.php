@@ -83,7 +83,7 @@ if(count($docs_library) >1)
 	$docs_limitation = substr($docs_limitation, 0,-1);
 }
 else
-$docs_limitation .= $docs_library[0];
+$docs_limitation .= '\''.$docs_library[0].'\'';
 $docs_limitation .= ' ) ';
 
 
