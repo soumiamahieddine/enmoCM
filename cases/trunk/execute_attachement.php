@@ -23,8 +23,8 @@ if ($_GET['searched_item'] == "case")
 {
 
 		$res_id_to_insert = $_POST['field'];
-		$actual_case_id = $_GET['searched_value']; 
-		
+		$actual_case_id = $_GET['searched_value'];
+
 		if (!empty($res_id_to_insert ) && !empty($actual_case_id))
 		{
 			if($cases->join_res($actual_case_id, $res_id_to_insert)==true)
@@ -50,21 +50,27 @@ elseif ($_GET['searched_item'] == "res_id")
 {
 
 		$case_id_to_insert = $_POST['field'];
-		$actual_res_id = $_GET['searched_value']; 
-		
+		$actual_res_id = $_GET['searched_value'];
+
 		if (!empty($case_id_to_insert ) && !empty($actual_res_id))
 		{
 			if($cases->join_res($case_id_to_insert, $actual_res_id)==true)
 			{
-				$_SESSION['error'] = _RESSOURCES_LINKED;
+				$error = _RESSOURCES_LINKED;
 			}
 			else
 			{
-				$_SESSION['error'] = _RESSOURCES_NOT_LINKED;
+				$error = _RESSOURCES_NOT_LINKED;
 			}
 			?>
 			<script language="javascript">
-			window.opener.top.location.reload();self.close();
+			window.opener.top.location.reload();
+			var error_div = window.opener.$('main_error');
+			if(error_div)
+			{
+				error_div.update('<?php echo $error ;?>');
+			}
+			self.close();
 			</script>
 			<?php
 		}

@@ -34,7 +34,7 @@ define('_INDEX_CASES', 'Index de l&rsquo;affaire');
 define('_DOCUMENTS_LIST_IN_THIS_CASE', 'Liste des documents de l&rsquo;affaire');
 define('_NOTES_FOR_THIS_CASES', 'Annotations de cette affaire');
 define('_HISTORY_CASES', 'Historique de l&rsquo;affaire');
-
+define('_CASE', 'Affaire');
 
 
 define('_CASE_NUMBER', 'Num&eacute;ro de l&rsquo;affaire');
@@ -80,10 +80,10 @@ define('_CASE_LABEL_HELP','Recherchez sur le libell&eacute; de l&rsquo;affaire..
 define('_FOUND_CASE','affaire(s) trouv&eacute;e(s)');
 define('_CREATE_CASE','Cr&eacute;er l&rsquo;affaire');
 define('_LINKED_TO_CASE','Attach&eacute; &agrave; l&rsquo;affaire');
-define('_CLOSE_THIS_CASE','Cloturer cette affaire');
+define('_CLOSE_THIS_CASE','Cl&ocirc;turer cette affaire');
 define('_THIS_CASE_IS_CLOSED','Affaire clotur&eacute;e');
-define('_CASE_CREATED','Affaire cr&eacute;e');
-define('_CLOSE_CASE','Cloturer des affaires');
+define('_CASE_CREATED','Affaire cr&eacute;&eacute;e');
+define('_CLOSE_CASE','Cl&ocirc;turer des affaires');
 
 
 
