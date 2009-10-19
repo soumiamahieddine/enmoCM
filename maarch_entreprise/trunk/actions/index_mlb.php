@@ -804,7 +804,7 @@ function check_docserver($coll_id)
  **/
 function process_category_check($cat_id, $values)
 {
-	//print_r($values);
+	print_r($values);
 	$core = new core_tools();
 	// If No category : Error
 	if(!isset($_ENV['categories'][$cat_id]))
@@ -816,7 +816,7 @@ function process_category_check($cat_id, $values)
 	// Simple cases
 	for($i=0; $i<count($values); $i++)
 	{
-		if($_ENV['categories'][$cat_id][$values[$i]['ID']]['mandatory'] == true  && (empty($values[$i]['VALUE']) && ($values[$i]['VALUE'] == 0 && $_ENV['categories'][$cat_id][$values[$i]['ID']]['type_form'] <> 'integer')))
+		if($_ENV['categories'][$cat_id][$values[$i]['ID']]['mandatory'] == true  && (empty($values[$i]['VALUE']) ))
 		{
 			$_SESSION['error'] = $_ENV['categories'][$cat_id][$values[$i]['ID']]['label'].' '._IS_EMPTY;
 			return false;

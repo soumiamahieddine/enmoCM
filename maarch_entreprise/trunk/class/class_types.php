@@ -589,7 +589,7 @@ class types extends dbquery
 		// Checks the manadatory indexes
 		for($i=0; $i<count($mandatory_indexes);$i++)
 		{
-			if( empty($values[$mandatory_indexes[$i]]) && ($values[$mandatory_indexes[$i]] == 0 && $indexes[$mandatory_indexes[$i]]['type'] <> 'float' && $indexes[$mandatory_indexes[$i]]['type'] <> 'integer'))  // Pb 0
+			if( empty($values[$mandatory_indexes[$i]]) )  // && ($values[$i]['VALUE'] == 0 && $_ENV['categories'][$cat_id][$values[$i]['ID']]['type_form'] <> 'integer')
 			{
 				$_SESSION['error'] = $indexes[$mandatory_indexes[$i]]['label']._IS_EMPTY;
 				return false;
@@ -616,11 +616,11 @@ class types extends dbquery
 			{
 				$field_value = $this->wash($value[$key],"no",$indexes[$key]['label']);
 			}
-			else if($indexes[$key]['type'] == 'float' ) // && $values[$key] >= 0
+			else if($indexes[$key]['type'] == 'float'  && !empty($values[$key])) // && $values[$key] >= 0
 			{
 				$field_value = $this->wash($values[$key],"float",$indexes[$key]['label']);
 			}
-			else if($indexes[$key]['type'] == 'integer') // && $values[$key] >= 0
+			else if($indexes[$key]['type'] == 'integer'  && !empty($values[$key])) // && $values[$key] >= 0
 			{
 				$field_value = $this->wash($values[$key],"num",$indexes[$key]['label']);
 			}
