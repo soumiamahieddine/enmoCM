@@ -69,7 +69,9 @@ define('_RESSOURCES_NOT_LINKED','Ce courrier est d&eacute;j&agrave; attach&eacut
 
 
 
+
 define('_SEARCH_A_CASE','Rechercher une affaire');
+define('_CLOSED_CASE','Clotur&eacute;e');
 define('_SEARCH_A_RES','Rechercher une courrier');
 define('_CREATE_NEW_CASE','Cr&eacute;er une nouvelle affaire');
 
