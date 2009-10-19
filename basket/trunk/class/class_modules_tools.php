@@ -381,6 +381,7 @@ class basket extends dbquery
 	*/
 	public function basket_list_doc($param_list, $actions, $line_txt)
 	{
+		//$this->show_array($param_list);
 		$action_form = '';
 		$bool_check_form = false;
 		$method = '';
@@ -413,6 +414,7 @@ class basket extends dbquery
 		{
 			$do_action = true;
 		}
+		//require_once($_SESSION['config']['businessapppath'].'class'.DIRECTORY_SEPARATOR.'class_list_show.php');
 		$list = new list_show();
 		if(!isset( $param_list['link_in_line']))
 		{
@@ -442,7 +444,7 @@ class basket extends dbquery
 		$param_list['key'],$param_list['detail_destination'],$param_list['view_doc'],false,$method,
 		$action_form ,'', $param_list['bool_details'], $param_list['bool_order'], $param_list['bool_frame'], $param_list['bool_export'], false, false ,
 		true, $bool_check_form, '', $param_list['module'],false, '', '', $param_list['css'], $param_list['comp_link'], $param_list['link_in_line'], true, $actions_list,
-		$param_list['hidden_fields'], $actions_json,$do_action , $_SESSION['current_basket']['default_action'], $param_list['open_details_popup'], $param_list['do_actions_arr'],  $param_list['template'] = false, $param_list['template_list'], $param_list['actual_template'],  true );
+		$param_list['hidden_fields'], $actions_json,$do_action , $_SESSION['current_basket']['default_action'], $param_list['open_details_popup'], $param_list['do_actions_arr'],  $param_list['template'], $param_list['template_list'], $param_list['actual_template'],  true);
 
 		// Displays the text line if needed
 		if(count($param_list['values']) > 0 && ($param_list['link_in_line'] || $do_action ) )
