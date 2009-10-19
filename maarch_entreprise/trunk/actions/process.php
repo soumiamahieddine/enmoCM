@@ -141,6 +141,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 	$data = array();
 	$params_data = array('show_market' => false, 'show_project' => false);
 	$data = get_general_data($coll_id, $res_id, 'full', $params_data);
+	
 	$process_data = $is->get_process_data($coll_id, $res_id);
 	$chrono_number = $cr->get_chrono_number($res_id, $sec->retrieve_view_from_table($table));
 	$_SESSION['doc_id'] = $res_id;
@@ -220,6 +221,57 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 
 		 $frm_str .= '</div><br/>';
 
+		if($core_tools->is_module_loaded('cases'))
+		{
+			
+			require_once($_SESSION['pathtomodules']."cases".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR.'class_modules_tools.php');
+			$cases = new cases();
+			$case_id = $cases->get_case_id($res_id);
+			$case_properties = $cases->get_case_info($case_id);
+			$frm_str .= '<h2 onclick="new Effect.toggle(\'cases_div\', \'blind\', {delay:0.2});return false;"  class="categorie" style="width:90%;">';
+			$frm_str .= '<img src="'.$_SESSION['config']['businessappurl'].$_SESSION['config']['img'].'/plus.png" alt="" id="img_cases" />&nbsp;<b>'._CASE.' :</b>';
+			$frm_str .= '<span class="lb1-details">&nbsp;</span>';
+			$frm_str .= '</h2>';
+			$frm_str .= '<div id="cases_div"  style="display:none">';
+				$frm_str .= '<div>';
+					$frm_str .= '<table width="98%" align="center" border="0">';
+						$frm_str .= '<tr >';
+							$frm_str .= '<td><label for="case_id" class="form_title" >'._CASE.'</label></td>';
+								$frm_str .= '<td>&nbsp;</td>';
+								$frm_str .='<td><input type="text" readonly="readonly" class="readonly" name="case_id" id="case_id" value="'.$case_properties['case_id'].'"  onblur=""/>';
+								$frm_str .='</td>';
+								$frm_str .= '</tr>';
+								$frm_str .= '<tr >';
+								$frm_str .= '<td><label for="case_label" class="case_label" >'._CASE_LABEL.'</label></td>';
+								$frm_str .= '<td>&nbsp;</td>';
+								$frm_str .='<td><input type="text" readonly="readonly" class="readonly" name="case_label" id="case_label" onblur="" value="'.$case_properties['case_label'].'" />';
+								$frm_str .='</td>';
+								$frm_str .= '</tr>';
+								$frm_str .= '<tr >';
+								$frm_str .= '<td><label for="case_description" class="case_description" >'._CASE_DESCRIPTION.'</label></td>';
+								$frm_str .= '<td>&nbsp;</td>';
+								$frm_str .='<td><input type="text" readonly="readonly" class="readonly" name="case_description" id="case_description" onblur="" value="'.$case_properties['case_description'].'" />';
+								$frm_str .='</td>';
+								$frm_str .= '</tr>';
+								$frm_str .= '<tr >';
+								
+								if ($core_tools->test_service('join_res_case_in_process', 'cases',false) == 1) 
+								{
+										$frm_str .= '<td colspan="3"> <input type="button" class="button" name="search_case" id="search_case" value="';
+								
+										if($case_properties['case_id']<>'') 
+											$frm_str .= _MODIFY_CASE; 
+										else 
+											$frm_str .= _JOIN_CASE;
+									
+								
+										$frm_str .= '" onclick="window.open(\''.$_SESSION['urltomodules'].'cases/search_adv_for_cases.php?searched_item=res_id_in_process&searched_value='.$_SESSION['doc_id'].'\',\'\', \'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=1020,height=685\');"/></td>';
+								}
+							$frm_str .= '</tr>';
+					$frm_str .= '</table>';
+				$frm_str .= '</div>';
+			$frm_str .= '</div>';
+		}
 		if($core_tools->is_module_loaded('entities'))
 		{
 			 // Displays the diffusion list (only copies)
