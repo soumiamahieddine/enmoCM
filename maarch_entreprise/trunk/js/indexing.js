@@ -204,7 +204,7 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
 		{id:'chrono_number', type:'label', state:'display'},
 		{id:'chrono_number_tr', type:'tr', state:'display'},
 		{id:'chrono_number_mandatory', type:'label', state:'display'},
-		{id:'project_mandatory', type:'label', state:'display'}
+		{id:'project_mandatory', type:'label', state:'hide'}
 		];
 	}
 	//Category = INTERNAL
@@ -295,7 +295,7 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
 		{id:'chrono_number', type:'label', state:'hide'},
 		{id:'chrono_number_tr', type:'tr', state:'hide'},
 		{id:'chrono_number_mandatory', type:'label', state:'hide'},
-		{id:'project_mandatory', type:'label', state:'display'}
+		{id:'project_mandatory', type:'label', state:'hide'}
 		];
 	}
 	if(params_cat)
@@ -306,8 +306,6 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
 	{
 		process_category(category, display_value_tr);
 	}
-
-
 
 	if(cat_id != null && cat_id != '' && cat_id != NaN)
 	{
