@@ -26,8 +26,8 @@ $path_tmp = explode('/',$_SERVER['SCRIPT_FILENAME']);
 $path_server = implode('/',array_slice($path_tmp,0,array_search('apps',$path_tmp))).'/';
 
 $_SESSION['pathtocore'] = $path_server."core".DIRECTORY_SEPARATOR;
-$_SESSION['pathtocoreclass'] = $path_server."core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR];
-$_SESSION['pathtomodules'] = $path_server."modules".DIRECTORY_SEPARATOR];
+$_SESSION['pathtocoreclass'] = $path_server."core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR;
+$_SESSION['pathtomodules'] = $path_server."modules".DIRECTORY_SEPARATOR;
 
 $_SESSION['urltomodules'] = $_SESSION['config']['coreurl']."/modules/";
 require_once($_SESSION['pathtocoreclass']."class_functions.php");

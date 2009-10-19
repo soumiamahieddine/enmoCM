@@ -804,6 +804,7 @@ function check_docserver($coll_id)
  **/
 function process_category_check($cat_id, $values)
 {
+	print_r($values);
 	$core = new core_tools();
 	// If No category : Error
 	if(!isset($_ENV['categories'][$cat_id]))
