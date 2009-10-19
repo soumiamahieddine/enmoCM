@@ -181,11 +181,11 @@ $tab=$request->select($select,$where_concat,$orderstr,$_SESSION['config']['datab
 
 	//Manage of template list
 	//###################
-	
+
 	//Defines template allowed for this list
 	$template_list=array();
 	array_push($template_list, array( "name"=>"document_list_extend", "img"=>"extend_list.gif", "label"=> _ACCESS_LIST_EXTEND));
-	
+
 	if(!$_REQUEST['template'])
 	{
 		$template_to_use = $template_list[0]["name"];
@@ -195,16 +195,16 @@ $tab=$request->select($select,$where_concat,$orderstr,$_SESSION['config']['datab
 		$template_to_use = '';
 	}
 	if($_REQUEST['template'])
-	{	
+	{
 		$template_to_use = $_REQUEST['template'];
 	}
-	
+
 	//For status icon
 	$extension_icon = '';
 	if($template_to_use <> '')
-		$extension_icon = "_big";	
+		$extension_icon = "_big";
 	//###################
-	
+
 
 
 for ($i=0;$i<count($tab);$i++)
@@ -245,15 +245,15 @@ for ($i=0;$i<count($tab);$i++)
 					$compareDate = $core_tools->compare_date($tab[$i][$j]["value"], date("d-m-Y"));
 					if($compareDate == "date2")
 					{
-						$tab[$i][$j]["value"] = "<span style='color:red;'><b>".$tab[$i][$j]["value"]."<br><small>(".$core_tools->nbDaysBetween2Dates($tab[$i][$j]["value"], date("d-m-Y"))." "._DAYS.")<small></b></span>";
+						$tab[$i][$j]["value"] = "<span style='color:red;'><b>".$tab[$i][$j]["value"]."<br/><small>(".$core_tools->nbDaysBetween2Dates($tab[$i][$j]["value"], date("d-m-Y"))." "._DAYS.")</small></b></span>";
 					}
 					elseif($compareDate == "date1")
 					{
-						$tab[$i][$j]["value"] = $tab[$i][$j]["value"]."<br><small>(".$core_tools->nbDaysBetween2Dates(date("d-m-Y"), $tab[$i][$j]["value"])." "._DAYS.")<small>";
+						$tab[$i][$j]["value"] = $tab[$i][$j]["value"]."<br/><small>(".$core_tools->nbDaysBetween2Dates(date("d-m-Y"), $tab[$i][$j]["value"])." "._DAYS.")</small>";
 					}
 					elseif($compareDate == "equal")
 					{
-						$tab[$i][$j]["value"] = "<span style='color:blue;'><b>".$tab[$i][$j]["value"]."<br><small>("._LAST_DAY.")<small></b></span>";
+						$tab[$i][$j]["value"] = "<span style='color:blue;'><b>".$tab[$i][$j]["value"]."<br/><small>("._LAST_DAY.")</small></b></span>";
 					}
 				}
 				$tab[$i][$j]["label"]=_PROCESS_LIMIT_DATE;
@@ -355,8 +355,6 @@ for ($i=0;$i<count($tab);$i++)
 if(count($tab) > 0)
 {
 
-	
-	
 	$i = count($tab);
 	$title = _RESULTS." : ".$i." "._FOUND_DOCS;
 	$_SESSION['origin'] = 'basket';
@@ -370,7 +368,7 @@ if(count($tab) > 0)
 	'bool_frame' => false, 'module' => '', 'css' => 'listing spec',
 	'hidden_fields' => '<input type="hidden" name="module" id="module" value="basket" /><input type="hidden" name="table" id="table" value="'.$_SESSION['current_basket']['table'].'"/>
 	<input type="hidden" name="coll_id" id="coll_id" value="'.$_SESSION['current_basket']['coll_id'].'"/>', 'open_details_popup' => false, 'do_actions_arr' => $do_actions_arr, 'template' => true,
-	'template_list'=> $template_list, 'actual_template'=>$template_to_use, 'bool_export'=>true );
-	$bask->basket_list_doc($param_list, $_SESSION['current_basket']['actions'], _CLICK_LINE_TO_PROCESS);
+	'template_list'=> $template_list, 'actual_template'=>$template_to_use, 'bool_export'=>true , 'mode_string' => true);
+	 echo $bask->basket_list_doc($param_list, $_SESSION['current_basket']['actions'], _CLICK_LINE_TO_PROCESS);
 }
 ?>

@@ -104,16 +104,24 @@ class list_show extends functions
 	$mode_string = false
 	)
 	{
-		if ($actual_template <> '')
+		if ($template && $actual_template <> '')
 		{
 			require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR.'class_list_show_with_template.php');
 			$list_temp = new list_show_with_template();
 
-			$list_temp->list_doc_by_template($result, $nb_total, $title,$what,$name,$key,$detail_destination,$bool_view_document,$bool_radio_form,$method,$action,
+			$str = $list_temp->list_doc_by_template($result, $nb_total, $title,$what,$name,$key,$detail_destination,$bool_view_document,$bool_radio_form,$method,$action,
 			$button_label, $bool_detail, $bool_order, $bool_frame,$bool_export, $show_close, $show_big_title,
 			$show_full_list, $bool_check_form, $res_link, $module, $bool_show_listletters, $all_sentence,
 			$whatname, $used_css , $comp_link, $link_in_line, $bool_show_actions_list , $actions,
-			$hidden_fields, $actions_json, $do_action, $id_action , $open_details_popup, $do_action_arr, $template, $template_list, $actual_template, $mode_string);
+			$hidden_fields, $actions_json, $do_action, $id_action , $open_details_popup, $do_action_arr, $template, $template_list, $actual_template, true);
+			if($mode_string)
+			{
+				return $str;
+			}
+			else
+			{
+				echo $str;
+			}
 
 		}
 		else
@@ -569,6 +577,7 @@ class list_show extends functions
 			}
 
 			$str .= ' </div>';
+
 			if($mode_string)
 			{
 				return $str;

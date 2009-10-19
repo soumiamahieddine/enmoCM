@@ -244,7 +244,7 @@ else if($_REQUEST['mode'] == 'add')
 <br/>
 
 <div id="contacts" style="padding-left: 20px;">
-	<h2 align="center"><img src="<?php echo $_SESSION['config']['businessappurl'];?>img/account_off.gif" alt="<?php echo _CONTACT_INFO;?>" /> <?php echo _CONTACT_INFO;?></h2>	<br/>
+	<h2 align="center"><img src="<?php echo $_SESSION['config']['businessappurl'];?>img/my_contacts_off.gif" alt="<?php echo _CONTACT_INFO;?>" /> <?php echo _CONTACT_INFO;?></h2>	<br/>
 	<form name="frmcontact" id="frmcontact" method="post" action="<?php echo $_SESSION['config']['businessappurl'];?>contact_info.php" class="forms addforms">
 		<p>
 			<label for="is_corporate"><?php echo _IS_CORPORATE_PERSON; ?> : </label>

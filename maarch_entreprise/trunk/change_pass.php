@@ -59,7 +59,7 @@ $time = $core_tools->get_session_time_expire();
 		<label><?php  echo _FIRSTNAME; ?> : </label>
 		<input name="FirstName" type="text" id="FirstName" value="<?php  echo $_SESSION['user']['FirstName']; ?>" /><span class="red_asterisk">*</span>
 	</p>
-	<?php if($core_tools->is_module_loaded("entities") )
+	<?php if(!$core_tools->is_module_loaded("entities") )
 	{?>
 	<p>
 		<label ><?php  echo _DEPARTMENT;?> : </label>
