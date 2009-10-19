@@ -161,7 +161,7 @@
 	<item>
 		<label>Courrier: Numéro chrono</label>
 		<var_name>[CHRONO]</var_name>
-		<field>identifier</field>
+		<field>alt_identifier</field>
 		<table>coll_view</table>
 		<type>string</type>
 	</item>
