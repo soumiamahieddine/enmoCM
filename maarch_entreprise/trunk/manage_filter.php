@@ -32,6 +32,11 @@ $_SESSION['collection_id_choice'] = $_SESSION['current_basket']['coll_id'];
 $select[$table]= array();
 $where = $_SESSION['current_basket']['clause'];
 array_push($select[$table],"res_id","status","category_id","category_id as category_img", "priority", "admission_date", "subject", "process_limit_date", "destination", "dest_user", "type_label", "exp_user_id" );
+
+if($core_tools->is_module_loaded("cases") == true)
+{
+	array_push($select[$table], "case_id", "case_label", "case_description"); 
+}
 $order = '';
 if(isset($_REQUEST['order']) && !empty($_REQUEST['order']))
 {
@@ -176,7 +181,24 @@ if(isset($_SESSION['auth_dep']['bask_chosen_status']) && !empty($_SESSION['auth_
 	}
 	$search = true;
 }
-$tab=$request->select($select,$where_concat,$orderstr,$_SESSION['config']['databasetype'], '1000');
+
+
+
+if(($_REQUEST['template']== 'group_case')&& ($core_tools->is_module_loaded('cases')))
+{
+	unset($select);
+	$select = array();
+	$select[$_SESSION['tablename']['cases']]= array();
+	$select[$table]= array();
+	array_push($select[$_SESSION['tablename']['cases']], "case_id", "case_label", "case_description", "case_typist", "case_creation_date");
+	$where = " ".$_SESSION['tablename']['cases'].".case_id = ".$table.".case_id   ";
+	$tab=$request->select($select,$where.$where_request,$orderstr,$_SESSION['config']['databasetype'], "default", false, "", "", "", true, false, true);
+
+}
+else
+{
+	$tab=$request->select($select,$where_concat,$orderstr,$_SESSION['config']['databasetype'], '1000');
+}
 //$request->show();
 
 	//Manage of template list
@@ -185,7 +207,8 @@ $tab=$request->select($select,$where_concat,$orderstr,$_SESSION['config']['datab
 	//Defines template allowed for this list
 	$template_list=array();
 	array_push($template_list, array( "name"=>"document_list_extend", "img"=>"extend_list.gif", "label"=> _ACCESS_LIST_EXTEND));
-
+	if($core_tools->is_module_loaded('cases'))	
+		//array_push($template_list, array( "name"=>"group_case", "img"=>"arrow_up.gif", "label"=> _ACCESS_LIST_CASE));
 	if(!$_REQUEST['template'])
 	{
 		$template_to_use = $template_list[0]["name"];
@@ -348,6 +371,30 @@ for ($i=0;$i<count($tab);$i++)
 				$tab[$i][$j]['value'] = "<img src = '".$my_imgcat."' alt = '' title = ''>";
 				$tab[$i][$j]["value"] = $tab[$i][$j]['value'];
 				$tab[$i][$j]["order"]="category_id";
+			}
+			if($tab[$i][$j][$value]=="case_id" && $core_tools->is_module_loaded("cases") == true)
+			{
+				$tab[$i][$j]["label"]=_CASE_NUM;
+				$tab[$i][$j]["size"]="10";
+				$tab[$i][$j]["label_align"]="left";
+				$tab[$i][$j]["align"]="left";
+				$tab[$i][$j]["valign"]="bottom";
+				$tab[$i][$j]["show"]=true;
+				$tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
+				$tab[$i][$j]["value"] = "<a href='".$_SESSION['config']['businessappurl']."index.php?page=details_cases&module=cases&id=".$tab[$i][$j]['value']."'>".$tab[$i][$j]['value']."</a>";
+				$tab[$i][$j]["order"]="case_id";
+			}
+			if($tab[$i][$j][$value]=="case_label" && $core_tools->is_module_loaded("cases") == true)
+			{
+				$tab[$i][$j]["label"]=_CASE_LABEL;
+				$tab[$i][$j]["size"]="10";
+				$tab[$i][$j]["label_align"]="left";
+				$tab[$i][$j]["align"]="left";
+				$tab[$i][$j]["valign"]="bottom";
+				$tab[$i][$j]["show"]=true;
+				$tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
+				//$tab[$i][$j]["value"] = $contact->get_contact_information($_SESSION['mlb_search_current_res_id'],$_SESSION['mlb_search_current_category_id'],$view);
+				$tab[$i][$j]["order"]="case_id";
 			}
 		}
 	}
