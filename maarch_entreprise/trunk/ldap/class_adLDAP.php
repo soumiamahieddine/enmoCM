@@ -228,47 +228,7 @@ class LDAP {
 		return $ad_info_group;
 	}
 	
- 
-	/**
-    * Returns a complete list of the groups in AD based on a SAM Account Type  
-    * 
-    * @param string $samaccounttype The account type to return
-    * @param bool $include_desc Whether to return a description
-    * @param string $search Search parameters
-    * @param bool $sorted Whether to sort the results
-    * @return array
-    */
-
-    public function search_groups_dn($sorted = true) {
-        if (!$this->_bind){ return (false); }
-			
-		// Perform the search and grab all their details
-       	$fields=array("dn");
-		
-		$entries = array();
-		
-		//Search for each filter
-		foreach($this->_filter_dn as $k_fdn => $v_fdn)
-		{
-			$filter = "(&(objectCategory=group)".$this->_filter_dn[$k_fdn]['group'].")";
-			$sr=ldap_search($this->_conn,$k_fdn,$filter,$fields);
-			$entries = array_merge(ldap_get_entries($this->_conn, $sr),$entries);
-		}
-		
-		$groups_array=array();
-		
-		for ($i=0; $i< count($entries); $i++)
-		{
-			if(!empty($entries[$i]["dn"]) )
-				$groups_array[] = $entries[$i]["dn"];
-        }
-		
-		if( $sorted ){ asort($groups_array); }
-		
-		return ($groups_array);
-    }
-    
-   /**
+    /**
     * Return a list of all users in AD
     * 
     * @param bool $include_desc Return a description of the user

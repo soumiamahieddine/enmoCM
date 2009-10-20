@@ -6,11 +6,11 @@
 		<!-- Prefixe les group_id de letterbox par -->
 		<group_prefix_ldap>LDAP</group_prefix_ldap>
 		<!-- nom de domaine ex : maarch.org -->
-		<domain>mairie.ville-blois.fr</domain>
+		<domain></domain>
 		<!-- login admnistrateur du domaine -->
-		<login_admin>Administrateur</login_admin>
+		<login_admin></login_admin>
 		<!-- mot de passe administrateur annuaire ldap -->
-		<pass>maarch</pass>
+		<pass></pass>
 		<!-- cryptage de la communication ( true or false) -->
 		<ssl>false</ssl>
 		<!--Nombre de logs avant purge (si purge_log == 0 alors les logs ne sont jamais purges)  -->
@@ -39,26 +39,18 @@
 	</mapping>
 	<filter>
 	<!-- Arbre invers&eacute; dont les feuilles sont des users -->
-		 <dn id="" type="organization">
+		 <dn id="OU=,DC=,DC=" type="organization">
 			<user>(cn=*)</user>
 			<group>(cn=*)</group>
-			<security><!-- Perimetre documentaire -->
-				<brothers>false</brothers>
-				<up>0</up>
-				<down>0</down>
+			<security><!-- Perimetre documentaire : -->
+				<coll_id>letterbox_coll</coll_id>
+				<where_clause>(DESTINATION = @my_primary_entity or DESTINATION in (@subentities[@my_primary_entity])) or DESTINATION is NULL</where_clause>
+				<can_insert>N</can_insert>
+				<can_update>N</can_update>
+				<can_delete>N</can_delete>
 			</security>
-			<redirect_services><!-- Redirection vers les services -->
-				<brothers>false</brothers>
-				<up>0</up>
-				<down>0</down>
-			</redirect_services>
-			<redirect_groups><!-- Redirection vers les utilisateurs des groupes -->
-				<brothers>false</brothers>
-				<up>0</up>
-				<down>0</down>
-			</redirect_groups>
 		</dn>
-		<dn id="" type="rights">
+		<dn id="OU=,OU=,DC=,DC=" type="rights">
 			<user>(cn=*)</user>
 			<group>(cn=*)</group>
 		</dn>
