@@ -101,7 +101,8 @@ class list_show extends functions
 	$template = false,
 	$template_list = array(),
 	$actual_template= '',
-	$mode_string = false
+	$mode_string = false,
+	$hide_standard_list = false
 	)
 	{
 		if ($template && $actual_template <> '')
@@ -113,7 +114,7 @@ class list_show extends functions
 			$button_label, $bool_detail, $bool_order, $bool_frame,$bool_export, $show_close, $show_big_title,
 			$show_full_list, $bool_check_form, $res_link, $module, $bool_show_listletters, $all_sentence,
 			$whatname, $used_css , $comp_link, $link_in_line, $bool_show_actions_list , $actions,
-			$hidden_fields, $actions_json, $do_action, $id_action , $open_details_popup, $do_action_arr, $template, $template_list, $actual_template, true);
+			$hidden_fields, $actions_json, $do_action, $id_action , $open_details_popup, $do_action_arr, $template, $template_list, $actual_template, true, $hide_standard_list);
 			if($mode_string)
 			{
 				return $str;

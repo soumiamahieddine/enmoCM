@@ -29,7 +29,7 @@ class list_show_with_template extends list_show
 	public $do_action;
 	public $id_action;
 	public $do_action_arr;
-
+	public $hide_standard_list;
 
 	//Load value from db with $result tab
 	public function tmplt_load_value($actual_string, $theline, $result)
@@ -461,7 +461,11 @@ class list_show_with_template extends list_show
 		//delete from link template=....&
 		//$link = preg_replace("^template=(.*?)&", "TOTO", $link);
 
-		$standard = "<a href='".$link."&template='><img src='".$_SESSION['config']['businessappurl']."img/standard_list.gif' alt='"._ACCESS_LIST_STANDARD."' ></a>";
+		if ($this->hide_standard_list == true)
+			$standard = '';
+		else
+			$standard = "<a href='".$link."&template='><img src='".$_SESSION['config']['businessappurl']."img/standard_list.gif' alt='"._ACCESS_LIST_STANDARD."' ></a>";
+		
 		$extend = "";
 		foreach ($template_list as $temp)
 		{
@@ -513,7 +517,7 @@ class list_show_with_template extends list_show
 	$button_label, $bool_detail, $bool_order, $bool_frame= false,$bool_export= false, $show_close = FALSE, $show_big_title = true,
 	$show_full_list = true, $bool_check_form = false, $res_link = '', $module='', $bool_show_listletters = false, $all_sentence = '',
 	$whatname = '', $used_css = 'listing spec', $comp_link = "", $link_in_line = false, $bool_show_actions_list = false, $actions = array(),
-	$hidden_fields = '', $actions_json= '{}', $do_action = false, $id_action = '', $open_details_popup = true, $do_actions_arr = array(), $template = false, $template_list = array(), $actual_template = '', $mode_string = false)
+	$hidden_fields = '', $actions_json= '{}', $do_action = false, $id_action = '', $open_details_popup = true, $do_actions_arr = array(), $template = false, $template_list = array(), $actual_template = '', $mode_string = false, $hide_standard_list = false)
 	{
 
 
@@ -528,6 +532,7 @@ class list_show_with_template extends list_show
 		$this->do_action = $do_action;
 		$this->id_action = $id_action;
 		$this->do_action_arr = $do_action_arr;
+		$this->hide_standard_list = $hide_standard_list;
 
 		if(isset($_REQUEST['start']) && !empty($_REQUEST['start']))
 		{
