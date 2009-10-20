@@ -227,7 +227,10 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 			require_once($_SESSION['pathtomodules']."cases".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR.'class_modules_tools.php');
 			$cases = new cases();
 			$case_id = $cases->get_case_id($res_id);
-			$case_properties = $cases->get_case_info($case_id);
+			if ($case_id <> false)
+				$case_properties = $cases->get_case_info($case_id);
+			else
+				$case_properties = '';
 			$frm_str .= '<h2 onclick="new Effect.toggle(\'cases_div\', \'blind\', {delay:0.2});return false;"  class="categorie" style="width:90%;">';
 			$frm_str .= '<img src="'.$_SESSION['config']['businessappurl'].$_SESSION['config']['img'].'/plus.png" alt="" id="img_cases" />&nbsp;<b>'._CASE.' :</b>';
 			$frm_str .= '<span class="lb1-details">&nbsp;</span>';
