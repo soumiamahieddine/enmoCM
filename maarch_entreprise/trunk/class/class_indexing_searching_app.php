@@ -199,7 +199,8 @@ class indexing_searching_app extends dbquery
 		}
 		if(!empty($_SESSION['error']))
 		{
-			$_SESSION['error_page'] = $_SESSION['error'];
+			//$_SESSION['error_page'] = $_SESSION['error'];
+			$error = $_SESSION['error'];
 			$_SESSION['error']= '';
 			?>
 			<script language="javascript" type="text/javascript">
@@ -207,7 +208,7 @@ class indexing_searching_app extends dbquery
               	var error_div = $('main_error');
                	if(error_div)
                	{
-				 	error_div.innerHTML = '<?php echo $_SESSION['error_page'];?>';
+				 	error_div.innerHTML = '<?php echo $error;?>';
 				}
             </script>
 			<?php
@@ -372,6 +373,10 @@ class indexing_searching_app extends dbquery
 				{
 					array_push($data_res, array('column' => 'folders_system_id', 'value' => $folder_id, 'type' => "integer"));
 				}
+				else
+				{
+					array_push($data_res, array('column' => 'folders_system_id', 'value' => 'NULL', 'type' => "integer"));
+				}
 				if($folder_id <> $old_folder_id && $_SESSION['history']['folderup'])
 				{
 					require_once($_SESSION['pathtocoreclass']."class_history.php");
@@ -428,7 +433,8 @@ class indexing_searching_app extends dbquery
 
 			$hist->add($table, $id_to_update, "UP", $_SESSION['error'], $_SESSION['config']['databasetype'],'apps');
 		}
-		$_SESSION['error_page'] = $_SESSION['error'];
+		//$_SESSION['error_page'] = $_SESSION['error'];
+		$error = $_SESSION['error'];
 		$_SESSION['error']= '';
 			?>
 			<script language="javascript" type="text/javascript">
@@ -436,7 +442,7 @@ class indexing_searching_app extends dbquery
               	var error_div = $('main_error');
                	if(error_div)
                	{
-				 	error_div.innerHTML = '<?php echo $_SESSION['error_page'];?>';
+				 	error_div.innerHTML = '<?php echo $error;?>';
 				}
             </script>
 			<?php
@@ -454,7 +460,7 @@ class indexing_searching_app extends dbquery
 		}
 		if(!empty($_SESSION['error']))
 		{
-			$_SESSION['error_page'] = $_SESSION['error'];
+			//$_SESSION['error_page'] = $_SESSION['error'];
 			?>
 			<script language="javascript" type="text/javascript">
                 window.opener.reload();
@@ -469,12 +475,12 @@ class indexing_searching_app extends dbquery
 			array_push($data, array('column' => 'status', 'value' => 'DEL', 'type' => 'string'));
 			$where = "res_id = ".$id_to_delete;
 			$request->update($table, $data, $where, $_SESSION['config']['databasetype']);
-			$_SESSION['error_page'] = _DOC_DELETED." ("._NUM." : ".$id_to_delete.")";
+			$_SESSION['error'] = _DOC_DELETED." ("._NUM." : ".$id_to_delete.")";
 			if($_SESSION['history']['res_del'])
 			{
 				require_once($_SESSION['pathtocoreclass']."class_history.php");
 				$hist = new history();
-				$hist->add($table, $id_to_delete, "DEL", $_SESSION['error_page'], $_SESSION['config']['databasetype'],'indexing_searching');
+				$hist->add($table, $id_to_delete, "DEL", $_SESSION['error'], $_SESSION['config']['databasetype'],'indexing_searching');
 			}
 		}
 	}
