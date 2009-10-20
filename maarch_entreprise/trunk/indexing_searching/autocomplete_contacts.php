@@ -82,7 +82,7 @@ elseif($table == 'contacts')
 	{
 		$where = " (lastname like '".$req->protect_string_db($_REQUEST['Input'])."%' or firstname like '".$req->protect_string_db($_REQUEST['Input'])."%' or society like '".$req->protect_string_db($_REQUEST['Input'])."%')  ";
 	}
-	$where .= " and (user_id = '' or user_id = '".$req->protect_string_db($_SESSION['user']['UserId'])."' ) and enabled = 'Y'";
+	$where .= " and (user_id = '' or user_id is null or user_id = '".$req->protect_string_db($_SESSION['user']['UserId'])."' ) and enabled = 'Y'";
 	$other = 'order by society, lastname, firstname';
 
 	$res = $req->select($select, $where, $other, $_SESSION['config']['databasetype'], 11,false,"","","", false);

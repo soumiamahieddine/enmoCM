@@ -455,7 +455,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 				$frm_str .= '</td>';
 				$frm_str .= '<td colspan="2">';
 					$frm_str .='<input name="lastname" type="text"  id="lastname" value="'.$core_tools->show($contact_info['LASTNAME']).'" /> ';
-					$frm_str .='<span class="red_asterisk" id="lastname_mandatory" style="display:none;">*</span>';
+					$frm_str .='<span class="red_asterisk" id="lastname_mandatory" style="display:inline;">*</span>';
 				$frm_str .= '</td>';
 			$frm_str .= '</tr>';
 		 	$frm_str .= '<tr id="firstname_p" style="display:';

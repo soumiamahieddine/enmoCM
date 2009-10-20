@@ -177,10 +177,10 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 		$services = array();
 		if(!empty($_SESSION['user']['redirect_groupbasket'][$_SESSION['current_basket']['id']][$id_action]['entities']))
 		{
-			$db->query("select entity_id, entity_label from ".$_SESSION['tablename']['ent_entities']." where entity_id in (".$_SESSION['user']['redirect_groupbasket'][$_SESSION['current_basket']['id']][$id_action]['entities'].") and enabled= 'Y' order by entity_label");
+			$db->query("select entity_id, short_label from ".$_SESSION['tablename']['ent_entities']." where entity_id in (".$_SESSION['user']['redirect_groupbasket'][$_SESSION['current_basket']['id']][$id_action]['entities'].") and enabled= 'Y' order by entity_label");
 			while($res = $db->fetch_object())
 			{
-				array_push($services, array( 'ID' => $res->entity_id, 'LABEL' => $db->show_string($res->entity_label)));
+				array_push($services, array( 'ID' => $res->entity_id, 'LABEL' => $db->show_string($res->short_label)));
 			}
 		}
 	}
@@ -622,7 +622,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 				$frm_str .= '</td>';
 				$frm_str .= '<td colspan="2">';
 					$frm_str .='<input name="lastname" type="text"  id="lastname" value="'.$core_tools->show($contact_info['LASTNAME']).'" /> ';
-					$frm_str .='<span class="red_asterisk" id="lastname_mandatory" style="display:none;">*</span>';
+					$frm_str .='<span class="red_asterisk" id="lastname_mandatory" style="display:inline;">*</span>';
 				$frm_str .= '</td>';
 			$frm_str .= '</tr>';
 		 	$frm_str .= '<tr id="firstname_p" style="display:';
@@ -767,7 +767,10 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 		{
 		  $frm_str .= 'launch_autocompleter_folders(\''.$_SESSION['urltomodules'].'folder/autocomplete_folders.php?mode=project\', \'project\');launch_autocompleter_folders(\''.$_SESSION['urltomodules'].'folder/autocomplete_folders.php?mode=market\', \'market\');';
 	 	 }
-		$frm_str .='init_validation(\''.$_SESSION['config']['businessappurl'].'indexing_searching/autocomplete_contacts.php\', \''.$display_value.'\', \''.$_SESSION['config']['businessappurl'].'indexing_searching/change_category.php\',  \''.$_SESSION['config']['businessappurl'].'get_content_js.php\');$(\'baskets\').style.visibility=\'hidden\';var item = $(\'valid_div\'); if(item){item.style.display=\'block\';}</script>';
+		$frm_str .='init_validation(\''.$_SESSION['config']['businessappurl'].'indexing_searching/autocomplete_contacts.php\', \''.$display_value.'\', \''.$_SESSION['config']['businessappurl'].'indexing_searching/change_category.php\',  \''.$_SESSION['config']['businessappurl'].'get_content_js.php\');$(\'baskets\').style.visibility=\'hidden\';var item = $(\'valid_div\'); if(item){item.style.display=\'block\';}';
+		$frm_str .='var type_id = $(\'type_id\');';
+		$frm_str .='if(type_id){change_doctype(type_id.options[type_id.selectedIndex].value, \''.$_SESSION['config']['businessappurl'].'indexing_searching/change_doctype.php\', \''._ERROR_DOCTYPE.'\', \''.$id_action.'\', \''.$_SESSION['config']['businessappurl'].'get_content_js.php\');}';
+		$frm_str .='</script>';
 
 	return addslashes($frm_str);
 }

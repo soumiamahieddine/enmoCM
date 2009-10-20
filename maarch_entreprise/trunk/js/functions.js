@@ -1631,23 +1631,65 @@ function unlock(path_script, id, coll)
 function show_admin_contacts( is_corporate, display)
 {
 	var display_value = display || 'inline';
+	var title = $("title_p");
+	var lastname = $("lastname_p");
+	var firstname = $("firstname_p");
+	var function_p = $("function_p");
+	var lastname_mandatory = $("lastname_mandatory");
+	var society_mandatory = $("society_mandatory");
 	if(is_corporate == true)
 	{
-		$("title_p").style.display = "none";
-		$("lastname_p").style.display = "none";
-		$("firstname_p").style.display = "none";
-		$("function_p").style.display = "none";
-		$('lastname_mandatory').style.visibility = 'hidden';
-		$('society_mandatory').style.visibility = 'visible';
+		if(title)
+		{
+			title.style.display = "none";
+		}
+		if(lastname)
+		{
+			lastname.style.display = "none";
+		}
+		if(firstname)
+		{
+			firstname.style.display = "none";
+		}
+		if(function_p)
+		{
+			function_p.style.display = "none";
+		}
+		if(lastname_mandatory)
+		{
+			lastname_mandatory.style.visibility = 'hidden';
+		}
+		if(society_mandatory)
+		{
+			society_mandatory.style.visibility = 'visible';
+		}
 	}
 	else
 	{
-		$("title_p").style.display = display_value;
-		$("lastname_p").style.display = display_value;
-		$("firstname_p").style.display = display_value;
-		$("function_p").style.display =display_value;
-		$('lastname_mandatory').style.visibility = 'visible';
-		$('society_mandatory').style.visibility = 'hidden';
+		if(title)
+		{
+			title.style.display = display_value;
+		}
+		if(lastname)
+		{
+			lastname.style.display = display_value;
+		}
+		if(firstname)
+		{
+			firstname.style.display = display_value;
+		}
+		if(function_p)
+		{
+			function_p.style.display = display_value;
+		}
+		if(lastname_mandatory)
+		{
+			lastname_mandatory.style.visibility = 'visible';
+		}
+		if(society_mandatory)
+		{
+			society_mandatory.style.visibility = 'hidden';
+		}
 	}
 }
 
