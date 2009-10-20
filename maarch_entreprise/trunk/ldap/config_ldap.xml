@@ -6,11 +6,11 @@
 		<!-- Prefixe les group_id de letterbox par -->
 		<group_prefix_ldap>LDAP</group_prefix_ldap>
 		<!-- nom de domaine ex : maarch.org -->
-		<domain></domain>
+		<domain>ca-charlmez.lan</domain>
 		<!-- login admnistrateur du domaine -->
-		<login_admin></login_admin>
+		<login_admin>maarch</login_admin>
 		<!-- mot de passe administrateur annuaire ldap -->
-		<pass></pass>
+		<pass>maarch</pass>
 		<!-- cryptage de la communication ( true or false) -->
 		<ssl>false</ssl>
 		<!--Nombre de logs avant purge (si purge_log == 0 alors les logs ne sont jamais purges)  -->
@@ -39,9 +39,9 @@
 	</mapping>
 	<filter>
 	<!-- Arbre invers&eacute; dont les feuilles sont des users -->
-		 <dn id="OU=,DC=,DC=" type="organization">
+		 <dn id="OU=Services,DC=CA-Charlmez,DC=lan" type="organization">
 			<user>(cn=*)</user>
-			<group>(cn=*)</group>
+			<group>(cn=GG_*)</group>
 			<security><!-- Perimetre documentaire : -->
 				<coll_id>letterbox_coll</coll_id>
 				<where_clause>(DESTINATION = @my_primary_entity or DESTINATION in (@subentities[@my_primary_entity])) or DESTINATION is NULL</where_clause>
@@ -50,9 +50,9 @@
 				<can_delete>N</can_delete>
 			</security>
 		</dn>
-		<dn id="OU=,OU=,DC=,DC=" type="rights">
+		<dn id="OU=MLB,OU=Applications,DC=CA-Charlmez,DC=lan" type="rights">
 			<user>(cn=*)</user>
-			<group>(cn=*)</group>
+			<group>(cn=GG_*)</group>
 		</dn>
 	</filter>
 </root>
