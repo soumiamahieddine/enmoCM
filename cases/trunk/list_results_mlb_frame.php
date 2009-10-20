@@ -39,7 +39,7 @@ require_once($_SESSION['pathtocoreclass']."class_manage_status.php");
 require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR.'class_list_show.php');
 require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR.'class_contacts.php');
 require_once($_SESSION['pathtocoreclass']."class_manage_status.php");
-
+require_once($_SESSION['pathtomodules']."cases".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR.'class_modules_tools.php');
 include_once($_SESSION['config']['businessapppath'].'definition_mail_categories.php');
 
 $status_obj = new manage_status();
@@ -51,6 +51,7 @@ $core_tools->load_header();
 $sec = new security();
 $status_obj = new manage_status();
 $contact = new contacts();
+$cases= new cases();
 /****************Management of the location bar  ************/
 $init = false;
 if($_REQUEST['reinit'] == "true")
@@ -90,6 +91,39 @@ for($i=0; $i<count($status);$i++)
 }
 $status_str = preg_replace('/,$/', '', $status_str);
 $where_request.= "  status not in (".$status_str.") ";
+
+
+
+//##################
+if($_GET['searched_item'] == "case")
+{
+
+	$res_id_in_case = $cases->get_res_id($_GET['searched_value']);
+	$tmp1 = " and res_id not in(";
+	
+	foreach($res_id_in_case as $rri)
+	{
+		$tmp1 .= '\''.$rri.'\',';
+	}
+	$tmp1 = substr($tmp1, 0,-1);
+	$tmp1 .=" )  	";
+	$where_request .= $tmp1;
+}
+
+
+
+//##################
+if($_GET['searched_item'] == "res_id" || $_GET['searched_item'] == "res_id_in_process")
+{
+
+	$case_id_in_res = $cases->get_case_id($_GET['searched_value']); 
+	$tmp1 = " and ".$_SESSION['tablename']['cases'].".case_id <> '".$case_id_in_res."' ";
+	
+	$where_request .= $tmp1;
+}
+
+
+
 $where_clause = $sec->get_where_clause_from_coll_id($_SESSION['collection_id_choice']);
 if(!empty($where_request))
 {
@@ -151,8 +185,8 @@ $_SESSION['error_page'] = '';
 	//Defines template allowed for this list
 	$template_list=array();
 	
-	
-	array_push($template_list, array( "name"=>"attach_to_case", "img"=>"extend_list.gif", "label"=> _ACCESS_LIST_EXTEND));
+	if($_GET['searched_item'] == 'case')
+		array_push($template_list, array( "name"=>"attach_to_case", "img"=>"extend_list.gif", "label"=> _ACCESS_LIST_EXTEND));
 	
 	if($_REQUEST['template'] == 'group_case')
 		array_push($template_list, array( "name"=>"group_case", "img"=>"arrow_up.gif", "label"=> _ACCESS_LIST_CASE));
@@ -372,14 +406,14 @@ $_SESSION['error_page'] = '';
     <div id="inner_content"><?php
 
 $details = 'details';
-	$list->list_doc($tab,$i,'','res_id','list_results_mlb_frame','res_id',$details.'&dir=indexing_searching',true,true,'post',$_SESSION['urltomodules']."cases/execute_attachement.php?searched_item=".$_GET['searched_item']."&searched_value=".$_GET['searched_value'],'Attacher &agrave; l&rsquo;affaire',false,true,true, false,false,false,true,true,'', '',false,'','','listing spec', '', false, false, null, '', '{}', true, '', true, array(), true, $template_list, $template_to_use );
+	$list->list_doc($tab,$i,'','res_id','list_results_mlb_frame','res_id',$details.'&dir=indexing_searching',true,true,'post',$_SESSION['urltomodules']."cases/execute_attachement.php?searched_item=".$_GET['searched_item']."&searched_value=".$_GET['searched_value'],'Attacher &agrave; l&rsquo;affaire',false,true,true, false,false,false,true,true,'', '',false,'','','listing spec', '', false, false, null, '', '{}', true, '', true, array(), true, $template_list, $template_to_use, false, true  );
 	?></div><?php
 }
 else
 {
-	$_SESSION['error_search'] = "<p class=\"error\"><img src=\"".$_SESSION['config']['img']."/noresult.gif\" /><br />"._NO_RESULTS."</p>";
+	echo  "<p class=\"error\"><img src=\"".$_SESSION['config']['img']."/noresult.gif\" /><br />"._NO_RESULTS."</p>";
 	?>
-	<script language="javascript" type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?page=search_adv_error&dir=indexing_searching';?>';</script>
+	<!--<script language="javascript" type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'].'indexing_searching/search_adv_error.php';?>';</script>-->
 	<?php
 }
 ?>

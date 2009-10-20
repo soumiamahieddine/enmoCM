@@ -71,14 +71,15 @@ for($i=0; $i<count($status);$i++)
 }
 $status_str = preg_replace('/,$/', '', $status_str);
 $where_request.= "  status not in (".$status_str.") ";
-$where_clause = $sec->get_where_clause_from_coll_id($_SESSION['collection_id_choice']);
+//$where_clause = $sec->get_where_clause_from_coll_id($_SESSION['collection_id_choice']);
+$where_request .= $obj_cases->get_where_clause_from_case($_SESSION['cases']['actual_case_id']);
 
 if($where_clause <> '')
 {
-		$where_clause .= $obj_cases->get_where_clause_from_case($_SESSION['cases']['actual_case_id']);
+		//$where_clause .= $obj_cases->get_where_clause_from_case($_SESSION['cases']['actual_case_id']);
 }
 
-if(!empty($where_request))
+/*if(!empty($where_request))
 {
 	if($_SESSION['searching']['where_clause_bis'] <> "")
 	{
@@ -94,6 +95,7 @@ else
 	}
 	$where_request = $where_clause;
 }
+*/
 $where_request = str_replace("()", "(1=-1)", $where_request);
 $where_request = str_replace("and ()", "", $where_request);
 $list=new list_show();
@@ -112,7 +114,7 @@ $orderstr = $list->define_order($order, $field);
 
 $request = new request();
 $tab=$request->select($select,$where_request,$orderstr,$_SESSION['config']['databasetype']);
-
+//$request->show();
 $_SESSION['error_page'] = '';
 
 

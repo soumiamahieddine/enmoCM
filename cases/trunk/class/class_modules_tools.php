@@ -309,18 +309,18 @@ class cases extends dbquery
 		$res = $db->fetch_object();
 		
 		$my_return['case_id'] = $res->case_id;
-		$my_return['case_label'] = $res->case_label;
-		$my_return['case_description'] = $res->case_description;
-		$my_return['case_creation_date'] = $res->ccd;
-		$my_return['case_typist'] = $res->case_typist;
-		$my_return['case_parent'] = $res->case_parent;
-		$my_return['case_custom_t1'] = $res->case_custom_t1;
-		$my_return['case_custom_t2'] = $res->case_custom_t2;
-		$my_return['case_custom_t3'] = $res->case_custom_t3;
-		$my_return['case_custom_t4'] = $res->case_custom_t4;
-		$my_return['case_type'] = $res->case_type;
-		$my_return['case_closing_date'] = $res->clo;
-		$my_return['case_last_update_date'] = $res->cud;
+		$my_return['case_label'] = $db->show_string($res->case_label);
+		$my_return['case_description'] = $db->show_string($res->case_description);
+		$my_return['case_creation_date'] = $db->show_string($res->ccd);
+		$my_return['case_typist'] = $db->show_string($res->case_typist);
+		$my_return['case_parent'] = $db->show_string($res->case_parent);
+		$my_return['case_custom_t1'] = $db->show_string($res->case_custom_t1);
+		$my_return['case_custom_t2'] = $db->show_string($res->case_custom_t2);
+		$my_return['case_custom_t3'] = $db->show_string($res->case_custom_t3);
+		$my_return['case_custom_t4'] = $db->show_string($res->case_custom_t4);
+		$my_return['case_type'] = $db->show_string($res->case_type);
+		$my_return['case_closing_date'] = $db->show_string($res->clo);
+		$my_return['case_last_update_date'] = $db->show_string($res->cud);
 		
 		
 		return $my_return;	
