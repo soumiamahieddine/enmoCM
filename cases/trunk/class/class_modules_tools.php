@@ -424,8 +424,15 @@ class cases extends dbquery
 		$db->connect();
 		$query="select  case_id from  ".$_SESSION['collections'][0]['view']." where res_id = ".$res_id." ";
 		$db->query($query);
-		$res = $db->fetch_object();
-		return $res->case_id;
+		if($db->nb_result() >0)
+		{
+			$res = $db->fetch_object();
+			return $res->case_id;
+		}
+		else
+		{
+			return false;
+		}
 	}
 }
 ?>
