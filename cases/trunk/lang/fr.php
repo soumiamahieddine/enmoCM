@@ -34,6 +34,7 @@ define('_INDEX_CASES', 'Index de l&rsquo;affaire');
 define('_DOCUMENTS_LIST_IN_THIS_CASE', 'Liste des documents de l&rsquo;affaire');
 define('_NOTES_FOR_THIS_CASES', 'Annotations de cette affaire');
 define('_HISTORY_CASES', 'Historique de l&rsquo;affaire');
+define('_CASE_CLOSED', 'Affaire cl&ocirc;tur&eacute;e');
 
 
 
