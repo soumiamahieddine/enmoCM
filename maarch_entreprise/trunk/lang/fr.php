@@ -935,4 +935,9 @@ define('_WARNING', 'Attention ');
 define('_STRING', 'Chaine de caract&egrave;res');
 define('_INTEGER', 'Entier');
 define('_FLOAT', 'Flottant');
+define('_CUSTOM_T1', 'Champ Texte 1');
+define('_CUSTOM_T2', 'Champ Texte 2');
+define('_CUSTOM_D1', 'Champ Date');
+define('_CUSTOM_N1', 'Champ Entier');
+define('_CUSTOM_F1', 'Champ Flottant');
 ?>

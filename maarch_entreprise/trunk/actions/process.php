@@ -141,7 +141,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 	$data = array();
 	$params_data = array('show_market' => false, 'show_project' => false);
 	$data = get_general_data($coll_id, $res_id, 'full', $params_data);
-	
+
 	$process_data = $is->get_process_data($coll_id, $res_id);
 	$chrono_number = $cr->get_chrono_number($res_id, $sec->retrieve_view_from_table($table));
 	$_SESSION['doc_id'] = $res_id;
@@ -222,7 +222,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 
 		if($core_tools->is_module_loaded('cases'))
 		{
-			
+
 			require_once($_SESSION['pathtomodules']."cases".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR.'class_modules_tools.php');
 			$cases = new cases();
 			$case_id = $cases->get_case_id($res_id);
@@ -256,17 +256,17 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 								$frm_str .='</td>';
 								$frm_str .= '</tr>';
 								$frm_str .= '<tr >';
-								
-								if ($core_tools->test_service('join_res_case_in_process', 'cases',false) == 1) 
+
+								if ($core_tools->test_service('join_res_case_in_process', 'cases',false) == 1)
 								{
 										$frm_str .= '<td colspan="3"> <input type="button" class="button" name="search_case" id="search_case" value="';
-								
-										if($case_properties['case_id']<>'') 
-											$frm_str .= _MODIFY_CASE; 
-										else 
+
+										if($case_properties['case_id']<>'')
+											$frm_str .= _MODIFY_CASE;
+										else
 											$frm_str .= _JOIN_CASE;
-									
-								
+
+
 										$frm_str .= '" onclick="window.open(\''.$_SESSION['urltomodules'].'cases/search_adv_for_cases.php?searched_item=res_id_in_process&searched_value='.$_SESSION['doc_id'].'\',\'\', \'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=1020,height=685\');"/></td>';
 								}
 							$frm_str .= '</tr>';
@@ -528,7 +528,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 				$frm_str .='</select> ';
 				$frm_str .= '<input type="button" name="send" id="send" value="'._VALIDATE.'" class="button" onclick="valid_action_form( \'process\', \''.$path_manage_action.'\', \''. $id_action.'\', \''.$res_id.'\', \''.$table.'\', \''.$module.'\', \''.$coll_id.'\', \''.$mode.'\');"/> ';
 			}
-			$frm_str .= '<input name="close" id="close" type="button" value="'._CANCEL.'" class="button" onClick="javascript:$(\'baskets\').style.visibility=\'visible\';destroyModal(\'modal_'.$id_action.'\');reinit();"/>';
+			$frm_str .= '<input name="close" id="close" type="button" value="'._CANCEL.'" class="button" onClick="javascript:$(\'baskets\').style.visibility=\'visible\';$(\'entity\').style.visibility=\'visible\';$(\'category\').style.visibility=\'visible\';destroyModal(\'modal_'.$id_action.'\');reinit();"/>';
 		$frm_str .= '</p>';
 	$frm_str .= '</form>';
 	$frm_str .= '</div>';
@@ -542,6 +542,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 		{
 		  $frm_str .= 'launch_autocompleter_folders(\''.$_SESSION['urltomodules'].'folder/autocomplete_folders.php?mode=project\', \'project\');launch_autocompleter_folders(\''.$_SESSION['urltomodules'].'folder/autocomplete_folders.php?mode=market\', \'market\');';
 	 	 }
+		$frm_str .='$(\'entity\').style.visibility=\'hidden\';';
+		$frm_str .='$(\'category\').style.visibility=\'hidden\';';
 		$frm_str .='$(\'baskets\').style.visibility=\'hidden\';</script>';
 	//}
 	return addslashes($frm_str);

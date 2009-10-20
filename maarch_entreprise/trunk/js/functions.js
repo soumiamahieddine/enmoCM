@@ -1090,8 +1090,12 @@ function valid_action_form(current_form_id, path_manage_script, id_action, value
 	//alert(frm_values);
 	if(protect)
 	{
-		frm_values = frm_values.replace("\'", "\\'", 'g');
-		frm_values = frm_values.replace('\"', '\\"', 'g');
+		alert(frm_values);
+		//frm_values = frm_values.replace("\'", "\\'", 'g');
+		var test = "/\'/g";
+		frm_values = frm_values.replace(test, "\\'");
+		//frm_values = frm_values.replace('\"', '\\"', 'g');
+		alert(frm_values);
 	}
 	//alert(frm_values);
 	var chosen_action_id = get_chosen_action(current_form_id);
