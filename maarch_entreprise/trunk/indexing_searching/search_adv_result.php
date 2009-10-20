@@ -144,7 +144,7 @@ if(count($_REQUEST['meta']) > 0)
 				$where_request .= " ".$_SESSION['collections'][0]['view'].".case_id = ".$func->wash($_REQUEST['numcase'], "num", _N_CASE,"no")." and ";
 				$case_view=true;
 			}
-			// CASE_LABEL 
+			// CASE_LABEL
 			else if($tab_id_fields[$j] == 'labelcase' && !empty($_REQUEST['labelcase']))
 			{
 				$json_txt .= "'labelcase' : ['".addslashes(trim($_REQUEST['labelcase']))."'],";
@@ -152,7 +152,7 @@ if(count($_REQUEST['meta']) > 0)
 				$where_request .= " ".$_SESSION['collections'][0]['view'].".case_label ilike '%".$func->wash($_REQUEST['labelcase'], "no", _CASE_LABEL,"no")."%' and ";
 				$case_view=true;
 			}
-			// CASE_DESCRIPTION 
+			// CASE_DESCRIPTION
 			else if($tab_id_fields[$j] == 'descriptioncase' && !empty($_REQUEST['descriptioncase']))
 			{
 				$json_txt .= "'descriptioncase' : ['".addslashes(trim($_REQUEST['descriptioncase']))."'],";
@@ -217,11 +217,11 @@ if(count($_REQUEST['meta']) > 0)
 				$market = $func->wash($_REQUEST['market'], "no", _MARKET,"no");
 				if($_SESSION['config']['databasetype'] == "POSTGRESQL")
 				{
-					$where_request .= " (folder_name ilike '".$func->protect_string_db($market)."%' or fold_subject ilike '".$func->protect_string_db($market)."%' ) and ";
+					$where_request .= " (folder_name ilike '%".$func->protect_string_db($market)."%' or folder_id ilike '%".$func->protect_string_db($market)."%' ) and ";
 				}
 				else
 				{
-					$where_request .= " (folder_name like '".$func->protect_string_db($market)."%' or fold_subject like '".$func->protect_string_db($market)."%' ) and ";
+					$where_request .= " (folder_name like '%".$func->protect_string_db($market)."%' or folder_id like '%".$func->protect_string_db($market)."%' ) and ";
 				}
 			}
 			// FOLDER : PROJECT
@@ -231,11 +231,11 @@ if(count($_REQUEST['meta']) > 0)
 				$project = $func->wash($_REQUEST['project'], "no", _MARKET,"no");
 				if($_SESSION['config']['databasetype'] == "POSTGRESQL")
 				{
-					$where_request .= " (folder_name ilike '".$func->protect_string_db($project)."%' or fold_subject ilike '".$func->protect_string_db($project)."%' ) and ";
+					$where_request .= " (folder_name ilike '%".$func->protect_string_db($project)."%' or folder_id ilike '%".$func->protect_string_db($project)."%' or folders_system_id in (select parent_id from ".$_SESSION['tablename']['fold_folders']." where folder_name ilike '%".$func->protect_string_db($project)."%' or folder_id like '%".$func->protect_string_db($project)."%')) and ";
 				}
 				else
 				{
-					$where_request .= " (folder_name like '".$func->protect_string_db($project)."%' or fold_subject like '".$func->protect_string_db($project)."%' or folders_system_id in (select parent_id from ".$_SESSION['tablename']['fold_folders']." where folder_name like '".$func->protect_string_db($project)."%' or fold_subject like '".$func->protect_string_db($project)."%')) and ";
+					$where_request .= " (folder_name like '%".$func->protect_string_db($project)."%' or folder_id like '%".$func->protect_string_db($project)."%' or folders_system_id in (select parent_id from ".$_SESSION['tablename']['fold_folders']." where folder_name like '".$func->protect_string_db($project)."%' or folder_id like '%".$func->protect_string_db($project)."%')) and ";
 				}
 			}
 			// DEST
