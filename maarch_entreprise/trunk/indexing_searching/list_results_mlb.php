@@ -150,7 +150,7 @@ $_SESSION['error_page'] = '';
 	$template_list=array();
 	array_push($template_list, array( "name"=>"search_adv", "img"=>"extend_list.gif", "label"=> _ACCESS_LIST_EXTEND));
 	if($core_tools->is_module_loaded('cases'))	
-		array_push($template_list, array( "name"=>"group_case", "img"=>"arrow_up.gif", "label"=> _ACCESS_LIST_CASE));
+		array_push($template_list, array( "name"=>"group_case", "img"=>"box.gif", "label"=> _ACCESS_LIST_CASE));
 	if(!$_REQUEST['template'])
 		$template_to_use = $template_list[0]["name"];
 	if(isset($_REQUEST['template']) && empty($_REQUEST['template']))
