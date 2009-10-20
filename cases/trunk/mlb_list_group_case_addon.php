@@ -54,6 +54,18 @@
 							$tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
 							$tab[$i][$j]["order"]="case_typist";
 						}
+						if($tab[$i][$j][$value]=="case_description")
+						{
+							$tab[$i][$j]["label"]=_CASE_DESCRIPTION;
+							$tab[$i][$j]['value'] = $request->show_string($tab[$i][$j]['value']);
+							$tab[$i][$j]["size"]="25";
+							$tab[$i][$j]["label_align"]="left";
+							$tab[$i][$j]["align"]="left";
+							$tab[$i][$j]["valign"]="bottom";
+							$tab[$i][$j]["show"]=false;
+							$tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
+							$tab[$i][$j]["order"]="case_description";
+						}
 					}
 				}
 			}

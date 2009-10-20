@@ -189,7 +189,7 @@ $_SESSION['error_page'] = '';
 		array_push($template_list, array( "name"=>"attach_to_case", "img"=>"extend_list.gif", "label"=> _ACCESS_LIST_EXTEND));
 	
 	if($_REQUEST['template'] == 'group_case')
-		array_push($template_list, array( "name"=>"group_case", "img"=>"arrow_up.gif", "label"=> _ACCESS_LIST_CASE));
+		array_push($template_list, array( "name"=>"group_case", "img"=>"box.gif", "label"=> _ACCESS_LIST_CASE));
 	
 	if(!$_REQUEST['template'])
 		$template_to_use = $template_list[0]["name"];
