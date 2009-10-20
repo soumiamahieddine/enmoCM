@@ -153,7 +153,7 @@ if(isset($_SESSION['chosen_name_folder']) && !empty($_SESSION['chosen_name_folde
 						{
 							$directResId = $res4->res_id;
 						}*/
-						array_push($results, array('res_id' => $res4->res_id, 'doc_date' => $res4->doc_date, 'name_folder' => $res4->folder_name, 'num_ref' => $res4->identifier, 'found_doc' => $foundDoc, 'subject' => $func->show_string($res4->subject)));
+						array_push($results, array('res_id' => $res4->res_id, 'doc_date' => $res4->doc_date, 'name_folder' => $res4->folder_name, 'num_ref' => $res4->identifier, 'found_doc' => $foundDoc, 'subject' => $func->show_string($res4->subject, true)));
 						$cptDoc++;
 					}
 					if($cptDoc == 0)
@@ -162,13 +162,13 @@ if(isset($_SESSION['chosen_name_folder']) && !empty($_SESSION['chosen_name_folde
 					}
 					else
 					{
-						array_push($doctypes, array('type_id' => $res3->type_id, 'description' => $func->show_string($res3->description), "results" => $results, "no_doc" => false ));
+						array_push($doctypes, array('type_id' => $res3->type_id, 'description' => $func->show_string($res3->description, true), "results" => $results, "no_doc" => false ));
 					}
 				}
-				array_push($s_level, array('doctypes_second_level_id' => $res2->doctypes_second_level_id, 'doctypes_second_level_label' => $func->show_string($res2->doctypes_second_level_label), 'doctypes' => $doctypes));
+				array_push($s_level, array('doctypes_second_level_id' => $res2->doctypes_second_level_id, 'doctypes_second_level_label' => $func->show_string($res2->doctypes_second_level_label, true), 'doctypes' => $doctypes));
 			}
 			//$func->show_array($s_level);
-			array_push($f_level, array('doctypes_first_level_id' => $res1->doctypes_first_level_id, 'doctypes_first_level_label' => $func->show_string($res1->doctypes_first_level_label), 'second_level' => $s_level));
+			array_push($f_level, array('doctypes_first_level_id' => $res1->doctypes_first_level_id, 'doctypes_first_level_label' => $func->show_string($res1->doctypes_first_level_label, true), 'second_level' => $s_level));
 		}
 		array_push($search_customer_results, array('folder_id' => $res->folder_id,'folder_name' => $res->folder_name, 'folder_subject' => $res->subject, 'content' => $f_level));
 	}

@@ -7,12 +7,9 @@ require_once($_SESSION['pathtocoreclass']."class_request.php");
 
  require_once($_SESSION['pathtocoreclass']."class_core_tools.php");
  require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR.'class_list_show.php');
-
-require_once($_SESSION['pathtomodules']."autofoldering".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
 $core_tools = new core_tools();
 $core_tools->load_lang();
 $func = new functions();
-$af  = new autofoldering();
 
 $id = '';
 if(isset($_GET['id']) && !empty($_GET['id']))

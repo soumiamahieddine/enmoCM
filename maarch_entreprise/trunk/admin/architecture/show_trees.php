@@ -82,9 +82,9 @@ else
 					$results = array();
 					array_push($doctypes, array('type_id' => $res3->type_id, 'description' => $func->show_string($res3->description), "results" => $results));
 				}
-				array_push($s_level, array('doctypes_second_level_id' => $res2->doctypes_second_level_id, 'doctypes_second_level_label' => $func->show_string($res2->doctypes_second_level_label), 'doctypes' => $doctypes));
+				array_push($s_level, array('doctypes_second_level_id' => $res2->doctypes_second_level_id, 'doctypes_second_level_label' => $func->show_string($res2->doctypes_second_level_label, true), 'doctypes' => $doctypes));
 			}
-			array_push($f_level, array('doctypes_first_level_id' => $res1->doctypes_first_level_id, 'doctypes_first_level_label' => $func->show_string($res1->doctypes_first_level_label), 'second_level' => $s_level));
+			array_push($f_level, array('doctypes_first_level_id' => $res1->doctypes_first_level_id, 'doctypes_first_level_label' => $func->show_string($res1->doctypes_first_level_label, true), 'second_level' => $s_level));
 		}
 		for($i=0;$i<count($_SESSION['tree_foldertypes']);$i++)
 		{
