@@ -74,11 +74,7 @@ function loginCreation()
 	{
 		mkdir(dirname($_SERVER["PHP_SELF"]).DIRECTORY_SEPARATOR."log".DIRECTORY_SEPARATOR."",0777);
 	}
-	if(!is_dir(dirname($_SERVER["PHP_SELF"]).DIRECTORY_SEPARATOR."log".DIRECTORY_SEPARATOR."".date("Y")."_".date("m")."_".date("d")."".DIRECTORY_SEPARATOR.""))
-	{
-		mkdir(dirname($_SERVER["PHP_SELF"]).DIRECTORY_SEPARATOR."log".DIRECTORY_SEPARATOR."".date("Y")."_".date("m")."_".date("d")."".DIRECTORY_SEPARATOR."",0777);
-	}
-	$folderLogName = dirname($_SERVER["PHP_SELF"]).DIRECTORY_SEPARATOR."log".DIRECTORY_SEPARATOR."".date("Y")."_".date("m")."_".date("d")."".DIRECTORY_SEPARATOR."";
+	$folderLogName = dirname($_SERVER["PHP_SELF"]).DIRECTORY_SEPARATOR."log".DIRECTORY_SEPARATOR."";
 	//$_ENV['log'] = $folderLogName."full_text_".date("Y")."_".date("m")."_".date("d")." ".date("H")."-".date("i")."-".date("s").".log";
 	$_ENV['log'] = $folderLogName."full_text_".date("Y")."_".date("m")."_".date("d").".log";
 	writeLog("Application start with : ".$_SERVER['SCRIPT_FILENAME']);
@@ -294,7 +290,7 @@ while($queryResult=$_ENV['db']->fetch_array())
 	$pathToDocServer[$queryResult[0]] = $queryResult[1];
 	writeLog($queryResult[1]);
 }
-$queryIndexFullText = "select res_id, docserver_id, path, filename, format from ".$_ENV['tablename']." where ".$fulltextColumnName." = 0 or ".$fulltextColumnName." = '' or ".$fulltextColumnName." is null ";
+$queryIndexFullText = "select res_id, docserver_id, path, filename, format from ".$_ENV['tablename']." where ".$fulltextColumnName." = '0' or ".$fulltextColumnName." = '' or ".$fulltextColumnName." is null ";
 writeLog("query to found document with no full text : ".$queryIndexFullText);
 $_ENV['db']->query($queryIndexFullText);
 $cpt_batch_size=0;
