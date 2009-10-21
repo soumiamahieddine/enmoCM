@@ -112,6 +112,10 @@ class types extends dbquery
 				?>
 				<br/><br/>
 					<form name="frmtype" id="frmtype" method="post" action="<? echo $_SESSION['config']['businessappurl'];?>index.php?page=types_up_db" class="forms">
+					<input type="hidden" name="order" id="order" value="<?php echo $_REQUEST['order'];?>" />
+					<input type="hidden" name="order_field" id="order_field" value="<?php echo $_REQUEST['order_field'];?>" />
+					<input type="hidden" name="what" id="what" value="<?php echo $_REQUEST['what'];?>" />
+					<input type="hidden" name="start" id="start" value="<?php echo $_REQUEST['start'];?>" />
 				<div class="block">
 
 						<input  type="hidden" name="mode" value="<? echo $mode; ?>" />
@@ -258,6 +262,10 @@ class types extends dbquery
 			$res = $this->fetch_object();
 			$_SESSION['m_admin']['doctypes']['STRUCTURE'] = $res->id;
 		}
+		$_SESSION['m_admin']['doctypes']['order'] = $_REQUEST['order'];
+		$_SESSION['m_admin']['doctypes']['order_field'] = $_REQUEST['order_field'];
+		$_SESSION['m_admin']['doctypes']['what'] = $_REQUEST['what'];
+		$_SESSION['m_admin']['doctypes']['start'] = $_REQUEST['start'];
 	}
 
 	/**
@@ -268,6 +276,10 @@ class types extends dbquery
 		// modify, add or validate a doctype
 		$core_tools = new core_tools();
 		$this->typesinfo();
+		$order = $_SESSION['m_admin']['doctypes']['order'];
+		$order_field = $_SESSION['m_admin']['doctypes']['order_field'];
+		$what = $_SESSION['m_admin']['doctypes']['what'];
+		$start = $_SESSION['m_admin']['doctypes']['start'];
 		if(!empty($_SESSION['error']))
 		{
 			if($_REQUEST['mode'] == "up")
@@ -281,7 +293,7 @@ class types extends dbquery
 				else
 				{
 				?>
-               	 <script language="javascript" type="text/javascript">window.top.location.href='<? echo $_SESSION['config']['businessappurl']."index.php?page=types";?>';</script>
+               	 <script language="javascript" type="text/javascript">window.top.location.href='<? echo $_SESSION['config']['businessappurl']."index.php?page=types&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what;?>';</script>
                 <?
 					exit();
 				}
@@ -329,9 +341,10 @@ class types extends dbquery
 						$users->add($_SESSION['tablename']['doctypes'], $_SESSION['m_admin']['doctypes']['TYPE_ID'],"UP",_DOCTYPE_MODIFICATION." : ".$_SESSION['m_admin']['doctypes']['LABEL'], $_SESSION['config']['databasetype']);
 					}
 				}
+
 				$this->cleartypeinfos();
 				?>
-				<script language="javascript" type="text/javascript">window.top.location.href='<? echo $_SESSION['config']['businessappurl']."index.php?page=types";?>';</script>
+				<script language="javascript" type="text/javascript">window.top.location.href='<? echo $_SESSION['config']['businessappurl']."index.php?page=types&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what;?>';</script>
                 <?
 				exit();
 			}
@@ -374,7 +387,7 @@ class types extends dbquery
 				}
 				$this->cleartypeinfos();
 				//header("location: ".$url);
-				?> <script language="javascript" type="text/javascript">window.top.location.href='<? echo $_SESSION['config']['businessappurl']."index.php?page=types";?>';</script>
+				?> <script language="javascript" type="text/javascript">window.top.location.href='<? echo $_SESSION['config']['businessappurl']."index.php?page=types&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what;?>';</script>
                 <?
 				exit();
 			}
@@ -487,7 +500,32 @@ class types extends dbquery
 				$label = $tmp;
 			}
 			$img = (STRING) $item->img;
-			array_push($indexes, array('column' => (STRING) $item->column, 'label' => $label, 'type' => (STRING) $item->type, 'img' => $_SESSION['config']['businessappurl'].'img/'.$img));
+
+			if(isset($item->values_list))
+			{
+				$values = array();
+				$list = $item->values_list ;
+				foreach($list->value as $val)
+				{
+					$tmp = (string) $val->label;
+					$tmp2 = $this->retrieve_constant_lang($tmp, $path_lang);
+					if($tmp2 <> false)
+					{
+						$label_val = $tmp2;
+					}
+					else
+					{
+						$label_val = $tmp;
+					}
+					array_push($values, array('id' => (string) $val->id, 'label' => $label_val));
+				}
+				$arr_tmp = array('column' => (STRING) $item->column, 'label' => $label, 'type' => (STRING) $item->type, 'img' => $_SESSION['config']['businessappurl'].'img/'.$img, 'type_field' => 'select', 'values' => $values);
+			}
+			else
+			{
+				$arr_tmp = array('column' => (STRING) $item->column, 'label' => $label, 'type' => (STRING) $item->type, 'img' => $_SESSION['config']['businessappurl'].'img/'.$img, 'type_field' => 'input');
+			}
+			array_push($indexes, $arr_tmp);
 		}
 		return $indexes;
 	}
@@ -544,7 +582,30 @@ class types extends dbquery
 
 			if(in_array($col, $fields))
 			{
-				$indexes[$col] = array( 'label' => $label, 'type' => (STRING) $item->type, 'img' => $_SESSION['config']['businessappurl'].'img/'.$img);
+				if(isset($item->values_list))
+				{
+					$values = array();
+					$list = $item->values_list ;
+					foreach($list->value as $val)
+					{
+						$tmp = (string) $val->label;
+						$tmp2 = $this->retrieve_constant_lang($tmp, $path_lang);
+						if($tmp2 <> false)
+						{
+							$label_val = $tmp2;
+						}
+						else
+						{
+							$label_val = $tmp;
+						}
+						array_push($values, array('id' => (string) $val->id, 'label' => $label_val));
+					}
+				$indexes[$col] = array( 'label' => $label, 'type' => (STRING) $item->type, 'img' => $_SESSION['config']['businessappurl'].'img/'.$img, 'type_field' => 'select', 'values' => $values);
+				}
+				else
+				{
+					$indexes[$col] = array( 'label' => $label, 'type' => (STRING) $item->type, 'img' => $_SESSION['config']['businessappurl'].'img/'.$img, 'type_field' => 'input');
+				}
 			}
 		}
 		return $indexes;
@@ -623,6 +684,24 @@ class types extends dbquery
 			else if($indexes[$key]['type'] == 'integer'  && !empty($values[$key])) // && $values[$key] >= 0
 			{
 				$field_value = $this->wash($values[$key],"num",$indexes[$key]['label']);
+			}
+
+			if(isset($indexes[$key]['values']) && count($indexes[$key]['values']) > 0)
+			{
+				$found = false;
+				for($i=0; $i < count($indexes[$key]['values']); $i++)
+				{
+					if($values[$key] == $indexes[$key]['values'][$i]['id'])
+					{
+						$found = true;
+						break;
+					}
+				}
+				if(!$found)
+				{
+					$_SESSION['error'] .= 	$indexes[$key]['label']." : "._ITEM_NOT_IN_LIST.".<br/>";
+					return false;
+				}
 			}
 		}
 		return true;

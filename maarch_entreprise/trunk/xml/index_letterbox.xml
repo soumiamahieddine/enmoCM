@@ -11,6 +11,16 @@
 		<label>_CUSTOM_T2</label>
 		<type>string</type>
 		<img>default_string.gif</img>
+		<values_list>
+			<value>
+				<id>1</id>
+				<label>Règlement</label>
+			</value>
+			<value>
+				<id>2</id>
+				<label>Pas de règlement</label>
+			</value>
+		</values_list>
 	</INDEX>
 	<INDEX>
 		<column>custom_d1</column>

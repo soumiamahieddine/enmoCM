@@ -93,6 +93,7 @@ function get_folder_data($coll_id, $res_id)
 	return array('project' => $project, 'market' => $market);
 }
 
+
 /**
  * Returns the indexing form text
  *
@@ -145,6 +146,21 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 	$process_data = $is->get_process_data($coll_id, $res_id);
 	$chrono_number = $cr->get_chrono_number($res_id, $sec->retrieve_view_from_table($table));
 	$_SESSION['doc_id'] = $res_id;
+	$indexes = array();
+	if(isset($data['type_id']))
+	{
+		$indexes = $type->get_indexes($data['type_id']['value'], $coll_id);
+
+		$fields = 'res_id';
+		foreach(array_keys($indexes) as $key)
+		{
+			$fields .= ','.$key;
+		}
+		$b->connect();
+		$b->query("select ".$fields." from ".$table." where res_id = ".$res_id);
+		$values_fields = $b->fetch_object();
+		//print_r($indexes);
+	}
 	//  to activate locking decomment these lines
 	/*if($b->reserve_doc( $_SESSION['user']['UserId'], $res_id, $coll_id) == false )
 	{
@@ -214,6 +230,36 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 
 					$frm_str .= '</td >';
 					$frm_str .= '</tr>';
+				}
+				if(count($indexes) > 0)
+				{
+					foreach(array_keys($indexes) as $key)
+					{
+						$frm_str .= '<tr>';
+							$frm_str .= '<td width="33%" align="left"><span class="form_title" >'.$indexes[$key]['label'].' :</span></td>';
+							$frm_str .= '<td >';
+							$frm_str .= '<input type="text" name="'.$key.'" id="'.$key.'" readonly="readonly" class="readonly" style="border:none;" ';
+							if($indexes[$key]['type_field'] == 'input')
+							{
+								$frm_str .= ' value="'.$values_fields->$key.'" ';
+							}
+							else
+							{
+								$val = '';
+								for($i=0; count($indexes[$key]['values']); $i++)
+								{
+									if($values_fields->$key == $indexes[$key]['values'][$i]['id'])
+									{
+										$val = 	$indexes[$key]['values'][$i]['label'];
+										break;
+									}
+								}
+								$frm_str .= ' value="'.$val.'" ';
+							}
+							$frm_str .= ' />';
+							$frm_str .= '</td >';
+						$frm_str .= '</tr>';
+					}
 				}
 			$frm_str .= '</table>';
 			$frm_str .= '</div>';

@@ -786,7 +786,7 @@ class list_show extends functions
 
 
 		$func = new functions();
-
+		$param_comp = '';
 		if(isset($_GET['start']))
 		{
 			$start = strip_tags($_GET['start']);
@@ -795,7 +795,7 @@ class list_show extends functions
 		{
 			$start = 0;
 		}
-
+		$param_comp .= "&amp;start=".$start;
 		if($name == "structures" || $name == "subfolders" || $name == "types")
 		{
 			$link = "index.php?page=".$name;
@@ -825,7 +825,7 @@ class list_show extends functions
 		{
 			$orderby = 'asc';
 		}
-
+		$param_comp .= "&amp;order=".$orderby;
 		$link .= "&amp;order=".$orderby;
 
 		if(isset($_GET['order_field']))
@@ -837,7 +837,7 @@ class list_show extends functions
 			$orderfield = '';
 		}
 		$link .= "&amp;order_field=".$orderfield;
-
+		$param_comp .= "&amp;order_field=".$orderfield;
 		if(isset($_GET['what']))
 		{
 			$get_what = strip_tags($_GET['what']);
@@ -847,7 +847,7 @@ class list_show extends functions
 			$get_what = '';
 		}
 		$link .= "&amp;what=".$get_what;
-
+		$param_comp .= "&amp;what=".$what;
 		// define the defaults values
 		$nb_show = $_SESSION['config']['nblinetoshow'];
 		$nb_pages = ceil($nb_total/$nb_show);
@@ -997,7 +997,7 @@ class list_show extends functions
             	<tfoot>
                     <tr>
 						<td colspan="9" class="price"><span class="add clearfix">
-                        <a href="<?php  echo $path_add;?>"  ><span><?php  echo $label_add;?></span></a></span></td>
+                        <a href="<?php  echo $path_add.$param_comp;?>"  ><span><?php  echo $label_add;?></span></a></span></td>
 					</tr>
 				</tfoot>
 				<?php
@@ -1153,7 +1153,7 @@ class list_show extends functions
 						else
 						{
 						?>
-						<a href="<?php  echo $path_up; ?>" class="change"><?php  echo _MODIFY;?></a>
+						<a href="<?php  echo $path_up.$param_comp; ?>" class="change"><?php  echo _MODIFY;?></a>
 						<?php
 
 						}?>
@@ -1179,7 +1179,7 @@ class list_show extends functions
 								else
 								{
 							?>
-                                <a href="<?php  echo $path_auth;?>" class="authorize" onclick="return(confirm('<?php  echo _REALLY_AUTHORIZE." "; if($page_name == "users"){ echo $complete_name;}
+                                <a href="<?php  echo $path_auth.$param_comp;?>" class="authorize" onclick="return(confirm('<?php  echo _REALLY_AUTHORIZE." "; if($page_name == "users"){ echo $complete_name;}
                                  else { echo $admin_id; } ?> ?'));"><?php  echo _AUTHORIZE;?></a>
                                 <?php
 								}
@@ -1203,7 +1203,7 @@ class list_show extends functions
 								else
 								{
 								?>
-							<a href="<?php  echo $path_ban; ?>" class="suspend" onclick="return(confirm('<?php  echo _REALLY_SUSPEND." ";  if($page_name == "users"){ echo $complete_name;} else { echo $admin_id; } ?> ?'));"><?php  echo _SUSPEND;?></a><?php  }
+							<a href="<?php  echo $path_ban.$param_comp; ?>" class="suspend" onclick="return(confirm('<?php  echo _REALLY_SUSPEND." ";  if($page_name == "users"){ echo $complete_name;} else { echo $admin_id; } ?> ?'));"><?php  echo _SUSPEND;?></a><?php  }
 								}
 							}
 							?>

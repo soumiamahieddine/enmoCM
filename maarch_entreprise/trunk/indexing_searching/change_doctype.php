@@ -33,6 +33,7 @@ session_start();
 require_once($_SESSION['pathtocoreclass']."class_functions.php");
 require_once($_SESSION['pathtocoreclass']."class_db.php");
 require_once($_SESSION['pathtocoreclass']."class_core_tools.php");
+require_once($_SESSION['pathtocoreclass']."class_security.php");
 require_once($_SESSION['config']['businessapppath'].'class'.DIRECTORY_SEPARATOR."class_types.php");
 
 $db = new dbquery();
@@ -54,6 +55,12 @@ if(!isset($_REQUEST['id_action']) || empty($_REQUEST['id_action']))
 	exit();
 }
 $id_action = $_REQUEST['id_action'];
+
+if(isset($_REQUEST['res_id']) && !empty($_REQUEST['res_id']) && isset($_REQUEST['coll_id']) && !empty($_REQUEST['coll_id']))
+{
+	$res_id = $_REQUEST['res_id'];
+	$coll_id = $_REQUEST['coll_id'];
+}
 
 // Process limit date calcul
 $db->connect();
@@ -92,6 +99,21 @@ else
 $opt_indexes  = '';
 if(count($indexes) > 0)
 {
+	if(isset($res_id) && isset($coll_id))
+	{
+		$sec = new security();
+		$table = $sec->retrieve_table_from_coll($coll_id);
+		if(!empty($table))
+		{
+			$fields = 'res_id ';
+			foreach(array_keys($indexes) as $key)
+			{
+				$fields .= ', '.$key;
+			}
+			$db->query("select ".$fields." from ".$table." where res_id = ".$res_id);
+			$values_fields = $db->fetch_object();
+		}
+	}
 	$opt_indexes .= '<table width="100%" align="center" border="0">';
 	foreach(array_keys($indexes) as $key)
 	{
@@ -107,13 +129,41 @@ if(count($indexes) > 0)
 			$opt_indexes.='<td><label for="'.$key.'" class="form_title" >'.$indexes[$key]['label'].'</label></td>';
 			$opt_indexes .='<td>&nbsp;</td>';
 			$opt_indexes .='<td class="indexing_field">';
-			if($indexes[$key]['type'] == 'date')
+			if($indexes[$key]['type_field'] == 'input')
 			{
-				$opt_indexes .='<input name="'.$key.'" type="text" id="'.$key.'" value="'.$today.'" onclick="clear_error(\'frm_error_'.$id_action.'\');showCalender(this);"/>';
+				if($indexes[$key]['type'] == 'date')
+				{
+					$opt_indexes .='<input name="'.$key.'" type="text" id="'.$key.'" value="';
+					if(isset($values_fields->$key))
+					{
+						$opt_indexes .= $db->format_date_db($values_fields->key, true);
+					}
+					$opt_indexes .= '" onclick="clear_error(\'frm_error_'.$id_action.'\');showCalender(this);"/>';
+				}
+				else
+				{
+					$opt_indexes .= '<input name="'.$key.'" type="text" id="'.$key.'" value="';
+					if(isset($values_fields->$key))
+					{
+						$opt_indexes .= $db->show_string($values_fields->key, true);
+					}
+					$opt_indexes .= '" onclick="clear_error(\'frm_error_'.$id_action.'\');" />';
+				}
 			}
 			else
 			{
-				$opt_indexes .= '<input name="'.$key.'" type="text" id="'.$key.'" value="" onclick="clear_error(\'frm_error_'.$id_action.'\');" />';
+				$opt_indexes .= '<select name="'.$key.'" id="'.$key.'" >';
+					$opt_indexes .= '<option value="">'._CHOOSE.'...</option>';
+					for($i=0; $i<count($indexes[$key]['values']);$i++)
+					{
+						$opt_indexes .= '<option value="'.$indexes[$key]['values'][$i]['id'].'"';
+						if($indexes[$key]['values'][$i]['id'] == $values_fields->$key)
+						{
+						$opt_indexes .= 'selected="selected"';
+						}
+						$opt_indexes .= ' >'.$indexes[$key]['values'][$i]['label'].'</option>';
+					}
+				$opt_indexes .= '</select>';
 			}
 			$opt_indexes .='</td>';
 			$opt_indexes .='<td><span class="red_asterisk" id="'.$key.'_mandatory" style="display:';

@@ -118,6 +118,7 @@ $param = array();
 
 // Indexes specific to doctype
 $indexes = $type->get_all_indexes($coll_id);
+
 for($i=0;$i<count($indexes);$i++)
 {
 	$field = $indexes[$i]['column'];
@@ -125,7 +126,17 @@ for($i=0;$i<count($indexes);$i++)
 	{
 		$field = 'doc_'.$field;
 	}
-	if($indexes[$i]['type'] == 'date')
+	if($indexes[$i]['type_field'] == 'select')
+	{
+		$arr_tmp = array();
+		array_push($arr_tmp, array('VALUE' => '', 'LABEL' => _CHOOSE.'...'));
+		for($j=0; $j<count($indexes[$i]['values']);$j++)
+		{
+			array_push($arr_tmp, array('VALUE' => $indexes[$i]['values'][$j]['id'], 'LABEL' => $indexes[$i]['values'][$j]['label']));
+		}
+		$arr_tmp2 = array('label' => $indexes[$i]['label'], 'type' => 'select_simple', 'param' => array('field_label' => $indexes[$i]['label'],'default_label' => '', 'options' => $arr_tmp));
+	}
+	elseif($indexes[$i]['type'] == 'date')
 	{
 		$arr_tmp2 = array('label' => $indexes[$i]['label'], 'type' => 'date_range', 'param' => array('field_label' => $indexes[$i]['label'], 'id1' => $field.'_from', 'id2' =>$field.'_to'));
 	}
@@ -382,9 +393,9 @@ function del_query_confirm()
     </tr>
 </table>
 <table align="center" border="0" width="100%">
-	
-	
-	
+
+
+
 			<?php
 			if($core_tools->is_module_loaded("cases") == true)
 			{ ?>
@@ -395,7 +406,7 @@ function del_query_confirm()
 				<td>
 					<div class="block">
 					<table border="0" width="100%">
-						
+
 						<tr>
 							<td width="70%"><label for="numcase" class="bold" ><?php echo _CASE_NUMBER;?>:</label>
 								<input type="text" name="numcase" id="numcase" <?php echo $size; ?>  />
@@ -426,15 +437,15 @@ function del_query_confirm()
 				</td>
 				<td>
 					<p align="center">
-					</p>	
+					</p>
 				</td>
 			</tr>
 		<?php
 	}	 ?>
-	
-	
-	
-	
+
+
+
+
 	<tr>
 		<td colspan="2" ><h2><?php echo _LETTER_INFO; ?></h2></td>
     </tr>
@@ -470,7 +481,7 @@ function del_query_confirm()
 				</td>
 				<td><em><?php echo _MULTI_FIELD_HELP; ?></em></td>
 			</tr>
-		
+
 			</table>
 			</div>
 			<div class="block_end">&nbsp;</div>

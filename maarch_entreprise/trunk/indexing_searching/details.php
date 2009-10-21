@@ -271,28 +271,31 @@ else
 			}
 			foreach(array_keys($indexes) as $key)
 			{
-				$indexes[$key]['display'] = 'textinput';
 				$indexes[$key]['opt_index'] = true;
+				if($indexes[$key]['type_field'] == 'select')
+				{
+					for($i=0; $i<count($indexes[$key]['values']);$i++)
+					{
+						if($indexes[$key]['values'][$i]['id'] == $indexes[$key]['value'])
+						{
+							$indexes[$key]['show_value'] = $indexes[$key]['values'][$i]['label'] ;
+							break;
+						}
+					}
+				}
 				if(!$modify_doc)
 				{
 					$indexes[$key]['readonly'] = true;
+					$indexes[$key]['type_field'] = 'input';
 				}
 				else
 				{
 					$indexes[$key]['readonly'] = false;
-					if($indexes[$key]['type'] == 'date')
-					{
-						$indexes[$key]['field_type'] = 'date';
-					}
-					else
-					{
-						$indexes[$key]['field_type'] = 'textfield';
-					}
 				}
 			}
 			$data = get_general_data($coll_id, $s_id, $mode_data, $param_data );
 			//$data = array_merge($data, $indexes);
-		//	$db->show_array($data);
+			//$db->show_array($indexes);
 			$detailsExport = "";
 			$detailsExport = "<html lang='fr' xmlns='http://www.w3.org/1999/xhtml' xml:lang='fr'>";
 			$detailsExport = "<head><title>Maarch Details</title><meta content='text/html; charset=UTF-8' http-equiv='Content-Type'/><meta content='fr' http-equiv='Content-Language'/>";
@@ -661,36 +664,24 @@ else
 								<td>
 									<?php
 									$detailsExport .=  $indexes[$key]['show_value'];
-								if(!isset($indexes[$key]['readonly']) || $indexes[$key]['readonly'] == true)
-								{
-									if($indexes[$key]['display'] == 'textinput')
+									if($indexes[$key]['type_field'] == 'input')
 									{
 										?>
-										<input type="text" name="<?php echo $key;?>" id="<?php echo $key;?>" value="<?php echo $indexes[$key]['show_value'];?>" readonly="readonly" class="readonly" size="40"  title="<?php  echo $indexes[$key]['show_value']; ?>" alt="<?php  echo $indexes[$key]['show_value']; ?>" />
+										<input type="text" name="<?php echo $key;?>" id="<?php echo $key;?>" value="<?php echo $indexes[$key]['show_value'];?>" <?php if(!isset($indexes[$key]['readonly']) || $indexes[$key]['readonly'] == true){ echo 'readonly="readonly" class="readonly"';}else if($indexes[$key]['type'] == 'date'){echo 'onclick="showCalender(this);"';}?> size="40"  title="<?php  echo $indexes[$key]['show_value']; ?>" alt="<?php  echo $indexes[$key]['show_value']; ?>"   />
 										<?php
 									}
 									else
-									{
-										?>
-										<input type="text" name="<?php echo $key;?>" id="<?php echo $key;?>" value="<?php echo $indexes[$key]['show_value'];?>" readonly="readonly" class="readonly" size="40" title="<?php  echo $indexes[$key]['show_value']; ?>" alt="<?php  echo $indexes[$key]['show_value']; ?>" />
-										<?php
+									{?>
+										<select name="<?php echo $key;?>" id="<?php echo $key;?>" >
+											<option value=""><?php echo _CHOOSE;?>...</option>
+											<?php
+											for($i=0; $i<count($indexes[$key]['values']);$i++)
+											{?>
+												<option value="<?php echo $indexes[$key]['values'][$i]['id'];?>" <?php if($indexes[$key]['values'][$i]['id'] == $indexes[$key]['value']){ echo 'selected="selected"';}?>><?php echo $indexes[$key]['values'][$i]['label'];?></option><?php
+											}?>
+										</select><?php
 									}
-								}
-								else
-								{
-									if($indexes[$key]['field_type'] == 'textfield')
-									{
-										?>
-										<input type="text" name="<?php echo $key;?>" id="<?php echo $key;?>" value="<?php echo $indexes[$key]['show_value'];?>" size="40"  title="<?php  echo $indexes[$key]['show_value']; ?>" alt="<?php  echo $indexes[$key]['show_value']; ?>" />
-										<?php
-									}
-									else if($indexes[$key]['field_type'] == 'date')
-									{
-										?>
-										<input type="text" name="<?php echo $key;?>" id="<?php echo $key;?>" value="<?php echo $indexes[$key]['show_value'];?>" size="40"  title="<?php  echo $indexes[$key]['show_value']; ?>" alt="<?php  echo $indexes[$key]['show_value']; ?>" onclick="showCalender(this);" />
-										<?php
-									}
-								}
+
 									$detailsExport .=  "</td>";
 									?>
 								</td>

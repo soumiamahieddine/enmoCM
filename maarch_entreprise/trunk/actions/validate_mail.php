@@ -240,7 +240,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 				  $frm_str .= '<tr id="type_id_tr" style="display:'.$display_value.';">';
 				  	$frm_str .='<td class="indexing_label"><span class="form_title" id="doctype_res" style="display:none;">'._DOCTYPE.'</span><span class="form_title" id="doctype_mail" style="display:inline;" >'._DOCTYPE_MAIL.'</span></td>';
 					$frm_str .='<td>&nbsp;</td>';
-					$frm_str .='<td class="indexing_field"><select name="type_id" id="type_id" onchange="clear_error(\'frm_error_'.$id_action.'\');change_doctype(this.options[this.selectedIndex].value, \''.$_SESSION['config']['businessappurl'].'indexing_searching/change_doctype.php\', \''._ERROR_DOCTYPE.'\', \''.$id_action.'\', \''.$_SESSION['config']['businessappurl'].'get_content_js.php\');">';
+					$frm_str .='<td class="indexing_field"><select name="type_id" id="type_id" onchange="clear_error(\'frm_error_'.$id_action.'\');change_doctype(this.options[this.selectedIndex].value, \''.$_SESSION['config']['businessappurl'].'indexing_searching/change_doctype.php\', \''._ERROR_DOCTYPE.'\', \''.$id_action.'\', \''.$_SESSION['config']['businessappurl'].'get_content_js.php\', '.$res_id.', \''.$coll_id.'\');">';
 							$frm_str .='<option value="">'._CHOOSE_TYPE.'</option>';
 							for($i=0; $i<count($doctypes);$i++)
 							{
@@ -769,7 +769,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 	 	 }
 		$frm_str .='init_validation(\''.$_SESSION['config']['businessappurl'].'indexing_searching/autocomplete_contacts.php\', \''.$display_value.'\', \''.$_SESSION['config']['businessappurl'].'indexing_searching/change_category.php\',  \''.$_SESSION['config']['businessappurl'].'get_content_js.php\');$(\'baskets\').style.visibility=\'hidden\';var item = $(\'valid_div\'); if(item){item.style.display=\'block\';}';
 		$frm_str .='var type_id = $(\'type_id\');';
-		$frm_str .='if(type_id){change_doctype(type_id.options[type_id.selectedIndex].value, \''.$_SESSION['config']['businessappurl'].'indexing_searching/change_doctype.php\', \''._ERROR_DOCTYPE.'\', \''.$id_action.'\', \''.$_SESSION['config']['businessappurl'].'get_content_js.php\');}';
+		$frm_str .='if(type_id){change_doctype(type_id.options[type_id.selectedIndex].value, \''.$_SESSION['config']['businessappurl'].'indexing_searching/change_doctype.php\', \''._ERROR_DOCTYPE.'\', \''.$id_action.'\', \''.$_SESSION['config']['businessappurl'].'get_content_js.php\', '.$res_id.', \''. $coll_id.'\' );}';
 		$frm_str .='</script>';
 
 	return addslashes($frm_str);
@@ -920,9 +920,9 @@ function process_category_check($cat_id, $values)
 		}
 		if(!empty($contact) )
 		{
-			if($contact_type == 'external' && preg_match('/\([0-9]+\)$/', $contact) == 0)
+			if($contact_type == 'external' && !preg_match('/\(\d+\)$/', trim($contact)))
 			{
-				$_SESSION['error'] = $_ENV['categories'][$cat_id]['other_cases']['contact']['label']." "._WRONG_FORMAT.".<br/>"._USE_AUTOCOMPLETION;
+				$_SESSION['error'] = $_ENV['categories'][$cat_id]['other_cases']['contact']['label']." "._WRONG_FORMAT.".<br/>".' '._USE_AUTOCOMPLETION;
 				return false;
 			}
 			//elseif($contact_type == 'internal' && preg_match('/\([A-Za-Z0-9-_ ]+\)$/', $contact) == 0)
@@ -1203,7 +1203,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
 	{
 		$val_indexes[$indexes[$i]] =  get_value_fields($values_form, $indexes[$i]);
 	}
-	$query_ext .=  $type->get_sql_update($type_id, $coll_id, $val_indexes);
+	$query_res .=  $type->get_sql_update($type_id, $coll_id, $val_indexes);
 
 
 	// Process limit Date

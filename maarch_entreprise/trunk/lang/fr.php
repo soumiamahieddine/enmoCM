@@ -940,4 +940,6 @@ define('_CUSTOM_T2', 'Champ Texte 2');
 define('_CUSTOM_D1', 'Champ Date');
 define('_CUSTOM_N1', 'Champ Entier');
 define('_CUSTOM_F1', 'Champ Flottant');
+
+define('_ITEM_NOT_IN_LIST', '&eacute;l&egrave;ment absent de la liste des valeurs autoris&eacute;es');
 ?>
