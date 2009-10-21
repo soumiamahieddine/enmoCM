@@ -3,16 +3,16 @@
 	<TYPE>
 		<id>Direction</id>
 		<label>Direction</label>
-		<typelevel>root</typelevel>
+		<typelevel>all</typelevel>
 	</TYPE>
 	<TYPE>
 		<id>Service</id>
 		<label>Service</label>
-		<typelevel>root</typelevel>
+		<typelevel>all</typelevel>
 	</TYPE>
 	<TYPE>
 		<id>Bureau</id>
 		<label>Bureau</label>
-		<typelevel>root</typelevel>
+		<typelevel>all</typelevel>
 	</TYPE>
 </root>

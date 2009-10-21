@@ -158,6 +158,7 @@ class entity extends dbquery
 						{
 							$entity_type = $this->get_entity_type_level($_SESSION['user']['primaryentity']['id']);
 						}
+
 						$typelist = $this->load_entities_types_for_user($entity_type);
 						 ?> : </label>
 						<select name="type" id="type">
