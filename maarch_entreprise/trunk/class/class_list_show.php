@@ -176,6 +176,7 @@ class list_show extends functions
 			{
 				$start = 0;
 			}
+
 			if(isset($_GET['order']))
 			{
 				$orderby = strip_tags($_GET['order']);
@@ -184,8 +185,10 @@ class list_show extends functions
 			{
 				$orderby = 'asc';
 			}
-
-			$link .= "&amp;order=".$orderby;
+			if(!preg_match('/order=/', $comp_link))
+			{
+				$link .= "&amp;order=".$orderby;
+			}
 			if(isset($_GET['order_field']))
 			{
 				$orderfield = strip_tags($_GET['order_field']);
@@ -194,7 +197,10 @@ class list_show extends functions
 			{
 				$orderfield = '';
 			}
-			$link .= "&amp;order_field=".$orderfield;
+			if(!preg_match('/order_field=/', $comp_link))
+			{
+				$link .= "&amp;order_field=".$orderby;
+			}
 			$link .= $comp_link;
 
 			$nb_show = $_SESSION['config']['nblinetoshow'];
@@ -821,6 +827,7 @@ class list_show extends functions
 		}
 
 		$link .= "&amp;order=".$orderby;
+
 		if(isset($_GET['order_field']))
 		{
 			$orderfield = strip_tags($_GET['order_field']);
@@ -829,6 +836,8 @@ class list_show extends functions
 		{
 			$orderfield = '';
 		}
+		$link .= "&amp;order_field=".$orderfield;
+
 		if(isset($_GET['what']))
 		{
 			$get_what = strip_tags($_GET['what']);
@@ -837,8 +846,7 @@ class list_show extends functions
 		{
 			$get_what = '';
 		}
-		$link .= "&amp;order=".$orderby."&amp;what=".$get_what;
-		//$link = "index.php?page=".$name."&amp;search=".$expr."&amp;admin=".$admin;
+		$link .= "&amp;what=".$get_what;
 
 		// define the defaults values
 		$nb_show = $_SESSION['config']['nblinetoshow'];
@@ -1040,7 +1048,7 @@ class list_show extends functions
 				$color = ' class="col"';
 			}
 			?>
-			<tr<?php  echo $color; ?>>
+			<tr <?php  echo $color; ?>>
 					<?php
 					$enabled = "";
 					if($page_name == "users")
