@@ -11,7 +11,7 @@
 		<label>_CUSTOM_T2</label>
 		<type>string</type>
 		<img>default_string.gif</img>
-		<values_list>
+		<values_list> <!-- If id are numpbers, always start with 1, never with 0 -->
 			<value>
 				<id>1</id>
 				<label>Règlement</label>
