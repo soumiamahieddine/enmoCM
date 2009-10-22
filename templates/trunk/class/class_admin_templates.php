@@ -1,8 +1,6 @@
 <?php
 class admin_templates extends dbquery
 {
-
-
 	/**
 	* Clear the session variables of the template administration
 	*
@@ -91,6 +89,10 @@ class admin_templates extends dbquery
 			{
 				?>
 				<form name="frmtemplate" id="frmtemplate" method="post" action="<?php  echo $_SESSION['urltomodules']."templates/";?>template_up_db.php" class="forms">
+					<input type="hidden" name="order" id="order" value="<?php echo $_REQUEST['order'];?>" />
+					<input type="hidden" name="order_field" id="order_field" value="<?php echo $_REQUEST['order_field'];?>" />
+					<input type="hidden" name="what" id="what" value="<?php echo $_REQUEST['what'];?>" />
+					<input type="hidden" name="start" id="start" value="<?php echo $_REQUEST['start'];?>" />
 				<input type="hidden" name="mode" id="mode" value="<?php  echo $mode;?>" />
 						<?php  if($mode == "up")
 						{
@@ -161,7 +163,10 @@ class admin_templates extends dbquery
 		{
 			$_SESSION['m_admin']['template']['ID'] = $func->wash($_REQUEST['template_id'], "no", _ID);
 		}
-
+		$_SESSION['m_admin']['template']['order'] = $_REQUEST['order'];
+		$_SESSION['m_admin']['template']['order_field'] = $_REQUEST['order_field'];
+		$_SESSION['m_admin']['template']['what'] = $_REQUEST['what'];
+		$_SESSION['m_admin']['template']['start'] = $_REQUEST['start'];
 		$_SESSION['service_tag'] = 'template_info';
 		require_once($_SESSION['pathtocoreclass']."class_core_tools.php");
 		$core = new core_tools();
@@ -175,7 +180,10 @@ class admin_templates extends dbquery
 	public function uptemplate()
 	{
 		$this->templateinfo();
-
+		$order = $_SESSION['m_admin']['template']['order'];
+		$order_field = $_SESSION['m_admin']['template']['order_field'];
+		$what = $_SESSION['m_admin']['template']['what'];
+		$start = $_SESSION['m_admin']['template']['start'];
 		if(!empty($_SESSION['error']))
 		{
 			if($_REQUEST['mode'] == "up")
@@ -187,7 +195,7 @@ class admin_templates extends dbquery
 				}
 				else
 				{
-					header("location: ".$_SESSION['config']['businessappurl']."index.php?page=templates&module=templates");
+					header("location: ".$_SESSION['config']['businessappurl']."index.php?page=templates&module=templates&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what);
 					exit;
 				}
 			}
@@ -222,7 +230,7 @@ class admin_templates extends dbquery
 				}
 
 				$this->cleartemplateinfos();
-				header("location: ".$_SESSION['config']['businessappurl']."index.php?page=templates&module=templates");
+				header("location: ".$_SESSION['config']['businessappurl']."index.php?page=templates&module=templates&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what);
 				exit;
 			}
 			else
@@ -264,12 +272,12 @@ class admin_templates extends dbquery
 
 			if ($_REQUEST['mode'] == "add")
 			{
-				$url = $_SESSION['config']['businessappurl']."index.php?page=templates&module=templates";
+				$url = $_SESSION['config']['businessappurl']."index.php?page=templates&module=templates&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what;
 			}
 
 			$this->cleartemplateinfos();
 			header("location: ".$url);
-			exit;
+			exit();
 		}
 	}
 
@@ -281,9 +289,13 @@ class admin_templates extends dbquery
 	*/
 	public function deltemplate($id)
 	{
+		$order = $_REQUEST['order'];
+		$order_field = $_REQUEST['order_field'];
+		$start = $_REQUEST['start'];
+		$what = $_REQUEST['what'];
 		if(!empty($_SESSION['error']))
 		{
-			header("location: ".$_SESSION['config']['businessappurl']."index.php?page=templates&module=templates");
+			header("location: ".$_SESSION['config']['businessappurl']."index.php?page=templates&module=templates&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what);
 			exit;
 		}
 		else
@@ -296,7 +308,7 @@ class admin_templates extends dbquery
 			if($this->nb_result() == 0)
 			{
 				$_SESSION['error'] = _TEMPLATE.' '._UNKNOWN;
-				header("location: ".$_SESSION['config']['businessappurl']."index.php?page=templates&module=templates");
+				header("location: ".$_SESSION['config']['businessappurl']."index.php?page=templates&module=templates&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what);
 				exit;
 			}
 			else
@@ -313,8 +325,8 @@ class admin_templates extends dbquery
 					$users->add($_SESSION['tablename']['temp_templates'], $id,"DEL",_TEMPLATE_DELETION." : ".$label, $_SESSION['config']['databasetype'], 'templates');
 				}
 					$_SESSION['error'] = _DELETED_TEMPLATE;
-					header("location: ".$_SESSION['config']['businessappurl']."index.php?page=templates&module=templates");
-					exit;
+					header("location: ".$_SESSION['config']['businessappurl']."index.php?page=templates&module=templates&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what);
+					exit();
 			}
 		}
 	}
