@@ -221,17 +221,17 @@ class foldertype extends dbquery
 						<tr>
 							<td width="150px"><?php echo $indexes[$i]['label'];?></td>
 							<td align="center">
-							<input name="fields[]" type="checkbox" class="check" value="<?php echo $indexes[$i]['column'];?>" <?php
+							<input name="fields[]" id="field_<?php echo $indexes[$i]['column'];?>" type="checkbox" class="check" value="<?php echo $indexes[$i]['column'];?>" <?php
 							if (in_array($indexes[$i]['column'], $_SESSION['m_admin']['foldertype']['indexes']))
 							{
 								echo 'checked="checked"';
-							}?> /></td>
+							}?>  /></td>
 							<td align="center" width="100px">
-								<input name="mandatory_fields[]" type="checkbox" class="check" value="<?php echo $indexes[$i]['column'];?>" <?php
+								<input name="mandatory_fields[]" id="mandatory_field_<?php echo $indexes[$i]['column'];?>" type="checkbox" class="check" value="<?php echo $indexes[$i]['column'];?>" <?php
 						if (in_array($indexes[$i]['column'], $_SESSION['m_admin']['foldertype']['mandatory_indexes']) && in_array($indexes[$i]['column'], $_SESSION['m_admin']['foldertype']['indexes']))
 						{
 							echo ' checked="checked"';
-						}?> /></td>
+						}?> onclick="$('field_<?php echo $indexes[$i]['column'];?>').checked=true;" /></td>
 						</tr>
 			<?php 	} ?>
     			</table>
@@ -289,7 +289,7 @@ class foldertype extends dbquery
 		}
 		else
 		{
-			$_SESSION['error'].= _COLLECTION_MISSING."<br/>";
+			$_SESSION['error'].= _COLLECTION.' '._MISSING."<br/>";
 		}
 		if(isset($_REQUEST['comment']) && !empty($_REQUEST['comment']))
 		{
