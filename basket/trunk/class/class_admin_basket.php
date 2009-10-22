@@ -157,6 +157,11 @@ class admin_basket extends dbquery
 			{
 			?>
 			<form name="formbasket" id="formbasket" method="post" action="<?php if($mode == "up") { echo $_SESSION['urltomodules']."basket/basket_up_db.php"; } elseif($mode == "add") { echo $_SESSION['urltomodules']."basket/basket_add_db.php"; } ?>" class="forms addforms">
+				<input type="hidden" name="order" id="order" value="<?php echo $_REQUEST['order'];?>" />
+				<input type="hidden" name="order_field" id="order_field" value="<?php echo $_REQUEST['order_field'];?>" />
+				<input type="hidden" name="what" id="what" value="<?php echo $_REQUEST['what'];?>" />
+				<input type="hidden" name="start" id="start" value="<?php echo $_REQUEST['start'];?>" />
+
 				<p>
 					<label><?php echo _ID;?> : </label>
 					<input name="basketId" id="basketId" type="text" value="<?php echo $_SESSION['m_admin']['basket']['basketId']; ?>" <?php if($mode == "up") { echo 'readonly="readonly" class="readonly"';} ?> />
@@ -241,6 +246,11 @@ class admin_basket extends dbquery
 		{
 			$this->add_error(_BELONGS_TO_NO_GROUP, "");
 		}
+
+		$_SESSION['m_admin']['basket']['order'] = $_REQUEST['order'];
+		$_SESSION['m_admin']['basket']['order_field'] = $_REQUEST['order_field'];
+		$_SESSION['m_admin']['basket']['what'] = $_REQUEST['what'];
+		$_SESSION['m_admin']['basket']['start'] = $_REQUEST['start'];
 	}
 
 	/**
@@ -250,9 +260,13 @@ class admin_basket extends dbquery
 	*/
 	public function addupbasket($mode)
 	{
-
 		// Checks the session values
 		$this->basketinfo($mode);
+
+		$order = $_SESSION['m_admin']['basket']['order'];
+		$order_field = $_SESSION['m_admin']['basket']['order_field'];
+		$what = $_SESSION['m_admin']['basket']['what'];
+		$start = $_SESSION['m_admin']['basket']['start'];
 
 		// If error redirection to the form page and shows the error
 		if(!empty($_SESSION['error']))
@@ -266,7 +280,7 @@ class admin_basket extends dbquery
 				}
 				else
 				{
-					header("location: ".$_SESSION['config']['businessappurl']."index.php?page=basket&module=basket");
+					header("location: ".$_SESSION['config']['businessappurl']."index.php?page=basket&module=basket&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what);
 					exit();
 				}
 			}
@@ -315,7 +329,7 @@ class admin_basket extends dbquery
 					// Empties the basket administration session var and redirect to baskets list
 					$this->clearbasketinfos();
 					$_SESSION['error'] = _BASKET_ADDED;
-					header("location: ".$_SESSION['config']['businessappurl']."index.php?page=basket&module=basket");
+					header("location: ".$_SESSION['config']['businessappurl']."index.php?page=basket&module=basket&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what);
 					exit();
 				}
 			}
@@ -353,7 +367,7 @@ class admin_basket extends dbquery
 				// Empties the basket administration session var and redirect to baskets list
 				$this->clearbasketinfos();
 				$_SESSION['error'] = _BASKET_UPDATED;
-				header("location: ".$_SESSION['config']['businessappurl']."index.php?page=basket&module=basket");
+				header("location: ".$_SESSION['config']['businessappurl']."index.php?page=basket&module=basket&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what);
 				exit();
 			}
 		}
@@ -467,9 +481,13 @@ class admin_basket extends dbquery
 	*/
 	public function adminbasket($id,$mode)
 	{
+		$order = $_REQUEST['order'];
+		$order_field = $_REQUEST['order_field'];
+		$start = $_REQUEST['start'];
+		$what = $_REQUEST['what'];
 		if(!empty($_SESSION['error']))
 		{
-			header("location: ".$_SESSION['config']['businessappurl']."index.php?page=basket&module=basket");
+			header("location: ".$_SESSION['config']['businessappurl']."index.php?page=basket&module=basket&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what);
 			exit();
 		}
 		else
@@ -480,7 +498,7 @@ class admin_basket extends dbquery
 			if($this->nb_result() == 0)
 			{
 				$_SESSION['error'] = _BASKET_MISSING;
-				header("location: ".$_SESSION['config']['businessappurl']."index.php?page=basket&module=basket");
+				header("location: ".$_SESSION['config']['businessappurl']."index.php?page=basket&module=basket&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what);
 				exit();
 			}
 			else
@@ -536,7 +554,7 @@ class admin_basket extends dbquery
 				}
 
 				// Redirection to the baskets list page
-				header("location: ".$_SESSION['config']['businessappurl']."index.php?page=basket&module=basket");
+				header("location: ".$_SESSION['config']['businessappurl']."index.php?page=basket&module=basket&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what);
 				exit();
 			}
 		}
