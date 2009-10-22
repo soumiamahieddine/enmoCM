@@ -123,6 +123,10 @@ class foldertype extends dbquery
 				$db3->connect();
 				?>
 				<form name="formfoldertype" id="formfoldertype" method="post" action="<?php  if($mode == "up") { echo $_SESSION['urltomodules']."folder/foldertype_up_db.php"; } elseif($mode == "add") { echo $_SESSION['urltomodules']."folder/foldertype_add_db.php"; } ?>" class="forms">
+					<input type="hidden" name="order" id="order" value="<?php echo $_REQUEST['order'];?>" />
+					<input type="hidden" name="order_field" id="order_field" value="<?php echo $_REQUEST['order_field'];?>" />
+					<input type="hidden" name="what" id="what" value="<?php echo $_REQUEST['what'];?>" />
+					<input type="hidden" name="start" id="start" value="<?php echo $_REQUEST['start'];?>" />
 					<?php
 					if($mode == "up")
 					{
@@ -176,18 +180,18 @@ class foldertype extends dbquery
 					{
 					?>
 						<p>
-								<label for="collection"><?php  echo _COLLECTION;?> : </label>
-								<select name="collection" id="collection" >
-									<option value="" ><?php  echo _CHOOSE_COLLECTION;?></option>
-								<?php  for($i=0; $i<count($_SESSION['collections']);$i++)
-								{
-								?>
-									<option value="<?php  echo $_SESSION['collections'][$i]['id'];?>" <?php  if($_SESSION['m_admin']['foldertype']['COLL_ID'] == $_SESSION['collections'][$i]['id']){ echo 'selected="selected"';}?> ><?php  echo $_SESSION['collections'][$i]['label'];?></option>
-								<?php
-								}
-								?>
-							 	</select>
-                   			 </p>
+							<label for="collection"><?php  echo _COLLECTION;?> : </label>
+							<select name="collection" id="collection" >
+								<option value="" ><?php  echo _CHOOSE_COLLECTION;?></option>
+							<?php  for($i=0; $i<count($_SESSION['collections']);$i++)
+							{
+							?>
+								<option value="<?php  echo $_SESSION['collections'][$i]['id'];?>" <?php  if($_SESSION['m_admin']['foldertype']['COLL_ID'] == $_SESSION['collections'][$i]['id']){ echo 'selected="selected"';}?> ><?php  echo $_SESSION['collections'][$i]['label'];?></option>
+							<?php
+							}
+							?>
+							</select>
+						 </p>
 						<?php
 					}
 					?>
@@ -301,6 +305,11 @@ class foldertype extends dbquery
 		{
 			array_push($_SESSION['m_admin']['foldertype']['mandatory_indexes'], $_REQUEST['mandatory_fields'][$i]);
 		}
+
+		$_SESSION['m_admin']['foldertype']['order'] = $_REQUEST['order'];
+		$_SESSION['m_admin']['foldertype']['order_field'] = $_REQUEST['order_field'];
+		$_SESSION['m_admin']['foldertype']['what'] = $_REQUEST['what'];
+		$_SESSION['m_admin']['foldertype']['start'] = $_REQUEST['start'];
 	}
 
 	/**
@@ -312,6 +321,11 @@ class foldertype extends dbquery
 	{
 		// add ou modify basket in the database
 		$this->foldertypeinfo($mode);
+		$order = $_SESSION['m_admin']['foldertype']['order'];
+		$order_field = $_SESSION['m_admin']['foldertype']['order_field'];
+		$what = $_SESSION['m_admin']['foldertype']['what'];
+		$start = $_SESSION['m_admin']['foldertype']['start'];
+
 		if(!empty($_SESSION['error']))
 		{
 			if($mode == "up")
@@ -323,7 +337,7 @@ class foldertype extends dbquery
 				}
 				else
 				{
-					header("location: ".$_SESSION['config']['businessappurl']."index.php?page=foldertypes&module=folder");
+					header("location: ".$_SESSION['config']['businessappurl']."index.php?page=foldertypes&module=folder&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what);
 					exit();
 				}
 			}
@@ -375,7 +389,7 @@ class foldertype extends dbquery
 					$this->clearfoldertypeinfos();
 					$_SESSION['error'] = _FOLDERTYPE_ADDED;
 					unset($_SESSION['m_admin']);
-					header("location: ".$_SESSION['config']['businessappurl']."index.php?page=foldertypes&module=folder");
+					header("location: ".$_SESSION['config']['businessappurl']."index.php?page=foldertypes&module=folder&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what);
 					exit();
 				}
 			}
@@ -406,7 +420,7 @@ class foldertype extends dbquery
 				$this->clearfoldertypeinfos();
 				$_SESSION['error'] = _FOLDERTYPE_UPDATE;
 				unset($_SESSION['m_admin']);
-				header("location: ".$_SESSION['config']['businessappurl']."index.php?page=foldertypes&module=folder");
+				header("location: ".$_SESSION['config']['businessappurl']."index.php?page=foldertypes&module=folder&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what);
 				exit();
 			}
 		}
@@ -442,9 +456,13 @@ class foldertype extends dbquery
 	*/
 	public function adminfoldertype($id,$mode)
 	{
+		$order = $_REQUEST['order'];
+		$order_field = $_REQUEST['order_field'];
+		$start = $_REQUEST['start'];
+		$what = $_REQUEST['what'];
 		if(!empty($_SESSION['error']))
 		{
-			header("location: ".$_SESSION['config']['businessappurl']."index.php?page=foldertypes&module=folder");
+			header("location: ".$_SESSION['config']['businessappurl']."index.php?page=foldertypes&module=folder&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what);
 			exit();
 		}
 		else
@@ -454,7 +472,7 @@ class foldertype extends dbquery
 			if($this->nb_result() == 0)
 			{
 				$_SESSION['error'] = _FOLDERTYPE_MISSING;
-				header("location: ".$_SESSION['config']['businessappurl']."index.php?page=foldertypes&module=folder");
+				header("location: ".$_SESSION['config']['businessappurl']."index.php?page=foldertypes&module=folder&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what);
 				exit();
 			}
 			else
@@ -474,7 +492,7 @@ class foldertype extends dbquery
 					}
 					$_SESSION['error'] = _FOLDERTYPE_DELETION;
 				}
-				header("location: ".$_SESSION['config']['businessappurl']."index.php?page=foldertypes&module=folder");
+				header("location: ".$_SESSION['config']['businessappurl']."index.php?page=foldertypes&module=folder&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what);
 				exit();
 			}
 		}

@@ -1,5 +1,6 @@
 <?php
 require_once($_SESSION['pathtocoreclass']."class_functions.php");
+$_SESSION['m_admin'] = array();
 $admin = new core_tools();
 $admin->test_admin('admin_foldertypes', 'folder');
 /****************Management of the location bar  ************/
