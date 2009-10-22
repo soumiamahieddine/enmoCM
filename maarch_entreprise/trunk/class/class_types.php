@@ -652,7 +652,7 @@ class types extends dbquery
 		{
 			if( empty($values[$mandatory_indexes[$i]]) )  // && ($values[$i]['VALUE'] == 0 && $_ENV['categories'][$cat_id][$values[$i]['ID']]['type_form'] <> 'integer')
 			{
-				$_SESSION['error'] = $indexes[$mandatory_indexes[$i]]['label']._IS_EMPTY;
+				$_SESSION['error'] = $indexes[$mandatory_indexes[$i]]['label'].' '._IS_EMPTY;
 				return false;
 			}
 		}

@@ -199,7 +199,7 @@ class list_show extends functions
 			}
 			if(!preg_match('/order_field=/', $comp_link))
 			{
-				$link .= "&amp;order_field=".$orderby;
+				$link .= "&amp;order_field=".$orderfield;
 			}
 			$link .= $comp_link;
 
