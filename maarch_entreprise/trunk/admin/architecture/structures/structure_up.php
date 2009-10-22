@@ -63,16 +63,12 @@ if(isset($_GET['id']) && !empty($_GET['id']))
 	}
 }
 
-
 $mode = "";
 if(isset($_REQUEST['mode']) && !empty($_REQUEST['mode']))
 {
 	$mode = $_REQUEST['mode'];
 	$_SESSION['m_admin']['mode'] = $mode;
-
-
 }
-
 
 $erreur = "";
 if( isset($_REQUEST['valid']))
@@ -81,7 +77,6 @@ if( isset($_REQUEST['valid']))
 	if(isset($_REQUEST['desc_structure']) && !empty($_REQUEST['desc_structure']))
 	{
 		$desc = $db->protect_string_db($_REQUEST['desc_structure']);
-
 	}
 	else
 	{

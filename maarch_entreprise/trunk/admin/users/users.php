@@ -50,6 +50,7 @@ $core_tools2->manage_location_bar($page_path, $page_label, $page_id, $init, $lev
 require_once($_SESSION['pathtocoreclass']."class_request.php");
 require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_list_show.php");
 $func = new functions();
+$_SESSION['m_admin'] = array();
 $select[$_SESSION['tablename']['users']] = array();
 array_push($select[$_SESSION['tablename']['users']],"user_id","lastname","firstname","enabled",'status',"mail" );
 $what = "";

@@ -24,27 +24,11 @@
 class AdminActions extends dbquery
 {
 	/**
-	*
-    * @access private
-    * @var integer
-    */
-	private $the_start;
-
-	/**
 	* Redefinition of the LetterBox object constructor
 	*/
 	function __construct()
 	{
 		parent::__construct();
-		// configure the sql argument order by
-		if(isset($_GET['start']))
-		{
-			$this->the_start = strip_tags($_GET['start']);
-		}
-		else
-		{
-			$this->the_start = 0;
-		}
 	}
 
 	/**
@@ -79,6 +63,11 @@ class AdminActions extends dbquery
 			$_SESSION['m_admin']['action']['ACTION_PAGE'] = trim($_REQUEST['action_page']);
 		}
 		$_SESSION['m_admin']['action']['HISTORY'] = $func->wash($_REQUEST['history'], "no", _HISTORY." ");
+
+		$_SESSION['m_admin']['action']['order'] = $_REQUEST['order'];
+		$_SESSION['m_admin']['action']['order_field'] = $_REQUEST['order_field'];
+		$_SESSION['m_admin']['action']['what'] = $_REQUEST['what'];
+		$_SESSION['m_admin']['action']['start'] = $_REQUEST['start'];
 	}
 
 	/**
@@ -90,6 +79,10 @@ class AdminActions extends dbquery
 	{
 		// add ou modify users in the database
 		$this->actioninfo($mode);
+		$order = $_SESSION['m_admin']['action']['order'];
+		$order_field = $_SESSION['m_admin']['action']['order_field'];
+		$what = $_SESSION['m_admin']['action']['what'];
+		$start = $_SESSION['m_admin']['action']['start'];
 
 		if(!empty($_SESSION['error']))
 		{
@@ -102,7 +95,7 @@ class AdminActions extends dbquery
 				}
 				else
 				{
-					header("location: ".$_SESSION['config']['businessappurl']."index.php?page=action&admin=action");
+					header("location: ".$_SESSION['config']['businessappurl']."index.php?page=action&admin=action&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what);
 					exit;
 				}
 			}
@@ -134,7 +127,7 @@ class AdminActions extends dbquery
 				}
 				$_SESSION['error'] = _ACTION_ADDED.' : '.$_SESSION['m_admin']['action']['LABEL'];
 				$this->clearactioninfos();
-				header("location: ".$_SESSION['config']['businessappurl']."index.php?page=action&admin=action");
+				header("location: ".$_SESSION['config']['businessappurl']."index.php?page=action&admin=action&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what);
 				exit();
 
 			}
@@ -151,7 +144,7 @@ class AdminActions extends dbquery
 
 				$_SESSION['error'] = _ACTION_MODIFIED.' : '.$_SESSION['m_admin']['action']['LABEL'];
 				$this->clearactioninfos();
-				header("location: ".$_SESSION['config']['businessappurl']."index.php?page=action&admin=action");
+				header("location: ".$_SESSION['config']['businessappurl']."index.php?page=action&admin=action&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what);
 				exit();
 			}
 		}
@@ -233,6 +226,10 @@ class AdminActions extends dbquery
 				<form name="frmaction" id="frmaction" method="post" action="<? echo $_SESSION['config']['businessappurl']."admin/action/action_up_db.php";?>" class="forms addforms">
 					<input type="hidden" name="mode" id="mode" value="<? echo $mode;?>" />
 					<input type="hidden" name="id" id="id" value="<? echo $_SESSION['m_admin']['action']['ID'];?>" />
+					<input type="hidden" name="order" id="order" value="<?php echo $_REQUEST['order'];?>" />
+					<input type="hidden" name="order_field" id="order_field" value="<?php echo $_REQUEST['order_field'];?>" />
+					<input type="hidden" name="what" id="what" value="<?php echo $_REQUEST['what'];?>" />
+					<input type="hidden" name="start" id="start" value="<?php echo $_REQUEST['start'];?>" />
 					<p>
 					 	<label for="label"><?php echo _DESC; ?> : </label>
 						<input name="label" type="text"  id="label" value="<?php echo $func->show($_SESSION['m_admin']['action']['LABEL']); ?>"/>
@@ -324,9 +321,13 @@ class AdminActions extends dbquery
 	*/
 	public function delaction($id)
 	{
+		$order = $_REQUEST['order'];
+		$order_field = $_REQUEST['order_field'];
+		$start = $_REQUEST['start'];
+		$what = $_REQUEST['what'];
 		if(!empty($_SESSION['error']))
 		{
-			header("location: ".$_SESSION['config']['businessappurl']."index.php?page=action&admin=action");
+			header("location: ".$_SESSION['config']['businessappurl']."index.php?page=action&admin=action&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what);
 			exit;
 		}
 		else
@@ -338,7 +339,7 @@ class AdminActions extends dbquery
 			if($this->nb_result() == 0)
 			{
 				$_SESSION['error'] = _THE_ACTION.' '._UNKNOWN;
-				header("location: ".$_SESSION['config']['businessappurl']."index.php?page=action&admin=action");
+				header("location: ".$_SESSION['config']['businessappurl']."index.php?page=action&admin=action&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what);
 				exit;
 			}
 			else
@@ -354,7 +355,7 @@ class AdminActions extends dbquery
 					$hist->add($_SESSION['tablename']['actions'], $id,"DEL",_ACTION_DELETED.' : '.$id, $_SESSION['config']['databasetype']);
 				}
 				$_SESSION['error'] = _ACTION_DELETED;
-				header("location: ".$_SESSION['config']['businessappurl']."index.php?page=action&admin=action");
+				header("location: ".$_SESSION['config']['businessappurl']."index.php?page=action&admin=action&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what);
 				exit;
 			}
 		}

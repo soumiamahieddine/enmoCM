@@ -1239,7 +1239,7 @@ class list_show extends functions
 						else
 						{
 						?>
-							<a href="<?php  echo $path_del;?>"  class="delete"
+							<a href="<?php  echo $path_del.$param_comp;?>"  class="delete"
 						onclick="return(confirm('<?php  echo _REALLY_DELETE." ";  if($page_name == "users"){ echo $complete_name;}
 								 else { echo $admin_id; }?> ?\n\r\n\r<?php  echo _DEFINITIVE_ACTION; ?>'));"><?php  echo _DELETE;?></a>
 	                    <?php
@@ -1286,7 +1286,7 @@ class list_show extends functions
 					</td>
 
 					<td class="action" >
-						<a href="<?php  echo $path_del2;?>" class="delete"
+						<a href="<?php  echo $path_del2.$param_comp;?>" class="delete"
 					onclick="return(confirm('<?php  echo _REALLY_DELETE;  if($page_name == "users"){ echo $complete_name;}
 							 else { echo " ".$admin_id; }?> ?\n\r\n\r<?php  echo _DEFINITIVE_ACTION; ?>'));"><?php  echo _DELETE;?></a>
 					</td>

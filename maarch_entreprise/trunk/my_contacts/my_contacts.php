@@ -1,4 +1,4 @@
-<?
+<?php
 /**
 * File : my_contacts.php
 *
@@ -10,6 +10,7 @@
 * @license GPL
 * @author  Claire Figueras <dev@maarch.org>
 */
+$_SESSION['m_admin'] = array();
 $admin = new core_tools();
 $admin->test_service('my_contacts', 'apps');
 $func = new functions();
@@ -119,7 +120,7 @@ $autoCompletionArray = array();
 $autoCompletionArray["list_script_url"] = $_SESSION['config']['businessappurl']."my_contacts/contact_list_by_name.php";
 $autoCompletionArray["number_to_begin"] = 1;
 $list->admin_list($tab, $i, $title, 'contact_id','my_contacts','my_contacts','contact_id', false, $page_name_up, $page_name_val, $page_name_ban, $page_name_del, $page_name_add, $label_add, false, false, _ALL_CONTACTS, _CONTACT, $_SESSION['config']['img'].'/manage_contact_b.gif', false, true, false, true, $what, true, $autoCompletionArray, true);
-//($result, $nb_total, $title, $expr, $name, $admin, $key, $bool_order, $page_name_up, $page_name_val, $page_name_ban, $page_name_del, $page_name_add, $label_add, $bool_history = false, $bool_simple_list = false, $all_sentence='', $whatname='', $picto_path ='', $is_part_of_module = false, $show_big_title = true, $flag_not_admin = false, $show_listletters = true, $what ="", $autoCompletion = false, $autoCompletionArray = array(), $is_in_apps_dir = false)
+
 $_SESSION['m_admin']['contacts'] = array();
 $_SESSION['m_admin']['contacts']['id'] = "";
 $_SESSION['m_admin']['contacts']['title'] = "";

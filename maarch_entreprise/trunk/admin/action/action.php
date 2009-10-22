@@ -49,20 +49,21 @@ $admin->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
 require_once($_SESSION['pathtocoreclass']."class_request.php");
 require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_list_show.php");
+$_SESSION['m_admin'] = array();
 $select[$_SESSION['tablename']['actions']] = array();
 array_push($select[$_SESSION['tablename']['actions']],"id", "label_action", 'is_system');
 $what = "";
 $where =" enabled = 'Y' ";
-if(isset($_REQUEST['what']))
+if(isset($_REQUEST['what']) && !empty($_REQUEST['what']))
 {
 	$what = $func->protect_string_db($_REQUEST['what']);
 	if($_SESSION['config']['databasetype'] == "POSTGRESQL")
 	{
-		$where .= " and (label_action ilike '".$func->protect_string_db($what,$_SESSION['config']['databasetype'])."%'  or id ilike '".$func->protect_string_db($what,$_SESSION['config']['databasetype'])."%' ) ";
+		$where .= " and (label_action ilike '".$func->protect_string_db($what,$_SESSION['config']['databasetype'])."%'  or id = ".$func->protect_string_db($what,$_SESSION['config']['databasetype'])." ) ";
 	}
 	else
 	{
-		$where .= " and (label_action like '".$func->protect_string_db($what,$_SESSION['config']['databasetype'])."%'  or id like '".$func->protect_string_db($what,$_SESSION['config']['databasetype'])."%' ) ";
+		$where .= " and (label_action like '".$func->protect_string_db($what,$_SESSION['config']['databasetype'])."%'  or id = ".$func->protect_string_db($what,$_SESSION['config']['databasetype'])." ) ";
 	}
 }
 $list = new list_show();

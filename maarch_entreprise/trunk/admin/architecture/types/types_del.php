@@ -57,7 +57,7 @@ if($db->nb_result() == 0)
 {
 	$_SESSION['error'] = _DOCTYPE.' '._UNKNOWN;
 	?>
-		<script>window.location.href="<?php echo $_SESSION['config']['businessappurl'] ?>index.php?page=types";</script>
+		<script>window.location.href="<?php echo $_SESSION['config']['businessappurl']; ?>index.php?page=types&order=<?php echo $_REQUEST['order'];?>&order_field=<?php echo $_REQUEST['order_field'];?>&start=<?php echo $_REQUEST['start'];?>&what=<?php echo $_REQUEST['what'];?>";</script>
 	<?php
 	exit();
 }
@@ -78,7 +78,7 @@ else
 	$users->add($_SESSION['tablename']['doctypes'], $id,"DEL",_DOCTYPE_DELETION." : ".$info->DESCRIPTION, $_SESSION['config']['databasetype']);
 	$_SESSION['error'] = _DELETED_DOCTYPE;
 	?>
-		<script>window.location.href="<?php echo $_SESSION['config']['businessappurl'] ?>index.php?page=types";</script>
+		<script>window.location.href="<?php echo $_SESSION['config']['businessappurl'] ?>index.php?page=types&order=<?php echo $_REQUEST['order'];?>&order_field=<?php echo $_REQUEST['order_field'];?>&start=<?php echo $_REQUEST['start'];?>&what=<?php echo $_REQUEST['what'];?>";</script>
 	<?php
 	exit();
 }

@@ -32,6 +32,7 @@
 $admin = new core_tools();
 $admin->test_admin('admin_status', 'apps');
 $func = new functions();
+$_SESSION['m_admin'] = array();
 /****************Management of the location bar  ************/
 $init = false;
 if($_REQUEST['reinit'] == "true")

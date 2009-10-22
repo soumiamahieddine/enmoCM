@@ -60,7 +60,7 @@ $db->query("select doctypes_first_level_label from ".$_SESSION['tablename']['doc
 if($db->nb_result() == 0)
 {
 	$_SESSION['error'] = _STRUCTURE.' '._UNKNOWN.".";
-	header("location: ".$_SESSION['config']['businessappurl']."index.php?page=structures");
+	header("location: ".$_SESSION['config']['businessappurl']."index.php?page=structures&order=".$_REQUEST['order']."&order_field=".$_REQUEST['order_field']."&start=".$_REQUEST['start']."&what=".$_REQUEST['what']);
 	exit();
 }
 else
@@ -95,7 +95,7 @@ else
 	}
 	$_SESSION['error'] = _DELETED_STRUCTURE.".";
 	unset($_SESSION['m_admin']);
-	header("location: ".$_SESSION['config']['businessappurl']."index.php?page=structures");
+	header("location: ".$_SESSION['config']['businessappurl']."index.php?page=structures&order=".$_REQUEST['order']."&order_field=".$_REQUEST['order_field']."&start=".$_REQUEST['start']."&what=".$_REQUEST['what']);
 	exit();
 }
 ?>

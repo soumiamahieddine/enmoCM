@@ -24,91 +24,11 @@
 class users extends dbquery
 {
 	/**
-    * @access private
-    * @var integer
-    */
-	private $the_start;
-
-	/**
-	* SQL argument orderby name
-    * @access private
-    * @var string
-    */
-	private $orderby;
-
-	/**
-	* SQL argument orderby
-    * @access private
-    * @var string
-    */
-	private $sqlorderby;
-
-	/**
 	* Redefinition of the user object constructor : configure the SQL argument order by
 	*/
 	function __construct()
 	{
 		parent::__construct();
-		// configure the sql argument order by
-		if(isset($_GET['start']))
-		{
-			$this->the_start = strip_tags($_GET['start']);
-		}
-		else
-		{
-			$this->the_start = 0;
-		}
-
-		if(isset($_GET['order']))
-		{
-			$this->orderby = strip_tags($_GET['order']);
-		}
-		else
-		{
-			$this->orderby = "nameasc";
-		}
-
-		$this->sqlorderby = "";
-
-		if($this->orderby == "nameasc")
-		{
-			$this->sqlorderby = "order by lastname asc";
-		}
-
-		if($this->orderby == "namedesc")
-		{
-			$this->sqlorderby = "order by lastname desc";
-		}
-
-		if($this->orderby == "userasc")
-		{
-			$this->sqlorderby = "order by user_id asc";
-		}
-
-		if($this->orderby == "userdesc")
-		{
-			$this->sqlorderby = "order by user_id desc";
-		}
-
-		if($this->orderby == "statusasc")
-		{
-			$this->sqlorderby = "order by status asc";
-		}
-
-		if($this->orderby == "statusdesc")
-		{
-			$this->sqlorderby = "order by status desc";
-		}
-
-		if($this->orderby == "mailasc")
-		{
-			$this->sqlorderby = "order by mail asc";
-		}
-
-		if($this->orderby == "maildesc")
-		{
-			$this->sqlorderby = "order by mail desc";
-		}
 	}
 
 	/**
@@ -119,13 +39,18 @@ class users extends dbquery
 	*/
 	public function adminuser($id,$mode)
 	{
+		$order = $_REQUEST['order'];
+		$order_field = $_REQUEST['order_field'];
+		$start = $_REQUEST['start'];
+		$what = $_REQUEST['what'];
+
 		require_once($_SESSION['pathtocoreclass'].'class_core_tools.php');
 		$core = new core_tools();
 		// To allow administrator to admin users
 		if(!empty($_SESSION['error']))
 		{
 
-			header("location: ".$_SESSION['config']['businessappurl']."index.php?page=users&admin=users");
+			header("location: ".$_SESSION['config']['businessappurl']."index.php?page=users&admin=users&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what);
 			exit();
 		}
 		else
@@ -136,7 +61,7 @@ class users extends dbquery
 			if($this->nb_result() == 0)
 			{
 				$_SESSION['error'] = _USER.' '._UNKNOWN;
-				header("location: ".$_SESSION['config']['businessappurl']."index.php?page=users&admin=users");
+				header("location: ".$_SESSION['config']['businessappurl']."index.php?page=users&admin=users&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what);
 				exit();
 			}
 			else
@@ -185,8 +110,7 @@ class users extends dbquery
 					$_SESSION['error'] = _DELETED_USER;
 				}
 
-			//	header("location: index.php?page=users&admin=users");
-				header("location: ".$_SESSION['config']['businessappurl']."index.php?page=users&admin=users");
+				header("location: ".$_SESSION['config']['businessappurl']."index.php?page=users&admin=users&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what);
 				exit();
 			}
 		}
@@ -198,8 +122,6 @@ class users extends dbquery
 	*/
 	public function user_modif()
 	{
-		//require_once("class_functions.php");
-		//$this = new functions();
 		$_SESSION['user']['FirstName'] = $this->wash($_POST['FirstName'], "no", _FIRSTNAME);
 		$_SESSION['user']['LastName'] = $this->wash($_POST['LastName'], "no", _LASTNAME);
 		$_SESSION['user']['pass1'] = $this->wash($_POST['pass1'], "no", _FIRST_PSW);
@@ -471,6 +393,10 @@ class users extends dbquery
 			{
 				?>
 				<form name="frmuser" id="frmuser" method="post" action="<?php  if($mode == "up") { echo "admin/users/users_up_db.php"; } elseif($mode == "add") { echo "admin/users/users_add_db.php"; } ?>" class="forms addforms" style="width:300px">
+					<input type="hidden" name="order" id="order" value="<?php echo $_REQUEST['order'];?>" />
+					<input type="hidden" name="order_field" id="order_field" value="<?php echo $_REQUEST['order_field'];?>" />
+					<input type="hidden" name="what" id="what" value="<?php echo $_REQUEST['what'];?>" />
+					<input type="hidden" name="start" id="start" value="<?php echo $_REQUEST['start'];?>" />
 				<p>
 					<label for="UserId"><?php  echo _ID; ?> :</label>
 					<?php  if($mode == "up") { echo $this->show_string($_SESSION['m_admin']['users']['UserId']); }else{ echo '<br/>'; } ?><input name="UserId"  type="<?php  if($mode == "up") { ?>hidden<?php  } elseif($mode == "add") { ?>text<?php  } ?>" id="UserId" value="<?php  echo $this->show_string($_SESSION['m_admin']['users']['UserId']); ?>" /><span class="red_asterisk">*</span>
@@ -551,6 +477,10 @@ class users extends dbquery
 			$_SESSION['m_admin']['users']['UserId'] = $this->wash($_POST['id'], "no", _THE_ID, 'yes', 0, 32);
 		}
 
+		$_SESSION['m_admin']['users']['order'] = $_REQUEST['order'];
+		$_SESSION['m_admin']['users']['order_field'] = $_REQUEST['order_field'];
+		$_SESSION['m_admin']['users']['what'] = $_REQUEST['what'];
+		$_SESSION['m_admin']['users']['start'] = $_REQUEST['start'];
 
 		$_SESSION['m_admin']['users']['FirstName'] = $this->wash($_POST['FirstName'], "no", _THE_FIRSTNAME, 'yes', 0, 255);
 		$_SESSION['m_admin']['users']['LastName'] = $this->wash($_POST['LastName'], "no", _THE_LASTNAME, 'yes', 0, 255);
@@ -594,6 +524,7 @@ class users extends dbquery
 		$_SESSION['service_tag'] = 'user_check';
 		$core = new core_tools();
 		echo $core->execute_modules_services($_SESSION['modules_services'], 'user_check', "include");
+
 	}
 
 	/**
@@ -606,6 +537,10 @@ class users extends dbquery
 		// add ou modify users in the database
 		$this->usersinfo($mode);
 		$core = new core_tools();
+		$order = $_SESSION['m_admin']['users']['order'];
+		$order_field = $_SESSION['m_admin']['users']['order_field'];
+		$what = $_SESSION['m_admin']['users']['what'];
+		$start = $_SESSION['m_admin']['users']['start'];
 		if(!empty($_SESSION['error']))
 		{
 			if($mode == "up")
@@ -617,7 +552,7 @@ class users extends dbquery
 				}
 				else
 				{
-					header("location: ".$_SESSION['config']['businessappurl']."index.php?page=users&admin=users");
+					header("location: ".$_SESSION['config']['businessappurl']."index.php?page=users&admin=users&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what);
 					exit();
 				}
 			}
@@ -673,7 +608,7 @@ class users extends dbquery
 					$this->clearuserinfos();
 
 					$_SESSION['error'] = _USER_ADDED;
-					header("location: ".$_SESSION['config']['businessappurl']."index.php?page=users&admin=users");
+					header("location: ".$_SESSION['config']['businessappurl']."index.php?page=users&admin=users&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what);
 					exit();
 				}
 			}
@@ -717,7 +652,7 @@ class users extends dbquery
 					$this->clearuserinfos();
 
 					$_SESSION['error'] = _USER_UPDATED;
-					header("location: ".$_SESSION['config']['businessappurl']."index.php?page=users&admin=users");
+					header("location: ".$_SESSION['config']['businessappurl']."index.php?page=users&admin=users&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what);
 					exit();
 			}
 		}

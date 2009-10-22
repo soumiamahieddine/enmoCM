@@ -168,6 +168,11 @@ class contacts extends dbquery
 		{
 			$_SESSION['m_admin']['contact']['OWNER'] = '';
 		}
+
+		$_SESSION['m_admin']['contact']['order'] = $_REQUEST['order'];
+		$_SESSION['m_admin']['contact']['order_field'] = $_REQUEST['order_field'];
+		$_SESSION['m_admin']['contact']['what'] = $_REQUEST['what'];
+		$_SESSION['m_admin']['contact']['start'] = $_REQUEST['start'];
 	}
 
 	/**
@@ -179,12 +184,17 @@ class contacts extends dbquery
 	{
 		// add ou modify users in the database
 		$this->contactinfo($mode);
-		$path_contacts = $_SESSION['config']['businessappurl']."index.php?page=contacts&admin=contacts";
+		$order = $_SESSION['m_admin']['contact']['order'];
+		$order_field = $_SESSION['m_admin']['contact']['order_field'];
+		$what = $_SESSION['m_admin']['contact']['what'];
+		$start = $_SESSION['m_admin']['contact']['start'];
+
+		$path_contacts = $_SESSION['config']['businessappurl']."index.php?page=contacts&admin=contacts&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what;
 		$path_contacts_add_errors = $_SESSION['config']['businessappurl']."index.php?page=contact_add&admin=contacts";
 		$path_contacts_up_errors = $_SESSION['config']['businessappurl']."index.php?page=contact_up&admin=contacts";
 		if(!$admin)
 		{
-			$path_contacts = $_SESSION['config']['businessappurl']."index.php?page=my_contacts&dir=my_contacts";
+			$path_contacts = $_SESSION['config']['businessappurl']."index.php?page=my_contacts&dir=my_contacts&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what;
 			$path_contacts_add_errors = $_SESSION['config']['businessappurl']."index.php?page=my_contact_add&dir=my_contacts";
 			$path_contacts_up_errors = $_SESSION['config']['businessappurl']."index.php?page=my_contact_up&dir=my_contacts";
 		}
@@ -389,6 +399,10 @@ class contacts extends dbquery
 				}
 				?>
 				<form name="frmcontact" id="frmcontact" method="post" action="<? echo $action;?>" class="forms">
+					<input type="hidden" name="order" id="order" value="<?php echo $_REQUEST['order'];?>" />
+					<input type="hidden" name="order_field" id="order_field" value="<?php echo $_REQUEST['order_field'];?>" />
+					<input type="hidden" name="what" id="what" value="<?php echo $_REQUEST['what'];?>" />
+					<input type="hidden" name="start" id="start" value="<?php echo $_REQUEST['start'];?>" />
 				<table width="75%" >
 				<?php if($admin && $mode == "up")
 				{
@@ -558,25 +572,7 @@ class contacts extends dbquery
 	private function clearcontactinfos()
 	{
 		// clear the session variable
-		$_SESSION['m_admin']['contact'] = array();
-		$_SESSION['m_admin']['contact']['ID'] = '';
-		$_SESSION['m_admin']['contact']['TITLE'] = '';
-		$_SESSION['m_admin']['contact']['LASTNAME'] = '';
-		$_SESSION['m_admin']['contact']['FIRSTNAME'] = '';
-		$_SESSION['m_admin']['contact']['SOCIETY'] = '';
-		$_SESSION['m_admin']['contact']['FUNCTION'] = '';
-		$_SESSION['m_admin']['contact']['ADD_NUM'] = '';
-		$_SESSION['m_admin']['contact']['ADD_STREET'] = '';
-		$_SESSION['m_admin']['contact']['ADD_COMP'] = '';
-		$_SESSION['m_admin']['contact']['ADD_TOWN'] = '';
-		$_SESSION['m_admin']['contact']['ADD_CP'] = '';
-		$_SESSION['m_admin']['contact']['ADD_COUNTRY'] = '';
-		$_SESSION['m_admin']['contact']['PHONE'] = '';
-		$_SESSION['m_admin']['contact']['MAIL'] = '';
-		$_SESSION['m_admin']['contact']['OTHER_DATA'] = '';
-		$_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] = '';
-		$_SESSION['m_admin']['contact']['OWNER'] = '';
-
+		unset($_SESSION['m_admin']);
 	}
 
 	/**
@@ -586,10 +582,14 @@ class contacts extends dbquery
 	*/
 	public function delcontact($id, $admin = true)
 	{
-		$path_contacts = $_SESSION['config']['businessappurl']."index.php?page=contacts&admin=contacts";
+		$order = $_REQUEST['order'];
+		$order_field = $_REQUEST['order_field'];
+		$start = $_REQUEST['start'];
+		$what = $_REQUEST['what'];
+		$path_contacts = $_SESSION['config']['businessappurl']."index.php?page=contacts&admin=contacts&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what;
 		if(!$admin)
 		{
-			$path_contacts = $_SESSION['config']['businessappurl']."index.php?page=my_contacts&dir=my_contacts";
+			$path_contacts = $_SESSION['config']['businessappurl']."index.php?page=my_contacts&dir=my_contacts&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what;
 		}
 		if(!empty($_SESSION['error']))
 		{

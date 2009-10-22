@@ -24,26 +24,11 @@
 class usergroups extends dbquery
 {
 	/**
-    * @access private
-    * @var integer
-    */
-	private $the_start;
-
-	/**
 	* Redefinition of the user object constructor : configure the SQL argument order by
 	*/
 	function __construct()
 	{
 		parent::__construct();
-		// configure the sql argument order by
-		if(isset($_GET['start']))
-		{
-			$this->the_start = strip_tags($_GET['start']);
-		}
-		else
-		{
-			$this->the_start = 0;
-		}
 	}
 
 	/**
@@ -147,6 +132,10 @@ class usergroups extends dbquery
 						<iframe name="group_form" id="group_form" class="frameform4" src="<?php  echo $_SESSION['config']['businessappurl'].'admin/groups/groups_form.php';?>" frameborder="0" scrolling="auto"></iframe>
 					</div>
 					<form name="formgroup" method="post"  class="forms" action="<?php  if($mode == "up") { echo "admin/groups/group_up_db.php"; } elseif($mode == "add") { echo "admin/groups/group_add_db.php"; } ?>" >
+					<input type="hidden" name="order" id="order" value="<?php echo $_REQUEST['order'];?>" />
+					<input type="hidden" name="order_field" id="order_field" value="<?php echo $_REQUEST['order_field'];?>" />
+					<input type="hidden" name="what" id="what" value="<?php echo $_REQUEST['what'];?>" />
+					<input type="hidden" name="start" id="start" value="<?php echo $_REQUEST['start'];?>" />
 						<table border="0" align="center" width="540px">
 							<tr>
 								<td width = "200px" align="right">
@@ -295,6 +284,10 @@ class usergroups extends dbquery
 		{
 			$func->add_error(_THE_GROUP.' '._NO_SECURITY_AND_NO_SERVICES, "");
 		}
+		$_SESSION['m_admin']['groups']['order'] = $_REQUEST['order'];
+		$_SESSION['m_admin']['groups']['order_field'] = $_REQUEST['order_field'];
+		$_SESSION['m_admin']['groups']['what'] = $_REQUEST['what'];
+		$_SESSION['m_admin']['groups']['start'] = $_REQUEST['start'];
 	}
 
 	/**
@@ -306,6 +299,10 @@ class usergroups extends dbquery
 	{
 		// add ou modify users in the database
 		$this->groupsinfo($mode);
+		$order = $_SESSION['m_admin']['groups']['order'];
+		$order_field = $_SESSION['m_admin']['groups']['order_field'];
+		$what = $_SESSION['m_admin']['groups']['what'];
+		$start = $_SESSION['m_admin']['groups']['start'];
 
 		if(!empty($_SESSION['error']))
 		{
@@ -318,7 +315,7 @@ class usergroups extends dbquery
 				}
 				else
 				{
-					header("location: ".$_SESSION['config']['businessappurl']."index.php?page=groups&admin=groups");
+					header("location: ".$_SESSION['config']['businessappurl']."index.php?page=groups&admin=groups&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what);
 					exit;
 				}
 			}
@@ -371,7 +368,7 @@ class usergroups extends dbquery
 						}
 						$this->cleargroupinfos();
 						$_SESSION['error'] =  _GROUP_ADDED;
-						header("location: ".$_SESSION['config']['businessappurl']."index.php?page=groups&admin=groups");
+						header("location: ".$_SESSION['config']['businessappurl']."index.php?page=groups&admin=groups&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what);
 						exit();
 					}
 				}
@@ -418,7 +415,7 @@ class usergroups extends dbquery
 						}
 						$this->cleargroupinfos();
 						$_SESSION['error'] = _GROUP_UPDATED;
-						header("location: ".$_SESSION['config']['businessappurl']."index.php?page=groups&admin=groups");
+						header("location: ".$_SESSION['config']['businessappurl']."index.php?page=groups&admin=groups&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what);
 						exit();
 					}
 			}
@@ -474,9 +471,13 @@ class usergroups extends dbquery
 	*/
 	public function admingroup($id,$mode)
 	{
+		$order = $_REQUEST['order'];
+		$order_field = $_REQUEST['order_field'];
+		$start = $_REQUEST['start'];
+		$what = $_REQUEST['what'];
 		if(!empty($_SESSION['error']))
 		{
-			header("location: ".$_SESSION['config']['businessappurl']."index.php?page=groups&admin=groups");
+			header("location: ".$_SESSION['config']['businessappurl']."index.php?page=groups&admin=groups&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what);
 			exit();
 		}
 		else
@@ -488,14 +489,11 @@ class usergroups extends dbquery
 			if($this->nb_result() == 0)
 			{
 				$_SESSION['error'] = _GROUP.' '._UNKNWON;
-				header("location: ".$_SESSION['config']['businessappurl']."index.php?page=groups&admin=groups");
-				exit;
+				header("location: ".$_SESSION['config']['businessappurl']."index.php?page=groups&admin=groups&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what);
+				exit();
 			}
 			else
 			{
-				//$info = $this->fetch_object();
-				//$theuser = $info->LastName." ".$info->FirstName." (".$id.")";
-
 				if($mode == "allow")
 				{
 					$this->query("Update ".$_SESSION['tablename']['usergroups']." set enabled = 'Y' where group_id = '".$id."'");
@@ -580,7 +578,7 @@ class usergroups extends dbquery
 					}
 				}
 
-				header("location: ".$_SESSION['config']['businessappurl']."index.php?page=groups&admin=groups");
+				header("location: ".$_SESSION['config']['businessappurl']."index.php?page=groups&admin=groups&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what);
 				exit();
 			}
 		}
