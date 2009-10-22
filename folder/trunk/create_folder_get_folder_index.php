@@ -106,7 +106,8 @@ if(count($indexes) > 0)
 
 $db = new dbquery();
 $db->connect();
-$db->query("select folders_system_id, folder_id, folder_name from ".$_SESSION['tablename']['fold_folders']." where foldertype_id = ".$_REQUEST['foldertype_id']." and folder_level = 1");
+//$db->query("select folders_system_id, folder_id, folder_name from ".$_SESSION['tablename']['fold_folders']." where foldertype_id = ".$_REQUEST['foldertype_id']." and folder_level = 1");
+$db->query("select folders_system_id, folder_id, folder_name from ".$_SESSION['tablename']['fold_folders']." wherefolder_level = 1");
 
 $folders = array();
 while($res = $db->fetch_object())
