@@ -942,4 +942,5 @@ define('_CUSTOM_N1', 'Champ Entier');
 define('_CUSTOM_F1', 'Champ Flottant');
 
 define('_ITEM_NOT_IN_LIST', '&eacute;l&egrave;ment absent de la liste des valeurs autoris&eacute;es');
+define('_PB_WITH_FINGERPRINT_OF_DOCUMENT', 'L&rsquo;empreinte num&eacute;rique itiniale du document ne correspond pas avec celle du document affich&eacute;e');
 ?>

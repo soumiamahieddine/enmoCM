@@ -600,7 +600,7 @@ class types extends dbquery
 						}
 						array_push($values, array('id' => (string) $val->id, 'label' => $label_val));
 					}
-				$indexes[$col] = array( 'label' => $label, 'type' => (STRING) $item->type, 'img' => $_SESSION['config']['businessappurl'].'img/'.$img, 'type_field' => 'select', 'values' => $values);
+					$indexes[$col] = array( 'label' => $label, 'type' => (STRING) $item->type, 'img' => $_SESSION['config']['businessappurl'].'img/'.$img, 'type_field' => 'select', 'values' => $values);
 				}
 				else
 				{

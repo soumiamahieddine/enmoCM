@@ -139,7 +139,7 @@ else
 			$type_state = $is->is_filetype_allowed($format);
 			//control of the fingerprint of the document
 		}
-		$fingerprint_from_docserver = md5_file($file);
+		$fingerprint_from_docserver = @md5_file($file);
 		if($fingerprint_from_db == $fingerprint_from_docserver)
 		{
 			if($type_state <> false)
@@ -206,13 +206,21 @@ else
 			}
 			else
 			{
-				echo _DOCTYPE.' '._UNKNOWN;
+				$core_tools->load_html();
+				$core_tools->load_header('', true, false);
+				echo '<body>';
+				echo '<br/><div class="error">'._DOCTYPE.' '._UNKNOWN.'</div>';
+				echo '</body></html>';
 				exit();
 			}
 		}
 		else
 		{
-			echo _PB_WITH_FINGERPRINT_OF_DOCUMENT;
+			$core_tools->load_html();
+			$core_tools->load_header('', true, false);
+			echo '<body>';
+			echo '<br/><div class="error">'._PB_WITH_FINGERPRINT_OF_DOCUMENT.'</div>';
+			echo '</body></html>';
 		}
 	}
 }
