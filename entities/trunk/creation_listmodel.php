@@ -54,7 +54,7 @@ $what = "";
 if(isset($_GET['what_users']) && !empty($_GET['what_users']) )
 {
 	$what_users = $func->protect_string_db($func->wash($_GET['what_users'], "no", "", "no"));
-	if($SESSION['config']['databasetype'] == 'POSTGRESQL')
+	if($_SESSION['config']['databasetype'] == 'POSTGRESQL')
 	{
 		$where_users .= " and (u.lastname ilike '%".strtolower($what_users)."%'
 				or u.lastname ilike '%".strtoupper($what_users)."%'
@@ -74,7 +74,7 @@ if(isset($_GET['what_users']) && !empty($_GET['what_users']) )
 	}
 	$orderby_users = " order by u.user_id asc, u.lastname asc, u.firstname asc, e.entity_label asc";
 
-	if($SESSION['config']['databasetype'] == 'POSTGRESQL')
+	if($_SESSION['config']['databasetype'] == 'POSTGRESQL')
 	{
 		$where_entities_users .= " and (u.lastname ilike '%".strtolower($what_users)."%'
 				or u.lastname ilike '%".strtoupper($what_users)."%'
@@ -96,8 +96,9 @@ if(isset($_GET['what_users']) && !empty($_GET['what_users']) )
 }
 if(isset($_GET['what_services']) && !empty($_GET['what_services']) )
 {
+	//$where_entities_users = '';
 	$what_services = addslashes($func->wash($_GET['what_services'], "no", "", "no"));
-	if($SESSION['config']['databasetype'] == 'POSTGRESQL')
+	if($_SESSION['config']['databasetype'] == 'POSTGRESQL')
 	{
 		$where_users .= " and (e.entity_label ilike '%".strtolower($what_services)."%' or e.entity_id ilike '%".strtoupper($what_services)."%')";
 		$where_entities .= " and (e.entity_label ilike '%".strtolower($what_services)."%' or e.entity_id ilike '%".strtolower($what_services)."%' )";
@@ -109,12 +110,14 @@ if(isset($_GET['what_services']) && !empty($_GET['what_services']) )
 	}
 	$orderby_users = " order by e.entity_label asc, u.user_id asc, u.lastname asc, u.firstname asc";
 	$orderby_entities = " order by e.entity_label asc";
+
 }
 $db = new dbquery();
 $db->connect();
 $db->query("select u.user_id, u.firstname, u.lastname,e.entity_id,  e.entity_label
 FROM ".$_SESSION['tablename']['users']." u, ".$_SESSION['tablename']['ent_entities']." e, ".$_SESSION['tablename']['ent_users_entities']." ue
 WHERE u.status <> 'DEL' and u.enabled = 'Y' and  e.entity_id = ue.entity_id and u.user_id = ue.user_id and e.enabled = 'Y' ".$where_users.$orderby_users);
+
 $i=0;
 while($line = $db->fetch_object())
 {
@@ -132,6 +135,7 @@ else
 FROM ".$_SESSION['tablename']['users']." u, ".$_SESSION['tablename']['ent_entities']." e, ".$_SESSION['tablename']['ent_users_entities']." ue
 WHERE u.status <> 'DEL' and u.enabled = 'Y' and  e.entity_id = ue.entity_id and u.user_id = ue.user_id and e.enabled = 'Y' ".$where_entities_users.$orderby_users);
 }
+
 $i=0;
 while($line = $db->fetch_object())
 {
