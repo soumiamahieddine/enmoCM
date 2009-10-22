@@ -15,12 +15,31 @@
   * last_modified_date
 -->
 <ROOT>
-
 	<INDEX>
 		<column>custom_t2</column>
 		<label>_STRING</label>
 		<type>string</type>
 		<img>default_string.gif</img>
+	</INDEX>
+	<INDEX>
+		<column>custom_t3</column>
+		<label>Couleur</label>
+		<type>string</type>
+		<img>default_string.gif</img>
+		<values_list> <!-- If id are numpbers, always start with 1, never with 0 -->
+			<value>
+				<id>1</id>
+				<label>Bleu</label>
+			</value>
+			<value>
+				<id>2</id>
+				<label>Blanc</label>
+			</value>
+			<value>
+				<id>3</id>
+				<label>Rouge</label>
+			</value>
+		</values_list>
 	</INDEX>
 	<INDEX>
 		<column>custom_d1</column>

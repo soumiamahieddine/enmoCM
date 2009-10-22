@@ -176,23 +176,40 @@ if(isset($_POST['delete_folder']))
 									<?php
 									if($update_right)
 									{
-										if($folder_array['index'][$key]['type'] == 'date')
+										if($folder_array['index'][$key]['type_field'] == 'input')
 										{
-											?>
-											<input type="text" name="<?php echo $key;?>" id="<?php echo $key;?>" value="<?php echo $folder_array['index'][$key]['value'];?>" size="40"  title="<?php  echo $folder_array['index'][$key]['value']; ?>" alt="<?php  echo $folder_array['index'][$key]['value']; ?>" onclick="showCalender(this);" />
-											<?php
+											if($folder_array['index'][$key]['type'] == 'date')
+											{
+												?>
+												<input type="text" name="<?php echo $key;?>" id="<?php echo $key;?>" value="<?php echo $folder_array['index'][$key]['show_value'];?>" size="40"  title="<?php  echo $folder_array['index'][$key]['show_value']; ?>" alt="<?php  echo $folder_array['index'][$key]['show_value']; ?>" onclick="showCalender(this);" />
+												<?php
+											}
+											else
+											{
+												?>
+												<input type="text" name="<?php echo $key;?>" id="<?php echo $key;?>" value="<?php echo $folder_array['index'][$key]['show_value'];?>" size="40"  title="<?php  echo $folder_array['index'][$key]['show_value']; ?>" alt="<?php  echo $folder_array['index'][$key]['show_value']; ?>" />
+												<?php
+											}
 										}
 										else
 										{
 											?>
-											<input type="text" name="<?php echo $key;?>" id="<?php echo $key;?>" value="<?php echo $folder_array['index'][$key]['value'];?>" size="40"  title="<?php  echo $folder_array['index'][$key]['value']; ?>" alt="<?php  echo $folder_array['index'][$key]['value']; ?>" />
-											<?php
+											<select name="<?php echo $key;?>" id="<?php echo $key;?>" >
+												<option value=""><?php echo _CHOOSE;?>...</option>
+												<?php for($i=0; $i<count($folder_array['index'][$key]['values']);$i++)
+												{?>
+													<option value="<?php echo $folder_array['index'][$key]['values'][$i]['id'];?>" <?php if($folder_array['index'][$key]['values'][$i]['id'] == $folder_array['index'][$key]['value']){ echo 'selected="selected"';}?>><?php echo $folder_array['index'][$key]['values'][$i]['label'];?></option>
+													<?php
+												}?>
+											</select>
+												<?php
 										}
+
 									}
 									else
 									{
 									?>
-										<input type="text" name="<?php echo $key;?>" id="<?php echo $key;?>" value="<?php echo $folder_array['index'][$key]['value'];?>" size="40"  title="<?php  echo $folder_array['index'][$key]['value']; ?>" alt="<?php  echo $folder_array['index'][$key]['value']; ?>" readonly="readonly" class="readonly" />
+										<input type="text" name="<?php echo $key;?>" id="<?php echo $key;?>" value="<?php echo $folder_array['index'][$key]['show_value'];?>" size="40"  title="<?php  echo $folder_array['index'][$key]['show_value']; ?>" alt="<?php  echo $folder_array['index'][$key]['show_value']; ?>" readonly="readonly" class="readonly" />
 										<?php
 									}
 								?>

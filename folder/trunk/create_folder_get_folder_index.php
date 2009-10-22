@@ -51,6 +51,7 @@ if(!isset($_REQUEST['foldertype_id']) || empty($_REQUEST['foldertype_id']))
 
 $indexes = $foldertype->get_indexes($_REQUEST['foldertype_id']);
 $mandatory = $foldertype->get_mandatory_indexes($_REQUEST['foldertype_id']);
+
 if(count($indexes) > 0)
 {
 	foreach(array_keys($indexes) as $key)
@@ -58,25 +59,43 @@ if(count($indexes) > 0)
 		$content .= '<p>';
 		$content .= '<label for="'.$key.'">	'.$indexes[$key]['label'].' :</label>';
 
-		if($indexes[$key]['type'] == 'string' || $indexes[$key]['type'] == 'integer' || $indexes[$key]['type'] == 'float')
+		if($indexes[$key]['type_field'] == 'input')
 		{
-			$content .= '<input type="text" name="'.$key.'" id="'.$key.'"';
-			if(isset($_SESSION['m_admin']['folder']['indexes'][$key]) && !empty($_SESSION['m_admin']['folder']['indexes'][$key]))
+			if($indexes[$key]['type'] == 'date')
 			{
-			 	$content .= 'value="'.$_SESSION['m_admin']['folder']['indexes'][$key].'"';
+				$content .='<input name="'.$key.'" type="text" id="'.$key.'" value="';
+				if(!empty($_SESSION['m_admin']['folder']['indexes'][$key]))
+				{
+					$content .= $_SESSION['m_admin']['folder']['indexes'][$key];
+				}
+				$content .= '" onclick="showCalender(this);"/>';
 			}
-			$content .= ' />';
+			else
+			{
+				$content .= '<input name="'.$key.'" type="text" id="'.$key.'" value="';
+				if(!empty($_SESSION['m_admin']['folder']['indexes'][$key]))
+				{
+					$content .= $_SESSION['m_admin']['folder']['indexes'][$key];
+				}
+				$content .= '"  />';
+			}
 		}
-		else if($indexes[$key]['type'] == 'date')
+		else
 		{
+			$content .= '<select name="'.$key.'" id="'.$key.'" >';
+				$content .= '<option value="">'._CHOOSE.'...</option>';
+				for($i=0; $i<count($indexes[$key]['values']);$i++)
+				{
+					$content .= '<option value="'.$indexes[$key]['values'][$i]['id'].'"';
+					if($indexes[$key]['values'][$i]['id'] == $_SESSION['m_admin']['folder']['indexes'][$key])
+					{
+						$content .= 'selected="selected"';
+					}
+					$content .= ' >'.$indexes[$key]['values'][$i]['label'].'</option>';
+				}
+			$content .= '</select>';
+		}
 
-			$content .= '<input type="text" name="'.$key.'" id="'.$key.'" ';
-			if(isset($_SESSION['m_admin']['folder']['indexes'][$key]) && !empty($_SESSION['m_admin']['folder']['indexes'][$key]))
-			{
-			 	$content .= 'value="'.$_SESSION['m_admin']['folder']['indexes'][$key].'"';
-			}
-			$content .= ' onclick="showCalender(this);" />';
-		}
 		if(in_array($key, $mandatory))
 		{
 			$content .= ' <span class="red_asterisk">*</span>';

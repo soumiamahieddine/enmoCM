@@ -210,9 +210,25 @@ class folder extends request
 		foreach(array_keys($tab_index) as $key)
 		{
 			$tab_index[$key]['value'] = $res->$key;
-			if($tab_index[$key]['type'] == 'date')
+			$tab_index[$key]['show_value'] = $res->$key;
+			if($tab_index[$key]['type_field'] == 'select')
 			{
-				$tab_index[$key]['value'] = $this->format_date_db($tab_index[$key]['value'], true);
+				for($i=0;$i<count($tab_index[$key]['values']);$i++)
+				{
+					if($tab_index[$key]['values'][$i]['id'] == $tab_index[$key]['value'] )
+					{
+						$tab_index[$key]['show_value'] = $tab_index[$key]['values'][$i]['label'];
+						break;
+					}
+				}
+			}
+			elseif($tab_index[$key]['type'] == 'date')
+			{
+				$tab_index[$key]['show_value'] = $this->format_date_db($tab_index[$key]['value'], true);
+			}
+			elseif($tab_index[$key]['type'] == 'string')
+			{
+				$tab_index[$key]['show_value'] = $this->show_string($tab_index[$key]['value']);
 			}
 		}
 		$this->index = array();
@@ -295,7 +311,7 @@ class folder extends request
 		else
 		{
 			$_SESSION['m_admin']['folder']['folder_id'] = '';
-			$_SESSION['error'] .= _FOLDER_ID.' '._IS_EMPTY;
+			$_SESSION['error'] .= _FOLDER_ID.' '._IS_EMPTY.'<br/>';
 		}
 
 		if(isset($_REQUEST['folder_name']) && !empty($_REQUEST['folder_name']))
@@ -305,7 +321,7 @@ class folder extends request
 		else
 		{
 			$_SESSION['m_admin']['folder']['folder_name'] = '';
-			$_SESSION['error'] .= _FOLDERNAME.' '._IS_EMPTY;
+			$_SESSION['error'] .= _FOLDERNAME.' '._IS_EMPTY.'<br/>';
 		}
 
 		$_SESSION['m_admin']['folder']['folder_parent'] = 0;
@@ -341,7 +357,7 @@ class folder extends request
 		else
 		{
 			$_SESSION['m_admin']['folder']['foldertype'] = '';
-			$_SESSION['error'] .= _FOLDERTYPE.' '._IS_EMPTY;
+			$_SESSION['error'] .= _FOLDERTYPE.' '._IS_EMPTY.'<br/>';
 		}
 	}
 
