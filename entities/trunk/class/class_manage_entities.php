@@ -82,6 +82,10 @@ class entity extends dbquery
 			{
 				?>
 				<form name="formentity" id="formentity" method="post" action="<?php  if($mode == 'up') { echo $_SESSION['urltomodules'].'entities/entity_up_db.php'; } elseif($mode == 'add') { echo $_SESSION['urltomodules'].'entities/entity_add_db.php'; } ?>" class="forms">
+					<input type="hidden" name="order" id="order" value="<?php echo $_REQUEST['order'];?>" />
+					<input type="hidden" name="order_field" id="order_field" value="<?php echo $_REQUEST['order_field'];?>" />
+					<input type="hidden" name="what" id="what" value="<?php echo $_REQUEST['what'];?>" />
+					<input type="hidden" name="start" id="start" value="<?php echo $_REQUEST['start'];?>" />
 					<?php
 					if($mode == 'up')
 					{
@@ -235,22 +239,6 @@ class entity extends dbquery
 	*/
 	public function init_session()
 	{
-	/*	$_SESSION['m_admin']['entity'] = array();
-		$_SESSION['m_admin']['entity']['entityId'] = '';
-		$_SESSION['m_admin']['entity']['label'] = '';
-		$_SESSION['m_admin']['entity']['enabled'] = '';
-		$_SESSION['m_admin']['entity']['adrs1'] = '';
-		$_SESSION['m_admin']['entity']['adrs2'] = '';
-		$_SESSION['m_admin']['entity']['adrs3'] = '';
-		$_SESSION['m_admin']['entity']['zcode'] = '';
-		$_SESSION['m_admin']['entity']['city'] = '';
-		$_SESSION['m_admin']['entity']['country'] = '';
-		$_SESSION['m_admin']['entity']['email'] = '';
-		$_SESSION['m_admin']['entity']['business'] = '';
-		$_SESSION['m_admin']['entity']['parent'] = '';
-		$_SESSION['m_admin']['entity']['type'] = '';
-
-		$_SESSION['m_admin']['init'] = false;*/
 		unset($_SESSION['m_admin']);
 	}
 
@@ -552,6 +540,10 @@ class entity extends dbquery
 			$hist = 'entityval';
 			$msgError = _ENTITY_AUTORIZED;
 		}
+		$order = $_REQUEST['order'];
+		$order_field = $_REQUEST['order_field'];
+		$start = $_REQUEST['start'];
+		$what = $_REQUEST['what'];
 
 		$this->connect();
 		$this->query('Update '.$_SESSION['tablename']['ent_entities']." set enabled = '".$this->protect_string_db(trim($action))."' where entity_id = '".$this->protect_string_db(trim($id))."'");
@@ -562,7 +554,7 @@ class entity extends dbquery
 			$users = new history();
 			$users->add($_SESSION['tablename']['ent_entities'], $id, $histKey, $histLabel." : ".$id, $_SESSION['config']['databasetype']);
 		}
-
+		$this->connect();
 		$this->query('select entity_id from '.$_SESSION['tablename']['ent_entities']." where parent_entity_id = '".$this->protect_string_db(trim($id))."'");
 
 		if($this->nb_result() > 0)
@@ -585,7 +577,7 @@ class entity extends dbquery
 				$db2->query('select entity_id from '.$_SESSION['tablename']['ent_entities']." where parent_entity_id = '".$this->protect_string_db(trim($line->entity_id))."'");
 				if($db2->nb_result() > 0)
 				{
-					$db2->allowbanentity($line->entity_id, $mode, $nbrEntity);
+					$db2->allowbanentity($line->entity_id, $mode);
 				}
 			}
 		}
@@ -601,9 +593,13 @@ class entity extends dbquery
 	*/
 	public function adminentity($id, $mode)
 	{
+		$order = $_REQUEST['order'];
+		$order_field = $_REQUEST['order_field'];
+		$start = $_REQUEST['start'];
+		$what = $_REQUEST['what'];
 		if(!empty($_SESSION['error']))
 		{
-			header('location: '.$_SESSION['config']['businessappurl'].'index.php?page=manage_entities&module=entities');
+			header('location: '.$_SESSION['config']['businessappurl'].'index.php?page=manage_entities&module=entities&order='.$order."&order_field=".$order_field."&start=".$start."&what=".$what);
 			exit();
 		}
 		else
@@ -615,7 +611,7 @@ class entity extends dbquery
 			if($this->nb_result() == 0)
 			{
 				$_SESSION['error'] = _ENTITY.' '._UNKNWON;
-				header('location: '.$_SESSION['config']['businessappurl'].'index.php?page=manage_entities&module=entities');
+				header('location: '.$_SESSION['config']['businessappurl'].'index.php?page=manage_entities&module=entities&order='.$order."&order_field=".$order_field."&start=".$start."&what=".$what);
 				exit;
 			}
 			else
@@ -650,7 +646,7 @@ class entity extends dbquery
 						$_SESSION['error'] = _ENTITY_DELETED;
 					}
 				}
-				header('location: '.$_SESSION['config']['businessappurl'].'index.php?page=manage_entities&module=entities');
+				header('location: '.$_SESSION['config']['businessappurl'].'index.php?page=manage_entities&module=entities&order='.$order."&order_field=".$order_field."&start=".$start."&what=".$what);
 				exit();
 			}
 		}
@@ -764,6 +760,11 @@ class entity extends dbquery
 			$_SESSION['m_admin']['entity']['parent'] = $_REQUEST['parententity'];
 		}
 		$_SESSION['m_admin']['init'] = false;
+
+		$_SESSION['m_admin']['entity']['order'] = $_REQUEST['order'];
+		$_SESSION['m_admin']['entity']['order_field'] = $_REQUEST['order_field'];
+		$_SESSION['m_admin']['entity']['what'] = $_REQUEST['what'];
+		$_SESSION['m_admin']['entity']['start'] = $_REQUEST['start'];
 	}
 
 
@@ -778,6 +779,10 @@ class entity extends dbquery
 		$core = new core_tools();
 		// add ou modify entity in the database
 		$this->entityinfo($mode);
+		$order = $_SESSION['m_admin']['entity']['order'];
+		$order_field = $_SESSION['m_admin']['entity']['order_field'];
+		$what = $_SESSION['m_admin']['entity']['what'];
+		$start = $_SESSION['m_admin']['entity']['start'];
 		if(!empty($_SESSION['error']))
 		{
 			if($mode == 'up')
@@ -789,7 +794,7 @@ class entity extends dbquery
 				}
 				else
 				{
-					header('location: '.$_SESSION['config']['businessappurl'].'index.php?page=manage_entities&module=entities');
+					header('location: '.$_SESSION['config']['businessappurl'].'index.php?page=manage_entities&module=entities&order='.$order.'&order_field='.$order_field.'&start='.$start.'&what='.$what);
 					exit();
 				}
 			}
@@ -828,7 +833,7 @@ class entity extends dbquery
 					$this->clearentityinfos();
 					$_SESSION['error'] = _ENTITY_ADDITION;
 					unset($_SESSION['m_admin']);
-					header("location: ".$_SESSION['config']['businessappurl']."index.php?page=manage_entities&module=entities");
+					header("location: ".$_SESSION['config']['businessappurl']."index.php?page=manage_entities&module=entities&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what);
 					exit();
 				}
 			}
@@ -849,7 +854,7 @@ class entity extends dbquery
 				$this->clearentityinfos();
 				$_SESSION['error'] = _ENTITY_MODIFICATION;
 				unset($_SESSION['m_admin']);
-				header('location: '.$_SESSION['config']['businessappurl'].'index.php?page=manage_entities&module=entities');
+				header('location: '.$_SESSION['config']['businessappurl'].'index.php?page=manage_entities&module=entities&order='.$order."&order_field=".$order_field."&start=".$start."&what=".$what);
 				exit();
 			}
 		}
@@ -862,7 +867,6 @@ class entity extends dbquery
 	private function clearentityinfos()
 	{
 		// clear the users add or modification vars
-		//unset($_SESSION['m_admin']['entity']);
 		unset($_SESSION['m_admin']);
 	}
 

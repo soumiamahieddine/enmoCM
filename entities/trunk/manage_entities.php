@@ -23,7 +23,7 @@
 
 $admin = new core_tools();
 $admin->test_admin('manage_entities', 'entities');
-$_SESSION['m_admin']['entity']= array();
+$_SESSION['m_admin']= array();
 /****************Management of the location bar  ************/
 $init = false;
 if($_REQUEST['reinit'] == "true")
