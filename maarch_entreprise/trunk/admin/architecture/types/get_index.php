@@ -56,7 +56,7 @@ if(count($indexes) > 0)
 		$content .= '<tr>';
 			$content .= '<td width="150px">	'.$indexes[$i]['label'].'</td>';
 			$content .= '<td align="center">';
-				$content .= '<input name="fields[]" type="checkbox" class="check" value="'.$indexes[$i]['column'].'"';
+				$content .= '<input name="fields[]" id="field_'.$indexes[$i]['column'].'" type="checkbox" class="check" value="'.$indexes[$i]['column'].'"';
 
 				if (in_array($indexes[$i]['column'], $_SESSION['m_admin']['doctypes']['indexes']))
 				{
@@ -65,12 +65,12 @@ if(count($indexes) > 0)
 				$content .= '/>';
 			$content .= '</td>';
 			$content.= '<td align="center" width="100px">';
-				$content .= '<input name="mandatory_fields[]" type="checkbox" class="check" value="'.$indexes[$i]['column'].'"';
+				$content .= '<input name="mandatory_fields[]" id="mandatory_field_'.$indexes[$i]['column'].'" type="checkbox" class="check" value="'.$indexes[$i]['column'].'"';
 				if (in_array($indexes[$i]['column'], $_SESSION['m_admin']['doctypes']['mandatory_indexes']) && in_array($indexes[$i]['column'], $_SESSION['m_admin']['doctypes']['indexes']))
 				{
 					$content .= ' checked="checked"';
 				}
-				$content .= '/>';
+				$content .= ' onclick="$(\'field_'.$indexes[$i]['column'].'\').checked=true;"/>';
 			$content .= '</td>';
 		$content .= '</tr>';
 	}

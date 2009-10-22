@@ -516,6 +516,7 @@ define('_INEXPLICABLE_ERROR', 'Une erreur inexplicable est survenue');
 define('_TRY_AGAIN_SOON', 'Veuillez r&eacute;essayer dans quelques instants');
 define('_NO_OTHER_RECIPIENT', 'Il n&rsquo;y a pas d&rsquo;autre destinataire de ce courrier');
 define('_WAITING_INTEGER', 'Entier attendu');
+define('_WAITING_FLOAT', 'Nombre flottant attendu');
 
 define('_DEFINE', 'Pr&eacute;ciser');
 define('_NUM', 'N&deg;');
@@ -943,4 +944,7 @@ define('_CUSTOM_F1', 'Champ Flottant');
 
 define('_ITEM_NOT_IN_LIST', '&eacute;l&egrave;ment absent de la liste des valeurs autoris&eacute;es');
 define('_PB_WITH_FINGERPRINT_OF_DOCUMENT', 'L&rsquo;empreinte num&eacute;rique itiniale du document ne correspond pas avec celle du document affich&eacute;e');
+define('_MISSING', 'manquant(e)');
+define('_NATURE', 'Nature');
+define('_NO_DEFINED_TREES', 'Aucun arbre d&eacute;fini');
 ?>

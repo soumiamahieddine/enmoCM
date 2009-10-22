@@ -234,7 +234,7 @@ class types extends dbquery
 		$_SESSION['service_tag'] = '';
 		if(!isset($_REQUEST['collection']) || empty($_REQUEST['collection']))
 		{
-			$_SESSION['error'] .= _THE_COLLECTION. ' '._IS_MANDATORY.'.<br/>';
+			$_SESSION['error'] .= _COLLECTION. ' '._IS_MANDATORY.'.<br/>';
 		}
 		else
 		{
@@ -652,7 +652,7 @@ class types extends dbquery
 		{
 			if( empty($values[$mandatory_indexes[$i]]) )  // && ($values[$i]['VALUE'] == 0 && $_ENV['categories'][$cat_id][$values[$i]['ID']]['type_form'] <> 'integer')
 			{
-				$_SESSION['error'] = $indexes[$mandatory_indexes[$i]]['label'].' '._IS_EMPTY;
+				$_SESSION['error'] = $indexes[$mandatory_indexes[$i]]['label'].' <br/>'._IS_EMPTY.'<br/>';
 				return false;
 			}
 		}
@@ -669,7 +669,7 @@ class types extends dbquery
 			{
 				if(preg_match( $date_pattern,$values[$key])== 0)
 				{
-					$_SESSION['error'] .= $indexes[$key]['label']." "._WRONG_FORMAT.".<br/>";
+					$_SESSION['error'] .= $indexes[$key]['label']." <br/>"._WRONG_FORMAT.".<br/>";
 					return false;
 				}
 			}
@@ -699,7 +699,7 @@ class types extends dbquery
 				}
 				if(!$found)
 				{
-					$_SESSION['error'] .= 	$indexes[$key]['label']." : "._ITEM_NOT_IN_LIST.".<br/>";
+					$_SESSION['error'] .= 	$indexes[$key]['label']." <br/>: "._ITEM_NOT_IN_LIST.".<br/>";
 					return false;
 				}
 			}
