@@ -128,7 +128,7 @@ CREATE TABLE IF NOT EXISTS foldertypes_doctypes_level1 (
   PRIMARY KEY  (foldertype_id,doctypes_first_level_id)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-CREATE TABLE entreprise.foldertypes_indexes (
+CREATE TABLE foldertypes_indexes (
 foldertype_id BIGINT NULL ,
 field_name VARCHAR( 255 ) NULL ,
 mandatory CHAR( 1 ) NOT NULL ,
