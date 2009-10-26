@@ -247,6 +247,10 @@ class types extends dbquery
 			}
 			for($i=0; $i<count($_REQUEST['mandatory_fields']);$i++)
 			{
+				if(!in_array($_REQUEST['mandatory_fields'][$i], $_SESSION['m_admin']['doctypes']['indexes']))
+				{
+					$_SESSION['error'] .= _IF_CHECKS_MANDATORY_MUST_CHECK_USE;
+				}
 				array_push($_SESSION['m_admin']['doctypes']['mandatory_indexes'], $_REQUEST['mandatory_fields'][$i]);
 			}
 		}

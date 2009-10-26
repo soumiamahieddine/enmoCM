@@ -947,4 +947,6 @@ define('_PB_WITH_FINGERPRINT_OF_DOCUMENT', 'L&rsquo;empreinte num&eacute;rique i
 define('_MISSING', 'manquant(e)');
 define('_NATURE', 'Nature');
 define('_NO_DEFINED_TREES', 'Aucun arbre d&eacute;fini');
+
+define('_IF_CHECKS_MANDATORY_MUST_CHECK_USE', 'Si vous cliquez sur un champ obligatoire, vous devez également cocher la case utilis&eacute;');
 ?>

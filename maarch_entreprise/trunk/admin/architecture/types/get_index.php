@@ -46,7 +46,7 @@ if(count($indexes) > 0)
 	$content .= '<hr/>';
     $content .= '<table>';
         $content .= '<tr>';
-            $content .= '<th width="150px">'._FIELD.'</th>';
+            $content .= '<th width="500px">'._FIELD.'</th>';
             $content .= '<th align="center" width="100px">'._USED.'</th>';
             $content .= '<th align="center" width="100px">'._MANDATORY.'</th>';
         $content .= '</tr>';
@@ -66,7 +66,7 @@ if(count($indexes) > 0)
 			$content .= '</td>';
 			$content.= '<td align="center" width="100px">';
 				$content .= '<input name="mandatory_fields[]" id="mandatory_field_'.$indexes[$i]['column'].'" type="checkbox" class="check" value="'.$indexes[$i]['column'].'"';
-				if (in_array($indexes[$i]['column'], $_SESSION['m_admin']['doctypes']['mandatory_indexes']) && in_array($indexes[$i]['column'], $_SESSION['m_admin']['doctypes']['indexes']))
+				if (in_array($indexes[$i]['column'], $_SESSION['m_admin']['doctypes']['mandatory_indexes']) )
 				{
 					$content .= ' checked="checked"';
 				}
