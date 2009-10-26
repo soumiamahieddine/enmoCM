@@ -10,7 +10,7 @@
 		<databaseserver>127.0.0.1</databaseserver>
 		<databaseserverport>5432</databaseserverport>
 		<databasename>maarch_entreprise</databasename>
-		<databasetype>POSTGRES</databasetype>
+		<databasetype>POSTGRESQL</databasetype>
 		<databaseuser>postgres</databaseuser>
 		<databasepassword></databasepassword>
 		<lang>fr</lang>
