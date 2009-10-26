@@ -815,6 +815,8 @@ define('_LIMIT_DATE_PROCESS','Date limite de traitement');
 
 
 //// INDEXING SEARCHING
+
+define('_CREATION_DATE', 'Date de cr&eacute;ation');
 define('_NO_RESULTS', 'Aucun r&eacute;sultat');
 define('_FOUND_DOCS', 'document(s) trouv&eacute;(s)');
 define('_MY_CONTACTS', 'Mes contacts');
