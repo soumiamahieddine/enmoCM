@@ -53,20 +53,23 @@ $core_tools->test_service('quicklaunch', "apps");
 		{
 			if($nb_max < 3)
 			{
-				if($element['id'] == 'physical_archive' && $element['show'] == true)
+				if($element['id'] == 'physical_archive' && $element['show'] == true && $displayed_physical_archive <> true)
 				{
 						echo '<td><a href="index.php?page=boxes&module=physical_archive&reinit=true"><div class="bighome_physical_archive"><div class="label_for_bighome_physical_archive">'._PHYSICAL_ARCHIVE.'</div></div></a></td>';
 						$nb_max++;
+						$displayed_physical_archive = true;
 				}
-				if ($element['id'] == 'adv_search_mlb' && $element['show'] == true)
+				if ($element['id'] == 'adv_search_mlb' && $element['show'] == true && $displayed_adv_search_mlb <> true)
 				{
 						echo '<td><a href="index.php?page=search_adv&dir=indexing_searching&reinit=true"><div class="bighome_search_adv"><div class="label_for_bighome_search_adv">'._ADV_SEARCH_TITLE.'</div></div></a></td>';
 						$nb_max++;
+						$displayed_adv_search_mlb = true;
 				}
-				if ($element['id'] == 'index_mlb' && $element['show'] == true )
+				if ($element['id'] == 'index_mlb' && $element['show'] == true && $displayed_index_mlb <> true)
 				{
 						echo '<td><a href="index.php?page=view_baskets&module=basket&baskets=IndexingBasket"><div class="bighome_indexing"><div class="label_for_bighome_indexing">'._INDEXING_MLB.'</div></div></a></td>';
 						$nb_max++;
+						$displayed_index_mlb = true;
 				}
 			}
 		}
