@@ -211,7 +211,7 @@ class foldertype extends dbquery
 				<div  class="block" align="center" >
 				<table>
         			<tr>
-            			<th width="150px"><?php echo _FIELD;?></th>
+            			<th width="500px"><?php echo _FIELD;?></th>
            				<th align="center" width="100px"><?php echo _USED;?></th>
             			<th align="center" width="100px"><?php echo _MANDATORY;?></th>
         			</tr>
@@ -303,6 +303,10 @@ class foldertype extends dbquery
 		}
 		for($i=0; $i<count($_REQUEST['mandatory_fields']);$i++)
 		{
+			if(!in_array($_REQUEST['mandatory_fields'][$i], $_SESSION['m_admin']['foldertype']['indexes']))
+			{
+				$_SESSION['error'].= _IF_CHECKS_MANDATORY_MUST_CHECK_USE;
+			}
 			array_push($_SESSION['m_admin']['foldertype']['mandatory_indexes'], $_REQUEST['mandatory_fields'][$i]);
 		}
 
