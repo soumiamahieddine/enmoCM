@@ -815,7 +815,7 @@ define('_LIMIT_DATE_PROCESS','Date limite de traitement');
 
 
 //// INDEXING SEARCHING
-
+define('_NO_COLLECTION_ACCESS_FOR_THIS_USER', 'Aucun acc&egrave;s aux collections documentaires pour cet utilisateur');
 define('_CREATION_DATE', 'Date de cr&eacute;ation');
 define('_NO_RESULTS', 'Aucun r&eacute;sultat');
 define('_FOUND_DOCS', 'document(s) trouv&eacute;(s)');
