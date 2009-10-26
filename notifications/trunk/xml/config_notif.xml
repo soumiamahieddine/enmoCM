@@ -3,26 +3,26 @@
 	<CONFIG>
 		<name>notifications</name>
 		<comment>_LETERBOX_NOTIFICATIONS</comment>
-		<path>C:\xampp\htdocs\letterbox_v3\modules\notifications\</path>
-		<businessapppath>C:\xampp\htdocs\letterbox_v3\apps\maarch_letterbox\</businessapppath>
-		<businessappurl>http://127.0.0.1/letterbox_v3/apps/maarch_letterbox/</businessappurl>
+		<path>C:\xampp\htdocs\maarch_entreprise\modules\notifications\</path>
+		<businessapppath>C:\xampp\htdocs\maarch_entreprise\apps\maarch_entreprise\</businessapppath>
+		<businessappurl>http://127.0.0.1/maarch_entreprise/apps/maarch_entreprise/</businessappurl>
 		<file_prefix>notif</file_prefix>
 		<databaseserver>127.0.0.1</databaseserver>
-		<databaseserverport>3306</databaseserverport>
-		<databasename>dggt</databasename>
-		<databasetype>MYSQL</databasetype>
-		<databaseuser>root</databaseuser>
+		<databaseserverport>5432</databaseserverport>
+		<databasename>maarch_entreprise</databasename>
+		<databasetype>POSTGRES</databasetype>
+		<databaseuser>postgres</databaseuser>
 		<databasepassword></databasepassword>
 		<lang>fr</lang>
-		<MaarchDirectory>C:\xampp\htdocs\letterbox_v3\</MaarchDirectory>
-		<MaarchURL>http://127.0.0.1/letterbox_v3/</MaarchURL>
-		<NotificationsUrl>http://127.0.0.1/maarch_v3/modules/notifications/</NotificationsUrl>	
+		<MaarchDirectory>C:\xampp\htdocs\maarch_entreprise\</MaarchDirectory>
+		<MaarchURL>http://127.0.0.1/maarch_entreprise/</MaarchURL>
+		<NotificationsUrl>http://127.0.0.1/maarch_entreprise/modules/notifications/</NotificationsUrl>	
 		<mailfrom>dev@maarch.org</mailfrom><!-- mail utilisé pour la notification -->
 	</CONFIG>
 	<FEATURES>
 		<copy_for_notif>true</copy_for_notif>
 		<copy_for_alarm1>false</copy_for_alarm1>
-		<copy_for_alarm2>true</copy_for_alarm2>
+		<copy_for_alarm2>false</copy_for_alarm2>
 	</FEATURES>
 	<TEMPLATES>
 		<templates_directory>templates</templates_directory>
@@ -35,7 +35,7 @@
 	</TEMPLATES>
 	<DEBUG>
 		<send_mail>true</send_mail>
-		<tag_when_send>true</tag_when_send>
+		<tag_when_send>false</tag_when_send>
 		<hide_console>true</hide_console>
 	</DEBUG>
 	<TABLENAME>
