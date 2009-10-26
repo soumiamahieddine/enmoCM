@@ -104,11 +104,21 @@ if(count($indexes) > 0)
 		{
 			if($indexes[$key]['type'] == 'string' || $indexes[$key]['type'] == 'float' || $indexes[$key]['type'] == 'integer')
 			{
-				$opt_indexes .= '<input type="text" name="'.$key.'" id="'.$key.'" value="" size="40"  />';
+				$opt_indexes .= '<input type="text" name="'.$key.'" id="'.$key.'" value="';
+				if($indexes[$key]['default_value'] <> false)
+				{
+					$opt_indexes .= $db->show_string($indexes[$key]['default_value'], true);
+				}
+				$opt_indexes .='" size="40"  />';
 			}
 			else if($indexes[$key]['type'] == 'date')
 			{
-				$opt_indexes .= '<input type="text" name="'.$key.'" id="'.$key.'" value="" size="40"  onclick="showCalender(this);" />';
+				$opt_indexes .= '<input type="text" name="'.$key.'" id="'.$key.'" value="';
+				if($indexes[$key]['default_value'] <> false)
+				{
+					$opt_indexes .= $db->format_date_db($indexes[$key]['default_value'], true);
+				}
+				$opt_indexes .='" size="40"  onclick="showCalender(this);" />';
 			}
 		}
 		else
@@ -117,7 +127,12 @@ if(count($indexes) > 0)
 					$opt_indexes .= '<option value="">'._CHOOSE.'...</option>';
 					for($i=0; $i<count($indexes[$key]['values']);$i++)
 					{
-						$opt_indexes .= '<option value="'.$indexes[$key]['values'][$i]['id'].'">'.$indexes[$key]['values'][$i]['label'].'</option>';
+						$opt_indexes .= '<option value="'.$indexes[$key]['values'][$i]['id'].'"';
+						if($indexes[$key]['default_value'] <> false)
+						{
+							$opt_indexes .=  'selected="selected"';
+						}
+						$opt_indexes .= '>'.$indexes[$key]['values'][$i]['label'].'</option>';
 					}
 			$opt_indexes .= '</select>';
 		}

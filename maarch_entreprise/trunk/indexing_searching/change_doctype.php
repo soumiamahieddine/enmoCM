@@ -138,6 +138,10 @@ if(count($indexes) > 0)
 					{
 						$opt_indexes .= $db->format_date_db($values_fields->key, true);
 					}
+					else if($indexes[$key]['default_value'] <> false)
+					{
+						$opt_indexes .= $db->format_date_db($indexes[$key]['default_value'], true);
+					}
 					$opt_indexes .= '" onclick="clear_error(\'frm_error_'.$id_action.'\');showCalender(this);"/>';
 				}
 				else
@@ -146,6 +150,10 @@ if(count($indexes) > 0)
 					if(isset($values_fields->$key))
 					{
 						$opt_indexes .= $db->show_string($values_fields->key, true);
+					}
+					else if($indexes[$key]['default_value'] <> false)
+					{
+						$opt_indexes .= $db->show_string($indexes[$key]['default_value'], true);
 					}
 					$opt_indexes .= '" onclick="clear_error(\'frm_error_'.$id_action.'\');" />';
 				}
@@ -159,7 +167,11 @@ if(count($indexes) > 0)
 						$opt_indexes .= '<option value="'.$indexes[$key]['values'][$i]['id'].'"';
 						if($indexes[$key]['values'][$i]['id'] == $values_fields->$key)
 						{
-						$opt_indexes .= 'selected="selected"';
+							$opt_indexes .= 'selected="selected"';
+						}
+						else if($indexes[$key]['default_value'] <> false && $indexes[$key]['values'][$i]['id'] == $indexes[$key]['default_value'])
+						{
+							$opt_indexes .= 'selected="selected"';
 						}
 						$opt_indexes .= ' >'.$indexes[$key]['values'][$i]['label'].'</option>';
 					}

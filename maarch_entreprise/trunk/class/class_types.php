@@ -504,7 +504,23 @@ class types extends dbquery
 				$label = $tmp;
 			}
 			$img = (STRING) $item->img;
-
+			if(isset($item->default_value) && !empty($item->default_value))
+			{
+				$tmp = (string) $item->default_value;
+				$tmp2 = $this->retrieve_constant_lang($tmp, $path_lang);
+				if($tmp2 <> false)
+				{
+					$default = $tmp2;
+				}
+				else
+				{
+					$default= $tmp;
+				}
+			}
+			else
+			{
+				$default = false;
+			}
 			if(isset($item->values_list))
 			{
 				$values = array();
@@ -523,11 +539,11 @@ class types extends dbquery
 					}
 					array_push($values, array('id' => (string) $val->id, 'label' => $label_val));
 				}
-				$arr_tmp = array('column' => (STRING) $item->column, 'label' => $label, 'type' => (STRING) $item->type, 'img' => $_SESSION['config']['businessappurl'].'img/'.$img, 'type_field' => 'select', 'values' => $values);
+				$arr_tmp = array('column' => (STRING) $item->column, 'label' => $label, 'type' => (STRING) $item->type, 'img' => $_SESSION['config']['businessappurl'].'img/'.$img, 'type_field' => 'select', 'values' => $values, 'default_value' => $default);
 			}
 			else
 			{
-				$arr_tmp = array('column' => (STRING) $item->column, 'label' => $label, 'type' => (STRING) $item->type, 'img' => $_SESSION['config']['businessappurl'].'img/'.$img, 'type_field' => 'input');
+				$arr_tmp = array('column' => (STRING) $item->column, 'label' => $label, 'type' => (STRING) $item->type, 'img' => $_SESSION['config']['businessappurl'].'img/'.$img, 'type_field' => 'input', 'default_value' => $default);
 			}
 			array_push($indexes, $arr_tmp);
 		}
@@ -583,7 +599,23 @@ class types extends dbquery
 			}
 			$col = (STRING) $item->column;
 			$img = (STRING) $item->img;
-
+			if(isset($item->default_value) && !empty($item->default_value))
+			{
+				$tmp = (string) $item->default_value;
+				$tmp2 = $this->retrieve_constant_lang($tmp, $path_lang);
+				if($tmp2 <> false)
+				{
+					$default = $tmp2;
+				}
+				else
+				{
+					$default= $tmp;
+				}
+			}
+			else
+			{
+				$default = false;
+			}
 			if(in_array($col, $fields))
 			{
 				if(isset($item->values_list))
@@ -604,11 +636,11 @@ class types extends dbquery
 						}
 						array_push($values, array('id' => (string) $val->id, 'label' => $label_val));
 					}
-					$indexes[$col] = array( 'label' => $label, 'type' => (STRING) $item->type, 'img' => $_SESSION['config']['businessappurl'].'img/'.$img, 'type_field' => 'select', 'values' => $values);
+					$indexes[$col] = array( 'label' => $label, 'type' => (STRING) $item->type, 'img' => $_SESSION['config']['businessappurl'].'img/'.$img, 'type_field' => 'select', 'values' => $values, 'default_value' => $default);
 				}
 				else
 				{
-					$indexes[$col] = array( 'label' => $label, 'type' => (STRING) $item->type, 'img' => $_SESSION['config']['businessappurl'].'img/'.$img, 'type_field' => 'input');
+					$indexes[$col] = array( 'label' => $label, 'type' => (STRING) $item->type, 'img' => $_SESSION['config']['businessappurl'].'img/'.$img, 'type_field' => 'input', 'default_value' => $default);
 				}
 			}
 		}
