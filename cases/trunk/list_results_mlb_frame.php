@@ -116,15 +116,22 @@ if($_GET['searched_item'] == "case")
 if($_GET['searched_item'] == "res_id" || $_GET['searched_item'] == "res_id_in_process")
 {
 
-	$case_id_in_res = $cases->get_case_id($_GET['searched_value']); 
-	$tmp1 = " and ".$_SESSION['tablename']['cases'].".case_id <> '".$case_id_in_res."' ";
-	
+	$case_id_in_res = $cases->get_case_id($_GET['searched_value']);
+	if($case_id_in_res <> '')
+	{
+		$tmp1 = " and ".$_SESSION['tablename']['cases'].".case_id <> '".$case_id_in_res."' ";
+	}
+	else
+	{
+		$tmp1 = " and ".$_SESSION['tablename']['cases'].".case_id <> 0 ";
+	}
 	$where_request .= $tmp1;
 }
 
-
+//echo $tmp1;exit;
 
 $where_clause = $sec->get_where_clause_from_coll_id($_SESSION['collection_id_choice']);
+//echo $where_clause;exit;
 if(!empty($where_request))
 {
 	if($_SESSION['searching']['where_clause_bis'] <> "")
@@ -143,6 +150,7 @@ else
 }
 $where_request = str_replace("()", "(1=-1)", $where_request);
 $where_request = str_replace("and ()", "", $where_request);
+//echo $where_request;exit;
 $list=new list_show();
 $order = '';
 if(isset($_REQUEST['order']) && !empty($_REQUEST['order']))
