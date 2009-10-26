@@ -68,6 +68,10 @@ if(count($indexes) > 0)
 				{
 					$content .= $_SESSION['m_admin']['folder']['indexes'][$key];
 				}
+				else if($indexes[$key]['default_value'] <> false)
+				{
+					$content .= $foldertype->format_date_db($indexes[$key]['default_value'], true);
+				}
 				$content .= '" onclick="showCalender(this);"/>';
 			}
 			else
@@ -76,6 +80,10 @@ if(count($indexes) > 0)
 				if(!empty($_SESSION['m_admin']['folder']['indexes'][$key]))
 				{
 					$content .= $_SESSION['m_admin']['folder']['indexes'][$key];
+				}
+				else if($indexes[$key]['default_value'] <> false)
+				{
+					$content .= $foldertype->protect_string_db($indexes[$key]['default_value'], true);
 				}
 				$content .= '"  />';
 			}
@@ -88,6 +96,10 @@ if(count($indexes) > 0)
 				{
 					$content .= '<option value="'.$indexes[$key]['values'][$i]['id'].'"';
 					if($indexes[$key]['values'][$i]['id'] == $_SESSION['m_admin']['folder']['indexes'][$key])
+					{
+						$content .= 'selected="selected"';
+					}
+					else if($indexes[$key]['default_value'] <> false && $indexes[$key]['values'][$i]['id'] == $indexes[$key]['default_value'])
 					{
 						$content .= 'selected="selected"';
 					}
@@ -107,7 +119,7 @@ if(count($indexes) > 0)
 $db = new dbquery();
 $db->connect();
 //$db->query("select folders_system_id, folder_id, folder_name from ".$_SESSION['tablename']['fold_folders']." where foldertype_id = ".$_REQUEST['foldertype_id']." and folder_level = 1");
-$db->query("select folders_system_id, folder_id, folder_name from ".$_SESSION['tablename']['fold_folders']." wherefolder_level = 1");
+$db->query("select folders_system_id, folder_id, folder_name from ".$_SESSION['tablename']['fold_folders']." where folder_level = 1");
 
 $folders = array();
 while($res = $db->fetch_object())

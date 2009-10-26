@@ -20,6 +20,7 @@
 		<label>_STRING</label>
 		<type>string</type>
 		<img>default_string.gif</img>
+		<default_value>test</default_value>
 	</INDEX>
 	<INDEX>
 		<column>custom_t3</column>
@@ -40,6 +41,7 @@
 				<label>Rouge</label>
 			</value>
 		</values_list>
+		<default_value>1</default_value>
 	</INDEX>
 	<INDEX>
 		<column>custom_d1</column>

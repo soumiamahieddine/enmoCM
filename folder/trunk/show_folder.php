@@ -176,18 +176,27 @@ if(isset($_POST['delete_folder']))
 									<?php
 									if($update_right)
 									{
+										$value = '';
+										if(!empty($folder_array['index'][$key]['show_value']))
+										{
+											$value = $folder_array['index'][$key]['show_value'];
+										}
+										elseif($folder_array['index'][$key]['default_value'])
+										{
+											$value = $folder_array['index'][$key]['default_value'];
+										}
 										if($folder_array['index'][$key]['type_field'] == 'input')
 										{
 											if($folder_array['index'][$key]['type'] == 'date')
 											{
 												?>
-												<input type="text" name="<?php echo $key;?>" id="<?php echo $key;?>" value="<?php echo $folder_array['index'][$key]['show_value'];?>" size="40"  title="<?php  echo $folder_array['index'][$key]['show_value']; ?>" alt="<?php  echo $folder_array['index'][$key]['show_value']; ?>" onclick="showCalender(this);" />
+												<input type="text" name="<?php echo $key;?>" id="<?php echo $key;?>" value="<?php echo $value; ?>" size="40"  title="<?php echo $value; ?>" alt="<?php echo $value; ?>" onclick="showCalender(this);" />
 												<?php
 											}
 											else
 											{
 												?>
-												<input type="text" name="<?php echo $key;?>" id="<?php echo $key;?>" value="<?php echo $folder_array['index'][$key]['show_value'];?>" size="40"  title="<?php  echo $folder_array['index'][$key]['show_value']; ?>" alt="<?php  echo $folder_array['index'][$key]['show_value']; ?>" />
+												<input type="text" name="<?php echo $key;?>" id="<?php echo $key;?>" value="<?php echo $key;?>" size="40"  title="<?php echo $key;?>" alt="<?php echo $key;?>" />
 												<?php
 											}
 										}
@@ -198,7 +207,7 @@ if(isset($_POST['delete_folder']))
 												<option value=""><?php echo _CHOOSE;?>...</option>
 												<?php for($i=0; $i<count($folder_array['index'][$key]['values']);$i++)
 												{?>
-													<option value="<?php echo $folder_array['index'][$key]['values'][$i]['id'];?>" <?php if($folder_array['index'][$key]['values'][$i]['id'] == $folder_array['index'][$key]['value']){ echo 'selected="selected"';}?>><?php echo $folder_array['index'][$key]['values'][$i]['label'];?></option>
+													<option value="<?php echo $folder_array['index'][$key]['values'][$i]['id'];?>" <?php if($folder_array['index'][$key]['values'][$i]['id'] == $folder_array['index'][$key]['value'] || $folder_array['index'][$key]['values'][$i]['id'] == $value){ echo 'selected="selected"';}?>><?php echo $folder_array['index'][$key]['values'][$i]['label'];?></option>
 													<?php
 												}?>
 											</select>
