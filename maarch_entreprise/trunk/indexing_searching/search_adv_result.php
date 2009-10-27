@@ -62,6 +62,15 @@ else
 {
 	$start = 0;
 }
+$mode = 'normal';
+if($_REQUEST['mode'] == 'frame')
+{
+	$mode = 'frame';
+}
+elseif($_REQUEST['mode'] == 'popup')
+{
+	$mode = 'popup';
+}
 $where_request = "";
 $case_view = false;
  $_ENV['date_pattern'] = "/^[0-3][0-9]-[0-1][0-9]-[1-2][0-9][0-9][0-9]$/";
@@ -707,10 +716,20 @@ exit();
 $_SESSION['current_search_query'] = $json_txt;
 if(!empty($_SESSION['error']))
 {
-	$_SESSION['error_search'] = '<br /><div class="error">'._MUST_CORRECT_ERRORS.' : <br /><br /><strong>'.$_SESSION['error_search'].'<br /><a href="'.$_SESSION['config']['businessappurl'].'index.php?page=search_adv&dir=indexing_searching">'._CLICK_HERE_TO_CORRECT.'</a></strong></div>';
-	?>
-	<script language="javascript" type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?page=search_adv_error&dir=indexing_searching';?>';</script>
-	<?php
+	if($mode == 'normal')
+	{
+		$_SESSION['error_search'] = '<br /><div class="error">'._MUST_CORRECT_ERRORS.' : <br /><br /><strong>'.$_SESSION['error_search'].'<br /><a href="'.$_SESSION['config']['businessappurl'].'index.php?page=search_adv&dir=indexing_searching">'._CLICK_HERE_TO_CORRECT.'</a></strong></div>';
+		?>
+		<script language="javascript" type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?page=search_adv_error&dir=indexing_searching';?>';</script>
+		<?php
+	}
+	else
+	{
+		$_SESSION['error_search'] = '<br /><div class="error">'._MUST_CORRECT_ERRORS.' : <br /><br /><strong>'.$_SESSION['error_search'].'<br /><a href="'.$_SESSION['config']['businessappurl'].'indexing_searching/search_adv.php?mode='.$mode.'">'._CLICK_HERE_TO_CORRECT.'</a></strong></div>';
+		?>
+		<script language="javascript" type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'].'indexing_searching/search_adv_error.php?mode='.$mode;?>';</script>
+		<?php
+	}
 }
 else
 {
@@ -719,10 +738,8 @@ else
 }
 if($_REQUEST['specific_case'] == "attach_to_case")
 {
-
 	$page = 'list_results_mlb_frame';
 	?>
-
 	<!--<script language="javascript" type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'].'indexing_searching/'.$page.'.php?searched_item='.$_REQUEST['searched_item'].'&searched_value='.$_REQUEST['searched_value'];?>';</script>-->
 	<script language="javascript" type="text/javascript">window.top.location.href='<?php  echo $_SESSION['urltomodules'].'cases/'.$page.'.php?searched_item='.$_REQUEST['searched_item'].'&searched_value='.$_REQUEST['searched_value'].'&template='.$_REQUEST['template'];?>';</script>
 	<?php
@@ -740,7 +757,7 @@ if(empty($_SESSION['error_search']))
 	//##################
 	$page = 'list_results_mlb';
 	?>
-	<script language="javascript" type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?page='.$page.'&dir=indexing_searching'.$extend_link_case;?>';</script>
+	<script language="javascript" type="text/javascript">window.top.location.href='<?php if($mode == 'normal'){ echo $_SESSION['config']['businessappurl'].'index.php?page='.$page.'&dir=indexing_searching'.$extend_link_case;} elseif($mode=='frame' || $mode == 'popup'){echo $_SESSION['config']['businessappurl'].'indexing_searching/'.$page.'?mode='.$mode.'&action_form='.$_REQUEST['action_form'].'&module='.$_REQUEST['module'];} if(isset($_REQUEST['nodetails'])){echo '&nodetails';}?>';</script>
 	<?php
 	exit();
 }

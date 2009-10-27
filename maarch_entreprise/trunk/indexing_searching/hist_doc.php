@@ -84,7 +84,7 @@ elseif(!empty($view) && !empty($table)&& $view <> false && $table <> false)
 $db_hist->query($query);
 //$db_hist->show();
 ?>
-<table cellpadding="0" cellspacing="0" border="0" class="listing">
+<table cellpadding="0" cellspacing="0" border="0" class="listing2">
     <thead>
         <tr>
             <th><?php  echo _DATE;?></th>

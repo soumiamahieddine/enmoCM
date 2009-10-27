@@ -32,6 +32,7 @@
 session_name('PeopleBox');
 session_start();
 require_once($_SESSION['pathtocoreclass']."class_functions.php");
+require_once($_SESSION['pathtocoreclass']."class_db.php");
 require_once($_SESSION['pathtocoreclass']."class_request.php");
 require_once($_SESSION['pathtocoreclass']."class_core_tools.php");
 require_once($_SESSION['pathtocoreclass']."class_security.php");
@@ -44,7 +45,22 @@ $core_tools->load_lang();
 $core_tools->test_service('adv_search_mlb', 'apps');
 $_SESSION['search']['plain_text'] = "";
 $type = new types();
+
+$func = new functions();
+$conn = new dbquery();
+$conn->connect();
+$search_obj = new indexing_searching_app();
+$status_obj = new manage_status();
+$sec = new security();
 $_SESSION['indexation'] = false;
+
+$mode = 'normal';
+if(isset($_REQUEST['mode'])&& !empty($_REQUEST['mode']))
+{
+	$mode = $func->wash($_REQUEST['mode'], "alphanum", _MODE);
+}
+if($mode == 'normal')
+{
 /****************Management of the location bar  ************/
 $init = false;
 if($_REQUEST['reinit'] == "true")
@@ -61,13 +77,23 @@ $page_label = _SEARCH_ADV_SHORT;
 $page_id = "search_adv_mlb";
 $core_tools->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
+}
+elseif($mode == 'popup' || $mode == 'frame')
+{
+	$core_tools->load_html();
+	$core_tools->load_header();
+	$time = $core_tools->get_session_time_expire();
+	?><body>
+	<div id="container">
 
-$func = new functions();
-$conn = new dbquery();
-$conn->connect();
-$search_obj = new indexing_searching_app();
-$status_obj = new manage_status();
-$sec = new security();
+            <div class="error" id="main_error">
+				<?php  echo $_SESSION['error'];?>
+            </div>
+			<div class="info" id="main_info">
+				<?php  echo $_SESSION['info'];?>
+            </div><?php
+}
+
 // load saved queries for the current user in an array
 $conn->query("select query_id, query_name from ".$_SESSION['tablename']['saved_queries']." where user_id = '".$_SESSION['user']['UserId']."' order by query_name");
 $queries = array();
@@ -379,9 +405,17 @@ function del_query_confirm()
 </div>
 </form>
 <?php } ?>
-<form name="frmsearch2" method="get" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php"  id="frmsearch2" class="<?php echo $class_for_form; ?>">
+<form name="frmsearch2" method="get" action="<?php if($mode == 'normal') {echo $_SESSION['config']['businessappurl'].'index.php'; } elseif($mode == 'frame' || $mode == 'popup'){ echo $_SESSION['config']['businessappurl'].'indexing_searching/search_adv_result.php';}?>"  id="frmsearch2" class="<?php echo $class_for_form; ?>">
 <input type="hidden" name="page" value="search_adv_result" />
 <input type="hidden" name="dir" value="indexing_searching" />
+<input type="hidden" name="mode" value="<?php echo $mode;?>" />
+<input type="hidden" name="action_form" value="<?php echo $_REQUEST['action_form'];?>" />
+<input type="hidden" name="module" value="<?php echo $_REQUEST['module'];?>" />
+<?php if(isset($_REQUEST['nodetails']))
+{?>
+<input type="hidden" name="nodetails" value="true" />
+<?php
+}?>
 <table align="center" border="0" width="100%">
     <tr>
     	<td align="left"><a href="#" onclick="clear_search_form('frmsearch2','select_criteria');clear_q_list();"><img src="<?php  echo $_SESSION['config']['businessappurl']."img/reset.gif";?>" alt="<?php echo _CLEAR_SEARCH;?>" /> <?php  echo _CLEAR_SEARCH; ?></a></td>
@@ -523,3 +557,12 @@ function del_query_confirm()
 <script type="text/javascript">
 load_query(valeurs, loaded_query, 'frmsearch2', '<?php echo $browser_ie;?>, <?php echo _ERROR_IE_SEARCH;?>');
 </script>
+<?php if($mode == 'popup' || $mode == 'frame')
+{
+ 	echo '</div>';
+ 	if($mode == 'popup')
+ 	{
+	?><br/><div align="center"><input type="button" name="close" class="button" value="<?php echo _CLOSE_WINDOW;?>" onclick="self.close();" /></div> <?php
+	}
+ 	echo '</body></html>';
+}

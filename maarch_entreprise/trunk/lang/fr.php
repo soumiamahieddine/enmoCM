@@ -951,4 +951,6 @@ define('_NATURE', 'Nature');
 define('_NO_DEFINED_TREES', 'Aucun arbre d&eacute;fini');
 
 define('_IF_CHECKS_MANDATORY_MUST_CHECK_USE', 'Si vous cliquez sur un champ obligatoire, vous devez également cocher la case utilis&eacute;');
+
+define('_SEARCH_DOC', 'Rechercher un document');
 ?>

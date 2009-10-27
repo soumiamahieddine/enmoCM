@@ -313,7 +313,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 											$frm_str .= _JOIN_CASE;
 
 
-										$frm_str .= '" onclick="window.open(\''.$_SESSION['urltomodules'].'cases/search_adv_for_cases.php?searched_item=res_id_in_process&searched_value='.$_SESSION['doc_id'].'\',\'\', \'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=1020,height=685\');"/></td>';
+										$frm_str .= '" onclick="window.open(\''.$_SESSION['urltomodules'].'cases/search_adv_for_cases.php?searched_item=res_id_in_process&searched_value='.$_SESSION['doc_id'].'\',\'\', \'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=1020,height=710\');"/></td>';
 								}
 							$frm_str .= '</tr>';
 					$frm_str .= '</table>';
@@ -416,7 +416,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 		$frm_str .= '</h2>';
 		$frm_str .= '<div class="desc" id="history_div" style="display:none">';
 			$frm_str .= '<div class="ref-unit">';
-				$frm_str .= '<iframe src="'.$_SESSION['urltomodules'].'indexing_searching/hist_doc.php?id='.$res_id.'" name="hist_doc_process" width="400" height="180" align="left" scrolling="auto" frameborder="0" id="hist_doc_process"></iframe>';
+				$frm_str .= '<iframe src="'.$_SESSION['config']['businessappurl'].'indexing_searching/hist_doc.php?id='.$res_id.'" name="hist_doc_process" width="400" height="180" align="left" scrolling="auto" frameborder="0" id="hist_doc_process"></iframe>';
 			$frm_str .= '</div>';
 		$frm_str .= '</div>';
 		if($core_tools->is_module_loaded('notes'))

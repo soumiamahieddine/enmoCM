@@ -49,6 +49,14 @@ $core_tools->load_lang();
 $sec = new security();
 $status_obj = new manage_status();
 $contact = new contacts();
+
+$mode = 'normal';
+if(isset($_REQUEST['mode'])&& !empty($_REQUEST['mode']))
+{
+	$mode = $core_tools->wash($_REQUEST['mode'], "alphanum", _MODE);
+}
+if($mode == 'normal')
+{
 /****************Management of the location bar  ************/
 $init = false;
 if($_REQUEST['reinit'] == "true")
@@ -65,6 +73,22 @@ $page_label = _RESULTS;
 $page_id = "search_adv_result_mlb";
 $core_tools->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
+}
+elseif($mode == 'popup' || $mode == 'frame')
+{
+	$core_tools->load_html();
+	$core_tools->load_header();
+	$time = $core_tools->get_session_time_expire();
+	?><body>
+	<div id="container">
+
+            <div class="error" id="main_error">
+				<?php  echo $_SESSION['error'];?>
+            </div>
+			<div class="info" id="main_info">
+				<?php  echo $_SESSION['info'];?>
+            </div><?php
+}
 //$_SESSION['collection_id_choice'] = $_SESSION['searching']['coll_id'];
 $_SESSION['collection_id_choice'] = 'letterbox_coll';
 $view = $sec->retrieve_view_from_coll_id($_SESSION['collection_id_choice'] );
@@ -76,7 +100,7 @@ array_push($select[$view], "res_id", "status", "subject", "dest_user", "type_lab
 
 if($core_tools->is_module_loaded("cases") == true)
 {
-	array_push($select[$view], "case_id", "case_label", "case_description"); 
+	array_push($select[$view], "case_id", "case_label", "case_description");
 }
 
 
@@ -149,7 +173,7 @@ $_SESSION['error_page'] = '';
 	//Defines template allowed for this list
 	$template_list=array();
 	array_push($template_list, array( "name"=>"search_adv", "img"=>"extend_list.gif", "label"=> _ACCESS_LIST_EXTEND));
-	if($core_tools->is_module_loaded('cases'))	
+	if($core_tools->is_module_loaded('cases'))
 		array_push($template_list, array( "name"=>"group_case", "img"=>"box.gif", "label"=> _ACCESS_LIST_CASE));
 	if(!$_REQUEST['template'])
 		$template_to_use = $template_list[0]["name"];
@@ -164,8 +188,8 @@ $_SESSION['error_page'] = '';
 		$extension_icon = "_big";
 	//###################
 
-	
-	
+
+
 	//#########################
 
 		//build the tab with right format for list_doc function
@@ -338,11 +362,11 @@ $_SESSION['error_page'] = '';
 					}
 				}
 			}
-		
-		
-		
+
+
+
 		}
-	
+
 
 
 
@@ -353,11 +377,64 @@ $_SESSION['error_page'] = '';
 ?>
 
 <h1><img src="<?php  echo $_SESSION['config']['businessappurl']."img/picto_search_b.gif";?>" alt="" /> <?php  echo _SEARCH_RESULTS." - ".count($tab)." ".$found_type;?></h1>
-    <div id="inner_content"><?php
+    <div id="inner_content">
+	<?php if(!isset($_REQUEST['action_form']) || empty($_REQUEST['action_form']))
+	{
+		$bool_radio_form = false;
+		$method = '';
+		$action = '';
+		$button_label = '';
+	}
+	else
+	{
+		$bool_radio_form = true;
+		$method = 'get';
+		$button_label = _VALIDATE;
+		if(isset($_REQUEST['module'])&& !empty($_REQUEST['module']))
+		{
+			$action = $_SESSION['urltomodules'].$_REQUEST['module'].'/'.$_REQUEST['action_form'].'.php';
+		}
+		else
+		{
+			$action = $_SESSION['config']['businessappurl'].$_REQUEST['action_form'].'.php';
+		}
+	}
+	if($mode == 'popup')
+	{
+		$show_close = true;
+	}
+	else
+	{
+		$show_close = false;
+	}
+	if(isset($_REQUEST['nodetails']))
+	{
+		$show_details = false;
+	}
+	else
+	{
+		$show_details = true;
+	}
 
+	if($mode == 'popup' || $mode == 'frame')
+	{
+		$export = false;
+		$save_mode = false;
+		$use_template = false;
+		$special = true;
+		$name = $_SESSION['config']['businessappurl'].'indexing_searching/list_results_mlb';
+	}
+	else
+	{
+		$export = true;
+		$save_mode = true;
+		$special = false;
+		$name = 'list_results_mlb&dir=indexing_searching';
+		$use_template = true;
+	}
+	$comp_link = '&mode='.$mode;
 
-$details = 'details';
-	$list->list_doc($tab,$i,'','res_id','list_results_mlb&dir=indexing_searching','res_id',$details.'&dir=indexing_searching',true,false,'','','',true,true,false, true,false,false,true,false,'', '',false,'','','listing spec', '', false, false, null, '', '{}', false, '', true, '', true, $template_list, $template_to_use );
+	$list->list_doc($tab,$i,'','res_id',$name,'res_id','details&dir=indexing_searching',true,$bool_radio_form,$method,$action,$button_label,$show_details,true,$special, $export,$show_close,false,true,false,'', '',false,'','','listing spec', $comp_link, false, false, array(), '', '{}', false, '', true, array(), $use_template, $template_list, $template_to_use );
 	?></div><?php
 }
 else
@@ -413,4 +490,13 @@ else
 	}
 	-->
 	</script>
+<?php if($save_mode)
+{?>
 	<input type="button" onclick="createModal(form_txt);" value="<?php echo _SAVE_QUERY;?>" class="button"/>
+<?php
+}
+if($mode == 'popup' || $mode == 'frame')
+{
+ 	echo '</div>';
+ 	echo '</body></html>';
+}

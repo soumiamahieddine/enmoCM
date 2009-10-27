@@ -1085,7 +1085,7 @@ else
 						 if ($core_tools->test_service('join_res_case', 'cases',false) == 1)
 						{
 						?><div align="center">
-							<input type="button" class="button" name="back_welcome" id="back_welcome" value="<?php if($res->case_id<>'') echo _MODIFY_CASE; else echo _JOIN_CASE;?>" onclick="window.open('<?php echo $_SESSION['urltomodules'];?>cases/search_adv_for_cases.php?searched_item=res_id&searched_value=<? echo $s_id;?>','', 'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=1020,height=685');"/></div><?php
+							<input type="button" class="button" name="back_welcome" id="back_welcome" value="<?php if($res->case_id<>'') echo _MODIFY_CASE; else echo _JOIN_CASE;?>" onclick="window.open('<?php echo $_SESSION['urltomodules'];?>cases/search_adv_for_cases.php?searched_item=res_id&searched_value=<? echo $s_id;?>','', 'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=1020,height=710');"/></div><?php
 						}
 						?>
 					</dd>

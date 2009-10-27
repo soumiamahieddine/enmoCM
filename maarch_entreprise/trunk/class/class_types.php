@@ -711,7 +711,7 @@ class types extends dbquery
 			}
 			else if($indexes[$key]['type'] == 'string'  && !empty($values[$key]))
 			{
-				$field_value = $this->wash($value[$key],"no",$indexes[$key]['label']);
+				$field_value = $this->wash($values[$key],"no",$indexes[$key]['label']);
 			}
 			else if($indexes[$key]['type'] == 'float'  && !empty($values[$key])) // && $values[$key] >= 0
 			{

@@ -149,6 +149,31 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 			}
 			$frm_str .= '<table width="100%" align="center" border="0" >';
 
+			if($core_tools->test_service('index_attachment', 'attachments', false))
+			{
+				$frm_str .= '<table width="100%" align="center" border="0" >';
+				  $frm_str .= '<tr id="attachment_tr" style="display:'.$display_value.';">';
+				 		$frm_str .='<td><label for="attachment" class="form_title" >'._ATTACH_TO_DOC.' : </label></td>';
+						$frm_str .='<td>&nbsp;</td>';
+						$frm_str .='<td class="indexing_field"><input type="radio" name="attachment" id="attach" value="true" onclick="hide_index(true, \''.$display_value.'\');" /> '._YES.' <input type="radio" name="attachment" id="no_attach" value="false" checked="checked" onclick="hide_index(false, \''.$display_value.'\');" /> '._NO.'</td>';
+							$frm_str .='<td><span class="red_asterisk" id="attachment_mandatory" style="display:inline;">*</span>&nbsp;</td>';
+				  $frm_str .= '</tr>';
+				    $frm_str .= '<tr id="attach_title_tr" style="display:none;">';
+				 		$frm_str .='<td><label for="attach_title" class="form_title" >'._TITLE.' : </label></td>';
+						$frm_str .='<td>&nbsp;</td>';
+						$frm_str .='<td class="indexing_field"><input type="text" name="attach_title" id="attach_title" value="" /></td>';
+							$frm_str .='<td><span class="red_asterisk" id="res_id_mandatory" style="display:inline;">*</span>&nbsp;</td>';
+				  $frm_str .= '</tr>';
+				   $frm_str .= '<tr id="attach_link_tr" style="display:none;">';
+				 		$frm_str .='<td><label for="attach" class="form_title" >'._NUM_GED.' : </label></td>';
+						$frm_str .='<td>&nbsp;</td>';
+						$frm_str .='<td class="indexing_field"><input type="text" name="res_id" id="res_id" class="readonly" readonly="readonly" value="" /><br/><a href="javascript://" onclick="window.open(\''.$_SESSION['config']['businessappurl'].'indexing_searching/search_adv.php?mode=popup&action_form=show_res_id&module=attachments&nodetails\',\'search_doc_for_attachment\', \'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=1020,height=710\');" title="'._SEARCH.'"><em>'._SEARCH_DOC.'</em></a></td>';
+							$frm_str .='<td><span class="red_asterisk" id="res_id_mandatory" style="display:inline;">*</span>&nbsp;</td>';
+				  $frm_str .= '</tr>';
+
+				$frm_str .= '</table>';
+			}
+			$frm_str .= '<table width="100%" align="center" border="0" id="indexing_fields" style="display:block;">';
 				  /*** Category ***/
 				  $frm_str .= '<tr id="category_tr" style="display:'.$display_value.';">';
 				  	$frm_str .='<td class="indexing_label"><label for="category_id" class="form_title" >'._CATEGORY.'</label></td>';
@@ -618,46 +643,52 @@ function check_form($form_id,$values)
 	}
 	else
 	{
-		$cat_id = '';
-		for($i=0; $i<count($values); $i++)
+		//print_r($values);
+
+		$attach = get_value_fields($values, 'attach');
+		$coll_id = get_value_fields($values, 'coll_id');
+		if(!$attach)
 		{
-			if($values[$i]['ID'] == "category_id" )
+			$cat_id = get_value_fields($values, 'category_id');
+			if(!$cat_id)
 			{
-				$cat_id = $values[$i]['VALUE'];
-				break;
+				$_SESSION['error'] = _CATEGORY.' '._IS_EMPTY;
+				return false;
+			}
+			$no_error = process_category_check($cat_id, $values);
+
+			if($no_error == false)
+			{
+				//$_SESSION['error'] .= _ERROR_CATEGORY;
+				return false;
+			}
+
+			if($_SESSION['upfile']['format'] <> 'maarch')
+			{
+				require_once($_SESSION['config']['businessapppath'].'class'.DIRECTORY_SEPARATOR.'class_indexing_searching_app.php');
+				$is = new indexing_searching_app();
+				$state = $is->is_filetype_allowed($_SESSION['upfile']['format']);
+				if(!$state)
+				{
+					$_SESSION['error'].= '<br/>'.$_SESSION['upfile']['format']._FILETYPE.' '._NOT_ALLOWED;
+					return false;
+				}
 			}
 		}
-		if(empty($cat_id))
+		else
 		{
-			$_SESSION['error'] = _CATEGORY.' '._IS_EMPTY;
-			return false;
-		}
-		$no_error = process_category_check($cat_id, $values);
-
-		if($no_error == false)
-		{
-			//$_SESSION['error'] .= _ERROR_CATEGORY;
-			return false;
-		}
-
-		$coll_id = '';
-		for($i=0; $i<count($values); $i++)
-		{
-			if($values[$i]['ID'] == "coll_id" )
+			$title = get_value_fields($values, 'attach_title');
+			if(!$title || empty($title))
 			{
-				$coll_id =  $values[$i]['VALUE'];
-				break;
+				$_SESSION['error'] .= _TITLE.' '._IS_EMPTY.'<br/>';
 			}
-		}
-
-		if($_SESSION['upfile']['format'] <> 'maarch')
-		{
-			require_once($_SESSION['config']['businessapppath'].'class'.DIRECTORY_SEPARATOR.'class_indexing_searching_app.php');
-			$is = new indexing_searching_app();
-			$state = $is->is_filetype_allowed($_SESSION['upfile']['format']);
-			if(!$state)
+			$id_doc = get_value_fields($values, 'res_id');
+			if(!$id_doc || empty($id_doc))
 			{
-				$_SESSION['error'].= '<br/>'.$_SESSION['upfile']['format']._FILETYPE.' '._NOT_ALLOWED;
+				$_SESSION['error'] .= _NUM_GED.' '._IS_EMPTY.'<br/>';
+			}
+			if(!empty($_SESSION['error']))
+			{
 				return false;
 			}
 		}
@@ -715,14 +746,16 @@ function check_docserver($coll_id)
 		return false;
 	}
 
+/*
 	if($_SESSION['origin'] == "scan")
 	{
 		$tmp = $_SESSION['pathtomodules'].'indexing_searching'.DIRECTORY_SEPARATOR.'tmp/';
 	}
 	else
 	{
+*/
 		$tmp = $_SESSION['config']['tmppath'];
-	}
+	//}
 	$d = dir($tmp);
 	$path_tmp = $d->path;
 	if($_SESSION['origin'] == "scan")

@@ -44,9 +44,8 @@ $ext_list = $is->filetypes_showed_indexation();
 $ext = strtolower($_SESSION['upfile']['format']);
 if($_SESSION['origin'] == "scan")
 {
-
 	//echo $_SESSION['pathtomodules'].'indexing_searching'.DIRECTORY_SEPARATOR.'tmp'.DIRECTORY_SEPARATOR.'tmp_file_'.$_SESSION['upfile']['md5'].'.'.$ext;
-	if(file_exists($_SESSION['pathtomodules'].'indexing_searching'.DIRECTORY_SEPARATOR.'tmp'.DIRECTORY_SEPARATOR.'tmp_file_'.$_SESSION['upfile']['md5'].'.'.$ext))
+	if(file_exists($_SESSION['config']['tmppath'].'tmp_file_'.$_SESSION['upfile']['md5'].'.'.$ext))
 	{
 		header("Pragma: public");
 		header("Expires: 0");
@@ -56,7 +55,7 @@ if($_SESSION['origin'] == "scan")
 		header("Content-Type: ".$_SESSION['upfile']['mime']);
 		header("Content-Disposition: inline; filename=".basename('maarch').".".$ext.";");
 		header("Content-Transfer-Encoding: binary");
-		$loc = $_SESSION['pathtomodules'].'indexing_searching'.DIRECTORY_SEPARATOR.'tmp'.DIRECTORY_SEPARATOR.'tmp_file_'.$_SESSION['upfile']['md5'].'.'.$ext;
+		$loc = $_SESSION['config']['tmppath'].'tmp_file_'.$_SESSION['upfile']['md5'].'.'.$ext;
 		readfile($loc);
 	}
 	else

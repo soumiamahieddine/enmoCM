@@ -5,7 +5,6 @@
 		<label>_CUSTOM_T1</label>
 		<type>string</type>
 		<img>default_string.gif</img>
-		<default_value>test</default_value>
 	</INDEX>
 	<INDEX>
 		<column>custom_t2</column>

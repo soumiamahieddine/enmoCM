@@ -154,7 +154,7 @@ else
 	}
 	if(isset($s_id) && !empty($s_id) && $_SESSION['history']['resview'] == "true")
 	{
-		$users->add($table, $s_id ,"VIEW", _VIEW_DOC_NUM.$s_id, $_SESSION['config']['databasetype'],'indexing_searching');
+		$users->add($table, $s_id ,"VIEW", _VIEW_DOC_NUM.$s_id, $_SESSION['config']['databasetype'],'apps');
 	}
 	$modify_doc = $security->collection_user_right($_SESSION['collection_id_choice'], "can_update");
 	if(empty($_SESSION['error']) || $_SESSION['indexation'])
@@ -254,8 +254,8 @@ else
 						$doctypes_second_level_id = $res['doctypes_second_level_id'];
 						$_SESSION['multidoc'] = true;
 					}
-					require_once($_SESSION['pathtomodules']."indexing_searching".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
-					$indexing_searching = new indexing_searching();
+					require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_indexing_searching_app.php");
+					$indexing_searching = new indexing_searching_app();
 					$indexing_searching->retrieve_index($res,$_SESSION['collection_id_choice'] );
 					?>
 					<form method="post" name="index_doc" action="index.php?page=details_invoices&dir=indexing_searching&id=<?php  echo $_SESSION['id_to_view']; ?>" class="forms">
