@@ -56,6 +56,7 @@ if(trim($_SESSION['config']['corename']) == "")
 		$i++;
 	}
 }
+//print_r($_REQUEST);
 if(trim($_GET['target_page']) <> "")
 {
 	$_SESSION['target_page'] = $_GET['target_page'];

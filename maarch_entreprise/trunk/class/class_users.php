@@ -569,7 +569,13 @@ class users extends dbquery
 
 			if($mode == "add")
 			{
-				$this->query("select user_id from ".$_SESSION['tablename']['users']." where user_Id = '".$_SESSION['m_admin']['users']['UserId']."'");
+				
+				if ($_SESSION['config']['databasetype'] == "POSTGRESQL")
+					$query = "select user_id from ".$_SESSION['tablename']['users']." where user_Id ilike '".$_SESSION['m_admin']['users']['UserId']."'";
+				else
+					$query = "select user_id from ".$_SESSION['tablename']['users']." where user_Id like '".$_SESSION['m_admin']['users']['UserId']."'";
+				
+ 				$this->query($query);
 
 				if($this->nb_result() > 0)
 				{

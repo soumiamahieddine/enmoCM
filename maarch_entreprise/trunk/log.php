@@ -123,7 +123,16 @@ else
 		{
 			$db = new dbquery();
 			$db->connect();
-			$db->query("SELECT * From users WHERE user_id ='".$s_login."'");
+			
+			
+			if ($_SESSION['config']['databasetype'] == "POSTGRESQL")
+				$query = "select * from ".$_SESSION['tablename']['users']." where user_id ilike '".$this->protect_string_db($s_login)."' ";
+			else
+				$query = "select * from ".$_SESSION['tablename']['users']." where user_id like '".$this->protect_string_db($s_login)."' ";
+			
+			
+			
+			$db->query($query);		
 			if($db->fetch_object())
 			{
 				$pass = md5($s_pass);
