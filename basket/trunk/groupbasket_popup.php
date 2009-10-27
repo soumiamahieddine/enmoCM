@@ -218,7 +218,7 @@ $time = $core_tools->get_session_time_expire();
 							<td><?php echo _USE_ONE; ?></td>
 
 							<td><input type="checkbox" class="check" name="action_<?php echo $_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID'];?>_page_use" value="Y"
-							<?php if($bask->get_infos_groupbasket_session($_SESSION['m_admin']['basket']['ind_group'],$_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID'], 'PAGE_USE' ) == 'Y'){ echo 'checked="checked"';}?>/></td>
+							<?php if($bask->get_infos_groupbasket_session($_SESSION['m_admin']['basket']['ind_group'],$_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID'], 'PAGE_USE' ) == 'Y'){ echo 'checked="checked"';}else{echo 'checked="checked"';}?> /></td>
 						</tr>
 					</table>
 				</div>

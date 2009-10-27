@@ -184,7 +184,7 @@ $title = _RESULTS." : ".$i." "._FOUND_INVOICES;
 $_SESSION['origin'] = 'basket';
 	$_SESSION['collection_id_choice'] = $_SESSION['current_basket']['coll_id'];
 	$tmp = preg_replace('/.php$/', '', $security->get_script_from_coll($_SESSION['current_basket']['coll_id'], 'script_details'));
-	$details = $tmp.'&module=indexing_searching';
+	$details = $tmp.'&dir=indexing_searching';
 $param_list = array('values' => $tab, 'title' => $title, 'key' => 'res_id', 'page_name' => 'invoices_list',
 'what' => 'res_id', 'detail_destination' =>$details, 'details_page' => '', 'view_doc' => true,  'bool_details' => true, 'bool_order' => true,
 'bool_frame' => true, 'module' => 'basket', 'css' => 'listing spec',
