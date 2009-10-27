@@ -44,7 +44,7 @@ if(isset($_SESSION['stringSearch'])and !empty($_SESSION['stringSearch']))
 	{
 		$where = " ".$_SESSION['tablename']['fold_folders'].".foldertype_id = ".$_SESSION['tablename']['fold_foldertypes'].".foldertype_id ";
 	}
-	$where .= " and subject ilike '%".$_SESSION['stringSearch']."%' and status <> 'DEL'";
+	$where .= " and (folder_id ilike '%".$_SESSION['stringSearch']."%' or folder_name ilike '%".$_SESSION['stringSearch']."%' or  subject ilike '%".$_SESSION['stringSearch']."%') and status <> 'DEL'";
 	$request= new request;
 	$tab=$request->select($select,$where," order by folder_name ",$_SESSION['config']['databasetype']);
 	//$request->show();
