@@ -439,10 +439,20 @@ $_SESSION['error_page'] = '';
 }
 else
 {
-	$_SESSION['error_search'] = "<p class=\"error\"><img src=\"".$_SESSION['config']['img']."/noresult.gif\" /><br />"._NO_RESULTS."</p>";
-	?>
-	<script language="javascript" type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?page=search_adv_error&dir=indexing_searching';?>';</script>
-	<?php
+	if($mode == 'normal')
+	{
+		$_SESSION['error_search'] = '<p class="error"><img src="'.$_SESSION['config']['businessappurl'].'img/noresult.gif" /><br />'._NO_RESULTS.'</p><br/><br/><div align="center"><strong><a href="'.$_SESSION['config']['businessappurl'].'index.php?page=search_adv&dir=indexing_searching&init_search">'._MAKE_NEW_SEARCH.'</a></strong></div>';
+		?>
+		<script language="javascript" type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?page=search_adv_error&dir=indexing_searching';?>';</script>
+		<?php
+	}
+	else
+	{
+		$_SESSION['error_search'] = '<p class="error"><img src="'.$_SESSION['config']['businessappurl'].'img/noresult.gif" /><br />'._NO_RESULTS.'</p><br/><br/><div align="center"><strong><a href="'.$_SESSION['config']['businessappurl'].'indexing_searching/search_adv.php?mode='.$mode.'&init_search">'._MAKE_NEW_SEARCH.'</a></strong></div>';
+		?>
+		<script language="javascript" type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'].'indexing_searching/search_adv_error.php?mode='.$mode;?>';</script>
+		<?php
+	}
 }
 ?>
 	<script type="text/javascript">

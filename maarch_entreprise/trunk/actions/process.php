@@ -671,27 +671,27 @@ function check_form($form_id,$values)
 		$market_id = '';
 		/*if(empty($market))
 		{
-			$_SESSION['error'] = _MARKET.' '._IS_EMPTY;
+			$_SESSION['action_error'] = _MARKET.' '._IS_EMPTY;
 			return false;
 		}*/
 		if(!empty($market))
 		{
 			if(!preg_match('/\([0-9]+\)$/', $market))
 			{
-				$_SESSION['error'] = _MARKET." "._WRONG_FORMAT."";
+				$_SESSION['action_error'] = _MARKET." "._WRONG_FORMAT."";
 					return false;
 			}
 			$market_id = str_replace(')', '', substr($market, strrpos($market,'(')+1));
 			$db->query("select folders_system_id from ".$_SESSION['tablename']['fold_folders']." where folders_system_id = ".$market_id);
 			if($db->nb_result() == 0)
 			{
-				$_SESSION['error'] = _MARKET.' '.$market_id.' '._UNKNOWN;
+				$_SESSION['action_error'] = _MARKET.' '.$market_id.' '._UNKNOWN;
 				return false;
 			}
 		}
 /*		if(empty($project))
 		{
-			$_SESSION['error'] = _PROJECT.' '._IS_EMPTY;
+			$_SESSION['action_error'] = _PROJECT.' '._IS_EMPTY;
 			return false;
 		}
 */
@@ -699,14 +699,14 @@ function check_form($form_id,$values)
 		{
 			if(!preg_match('/\([0-9]+\)$/', $project))
 			{
-				$_SESSION['error'] = _PROJECT." "._WRONG_FORMAT."";
+				$_SESSION['action_error'] = _PROJECT." "._WRONG_FORMAT."";
 				return false;
 			}
 			$project_id = str_replace(')', '', substr($project, strrpos($project,'(')+1));
 			$db->query("select folders_system_id from ".$_SESSION['tablename']['fold_folders']." where folders_system_id = ".$project_id);
 			if($db->nb_result() == 0)
 			{
-				$_SESSION['error'] = _PROJECT.' '.$project_id.' '._UNKNOWN;
+				$_SESSION['action_error'] = _PROJECT.' '.$project_id.' '._UNKNOWN;
 				return false;
 			}
 		}
@@ -715,7 +715,7 @@ function check_form($form_id,$values)
 			$db->query("select folders_system_id from ".$_SESSION['tablename']['fold_folders']." where folders_system_id = ".$market_id." and parent_id = ".$project_id);
 			if($db->nb_result() == 0)
 			{
-				$_SESSION['error'] = _INCOMPATIBILITY_MARKET_PROJECT;
+				$_SESSION['action_error'] = _INCOMPATIBILITY_MARKET_PROJECT;
 				return false;
 			}
 		}
@@ -727,7 +727,7 @@ function check_form($form_id,$values)
 			$table = $sec->retrieve_table_from_coll($coll_id);
 			if(empty($table))
 			{
-				$_SESSION['error'] .= _COLLECTION.' '._UNKNOWN;
+				$_SESSION['action_error'] .= _COLLECTION.' '._UNKNOWN;
 				return false;
 			}
 
@@ -748,7 +748,7 @@ function check_form($form_id,$values)
 			$db->query("select fdl.foldertype_id from ".$_SESSION['tablename']['fold_foldertypes_doctypes_level1']." fdl, ".$_SESSION['tablename']['doctypes']." d where d.doctypes_first_level_id = fdl.doctypes_first_level_id and fdl.foldertype_id = ".$foldertype_id." and d.type_id = ".$type_id);
 			if($db->nb_result() == 0)
 			{
-				$_SESSION['error'] .= _ERROR_COMPATIBILITY_FOLDER;
+				$_SESSION['action_error'] .= _ERROR_COMPATIBILITY_FOLDER;
 				return false;
 			}
 		}
@@ -756,12 +756,12 @@ function check_form($form_id,$values)
 
 	if($other_checked && $other_txt == '')
 	{
-		$_SESSION['error'] = _MUST_DEFINE_ANSWER_TYPE;
+		$_SESSION['action_error'] = _MUST_DEFINE_ANSWER_TYPE;
 		return false;
 	}
 	if($check == false)
 	{
-		$_SESSION['error'] = _MUST_CHECK_ONE_BOX;
+		$_SESSION['action_error'] = _MUST_CHECK_ONE_BOX;
 	}
 	return $check;
 }
@@ -919,7 +919,7 @@ function manage_unlock($arr_id, $history, $id_action, $label_action, $status, $c
 		$req = $db->query("update ".$table. " set video_user = '', video_time = 0 where res_id = ".$arr_id[$i], true);
 		if(!$req)
 		{
-			$_SESSION['error'] = _SQL_ERROR;
+			$_SESSION['action_error'] = _SQL_ERROR;
 			return false;
 		}
 	}
@@ -942,7 +942,7 @@ function manage_status($arr_id, $history, $id_action, $label_action, $status)
 			$req = $db->query("update ".$_POST['table']. " set status = '".$status."' where res_id = ".$arr_id[$i], true);
 			if(!$req)
 			{
-				$_SESSION['error'] = _SQL_ERROR;
+				$_SESSION['action_error'] = _SQL_ERROR;
 				return false;
 			}
 		}
@@ -953,7 +953,7 @@ function manage_status($arr_id, $history, $id_action, $label_action, $status)
 			if($core->is_module_loaded('folder') && empty($folder_id ))
 			{
 				$db->query("update ".$_POST['table']. " set status = 'NEW' where res_id = ".$arr_id[$i], true);
-				$_SESSION['error'] = _NUM.$arr_id[$i].' : '._FOLDER_MISSING;
+				$_SESSION['action_error'] = _NUM.$arr_id[$i].' : '._FOLDER_MISSING;
 				return false;
 			}
 */

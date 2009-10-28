@@ -63,7 +63,7 @@ function manage_status($arr_id, $history, $id_action, $label_action, $status)
 		$req = $db->query("update ".$_POST['table']. " set status = '".$status."' where res_id = ".$arr_id[$i], true);
 		if(!$req)
 		{
-			$_SESSION['error'] = _SQL_ERROR;
+			$_SESSION['action_error'] = _SQL_ERROR;
 			return false;
 		}
 	}

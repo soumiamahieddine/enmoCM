@@ -40,7 +40,7 @@ require_once($_SESSION['config']['businessapppath'].'class'.DIRECTORY_SEPARATOR.
 $core_tools = new core_tools();
 $core_tools->test_user();
 $core_tools->load_lang();
-$core_tools->test_service('adv_search_mlb', 'apps');
+
 $is = new indexing_searching_app();
 $func = new functions();
 $req = new request();
@@ -53,6 +53,7 @@ $indexes = $type->get_all_indexes($coll_id);
 //$func->show_array($indexes);
 $_SESSION['copies'] = "false";
 $_SESSION['searching']['where_clause_bis'] = "";
+$_SESSION['error_search'] = '';
 // define the row of the start
 if(isset($_REQUEST['start']))
 {
@@ -62,7 +63,7 @@ else
 {
 	$start = 0;
 }
-$mode = 'normal';
+
 if($_REQUEST['mode'] == 'frame')
 {
 	$mode = 'frame';
@@ -70,6 +71,11 @@ if($_REQUEST['mode'] == 'frame')
 elseif($_REQUEST['mode'] == 'popup')
 {
 	$mode = 'popup';
+}
+else
+{
+	$mode = 'normal';
+	$core_tools->test_service('adv_search_mlb', 'apps');
 }
 $where_request = "";
 $case_view = false;
@@ -718,7 +724,7 @@ if(!empty($_SESSION['error']))
 {
 	if($mode == 'normal')
 	{
-		$_SESSION['error_search'] = '<br /><div class="error">'._MUST_CORRECT_ERRORS.' : <br /><br /><strong>'.$_SESSION['error_search'].'<br /><a href="'.$_SESSION['config']['businessappurl'].'index.php?page=search_adv&dir=indexing_searching">'._CLICK_HERE_TO_CORRECT.'</a></strong></div>';
+		$_SESSION['error_search'] = 'normal<br /><div class="error">'._MUST_CORRECT_ERRORS.' : <br /><br /><strong>'.$_SESSION['error_search'].'<br /><a href="'.$_SESSION['config']['businessappurl'].'index.php?page=search_adv&dir=indexing_searching">'._CLICK_HERE_TO_CORRECT.'</a></strong></div>';
 		?>
 		<script language="javascript" type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?page=search_adv_error&dir=indexing_searching';?>';</script>
 		<?php
@@ -730,6 +736,7 @@ if(!empty($_SESSION['error']))
 		<script language="javascript" type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'].'indexing_searching/search_adv_error.php?mode='.$mode;?>';</script>
 		<?php
 	}
+	exit();
 }
 else
 {
@@ -748,6 +755,7 @@ if($_REQUEST['specific_case'] == "attach_to_case")
 
 if(empty($_SESSION['error_search']))
 {
+
 	//specific string for search_adv cases
 	$extend_link_case = "";
 	if($case_view == true)

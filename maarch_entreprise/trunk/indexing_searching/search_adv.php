@@ -42,7 +42,7 @@ require_once($_SESSION['config']['businessapppath'].'class'.DIRECTORY_SEPARATOR.
 $core_tools = new core_tools();
 $core_tools->test_user();
 $core_tools->load_lang();
-$core_tools->test_service('adv_search_mlb', 'apps');
+
 $_SESSION['search']['plain_text'] = "";
 $type = new types();
 
@@ -61,6 +61,7 @@ if(isset($_REQUEST['mode'])&& !empty($_REQUEST['mode']))
 }
 if($mode == 'normal')
 {
+	$core_tools->test_service('adv_search_mlb', 'apps');
 /****************Management of the location bar  ************/
 $init = false;
 if($_REQUEST['reinit'] == "true")
@@ -406,12 +407,17 @@ function del_query_confirm()
 </form>
 <?php } ?>
 <form name="frmsearch2" method="get" action="<?php if($mode == 'normal') {echo $_SESSION['config']['businessappurl'].'index.php'; } elseif($mode == 'frame' || $mode == 'popup'){ echo $_SESSION['config']['businessappurl'].'indexing_searching/search_adv_result.php';}?>"  id="frmsearch2" class="<?php echo $class_for_form; ?>">
-<input type="hidden" name="page" value="search_adv_result" />
-<input type="hidden" name="dir" value="indexing_searching" />
+<?php if($mode == 'normal')
+{?><input type="hidden" name="page" value="search_adv_result" />
+	<input type="hidden" name="dir" value="indexing_searching" />
+<?php } ?>
 <input type="hidden" name="mode" value="<?php echo $mode;?>" />
-<input type="hidden" name="action_form" value="<?php echo $_REQUEST['action_form'];?>" />
-<input type="hidden" name="module" value="<?php echo $_REQUEST['module'];?>" />
-<?php if(isset($_REQUEST['nodetails']))
+<?php if($mode == 'frame' || $mode == 'popup'){?>
+	<input type="hidden" name="action_form" value="<?php echo $_REQUEST['action_form'];?>" />
+	<input type="hidden" name="module" value="<?php echo $_REQUEST['module'];?>" />
+<?php
+}
+if(isset($_REQUEST['nodetails']))
 {?>
 <input type="hidden" name="nodetails" value="true" />
 <?php
@@ -556,6 +562,10 @@ function del_query_confirm()
  </div>
 <script type="text/javascript">
 load_query(valeurs, loaded_query, 'frmsearch2', '<?php echo $browser_ie;?>, <?php echo _ERROR_IE_SEARCH;?>');
+<?php if(isset($_REQUEST['init_search']))
+{
+	?>clear_search_form('frmsearch2','select_criteria');clear_q_list();	<?php
+}?>
 </script>
 <?php if($mode == 'popup' || $mode == 'frame')
 {
@@ -566,3 +576,4 @@ load_query(valeurs, loaded_query, 'frmsearch2', '<?php echo $browser_ie;?>, <?ph
 	}
  	echo '</body></html>';
 }
+

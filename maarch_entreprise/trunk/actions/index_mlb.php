@@ -147,8 +147,6 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 					$frm_str .= '<iframe src="'.$_SESSION['config']['businessappurl'].'indexing_searching/choose_file.php" name="choose_file" id="choose_file" frameborder="0" scrolling="no" width="100%" height="40"></iframe>';
                  $frm_str .= '</div>';
 			}
-			$frm_str .= '<table width="100%" align="center" border="0" >';
-
 			if($core_tools->test_service('index_attachment', 'attachments', false))
 			{
 				$frm_str .= '<table width="100%" align="center" border="0" >';
@@ -167,7 +165,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 				   $frm_str .= '<tr id="attach_link_tr" style="display:none;">';
 				 		$frm_str .='<td><label for="attach" class="form_title" >'._NUM_GED.' : </label></td>';
 						$frm_str .='<td>&nbsp;</td>';
-						$frm_str .='<td class="indexing_field"><input type="text" name="res_id" id="res_id" class="readonly" readonly="readonly" value="" /><br/><a href="javascript://" onclick="window.open(\''.$_SESSION['config']['businessappurl'].'indexing_searching/search_adv.php?mode=popup&action_form=show_res_id&module=attachments&nodetails\',\'search_doc_for_attachment\', \'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=1020,height=710\');" title="'._SEARCH.'"><em>'._SEARCH_DOC.'</em></a></td>';
+						$frm_str .='<td class="indexing_field"><input type="text" name="res_id" id="res_id" class="readonly" readonly="readonly" value="" /><br/><a href="javascript://" onclick="window.open(\''.$_SESSION['config']['businessappurl'].'indexing_searching/search_adv.php?mode=popup&action_form=show_res_id&module=attachments&init_search&nodetails\',\'search_doc_for_attachment\', \'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=1020,height=710\');" title="'._SEARCH.'"><em>'._SEARCH_DOC.'</em></a></td>';
 							$frm_str .='<td><span class="red_asterisk" id="res_id_mandatory" style="display:inline;">*</span>&nbsp;</td>';
 				  $frm_str .= '</tr>';
 
@@ -635,10 +633,10 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 function check_form($form_id,$values)
 {
 	//print_r($values);
-	$_SESSION['error'] = '';
+	$_SESSION['action_error'] = '';
 	if(count($values) < 1 || empty($form_id))
 	{
-		$_SESSION['error'] =  _FORM_ERROR;
+		$_SESSION['action_error'] =  _FORM_ERROR;
 		return false;
 	}
 	else
@@ -652,14 +650,14 @@ function check_form($form_id,$values)
 			$cat_id = get_value_fields($values, 'category_id');
 			if(!$cat_id)
 			{
-				$_SESSION['error'] = _CATEGORY.' '._IS_EMPTY;
+				$_SESSION['action_error'] = _CATEGORY.' '._IS_EMPTY;
 				return false;
 			}
 			$no_error = process_category_check($cat_id, $values);
 
 			if($no_error == false)
 			{
-				//$_SESSION['error'] .= _ERROR_CATEGORY;
+				//$_SESSION['action_error'] .= _ERROR_CATEGORY;
 				return false;
 			}
 
@@ -670,7 +668,7 @@ function check_form($form_id,$values)
 				$state = $is->is_filetype_allowed($_SESSION['upfile']['format']);
 				if(!$state)
 				{
-					$_SESSION['error'].= '<br/>'.$_SESSION['upfile']['format']._FILETYPE.' '._NOT_ALLOWED;
+					$_SESSION['action_error'].= '<br/>'.$_SESSION['upfile']['format']._FILETYPE.' '._NOT_ALLOWED;
 					return false;
 				}
 			}
@@ -680,14 +678,14 @@ function check_form($form_id,$values)
 			$title = get_value_fields($values, 'attach_title');
 			if(!$title || empty($title))
 			{
-				$_SESSION['error'] .= _TITLE.' '._IS_EMPTY.'<br/>';
+				$_SESSION['action_error'] .= _TITLE.' '._IS_EMPTY.'<br/>';
 			}
 			$id_doc = get_value_fields($values, 'res_id');
 			if(!$id_doc || empty($id_doc))
 			{
-				$_SESSION['error'] .= _NUM_GED.' '._IS_EMPTY.'<br/>';
+				$_SESSION['action_error'] .= _NUM_GED.' '._IS_EMPTY.'<br/>';
 			}
-			if(!empty($_SESSION['error']))
+			if(!empty($_SESSION['action_error']))
 			{
 				return false;
 			}
@@ -704,6 +702,14 @@ function check_form($form_id,$values)
  **/
 function check_docserver($coll_id)
 {
+	if(isset($_SESSION['indexing']['path_template']) && !empty($_SESSION['indexing']['path_template']) &&
+	isset($_SESSION['indexing']['destination_dir']) && !empty($_SESSION['indexing']['destination_dir']) &&
+	isset($_SESSION['indexing']['docserver_id']) && !empty($_SESSION['indexing']['docserver_id']) &&
+	isset($_SESSION['indexing']['file_destination_name']) && !empty($_SESSION['indexing']['file_destination_name']))
+	{
+		$_SESSION['action_error'] = _CHECK_FORM_OK;
+		return true;
+	}
 	require_once($_SESSION['pathtocoreclass']."class_docserver.php");
 	$core_tools =new core_tools();
 
@@ -712,7 +718,7 @@ function check_docserver($coll_id)
 	$error = $docserver->get_error();
 	if(!empty($error))
 	{
-		$_SESSION['error'] = _DOCSERVER_ERROR.' : '.$error;
+		$_SESSION['action_error'] = _DOCSERVER_ERROR.' : '.$error;
 		return false;
 	}
 
@@ -720,7 +726,7 @@ function check_docserver($coll_id)
 	{
 		if(!isset($_SESSION['template_content']) || empty($_SESSION['template_content']))
 		{
-			$_SESSION['error'] = _TEMPLATE.' '._IS_EMPTY;
+			$_SESSION['action_error'] = _TEMPLATE.' '._IS_EMPTY;
 			return false;
 		}
 		$path_tmp = $_SESSION['config']['tmppath'].DIRECTORY_SEPARATOR."tmp_file_".$_SESSION['user']['UserId'].".maarch";
@@ -729,7 +735,7 @@ function check_docserver($coll_id)
 
 		if(!$myfile)
 		{
-			$_SESSION['error'] .= _FILE_OPEN_ERROR.'.<br/>';
+			$_SESSION['action_error'] .= _FILE_OPEN_ERROR.'.<br/>';
 			return false;
 		}
 
@@ -742,7 +748,7 @@ function check_docserver($coll_id)
 	$new_size = $docserver->check_size($_SESSION['upfile']['size'], $_SESSION["config"]["lang"]);
 	if($new_size == 0)
 	{
-		$_SESSION['error'] = _DOCSERVER_ERROR.' : '.$docserver->get_error();
+		$_SESSION['action_error'] = _DOCSERVER_ERROR.' : '.$docserver->get_error();
 		return false;
 	}
 
@@ -783,7 +789,7 @@ function check_docserver($coll_id)
 	$docinfo = $docserver->filename();
 	if($docserver->get_error() == "txt_error_when_sending_file")
 	{
-		$_SESSION['error'] = _FILE_SEND_ERROR;
+		$_SESSION['action_error'] = _FILE_SEND_ERROR;
 		return false;
 	}
 	$destination_rept = $docinfo['destination_rept'];
@@ -795,7 +801,7 @@ function check_docserver($coll_id)
 	// Tests the existence of the file
 	if(file_exists( $destination_rept.$file_destination_name.".".$_SESSION['upfile']['format']))
 	{
-		 $_SESSION['error'].= _FILE_ALREADY_EXISTS.". "._MORE_INFOS." : <a href=\"mailto:".$_SESSION['config']['adminmail']."\">".$_SESSION['config']['adminname']."</a>.";
+		 $_SESSION['action_error'].= _FILE_ALREADY_EXISTS.". "._MORE_INFOS." : <a href=\"mailto:".$_SESSION['config']['adminmail']."\">".$_SESSION['config']['adminname']."</a>.";
 		return false;
 	}
 
@@ -805,7 +811,7 @@ function check_docserver($coll_id)
 	$file_name = $entry;
 	if($cp == false)
 	{
-		$_SESSION['error'] .= _DOCSERVER_COPY_ERROR;
+		$_SESSION['action_error'] .= _DOCSERVER_COPY_ERROR;
 		return false;
 	}
 	else
@@ -814,7 +820,7 @@ function check_docserver($coll_id)
 		$delete = unlink($tmp_source_copy);
 		if ($delete == false)
 		{
-			$_SESSION['error'] .= _TMP_FILE_DEL_ERROR;
+			$_SESSION['action_error'] .= _TMP_FILE_DEL_ERROR;
 			return false;
 		}
 	}
@@ -825,7 +831,7 @@ function check_docserver($coll_id)
 	$_SESSION['indexing']['docserver_id'] = $docserver_id;
 	$_SESSION['indexing']['file_destination_name'] = $file_destination_name;
 
-	$_SESSION['error'] = _CHECK_FORM_OK;
+	$_SESSION['action_error'] = _CHECK_FORM_OK;
 	return true;
 }
 
@@ -843,7 +849,7 @@ function process_category_check($cat_id, $values)
 	// If No category : Error
 	if(!isset($_ENV['categories'][$cat_id]))
 	{
-		$_SESSION['error'] = _CATEGORY.' '._UNKNOWN.': '.$cat_id;
+		$_SESSION['action_error'] = _CATEGORY.' '._UNKNOWN.': '.$cat_id;
 		return false;
 	}
 
@@ -852,22 +858,22 @@ function process_category_check($cat_id, $values)
 	{
 		if($_ENV['categories'][$cat_id][$values[$i]['ID']]['mandatory'] == true  && (empty($values[$i]['VALUE']) ))
 		{
-			$_SESSION['error'] = $_ENV['categories'][$cat_id][$values[$i]['ID']]['label'].' '._IS_EMPTY;
+			$_SESSION['action_error'] = $_ENV['categories'][$cat_id][$values[$i]['ID']]['label'].' '._IS_EMPTY;
 			return false;
 		}
 		if($_ENV['categories'][$cat_id][$values[$i]['ID']]['type_form'] == 'date' && !empty($values[$i]['VALUE']) && preg_match($_ENV['date_pattern'],$values[$i]['VALUE'])== 0)
 		{
-			$_SESSION['error'] = $_ENV['categories'][$cat_id][$values[$i]['ID']]['label']." "._WRONG_FORMAT."";
+			$_SESSION['action_error'] = $_ENV['categories'][$cat_id][$values[$i]['ID']]['label']." "._WRONG_FORMAT."";
 			return false;
 		}
 		if($_ENV['categories'][$cat_id][$values[$i]['ID']]['type_form'] == 'integer' && !empty($values[$i]['VALUE']) && preg_match("/^[0-9]*$/",$values[$i]['VALUE'])== 0)
 		{
-			$_SESSION['error'] = $_ENV['categories'][$cat_id][$values[$i]['ID']]['label']." "._WRONG_FORMAT."";
+			$_SESSION['action_error'] = $_ENV['categories'][$cat_id][$values[$i]['ID']]['label']." "._WRONG_FORMAT."";
 			return false;
 		}
 		if($_ENV['categories'][$cat_id][$values[$i]['ID']]['type_form'] == 'radio' && !empty($values[$i]['VALUE']) && !in_array($values[$i]['VALUE'], $_ENV['categories'][$cat_id][$values[$i]['ID']]['values']))
 		{
-			$_SESSION['error'] = $_ENV['categories'][$cat_id][$values[$i]['ID']]['label']." "._WRONG_FORMAT."";
+			$_SESSION['action_error'] = $_ENV['categories'][$cat_id][$values[$i]['ID']]['label']." "._WRONG_FORMAT."";
 			return false;
 		}
 	}
@@ -901,7 +907,7 @@ function process_category_check($cat_id, $values)
 			$process_limit_date = get_value_fields($values, 'process_limit_date');
 			if(trim($process_limit_date) == "" || preg_match($_ENV['date_pattern'], $process_limit_date)== 0)
 			{
-				$_SESSION['error'] = $_ENV['categories'][$cat_id]['other_cases']['process_limit_date']['label']." "._WRONG_FORMAT."";
+				$_SESSION['action_error'] = $_ENV['categories'][$cat_id]['other_cases']['process_limit_date']['label']." "._WRONG_FORMAT."";
 				return false;
 			}
 		}
@@ -921,7 +927,7 @@ function process_category_check($cat_id, $values)
 		}
 		if(!$contact_type)
 		{
-			$_SESSION['error'] = $_ENV['categories'][$cat_id]['other_cases']['type_contact']['label']." "._MANDATORY."";
+			$_SESSION['action_error'] = $_ENV['categories'][$cat_id]['other_cases']['type_contact']['label']." "._MANDATORY."";
 			return false;
 		}
 		$contact = get_value_fields($values, 'contact');
@@ -929,7 +935,7 @@ function process_category_check($cat_id, $values)
 		{
 			if(empty($contact))
 			{
-				$_SESSION['error'] = $_ENV['categories'][$cat_id]['other_cases']['contact']['label'].' '._IS_EMPTY;
+				$_SESSION['action_error'] = $_ENV['categories'][$cat_id]['other_cases']['contact']['label'].' '._IS_EMPTY;
 				return false;
 			}
 		}
@@ -937,12 +943,12 @@ function process_category_check($cat_id, $values)
 		{
 			if($contact_type == 'external' && preg_match('/\([0-9]+\)$/', $contact) == 0)
 			{
-				$_SESSION['error'] = $_ENV['categories'][$cat_id]['other_cases']['contact']['label']." "._WRONG_FORMAT.".<br/>"._USE_AUTOCOMPLETION;
+				$_SESSION['action_error'] = $_ENV['categories'][$cat_id]['other_cases']['contact']['label']." "._WRONG_FORMAT.".<br/>"._USE_AUTOCOMPLETION;
 				return false;
 			}
 			elseif($contact_type == 'internal' && preg_match('/\((\s|\d|\h|\w)+\)$/i', $contact) == 0)
 			{
-				$_SESSION['error'] = $_ENV['categories'][$cat_id]['other_cases']['contact']['label']." "._WRONG_FORMAT.".<br/>"._USE_AUTOCOMPLETION;
+				$_SESSION['action_error'] = $_ENV['categories'][$cat_id]['other_cases']['contact']['label']." "._WRONG_FORMAT.".<br/>"._USE_AUTOCOMPLETION;
 				return false;
 			}
 		}
@@ -955,7 +961,7 @@ function process_category_check($cat_id, $values)
 		{
 			if(empty($_SESSION['indexing']['diff_list']['dest']['user_id']) || !isset($_SESSION['indexing']['diff_list']['dest']['user_id']))
 			{
-				$_SESSION['error'] = $_ENV['categories'][$cat_id]['other_cases']['diff_list']['label']." "._MANDATORY."";
+				$_SESSION['action_error'] = $_ENV['categories'][$cat_id]['other_cases']['diff_list']['label']." "._MANDATORY."";
 				return false;
 			}
 		}
@@ -971,7 +977,7 @@ function process_category_check($cat_id, $values)
 		{
 			if(empty($market))
 			{
-				$_SESSION['error'] = $_ENV['categories'][$cat_id]['other_cases']['market']['label'].' '._IS_EMPTY;
+				$_SESSION['action_error'] = $_ENV['categories'][$cat_id]['other_cases']['market']['label'].' '._IS_EMPTY;
 				return false;
 			}
 		}
@@ -979,14 +985,14 @@ function process_category_check($cat_id, $values)
 		{
 			if(!preg_match('/\([0-9]+\)$/', $market))
 			{
-				$_SESSION['error'] = $_ENV['categories'][$cat_id]['other_cases']['market']['label']." "._WRONG_FORMAT."";
+				$_SESSION['action_error'] = $_ENV['categories'][$cat_id]['other_cases']['market']['label']." "._WRONG_FORMAT."";
 				return false;
 			}
 			$market_id = str_replace(')', '', substr($market, strrpos($market,'(')+1));
 			$db->query("select folders_system_id from ".$_SESSION['tablename']['fold_folders']." where folders_system_id = ".$market_id);
 			if($db->nb_result() == 0)
 			{
-				$_SESSION['error'] = _MARKET.' '.$market_id.' '._UNKNOWN;
+				$_SESSION['action_error'] = _MARKET.' '.$market_id.' '._UNKNOWN;
 				return false;
 			}
 		}
@@ -995,7 +1001,7 @@ function process_category_check($cat_id, $values)
 		{
 			if(empty($project))
 			{
-				$_SESSION['error'] = $_ENV['categories'][$cat_id]['other_cases']['project']['label'].' '._IS_EMPTY;
+				$_SESSION['action_error'] = $_ENV['categories'][$cat_id]['other_cases']['project']['label'].' '._IS_EMPTY;
 				return false;
 			}
 		}
@@ -1003,14 +1009,14 @@ function process_category_check($cat_id, $values)
 		{
 			if(!preg_match('/\([0-9]+\)$/', $project))
 			{
-				$_SESSION['error'] = $_ENV['categories'][$cat_id]['other_cases']['project']['label']." "._WRONG_FORMAT."";
+				$_SESSION['action_error'] = $_ENV['categories'][$cat_id]['other_cases']['project']['label']." "._WRONG_FORMAT."";
 				return false;
 			}
 			$project_id = str_replace(')', '', substr($project, strrpos($project,'(')+1));
 			$db->query("select folders_system_id from ".$_SESSION['tablename']['fold_folders']." where folders_system_id = ".$project_id);
 			if($db->nb_result() == 0)
 			{
-				$_SESSION['error'] = _MARKET.' '.$project_id.' '._UNKNOWN;
+				$_SESSION['action_error'] = _MARKET.' '.$project_id.' '._UNKNOWN;
 				return false;
 			}
 		}
@@ -1019,7 +1025,7 @@ function process_category_check($cat_id, $values)
 			$db->query("select folders_system_id from ".$_SESSION['tablename']['fold_folders']." where folders_system_id = ".$market_id." and parent_id = ".$project_id);
 			if($db->nb_result() == 0)
 			{
-				$_SESSION['error'] = _INCOMPATIBILITY_MARKET_PROJECT;
+				$_SESSION['action_error'] = _INCOMPATIBILITY_MARKET_PROJECT;
 				return false;
 			}
 		}
@@ -1039,7 +1045,7 @@ function process_category_check($cat_id, $values)
 			$db->query("select fdl.foldertype_id from ".$_SESSION['tablename']['fold_foldertypes_doctypes_level1']." fdl, ".$_SESSION['tablename']['doctypes']." d where d.doctypes_first_level_id = fdl.doctypes_first_level_id and fdl.foldertype_id = ".$foldertype_id." and d.type_id = ".$type_id);
 			if($db->nb_result() == 0)
 			{
-				$_SESSION['error'] .= _ERROR_COMPATIBILITY_FOLDER;
+				$_SESSION['action_error'] .= _ERROR_COMPATIBILITY_FOLDER;
 				return false;
 			}
 		}
@@ -1053,7 +1059,7 @@ function process_category_check($cat_id, $values)
 		{
 			if($box_id == false)
 			{
-				$_SESSION['error'] = _NO_BOX_SELECTED.' ';
+				$_SESSION['action_error'] = _NO_BOX_SELECTED.' ';
 				return false;
 			}
 		}
@@ -1064,7 +1070,7 @@ function process_category_check($cat_id, $values)
 			$pa_return_value = $physical_archive->load_box_db($box_id, $cat_id, $_SESSION['user']['UserId']);
 			if ($pa_return_value == false)
 			{
-				$_SESSION['error'] = _ERROR_TO_INDEX_NEW_BATCH_WITH_PHYSICAL_ARCHIVE;
+				$_SESSION['action_error'] = _ERROR_TO_INDEX_NEW_BATCH_WITH_PHYSICAL_ARCHIVE;
 				return false;
 			}
 		}
@@ -1076,7 +1082,7 @@ function process_category_check($cat_id, $values)
 	{
 		if($chrono_out == false)
 		{
-			$_SESSION['error'] = _NO_CHRONO_NUMBER_DEFINED.' ';
+			$_SESSION['action_error'] = _NO_CHRONO_NUMBER_DEFINED.' ';
 			return false;
 		}
 	}
@@ -1087,7 +1093,7 @@ function process_category_check($cat_id, $values)
 		$pa_return_value = $physical_archive->load_box_db($box_id, $cat_id, $_SESSION['user']['UserId']);
 		if ($pa_return_value == false)
 		{
-			$_SESSION['error'] = _ERROR_TO_INDEX_NEW_BATCH_WITH_PHYSICAL_ARCHIVE;
+			$_SESSION['action_error'] = _ERROR_TO_INDEX_NEW_BATCH_WITH_PHYSICAL_ARCHIVE;
 			return false;
 		}
 	}
@@ -1135,7 +1141,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
 
 	if(empty($values_form) || count($arr_id) < 1 || empty($coll_id))
 	{
-		$_SESSION['error'] = _ERROR_MANAGE_FORM_ARGS;
+		$_SESSION['action_error'] = _ERROR_MANAGE_FORM_ARGS;
 		return false;
 	}
 
@@ -1145,6 +1151,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
 	require_once($_SESSION['pathtocoreclass']."class_resource.php");
 	$db = new dbquery();
 	$sec = new security();
+	$req = new request();
 	$core = new core_tools();
 	$table = $sec->retrieve_table_from_coll($coll_id);
 	$ind_coll = $sec->get_ind_collection($coll_id);
@@ -1154,263 +1161,267 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
 	$resource = new resource();
 	$_SESSION['data'] = array();
 
-	$cat_id = '';
-	for($i=0; $i<count($values_form); $i++)
-	{
-		if($values_form[$i]['ID'] == "category_id" )
-		{
-			$cat_id = $values_form[$i]['VALUE'];
-			break;
-		}
-	}
-
-	$query_ext_fields .= 'category_id,' ;
-	$query_ext_values .= "'".$cat_id."'," ;
-
 	// Load in the $_SESSION['data'] minimal indexes
 	array_push($_SESSION['data'], array('column' => "typist", 'value' => $_SESSION['user']['UserId'], 'type' => "string"));
 	array_push($_SESSION['data'], array('column' => "docserver_id", 'value' => $_SESSION['indexing']['docserver_id'], 'type' => "string"));
-	if($_SESSION['origin']<> 'store_file' && !$_SESSION['is_store'])
-	{
-		array_push($_SESSION['data'], array('column' => "status", 'value' => 'NEW', 'type' => "string"));
-	}
-	else
-	{
-		array_push($_SESSION['data'], array('column' => "status", 'value' => 'ATT', 'type' => "string"));
-	}
+	array_push($_SESSION['data'], array('column' => "format", 'value' => $_SESSION['upfile']['format'], 'type' => "string"));
+	array_push($_SESSION['data'], array('column' => "status", 'value' => 'NEW', 'type' => "string"));
 	array_push($_SESSION['data'], array('column' => "offset_doc", 'value' => ' ', 'type' => "string"));
 	array_push($_SESSION['data'], array('column' => "logical_adr", 'value' => ' ', 'type' => "string"));
 
 	if($_SESSION['origin'] == "scan")
 	{
 		array_push($_SESSION['data'], array('column' => "scan_user", 'value' => $_SESSION['user']['UserId'], 'type' => "string"));
-		if($_SESSION['config']['databasetype'] == "SQLSERVER")
-		{
-			$func_date = 'getdate()';
-		}
-		else //MYSQL & POSTGRESQL
-		{
-			$func_date = 'now()';
-		}
-		array_push($_SESSION['data'], array('column' => "scan_date", 'value' => $func_date, 'type' => "function"));
-	}
-	//if($_SESSION['origin'] == "files" || $_SESSION['origin'] == "scan")
-	//{
-		array_push($_SESSION['data'], array('column' => "format", 'value' => $_SESSION['upfile']['format'], 'type' => "string"));
-	//}
-	$_SESSION['origin'] = "";
-	// Specific indexes : values from the form
-	// Simple cases
-	for($i=0; $i<count($values_form); $i++)
-	{
-		if($_ENV['categories'][$cat_id][$values_form[$i]['ID']]['type_field'] == 'integer' && $_ENV['categories'][$cat_id][$values_form[$i]['ID']]['table'] <> 'none')
-		{
-			if($_ENV['categories'][$cat_id][$values_form[$i]['ID']]['table'] == 'res')
-			{
-				array_push($_SESSION['data'], array('column' => $values_form[$i]['ID'], 'value' => $values_form[$i]['VALUE'], 'type' => "integer"));
-			}
-			else if($_ENV['categories'][$cat_id][$values_form[$i]['ID']]['table'] == 'coll_ext')
-			{
-				$query_ext_fields .= $values_form[$i]['ID'].',';
-				$query_ext_values .= $values_form[$i]['VALUE'].',';
-			}
-		}
-		else if($_ENV['categories'][$cat_id][$values_form[$i]['ID']]['type_field'] == 'string' && $_ENV['categories'][$cat_id][$values_form[$i]['ID']]['table'] <> 'none')
-		{
-			if($_ENV['categories'][$cat_id][$values_form[$i]['ID']]['table'] == 'res')
-			{
-				array_push($_SESSION['data'], array('column' => $values_form[$i]['ID'], 'value' => $db->protect_string_db($values_form[$i]['VALUE']), 'type' => "string"));
-			}
-			else if($_ENV['categories'][$cat_id][$values_form[$i]['ID']]['table'] == 'coll_ext')
-			{
-				$query_ext_fields .= $values_form[$i]['ID'].',';
-				$query_ext_values .= "'".$db->protect_string_db($values_form[$i]['VALUE'])."',";
-			}
-		}
-		else if($_ENV['categories'][$cat_id][$values_form[$i]['ID']]['type_field'] == 'date' && $_ENV['categories'][$cat_id][$values_form[$i]['ID']]['table'] <> 'none')
-		{
-			if($_ENV['categories'][$cat_id][$values_form[$i]['ID']]['table'] == 'res')
-			{
-				array_push($_SESSION['data'], array('column' => $values_form[$i]['ID'], 'value' => $db->format_date_db($values_form[$i]['VALUE']), 'type' => "date"));
-			}
-			else if($_ENV['categories'][$cat_id][$values_form[$i]['ID']]['table'] == 'coll_ext')
-			{
-				$query_ext_fields .= $values_form[$i]['ID'].',';
-				$query_ext_values .= "'".$db->format_date_db($values_form[$i]['VALUE'])."',";
-			}
-		}
-	}
-	///// Manages the complementary indexes depending on the doctype
-	require_once($_SESSION['config']['businessapppath'].'class'.DIRECTORY_SEPARATOR.'class_types.php');
-	$type = new types();
-	$type_id =  get_value_fields($values_form, 'type_id');
-	$indexes = $type->get_indexes( $type_id,$coll_id, 'minimal');
-	$val_indexes = array();
-	for($i=0; $i<count($indexes);$i++)
-	{
-		$val_indexes[$indexes[$i]] =  get_value_fields($values_form, $indexes[$i]);
-	}
-	$_SESSION['data'] = $type->fill_data_array($type_id, $coll_id, $val_indexes, $_SESSION['data']);
-	//print_r($_SESSION['data']);
-	///////////////////////// Other cases
-	// Process limit Date
-	if(isset($_ENV['categories'][$cat_id]['other_cases']['process_limit_date']))
-	{
-		$process_limit_date = get_value_fields($values_form, 'process_limit_date');
-		if($_ENV['categories'][$cat_id]['other_cases']['process_limit_date']['table'] == 'res')
-		{
-			array_push($_SESSION['data'], array('column' => 'process_limit_date', 'value' => $db->format_date_db($process_limit_date), 'type' => "date"));
-		}
-		else if($_ENV['categories'][$cat_id]['other_cases']['process_limit_date']['table'] == 'coll_ext')
-		{
-			if($_SESSION['store_process_limit_date'] == "ok")
-			{
-				$query_ext_fields .= 'process_limit_date,';
-				$query_ext_values .= "'".$db->format_date_db($process_limit_date)."',";
-			}
-			$_SESSION['store_process_limit_date'] = "";
-		}
+		array_push($_SESSION['data'], array('column' => "scan_date", 'value' => $req->current_datetime(), 'type' => "function"));
 	}
 
-	// Contact
-	if(isset($_ENV['categories'][$cat_id]['other_cases']['contact']))
+	$attach = get_value_fields($values_form, 'attach');
+
+	if($attach == false)
 	{
-		$contact = get_value_fields($values_form, 'contact');
-		$contact_type = get_value_fields($values_form, 'type_contact_external');
-		if(!$contact_type)
+		$cat_id = get_value_fields($values_form, 'category_id');
+		$query_ext_fields .= 'category_id,' ;
+		$query_ext_values .= "'".$cat_id."'," ;
+
+		$_SESSION['origin'] = "";
+		// Specific indexes : values from the form
+		// Simple cases
+		for($i=0; $i<count($values_form); $i++)
 		{
-			$contact_type = get_value_fields($values_form, 'type_contact_internal');
+			if($_ENV['categories'][$cat_id][$values_form[$i]['ID']]['type_field'] == 'integer' && $_ENV['categories'][$cat_id][$values_form[$i]['ID']]['table'] <> 'none')
+			{
+				if($_ENV['categories'][$cat_id][$values_form[$i]['ID']]['table'] == 'res')
+				{
+					array_push($_SESSION['data'], array('column' => $values_form[$i]['ID'], 'value' => $values_form[$i]['VALUE'], 'type' => "integer"));
+				}
+				else if($_ENV['categories'][$cat_id][$values_form[$i]['ID']]['table'] == 'coll_ext')
+				{
+					$query_ext_fields .= $values_form[$i]['ID'].',';
+					$query_ext_values .= $values_form[$i]['VALUE'].',';
+				}
+			}
+			else if($_ENV['categories'][$cat_id][$values_form[$i]['ID']]['type_field'] == 'string' && $_ENV['categories'][$cat_id][$values_form[$i]['ID']]['table'] <> 'none')
+			{
+				if($_ENV['categories'][$cat_id][$values_form[$i]['ID']]['table'] == 'res')
+				{
+					array_push($_SESSION['data'], array('column' => $values_form[$i]['ID'], 'value' => $db->protect_string_db($values_form[$i]['VALUE']), 'type' => "string"));
+				}
+				else if($_ENV['categories'][$cat_id][$values_form[$i]['ID']]['table'] == 'coll_ext')
+				{
+					$query_ext_fields .= $values_form[$i]['ID'].',';
+					$query_ext_values .= "'".$db->protect_string_db($values_form[$i]['VALUE'])."',";
+				}
+			}
+			else if($_ENV['categories'][$cat_id][$values_form[$i]['ID']]['type_field'] == 'date' && $_ENV['categories'][$cat_id][$values_form[$i]['ID']]['table'] <> 'none')
+			{
+				if($_ENV['categories'][$cat_id][$values_form[$i]['ID']]['table'] == 'res')
+				{
+					array_push($_SESSION['data'], array('column' => $values_form[$i]['ID'], 'value' => $db->format_date_db($values_form[$i]['VALUE']), 'type' => "date"));
+				}
+				else if($_ENV['categories'][$cat_id][$values_form[$i]['ID']]['table'] == 'coll_ext')
+				{
+					$query_ext_fields .= $values_form[$i]['ID'].',';
+					$query_ext_values .= "'".$db->format_date_db($values_form[$i]['VALUE'])."',";
+				}
+			}
 		}
-		//echo 'contact '.$contact.', type '.$contact_type;
-		$contact_id = str_replace(')', '', substr($contact, strrpos($contact,'(')+1));
-		if($contact_type == 'internal')
+		///// Manages the complementary indexes depending on the doctype
+		require_once($_SESSION['config']['businessapppath'].'class'.DIRECTORY_SEPARATOR.'class_types.php');
+		$type = new types();
+		$type_id =  get_value_fields($values_form, 'type_id');
+		$indexes = $type->get_indexes( $type_id,$coll_id, 'minimal');
+		$val_indexes = array();
+		for($i=0; $i<count($indexes);$i++)
 		{
-			if($cat_id == 'incoming')
+			$val_indexes[$indexes[$i]] =  get_value_fields($values_form, $indexes[$i]);
+		}
+		$_SESSION['data'] = $type->fill_data_array($type_id, $coll_id, $val_indexes, $_SESSION['data']);
+
+		///////////////////////// Other cases
+		// Process limit Date
+		if(isset($_ENV['categories'][$cat_id]['other_cases']['process_limit_date']))
+		{
+			$process_limit_date = get_value_fields($values_form, 'process_limit_date');
+			if($_ENV['categories'][$cat_id]['other_cases']['process_limit_date']['table'] == 'res')
 			{
-				$query_ext_fields .= 'exp_user_id,';
-				$query_ext_values .= "'".$db->protect_string_db($contact_id)."',";
+				array_push($_SESSION['data'], array('column' => 'process_limit_date', 'value' => $db->format_date_db($process_limit_date), 'type' => "date"));
 			}
-			else if($cat_id == 'outgoing' || $cat_id == 'internal')
+			else if($_ENV['categories'][$cat_id]['other_cases']['process_limit_date']['table'] == 'coll_ext')
 			{
-				$query_ext_fields .= 'dest_user_id,';
-				$query_ext_values .= "'".$db->protect_string_db($contact_id)."',";
+				if($_SESSION['store_process_limit_date'] == "ok")
+				{
+					$query_ext_fields .= 'process_limit_date,';
+					$query_ext_values .= "'".$db->format_date_db($process_limit_date)."',";
+				}
+				$_SESSION['store_process_limit_date'] = "";
 			}
 		}
-		elseif($contact_type == 'external')
+
+		// Contact
+		if(isset($_ENV['categories'][$cat_id]['other_cases']['contact']))
 		{
-			if($cat_id == 'incoming')
+			$contact = get_value_fields($values_form, 'contact');
+			$contact_type = get_value_fields($values_form, 'type_contact_external');
+			if(!$contact_type)
 			{
-				$query_ext_fields .= 'exp_contact_id,';
-				$query_ext_values .= $contact_id.",";
+				$contact_type = get_value_fields($values_form, 'type_contact_internal');
 			}
-			else if($cat_id == 'outgoing' || $cat_id == 'internal')
+			//echo 'contact '.$contact.', type '.$contact_type;
+			$contact_id = str_replace(')', '', substr($contact, strrpos($contact,'(')+1));
+			if($contact_type == 'internal')
 			{
-				$query_ext_fields .= 'dest_contact_id,';
-				$query_ext_values .= $contact_id.",";
+				if($cat_id == 'incoming')
+				{
+					$query_ext_fields .= 'exp_user_id,';
+					$query_ext_values .= "'".$db->protect_string_db($contact_id)."',";
+				}
+				else if($cat_id == 'outgoing' || $cat_id == 'internal')
+				{
+					$query_ext_fields .= 'dest_user_id,';
+					$query_ext_values .= "'".$db->protect_string_db($contact_id)."',";
+				}
+			}
+			elseif($contact_type == 'external')
+			{
+				if($cat_id == 'incoming')
+				{
+					$query_ext_fields .= 'exp_contact_id,';
+					$query_ext_values .= $contact_id.",";
+				}
+				else if($cat_id == 'outgoing' || $cat_id == 'internal')
+				{
+					$query_ext_fields .= 'dest_contact_id,';
+					$query_ext_values .= $contact_id.",";
+				}
 			}
 		}
-	}
-	if($core->is_module_loaded('folder'))
-	{
-		$market = get_value_fields($values_form, 'market');
-		$folder_id = '';
-		if(!empty($market))
+		if($core->is_module_loaded('folder'))
 		{
-			$folder_id = str_replace(')', '', substr($market, strrpos($market,'(')+1));
+			$market = get_value_fields($values_form, 'market');
+			$folder_id = '';
+			if(!empty($market))
+			{
+				$folder_id = str_replace(')', '', substr($market, strrpos($market,'(')+1));
+			}
+			else
+			{
+				$project = get_value_fields($values_form, 'project');
+				$folder_id = str_replace(')', '', substr($project, strrpos($project,'(')+1));
+			}
+			if(!empty($folder_id))
+			{
+				array_push($_SESSION['data'], array('column' => 'folders_system_id', 'value' => $folder_id, 'type' => "integer"));
+
+			}
+		}
+
+		if($core->is_module_loaded('entities'))
+		{
+			// Diffusion list
+			$load_list_diff = false;
+			if(isset($_ENV['categories'][$cat_id]['other_cases']['diff_list']) )
+			{
+				if(!empty($_SESSION['indexing']['diff_list']['dest']['user_id']) && isset($_SESSION['indexing']['diff_list']['dest']['user_id']))
+				{
+					array_push($_SESSION['data'], array('column' => 'dest_user', 'value' => $db->protect_string_db($_SESSION['indexing']['diff_list']['dest']['user_id']), 'type' => "string"));
+				}
+				$load_list_diff = true;
+			}
+		}
+
+		if($core->is_module_loaded('physical_archive'))
+		{
+			// Arbox_id + Arbatch_id
+			$box_id = get_value_fields($values_form, 'arbox_id');
+			array_push($_SESSION['data'], array('column' => 'arbox_id', 'value' => $box_id, 'type' => "integer"));
+			require_once($_SESSION['pathtomodules'].'physical_archive'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php');
+			$physical_archive = new physical_archive();
+			$pa_return_value = $physical_archive->load_box_db($box_id, $cat_id, $_SESSION['user']['UserId']);
+			array_push($_SESSION['data'], array('column' => 'arbatch_id', 'value' => $pa_return_value, 'type' => "integer"));
+		}
+		//print_r($_SESSION['data']);
+		$res_id = $resource->load_into_db($table ,$_SESSION['indexing']['destination_dir'], $_SESSION['indexing']['file_destination_name'].".".$_SESSION['upfile']['format'], $_SESSION['indexing']['path_template'], $_SESSION['indexing']['docserver_id'],  $_SESSION['data'], $_SESSION['config']['databasetype']);
+
+		if($res_id <> false)
+		{
+			//Create chrono number
+			//######
+			$c_box_id = get_value_fields($values_form, 'arbox_id');
+			$c_type_id = get_value_fields($values_form, 'type_id');
+			$c_entity = get_value_fields($values_form, 'destination');
+
+			$c_chrono_out = get_value_fields($values_form, 'chrono_number');
+
+			require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_chrono.php");
+			$chrono_x = new chrono();
+			$my_vars = array("entity_id"=>$c_entity, "arbox_id"=>$c_box_id, "type_id"=>$c_type_id, "category_id"=>$cat_id);
+			$my_form = array("chrono_out" => $c_chrono_out);
+			$my_chrono = $chrono_x->generate_chrono($cat_id, $my_vars, $my_form);
+
+			$query_ext_fields .= 'alt_identifier,';
+			$query_ext_values .= "'".$db->protect_string_db($my_chrono)."',";
+			//######
+
+			$query_ext_fields = preg_replace('/,$/', ',res_id)', $query_ext_fields);
+			$query_ext_values = preg_replace('/,$/', ','.$res_id.')', $query_ext_values);
+			$query_ext = " insert into ".$table_ext." ".$query_ext_fields.' values '.$query_ext_values ;
+
+			$db->connect();
+			$db->query($query_ext);
+			if($core->is_module_loaded('folder') && !empty($folder_id) && $_SESSION['history']['folderup'])
+			{
+				require_once($_SESSION['pathtocoreclass']."class_history.php");
+				$hist = new history();
+				$hist->add($_SESSION['tablename']['fold_folders'], $folder_id, "UP", _DOC_NUM.$res_id._ADDED_TO_FOLDER, $_SESSION['config']['databasetype'],'apps');
+			}
+			//$db->show();
+			if($core->is_module_loaded('entities'))
+			{
+				if($load_list_diff)
+				{
+					require_once($_SESSION['pathtomodules'].'entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_listdiff.php');
+					$diff_list = new diffusion_list();
+					$params = array('mode'=> 'listinstance', 'table' => $_SESSION['tablename']['ent_listinstance'], 'coll_id' => $coll_id, 'res_id' => $res_id, 'user_id' => $_SESSION['user']['UserId']);
+					$diff_list->load_list_db($_SESSION['indexing']['diff_list'], $params);
+				}
+			}
 		}
 		else
 		{
-			$project = get_value_fields($values_form, 'project');
-			$folder_id = str_replace(')', '', substr($project, strrpos($project,'(')+1));
+			$_SESSION['action_error'] = _ERROR_RES_ID;
+			return false;
 		}
-		if(!empty($folder_id))
-		{
-			array_push($_SESSION['data'], array('column' => 'folders_system_id', 'value' => $folder_id, 'type' => "integer"));
-
-		}
-	}
-
-	if($core->is_module_loaded('entities'))
-	{
-		// Diffusion list
-		$load_list_diff = false;
-		if(isset($_ENV['categories'][$cat_id]['other_cases']['diff_list']) )
-		{
-			if(!empty($_SESSION['indexing']['diff_list']['dest']['user_id']) && isset($_SESSION['indexing']['diff_list']['dest']['user_id']))
-			{
-				array_push($_SESSION['data'], array('column' => 'dest_user', 'value' => $db->protect_string_db($_SESSION['indexing']['diff_list']['dest']['user_id']), 'type' => "string"));
-			}
-			$load_list_diff = true;
-		}
-	}
-
-	if($core->is_module_loaded('physical_archive'))
-	{
-		// Arbox_id + Arbatch_id
-		$box_id = get_value_fields($values_form, 'arbox_id');
-		array_push($_SESSION['data'], array('column' => 'arbox_id', 'value' => $box_id, 'type' => "integer"));
-		require_once($_SESSION['pathtomodules'].'physical_archive'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php');
-		$physical_archive = new physical_archive();
-		$pa_return_value = $physical_archive->load_box_db($box_id, $cat_id, $_SESSION['user']['UserId']);
-		array_push($_SESSION['data'], array('column' => 'arbatch_id', 'value' => $pa_return_value, 'type' => "integer"));
-	}
-	//print_r($_SESSION['data']);
-	$res_id = $resource->load_into_db($table ,$_SESSION['indexing']['destination_dir'], $_SESSION['indexing']['file_destination_name'].".".$_SESSION['upfile']['format'], $_SESSION['indexing']['path_template'], $_SESSION['indexing']['docserver_id'],  $_SESSION['data'], $_SESSION['config']['databasetype']);
-
-	if($res_id <> false)
-	{
-		//Create chrono number
-		//######
-		$c_box_id = get_value_fields($values_form, 'arbox_id');
-		$c_type_id = get_value_fields($values_form, 'type_id');
-		$c_entity = get_value_fields($values_form, 'destination');
-
-		$c_chrono_out = get_value_fields($values_form, 'chrono_number');
-
-		require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_chrono.php");
-		$chrono_x = new chrono();
-		$my_vars = array("entity_id"=>$c_entity, "arbox_id"=>$c_box_id, "type_id"=>$c_type_id, "category_id"=>$cat_id);
-		$my_form = array("chrono_out" => $c_chrono_out);
-		$my_chrono = $chrono_x->generate_chrono($cat_id, $my_vars, $my_form);
-
-		$query_ext_fields .= 'alt_identifier,';
-		$query_ext_values .= "'".$db->protect_string_db($my_chrono)."',";
-		//######
-
-		$query_ext_fields = preg_replace('/,$/', ',res_id)', $query_ext_fields);
-		$query_ext_values = preg_replace('/,$/', ','.$res_id.')', $query_ext_values);
-		$query_ext = " insert into ".$table_ext." ".$query_ext_fields.' values '.$query_ext_values ;
-
-		$db->connect();
-		$db->query($query_ext);
-		if($core->is_module_loaded('folder') && !empty($folder_id) && $_SESSION['history']['folderup'])
-		{
-			require_once($_SESSION['pathtocoreclass']."class_history.php");
-			$hist = new history();
-			$hist->add($_SESSION['tablename']['fold_folders'], $folder_id, "UP", _DOC_NUM.$res_id._ADDED_TO_FOLDER, $_SESSION['config']['databasetype'],'apps');
-		}
-		//$db->show();
-		if($core->is_module_loaded('entities'))
-		{
-			if($load_list_diff)
-			{
-				require_once($_SESSION['pathtomodules'].'entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_listdiff.php');
-				$diff_list = new diffusion_list();
-				$params = array('mode'=> 'listinstance', 'table' => $_SESSION['tablename']['ent_listinstance'], 'coll_id' => $coll_id, 'res_id' => $res_id, 'user_id' => $_SESSION['user']['UserId']);
-				$diff_list->load_list_db($_SESSION['indexing']['diff_list'], $params);
-			}
-		}
+		//$_SESSION['indexing'] = array();
+		unset($_SESSION['upfile']);
+		unset($_SESSION['data']);
+		$_SESSION['action_error'] = _NEW_DOC_ADDED;
+		$_SESSION['indexation'] = true;
+		return array('result' => $res_id.'#', 'history_msg' => '', 'page_result' =>$_SESSION['config']['businessappurl'].'index.php?page=details&dir=indexing_searching&coll_id='.$coll_id.'&id='.$res_id);
 	}
 	else
 	{
-		$_SESSION['error'] = _ERROR_RES_ID;
-		return false;
+		$title = get_value_fields($values_form, 'attach_title');
+		$id_doc = get_value_fields($values_form, 'res_id');
+
+		array_push($_SESSION['data'], array('column' => "title", 'value' => $title, 'type' => "string"));
+		array_push($_SESSION['data'], array('column' => "res_id_master", 'value' => $id_doc, 'type' => "integer"));
+		array_push($_SESSION['data'], array('column' => "coll_id", 'value' => $coll_id, 'type' => "string"));
+
+		$res_id = $resource->load_into_db($_SESSION['tablename']['attach_res_attachments'],$_SESSION['indexing']['destination_dir'], $_SESSION['indexing']['file_destination_name'].".".$_SESSION['upfile']['format'], $_SESSION['indexing']['path_template'], $_SESSION['indexing']['docserver_id'],  $_SESSION['data'], $_SESSION['config']['databasetype']);
+
+		if($res_id == false)
+		{
+			$_SESSION['action_error'] = _ERROR_RES_ID;
+			return false;
+		}
+		else
+		{
+			unset($_SESSION['upfile']);
+			unset($_SESSION['data']);
+			$_SESSION['action_error'] = _NEW_ATTACH_ADDED;
+			$_SESSION['indexation'] = true;
+			return array('result' => $res_id.'#', 'history_msg' => '', 'page_result' =>$_SESSION['config']['businessappurl'].'index.php?page=details&dir=indexing_searching&coll_id='.$coll_id.'&id='.$id_doc );
+		}
 	}
-	//$_SESSION['indexing'] = array();
-	unset($_SESSION['upfile']);
-	unset($_SESSION['data']);
-	$_SESSION['error'] = _NEW_DOC_ADDED;
-	$_SESSION['indexation'] = true;
-	return array('result' => $res_id.'#', 'history_msg' => '', 'page_result' =>$_SESSION['config']['businessappurl'].'index.php?page=details&dir=indexing_searching&coll_id='.$coll_id.'&id='.$res_id);
 }
 ?>

@@ -256,7 +256,10 @@ function fill_field_radio(values)
 	for( var key in values)
 	{
 		var tmp_elem = $(key);
-		tmp_elem.checked='checked';
+		if(tmp_elem)
+		{
+			tmp_elem.checked='checked';
+		}
 	}
 }
 
@@ -379,22 +382,35 @@ function clear_search_form(id_form,id_list)
 function clear_q_list(item_value)
 {
 	var query = $('query');
-	if(item_value && item_value != '')
+
+	if(item_value && item_value != '' && query)
 	{
 		var item = $('query_'+item_value);
-		query.removeChild(item);
+		if(item)
+		{
+			query.removeChild(item);
+		}
 	}
-	if(query.options.length > 1)
+	if(query && query.options.length > 1)
 	{
 		var q_list = $('default_query');
-		q_list.selected="selected";
+		if(q_list)
+		{
+			q_list.selected="selected";
+		}
 		var del_button = $('del_query');
-		del_button.style.display='none';
+		if(del_button)
+		{
+			del_button.style.display='none';
+		}
 	}
 	else
 	{
 		var div_query = $('div_query');
-		div_query .style.display = 'none';
+		if(div_query)
+		{
+			div_query .style.display = 'none';
+		}
 	}
 }
 

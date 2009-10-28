@@ -31,12 +31,21 @@ session_name('PeopleBox');
 session_start();
 
 require_once($_SESSION['pathtocoreclass']."class_functions.php");
+require_once($_SESSION['pathtocoreclass']."class_db.php");
 require_once($_SESSION['pathtocoreclass']."class_request.php");
 require_once($_SESSION['pathtocoreclass']."class_core_tools.php");
 $core_tools = new core_tools();
 $core_tools->test_user();
 $core_tools->load_lang();
-$core_tools->test_service('adv_search_mlb', 'apps');
+
+$mode = 'normal';
+if(isset($_REQUEST['mode'])&& !empty($_REQUEST['mode']))
+{
+	$mode = $core_tools->wash($_REQUEST['mode'], "alphanum", _MODE);
+}
+if($mode == 'normal')
+{
+	$core_tools->test_service('adv_search_mlb', 'apps');
 /****************Management of the location bar  ************/
 $init = false;
 if($_REQUEST['reinit'] == "true")
@@ -53,6 +62,22 @@ $page_label = _RESULTS;
 $page_id = "search_adv_result_apps";
 $core_tools->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
+}
+elseif($mode == 'popup' || $mode == 'frame')
+{
+	$core_tools->load_html();
+	$core_tools->load_header();
+	$time = $core_tools->get_session_time_expire();
+	?><body>
+	<div id="container">
+
+            <div class="error" id="main_error">
+				<?php  echo $_SESSION['error'];?>
+            </div>
+			<div class="info" id="main_info">
+				<?php  echo $_SESSION['info'];?>
+            </div><?php
+}
 ?>
 <h1><img src="<?php  echo $_SESSION['config']['businessappurl']."img/picto_search_b.gif";?>" alt="" /> <?php  echo _ADV_SEARCH_TITLE; ?></h1>
 <div id="inner_content">
@@ -66,3 +91,12 @@ $core_tools->manage_location_bar($page_path, $page_label, $page_id, $init, $leve
 	$_SESSION['error_search'] = "";
 	?>
 </div>
+<?php if($mode == 'popup' || $mode == 'frame')
+{
+ 	echo '</div>';
+ 	if($mode == 'popup')
+ 	{
+	?><br/><div align="center"><input type="button" name="close" class="button" value="<?php echo _CLOSE_WINDOW;?>" onclick="self.close();" /></div> <?php
+	}
+ 	echo '</body></html>';
+}
