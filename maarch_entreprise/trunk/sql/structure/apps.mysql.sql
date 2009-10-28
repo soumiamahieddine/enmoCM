@@ -138,6 +138,7 @@ CREATE TABLE IF NOT EXISTS res_x (
   video_batch int(8) default NULL,
   video_time int(11) default NULL,
   video_user varchar(50) collate utf8_unicode_ci default NULL,
+  video_date datetime default NULL,
   PRIMARY KEY  (res_id)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci  ;
 
@@ -232,6 +233,7 @@ CREATE TABLE IF NOT EXISTS res_letterbox (
   video_batch int(8) default NULL,
   video_time int(11) default NULL,
   video_user varchar(50) collate utf8_unicode_ci default NULL,
+  video_date datetime default NULL,
   PRIMARY KEY  (res_id)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci  ;
 

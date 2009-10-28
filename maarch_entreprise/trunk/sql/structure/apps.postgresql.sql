@@ -183,6 +183,7 @@ CREATE TABLE res_x
   video_batch integer DEFAULT NULL,
   video_time integer DEFAULT NULL,
   video_user character varying(50)  DEFAULT NULL,
+  video_date timestamp without time zone,
   CONSTRAINT res_x_pkey PRIMARY KEY  (res_id)
 )
 WITH (OIDS=FALSE);
@@ -287,6 +288,7 @@ CREATE TABLE res_letterbox
   video_batch integer DEFAULT NULL,
   video_time integer DEFAULT NULL,
   video_user character varying(50)  DEFAULT NULL,
+  video_date timestamp without time zone,
   CONSTRAINT res_letterbox_pkey PRIMARY KEY  (res_id)
 )
 WITH (OIDS=FALSE);
