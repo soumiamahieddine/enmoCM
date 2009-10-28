@@ -92,7 +92,7 @@ $frm_height = '500px';
 	{
 		if(count($values) < 1)
 		{
-			$_SESSION['error'] = _MUST_CHOOSE_DEP;
+			$_SESSION['action_error'] = _MUST_CHOOSE_DEP;
 			return false;
 		}
 		else
@@ -104,7 +104,7 @@ $frm_height = '500px';
 	{
 		if(count($values) < 1)
 		{
-			$_SESSION['error'] = _MUST_CHOOSE_USER;
+			$_SESSION['action_error'] = _MUST_CHOOSE_USER;
 			return false;
 		}
 		else
@@ -114,7 +114,7 @@ $frm_height = '500px';
 	}
 	else
 	{
-		$_SESSION['error'] = _FORM_ERROR;
+		$_SESSION['action_error'] = _FORM_ERROR;
 		return false;
 	}
  }
@@ -155,7 +155,7 @@ $frm_height = '500px';
 				$params = array('mode'=> 'listinstance', 'table' => $_SESSION['tablename']['ent_listinstance'], 'coll_id' => $coll_id, 'res_id' => $arr_id[$i], 'user_id' => $_SESSION['user']['UserId'], 'concat_list' => true);
 				$list->load_list_db($_SESSION['redirect']['diff_list'], $params);
 			}
-			$_SESSION['error'] = _REDIRECT_TO_DEP_OK;
+			$_SESSION['action_error'] = _REDIRECT_TO_DEP_OK;
 
 			return array('result' => $arr_list, 'history_msg' => $msg );
 		}
@@ -181,7 +181,7 @@ $frm_height = '500px';
 				$params = array('mode'=> 'listinstance', 'table' => $_SESSION['tablename']['ent_listinstance'], 'coll_id' => $coll_id, 'res_id' => $arr_id[$i], 'user_id' => $_SESSION['user']['UserId'], 'concat_list' => true);
 				$list->load_list_db($difflist, $params);
 			}
-			$_SESSION['error'] = _REDIRECT_TO_USER_OK;
+			$_SESSION['action_error'] = _REDIRECT_TO_USER_OK;
 			return array('result' => $arr_list, 'history_msg' => $msg);
 		}
 	}
@@ -198,7 +198,7 @@ function manage_status($arr_id, $history, $id_action, $label_action, $status, $c
 		$req = $db->query("update ".$table. " set status = '".$status."' where res_id = ".$arr_id[$i], true);
 		if(!$req)
 		{
-			$_SESSION['error'] = _SQL_ERROR;
+			$_SESSION['action_error'] = _SQL_ERROR;
 			return false;
 		}
 	}
@@ -215,7 +215,7 @@ function manage_unlock($arr_id, $history, $id_action, $label_action, $status, $c
 
 		if(!$req)
 		{
-			$_SESSION['error'] = _SQL_ERROR;
+			$_SESSION['action_error'] = _SQL_ERROR;
 			return false;
 		}
 	}
