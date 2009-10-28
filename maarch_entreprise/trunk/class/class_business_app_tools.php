@@ -301,12 +301,13 @@ class business_app_tools extends dbquery
 	public function load_app_var_session()
 	{
 		$this->load_current_folder();
-		$this->load_status();
+	//	$this->load_status();
 		$this->load_letterbox_var();
 		$this->load_features($_SESSION['config']['businessapppath'].'xml'.DIRECTORY_SEPARATOR.'features.xml');
 		//$this->load_index();
 	}
 
+/*
 	private function load_status()
 	{
 		$this->connect();
@@ -317,9 +318,10 @@ class business_app_tools extends dbquery
 		while($res = $this->fetch_object())
 		{
 			array_push($_SESSION['status'], array('id' => $res->id, 'label' => $res->label_status, 'is_system' => $res->is_system, 'img_filename' => $res->img_filename,
-			'module' => $res->module, 'can_be_searched' => $res->can_be_searched));
+			'module' => $res->module, 'can_be_searched' => $res->can_be_searched, 'can_be_modified' => $res->can_be_modified));
 		}
 	}
+*/
 	/**
 	* Return a specific path or false
 	*

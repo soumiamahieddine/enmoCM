@@ -955,5 +955,6 @@ define('_IF_CHECKS_MANDATORY_MUST_CHECK_USE', 'Si vous cliquez sur un champ obli
 define('_SEARCH_DOC', 'Rechercher un document');
 define('_DOCSERVER_COPY_ERROR', ' Erreur lors de la copie sur le DocServer');
 define('_MAKE_NEW_SEARCH', 'Effectuer une nouvelle recherche');
+define('_NO_PAGE', 'Aucune page');
 
 ?>

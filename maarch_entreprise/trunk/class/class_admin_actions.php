@@ -196,6 +196,17 @@ class AdminActions extends dbquery
 			$_SESSION['m_admin']['action']['IS_SYSTEM'] = 'N';
 			$_SESSION['m_admin']['action']['HISTORY'] = 'Y';
 		}
+
+		$this->connect();
+		$this->query("select * from ".$_SESSION['tablename']['status']." order by label_status");
+
+		$arr_status = array();
+
+		while($res = $this->fetch_object())
+		{
+			array_push($arr_status, array('id' => $res->id, 'label' => $res->label_status, 'is_system' => $res->is_system, 'img_filename' => $res->img_filename,
+			'module' => $res->module, 'can_be_searched' => $res->can_be_searched, 'can_be_modified' => $res->can_be_modified));
+		}
 		?>
 		<h1><img src="<? echo $_SESSION['config']['img'];?>/manage_actions_b.gif" alt="" />
 				<?php
@@ -246,9 +257,9 @@ class AdminActions extends dbquery
                         <select name="status" id="status">
 							<option value=""><? echo _CHOOSE_STATUS;?></option>
 							<?
-								for($i=0; $i<count($_SESSION['status']);$i++)
+								for($i=0; $i<count($arr_status);$i++)
 								{
-									?><option value="<? echo $_SESSION['status'][$i]['id'];?>" <? if($_SESSION['m_admin']['action']['ID_STATUS'] == $_SESSION['status'][$i]['id']) { echo 'selected="selected"';}?>><? echo $_SESSION['status'][$i]['label'];?></option><?
+									?><option value="<? echo $arr_status[$i]['id'];?>" <? if($_SESSION['m_admin']['action']['ID_STATUS'] == $arr_status[$i]['id']) { echo 'selected="selected"';}?>><? echo $arr_status[$i]['label'];?></option><?
 								}
 							?>
 						</select>
@@ -257,7 +268,7 @@ class AdminActions extends dbquery
 					<p>
 						<label><? echo _ACTION_PAGE;?> : </label>
 						<select name="action_page" id="action_page">
-							<option value=""><? echo _CHOOSE;?></option>
+							<option value=""><? echo _NO_PAGE;?></option>
 						<? for($i=0; $i< count($_SESSION['actions_pages']); $i++)
 						{
 							?><option value="<? echo $_SESSION['actions_pages'][$i]['ID'];?>" <? if($_SESSION['actions_pages'][$i]['ID'] == $_SESSION['m_admin']['action']['ACTION_PAGE']){ echo 'selected="selected"';}?> ><? echo $_SESSION['actions_pages'][$i]['LABEL'];?></option><?

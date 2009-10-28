@@ -91,28 +91,38 @@ while($res = $db->fetch_object())
 	$res2 = $db2->fetch_object();
 	array_push($entities, array('ID' => $res->entity_id, 'LABEL' => $res2->entity_label, 'SHORT_LABEL' => $res2->short_label, 'IN_ENTITY' => $ent->is_user_in_entity($_SESSION['user']['UserId'], $res->entity_id), 'TOTAL' => $res->total));
 }
+
+$db->query("select * from ".$_SESSION['tablename']['status']." order by label_status");
+
+$arr_status = array();
+
+while($res = $db->fetch_object())
+{
+	array_push($arr_status , array('id' => $res->id, 'label' => $res->label_status, 'is_system' => $res->is_system, 'img_filename' => $res->img_filename,
+	'module' => $res->module, 'can_be_searched' => $res->can_be_searched, 'can_be_modified' => $res->can_be_modified));
+}
 ?>
 <div align="center">
 	<script>
 		function change_list_entity(id_entity, path_script)
 		{
-			
-			//Defines template allowed for this list			
-			<?php if(!$_REQUEST['template']) 
+
+			//Defines template allowed for this list
+			<?php if(!$_REQUEST['template'])
 			{ 	?>
 				var templateVal = 'document_list_extend'; <?php
 			} ?>
-			<?php if(isset($_REQUEST['template']) && empty($_REQUEST['template'])) 
+			<?php if(isset($_REQUEST['template']) && empty($_REQUEST['template']))
 			{ ?>
 				var templateVal = ''; <?php
 			} ?>
-			<? if($_REQUEST['template']) 
+			<? if($_REQUEST['template'])
 			{	 ?>
-				var templateVal = '<? echo $_REQUEST['template']; ?>'; <?	
+				var templateVal = '<? echo $_REQUEST['template']; ?>'; <?
 			}	?>
 			//###################
-	
-			
+
+
 			//console.log(id_entity);
 			var startVal = '<?php echo $_REQUEST['start'];?>';
 			var orderVal = '<?php echo $_REQUEST['order'];?>';
@@ -135,25 +145,25 @@ while($res = $db->fetch_object())
 				});
 			}
 		}
-		
+
 		function change_list_category(id_category, path_script)
 		{
-			
-			//Defines template allowed for this list			
-			<?php if(!$_REQUEST['template']) 
+
+			//Defines template allowed for this list
+			<?php if(!$_REQUEST['template'])
 			{ 	?>
 				var templateVal = 'document_list_extend'; <?php
 			} ?>
-			<?php if(isset($_REQUEST['template']) && empty($_REQUEST['template'])) 
+			<?php if(isset($_REQUEST['template']) && empty($_REQUEST['template']))
 			{ ?>
 				var templateVal = ''; <?php
 			} ?>
-			<? if($_REQUEST['template']) 
+			<? if($_REQUEST['template'])
 			{	 ?>
-				var templateVal = '<? echo $_REQUEST['template']; ?>'; <?	
+				var templateVal = '<? echo $_REQUEST['template']; ?>'; <?
 			}	?>
 			//###################
-			
+
 			//console.log(id_category);
 			var startVal = '<?php echo $_REQUEST['start'];?>';
 			var orderVal = '<?php echo $_REQUEST['order'];?>';
@@ -176,22 +186,22 @@ while($res = $db->fetch_object())
 				});
 			}
 		}
-		
+
 		function change_list_status(id_status, path_script)
 		{
-			
-			//Defines template allowed for this list			
-			<?php if(!$_REQUEST['template']) 
+
+			//Defines template allowed for this list
+			<?php if(!$_REQUEST['template'])
 			{ 	?>
 				var templateVal = 'document_list_extend'; <?php
 			} ?>
-			<?php if(isset($_REQUEST['template']) && empty($_REQUEST['template'])) 
+			<?php if(isset($_REQUEST['template']) && empty($_REQUEST['template']))
 			{ ?>
 				var templateVal = ''; <?php
 			} ?>
-			<? if($_REQUEST['template']) 
+			<? if($_REQUEST['template'])
 			{	 ?>
-				var templateVal = '<? echo $_REQUEST['template']; ?>'; <?	
+				var templateVal = '<? echo $_REQUEST['template']; ?>'; <?
 			}	?>
 			//###################
 			//console.log(id_status);
@@ -216,24 +226,24 @@ while($res = $db->fetch_object())
 				});
 			}
 		}
-		
+
 		function change_contact(id_contact, path_script)
 		{
-			//Defines template allowed for this list			
-			<?php if(!$_REQUEST['template']) 
+			//Defines template allowed for this list
+			<?php if(!$_REQUEST['template'])
 			{ 	?>
 				var templateVal = 'document_list_extend'; <?php
 			} ?>
-			<?php if(isset($_REQUEST['template']) && empty($_REQUEST['template'])) 
+			<?php if(isset($_REQUEST['template']) && empty($_REQUEST['template']))
 			{ ?>
 				var templateVal = ''; <?php
 			} ?>
-			<? if($_REQUEST['template']) 
+			<? if($_REQUEST['template'])
 			{	 ?>
-				var templateVal = '<? echo $_REQUEST['template']; ?>'; <?	
+				var templateVal = '<? echo $_REQUEST['template']; ?>'; <?
 			}	?>
 			//###################
-			
+
 			//console.log(id_contact);
 			var startVal = '<?php echo $_REQUEST['start'];?>';
 			var orderVal = '<?php echo $_REQUEST['order'];?>';
@@ -262,21 +272,21 @@ while($res = $db->fetch_object())
 		{
 			?>
 			<script language="javascript">
-				//Defines template allowed for this list			
-				<?php if(!$_REQUEST['template']) 
+				//Defines template allowed for this list
+				<?php if(!$_REQUEST['template'])
 				{ 	?>
 					var templateVal = 'document_list_extend'; <?php
 				} ?>
-				<?php if(isset($_REQUEST['template']) && empty($_REQUEST['template'])) 
+				<?php if(isset($_REQUEST['template']) && empty($_REQUEST['template']))
 				{ ?>
 					var templateVal = ''; <?php
 				} ?>
-				<? if($_REQUEST['template']) 
+				<? if($_REQUEST['template'])
 				{	 ?>
-					var templateVal = '<? echo $_REQUEST['template']; ?>'; <?	
+					var templateVal = '<? echo $_REQUEST['template']; ?>'; <?
 				}	?>
 				//###################
-				
+
 				var startVal = '<?php echo $_REQUEST['start'];?>';
 				var orderVal = '<?php echo $_REQUEST['order'];?>';
 				var order_fieldVal = '<?php echo $_REQUEST['order_field'];?>';
@@ -302,7 +312,7 @@ while($res = $db->fetch_object())
 		<?php echo _FILTER_BY;?> :
 		<select name="entity" id="entity" onchange="change_list_entity(this.options[this.selectedIndex].value, '<?php echo $_SESSION['config']['businessappurl'];?>manage_filter.php');">
 			<option value="none"><?php echo _CHOOSE_ENTITY;?></option>
-			<?php 
+			<?php
 			for($i=0;$i<count($entities);$i++)
 			{
 				?>
@@ -313,12 +323,12 @@ while($res = $db->fetch_object())
 		</select>
 		<select name="category" id="category" onchange="change_list_category(this.options[this.selectedIndex].value, '<?php echo $_SESSION['config']['businessappurl'];?>manage_filter.php');">
 			<option value="none"><?php echo _CHOOSE_CATEGORY;?></option>
-			<?php 
+			<?php
 			foreach(array_keys($_SESSION['mail_categories']) as $value)
 			{
 				?>
 				<option value="<?php echo $value;?>"<?php if($_SESSION['auth_dep']['bask_chosen_category'] == $value){echo ' selected="selected"';}?>><?php echo $_SESSION['mail_categories'][$value];?></option>
-				<?php	
+				<?php
 			}
 			?>
 		</select>
@@ -328,20 +338,20 @@ while($res = $db->fetch_object())
 			?>
 			<select name="status" id="status" onchange="change_list_status(this.options[this.selectedIndex].value, '<?php echo $_SESSION['config']['businessappurl'];?>manage_filter.php');">
 				<option value="none"><?php echo _CHOOSE_STATUS;?></option>
-				<?php 
-				for($cptStatus=0;$cptStatus<count($_SESSION['status']);$cptStatus++)
+				<?php
+				for($cptStatus=0;$cptStatus<count($arr_status);$cptStatus++)
 				{
 					?>
-					<option value="<?php echo $_SESSION['status'][$cptStatus]['id'];?>"<?php if($_SESSION['auth_dep']['bask_chosen_status'] == $_SESSION['status'][$cptStatus]['id']){echo ' selected="selected"';}?>><?php echo $_SESSION['status'][$cptStatus]['label'];?></option>
-					<?php	
+					<option value="<?php echo $arr_status[$cptStatus]['id'];?>"<?php if($_SESSION['auth_dep']['bask_chosen_status'] == $arr_status[$cptStatus]['id']){echo ' selected="selected"';}?>><?php echo $arr_status[$cptStatus]['label'];?></option>
+					<?php
 				}
 				?>
 			</select>
 			<?php
 		}
 		?>
-		<input type="text" name="contact_id" id="contact_id" 
-			value="<?php 
+		<input type="text" name="contact_id" id="contact_id"
+			value="<?php
 					if(!empty($_SESSION['auth_dep']['bask_chosen_contact']))
 					{
 						echo $_SESSION['auth_dep']['bask_chosen_contact'];
@@ -350,7 +360,7 @@ while($res = $db->fetch_object())
 					{
 						echo '['._CONTACT.']';
 					}
-					?>" 
+					?>"
 					<?php
 					if(empty($_SESSION['auth_dep']['bask_chosen_contact']))
 					{
@@ -366,7 +376,7 @@ while($res = $db->fetch_object())
 		</script>
 		<input type="button" class="button" value="<?php echo _CLEAR_SEARCH;?>" onclick="javascript:window.location.href='<?php echo $_SESSION['config']['businessappurl']."index.php?page=view_baskets&module=basket&baskets=".$_SESSION['current_basket']['id']."&clear=ok";?>';">
 	</form>
-	<?php 
+	<?php
 	if(isset($_SESSION['auth_dep']['bask_chosen_entity']) && !empty($_SESSION['auth_dep']['bask_chosen_entity']))
 	{
 		?>
