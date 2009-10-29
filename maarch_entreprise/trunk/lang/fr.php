@@ -956,5 +956,6 @@ define('_SEARCH_DOC', 'Rechercher un document');
 define('_DOCSERVER_COPY_ERROR', ' Erreur lors de la copie sur le DocServer');
 define('_MAKE_NEW_SEARCH', 'Effectuer une nouvelle recherche');
 define('_NO_PAGE', 'Aucune page');
+define('_VALIDATE_QUALIF', 'Validation/Qualification');
 
 ?>
