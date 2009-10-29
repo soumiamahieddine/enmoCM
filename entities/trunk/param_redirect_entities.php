@@ -50,7 +50,7 @@ if($_SESSION['service_tag'] == 'group_basket')
 					if($state_entity == false)
 					{
 						?>
-						<option value="<?php  echo $_SESSION['m_admin']['entities'][$i]['ID']; ?>"><?php  echo $_SESSION['m_admin']['entities'][$i]['LABEL']; ?></option>
+						<option title = "<?php  echo $_SESSION['m_admin']['entities'][$i]['LABEL']; ?>" alt = "<?php  echo $_SESSION['m_admin']['entities'][$i]['LABEL']; ?>" value="<?php  echo $_SESSION['m_admin']['entities'][$i]['ID']; ?>"><?php  echo $_SESSION['m_admin']['entities'][$i]['LABEL']; ?></option>
 					<?php
 					}
 				}
@@ -101,7 +101,7 @@ if($_SESSION['service_tag'] == 'group_basket')
 					if($state_entity == true)
 					{
 					?>
-						<option value="<?php  echo $_SESSION['m_admin']['entities'][$i]['ID']; ?>" selected="selected" ><?php  echo $_SESSION['m_admin']['entities'][$i]['LABEL']; ?></option>
+						<option title = "<?php  echo $_SESSION['m_admin']['entities'][$i]['LABEL']; ?>" alt = "<?php  echo $_SESSION['m_admin']['entities'][$i]['LABEL']; ?>" value="<?php  echo $_SESSION['m_admin']['entities'][$i]['ID']; ?>" selected="selected" ><?php  echo $_SESSION['m_admin']['entities'][$i]['LABEL']; ?></option>
 					<?php
 					}
 				}
@@ -155,7 +155,7 @@ if($_SESSION['service_tag'] == 'group_basket')
 					if($state_usersentities == false)
 					{
 						?>
-						<option value="<?php  echo $_SESSION['m_admin']['entities'][$i]['ID']; ?>"><?php  echo $_SESSION['m_admin']['entities'][$i]['LABEL']; ?></option>
+						<option title = "<?php  echo $_SESSION['m_admin']['entities'][$i]['LABEL']; ?>" alt = "<?php  echo $_SESSION['m_admin']['entities'][$i]['LABEL']; ?>" value="<?php  echo $_SESSION['m_admin']['entities'][$i]['ID']; ?>"><?php  echo $_SESSION['m_admin']['entities'][$i]['LABEL']; ?></option>
 						<?php
 					}
 				}
@@ -206,7 +206,7 @@ if($_SESSION['service_tag'] == 'group_basket')
 					{
 
 						?>
-						<option value="<?php  echo $_SESSION['m_admin']['entities'][$i]['ID']; ?>" selected="selected"><?php  echo $_SESSION['m_admin']['entities'][$i]['LABEL']; ?></option>
+						<option title = "<?php  echo $_SESSION['m_admin']['entities'][$i]['LABEL']; ?>" alt = "<?php  echo $_SESSION['m_admin']['entities'][$i]['LABEL']; ?>" value="<?php  echo $_SESSION['m_admin']['entities'][$i]['ID']; ?>" selected="selected"><?php  echo $_SESSION['m_admin']['entities'][$i]['LABEL']; ?></option>
 						<?php
 					}
 				}
