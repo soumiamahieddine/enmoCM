@@ -41,7 +41,7 @@ $_SESSION['service_tag'] = 'manage_groupbasket';
 
 if(isset($_REQUEST['cancel']))
 {
-	unset($_SESSION['m_admin']['basket']['error']);
+	unset($_SESSION['m_admin']['basket_popup']);
 	?>
 	<script type="text/javascript">window.top.close();</script>
 	<?php
@@ -53,9 +53,11 @@ $bask = new admin_basket();
 $func = new functions();
 $db = new dbquery();
 $db->connect();
+$_SESSION['m_admin']['basket_popup'] = array();
 if(isset($_REQUEST['group']) && !empty($_REQUEST['group']))
 {
 	$groupe = $_REQUEST['group'];
+	$_SESSION['m_admin']['basket_popup']['group_id'] = $groupe;
 }
 else
 {
@@ -64,12 +66,14 @@ else
 if(isset($_REQUEST['result_page']) && !empty($_REQUEST['result_page']))
 {
 	$respage = $_REQUEST['result_page'];
+	$_SESSION['m_admin']['basket_popup']['res_page'] = $respage;
 }
 else
 {
 	$_SESSION['error'] .= _NO_RESULT_PAGE_SELECTED.".";
 }
 
+/*
 if(!empty($_SESSION['error']))
 {
 
@@ -78,6 +82,7 @@ if(!empty($_SESSION['error']))
 }
 else
 {
+*/
 
 	$old_group = "";
 	$seq = "";
@@ -93,7 +98,7 @@ else
 
 	$actions = array();
 
-	$_SESSION['m_admin']['basket']['error'] = array();
+	$_SESSION['m_admin']['basket_popup']['actions'] = array();
 	if(count($_REQUEST['actions']) > 0)
 	{
 		for($i=0; $i < count($_REQUEST['actions']); $i++)
@@ -132,7 +137,9 @@ else
 			{
 				$_SESSION['error'] .= " "._MUST_CHOOSE_WHERE_USE_ACTION." : ".$res->label_action.'<br/>' ;
 			}
-			array_push($_SESSION['m_admin']['basket']['error'], array('ID_ACTION' => $_REQUEST['actions'][$i], 'WHERE' => $where, 'MASS_USE' => $mass, 'PAGE_USE' => $page));
+
+			$_SESSION['m_admin']['basket_popup']['actions'][$_REQUEST['actions'][$i]] = array( 'WHERE' => $where, 'MASS_USE' => $mass, 'PAGE_USE' => $page);
+
 			$tmp_action = array('ID_ACTION' => $_REQUEST['actions'][$i], 'LABEL_ACTION' => $res->label_action, 'WHERE' => $where, 'MASS_USE' => $mass, 'PAGE_USE' => $page);
 			array_push($actions, $tmp_action);
 		}
@@ -141,6 +148,7 @@ else
 	if(isset($_REQUEST['default_action_page']) && !empty($_REQUEST['default_action_page']))
 	{
 		$default_action_page = $_REQUEST['default_action_page'];
+		$_SESSION['m_admin']['basket_popup']['default_action_page'] = $default_action_page;
 	}
 	if(empty($_SESSION['error']))
 	{
@@ -173,7 +181,7 @@ else
 	//$core_tools->show_array($_REQUEST);
 	//$core_tools->show_array($_SESSION['m_admin']['basket']['groups']);
 	//exit();
-}
+//}
 
 if(!empty($_SESSION['error']))
 {
@@ -181,6 +189,7 @@ if(!empty($_SESSION['error']))
 	exit();
 }
 $_SESSION['service_tag'] = '';
+unset($_SESSION['m_admin']['basket_popup']);
 ?>
 <script language="javascript">
 	window.parent.opener.location.reload();self.close();

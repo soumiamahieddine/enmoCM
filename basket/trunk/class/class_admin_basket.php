@@ -619,54 +619,5 @@ class admin_basket extends dbquery
 		}
 	}
 
-	/**
-	* Gets the data of an action if there is an error in the basket - group setting
-	*
-	* @param  $id_action   string Action identifier
-	* @param  $what  string Action mode : "MASS_USE" or "PAGE_USE"
-	* @return string 'N' or empty string
-	*/
-	public function get_data_from_error($id_action, $what)
-	{
-		if(isset($_SESSION['m_admin']['basket']['error']) && count($_SESSION['m_admin']['basket']['error']) < 1)
-		{
-			if($what == 'WHERE')
-			{
-				return '';
-			}
-			else
-			{
-				return 'N';
-			}
-		}
-		for($i=0; $i <count($_SESSION['m_admin']['basket']['error']); $i++)
-		{
-			if($_SESSION['m_admin']['basket']['error'][$i]['ID_ACTION'] == $id_action)
-			{
-				if(isset($_SESSION['m_admin']['basket']['error'][$i][$what]))
-				{
-					return $_SESSION['m_admin']['basket']['error'][$i][$what];
-				}
-				else
-				{
-					if($what == 'WHERE')
-					{
-						return '';
-					}
-					else
-					{
-						return 'N';
-					}
-				}
-			}
-		}
-		if($what == 'WHERE')
-		{
-			return '';
-		}
-		else
-		{
-			return 'N';
-		}
-	}
+
 }
