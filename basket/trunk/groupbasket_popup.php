@@ -155,31 +155,45 @@ $time = $core_tools->get_session_time_expire();
 				<table>
 
 				<?php
+				
+				$tr = 0;
 				for($i=0; $i < count($_SESSION['m_admin']['basket']['all_actions']); $i++)
 				{
-					if($i%2 != 1 || $i==0) // pair
+					if($tr == 0)
 					{
 						echo '<tr>';
 					}
+					
+					/*if($i%3 != 1 || $i==0 ) // pair
+					{
+						echo '<tr>';
+					}*/
 				?>
 					<!--<li>-->
 					<td
-					<?php if(($i%2 != 1 || $i==0 ) && $i+1 == count($_SESSION['m_admin']['basket']['all_actions']))
+					<?php if(($i%3 != 1 || $i==0 ) && $i+1 == count($_SESSION['m_admin']['basket']['all_actions']))
 					{
 						echo 'colspan="2"';
 					}?>
-					><input type="checkbox"  name="actions[]" value="<?php echo $_SESSION['m_admin']['basket']['all_actions'][$i]['ID']; ?>" class="check group_action" id="checkbox_<?php echo $_SESSION['m_admin']['basket']['all_actions'][$i]['ID'] ?>"
+					><div style='font-size:10px;'><input type="checkbox"  name="actions[]" value="<?php echo $_SESSION['m_admin']['basket']['all_actions'][$i]['ID']; ?>" class="check group_action" id="checkbox_<?php echo $_SESSION['m_admin']['basket']['all_actions'][$i]['ID'] ?>"
 					<?php if($bask->is_action_defined_for_the_group($_SESSION['m_admin']['basket']['all_actions'][$i]['ID'], $_SESSION['m_admin']['basket']['ind_group'])){echo 'checked="checked"';}?> <?php if($_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['DEFAULT_ACTION'] == $_SESSION['m_admin']['basket']['all_actions'][$i]['ID']){echo 'disabled="disabled"';}?>/>
-					<?php echo $_SESSION['m_admin']['basket']['all_actions'][$i]['LABEL']; ?>
-					<a href="javascript://" onclick="check_this_box('checkbox_<?php echo $_SESSION['m_admin']['basket']['all_actions'][$i]['ID'] ?>');show_config_action(<?php echo $_SESSION['m_admin']['basket']['all_actions'][$i]['ID']; ?>, true, <?php if(!empty($_SESSION['m_admin']['basket']['all_actions'][$i]['KEYWORD'])){ echo 'true';}else{ echo 'false';}?>);" class="config"><?php echo _CONFIG;?></a>
+					<?php echo $_SESSION['m_admin']['basket']['all_actions'][$i]['LABEL'];  $tr++;     ?>
+					<a href="javascript://" onclick="check_this_box('checkbox_<?php echo $_SESSION['m_admin']['basket']['all_actions'][$i]['ID'] ?>');show_config_action(<?php echo $_SESSION['m_admin']['basket']['all_actions'][$i]['ID']; ?>, true, <?php if(!empty($_SESSION['m_admin']['basket']['all_actions'][$i]['KEYWORD'])){ echo 'true';}else{ echo 'false';}?>);" class="config"><?php echo _CONFIG;?></a></div>
 					</td>
 					<!--</li>-->
 					<?php
-					if($i%2 == 1 && $i!=0) // impair
+					/*if($i%4 == 3 && $i!=0) // impair
 					{
 						?>
 						</tr><?php
+					}*/
+					
+					if($tr==3)
+					{
+						echo '</tr>';
+						$tr = 0;
 					}
+					
 		 } ?>
 			  	</table>
 				<!--</ul>-->
