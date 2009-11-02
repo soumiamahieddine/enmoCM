@@ -170,6 +170,9 @@
 	<MODULES>
    		<moduleid>basket</moduleid>
 		<comment>_BASKETS_COMMENT</comment>
+	</MODULES><MODULES>
+   		<moduleid>cases</moduleid>
+		<comment>_CASES_COMMENT</comment>
 	</MODULES>
 	<MODULES>
    		<moduleid>doc_converter</moduleid>
