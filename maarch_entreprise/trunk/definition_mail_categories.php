@@ -82,7 +82,7 @@ $_ENV['categories'] = array();
 $_ENV['categories']['incoming'] = array();
 $_ENV['categories']['incoming']['img_cat'] = $_SESSION['config']['businessappurl'].'img/cat_doc_incoming.gif';
 $_ENV['categories']['incoming']['other_cases'] = array();
-$_ENV['categories']['incoming']['priority'] = array( 'type_form' => 'integer', 'type_field' => 'integer','mandatory' => true, 'label' => _PRIORITY, 'table' => 'res', 'img' => $_SESSION['config']['businessappurl'].'img/mini_type.gif', 'modify' => true, 'form_show' => 'select');
+$_ENV['categories']['incoming']['priority'] = array( 'type_form' => 'integer', 'type_field' => 'integer','mandatory' => false, 'label' => _PRIORITY, 'table' => 'res', 'img' => $_SESSION['config']['businessappurl'].'img/mini_type.gif', 'modify' => true, 'form_show' => 'select');
 $_ENV['categories']['incoming']['type_id'] = array('type_form' => 'integer', 'type_field' => 'integer', 'mandatory' => true, 'label' => _DOCTYPE_MAIL, 'table' => 'res', 'img' => $_SESSION['config']['businessappurl'].'img/mini_type.gif', 'modify' => true, 'form_show' => 'select');
 $_ENV['categories']['incoming']['doc_date'] = array( 'type_form' => 'date', 'type_field' => 'date', 'mandatory' => true, 'label' => _MAIL_DATE, 'table' => 'res', 'img' => $_SESSION['config']['businessappurl'].'img/date_arr.gif', 'modify' => true, 'form_show' => 'date');
 $_ENV['categories']['incoming']['admission_date'] = array( 'type_form' => 'date', 'type_field' => 'date', 'mandatory' => true, 'label' => _RECEIVING_DATE, 'table' => 'coll_ext', 'img' => $_SESSION['config']['businessappurl'].'img/date_arriv.gif', 'modify' => true, 'form_show' => 'date');
@@ -98,7 +98,7 @@ $_ENV['categories']['incoming']['other_cases']['contact'] = array( 'type_form' =
 $_ENV['categories']['outgoing'] = array();
 $_ENV['categories']['outgoing']['img_cat'] = $_SESSION['config']['businessappurl'].'img/cat_doc_outgoing.gif';
 $_ENV['categories']['outgoing']['other_cases'] = array();
-$_ENV['categories']['outgoing']['priority'] = array( 'type_form' => 'integer', 'type_field' => 'integer', 'mandatory' => true, 'label' => _PRIORITY, 'table' => 'res', 'img' => $_SESSION['config']['businessappurl'].'img/mini_type.gif', 'modify' => true, 'form_show' => 'select');
+$_ENV['categories']['outgoing']['priority'] = array( 'type_form' => 'integer', 'type_field' => 'integer', 'mandatory' => false, 'label' => _PRIORITY, 'table' => 'res', 'img' => $_SESSION['config']['businessappurl'].'img/mini_type.gif', 'modify' => true, 'form_show' => 'select');
 $_ENV['categories']['outgoing']['type_id'] = array('type_form' => 'integer', 'type_field' => 'integer', 'mandatory' => true, 'label' => _DOCTYPE_MAIL, 'table' => 'res', 'img' => $_SESSION['config']['businessappurl'].'img/mini_type.gif', 'modify' => true, 'form_show' => 'select');
 $_ENV['categories']['outgoing']['doc_date'] = array( 'type_form' => 'date', 'type_field' => 'date', 'mandatory' => true, 'label' => _MAIL_DATE, 'table' => 'res', 'img' => $_SESSION['config']['businessappurl'].'img/small_calend.gif', 'modify' => true, 'form_show' => 'date');
 $_ENV['categories']['outgoing']['nature_id'] = array( 'type_form' => 'string', 'type_field' => 'string', 'mandatory' => true, 'label' => _NATURE, 'table' => 'coll_ext', 'img' => $_SESSION['config']['businessappurl'].'img/nature_send.gif', 'modify' => true, 'form_show' => 'select');
@@ -114,7 +114,7 @@ $_ENV['categories']['outgoing']['other_cases']['contact'] = array( 'type_form' =
 $_ENV['categories']['internal'] = array();
 $_ENV['categories']['internal']['img_cat'] =  $_SESSION['config']['businessappurl'].'img/cat_doc_internal.gif';
 $_ENV['categories']['internal']['other_cases'] = array();
-$_ENV['categories']['internal']['priority'] = array('type_form' => 'integer', 'type_field' => 'integer', 'mandatory' => true, 'label' => _PRIORITY, 'table' => 'res', 'img' => $_SESSION['config']['businessappurl'].'img/mini_type.gif', 'modify' => true, 'form_show' => 'select');
+$_ENV['categories']['internal']['priority'] = array('type_form' => 'integer', 'type_field' => 'integer', 'mandatory' => false, 'label' => _PRIORITY, 'table' => 'res', 'img' => $_SESSION['config']['businessappurl'].'img/mini_type.gif', 'modify' => true, 'form_show' => 'select');
 $_ENV['categories']['internal']['type_id'] = array('type_form' => 'integer', 'type_field' => 'integer', 'mandatory' => true, 'label' => _DOCTYPE_MAIL, 'table' => 'res', 'img' => $_SESSION['config']['businessappurl'].'img/mini_type.gif',  'modify' => true, 'form_show' => 'select');
 $_ENV['categories']['internal']['doc_date'] = array( 'type_form' => 'date', 'type_field' => 'date', 'mandatory' => true, 'label' => _MAIL_DATE, 'table' => 'res', 'img' => $_SESSION['config']['businessappurl'].'img/date_arr.gif', 'modify' => true, 'form_show' => 'date');
 $_ENV['categories']['internal']['nature_id'] = array( 'type_form' => 'string', 'type_field' => 'string', 'mandatory' => true, 'label' => _NATURE, 'table' => 'coll_ext', 'img' => $_SESSION['config']['businessappurl'].'img/nature_send.gif', 'modify' => true, 'form_show' => 'select');
