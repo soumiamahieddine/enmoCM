@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<CONFIG>
+		<name>attachments</name>
+		<comment>_ATTACHMENTS_COMMENT</comment>
+		<file_prefix>attach</file_prefix>
+		<loaded>true</loaded>
+	</CONFIG>
+	<TABLENAME>
+		<attach_res_attachments>res_attachments</attach_res_attachments>
+	</TABLENAME>
+	<HISTORY>
+		<attachadd>true</attachadd>
+		<attachup>true</attachup>
+		<attachdel>true</attachdel>
+		<attachview>false</attachview>
+	</HISTORY>
+</root>
