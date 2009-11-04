@@ -1,0 +1,176 @@
+INSERT INTO docservers VALUES ('documents', NULL, NULL, 'N', 'Y', 1000000000, 17890777, 'C:\\\\Maarch\\\\DocServer\\\\res_x\\\\', NULL, NULL, NULL, TO_DATE('2007-11-19 11:41:22', 'YYYY-MM-DD HH24:MI:SS'), NULL, 'coll_1', 10);
+INSERT INTO docservers VALUES ('documents_ai', NULL, NULL, 'N', 'Y', 1000000000, 17890777, 'C:\\\\Maarch\\\\DocServer\\\\res_x_ai\\\\', NULL, NULL, NULL, TO_DATE('2007-11-19 11:41:22', 'YYYY-MM-DD HH24:MI:SS'), NULL, 'coll_1', 20);
+INSERT INTO docservers VALUES ('invoices', NULL, NULL, 'N', 'Y', 100000000, 3271717, 'C:\\\\Maarch\\\\DocServer\\\\res_invoices\\\\', NULL, NULL, NULL, TO_DATE('2007-11-19 11:41:22', 'YYYY-MM-DD HH24:MI:SS'), NULL, 'coll_2', 10);
+INSERT INTO docservers VALUES ('invoices_ai', NULL, NULL, 'N', 'Y', 100000000, 3271717, 'C:\\\\Maarch\\\\DocServer\\\\res_invoices_ai\\\\', NULL, NULL, NULL, TO_DATE('2007-11-19 11:41:22', 'YYYY-MM-DD HH24:MI:SS'), NULL, 'coll_2', 20);
+
+INSERT INTO doctypes VALUES ('coll_1', 1, 'Carte de securite sociale - Social security card', 'Y', 1, 1, NULL, '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', 'N',  NULL );
+INSERT INTO doctypes VALUES ('coll_1', 2, 'Passeport - Passport', 'Y', 1, 1, NULL, '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', 'N', NULL );
+INSERT INTO doctypes VALUES ('coll_1', 3, 'Devis - Loan proposal', 'Y', 1, 3, NULL, '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', 'N',  NULL );
+INSERT INTO doctypes VALUES ('coll_1', 4, 'Demande de prelevement FMG - FMG agreement', 'Y', 1, 3, NULL, '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', 'N',  NULL );
+INSERT INTO doctypes VALUES ('coll_1', 5, 'Bulletins de salaire - Salary sheets', 'Y', 1, 2, NULL, '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', 'N', NULL );
+INSERT INTO doctypes VALUES ('coll_1', 6, 'Interrogation BDF - BDF query', 'Y', 1, 2, NULL, '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', 'N',  NULL );
+INSERT INTO doctypes VALUES ('coll_1', 7, 'Releves de compte - Bank listings', 'Y', 1, 2, NULL, '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', 'N',  NULL );
+INSERT INTO doctypes VALUES ('coll_1', 8, 'Situation financiere - Financial situation', 'Y', 1, 2, NULL, '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', 'N', NULL );
+INSERT INTO doctypes VALUES ('coll_1', 9, 'Fiche d etude de compte - Bank listing memo', 'Y', 1, 2, NULL, '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', 'N',  NULL );
+INSERT INTO doctypes VALUES ('coll_1', 10, 'Fiche de liaison - Loan memo', 'Y', 1, 3, NULL, '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', 'N',  NULL );
+INSERT INTO doctypes VALUES ('coll_2', 22, 'Facture - Customer Invoice', 'Y', 1, 1, NULL, '1000000000', '1000000000', '0000000000', '0000000000', '1000000000', '0000000000', '0000000000', '0000000000', '1000000000', '0000000000', '0000000000', '0000000000', '1000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', 'N',  NULL );
+
+INSERT INTO parameters VALUES ('workbatch_rec', '', 7);
+INSERT INTO parameters VALUES ('folder_id_increment', '', 152);
+INSERT INTO parameters VALUES ('work_batch_autoimport_id', NULL, 1);
+
+INSERT INTO security VALUES ('Recovery', 'coll_2', ' ', '', 'Y', 'Y', 'N');
+INSERT INTO security VALUES ('Recovery', 'coll_1', ' ', '', 'Y', 'Y', 'N');
+INSERT INTO security VALUES ('Accountants', 'coll_2', ' ', '', 'Y', 'Y', 'N');
+
+INSERT INTO usergroups VALUES ('Recovery', 'Recovery - Recouvrement', 'N', 'N', 'N', 'N', 'N', 'Y');
+INSERT INTO usergroups VALUES ('Admin', 'Administration', 'N', 'N', 'N', 'N', 'N', 'Y');
+INSERT INTO usergroups VALUES ('Accountants', 'Accountants - Comptables', 'N', 'N', 'N', 'N', 'N', 'Y');
+INSERT INTO usergroups VALUES ('Managers', 'Customer managers - Gestionnaires de comptes', 'N', 'N', 'N', 'N', 'N', 'Y');
+
+INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('pparker', 'Recovery', 'Y', 'Service manager');
+INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('ccharles', 'Accountants', 'Y', 'Clerck');
+INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('bsaporta', 'Managers', 'Y', 'Account manager');
+
+INSERT INTO users (user_id, password, firstname, lastname, phone, mail, department, custom_t1, custom_t2, custom_t3, cookie_key, cookie_date, enabled, change_password, delay, status) VALUES ('pparker', 'ef9689be896dacd901cae4f13593e90d', 'Peter', 'Parker', '+33 1 47 24 51 ', 'info@maarch.org', 'Financial - DFI', NULL, NULL, NULL, '50b29715235ee7204c22cbd4b59a3e42', TO_DATE('2008-09-10 15:09:22', 'YYYY-MM-DD HH24:MI:SS'), 'Y', 'N', NULL, 'OK');
+INSERT INTO users (user_id, password, firstname, lastname, phone, mail, department, custom_t1, custom_t2, custom_t3, cookie_key, cookie_date, enabled, change_password, delay, status) VALUES ('ccharles', 'ef9689be896dacd901cae4f13593e90d', 'Charlotte', 'Charles', '+33 1 47 24 51 ', 'info@maarch.org', 'Accounting department - DFI', NULL, NULL, NULL, '2b67f8017119d7de32f300be3e97ccb4',  TO_DATE('2008-09-10 15:09:23', 'YYYY-MM-DD HH24:MI:SS'), 'Y', 'N', NULL, 'OK');
+INSERT INTO users (user_id, password, firstname, lastname, phone, mail, department, custom_t1, custom_t2, custom_t3, cookie_key, cookie_date, enabled, change_password, delay, status) VALUES ('bsaporta', 'ef9689be896dacd901cae4f13593e90d', 'Barbara', 'Saporta', '+33 1 47 24 51 ', 'info@maarch.org', 'Sales - Commercial', NULL, NULL, NULL, '35286c2c7b64e9ae8dc1d88ef78814d4', TO_DATE('2008-09-10 15:09:23', 'YYYY-MM-DD HH24:MI:SS'), 'Y', 'N', NULL, 'OK');
+INSERT INTO users (user_id, password, firstname, lastname, phone, mail, department, custom_t1, custom_t2, custom_t3, cookie_key, cookie_date, enabled, change_password, delay, status) VALUES ('superadmin', '17c4520f6cfd1ab53d8745e84681eb49', 'Super', 'Admin', '', 'admin@maarch.org', 'Maarch', '1', NULL, NULL, '5a12d1199eccb57fded2a232df35cb4b', TO_DATE('2009-05-07 17:05:46', 'YYYY-MM-DD HH24:MI:SS'), 'Y', 'N', NULL, 'OK');
+INSERT INTO users (user_id, password, firstname, lastname, phone, mail, department, custom_t1, custom_t2, custom_t3, cookie_key, cookie_date, enabled, change_password, delay, status) VALUES ('bblier', 'ef9689be896dacd901cae4f13593e90d', 'Bernard', 'Blier', '+33 1 47 24 51 ', 'info@maarch.org', '', NULL, NULL, NULL, '', NULL, 'Y', 'Y', NULL, 'OK');
+INSERT INTO users (user_id, password, firstname, lastname, phone, mail, department, custom_t1, custom_t2, custom_t3, cookie_key, cookie_date, enabled, change_password, delay, status) VALUES ('ppetit', 'ef9689be896dacd901cae4f13593e90d', 'Patricia', 'Petit', '+33 1 47 24 51 ', 'info@maarch.org', '', NULL, NULL, NULL, '', NULL, 'Y', 'Y', NULL, 'OK');
+
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Accountants', '_print_sep');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Accountants', 'admin');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Accountants', 'admin_architecture');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Accountants', 'admin_baskets');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Accountants', 'admin_foldertypes');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Accountants', 'admin_groups');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Accountants', 'admin_tree_autofoldering');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Accountants', 'admin_users');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Accountants', 'adv_search');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Accountants', 'delete_folder');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Accountants', 'delete_res');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Accountants', 'folder_search');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Accountants', 'indexing');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Accountants', 'launch_workflow');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Accountants', 'modify_folder');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Accountants', 'modify_res');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Accountants', 'physical_archive');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Accountants', 'physical_archive_box_manage');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Accountants', 'physical_archive_box_read');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Accountants', 'view_attached_files');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Accountants', 'view_history');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Accountants', 'view_trees');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Accountants', 'view_baskets');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Admin', '_print_sep');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Admin', 'admin');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Admin', 'admin_architecture');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Admin', 'admin_baskets');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Admin', 'admin_foldertypes');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Admin', 'admin_groups');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Admin', 'admin_tree_autofoldering');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Admin', 'admin_users');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Admin', 'adv_search');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Admin', 'create_folder');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Admin', 'delete_folder');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Admin', 'delete_res');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Admin', 'folder_search');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Admin', 'index_file');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Admin', 'index_file2');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Admin', 'indexing');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Admin', 'modify_folder');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Admin', 'modify_res');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Admin', 'physical_archive');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Admin', 'physical_archive_box_manage');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Admin', 'physical_archive_box_read');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Admin', 'physical_archive_lot_manage');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Admin', 'physical_archive_lot_read');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Admin', 'salary_sheet');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Admin', 'select_doctype');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Admin', 'select_doctype2');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Admin', 'select_folder');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Admin', 'show_contract_history');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Admin', 'show_history_folder');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Admin', 'show_missing_doc_in_folder');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Admin', 'use_baskets');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Admin', 'view_history');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Admin', 'view_stats');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Admin', 'view_trees');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Managers', '_print_sep');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Managers', 'admin');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Managers', 'admin_architecture');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Managers', 'admin_baskets');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Managers', 'admin_foldertypes');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Managers', 'admin_groups');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Managers', 'admin_tree_autofoldering');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Managers', 'admin_users');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Managers', 'adv_search');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Managers', 'delete_folder');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Managers', 'delete_res');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Managers', 'folder_search');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Managers', 'indexing');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Managers', 'modify_folder');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Managers', 'modify_res');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Managers', 'physical_archive');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Managers', 'physical_archive_batch_manage');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Managers', 'physical_archive_batch_read');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Managers', 'physical_archive_box_manage');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Managers', 'physical_archive_box_read');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Managers', 'view_attached_files');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Managers', 'view_history');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Managers', 'view_trees');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Recovery', '_print_sep');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Recovery', 'admin');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Recovery', 'admin_architecture');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Recovery', 'admin_baskets');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Recovery', 'admin_foldertypes');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Recovery', 'admin_groups');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Recovery', 'admin_tree_autofoldering');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Recovery', 'admin_users');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Recovery', 'adv_search');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Recovery', 'create_folder');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Recovery', 'delete_folder');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Recovery', 'delete_res');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Recovery', 'folder_search');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Recovery', 'index_file');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Recovery', 'index_file2');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Recovery', 'indexing');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Recovery', 'modify_folder');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Recovery', 'modify_res');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Recovery', 'physical_archive');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Recovery', 'physical_archive_box_manage');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Recovery', 'physical_archive_box_read');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Recovery', 'physical_archive_lot_manage');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Recovery', 'physical_archive_lot_read');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Recovery', 'salary_sheet');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Recovery', 'select_doctype');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Recovery', 'select_doctype2');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Recovery', 'select_folder');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Recovery', 'show_contract_history');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Recovery', 'show_history_folder');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Recovery', 'show_missing_doc_in_folder');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Recovery', 'use_baskets');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Recovery', 'view_history');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Recovery', 'view_stats');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('Recovery', 'view_trees');
+
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin) VALUES (2,'to_validate', 'A valider', 'VAL', 'Y', 'N', 'confirm_status', 'N', 'apps');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin) VALUES (4,'', 'Valider Facture', 'END', 'N', 'Y', 'confirm_status', 'Y','apps');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin) VALUES (5,'', 'Rejeter Facture', 'REJ', 'N', 'Y', 'confirm_status', 'Y', 'apps');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin) VALUES (6,'', 'Verifier facture', '', 'N', 'Y', 'check_invoice_action', 'Y', 'apps');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin) VALUES (14,'', 'Reserver', 'RSV', 'N', 'Y', 'doc_list', 'Y', 'apps');
+
+
+INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched) VALUES ('COU', 'En cours', 'Y', NULL, 'indexing_searching', 'Y');
+INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched) VALUES ('NEW', 'nouveau courrier', 'Y', '', 'apps', 'Y');
+INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched) VALUES ('RSV', 'Reserve', 'N', '', 'apps', 'N');
+INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched) VALUES ('DEL', 'Supprime', 'Y', NULL, 'apps', 'N');
+INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched) VALUES ('END', 'Valide', 'Y', NULL, 'indexing_searching', 'Y');
+INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched) VALUES ('VAL', 'A valider', 'Y', NULL, 'apps', 'N');
+INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched) VALUES ('REJ', 'Rejete', 'N', '', 'apps', 'Y');
+
+
+
+
+
+

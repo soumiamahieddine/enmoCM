@@ -1,0 +1,94 @@
+#menunav {
+	padding-bottom: 5px;
+}
+
+.addforms {
+	width: 400px;
+}
+
+input.small {
+	width: 17px;
+}
+
+input.button {
+	padding: 0.2em 0 0.2em 0.5em;
+}
+
+#doctype {
+	height: 10em;
+}
+
+#logo {
+	margin: 0 0 20px 10px;
+}
+
+#help {
+	margin-top: 42px;
+	padding-bottom: 10px;
+}
+
+
+
+#content h1 {
+	height: 2.05em;
+	padding: 0;
+}
+
+#content h1 img {
+	margin-top: .35em;
+}
+
+#content h1 a.back {
+	font-size: .5em;
+	margin-top: 1em;
+}
+
+#formlogin {
+	width: 265px;
+}
+
+#formlogin input {
+	width: 128px;
+}
+
+#formlogin .nota, #formlogin p.buttons {
+	margin-right: 12px;
+}
+
+#formlogin select {
+	width: 134px;
+}
+
+#post #content {
+	padding-top: 0;
+}
+
+#post_indexing input.textbox {
+	width: 155px;
+}
+
+#post_indexing input.small {
+	width: 17px;
+}
+
+#post_indexing div label {
+	margin-right: 1px;
+}
+
+#post_indexing div ul {
+	width: 30%;
+}
+
+#post_indexing .buttons {
+	padding-right: 11px;
+}
+
+#post #pdf iframe {
+	height: 665px;
+}
+
+#titless {
+	margin-left: 5px;
+}
+
+

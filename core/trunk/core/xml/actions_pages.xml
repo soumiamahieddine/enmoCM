@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ROOT>
+	<ACTIONPAGE>
+		<ID>redirect</ID>
+		<LABEL>_REDIRECTION</LABEL>
+    	<NAME>redirect</NAME>
+        <ORIGIN>module</ORIGIN> <!-- apps or module -->
+		<MODULE>entities</MODULE>
+    </ACTIONPAGE>
+	<ACTIONPAGE>
+		<ID>confirm_status</ID>
+		<LABEL>_SIMPLE_CONFIRM</LABEL>
+    	<NAME>confirm_status</NAME>
+        <ORIGIN>apps</ORIGIN> <!-- apps or module -->
+		<MODULE></MODULE>
+    </ACTIONPAGE>
+	<ACTIONPAGE>
+		<ID>process</ID>
+		<LABEL>_PROCESS</LABEL>
+    	<NAME>process</NAME>
+        <ORIGIN>apps</ORIGIN> <!-- apps or module -->
+		<MODULE></MODULE>
+    </ACTIONPAGE>
+	<ACTIONPAGE>
+		<ID>index_mlb</ID>
+		<LABEL>_INDEX_FILE</LABEL>
+    	<NAME>index_mlb</NAME>
+        <ORIGIN>apps</ORIGIN> <!-- apps or module -->
+		<MODULE></MODULE>
+    </ACTIONPAGE>
+	<ACTIONPAGE>
+		<ID>validate_mail</ID>
+		<LABEL>_VALIDATE_QUALIF</LABEL>
+    	<NAME>validate_mail</NAME>
+        <ORIGIN>apps</ORIGIN> <!-- apps or module -->
+		<MODULE></MODULE>
+    </ACTIONPAGE>
+	<ACTIONPAGE>
+		<ID>view</ID>
+		<LABEL>_VIEW_DOC</LABEL>
+    	<NAME>view</NAME>
+        <ORIGIN>apps</ORIGIN> <!-- apps or module -->
+		<MODULE></MODULE>
+    </ACTIONPAGE>
+	<ACTIONPAGE>
+		<ID>close_mail</ID>
+		<LABEL>_CLOSE_MAIL</LABEL>
+    	<NAME>close_mail</NAME>
+        <ORIGIN>apps</ORIGIN> <!-- apps or module -->
+		<MODULE></MODULE>
+    </ACTIONPAGE>
+</ROOT>
