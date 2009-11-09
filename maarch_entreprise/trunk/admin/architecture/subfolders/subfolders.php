@@ -34,7 +34,7 @@ require_once($_SESSION['pathtocoreclass']."class_request.php");
 require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_list_show.php");
 $func = new functions();
 $select[$_SESSION['tablename']['doctypes_second_level']] = array();
-array_push($select[$_SESSION['tablename']['doctypes_second_level']],"doctypes_second_level_id","doctypes_second_level_label");
+array_push($select[$_SESSION['tablename']['doctypes_second_level']],"doctypes_second_level_id","doctypes_first_level_id","doctypes_second_level_label");
 $what = "";
 $where= " enabled = 'Y' ";
 if(isset($_REQUEST['what']) && !empty($_REQUEST['what']))
@@ -76,12 +76,23 @@ for ($i=0;$i<count($tab);$i++)
 			{
 				$tab[$i][$j]["doctypes_second_level_id"]=$tab[$i][$j]['value'];
 				$tab[$i][$j]["label"]=_ID;
-				$tab[$i][$j]["size"]="30";
+				$tab[$i][$j]["size"]="10";
 				$tab[$i][$j]["label_align"]="left";
 				$tab[$i][$j]["align"]="left";
 				$tab[$i][$j]["valign"]="bottom";
 				$tab[$i][$j]["show"]=true;
 				$tab[$i][$j]["order"]='doctypes_second_level_id';
+			}
+			if($tab[$i][$j][$value]=="doctypes_first_level_id")
+			{
+				$tab[$i][$j]["doctypes_first_level_id"]=$tab[$i][$j]['value'];
+				$tab[$i][$j]["label"]=_STRUCTURE;
+				$tab[$i][$j]["size"]="10";
+				$tab[$i][$j]["label_align"]="left";
+				$tab[$i][$j]["align"]="left";
+				$tab[$i][$j]["valign"]="bottom";
+				$tab[$i][$j]["show"]=true;
+				$tab[$i][$j]["order"]='doctypes_first_level_id';
 			}
 			if($tab[$i][$j][$value]=="doctypes_second_level_label")
 			{

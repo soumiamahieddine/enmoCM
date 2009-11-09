@@ -70,7 +70,7 @@ CREATE SEQUENCE doctypes_second_level_id_seq
   INCREMENT 1
   MINVALUE 1
   MAXVALUE 9223372036854775807
-  START 10
+  START 50
   CACHE 1;
 
 CREATE TABLE doctypes_second_level
