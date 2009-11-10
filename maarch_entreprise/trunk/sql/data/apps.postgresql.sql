@@ -158,7 +158,8 @@ INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause
 INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, enabled) VALUES ('letterbox_coll', 'RetourCourrier', 'Retours Courrier', 'Courriers retournes au service Courrier', 'STATUS=''RET'' ', 'N', 'Y');
 INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, enabled) VALUES ('letterbox_coll', 'IndexingBasket', 'Corbeille d''indexation', 'Corbeille d''indexation', ' ', 'N', 'Y');
 INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, enabled) VALUES ('letterbox_coll', 'MyBasket', 'Mes courriers a traiter', 'Mes courriers a traiter', '(status =''NEW'' or status =''COU'') and dest_user = @user', 'N', 'Y');
-INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, enabled) VALUES ('letterbox_coll', 'ValidationBasket', 'Mes courriers a valider', 'Mes courriers a valider', 'status = ''VAL''', 'N', 'Y');
+INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, enabled) VALUES ('letterbox_coll', 'QualificationBasket', 'Corbeille de qualification', 'Corbeille de qualification', 'status=''VAL''', 'N', 'Y');
+INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, enabled) VALUES ('letterbox_coll', 'ValidationBasket', 'Mes courriers a valider', 'Mes courriers a valider', 'status = ''VAL'' and destination<>''COU''', 'N', 'Y');
 INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, enabled) VALUES ('letterbox_coll', 'DepartmentBasket', 'Corbeille de supervision', 'Corbeille de supervision', 'destination in (@my_entities, @subentities[@my_primary_entity]) and (status <> ''DEL'' AND status <> ''REP'')', 'N', 'Y');
 
 INSERT INTO groupbasket (group_id, basket_id, "sequence", redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('TYPISTS', 'IndexingBasket', 1, NULL, NULL, 'redirect_to_action', 'N', 'N', 'N');
@@ -173,6 +174,7 @@ INSERT INTO groupbasket (group_id, basket_id, "sequence", redirect_basketlist, r
 INSERT INTO groupbasket (group_id, basket_id, "sequence", redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('ARCHIVISTS', 'APA_picking', 2, NULL, NULL, 'apa_basket_list', 'N', 'N', 'N');
 INSERT INTO groupbasket (group_id, basket_id, "sequence", redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('TYPISTS', 'APA_reservation', 2, NULL, NULL, 'apa_basket_list', 'N', 'N', 'N');
 INSERT INTO groupbasket (group_id, basket_id, "sequence", redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('TYPISTS', 'APA_picking', 3, NULL, NULL, 'apa_basket_list', 'N', 'N', 'N');
+INSERT INTO groupbasket (group_id, basket_id, "sequence", redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('TYPISTS', 'QualificationBasket', 8, NULL, NULL, 'documents_list', 'N', 'N', 'N');
 
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (22, '', 'TYPISTS', 'IndexingBasket', 'N', 'Y', 'N');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (21, '', 'TYPISTS', 'IndexingBasket', 'N', 'N', 'Y');
@@ -191,6 +193,7 @@ INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, 
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (16, '', 'ARCHIVISTS', 'APA_picking', 'Y', 'Y', 'N');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (15, '', 'TYPISTS', 'APA_reservation', 'Y', 'Y', 'N');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (16, '', 'TYPISTS', 'APA_picking', 'Y', 'Y', 'N');
+INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (23, '', 'TYPISTS', 'QualificationBasket', 'N', 'N', 'Y');
 
 INSERT INTO groupbasket_redirect (system_id, group_id, basket_id, action_id, entity_id, keyword, redirect_mode) VALUES (1, 'TYPISTS', 'IndexingBasket', 21, '', 'ALL_ENTITIES', 'ENTITY');
 INSERT INTO groupbasket_redirect (system_id, group_id, basket_id, action_id, entity_id, keyword, redirect_mode) VALUES (2, 'MANAGERS', 'MyBasket', 1, '', 'ALL_ENTITIES', 'ENTITY');
@@ -198,6 +201,7 @@ INSERT INTO groupbasket_redirect (system_id, group_id, basket_id, action_id, ent
 INSERT INTO groupbasket_redirect (system_id, group_id, basket_id, action_id, entity_id, keyword, redirect_mode) VALUES (4, 'ARCHIVISTS', 'ValidationBasket', 23, '', 'ALL_ENTITIES', 'ENTITY');
 INSERT INTO groupbasket_redirect (system_id, group_id, basket_id, action_id, entity_id, keyword, redirect_mode) VALUES (5, 'MANAGERS', 'DepartmentBasket', 1, '', 'MY_ENTITIES', 'ENTITY');
 INSERT INTO groupbasket_redirect (system_id, group_id, basket_id, action_id, entity_id, keyword, redirect_mode) VALUES (6, 'MANAGERS', 'DepartmentBasket', 1, '', 'MY_ENTITIES', 'USERS');
+INSERT INTO groupbasket_redirect (system_id, group_id, basket_id, action_id, entity_id, keyword, redirect_mode) VALUES (7, 'TYPISTS', 'QualificationBasket', 23, '', 'ALL_ENTITIES', 'ENTITY');
 
 INSERT INTO listmodels (coll_id, object_id, object_type, "sequence", item_id, item_type, item_mode, listmodel_type) VALUES ('letterbox_coll', 'DIR', 'entity_id', 0, 'eerina', 'user_id', 'dest', 'DOC');
 INSERT INTO listmodels (coll_id, object_id, object_type, "sequence", item_id, item_type, item_mode, listmodel_type) VALUES ('letterbox_coll', 'DIR', 'entity_id', 0, 'ppetit', 'user_id', 'cc', 'DOC');
