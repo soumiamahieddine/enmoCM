@@ -1,4 +1,4 @@
-﻿-- Maarch LetterBox v3 sample data : Application
+-- Maarch LetterBox v3 sample data : Application
 
 -- USERS, GROUPS and ENTITIES
 INSERT INTO usergroups (group_id, group_desc, administrator, custom_right1, custom_right2, custom_right3, custom_right4, enabled) VALUES ('ADMINS', 'Administrateurs fonctionnels', ' ', ' ', ' ', ' ', ' ', 'Y');
@@ -35,6 +35,7 @@ INSERT INTO usergroup_content (user_id, group_id, primary_group, "role") VALUES 
 INSERT INTO usergroup_content (user_id, group_id, primary_group, "role") VALUES ('ssissoko', 'ADMINS', 'N', 'Administrateur du système');
 INSERT INTO usergroup_content (user_id, group_id, primary_group, "role") VALUES ('bblier', 'TYPISTS', 'Y', 'Responsable service Courrier');
 INSERT INTO usergroup_content (user_id, group_id, primary_group, "role") VALUES ('bblier', 'ARCHIVISTS', 'N', 'Archiviste');
+INSERT INTO usergroup_content (user_id, group_id, primary_group, "role") VALUES ('bblier', 'EMPLOYEES', 'N', 'Employé');
 INSERT INTO usergroup_content (user_id, group_id, primary_group, "role") VALUES ('bboule', 'EMPLOYEES', 'Y', 'Comptable');
 INSERT INTO usergroup_content (user_id, group_id, primary_group, "role") VALUES ('bboule', 'CORRESPONDANTS', 'N', 'Correspondant Archives');
 
@@ -123,8 +124,8 @@ INSERT INTO "security" (group_id, coll_id, where_clause, maarch_comment, can_ins
 INSERT INTO "security" (group_id, coll_id, where_clause, maarch_comment, can_insert, can_update, can_delete) VALUES ('CORRESPONDANTS', 'letterbox_coll', '(DESTINATION = @my_primary_entity or DESTINATION in (@subentities[@my_primary_entity])) or DESTINATION is NULL', '', 'N', 'N', 'N');
 
 -- DOCSERVERS
-INSERT INTO docservers (docserver_id, device_type, device_label, is_readonly, enabled, size_limit, actual_size, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority) VALUES ('letterbox_ai', NULL, NULL, 'N', 'Y', 100000000, 3271717, 'C:\\Maarch\\Docserver\\DGGT_ai\\', NULL, NULL, NULL, '2007-11-19 11:41:22', NULL, 'letterbox_coll', 20);
-INSERT INTO docservers (docserver_id, device_type, device_label, is_readonly, enabled, size_limit, actual_size, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority) VALUES ('letterbox', NULL, NULL, 'N', 'Y', 100000000, 7949134, 'C:\\Maarch\\Docserver\\DGGT\\', NULL, NULL, NULL, '2007-11-19 11:41:22', NULL, 'letterbox_coll', 10);
+INSERT INTO docservers (docserver_id, device_type, device_label, is_readonly, enabled, size_limit, actual_size, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority) VALUES ('letterbox_ai', NULL, NULL, 'N', 'Y', 100000000, 3271717, 'C:\\maarch\\docserver\\letterbox_coll_ai\\', NULL, NULL, NULL, '2007-11-19 11:41:22', NULL, 'letterbox_coll', 20);
+INSERT INTO docservers (docserver_id, device_type, device_label, is_readonly, enabled, size_limit, actual_size, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority) VALUES ('letterbox', NULL, NULL, 'N', 'Y', 100000000, 7949134, 'C:\\maarch\\docserver\\letterbox_coll\\', NULL, NULL, NULL, '2007-11-19 11:41:22', NULL, 'letterbox_coll', 10);
 
 -- ACTIONS and BASKETS
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (15, '', 'Prelever une archive', 'OUT', 'N', 'Y', 'confirm_status', 'Y', 'advanced_physical_archive', 'N');
@@ -160,7 +161,7 @@ INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause
 INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, enabled) VALUES ('letterbox_coll', 'ValidationBasket', 'Mes courriers a valider', 'Mes courriers a valider', 'status = ''VAL''', 'N', 'Y');
 INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, enabled) VALUES ('letterbox_coll', 'DepartmentBasket', 'Corbeille de supervision', 'Corbeille de supervision', 'destination in (@my_entities, @subentities[@my_primary_entity]) and (status <> ''DEL'' AND status <> ''REP'')', 'N', 'Y');
 
-INSERT INTO groupbasket (group_id, basket_id, "sequence", redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('TYPISTS', 'IndexingBasket', 2, NULL, NULL, 'redirect_to_action', 'N', 'N', 'N');
+INSERT INTO groupbasket (group_id, basket_id, "sequence", redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('TYPISTS', 'IndexingBasket', 1, NULL, NULL, 'redirect_to_action', 'N', 'N', 'N');
 INSERT INTO groupbasket (group_id, basket_id, "sequence", redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('EMPLOYEES', 'MyBasket', 1, NULL, NULL, 'auth_dep', 'N', 'N', 'N');
 INSERT INTO groupbasket (group_id, basket_id, "sequence", redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('MANAGERS', 'MyBasket', 1, NULL, NULL, 'auth_dep', 'N', 'N', 'N');
 INSERT INTO groupbasket (group_id, basket_id, "sequence", redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('ARCHIVISTS', 'ValidationBasket', 1, NULL, NULL, 'auth_dep', 'N', 'N', 'N');
@@ -170,6 +171,8 @@ INSERT INTO groupbasket (group_id, basket_id, "sequence", redirect_basketlist, r
 INSERT INTO groupbasket (group_id, basket_id, "sequence", redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('TYPISTS', 'CopyMailBasket', 7, NULL, NULL, 'auth_dep', 'N', 'N', 'N');
 INSERT INTO groupbasket (group_id, basket_id, "sequence", redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('ARCHIVISTS', 'APA_reservation', 1, NULL, NULL, 'apa_basket_list', 'N', 'N', 'N');
 INSERT INTO groupbasket (group_id, basket_id, "sequence", redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('ARCHIVISTS', 'APA_picking', 2, NULL, NULL, 'apa_basket_list', 'N', 'N', 'N');
+INSERT INTO groupbasket (group_id, basket_id, "sequence", redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('TYPISTS', 'APA_reservation', 2, NULL, NULL, 'apa_basket_list', 'N', 'N', 'N');
+INSERT INTO groupbasket (group_id, basket_id, "sequence", redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('TYPISTS', 'APA_picking', 3, NULL, NULL, 'apa_basket_list', 'N', 'N', 'N');
 
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (22, '', 'TYPISTS', 'IndexingBasket', 'N', 'Y', 'N');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (21, '', 'TYPISTS', 'IndexingBasket', 'N', 'N', 'Y');
@@ -186,6 +189,8 @@ INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, 
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (100, '', 'TYPISTS', 'CopyMailBasket', 'N', 'N', 'Y');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (15, '', 'ARCHIVISTS', 'APA_reservation', 'Y', 'Y', 'N');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (16, '', 'ARCHIVISTS', 'APA_picking', 'Y', 'Y', 'N');
+INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (15, '', 'TYPISTS', 'APA_reservation', 'Y', 'Y', 'N');
+INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (16, '', 'TYPISTS', 'APA_picking', 'Y', 'Y', 'N');
 
 INSERT INTO groupbasket_redirect (system_id, group_id, basket_id, action_id, entity_id, keyword, redirect_mode) VALUES (1, 'TYPISTS', 'IndexingBasket', 21, '', 'ALL_ENTITIES', 'ENTITY');
 INSERT INTO groupbasket_redirect (system_id, group_id, basket_id, action_id, entity_id, keyword, redirect_mode) VALUES (2, 'MANAGERS', 'MyBasket', 1, '', 'ALL_ENTITIES', 'ENTITY');
@@ -479,16 +484,12 @@ INSERT INTO ar_boxes (arbox_id, title, subject, description, entity_id, arcontai
 INSERT INTO ar_batch (arbatch_id, title, subject, description, arbox_id, status, creation_date, retention_time, custom_t1, custom_n1, custom_f1, custom_d1, custom_t2, custom_n2, custom_f2, custom_d2, custom_t3, custom_n3, custom_f3, custom_d3, custom_t4, custom_n4, custom_f4, custom_d4, custom_t5, custom_n5, custom_f5, custom_d5, custom_t6, custom_t7, custom_t8, custom_t9, custom_t10, custom_t11) VALUES (1, '1', NULL, NULL, 1, 'NEW', '2009-09-16 18:26:27.979', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'bblier', NULL, NULL, NULL, NULL, NULL, NULL, '2009-09-16 18:26:27.979', NULL, NULL, NULL, NULL, 'LETTERBOX', NULL, NULL, NULL, NULL, NULL);
 
 INSERT INTO ar_container_types (ctype_id, ctype_desc, size_x, size_y, size_z) VALUES
-('CAF20', 'Conteneur aere ferme 20 pieds', 6, 2.32, 2.37),
-('CAF40', 'Conteneur aere ferme 40 pieds', 12, 2.32, 2.37),
-('CPF20', 'Conteneur plate-forme 20 pieds', 6, 2.32, 2.37),
-('SCPF40', 'Super conteneur plate-forme 20 pieds', 6, 2.32, 2.37),
-('CTH40', 'Conteneur a caracteristiques thermiques 40 pieds', 12, 2.32, 2.37),
-('CTH20', 'Conteneur a caracteristiques thermiques 20 pieds', 6, 2.32, 2.37);
+('BOITE', 'Boite archive standard', 0, 0, 0),
+('CONTENEUR', 'Conteneur de 5 boites', 0, 0, 0);
 
 INSERT INTO ar_sites (site_id, site_desc, entity_id) VALUES
-('FR01', 'Site de Paris', 'ARC'),
-('FR02', 'Site de Londres', 'ARC');
+('FR01', 'Site de Paris', 'COU'),
+('DK01', 'Site de Dakar', 'COU');
 
 INSERT INTO ar_natures (arnature_id, arnature_desc, arnature_retention, entity_id, enabled) VALUES ('DOSPROJ', 'Dossiers de projet', 10, 'COR', 'Y');
 INSERT INTO ar_natures (arnature_id, arnature_desc, arnature_retention, entity_id, enabled) VALUES ('DOSTECH', 'Dossiers techniques', 10, 'COR', 'Y');
