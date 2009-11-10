@@ -150,7 +150,7 @@ else
 <?php
 if(count($_SESSION['user']['baskets'])== 0)
 {
-	?><div align="center"><?php echo _NO_BASKET_DEFINED_FOR_YOU;?></div><?
+	?><div align="center"><?php echo _NO_BASKET_DEFINED_FOR_YOU;?></div><?php
 
 }
 
@@ -176,7 +176,7 @@ else
 			 </tr>
 		 </table>
 		 </p>";
-		 ?></div><?
+		 ?></div><?php
 
 	}
 }
