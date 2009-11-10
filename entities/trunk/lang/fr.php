@@ -86,12 +86,12 @@ define('_ENTITY_TYPE', 'Type de l&rsquo;entit&eacute;');
 
 define('_TO_USERS_OF_ENTITIES', 'Vers des utilisateurs des services');
 define('_ALL_ENTITIES', 'Toutes les entit&eacute;s');
-define('_ENTITIES_JUST_BELOW', 'Entit&eacute;s im&eacute;diatement inf&eacute;rieures &agrave; l&rsquo;entit&eacute; primaire');
-define('_ALL_ENTITIES_BELOW', 'Toutes les entit&eacute;s inf&eacute;rieures &agrave; l&rsquo;entit&eacute; primaire');
-define('_ENTITIES_JUST_UP', 'Entitit&eacute;s im&eacute;diatement sup&eacute;rieures  &agrave; l&rsquo;entit&eacute; primaire');
+define('_ENTITIES_JUST_BELOW', 'Imm&eacute;diatement inf&eacute;rieures &agrave; l&rsquo;entit&eacute; primaire');
+define('_ALL_ENTITIES_BELOW', 'Inf&eacute;rieures &agrave; l&rsquo;entit&eacute; primaire');
+define('_ENTITIES_JUST_UP', 'Imm&eacute;diatement sup&eacute;rieures  &agrave; l&rsquo;entit&eacute; primaire');
 define('_MY_ENTITIES', 'Toutes les entit&eacute;s de l&rsquo;utilisateur');
 define('_MY_PRIMARY_ENTITY', 'Entit&eacute; primaire');
-define('_SAME_LEVEL_ENTITIES', 'Toutes les entit&eacute;s du m&ecirc;me niveau de l&rsquo;entit&eacute; primaire');
+define('_SAME_LEVEL_ENTITIES', 'M&ecirc;me niveau de l&rsquo;entit&eacute; primaire');
 
 define('_INDEXING_ENTITIES', 'Indexer pour les services');
 define('_SEARCH_DIFF_LIST', 'Rechercher un service ou un utilisateur');
