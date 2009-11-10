@@ -202,6 +202,7 @@ INSERT INTO groupbasket_redirect (system_id, group_id, basket_id, action_id, ent
 INSERT INTO groupbasket_redirect (system_id, group_id, basket_id, action_id, entity_id, keyword, redirect_mode) VALUES (5, 'MANAGERS', 'DepartmentBasket', 1, '', 'MY_ENTITIES', 'ENTITY');
 INSERT INTO groupbasket_redirect (system_id, group_id, basket_id, action_id, entity_id, keyword, redirect_mode) VALUES (6, 'MANAGERS', 'DepartmentBasket', 1, '', 'MY_ENTITIES', 'USERS');
 INSERT INTO groupbasket_redirect (system_id, group_id, basket_id, action_id, entity_id, keyword, redirect_mode) VALUES (7, 'TYPISTS', 'QualificationBasket', 23, '', 'ALL_ENTITIES', 'ENTITY');
+INSERT INTO groupbasket_redirect (system_id, group_id, basket_id, action_id, entity_id, keyword, redirect_mode) VALUES (8, 'EMPLOYEES', 'MyBasket', 1, '', 'ENTITIES_JUST_BELOW', 'ENTITY');
 
 INSERT INTO listmodels (coll_id, object_id, object_type, "sequence", item_id, item_type, item_mode, listmodel_type) VALUES ('letterbox_coll', 'DIR', 'entity_id', 0, 'eerina', 'user_id', 'dest', 'DOC');
 INSERT INTO listmodels (coll_id, object_id, object_type, "sequence", item_id, item_type, item_mode, listmodel_type) VALUES ('letterbox_coll', 'DIR', 'entity_id', 0, 'ppetit', 'user_id', 'cc', 'DOC');
