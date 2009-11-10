@@ -60,7 +60,7 @@ $db->connect();
 			<div class="blank_space">&nbsp;</div>
 			<?
 		}
-		?> <ul class="basket_elem"><?
+		?> <ul class="basket_elem"><?php
 		$abs_basket = false;
 		for ($i=0;$i<count($_SESSION['user']['baskets']);$i++)
 		{
