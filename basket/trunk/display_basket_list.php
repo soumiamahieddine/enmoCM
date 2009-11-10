@@ -58,7 +58,7 @@ $db->connect();
 			<h2><?php echo _MY_BASKETS; ?> : </h2>
 			</div>
 			<div class="blank_space">&nbsp;</div>
-			<?
+			<?php
 		}
 		?> <ul class="basket_elem"><?php
 		$abs_basket = false;
