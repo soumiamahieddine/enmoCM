@@ -1022,7 +1022,34 @@ class functions
 			}
 		}
 	}
+	
+	/**
+	*  Convert some html entities in normal char (to correct a php bug concerning &rsquo; and else)
+	*
+	* @param  $string string The html entity to convert
+	* @return string the converted result
+	*/
+	function convert_smart_quotes($string)
+	{ 
+		$search = array(
+			'&lsquo;',
+			'&rsquo;',
+			'&ldquo;',
+			'&rdquo;',
+			'&mdash;'
+		);
 
+		$replace = array(
+			"'",
+			"'",
+			'"',
+			'"',
+			'-'
+		);
+		
+		return str_replace($search, $replace, $string);
+	}
+	
 	/**
 	* Cleans html string, replacing entities by utf-8 code
 	*
