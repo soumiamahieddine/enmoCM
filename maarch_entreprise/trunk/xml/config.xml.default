@@ -214,4 +214,8 @@
    		<moduleid>reports</moduleid>
 		<comment>_REPORTS_COMMENT</comment>
 	</MODULES>
+		<MODULES>
+   		<moduleid>postindexing</moduleid>
+		<comment>_POSTINDEXING</comment>
+	</MODULES>
 </ROOT>
