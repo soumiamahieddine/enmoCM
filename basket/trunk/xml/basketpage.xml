@@ -7,13 +7,13 @@
         <ORIGIN>module</ORIGIN>
 		<MODULE>basket</MODULE>
     </BASKETPAGE>-->
-<!--	<BASKETPAGE>
-		<ID>doc_list</ID>
+	<BASKETPAGE>
+		<ID>postindexing_documents_list</ID>
 		<LABEL>_POSTINDEXING_LIST</LABEL>
-		<NAME>doc_list</NAME>
+		<NAME>postindexing_documents_list</NAME>
 		<ORIGIN>module</ORIGIN>
-		<MODULE>basket</MODULE>
-    </BASKETPAGE>-->
+		<MODULE>postindexing</MODULE>
+    </BASKETPAGE>
 	<BASKETPAGE>
 		<ID>documents_list</ID>
 		<LABEL>_DOCUMENTS_LIST</LABEL>
