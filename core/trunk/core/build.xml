@@ -1,0 +1,32 @@
+<project name="core" default="" basedir=".">
+
+	<target name="configure">
+		<if>
+			<os family="windows"/>
+			<then>
+				<property name="defaultpage_replacement" value="&lt;defaultpage>${maarch.basedir}\\\1.php &lt;/defaultpage>"/>
+			</then>
+			<else>
+				<property name="defaultpage_replacement" value="&lt;defaultpage>${maarch.basedir}/\1.php &lt;/defaultpage>"/>
+			</else>
+		</if>
+		<copy file="core/xml/config.xml.default" tofile="core/xml/config.xml" >
+			<filterchain>
+			  <replaceregexp>
+				<regexp pattern="&lt;corepath>.*&lt;\/corepath>" 
+					replace="&lt;corepath>${maarch.basedir}${dir_sep}&lt;/corepath>"/>
+					
+				<regexp pattern="&lt;tmppath>.*&lt;\/tmppath>" 
+					replace="&lt;tmppath>${maarch.basedir}${dir_sep}tmp${dir_sep}&lt;/tmppath>"/>
+					
+				<regexp pattern="&lt;defaultpage>.*\\(.+)\.php&lt;\/defaultpage>" 
+					replace="${defaultpage_replacement}"/>
+					
+				<regexp pattern="&lt;appid>.*&lt;\/appid>" 
+					replace="&lt;tmppath>${apps.name}&lt;/tmppath>"/>
+			  </replaceregexp>
+			</filterchain>
+		</copy>
+	</target>
+
+</project>
