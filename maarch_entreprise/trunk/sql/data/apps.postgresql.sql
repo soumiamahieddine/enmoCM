@@ -176,7 +176,7 @@ INSERT INTO groupbasket (group_id, basket_id, "sequence", redirect_basketlist, r
 INSERT INTO groupbasket (group_id, basket_id, "sequence", redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('TYPISTS', 'APA_reservation', 2, NULL, NULL, 'apa_basket_list', 'N', 'N', 'N');
 INSERT INTO groupbasket (group_id, basket_id, "sequence", redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('TYPISTS', 'APA_picking', 3, NULL, NULL, 'apa_basket_list', 'N', 'N', 'N');
 INSERT INTO groupbasket (group_id, basket_id, "sequence", redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('TYPISTS', 'QualificationBasket', 8, NULL, NULL, 'documents_list', 'N', 'N', 'N');
-INSERT INTO groupbasket (group_id, basket_id, "sequence", redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('TYPISTS', 'PostindexingBasket', 1, NULL, NULL, 'postindexing_documents_list', 'Y', 'N', 'N', );
+INSERT INTO groupbasket (group_id, basket_id, "sequence", redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('TYPISTS', 'PostindexingBasket', 1, NULL, NULL, 'postindexing_documents_list', 'Y', 'N', 'N');
 
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (22, '', 'TYPISTS', 'IndexingBasket', 'N', 'Y', 'N');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (21, '', 'TYPISTS', 'IndexingBasket', 'N', 'N', 'Y');
