@@ -256,7 +256,7 @@ else
 					}
 					require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_indexing_searching_app.php");
 					$indexing_searching = new indexing_searching_app();
-					$indexing_searching->retrieve_index($res,$_SESSION['collection_id_choice'] );
+					//$indexing_searching->retrieve_index($res,$_SESSION['collection_id_choice'] );
 					?>
 					<form method="post" name="index_doc" action="index.php?page=details_invoices&dir=indexing_searching&id=<?php  echo $_SESSION['id_to_view']; ?>" class="forms">
 						<div class="block">
