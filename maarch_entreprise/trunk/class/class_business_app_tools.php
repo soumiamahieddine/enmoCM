@@ -19,11 +19,29 @@ class business_app_tools extends dbquery
 		parent::__construct();
 	}
 
+	public function get_client_id()
+	{
+		$xml = simplexml_load_file('xml/clients.xml');
+		foreach($xml->client as $client)
+		{
+			if($client->ip == $_SERVER['REMOTE_ADDR'])
+			{
+				return $client->client_id;
+			}
+			if($client->external_domain == $_SERVER['HTTP_HOST'])
+			{
+				return $client->client_id;
+			}
+		}
+		return '';
+	}
+
 	/**
 	* Build Maarch business app configuration into sessions vars with a xml configuration file
 	*/
 	public function build_business_app_config()
 	{
+		$_SESSION['client_id'] = $this->get_client_id();
 		// build Maarch business app configuration into sessions vars
 		$_SESSION['showmenu']='oui';
 

@@ -123,6 +123,7 @@ $time = $core_tools->get_session_time_expire();
 
 ?>
 <body id="bodylogin" onload="setTimeout('window.location.reload(true)', <?php  echo $time;?>*60*1000);">
+<?php $core_tools->show_array($_SERVER);?>
     <div id="loginpage">
         <p id="logo"><img src="<?php  echo $_SESSION['config']['img'];?>/default_maarch.gif" alt="Maarch" /></p>
         <form name="formlogin" id="formlogin" method="post" action="log.php" class="forms">
