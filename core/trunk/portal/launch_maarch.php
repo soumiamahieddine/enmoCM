@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
 * File : launch_maarch.php
 *
@@ -14,6 +14,7 @@ session_name('PeopleBox');
 session_start();
 if(trim($_GET['app'])<> "" )
 {
+	$_SESSION['config']['app_id'] = $_GET['app'];
 	header("location: ../apps/".$_GET['app']."/login.php?coreurl=".$_SESSION['config']['coreurl']);
 }
 else
