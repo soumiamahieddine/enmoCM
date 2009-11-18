@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
 * File : index.php
 *
@@ -58,7 +58,7 @@ else
                 <p>
                     <select name="app" id="app">
                         <option value="">--</option>
-                        <?php 
+                        <?php
                         for($i=0;$i<=count($_SESSION['businessapps'])-1;$i++)
                         {
                             echo "<option value='".$_SESSION['businessapps'][$i]['appid']."'>".$_SESSION['businessapps'][$i]['comment']."</option>";
@@ -73,6 +73,6 @@ else
         </div>
     </body>
     </html>
-<?php 
+<?php
 }
 ?>
