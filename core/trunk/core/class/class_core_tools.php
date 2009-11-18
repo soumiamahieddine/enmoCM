@@ -965,6 +965,7 @@ class core_tools extends functions
 		// Page is defined in a module
 		if(isset($_GET['module']) && $_GET['module'] <> "core")
 		{
+/*
 			$path = $_SESSION['pathtomodules'].$_GET['module'].DIRECTORY_SEPARATOR.$this->f_page.".php";
 			if(file_exists($path))
 			{
@@ -975,10 +976,22 @@ class core_tools extends functions
 				//require($_SESSION["config"]["defaultPage"].".php");
 				$this->loadDefaultPage();
 			}
+*/
+			if(file_exists($_SESSION['config']['corepath'].'modules'.$_GET['module'].DIRECTORY_SEPARATOR.$this->f_page.".php")
+			|| file_exists($_SESSION['config']['corepath'].'clients'.$_SESSION['high_layer_id'].'modules'.$_GET['module'].DIRECTORY_SEPARATOR.$this->f_page.".php")
+			)
+			{
+				require('modules'.$_GET['module'].DIRECTORY_SEPARATOR.$this->f_page.".php");
+			}
+			else
+			{
+				$this->loadDefaultPage();
+			}
 		}
 		// Page is defined the core
 		elseif(isset($_GET['module']) && $_GET['module'] == "core")
 		{
+/*
 			if(file_exists($_SESSION['pathtocore'].$this->f_page.".php"))
 			{
 				require($_SESSION['pathtocore'].$this->f_page.".php");
@@ -988,10 +1001,22 @@ class core_tools extends functions
 				//require($_SESSION["config"]["defaultPage"].".php");
 				$this->loadDefaultPage();
 			}
+*/
+			if(file_exists($_SESSION['config']['corepath'].'core'.DIRECTORY_SEPARATOR.$this->f_page.".php")
+			|| file_exists($_SESSION['config']['corepath'].'clients'.$_SESSION['high_layer_id'].'core'.DIRECTORY_SEPARATOR.$this->f_page.".php")
+			)
+			{
+				require('core'.DIRECTORY_SEPARATOR.$this->f_page.".php");
+			}
+			else
+			{
+				$this->loadDefaultPage();
+			}
 		}
 		// Page is defined the admin directory of the application
 		elseif(isset($_GET['admin']) && !empty($_GET['admin']))
 		{
+/*
 			$path = $_SESSION['config']['businessapppath']."admin".DIRECTORY_SEPARATOR.trim($_GET['admin']).DIRECTORY_SEPARATOR.$this->f_page.'.php';
 			if(file_exists($path))
 			{
@@ -1002,9 +1027,21 @@ class core_tools extends functions
 				//require($_SESSION["config"]["defaultPage"].".php");
 				$this->loadDefaultPage();
 			}
+*/
+			if(file_exists($_SESSION['config']['corepath'].'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."admin".DIRECTORY_SEPARATOR.trim($_GET['admin']).$this->f_page.".php")
+			|| file_exists($_SESSION['config']['corepath'].'clients'.$_SESSION['high_layer_id'].'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."admin".DIRECTORY_SEPARATOR.trim($_GET['admin']).$this->f_page.".php")
+			)
+			{
+				require('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."admin".DIRECTORY_SEPARATOR.trim($_GET['admin']).$this->f_page.".php");
+			}
+			else
+			{
+				$this->loadDefaultPage();
+			}
 		}
 		elseif(isset($_GET['dir']) && !empty($_GET['dir']))
 		{
+/*
 			$path = $_SESSION['config']['businessapppath'].DIRECTORY_SEPARATOR.trim($_GET['dir']).DIRECTORY_SEPARATOR.$this->f_page.'.php';
 			if(file_exists($path))
 			{
@@ -1015,10 +1052,22 @@ class core_tools extends functions
 				//require($_SESSION["config"]["defaultPage"].".php");
 				$this->loadDefaultPage();
 			}
+*/
+			if(file_exists($_SESSION['config']['corepath'].'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.trim($_GET['dir']).DIRECTORY_SEPARATOR.$this->f_page.".php")
+			|| file_exists($_SESSION['config']['corepath'].'clients'.$_SESSION['high_layer_id'].'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.trim($_GET['dir']).DIRECTORY_SEPARATOR.$this->f_page.".php")
+			)
+			{
+				require('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.trim($_GET['dir']).DIRECTORY_SEPARATOR.$this->f_page.".php");
+			}
+			else
+			{
+				$this->loadDefaultPage();
+			}
 		}
 		// Page is defined in the application
 		else
 		{
+/*
 			if(file_exists($this->f_page.".php"))
 			{
 				require($this->f_page.".php");
@@ -1029,6 +1078,34 @@ class core_tools extends functions
 				$app = new business_app_tools();
 				$path = $app->insert_app_page($this->f_page);
 				if( !$path || !file_exists($path))
+				{
+					//require($_SESSION["config"]["defaultPage"].".php");
+					$this->loadDefaultPage();
+				}
+				else
+				{
+					require($path);
+				}
+			}
+*/
+
+			if(file_exists($_SESSION['config']['corepath'].'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.$this->f_page.".php")
+			|| file_exists($_SESSION['config']['corepath'].'clients'.DIRECTORY_SEPARATOR.$_SESSION['high_layer_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.$this->f_page.".php")
+			)
+			{
+				echo "<br/>'".$_SESSION['config']['corepath'].'clients'.$_SESSION['high_layer_id'].'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.$this->f_page.".php"."'<br/>";
+				if(file_exists($_SESSION['config']['corepath'].'clients'.DIRECTORY_SEPARATOR.$_SESSION['high_layer_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.$this->f_page.".php"))
+				{
+					echo 'FILE EXISTS';
+				}
+				require('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.$this->f_page.".php");
+			}
+			else
+			{
+				require_once('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
+				$app = new business_app_tools();
+				$path = $app->insert_app_page($this->f_page);
+				if( !$path || !file_exists($_SESSION['config']['corepath'].'clients'.DIRECTORY_SEPARATOR.$_SESSION['high_layer_id'].DIRECTORY_SEPARATOR.$path) || !file_exists($_SESSION['config']['corepath'].$path))
 				{
 					//require($_SESSION["config"]["defaultPage"].".php");
 					$this->loadDefaultPage();
@@ -1068,7 +1145,7 @@ class core_tools extends functions
 			if(count($tmpTab) == 1)
 			{
 				$page = str_replace("page=", "", $tmpTab[0]);
-				require($page.".php");
+				require('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.$page.".php");
 			}
 			elseif(count($tmpTab) == 2)
 			{
@@ -1078,7 +1155,7 @@ class core_tools extends functions
 				$tabModuleOrAdmin = explode("=", $tmpTab[1]);
 				if($tabModuleOrAdmin[0] == "module")
 				{
-					require($_SESSION['pathtomodules'].$tabModuleOrAdmin[1].DIRECTORY_SEPARATOR.$tabPage[1].".php");
+					require('modules'.DIRECTORY_SEPARATOR.$tabModuleOrAdmin[1].DIRECTORY_SEPARATOR.$tabPage[1].".php");
 				}
 				else
 				{
@@ -1087,17 +1164,17 @@ class core_tools extends functions
 					   || $tabPage[1] == "status" || $tabPage[1] == "action" || $tabPage[1] == "xml_param_services" || $tabPage[1] == "modify_user"
 					  )
 					{
-						require($_SESSION['config']['businessapppath']."admin".DIRECTORY_SEPARATOR.$tabModuleOrAdmin[1].DIRECTORY_SEPARATOR.$tabPage[1].".php");
+						require('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."admin".DIRECTORY_SEPARATOR.$tabModuleOrAdmin[1].DIRECTORY_SEPARATOR.$tabPage[1].".php");
 					}
 					else
 					{
-						require("welcome.php");
+						require('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."welcome.php");
 					}
 				}
 			}
 			else
 			{
-				require("welcome.php");
+				require('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."welcome.php");
 			}
 		}
 		elseif(trim($_SESSION["config"]["defaultPage"]) <> "")
@@ -1107,7 +1184,7 @@ class core_tools extends functions
 			if(count($tmpTab) == 1)
 			{
 				$page = str_replace("page=", "", $tmpTab[0]);
-				require($page.".php");
+				require('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.$page.".php");
 			}
 			elseif(count($tmpTab) == 2)
 			{
@@ -1117,21 +1194,21 @@ class core_tools extends functions
 				$tabModuleOrAdmin = explode("=", $tmpTab[1]);
 				if($tabModuleOrAdmin[0] == "module")
 				{
-					require($_SESSION['pathtomodules'].$tabModuleOrAdmin[1].DIRECTORY_SEPARATOR.$tabPage[1].".php");
+					require('modules'.DIRECTORY_SEPARATOR.$tabModuleOrAdmin[1].DIRECTORY_SEPARATOR.$tabPage[1].".php");
 				}
 				else
 				{
-					require($_SESSION['config']['businessapppath']."admin".DIRECTORY_SEPARATOR.$tabModuleOrAdmin[1].DIRECTORY_SEPARATOR.$tabPage[1].".php");
+					require('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."admin".DIRECTORY_SEPARATOR.$tabModuleOrAdmin[1].DIRECTORY_SEPARATOR.$tabPage[1].".php");
 				}
 			}
 			else
 			{
-				require("welcome.php");
+				require('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."welcome.php");
 			}
 		}
 		else
 		{
-			require("welcome.php");
+			require('apps'.DIRECTORY_SEPARATOR."welcome.php");
 		}
 	}
 
@@ -1734,6 +1811,23 @@ class core_tools extends functions
 			}
 		}
 		return false;
+	}
+
+	public function load_maarch_xml($path)
+	{
+		//echo $_SESSION['core_path'].'clients'.DIRECTORY_SEPARATOR.$_SESSION['high_layer_id'].DIRECTORY_SEPARATOR.$path;
+		if(file_exists($_SESSION['core_path'].'clients'.DIRECTORY_SEPARATOR.$_SESSION['high_layer_id'].DIRECTORY_SEPARATOR.$path))
+		{
+			return simplexml_load_file($_SESSION['core_path'].'clients'.DIRECTORY_SEPARATOR.$_SESSION['high_layer_id'].DIRECTORY_SEPARATOR.$path);
+		}
+		else if(file_exists($_SESSION['core_path'].$path))
+		{
+			return simplexml_load_file($_SESSION['core_path'].$path);
+		}
+		else
+		{
+			return false;
+		}
 	}
 }
 ?>
