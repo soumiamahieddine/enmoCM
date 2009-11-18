@@ -41,7 +41,7 @@ class business_app_tools extends dbquery
 	*/
 	public function build_business_app_config()
 	{
-		$_SESSION['client_id'] = $this->get_client_id();
+		$_SESSION['high_layer_id'] = $this->get_client_id();
 		// build Maarch business app configuration into sessions vars
 		$_SESSION['showmenu']='oui';
 

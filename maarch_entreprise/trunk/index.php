@@ -69,7 +69,7 @@ $time = $core_tools->get_session_time_expire();
 
                     //here we building the maarch menu
                     $core_tools->build_menu($_SESSION['menu']);
-					
+
                    ?>
                 </ul>
                		 <?php
