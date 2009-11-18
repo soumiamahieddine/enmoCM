@@ -12,8 +12,11 @@
 * @author  Claire Figueras  <dev@maarch.org>
 * @author  Loïc Vinet <dev@maarch.org>
 */
-session_name('PeopleBox');
-session_start();
+//session_name('PeopleBox');
+//session_start();
+
+include_once('init.php');
+//var_dump(get_include_path());
 if(!isset($_SESSION['user']['UserId']))
 {
 	if(trim($_SERVER['argv'][0]) <> "")

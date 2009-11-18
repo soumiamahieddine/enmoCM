@@ -1,14 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
 	<client>
-		<client_id>Charleville_mezieres</client_id>
-		<ip>127.0.0.1</ip>
-		<external_domain></external_domain>
-		<domain></domain>
-	</client>
-	<client>
 		<client_id>DGGT</client_id>
-		<ip></ip>
+		<ip>127.0.0.1</ip>
 		<external_domain></external_domain>
 		<domain></domain>
 	</client>

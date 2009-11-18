@@ -56,6 +56,7 @@ if(trim($_SESSION['config']['corename']) == "")
 		$i++;
 	}
 }
+$_SESSION['config']['app_id'] = $_SESSION['businessapps'][0]['appid'];
 //print_r($_REQUEST);
 if(trim($_GET['target_page']) <> "")
 {
@@ -120,7 +121,6 @@ $core_tools->load_lang();
 $core_tools->load_html();
 $core_tools->load_header();
 $time = $core_tools->get_session_time_expire();
-
 ?>
 <body id="bodylogin" onload="setTimeout('window.location.reload(true)', <?php  echo $time;?>*60*1000);">
 <?php //$core_tools->show_array($_SERVER);?>
