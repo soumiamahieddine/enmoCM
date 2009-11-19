@@ -10,8 +10,8 @@
 * @license GPL v3
 * @author  Laurent Giovannoni  <dev@maarch.org>
 */
-session_name('PeopleBox');
-session_start();
+include('core/init.php');
+
 if(trim($_GET['app'])<> "" )
 {
 	$_SESSION['config']['app_id'] = $_GET['app'];
