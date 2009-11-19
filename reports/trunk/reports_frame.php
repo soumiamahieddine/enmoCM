@@ -27,10 +27,10 @@
 * @version $Revision$
 * @ingroup reports
 */
-session_name('PeopleBox'); 
-session_start();
-require_once($_SESSION['pathtocoreclass']."class_functions.php");
-require_once($_SESSION['pathtocoreclass']."class_core_tools.php");
+include('core/init.php'); 
+
+require_once("core/class/class_functions.php");
+require_once("core/class/class_core_tools.php");
 $core_tools = new core_tools();
 //here we loading the lang vars
 $core_tools->load_lang();

@@ -10,9 +10,9 @@
 * @license GPL
 * @author  Claire Figueras  <dev@maarch.org>
 */
-session_name('PeopleBox');
-session_start();
-require_once($_SESSION['pathtomodules'].'reports'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_graphics.php');
+include('core/init.php');
+
+require_once('modules/reports'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_graphics.php');
 
 $graphi = new graphics();
 

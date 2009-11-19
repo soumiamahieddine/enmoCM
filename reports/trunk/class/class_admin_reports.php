@@ -73,7 +73,7 @@ class admin_reports extends dbquery
 
 		if($_SESSION['history']['usergroupsreportsadd'] == "true")
 		{
-			require_once($_SESSION['pathtocoreclass']."class_history.php");
+			require_once("core/class/class_history.php");
 			$hist = new history();
 			$hist->add($_SESSION['tablename']['usergroups_reports'], $group,"ADD",_GROUP_REPORTS_ADDED." : ".$group, $_SESSION['config']['databasetype']);
 		}
@@ -183,9 +183,9 @@ class admin_reports extends dbquery
 	*/
 	public function groupreports($id = "")
 	{
-		require_once($_SESSION['pathtocoreclass']."class_security.php");
-		require_once($_SESSION['pathtocoreclass']."class_core_tools.php");
-		require_once($_SESSION['pathtomodules'].'reports'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php');
+		require_once("core/class/class_security.php");
+		require_once("core/class/class_core_tools.php");
+		require_once('modules/reports'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php');
 		$rep = new reports();
 		$enabled_reports = $rep->get_reports_from_xml();
 		$sec = new security();

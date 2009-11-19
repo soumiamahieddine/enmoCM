@@ -20,7 +20,7 @@ class reports  extends dbquery
 	*/
 	public function build_modules_tables()
 	{
-		$xmlconfig = simplexml_load_file($_SESSION['pathtomodules']."reports".DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."config.xml");
+		$xmlconfig = simplexml_load_file("modules/reports/xml/config.xml");
 
 		foreach($xmlconfig->TABLENAME as $TABLENAME)
 		{
@@ -42,7 +42,7 @@ class reports  extends dbquery
 	function get_reports_from_xml($id_report = '', $only_enabled = true)
 	{
 		$reports = array();
-		$xmlfile = simplexml_load_file($_SESSION['pathtomodules']."reports".DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."reports.xml");
+		$xmlfile = simplexml_load_file("modules/reports/xml/reports.xml");
 		$i =0;
 		foreach($xmlfile->REPORT as $report)
 		{
@@ -56,7 +56,7 @@ class reports  extends dbquery
 			if ($origin == "apps")
 			{
 				$module = "application";
-				$path_lang = $_SESSION['config']['businessapppath'].'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php';
+				$path_lang = 'apps/'.$_SESSION['config']['app_id'].'/lang/'.$_SESSION['config']['lang'].'.php';
 				$tmp = $this->retrieve_constant_lang(_APPS_COMMENT, $path_lang);
 				if($tmp != false)
 				{
@@ -76,7 +76,7 @@ class reports  extends dbquery
 			{
 				$module = (string)$report->MODULE;
 				$moduleLabel = (string)$report->MODULE_LABEL;
-				$path_lang = $_SESSION['pathtomodules'].$module.DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php';
+				$path_lang = 'modules/'.$module.'/lang/'.$_SESSION['config']['lang'].'.php';
 				$tmp = $this->retrieve_constant_lang($moduleLabel, $path_lang);
 				if($tmp != false)
 				{

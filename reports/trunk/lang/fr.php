@@ -36,7 +36,10 @@ define('_PRINT_NO_RESULT', 'Rien &agrave; afficher');
 
 
 //Global
-define('_DOCUMENTS_LIST','Liste des documents');
+if(!defined('_DOCUMENTS_LIST'))
+{
+	define('_DOCUMENTS_LIST','Liste des documents');
+}
 define('_DOCUMENTS_LIST_DESC','Liste des documents');
 
 /*************************** Module label in report *****************/
