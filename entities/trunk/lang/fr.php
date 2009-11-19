@@ -42,17 +42,29 @@ define('_ENTITY_TREE', 'Arborescence des entit&eacute;s');
 define('_ENTITY_TREE_DESC', 'Voir l&rsquo;arborescence des entit&eacute;s');
 define('_ENTITY_HAVE_CHILD', 'Cette entit&eacute; poss&egrave;de des sous entit&eacute;s');
 define('_ENTITY_IS_RELATED', 'Cette entit&eacute; est reli&eacute;e &agrave; des utilisateurs');
-define('_TYPE', 'Type');
 
+if(!defined('_TYPE'))
+{
+	define('_TYPE', 'Type');
+}
 /*************************** Users - Entites management *****************/
 define('_ENTITY_USER_DESC', 'Mettre en relation des entit&eacute;s et des utilisateurs');
 define('_ENTITIES_USERS', 'Relation entit&eacute;s - utilisateurs');
 define('_ENTITIES_USERS_LIST', 'Liste des utilisateurs');
-define('_USER_ENTITIES_TITLE', 'L&rsquo;utilisateur appartient aux entit&eacute;s suivantes');
+if(!defined('_USER_ENTITIES_TITLE'))
+{
+	define('_USER_ENTITIES_TITLE', 'L&rsquo;utilisateur appartient aux entit&eacute;s suivantes');
+}
 define('_USER_ENTITIES_ADDITION', 'Relation Utilisateur - Entit&eacute;s');
-define('_USER_BELONGS_NO_ENTITY', 'L&rsquo;utilisateur n&rsquo;appartient &agrave; aucune entit&eacute;');
+if(!defined('_USER_BELONGS_NO_ENTITY'))
+{
+	define('_USER_BELONGS_NO_ENTITY', 'L&rsquo;utilisateur n&rsquo;appartient &agrave; aucune entit&eacute;');
+}
 define('_CHOOSE_ONE_ENTITY', 'Choisissez au moins une entit&eacute;');
-define('_CHOOSE_ENTITY', 'Choisissez une entit&eacute;');
+if(!defined('_CHOOSE_ENTITY'))
+{
+	define('_CHOOSE_ENTITY', 'Choisissez une entit&eacute;');
+}
 define('_CHOOSE_PRIMARY_ENTITY', 'Choisir comme entit&eacute; primaire');
 define('_PRIMARY_ENTITY', 'Entit&eacute; primaire');
 define('_DELETE_ENTITY', 'Supprimer le(s) entit&eacute;(s)');
@@ -85,7 +97,10 @@ define('_CHOOSE_ENTITY_TYPE', 'Choisissez le type de l&rsquo;entit&eacute;');
 define('_ENTITY_TYPE', 'Type de l&rsquo;entit&eacute;');
 
 define('_TO_USERS_OF_ENTITIES', 'Vers des utilisateurs des services');
-define('_ALL_ENTITIES', 'Toutes les entit&eacute;s');
+if(!defined('_ALL_ENTITIES'))
+{
+	define('_ALL_ENTITIES', 'Toutes les entit&eacute;s');
+}
 define('_ENTITIES_JUST_BELOW', 'Imm&eacute;diatement inf&eacute;rieures &agrave; l&rsquo;entit&eacute; primaire');
 define('_ALL_ENTITIES_BELOW', 'Inf&eacute;rieures &agrave; l&rsquo;entit&eacute; primaire');
 define('_ENTITIES_JUST_UP', 'Imm&eacute;diatement sup&eacute;rieures  &agrave; l&rsquo;entit&eacute; primaire');

@@ -10,12 +10,12 @@
 * @license GPL
 * @author Cédric Ndoumba <dev@maarch.org>
 */
-session_name('PeopleBox');
-session_start();
-require_once($_SESSION['pathtocoreclass']."class_functions.php");
-require_once($_SESSION['pathtocoreclass']."class_db.php");
-require_once($_SESSION['pathtocoreclass']."class_request.php");
-require_once($_SESSION['pathtomodules'].'entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_entities.php');
+include('core/init.php');
+
+require_once("core/class/class_functions.php");
+require_once("core/class/class_db.php");
+require_once("core/class/class_request.php");
+require_once('modules/entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_entities.php');
 $ent = new entity();
 
 $select = "select entity_id from ".$_SESSION['tablename']['ent_entities'];

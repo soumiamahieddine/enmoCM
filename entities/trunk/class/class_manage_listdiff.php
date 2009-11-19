@@ -174,7 +174,7 @@ class diffusion_list extends dbquery
 			}
 			if(isset($params['user_id']) && !empty($params['user_id']))
 			{
-				require_once($_SESSION['pathtomodules'].'entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_entities.php');
+				require_once('modules/entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_entities.php');
 				$ent = new entity();
 				$creator_user = $params['user_id'];
 				$primary = $ent->get_primary_entity($creator_user);

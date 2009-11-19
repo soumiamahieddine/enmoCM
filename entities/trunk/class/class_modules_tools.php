@@ -18,7 +18,7 @@ class entities extends dbquery
 	*/
 	public function build_modules_tables()
 	{
-		$xmlconfig = simplexml_load_file($_SESSION['pathtomodules']."entities".DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."config.xml");
+		$xmlconfig = simplexml_load_file("modules/entities/xml/config.xml");
 		foreach($xmlconfig->TABLENAME as $TABLENAME)
 		{
 			$_SESSION['tablename']['ent_entities'] = (string) $TABLENAME->ent_entities;
@@ -62,7 +62,7 @@ class entities extends dbquery
 			}
 		}
 
-		$xmltype = simplexml_load_file($_SESSION['pathtomodules']."entities".DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."typentity.xml");
+		$xmltype = simplexml_load_file("modules/entities/xml/typentity.xml");
 		$entypes = array();
 
 		foreach($xmltype->TYPE as $TYPE)
@@ -125,7 +125,7 @@ class entities extends dbquery
 		if(preg_match('/@my_primary_entity/', $where))
 		{
 			$prim_entity = '';
-			if($user == $_SESSION['user']['UserId'])
+			if($user_id == $_SESSION['user']['UserId'] && isset($_SESSION['user']['primary_entity']['id']))
 			{
 				$prim_entity = "'".$_SESSION['user']['primary_entity']['id']."'";
 			}
@@ -133,7 +133,10 @@ class entities extends dbquery
 			{
 				$db->query("select entity_id from ".$_SESSION['tablename']['ent_users_entities']." where user_id = '".$this->protect_string_db(trim($user_id))."' and primary_entity = 'Y'");
 				$res = $db->fetch_object();
-				$prim_entity = "'".$res->entity_id."'";
+				if(isset($res->entity_id))
+				{
+					$prim_entity = "'".$res->entity_id."'";
+				}
 			}
 			if($prim_entity == '' && $user_id == 'superadmin')
 			{

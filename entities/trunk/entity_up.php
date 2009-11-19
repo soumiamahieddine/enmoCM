@@ -10,8 +10,8 @@
 * @license GPL
 * @author  Cédric Ndoumba  <dev@maarch.org>
 */
-session_name('PeopleBox');
-session_start();
+include('core/init.php');
+
 
 $admin = new core_tools();
 $admin->test_admin('manage_entities', 'entities');
@@ -31,9 +31,9 @@ $page_label = _MODIFICATION;
 $page_id = "entity_up";
 $admin->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
-//require_once($_SESSION['pathtocoreclass']."class_db.php");
-//require_once($_SESSION['pathtomodules']."folder".DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_admin_foldertypes.php');
-require_once($_SESSION['pathtomodules'].'entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_entities.php');
+//require_once("core/class/class_db.php");
+//require_once("modules/folder".DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_admin_foldertypes.php');
+require_once('modules/entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_entities.php');
 
 $func = new functions();
 $ent = new entity();

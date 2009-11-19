@@ -1,6 +1,6 @@
 <?php
-session_name('PeopleBox');
-session_start();
+include('core/init.php');
+
 
 // Group - Basket Form : actions params
 if($_SESSION['service_tag'] == 'group_basket')
@@ -119,7 +119,7 @@ if($_SESSION['service_tag'] == 'group_basket')
 }
 elseif($_SESSION['service_tag'] == 'manage_groupbasket')
 {
-	require_once($_SESSION['pathtomodules'].'entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php');
+	require_once('modules/entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php');
 	$ent = new entities();
 	//$ent->show_array($_SESSION['m_admin']['basket']['groups']);
 	$groupe = $_REQUEST['group'];
@@ -179,7 +179,7 @@ elseif($_SESSION['service_tag'] == 'manage_groupbasket')
 }
 elseif($_SESSION['service_tag'] == 'load_basket_session')
 {
-	require_once($_SESSION['pathtomodules'].'entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php');
+	require_once('modules/entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php');
 	$entity_tmp = new entities();
 	for($i=0; $i < count($_SESSION['m_admin']['basket']['groups'] ); $i++)
 	{
@@ -199,7 +199,7 @@ elseif($_SESSION['service_tag'] == 'load_basket_session')
 }
 elseif($_SESSION['service_tag'] == 'load_basket_db')
 {
-	require_once($_SESSION['pathtomodules'].'entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php');
+	require_once('modules/entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php');
 	$ent = new entities();
 	$indexing_actions = array();
 	for($i=0; $i<count($_SESSION['m_admin']['basket']['all_actions']);$i++ )
@@ -227,7 +227,7 @@ elseif($_SESSION['service_tag'] == 'load_basket_db')
 }
 else if($_SESSION['service_tag'] == 'del_basket' && !empty($_SESSION['temp_basket_id']))
 {
-	require_once($_SESSION['pathtocoreclass']."class_db.php");
+	require_once("core/class/class_db.php");
 	$db = new dbquery();
 	$db->query("delete from ".$_SESSION['tablename']['ent_groupbasket_redirect']." where basket_id = '".$_SESSION['temp_basket_id']."'");
 	unset($_SESSION['temp_basket_id']);

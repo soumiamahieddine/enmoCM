@@ -28,8 +28,8 @@ $page_label = _ENTITIES_USERS_LIST;
 $page_id = "users_list";
 $admin->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
-require_once($_SESSION['pathtocoreclass']."class_request.php");
-require_once($_SESSION['pathtomodules'].'entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_entities.php');
+require_once("core/class/class_request.php");
+require_once('modules/entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_entities.php');
 require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR.'class_list_show.php');
 $func = new functions();
 $ent = new entity();

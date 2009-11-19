@@ -12,14 +12,14 @@
 * @author  Claire Figueras  <dev@maarch.org>
 */
 
-session_name('PeopleBox');
-session_start();
-require_once($_SESSION['pathtocoreclass']."class_functions.php");
+include('core/init.php');
+
+require_once("core/class/class_functions.php");
 
 $admin = new core_tools();
 $admin->test_admin('manage_entities', 'entities');
 
-require_once($_SESSION['pathtocoreclass']."class_db.php");
+require_once("core/class/class_db.php");
 
 $func = new functions();
 if(isset($_GET['id']))
@@ -46,7 +46,7 @@ $page_label = _MODIFICATION;
 $page_id = "users_entities_up";
 $admin->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
-require_once($_SESSION['pathtomodules'].'entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_users_entities.php');
+require_once('modules/entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_users_entities.php');
 $usersent = new users_entities();
 
 $usersent->formuserentities("up", $id);

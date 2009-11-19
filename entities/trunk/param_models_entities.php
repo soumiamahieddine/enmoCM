@@ -1,6 +1,6 @@
 <?php
-session_name('PeopleBox');
-session_start();
+include('core/init.php');
+
 
 if($_SESSION['service_tag'] == 'admin_models')
 {?>
@@ -69,7 +69,7 @@ if($_SESSION['service_tag'] == 'admin_models')
 }
 elseif($_SESSION['service_tag'] == 'load_model_session')
 {
-	require_once($_SESSION['pathtomodules'].'models'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php');
+	require_once('modules/models'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php');
 
 	$model = new models();
 	$entities = $model->getAllItemsLinkedToModel($_SESSION['m_admin']['model']['ID'], 'destination');
@@ -86,7 +86,7 @@ elseif($_SESSION['service_tag'] == 'load_model_session')
 }
 elseif($_SESSION['service_tag'] == 'model_info')
 {
-	require_once($_SESSION['pathtomodules']."entities".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_manage_entities.php");
+	require_once("modules/entities".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_manage_entities.php");
 	$ent = new entity();
 	$_SESSION['m_admin']['model']['ENTITIES'] = array();
 	for($i=0;$i<count($_REQUEST['entities_chosen']); $i++)
@@ -101,7 +101,7 @@ elseif($_SESSION['service_tag'] == 'model_info')
 }
 elseif($_SESSION['service_tag'] == 'load_model_db')
 {
-	require_once($_SESSION['pathtocoreclass']."class_db.php");
+	require_once("core/class/class_db.php");
 	$db = new dbquery();
 	$db->connect();
 	$db->query("Delete from ".$_SESSION['tablename']['mod_models_association']." where model_id = '".$_SESSION['m_admin']['model']['ID']."' and what = 'destination'");

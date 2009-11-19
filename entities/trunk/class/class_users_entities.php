@@ -387,7 +387,7 @@ class users_entities extends dbquery
 				if($_SESSION['history']['usersup'] == "true")
 				{
 					$tmp_h = $this->protect_string_db(_USER_UPDATE." : ".$_SESSION['m_admin']['entity']['user_LastName']." ".$_SESSION['m_admin']['entity']['user_FirstName']." (".$_SESSION['m_admin']['entity']['user_UserId'].")");
-					require_once($_SESSION['pathtocoreclass']."class_history.php");
+					require_once("core/class/class_history.php");
 					$users = new history();
 					$users->add($_SESSION['tablename']['users'], $_SESSION['m_admin']['entity']['user_UserId'],"UP",$tmp_h, $_SESSION['config']['databasetype']);
 				}

@@ -150,7 +150,7 @@ class entity extends dbquery
 					</p>
 					<p>
 						<label><?php  echo _ENTITY_TYPE;
-						require_once($_SESSION['pathtomodules'].'entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php');
+						require_once('modules/entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php');
 
 						$ent = new entities;
 
@@ -550,7 +550,7 @@ class entity extends dbquery
 
 		if($_SESSION['history'][$hist] == "true")
 		{
-			require_once($_SESSION['pathtocoreclass']."class_history.php");
+			require_once("core/class/class_history.php");
 			$users = new history();
 			$users->add($_SESSION['tablename']['ent_entities'], $id, $histKey, $histLabel." : ".$id, $_SESSION['config']['databasetype']);
 		}
@@ -567,7 +567,7 @@ class entity extends dbquery
 				$db2->query('Update '.$_SESSION['tablename']['ent_entities']." set enabled = '".$this->protect_string_db(trim($action))."' where entity_id = '".$this->protect_string_db(trim($line->entity_id))."'");
 				if($_SESSION['history'][hist] == "true")
 				{
-					require_once($_SESSION['pathtocoreclass']."class_history.php");
+					require_once("core/class/class_history.php");
 					$users = new history();
 					$users->add($_SESSION['tablename']['ent_entities'], $line->entity_id, $HistKey, $HistLabel." : ".$line->entity_id, $_SESSION['config']['databasetype']);
 				}
@@ -826,7 +826,7 @@ class entity extends dbquery
 
 					if($_SESSION['history']['entityadd'] == "true")
 					{
-						require($_SESSION['pathtocoreclass']."class_history.php");
+						require("core/class/class_history.php");
 						$hist = new history();
 						$hist->add($_SESSION['tablename']['ent_entities'], $_SESSION['m_admin']['entity']['entityId'] ,"ADD",_ADD_ENTITY." : ".$_SESSION['m_admin']['entity']['entityId'] , $_SESSION['config']['databasetype'], 'entities');
 					}
@@ -917,7 +917,7 @@ class entity extends dbquery
 		//$this->show();
 		$line = $this->fetch_object();
 		$entity_type = $line->entity_type;
-		$xmltypeentity = simplexml_load_file($_SESSION['pathtomodules']."entities".DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."typentity.xml");
+		$xmltypeentity = simplexml_load_file("modules/entities/xml/typentity.xml");
 		//echo "<br>";
 		foreach($xmltypeentity->TYPE as $ENTITYTYPE)
 		{

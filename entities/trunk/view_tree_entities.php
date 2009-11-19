@@ -10,9 +10,9 @@
 * @license GPL
 * @author  Cédric Ndoumba  <dev@maarch.org>
 */
-require_once($_SESSION['pathtocoreclass']."class_functions.php");
-require_once($_SESSION['pathtocoreclass']."class_db.php");
-require_once($_SESSION['pathtocoreclass']."class_core_tools.php");
+require_once("core/class/class_functions.php");
+require_once("core/class/class_db.php");
+require_once("core/class/class_core_tools.php");
 $admin = new core_tools();
 $admin->test_admin('manage_entities', 'entities');
 $db = new dbquery();

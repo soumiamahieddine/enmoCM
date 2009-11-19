@@ -10,11 +10,11 @@
 * @license GPL
 * @author  Cédric Ndoumba  <dev@maarch.org>
 */
-session_name('PeopleBox');
-session_start();
-require_once($_SESSION['pathtocoreclass']."class_functions.php");
+include('core/init.php');
 
-require($_SESSION['pathtocoreclass']."class_core_tools.php");
+require_once("core/class/class_functions.php");
+
+require("core/class/class_core_tools.php");
 
 $core_tools = new core_tools();
 //here we loading the lang vars
@@ -22,9 +22,9 @@ $core_tools->load_lang();
 $admin = new core_tools();
 $admin->test_admin('manage_entities', 'entities');
 
-require_once($_SESSION['pathtocoreclass']."class_db.php");
+require_once("core/class/class_db.php");
 
-$path = $_SESSION['pathtomodules'].'entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_entities.php';
+$path = 'modules/entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_entities.php';
 
 require($path);
 

@@ -1,6 +1,6 @@
 <?
-session_name('PeopleBox');
-session_start();
+include('core/init.php');
+
 
 if($_SESSION['service_tag'] == 'categories_declaration')
 {
