@@ -57,7 +57,7 @@
 </script>
 <?php
    //	$this->show_array($_SESSION['user']['baskets']);
-    require_once($_SESSION['pathtomodules'].'basket'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php');
+    require_once('modules/basket'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php');
 	$bask = new basket();
 	$modal_content = $bask->redirect_my_baskets_list($_SESSION['user']['baskets'], count($_SESSION['user']['baskets']), $_SESSION['user']['UserId'], "listingbasket specsmall");
 	echo "<div>";

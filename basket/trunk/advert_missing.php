@@ -28,10 +28,10 @@
 * @version $Revision$
 * @ingroup basket
 */
-session_name('PeopleBox');
-session_start();
-require_once($_SESSION['pathtocoreclass']."class_functions.php");
-require_once($_SESSION['pathtocoreclass']."class_db.php");
+include('core/init.php');
+
+require_once("core/class/class_functions.php");
+require_once("core/class/class_db.php");
 
 
 if ($_POST['value'] == "submit")
@@ -40,7 +40,7 @@ if ($_POST['value'] == "submit")
 	$db->connect();
 	$db2 = new dbquery();
 	$db2->connect();
-	require_once($_SESSION['pathtomodules'].'basket'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php');
+	require_once('modules/basket'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php');
 
 	$bask = new basket();
 	$bask->cancel_abs($_SESSION['user']['UserId']);
@@ -48,7 +48,7 @@ if ($_POST['value'] == "submit")
 	$_SESSION['abs_user_status'] = false;
 	if($_SESSION['history']['userabs'] == "true")
 	{
-		require_once($_SESSION['pathtocoreclass']."class_history.php");
+		require_once("core/class/class_history.php");
 		$history = new history();
 		$history->connect();
 		$history->query("select firstname, lastname from ".$_SESSION['tablename']['users']." where user_id = '".$this_user."'");

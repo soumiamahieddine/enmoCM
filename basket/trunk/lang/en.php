@@ -70,7 +70,6 @@ define('_ADD_A_GROUP_TO_BASKET', 'Associate a group to the basket');
 define('_DEL_GROUPS', 'Remove groups');
 define('_BASKET_NOT_USABLE', 'No group associated (the basket cannot be used)');
 define('_ASSOCIATED_GROUP', 'Groups associated to the basket');
-define('_BASKETS', 'Basket(s)');
 
 define('_TITLE_GROUP_BASKET', 'Associate a group to the basket');
 define('_ADD_TO_BASKET', 'Associate a group');

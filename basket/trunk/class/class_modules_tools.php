@@ -58,7 +58,7 @@ class basket extends dbquery
 	*/
 	public function build_modules_tables()
 	{
-		$xmlconfig = simplexml_load_file($_SESSION['pathtomodules']."basket/xml/config.xml");
+		$xmlconfig = simplexml_load_file("modules/basket/xml/config.xml");
 
 		$CONFIG = $xmlconfig->CONFIG;
 
@@ -142,7 +142,7 @@ class basket extends dbquery
 			}// The page is in a module
 			elseif(strtoupper($_SESSION['basket_page'][$ind]['ORIGIN']) == "MODULE")
 			{
-				require_once($_SESSION['pathtocoreclass']."class_core_tools.php");
+				require_once("core/class/class_core_tools.php");
 				$core_tools = new core_tools();
 				// Error : The module name is empty or the module is not loaded
 				if(empty($_SESSION['basket_page'][$ind]['MODULE']) || !$core_tools->is_module_loaded($_SESSION['basket_page'][$ind]['MODULE']))
@@ -185,8 +185,8 @@ class basket extends dbquery
 	private function load_baskets_pages()
 	{
 		$_SESSION['basket_page'] = array();
-		$xmlfile = simplexml_load_file($_SESSION['pathtomodules']."basket".DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."basketpage.xml");
-		$path_lang = $_SESSION['pathtomodules']."basket".DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php';
+		$xmlfile = simplexml_load_file("modules/basket/xml/basketpage.xml");
+		$path_lang = "modules/basket/lang/".$_SESSION['config']['lang'].'.php';
 		$i =0;
 		foreach($xmlfile->BASKETPAGE as $BASKETPAGE)
 		{
@@ -480,7 +480,7 @@ class basket extends dbquery
 		}
 		else
 		{
-			require_once($_SESSION['pathtocoreclass']."class_security.php");
+			require_once("core/class/class_security.php");
 			$sec =new security();
 			$this->connect();
 			$table = $sec->retrieve_view_from_coll_id($coll_id);
@@ -595,7 +595,7 @@ class basket extends dbquery
 	{
 		$tab = array();
 		$this->connect();
-		require_once($_SESSION['pathtocoreclass']."class_security.php");
+		require_once("core/class/class_security.php");
 		$sec = new security();
 
 		$this->query("select basket_id, coll_id, basket_name, basket_desc, basket_clause, is_generic from ".$_SESSION['tablename']['bask_baskets']." where basket_id = '".$this->protect_string_db($basket_id)."' and enabled = 'Y'");
@@ -666,7 +666,7 @@ class basket extends dbquery
 	{
 		$tab = array();
 		$this->connect();
-			require_once($_SESSION['pathtocoreclass']."class_security.php");
+			require_once("core/class/class_security.php");
 		$sec = new security();
 
 		$this->query("select basket_id, coll_id, basket_name, basket_desc, basket_clause from ".$_SESSION['tablename']['bask_baskets']." where basket_id = '".$basket_id."' and enabled = 'Y'");

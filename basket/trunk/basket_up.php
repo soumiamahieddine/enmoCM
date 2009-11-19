@@ -29,13 +29,13 @@
 * @version $Revision$
 * @ingroup basket
 */
-session_name('PeopleBox');
-session_start();
+include('core/init.php');
+
 
 $admin = new core_tools();
 $admin->test_admin('admin_baskets', 'basket');
 
-require_once($_SESSION['pathtomodules']."basket".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_admin_basket.php");
+require_once("modules/basket".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_admin_basket.php");
  /****************Management of the location bar  ************/
 $init = false;
 if($_REQUEST['reinit'] == "true")

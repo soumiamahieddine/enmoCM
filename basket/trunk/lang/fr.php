@@ -70,7 +70,6 @@ define('_ADD_A_GROUP_TO_BASKET', 'Associer un nouveau groupe &agrave; la corbeil
 define('_DEL_GROUPS', 'Supprimer groupe(s)');
 define('_BASKET_NOT_USABLE', 'Aucun groupe associ&eacute; (la corbeille est inutilisable pour l&rsquo;instant)');
 define('_ASSOCIATED_GROUP', 'Liste des groupes associ&eacute;s &agrave; la corbeille');
-define('_BASKETS', 'corbeille(s)');
 
 define('_TITLE_GROUP_BASKET', 'Associer la corbeille &agrave; un groupe');
 define('_ADD_TO_BASKET', 'Associer la corbeille');
@@ -94,6 +93,7 @@ define('_NO_REDIRECT_RIGHT', 'Vous n&rsquo;avez pas le droit de redirection dans
 define('_CLICK_LINE_BASKET1', 'Cliquez sur une ligne pour qualifier un document');
 
 //ENTITY
+/*
 define('_SELECT_ENTITY', 'S&eacute;lection service');
 define('_ENTITY', 'Service');
 define('_LABEL', 'Label');
@@ -120,6 +120,7 @@ define('_PRINT_SEP_WILL_BE_START','L&rsquo;impression va d&eacute;marrer');
 define('_PRINT_SEP_TITLE','SEPARATEUR DE DOCUMENTS');
 define('_INGOING_UP','ARRIVEE');
 define('_ONGOING_UP','DEPART');
+*/
 
 //DIFFUSION LIST
 define('_CHOOSE_DEPARTMENT_FIRST', 'Vous devez d&rsquo;abord choisir un service avant de pouvoir acc&eacute;der &agrave; la liste diffusion');
@@ -142,7 +143,10 @@ define('_CLICK_ON', 'cliquez sur');
 define('_ADD_USER_TO_LIST_EXPLANATION', 'Pour ajouter un utilisateur &agrave; la liste de diffusion');
 define('_REMOVE_USER_FROM_LIST_EXPLANATION', 'Pour retirer l&rsquo;utilisateur &agrave; cette liste de diffusion');
 define('_TO_MODIFY_LIST_ORDER_EXPLANATION', 'Pour modifier l&rsquo;ordre d&rsquo;attribution d&rsquo;un courrier aux utilisateurs, utilisez les ic&ocirc;nes');
-define('_AND', ' et ' );
+if(!defined('_AND'))
+{
+	define('_AND', ' et ' );
+}
 define('_LINKED_DIFF_LIST', 'Liste de diffusion associ&eacute;e');
 define('_NO_LINKED_DIFF_LIST', 'Pas de liste associ&eacute;e');
 define('_CREATE_LIST', 'Cr&eacute;er une liste de diffusion');
@@ -164,7 +168,7 @@ define('_CLICK_LINE_TO_PROCESS', 'Cliquez sur une ligne pour traiter');
 
 define('_REDIRECT_TO_SENDER_ENTITY', 'Redirection vers le service &eacute;metteur');
 define('_CHOOSE_DEPARTMENT', 'Choisissez un service');
-define('_REDIRECTION', 'Redirection');
+//define('_REDIRECTION', 'Redirection');
 define('_ENTITY_UPDATE', 'Service mis &agrave; jour');
 // USER ABS
 define('_MY_ABS', 'G&eacute;rer mes absences');
@@ -182,7 +186,10 @@ define('_PROCESSED_MAIL', 'Courriers trait&eacute;s');
 define('_INDEXED_MAIL', 'Courriers index&eacute;s');
 define('_REDIRECTED_MAIL', 'Courriers redirig&eacute;s');
 define('_PROCESS_MAIL_OF', 'Courrier &agrave; traiter de');
-define('_MISSING', 'Absent');
+if(!defined('_MISSING'))
+{
+	define('_MISSING', 'Absent');
+}
 define('_BACK_FROM_VACATION', 'de retour de son absence');
 define('_MISSING_ADVERT_TITLE','Gestion des absences');
 define('_MISSING_ADVERT_01','Ce compte est actuellement d&eacute;finit en mode &rsquo;absent&rsquo; et les courriers sont redirig&eacute;s vers un autre utilisateur.');
@@ -245,8 +252,8 @@ define('_REALLY_CANCEL_ABS', 'Voulez-vous vraiment annuler l&rsquo;absence ?');
 define('_ABS_MODE', 'Gestion des absences');
 define('_REALLY_ABS_MODE', 'Voulez-vous vraiment passer en mode absent ?');
 
-define('_REDIRECT_TO_ACTION', 'Rediriger vers une action');
-define('_DOCUMENTS_LIST', 'Liste simple');
+//define('_REDIRECT_TO_ACTION', 'Rediriger vers une action');
+//define('_DOCUMENTS_LIST', 'Liste simple');
 define('_DOCUMENTS_LIST_WITH_FILTERS', 'Liste avec filtres');
 define('_AUTHORISED_ENTITIES', 'Liste services autoris&eacute;s');
 define('_ARCHIVE_LIST', 'Liste d&rsquo;unit&eacute;s d&rsquo;archive');

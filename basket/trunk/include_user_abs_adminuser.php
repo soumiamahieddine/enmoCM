@@ -71,7 +71,7 @@ if($_SESSION['m_admin']['users']['Status'] == 'ABS')
 		}
 	</script>
     <?php
-    require_once($_SESSION['pathtomodules'].'basket'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php');
+    require_once('modules/basket'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php');
 	$bask = new basket();
 	$arr_baskets = $bask->get_baskets($_SESSION['m_admin']['users']['UserId']);
 	//print_r($arr_baskets);
