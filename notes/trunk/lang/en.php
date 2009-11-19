@@ -25,7 +25,10 @@ define('_ADDITION_NOTE', 'Add a note');
 define('_NOTES_DELETED', 'Note deleted');
 define('_NOTES_MODIFIED', 'Note modified');
 define('_NOTE_UPDATED', 'Note modified');
-define('_NOTES', 'Notes');
+if(!defined('_NOTES'))
+{
+	define('_NOTES', 'Notes');
+}
 define('_NOTES_COMMENT', 'Notes');
 define('_OF', 'of');
 

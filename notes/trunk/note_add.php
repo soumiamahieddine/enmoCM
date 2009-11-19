@@ -10,13 +10,13 @@
 * @license GPL
 * @author  Claire Figueras  <dev@maarch.org>
 */
-session_name('PeopleBox');
-session_start();
+include('core/init.php');
 
-require_once($_SESSION['pathtocoreclass']."class_functions.php");
-require_once($_SESSION['pathtocoreclass']."class_db.php");
-require_once($_SESSION['pathtocoreclass']."class_core_tools.php");
-require_once($_SESSION['pathtocoreclass']."class_security.php");
+
+require_once("core/class/class_functions.php");
+require_once("core/class/class_db.php");
+require_once("core/class/class_core_tools.php");
+require_once("core/class/class_security.php");
 
 $core_tools = new core_tools();
 $sec = new security();
@@ -66,7 +66,7 @@ if (isset($_REQUEST['notes'])&& !empty($_REQUEST['notes']))
 		if($_SESSION['history']['noteadd'])
 		{
 
-			require_once($_SESSION['pathtocoreclass']."class_history.php");
+			require_once("core/class/class_history.php");
 			$hist = new history();
 			$hist->add($view, $identifier ,"ADD", _ADDITION_NOTE._ON_DOC_NUM.$identifier, $_SESSION['config']['databasetype'], 'notes');
 

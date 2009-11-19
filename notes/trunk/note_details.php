@@ -10,17 +10,17 @@
 * @license GPL
 * @author  Claire Figueras  <dev@maarch.org>
 */ 
-session_name('PeopleBox'); 
-session_start(); 
+include('core/init.php'); 
+ 
 
-require_once($_SESSION['pathtocoreclass']."class_functions.php");
-require($_SESSION['pathtocoreclass']."class_core_tools.php");
+require_once("core/class/class_functions.php");
+require("core/class/class_core_tools.php");
 
 $core_tools = new core_tools();
 //here we loading the lang vars
 $core_tools->load_lang();
 
-require_once($_SESSION['pathtocoreclass']."class_db.php");
+require_once("core/class/class_db.php");
 
 $func = new functions();
 $db = new dbquery();
@@ -55,7 +55,7 @@ if(isset($_REQUEST['modify']) )
 				
 		if($_SESSION['history']['noteup'])
 		{
-			require_once($_SESSION['pathtocoreclass']."class_history.php");
+			require_once("core/class/class_history.php");
 			$hist = new history();								
 			$hist->add($_SESSION['tablename']['not_notes'], $id ,"UP", _NOTE_UPDATED, $_SESSION['config']['databasetype'], 'notes');
 		}
@@ -75,7 +75,7 @@ if(isset($_REQUEST['delete']) )
 				
 	if($_SESSION['history']['notedel'])
 	{
-		require_once($_SESSION['pathtocoreclass']."class_history.php");
+		require_once("core/class/class_history.php");
 		$hist = new history();								
 		$hist->add($_SESSION['tablename']['not_notes'], $id ,"DEL", _NOTES_DELETED, $_SESSION['config']['databasetype'], 'notes');
 	}
