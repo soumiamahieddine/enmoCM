@@ -20,7 +20,7 @@ class attachments
 	*/
 	public function build_modules_tables()
 	{
-		$xmlconfig = simplexml_load_file($_SESSION['pathtomodules']."attachments/xml/config.xml");
+		$xmlconfig = simplexml_load_file("modules/attachments/xml/config.xml");
 		foreach($xmlconfig->TABLENAME as $TABLENAME)
 		{
 			$_SESSION['tablename']['attach_res_attachments'] = (string) $TABLENAME->attach_res_attachments;

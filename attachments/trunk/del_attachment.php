@@ -1,13 +1,13 @@
 <?php
-session_name('PeopleBox');
-session_start();
-require_once($_SESSION['pathtocoreclass']."class_functions.php");
-require_once($_SESSION['pathtocoreclass']."class_db.php");
-require_once($_SESSION['pathtocoreclass']."class_core_tools.php");
-require_once($_SESSION['pathtocoreclass']."class_security.php");
+include('core/init.php');
 
-require_once($_SESSION['pathtocoreclass']."class_request.php");
-require_once($_SESSION['pathtocoreclass']."class_resource.php");
+require_once("core/class/class_functions.php");
+require_once("core/class/class_db.php");
+require_once("core/class/class_core_tools.php");
+require_once("core/class/class_security.php");
+
+require_once("core/class/class_request.php");
+require_once("core/class/class_resource.php");
 $core_tools = new core_tools();
 $core_tools->load_lang();
 
@@ -20,7 +20,7 @@ $db->query("update ".$_SESSION['tablename']['attach_res_attachments']." set stat
 
 if($_SESSION['history']['attachdel'] == "true")
 {
-	require_once($_SESSION['pathtocoreclass']."class_history.php");
+	require_once("core/class/class_history.php");
 	$users = new history();
 	$users->add($_SESSION['tablename']['attach_res_attachments'], $_REQUEST['id'],"DEL", _ATTACH_DELETED." : ".$_REQUEST['id'], $_SESSION['config']['databasetype'],"attachments");
 

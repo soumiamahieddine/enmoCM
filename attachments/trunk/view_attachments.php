@@ -1,22 +1,22 @@
 <?php
-session_name('PeopleBox');
-session_start();
+include('core/init.php');
 
-require_once($_SESSION['pathtocoreclass']."class_functions.php");
-require_once($_SESSION['pathtocoreclass']."class_core_tools.php");
+
+require_once("core/class/class_functions.php");
+require_once("core/class/class_core_tools.php");
 
 $core_tools = new core_tools();
 //here we loading the lang vars
 $core_tools->load_lang();
 $core_tools->test_service('view_attachments', 'attachments');
-require_once($_SESSION['pathtocoreclass']."class_db.php");
+require_once("core/class/class_db.php");
 $func = new functions();
 
 if(empty($_SESSION['collection_id_choice']))
 {
 	$_SESSION['collection_id_choice']= $_SESSION['user']['collections'][0];
 }
-require_once($_SESSION['pathtocoreclass']."class_request.php");
+require_once("core/class/class_request.php");
 require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_list_show.php");
 $func = new functions();
 

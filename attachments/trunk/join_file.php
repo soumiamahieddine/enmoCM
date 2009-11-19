@@ -10,14 +10,14 @@
 * @license GPL
 * @author  Claire Figueras  <dev@maarch.org>
 */
-session_name('PeopleBox');
-session_start();
-require_once($_SESSION['pathtocoreclass']."class_functions.php");
-require_once($_SESSION['pathtocoreclass']."class_db.php");
-require_once($_SESSION['pathtocoreclass']."class_core_tools.php");
-require_once($_SESSION['pathtocoreclass']."class_security.php");
-require_once($_SESSION['pathtocoreclass']."class_request.php");
-require_once($_SESSION['pathtocoreclass']."class_resource.php");
+include('core/init.php');
+
+require_once("core/class/class_functions.php");
+require_once("core/class/class_db.php");
+require_once("core/class/class_core_tools.php");
+require_once("core/class/class_security.php");
+require_once("core/class/class_request.php");
+require_once("core/class/class_resource.php");
 $core_tools = new core_tools();
 $core_tools->load_lang();
 
@@ -87,7 +87,7 @@ if($_POST['valid'])
 			else
 			{
 
-				require_once($_SESSION['pathtocoreclass']."class_docserver.php");
+				require_once("core/class/class_docserver.php");
 				if(!isset($_SESSION['collection_id_choice']) || empty($_SESSION['collection_id_choice']))
 				{
 					$_SESSION['collection_id_choice'] = $_SESSION['user']['collections'][0];
@@ -185,7 +185,7 @@ if($_POST['valid'])
 
 										if($_SESSION['history']['attachadd'] == "true")
 										{
-											require_once($_SESSION['pathtocoreclass']."class_history.php");
+											require_once("core/class/class_history.php");
 											$users = new history();
 											$_SESSION['error'] = _NEW_ATTACH_ADDED;
 											$users->add($_SESSION['tablename']['attach_res_attachments'], $id, "ADD", $_SESSION['error']." (".$title.") ", $_SESSION['config']['databasetype'],'attachments');
