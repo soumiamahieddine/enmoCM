@@ -29,13 +29,13 @@
 * @license GPL
 * @author  Claire Figueras  <dev@maarch.org>
 */
-session_name('PeopleBox');
-session_start();
+include('core/init.php');
 
-require_once($_SESSION['pathtocoreclass']."class_functions.php");
-require_once($_SESSION['pathtocoreclass']."class_db.php");
-require($_SESSION['pathtocoreclass']."class_core_tools.php");
-require($_SESSION['pathtomodules'].'folder'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR."class_admin_foldertypes.php");
+
+require_once("core/class/class_functions.php");
+require_once("core/class/class_db.php");
+require("core/class/class_core_tools.php");
+require('modules/folder'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR."class_admin_foldertypes.php");
 
 $core_tools = new core_tools();
 //here we loading the lang vars

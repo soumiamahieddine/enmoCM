@@ -11,12 +11,12 @@
 * @license GPL
 * @author  Claire Figueras  <dev@maarch.org>
 */
-session_name('PeopleBox');
-session_start();
+include('core/init.php');
 
-require($_SESSION['pathtocoreclass']."class_functions.php");
-require($_SESSION['pathtocoreclass']."class_db.php");
-require($_SESSION['pathtocoreclass']."class_core_tools.php");
+
+require("core/class/class_functions.php");
+require("core/class/class_db.php");
+require("core/class/class_core_tools.php");
 
 if(isset($_REQUEST['id_value']) && !empty($_REQUEST['id_value']))
 {
@@ -32,7 +32,7 @@ if(isset($_REQUEST['id_value']) && !empty($_REQUEST['id_value']))
 	{
 		$db->query('select folder_id from '.$_SESSION['tablename']['fold_folders']." where folders_system_id = ".$folder_sys_id."");
 		$res = $db->fetch_object();
-		require_once($_SESSION['pathtocoreclass']."class_history.php");
+		require_once("core/class/class_history.php");
 		$users = new history();
 		$users->add($_SESSION['tablename']['fold_folders'], $res->folder_id ,"DEL", _DEL_FOLDER_NUM.$res->folder_id, $_SESSION['config']['databasetype'],'folder');
 	}

@@ -144,7 +144,7 @@ class folder extends request
 	*/
 	public function build_modules_tables()
 	{
-		$xmlconfig = simplexml_load_file($_SESSION['pathtomodules']."folder/xml/config.xml");
+		$xmlconfig = simplexml_load_file("modules/folder/xml/config.xml");
 
 		$TABLENAME = $xmlconfig->TABLENAME;
 		$_SESSION['tablename']['fold_folders'] = (string) $TABLENAME->fold_folders;
@@ -177,7 +177,7 @@ class folder extends request
 	*/
 	function load_folder($id, $table)
 	{
-		require_once($_SESSION['pathtomodules'].'folder'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_admin_foldertypes.php');
+		require_once('modules/folder'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_admin_foldertypes.php');
 		$ft = new foldertype();
 		$this->connect();
 		$this->query("select foldertype_id from ".$table." where folders_system_id = ".$id."");
@@ -270,7 +270,7 @@ class folder extends request
 				$res = $this->fetch_object();
 				$id = $res->folders_system_id;
 
-				require_once($_SESSION['pathtomodules'].'folder'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR."class_admin_foldertypes.php");
+				require_once('modules/folder'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR."class_admin_foldertypes.php");
 				$foldertype = new foldertype();
 
 				$query = $foldertype->get_sql_update($_SESSION['m_admin']['folder']['foldertype_id'], $_SESSION['m_admin']['folder']['indexes']);
@@ -282,7 +282,7 @@ class folder extends request
 				}
 				if($_SESSION['history']['folderadd'] == "true")
 				{
-					require($_SESSION['pathtocoreclass']."class_history.php");
+					require("core/class/class_history.php");
 					$hist = new history();
 					$hist->add($_SESSION['tablename']['fold_folders'], $id ,"ADD",_FOLDER_ADDED." : ".$_SESSION['m_admin']['folder']['folder_id'] , $_SESSION['config']['databasetype'], 'folder');
 				}
@@ -301,7 +301,7 @@ class folder extends request
 	*/
 	private function checks_folder_data()
 	{
-		require_once($_SESSION['pathtomodules'].'folder'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR."class_admin_foldertypes.php");
+		require_once('modules/folder'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR."class_admin_foldertypes.php");
 		$foldertype = new foldertype();
 
 		if(isset($_REQUEST['folder_id']) && !empty($_REQUEST['folder_id']))
@@ -622,7 +622,7 @@ class folder extends request
 
 	public function update_folder($values, $id_to_update)
 	{
-		require_once($_SESSION['pathtomodules'].'folder'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_admin_foldertypes.php');
+		require_once('modules/folder'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_admin_foldertypes.php');
 		require_once($_SESSION['pathtocoreclass'].'class_request.php');
 		$data = array();
 		$foldertype = new foldertype();
@@ -655,7 +655,7 @@ class folder extends request
 			$_SESSION['error'] = _FOLDER_INDEX_UPDATED." (".strtolower(_NUM).$values['folder_id'].")";
 			if($_SESSION['history']['folderup'])
 			{
-				require_once($_SESSION['pathtocoreclass']."class_history.php");
+				require_once("core/class/class_history.php");
 				$hist = new history();
 				$hist->add($_SESSION['tablename']['fold_folders'], $id_to_update, "UP", $_SESSION['error'], $_SESSION['config']['databasetype'],'apps');
 			}

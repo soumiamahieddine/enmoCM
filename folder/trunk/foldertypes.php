@@ -1,5 +1,5 @@
 <?php
-require_once($_SESSION['pathtocoreclass']."class_functions.php");
+require_once("core/class/class_functions.php");
 $_SESSION['m_admin'] = array();
 $admin = new core_tools();
 $admin->test_admin('admin_foldertypes', 'folder');
@@ -19,8 +19,8 @@ $page_label = _FOLDERTYPES_LIST;
 $page_id = "foldertypes";
 $admin->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
-require_once($_SESSION['pathtocoreclass']."class_db.php");
-require_once($_SESSION['pathtocoreclass']."class_request.php");
+require_once("core/class/class_db.php");
+require_once("core/class/class_request.php");
 require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_list_show.php");
 $func = new functions();
 $select[$_SESSION['tablename']['fold_foldertypes']] = array();

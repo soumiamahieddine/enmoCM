@@ -10,11 +10,11 @@
 * @license GPL
 * @author  Claire Figueras  <dev@maarch.org>
 */
-session_name('PeopleBox');
-session_start();
-require_once($_SESSION['pathtocoreclass']."class_request.php");
+include('core/init.php');
+
+require_once("core/class/class_request.php");
 require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_list_show.php");
-require_once($_SESSION['pathtocoreclass']."class_core_tools.php");
+require_once("core/class/class_core_tools.php");
 $core_tools = new core_tools();
 $lastname = '';
 if(!$core_tools->is_module_loaded("folder"))
@@ -44,11 +44,11 @@ $page_label = _SEARCH_FOLDER;
 $page_id = "fold_view_folder";
 $core_tools->manage_location_bar($page_path, $page_label,$page_id, $init, $level);
 /***********************************************************/
-require_once($_SESSION['pathtomodules']."folder".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
-require_once($_SESSION['pathtomodules']."indexing_searching".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
-require_once($_SESSION['pathtomodules']."folder".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_folders_show.php");
-require_once($_SESSION['pathtocoreclass']."class_history.php");
-require_once($_SESSION['pathtocoreclass']."class_security.php");
+require_once("modules/folder".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
+require_once("modules/indexing_searching".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
+require_once("modules/folder".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_folders_show.php");
+require_once("core/class/class_history.php");
+require_once("core/class/class_security.php");
 $security = new security();
 $users = new history();
 $func = new functions();

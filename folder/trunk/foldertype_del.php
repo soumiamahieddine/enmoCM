@@ -1,15 +1,15 @@
 <?php
-session_name('PeopleBox');
-session_start();
-
-require_once($_SESSION['pathtocoreclass']."class_functions.php");
+include('core/init.php');
 
 
-require_once($_SESSION['pathtocoreclass']."class_db.php");
-require_once($_SESSION['pathtomodules']."folder".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_admin_foldertypes.php");
+require_once("core/class/class_functions.php");
+
+
+require_once("core/class/class_db.php");
+require_once("modules/folder".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_admin_foldertypes.php");
 
 $func = new functions();
-require_once($_SESSION['pathtocoreclass']."class_core_tools.php");
+require_once("core/class/class_core_tools.php");
 $core_tools = new core_tools();
 
 $core_tools->load_lang();

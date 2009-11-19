@@ -10,18 +10,18 @@
 * @license GPL
 * @author  Laurent Giovannoni <dev@maarch.org>
 */
-session_name('PeopleBox');
-session_start();
+include('core/init.php');
 
-require_once($_SESSION['pathtocoreclass']."class_functions.php");
-require_once($_SESSION['pathtocoreclass']."class_db.php");
-require_once($_SESSION['pathtocoreclass']."class_request.php");
-require_once($_SESSION['pathtocoreclass']."class_core_tools.php");
+
+require_once("core/class/class_functions.php");
+require_once("core/class/class_db.php");
+require_once("core/class/class_request.php");
+require_once("core/class/class_core_tools.php");
 $func = new functions();
 $core_tools = new core_tools();
 $core_tools->load_lang();
-require_once($_SESSION['pathtomodules']."folder".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
-require_once($_SESSION['pathtocoreclass']."class_history.php");
+require_once("modules/folder".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
+require_once("core/class/class_history.php");
 //*************** HISTORY ***************//
 $users = new history();
 if($_SESSION['origin'] <> 'store_file' && !$_SESSION['is_store'])

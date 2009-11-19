@@ -53,7 +53,7 @@ class foldertype extends dbquery
 	{
 		$func = new functions();
 		$state = true;
-		require_once($_SESSION['pathtocoreclass']."class_security.php");
+		require_once("core/class/class_security.php");
 		$sec = new security();
 		$_SESSION['m_admin']['foldertype']['COLL_ID']= "";
 		if($mode == "up")
@@ -386,7 +386,7 @@ class foldertype extends dbquery
 
 					if($_SESSION['history']['foldertypeadd'] == "true")
 					{
-						require($_SESSION['pathtocoreclass']."class_history.php");
+						require("core/class/class_history.php");
 						$hist = new history();
 						$hist->add($_SESSION['tablename']['fold_foldertypes'], $_SESSION['m_admin']['foldertype']['foldertypeId'] ,"ADD",_FOLDERTYPE_ADDED." : ".$_SESSION['m_admin']['foldertype']['foldertypeId'] , $_SESSION['config']['databasetype'], 'folder');
 					}
@@ -417,7 +417,7 @@ class foldertype extends dbquery
 				}
 				if($_SESSION['history']['foldertypeup'] == "true")
 				{
-					require($_SESSION['pathtocoreclass']."class_history.php");
+					require("core/class/class_history.php");
 					$hist = new history();
 					$hist->add($_SESSION['tablename']['fold_foldertypes'], $_SESSION['m_admin']['foldertype']['foldertypeId'] ,"UP",_FOLDERTYPE_UPDATE." : ".$_SESSION['m_admin']['foldertype']['foldertypeId'] , $_SESSION['config']['databasetype'], 'folder');
 				}
@@ -490,7 +490,7 @@ class foldertype extends dbquery
 
 					if($_SESSION['history']['foldertypedel'] == "true")
 					{
-						require($_SESSION['pathtocoreclass']."class_history.php");
+						require("core/class/class_history.php");
 						$users = new history();
 						$users->add($_SESSION['tablename']['fold_foldertypes'], $id,"DEL",_FOLDERTYPE_DELETION." : ".$id, $_SESSION['config']['databasetype'],  'folder');
 					}
@@ -514,8 +514,8 @@ class foldertype extends dbquery
 	public function get_all_indexes()
 	{
 
-		$xmlfile = simplexml_load_file($_SESSION['pathtomodules'].'folder'.DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR.'folder_index.xml');
-		$path_lang = $_SESSION['pathtomodules'].'folder'.DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php';
+		$xmlfile = simplexml_load_file('modules/folder/xml/folder_index.xml');
+		$path_lang = 'modules/folder/lang/'.$_SESSION['config']['lang'].'.php';
 		$indexes = array();
 		foreach($xmlfile->INDEX as $item)
 		{
@@ -607,8 +607,8 @@ class foldertype extends dbquery
 		}
 
 		$indexes = array();
-		$xmlfile = simplexml_load_file($_SESSION['pathtomodules'].'folder'.DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR.'folder_index.xml');
-		$path_lang = $_SESSION['pathtomodules'].'folder'.DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php';
+		$xmlfile = simplexml_load_file('modules/folder/xml/folder_index.xml');
+		$path_lang = 'modules/folder/lang/'.$_SESSION['config']['lang'].'.php';
 		foreach($xmlfile->INDEX as $item)
 		{
 			$tmp = (string) $item->label;

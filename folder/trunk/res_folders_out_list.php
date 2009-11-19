@@ -10,8 +10,8 @@
 * @license GPL
 * @author  Claire Figueras  <dev@maarch.org>
 */
-  session_name('PeopleBox'); 
-session_start();
+  include('core/init.php'); 
+
  if(file_exists($_SESSION['config']['lang'].'.php'))
 {
 	include($_SESSION['config']['lang'].'.php');
@@ -20,9 +20,9 @@ else
 {
 	$_SESSION['error'] = "Language file missing...<br/>";
 }
-  require_once($_SESSION['pathtocoreclass']."class_functions.php");
- require_once($_SESSION['pathtocoreclass']."class_db.php");
- require_once($_SESSION['pathtocoreclass']."class_request.php");
+  require_once("core/class/class_functions.php");
+ require_once("core/class/class_db.php");
+ require_once("core/class/class_request.php");
  require_once("class/class_folder.php");
 
 

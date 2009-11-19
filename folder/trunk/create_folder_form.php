@@ -29,8 +29,8 @@
 * @license GPL
 * @author  Claire Figueras  <dev@maarch.org>
 */
-session_name('PeopleBox');
-session_start();
+include('core/init.php');
+
 
 $core_tools = new core_tools();
 $core_tools->load_lang();

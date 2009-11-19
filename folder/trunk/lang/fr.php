@@ -36,11 +36,17 @@ define('_FOUND_FOLDER', 'dossier(s) trouv&eacute;(s)');
 define('_CHOOSE', 'Choisir');
 define('_ADV_SEARCH_FOLDER_TITLE', 'Recherche de dossier');
 define('_SEARCH_ADV_FOLDER', 'Recherche de dossier');
-define('_NEW_SEARCH', 'Effacer les crit&egrave;res');
+if(!defined('_NEW_SEARCH'))
+{
+	define('_NEW_SEARCH', 'Effacer les crit&egrave;res');
+}
 define('_SELECT_FOLDER', 'S&eacute;lection Dossier');
 define('_CREATE_FOLDER', 'Cr&eacute;ation Dossier');
 define('_CREATE_FOLDER2', 'Cr&eacute;er Dossier');
-define('_FOLDER', 'Dossier');
+if(!defined('_FOLDER'))
+{
+	define('_FOLDER', 'Dossier');
+}
 define('_MODIFY_FOLDER', 'Droit de modification des index d&rsquo;un dossier');
 define('_FOLDERID', 'Num&eacute;ro du Dossier/Sous-dossier');
 define('_FOLDERSYSTEMID', 'Num&eacute;ro syst&egrave;me Maarch');
@@ -98,8 +104,14 @@ define('_BROWSE_BY_FOLDER', 'Recherche Dossier');
 /*************************** Foldertypes management *****************/
 define('_FOLDERTYPE_ADDITION', 'Ajout type de dossier');
 define('_FOLDERTYPE_MODIFICATION', 'Modification du type de dossier');
-define('_FOLDERTYPES_LIST', 'Liste des types de dossier');
-define('_TYPES', 'type(s)');
+if(!defined('_FOLDERTYPES_LIST'))
+{
+	define('_FOLDERTYPES_LIST', 'Liste des types de dossier');
+}
+if(!defined('_TYPES'))
+{
+	define('_TYPES', 'type(s)');
+}
 define('_ALL_FOLDERTYPES', 'Tous les types');
 define('_FOLDERTYPE', 'Type de dossier');
 
@@ -107,7 +119,6 @@ define('_FOLDERTYPE_MISSING', 'Type de dossier manquant');
 
 /************************** Fiche salarie ***************************/
 
-define('_CONTRACT_HISTORY','Historique des contrats');
 define('_ARCHIVED_DOC', 'Pi&egrave;ces archiv&eacute;es');
 define('_SEND_RELANCE_MAIL', 'Envoyer un mail de relance');
 define('_DIRECTION_DEP', 'Direction/Dpt');
@@ -124,7 +135,7 @@ define('_DELETE_FOLDER_NOTES5', 'Le dossier est d&eacute;sormais supprim&eacute;
 define('_FOLDER_INDEX_MODIF', 'Modification des index du dossier');
 define('_FOLDERS_OUT', 'Dossiers d&eacute;sarchiv&eacute;s');
 
-define('_VIEW', 'Visualisation');
+//define('_VIEW', 'Visualisation');
 
 ///////////////// Class_admin_foldertype
 
@@ -174,10 +185,22 @@ define('_UPDATE_FOLDER', 'Modifier des informations');
 define('_FOLDER_INDEX_UPDATED', 'Index du dossier modifi&eacute;s');
 define('_ALL_DOCS_AND_SUFOLDERS_WILL_BE_DELETED', 'tous les documents de ce dossier, ainsi que tous les sous-dossiers seront &eacute;galement supprim&eacute;s !');
 
-define('_STRING', 'Chaine de caract&egrave;res');
-define('_INTEGER', 'Entier');
-define('_FLOAT', 'Flottant');
-define('_DATE', 'Date');
+if(!defined('_STRING'))
+{
+	define('_STRING', 'Chaine de caract&egrave;res');
+}
+if(!defined('_INTEGER'))
+{
+	define('_INTEGER', 'Entier');
+}
+if(!defined('_FLOAT'))
+{
+	define('_FLOAT', 'Flottant');
+}
+if(!defined('_DATE'))
+{
+	define('_DATE', 'Date');
+}
 define('_MAX', 'maximum');
 define('_MIN', 'minimum');
 define('_ERROR_COMPATIBILITY_FOLDER', 'Probl&egrave;me de compatibilit&eacute; entre<br/>le dossier et le type de document');
