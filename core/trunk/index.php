@@ -10,14 +10,17 @@
 * @license GPL v3
 * @author  Laurent Giovannoni  <dev@maarch.org>
 */
-session_name('PeopleBox');
-session_start();
+
+include_once('core/init.php');
 require_once("core/class/class_functions.php");
 require_once("core/class/class_portal.php");
+require_once("core/class/class_core_tools.php");
 $portal = new portal();
 $portal->unset_session();
 $portal->build_config();
 $func = new functions();
+$core = new core_tools();
+$_SESSION['custom_override_id'] = $core->get_custom_id();
 //$func->show_array($_SESSION['config']);
 //$func->show_array($_SESSION['businessapps']);
 //$func->show_array($_SESSION['tablename']);
@@ -27,7 +30,7 @@ if(isset($_SESSION['config']['defaultlang']) && !empty($_SESSION['config']['defa
 }
 /*print_r($_SESSION['config']);
 exit;*/
-if($_GET['origin'] == "scan")
+if(isset($_GET['origin']) && $_GET['origin'] == "scan")
 {
 	header("location: apps/".$_SESSION['businessapps'][0]['appid']."/reopen.php");
 }
