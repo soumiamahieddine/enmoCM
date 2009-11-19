@@ -28,18 +28,18 @@
 * @version $Revision$
 * @ingroup indexing_searching_mlb
 */
-session_name('PeopleBox');
-session_start();
-require_once($_SESSION['pathtocoreclass']."class_functions.php");
-require_once($_SESSION['pathtocoreclass']."class_db.php");
-require_once($_SESSION['pathtocoreclass']."class_request.php");
-require_once($_SESSION['pathtocoreclass']."class_security.php");
-require_once($_SESSION['pathtocoreclass']."class_core_tools.php");
-require_once($_SESSION['pathtocoreclass']."class_manage_status.php");
+include('core/init.php');
+
+require_once("core/class/class_functions.php");
+require_once("core/class/class_db.php");
+require_once("core/class/class_request.php");
+require_once("core/class/class_security.php");
+require_once("core/class/class_core_tools.php");
+require_once("core/class/class_manage_status.php");
 require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR.'class_list_show.php');
 require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR.'class_contacts.php');
-require_once($_SESSION['pathtocoreclass']."class_manage_status.php");
-require_once($_SESSION['pathtomodules']."cases".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR.'class_modules_tools.php');
+require_once("core/class/class_manage_status.php");
+require_once("modules/cases".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR.'class_modules_tools.php');
 include_once($_SESSION['config']['businessapppath'].'definition_mail_categories.php');
 
 $status_obj = new manage_status();
@@ -224,7 +224,7 @@ $_SESSION['error_page'] = '';
 			//#########################
 			if(($_REQUEST['template']== 'group_case')&& ($core_tools->is_module_loaded('cases')))
 			{
-				include($_SESSION['pathtomodules']."cases".DIRECTORY_SEPARATOR.'mlb_list_group_case_addon.php');
+				include("modules/cases".DIRECTORY_SEPARATOR.'mlb_list_group_case_addon.php');
 			}
 			else
 			{

@@ -77,7 +77,7 @@ $db_external->query("select res_id, status, subject, dest_user, type_label, crea
 
 if ($db_external->nb_result() >0)
 {
-	require_once($_SESSION['pathtocoreclass']."class_security.php");
+	require_once("core/class/class_security.php");
 	$security = new security();
 	 $external = '<table border="0" style="font-size:9px; margin:0px;" width="100%"  cellspacing="0">';
 	 while ($ext_result=$db_external->fetch_object())

@@ -12,18 +12,18 @@
 */
 
 
-session_name('PeopleBox');
-session_start();
-require_once($_SESSION['pathtocoreclass']."class_functions.php");
-require_once($_SESSION['pathtocoreclass']."class_core_tools.php");
-require_once($_SESSION['pathtocoreclass']."class_db.php");
-require_once($_SESSION['pathtocoreclass']."class_request.php");
-require_once($_SESSION['pathtocoreclass']."class_docserver.php");
-require_once($_SESSION['pathtocoreclass']."class_security.php");
+include('core/init.php');
+
+require_once("core/class/class_functions.php");
+require_once("core/class/class_core_tools.php");
+require_once("core/class/class_db.php");
+require_once("core/class/class_request.php");
+require_once("core/class/class_docserver.php");
+require_once("core/class/class_security.php");
 require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_list_show.php");
-require_once($_SESSION['pathtocoreclass']."class_history.php");
-require_once($_SESSION['pathtocoreclass']."class_manage_status.php");
-require_once($_SESSION['pathtomodules']."cases".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR.'class_modules_tools.php');
+require_once("core/class/class_history.php");
+require_once("core/class/class_manage_status.php");
+require_once("modules/cases".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR.'class_modules_tools.php');
 
 $core_tools = new core_tools();
 $core_tools->test_user();

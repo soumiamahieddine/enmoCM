@@ -34,15 +34,15 @@
 * @date $date$
 * @version $Revision$
 */
-require_once($_SESSION['pathtocoreclass']."class_request.php");
-require_once($_SESSION['pathtocoreclass']."class_functions.php");
-require_once($_SESSION['pathtocoreclass']."class_history.php");
+require_once("core/class/class_request.php");
+require_once("core/class/class_functions.php");
+require_once("core/class/class_history.php");
 class cases extends dbquery
 {
 
 	public function build_modules_tables()
 	{
-		$xmlconfig = simplexml_load_file($_SESSION['pathtomodules']."cases/xml/config.xml");
+		$xmlconfig = simplexml_load_file("modules/cases/xml/config.xml");
 		$CONFIG = $xmlconfig->CONFIG;
 
 
