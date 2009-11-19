@@ -24,7 +24,7 @@ class templates extends dbquery
 	*/
 	public function build_modules_tables()
 	{
-		$xmlconfig = simplexml_load_file($_SESSION['pathtomodules']."templates/xml/config.xml");
+		$xmlconfig = simplexml_load_file("modules/templates/xml/config.xml");
 		foreach($xmlconfig->TABLENAME as $TABLENAME)
 		{
 			$_SESSION['tablename']['temp_templates'] = (string) $TABLENAME->temp_templates;
@@ -87,7 +87,7 @@ class templates extends dbquery
 		{
 			return $templates;
 		}
-		require_once($_SESSION['pathtocoreclass']."class_security.php");
+		require_once("core/class/class_security.php");
 		$sec = new security();
 		$table = $sec->retrieve_table_from_coll($coll_id);
 		if(empty($table))
@@ -193,7 +193,7 @@ class templates extends dbquery
 
 			if($table <> '')
 			{
-				$xml = simplexml_load_file($_SESSION['pathtomodules']."templates/xml/mapping_file.xml");
+				$xml = simplexml_load_file("modules/templates/xml/mapping_file.xml");
 
 				$items = array();
 				foreach($xml->item as $item)

@@ -10,11 +10,11 @@
 * @license GPL
 * @author  Claire Figueras  <dev@maarch.org>
 */
- session_name('PeopleBox');
-session_start();
-require_once($_SESSION['pathtocoreclass']."class_functions.php");
-require_once($_SESSION['pathtocoreclass']."class_db.php");
-require_once($_SESSION['pathtocoreclass']."class_core_tools.php");
+ include('core/init.php');
+
+require_once("core/class/class_functions.php");
+require_once("core/class/class_db.php");
+require_once("core/class/class_core_tools.php");
 
 $core_tools = new core_tools();
 $core_tools->test_user();
@@ -23,7 +23,7 @@ $core_tools->load_lang();
 $db = new dbquery();
 $db->connect();
 
-require_once($_SESSION['pathtomodules'].'templates'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php');
+require_once('modules/templates'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php');
 
 $lb = new templates();
 $answer= array();
@@ -148,7 +148,7 @@ $core_tools->load_header($title);
 <body onload="moveTo(0,0);resizeTo(screen.width, screen.height);setTimeout(window.close, <?php  echo $time;?>*60*1000);">
 <?php
 $_SESSION['mode_editor'] = false;
- include($_SESSION['pathtomodules']."templates".DIRECTORY_SEPARATOR."load_editor.php");?>
+ include("modules/templates".DIRECTORY_SEPARATOR."load_editor.php");?>
 
 <div class="error"><?php  echo $_SESSION['error']; $_SESSION['error']= "";?></div>
 <div align="center">

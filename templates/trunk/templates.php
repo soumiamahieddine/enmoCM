@@ -11,7 +11,7 @@
 * @author  Claire Figueras  <dev@maarch.org>
 */
 
-require_once($_SESSION['pathtocoreclass']."class_functions.php");
+require_once("core/class/class_functions.php");
 $_SESSION['m_admin'] = array();
 $admin = new core_tools();
 $admin->test_admin('admin_templates', 'templates');
@@ -31,8 +31,8 @@ $page_label = _TEMPLATES_LIST;
 $page_id = "templates";
 $admin->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
- require_once($_SESSION['pathtocoreclass']."class_db.php");
- require_once($_SESSION['pathtocoreclass']."class_request.php");
+ require_once("core/class/class_db.php");
+ require_once("core/class/class_request.php");
  require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_list_show.php");
 
  $func = new functions();

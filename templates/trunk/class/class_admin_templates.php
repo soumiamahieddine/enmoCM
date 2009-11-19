@@ -26,7 +26,7 @@ class admin_templates extends dbquery
 	*/
 	public function formtemplate($mode,$id = "")
 	{
-		require_once($_SESSION['pathtocoreclass']."class_core_tools.php");
+		require_once("core/class/class_core_tools.php");
 		$core = new core_tools();
 		$func = new functions();
 
@@ -63,7 +63,7 @@ class admin_templates extends dbquery
 			}
 		}
 		$_SESSION['mode_editor'] = true;
-		include($_SESSION['pathtomodules']."templates".DIRECTORY_SEPARATOR."load_editor.php");
+		include("modules/templates".DIRECTORY_SEPARATOR."load_editor.php");
 		?>
 		<h1><img src="<?php  echo $_SESSION['urltomodules']."templates/img";?>/picto_add_b.gif" alt="" />
 				<?php
@@ -168,7 +168,7 @@ class admin_templates extends dbquery
 		$_SESSION['m_admin']['template']['what'] = $_REQUEST['what'];
 		$_SESSION['m_admin']['template']['start'] = $_REQUEST['start'];
 		$_SESSION['service_tag'] = 'template_info';
-		require_once($_SESSION['pathtocoreclass']."class_core_tools.php");
+		require_once("core/class/class_core_tools.php");
 		$core = new core_tools();
 		echo $core->execute_modules_services($_SESSION['modules_services'], 'template_info', "include");
 	}
@@ -207,7 +207,7 @@ class admin_templates extends dbquery
 		}
 		else
 		{
-			require_once($_SESSION['pathtocoreclass']."class_core_tools.php");
+			require_once("core/class/class_core_tools.php");
 			$core = new core_tools();
 			$_SESSION['service_tag'] = 'load_template_db';
 
@@ -223,7 +223,7 @@ class admin_templates extends dbquery
 					$_SESSION['error'] = _TEMPLATE_MODIFICATION;
 					if($_SESSION['history']['templateup'] == "true")
 					{
-						require($_SESSION['pathtocoreclass']."class_history.php");
+						require("core/class/class_history.php");
 						$users = new history();
 						$users->add($_SESSION['tablename']['temp_templates'], $_SESSION['m_admin']['template']['ID'],"UP",_TEMPLATE_MODIFICATION." : ".$_SESSION['m_admin']['template']['LABEL'], $_SESSION['config']['databasetype'], 'templates');
 					}
@@ -247,7 +247,7 @@ class admin_templates extends dbquery
 				{
 
 					$this->connect();
-					require($_SESSION['pathtocoreclass']."class_history.php");
+					require("core/class/class_history.php");
 					$users = new history();
 
 					 if( $_REQUEST['mode'] == "add")
@@ -320,7 +320,7 @@ class admin_templates extends dbquery
 
 				if($_SESSION['history']['templatedel'])
 				{
-					require($_SESSION['pathtocoreclass']."class_history.php");
+					require("core/class/class_history.php");
 					$users = new history();
 					$users->add($_SESSION['tablename']['temp_templates'], $id,"DEL",_TEMPLATE_DELETION." : ".$label, $_SESSION['config']['databasetype'], 'templates');
 				}

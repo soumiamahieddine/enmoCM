@@ -10,7 +10,7 @@
 * @license GPL
 * @author  Laurent Giovannoni  <dev@maarch.org>
 */
-require_once($_SESSION['pathtocoreclass']."class_functions.php");
+require_once("core/class/class_functions.php");
 ?>
 <h1><?php  echo ADMIN_TEMPLATE_ANSWER;?></h1>
 <div id="inner_content" class="clearfix">
