@@ -2,20 +2,6 @@
 
 	<target name="configure">
 
-		<echo>Veuillez vérifier les informations de connexion à la base de données :</echo>
-		<propertyprompt propertyName="base.type" defaultValue="${db.type}"
-						promptText="Type :" />
-		<propertyprompt propertyName="base.server" defaultValue="${db.server}"
-						promptText="Server :" />
-		<propertyprompt propertyName="base.port" defaultValue="${db.port}"
-						promptText="Port :" />
-		<propertyprompt propertyName="base.base" defaultValue="${db.base}"
-						promptText="Base :" />
-		<propertyprompt propertyName="base.user" defaultValue="${db.user}"
-						promptText="User :" />
-		<propertyprompt propertyName="base.password" defaultValue=""
-						promptText="Password :" />
-
 		<if>
 			<contains  string="${modules.list}" substring="full_text"/>
 			<then>
