@@ -49,7 +49,6 @@
 */
 class core_tools extends functions
 {
-
 	/**
 	* Load Maarch core configuration into sessions vars from the core/xml/config.xml file
 	*/
@@ -89,8 +88,8 @@ class core_tools extends functions
 		// Browses enabled modules
 		for($i=0;$i<count($modules);$i++)
 		{
-			$path_config = $_SESSION['pathtomodules'].$modules[$i]['moduleid'].DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."config.xml";
-			$path_lang = $_SESSION['pathtomodules'].$modules[$i]['moduleid'].DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php';
+			$path_config = 'modules/'.$modules[$i]['moduleid']."/xml/config.xml";
+			$path_lang = 'modules/'.$modules[$i]['moduleid'].'/lang/'.$_SESSION['config']['lang'].'.php';
 			// Reads the config.xml file of the current module
 			$xmlconfig = simplexml_load_file($path_config);
 			// Loads into $_SESSION['modules_loaded'] module's informations
@@ -106,7 +105,7 @@ class core_tools extends functions
 				{
 					$_SESSION['modules_loaded'][$modules[$i]['moduleid']]['name'] = $tmp;
 				}
-				$_SESSION['modules_loaded'][$modules[$i]['moduleid']]['path'] = $_SESSION['pathtomodules'].$modules[$i]['moduleid'].DIRECTORY_SEPARATOR;
+				$_SESSION['modules_loaded'][$modules[$i]['moduleid']]['path'] = 'modules'.DIRECTORY_SEPARATOR.$modules[$i]['moduleid'].DIRECTORY_SEPARATOR;
 				$tmp = (string) $CONFIG->comment;
 				$tmp2 = $this->retrieve_constant_lang($tmp, $path_lang);
 				if($tmp2 <> false)
@@ -120,7 +119,7 @@ class core_tools extends functions
 				$_SESSION['modules_loaded'][$modules[$i]['moduleid']]['fileprefix'] = (string) $CONFIG->fileprefix;
 				$_SESSION['modules_loaded'][$modules[$i]['moduleid']]['loaded'] = (string) $CONFIG->loaded;
 			}
-			$path_module_tools = $_SESSION['pathtomodules'].$modules[$i]['moduleid'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php";
+			$path_module_tools = 'modules'.DIRECTORY_SEPARATOR.$modules[$i]['moduleid'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php";
 			require_once($path_module_tools);
 			$modules_tools = new $modules[$i]['moduleid'];
 			//Loads the tables of the module into session
@@ -143,8 +142,9 @@ class core_tools extends functions
 		}
 		if(!$mode_batch)
 		{
+			
 			//Loads logs keywords of the actions
-			require_once($_SESSION['pathtocoreclass']."class_db.php");
+			require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR."class_db.php");
 			$db = new dbquery();
 			$db->connect();
 			$db->query("select id, label_action from ".$_SESSION['tablename']['actions']." where enabled = 'Y' and history = 'Y'");
@@ -184,7 +184,7 @@ class core_tools extends functions
 	{
 		for($i=0;$i<count($modules);$i++)
 		{
-			$path_module_tools = $_SESSION['pathtomodules'].$modules[$i]['moduleid'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php";
+			$path_module_tools = 'modules'.DIRECTORY_SEPARATOR.$modules[$i]['moduleid'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php";
 			require_once($path_module_tools);
 			$modules_tools = new $modules[$i]['moduleid'];
 			$modules_tools->load_module_var_session();
@@ -196,9 +196,9 @@ class core_tools extends functions
 	*/
 	public function load_lang()
 	{
-		if(file_exists($_SESSION['config']['businessapppath'].'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php'))
+		if(isset($_SESSION['config']['lang']) && file_exists($_SESSION['config']['corepath'].'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php'))
 		{
-			include($_SESSION['config']['businessapppath'].'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php');
+			include($_SESSION['config']['corepath'].'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php');
 		}
 		else
 		{
@@ -216,10 +216,9 @@ class core_tools extends functions
 	{
 		for($i=0;$i<count($modules);$i++)
 		{
-			$path_lang_module = $_SESSION['pathtomodules'].$modules[$i]['moduleid'].DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php';
-			if(file_exists($path_lang_module))
+			if(isset($_SESSION['config']['lang']) && file_exists($_SESSION['config']['corepath'].'modules'.DIRECTORY_SEPARATOR.$modules[$i]['moduleid'].DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php'))
 			{
-				include($path_lang_module);
+				include('modules'.DIRECTORY_SEPARATOR.$modules[$i]['moduleid'].DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php');
 			}
 			else
 			{
@@ -239,14 +238,14 @@ class core_tools extends functions
 		$k=0;
 		for($i=0;$i<count($modules);$i++)
 		{
-			$path_menu = $_SESSION['pathtomodules'].$modules[$i]['moduleid'].DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."menu.xml";
+			$path_menu = 'modules/'.$modules[$i]['moduleid']."/xml/menu.xml";
 			// Reads the module/module_name/xml/menu.xml file  and loads into session
-			$path_lang = $_SESSION['pathtomodules'].$modules[$i]['moduleid'].DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php';
+			$path_lang = 'modules/'.$modules[$i]['moduleid'].'/lang/'.$_SESSION['config']['lang'].'.php';
 			$xmlconfig = simplexml_load_file($path_menu);
 			foreach($xmlconfig->MENU as $MENU)
 			{
 				$_SESSION['menu'][$k]['id'] = (string) $MENU->id;
-				if($_SESSION['user']['services'][$_SESSION['menu'][$k]['id'] ] == true)
+				if(isset($_SESSION['user']['services'][$_SESSION['menu'][$k]['id'] ]) && $_SESSION['user']['services'][$_SESSION['menu'][$k]['id'] ] == true)
 				{
 					$tmp = (string) $MENU->libconst;
 					$tmp2 = $this->retrieve_constant_lang($tmp, $path_lang);
@@ -280,8 +279,8 @@ class core_tools extends functions
 		}
 
 		// Reads the apps/apps_name/xml/menu.xml file  and loads into session
-		$xmlconfig = simplexml_load_file($_SESSION['config']['businessapppath'].'xml'.DIRECTORY_SEPARATOR.'menu.xml');
-		$path_lang =$_SESSION['config']['businessapppath'].'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php';
+		$xmlconfig = simplexml_load_file('apps/'.$_SESSION['config']['app_id'].'/xml/menu.xml');
+		$path_lang ='apps/'.$_SESSION['config']['app_id'].'/lang/'.$_SESSION['config']['lang'].'.php';
 		foreach($xmlconfig->MENU as $MENU2)
 		{
 			$_SESSION['menu'][$k]['id'] = (string) $MENU2->id;
@@ -358,7 +357,7 @@ class core_tools extends functions
 	public function load_app_services()
 	{
 		// Reads the application config.xml file
-		$xmlconfig = simplexml_load_file($_SESSION['config']['businessapppath']."xml".DIRECTORY_SEPARATOR."services.xml");
+		$xmlconfig = simplexml_load_file('apps/'.$_SESSION['config']['app_id']."/xml/services.xml");
 		$k = 0;
 		$m = 0;
 		// Browses the services in that file  and loads $_SESSION['app_services']
@@ -366,7 +365,7 @@ class core_tools extends functions
 		{
 			$_SESSION['app_services'][$k]['id'] = (string) $SERVICE->id;
 			$tmp = (string) $SERVICE->name;
-			$tmp2 = $this->retrieve_constant_lang($tmp, $_SESSION['config']['businessapppath'].DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php');
+			$tmp2 = $this->retrieve_constant_lang($tmp, 'apps/'.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php');
 			if($tmp2 <> false)
 			{
 				$_SESSION['app_services'][$k]['name'] = $tmp2;
@@ -377,7 +376,7 @@ class core_tools extends functions
 			}
 
 			$tmp = (string) $SERVICE->comment;
-			$tmp2 = $this->retrieve_constant_lang($tmp, $_SESSION['config']['businessapppath'].DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php');
+			$tmp2 = $this->retrieve_constant_lang($tmp, 'apps/'.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php');
 			if($tmp2 <> false)
 			{
 				$_SESSION['app_services'][$k]['comment'] = $tmp2;
@@ -420,7 +419,7 @@ class core_tools extends functions
 				}
 				if(isset($WHEREAMIUSED->tab_label))
 				{
-					$_SESSION['app_services'][$k]['whereamiused'][$l]['tab_label'] = $this->retrieve_constant_lang((string) $WHEREAMIUSED->tab_label, $_SESSION['config']['businessapppath'].DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php');
+					$_SESSION['app_services'][$k]['whereamiused'][$l]['tab_label'] = $this->retrieve_constant_lang((string) $WHEREAMIUSED->tab_label, 'apps/'.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php');
 
 				}
 				if(isset($WHEREAMIUSED->tab_order))
@@ -477,7 +476,7 @@ class core_tools extends functions
 		for($i=0;$i<count($modules);$i++)
 		{
 			// Reads the module config.xml file
-			$xmlconfig = simplexml_load_file($_SESSION['pathtomodules'].$modules[$i]['moduleid'].DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."services.xml");
+			$xmlconfig = simplexml_load_file('modules/'.$modules[$i]['moduleid']."/xml/services.xml");
 			$k = 0;
 			$m = 0;
 			foreach($xmlconfig->SERVICE as $SERVICE)
@@ -486,7 +485,7 @@ class core_tools extends functions
 				{
 					$_SESSION['modules_services'][$modules[$i]['moduleid']][$k]['id'] = (string) $SERVICE->id;
 					$tmp = (string) $SERVICE->name;
-					$tmp2 = $this->retrieve_constant_lang($tmp, $_SESSION['pathtomodules'].$modules[$i]['moduleid'].DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php');
+					$tmp2 = $this->retrieve_constant_lang($tmp, 'modules/'.$modules[$i]['moduleid'].'/lang/'.$_SESSION['config']['lang'].'.php');
 					if($tmp2<> false)
 					{
 						$_SESSION['modules_services'][$modules[$i]['moduleid']][$k]['name']=$tmp2;
@@ -496,7 +495,7 @@ class core_tools extends functions
 						$_SESSION['modules_services'][$modules[$i]['moduleid']][$k]['name']=$tmp;
 					}
 					$tmp = (string) $SERVICE->comment;
-					$tmp2 = $this->retrieve_constant_lang($tmp, $_SESSION['pathtomodules'].$modules[$i]['moduleid'].DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php');
+					$tmp2 = $this->retrieve_constant_lang($tmp, 'modules'.DIRECTORY_SEPARATOR.$modules[$i]['moduleid'].DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php');
 					if($tmp2<> false)
 					{
 						$_SESSION['modules_services'][$modules[$i]['moduleid']][$k]['comment']=$tmp2;
@@ -640,7 +639,7 @@ class core_tools extends functions
 							elseif($modules_services[$id_module][$i]['whereamiused'][$k]['nature'] == "include" && $_SESSION['user']['services'][$modules_services[$id_module][$i]['id']] && !in_array($modules_services[$id_module][$i]['id'], $executed_services))
 							{
 								array_push($executed_services,$modules_services[$id_module][$i]['id']);
-								include($_SESSION['pathtomodules'].$id_module.DIRECTORY_SEPARATOR.$modules_services[$id_module][$i]['servicepage']);
+								include('modules'.DIRECTORY_SEPARATOR.$id_module.DIRECTORY_SEPARATOR.$modules_services[$id_module][$i]['servicepage']);
 								break;
 							}
 						}
@@ -655,53 +654,56 @@ class core_tools extends functions
 			{
 				for($i=0;$i<count($modules_services[$value]);$i++)
 				{
-					for($k=0;$k<count($modules_services[$value][$i]['whereamiused']);$k++)
+					if(isset($modules_services[$value][$i]['whereamiused']))
 					{
-						if($modules_services[$value][$i]['whereamiused'][$k]['page'] == $whereami  )
+						for($k=0;$k<count($modules_services[$value][$i]['whereamiused']);$k++)
 						{
-							if($modules_services[$value][$i]['whereamiused'][$k]['nature'] == "frame" && $_SESSION['user']['services'][$modules_services[$value][$i]['id']] && ($servicenature == "all" || $servicenature == "frame") && !in_array($modules_services[$value][$i]['id'], $executed_services))
+							if($modules_services[$value][$i]['whereamiused'][$k]['page'] == $whereami  )
 							{
-								array_push($executed_services,$modules_services[$value][$i]['id']);
-								?>
-								<br />
-								<iframe src='<?php  echo $_SESSION['urltomodules'].$value."/".$modules_services[$value][$i]['servicepage'];?>' name="<?php  echo $modules_services[$value][$i]['id'];?>" id="<?php  echo $modules_services[$value][$i]['id'];?>" width='<?php  echo $modules_services[$value][$i]['whereamiused'][$k]['width'];?>' height='<?php  echo $modules_services[$value][$i]['whereamiused'][$k]['height'];?>' frameborder='<?php  echo $modules_services[$value][$i]['whereamiused'][$k]['border'];?>' scrolling='<?php  echo $modules_services[$value][$i]['whereamiused'][$k]['scrolling'];?>'></iframe><br /><br />
-								<?php
-							}
-							elseif($modules_services[$value][$i]['whereamiused'][$k]['nature'] == "tab" && $_SESSION['user']['services'][$modules_services[$value][$i]['id']] && ($servicenature == "tab") && !in_array($modules_services[$value][$i]['id'], $executed_services))
-							{
-								array_push($executed_services,$modules_services[$value][$i]['id']);
-								$tab_label = $modules_services[$value][$i]['whereamiused'][$k]['tab_label'];
-								$tab_order = $modules_services[$value][$i]['whereamiused'][$k]['tab_order'];
-								$frame_src = $_SESSION['urltomodules'].$value."/".$modules_services[$value][$i]['servicepage'];
-								$tab_view[$tab_order]['tab_label'] = $this->retrieve_constant_lang($tab_label, $_SESSION['modules_loaded'][$value]['path'].'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].".php");
-								$tab_view[$tab_order]['frame_src'] = $frame_src;
-							}
-							elseif($modules_services[$value][$i]['whereamiused'][$k]['nature'] == "popup" && $_SESSION['user']['services'][$modules_services[$value][$i]['id']] && ($servicenature == "all" || $servicenature == "popup") && !in_array($modules_services[$value][$i]['id'], $executed_services))
-							{
-								array_push($executed_services,$modules_services[$value][$i]['id']);
-								echo $modules_services[$value][$i]['name'];
-								?>
-								<br />
-								<a href='<?php  echo $_SESSION['urltomodules'].$value."/".$modules_services[$value][$i]['servicepage'];?>' target='_blank'><?php  echo _ACCESS_TO_SERVICE;?></a><br /><br />
-								<?php
-							}
-							elseif($modules_services[$value][$i]['whereamiused'][$k]['nature'] == "button" && $_SESSION['user']['services'][$modules_services[$value][$i]['id']]&& ($servicenature == "all" || $servicenature == "button") && !in_array($modules_services[$value][$i]['id'], $executed_services))
-							{
-								array_push($executed_services,$modules_services[$value][$i]['id']);
-								$tmp = $modules_services[$value][$i]['whereamiused'][$k]['button_label'];
-								$tmp2 = $this->retrieve_constant_lang($modules_services[$value][$i]['whereamiused'][$k]['button_label'], $_SESSION['modules_loaded'][$value]['path'].'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].".php");
-								if($tmp2 <> false)
+								if($modules_services[$value][$i]['whereamiused'][$k]['nature'] == "frame" && $_SESSION['user']['services'][$modules_services[$value][$i]['id']] && ($servicenature == "all" || $servicenature == "frame") && !in_array($modules_services[$value][$i]['id'], $executed_services))
 								{
-									$tmp = $tmp2;
+									array_push($executed_services,$modules_services[$value][$i]['id']);
+									?>
+									<br />
+									<iframe src='<?php  echo $_SESSION['urltomodules'].$value."/".$modules_services[$value][$i]['servicepage'];?>' name="<?php  echo $modules_services[$value][$i]['id'];?>" id="<?php  echo $modules_services[$value][$i]['id'];?>" width='<?php  echo $modules_services[$value][$i]['whereamiused'][$k]['width'];?>' height='<?php  echo $modules_services[$value][$i]['whereamiused'][$k]['height'];?>' frameborder='<?php  echo $modules_services[$value][$i]['whereamiused'][$k]['border'];?>' scrolling='<?php  echo $modules_services[$value][$i]['whereamiused'][$k]['scrolling'];?>'></iframe><br /><br />
+									<?php
 								}
-								?>
-								<input type="button" name="<?php  echo $modules_services[$value][$i]['id'];?>" value="<?php  echo $tmp;?>" onclick="window.open('<?php  echo $_SESSION['urltomodules'].$value.'/'.$modules_services[$value][$i]['servicepage'];?>', '<?php  echo $modules_services[$value][$i]['id'];?>','width=<?php  echo $modules_services[$value][$i]['whereamiused'][$k]['width'];?>,height=<?php  echo $modules_services[$value][$i]['whereamiused'][$k]['height'];?>,scrollbars=yes,resizable=yes' );" class="button" /><br/>
-								<?php
-							}
-							elseif($modules_services[$value][$i]['whereamiused'][$k]['nature'] == "include" && $_SESSION['user']['services'][$modules_services[$value][$i]['id']] && ($servicenature == "all" || $servicenature == "include") && !in_array($modules_services[$value][$i]['id'], $executed_services))
-							{
-								array_push($executed_services,$modules_services[$value][$i]['id']);
-								include($_SESSION['pathtomodules'].$value.DIRECTORY_SEPARATOR.$modules_services[$value][$i]['servicepage']);
+								elseif($modules_services[$value][$i]['whereamiused'][$k]['nature'] == "tab" && $_SESSION['user']['services'][$modules_services[$value][$i]['id']] && ($servicenature == "tab") && !in_array($modules_services[$value][$i]['id'], $executed_services))
+								{
+									array_push($executed_services,$modules_services[$value][$i]['id']);
+									$tab_label = $modules_services[$value][$i]['whereamiused'][$k]['tab_label'];
+									$tab_order = $modules_services[$value][$i]['whereamiused'][$k]['tab_order'];
+									$frame_src = $_SESSION['urltomodules'].$value."/".$modules_services[$value][$i]['servicepage'];
+									$tab_view[$tab_order]['tab_label'] = $this->retrieve_constant_lang($tab_label, $_SESSION['modules_loaded'][$value]['path'].'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].".php");
+									$tab_view[$tab_order]['frame_src'] = $frame_src;
+								}
+								elseif($modules_services[$value][$i]['whereamiused'][$k]['nature'] == "popup" && $_SESSION['user']['services'][$modules_services[$value][$i]['id']] && ($servicenature == "all" || $servicenature == "popup") && !in_array($modules_services[$value][$i]['id'], $executed_services))
+								{
+									array_push($executed_services,$modules_services[$value][$i]['id']);
+									echo $modules_services[$value][$i]['name'];
+									?>
+									<br />
+									<a href='<?php  echo $_SESSION['urltomodules'].$value."/".$modules_services[$value][$i]['servicepage'];?>' target='_blank'><?php  echo _ACCESS_TO_SERVICE;?></a><br /><br />
+									<?php
+								}
+								elseif($modules_services[$value][$i]['whereamiused'][$k]['nature'] == "button" && $_SESSION['user']['services'][$modules_services[$value][$i]['id']]&& ($servicenature == "all" || $servicenature == "button") && !in_array($modules_services[$value][$i]['id'], $executed_services))
+								{
+									array_push($executed_services,$modules_services[$value][$i]['id']);
+									$tmp = $modules_services[$value][$i]['whereamiused'][$k]['button_label'];
+									$tmp2 = $this->retrieve_constant_lang($modules_services[$value][$i]['whereamiused'][$k]['button_label'], $_SESSION['modules_loaded'][$value]['path'].'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].".php");
+									if($tmp2 <> false)
+									{
+										$tmp = $tmp2;
+									}
+									?>
+									<input type="button" name="<?php  echo $modules_services[$value][$i]['id'];?>" value="<?php  echo $tmp;?>" onclick="window.open('<?php  echo $_SESSION['urltomodules'].$value.'/'.$modules_services[$value][$i]['servicepage'];?>', '<?php  echo $modules_services[$value][$i]['id'];?>','width=<?php  echo $modules_services[$value][$i]['whereamiused'][$k]['width'];?>,height=<?php  echo $modules_services[$value][$i]['whereamiused'][$k]['height'];?>,scrollbars=yes,resizable=yes' );" class="button" /><br/>
+									<?php
+								}
+								elseif($modules_services[$value][$i]['whereamiused'][$k]['nature'] == "include" && $_SESSION['user']['services'][$modules_services[$value][$i]['id']] && ($servicenature == "all" || $servicenature == "include") && !in_array($modules_services[$value][$i]['id'], $executed_services))
+								{
+									array_push($executed_services,$modules_services[$value][$i]['id']);
+									include('modules'.DIRECTORY_SEPARATOR.$value.DIRECTORY_SEPARATOR.$modules_services[$value][$i]['servicepage']);
+								}
 							}
 						}
 					}
@@ -793,43 +795,46 @@ class core_tools extends functions
 		$executed_services = array();
 		for($i=0;$i<count($app_services);$i++)
 		{
-			for($k=0;$k<count($app_services[$i]['whereamiused']);$k++)
+			if(isset($app_services[$i]['whereamiused']))
 			{
-				if($app_services[$i]['whereamiused'][$k]['page'] == $whereami  )
+				for($k=0;$k<count($app_services[$i]['whereamiused']);$k++)
 				{
-					if($app_services[$i]['whereamiused'][$k]['nature'] == "frame" && $_SESSION['user']['services'][$app_services[$i]['id']] && ($servicenature == "all" || $servicenature == "frame") && !in_array($app_services[$i]['id'],$executed_services ))
+					if($app_services[$i]['whereamiused'][$k]['page'] == $whereami  )
 					{
-						array_push($executed_services,$app_services[$i]['id']);
-						?>
-                           <iframe src='<?php  echo $_SESSION['config']['businessappurl'].$app_services[$i]['servicepage'];?>' name="<?php  $app_services[$i]['id'];?>" id="<?php  $app_services[$i]['id'];?>" width='<?php  echo $app_services[$i]['whereamiused'][$k]['width'];?>' height='<?php  echo $app_services[$i]['whereamiused'][$k]['height'];?>' frameborder='<?php  echo $app_services[$i]['whereamiused'][$k]['border'];?>' scrolling='<?php  echo $app_services[$i]['whereamiused'][$k]['scrolling'];?>'></iframe>
-                           <?php
-					}
-					elseif($app_services[$i]['whereamiused'][$k]['nature'] == "popup" && $_SESSION['user']['services'][$app_services[$i]['id']] && ($servicenature == "all" || $servicenature == "popup") && !in_array($app_services[$i]['id'],$executed_services))
-					{
-						array_push($executed_services,$app_services[$i]['id']);
-						echo $app_services[$i]['name'];
-						?>
-                        <br />
-                        <a href='<?php  echo $_SESSION['config']['businessappservices'].$app_services[$i]['servicepage'];?>' target='_blank'><?php  echo _ACCESS_TO_SERVICE;?></a><br /><br />
-                         <?php
-					}
-					elseif($app_services[$i]['whereamiused'][$k]['nature'] == "button" && $_SESSION['user']['services'][$app_services[$i]['id']]&& ($servicenature == "all" || $servicenature == "button") && !in_array($app_services[$i]['id'],$executed_services ))
-					{
-						array_push($executed_services,$app_services[$i]['id']);
-						$tmp = $app_services[$i]['whereamiused'][$k]['button_label'];
-						$tmp2 = $this->retrieve_constant_lang($app_services[$i]['whereamiused'][$k]['button_label'], $_SESSION['config']['businessapppath'].'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].".php");
-						if($tmp2 <> false)
+						if($app_services[$i]['whereamiused'][$k]['nature'] == "frame" && $_SESSION['user']['services'][$app_services[$i]['id']] && ($servicenature == "all" || $servicenature == "frame") && !in_array($app_services[$i]['id'],$executed_services ))
 						{
-							$tmp = $tmp2;
+							array_push($executed_services,$app_services[$i]['id']);
+							?>
+							   <iframe src='<?php  echo $_SESSION['config']['businessappurl'].$app_services[$i]['servicepage'];?>' name="<?php  $app_services[$i]['id'];?>" id="<?php  $app_services[$i]['id'];?>" width='<?php  echo $app_services[$i]['whereamiused'][$k]['width'];?>' height='<?php  echo $app_services[$i]['whereamiused'][$k]['height'];?>' frameborder='<?php  echo $app_services[$i]['whereamiused'][$k]['border'];?>' scrolling='<?php  echo $app_services[$i]['whereamiused'][$k]['scrolling'];?>'></iframe>
+							   <?php
 						}
-						?>
-                        <input type="button" name="<?php  echo $app_services[$i]['id'];?>" value="<?php  echo $tmp;?>" onclick="window.open('<?php  echo $_SESSION['config']['businessappurl'].$app_services[$i]['servicepage'];?>', '<?php  echo $app_services[$i]['id'];?>','width=<?php  echo $app_services[$i]['whereamiused'][$k]['width'];?>,height=<?php  echo $app_services[$i]['whereamiused'][$k]['height'];?>,scrollbars=yes,resizable=yes' );" class="button" /><br/>
-                        <?php
-					}
-					elseif($app_services[$i]['whereamiused'][$k]['nature'] == "include" && $_SESSION['user']['services'][$app_services[$i]['id']] && ($servicenature == "all" || $servicenature == "include") && !in_array($app_services[$i]['id'],$executed_services))
-					{
-						array_push($executed_services, $app_services[$i]['id']);
-						include($_SESSION['config']['businessapppath'].$app_services[$i]['servicepage']);
+						elseif($app_services[$i]['whereamiused'][$k]['nature'] == "popup" && $_SESSION['user']['services'][$app_services[$i]['id']] && ($servicenature == "all" || $servicenature == "popup") && !in_array($app_services[$i]['id'],$executed_services))
+						{
+							array_push($executed_services,$app_services[$i]['id']);
+							echo $app_services[$i]['name'];
+							?>
+							<br />
+							<a href='<?php  echo $_SESSION['config']['businessappservices'].$app_services[$i]['servicepage'];?>' target='_blank'><?php  echo _ACCESS_TO_SERVICE;?></a><br /><br />
+							 <?php
+						}
+						elseif($app_services[$i]['whereamiused'][$k]['nature'] == "button" && $_SESSION['user']['services'][$app_services[$i]['id']]&& ($servicenature == "all" || $servicenature == "button") && !in_array($app_services[$i]['id'],$executed_services ))
+						{
+							array_push($executed_services,$app_services[$i]['id']);
+							$tmp = $app_services[$i]['whereamiused'][$k]['button_label'];
+							$tmp2 = $this->retrieve_constant_lang($app_services[$i]['whereamiused'][$k]['button_label'], 'apps/'.$_SESSION['config']['app_id'].'/lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].".php");
+							if($tmp2 <> false)
+							{
+								$tmp = $tmp2;
+							}
+							?>
+							<input type="button" name="<?php  echo $app_services[$i]['id'];?>" value="<?php  echo $tmp;?>" onclick="window.open('<?php  echo $_SESSION['config']['businessappurl'].$app_services[$i]['servicepage'];?>', '<?php  echo $app_services[$i]['id'];?>','width=<?php  echo $app_services[$i]['whereamiused'][$k]['width'];?>,height=<?php  echo $app_services[$i]['whereamiused'][$k]['height'];?>,scrollbars=yes,resizable=yes' );" class="button" /><br/>
+							<?php
+						}
+						elseif($app_services[$i]['whereamiused'][$k]['nature'] == "include" && $_SESSION['user']['services'][$app_services[$i]['id']] && ($servicenature == "all" || $servicenature == "include") && !in_array($app_services[$i]['id'],$executed_services))
+						{
+							array_push($executed_services, $app_services[$i]['id']);
+							include($_SESSION['config']['businessapppath'].$app_services[$i]['servicepage']);
+						}
 					}
 				}
 			}
@@ -892,11 +897,11 @@ class core_tools extends functions
 		foreach(array_keys($_SESSION['modules_loaded']) as $value)
 		{
 			$url_css = $_SESSION['urltomodules'].$_SESSION['modules_loaded'][$value]['name']."/css/module.css";
-			$path_css = $_SESSION['pathtomodules'].$_SESSION['modules_loaded'][$value]['name'].DIRECTORY_SEPARATOR."css".DIRECTORY_SEPARATOR."module.css";
+			$path_css = 'modules'.DIRECTORY_SEPARATOR.$_SESSION['modules_loaded'][$value]['name'].DIRECTORY_SEPARATOR."css".DIRECTORY_SEPARATOR."module.css";
 			$url_cssIE = $_SESSION['urltomodules'].$_SESSION['modules_loaded'][$value]['name']."/css/module_IE.css";
-			$path_cssIE = $_SESSION['pathtomodules'].$_SESSION['modules_loaded'][$value]['name'].DIRECTORY_SEPARATOR."css".DIRECTORY_SEPARATOR."module_IE.css";
+			$path_cssIE = 'modules'.DIRECTORY_SEPARATOR.$_SESSION['modules_loaded'][$value]['name'].DIRECTORY_SEPARATOR."css".DIRECTORY_SEPARATOR."module_IE.css";
 			$url_cssIE7 = $_SESSION['urltomodules'].$_SESSION['modules_loaded'][$value]['name']."/css/module_IE7.css";
-			$path_cssIE7 = $_SESSION['pathtomodules'].$_SESSION['modules_loaded'][$value]['name'].DIRECTORY_SEPARATOR."css".DIRECTORY_SEPARATOR."module_IE7.css";
+			$path_cssIE7 = 'modules'.DIRECTORY_SEPARATOR.$_SESSION['modules_loaded'][$value]['name'].DIRECTORY_SEPARATOR."css".DIRECTORY_SEPARATOR."module_IE7.css";
 			if(file_exists($path_css))
 			{
 				?>
@@ -937,7 +942,7 @@ class core_tools extends functions
 		foreach(array_keys($_SESSION['modules_loaded']) as $value)
 		{
 			$url_js = $_SESSION['urltomodules'].$_SESSION['modules_loaded'][$value]['name']."/js/functions.js";
-			$path_js = $_SESSION['pathtomodules'].$_SESSION['modules_loaded'][$value]['name'].DIRECTORY_SEPARATOR."js".DIRECTORY_SEPARATOR."functions.js";
+			$path_js = 'modules'.DIRECTORY_SEPARATOR.$_SESSION['modules_loaded'][$value]['name'].DIRECTORY_SEPARATOR."js".DIRECTORY_SEPARATOR."functions.js";
 			if(file_exists($path_js))
 			{
 				?>
@@ -966,7 +971,7 @@ class core_tools extends functions
 		if(isset($_GET['module']) && $_GET['module'] <> "core")
 		{
 /*
-			$path = $_SESSION['pathtomodules'].$_GET['module'].DIRECTORY_SEPARATOR.$this->f_page.".php";
+			$path = 'modules'.DIRECTORY_SEPARATOR.$_GET['module'].DIRECTORY_SEPARATOR.$this->f_page.".php";
 			if(file_exists($path))
 			{
 				require($path);
@@ -978,7 +983,7 @@ class core_tools extends functions
 			}
 */
 			if(file_exists($_SESSION['config']['corepath'].'modules'.$_GET['module'].DIRECTORY_SEPARATOR.$this->f_page.".php")
-			|| file_exists($_SESSION['config']['corepath'].'clients'.$_SESSION['high_layer_id'].'modules'.$_GET['module'].DIRECTORY_SEPARATOR.$this->f_page.".php")
+			|| file_exists($_SESSION['config']['corepath'].'clients'.$_SESSION['custom_override_id'].'modules'.$_GET['module'].DIRECTORY_SEPARATOR.$this->f_page.".php")
 			)
 			{
 				require('modules'.$_GET['module'].DIRECTORY_SEPARATOR.$this->f_page.".php");
@@ -1003,7 +1008,7 @@ class core_tools extends functions
 			}
 */
 			if(file_exists($_SESSION['config']['corepath'].'core'.DIRECTORY_SEPARATOR.$this->f_page.".php")
-			|| file_exists($_SESSION['config']['corepath'].'clients'.$_SESSION['high_layer_id'].'core'.DIRECTORY_SEPARATOR.$this->f_page.".php")
+			|| file_exists($_SESSION['config']['corepath'].'clients'.$_SESSION['custom_override_id'].'core'.DIRECTORY_SEPARATOR.$this->f_page.".php")
 			)
 			{
 				require('core'.DIRECTORY_SEPARATOR.$this->f_page.".php");
@@ -1029,7 +1034,7 @@ class core_tools extends functions
 			}
 */
 			if(file_exists($_SESSION['config']['corepath'].'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."admin".DIRECTORY_SEPARATOR.trim($_GET['admin']).$this->f_page.".php")
-			|| file_exists($_SESSION['config']['corepath'].'clients'.$_SESSION['high_layer_id'].'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."admin".DIRECTORY_SEPARATOR.trim($_GET['admin']).$this->f_page.".php")
+			|| file_exists($_SESSION['config']['corepath'].'clients'.$_SESSION['custom_override_id'].'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."admin".DIRECTORY_SEPARATOR.trim($_GET['admin']).$this->f_page.".php")
 			)
 			{
 				require('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."admin".DIRECTORY_SEPARATOR.trim($_GET['admin']).$this->f_page.".php");
@@ -1054,7 +1059,7 @@ class core_tools extends functions
 			}
 */
 			if(file_exists($_SESSION['config']['corepath'].'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.trim($_GET['dir']).DIRECTORY_SEPARATOR.$this->f_page.".php")
-			|| file_exists($_SESSION['config']['corepath'].'clients'.$_SESSION['high_layer_id'].'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.trim($_GET['dir']).DIRECTORY_SEPARATOR.$this->f_page.".php")
+			|| file_exists($_SESSION['config']['corepath'].'clients'.$_SESSION['custom_override_id'].'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.trim($_GET['dir']).DIRECTORY_SEPARATOR.$this->f_page.".php")
 			)
 			{
 				require('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.trim($_GET['dir']).DIRECTORY_SEPARATOR.$this->f_page.".php");
@@ -1090,11 +1095,11 @@ class core_tools extends functions
 */
 
 			if(file_exists($_SESSION['config']['corepath'].'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.$this->f_page.".php")
-			|| file_exists($_SESSION['config']['corepath'].'clients'.DIRECTORY_SEPARATOR.$_SESSION['high_layer_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.$this->f_page.".php")
+			|| file_exists($_SESSION['config']['corepath'].'clients'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.$this->f_page.".php")
 			)
 			{
-				echo "<br/>'".$_SESSION['config']['corepath'].'clients'.$_SESSION['high_layer_id'].'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.$this->f_page.".php"."'<br/>";
-				if(file_exists($_SESSION['config']['corepath'].'clients'.DIRECTORY_SEPARATOR.$_SESSION['high_layer_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.$this->f_page.".php"))
+				echo "<br/>'".$_SESSION['config']['corepath'].'clients'.$_SESSION['custom_override_id'].'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.$this->f_page.".php"."'<br/>";
+				if(file_exists($_SESSION['config']['corepath'].'clients'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.$this->f_page.".php"))
 				{
 					echo 'FILE EXISTS';
 				}
@@ -1105,7 +1110,7 @@ class core_tools extends functions
 				require_once('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
 				$app = new business_app_tools();
 				$path = $app->insert_app_page($this->f_page);
-				if( !$path || !file_exists($_SESSION['config']['corepath'].'clients'.DIRECTORY_SEPARATOR.$_SESSION['high_layer_id'].DIRECTORY_SEPARATOR.$path) || !file_exists($_SESSION['config']['corepath'].$path))
+				if( !$path || !file_exists($_SESSION['config']['corepath'].'clients'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.$path) || !file_exists($_SESSION['config']['corepath'].$path))
 				{
 					//require($_SESSION["config"]["defaultPage"].".php");
 					$this->loadDefaultPage();
@@ -1138,7 +1143,7 @@ class core_tools extends functions
 		$_SESSION['target_page'] = "";
 		$_SESSION['target_module'] = "";
 		$_SESSION['target_admin'] = "";
-		if(trim($target) <> "")
+		if(isset($target) && trim($target) <> "")
 		{
 			$tmpTab = array();
 			$tmpTab = explode("&", $target);
@@ -1419,11 +1424,14 @@ class core_tools extends functions
 		if($module == "apps")
 		{
 			$system = false;
-			for($i=0; $i< count($_SESSION['apps_services']); $i++)
+			if(isset($_SESSION['apps_services']))
 			{
-				if($_SESSION['apps_services'][$i]['system_service'])
+				for($i=0; $i< count($_SESSION['apps_services']); $i++)
 				{
-					return true;
+					if($_SESSION['apps_services'][$i]['system_service'])
+					{
+						return true;
+					}
 				}
 			}
 		}
@@ -1543,7 +1551,7 @@ class core_tools extends functions
 					if($modules_services[$value][$i]['processinbackground'][$k]['page'] == $whereami && $modules_services[$value][$i]['processinbackground'][$k]['preprocess'] <> "")
 					{
 						$process_order = $modules_services[$value][$i]['processinbackground'][$k]['processorder'];
-						$process_view[$process_order]['preprocess'] = $_SESSION['pathtomodules'].$value.DIRECTORY_SEPARATOR.$modules_services[$value][$i]['processinbackground'][$k]['preprocess'];
+						$process_view[$process_order]['preprocess'] = 'modules'.DIRECTORY_SEPARATOR.$value.DIRECTORY_SEPARATOR.$modules_services[$value][$i]['processinbackground'][$k]['preprocess'];
 						$process_view[$process_order]['id_service'] = $modules_services[$value][$i]['id'];
 					}
 				}
@@ -1578,7 +1586,7 @@ class core_tools extends functions
 					if($modules_services[$value][$i]['processinbackground'][$k]['page'] == $whereami && $modules_services[$value][$i]['processinbackground'][$k]['postprocess'] <> "")
 					{
 						$process_order = $modules_services[$value][$i]['processinbackground'][$k]['processorder'];
-						$process_view[$process_order]['postprocess'] = $_SESSION['pathtomodules'].$value.DIRECTORY_SEPARATOR.$modules_services[$value][$i]['processinbackground'][$k]['postprocess'];
+						$process_view[$process_order]['postprocess'] = 'modules'.DIRECTORY_SEPARATOR.$value.DIRECTORY_SEPARATOR.$modules_services[$value][$i]['processinbackground'][$k]['postprocess'];
 					}
 				}
 			}
@@ -1741,7 +1749,7 @@ class core_tools extends functions
 			}
 			elseif(strtoupper($_SESSION['actions_pages'][$ind]['ORIGIN']) == "MODULE")
 			{
-				$path = $_SESSION['pathtomodules'].$_SESSION['actions_pages'][$ind]['MODULE'].DIRECTORY_SEPARATOR.$_SESSION['actions_pages'][$ind]['NAME'].".php";
+				$path = 'modules'.DIRECTORY_SEPARATOR.$_SESSION['actions_pages'][$ind]['MODULE'].DIRECTORY_SEPARATOR.$_SESSION['actions_pages'][$ind]['NAME'].".php";
 			}
 			return $path;
 		}
@@ -1788,7 +1796,7 @@ class core_tools extends functions
 
 	public function is_action_defined($action_id)
 	{
-		require_once($_SESSION['pathtocoreclass'].'class_db.php');
+		require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_db.php');
 		if(empty($action_id))
 		{
 			return false;
@@ -1813,21 +1821,43 @@ class core_tools extends functions
 		return false;
 	}
 
+/*
 	public function load_maarch_xml($path)
 	{
-		//echo $_SESSION['core_path'].'clients'.DIRECTORY_SEPARATOR.$_SESSION['high_layer_id'].DIRECTORY_SEPARATOR.$path;
-		if(file_exists($_SESSION['core_path'].'clients'.DIRECTORY_SEPARATOR.$_SESSION['high_layer_id'].DIRECTORY_SEPARATOR.$path))
+		if(file_exists($_SESSION['config']['corepath'].'clients'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.$path))
 		{
-			return simplexml_load_file($_SESSION['core_path'].'clients'.DIRECTORY_SEPARATOR.$_SESSION['high_layer_id'].DIRECTORY_SEPARATOR.$path);
+			return simplexml_load_file($_SESSION['config']['corepath'].'clients'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.$path);
 		}
-		else if(file_exists($_SESSION['core_path'].$path))
+		else if(file_exists($_SESSION['config']['corepath'].$path))
 		{
-			return simplexml_load_file($_SESSION['core_path'].$path);
+			return simplexml_load_file($_SESSION['config']['corepath'].$path);
 		}
 		else
 		{
 			return false;
 		}
+	}
+*/
+	
+	public function get_custom_id()
+	{
+		if(!file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.'custom.xml'))
+		{
+			return '';
+		}
+		$xml = simplexml_load_file($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.'custom.xml');
+		foreach($xml->custom as $custom)
+		{
+			if($custom->ip == $_SERVER['REMOTE_ADDR'])
+			{
+				return (string) $custom->custom_id;
+			}
+			if($custom->external_domain == $_SERVER['HTTP_HOST'] xor $custom->domain == $_SERVER['HTTP_HOST'])
+			{
+				return (string) $custom->custom_id;
+			}
+		}
+		return '';
 	}
 }
 ?>

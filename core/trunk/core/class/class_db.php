@@ -106,13 +106,31 @@ class dbquery extends functions
 		$args = func_get_args();
 		if(count($args) < 1)
 		{
-			$this->server = $_SESSION['config']['databaseserver'];
-			$this->port = $_SESSION['config']['databaseserverport'];
-			$this->user = $_SESSION['config']['databaseuser'];
-			$this->pass = $_SESSION['config']['databasepassword'];
-			$this->base = $_SESSION['config']['databasename'];
+			if(isset($_SESSION['config']['databaseserver']))
+			{
+				$this->server = $_SESSION['config']['databaseserver'];
+			}
+			if(isset($_SESSION['config']['databaseserverport']))
+			{
+				$this->port = $_SESSION['config']['databaseserverport'];
+			}
+			if(isset($_SESSION['config']['databaseuser']))
+			{
+				$this->user = $_SESSION['config']['databaseuser'];
+			}
+			if(isset($_SESSION['config']['databasepassword']))
+			{
+				$this->pass = $_SESSION['config']['databasepassword'];
+			}
+			if(isset($_SESSION['config']['databasename']))
+			{
+				$this->base = $_SESSION['config']['databasename'];
+			}
 			//$this->workspace = $_SESSION['config']['databaseworkspace'];
-			$this->databasetype = $_SESSION['config']['databasetype'];
+			if(isset($_SESSION['config']['databasetype']))
+			{
+				$this->databasetype = $_SESSION['config']['databasetype'];
+			}
 		}
 		else
 		{
@@ -204,6 +222,7 @@ class dbquery extends functions
 	*/
 	public function connect()
 	{
+		//var_dump($this);
 		$this->debug = 0;
 		$this->nb_query = 0;
 		if($this->databasetype == "MYSQL")

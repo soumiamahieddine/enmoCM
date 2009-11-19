@@ -985,24 +985,31 @@ class functions
 	public function retrieve_constant_lang($constant, $file)
 	{
 		$filelang = fopen($file, "r");
-		if(!file_exists($file))
+		if(!file_exists($_SESSION['config']['corepath'].$file) && !file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].$file))
 		{
 			echo '<div class="error">Language file missing: '.$file.'</div>';
 			exit();
 		}
 		$find = false;
+
 		while (!feof($filelang))
 		{
-
 			$string = fgets($filelang);
 			$search="`'".$constant."'`";
 			preg_match($search,$string,$out);
-			$count=count($out[0]);
-			if($count == 1)
+
+			if(isset($out[0]))
 			{
 				$tab_string = explode("'", $string);
-				$myresult = $tab_string[3];
-				$find = true;
+				if(isset($tab_string[3]))
+				{
+					$myresult = $tab_string[3];
+					$find = true;
+				}
+				else
+				{
+					$find = false;
+				}
 				break;
 			}
 		}
