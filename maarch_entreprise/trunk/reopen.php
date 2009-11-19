@@ -10,8 +10,8 @@
 * @license GPL
 * @author  Claire Figueras  <dev@maarch.org>
 */
-session_name('PeopleBox');
-session_start();
+include('core/init.php');
+
 /*if( strtoupper(substr(PHP_OS, 0, 3)) != "WIN")
 {
 	$_SESSION['slash_env'] = "/";
@@ -30,9 +30,9 @@ $_SESSION['pathtocoreclass'] = $path_server."core".DIRECTORY_SEPARATOR."class".D
 $_SESSION['pathtomodules'] = $path_server."modules".DIRECTORY_SEPARATOR;
 
 $_SESSION['urltomodules'] = $_SESSION['config']['coreurl']."/modules/";
-require_once($_SESSION['pathtocoreclass']."class_functions.php");
-require_once($_SESSION['pathtocoreclass']."class_db.php");
-require_once($_SESSION['pathtocoreclass']."class_core_tools.php");
+require_once("core/class/class_functions.php");
+require_once("core/class/class_db.php");
+require_once("core/class/class_core_tools.php");
 require_once("class/class_business_app_tools.php");
 $core_tools = new core_tools();
 $business_app_tools = new business_app_tools();
@@ -59,7 +59,7 @@ else
 	}
 	exit();
 	/*$pass = md5($s_pass);
-	require($_SESSION['pathtocoreclass']."class_security.php");
+	require("core/class/class_security.php");
 	$sec = new security();
 	//$sec->show_array($_SESSION);
 	//$sec->build_config();

@@ -1,10 +1,10 @@
 <?
-session_name('PeopleBox');
-session_start();
+include('core/init.php');
+
 
 if($_SESSION['service_tag'] == 'doctype_up')
 {
-	require_once($_SESSION['pathtocoreclass']."class_db.php");
+	require_once("core/class/class_db.php");
 	$db = new dbquery();
 	$db->connect();
 	$db->query("select * from ".$_SESSION['tablename']['mlb_doctype_ext']." where type_id = ".$_SESSION['m_admin']['doctypes']['TYPE_ID']."");
@@ -66,7 +66,7 @@ elseif($_SESSION['service_tag'] == "doctype_info")
 }
 elseif($_SESSION['service_tag'] == "doctype_updatedb")
 {
-	require_once($_SESSION['pathtocoreclass']."class_db.php");
+	require_once("core/class/class_db.php");
 	$db = new dbquery();
 	$db->connect();
 
@@ -83,14 +83,14 @@ elseif($_SESSION['service_tag'] == "doctype_updatedb")
 }
 elseif($_SESSION['service_tag'] == "doctype_insertdb")
 {
-	require_once($_SESSION['pathtocoreclass']."class_db.php");
+	require_once("core/class/class_db.php");
 	$db = new dbquery();
 	$db->connect();
 	$db->query("insert into ".$_SESSION['tablename']['mlb_doctype_ext']." (type_id, process_delay, delay1, delay2) values (".$_SESSION['m_admin']['doctypes']['TYPE_ID'].", ".$_SESSION['m_admin']['doctypes']['process_delay'].", ".$_SESSION['m_admin']['doctypes']['delay1'].", ".$_SESSION['m_admin']['doctypes']['delay2'].")");
 }
 elseif($_SESSION['service_tag'] == "doctype_delete")
 {
-	require_once($_SESSION['pathtocoreclass']."class_db.php");
+	require_once("core/class/class_db.php");
 	$db = new dbquery();
 	$db->connect();
 	$db->query("delete from ".$_SESSION['tablename']['mlb_doctype_ext']." where type_id = ".$_SESSION['m_admin']['doctypes']['TYPE_ID']."");

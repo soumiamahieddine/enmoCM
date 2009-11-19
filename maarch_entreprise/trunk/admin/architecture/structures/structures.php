@@ -48,7 +48,7 @@ $page_id = "structures";
 $admin->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
 unset($_SESSION['m_admin']);
-require_once($_SESSION['pathtocoreclass']."class_request.php");
+require_once("core/class/class_request.php");
 require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_list_show.php");
 $func = new functions();
 $select[$_SESSION['tablename']['doctypes_first_level']] = array();

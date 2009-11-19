@@ -28,12 +28,12 @@
 * @ingroup indexing_searching_mlb
 */
 
-session_name('PeopleBox');
-session_start();
+include('core/init.php');
 
-require_once($_SESSION['pathtocoreclass']."class_functions.php");
-require_once($_SESSION['pathtocoreclass']."class_db.php");
-require_once($_SESSION['pathtocoreclass']."class_core_tools.php");
+
+require_once("core/class/class_functions.php");
+require_once("core/class/class_db.php");
+require_once("core/class/class_core_tools.php");
 
 $db = new dbquery();
 $core = new core_tools();

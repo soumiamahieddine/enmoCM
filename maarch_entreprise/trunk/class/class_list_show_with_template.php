@@ -554,7 +554,7 @@ class list_show_with_template extends list_show
 		//##############################################################
 		if($core_tools->is_module_loaded("cases") == true)
 		{
-				$case_file = $_SESSION['pathtomodules']."cases".DIRECTORY_SEPARATOR."template_addon".DIRECTORY_SEPARATOR.$actual_template.".html";
+				$case_file = "modules/cases".DIRECTORY_SEPARATOR."template_addon".DIRECTORY_SEPARATOR.$actual_template.".html";
 				if (file_exists($case_file))
 				{
 					$addon_list_trait = $this->get_template($case_file);
@@ -649,12 +649,12 @@ class list_show_with_template extends list_show
 		}
 
 		//########################
-		require_once($_SESSION['pathtocoreclass']."class_core_tools.php");
+		require_once("core/class/class_core_tools.php");
 		$core_tools = new core_tools();
 		if($core_tools->is_module_loaded("doc_converter") && $bool_export)
 		{
 			$_SESSION['doc_convert'] = array();
-			require_once($_SESSION['pathtomodules']."doc_converter".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
+			require_once("modules/doc_converter".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
 			$doc_converter = new doc_converter();
 			$disp_dc = $doc_converter->convert_list($result, true);
 		}

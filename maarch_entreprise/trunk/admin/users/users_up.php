@@ -28,14 +28,14 @@
 * @version $Revision$
 * @ingroup admin
 */
-session_name('PeopleBox');
-session_start();
-require_once($_SESSION['pathtocoreclass']."class_functions.php");
+include('core/init.php');
+
+require_once("core/class/class_functions.php");
 
 $admin = new core_tools();
 $admin->test_admin('admin_users', 'apps');
 
-require_once($_SESSION['pathtocoreclass']."class_db.php");
+require_once("core/class/class_db.php");
 require($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_users.php");
 
 $func = new functions();

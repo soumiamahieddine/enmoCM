@@ -28,15 +28,15 @@
 * @version $Revision$
 * @ingroup basket
 */
-session_name('PeopleBox');
-session_start();
+//include('core/init.php');
+//
 
-require_once($_SESSION['pathtocoreclass']."class_functions.php");
-require_once($_SESSION['pathtocoreclass']."class_request.php");
-require_once($_SESSION['pathtocoreclass']."class_core_tools.php");
+require_once("core/class/class_functions.php");
+require_once("core/class/class_request.php");
+require_once("core/class/class_core_tools.php");
 $core_tools = new core_tools();
 $core_tools->test_user();
-$core_tools->load_lang();
+//$core_tools->load_lang();
 $core_tools->test_service('quicklaunch', "apps");
 ?>
 <div id="welcome_box_left_quick_lunch" >
@@ -53,19 +53,21 @@ $core_tools->test_service('quicklaunch', "apps");
 		{
 			if($nb_max < 3)
 			{
-				if($element['id'] == 'physical_archive' && $element['show'] == true && $displayed_physical_archive <> true)
+				if($element['id'] == 'physical_archive' && $element['show'] == true && (!isset($displayed_physical_archive) || isset($displayed_physical_archive) && $displayed_physical_archive <> true))
 				{
 						echo '<td><a href="index.php?page=boxes&module=physical_archive&reinit=true"><div class="bighome_physical_archive"><div class="label_for_bighome_physical_archive">'._PHYSICAL_ARCHIVE.'</div></div></a></td>';
 						$nb_max++;
 						$displayed_physical_archive = true;
 				}
-				if ($element['id'] == 'adv_search_mlb' && $element['show'] == true && $displayed_adv_search_mlb <> true)
+				if ($element['id'] == 'adv_search_mlb' && $element['show'] == true && 
+				(!isset($displayed_adv_search_mlb) || isset($displayed_index_mlb) && $displayed_adv_search_mlb <> true))
 				{
 						echo '<td><a href="index.php?page=search_adv&dir=indexing_searching&reinit=true"><div class="bighome_search_adv"><div class="label_for_bighome_search_adv">'._ADV_SEARCH_TITLE.'</div></div></a></td>';
 						$nb_max++;
 						$displayed_adv_search_mlb = true;
 				}
-				if ($element['id'] == 'index_mlb' && $element['show'] == true && $displayed_index_mlb <> true)
+				if ($element['id'] == 'index_mlb' && $element['show'] == true &&
+				(!isset($displayed_physical_archive) || isset($displayed_index_mlb) && $displayed_index_mlb <> true))
 				{
 						echo '<td><a href="index.php?page=view_baskets&module=basket&baskets=IndexingBasket"><div class="bighome_indexing"><div class="label_for_bighome_indexing">'._INDEXING_MLB.'</div></div></a></td>';
 						$nb_max++;

@@ -10,7 +10,7 @@
 * @author  Laurent Giovannoni  	<dev@maarch.org>
 */
 session_name('maarch_v3');
-session_start();
+
 $_SESSION['modules_calling_scripts'] = array();
 $_SESSION['apps_calling_scripts'] = array();
 function create_reports_file_php($report_text)
@@ -403,10 +403,10 @@ $_SESSION['history_keywords'] = array();
 $_SESSION['pathtocore'] = $path_server.DIRECTORY_SEPARATOR."core".DIRECTORY_SEPARATOR;
 $_SESSION['pathtocoreclass'] = $path_server.DIRECTORY_SEPARATOR."core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR;
 $_SESSION['pathtomodules'] = $path_server.DIRECTORY_SEPARATOR."modules".DIRECTORY_SEPARATOR;
-require_once($_SESSION['pathtocoreclass']."class_functions.php");
-require_once($_SESSION['pathtocoreclass']."class_core_tools.php");
-require_once($_SESSION['pathtocoreclass']."class_db.php");
-require_once($_SESSION['pathtocoreclass']."class_request.php");
+require_once("core/class/class_functions.php");
+require_once("core/class/class_core_tools.php");
+require_once("core/class/class_db.php");
+require_once("core/class/class_request.php");
 $core_tools = new core_tools();
 $core_tools->load_app_services();
 $core_tools->load_modules_config($_SESSION['modules'], true);

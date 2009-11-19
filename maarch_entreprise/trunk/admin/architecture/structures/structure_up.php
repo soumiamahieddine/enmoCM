@@ -29,11 +29,11 @@
 * @ingroup admin
 */
 
-session_name('PeopleBox');
-session_start();
-require_once($_SESSION['pathtocoreclass']."class_functions.php");
-require_once($_SESSION['pathtocoreclass']."class_db.php");
-require($_SESSION['pathtocoreclass']."class_core_tools.php");
+include('core/init.php');
+
+require_once("core/class/class_functions.php");
+require_once("core/class/class_db.php");
+require("core/class/class_core_tools.php");
 
 $core_tools = new core_tools();
 $core_tools->test_admin('admin_architecture', 'apps');
@@ -120,7 +120,7 @@ if( isset($_REQUEST['valid']))
 					}
 					if($_SESSION['history']['structureup'] == "true")
 					{
-						require($_SESSION['pathtocoreclass']."class_history.php");
+						require("core/class/class_history.php");
 						$hist = new history();
 						$hist->add($_SESSION['tablename']['doctypes_first_level'], $id,"UP",_STRUCTURE_MODIF." ".strtolower(_NUM).$id." (".$info.")", $_SESSION['config']['databasetype']);
 					}
@@ -147,7 +147,7 @@ if( isset($_REQUEST['valid']))
 				}
 				if($_SESSION['history']['structureadd'] == "true")
 				{
-					require($_SESSION['pathtocoreclass']."class_history.php");
+					require("core/class/class_history.php");
 					$hist = new history();
 					$hist->add($_SESSION['tablename']['doctypes_first_level'], $id,"ADD",_NEW_STRUCTURE_ADDED." (".$desc.")", $_SESSION['config']['databasetype']);
 

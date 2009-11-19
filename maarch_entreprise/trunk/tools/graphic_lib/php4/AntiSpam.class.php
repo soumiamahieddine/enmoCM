@@ -206,8 +206,8 @@ class awAntiSpam extends awImage {
 	
 		// Start session if needed
 		if(!session_id()) { 
-	 session_name('PeopleBox'); 
-session_start();
+	 include('core/init.php'); 
+
 		}
 		
 	}

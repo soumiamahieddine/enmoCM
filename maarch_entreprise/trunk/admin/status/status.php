@@ -49,7 +49,7 @@ $page_label = _STATUS_LIST;
 $page_id = "status";
 $admin->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
-require_once($_SESSION['pathtocoreclass']."class_request.php");
+require_once("core/class/class_request.php");
 require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_list_show.php");
 $select[$_SESSION['tablename']['status']] = array();
 array_push($select[$_SESSION['tablename']['status']],"id", "label_status","is_system","can_be_searched");

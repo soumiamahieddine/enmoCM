@@ -29,8 +29,8 @@
 * @ingroup admin
 */
 
-session_name('PeopleBox');
-session_start();
+include('core/init.php');
+
 
 $admin = new core_tools();
 $admin->test_admin('admin_users', 'apps');

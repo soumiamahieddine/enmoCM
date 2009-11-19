@@ -40,7 +40,7 @@
 */
  $etapes = array('status');
 
-require_once($_SESSION['pathtocoreclass']."class_history.php");
+require_once("core/class/class_history.php");
 
 /**
 * Manages a status (All params must be declared, even if not used, to corresponds to the action management of the core)

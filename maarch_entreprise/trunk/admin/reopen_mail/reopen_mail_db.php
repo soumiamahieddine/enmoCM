@@ -18,18 +18,18 @@
 *    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-session_name('PeopleBox');
-session_start();
+include('core/init.php');
 
-require_once($_SESSION['pathtocoreclass']."class_functions.php");
-require($_SESSION['pathtocoreclass']."class_core_tools.php");
+
+require_once("core/class/class_functions.php");
+require("core/class/class_core_tools.php");
 
 $core_tools = new core_tools();
 //here we loading the lang vars
 $core_tools->load_lang();
 $core_tools->test_admin('reopen_mail', 'apps');
 
-require_once($_SESSION['pathtocoreclass']."class_db.php");
+require_once("core/class/class_db.php");
 require($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_reopen_mail.php");
 
 $reopen = new ReopenMail();

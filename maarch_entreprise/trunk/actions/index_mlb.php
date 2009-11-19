@@ -84,8 +84,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 	$_SESSION['req'] = "action";
 	$res_id = $values[0];
 	$frm_str = '';
-	require_once($_SESSION['pathtocoreclass']."class_security.php");
-	require_once($_SESSION['pathtomodules']."basket".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
+	require_once("core/class/class_security.php");
+	require_once("modules/basket".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
 	require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
 	require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_types.php");
 	$type = new types();
@@ -710,7 +710,7 @@ function check_docserver($coll_id)
 		$_SESSION['action_error'] = _CHECK_FORM_OK;
 		return true;
 	}
-	require_once($_SESSION['pathtocoreclass']."class_docserver.php");
+	require_once("core/class/class_docserver.php");
 	$core_tools =new core_tools();
 
 	// Gets the available docserver for the collection
@@ -755,7 +755,7 @@ function check_docserver($coll_id)
 /*
 	if($_SESSION['origin'] == "scan")
 	{
-		$tmp = $_SESSION['pathtomodules'].'indexing_searching'.DIRECTORY_SEPARATOR.'tmp/';
+		$tmp = 'modules/indexing_searching'.DIRECTORY_SEPARATOR.'tmp/';
 	}
 	else
 	{
@@ -1065,7 +1065,7 @@ function process_category_check($cat_id, $values)
 		}
 		if($box_id != false && preg_match('/^[0-9]+$/', $box_id))
 		{
-			require_once($_SESSION['pathtomodules'].'physical_archive'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php');
+			require_once('modules/physical_archive'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php');
 			$physical_archive = new physical_archive();
 			$pa_return_value = $physical_archive->load_box_db($box_id, $cat_id, $_SESSION['user']['UserId']);
 			if ($pa_return_value == false)
@@ -1088,7 +1088,7 @@ function process_category_check($cat_id, $values)
 	}
 	if($chrono_out != false && preg_match('/^[0-9]+$/', $chrono_out))
 	{
-		require_once($_SESSION['pathtomodules'].'physical_archive'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php');
+		require_once('modules/physical_archive'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php');
 		$physical_archive = new physical_archive();
 		$pa_return_value = $physical_archive->load_box_db($box_id, $cat_id, $_SESSION['user']['UserId']);
 		if ($pa_return_value == false)
@@ -1145,10 +1145,10 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
 		return false;
 	}
 
-	require_once($_SESSION['pathtocoreclass']."class_db.php");
-	require_once($_SESSION['pathtocoreclass']."class_security.php");
-	require_once($_SESSION['pathtocoreclass']."class_request.php");
-	require_once($_SESSION['pathtocoreclass']."class_resource.php");
+	require_once("core/class/class_db.php");
+	require_once("core/class/class_security.php");
+	require_once("core/class/class_request.php");
+	require_once("core/class/class_resource.php");
 	$db = new dbquery();
 	$sec = new security();
 	$req = new request();
@@ -1334,7 +1334,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
 			// Arbox_id + Arbatch_id
 			$box_id = get_value_fields($values_form, 'arbox_id');
 			array_push($_SESSION['data'], array('column' => 'arbox_id', 'value' => $box_id, 'type' => "integer"));
-			require_once($_SESSION['pathtomodules'].'physical_archive'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php');
+			require_once('modules/physical_archive'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php');
 			$physical_archive = new physical_archive();
 			$pa_return_value = $physical_archive->load_box_db($box_id, $cat_id, $_SESSION['user']['UserId']);
 			array_push($_SESSION['data'], array('column' => 'arbatch_id', 'value' => $pa_return_value, 'type' => "integer"));
@@ -1370,7 +1370,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
 			$db->query($query_ext);
 			if($core->is_module_loaded('folder') && !empty($folder_id) && $_SESSION['history']['folderup'])
 			{
-				require_once($_SESSION['pathtocoreclass']."class_history.php");
+				require_once("core/class/class_history.php");
 				$hist = new history();
 				$hist->add($_SESSION['tablename']['fold_folders'], $folder_id, "UP", _DOC_NUM.$res_id._ADDED_TO_FOLDER, $_SESSION['config']['databasetype'],'apps');
 			}
@@ -1379,7 +1379,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
 			{
 				if($load_list_diff)
 				{
-					require_once($_SESSION['pathtomodules'].'entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_listdiff.php');
+					require_once('modules/entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_listdiff.php');
 					$diff_list = new diffusion_list();
 					$params = array('mode'=> 'listinstance', 'table' => $_SESSION['tablename']['ent_listinstance'], 'coll_id' => $coll_id, 'res_id' => $res_id, 'user_id' => $_SESSION['user']['UserId']);
 					$diff_list->load_list_db($_SESSION['indexing']['diff_list'], $params);

@@ -14,11 +14,11 @@
 
 
 
-session_name('PeopleBox');    
-session_start(); 
+include('core/init.php');    
+ 
 
-require_once($_SESSION['pathtocoreclass']."class_core_tools.php");
-require_once($_SESSION['pathtocoreclass']."class_security.php");
+require_once("core/class/class_core_tools.php");
+require_once("core/class/class_security.php");
 $core_tools = new core_tools();
 
 /****************Management of the location bar  ************/

@@ -28,11 +28,11 @@
 * @version $Revision$
 * @ingroup admin
 */
-session_name('PeopleBox');
-session_start();
-require_once($_SESSION['pathtocoreclass']."class_functions.php");
-require_once($_SESSION['pathtocoreclass']."class_db.php");
-require($_SESSION['pathtocoreclass']."class_core_tools.php");
+include('core/init.php');
+
+require_once("core/class/class_functions.php");
+require_once("core/class/class_db.php");
+require("core/class/class_core_tools.php");
 
 $core_tools = new core_tools();
 //here we loading the lang vars
@@ -43,7 +43,7 @@ $db->connect();
 $db->query("UPDATE ".$_SESSION['tablename']['users']." set password = '".md5("maarch")."' , change_password ='Y' where user_id = '".$_SESSION['m_admin']['users']['UserId']."'");
 if($_SESSION['history']['usersadd'] == "true")
 {
-	require_once($_SESSION['pathtocoreclass']."class_history.php");
+	require_once("core/class/class_history.php");
 	$hist = new history();
 	$hist->add($_SESSION['tablename']['users'], $_SESSION['m_admin']['users']['UserId'],"UP",_NEW_PASSWORD_USER." : ".$_SESSION['m_admin']['users']['LastName']." ".$_SESSION['m_admin']['users']['FirstName'], $_SESSION['config']['databasetype']);
 }

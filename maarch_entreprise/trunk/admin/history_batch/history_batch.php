@@ -1,8 +1,8 @@
 <?php
-session_name('PeopleBox');
-session_start();
+include('core/init.php');
+
 require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_list_show.php");
-require_once($_SESSION['pathtocoreclass']."class_request.php");
+require_once("core/class/class_request.php");
 $core_tools2 = new core_tools();
 $core_tools2->test_admin('view_history_batch', 'apps');
 /****************Management of the location bar  ************/

@@ -27,11 +27,11 @@
 * @version $Revision$
 * @ingroup indexing_searching_mlb
 */
-session_name('PeopleBox');
-session_start();
-require_once($_SESSION['pathtocoreclass']."class_functions.php");
-require_once($_SESSION['pathtocoreclass']."class_db.php");
-require_once($_SESSION['pathtocoreclass']."class_request.php");
+include('core/init.php');
+
+require_once("core/class/class_functions.php");
+require_once("core/class/class_db.php");
+require_once("core/class/class_request.php");
 
 $req = new request();
 $req->connect();

@@ -10,8 +10,8 @@
 * @license GPL
 * @author  Claire Figueras  <dev@maarch.org>
 */
-session_name('PeopleBox');
-session_start();
+include('core/init.php');
+
 $admin = new core_tools();
 $admin->test_admin('admin_architecture', 'apps');
 /****************Management of the location bar  ************/
@@ -30,7 +30,7 @@ $page_label = _SUBFOLDER_LIST;
 $page_id = "subfolders";
 $admin->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
-require_once($_SESSION['pathtocoreclass']."class_request.php");
+require_once("core/class/class_request.php");
 require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_list_show.php");
 $func = new functions();
 $select[$_SESSION['tablename']['doctypes_second_level']] = array();

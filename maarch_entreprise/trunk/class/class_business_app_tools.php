@@ -19,36 +19,19 @@ class business_app_tools extends dbquery
 		parent::__construct();
 	}
 
-	public function get_client_id()
-	{
-		$xml = simplexml_load_file('xml/clients.xml');
-		foreach($xml->client as $client)
-		{
-			if($client->ip == $_SERVER['REMOTE_ADDR'])
-			{
-				return (string) $client->client_id;
-			}
-			if($client->external_domain == $_SERVER['HTTP_HOST'])
-			{
-				return (string) $client->client_id;
-			}
-		}
-		return '';
-	}
+	
 
 	/**
 	* Build Maarch business app configuration into sessions vars with a xml configuration file
 	*/
 	public function build_business_app_config()
 	{
-		$_SESSION['high_layer_id'] = $this->get_client_id();
-		include($_SESSION['config']['corepath'].'apps'.DIRECTORY_SEPARATOR.'maarch_entreprise'.DIRECTORY_SEPARATOR.'init.php');
 		// build Maarch business app configuration into sessions vars
 		$_SESSION['showmenu']='oui';
-
+	
 		$core = new core_tools();
-		$xmlconfig = $core->load_maarch_xml('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'config.xml');
-		//$xmlconfig = simplexml_load_file('xml/config.xml');
+	
+		$xmlconfig = simplexml_load_file('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'config.xml');
 		if( $xmlconfig <> false)
 		{
 			$CONFIG = $xmlconfig->CONFIG;
@@ -103,7 +86,7 @@ class business_app_tools extends dbquery
 			foreach($xmlconfig->COLLECTION as $col)
 			{
 				$tmp = (string) $col->label;
-				$tmp2 = $this->retrieve_constant_lang($tmp, $_SESSION['config']['businessapppath'].'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].".php");
+				$tmp2 = $this->retrieve_constant_lang($tmp, 'apps/'.$_SESSION['config']['app_id'].'/lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].".php");
 				if($tmp2 <> false)
 				{
 					$tmp = $tmp2;
@@ -165,7 +148,7 @@ class business_app_tools extends dbquery
 			foreach($xmlconfig->KEYWORDS as $keyword)
 			{
 				$tmp = (string) $keyword->label;
-				$tmp2 = $this->retrieve_constant_lang($tmp, $_SESSION['config']['businessapppath'].'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].".php");
+				$tmp2 = $this->retrieve_constant_lang($tmp, 'apps/'.$_SESSION['config']['app_id'].'/lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].".php");
 				if($tmp2 <> false)
 				{
 					$tmp = $tmp2;
@@ -193,34 +176,37 @@ class business_app_tools extends dbquery
 	*/
 	private function load_actions_pages()
 	{
-		$core = new core_tools();
-		$xmlfile = simplexml_load_file($_SESSION['pathtocore']."xml".DIRECTORY_SEPARATOR."actions_pages.xml");
-		$path_lang = $_SESSION['config']['businessapppath'].'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php';
-
-		$i =0;
-		foreach($xmlfile->ACTIONPAGE as $ACTIONPAGE)
+		if(isset($_SESSION['config']['pathtocore']) && isset($_SESSION['config']['app_id']) && isset($_SESSION['config']['lang']))
 		{
-			$tmp = (string) $ACTIONPAGE->LABEL;
-			$tmp2 = $this->retrieve_constant_lang($tmp, $path_lang);
-			if($tmp2 <> false)
-			{
-				$label = $tmp2;
-			}
-			else
-			{
-				$label = $tmp;
-			}
-			$_SESSION['actions_pages'][$i] = array("ID" => (string) $ACTIONPAGE->ID, "LABEL" => $label,"NAME" => (string) $ACTIONPAGE->NAME, "ORIGIN" => (string) $ACTIONPAGE->ORIGIN,"MODULE" => (string) $ACTIONPAGE->MODULE);
-			$i++;
+			$core = new core_tools();
+			$xmlfile = simplexml_load_file("core/xml/actions_pages.xml");
+			$path_lang = 'apps/'.$_SESSION['config']['app_id'].'/lang/'.$_SESSION['config']['lang'].'.php';
 
+			$i =0;
+			foreach($xmlfile->ACTIONPAGE as $ACTIONPAGE)
+			{
+				$tmp = (string) $ACTIONPAGE->LABEL;
+				$tmp2 = $this->retrieve_constant_lang($tmp, $path_lang);
+				if($tmp2 <> false)
+				{
+					$label = $tmp2;
+				}
+				else
+				{
+					$label = $tmp;
+				}
+				$_SESSION['actions_pages'][$i] = array("ID" => (string) $ACTIONPAGE->ID, "LABEL" => $label,"NAME" => (string) $ACTIONPAGE->NAME, "ORIGIN" => (string) $ACTIONPAGE->ORIGIN,"MODULE" => (string) $ACTIONPAGE->MODULE);
+				$i++;
+
+			}
 		}
 	}
 
 	private function load_letterbox_var()
 	{
 		$core = new core_tools();
-		$xmlfile = simplexml_load_file($_SESSION['config']['businessapppath']."xml".DIRECTORY_SEPARATOR."letterbox.xml");
-		$path_lang = $_SESSION['config']['businessapppath'].'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php';
+		$xmlfile = simplexml_load_file('apps/'.$_SESSION['config']['app_id']."/xml/letterbox.xml");
+		$path_lang = 'apps/'.$_SESSION['config']['app_id'].'/lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php';
 
 		$categories = $xmlfile->categories;
 		$_SESSION['mail_categories'] = array();
@@ -325,8 +311,7 @@ class business_app_tools extends dbquery
 	{
 		$this->load_current_folder();
 		$this->load_letterbox_var();
-		$this->load_features($_SESSION['config']['businessapppath'].'xml'.DIRECTORY_SEPARATOR.'features.xml');
-		//$this->load_index();
+		$this->load_features('apps/'.$_SESSION['config']['app_id'].'/xml/features.xml');
 	}
 
 	/**
@@ -362,8 +347,8 @@ class business_app_tools extends dbquery
 	public function get_titles()
 	{
 		$core = new core_tools();
-		$xmlfile = simplexml_load_file($_SESSION['config']['businessapppath']."xml".DIRECTORY_SEPARATOR."letterbox.xml");
-		$path_lang = $_SESSION['config']['businessapppath'].'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php';
+		$xmlfile = simplexml_load_file('apps/'.$_SESSION['config']['app_id']."/xml/letterbox.xml");
+		$path_lang = 'apps/'.$_SESSION['config']['app_id'].'/lang/'.$_SESSION['config']['lang'].'.php';
 
 		$res_titles = array();
 		$titles = $xmlfile->titles;
@@ -392,8 +377,8 @@ class business_app_tools extends dbquery
 	public function get_label_title($id_title)
 	{
 		$core = new core_tools();
-		$xmlfile = simplexml_load_file($_SESSION['config']['businessapppath']."xml".DIRECTORY_SEPARATOR."letterbox.xml");
-		$path_lang = $_SESSION['config']['businessapppath'].'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php';
+		$xmlfile = simplexml_load_file('apps/'.$_SESSION['config']['app_id']."/xml/letterbox.xml");
+		$path_lang = 'apps/'.$_SESSION['config']['app_id'].'/lang/'.$_SESSION['config']['lang'].'.php';
 		$titles = $xmlfile->titles;
 		foreach($titles->title as $title )
 		{

@@ -64,7 +64,7 @@ class ReopenMail extends dbquery
 		}
 		else
 		{
-			require_once($_SESSION['pathtocoreclass']."class_security.php");
+			require_once("core/class/class_security.php");
 			$sec = new security();
 			$ind_coll = $sec->get_ind_collection('letterbox_coll');
 			$table = $_SESSION['collections'][$ind_coll]['table'];
@@ -82,7 +82,7 @@ class ReopenMail extends dbquery
 
 			if($_SESSION['history']['resup'] == true )
 			{
-				require_once($_SESSION['pathtocoreclass']."class_history.php");
+				require_once("core/class/class_history.php");
 				$hist = new history();
 				$hist->add($table, $_SESSION['m_admin']['reopen_mail']['ID'],"UP",_REOPEN_THIS_MAIL." : ".$_SESSION['m_admin']['reopen_mail']['ID'], $_SESSION['config']['databasetype'], 'apps');
 			}

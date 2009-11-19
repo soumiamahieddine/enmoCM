@@ -10,8 +10,8 @@
 * @license GPL
 * @author  Claire Figueras  <dev@maarch.org>
 */
-session_name('PeopleBox');
-session_start();
+include('core/init.php');
+
 
 $core_tools2 = new core_tools();
 //here we loading the lang vars

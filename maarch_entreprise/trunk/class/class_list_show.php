@@ -224,12 +224,12 @@ class list_show extends functions
 
 
 			//########################
-			require_once($_SESSION['pathtocoreclass']."class_core_tools.php");
+			require_once("core/class/class_core_tools.php");
 			$core_tools = new core_tools();
 			if($core_tools->is_module_loaded("doc_converter") && $bool_export)
 			{
 				$_SESSION['doc_convert'] = array();
-				require_once($_SESSION['pathtomodules']."doc_converter".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
+				require_once("modules/doc_converter".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
 				$doc_converter = new doc_converter();
 				$disp_dc = $doc_converter->convert_list($result, true);
 			}
@@ -1301,12 +1301,12 @@ class list_show extends functions
 		</table><br/>
 		</div>
 		<?php
-		require_once($_SESSION['pathtocoreclass']."class_core_tools.php");
+		require_once("core/class/class_core_tools.php");
 		$core_tools = new core_tools();
 		if($core_tools->is_module_loaded("doc_converter"))
 		{
 			$_SESSION['doc_convert'] = array();
-			require_once($_SESSION['pathtomodules']."doc_converter".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
+			require_once("modules/doc_converter".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
 			$doc_converter = new doc_converter();
 			$doc_converter->convert_list($result);
 		}

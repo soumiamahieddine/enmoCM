@@ -11,49 +11,49 @@
 * @author  Claire Figueras  <dev@maarch.org>
 * @author  Laurent Giovannoni  <dev@maarch.org>
 */
-session_name('PeopleBox');
-session_start();
+include_once('../../core/init.php');
 
-require_once($_SESSION['pathtocoreclass']."class_functions.php");
-require($_SESSION['pathtocoreclass']."class_core_tools.php");
-require_once($_SESSION['pathtocoreclass']."class_db.php");
+require_once("core/class/class_functions.php");
+require("core/class/class_core_tools.php");
+require_once("core/class/class_db.php");
 
 $core_tools = new core_tools();
 $core_tools->load_lang();
 $func = new functions();
 
 $_SESSION['error'] = "";
-$s_login = $func->wash($_REQUEST['login'],"no",_THE_ID,"yes");
-$s_pass =$func->wash($_REQUEST['pass'],"no",_PASSWORD_FOR_USER,"yes");
-require($_SESSION['pathtocoreclass']."class_security.php");
-require($_SESSION['pathtocoreclass']."class_request.php");
-require($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
+if(isset($_REQUEST['login']))
+{
+	$s_login = $func->wash($_REQUEST['login'],"no",_THE_ID,"yes");
+}
+else
+{
+	$s_login = '';
+}
+if(isset($_REQUEST['pass']))
+{
+	$s_pass =$func->wash($_REQUEST['pass'],"no",_PASSWORD_FOR_USER,"yes");
+}
+else
+{
+	$s_pass = '';
+}
+require("core/class/class_security.php");
+require("core/class/class_request.php");
+require("apps/".$_SESSION['config']['app_id']."/class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
 $sec = new security();
 $business_app_tools = new business_app_tools();
 
 if(count($_SESSION['config']) <= 0)
 {
-/*
-	if( strtoupper(substr(PHP_OS, 0, 3)) != "WIN")
-	{
-		$_SESSION['slash_env'] = "/";
-	}
-	else
-	{
-		$_SESSION['slash_env'] = "\\";
-	}
-*/
-$_SESSION['slash_env'] = DIRECTORY_SEPARATOR;
-	/*$path_server = $_SERVER['DOCUMENT_ROOT'];
-	if(!preg_match("/[/\\]$/",$path_server))
-	{
-		$path_server = $path_server.$_SESSION['slash_env'];
-	}*/
 
+$_SESSION['slash_env'] = DIRECTORY_SEPARATOR;
+	
 	$path_tmp = explode(DIRECTORY_SEPARATOR, str_replace('/', DIRECTORY_SEPARATOR,$_SERVER['SCRIPT_FILENAME']));
 	$path_server = implode(DIRECTORY_SEPARATOR,array_slice($path_tmp,0,array_search('apps',$path_tmp))).DIRECTORY_SEPARATOR;
 
-	$core_tools->build_core_config($path_server."core".DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."config.xml");
+	//$core_tools->build_core_config($path_server."core".DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."config.xml");
+	$core_tools->build_core_config("core/xml/config.xml");
 	$business_app_tools->build_business_app_config();
 	$core_tools->load_modules_config($_SESSION['modules']);
 	$core_tools->load_menu($_SESSION['modules']);

@@ -48,7 +48,7 @@ $page_label = _CONTACTS_LIST;
 $page_id = "contacts";
 $admin->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
-require_once($_SESSION['pathtocoreclass']."class_request.php");
+require_once("core/class/class_request.php");
 require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_list_show.php");
 $select[$_SESSION['tablename']['contacts']] = array();
 array_push($select[$_SESSION['tablename']['contacts']],"contact_id", "society","lastname","firstname", 'user_id');

@@ -28,16 +28,16 @@
 * @version $Revision$
 * @ingroup basket
 */
-session_name('PeopleBox');
-session_start();
-require_once($_SESSION['pathtocoreclass']."class_functions.php");
-require_once($_SESSION['pathtocoreclass']."class_db.php");
-require_once($_SESSION['pathtocoreclass']."class_request.php");
-require_once($_SESSION['pathtocoreclass']."class_core_tools.php");
+include('core/init.php');
+
+require_once("core/class/class_functions.php");
+require_once("core/class/class_db.php");
+require_once("core/class/class_request.php");
+require_once("core/class/class_core_tools.php");
 require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_list_show.php");
-require_once($_SESSION['pathtocoreclass']."class_security.php");
+require_once("core/class/class_security.php");
 require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR.'class_contacts.php');
-require_once($_SESSION['pathtocoreclass']."class_manage_status.php");
+require_once("core/class/class_manage_status.php");
 
 include_once($_SESSION['config']['businessapppath'].'definition_mail_categories.php');
 $status_obj = new manage_status();
@@ -45,7 +45,7 @@ $security = new security();
 $core_tools = new core_tools();
 $request = new request();
 $contact = new contacts();
-require_once($_SESSION['pathtomodules']."basket".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
+require_once("modules/basket".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
 $bask = new basket();
 if(!empty($_REQUEST['id']))
 {

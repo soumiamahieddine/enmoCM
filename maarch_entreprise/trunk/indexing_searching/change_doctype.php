@@ -27,13 +27,13 @@
 * @version $Revision$
 * @ingroup indexing_searching_mlb
 */
-session_name('PeopleBox');
-session_start();
+include('core/init.php');
 
-require_once($_SESSION['pathtocoreclass']."class_functions.php");
-require_once($_SESSION['pathtocoreclass']."class_db.php");
-require_once($_SESSION['pathtocoreclass']."class_core_tools.php");
-require_once($_SESSION['pathtocoreclass']."class_security.php");
+
+require_once("core/class/class_functions.php");
+require_once("core/class/class_db.php");
+require_once("core/class/class_core_tools.php");
+require_once("core/class/class_security.php");
 require_once($_SESSION['config']['businessapppath'].'class'.DIRECTORY_SEPARATOR."class_types.php");
 
 $db = new dbquery();
@@ -201,7 +201,7 @@ if(!$core->is_module_loaded('alert_diffusion'))
 }
 
 
-require_once($_SESSION['pathtomodules'].'alert_diffusion'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_alert_engine.php');
+require_once('modules/alert_diffusion'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_alert_engine.php');
 $alert_engine = new alert_engine();
 $date = $alert_engine->date_max_treatment($delay, false);
 $process_date = $db->dateformat($date, '-');

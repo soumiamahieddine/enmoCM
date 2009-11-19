@@ -17,7 +17,7 @@ class chrono
 {
 	function get_chrono_number($res_id, $view)
 	{
-		require_once($_SESSION['pathtocoreclass']."class_db.php");
+		require_once("core/class/class_db.php");
 		$db = new dbquery();
 		$db->connect();
 
@@ -40,7 +40,7 @@ class chrono
 		$chrono_tab = array();
 
 
-		$chrono_config = simplexml_load_file($_SESSION['config']['businessapppath']."xml".DIRECTORY_SEPARATOR."chrono.xml");
+		$chrono_config = simplexml_load_file('apps/'.$_SESSION['config']['app_id']."/xml/chrono.xml");
 		if($chrono_config)
 		{
 			foreach($chrono_config ->CHRONO as $CHRONO)
@@ -183,7 +183,7 @@ class chrono
 
 	function execute_chrono_for_this_year()
 	{
-		require_once($_SESSION['pathtocoreclass']."class_db.php");
+		require_once("core/class/class_db.php");
 		$db = new dbquery();
 		$db->connect();
 
@@ -205,7 +205,7 @@ class chrono
 
 	function execute_chrono_by_entity($entity)
 	{
-		require_once($_SESSION['pathtocoreclass']."class_db.php");
+		require_once("core/class/class_db.php");
 		$db = new dbquery();
 		$db->connect();
 
@@ -226,7 +226,7 @@ class chrono
 
 	function execute_chrono_by_category($category)
 	{
-		require_once($_SESSION['pathtocoreclass']."class_db.php");
+		require_once("core/class/class_db.php");
 		$db = new dbquery();
 		$db->connect();
 

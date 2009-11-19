@@ -30,8 +30,8 @@
 * @ingroup apps
 */
 
-session_name('PeopleBox');
-session_start();
+include('core/init.php');
+
 
 header('content-type: text/javascript');
 

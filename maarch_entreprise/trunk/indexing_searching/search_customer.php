@@ -10,11 +10,11 @@
 * @license GPL
 * @author Loïc Vinet  <dev@maarch.org>
 */
-session_name('PeopleBox');
-session_start();
-require_once($_SESSION['pathtocoreclass']."class_functions.php");
-require_once($_SESSION['pathtocoreclass']."class_request.php");
-require_once($_SESSION['pathtocoreclass']."class_core_tools.php");
+include('core/init.php');
+
+require_once("core/class/class_functions.php");
+require_once("core/class/class_request.php");
+require_once("core/class/class_core_tools.php");
 require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR.'class_business_app_tools.php');
 $appTools = new business_app_tools();
 $core_tools = new core_tools();

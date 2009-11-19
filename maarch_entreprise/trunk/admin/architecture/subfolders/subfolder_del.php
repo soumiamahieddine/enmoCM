@@ -10,18 +10,18 @@
 * @license GPL
 * @author  Claire Figueras  <dev@maarch.org>
 */
-session_name('PeopleBox');
-session_start();
-require_once($_SESSION['pathtocoreclass']."class_functions.php");
+include('core/init.php');
 
-require($_SESSION['pathtocoreclass']."class_core_tools.php");
+require_once("core/class/class_functions.php");
+
+require("core/class/class_core_tools.php");
 
 $core_tools = new core_tools();
 $core_tools->test_admin('admin_architecture', 'apps');
 //here we loading the lang vars
 $core_tools->load_lang();
 
-require_once($_SESSION['pathtocoreclass']."class_db.php");
+require_once("core/class/class_db.php");
 
 $db = new dbquery();
 
@@ -63,7 +63,7 @@ else
 
 	if($_SESSION['history']['subfolderdel'] == "true")
 	{
-		require($_SESSION['pathtocoreclass']."class_history.php");
+		require("core/class/class_history.php");
 		$users = new history();
 		$users->add($_SESSION['tablename']['doctypes_second_level'], $id,"DEL",_DEL_SUBFOLDER." ".strtolower(_NUM).$id."", $_SESSION['config']['databasetype']);
 	}

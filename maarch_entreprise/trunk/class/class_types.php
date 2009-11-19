@@ -34,7 +34,7 @@ class types extends dbquery
 		// form to add, modify or proposale a doc type
 		$func = new functions();
 		$core_tools = new core_tools();
-		require_once($_SESSION['pathtocoreclass']."class_security.php");
+		require_once("core/class/class_security.php");
 		$sec = new security();
 		$state = true;
 		if(!isset($_SESSION['m_admin']['doctypes']))
@@ -340,7 +340,7 @@ class types extends dbquery
 					$_SESSION['error'] = _DOCTYPE_MODIFICATION;
 					if($_SESSION['history']['doctypesup'] == "true")
 					{
-						require($_SESSION['pathtocoreclass']."class_history.php");
+						require("core/class/class_history.php");
 						$users = new history();
 						$users->add($_SESSION['tablename']['doctypes'], $_SESSION['m_admin']['doctypes']['TYPE_ID'],"UP",_DOCTYPE_MODIFICATION." : ".$_SESSION['m_admin']['doctypes']['LABEL'], $_SESSION['config']['databasetype']);
 					}
@@ -354,7 +354,7 @@ class types extends dbquery
 			}
 			else
 			{
-				require($_SESSION['pathtocoreclass']."class_history.php");
+				require("core/class/class_history.php");
 				$users = new history();
 				if( $_REQUEST['mode'] == "add")
 				{
@@ -486,8 +486,8 @@ class types extends dbquery
 		require_once($_SESSION['pathtocoreclass'].'class_security.php');
 		$sec = new security();
 		$ind_coll = $sec->get_ind_collection($coll_id);
-		$xmlfile = simplexml_load_file($_SESSION['config']['businessapppath']."xml".DIRECTORY_SEPARATOR.$_SESSION['collections'][$ind_coll]['index_file']);
-		$path_lang = $_SESSION['config']['businessapppath'].'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php';
+		$xmlfile = simplexml_load_file('apps/'.$_SESSION['config']['app_id']."/xml/".$_SESSION['collections'][$ind_coll]['index_file']);
+		$path_lang = 'apps/'.$_SESSION['config']['app_id'].'/lang/'.$_SESSION['config']['lang'].'.php';
 		$indexes = array();
 		foreach($xmlfile->INDEX as $item)
 		{
@@ -583,8 +583,8 @@ class types extends dbquery
 		require_once($_SESSION['pathtocoreclass'].'class_security.php');
 		$sec = new security();
 		$ind_coll = $sec->get_ind_collection($coll_id);
-		$xmlfile = simplexml_load_file($_SESSION['config']['businessapppath']."xml".DIRECTORY_SEPARATOR.$_SESSION['collections'][$ind_coll]['index_file']);
-		$path_lang = $_SESSION['config']['businessapppath'].'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php';
+		$xmlfile = simplexml_load_file('apps/'$_SESSION['config']['app_id']."/xml/".$_SESSION['collections'][$ind_coll]['index_file']);
+		$path_lang = 'apps/'$_SESSION['config']['app_id'].'/lang/'.$_SESSION['config']['lang'].'.php';
 		foreach($xmlfile->INDEX as $item)
 		{
 			$tmp = (string) $item->label;

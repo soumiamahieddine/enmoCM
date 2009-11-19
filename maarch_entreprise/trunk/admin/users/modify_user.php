@@ -28,8 +28,8 @@
 * @version $Revision$
 * @ingroup admin
 */
-session_name('PeopleBox');
-session_start();
+include('core/init.php');
+
 $core_tools2 = new core_tools();
 //here we loading the lang vars
 $core_tools2->load_lang();
@@ -49,7 +49,7 @@ $page_label = _MY_INFO;
 $page_id = "modify_users";
 $core_tools2->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
-require_once($_SESSION['pathtocoreclass']."class_db.php");
+require_once("core/class/class_db.php");
 require($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_users.php");
 $users = new users();
 $users->change_info_user();

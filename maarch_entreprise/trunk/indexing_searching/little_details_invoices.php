@@ -11,20 +11,20 @@
 * @author  Claire Figueras  <dev@maarch.org>
 * @author  Laurent Giovannoni  <dev@maarch.org>
 */
-session_name('PeopleBox');
-session_start();
-require_once($_SESSION['pathtocoreclass']."class_functions.php");
-require_once($_SESSION['pathtocoreclass']."class_core_tools.php");
+include('core/init.php');
+
+require_once("core/class/class_functions.php");
+require_once("core/class/class_core_tools.php");
 $core_tools = new core_tools();
 $core_tools->test_user();
 $core_tools->load_lang();
 $core_tools->load_header();
-require_once($_SESSION['pathtocoreclass']."class_db.php");
-require_once($_SESSION['pathtocoreclass']."class_request.php");
-require_once($_SESSION['pathtocoreclass']."class_docserver.php");
-require_once($_SESSION['pathtocoreclass']."class_security.php");
+require_once("core/class/class_db.php");
+require_once("core/class/class_request.php");
+require_once("core/class/class_docserver.php");
+require_once("core/class/class_security.php");
 require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_list_show.php");
-require_once($_SESSION['pathtocoreclass']."class_history.php");
+require_once("core/class/class_history.php");
 /****************Management of the location bar  ************/
 $init = false;
 if($_REQUEST['reinit'] == "true")

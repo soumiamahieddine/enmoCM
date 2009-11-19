@@ -10,19 +10,19 @@
 * @license GPL
 * @author  Claire Figueras  <dev@maarch.org>
 */
-session_name('PeopleBox');
-session_start();
-require_once($_SESSION['pathtocoreclass']."class_functions.php");
-require_once($_SESSION['pathtocoreclass']."class_core_tools.php");
+include('core/init.php');
+
+require_once("core/class/class_functions.php");
+require_once("core/class/class_core_tools.php");
 $core_tools = new core_tools();
 $core_tools->test_user();
 $core_tools->load_lang();
-require_once($_SESSION['pathtocoreclass']."class_db.php");
-require_once($_SESSION['pathtocoreclass']."class_request.php");
-require_once($_SESSION['pathtocoreclass']."class_docserver.php");
-require_once($_SESSION['pathtocoreclass']."class_security.php");
+require_once("core/class/class_db.php");
+require_once("core/class/class_request.php");
+require_once("core/class/class_docserver.php");
+require_once("core/class/class_security.php");
 require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_list_show.php");
-require_once($_SESSION['pathtocoreclass']."class_history.php");
+require_once("core/class/class_history.php");
 require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_indexing_searching_app.php");
 require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_types.php");
 include($_SESSION['config']['businessapppath'].'definition_mail_categories.php');
@@ -234,7 +234,7 @@ else
 
 			if($core_tools->is_module_loaded('cases') == true)
 			{
-				require_once($_SESSION['pathtomodules']."cases".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR.'class_modules_tools.php');
+				require_once("modules/cases".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR.'class_modules_tools.php');
 				$case = new cases();
 				if ($res->case_id <> '')
 					$case_properties = $case->get_case_info($res->case_id);
@@ -252,7 +252,7 @@ else
 			$status = $res->status;
 			if(!empty($status))
 			{
-				require_once($_SESSION['pathtocoreclass']."class_manage_status.php");
+				require_once("core/class/class_manage_status.php");
 				$status_obj = new manage_status();
 				$res_status = $status_obj->get_status_data($status);
 				if($modify_doc)
@@ -806,7 +806,7 @@ else
 					?>
 					<dt><?php  echo _DIFF_LIST;?></dt>
 					<dd><?php
-						require_once($_SESSION['pathtomodules']."entities".DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_listdiff.php');
+						require_once("modules/entities".DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_listdiff.php');
 						$diff_list = new diffusion_list();
 						$_SESSION['details']['diff_list'] = array();
 						$_SESSION['details']['diff_list'] = $diff_list->get_listinstance($s_id);
@@ -1081,7 +1081,7 @@ else
 					<dt><?php  echo _CASE;?></dt>
 					<dd>
 				<?php
-						include($_SESSION['pathtomodules'].'cases'.DIRECTORY_SEPARATOR.'including_detail_cases.php');
+						include('modules/cases'.DIRECTORY_SEPARATOR.'including_detail_cases.php');
 						 if ($core_tools->test_service('join_res_case', 'cases',false) == 1)
 						{
 						?><div align="center">
@@ -1108,12 +1108,12 @@ else
 $detailsExport .= "</body></html>";
 $_SESSION['doc_convert'] = array();
 $_SESSION['doc_convert']['details_result'] = $detailsExport;
-require_once($_SESSION['pathtocoreclass']."class_core_tools.php");
+require_once("core/class/class_core_tools.php");
 $core_tools = new core_tools();
 if($core_tools->is_module_loaded("doc_converter"))
 {
 
-	require_once($_SESSION['pathtomodules']."doc_converter".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
+	require_once("modules/doc_converter".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
 	$doc_converter = new doc_converter();
 	$doc_converter->convert_details($detailsExport);
 }

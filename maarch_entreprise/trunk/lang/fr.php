@@ -401,14 +401,11 @@ define('_CAN_BE_SEARCHED', 'Recherche');
 define('_CAN_BE_MODIFIED', 'Modification des index');
 define('_THE_STATUS', 'Le statut ');
 define('_ADMIN_STATUS', 'Statuts');
-define('_ADMIN_STATUS_DESC', 'G&eacute;rer les &eacute;tats des ressources dans l&rsquo;application');
 /************* Actions **************/
 
 define('_ACTION_LIST', 'Liste des actions');
 define('_ADD_ACTION', 'Ajouter nouvelle action');
 define('_ALL_ACTIONS', 'Toutes les actions');
-define('_ACTIONS', 'actions');
-define('_ACTION', 'action');
 define('_ACTION_HISTORY', 'Tracer l&rsquo;action');
 
 define('_ACTION_DELETED', 'Suppression de l&rsquo;action');
@@ -419,7 +416,6 @@ define('_ACTION_MODIFIED','Modification d&rsquo;une action');
 define('_NEW_ACTION', 'Nouvelle action');
 define('_THE_ACTION', 'L&rsquo;action ');
 define('_ADMIN_ACTIONS', 'Actions');
-define('_ADMIN_ACTIONS_DESC', 'G&eacute;rer les actions utilisables dans l&rsquo;application');
 
 /************** Historique**************/
 define('_HISTORY_TITLE', 'Historique des &eacute;v&egrave;nements');
@@ -547,7 +543,6 @@ define('_NOVEMBER', 'Novembre');
 define('_DECEMBER', 'D&eacute;cembre');
 
 define('_NOW_LOGOUT', 'Vous &ecirc;tes maintenant d&eacute;connect&eacute;.');
-define('_LOGOUT', 'D&eacute;connexion');
 
 define('_WELCOME2', 'Bienvenue');
 define('_WELCOME_NOTES1', 'Pour naviguer dans l\'application');
@@ -608,8 +603,6 @@ define('_CHOOSE_ONE_OBJECT', 'Choisissez au moins un &eacute;l&eacute;ment');
 
 define('_CLICK_LINE_TO_CHECK_INVOICE', 'Cliquer sur une ligne pour v&eacute;rifier une facture');
 define('_FOUND_INVOICES', ' facture(s) trouv&eacute;e(s)');
-define('_TO_PROCESS', 'Nouvelle facture');
-define('_IN_PROGRESS', 'Facture en cours');
 define('_SIMPLE_CONFIRM', 'Confirmation simple');
 define('_CHECK_INVOICE', 'V&eacute;rifier facture');
 
@@ -621,13 +614,9 @@ define('_NO_STRUCTURE_ATTACHED', 'Ce type de document n&rsquo;est attach&eacute;
 define('_MAARCH_CREDITS', 'A propos de Maarch&nbsp;');
 define('_CR_LONGTEXT_INFOS', '<p>Maarch Framework 3 est une infrastructure de <b>GED de Production</b>, r&eacute;pondant en standard &agrave; la plupart des besoins de gestion op&eacute;rationnelle de contenu d\'une organisation. La tr&egrave;s grande majorit&eacute; des composants du Framework est diffusé sous les termes de la licence open source GNU GPLv3, de sorte que le coût d\'impl&eacute;mentation rend la solution aborbable pour tout type d\'organisation (public, priv&eacute;, parapublic, monde associatif).</p> <p>Pour autant, Maarch Framework ayant &eacute;t&eacute; conçu par deux consultants cumulant &agrave; eux deux plus de 20 ans d\'expertise en Syst&egrave;mes d\'Archivage &Eacute;lectronique et en &Eacute;ditique, le produit offre <b>toutes les garanties de robustesse, d\'int&eacute;grit&eacute;, de performance</b> que l\'on doit attendre de ce type de produit. Un grand soin a &eacute;t&eacute; port&eacute; sur l\'architecture afin d\'autoriser des performances maximales sur du mat&eacute;riel standard.</p><p>Maarch est d&eacute;velopp&eacute; en PHP5 objet. Il est compatible avec les 4 moteurs de bases de donn&eacute;es suivants&nbsp;: MySQL, PostgreSQL, SQLServer, et bientôt Oracle.</p> <p>Maarch est <b>totalement modulaire</b>&nbsp;: toutes les fonctionnalit&eacute;s sont regroup&eacute;es dans des modules exposant des services qui peuvent être activ&eacute;s/d&eacute;sactiv&eacute;s en fonction du profil de l\'utilisateur. Un ing&eacute;nieur exp&eacute;riment&eacute; peut ajouter ou remplacer un module existant sans toucher au coeur du syst&egrave;me.</p><p>Maarch propose un sch&eacute;ma global et <b>tous les outils pour acqu&eacute;rir, g&eacute;rer, conserver puis restituer les flux documentaires de production</b>.');
 
-define('_CLOSED', 'Valid&eacute;');
-define('_PROCESS_SHORT', 'Traitement');
 define('_PROCESSING_DATE', 'Date limite de traitement');
 define('_PROCESS_NUM','Traitement du courrier n&deg;');
 define('_PROCESS_LIMIT_DATE', 'Date limite de traitement');
-define('_TO_PROCESS', 'A traiter');
-define('_IN_PROGRESS', 'En cours');
 define('_LATE_PROCESS', 'En retard');
 define('_PROCESS_DELAY', 'D&eacute;lai de traitement');
 define('_ALARM1_DELAY', 'D&eacute;lai relance 1');
@@ -696,7 +685,7 @@ define('_NO_ANSWER','Pas de r&eacute;ponse');
 define('_DETAILS', 'Fiche d&eacute;taill&eacute;e');
 define('_DOWNLOAD', 'T&eacute;l&eacute;charger le courrier');
 define('_SEARCH_RESULTS', 'R&eacute;sultat de la recherche');
-define('_DOCUMENTS', 'documents');
+//define('_DOCUMENTS', 'documents');
 define('_THE_SEARCH', 'La recherche');
 define('_CHOOSE_TABLE', 'Choisissez une collection');
 define('_SEARCH_COPY_MAIL','Chercher dans mes courriers en copie');
@@ -717,7 +706,6 @@ define('_SAVE_QUERY', 'Enregistrer ma recherche');
 define('_SAVE_QUERY_TITLE', 'Enregistrement de recherche');
 define('_QUERY_NAME', 'Nom de ma recherche');
 define('_QUERY_SAVED', 'Recherche sauvegard&eacute;e');
-define('_SERVER_ERROR', 'Erreur serveur lors de l&acute;enregistrement de la recherche');
 //define('_SQL_ERROR', 'Erreur SQL lors de l&acute;enregistrement de la recherche');
 define('_LOAD_QUERY', 'Charger la recherche');
 define('_DELETE_QUERY', 'Supprimer la recherche');
@@ -789,7 +777,6 @@ define('_CONTACT_MODIFIED', 'Contact modifi&eacute;');
 define('_CONTACT_DELETED', 'Contact supprim&eacute;');
 define('_MODIFY_CONTACT', 'Modifier un contact');
 define('_IS_CORPORATE_PERSON', 'Personne morale');
-define('_TITLE2', 'Civilit&eacute;');
 define('_TITLE2', 'Civilit&eacute;');
 define('_YOU_MUST_SELECT_CONTACT', 'Vous devez s&eacute;lectionner un contact ');
 define('_CONTACT_INFO', 'Fiche contact');
@@ -921,7 +908,6 @@ define('_MAIL_SENTENCE2', 'En saisissant le n&deg;GED du document, vous passerez
 define('_MAIL_SENTENCE3', 'Cette fonction a pour but d&rsquo;ouvrir un courrier ferm&eacute; pr&eacute;matur&eacute;ment.');
 define('_ENTER_DOC_ID', 'Saisissez l&rsquo;identifiant du document');
 define('_TO_KNOW_ID', 'Pour conna&icirc;tre l&rsquo;identifiant du document, effectuez une recherche ou demandez-le &agrave; l&rsquo;op&eacute;rateur');
-define('_MODIFY_STATUS', 'Modifier le statut');
 define('_REOPEN_MAIL', 'R&eacute;ouverture de courrier');
 define('_REOPEN_THIS_MAIL', 'R&eacute;ouverture du courrier');
 
@@ -958,4 +944,11 @@ define('_MAKE_NEW_SEARCH', 'Effectuer une nouvelle recherche');
 define('_NO_PAGE', 'Aucune page');
 define('_VALIDATE_QUALIF', 'Validation/Qualification');
 
+
+define('_DB_CONNEXION_ERROR', 'Erreur de connexion &agrave; la base de donn&eacute;es');
+define('_DATABASE_SERVER', 'Serveur de base de donn&eacute;es');
+define('_DB_PORT', 'Port');
+define('_DB_TYPE', 'Type');
+define('_DB_USER', 'Utilisateur');
+define('_DATABASE', 'Base');
 ?>

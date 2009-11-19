@@ -28,12 +28,12 @@
 * @ingroup indexing_searching_mlb
 */
 
-session_name('PeopleBox');
-session_start();
-require_once($_SESSION['pathtocoreclass']."class_functions.php");
-require_once($_SESSION['pathtocoreclass']."class_db.php");
+include('core/init.php');
+
+require_once("core/class/class_functions.php");
+require_once("core/class/class_db.php");
 $func = new functions();
-require_once($_SESSION['pathtocoreclass']."class_core_tools.php");
+require_once("core/class/class_core_tools.php");
 $core_tools = new core_tools();
 $core_tools->test_user();
 $core_tools->load_lang();
@@ -44,7 +44,7 @@ $ext_list = $is->filetypes_showed_indexation();
 $ext = strtolower($_SESSION['upfile']['format']);
 if($_SESSION['origin'] == "scan")
 {
-	//echo $_SESSION['pathtomodules'].'indexing_searching'.DIRECTORY_SEPARATOR.'tmp'.DIRECTORY_SEPARATOR.'tmp_file_'.$_SESSION['upfile']['md5'].'.'.$ext;
+	//echo 'modules/indexing_searching'.DIRECTORY_SEPARATOR.'tmp'.DIRECTORY_SEPARATOR.'tmp_file_'.$_SESSION['upfile']['md5'].'.'.$ext;
 	if(file_exists($_SESSION['config']['tmppath'].'tmp_file_'.$_SESSION['upfile']['md5'].'.'.$ext))
 	{
 		header("Pragma: public");

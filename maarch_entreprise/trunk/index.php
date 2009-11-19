@@ -12,11 +12,21 @@
 * @author  Claire Figueras  <dev@maarch.org>
 * @author  Loïc Vinet <dev@maarch.org>
 */
-//session_name('PeopleBox');
-//session_start();
+//include('core/init.php');
+//
 
-include_once('init.php');
+include_once('../../core/init.php');
 //var_dump(get_include_path());
+
+require_once("core/class/class_functions.php");
+require_once("core/class/class_db.php");
+require_once("core/class/class_core_tools.php");
+$core_tools = new core_tools();
+
+if(isset($_GET['display']) && !empty($_GET['display']))
+{
+	
+} 
 if(!isset($_SESSION['user']['UserId']))
 {
 	if(trim($_SERVER['argv'][0]) <> "")
@@ -37,10 +47,7 @@ else
 {
 	$show = "true";
 }
-require_once($_SESSION['pathtocoreclass']."class_functions.php");
-require_once($_SESSION['pathtocoreclass']."class_db.php");
-require_once($_SESSION['pathtocoreclass']."class_core_tools.php");
-$core_tools = new core_tools();
+
 //$core_tools->test_user();
 $core_tools->start_page_stat();
 $core_tools->configPosition();
@@ -108,7 +115,7 @@ $time = $core_tools->get_session_time_expire();
             <?php
             if($core_tools->is_module_loaded("basket") && $_SESSION['abs_user_status'] ==true)
 			{
-				include($_SESSION['pathtomodules'].'basket'.DIRECTORY_SEPARATOR."advert_missing.php");
+				include('modules/basket'.DIRECTORY_SEPARATOR."advert_missing.php");
 			}
 			else
 			{

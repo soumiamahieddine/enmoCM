@@ -213,7 +213,7 @@ if($core->is_module_loaded('folder'))
 */
 function get_general_data($coll_id, $res_id, $mode, $params = array())
 {
-	require_once($_SESSION['pathtocoreclass']."class_security.php");
+	require_once("core/class/class_security.php");
 	$sec =new security();
 	$view = $sec->retrieve_view_from_coll_id($coll_id);
 	if(empty($view))

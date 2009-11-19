@@ -19,72 +19,9 @@ class indexing_searching_app extends dbquery
 		parent::__construct();
 	}
 
-
-/*	public function load_module_var_session()
-	{
-		$func = new functions();
-		$_SESSION['index'] = array();
-
-		for($j=0; $j < count($_SESSION['collections']); $j++)
-		{
-			$_SESSION['index'][$_SESSION['collections'][$j]['id']] = array();
-			$xmlfile = simplexml_load_file($_SESSION['pathtomodules']."indexing_searching".DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR.$_SESSION['collections'][$j]['index_file']);
-			$path_lang = $_SESSION['pathtomodules']."indexing_searching".DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php';
-			$i = 0;
-
-			foreach($xmlfile->INDEX as $INDEX)
-			{
-				$_SESSION['index'][$_SESSION['collections'][$j]['id']][$i]['COLUMN'] = (string) $INDEX->COLUMN;
-					$tmp = (string) $INDEX->LABEL;
-					$tmp2 = $this->retrieve_constant_lang($tmp, $path_lang);
-					if($tmp2 <> false)
-					{
-						$_SESSION['index'][$_SESSION['collections'][$j]['id']][$i]['LABEL'] = $tmp2;
-					}
-					else
-					{
-						$_SESSION['index'][$_SESSION['collections'][$j]['id']][$i]['LABEL']= $tmp;
-					}
-					if(isset($INDEX->FOREIGN_KEY) && !empty($INDEX->FOREIGN_KEY))
-					{
-						$_SESSION['index'][$_SESSION['collections'][$j]['id']][$i]['FOREIGN_KEY']= (string) $INDEX->FOREIGN_KEY;
-					}
-					if(isset($INDEX->FOREIGN_LABEL) && !empty($INDEX->FOREIGN_LABEL))
-					{
-						$_SESSION['index'][$_SESSION['collections'][$j]['id']][$i]['FOREIGN_LABEL']= (string) $INDEX->FOREIGN_LABEL;
-					}
-					if(isset($INDEX->TABLENAME) && !empty($INDEX->TABLENAME))
-					{
-						$_SESSION['index'][$_SESSION['collections'][$j]['id']][$i]['TABLENAME']= (string) $INDEX->TABLENAME;
-					}
-					if(isset($INDEX->ORDER) && !empty($INDEX->ORDER))
-					{
-						$_SESSION['index'][$_SESSION['collections'][$j]['id']][$i]['ORDER']= (string) $INDEX->ORDER;
-					}
-					if(isset($INDEX->WHERE) && !empty($INDEX->WHERE))
-					{
-						$_SESSION['index'][$_SESSION['collections'][$j]['id']][$i]['WHERE']= (string) $INDEX->WHERE;
-					}
-
-					if(count($INDEX->VALUES) > 0)
-					{
-						$_SESSION['index'][$_SESSION['collections'][$j]['id']][$i]['VALUES'] = array();
-						$k=0;
-						foreach($INDEX->VALUES as $value)
-						{
-							//$_SESSION['index'][$i]['VALUES'][$k]['id'] = (string) $value->ID;
-							$_SESSION['index'][$_SESSION['collections'][$j]['id']][$i]['VALUES'][$k]['label'] = (string) $value->LABEL;
-							$k++;
-						}
-					}
-				$i++;
-			}
-		}
-	}
-	*/
 	public function is_filetype_allowed($ext)
 	{
-		$xmlconfig = simplexml_load_file($_SESSION['config']['businessapppath'].'xml'.DIRECTORY_SEPARATOR.'extensions.xml');
+		$xmlconfig = simplexml_load_file('apps/'.$_SESSION['config']['app_id'].'/xml/extensions.xml');
 
 		$ext_list = array();
 		$i = 0;
@@ -114,7 +51,7 @@ class indexing_searching_app extends dbquery
 		{
 			return false;
 		}
-		$xmlconfig = simplexml_load_file($_SESSION['config']['businessapppath'].'xml'.DIRECTORY_SEPARATOR.'extensions.xml');
+		$xmlconfig = simplexml_load_file('apps/'.$_SESSION['config']['app_id'].'/xml/extensions.xml');
 
 		foreach($xmlconfig->FORMAT as $FORMAT)
 		{
@@ -135,7 +72,7 @@ class indexing_searching_app extends dbquery
 	public function filetypes_showed_indexation()
 	{
 
-		$xmlconfig = simplexml_load_file($_SESSION['config']['businessapppath'].'xml'.DIRECTORY_SEPARATOR.'extensions.xml');
+		$xmlconfig = simplexml_load_file('apps/'.$_SESSION['config']['app_id'].'/xml/extensions.xml');
 
 		$ext_list = array();
 		foreach($xmlconfig->FORMAT as $FORMAT)
@@ -151,7 +88,7 @@ class indexing_searching_app extends dbquery
 
 	public function get_mime_type($ext)
 	{
-		$xmlconfig = simplexml_load_file($_SESSION['config']['businessapppath'].'xml'.DIRECTORY_SEPARATOR.'extensions.xml');
+		$xmlconfig = simplexml_load_file('apps/'.$_SESSION['config']['app_id'].'/xml/extensions.xml');
 		$ext_list = array();
 		$i = 0;
 		foreach($xmlconfig->FORMAT as $FORMAT)
@@ -164,7 +101,6 @@ class indexing_searching_app extends dbquery
 			if($ext_list[$i]['name'] == strtoupper($ext))
 			{
 				$mime_type = $ext_list[$i]['mime'];
-				//echo "ici ".$mime_type;
 				$type_state = true;
 				$i = count($ext_list);
 				return $mime_type;
@@ -177,10 +113,10 @@ class indexing_searching_app extends dbquery
 
 	public function update_mail($post, $typeform, $id_to_update, $coll_id)
 	{
-		require_once($_SESSION['pathtocoreclass']."class_functions.php");
-		require_once($_SESSION['pathtocoreclass']."class_request.php");
-		require_once($_SESSION['pathtocoreclass']."class_history.php");
-		require_once($_SESSION['pathtocoreclass']."class_security.php");
+		require_once("core/class/class_functions.php");
+		require_once("core/class/class_request.php");
+		require_once("core/class/class_history.php");
+		require_once("core/class/class_security.php");
 		$hist = new history();
 		$func = new functions();
 		$sec = new security();
@@ -379,7 +315,7 @@ class indexing_searching_app extends dbquery
 				}
 				if($folder_id <> $old_folder_id && $_SESSION['history']['folderup'])
 				{
-					require_once($_SESSION['pathtocoreclass']."class_history.php");
+					require_once("core/class/class_history.php");
 					$hist = new history();
 					$hist->add($_SESSION['tablename']['fold_folders'], $folder_id, "UP", _DOC_NUM.$id_to_update._ADDED_TO_FOLDER, $_SESSION['config']['databasetype'],'apps');
 					if(isset($old_folder_id) && !empty($old_folder_id))
@@ -408,7 +344,7 @@ class indexing_searching_app extends dbquery
 			}
 			if($box_id != false && preg_match('/^[0-9]+$/', $box_id))
 			{
-				require_once($_SESSION['pathtomodules'].'physical_archive'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php');
+				require_once('modules/physical_archive'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php');
 				$physical_archive = new physical_archive();
 				$pa_return_value = $physical_archive->load_box_db($box_id, $cat_id, $_SESSION['user']['UserId']);
 				if ($pa_return_value == false)
@@ -450,7 +386,7 @@ class indexing_searching_app extends dbquery
 
 	public function delete_doc( $id_to_delete, $coll_id)
 	{
-		require_once($_SESSION['pathtocoreclass']."class_security.php");
+		require_once("core/class/class_security.php");
 		$sec = new security();
 		$table = $sec->retrieve_table_from_coll($coll_id);
 
@@ -469,7 +405,7 @@ class indexing_searching_app extends dbquery
 		}
 		else
 		{
-			require_once($_SESSION['pathtocoreclass']."class_request.php");
+			require_once("core/class/class_request.php");
 			$request = new request();
 			$data = array();
 			array_push($data, array('column' => 'status', 'value' => 'DEL', 'type' => 'string'));
@@ -478,7 +414,7 @@ class indexing_searching_app extends dbquery
 			$_SESSION['error'] = _DOC_DELETED." ("._NUM." : ".$id_to_delete.")";
 			if($_SESSION['history']['res_del'])
 			{
-				require_once($_SESSION['pathtocoreclass']."class_history.php");
+				require_once("core/class/class_history.php");
 				$hist = new history();
 				$hist->add($table, $id_to_delete, "DEL", $_SESSION['error'], $_SESSION['config']['databasetype'],'indexing_searching');
 			}
@@ -757,7 +693,7 @@ class indexing_searching_app extends dbquery
 
 	public function get_process_data($coll_id, $res_id)
 	{
-		require_once($_SESSION['pathtocoreclass']."class_security.php");
+		require_once("core/class/class_security.php");
 		$sec =new security();
 		$view = $sec->retrieve_view_from_coll_id($coll_id);
 		if(empty($view))

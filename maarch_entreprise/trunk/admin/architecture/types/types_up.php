@@ -29,8 +29,8 @@
 * @ingroup admin
 */
 
-session_name('PeopleBox');
-session_start();
+include('core/init.php');
+
 
 $core_tools = new core_tools();
 $core_tools->load_lang();
@@ -51,7 +51,7 @@ $page_label = _MODIFICATION.' '._TYPE;
 $page_id = "types_up";
 $core_tools->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
-require_once($_SESSION['pathtocoreclass']."class_db.php");
+require_once("core/class/class_db.php");
 require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_types.php");
 
 $func = new functions();
