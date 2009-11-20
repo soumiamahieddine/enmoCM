@@ -23,7 +23,7 @@ require_once("core/class/class_db.php");
 require_once("core/class/class_request.php");
 require_once("core/class/class_docserver.php");
 require_once("core/class/class_security.php");
-require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_list_show.php");
+require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_list_show.php");
 require_once("core/class/class_history.php");
 
 if($_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1)
