@@ -133,7 +133,7 @@ class basket extends dbquery
 				}
 				elseif(strtoupper($mode) == 'INCLUDE')
 				{
-					$path = $_SESSION['config']['businessapppath']."".$_SESSION['basket_page'][$ind]['NAME'].".php";
+					$path = "apps/".$_SESSION['businessapps'][0]['appid']."/".$_SESSION['basket_page'][$ind]['NAME'].".php";
 				}
 				else
 				{
@@ -414,7 +414,7 @@ class basket extends dbquery
 		{
 			$do_action = true;
 		}
-		//require_once($_SESSION['config']['businessapppath'].'class'.DIRECTORY_SEPARATOR.'class_list_show.php');
+		//require_once('apps/'.$_SESSION['businessapps'][0]['appid'].'/class'.DIRECTORY_SEPARATOR.'class_list_show.php');
 		$list = new list_show();
 		if(!isset( $param_list['link_in_line']))
 		{
