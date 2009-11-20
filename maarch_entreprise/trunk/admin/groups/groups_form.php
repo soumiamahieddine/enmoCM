@@ -30,11 +30,11 @@
 * @ingroup admin
 */
 
-include('core/init.php');
+//include('core/init.php');
 
 
-require_once("core/class/class_functions.php");
-require("core/class/class_core_tools.php");
+//require_once("core/class/class_functions.php");
+//require("core/class/class_core_tools.php");
 
 $core_tools = new core_tools();
 //here we loading the lang vars
@@ -89,7 +89,7 @@ if(isset($_REQUEST['modifyAccess']))
 	if(count($_REQUEST['security'])>0)
 	{
 		?>
-		<script type="text/javascript" language="javascript">window.open('<?php  echo $_SESSION['config']['businessappurl'];?>admin/groups/add_grant.php?collection=<?php  echo $_REQUEST['security'][0];?>','modify','toolbar=no,status=no,width=800,height=450,left=150,top=300,scrollbars=auto,location=no,menubar=no,resizable=yes');</script>
+		<script type="text/javascript" language="javascript">window.open('<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&admin=groups&page=add_grant&collection=<?php  echo $_REQUEST['security'][0];?>','modify','toolbar=no,status=no,width=800,height=450,left=150,top=300,scrollbars=auto,location=no,menubar=no,resizable=yes');</script>
 		<?php
 	}
 }
@@ -120,7 +120,10 @@ $core_tools->load_header(_MANAGE_RIGHTS);
 <?php  //$func->show_array($_SESSION['m_admin']['groups']['security']);
 ?>
 <h2 class="tit"><small><?php  echo _MANAGE_RIGHTS;?> : </small></h2>
-<form name="security_form" method="get">
+<form name="security_form" method="get" >
+<input type="hidden" name="display" value="true" />
+<input type="hidden" name="admin" value="groups" />
+<input type="hidden" name="page" value="groups_form" />
 	<?php
 	if(count($_SESSION['m_admin']['groups']['security']) < 1 )
 	{
@@ -171,7 +174,7 @@ $core_tools->load_header(_MANAGE_RIGHTS);
 	if (count($_SESSION['collections']) > count($_SESSION['m_admin']['groups']['security']))
 	{
 		?>
-		<input type="button" name="addGrant" class="button" onClick="window.open('<?php  echo $_SESSION['config']['businessappurl'];?>admin/groups/add_grant.php','add','toolbar=no,status=no,width=800,height=450,left=150,top=300,scrollbars=auto,location=no,menubar=no,resizable=yes');" value="<?php  echo _ADD_GRANT; ?>" />
+		<input type="button" name="addGrant" class="button" onClick="window.open('<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&admin=groups&page=add_grant','add','toolbar=no,status=no,width=800,height=450,left=150,top=300,scrollbars=auto,location=no,menubar=no,resizable=yes');" value="<?php  echo _ADD_GRANT; ?>" />
 		<?php
 	}
 	/*

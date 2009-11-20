@@ -44,7 +44,7 @@ class users extends dbquery
 		$start = $_REQUEST['start'];
 		$what = $_REQUEST['what'];
 
-		require_once($_SESSION['pathtocoreclass'].'class_core_tools.php');
+		//require_once($_SESSION['pathtocoreclass'].'class_core_tools.php');
 		$core = new core_tools();
 		// To allow administrator to admin users
 		if(!empty($_SESSION['error']))
@@ -240,7 +240,10 @@ class users extends dbquery
                      <div class="block_end">&nbsp;</div>
                      </div>
 
-                     	<form name="frmuser" id="frmuser" method="post" action="admin/users/user_modif.php" class="forms addforms">
+                     	<form name="frmuser" id="frmuser" method="post" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php" class="forms addforms">
+							<input type="hidden" name="display" value="true" />
+							<input type="hidden" name="adminh" value="users" />
+							<input type="hidden" name="page" value="user_modif" />
 						<div class="">
 					<p>
 						<label><?php  echo _ID; ?> : </label>
@@ -380,7 +383,8 @@ class users extends dbquery
                     <p>
                     <?php  if($_SESSION['m_admin']['users']['UserId'] <> "superadmin")
 					{?>
-                    	<iframe name="usergroups_content" id="usergroups_content" class="frameform2" src="<?php  echo $_SESSION['config']['businessappurl'].'admin/users/ugc_form.php';?>" frameborder="0"></iframe>
+                    	<!--<iframe name="usergroups_content" id="usergroups_content" class="frameform2" src="<?php  echo $_SESSION['config']['businessappurl'].'admin/users/ugc_form.php';?>" frameborder="0"></iframe>-->
+                    	<iframe name="usergroups_content" id="usergroups_content" class="frameform2" src="<?php  echo $_SESSION['config']['businessappurl'].'index.php?display=true&admin=users&page=ugc_form';?>" frameborder="0"></iframe>
                      <?php  } ?>
                     </p>
 				</div>
@@ -392,7 +396,15 @@ class users extends dbquery
 			else
 			{
 				?>
-				<form name="frmuser" id="frmuser" method="post" action="<?php  if($mode == "up") { echo "admin/users/users_up_db.php"; } elseif($mode == "add") { echo "admin/users/users_add_db.php"; } ?>" class="forms addforms" style="width:300px">
+				<form name="frmuser" id="frmuser" method="post" action="<?php echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&admin=users&page=<?php  if($mode == "up") { echo "users_up_db";}elseif($mode=="add"){echo"users_add_db";}?>" class="forms addforms" style="width:300px">
+					<input type="hidden" name="display" value="true" />
+					<input type="hidden" name="admin" value="users" />
+					<?php  if($mode == "up") {?>
+					<input type="hidden" name="page" value="users_up_db" />
+					<?php }
+					elseif($mode == "add") { ?>
+					<input type="hidden" name="page" value="users_add_db" />
+					<?php } ?>
 					<input type="hidden" name="order" id="order" value="<?php echo $_REQUEST['order'];?>" />
 					<input type="hidden" name="order_field" id="order_field" value="<?php echo $_REQUEST['order_field'];?>" />
 					<input type="hidden" name="what" id="what" value="<?php echo $_REQUEST['what'];?>" />
@@ -412,7 +424,7 @@ class users extends dbquery
 					<input name="FirstName" id="FirstName"  type="text" value="<?php  echo $this->show_string($_SESSION['m_admin']['users']['FirstName']); ?>" /><span class="red_asterisk">*</span>
 				</p>
 				<?php
-				require_once("core/class/class_core_tools.php");
+				//require_once("core/class/class_core_tools.php");
 				?>
 				<p>
 					<label for="Phone"><?php  echo _PHONE_NUMBER; ?> :</label><br/>
@@ -428,7 +440,7 @@ class users extends dbquery
 						{
 						?>
 
-						<input type="button" name="reset_pwd" value="<?php  echo _RESET.' '._PASSWORD; ?>" class="button" onclick="window.open('admin/users/psw_changed.php', '', 'toolbar=no,status=yes,width=400,height=150,left=500,top=300,scrollbars=no,top=no,location=no,resize=yes,menubar=no')" />
+						<input type="button" name="reset_pwd" value="<?php  echo _RESET.' '._PASSWORD; ?>" class="button" onclick="window.open('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&admin=users&page=psw_changed', '', 'toolbar=no,status=yes,width=400,height=150,left=500,top=300,scrollbars=no,top=no,location=no,resize=yes,menubar=no')" />
 						<?php
 						}
 						elseif($mode == "add")

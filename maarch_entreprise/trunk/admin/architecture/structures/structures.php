@@ -65,7 +65,6 @@ if(isset($_REQUEST['what']) && !empty($_REQUEST['what']))
 	else
 	{
 		$where .= " and (doctypes_first_level_label like '".strtolower($what)."%' or doctypes_first_level_label like '".strtoupper($what)."%') ";
-
 	}
 }
 
@@ -144,7 +143,7 @@ while($res = $db->fetch_object())
 }
 
 $autoCompletionArray = array();
-$autoCompletionArray["list_script_url"] = $_SESSION['config']['businessappurl']."admin/architecture/structures/structures_list_by_name.php";
+$autoCompletionArray["list_script_url"] = $_SESSION['config']['businessappurl']."index.php?display=true&page=structures_list_by_name";
 $autoCompletionArray["number_to_begin"] = 1;
 $list->admin_list($tab, $i, _STRUCTURE_LIST.' : '.$i." "._STRUCTURES, 'doctypes_first_level_id"','structures','structures','doctypes_first_level_id', true, $page_name_up, $page_name_val, $page_name_ban, $page_name_del, $page_name_add, $label_add, FALSE, TRUE,_ALL_STRUCTURES, _STRUCTURE, $_SESSION['config']['img'].'/manage_structures_b.gif',false, true, true, true, "", true, $autoCompletionArray);
 ?>

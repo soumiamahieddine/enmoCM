@@ -28,9 +28,9 @@
 * @ingroup admin
 */
 
-require_once("core/class/class_functions.php");
-require_once("core/class/class_db.php");
-require_once("core/class/class_core_tools.php");
+//require_once("core/class/class_functions.php");
+//require_once("core/class/class_db.php");
+//require_once("core/class/class_core_tools.php");
 $admin = new core_tools();
 $admin->test_admin('admin_architecture', 'apps');
 $db = new dbquery();
@@ -66,12 +66,12 @@ while($res = $db->fetch_object())
 	<table width="100%" border="0">
 		<tr>
 	    	<td>
-				<iframe name="choose_tree" id="choose_tree" width="900px" height="40px" frameborder="0" scrolling="no" src="<?php  echo $_SESSION['businessappurl']."admin/architecture/choose_tree.php";?>"></iframe>
+				<iframe name="choose_tree" id="choose_tree" width="900px" height="40px" frameborder="0" scrolling="no" src="<?php  echo $_SESSION['config']['businessappurl']."index.php?display=true&admin=architecture&page=choose_tree";?>"></iframe>
 			</td>
 		</tr>
 		<tr>
 			<td>
-				<iframe name="show_trees" id="show_trees" width="900px" height="600px" frameborder="0" scrolling="auto" src="<?php  echo $_SESSION['businessappurl']."admin/architecture/show_trees.php";?>"></iframe>
+				<iframe name="show_trees" id="show_trees" width="900px" height="600px" frameborder="0" scrolling="auto" src="<?php  echo $_SESSION['config']['businessappurl']."index.php?display=true&admin=architecture&page=show_trees";?>"></iframe>
 			</td>
 		</tr>
 	</table>

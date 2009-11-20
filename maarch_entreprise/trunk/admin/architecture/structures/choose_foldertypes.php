@@ -18,12 +18,11 @@
 *    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-include('core/init.php');
+//include('core/init.php');
 
-
-require_once("core/class/class_functions.php");
-require_once("core/class/class_db.php");
-require_once("core/class/class_request.php");
+//require_once("core/class/class_functions.php");
+//require_once("core/class/class_db.php");
+//require_once("core/class/class_request.php");
 require_once("core/class/class_core_tools.php");
 $core_tools = new core_tools();
 $core_tools->load_lang();
@@ -39,9 +38,7 @@ if($_SESSION['m_admin']['mode'] == "up" && $_SESSION['m_admin']['init'] == true)
 }
 elseif($_SESSION['m_admin']['mode'] == "add")
 {
-
-		$_SESSION['m_admin']['chosen_foldertypes'] = array();
-
+	$_SESSION['m_admin']['chosen_foldertypes'] = array();
 }
 
 if(isset($_REQUEST['foldertypes']) && count($_REQUEST['foldertypes']) > 0)
@@ -57,20 +54,19 @@ if(isset($_REQUEST['foldertypes']) && count($_REQUEST['foldertypes']) > 0)
 }
 else if(isset($_REQUEST['foldertypeslist']) && count($_REQUEST['foldertypeslist']) > 0)
 {
+	for($i=0; $i < count($_SESSION['m_admin']['chosen_foldertypes']); $i++)
+	{
 
-		for($i=0; $i < count($_SESSION['m_admin']['chosen_foldertypes']); $i++)
+		for($j=0; $j < count($_REQUEST['foldertypeslist']); $j++)
 		{
-
-			for($j=0; $j < count($_REQUEST['foldertypeslist']); $j++)
+			if(trim($_REQUEST['foldertypeslist'][$j]) == trim($_SESSION['m_admin']['chosen_foldertypes'][$i]))
 			{
-				if(trim($_REQUEST['foldertypeslist'][$j]) == trim($_SESSION['m_admin']['chosen_foldertypes'][$i]))
-				{
-					unset($_SESSION['m_admin']['chosen_foldertypes'][$i]);
-				}
+				unset($_SESSION['m_admin']['chosen_foldertypes'][$i]);
 			}
 		}
-		$_SESSION['m_admin']['chosen_foldertypes'] = array_values($_SESSION['m_admin']['chosen_foldertypes']);
-		$_SESSION['m_admin']['loaded_foldertypes'] = $_SESSION['m_admin']['chosen_foldertypes'];
+	}
+	$_SESSION['m_admin']['chosen_foldertypes'] = array_values($_SESSION['m_admin']['chosen_foldertypes']);
+	$_SESSION['m_admin']['loaded_foldertypes'] = $_SESSION['m_admin']['chosen_foldertypes'];
 }
 elseif(isset($_REQUEST['foldertypes']) && count($_REQUEST['foldertypes']) <= 0)
 {
@@ -80,7 +76,9 @@ elseif(isset($_REQUEST['foldertypes']) && count($_REQUEST['foldertypes']) <= 0)
 }
 ?>
 <body>
-<form name="choose_foldertypes" id="choose_foldertypes" method="post" action="choose_foldertypes.php">
+<form name="choose_foldertypes" id="choose_foldertypes" method="post" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=choose_foldertypes">
+	<input type="hidden" name="display" value="true" />
+    <input type="hidden" name="page" value="choose_foldertypes" />
 		<table align="left" border="0" width="100%">
 		<tr>
 			<td valign="top" width="48%"><b class="tit"><?php  echo _FOLDERTYPES_LIST;?></b></td>

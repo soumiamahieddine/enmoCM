@@ -82,7 +82,7 @@ if($_REQUEST['name_folder'] <> "")
 		launch_autocompleter_folders('<?php echo $_SESSION['urltomodules']?>folder/autocomplete_folders.php?mode=market', 'market');
 		function submitForm()
 		{
-			window.frames['show_trees'].location.href='<?php echo $_SESSION['config']['businessappurl'];?>indexing_searching/show_trees.php?project='+window.document.getElementById("project").value+'&market='+window.document.getElementById("market").value;
+			window.frames['show_trees'].location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&dir=indexing_searching&page=show_trees&project='+window.document.getElementById("project").value+'&market='+window.document.getElementById("market").value;
 		}
 	</script>
 	<div class="clearsearch">
@@ -93,10 +93,12 @@ if($_REQUEST['name_folder'] <> "")
 	<table width="100%" height="100%" border="1">
 		<tr>
 			<td width= "55%" height = "720px">
-				<iframe name="show_trees" id="show_trees" width="100%" height="720" frameborder="0" scrolling="auto" src="<?php  echo $_SESSION['config']['businessappurl']."indexing_searching/show_trees.php?num_folder=".$_REQUEST['num_folder']."&name_folder=".$_REQUEST['name_folder'];?>"></iframe>
+				<!--<iframe name="show_trees" id="show_trees" width="100%" height="720" frameborder="0" scrolling="auto" src="<?php  echo $_SESSION['config']['businessappurl']."indexing_searching/show_trees.php?num_folder=".$_REQUEST['num_folder']."&name_folder=".$_REQUEST['name_folder'];?>"></iframe>-->
+				<iframe name="show_trees" id="show_trees" width="100%" height="720" frameborder="0" scrolling="auto" src="<?php  echo $_SESSION['config']['businessappurl']."index.php?display=true&dir=indexing_searching&page=show_trees&num_folder=".$_REQUEST['num_folder']."&name_folder=".$_REQUEST['name_folder'];?>"></iframe>
 			</td>
 			<td>
-				<iframe name="view" id="view" width="100%" height="720" frameborder="0" scrolling="no" src="<?php  echo $_SESSION['config']['businessappurl']."indexing_searching/little_details_invoices.php?status=empty";?>"></iframe>
+				<!--<iframe name="view" id="view" width="100%" height="720" frameborder="0" scrolling="no" src="<?php  echo $_SESSION['config']['businessappurl']."indexing_searching/little_details_invoices.php?status=empty";?>"></iframe>-->
+				<iframe name="view" id="view" width="100%" height="720" frameborder="0" scrolling="no" src="<?php  echo $_SESSION['config']['businessappurl']."index.php?display=true&dir=indexing_searching&page=little_details_invoices&status=empty";?>"></iframe>
 			</td>
 		</tr>
 	</table>

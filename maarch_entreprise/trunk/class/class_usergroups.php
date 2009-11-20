@@ -40,7 +40,7 @@ class usergroups extends dbquery
 	public function formgroups($mode,$id = "")
 	{
 		require_once("core/class/class_security.php");
-		require_once("core/class/class_core_tools.php");
+		//require_once("core/class/class_core_tools.php");
 		$sec = new security();
 		$func = new functions();
 		$core_tools = new core_tools();
@@ -125,13 +125,22 @@ class usergroups extends dbquery
 						if($mode == "up")
 						{
 						?>
-							<a href="javascript://" onclick="window.open('<?php  echo $_SESSION['config']['businessappurl'];?>/admin/groups/liste_users.php?id=<?php  echo $id;?>&admin=groups', '', 'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=820,height=400')"><img src="<?php  echo $_SESSION['config']['businessappurl'].$_SESSION['config']['img'];?>/membres_groupe_b.gif" alt="" /><i><?php  echo _SEE_GROUP_MEMBERS;?></i></a><br/><br/>
+							<a href="javascript://" onclick="window.open('<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&admin=groups&page=liste_users&id=<?php  echo $id;?>&admin=groups', '', 'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=820,height=400')"><img src="<?php  echo $_SESSION['config']['businessappurl'].$_SESSION['config']['img'];?>/membres_groupe_b.gif" alt="" /><i><?php  echo _SEE_GROUP_MEMBERS;?></i></a><br/><br/>
 						<?php
 						}
 						?>
-						<iframe name="group_form" id="group_form" class="frameform4" src="<?php  echo $_SESSION['config']['businessappurl'].'admin/groups/groups_form.php';?>" frameborder="0" scrolling="auto"></iframe>
+						<iframe name="group_form" id="group_form" class="frameform4" src="<?php  echo $_SESSION['config']['businessappurl'].'index.php?display=true&admin=groups&page=groups_form';?>" frameborder="0" scrolling="auto"></iframe>
 					</div>
-					<form name="formgroup" method="post"  class="forms" action="<?php  if($mode == "up") { echo "admin/groups/group_up_db.php"; } elseif($mode == "add") { echo "admin/groups/group_add_db.php"; } ?>" >
+					<form name="formgroup" method="post"  class="forms" action="<?php  if($mode == "up") { echo $_SESSION['config']['businessappurl']."index.php?display=true&admin=groups&page=group_up_db"; } elseif($mode == "add") { echo "index.php?display=true&admin=groups&page=group_add_db"; } ?>" >
+					<input type="hidden" name="display" value="value" />
+					<input type="hidden" name="admin" value="groups" />
+					<?php  if($mode == "up") {?>
+						<input type="hidden" name="page" value="group_up" />
+					<?php }
+					elseif($mode == "add")
+					{?>
+						<input type="hidden" name="page" value="group_add" />
+			<?php	}?>
 					<input type="hidden" name="order" id="order" value="<?php echo $_REQUEST['order'];?>" />
 					<input type="hidden" name="order_field" id="order_field" value="<?php echo $_REQUEST['order_field'];?>" />
 					<input type="hidden" name="what" id="what" value="<?php echo $_REQUEST['what'];?>" />

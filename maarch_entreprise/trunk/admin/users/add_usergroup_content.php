@@ -29,16 +29,16 @@
 * @ingroup admin
 */
 
-include('core/init.php');
+//include('core/init.php');
 
-require_once("core/class/class_functions.php");
-require("core/class/class_core_tools.php");
+//require_once("core/class/class_functions.php");
+//require_once("core/class/class_core_tools.php");
 
 $core_tools = new core_tools();
 //here we loading the lang vars
 $core_tools->load_lang();
 $core_tools->test_admin('admin_users', 'apps');
-require_once("core/class/class_db.php");
+//require_once("core/class/class_db.php");
 
 $ugc = new dbquery();
 //loading all the enabled groups in an array
@@ -89,8 +89,10 @@ $time = $core_tools->get_session_time_expire();
 <body onLoad="setTimeout(window.close, <?php  echo $time;?>*60*1000);">
 <div class="popup_content">
 <h2 class="tit"><?php  echo _ADD_GROUP;?></h2>
-<form name="chooseGroup" method="get" action="choose_group.php" class="forms">
-
+<form name="chooseGroup" method="get" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php" class="forms">
+<input type="hidden" name="display" value="true" />
+<input type="hidden" name="admin" value="users" />
+<input type="hidden" name="page" value="choose_group" />
 <p>
 	<label for="groupe"> <?php  echo _CHOOSE_GROUP;?> : </label>
 	<select name="groupe" id="groupe" >

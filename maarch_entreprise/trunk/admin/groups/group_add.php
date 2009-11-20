@@ -28,7 +28,7 @@
 * @ingroup admin
 */
 
-include('core/init.php');
+//include('core/init.php');
 
 
 $core_tools2 = new core_tools();

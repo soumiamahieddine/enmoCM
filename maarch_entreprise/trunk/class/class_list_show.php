@@ -787,7 +787,7 @@ class list_show extends functions
 
 		$func = new functions();
 		$param_comp = '';
-		if(isset($_GET['start']))
+		if(isset($_GET['start']) && !empty($_GET['start']))
 		{
 			$start = strip_tags($_GET['start']);
 		}
@@ -798,22 +798,22 @@ class list_show extends functions
 		$param_comp .= "&amp;start=".$start;
 		if($name == "structures" || $name == "subfolders" || $name == "types")
 		{
-			$link = "index.php?page=".$name;
+			$link = $_SESSION['config']['businessappurl']."index.php?page=".$name;
 		}
 		else
 		{
 			if($is_part_of_module == false && $is_in_apps_dir == false)
 			{
-				$link = "index.php?page=".$name."&amp;admin=".$admin;
+				$link = $_SESSION['config']['businessappurl']."index.php?page=".$name."&amp;admin=".$admin;
 			}
 			elseif($is_in_apps_dir)
 			{
 
-				$link = "index.php?page=".$name."&amp;dir=".$admin;
+				$link = $_SESSION['config']['businessappurl']."index.php?page=".$name."&amp;dir=".$admin;
 			}
 			else
 			{
-				$link = "index.php?page=".$name."&amp;module=".$admin;
+				$link = $_SESSION['config']['businessappurl']."index.php?page=".$name."&amp;module=".$admin;
 			}
 		}
 
@@ -967,7 +967,6 @@ class list_show extends functions
 						<?php
 					}
 				}
-
 				?>
 				</tr>
 			</thead>
@@ -977,19 +976,19 @@ class list_show extends functions
 			{
 				if(!$is_part_of_module && !$flag_not_admin && !$is_in_apps_dir)
 				{
-					$path_add = "index.php?page=".$page_name_add."&amp;admin=".$admin;
+					$path_add = $_SESSION['config']['businessappurl']."index.php?page=".$page_name_add."&amp;admin=".$admin;
 				}
 				elseif($flag_not_admin && !$is_in_apps_dir)
 				{
-					$path_add = "index.php?page=".$page_name_add;
+					$path_add = $_SESSION['config']['businessappurl']."index.php?page=".$page_name_add;
 				}
 				elseif($is_in_apps_dir)
 				{
-					$path_add = "index.php?page=".$page_name_add."&amp;dir=".$admin;
+					$path_add = $_SESSION['config']['businessappurl']."index.php?page=".$page_name_add."&amp;dir=".$admin;
 				}
 				else
 				{
-					$path_add = "index.php?page=".$page_name_add."&amp;module=".$admin;
+					$path_add = $_SESSION['config']['businessappurl']."index.php?page=".$page_name_add."&amp;module=".$admin;
 				}
 				 if(!empty($page_name_add))
                 {
@@ -1007,17 +1006,20 @@ class list_show extends functions
 			{
 				if($admin == "types" || $admin == "structures" || $admin == "subfolders")
 				{
-					$path_root = $_SESSION['config']['businessappurl']."admin/architecture/".$admin."/";
+					//$path_root = $_SESSION['config']['businessappurl']."admin/architecture/".$admin."/";
+					$path_root = $_SESSION['config']['businessappurl']."index.php?display=true";
 				}
 				else
 				{
 					if(!$is_part_of_module)
 					{
-						$path_root = $_SESSION['config']['businessappurl']."admin/".$admin."/";
+						//$path_root = $_SESSION['config']['businessappurl']."admin/".$admin."/";
+						$path_root = $_SESSION['config']['businessappurl']."index.php?display=true&admin=".$admin;
 					}
 					else
 					{
-						$path_root = $_SESSION['urltomodules'].$admin."/";
+						//$path_root = $_SESSION['urltomodules'].$admin."/";
+						$path_root = $_SESSION['config']['businessappurl']."index.php?display=true&module=".$admin;
 					}
 				}
 				if(!empty($page_name_add))
@@ -1026,7 +1028,7 @@ class list_show extends functions
 					<tfoot>
 		                 <tr>
 		                    <td colspan="<?php  if($name <> 'types'){ echo'7';} else{ echo '5'; }
-		                    ?>" class="price"><span class="add clearfix"><a href="javascript://" onclick="window.open('<?php  echo $path_root; if($name <> 'types'){ echo $page_name_up;?>.php?mode=add<?php  }  else{ echo $page_name_add; }?>','add','height=250, width=500, resizable=yes, scrollbars=yes');" ><span><?php  echo $label_add;?></span></a></span></td>
+		                    ?>" class="price"><span class="add clearfix"><a href="javascript://" onclick="window.open('<?php  echo $path_root; if($name <> 'types'){ echo '&page='.$page_name_up;?>&mode=add<?php  } else{ echo  '&page='.$page_name_add; }?>','add','height=250, width=500, resizable=yes, scrollbars=yes');" ><span><?php  echo $label_add;?></span></a></span></td>
 		                </tr>
 					</tfoot>
 					<?php
@@ -1166,11 +1168,13 @@ class list_show extends functions
 							{
 								if(!$is_part_of_module)
 								 {
-								 	$path_auth = $_SESSION['config']['businessappurl'].'admin/'.$admin.'/'.$page_name_val.".php?id=".$result[$theline][0][$key];
+								 	//$path_auth = $_SESSION['config']['businessappurl'].'admin/'.$admin.'/'.$page_name_val.".php?id=".$result[$theline][0][$key];
+								 	$path_auth = $_SESSION['config']['businessappurl'].'index.php?display=true&admin='.$admin.'&page='.$page_name_val."&id=".$result[$theline][0][$key];
 								 }
 								 else
 								 {
-								 	$path_auth = $_SESSION['urltomodules'].$admin.'/'.$page_name_val.".php?id=".$result[$theline][0][$key];
+								 	//$path_auth = $_SESSION['urltomodules'].$admin.'/'.$page_name_val.".php?id=".$result[$theline][0][$key];
+								 	$path_auth = $_SESSION['config']['businessappurl'].'index.php?display=true&module='.$admin.'&page='.$page_name_val."&id=".$result[$theline][0][$key];
 								 }
 								if($name == "users" &&  $result[$theline][0][$key] == "superadmin")
 								{
@@ -1190,11 +1194,13 @@ class list_show extends functions
 								{
 								 if(!$is_part_of_module)
 								 {
-								 	$path_ban = $_SESSION['config']['businessappurl'].'admin/'.$admin.'/'.$page_name_ban.".php?id=".$result[$theline][0][$key];
+								 //	$path_ban = $_SESSION['config']['businessappurl'].'admin/'.$admin.'/'.$page_name_ban.".php?id=".$result[$theline][0][$key];
+								 	$path_ban = $_SESSION['config']['businessappurl'].'index.php?display=true&admin='.$admin.'&page='.$page_name_ban."&id=".$result[$theline][0][$key];
 								 }
 								 else
 								 {
-								 	$path_ban = $_SESSION['urltomodules'].$admin.'/'.$page_name_ban.".php?id=".$result[$theline][0][$key];
+								 	//$path_ban = $_SESSION['urltomodules'].$admin.'/'.$page_name_ban.".php?id=".$result[$theline][0][$key];
+								 	$path_ban = $_SESSION['config']['businessappurl'].'index.php?display=true&module='.$admin.'&page='.$page_name_ban."&id=".$result[$theline][0][$key];
 								 }
 								if($name == "users" &&  $result[$theline][0][$key] == "superadmin")
 								{
@@ -1218,19 +1224,23 @@ class list_show extends functions
 					{
 						if(!$is_part_of_module && !$flag_not_admin && !$is_in_apps_dir)
 						{
-							$path_del = $_SESSION['config']['businessappurl'].'admin/'.$admin.'/'.$page_name_del.".php?id=".$result[$theline][0][$key]."&amp;admin=".$admin;
+							//$path_del = $_SESSION['config']['businessappurl'].'admin/'.$admin.'/'.$page_name_del.".php?id=".$result[$theline][0][$key]."&amp;admin=".$admin;
+							$path_del = $_SESSION['config']['businessappurl'].'index.php?display=true&page='.$page_name_del."&id=".$result[$theline][0][$key]."&amp;admin=".$admin;
 						}
 						elseif($flag_not_admin && !$is_in_apps_dir)
 						{
-							$path_del = "index.php?page=".$page_name_del."&id=".$result[$theline][0][$key];
+							//$path_del = "index.php?page=".$page_name_del."&id=".$result[$theline][0][$key];
+							$path_del =  $_SESSION['config']['businessappurl']."index.php?page=".$page_name_del."&id=".$result[$theline][0][$key];
 						}
 						elseif($is_in_apps_dir)
 						{
-							$path_del = $_SESSION['config']['businessappurl'].$admin.'/'.$page_name_del.".php?id=".$result[$theline][0][$key]."&amp;dir=".$admin;
+							//$path_del = $_SESSION['config']['businessappurl'].$admin.'/'.$page_name_del.".php?id=".$result[$theline][0][$key]."&amp;dir=".$admin;
+							$path_del = $_SESSION['config']['businessappurl'].'index.php?display=true&page='.$page_name_del."&id=".$result[$theline][0][$key]."&amp;dir=".$admin;
 						}
 						else
 						{
-							$path_del = $_SESSION['urltomodules'].$admin.'/'.$page_name_del.".php?id=".$result[$theline][0][$key]."&amp;module=".$admin;
+							//$path_del = $_SESSION['urltomodules'].$admin.'/'.$page_name_del.".php?id=".$result[$theline][0][$key]."&amp;module=".$admin;
+							$path_del = $_SESSION['config']['businessappurl'].'index.php?display=true&page='.$page_name_del."&id=".$result[$theline][0][$key]."&amp;module=".$admin;
 						}
 						if( $can_delete == false || $name == "users" &&  $result[$theline][0][$key] == "superadmin")
 						{
@@ -1266,18 +1276,24 @@ class list_show extends functions
 
 				if($admin == "types" || $admin == "structures" || $admin == "subfolders")
 				{
-					$path_up2 = $_SESSION['config']['businessappurl']."admin/architecture/".$admin."/".$page_name_up.".php?mode=up&amp;id=".$result[$theline][0][$key]."&amp;admin=".$admin;
-					$path_del2 = $_SESSION['config']['businessappurl']."admin/architecture/".$admin."/".$page_name_del.".php?id=".$result[$theline][0][$key]."&amp;admin=".$admin;
+					//$path_up2 = $_SESSION['config']['businessappurl']."admin/architecture/".$admin."/".$page_name_up.".php?mode=up&amp;id=".$result[$theline][0][$key]."&amp;admin=".$admin;
+					$path_up2 = $_SESSION['config']['businessappurl']."index.php?display=true&page=".$page_name_up."&mode=up&amp;id=".$result[$theline][0][$key]."&amp;admin=".$admin;
+					//$path_del2 = $_SESSION['config']['businessappurl']."admin/architecture/".$admin."/".$page_name_del.".php?id=".$result[$theline][0][$key]."&amp;admin=".$admin;
+					$path_del2 = $_SESSION['config']['businessappurl']."index.php?display=true&page=".$page_name_del."&id=".$result[$theline][0][$key]."&amp;admin=".$admin;
 				}
 				elseif(!$is_part_of_module)
 				{
-					$path_up2 = $_SESSION['config']['businessappurl']."admin/".$admin."/".$page_name_up.".php?mode=up&amp;id=".$result[$theline][0][$key]."&amp;admin=".$admin;
-					$path_del2 = $_SESSION['config']['businessappurl']."admin/".$admin."/".$page_name_del.".php?id=".$result[$theline][0][$key]."&amp;admin=".$admin;
+					//$path_up2 = $_SESSION['config']['businessappurl']."admin/".$admin."/".$page_name_up.".php?mode=up&amp;id=".$result[$theline][0][$key]."&amp;admin=".$admin;
+					$path_up2 = $_SESSION['config']['businessappurl']."index.php?display=true&page=".$page_name_up."&mode=up&amp;id=".$result[$theline][0][$key]."&amp;admin=".$admin;
+					//$path_del2 = $_SESSION['config']['businessappurl']."admin/".$admin."/".$page_name_del.".php?id=".$result[$theline][0][$key]."&amp;admin=".$admin;
+					$path_del2 = $_SESSION['config']['businessappurl']."index.php?display=true&page=".$page_name_del."&id=".$result[$theline][0][$key]."&amp;admin=".$admin;
 				}
 				else
 				{
-					$path_up2 = $_SESSION['urltomodules'].$admin."/".$page_name_up.".php?mode=up&amp;id=".$result[$theline][0][$key]."&amp;module=".$admin;
-					$path_del2 = $$_SESSION['urltomodules'].$admin."/".$page_name_del.".php?id=".$result[$theline][0][$key]."&amp;module=".$admin;
+					//$path_up2 = $_SESSION['urltomodules'].$admin."/".$page_name_up.".php?mode=up&amp;id=".$result[$theline][0][$key]."&amp;module=".$admin;
+					$path_up2 =  $_SESSION['config']['businessappurl']."index.php?display=true&page=".$page_name_up."&mode=up&amp;id=".$result[$theline][0][$key]."&amp;module=".$admin;
+					//$path_del2 = $$_SESSION['urltomodules'].$admin."/".$page_name_del.".php?id=".$result[$theline][0][$key]."&amp;module=".$admin;
+					$path_del2 = $_SESSION['config']['businessappurl']."index.php?display=true&page=".$page_name_del.".&id=".$result[$theline][0][$key]."&amp;module=".$admin;
 
 				}
 						?>

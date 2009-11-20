@@ -29,12 +29,10 @@
 * @ingroup admin
 */
 
-include('core/init.php');
-
-
-require_once("core/class/class_functions.php");
-require_once("core/class/class_db.php");
-require("core/class/class_core_tools.php");
+//include('core/init.php');
+//require_once("core/class/class_functions.php");
+//require_once("core/class/class_db.php");
+//require_once("core/class/class_core_tools.php");
 
 $core_tools = new core_tools();
 //here we loading the lang vars
@@ -79,7 +77,10 @@ $core_tools->load_header(_USER_GROUPS_TITLE);
 ?>
 <body id="iframe">
 <div class="block">
-<form name="usergroup_content" method="get" action="ugc_form.php" >
+<form name="usergroup_content" method="get" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php" >
+<input type="hidden" name="display" value="true" />
+<input type="hidden" name="admin" value="users" />
+<input type="hidden" name="page" value="ugc_form" />
  <h2 class="tit"> <?php  echo _USER_GROUPS_TITLE; ?> :</h2>
 <?php
 
@@ -110,7 +111,7 @@ $core_tools->load_header(_USER_GROUPS_TITLE);
 	if (count($_SESSION['m_admin']['users']['groups']) < $_SESSION['m_admin']['nbgroups']  || empty($_SESSION['m_admin']['users']['groups']))
 	{
 	?>
-		<input class="button" type="button" name="addGroup" onClick="window.open('<?php  echo $_SESSION['config']['businessappurl'];?>admin/users/add_usergroup_content.php','add','toolbar=no,status=no,width=400,height=150,left=500,top=300,scrollbars=no,top=no,location=no,resizable=yes,menubar=no')" value="<?php  echo _ADD_TO_GROUP; ?>" />
+		<input class="button" type="button" name="addGroup" onClick="window.open('<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&admin=users&page=add_usergroup_content','add','toolbar=no,status=no,width=400,height=150,left=500,top=300,scrollbars=no,top=no,location=no,resizable=yes,menubar=no')" value="<?php  echo _ADD_TO_GROUP; ?>" />
 	<?php
 	}
 

@@ -18,9 +18,6 @@ class business_app_tools extends dbquery
 	{
 		parent::__construct();
 	}
-
-	
-
 	/**
 	* Build Maarch business app configuration into sessions vars with a xml configuration file
 	*/
@@ -320,10 +317,10 @@ class business_app_tools extends dbquery
 	*/
 	public function insert_app_page($name)
 	{
-		if($name == "structures")
+		if($name == "structures" || $name=="structures_list_by_name" || $name == "structure_up")
 		{
 			//$path = "apps/".$_SESSION['businessapps'][0]['appid']."/admin".DIRECTORY_SEPARATOR."architecture".DIRECTORY_SEPARATOR."structures".DIRECTORY_SEPARATOR.'structures.php';
-			$path = 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."admin".DIRECTORY_SEPARATOR."architecture".DIRECTORY_SEPARATOR."structures".DIRECTORY_SEPARATOR.'structures.php';
+			$path = 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."admin".DIRECTORY_SEPARATOR."architecture".DIRECTORY_SEPARATOR."structures".DIRECTORY_SEPARATOR.$name.'.php';
 			return $path;
 		}
 		elseif($name == "subfolders")

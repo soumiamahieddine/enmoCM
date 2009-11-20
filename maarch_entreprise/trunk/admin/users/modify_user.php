@@ -28,7 +28,7 @@
 * @version $Revision$
 * @ingroup admin
 */
-include('core/init.php');
+//include('core/init.php');
 
 $core_tools2 = new core_tools();
 //here we loading the lang vars
@@ -49,7 +49,7 @@ $page_label = _MY_INFO;
 $page_id = "modify_users";
 $core_tools2->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
-require_once("core/class/class_db.php");
+//require_once("core/class/class_db.php");
 require("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_users.php");
 $users = new users();
 $users->change_info_user();

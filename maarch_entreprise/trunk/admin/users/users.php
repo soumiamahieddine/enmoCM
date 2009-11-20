@@ -183,7 +183,7 @@ $label_add = _ADD_USER;
 $title = _USERS_LIST." : ".$i." "._USERS;
 
 $autoCompletionArray = array();
-$autoCompletionArray["list_script_url"] = $_SESSION['config']['businessappurl']."admin/users/users_list_by_name.php";
+$autoCompletionArray["list_script_url"] = $_SESSION['config']['businessappurl']."index.php?display=true&admin=users&page=users_list_by_name";
 $autoCompletionArray["number_to_begin"] = 1;
 $list->admin_list($tab, $i, $title,'user_id','users', 'users','user_id', true, $page_name_up, $page_name_val, $page_name_ban, $page_name_del, $page_name_add, $label_add, false, false, _ALL_USERS, _USER, $_SESSION['config']['img'].'/manage_users_b.gif', false, true, false, true, "", true, $autoCompletionArray);
 

@@ -29,11 +29,11 @@
 * @ingroup admin
 */
 
-include('core/init.php');
+//include('core/init.php');
 
-require_once("core/class/class_functions.php");
-require_once("core/class/class_db.php");
-require("core/class/class_core_tools.php");
+//require_once("core/class/class_functions.php");
+//require_once("core/class/class_db.php");
+//require("core/class/class_core_tools.php");
 
 $core_tools = new core_tools();
 $core_tools->test_admin('admin_architecture', 'apps');
@@ -73,7 +73,6 @@ if(isset($_REQUEST['mode']) && !empty($_REQUEST['mode']))
 $erreur = "";
 if( isset($_REQUEST['valid']))
 {
-
 	if(isset($_REQUEST['desc_structure']) && !empty($_REQUEST['desc_structure']))
 	{
 		$desc = $db->protect_string_db($_REQUEST['desc_structure']);
@@ -82,13 +81,8 @@ if( isset($_REQUEST['valid']))
 	{
 		$erreur .= _DESC_STRUCTURE_MISSING.".<br/>";
 	}
-/*	if(isset($_REQUEST['foldertype']) && !empty($_REQUEST['foldertype']))
-	{
-		$foldertype_id = $_REQUEST['foldertype'];
 
-	}*/
 	if(!isset($_REQUEST['foldertypes']) || count($_REQUEST['foldertypes']) == 0)
-	//if(!isset($_SESSION['m_admin']['chosen_foldertypes']) && count($_SESSION['m_admin']['chosen_foldertypes']) < 1)
 	{
 		$erreur .= _FOLDERTYPE_MISSING.".<br/>";
 	}
@@ -192,8 +186,9 @@ $time = $core_tools->get_session_time_expire();
 <br/>
 
 <br/>
-<form method="post" name="frmstructure" id="frmstructure" class="forms">
-
+<form method="post" name="frmstructure" id="frmstructure" class="forms" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=structure_up">
+	<input type="hidden" name="display" value="true" />
+    <input type="hidden" name="page" value="structure_up" />
 	<?php  if ($mode == "up")
 	{ ?>
 	<p>

@@ -28,14 +28,14 @@
 * @version $Revision$
 * @ingroup admin
 */
-include('core/init.php');
+//include('core/init.php');
 
-require_once("core/class/class_functions.php");
+//require_once("core/class/class_functions.php");
 
 $admin = new core_tools();
 $admin->test_admin('admin_users', 'apps');
 
-require_once("core/class/class_db.php");
+//require_once("core/class/class_db.php");
 require("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_users.php");
 
 $func = new functions();

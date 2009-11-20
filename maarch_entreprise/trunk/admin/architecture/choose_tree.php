@@ -27,11 +27,11 @@
 * @version $Revision$
 * @ingroup admin
 */
-include('core/init.php');
+//include('core/init.php');
 
-require_once("core/class/class_functions.php");
-require_once("core/class/class_db.php");
-require_once("core/class/class_request.php");
+//require_once("core/class/class_functions.php");
+//require_once("core/class/class_db.php");
+//require_once("core/class/class_request.php");
 require_once("core/class/class_core_tools.php");
 $core_tools = new core_tools();
 $core_tools->load_lang();
@@ -43,7 +43,7 @@ if(isset($_REQUEST['tree_id']) && !empty($_REQUEST['tree_id']))
 {
 	$_SESSION['doctypes_chosen_tree'] = $_REQUEST['tree_id'];
 	?>
-    <script language="javascript" type="text/javascript">window.top.frames['show_trees'].location.href='<?php  echo "show_trees.php";?>';</script>
+    <script language="javascript" type="text/javascript">window.top.frames['show_trees'].location.href='<?php  echo $_SESSION['config']['businessappurl']."index.php?display=true&admin=architecture&page=show_trees";?>';</script>
     <?php
 }
 else
@@ -52,7 +52,10 @@ else
 }
 ?>
 <body>
-	<form name="frm_choose_tree" id="frm_choose_tree" method="get" action="<?php  echo "choose_tree.php";?>">
+	<form name="frm_choose_tree" id="frm_choose_tree" method="get" action="<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&admin=architecture&page=choose_tree">
+    	<input type="hidden" name="display" value="true" />
+    	<input type="hidden" name="admin" value="architecture" />
+    	<input type="hidden" name="page" value="choose_tree" />
     	<p align="left">
         	<label><?php  echo _FOLDERTYPE;?> :</label>
             <select name="tree_id" id="tree_id" onchange="this.form.submit();">

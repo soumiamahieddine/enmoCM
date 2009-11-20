@@ -27,12 +27,11 @@
 * @version $Revision$
 * @ingroup admin
 */
-include('core/init.php');
+//include('core/init.php');
 
-
-require_once("core/class/class_functions.php");
-require_once("core/class/class_db.php");
-require_once("core/class/class_core_tools.php");
+//require_once("core/class/class_functions.php");
+//require_once("core/class/class_db.php");
+//require_once("core/class/class_core_tools.php");
 require_once("core/class/class_security.php");
 
 $_SESSION['m_admin']['group']['show_check'] = false;
@@ -89,7 +88,7 @@ if(isset($_REQUEST['collselect']) && !empty($_REQUEST['collselect']))
 	}
 
 	?>
-    <script language="javascript" type="text/javascript">window.top.location.href = "add_grant.php";</script>
+    <script language="javascript" type="text/javascript">window.top.location.href = "<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&admin=groups&page=add_grant";</script>
     <?php
 }
 
@@ -102,7 +101,10 @@ $core_tools->load_html();
 $core_tools->load_header();
 ?>
 <body>
-<form name="choose_coll" action="<?php echo $_SESSION['config']['businessappurl'];?>admin/groups/choose_coll.php" method="get" class="forms">
+<form name="choose_coll"  method="get" class="forms">
+<input type="hidden" name="display" value="true" />
+<input type="hidden" name="admin" value="groups" />
+<input type="hidden" name="page" value="choose_coll" />
 	<p>
 		<label><?php  echo _COLLECTION;?> :</label>
 		<select name="collselect" id="collselect" onchange="this.form.submit();return false;">

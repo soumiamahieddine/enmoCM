@@ -28,11 +28,11 @@
 * @ingroup admin
 */
 
-include('core/init.php');
+//include('core/init.php');
 
-require_once("core/class/class_functions.php");
-require("core/class/class_core_tools.php");
-require_once("core/class/class_db.php");
+//require_once("core/class/class_functions.php");
+//require("core/class/class_core_tools.php");
+//require_once("core/class/class_db.php");
 require_once("core/class/class_security.php");
 $core_tools = new core_tools();
 //here we loading the lang vars
@@ -207,7 +207,7 @@ $time = $core_tools->get_session_time_expire();
 <tr>
 <td>
 <div class="popup_content">
-<form name="addGrant" method="post" action="<?php  echo $_SESSION['config']['businessappurl']."/admin/groups/add_grant_table.php";?>" class="forms">
+<form name="addGrant" method="post" action="<?php  echo $_SESSION['config']['businessappurl']."index.php?display=true&admin=groups&page=add_grant_table";?>" class="forms">
 	<input type="hidden" name="mode" value="<?php  echo $mode;?>" />
 		<?php
 		if(isset($_REQUEST['collection']) && !empty($_REQUEST['collection']))
@@ -224,7 +224,7 @@ $time = $core_tools->get_session_time_expire();
 		{
 			?>
 	    	<div align="center">
-			<iframe name="choose_coll" id="choose_coll" scrolling="auto" width="100%" height="25" frameborder="0" src="<?php echo $_SESSION['config']['businessappurl'];?>admin/groups/choose_coll.php"></iframe></div>
+			<iframe name="choose_coll" id="choose_coll" scrolling="auto" width="100%" height="25" frameborder="0" src="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&admin=groups&page=choose_coll"></iframe></div>
 			<?php
 		}
 		?>
@@ -240,7 +240,7 @@ $time = $core_tools->get_session_time_expire();
 		<textarea rows="6" cols="100" name="where" id="where" /><?php  echo stripslashes($_SESSION['choosen_where_clause']);?></textarea>
 	</p>
 	<p>
-		<iframe name="frm_expert_mode" id="frm_expert_mode" src="<?php  echo $_SESSION['config']['businessappurl'].'admin/groups/frame_expert_mode.php';?>" width="1" height="1" frameborder="0" scrolling="auto"></iframe>
+		<iframe name="frm_expert_mode" id="frm_expert_mode" src="<?php  echo $_SESSION['config']['businessappurl'].'index.php?display=true&admin=groups&page=frame_expert_mode';?>" width="1" height="1" frameborder="0" scrolling="auto"></iframe>
 		<div id="label_expert_show" class="input_expert_hide">
 			<a href="#" onclick="javascript:expertmodeview('<?php  echo $_SESSION['m_admin']['group']['coll_id'];?>');"><h5><i><b><?php  echo _VALID_THE_WHERE_CLAUSE;?>!!!</b></i></h5></a>
 		</div>

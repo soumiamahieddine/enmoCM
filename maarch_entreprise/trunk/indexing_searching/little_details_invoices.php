@@ -1,8 +1,6 @@
 <?php
 /**
-* File : details_invoices.php
-*
-* Detailed informations on an indexed document
+* File : little_details_invoices.php
 *
 * @package  Maarch PeopleBox 1.0
 * @version 2.1

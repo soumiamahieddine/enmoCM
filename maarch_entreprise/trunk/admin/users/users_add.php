@@ -29,8 +29,7 @@
 * @ingroup admin
 */
 
-include('core/init.php');
-
+//include('core/init.php');
 
 $admin = new core_tools();
 $admin->test_admin('admin_users', 'apps');

@@ -27,11 +27,11 @@
 * @version $Revision$
 * @ingroup admin
 */
-include('core/init.php');
+//include('core/init.php');
 
 
-require_once("core/class/class_functions.php");
-require_once("core/class/class_db.php");
+//require_once("core/class/class_functions.php");
+//require_once("core/class/class_db.php");
 require_once("core/class/class_security.php");
 
 $_SESSION['error'] = "";
@@ -70,5 +70,5 @@ else
 }
 ?>
 <script language="javascript">
-window.opener.top.frames['group_form'].location.href='groups_form.php';self.close();
+window.opener.top.frames['group_form'].location.href='<?php $_SESSION['config']['businessappurl'];?>index.php?display&page=groups_form&admin=groups';self.close();
 </script>

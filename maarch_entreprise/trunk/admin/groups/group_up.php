@@ -29,10 +29,10 @@
 * @ingroup admin
 */
 
-include('core/init.php');
+//include('core/init.php');
 
-require_once("core/class/class_functions.php");
-require_once("core/class/class_core_tools.php");
+//require_once("core/class/class_functions.php");
+//require_once("core/class/class_core_tools.php");
 
 $core_tools = new core_tools();
 //here we loading the lang vars

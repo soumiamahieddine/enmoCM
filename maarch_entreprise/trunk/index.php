@@ -12,8 +12,6 @@
 * @author  Claire Figueras  <dev@maarch.org>
 * @author  Loïc Vinet <dev@maarch.org>
 */
-//include('core/init.php');
-//
 
 include_once('../../core/init.php');
 //var_dump(get_include_path());
@@ -23,15 +21,17 @@ require_once("core/class/class_db.php");
 require_once("core/class/class_core_tools.php");
 $core_tools = new core_tools();
 
-if(isset($_GET['display']) && !empty($_GET['display']))
+if(isset($_REQUEST['display']) )
 {
-	
+//	echo 'test';
+	 $core_tools->insert_page();
+	 exit();
 } 
 if(!isset($_SESSION['user']['UserId']))
 {
 	if(trim($_SERVER['argv'][0]) <> "")
 	{
-		header("location: reopen.php?".$_SERVER['argv'][0]);
+		header("location: adminreopen.php?".$_SERVER['argv'][0]);
 	}
 	else
 	{
