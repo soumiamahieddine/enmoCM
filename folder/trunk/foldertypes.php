@@ -21,7 +21,7 @@ $admin->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
 require_once("core/class/class_db.php");
 require_once("core/class/class_request.php");
-require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_list_show.php");
+require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_list_show.php");
 $func = new functions();
 $select[$_SESSION['tablename']['fold_foldertypes']] = array();
 array_push($select[$_SESSION['tablename']['fold_foldertypes']],"foldertype_id","foldertype_label" );

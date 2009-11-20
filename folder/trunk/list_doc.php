@@ -20,7 +20,7 @@ require_once("core/class/class_security.php");
 $core_tools = new core_tools();
 $core_tools->load_lang();
 $security = new security();
-require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_list_show.php");
+require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_list_show.php");
 require_once("modules/folder".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
 $func = new functions();
 $core_tools->load_html();

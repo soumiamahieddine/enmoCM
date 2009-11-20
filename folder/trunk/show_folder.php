@@ -40,7 +40,7 @@ $page_id = "fold_show_folder";
 $core_tools->manage_location_bar($page_path, $page_label,$page_id, $init, $level);
 /***********************************************************/
 require_once("modules/folder".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
-require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_list_show.php");
+require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_list_show.php");
 $folder_object = new folder();
 $request= new request;
 $func = new functions();

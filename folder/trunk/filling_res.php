@@ -23,7 +23,7 @@ $core_tools = new core_tools();
 $core_tools->load_lang();
 $security = new security();
 require_once("modules/folder".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
-require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_list_show.php");
+require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_list_show.php");
 $func = new functions();
 $table_name = $security->retrieve_table_from_coll($_SESSION['current_foldertype_coll_id']);
 $table_view = $security->retrieve_view_from_coll_id($_SESSION['current_foldertype_coll_id']);
