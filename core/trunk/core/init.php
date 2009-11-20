@@ -1,5 +1,6 @@
 <?php
-include('core/init.php');
+session_name('maarch_entreprise');
+session_start();
 
 if(isset($_SESSION['config']['corepath']) && !empty($_SESSION['config']['corepath']))
 {
