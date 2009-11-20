@@ -484,7 +484,7 @@ class security extends dbquery
 				$_SESSION['user']['collections'] = $tmp['collections'];
 				$_SESSION['user']['security'] = $tmp['security'];
 				$this->load_enabled_services();
-				require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
+				require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
 				require_once("core/class/class_core_tools.php");
 				$business_app_tools = new business_app_tools();
 				$core_tools = new core_tools();
@@ -598,7 +598,7 @@ class security extends dbquery
 				$_SESSION['user']['security'] = $tmp['security'];
 				$this->load_enabled_services();
 
-				require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
+				require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
 				require_once("core/class/class_core_tools.php");
 				$business_app_tools = new business_app_tools();
 				$core_tools = new core_tools();
@@ -727,7 +727,7 @@ class security extends dbquery
 		{
 			$this->connect();
 			//$_SESSION['user']['services'] = array();
-			require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_usergroups.php");
+			require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_usergroups.php");
 			$group = new usergroups();
 			for($i=0; $i< count($_SESSION['enabled_services']);$i++)
 			{
@@ -1249,7 +1249,7 @@ class security extends dbquery
 			$where = preg_replace('/, ?\)/', ')', $where);
 
 			// Process with the apps vars
-			require_once($_SESSION['config']['businessapppath'].'class'.DIRECTORY_SEPARATOR.'class_business_app_tools.php');
+			require_once('apps/'.$_SESSION['businessapps'][0]['appid'].'/class'.DIRECTORY_SEPARATOR.'class_business_app_tools.php');
 			$object = new business_app_tools();
 			if(method_exists($object, 'process_where_clause'))
 			{

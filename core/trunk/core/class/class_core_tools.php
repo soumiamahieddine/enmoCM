@@ -833,7 +833,7 @@ class core_tools extends functions
 						elseif($app_services[$i]['whereamiused'][$k]['nature'] == "include" && $_SESSION['user']['services'][$app_services[$i]['id']] && ($servicenature == "all" || $servicenature == "include") && !in_array($app_services[$i]['id'],$executed_services))
 						{
 							array_push($executed_services, $app_services[$i]['id']);
-							include($_SESSION['config']['businessapppath'].$app_services[$i]['servicepage']);
+							include('apps/'.$_SESSION['config']['app_id'].'/'.$app_services[$i]['servicepage']);
 						}
 					}
 				}
@@ -933,7 +933,7 @@ class core_tools extends functions
 			var app_path = '<?php  echo $_SESSION['config']['businessappurl'];?>';
 		</script>
 		<?php
-		if(file_exists($_SESSION['config']['businessapppath']."js".DIRECTORY_SEPARATOR."functions.js"))
+		if(file_exists("apps/".$_SESSION['businessapps'][0]['appid']."/js".DIRECTORY_SEPARATOR."functions.js"))
 		{
 			?>
 			<script type="text/javascript" src="<?php  echo $_SESSION['config']['businessappurl'];?>js/functions.js"></script>
@@ -970,18 +970,6 @@ class core_tools extends functions
 		// Page is defined in a module
 		if(isset($_GET['module']) && $_GET['module'] <> "core")
 		{
-/*
-			$path = 'modules'.DIRECTORY_SEPARATOR.$_GET['module'].DIRECTORY_SEPARATOR.$this->f_page.".php";
-			if(file_exists($path))
-			{
-				require($path);
-			}
-			else
-			{
-				//require($_SESSION["config"]["defaultPage"].".php");
-				$this->loadDefaultPage();
-			}
-*/
 			if(file_exists($_SESSION['config']['corepath'].'modules'.$_GET['module'].DIRECTORY_SEPARATOR.$this->f_page.".php")
 			|| file_exists($_SESSION['config']['corepath'].'clients'.$_SESSION['custom_override_id'].'modules'.$_GET['module'].DIRECTORY_SEPARATOR.$this->f_page.".php")
 			)
@@ -996,17 +984,6 @@ class core_tools extends functions
 		// Page is defined the core
 		elseif(isset($_GET['module']) && $_GET['module'] == "core")
 		{
-/*
-			if(file_exists($_SESSION['pathtocore'].$this->f_page.".php"))
-			{
-				require($_SESSION['pathtocore'].$this->f_page.".php");
-			}
-			else
-			{
-				//require($_SESSION["config"]["defaultPage"].".php");
-				$this->loadDefaultPage();
-			}
-*/
 			if(file_exists($_SESSION['config']['corepath'].'core'.DIRECTORY_SEPARATOR.$this->f_page.".php")
 			|| file_exists($_SESSION['config']['corepath'].'clients'.$_SESSION['custom_override_id'].'core'.DIRECTORY_SEPARATOR.$this->f_page.".php")
 			)
@@ -1021,18 +998,6 @@ class core_tools extends functions
 		// Page is defined the admin directory of the application
 		elseif(isset($_GET['admin']) && !empty($_GET['admin']))
 		{
-/*
-			$path = $_SESSION['config']['businessapppath']."admin".DIRECTORY_SEPARATOR.trim($_GET['admin']).DIRECTORY_SEPARATOR.$this->f_page.'.php';
-			if(file_exists($path))
-			{
-				require($path);
-			}
-			else
-			{
-				//require($_SESSION["config"]["defaultPage"].".php");
-				$this->loadDefaultPage();
-			}
-*/
 			if(file_exists($_SESSION['config']['corepath'].'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."admin".DIRECTORY_SEPARATOR.trim($_GET['admin']).DIRECTORY_SEPARATOR.$this->f_page.".php")
 			|| file_exists($_SESSION['config']['corepath'].'clients'.$_SESSION['custom_override_id'].'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."admin".DIRECTORY_SEPARATOR.trim($_GET['admin']).DIRECTORY_SEPARATOR.$this->f_page.".php")
 			)
@@ -1046,18 +1011,6 @@ class core_tools extends functions
 		}
 		elseif(isset($_GET['dir']) && !empty($_GET['dir']))
 		{
-/*
-			$path = $_SESSION['config']['businessapppath'].DIRECTORY_SEPARATOR.trim($_GET['dir']).DIRECTORY_SEPARATOR.$this->f_page.'.php';
-			if(file_exists($path))
-			{
-				require($path);
-			}
-			else
-			{
-				//require($_SESSION["config"]["defaultPage"].".php");
-				$this->loadDefaultPage();
-			}
-*/
 			if(file_exists($_SESSION['config']['corepath'].'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.trim($_GET['dir']).DIRECTORY_SEPARATOR.$this->f_page.".php")
 			|| file_exists($_SESSION['config']['corepath'].'clients'.$_SESSION['custom_override_id'].'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.trim($_GET['dir']).DIRECTORY_SEPARATOR.$this->f_page.".php")
 			)
@@ -1072,28 +1025,6 @@ class core_tools extends functions
 		// Page is defined in the application
 		else
 		{
-/*
-			if(file_exists($this->f_page.".php"))
-			{
-				require($this->f_page.".php");
-			}
-			else
-			{
-				require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
-				$app = new business_app_tools();
-				$path = $app->insert_app_page($this->f_page);
-				if( !$path || !file_exists($path))
-				{
-					//require($_SESSION["config"]["defaultPage"].".php");
-					$this->loadDefaultPage();
-				}
-				else
-				{
-					require($path);
-				}
-			}
-*/
-
 			if(file_exists($_SESSION['config']['corepath'].'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.$this->f_page.".php")
 			|| file_exists($_SESSION['config']['corepath'].'clients'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.$this->f_page.".php")
 			)
@@ -1617,7 +1548,7 @@ class core_tools extends functions
 				if($app_services[$i]['processinbackground'][$k]['page'] == $whereami && $app_services[$i]['processinbackground'][$k]['preprocess'] <> "")
 				{
 					$process_order = $app_services[$i]['processinbackground'][$k]['processorder'];
-					$process_view[$process_order]['preprocess'] = $_SESSION['config']['businessapppath'].DIRECTORY_SEPARATOR.$app_services[$i]['processinbackground'][$k]['preprocess'];
+					$process_view[$process_order]['preprocess'] = 'apps/'.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.$app_services[$i]['processinbackground'][$k]['preprocess'];
 					$process_view[$process_order]['id_service'] = $app_services[$i]['id'];
 				}
 			}
@@ -1648,7 +1579,7 @@ class core_tools extends functions
 				if($app_services[$i]['processinbackground'][$k]['page'] == $whereami && $app_services[$i]['processinbackground'][$k]['postprocess'] <> "")
 				{
 					$process_order = $app_services[$i]['processinbackground'][$k]['processorder'];
-					$process_view[$process_order]['postprocess'] = $_SESSION['config']['businessapppath'].DIRECTORY_SEPARATOR.$app_services[$i]['processinbackground'][$k]['postprocess'];
+					$process_view[$process_order]['postprocess'] = 'apps/'.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.$app_services[$i]['processinbackground'][$k]['postprocess'];
 					$process_view[$process_order]['id_service'] = $app_services[$i]['id'];
 				}
 			}
@@ -1745,7 +1676,7 @@ class core_tools extends functions
 			$path = $action_id;
 			if(strtoupper($_SESSION['actions_pages'][$ind]['ORIGIN']) == "APPS")
 			{
-				$path = $_SESSION['config']['businessapppath']."actions".DIRECTORY_SEPARATOR.$_SESSION['actions_pages'][$ind]['NAME'].".php";
+				$path = "apps/".$_SESSION['businessapps'][0]['appid']."/actions".DIRECTORY_SEPARATOR.$_SESSION['actions_pages'][$ind]['NAME'].".php";
 			}
 			elseif(strtoupper($_SESSION['actions_pages'][$ind]['ORIGIN']) == "MODULE")
 			{
