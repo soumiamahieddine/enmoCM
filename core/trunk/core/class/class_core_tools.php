@@ -1055,8 +1055,9 @@ class core_tools extends functions
 			{
 				require_once('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
 				$app = new business_app_tools();
-				$path = $app->insert_app_page($this->f_page);
-				if( !$path || !file_exists($_SESSION['config']['corepath'].'clients'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.$path) || !file_exists($_SESSION['config']['corepath'].$path))
+				
+				$path = $app->insert_app_page($_GET['page']);
+				if( !$path && !file_exists($_SESSION['config']['corepath'].'clients'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.$path) && !file_exists($_SESSION['config']['corepath'].$path))
 				{
 					//require($_SESSION["config"]["defaultPage"].".php");
 					$this->loadDefaultPage();

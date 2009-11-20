@@ -13,3 +13,7 @@ if (isset($_SESSION['custom_override_id']) && !empty($_SESSION['custom_override_
 	//echo $path;
 	set_include_path( $path.PATH_SEPARATOR.$_SESSION['config']['corepath']);
 }
+elseif(isset($_SESSION['config']['corepath']) && !empty($_SESSION['config']['corepath']))
+{
+	set_include_path($_SESSION['config']['corepath']);	
+}
