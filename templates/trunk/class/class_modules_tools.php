@@ -146,7 +146,7 @@ class templates extends dbquery
 		if(!empty($res_id) && !empty($coll_id))
 		{
 			require_once($_SESSION['pathtocoreclass'].'class_security.php');
-			require_once($_SESSION['config']['businessapppath'].'class'.DIRECTORY_SEPARATOR.'class_business_app_tools.php');
+			require_once('apps/'.$_SESSION['businessapps'][0]['appid'].'/class'.DIRECTORY_SEPARATOR.'class_business_app_tools.php');
 			$sec = new security();
 			$business = new business_app_tools();
 			$this->connect();
