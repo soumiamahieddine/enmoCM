@@ -29,7 +29,7 @@
 * @license GPL
 * @author  Claire Figueras  <dev@maarch.org>
 */
-include('core/init.php');
+include('../../core/init.php');
 
 
 require_once("core/class/class_functions.php");
