@@ -11,9 +11,9 @@
 * @author  Claire Figueras  <dev@maarch.org>
 *
 */
-require_once($_SESSION['config']['businessapppath']."tools".DIRECTORY_SEPARATOR."graphic_lib".DIRECTORY_SEPARATOR."LinePlot.class.php");
-require_once($_SESSION['config']['businessapppath']."tools".DIRECTORY_SEPARATOR."graphic_lib".DIRECTORY_SEPARATOR."BarPlot.class.php");
-require_once($_SESSION['config']['businessapppath']."tools".DIRECTORY_SEPARATOR."graphic_lib".DIRECTORY_SEPARATOR."Pie.class.php");
+require_once("apps/".$_SESSION['businessapps'][0]['appid']."/tools".DIRECTORY_SEPARATOR."graphic_lib".DIRECTORY_SEPARATOR."LinePlot.class.php");
+require_once("apps/".$_SESSION['businessapps'][0]['appid']."/tools".DIRECTORY_SEPARATOR."graphic_lib".DIRECTORY_SEPARATOR."BarPlot.class.php");
+require_once("apps/".$_SESSION['businessapps'][0]['appid']."/tools".DIRECTORY_SEPARATOR."graphic_lib".DIRECTORY_SEPARATOR."Pie.class.php");
 /**
 * Class graphics : Contains the functions to create graphics
 *
