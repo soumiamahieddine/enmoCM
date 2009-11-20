@@ -970,11 +970,11 @@ class core_tools extends functions
 		// Page is defined in a module
 		if(isset($_GET['module']) && $_GET['module'] <> "core")
 		{
-			if(file_exists($_SESSION['config']['corepath'].'modules'.$_GET['module'].DIRECTORY_SEPARATOR.$this->f_page.".php")
-			|| file_exists($_SESSION['config']['corepath'].'clients'.$_SESSION['custom_override_id'].'modules'.$_GET['module'].DIRECTORY_SEPARATOR.$this->f_page.".php")
+			if(file_exists($_SESSION['config']['corepath'].'modules'.DIRECTORY_SEPARATOR.$_GET['module'].DIRECTORY_SEPARATOR.$this->f_page.".php")
+			|| file_exists($_SESSION['config']['corepath'].DIRECTORY_SEPARATOR.'clients'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].'modules'.$_GET['module'].DIRECTORY_SEPARATOR.$this->f_page.".php")
 			)
 			{
-				require('modules'.$_GET['module'].DIRECTORY_SEPARATOR.$this->f_page.".php");
+				require('modules'.DIRECTORY_SEPARATOR.$_GET['module'].DIRECTORY_SEPARATOR.$this->f_page.".php");
 			}
 			else
 			{
@@ -985,7 +985,7 @@ class core_tools extends functions
 		elseif(isset($_GET['module']) && $_GET['module'] == "core")
 		{
 			if(file_exists($_SESSION['config']['corepath'].'core'.DIRECTORY_SEPARATOR.$this->f_page.".php")
-			|| file_exists($_SESSION['config']['corepath'].'clients'.$_SESSION['custom_override_id'].'core'.DIRECTORY_SEPARATOR.$this->f_page.".php")
+			|| file_exists($_SESSION['config']['corepath'].'clients'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'core'.DIRECTORY_SEPARATOR.$this->f_page.".php")
 			)
 			{
 				require('core'.DIRECTORY_SEPARATOR.$this->f_page.".php");
