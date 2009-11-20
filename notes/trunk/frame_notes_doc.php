@@ -28,7 +28,7 @@ if(empty($_SESSION['collection_id_choice']))
 //$db->query("select i.id, i.note_text, i.date, i.user_id,  u.lastname, u.firstname from ".$_SESSION['tablename']['not_notes']." i
 //inner join ".$_SESSION['tablename']['users']." u on i.user_id  = u.user_id  WHERE identifier = ".$_SESSION['doc_id']." and i.coll_id = '".$_SESSION['collection_id_choice']."' ORDER  BY date desc");
 require_once("core/class/class_request.php");
-require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_list_show.php");
+require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_list_show.php");
 $func = new functions();
 $select[$_SESSION['tablename']['users']] = array();
 array_push($select[$_SESSION['tablename']['users']],"user_id","lastname","firstname");
