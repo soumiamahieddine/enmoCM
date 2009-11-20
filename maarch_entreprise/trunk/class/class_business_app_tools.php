@@ -36,7 +36,7 @@ class business_app_tools extends dbquery
 		{
 			$CONFIG = $xmlconfig->CONFIG;
 			$_SESSION['config']['businessappname'] = (string) $CONFIG->businessappname;
-			$_SESSION['config']['businessapppath'] = (string) $CONFIG->businessapppath;
+			//$_SESSION['config']['businessapppath'] = (string) $CONFIG->businessapppath;
 			//##############
 			if($_SERVER['SERVER_PORT'] <> 80)
 				$server_port = ":".$_SERVER['SERVER_PORT'];
@@ -322,19 +322,19 @@ class business_app_tools extends dbquery
 	{
 		if($name == "structures")
 		{
-			//$path = $_SESSION['config']['businessapppath']."admin".DIRECTORY_SEPARATOR."architecture".DIRECTORY_SEPARATOR."structures".DIRECTORY_SEPARATOR.'structures.php';
+			//$path = "apps/".$_SESSION['businessapps'][0]['appid']."/admin".DIRECTORY_SEPARATOR."architecture".DIRECTORY_SEPARATOR."structures".DIRECTORY_SEPARATOR.'structures.php';
 			$path = 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."admin".DIRECTORY_SEPARATOR."architecture".DIRECTORY_SEPARATOR."structures".DIRECTORY_SEPARATOR.'structures.php';
 			return $path;
 		}
 		elseif($name == "subfolders")
 		{
-			//$path = $_SESSION['config']['businessapppath']."admin".DIRECTORY_SEPARATOR."architecture".DIRECTORY_SEPARATOR."subfolders".DIRECTORY_SEPARATOR.'subfolders.php';
+			//$path = "apps/".$_SESSION['businessapps'][0]['appid']."/admin".DIRECTORY_SEPARATOR."architecture".DIRECTORY_SEPARATOR."subfolders".DIRECTORY_SEPARATOR.'subfolders.php';
 			$path = 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."admin".DIRECTORY_SEPARATOR."architecture".DIRECTORY_SEPARATOR."subfolders".DIRECTORY_SEPARATOR.'subfolders.php';
 			return $path;
 		}
 		elseif($name == "types" || $name == "types_up" || $name == "types_up_db" || $name == "types_add" || $name == "types_del")
 		{
-			//$path = $_SESSION['config']['businessapppath']."admin".DIRECTORY_SEPARATOR."architecture".DIRECTORY_SEPARATOR."types".DIRECTORY_SEPARATOR.$name.'.php';
+			//$path = "apps/".$_SESSION['businessapps'][0]['appid']."/admin".DIRECTORY_SEPARATOR."architecture".DIRECTORY_SEPARATOR."types".DIRECTORY_SEPARATOR.$name.'.php';
 			$path = 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."admin".DIRECTORY_SEPARATOR."architecture".DIRECTORY_SEPARATOR."types".DIRECTORY_SEPARATOR.$name.'.php';
 			return $path;
 		}

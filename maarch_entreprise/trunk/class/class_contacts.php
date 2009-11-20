@@ -367,7 +367,7 @@ class contacts extends dbquery
 		{
 			$_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] = 'Y';
 		}
-		require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
+		require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
 		$business = new business_app_tools();
 		$tmp = $business->get_titles();
 		$titles = $tmp['titles'];

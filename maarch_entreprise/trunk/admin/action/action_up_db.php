@@ -40,7 +40,7 @@ $core_tools->load_lang();
 $core_tools->test_admin('admin_actions', 'apps');
 
 require_once("core/class/class_db.php");
-require($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_admin_actions.php");
+require("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_admin_actions.php");
 
 $satus = new AdminActions();
 $satus->addupaction($_REQUEST['mode']);

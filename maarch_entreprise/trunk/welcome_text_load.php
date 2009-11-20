@@ -41,7 +41,7 @@ function get_file_template($this_file)
 ?>
 <div id="welcome_box_left_text" >
 
-	<?php echo get_file_template($_SESSION['config']['businessapppath']."welcome_file.html");?>
+	<?php echo get_file_template("apps/".$_SESSION['businessapps'][0]['appid']."/welcome_file.html");?>
 	<div class="blank_space">&nbsp;</div>
 	
 	

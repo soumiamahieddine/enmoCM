@@ -41,7 +41,7 @@ $core_tools->test_admin('admin_groups', 'apps');
 
 require_once("core/class/class_db.php");
 
-$path = $_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_usergroups.php";
+$path = "apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_usergroups.php";
 require_once($path);
 
 $users = new usergroups();

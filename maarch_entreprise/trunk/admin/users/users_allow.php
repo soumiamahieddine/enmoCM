@@ -39,7 +39,7 @@ $core_tools->test_admin('admin_users', 'apps');
 $core_tools->load_lang();
 
 require_once("core/class/class_db.php");
-require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_users.php");
+require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_users.php");
 
 $func = new functions();
 

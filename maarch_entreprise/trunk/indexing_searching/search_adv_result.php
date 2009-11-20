@@ -35,8 +35,8 @@ require_once("core/class/class_request.php");
 require_once("core/class/class_core_tools.php");
 require_once("core/class/class_security.php");
 require_once("core/class/class_request.php");
-require_once($_SESSION['config']['businessapppath'].'class'.DIRECTORY_SEPARATOR."class_indexing_searching_app.php");
-require_once($_SESSION['config']['businessapppath'].'class'.DIRECTORY_SEPARATOR."class_types.php");
+require_once('apps/'.$_SESSION['businessapps'][0]['appid'].'/class'.DIRECTORY_SEPARATOR."class_indexing_searching_app.php");
+require_once('apps/'.$_SESSION['businessapps'][0]['appid'].'/class'.DIRECTORY_SEPARATOR."class_types.php");
 $core_tools = new core_tools();
 $core_tools->test_user();
 $core_tools->load_lang();
@@ -322,7 +322,7 @@ if(count($_REQUEST['meta']) > 0)
 			else if($tab_id_fields[$j] == 'fulltext' && !empty($_REQUEST['fulltext']))
 			{
 				$json_txt .= " 'fulltext' : ['".addslashes(trim($_REQUEST['fulltext']))."'],";
-				set_include_path($_SESSION['config']['businessapppath']."tools".DIRECTORY_SEPARATOR.PATH_SEPARATOR.get_include_path());
+				set_include_path("apps/".$_SESSION['businessapps'][0]['appid']."/tools".DIRECTORY_SEPARATOR.PATH_SEPARATOR.get_include_path());
 				require_once('Zend/Search/Lucene.php');
 				$_SESSION['search']['plain_text'] = $_REQUEST['fulltext'];
 				$path_to_lucene_index = $_SESSION['collections'][0]['path_to_lucene_index'];

@@ -107,16 +107,17 @@ require_once("core/class/class_db.php");
 require_once("core/class/class_core_tools.php");
 require_once("core/class/class_request.php");
 /*
-require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
+require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
 */
 require('apps'.DIRECTORY_SEPARATOR.$_SESSION['businessapps'][0]['appid'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
 $core_tools = new core_tools();
 $business_app_tools = new business_app_tools();
 $func = new functions();
-$core_tools->load_lang();
+
 $core_tools->build_core_config('core/xml/config.xml');
 $business_app_tools->build_business_app_config();
 $core_tools->load_modules_config($_SESSION['modules']);
+$core_tools->load_lang();
 //$func->show_array($_SESSION);
 $core_tools->load_app_services();
 $core_tools->load_modules_services($_SESSION['modules']);

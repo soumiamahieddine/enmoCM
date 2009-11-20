@@ -80,7 +80,7 @@ $core_tools->load_header();
 			$_SESSION['upfile']['local_path'] = $_SESSION['config']['tmppath'].'tmp_file_'.$_SESSION['user']['UserId'].'.'.strtolower($the_ext);
 			$_SESSION['upfile']['name'] = $_FILES['file']['name'];
 			$_SESSION['upfile']['format'] = $the_ext;
-			require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_indexing_searching_app.php");
+			require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_indexing_searching_app.php");
 			$is = new indexing_searching_app();
 			$ext_ok = $is->is_filetype_allowed($the_ext);
 			if($ext_ok == false)

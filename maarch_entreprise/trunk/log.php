@@ -60,7 +60,7 @@ $_SESSION['slash_env'] = DIRECTORY_SEPARATOR;
 	$core_tools->load_admin_core_board();
 	$core_tools->load_admin_module_board($_SESSION['modules']);
 	//loading app admin board
-	$core_tools->load_admin_app_board($_SESSION['config']['businessapppath']);
+	$core_tools->load_admin_app_board('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR);
 	//$func->show_array($_SESSION['config']);
 	//$func->show_array($_SESSION['ressources']);
 	//$func->show_array($_SESSION['history']);
@@ -85,7 +85,7 @@ else
 		$ldap_conf = new DomDocument();
 		try
 		{
-			if(!@$ldap_conf->load($_SESSION['config']['businessapppath']."ldap".DIRECTORY_SEPARATOR."config_ldap.xml"))
+			if(!@$ldap_conf->load("apps/".$_SESSION['businessapps'][0]['appid']."/ldap".DIRECTORY_SEPARATOR."config_ldap.xml"))
 			{
 				throw new Exception("Impossible de charger le document : ".$_SESSION['config']['businessappurl']."ldap".DIRECTORY_SEPARATOR."config_ldap.xml");
 			}
@@ -103,7 +103,7 @@ else
 		}
 
 		//On inclus la class LDAP qui correspond à l'annuaire
-		if(!include($_SESSION['config']['businessapppath']."ldap".DIRECTORY_SEPARATOR."class_".$type_ldap.".php"))
+		if(!include("apps/".$_SESSION['businessapps'][0]['appid']."/ldap".DIRECTORY_SEPARATOR."class_".$type_ldap.".php"))
 		{
 			exit("Impossible de charger class_".$type_ldap.".php\n");
 		}

@@ -21,11 +21,11 @@ require_once("core/class/class_db.php");
 require_once("core/class/class_request.php");
 require_once("core/class/class_docserver.php");
 require_once("core/class/class_security.php");
-require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_list_show.php");
+require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_list_show.php");
 require_once("core/class/class_history.php");
-require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_indexing_searching_app.php");
-require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_types.php");
-include($_SESSION['config']['businessapppath'].'definition_mail_categories.php');
+require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_indexing_searching_app.php");
+require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_types.php");
+include('apps/'.$_SESSION['businessapps'][0]['appid'].'/definition_mail_categories.php');
 $_SESSION['doc_convert'] = array();
 /****************Management of the location bar  ************/
 $init = false;

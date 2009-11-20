@@ -184,7 +184,7 @@ class users extends dbquery
 	*/
 	public function change_info_user()
 	{
-		require_once($_SESSION['pathtocoreclass'].'class_core_tools.php');
+		require_once('core/class/class_core_tools.php');
 		$core_tools = new core_tools();
 		?>
 		<h1><img src="<?php  echo $_SESSION['config']['img'];?>/picto_user_b.gif" alt="" /> <?php  echo _MY_INFO; ?></h1>
@@ -307,7 +307,7 @@ class users extends dbquery
 	*/
 	public function formuser($mode,$id = "")
 	{
-		require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_usergroup_content.php");
+		require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_usergroup_content.php");
 		// the form to add or modify users
 		$core = new core_tools();
 		$state = true;
@@ -462,7 +462,7 @@ class users extends dbquery
 	*/
 	public function usersinfo($mode)
 	{
-		require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_usergroup_content.php");
+		require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_usergroup_content.php");
 		// return the user information in sessions vars
 
 		if($mode == "add")
@@ -598,7 +598,7 @@ class users extends dbquery
 					$this->query("INSERT INTO ".$_SESSION['tablename']['users']." (  user_id , password , firstname , lastname , phone , mail , department , cookie_key , cookie_date , enabled ) values ( '".$_SESSION['m_admin']['users']['UserId']."', '".$_SESSION['m_admin']['users']['pass']."', '".$tmp_fn."', '".$tmp_ln."', '".$_SESSION['m_admin']['users']['Phone']."', '".$_SESSION['m_admin']['users']['Mail']."', '".$tmp_dep."', '', ".$cookie_date.", 'Y')");
 
 
-					require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_usergroup_content.php");
+					require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_usergroup_content.php");
 					$ugc=new usergroup_content();
 					$ugc->load_db();
 
@@ -627,7 +627,7 @@ class users extends dbquery
 
 					if($_SESSION['m_admin']['users']['UserId'] <> "superadmin")
 					{
-						require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_usergroup_content.php");
+						require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_usergroup_content.php");
 						$ugc=new usergroup_content();
 						$ugc->load_db();
 					}

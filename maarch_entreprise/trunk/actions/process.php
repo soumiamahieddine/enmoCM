@@ -51,7 +51,7 @@ $frm_height = '';
 */
 $mode_form = 'fullscreen';
 
-include($_SESSION['config']['businessapppath'].'definition_mail_categories.php');
+include('apps/'.$_SESSION['businessapps'][0]['appid'].'/definition_mail_categories.php');
 
 /**
  * Gets the folder data for a given document
@@ -129,9 +129,9 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 	require_once("core/class/class_security.php");
 	require_once("modules/basket".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
 	require_once("core/class/class_request.php");
-	require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_types.php");
-	require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_indexing_searching_app.php");
-	require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_chrono.php");
+	require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_types.php");
+	require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_indexing_searching_app.php");
+	require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_chrono.php");
 	$type = new types();
 	$sec =new security();
 	$core_tools =new core_tools();

@@ -38,7 +38,7 @@ $core_tools->test_admin('admin_architecture', 'apps');
 //here we loading the lang vars
 $core_tools->load_lang();
 require_once("core/class/class_db.php");
-require($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_types.php");
+require("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_types.php");
 $func = new functions();
 if(isset($_GET['id']))
 {

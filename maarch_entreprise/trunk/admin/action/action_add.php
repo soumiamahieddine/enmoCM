@@ -52,7 +52,7 @@ $page_id = "action_add";
 $core_tools2->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
 
-require($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_admin_actions.php");
+require("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_admin_actions.php");
 
 $action = new AdminActions();
 

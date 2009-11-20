@@ -53,7 +53,7 @@ $page_id = "contact_add";
 $core_tools2->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
 
-require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_contacts.php");
+require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_contacts.php");
 
 $contact = new contacts();
 $contact->formcontact("add");

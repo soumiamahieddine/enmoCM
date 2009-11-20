@@ -16,7 +16,7 @@ include('core/init.php');
 require_once("core/class/class_functions.php");
 require_once("core/class/class_db.php");
 require_once("core/class/class_core_tools.php");
-require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
+require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
 $core_tools = new core_tools();
 $business = new business_app_tools();
 $core_tools->load_lang();

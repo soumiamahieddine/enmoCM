@@ -210,7 +210,7 @@ class indexing_searching_app extends dbquery
 			}
 		}
 
-		require_once($_SESSION['config']['businessapppath'].'class'.DIRECTORY_SEPARATOR.'class_types.php');
+		require_once('apps/'.$_SESSION['businessapps'][0]['appid'].'/class'.DIRECTORY_SEPARATOR.'class_types.php');
 		$type = new types();
 		$type->inits_opt_indexes($coll_id, $id_to_update);
 		$type_id =  $post['type_id'];

@@ -33,7 +33,7 @@ include('core/init.php');
 require_once("core/class/class_functions.php");
 require_once("core/class/class_db.php");
 require_once("core/class/class_core_tools.php");
-require_once($_SESSION['config']['businessapppath'].'class'.DIRECTORY_SEPARATOR."class_types.php");
+require_once('apps/'.$_SESSION['businessapps'][0]['appid'].'/class'.DIRECTORY_SEPARATOR."class_types.php");
 
 $db = new dbquery();
 $core = new core_tools();

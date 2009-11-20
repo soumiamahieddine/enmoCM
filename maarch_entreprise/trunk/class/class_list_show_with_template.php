@@ -547,7 +547,7 @@ class list_show_with_template extends list_show
 		/* ---------------------- */
 
 
-		$file = $_SESSION['config']['businessapppath']."template".DIRECTORY_SEPARATOR.$actual_template.".html";
+		$file = 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."template".DIRECTORY_SEPARATOR.$actual_template.".html";
 
 
 		//To load including values template Use for case by exemple

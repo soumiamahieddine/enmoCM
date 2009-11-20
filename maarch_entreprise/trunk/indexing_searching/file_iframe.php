@@ -37,7 +37,7 @@ require_once("core/class/class_core_tools.php");
 $core_tools = new core_tools();
 $core_tools->test_user();
 $core_tools->load_lang();
-require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_indexing_searching_app.php");
+require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_indexing_searching_app.php");
 $is = new indexing_searching_app();
 $show_file = $is->show_index_frame($_SESSION['upfile']['format']);
 $ext_list = $is->filetypes_showed_indexation();

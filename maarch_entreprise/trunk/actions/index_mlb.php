@@ -50,7 +50,7 @@ $frm_height = '';
 */
 $mode_form = 'fullscreen';
 $_SESSION['validStep'] = "ko";
-include($_SESSION['config']['businessapppath'].'definition_mail_categories.php');
+include('apps/'.$_SESSION['businessapps'][0]['appid'].'/definition_mail_categories.php');
 
 /**
  * Returns the indexing form text
@@ -86,8 +86,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 	$frm_str = '';
 	require_once("core/class/class_security.php");
 	require_once("modules/basket".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
-	require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
-	require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_types.php");
+	require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
+	require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_types.php");
 	$type = new types();
 	$sec =new security();
 	$b = new basket();
@@ -663,7 +663,7 @@ function check_form($form_id,$values)
 
 			if($_SESSION['upfile']['format'] <> 'maarch')
 			{
-				require_once($_SESSION['config']['businessapppath'].'class'.DIRECTORY_SEPARATOR.'class_indexing_searching_app.php');
+				require_once('apps/'.$_SESSION['businessapps'][0]['appid'].'/class'.DIRECTORY_SEPARATOR.'class_indexing_searching_app.php');
 				$is = new indexing_searching_app();
 				$state = $is->is_filetype_allowed($_SESSION['upfile']['format']);
 				if(!$state)
@@ -878,7 +878,7 @@ function process_category_check($cat_id, $values)
 		}
 	}
 	///// Checks the complementary indexes depending on the doctype
-	require_once($_SESSION['config']['businessapppath'].'class'.DIRECTORY_SEPARATOR.'class_types.php');
+	require_once('apps/'.$_SESSION['businessapps'][0]['appid'].'/class'.DIRECTORY_SEPARATOR.'class_types.php');
 	$type = new types();
 	$type_id =  get_value_fields($values, 'type_id');
 	$coll_id =  get_value_fields($values, 'coll_id');
@@ -1226,7 +1226,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
 			}
 		}
 		///// Manages the complementary indexes depending on the doctype
-		require_once($_SESSION['config']['businessapppath'].'class'.DIRECTORY_SEPARATOR.'class_types.php');
+		require_once('apps/'.$_SESSION['businessapps'][0]['appid'].'/class'.DIRECTORY_SEPARATOR.'class_types.php');
 		$type = new types();
 		$type_id =  get_value_fields($values_form, 'type_id');
 		$indexes = $type->get_indexes( $type_id,$coll_id, 'minimal');
@@ -1352,7 +1352,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
 
 			$c_chrono_out = get_value_fields($values_form, 'chrono_number');
 
-			require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_chrono.php");
+			require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_chrono.php");
 			$chrono_x = new chrono();
 			$my_vars = array("entity_id"=>$c_entity, "arbox_id"=>$c_box_id, "type_id"=>$c_type_id, "category_id"=>$cat_id);
 			$my_form = array("chrono_out" => $c_chrono_out);

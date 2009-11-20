@@ -41,7 +41,7 @@ $core_tools = new core_tools();
 //here we loading the lang vars
 $core_tools->load_lang();
 
-require($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_users.php");
+require("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_users.php");
 
 $users = new users();
 $users->user_modif();

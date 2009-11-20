@@ -107,7 +107,7 @@ class list_show extends functions
 	{
 		if ($template && $actual_template <> '')
 		{
-			require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR.'class_list_show_with_template.php');
+			require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR.'class_list_show_with_template.php');
 			$list_temp = new list_show_with_template();
 
 			$str = $list_temp->list_doc_by_template($result, $nb_total, $title,$what,$name,$key,$detail_destination,$bool_view_document,$bool_radio_form,$method,$action,
@@ -237,7 +237,7 @@ class list_show extends functions
 
 			if ($template == true)
 			{
-				require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR.'class_list_show_with_template.php');
+				require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR.'class_list_show_with_template.php');
 				$template_object = new list_show_with_template();
 				$tdeto = $template_object->display_template_for_user($template_list, $link);
 			}

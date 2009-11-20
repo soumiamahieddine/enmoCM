@@ -55,7 +55,7 @@ $core_tools->manage_location_bar($page_path, $page_label, $page_id, $init, $leve
 $core_tools->load_lang();
 $time = $core_tools->get_session_time_expire();
 require_once("core/class/class_db.php");
-require($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_types.php");
+require("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_types.php");
 
 $users = new types();
 $users->formtype("add");

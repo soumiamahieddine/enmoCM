@@ -279,13 +279,13 @@ function get_general_data($coll_id, $res_id, $mode, $params = array())
 						$data[$field]['select']= array();
 						if($field == 'type_id')
 						{
-							require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_types.php");
+							require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_types.php");
 							$type = new types();
 							$data[$field]['select'] = $type->getArrayStructTypes($coll_id);
 						}
 						else if($field == 'destination')
 						{
-							//require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_entities.php");
+							//require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_entities.php");
 							// TO DO : get the entities list
 						}
 						else if($field == 'nature_id')

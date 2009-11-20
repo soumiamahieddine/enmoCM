@@ -10,7 +10,7 @@ $core_tools->test_user();
 $core_tools->load_lang();
 
 require_once("core/class/class_request.php");
-require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_list_show.php");
+require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_list_show.php");
 $func = new functions();
 
 $what = "all";

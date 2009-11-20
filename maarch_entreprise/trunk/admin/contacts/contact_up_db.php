@@ -40,7 +40,7 @@ $core_tools->load_lang();
 $core_tools->test_admin('admin_contacts', 'apps');
 
 require_once("core/class/class_db.php");
-require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_contacts.php");
+require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_contacts.php");
 
 $contact = new contacts();
 $contact->addupcontact($_POST['mode']);
