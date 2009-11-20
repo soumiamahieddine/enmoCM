@@ -122,7 +122,7 @@ else
 				// TEMP : to modify when deleting indexing_searching module
 				//if(!$core_tools->is_module_loaded('indexing_searching'))
 				//{
-					require_once($_SESSION['config']['businessapppath'].'class'.DIRECTORY_SEPARATOR.'class_indexing_searching_app.php');
+					require_once('apps/'.$_SESSION['businessapps'][0]['appid'].'/class'.DIRECTORY_SEPARATOR.'class_indexing_searching_app.php');
 					$is = new indexing_searching_app();
 					$type_state = $is->is_filetype_allowed($format);
 /*

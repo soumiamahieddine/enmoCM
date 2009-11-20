@@ -17,7 +17,7 @@ if(empty($_SESSION['collection_id_choice']))
 	$_SESSION['collection_id_choice']= $_SESSION['user']['collections'][0];
 }
 require_once("core/class/class_request.php");
-require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_list_show.php");
+require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_list_show.php");
 $func = new functions();
 
 $select[$_SESSION['tablename']['attach_res_attachments']] = array();

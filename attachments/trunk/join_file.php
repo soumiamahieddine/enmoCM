@@ -75,7 +75,7 @@ if($_POST['valid'])
 			$count_level = count($extension)-1;
 			$the_ext = $extension[$count_level];
 
-			require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_indexing_searching_app.php");
+			require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_indexing_searching_app.php");
 			$is = new indexing_searching_app();
 			$ext_ok = $is->is_filetype_allowed($the_ext);
 			$_SESSION['upfile']['format'] = $the_ext;
