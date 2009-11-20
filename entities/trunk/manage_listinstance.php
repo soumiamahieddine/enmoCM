@@ -10,12 +10,10 @@
 * @author  Claire Figueras  <dev@maarch.org>
 */
 
-include('core/init.php');
-
-
-require_once("core/class/class_functions.php");
-require_once("core/class/class_db.php");
-require("core/class/class_core_tools.php");
+//include('core/init.php');
+//require_once("core/class/class_functions.php");
+//require_once("core/class/class_db.php");
+//require("core/class/class_core_tools.php");
 
 function cmp_entity($a, $b)
 {
@@ -320,7 +318,7 @@ else
 ?>
 <body onLoad="setTimeout(window.close, <?php echo $time;?>*60*1000);">
 <?php //$db->show_array($_SESSION[$origin]['diff_list']);?>
-	<?php $link = $_SESSION['urltomodules']."entities/manage_listinstance.php?origin=".$origin;
+	<?php $link = $_SESSION['config']['businessappurl']."index.php?display=true&module=entities&page=manage_listinstance&origin=".$origin;
 	if($only_cc)
 	{
 		$link .= '&only_cc';
@@ -331,6 +329,9 @@ else
 		<div align="center">
 		<h2 class="tit"><?php echo _SEARCH_DIFF_LIST ?></h2>
 		<form action="#" name="search_diff_list" method="" id="search_diff_list" >
+			<input type="hidden" name="display" value="true" />
+			<input type="hidden" name="module" value="entities" />
+			<input type="hidden" name="page" value="manage_listinstance" />
 		<input type="hidden" name="origin" id="origin" value="<?php echo $_REQUEST['origin'];?>" />
 		<table cellpadding="2" cellspacing="2" border="0">
 			<tr>
@@ -439,7 +440,7 @@ else
 	<?php
 	if(isset($_SESSION[$origin]['diff_list']['dest']['user_id']) && !empty($_SESSION[$origin]['diff_list']['dest']['user_id']))
 		{?>
-	<input align="middle" type="button" value="<?php echo _VALIDATE;?>" class="button" name="valid" onclick="change_diff_list('<?php echo $_SESSION['urltomodules'].'entities/load_listinstance.php?origin='.$origin; if($only_cc){echo '&only_cc';}?>', <?php echo "'".$display_value."'"; if($_REQUEST['origin'] == 'redirect'){echo ",'diff_list_div_redirect'";}?>);" />
+	<input align="middle" type="button" value="<?php echo _VALIDATE;?>" class="button" name="valid" onclick="change_diff_list('<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=load_listinstance&origin='.$origin; if($only_cc){echo '&only_cc';}?>', <?php echo "'".$display_value."'"; if($_REQUEST['origin'] == 'redirect'){echo ",'diff_list_div_redirect'";}?>);" />
 	<?php } ?>
 	<input align="middle" type="button" value="<?php echo _CANCEL;?>"  onclick="self.close();" class="button"/>
 
@@ -527,23 +528,6 @@ else
 {
 ?>
 <div id="diff_list" align="center">
-<?php /*
- <br/>
-  <br/>
-  <br/>
-  <br/>
-   <h2 class="tit"><?php echo _MANAGE_MODEL_LIST_TITLE;?> </h2>
-	<table width="79%" border="0">
-    <tr>
-      <td><p align="center"><img src="<?php echo $_SESSION['config']['img'];?>/separateur_1.jpg" width="800" height="1" alt="" /><br/><?php echo _WELCOME_MODEL_LIST_TITLE;?>.<br/><br/>
-          <?php echo _MODEL_LIST_EXPLANATION1;?>.</p>
-        <p align="center"><?php echo _ADD_USER_TO_LIST_EXPLANATION.', '._CLICK_ON;?> : <img src="<?php echo $_SESSION['config']['img'];?>/picto_change.gif" width="21" height="21" alt="" />.</p>
-        <p align="center"><?php echo _REMOVE_USER_FROM_LIST_EXPLANATION.', '._CLICK_ON;?> : <img src="<?php echo $_SESSION['config']['img'];?>/picto_delete.gif" width="19" height="19" alt="" />.</p>
-        <p align="center"><?php echo _TO_MODIFY_LIST_ORDER_EXPLANATION;?> <img src="<?php echo $_SESSION['config']['img'];?>/arrow_down.gif" width="16" height="16" alt="" /> <?php echo _AND;?> <img src="<?php echo $_SESSION['config']['img'];?>/arrow_up.gif" width="16" height="16" alt=""/>. <br/><br/><img src="<?php echo $_SESSION['config']['img'];?>/separateur_1.jpg" width="800" height="1" alt=""/></p>
-        </td>
-    </tr>
-    </table>*/
-	?>
 	<input  type="button" value="<?php echo _CANCEL;?>" class="button"  onclick="self.close();"/>
 	</div>
   <?php  }

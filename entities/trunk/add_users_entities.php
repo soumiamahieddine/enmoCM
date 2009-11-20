@@ -11,11 +11,10 @@
 * @author  Cédric Ndoumba  <dev@maarch.org>
 */
 
-include('core/init.php');
+//include('core/init.php');
 
-require_once("core/class/class_functions.php");
-
-require("core/class/class_core_tools.php");
+//require_once("core/class/class_functions.php");
+//require("core/class/class_core_tools.php");
 
 $admin = new core_tools();
 //here we loading the lang vars
@@ -53,7 +52,10 @@ else
 <body onLoad="setTimeout(window.close, <?php  echo $time;?>*60*1000);">
 <div class="popup_content">
 <h2 class="tit"><?php  echo USER_ADD_ENTITY;?></h2>
-<form name="chooseEntity" id="chooseEntity" method="get" action="<?php  $_SESSION['urltomodules'].'entities/';?>choose_user_entity.php" class="forms">
+<form name="chooseEntity" id="chooseEntity" method="get" action="<?php  $_SESSION['config']['businessappurl'];?>index.php" class="forms">
+<input type="hidden" name="display" value="true" />
+<input type="hidden" name="module" value="entities" />
+<input type="hidden" name="page" value="choose_user_entity" />
 <p>
 	<label for="groupe"> <?php  echo _CHOOSE_ENTITY;?> : </label>
 	<select name="entity" id="entity" size="10">

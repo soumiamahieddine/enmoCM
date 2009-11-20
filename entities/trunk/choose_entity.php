@@ -11,11 +11,11 @@
 * @author  Cédric Ndoumba  <dev@maarch.org>
 * @author  Claire Figueras  <dev@maarch.org>
 */
-include('core/init.php');
+//include('core/init.php');
 
-require_once("core/class/class_functions.php");
-require_once("core/class/class_db.php");
-require("core/class/class_core_tools.php");
+//require_once("core/class/class_functions.php");
+//require_once("core/class/class_db.php");
+//require("core/class/class_core_tools.php");
 $path = 'modules/entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_entities.php';
 require($path);
 $core_tools = new core_tools();
@@ -50,7 +50,10 @@ else
 
 ?>
 <body>
-<form name="choose_entity" method="get" action="choose_entity.php" class="forms" >
+<form name="choose_entity" method="get" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php" class="forms" >
+<input type="hidden" name="display" value="true" />
+<input type="hidden" name="module" value="entities" />
+<input type="hidden" name="page" value="choose_entity" />
 	<p>
 		<label for="entity_id"><?php  echo _ENTITY;?> : </label>
 		<select name="entityid" onChange="this.form.submit();">

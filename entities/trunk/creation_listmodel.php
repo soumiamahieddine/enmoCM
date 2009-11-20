@@ -10,11 +10,11 @@
 * @license GPL
 * @author  Claire Figueras  <dev@maarch.org>
 */
-include('core/init.php');
+//include('core/init.php');
 
-require_once("core/class/class_functions.php");
-require_once("core/class/class_db.php");
-require("core/class/class_core_tools.php");
+//require_once("core/class/class_functions.php");
+//require_once("core/class/class_db.php");
+//require("core/class/class_core_tools.php");
 function cmp_entity($a, $b)
 {
    	return strcmp($a["entity_label"], $b["entity_label"]);
@@ -302,12 +302,15 @@ $time = $core_tools->get_session_time_expire();
 ?>
 <body onLoad="setTimeout(window.close, <?php echo $time;?>*60*1000);">
 <?php //$db->show_array($_SESSION['m_admin']['entity']['listmodel']);?>
-	<?php $link = $_SESSION['urltomodules']."entities/creation_listmodel.php";
+	<?php $link = $_SESSION['config']['businessappurl']."index.php?display=true&module=entities&page=creation_listmodel";
 		?>
 		<br/></br>
 		<div align="center">
 		<h2 class="tit"><?php echo _SEARCH_DIFF_LIST ?></h2>
 		<form action="#" name="search_diff_list" >
+			<input type="hidden" name="display" value="true" />
+			<input type="hidden" name="module" value="entities" />
+			<input type="hidden" name="page" value="creation_listmodel" />
 		<table cellpadding="2" cellspacing="2" border="0">
 			<tr>
 				<th>
@@ -347,8 +350,8 @@ $time = $core_tools->get_session_time_expire();
 			 	<td><?php echo $_SESSION['m_admin']['entity']['listmodel']['dest']['lastname'];?></td>
 				<td><?php echo $_SESSION['m_admin']['entity']['listmodel']['dest']['firstname'];?></td>
 				<td><?php echo $_SESSION['m_admin']['entity']['listmodel']['dest']['entity_label']; ?></td>
-				<td class="action_entities"><a href="creation_listmodel.php?action=remove_dest" class="delete"><?php echo _DELETE;?></a></td>
-				<td class="action_entities"><a href="creation_listmodel.php?what_users=<?php echo $what_users; ?>&what_services=<?php echo $what_services; ?>&action=dest_to_copy" class="down"><?php echo _TO_CC;?></a></td>
+				<td class="action_entities"><a href="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=entities&page=creation_listmodel&action=remove_dest" class="delete"><?php echo _DELETE;?></a></td>
+				<td class="action_entities"><a href="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=entities&page=creation_listmodel&what_users=<?php echo $what_users; ?>&what_services=<?php echo $what_services; ?>&action=dest_to_copy" class="down"><?php echo _TO_CC;?></a></td>
 		 </tr>
 	</table>
 	<?php } ?>
@@ -374,7 +377,7 @@ $time = $core_tools->get_session_time_expire();
 	  		<td><img src="<?php echo $_SESSION['urltomodules'].'entities/img/manage_entities_b.gif';?>" alt="<? echo _ENTITY;?>" title="<? echo _ENTITY;?>" /></td>
 			<td><?php echo $_SESSION['m_admin']['entity']['listmodel']['copy']['entities'][$i]['entity_id'];?></td>
 			<td colspan="2"><?php echo $_SESSION['m_admin']['entity']['listmodel']['copy']['entities'][$i]['entity_label'];?></td>
-			<td class="action_entities"><a href="<? echo $link;?>?what_users=<?php echo $what_users; ?>&what_services=<?php echo $what_services; ?>&action=remove_entity&rank=<?php echo $i;?>&id=<?php echo $_SESSION['m_admin']['entity']['listmodel']['copy']['entities'][$i]['entity_id'];?>" class="delete"><?php echo _DELETE;?></a></td>
+			<td class="action_entities"><a href="<? echo $link;?>&what_users=<?php echo $what_users; ?>&what_services=<?php echo $what_services; ?>&action=remove_entity&rank=<?php echo $i;?>&id=<?php echo $_SESSION['m_admin']['entity']['listmodel']['copy']['entities'][$i]['entity_id'];?>" class="delete"><?php echo _DELETE;?></a></td>
 
 			<td  >&nbsp;</td>
 	</tr>
@@ -395,8 +398,8 @@ $time = $core_tools->get_session_time_expire();
 			<td><?php echo $_SESSION['m_admin']['entity']['listmodel']['copy']['users'][$i]['lastname'];?></td>
 			<td><?php echo $_SESSION['m_admin']['entity']['listmodel']['copy']['users'][$i]['firstname'];?></td>
 			<td><?php echo $_SESSION['m_admin']['entity']['listmodel']['copy']['users'][$i]['entity_label']; ?></td>
-			<td class="action_entities"><a href="<? echo $link;?>?what_users=<?php echo $what_users; ?>&what_services=<?php echo $what_services; ?>&action=remove_user&rank=<?php echo $i;?>&id=<?php echo $_SESSION['m_admin']['entity']['listmodel']['copy']['users'][$i]['user_id'];?>" class="delete"><?php echo _DELETE;?></a></td>
-			<td class="action_entities"><a href="<? echo $link;?>?what_users=<?php echo $what_users; ?>&what_services=<?php echo $what_services; ?>&action=copy_to_dest&rank=<?php echo $i;?>" class="up"><?php echo _TO_DEST;?></a></td>
+			<td class="action_entities"><a href="<? echo $link;?>&what_users=<?php echo $what_users; ?>&what_services=<?php echo $what_services; ?>&action=remove_user&rank=<?php echo $i;?>&id=<?php echo $_SESSION['m_admin']['entity']['listmodel']['copy']['users'][$i]['user_id'];?>" class="delete"><?php echo _DELETE;?></a></td>
+			<td class="action_entities"><a href="<? echo $link;?>&what_users=<?php echo $what_users; ?>&what_services=<?php echo $what_services; ?>&action=copy_to_dest&rank=<?php echo $i;?>" class="up"><?php echo _TO_DEST;?></a></td>
 		</tr>
 <?php }
 		?>
@@ -454,7 +457,7 @@ $time = $core_tools->get_session_time_expire();
 				<tr <?php echo $color; ?>>
 					<td><?php echo $entities[$j]['ID'];?></td>
 					<td><?php echo $entities[$j]['DEP']; ?></td>
-					<td class="action_entities"><a href="<? echo $link;?>?what_users=<?php echo $what_users; ?>&what_services=<?php echo $what_services; ?>&action=add_entity&id=<?php echo $entities[$j]['ID'];?>" class="change"><?php echo _ADD_CC;?></a></td>
+					<td class="action_entities"><a href="<? echo $link;?>&what_users=<?php echo $what_users; ?>&what_services=<?php echo $what_services; ?>&action=add_entity&id=<?php echo $entities[$j]['ID'];?>" class="change"><?php echo _ADD_CC;?></a></td>
 			</tr>
 			<?php }
 			?>
@@ -491,7 +494,7 @@ $time = $core_tools->get_session_time_expire();
 				<td><?php echo $users[$j]['NOM']; ?></td>
 				<td><?php echo $users[$j]['PRENOM']; ?></td>
 				<td><?php echo $users[$j]['DEP'];?></td>
-				<td class="action_entities"><a href="<? echo $link;?>?what_users=<?php echo $what_users; ?>&what_services=<?php echo $what_services; ?>&action=add_user&id=<?php echo $users[$j]['ID'];?>" class="change"><?php echo _ADD;?></a></td>
+				<td class="action_entities"><a href="<? echo $link;?>&what_users=<?php echo $what_users; ?>&what_services=<?php echo $what_services; ?>&action=add_user&id=<?php echo $users[$j]['ID'];?>" class="change"><?php echo _ADD;?></a></td>
 			</tr>
 			<?php }
 			?>

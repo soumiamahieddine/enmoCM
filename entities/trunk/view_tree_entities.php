@@ -10,9 +10,9 @@
 * @license GPL
 * @author  Cédric Ndoumba  <dev@maarch.org>
 */
-require_once("core/class/class_functions.php");
-require_once("core/class/class_db.php");
-require_once("core/class/class_core_tools.php");
+//require_once("core/class/class_functions.php");
+//require_once("core/class/class_db.php");
+//require_once("core/class/class_core_tools.php");
 $admin = new core_tools();
 $admin->test_admin('manage_entities', 'entities');
 $db = new dbquery();
@@ -49,12 +49,12 @@ while($res = $db->fetch_object())
 	<table width="100%" border="0">
 		<tr>
 	    	<td>
-				<iframe name="choose_tree" id="choose_tree" width="550" height="40" frameborder="0" scrolling="no" src="<?php  echo $_SESSION['urltomodules']."entities/choose_tree.php";?>"></iframe>
+				<iframe name="choose_tree" id="choose_tree" width="550" height="40" frameborder="0" scrolling="no" src="<?php  echo $_SESSION['config']['businessappurl']."index.php?display=true&module=entities&page=choose_tree";?>"></iframe>
 			</td>
 		</tr>
 		<tr>
 			<td>
-				<iframe name="show_trees" id="show_trees" width="550" height="600" frameborder="0" scrolling="auto" src="<?php  echo $_SESSION['urltomodules']."entities/show_trees.php";?>"></iframe>
+				<iframe name="show_trees" id="show_trees" width="550" height="600" frameborder="0" scrolling="auto" src="<?php  echo $_SESSION['config']['businesappurl']."index.php?display=true&module=entities&page=show_trees";?>"></iframe>
 			</td>
 		</tr>
 	</table>

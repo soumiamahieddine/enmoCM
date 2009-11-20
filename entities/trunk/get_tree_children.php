@@ -1,5 +1,5 @@
 <?php
-include('core/init.php');
+//include('core/init.php');
 
 if(isset($_REQUEST['branch_id']) && !empty($_REQUEST['branch_id']) && isset($_REQUEST['IdTree']) && !empty($_REQUEST['IdTree']))
 {
@@ -19,9 +19,9 @@ if(isset($_REQUEST['branch_id']) && !empty($_REQUEST['branch_id']) && isset($_RE
 	$branch_level_id = str_replace("\"", "", $branch_level_id);
 	//echo "alert('branch_level_id:".$branch_level_id."');";
 	//exit;
-	require_once("core/class/class_functions.php");
-	require_once("core/class/class_db.php");
-	require_once("core/class/class_core_tools.php");
+	//require_once("core/class/class_functions.php");
+	//require_once("core/class/class_db.php");
+	//require_once("core/class/class_core_tools.php");
 	$core_tools = new core_tools();
 	$core_tools->load_lang();
 	$func = new functions();
@@ -60,12 +60,9 @@ if(isset($_REQUEST['branch_id']) && !empty($_REQUEST['branch_id']) && isset($_RE
 		while($res = $db->fetch_object())
 		{
 			array_push($children, array('id' => $res->type_id, 'tree' => $_SESSION['entities_chosen_tree'], 'key_value' => $res->type_id, 'label_value' => $db->show_string($res->description), 'script' => "other"));
-			//array_push($children, array('id' => $res->type_id, 'tree' => $_SESSION['entities_chosen_tree'], 'key_value' => $res->type_id, 'label_value' => $db->show_string($res->description), 'script' => "default"));
 		}
 		if(count($children) > 0)
 		{
-			//echo "alert('id:".$children[$i]['id']."');";
-			//echo "alert(txt'".$children[$i]['label_value']."');";
 			echo "[";
 			for($i=0; $i< count($children); $i++)
 			{

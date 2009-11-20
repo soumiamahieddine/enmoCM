@@ -10,12 +10,11 @@
 * @license GPL v3
 * @author  Claire Figueras  <dev@maarch.org>
 */
-include('core/init.php');
+//include('core/init.php');
 
-
-require_once($_SESSION['pathtocoreclass'].'class_functions.php');
-require_once($_SESSION['pathtocoreclass'].'class_db.php');
-require_once($_SESSION['pathtocoreclass'].'class_core_tools.php');
+//require_once($_SESSION['pathtocoreclass'].'class_functions.php');
+//require_once($_SESSION['pathtocoreclass'].'class_db.php');
+//require_once($_SESSION['pathtocoreclass'].'class_core_tools.php');
 require_once('modules/entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_listdiff.php');
 
 $db = new dbquery();
@@ -131,7 +130,7 @@ if($only_cc)
 	$arg .= '&only_cc';
 }
 	$content .= '<p class="button" >';
-		$content .= '<img src="'.$_SESSION['config']['img'].'/modif_liste.png" alt="" /><a href="javascript://" onclick="window.open(\''.$_SESSION['urltomodules'].'entities/manage_listinstance.php?origin='.$origin.$arg.'\', \'\', \'scrollbars=yes,menubar=no,toolbar=no,status=no,resizable=yes,width=1024,height=650,location=no\');">'.$label_button.'</a>';
+		$content .= '<img src="'.$_SESSION['config']['img'].'/modif_liste.png" alt="" /><a href="javascript://" onclick="window.open(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=manage_listinstance&origin='.$origin.$arg.'\', \'\', \'scrollbars=yes,menubar=no,toolbar=no,status=no,resizable=yes,width=1024,height=650,location=no\');">'.$label_button.'</a>';
 	$content .= '</p>';
 
 echo "{status : 0, div_content : '".addslashes($content)."'}";

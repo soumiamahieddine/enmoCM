@@ -1,13 +1,11 @@
 <?php
-include('core/init.php');
-
-
+//include('core/init.php');
 
 if(isset($_POST['branch_id'])) {
 
-	require_once("core/class/class_functions.php");
-	require_once("core/class/class_db.php");
-	require_once("core/class/class_core_tools.php");
+	//require_once("core/class/class_functions.php");
+	//require_once("core/class/class_db.php");
+	..require_once("core/class/class_core_tools.php");
 	require_once('modules/entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_entities.php');
 	$core_tools = new core_tools();
 	$core_tools->load_lang();
@@ -23,7 +21,6 @@ if(isset($_POST['branch_id'])) {
 		{
 			$canhavechildren = 'canhavechildren:false, ';
 			array_push($children, array('id' => $res->user_id.'_'.$_POST['branch_id'], 'tree' => $_SESSION['entities_chosen_tree'], 'key_value' => $res->user_id, 'label_value' => $res->user_id.' - '.$ent->show_string($res->lastname.' '.$res->firstname, true), 'canhavechildren' => '', 'is_entity' => 'false'));
-
 		}
 	}
 	else
@@ -49,12 +46,8 @@ if(isset($_POST['branch_id'])) {
 			$canhavechildren = '';
 			$canhavechildren = 'canhavechildren:true, ';
 			array_push($children, array('id' => $res->entity_id, 'tree' => $_SESSION['entities_chosen_tree'], 'key_value' => $res->entity_id, 'label_value' => $ent->show_string($res->entity_id.' - '.$res->entity_label, true), 'canhavechildren' => $canhavechildren, 'is_entity' => 'true'));
-
 		}
-
 	}
-
-
 	if(count($children) > 0)
 	{
 		echo '[';

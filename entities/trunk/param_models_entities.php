@@ -1,5 +1,5 @@
 <?php
-include('core/init.php');
+//include('core/init.php');
 
 
 if($_SESSION['service_tag'] == 'admin_models')
@@ -101,7 +101,7 @@ elseif($_SESSION['service_tag'] == 'model_info')
 }
 elseif($_SESSION['service_tag'] == 'load_model_db')
 {
-	require_once("core/class/class_db.php");
+	//require_once("core/class/class_db.php");
 	$db = new dbquery();
 	$db->connect();
 	$db->query("Delete from ".$_SESSION['tablename']['mod_models_association']." where model_id = '".$_SESSION['m_admin']['model']['ID']."' and what = 'destination'");

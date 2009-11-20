@@ -131,7 +131,7 @@ if($_SESSION['service_tag_form'] == 'formentity')
 				/// TO DO : use modal instead of popup
 				?>
 				<p class="buttons">
-					<input type="button" onclick="window.open('<?php echo $_SESSION['urltomodules'].'entities/';?>creation_listmodel.php?what=A', '', 'scrollbars=yes,menubar=no,toolbar=no,status=no,resizable=yes,width=1024,height=650,location=no');" class="button" value="<?php echo _MODIFY_LIST;?>" />
+					<input type="button" onclick="window.open('<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=';?>creation_listmodel&what=A', '', 'scrollbars=yes,menubar=no,toolbar=no,status=no,resizable=yes,width=1024,height=650,location=no');" class="button" value="<?php echo _MODIFY_LIST;?>" />
 				</p>
 				<?php 
 			}
@@ -141,7 +141,7 @@ if($_SESSION['service_tag_form'] == 'formentity')
 				<h2 class="tit"><?php echo _NO_LINKED_DIFF_LIST;?>.</h2>
 				<p class="buttons">
 					<p>
-						<input type="button" onclick="window.open('<?php echo $_SESSION['urltomodules'].'entities/';?>creation_listmodel.php', '', 'scrollbars=yes,menubar=no,toolbar=no,status=no,resizable=yes,width=1024,height=650,location=no');" class="button" value="<?php echo _CREATE_LIST;?>" />
+						<input type="button" onclick="window.open('<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=';?>creation_listmodel', '', 'scrollbars=yes,menubar=no,toolbar=no,status=no,resizable=yes,width=1024,height=650,location=no');" class="button" value="<?php echo _CREATE_LIST;?>" />
 					</p>
 				</p>
 				<?php 

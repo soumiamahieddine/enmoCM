@@ -14,7 +14,8 @@ elseif($_SESSION['service_tag'] == 'formuser')
         <p>
             <?php  if($_SESSION['m_admin']['users']['UserId'] <> "superadmin")
 			{?>
-                <iframe name="user_entities" id="user_entities" class="frameform2" src="<?php  echo $_SESSION['urltomodules'].'entities/users_entities_form.php';?>" frameborder="0"></iframe>
+               <!-- <iframe name="user_entities" id="user_entities" class="frameform2" src="<?php  echo $_SESSION['urltomodules'].'entities/users_entities_form.php';?>" frameborder="0"></iframe>-->
+              <iframe name="user_entities" id="user_entities" class="frameform2" src="<?php  echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=users_entities_form';?>" frameborder="0"></iframe>
             <?php  } ?>
         </p>
 </div>

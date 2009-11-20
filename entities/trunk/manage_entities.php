@@ -40,27 +40,16 @@ $page_label = _ENTITIES_LIST;
 $page_id = "manage_entities";
 $admin->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
-require_once("core/class/class_request.php");
-require_once("core/class/class_functions.php");
+//require_once("core/class/class_request.php");
+//require_once("core/class/class_functions.php");
 require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_list_show.php");
 require_once('modules/entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_entities.php');
 $ent = new entity();
 $func = new functions();
 $request = new request;
 
-
-
 $what = '';
 $where = '';
-
-/*
-$order = ' order by entity_type, entity_label';
-
-if(isset($_REQUEST['order_field']) && !empty($_REQUEST['order_field']))
-{
-	$order = ' order by '.$_REQUEST['order_field'].' '.$_REQUEST['order'];
-
-}*/
 
 if(isset($_REQUEST['what']) && !empty($_REQUEST['what']))
 {
@@ -164,7 +153,6 @@ for ($i=0;$i<count($tab);$i++)
 				$tab[$i][$j]["valign"]="bottom";
 				$tab[$i][$j]["show"]=true;
 			}
-
 		}
 	}
 }
@@ -180,7 +168,7 @@ $_SESSION['m_admin']['init'] = true;
 
 $title = _ENTITIES_LIST." : ".$i." "._ENTITIES;
 $autoCompletionArray = array();
-$autoCompletionArray["list_script_url"] = $_SESSION['urltomodules'].'entities/entities_list_by_label.php';
+$autoCompletionArray["list_script_url"] = $_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=entities_list_by_label';
 $autoCompletionArray["number_to_begin"] = 1;
 
 $list->admin_list($tab, $i, $title, 'entity_id','manage_entities','entities', 'entity_id', true, $page_name_up, $page_name_val, $page_name_ban, $page_name_del, $page_name_add, $label_add, false, false, _ALL_ENTITIES, _ENTITY, $_SESSION['urltomodules'].'entities/img/manage_entities_b.gif', true, true, false, true, "", true, $autoCompletionArray);

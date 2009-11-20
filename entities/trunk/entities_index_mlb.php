@@ -1,5 +1,5 @@
 <?
-include('core/init.php');
+//include('core/init.php');
 
 
 if($_SESSION['service_tag'] == 'categories_declaration')

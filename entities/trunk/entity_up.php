@@ -10,8 +10,7 @@
 * @license GPL
 * @author  Cédric Ndoumba  <dev@maarch.org>
 */
-include('core/init.php');
-
+//include('core/init.php');
 
 $admin = new core_tools();
 $admin->test_admin('manage_entities', 'entities');
@@ -31,8 +30,7 @@ $page_label = _MODIFICATION;
 $page_id = "entity_up";
 $admin->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
-//require_once("core/class/class_db.php");
-//require_once("modules/folder".DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_admin_foldertypes.php');
+
 require_once('modules/entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_entities.php');
 
 $func = new functions();
@@ -41,7 +39,6 @@ $ent = new entity();
 if(isset($_GET['id']))
 {
 	$id = addslashes($func->wash($_GET['id'], "alphanum", _THE_ID));
-	//$ent->access_user_entity($_SESSION['user']['UserId'], $id)
 }
 else
 {

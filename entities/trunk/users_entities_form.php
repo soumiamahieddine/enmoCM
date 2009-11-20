@@ -11,12 +11,12 @@
 * @author  Cédric Ndoumba  <dev@maarch.org>
 * @author  Claire Figueras  <dev@maarch.org>
 */
-include('core/init.php');
+//include('core/init.php');
 
 
-require_once("core/class/class_functions.php");
-require_once("core/class/class_db.php");
-require("core/class/class_core_tools.php");
+//require_once("core/class/class_functions.php");
+//require_once("core/class/class_db.php");
+//require_once("core/class/class_core_tools.php");
 
 $admin = new core_tools();
 //$admin->test_admin('manage_entities', 'entities');
@@ -63,7 +63,10 @@ $admin->load_header(_USER_ENTITIES_TITLE);
 
 <body id="iframe">
 <div class="block">
-<form name="userEntity" method="get" action="<?php  $_SESSION['urltomodules'].'entities/';?>users_entities_form.php" >
+<form name="userEntity" method="get" action="<?php  $_SESSION['config']['businessappurl'];?>index.php" >
+<input type="hidden" name="display" value="true" />
+<input type="hidden" name="module" value="entities" />
+<input type="hidden" name="page" value="users_entities_form" />
  <h2 class="tit"> <?php  echo _USER_ENTITIES_TITLE; ?> :</h2>
 
 <?php
@@ -95,7 +98,7 @@ $admin->load_header(_USER_ENTITIES_TITLE);
 	if (count($_SESSION['m_admin']['entity']['entities']) < $_SESSION['m_admin']['nbentities']  || empty($_SESSION['m_admin']['entity']['entities']))
 	{
 	?>
-		<input class="button" type="button" name="addEntity" onClick="window.open('<?php  echo $_SESSION['urltomodules'];?>entities/add_users_entities.php', 'add', 'toolbar=no, status=no, width=550, height=270, left=500, top=300, scrollbars=no, top=no, location=no, resizable=yes, menubar=no')" value="<?php  echo _ADD_TO_ENTITY; ?>" />
+		<input class="button" type="button" name="addEntity" onClick="window.open('<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=entities&page=add_users_entities', 'add', 'toolbar=no, status=no, width=550, height=270, left=500, top=300, scrollbars=no, top=no, location=no, resizable=yes, menubar=no')" value="<?php  echo _ADD_TO_ENTITY; ?>" />
 	<?php
 	}
 	?>

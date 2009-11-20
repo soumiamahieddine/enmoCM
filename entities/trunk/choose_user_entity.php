@@ -11,12 +11,11 @@
 * @author  Cédric Ndoumba  <dev@maarch.org>
 * @author  Claire Figueras  <dev@maarch.org>
 */
-include('core/init.php');
+//include('core/init.php');
  
-
-require_once("core/class/class_functions.php");
-require_once("core/class/class_db.php");
-require_once("core/class/class_core_tools.php");
+//require_once("core/class/class_functions.php");
+//require_once("core/class/class_db.php");
+//require_once("core/class/class_core_tools.php");
 
 $admin = new core_tools();
 //$admin->test_admin('manage_entities', 'entities');
@@ -45,5 +44,5 @@ else
 }
 ?>
 <script language="javascript">
-window.parent.opener.location.href='<?php  echo $_SESSION['urltomodules'].'entities/';?>users_entities_form.php';self.close();
+window.parent.opener.location.href='<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=entities&page=users_entities_form';self.close();
 </script>

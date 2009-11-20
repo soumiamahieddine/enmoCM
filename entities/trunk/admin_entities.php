@@ -60,11 +60,6 @@ unset($_SESSION['m_admin']);
 				<strong><?php  echo _MANAGE_ENTITIES;?></strong>
 		</div>
     </div>
-	<!--<div class="admin_item" id="admin_users_entities_sub" title="<?php  echo _ENTITY_USER_DESC;?>" onclick="window.top.location='<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=users_list&amp;module=entities';">
-        <div class="sum_margin">
-				<strong><?php  echo _ENTITIES_USERS;?></strong>
-         </div>
-    </div>-->
     <div class="admin_item" id="admin_entities_tree_sub" title="<?php  echo _ENTITY_TREE_DESC;?>" onclick="window.top.location='<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=view_tree_entities&amp;module=entities';">
         <div class="sum_margin">
 				<strong><?php  echo _ENTITY_TREE;?></strong>
