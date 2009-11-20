@@ -10,7 +10,7 @@
 * @license GPL v3
 * @author  Laurent Giovannoni  <dev@maarch.org>
 */
-include('core/init.php');
+include('../core/init.php');
 
 if(trim($_GET['app'])<> "" )
 {
