@@ -196,6 +196,10 @@ class core_tools extends functions
 	*/
 	public function load_lang()
 	{
+		//Overload of language files with custom langage file
+		if (isset($_SESSION['custom_override_id']) && !empty($_SESSION['custom_override_id']))
+			$this->load_lang_custom_override($_SESSION['custom_override_id']);
+		
 		if(isset($_SESSION['config']['lang']) && file_exists($_SESSION['config']['corepath'].'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php'))
 		{
 			include($_SESSION['config']['corepath'].'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php');
@@ -205,6 +209,8 @@ class core_tools extends functions
 			$_SESSION['error'] = "Language file missing...<br/>";
 		}
 		$this->load_lang_modules($_SESSION['modules']);
+		
+		
 	}
 
 	/**
@@ -225,6 +231,15 @@ class core_tools extends functions
 				$_SESSION['error'] .= "Language file missing for module : ".$modules[$i]['moduleid']."<br/>";
 			}
 		}
+	}
+	
+	private function load_lang_custom_override($custom_id)
+	{
+		$pathname = $_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$custom_id.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php';
+		if (file_exists($pathname)) {
+			include($pathname);
+		}
+		
 	}
 
 	/**
