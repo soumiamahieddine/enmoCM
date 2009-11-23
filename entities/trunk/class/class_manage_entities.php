@@ -639,7 +639,7 @@ class entity extends dbquery
 						$this->query("delete from ".$_SESSION['tablename']['ent_entities']." where entity_id = '".$this->protect_string_db(trim($id))."'");
 						if($_SESSION['history']['entitydel'] == "true")
 						{
-							require_once($_SESSION['pathtocoreclass'].'class_history.php');
+							require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_history.php');
 							$users = new history();
 							$users->add($_SESSION['tablename']['ent_entities'], $id,'DEL',_ENTITY_DELETION." : ".$this->protect_string_db(trim($id)), $_SESSION['config']['databasetype']);
 						}
@@ -659,7 +659,7 @@ class entity extends dbquery
 	*/
 	public function entityinfo($mode)
 	{
-		require_once($_SESSION['pathtocoreclass'].'class_core_tools.php');
+		//require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR..'class_core_tools.php');
 		$core = new core_tools();
 		if($mode == 'up')
 		{
@@ -775,7 +775,7 @@ class entity extends dbquery
 	*/
 	public function addupentity($mode)
 	{
-		require_once($_SESSION['pathtocoreclass'].'class_core_tools.php');
+		//require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_core_tools.php');
 		$core = new core_tools();
 		// add ou modify entity in the database
 		$this->entityinfo($mode);
@@ -847,7 +847,7 @@ class entity extends dbquery
 
 				if($_SESSION['history']['entityup'] == "true")
 				{
-					require($_SESSION['pathtocoreclass'].'class_history.php');
+					require('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_history.php');
 					$hist = new history();
 					$hist->add($_SESSION['tablename']['ent_entities'], $_SESSION['m_admin']['entity']['entityId'] ,'UP',_ENTITY_UPDATED.' : '.$_SESSION['m_admin']['entity']['entityId'] , $_SESSION['config']['databasetype'], 'folder');
 				}
