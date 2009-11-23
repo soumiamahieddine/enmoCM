@@ -144,7 +144,7 @@ class folder extends request
 	*/
 	public function build_modules_tables()
 	{
-		$xmlconfig = simplexml_load_file("modules".DIRECTORY_SEPARATOR."folder".DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR"config.xml");
+		$xmlconfig = simplexml_load_file("modules".DIRECTORY_SEPARATOR."folder".DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."config.xml");
 
 		$TABLENAME = $xmlconfig->TABLENAME;
 		$_SESSION['tablename']['fold_folders'] = (string) $TABLENAME->fold_folders;
