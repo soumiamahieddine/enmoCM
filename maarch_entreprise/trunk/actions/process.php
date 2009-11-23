@@ -51,7 +51,7 @@ $frm_height = '';
 */
 $mode_form = 'fullscreen';
 
-include('apps/'.$_SESSION['businessapps'][0]['appid'].'/definition_mail_categories.php');
+include('apps'.DIRECTORY_SEPARATOR..$_SESSION['businessapps'][0]['appid'].DIRECTORY_SEPARATOR.'definition_mail_categories.php');
 
 /**
  * Gets the folder data for a given document
@@ -62,7 +62,7 @@ include('apps/'.$_SESSION['businessapps'][0]['appid'].'/definition_mail_categori
  **/
 function get_folder_data($coll_id, $res_id)
 {
-	require_once("core/class/class_security.php");
+	require_once("core".DIRECTORY_SEPARATOR."class"."class_security.php");
 	$sec =new security();
 	$view = $sec->retrieve_view_from_coll_id($coll_id);
 	if(empty($view))
@@ -126,12 +126,12 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 	$_SESSION['req'] = "action";
 	$res_id = $values[0];
 	$frm_str = '';
-	require_once("core/class/class_security.php");
-	require_once("modules/basket".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
-	require_once("core/class/class_request.php");
-	require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_types.php");
-	require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_indexing_searching_app.php");
-	require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_chrono.php");
+	require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR"class_security.php");
+	require_once("modules".DIRECTORY_SEPARATOR."basket".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
+	require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR"class_request.php");
+	require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['businessapps'][0]['appid'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_types.php");
+	require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['businessapps'][0]['appid'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_indexing_searching_app.php");
+	require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['businessapps'][0]['appid'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_chrono.php");
 	$type = new types();
 	$sec =new security();
 	$core_tools =new core_tools();
@@ -269,7 +269,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 		if($core_tools->is_module_loaded('cases'))
 		{
 
-			require_once("modules/cases".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR.'class_modules_tools.php');
+			require_once("modules".DIRECTORY_SEPARATOR."cases".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR.'class_modules_tools.php');
 			$cases = new cases();
 			$case_id = $cases->get_case_id($res_id);
 			if ($case_id <> false)
@@ -323,7 +323,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 		if($core_tools->is_module_loaded('entities'))
 		{
 			 // Displays the diffusion list (only copies)
-			require_once("modules/entities".DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_listdiff.php');
+			require_once("modules".DIRECTORY_SEPARATOR."entities".DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_listdiff.php');
 			$diff_list = new diffusion_list();
 			$_SESSION['process']['diff_list'] = $diff_list->get_listinstance($res_id, true);
 			$frm_str .= '<h2 onclick="new Effect.toggle(\'diff_list_div\', \'blind\', {delay:0.2});return false;"  class="categorie" style="width:90%;">';
@@ -722,7 +722,7 @@ function check_form($form_id,$values)
 
 		if(!empty($res_id) && !empty($coll_id) && (!empty($project_id) || !empty($market_id)))
 		{
-			require_once($_SESSION['pathtocoreclass'].'class_security.php');
+			require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_security.php');
 			$sec = new security();
 			$table = $sec->retrieve_table_from_coll($coll_id);
 			if(empty($table))
@@ -787,8 +787,8 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
 	{
 		return false;
 	}
-	require_once("core/class/class_db.php");
-	require_once("core/class/class_security.php");
+	//require_once("core/class/class_db.php");
+	require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
 	$sec =new security();
 	$db = new dbquery();
 	$core = new core_tools();
@@ -882,7 +882,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
 		}
 		if($folder_id <> $old_folder_id && $_SESSION['history']['folderup'])
 		{
-			require_once("core/class/class_history.php");
+			require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 			$hist = new history();
 			$hist->add($_SESSION['tablename']['fold_folders'], $folder_id, "UP", _DOC_NUM.$arr_id[0]._ADDED_TO_FOLDER, $_SESSION['config']['databasetype'],'apps');
 			if(isset($old_folder_id) && !empty($old_folder_id))
@@ -896,7 +896,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
 
 	if($core->is_module_loaded('entities') )
 	{
-		require_once('modules/entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_listdiff.php');
+		require_once('modules'.DIRECTORY_SEPARATOR.'entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_listdiff.php');
 		$list = new diffusion_list();
 		$params = array('mode'=> 'listinstance', 'table' => $_SESSION['tablename']['ent_listinstance'], 'coll_id' => $coll_id, 'res_id' => $arr_id[0], 'user_id' => $_SESSION['user']['UserId'], 'concat_list' => true, 'only_cc' => true);
 		$list->load_list_db($_SESSION['process']['diff_list'], $params); //pb enchainement avec action redirect
@@ -948,8 +948,8 @@ function manage_status($arr_id, $history, $id_action, $label_action, $status)
 		}
 		else
 		{
-			$core = new core_tools();
-/*
+		/*	$core = new core_tools();
+
 			if($core->is_module_loaded('folder') && empty($folder_id ))
 			{
 				$db->query("update ".$_POST['table']. " set status = 'NEW' where res_id = ".$arr_id[$i], true);

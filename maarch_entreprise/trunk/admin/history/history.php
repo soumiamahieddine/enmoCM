@@ -28,11 +28,9 @@
 * @version $Revision$
 * @ingroup admin
 */
-include('core/init.php');
 
-
-require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_list_show.php");
-require_once("core/class/class_request.php");
+require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['businessapps'][0]['appid'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
 
 $core_tools2 = new core_tools();
 $core_tools2->test_admin('view_history', 'apps');
@@ -381,7 +379,6 @@ $list->admin_list($tab, $nb, '', 'id','history','history','id', true, '', '', ''
 	<td colspan="2" align="left">
 		<p >
 		<input type="submit" name="search" value="<?php  echo _SEARCH;?>" class="button" />
-		<!--<input class="button" name="clear" type="button" value="<?php echo _CLEAR_FORM;?>" onclick="clear_form('frm_search_hist');this.form.submit();"  />-->
  		<input type="button" class="button"  name="cancel" value="<?php  echo _CANCEL; ?>" onclick="javascript:window.location.href='<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=admin';"/>
 		</p>
 	</td>

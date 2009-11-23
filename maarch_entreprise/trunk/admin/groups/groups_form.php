@@ -30,18 +30,11 @@
 * @ingroup admin
 */
 
-//include('core/init.php');
-
-
-//require_once("core/class/class_functions.php");
-//require("core/class/class_core_tools.php");
-
 $core_tools = new core_tools();
-//here we loading the lang vars
+
 $core_tools->load_lang();
 $core_tools->test_admin('admin_groups', 'apps');
 
-//require_once("coreclass/class_db.php");
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
 
 $func = new functions();
@@ -49,7 +42,6 @@ $sec= new security();
 $_SESSION['doctypes_choosen'] = array();
 
 $_SESSION['m_admin']['collection_choice'] = "coll_1";
-
 
 if(isset($_REQUEST['setRights']))
 {

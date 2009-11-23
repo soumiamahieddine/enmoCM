@@ -28,16 +28,10 @@
 * @version $Revision$
 * @ingroup admin
 */
-//include('core/init.php');
-
-//require_once("core/class/class_functions.php");
-//require("core/class/class_core_tools.php");
 
 $core_tools = new core_tools();
 $core_tools->test_admin('admin_users', 'apps');
-//here we loading the lang vars
 $core_tools->load_lang();
-//require_once("core/class/class_db.php");
 require("apps".DIRECTORY_SEPARATOR.$_SESSION['businessapps'][0]['appid'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_users.php");
 
 $func = new functions();

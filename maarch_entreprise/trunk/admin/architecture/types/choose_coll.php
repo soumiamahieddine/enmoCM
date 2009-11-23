@@ -29,20 +29,11 @@
 * @ingroup admin
 */
 
-include('core/init.php');
-
-
-require_once("core/class/class_functions.php");
-require_once("core/class/class_db.php");
-require("core/class/class_core_tools.php");
-
 $core_tools = new core_tools();
-//here we loading the lang vars
 $core_tools->load_lang();
-
 $core_tools->load_html();
 $core_tools->load_header();
-require_once("core/class/class_security.php");
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
 $sec = new security();
 $array_coll = $sec->retrieve_insert_collections();
 
@@ -52,16 +43,16 @@ if(isset($_REQUEST['collection']) && !empty($_REQUEST['collection']) )
 	{
 		$_SESSION['m_admin']['doctypes'][$_SESSION['index'][$_SESSION['m_admin']['doctypes']['COLL_ID']][$i]['COLUMN']] = '0000000000';
 	}
-
-
 	$_SESSION['m_admin']['doctypes']['COLL_ID'] = $_REQUEST['collection'];
 	?>
-    	<script language="javascript" type="text/javascript">window.top.frames['choose_index'].location.href='<?php  echo $_SESSION['config']['businessappurl'].'admin/architecture/types/choose_index.php';?>';</script>
+    	<script language="javascript" type="text/javascript">window.top.frames['choose_index'].location.href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?display=true&page=choose_index';?>';</script>
     <?php
 }
 ?>
 <body id="iframe">
-<form name="choose_coll" method="get" action="<?php echo $_SESSION['config']['businessappurl'];?>admin/architecture/types/choose_coll.php" class="forms" >
+<form name="choose_coll" method="get" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=choose_coll" class="forms" >
+<input type="hidden" name="display" value="true" />
+<input type="hidden" name="page" value="choose_coll" />
   <p>
 	<label for="coll_id"><?php  echo _COLLECTION;?> : </label>
 	<select name="collection" onChange="this.form.submit();">

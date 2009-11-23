@@ -326,10 +326,10 @@ class business_app_tools extends dbquery
 		elseif($name == "subfolders" || $name=="subfolders_list_by_name" || $name == "subfolder_up" || $name == "subfolder_del")
 		{
 			//$path = "apps/".$_SESSION['businessapps'][0]['appid']."/admin".DIRECTORY_SEPARATOR."architecture".DIRECTORY_SEPARATOR."subfolders".DIRECTORY_SEPARATOR.'subfolders.php';
-			$path = 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."admin".DIRECTORY_SEPARATOR."architecture".DIRECTORY_SEPARATOR."subfolders".DIRECTORY_SEPARATOR.'subfolders.php';
+			$path = 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."admin".DIRECTORY_SEPARATOR."architecture".DIRECTORY_SEPARATOR."subfolders".DIRECTORY_SEPARATOR.$name.'.php';
 			return $path;
 		}
-		elseif($name == "types" || $name == "types_up" || $name == "types_up_db" || $name == "types_add" || $name == "types_del")
+		elseif($name == "types" || $name == "types_up" || $name == "types_up_db" || $name == "types_add" || $name == "types_del" || $name == 'get_index' || $name == "choose_index" || $name == "choose_coll" || $name == "types_list_by_name")
 		{
 			//$path = "apps/".$_SESSION['businessapps'][0]['appid']."/admin".DIRECTORY_SEPARATOR."architecture".DIRECTORY_SEPARATOR."types".DIRECTORY_SEPARATOR.$name.'.php';
 			$path = 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."admin".DIRECTORY_SEPARATOR."architecture".DIRECTORY_SEPARATOR."types".DIRECTORY_SEPARATOR.$name.'.php';

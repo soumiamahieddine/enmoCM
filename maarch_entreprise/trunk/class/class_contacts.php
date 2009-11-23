@@ -246,7 +246,7 @@ class contacts extends dbquery
 					{
 						$msg = 	_CONTACT_ADDED.' : '.$this->protect_string_db($_SESSION['m_admin']['contact']['LASTNAME'].' '.$_SESSION['m_admin']['contact']['FIRSTNAME']);
 					}
-					require_once($_SESSION['pathtocoreclass'].'class_history.php');
+					require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_history.php');
 					$hist = new history();
 					$hist->add($_SESSION['tablename']['contacts'], $id,"ADD",$msg, $_SESSION['config']['databasetype']);
 				}
@@ -278,7 +278,7 @@ class contacts extends dbquery
 					{
 						$msg = 	_CONTACT_MODIFIED.' : '.$this->protect_string_db($_SESSION['m_admin']['contact']['LASTNAME'].' '.$_SESSION['m_admin']['contact']['FIRSTNAME']);
 					}
-					require_once($_SESSION['pathtocoreclass'].'class_history.php');
+					require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_history.php');
 					$hist = new history();
 					$hist->add($_SESSION['tablename']['contacts'], $_SESSION['m_admin']['contact']['ID'],"UP",$msg, $_SESSION['config']['databasetype']);
 				}
@@ -618,7 +618,7 @@ class contacts extends dbquery
 				$this->query("update ".$_SESSION['tablename']['contacts']." set enabled = 'N' where contact_id = ".$id);
 				if($_SESSION['history']['contactdel'])
 				{
-					require_once($_SESSION['pathtocoreclass'].'class_history.php');
+					require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_history.php');
 					$hist = new history();
 					$hist->add($_SESSION['tablename']['contacts'], $id,"DEL",_CONTACT_DELETED.' : '.$id, $_SESSION['config']['databasetype']);
 				}

@@ -711,7 +711,8 @@ class list_show extends functions
 			if($show_searchbox)
 			{
 				?>
-				<form action="<?php  echo $_SESSION['config']['businessappurl'].$link;?>" method="post" name="frmletters">
+				<form action="<?php  echo $link;?>" method="post" name="frmletters">
+					
 					<input name="what" id="what" type="text" size="15"/>
 					<?php
 					if($autoCompletion)

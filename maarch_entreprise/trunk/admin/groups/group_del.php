@@ -28,16 +28,9 @@
 * @ingroup admin
 */
 
-//include('core/init.php');
-
-//require_once("core/class/class_functions.php");
-//require("core/class/class_core_tools.php");
-
 $core_tools = new core_tools();
-//here we loading the lang vars
 $core_tools->load_lang();
 $core_tools->test_admin('admin_groups', 'apps');
-//require_once("core/class/class_db.php");
 require("apps".DIRECTORY_SEPARATOR.$_SESSION['businessapps'][0]['appid'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_usergroups.php");
 
 $func = new functions();

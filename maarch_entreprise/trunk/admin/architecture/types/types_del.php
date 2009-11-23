@@ -29,16 +29,11 @@
 * @ingroup admin
 */
 
-include('core/init.php');
-
-require_once("core/class/class_functions.php");
-require_once("core/class/class_core_tools.php");
 $core_tools = new core_tools();
 $core_tools->test_admin('admin_architecture', 'apps');
 //here we loading the lang vars
 $core_tools->load_lang();
-require_once("core/class/class_db.php");
-require("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_types.php");
+require("apps".DIRECTORY_SEPARATOR.$_SESSION['businessapps'][0]['appid'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_types.php");
 $func = new functions();
 if(isset($_GET['id']))
 {
@@ -73,7 +68,7 @@ else
 	$core_tools->execute_app_services($_SESSION['app_services'], 'doctype_del', 'include');
 	$_SESSION['service_tag'] = '';
 	unset($_SESSION['m_admin']['doctypes']['TYPE_ID']);
-	require("core/class/class_history.php");
+	require("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 	$users = new history();
 	$users->add($_SESSION['tablename']['doctypes'], $id,"DEL",_DOCTYPE_DELETION." : ".$info->DESCRIPTION, $_SESSION['config']['databasetype']);
 	$_SESSION['error'] = _DELETED_DOCTYPE;

@@ -40,8 +40,6 @@
 */
  $etapes = array('status','close');
 
-require_once("core/class/class_history.php");
-
 /**
 * Manages a status (All params must be declared, even if not used, to corresponds to the action management of the core)
 *
@@ -76,8 +74,8 @@ function manage_close($arr_id, $history, $id_action, $label_action, $status)
 	$db = new dbquery();
 	$db->connect();
 	$result = '';
-	require_once($_SESSION['pathtocoreclass'].'class_security.php');
-	require_once($_SESSION['pathtocoreclass'].'class_request.php');
+	require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_security.php');
+	require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_request.php');
 	$sec = new security();
 	$req = new request();
 	$ind_coll = $sec->get_ind_collection($_POST['coll_id']);

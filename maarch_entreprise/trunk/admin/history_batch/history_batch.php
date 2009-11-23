@@ -1,8 +1,6 @@
 <?php
-include('core/init.php');
-
-require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_list_show.php");
-require_once("core/class/class_request.php");
+require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['businessapps'][0]['appid'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
 $core_tools2 = new core_tools();
 $core_tools2->test_admin('view_history_batch', 'apps');
 /****************Management of the location bar  ************/

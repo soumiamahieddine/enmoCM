@@ -28,9 +28,6 @@
 * @ingroup admin
 */
 
-//require_once("core/class/class_functions.php");
-//require_once("core/class/class_db.php");
-//require_once("core/class/class_core_tools.php");
 $admin = new core_tools();
 $admin->test_admin('admin_architecture', 'apps');
 $db = new dbquery();

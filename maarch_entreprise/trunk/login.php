@@ -100,10 +100,6 @@ $_SESSION['slash_env'] = DIRECTORY_SEPARATOR;
 $path_tmp = explode(DIRECTORY_SEPARATOR, str_replace('/', DIRECTORY_SEPARATOR,$_SERVER['SCRIPT_FILENAME']));
 $path_server = implode(DIRECTORY_SEPARATOR,array_slice($path_tmp,0,array_search('apps',$path_tmp))).DIRECTORY_SEPARATOR;
 
-//$_SESSION['pathtocore'] = $path_server."core".DIRECTORY_SEPARATOR;;
-//$_SESSION['pathtocoreclass'] = $path_server."core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR;
-//$_SESSION['pathtomodules'] = $path_server."modules".DIRECTORY_SEPARATOR;
-
 $_SESSION['urltomodules'] = $_SESSION['config']['coreurl']."modules/";
 $_SESSION['urltocore'] = $_SESSION['config']['coreurl'].'core/';
 if(isset($_SESSION['error']))

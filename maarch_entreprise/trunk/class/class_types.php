@@ -34,7 +34,7 @@ class types extends dbquery
 		// form to add, modify or proposale a doc type
 		$func = new functions();
 		$core_tools = new core_tools();
-		require_once("core/class/class_security.php");
+		require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
 		$sec = new security();
 		$state = true;
 		if(!isset($_SESSION['m_admin']['doctypes']))
@@ -136,7 +136,10 @@ class types extends dbquery
 
 						<p>
 							<label for="collection"><?php  echo _COLLECTION;?> : </label>
-                      		<select name="collection" id="collection" onchange="get_opt_index('<?php echo $_SESSION['config']['businessappurl'];?>admin/architecture/types/get_index.php', this.options[this.options.selectedIndex].value);">
+                      		<!--<select name="collection" id="collection" onchange="get_opt_index('<?php echo 
+                      		$_SESSION['config']['businessappurl'];?>admin/architecture/types/get_index.php', this.options[this.options.selectedIndex].value);">-->
+                      		<select name="collection" id="collection" onchange="get_opt_index('<?php echo 
+                      		$_SESSION['config']['businessappurl'];?>index.php?display=true&page=get_index', this.options[this.options.selectedIndex].value);">
                         		<option value="" ><?php  echo _CHOOSE_COLLECTION;?></option>
                             <?php  for($i=0; $i<count($array_coll);$i++)
 							{
@@ -199,7 +202,9 @@ class types extends dbquery
                 </div>
                 <script type="text/javascript">
                 var coll_list = $('collection');
-                get_opt_index('<?php echo $_SESSION['config']['businessappurl'];?>admin/architecture/types/get_index.php', coll_list.options[coll_list.options.selectedIndex].value);</script>
+               // get_opt_index('<?php echo $_SESSION['config']['businessappurl'];?>admin/architecture/types/get_index.php', coll_list.options[coll_list.options.selectedIndex].value);
+                get_opt_index('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=get_index', coll_list.options[coll_list.options.selectedIndex].value);
+                </script>
 			<?
 			}
 			?>
@@ -340,7 +345,7 @@ class types extends dbquery
 					$_SESSION['error'] = _DOCTYPE_MODIFICATION;
 					if($_SESSION['history']['doctypesup'] == "true")
 					{
-						require("core/class/class_history.php");
+						require("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 						$users = new history();
 						$users->add($_SESSION['tablename']['doctypes'], $_SESSION['m_admin']['doctypes']['TYPE_ID'],"UP",_DOCTYPE_MODIFICATION." : ".$_SESSION['m_admin']['doctypes']['LABEL'], $_SESSION['config']['databasetype']);
 					}
@@ -354,7 +359,7 @@ class types extends dbquery
 			}
 			else
 			{
-				require("core/class/class_history.php");
+				require("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 				$users = new history();
 				if( $_REQUEST['mode'] == "add")
 				{
@@ -483,11 +488,11 @@ class types extends dbquery
 	*/
 	public function get_all_indexes($coll_id)
 	{
-		require_once($_SESSION['pathtocoreclass'].'class_security.php');
+		require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_security.php');
 		$sec = new security();
 		$ind_coll = $sec->get_ind_collection($coll_id);
-		$xmlfile = simplexml_load_file('apps/'.$_SESSION['config']['app_id']."/xml/".$_SESSION['collections'][$ind_coll]['index_file']);
-		$path_lang = 'apps/'.$_SESSION['config']['app_id'].'/lang/'.$_SESSION['config']['lang'].'.php';
+		$xmlfile = simplexml_load_file('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR.$_SESSION['collections'][$ind_coll]['index_file']);
+		$path_lang = 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php';
 		$indexes = array();
 		foreach($xmlfile->INDEX as $item)
 		{
@@ -580,11 +585,11 @@ class types extends dbquery
 		}
 
 		$indexes = array();
-		require_once($_SESSION['pathtocoreclass'].'class_security.php');
+		require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_security.php');
 		$sec = new security();
 		$ind_coll = $sec->get_ind_collection($coll_id);
-		$xmlfile = simplexml_load_file('apps/'$_SESSION['config']['app_id']."/xml/".$_SESSION['collections'][$ind_coll]['index_file']);
-		$path_lang = 'apps/'$_SESSION['config']['app_id'].'/lang/'.$_SESSION['config']['lang'].'.php';
+		$xmlfile = simplexml_load_file('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR.$_SESSION['collections'][$ind_coll]['index_file']);
+		$path_lang = 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php';
 		foreach($xmlfile->INDEX as $item)
 		{
 			$tmp = (string) $item->label;
@@ -677,7 +682,7 @@ class types extends dbquery
 	*/
 	public function check_indexes($type_id, $coll_id, $values)
 	{
-		require_once($_SESSION['pathtocoreclass'].'class_security.php');
+		require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_security.php');
 		$sec = new security();
 		$ind_coll = $sec->get_ind_collection($coll_id);
 		$indexes = $this->get_indexes($type_id, $coll_id);
@@ -822,7 +827,7 @@ class types extends dbquery
 	*/
 	public function inits_opt_indexes($coll_id, $res_id)
 	{
-		require_once($_SESSION['pathtocoreclass'].'class_security.php');
+		require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_security.php');
 		$sec = new security();
 		$table = $sec->retrieve_table_from_coll($coll_id);
 

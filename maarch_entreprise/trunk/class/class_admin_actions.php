@@ -121,7 +121,7 @@ class AdminActions extends dbquery
 					$this->query("select id from ".$_SESSION['tablename']['actions']." where label_action = '".$this->protect_string_db($_SESSION['m_admin']['action']['LABEL'])."' and id_status = '".$this->protect_string_db($_SESSION['m_admin']['action']['ID_STATUS'])."' and action_page = '".$this->protect_string_db($_SESSION['m_admin']['action']['ACTION_PAGE'])."' and history = '".$this->protect_string_db($_SESSION['m_admin']['action']['HISTORY'])."'");
 					$res = $this->fetch_object();
 					$id = $res->id;
-					require_once($_SESSION['pathtocoreclass'].'class_history.php');
+					require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_history.php');
 					$hist = new history();
 					$hist->add($_SESSION['tablename']['actions'], $id,"ADD",_ACTION_ADDED.' : '.$this->protect_string_db($_SESSION['m_admin']['action']['LABEL']), $_SESSION['config']['databasetype']);
 				}
@@ -137,7 +137,7 @@ class AdminActions extends dbquery
 
 				if($_SESSION['history']['actionup'])
 				{
-					require_once($_SESSION['pathtocoreclass'].'class_history.php');
+					require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_history.php');
 					$hist = new history();
 					$hist->add($_SESSION['tablename']['actions'], $_SESSION['m_admin']['action']['ID'],"UP",_ACTION_MODIFIED.' : '.$this->protect_string_db($_SESSION['m_admin']['action']['LABEL']), $_SESSION['config']['databasetype']);
 				}
@@ -361,7 +361,7 @@ class AdminActions extends dbquery
 
 				if($_SESSION['history']['actiondel'])
 				{
-					require_once($_SESSION['pathtocoreclass'].'class_history.php');
+					require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_history.php');
 					$hist = new history();
 					$hist->add($_SESSION['tablename']['actions'], $id,"DEL",_ACTION_DELETED.' : '.$id, $_SESSION['config']['databasetype']);
 				}

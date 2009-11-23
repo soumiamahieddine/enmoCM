@@ -10,17 +10,9 @@
 * @license GPL
 * @author  Claire Figueras  <dev@maarch.org>
 */
-//include('core/init.php');
-
-//require_once("core/class/class_functions.php");
-//require("core/class/class_core_tools.php");
-
 $core_tools = new core_tools();
 $core_tools->test_admin('admin_architecture', 'apps');
-//here we loading the lang vars
 $core_tools->load_lang();
-
-//require_once("core/class/class_db.php");
 
 $db = new dbquery();
 

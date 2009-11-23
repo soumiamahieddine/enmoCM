@@ -106,7 +106,7 @@ class AdminStatus extends dbquery
 
 				if($_SESSION['history']['statusadd'])
 				{
-					require_once($_SESSION['pathtocoreclass'].'class_history.php');
+					require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_history.php');
 					$hist = new history();
 					$hist->add($_SESSION['tablename']['status'], $this->protect_string_db($_SESSION['m_admin']['status']['ID']),"ADD",_STATUS_ADDED.' : '.$this->protect_string_db($_SESSION['m_admin']['status']['LABEL']), $_SESSION['config']['databasetype']);
 				}
@@ -123,7 +123,7 @@ class AdminStatus extends dbquery
 
 				if($_SESSION['history']['statusup'])
 				{
-					require_once($_SESSION['pathtocoreclass'].'class_history.php');
+					require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_history.php');
 					$hist = new history();
 					$hist->add($_SESSION['tablename']['status'], $this->protect_string_db($_SESSION['m_admin']['status']['ID']),"UP",_STATUS_MODIFIED.' : '.$this->protect_string_db($_SESSION['m_admin']['status']['LABEL']), $_SESSION['config']['databasetype']);
 				}
@@ -210,7 +210,10 @@ class AdminStatus extends dbquery
 			else
 			{
 				?>
-				<form name="frmstatus" id="frmstatus" method="post" action="<? echo $_SESSION['config']['businessappurl']."admin/status/status_up_db.php";?>" class="forms addforms">
+				<form name="frmstatus" id="frmstatus" method="post" action="<? echo $_SESSION['config']['businessappurl']."index.php?display=true&admin=status&page=status_up_db";?>" class="forms addforms">
+					<input type="hidden" name="display" value="true" />
+					<input type="hidden" name="admin" value="status" />
+					<input type="hidden" name="page" value="status_up_db" />
 					<input type="hidden" name="is_system" id="is_system" value="<? echo $_SESSION['m_admin']['status']['IS_SYSTEM'];?>" />
 					<input type="hidden" name="mode" id="mode" value="<? echo $mode;?>" />
 					<input type="hidden" name="order" id="order" value="<?php echo $_REQUEST['order'];?>" />
@@ -318,7 +321,7 @@ class AdminStatus extends dbquery
 
 				if($_SESSION['history']['statusdel'])
 				{
-					require_once($_SESSION['pathtocoreclass'].'class_history.php');
+					require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_history.php');
 					$hist = new history();
 					$hist->add($_SESSION['tablename']['status'], $this->protect_string_db($id),"DEL",_STATUS_DELETED.' : '.$this->protect_string_db($id), $_SESSION['config']['databasetype']);
 				}

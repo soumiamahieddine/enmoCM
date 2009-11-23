@@ -28,16 +28,7 @@
 * @version $Revision$
 * @ingroup admin
 */
-
-include('core/init.php');
-
-
-require_once("core/class/class_functions.php");
-require_once("core/class/class_db.php");
-require("core/class/class_core_tools.php");
-
 $core_tools = new core_tools();
-//here we loading the lang vars
 $core_tools->load_lang();
 
 $core_tools->load_html();
@@ -105,8 +96,10 @@ if(isset($_REQUEST['valid']) && isset($_SESSION['m_admin']['doctypes']['COLL_ID'
  }
  else
  {?>
- 	<form name="frm_choose_index" action="choose_index.php" method="get" id="frm_choose_index">
-    <input type="hidden" name="valid" id="valid" value="true"/>
+ 	<form name="frm_choose_index" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=choose_index" method="get" id="frm_choose_index">
+		<input type="hidden" name="display" value="true" />
+		<input type="hidden" name="page" value="choose_index" />
+		<input type="hidden" name="valid" id="valid" value="true"/>
     <?php if(count($_SESSION['index'][$_SESSION['m_admin']['doctypes']['COLL_ID']]) > 0)
 	{?>
                     <table>

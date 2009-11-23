@@ -28,11 +28,6 @@
 * @version $Revision$
 * @ingroup admin
 */
-
-include('core/init.php');
-
-require_once($_SESSION['pathtocoreclass'].'class_functions.php');
-require_once("core/class/class_core_tools.php");
 $core_tools = new core_tools();
 $core_tools->test_admin('admin_architecture', 'apps');
 /****************Management of the location bar  ************/
@@ -54,8 +49,8 @@ $core_tools->manage_location_bar($page_path, $page_label, $page_id, $init, $leve
 //here we loading the lang vars
 $core_tools->load_lang();
 $time = $core_tools->get_session_time_expire();
-require_once("core/class/class_db.php");
-require("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_types.php");
+//require_once("core/class/class_db.php");
+require("apps".DIRECTORY_SEPARATOR.$_SESSION['businessapps'][0]['appid'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_types.php");
 
 $users = new types();
 $users->formtype("add");

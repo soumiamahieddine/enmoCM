@@ -14,7 +14,6 @@
 */
 
 include_once('../../core/init.php');
-//var_dump(get_include_path());
 
 require_once("core/class/class_functions.php");
 require_once("core/class/class_db.php");

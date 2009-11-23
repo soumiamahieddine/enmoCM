@@ -28,11 +28,7 @@
 * @ingroup admin
 */
 
-//include('core/init.php');
-
-
 $core_tools2 = new core_tools();
-//here we loading the lang vars
 $core_tools2->load_lang();
 $core_tools2->test_admin('admin_groups', 'apps');
 /****************Management of the location bar  ************/
