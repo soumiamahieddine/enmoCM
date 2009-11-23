@@ -846,7 +846,7 @@ class basket extends dbquery
 
 	public function check_reserved_time($res_id, $coll_id)
 	{
-		require_once($_SESSION['pathtocoreclass'].'class_security.php');
+		require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_security.php');
 		$sec = new security();
 		$table = $sec->retrieve_table_from_coll($coll_id);
 		$db = new dbquery();
@@ -889,7 +889,7 @@ class basket extends dbquery
 		{
 			return false;
 		}
-		require_once($_SESSION['pathtocoreclass'].'class_security.php');
+		require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_security.php');
 		$sec = new security();
 		$table = $sec->retrieve_table_from_coll($coll_id);
 		if(empty($table))
