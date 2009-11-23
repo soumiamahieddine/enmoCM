@@ -35,12 +35,27 @@ class business_app_tools extends dbquery
 			$_SESSION['config']['businessappname'] = (string) $CONFIG->businessappname;
 			//$_SESSION['config']['businessapppath'] = (string) $CONFIG->businessapppath;
 			//##############
-			if($_SERVER['SERVER_PORT'] <> 80)
+			if ($_SERVER['SERVER_PORT'] <> 443 && $protocol == "https")		
+			{
 				$server_port = ":".$_SERVER['SERVER_PORT'];
+			}
+			elseif ($_SERVER['SERVER_PORT'] <> 80 && $protocol == "http")
+			{
+				$server_port = ":".$_SERVER['SERVER_PORT'];
+			}
 			else
-				$server_port = "";
+			{
+					$server_port = "";
+			}	
+				
+			if ($_SERVER['HTTPS'] == "on")
+				$protocol = "https";
+			else
+				$protocol = "http";
+				
+				
 			//##############
-			$_SESSION['config']['businessappurl'] = "http://".$_SERVER['SERVER_NAME'].$server_port.str_replace('login.php','',$_SERVER['SCRIPT_NAME']);
+			$_SESSION['config']['businessappurl'] = $protocol."://".$_SERVER['SERVER_NAME'].$server_port.str_replace('login.php','',$_SERVER['SCRIPT_NAME']);
 			$_SESSION['config']['databaseserver'] = (string) $CONFIG->databaseserver;
 			$_SESSION['config']['databaseserverport'] = (string) $CONFIG->databaseserverport;
 			$_SESSION['config']['databasetype'] = (string) $CONFIG->databasetype;
