@@ -39,9 +39,7 @@
 */
 
 //Requires to launch history functions
-require_once("core/class/class_history.php");
-
-
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 
 class security extends dbquery
 {
@@ -274,7 +272,7 @@ class security extends dbquery
 				$selectWhereTest[$_SESSION['collections'][$ind]['view']]= array();
 				array_push($selectWhereTest[$_SESSION['collections'][$ind]['view']],"res_id");
 				$tabResult = array();
-				require_once("core/class/class_request.php");
+				require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
 				$request = new request();
 				if(str_replace(" ", "", $where) == "")
 				{
@@ -484,8 +482,8 @@ class security extends dbquery
 				$_SESSION['user']['collections'] = $tmp['collections'];
 				$_SESSION['user']['security'] = $tmp['security'];
 				$this->load_enabled_services();
-				require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
-				require_once("core/class/class_core_tools.php");
+				require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['businessapps'][0]['appid'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
+				//require_once("core/class/class_core_tools.php");
 				$business_app_tools = new business_app_tools();
 				$core_tools = new core_tools();
 				$business_app_tools->load_app_var_session();
@@ -499,7 +497,7 @@ class security extends dbquery
 
 				if($_SESSION['history']['userlogin'] == "true")
 				{
-					require_once("core/class/class_history.php");
+					require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 					//add new instance in history table for the user's connexion
 					$hist = new history();
 					$ip = $_SERVER['REMOTE_ADDR'];
@@ -598,8 +596,8 @@ class security extends dbquery
 				$_SESSION['user']['security'] = $tmp['security'];
 				$this->load_enabled_services();
 
-				require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
-				require_once("core/class/class_core_tools.php");
+				require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['businessapps'][0]['appid'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
+				//require_once("core/class/class_core_tools.php");
 				$business_app_tools = new business_app_tools();
 				$core_tools = new core_tools();
 				$business_app_tools->load_app_var_session();
@@ -727,7 +725,7 @@ class security extends dbquery
 		{
 			$this->connect();
 			//$_SESSION['user']['services'] = array();
-			require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_usergroups.php");
+			require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['businessapps'][0]['appid'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_usergroups.php");
 			$group = new usergroups();
 			for($i=0; $i< count($_SESSION['enabled_services']);$i++)
 			{
@@ -1018,7 +1016,6 @@ class security extends dbquery
 	*/
 	public function collection_user_right($coll_id, $action)
 	{
-		require_once("core/class/class_functions.php");
 		$func = new functions();
 		$flag = false;
 		for($i=0; $i<count($_SESSION['user']['security']);$i++)
@@ -1232,7 +1229,7 @@ class security extends dbquery
 			// Process with the core vars
 			$where = $this->process_where_clause($where, $user_id);
 
-			require_once("core/class/class_request.php");
+			require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
 			// Process with the modules vars
 			foreach(array_keys($_SESSION['modules_loaded']) as $key)
 			{
