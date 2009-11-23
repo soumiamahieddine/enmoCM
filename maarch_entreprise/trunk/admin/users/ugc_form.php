@@ -38,7 +38,7 @@ $core_tools = new core_tools();
 //here we loading the lang vars
 $core_tools->load_lang();
 
-require_once( "apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_usergroup_content.php");
+require_once( "apps".DIRECTORY_SEPARATOR.$_SESSION['businessapps'][0]['appid'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_usergroup_content.php");
 $func = new functions();
 
 if(isset($_REQUEST['removeGroup']) && !empty($_REQUEST['removeGroup']))

@@ -32,7 +32,7 @@
 //require_once("core/class/class_functions.php");
 //require_once("core/class/class_db.php");
 //require_once("core/class/class_core_tools.php");
-require_once("core/class/class_security.php");
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
 
 $_SESSION['m_admin']['group']['show_check'] = false;
 $sec = new security();

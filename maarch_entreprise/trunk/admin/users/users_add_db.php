@@ -38,7 +38,7 @@ $core_tools->test_admin('admin_users', 'apps');
 //here we loading the lang vars
 $core_tools->load_lang();
 //require_once("core/class/class_db.php");
-require("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_users.php");
+require("apps".DIRECTORY_SEPARATOR.$_SESSION['businessapps'][0]['appid'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_users.php");
 
 $users = new users();
 $users->addupusers("add");

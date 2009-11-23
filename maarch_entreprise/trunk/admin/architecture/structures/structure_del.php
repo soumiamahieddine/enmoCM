@@ -87,7 +87,7 @@ else
 
 	if($_SESSION['history']['structuredel'] == "true")
 	{
-		require_once("core/class/class_history.php");
+		require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 		$users = new history();
 		$users->add($_SESSION['tablename']['doctypes_first_level'], $id,"DEL",_STRUCTURE_DEL." ".strtolower(_NUM).$id."", $_SESSION['config']['databasetype']);
 	}

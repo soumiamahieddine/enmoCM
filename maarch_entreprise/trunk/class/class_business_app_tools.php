@@ -317,13 +317,13 @@ class business_app_tools extends dbquery
 	*/
 	public function insert_app_page($name)
 	{
-		if($name == "structures" || $name=="structures_list_by_name" || $name == "structure_up")
+		if($name == "structures" || $name=="structures_list_by_name" || $name == "structure_up" || $name == "structure_del")
 		{
 			//$path = "apps/".$_SESSION['businessapps'][0]['appid']."/admin".DIRECTORY_SEPARATOR."architecture".DIRECTORY_SEPARATOR."structures".DIRECTORY_SEPARATOR.'structures.php';
 			$path = 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."admin".DIRECTORY_SEPARATOR."architecture".DIRECTORY_SEPARATOR."structures".DIRECTORY_SEPARATOR.$name.'.php';
 			return $path;
 		}
-		elseif($name == "subfolders")
+		elseif($name == "subfolders" || $name=="subfolders_list_by_name" || $name == "subfolder_up" || $name == "subfolder_del")
 		{
 			//$path = "apps/".$_SESSION['businessapps'][0]['appid']."/admin".DIRECTORY_SEPARATOR."architecture".DIRECTORY_SEPARATOR."subfolders".DIRECTORY_SEPARATOR.'subfolders.php';
 			$path = 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."admin".DIRECTORY_SEPARATOR."architecture".DIRECTORY_SEPARATOR."subfolders".DIRECTORY_SEPARATOR.'subfolders.php';

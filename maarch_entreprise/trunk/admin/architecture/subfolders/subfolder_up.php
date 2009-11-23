@@ -29,11 +29,11 @@
 * @ingroup admin
 */
 
-include('core/init.php');
+//include('core/init.php');
 
-require_once("core/class/class_functions.php");
-require_once("core/class/class_db.php");
-require("core/class/class_core_tools.php");
+//require_once("core/class/class_functions.php");
+//require_once("core/class/class_db.php");
+//require("core/class/class_core_tools.php");
 
 $core_tools = new core_tools();
 $core_tools->test_admin('admin_architecture', 'apps');
@@ -90,7 +90,7 @@ if( isset($_REQUEST['valid']))
 						if($_SESSION['history']['subfolderup'] == "true")
 						{
 
-							require("core/class/class_history.php");
+							require("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 							$hist = new history();
 							$hist->add($_SESSION['tablename']['doctypes_second_level'], $id,"UP",_SUBFOLDER_MODIF." ".strtolower(_NUM).$id." (".$info.")", $_SESSION['config']['databasetype']);
 						}
@@ -110,7 +110,7 @@ if( isset($_REQUEST['valid']))
 					$res = $db->fetch_object();
 					if($_SESSION['history']['subfolderadd'] == "true")
 					{
-						require("core/class/class_history.php");
+						require("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 						$hist = new history();
 						$hist->add($_SESSION['tablename']['doctypes_second_level'], $res->doctypes_first_level_id,"ADD",_SUBFOLDER_ADDED." (".$desc.")", $_SESSION['config']['databasetype']);
 					}
@@ -161,8 +161,9 @@ $time = $core_tools->get_session_time_expire();
 <h2 class="tit"> &nbsp;<img src="<?php  echo $_SESSION['config']['businessappurl'].$_SESSION['config']['img'];?>/manage_structures_b.gif" alt="" valign="center"/> <?php  if($mode == "up"){ echo _SUBFOLDER_MODIF;} else{ echo _SUBFOLDER_CREATION;}?></h2>
 <div class="block">
 <br/>
-<form method="post" name="modif" id="modif" class="forms">
-
+<form method="post" name="modif" id="modif" class="forms" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=subfolder_up">
+	<input type="hidden" name="display" value="true" />
+    <input type="hidden" name="page" value="subfolder_up" />
 	<?php  if ($mode == "up")
 	{ ?>
 	<p>

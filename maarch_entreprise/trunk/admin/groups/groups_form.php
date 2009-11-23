@@ -41,8 +41,8 @@ $core_tools = new core_tools();
 $core_tools->load_lang();
 $core_tools->test_admin('admin_groups', 'apps');
 
-require_once("core/class/class_db.php");
-require_once("core/class/class_security.php");
+//require_once("coreclass/class_db.php");
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
 
 $func = new functions();
 $sec= new security();

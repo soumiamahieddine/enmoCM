@@ -44,7 +44,6 @@ class users extends dbquery
 		$start = $_REQUEST['start'];
 		$what = $_REQUEST['what'];
 
-		//require_once($_SESSION['pathtocoreclass'].'class_core_tools.php');
 		$core = new core_tools();
 		// To allow administrator to admin users
 		if(!empty($_SESSION['error']))
@@ -74,7 +73,7 @@ class users extends dbquery
 					$this->query("Update ".$_SESSION['tablename']['users']." set enabled = 'Y' where user_id = '".$id."'");
 					if($_SESSION['history']['usersval'] == "true")
 					{
-						require_once("core/class/class_history.php");
+						require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 
 						$hist = new history();
 						$hist->add($_SESSION['tablename']['users'], $id,"VAL",_USER_AUTORIZATION." ".$theuser, $_SESSION['config']['databasetype']);
@@ -87,7 +86,7 @@ class users extends dbquery
 					$this->query("Update ".$_SESSION['tablename']['users']." set enabled = 'N' where user_id = '".$id."'");
 					if($_SESSION['history']['usersban'] == "true")
 					{
-						require_once("core/class/class_history.php");
+						require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 
 						$hist = new history();
 						$hist->add($_SESSION['tablename']['users'], $id,"BAN",_USER_SUSPENSION." : ".$theuser, $_SESSION['config']['databasetype']);
@@ -103,7 +102,7 @@ class users extends dbquery
 					}
 					if($_SESSION['history']['usersdel'])
 					{
-						require_once("core/class/class_history.php");
+						require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 						$hist = new history();
 						$hist->add($_SESSION['tablename']['users'], $id,"DEL",_USER_DELETION." : ".$theuser, $_SESSION['config']['databasetype']);
 					}
@@ -162,7 +161,7 @@ class users extends dbquery
 
 			if($_SESSION['history']['usersup'] == "true")
 			{
-				require_once("core/class/class_history.php");
+				require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 				$hist = new history();
 				$hist->add($_SESSION['tablename']['users'], $_SESSION['user']['UserId'],"UP",_USER_UPDATE." : ".$_SESSION['user']['LastName']." ".$_SESSION['user']['FirstName'], $_SESSION['config']['databasetype']);
 			}
@@ -184,7 +183,7 @@ class users extends dbquery
 	*/
 	public function change_info_user()
 	{
-		require_once('core/class/class_core_tools.php');
+		//require_once('core/class/class_core_tools.php');
 		$core_tools = new core_tools();
 		?>
 		<h1><img src="<?php  echo $_SESSION['config']['img'];?>/picto_user_b.gif" alt="" /> <?php  echo _MY_INFO; ?></h1>
@@ -292,7 +291,7 @@ class users extends dbquery
 					<div class="blank_space"></div>
 				<?php
 
-				require_once("core/class/class_core_tools.php");
+			//	require_once("core/class/class_core_tools.php");
 				$core_tools = new core_tools;
 				echo $core_tools->execute_modules_services($_SESSION['modules_services'], 'modify_user.php', "include");
 				?>
@@ -310,7 +309,7 @@ class users extends dbquery
 	*/
 	public function formuser($mode,$id = "")
 	{
-		require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_usergroup_content.php");
+		require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['businessapps'][0]['appid'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_usergroup_content.php");
 		// the form to add or modify users
 		$core = new core_tools();
 		$state = true;
@@ -456,7 +455,7 @@ class users extends dbquery
 								</p>
 			</form>
 				 <?php
-				 require_once("core/class/class_core_tools.php");
+				 //require_once("core/class/class_core_tools.php");
 				$core_tools = new core_tools;
 				echo $core_tools->execute_modules_services($_SESSION['modules_services'], 'users_up.php', "include");
 				 ?>
@@ -474,7 +473,7 @@ class users extends dbquery
 	*/
 	public function usersinfo($mode)
 	{
-		require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_usergroup_content.php");
+		require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['businessapps'][0]['appid'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_usergroup_content.php");
 		// return the user information in sessions vars
 
 		if($mode == "add")
@@ -610,14 +609,14 @@ class users extends dbquery
 					$this->query("INSERT INTO ".$_SESSION['tablename']['users']." (  user_id , password , firstname , lastname , phone , mail , department , cookie_key , cookie_date , enabled ) values ( '".$_SESSION['m_admin']['users']['UserId']."', '".$_SESSION['m_admin']['users']['pass']."', '".$tmp_fn."', '".$tmp_ln."', '".$_SESSION['m_admin']['users']['Phone']."', '".$_SESSION['m_admin']['users']['Mail']."', '".$tmp_dep."', '', ".$cookie_date.", 'Y')");
 
 
-					require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_usergroup_content.php");
+					require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['businessapps'][0]['appid'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_usergroup_content.php");
 					$ugc=new usergroup_content();
 					$ugc->load_db();
 
 					if($_SESSION['history']['usersadd'] == "true")
 					{
 						$tmp_h = $this->protect_string_db(_USER_ADDED." : ".$_SESSION['m_admin']['users']['LastName']." ".$_SESSION['m_admin']['users']['FirstName']);
-						require_once("core/class/class_history.php");
+						require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 						$hist = new history();
 						$hist->add($_SESSION['tablename']['users'], $_SESSION['m_admin']['users']['UserId'],"ADD",$tmp_h, $_SESSION['config']['databasetype']);
 					}
@@ -639,14 +638,14 @@ class users extends dbquery
 
 					if($_SESSION['m_admin']['users']['UserId'] <> "superadmin")
 					{
-						require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_usergroup_content.php");
+						require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['businessapps'][0]['appid'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_usergroup_content.php");
 						$ugc=new usergroup_content();
 						$ugc->load_db();
 					}
 					if($_SESSION['history']['usersup'] == "true")
 					{
 						$tmp_h = $this->protect_string_db(_USER_UPDATE." : ".$_SESSION['m_admin']['users']['LastName']." ".$_SESSION['m_admin']['users']['FirstName']." (".$_SESSION['m_admin']['users']['UserId'].")");
-						require_once("core/class/class_history.php");
+						require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 						$users = new history();
 						$users->add($_SESSION['tablename']['users'], $_SESSION['m_admin']['users']['UserId'],"UP",$tmp_h, $_SESSION['config']['databasetype']);
 					}
@@ -655,7 +654,7 @@ class users extends dbquery
 					{
 						$_SESSION['user']['groups'] = array();
 						$_SESSION['user']['security'] = array();
-						require_once("core/class/class_security.php");
+						require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
 						$sec = new security();
 						$tmp = $sec->load_groups($_SESSION['user']['UserId']);
 						$_SESSION['user']['groups'] = $tmp['groups'];

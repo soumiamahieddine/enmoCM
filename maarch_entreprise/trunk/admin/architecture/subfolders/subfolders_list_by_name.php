@@ -10,14 +10,14 @@
 * @license GPL
 * @author Laurent Giovannoni <dev@maarch.org>
 */
-include('core/init.php');    
+//include('core/init.php');    
 
-require_once("core/class/class_functions.php");
-require_once("core/class/class_db.php");
-require_once("core/class/class_request.php");
+//require_once("core/class/class_functions.php");
+//require_once("core/class/class_db.php");
+//require_once("core/class/class_request.php");
 $db = new dbquery();
 $db->connect();
-//$_REQUEST['what'] = "P";
+
 if($_SESSION['config']['databasetype'] == "POSTGRESQL")
 {
 	$db->query("select doctypes_second_level_label as tag from ".$_SESSION['tablename']['doctypes_second_level']." where doctypes_second_level_label ilike '".$_REQUEST['what']."%' order by doctypes_second_level_label");

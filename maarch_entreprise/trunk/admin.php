@@ -17,8 +17,8 @@
 *
 * this page tests the user access level, and if the user is an admin or not
 */
-require_once("core/class/class_functions.php");
-require("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_admin.php");
+//require_once("core/class/class_functions.php");
+require("apps".DIRECTORY_SEPARATOR.$_SESSION['businessapps'][0]['appid'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_admin.php");
 $admin = new admin();
 
 $core_tools2 = new core_tools();

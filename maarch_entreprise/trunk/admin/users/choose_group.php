@@ -41,7 +41,7 @@ $core_tools->load_lang();
 
 if(!empty($_REQUEST['groupe']) && isset($_REQUEST['groupe']))
 {
-	require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_usergroup_content.php");
+	require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['businessapps'][0]['appid'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_usergroup_content.php");
 	$ugc = new usergroup_content();
 	$ugc->connect();
 

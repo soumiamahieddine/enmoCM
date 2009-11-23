@@ -39,7 +39,7 @@ class usergroups extends dbquery
 	*/
 	public function formgroups($mode,$id = "")
 	{
-		require_once("core/class/class_security.php");
+		require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
 		//require_once("core/class/class_core_tools.php");
 		$sec = new security();
 		$func = new functions();
@@ -350,7 +350,7 @@ class usergroups extends dbquery
 				}
 				else
 				{
-					require_once("core/class/class_security.php");
+					require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
 					$sec = new security();
 					$syntax = true;
 					$syntax = $sec->where_test();
@@ -371,7 +371,7 @@ class usergroups extends dbquery
 
 						if($_SESSION['history']['usergroupsadd'] == "true")
 						{
-							require_once("core/class/class_history.php");
+							require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 							$users = new history();
 							$users->add($_SESSION['tablename']['usergroups'], $_SESSION['m_admin']['groups']['GroupId'],"ADD",_GROUP_ADDED." : ".$_SESSION['m_admin']['groups']['GroupId'], $_SESSION['config']['databasetype']);
 						}
@@ -387,7 +387,7 @@ class usergroups extends dbquery
 					$this->query("UPDATE ".$_SESSION['tablename']['usergroups']." set group_desc = '".$this->protect_string_db($_SESSION['m_admin']['groups']['desc'])."' , administrator = '".$_SESSION['m_admin']['groups']['admin']."'," ." custom_right1 = '".$_SESSION['m_admin']['groups']['stagiaire']."', custom_right2 = '".$_SESSION['m_admin']['groups']['view']."', custom_right3 = '".$_SESSION['m_admin']['groups']['stats']."'" .", custom_right4 = '".$_SESSION['m_admin']['groups']['del']."' where group_id = '".$_SESSION['m_admin']['groups']['GroupId']."'");
 					$tmp = $this->protect_string_db($_SESSION['m_admin']['groups']['desc']);
 					$this->query("UPDATE ".$_SESSION['tablename']['usergroups']." set group_desc = '".$this->protect_string_db($tmp)."'  where group_id = '".$_SESSION['m_admin']['groups']['GroupId']."'");
-					require_once("core/class/class_security.php");
+					require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
 					$sec = new security();
 
 					if($sec->where_test() == false)
@@ -402,7 +402,7 @@ class usergroups extends dbquery
 						$sec->load_services_db($_REQUEST['services'],$_SESSION['m_admin']['groups']['GroupId']);
 						if($_SESSION['history']['usergroupsup'] == "true")
 						{
-							require_once("core/class/class_history.php");
+							require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 							$users = new history();
 							$users->add($_SESSION['tablename']['usergroups'], $_SESSION['m_admin']['groups']['GroupId'],"UP",_GROUP_UPDATE." : ".$_SESSION['m_admin']['groups']['GroupId'], $_SESSION['config']['databasetype']);
 						}
@@ -508,7 +508,7 @@ class usergroups extends dbquery
 					$this->query("Update ".$_SESSION['tablename']['usergroups']." set enabled = 'Y' where group_id = '".$id."'");
 					if($_SESSION['history']['usergroupsval'] == "true")
 					{
-						require_once("core/class/class_history.php");
+						require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 						$users = new history();
 						$users->add($_SESSION['tablename']['usergroups'], $id,"VAL",_GROUP_AUTORIZATION." : ".$id, $_SESSION['config']['databasetype']);
 					}
@@ -516,7 +516,7 @@ class usergroups extends dbquery
 
 					if($this->in_group($_SESSION['user']['UserId'], $id))
 					{
-						require_once("core/class/class_security.php");
+						require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
 						$_SESSION['user']['groups'] = array();
 						$_SESSION['user']['security'] = array();
 						$sec = new security();
@@ -535,7 +535,7 @@ class usergroups extends dbquery
 					$this->query("Update ".$_SESSION['tablename']['usergroups']." set enabled = 'N' where group_id = '".$id."'");
 					if($_SESSION['history']['usergroupsban'] == "true")
 					{
-						require_once("core/class/class_history.php");
+						require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 						$users = new history();
 						$users->add($_SESSION['tablename']['usergroups'], $id,"BAN",_GROUP_SUSPENSION." : ".$id, $_SESSION['config']['databasetype']);
 					}
@@ -543,7 +543,7 @@ class usergroups extends dbquery
 
 					if($this->in_group($_SESSION['user']['UserId'], $id))
 					{
-						require_once("core/class/class_security.php");
+						require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
 						$_SESSION['user']['groups'] = array();
 						$_SESSION['user']['security'] = array();
 						$sec = new security();
@@ -564,7 +564,7 @@ class usergroups extends dbquery
 					$this->query("delete from ".$_SESSION['tablename']['usergroup_services']."  where group_id = '".$id."'");
 					if($_SESSION['history']['usergroupsdel'] == "true")
 					{
-						require_once("core/class/class_history.php");
+						require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 						$users = new history();
 						$users->add($_SESSION['tablename']['usergroups'], $id,"DEL",_GROUP_DELETION." : ".$id, $_SESSION['config']['databasetype']);
 					}
@@ -572,7 +572,7 @@ class usergroups extends dbquery
 
 					if($this->in_group($_SESSION['user']['UserId'], $id))
 					{
-						require_once("core/class/class_security.php");
+						require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
 						$_SESSION['user']['groups'] = array();
 						$_SESSION['user']['security'] = array();
 						$sec = new security();

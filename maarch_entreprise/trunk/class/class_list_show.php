@@ -107,7 +107,7 @@ class list_show extends functions
 	{
 		if ($template && $actual_template <> '')
 		{
-			require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR.'class_list_show_with_template.php');
+			require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['businessapps'][0]['appid'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR.'class_list_show_with_template.php');
 			$list_temp = new list_show_with_template();
 
 			$str = $list_temp->list_doc_by_template($result, $nb_total, $title,$what,$name,$key,$detail_destination,$bool_view_document,$bool_radio_form,$method,$action,
@@ -224,12 +224,12 @@ class list_show extends functions
 
 
 			//########################
-			require_once("core/class/class_core_tools.php");
+			//require_once("core/class/class_core_tools.php");
 			$core_tools = new core_tools();
 			if($core_tools->is_module_loaded("doc_converter") && $bool_export)
 			{
 				$_SESSION['doc_convert'] = array();
-				require_once("modules/doc_converter".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
+				require_once("modules".DIRECTORY_SEPARATOR."doc_converter".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
 				$doc_converter = new doc_converter();
 				$disp_dc = $doc_converter->convert_list($result, true);
 			}
@@ -237,7 +237,7 @@ class list_show extends functions
 
 			if ($template == true)
 			{
-				require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR.'class_list_show_with_template.php');
+				require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['businessapps'][0]['appid'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR.'class_list_show_with_template.php');
 				$template_object = new list_show_with_template();
 				$tdeto = $template_object->display_template_for_user($template_list, $link);
 			}
@@ -1277,9 +1277,9 @@ class list_show extends functions
 				if($admin == "types" || $admin == "structures" || $admin == "subfolders")
 				{
 					//$path_up2 = $_SESSION['config']['businessappurl']."admin/architecture/".$admin."/".$page_name_up.".php?mode=up&amp;id=".$result[$theline][0][$key]."&amp;admin=".$admin;
-					$path_up2 = $_SESSION['config']['businessappurl']."index.php?display=true&page=".$page_name_up."&mode=up&amp;id=".$result[$theline][0][$key]."&amp;admin=".$admin;
+					$path_up2 = $_SESSION['config']['businessappurl']."index.php?display=true&page=".$page_name_up."&mode=up&amp;id=".$result[$theline][0][$key];
 					//$path_del2 = $_SESSION['config']['businessappurl']."admin/architecture/".$admin."/".$page_name_del.".php?id=".$result[$theline][0][$key]."&amp;admin=".$admin;
-					$path_del2 = $_SESSION['config']['businessappurl']."index.php?display=true&page=".$page_name_del."&id=".$result[$theline][0][$key]."&amp;admin=".$admin;
+					$path_del2 = $_SESSION['config']['businessappurl']."index.php?display=true&page=".$page_name_del."&id=".$result[$theline][0][$key];
 				}
 				elseif(!$is_part_of_module)
 				{
@@ -1317,12 +1317,12 @@ class list_show extends functions
 		</table><br/>
 		</div>
 		<?php
-		require_once("core/class/class_core_tools.php");
+		//require_once("core/class/class_core_tools.php");
 		$core_tools = new core_tools();
 		if($core_tools->is_module_loaded("doc_converter"))
 		{
 			$_SESSION['doc_convert'] = array();
-			require_once("modules/doc_converter".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
+			require_once("modules".DIRECTORY_SEPARATOR."doc_converter".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
 			$doc_converter = new doc_converter();
 			$doc_converter->convert_list($result);
 		}

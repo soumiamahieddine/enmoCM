@@ -12,18 +12,28 @@
 * @author  Laurent Giovannoni  <dev@maarch.org>
 */
 
-include_once('../../core/init.php');
+include('../../core'.DIRECTORY_SEPARATOR.'init.php');
+
 if(trim($_GET["coreurl"]) <> '')
 {
 	$_SESSION['config']['coreurl'] = $_GET["coreurl"];
 }
+
 if(!isset($_SESSION['config']['corename']) || empty($_SESSION['config']['corename']))
 {
-	$xmlconfig = simplexml_load_file('core/xml/config.xml');
+	if(isset($_SESSION['config']['corepath']) && !empty($_SESSION['config']['corepath'] ))
+	{
+		$path = 'core'.DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'config.xml';
+	} 
+	else
+	{
+		$path = '..'.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'core'.DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'config.xml';
+	}
+	$xmlconfig = simplexml_load_file($path );
 	foreach($xmlconfig->CONFIG as $CONFIG)
 	{
 		$_SESSION['config']['corename'] = (string) $CONFIG->corename;
-	//	$_SESSION['config']['corepath'] = (string) $CONFIG->corepath;
+		$_SESSION['config']['corepath'] = (string) $CONFIG->corepath;
 	//	$_SESSION['config']['tmppath'] = (string) $CONFIG->tmppath;
 		$_SESSION['config']['unixserver'] = (string) $CONFIG->unixserver;
 		$_SESSION['config']['defaultpage'] = (string) $CONFIG->defaultpage;
@@ -49,8 +59,10 @@ if(!isset($_SESSION['config']['corename']) || empty($_SESSION['config']['corenam
 		$_SESSION['businessapps'][$i] = array("appid" => (string) $BUSINESSAPPS->appid,
 																		"comment" => (string) $BUSINESSAPPS->comment);
 		$i++;
-	}
+	}	
+	chdir($_SESSION['config']['corepath']);
 }
+
 $_SESSION['config']['app_id'] = $_SESSION['businessapps'][0]['appid'];
 //print_r($_REQUEST);
 if(isset($_GET['target_page']) && trim($_GET['target_page']) <> "")
@@ -102,19 +114,32 @@ else
 {
 	$error ='';
 }
-require_once("core/class/class_functions.php");
-require_once("core/class/class_db.php");
-require_once("core/class/class_core_tools.php");
-require_once("core/class/class_request.php");
+if(isset($_SESSION['config']['corepath']) && !empty($_SESSION['config']['corepath'] ))
+{
+	require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_functions.php");
+	require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_db.php");
+	require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_core_tools.php");
+	require('apps'.DIRECTORY_SEPARATOR.$_SESSION['businessapps'][0]['appid'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
+	$path_core_config = 'core'.DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'config.xml';
+}
+else
+{
+	require_once("..".DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_functions.php");
+	require_once("..".DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_db.php");
+	require_once("..".DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_core_tools.php");
+	require("class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
+	$path_core_config = "..".DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR.'core'.DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'config.xml';
+}
+
 /*
 require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
 */
-require('apps'.DIRECTORY_SEPARATOR.$_SESSION['businessapps'][0]['appid'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
+
 $core_tools = new core_tools();
 $business_app_tools = new business_app_tools();
 $func = new functions();
 
-$core_tools->build_core_config('core/xml/config.xml');
+$core_tools->build_core_config($path_core_config );
 $business_app_tools->build_business_app_config();
 $core_tools->load_modules_config($_SESSION['modules']);
 $core_tools->load_lang();

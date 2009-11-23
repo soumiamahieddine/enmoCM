@@ -10,16 +10,8 @@
 * @license GPL
 * @author  Claire Figueras  <dev@maarch.org>
 */
-include('core/init.php');
+include('../../core/init.php');
 
-/*if( strtoupper(substr(PHP_OS, 0, 3)) != "WIN")
-{
-	$_SESSION['slash_env'] = "/";
-}
-else
-{
-	$_SESSION['slash_env'] = "\\";
-}*/
 $_SESSION['slash_env'] = DIRECTORY_SEPARATOR;
 
 $path_tmp = explode('/',$_SERVER['SCRIPT_FILENAME']);
@@ -30,10 +22,10 @@ $_SESSION['pathtocoreclass'] = $path_server."core".DIRECTORY_SEPARATOR."class".D
 $_SESSION['pathtomodules'] = $path_server."modules".DIRECTORY_SEPARATOR;
 
 $_SESSION['urltomodules'] = $_SESSION['config']['coreurl']."/modules/";
-require_once("core/class/class_functions.php");
-require_once("core/class/class_db.php");
-require_once("core/class/class_core_tools.php");
-require_once("class/class_business_app_tools.php");
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_functions.php");
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_db.php");
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_core_tools.php");
+require_once("class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
 $core_tools = new core_tools();
 $business_app_tools = new business_app_tools();
 $func = new functions();

@@ -114,7 +114,7 @@ if( isset($_REQUEST['valid']))
 					}
 					if($_SESSION['history']['structureup'] == "true")
 					{
-						require("core/class/class_history.php");
+						require("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 						$hist = new history();
 						$hist->add($_SESSION['tablename']['doctypes_first_level'], $id,"UP",_STRUCTURE_MODIF." ".strtolower(_NUM).$id." (".$info.")", $_SESSION['config']['databasetype']);
 					}
@@ -141,7 +141,7 @@ if( isset($_REQUEST['valid']))
 				}
 				if($_SESSION['history']['structureadd'] == "true")
 				{
-					require("core/class/class_history.php");
+					require("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 					$hist = new history();
 					$hist->add($_SESSION['tablename']['doctypes_first_level'], $id,"ADD",_NEW_STRUCTURE_ADDED." (".$desc.")", $_SESSION['config']['databasetype']);
 

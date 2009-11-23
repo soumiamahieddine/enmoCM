@@ -43,7 +43,7 @@ $db->connect();
 $db->query("UPDATE ".$_SESSION['tablename']['users']." set password = '".md5("maarch")."' , change_password ='Y' where user_id = '".$_SESSION['m_admin']['users']['UserId']."'");
 if($_SESSION['history']['usersadd'] == "true")
 {
-	require_once("core/class/class_history.php");
+	require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 	$hist = new history();
 	$hist->add($_SESSION['tablename']['users'], $_SESSION['m_admin']['users']['UserId'],"UP",_NEW_PASSWORD_USER." : ".$_SESSION['m_admin']['users']['LastName']." ".$_SESSION['m_admin']['users']['FirstName'], $_SESSION['config']['databasetype']);
 }
