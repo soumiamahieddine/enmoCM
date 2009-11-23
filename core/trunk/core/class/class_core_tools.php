@@ -915,6 +915,7 @@ class core_tools extends functions
         <?php
 		foreach(array_keys($_SESSION['modules_loaded']) as $value)
 		{
+			
 			$url_css = $_SESSION['urltomodules'].$_SESSION['modules_loaded'][$value]['name']."/css/module.css";
 			$path_css = 'modules'.DIRECTORY_SEPARATOR.$_SESSION['modules_loaded'][$value]['name'].DIRECTORY_SEPARATOR."css".DIRECTORY_SEPARATOR."module.css";
 			$url_cssIE = $_SESSION['urltomodules'].$_SESSION['modules_loaded'][$value]['name']."/css/module_IE.css";
