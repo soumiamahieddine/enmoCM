@@ -984,6 +984,44 @@ class functions
 	*/
 	public function retrieve_constant_lang($constant, $file)
 	{
+		
+		//#####CUSTOM_OVERLOAD#####//
+		if(isset($_SESSION['custom_override_id']) && !empty($_SESSION['custom_override_id']))
+		{
+			
+			$custom_file = $_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php';
+			if(file_exists($custom_file))
+			{
+				
+				$customlang = fopen($custom_file, "r");
+				while (!feof($customlang))
+				{
+				
+					$c_string = fgets($customlang);
+					$c_search="`'".$constant."'`";
+					preg_match($c_search,$c_string,$c_out);
+					
+					if(isset($c_out[0]))
+					{
+						
+						$tab_c_string = explode("'", $c_string);
+						if(isset($tab_c_string[3]))
+						{
+							
+							$c_myresult = $tab_c_string[3];
+							return $c_myresult;
+						}
+						
+					}
+				}
+			}
+			
+			
+			
+		}
+		
+		//#################//
+	
 		$filelang = fopen($file, "r");
 		if(!file_exists($_SESSION['config']['corepath'].$file) && !file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].$file))
 		{
@@ -991,19 +1029,21 @@ class functions
 			exit();
 		}
 		$find = false;
-
+		
 		while (!feof($filelang))
 		{
+			
 			$string = fgets($filelang);
+			
 			$search="`'".$constant."'`";
 			preg_match($search,$string,$out);
-
+			
 			if(isset($out[0]))
 			{
 				$tab_string = explode("'", $string);
-				if(isset($tab_string[3]))
+				if(isset($tab_string[5]))
 				{
-					$myresult = $tab_string[3];
+					$myresult = $tab_string[5];
 					$find = true;
 				}
 				else
@@ -1028,6 +1068,8 @@ class functions
 				return false;
 			}
 		}
+		
+			
 	}
 	
 	/**

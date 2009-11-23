@@ -224,7 +224,8 @@ class core_tools extends functions
 		{
 			if(isset($_SESSION['config']['lang']) && file_exists($_SESSION['config']['corepath'].'modules'.DIRECTORY_SEPARATOR.$modules[$i]['moduleid'].DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php'))
 			{
-				include('modules'.DIRECTORY_SEPARATOR.$modules[$i]['moduleid'].DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php');
+				$filename = ('modules'.DIRECTORY_SEPARATOR.$modules[$i]['moduleid'].DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php'); 
+				include($filename);
 			}
 			else
 			{
@@ -236,6 +237,7 @@ class core_tools extends functions
 	private function load_lang_custom_override($custom_id)
 	{
 		$pathname = $_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$custom_id.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php';
+		
 		if (file_exists($pathname)) {
 			include($pathname);
 		}
@@ -510,7 +512,9 @@ class core_tools extends functions
 						$_SESSION['modules_services'][$modules[$i]['moduleid']][$k]['name']=$tmp;
 					}
 					$tmp = (string) $SERVICE->comment;
-					$tmp2 = $this->retrieve_constant_lang($tmp, 'modules'.DIRECTORY_SEPARATOR.$modules[$i]['moduleid'].DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php');
+					$filename = 'modules'.DIRECTORY_SEPARATOR.$modules[$i]['moduleid'].DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php';
+					
+					$tmp2 = $this->retrieve_constant_lang($tmp, $filename);
 					if($tmp2<> false)
 					{
 						$_SESSION['modules_services'][$modules[$i]['moduleid']][$k]['comment']=$tmp2;
@@ -1055,9 +1059,8 @@ class core_tools extends functions
 			{
 				require_once('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
 				$app = new business_app_tools();
-				
-				$path = $app->insert_app_page($_GET['page']);
-				if( !$path && !file_exists($_SESSION['config']['corepath'].'clients'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.$path) && !file_exists($_SESSION['config']['corepath'].$path) || empty($path))
+				$path = $app->insert_app_page($this->f_page);
+				if( !$path || !file_exists($_SESSION['config']['corepath'].'clients'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.$path) || !file_exists($_SESSION['config']['corepath'].$path))
 				{
 					//require($_SESSION["config"]["defaultPage"].".php");
 					$this->loadDefaultPage();
