@@ -372,7 +372,7 @@ class folders_show extends functions
 		{ ?>
 			<input type="submit" class="button" value="<?php  echo _UPDATE_FOLDER;?>" />
 		<?php  }
-		require_once($_SESSION['pathtocoreclass'].'class_core_tools.php');
+		//require_once($_SESSION['pathtocoreclass'].'class_core_tools.php');
 		$ct = new core_tools();
 		$ct->execute_modules_services($_SESSION['modules_services'], "index.php?page=".$_SESSION['origin'], '', 'delete_folder', 'folder');
 				?>
