@@ -23,7 +23,7 @@ $admin->test_admin('manage_entities', 'entities');
 
 //require_once("core/class/class_db.php");
 
-$path = 'modules/entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_entities.php';
+$path = 'modules'.DIRECTORY_SEPARATOR.'entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_entities.php';
 
 require($path);
 

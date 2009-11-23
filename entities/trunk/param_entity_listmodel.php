@@ -35,7 +35,7 @@ elseif($_SESSION['service_tag'] == 'entity_up')
 {
 	if(!isset($_SESSION['m_admin']['entity']['listmodel']))
 	{
-		require_once('modules/entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_listdiff.php');
+		require_once('modules'.DIRECTORY_SEPARATOR.'entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_listdiff.php');
 		$listdiff = new diffusion_list();
 		$_SESSION['m_admin']['entity']['listmodel'] =  $listdiff->get_listmodel_from_entity($_SESSION['m_admin']['entity']['entityId']);
 	}
@@ -53,7 +53,7 @@ elseif($_SESSION['service_tag'] == 'entity_check')
 }
 elseif($_SESSION['service_tag'] == 'entity_add_db' || $_SESSION['service_tag'] == 'entity_up_db')
 {
-	require_once('modules/entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_listdiff.php');
+	require_once('modules'.DIRECTORY_SEPARATOR.'entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_listdiff.php');
 	$params  = array('mode' => 'listmodel', 'table' => $_SESSION['tablename']['ent_listmodels'], 'object_id' => $_SESSION['m_admin']['entity']['entityId'], 'coll_id' => 'letterbox_coll');
 	$diff_list = new diffusion_list();
 	$diff_list->load_list_db($_SESSION['m_admin']['entity']['listmodel'], $params);

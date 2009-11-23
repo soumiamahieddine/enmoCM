@@ -24,7 +24,7 @@ $admin->load_lang();
 
 if(!empty($_REQUEST['entity']) && isset($_REQUEST['entity']))
 {
-	require_once('modules/entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_users_entities.php');
+	require_once('modules'.DIRECTORY_SEPARATOR.'entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_users_entities.php');
 	$usersent = new users_entities();
 	$usersent->connect();
 

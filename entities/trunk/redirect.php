@@ -128,7 +128,7 @@ $frm_height = '500px';
 	$db = new dbquery();
 	$db->connect();
 
-	require_once('modules/entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_listdiff.php');
+	require_once('modules'.DIRECTORY_SEPARATOR.'entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_listdiff.php');
 	$list = new diffusion_list();
 	$arr_list = '';
 	//$db->show_array($arr_id);

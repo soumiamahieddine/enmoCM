@@ -46,7 +46,7 @@ $page_label = _MODIFICATION;
 $page_id = "users_entities_up";
 $admin->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
-require_once('modules/entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_users_entities.php');
+require_once('modules'.DIRECTORY_SEPARATOR.'entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_users_entities.php');
 $usersent = new users_entities();
 
 $usersent->formuserentities("up", $id);

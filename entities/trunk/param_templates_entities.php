@@ -69,7 +69,7 @@ if($_SESSION['service_tag'] == 'admin_templates')
 }
 elseif($_SESSION['service_tag'] == 'load_template_session')
 {
-	require_once('modules/templates'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php');
+	require_once('modules'.DIRECTORY_SEPARATOR.'templates'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php');
 
 	$template = new templates();
 	$entities = $template->getAllItemsLinkedToModel($_SESSION['m_admin']['template']['ID'], 'destination');
@@ -86,7 +86,7 @@ elseif($_SESSION['service_tag'] == 'load_template_session')
 }
 elseif($_SESSION['service_tag'] == 'template_info')
 {
-	require_once("modules/entities".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_manage_entities.php");
+	require_once("modules".DIRECTORY_SEPARATOR."entities".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_manage_entities.php");
 	$ent = new entity();
 	$_SESSION['m_admin']['template']['ENTITIES'] = array();
 	for($i=0;$i<count($_REQUEST['entities_chosen']); $i++)

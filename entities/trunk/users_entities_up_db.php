@@ -21,7 +21,7 @@ $core_tools->test_admin('manage_entities', 'entities');
 //here we loading the lang vars
 $core_tools->load_lang();
 //require_once("core/class/class_db.php");
-require_once('modules/entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_users_entities.php');
+require_once('modules'.DIRECTORY_SEPARATOR.'entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_users_entities.php');
 
 $usersEnt = new users_entities();
 

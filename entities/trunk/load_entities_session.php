@@ -1,5 +1,5 @@
 <?php
-	require_once('modules/entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_entities.php');
+	require_once('modules'.DIRECTORY_SEPARATOR.'entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_entities.php');
 	$ent = new entity();
 	$_SESSION['m_admin']['entities'] = array();
 	$_SESSION['m_admin']['entities'] = $ent->getShortEntityTree($_SESSION['m_admin']['entities'] ,'all', '', array(), 'all' );

@@ -22,7 +22,7 @@ $admin = new core_tools();
 //$admin->test_admin('manage_entities', 'entities');
 //here we loading the lang vars
 $admin->load_lang();
-require_once('modules/entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_users_entities.php');
+require_once('modules'.DIRECTORY_SEPARATOR.'entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_users_entities.php');
 
 $func = new functions();
 

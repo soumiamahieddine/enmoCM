@@ -69,7 +69,7 @@ if($_SESSION['service_tag'] == 'admin_models')
 }
 elseif($_SESSION['service_tag'] == 'load_model_session')
 {
-	require_once('modules/models'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php');
+	require_once('modules'.DIRECTORY_SEPARATOR.'models'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php');
 
 	$model = new models();
 	$entities = $model->getAllItemsLinkedToModel($_SESSION['m_admin']['model']['ID'], 'destination');

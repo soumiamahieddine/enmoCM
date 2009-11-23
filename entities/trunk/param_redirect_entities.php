@@ -222,7 +222,7 @@ if($_SESSION['service_tag'] == 'group_basket')
 }
 elseif($_SESSION['service_tag'] == 'manage_groupbasket')
 {
-	require_once('modules/entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php');
+	require_once('modules'.DIRECTORY_SEPARATOR.'entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php');
 	$ent = new entities();
 	$groupe = $_REQUEST['group'];
 	if(isset($_REQUEST['old_group']) && !empty($_REQUEST['old_group']))
@@ -317,7 +317,7 @@ elseif($_SESSION['service_tag'] == 'manage_groupbasket')
 }
 elseif($_SESSION['service_tag'] == 'load_basket_session')
 {
-	require_once('modules/entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php');
+	require_once('modules'.DIRECTORY_SEPARATOR.'entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php');
 	$entity_tmp = new entities();
 	for($i=0; $i < count($_SESSION['m_admin']['basket']['groups'] ); $i++)
 	{
@@ -342,7 +342,7 @@ elseif($_SESSION['service_tag'] == 'load_basket_session')
 }
 elseif($_SESSION['service_tag'] == 'load_basket_db')
 {
-	require_once('modules/entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php');
+	require_once('modules'.DIRECTORY_SEPARATOR.'entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php');
 	$ent = new entities();
 	//$ent->show_array($_SESSION['m_admin']['basket']['all_actions']);
 	$redirect_actions = array();

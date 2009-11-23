@@ -14,8 +14,8 @@
 
 //require_once("core/class/class_functions.php");
 //require_once("core/class/class_db.php");
-require_once("core/class/class_request.php");
-require_once('modules/entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_entities.php');
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
+require_once('modules'.DIRECTORY_SEPARATOR.'entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_entities.php');
 $ent = new entity();
 
 $select = "select entity_id from ".$_SESSION['tablename']['ent_entities'];
