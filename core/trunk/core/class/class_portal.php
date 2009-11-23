@@ -51,8 +51,17 @@ class portal extends functions
 			$_SESSION['config']['unixserver'] = (string) $CONFIG->unixserver;
 			$_SESSION['config']['defaultpage'] = (string) $CONFIG->defaultpage;
 			$_SESSION['config']['defaultlang'] = (string) $CONFIG->defaultlanguage;
-			//$_SESSION['config']['coreurl'] = (string) $CONFIG->coreurl;
-			if ($_SERVER['SERVER_PORT'] <> 80)
+			
+			if ($_SERVER['HTTPS'] == "on")
+				$protocol = "https";
+			else
+				$protocol = "http";
+			
+			if ($_SERVER['SERVER_PORT'] <> 443 && $protocol == "https")		
+			{
+				$server_port = ":".$_SERVER['SERVER_PORT'];
+			}
+			elseif ($_SERVER['SERVER_PORT'] <> 80 && $protocol == "http")
 			{
 				$server_port = ":".$_SERVER['SERVER_PORT'];
 			}
@@ -60,7 +69,9 @@ class portal extends functions
 			{
 				$server_port = '';
 			}
-			$_SESSION['config']['coreurl'] = "http://".$_SERVER['SERVER_NAME'].$server_port.str_replace('index.php','',$_SERVER['SCRIPT_NAME']);
+			$_SESSION['config']['coreurl'] = $protocol."://".$_SERVER['SERVER_NAME'].$server_port.str_replace('index.php','',$_SERVER['SCRIPT_NAME']);
+		
+		
 		}
 		$i=0;
 		foreach($xmlconfig->BUSINESSAPPS as $BUSINESSAPPS)
