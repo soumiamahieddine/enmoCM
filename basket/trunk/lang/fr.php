@@ -20,251 +20,219 @@
  */
 
 /*********************** SERVICES ***********************************/
-define('_ADMIN_BASKETS', 'Corbeilles');
-define('_ADMIN_BASKETS_DESC', 'D&eacute;finir le contenu des corbeilles et les affecter &agrave; des groupes d&rsquo;utilisateurs. Enum&eacute;rer les redirections possibles lors de l&rsquo;utilisation de la corbeille par un groupe donn&eacute;. Attribuer un format d&rsquo;affichage de la corbeille par ce groupe.');
-define('_USE_BASKETS', 'Utiliser les corbeilles');
-define('_DIFFUSION_LIST', 'Liste de diffusion');
+if (!defined('_ADMIN_BASKETS'))  define('_ADMIN_BASKETS', 'Corbeilles');
+if (!defined('_ADMIN_BASKETS_DESC'))  define('_ADMIN_BASKETS_DESC', 'D&eacute;finir le contenu des corbeilles et les affecter &agrave; des groupes d&rsquo;utilisateurs. Enum&eacute;rer les redirections possibles lors de l&rsquo;utilisation de la corbeille par un groupe donn&eacute;. Attribuer un format d&rsquo;affichage de la corbeille par ce groupe.');
+if (!defined('_USE_BASKETS'))  define('_USE_BASKETS', 'Utiliser les corbeilles');
+if (!defined('_DIFFUSION_LIST'))  define('_DIFFUSION_LIST', 'Liste de diffusion');
 
 //class basket
-define('_BASKET', 'Corbeille');
-define('_BASKETS_COMMENT', 'Corbeilles');
-define('_THE_BASKET', 'La corbeille ');
-define('_THE_ID', 'L&rsquo;identifiant ');
-define('_THE_DESC', 'La description ');
-define('_BELONGS_TO_NO_GROUP', 'n&rsquo;appartient &agrave; aucun groupe');
-define('_SYSTEM_BASKET_MESSAGE', 'Cette corbeille est une corbeille syst&egrave;me, vous ne pouvez pas modifier la table et la where clause. Elles sont affich&eacute;es &agrave; titre indicatif');
-define('_BASKET_MISSING', 'La Corbeille n&rsquo;existe pas');
-define('_BASKET_UPDATED', 'Corbeille modifi&eacute;e');
-define('_BASKET_UPDATE', 'Modification de la corbeille');
-define('_BASKET_ADDED', 'Nouvelle corbeille ajout&eacute;e');
-define('_DELETED_BASKET', 'Corbeille supprim&eacute;e');
-define('_BASKET_DELETION', 'Suppression de la corbeille');
-define('_BASKET_AUTORIZATION', 'Autorisation de la corbeille');
-define('_BASKET_SUSPENSION', 'Suspension de la corbeille');
-define('_AUTORIZED_BASKET', 'Corbeille autoris&eacute;e');
-define('_SUSPENDED_BASKET', 'Corbeille suspendue');
-define('_NO_BASKET_DEFINED_FOR_YOU', 'Aucune corbeille d&eacute;finie pour cet utilisateur');
+if (!defined('_BASKET'))  define('_BASKET', 'Corbeille');
+if (!defined('_BASKETS_COMMENT'))  define('_BASKETS_COMMENT', 'Corbeilles');
+if (!defined('_THE_BASKET'))  define('_THE_BASKET', 'La corbeille ');
+if (!defined('_THE_ID'))  define('_THE_ID', 'L&rsquo;identifiant ');
+if (!defined('_THE_DESC'))  define('_THE_DESC', 'La description ');
+if (!defined('_BELONGS_TO_NO_GROUP'))  define('_BELONGS_TO_NO_GROUP', 'n&rsquo;appartient &agrave; aucun groupe');
+if (!defined('_SYSTEM_BASKET_MESSAGE'))  define('_SYSTEM_BASKET_MESSAGE', 'Cette corbeille est une corbeille syst&egrave;me, vous ne pouvez pas modifier la table et la where clause. Elles sont affich&eacute;es &agrave; titre indicatif');
+if (!defined('_BASKET_MISSING'))  define('_BASKET_MISSING', 'La Corbeille n&rsquo;existe pas');
+if (!defined('_BASKET_UPDATED'))  define('_BASKET_UPDATED', 'Corbeille modifi&eacute;e');
+if (!defined('_BASKET_UPDATE'))  define('_BASKET_UPDATE', 'Modification de la corbeille');
+if (!defined('_BASKET_ADDED'))  define('_BASKET_ADDED', 'Nouvelle corbeille ajout&eacute;e');
+if (!defined('_DELETED_BASKET'))  define('_DELETED_BASKET', 'Corbeille supprim&eacute;e');
+if (!defined('_BASKET_DELETION'))  define('_BASKET_DELETION', 'Suppression de la corbeille');
+if (!defined('_BASKET_AUTORIZATION'))  define('_BASKET_AUTORIZATION', 'Autorisation de la corbeille');
+if (!defined('_BASKET_SUSPENSION'))  define('_BASKET_SUSPENSION', 'Suspension de la corbeille');
+if (!defined('_AUTORIZED_BASKET'))  define('_AUTORIZED_BASKET', 'Corbeille autoris&eacute;e');
+if (!defined('_SUSPENDED_BASKET'))  define('_SUSPENDED_BASKET', 'Corbeille suspendue');
+if (!defined('_NO_BASKET_DEFINED_FOR_YOU'))  define('_NO_BASKET_DEFINED_FOR_YOU', 'Aucune corbeille d&eacute;finie pour cet utilisateur');
 
 
-define('_BASKETS_LIST', 'Liste des corbeilles');
+if (!defined('_BASKETS_LIST'))  define('_BASKETS_LIST', 'Liste des corbeilles');
 
 /////// frame corbeilles
-define('_BASKETS', 'Corbeilles');
-define('_CHOOSE_BASKET', 'Choisissez une corbeille');
-define('_PROCESS_BASKET', 'Votre courrier &agrave; traiter');
-define('_VALIDATION_BASKET', 'Votre courrier &agrave; valider');
+if (!defined('_BASKETS'))  define('_BASKETS', 'Corbeilles');
+if (!defined('_CHOOSE_BASKET'))  define('_CHOOSE_BASKET', 'Choisissez une corbeille');
+if (!defined('_PROCESS_BASKET'))  define('_PROCESS_BASKET', 'Votre courrier &agrave; traiter');
+if (!defined('_VALIDATION_BASKET'))  define('_VALIDATION_BASKET', 'Votre courrier &agrave; valider');
 
-define('_MANAGE_BASKETS', 'G&eacute;rer les corbeilles');
-define('_MANAGE_BASKETS_APP', 'G&eacute;rer les corbeilles de l&rsquo;application');
+if (!defined('_MANAGE_BASKETS'))  define('_MANAGE_BASKETS', 'G&eacute;rer les corbeilles');
+if (!defined('_MANAGE_BASKETS_APP'))  define('_MANAGE_BASKETS_APP', 'G&eacute;rer les corbeilles de l&rsquo;application');
 
 /************** Corbeille : Liste + Formulaire**************/
-define('_ALL_BASKETS', 'Toutes les corbeilles');
-define('_BASKET_LIST', 'Liste des corbeilles');
-define('_ADD_BASKET', 'Ajouter une corbeille');
-define('_BASKET_ADDITION', 'Ajout d&rsquo;une corbeille');
-define('_BASKET_MODIFICATION', 'Modification d&rsquo;une corbeille');
-define('_BASKET_VIEW', 'Vue sur la table');
-define('_MODIFY_BASKET', 'Modifier la corbeille');
-define('_ADD_A_NEW_BASKET', 'Cr&eacute;er une nouvelle corbeille');
-define('_ADD_A_GROUP_TO_BASKET', 'Associer un nouveau groupe &agrave; la corbeille');
-define('_DEL_GROUPS', 'Supprimer groupe(s)');
-define('_BASKET_NOT_USABLE', 'Aucun groupe associ&eacute; (la corbeille est inutilisable pour l&rsquo;instant)');
-define('_ASSOCIATED_GROUP', 'Liste des groupes associ&eacute;s &agrave; la corbeille');
+if (!defined('_ALL_BASKETS'))  define('_ALL_BASKETS', 'Toutes les corbeilles');
+if (!defined('_BASKET_LIST'))  define('_BASKET_LIST', 'Liste des corbeilles');
+if (!defined('_ADD_BASKET'))  define('_ADD_BASKET', 'Ajouter une corbeille');
+if (!defined('_BASKET_ADDITION'))  define('_BASKET_ADDITION', 'Ajout d&rsquo;une corbeille');
+if (!defined('_BASKET_MODIFICATION'))  define('_BASKET_MODIFICATION', 'Modification d&rsquo;une corbeille');
+if (!defined('_BASKET_VIEW'))  define('_BASKET_VIEW', 'Vue sur la table');
+if (!defined('_MODIFY_BASKET'))  define('_MODIFY_BASKET', 'Modifier la corbeille');
+if (!defined('_ADD_A_NEW_BASKET'))  define('_ADD_A_NEW_BASKET', 'Cr&eacute;er une nouvelle corbeille');
+if (!defined('_ADD_A_GROUP_TO_BASKET'))  define('_ADD_A_GROUP_TO_BASKET', 'Associer un nouveau groupe &agrave; la corbeille');
+if (!defined('_DEL_GROUPS'))  define('_DEL_GROUPS', 'Supprimer groupe(s)');
+if (!defined('_BASKET_NOT_USABLE'))  define('_BASKET_NOT_USABLE', 'Aucun groupe associ&eacute; (la corbeille est inutilisable pour l&rsquo;instant)');
+if (!defined('_ASSOCIATED_GROUP'))  define('_ASSOCIATED_GROUP', 'Liste des groupes associ&eacute;s &agrave; la corbeille');
 
-define('_TITLE_GROUP_BASKET', 'Associer la corbeille &agrave; un groupe');
-define('_ADD_TO_BASKET', 'Associer la corbeille');
-define('_TO_THE_GROUP', '&agrave; un groupe');
-define('_ALLOWED_ACTIONS', 'Actions autoris&eacute;es');
-define('_SERVICES_BASKETS', 'Corbeilles de services');
-define('_USERGROUPS_BASKETS', 'Corbeilles des groupes d&rsquo;utilisateurs');
-define('_BASKET_RESULT_PAGE', 'Liste de r&eacute;sultats');
-define('_ADD_THIS_GROUP', 'Ajouter le groupe');
-define('_MODIFY_THIS_GROUP', 'Modifier le groupe');
-define('_DEFAULT_ACTION_LIST', 'Action par d&eacute;faut sur la liste<br/><i>(Cliquez sur la ligne)');
-define('_NO_ACTION_DEFINED', 'Aucune action d&eacute;finie');
+if (!defined('_TITLE_GROUP_BASKET'))  define('_TITLE_GROUP_BASKET', 'Associer la corbeille &agrave; un groupe');
+if (!defined('_ADD_TO_BASKET'))  define('_ADD_TO_BASKET', 'Associer la corbeille');
+if (!defined('_TO_THE_GROUP'))  define('_TO_THE_GROUP', '&agrave; un groupe');
+if (!defined('_ALLOWED_ACTIONS'))  define('_ALLOWED_ACTIONS', 'Actions autoris&eacute;es');
+if (!defined('_SERVICES_BASKETS'))  define('_SERVICES_BASKETS', 'Corbeilles de services');
+if (!defined('_USERGROUPS_BASKETS'))  define('_USERGROUPS_BASKETS', 'Corbeilles des groupes d&rsquo;utilisateurs');
+if (!defined('_BASKET_RESULT_PAGE'))  define('_BASKET_RESULT_PAGE', 'Liste de r&eacute;sultats');
+if (!defined('_ADD_THIS_GROUP'))  define('_ADD_THIS_GROUP', 'Ajouter le groupe');
+if (!defined('_MODIFY_THIS_GROUP'))  define('_MODIFY_THIS_GROUP', 'Modifier le groupe');
+if (!defined('_DEFAULT_ACTION_LIST'))  define('_DEFAULT_ACTION_LIST', 'Action par d&eacute;faut sur la liste<br/><i>(Cliquez sur la ligne)');
+if (!defined('_NO_ACTION_DEFINED'))  define('_NO_ACTION_DEFINED', 'Aucune action d&eacute;finie');
 
 //BASKETS
-define('_PROCESS_FOLDER_LIST', 'Liste des dossiers trait&eacute;s');
-define('_INCOMPLETE_FOLDERS_LIST', 'Liste des dossiers incomplets');
-define('_WAITING_VAL_LIST', 'Liste des pi&egrave;ces en attente de validation');
-define('_WAITING_QUAL_LIST', 'Liste des pi&egrave;ces en attente de qualification');
-define('_WAITING_DISTRIB_LIST', 'Liste des courriers en attente de distribution');
-define('_NO_REDIRECT_RIGHT', 'Vous n&rsquo;avez pas le droit de redirection dans cette corbeille');
-define('_CLICK_LINE_BASKET1', 'Cliquez sur une ligne pour qualifier un document');
+if (!defined('_PROCESS_FOLDER_LIST'))  define('_PROCESS_FOLDER_LIST', 'Liste des dossiers trait&eacute;s');
+if (!defined('_INCOMPLETE_FOLDERS_LIST'))  define('_INCOMPLETE_FOLDERS_LIST', 'Liste des dossiers incomplets');
+if (!defined('_WAITING_VAL_LIST'))  define('_WAITING_VAL_LIST', 'Liste des pi&egrave;ces en attente de validation');
+if (!defined('_WAITING_QUAL_LIST'))  define('_WAITING_QUAL_LIST', 'Liste des pi&egrave;ces en attente de qualification');
+if (!defined('_WAITING_DISTRIB_LIST'))  define('_WAITING_DISTRIB_LIST', 'Liste des courriers en attente de distribution');
+if (!defined('_NO_REDIRECT_RIGHT'))  define('_NO_REDIRECT_RIGHT', 'Vous n&rsquo;avez pas le droit de redirection dans cette corbeille');
+if (!defined('_CLICK_LINE_BASKET1'))  define('_CLICK_LINE_BASKET1', 'Cliquez sur une ligne pour qualifier un document');
 
-//ENTITY
-/*
-define('_SELECT_ENTITY', 'S&eacute;lection service');
-define('_ENTITY', 'Service');
-define('_LABEL', 'Label');
-define('_THE_ENTITY', 'Le service');
-define('_ENTITIES', 'Services');
-define('_ALL_ENTITIES', 'Tous les services');
-define('_ENTITY_LIST', 'Liste des services');
-define('_SELECTED_ENTITIES', 'Services s&eacute;lectionn&eacute;s');
-define('_CHOOSE_ENTITY', 'Choisir service');
-define('_MUST_CHOOSE_AN_ENTITY', 'Vous devez choisir un service');
-define('_ADMIN_ENTITIES', 'Administrer les services');
-define('_ADMIN_ENTITIES_DESC', 'Administration des services et des listes de diffusion associ&eacute;es');
-define('_ENTITIES_LIST', 'Liste des services');
-define('_ENTITY_ADDITION', 'Ajout d&rsquo;un service');
-define('_ENTITY_MODIFICATION', 'Modification d&rsquo;un service');
-define('_ENTITY_MISSING', 'Le service n&rsquo;existe pas');
-define('_ENTITY_DELETION', 'Suppression d&rsquo;un service');
-define('_ENTITY_ADDITION', 'Ajout d&rsquo;un service');
-define('_ENTITY_ADDED', 'Service ajout&eacute;');
-define('_ENTITY_UPDATED', 'Service modifi&eacute;');
-define('_ENTITY_BASKETS','Services disponibles');
-define('_PRINT_ENTITY_SEP','Imprimer le s&eacute;parateur de documents');
-define('_PRINT_SEP_WILL_BE_START','L&rsquo;impression va d&eacute;marrer');
-define('_PRINT_SEP_TITLE','SEPARATEUR DE DOCUMENTS');
-define('_INGOING_UP','ARRIVEE');
-define('_ONGOING_UP','DEPART');
-*/
 
 //DIFFUSION LIST
-define('_CHOOSE_DEPARTMENT_FIRST', 'Vous devez d&rsquo;abord choisir un service avant de pouvoir acc&eacute;der &agrave; la liste diffusion');
-define('_NO_LIST_DEFINED__FOR_THIS_MAIL', 'Aucune liste n&rsquo;est d&eacute;finie pour ce courrier');
-define('_NO_LIST_DEFINED__FOR_THIS_DEPARTMENT', 'Aucune liste n&rsquo;est d&eacute;finie pour ce service');
-define('_NO_LIST_DEFINED', 'Pas de liste d&eacute;finie');
-define('_REDIRECT_MAIL', 'Redirection du document');
-define('_DISTRIBUTE_MAIL', 'Ventilation du document');
-define('_REDIRECT_TO_OTHER_DEP', 'Rediriger vers un autre service');
-define('_REDIRECT_TO_USER', 'Rediriger vers un utilisateur');
-define('_LETTER_SERVICE_REDIRECT','Rediriger vers le service &eacute;metteur');
-define('_LETTER_SERVICE_REDIRECT_VALIDATION','Souhaitez-vous vraiment rediriger vers le service &eacute;metteur');
-define('_DOC_REDIRECT_TO_SENDER_ENTITY', 'Document redirig&eacute; vers service &eacute;metteur');
-define('_DOC_REDIRECT_TO_ENTITY', 'Document redirig&eacute; vers service');
-define('_DOC_REDIRECT_TO_USER', 'Document redirig&eacute; vers utilisateur');
+if (!defined('_CHOOSE_DEPARTMENT_FIRST'))  define('_CHOOSE_DEPARTMENT_FIRST', 'Vous devez d&rsquo;abord choisir un service avant de pouvoir acc&eacute;der &agrave; la liste diffusion');
+if (!defined('_NO_LIST_DEFINED__FOR_THIS_MAIL'))  define('_NO_LIST_DEFINED__FOR_THIS_MAIL', 'Aucune liste n&rsquo;est d&eacute;finie pour ce courrier');
+if (!defined('_NO_LIST_DEFINED__FOR_THIS_DEPARTMENT'))  define('_NO_LIST_DEFINED__FOR_THIS_DEPARTMENT', 'Aucune liste n&rsquo;est d&eacute;finie pour ce service');
+if (!defined('_NO_LIST_DEFINED'))  define('_NO_LIST_DEFINED', 'Pas de liste d&eacute;finie');
+if (!defined('_REDIRECT_MAIL'))  define('_REDIRECT_MAIL', 'Redirection du document');
+if (!defined('_DISTRIBUTE_MAIL'))  define('_DISTRIBUTE_MAIL', 'Ventilation du document');
+if (!defined('_REDIRECT_TO_OTHER_DEP'))  define('_REDIRECT_TO_OTHER_DEP', 'Rediriger vers un autre service');
+if (!defined('_REDIRECT_TO_USER'))  define('_REDIRECT_TO_USER', 'Rediriger vers un utilisateur');
+if (!defined('_LETTER_SERVICE_REDIRECT'))  define('_LETTER_SERVICE_REDIRECT','Rediriger vers le service &eacute;metteur');
+if (!defined('_LETTER_SERVICE_REDIRECT_VALIDATION'))  define('_LETTER_SERVICE_REDIRECT_VALIDATION','Souhaitez-vous vraiment rediriger vers le service &eacute;metteur');
+if (!defined('_DOC_REDIRECT_TO_SENDER_ENTITY'))  define('_DOC_REDIRECT_TO_SENDER_ENTITY', 'Document redirig&eacute; vers service &eacute;metteur');
+if (!defined('_DOC_REDIRECT_TO_ENTITY'))  define('_DOC_REDIRECT_TO_ENTITY', 'Document redirig&eacute; vers service');
+if (!defined('_DOC_REDIRECT_TO_USER'))  define('_DOC_REDIRECT_TO_USER', 'Document redirig&eacute; vers utilisateur');
 
-define('_WELCOME_DIFF_LIST', 'Bienvenue dans l&rsquo;outil de diffusion de courrier');
-define('_START_DIFF_EXPLANATION', 'Pour demarrer la diffusion, utilisez la navigation par service ou par utilisateur ci-dessus');
-define('_CLICK_ON', 'cliquez sur');
-define('_ADD_USER_TO_LIST_EXPLANATION', 'Pour ajouter un utilisateur &agrave; la liste de diffusion');
-define('_REMOVE_USER_FROM_LIST_EXPLANATION', 'Pour retirer l&rsquo;utilisateur &agrave; cette liste de diffusion');
-define('_TO_MODIFY_LIST_ORDER_EXPLANATION', 'Pour modifier l&rsquo;ordre d&rsquo;attribution d&rsquo;un courrier aux utilisateurs, utilisez les ic&ocirc;nes');
-if(!defined('_AND'))
-{
-	define('_AND', ' et ' );
-}
-define('_LINKED_DIFF_LIST', 'Liste de diffusion associ&eacute;e');
-define('_NO_LINKED_DIFF_LIST', 'Pas de liste associ&eacute;e');
-define('_CREATE_LIST', 'Cr&eacute;er une liste de diffusion');
-define('_MODIFY_LIST', 'Modifier la liste');
-define('_THE_ENTITY_DO_NOT_CONTAIN_DIFF_LIST', 'Le service s&eacute;lectionn&eacute; n&rsquo;a pas de mod&egrave;le de liste de diffusion associ&eacute;e');
+if (!defined('_WELCOME_DIFF_LIST'))  define('_WELCOME_DIFF_LIST', 'Bienvenue dans l&rsquo;outil de diffusion de courrier');
+if (!defined('_START_DIFF_EXPLANATION'))  define('_START_DIFF_EXPLANATION', 'Pour demarrer la diffusion, utilisez la navigation par service ou par utilisateur ci-dessus');
+if (!defined('_CLICK_ON'))  define('_CLICK_ON', 'cliquez sur');
+if (!defined('_ADD_USER_TO_LIST_EXPLANATION'))  define('_ADD_USER_TO_LIST_EXPLANATION', 'Pour ajouter un utilisateur &agrave; la liste de diffusion');
+if (!defined('_REMOVE_USER_FROM_LIST_EXPLANATION'))  define('_REMOVE_USER_FROM_LIST_EXPLANATION', 'Pour retirer l&rsquo;utilisateur &agrave; cette liste de diffusion');
+if (!defined('_TO_MODIFY_LIST_ORDER_EXPLANATION'))  define('_TO_MODIFY_LIST_ORDER_EXPLANATION', 'Pour modifier l&rsquo;ordre d&rsquo;attribution d&rsquo;un courrier aux utilisateurs, utilisez les ic&ocirc;nes');
+if (!defined('_AND'))  define('_AND', ' et ' );
+
+if (!defined('_LINKED_DIFF_LIST'))  define('_LINKED_DIFF_LIST', 'Liste de diffusion associ&eacute;e');
+if (!defined('_NO_LINKED_DIFF_LIST'))  define('_NO_LINKED_DIFF_LIST', 'Pas de liste associ&eacute;e');
+if (!defined('_CREATE_LIST'))  define('_CREATE_LIST', 'Cr&eacute;er une liste de diffusion');
+if (!defined('_MODIFY_LIST'))  define('_MODIFY_LIST', 'Modifier la liste');
+if (!defined('_THE_ENTITY_DO_NOT_CONTAIN_DIFF_LIST'))  define('_THE_ENTITY_DO_NOT_CONTAIN_DIFF_LIST', 'Le service s&eacute;lectionn&eacute; n&rsquo;a pas de mod&egrave;le de liste de diffusion associ&eacute;e');
 
 //LIST MODEL
-define('_MANAGE_MODEL_LIST_TITLE', 'Cr&eacute;ation / Modification Mod&egrave;le de liste de diffusion');
-define('_SORT_BY', 'Trier par');
-define('_WELCOME_MODEL_LIST_TITLE', 'Bienvenue dans l&rsquo;outil de cr&eacute;tion de mod&egrave;le de liste de diffusion');
-define('_MODEL_LIST_EXPLANATION1', 'Pour d&eacute;marrer la cr&eacute;tion, utilisez la navigation par service ou par utilisateur cidessus');
-define('_VALID_LIST', 'Valider la liste');
+if (!defined('_MANAGE_MODEL_LIST_TITLE'))  define('_MANAGE_MODEL_LIST_TITLE', 'Cr&eacute;ation / Modification Mod&egrave;le de liste de diffusion');
+if (!defined('_SORT_BY'))  define('_SORT_BY', 'Trier par');
+if (!defined('_WELCOME_MODEL_LIST_TITLE'))  define('_WELCOME_MODEL_LIST_TITLE', 'Bienvenue dans l&rsquo;outil de cr&eacute;tion de mod&egrave;le de liste de diffusion');
+if (!defined('_MODEL_LIST_EXPLANATION1'))  define('_MODEL_LIST_EXPLANATION1', 'Pour d&eacute;marrer la cr&eacute;tion, utilisez la navigation par service ou par utilisateur cidessus');
+if (!defined('_VALID_LIST'))  define('_VALID_LIST', 'Valider la liste');
 
 //LIST
-define('_COPY_LIST', 'Liste des documents en copie');
-define('_PROCESS_LIST', 'Liste des documents &agrave; traiter');
-define('_CLICK_LINE_TO_VIEW', 'Cliquez sur une ligne pour visualiser');
-define('_CLICK_LINE_TO_PROCESS', 'Cliquez sur une ligne pour traiter');
+if (!defined('_COPY_LIST'))  define('_COPY_LIST', 'Liste des documents en copie');
+if (!defined('_PROCESS_LIST'))  define('_PROCESS_LIST', 'Liste des documents &agrave; traiter');
+if (!defined('_CLICK_LINE_TO_VIEW'))  define('_CLICK_LINE_TO_VIEW', 'Cliquez sur une ligne pour visualiser');
+if (!defined('_CLICK_LINE_TO_PROCESS'))  define('_CLICK_LINE_TO_PROCESS', 'Cliquez sur une ligne pour traiter');
 
-define('_REDIRECT_TO_SENDER_ENTITY', 'Redirection vers le service &eacute;metteur');
-define('_CHOOSE_DEPARTMENT', 'Choisissez un service');
-//define('_REDIRECTION', 'Redirection');
-define('_ENTITY_UPDATE', 'Service mis &agrave; jour');
+if (!defined('_REDIRECT_TO_SENDER_ENTITY'))  define('_REDIRECT_TO_SENDER_ENTITY', 'Redirection vers le service &eacute;metteur');
+if (!defined('_CHOOSE_DEPARTMENT'))  define('_CHOOSE_DEPARTMENT', 'Choisissez un service');
+//if (!defined('_REDIRECTION'))  define('_REDIRECTION', 'Redirection');
+if (!defined('_ENTITY_UPDATE'))  define('_ENTITY_UPDATE', 'Service mis &agrave; jour');
 // USER ABS
-define('_MY_ABS', 'G&eacute;rer mes absences');
-define('_MY_ABS_TXT', 'Permet de rediriger vos corbeilles en cas de d&eacute;part en cong&eacute;.');
-define('_MY_ABS_REDIRECT', 'Vos courriers sont actuellement redirig&eacute;s vers');
-define('_MY_ABS_DEL', 'Pour supprimer la redirection, cliquez ici pour stopper');
-define('_ADMIN_ABS', 'G&eacute;rer les absences.');
-define('_ADMIN_ABS_TXT', 'Permet de rediriger le courrier de l&rsquo;utilisateur en attente en cas de d&eacute;part en cong&eacute;.');
-define('_ADMIN_ABS_REDIRECT', 'Redirection d&rsquo;absence en cours.');
-define('_ADMIN_ABS_FIRST_PART', 'Les courrier de');
-define('_ADMIN_ABS_SECOND_PART', 'sont actuellement redirig&eacute;s vers ');
-define('_ADMIN_ABS_THIRD_PART', '. Cliquez ici pour supprimer la redirection.');
-define('_ACTIONS_DONE', 'Actions effectu&eacute;es le');
-define('_PROCESSED_MAIL', 'Courriers trait&eacute;s');
-define('_INDEXED_MAIL', 'Courriers index&eacute;s');
-define('_REDIRECTED_MAIL', 'Courriers redirig&eacute;s');
-define('_PROCESS_MAIL_OF', 'Courrier &agrave; traiter de');
-if(!defined('_MISSING'))
-{
-	define('_MISSING', 'Absent');
-}
-define('_BACK_FROM_VACATION', 'de retour de son absence');
-define('_MISSING_ADVERT_TITLE','Gestion des absences');
-define('_MISSING_ADVERT_01','Ce compte est actuellement d&eacute;finit en mode &rsquo;absent&rsquo; et les courriers sont redirig&eacute;s vers un autre utilisateur.');
-define('_MISSING_ADVERT_02','Si vous desirez vous connecter avec ce compte, le mode &rsquo;absent&rsquo; sera alors supprim&eacute;.<br/> La redirection des courriers arrivera &agrave; son terme et l&rsquo;application sera r&eacute;activ&eacute;e');
-define('_MISSING_CHOOSE','Souhaitez-vous continuer?');
+if (!defined('_MY_ABS'))  define('_MY_ABS', 'G&eacute;rer mes absences');
+if (!defined('_MY_ABS_TXT'))  define('_MY_ABS_TXT', 'Permet de rediriger vos corbeilles en cas de d&eacute;part en cong&eacute;.');
+if (!defined('_MY_ABS_REDIRECT'))  define('_MY_ABS_REDIRECT', 'Vos courriers sont actuellement redirig&eacute;s vers');
+if (!defined('_MY_ABS_DEL'))  define('_MY_ABS_DEL', 'Pour supprimer la redirection, cliquez ici pour stopper');
+if (!defined('_ADMIN_ABS'))  define('_ADMIN_ABS', 'G&eacute;rer les absences.');
+if (!defined('_ADMIN_ABS_TXT'))  define('_ADMIN_ABS_TXT', 'Permet de rediriger le courrier de l&rsquo;utilisateur en attente en cas de d&eacute;part en cong&eacute;.');
+if (!defined('_ADMIN_ABS_REDIRECT'))  define('_ADMIN_ABS_REDIRECT', 'Redirection d&rsquo;absence en cours.');
+if (!defined('_ADMIN_ABS_FIRST_PART'))  define('_ADMIN_ABS_FIRST_PART', 'Les courrier de');
+if (!defined('_ADMIN_ABS_SECOND_PART'))  define('_ADMIN_ABS_SECOND_PART', 'sont actuellement redirig&eacute;s vers ');
+if (!defined('_ADMIN_ABS_THIRD_PART'))  define('_ADMIN_ABS_THIRD_PART', '. Cliquez ici pour supprimer la redirection.');
+if (!defined('_ACTIONS_DONE'))  define('_ACTIONS_DONE', 'Actions effectu&eacute;es le');
+if (!defined('_PROCESSED_MAIL'))  define('_PROCESSED_MAIL', 'Courriers trait&eacute;s');
+if (!defined('_INDEXED_MAIL'))  define('_INDEXED_MAIL', 'Courriers index&eacute;s');
+if (!defined('_REDIRECTED_MAIL'))  define('_REDIRECTED_MAIL', 'Courriers redirig&eacute;s');
+if (!defined('_PROCESS_MAIL_OF'))  define('_PROCESS_MAIL_OF', 'Courrier &agrave; traiter de');
+
+if (!defined('_MISSING'))  define('_MISSING', 'Absent');
+
+if (!defined('_BACK_FROM_VACATION'))  define('_BACK_FROM_VACATION', 'de retour de son absence');
+if (!defined('_MISSING_ADVERT_TITLE'))  define('_MISSING_ADVERT_TITLE','Gestion des absences');
+if (!defined('_ADMIN_USERS'))  define('_MISSING_ADVERT_01','Ce compte est actuellement d&eacute;finit en mode &rsquo;absent&rsquo; et les courriers sont redirig&eacute;s vers un autre utilisateur.');
+if (!defined('_ADMIN_USERS'))  define('_MISSING_ADVERT_02','Si vous desirez vous connecter avec ce compte, le mode &rsquo;absent&rsquo; sera alors supprim&eacute;.<br/> La redirection des courriers arrivera &agrave; son terme et l&rsquo;application sera r&eacute;activ&eacute;e');
+if (!defined('_MISSING_CHOOSE'))  define('_MISSING_CHOOSE','Souhaitez-vous continuer?');
 
 
-define('_CHOOSE_PERSON_TO_REDIRECT', 'Choisissez la personne vers qui vous souhaitez rediriger ce courrier dans la liste ci-dessus');
-define('_CLICK_ON_THE_LINE_OR_ICON', 'Il vous suffit de cliquer sur la ligne ou sur l&rsquo;ic&ocirc;ne');
-define('_TO_SELECT_USER', 'pour s&eacute;lectionner un utilisateur');
+if (!defined('_CHOOSE_PERSON_TO_REDIRECT'))  define('_CHOOSE_PERSON_TO_REDIRECT', 'Choisissez la personne vers qui vous souhaitez rediriger ce courrier dans la liste ci-dessus');
+if (!defined('_CLICK_ON_THE_LINE_OR_ICON'))  define('_CLICK_ON_THE_LINE_OR_ICON', 'Il vous suffit de cliquer sur la ligne ou sur l&rsquo;ic&ocirc;ne');
+if (!defined('_TO_SELECT_USER'))  define('_TO_SELECT_USER', 'pour s&eacute;lectionner un utilisateur');
 
-define('_DIFFUSION_DISTRIBUTION', 'Diffusion et distribution du courrier');
-define('_VALIDATED_ANSWERS', 'DGS R&eacute;ponses valid&eacute;es');
-define('_REJECTED_ANSWERS', 'DGS R&eacute;ponses rejet&eacute;es');
-define('_MUST_HAVE_DIFF_LIST', 'Vous devez d&eacute;finir une liste de diffusion');
-
-
-define('_ASSOCIATED_STATUS', 'Statut associ&eacute;');
-define('_SYSTEM_ACTION', 'Action syst&egrave;me');
-define('_CANNOT_MODIFY_STATUS', 'Vous ne pouvez pas modifier le statut');
-define('_ASSOCIATED_ACTIONS', 'Actions possibles sur la page de r&eacute;sultat');
-define('_NO_ACTIONS_DEFINED', 'Aucune action d&eacute;finie');
-define('_CONFIG', '(param&egrave;trer)');
-define('_CONFIG_ACTION', 'Param&egrave;trage de l&rsquo;action');
-define('_WHERE_CLAUSE_ACTION_TEXT', 'D&eacute;finissez une condition d&rsquo;apparition de l&rsquo;action dans la page par une clause Where (Facultatif) : ');
-define('_IN_ACTION', ' dans l&rsquo;action');
-
-define('_TO_ENTITIES', 'Vers des services');
-define('_TO_USERGROUPS', 'Vers des groupes d&rsquo;utilisateur');
-define('_USE_IN_MASS', 'Action disponible dans la liste');
-define('_USE_ONE', 'Action disponible dans la page d&rsquo;action');
-define('_MUST_CHOOSE_WHERE_USE_ACTION','Vous devez d&eacute;finir o&ugrave; vous souhaitez utiliser l&rsquo;action ');
-
-define('_MUST_CHOOSE_DEP', 'Vous devez s&eacute;lectionner un service!');
-define('_MUST_CHOOSE_USER', 'Vous devez s&eacute;lectionner un utilisateur!');
-define('_REDIRECT_TO_DEP_OK', 'Redirection vers un service effectu&eacute;e');
-define('_REDIRECT_TO_USER_OK', 'Redirection vers un utilisateur effectu&eacute;e');
-
-define('_SAVE_CHANGES', 'Enregistrer les modifications');
-define('_VIEW_BASKETS', 'Mes corbeilles');
-define('_VIEW_BASKETS_TITLE', 'Mes corbeilles');
-
-define('_INVOICE_LIST_TO_VAL', 'Factures &agrave; valider');
-define('_POSTINDEXING_LIST', 'Documents &agrave; vid&eacute;ocoder');
-define('_MY_BASKETS', 'Mes corbeilles');
-define('_REDIRECT_MY_BASKETS', 'Rediriger les corbeilles');
-define('_NAME', 'Nom');
-define('_CHOOSE_USER_TO_REDIRECT', 'Vous devez rediriger au moins une des corbeilles vers un utilisateur.');
-define('_FORMAT_ERROR_ON_USER_FIELD', 'Un champ n&rsquo;est pas dans le bon format : Nom, Pr&eacute;nom (Identifiant)');
-define('_BASKETS_OWNER_MISSING', 'Le propri&eacute;taire des corbeilles n&rsquo;est pas d&eacute;fini.');
-define('_FORM_ERROR', 'Erreur dans la transmission du formulaire...');
-define('_USER_ABS', 'Utilisateur absent : redirection d&eacute;j&agrave; param&eacute;tr&eacute;e.');
-define('_ABS_LOG_OUT', 'si vous vous reconnectez, le mode absent sera annul&eacute;.');
-define('_ABS_USER', 'Utilisateur absent');
-define('_ABSENCE', 'Absence');
-define('_BASK_BACK', 'Retour');
-
-define('_CANCEL_ABS', 'Annulation d&rsquo;absence');
-define('_REALLY_CANCEL_ABS', 'Voulez-vous vraiment annuler l&rsquo;absence ?');
-define('_ABS_MODE', 'Gestion des absences');
-define('_REALLY_ABS_MODE', 'Voulez-vous vraiment passer en mode absent ?');
-
-//define('_REDIRECT_TO_ACTION', 'Rediriger vers une action');
-//define('_DOCUMENTS_LIST', 'Liste simple');
-define('_DOCUMENTS_LIST_WITH_FILTERS', 'Liste avec filtres');
-define('_AUTHORISED_ENTITIES', 'Liste services autoris&eacute;s');
-define('_ARCHIVE_LIST', 'Liste d&rsquo;unit&eacute;s d&rsquo;archive');
-
-define('_FILTER_BY_ENTITY', 'Filtrer par service');
-define('_FILTER_BY', 'Filtrer par');
-define('_OTHER_BASKETS', 'Autres corbeilles');
+if (!defined('_DIFFUSION_DISTRIBUTION'))  define('_DIFFUSION_DISTRIBUTION', 'Diffusion et distribution du courrier');
+if (!defined('_VALIDATED_ANSWERS'))  define('_VALIDATED_ANSWERS', 'DGS R&eacute;ponses valid&eacute;es');
+if (!defined('_REJECTED_ANSWERS'))  define('_REJECTED_ANSWERS', 'DGS R&eacute;ponses rejet&eacute;es');
+if (!defined('_MUST_HAVE_DIFF_LIST'))  define('_MUST_HAVE_DIFF_LIST', 'Vous devez d&eacute;finir une liste de diffusion');
 
 
-define('_BASKET_WELCOME_TXT1', 'Durant votre navigation dans les corbeilles,');
-define('_BASKET_WELCOME_TXT2', 'cliquez, &agrave; tout moment, dans la liste ci-dessus <br/>pour changer de corbeille');
+if (!defined('_ASSOCIATED_STATUS'))  define('_ASSOCIATED_STATUS', 'Statut associ&eacute;');
+if (!defined('_SYSTEM_ACTION'))  define('_SYSTEM_ACTION', 'Action syst&egrave;me');
+if (!defined('_CANNOT_MODIFY_STATUS'))  define('_CANNOT_MODIFY_STATUS', 'Vous ne pouvez pas modifier le statut');
+if (!defined('_ASSOCIATED_ACTIONS'))  define('_ASSOCIATED_ACTIONS', 'Actions possibles sur la page de r&eacute;sultat');
+if (!defined('_NO_ACTIONS_DEFINED'))  define('_NO_ACTIONS_DEFINED', 'Aucune action d&eacute;finie');
+if (!defined('_CONFIG'))  define('_CONFIG', '(param&egrave;trer)');
+if (!defined('_CONFIG_ACTION'))  define('_CONFIG_ACTION', 'Param&egrave;trage de l&rsquo;action');
+if (!defined('_WHERE_CLAUSE_ACTION_TEXT'))  define('_WHERE_CLAUSE_ACTION_TEXT', 'D&eacute;finissez une condition d&rsquo;apparition de l&rsquo;action dans la page par une clause Where (Facultatif) : ');
+if (!defined('_IN_ACTION'))  define('_IN_ACTION', ' dans l&rsquo;action');
+
+if (!defined('_TO_ENTITIES'))  define('_TO_ENTITIES', 'Vers des services');
+if (!defined('_TO_USERGROUPS'))  define('_TO_USERGROUPS', 'Vers des groupes d&rsquo;utilisateur');
+if (!defined('_USE_IN_MASS'))  define('_USE_IN_MASS', 'Action disponible dans la liste');
+if (!defined('_USE_ONE'))  define('_USE_ONE', 'Action disponible dans la page d&rsquo;action');
+if (!defined('_MUST_CHOOSE_WHERE_USE_ACTION'))  define('_MUST_CHOOSE_WHERE_USE_ACTION','Vous devez d&eacute;finir o&ugrave; vous souhaitez utiliser l&rsquo;action ');
+
+if (!defined('_MUST_CHOOSE_DEP'))  define('_MUST_CHOOSE_DEP', 'Vous devez s&eacute;lectionner un service!');
+if (!defined('_MUST_CHOOSE_USER'))  define('_MUST_CHOOSE_USER', 'Vous devez s&eacute;lectionner un utilisateur!');
+if (!defined('_REDIRECT_TO_DEP_OK'))  define('_REDIRECT_TO_DEP_OK', 'Redirection vers un service effectu&eacute;e');
+if (!defined('_REDIRECT_TO_USER_OK'))  define('_REDIRECT_TO_USER_OK', 'Redirection vers un utilisateur effectu&eacute;e');
+
+if (!defined('_SAVE_CHANGES'))  define('_SAVE_CHANGES', 'Enregistrer les modifications');
+if (!defined('_VIEW_BASKETS'))  define('_VIEW_BASKETS', 'Mes corbeilles');
+if (!defined('_VIEW_BASKETS_TITLE'))  define('_VIEW_BASKETS_TITLE', 'Mes corbeilles');
+
+if (!defined('_INVOICE_LIST_TO_VAL'))  define('_INVOICE_LIST_TO_VAL', 'Factures &agrave; valider');
+if (!defined('_POSTINDEXING_LIST'))  define('_POSTINDEXING_LIST', 'Documents &agrave; vid&eacute;ocoder');
+if (!defined('_MY_BASKETS'))  define('_MY_BASKETS', 'Mes corbeilles');
+if (!defined('_REDIRECT_MY_BASKETS'))  define('_REDIRECT_MY_BASKETS', 'Rediriger les corbeilles');
+if (!defined('_NAME'))  define('_NAME', 'Nom');
+if (!defined('_CHOOSE_USER_TO_REDIRECT'))  define('_CHOOSE_USER_TO_REDIRECT', 'Vous devez rediriger au moins une des corbeilles vers un utilisateur.');
+if (!defined('_FORMAT_ERROR_ON_USER_FIELD'))  define('_FORMAT_ERROR_ON_USER_FIELD', 'Un champ n&rsquo;est pas dans le bon format : Nom, Pr&eacute;nom (Identifiant)');
+if (!defined('_BASKETS_OWNER_MISSING'))  define('_BASKETS_OWNER_MISSING', 'Le propri&eacute;taire des corbeilles n&rsquo;est pas d&eacute;fini.');
+if (!defined('_FORM_ERROR'))  define('_FORM_ERROR', 'Erreur dans la transmission du formulaire...');
+if (!defined('_USER_ABS'))  define('_USER_ABS', 'Utilisateur absent : redirection d&eacute;j&agrave; param&eacute;tr&eacute;e.');
+if (!defined('_ABS_LOG_OUT'))  define('_ABS_LOG_OUT', 'si vous vous reconnectez, le mode absent sera annul&eacute;.');
+if (!defined('_ABS_USER'))  define('_ABS_USER', 'Utilisateur absent');
+if (!defined('_ABSENCE'))  define('_ABSENCE', 'Absence');
+if (!defined('_BASK_BACK'))  define('_BASK_BACK', 'Retour');
+
+if (!defined('_CANCEL_ABS'))  define('_CANCEL_ABS', 'Annulation d&rsquo;absence');
+if (!defined('_REALLY_CANCEL_ABS'))  define('_REALLY_CANCEL_ABS', 'Voulez-vous vraiment annuler l&rsquo;absence ?');
+if (!defined('_ABS_MODE'))  define('_ABS_MODE', 'Gestion des absences');
+if (!defined('_REALLY_ABS_MODE'))  define('_REALLY_ABS_MODE', 'Voulez-vous vraiment passer en mode absent ?');
+
+//if (!defined('_REDIRECT_TO_ACTION'))  define('_REDIRECT_TO_ACTION', 'Rediriger vers une action');
+//if (!defined('_DOCUMENTS_LIST'))  define('_DOCUMENTS_LIST', 'Liste simple');
+if (!defined('_DOCUMENTS_LIST_WITH_FILTERS'))  define('_DOCUMENTS_LIST_WITH_FILTERS', 'Liste avec filtres');
+if (!defined('_AUTHORISED_ENTITIES'))  define('_AUTHORISED_ENTITIES', 'Liste services autoris&eacute;s');
+if (!defined('_ARCHIVE_LIST'))  define('_ARCHIVE_LIST', 'Liste d&rsquo;unit&eacute;s d&rsquo;archive');
+
+if (!defined('_FILTER_BY_ENTITY'))  define('_FILTER_BY_ENTITY', 'Filtrer par service');
+if (!defined('_FILTER_BY'))  define('_FILTER_BY', 'Filtrer par');
+if (!defined('_OTHER_BASKETS'))  define('_OTHER_BASKETS', 'Autres corbeilles');
+
+
+if (!defined('_BASKET_WELCOME_TXT1'))  define('_BASKET_WELCOME_TXT1', 'Durant votre navigation dans les corbeilles,');
+if (!defined('_BASKET_WELCOME_TXT2'))  define('_BASKET_WELCOME_TXT2', 'cliquez, &agrave; tout moment, dans la liste ci-dessus <br/>pour changer de corbeille');
 
 
 
