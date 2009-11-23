@@ -19,16 +19,13 @@
  *    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-define('_ADD_NOTE','Ajouter une note');
-define('_READ', 'Lire');
-define('_ADDITION_NOTE', 'Ajout d&rsquo;une note');
-define('_NOTES_DELETED', 'Note supprim&eacute;e');
-define('_NOTES_MODIFIED', 'Note modifi&eacute;e');
-define('_NOTE_UPDATED', 'Note modifi&eacute;e');
-if(!defined('_NOTES'))
-{
-	define('_NOTES', 'Notes');
-}
-define('_NOTES_COMMENT', 'Notes');
-define('_OF', 'de');
+if (!defined('_ADD_NOTE'))  define('_ADD_NOTE','Ajouter une note');
+if (!defined('_READ'))  define('_READ', 'Lire');
+if (!defined('_ADDITION_NOTE'))  define('_ADDITION_NOTE', 'Ajout d&rsquo;une note');
+if (!defined('_NOTES_DELETED'))  define('_NOTES_DELETED', 'Note supprim&eacute;e');
+if (!defined('_NOTES_MODIFIED'))  define('_NOTES_MODIFIED', 'Note modifi&eacute;e');
+if (!defined('_NOTE_UPDATED'))  define('_NOTE_UPDATED', 'Note modifi&eacute;e');
+if (!defined('_NOTES'))  define('_NOTES', 'Notes');
+if (!defined('_NOTES_COMMENT'))  define('_NOTES_COMMENT', 'Notes');
+if (!defined('_OF'))  define('_OF', 'de');
 ?>
