@@ -30,6 +30,15 @@ if(!isset($_SESSION['config']['corename']) || empty($_SESSION['config']['corenam
 		$path = '..'.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'core'.DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'config.xml';
 	}
 	$xmlconfig = simplexml_load_file($path );
+	
+	
+	if ($_SERVER['HTTPS'] == "on")
+		$protocol = "https";
+	else
+		$protocol = "http";
+		
+		
+	
 	foreach($xmlconfig->CONFIG as $CONFIG)
 	{
 		$_SESSION['config']['corename'] = (string) $CONFIG->corename;
@@ -41,16 +50,23 @@ if(!isset($_SESSION['config']['corename']) || empty($_SESSION['config']['corenam
 		//$_SESSION['config']['coreurl'] = (string) $CONFIG->coreurl;
 		if(!isset($_SESSION['config']['coreurl']))
 		{
-			if($_SERVER['SERVER_PORT'] <> 80)
+			if ($_SERVER['SERVER_PORT'] <> 443 && $protocol == "https")		
+			{
 				$server_port = ":".$_SERVER['SERVER_PORT'];
+			}
+			elseif ($_SERVER['SERVER_PORT'] <> 80 && $protocol == "http")
+			{
+				$server_port = ":".$_SERVER['SERVER_PORT'];
+			}
 			else
-				$server_port = "";
-
+			{
+					$server_port = "";
+			}
 			$array_uri = explode("/",$_SERVER['SCRIPT_NAME']);
 			$slice_uri = array_slice($array_uri, 0, -3);
 			$final_uri = implode("/", $slice_uri)."/";
-			//$_SESSION['config']['coreurl'] = "http://".$_SERVER['SERVER_NAME'].$server_port.array_slice('index.php','',arr$_SERVER['SCRIPT_NAME']);
-			$_SESSION['config']['coreurl'] = "http://".$_SERVER['SERVER_NAME'].$server_port.$final_uri;
+			
+			$_SESSION['config']['coreurl'] = $protocol."://".$_SERVER['SERVER_NAME'].$server_port.$final_uri;
 		}
 	}
 	$i=0;
@@ -147,6 +163,7 @@ $core_tools->load_modules_services($_SESSION['modules']);
 $core_tools->load_html();
 $core_tools->load_header();
 $time = $core_tools->get_session_time_expire();
+
 ?>
 <body id="bodylogin" onload="setTimeout('window.location.reload(true)', <?php  echo $time;?>*60*1000);">
 <?php //$core_tools->show_array($_SERVER);?>
