@@ -27,12 +27,7 @@
 * @version $Revision$
 * @ingroup admin
 */
-
-include('core/init.php');
-
-
 $core_tools2 = new core_tools();
-//here we loading the lang vars
 $core_tools2->load_lang();
 $core_tools2->test_admin('admin_actions', 'apps');
 $func = new functions();
@@ -60,7 +55,7 @@ $page_label = _ADDITION;
 $page_id = "action_up";
 $core_tools2->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
-require("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_admin_actions.php");
+require("apps".DIRECTORY_SEPARATOR.$_SESSION['businessapps'][0]['appid'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_admin_actions.php");
 
 $action = new AdminActions();
 

@@ -1,6 +1,4 @@
 <?php
-include('core/init.php');
-
 
 $core_tools2 = new core_tools();
 //here we loading the lang vars
@@ -22,7 +20,7 @@ $page_label = _REOPEN_MAIL;
 $page_id = "reopen_mail";
 $core_tools2->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
-require("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_reopen_mail.php");
+require("apps".DIRECTORY_SEPARATOR.$_SESSION['businessapps'][0]['appid'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_reopen_mail.php");
 
 $reopen = new ReopenMail();
 $reopen->formreopenmail();

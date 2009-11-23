@@ -173,11 +173,11 @@ class business_app_tools extends dbquery
 	*/
 	private function load_actions_pages()
 	{
-		if(isset($_SESSION['config']['pathtocore']) && isset($_SESSION['config']['app_id']) && isset($_SESSION['config']['lang']))
+		if(isset($_SESSION['config']['corepath']) && isset($_SESSION['config']['app_id']) && isset($_SESSION['config']['lang']))
 		{
 			$core = new core_tools();
-			$xmlfile = simplexml_load_file("core/xml/actions_pages.xml");
-			$path_lang = 'apps/'.$_SESSION['config']['app_id'].'/lang/'.$_SESSION['config']['lang'].'.php';
+			$xmlfile = simplexml_load_file("core".DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."actions_pages.xml");
+			$path_lang = 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php';
 
 			$i =0;
 			foreach($xmlfile->ACTIONPAGE as $ACTIONPAGE)
@@ -202,8 +202,8 @@ class business_app_tools extends dbquery
 	private function load_letterbox_var()
 	{
 		$core = new core_tools();
-		$xmlfile = simplexml_load_file('apps/'.$_SESSION['config']['app_id']."/xml/letterbox.xml");
-		$path_lang = 'apps/'.$_SESSION['config']['app_id'].'/lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php';
+		$xmlfile = simplexml_load_file('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."letterbox.xml");
+		$path_lang = 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php';
 
 		$categories = $xmlfile->categories;
 		$_SESSION['mail_categories'] = array();
@@ -308,7 +308,7 @@ class business_app_tools extends dbquery
 	{
 		$this->load_current_folder();
 		$this->load_letterbox_var();
-		$this->load_features('apps/'.$_SESSION['config']['app_id'].'/xml/features.xml');
+		$this->load_features('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'features.xml');
 	}
 
 	/**
@@ -344,8 +344,8 @@ class business_app_tools extends dbquery
 	public function get_titles()
 	{
 		$core = new core_tools();
-		$xmlfile = simplexml_load_file('apps/'.$_SESSION['config']['app_id']."/xml/letterbox.xml");
-		$path_lang = 'apps/'.$_SESSION['config']['app_id'].'/lang/'.$_SESSION['config']['lang'].'.php';
+		$xmlfile = simplexml_load_file('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."letterbox.xml");
+		$path_lang = 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php';
 
 		$res_titles = array();
 		$titles = $xmlfile->titles;
@@ -374,8 +374,8 @@ class business_app_tools extends dbquery
 	public function get_label_title($id_title)
 	{
 		$core = new core_tools();
-		$xmlfile = simplexml_load_file('apps/'.$_SESSION['config']['app_id']."/xml/letterbox.xml");
-		$path_lang = 'apps/'.$_SESSION['config']['app_id'].'/lang/'.$_SESSION['config']['lang'].'.php';
+		$xmlfile = simplexml_load_file('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."letterbox.xml");
+		$path_lang = 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php';
 		$titles = $xmlfile->titles;
 		foreach($titles->title as $title )
 		{

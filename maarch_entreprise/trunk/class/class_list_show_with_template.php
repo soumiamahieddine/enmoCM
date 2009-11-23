@@ -101,7 +101,7 @@ class list_show_with_template extends list_show
 		$module_id = $my_explode[1];
 		$file_name = $my_explode[2];
 
-		include($_SESSION['pathtomodules'].$module_id.DIRECTORY_SEPARATOR.$file_name);
+		include('modules'.DIRECTORY_SEPARATOR.$module_id.DIRECTORY_SEPARATOR.$file_name);
 		return $external;
 
 	}
@@ -128,7 +128,7 @@ class list_show_with_template extends list_show
 	//Generate link to view the document
 	public function url_docview($actual_string, $theline, $result, $key)
 	{
-		$return = $_SESSION['config']['businessappurl']."indexing_searching/view.php?id=".$result[$theline][0][$key];
+		$return = $_SESSION['config']['businessappurl']."index.php?display=true&dir=indexing_searching&page=view&id=".$result[$theline][0][$key];
 		return $return;
 	}
 
@@ -216,7 +216,7 @@ class list_show_with_template extends list_show
 		if ($this->bool_view_document == true)
 		{
 
-			$return = "<a href='".$_SESSION['config']['businessappurl']."indexing_searching/view.php?id=".$result[$theline][0][$key]."' target=\"_blank\" title='"._VIEW_DOC."'>
+			$return = "<a href='".$_SESSION['config']['businessappurl']."index.php?display=true&dir=indexing_searching&page=view&id=".$result[$theline][0][$key]."' target=\"_blank\" title='"._VIEW_DOC."'>
                             <img src='".$_SESSION['config']['businessappurl']."img/picto_dld.gif' alt='"._VIEW_DOC."' border='0'/></a>";
 			return $return;
 		}
@@ -554,7 +554,7 @@ class list_show_with_template extends list_show
 		//##############################################################
 		if($core_tools->is_module_loaded("cases") == true)
 		{
-				$case_file = "modules/cases".DIRECTORY_SEPARATOR."template_addon".DIRECTORY_SEPARATOR.$actual_template.".html";
+				$case_file = "modules".DIRECTORY_SEPARATOR."cases".DIRECTORY_SEPARATOR."template_addon".DIRECTORY_SEPARATOR.$actual_template.".html";
 				if (file_exists($case_file))
 				{
 					$addon_list_trait = $this->get_template($case_file);
@@ -649,12 +649,12 @@ class list_show_with_template extends list_show
 		}
 
 		//########################
-		require_once("core/class/class_core_tools.php");
+		//require_once("core/class/class_core_tools.php");
 		$core_tools = new core_tools();
 		if($core_tools->is_module_loaded("doc_converter") && $bool_export)
 		{
 			$_SESSION['doc_convert'] = array();
-			require_once("modules/doc_converter".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
+			require_once("modules".DIRECTORY_SEPARATOR."doc_converter".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
 			$doc_converter = new doc_converter();
 			$disp_dc = $doc_converter->convert_list($result, true);
 		}

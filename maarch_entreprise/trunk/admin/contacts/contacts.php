@@ -48,8 +48,8 @@ $page_label = _CONTACTS_LIST;
 $page_id = "contacts";
 $admin->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
-require_once("core/class/class_request.php");
-require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_list_show.php");
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
+require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['businessapps'][0]['appid'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");
 $select[$_SESSION['tablename']['contacts']] = array();
 array_push($select[$_SESSION['tablename']['contacts']],"contact_id", "society","lastname","firstname", 'user_id');
 $what = "";
@@ -160,7 +160,7 @@ $label_add = _CONTACT_ADDITION;
 $_SESSION['m_admin']['init'] = true;
 $title = _CONTACTS_LIST." : ".$i." "._CONTACTS;
 $autoCompletionArray = array();
-$autoCompletionArray["list_script_url"] = $_SESSION['config']['businessappurl']."admin/contacts/contact_list_by_name.php";
+$autoCompletionArray["list_script_url"] = $_SESSION['config']['businessappurl']."index.php?display=true&admin=contacts&page=contact_list_by_name";
 $autoCompletionArray["number_to_begin"] = 1;
 
 $list->admin_list($tab, $i, $title, 'contact_id','contacts','contacts','contact_id', true, $page_name_up, $page_name_val, $page_name_ban, $page_name_del, $page_name_add, $label_add, FALSE, FALSE, _ALL_CONTACTS, _CONTACT, $_SESSION['config']['img'].'/manage_contact_b.gif', false, true, false, true, $what, true, $autoCompletionArray);

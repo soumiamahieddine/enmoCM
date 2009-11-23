@@ -367,7 +367,7 @@ class contacts extends dbquery
 		{
 			$_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] = 'Y';
 		}
-		require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
+		require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['businessapps'][0]['appid'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
 		$business = new business_app_tools();
 		$tmp = $business->get_titles();
 		$titles = $tmp['titles'];
@@ -392,13 +392,24 @@ class contacts extends dbquery
 			}
 			else
 			{
-				$action = $_SESSION['config']['businessappurl']."admin/contacts/contact_up_db.php";
+				$action = $_SESSION['config']['businessappurl']."index.php?display=true&admin=contacts&page=contact_up_db";
 				if(!$admin)
 				{
-					$action = $_SESSION['config']['businessappurl']."my_contacts/my_contact_up_db.php";
+					$action = $_SESSION['config']['businessappurl']."index.php?display=true&dir=my_contacts&page=my_contact_up_db";
 				}
 				?>
 				<form name="frmcontact" id="frmcontact" method="post" action="<? echo $action;?>" class="forms">
+					<input type="hidden" name="display"  value="true" />
+					<?php if(!$admin)
+					{?>
+						<input type="hidden" name="dir"  value="my_contacts" />
+						<input type="hidden" name="page"  value="my_contact_up_db" />
+				<?php	}
+					else
+					{?>
+						<input type="hidden" name="admin"  value="contacts" />
+						<input type="hidden" name="page"  value="contact_up_db" />
+				<?php	}?>
 					<input type="hidden" name="order" id="order" value="<?php echo $_REQUEST['order'];?>" />
 					<input type="hidden" name="order_field" id="order_field" value="<?php echo $_REQUEST['order_field'];?>" />
 					<input type="hidden" name="what" id="what" value="<?php echo $_REQUEST['what'];?>" />
@@ -557,7 +568,7 @@ class contacts extends dbquery
 			<?php
 				if($mode=="up" && $admin)
 				{
-					?><script type="text/javascript">launch_autocompleter('<?php echo $_SESSION['config']['businessappurl'];?>users_autocomplete_list.php', 'owner', 'show_user');</script><?php
+					?><script type="text/javascript">launch_autocompleter('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=users_autocomplete_list', 'owner', 'show_user');</script><?php
 				}
 			}
 			?>

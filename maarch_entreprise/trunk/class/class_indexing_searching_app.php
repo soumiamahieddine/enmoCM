@@ -21,7 +21,7 @@ class indexing_searching_app extends dbquery
 
 	public function is_filetype_allowed($ext)
 	{
-		$xmlconfig = simplexml_load_file('apps/'.$_SESSION['config']['app_id'].'/xml/extensions.xml');
+		$xmlconfig = simplexml_load_file('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'extensions.xml');
 
 		$ext_list = array();
 		$i = 0;
@@ -51,8 +51,7 @@ class indexing_searching_app extends dbquery
 		{
 			return false;
 		}
-		$xmlconfig = simplexml_load_file('apps/'.$_SESSION['config']['app_id'].'/xml/extensions.xml');
-
+		$xmlconfig = simplexml_load_file('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'extensions.xml');
 		foreach($xmlconfig->FORMAT as $FORMAT)
 		{
 			if(strtoupper($ext) == (string) $FORMAT->name)
@@ -72,8 +71,7 @@ class indexing_searching_app extends dbquery
 	public function filetypes_showed_indexation()
 	{
 
-		$xmlconfig = simplexml_load_file('apps/'.$_SESSION['config']['app_id'].'/xml/extensions.xml');
-
+		$xmlconfig = simplexml_load_file('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'extensions.xml');
 		$ext_list = array();
 		foreach($xmlconfig->FORMAT as $FORMAT)
 		{
@@ -88,7 +86,7 @@ class indexing_searching_app extends dbquery
 
 	public function get_mime_type($ext)
 	{
-		$xmlconfig = simplexml_load_file('apps/'.$_SESSION['config']['app_id'].'/xml/extensions.xml');
+		$xmlconfig = simplexml_load_file('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'extensions.xml');
 		$ext_list = array();
 		$i = 0;
 		foreach($xmlconfig->FORMAT as $FORMAT)
@@ -113,10 +111,9 @@ class indexing_searching_app extends dbquery
 
 	public function update_mail($post, $typeform, $id_to_update, $coll_id)
 	{
-		require_once("core/class/class_functions.php");
-		require_once("core/class/class_request.php");
-		require_once("core/class/class_history.php");
-		require_once("core/class/class_security.php");
+		require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
+		require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
+		require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
 		$hist = new history();
 		$func = new functions();
 		$sec = new security();
@@ -210,7 +207,7 @@ class indexing_searching_app extends dbquery
 			}
 		}
 
-		require_once('apps/'.$_SESSION['businessapps'][0]['appid'].'/class'.DIRECTORY_SEPARATOR.'class_types.php');
+		require_once('apps'.DIRECTORY_SEPARATOR.$_SESSION['businessapps'][0]['appid'].DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_types.php');
 		$type = new types();
 		$type->inits_opt_indexes($coll_id, $id_to_update);
 		$type_id =  $post['type_id'];
@@ -315,7 +312,7 @@ class indexing_searching_app extends dbquery
 				}
 				if($folder_id <> $old_folder_id && $_SESSION['history']['folderup'])
 				{
-					require_once("core/class/class_history.php");
+					require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 					$hist = new history();
 					$hist->add($_SESSION['tablename']['fold_folders'], $folder_id, "UP", _DOC_NUM.$id_to_update._ADDED_TO_FOLDER, $_SESSION['config']['databasetype'],'apps');
 					if(isset($old_folder_id) && !empty($old_folder_id))
@@ -386,7 +383,7 @@ class indexing_searching_app extends dbquery
 
 	public function delete_doc( $id_to_delete, $coll_id)
 	{
-		require_once("core/class/class_security.php");
+		require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
 		$sec = new security();
 		$table = $sec->retrieve_table_from_coll($coll_id);
 
@@ -405,7 +402,7 @@ class indexing_searching_app extends dbquery
 		}
 		else
 		{
-			require_once("core/class/class_request.php");
+			require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
 			$request = new request();
 			$data = array();
 			array_push($data, array('column' => 'status', 'value' => 'DEL', 'type' => 'string'));
@@ -414,7 +411,7 @@ class indexing_searching_app extends dbquery
 			$_SESSION['error'] = _DOC_DELETED." ("._NUM." : ".$id_to_delete.")";
 			if($_SESSION['history']['res_del'])
 			{
-				require_once("core/class/class_history.php");
+				require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 				$hist = new history();
 				$hist->add($table, $id_to_delete, "DEL", $_SESSION['error'], $_SESSION['config']['databasetype'],'indexing_searching');
 			}
@@ -693,7 +690,7 @@ class indexing_searching_app extends dbquery
 
 	public function get_process_data($coll_id, $res_id)
 	{
-		require_once("core/class/class_security.php");
+		require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
 		$sec =new security();
 		$view = $sec->retrieve_view_from_coll_id($coll_id);
 		if(empty($view))

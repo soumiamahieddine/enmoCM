@@ -17,7 +17,7 @@ class chrono
 {
 	function get_chrono_number($res_id, $view)
 	{
-		require_once("core/class/class_db.php");
+		require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR"class_db.php");
 		$db = new dbquery();
 		$db->connect();
 
@@ -40,7 +40,7 @@ class chrono
 		$chrono_tab = array();
 
 
-		$chrono_config = simplexml_load_file('apps/'.$_SESSION['config']['app_id']."/xml/chrono.xml");
+		$chrono_config = simplexml_load_file('apps'.DIRECTORY_SEPARATORDIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."chrono.xml");
 		if($chrono_config)
 		{
 			foreach($chrono_config ->CHRONO as $CHRONO)
@@ -183,7 +183,7 @@ class chrono
 
 	function execute_chrono_for_this_year()
 	{
-		require_once("core/class/class_db.php");
+		require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_db.php");
 		$db = new dbquery();
 		$db->connect();
 
@@ -205,7 +205,7 @@ class chrono
 
 	function execute_chrono_by_entity($entity)
 	{
-		require_once("core/class/class_db.php");
+		require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_db.php");
 		$db = new dbquery();
 		$db->connect();
 
@@ -226,7 +226,7 @@ class chrono
 
 	function execute_chrono_by_category($category)
 	{
-		require_once("core/class/class_db.php");
+		require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_db.php");
 		$db = new dbquery();
 		$db->connect();
 
@@ -322,8 +322,6 @@ class chrono
 		$elements = $this->convert_maarch_functions($elements, $php_var);
 		$elements = $this->convert_maarch_forms($elements, $form); //For values used in forms
 
-
-
 		//Generate chrono string
 		$string = $this->convert_in_string($elements, $parameters);
 		return $string;
@@ -332,7 +330,6 @@ class chrono
 
 	function convert_in_string($elements, $parameters)
 	{
-
 		$separator = $parameters[0]['SEPARATOR'];
 
 		$this_string = '';

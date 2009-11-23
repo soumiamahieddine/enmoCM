@@ -48,7 +48,7 @@ $page_id = "action";
 $admin->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
-require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_list_show.php");
+require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['businessapps'][0]['appid'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");
 $_SESSION['m_admin'] = array();
 $select[$_SESSION['tablename']['actions']] = array();
 array_push($select[$_SESSION['tablename']['actions']],"id", "label_action", 'is_system');
@@ -59,11 +59,11 @@ if(isset($_REQUEST['what']) && !empty($_REQUEST['what']))
 	$what = $func->protect_string_db($_REQUEST['what']);
 	if($_SESSION['config']['databasetype'] == "POSTGRESQL")
 	{
-		$where .= " and (label_action ilike '".$func->protect_string_db($what,$_SESSION['config']['databasetype'])."%'  or id = ".$func->protect_string_db($what,$_SESSION['config']['databasetype'])." ) ";
+		$where .= " and (label_action ilike '".$func->protect_string_db($what,$_SESSION['config']['databasetype'])."%'  ) ";
 	}
 	else
 	{
-		$where .= " and (label_action like '".$func->protect_string_db($what,$_SESSION['config']['databasetype'])."%'  or id = ".$func->protect_string_db($what,$_SESSION['config']['databasetype'])." ) ";
+		$where .= " and (label_action like '".$func->protect_string_db($what,$_SESSION['config']['databasetype'])."%'   ) ";
 	}
 }
 $list = new list_show();
@@ -162,7 +162,7 @@ $_SESSION['m_admin']['init'] = true;
 $title = _ACTION_LIST." : ".count($tab)." "._ACTIONS;
 
 $autoCompletionArray = array();
-$autoCompletionArray["list_script_url"] = $_SESSION['config']['businessappurl']."admin/action/action_list_by_name.php";
+$autoCompletionArray["list_script_url"] = $_SESSION['config']['businessappurl']."index.php?display=true&admin=action&page=action_list_by_name";
 $autoCompletionArray["number_to_begin"] = 1;
 
 $list->admin_list($tab, count($tab), $title, 'id','action','action','id', true, $page_name_up, $page_name_val, $page_name_ban, $page_name_del, $page_name_add, $label_add, FALSE, FALSE, _ALL_ACTIONS, _ACTION, $_SESSION['config']['img'].'/manage_actions_b.gif', false, true, false, true, $what, true, $autoCompletionArray);

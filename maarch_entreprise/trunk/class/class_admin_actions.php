@@ -234,7 +234,10 @@ class AdminActions extends dbquery
 			{
 
 				?>
-				<form name="frmaction" id="frmaction" method="post" action="<? echo $_SESSION['config']['businessappurl']."admin/action/action_up_db.php";?>" class="forms addforms">
+				<form name="frmaction" id="frmaction" method="post" action="<? echo $_SESSION['config']['businessappurl']."index.php?display=true&admin=action&page=action_up_db";?>" class="forms addforms">
+					<input type="hidden" name="display"  value="true" />
+					<input type="hidden" name="admin"  value="action" />
+					<input type="hidden" name="page"  value="action_up_db" />
 					<input type="hidden" name="mode" id="mode" value="<? echo $mode;?>" />
 					<input type="hidden" name="id" id="id" value="<? echo $_SESSION['m_admin']['action']['ID'];?>" />
 					<input type="hidden" name="order" id="order" value="<?php echo $_REQUEST['order'];?>" />

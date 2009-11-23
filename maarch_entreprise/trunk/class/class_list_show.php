@@ -472,7 +472,7 @@ class list_show extends functions
 						$str .= ' <div align="center">';
 						if($bool_view_document)
 						{
-							$str .= '<a href="'.$_SESSION['config']['businessappurl'].'indexing_searching/view.php?id='.$result[$theline][0][$key].'" target="_blank" title="'._VIEW_DOC.'">';
+							$str .= '<a href="'.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=view&id='.$result[$theline][0][$key].'" target="_blank" title="'._VIEW_DOC.'">';
 							$str .= ' <img src="'.$_SESSION['config']['businessappurl'].'img/picto_dld.gif" alt="'._VIEW_DOC.'" border="0"/></a>';
 						}
 						$str .= ' </div>';
