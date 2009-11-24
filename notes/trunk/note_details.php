@@ -10,17 +10,9 @@
 * @license GPL
 * @author  Claire Figueras  <dev@maarch.org>
 */ 
-include('core/init.php'); 
- 
-
-require_once("core/class/class_functions.php");
-require("core/class/class_core_tools.php");
 
 $core_tools = new core_tools();
-//here we loading the lang vars
 $core_tools->load_lang();
-
-require_once("core/class/class_db.php");
 
 $func = new functions();
 $db = new dbquery();
@@ -55,7 +47,7 @@ if(isset($_REQUEST['modify']) )
 				
 		if($_SESSION['history']['noteup'])
 		{
-			require_once("core/class/class_history.php");
+			require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 			$hist = new history();								
 			$hist->add($_SESSION['tablename']['not_notes'], $id ,"UP", _NOTE_UPDATED, $_SESSION['config']['databasetype'], 'notes');
 		}
@@ -75,7 +67,7 @@ if(isset($_REQUEST['delete']) )
 				
 	if($_SESSION['history']['notedel'])
 	{
-		require_once("core/class/class_history.php");
+		require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 		$hist = new history();								
 		$hist->add($_SESSION['tablename']['not_notes'], $id ,"DEL", _NOTES_DELETED, $_SESSION['config']['databasetype'], 'notes');
 	}
@@ -147,7 +139,10 @@ if(trim($user_id) == $_SESSION['user']['UserId'])
 	<h2 class="sstit" style="padding:10px;"><?php  echo _NOTES." "._OF." ".$user." (".$date.") ";?></h2>
 
 	<div class="block" style="padding:10px">
-      <form name="form1" method="post" class="forms" action="<?php  echo $_SESSION['urltomodules']."notes/note_details.php"; ?>">
+      <form name="form1" method="post" class="forms" action="<?php  echo $_SESSION['config']['businessappurl']."index.php?display=true&module=notes&page=note_details"; ?>">
+		<input type="hidden" name="display" value="true" />
+		<input type="hidden" name="modules" value="notes" />
+		<input type="hidden" name="page" value="note_details" />
 		<textarea  <?php  if(!$can_modify){?>readonly="readonly" class="readonly" <?php  } ?>style="width:380px" cols="70" rows="10"  name="notes"  id="notes"><?php  echo $text; ?></textarea>
 	  
       	<input type="hidden" name="id" id="id" value="<?php  echo $s_id; ?>"/>

@@ -20,7 +20,7 @@ class notes
 	*/
 	public function build_modules_tables()
 	{
-		$xmlconfig = simplexml_load_file("modules/notes/xml/config.xml");
+		$xmlconfig = simplexml_load_file("modules".DIRECTORY_SEPARATOR."notes".DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."config.xml");
 		foreach($xmlconfig->TABLENAME as $TABLENAME)
 		{
 			$_SESSION['tablename']['not_notes'] = (string) $TABLENAME->not_notes;

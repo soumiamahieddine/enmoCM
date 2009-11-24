@@ -10,13 +10,7 @@
 * @license GPL
 * @author  Claire Figueras  <dev@maarch.org>
 */
-include('core/init.php');
-
-
-require_once("core/class/class_functions.php");
-require_once("core/class/class_db.php");
-require_once("core/class/class_core_tools.php");
-require_once("core/class/class_security.php");
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
 
 $core_tools = new core_tools();
 $sec = new security();
@@ -35,7 +29,7 @@ $coll_id = '';
 
 if ($_REQUEST['size'] == "full")
 {
-	$extend_url = "?size=full";
+	$extend_url = "&size=full";
 	$extend_url_value = $_REQUEST['size'];
 }
 
@@ -80,7 +74,6 @@ if (isset($_REQUEST['notes'])&& !empty($_REQUEST['notes']))
 		<?php  if($_SESSION['origin'] == "process")
 		{?>
 			var eleframe1 =  window.opener.top.frames['process_frame'].document.getElementById('list_notes_doc');
-			//var eleframe1 =  window.top.frames['process_frame'].document.getElementById('list_notes_doc');
 		<?php  }
 		elseif($_SESSION['origin'] == "valid" || $_SESSION['origin'] == 'qualify')
 		{
@@ -94,7 +87,7 @@ if (isset($_REQUEST['notes'])&& !empty($_REQUEST['notes']))
 	<?php 	}
 
 		?>
-		eleframe1.src = '<?php  echo $_SESSION['urltomodules']."notes/";?>frame_notes_doc.php<? echo $extend_url;?>';
+		eleframe1.src = '<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=notes&page=frame_notes_doc<? echo $extend_url;?>';
 		window.top.close();
 		</script>
 
@@ -107,7 +100,10 @@ else
 <h2 class="tit" style="padding:10px;"><img src="<? echo $_SESSION['config']['businessappurl'].$_SESSION['config']['img']; ?>/picto_add_b.gif" alt=""/> <?php  echo _ADD_NOTE;?> </h2>
  
 	<div class="block" style="padding:10px;">
-      <form name="form1" method="post" action="<?php  echo $_SESSION['urltomodules']."notes/";?>note_add.php?identifier=<?php  echo $_GET['identifier'];?>&table=<?php  echo $table;?>&coll_id=<?php  echo $coll_id;?>" >
+      <form name="form1" method="post" action="<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=notes&page=note_add&identifier=<?php  echo $_GET['identifier'];?>&table=<?php  echo $table;?>&coll_id=<?php  echo $coll_id;?>" >
+		<input type="hidden" name="display" value="true" />
+		<input type="hidden" name="modules" value="notes" />
+		<input type="hidden" name="page" value="note_add" />
 		<input type="hidden" value="<?php  echo $identifier;?>" name="identifier" id="identifier">
 		<input type="hidden" value="<?php  echo $extend_url_value;?>" name="size" id="size">
 <?php  /* if($_REQUEST['validation'] == 1){?><input type="hidden" value="<?php  echo $_GET['validation'];?>" name="validation"><?php  } */?>

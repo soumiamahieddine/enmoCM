@@ -9,15 +9,11 @@
 * @license GPL
 * @author  Claire Figueras  <dev@maarch.org>
 */
-include('core/init.php');
 
-require_once("core/class/class_functions.php");
-require_once("core/class/class_core_tools.php");
 $core_tools = new core_tools();
 //here we loading the lang vars
 $core_tools->load_lang();
 $core_tools->test_service('manage_notes_doc', 'notes');
-require_once("core/class/class_db.php");
 $func = new functions();
 //$db = new dbquery();
 //$db->connect();
@@ -25,10 +21,9 @@ if(empty($_SESSION['collection_id_choice']))
 {
 	$_SESSION['collection_id_choice']= $_SESSION['user']['collections'][0];
 }
-//$db->query("select i.id, i.note_text, i.date, i.user_id,  u.lastname, u.firstname from ".$_SESSION['tablename']['not_notes']." i
-//inner join ".$_SESSION['tablename']['users']." u on i.user_id  = u.user_id  WHERE identifier = ".$_SESSION['doc_id']." and i.coll_id = '".$_SESSION['collection_id_choice']."' ORDER  BY date desc");
-require_once("core/class/class_request.php");
-require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_list_show.php");
+
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
+require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");
 $func = new functions();
 $select[$_SESSION['tablename']['users']] = array();
 array_push($select[$_SESSION['tablename']['users']],"user_id","lastname","firstname");
@@ -121,8 +116,7 @@ for ($ind_notes1=0;$ind_notes1<count($tabNotes);$ind_notes1++)
 			}
 			if($tabNotes[$ind_notes1][$ind_notes2][$value]=="note_text")
 			{
-				//$tabNotes[$ind_notes1][$ind_notes2]['value'] = '<a href="javascript://" onclick="ouvreFenetre(\''.$_SESSION['urltomodules'].'notes/note_details.php?id='.$ind_notes1d.'&amp;resid='.$_SESSION['doc_id'].'&amp;coll_id='.$_SESSION['collection_id_choice'].'\', 450, 300)">'.substr($request->show_string($tabNotes[$ind_notes1][$ind_notes2]['value']), 0, 20).'... <span class="sstit"> > '._READ.'</span>';
-				$tabNotes[$ind_notes1][$ind_notes2]['value'] = '<a href="javascript://" onclick="ouvreFenetre(\''.$_SESSION['urltomodules'].'notes/note_details.php?id='.$ind_notes1d.'&amp;resid='.$_SESSION['doc_id'].'&amp;coll_id='.$_SESSION['collection_id_choice'].$extend_url.'\', 450, 300)">'.$func->cut_string($request->show_string($tabNotes[$ind_notes1][$ind_notes2]['value']), $cut_string).'<span class="sstit"> > '._READ.'</span>';
+				$tabNotes[$ind_notes1][$ind_notes2]['value'] = '<a href="javascript://" onclick="ouvreFenetre(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=notes&page=note_details&id='.$ind_notes1d.'&amp;resid='.$_SESSION['doc_id'].'&amp;coll_id='.$_SESSION['collection_id_choice'].$extend_url.'\', 450, 300)">'.$func->cut_string($request->show_string($tabNotes[$ind_notes1][$ind_notes2]['value']), $cut_string).'<span class="sstit"> > '._READ.'</span>';
 				$tabNotes[$ind_notes1][$ind_notes2]["note_text"]= $tabNotes[$ind_notes1][$ind_notes2]['value'];
 				$tabNotes[$ind_notes1][$ind_notes2]["label"]=_NOTES;
 				$tabNotes[$ind_notes1][$ind_notes2]["size"]=$size_full;
