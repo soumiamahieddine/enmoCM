@@ -10,12 +10,8 @@
 * @license GPL
 * @author  Claire Figueras  <dev@maarch.org>
 */
-include('core/init.php');
 
-require_once("core/class/class_functions.php");
-require_once("core/class/class_db.php");
-require_once("core/class/class_core_tools.php");
-require_once("core/class/class_security.php");
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
 $core_tools = new core_tools();
 $core_tools->test_user();
 //here we loading the lang vars
@@ -119,27 +115,17 @@ else
 			}
 			else
 			{
-				// TEMP : to modify when deleting indexing_searching module
-				//if(!$core_tools->is_module_loaded('indexing_searching'))
-				//{
-					require_once('apps/'.$_SESSION['businessapps'][0]['appid'].'/class'.DIRECTORY_SEPARATOR.'class_indexing_searching_app.php');
+
+					require_once('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_indexing_searching_app.php');
 					$is = new indexing_searching_app();
 					$type_state = $is->is_filetype_allowed($format);
-/*
-				}
-				else
-				{
-					require_once("modules/indexing_searching".DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php');
-					$is = new indexing_searching();
-					$type_state = $is->is_filetype_allowed($format);
-				}
-*/
+
 				if($type_state <> false)
 				{
 					$mime_type = $is->get_mime_type($format);
 					if($_SESSION['history']['attachview'] == "true")
 					{
-						require_once("core/class/class_history.php");
+						require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 						$users = new history();
 						$users->add($table, $s_id ,"VIEW", _VIEW_DOC_NUM."".$s_id, $_SESSION['config']['databasetype'],'apps');
 					}

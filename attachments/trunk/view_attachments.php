@@ -1,23 +1,17 @@
 <?php
-include('core/init.php');
-
-
-require_once("core/class/class_functions.php");
-require_once("core/class/class_core_tools.php");
 
 $core_tools = new core_tools();
 //here we loading the lang vars
 $core_tools->load_lang();
 $core_tools->test_service('view_attachments', 'attachments');
-require_once("core/class/class_db.php");
 $func = new functions();
 
 if(empty($_SESSION['collection_id_choice']))
 {
 	$_SESSION['collection_id_choice']= $_SESSION['user']['collections'][0];
 }
-require_once("core/class/class_request.php");
-require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_list_show.php");
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
+require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");
 $func = new functions();
 
 $select[$_SESSION['tablename']['attach_res_attachments']] = array();
@@ -102,7 +96,7 @@ for ($ind_att1=0;$ind_att1<count($tab_attach);$ind_att1++)
 	<div class="ref-unit">
    <?php
 	$list_attach = new list_show();
-	$list_attach->list_simple($tab_attach, count($tab_attach), '','res_id','res_id', true, $_SESSION['urltomodules']."attachments/view_attachment.php",'listing2', '',450,  500, '');
+	$list_attach->list_simple($tab_attach, count($tab_attach), '','res_id','res_id', true, $_SESSION['config']['businessappurl']."index.php?display=true&module=attachments&page=view_attachment",'listing2', '',450,  500, '');
 	?>
    </div>
 </div>

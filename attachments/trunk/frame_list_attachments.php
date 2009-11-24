@@ -1,15 +1,9 @@
-<?php  include('core/init.php');
-
-
-require_once("core/class/class_functions.php");
-require_once("core/class/class_core_tools.php");
-
+<?php
 $core_tools = new core_tools();
 //here we loading the lang vars
 $core_tools->load_lang();
 $core_tools->test_service('manage_attachments', 'attachments');
 
-require_once("core/class/class_db.php");
 $func = new functions();
 
 if(empty($_SESSION['collection_id_choice']))
@@ -21,8 +15,8 @@ if(isset($_REQUEST['view_only']))
 {
 	$view_only = true;
 }
-require_once("core/class/class_request.php");
-require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_list_show.php");
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
+require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");
 $func = new functions();
 
 $select[$_SESSION['tablename']['attach_res_attachments']] = array();
@@ -111,7 +105,7 @@ $core_tools->load_header();
  <?php
 $list_attach = new list_show();
 
-	$list_attach->list_simple($tab_attach, count($tab_attach), '','res_id','res_id', true, $_SESSION['urltomodules']."attachments/view_attachment.php",'listingsmall',$_SESSION['urltomodules']."templates/generate_attachment.php?mode=up",450,  500, $page_del = $_SESSION['urltomodules']."attachments/del_attachment.php");
+	$list_attach->list_simple($tab_attach, count($tab_attach), '','res_id','res_id', true, $_SESSION['config']['businessappurl']."index.php?display=true&module=attachments&page=view_attachment",'listingsmall',$_SESSION['config']['businessappurl']."index.php?display=true&module=templates&page=generate_attachment&mode=up",450,  500, $page_del = $_SESSION['config']['businessappurl']."index.php?display=true&module=attachments&page=del_attachment");
 
 ?></body>
 </html>

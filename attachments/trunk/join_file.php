@@ -10,14 +10,10 @@
 * @license GPL
 * @author  Claire Figueras  <dev@maarch.org>
 */
-include('core/init.php');
 
-require_once("core/class/class_functions.php");
-require_once("core/class/class_db.php");
-require_once("core/class/class_core_tools.php");
-require_once("core/class/class_security.php");
-require_once("core/class/class_request.php");
-require_once("core/class/class_resource.php");
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_resource.php");
 $core_tools = new core_tools();
 $core_tools->load_lang();
 
@@ -75,7 +71,7 @@ if($_POST['valid'])
 			$count_level = count($extension)-1;
 			$the_ext = $extension[$count_level];
 
-			require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_indexing_searching_app.php");
+			require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_indexing_searching_app.php");
 			$is = new indexing_searching_app();
 			$ext_ok = $is->is_filetype_allowed($the_ext);
 			$_SESSION['upfile']['format'] = $the_ext;
@@ -87,7 +83,7 @@ if($_POST['valid'])
 			else
 			{
 
-				require_once("core/class/class_docserver.php");
+				require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_docserver.php");
 				if(!isset($_SESSION['collection_id_choice']) || empty($_SESSION['collection_id_choice']))
 				{
 					$_SESSION['collection_id_choice'] = $_SESSION['user']['collections'][0];
@@ -109,7 +105,7 @@ if($_POST['valid'])
 						?>
 						<script language="javascript" type="text/javascript">
 							var eleframe1 =  window.opener.top.frames['process_frame'].document.getElementById('list_attach');
-							eleframe1.location.href = '<?php  echo $_SESSION['urltomodules']."attachments/";?>frame_list_attachments.php';
+							eleframe1.location.href = '<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=attachments&page=frame_list_attachments';
 						</script>
 						<?php
 						exit();
@@ -185,7 +181,7 @@ if($_POST['valid'])
 
 										if($_SESSION['history']['attachadd'] == "true")
 										{
-											require_once("core/class/class_history.php");
+											require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 											$users = new history();
 											$_SESSION['error'] = _NEW_ATTACH_ADDED;
 											$users->add($_SESSION['tablename']['attach_res_attachments'], $id, "ADD", $_SESSION['error']." (".$title.") ", $_SESSION['config']['databasetype'],'attachments');
@@ -203,7 +199,7 @@ if($_POST['valid'])
 				?>
 				<script language="javascript" type="text/javascript">
 					var eleframe1 =  window.opener.top.document.getElementById('list_attach');
-					eleframe1.src = '<?php  echo $_SESSION['urltomodules']."attachments/";?>frame_list_attachments.php';
+					eleframe1.src = '<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=attachments&page=frame_list_attachments';
 					window.top.close();
 				</script>
 				<?php

@@ -1,13 +1,8 @@
 <?php
-include('core/init.php');
 
-require_once("core/class/class_functions.php");
-require_once("core/class/class_db.php");
-require_once("core/class/class_core_tools.php");
-require_once("core/class/class_security.php");
-
-require_once("core/class/class_request.php");
-require_once("core/class/class_resource.php");
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_resource.php");
 $core_tools = new core_tools();
 $core_tools->load_lang();
 
@@ -20,7 +15,7 @@ $db->query("update ".$_SESSION['tablename']['attach_res_attachments']." set stat
 
 if($_SESSION['history']['attachdel'] == "true")
 {
-	require_once("core/class/class_history.php");
+	require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 	$users = new history();
 	$users->add($_SESSION['tablename']['attach_res_attachments'], $_REQUEST['id'],"DEL", _ATTACH_DELETED." : ".$_REQUEST['id'], $_SESSION['config']['databasetype'],"attachments");
 
@@ -29,6 +24,6 @@ if($_SESSION['history']['attachdel'] == "true")
 ?>
 <script language="javascript" type="text/javascript">
 	var eleframe1 =  window.top.document.getElementById('list_attach');
-	eleframe1.src = '<?php  echo $_SESSION['urltomodules']."attachments/";?>frame_list_attachments.php';
+	eleframe1.src = '<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=attachments&page=frame_list_attachments';
 	//window.top.close();
 </script>
