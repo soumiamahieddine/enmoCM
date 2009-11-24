@@ -562,11 +562,11 @@ function open_contact_card(path_contact_card,path_user_card)
 
 		if(arr[0] == 'internal')
 		{
-			window.open(path_user_card+'?id='+contact_id, 'contact_info', 'height=450, width=600,scrollbars=no,resizable=yes');
+			window.open(path_user_card+'&id='+contact_id, 'contact_info', 'height=450, width=600,scrollbars=no,resizable=yes');
 		}
 		else if(arr[0] == 'external')
 		{
-			window.open(path_contact_card+'?mode=view&id='+contact_id, 'contact_info', 'height=600, width=600,scrollbars=yes,resizable=yes');
+			window.open(path_contact_card+'&mode=view&id='+contact_id, 'contact_info', 'height=600, width=600,scrollbars=yes,resizable=yes');
 		}
 	}
 }
@@ -575,8 +575,7 @@ function create_contact(path_create, id_action)
 {
 	$('type_contact_external').checked = true;
 	$('type_contact_external').onclick();
-	//window.open(path_create+'?mode=add', 'contact_info', 'height=600, width=600,scrollbars=no,resizable=yes');
-	//alert('create');
+
 	var contact_frm = $('indexingfrmcontact');
 	if(contact_frm)
 	{

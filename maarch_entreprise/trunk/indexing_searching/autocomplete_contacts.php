@@ -27,7 +27,7 @@
 * @version $Revision$
 * @ingroup indexing_searching_mlb
 */
-require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR"class_request.php");
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
 
 $req = new request();
 $req->connect();

@@ -153,7 +153,7 @@ if(empty($_SESSION['error']) || $_SESSION['indexation'])
 
 }
 ?>
-<div id="details_div" style="display:block;">
+<div id="details_div" style="display:none;">
 <h1 class="titdetail">
 	<img src="<?php  echo $_SESSION['config']['img'];?>/picto_detail_b.gif" alt="" /><?php  echo _DETAILS." : "._DOC.' '.strtolower(_NUM); ?><?php  echo $s_id; ?> <span>(<?php  echo  $security->retrieve_coll_label_from_coll_id($coll_id); ?>)</span>
 </h1>
