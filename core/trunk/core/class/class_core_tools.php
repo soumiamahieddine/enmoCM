@@ -694,7 +694,9 @@ class core_tools extends functions
 									array_push($executed_services,$modules_services[$value][$i]['id']);
 									$tab_label = $modules_services[$value][$i]['whereamiused'][$k]['tab_label'];
 									$tab_order = $modules_services[$value][$i]['whereamiused'][$k]['tab_order'];
-									$frame_src = $_SESSION['urltomodules'].$value."/".$modules_services[$value][$i]['servicepage'];
+									
+									$frame_src = $_SESSION['config']['businessappurl'].'index.php?display=true&module='.$value."&page=".$modules_services[$value][$i]['servicepage'];								
+									//$frame_src = $_SESSION['urltomodules'].$value."/".$modules_services[$value][$i]['servicepage'];
 									$tab_view[$tab_order]['tab_label'] = $this->retrieve_constant_lang($tab_label, $_SESSION['modules_loaded'][$value]['path'].'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].".php");
 									$tab_view[$tab_order]['frame_src'] = $frame_src;
 								}
