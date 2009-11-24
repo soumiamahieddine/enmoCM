@@ -23,7 +23,7 @@
 					replace="${defaultpage_replacement}"/>
 					
 				<regexp pattern="&lt;appid>.*&lt;\/appid>" 
-					replace="&lt;tmppath>${apps.name}&lt;/tmppath>"/>
+					replace="&lt;appid>${apps.name}&lt;/appid>"/>
 			  </replaceregexp>
 			</filterchain>
 		</copy>
