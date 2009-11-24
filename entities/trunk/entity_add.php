@@ -10,7 +10,6 @@
 * @license GPL
 * @author  Cédric Ndoumba  <dev@maarch.org>
 */
-//include('core/init.php');
 
 $admin = new core_tools();
 $admin->test_admin('manage_entities', 'entities');
@@ -31,7 +30,6 @@ $page_id = "entity_add";
 $admin->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
 require_once('modules'.DIRECTORY_SEPARATOR.'entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_entities.php');
-//$func = new functions();
 
 $ent = new entity();
 

@@ -101,7 +101,6 @@ elseif($_SESSION['service_tag'] == 'template_info')
 }
 elseif($_SESSION['service_tag'] == 'load_template_db')
 {
-	//require_once("core/class/class_db.php");
 	$db = new dbquery();
 	$db->connect();
 	$db->query("Delete from ".$_SESSION['tablename']['temp_templates_association']." where template_id = '".$_SESSION['m_admin']['template']['ID']."' and what = 'destination'");

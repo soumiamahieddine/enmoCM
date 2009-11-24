@@ -18,7 +18,7 @@ class entities extends dbquery
 	*/
 	public function build_modules_tables()
 	{
-		$xmlconfig = simplexml_load_file("modules/entities/xml/config.xml");
+		$xmlconfig = simplexml_load_file("modules".DIRECTORY_SEPARATOR."entities".DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."config.xml");
 		foreach($xmlconfig->TABLENAME as $TABLENAME)
 		{
 			$_SESSION['tablename']['ent_entities'] = (string) $TABLENAME->ent_entities;
@@ -62,7 +62,7 @@ class entities extends dbquery
 			}
 		}
 
-		$xmltype = simplexml_load_file("modules/entities/xml/typentity.xml");
+		$xmltype = simplexml_load_file("modules".DIRECTORY_SEPARATOR."entities".DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."typentity.xml");
 		$entypes = array();
 
 		foreach($xmltype->TYPE as $TYPE)
@@ -83,7 +83,7 @@ class entities extends dbquery
 		// We must create a new object because the object connexion can already be used
 		$db = new dbquery();
 		$db->connect();
-		require_once("class_manage_entities.php");
+		require_once("modules".DIRECTORY_SEPARATOR."entities".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_manage_entities.php");
 		$obj = new entity();
 		if(preg_match('/@my_entities/', $where))
 		{

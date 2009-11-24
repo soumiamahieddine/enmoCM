@@ -10,11 +10,7 @@
 * @license GPL v3
 * @author  Claire Figueras  <dev@maarch.org>
 */
-//include('core/init.php');
 
-//require_once($_SESSION['pathtocoreclass'].'class_functions.php');
-//require_once($_SESSION['pathtocoreclass'].'class_db.php');
-//require_once($_SESSION['pathtocoreclass'].'class_core_tools.php');
 require_once('modules'.DIRECTORY_SEPARATOR.'entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_listdiff.php');
 
 $db = new dbquery();

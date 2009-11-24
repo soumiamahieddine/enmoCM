@@ -10,10 +10,6 @@
 * @author  Claire Figueras  <dev@maarch.org>
 */
 
-//include('core/init.php');
-//require_once("core/class/class_functions.php");
-//require_once("core/class/class_db.php");
-//require("core/class/class_core_tools.php");
 
 function cmp_entity($a, $b)
 {

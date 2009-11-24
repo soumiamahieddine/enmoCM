@@ -86,7 +86,7 @@ elseif($_SESSION['service_tag'] == 'load_model_session')
 }
 elseif($_SESSION['service_tag'] == 'model_info')
 {
-	require_once("modules/entities".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_manage_entities.php");
+	require_once("modules".DIRECTORY_SEPARATOR."entities".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_manage_entities.php");
 	$ent = new entity();
 	$_SESSION['m_admin']['model']['ENTITIES'] = array();
 	for($i=0;$i<count($_REQUEST['entities_chosen']); $i++)
@@ -101,7 +101,6 @@ elseif($_SESSION['service_tag'] == 'model_info')
 }
 elseif($_SESSION['service_tag'] == 'load_model_db')
 {
-	//require_once("core/class/class_db.php");
 	$db = new dbquery();
 	$db->connect();
 	$db->query("Delete from ".$_SESSION['tablename']['mod_models_association']." where model_id = '".$_SESSION['m_admin']['model']['ID']."' and what = 'destination'");

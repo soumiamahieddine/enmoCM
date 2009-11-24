@@ -81,7 +81,17 @@ class entity extends dbquery
 			else
 			{
 				?>
-				<form name="formentity" id="formentity" method="post" action="<?php  if($mode == 'up') { echo $_SESSION['urltomodules'].'entities/entity_up_db.php'; } elseif($mode == 'add') { echo $_SESSION['urltomodules'].'entities/entity_add_db.php'; } ?>" class="forms">
+				<form name="formentity" id="formentity" method="post" action="<?php  if($mode == 'up') { echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=entity_up_db'; } elseif($mode == 'add') { echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=entity_add_db'; } ?>" class="forms">
+					<input type="hidden" name="display" value="true" />
+					<input type="hidden" name="module" value="entities" />
+					<?php  if($mode == 'up') 
+					{?>
+						<input type="hidden" name="page" value="entity_up_db" />
+					<?php }
+					elseif($mode == 'add')
+					{?>
+						<input type="hidden" name="page" value="entity_add_db" />
+					<?php } ?>						
 					<input type="hidden" name="order" id="order" value="<?php echo $_REQUEST['order'];?>" />
 					<input type="hidden" name="order_field" id="order_field" value="<?php echo $_REQUEST['order_field'];?>" />
 					<input type="hidden" name="what" id="what" value="<?php echo $_REQUEST['what'];?>" />
@@ -150,7 +160,7 @@ class entity extends dbquery
 					</p>
 					<p>
 						<label><?php  echo _ENTITY_TYPE;
-						require_once('modules/entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php');
+						require_once('modules'.DIRECTORY_SEPARATOR.'entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php');
 
 						$ent = new entities;
 
@@ -550,7 +560,7 @@ class entity extends dbquery
 
 		if($_SESSION['history'][$hist] == "true")
 		{
-			require_once("core/class/class_history.php");
+			require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 			$users = new history();
 			$users->add($_SESSION['tablename']['ent_entities'], $id, $histKey, $histLabel." : ".$id, $_SESSION['config']['databasetype']);
 		}
@@ -567,7 +577,7 @@ class entity extends dbquery
 				$db2->query('Update '.$_SESSION['tablename']['ent_entities']." set enabled = '".$this->protect_string_db(trim($action))."' where entity_id = '".$this->protect_string_db(trim($line->entity_id))."'");
 				if($_SESSION['history'][hist] == "true")
 				{
-					require_once("core/class/class_history.php");
+					require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 					$users = new history();
 					$users->add($_SESSION['tablename']['ent_entities'], $line->entity_id, $HistKey, $HistLabel." : ".$line->entity_id, $_SESSION['config']['databasetype']);
 				}
@@ -826,7 +836,7 @@ class entity extends dbquery
 
 					if($_SESSION['history']['entityadd'] == "true")
 					{
-						require("core/class/class_history.php");
+						require("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 						$hist = new history();
 						$hist->add($_SESSION['tablename']['ent_entities'], $_SESSION['m_admin']['entity']['entityId'] ,"ADD",_ADD_ENTITY." : ".$_SESSION['m_admin']['entity']['entityId'] , $_SESSION['config']['databasetype'], 'entities');
 					}
@@ -917,7 +927,7 @@ class entity extends dbquery
 		//$this->show();
 		$line = $this->fetch_object();
 		$entity_type = $line->entity_type;
-		$xmltypeentity = simplexml_load_file("modules/entities/xml/typentity.xml");
+		$xmltypeentity = simplexml_load_file("modules".DIRECTORY_SEPARATOR."entities".DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."typentity.xml");
 		//echo "<br>";
 		foreach($xmltypeentity->TYPE as $ENTITYTYPE)
 		{

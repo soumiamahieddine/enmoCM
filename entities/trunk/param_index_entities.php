@@ -1,5 +1,5 @@
 <?php
-//include('core/init.php');
+
 
 // Group - Basket Form : actions params
 if($_SESSION['service_tag'] == 'group_basket')
@@ -226,10 +226,8 @@ elseif($_SESSION['service_tag'] == 'load_basket_db')
 }
 else if($_SESSION['service_tag'] == 'del_basket' && !empty($_SESSION['temp_basket_id']))
 {
-	//require_once("core/class/class_db.php");
 	$db = new dbquery();
 	$db->query("delete from ".$_SESSION['tablename']['ent_groupbasket_redirect']." where basket_id = '".$_SESSION['temp_basket_id']."'");
 	unset($_SESSION['temp_basket_id']);
-
 }
 ?>

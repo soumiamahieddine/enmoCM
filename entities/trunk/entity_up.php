@@ -10,7 +10,6 @@
 * @license GPL
 * @author  Cédric Ndoumba  <dev@maarch.org>
 */
-//include('core/init.php');
 
 $admin = new core_tools();
 $admin->test_admin('manage_entities', 'entities');

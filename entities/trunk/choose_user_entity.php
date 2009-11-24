@@ -11,15 +11,9 @@
 * @author  Cédric Ndoumba  <dev@maarch.org>
 * @author  Claire Figueras  <dev@maarch.org>
 */
-//include('core/init.php');
- 
-//require_once("core/class/class_functions.php");
-//require_once("core/class/class_db.php");
-//require_once("core/class/class_core_tools.php");
 
 $admin = new core_tools();
 //$admin->test_admin('manage_entities', 'entities');
-//here we loading the lang vars
 $admin->load_lang();
 
 if(!empty($_REQUEST['entity']) && isset($_REQUEST['entity']))

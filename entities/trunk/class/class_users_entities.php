@@ -42,9 +42,7 @@ class users_entities extends dbquery
 	*/
 	public function load_entities_session($user_id)
 	{
-
 		$this->connect();
-		//$this->query("select ue.user_id, ue.entity_id, ue.primary_entity, ue.user_role, e.entity_label from ".$_SESSION['tablename']['ent_users_entities']." ue, ".$_SESSION['tablename']['ent_entities']." e where ue.user_id = '".$user_id."' and ue.entity_id = e.entity_id");
 		$this->query("select  ue.entity_id, ue.primary_entity, ue.user_role, e.entity_label from ".$_SESSION['tablename']['ent_users_entities']." ue, ".$_SESSION['tablename']['ent_entities']." e where ue.user_id = '".$this->protect_string_db(trim($user_id))."' and ue.entity_id = e.entity_id");
 		if($this->nb_result() == 0)
 		{
@@ -228,7 +226,7 @@ class users_entities extends dbquery
 				if($_SESSION['m_admin']['entity']['user_UserId'] <> "superadmin")
 				{
 				?>
-					<iframe name="usersEnt" id="usersEnt" class="frameform2" src="<?php  echo $_SESSION['urltomodules'].'entities/users_entities_form.php';?>" frameborder="0"></iframe>
+					<iframe name="usersEnt" id="usersEnt" class="frameform2" src="<?php  echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=users_entities_form';?>" frameborder="0"></iframe>
 				 <?php
 				 }
 				 ?>
@@ -243,7 +241,7 @@ class users_entities extends dbquery
 			else
 			{
 				?>
-				<form name="frmuserent" method="post" action="<?php  if($mode == "up") { echo $_SESSION['urltomodules'].'entities/users_entities_up_db.php'; } /*elseif($mode == "add") { echo "admin/users/users_add_db.php"; }*/ ?>" class="forms addforms" >
+				<form name="frmuserent" method="post" action="<?php  if($mode == "up") { echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=users_entities_up_db'; }  ?>" class="forms addforms" >
 								<p>
 					<label for="UserId"><?php  echo _ID; ?> :</label>
 					<?php  if($mode == "up") { echo $func->show($_SESSION['m_admin']['entity']['user_UserId']); } ?>
@@ -387,7 +385,7 @@ class users_entities extends dbquery
 				if($_SESSION['history']['usersup'] == "true")
 				{
 					$tmp_h = $this->protect_string_db(_USER_UPDATE." : ".$_SESSION['m_admin']['entity']['user_LastName']." ".$_SESSION['m_admin']['entity']['user_FirstName']." (".$_SESSION['m_admin']['entity']['user_UserId'].")");
-					require_once("core/class/class_history.php");
+					require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 					$users = new history();
 					$users->add($_SESSION['tablename']['users'], $_SESSION['m_admin']['entity']['user_UserId'],"UP",$tmp_h, $_SESSION['config']['databasetype']);
 				}
@@ -407,18 +405,6 @@ class users_entities extends dbquery
 	*/
 	private function clearuserinfos()
 	{
-		// clear the users add or modification vars
-		/*$_SESSION['m_admin']['users'] = array();
-		$_SESSION['m_admin']['users']['UserId'] = "";
-		$_SESSION['m_admin']['users']['pass'] = "";
-		$_SESSION['m_admin']['users']['FirstName'] = "";
-		$_SESSION['m_admin']['users']['LastName'] = "";
-		$_SESSION['m_admin']['users']['Phone'] = "";
-		$_SESSION['m_admin']['users']['Mail'] = "";
-		$_SESSION['m_admin']['users']['Department'] ="";
-		$_SESSION['m_admin']['users']['Status'] = "";
-		$_SESSION['m_admin']['users']['groups'] = array();
-		$_SESSION['m_admin']['users']['nbbelonginggroups'] = 0;*/
 		unset($_SESSION['m_admin']);
 	}
 

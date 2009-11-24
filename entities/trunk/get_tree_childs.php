@@ -1,11 +1,7 @@
 <?php
-//include('core/init.php');
 
 if(isset($_POST['branch_id'])) {
 
-	//require_once("core/class/class_functions.php");
-	//require_once("core/class/class_db.php");
-	//require_once("core/class/class_core_tools.php");
 	require_once('modules'.DIRECTORY_SEPARATOR.'entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_entities.php');
 	$core_tools = new core_tools();
 	$core_tools->load_lang();

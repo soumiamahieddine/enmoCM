@@ -40,10 +40,10 @@ $page_label = _ENTITIES_LIST;
 $page_id = "manage_entities";
 $admin->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
-//require_once("core/class/class_request.php");
-//require_once("core/class/class_functions.php");
+
 require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['businessapps'][0]['appid'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");
 require_once('modules'.DIRECTORY_SEPARATOR.'entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_entities.php');
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
 $ent = new entity();
 $func = new functions();
 $request = new request;
