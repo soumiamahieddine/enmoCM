@@ -200,7 +200,7 @@ else
 		include($path_action_page);
 		if($_POST['req'] == 'first_request' && in_array('form', $etapes))
 		{
-			$frm_test = get_form_txt($arr_id, $_SESSION['config']['coreurl'].'core/manage_action.php', $id_action, $_POST['table'],$_POST['module'], $_POST['coll_id'],  $_POST['mode'] );
+			$frm_test = get_form_txt($arr_id, $_SESSION['config']['businessappurl'].'index.php?display=true&page=manage_action&module=core', $id_action, $_POST['table'],$_POST['module'], $_POST['coll_id'],  $_POST['mode'] );
 			echo "{status : 3, form_content : '".$frm_test."', height : '".$frm_height."', width : '".$frm_width."', 'mode_frm' : '".$mode_form."'}";
 			exit();
 		}
