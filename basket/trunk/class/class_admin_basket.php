@@ -90,7 +90,6 @@ class admin_basket extends dbquery
 	public function formbasket($mode,$id = "")
 	{
 		$state = true;
-		require_once("core/class/class_core_tools.php");
 		$core_tools = new core_tools();
 		$this->connect();
 
@@ -143,7 +142,7 @@ class admin_basket extends dbquery
 		<div id="inner_content" class="clearfix">
 			<div id="add_box" class="bloc">
 				<div class="block">
-				<p><iframe name="groupbasket_form" id="groupbasket_form" src="<?php echo $_SESSION['urltomodules']."basket/groupbasket_form.php";?>"  frameborder="0" class="frameform2" width="280px"></iframe></p>
+				<p><iframe name="groupbasket_form" id="groupbasket_form" src="<?php echo $_SESSION['config']['businessappurl']."index.php?display=true&module=basket&page=groupbasket_form";?>"  frameborder="0" class="frameform2" width="280px"></iframe></p>
 				</div>
 			<div class="block_end">&nbsp;</div>
 			</div>
@@ -156,7 +155,17 @@ class admin_basket extends dbquery
 			else
 			{
 			?>
-			<form name="formbasket" id="formbasket" method="post" action="<?php if($mode == "up") { echo $_SESSION['urltomodules']."basket/basket_up_db.php"; } elseif($mode == "add") { echo $_SESSION['urltomodules']."basket/basket_add_db.php"; } ?>" class="forms addforms">
+			<form name="formbasket" id="formbasket" method="post" action="<?php if($mode == "up") { echo $_SESSION['config']['businessappurl']."index.php?display=true&module=basket&page=basket_up_db"; } elseif($mode == "add") { echo $_SESSION['config']['businessappurl']."index.php?display=true&module=basket&page=basket_add_db"; } ?>" class="forms addforms">
+				<input type="hidden" name="display"  value="true" />
+				<input type="hidden" name="module"  value="basket" />
+				<?php if($mode == "up")
+				 {?>
+					<input type="hidden" name="page"  value="basket_up_db" />
+				 <?php } 
+				 elseif($mode == "add")
+				 {?>
+					<input type="hidden" name="page"  value="basket_add_db" />
+				 <?php } ?>
 				<input type="hidden" name="order" id="order" value="<?php echo $_REQUEST['order'];?>" />
 				<input type="hidden" name="order_field" id="order_field" value="<?php echo $_REQUEST['order_field'];?>" />
 				<input type="hidden" name="what" id="what" value="<?php echo $_REQUEST['what'];?>" />
@@ -321,7 +330,7 @@ class admin_basket extends dbquery
 					// Log in database if required
 					if($_SESSION['history']['basketadd'] == "true")
 					{
-						require_once("core/class/class_history.php");
+						require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 						$hist = new history();
 						$hist->add($_SESSION['tablename']['bask_baskets'], $_SESSION['m_admin']['basket']['basketId'],"ADD",_BASKET_ADDED." : ".$_SESSION['m_admin']['basket']['basketId'], $_SESSION['config']['databasetype'], 'basket');
 					}
@@ -359,7 +368,7 @@ class admin_basket extends dbquery
 				// Log in database if required
 				if($_SESSION['history']['basketup'] == "true")
 				{
-					require_once("core/class/class_history.php");
+					require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 					$hist = new history();
 					$hist->add($_SESSION['tablename']['bask_baskets'], $_SESSION['m_admin']['basket']['basketId'],"UP",_BASKET_UPDATE." : ".$_SESSION['m_admin']['basket']['basketId'], $_SESSION['config']['databasetype'], 'basket');
 				}
@@ -394,7 +403,7 @@ class admin_basket extends dbquery
 
 		if( !empty ($where_clause))
 		{
-			require_once("core/class/class_security.php");
+			require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
 			$sec = new security();
 			$where = $sec->process_security_where_clause($where, $_SESSION['user']['UserId']);
 		 }
@@ -539,14 +548,14 @@ class admin_basket extends dbquery
 
 					$_SESSION['service_tag'] = 'del_basket';
 					$_SESSION['temp_basket_id'] = $id;
-					require_once("core/class/class_core_tools.php");
+					require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_core_tools.php");
 					$core = new core_tools();
 					echo $core->execute_modules_services($_SESSION['modules_services'], 'del_basket', "include");
 
 					// Log in database if needed
 					if($_SESSION['history']['basketdel'] == "true")
 					{
-						require_once("core/class/class_history.php");
+						require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 						$users = new history();
 						$users->add($_SESSION['tablename']['bask_baskets'], $id,"DEL",_BASKET_DELETION." : ".$id, $_SESSION['config']['databasetype'],  'basket');
 					}

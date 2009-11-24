@@ -28,11 +28,8 @@
 * @version $Revision$
 * @ingroup basket
 */
-//include('core/init.php');
-//
-require_once("core/class/class_functions.php");
-require_once("core/class/class_request.php");
-require_once("core/class/class_core_tools.php");
+
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
 $core_tools = new core_tools();
 $core_tools->test_user();
 //$core_tools->load_lang();
@@ -41,7 +38,7 @@ if(!isset($_REQUEST['noinit']))
 {
 	$_SESSION['current_basket'] = array();
 }
-require_once("modules/basket".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
+require_once("modules".DIRECTORY_SEPARATOR."basket".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
 /************/
 $bask = new basket();
 $db = new dbquery();

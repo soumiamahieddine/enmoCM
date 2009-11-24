@@ -58,7 +58,7 @@ class basket extends dbquery
 	*/
 	public function build_modules_tables()
 	{
-		$xmlconfig = simplexml_load_file("modules/basket/xml/config.xml");
+		$xmlconfig = simplexml_load_file("modules".DIRECTORY_SEPARATOR."basket".DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."config.xml");
 
 		$CONFIG = $xmlconfig->CONFIG;
 
@@ -142,7 +142,6 @@ class basket extends dbquery
 			}// The page is in a module
 			elseif(strtoupper($_SESSION['basket_page'][$ind]['ORIGIN']) == "MODULE")
 			{
-				require_once("core/class/class_core_tools.php");
 				$core_tools = new core_tools();
 				// Error : The module name is empty or the module is not loaded
 				if(empty($_SESSION['basket_page'][$ind]['MODULE']) || !$core_tools->is_module_loaded($_SESSION['basket_page'][$ind]['MODULE']))
@@ -185,8 +184,8 @@ class basket extends dbquery
 	private function load_baskets_pages()
 	{
 		$_SESSION['basket_page'] = array();
-		$xmlfile = simplexml_load_file("modules/basket/xml/basketpage.xml");
-		$path_lang = "modules/basket/lang/".$_SESSION['config']['lang'].'.php';
+		$xmlfile = simplexml_load_file("modules".DIRECTORY_SEPARATOR."basket".DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."basketpage.xml");
+		$path_lang = "modules".DIRECTORY_SEPARATOR."basket".DIRECTORY_SEPARATOR."lang".DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php';
 		$i =0;
 		foreach($xmlfile->BASKETPAGE as $BASKETPAGE)
 		{
@@ -404,7 +403,7 @@ class basket extends dbquery
 
 		if(count($actions_list) > 0)
 		{
-			$action_form = $_SESSION['urltocore']."manage_action.php";
+			$action_form = $_SESSION['config']['businessappurl']."index.php?display=true&page=manage_action&module=core";
 			$bool_check_form = true;
 			$method = 'get';
 		}
@@ -480,7 +479,7 @@ class basket extends dbquery
 		}
 		else
 		{
-			require_once("core/class/class_security.php");
+			require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
 			$sec =new security();
 			$this->connect();
 			$table = $sec->retrieve_view_from_coll_id($coll_id);
@@ -595,7 +594,7 @@ class basket extends dbquery
 	{
 		$tab = array();
 		$this->connect();
-		require_once("core/class/class_security.php");
+		require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
 		$sec = new security();
 
 		$this->query("select basket_id, coll_id, basket_name, basket_desc, basket_clause, is_generic from ".$_SESSION['tablename']['bask_baskets']." where basket_id = '".$this->protect_string_db($basket_id)."' and enabled = 'Y'");
@@ -666,7 +665,7 @@ class basket extends dbquery
 	{
 		$tab = array();
 		$this->connect();
-			require_once("core/class/class_security.php");
+			require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
 		$sec = new security();
 
 		$this->query("select basket_id, coll_id, basket_name, basket_desc, basket_clause from ".$_SESSION['tablename']['bask_baskets']." where basket_id = '".$basket_id."' and enabled = 'Y'");
@@ -791,7 +790,7 @@ class basket extends dbquery
 		if($nb_total > 0)
 		{
 			ob_start();
-			?><h2><?php echo _REDIRECT_MY_BASKETS;?></h2><div align="center"><form name="redirect_my_baskets_to" id="redirect_my_baskets_to" method="post" action="<?php echo $_SESSION['urltomodules'].'basket/';?>manage_redirect_my_basket.php"><input type="hidden" name="baskets_owner" id="baskets_owner" value="<?php echo $user_id;?>" /><table border="0" cellspacing="0" class="<?php echo $used_css;?>"><thead><tr><th><?php echo _ID; ?></th><th><?php echo _NAME; ?></th><th><?php echo _REDIRECT_TO; ?></th></tr></thead><tbody><?php
+			?><h2><?php echo _REDIRECT_MY_BASKETS;?></h2><div align="center"><form name="redirect_my_baskets_to" id="redirect_my_baskets_to" method="post" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=basket&page=manage_redirect_my_basket"><input type="hidden" name="display" id="display" value="true" /><input type="hidden" name="display" id="display" value="true" /><input type="hidden" name="module" id="module" value="basket" /><input type="hidden" name="module" id="module" value="manage_redirect_my_basket" /><input type="hidden" name="page" id="page" value="<?php echo $user_id;?>" /><table border="0" cellspacing="0" class="<?php echo $used_css;?>"><thead><tr><th><?php echo _ID; ?></th><th><?php echo _NAME; ?></th><th><?php echo _REDIRECT_TO; ?></th></tr></thead><tbody><?php
 			$color = "";
 			for($theline = 0; $theline < $nb_total ; $theline++)
 			{

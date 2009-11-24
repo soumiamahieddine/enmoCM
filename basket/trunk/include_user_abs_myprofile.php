@@ -57,7 +57,7 @@
 </script>
 <?php
    //	$this->show_array($_SESSION['user']['baskets']);
-    require_once('modules/basket'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php');
+    require_once('modules'.DIRECTORY_SEPARATOR.'basket'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php');
 	$bask = new basket();
 	$modal_content = $bask->redirect_my_baskets_list($_SESSION['user']['baskets'], count($_SESSION['user']['baskets']), $_SESSION['user']['UserId'], "listingbasket specsmall");
 	echo "<div>";
@@ -65,6 +65,6 @@
 		<script>
 			var modal_content = '<?php echo addslashes($modal_content);?>';
 		</script>
-		<h2><a href="javascript://" onclick="createModal(modal_content, 'modal_redirect', <?php if(count($_SESSION['user']['baskets']) >0) {?>'400px', '950px'<?php }else{?>'100px', '300px'<?php }?>);autocomplete(<?php echo count($_SESSION['user']['baskets']);?>, '<?php echo $_SESSION['urltomodules'].'basket/';?>autocomplete_users_list.php')"><img src = "<?php echo $_SESSION['urltomodules'].'basket/img';?>/missing_user_big_on.gif" alt="" /> <?php echo _MY_ABS; ?> </a></h2>
+		<h2><a href="javascript://" onclick="createModal(modal_content, 'modal_redirect', <?php if(count($_SESSION['user']['baskets']) >0) {?>'400px', '950px'<?php }else{?>'100px', '300px'<?php }?>);autocomplete(<?php echo count($_SESSION['user']['baskets']);?>, '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=basket&page=autocomplete_users_list')"><img src = "<?php echo $_SESSION['urltomodules'].'basket/img';?>/missing_user_big_on.gif" alt="" /> <?php echo _MY_ABS; ?> </a></h2>
          <p id="abs"><?php echo _MY_ABS_TXT; ?></p>
     </div>

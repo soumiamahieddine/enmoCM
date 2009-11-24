@@ -29,13 +29,10 @@
 * @version $Revision$
 * @ingroup basket
 */
-include('core/init.php');
-
-
 $admin = new core_tools();
 $admin->test_admin('admin_baskets', 'basket');
 
-require_once("modules/basket".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_admin_basket.php");
+require_once("modules".DIRECTORY_SEPARATOR."basket".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_admin_basket.php");
  /****************Management of the location bar  ************/
 $init = false;
 if($_REQUEST['reinit'] == "true")

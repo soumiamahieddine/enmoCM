@@ -29,13 +29,6 @@
 * @ingroup basket
 */
 
-//include('core/init.php');
-
-
-//require_once("core/class/class_functions.php");
-//require_once("core/class/class_core_tools.php");
-//require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR..'class_db.php');
-
 $core_tools = new core_tools();
 $core_tools->load_lang();
 $db = new dbquery();
@@ -94,7 +87,10 @@ $time = $core_tools->get_session_time_expire();
 	echo _TO_THE_GROUP ; ?></h2>
 	<br/>
  <div style="margin-left: 15px;" >
-	<form name="group_basket" id="group_basket" action="<?php echo $_SESSION['urltomodules']."basket/";?>manage_group_basket.php" method="get" class="forms">
+	<form name="group_basket" id="group_basket" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=basket&page=manage_group_basket" method="get" class="forms">
+		<input type="hidden" name="display" value="true" />
+		<input type="hidden" name="module" value="basket" />
+		<input type="hidden" name="page" value="manage_group_basket" />
 		<p>
 			<label><?php echo _CHOOSE_GROUP;?> :  </label>
 			<select name="group" id="group">
@@ -148,7 +144,7 @@ $time = $core_tools->get_session_time_expire();
 			<?php
 			if(count($_SESSION['m_admin']['basket']['all_actions']) > 0)
 			{
-				require_once("modules/basket".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_admin_basket.php");
+				require_once("modules".DIRECTORY_SEPARATOR."basket".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_admin_basket.php");
 				$bask = new admin_basket();
 				?>
 				<!--<ul>-->

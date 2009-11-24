@@ -28,12 +28,8 @@
 * @version $Revision$
 * @ingroup basket
 */
-include('core/init.php');
 
-require_once("core/class/class_functions.php");
-require_once("core/class/class_core_tools.php");
-require_once("core/class/class_db.php");
-require_once("modules/basket".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_admin_basket.php");
+require_once("modules".DIRECTORY_SEPARATOR."basket".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_admin_basket.php");
 
 $core_tools = new core_tools();
 $core_tools->load_lang();
@@ -185,7 +181,7 @@ else
 
 if(!empty($_SESSION['error']))
 {
-	header("location: ".$_SESSION['urltomodules']."basket/groupbasket_popup.php");
+	header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&module=basket&page=groupbasket_popup");
 	exit();
 }
 $_SESSION['service_tag'] = '';

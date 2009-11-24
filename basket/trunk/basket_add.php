@@ -30,8 +30,6 @@
 * @version $Revision$
 * @ingroup basket
 */
-include('core/init.php');
-
 
 $admin = new core_tools();
 $admin->test_admin('admin_baskets', 'basket');
@@ -52,7 +50,7 @@ $page_id = "basket_add";
 $admin->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
 
-require_once("modules/basket".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_admin_basket.php");
+require_once("modules".DIRECTORY_SEPARATOR."basket".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_admin_basket.php");
 
 $_SESSION['origin'] = 'basket_add';
 $bask = new admin_basket();

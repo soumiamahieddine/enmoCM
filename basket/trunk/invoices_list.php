@@ -28,21 +28,17 @@
 * @version $Revision$
 * @ingroup basket
 */
-include('core/init.php');
 
-require_once("core/class/class_functions.php");
-require_once("core/class/class_db.php");
-require_once("core/class/class_request.php");
-require_once("core/class/class_core_tools.php");
-require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_list_show.php");
-require_once("core/class/class_security.php");
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
+require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['businessapps'][0]['appid'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
 $security = new security();
 $core_tools = new core_tools();
 $core_tools->load_lang();
 $core_tools->load_html();
 $core_tools->load_header();
 $request= new request();
-require_once("modules/basket".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
+require_once("modules".DIRECTORY_SEPARATOR."basket".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
 
 $bask = new basket();
 if(!empty($_REQUEST['id']))
@@ -179,8 +175,7 @@ for ($i=0;$i<count($tab);$i++)
 }
 $i = count($tab);
 $title = _RESULTS." : ".$i." "._FOUND_INVOICES;
-//$request->show_array($tab);
-//$_SESSION['origin'] = $_SESSION['config']['businessappurl'].'index.php?page=view_baskets&module=basket&baskets='.$_SESSION['current_basket']['id'];
+
 $_SESSION['origin'] = 'basket';
 	$_SESSION['collection_id_choice'] = $_SESSION['current_basket']['coll_id'];
 	$tmp = preg_replace('/.php$/', '', $security->get_script_from_coll($_SESSION['current_basket']['coll_id'], 'script_details'));

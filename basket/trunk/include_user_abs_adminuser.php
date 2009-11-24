@@ -31,7 +31,7 @@
 if($_SESSION['m_admin']['users']['Status'] == 'ABS')
 {
 
- $content = '<h2>'._CANCEL_ABS.'</h2><div><form name="cancel_abs" id="cancel_abs" method="get" action="'.$_SESSION['urltomodules'].'basket/manage_cancel_abs.php"><p>'._REALLY_CANCEL_ABS.'</p><input type="submit" name="submit" value="'._VALIDATE.'" class="button" /> <input type="button" name="cancel" value="'._CANCEL.'" onclick="destroyModal(\'modal_cancel_abs\');" class="button" /></form></div>';
+ $content = '<h2>'._CANCEL_ABS.'</h2><div><form name="cancel_abs" id="cancel_abs" method="get" action="'.$_SESSION['config']['bussinesappurl'].'index.php?display=true&module=basket&page=manage_cancel_abs"><p>'._REALLY_CANCEL_ABS.'</p><input type="submit" name="submit" value="'._VALIDATE.'" class="button" /> <input type="button" name="cancel" value="'._CANCEL.'" onclick="destroyModal(\'modal_cancel_abs\');" class="button" /></form></div>';
 
  ?><script >var abs_content = '<?php echo addslashes($content);?>';</script>
 	<div>
@@ -71,7 +71,7 @@ if($_SESSION['m_admin']['users']['Status'] == 'ABS')
 		}
 	</script>
     <?php
-    require_once('modules/basket'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php');
+    require_once('modules'.DIRECTORY_SEPARATOR.'basket'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php');
 	$bask = new basket();
 	$arr_baskets = $bask->get_baskets($_SESSION['m_admin']['users']['UserId']);
 	//print_r($arr_baskets);
@@ -81,7 +81,7 @@ if($_SESSION['m_admin']['users']['Status'] == 'ABS')
 		<script>
 			var modal_content = '<?php echo addslashes($modal_content);?>';
 		</script>
-		<h2><a href="javascript://" onclick="createModal(modal_content, 'modal_redirect', <?php if(count($arr_baskets) >0) {?>'400px', '800px'<?php }else{?>'100px', '320px'<?php }?>);autocomplete(<?php echo count($arr_baskets);?>, '<?php echo $_SESSION['urltomodules'].'basket/';?>autocomplete_users_list.php')"><img src="<?php echo $_SESSION['urltomodules'].'basket/img';?>/missing_user_big.gif" alt="" /> <?php echo _ADMIN_ABS; ?> </a></h2>
+		<h2><a href="javascript://" onclick="createModal(modal_content, 'modal_redirect', <?php if(count($arr_baskets) >0) {?>'400px', '800px'<?php }else{?>'100px', '320px'<?php }?>);autocomplete(<?php echo count($arr_baskets);?>, '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=basket&page=autocomplete_users_list')"><img src="<?php echo $_SESSION['urltomodules'].'basket/img';?>/missing_user_big.gif" alt="" /> <?php echo _ADMIN_ABS; ?> </a></h2>
         <p id="abs"><?php echo _ADMIN_ABS_TXT; ?></p>
     </div>
 <?php } ?>
