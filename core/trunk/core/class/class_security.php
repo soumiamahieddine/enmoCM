@@ -431,6 +431,7 @@ class security extends dbquery
 				}
 			}
 		}
+		
 		return $tab;
 	}
 
@@ -443,7 +444,6 @@ class security extends dbquery
 	public function login($s_login,$pass)
 	{
 		$this->connect();
-
 
 		if ($_SESSION['config']['databasetype'] == "POSTGRESQL")
 			$query = "select * from ".$_SESSION['tablename']['users']." where user_id ilike '".$this->protect_string_db($s_login)."' and password = '".$pass."' and STATUS <> 'DEL'";
@@ -482,18 +482,13 @@ class security extends dbquery
 				$_SESSION['user']['collections'] = $tmp['collections'];
 				$_SESSION['user']['security'] = $tmp['security'];
 				$this->load_enabled_services();
-				require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['businessapps'][0]['appid'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
-				//require_once("core/class/class_core_tools.php");
+				require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
 				$business_app_tools = new business_app_tools();
 				$core_tools = new core_tools();
 				$business_app_tools->load_app_var_session();
 				$core_tools->load_var_session($_SESSION['modules']);
-
 				$_SESSION['user']['services'] = $this->load_user_services($_SESSION['user']['UserId']);
-
 				$core_tools->load_menu($_SESSION['modules']);
-
-
 
 				if($_SESSION['history']['userlogin'] == "true")
 				{
@@ -1228,7 +1223,7 @@ class security extends dbquery
 
 			// Process with the core vars
 			$where = $this->process_where_clause($where, $user_id);
-
+	
 			require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
 			// Process with the modules vars
 			foreach(array_keys($_SESSION['modules_loaded']) as $key)
