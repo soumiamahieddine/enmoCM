@@ -202,7 +202,6 @@ class types extends dbquery
                 </div>
                 <script type="text/javascript">
                 var coll_list = $('collection');
-               // get_opt_index('<?php echo $_SESSION['config']['businessappurl'];?>admin/architecture/types/get_index.php', coll_list.options[coll_list.options.selectedIndex].value);
                 get_opt_index('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=get_index', coll_list.options[coll_list.options.selectedIndex].value);
                 </script>
 			<?

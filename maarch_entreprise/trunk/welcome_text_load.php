@@ -13,15 +13,7 @@
 * @ingroup core
 */
 
-/*
-
-include('core/init.php');
-
-*/
-
-require_once("core/class/class_functions.php");
-require_once("core/class/class_request.php");
-require_once("core/class/class_core_tools.php");
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
 $core_tools = new core_tools();
 $core_tools->test_user();
 //$core_tools->load_lang();
@@ -41,7 +33,7 @@ function get_file_template($this_file)
 ?>
 <div id="welcome_box_left_text" >
 
-	<?php echo get_file_template("apps/".$_SESSION['businessapps'][0]['appid']."/welcome_file.html");?>
+	<?php echo get_file_template("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id']."/welcome_file.html");?>
 	<div class="blank_space">&nbsp;</div>
 	
 	

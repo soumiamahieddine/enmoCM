@@ -10,19 +10,8 @@
 * @license GPL
 * @author  Claire Figueras  <dev@maarch.org>
 */
-include('core/init.php'); 
 
-if(file_exists($_SESSION['config']['lang'].'.php'))
-{
-	include($_SESSION['config']['lang'].'.php');
-}
-else
-{
-	$_SESSION['error'] = "Language file missing...<br/>";
-}
-require_once("core/class/class_functions.php");
-require_once("core/class/class_db.php");
-require_once("core/class/class_request.php");
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
 
 //----------------------- suppression fichiers d'export existants ----------------------------------------//
 

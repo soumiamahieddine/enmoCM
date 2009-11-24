@@ -213,7 +213,7 @@ if($core->is_module_loaded('folder'))
 */
 function get_general_data($coll_id, $res_id, $mode, $params = array())
 {
-	require_once("core/class/class_security.php");
+	require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
 	$sec =new security();
 	$view = $sec->retrieve_view_from_coll_id($coll_id);
 	if(empty($view))
@@ -279,7 +279,7 @@ function get_general_data($coll_id, $res_id, $mode, $params = array())
 						$data[$field]['select']= array();
 						if($field == 'type_id')
 						{
-							require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_types.php");
+							require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_types.php");
 							$type = new types();
 							$data[$field]['select'] = $type->getArrayStructTypes($coll_id);
 						}
@@ -553,7 +553,7 @@ function get_general_data($coll_id, $res_id, $mode, $params = array())
 					$db2->query('select lastname, firstname from '.$_SESSION['tablename']['users']." where user_id = '".$line->$arr[$i]."'");
 					$res = $db2->fetch_object();
 					$data[$arr[$i]]['show_value'] = $res->lastname.', '.$res->firstname.' ('.$line->$arr[$i].')';
-					$data[$arr[$i]]['addon'] = '<a href="#" id="contact_card" title="'._CONTACT_CARD.'" onclick="window.open(\''.$_SESSION ['config']['businessappurl'].'user_info.php?id='.$line->$arr[$i].'\', \'contact_info\', \'height=450, width=600,scrollbars=yes,resizable=yes\');" ><img src="'.$_SESSION['config']['businessappurl'].'img/my_contacts_off.gif" alt="'._CONTACT_CARD.'" /></a>';
+					$data[$arr[$i]]['addon'] = '<a href="#" id="contact_card" title="'._CONTACT_CARD.'" onclick="window.open(\''.$_SESSION ['config']['businessappurl'].'index.php?display=true&page=user_info&id='.$line->$arr[$i].'\', \'contact_info\', \'height=450, width=600,scrollbars=yes,resizable=yes\');" ><img src="'.$_SESSION['config']['businessappurl'].'img/my_contacts_off.gif" alt="'._CONTACT_CARD.'" /></a>';
 				}
 				else
 				{
@@ -578,7 +578,7 @@ function get_general_data($coll_id, $res_id, $mode, $params = array())
 							$data[$arr[$i]]['show_value'] .= ' ('.$res->society.')';
 						}
 					}
-					$data[$arr[$i]]['addon'] = '<a href="#" id="contact_card" title="'._CONTACT_CARD.'" onclick="window.open(\''.$_SESSION ['config']['businessappurl'].'contact_info.php?mode=view&id='.$line->$arr[$i].'\', \'contact_info\', \'height=600, width=600,scrollbars=yes,resizable=yes\');" ><img src="'.$_SESSION['config']['businessappurl'].'img/my_contacts_off.gif" alt="'._CONTACT_CARD.'" /></a>';
+					$data[$arr[$i]]['addon'] = '<a href="#" id="contact_card" title="'._CONTACT_CARD.'" onclick="window.open(\''.$_SESSION ['config']['businessappurl'].'index.php?display=true&page=contact_info&mode=view&id='.$line->$arr[$i].'\', \'contact_info\', \'height=600, width=600,scrollbars=yes,resizable=yes\');" ><img src="'.$_SESSION['config']['businessappurl'].'img/my_contacts_off.gif" alt="'._CONTACT_CARD.'" /></a>';
 				}
 				else
 				{

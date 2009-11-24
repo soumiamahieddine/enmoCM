@@ -207,7 +207,7 @@ class indexing_searching_app extends dbquery
 			}
 		}
 
-		require_once('apps'.DIRECTORY_SEPARATOR.$_SESSION['businessapps'][0]['appid'].DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_types.php');
+		require_once('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_types.php');
 		$type = new types();
 		$type->inits_opt_indexes($coll_id, $id_to_update);
 		$type_id =  $post['type_id'];
@@ -341,7 +341,7 @@ class indexing_searching_app extends dbquery
 			}
 			if($box_id != false && preg_match('/^[0-9]+$/', $box_id))
 			{
-				require_once('modules/physical_archive'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php');
+				require_once('modules'.DIRECTORY_SEPARATOR.'physical_archive'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php');
 				$physical_archive = new physical_archive();
 				$pa_return_value = $physical_archive->load_box_db($box_id, $cat_id, $_SESSION['user']['UserId']);
 				if ($pa_return_value == false)

@@ -1,7 +1,7 @@
 <?php
 
-require_once("core/class/class_request.php");
-require_once("apps/".$_SESSION['config']['app_id']."/class".DIRECTORY_SEPARATOR."class_list_show.php");
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
+require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");
 $core_tools = new core_tools();
 $core_tools->load_lang();
 $db = new dbquery();

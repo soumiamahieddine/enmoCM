@@ -1,10 +1,6 @@
 <?php
-include('core/init.php');
 
-require_once("core/class/class_functions.php");
-require_once("core/class/class_db.php");
-require_once("core/class/class_core_tools.php");
-require_once($_SESSION['pathtomodules']."reports".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
+require_once('modules'.DIRECTORY_SEPARATOR."reports".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
 $core_tools = new core_tools();
 $rep = new reports();
 $core_tools->load_lang();
@@ -73,7 +69,7 @@ $content .='<div id="params">';
 	$content .='</form>';
 $content .='</div>';
 $content .='<div id="result_period_report"></div>';
-$js ='valid_report_by_period(\''.$_SESSION['config']['businessappurl'].'reports/get_report_by_period_val.php\');';
+$js ='valid_report_by_period(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=reports&page=get_report_by_period_val\');';
 
 echo "{content : '".addslashes($content)."', exec_js : '".addslashes($js)."'}";
 exit();

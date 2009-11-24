@@ -17,7 +17,7 @@ class chrono
 {
 	function get_chrono_number($res_id, $view)
 	{
-		require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR"class_db.php");
+		require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_db.php");
 		$db = new dbquery();
 		$db->connect();
 
@@ -40,7 +40,7 @@ class chrono
 		$chrono_tab = array();
 
 
-		$chrono_config = simplexml_load_file('apps'.DIRECTORY_SEPARATORDIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."chrono.xml");
+		$chrono_config = simplexml_load_file('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."chrono.xml");
 		if($chrono_config)
 		{
 			foreach($chrono_config ->CHRONO as $CHRONO)

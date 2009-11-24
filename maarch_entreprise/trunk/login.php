@@ -43,7 +43,7 @@ if(!isset($_SESSION['config']['corename']) || empty($_SESSION['config']['corenam
 	{
 		$_SESSION['config']['corename'] = (string) $CONFIG->corename;
 		$_SESSION['config']['corepath'] = (string) $CONFIG->corepath;
-	//	$_SESSION['config']['tmppath'] = (string) $CONFIG->tmppath;
+		$_SESSION['config']['tmppath'] = (string) $CONFIG->tmppath;
 		$_SESSION['config']['unixserver'] = (string) $CONFIG->unixserver;
 		$_SESSION['config']['defaultpage'] = (string) $CONFIG->defaultpage;
 		$_SESSION['config']['defaultlang'] = (string) $CONFIG->defaultlanguage;

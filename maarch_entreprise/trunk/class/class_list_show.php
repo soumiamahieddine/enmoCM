@@ -237,7 +237,7 @@ class list_show extends functions
 
 			if ($template == true)
 			{
-				require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['businessapps'][0]['appid'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR.'class_list_show_with_template.php');
+				require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR.'class_list_show_with_template.php');
 				$template_object = new list_show_with_template();
 				$tdeto = $template_object->display_template_for_user($template_list, $link);
 			}
@@ -377,7 +377,7 @@ class list_show extends functions
 							$str .= ' val_frm[\'action_id\'] = id_action;';
 						$str .= ' }';
 
-						$str .= ' action_send_first_request(\''.$_SESSION['urltocore'].'manage_action.php\', mode,  val_frm[\'action_id\'], val_frm[\'values\'], val_frm[\'table\'], val_frm[\'module\'], val_frm[\'coll_id\']);';
+						$str .= ' action_send_first_request(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&page=manage_action&module=core\', mode,  val_frm[\'action_id\'], val_frm[\'values\'], val_frm[\'table\'], val_frm[\'module\'], val_frm[\'coll_id\']);';
 					$str .= ' }';
 					$str .= ' else';
 					$str .= ' {';

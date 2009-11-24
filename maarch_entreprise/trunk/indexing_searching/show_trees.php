@@ -1,12 +1,8 @@
 <?php
-//include('core/init.php');
 
-//require_once("core/class/class_functions.php");
-//require_once("core/class/class_db.php");
-//require_once("core/class/class_request.php");
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_core_tools.php");
-require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['businessapps'][0]['appid'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR.'class_business_app_tools.php');
+require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR.'class_business_app_tools.php');
 $appTools = new business_app_tools();
 $core_tools = new core_tools();
 $core_tools->load_lang();
@@ -184,7 +180,7 @@ if(isset($_SESSION['chosen_name_folder']) && !empty($_SESSION['chosen_name_folde
 		}
 
 		function myClick(branch) {
-			//window.top.frames['view'].location.href='<?php echo $_SESSION['config']['businessappurl'];?>indexing_searching/little_details_invoices.php?id='+branch.getId();
+		
 			window.top.frames['view'].location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&dir=indexing_searching&page=little_details_invoices&id='+branch.getId();
 		}
 
@@ -205,7 +201,7 @@ if(isset($_SESSION['chosen_name_folder']) && !empty($_SESSION['chosen_name_folde
 				{
 					str_children = str_children + '&children_id[]=' + children[i].getId();
 				}
-				//window.top.frames['show_res_trees'].location.href='<?php  echo $_SESSION['config']['businessappurl']."indexing_searching/";?>show_res_trees.php?script='+branch.struct.script+'&id='+branch.getId()+"&tree_id="+branch.getAncestor().getId()+str+str_children;
+				
 				window.top.frames['show_res_trees'].location.href='<?php  echo $_SESSION['config']['businessappurl']."index.php?display=true&dir=indexing_searching&page=";?>show_res_trees&script='+branch.struct.script+'&id='+branch.getId()+"&tree_id="+branch.getAncestor().getId()+str+str_children;
 			}
 			return true;
@@ -221,13 +217,13 @@ if(isset($_SESSION['chosen_name_folder']) && !empty($_SESSION['chosen_name_folde
 				var branch2 = tree.getBranchById(current_branch_id);
 				if(current_branch_id == branch_id )
 				{
-					//window.top.frames['show_res_trees'].location.href='<?php  echo $_SESSION['config']['businessappurl']."indexing_searching/";?>show_res_trees.php';
+					
 					window.top.frames['show_res_trees'].location.href='<?php  echo $_SESSION['config']['businessappurl']."index.php?display=true&dir=indexing_searching&page=";?>show_res_trees';
 					current_branch_id = branch.getNextOpenedBranch;
 				}
 				else if(branch2 && branch2.isChild(branch_id))
 				{
-					//window.top.frames['show_res_trees'].location.href='<?php  echo $_SESSION['config']['businessappurl']."indexing_searching/";?>show_res_trees.php';
+					
 					window.top.frames['show_res_trees'].location.href='<?php  echo $_SESSION['config']['businessappurl']."index.php?display=true&dir=indexing_searching&page=";?>show_res_trees';
 					current_branch_id = branch.getNextOpenedBranch;
 				}
@@ -407,7 +403,6 @@ if(isset($_SESSION['chosen_name_folder']) && !empty($_SESSION['chosen_name_folde
 	{
 		?>
 		<script language="javascript">
-			//window.top.frames['view'].location.href='<?php echo $_SESSION['config']['businessappurl'];?>indexing_searching/little_details_invoices.php?id=<?php echo $directResId;?>';
 			window.top.frames['view'].location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&dir=indexing_searching&page=little_details_invoices&id=<?php echo $directResId;?>';
 		</script>
 		<?php
@@ -416,7 +411,6 @@ if(isset($_SESSION['chosen_name_folder']) && !empty($_SESSION['chosen_name_folde
 	{
 		?>
 		<script language="javascript">
-			//window.top.frames['view'].location.href='<?php echo $_SESSION['config']['businessappurl'];?>indexing_searching/little_details_invoices.php';
 			window.top.frames['view'].location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&dir=indexing_searching&page=little_details_invoices';
 		</script>
 		<?php

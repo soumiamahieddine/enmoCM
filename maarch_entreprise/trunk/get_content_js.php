@@ -30,9 +30,6 @@
 * @ingroup apps
 */
 
-include('core/init.php');
-
-
 header('content-type: text/javascript');
 
 if(empty($_REQUEST['scripts']))

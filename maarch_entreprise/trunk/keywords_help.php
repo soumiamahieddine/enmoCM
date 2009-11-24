@@ -10,11 +10,6 @@
 * @license GPL
 * @author  Loïc Vinet  <dev@maarch.org>
 */
-include('core/init.php');
-
-require_once("core/class/class_functions.php");
-require_once("core/class/class_core_tools.php");
-
 
 function show_helper()
 {

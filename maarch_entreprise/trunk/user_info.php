@@ -10,11 +10,7 @@
 * @license GPL
 * @author  Claire Figueras <dev@maarch.org>
 */
-include('core/init.php');
 
-require_once("core/class/class_functions.php");
-require_once("core/class/class_db.php");
-require_once("core/class/class_core_tools.php");
 $core_tools = new core_tools();
 $core_tools->load_lang();
 $core_tools->load_html();
@@ -73,7 +69,7 @@ else
 		 <?php
 		if($core_tools->is_module_loaded('entities'))
 		{
-			require_once('modules/entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_entities.php');
+			require_once('modules'.DIRECTORY_SEPARATOR.'entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_entities.php');
 			$ent = new entity();
 			$entities = $ent->get_entities_of_user($_REQUEST['id']);
 			//$db->show_array($entities);

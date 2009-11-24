@@ -28,12 +28,7 @@
 * @ingroup indexing_searching_mlb
 */
 
-include('core/init.php');
-
-require_once("core/class/class_functions.php");
-require_once("core/class/class_db.php");
-require_once("core/class/class_core_tools.php");
-require_once("core/class/class_security.php");
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
 
 $core_tools = new core_tools();
 $core_tools->test_user();
@@ -134,7 +129,7 @@ else
 		}
 		else
 		{
-			require_once('apps/'.$_SESSION['config']['app_id'].'/class'.DIRECTORY_SEPARATOR."class_indexing_searching_app.php");
+			require_once('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR."class_indexing_searching_app.php");
 			$is = new indexing_searching_app();
 			$type_state = $is->is_filetype_allowed($format);
 			//control of the fingerprint of the document
@@ -146,7 +141,7 @@ else
 			{
 				if($_SESSION['history']['resview'] == "true")
 				{
-					require_once("core/class/class_history.php");
+					require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 					$users = new history();
 					$users->add($table, $s_id ,"VIEW", _VIEW_DOC_NUM."".$s_id, $_SESSION['config']['databasetype'],'indexing_searching');
 				}

@@ -11,8 +11,7 @@
 * @author  Claire Figueras  <dev@maarch.org>
 */
 $_SESSION['FOLDER']['SEARCH'] = array();
-require_once("core/class/class_functions.php");
-require_once("core/class/class_core_tools.php");
+
 $core_tools = new core_tools();
 $_SESSION['location_bar']['level2']['path']	= "";
 $_SESSION['location_bar']['level2']['label'] = "";

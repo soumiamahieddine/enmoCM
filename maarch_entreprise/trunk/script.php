@@ -10,12 +10,6 @@
 * @license GPL
 * @author  Laurent Giovannoni
 */
-include('core/init.php'); 
-
-
-require_once("core/class/class_functions.php");
-require_once("core/class/class_db.php");
-require_once("core/class/class_core_tools.php");
 
 $core_tools = new core_tools();
 $core_tools->insert_page();

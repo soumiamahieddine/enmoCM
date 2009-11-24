@@ -54,7 +54,7 @@ if($_SESSION['origin'] == "scan")
 	}
 	else
 	{
-		echo "<br>PROBLEM DURING FILE SEND";
+		echo "<br/>PROBLEM DURING FILE SEND";
 	}
 	exit();
 }

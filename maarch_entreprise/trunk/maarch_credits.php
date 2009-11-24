@@ -12,13 +12,7 @@
 * @author  Loic Vinet <dev@maarch.org>
 */
 
-
-
-include('core/init.php');    
- 
-
-require_once("core/class/class_core_tools.php");
-require_once("core/class/class_security.php");
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
 $core_tools = new core_tools();
 
 /****************Management of the location bar  ************/

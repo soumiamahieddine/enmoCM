@@ -1,14 +1,9 @@
 <?php
-include('core/init.php');
-
-require_once("core/class/class_functions.php");
-require_once("core/class/class_db.php");
-require_once("core/class/class_core_tools.php");
-require_once("core/class/class_request.php");
-require_once("core/class/class_security.php");
-require_once("core/class/class_manage_status.php");
-require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_list_show.php");
-require_once('modules/reports'.DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_graphics.php");
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_manage_status.php");
+require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");
+require_once('modules'.DIRECTORY_SEPARATOR.'reports'.DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_graphics.php");
 $core_tools = new core_tools();
 $core_tools->load_lang();
 $db = new dbquery();
@@ -235,7 +230,7 @@ if($id_report == 'process_delay')
 
 	if($report_type == 'graph')
 	{
-		$src1 = $_SESSION['urltomodules']."reports/graphs.php?type=histo&largeur=1000&hauteur=400&title=".$title."&labelX="._MONTH."&labelY="._N_DAYS;
+		$src1 = $_SESSION['config']['businessappurl']."index.php?display=true&module=reports&page=graphs&type=histo&largeur=1000&hauteur=400&title=".$title."&labelX="._MONTH."&labelY="._N_DAYS;
 		for($i=0;$i<count($_SESSION['labels1']);$i++)
 		{
 			$src1 .= "&labels[]=".$_SESSION['labels1'][$i];
@@ -307,7 +302,7 @@ else if($id_report == 'mail_typology')
 
 	if($report_type == 'graph')
 	{
-		$src1 = $_SESSION['urltomodules']."reports/graphs.php?type=pie&largeur=1000&hauteur=300&title=".$title;
+		$src1 = $_SESSION['config']['businessappurl']."index.php?display=true&module=reports&page=graphs&type=pie&largeur=1000&hauteur=300&title=".$title;
 
 		for($i=0;$i<count($vol_an);$i++)
 		{
@@ -374,7 +369,7 @@ else if($id_report == 'mail_vol_by_cat')
 	}
 	if($report_type == 'graph')
 	{
-		$src1 = $_SESSION['urltomodules']."reports/graphs.php?type=pie&largeur=1000&hauteur=300&title=".$title;
+		$src1 = $_SESSION['config']['businessappurl']."index.php?display=true&module=reports&page=graphs&type=pie&largeur=1000&hauteur=300&title=".$title;
 
 		for($i=0;$i<count($vol_an);$i++)
 		{

@@ -64,7 +64,7 @@ class ReopenMail extends dbquery
 		}
 		else
 		{
-			require_once("core/class/class_security.php");
+			require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
 			$sec = new security();
 			$ind_coll = $sec->get_ind_collection('letterbox_coll');
 			$table = $_SESSION['collections'][$ind_coll]['table'];
@@ -82,7 +82,7 @@ class ReopenMail extends dbquery
 
 			if($_SESSION['history']['resup'] == true )
 			{
-				require_once("core/class/class_history.php");
+				require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 				$hist = new history();
 				$hist->add($table, $_SESSION['m_admin']['reopen_mail']['ID'],"UP",_REOPEN_THIS_MAIL." : ".$_SESSION['m_admin']['reopen_mail']['ID'], $_SESSION['config']['databasetype'], 'apps');
 			}
@@ -109,7 +109,7 @@ class ReopenMail extends dbquery
 		<p ><? echo _MAIL_SENTENCE2._MAIL_SENTENCE3;?> </p>
 		  <br/>
 		  <p ><img src="<? echo $_SESSION['config']['img'];?>/separateur_1.jpg" width="90%" height="1" alt="" /></p>
-		  <form name="form1" method="post" action="<? echo $_SESSION['config']['businessappurl']."admin/reopen_mail/reopen_mail_db.php";?>" >
+		  <form name="form1" method="post" action="<? echo $_SESSION['config']['businessappurl']."index.php?display=true&admin=reopen_mail&page=reopen_mail_db";?>" >
 		  <p>
 			<label for="id"><? echo _ENTER_DOC_ID;?> : </h2>
 				<input type="text" name="id" id="id" value="<?php echo $_SESSION['m_admin']['reopen_mail']['ID'];?>" />

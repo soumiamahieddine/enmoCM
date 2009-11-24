@@ -153,7 +153,7 @@ if(empty($_SESSION['error']) || $_SESSION['indexation'])
 
 }
 ?>
-<div id="details_div" style="display:none;">
+<div id="details_div" style="display:block;">
 <h1 class="titdetail">
 	<img src="<?php  echo $_SESSION['config']['img'];?>/picto_detail_b.gif" alt="" /><?php  echo _DETAILS." : "._DOC.' '.strtolower(_NUM); ?><?php  echo $s_id; ?> <span>(<?php  echo  $security->retrieve_coll_label_from_coll_id($coll_id); ?>)</span>
 </h1>
@@ -990,7 +990,7 @@ else
 						?>
 						<div>
 						<label><?php echo _ATTACHED_DOC;?> : </label>
-						<iframe name="list_attach" id="list_attach" src="<?php echo $_SESSION['config']['businessappurl'];?>index.php?displya=true&module=attachments&page=frame_list_attachments&view_only" frameborder="0" width="100%" height="300px"></iframe>
+						<iframe name="list_attach" id="list_attach" src="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=attachments&page=frame_list_attachments&view_only" frameborder="0" width="100%" height="300px"></iframe>
 						</div>
 						<?php
 					}
@@ -999,7 +999,7 @@ else
 				</dd>
 				<dt><?php echo _DOC_HISTORY;?></dt>
 				<dd>
-					<?php include('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR?"indexing_searching".DIRECTORY_SEPARATOR."hist_doc.php");?>
+					<?php include('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."indexing_searching".DIRECTORY_SEPARATOR."hist_doc.php");?>
 				</dd>
 				<?php
 				if($core_tools->is_module_loaded('notes'))

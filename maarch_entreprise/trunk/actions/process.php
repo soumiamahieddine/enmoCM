@@ -62,7 +62,7 @@ include('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPAR
  **/
 function get_folder_data($coll_id, $res_id)
 {
-	require_once("core".DIRECTORY_SEPARATOR."class"."class_security.php");
+	require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
 	$sec =new security();
 	$view = $sec->retrieve_view_from_coll_id($coll_id);
 	if(empty($view))
@@ -126,9 +126,9 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 	$_SESSION['req'] = "action";
 	$res_id = $values[0];
 	$frm_str = '';
-	require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR"class_security.php");
+	require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
 	require_once("modules".DIRECTORY_SEPARATOR."basket".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
-	require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR"class_request.php");
+	require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
 	require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_types.php");
 	require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_indexing_searching_app.php");
 	require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_chrono.php");
@@ -313,7 +313,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 											$frm_str .= _JOIN_CASE;
 
 
-										$frm_str .= '" onclick="window.open(\''.$_SESSION['urltomodules'].'cases/search_adv_for_cases.php?searched_item=res_id_in_process&searched_value='.$_SESSION['doc_id'].'\',\'\', \'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=1020,height=710\');"/></td>';
+										$frm_str .= '" onclick="window.open(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=cases&page=search_adv_for_cases&searched_item=res_id_in_process&searched_value='.$_SESSION['doc_id'].'\',\'\', \'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=1020,height=710\');"/></td>';
 								}
 							$frm_str .= '</tr>';
 					$frm_str .= '</table>';
@@ -377,7 +377,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 			}
 			if($core_tools->test_service('add_copy_in_process', 'entities', false))
 			{
-				$frm_str .= '<a href="#" onclick="window.open(\''.$_SESSION['urltomodules'].'entities/manage_listinstance.php?origin=process&only_cc\', \'\', \'scrollbars=yes,menubar=no,toolbar=no,status=no,resizable=yes,width=1024,height=650,location=no\');" title="'._ADD_COPIES.'"><img src="'.$_SESSION['config']['businessappurl'].'img/modif_liste.png" alt="'._ADD_COPIES.'" />'._ADD_COPIES.'</a>';
+				$frm_str .= '<a href="#" onclick="window.open(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=manage_listinstance&origin=process&only_cc\', \'\', \'scrollbars=yes,menubar=no,toolbar=no,status=no,resizable=yes,width=1024,height=650,location=no\');" title="'._ADD_COPIES.'"><img src="'.$_SESSION['config']['businessappurl'].'img/modif_liste.png" alt="'._ADD_COPIES.'" />'._ADD_COPIES.'</a>';
 			}
 			$frm_str .= '</div>';
 		 	$frm_str .= '</div>';
@@ -403,7 +403,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 					$frm_str .= '<tr id="market_tr" style="display:'.$display_value.';">';
 						$frm_str .= '<td><label for="market" class="form_title" >'._MARKET.'</label></td>';
 						$frm_str .= '<td>&nbsp;</td>';
-						 $frm_str .='<td><input type="text" name="market" id="market" onblur="fill_project(\''.$_SESSION['urltomodules'].'folder/ajax_get_project.php\');" value="'.$market.'" /><div id="show_market" class="autocomplete"></div>';
+						 $frm_str .='<td><input type="text" name="market" id="market" onblur="fill_project(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=folder&page=ajax_get_project\');" value="'.$market.'" /><div id="show_market" class="autocomplete"></div>';
 					$frm_str .= '</tr>';
 					$frm_str .= '</table>';
 				$frm_str .= '</div>';
@@ -416,7 +416,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 		$frm_str .= '</h2>';
 		$frm_str .= '<div class="desc" id="history_div" style="display:none">';
 			$frm_str .= '<div class="ref-unit">';
-				$frm_str .= '<iframe src="'.$_SESSION['config']['businessappurl'].'indexing_searching/hist_doc.php?id='.$res_id.'" name="hist_doc_process" width="400" height="180" align="left" scrolling="auto" frameborder="0" id="hist_doc_process"></iframe>';
+				$frm_str .= '<iframe src="'.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=hist_doc&id='.$res_id.'" name="hist_doc_process" width="400" height="180" align="left" scrolling="auto" frameborder="0" id="hist_doc_process"></iframe>';
 			$frm_str .= '</div>';
 		$frm_str .= '</div>';
 		if($core_tools->is_module_loaded('notes'))
@@ -437,11 +437,11 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 			$frm_str .= '<div class="ref-unit">';
 			$frm_str .= '<div style="text-align:center;">';
 			$frm_str .= '<img src="'.$_SESSION['urltomodules'].'notes/img/modif_note.png" border="0" alt="" />';
-								$frm_str .= '<a href="javascript://" onclick="ouvreFenetre(\''.$_SESSION['urltomodules'].'notes/note_add.php?identifier='.$_SESSION['doc_id'].'&coll_id='.$_SESSION['collection_id_choice'].'\', 450, 300)" >';
+								$frm_str .= '<a href="javascript://" onclick="ouvreFenetre(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=notes&page=note_add&identifier='.$_SESSION['doc_id'].'&coll_id='.$_SESSION['collection_id_choice'].'\', 450, 300)" >';
 									$frm_str .= _ADD_NOTE;
 								$frm_str .= '</a>';
 				$frm_str .= '</div>';
-			$frm_str .= '<iframe name="list_notes_doc" id="list_notes_doc" src="'.$_SESSION['urltomodules'].'notes/frame_notes_doc.php" frameborder="0" width="430px" height="150px"></iframe>';
+			$frm_str .= '<iframe name="list_notes_doc" id="list_notes_doc" src="'.$_SESSION['config']['businessappurl'].'index.php?display=true&module=notes&page=frame_notes_doc" frameborder="0" width="430px" height="150px"></iframe>';
 	$frm_str .= '</div>';
 	$frm_str .= '</div>';
 		}
@@ -524,7 +524,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 									$frm_str .=' /><br/>';
 									$frm_str .= '</td>';
 									$frm_str .= '<td>&nbsp;</td>';
-									//$frm_str .= '<td><label for="process_notes">'._PROCESS_NOTES.' : </label><br/><textarea name="process_notes" id="process_notes" style="display:block;" rows="8" cols="5">'.$process_data['process_notes'].'</textarea></td>';
+									
 									$frm_str .= '</tr>';
 									$frm_str .= '<tr>';
 									$frm_str .= '<td><label for="process_notes">'._PROCESS_NOTES.' : </label><br/><textarea name="process_notes" id="process_notes" style="display:block;" rows="8" cols="5">'.$process_data['process_notes'].'</textarea></td>';
@@ -542,12 +542,12 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 						$nb_attach = $req->nb_result();
 					}
 					$frm_str .= '<div class="ref-unit">';
-					$frm_str .= '<input type="button" name="attach" id="attach" class="button" value="'._ATTACH.'" onclick="javascript:window.open(\''.$_SESSION['urltomodules'].'attachments/join_file.php\',\'\', \'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=550,height=200\');" /> ';
+					$frm_str .= '<input type="button" name="attach" id="attach" class="button" value="'._ATTACH.'" onclick="javascript:window.open(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=join_file\',\'\', \'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=550,height=200\');" /> ';
 					if($core_tools->is_module_loaded("templates"))
 					{
-						$frm_str .= '<input type="button" name="template" id="template" class="button" value="'._GENERATE.'" onclick="javascript:window.open(\''.$_SESSION['urltomodules'].'templates/choose_template.php?entity='.$data['destination']['value'].'&res_id='.$res_id.'&coll_id='.$coll_id.'\',\'\', \'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=355,height=210\');" />';
+						$frm_str .= '<input type="button" name="template" id="template" class="button" value="'._GENERATE.'" onclick="javascript:window.open(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=templates&page=choose_template&entity='.$data['destination']['value'].'&res_id='.$res_id.'&coll_id='.$coll_id.'\',\'\', \'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=355,height=210\');" />';
 					}
-					$frm_str .= '<iframe name="list_attach" align="left" id="list_attach" src="'.$_SESSION['urltomodules'].'attachments/frame_list_attachments.php" frameborder="0" width="430px" height="300px"></iframe>';
+					$frm_str .= '<iframe name="list_attach" align="left" id="list_attach" src="'.$_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=frame_list_attachments" frameborder="0" width="430px" height="300px"></iframe>';
 					$frm_str .= '</div>';
 				}
 			$frm_str .= '</div>';
@@ -581,12 +581,12 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 		$frm_str .= '</div>';
 
 		$frm_str .= '<div id="validright">';
-		$frm_str .= '<iframe src="'.$_SESSION['config']['businesappurl'].'indexing_searching/view.php?id='.$res_id.'" name="viewframe" id="viewframe"  scrolling="auto" frameborder="0" ></iframe>';
+		$frm_str .= '<iframe src="'.$_SESSION['config']['businesappurl'].'index.php?display=true&dir=indexing_searching&page=view&id='.$res_id.'" name="viewframe" id="viewframe"  scrolling="auto" frameborder="0" ></iframe>';
 		$frm_str .= '</div>';
 		$frm_str .= '<script type="text/javascript">resize_frame_process("modal_'.$id_action.'", "viewframe", true, true);resize_frame_process("modal_'.$id_action.'", "hist_doc", true, false);window.scrollTo(0,0);';
 		if($core_tools->is_module_loaded('folder'))
 		{
-		  $frm_str .= 'launch_autocompleter_folders(\''.$_SESSION['urltomodules'].'folder/autocomplete_folders.php?mode=project\', \'project\');launch_autocompleter_folders(\''.$_SESSION['urltomodules'].'folder/autocomplete_folders.php?mode=market\', \'market\');';
+		  $frm_str .= 'launch_autocompleter_folders(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=folder&page=autocomplete_folders&mode=project\', \'project\');launch_autocompleter_folders(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=folder&page=autocomplete_folders&mode=market\', \'market\');';
 	 	 }
 		$frm_str .='$(\'entity\').style.visibility=\'hidden\';';
 		$frm_str .='$(\'category\').style.visibility=\'hidden\';';

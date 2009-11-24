@@ -27,16 +27,11 @@
 * @version $Revision$
 * @ingroup indexing_searching_mlb
 */
-include('core/init.php');
 
-require_once("core/class/class_functions.php");
-require_once("core/class/class_db.php");
-require_once("core/class/class_request.php");
-require_once("core/class/class_core_tools.php");
-require_once("core/class/class_security.php");
-require_once("core/class/class_request.php");
-require_once('apps/'.$_SESSION['config']['app_id'].'/class'.DIRECTORY_SEPARATOR."class_indexing_searching_app.php");
-require_once('apps/'.$_SESSION['config']['app_id'].'/class'.DIRECTORY_SEPARATOR."class_types.php");
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
+require_once('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR."class_indexing_searching_app.php");
+require_once('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR."class_types.php");
 $core_tools = new core_tools();
 $core_tools->test_user();
 $core_tools->load_lang();
@@ -322,8 +317,8 @@ if(count($_REQUEST['meta']) > 0)
 			else if($tab_id_fields[$j] == 'fulltext' && !empty($_REQUEST['fulltext']))
 			{
 				$json_txt .= " 'fulltext' : ['".addslashes(trim($_REQUEST['fulltext']))."'],";
-				set_include_path("apps/".$_SESSION['businessapps'][0]['appid']."/tools".DIRECTORY_SEPARATOR.PATH_SEPARATOR.get_include_path());
-				require_once('Zend/Search/Lucene.php');
+				set_include_path("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."tools".DIRECTORY_SEPARATOR.PATH_SEPARATOR.get_include_path());
+				require_once('Zend'.DIRECTORY_SEPARATOR.'Search'.DIRECTORY_SEPARATOR.'Lucene.php');
 				$_SESSION['search']['plain_text'] = $_REQUEST['fulltext'];
 				$path_to_lucene_index = $_SESSION['collections'][0]['path_to_lucene_index'];
 				if(is_dir($path_to_lucene_index))
@@ -731,9 +726,9 @@ if(!empty($_SESSION['error']))
 	}
 	else
 	{
-		$_SESSION['error_search'] = '<br /><div class="error">'._MUST_CORRECT_ERRORS.' : <br /><br /><strong>'.$_SESSION['error_search'].'<br /><a href="'.$_SESSION['config']['businessappurl'].'indexing_searching/search_adv.php?mode='.$mode.'">'._CLICK_HERE_TO_CORRECT.'</a></strong></div>';
+		$_SESSION['error_search'] = '<br /><div class="error">'._MUST_CORRECT_ERRORS.' : <br /><br /><strong>'.$_SESSION['error_search'].'<br /><a href="'.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=search_adv&mode='.$mode.'">'._CLICK_HERE_TO_CORRECT.'</a></strong></div>';
 		?>
-		<script language="javascript" type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'].'indexing_searching/search_adv_error.php?mode='.$mode;?>';</script>
+		<script language="javascript" type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=search_adv_error&mode='.$mode;?>';</script>
 		<?php
 	}
 	exit();
@@ -747,8 +742,7 @@ if($_REQUEST['specific_case'] == "attach_to_case")
 {
 	$page = 'list_results_mlb_frame';
 	?>
-	<!--<script language="javascript" type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'].'indexing_searching/'.$page.'.php?searched_item='.$_REQUEST['searched_item'].'&searched_value='.$_REQUEST['searched_value'];?>';</script>-->
-	<script language="javascript" type="text/javascript">window.top.location.href='<?php  echo $_SESSION['urltomodules'].'cases/'.$page.'.php?searched_item='.$_REQUEST['searched_item'].'&searched_value='.$_REQUEST['searched_value'].'&template='.$_REQUEST['template'];?>';</script>
+	<script language="javascript" type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=cases&page='.$page.'&searched_item='.$_REQUEST['searched_item'].'&searched_value='.$_REQUEST['searched_value'].'&template='.$_REQUEST['template'];?>';</script>
 	<?php
 	exit();
 }
@@ -765,7 +759,7 @@ if(empty($_SESSION['error_search']))
 	//##################
 	$page = 'list_results_mlb';
 	?>
-	<script language="javascript" type="text/javascript">window.top.location.href='<?php if($mode == 'normal'){ echo $_SESSION['config']['businessappurl'].'index.php?page='.$page.'&dir=indexing_searching'.$extend_link_case;} elseif($mode=='frame' || $mode == 'popup'){echo $_SESSION['config']['businessappurl'].'indexing_searching/'.$page.'?mode='.$mode.'&action_form='.$_REQUEST['action_form'].'&module='.$_REQUEST['module'];} if(isset($_REQUEST['nodetails'])){echo '&nodetails';}?>';</script>
+	<script language="javascript" type="text/javascript">window.top.location.href='<?php if($mode == 'normal'){ echo $_SESSION['config']['businessappurl'].'index.php?page='.$page.'&dir=indexing_searching'.$extend_link_case;} elseif($mode=='frame' || $mode == 'popup'){echo $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page='.$page.'&mode='.$mode.'&action_form='.$_REQUEST['action_form'].'&module='.$_REQUEST['module'];} if(isset($_REQUEST['nodetails'])){echo '&nodetails';}?>';</script>
 	<?php
 	exit();
 }

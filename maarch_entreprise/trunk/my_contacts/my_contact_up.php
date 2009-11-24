@@ -10,18 +10,11 @@
 * @license GPL
 * @author  Claire Figueras  <dev@maarch.org>
 */
-include('core/init.php');
-
-require_once("core/class/class_functions.php");
-require_once("core/class/class_core_tools.php");
-
 $core_tools = new core_tools();
-//here we loading the lang vars
 $core_tools->load_lang();
 $core_tools->test_service('my_contacts', 'apps');
 
-require_once("core/class/class_db.php");
-require("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_contacts.php");
+require("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_contacts.php");
 
 $func = new functions();
 
@@ -49,7 +42,6 @@ $page_label = _MODIFICATION;
 $page_id = "my_contact_up";
 $core_tools->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
-
 
 $contact = new contacts();
 $contact->formcontact("up",$id, false);

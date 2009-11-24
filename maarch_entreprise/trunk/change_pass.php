@@ -11,13 +11,6 @@
 * @author  Claire Figueras  <dev@maarch.org>
 */
 
-include('core/init.php');
-
-
-require_once("core/class/class_functions.php");
-require_once("core/class/class_db.php");
-require("core/class/class_core_tools.php");
-
 $core_tools = new core_tools();
 $core_tools->load_lang();
 $core_tools->load_html();
@@ -38,7 +31,9 @@ $time = $core_tools->get_session_time_expire();
 
 <h3> <?php  echo _YOUR_FIRST_CONNEXION.", "._PLEASE_CHANGE_PSW.".<br/>"._ASKED_ONLY_ONCE.".";?>  </h3>
 <div class="blank_space">&nbsp;</div>
-<form name="frmuser" method="post"  action="<?php echo $_SESSION['config']['businessappurl'];?>verif_pass.php" class="forms" >
+<form name="frmuser" method="post"  action="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=verif_pass" class="forms" >
+	<input type="hidden" name="display" value="true" />	
+	<input type="hidden" name="page" value="verif_pass" />
 	<p>
 		<label><?php  echo _ID; ?> : </label>
 		<input type="text" readonly="readonly" class="readonly" value="<?php  echo $_SESSION['user']['UserId']; ?>"/>
@@ -76,7 +71,7 @@ $time = $core_tools->get_session_time_expire();
 	</p>
 	<p class="buttons">
 		<input type="submit" name="Submit" value="<?php  echo _VALIDATE;?>" class="button" />
-        <input type="button" name="cancel" value="<?php  echo _CANCEL;?>" class="button" onclick="window.location.href='login.php?coreurl=<?php  echo $_SESSION['config']['coreurl'];?>';" />
+        <input type="button" name="cancel" value="<?php  echo _CANCEL;?>" class="button" onclick="window.location.href='<?php echo $_SESSION['config']['businessappurl'];?>login.php?coreurl=<?php  echo $_SESSION['config']['coreurl'];?>';" />
 	</p>
 
 </form>

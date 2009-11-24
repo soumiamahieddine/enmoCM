@@ -1,16 +1,12 @@
 <?php
-include('core/init.php');
 
-require_once("core/class/class_functions.php");
-require_once("core/class/class_db.php");
-require_once("core/class/class_core_tools.php");
-require_once("core/class/class_security.php");
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
 $security = new security();
 $core_tools = new core_tools();
 $core_tools->load_lang();
 $core_tools->load_html();
 $core_tools->load_header();
-require_once("modules/basket".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
+require_once("modules".DIRECTORY_SEPARATOR."basket".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
 
 $bask = new basket();
 if(!empty($_REQUEST['id']))
@@ -39,7 +35,7 @@ $actions_json = $bask->translates_actions_to_json($_SESSION['current_basket']['a
 	var mode = 'page';
 	var val_frm = {'values' : val,  'action_id' : action_id, 'table' : table, 'coll_id' : coll_id, 'module' : module}
 	//alert(val_frm);
-	action_send_first_request('<?php  echo $_SESSION['urltocore'];?>manage_action.php', mode,  val_frm['action_id'], val_frm['values'], val_frm['table'], val_frm['module'], val_frm['coll_id']);
+	action_send_first_request('<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=manage_action&module=core', mode,  val_frm['action_id'], val_frm['values'], val_frm['table'], val_frm['module'], val_frm['coll_id']);
 //	alert('apres_action_send');
 
 </script>

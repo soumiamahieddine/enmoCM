@@ -40,7 +40,6 @@ class usergroups extends dbquery
 	public function formgroups($mode,$id = "")
 	{
 		require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
-		//require_once("core/class/class_core_tools.php");
 		$sec = new security();
 		$func = new functions();
 		$core_tools = new core_tools();
@@ -459,15 +458,6 @@ class usergroups extends dbquery
 	private function cleargroupinfos()
 		{
 			// clear the users add or modification vars
-			/*$_SESSION['m_admin']['groups'] = array();
-			$_SESSION['m_admin']['groups']['GroupId'] = "";
-			$_SESSION['m_admin']['groups']['desc'] = "";
-			$_SESSION['m_admin']['groups']['admin'] = "";
-			$_SESSION['m_admin']['groups']['stagiaire'] = "";
-			$_SESSION['m_admin']['groups']['view'] = "";
-			$_SESSION['m_admin']['groups']['stats'] = "";
-			$_SESSION['m_admin']['groups']['del'] = "";
-			$_SESSION['m_admin']['groups']['security'] = array();*/
 			unset($_SESSION['m_admin']);
 
 		}

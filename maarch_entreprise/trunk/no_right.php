@@ -10,8 +10,7 @@
 * @license GPL
 * @author  Claire Figueras  <dev@maarch.org>
 */;
-require_once("core/class/class_functions.php");
-require_once("core/class/class_core_tools.php");
+
 $core_tools = new core_tools();
 
 unset($_SESSION['location_bar']['level2']);

@@ -17,15 +17,15 @@ $_SESSION['slash_env'] = DIRECTORY_SEPARATOR;
 $path_tmp = explode('/',$_SERVER['SCRIPT_FILENAME']);
 $path_server = implode('/',array_slice($path_tmp,0,array_search('apps',$path_tmp))).'/';
 
-$_SESSION['pathtocore'] = $path_server."core".DIRECTORY_SEPARATOR;
-$_SESSION['pathtocoreclass'] = $path_server."core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR;
-$_SESSION['pathtomodules'] = $path_server."modules".DIRECTORY_SEPARATOR;
+//$_SESSION['pathtocore'] = $path_server."core".DIRECTORY_SEPARATOR;
+//$_SESSION['pathtocoreclass'] = $path_server."core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR;
+//$_SESSION['pathtomodules'] = $path_server."modules".DIRECTORY_SEPARATOR;
 
 $_SESSION['urltomodules'] = $_SESSION['config']['coreurl']."/modules/";
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_functions.php");
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_db.php");
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_core_tools.php");
-require_once("class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
+require_once('apps'.DIRECTORY_SEPARATOR.$-SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
 $core_tools = new core_tools();
 $business_app_tools = new business_app_tools();
 $func = new functions();

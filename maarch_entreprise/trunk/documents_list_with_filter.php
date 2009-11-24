@@ -28,16 +28,13 @@
 * @version $Revision$
 * @ingroup basket
 */
-include('core/init.php');
 
-require_once("core/class/class_functions.php");
-require_once("core/class/class_db.php");
-require_once("core/class/class_request.php");
-require_once("core/class/class_core_tools.php");
-require_once("modules/basket".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
-require_once("modules/entities".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_manage_entities.php");
-require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_list_show.php");
-require_once("core/class/class_security.php");
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
+
+require_once("modules".DIRECTORY_SEPARATOR."basket".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
+require_once("modules".DIRECTORY_SEPARATOR."entities".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_manage_entities.php");
+require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
 $security = new security();
 $core_tools = new core_tools();
 $request = new request();
@@ -290,7 +287,7 @@ while($res = $db->fetch_object())
 				var startVal = '<?php echo $_REQUEST['start'];?>';
 				var orderVal = '<?php echo $_REQUEST['order'];?>';
 				var order_fieldVal = '<?php echo $_REQUEST['order_field'];?>';
-				new Ajax.Request('<?php echo $_SESSION['config']['businessappurl'];?>manage_filter.php',
+				new Ajax.Request('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=manage_filter',
 				{
 					method:'post',
 					parameters: {start : startVal, order : orderVal, order_field : order_fieldVal, template : templateVal},
@@ -310,7 +307,7 @@ while($res = $db->fetch_object())
 	?>
 	<form name="filter_by_entity" action="#" method="post">
 		<?php echo _FILTER_BY;?> :
-		<select name="entity" id="entity" onchange="change_list_entity(this.options[this.selectedIndex].value, '<?php echo $_SESSION['config']['businessappurl'];?>manage_filter.php');">
+		<select name="entity" id="entity" onchange="change_list_entity(this.options[this.selectedIndex].value, '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=manage_filter');">
 			<option value="none"><?php echo _CHOOSE_ENTITY;?></option>
 			<?php
 			for($i=0;$i<count($entities);$i++)
@@ -321,7 +318,7 @@ while($res = $db->fetch_object())
 			}
 			?>
 		</select>
-		<select name="category" id="category" onchange="change_list_category(this.options[this.selectedIndex].value, '<?php echo $_SESSION['config']['businessappurl'];?>manage_filter.php');">
+		<select name="category" id="category" onchange="change_list_category(this.options[this.selectedIndex].value, '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=manage_filter');">
 			<option value="none"><?php echo _CHOOSE_CATEGORY;?></option>
 			<?php
 			foreach(array_keys($_SESSION['mail_categories']) as $value)
@@ -336,7 +333,7 @@ while($res = $db->fetch_object())
 		if($_SESSION['current_basket']['id'] == "DepartmentBasket")
 		{
 			?>
-			<select name="status" id="status" onchange="change_list_status(this.options[this.selectedIndex].value, '<?php echo $_SESSION['config']['businessappurl'];?>manage_filter.php');">
+			<select name="status" id="status" onchange="change_list_status(this.options[this.selectedIndex].value, '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=manage_filter');">
 				<option value="none"><?php echo _CHOOSE_STATUS;?></option>
 				<?php
 				for($cptStatus=0;$cptStatus<count($arr_status);$cptStatus++)
@@ -368,11 +365,10 @@ while($res = $db->fetch_object())
 						onfocus="if(this.value=='[<?php echo _CONTACT;?>]'){this.value='';}"
 						<?php
 					}
-					?>
-					 size="40" onKeyPress="if(event.keyCode == 9)change_contact(this.value, '<?php echo $_SESSION['config']['businessappurl'];?>manage_filter.php');" onBlur="change_contact(this.value, '<?php echo $_SESSION['config']['businessappurl'];?>manage_filter.php');"  />
+					?> size="40" onKeyPress="if(event.keyCode == 9)change_contact(this.value, '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&amp;page=manage_filter');" onBlur="change_contact(this.value, '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&amp;page=manage_filter');"  />
 		<div id="contactListByName" class="autocomplete"></div>
 		<script type="text/javascript">
-			initList('contact_id', 'contactListByName', '<?php echo $_SESSION['config']['businessappurl'];?>contact_list_by_name.php', 'what', '2');
+			initList('contact_id', 'contactListByName', '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=contact_list_by_name', 'what', '2');
 		</script>
 		<input type="button" class="button" value="<?php echo _CLEAR_SEARCH;?>" onclick="javascript:window.location.href='<?php echo $_SESSION['config']['businessappurl']."index.php?page=view_baskets&module=basket&baskets=".$_SESSION['current_basket']['id']."&clear=ok";?>';">
 	</form>
@@ -381,7 +377,7 @@ while($res = $db->fetch_object())
 	{
 		?>
 		<script>
-			change_list_entity('<?php echo $_SESSION['auth_dep']['bask_chosen_entity'];?>', '<?php echo $_SESSION['config']['businessappurl'];?>manage_filter.php');
+			change_list_entity('<?php echo $_SESSION['auth_dep']['bask_chosen_entity'];?>', '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&amp;page=manage_filter');
 		</script>
 		<?php
 	}
@@ -389,7 +385,7 @@ while($res = $db->fetch_object())
 	{
 		?>
 		<script>
-			change_list_category('<?php echo $_SESSION['auth_dep']['bask_chosen_category'];?>', '<?php echo $_SESSION['config']['businessappurl'];?>manage_filter.php');
+			change_list_category('<?php echo $_SESSION['auth_dep']['bask_chosen_category'];?>', '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&amp;page=manage_filter');
 		</script>
 		<?php
 	}
@@ -397,7 +393,7 @@ while($res = $db->fetch_object())
 	{
 		?>
 		<script>
-			change_list_status('<?php echo $_SESSION['auth_dep']['bask_chosen_status'];?>', '<?php echo $_SESSION['config']['businessappurl'];?>manage_filter.php');
+			change_list_status('<?php echo $_SESSION['auth_dep']['bask_chosen_status'];?>', '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&amp;page=manage_filter');
 		</script>
 		<?php
 	}
@@ -405,7 +401,7 @@ while($res = $db->fetch_object())
 	{
 		?>
 		<script>
-			change_contact('<?php echo $_SESSION['auth_dep']['bask_chosen_contact'];?>', '<?php echo $_SESSION['config']['businessappurl'];?>manage_filter.php');
+			change_contact('<?php echo $_SESSION['auth_dep']['bask_chosen_contact'];?>', '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&amp;page=manage_filter');
 		</script>
 		<?php
 	}

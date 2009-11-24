@@ -10,11 +10,6 @@
 * @license GPL
 * @author  Claire Figueras  <dev@maarch.org>
 */
-include('core/init.php');
-
-require_once("core/class/class_functions.php");
-//require_once("core/class/class_db.php");
-require("core/class/class_core_tools.php");
 
 $core_tools = new core_tools();
 $core_tools->load_lang();
@@ -54,12 +49,11 @@ $core_tools->load_lang();
 	}
 	if(!empty($_SESSION['error']))
 	{
-		header("location: ".$_SESSION['config']['businessappurl']."change_pass.php");
+		header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&page=change_pass");
 		exit();
 	}
 	else
 	{
-		require_once("core/class/class_db.php");
 		$db = new dbquery();
 		$db->connect();
 
