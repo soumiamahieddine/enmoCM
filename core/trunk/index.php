@@ -12,15 +12,16 @@
 */
 
 include_once('core/init.php');
-require_once("core/class/class_functions.php");
-require_once("core/class/class_portal.php");
-require_once("core/class/class_core_tools.php");
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_functions.php");
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_portal.php");
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_core_tools.php");
 $portal = new portal();
 $portal->unset_session();
 $portal->build_config();
 $func = new functions();
 $core = new core_tools();
 $_SESSION['custom_override_id'] = $core->get_custom_id();
+
 //$func->show_array($_SESSION['config']);
 //$func->show_array($_SESSION['businessapps']);
 //$func->show_array($_SESSION['tablename']);
