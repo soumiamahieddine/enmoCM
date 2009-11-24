@@ -24,7 +24,7 @@ class templates extends dbquery
 	*/
 	public function build_modules_tables()
 	{
-		$xmlconfig = simplexml_load_file("modules/templates/xml/config.xml");
+		$xmlconfig = simplexml_load_file("modules".DIRECTORY_SEPARATOR."templates".DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."config.xml");
 		foreach($xmlconfig->TABLENAME as $TABLENAME)
 		{
 			$_SESSION['tablename']['temp_templates'] = (string) $TABLENAME->temp_templates;
@@ -87,7 +87,7 @@ class templates extends dbquery
 		{
 			return $templates;
 		}
-		require_once("core/class/class_security.php");
+		require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
 		$sec = new security();
 		$table = $sec->retrieve_table_from_coll($coll_id);
 		if(empty($table))
@@ -146,7 +146,7 @@ class templates extends dbquery
 		if(!empty($res_id) && !empty($coll_id))
 		{
 			require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_security.php');
-			require_once('apps'.DIRECTORY_SEPARATOR.$_SESSION['businessapps'][0]['appid'].DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_business_app_tools.php');
+			require_once('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_business_app_tools.php');
 			$sec = new security();
 			$business = new business_app_tools();
 			$this->connect();
@@ -193,7 +193,7 @@ class templates extends dbquery
 
 			if($table <> '')
 			{
-				$xml = simplexml_load_file("modules/templates/xml/mapping_file.xml");
+				$xml = simplexml_load_file("modules".DIRECTORY_SEPARATOR."templates".DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."mapping_file.xml");
 
 				$items = array();
 				foreach($xml->item as $item)

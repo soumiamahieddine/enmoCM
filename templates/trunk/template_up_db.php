@@ -10,13 +10,7 @@
 * @license GPL
 * @author  Claire Figueras  <dev@maarch.org>
 */
-include('core/init.php');
-
-
-require_once("core/class/class_functions.php");
-require_once("core/class/class_db.php");
-require_once("modules/templates".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_admin_templates.php");
-require_once("core/class/class_core_tools.php");
+require_once("modules".DIRECTORY_SEPARATOR."templates".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_admin_templates.php");
 
 $admin = new core_tools();
 $admin->load_lang();

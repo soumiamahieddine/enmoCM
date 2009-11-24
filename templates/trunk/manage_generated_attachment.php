@@ -10,13 +10,9 @@
 * @license GPL
 * @author  Claire Figueras  <dev@maarch.org>
 */
-include('core/init.php');
 
-require_once("core/class/class_functions.php");
-require_once("core/class/class_db.php");
-require_once("core/class/class_core_tools.php");
-require_once("core/class/class_request.php");
-require_once("core/class/class_resource.php");
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_resource.php");
 
 $core_tools = new core_tools();
 $core_tools->test_user();
@@ -25,7 +21,7 @@ $func = new functions();
 if(empty($_REQUEST['mode']) || !isset($_REQUEST['mode']))
 {
 	$_SESSION['error'] .= _NO_MODE_DEFINED.'.<br/>';
-	header("location: ".$_SESSION['urltomodules']."templates/generate_attachment.php?template=".$_REQUEST['template_id']);
+	header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&module=templates&page=generate_attachment&template=".$_REQUEST['template_id']);
 	exit;
 }
 else
@@ -38,11 +34,11 @@ else
 		$_SESSION['error'] .= _NO_CONTENT.'.<br/>';
 		if($_REQUEST['mode'] == 'add')
 		{
-			header("location: ".$_SESSION['urltomodules']."templates/generate_attachment.php?template=".$_REQUEST['template_id']."&mode=".$_REQUEST['mode']);
+			header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&module=templates&page=generate_attachment&template=".$_REQUEST['template_id']."&mode=".$_REQUEST['mode']);
 		}
 		else
 		{
-			header("location: ".$_SESSION['urltomodules']."templates/generate_attachment.php?id=".$_REQUEST['id']."&mode=".$_REQUEST['mode']);
+			header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&module=templates&page=generate_attachment&id=".$_REQUEST['id']."&mode=".$_REQUEST['mode']);
 		}
 		exit;
 
@@ -65,14 +61,14 @@ else
 			if(!$myfile)
 			{
 				$_SESSION['error'] .= _FILE_OPEN_ERROR.'.<br/>';
-				header("location: ".$_SESSION['urltomodules']."templates/generate_attachment.php?template=".$_REQUEST['template_id']);
+				header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&module=templates&page=generate_attachment&template=".$_REQUEST['template_id']);
 				exit;
 			}
 
 			fwrite($myfile, $_REQUEST['template_content']);
 			fclose($myfile);
 
-			require_once("core/class/class_docserver.php");
+			require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_docserver.php");
 			if(!isset($_SESSION['collection_id_choice']) || empty($_SESSION['collection_id_choice']))
 			{
 				$_SESSION['collection_id_choice'] = $_SESSION['user']['collections'][0];
@@ -91,7 +87,7 @@ else
 				if($new_size == 0)
 				{
 					$_SESSION['error'] = $docserver->get_error();
-					header("location: ".$_SESSION['urltomodules']."templates/generate_attachment.php?template=".$_REQUEST['template_id']."&mode=".$_REQUEST['mode']);
+					header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&module=templates&page=generate_attachment&template=".$_REQUEST['template_id']."&mode=".$_REQUEST['mode']);
 					exit();
 				}
 				else
@@ -100,7 +96,7 @@ else
 					if($docserver->get_error() == "txt_error_when_sending_file")
 					{
 						$_SESSION['error'] = _FILE_SEND_ERROR;
-						header("location: ".$_SESSION['urltomodules']."templates/generate_attachment.php?template=".$_REQUEST['template_id']."&mode=".$_REQUEST['mode']);
+						header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&module=templates&page=generate_attachment&template=".$_REQUEST['template_id']."&mode=".$_REQUEST['mode']);
 					exit();
 					}
 					else
@@ -114,7 +110,7 @@ else
 						if(file_exists( $destination_rept.$file_destination_name.".maarch"))
 						{
 							 $_SESSION['error'] .= _FILE_ALREADY_EXISTS.". "._MORE_INFOS." : <a href=\"mailto:".$_SESSION['config']['adminmail']."\">".$_SESSION['config']['adminname']."</a>.";
-							 header("location: ".$_SESSION['urltomodules']."templates/generate_attachment.php?template=".$_REQUEST['template_id']."&mode=".$_REQUEST['mode']);
+							 header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&module=templates&page=generate_attachment&template=".$_REQUEST['template_id']."&mode=".$_REQUEST['mode']);
 							exit();
 						}
 						else
@@ -123,7 +119,7 @@ else
 							{
 
 								$_SESSION['error'] = _FILE_SEND_ERROR.". "._TRY_AGAIN.". "._MORE_INFOS." : <a href=\"mailto:".$_SESSION['config']['adminmail']."\">".$_SESSION['config']['adminname']."</a>.<br/>";
-								header("location: ".$_SESSION['urltomodules']."templates/generate_attachment.php?template=".$_REQUEST['template_id']."&mode=".$_REQUEST['mode']);
+								header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&module=templates&page=generate_attachment&template=".$_REQUEST['template_id']."&mode=".$_REQUEST['mode']);
 								exit();
 							}
 							else
@@ -154,7 +150,7 @@ else
 								if($id == false)
 								{
 									$_SESSION['error'] = $res_attach->get_error();
-									header("location: ".$_SESSION['urltomodules']."templates/generate_attachment.php?template=".$_REQUEST['template_id']."&mode=".$_REQUEST['mode']);
+									header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&module=templates&page=generate_attachment&template=".$_REQUEST['template_id']."&mode=".$_REQUEST['mode']);
 									exit();
 								}
 								else
@@ -162,7 +158,7 @@ else
 
 									if($_SESSION['history']['attachadd'] == "true")
 									{
-										require_once("core/class/class_history.php");
+										require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 										$users = new history();
 										//$_SESSION['error'] = _NEW_ATTACH_ADDED;
 										$users->add($_SESSION['tablename']['attach_res_attachments'], $id, "ADD", _NEW_ATTACH_ADDED." (".$title.") ", $_SESSION['config']['databasetype'],'attachments');
@@ -180,9 +176,8 @@ else
 			{
 				?>
 				<script language="javascript" type="text/javascript">
-					//var eleframe1 =  window.opener.top.frames['process_frame'].document.getElementById('list_attach');
 					var eleframe1 =  window.opener.top.document.getElementById('list_attach');
-					eleframe1.src = '<?php  echo $_SESSION['urltomodules']."attachments/";?>frame_list_attachments.php';
+					eleframe1.src = '<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=attachments&page=frame_list_attachments';
 					window.top.close();
 						</script>
 					<?php
@@ -195,7 +190,7 @@ else
 		if(empty($_REQUEST['id']) || !isset($_REQUEST['id']))
 		{
 			$_SESSION['error'] .= _ANSWER_OPEN_ERROR.'.<br/>';
-			header("location: ".$_SESSION['urltomodules']."templates/generate_attachment.php?template=".$_REQUEST['template_id']);
+			header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&module=templates&page=generate_attachment&template=".$_REQUEST['template_id']);
 			exit;
 		}
 		else
@@ -209,7 +204,7 @@ else
 				?>
 				<script language="javascript" type="text/javascript">
 					var eleframe1 =  window.opener.top.frames['process_frame'].document.getElementById('list_attach');
-					eleframe1.src = '<?php  echo $_SESSION['urltomodules']."attachments/";?>frame_list_attachments.php';
+					eleframe1.src = '<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=attachments&page=frame_list_attachments';
 					window.top.close();
 						</script>
 					<?php
@@ -237,7 +232,7 @@ else
 				if(!$myfile)
 				{
 					$_SESSION['error'] .= _FILE_OPEN_ERROR.'.<br/>';
-					header("location: ".$_SESSION['urltomodules']."templates/generate_attachment.php?id=".$_REQUEST['id']);
+					header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&module=templates&page=generate_attachment&id=".$_REQUEST['id']);
 					exit;
 				}
 
@@ -248,16 +243,15 @@ else
 
 				if($_SESSION['history']['attachup'] == "true")
 				{
-					require_once("core/class/class_history.php");
+					require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR"class_history.php");
 					$hist = new history();
 					$hist->add($_SESSION['tablename']['attach_res_attachments'], $_SESSION['courrier']['res_id'],"UP", _ANSWER_UPDATED."  (".$_SESSION['courrier']['res_id'].")", $_SESSION['config']['databasetype'],'attachments');
 
 				}
 				?>
 				<script language="javascript" type="text/javascript">
-					//var eleframe1 =  window.opener.top.frames['process_frame'].document.getElementById('list_attach');
 					var eleframe1 =  window.opener.top.document.getElementById('list_attach');
-					eleframe1.src = '<?php  echo $_SESSION['urltomodules']."attachments/";?>frame_list_attachments.php';
+					eleframe1.src = '<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=attachments&page=frame_list_attachments';
 					window.top.close();
 						</script>
 					<?php

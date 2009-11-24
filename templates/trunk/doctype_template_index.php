@@ -11,18 +11,9 @@
 * @author  Claire Figueras  <dev@maarch.org>
 *
 */
-
-include('core/init.php');
-
-
-require_once("core/class/class_functions.php");
-require("core/class/class_core_tools.php");
-
 $core_tools = new core_tools();
-//here we loading the lang vars
 $core_tools->load_lang();
-require_once("core/class/class_db.php");
-require_once("core/class/class_security.php");
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
 
 $func = new functions();
 $db = new dbquery();
@@ -71,7 +62,10 @@ while($res = $db->fetch_object())
 ?>
 
 <body>
-<form name="e_type" action="<?php  echo $_SESSION['urltomodules']."templates/";?>doctype_template_index.php" method="post">
+<form name="e_type" action="<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=templates&page=doctype_template_index" method="post">
+	<input type="hidden" name="display"  value="true" />
+	<input type="hidden" name="module"  value="templates" />
+	<input type="hidden" name="page"  value="doctype_template_index" />
   <p>
     <label>
       <input type="radio"  class="check" onClick="javascript:this.form.submit();" name="e_file" value="N"  <?php  if ($_SESSION['temp_admin']['GENERATE'] == 'N') { echo 'checked="checked"';} ?>/>

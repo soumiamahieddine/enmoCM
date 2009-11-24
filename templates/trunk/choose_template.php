@@ -10,28 +10,14 @@
 * @license GPL
 * @author  Claire Figueras  <dev@maarch.org>
 */
- include('core/init.php');
-
-require_once("core/class/class_functions.php");
-require_once("core/class/class_db.php");
-require_once("core/class/class_core_tools.php");
-
 $core_tools = new core_tools();
 $core_tools->test_user();
 $core_tools->load_lang();
 
 if(isset($_REQUEST['template']) && !empty($_REQUEST['template']))
 {
-	/*?>
-    <!--	<script type="text/javascript" language="javascript">
-		function replace() {
-			window.moveTo(0,0)
-			window.resizeTo(screen.availWidth,screen.availHeight)
-			}
-		replace()
-        </script>-->
-    <?php */
-	header('location: '.$_SESSION['urltomodules'].'templates/generate_attachment.php?mode=add&template='.$_REQUEST['template'].'&res_id='.$_REQUEST['res_id'].'&coll_id='.$_REQUEST['coll_id']);
+
+	header('location: '.$_SESSION['config']['businessappurl'].'index.php?display=true&module=templates&page=generate_attachment&mode=add&template='.$_REQUEST['template'].'&res_id='.$_REQUEST['res_id'].'&coll_id='.$_REQUEST['coll_id']);
 
 	exit();
 }
@@ -59,7 +45,10 @@ $core_tools->load_header(_CHOOSE_TEMPLATE);
 <h2 class="tit"><?php  echo _CHOOSE_TEMPLATE;?> </h2>
 
 <div align="center"><b><?php  echo $erreur; ?></b></div>
-<form enctype="multipart/form-data" method="post" name="attachement" action="<?php  echo $_SESSION['urltomodules']."templates/";?>choose_template.php"   >
+<form enctype="multipart/form-data" method="post" name="attachement" action="<?php  echo $_SESSION['config']['businessappurl'];?>inhdex.php?display=true&module=templates&page=choose_template"   >
+	<input type="hidden" name="display"  value="true" />
+	<input type="hidden" name="module"  value="templates" />
+	<input type="hidden" name="page"  value="choose_template" />
 	<input type="hidden" name="res_id" id="res_id" value="<?php  echo $_REQUEST['res_id'];?>" />
 	<input type="hidden" name="coll_id" id="coll_id" value="<?php  echo $_REQUEST['coll_id'];?>" />
 	<p><label><?php  echo _PLEASE_SELECT_TEMPLATE;?> :</label></p>

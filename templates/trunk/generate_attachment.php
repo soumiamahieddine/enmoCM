@@ -10,12 +10,6 @@
 * @license GPL
 * @author  Claire Figueras  <dev@maarch.org>
 */
- include('core/init.php');
-
-require_once("core/class/class_functions.php");
-require_once("core/class/class_db.php");
-require_once("core/class/class_core_tools.php");
-
 $core_tools = new core_tools();
 $core_tools->test_user();
 $core_tools->load_lang();
@@ -23,7 +17,7 @@ $core_tools->load_lang();
 $db = new dbquery();
 $db->connect();
 
-require_once('modules/templates'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php');
+require_once('modules'.DIRECTORY_SEPARATOR.'templates'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php');
 
 $lb = new templates();
 $answer= array();
@@ -148,11 +142,14 @@ $core_tools->load_header($title);
 <body onload="moveTo(0,0);resizeTo(screen.width, screen.height);setTimeout(window.close, <?php  echo $time;?>*60*1000);">
 <?php
 $_SESSION['mode_editor'] = false;
- include("modules/templates".DIRECTORY_SEPARATOR."load_editor.php");?>
+ include("modules".DIRECTORY_SEPARATOR."templates".DIRECTORY_SEPARATOR."load_editor.php");?>
 
 <div class="error"><?php  echo $_SESSION['error']; $_SESSION['error']= "";?></div>
 <div align="center">
-	<form name="frmtemplate" id="frmtemplate" method="post" action="<?php  echo $_SESSION['urltomodules'].'templates/';?>manage_generated_attachment.php?mode=<?php  echo $mode;?>">
+	<form name="frmtemplate" id="frmtemplate" method="post" action="<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=templates&page=manage_generated_attachment&mode=<?php  echo $mode;?>">
+	<input type="hidden" name="display"  value="true" />
+	<input type="hidden" name="module"  value="templates" />
+	<input type="hidden" name="page"  value="manage_generated_attachment" />
 	<?php  if($mode == "up")
 	{
 	?>
