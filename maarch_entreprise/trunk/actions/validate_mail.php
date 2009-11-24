@@ -50,7 +50,7 @@ $frm_height = '';
 */
 $mode_form = 'fullscreen';
 
-include('apps/'.$_SESSION['businessapps'][0]['appid'].'/definition_mail_categories.php');
+include('apps/'.$_SESSION['config']['app_id'].'/definition_mail_categories.php');
 
 ///////////////////// Pattern to check dates
 if($_SESSION['config']['databasetype'] == "SQLSERVER")
@@ -145,9 +145,9 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 	$res_id = $values[0];
 	$frm_str = '';
 	require_once("core/class/class_security.php");
-	require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
+	require_once("apps/".$_SESSION['config']['app_id']."/class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
 	require_once("modules/basket".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
-	require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_types.php");
+	require_once("apps/".$_SESSION['config']['app_id']."/class".DIRECTORY_SEPARATOR."class_types.php");
 
 	$sec =new security();
 	$core_tools =new core_tools();
@@ -899,7 +899,7 @@ function process_category_check($cat_id, $values)
 	}
 
 	///// Checks the complementary indexes depending on the doctype
-	require_once('apps/'.$_SESSION['businessapps'][0]['appid'].'/class'.DIRECTORY_SEPARATOR.'class_types.php');
+	require_once('apps/'.$_SESSION['config']['app_id'].'/class'.DIRECTORY_SEPARATOR.'class_types.php');
 	$type = new types();
 	$type_id =  get_value_fields($values, 'type_id');
 	$coll_id =  get_value_fields($values, 'coll_id');
@@ -1235,7 +1235,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
 		}
 
 		///////////////////////// Other cases
-		require_once('apps/'.$_SESSION['businessapps'][0]['appid'].'/class'.DIRECTORY_SEPARATOR.'class_types.php');
+		require_once('apps/'.$_SESSION['config']['app_id'].'/class'.DIRECTORY_SEPARATOR.'class_types.php');
 		$type = new types();
 		$type->inits_opt_indexes($coll_id, $res_id);
 		$type_id =  get_value_fields($values_form, 'type_id');

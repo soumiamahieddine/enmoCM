@@ -18,7 +18,7 @@
 * this page tests the user access level, and if the user is an admin or not
 */
 
-require("apps".DIRECTORY_SEPARATOR.$_SESSION['businessapps'][0]['appid'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_admin.php");
+require("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_admin.php");
 $admin = new admin();
 
 $core_tools2 = new core_tools();

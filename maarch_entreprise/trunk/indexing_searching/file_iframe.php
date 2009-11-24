@@ -27,17 +27,11 @@
 * @version $Revision$
 * @ingroup indexing_searching_mlb
 */
-
-include('core/init.php');
-
-require_once("core/class/class_functions.php");
-require_once("core/class/class_db.php");
 $func = new functions();
-require_once("core/class/class_core_tools.php");
 $core_tools = new core_tools();
 $core_tools->test_user();
 $core_tools->load_lang();
-require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_indexing_searching_app.php");
+require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_indexing_searching_app.php");
 $is = new indexing_searching_app();
 $show_file = $is->show_index_frame($_SESSION['upfile']['format']);
 $ext_list = $is->filetypes_showed_indexation();
@@ -77,9 +71,9 @@ elseif(isset($_SESSION['upfile']['mime']) && !empty($_SESSION['upfile']['mime'])
 		header("Content-Disposition: inline; filename=".basename('maarch').".".$ext.";");
 		header("Content-Transfer-Encoding: binary");
 		$ext = strtolower($_SESSION['upfile']['format']);
-		if(file_exists($_SESSION['config']['tmppath'].'/tmp_file_'.$_SESSION['user']['UserId'].'.'.$ext))
+		if(file_exists($_SESSION['config']['tmppath'].DIRECTORY_SEPARATOR.'tmp_file_'.$_SESSION['user']['UserId'].'.'.$ext))
 		{
-			$loc = $_SESSION['config']['MaarchUrl'].$_SESSION['config']['tmppath'].'/tmp_file_'.$_SESSION['user']['UserId'].'.'.$ext;
+			$loc = $_SESSION['config']['MaarchUrl'].$_SESSION['config']['tmppath'].DIRECTORY_SEPARATOR.'tmp_file_'.$_SESSION['user']['UserId'].'.'.$ext;
 			readfile($loc);
 		}
 		exit();
@@ -101,7 +95,7 @@ elseif(isset($_SESSION['upfile']['mime']) && !empty($_SESSION['upfile']['mime'])
 		<body background="<?php echo $_SESSION['config']['businessappurl'];?>img/bg_home_home.gif" style="background-repeat:no-repeat;background-position:center">
 		<?php
    		$ext = strtolower($_SESSION['upfile']['format']);
-		if(file_exists($_SESSION['config']['tmppath'].'/tmp_file_'.$_SESSION['user']['UserId'].'.'.$ext))
+		if(file_exists($_SESSION['config']['tmppath'].DIRECTORY_SEPARATOR.'tmp_file_'.$_SESSION['user']['UserId'].'.'.$ext))
 		{
 			echo "<br/><br/><div class=\"error\">"._FILE_LOADED_BUT_NOT_VISIBLE.			_ONLY_FILETYPES_AUTHORISED." <br/><ul>";
 				for($i=0; $i< count($ext_list); $i++)

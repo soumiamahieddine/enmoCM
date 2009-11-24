@@ -28,19 +28,14 @@
 * @version $Revision$
 * @ingroup indexing_searching_mlb
 */
-include('core/init.php');
 
-require_once("core/class/class_functions.php");
-require_once("core/class/class_db.php");
-require_once("core/class/class_request.php");
-require_once("core/class/class_security.php");
-require_once("core/class/class_core_tools.php");
-require_once("core/class/class_manage_status.php");
-require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR.'class_list_show.php');
-require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR.'class_contacts.php');
-require_once("core/class/class_manage_status.php");
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_manage_status.php");
+require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR.'class_list_show.php');
+require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR.'class_contacts.php');
 
-include_once('apps/'.$_SESSION['businessapps'][0]['appid'].'/definition_mail_categories.php');
+include_once('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'definition_mail_categories.php');
 
 $status_obj = new manage_status();
 $core_tools = new core_tools();
@@ -200,7 +195,7 @@ $_SESSION['error_page'] = '';
 			//#########################
 			if(($_REQUEST['template']== 'group_case')&& ($core_tools->is_module_loaded('cases')))
 			{
-				include("modules/cases".DIRECTORY_SEPARATOR.'mlb_list_group_case_addon.php');
+				include("modules".DIRECTORY_SEPARATOR."cases".DIRECTORY_SEPARATOR.'mlb_list_group_case_addon.php');
 			}
 			else
 			{
@@ -448,9 +443,9 @@ else
 	}
 	else
 	{
-		$_SESSION['error_search'] = '<p class="error"><img src="'.$_SESSION['config']['businessappurl'].'img/noresult.gif" /><br />'._NO_RESULTS.'</p><br/><br/><div align="center"><strong><a href="'.$_SESSION['config']['businessappurl'].'indexing_searching/search_adv.php?mode='.$mode.'&init_search">'._MAKE_NEW_SEARCH.'</a></strong></div>';
+		$_SESSION['error_search'] = '<p class="error"><img src="'.$_SESSION['config']['businessappurl'].'img/noresult.gif" /><br />'._NO_RESULTS.'</p><br/><br/><div align="center"><strong><a href="'.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=search_adv&mode='.$mode.'&init_search">'._MAKE_NEW_SEARCH.'</a></strong></div>';
 		?>
-		<script language="javascript" type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'].'indexing_searching/search_adv_error.php?mode='.$mode;?>';</script>
+		<script language="javascript" type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=search_adv_error&mode='.$mode;?>';</script>
 		<?php
 	}
 }
@@ -465,7 +460,7 @@ else
 		var q_name = form.query_name.value;
 		$('modal').innerHTML = '<img src="img/loading.gif" />';
 
-		new Ajax.Request('<? echo $_SESSION['config']['businessappurl'];?>indexing_searching/manage_query.php',
+		new Ajax.Request('<? echo $_SESSION['config']['businessappurl'];?>index.php?display=true&dir=indexing_searching&page=manage_query',
 	    {
 	        method:'post',
 	        parameters: {name: q_name,

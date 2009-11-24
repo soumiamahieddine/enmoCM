@@ -21,7 +21,7 @@ $core_tools->load_header();
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_docserver.php");
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
-require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['businessapps'][0]['appid'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");
+require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 /****************Management of the location bar  ************/
 $init = false;
@@ -335,7 +335,7 @@ else
 							</div>
 						</div>
 					</form>
-				<iframe name="view" id="view" width="100%" height="700" frameborder="0" scrolling="no" src="<?php  echo $_SESSION['config']['businessappurl']."indexing_searching/view.php?id=".$s_id;?>"></iframe>
+				<iframe name="view" id="view" width="100%" height="700" frameborder="0" scrolling="no" src="<?php  echo $_SESSION['config']['businessappurl']."index.php?display=true&dir=indexing_searching&page=view&id=".$s_id;?>"></iframe>
 				<?php
 			}
 			else

@@ -134,7 +134,7 @@ else
 		}
 		else
 		{
-			require_once('apps/'.$_SESSION['businessapps'][0]['appid'].'/class'.DIRECTORY_SEPARATOR."class_indexing_searching_app.php");
+			require_once('apps/'.$_SESSION['config']['app_id'].'/class'.DIRECTORY_SEPARATOR."class_indexing_searching_app.php");
 			$is = new indexing_searching_app();
 			$type_state = $is->is_filetype_allowed($format);
 			//control of the fingerprint of the document

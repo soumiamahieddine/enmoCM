@@ -10,22 +10,18 @@
 * @license GPL
 * @author  Claire Figueras  <dev@maarch.org>
 */
-include('core/init.php');
 
-require_once("core/class/class_functions.php");
-require_once("core/class/class_core_tools.php");
 $core_tools = new core_tools();
 $core_tools->test_user();
 $core_tools->load_lang();
-require_once("core/class/class_db.php");
-require_once("core/class/class_request.php");
-require_once("core/class/class_docserver.php");
-require_once("core/class/class_security.php");
-require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_list_show.php");
-require_once("core/class/class_history.php");
-require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_indexing_searching_app.php");
-require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_types.php");
-include('apps/'.$_SESSION['businessapps'][0]['appid'].'/definition_mail_categories.php');
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_docserver.php");
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
+require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
+require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_indexing_searching_app.php");
+require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_types.php");
+include('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'definition_mail_categories.php');
 $_SESSION['doc_convert'] = array();
 /****************Management of the location bar  ************/
 $init = false;
@@ -78,28 +74,11 @@ else
 }
 $_SESSION['collection_id_choice'] = $coll_id;
 
-/*$_SESSION['id_to_view'] = "";
-if(isset($_GET['id']) && !empty($_GET['id']))
-{
-	$_SESSION['id_to_view'] = $_GET['id'];
-}
-if(isset($_POST['up_res_id']) && !empty($_POST['up_res_id']))
-{
-	$_GET['id'] = $_POST['up_res_id'];
-}
-if(isset($_SESSION['detail_id']) && !empty($_SESSION['detail_id']) && $_GET['origin'] =="waiting_list")
-{
-	$s_id =$_SESSION['detail_id'];
-}*/
 if(isset($_GET['id']) && !empty($_GET['id']))
 {
 	$s_id = addslashes($func->wash($_GET['id'], "num", _THE_DOC));
 }
-/*else if(isset($_SESSION['scan_doc_id']) && !empty($_SESSION['scan_doc_id']))
-{
-	$s_id =$_SESSION['scan_doc_id'];
-	$_SESSION['scan_doc_id'] = "";
-}*/
+
 $_SESSION['doc_id'] = $s_id;
 if($_SESSION['origin'] <> "basket")
 {
@@ -234,7 +213,7 @@ else
 
 			if($core_tools->is_module_loaded('cases') == true)
 			{
-				require_once("modules/cases".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR.'class_modules_tools.php');
+				require_once("modules".DIRECTORY_SEPARATOR."cases".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR.'class_modules_tools.php');
 				$case = new cases();
 				if ($res->case_id <> '')
 					$case_properties = $case->get_case_info($res->case_id);
@@ -252,7 +231,7 @@ else
 			$status = $res->status;
 			if(!empty($status))
 			{
-				require_once("core/class/class_manage_status.php");
+				require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_manage_status.php");
 				$status_obj = new manage_status();
 				$res_status = $status_obj->get_status_data($status);
 				if($modify_doc)
@@ -319,7 +298,7 @@ else
 				</p>
 
 				<p id="viewdoc">
-					<a href="<?php  echo $_SESSION['config']['businessappurl'];?>indexing_searching/view.php?id=<?php  echo $s_id; ?>" target="_blank"><?php  echo _VIEW_DOC; ?></a> &nbsp;| &nbsp;
+					<a href="<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&dir=indexing_searching&page=view&id=<?php  echo $s_id; ?>" target="_blank"><?php  echo _VIEW_DOC; ?></a> &nbsp;| &nbsp;
 				</p></b>&nbsp;
 			</div>
 			<br/>
@@ -442,7 +421,7 @@ else
 								else if($data[$key]['field_type'] == 'select')
 								{
 									?>
-									<select id="<?php echo $key;?>" name="<?php echo $key;?>" <?php if($key == 'type_id'){echo 'onchange="change_doctype_details(this.options[this.options.selectedIndex].value, \''.$_SESSION['config']['businessappurl'].'indexing_searching/change_doctype_details.php\' , \''._DOCTYPE.' '._MISSING.'\');"';}?>>
+									<select id="<?php echo $key;?>" name="<?php echo $key;?>" <?php if($key == 'type_id'){echo 'onchange="change_doctype_details(this.options[this.options.selectedIndex].value, \''.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=change_doctype_details\' , \''._DOCTYPE.' '._MISSING.'\');"';}?>>
 									<?php
 										if($key == 'type_id')
 										{
@@ -477,13 +456,13 @@ else
 									if($key == 'project')
 									{
 										//$('market').value='';return false;
-									?><input type="text" name="project" id="project" onblur="" value="<?php echo $data['project']['show_value']; ?>" /><div id="show_project" class="autocomplete"></div><script type="text/javascript">launch_autocompleter_folders('<?php echo $_SESSION['urltomodules'];?>folder/autocomplete_folders.php?mode=project', 'project');</script>
+									?><input type="text" name="project" id="project" onblur="" value="<?php echo $data['project']['show_value']; ?>" /><div id="show_project" class="autocomplete"></div><script type="text/javascript">launch_autocompleter_folders('<?php echo $_SESSION['config']['businessappurl'];?>index.pĥp?display=true&module=folder&page=autocomplete_folders&mode=project', 'project');</script>
 									<?php
 									}
 									else if($key == 'market')
 									{
-									?><input type="text" name="market" id="market" onblur="fill_project('<?php echo $_SESSION['urltomodules'];?>folder/ajax_get_project.php');return false;"  value="<?php echo $data['market']['show_value']; ?>"/><div id="show_market" class="autocomplete"></div>
-									<script type="text/javascript">launch_autocompleter_folders('<?php echo $_SESSION['urltomodules'];?>folder/autocomplete_folders.php?mode=market', 'market');</script>
+									?><input type="text" name="market" id="market" onblur="fill_project('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=folder&page=ajax_get_project');return false;"  value="<?php echo $data['market']['show_value']; ?>"/><div id="show_market" class="autocomplete"></div>
+									<script type="text/javascript">launch_autocompleter_folders('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=folder&page=autocomplete_folders&mode=market', 'market');</script>
 									<?php
 									}
 								}
@@ -806,7 +785,7 @@ else
 					?>
 					<dt><?php  echo _DIFF_LIST;?></dt>
 					<dd><?php
-						require_once("modules/entities".DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_listdiff.php');
+						require_once("modules".DIRECTORY_SEPARATOR."entities".DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_listdiff.php');
 						$diff_list = new diffusion_list();
 						$_SESSION['details']['diff_list'] = array();
 						$_SESSION['details']['diff_list'] = $diff_list->get_listinstance($s_id);
@@ -1011,7 +990,7 @@ else
 						?>
 						<div>
 						<label><?php echo _ATTACHED_DOC;?> : </label>
-						<iframe name="list_attach" id="list_attach" src="<?php echo $_SESSION['urltomodules'];?>attachments/frame_list_attachments.php?view_only" frameborder="0" width="100%" height="300px"></iframe>
+						<iframe name="list_attach" id="list_attach" src="<?php echo $_SESSION['config']['businessappurl'];?>index.php?displya=true&module=attachments&page=frame_list_attachments&view_only" frameborder="0" width="100%" height="300px"></iframe>
 						</div>
 						<?php
 					}
@@ -1020,7 +999,7 @@ else
 				</dd>
 				<dt><?php echo _DOC_HISTORY;?></dt>
 				<dd>
-					<?php include($_SESSION['config']['businesapppath']."indexing_searching".DIRECTORY_SEPARATOR."hist_doc.php");?>
+					<?php include('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR?"indexing_searching".DIRECTORY_SEPARATOR."hist_doc.php");?>
 				</dd>
 				<?php
 				if($core_tools->is_module_loaded('notes'))
@@ -1069,9 +1048,9 @@ else
 						$tab_notes=$request_notes->select($select_notes,$where_notes,"order by ".$_SESSION['tablename']['not_notes'].".date desc",$_SESSION['config']['databasetype'], "500", true,$_SESSION['tablename']['not_notes'], $_SESSION['tablename']['users'], "user_id" );
 						?>
 						<div style="text-align:center;">
-							<img src="<?php echo $_SESSION['urltomodules'];?>notes/img/modif_note.png" border="0" alt="" /><a href="javascript://" onclick="ouvreFenetre('<?php echo $_SESSION['urltomodules'];?>notes/note_add.php?size=full&identifier=<?php echo $s_id;?>&coll_id=<?php echo $coll_id;?>', 450, 300)" ><?php echo _ADD_NOTE;?></a>
+							<img src="<?php echo $_SESSION['urltomodules'];?>notes/img/modif_note.png" border="0" alt="" /><a href="javascript://" onclick="ouvreFenetre('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=notes&page=note_add&size=full&identifier=<?php echo $s_id;?>&coll_id=<?php echo $coll_id;?>', 450, 300)" ><?php echo _ADD_NOTE;?></a>
 						</div>
-						<iframe name="list_notes_doc" id="list_notes_doc" src="<?php echo $_SESSION['urltomodules'];?>notes/frame_notes_doc.php?size=full" frameborder="0" width="100%" height="520px"></iframe>
+						<iframe name="list_notes_doc" id="list_notes_doc" src="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=notes&page=frame_notes_doc&size=full" frameborder="0" width="100%" height="520px"></iframe>
 					</dd>
 					<?php
 				}
@@ -1081,11 +1060,11 @@ else
 					<dt><?php  echo _CASE;?></dt>
 					<dd>
 				<?php
-						include('modules/cases'.DIRECTORY_SEPARATOR.'including_detail_cases.php');
+						include('modules'.DIRECTORY_SEPARATOR.'cases'.DIRECTORY_SEPARATOR.'including_detail_cases.php');
 						 if ($core_tools->test_service('join_res_case', 'cases',false) == 1)
 						{
 						?><div align="center">
-							<input type="button" class="button" name="back_welcome" id="back_welcome" value="<?php if($res->case_id<>'') echo _MODIFY_CASE; else echo _JOIN_CASE;?>" onclick="window.open('<?php echo $_SESSION['urltomodules'];?>cases/search_adv_for_cases.php?searched_item=res_id&searched_value=<? echo $s_id;?>','', 'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=1020,height=710');"/></div><?php
+							<input type="button" class="button" name="back_welcome" id="back_welcome" value="<?php if($res->case_id<>'') echo _MODIFY_CASE; else echo _JOIN_CASE;?>" onclick="window.open('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=cases&page=search_adv_for_cases&searched_item=res_id&searched_value=<? echo $s_id;?>','', 'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=1020,height=710');"/></div><?php
 						}
 						?>
 					</dd>
@@ -1108,12 +1087,11 @@ else
 $detailsExport .= "</body></html>";
 $_SESSION['doc_convert'] = array();
 $_SESSION['doc_convert']['details_result'] = $detailsExport;
-require_once("core/class/class_core_tools.php");
 $core_tools = new core_tools();
 if($core_tools->is_module_loaded("doc_converter"))
 {
 
-	require_once("modules/doc_converter".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
+	require_once("modules".DIRECTORY_SEPARATOR."doc_converter".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
 	$doc_converter = new doc_converter();
 	$doc_converter->convert_details($detailsExport);
 }

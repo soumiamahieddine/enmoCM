@@ -29,16 +29,11 @@
 * @ingroup indexing_searching_mlb
 */
 
-include('core/init.php');
-
-require_once("core/class/class_functions.php");
-require_once("core/class/class_db.php");
-require_once("core/class/class_request.php");
-require_once("core/class/class_core_tools.php");
-require_once("core/class/class_security.php");
-require_once("core/class/class_manage_status.php");
-require_once('apps/'.$_SESSION['businessapps'][0]['appid'].'/class'.DIRECTORY_SEPARATOR."class_indexing_searching_app.php");
-require_once('apps/'.$_SESSION['businessapps'][0]['appid'].'/class'.DIRECTORY_SEPARATOR."class_types.php");
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_manage_status.php");
+require_once('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR."class_indexing_searching_app.php");
+require_once('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR."class_types.php");
 $core_tools = new core_tools();
 $core_tools->test_user();
 $core_tools->load_lang();
@@ -379,7 +374,7 @@ function del_query_confirm()
 {
 	if(confirm('<?php echo _REALLY_DELETE.' '._THIS_SEARCH.'?';?>'))
 	{
-		del_query_db($('query').options[$('query').selectedIndex], 'select_criteria', 'frmsearch2', '<?php echo _SQL_ERROR;?>', '<?php echo _SERVER_ERROR;?>', '<?php echo $_SESSION['config']['businessappurl'].'indexing_searching/manage_query.php';?>');
+		del_query_db($('query').options[$('query').selectedIndex], 'select_criteria', 'frmsearch2', '<?php echo _SQL_ERROR;?>', '<?php echo _SERVER_ERROR;?>', '<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=manage_query';?>');
 		return false;
 	}
 }
@@ -395,7 +390,7 @@ function del_query_confirm()
 <div align="center" style="display:block;" id="div_query">
 
 <label for="query"><?php echo _MY_SEARCHES;?> : </label>
-<select name="query" id="query" onchange="load_query_db(this.options[this.selectedIndex].value, 'select_criteria', 'frmsearch2', '<?php echo _SQL_ERROR;?>', '<?php echo _SERVER_ERROR;?>', '<?php echo $_SESSION['config']['businessappurl'].'indexing_searching/manage_query.php';?>');return false;" >
+<select name="query" id="query" onchange="load_query_db(this.options[this.selectedIndex].value, 'select_criteria', 'frmsearch2', '<?php echo _SQL_ERROR;?>', '<?php echo _SERVER_ERROR;?>', '<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&âge=manage_query';?>');return false;" >
 	<option id="default_query" value=""><?php echo _CHOOSE_SEARCH;?></option>
 	<?php for($i=0; $i< count($queries);$i++)
 	{
@@ -406,7 +401,7 @@ function del_query_confirm()
 </div>
 </form>
 <?php } ?>
-<form name="frmsearch2" method="get" action="<?php if($mode == 'normal') {echo $_SESSION['config']['businessappurl'].'index.php'; } elseif($mode == 'frame' || $mode == 'popup'){ echo $_SESSION['config']['businessappurl'].'indexing_searching/search_adv_result.php';}?>"  id="frmsearch2" class="<?php echo $class_for_form; ?>">
+<form name="frmsearch2" method="get" action="<?php if($mode == 'normal') {echo $_SESSION['config']['businessappurl'].'index.php'; } elseif($mode == 'frame' || $mode == 'popup'){ echo $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=search_adv_result';}?>"  id="frmsearch2" class="<?php echo $class_for_form; ?>">
 <?php if($mode == 'normal')
 {?><input type="hidden" name="page" value="search_adv_result" />
 	<input type="hidden" name="dir" value="indexing_searching" />

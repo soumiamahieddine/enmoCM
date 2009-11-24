@@ -11,12 +11,6 @@
 * @author  Claire Figueras  <dev@maarch.org>
 * @author  Laurent Giovannoni  <dev@maarch.org>
 */
-include_once('../../core/init.php');
-
-require_once("core/class/class_functions.php");
-require("core/class/class_core_tools.php");
-require_once("core/class/class_db.php");
-
 $core_tools = new core_tools();
 $core_tools->load_lang();
 $func = new functions();
@@ -38,22 +32,22 @@ else
 {
 	$s_pass = '';
 }
-require("core/class/class_security.php");
-require("core/class/class_request.php");
-require("apps/".$_SESSION['config']['app_id']."/class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
+require("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
+require("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
+require("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
 $sec = new security();
 $business_app_tools = new business_app_tools();
 
 if(count($_SESSION['config']) <= 0)
 {
-
-$_SESSION['slash_env'] = DIRECTORY_SEPARATOR;
+	//echo 'config vide <br/>';
+	$_SESSION['slash_env'] = DIRECTORY_SEPARATOR;
 	
 	$path_tmp = explode(DIRECTORY_SEPARATOR, str_replace('/', DIRECTORY_SEPARATOR,$_SERVER['SCRIPT_FILENAME']));
 	$path_server = implode(DIRECTORY_SEPARATOR,array_slice($path_tmp,0,array_search('apps',$path_tmp))).DIRECTORY_SEPARATOR;
 
 	//$core_tools->build_core_config($path_server."core".DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."config.xml");
-	$core_tools->build_core_config("core/xml/config.xml");
+	$core_tools->build_core_config("core".DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."config.xml");
 	$business_app_tools->build_business_app_config();
 	$core_tools->load_modules_config($_SESSION['modules']);
 	$core_tools->load_menu($_SESSION['modules']);
@@ -85,7 +79,7 @@ else
 		$ldap_conf = new DomDocument();
 		try
 		{
-			if(!@$ldap_conf->load("apps/".$_SESSION['businessapps'][0]['appid']."/ldap".DIRECTORY_SEPARATOR."config_ldap.xml"))
+			if(!@$ldap_conf->load("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."ldap".DIRECTORY_SEPARATOR."config_ldap.xml"))
 			{
 				throw new Exception("Impossible de charger le document : ".$_SESSION['config']['businessappurl']."ldap".DIRECTORY_SEPARATOR."config_ldap.xml");
 			}
@@ -103,7 +97,7 @@ else
 		}
 
 		//On inclus la class LDAP qui correspond à l'annuaire
-		if(!include("apps/".$_SESSION['businessapps'][0]['appid']."/ldap".DIRECTORY_SEPARATOR."class_".$type_ldap.".php"))
+		if(!include("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."ldap".DIRECTORY_SEPARATOR."class_".$type_ldap.".php"))
 		{
 			exit("Impossible de charger class_".$type_ldap.".php\n");
 		}

@@ -131,7 +131,7 @@ if(isset($_SESSION['config']['corepath']) && !empty($_SESSION['config']['corepat
 	require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_functions.php");
 	require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_db.php");
 	require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_core_tools.php");
-	require('apps'.DIRECTORY_SEPARATOR.$_SESSION['businessapps'][0]['appid'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
+	require('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
 	$path_core_config = 'core'.DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'config.xml';
 }
 else
@@ -142,10 +142,6 @@ else
 	require("class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
 	$path_core_config = "..".DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR.'core'.DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'config.xml';
 }
-
-/*
-require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
-*/
 
 $core_tools = new core_tools();
 $business_app_tools = new business_app_tools();
@@ -169,7 +165,9 @@ $time = $core_tools->get_session_time_expire();
 <?php //$core_tools->show_array($_SERVER);?>
     <div id="loginpage">
         <p id="logo"><img src="<?php  echo $_SESSION['config']['img'];?>/default_maarch.gif" alt="Maarch" /></p>
-        <form name="formlogin" id="formlogin" method="post" action="log.php" class="forms">
+        <form name="formlogin" id="formlogin" method="post" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=log" class="forms">
+			<input type="hidden" name="display" value="true" />
+			<input type="hidden" name="page" value="log" />
             <p>
                 <label for="login"><?php  echo _ID; ?> :</label>
                 <input name="login" id="login" value="" type="text"  />

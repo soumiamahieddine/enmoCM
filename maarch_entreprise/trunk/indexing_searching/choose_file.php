@@ -27,11 +27,7 @@
 * @version $Revision$
 * @ingroup indexing_searching_mlb
 */
-include('core/init.php');
 
-require_once("core/class/class_functions.php");
-require_once("core/class/class_db.php");
-require_once("core/class/class_core_tools.php");
 $core_tools = new core_tools();
 $core_tools->load_lang();
 $func = new functions();
@@ -53,7 +49,7 @@ $core_tools->load_header();
 				var test = window.top.document.getElementById('file_iframe');
 				if (test != null)
 				{
-					test.src = '<?php echo $_SESSION['config']['businessappurl'];?>indexing_searching/file_iframe.php';
+					test.src = '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&dir=indexing_searching&page=file_iframe';
 				}
 			</script>
 	        <?php
@@ -80,7 +76,7 @@ $core_tools->load_header();
 			$_SESSION['upfile']['local_path'] = $_SESSION['config']['tmppath'].'tmp_file_'.$_SESSION['user']['UserId'].'.'.strtolower($the_ext);
 			$_SESSION['upfile']['name'] = $_FILES['file']['name'];
 			$_SESSION['upfile']['format'] = $the_ext;
-			require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_indexing_searching_app.php");
+			require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_indexing_searching_app.php");
 			$is = new indexing_searching_app();
 			$ext_ok = $is->is_filetype_allowed($the_ext);
 			if($ext_ok == false)
@@ -94,13 +90,16 @@ $core_tools->load_header();
 		var test = window.top.document.getElementById('file_iframe');
 			if (test != null)
 			{
-				test.src = '<?php echo $_SESSION['config']['businessappurl'];?>indexing_searching/file_iframe.php';
+				test.src = '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&dir=indexing_searching&page=file_iframe';
 			}
 		</script>
 		<?php
 	}
 	?>
-    <form name="select_file_form" id="select_file_form" method="get" enctype="multipart/form-data" action="<?php  echo $_SESSION['config']['businessappurl'];?>indexing_searching/choose_file.php" class="forms">
+    <form name="select_file_form" id="select_file_form" method="get" enctype="multipart/form-data" action="<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&dir=indexing_searching&page=choose_file" class="forms">
+		<input type="hidden" name="display" value="true" />
+		<input type="hidden" name="dir" value="indexing_searching" />
+		<input type="hidden" name="page" value="choose_file" />
         <p>
                <label for="file" ><?php  echo _CHOOSE_FILE; ?> </label>
                <input type="file" name="file" id="file"  onchange="this.form.method = 'post';this.form.submit();" value="<?php  echo $_SESSION['file_path']; ?>" style="width:200px;margin-left:33px;" /><?php
