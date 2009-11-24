@@ -625,9 +625,11 @@ class core_tools extends functions
 							if($modules_services[$id_module][$i]['whereamiused'][$k]['nature'] == "frame" && $_SESSION['user']['services'][$modules_services[$id_module][$i]['id']] && !in_array($modules_services[$id_module][$i]['id'], $executed_services))
 							{
 								array_push($executed_services,$modules_services[$id_module][$i]['id']);
+								
 								?>
 								<br />
-								<iframe src='<?php  echo $_SESSION['urltomodules'].$id_module."/".$modules_services[$id_module][$i]['servicepage'];?>' name="<?php  echo $modules_services[$id_module][$i]['id'];?>" id="<?php  echo $modules_services[$id_module][$i]['id'];?>" width='<?php  echo $modules_services[$id_module][$i]['whereamiused'][$k]['width'];?>' height='<?php  echo $modules_services[$id_module][$i]['whereamiused'][$k]['height'];?>' frameborder='<?php  echo $modules_services[$id_module][$i]['whereamiused'][$k]['border'];?>' scrolling='<?php  echo $modules_services[$id_module][$i]['whereamiused'][$k]['scrolling'];?>'></iframe><br /><br />
+								
+								<iframe src='<?php  echo $_SESSION['config']['businessappurl'].'index.php?display=true&module='.$id_module."&page=".$modules_services[$id_module][$i]['servicepage'];?>' name="<?php  echo $modules_services[$id_module][$i]['id'];?>" id="<?php  echo $modules_services[$id_module][$i]['id'];?>" width='<?php  echo $modules_services[$id_module][$i]['whereamiused'][$k]['width'];?>' height='<?php  echo $modules_services[$id_module][$i]['whereamiused'][$k]['height'];?>' frameborder='<?php  echo $modules_services[$id_module][$i]['whereamiused'][$k]['border'];?>' scrolling='<?php  echo $modules_services[$id_module][$i]['whereamiused'][$k]['scrolling'];?>'></iframe><br /><br />
 								<?php
 								break;
 							}
@@ -651,7 +653,7 @@ class core_tools extends functions
 									$tmp = $tmp2;
 								}
 								?>
-								<input type="button" name="<?php  echo $modules_services[$id_module][$i]['id'];?>" value="<?php  echo $tmp;?>" onclick="window.open('<?php  echo $_SESSION['urltomodules'].$id_module.'/'.$modules_services[$id_module][$i]['servicepage'];?>', '<?php  echo $modules_services[$id_module][$i]['id'];?>','width=<?php  echo $modules_services[$id_module][$i]['whereamiused'][$k]['width'];?>,height=<?php  echo $modules_services[$id_module][$i]['whereamiused'][$k]['height'];?>,scrollbars=yes,resizable=yes' );" class="button" /><br/>
+								<input type="button" name="<?php  echo $modules_services[$id_module][$i]['id'];?>" value="<?php  echo $tmp;?>" onclick="window.open('<?php  echo   $_SESSION['config']['businessappurl'].'index.php?display=true&module='.$id_module."&page=".$modules_services[$id_module][$i]['servicepage'];?>', '<?php  echo $modules_services[$id_module][$i]['id'];?>','width=<?php  echo $modules_services[$id_module][$i]['whereamiused'][$k]['width'];?>,height=<?php  echo $modules_services[$id_module][$i]['whereamiused'][$k]['height'];?>,scrollbars=yes,resizable=yes' );" class="button" /><br/>
 								<?php
 								break;
 							}
@@ -684,7 +686,7 @@ class core_tools extends functions
 									array_push($executed_services,$modules_services[$value][$i]['id']);
 									?>
 									<br />
-									<iframe src='<?php  echo $_SESSION['urltomodules'].$value."/".$modules_services[$value][$i]['servicepage'];?>' name="<?php  echo $modules_services[$value][$i]['id'];?>" id="<?php  echo $modules_services[$value][$i]['id'];?>" width='<?php  echo $modules_services[$value][$i]['whereamiused'][$k]['width'];?>' height='<?php  echo $modules_services[$value][$i]['whereamiused'][$k]['height'];?>' frameborder='<?php  echo $modules_services[$value][$i]['whereamiused'][$k]['border'];?>' scrolling='<?php  echo $modules_services[$value][$i]['whereamiused'][$k]['scrolling'];?>'></iframe><br /><br />
+									<iframe src='<?php  echo $_SESSION['config']['businessappurl'].'index.php?display=true&module='.$id_module."&page=".$modules_services[$id_module][$i]['servicepage'];?>' name="<?php  echo $modules_services[$value][$i]['id'];?>" id="<?php  echo $modules_services[$value][$i]['id'];?>" width='<?php  echo $modules_services[$value][$i]['whereamiused'][$k]['width'];?>' height='<?php  echo $modules_services[$value][$i]['whereamiused'][$k]['height'];?>' frameborder='<?php  echo $modules_services[$value][$i]['whereamiused'][$k]['border'];?>' scrolling='<?php  echo $modules_services[$value][$i]['whereamiused'][$k]['scrolling'];?>'></iframe><br /><br />
 									<?php
 								}
 								elseif($modules_services[$value][$i]['whereamiused'][$k]['nature'] == "tab" && $_SESSION['user']['services'][$modules_services[$value][$i]['id']] && ($servicenature == "tab") && !in_array($modules_services[$value][$i]['id'], $executed_services))
@@ -715,7 +717,7 @@ class core_tools extends functions
 										$tmp = $tmp2;
 									}
 									?>
-									<input type="button" name="<?php  echo $modules_services[$value][$i]['id'];?>" value="<?php  echo $tmp;?>" onclick="window.open('<?php  echo $_SESSION['urltomodules'].$value.'/'.$modules_services[$value][$i]['servicepage'];?>', '<?php  echo $modules_services[$value][$i]['id'];?>','width=<?php  echo $modules_services[$value][$i]['whereamiused'][$k]['width'];?>,height=<?php  echo $modules_services[$value][$i]['whereamiused'][$k]['height'];?>,scrollbars=yes,resizable=yes' );" class="button" /><br/>
+									<input type="button" name="<?php  echo $modules_services[$value][$i]['id'];?>" value="<?php  echo $tmp;?>" onclick="window.open('<?php  echo  $_SESSION['config']['businessappurl'].'index.php?display=true&module='.$id_module."&page=".$modules_services[$id_module][$i]['servicepage'];?>', '<?php  echo $modules_services[$value][$i]['id'];?>','width=<?php  echo $modules_services[$value][$i]['whereamiused'][$k]['width'];?>,height=<?php  echo $modules_services[$value][$i]['whereamiused'][$k]['height'];?>,scrollbars=yes,resizable=yes' );" class="button" /><br/>
 									<?php
 								}
 								elseif($modules_services[$value][$i]['whereamiused'][$k]['nature'] == "include" && $_SESSION['user']['services'][$modules_services[$value][$i]['id']] && ($servicenature == "all" || $servicenature == "include") && !in_array($modules_services[$value][$i]['id'], $executed_services))
@@ -824,7 +826,7 @@ class core_tools extends functions
 						{
 							array_push($executed_services,$app_services[$i]['id']);
 							?>
-							   <iframe src='<?php  echo $_SESSION['config']['businessappurl'].$app_services[$i]['servicepage'];?>' name="<?php  $app_services[$i]['id'];?>" id="<?php  $app_services[$i]['id'];?>" width='<?php  echo $app_services[$i]['whereamiused'][$k]['width'];?>' height='<?php  echo $app_services[$i]['whereamiused'][$k]['height'];?>' frameborder='<?php  echo $app_services[$i]['whereamiused'][$k]['border'];?>' scrolling='<?php  echo $app_services[$i]['whereamiused'][$k]['scrolling'];?>'></iframe>
+							   <iframe src='<?php  echo  $_SESSION['config']['businessappurl'].'index.php?display=true&page='.$app_services[$i]['servicepage'];?>' name="<?php  $app_services[$i]['id'];?>" id="<?php  $app_services[$i]['id'];?>" width='<?php  echo $app_services[$i]['whereamiused'][$k]['width'];?>' height='<?php  echo $app_services[$i]['whereamiused'][$k]['height'];?>' frameborder='<?php  echo $app_services[$i]['whereamiused'][$k]['border'];?>' scrolling='<?php  echo $app_services[$i]['whereamiused'][$k]['scrolling'];?>'></iframe>
 							   <?php
 						}
 						elseif($app_services[$i]['whereamiused'][$k]['nature'] == "popup" && $_SESSION['user']['services'][$app_services[$i]['id']] && ($servicenature == "all" || $servicenature == "popup") && !in_array($app_services[$i]['id'],$executed_services))
@@ -846,7 +848,7 @@ class core_tools extends functions
 								$tmp = $tmp2;
 							}
 							?>
-							<input type="button" name="<?php  echo $app_services[$i]['id'];?>" value="<?php  echo $tmp;?>" onclick="window.open('<?php  echo $_SESSION['config']['businessappurl'].$app_services[$i]['servicepage'];?>', '<?php  echo $app_services[$i]['id'];?>','width=<?php  echo $app_services[$i]['whereamiused'][$k]['width'];?>,height=<?php  echo $app_services[$i]['whereamiused'][$k]['height'];?>,scrollbars=yes,resizable=yes' );" class="button" /><br/>
+							<input type="button" name="<?php  echo $app_services[$i]['id'];?>" value="<?php  echo $tmp;?>" onclick="window.open('<?php  echo  $_SESSION['config']['businessappurl'].'index.php?display=true&page='.$app_services[$i]['servicepage']; ?>', '<?php  echo $app_services[$i]['id'];?>','width=<?php  echo $app_services[$i]['whereamiused'][$k]['width'];?>,height=<?php  echo $app_services[$i]['whereamiused'][$k]['height'];?>,scrollbars=yes,resizable=yes' );" class="button" /><br/>
 							<?php
 						}
 						elseif($app_services[$i]['whereamiused'][$k]['nature'] == "include" && $_SESSION['user']['services'][$app_services[$i]['id']] && ($servicenature == "all" || $servicenature == "include") && !in_array($app_services[$i]['id'],$executed_services))
