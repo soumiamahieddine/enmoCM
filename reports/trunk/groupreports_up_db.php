@@ -10,20 +10,13 @@
 * @license GPL
 * @author  Claire Figueras  <dev@maarch.org>
 */
-include('core/init.php');
-
-
-require_once("core/class/class_functions.php");
-require("core/class/class_core_tools.php");
 
 $core_tools = new core_tools();
 //here we loading the lang vars
 $core_tools->load_lang();
 $core_tools->test_admin('admin_reports', 'reports');
 
-require_once("core/class/class_db.php");
-
-require_once("modules/reports".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_admin_reports.php");
+require_once("modules".DIRECTORY_SEPARATOR."reports".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_admin_reports.php");
 
 $admin_reports = new admin_reports();
 

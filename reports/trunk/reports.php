@@ -27,8 +27,6 @@
 * @version $Revision$
 * @ingroup reports
 */
-require_once("core/class/class_functions.php");
-require_once("core/class/class_db.php");
 
 $rep = new core_tools();
 $db = new dbquery();
@@ -61,6 +59,6 @@ $count_folder = $db->fetch_object();
 	<img src="<? echo $_SESSION['config']['img'];?>/contrat_mini.png" alt=""  /> <? echo _NB_TOTAL_DOC;?> : <b><? echo $count_piece->total; ?></b>
 	&nbsp;&nbsp; <img src="<? echo $_SESSION['config']['img'];?>/folder_documents_mini.png" alt=""  /> <? echo _NB_TOTAL_FOLDER;?> : <b><? echo $count_folder->total; ?></b>
 	</p>
-<?php include('modules/reports'.DIRECTORY_SEPARATOR.'user_reports.php');?>
-	<!--<iframe src="<?php echo $_SESSION['urltomodules'];?>/reports/user_reports.php?from=menu" name="reports" id="reports" frameborder="0" width="100%" height="700" scrolling="no"></iframe>-->
+<?php include('modules'.DIRECTORY_SEPARATOR.'reports'.DIRECTORY_SEPARATOR.'user_reports.php');?>
+
 </div>

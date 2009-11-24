@@ -127,7 +127,7 @@ if(isset($_GET['id']) && !empty($_GET['id']))
 						evalMyScripts('listReports');
 					}
 				}
-				xhr.open("POST", "<?php echo $_SESSION['urltomodules'].'reports/list_reports.php'; ?>", true);
+				xhr.open("POST", "<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=reports&page=list_reports'; ?>", true);
 				xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
 				sendParam = '';
 				// ici, on recupère les arguments à poster

@@ -73,7 +73,7 @@ class admin_reports extends dbquery
 
 		if($_SESSION['history']['usergroupsreportsadd'] == "true")
 		{
-			require_once("core/class/class_history.php");
+			require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 			$hist = new history();
 			$hist->add($_SESSION['tablename']['usergroups_reports'], $group,"ADD",_GROUP_REPORTS_ADDED." : ".$group, $_SESSION['config']['databasetype']);
 		}
@@ -91,7 +91,7 @@ class admin_reports extends dbquery
 	*/
 	private function get_all_reports()
 	{
-		require_once('class_modules_tools.php');
+		require_once('modules'.DIRECTORY_SEPARATOR.'reports'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php');
 		$rep = new reports();
 		$enabled_reports = $rep->get_reports_from_xml();
 		$reports = array();
@@ -116,12 +116,12 @@ class admin_reports extends dbquery
 		}
 		else
 		{
-			require_once('class_modules_tools.php');
+			require_once('modules'.DIRECTORY_SEPARATOR.'reports'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php');
 			$rep = new reports();
 			$enabled_reports = $rep->get_reports_from_xml();
 			$this->connect();
 			//$_SESSION['user']['reports'] = array();
-			require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_usergroups.php");
+			require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_usergroups.php");
 			$group = new usergroups();
 
 			foreach(array_keys($enabled_reports)as $key)
@@ -183,9 +183,8 @@ class admin_reports extends dbquery
 	*/
 	public function groupreports($id = "")
 	{
-		require_once("core/class/class_security.php");
-		require_once("core/class/class_core_tools.php");
-		require_once('modules/reports'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php');
+		require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
+		require_once('modules'.DIRECTORY_SEPARATOR.'reports'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php');
 		$rep = new reports();
 		$enabled_reports = $rep->get_reports_from_xml();
 		$sec = new security();
@@ -225,9 +224,9 @@ class admin_reports extends dbquery
 		{
 		?>
 			<div id="group_box" class="bloc">
-				<a href="javascript://" onclick="window.open('<?php  echo $_SESSION['config']['businessappurl'];?>/admin/groups/liste_users.php?id=<?php  echo $id;?>&admin=groups', '', 'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=820,height=400')"><img src="<?php  echo $_SESSION['config']['businessappurl'].$_SESSION['config']['img'];?>/membres_groupe_b.gif" alt="" /><i><?php  echo _SEE_GROUP_MEMBERS;?></i></a><br/><br/>
+				<a href="javascript://" onclick="window.open('<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&admin=groups&page=liste_users&id=<?php  echo $id;?>&admin=groups', '', 'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=820,height=400')"><img src="<?php  echo $_SESSION['config']['businessappurl'].$_SESSION['config']['img'];?>/membres_groupe_b.gif" alt="" /><i><?php  echo _SEE_GROUP_MEMBERS;?></i></a><br/><br/>
 			</div>
-			<form name="formgroupreport" method="post"  class="forms" action="<?php echo $_SESSION['urltomodules'];?>reports/groupreports_up_db.php">
+			<form name="formgroupreport" method="post"  class="forms" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=reports&page=groupreports_up_db">
 
 				<br><center><i><?php  echo _AVAILABLE_REPORTS.'</i> '.$_SESSION['m_admin']['reports']['desc'];?> :</center>
 				<?php

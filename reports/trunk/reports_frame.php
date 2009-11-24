@@ -27,17 +27,12 @@
 * @version $Revision$
 * @ingroup reports
 */
-include('core/init.php'); 
-
-require_once("core/class/class_functions.php");
-require_once("core/class/class_core_tools.php");
 $core_tools = new core_tools();
-//here we loading the lang vars
 $core_tools->load_lang();
 $core_tools->test_service('show_reports', 'reports');
 echo '';
 ?>
 <br>
-<iframe src="<?php echo $_SESSION['urltomodules'];?>/reports/user_reports.php" name="user_reports" id="user_reports" frameborder="0" width="100%" height="560" scrolling="no"></iframe>
+<iframe src="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=reports&page=user_reports" name="user_reports" id="user_reports" frameborder="0" width="100%" height="560" scrolling="no"></iframe>
 
 

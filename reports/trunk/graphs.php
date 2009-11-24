@@ -10,9 +10,7 @@
 * @license GPL
 * @author  Claire Figueras  <dev@maarch.org>
 */
-include('core/init.php');
-
-require_once('modules/reports'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_graphics.php');
+require_once('modules'.DIRECTORY_SEPARATOR.'reports'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_graphics.php');
 
 $graphi = new graphics();
 
@@ -105,28 +103,6 @@ if(isset($_GET['labels']))
 	}
 }
 
-/*echo "labels : ";
-print_r($labels);
-echo "<br/>valeurs : ";
-print_r($values);
-exit;*/
-/*
-if(isset($_GET['values']) == FALSE)
-{
-	echo "pb get values";
-	exit;
-}
-echo $_GET['values'];
-// On récupère les valeurs à afficher sur le graphique dans $_GET['values'] et on les désérialize
-$data = @unserialize($_GET['values']);
-echo "test ".$data;
-// On vérifie que les données passées en GET sont correctes
-if(is_array($data) == FALSE)
-{
-	echo "pb array data";
-	exit;
-}
-*/
 if($_GET['type'] == "histo")
 {
 	$graphi->histo($width, $height, $values, $title, $_SESSION['labels1'], $margin_bottom,$labelX,$labelY);

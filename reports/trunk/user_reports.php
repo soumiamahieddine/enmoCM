@@ -28,13 +28,8 @@
 * @ingroup reports
 */
 
-include('core/init.php');
-
-require_once("core/class/class_functions.php");
-require_once("core/class/class_db.php");
-require_once("core/class/class_core_tools.php");
-require_once("modules/reports".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_admin_reports.php");
-require_once("modules/reports".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
+require_once("modules".DIRECTORY_SEPARATOR."reports".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_admin_reports.php");
+require_once("modules".DIRECTORY_SEPARATOR."reports".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
 
 $core_tools = new core_tools();
 $core_tools->test_user();
@@ -48,22 +43,9 @@ $user_id = $_SESSION['user']['UserId'];
 
 $admin_reports = new admin_reports();
 $report = new reports();
-//$admin_reports->load_enabled_reports();
- $enabled_reports = $report->get_reports_from_xml();
-/*
-if (isset($_REQUEST['from']) && !empty($_REQUEST['from']))
-{
-	$from = $_REQUEST['from'];
-}
-else
-{
-	$from = '';
 
+$enabled_reports = $report->get_reports_from_xml();
 
-}*/
-//echo $from;
-
-//$userReports = $admin_reports->load_user_reports($user_id, $from);
 $userReports = $admin_reports->load_user_reports($user_id, '');
 //$func->show_array($userReports);
 $authorized_reports_sort_by_parent = array();
