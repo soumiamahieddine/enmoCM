@@ -1,11 +1,7 @@
 <?php
-include('core/init.php');
 
-require_once("core/class/class_functions.php");
-require_once("core/class/class_core_tools.php");
-require_once("core/class/class_db.php");
-require_once("core/class/class_request.php");
-require_once("modules/folder".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
+require_once("modules".DIRECTORY_SEPARATOR."folder".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
 $core_tools = new core_tools();
 $core_tools->load_lang();
 $db = new dbquery();
@@ -32,7 +28,10 @@ $core_tools->load_header();
 <?php  if(isset($_SESSION['foldertype']) && !empty($_SESSION['foldertype']))
 {?>
  <div id="create_folder">
-     	<form name="create_folder_frm" method="get" action="<?php  echo $_SESSION['urltomodules'];?>folder/create_folder.php" class="forms addforms">
+     	<form name="create_folder_frm" method="get" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=folder&page=create_folder" class="forms addforms">
+			<input type="hidden" name="display"  value="true" />
+			<input type="hidden" name="module"  value="folder" />
+			<input type="hidden" name="page"  value="create_folder" />
         <?php
         for($i=0;$i<=count($_SESSION['folder_index_to_use']);$i++)
 		{
@@ -133,29 +132,5 @@ else
 	echo _CHOOSE_FOLDERTYPE;
 }
 ?>
-  <!--    <hr />
-      <div id="select_new_folder" >
-      	<form name="select_new_folder_frm" method="get" action="create_folder_form.php"  >
-      	<table border="0" align="center" width="80%">
-      		<tr>
-      			<td align="left" class="form_title" ><?php  //echo _NEW_EMPLOYEES_LIST;?> : </td>
-      			<td>
-      					<table border="0" >
-      						<tr>
-      							<td class="form_title" align="left"><?php  //echo _MATRICULE;?> :</td>
-      							<td><input type="text" name="matricule" id="matricule"  /></td>
-      						</tr>
-      						<tr>
-      							<td class="form_title" align="left"><?php  //echo _LASTNAME;?> :</td>
-      							<td><input type="text" name="nom"  /></td>
-      						</tr>
-      					</table>
-      			</td>
-      			<td><input type="submit" name="submit2" class="button" value="<?php  //echo _SEARCH;?>" /></td>
-      		</tr>
-      		</table>
-      	</form>
-      	<br/>
-         </div>-->
 </body>
 </html>

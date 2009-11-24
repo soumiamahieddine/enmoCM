@@ -18,20 +18,10 @@
 *    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
-include('core/init.php');
-
-
-require_once("core/class/class_functions.php");
-require_once("core/class/class_db.php");
-require("core/class/class_core_tools.php");
-
 $core_tools = new core_tools();
-//here we loading the lang vars
 $core_tools->load_lang();
 
 $content = '';
-
 if(!isset($_REQUEST['coll_id']) || empty($_REQUEST['coll_id']))
 {
 	echo _COLLECTION.' '._IS_EMPTY;

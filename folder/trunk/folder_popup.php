@@ -10,19 +10,13 @@
 * @license GPL
 * @author  Claire Figueras  <dev@maarch.org>
 */
-include('core/init.php');
 
-
-require_once("core/class/class_functions.php");
-require_once("core/class/class_db.php");
-require_once("core/class/class_request.php");
-require_once("core/class/class_core_tools.php");
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
 $core_tools = new core_tools();
 $core_tools->load_lang();
 
-require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_list_show.php");
+require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");
  $core_tools->load_html();
-//here we building the header
 $core_tools->load_header();
 ?>
 <body>
@@ -30,11 +24,8 @@ $core_tools->load_header();
 
 $select = array();
 $select[$_SESSION['collections'][0]['view']]= array();
-//$select[$_SESSION['tablename']['fold_folders']]= array();
-//$select[$_SESSION['tablename']['doctypes']]= array();
 
 array_push($select[$_SESSION['collections'][0]['view']],"res_id",  'type_label');
-//array_push($select[$_SESSION['tablename']['doctypes']], "description");
 
 $where_request.= " folder_id = '".$_GET['id']."' AND status <> 'ATT' AND status <> 'REP' AND status <> 'DEL' ";
 

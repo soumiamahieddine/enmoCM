@@ -1,9 +1,5 @@
 <?php
-include('core/init.php');
 
-require_once("core/class/class_functions.php");
-require_once("core/class/class_db.php");
-require_once("core/class/class_core_tools.php");
 $core_tools = new core_tools();
 $core_tools->load_lang();
 $content = '';
@@ -18,8 +14,8 @@ $content .= '<form id="form" name="form" method="get" action="#">';
 	$content .= '<table width="95%"  border="0" align="center">';
 		$content .= '<tr>';
 			$content .= '<td rowspan="3" width="25"><!--IMAGE--></td>';
-			$content .= '<td align="left"><label for="folder_id">'._NUM.'&nbsp;</label><input type="text" id="folder_id" name="folder_id" value="" />&nbsp;<em><span><a href="javascript://" onclick="window.open(\''.$_SESSION['urltomodules'].'folder/select_folder_report.php\',\'select_folder\',\'width=912,height=600,resizable=yes\');" >'._CHOOSE_FOLDER.'</a></span></em></td>';
-			$content .='<td rowspan="3" align="right" valign="middle"><input type="button" onclick="valid_histfolder( \''.$_SESSION['urltomodules'].'folder/get_folder_hist_stats_val.php\');" class="button" name="Submit1" value="'._VALIDATE.'" /></td>';
+			$content .= '<td align="left"><label for="folder_id">'._NUM.'&nbsp;</label><input type="text" id="folder_id" name="folder_id" value="" />&nbsp;<em><span><a href="javascript://" onclick="window.open(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=folder&page=select_folder_report\',\'select_folder\',\'width=912,height=600,resizable=yes\');" >'._CHOOSE_FOLDER.'</a></span></em></td>';
+			$content .='<td rowspan="3" align="right" valign="middle"><input type="button" onclick="valid_histfolder( \''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=folder&page=get_folder_hist_stats_val\');" class="button" name="Submit1" value="'._VALIDATE.'" /></td>';
 		$content .='</tr>';
 		$content .='<tr>';
 			$content .='<td align="left"><input type="radio" id="action" name="type_choice" value="action" checked="checked"><label for="action_id">'._TITLE_STATS_CHOICE_ACTION.'</label> ';

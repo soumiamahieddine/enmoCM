@@ -10,11 +10,6 @@
 * @license GPL v3
 * @author  Claire Figueras  <dev@maarch.org>
 */
-include('../../core/init.php');
-
-require_once("core/class/class_functions.php");
-require_once("core/class/class_db.php");
-require_once("core/class/class_request.php");
 
 $req = new request();
 $req->connect();

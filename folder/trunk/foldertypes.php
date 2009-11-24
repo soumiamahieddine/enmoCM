@@ -1,5 +1,5 @@
 <?php
-require_once("core/class/class_functions.php");
+
 $_SESSION['m_admin'] = array();
 $admin = new core_tools();
 $admin->test_admin('admin_foldertypes', 'folder');
@@ -19,9 +19,8 @@ $page_label = _FOLDERTYPES_LIST;
 $page_id = "foldertypes";
 $admin->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
-require_once("core/class/class_db.php");
-require_once("core/class/class_request.php");
-require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_list_show.php");
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
+require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");
 $func = new functions();
 $select[$_SESSION['tablename']['fold_foldertypes']] = array();
 array_push($select[$_SESSION['tablename']['fold_foldertypes']],"foldertype_id","foldertype_label" );
@@ -105,7 +104,7 @@ $_SESSION['m_admin']['foldertype']['doctypes'] = array();
 $_SESSION['m_admin']['load_doctypes'] = true;
 $title = _FOLDERTYPES_LIST." : ".$i." "._TYPES;
 $autoCompletionArray = array();
-$autoCompletionArray["list_script_url"] = $_SESSION['urltomodules']."folder/foldertype_list_by_name.php";
+$autoCompletionArray["list_script_url"] = $_SESSION['config']['businessappurl']."index.php?display=true&module=folder&page=foldertype_list_by_name";
 $autoCompletionArray["number_to_begin"] = 1;
 
 $list->admin_list($tab, $i, $title, 'foldertype_id','foldertypes','folder','foldertype_id', true, $page_name_up, $page_name_val, $page_name_ban, $page_name_del, $page_name_add, $label_add, false, false, _ALL_FOLDERTYPES, _FOLDERTYPE, $_SESSION['urltomodules'].'folder/img/manage_foldertypes_b.gif', true, true, false, true, "", true, $autoCompletionArray);

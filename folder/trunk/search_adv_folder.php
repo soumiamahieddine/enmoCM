@@ -10,12 +10,8 @@
 * @license GPL
 * @author  Claire Figueras  <dev@maarch.org>
 */
-include('core/init.php');
 
-require_once("core/class/class_functions.php");
-require_once("core/class/class_db.php");
-require_once("core/class/class_request.php");
-require_once("core/class/class_core_tools.php");
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
 $core_tools = new core_tools();
 $core_tools->test_user();
 //$core_tools->load_lang();
@@ -61,6 +57,9 @@ if($_REQUEST['erase'] == 'true')
 <h1><img src="<?php  echo $_SESSION['urltomodules']."folder/img/picto_search_b.gif";?>" alt="" /> <?php  echo _ADV_SEARCH_FOLDER_TITLE; ?></h1>
 <br/>
 <form name="search_folder_frm" method="get" action="<?php  echo $_SESSION['config']['businessappurl'];?>index.php" id="search_folder_frm" class="forms2">
+	<input type="hidden" name="display"  value="true" />
+	<input type="hidden" name="module"  value="folder" />
+	<input type="hidden" name="page"  value="search_adv_folder_result" />
 <?php
 if($choose_coll)
 {
@@ -68,7 +67,7 @@ if($choose_coll)
 	<div align="center">
 		<p>
 			<label for="coll_id"><?php echo _COLLECTION;?> :</label>
-			<select name="coll_id" id="coll_id" onchange="search_change_coll('<?php echo $_SESSION['urltomodules'];?>folder/get_foldertypes.php', this.options[this.options.selectedIndex].value)">
+			<select name="coll_id" id="coll_id" onchange="search_change_coll('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=folder&page=get_foldertypes', this.options[this.options.selectedIndex].value)">
 				<option value=""><?php echo _CHOOSE_COLLECTION;?></option>
 				<?php for($i=0; $i<count($_SESSION['user']['security']);$i++)
 				{
@@ -86,7 +85,7 @@ else
 ?>
 <div id="folder_search_div" style="display:<?php if($choose_coll){echo "none";}else{echo "block";}?>">
 	<div class="clearsearch">
-		<a href="index.php?page=search_adv_folder&module=folder&reinit=true&erase=true"><img src="<?php  echo $_SESSION['config']['businessappurl']."img/reset.gif";?>" alt="" /> <?php  echo _NEW_SEARCH; ?></a>
+		<a href="<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=search_adv_folder&module=folder&reinit=true&erase=true"><img src="<?php  echo $_SESSION['config']['businessappurl']."img/reset.gif";?>" alt="" /> <?php  echo _NEW_SEARCH; ?></a>
 	</div>
 	<br/>
 	<br/>
@@ -100,7 +99,7 @@ else
 			<tr>
 				<td width="25%" align="right"><label for="foldertype_id"><?php  echo _FOLDERTYPE;?> :</label></td>
 				<td width="24%">
-					<select name="foldertype_id" id="foldertype_id" onchange="get_folder_index('<?php echo $_SESSION['urltomodules'];?>folder/get_folder_search_index.php', this.options[this.options.selectedIndex].value, 'opt_indexes')">
+					<select name="foldertype_id" id="foldertype_id" onchange="get_folder_index('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=folder&page=get_folder_search_index', this.options[this.options.selectedIndex].value, 'opt_indexes')">
 						<option value=""><?php echo _CHOOSE_FOLDERTYPE;?></option>
 						<?php for($i=0; $i<count($foldertypes);$i++)
 						{
@@ -114,7 +113,7 @@ else
 					<input type="text" name="folder_id" id="folder_id" value="<?php  echo $_SESSION['folder_search']['folder_id'] ;?>" />
 					<div id="foldersListById" class="autocomplete"></div>
 					<script type="text/javascript">
-						initList('folder_id', 'foldersListById', '<?php  echo $_SESSION['urltomodules'];?>folder/folders_list_by_id.php', 'Input', '2');
+						initList('folder_id', 'foldersListById', '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=folder&page=folders_list_by_id', 'Input', '2');
 					</script>
 				</td>
 			</tr>
@@ -150,6 +149,6 @@ else
 var foldertypes = $('foldertype_id');
 if(foldertypes)
 {
-	get_folder_index('<?php echo $_SESSION['urltomodules'];?>folder/get_folder_search_index.php', foldertypes.options[foldertypes.options.selectedIndex].value, 'opt_indexes');
+	get_folder_index('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=folder&page=get_folder_search_index', foldertypes.options[foldertypes.options.selectedIndex].value, 'opt_indexes');
 }
 </script>

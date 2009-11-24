@@ -10,11 +10,8 @@
 * @license GPL
 * @author Laurent Giovannoni <dev@maarch.org>
 */
-include('core/init.php');    
 
-require_once("core/class/class_functions.php");
-require_once("core/class/class_db.php");
-require_once("core/class/class_request.php");
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
 $db = new dbquery();
 $db->connect();
 //$_REQUEST['what'] = "P";
@@ -34,7 +31,7 @@ while($line = $db->fetch_object())
 }
 echo "<ul>\n";
 $authViewList = 0;
-//echo "<li>test</li>\n";
+
 foreach($listArray as $what)
 {
 	if($authViewList >= 10)

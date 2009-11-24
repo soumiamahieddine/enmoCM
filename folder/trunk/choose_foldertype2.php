@@ -1,11 +1,5 @@
 <?php 
-include('core/init.php'); 
-
-
-require_once("core/class/class_functions.php");
-require_once("core/class/class_db.php");
-require_once("core/class/class_request.php");
-require_once("core/class/class_core_tools.php"); 
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
 $core_tools = new core_tools();
 $core_tools->load_lang();
 
@@ -19,9 +13,7 @@ while($res = $db->fetch_object())
 {
 	array_push($types, array('id' => $res->foldertype_id, 'label' => $res->foldertype_label));
 }
-
- $core_tools->load_html();
-//here we building the header
+$core_tools->load_html();
 $core_tools->load_header();
 ?>
 <body>
@@ -31,12 +23,15 @@ if(isset($_REQUEST['foldertype']) && !empty($_REQUEST['foldertype']))
 	$_SESSION['current_foldertype'] = $_REQUEST['foldertype'];
 
 	?>
-    <script language="javascript" type="text/javascript">window.top.frames['search_folder'].location.href='<?php  echo $_SESSION['urltomodules']."folder/search_folder.php";?>';</script>
+    <script language="javascript" type="text/javascript">window.top.frames['search_folder'].location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=folder&page=search_folder';</script>
     <?php 
 
 }
 ?>
-<form name="choose_type" action="choose_foldertype2.php" method="get" <?php  if($_SESSION['origin'] == 'show_folder'){?>class="forms addforms"<?php  }?>>
+<form name="choose_type" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=folder&page=choose_foldertype2" method="get" <?php  if($_SESSION['origin'] == 'show_folder'){?>class="forms addforms"<?php  }?>>
+	<input type="hidden" name="display"  value="true" />
+	<input type="hidden" name="module"  value="folder" />
+	<input type="hidden" name="page"  value="choose_foldertype2" />
 	<p>
     	<label><?php  echo _FOLDERTYPE;?> : </label>
         <select name="foldertype" id="foldertype" onChange="this.form.submit();">

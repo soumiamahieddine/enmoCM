@@ -9,17 +9,11 @@
 * @since 06/2006
 * @license GPL
 */
- include('core/init.php');
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
 
-
-require_once("core/class/class_functions.php");
-require_once("core/class/class_db.php");
-require_once("core/class/class_request.php");
-require_once("core/class/class_core_tools.php");
 $core_tools = new core_tools();
 $core_tools->load_lang();
  $core_tools->load_html();
-//here we building the header
 $core_tools->load_header( );
 
 if($_SESSION['m_admin']['mode'] == "up" && $_SESSION['m_admin']['init'] == true)
@@ -66,7 +60,10 @@ elseif(isset($_REQUEST['doctypes']) && count($_REQUEST['doctypes']) <= 0)
 
 <?php  if(isset($_SESSION['m_admin']['foldertype']['structures']) && count($_SESSION['m_admin']['foldertype']['structures'])> 0)
 {?>
-<form name="choose_doctypes" id="choose_doctypes" method="post" action="choose_doctypes.php">
+<form name="choose_doctypes" id="choose_doctypes" method="post" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=folder&page=choose_doctypes">
+	<input type="hidden" name="display"  value="true" />
+	<input type="hidden" name="module"  value="folder" />
+	<input type="hidden" name="page"  value="choose_doctypes" />
 		<table align="left" border="0" width="100%">
 		<tr>
 			<td valign="top" width="48%"><b class="tit"><?php  echo _DOCTYPES_LIST;?></b></td>

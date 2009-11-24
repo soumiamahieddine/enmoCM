@@ -10,18 +10,14 @@
 * @license GPL
 * @author  Claire Figueras  <dev@maarch.org>
 */
-  include('core/init.php');
 
- require_once("core/class/class_functions.php");
- require_once("core/class/class_db.php");
- require_once("core/class/class_request.php");
-	require_once("modules/folder".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
+require_once("modules".DIRECTORY_SEPARATOR."folder".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
 
- 	require_once("core/class/class_core_tools.php");
 $core_tools = new core_tools();
 $core_tools->load_lang();
 
-require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_list_show.php");
+require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");
 
  $core_tools->load_html();
 //here we building the header
@@ -139,7 +135,6 @@ $core_tools->load_header( );
 <div align="center">
 <?php
 	$list=new list_show();
-	//$list->list_doc($tab,$i,_FOLDERS_LIST." : ".$i." "._FOLDERS,'res_id',"select_folder","folders_system_id","folder_detail",false,true,"get",$_SESSION['urltomodules']."folder/res_select_folder.php",_CHOOSE, false, false, "false", false, TRUE);
 	$list->list_doc($tab,$i,_NEW_FOLDERS_LIST." : ".$i." "._FOLDERS,'res_id',"select_folder","folders_system_id","folder_detail",false,false,"","",'', false, false, "false", false, false);
 ?>
 </div>

@@ -10,18 +10,14 @@
 * @license GPL
 * @author  Claire Figueras  <dev@maarch.org>
 */
-include('core/init.php');
 
-require_once("core/class/class_functions.php");
-require_once("core/class/class_db.php");
-require_once("core/class/class_request.php");
-require_once("core/class/class_core_tools.php");
-require_once("core/class/class_security.php");
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
 $core_tools = new core_tools();
 $core_tools->load_lang();
 $security = new security();
-require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_list_show.php");
-require_once("modules/folder".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
+require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");
+require_once("modules".DIRECTORY_SEPARATOR."folder".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
 $func = new functions();
 $core_tools->load_html();
 //here we building the header
@@ -50,21 +46,9 @@ if(isset($list_id) && $list_id <> "")
 	$table_view = $security->retrieve_view_from_coll_id($_SESSION['current_foldertype_coll_id']);
 
 	$_SESSION['collection_id_choice'] = $_SESSION['current_foldertype_coll_id'];
-	//$_SESSION['collection_choice'] = $table_view;
 	$details = $security->get_script_from_coll($_SESSION['collection_id_choice'], 'script_details');
 	$details = preg_replace( '/.php/', '', $details);
-	/*for($z=0;$z<count($_SESSION['collections']);$z++)
-	{
-		if($_SESSION['collections'][$z]['id'] == $_SESSION['current_foldertype_coll_id'])
-		{
-			$details = preg_replace( '/.php/', '', $_SESSION['collections'][$z]['script_details']);
 
-			$_SESSION['collection_choice'] = $_SESSION['collections'][$z]['table'];
-			$_SESSION['collection_id_choice'] = $_SESSION['collections'][$z]['id'];
-		}
-	}*/
-	//lgi
-	//$details = "details";
 	$select[$table_view]= array();
 	array_push($select[$table_view],"res_id, type_label, creation_date");
 	$where = "res_id in (".$list_id.") and (".$where_clause.")";

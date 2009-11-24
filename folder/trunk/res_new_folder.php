@@ -5,20 +5,15 @@
  * To change the template for this generated file go to
  * Window - Preferences - PHPeclipse - PHP - Code Templates
  */
-  include('core/init.php');
 
+ require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
+require_once("modules".DIRECTORY_SEPARATOR."folder".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
 
-  require_once("core/class/class_functions.php");
- require_once("core/class/class_db.php");
- require_once("core/class/class_request.php");
-require_once("modules/folder".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
-
- require_once("core/class/class_core_tools.php");
 $core_tools = new core_tools();
 $core_tools->load_lang();
  if(!isset($_REQUEST['field']) || empty($_REQUEST['field']))
  {
- 	header("location: ".$_SESSION['urltomodules']."folder/result_new_folder.php");
+ 	header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&module=folder&page=result_new_folder");
  	exit;
  }
  else

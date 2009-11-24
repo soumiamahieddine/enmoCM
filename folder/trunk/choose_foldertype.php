@@ -1,17 +1,10 @@
 <?php
-
 /// DEPRECATED ?
-  include('core/init.php');
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
 
-
-require_once("core/class/class_functions.php");
-require_once("core/class/class_db.php");
-require_once("core/class/class_request.php");
-require_once("core/class/class_core_tools.php");
 $core_tools = new core_tools();
 $core_tools->load_lang();
  $core_tools->load_html();
-//here we building the header
 $core_tools->load_header();
 
 $db = new dbquery();
@@ -31,10 +24,13 @@ if(isset($_REQUEST['foldertype']) && !empty($_REQUEST['foldertype']))
 {
 	$_SESSION['foldertype'] = $_REQUEST['foldertype'];
 	?>
-	<script language="javascript" type="text/javascript">window.parent.frames['frm_create_folder'].location.href='<?php  echo $_SESSION['urltomodules']."folder/";?>frm_create_folder.php';</script>
+	<script language="javascript" type="text/javascript">window.parent.frames['frm_create_folder'].location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=folder&page=frm_create_folder';</script>
     <?php
 }?>
-<form name="choose_foldertype_form" id="choose_foldertype_form" action="<?php  echo $_SESSION['urltomodules']."folder/";?>choose_foldertype.php">
+<form name="choose_foldertype_form" id="choose_foldertype_form" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=folder&page=choose_foldertype">
+	<input type="hidden" name="display"  value="true" />
+	<input type="hidden" name="module"  value="folder" />
+	<input type="hidden" name="page"  value="choose_foldertype" />
 <p>
 	<label><?php  echo _FOLDERTYPE;?></label>
     <select name="foldertype" id="foldertype" onchange="this.form.submit();">

@@ -1,11 +1,7 @@
 <?php
-include('core/init.php');
 
-require_once("core/class/class_functions.php");
-require_once("core/class/class_db.php");
-require_once("core/class/class_core_tools.php");
-require_once("core/class/class_request.php");
-require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_list_show.php");
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
+require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");
 $core_tools = new core_tools();
 $core_tools->load_lang();
 $db = new dbquery();
@@ -85,7 +81,7 @@ if(isset($_REQUEST['type_report']) && $_REQUEST['type_report'] == 'foldertype')
 		<div align="center"><?php $list->list_simple($tab, $i, $title, 'foldertype_id', 'istats_result', false, '', 'listing spec', '', 400, 500, '', false); ?></div>
 		<?php
 	}
-} // FIN if(isset($_REQUEST['type_report']) && $_REQUEST['type_report'] == 'foldertype')
+} // FIN 
 elseif(isset($_REQUEST['type_report']) && $_REQUEST['type_report'] == 'usergroup')
 {
 	$db->query("SELECT g.group_id AS id, g.group_desc AS label, (SELECT COUNT(DISTINCT h.record_id) FROM ".$_SESSION['tablename']['history']." h INNER JOIN ".$_SESSION['tablename']['usergroup_content']." u ON h.user_id = u.user_id WHERE h.event_type = 'VIEW' AND h.table_name = '".$_SESSION['tablename']['fold_folders']."' AND u.group_id = g.group_id ) AS nbr FROM ".$_SESSION['tablename']['usergroups']." g");

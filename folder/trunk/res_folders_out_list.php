@@ -10,28 +10,16 @@
 * @license GPL
 * @author  Claire Figueras  <dev@maarch.org>
 */
-  include('core/init.php'); 
 
- if(file_exists($_SESSION['config']['lang'].'.php'))
-{
-	include($_SESSION['config']['lang'].'.php');
-}
-else
-{
-	$_SESSION['error'] = "Language file missing...<br/>";
-}
-  require_once("core/class/class_functions.php");
- require_once("core/class/class_db.php");
- require_once("core/class/class_request.php");
- require_once("class/class_folder.php");
-
+ require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
+ require_once("modules".DIRECTORY_SEPARATOR."folder".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_folder.php");
 
  if(!isset($_REQUEST['field']) || empty($_REQUEST['field']))
  {
  
- 	$page = "folders_out_list.php";
+ 	$page = $_SESSION['config']['businessappurl']."index.php?display=true&module=folder&page=folders_out_list";
  	
- 	header("location: ".$page);
+	header("location: ".$page);
  	exit;
  }
  else
@@ -39,7 +27,7 @@ else
  	$_SESSION['folder_out_id'] = $_REQUEST['field'];
  	?>
 	 	<script language="JavaScript" type="text/javascript" >
-	 	window.top.location = 'index.php?page=details_folder_out&origin=welcome&module=folder';
+	 	window.top.location = '<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=details_folder_out&origin=welcome&module=folder';
 	 	</script>
 	 	<?php 
  	

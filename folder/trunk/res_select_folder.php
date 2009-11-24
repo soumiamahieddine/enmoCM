@@ -10,19 +10,15 @@
 * @license GPL
 * @author  Claire Figueras  <dev@maarch.org>
 */
-include('core/init.php');
 
-require_once("core/class/class_functions.php");
-require_once("core/class/class_db.php");
-require_once("core/class/class_request.php");
-require_once("core/class/class_core_tools.php");
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
 $core_tools = new core_tools();
 $core_tools->load_lang();
-require_once("modules/folder".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
+require_once("modules".DIRECTORY_SEPARATOR."folder".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
 
  if(!isset($_REQUEST['field']) || empty($_REQUEST['field']))
  {
- 	header("location: ".$_SESSION['urltomodules']."folder/result_folder.php");
+ 	header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&module=folder&page=result_folder");
  	exit;
  }
  else
@@ -52,18 +48,16 @@ require_once("modules/folder".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."c
 				?>
 
 				var eleframe1 = window.top.document.getElementById('myframe');
-				eleframe1.src = '<?php  echo $_SESSION['urltomodules']?>physical_archive/select_types_for_pa.php';
+				eleframe1.src = '<?php  echo $_SESSION['config']['businessappurl']?>index.php?display=true&module=physical_archive&page=select_types_for_pa';
 
 				<?php
 			}
 			elseif($_SESSION['origin'] <> 'store_file')
 			{
 			?>
-				//var eleframe1 = window.top.document.getElementById('myframe');
 				var eleframe1 = window.top.frames['index'].document.getElementById('myframe');
-				eleframe1.src = '<?php  echo $_SESSION['urltomodules']?>physical_archive/select_type.php';
-				//eleframe1.src = '<?php  echo $_SESSION['urltomodules']?>physical_archive/select_types_for_pa.php';
-				//window.top.location.reload();//window.top.close();
+				eleframe1.src = '<?php  echo $_SESSION['config']['businessappurl']?>index.php?display=true&module=physical_archive&page=select_type';
+				
 			<?php
 			}
 			else

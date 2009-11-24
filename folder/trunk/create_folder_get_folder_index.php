@@ -29,13 +29,8 @@
 * @license GPL
 * @author  Claire Figueras  <dev@maarch.org>
 */
-include('../../core/init.php');
 
-
-require_once("core/class/class_functions.php");
-require_once("core/class/class_db.php");
-require("core/class/class_core_tools.php");
-require('modules/folder'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR."class_admin_foldertypes.php");
+require('modules'.DIRECTORY_SEPARATOR.'folder'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR."class_admin_foldertypes.php");
 
 $core_tools = new core_tools();
 //here we loading the lang vars
@@ -118,7 +113,7 @@ if(count($indexes) > 0)
 
 $db = new dbquery();
 $db->connect();
-//$db->query("select folders_system_id, folder_id, folder_name from ".$_SESSION['tablename']['fold_folders']." where foldertype_id = ".$_REQUEST['foldertype_id']." and folder_level = 1");
+
 $db->query("select folders_system_id, folder_id, folder_name from ".$_SESSION['tablename']['fold_folders']." where folder_level = 1");
 
 $folders = array();

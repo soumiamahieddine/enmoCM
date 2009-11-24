@@ -29,9 +29,6 @@
 * @license GPL
 * @author  Claire Figueras  <dev@maarch.org>
 */
-include('core/init.php');
-
-
 $core_tools = new core_tools();
 $core_tools->load_lang();
 $core_tools->test_service('create_folder', 'folder');
@@ -67,10 +64,13 @@ while($res = $db->fetch_object())
 
 <h1><img src="<?php  echo $_SESSION['urltomodules']."folder/img/s_sheet_b.gif";?>" alt="" /> <?php  echo _CREATE_FOLDER;?></h1>
 <div id="inner_content">
-	<form name="create_folder" id="create_folder" action="<?php echo $_SESSION['urltomodules'];?>folder/manage_create_folder.php" method="post" class="forms">
+	<form name="create_folder" id="create_folder" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=folder&page=manage_create_folder" method="post" class="forms">
+		<input type="hidden" name="display"  value="true" />
+		<input type="hidden" name="module"  value="folder" />
+		<input type="hidden" name="page"  value="manage_create_folder" />
 		<p>
 			<label for="foldertype"><?php echo _FOLDERTYPE;?> :</label>
-			<select name="foldertype" id="foldertype" onchange="get_folder_index('<?php echo $_SESSION['urltomodules'];?>folder/create_folder_get_folder_index.php', this.options[this.options.selectedIndex].value, 'folder_indexes');">
+			<select name="foldertype" id="foldertype" onchange="get_folder_index('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=folder&page=create_folder_get_folder_index', this.options[this.options.selectedIndex].value, 'folder_indexes');">
 				<option value=""><?php  echo _CHOOSE_FOLDERTYPE;?></option>
 				<?php  for($i=0; $i< count($foldertypes);$i++)
 				{
@@ -99,7 +99,7 @@ while($res = $db->fetch_object())
 	var ft_list = $('foldertype');
 	if(ft_list)
 	{
-		get_folder_index('<?php echo $_SESSION['urltomodules'];?>folder/create_folder_get_folder_index.php', ft_list.options[ft_list.options.selectedIndex].value, 'folder_indexes');
+		get_folder_index('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=folder&page=create_folder_get_folder_index', ft_list.options[ft_list.options.selectedIndex].value, 'folder_indexes');
 	}
 	</script>
 	<?php } ?>

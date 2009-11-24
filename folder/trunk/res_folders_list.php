@@ -10,13 +10,9 @@
 * @license GPL
 * @author  Claire Figueras  <dev@maarch.org>
 */
-include('core/init.php');
 
-require_once("core/class/class_functions.php");
-require_once("core/class/class_db.php");
-require_once("core/class/class_request.php");
-require_once("core/class/class_core_tools.php");
-require_once("modules/folder".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
+require_once("modules".DIRECTORY_SEPARATOR."folder".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
 $core_tools = new core_tools();
 if(!$core_tools->is_module_loaded("folder"))
 {
@@ -27,7 +23,7 @@ if(!$core_tools->is_module_loaded("folder"))
 $core_tools->load_lang();
 if(!isset($_REQUEST['field']) || empty($_REQUEST['field']))
 {
-	$page = "folders_list.php";
+	$page = $_SESSION['config']['businessappurl']."index.php?display=true&module=folder&page=folders_list";
 	header("location: ".$page);
 	exit();
 }

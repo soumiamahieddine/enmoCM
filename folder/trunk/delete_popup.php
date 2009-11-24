@@ -11,12 +11,6 @@
 * @license GPL
 * @author  Claire Figueras  <dev@maarch.org>
 */
-include('core/init.php');
-
-
-require("core/class/class_functions.php");
-require("core/class/class_db.php");
-require("core/class/class_core_tools.php");
 
 if(isset($_REQUEST['id_value']) && !empty($_REQUEST['id_value']))
 {
@@ -32,7 +26,7 @@ if(isset($_REQUEST['id_value']) && !empty($_REQUEST['id_value']))
 	{
 		$db->query('select folder_id from '.$_SESSION['tablename']['fold_folders']." where folders_system_id = ".$folder_sys_id."");
 		$res = $db->fetch_object();
-		require_once("core/class/class_history.php");
+		require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 		$users = new history();
 		$users->add($_SESSION['tablename']['fold_folders'], $res->folder_id ,"DEL", _DEL_FOLDER_NUM.$res->folder_id, $_SESSION['config']['databasetype'],'folder');
 	}
@@ -75,7 +69,10 @@ $core_tools->load_header(_DELETE_FOLDER);
 		 <br/>
 		 <p><?php  echo _DELETE_FOLDER_NOTES1;?></p><br/>
 		   <p><?php  echo _REALLY_DELETE_FOLDER;?>  </p>
-		 <form name="del_folder1" method="post" action="delete_popup.php">
+		 <form name="del_folder1" method="post" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=folder&page=delete_popup">
+			<input type="hidden" name="display"  value="true" />
+			<input type="hidden" name="module"  value="delete_popup" />
+			<input type="hidden" name="page"  value="choose_foldertype2" />
 		      <div align="center">
 				<input name="id_value" type="hidden" value="<?php  echo $_SESSION['current_folder_id']; ?>" />
 		        <input type="submit" name="valid" value="<?php  echo _DELETE;?>" class="button" />

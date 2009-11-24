@@ -12,18 +12,14 @@
 * @author  Loïc Vinet  <dev@maarch.org>
 * @author  Laurent Giovannoni  <dev@maarch.org>
 */
-include('core/init.php');
 
-require_once("core/class/class_functions.php");
-require_once("core/class/class_db.php");
-require_once("core/class/class_request.php");
-require_once("core/class/class_core_tools.php");
-require_once("core/class/class_security.php");
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
 $core_tools = new core_tools();
 $core_tools->load_lang();
 $security = new security();
-require_once("modules/folder".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
-require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_list_show.php");
+require_once("modules".DIRECTORY_SEPARATOR."folder".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
+require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");
 $func = new functions();
 $table_name = $security->retrieve_table_from_coll($_SESSION['current_foldertype_coll_id']);
 $table_view = $security->retrieve_view_from_coll_id($_SESSION['current_foldertype_coll_id']);
@@ -87,7 +83,7 @@ else
 			function view_doc(id)
 			{
 				var eleframe1 = window.top.document.getElementById('view_doc');
-				eleframe1.src = '<?php  echo $_SESSION['urltomodules']?>folder/list_doc.php?listid='+id;
+				eleframe1.src = '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=folder&page=list_doc&listid='+id;
 			}
 		</script>
 		<div align="left">

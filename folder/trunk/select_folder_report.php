@@ -1,16 +1,11 @@
 <?php
-include('core/init.php');
-
-require_once("core/class/class_functions.php");
-require_once("core/class/class_db.php");
-require_once("core/class/class_core_tools.php");
 
 $core_tools = new core_tools();
 $core_tools->test_user();
 $core_tools->load_lang();
 
-require_once("core/class/class_request.php");
-require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_list_show.php");
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
+require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");
 $func = new functions();
 
 $what = "all";
@@ -91,7 +86,6 @@ for ($i=0;$i<count($tab);$i++)
 					item.value = '<?php echo $_REQUEST['field'];?>';
 					self.close();
 				}
-				//window.opener.document.location.href = '<? echo $_SESSION['urltomodules'];?>stats/target_stats.php?id=folder_hist';self.close();
 			</script>
 			<?
 		exit();
@@ -108,7 +102,7 @@ $time = $core_tools->get_session_time_expire();
 $nb = count($tab);
 
 $list=new list_show();
-$list->list_doc($tab, $nb, _FOLDERS_LIST,'folder_id',$name = "select_folder_report",'folder_id','',false,true,'get',$_SESSION['urltomodules'].'folder/select_folder_report.php',_CHOOSE_FOLDER, false, false, true,false, true, true,  true, false, '', '',  true, _ALL_FOLDERS,_FOLDER);
+$list->list_doc($tab, $nb, _FOLDERS_LIST,'folder_id',$name = "select_folder_report",'folder_id','',false,true,'get',$_SESSION['config']['businessappurl'].'index.php?module=folder&page=select_folder_report',_CHOOSE_FOLDER, false, false, true,false, true, true,  true, false, '', '',  true, _ALL_FOLDERS,_FOLDER);
 ?>
 
 </body>
