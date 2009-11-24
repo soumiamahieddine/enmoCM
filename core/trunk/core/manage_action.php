@@ -27,12 +27,6 @@
 * @version $Revision$
 * @ingroup core
 */
-include('core/init.php');
-
-
-require_once("core/class/class_functions.php");
-require_once("core/class/class_db.php");
-require_once("core/class/class_core_tools.php");
 
 $db = new dbquery();
 $core = new core_tools();
@@ -262,7 +256,7 @@ else
 	// Save action in history if needed
 	if($bool_history=='Y')
 	{
-		require_once("core/class/class_history.php");
+		require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 		$hist = new history();
 		$arr_res = explode('#', $res_action['result']);
 		for($i=0; $i<count($arr_res );$i++)

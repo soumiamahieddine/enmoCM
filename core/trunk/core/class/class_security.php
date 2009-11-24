@@ -503,26 +503,10 @@ class security extends dbquery
 
 				if($_SESSION['user']['change_pass'] == 'Y')
 				{
-					header("location: ".$_SESSION['config']['businessappurl']."change_pass.php");
+					header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&page=change_pass");
 					exit();
 				}
-/*
-				if($_SESSION['origin'] == "scan" && !$_SESSION['is_store'])
-				{
-					header("location: ../../modules/indexing_searching/index_file.php");
-					exit();
-				}
-				elseif($_SESSION['origin'] == "scan" && $_SESSION['is_store'])
-				{
-					header("location: ../../modules/indexing_searching/store_file.php");
-					exit();
-				}
-				elseif($_SESSION['req_type'] == "files")
-				{
-					header("location: ../../modules/indexing_searching/index_file.php");
-					exit();
-				}
-*/
+
 				elseif(trim($_SESSION['requestUri']) <> "")
 				{
 					header("location: ".$_SESSION['config']['businessappurl']."index.php?".$_SESSION['requestUri']);
@@ -592,7 +576,7 @@ class security extends dbquery
 				$this->load_enabled_services();
 
 				require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['businessapps'][0]['appid'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
-				//require_once("core/class/class_core_tools.php");
+			
 				$business_app_tools = new business_app_tools();
 				$core_tools = new core_tools();
 				$business_app_tools->load_app_var_session();
@@ -613,10 +597,10 @@ class security extends dbquery
 */
 				if($_SESSION['user']['change_pass'] == 'Y')
 				{
-					header("location: ".$_SESSION['config']['businessappurl']."change_pass.php");
+					header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&page=change_pass");
 					exit();
 				}
-				if($_SESSION['origin'] == "scan")
+				/*if($_SESSION['origin'] == "scan")
 				{
 					header("location: ../../modules/indexing_searching/index_file.php");
 					exit();
@@ -625,7 +609,7 @@ class security extends dbquery
 				{
 					header("location: ../../modules/indexing_searching/index_file.php");
 					exit();
-				}
+				}*/
 				else
 				{
 					header("location: ".$_SESSION['config']['businessappurl']."index.php");
@@ -720,7 +704,7 @@ class security extends dbquery
 		{
 			$this->connect();
 			//$_SESSION['user']['services'] = array();
-			require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['businessapps'][0]['appid'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_usergroups.php");
+			require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_usergroups.php");
 			$group = new usergroups();
 			for($i=0; $i< count($_SESSION['enabled_services']);$i++)
 			{

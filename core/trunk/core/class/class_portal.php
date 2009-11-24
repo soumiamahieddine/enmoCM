@@ -42,7 +42,7 @@ class portal extends functions
 	*/
 	public function build_config()
 	{
-		$xmlconfig = simplexml_load_file('core/xml/config.xml');
+		$xmlconfig = simplexml_load_file('core'.DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'config.xml');
 		foreach($xmlconfig->CONFIG as $CONFIG)
 		{
 			$_SESSION['config']['corename'] = (string) $CONFIG->corename;

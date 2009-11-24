@@ -88,8 +88,8 @@ class core_tools extends functions
 		// Browses enabled modules
 		for($i=0;$i<count($modules);$i++)
 		{
-			$path_config = 'modules/'.$modules[$i]['moduleid']."/xml/config.xml";
-			$path_lang = 'modules/'.$modules[$i]['moduleid'].'/lang/'.$_SESSION['config']['lang'].'.php';
+			$path_config = 'modules'.DIRECTORY_SEPARATOR.$modules[$i]['moduleid'].DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."config.xml";
+			$path_lang = 'modules'.DIRECTORY_SEPARATOR.$modules[$i]['moduleid'].DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php';
 			// Reads the config.xml file of the current module
 			$xmlconfig = simplexml_load_file($path_config);
 			// Loads into $_SESSION['modules_loaded'] module's informations
@@ -255,9 +255,9 @@ class core_tools extends functions
 		$k=0;
 		for($i=0;$i<count($modules);$i++)
 		{
-			$path_menu = 'modules/'.$modules[$i]['moduleid']."/xml/menu.xml";
+			$path_menu = 'modules'.DIRECTORY_SEPARATOR.$modules[$i]['moduleid'].DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."menu.xml";
 			// Reads the module/module_name/xml/menu.xml file  and loads into session
-			$path_lang = 'modules/'.$modules[$i]['moduleid'].'/lang/'.$_SESSION['config']['lang'].'.php';
+			$path_lang = 'modules'.DIRECTORY_SEPARATOR.$modules[$i]['moduleid'].DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php';
 			$xmlconfig = simplexml_load_file($path_menu);
 			foreach($xmlconfig->MENU as $MENU)
 			{
@@ -296,8 +296,8 @@ class core_tools extends functions
 		}
 
 		// Reads the apps/apps_name/xml/menu.xml file  and loads into session
-		$xmlconfig = simplexml_load_file('apps/'.$_SESSION['config']['app_id'].'/xml/menu.xml');
-		$path_lang ='apps/'.$_SESSION['config']['app_id'].'/lang/'.$_SESSION['config']['lang'].'.php';
+		$xmlconfig = simplexml_load_file('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'menu.xml');
+		$path_lang ='apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php';
 		foreach($xmlconfig->MENU as $MENU2)
 		{
 			$_SESSION['menu'][$k]['id'] = (string) $MENU2->id;
@@ -365,7 +365,7 @@ class core_tools extends functions
 		echo '<li id="account" onmouseover="this.className=\'on\';" onmouseout="this.className=\'\';">
 		<a href="'.$_SESSION['config']['businessappurl'].'index.php?page=modify_user&admin=users&reinit=true"><span><span>'._MY_INFO.'</span></span></a></li>';
 		echo '<li id="logout" onmouseover="this.className=\'on\';" onmouseout="this.className=\'\';">
-		<a href="'.$_SESSION['config']['businessappurl'].'logout.php?coreurl='.$_SESSION['config']['coreurl'].'"><span><span>'._LOGOUT.'</span></span></a></li>';
+		<a href="'.$_SESSION['config']['businessappurl'].'index.php?display=true&page=logout&coreurl='.$_SESSION['config']['coreurl'].'"><span><span>'._LOGOUT.'</span></span></a></li>';
 	}
 
 	/**
@@ -374,7 +374,7 @@ class core_tools extends functions
 	public function load_app_services()
 	{
 		// Reads the application config.xml file
-		$xmlconfig = simplexml_load_file('apps/'.$_SESSION['config']['app_id']."/xml/services.xml");
+		$xmlconfig = simplexml_load_file('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."services.xml");
 		$k = 0;
 		$m = 0;
 		// Browses the services in that file  and loads $_SESSION['app_services']
@@ -382,7 +382,7 @@ class core_tools extends functions
 		{
 			$_SESSION['app_services'][$k]['id'] = (string) $SERVICE->id;
 			$tmp = (string) $SERVICE->name;
-			$tmp2 = $this->retrieve_constant_lang($tmp, 'apps/'.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php');
+			$tmp2 = $this->retrieve_constant_lang($tmp, 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php');
 			if($tmp2 <> false)
 			{
 				$_SESSION['app_services'][$k]['name'] = $tmp2;
@@ -393,7 +393,7 @@ class core_tools extends functions
 			}
 
 			$tmp = (string) $SERVICE->comment;
-			$tmp2 = $this->retrieve_constant_lang($tmp, 'apps/'.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php');
+			$tmp2 = $this->retrieve_constant_lang($tmp, 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php');
 			if($tmp2 <> false)
 			{
 				$_SESSION['app_services'][$k]['comment'] = $tmp2;
@@ -436,7 +436,7 @@ class core_tools extends functions
 				}
 				if(isset($WHEREAMIUSED->tab_label))
 				{
-					$_SESSION['app_services'][$k]['whereamiused'][$l]['tab_label'] = $this->retrieve_constant_lang((string) $WHEREAMIUSED->tab_label, 'apps/'.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php');
+					$_SESSION['app_services'][$k]['whereamiused'][$l]['tab_label'] = $this->retrieve_constant_lang((string) $WHEREAMIUSED->tab_label, 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php');
 
 				}
 				if(isset($WHEREAMIUSED->tab_order))
@@ -493,7 +493,7 @@ class core_tools extends functions
 		for($i=0;$i<count($modules);$i++)
 		{
 			// Reads the module config.xml file
-			$xmlconfig = simplexml_load_file('modules/'.$modules[$i]['moduleid']."/xml/services.xml");
+			$xmlconfig = simplexml_load_file('modules'.DIRECTORY_SEPARATOR.$modules[$i]['moduleid'].DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."services.xml");
 			$k = 0;
 			$m = 0;
 			foreach($xmlconfig->SERVICE as $SERVICE)
@@ -502,7 +502,7 @@ class core_tools extends functions
 				{
 					$_SESSION['modules_services'][$modules[$i]['moduleid']][$k]['id'] = (string) $SERVICE->id;
 					$tmp = (string) $SERVICE->name;
-					$tmp2 = $this->retrieve_constant_lang($tmp, 'modules/'.$modules[$i]['moduleid'].'/lang/'.$_SESSION['config']['lang'].'.php');
+					$tmp2 = $this->retrieve_constant_lang($tmp, 'modules'.DIRECTORY_SEPARATOR.$modules[$i]['moduleid'].DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php');
 					if($tmp2<> false)
 					{
 						$_SESSION['modules_services'][$modules[$i]['moduleid']][$k]['name']=$tmp2;
@@ -639,7 +639,7 @@ class core_tools extends functions
 								echo $modules_services[$id_module][$i]['name'];
 								?>
 								<br />
-								<a href='<?php  echo $_SESSION['urltomodules'].$id_module."/".$modules_services[$id_module][$i]['servicepage'];?>' target='_blank'><?php  echo _ACCESS_TO_SERVICE;?></a><br /><br />
+								<a href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?display=true&module='.$id_module."&page=".$modules_services[$id_module][$i]['servicepage'];?>' target='_blank'><?php  echo _ACCESS_TO_SERVICE;?></a><br /><br />
 								<?php
 								break;
 							}
@@ -704,7 +704,7 @@ class core_tools extends functions
 									echo $modules_services[$value][$i]['name'];
 									?>
 									<br />
-									<a href='<?php  echo $_SESSION['urltomodules'].$value."/".$modules_services[$value][$i]['servicepage'];?>' target='_blank'><?php  echo _ACCESS_TO_SERVICE;?></a><br /><br />
+									<a href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?display=true&module='.$value."&page=".$modules_services[$value][$i]['servicepage'];?>' target='_blank'><?php  echo _ACCESS_TO_SERVICE;?></a><br /><br />
 									<?php
 								}
 								elseif($modules_services[$value][$i]['whereamiused'][$k]['nature'] == "button" && $_SESSION['user']['services'][$modules_services[$value][$i]['id']]&& ($servicenature == "all" || $servicenature == "button") && !in_array($modules_services[$value][$i]['id'], $executed_services))
@@ -787,7 +787,7 @@ class core_tools extends functions
 						{
 							$tab_label = $modules_services[$value][$i]['whereamiused'][$k]['tab_label'];
 							$tab_order = $modules_services[$value][$i]['whereamiused'][$k]['tab_order'];
-							$frame_src = $_SESSION['urltomodules'].$value."/".$modules_services[$value][$i]['servicepage'];
+							$frame_src = $_SESSION['config']['businessappurl'].'index.php?display=true&module='.$value."&page=".$modules_services[$value][$i]['servicepage'];
 							$tab_view[$tab_order]['tab_label'] = $this->retrieve_constant_lang($tab_label, $_SESSION['modules_loaded'][$value]['path'].'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].".php");
 							$tab_view[$tab_order]['frame_src'] = $frame_src;
 						}
@@ -835,14 +835,14 @@ class core_tools extends functions
 							echo $app_services[$i]['name'];
 							?>
 							<br />
-							<a href='<?php  echo $_SESSION['config']['businessappservices'].$app_services[$i]['servicepage'];?>' target='_blank'><?php  echo _ACCESS_TO_SERVICE;?></a><br /><br />
+							<a href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?display=true&page='.$app_services[$i]['servicepage'];?>' target='_blank'><?php  echo _ACCESS_TO_SERVICE;?></a><br /><br />
 							 <?php
 						}
 						elseif($app_services[$i]['whereamiused'][$k]['nature'] == "button" && $_SESSION['user']['services'][$app_services[$i]['id']]&& ($servicenature == "all" || $servicenature == "button") && !in_array($app_services[$i]['id'],$executed_services ))
 						{
 							array_push($executed_services,$app_services[$i]['id']);
 							$tmp = $app_services[$i]['whereamiused'][$k]['button_label'];
-							$tmp2 = $this->retrieve_constant_lang($app_services[$i]['whereamiused'][$k]['button_label'], 'apps/'.$_SESSION['config']['app_id'].'/lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].".php");
+							$tmp2 = $this->retrieve_constant_lang($app_services[$i]['whereamiused'][$k]['button_label'], 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].".php");
 							if($tmp2 <> false)
 							{
 								$tmp = $tmp2;
@@ -854,7 +854,7 @@ class core_tools extends functions
 						elseif($app_services[$i]['whereamiused'][$k]['nature'] == "include" && $_SESSION['user']['services'][$app_services[$i]['id']] && ($servicenature == "all" || $servicenature == "include") && !in_array($app_services[$i]['id'],$executed_services))
 						{
 							array_push($executed_services, $app_services[$i]['id']);
-							include('apps/'.$_SESSION['config']['app_id'].'/'.$app_services[$i]['servicepage']);
+							include('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.$app_services[$i]['servicepage']);
 						}
 					}
 				}
@@ -917,7 +917,6 @@ class core_tools extends functions
         <?php
 		foreach(array_keys($_SESSION['modules_loaded']) as $value)
 		{
-			
 			$url_css = $_SESSION['urltomodules'].$_SESSION['modules_loaded'][$value]['name']."/css/module.css";
 			$path_css = 'modules'.DIRECTORY_SEPARATOR.$_SESSION['modules_loaded'][$value]['name'].DIRECTORY_SEPARATOR."css".DIRECTORY_SEPARATOR."module.css";
 			$url_cssIE = $_SESSION['urltomodules'].$_SESSION['modules_loaded'][$value]['name']."/css/module_IE.css";
@@ -955,7 +954,7 @@ class core_tools extends functions
 			var app_path = '<?php  echo $_SESSION['config']['businessappurl'];?>';
 		</script>
 		<?php
-		if(file_exists("apps/".$_SESSION['businessapps'][0]['appid']."/js".DIRECTORY_SEPARATOR."functions.js"))
+		if(file_exists("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."js".DIRECTORY_SEPARATOR."functions.js"))
 		{
 			?>
 			<script type="text/javascript" src="<?php  echo $_SESSION['config']['businessappurl'];?>js/functions.js"></script>
@@ -1694,7 +1693,7 @@ class core_tools extends functions
 			$path = $action_id;
 			if(strtoupper($_SESSION['actions_pages'][$ind]['ORIGIN']) == "APPS")
 			{
-				$path = "apps/".$_SESSION['businessapps'][0]['appid']."/actions".DIRECTORY_SEPARATOR.$_SESSION['actions_pages'][$ind]['NAME'].".php";
+				$path = "apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."actions".DIRECTORY_SEPARATOR.$_SESSION['actions_pages'][$ind]['NAME'].".php";
 			}
 			elseif(strtoupper($_SESSION['actions_pages'][$ind]['ORIGIN']) == "MODULE")
 			{
