@@ -69,9 +69,15 @@ class portal extends functions
 			{
 				$server_port = '';
 			}
-			$_SESSION['config']['coreurl'] = $protocol."://".$_SERVER['SERVER_NAME'].$server_port.str_replace('index.php','',$_SERVER['SCRIPT_NAME']);
-		
-		
+			if($_SERVER['HTTP_X_FORWARDED_HOST'] <> "")
+                        {
+                                $host = $_SERVER['HTTP_X_FORWARDED_HOST'];
+                        }
+                        else
+                        {
+                                $host = $_SERVER['HTTP_HOST'];
+                        }
+			$_SESSION['config']['coreurl'] = $protocol."://".$host.$server_port.str_replace('index.php','',$_SERVER['SCRIPT_NAME']);
 		}
 		$i=0;
 		foreach($xmlconfig->BUSINESSAPPS as $BUSINESSAPPS)
