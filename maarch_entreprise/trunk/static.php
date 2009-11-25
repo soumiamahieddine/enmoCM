@@ -1,0 +1,105 @@
+<?php
+include_once('../../core/init.php');
+
+if(isset($_GET['filename']) && !empty($_GET['filename']))
+{
+	$filename = trim($_GET['filename']);
+	$items = explode('.', $filename);
+	$ext = array_pop($items);
+	$dir = '';
+	$module = '';
+	$path = '';
+	if(isset($_GET['module']) && !empty($_GET['module']))
+	{
+		$module = trim($_GET['module']);
+	}
+	switch(strtoupper($ext))
+	{
+		case 'CSS' :
+			$mime_type = 'text/css';
+			$dir = 'css'.DIRECTORY_SEPARATOR;
+			break;
+		case 'JS' :
+			$mime_type = 'text/javascript';
+			$dir = 'js'.DIRECTORY_SEPARATOR;
+			break;
+		case 'HTML' :
+			$mime_type = 'text/html';
+			break;
+		case 'XML' :
+			$mime_type = 'text/xml';
+			break;
+		case 'PNG' :
+			$mime_type = 'image/png';
+			$dir = 'img'.DIRECTORY_SEPARATOR;
+			break;
+		case 'JPEG' :
+			$mime_type = 'image/jpeg ';
+			$dir = 'img'.DIRECTORY_SEPARATOR;
+			break;
+		case 'JPG' :
+			$mime_type = 'image/jpeg ';
+			$dir = 'img'.DIRECTORY_SEPARATOR;
+			break;
+		case 'GIF' :
+			$mime_type = 'image/gif ';
+			$dir = 'img'.DIRECTORY_SEPARATOR;
+			break;
+		default :
+			$mime_type = '';
+	}
+	
+	if(!empty($module) && $module <> 'core')
+	{
+		if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'modules'.DIRECTORY_SEPARATOR.$module.DIRECTORY_SEPARATOR.$dir.$filename))
+		{
+			$path = $_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'modules'.DIRECTORY_SEPARATOR.$module.DIRECTORY_SEPARATOR.$dir.$filename;
+		}
+		elseif(file_exists($_SESSION['config']['corepath'].'modules'.DIRECTORY_SEPARATOR.$module.DIRECTORY_SEPARATOR.$dir.$filename))
+		{
+			$path = $_SESSION['config']['corepath'].'modules'.DIRECTORY_SEPARATOR.$module.DIRECTORY_SEPARATOR.$dir.$filename;
+		}
+	}
+	else if($module == 'core')
+	{
+		if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'core'.DIRECTORY_SEPARATOR.$dir.$filename))
+		{
+			$path = $_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'core'.DIRECTORY_SEPARATOR.$dir.$filename;
+		}
+		elseif(file_exists($_SESSION['config']['corepath'].'core'.DIRECTORY_SEPARATOR.$dir.$filename))
+		{
+			$path = $_SESSION['config']['corepath'].'core'.DIRECTORY_SEPARATOR.$dir.$filename;
+		}
+	}
+	else
+	{
+		if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.$dir.$filename))
+		{
+			$path = $_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.$dir.$filename;
+		}
+		elseif(file_exists($_SESSION['config']['corepath'].'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.$dir.$filename))
+		{
+			$path = $_SESSION['config']['corepath'].'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.$dir.$filename;
+		}
+	}
+	
+	//echo get_include_path();
+	//echo '<br/>';
+	//echo $path;
+	if(!empty($mime_type) && !empty($path))
+	{
+		header("Pragma: public");
+		//header("Expires: 0");
+		//header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+		//header("Cache-Control: public");
+		header("Content-Description: File Transfer");
+		header("Content-Type: ".$mime_type);
+		header("Content-Disposition: inline; filename=".$filename.";");
+		header("Content-Transfer-Encoding: binary");
+		readfile($path);
+	}
+}
+
+exit();
+
+?>
