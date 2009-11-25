@@ -523,7 +523,7 @@ class foldertype extends dbquery
 	{
 
 		$xmlfile = simplexml_load_file('modules'.DIRECTORY_SEPARATOR.'folder'.DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'folder_index.xml');
-		$path_lang = 'modules'.DIRECTORY_SEPARATOR.'folder'.DIRECTORY_SEPARATOR'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php';
+		$path_lang = 'modules'.DIRECTORY_SEPARATOR.'folder'.DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php';
 		$indexes = array();
 		foreach($xmlfile->INDEX as $item)
 		{
@@ -616,7 +616,7 @@ class foldertype extends dbquery
 
 		$indexes = array();
 		$xmlfile = simplexml_load_file('modules'.DIRECTORY_SEPARATOR.'folder'.DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'folder_index.xml');
-		$path_lang = 'modules'.DIRECTORY_SEPARATOR.'folder'.DIRECTORY_SEPARATOR'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php';
+		$path_lang = 'modules'.DIRECTORY_SEPARATOR.'folder'.DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php';
 		foreach($xmlfile->INDEX as $item)
 		{
 			$tmp = (string) $item->label;
