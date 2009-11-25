@@ -10,11 +10,9 @@
 * @license GPL
 * @author  Claire Figueras  <dev@maarch.org>
 */
-include('core/init.php');
 
-require_once("core/class/class_request.php");
-require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_list_show.php");
-require_once("core/class/class_core_tools.php");
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
+require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");
 $core_tools = new core_tools();
 $lastname = '';
 if(!$core_tools->is_module_loaded("folder"))
@@ -44,11 +42,11 @@ $page_label = _SEARCH_FOLDER;
 $page_id = "fold_view_folder";
 $core_tools->manage_location_bar($page_path, $page_label,$page_id, $init, $level);
 /***********************************************************/
-require_once("modules/folder".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
-require_once("modules/indexing_searching".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
-require_once("modules/folder".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_folders_show.php");
-require_once("core/class/class_history.php");
-require_once("core/class/class_security.php");
+require_once("modules".DIRECTORY_SEPARATOR."folder".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
+//require_once("modules/indexing_searching".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
+require_once("modules".DIRECTORY_SEPARATOR."folder".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_folders_show.php");
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
 $security = new security();
 $users = new history();
 $func = new functions();
@@ -359,8 +357,8 @@ if(isset($_REQUEST['delete_doc']) && !empty($_REQUEST['coll_id']))
                 <div id="form1">
                     <table border="0" width="100%">
                         <tr>
-                            <td width="45%"><iframe name="choose_foldertype2" id="choose_foldertype2" src="<?php  echo $_SESSION['urltomodules']."folder/choose_foldertype2.php";?>" frameborder="0" width="300" height="60"></iframe></td>
-                            <td><iframe name="search_folder" id="search_folder" src="<?php  echo $_SESSION['urltomodules']."folder/search_folder.php";?>" frameborder="0" width="100%" height="80" scrolling="no"></iframe></td>
+                            <td width="45%"><iframe name="choose_foldertype2" id="choose_foldertype2" src="<?php  echo $_SESSION['config']['businessappurl']."index.php.display=true&module=folder&page=choose_foldertype2";?>" frameborder="0" width="300" height="60"></iframe></td>
+                            <td><iframe name="search_folder" id="search_folder" src="<?php  echo $_SESSION['config']['businessappurl']."index.php.display=true&module=folder&page=search_folder";?>" frameborder="0" width="100%" height="80" scrolling="no"></iframe></td>
                         </tr>
                     </table>
                 </div>
@@ -499,7 +497,7 @@ if(isset($_REQUEST['delete_doc']) && !empty($_REQUEST['coll_id']))
                                     $indexing_searching->retrieve_index($res);
                                     //$func->show_array($_SESSION['index_to_use']);
                                     ?>
-                                    <form method="post" name="index_doc" action="index.php?page=view_folder&amp;module=folder&amp;id=<?php  echo $_SESSION['unique_res_id'];?>" class="forms">
+                                    <form method="post" name="index_doc" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=view_folder&amp;module=folder&amp;id=<?php  echo $_SESSION['unique_res_id'];?>" class="forms">
                                     <p>&nbsp;</p>
                                     <p>
                                         <label><?php  echo _PIECE_TYPE;?> :</label>
@@ -508,210 +506,7 @@ if(isset($_REQUEST['delete_doc']) && !empty($_REQUEST['coll_id']))
                                     <?php
                                     $db = new dbquery();
                                     $db->connect();
-                                  /*  if($is_master == "Y")
-                                    {
-                                        $array_doctypes = array();
-                                        $array_doctypes_exists = array();
-                                        $connexion->query("select * from ".$_SESSION['tablename']['doctypes']." where doctypes_second_level_id = ".$doctypes_second_level_id);
-                                        while($res = $connexion->fetch_object())
-                                        {
-                                            array_push($array_doctypes, array("TYPE_ID" => $res->type_id, "DESCRIPTION" => $connexion->show_string($res->description)));
-                                        }
-                                        //$func->show_array($array_doctypes);
-                                        $connexion->query("select * from ".$_SESSION['collection_choice']." where folders_system_id = ".$_SESSION['current_folder_id']." and envelop_id = ".$_SESSION['FOLDER']['SEARCH']['TYPE_ID']." and status <> 'DEL'");
-                                        $count_doc_exist = $connexion->nb_result();
-                                        if($count_doc_exist > 0)
-                                        {
-                                            while($res2 = $connexion->fetch_object())
-                                            {
-                                                array_push($array_doctypes_exists, array("TYPE_ID" => $res2->type_id, "RES_ID" => $res2->res_id));
-                                                if($res2->relation <> "")
-                                                {
-                                                    $_SESSION['masterdoctype_res_id'] = $res2->relation;
-                                                    $_SESSION['masterdoctype_exists'] = true;
-                                                }
-                                            }
-                                            //$func->show_array($array_doctypes_exists);
-                                            echo "<b>"._DOC_ALREADY_PRESENT."</b><br/><br/>";
-                                            for($i=0;$i<count($array_doctypes_exists);$i++)
-                                            {
-                                                if($array_doctypes_exists[$i]['TYPE_ID'] <> $type_id)
-                                                {
-                                                    $connexion->query("select * from ".$_SESSION['tablename']['doctypes']." where type_id = ".$array_doctypes_exists[$i]['TYPE_ID']);
-                                                    $res_doctypes = $connexion->fetch_array();
-                                                    $desc_exists = $connexion->show_string($res_doctypes['description']);
-                                                    ?>
-                                                    <p>
-                                                        <label>
-                                                            <a onclick="javascript:window.open('<?php  echo $_SESSION['urltomodules'];?>indexing_searching/view.php?id=<?php  echo $array_doctypes_exists[$i]['RES_ID'];?>','_blank');"><?php  echo $desc_exists;?></a> :
-                                                        </label>
-                                                        <!--<input type="checkbox" name="docexists" checked disabled/>&nbsp;--><img src="img/picto_dld.gif" onclick="javascript:window.open('<?php  echo $_SESSION['urltomodules'];?>indexing_searching/view.php?id=<?php  echo $array_doctypes_exists[$i]['RES_ID'];?>','_blank');"/>
-                                                    </p>
-                                                    <?php
-                                                }
-                                            }
-                                        }
-                                        $array_doctypes_not_indexed = array();
-                                        $cpt_find_element = 0;
-                                        for($z=0;$z<count($array_doctypes);$z++)
-                                        {
-                                            //echo "<br/>".$array_doctypes[$z]["TYPE_ID"]."<br/>";
-                                            $find_element = false;
-                                            for($h=0;$h<=count($array_doctypes_exists);$h++)
-                                            {
-                                                if($array_doctypes[$z]["TYPE_ID"] == $array_doctypes_exists[$h]['TYPE_ID'])
-                                                {
-                                                    $find_element = true;
-                                                }
-                                            }
-                                            if(!$find_element)
-                                            {
-                                                $array_doctypes_not_indexed[$cpt_find_element] = $array_doctypes[$z];
-                                                $cpt_find_element ++;
-                                            }
-                                        }
-                                        //$func->show_array($array_doctypes_not_indexed);
-                                        //echo "test ".count($array_doctypes_not_indexed);
-                                        if((count($array_doctypes_not_indexed) > 1 && count($array_doctypes_not_indexed) <> "") && $is_master == "Y")
-                                        {
-                                            echo "<b>"._DOC_TO_ADD_FOR." ".$desc."</b><br/><br/>";
-                                            for($i=0;$i<=count($array_doctypes_not_indexed);$i++)
-                                            {
-                                                if($array_doctypes_not_indexed[$i]['TYPE_ID'] <> $type_id && $array_doctypes_not_indexed[$i]['TYPE_ID'] <> "")
-                                                {
-                                                    ?>
-                                                    <p>
-                                                        <label>
-                                                            <?php  echo $connexion->show_string($array_doctypes_not_indexed[$i]['DESCRIPTION']);?> :
-                                                        </label>
-                                                        <input type="checkbox" disabled="disabled" name="doctype_<?php  echo $array_doctypes_not_indexed[$i]['TYPE_ID'];?>"/>
-                                                    </p>
-                                                    <?php
-                                                }
-                                            }
-                                        }
-                                        elseif((count($array_doctypes_not_indexed) < 2 && count($array_doctypes_not_indexed) <> "")  && $is_master == "Y")
-                                        {
-                                            echo "<i style='color:#FF0000'>".$desc." "._COMPLETE."</i><br/>";
-                                            $is_folder_complete = true;
-                                        }
-                                    }*/
-                                /*    if(!$is_folder_complete && $is_master == "Y")
-                                    {
-										echo "<b>"._INDEX."</b><br/><br/>";
-										for($i=0;$i<=count($_SESSION['index_to_use']);$i++)
-										{
-											if($_SESSION['index_to_use'][$i]['label'] <> "")
-											{
-												if($_SESSION['masterdoctype_res_id'] <> "")
-												{
-													$connexion->query("select ".$_SESSION['index_to_use'][$i]['column']." from ".$_SESSION['collection_choice']." where res_id = ".$_SESSION['masterdoctype_res_id']);
-													$res_mastertype = $connexion->fetch_array();
-													$_SESSION['indexing'][$_SESSION['index_to_use'][$i]['column']] = $res_mastertype[$_SESSION['index_to_use'][$i]['column']];
-													if($_SESSION['index_to_use'][$i]['date'])
-													{
-														$_SESSION['indexing'][$_SESSION['index_to_use'][$i]['column']] = $func->format_date_db($_SESSION['indexing'][$_SESSION['index_to_use'][$i]['column']], false);
-													}
-												}
-												if((isset($_SESSION['index_to_use'][$i]['foreign_key']) && !empty($_SESSION['index_to_use'][$i]['foreign_key']) && isset($_SESSION['index_to_use'][$i]['foreign_label']) && !empty($_SESSION['index_to_use'][$i]['foreign_label']) && isset($_SESSION['index_to_use'][$i]['tablename']) && !empty($_SESSION['index_to_use'][$i]['tablename'])) || (isset($_SESSION['index_to_use'][$i]['values']) && count($_SESSION['index_to_use'][$i]['values']) > 0))
-												{
-													?>
-												<p>
-													<label>
-													<?php
-													if($_SESSION['index_to_use'][$i]['mandatory'])
-													{
-														echo "<b>".$_SESSION['index_to_use'][$i]['label']."</b> : ";
-													}
-													else
-													{
-														echo $_SESSION['index_to_use'][$i]['label']." : ";
-													}
-													?>
-												</label>
-												<select name="doc_<?php  echo $_SESSION['index_to_use'][$i]['column'];?>" id="doc_<?php  echo $_SESSION['index_to_use'][$i]['column'];?>">
-												<option value=""><?php  echo _CHOOSE;?></option>
-												<?php
-												if(isset($_SESSION['index_to_use'][$i]['values']) && count($_SESSION['index_to_use'][$i]['values']) > 0)
-												{
-													for($k=0; $k < count($_SESSION['index_to_use'][$i]['values']); $k++)
-													{
-													?>
-														<option value="<?php  echo $_SESSION['index_to_use'][$i]['values'][$k]['label'];?>" <?php  if($_SESSION['indexing'][$_SESSION['index_to_use'][$i]['column']] == $_SESSION['index_to_use'][$i]['values'][$k]['label']){ echo 'selected="selected"'; } ?>><?php  echo $_SESSION['index_to_use'][$i]['values'][$k]['label'];?></option>
-													<?php
-													}
-												}
-												else
-												{
-													$query = "select ".$_SESSION['index_to_use'][$i]['foreign_key'].", ".$_SESSION['index_to_use'][$i]['foreign_label']." from ".$_SESSION['index_to_use'][$i]['tablename'];
-													if(isset($_SESSION['index_to_use'][$i]['where']) && !empty($_SESSION['index_to_use'][$i]['where']))
-													{
-														$query .= " where ".$_SESSION['index_to_use'][$i]['where'];
-													}
-													if(isset($_SESSION['index_to_use'][$i]['order']) && !empty($_SESSION['index_to_use'][$i]['order']))
-													{
-														$query .= ' '.$_SESSION['index_to_use'][$i]['order'];
-													}
-													$db->query($query);
-													while($res = $db->fetch_object())
-													{
-														?>
-														<option value="<?php  echo $res->$_SESSION['index_to_use'][$i]['foreign_key'];?>" <?php  if($_SESSION['indexing'][$_SESSION['index_to_use'][$i]['column']] == $res->$_SESSION['index_to_use'][$i]['foreign_key']){ echo 'selected="selected"'; } ?>><?php  echo $db->show_string($res->$_SESSION['index_to_use'][$i]['foreign_label']);?></option>
-														<?php
-													}
-												}
-												?>
-												</select>
-											</p>
-											<?php
-											}
-											else
-											{
-											?>
-											<p>
-												<span>
-													<?php
-													if($_SESSION['index_to_use'][$i]['mandatory'])
-													{
-														echo "<b>".$_SESSION['index_to_use'][$i]['label']."</b> : ";
-													}
-													else
-													{
-														echo $_SESSION['index_to_use'][$i]['label']." : ";
-													}
-													?>
-												</span>
-												<?php
-												if($_SESSION['index_to_use'][$i]['date'])
-												{
-
-												?>
-												<input type="text" name="doc_<?php  echo $_SESSION['index_to_use'][$i]['column'];?>" id="doc_<?php  echo $_SESSION['index_to_use'][$i]['column'];?>" value="<?php  echo $_SESSION['indexing'][$_SESSION['index_to_use'][$i]['column']];?>" <?php  if($_SESSION['field_error'][$_SESSION['index_to_use'][$i]['column']]){?>style="background-color:#FF0000"<?php  }?>
-<?php  if($_SESSION['index_to_use'][$i]['date']){?> onclick="showCalender(this);"<?php  }?>
-												/>
-												<?php
-												if($_SESSION['index_to_use'][$i]['mandatory'])
-												{
-													?>
-													<input type="hidden" name="mandatory_doc_<?php  echo $_SESSION['index_to_use'][$i]['column'];?>" id="mandatory_doc_<?php  echo $_SESSION['index_to_use'][$i]['column'];?>" value="true" />
-													<?php
-												}
-												if($_SESSION['index_to_use'][$i]['date'])
-												{
-												?>
-													&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-												<?php
-												}
-												?>
-											</p>
-											<?php
-												}
-											}
-										}
-									}
-									else if($is_master == "N")
-									{*/
-										//echo "<b>"._INDEX."</b><br/><br/>";
+                                 
 										for($i=0;$i<=count($_SESSION['index_to_use']);$i++)
 										{
 											if($_SESSION['index_to_use'][$i]['label'] <> "")
@@ -794,8 +589,7 @@ if(isset($_REQUEST['delete_doc']) && !empty($_REQUEST['coll_id']))
 														<?php
 														if($_SESSION['index_to_use'][$i]['date'])
 														{
-															/*?>
-															<img src="<?php  echo $_SESSION['config']['businessappurl'];?>img/calendar.jpg" alt="" name="for_doc_<?php  echo $_SESSION['index_to_use'][$i]['column'];?>" id='for_doc_<?php  echo $_SESSION['index_to_use'][$i]['column'];?>' onclick='showCalender(this)' /> <?php  */?>
+										?>
 															<input type="text" name="doc_<?php  echo $_SESSION['index_to_use'][$i]['column'];?>" id="doc_<?php  echo $_SESSION['index_to_use'][$i]['column'];?>" value="<?php  echo $func->format_date_db($_SESSION['indexing'][$_SESSION['index_to_use'][$i]['column']], false);?>" <?php  if($_SESSION['field_error'][$_SESSION['index_to_use'][$i]['column']]){?>style="background-color:#FF0000"<?php  }?> onclick='showCalender(this)' />
 															<?php
 														}
@@ -826,127 +620,6 @@ if(isset($_REQUEST['delete_doc']) && !empty($_REQUEST['coll_id']))
 												}
 											}
 										}
-									//}
-								/*	elseif($is_folder_complete && $is_master == "Y")
-									{
-										echo "<b>"._INDEX."</b><br/><br/>";
-										for($i=0;$i<=count($_SESSION['index_to_use']);$i++)
-										{
-											if($_SESSION['index_to_use'][$i]['label'] <> "")
-											{
-												if($_SESSION['masterdoctype_res_id'] <> "")
-												{
-													$connexion->query("select ".$_SESSION['index_to_use'][$i]['column']." from ".$_SESSION['collection_choice']." where res_id = ".$_SESSION['masterdoctype_res_id']);
-													$res_to_view = $connexion->fetch_array();
-													$_SESSION['indexing'][$_SESSION['index_to_use'][$i]['column']] = $res_to_view[$_SESSION['index_to_use'][$i]['column']];
-													if($_SESSION['index_to_use'][$i]['date'])
-													{
-														$_SESSION['indexing'][$_SESSION['index_to_use'][$i]['column']] = $func->format_date_db($_SESSION['indexing'][$_SESSION['index_to_use'][$i]['column']], false);
-													}
-												}
-												if((isset($_SESSION['index_to_use'][$i]['foreign_key']) && !empty($_SESSION['index_to_use'][$i]['foreign_key']) && isset($_SESSION['index_to_use'][$i]['foreign_label']) && !empty($_SESSION['index_to_use'][$i]['foreign_label']) && isset($_SESSION['index_to_use'][$i]['tablename']) && !empty($_SESSION['index_to_use'][$i]['tablename'])) || (isset($_SESSION['index_to_use'][$i]['values']) && count($_SESSION['index_to_use'][$i]['values']) > 0))
-											{
-												?>
-												<p>
-													<label>
-														<?php
-														if($_SESSION['index_to_use'][$i]['mandatory'])
-														{
-															echo "<b>".$_SESSION['index_to_use'][$i]['label']."</b> : ";
-														}
-														else
-														{
-															echo $_SESSION['index_to_use'][$i]['label']." : ";
-														}
-														?>
-													</label>
-													<select name="doc_<?php  echo $_SESSION['index_to_use'][$i]['column'];?>" id="doc_<?php  echo $_SESSION['index_to_use'][$i]['column'];?>">
-													<option value=""><?php  echo _CHOOSE;?></option>
-													<?php
-													if(isset($_SESSION['index_to_use'][$i]['values']) && count($_SESSION['index_to_use'][$i]['values']) > 0)
-													{
-														for($k=0; $k < count($_SESSION['index_to_use'][$i]['values']); $k++)
-														{
-														?>
-															<option value="<?php  echo $_SESSION['index_to_use'][$i]['values'][$k]['label'];?>" <?php  if($_SESSION['indexing'][$_SESSION['index_to_use'][$i]['column']] == $_SESSION['index_to_use'][$i]['values'][$k]['label']){ echo 'selected="selected"'; } ?>><?php  echo $_SESSION['index_to_use'][$i]['values'][$k]['label'];?></option>
-														<?php
-														}
-													}
-													else
-													{
-														$query = "select ".$_SESSION['index_to_use'][$i]['foreign_key'].", ".$_SESSION['index_to_use'][$i]['foreign_label']." from ".$_SESSION['index_to_use'][$i]['tablename'];
-														if(isset($_SESSION['index_to_use'][$i]['where']) && !empty($_SESSION['index_to_use'][$i]['where']))
-														{
-															$query .= " where ".$_SESSION['index_to_use'][$i]['where'];
-														}
-														if(isset($_SESSION['index_to_use'][$i]['order']) && !empty($_SESSION['index_to_use'][$i]['order']))
-														{
-															$query .= ' '.$_SESSION['index_to_use'][$i]['order'];
-														}
-														$db->query($query);
-														while($res = $db->fetch_object())
-														{
-															?>
-															<option value="<?php  echo $res->$_SESSION['index_to_use'][$i]['foreign_key'];?>" <?php  if($_SESSION['indexing'][$_SESSION['index_to_use'][$i]['column']] == $res->$_SESSION['index_to_use'][$i]['foreign_key']){ echo 'selected="selected"'; } ?>><?php  echo $db->show_string($res->$_SESSION['index_to_use'][$i]['foreign_label']);?></option>
-															<?php
-														}
-													}
-													?>
-													</select>
-												</p>
-												<?php
-												}
-												else
-												{
-													?>
-													<p>
-														<span>
-															<?php
-															if($_SESSION['index_to_use'][$i]['mandatory'])
-															{
-																echo "<b>".$_SESSION['index_to_use'][$i]['label']."</b> : ";
-															}
-															else
-															{
-																echo $_SESSION['index_to_use'][$i]['label']." : ";
-															}
-															?>
-														</span>
-														<?php
-														if($_SESSION['index_to_use'][$i]['date'])
-														{
-														?>
-															<input type="text" name="doc_<?php  echo $_SESSION['index_to_use'][$i]['column'];?>" id="doc_<?php  echo $_SESSION['index_to_use'][$i]['column'];?>" value="<?php  echo $func->format_date_db($_SESSION['indexing'][$_SESSION['index_to_use'][$i]['column']], false);?>" <?php  if($_SESSION['field_error'][$_SESSION['index_to_use'][$i]['column']]){?>style="background-color:#FF0000"<?php  }?> onclick="showCalender(this);" />
-															<?php
-														}
-														else
-														{
-															?>
-															<input type="text" name="doc_<?php  echo $_SESSION['index_to_use'][$i]['column'];?>" id="doc_<?php  echo $_SESSION['index_to_use'][$i]['column'];?>" value="<?php  echo $_SESSION['indexing'][$_SESSION['index_to_use'][$i]['column']];?>" <?php  if($_SESSION['field_error'][$_SESSION['index_to_use'][$i]['column']]){?>style="background-color:#FF0000"<?php  }?> />
-															<?php
-														}
-														?>
-
-														<?php
-														if($_SESSION['index_to_use'][$i]['mandatory'])
-														{
-															?>
-															<input type="hidden" name="mandatory_doc_<?php  echo $_SESSION['index_to_use'][$i]['column'];?>" id="mandatory_doc_<?php  echo $_SESSION['index_to_use'][$i]['column'];?>" value="true" />
-															<?php
-														}
-														if($_SESSION['index_to_use'][$i]['date'])
-														{
-														?>
-															&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-														<?php
-														}
-														?>
-													</p>
-													<?php
-												}
-											}
-										}
-									}*/
 								?>
 								<p class="buttons">
                                 <input type="hidden" name="coll_id" value="<?php  echo $_SESSION['collection_id_choice'];?>"/>
@@ -968,8 +641,8 @@ if(isset($_REQUEST['delete_doc']) && !empty($_REQUEST['coll_id']))
 								 </p>
 								</form>
                                 <hr/>
-								<div  align="center"> <iframe src="<?php  echo $_SESSION['urltomodules']."indexing_searching/";?>view.php?id=<?php  echo $_SESSION['unique_res_id'] ;?>" id="pdf_iframe" frameborder="0" marginheight="0" marginwidth="0" width="95%" height="300px" ></iframe>
-								<a href="<?php  echo $_SESSION['urltomodules']."indexing_searching/";?>view.php?id=<?php  echo $_SESSION['unique_res_id'];?>" target="_blank"><?php  echo _FULL_PAGE;?></a>
+								<div  align="center"> <iframe src="<?php  echo $_SESSION['config']['businessappurl']."index.php?display=true&dir=indexing_searching&page=";?>view&id=<?php  echo $_SESSION['unique_res_id'] ;?>" id="pdf_iframe" frameborder="0" marginheight="0" marginwidth="0" width="95%" height="300px" ></iframe>
+								<a href="<?php  echo $_SESSION['config']['businessappurl']."index.php?display=true&dir=indexing_searching&page=";?>view&id=<?php  echo $_SESSION['unique_res_id'];?>" target="_blank"><?php  echo _FULL_PAGE;?></a>
 						</div>
 							<?php
 							}
@@ -977,7 +650,7 @@ if(isset($_REQUEST['delete_doc']) && !empty($_REQUEST['coll_id']))
 							{
 								?>
 
-								<form method="get" name="index_doc" action="index.php?page=view_folder&amp;module=folder" class="forms">
+								<form method="get" name="index_doc" action="<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=view_folder&amp;module=folder" class="forms">
                                 	<input type="hidden" name="coll_id" value="<?php  echo $_SESSION['collection_id_choice'];?>"/>
                                     <input type="hidden" name="res_id" value="<?php  echo $_SESSION['unique_res_id'];?>" />
                                     <input type="submit" class="button"  value="<?php  echo _DELETE_THE_DOC;?>" name="delete_doc" onclick="return(confirm('<?php  echo _REALLY_DELETE.' '._THIS_DOC;?> ?\n\r\n\r'));" />
@@ -1008,7 +681,7 @@ if(isset($_REQUEST['delete_doc']) && !empty($_REQUEST['coll_id']))
 						{
 							//$func->show_array($tab);
 							$list=new list_show();
-							$list->list_doc($tab,$i,$i." "._FOUND_DOC,"res_id","view_folder","res_id","folder_detail",false,true,"post","index.php?page=view_folder&amp;module=folder&amp;type_id=".$_REQUEST['type_id']."&amp;second_level=".$_REQUEST['second_level']."&amp;morethantwodocs=ok&amp;coll_id=".$_SESSION['collection_id_choice'],_CHOOSE, false, false, false,false, false, false, false, false, "", "", false, "", "");
+							$list->list_doc($tab,$i,$i." "._FOUND_DOC,"res_id","view_folder","res_id","folder_detail",false,true,"post", $_SESSION['config']['businessappurl']."index.php?page=view_folder&amp;module=folder&amp;type_id=".$_REQUEST['type_id']."&amp;second_level=".$_REQUEST['second_level']."&amp;morethantwodocs=ok&amp;coll_id=".$_SESSION['collection_id_choice'],_CHOOSE, false, false, false,false, false, false, false, false, "", "", false, "", "");
 						}
 						else
 						{

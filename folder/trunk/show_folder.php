@@ -38,11 +38,11 @@ $page_id = "fold_show_folder";
 $core_tools->manage_location_bar($page_path, $page_label,$page_id, $init, $level);
 /***********************************************************/
 require_once("modules".DIRECTORY_SEPARATOR."folder".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
-require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_list_show.php");
+require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");
 $folder_object = new folder();
 $request= new request;
 $func = new functions();
-require_once("core/class/class_history.php");
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 $users = new history();
 $users->connect();
 $status = '';
@@ -336,7 +336,7 @@ if(isset($_POST['delete_folder']))
 										$_SESSION['FILLING_RES']['PARAM']['BOOL_FRAME']=true;
 
 										?>
-										<iframe name="filling_res" id="filling_res" src="<?php  echo $_SESSION['urltomodules']."folder/filling_res.php";?>" frameborder="0" scrolling="auto" width="400px" height="580px"></iframe>
+										<iframe name="filling_res" id="filling_res" src="<?php  echo $_SESSION['config']['businessappurl']."index.php?display=true&module=folder&page=filling_res";?>" frameborder="0" scrolling="auto" width="400px" height="580px"></iframe>
 										<?php
 									}
 									else
@@ -350,7 +350,7 @@ if(isset($_POST['delete_folder']))
 					            <table>
 									<tr valign="top">
 										<td>
-										<iframe name="view_doc" id="view_doc" src="<?php  echo $_SESSION['urltomodules']."folder/list_doc.php";?>" frameborder="0" scrolling="no" width="570px" height="580px"></iframe>
+										<iframe name="view_doc" id="view_doc" src="<?php  echo $_SESSION['config']['businessappurl']."index.php?display=true&module=folder&page=list_doc";?>" frameborder="0" scrolling="no" width="570px" height="580px"></iframe>
 										</td>
 									</tr>
 								</table>
