@@ -12,7 +12,7 @@
    <id>select_folder</id>
    <name>_SELECT_FOLDER</name>
    <comment>_SELECT_FOLDER</comment>
-   <servicepage>select_folder.php</servicepage>
+   <servicepage>select_folder</servicepage>
    <servicetype>use</servicetype>
     <system_service>true</system_service>
    <enabled>true</enabled>

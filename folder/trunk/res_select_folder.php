@@ -11,6 +11,7 @@
 * @author  Claire Figueras  <dev@maarch.org>
 */
 
+
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
 $core_tools = new core_tools();
 $core_tools->load_lang();
@@ -23,7 +24,6 @@ require_once("modules".DIRECTORY_SEPARATOR."folder".DIRECTORY_SEPARATOR."class".
  }
  else
  {
-
  	$folder = new folder();
  	$folder->load_folder(trim($_REQUEST['field']), $_SESSION['tablename']['fold_folders']);
  	$_SESSION['current_folder_id'] = $folder->get_field('folders_system_id');
@@ -45,6 +45,7 @@ require_once("modules".DIRECTORY_SEPARATOR."folder".DIRECTORY_SEPARATOR."class".
 
 			if($_SESSION['physical_archive_origin'] == 'true')
 			{
+				
 				?>
 
 				var eleframe1 = window.top.document.getElementById('myframe');

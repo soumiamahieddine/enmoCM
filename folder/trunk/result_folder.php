@@ -118,6 +118,7 @@ if(isset($_SESSION['stringSearch'])and !empty($_SESSION['stringSearch']))
 			}
 		}
 	}
+
 	//$request->show_array($tab);
 	$list=new list_show();
 	$ind = count($tab);
