@@ -55,7 +55,15 @@ class business_app_tools extends dbquery
 				
 				
 			//##############
-			$_SESSION['config']['businessappurl'] = $protocol."://".$_SERVER['SERVER_NAME'].$server_port.str_replace('login.php','',$_SERVER['SCRIPT_NAME']);
+			if($_SERVER['HTTP_X_FORWARDED_HOST'] <> "")
+                        {
+                                $host = $_SERVER['HTTP_X_FORWARDED_HOST'];
+                        }
+                        else
+                        {
+                                $host = $_SERVER['HTTP_HOST'];
+                        }
+			$_SESSION['config']['businessappurl'] = $protocol."://".$host.$server_port.str_replace('login.php','',$_SERVER['SCRIPT_NAME']);
 			$_SESSION['config']['databaseserver'] = (string) $CONFIG->databaseserver;
 			$_SESSION['config']['databaseserverport'] = (string) $CONFIG->databaseserverport;
 			$_SESSION['config']['databasetype'] = (string) $CONFIG->databasetype;
