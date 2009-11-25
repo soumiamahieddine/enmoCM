@@ -12,6 +12,7 @@
 * @author  Laurent Giovannoni  <dev@maarch.org>
 */
 
+//print_r($_SERVER);
 include('../../core'.DIRECTORY_SEPARATOR.'init.php');
 
 if(trim($_GET["coreurl"]) <> '')
@@ -65,8 +66,16 @@ if(!isset($_SESSION['config']['corename']) || empty($_SESSION['config']['corenam
 			$array_uri = explode("/",$_SERVER['SCRIPT_NAME']);
 			$slice_uri = array_slice($array_uri, 0, -3);
 			$final_uri = implode("/", $slice_uri)."/";
-			
-			$_SESSION['config']['coreurl'] = $protocol."://".$_SERVER['SERVER_NAME'].$server_port.$final_uri;
+			if($_SERVER['HTTP_X_FORWARDED_HOST'] <> "")
+			{
+				$host = $_SERVER['HTTP_X_FORWARDED_HOST'];
+			}
+			else
+			{
+				$host = $_SERVER['HTTP_HOST'];
+			}
+			$_SESSION['config']['coreurl'] = $protocol."://".$host.$server_port.$final_uri;
+
 		}
 	}
 	$i=0;
