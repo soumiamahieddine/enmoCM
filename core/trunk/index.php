@@ -11,7 +11,7 @@
 * @author  Laurent Giovannoni  <dev@maarch.org>
 */
 
-include_once('core/init.php');
+include_once('core'.DIRECTORY_SEPARATOR.'init.php');
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_functions.php");
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_portal.php");
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_core_tools.php");
@@ -22,15 +22,11 @@ $func = new functions();
 $core = new core_tools();
 $_SESSION['custom_override_id'] = $core->get_custom_id();
 
-//$func->show_array($_SESSION['config']);
-//$func->show_array($_SESSION['businessapps']);
-//$func->show_array($_SESSION['tablename']);
 if(isset($_SESSION['config']['defaultlang']) && !empty($_SESSION['config']['defaultlang']))
 {
-	include("portal/".$_SESSION['config']['defaultlang'].'.php');
+	include("portal".DIRECTORY_SEPARATOR.$_SESSION['config']['defaultlang'].'.php');
 }
-/*print_r($_SESSION['config']);
-exit;*/
+
 if(isset($_GET['origin']) && $_GET['origin'] == "scan")
 {
 	header("location: apps/".$_SESSION['businessapps'][0]['appid']."/index.php?display=true&page=reopen");
