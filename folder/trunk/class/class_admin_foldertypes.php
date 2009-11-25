@@ -53,7 +53,7 @@ class foldertype extends dbquery
 	{
 		$func = new functions();
 		$state = true;
-		require_once("core/class/class_security.php");
+		require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
 		$sec = new security();
 		$_SESSION['m_admin']['foldertype']['COLL_ID']= "";
 		if($mode == "up")
@@ -122,7 +122,15 @@ class foldertype extends dbquery
 				$db3 = new dbquery();
 				$db3->connect();
 				?>
-				<form name="formfoldertype" id="formfoldertype" method="post" action="<?php  if($mode == "up") { echo $_SESSION['urltomodules']."folder/foldertype_up_db.php"; } elseif($mode == "add") { echo $_SESSION['urltomodules']."folder/foldertype_add_db.php"; } ?>" class="forms">
+				<form name="formfoldertype" id="formfoldertype" method="post" action="<?php  if($mode == "up") { echo $_SESSION['config']['businessappurl']."index.php?display=true&module=folder&page=foldertype_up_db"; } elseif($mode == "add") { echo $_SESSION['config']['businessappurl']."index.php?display=true&module=folder&page=foldertype_add_db"; } ?>" class="forms">
+					<input type="hidden" name="display" value="true" />
+					<input type="hidden" name="module" value="folder" />
+					<?php  if($mode == "up") {?>
+						<input type="hidden" name="page" value="foldertype_up_db" />
+					<?php }
+					elseif($mode == "add") {?>
+						<input type="hidden" name="page" value="foldertype_add_db" />
+					<?php } ?>
 					<input type="hidden" name="order" id="order" value="<?php echo $_REQUEST['order'];?>" />
 					<input type="hidden" name="order_field" id="order_field" value="<?php echo $_REQUEST['order_field'];?>" />
 					<input type="hidden" name="what" id="what" value="<?php echo $_REQUEST['what'];?>" />
@@ -241,7 +249,7 @@ class foldertype extends dbquery
 			<?php } ?>
 					<div align="center">
 					 <p><h3><?php  echo _MANDATORY_DOCTYPES_COMP;?> : </h3></p><br/>
-					<iframe name="doctypes_frame" src="<?php  echo $_SESSION['urltomodules'];?>folder/choose_doctypes.php" frameborder="0" width="900px" height="250px" scrolling="no"></iframe>
+					<iframe name="doctypes_frame" src="<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=folder&page=choose_doctypes" frameborder="0" width="900px" height="250px" scrolling="no"></iframe>
 					</div>
 					<p class="buttons">
 						<input type="submit" name="Submit" value="<?php  echo _VALIDATE; ?>" class="button" />
@@ -386,7 +394,7 @@ class foldertype extends dbquery
 
 					if($_SESSION['history']['foldertypeadd'] == "true")
 					{
-						require("core/class/class_history.php");
+						require("coreclass/class_history.php");
 						$hist = new history();
 						$hist->add($_SESSION['tablename']['fold_foldertypes'], $_SESSION['m_admin']['foldertype']['foldertypeId'] ,"ADD",_FOLDERTYPE_ADDED." : ".$_SESSION['m_admin']['foldertype']['foldertypeId'] , $_SESSION['config']['databasetype'], 'folder');
 					}
@@ -417,7 +425,7 @@ class foldertype extends dbquery
 				}
 				if($_SESSION['history']['foldertypeup'] == "true")
 				{
-					require("core/class/class_history.php");
+					require("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 					$hist = new history();
 					$hist->add($_SESSION['tablename']['fold_foldertypes'], $_SESSION['m_admin']['foldertype']['foldertypeId'] ,"UP",_FOLDERTYPE_UPDATE." : ".$_SESSION['m_admin']['foldertype']['foldertypeId'] , $_SESSION['config']['databasetype'], 'folder');
 				}
@@ -490,7 +498,7 @@ class foldertype extends dbquery
 
 					if($_SESSION['history']['foldertypedel'] == "true")
 					{
-						require("core/class/class_history.php");
+						require("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 						$users = new history();
 						$users->add($_SESSION['tablename']['fold_foldertypes'], $id,"DEL",_FOLDERTYPE_DELETION." : ".$id, $_SESSION['config']['databasetype'],  'folder');
 					}
@@ -514,8 +522,8 @@ class foldertype extends dbquery
 	public function get_all_indexes()
 	{
 
-		$xmlfile = simplexml_load_file('modules/folder/xml/folder_index.xml');
-		$path_lang = 'modules/folder/lang/'.$_SESSION['config']['lang'].'.php';
+		$xmlfile = simplexml_load_file('modules'.DIRECTORY_SEPARATOR.'folder'.DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'folder_index.xml');
+		$path_lang = 'modules'.DIRECTORY_SEPARATOR.'folder'.DIRECTORY_SEPARATOR'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php';
 		$indexes = array();
 		foreach($xmlfile->INDEX as $item)
 		{
@@ -607,8 +615,8 @@ class foldertype extends dbquery
 		}
 
 		$indexes = array();
-		$xmlfile = simplexml_load_file('modules/folder/xml/folder_index.xml');
-		$path_lang = 'modules/folder/lang/'.$_SESSION['config']['lang'].'.php';
+		$xmlfile = simplexml_load_file('modules'.DIRECTORY_SEPARATOR.'folder'.DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'folder_index.xml');
+		$path_lang = 'modules'.DIRECTORY_SEPARATOR.'folder'.DIRECTORY_SEPARATOR'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php';
 		foreach($xmlfile->INDEX as $item)
 		{
 			$tmp = (string) $item->label;
@@ -707,10 +715,6 @@ class foldertype extends dbquery
 		// Checks the manadatory indexes
 		$indexes = $this->get_indexes($foldertype_id);
 		$mandatory_indexes = $this->get_mandatory_indexes($foldertype_id);
-
-		//$this->show_array($indexes);
-		//$this->show_array($mandatory_indexes);
-		//$this->show_array($values);
 
 		for($i=0; $i<count($mandatory_indexes);$i++)
 		{

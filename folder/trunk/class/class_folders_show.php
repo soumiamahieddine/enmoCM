@@ -59,13 +59,13 @@ class folders_show extends functions
 						if($_GET['second_level'] == $result[$i]['level2']['second_level_id'][$second_level])
 						{
 							?><span class="selected">
-							<a href="index.php?page=<?php  echo $link;?>"><img src="<?php  echo $_SESSION['config']['img'];?>/dir_open.gif" border="0" align='middle' alt="" /> 		<?php  echo $result[$i]['level2']['second_level_label'][$second_level];?></a><br/>
+							<a href="<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=<?php  echo $link;?>"><img src="<?php  echo $_SESSION['config']['img'];?>/dir_open.gif" border="0" align='middle' alt="" /> 		<?php  echo $result[$i]['level2']['second_level_label'][$second_level];?></a><br/>
 							</span>
 							<div class='dir_third_level'>
 							<?php  for($k=0;$k<count($result[$i]['level2'][$second_level]['level3']['type_id']);$k++)
 							{
 								?>
-								<a href="index.php?page=<?php  echo $link;?>&amp;type_id=<?php  echo $result[$i]['level2'][$second_level]['level3']['type_id'][$third_level];?>&amp;second_level=<?php  echo $result[$i]['level2']['second_level_id'][$second_level];?>&amp;coll_id=<?php  echo $result[$i]['level2'][$second_level]['level3']['coll_id'][$third_level] ?>"><img src="<?php  echo $_SESSION['config']['img'];?>/arrow_primary.gif" border="0" align="middle" alt="" /> <?php  echo $result[$i]['level2'][$second_level]['level3']['type_label'][$third_level];?></a><br/> <?php
+								<a href="<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=<?php  echo $link;?>&amp;type_id=<?php  echo $result[$i]['level2'][$second_level]['level3']['type_id'][$third_level];?>&amp;second_level=<?php  echo $result[$i]['level2']['second_level_id'][$second_level];?>&amp;coll_id=<?php  echo $result[$i]['level2'][$second_level]['level3']['coll_id'][$third_level] ?>"><img src="<?php  echo $_SESSION['config']['img'];?>/arrow_primary.gif" border="0" align="middle" alt="" /> <?php  echo $result[$i]['level2'][$second_level]['level3']['type_label'][$third_level];?></a><br/> <?php
 								$third_level++;
 							}
 							$second_level++;
@@ -77,7 +77,7 @@ class folders_show extends functions
 							{
 								$third_level++;
 							}
-							?><a href="index.php?page=<?php  echo $link;?>&amp;second_level=<?php  echo $result[$i]['level2']['second_level_id'][$second_level];?>"><img src="<?php  echo $_SESSION['config']['img'];?>/dir_close.gif" align="top" border="0" alt="" /> <?php  echo $result[$i]['level2']['second_level_label'][$second_level];?></a><br/><?php
+							?><a href="<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=<?php  echo $link;?>&amp;second_level=<?php  echo $result[$i]['level2']['second_level_id'][$second_level];?>"><img src="<?php  echo $_SESSION['config']['img'];?>/dir_close.gif" align="top" border="0" alt="" /> <?php  echo $result[$i]['level2']['second_level_label'][$second_level];?></a><br/><?php
 							$second_level++;
 						}
 					}

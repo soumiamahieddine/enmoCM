@@ -301,7 +301,7 @@ class folder extends request
 	*/
 	private function checks_folder_data()
 	{
-		require_once('modules/folder'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR."class_admin_foldertypes.php");
+		require_once('modules'.DIRECTORY_SEPARATOR.'folder'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR."class_admin_foldertypes.php");
 		$foldertype = new foldertype();
 
 		if(isset($_REQUEST['folder_id']) && !empty($_REQUEST['folder_id']))
@@ -497,7 +497,6 @@ class folder extends request
 		$missing_res = array();
 		for($i=0; $i < count($temp); $i++)
 		{
-			//$this->query("select type_id, DESCRIPTION from ".$table_doctypes." where type_id = ".$temp[$i]." and CUSTOM_T1 = 'Y'");
 			$this->query("select type_id, description from ".$table_doctypes." where type_id = ".$temp[$i]);
 			//$this->show();
 			$res = $this->fetch_object();
