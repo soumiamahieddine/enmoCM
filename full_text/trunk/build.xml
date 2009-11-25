@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+
+<project name="full_text" default="" basedir=".">
+
+	<target name="configure">
+		<property name="this.dir" value="${project.basedir}${dir_sep}modules${dir_sep}full_text${dir_sep}"/>
+        
+        <if>
+            <os family="windows"/>
+            <then>
+                <property name="maarch_tools_path" value="${project.basedir}\\apps\\${apps.name}\\tools\\"/>
+            </then>
+            <else>
+                <property name="maarch_tools_path" value="${project.basedir}/apps/${apps.name}/tools/"/>
+            </else>
+        </if>
+
+        <foreach list="${maarch.coll}" param="coll" target="_configure_coll"/>
+    </target>
+    
+    <target name="_configure_coll">
+        <property name="table_property_name" value="maarch.coll.${coll}.table"/>
+
+        <if>
+            <isset property="maarch.coll.${coll}.index"/>
+            <then>
+                <if>
+                    <os family="windows"/>
+                    <then>
+                        <property name="lucenepath_replacement" value="${indexes_path}\\$###{maarch.coll.${coll}.index}\\"/>
+                    </then>
+                    <else>
+                        <property name="lucenepath_replacement" value="${indexes_path}/$###{maarch.coll.${coll}.index}/"/>
+                    </else>
+                </if>
+            </then>
+            <else>
+                <property name="lucenepath_replacement" value="none"/>
+            </else>
+        </if>
+        
+		<copy file="${this.dir}/xml/config_documents.xml" tofile="${this.dir}/xml/config_${coll}.xml" overwrite="true">
+			<filterchain>
+			  <replaceregexp>
+				<regexp pattern="&lt;BASE_DIRECTORY>.*&lt;\/BASE_DIRECTORY>" 
+					replace="&lt;BASE_DIRECTORY>${this.dir}&lt;/BASE_DIRECTORY>"/>
+                
+                <regexp pattern="&lt;LOCATION>.*&lt;\/LOCATION>" 
+					replace="&lt;LOCATION>${db.server}&lt;/LOCATION>" ignoreCase="true"/>
+					
+				<regexp pattern="&lt;DATABASE_PORT>.*&lt;\/DATABASE_PORT>" 
+					replace="&lt;DATABASE_PORT>${db.port}&lt;/DATABASE_PORT>" ignoreCase="true"/>
+					
+				<regexp pattern="&lt;DATABASETYPE>.*&lt;\/DATABASETYPE>" 
+					replace="&lt;DATABASETYPE>${db.type}&lt;/DATABASETYPE>" ignoreCase="true"/>
+					
+				<regexp pattern="&lt;DATABASE>.*&lt;\/DATABASE>" 
+					replace="&lt;DATABASE>${db.base}&lt;/DATABASE>" ignoreCase="true"/>
+					
+				<regexp pattern="&lt;USER_NAME>.*&lt;\/USER_NAME>" 
+					replace="&lt;USER_NAME>${db.user}&lt;/USER_NAME>" ignoreCase="true"/>
+					
+				<regexp pattern="&lt;PASSWORD>.*&lt;\/PASSWORD>" 
+					replace="&lt;PASSWORD>${db.password}&lt;/PASSWORD>" ignoreCase="true"/>
+                    
+				<regexp pattern="&lt;TABLE_NAME>.*&lt;\/TABLE_NAME>" 
+					replace="&lt;TABLE_NAME>$###{${table_property_name}}&lt;/TABLE_NAME>" ignoreCase="true"/>
+                
+                <regexp pattern="&lt;MAARCH_TOOLS_PATH>.*&lt;\/MAARCH_TOOLS_PATH>" 
+					replace="&lt;MAARCH_TOOLS_PATH>${maarch_tools_path}&lt;/MAARCH_TOOLS_PATH>" ignoreCase="true"/>
+
+                <regexp pattern="&lt;INDEX_FILE_DIRECTORY>.*&lt;\/INDEX_FILE_DIRECTORY>" 
+					replace="&lt;INDEX_FILE_DIRECTORY>${lucenepath_replacement}&lt;/INDEX_FILE_DIRECTORY>" ignoreCase="true"/>
+                
+                <regexp pattern="###" 
+					replace="" ignoreCase="true"/>
+                
+			  </replaceregexp>
+              <expandproperties />
+			</filterchain>
+		</copy>
+        
+	</target>
+
+</project>
