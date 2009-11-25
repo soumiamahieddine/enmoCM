@@ -11,7 +11,12 @@
 * @author  Claire Figueras  <dev@maarch.org>
 */
 
+
+
+require_once("core/class/class_request.php");
+
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
+
 $core_tools = new core_tools();
 $core_tools->test_user();
 $core_tools->load_lang();
@@ -119,7 +124,8 @@ else
 <br/>
 <!--<img src="img/<?php  echo $file_trombi;?>" style="float:left; position:absolute; top:40px; left:10px" alt="" />-->
 <div class="block">
-	<form name="frm1" class="physicalform" action="<?php  echo $_SESSION['urltomodules'];?>indexing_searching/file_index.php">
+	<form name="frm1" class="physicalform" action="<?php  echo  $_SESSION['config']['businessappurl'].'index.php?display=true&module=indexing_searching&page=file_index';?>"
+	
 		<b><?php  echo _SELECTED_FOLDER;?></b>
 		<br/>
 		<br/>
@@ -149,8 +155,12 @@ if($_SESSION['origin'] <> "qualify")
     <b><?php  echo _SEARCH_FOLDER;?></b>
     <br/>
     <br/>
-    <form name="select_folder" method="get" action="<?php  echo $_SESSION["urltomodules"];?>folder/select_folder.php" class="physicalform">
-        <p>
+	
+    <form name="select_folder" method="get" action="<?php echo $_SESSION['config']['businessappurl'].'index.php';?>" class="physicalform">
+    <input type="hidden" name="display" value="true"/>
+	<input type="hidden" name="module" value="folder"/>
+	<input type="hidden" name="page" value="select_folder"/>
+	    <p>
             <label><?php  echo _PROJECT." / "._MARKET;?> :</label>
             <input type="text" name="project" id="project"/>
 			<!--<div id="show_project" class="autocomplete"></div>-->
@@ -172,7 +182,7 @@ if($_SESSION['origin'] <> "qualify")
     {
 		?>
 		<div align="center">
-			<iframe name="result_folder" src="<?php  echo $_SESSION["urltomodules"];?>folder/result_folder.php" frameborder="0" width="98%" height="1000" scrolling="no"></iframe>
+			<iframe name="result_folder" src="<?php  echo$_SESSION['config']['businessappurl'].'index.php?display=true&module=folder&page=result_folder';?>" frameborder="0" width="98%" height="1000" scrolling="no"></iframe>
 		</div>
 		<?php
     }
