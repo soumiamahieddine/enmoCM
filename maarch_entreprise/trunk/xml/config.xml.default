@@ -18,9 +18,11 @@
 		<adminname>maarch</adminname>
 		<debug>false</debug>
 		<applicationname>Maarch</applicationname>
+<!--
 		<css>css/styles.css</css>
 		<css_ie>css/style_ie.css</css_ie>
 		<css_ie7>css/style_ie7.css</css_ie7>
+-->
 		<img>img</img>
 		<defaultPage>welcome</defaultPage>
 		<exportdirectory></exportdirectory>

@@ -240,7 +240,7 @@ else if($_REQUEST['mode'] == 'add')
 <br/>
 
 <div id="contacts" style="padding-left: 20px;">
-	<h2 align="center"><img src="<?php echo $_SESSION['config']['businessappurl'];?>img/my_contacts_off.gif" alt="<?php echo _CONTACT_INFO;?>" /> <?php echo _CONTACT_INFO;?></h2>	<br/>
+	<h2 align="center"><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=my_contacts_off.gif" alt="<?php echo _CONTACT_INFO;?>" /> <?php echo _CONTACT_INFO;?></h2>	<br/>
 	<form name="frmcontact" id="frmcontact" method="post" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=contact_info" class="forms addforms">
 		<input type="hidden" name="display" value="true" />	
 		<input type="hidden" name="page" value="contact_info" />

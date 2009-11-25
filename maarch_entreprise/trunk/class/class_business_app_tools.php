@@ -80,10 +80,12 @@ class business_app_tools extends dbquery
 			$_SESSION['config']['adminname'] = (string) $CONFIG->adminname;
 			$_SESSION['config']['debug'] = (string) $CONFIG->debug;
 			$_SESSION['config']['applicationname'] = (string) $CONFIG->applicationname;
+/*
 
 			$_SESSION['config']['css'] = $_SESSION['config']['businessappurl'].((string) $CONFIG->css);
 			$_SESSION['config']['css_IE'] = $_SESSION['config']['businessappurl'].((string) $CONFIG->css_ie);
 			$_SESSION['config']['css_IE7'] = $_SESSION['config']['businessappurl'].((string) $CONFIG->css_ie7);
+*/
 
 			$_SESSION['config']['img'] = (string) $CONFIG->img;
 
