@@ -891,7 +891,7 @@ class core_tools extends functions
             <title><?php  echo $title;?></title>
             <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
             <meta http-equiv="Content-Language" content="<?php  echo $_SESSION['config']['lang'];?>" />
-			<link rel="icon" type="image/png" href="<?php echo $_SESSION['config']['businessappurl'];?>img/favicon.png"/>
+			<link rel="icon" type="image/png" href="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=favicon.png"/>
             <?php
             if($load_css)
             {

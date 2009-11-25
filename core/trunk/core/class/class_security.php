@@ -452,7 +452,7 @@ class security extends dbquery
 			$query = "select * from ".$_SESSION['tablename']['users']." where user_id like '".$this->protect_string_db($s_login)."' and password = '".$pass."' and STATUS <> 'DEL'";
 
 		$this->query($query);
-
+		
 		if($this->nb_result() > 0)
 		{
 			$line = $this->fetch_object();
@@ -500,14 +500,14 @@ class security extends dbquery
 
 					$hist->add($_SESSION['tablename']['users'],$_SESSION['user']['UserId'],"LOGIN","IP : ".$ip.", BROWSER : ".$navigateur , $_SESSION['config']['databasetype']);
 				}
-
+				
 				if($_SESSION['user']['change_pass'] == 'Y')
 				{
 					header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&page=change_pass");
 					exit();
 				}
 
-				elseif(trim($_SESSION['requestUri']) <> "")
+				elseif(isset($_SESSION['requestUri']) && trim($_SESSION['requestUri']) <> ""&& !preg_match('/page=login/', $_SESSION['requestUri']))
 				{
 					header("location: ".$_SESSION['config']['businessappurl']."index.php?".$_SESSION['requestUri']);
 					exit();
@@ -527,8 +527,9 @@ class security extends dbquery
 		}
 		else
 		{
+			
 			$_SESSION['error'] = _BAD_LOGIN_OR_PSW."&hellip;";
-			header("location: ".$_SESSION['config']['businessappurl']."login.php?coreurl=".$_SESSION['config']['coreurl']);
+			header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&page=login&coreurl=".$_SESSION['config']['coreurl']);
 			exit();
 		}
 	}
@@ -626,7 +627,7 @@ class security extends dbquery
 		else
 		{
 			$_SESSION['error'] = _ERROR;
-			header("location: ".$_SESSION['config']['businessappurl']."login.php?coreurl=".$_SESSION['config']['coreurl']);
+			header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&page=login&coreurl=".$_SESSION['config']['coreurl']);
 			exit();
 		}
 	}
