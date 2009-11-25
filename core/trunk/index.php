@@ -33,7 +33,7 @@ if(isset($_SESSION['config']['defaultlang']) && !empty($_SESSION['config']['defa
 exit;*/
 if(isset($_GET['origin']) && $_GET['origin'] == "scan")
 {
-	header("location: apps/".$_SESSION['businessapps'][0]['appid']."/reopen.php");
+	header("location: apps/".$_SESSION['businessapps'][0]['appid']."/index.php?display=true&page=reopen");
 }
 elseif(count($_SESSION['businessapps'])== 1)
 {
