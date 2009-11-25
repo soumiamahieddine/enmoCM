@@ -20,35 +20,35 @@
  */
 
 /*************************** Report management *****************/
-define('_ADMIN_REPORTS','Manage reports');
-define('_ADMIN_REPORTS_DESC','Manage reports');
-define('_REPORTS','Reports');
-define('_REPORTS_COMMENT','Reports');
-define('_OTHER_REPORTS','Other reports');
-define('_REPORTS_DESC','Edit reports');
-define('_HAVE_TO_SELECT_GROUP', 'You must choose a group');
-define('_AVAILABLE_REPORTS', 'Report available for');
-define('_GROUP_REPORTS_ADDED', 'Reports for the group');
-define('_CLICK_LINE_BELOW_TO_SEE_REPORT', 'Click on a line to see the report');
-define('_CLICK_LINE_BELOW_TO_RETURN_TO_REPORTS', 'Back to the list of reports');
-define('_NO_REPORTS_FOR_USER', 'No report available for this user');
-define('_PRINT_NO_RESULT', 'Nothing to display');
+if (!defined('_ADMIN_REPORTS')) define('_ADMIN_REPORTS','Manage reports');
+if (!defined('_ADMIN_REPORTS_DESC')) define('_ADMIN_REPORTS_DESC','Manage reports');
+if (!defined('_REPORTS')) define('_REPORTS','Reports');
+if (!defined('_REPORTS_COMMENT')) define('_REPORTS_COMMENT','Reports');
+if (!defined('_OTHER_REPORTS')) define('_OTHER_REPORTS','Other reports');
+if (!defined('_REPORTS_DESC')) define('_REPORTS_DESC','Edit reports');
+if (!defined('_HAVE_TO_SELECT_GROUP')) define('_HAVE_TO_SELECT_GROUP', 'You must choose a group');
+if (!defined('_AVAILABLE_REPORTS')) define('_AVAILABLE_REPORTS', 'Report available for');
+if (!defined('_GROUP_REPORTS_ADDED')) define('_GROUP_REPORTS_ADDED', 'Reports for the group');
+if (!defined('_CLICK_LINE_BELOW_TO_SEE_REPORT')) define('_CLICK_LINE_BELOW_TO_SEE_REPORT', 'Click on a line to see the report');
+if (!defined('_CLICK_LINE_BELOW_TO_RETURN_TO_REPORTS')) define('_CLICK_LINE_BELOW_TO_RETURN_TO_REPORTS', 'Back to the list of reports');
+if (!defined('_NO_REPORTS_FOR_USER')) define('_NO_REPORTS_FOR_USER', 'No report available for this user');
+if (!defined('_PRINT_NO_RESULT')) define('_PRINT_NO_RESULT', 'Nothing to display');
 
 
 //Global
-define('_DOCUMENTS_LIST','Document list');
-define('_DOCUMENTS_LIST_DESC','Documents list');
+if (!defined('_DOCUMENTS_LIST')) define('_DOCUMENTS_LIST','Document list');
+if (!defined('_DOCUMENTS_LIST_DESC')) define('_DOCUMENTS_LIST_DESC','Documents list');
 
 /*************************** Module label in report *****************/
-define('_TITLE_STATS_DU','from');
-define('_TITLE_STATS_AU','to');
+if (!defined('_TITLE_STATS_DU')) define('_TITLE_STATS_DU','from');
+if (!defined('_TITLE_STATS_AU')) define('_TITLE_STATS_AU','to');
 
 
-define('_NB_TOTAL_DOC', 'Total number of documents');
-define('_NB_TOTAL_FOLDER', 'Total number of files');
+if (!defined('_NB_TOTAL_DOC')) define('_NB_TOTAL_DOC', 'Total number of documents');
+if (!defined('_NB_TOTAL_FOLDER')) define('_NB_TOTAL_FOLDER', 'Total number of files');
 
-define('_NO_DATA_MESSAGE', 'Not enough data to generate the report');
-define('_REPORT', 'Report');
-define('_ERROR_REPORT_TYPE', 'The type of report is not correct');
-define('_ERROR_PERIOD_TYPE', 'The type of period is not correct');
+if (!defined('_NO_DATA_MESSAGE')) define('_NO_DATA_MESSAGE', 'Not enough data to generate the report');
+if (!defined('_REPORT')) define('_REPORT', 'Report');
+if (!defined('_ERROR_REPORT_TYPE')) define('_ERROR_REPORT_TYPE', 'The type of report is not correct');
+if (!defined('_ERROR_PERIOD_TYPE')) define('_ERROR_PERIOD_TYPE', 'The type of period is not correct');
 ?>
