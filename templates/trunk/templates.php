@@ -30,7 +30,7 @@ $page_label = _TEMPLATES_LIST;
 $page_id = "templates";
 $admin->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
- require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR"class_request.php");
+ require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
  require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");
 
  $func = new functions();
