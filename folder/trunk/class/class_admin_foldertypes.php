@@ -394,7 +394,7 @@ class foldertype extends dbquery
 
 					if($_SESSION['history']['foldertypeadd'] == "true")
 					{
-						require("coreclass/class_history.php");
+						require("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 						$hist = new history();
 						$hist->add($_SESSION['tablename']['fold_foldertypes'], $_SESSION['m_admin']['foldertype']['foldertypeId'] ,"ADD",_FOLDERTYPE_ADDED." : ".$_SESSION['m_admin']['foldertype']['foldertypeId'] , $_SESSION['config']['databasetype'], 'folder');
 					}
