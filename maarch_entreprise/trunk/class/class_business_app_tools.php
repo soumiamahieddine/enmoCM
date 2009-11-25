@@ -56,14 +56,15 @@ class business_app_tools extends dbquery
 				
 			//##############
 			if($_SERVER['HTTP_X_FORWARDED_HOST'] <> "")
-                        {
-                                $host = $_SERVER['HTTP_X_FORWARDED_HOST'];
-                        }
-                        else
-                        {
-                                $host = $_SERVER['HTTP_HOST'];
-                        }
-			$_SESSION['config']['businessappurl'] = $protocol."://".$host.$server_port.str_replace('login.php','',$_SERVER['SCRIPT_NAME']);
+			{
+					$host = $_SERVER['HTTP_X_FORWARDED_HOST'];
+			}
+			else
+			{
+					$host = $_SERVER['HTTP_HOST'];
+			}
+
+			$_SESSION['config']['businessappurl'] = $protocol."://".$host.$server_port.str_replace('index.php','',$_SERVER['SCRIPT_NAME']);
 			$_SESSION['config']['databaseserver'] = (string) $CONFIG->databaseserver;
 			$_SESSION['config']['databaseserverport'] = (string) $CONFIG->databaseserverport;
 			$_SESSION['config']['databasetype'] = (string) $CONFIG->databasetype;
@@ -106,7 +107,7 @@ class business_app_tools extends dbquery
 			foreach($xmlconfig->COLLECTION as $col)
 			{
 				$tmp = (string) $col->label;
-				$tmp2 = $this->retrieve_constant_lang($tmp, 'apps/'.$_SESSION['config']['app_id'].'/lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].".php");
+				$tmp2 = $this->retrieve_constant_lang($tmp, 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].".php");
 				if($tmp2 <> false)
 				{
 					$tmp = $tmp2;
@@ -168,7 +169,7 @@ class business_app_tools extends dbquery
 			foreach($xmlconfig->KEYWORDS as $keyword)
 			{
 				$tmp = (string) $keyword->label;
-				$tmp2 = $this->retrieve_constant_lang($tmp, 'apps/'.$_SESSION['config']['app_id'].'/lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].".php");
+				$tmp2 = $this->retrieve_constant_lang($tmp, 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].".php");
 				if($tmp2 <> false)
 				{
 					$tmp = $tmp2;

@@ -68,7 +68,7 @@ if(count($_SESSION['config']) <= 0)
 
 if(!empty($_SESSION['error']))
 {
-	header("location: ".$_SESSION['config']['businessappurl']."login.php?coreurl=".$_SESSION['config']['coreurl']);
+	header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&page=login&coreurl=".$_SESSION['config']['coreurl']);
 	exit();
 }
 else
@@ -135,14 +135,14 @@ else
 			else
 			{
 				$_SESSION['error'] =  _NO_LOGIN_OR_PSW_BY_LDAP."...";
-				header("location: login.php");
+				header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&page=login&coreurl=".$_SESSION['config']['coreurl']);
 				exit;
 			}
 		}
 		else
 		{
 			$_SESSION['error'] =  _BAD_LOGIN_OR_PSW."...";
-			header("location: login.php");
+			header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&page=login&coreurl=".$_SESSION['config']['coreurl']);
 			exit;
 		}
 	}

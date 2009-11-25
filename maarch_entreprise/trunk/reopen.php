@@ -36,18 +36,18 @@ $s_UserId = strtolower($func->wash($user[1],"no","","yes"));
 $s_key =strtolower($func->wash($thekey[1],"no","","yes"));
 if(!empty($_SESSION['error']) || ($s_UserId == "1" && $s_key == ""))
 {
-	header("location: ".$_SESSION['config']['businessappurl']."login.php?coreurl=".$_SESSION['config']['coreurl']);
+	header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&page=login&coreurl=".$_SESSION['config']['coreurl']);
 	exit();
 }
 else
 {
 	if(trim($_SERVER['argv'][0]) <> "")
 	{
-		header("location: ".$_SESSION['config']['businessappurl']."login.php?coreurl=".$_SESSION['config']['coreurl']."&".$_SERVER['argv'][0]);
+		header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&page=login&coreurl=".$_SESSION['config']['coreurl']."&".$_SERVER['argv'][0]);
 	}
 	else
 	{
-		header("location: ".$_SESSION['config']['businessappurl']."login.php?coreurl=".$_SESSION['config']['coreurl']);
+		header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&page=login&coreurl=".$_SESSION['config']['coreurl']);
 	}
 	exit();
 	/*$pass = md5($s_pass);

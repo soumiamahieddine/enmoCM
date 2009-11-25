@@ -13,7 +13,6 @@
 */
 
 //print_r($_SERVER);
-include('../../core'.DIRECTORY_SEPARATOR.'init.php');
 
 if(trim($_GET["coreurl"]) <> '')
 {
@@ -137,17 +136,11 @@ else
 }
 if(isset($_SESSION['config']['corepath']) && !empty($_SESSION['config']['corepath'] ))
 {
-	require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_functions.php");
-	require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_db.php");
-	require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_core_tools.php");
 	require('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
 	$path_core_config = 'core'.DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'config.xml';
 }
 else
 {
-	require_once("..".DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_functions.php");
-	require_once("..".DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_db.php");
-	require_once("..".DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_core_tools.php");
 	require("class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
 	$path_core_config = "..".DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR.'core'.DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'config.xml';
 }
@@ -173,7 +166,7 @@ $time = $core_tools->get_session_time_expire();
 <body id="bodylogin" onload="setTimeout('window.location.reload(true)', <?php  echo $time;?>*60*1000);">
 <?php //$core_tools->show_array($_SERVER);?>
     <div id="loginpage">
-        <p id="logo"><img src="<?php  echo $_SESSION['config']['img'];?>/default_maarch.gif" alt="Maarch" /></p>
+        <p id="logo"><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=default_maarch.gif" alt="Maarch" /></p>
         <form name="formlogin" id="formlogin" method="post" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=log" class="forms">
 			<input type="hidden" name="display" value="true" />
 			<input type="hidden" name="page" value="log" />

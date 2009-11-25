@@ -30,7 +30,7 @@ if(!isset($_SESSION['user']['UserId']))
 {
 	if(trim($_SERVER['argv'][0]) <> "")
 	{
-		header("location: adminreopen.php?".$_SERVER['argv'][0]);
+		header("location: reopen.php?".$_SERVER['argv'][0]);
 	}
 	else
 	{

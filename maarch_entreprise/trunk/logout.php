@@ -31,9 +31,7 @@ if($_SESSION['history']['userlogout'] == "true")
 	$hist->add($_SESSION['tablename']['users'],$_SESSION['user']['UserId'],"LOGOUT","IP : ".$ip.", BROWSER : ".$navigateur.", HOST : ".$host, $_SESSION['config']['databasetype']);
 }
 
-$path = $_SESSION['config']['businessappurl'];
-
 $_SESSION = array();
-header("location: ".$path."login.php?coreurl=".$_GET['coreurl']);
+header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&page=login&coreurl=".$_GET['coreurl']);
 exit();
 ?>
