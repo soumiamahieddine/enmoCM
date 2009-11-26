@@ -124,7 +124,7 @@ input.button {
 	margin-bottom: 6px;
 }
 #list .file li.on li {
-	background-image: url(../img/case_ins_on.gif);
+	background-image: url(img/case_ins_on.gif);
 	background-position: top left;
 	padding: 4px 0 4px 35px;
 	margin-left: 5px;

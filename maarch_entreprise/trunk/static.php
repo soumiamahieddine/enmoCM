@@ -79,7 +79,7 @@ if(isset($_GET['filename']) && !empty($_GET['filename']))
 		}
 		elseif(file_exists($_SESSION['config']['corepath'].'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.$dir.$filename))
 		{
-			$path = $_SESSION['config']['corepath'].'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.$dir.$filename;
+			$path = $_SESSION['config']['corepath'].'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.$dir.$filename;	
 		}
 	}
 	
