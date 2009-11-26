@@ -1,6 +1,4 @@
 <?php
-//include('core/init.php');
-
 if($_SESSION['service_tag'] == 'admin_templates')
 {?>
 	<table align="center" width="100%" id="template_entities" >

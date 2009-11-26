@@ -1,6 +1,4 @@
 <?php
-//include('core/init.php');
-
 if($_SESSION['service_tag'] == 'group_basket')
 {
 

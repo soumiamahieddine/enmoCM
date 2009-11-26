@@ -12,14 +12,8 @@
 * @author  Claire Figueras  <dev@maarch.org>
 */
 
-//include('core/init.php');
-
-//require_once("core/class/class_functions.php");
-
 $admin = new core_tools();
 $admin->test_admin('manage_entities', 'entities');
-
-//require_once("core/class/class_db.php");
 
 $func = new functions();
 if(isset($_GET['id']))
