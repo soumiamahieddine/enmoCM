@@ -118,7 +118,7 @@ if(count($_SESSION['user']['baskets'])> 0)
 {
 	?><div style="">
 	    <form name="select_basket" method="get"  id="select_basket"  action="<?php echo $_SESSION['config']['businessappurl'];?>index.php">
-	    <img src="<?php echo $_SESSION['urltomodules']."basket/img/picto_basket_b.gif";?>" alt="" /> <?php echo _VIEW_BASKETS_TITLE; ?> :
+	    <img src="<?php echo $_SESSION['config']['businessappurl']."static.php?filename=picto_basket_b.gif&module=basket";?>" alt="" /> <?php echo _VIEW_BASKETS_TITLE; ?> :
 	    	<input type="hidden" name="page" id="page" value="view_baskets" />
 			<input type="hidden" name="module" id="module" value="basket" />
 
@@ -141,7 +141,7 @@ if(count($_SESSION['user']['baskets'])> 0)
 }
 else
 {?>
-	 <img src="<?php echo $_SESSION['urltomodules']."basket/img/picto_basket_b.gif";?>" alt="" /> <?php echo _VIEW_BASKETS_TITLE;
+	 <img src="<?php echo $_SESSION['config']['businessappurl']."static.php?filename=picto_basket_b.gif&module=basket";?>" alt="" /> <?php echo _VIEW_BASKETS_TITLE;
 }?>
 </h1>
 <div id="inner_content">
@@ -163,13 +163,13 @@ else
 	if(count($_SESSION['user']['baskets'])> 0)
 	{
 		$core_tools->execute_modules_services($_SESSION['modules_services'], 'view_basket', "include");
-		echo '<p style="border:0px solid;padding-left:250px;"><img src="'.$_SESSION['config']['businessappurl'].'img/arrow_up.gif" /></p>';
+		echo '<p style="border:0px solid;padding-left:250px;"><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=arrow_up.gif" /></p>';
 		?><div align="left"  style="width:500px;"><?php
 
 		 echo "<p align = 'justify'>
 		 <table width='100%'>
 			 <tr>
-				 <td width='80px'><img src='".$_SESSION['config']['businessappurl']."img/lunch_guide.gif'> </td>
+				 <td width='80px'><img src='".$_SESSION['config']['businessappurl']."static.php?filename=lunch_guide.gif'> </td>
 				 <td> <div class='block' align='center'>"._BASKET_WELCOME_TXT1."<br/>"._BASKET_WELCOME_TXT2.".<div class='block_end'>&nbsp;</div></div></td>
 			 </tr>
 		 </table>

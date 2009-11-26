@@ -87,7 +87,7 @@ $db->connect();
 				$nb = "";
 			if(!preg_match('/^IndexingBasket/', $_SESSION['user']['baskets'][$i]['id']))
 			{
-				echo '<li><a href="'.$_SESSION['config']['businessappurl'].'index.php?page=view_baskets&module=basket&baskets='.$_SESSION['user']['baskets'][$i]['id'].'"><img src="'.$_SESSION['urltomodules'].'basket/img/nature_send.gif" alt=""/> '.$_SESSION['user']['baskets'][$i]['desc'].'  <b>'.$nb.'</b> </a></li>';
+				echo '<li><a href="'.$_SESSION['config']['businessappurl'].'index.php?page=view_baskets&module=basket&baskets='.$_SESSION['user']['baskets'][$i]['id'].'"><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=nature_send.gif&module=basket" alt=""/> '.$_SESSION['user']['baskets'][$i]['desc'].'  <b>'.$nb.'</b> </a></li>';
 			}
 		}
 		?>

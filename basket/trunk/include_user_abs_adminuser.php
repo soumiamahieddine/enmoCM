@@ -35,7 +35,7 @@ if($_SESSION['m_admin']['users']['Status'] == 'ABS')
 
  ?><script >var abs_content = '<?php echo addslashes($content);?>';</script>
 	<div>
-        <h2<img src="<?php echo $_SESSION['urltomodules'];?>basket/img/missing_user_big.gif" alt="" /> <?php echo _ADMIN_ABS; ?> </a></h2>
+        <h2<img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=missing_user_big.gif&module=basket" alt="" /> <?php echo _ADMIN_ABS; ?> </a></h2>
         <p id="abs"><?php echo _USER_ABS; ?></p>
         <p><input type="button" onclick="createModal(abs_content, 'modal_cancel_abs', '100px', '300px');" value="<?php echo _CANCEL_ABS;?>" class="button"/></p>
     </div>
@@ -81,7 +81,7 @@ if($_SESSION['m_admin']['users']['Status'] == 'ABS')
 		<script>
 			var modal_content = '<?php echo addslashes($modal_content);?>';
 		</script>
-		<h2><a href="javascript://" onclick="createModal(modal_content, 'modal_redirect', <?php if(count($arr_baskets) >0) {?>'400px', '800px'<?php }else{?>'100px', '320px'<?php }?>);autocomplete(<?php echo count($arr_baskets);?>, '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=basket&page=autocomplete_users_list')"><img src="<?php echo $_SESSION['urltomodules'].'basket/img';?>/missing_user_big.gif" alt="" /> <?php echo _ADMIN_ABS; ?> </a></h2>
+		<h2><a href="javascript://" onclick="createModal(modal_content, 'modal_redirect', <?php if(count($arr_baskets) >0) {?>'400px', '800px'<?php }else{?>'100px', '320px'<?php }?>);autocomplete(<?php echo count($arr_baskets);?>, '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=basket&page=autocomplete_users_list')"><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=missing_user_big.gif&module=basket" alt="" /> <?php echo _ADMIN_ABS; ?> </a></h2>
         <p id="abs"><?php echo _ADMIN_ABS_TXT; ?></p>
     </div>
 <?php } ?>

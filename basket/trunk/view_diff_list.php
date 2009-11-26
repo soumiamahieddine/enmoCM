@@ -39,7 +39,7 @@ $func = new functions;
 $list = new list_show();
 ?>
 <h2 onclick="change(22)" id="h222" class="categorie">
-	<img src="<?php echo $_SESSION['config']['businessappurl'].$_SESSION['config']['img'];?>/plus.png" alt="" />&nbsp;<b><?php echo _DIFFUSION_DISTRIBUTION;?> :</b>
+	<img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=plus.png" alt="" />&nbsp;<b><?php echo _DIFFUSION_DISTRIBUTION;?> :</b>
 	<span class="lb1-details">&nbsp;</span>
 </h2>
 <br>

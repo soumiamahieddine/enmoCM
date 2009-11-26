@@ -132,11 +132,11 @@ class admin_basket extends dbquery
 		{
 			$_SESSION['m_admin']['basket']['coll_id'] = $_SESSION['collections'][0]['id'];
 			echo $core_tools->execute_modules_services($_SESSION['modules_services'], 'basket_add.php', "include");
-			echo '<h1><img src="'.$_SESSION['urltomodules'].'basket/img/picto_basket_b.gif" alt="" /> '._BASKET_ADDITION.'</h1>';
+			echo '<h1><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=picto_basket_b.gif&module=basket" alt="" /> '._BASKET_ADDITION.'</h1>';
 		}
 		elseif($mode == "up")
 		{
-			echo '<h1><img src="'.$_SESSION['urltomodules'].'basket/img/picto_basket_b.gif" alt="" /> '._BASKET_MODIFICATION.'</h1>';
+			echo '<h1><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=picto_basket_b.gif&module=basket" alt="" /> '._BASKET_MODIFICATION.'</h1>';
 		}
 		?>
 		<div id="inner_content" class="clearfix">
@@ -205,7 +205,7 @@ class admin_basket extends dbquery
 				</p>
 				<p>
 					<label><?php echo _BASKET_VIEW;?> : </label>
-					<textarea  cols="30" rows="4"  name="basketclause" <?php if($_SESSION['m_admin']['basket']['basketId'] == 'CopyMailBasket' || $_SESSION['m_admin']['basket']['basketId'] == 'DepartmentBasket') { echo 'readonly="readonly" class="readonly"';} ?> id="basketclause" ><?php echo $_SESSION['m_admin']['basket']['clause']; ?></textarea> <a href="javascript::" onclick="window.open('<?php  echo $_SESSION['config']['businessappurl'];?>keywords_help.php','modify','toolbar=no,status=no,width=400,height=450,left=500,top=300,scrollbars=auto,location=no,menubar=no,resizable=yes');"><img src = "<?php  echo $_SESSION['config']['businessappurl'].$_SESSION['config']['img'];?>/picto_menu_help.gif" alt="<? echo _HELP_KEYWORDS; ?>" title="<? echo _HELP_KEYWORDS; ?>" /></a>
+					<textarea  cols="30" rows="4"  name="basketclause" <?php if($_SESSION['m_admin']['basket']['basketId'] == 'CopyMailBasket' || $_SESSION['m_admin']['basket']['basketId'] == 'DepartmentBasket') { echo 'readonly="readonly" class="readonly"';} ?> id="basketclause" ><?php echo $_SESSION['m_admin']['basket']['clause']; ?></textarea> <a href="javascript::" onclick="window.open('<?php  echo $_SESSION['config']['businessappurl'];?>keywords_help.php','modify','toolbar=no,status=no,width=400,height=450,left=500,top=300,scrollbars=auto,location=no,menubar=no,resizable=yes');"><img src = "<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_menu_help.gif" alt="<? echo _HELP_KEYWORDS; ?>" title="<? echo _HELP_KEYWORDS; ?>" /></a>
 				</p>
 				<p class="buttons">
 					<input type="submit" name="Submit" value="<?php echo _VALIDATE; ?>" class="button" />
