@@ -29,16 +29,11 @@
 * @ingroup indexing_searching_mlb
 */
 
-include('core/init.php');
-
-require_once("core/class/class_functions.php");
-require_once("core/class/class_db.php");
 require_once("core/class/class_request.php");
-require_once("core/class/class_core_tools.php");
 require_once("core/class/class_security.php");
 require_once("core/class/class_manage_status.php");
-require_once('apps/'.$_SESSION['businessapps'][0]['appid'].'/class'.DIRECTORY_SEPARATOR."class_indexing_searching_app.php");
-require_once('apps/'.$_SESSION['businessapps'][0]['appid'].'/class'.DIRECTORY_SEPARATOR."class_types.php");
+require_once('apps/'.$_SESSION['config']['app_id'].'/class'.DIRECTORY_SEPARATOR."class_indexing_searching_app.php");
+require_once('apps/'.$_SESSION['config']['app_id'].'/class'.DIRECTORY_SEPARATOR."class_types.php");
 $core_tools = new core_tools();
 $core_tools->test_user();
 $core_tools->load_lang();

@@ -10,21 +10,14 @@
 * @license GPL
 * @author  Loïc Vinet  <dev@maarch.org>
 */
-
-
-include('core/init.php');
-
-require_once("core/class/class_functions.php");
-require_once("core/class/class_core_tools.php");
 $core_tools = new core_tools();
 $core_tools->test_user();
 $core_tools->load_lang();
-require_once("core/class/class_db.php");
-require_once("core/class/class_request.php");
-require_once("core/class/class_docserver.php");
-require_once("core/class/class_security.php");
-require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_list_show.php");
-require_once("core/class/class_history.php");
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_docserver.php");
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
+require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 
 if($_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1)
 {

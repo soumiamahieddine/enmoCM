@@ -8,19 +8,12 @@
 * @license GPL
 * @author  Loïc Vinet  <dev@maarch.org>
 */
-
-include('core/init.php');
-
-
-require_once("core/class/class_functions.php");
-require_once("core/class/class_db.php");
-require_once("core/class/class_request.php");
-require_once("core/class/class_core_tools.php");
-require_once("core/class/class_security.php");
-require_once("core/class/class_manage_status.php");
-require_once('apps/'.$_SESSION['businessapps'][0]['appid'].'/class'.DIRECTORY_SEPARATOR."class_indexing_searching_app.php");
-require_once('apps/'.$_SESSION['businessapps'][0]['appid'].'/class'.DIRECTORY_SEPARATOR."class_types.php");
-require_once("modules/cases".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR.'class_modules_tools.php');
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_manage_status.php");
+require_once('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR."class_indexing_searching_app.php");
+require_once('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR."class_types.php");
+require_once("modules".DIRECTORY_SEPARATOR."cases".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR.'class_modules_tools.php');
 
 $core_tools = new core_tools();
 $core_tools->test_user();
