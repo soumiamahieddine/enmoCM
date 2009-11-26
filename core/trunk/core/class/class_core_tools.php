@@ -912,10 +912,10 @@ class core_tools extends functions
 	private function load_css()
 	{
 		?>
-        <link rel="stylesheet" type="text/css" href="<?php  echo $_SESSION['config']['businessappurl'].'static.php?filename=styles.css&module='.$_SESSION['modules_loaded'][$value]['name']; ?>" media="screen" />
+        <link rel="stylesheet" type="text/css" href="<?php  echo $_SESSION['config']['businessappurl'].'static.php?filename=styles.css'; ?>" media="screen" />
 
-        <!--[if lt IE 7.0]>  <link rel="stylesheet" type="text/css" href="<?php  echo $_SESSION['config']['businessappurl'].'static.php?filename=style_ie.css&module='.$_SESSION['modules_loaded'][$value]['name']; ?>" media="screen" />  <![endif]-->
-        <!--[if gte IE 7.0]>  <link rel="stylesheet" type="text/css" href="<?php  echo $_SESSION['config']['businessappurl'].'static.php?filename=style_ie7.css&module='.$_SESSION['modules_loaded'][$value]['name']; ?>" media="screen" />  <![endif]-->
+        <!--[if lt IE 7.0]>  <link rel="stylesheet" type="text/css" href="<?php  echo $_SESSION['config']['businessappurl'].'static.php?filename=style_ie.css'; ?>" media="screen" />  <![endif]-->
+        <!--[if gte IE 7.0]>  <link rel="stylesheet" type="text/css" href="<?php  echo $_SESSION['config']['businessappurl'].'static.php?filename=style_ie7.css'; ?>" media="screen" />  <![endif]-->
         <?php
 		foreach(array_keys($_SESSION['modules_loaded']) as $value)
 		{
