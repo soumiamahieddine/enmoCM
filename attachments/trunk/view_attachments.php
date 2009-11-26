@@ -1,7 +1,6 @@
 <?php
 
 $core_tools = new core_tools();
-//here we loading the lang vars
 $core_tools->load_lang();
 $core_tools->test_service('view_attachments', 'attachments');
 $func = new functions();
@@ -81,14 +80,10 @@ for ($ind_att1=0;$ind_att1<count($tab_attach);$ind_att1++)
 		}
 	}
 }
-//$request->show_array($tab_attach);
-//here we loading the html
-//$core_tools->load_html();
-//here we building the header
-//$core_tools->load_header();
+
 ?>
 <h2 onclick="change(100)" id="h2100" class="categorie">
-	<img src="<?php  echo $_SESSION['config']['businessappurl'].$_SESSION['config']['img'];?>/plus.png" alt="" />&nbsp;<b><?php  echo _ATTACHMENTS;?> :</b>
+	<img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=plus.png" alt="" />&nbsp;<b><?php  echo _ATTACHMENTS;?> :</b>
 	<span class="lb1-details">&nbsp;</span>
 </h2>
 <br>
