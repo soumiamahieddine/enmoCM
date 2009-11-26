@@ -15,7 +15,7 @@ $core_tools->load_lang();
 $core_tools->test_service('manage_notes_doc', 'notes');
 ?>
 
-<img src="<?php  echo $_SESSION['urltomodules'];?>notes/img/modif_note.png" border="0" alt="" /> 
+<img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=modif_note.png&module=notes" border="0" alt="" /> 
 <a href="javascript://" onclick="ouvreFenetre('<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=notes&page=note_add&identifier=<?php  echo $_SESSION['doc_id']; ?>&coll_id=<?php  echo $_SESSION['collection_id_choice'];?>', 550, 350)"><?php  echo _ADD_NOTE;?></a>
 <iframe name="list_notes_doc" id="list_notes_doc" src="<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=notes&page=frame_notes_doc" frameborder="0" width="100%" height="440px"></iframe>
 
