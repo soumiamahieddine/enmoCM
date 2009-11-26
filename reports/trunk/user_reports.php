@@ -81,7 +81,7 @@ if(count($userReports) > 0)
 	{
 	?>
 		<h5 onclick="new Effect.toggle('div_<?php  echo $authorized_reports_sort_by_parent[$value][0]['module_label'];?>', 'blind', {delay:0.2});return false;"  >
-			<img src="<?php  echo $_SESSION['urltomodules'];?>reports/img/plus.png" alt="" />&nbsp;<b><?php  echo $authorized_reports_sort_by_parent[$value][0]['module_label'];?></b>
+			<img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=plus.png&module=reports" alt="" />&nbsp;<b><?php  echo $authorized_reports_sort_by_parent[$value][0]['module_label'];?></b>
 		</h5>
 		<br/>
 		<div class="block_light" id="div_<?php  echo $authorized_reports_sort_by_parent[$value][0]['module_label'];?>"  style="display:none">

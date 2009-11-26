@@ -53,11 +53,11 @@ $count_piece = $db->fetch_object();
 $db->query("SELECT count(*) as total from ".$_SESSION['tablename']['fold_folders']." where status = 'NEW'");
 $count_folder = $db->fetch_object();
 ?>
-<h1><img src="<?php echo $_SESSION['urltomodules'];?>/reports/img/reports_b.gif" alt="" /> <?php echo _REPORTS;?></h1>
+<h1><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=reports_b.gif&module=reports" alt="" /> <?php echo _REPORTS;?></h1>
 <div id="inner_content" class="clearfix">
 <p>
-	<img src="<? echo $_SESSION['config']['img'];?>/contrat_mini.png" alt=""  /> <? echo _NB_TOTAL_DOC;?> : <b><? echo $count_piece->total; ?></b>
-	&nbsp;&nbsp; <img src="<? echo $_SESSION['config']['img'];?>/folder_documents_mini.png" alt=""  /> <? echo _NB_TOTAL_FOLDER;?> : <b><? echo $count_folder->total; ?></b>
+	<img src="<? echo $_SESSION['config']['businessappurl'];?>static.php?filename=contrat_mini.png" alt=""  /> <? echo _NB_TOTAL_DOC;?> : <b><? echo $count_piece->total; ?></b>
+	&nbsp;&nbsp; <img src="<? echo $_SESSION['config']['businessappurl'];?>static.php?filename=folder_documents_mini.png" alt=""  /> <? echo _NB_TOTAL_FOLDER;?> : <b><? echo $count_folder->total; ?></b>
 	</p>
 <?php include('modules'.DIRECTORY_SEPARATOR.'reports'.DIRECTORY_SEPARATOR.'user_reports.php');?>
 

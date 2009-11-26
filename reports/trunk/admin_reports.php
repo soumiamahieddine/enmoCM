@@ -67,7 +67,7 @@ if(isset($_GET['id']) && !empty($_GET['id']))
 	$groupeid = $_GET['id'];
 }
 ?>
-<h1><img src="<?php echo $_SESSION['urltomodules'];?>/reports/img/manage_reports_b.gif" alt="" /> <?php echo _ADMIN_REPORTS;?></h1>
+<h1><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=manage_reports_b.gif&module=reports" alt="" /> <?php echo _ADMIN_REPORTS;?></h1>
 
 			<script type='text/javascript'>
 			// Two functions to access javascript object in Ajax frame
@@ -173,7 +173,7 @@ if(isset($_GET['id']) && !empty($_GET['id']))
 	</form>
 	<br />
 	<div>
-	<div id="loading" style="display:none;text-align:center;"><p><img src="<?php echo $_SESSION['urltomodules'].'reports/img/ajax_loader.gif'; ?>" alt=""/></p></div>
+	<div id="loading" style="display:none;text-align:center;"><p><img src="<?php echo $_SESSION['config']['businessappurl'].'static.php?filename=ajax_loader.gif&module=reports'; ?>" alt=""/></p></div>
 
 	<div id="listReports">
 
