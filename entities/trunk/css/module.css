@@ -1,19 +1,19 @@
 
 /* admin modules board */
 #ent_manage_entities {
-	background: url(../img/manage_entities.gif) no-repeat 2px top;
+	background: url(../../modules/entities/img/manage_entities.gif) no-repeat 2px top;
 }
 
 #admin_entities_sub {
-	background:  url(../img/manage_entities.gif) no-repeat 2px top;
+	background:  url(../../modules/entities/img/manage_entities.gif) no-repeat 2px top;
 }
 
 #admin_entities_tree_sub {
-	background:  url(../img/entity_tree.gif) no-repeat 2px top;
+	background:  url(../../modules/entities/img/entity_tree.gif) no-repeat 2px top;
 }
 
 #admin_users_entities_sub {
-	background:  url(../img/manage_users_entities.gif) no-repeat 2px top;
+	background:  url(../../modules/entities/img/manage_users_entities.gif) no-repeat 2px top;
 }
 
 .entities_list
