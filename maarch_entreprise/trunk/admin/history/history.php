@@ -29,7 +29,7 @@
 * @ingroup admin
 */
 
-require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['businessapps'][0]['appid'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");
+require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
 
 $core_tools2 = new core_tools();
@@ -322,7 +322,7 @@ for ($i=0;$i<count($tab);$i++)
 
 $nb =count($tab);
 ?>
-<h1><img src="<?php  echo $_SESSION['config']['img'].'/view_history_b.gif' ;?>" alt="" /> <?php  echo _HISTORY_TITLE.' : '.	$nb.' '._RESULTS; ?></h1>
+<h1><img src="<?php  echo $_SESSION['config']['businessappurl'].'static.php?filename=view_history_b.gif' ;?>" alt="" /> <?php  echo _HISTORY_TITLE.' : '.	$nb.' '._RESULTS; ?></h1>
 <div id="inner_content">
 <?php
 
@@ -382,7 +382,7 @@ $list->admin_list($tab, $nb, '', 'id','history','history','id', true, '', '', ''
  		<input type="button" class="button"  name="cancel" value="<?php  echo _CANCEL; ?>" onclick="javascript:window.location.href='<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=admin';"/>
 		</p>
 	</td>
-	<td align="right"><a href="#" onclick="clear_form('frm_search_hist');$('frm_search_hist').submit();"><img src="<?php  echo $_SESSION['config']['businessappurl']."img/reset.gif";?>" alt="<?php echo _CLEAR_FORM;?>" /> <?php  echo _CLEAR_FORM; ?></a></td>
+	<td align="right"><a href="#" onclick="clear_form('frm_search_hist');$('frm_search_hist').submit();"><img src="<?php  echo $_SESSION['config']['businessappurl']."static.php?filename=reset.gif";?>" alt="<?php echo _CLEAR_FORM;?>" /> <?php  echo _CLEAR_FORM; ?></a></td>
 </tr>
 </table>
 </form>

@@ -185,7 +185,7 @@ class AdminStatus extends dbquery
 			$_SESSION['m_admin']['status']['CAN_BE_MODIFIED'] = 'Y';
 		}
 		?>
-		<h1><img src="<? echo $_SESSION['config']['img'];?>/manage_status_b.gif" alt="" />
+		<h1><img src="<? echo $_SESSION['config']['businessappurl'];?>static.php?filename=manage_status_b.gif" alt="" />
 				<?php
 				if($mode == "up")
 				{

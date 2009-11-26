@@ -33,7 +33,7 @@ $core_tools->manage_location_bar($page_path, $page_label, $page_id, $init, $leve
 /***********************************************************/
 ?>
 
-<h1><img src="<?php  echo $_SESSION['config']['img'];?>/picto_menu_help.gif" alt="" /> <?php  echo _MAARCH_CREDITS; ?></h1>
+<h1><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_menu_help.gif" alt="" /> <?php  echo _MAARCH_CREDITS; ?></h1>
 <div id="inner_content" class="clearfix">
 	<div class="maarch_credits_left_box" style="height:420px;">
 		<h3><?php  echo _MAARCH_CREDITS; ?></h3>
@@ -87,7 +87,7 @@ $core_tools->manage_location_bar($page_path, $page_label, $page_id, $init, $leve
 	<p>&nbsp;</p>
 	
 	
-	<div class="img_credits_maarch_box"><img src="<?php  echo $_SESSION['config']['img']; ?>/maarch_box.png"></div>
+	<div class="img_credits_maarch_box"><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=maarch_box.png" /></div>
 	</div>
 </div>
 <p style="clear:both"></p>

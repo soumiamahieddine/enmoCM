@@ -50,7 +50,7 @@ $admin->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
 unset($_SESSION['m_admin']);
 ?>
-<h1><img src="<?php  echo $_SESSION['config']['img'];?>/manage_architecture_b.gif" alt="" /> <?php  echo _ADMIN_ARCHI;?></h1>
+<h1><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=manage_architecture_b.gif" alt="" /> <?php  echo _ADMIN_ARCHI;?></h1>
 <div id="inner_content" class="clearfix">
 	<h2 class="admin_subtitle block" ><?php  echo _ARCHITECTURE;?></h2>
     <div  class="admin_item" id="admin_structures" title="<?php  echo _MANAGE_STRUCTURE_DESC;?>" onclick="window.top.location='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=structures';">

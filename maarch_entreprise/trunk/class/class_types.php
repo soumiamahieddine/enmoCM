@@ -88,7 +88,7 @@ class types extends dbquery
 			$_SESSION['service_tag'] = '';
 		}
 		?>
-		<h1><img src="<? echo $_SESSION['config']['img'];?>/manage_doctypes_b.gif" alt="" />
+		<h1><img src="<? echo $_SESSION['config']['businessappurl'];?>static.php?filename=manage_doctypes_b.gif" alt="" />
 			<?
             if($mode == "up")
             {

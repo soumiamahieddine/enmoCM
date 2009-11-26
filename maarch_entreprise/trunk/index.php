@@ -14,18 +14,25 @@
 */
 
 include_once('../../core/init.php');
-
-require_once("core/class/class_functions.php");
-require_once("core/class/class_db.php");
-require_once("core/class/class_core_tools.php");
+if(isset($_SESSION['config']['corepath']))
+{
+	require_once("core/class/class_functions.php");
+	require_once("core/class/class_db.php");
+	require_once("core/class/class_core_tools.php");
+}
+else
+{
+	require_once("../../core/class/class_functions.php");
+	require_once("../../core/class/class_db.php");
+	require_once("../../core/class/class_core_tools.php");	
+}
 $core_tools = new core_tools();
-
 if(isset($_REQUEST['display']) )
 {
-//	echo 'test';
 	 $core_tools->insert_page();
 	 exit();
 } 
+
 if(!isset($_SESSION['user']['UserId']))
 {
 	if(trim($_SERVER['argv'][0]) <> "")
@@ -36,8 +43,11 @@ if(!isset($_SESSION['user']['UserId']))
 	{
 		header("location: reopen.php");
 	}
-	exit;
+	exit();
 }
+
+
+
 if(isset($_GET['show']))
 {
 	$show = $_GET['show'];
@@ -66,7 +76,7 @@ $time = $core_tools->get_session_time_expire();
         <div id="nav">
             <div id="menu" onMouseOver="ShowHideMenu('menunav','on');" onMouseOut="ShowHideMenu('menunav','off');" class="off">
                 <p>
-                	<img src="<?php  echo $_SESSION['config']['img'];?>/but_menu.gif" alt="<?php  echo _MENU;?>" />
+                	<img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=but_menu.gif" alt="<?php  echo _MENU;?>" />
                 </p>
                 <div id="menunav" style="display: none;">
                 <?php
@@ -89,8 +99,8 @@ $time = $core_tools->get_session_time_expire();
         	</div>
 			<div><p id="ariane"><?php  //$core_tools->where_am_i();
 			?></p></div>
-			<p id="gauchemenu"><img src="img/bando_tete_gche.gif" alt=""></p>
-			<p id="logo"><a href="index.php"><img src="<?php  echo $_SESSION['config']['img'];?>/bando_tete_dte.gif" alt="<?php  echo _LOGO_ALT;?>" /></a></p>
+			<p id="gauchemenu"><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=bando_tete_gche.gif" alt=""></p>
+			<p id="logo"><a href="index.php"><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=bando_tete_dte.gif" alt="<?php  echo _LOGO_ALT;?>" /></a></p>
        </div>
 		<!--
 		<dl class="protohud" id="protohudInde">
@@ -114,7 +124,7 @@ $time = $core_tools->get_session_time_expire();
             <?php
             if($core_tools->is_module_loaded("basket") && $_SESSION['abs_user_status'] ==true)
 			{
-				include('modules/basket'.DIRECTORY_SEPARATOR."advert_missing.php");
+				include('modules'.DIRECTORY_SEPARATOR.'basket'.DIRECTORY_SEPARATOR."advert_missing.php");
 			}
 			else
 			{

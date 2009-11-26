@@ -48,7 +48,7 @@ $page_id = "list_users";
 $core_tools2->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
-require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['businessapps'][0]['appid'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");
+require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");
 $func = new functions();
 $_SESSION['m_admin'] = array();
 $select[$_SESSION['tablename']['users']] = array();
@@ -185,6 +185,6 @@ $title = _USERS_LIST." : ".$i." "._USERS;
 $autoCompletionArray = array();
 $autoCompletionArray["list_script_url"] = $_SESSION['config']['businessappurl']."index.php?display=true&admin=users&page=users_list_by_name";
 $autoCompletionArray["number_to_begin"] = 1;
-$list->admin_list($tab, $i, $title,'user_id','users', 'users','user_id', true, $page_name_up, $page_name_val, $page_name_ban, $page_name_del, $page_name_add, $label_add, false, false, _ALL_USERS, _USER, $_SESSION['config']['img'].'/manage_users_b.gif', false, true, false, true, "", true, $autoCompletionArray);
+$list->admin_list($tab, $i, $title,'user_id','users', 'users','user_id', true, $page_name_up, $page_name_val, $page_name_ban, $page_name_del, $page_name_add, $label_add, false, false, _ALL_USERS, _USER, $_SESSION['config']['businessappurl'].'static.php?filename=manage_users_b.gif', false, true, false, true, "", true, $autoCompletionArray);
 
 ?>

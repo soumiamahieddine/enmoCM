@@ -271,7 +271,7 @@ $time = $core_tools->get_session_time_expire();
 
 <td width='400px'>
 	<?php
-	$incl = "apps/".$_SESSION['businessapps'][0]['appid']."/keywords_help.php";
+	$incl = "apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."keywords_help.php";
 	include ($incl); ?>
 </td>
 </tr>

@@ -48,7 +48,7 @@ $page_id = "group_add";
 $core_tools2->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
 
-require("apps".DIRECTORY_SEPARATOR.$_SESSION['businessapps'][0]['appid'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_usergroups.php");
+require("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_usergroups.php");
 
 $func = new functions();
 

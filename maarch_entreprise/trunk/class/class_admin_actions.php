@@ -208,7 +208,7 @@ class AdminActions extends dbquery
 			'module' => $res->module, 'can_be_searched' => $res->can_be_searched, 'can_be_modified' => $res->can_be_modified));
 		}
 		?>
-		<h1><img src="<? echo $_SESSION['config']['img'];?>/manage_actions_b.gif" alt="" />
+		<h1><img src="<? echo $_SESSION['config']['businessappurl'];?>static.php?filename=manage_actions_b.gif" alt="" />
 				<?php
 				if($mode == "up")
 				{

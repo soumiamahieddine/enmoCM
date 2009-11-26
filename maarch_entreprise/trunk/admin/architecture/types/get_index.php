@@ -18,7 +18,7 @@
 *    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-require('apps'.DIRECTORY_SEPARATOR.$_SESSION['businessapps'][0]['appid'].DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR."class_types.php");
+require('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR."class_types.php");
 
 $core_tools = new core_tools();
 //here we loading the lang vars

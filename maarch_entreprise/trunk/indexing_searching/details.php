@@ -155,7 +155,7 @@ if(empty($_SESSION['error']) || $_SESSION['indexation'])
 ?>
 <div id="details_div" style="display:none;">
 <h1 class="titdetail">
-	<img src="<?php  echo $_SESSION['config']['img'];?>/picto_detail_b.gif" alt="" /><?php  echo _DETAILS." : "._DOC.' '.strtolower(_NUM); ?><?php  echo $s_id; ?> <span>(<?php  echo  $security->retrieve_coll_label_from_coll_id($coll_id); ?>)</span>
+	<img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_detail_b.gif" alt="" /><?php  echo _DETAILS." : "._DOC.' '.strtolower(_NUM); ?><?php  echo $s_id; ?> <span>(<?php  echo  $security->retrieve_coll_label_from_coll_id($coll_id); ?>)</span>
 </h1>
 <div id="inner_content" class="clearfix">
 <?php
@@ -499,13 +499,13 @@ else
 						$detailsExport .=  $res_status['LABEL'];
 						$detailsExport .=  "</td>";
 						$detailsExport .=  "<th align='left' width='50px'>";
-						$detailsExport .=  "<img alt='"._CREATION_DATE." : ".$res_status['LABEL']." src='".$_SESSION['config']['businessappurl']."img/small_calend.gif' />";
+						$detailsExport .=  "<img alt='"._CREATION_DATE." : ".$res_status['LABEL']." src='".$_SESSION['config']['businessappurl']."static.php?filename=small_calend.gif' />";
 						$detailsExport .=  "</th>";
 						$detailsExport .=  "</tr>";
 
 						$detailsExport .=  "<tr class='col'>";
 						$detailsExport .=  "<th align='left' width='50px'>";
-						$detailsExport .=  "<img alt='".CHRONO_NUMBER." src='".$_SESSION['config']['businessappurl']."img/chrono.gif' />";
+						$detailsExport .=  "<img alt='".CHRONO_NUMBER." src='".$_SESSION['config']['businessappurl']."static.php?filename=chrono.gif' />";
 						$detailsExport .=  "</th>";
 						$detailsExport .=  "<td align='left' width='200px'>";
 						$detailsExport .=  _CHRONO_NUMBER." : ";
@@ -529,7 +529,7 @@ else
 						</tr>
 						<tr class="col">
 							<th align="left" class="picto">
-								<img alt="<?php echo _CHRONO_NUMBER; ?>" src="<?php echo $_SESSION['config']['businessappurl'];?>img/chrono.gif" />
+								<img alt="<?php echo _CHRONO_NUMBER; ?>" src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=chrono.gif" />
 							</th>
 							<td align="left" width="200px">
 								<?php  echo _CHRONO_NUMBER; ?> :
@@ -698,37 +698,37 @@ else
 		        	<table cellpadding="2" cellspacing="2" border="0" class="block forms details" width="100%">
 						<tr>
 							<th align="left" class="picto">
-								<img alt="<?php echo _TYPIST; ?>" src="<?php echo $_SESSION['config']['businessappurl'];?>img/manage_users_entities_b_small.gif" />
+								<img alt="<?php echo _TYPIST; ?>" src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=manage_users_entities_b_small.gif" />
 							</th>
 							<td align="left" width="200px"><?php  echo _TYPIST; ?> :</td>
 							<td><input type="text" class="readonly" readonly="readonly" value="<?php  echo $typist; ?>"  /></td>
 							<th align="left" class="picto">
-								<img alt="<?php echo _SIZE; ?>" src="<?php echo $_SESSION['config']['businessappurl'];?>img/weight.gif" />
+								<img alt="<?php echo _SIZE; ?>" src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=weight.gif" />
 							</th>
 							<td align="left" width="200px"><?php  echo _SIZE; ?> :</td>
 							<td><input type="text" class="readonly" readonly="readonly" value="<?php  echo $filesize." ".$_SESSION['lang']['txt_byte']." ( ".round($filesize/1024,2)."K )"; ?>" /></td>
 						</tr>
 						<tr class="col">
 							<th align="left" class="picto">
-								<img alt="<?php echo _FORMAT; ?>" src="<?php echo $_SESSION['config']['businessappurl'];?>img/mini_type.gif" />
+								<img alt="<?php echo _FORMAT; ?>" src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=mini_type.gif" />
 							</th>
 							<td align="left"><?php  echo _FORMAT; ?> :</td>
 							<td><input type="text" class="readonly" readonly="readonly" value="<?php  echo $format; ?>" size="40"  /></td>
 							<th align="left" class="picto">
-								<img alt="<?php echo _CREATION_DATE; ?>" src="<?php echo $_SESSION['config']['businessappurl'];?>img/small_calend.gif" />
+								<img alt="<?php echo _CREATION_DATE; ?>" src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=small_calend.gif" />
 							</th>
 							<td align="left"><?php  echo _CREATION_DATE; ?> :</td>
 							<td><input type="text" class="readonly" readonly="readonly" value="<?php  echo $func->format_date_db($creation_date, false); ?>"/></td>
 						</tr>
 						<tr>
 							<th align="left" class="picto">
-								<img alt="<?php echo _MD5; ?>" src="<?php echo $_SESSION['config']['businessappurl'];?>img/md5.gif" />
+								<img alt="<?php echo _MD5; ?>" src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=md5.gif" />
 							</th>
 							<td align="left"><?php  echo _MD5; ?> :</td>
 							<td><input type="text" class="readonly" readonly="readonly" value="<?php  echo $fingerprint; ?>"  title="<?php  echo $fingerprint; ?>" alt="<?php  echo $fingerprint; ?>" /></td>
 
 							<th align="left" class="picto">
-								<img alt="<?php echo _WORK_BATCH; ?>" src="<?php echo $_SESSION['config']['businessappurl'];?>img/lot.gif" />
+								<img alt="<?php echo _WORK_BATCH; ?>" src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=lot.gif" />
 							</th>
 							<td align="left"><?php  echo _WORK_BATCH; ?> :</td>
 							<td><input type="text" class="readonly" readonly="readonly" value="<?php  echo $work_batch; ?>" title="<?php  echo $work_batch; ?>" alt="<?php  echo $work_batch; ?>" /></td>
@@ -804,7 +804,7 @@ else
 								$detailsExport .= "<p class='sstit'>"._RECIPIENT."</p>";
 								$detailsExport .= "<table cellpadding='0' cellspacing='0' border='0' class='listing'>";
 								$detailsExport .= "<tr class='col'>";
-								$detailsExport .= "<td><img src='".$_SESSION['urltomodules']."entities/img/manage_users_entities_b_small.gif' alt='"._USER."' title='"._USER."' /></td>";
+								$detailsExport .= "<td><img src='".$_SESSION['config']['businessappurl']."static.php?filename=manage_users_entities_b_small.gif&module=entities' alt='"._USER."' title='"._USER."' /></td>";
 								$detailsExport .= "<td>".$_SESSION['details']['diff_list']['dest']['firstname']."</td>";
 								$detailsExport .= "<td>".$_SESSION['details']['diff_list']['dest']['lastname']."</td>";
 								$detailsExport .= "<td>".$_SESSION['details']['diff_list']['dest']['entity_label']."</td>";
@@ -815,7 +815,7 @@ else
 								<p class="sstit"><?php echo _RECIPIENT;?></p>
 								<table cellpadding="0" cellspacing="0" border="0" class="listing">
 									<tr class="col">
-										<td><img src="<?php echo $_SESSION['urltomodules'];?>entities/img/manage_users_entities_b_small.gif" alt="<?php echo _USER;?>" title="<?php echo _USER;?>" /></td>
+										<td><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=manage_users_entities_b_small.gif&module=entities" alt="<?php echo _USER;?>" title="<?php echo _USER;?>" /></td>
 										<td><?php echo $_SESSION['details']['diff_list']['dest']['firstname'];?></td>
 										<td><?php echo $_SESSION['details']['diff_list']['dest']['lastname'];?></td>
 										<td><?php echo $_SESSION['details']['diff_list']['dest']['entity_label'];?></td>
@@ -843,13 +843,13 @@ else
 										$color = ' class="col"';
 									}
 									$detailsExport .= "<tr ".$color.">";
-									$detailsExport .= "<td><img src='".$_SESSION['urltomodules']."entities/img/manage_entities_b_small.gif' alt='"._ENTITY."' title='"._ENTITY."' /></td>";
+									$detailsExport .= "<td><img src='".$_SESSION['config']['businessappurl']."static.php?filename=manage_entities_b_small.gif&module=entities' alt='"._ENTITY."' title='"._ENTITY."' /></td>";
 									$detailsExport .= "<td>".$_SESSION['details']['diff_list']['copy']['entities'][$i]['entity_id']."</td>";
 									$detailsExport .= "<td colspan='2'>".$_SESSION['details']['diff_list']['copy']['entities'][$i]['entity_label']."</td>";
 									$detailsExport .= "</tr>";
 									?>
 									<tr <?php echo $color;?> >
-										<td><img src="<?php echo $_SESSION['urltomodules'];?>entities/img/manage_entities_b_small.gif" alt="<?php echo _ENTITY;?>" title="<?php echo _ENTITY;?>" /></td>
+										<td><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=manage_entities_b_small.gif&module=entities" alt="<?php echo _ENTITY;?>" title="<?php echo _ENTITY;?>" /></td>
 										<td ><?php echo $_SESSION['details']['diff_list']['copy']['entities'][$i]['entity_id'];?></td>
 										<td colspan="2"><?php echo $_SESSION['details']['diff_list']['copy']['entities'][$i]['entity_label'];?></td>
 									</tr><?php
@@ -865,7 +865,7 @@ else
 										$color = ' class="col"';
 									}
 									$detailsExport .= "<tr ".$color.">";
-									$detailsExport .= "<td><img src='".$_SESSION['urltomodules']."entities/img/manage_users_entities_b_small.gif' alt='"._USER."' title='"._USER."' /></td>";
+									$detailsExport .= "<td><img src='".$_SESSION['config']['businessappurl']."static.php?filename=manage_users_entities_b_small.gif&module=entities' alt='"._USER."' title='"._USER."' /></td>";
 									$detailsExport .= "<td>".$_SESSION['details']['diff_list']['copy']['users'][$i]['firstname']."</td>";
 									$detailsExport .= "<td>".$_SESSION['details']['diff_list']['copy']['users'][$i]['lastname']."</td>";
 									$detailsExport .= "<td>".$_SESSION['details']['diff_list']['copy']['users'][$i]['entity_label']."</td>";

@@ -101,6 +101,7 @@ if(isset($_GET['target_page']) && trim($_GET['target_page']) <> "")
 		$_SESSION['target_admin'] = $_GET['target_admin'];
 	}
 }
+/*
 $_SESSION['requestUri'] = "";
 if(trim($_SERVER['argv'][0]) <> "")
 {
@@ -108,6 +109,8 @@ if(trim($_SERVER['argv'][0]) <> "")
 	$requestUri = str_replace("coreurl=".$_REQUEST["coreurl"], "", $requestUri);
 	$_SESSION['requestUri'] = $requestUri;
 }
+*/
+
 $path_server = '';
 //$path_server = $_SERVER['DOCUMENT_ROOT'];
 if(strtoupper(substr(PHP_OS, 0, 3)) != "WIN" && strtoupper(substr(PHP_OS, 0, 3)) != "WINNT")

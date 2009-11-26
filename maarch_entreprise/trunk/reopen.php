@@ -12,28 +12,31 @@
 */
 include('../../core/init.php');
 
-$_SESSION['slash_env'] = DIRECTORY_SEPARATOR;
+//$_SESSION['slash_env'] = DIRECTORY_SEPARATOR;
 
 $path_tmp = explode('/',$_SERVER['SCRIPT_FILENAME']);
 $path_server = implode('/',array_slice($path_tmp,0,array_search('apps',$path_tmp))).'/';
-
-//$_SESSION['pathtocore'] = $path_server."core".DIRECTORY_SEPARATOR;
-//$_SESSION['pathtocoreclass'] = $path_server."core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR;
-//$_SESSION['pathtomodules'] = $path_server."modules".DIRECTORY_SEPARATOR;
-
-$_SESSION['urltomodules'] = $_SESSION['config']['coreurl']."/modules/";
-require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_functions.php");
-require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_db.php");
-require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_core_tools.php");
-require_once('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
-$core_tools = new core_tools();
-$business_app_tools = new business_app_tools();
+//$_SESSION['urltomodules'] = $_SESSION['config']['coreurl']."/modules/";
+if(isset($_SESSION['config']['corepath']))
+{
+	require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_functions.php");
+}
+else
+{
+	require_once("..".DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_functions.php");	
+}
+//require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_db.php");
+//require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_core_tools.php");
+//require_once('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
+//$core_tools = new core_tools();
+//$business_app_tools = new business_app_tools();
 $func = new functions();
 $cookie = explode("&",$_COOKIE['maarch']);
 $user = explode("=",$cookie[0]);
 $thekey = explode("=",$cookie[1]);
 $s_UserId = strtolower($func->wash($user[1],"no","","yes"));
 $s_key =strtolower($func->wash($thekey[1],"no","","yes"));
+$_SESSION['arg_page'] = '';
 if(!empty($_SESSION['error']) || ($s_UserId == "1" && $s_key == ""))
 {
 	header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&page=login&coreurl=".$_SESSION['config']['coreurl']);
@@ -43,7 +46,8 @@ else
 {
 	if(trim($_SERVER['argv'][0]) <> "")
 	{
-		header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&page=login&coreurl=".$_SESSION['config']['coreurl']."&".$_SERVER['argv'][0]);
+		$_SESSION['requestUri'] = $_SERVER['argv'][0];
+		header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&page=login&coreurl=".$_SESSION['config']['coreurl']);
 	}
 	else
 	{

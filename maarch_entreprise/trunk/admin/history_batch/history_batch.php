@@ -1,5 +1,5 @@
 <?php
-require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['businessapps'][0]['appid'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");
+require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
 $core_tools2 = new core_tools();
 $core_tools2->test_admin('view_history_batch', 'apps');
@@ -212,7 +212,7 @@ for($i=0;$i<count($tab);$i++)
 $list = new list_show();
 $nb =count($tab);
 ?>
-<h1><img src="<?php  echo $_SESSION['config']['img'].'/view_history_b.gif' ;?>" alt="" /> <?php  echo _HISTORY_BATCH_TITLE.' : '.	$nb.' '._RESULTS; ?></h1>
+<h1><img src="<?php  echo $_SESSION['config']['businessappurl'].'static.php?filename=view_history_b.gif' ;?>" alt="" /> <?php  echo _HISTORY_BATCH_TITLE.' : '.	$nb.' '._RESULTS; ?></h1>
 <div id="inner_content">
 <?php
 $list->admin_list($tab, $nb, '', 'id','history_batch','history_batch','id', true, '', '', '', '', '', '', TRUE, FALSE, '', '', '', false, false);

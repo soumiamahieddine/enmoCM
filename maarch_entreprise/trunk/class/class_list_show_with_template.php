@@ -188,7 +188,7 @@ class list_show_with_template extends list_show
 		{
 
 			$return = "<a href='".$_SESSION['config']['businessappurl']."index.php?page=".$this->detail_destination."&amp;id=".$result[$theline][0][$key]."' title='". _DETAILS."'>
-			<img src='".$_SESSION['config']['businessappurl']."img/picto_infos.gif'  alt='"._DETAILS."'  width='25' height='25' border='0' /></a>";
+			<img src='".$_SESSION['config']['businessappurl']."static.php?filename=picto_infos.gif'  alt='"._DETAILS."'  width='25' height='25' border='0' /></a>";
 
 			return $return;
 		}
@@ -201,7 +201,7 @@ class list_show_with_template extends list_show
 		if ($this->bool_detail == true)
 		{
 			$return = "<a href='".$_SESSION['config']['businessappurl']."index.php?page=details_cases&module=cases&amp;id=".$result[$theline][0]['case_id']."' title='". _DETAILS_CASES."'>
-			<img src='".$_SESSION['config']['businessappurl']."img/picto_infos.gif'  alt='"._DETAILS."'  width='25' height='25' border='0' /></a>";
+			<img src='".$_SESSION['config']['businessappurl']."static.php?filename=picto_infos.gif'  alt='"._DETAILS."'  width='25' height='25' border='0' /></a>";
 
 			return $return;
 		}
@@ -217,7 +217,7 @@ class list_show_with_template extends list_show
 		{
 
 			$return = "<a href='".$_SESSION['config']['businessappurl']."index.php?display=true&dir=indexing_searching&page=view&id=".$result[$theline][0][$key]."' target=\"_blank\" title='"._VIEW_DOC."'>
-                            <img src='".$_SESSION['config']['businessappurl']."img/picto_dld.gif' alt='"._VIEW_DOC."' border='0'/></a>";
+                            <img src='".$_SESSION['config']['businessappurl']."static.php?filename=picto_dld.gif' alt='"._VIEW_DOC."' border='0'/></a>";
 			return $return;
 		}
 
@@ -464,12 +464,12 @@ class list_show_with_template extends list_show
 		if ($this->hide_standard_list == true)
 			$standard = '';
 		else
-			$standard = "<a href='".$link."&template='><img src='".$_SESSION['config']['businessappurl']."img/standard_list.gif' alt='"._ACCESS_LIST_STANDARD."' ></a>";
+			$standard = "<a href='".$link."&template='><img src='".$_SESSION['config']['businessappurl']."static.php?filename=standard_list.gif' alt='"._ACCESS_LIST_STANDARD."' ></a>";
 
 		$extend = "";
 		foreach ($template_list as $temp)
 		{
-				$extend .= "&nbsp;<a href='".$link."&amp;template=".$temp['name']."'> <img src='".$_SESSION['config']['businessappurl']."img/".$temp['img']."' alt='".$temp['label']."' title='".$temp['label']."'></a>";
+				$extend .= "&nbsp;<a href='".$link."&amp;template=".$temp['name']."'> <img src='".$_SESSION['config']['businessappurl']."static.php?filename=".$temp['img']."' alt='".$temp['label']."' title='".$temp['label']."'></a>";
 		}
 		return $standard." ".$extend."";
 

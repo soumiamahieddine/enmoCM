@@ -199,7 +199,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 	//print_r($data);
 	$frm_str .= '<div id="validleft">';
 	$frm_str .= '<div id="valid_div" style="display:none;";>';
-		$frm_str .= '<h1 class="tit" id="action_title"><img src="'.$_SESSION['config']['img'].'/file_index_b.gif"  align="middle" alt="" />'._VALIDATE_MAIL.' '._NUM.$res_id;
+		$frm_str .= '<h1 class="tit" id="action_title"><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=file_index_b.gif"  align="middle" alt="" />'._VALIDATE_MAIL.' '._NUM.$res_id;
 					$frm_str .= '</h1>';
 					$frm_str .= '<div id="frm_error_'.$id_action.'" class="indexing_error"></div>';
 					$frm_str .= '<form name="index_file" method="post" id="index_file" action="#" class="forms indexingform" style="text-align:left;">';
@@ -373,10 +373,10 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 				   $frm_str .='<td class="indexing_label"><label for="contact" class="form_title" ><span id="exp_contact">'._SHIPPER.'</span><span id="dest_contact">'._DEST.'</span>';
 				   if($_SESSION['features']['personal_contact'] == "true"  && $core_tools->test_service('my_contacts','apps', false))
 				   {
-						$frm_str .=' <a href="#" id="create_contact" title="'._CREATE_CONTACT.'" onclick="new Effect.toggle(\'create_contact_div\', \'blind\', {delay:0.2});return false;" style="display:inline;" ><img src="'.$_SESSION['config']['businessappurl'].'img/modif_liste.png" alt="'._CREATE_CONTACT.'"/></a>';
+						$frm_str .=' <a href="#" id="create_contact" title="'._CREATE_CONTACT.'" onclick="new Effect.toggle(\'create_contact_div\', \'blind\', {delay:0.2});return false;" style="display:inline;" ><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=modif_liste.png" alt="'._CREATE_CONTACT.'"/></a>';
 					}
 					 $frm_str .= '</label></td>';
-				   $frm_str .='<td><a href="#" id="contact_card" title="'._CONTACT_CARD.'" onclick="open_contact_card(\''.$_SESSION ['config']['businessappurl'].'index.php?display=true&page=contact_info\', \''.$_SESSION ['config']['businessappurl'].'index.php?display=true&page=user_info\');" style="visibility:hidden;" ><img src="'.$_SESSION['config']['businessappurl'].'img/my_contacts_off.gif" alt="'._CONTACT_CARD.'" /></a>&nbsp;</td>';
+				   $frm_str .='<td><a href="#" id="contact_card" title="'._CONTACT_CARD.'" onclick="open_contact_card(\''.$_SESSION ['config']['businessappurl'].'index.php?display=true&page=contact_info\', \''.$_SESSION ['config']['businessappurl'].'index.php?display=true&page=user_info\');" style="visibility:hidden;" ><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=my_contacts_off.gif" alt="'._CONTACT_CARD.'" /></a>&nbsp;</td>';
 				   $frm_str .='<td class="indexing_field"><input type="text" name="contact" id="contact" onchange="clear_error(\'frm_error_'.$id_action.'\');display_contact_card(\'visible\');"';
 				    if(isset($data['contact']) && !empty($data['contact']))
 				   {
@@ -439,7 +439,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 				  $frm_str .= '<tr id="diff_list_tr" style="display:none;">';
 				  		$frm_str .= '<td colspan="3">';
 				  		$frm_str .= '<h2 onclick="new Effect.toggle(\'diff_list_div\', \'blind\', {delay:0.2});return false;"  class="categorie" style="width:90%;">';
-								$frm_str .= '<img src="'.$_SESSION['config']['businessappurl'].$_SESSION['config']['img'].'/plus.png" alt="" id="img_diff_list" />&nbsp;<b><small>'._DIFF_LIST_COPY.' :</small></b>';
+								$frm_str .= '<img src="'.$_SESSION['config']['businessappurl'].$_SESSION['config']['businessappurl'].'static.php?filename=plus.png" alt="" id="img_diff_list" />&nbsp;<b><small>'._DIFF_LIST_COPY.' :</small></b>';
 						$frm_str .= '<span class="lb1-details">&nbsp;</span>';
 					$frm_str .= '</h2>';
 					$frm_str .= '<div id="diff_list_div"  style="display:none">';

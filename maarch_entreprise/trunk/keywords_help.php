@@ -20,7 +20,7 @@ function show_helper()
 	<div class="block small_text" >
 
 
-	<h3><img src = "<?php  echo $_SESSION['config']['businessappurl'].$_SESSION['config']['img'];?>/picto_detail_b.gif"> <? echo _HELP_KEYWORDS; ?></h3>
+	<h3><img src ="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_detail_b.gif" /> <? echo _HELP_KEYWORDS; ?></h3>
 	<? 
 
 		echo "<p align='right'>";

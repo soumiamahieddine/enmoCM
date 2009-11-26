@@ -30,7 +30,7 @@ $page_id = "subfolders";
 $admin->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
-require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['businessapps'][0]['appid'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");
+require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");
 $func = new functions();
 $select[$_SESSION['tablename']['doctypes_second_level']] = array();
 array_push($select[$_SESSION['tablename']['doctypes_second_level']],"doctypes_second_level_id","doctypes_first_level_id","doctypes_second_level_label");
@@ -126,5 +126,5 @@ $autoCompletionArray = array();
 $autoCompletionArray["list_script_url"] = $_SESSION['config']['businessappurl']."index.php?display=true&page=subfolders_list_by_name";
 $autoCompletionArray["number_to_begin"] = 1;
 
-$list->admin_list($tab, $i, _SUBFOLDER_LIST.' : '.$i." ".strtolower(_SUBFOLDERS), 'doctypes_second_level_id','subfolders','subfolders','doctypes_second_level_id', true, $page_name_up, $page_name_val, $page_name_ban, $page_name_del, $page_name_add, $label_add, FALSE, TRUE, _ALL_SUBFOLDERS, _SUBFOLDER, $_SESSION['config']['img'].'/gerer_sous-dossiers_b.gif', false, true, false, true, "", true, $autoCompletionArray);
+$list->admin_list($tab, $i, _SUBFOLDER_LIST.' : '.$i." ".strtolower(_SUBFOLDERS), 'doctypes_second_level_id','subfolders','subfolders','doctypes_second_level_id', true, $page_name_up, $page_name_val, $page_name_ban, $page_name_del, $page_name_add, $label_add, FALSE, TRUE, _ALL_SUBFOLDERS, _SUBFOLDER, $_SESSION['config']['businessappurl'].'static.php?filename=gerer_sous-dossiers_b.gif', false, true, false, true, "", true, $autoCompletionArray);
 ?>

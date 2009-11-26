@@ -33,7 +33,7 @@ $core_tools = new core_tools();
 $core_tools->load_lang();
 $core_tools->test_admin('admin_contacts', 'apps');
 
-require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['businessapps'][0]['appid'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_contacts.php");
+require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_contacts.php");
 
 $contact = new contacts();
 $contact->addupcontact($_POST['mode']);

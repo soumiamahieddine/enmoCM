@@ -32,7 +32,7 @@
 $admin = new core_tools();
 $admin->test_admin('admin_users', 'apps');
 
-require("apps".DIRECTORY_SEPARATOR.$_SESSION['businessapps'][0]['appid'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_users.php");
+require("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_users.php");
 
 $func = new functions();
 if(isset($_GET['id']))

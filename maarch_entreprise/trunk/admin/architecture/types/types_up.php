@@ -48,7 +48,7 @@ $page_label = _MODIFICATION.' '._TYPE;
 $page_id = "types_up";
 $core_tools->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
-require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['businessapps'][0]['appid'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_types.php");
+require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_types.php");
 
 $func = new functions();
 

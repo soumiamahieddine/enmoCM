@@ -32,7 +32,7 @@
 $core_tools = new core_tools();
 $core_tools->load_lang();
 
-require_once( "apps".DIRECTORY_SEPARATOR.$_SESSION['businessapps'][0]['appid'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_usergroup_content.php");
+require_once( "apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_usergroup_content.php");
 $func = new functions();
 
 if(isset($_REQUEST['removeGroup']) && !empty($_REQUEST['removeGroup']))
@@ -89,7 +89,7 @@ $core_tools->load_header(_USER_GROUPS_TITLE);
 		{
 				if( $_SESSION['m_admin']['users']['groups'][$theline]['PRIMARY'] == 'Y')
 				{
-					?><img src="<?php  echo $_SESSION['config']['businessappurl'].$_SESSION['config']['img'];?>/arrow_primary.gif" alt="<?php  echo _PRIMARY_GROUP;?>" title="<?php  echo _PRIMARY_GROUP;?>" /> <?php
+					?><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=arrow_primary.gif" alt="<?php  echo _PRIMARY_GROUP;?>" title="<?php  echo _PRIMARY_GROUP;?>" /> <?php
 				}
 				else
 				{

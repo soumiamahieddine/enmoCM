@@ -285,7 +285,7 @@ function get_general_data($coll_id, $res_id, $mode, $params = array())
 						}
 						else if($field == 'destination')
 						{
-							//require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_entities.php");
+							//require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_entities.php");
 							// TO DO : get the entities list
 						}
 						else if($field == 'nature_id')

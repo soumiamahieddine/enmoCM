@@ -105,12 +105,12 @@ $core_tools->load_header();
                <input type="file" name="file" id="file"  onchange="this.form.method = 'post';this.form.submit();" value="<?php  echo $_SESSION['file_path']; ?>" style="width:200px;margin-left:33px;" /><?php
 		if(!empty($_SESSION['upfile']['local_path']) && empty($_SESSION['error'] ) )
 			{
-				?><img src="<?php  echo $_SESSION['config']['businessappurl'];?>img/picto_stat_enabled.gif" alt="" class="img_upload_doc" /><?php
+				?><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_stat_enabled.gif" alt="" class="img_upload_doc" /><?php
 				echo "<br/><center><small>"._DOWNLOADED_FILE." : ".$_SESSION['upfile']['name'];"</small></center><br/>";
 			}
 			else
 			{
-				?><img src="<?php  echo $_SESSION['config']['businessappurl'];?>img/picto_stat_disabled.gif" class="img_upload_doc" alt=""/><?php
+				?><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_stat_disabled.gif" class="img_upload_doc" alt=""/><?php
 			}
             ?>
         </p>

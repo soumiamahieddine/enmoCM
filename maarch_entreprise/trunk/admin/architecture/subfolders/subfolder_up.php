@@ -152,7 +152,7 @@ $time = $core_tools->get_session_time_expire();
 	$erreur = "";
 ?>
 </div>
-<h2 class="tit"> &nbsp;<img src="<?php  echo $_SESSION['config']['businessappurl'].$_SESSION['config']['img'];?>/manage_structures_b.gif" alt="" valign="center"/> <?php  if($mode == "up"){ echo _SUBFOLDER_MODIF;} else{ echo _SUBFOLDER_CREATION;}?></h2>
+<h2 class="tit"> &nbsp;<img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=manage_structures_b.gif" alt="" valign="center"/> <?php  if($mode == "up"){ echo _SUBFOLDER_MODIF;} else{ echo _SUBFOLDER_CREATION;}?></h2>
 <div class="block">
 <br/>
 <form method="post" name="modif" id="modif" class="forms" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=subfolder_up">

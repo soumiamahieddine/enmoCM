@@ -24,7 +24,7 @@ $_SESSION['location_bar']['level4']['label'] = "";
 $_SESSION['location_bar']['level4']['id'] = "";
 $core_tools->manage_location_bar();
 ?>
-<h1><img src="<?php echo $_SESSION['config']['img'];?>/picto_welcome_b.gif" alt="" /><?php echo _WELCOME;?></h1>
+<h1><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_welcome_b.gif" alt="" /><?php echo _WELCOME;?></h1>
 <div id="inner_content" class="clearfix">
 <?php
 $core_tools->execute_app_services($_SESSION['app_services'], "welcome.php");

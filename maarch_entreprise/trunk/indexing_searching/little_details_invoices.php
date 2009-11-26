@@ -9,15 +9,12 @@
 * @author  Claire Figueras  <dev@maarch.org>
 * @author  Laurent Giovannoni  <dev@maarch.org>
 */
-//include('core/init.php');
 
-//require_once("core/class/class_functions.php");
-//require_once("core/class/class_core_tools.php");
 $core_tools = new core_tools();
 $core_tools->test_user();
 $core_tools->load_lang();
 $core_tools->load_header();
-//require_once("core/class/class_db.php");
+
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_docserver.php");
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
@@ -252,7 +249,7 @@ else
 						$doctypes_second_level_id = $res['doctypes_second_level_id'];
 						$_SESSION['multidoc'] = true;
 					}
-					require_once("apps/".$_SESSION['businessapps'][0]['appid']."/class".DIRECTORY_SEPARATOR."class_indexing_searching_app.php");
+					require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_indexing_searching_app.php");
 					$indexing_searching = new indexing_searching_app();
 					//$indexing_searching->retrieve_index($res,$_SESSION['collection_id_choice'] );
 					?>

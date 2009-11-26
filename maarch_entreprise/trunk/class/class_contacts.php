@@ -367,12 +367,12 @@ class contacts extends dbquery
 		{
 			$_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] = 'Y';
 		}
-		require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['businessapps'][0]['appid'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
+		require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
 		$business = new business_app_tools();
 		$tmp = $business->get_titles();
 		$titles = $tmp['titles'];
 		?>
-		<h1><img src="<? echo $_SESSION['config']['img'];?>/picto_add_b.gif" alt="" />
+		<h1><img src="<? echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_add_b.gif" alt="" />
 			<?php
 			if($mode == "up")
 			{

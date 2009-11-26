@@ -48,7 +48,7 @@ $page_id = "types";
 $admin->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
-require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['businessapps'][0]['appid'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");
+require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");
 $func = new functions();
 $_SESSION['m_admin'] = array();
 $select[$_SESSION['tablename']['doctypes']] = array();
@@ -143,5 +143,5 @@ $autoCompletionArray = array();
 $autoCompletionArray["list_script_url"] = $_SESSION['config']['businessappurl']."index.php?display=true&page=types_list_by_name";
 $autoCompletionArray["number_to_begin"] = 1;
 
-$list->admin_list($tab, $i, $title, 'type_id','types','architecture/types','type_id', true, $page_name_up, $page_name_val, $page_name_ban, $page_name_del, $page_name_add, $label_add, false, false,_ALL_DOCTYPES, _TYPE, $_SESSION['config']['img'].'/manage_doctypes_b.gif',false, true, true, true, "", true, $autoCompletionArray);
+$list->admin_list($tab, $i, $title, 'type_id','types','architecture/types','type_id', true, $page_name_up, $page_name_val, $page_name_ban, $page_name_del, $page_name_add, $label_add, false, false,_ALL_DOCTYPES, _TYPE, $_SESSION['config']['businessappurl'].'static.php?filename=manage_doctypes_b.gif',false, true, true, true, "", true, $autoCompletionArray);
 ?>

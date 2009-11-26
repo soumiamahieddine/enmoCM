@@ -48,7 +48,7 @@ $page_id = "action";
 $admin->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
-require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['businessapps'][0]['appid'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");
+require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");
 $_SESSION['m_admin'] = array();
 $select[$_SESSION['tablename']['actions']] = array();
 array_push($select[$_SESSION['tablename']['actions']],"id", "label_action", 'is_system');
@@ -165,6 +165,6 @@ $autoCompletionArray = array();
 $autoCompletionArray["list_script_url"] = $_SESSION['config']['businessappurl']."index.php?display=true&admin=action&page=action_list_by_name";
 $autoCompletionArray["number_to_begin"] = 1;
 
-$list->admin_list($tab, count($tab), $title, 'id','action','action','id', true, $page_name_up, $page_name_val, $page_name_ban, $page_name_del, $page_name_add, $label_add, FALSE, FALSE, _ALL_ACTIONS, _ACTION, $_SESSION['config']['img'].'/manage_actions_b.gif', false, true, false, true, $what, true, $autoCompletionArray);
+$list->admin_list($tab, count($tab), $title, 'id','action','action','id', true, $page_name_up, $page_name_val, $page_name_ban, $page_name_del, $page_name_add, $label_add, FALSE, FALSE, _ALL_ACTIONS, _ACTION, $_SESSION['config']['businessappurl'].'static.php?filename=manage_actions_b.gif', false, true, false, true, $what, true, $autoCompletionArray);
 $_SESSION['m_admin']['action'] = array();
 ?>

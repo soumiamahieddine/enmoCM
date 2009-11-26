@@ -97,7 +97,7 @@ class usergroups extends dbquery
 		}
 
 		?>
-        <h1><img src="<?php  echo $_SESSION['config']['businessappurl'].$_SESSION['config']['img'];?>/manage_groupe_b.gif" alt="" />
+        <h1><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=manage_groupe_b.gif" alt="" />
 		<?php
 			if($mode == "add")
 			{
@@ -124,7 +124,7 @@ class usergroups extends dbquery
 						if($mode == "up")
 						{
 						?>
-							<a href="javascript://" onclick="window.open('<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&admin=groups&page=liste_users&id=<?php  echo $id;?>&admin=groups', '', 'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=820,height=400')"><img src="<?php  echo $_SESSION['config']['businessappurl'].$_SESSION['config']['img'];?>/membres_groupe_b.gif" alt="" /><i><?php  echo _SEE_GROUP_MEMBERS;?></i></a><br/><br/>
+							<a href="javascript://" onclick="window.open('<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&admin=groups&page=liste_users&id=<?php  echo $id;?>&admin=groups', '', 'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=820,height=400')"><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=membres_groupe_b.gif" alt="" /><i><?php  echo _SEE_GROUP_MEMBERS;?></i></a><br/><br/>
 						<?php
 						}
 						?>
@@ -206,7 +206,7 @@ class usergroups extends dbquery
 							?>
 
 								<h5 onclick="change(<?php  echo $_SESSION['cpt'];?>)" id="h2<?php  echo $_SESSION['cpt'];?>" class="categorie">
-									<img src="<?php  echo $_SESSION['config']['businessappurl'].$_SESSION['config']['img'];?>/plus.png" alt="" />&nbsp;<b><?php  echo $label ;?></b>
+									<img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=plus.png" alt="" />&nbsp;<b><?php  echo $label ;?></b>
 									<span class="lb1-details">&nbsp;</span>
 								</h5>
 								<br/>

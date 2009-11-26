@@ -107,7 +107,7 @@ class list_show extends functions
 	{
 		if ($template && $actual_template <> '')
 		{
-			require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['businessapps'][0]['appid'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR.'class_list_show_with_template.php');
+			require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR.'class_list_show_with_template.php');
 			$list_temp = new list_show_with_template();
 
 			$str = $list_temp->list_doc_by_template($result, $nb_total, $title,$what,$name,$key,$detail_destination,$bool_view_document,$bool_radio_form,$method,$action,
@@ -407,7 +407,7 @@ class list_show extends functions
 							$str .= ' <th width="'.$result[0][$count_column]['size'].'%" valign="'.$result[0][$count_column]['valign'].'"  align="'.$result[0][$count_column]['label_align'].'" ><span>'.$listcolumn[$count_column];
 								if($bool_order)
 								{
-									$str .= ' <br/><br/> <a href="'.$link.'&amp;start='.$start.'&amp;order=desc&amp;order_field='.$ordercol[$count_column].'" title="'._DESC_SORT.'"><img src="'.$_SESSION['config']['businessappurl'].'img/tri_down.gif" border="0" alt="'._DESC_SORT.'" /> </a> <a href="'.$link.'&amp;start='.$start.'&amp;order=asc&amp;order_field='.$ordercol[$count_column].'" title="'._ASC_SORT.'"> <img src="'.$_SESSION['config']['businessappurl'].'img/tri_up.gif" border="0" alt="'._ASC_SORT.'" /></a>';
+									$str .= ' <br/><br/> <a href="'.$link.'&amp;start='.$start.'&amp;order=desc&amp;order_field='.$ordercol[$count_column].'" title="'._DESC_SORT.'"><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=tri_down.gif" border="0" alt="'._DESC_SORT.'" /> </a> <a href="'.$link.'&amp;start='.$start.'&amp;order=asc&amp;order_field='.$ordercol[$count_column].'" title="'._ASC_SORT.'"> <img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=tri_up.gif" border="0" alt="'._ASC_SORT.'" /></a>';
 								}
 							$str .= ' </span></th>';
 
@@ -449,7 +449,7 @@ class list_show extends functions
 									}
 									else
 									{
-										$str .= '<img src="'.$_SESSION['config']['businessappurl'].'img/cadenas_rouge.png" alt="'._DOC_LOCKED.'" border="0"/>';
+										$str .= '<img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=cadenas_rouge.png" alt="'._DOC_LOCKED.'" border="0"/>';
 									}
 							}
 							elseif($bool_check_form)
@@ -460,7 +460,7 @@ class list_show extends functions
 						}
 						else
 						{
-							$str .= '<img src="'.$_SESSION['config']['businessappurl'].'img/cadenas_rouge.png" alt="'._DOC_LOCKED.'" border="0"/>';
+							$str .= '<img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=cadenas_rouge.png" alt="'._DOC_LOCKED.'" border="0"/>';
 						}
 					}
 					$str .= ' </div>';
@@ -473,7 +473,7 @@ class list_show extends functions
 						if($bool_view_document)
 						{
 							$str .= '<a href="'.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=view&id='.$result[$theline][0][$key].'" target="_blank" title="'._VIEW_DOC.'">';
-							$str .= ' <img src="'.$_SESSION['config']['businessappurl'].'img/picto_dld.gif" alt="'._VIEW_DOC.'" border="0"/></a>';
+							$str .= ' <img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=picto_dld.gif" alt="'._VIEW_DOC.'" border="0"/></a>';
 						}
 						$str .= ' </div>';
 						$str .= ' </td>';
@@ -525,19 +525,19 @@ class list_show extends functions
 					if($bool_frame && $open_details_popup)
 					{
 						$str .= ' <td width="4%"  align="center"><div align="right">';
-								$str .= ' <a href="javascript:window.open(\''.$_SESSION['config']['businessappurl'].'index.php?page='.$detail_destination.'&id='.$result[$theline][0][$key].'\',\'_parent\',\'_parent\');" title="'._DETAILS.'"><img  src="'.$_SESSION['config']['businessappurl'].'img/picto_infos.gif" alt="'._DETAILS.'" width="25" height="25" border="0" /></a></div>';
+								$str .= ' <a href="javascript:window.open(\''.$_SESSION['config']['businessappurl'].'index.php?page='.$detail_destination.'&id='.$result[$theline][0][$key].'\',\'_parent\',\'_parent\');" title="'._DETAILS.'"><img  src="'.$_SESSION['config']['businessappurl'].'static.php?filename=picto_infos.gif" alt="'._DETAILS.'" width="25" height="25" border="0" /></a></div>';
 							$str .= ' </td>';
 					}
 					elseif($bool_frame && !$open_details_popup)
 					{
 						$str .= '<td width="4%"  align="center">';
-							$str .= '<a href="#" title="'._DETAILS.'" onclick="javascript:window.top.location=\''.$_SESSION['config']['businessappurl'].'index.php?page='.$detail_destination.'&id='.$result[$theline][0][$key].'\';return false;"><img  src="'.$_SESSION['config']['businessappurl'].'img/picto_infos.gif" alt="'._DETAILS.'" width="25" height="25" border="0" /></a>';
+							$str .= '<a href="#" title="'._DETAILS.'" onclick="javascript:window.top.location=\''.$_SESSION['config']['businessappurl'].'index.php?page='.$detail_destination.'&id='.$result[$theline][0][$key].'\';return false;"><img  src="'.$_SESSION['config']['businessappurl'].'static.php?filename=picto_infos.gif" alt="'._DETAILS.'" width="25" height="25" border="0" /></a>';
 							$str .= ' </td>';
 					}
 					else
 					{
 						$str .= ' <td width="4%"  align="center"><div align="right">
-								<a href="'.$_SESSION['config']['businessappurl'].'index.php?page='.$detail_destination.'&amp;id='.$result[$theline][0][$key].'" title="'._DETAILS.'"><img src="'.$_SESSION['config']['businessappurl'].'img/picto_infos.gif"  alt="'._DETAILS.'"  width="25" height="25" border="0" /></a></div>';
+								<a href="'.$_SESSION['config']['businessappurl'].'index.php?page='.$detail_destination.'&amp;id='.$result[$theline][0][$key].'" title="'._DETAILS.'"><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=picto_infos.gif"  alt="'._DETAILS.'"  width="25" height="25" border="0" /></a></div>';
 						$str .= ' </td>';
 					}
 				}
@@ -962,7 +962,7 @@ class list_show extends functions
 						 ?>
 						 ><span><?php  echo $listcolumn[$count_column]?>
 						 <?php  if($bool_order && !empty($ordercol[$count_column]))
-						{ ?> <br/> <a href="<?php  echo $link; ?>&amp;start=<?php  echo $start; ?>&amp;order=desc&amp;order_field=<?php  echo $ordercol[$count_column];?>" title="<?php  echo _DESC_SORT;?>"><img src="<?php  echo $_SESSION['config']['businessappurl'].$_SESSION['config']['img'];?>/tri_down.gif" border="0" alt="<?php  echo _DESC_SORT; ?>" /> </a> <a href="<?php  echo $link; ?>&amp;start=<?php  echo $start; ?>&amp;order=asc&amp;order_field=<?php  echo $ordercol[$count_column];?>" title="<?php  echo _ASC_SORT;?>"> <img src="<?php  echo $_SESSION['config']['businessappurl'].$_SESSION['config']['img'];?>/tri_up.gif" border="0" alt="<?php  echo _ASC_SORT; ?>" /></a> <?php  }
+						{ ?> <br/> <a href="<?php  echo $link; ?>&amp;start=<?php  echo $start; ?>&amp;order=desc&amp;order_field=<?php  echo $ordercol[$count_column];?>" title="<?php  echo _DESC_SORT;?>"><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=tri_down.gif" border="0" alt="<?php  echo _DESC_SORT; ?>" /> </a> <a href="<?php  echo $link; ?>&amp;start=<?php  echo $start; ?>&amp;order=asc&amp;order_field=<?php  echo $ordercol[$count_column];?>" title="<?php  echo _ASC_SORT;?>"> <img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=tri_up.gif" border="0" alt="<?php  echo _ASC_SORT; ?>" /></a> <?php  }
 
 						?></span></th>
 						<?php
@@ -1080,13 +1080,13 @@ class list_show extends functions
 									 {
 									?>
                                 	<div align="center">
-									<img src="<?php  echo $_SESSION['config']['businessappurl'].$_SESSION['config']['img'];?>/picto_stat_disabled.gif" alt="<?php  echo _NOT_ENABLED;?>" title="<?php  echo _NOT_ENABLED;?>"/></div>
+									<img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_stat_disabled.gif" alt="<?php  echo _NOT_ENABLED;?>" title="<?php  echo _NOT_ENABLED;?>"/></div>
 									<?php
 									 }
 					 				elseif($result[$theline][$count_column]['enabled'] == "Y")
 									{
 									?>  <div align="center">
-									<img src="<?php  echo $_SESSION['config']['businessappurl'].$_SESSION['config']['img'];?>/picto_stat_enabled.gif" alt="<?php  echo _ENABLED; ?>" title="<?php  echo _ENABLED; ?>"/></div>
+									<img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_stat_enabled.gif" alt="<?php  echo _ENABLED; ?>" title="<?php  echo _ENABLED; ?>"/></div>
 									<?php
 									}
 								}
@@ -1414,7 +1414,7 @@ class list_show extends functions
                         if($bool_view_document)
                         {
                             echo "<a href='".$page_view."?id=".$result[$theline][0][$key]."' target=\"_blank\" title='"._VIEW_DOC."'>
-                            <img src='".$_SESSION['config']['businessappurl']."img/picto_dld.gif' alt='"._VIEW_DOC."' border='0'/></a>";
+                            <img src='".$_SESSION['config']['businessappurl']."static.php?filename=picto_dld.gif' alt='"._VIEW_DOC."' border='0'/></a>";
                         }
 
                         ?></td>

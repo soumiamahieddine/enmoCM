@@ -33,7 +33,7 @@ $core_tools = new core_tools();
 $core_tools->load_lang();
 $core_tools->test_admin('admin_architecture', 'apps');
 
-require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['businessapps'][0]['appid'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_types.php");
+require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_types.php");
 
 $users = new types();
 $users->uptypes();

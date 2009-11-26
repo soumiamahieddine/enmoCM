@@ -173,7 +173,7 @@ $time = $core_tools->get_session_time_expire();
 ?>
 </div>
 <h2 class="tit">
-&nbsp;<img src="<?php  echo $_SESSION['config']['businessappurl'].$_SESSION['config']['img'];?>/manage_structures_b.gif" alt="" valign="center"/> <?php  if($mode == "up"){ echo _STRUCTURE_MODIF;} else{ echo _NEW_STRUCTURE_ADDED;}?></h2>
+&nbsp;<img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=manage_structures_b.gif" alt="" valign="center"/> <?php  if($mode == "up"){ echo _STRUCTURE_MODIF;} else{ echo _NEW_STRUCTURE_ADDED;}?></h2>
 <div class="block">
 <br/>
 
