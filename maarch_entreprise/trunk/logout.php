@@ -30,8 +30,13 @@ if($_SESSION['history']['userlogout'] == "true")
 	$host = $_SERVER['REMOTE_ADDR'];
 	$hist->add($_SESSION['tablename']['users'],$_SESSION['user']['UserId'],"LOGOUT","IP : ".$ip.", BROWSER : ".$navigateur.", HOST : ".$host, $_SESSION['config']['databasetype']);
 }
-
+$custom = $_SESSION['custom_override_id'];
+$core_path = $_SESSION['config']['corepath'];
+$app_id = $_SESSION['config']['app_id'];
 $_SESSION = array();
+$_SESSION['custom_override_id'] = $tmp;
+$_SESSION['config']['corepath'] = $core_path ;
+$_SESSION['config']['app_id'] = $app_id ;
 header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&page=login&coreurl=".$_GET['coreurl']);
 exit();
 ?>
