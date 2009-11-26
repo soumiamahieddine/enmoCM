@@ -15,7 +15,7 @@ include('../core/init.php');
 if(trim($_GET['app'])<> "" )
 {
 	$_SESSION['config']['app_id'] = $_GET['app'];
-	header("location: ../apps/".$_GET['app']."/login.php?coreurl=".$_SESSION['config']['coreurl']);
+	header("location: ../apps/".$_GET['app']."/index.php?display=true&page=login&coreurl=".$_SESSION['config']['coreurl']);
 }
 else
 {
