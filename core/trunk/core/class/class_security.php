@@ -576,7 +576,7 @@ class security extends dbquery
 				$_SESSION['user']['security'] = $tmp['security'];
 				$this->load_enabled_services();
 
-				require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['businessapps'][0]['appid'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
+				require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
 			
 				$business_app_tools = new business_app_tools();
 				$core_tools = new core_tools();
@@ -1226,7 +1226,7 @@ class security extends dbquery
 			$where = preg_replace('/, ?\)/', ')', $where);
 
 			// Process with the apps vars
-			require_once('apps'.DIRECTORY_SEPARATOR.$_SESSION['businessapps'][0]['appid'].DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_business_app_tools.php');
+			require_once('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_business_app_tools.php');
 			$object = new business_app_tools();
 			if(method_exists($object, 'process_where_clause'))
 			{
