@@ -73,7 +73,7 @@ if($_SESSION['service_tag_form'] == 'formentity')
 				<p class="sstit"><?php echo _RECIPIENT;?></p>
 				<table cellpadding="0" cellspacing="0" border="0" class="listingsmall list_diff spec">
 					 <tr class="col">
-					 	<td><img src="<?php echo $_SESSION['urltomodules'].'entities/img/manage_users_entities_b_small.gif';?>" alt="<? echo _USER;?>" title="<? echo _USER;?>" /></td>
+					 	<td><img src="<?php echo $_SESSION['config']['businessappurl'].'static.php?filename=manage_users_entities_b_small.gif&module=entities';?>" alt="<? echo _USER;?>" title="<? echo _USER;?>" /></td>
 						<td><?php echo $_SESSION['m_admin']['entity']['listmodel']['dest']['firstname'];?></td>
 						<td><?php echo $_SESSION['m_admin']['entity']['listmodel']['dest']['lastname'];?></td>
 						<td><?php echo $_SESSION['m_admin']['entity']['listmodel']['dest']['entity_label']; ?></td>
@@ -99,7 +99,7 @@ if($_SESSION['service_tag_form'] == 'formentity')
 								}
 									?>
 								<tr <?php echo $color; ?>>
-							  		<td><img src="<?php echo $_SESSION['urltomodules'].'entities/img/manage_entities_b_small.gif';?>" alt="<? echo _ENTITY;?>" title="<? echo _ENTITY;?>" /></td>
+							  		<td><img src="<?php echo $_SESSION['config']['businessappurl'].'static.php?filename=manage_entities_b_small.gif&module=entities';?>" alt="<? echo _ENTITY;?>" title="<? echo _ENTITY;?>" /></td>
 									<td><?php echo $_SESSION['m_admin']['entity']['listmodel']['copy']['entities'][$i]['entity_id'];?></td>
 									<td colspan="2"><?php echo $_SESSION['m_admin']['entity']['listmodel']['copy']['entities'][$i]['entity_label'];?></td>
 								</tr>
@@ -117,7 +117,7 @@ if($_SESSION['service_tag_form'] == 'formentity')
 								}
 								?>
 							    <tr <?php echo $color; ?>>
-									<td><img src="<?php echo $_SESSION['urltomodules'].'entities/img/manage_users_entities_b_small.gif';?>" alt="<? echo _USER;?>" title="<? echo _USER;?>" /></td>
+									<td><img src="<?php echo $_SESSION['config']['businessappurl'].'static.php?filename=manage_users_entities_b_small.gif&module=entities';?>" alt="<? echo _USER;?>" title="<? echo _USER;?>" /></td>
 									<td><?php echo $_SESSION['m_admin']['entity']['listmodel']['copy']['users'][$i]['firstname'];?></td>
 									<td><?php echo $_SESSION['m_admin']['entity']['listmodel']['copy']['users'][$i]['lastname'];?></td>
 									<td><?php echo $_SESSION['m_admin']['entity']['listmodel']['copy']['users'][$i]['entity_label']; ?></td>

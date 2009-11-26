@@ -14,7 +14,7 @@ class entity extends dbquery
 		if($mode == "up")
 		{
 			$_SESSION['service_tag'] = 'entity_up';
-			echo '<h1><img src="'.$_SESSION['urltomodules'].'entities/img/manage_entities_b.gif" alt="" /> '._ENTITY_MODIFICATION.'</h1>';
+			echo '<h1><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=manage_entities_b.gif&module=entities" alt="" /> '._ENTITY_MODIFICATION.'</h1>';
 			if(empty($_SESSION['error']))
 			{
 				$this->connect();
@@ -49,7 +49,7 @@ class entity extends dbquery
 		elseif($mode == 'add')
 		{
 			$_SESSION['service_tag'] = 'entity_add';
-			echo '<h1><img src="'.$_SESSION['urltomodules'].'entities/img/manage_entities_b.gif" alt="" /> '._ENTITY_ADDITION.'</h1>';
+			echo '<h1><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=manage_entities_b.gif&module=entities" alt="" /> '._ENTITY_ADDITION.'</h1>';
 			if($_SESSION['m_admin']['init']== true || !isset($_SESSION['m_admin']['init'] ))
 			{
 				//$this->init_session();

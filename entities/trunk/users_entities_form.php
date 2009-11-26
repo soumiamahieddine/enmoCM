@@ -76,7 +76,7 @@ $admin->load_header(_USER_ENTITIES_TITLE);
 		{
 				if( $_SESSION['m_admin']['entity']['entities'][$theline]['PRIMARY'] == 'Y')
 				{
-					?><img src="<?php  echo $_SESSION['urltomodules'];?>entities/img/arrow_primary.gif" alt="<?php  echo _PRIMARY_ENTITY;?>" title="<?php  echo _PRIMARY_ENTITY;?>" /> <?php
+					?><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=arrow_primary.gif&module=entities" alt="<?php  echo _PRIMARY_ENTITY;?>" title="<?php  echo _PRIMARY_ENTITY;?>" /> <?php
 				}
 				else
 				{

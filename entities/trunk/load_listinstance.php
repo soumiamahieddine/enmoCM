@@ -62,7 +62,7 @@ if(isset($_SESSION[$origin]['diff_list']['dest']['user_id']) && !empty($_SESSION
 		$content .= '<p class="sstit">'._RECIPIENT.'</p>';
 		$content .= '<table cellpadding="0" cellspacing="0" border="0" class="listing3">';
 			$content .= '<tr class="col">';
-				$content .= '<td><img src="'.$_SESSION['urltomodules'].'entities/img/manage_users_entities_b_small.gif" alt="'._USER.'" title="'._USER.'" /></td>';
+				$content .= '<td><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=manage_users_entities_b_small.gif&module=entities" alt="'._USER.'" title="'._USER.'" /></td>';
 				$content .= '<td >'.$_SESSION[$origin]['diff_list']['dest']['firstname'].'</td>';
 				$content .= '<td >'.$_SESSION[$origin]['diff_list']['dest']['lastname'].'</td>';
 				$content .= '<td>'.$_SESSION[$origin]['diff_list']['dest']['entity_label'].'</td>';
@@ -88,7 +88,7 @@ if(isset($_SESSION[$origin]['diff_list']['dest']['user_id']) && !empty($_SESSION
 				$color = ' class="col"';
 			}
 			$content .= '<tr '.$color.' >';
-				$content .= '<td><img src="'.$_SESSION['urltomodules'].'entities/img/manage_entities_b_small.gif" alt="'._ENTITY.'" title="'._ENTITY.'" /></td>';
+				$content .= '<td><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=manage_entities_b_small.gif&module=entities" alt="'._ENTITY.'" title="'._ENTITY.'" /></td>';
 				$content .= '<td >'.$_SESSION[$origin]['diff_list']['copy']['entities'][$i]['entity_id'].'</td>';
 				$content .= '<td colspan="2">'.$_SESSION[$origin]['diff_list']['copy']['entities'][$i]['entity_label'].'</td>';
 			$content .= '</tr>';
@@ -104,7 +104,7 @@ if(isset($_SESSION[$origin]['diff_list']['dest']['user_id']) && !empty($_SESSION
 				$color = ' class="col"';
 			}
 			$content .= '<tr '.$color.' >';
-				$content .= '<td><img src="'.$_SESSION['urltomodules'].'entities/img/manage_users_entities_b_small.gif" alt="'._USER.'" title="'._USER.'" /></td>';
+				$content .= '<td><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=manage_users_entities_b_small.gif&module=entities" alt="'._USER.'" title="'._USER.'" /></td>';
 				$content .= '<td >'.$_SESSION[$origin]['diff_list']['copy']['users'][$i]['firstname'].'</td>';
 				$content .= '<td >'.$_SESSION[$origin]['diff_list']['copy']['users'][$i]['lastname'].'</td>';
 				$content .= '<td>'.$_SESSION[$origin]['diff_list']['copy']['users'][$i]['entity_label'].'</td>';
@@ -126,7 +126,7 @@ if($only_cc)
 	$arg .= '&only_cc';
 }
 	$content .= '<p class="button" >';
-		$content .= '<img src="'.$_SESSION['config']['img'].'/modif_liste.png" alt="" /><a href="javascript://" onclick="window.open(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=manage_listinstance&origin='.$origin.$arg.'\', \'\', \'scrollbars=yes,menubar=no,toolbar=no,status=no,resizable=yes,width=1024,height=650,location=no\');">'.$label_button.'</a>';
+		$content .= '<img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=modif_liste.png&module=entities" alt="" /><a href="javascript://" onclick="window.open(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=manage_listinstance&origin='.$origin.$arg.'\', \'\', \'scrollbars=yes,menubar=no,toolbar=no,status=no,resizable=yes,width=1024,height=650,location=no\');">'.$label_button.'</a>';
 	$content .= '</p>';
 
 echo "{status : 0, div_content : '".addslashes($content)."'}";

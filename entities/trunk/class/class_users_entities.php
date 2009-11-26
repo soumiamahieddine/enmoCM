@@ -215,7 +215,7 @@ class users_entities extends dbquery
 
 		if($mode == "up")
 		{
-			echo '<h1><img src="'.$_SESSION['urltomodules'].'entities/img/manage_users_entities_b.gif" alt="" />'._USER_ENTITIES_ADDITION.'</h1>';
+			echo '<h1><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=manage_users_entities_b.gif&module=entities" alt="" />'._USER_ENTITIES_ADDITION.'</h1>';
 		}
 
 		?>

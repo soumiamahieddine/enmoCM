@@ -44,7 +44,7 @@ while($res = $db->fetch_object())
 	array_push($_SESSION['tree_entities'], array("ID" => $res->entity_id, "LABEL" => $res->entity_label));
 }
 ?>
-<h1><img src="<?php  echo $_SESSION['urltomodules'];?>entities/img/entity_tree_b.gif" alt="" /> <?php  echo _ENTITY_TREE;?></h1>
+<h1><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=entity_tree_b.gif&module=entities" alt="" /> <?php  echo _ENTITY_TREE;?></h1>
 <div id="inner_content" class="clearfix">
 	<table width="100%" border="0">
 		<tr>

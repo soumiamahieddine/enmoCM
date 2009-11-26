@@ -51,7 +51,7 @@ $admin->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 unset($_SESSION['m_admin']);
 
 ?>
-<h1><img src="<?php  echo $_SESSION['urltomodules'];?>/entities/img/manage_entities_b.gif" alt="" /> <?php  echo _ENTITIES;?></h1>
+<h1><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=manage_entities_b.gif&module=entities" alt="" /> <?php  echo _ENTITIES;?></h1>
 
 <div id="inner_content" class="clearfix">
 <h2 class="admin_subtitle block" ><?php  echo _ENTITIES;?></h2>

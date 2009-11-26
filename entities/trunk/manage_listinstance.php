@@ -363,7 +363,7 @@ else
 			<h2 class="sstit"><?php echo _PRINCIPAL_RECIPIENT;?></h2>
 			<table cellpadding="0" cellspacing="0" border="0" class="listing spec">
 			 <tr >
-			 <td><img src="<?php echo $_SESSION['urltomodules'].'entities/img/manage_users_entities_b.gif';?>" alt="<? echo _USER;?>" title="<? echo _USER;?>" /></td>
+			 <td><img src="<?php echo $_SESSION['config']['businessappurl'].'static.php?filename=manage_users_entities_b.gif&module=entities';?>" alt="<? echo _USER;?>" title="<? echo _USER;?>" /></td>
 			 	 <td ><?php echo $_SESSION[$origin]['diff_list']['dest']['lastname'];?></td>
 				 <td ><?php echo $_SESSION[$origin]['diff_list']['dest']['firstname'];?></td>
 				<td><?php echo $_SESSION[$origin]['diff_list']['dest']['entity_label']; ?></td>
@@ -391,7 +391,7 @@ else
 					}
 					?>
 			 <tr <?php echo $color; ?> >
-					<td><img src="<?php echo $_SESSION['urltomodules'].'entities/img/manage_entities_b.gif';?>" alt="<? echo _ENTITY;?>" title="<? echo _ENTITY;?>" /></td>
+					<td><img src="<?php echo $_SESSION['config']['businessappurl'].'static.php?filename=manage_entities_b.gif&module=entities';?>" alt="<? echo _ENTITY;?>" title="<? echo _ENTITY;?>" /></td>
 					<td ><?php echo $_SESSION[$origin]['diff_list']['copy']['entities'][$i]['entity_id'];?></td>
 					<td colspan="2"><?php echo $_SESSION[$origin]['diff_list']['copy']['entities'][$i]['entity_label'];?></td>
 					<td class="action_entities"><a href="<? echo $link;?>&what_users=<?php echo $what_users; ?>&what_services=<?php echo $what_services; ?>&action=remove_entity&rank=<?php echo $i;?>&id=<?php echo $_SESSION[$origin]['diff_list']['copy']['entities'][$i]['entity_id'];?>" class="delete"><?php echo _DELETE;?></a></td>
@@ -411,7 +411,7 @@ else
 			}
 				?>
 			<tr <?php echo $color; ?> >
-				<td><img src="<?php echo $_SESSION['urltomodules'].'entities/img/manage_users_entities_b.gif';?>" alt="<? echo _USER;?>" title="<? echo _USER;?>" /></td>
+				<td><img src="<?php echo $_SESSION['config']['businessappurl'].'static.php?filename=manage_users_entities_b.gif&module=entities';?>" alt="<? echo _USER;?>" title="<? echo _USER;?>" /></td>
 				<td ><?php echo $_SESSION[$origin]['diff_list']['copy']['users'][$i]['lastname'];?></td>
 				<td ><?php echo $_SESSION[$origin]['diff_list']['copy']['users'][$i]['firstname'];?></td>
 				<td><?php echo $_SESSION[$origin]['diff_list']['copy']['users'][$i]['entity_label']; ?></td>
