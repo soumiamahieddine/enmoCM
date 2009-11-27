@@ -61,15 +61,18 @@ class manage_status extends dbquery
 
 		if($maarch_module == 'apps' && isset($img_name) && !empty($img_name))
 		{
-			$img_path = $_SESSION['config']['businessappurl'].'img/'.$img_name;
+			//$img_path = $_SESSION['config']['businessappurl'].'img/'.$img_name;
+			$img_path = $_SESSION['config']['businessappurl'].'static.php?filename='.$img_name;
 		}
 		else if(!empty($maarch_module) && isset($maarch_module)&& isset($img_name) && !empty($img_name))
 		{
-			$img_path = $_SESSION['urltomodules'].$maarch_module.'img/'.$img_name;
+			//$img_path = $_SESSION['urltomodules'].$maarch_module.'img/'.$img_name;
+			$img_path = $_SESSION['config']['businessappurl'].'static.php?filename='.$img_name."&module=".$maarch_module;
 		}
 		else
 		{
-			$img_path = $_SESSION['config']['businessappurl'].'img/default_status'.$extension.'.gif';
+			//$img_path = $_SESSION['config']['businessappurl'].'img/default_status'.$extension.'.gif';
+			$img_path = $_SESSION['config']['businessappurl'].'static.php?filename=default_status'.$extension.'.gif';
 		}
 
 		if(empty($status_txt) || !isset($status_txt))

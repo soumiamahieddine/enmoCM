@@ -1726,11 +1726,13 @@ class core_tools extends functions
 			$path = $action_id;
 			if(strtoupper($_SESSION['actions_pages'][$ind]['ORIGIN']) == "APPS")
 			{
-				$path = $_SESSION['config']['businessappurl'].$_SESSION['actions_pages'][$ind]['NAME'].".php";
+				//$path = $_SESSION['config']['businessappurl'].$_SESSION['actions_pages'][$ind]['NAME'].".php";
+				$path = $_SESSION['config']['businessappurl']."index.php?display=true&page=".$_SESSION['actions_pages'][$ind]['NAME'];
 			}
 			elseif(strtoupper($_SESSION['actions_pages'][$ind]['ORIGIN']) == "MODULE")
 			{
-				$path = $_SESSION['urltomodules'].$_SESSION['actions_pages'][$ind]['MODULE'].'/'.$_SESSION['actions_pages'][$ind]['NAME'].".php";
+				//$path = $_SESSION['urltomodules'].$_SESSION['actions_pages'][$ind]['MODULE'].'/'.$_SESSION['actions_pages'][$ind]['NAME'].".php";
+				$path = $_SESSION['config']['businessappurl']."index.php?display=true&page=".$_SESSION['actions_pages'][$ind]['NAME']."&module=".$_SESSION['actions_pages'][$ind]['MODULE'];
 			}
 			return $path;
 		}
