@@ -62,7 +62,7 @@ while($res = $db->fetch_object())
 }
 ?>
 
-<h1><img src="<?php  echo $_SESSION['urltomodules']."folder/img/s_sheet_b.gif";?>" alt="" /> <?php  echo _CREATE_FOLDER;?></h1>
+<h1><img src="<?php  echo $_SESSION['config']['businessappurl']."static.php?module=folder&filename=s_sheet_b.gif";?>" alt="" /> <?php  echo _CREATE_FOLDER;?></h1>
 <div id="inner_content">
 	<form name="create_folder" id="create_folder" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=folder&page=manage_create_folder" method="post" class="forms">
 		<input type="hidden" name="display"  value="true" />

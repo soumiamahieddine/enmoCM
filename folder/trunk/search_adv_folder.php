@@ -54,7 +54,7 @@ if($_REQUEST['erase'] == 'true')
 	$_SESSION['folder_search'] = array();
 }
 ?>
-<h1><img src="<?php  echo $_SESSION['urltomodules']."folder/img/picto_search_b.gif";?>" alt="" /> <?php  echo _ADV_SEARCH_FOLDER_TITLE; ?></h1>
+<h1><img src="<?php  echo $_SESSION['config']['businessappurl']."static.php?module=folder&filename=picto_search_b.gif";?>" alt="" /> <?php  echo _ADV_SEARCH_FOLDER_TITLE; ?></h1>
 <br/>
 <form name="search_folder_frm" method="get" action="<?php  echo $_SESSION['config']['businessappurl'];?>index.php" id="search_folder_frm" class="forms2">
 	<input type="hidden" name="display"  value="true" />
@@ -85,7 +85,7 @@ else
 ?>
 <div id="folder_search_div" style="display:<?php if($choose_coll){echo "none";}else{echo "block";}?>">
 	<div class="clearsearch">
-		<a href="<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=search_adv_folder&module=folder&reinit=true&erase=true"><img src="<?php  echo $_SESSION['config']['businessappurl']."img/reset.gif";?>" alt="" /> <?php  echo _NEW_SEARCH; ?></a>
+		<a href="<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=search_adv_folder&module=folder&reinit=true&erase=true"><img src="<?php  echo $_SESSION['config']['businessappurl']."static.php?filename=reset.gif";?>" alt="" /> <?php  echo _NEW_SEARCH; ?></a>
 	</div>
 	<br/>
 	<br/>

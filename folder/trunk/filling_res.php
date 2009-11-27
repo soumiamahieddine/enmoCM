@@ -169,7 +169,7 @@ else
 				}
 				?>
 				<div onClick="change2(<?php  echo $value_1;?>)" id="h2<?php  echo $value_1;?>" class="categorie">
-					<?php  echo "<a href=javascript:view_doc('".$res_id_list."');>"?><img src="<?php  echo $_SESSION['config']['businessappurl'].$_SESSION['config']['img'];?>/folderopen.gif" alt="" />&nbsp;<b><?php  echo $_SESSION['array_struct_final']['level_1'][$value_1]['label'];?></b></a>
+					<?php  echo "<a href=javascript:view_doc('".$res_id_list."');>"?><img src="<?php  echo $_SESSION['config']['businessappurl']?>static.php?filename=folderopen.gif" alt="" />&nbsp;<b><?php  echo $_SESSION['array_struct_final']['level_1'][$value_1]['label'];?></b></a>
 					<span class="lb1-details">&nbsp;</span>
 				</div>
 				<br>
@@ -191,7 +191,7 @@ else
 							//echo $res_id_list;
 							?>
 							<div onClick="change2(<?php  echo $value_2;?>)" id="h2<?php  echo $value_2;?>" class="categorie">
-								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php  echo "<a href=javascript:view_doc('".$res_id_list."');>"?><img src="<?php  echo $_SESSION['config']['businessappurl'].$_SESSION['config']['img'];?>/folderopen.gif" alt="" />&nbsp;<b><?php  echo $_SESSION['array_struct_final']['level_1'][$value_1]['level_2'][$value_2]['label'];?></b></a>
+								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php  echo "<a href=javascript:view_doc('".$res_id_list."');>"?><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=folderopen.gif" alt="" />&nbsp;<b><?php  echo $_SESSION['array_struct_final']['level_1'][$value_1]['level_2'][$value_2]['label'];?></b></a>
 								<span class="lb1-details">&nbsp;</span>
 							</div>
 							<br>
@@ -206,7 +206,7 @@ else
 										{
 											$res_id_list = $_SESSION['array_struct_final']['level_1'][$value_1]['level_2'][$value_2]['level_3'][$value_3]['level_4'][$value_4]['label'].",";
 											echo 	"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-													<a href=javascript:view_doc('".$res_id_list."');><img src='".$_SESSION['config']['businessappurl'].$_SESSION['config']['img']."/page.gif'alt='' />".$_SESSION['array_struct_final']['level_1'][$value_1]['level_2'][$value_2]['level_3'][$value_3]['level_4'][$value_4]['label']." - ".$_SESSION['array_struct_final']['level_1'][$value_1]['level_2'][$value_2]['level_3'][$value_3]['label']."</a><br>";
+													<a href=javascript:view_doc('".$res_id_list."');><img src='".$_SESSION['config']['businessappurl']."static.php?module=folder&filename=page.gif' alt='' />".$_SESSION['array_struct_final']['level_1'][$value_1]['level_2'][$value_2]['level_3'][$value_3]['level_4'][$value_4]['label']." - ".$_SESSION['array_struct_final']['level_1'][$value_1]['level_2'][$value_2]['level_3'][$value_3]['label']."</a><br>";
 										}
 
 										?>
@@ -216,7 +216,7 @@ else
 												foreach(array_keys($_SESSION['array_struct_final']['level_1'][$value_1]['level_2'][$value_2]['level_3'][$value_3]['level_4']) as $value_4)
 												{
 													echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-													<a href=javascript:view_doc('".$res_id_list."');><img src='".$_SESSION['config']['businessappurl'].$_SESSION['config']['img']."/page.gif'alt='' />".$_SESSION['array_struct_final']['level_1'][$value_1]['level_2'][$value_2]['level_3'][$value_3]['level_4'][$value_4]['label']."</a><br>";
+													<a href=javascript:view_doc('".$res_id_list."');><img src='".$_SESSION['config']['businessappurl']."static.php?filename=page.gif'alt='' />".$_SESSION['array_struct_final']['level_1'][$value_1]['level_2'][$value_2]['level_3'][$value_3]['level_4'][$value_4]['label']."</a><br>";
 												}
 */
 												?>

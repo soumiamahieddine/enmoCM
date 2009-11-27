@@ -105,24 +105,13 @@ if($_SESSION['current_folder_id'] <> "" && $folder->is_folder_exists($_SESSION['
 	$folder->load_folder($_SESSION['current_folder_id'], $_SESSION['tablename']['fold_folders']);
 	$folder_data = $folder->get_folder_info();
 	//$func->show_array($folder_data);
-	if(file_exists($path_trombi."00".$folder_data['folder_id'].".jpg"))
-	{
-		$file_trombi = $path_trombi."00".$folder_data['folder_id'].".jpg";
-	}
-	else
-	{
-		$file_trombi = $path_trombi."manage_foldertypes.jpg";
-	}
 }
-else
-{
-	$file_trombi = $path_trombi."manage_foldertypes.jpg";
-}
+
 ?>
 <body  onload="setTimeout(window.close, <?php  echo $time;?>*60*1000);">
 <br/>
 <br/>
-<!--<img src="img/<?php  echo $file_trombi;?>" style="float:left; position:absolute; top:40px; left:10px" alt="" />-->
+
 <div class="block">
 	<form name="frm1" class="physicalform" action="<?php  echo  $_SESSION['config']['businessappurl'].'index.php?display=true&module=indexing_searching&page=file_index';?>"
 	

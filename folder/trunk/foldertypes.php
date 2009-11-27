@@ -107,5 +107,5 @@ $autoCompletionArray = array();
 $autoCompletionArray["list_script_url"] = $_SESSION['config']['businessappurl']."index.php?display=true&module=folder&page=foldertype_list_by_name";
 $autoCompletionArray["number_to_begin"] = 1;
 
-$list->admin_list($tab, $i, $title, 'foldertype_id','foldertypes','folder','foldertype_id', true, $page_name_up, $page_name_val, $page_name_ban, $page_name_del, $page_name_add, $label_add, false, false, _ALL_FOLDERTYPES, _FOLDERTYPE, $_SESSION['urltomodules'].'folder/img/manage_foldertypes_b.gif', true, true, false, true, "", true, $autoCompletionArray);
+$list->admin_list($tab, $i, $title, 'foldertype_id','foldertypes','folder','foldertype_id', true, $page_name_up, $page_name_val, $page_name_ban, $page_name_del, $page_name_add, $label_add, false, false, _ALL_FOLDERTYPES, _FOLDERTYPE, $_SESSION['config']['businessappurl'].'static.php?module=folder&filename=manage_foldertypes_b.gif', true, true, false, true, "", true, $autoCompletionArray);
 ?>

@@ -101,11 +101,11 @@ class foldertype extends dbquery
 		//$this->show_array($_SESSION['m_admin']);
 		if($mode == "add")
 		{
-			echo '<h1><img src="'.$_SESSION['urltomodules'].'folder/img/manage_foldertypes_b.gif" alt="" /> '._FOLDERTYPE_ADDITION.'</h1>';
+			echo '<h1><img src="'.$_SESSION['config']['businessappurl'].'static.php?module=folder&filename=manage_foldertypes_b.gif" alt="" /> '._FOLDERTYPE_ADDITION.'</h1>';
 		}
 		elseif($mode == "up")
 		{
-			echo '<h1><img src="'.$_SESSION['urltomodules'].'folder/img/manage_foldertypes_b.gif" alt="" /> '._FOLDERTYPE_MODIFICATION.'</h1>';
+			echo '<h1><img src="'.$_SESSION['config']['businessappurl'].'static.php?module=folder&filename=manage_foldertypes_b.gif" alt="" /> '._FOLDERTYPE_MODIFICATION.'</h1>';
 		}
 		?>
 		<div id="inner_content" class="clearfix">
@@ -575,11 +575,11 @@ class foldertype extends dbquery
 					}
 					array_push($values, array('id' => (string) $val->id, 'label' => $label_val));
 				}
-				$arr_tmp = array('column' => (STRING) $item->column, 'label' => $label, 'type' => (STRING) $item->type, 'img' => $_SESSION['urltomodules'].'folder/img/'.$img, 'type_field' => 'select', 'values' => $values, 'default_value' => $default);
+				$arr_tmp = array('column' => (STRING) $item->column, 'label' => $label, 'type' => (STRING) $item->type, 'img' => $_SESSION['config']['businessappurl'].'static.php?module=folder&filename='.$img, 'type_field' => 'select', 'values' => $values, 'default_value' => $default);
 			}
 			else
 			{
-				$arr_tmp = array('column' => (STRING) $item->column, 'label' => $label, 'type' => (STRING) $item->type, 'img' => $_SESSION['urltomodules'].'folder/img/'.$img, 'type_field' => 'input', 'default_value' => $default);
+				$arr_tmp = array('column' => (STRING) $item->column, 'label' => $label, 'type' => (STRING) $item->type, 'img' =>$_SESSION['config']['businessappurl'].'static.php?module=folder&filename='.$img, 'type_field' => 'input', 'default_value' => $default);
 			}
 			array_push($indexes, $arr_tmp);
 		}
@@ -668,11 +668,11 @@ class foldertype extends dbquery
 						}
 						array_push($values, array('id' => (string) $val->id, 'label' => $label_val));
 					}
-					$indexes[$col] = array( 'label' => $label, 'type' => (STRING) $item->type, 'img' => $_SESSION['urltomodules'].'folder/img/'.$img, 'type_field' => 'select', 'values' => $values, 'default_value' => $default);
+					$indexes[$col] = array( 'label' => $label, 'type' => (STRING) $item->type, 'img' => $_SESSION['config']['businessappurl'].'static.php?module=folder&filename='.$img, 'type_field' => 'select', 'values' => $values, 'default_value' => $default);
 				}
 				else
 				{
-					$indexes[$col] = array( 'label' => $label, 'type' => (STRING) $item->type, 'img' => $_SESSION['urltomodules'].'folder/img/'.$img, 'type_field' => 'input', 'default_value' => $default);
+					$indexes[$col] = array( 'label' => $label, 'type' => (STRING) $item->type, 'img' => $_SESSION['config']['businessappurl'].'static.php?module=folder&filename='.$img, 'type_field' => 'input', 'default_value' => $default);
 				}
 			}
 		}

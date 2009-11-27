@@ -99,7 +99,7 @@ $core_tools->load_header();
 						if($_SESSION['folder_index_to_use'][$i]['date'])
 						{
 						?>
-							<img src="<?php  echo $_SESSION['config']['businessappurl'];?>img/calendar.jpg" alt="" name="for_<?php  echo $_SESSION['folder_index_to_use'][$i]['column'];?>" id='for_<?php  echo $_SESSION['folder_index_to_use'][$i]['column'];?>' onclick='showCalender(this)' />
+							<img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=calendar.jpg" alt="" name="for_<?php  echo $_SESSION['folder_index_to_use'][$i]['column'];?>" id='for_<?php  echo $_SESSION['folder_index_to_use'][$i]['column'];?>' onclick='showCalender(this)' />
 						<?php
                    		 }
 						?>

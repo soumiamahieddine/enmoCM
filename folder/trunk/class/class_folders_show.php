@@ -48,7 +48,7 @@ class folders_show extends functions
 			{
 				if($value == "first_level_id")
 				{
-					?><img src="<?php  echo $_SESSION['config']['img'];?>/dossiers2.gif" align="middle" alt="" />
+					?><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=dossiers2.gif" align="middle" alt="" />
 				<span class='selected'>
 					<?php  echo $result[$i]['first_level_label'];?><br />
 					</span>
@@ -59,13 +59,13 @@ class folders_show extends functions
 						if($_GET['second_level'] == $result[$i]['level2']['second_level_id'][$second_level])
 						{
 							?><span class="selected">
-							<a href="<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=<?php  echo $link;?>"><img src="<?php  echo $_SESSION['config']['img'];?>/dir_open.gif" border="0" align='middle' alt="" /> 		<?php  echo $result[$i]['level2']['second_level_label'][$second_level];?></a><br/>
+							<a href="<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=<?php  echo $link;?>"><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=dir_open.gif" border="0" align='middle' alt="" /> 		<?php  echo $result[$i]['level2']['second_level_label'][$second_level];?></a><br/>
 							</span>
 							<div class='dir_third_level'>
 							<?php  for($k=0;$k<count($result[$i]['level2'][$second_level]['level3']['type_id']);$k++)
 							{
 								?>
-								<a href="<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=<?php  echo $link;?>&amp;type_id=<?php  echo $result[$i]['level2'][$second_level]['level3']['type_id'][$third_level];?>&amp;second_level=<?php  echo $result[$i]['level2']['second_level_id'][$second_level];?>&amp;coll_id=<?php  echo $result[$i]['level2'][$second_level]['level3']['coll_id'][$third_level] ?>"><img src="<?php  echo $_SESSION['config']['img'];?>/arrow_primary.gif" border="0" align="middle" alt="" /> <?php  echo $result[$i]['level2'][$second_level]['level3']['type_label'][$third_level];?></a><br/> <?php
+								<a href="<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=<?php  echo $link;?>&amp;type_id=<?php  echo $result[$i]['level2'][$second_level]['level3']['type_id'][$third_level];?>&amp;second_level=<?php  echo $result[$i]['level2']['second_level_id'][$second_level];?>&amp;coll_id=<?php  echo $result[$i]['level2'][$second_level]['level3']['coll_id'][$third_level] ?>"><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=arrow_primary.gif" border="0" align="middle" alt="" /> <?php  echo $result[$i]['level2'][$second_level]['level3']['type_label'][$third_level];?></a><br/> <?php
 								$third_level++;
 							}
 							$second_level++;
@@ -77,7 +77,7 @@ class folders_show extends functions
 							{
 								$third_level++;
 							}
-							?><a href="<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=<?php  echo $link;?>&amp;second_level=<?php  echo $result[$i]['level2']['second_level_id'][$second_level];?>"><img src="<?php  echo $_SESSION['config']['img'];?>/dir_close.gif" align="top" border="0" alt="" /> <?php  echo $result[$i]['level2']['second_level_label'][$second_level];?></a><br/><?php
+							?><a href="<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=<?php  echo $link;?>&amp;second_level=<?php  echo $result[$i]['level2']['second_level_id'][$second_level];?>"><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?module=folder&filename=dir_close.gif" align="top" border="0" alt="" /> <?php  echo $result[$i]['level2']['second_level_label'][$second_level];?></a><br/><?php
 							$second_level++;
 						}
 					}
@@ -226,7 +226,7 @@ class folders_show extends functions
                     <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
                     <span id="link_right" >
                     	<?php  if($_SESSION['origin'] == "view_folder")
-						{?><a href="<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=show_folder&amp;module=folder&amp;field=<?php  echo $_SESSION['current_folder_id'];?>"><img src="<?php  echo $_SESSION['config']['img'];?>/s_sheet_c.gif" width="20px" height="25px"
+						{?><a href="<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=show_folder&amp;module=folder&amp;field=<?php  echo $_SESSION['current_folder_id'];?>"><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?module=folder&filename=s_sheet_c.gif" width="20px" height="25px"
                     	alt="logo"/><?php  echo _VIEW_SALARY_SHEET;?></a>
                         <?php  } ?>
                     </span>
@@ -306,12 +306,6 @@ class folders_show extends functions
 					}
 					else
 					{
-						if($folder_array['index'][$i]['date'])
-						{
-						/*?>
-							<img src="<?php  echo $_SESSION['config']['businessappurl'];?>img/calendar.jpg" alt="" name="for_<?php  echo $folder_array['index'][$i]['column'];?>" id='for_<?php  echo $folder_array['index'][$i]['column'];?>' onclick='showCalender(this)' />
-						<?php */
-                   		 }
 						?>
 						<input type="text" name="<?php  echo $folder_array['index'][$i]['column'];?>" id="<?php  echo $folder_array['index'][$i]['column'];?>" <?php  if($_SESSION['field_error'][$folder_array['index'][$i]['column']]){?>style="background-color:#FF0000"<?php  }?> <?php  if($folder_array['index'][$i]['date'])
 						{ echo 'class="medium"'; } ?> value="<?php

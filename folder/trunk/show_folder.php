@@ -71,7 +71,7 @@ if(isset($_POST['delete_folder']))
 
 ?>
 <div id="details_div" style="display:none;">
-<h1><img src="<?php  echo $_SESSION['config']['img'];?>/manage_structures.gif" alt="<?php _FOLDER;?>" width="35px" height="30px"/> <?php  echo _SHOW_FOLDER;?></h1>
+<h1><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=manage_structures.gif" alt="<?php _FOLDER;?>" width="35px" height="30px"/> <?php  echo _SHOW_FOLDER;?></h1>
 <div id="inner_content">
 	<?php
 	if($_REQUEST['id']<>"")

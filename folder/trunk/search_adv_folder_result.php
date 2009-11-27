@@ -140,7 +140,7 @@ if(isset($_SESSION['folder_search']['foldertype_id']) && !empty($_SESSION['folde
 
 if(!empty($_SESSION['error']))
 {
-	$func->echo_error(_ADV_SEARCH_FOLDER_TITLE, "<br /><div class=\"error\">"._MUST_CORRECT_ERRORS." : <br /><br /><strong>".$_SESSION['error']."<br /><a href=\"".$_SESSION['config']['businessappurl']."index.php?page=search_adv_folder&module=folder\">"._CLICK_HERE_TO_CORRECT."</a></strong></div>", 'title', $_SESSION['urltomodules']."folder/img/picto_search_b.gif");
+	$func->echo_error(_ADV_SEARCH_FOLDER_TITLE, "<br /><div class=\"error\">"._MUST_CORRECT_ERRORS." : <br /><br /><strong>".$_SESSION['error']."<br /><a href=\"".$_SESSION['config']['businessappurl']."index.php?page=search_adv_folder&module=folder\">"._CLICK_HERE_TO_CORRECT."</a></strong></div>", 'title', $_SESSION['config']['businessappurl']."static.php?module=folder&filename=picto_search_b.gif");
 }
 else
 {
@@ -242,7 +242,7 @@ if(empty($_SESSION['error']))
 
 
 		?>
-        <h1><img src="<?php  echo $_SESSION['urltomodules']."folder/img/picto_search_b.gif";?>" alt="" /> <?php  echo _SEARCH_RESULTS." - ".count($tab)." "._FOUND_FOLDER;?></h1>
+        <h1><img src="<?php  echo $_SESSION['config']['businessappurl']."static.php?module=folder&filename=picto_search_b.gif";?>" alt="" /> <?php  echo _SEARCH_RESULTS." - ".count($tab)." "._FOUND_FOLDER;?></h1>
         <div id="inner_content"><?php
 
 	$list->list_doc($tab,count($tab),'','folders_system_id','search_adv_folder_result','folders_system_id','show_folder&module=folder',false,false,'','','',true,true,false, false,false,false,true,false,'', 'folder',false,'','','listing spec','','',true);
@@ -250,7 +250,7 @@ if(empty($_SESSION['error']))
 	}
 	else
 	{
-		$func->echo_error(_ADV_SEARCH_FOLDER_TITLE,"<p class=\"error\"><img src=\"".$_SESSION['config']['img']."/noresult.gif\" /><br />"._NO_RESULTS."</p>", 'title',  $_SESSION['urltomodules']."folder/img/picto_search_b.gif");
+		$func->echo_error(_ADV_SEARCH_FOLDER_TITLE,"<p class=\"error\"><img src=\"".$_SESSION['config']['businessappurl']."static.php?filename=noresult.gif\" /><br />"._NO_RESULTS."</p>", 'title',  $_SESSION['config']['businessappurl']."static.php?module=folder&filename=picto_search_b.gif");
 	}
 }
 ?>
