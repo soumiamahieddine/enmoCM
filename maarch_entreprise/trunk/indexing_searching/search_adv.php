@@ -381,7 +381,7 @@ function del_query_confirm()
 -->
 </script>
 
-<h1><img src="<?php echo $_SESSION['config']['img'];?>/picto_search_b.gif" alt="" /> <?php echo _ADV_SEARCH_TITLE; ?></h1>
+<h1><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_search_b.gif" alt="" /> <?php echo _ADV_SEARCH_TITLE; ?></h1>
 <div id="inner_content">
 
 <?php if (count($queries) > 0)
@@ -419,7 +419,7 @@ if(isset($_REQUEST['nodetails']))
 }?>
 <table align="center" border="0" width="100%">
     <tr>
-    	<td align="left"><a href="#" onclick="clear_search_form('frmsearch2','select_criteria');clear_q_list();"><img src="<?php  echo $_SESSION['config']['businessappurl']."img/reset.gif";?>" alt="<?php echo _CLEAR_SEARCH;?>" /> <?php  echo _CLEAR_SEARCH; ?></a></td>
+    	<td align="left"><a href="#" onclick="clear_search_form('frmsearch2','select_criteria');clear_q_list();"><img src="<?php  echo $_SESSION['config']['businessappurl']."static.php?filename=reset.gif";?>" alt="<?php echo _CLEAR_SEARCH;?>" /> <?php  echo _CLEAR_SEARCH; ?></a></td>
     	<td  width="75%" align="right" ><span class="bold"><?php echo _SEARCH_COPY_MAIL;?></span>
 			<input type="hidden" name="meta[]" value="copies#copies_false,copies_true#radio" />
 			<input type="radio" name="copies" id="copies_false" class="check"  value="false" checked="checked" /><?php echo _NO;?>

@@ -16,7 +16,7 @@ include('../../core/init.php');
 
 $path_tmp = explode('/',$_SERVER['SCRIPT_FILENAME']);
 $path_server = implode('/',array_slice($path_tmp,0,array_search('apps',$path_tmp))).'/';
-//$_SESSION['urltomodules'] = $_SESSION['config']['coreurl']."/modules/";
+$_SESSION['urltomodules'] = $_SESSION['config']['coreurl']."/modules/";
 if(isset($_SESSION['config']['corepath']))
 {
 	require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_functions.php");

@@ -543,11 +543,11 @@ class types extends dbquery
 					}
 					array_push($values, array('id' => (string) $val->id, 'label' => $label_val));
 				}
-				$arr_tmp = array('column' => (STRING) $item->column, 'label' => $label, 'type' => (STRING) $item->type, 'img' => $_SESSION['config']['businessappurl'].'img/'.$img, 'type_field' => 'select', 'values' => $values, 'default_value' => $default);
+				$arr_tmp = array('column' => (STRING) $item->column, 'label' => $label, 'type' => (STRING) $item->type, 'img' => $_SESSION['config']['businessappurl'].'static.php?filename='.$img, 'type_field' => 'select', 'values' => $values, 'default_value' => $default);
 			}
 			else
 			{
-				$arr_tmp = array('column' => (STRING) $item->column, 'label' => $label, 'type' => (STRING) $item->type, 'img' => $_SESSION['config']['businessappurl'].'img/'.$img, 'type_field' => 'input', 'default_value' => $default);
+				$arr_tmp = array('column' => (STRING) $item->column, 'label' => $label, 'type' => (STRING) $item->type, 'img' => $_SESSION['config']['businessappurl'].'static.php?filename='.$img, 'type_field' => 'input', 'default_value' => $default);
 			}
 			array_push($indexes, $arr_tmp);
 		}
@@ -640,11 +640,11 @@ class types extends dbquery
 						}
 						array_push($values, array('id' => (string) $val->id, 'label' => $label_val));
 					}
-					$indexes[$col] = array( 'label' => $label, 'type' => (STRING) $item->type, 'img' => $_SESSION['config']['businessappurl'].'img/'.$img, 'type_field' => 'select', 'values' => $values, 'default_value' => $default);
+					$indexes[$col] = array( 'label' => $label, 'type' => (STRING) $item->type, 'img' => $_SESSION['config']['businessappurl'].'static.php?filename='.$img, 'type_field' => 'select', 'values' => $values, 'default_value' => $default);
 				}
 				else
 				{
-					$indexes[$col] = array( 'label' => $label, 'type' => (STRING) $item->type, 'img' => $_SESSION['config']['businessappurl'].'img/'.$img, 'type_field' => 'input', 'default_value' => $default);
+					$indexes[$col] = array( 'label' => $label, 'type' => (STRING) $item->type, 'img' => $_SESSION['config']['businessappurl'].'static.php?filename='.$img, 'type_field' => 'input', 'default_value' => $default);
 				}
 			}
 		}

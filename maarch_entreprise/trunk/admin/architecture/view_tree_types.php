@@ -58,7 +58,7 @@ while($res = $db->fetch_object())
 	array_push($_SESSION['tree_foldertypes'], array("ID" => $res->foldertype_id, "LABEL" => $res->foldertype_label));
 }
 ?>
-<h1><img src="<?php  echo $_SESSION['config']['img'];?>/manage_architecture_b.gif" alt="" /> <?php  echo _VIEW_TREE_DOCTYPES;?></h1>
+<h1><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=manage_architecture_b.gif" alt="" /> <?php  echo _VIEW_TREE_DOCTYPES;?></h1>
 <div id="inner_content" class="clearfix">
 	<table width="100%" border="0">
 		<tr>

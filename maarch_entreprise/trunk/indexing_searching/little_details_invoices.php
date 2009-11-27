@@ -50,7 +50,7 @@ $is_view= false;
 $_SESSION['indexing'] = array();
 if($_GET['status'] == "empty")
 {
-	?><p align="center"><img src="<?php echo $_SESSION['config']['businessappurl'].$_SESSION['config']['img'].'/bg_home_home.gif'; ?>" alt="Maarch" /></p> <?php
+	?><p align="center"><img src="<?php echo $_SESSION['config']['businessappurl'].'static.php?filename=bg_home_home.gif'; ?>" alt="Maarch" /></p> <?php
 }
 else
 {

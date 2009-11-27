@@ -872,7 +872,7 @@ else
 									$detailsExport .= "</tr>";
 									?>
 									<tr <?php echo $color;?> >
-										<td><img src="<?php echo $_SESSION['urltomodules'];?>entities/img/manage_users_entities_b_small.gif" alt="<?php echo _USER;?>" title="<?php echo _USER;?>" /></td>
+										<td><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=manage_users_entities_b_small.gifamodule=entities" alt="<?php echo _USER;?>" title="<?php echo _USER;?>" /></td>
 										<td ><?php echo $_SESSION['details']['diff_list']['copy']['users'][$i]['firstname'];?></td>
 										<td ><?php echo $_SESSION['details']['diff_list']['copy']['users'][$i]['lastname'];?></td>
 										<td><?php echo $_SESSION['details']['diff_list']['copy']['users'][$i]['entity_label'];?></td>
@@ -1048,7 +1048,7 @@ else
 						$tab_notes=$request_notes->select($select_notes,$where_notes,"order by ".$_SESSION['tablename']['not_notes'].".date desc",$_SESSION['config']['databasetype'], "500", true,$_SESSION['tablename']['not_notes'], $_SESSION['tablename']['users'], "user_id" );
 						?>
 						<div style="text-align:center;">
-							<img src="<?php echo $_SESSION['urltomodules'];?>notes/img/modif_note.png" border="0" alt="" /><a href="javascript://" onclick="ouvreFenetre('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=notes&page=note_add&size=full&identifier=<?php echo $s_id;?>&coll_id=<?php echo $coll_id;?>', 450, 300)" ><?php echo _ADD_NOTE;?></a>
+							<img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=modif_note.png&module=notes" border="0" alt="" /><a href="javascript://" onclick="ouvreFenetre('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=notes&page=note_add&size=full&identifier=<?php echo $s_id;?>&coll_id=<?php echo $coll_id;?>', 450, 300)" ><?php echo _ADD_NOTE;?></a>
 						</div>
 						<iframe name="list_notes_doc" id="list_notes_doc" src="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=notes&page=frame_notes_doc&size=full" frameborder="0" width="100%" height="520px"></iframe>
 					</dd>

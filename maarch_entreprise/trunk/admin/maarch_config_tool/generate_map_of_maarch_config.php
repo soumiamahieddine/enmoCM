@@ -418,7 +418,7 @@ $core_tools->load_lang();
 //$core_tools->show_array($_SESSION['modules_services']);
 load_calling_scripts_of_modules_services($_SESSION['modules_services']);
 //$core_tools->show_array($_SESSION['modules_calling_scripts']);
-$report_modules_text = "<h1><img src='".$_SESSION['config']['businessappurl'].$_SESSION['config']['img']."/picto_admin_b.gif' alt='' />"._XML_PARAM_SERVICE."</h1><div id='inner_content' class='clearfix'>";
+$report_modules_text = "<h1><img src='".$_SESSION['config']['businessappurl']."static.php?filename=picto_admin_b.gif' alt='' />"._XML_PARAM_SERVICE."</h1><div id='inner_content' class='clearfix'>";
 $report_modules_text .= "<center><h3>"._MODULES_SERVICES."</h3></center><br>";
 for($i=0;$i<count($_SESSION['modules_calling_scripts']);$i++)
 {

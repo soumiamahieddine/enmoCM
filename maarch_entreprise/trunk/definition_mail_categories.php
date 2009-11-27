@@ -139,27 +139,27 @@ $core = new core_tools();
 if($core->is_module_loaded('entities'))
 {
 	//Entities module (incoming)
-	$_ENV['categories']['incoming']['destination'] = array( 'type_form' => 'string', 'type_field' => 'string', 'mandatory' => true, 'label' => _DEPARTMENT_DEST, 'table' => 'res', 'img' => $_SESSION['urltomodules'].'entities/img/manage_entities_b_small.gif', 'modify' => false, 'form_show' => 'select');
+	$_ENV['categories']['incoming']['destination'] = array( 'type_form' => 'string', 'type_field' => 'string', 'mandatory' => true, 'label' => _DEPARTMENT_DEST, 'table' => 'res', 'img' => $_SESSION['config']['businessappurl'].'static.php?module=entities&filename=manage_entities_b_small.gif', 'modify' => false, 'form_show' => 'select');
 	$_ENV['categories']['incoming']['other_cases']['diff_list'] = array( 'type' => 'special', 'mandatory' => true, 'label' => _DIFF_LIST,'table' => 'special');
 
 	// Entities module (outgoing)
-	$_ENV['categories']['outgoing']['destination'] = array( 'type_form' => 'string', 'type_field' => 'string', 'mandatory' => true, 'label' => _DEPARTMENT_EXP, 'table' => 'res', 'img' => $_SESSION['urltomodules'].'entities/img/manage_entities_b_small.gif', 'modify' => false, 'form_show' => 'select');
+	$_ENV['categories']['outgoing']['destination'] = array( 'type_form' => 'string', 'type_field' => 'string', 'mandatory' => true, 'label' => _DEPARTMENT_EXP, 'table' => 'res', 'img' => $_SESSION['config']['businessappurl'].'static.php?module=entities&filename=manage_entities_b_small.gif', 'modify' => false, 'form_show' => 'select');
 	$_ENV['categories']['outgoing']['other_cases']['diff_list'] = array( 'type' => 'special', 'mandatory' => true, 'label' => _DIFF_LIST,'table' => 'special');
 
 	// Entities module (internal)
-	$_ENV['categories']['internal']['destination'] = array( 'type_form' => 'string', 'type_field' => 'string', 'mandatory' => true, 'label' => _DEPARTMENT_DEST, 'table' => 'res', 'img' => $_SESSION['urltomodules'].'entities/img/manage_entities_b_small.gif', 'modify' => false, 'form_show' => 'select');
+	$_ENV['categories']['internal']['destination'] = array( 'type_form' => 'string', 'type_field' => 'string', 'mandatory' => true, 'label' => _DEPARTMENT_DEST, 'table' => 'res', 'img' => $_SESSION['config']['businessappurl'].'static.php?module=entities&filename=manage_entities_b_small.gif', 'modify' => false, 'form_show' => 'select');
 	$_ENV['categories']['internal']['other_cases']['diff_list'] = array( 'type' => 'special', 'mandatory' => true, 'label' => _DIFF_LIST,'table' => 'special');
 }
 if($core->is_module_loaded('physical_archive'))
 {
 	//Physical Archive (incoming)
-	$_ENV['categories']['incoming']['other_cases']['arbox_id'] = array( 'type_form' => 'interger', 'type_field' => 'integer', 'mandatory' => true, 'label' => _BOX_ID, 'table' => 'res', 'img' => $_SESSION['urltomodules'].'physical_archive/img/pa_boxes.gif', 'modify' => false, 'form_show' => 'select');
+	$_ENV['categories']['incoming']['other_cases']['arbox_id'] = array( 'type_form' => 'interger', 'type_field' => 'integer', 'mandatory' => true, 'label' => _BOX_ID, 'table' => 'res', 'img' => $_SESSION['config']['businessappurl'].'static.php?module=physical_archive&filename=pa_boxes.gif', 'modify' => false, 'form_show' => 'select');
 	// Physical Archive (outgoing)
-	$_ENV['categories']['outgoing']['other_cases']['arbox_id'] = array( 'type_form' => 'interger', 'type_field' => 'integer', 'mandatory' => true, 'label' => _BOX_ID, 'table' => 'res', 'img' => $_SESSION['urltomodules'].'physical_archive/img/pa_boxes.gif', 'modify' => false, 'form_show' => 'select');
+	$_ENV['categories']['outgoing']['other_cases']['arbox_id'] = array( 'type_form' => 'interger', 'type_field' => 'integer', 'mandatory' => true, 'label' => _BOX_ID, 'table' => 'res', 'img' => $_SESSION['config']['businessappurl'].'static.php?module=physical_archive&filename=pa_boxes.gif', 'modify' => false, 'form_show' => 'select');
 	// Physical Archive (internal)
-	$_ENV['categories']['internal']['other_cases']['arbox_id'] = array( 'type_form' => 'interger', 'type_field' => 'integer', 'mandatory' => true, 'label' => _BOX_ID, 'table' => 'res', 'img' => $_SESSION['urltomodules'].'physical_archive/img/pa_boxes.gif', 'modify' => false, 'form_show' => 'select');
+	$_ENV['categories']['internal']['other_cases']['arbox_id'] = array( 'type_form' => 'interger', 'type_field' => 'integer', 'mandatory' => true, 'label' => _BOX_ID, 'table' => 'res', 'img' => $_SESSION['config']['businessappurl'].'static.php?module=physical_archive&filename=pa_boxes.gif', 'modify' => false, 'form_show' => 'select');
 	// Physical Archive (market_document)
-	$_ENV['categories']['market_document']['other_cases']['arbox_id'] = array( 'type_form' => 'interger', 'type_field' => 'integer', 'mandatory' => true, 'label' => _BOX_ID, 'table' => 'res', 'img' => $_SESSION['urltomodules'].'physical_archive/img/pa_boxes.gif', 'modify' => false, 'form_show' => 'select');
+	$_ENV['categories']['market_document']['other_cases']['arbox_id'] = array( 'type_form' => 'interger', 'type_field' => 'integer', 'mandatory' => true, 'label' => _BOX_ID, 'table' => 'res', 'img' => $_SESSION['config']['businessappurl'].'static.php?module=physical_archive&filename=pa_boxes.gif', 'modify' => false, 'form_show' => 'select');
 }
 
 if($core->is_module_loaded('folder'))

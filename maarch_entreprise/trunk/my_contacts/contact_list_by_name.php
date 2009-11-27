@@ -28,7 +28,7 @@
 * @version $Revision$
 * @ingroup admin
 */
-require_once("core/class/class_request.php");
+
 $db = new dbquery();
 $db->connect();
 if($_SESSION['config']['databasetype'] == "POSTGRESQL")

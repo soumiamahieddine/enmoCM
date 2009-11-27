@@ -87,7 +87,7 @@ class business_app_tools extends dbquery
 			$_SESSION['config']['css_IE7'] = $_SESSION['config']['businessappurl'].((string) $CONFIG->css_ie7);
 */
 
-			$_SESSION['config']['img'] = (string) $CONFIG->img;
+			//$_SESSION['config']['img'] = (string) $CONFIG->img;
 
 			$_SESSION['config']['defaultPage'] = (string) $CONFIG->defaultPage;
 			$_SESSION['config']['exportdirectory'] = (string) $CONFIG->exportdirectory;

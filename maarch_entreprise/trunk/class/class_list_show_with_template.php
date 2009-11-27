@@ -82,7 +82,7 @@ class list_show_with_template extends list_show
 		}
 		else
 		{
-			return $_SESSION['config']['businessappurl']."img/".$my_explode[1];
+			return $_SESSION['config']['businessappurl']."static.php?filename=".$my_explode[1];
 		}
 	}
 

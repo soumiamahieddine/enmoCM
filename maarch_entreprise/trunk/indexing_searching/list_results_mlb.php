@@ -371,7 +371,7 @@ $_SESSION['error_page'] = '';
 			$found_type = _FOUND_DOC;
 ?>
 
-<h1><img src="<?php  echo $_SESSION['config']['businessappurl']."img/picto_search_b.gif";?>" alt="" /> <?php  echo _SEARCH_RESULTS." - ".count($tab)." ".$found_type;?></h1>
+<h1><img src="<?php  echo $_SESSION['config']['businessappurl']."static.php?filename=picto_search_b.gif";?>" alt="" /> <?php  echo _SEARCH_RESULTS." - ".count($tab)." ".$found_type;?></h1>
     <div id="inner_content">
 	<?php if(!isset($_REQUEST['action_form']) || empty($_REQUEST['action_form']))
 	{
@@ -387,11 +387,13 @@ $_SESSION['error_page'] = '';
 		$button_label = _VALIDATE;
 		if(isset($_REQUEST['module'])&& !empty($_REQUEST['module']))
 		{
-			$action = $_SESSION['urltomodules'].$_REQUEST['module'].'/'.$_REQUEST['action_form'].'.php';
+			//$action = $_SESSION['urltomodules'].$_REQUEST['module'].'/'.$_REQUEST['action_form'].'.php';
+			$action = $_SESSION['config']['businessappurl'].".index.php?display=true&page=".$_REQUEST['action_form']."&module=".$_REQUEST['module'];
 		}
 		else
 		{
-			$action = $_SESSION['config']['businessappurl'].$_REQUEST['action_form'].'.php';
+			//$action = $_SESSION['config']['businessappurl'].$_REQUEST['action_form'].'.php';
+			$action = $_SESSION['config']['businessappurl'].".index.php?display=true&page=".$_REQUEST['action_form'];
 		}
 	}
 	if($mode == 'popup')
@@ -436,14 +438,14 @@ else
 {
 	if($mode == 'normal')
 	{
-		$_SESSION['error_search'] = '<p class="error"><img src="'.$_SESSION['config']['businessappurl'].'img/noresult.gif" /><br />'._NO_RESULTS.'</p><br/><br/><div align="center"><strong><a href="'.$_SESSION['config']['businessappurl'].'index.php?page=search_adv&dir=indexing_searching&init_search">'._MAKE_NEW_SEARCH.'</a></strong></div>';
+		$_SESSION['error_search'] = '<p class="error"><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=noresult.gif" /><br />'._NO_RESULTS.'</p><br/><br/><div align="center"><strong><a href="'.$_SESSION['config']['businessappurl'].'index.php?page=search_adv&dir=indexing_searching&init_search">'._MAKE_NEW_SEARCH.'</a></strong></div>';
 		?>
 		<script language="javascript" type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?page=search_adv_error&dir=indexing_searching';?>';</script>
 		<?php
 	}
 	else
 	{
-		$_SESSION['error_search'] = '<p class="error"><img src="'.$_SESSION['config']['businessappurl'].'img/noresult.gif" /><br />'._NO_RESULTS.'</p><br/><br/><div align="center"><strong><a href="'.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=search_adv&mode='.$mode.'&init_search">'._MAKE_NEW_SEARCH.'</a></strong></div>';
+		$_SESSION['error_search'] = '<p class="error"><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=noresult.gif" /><br />'._NO_RESULTS.'</p><br/><br/><div align="center"><strong><a href="'.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=search_adv&mode='.$mode.'&init_search">'._MAKE_NEW_SEARCH.'</a></strong></div>';
 		?>
 		<script language="javascript" type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=search_adv_error&mode='.$mode;?>';</script>
 		<?php
@@ -458,7 +460,7 @@ else
 	{
 		var form = document.getElementById(form_id);
 		var q_name = form.query_name.value;
-		$('modal').innerHTML = '<img src="img/loading.gif" />';
+		$('modal').innerHTML = '<img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=loading.gif" />';
 
 		new Ajax.Request('<? echo $_SESSION['config']['businessappurl'];?>index.php?display=true&dir=indexing_searching&page=manage_query',
 	    {

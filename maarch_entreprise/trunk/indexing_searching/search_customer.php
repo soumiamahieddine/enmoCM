@@ -52,7 +52,7 @@ if($_REQUEST['name_folder'] <> "")
 }
 //$core_tools->show_array($_REQUEST);
 ?>
-<h1><img src="<?php  echo $_SESSION['config']['businessappurl']."img/search_proj_off.gif";?>" alt="" /> <?php  echo _SEARCH_CUSTOMER_TITLE; ?></h1>
+<h1><img src="<?php  echo $_SESSION['config']['businessappurl']."static.php?filename=search_proj_off.gif";?>" alt="" /> <?php  echo _SEARCH_CUSTOMER_TITLE; ?></h1>
 <div id="inner_content" align="center">
 	<div class="block">
 		<table width="100%" border="0">
@@ -83,7 +83,7 @@ if($_REQUEST['name_folder'] <> "")
 	</script>
 	<div class="clearsearch">
 		<br>
-		<a href="<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=search_customer&dir=indexing_searching&erase=true"><img src="<?php  echo $_SESSION['config']['businessappurl']."img/reset.gif";?>" alt="" height="15px" width="15px" /><?php  echo _NEW_SEARCH; ?></a>
+		<a href="<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=search_customer&dir=indexing_searching&erase=true"><img src="<?php  echo $_SESSION['config']['businessappurl']."static.php?filename=reset.gif";?>" alt="" height="15px" width="15px" /><?php  echo _NEW_SEARCH; ?></a>
 	</div>
 	<!-- Display the layout of search_customer -->
 	<table width="100%" height="100%" border="1">
