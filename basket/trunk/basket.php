@@ -200,6 +200,6 @@ while($line = $request->fetch_object())
 $title = _BASKET_LIST." : ".$i." "._BASKETS;
 
 
-$list->admin_list($tab, $i, $title, 'basket_id','basket','basket','basket_id', true, $page_name_up, $page_name_val, $page_name_ban, $page_name_del, $page_name_add, $label_add, FALSE, FALSE, _ALL_BASKETS, _BASKET,$_SESSION['urltomodules'].'basket/img/picto_basket_b.gif', TRUE ,true, false, true, $what);
+$list->admin_list($tab, $i, $title, 'basket_id','basket','basket','basket_id', true, $page_name_up, $page_name_val, $page_name_ban, $page_name_del, $page_name_add, $label_add, FALSE, FALSE, _ALL_BASKETS, _BASKET,$_SESSION['config']['businessappurl'].'static.php?module=basket&filename=picto_basket_b.gif', TRUE ,true, false, true, $what);
 
 ?>

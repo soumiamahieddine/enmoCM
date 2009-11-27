@@ -69,16 +69,6 @@ else
 	$_SESSION['error'] .= _NO_RESULT_PAGE_SELECTED.".";
 }
 
-/*
-if(!empty($_SESSION['error']))
-{
-
-	header("location: ".$_SESSION['urltomodules']."basket/groupbasket_popup.php");
-	exit();
-}
-else
-{
-*/
 
 	$old_group = "";
 	$seq = "";
@@ -174,10 +164,7 @@ else
 		}
 		echo $core_tools->execute_modules_services($_SESSION['modules_services'], 'manage_group_basket.php', "include");
 	}
-	//$core_tools->show_array($_REQUEST);
-	//$core_tools->show_array($_SESSION['m_admin']['basket']['groups']);
-	//exit();
-//}
+
 
 if(!empty($_SESSION['error']))
 {

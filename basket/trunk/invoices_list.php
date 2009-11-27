@@ -161,7 +161,7 @@ for ($i=0;$i<count($tab);$i++)
 			}
 			if($tab[$i][$j][$value]=="status")
 			{
-				if($tab[$i][$j]['value'] == 'NEW') { $tab[$i][$j]['value'] = "<img src = '".$_SESSION['config']['businessappurl']."static.php?filename=mail_new.gif' alt = '"._TO_PROCESS."' title = '"._TO_PROCESS."'>";} elseif($tab[$i][$j]['value'] == 'COU') { $tab[$i][$j]['value'] = "<img src = '".$_SESSION['config']['businessappurl']."img/mail.gif' alt = '"._IN_PROGRESS."' title = '"._IN_PROGRESS."'>";}elseif($tab[$i][$j]['value'] == 'END') { $tab[$i][$j]['value'] = "<img src = '".$_SESSION['config']['businessappurl']."img/mail_end.gif' alt = '"._CLOSED."' title = '"._CLOSED."'>";}else {$tab[$i][$j]['value'] =$request->show_string($tab[$i][$j]["value"]);}
+				if($tab[$i][$j]['value'] == 'NEW') { $tab[$i][$j]['value'] = "<img src = '".$_SESSION['config']['businessappurl']."static.php?filename=mail_new.gif' alt = '"._TO_PROCESS."' title = '"._TO_PROCESS."'>";} elseif($tab[$i][$j]['value'] == 'COU') { $tab[$i][$j]['value'] = "<img src = '".$_SESSION['config']['businessappurl']."static.php?filename=mail.gif' alt = '"._IN_PROGRESS."' title = '"._IN_PROGRESS."'>";}elseif($tab[$i][$j]['value'] == 'END') { $tab[$i][$j]['value'] = "<img src = '".$_SESSION['config']['businessappurl']."static.php?filename=mail_end.gif' alt = '"._CLOSED."' title = '"._CLOSED."'>";}else {$tab[$i][$j]['value'] =$request->show_string($tab[$i][$j]["value"]);}
 				$tab[$i][$j]["label"]=_STATUS;
 				$tab[$i][$j]["size"]="4";
 				$tab[$i][$j]["label_align"]="left";

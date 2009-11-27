@@ -156,12 +156,14 @@ class basket extends dbquery
 					}
 					else if(strtoupper($mode) == 'FRAME')
 					{
-						$path = $_SESSION['urltomodules'].$_SESSION['basket_page'][$ind]['MODULE']."/".$_SESSION['basket_page'][$ind]['NAME'].".php";
+						//$path = $_SESSION['urltomodules'].$_SESSION['basket_page'][$ind]['MODULE']."/".$_SESSION['basket_page'][$ind]['NAME'].".php";
+						$path = $_SESSION['config']['businessappurl']."index.php?display=true&module=".$_SESSION['basket_page'][$ind]['MODULE']."&page=".$_SESSION['basket_page'][$ind]['NAME'];
 
 					}
 					elseif(strtoupper($mode) == 'INCLUDE')
 					{
-						$path = $_SESSION['pathtomodules'].$_SESSION['basket_page'][$ind]['MODULE'].DIRECTORY_SEPARATOR.$_SESSION['basket_page'][$ind]['NAME'].".php";
+						//$path = $_SESSION['pathtomodules'].$_SESSION['basket_page'][$ind]['MODULE'].DIRECTORY_SEPARATOR.$_SESSION['basket_page'][$ind]['NAME'].".php";
+						$path = 'modules'.DIRECTORY_SEPARATOR.$_SESSION['basket_page'][$ind]['MODULE'].DIRECTORY_SEPARATOR.$_SESSION['basket_page'][$ind]['NAME'].".php";
 					}
 					else
 					{
@@ -811,7 +813,7 @@ class basket extends dbquery
 		else
 		{
 			ob_start();
-			?><h2><?php echo _ABS_MODE;?></h2><div align="center"><form name="abs_mode" id="abs_mode" method="get" action="<?php echo $_SESSION['urltomodules'];?>basket/manage_abs_mode.php"><input type="hidden" name="user_id" value="<?php echo $user_id ;?>"/><p><?php echo _REALLY_ABS_MODE;?></p><input type="submit" name="submit" value="<?php echo _VALIDATE;?>" class="button" /> <input type="button" name="cancel" value="<?php echo _CANCEL;?>" onclick="destroyModal('modal_redirect');" class="button" /></form></div><?php
+			?><h2><?php echo _ABS_MODE;?></h2><div align="center"><form name="abs_mode" id="abs_mode" method="get" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=basket&page=manage_abs_mode"><input type="hidden" name="display" value="true"/><input type="hidden" name="module" value="basket"/><input type="hidden" name="page" value="manage_abs_mode"/><input type="hidden" name="user_id" value="<?php echo $user_id ;?>"/><p><?php echo _REALLY_ABS_MODE;?></p><input type="submit" name="submit" value="<?php echo _VALIDATE;?>" class="button" /> <input type="button" name="cancel" value="<?php echo _CANCEL;?>" onclick="destroyModal('modal_redirect');" class="button" /></form></div><?php
 			$content = ob_get_clean();
 		}
 		 return $content;
