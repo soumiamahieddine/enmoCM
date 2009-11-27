@@ -34,7 +34,7 @@ if($_SESSION['mode_editor'])
 		theme_<?php  echo $theme;?>_styles : "Header 1=header1;Header 2=header2;Header 3=header3;Table Row=tableRow1" // Theme specific setting CSS classes
 		<?php  if($show_maarch_list)
 		{
-			echo ', mapping_file : "'.$_SESSION['urltomodules'].'templates/xml/mapping_file.xml"';
+			echo ', mapping_file : "'.$_SESSION['config']['coreurl'].'modules/templates/xml/mapping_file.xml"';
 		}?>
 	});
 

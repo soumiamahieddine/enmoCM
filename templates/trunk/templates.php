@@ -138,6 +138,6 @@ $admin->execute_modules_services($_SESSION['modules_services'], 'templates.php',
 $title = _TEMPLATES_LIST." : ".$i." "._TEMPLATES;
 $list = new list_show();
 
-$list->admin_list($tab, $i, $title, 'id','templates','templates','id', true, $page_name_up, $page_name_val, $page_name_ban, $page_name_del, $page_name_add, $label_add, FALSE, FALSE, _ALL_TEMPLATES, _TEMPLATE, $_SESSION['config']['img'].'/picto_add_b.gif', TRUE, true, false, true, $what);
+$list->admin_list($tab, $i, $title, 'id','templates','templates','id', true, $page_name_up, $page_name_val, $page_name_ban, $page_name_del, $page_name_add, $label_add, FALSE, FALSE, _ALL_TEMPLATES, _TEMPLATE, $_SESSION['config']['businessappurl'].'static.php?filename=picto_add_b.gif', TRUE, true, false, true, $what);
 
 ?>

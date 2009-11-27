@@ -142,7 +142,7 @@ class admin_templates extends dbquery
 		{
 			$_SESSION['error'] = _UNKNOWN_PARAM."<br />";
 		}
-		$allowedTags='<p><strong><em><u><h1><h2><h3><h4><h5><h6><img>';
+tilda		$allowedTags='<p><strong><em><u><h1><h2><h3><h4><h5><h6><img>';
  		$allowedTags.='<li><ol><ul><span><div><br><ins><del><blockquote><font><strike><table><tr><td><th><tbody><thead><tfooter><caption>';
 
   		if($_REQUEST['template_content']!='')
