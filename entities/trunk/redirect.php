@@ -45,7 +45,7 @@ $frm_height = '500px';
 		$frm_str .= '<input type="hidden" name="chosen_action" id="chosen_action" value="end_action" />';
 				$frm_str .='<p>';
 					$frm_str .= '<label><b>'._REDIRECT_TO_OTHER_DEP.' :</b></label>';
-					$frm_str .= '<select name="department" id="department" onchange="change_entity(this.options[this.selectedIndex].value, \''.$_SESSION['urltomodules'].'entities/load_listinstance.php'.'\', \'diff_list_div_redirect\', \'redirect\');">';
+					$frm_str .= '<select name="department" id="department" onchange="change_entity(this.options[this.selectedIndex].value, \''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=load_listinstance'.'\', \'diff_list_div_redirect\', \'redirect\');">';
 						$frm_str .='<option value="">'._CHOOSE_DEPARTMENT.'</option>';
 					   for($i=0; $i < count($services); $i++)
 					   {

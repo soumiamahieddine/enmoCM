@@ -150,6 +150,6 @@ $label_add = "";
 $title = _ENTITIES_USERS_LIST." : ".$i." "._USERS;
 $list = new list_show();
 $autoCompletionArray = array();
-$list->admin_list($tab, $i, $title,'user_id','users_list', 'entities','user_id', false, $page_name_up, $page_name_val, $page_name_ban, false, $page_name_add, $label_add, false, false, _ALL_USERS, _USER, $_SESSION['config']['img'].'/manage_users_entities_b.gif', true, true, false, true, "", false, $autoCompletionArray);
+$list->admin_list($tab, $i, $title,'user_id','users_list', 'entities','user_id', false, $page_name_up, $page_name_val, $page_name_ban, false, $page_name_add, $label_add, false, false, _ALL_USERS, _USER, $_SESSION['config']['businessappurl'].'static.php?filename=manage_users_entities_b.gif&moduke=entities', true, true, false, true, "", false, $autoCompletionArray);
 
 ?>
