@@ -197,8 +197,7 @@ for ($ind_notes1=0;$ind_notes1<count($tabNotes);$ind_notes1++)
 			}
 			if($tabNotes[$ind_notes1][$ind_notes2][$value]=="note_text")
 			{
-				//$tabNotes[$ind_notes1][$ind_notes2]['value'] = '<a href="javascript://" onclick="ouvreFenetre(\''.$_SESSION['urltomodules'].'notes/note_details.php?id='.$ind_notes1d.'&amp;resid='.$_SESSION['doc_id'].'&amp;coll_id='.$_SESSION['collection_id_choice'].'\', 450, 300)">'.substr($request->show_string($tabNotes[$ind_notes1][$ind_notes2]['value']), 0, 20).'... <span class="sstit"> > '._READ.'</span>';
-				$tabNotes[$ind_notes1][$ind_notes2]['value'] = '<a href="javascript://" onclick="ouvreFenetre(\''.$_SESSION['urltomodules'].'notes/note_details.php?id='.$ind_notes1d.'&amp;resid='.$_SESSION['doc_id'].'&amp;coll_id='.$_SESSION['collection_id_choice'].$extend_url.'\', 450, 300)">'.$func->cut_string($request->show_string($tabNotes[$ind_notes1][$ind_notes2]['value']), $cut_string).'<span class="sstit"> > '._READ.'</span>';
+				$tabNotes[$ind_notes1][$ind_notes2]['value'] = '<a href="javascript://" onclick="ouvreFenetre(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=notes&page=note_details&id='.$ind_notes1d.'&amp;resid='.$_SESSION['doc_id'].'&amp;coll_id='.$_SESSION['collection_id_choice'].$extend_url.'\', 450, 300)">'.$func->cut_string($request->show_string($tabNotes[$ind_notes1][$ind_notes2]['value']), $cut_string).'<span class="sstit"> > '._READ.'</span>';
 				$tabNotes[$ind_notes1][$ind_notes2]["note_text"]= $tabNotes[$ind_notes1][$ind_notes2]['value'];
 				$tabNotes[$ind_notes1][$ind_notes2]["label"]=_NOTES;
 				$tabNotes[$ind_notes1][$ind_notes2]["size"]=$size_full;

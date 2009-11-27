@@ -73,7 +73,7 @@ else
 			<td width="50%">
 				<table width="100%" border ="0">
 					<tr>
-						<td><p align="center"><img src="<?php echo $_SESSION['urltomodules']."cases/img/case_big.gif"; ?>" width="250px"> </td></p>
+						<td><p align="center"><img src="<?php echo $_SESSION['config']['businessappurl']."static.php?module=cases&filename=case_big.gif"; ?>" width="250px"> </td></p>
 					</tr>
 					<tr>
 						<td>
@@ -91,7 +91,7 @@ else
 			<table cellpadding="2" cellspacing="2" border="0" class="block forms details" width="100%">
 			<tr class="col">
 				<th align="left" class="picto">
-					<img alt="<?php echo _CASE_ID.' : '.$case_indexes['case_id'];?>" src="<?php echo $_SESSION['urltomodules']."cases/img/case_id.gif"; ?>" title="<?php  echo _CASE_ID; ?>" alt="<?php  echo _CASE_ID; ?>"/>
+					<img alt="<?php echo _CASE_ID.' : '.$case_indexes['case_id'];?>" src="<?php echo $_SESSION['config']['businessappurl']."static.php?module=cases&filename=case_id.gif"; ?>" title="<?php  echo _CASE_ID; ?>" alt="<?php  echo _CASE_ID; ?>"/>
 				</th>
 				<td align="left" width="200px">
 					<?php  echo _CASE_ID; ?> :
@@ -103,7 +103,7 @@ else
 
 			<tr class="col">
 				<th align="left" class="picto">
-					<img alt="<?php echo _CASE_LABEL.' : '.$case_indexes['case_label'];?>" src="<?php echo $_SESSION['urltomodules']."cases/img/case_label.gif"; ?>" title="<?php  echo _CASE_LABEL; ?>" alt="<?php  echo _CASE_LABEL; ?>"/>
+					<img alt="<?php echo _CASE_LABEL.' : '.$case_indexes['case_label'];?>" src="<?php echo$_SESSION['config']['businessappurl']."static.php?module=cases&filename=case_label.gif"; ?>" title="<?php  echo _CASE_LABEL; ?>" alt="<?php  echo _CASE_LABEL; ?>"/>
 				</th>
 				<td align="left" width="200px">
 					<?php  echo _CASE_LABEL; ?> :
@@ -119,7 +119,7 @@ else
 
 			<tr class="col">
 				<th align="left" class="picto">
-					<img alt="<?php echo _CASE_DESCRIPTION.' : '.$case_indexes['case_description'];?>" src="<?php echo $_SESSION['urltomodules']."cases/img/case_description.gif"; ?>" title="<?php  echo _CASE_DESCRIPTION; ?>" alt="<?php  echo _CASE_DESCRIPTION; ?>"/>
+					<img alt="<?php echo _CASE_DESCRIPTION.' : '.$case_indexes['case_description'];?>" src="<?php echo $_SESSION['config']['businessappurl']."static.php?module=cases&filename=case_description.gif"; ?>" title="<?php  echo _CASE_DESCRIPTION; ?>" alt="<?php  echo _CASE_DESCRIPTION; ?>"/>
 				</th>
 				<td align="left" width="200px">
 					<?php  echo _CASE_DESCRIPTION; ?> :
@@ -136,7 +136,7 @@ else
 
 			<tr class="col">
 				<th align="left" class="picto">
-					<img alt="<?php echo _CASE_TYPIST.' : '.$case_indexes['case_typist'];?>" src="<?php echo $_SESSION['urltomodules']."cases/img/case_author.gif"; ?>" title="<?php  echo _CASE_TYPIST; ?>" alt="<?php  echo _CASE_TYPIST; ?>"/>
+					<img alt="<?php echo _CASE_TYPIST.' : '.$case_indexes['case_typist'];?>" src="<?php echo $_SESSION['config']['businessappurl']."static.php?module=cases&filename=case_author.gif"; ?>" title="<?php  echo _CASE_TYPIST; ?>" alt="<?php  echo _CASE_TYPIST; ?>"/>
 				</th>
 				<td align="left" width="200px">
 					<?php  echo _CASE_TYPIST; ?> :
@@ -149,7 +149,7 @@ else
 
 			<tr class="col">
 				<th align="left" class="picto">
-					<img alt="<?php echo _CASE_CREATION_DATE.' : '.$case_indexes['case_creation_date'];?>" src="<?php echo $_SESSION['urltomodules']."cases/img/case_creation_date.gif"; ?>" title="<?php  echo _CASE_CREATION_DATE; ?>" alt="<?php  echo _CASE_CREATION_DATE; ?>"/>
+					<img alt="<?php echo _CASE_CREATION_DATE.' : '.$case_indexes['case_creation_date'];?>" src="<?php echo $_SESSION['config']['businessappurl']."static.php?module=cases&filename=case_creation_date.gif"; ?>" title="<?php  echo _CASE_CREATION_DATE; ?>" alt="<?php  echo _CASE_CREATION_DATE; ?>"/>
 				</th>
 				<td align="left" width="200px">
 					<?php  echo _CASE_CREATION_DATE; ?> :
@@ -162,7 +162,7 @@ else
 
 			<tr class="col">
 				<th align="left" class="picto">
-					<img alt="<?php echo _CASE_LAST_UPDATE_DATE.' : '.$case_indexes['case_last_update_date'];?>" src="<?php echo $_SESSION['urltomodules']."cases/img/case_last_update.gif"; ?>" title="<?php  echo _CASE_LAST_UPDATE_DATE; ?>" alt="<?php  echo _CASE_LAST_UPDATE_DATE; ?>"/>
+					<img alt="<?php echo _CASE_LAST_UPDATE_DATE.' : '.$case_indexes['case_last_update_date'];?>" src="<?php echo $_SESSION['config']['businessappurl']."static.php?module=cases&filename=case_last_update.gif"; ?>" title="<?php  echo _CASE_LAST_UPDATE_DATE; ?>" alt="<?php  echo _CASE_LAST_UPDATE_DATE; ?>"/>
 				</th>
 				<td align="left" width="200px">
 					<?php  echo _CASE_LAST_UPDATE_DATE; ?> :
@@ -175,7 +175,7 @@ else
 
 			<tr class="col">
 				<th align="left" class="picto">
-					<img alt="<?php echo _CASE_CLOSING_DATE.' : '.$case_indexes['case_closing_date'];?>" src="<?php echo $_SESSION['urltomodules']."cases/img/case_closing_date.gif"; ?>" title="<?php  echo _CASE_CLOSING_DATE; ?>" alt="<?php  echo _CASE_CLOSING_DATE; ?>"/>
+					<img alt="<?php echo _CASE_CLOSING_DATE.' : '.$case_indexes['case_closing_date'];?>" src="<?php echo $_SESSION['config']['businessappurl']."static.php?module=cases&filename=case_closing_date.gif"; ?>" title="<?php  echo _CASE_CLOSING_DATE; ?>" alt="<?php  echo _CASE_CLOSING_DATE; ?>"/>
 				</th>
 				<td align="left" width="200px">
 					<?php  echo _CASE_CLOSING_DATE; ?> :
@@ -221,12 +221,12 @@ else
 	<?php
 	if ($core_tools->test_service('join_res_case', 'cases',false) == 1)
 	{ ?>
-		<input type="button" class="button"  value="<?php  echo _JOIN_RES_ON_THIS_CASE;?>" name="join_res" onclick="window.open('search_adv_for_cases.php?searched_item=case&searched_value=<? echo $case_indexes['case_id'];?>','', 'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=1020,height=710');"/>
+		<input type="button" class="button"  value="<?php  echo _JOIN_RES_ON_THIS_CASE;?>" name="join_res" onclick="window.open('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=cases&page=search_adv_for_cases&searched_item=case&searched_value=<? echo $case_indexes['case_id'];?>','', 'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=1020,height=710');"/>
 	<?php
 	}
 	if ($core_tools->test_service('close_case', 'cases',false) == 1)
 	{ ?>
-		<input type="button" class="button"  value="<?php  echo _CLOSE_THIS_CASE;?>" name="join_res" onclick="window.location.href='db_close_case.php?case_id=<? echo $case_indexes['case_id'];?>' "/>
+		<input type="button" class="button"  value="<?php  echo _CLOSE_THIS_CASE;?>" name="join_res" onclick="window.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=cases&page=db_close_case&case_id=<? echo $case_indexes['case_id'];?>' "/>
 	<?php
 	} ?>
 	</p>

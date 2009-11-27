@@ -220,7 +220,7 @@ $_SESSION['error_page'] = '';
 			//#########################
 			if(($_REQUEST['template']== 'group_case')&& ($core_tools->is_module_loaded('cases')))
 			{
-				include("modules/cases".DIRECTORY_SEPARATOR.'mlb_list_group_case_addon.php');
+				include("modules".DIRECTORY_SEPARATOR."cases".DIRECTORY_SEPARATOR.'mlb_list_group_case_addon.php');
 			}
 			else
 			{
@@ -406,18 +406,18 @@ $_SESSION['error_page'] = '';
  		
 ?>
 
-<h4><p align="center"><img src="<?php  echo $_SESSION['config']['businessappurl']."img/picto_search_b.gif";?>" alt="" /> <?php  echo _SEARCH_RESULTS." - ".count($tab)." "._FOUND_DOC;?></h4></p>
+<h4><p align="center"><img src="<?php  echo $_SESSION['config']['businessappurl']."static.php?filename=picto_search_b.gif";?>" alt="" /> <?php  echo _SEARCH_RESULTS." - ".count($tab)." "._FOUND_DOC;?></h4></p>
     <div id="inner_content"><?php
 
 $details = 'details';
-	$list->list_doc($tab,$i,'','res_id','list_results_mlb_frame','res_id',$details.'&dir=indexing_searching',true,true,'post',$_SESSION['urltomodules']."cases/execute_attachement.php?searched_item=".$_GET['searched_item']."&searched_value=".$_GET['searched_value'],'Attacher &agrave; l&rsquo;affaire',false,true,true, false,false,false,true,true,'', '',false,'','','listing spec', '', false, false, null, '', '{}', true, '', true, array(), true, $template_list, $template_to_use, false, true  );
+	$list->list_doc($tab,$i,'','res_id','list_results_mlb_frame','res_id',$details.'&dir=indexing_searching',true,true,'post',$_SESSION['config']['businessappurl']."index.php?display=true&module=cases&page=execute_attachement&searched_item=".$_GET['searched_item']."&searched_value=".$_GET['searched_value'],'Attacher &agrave; l&rsquo;affaire',false,true,true, false,false,false,true,true,'', '',false,'','','listing spec', '', false, false, null, '', '{}', true, '', true, array(), true, $template_list, $template_to_use, false, true  );
 	?></div><?php
 }
 else
 {
-	echo  "<p class=\"error\"><img src=\"".$_SESSION['config']['img']."/noresult.gif\" /><br />"._NO_RESULTS."</p>";
+	echo  "<p class=\"error\"><img src=\"".$_SESSION['config']['businessappurl']."static.php?filename=noresult.gif\" /><br />"._NO_RESULTS."</p>";
 	?>
-	<!--<script language="javascript" type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'].'indexing_searching/search_adv_error.php';?>';</script>-->
+	<!--<script language="javascript" type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=search_adv_error';?>';</script>-->
 	<?php
 }
 ?>
@@ -429,9 +429,9 @@ else
 	{
 		var form = document.getElementById(form_id);
 		var q_name = form.query_name.value;
-		$('modal').innerHTML = '<img src="img/loading.gif" />';
+		$('modal').innerHTML = '<img src="<? echo $_SESSION['config']['businessappurl'];?>static.php?filename=loading.gif" />';
 
-		new Ajax.Request('<? echo $_SESSION['config']['businessappurl'];?>indexing_searching/manage_query.php',
+		new Ajax.Request('<? echo $_SESSION['config']['businessappurl'];?>index.php?display=true&dir=indexing_searching&page=manage_query',
 	    {
 	        method:'post',
 	        parameters: {name: q_name,

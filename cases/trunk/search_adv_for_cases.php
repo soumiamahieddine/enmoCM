@@ -32,8 +32,8 @@
 require_once("core/class/class_request.php");
 require_once("core/class/class_security.php");
 require_once("core/class/class_manage_status.php");
-require_once('apps/'.$_SESSION['config']['app_id'].'/class'.DIRECTORY_SEPARATOR."class_indexing_searching_app.php");
-require_once('apps/'.$_SESSION['config']['app_id'].'/class'.DIRECTORY_SEPARATOR."class_types.php");
+require_once('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR."class_indexing_searching_app.php");
+require_once('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR."class_types.php");
 $core_tools = new core_tools();
 $core_tools->test_user();
 $core_tools->load_lang();
@@ -325,7 +325,7 @@ $src_tab = $tab[0];
 $string = '';
 ?>
 
-<script type="text/javascript" src="<?php echo $_SESSION['config']['businessappurl'];?>js/search_adv.js" ></script>
+<script type="text/javascript" src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=search_adv.js" ></script>
 <script type="text/javascript">
 <!--
 var valeurs = { <?php echo $tab[1];?>};
@@ -336,7 +336,7 @@ function del_query_confirm()
 {
 	if(confirm('<?php echo _REALLY_DELETE.' '._THIS_SEARCH.'?';?>'))
 	{
-		del_query_db($('query').options[$('query').selectedIndex], 'select_criteria', 'frmsearch2', '<?php echo _SQL_ERROR;?>', '<?php echo _SERVER_ERROR;?>', '<?php echo $_SESSION['config']['businessappurl'].'indexing_searching/manage_query.php';?>');
+		del_query_db($('query').options[$('query').selectedIndex], 'select_criteria', 'frmsearch2', '<?php echo _SQL_ERROR;?>', '<?php echo _SERVER_ERROR;?>', '<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=manage_query';?>');
 		return false;
 	}
 }
@@ -349,10 +349,12 @@ function del_query_confirm()
 		{ ?>
 			<dt><?php echo _CREATE_NEW_CASE; ?></dt>
 			<dd>
-				<h4><p align="center"><img src="<?php echo $_SESSION['config']['businessappurl'];?>img/picto_add_b.gif" alt="" /> <?php echo _CREATE_NEW_CASE; ?><p></h4>
+				<h4><p align="center"><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_add_b.gif" alt="" /> <?php echo _CREATE_NEW_CASE; ?><p></h4>
 				<div class="blank_space">&nbsp;</div>
-				<form name="create_case" id="create_case" action="<?php echo $_SESSION['urltomodules'];?>cases/create_case.php" method="post" >
-
+				<form name="create_case" id="create_case" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=cases&page=create_case" method="post" >
+					<input type="hidden" name="display" value="true" />
+					<input type="hidden" name="module" value="cases" />
+					<input type="hidden" name="page" value="create_case" />
 					<input type="hidden" name="searched_item" value="<?php echo $_GET['searched_item']; ?>" />
 					<input type="hidden" name="searched_value" value="<?php echo $_GET['searched_value']; ?>" />
 
@@ -400,7 +402,7 @@ function del_query_confirm()
 
 			<dt><? echo $title_search ; ?></dt>
 			<dd>
-				<h4><p align="center"><img src="<?php echo $_SESSION['config']['businessappurl'];?>img/picto_search_b.gif" alt="" /> <?php  echo $title_search ; ?></h4></p>
+				<h4><p align="center"><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_search_b.gif" alt="" /> <?php  echo $title_search ; ?></h4></p>
 				<hr/>
 		<?php if (count($queries) > 0)
 		{?>
@@ -408,7 +410,7 @@ function del_query_confirm()
 		<div align="center" style="display:block;" id="div_query">
 
 		<label for="query"><?php echo _MY_SEARCHES;?> : </label>
-		<select name="query" id="query" onchange="load_query_db(this.options[this.selectedIndex].value, 'select_criteria', 'frmsearch2', '<?php echo _SQL_ERROR;?>', '<?php echo _SERVER_ERROR;?>', '<?php echo $_SESSION['config']['businessappurl'].'indexing_searching/manage_query.php';?>');return false;" >
+		<select name="query" id="query" onchange="load_query_db(this.options[this.selectedIndex].value, 'select_criteria', 'frmsearch2', '<?php echo _SQL_ERROR;?>', '<?php echo _SERVER_ERROR;?>', '<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=manage_query';?>');return false;" >
 			<option id="default_query" value=""><?php echo _CHOOSE_SEARCH;?></option>
 			<?php for($i=0; $i< count($queries);$i++)
 			{
@@ -420,7 +422,7 @@ function del_query_confirm()
 		</form>
 		<?php } ?>
 		<!--<form name="frmsearch2" method="get" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=search_adv_result&dir=indexing_searching"  id="frmsearch2" class="<?php echo $class_for_form; ?>">-->
-		<form name="frmsearch2" method="get" action="<?php echo $_SESSION['config']['businessappurl'];?>indexing_searching/search_adv_result.php"  id="frmsearch2" class="<?php echo $class_for_form; ?>">
+		<form name="frmsearch2" method="get" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&dir=indexing_searching&page=search_adv_result"  id="frmsearch2" class="<?php echo $class_for_form; ?>">
 
 		<?php if ($_GET['schema'] <> '')
 		{ ?>
@@ -449,7 +451,7 @@ function del_query_confirm()
 
 		<table align="center" border="0" width="100%">
 			<tr>
-				<td align="left"><a href="#" onclick="clear_search_form('frmsearch2','select_criteria');clear_q_list();"><img src="<?php  echo $_SESSION['config']['businessappurl']."img/reset.gif";?>" alt="<?php echo _CLEAR_SEARCH;?>" /> <?php  echo _CLEAR_SEARCH; ?></a></td>
+				<td align="left"><a href="#" onclick="clear_search_form('frmsearch2','select_criteria');clear_q_list();"><img src="<?php  echo $_SESSION['config']['businessappurl']."static.php?filename=reset.gif";?>" alt="<?php echo _CLEAR_SEARCH;?>" /> <?php  echo _CLEAR_SEARCH; ?></a></td>
 				<td  width="75%" align="right" ><span class="bold"><?php echo _SEARCH_COPY_MAIL;?></span>
 					<input type="hidden" name="meta[]" value="copies#copies_false,copies_true#radio" />
 					<input type="radio" name="copies" id="copies_false" class="check"  value="false" checked="checked" /><?php echo _NO;?>

@@ -40,7 +40,7 @@ if ($case_properties['case_id'] <> '')
 								<table cellpadding="2" cellspacing="2" border="0" class="block forms details" width="100%">
 									<tr>
 										<th align="left" class="picto">
-											<img alt="<?php echo _CASE; ?>" src="<?php echo $_SESSION['config']['businessappurl'];?>img/chrono.gif" />
+											<img alt="<?php echo _CASE; ?>" src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=chrono.gif" />
 										</th>
 										<td align="left" width="200px">
 											<?php  echo _NUM_CASE; ?> :
@@ -49,7 +49,7 @@ if ($case_properties['case_id'] <> '')
 											<input type="text" class="readonly" readonly="readonly" value="<?php  echo $case_properties['case_id']; ?>" size="40" title="<?php  echo $case_properties['case_id']; ?>" alt="<?php  echo $case_properties['case_id']; ?>" />
 										</td>
 										<th align="left" class="picto">
-											<img alt="<?php echo _CASE; ?>" src="<?php echo $_SESSION['config']['businessappurl'];?>img/chrono.gif" />
+											<img alt="<?php echo _CASE; ?>" src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=chrono.gif" />
 										</th>
 										<td align="left" width="200px">
 											<?php  echo _CASE_LABEL; ?> :
@@ -60,7 +60,7 @@ if ($case_properties['case_id'] <> '')
 									</tr>
 									<tr>
 										<th align="left" class="picto">
-											<img alt="<?php echo _CASE; ?>" src="<?php echo $_SESSION['config']['businessappurl'];?>img/chrono.gif" />
+											<img alt="<?php echo _CASE; ?>" src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=chrono.gif" />
 										</th>
 										<td align="left" width="200px">
 											<?php  echo _CASE_DESCRIPTION; ?> :
