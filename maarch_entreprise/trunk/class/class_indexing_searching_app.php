@@ -21,7 +21,15 @@ class indexing_searching_app extends dbquery
 
 	public function is_filetype_allowed($ext)
 	{
-		$xmlconfig = simplexml_load_file('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'extensions.xml');
+		if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."extensions.xml"))
+		{
+			$path = $_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."extensions.xml";
+		}
+		else
+		{
+			$path = 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."extensions.xml";
+		}
+		$xmlconfig = simplexml_load_file($path);
 
 		$ext_list = array();
 		$i = 0;
@@ -51,7 +59,15 @@ class indexing_searching_app extends dbquery
 		{
 			return false;
 		}
-		$xmlconfig = simplexml_load_file('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'extensions.xml');
+		if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."extensions.xml"))
+		{
+			$path = $_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."extensions.xml";
+		}
+		else
+		{
+			$path = 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."extensions.xml";
+		}
+		$xmlconfig = simplexml_load_file($path);
 		foreach($xmlconfig->FORMAT as $FORMAT)
 		{
 			if(strtoupper($ext) == (string) $FORMAT->name)
@@ -70,8 +86,15 @@ class indexing_searching_app extends dbquery
 	}
 	public function filetypes_showed_indexation()
 	{
-
-		$xmlconfig = simplexml_load_file('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'extensions.xml');
+		if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."extensions.xml"))
+		{
+			$path = $_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."extensions.xml";
+		}
+		else
+		{
+			$path = 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."extensions.xml";
+		}
+		$xmlconfig = simplexml_load_file($path);
 		$ext_list = array();
 		foreach($xmlconfig->FORMAT as $FORMAT)
 		{
@@ -86,7 +109,15 @@ class indexing_searching_app extends dbquery
 
 	public function get_mime_type($ext)
 	{
-		$xmlconfig = simplexml_load_file('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'extensions.xml');
+		if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."extensions.xml"))
+		{
+			$path = $_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."extensions.xml";
+		}
+		else
+		{
+			$path = 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."extensions.xml";
+		}
+		$xmlconfig = simplexml_load_file($path);
 		$ext_list = array();
 		$i = 0;
 		foreach($xmlconfig->FORMAT as $FORMAT)

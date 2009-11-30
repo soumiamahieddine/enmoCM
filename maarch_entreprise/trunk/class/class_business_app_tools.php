@@ -27,8 +27,15 @@ class business_app_tools extends dbquery
 		$_SESSION['showmenu']='oui';
 	
 		$core = new core_tools();
-	
-		$xmlconfig = simplexml_load_file('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'config.xml');
+		if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'config.xml'))
+		{
+			$path = $_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'config.xml';
+		}
+		else
+		{
+			$path = 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'config.xml';
+		}
+		$xmlconfig = simplexml_load_file($path);
 		if( $xmlconfig <> false)
 		{
 			$CONFIG = $xmlconfig->CONFIG;
@@ -80,15 +87,6 @@ class business_app_tools extends dbquery
 			$_SESSION['config']['adminname'] = (string) $CONFIG->adminname;
 			$_SESSION['config']['debug'] = (string) $CONFIG->debug;
 			$_SESSION['config']['applicationname'] = (string) $CONFIG->applicationname;
-/*
-
-			$_SESSION['config']['css'] = $_SESSION['config']['businessappurl'].((string) $CONFIG->css);
-			$_SESSION['config']['css_IE'] = $_SESSION['config']['businessappurl'].((string) $CONFIG->css_ie);
-			$_SESSION['config']['css_IE7'] = $_SESSION['config']['businessappurl'].((string) $CONFIG->css_ie7);
-*/
-
-			//$_SESSION['config']['img'] = (string) $CONFIG->img;
-
 			$_SESSION['config']['defaultPage'] = (string) $CONFIG->defaultPage;
 			$_SESSION['config']['exportdirectory'] = (string) $CONFIG->exportdirectory;
 			$_SESSION['config']['tmppath'] = (string) $CONFIG->tmppath;
@@ -202,7 +200,15 @@ class business_app_tools extends dbquery
 		if(isset($_SESSION['config']['corepath']) && isset($_SESSION['config']['app_id']) && isset($_SESSION['config']['lang']))
 		{
 			$core = new core_tools();
-			$xmlfile = simplexml_load_file("core".DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."actions_pages.xml");
+			if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR."core".DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."actions_pages.xml"))
+			{
+				$path = $_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR."core".DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."actions_pages.xml";
+			}
+			else
+			{
+				$path = "core".DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."actions_pages.xml";
+			}
+			$xmlfile = simplexml_load_file($path);
 			$path_lang = 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php';
 
 			$i =0;
@@ -228,7 +234,15 @@ class business_app_tools extends dbquery
 	private function load_letterbox_var()
 	{
 		$core = new core_tools();
-		$xmlfile = simplexml_load_file('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."letterbox.xml");
+		if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."letterbox.xml"))
+		{
+			$path = $_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."letterbox.xml";
+		}
+		else
+		{
+			$path = 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."letterbox.xml";
+		}
+		$xmlfile = simplexml_load_file($path);
 		$path_lang = 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php';
 
 		$categories = $xmlfile->categories;
@@ -356,6 +370,7 @@ class business_app_tools extends dbquery
 		elseif($name == "types" || $name == "types_up" || $name == "types_up_db" || $name == "types_add" || $name == "types_del" || $name == 'get_index' || $name == "choose_index" || $name == "choose_coll" || $name == "types_list_by_name")
 		{
 			$path = 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."admin".DIRECTORY_SEPARATOR."architecture".DIRECTORY_SEPARATOR."types".DIRECTORY_SEPARATOR.$name.'.php';
+			
 			return $path;
 		}
 		else
@@ -367,7 +382,15 @@ class business_app_tools extends dbquery
 	public function get_titles()
 	{
 		$core = new core_tools();
-		$xmlfile = simplexml_load_file('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."letterbox.xml");
+		if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."letterbox.xml"))
+		{
+			$path = $_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."letterbox.xml";
+		}
+		else
+		{
+			$path = 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."letterbox.xml";
+		}
+		$xmlfile = simplexml_load_file($path);
 		$path_lang = 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php';
 
 		$res_titles = array();
@@ -397,7 +420,15 @@ class business_app_tools extends dbquery
 	public function get_label_title($id_title)
 	{
 		$core = new core_tools();
-		$xmlfile = simplexml_load_file('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."letterbox.xml");
+		if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."letterbox.xml"))
+		{
+			$path = $_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."letterbox.xml";
+		}
+		else
+		{
+			$path = 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."letterbox.xml";
+		}
+		$xmlfile = simplexml_load_file($path);
 		$path_lang = 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php';
 		$titles = $xmlfile->titles;
 		foreach($titles->title as $title )

@@ -490,7 +490,15 @@ class types extends dbquery
 		require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_security.php');
 		$sec = new security();
 		$ind_coll = $sec->get_ind_collection($coll_id);
-		$xmlfile = simplexml_load_file('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR.$_SESSION['collections'][$ind_coll]['index_file']);
+		if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR.$_SESSION['collections'][$ind_coll]['index_file']))
+		{
+			$path = $_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR.$_SESSION['collections'][$ind_coll]['index_file'];
+		}
+		else
+		{
+			$path = 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR.$_SESSION['collections'][$ind_coll]['index_file'];
+		}
+		$xmlfile = simplexml_load_file($path);
 		$path_lang = 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php';
 		$indexes = array();
 		foreach($xmlfile->INDEX as $item)
@@ -587,7 +595,15 @@ class types extends dbquery
 		require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_security.php');
 		$sec = new security();
 		$ind_coll = $sec->get_ind_collection($coll_id);
-		$xmlfile = simplexml_load_file('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR.$_SESSION['collections'][$ind_coll]['index_file']);
+		if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR.$_SESSION['collections'][$ind_coll]['index_file']))
+		{
+			$path = $_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR.$_SESSION['collections'][$ind_coll]['index_file'];
+		}
+		else
+		{
+			$path = 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR.$_SESSION['collections'][$ind_coll]['index_file'];
+		}
+		$xmlfile = simplexml_load_file($path);
 		$path_lang = 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php';
 		foreach($xmlfile->INDEX as $item)
 		{

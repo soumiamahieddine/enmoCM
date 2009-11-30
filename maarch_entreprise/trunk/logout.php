@@ -34,7 +34,7 @@ $custom = $_SESSION['custom_override_id'];
 $core_path = $_SESSION['config']['corepath'];
 $app_id = $_SESSION['config']['app_id'];
 $_SESSION = array();
-$_SESSION['custom_override_id'] = $tmp;
+$_SESSION['custom_override_id'] = $custom;
 $_SESSION['config']['corepath'] = $core_path ;
 $_SESSION['config']['app_id'] = $app_id ;
 header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&page=login&coreurl=".$_GET['coreurl']);

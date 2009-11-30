@@ -167,7 +167,6 @@ $time = $core_tools->get_session_time_expire();
 
 ?>
 <body id="bodylogin" onload="setTimeout('window.location.reload(true)', <?php  echo $time;?>*60*1000);">
-  <?php //echo $_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'css/styles.css';?>
     <div id="loginpage">
         <p id="logo"><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=default_maarch.gif" alt="Maarch" /></p>
         <form name="formlogin" id="formlogin" method="post" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=log" class="forms">

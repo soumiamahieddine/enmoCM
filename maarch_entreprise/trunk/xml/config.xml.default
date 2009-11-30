@@ -18,12 +18,6 @@
 		<adminname>maarch</adminname>
 		<debug>false</debug>
 		<applicationname>Maarch</applicationname>
-<!--
-		<css>css/styles.css</css>
-		<css_ie>css/style_ie.css</css_ie>
-		<css_ie7>css/style_ie7.css</css_ie7>
--->
-		<img>img</img>
 		<defaultPage>welcome</defaultPage>
 		<exportdirectory></exportdirectory>
 		<tmppath>c:\xampp\htdocs\maarch_entreprise\apps\maarch_entreprise\tmp\</tmppath>
@@ -188,14 +182,10 @@
    		<moduleid>folder</moduleid>
 		<comment>_FOLDERS_COMMENT</comment>
 	</MODULES>
-	<!--<MODULES>
+	<MODULES>
    		<moduleid>full_text</moduleid>
 		<comment>_FULL_TEXT</comment>
-	</MODULES>-->
-	<!--<MODULES>
-   		<moduleid>indexing_searching</moduleid>
-		<comment>_INDEXING_SEARCHING</comment>
-	</MODULES>!-->
+	</MODULES>
 	<MODULES>
    		<moduleid>notes</moduleid>
 		<comment>_NOTES_COMMENT</comment>
@@ -204,10 +194,6 @@
    		<moduleid>physical_archive</moduleid>
 		<comment>_PHYSICAL_ARCHIVE_COMMENT</comment>
 	</MODULES>
-<!--	<MODULES>
-   		<moduleid>stats</moduleid>
-		<comment>_STATS</comment>
-	</MODULES>-->
 	<MODULES>
    		<moduleid>templates</moduleid>
 		<comment>_TEMPLATES_COMMENT</comment>
