@@ -22,7 +22,7 @@ $core_tools->test_service('welcome_text_load', "apps");
 function get_file_template($this_file)
 {			
 		//Ouverture du fichier
-		$mail_trait = file_get_contents ($this_file);
+		$mail_trait = file_get_contents($this_file);
 		//Suppression des commantaires dans la page
 		$mail_trait = preg_replace("/(<!--.*?-->)/s","", $mail_trait);	
 		
