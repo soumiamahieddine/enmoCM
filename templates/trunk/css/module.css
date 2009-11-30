@@ -1,19 +1,19 @@
 /* menu */
 #menunav li#exploit_template_answer span span {
-	background-image: url(../../modules/templates/img/exploit_template_answer_off.gif);
+	background-image: url(static.php?filename=exploit_template_answer_off.gif&module=templates);
 }
 #menunav li#exploit_template_answer.on span span {
-	background-image: url(../../modules/templates/img/exploit_template_answer_on.gif);
+	background-image: url(static.php?filename=exploit_template_answer_on.gif&module=templates);
 }
 
 /* admin modules board */
 #admin_template_answer {
-	background:  url(../../modules/templates/img/manage_template_answer.gif) 2px center no-repeat;
+	background:  url(static.php?filename=manage_template_answer.gif&module=templates) 2px center no-repeat;
 	height:80px;
 }
 
 #temp_admin_templates{
-	background:  url(../../modules/templates/img/templates.gif) 2px center no-repeat;
+	background:  url(static.php?filename=templates.gif&module=templates) 2px center no-repeat;
 	height:63px;
 	padding-bottom: 25px;
 }
