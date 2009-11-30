@@ -13,7 +13,7 @@ html {
 }
 body {
 	color: #666;
-	/*background: white url(img/bg_body.gif) top center repeat-y;*/
+	/*background: white url(static.php?filename=bg_body.gif) top center repeat-y;*/
 	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
 	font-size: 12px;
 	font-weight: normal;
@@ -77,7 +77,7 @@ a:hover {
 
 
 #admin_types {
-	background:  url(img/manage_doctypes.gif) no-repeat 2px top;
+	background:  url(static.php?filename=manage_doctypes.gif) no-repeat 2px top;
 	width: 315px;
 	min-height: 110px;
 	float: left;
@@ -91,7 +91,7 @@ a:hover {
 }
 
 #admin_structures {
-	background:  url(img/manage_structures.gif) no-repeat 2px top;
+	background:  url(static.php?filename=manage_structures.gif) no-repeat 2px top;
 	width: 315px;
 	min-height: 110px;
 	float: left;
@@ -105,7 +105,7 @@ a:hover {
 }
 
 #admin_subfolders {
-	background:  url(img/manage_subfolders.gif) no-repeat 2px top;
+	background:  url(static.php?filename=manage_subfolders.gif) no-repeat 2px top;
 	width: 315px;
 	min-height: 110px;
 	float: left;
@@ -119,7 +119,7 @@ a:hover {
 }
 
 #view_tree_types {
-	background:  url(img/manage_architecture.gif) no-repeat 2px top;
+	background:  url(static.php?filename=manage_architecture.gif) no-repeat 2px top;
 	width: 315px;
 	min-height: 110px;
 	float: left;
@@ -221,22 +221,22 @@ acronym, abbr {
 }
 
 .text li {
-	list-style-image: url(img/puce.gif);
+	list-style-image: url(static.php?filename=puce.gif);
 	margin-left: 30px;
 }
 
 a.next, a.change, a.suspend, a.delete, a.authorize, a.prev, a.up, a.down, a.view {
 	padding-left: 20px;
-	background: transparent url(img/puce_prev.gif) 10px center no-repeat;
+	background: transparent url(static.php?filename=puce_prev.gif) 10px center no-repeat;
 	color: #16ADEB;
 }
 
 
 a.up {
-	background-image: url(img/arrow_up.gif);
+	background-image: url(static.php?filename=arrow_up.gif);
 }
 a.down {
-	background-image: url(img/arrow_down.gif);
+	background-image: url(static.php?filename=arrow_down.gif);
 }
 
 a.prev {
@@ -245,7 +245,7 @@ a.prev {
 }
 
 a.next {
-	background-image: url(img/puce_next.gif);
+	background-image: url(static.php?filename=puce_next.gif);
 	background-position: center right;
 	padding-left: 0;
 	padding-right: 10px;
@@ -257,28 +257,28 @@ a.change, a.suspend, a.delete, a.authorize, a.up, a.down, a.view {
 }
 
 a.change {
-	background-image: url(img/picto_change.gif);
+	background-image: url(static.php?filename=picto_change.gif);
 	padding-left: 25px;
 }
 
 a.suspend {
-	background-image: url(img/picto_suspend.gif);
+	background-image: url(static.php?filename=picto_suspend.gif);
 }
 
 a.delete {
-	background-image: url(img/picto_delete.gif);
+	background-image: url(static.php?filename=picto_delete.gif);
 }
 
 a.view {
-	background-image: url(img/picto_view.gif);
+	background-image: url(static.php?filename=picto_view.gif);
 }
 a.authorize {
-	background-image: url(img/picto_authorize.gif);
+	background-image: url(static.php?filename=picto_authorize.gif);
 }
 
 
 .add {
-	background: transparent url(img/bg_but_add_left.gif) top left no-repeat;
+	background: transparent url(static.php?filename=bg_but_add_left.gif) top left no-repeat;
 	padding: 0 0px 6px 21px;
 	display: block;
 	float: right;
@@ -287,7 +287,7 @@ a.authorize {
 
 .add a {
 	padding: 5px 10px 6px 0;
-	background: transparent url(img/bg_but_add_right.gif) top right no-repeat;
+	background: transparent url(static.php?filename=bg_but_add_right.gif) top right no-repeat;
 	float: left;
 }
 
@@ -478,7 +478,7 @@ input.button {
 	border: 1px solid;
 	/*color: #1481A5;*/
 	color: #756666;
-	background: white url(img/bg_but.gif) top left repeat-x;
+	background: white url(static.php?filename=bg_but.gif) top left repeat-x;
 	cursor: pointer;
 	width: auto;
 	padding: 0.2em 0.5em;
@@ -992,7 +992,7 @@ left: -100em;
 	border: none;
 	padding: .2em .6em .4em .6em;
 	width: 10.7em;
-	background: transparent url(img/bg_inputsearch.gif) top left no-repeat;
+	background: transparent url(static.php?filename=bg_inputsearch.gif) top left no-repeat;
 }
 
 #quicksearchform label {
@@ -1023,7 +1023,7 @@ left: -100em;
 	margin-bottom: 0px;
 	margin-left: 1px;
 	height: 70px;
-	background: url(img/bando_tete2.gif) repeat-x left top;
+	background: url(static.php?filename=bando_tete2.gif) repeat-x left top;
 	margin-top: 3px;
 	min-width: 1000px;
 }
@@ -1033,7 +1033,7 @@ left: -100em;
 	width: 100%;
 	margin-bottom: 0px;
 	height: 30px;
-	background: url(img/bando_foot2.gif) repeat-x left top;
+	background: url(static.php?filename=bando_foot2.gif) repeat-x left top;
 	margin-top: 305px;
 	min-width: 1000px;
 	float: left;
@@ -1118,36 +1118,36 @@ left: -100em;
 }
 
 #menunav li#admin span span {
-	background-image: url(img/picto_menu_admin.gif);
+	background-image: url(static.php?filename=picto_menu_admin.gif);
 }
 
 
 #menunav li#aide span span {
-	background-image: url(img/picto_menu_help.gif);
+	background-image: url(static.php?filename=picto_menu_help.gif);
 }
 #menunav li#add span span {
-	background-image: url(img/picto_menu_fileindex.gif);
+	background-image: url(static.php?filename=picto_menu_fileindex.gif);
 }
 
 #menunav li#post span span {
-	background-image: url(img/picto_menu_postindex.gif);
+	background-image: url(static.php?filename=picto_menu_postindex.gif);
 }
 
 #menunav li#browse span span {
-	background-image: url(img/stats_menu_off.gif);
+	background-image: url(static.php?filename=stats_menu_off.gif);
 }
 #menunav li#valid_mail span span {
-	background-image: url(img/valid_menu_off.gif);
+	background-image: url(static.php?filename=valid_menu_off.gif);
 }
 
 #menunav li#maarch_credits span span {
-	background-image: url(img/picto_menu_help.gif);
+	background-image: url(static.php?filename=picto_menu_help.gif);
 }
 #menunav li#logout span span {
-	background-image: url(img/logout_off.gif);
+	background-image: url(static.php?filename=logout_off.gif);
 }
 #menunav li#manbask span span {
-	background-image: url(img/manage_baskets_off.gif);
+	background-image: url(static.php?filename=manage_baskets_off.gif);
 }
 #menunav li.on {
 	padding-left: 3px;
@@ -1159,66 +1159,66 @@ left: -100em;
 }
 
 #menunav li.on span {
-	background-image: url(img/bg_menu_span_on.gif);
+	background-image: url(static.php?filename=bg_menu_span_on.gif);
 }
 
 #menunav li#admin.on span span {
-	background-image: url(img/picto_menu_admin_on.gif);
+	background-image: url(static.php?filename=picto_menu_admin_on.gif);
 }
 #menunav li#aide.on span span {
-	background-image: url(img/picto_menu_help_on.gif);
+	background-image: url(static.php?filename=picto_menu_help_on.gif);
 }
 #menunav li#searching span span {
-	background-image: url(img/searching_off.gif);
+	background-image: url(static.php?filename=searching_off.gif);
 }
 #menunav li#searching.on span span {
-	background-image: url(img/searching_on.gif);
+	background-image: url(static.php?filename=searching_on.gif);
 }
 #menunav li#market_search span span {
-	background-image: url(img/search_proj_off.gif);
+	background-image: url(static.php?filename=search_proj_off.gif);
 }
 #menunav li#market_search.on span span {
-	background-image: url(img/search_proj_on.gif);
+	background-image: url(static.php?filename=search_proj_on.gif);
 }
 #menunav li#add.on span span {
-	background-image: url(img/picto_menu_fileindex_on.gif);
+	background-image: url(static.php?filename=picto_menu_fileindex_on.gif);
 }
 
 #menunav li#post.on span span {
-	background-image: url(img/picto_menu_postindex_on.gif);
+	background-image: url(static.php?filename=picto_menu_postindex_on.gif);
 }
 #menunav li#valid_mail.on span span {
-	background-image: url(img/valid_menu_on.gif);
+	background-image: url(static.php?filename=valid_menu_on.gif);
 }
 #menunav li#browse.on span span {
-	background-image: url(img/stats_menu_on.gif);
+	background-image: url(static.php?filename=stats_menu_on.gif);
 }
 #menunav li#account span span {
-	background-image: url(img/account_off.gif);
+	background-image: url(static.php?filename=account_off.gif);
 }
 #menunav li#account.on span span {
-	background-image: url(img/account_on.gif);
+	background-image: url(static.php?filename=account_on.gif);
 }
 #menunav li#my_contacts span span {
-	background-image: url(img/my_contacts_off.gif);
+	background-image: url(static.php?filename=my_contacts_off.gif);
 }
 #menunav li#my_contacts.on span span {
-	background-image: url(img/my_contacts_on.gif);
+	background-image: url(static.php?filename=my_contacts_on.gif);
 }
 #menunav li#maarch_credits.on span span {
-	background-image: url(img/picto_menu_help_on.gif);
+	background-image: url(static.php?filename=picto_menu_help_on.gif);
 }
 #menunav li#logout.on span span {
-	background-image: url(img/logout_on.gif);
+	background-image: url(static.php?filename=logout_on.gif);
 }
 #menunav li#manbask.on span span {
-	background-image: url(img/manage_baskets_on.gif);
+	background-image: url(static.php?filename=manage_baskets_on.gif);
 }
 #menunav li#indexing span span {
-	background-image: url(img/indexing_off.gif);
+	background-image: url(static.php?filename=indexing_off.gif);
 }
 #menunav li#indexing.on span span {
-	background-image: url(img/indexing_on.gif);
+	background-image: url(static.php?filename=indexing_on.gif);
 }
 #menunav li ol {
 	font-size: .9em;
@@ -1397,7 +1397,7 @@ vertical-align: middle;
 /* Home */
 
 #bodylogin {
-	background: White url(img/bg_home_home.gif) center center no-repeat;
+	background: White url(static.php?filename=bg_home_home.gif) center center no-repeat;
 	height: 100%;
 	text-align: left;
 }
@@ -1448,7 +1448,7 @@ vertical-align: middle;
 }
 
 #post #container {
-	background: transparent url(img/bg_ht_content.gif) top center no-repeat;
+	background: transparent url(static.php?filename=bg_ht_content.gif) top center no-repeat;
 	margin-top: 15px;
 }
 
@@ -1464,7 +1464,7 @@ vertical-align: middle;
 }
 
 #post #infos_box {
-	background: transparent url(img/bg_boite_post.gif) top left no-repeat;
+	background: transparent url(static.php?filename=bg_boite_post.gif) top left no-repeat;
 	padding: 3px 7px 5px 7px;
 	width: 252px;
 	font-family: Arial, Helvetica, sans-serif;
@@ -1573,17 +1573,17 @@ vertical-align: middle;
 
 #list .file li {
 	padding-left: 13px;
-	background: transparent url(img/case.gif) left .2em no-repeat;
+	background: transparent url(static.php?filename=case.gif) left .2em no-repeat;
 	margin-bottom: .3em;
 }
 
 #list .file li.on {
-	background-image: url(img/case_on.gif);
+	background-image: url(static.php?filename=case_on.gif);
 	margin-bottom: 1em;
 }
 
 #list .file li.on li {
-	background-image: url(img/case_ins_on.gif);
+	background-image: url(static.php?filename=case_ins_on.gif);
 	background-position: top left;
 	padding: 4px 0 4px 35px;
 	margin-left: 5px;
@@ -1591,7 +1591,7 @@ vertical-align: middle;
 
 #list .file a {
 	padding-left: 23px;
-	background: transparent url(img/file.gif) center left no-repeat;
+	background: transparent url(static.php?filename=file.gif) center left no-repeat;
 }
 
 #list .file a.no_doc {
@@ -1716,32 +1716,32 @@ padding-left :15px;
 
 /* admin core board */
 .summary_admin_users {
-	background:  url(img/gerer_utilisateurs.gif) no-repeat 2px top;
+	background:  url(static.php?filename=gerer_utilisateurs.gif) no-repeat 2px top;
 	height:65px;
 }
 
 .summary_admin_groups {
-	background:  url(img/manage_groupe.gif) no-repeat 2px top;
+	background:  url(static.php?filename=manage_groupe.gif) no-repeat 2px top;
 	height:80px;
 }
 
 .summary_admin_contacts {
-	background:  url(img/manage_contacts.gif) no-repeat 2px top;
+	background:  url(static.php?filename=manage_contacts.gif) no-repeat 2px top;
 	height:80px;
 }
 
 .summary_admin_doctypes {
-	background:  url(img/picto_managed_superb.gif) no-repeat 2px top;
+	background:  url(static.php?filename=picto_managed_superb.gif) no-repeat 2px top;
 	height:80px;
 }
 
 .summary_admin_modules {
-	background:  url(img/gerer_structures.gif) no-repeat 2px top;
+	background:  url(static.php?filename=gerer_structures.gif) no-repeat 2px top;
 	height:80px;
 }
 
 .summary_view_history {
-	background:  url(img/historique.gif) no-repeat 2px top;
+	background:  url(static.php?filename=historique.gif) no-repeat 2px top;
 	height:80px;
 }
 
@@ -2568,7 +2568,7 @@ input[type="checkbox"] , input[type="radio"]
 
 .block /* Propriétés qui s'appliquent au cadre d'habillage en général */
 {
-background-image:url("../img/border_top.gif");
+background-image:url("static.php?filename=border_top.gif");
 background-repeat:repeat-x;
 background-position:top center;
 padding-top : 8px;
@@ -2578,7 +2578,7 @@ background-color: #deedf3;
 }
 
 .block_end{
-background-image:url("../img/border_bottom.gif");
+background-image:url("static.php?filename=border_bottom.gif");
 /*background-repeat:repeat_x;*/
 background-position:bottom;
 padding-bottom : 7px;
@@ -2634,7 +2634,7 @@ background-color: #fefeee;
 }
 
 .bighome_search_adv{
-background:  url(img/big_home_search.gif) no-repeat top;
+background:  url(static.php?filename=big_home_search.gif) no-repeat top;
 width:187px;
 height:64px;
 color: #1B98C5;
@@ -2646,7 +2646,7 @@ cursor:pointer;
 }
 
 .bighome_userinfo{
-background:  url(img/big_home_account.gif) no-repeat top;
+background:  url(static.php?filename=big_home_account.gif) no-repeat top;
 width:187px;
 height:64px;
 color: #1B98C5;
@@ -2658,7 +2658,7 @@ cursor:pointer;
 }
 
 .bighome_physical_archive{
-background:  url(img/big_home_physical.gif) no-repeat top;
+background:  url(static.php?filename=big_home_physical.gif) no-repeat top;
 width:187px;
 height:64px;
 color: #1B98C5;
@@ -2670,7 +2670,7 @@ cursor:pointer;
 }
 
 .bighome_workflow{
-background:  url(img/big_home_workflow.gif) no-repeat top;
+background:  url(static.php?filename=big_home_workflow.gif) no-repeat top;
 width:187px;
 height:64px;
 color: #1B98C5;
@@ -2681,7 +2681,7 @@ letter-spacing: 0.1em;
 cursor:pointer;
 }
 .bighome_indexing{
-background:  url(img/big_home_indexing.gif) no-repeat top;
+background:  url(static.php?filename=big_home_indexing.gif) no-repeat top;
 width:187px;
 height:64px;
 color: #1B98C5;
@@ -2741,7 +2741,7 @@ font-size: 11px;
 }
 
 .advertissement_for_welcome{
-background:  url(img/picto_menu_help.gif) no-repeat top left;
+background:  url(static.php?filename=picto_menu_help.gif) no-repeat top left;
 padding-left:30px;
 height:30px;
 }
@@ -3021,40 +3021,39 @@ hr{
  margin-top: 20px;
 }
 #admin_users {
-	background-image : url(img/manage_users.gif);
+	background-image : url(static.php?filename=manage_users.gif);
 	background-repeat: no-repeat;
 	background-position : 2px top;
-	/*background:  url(img/manage_users.gif) no-repeat 2px top;*/
+	/*background:  url(static.php?filename=manage_users.gif) no-repeat 2px top;*/
 }
 
 #admin_groups {
-	/*background:  url(img/manage_groups.gif) no-repeat 2px top;*/
-	background-image : url(img/manage_groups.gif);
+	/*background:  url(static.php?filename=manage_groups.gif) no-repeat 2px top;*/
+	background-image : url(static.php?filename=manage_groups.gif);
 	background-repeat: no-repeat;
 	background-position : 2px top;
 }
 
 #admin_architecture {
-/*	background:  url(img/manage_architecture.gif) no-repeat 2px top;*/
-	background-image : url(img/manage_architecture.gif);
+/*	background:  url(static.php?filename=manage_architecture.gif) no-repeat 2px top;*/
+	background-image : url(static.php?filename=manage_architecture.gif);
 	background-repeat: no-repeat;
 	background-position : 2px top;
 }
 #admin_contacts {
-/*	background:  url(img/manage_architecture.gif) no-repeat 2px top;*/
-	background-image : url(img/manage_contacts.gif);
+/*	background:  url(static.php?filename=manage_architecture.gif) no-repeat 2px top;*/
+	background-image : url(static.php?filename=manage_contacts.gif);
 	background-repeat: no-repeat;
 	background-position : 2px top;
 }
 
 #admin_reopen_mail {
-	background-image : url(img/file_status.gif);
+	background-image : url(static.php?filename=file_status.gif);
 	background-repeat: no-repeat;
 	background-position : 2px top;
 }
 
 #help_welcome_basket {
-	background-image : url(img/);
 	background-repeat: no-repeat;
 	background-position : 2px top;
 	padding: 10px;
@@ -3064,47 +3063,47 @@ hr{
 }
 
 #view_history {
-	/*background:  url(img/view_history.gif) no-repeat 2px top;*/
-	background-image : url(img/view_history.gif);
+	/*background:  url(static.php?filename=view_history.gif) no-repeat 2px top;*/
+	background-image : url(static.php?filename=view_history.gif);
 	background-repeat: no-repeat;
 	background-position : 2px top;
 }
 
 #xml_param_services {
-	/*background:  url(img/manage_structures2.gif) no-repeat 2px top;*/
-	background-image : url(img/manage_structures2.gif);
+	/*background:  url(static.php?filename=manage_structures2.gif) no-repeat 2px top;*/
+	background-image : url(static.php?filename=manage_structures2.gif);
 	background-repeat: no-repeat;
 	background-position : 2px top;
 }
 
 #admin_types {
-	background:  url(img/manage_doctypes.gif) no-repeat 2px top;
+	background:  url(static.php?filename=manage_doctypes.gif) no-repeat 2px top;
 
 }
 
 #admin_structures {
-	background:  url(img/manage_structures.gif) no-repeat 2px top;
+	background:  url(static.php?filename=manage_structures.gif) no-repeat 2px top;
 
 }
 
 #admin_subfolders {
-	background:  url(img/manage_subfolders.gif) no-repeat 2px top;
+	background:  url(static.php?filename=manage_subfolders.gif) no-repeat 2px top;
 
 }
 #admin_actions {
-	background-image : url(img/manage_actions.gif);
+	background-image : url(static.php?filename=manage_actions.gif);
 	background-repeat: no-repeat;
 	background-position : 2px top;
-	/*background:  url(img/manage_users.gif) no-repeat 2px top;*/
+	/*background:  url(static.php?filename=manage_users.gif) no-repeat 2px top;*/
 }
 #admin_status {
-	background-image : url(img/manage_status.gif);
+	background-image : url(static.php?filename=manage_status.gif);
 	background-repeat: no-repeat;
 	background-position : 2px top;
-	/*background:  url(img/manage_users.gif) no-repeat 2px top;*/
+	/*background:  url(static.php?filename=manage_users.gif) no-repeat 2px top;*/
 }
 #view_tree_types {
-	background:  url(img/manage_architecture.gif) no-repeat 2px top;
+	background:  url(static.php?filename=manage_architecture.gif) no-repeat 2px top;
 
 }
 
@@ -3132,7 +3131,7 @@ div.lb1-layer{
 text-align:center;
 position:absolute;
 display:none;
-/*background:url(img/lb1/fond2.png);*/
+/*background:url(static.php?filename=lb1/fond2.png);*/
 background:white;/*#555555;*/
 /*background-color: transparent;*/
 /*z-index:1000;*/
@@ -3168,15 +3167,15 @@ width:10px;
 height:380px;
 padding:0;
 margin:0;
-background: url(img/scrollbox_blank.gif) top left no-repeat;
+background: url(static.php?filename=scrollbox_blank.gif) top left no-repeat;
 
 }
 
 
 .scrollbox_up_button {
-background:  url(img/scrollbox_up.png) no-repeat scroll right top;
+background:  url(static.php?filename=scrollbox_up.png) no-repeat scroll right top;
 	_background:none;
-	_filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../img/scrollbox_up.png', sizingMethod='crop');
+	_filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../static.php?filename=scrollbox_up.png', sizingMethod='crop');
 height:7px;
 
 width:10px;
@@ -3188,9 +3187,9 @@ padding:0;
 }
 
 .scrollbox_down_button {
-background:url(img/down.png) no-repeat scroll right top;
+background:url(static.php?filename=down.png) no-repeat scroll right top;
 	_background:none;
-	_filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../img/scrollbox_down.png', sizingMethod='crop');
+	_filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../static.php?filename=scrollbox_down.png', sizingMethod='crop');
 height:7px;
 width:10px;
 display:block;
@@ -3199,9 +3198,9 @@ padding:0;
 	cursor:pointer;
 }
 .scrollbox_handle {
-     background:url(img/scrollbox_middle.png) top left no-repeat;
+     background:url(static.php?filename=scrollbox_middle.png) top left no-repeat;
 	_background:none;
-	_filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../img/scrollbox_middle.png', sizingMethod='crop');
+	_filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../static.php?filename=scrollbox_middle.png', sizingMethod='crop');
 	width:10px;
 	height:10px;
 	display:block;
@@ -3300,7 +3299,7 @@ padding:0;
 input.button_search_adv {
 	border: 1px solid #44b2bf;
 	color: #007583;
-	background: white url(img/search_button.gif) top left repeat-x;
+	background: white url(static.php?filename=search_button.gif) top left repeat-x;
 	cursor: pointer;
 	width: 100px;
 	height: 75px;
