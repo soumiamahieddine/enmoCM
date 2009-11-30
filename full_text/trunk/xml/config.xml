@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<CONFIG>
+		<name>fulltext</name>
+		<comment>_FULLTEXT</comment>
+		<file_prefix>fulltext</file_prefix>
+		<loaded>true</loaded>
+	</CONFIG>
+	<TABLENAME>
+	</TABLENAME>
+</root>
