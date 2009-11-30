@@ -85,10 +85,19 @@ class core_tools extends functions
 	*/
 	public function load_modules_config($modules, $mode_batch=false)
 	{
+		require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
 		// Browses enabled modules
 		for($i=0;$i<count($modules);$i++)
 		{
-			$path_config = 'modules'.DIRECTORY_SEPARATOR.$modules[$i]['moduleid'].DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."config.xml";
+			if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'modules'.DIRECTORY_SEPARATOR.$modules[$i]['moduleid'].DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."config.xml"))
+			{
+				$path_config = $_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'modules'.DIRECTORY_SEPARATOR.$modules[$i]['moduleid'].DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."config.xml";
+			}
+			else
+			{
+					$path_config = 'modules'.DIRECTORY_SEPARATOR.$modules[$i]['moduleid'].DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."config.xml";
+			}
+			
 			$path_lang = 'modules'.DIRECTORY_SEPARATOR.$modules[$i]['moduleid'].DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php';
 			// Reads the config.xml file of the current module
 			$xmlconfig = simplexml_load_file($path_config);
@@ -255,48 +264,66 @@ class core_tools extends functions
 		$k=0;
 		for($i=0;$i<count($modules);$i++)
 		{
-			$path_menu = 'modules'.DIRECTORY_SEPARATOR.$modules[$i]['moduleid'].DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."menu.xml";
+			if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'modules'.DIRECTORY_SEPARATOR.$modules[$i]['moduleid'].DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."menu.xml"))
+			{
+				$path_menu = $_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'modules'.DIRECTORY_SEPARATOR.$modules[$i]['moduleid'].DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."menu.xml";
+			}
+			else
+			{
+				$path_menu = 'modules'.DIRECTORY_SEPARATOR.$modules[$i]['moduleid'].DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."menu.xml";
+			}
+			
 			// Reads the module/module_name/xml/menu.xml file  and loads into session
 			$path_lang = 'modules'.DIRECTORY_SEPARATOR.$modules[$i]['moduleid'].DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php';
-			$xmlconfig = simplexml_load_file($path_menu);
-			foreach($xmlconfig->MENU as $MENU)
+			if(file_exists($_SESSION['config']['corepath'].'modules'.DIRECTORY_SEPARATOR.$modules[$i]['moduleid'].DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."menu.xml") || file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'modules'.DIRECTORY_SEPARATOR.$modules[$i]['moduleid'].DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."menu.xml"))
 			{
-				$_SESSION['menu'][$k]['id'] = (string) $MENU->id;
-				if(isset($_SESSION['user']['services'][$_SESSION['menu'][$k]['id'] ]) && $_SESSION['user']['services'][$_SESSION['menu'][$k]['id'] ] == true)
+				$xmlconfig = simplexml_load_file($path_menu);
+				foreach($xmlconfig->MENU as $MENU)
 				{
-					$tmp = (string) $MENU->libconst;
-					$tmp2 = $this->retrieve_constant_lang($tmp, $path_lang);
-					if($tmp2 <> false)
+					$_SESSION['menu'][$k]['id'] = (string) $MENU->id;
+					if(isset($_SESSION['user']['services'][$_SESSION['menu'][$k]['id'] ]) && $_SESSION['user']['services'][$_SESSION['menu'][$k]['id'] ] == true)
 					{
-						$_SESSION['menu'][$k]['libconst'] = $tmp2;
+						$tmp = (string) $MENU->libconst;
+						$tmp2 = $this->retrieve_constant_lang($tmp, $path_lang);
+						if($tmp2 <> false)
+						{
+							$_SESSION['menu'][$k]['libconst'] = $tmp2;
+						}
+						else
+						{
+							$_SESSION['menu'][$k]['libconst'] = $tmp;
+						}
+						$_SESSION['menu'][$k]['url'] = $_SESSION['config']['businessappurl'].(string) $MENU->url;
+						if(trim((string) $MENU->target) <> "")
+						{
+							$tmp = preg_replace('/\/core\/$/', '/', $_SESSION['urltocore']);
+							$_SESSION['menu'][$k]['url'] = $tmp. (string) $MENU->url;
+							$_SESSION['menu'][$k]['target'] = (string) $MENU->target;
+						}
+						$_SESSION['menu'][$k]['style'] = (string) $MENU->style;
+						$_SESSION['menu'][$k]['show'] = true;
 					}
 					else
 					{
-						$_SESSION['menu'][$k]['libconst'] = $tmp;
+						$_SESSION['menu'][$k]['libconst'] ='';
+						$_SESSION['menu'][$k]['url'] ='';
+						$_SESSION['menu'][$k]['style'] = '';
+						$_SESSION['menu'][$k]['show'] = false;
 					}
-					$_SESSION['menu'][$k]['url'] = $_SESSION['config']['businessappurl'].(string) $MENU->url;
-					if(trim((string) $MENU->target) <> "")
-					{
-						$tmp = preg_replace('/\/core\/$/', '/', $_SESSION['urltocore']);
-						$_SESSION['menu'][$k]['url'] = $tmp. (string) $MENU->url;
-						$_SESSION['menu'][$k]['target'] = (string) $MENU->target;
-					}
-					$_SESSION['menu'][$k]['style'] = (string) $MENU->style;
-					$_SESSION['menu'][$k]['show'] = true;
+					$k++;
 				}
-				else
-				{
-					$_SESSION['menu'][$k]['libconst'] ='';
-					$_SESSION['menu'][$k]['url'] ='';
-					$_SESSION['menu'][$k]['style'] = '';
-					$_SESSION['menu'][$k]['show'] = false;
-				}
-				$k++;
 			}
 		}
-
+		if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'menu.xml'))
+		{
+			$path = $_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'menu.xml';
+		}
+		else
+		{
+			$path = 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'menu.xml';
+		}
 		// Reads the apps/apps_name/xml/menu.xml file  and loads into session
-		$xmlconfig = simplexml_load_file('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'menu.xml');
+		$xmlconfig = simplexml_load_file($path);
 		$path_lang ='apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php';
 		foreach($xmlconfig->MENU as $MENU2)
 		{
@@ -374,7 +401,15 @@ class core_tools extends functions
 	public function load_app_services()
 	{
 		// Reads the application config.xml file
-		$xmlconfig = simplexml_load_file('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."services.xml");
+		if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'services.xml'))
+		{
+			$path = $_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'services.xml';
+		}
+		else
+		{
+			$path = 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'services.xml';
+		}
+		$xmlconfig = simplexml_load_file($path);
 		$k = 0;
 		$m = 0;
 		// Browses the services in that file  and loads $_SESSION['app_services']
@@ -493,7 +528,15 @@ class core_tools extends functions
 		for($i=0;$i<count($modules);$i++)
 		{
 			// Reads the module config.xml file
-			$xmlconfig = simplexml_load_file('modules'.DIRECTORY_SEPARATOR.$modules[$i]['moduleid'].DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."services.xml");
+			if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'modules'.DIRECTORY_SEPARATOR.$modules[$i]['moduleid'].DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."services.xml"))
+			{
+				$path = $_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'modules'.DIRECTORY_SEPARATOR.$modules[$i]['moduleid'].DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."services.xml";
+			}
+			else
+			{
+				$path = 'modules'.DIRECTORY_SEPARATOR.$modules[$i]['moduleid'].DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."services.xml";
+			}
+			$xmlconfig = simplexml_load_file($path);
 			$k = 0;
 			$m = 0;
 			foreach($xmlconfig->SERVICE as $SERVICE)
@@ -1052,7 +1095,8 @@ class core_tools extends functions
 				require_once('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
 				$app = new business_app_tools();
 				$path = $app->insert_app_page($this->f_page);
-				if( !$path || !file_exists($_SESSION['config']['corepath'].'clients'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.$path) || !file_exists($_SESSION['config']['corepath'].$path))
+				
+				if( !$path && !file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.$path) && !file_exists($_SESSION['config']['corepath'].$path))
 				{
 					//require($_SESSION["config"]["defaultPage"].".php");
 					$this->loadDefaultPage();
@@ -1765,23 +1809,7 @@ class core_tools extends functions
 		return false;
 	}
 
-/*
-	public function load_maarch_xml($path)
-	{
-		if(file_exists($_SESSION['config']['corepath'].'clients'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.$path))
-		{
-			return simplexml_load_file($_SESSION['config']['corepath'].'clients'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.$path);
-		}
-		else if(file_exists($_SESSION['config']['corepath'].$path))
-		{
-			return simplexml_load_file($_SESSION['config']['corepath'].$path);
-		}
-		else
-		{
-			return false;
-		}
-	}
-*/
+
 	
 	public function get_custom_id()
 	{
@@ -1789,6 +1817,7 @@ class core_tools extends functions
 		{
 			return '';
 		}
+		
 		$xml = simplexml_load_file($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.'custom.xml');
 		foreach($xml->custom as $custom)
 		{
