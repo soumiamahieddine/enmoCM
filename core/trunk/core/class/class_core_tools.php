@@ -1823,7 +1823,7 @@ class core_tools extends functions
 		$xml = simplexml_load_file($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.'custom.xml');
 		foreach($xml->custom as $custom)
 		{
-			if($custom->ip == $_SERVER['REMOTE_ADDR'])
+			if($custom->ip == $_SERVER['SERVER_ADDR'])
 			{
 				return (string) $custom->custom_id;
 			}
