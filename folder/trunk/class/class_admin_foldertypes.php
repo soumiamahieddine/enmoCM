@@ -521,8 +521,15 @@ class foldertype extends dbquery
 	*/
 	public function get_all_indexes()
 	{
-
-		$xmlfile = simplexml_load_file('modules'.DIRECTORY_SEPARATOR.'folder'.DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'folder_index.xml');
+		if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'modules'.DIRECTORY_SEPARATOR.'folder'.DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'folder_index.xml'))
+		{
+			$path = $_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'modules'.DIRECTORY_SEPARATOR.'folder'.DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'folder_index.xml';
+		}
+		else
+		{
+			$path = 'modules'.DIRECTORY_SEPARATOR.'folder'.DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'folder_index.xml';
+		}
+		$xmlfile = simplexml_load_file($path);
 		$path_lang = 'modules'.DIRECTORY_SEPARATOR.'folder'.DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php';
 		$indexes = array();
 		foreach($xmlfile->INDEX as $item)
@@ -615,7 +622,15 @@ class foldertype extends dbquery
 		}
 
 		$indexes = array();
-		$xmlfile = simplexml_load_file('modules'.DIRECTORY_SEPARATOR.'folder'.DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'folder_index.xml');
+		if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'modules'.DIRECTORY_SEPARATOR.'folder'.DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'folder_index.xml'))
+		{
+			$path = $_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'modules'.DIRECTORY_SEPARATOR.'folder'.DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'folder_index.xml';
+		}
+		else
+		{
+			$path = 'modules'.DIRECTORY_SEPARATOR.'folder'.DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'folder_index.xml';
+		}
+		$xmlfile = simplexml_load_file($path);
 		$path_lang = 'modules'.DIRECTORY_SEPARATOR.'folder'.DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php';
 		foreach($xmlfile->INDEX as $item)
 		{

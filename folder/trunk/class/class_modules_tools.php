@@ -144,7 +144,15 @@ class folder extends request
 	*/
 	public function build_modules_tables()
 	{
-		$xmlconfig = simplexml_load_file("modules".DIRECTORY_SEPARATOR."folder".DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."config.xml");
+		if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR."modules".DIRECTORY_SEPARATOR."folder".DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."config.xml"))
+		{
+			$path = $_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR."modules".DIRECTORY_SEPARATOR."folder".DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."config.xml";
+		}
+		else
+		{
+			$path = "modules".DIRECTORY_SEPARATOR."folder".DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."config.xml";
+		}
+		$xmlconfig = simplexml_load_file($path);
 
 		$TABLENAME = $xmlconfig->TABLENAME;
 		$_SESSION['tablename']['fold_folders'] = (string) $TABLENAME->fold_folders;
