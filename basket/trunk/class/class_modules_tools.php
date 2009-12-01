@@ -58,12 +58,19 @@ class basket extends dbquery
 	*/
 	public function build_modules_tables()
 	{
-		$xmlconfig = simplexml_load_file("modules".DIRECTORY_SEPARATOR."basket".DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."config.xml");
+		if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR."modules".DIRECTORY_SEPARATOR."basket".DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."config.xml"))
+		{
+			$path = $_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR."modules".DIRECTORY_SEPARATOR."basket".DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."config.xml";
+		}
+		else
+		{
+			$path = "modules".DIRECTORY_SEPARATOR."basket".DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."config.xml";
+		}
+		$xmlconfig = simplexml_load_file($path);
 
 		$CONFIG = $xmlconfig->CONFIG;
 
 		$_SESSION['config']['basket_reserving_time'] = (string) $CONFIG->reserving_time;
-
 
 		// Loads the tables of the module basket  into session ($_SESSION['tablename'] array)
 		$TABLENAME =  $xmlconfig->TABLENAME ;
@@ -186,7 +193,15 @@ class basket extends dbquery
 	private function load_baskets_pages()
 	{
 		$_SESSION['basket_page'] = array();
-		$xmlfile = simplexml_load_file("modules".DIRECTORY_SEPARATOR."basket".DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."basketpage.xml");
+		if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR."modules".DIRECTORY_SEPARATOR."basket".DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."basketpage.xml"))
+		{
+			$path = $_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR."modules".DIRECTORY_SEPARATOR."basket".DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."basketpage.xml";
+		}
+		else
+		{
+			$path = "modules".DIRECTORY_SEPARATOR."basket".DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."basketpage.xml";
+		}
+		$xmlfile = simplexml_load_file($path);
 		$path_lang = "modules".DIRECTORY_SEPARATOR."basket".DIRECTORY_SEPARATOR."lang".DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php';
 		$i =0;
 		foreach($xmlfile->BASKETPAGE as $BASKETPAGE)
