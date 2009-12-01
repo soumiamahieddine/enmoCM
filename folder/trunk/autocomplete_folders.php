@@ -10,7 +10,7 @@
 * @license GPL v3
 * @author  Claire Figueras  <dev@maarch.org>
 */
-
+require('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_request.php');
 $req = new request();
 $req->connect();
 if($_REQUEST['mode']<> 'market' && $_REQUEST['mode'] <> 'project')
