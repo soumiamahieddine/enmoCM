@@ -224,7 +224,7 @@ class admin_reports extends dbquery
 		{
 		?>
 			<div id="group_box" class="bloc">
-				<a href="javascript://" onclick="window.open('<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&admin=groups&page=liste_users&id=<?php  echo $id;?>&admin=groups', '', 'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=820,height=400')"><img src="<?php  echo $_SESSION['config']['businessappurl'].$_SESSION['config']['businessappurl'];?>static.php?filename=membres_groupe_b.gif" alt="" /><i><?php  echo _SEE_GROUP_MEMBERS;?></i></a><br/><br/>
+				<a href="javascript://" onclick="window.open('<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&admin=groups&page=liste_users&id=<?php  echo $id;?>&admin=groups', '', 'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=820,height=400')"><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=membres_groupe_b.gif" alt="" /><i><?php  echo _SEE_GROUP_MEMBERS;?></i></a><br/><br/>
 			</div>
 			<form name="formgroupreport" method="post"  class="forms" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=reports&page=groupreports_up_db">
 

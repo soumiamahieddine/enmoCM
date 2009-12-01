@@ -67,7 +67,7 @@ if(isset($_GET['id']) && !empty($_GET['id']))
 	$groupeid = $_GET['id'];
 }
 ?>
-<h1><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=manage_reports_b.gif&module=reports" alt="" /> <?php echo _ADMIN_REPORTS;?></h1>
+<h1><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?module=reports&filename=manage_reports_b.gif" alt="" /> <?php echo _ADMIN_REPORTS;?></h1>
 
 			<script type='text/javascript'>
 			// Two functions to access javascript object in Ajax frame
