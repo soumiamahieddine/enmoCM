@@ -42,7 +42,15 @@ class cases extends dbquery
 
 	public function build_modules_tables()
 	{
-		$xmlconfig = simplexml_load_file("modules/cases/xml/config.xml");
+		if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR."modules".DIRECTORY_SEPARATOR."cases".DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."config.xml"))
+		{
+			$path = $_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR."modules".DIRECTORY_SEPARATOR."cases".DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."config.xml";
+		}
+		else
+		{
+			$path = "modules".DIRECTORY_SEPARATOR."cases".DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."config.xml";
+		}
+		$xmlconfig = simplexml_load_file($path);
 		$CONFIG = $xmlconfig->CONFIG;
 
 
