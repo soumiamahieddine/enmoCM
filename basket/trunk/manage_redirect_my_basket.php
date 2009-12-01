@@ -124,7 +124,7 @@ else
 	if($baskets_owner == $_SESSION['user']['UserId'])
 	{
 		?>
-		<script language="javascript">window.top.location.href='<?php echo $_SESSION['config']['businessappurl'];?>logout.php?abs_mode&coreurl=<?php echo $_SESSION['config']['coreurl'];?>';</script>
+		<script language="javascript">window.top.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=logout&abs_mode&coreurl=<?php echo $_SESSION['config']['coreurl'];?>';</script>
 		<?php
 	}
 	else

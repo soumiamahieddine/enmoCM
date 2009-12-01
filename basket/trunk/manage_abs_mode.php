@@ -45,7 +45,7 @@ if(isset($_REQUEST['submit']) && isset($_REQUEST['user_id']) && !empty($_REQUEST
 if($_REQUEST['user_id'] == $_SESSION['user']['UserId'])
 {
 ?>
-<script >window.top.location='<?php echo $_SESSION['config']['businessappurl'];?>logout.php?coreurl=<?php echo $_SESSION['config']['coreurl'];?>';</script>
+<script >window.top.location='<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=logout&coreurl=<?php echo $_SESSION['config']['coreurl'];?>';</script>
 <?php
 }
 else

@@ -160,8 +160,8 @@ if (!defined('_MISSING'))  define('_MISSING', 'Absent');
 
 if (!defined('_BACK_FROM_VACATION'))  define('_BACK_FROM_VACATION', 'de retour de son absence');
 if (!defined('_MISSING_ADVERT_TITLE'))  define('_MISSING_ADVERT_TITLE','Gestion des absences');
-if (!defined('_ADMIN_USERS'))  define('_MISSING_ADVERT_01','Ce compte est actuellement d&eacute;finit en mode &rsquo;absent&rsquo; et les courriers sont redirig&eacute;s vers un autre utilisateur.');
-if (!defined('_ADMIN_USERS'))  define('_MISSING_ADVERT_02','Si vous desirez vous connecter avec ce compte, le mode &rsquo;absent&rsquo; sera alors supprim&eacute;.<br/> La redirection des courriers arrivera &agrave; son terme et l&rsquo;application sera r&eacute;activ&eacute;e');
+if (!defined('_MISSING_ADVERT_01'))  define('_MISSING_ADVERT_01','Ce compte est actuellement d&eacute;finit en mode &rsquo;absent&rsquo; et les courriers sont redirig&eacute;s vers un autre utilisateur.');
+if (!defined('_MISSING_ADVERT_02'))  define('_MISSING_ADVERT_02','Si vous desirez vous connecter avec ce compte, le mode &rsquo;absent&rsquo; sera alors supprim&eacute;.<br/> La redirection des courriers arrivera &agrave; son terme et l&rsquo;application sera r&eacute;activ&eacute;e');
 if (!defined('_MISSING_CHOOSE'))  define('_MISSING_CHOOSE','Souhaitez-vous continuer?');
 
 

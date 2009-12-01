@@ -28,6 +28,7 @@
 * @version $Revision$
 * @ingroup basket
 */
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
 
 $req = new request();
 $req->connect();
