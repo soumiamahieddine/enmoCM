@@ -58,7 +58,7 @@ $core_tools->load_html();
 $core_tools->load_header(_USERS_LIST_IN_GROUP.' '.$group);
 $time = $core_tools->get_session_time_expire();
 ?>
-<body onload="setTimeout(window.close, <?php  echo $time;?>*60*1000);">
+<body onload="setTimeout(window.close, <?php  echo $time;?>*60*1000);" class="popup_content">
 <h2 class="tit"><?php  echo _USERS_LIST_IN_GROUP.' '.$group;?></h2>
 
 <table cellpadding="0" cellspacing="0" border="0" class="listing spec">

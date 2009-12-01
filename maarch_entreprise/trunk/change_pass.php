@@ -26,7 +26,7 @@ $time = $core_tools->get_session_time_expire();
 
 <div id="inner_content" class="clearfix">
 
-<h2 class="tit" ><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=maarch_box.gif"; ?>"><?php  echo _FIRST_CONN;?></h2>
+<h2 class="tit" ><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=maarch_box.gif" ><?php  echo _FIRST_CONN;?></h2>
 <div class="block">
 
 <h3> <?php  echo _YOUR_FIRST_CONNEXION.", "._PLEASE_CHANGE_PSW.".<br/>"._ASKED_ONLY_ONCE.".";?>  </h3>
