@@ -390,4 +390,4 @@ $list->admin_list($tab, $nb, '', 'id','history','history','id', true, '', '', ''
 <div class="block_end">&nbsp;</div>
 <br/>
 </div>
-<script type="text/javascript">launch_autocompleter('<?php echo $_SESSION['config']['businessappurl'];?>users_autocomplete_list.php', 'user', 'show_user');</script>
+<script type="text/javascript">launch_autocompleter('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=users_autocomplete_list', 'user', 'show_user');</script>

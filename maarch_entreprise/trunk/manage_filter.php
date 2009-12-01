@@ -402,10 +402,8 @@ if(count($tab) > 0)
 	$title = _RESULTS." : ".$i." "._FOUND_DOCS;
 	$_SESSION['origin'] = 'basket';
 	$_SESSION['collection_id_choice'] = $_SESSION['current_basket']['coll_id'];
-	//$tmp = preg_replace('/.php$/', '', $security->get_script_from_coll($_SESSION['current_basket']['coll_id'], 'script_details'));
-	//$details = $tmp.'&dir=indexing_searching';
 	$details = 'details&dir=indexing_searching';
-	//$param_list = array('values' => $tab, 'title' => $title, 'key' => 'res_id', 'page_name' => 'documents_list',
+
 	$param_list = array('values' => $tab, 'title' => $title, 'key' => 'res_id', 'page_name' => 'view_baskets&module=basket&baskets='.$_SESSION['current_basket']['id'] ,
 	'what' => 'res_id', 'detail_destination' =>$details, 'details_page' => '', 'view_doc' => true,  'bool_details' => true, 'bool_order' => true,
 	'bool_frame' => false, 'module' => '', 'css' => 'listing spec',
