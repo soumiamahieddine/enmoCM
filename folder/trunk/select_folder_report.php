@@ -102,8 +102,7 @@ $time = $core_tools->get_session_time_expire();
 $nb = count($tab);
 
 $list=new list_show();
-$list->list_doc($tab, $nb, _FOLDERS_LIST,'folder_id',$name = "select_folder_report",'folder_id','',false,true,'get',$_SESSION['config']['businessappurl'].'index.php?module=folder&page=select_folder_report',_CHOOSE_FOLDER, false, false, true,false, true, true,  true, false, '', '',  true, _ALL_FOLDERS,_FOLDER);
+$list->list_doc($tab, $nb, _FOLDERS_LIST,'folder_id',$name = "select_folder_report",'folder_id','',false,true,'get',$_SESSION['config']['businessappurl'].'index.php?display=true&module=folder&page=select_folder_report',_CHOOSE_FOLDER, false, false, true,false, true, true,  true, false, '', '',  true, _ALL_FOLDERS,_FOLDER, 'listing spec', '', false, false, array(), '<input type="hidden" name="display" value="true"/><input type="hidden" name="module" value="folder" /><input type="hidden" name="page" value="select_folder_report" />');
 ?>
-
 </body>
 </html>

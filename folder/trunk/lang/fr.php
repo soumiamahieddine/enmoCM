@@ -193,4 +193,6 @@ if (!defined('_CHOOSE_PARENT_FOLDER'))  define('_CHOOSE_PARENT_FOLDER', 'Associe
 if (!defined('_FOLDER_PARENT'))  define('_FOLDER_PARENT', 'Dossier parent');
 if (!defined('_FOLDER_PARENT_DESC'))  define('_FOLDER_PARENT_DESC', 'Vous pouvez choisir de cr&eacute;er un dous-dossier en le rattachant &agrave; un dossier du m&ecirc;me type. Il y a seulement 2 niveaux : dossier et sous-dossier.');
 if (!defined('_THIS_FOLDER'))  define('_THIS_FOLDER', 'ce dossier');
+if (!defined('_LABEL'))  define('_LABEL', 'Libelle');
+if (!defined('_ALL_FOLDERS'))  define('_ALL_FOLDERS', 'Tous les dossiers');
 ?>

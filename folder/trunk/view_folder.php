@@ -367,7 +367,8 @@ if(isset($_REQUEST['delete_doc']) && !empty($_REQUEST['coll_id']))
                     if($show_list)
                     {
                         $list=new list_show();
-                        $list->list_doc($tab,$i,_SEARCH_RESULTS." : ".$i." "._FOUND_FOLDERS,"folder_id","view_folder","folder_id","folder_detail",false,true,"post","index.php?page=view_folder&amp;module=folder",_CHOOSE, false, false, false, false, false, false, false);
+                        $list->list_doc($tab,$i,_SEARCH_RESULTS." : ".$i." "._FOUND_FOLDERS,"folder_id","view_folder","folder_id","folder_detail",false,true,"post",$_SESSION['config']['businessappurl']."index.php?page=view_folder&amp;module=folder",_CHOOSE, false, false, false, false, false, false, false,false, '', '',  true, _ALL_USERS,_USER'listing spec', '', false, false, array(), '<input type="hidden" name="module" value="folder" /><input type="hidden" name="page" value="view_folder" />');
+                              
                         echo '<br/>';
                     }
                     else

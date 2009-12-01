@@ -246,6 +246,7 @@ if(empty($_SESSION['error']))
         <div id="inner_content"><?php
 
 	$list->list_doc($tab,count($tab),'','folders_system_id','search_adv_folder_result','folders_system_id','show_folder&module=folder',false,false,'','','',true,true,false, false,false,false,true,false,'', 'folder',false,'','','listing spec','','',true);
+	
 		?></div><?php
 	}
 	else

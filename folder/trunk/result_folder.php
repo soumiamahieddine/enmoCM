@@ -122,7 +122,7 @@ if(isset($_SESSION['stringSearch'])and !empty($_SESSION['stringSearch']))
 	//$request->show_array($tab);
 	$list=new list_show();
 	$ind = count($tab);
-	$list->list_doc($tab,$ind,_SEARCH_RESULTS." : ".$ind." "._FOUND_FOLDERS,"folders_system_id","result_folder","folders_system_id","folder_detail",false,true,"get",$_SESSION['config']['businessappurl']."index.php?display=true&module=folder&page=res_select_folder",_CHOOSE, false, false, true, false, false, false,  false, false, '', '', false, '', '', 'listing spec');
+	$list->list_doc($tab,$ind,_SEARCH_RESULTS." : ".$ind." "._FOUND_FOLDERS,"folders_system_id","result_folder","folders_system_id","folder_detail",false,true,"get",$_SESSION['config']['businessappurl']."index.php?display=true&module=folder&page=res_select_folder",_CHOOSE, false, false, true, false, false, false,  false, false, '', '', false, '', '', 'listing spec', '', false, false, array(), '<input type="hidden" name="display" value="true"/><input type="hidden" name="module" value="folder" /><input type="hidden" name="page" value="res_select_folder" />');
 }
 ?>
 </body>
