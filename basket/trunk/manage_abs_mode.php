@@ -39,6 +39,16 @@ if(isset($_REQUEST['submit']) && isset($_REQUEST['user_id']) && !empty($_REQUEST
 
 	require_once('modules'.DIRECTORY_SEPARATOR.'basket'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php');
 	$db->query("update ".$_SESSION['tablename']['users']." set status = 'ABS' where user_id = '".$db->protect_string_db($_REQUEST['user_id'])."'");
+	
+	if($_SESSION['history']['userabs'] == "true")
+	{
+		require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
+		$history = new history();
+		$history->connect();
+		$history->query("select firstname, lastname from ".$_SESSION['tablename']['users']." where user_id = '".$_REQUEST['user_id']."'");
+		$res = $history->fetch_object();
+		$history->add($_SESSION['tablename']['users'],$_SESSION['user']['UserId'],"ABS",_ABS_USER.' : '.$res->firstname.' '.$res->lastname, $_SESSION['config']['databasetype']);
+	}
 
 
 }

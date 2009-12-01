@@ -119,7 +119,7 @@ else
 		$history->connect();
 		$history->query("select firstname, lastname from ".$_SESSION['tablename']['users']." where user_id = '".$baskets_owner."'");
 		$res = $history->fetch_object();
-		$history->add($_SESSION['tablename']['users'],$baskets_owner,"ABS",_ABS_USER.' : '.$res->firstname.' '.$res->firstname, $_SESSION['config']['databasetype']);
+		$history->add($_SESSION['tablename']['users'],$baskets_owner,"ABS",_ABS_USER.' : '.$res->firstname.' '.$res->lastname, $_SESSION['config']['databasetype']);
 	}
 	if($baskets_owner == $_SESSION['user']['UserId'])
 	{
