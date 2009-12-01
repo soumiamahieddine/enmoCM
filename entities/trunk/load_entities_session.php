@@ -6,7 +6,15 @@
 
 	if($_SESSION['origin'] == "basket_up" ||$_SESSION['origin'] == 'basket_add')
 	{
-		$xml = simplexml_load_file("modules".DIRECTORY_SEPARATOR."entities".DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."redirect_keywords.xml");
+		if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR."modules".DIRECTORY_SEPARATOR."entities".DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."redirect_keywords.xml"))
+		{
+			$path = $_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR."modules".DIRECTORY_SEPARATOR."entities".DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."redirect_keywords.xml";
+		}
+		else
+		{
+			$path = "modules".DIRECTORY_SEPARATOR."entities".DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."redirect_keywords.xml";
+		}
+		$xml = simplexml_load_file($path);
 		$_SESSION['m_admin']['redirect_keywords'] = array();
 		$path_lang = "modules".DIRECTORY_SEPARATOR."entities".DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php';
 

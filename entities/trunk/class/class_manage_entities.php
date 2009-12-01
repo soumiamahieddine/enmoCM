@@ -927,7 +927,15 @@ class entity extends dbquery
 		//$this->show();
 		$line = $this->fetch_object();
 		$entity_type = $line->entity_type;
-		$xmltypeentity = simplexml_load_file("modules".DIRECTORY_SEPARATOR."entities".DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."typentity.xml");
+		if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR."modules".DIRECTORY_SEPARATOR."entities".DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."typentity.xml"))
+		{
+			$path = $_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR."modules".DIRECTORY_SEPARATOR."entities".DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."typentity.xml";
+		}
+		else
+		{
+			$path = "modules".DIRECTORY_SEPARATOR."entities".DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."typentity.xml";
+		}
+		$xmltypeentity = simplexml_load_file($path);
 		//echo "<br>";
 		foreach($xmltypeentity->TYPE as $ENTITYTYPE)
 		{
