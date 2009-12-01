@@ -87,6 +87,7 @@ if (!defined('_THIS_CASE_IS_CLOSED'))  define('_THIS_CASE_IS_CLOSED','Affaire cl
 if (!defined('_CASE_CREATED'))  define('_CASE_CREATED','Affaire cr&eacute;e');
 if (!defined('_JOIN_RES_CASE_IN_PROCESS'))  define('_JOIN_RES_CASE_IN_PROCESS','Attacher des courriers aux affaires (corbeille de traitement)');
 if (!defined('_CLOSE_CASE'))  define('_CLOSE_CASE','Cl&ocirc;turer des affaires');
+if (!defined('_LINK_TO_CASE'))  define('_LINK_TO_CASE','Attacher &agrave; l&rsquo;affaire');
 
 
 
