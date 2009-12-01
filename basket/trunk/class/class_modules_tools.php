@@ -846,17 +846,18 @@ class basket extends dbquery
 		$db = new dbquery();
 		$db->connect();
 		$this->query("delete from ".$_SESSION['tablename']['bask_users_abs']." where is_virtual = 'Y' and basket_owner = '".$this->protect_string_db($user_id)."'");
-
 		//Then we search all the virtual baskets assigned to the user
 		$this->query("select basket_owner, basket_id from ".$_SESSION['tablename']['bask_users_abs']." where is_virtual='Y' and user_abs = '".$this->protect_string_db($user_id)."'" );
 		// and delete this baskets if they were reassigned to someone else
+		$i=0;
 		while($res = $this->fetch_object())
 		{
 			$db->query("delete from ".$_SESSION['tablename']['bask_users_abs']." where is_virtual ='Y' and basket_id = '".$this->protect_string_db($res->basket_id)."' and basket_owner = '".$this->protect_string_db($res->basket_owner)."'");
+			$this->show();
+			$i++;
 		}
-
 		// then we delete all baskets where the user was the missing user
-		$this->query("DELETE  from ".$_SESSION['tablename']['bask_users_abs']." WHERE user_abs='".$this->protect_string_db($this_user)."'");
+		$this->query("DELETE  from ".$_SESSION['tablename']['bask_users_abs']." WHERE user_abs='".$this->protect_string_db($user_id)."'");
 		$this->query("update ".$_SESSION['tablename']['users']." set status = 'OK' where user_id = '".$user_id."'");
 	}
 
