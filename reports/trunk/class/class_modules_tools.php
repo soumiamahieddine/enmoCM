@@ -86,7 +86,7 @@ class reports  extends dbquery
 				$label = $this->retrieve_constant_lang($label, $path_lang);
 				$desc = (string)$report->DESCRIPTION;
 				$desc = $this->retrieve_constant_lang($desc, $path_lang);
-				$url = $_SESSION['config']['businessappurl'].'index.php?display=true&module=reports&page='.$url;
+				$url = $_SESSION['config']['businessappurl'].'index.php?display=true&dir=reports&page='.$url;
 			}
 			else
 			{
