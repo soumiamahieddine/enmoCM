@@ -582,7 +582,8 @@ class list_show_with_template extends list_show
 
 		if($bool_frame)
 		{
-			$link = $name.".php?search=".$what;
+			//$link = $name.".php?search=".$what;
+			$link = $_SESSION['config']['businessappurl']."index.php?display=true&page=".$name."&amp;search=".$what;
 		}
 		else
 		{

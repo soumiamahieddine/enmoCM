@@ -390,7 +390,7 @@ function del_query_confirm()
 <div align="center" style="display:block;" id="div_query">
 
 <label for="query"><?php echo _MY_SEARCHES;?> : </label>
-<select name="query" id="query" onchange="load_query_db(this.options[this.selectedIndex].value, 'select_criteria', 'frmsearch2', '<?php echo _SQL_ERROR;?>', '<?php echo _SERVER_ERROR;?>', '<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&âge=manage_query';?>');return false;" >
+<select name="query" id="query" onchange="load_query_db(this.options[this.selectedIndex].value, 'select_criteria', 'frmsearch2', '<?php echo _SQL_ERROR;?>', '<?php echo _SERVER_ERROR;?>', '<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=manage_query';?>');return false;" >
 	<option id="default_query" value=""><?php echo _CHOOSE_SEARCH;?></option>
 	<?php for($i=0; $i< count($queries);$i++)
 	{
