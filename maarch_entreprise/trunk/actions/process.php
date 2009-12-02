@@ -189,7 +189,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 					$frm_str .= '<input type="hidden" name="req" id="req" value="second_request" />';
 
 					$frm_str .= '<h2 onclick="new Effect.toggle(\'general_datas_div\', \'blind\', {delay:0.2});return false;"  class="categorie" style="width:90%;">';
-						$frm_str .= '<img src="'.$_SESSION['config']['businessappurl'].$_SESSION['config']['businessappurl'].'static.php?filename=plus.png" alt="" id="img_general_data" />&nbsp;<b>'._GENERAL_INFO.' :</b>';
+						$frm_str .= '<img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=plus.png" alt="" id="img_general_data" />&nbsp;<b>'._GENERAL_INFO.' :</b>';
 				$frm_str .= '<span class="lb1-details">&nbsp;</span>';
 			$frm_str .= '</h2>';
 			$frm_str .= '<div id="general_datas_div"  style="display:block">';
@@ -277,7 +277,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 			else
 				$case_properties = '';
 			$frm_str .= '<h2 onclick="new Effect.toggle(\'cases_div\', \'blind\', {delay:0.2});return false;"  class="categorie" style="width:90%;">';
-			$frm_str .= '<img src="'.$_SESSION['config']['businessappurl'].$_SESSION['config']['businessappurl'].'static.php?filename=plus.png" alt="" id="img_cases" />&nbsp;<b>'._CASE.' :</b>';
+			$frm_str .= '<img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=plus.png" alt="" id="img_cases" />&nbsp;<b>'._CASE.' :</b>';
 			$frm_str .= '<span class="lb1-details">&nbsp;</span>';
 			$frm_str .= '</h2>';
 			$frm_str .= '<div id="cases_div"  style="display:none">';
@@ -327,7 +327,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 			$diff_list = new diffusion_list();
 			$_SESSION['process']['diff_list'] = $diff_list->get_listinstance($res_id, true);
 			$frm_str .= '<h2 onclick="new Effect.toggle(\'diff_list_div\', \'blind\', {delay:0.2});return false;"  class="categorie" style="width:90%;">';
-						$frm_str .= '<img src="'.$_SESSION['config']['businessappurl'].$_SESSION['config']['businessappurl'].'static.php?filename=plus.png" alt="" id="img_diff_list" />&nbsp;<b>'._DIFF_LIST_COPY.' :</b>';
+						$frm_str .= '<img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=plus.png" alt="" id="img_diff_list" />&nbsp;<b>'._DIFF_LIST_COPY.' :</b>';
 				$frm_str .= '<span class="lb1-details">&nbsp;</span>';
 			$frm_str .= '</h2>';
 			$frm_str .= '<div id="diff_list_div"  style="display:none">';
@@ -389,7 +389,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 			$project = $arr_tmp['project'];
 			$market = $arr_tmp['market'];
 			$frm_str .= '<h2 onclick="new Effect.toggle(\'folder_div\', \'blind\', {delay:0.2});return false;"  class="categorie" style="width:90%;">';
-						$frm_str .= '<img src="'.$_SESSION['config']['businessappurl'].$_SESSION['config']['businessappurl'].'static.php?filename=plus.png" alt="" id="img_folder" />&nbsp;<b>'._FOLDER_ATTACH.' :</b>';
+						$frm_str .= '<img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=plus.png" alt="" id="img_folder" />&nbsp;<b>'._FOLDER_ATTACH.' :</b>';
 				$frm_str .= '<span class="lb1-details">&nbsp;</span>';
 			$frm_str .= '</h2>';
 			$frm_str .= '<div id="folder_div"  style="display:none">';
@@ -411,7 +411,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 		 	 $frm_str .='<input type="hidden" name="res_id" id="res_id"  value="'.$res_id.'" />';
 		}
 		$frm_str .= '<h2 onclick="new Effect.toggle(\'history_div\', \'blind\', {delay:0.2});return false;" class="categorie" style="width:90%;">';
-			$frm_str .= '<img src="'.$_SESSION['config']['businessappurl'].$_SESSION['config']['businessappurl'].'static.php?filename=plus.png" alt="" />&nbsp;<b>'. _DOC_HISTORY.' :</b>';
+			$frm_str .= '<img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=plus.png" alt="" />&nbsp;<b>'. _DOC_HISTORY.' :</b>';
 			$frm_str .= '<span class="lb1-details">&nbsp;</span>';
 		$frm_str .= '</h2>';
 		$frm_str .= '<div class="desc" id="history_div" style="display:none">';
@@ -430,7 +430,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 			$request_notes = new request;
 			$tab_notes=$request_notes->select($select_notes,$where_notes,"order by ".$_SESSION['tablename']['not_notes'].".date desc",$_SESSION['config']['databasetype'], "500", true,$_SESSION['tablename']['not_notes'], $_SESSION['tablename']['users'], "user_id" );
 			$frm_str .= '<h2 onclick="new Effect.toggle(\'notes_div\', \'blind\', {delay:0.2});return false;"  class="categorie" style="width:90%;">';
-			$frm_str .= '<img src="'.$_SESSION['config']['businessappurl'].$_SESSION['config']['businessappurl'].'static.php?filename=plus.png" alt="" />&nbsp;<b>'._NOTES." (".count($tab_notes).")".' :</b>';
+			$frm_str .= '<img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=plus.png" alt="" />&nbsp;<b>'._NOTES." (".count($tab_notes).")".' :</b>';
 			$frm_str .= '<span class="lb1-details">&nbsp;</span>';
 	$frm_str .= '</h2>';
 	$frm_str .= '<div class="desc" id="notes_div" style="display:none;">';
@@ -458,7 +458,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 			}
 		}
 			$frm_str .= '<h2 onclick="new Effect.toggle(\'done_answers_div\', \'blind\', {delay:0.2});return false;"  class="categorie"  style="width:90%;">';
-			$frm_str .= '<img src="'.$_SESSION['config']['businessappurl'].$_SESSION['config']['businessappurl'].'static.php?filename=plus.png" alt="" />&nbsp;<b>'._DONE_ANSWERS.' ('.$nb_attach .'):</b>';
+			$frm_str .= '<img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=plus.png" alt="" />&nbsp;<b>'._DONE_ANSWERS.' ('.$nb_attach .'):</b>';
 			$frm_str .= '<span class="lb1-details">&nbsp;</span>';
 			$frm_str .= '</h2>';
 			$frm_str .= '<div class="desc" id="done_answers_div" style="display:none;width:90%;">';

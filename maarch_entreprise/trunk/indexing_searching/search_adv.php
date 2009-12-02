@@ -363,7 +363,7 @@ $src_tab = $tab[0];
 
 ?>
 <?php // echo $_SESSION['current_search_query'];?>
-<script type="text/javascript" src="<?php echo $_SESSION['config']['businessappurl'];?>js/search_adv.js" ></script>
+<script type="text/javascript" src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=search_adv.js" ></script>
 <script type="text/javascript">
 <!--
 var valeurs = { <?php echo $tab[1];?>};

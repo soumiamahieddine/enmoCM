@@ -439,7 +439,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 				  $frm_str .= '<tr id="diff_list_tr" style="display:none;">';
 				  		$frm_str .= '<td colspan="3">';
 				  		$frm_str .= '<h2 onclick="new Effect.toggle(\'diff_list_div\', \'blind\', {delay:0.2});return false;"  class="categorie" style="width:90%;">';
-								$frm_str .= '<img src="'.$_SESSION['config']['businessappurl'].$_SESSION['config']['businessappurl'].'static.php?filename=plus.png" alt="" id="img_diff_list" />&nbsp;<b><small>'._DIFF_LIST_COPY.' :</small></b>';
+								$frm_str .= '<img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=plus.png" alt="" id="img_diff_list" />&nbsp;<b><small>'._DIFF_LIST_COPY.' :</small></b>';
 						$frm_str .= '<span class="lb1-details">&nbsp;</span>';
 					$frm_str .= '</h2>';
 					$frm_str .= '<div id="diff_list_div"  style="display:none">';

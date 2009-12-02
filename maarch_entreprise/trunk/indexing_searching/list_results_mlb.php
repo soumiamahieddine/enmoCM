@@ -419,7 +419,8 @@ $_SESSION['error_page'] = '';
 		$save_mode = false;
 		$use_template = false;
 		$special = true;
-		$name = $_SESSION['config']['businessappurl'].'indexing_searching/list_results_mlb';
+		//$name = $_SESSION['config']['businessappurl'].'indexing_searching/list_results_mlb';
+		$name = $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&pagelist_results_mlb';
 	}
 	else
 	{
