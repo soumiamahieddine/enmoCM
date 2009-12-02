@@ -22,8 +22,8 @@
 /*************************** Report management *****************/
 if (!defined('_ADMIN_REPORTS'))  define('_ADMIN_REPORTS','Gestion des &eacute;tats et &eacute;ditions');
 if (!defined('_ADMIN_REPORTS_DESC'))  define('_ADMIN_REPORTS_DESC','Administration des &eacute;tats et des &eacute;ditions');
-if (!defined('_REPORTS'))  define('_REPORTS','Etats &amp; Editions');
-if (!defined('_REPORTS_COMMENT'))  define('_REPORTS_COMMENT','Etats &amp; Editions');
+if (!defined('_REPORTS'))  define('_REPORTS','Etats et Editions');
+if (!defined('_REPORTS_COMMENT'))  define('_REPORTS_COMMENT','Etats et Editions');
 if (!defined('_OTHER_REPORTS'))  define('_OTHER_REPORTS','Editions diverses');
 if (!defined('_REPORTS_DESC'))  define('_REPORTS_DESC','Editions des &eacute;tats');
 if (!defined('_HAVE_TO_SELECT_GROUP'))  define('_HAVE_TO_SELECT_GROUP', 'Vous devez s&eacute;lectionner un groupe');
