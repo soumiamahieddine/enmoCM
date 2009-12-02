@@ -1,10 +1,10 @@
 <ROOT>
 	<CONFIG>
 		<BASE_DIRECTORY>C:\xampp\htdocs\maarch_entreprise\modules\full_text\</BASE_DIRECTORY>
-		<INDEX_FILE_DIRECTORY>C:\Maarch\indexes\DGGT\coll_1\</INDEX_FILE_DIRECTORY>
+		<INDEX_FILE_DIRECTORY>C:\Maarch\indexes\entreprise\letterbox_coll\</INDEX_FILE_DIRECTORY>
 		<LOCATION>localhost</LOCATION>
 		<DATABASE_PORT>5432</DATABASE_PORT>
-		<DATABASE>DGGT</DATABASE>
+		<DATABASE>maarch_entreprise</DATABASE>
 		<DATABASETYPE>POSTGRESQL</DATABASETYPE>
 		<USER_NAME>postgres</USER_NAME>
 		<PASSWORD>maarch</PASSWORD>	
