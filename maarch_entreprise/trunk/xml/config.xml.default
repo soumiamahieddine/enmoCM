@@ -48,7 +48,7 @@
 		<extensions>
 			<table>mlb_coll_ext</table>
 		</extensions>
-		<path_to_lucene_index>C:\Maarch\indexes\DGGT\coll_1\</path_to_lucene_index>
+		<path_to_lucene_index>C:\Maarch\indexes\entreprise\letterbox_coll\</path_to_lucene_index>
 	</COLLECTION>
 	<COLLECTION>
 		<id>apa_coll</id>
