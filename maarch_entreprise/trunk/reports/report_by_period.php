@@ -63,13 +63,13 @@ $content .='<div id="params">';
               	$content .='<input type="radio" id="custom_period" name="type_period" value="custom_period" /><label for="period">'._TITLE_STATS_CHOICE_PERIOD.'.&nbsp;</label>'._SINCE.'&nbsp;:&nbsp;<input name="datestart" type="text"  id="datestart" onclick="showCalender(this);" />&nbsp;'._FOR.'&nbsp;:&nbsp;<input name="dateend" type="text"  id="dateend" onclick="showCalender(this);" /></p>';
         	}
         $content .='</td>';
-        $content .='<td><input type="button" name="validate" value="'._VALIDATE.'" class="button" onclick="valid_report_by_period(\''.$_SESSION['config']['businessappurl'].'reports/get_report_by_period_val.php\');" /></td>';
+        $content .='<td><input type="button" name="validate" value="'._VALIDATE.'" class="button" onclick="valid_report_by_period(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=reports&page=get_report_by_period_val\');" /></td>';
         $content .='</tr>';
        $content .='</table>';
 	$content .='</form>';
 $content .='</div>';
 $content .='<div id="result_period_report"></div>';
-$js ='valid_report_by_period(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=reports&page=get_report_by_period_val\');';
+$js ='valid_report_by_period(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=reports&page=get_report_by_period_val\');';
 
 echo "{content : '".addslashes($content)."', exec_js : '".addslashes($js)."'}";
 exit();

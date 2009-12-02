@@ -150,7 +150,8 @@ class list_show extends functions
 
 			if($bool_frame)
 			{
-				$link = $name.".php?search=".$what;
+				$link = $_SESSION['config']['businessappurl'].'index.php?display=true&page='.$name.'&search='.$what;
+				//$link = $name.".php?search=".$what;
 			}
 			else
 			{

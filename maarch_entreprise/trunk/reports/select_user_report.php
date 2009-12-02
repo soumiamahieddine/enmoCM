@@ -127,7 +127,7 @@ $time = $core_tools->get_session_time_expire();
 <?php
 $nb = count($tab);
 
-$list->list_doc($tab, $nb, _USERS_LIST,'user_id',$name = "select_user_report",'user_id','',false,true,'get',$_SESSION['config']['businessappurl'].'index.php?dipslay=true&module=reports&page=select_user_report',_CHOOSE_USER2, false, true, true,false, true, true,  true, false, '', '',  true, _ALL_USERS,_USER, 'listing spec', '', false, false, array(), '<input type="hidden" name="display" value="true"/><input type="hidden" name="module" value="reports" /><input type="hidden" name="page" value="select_user_report" />');
+$list->list_doc($tab, $nb, _USERS_LIST,'user_id',$name = "select_user_report",'user_id','',false,true,'get',$_SESSION['config']['businessappurl'].'index.php?dipslay=true&dir=reports&page=select_user_report',_CHOOSE_USER2, false, true, true,false, true, true,  true, false, '', '',  true, _ALL_USERS,_USER, 'listing spec', '&dir=reports', false, false, array(), '<input type="hidden" name="display" value="true"/><input type="hidden" name="dir" value="reports" /><input type="hidden" name="page" value="select_user_report" />');
 
 ?>
 </body>
