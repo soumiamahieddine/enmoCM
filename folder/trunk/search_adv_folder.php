@@ -57,7 +57,7 @@ if($_REQUEST['erase'] == 'true')
 <h1><img src="<?php  echo $_SESSION['config']['businessappurl']."static.php?module=folder&filename=picto_search_b.gif";?>" alt="" /> <?php  echo _ADV_SEARCH_FOLDER_TITLE; ?></h1>
 <br/>
 <form name="search_folder_frm" method="get" action="<?php  echo $_SESSION['config']['businessappurl'];?>index.php" id="search_folder_frm" class="forms2">
-	<input type="hidden" name="display"  value="true" />
+	<!--<input type="hidden" name="display"  value="true" />-->
 	<input type="hidden" name="module"  value="folder" />
 	<input type="hidden" name="page"  value="search_adv_folder_result" />
 <?php
