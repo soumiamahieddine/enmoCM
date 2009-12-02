@@ -619,8 +619,8 @@ if (!defined('_PROCESS_NUM')) define( '_PROCESS_NUM','Traitement du courrier n&d
 if (!defined('_PROCESS_LIMIT_DATE')) define( '_PROCESS_LIMIT_DATE', 'Date limite de traitement');
 if (!defined('_LATE_PROCESS')) define( '_LATE_PROCESS', 'En retard');
 if (!defined('_PROCESS_DELAY')) define( '_PROCESS_DELAY', 'D&eacute;lai de traitement');
-if (!defined('_ALARM1_DELAY')) define( '_ALARM1_DELAY', 'D&eacute;lai relance 1');
-if (!defined('_ALARM2_DELAY')) define( '_ALARM2_DELAY', 'D&eacute;lai relance 2');
+if (!defined('_ALARM1_DELAY')) define( '_ALARM1_DELAY', 'D&eacute;lai relance 1 (jours)');
+if (!defined('_ALARM2_DELAY')) define( '_ALARM2_DELAY', 'D&eacute;lai relance 2 (jours)');
 if (!defined('_CATEGORY')) define( '_CATEGORY', 'Cat&eacute;gorie');
 if (!defined('_CHOOSE_CATEGORY')) define( '_CHOOSE_CATEGORY', 'Choisissez une cat&eacute;gorie');
 if (!defined('_RECEIVING_DATE')) define( '_RECEIVING_DATE', 'Date d&rsquo;arriv&eacute;e');
