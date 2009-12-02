@@ -97,7 +97,7 @@ if (isset($_REQUEST['notes'])&& !empty($_REQUEST['notes']))
 else
 {
 ?>
-<h2 class="tit" style="padding:10px;"><img src="<? echo $_SESSION['config']['businessappurl'].$_SESSION['config']['businessappurl']; ?>static.php?filename=picto_add_b.gif" alt=""/> <?php  echo _ADD_NOTE;?> </h2>
+<h2 class="tit" style="padding:10px;"><img src="<? echo $_SESSION['config']['businessappurl']; ?>static.php?filename=picto_add_b.gif" alt=""/> <?php  echo _ADD_NOTE;?> </h2>
  
 	<div class="block" style="padding:10px;">
       <form name="form1" method="post" action="<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=notes&page=note_add&identifier=<?php  echo $_GET['identifier'];?>&table=<?php  echo $table;?>&coll_id=<?php  echo $coll_id;?>" >
