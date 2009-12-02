@@ -60,7 +60,7 @@ if(isset($_REQUEST['remove']))
 $core_tools->load_html();
 $core_tools->load_header();
  ?>
-<body id="iframe" bgcolor="#deedf3">
+<body id="iframe" >
 	<div align="center">
 	<form name="manage_groupbasket" id="manage_groupbasket" method="get" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=basket&page=groupbasket_form">
 		<input type="hidden" name="display" value="true" />
