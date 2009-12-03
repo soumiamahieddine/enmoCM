@@ -236,7 +236,7 @@ else if($_REQUEST['mode'] == 'add')
 	$contact_info['IS_CORPORATE_PERSON'] == 'Y';
 }
 ?>
-<script type="text/javascript">window.resizeTo(510, 555);</script>
+<script type="text/javascript">window.resizeTo(600, 570);</script>
 <br/>
 
 <div id="contacts" style="padding-left: 20px;">
