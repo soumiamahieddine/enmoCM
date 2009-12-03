@@ -55,6 +55,13 @@ $core_tools->test_service('quicklaunch', "apps");
 						$nb_max++;
 						$displayed_physical_archive = true;
 				}
+				if ($element['id'] == 'index_mlb' && $element['show'] == true &&
+				(!isset($displayed_index_mlb) || $displayed_index_mlb <> true))
+				{
+						echo '<td><a href="index.php?page=view_baskets&module=basket&baskets=IndexingBasket"><div class="bighome_indexing"><div class="label_for_bighome_indexing">'._INDEXING_MLB.'</div></div></a></td>';
+						$nb_max++;
+						$displayed_index_mlb = true;
+				}
 				if ($element['id'] == 'adv_search_mlb' && $element['show'] == true && 
 				(!isset($displayed_adv_search_mlb) || isset($displayed_index_mlb) && $displayed_adv_search_mlb <> true))
 				{
@@ -62,13 +69,7 @@ $core_tools->test_service('quicklaunch', "apps");
 						$nb_max++;
 						$displayed_adv_search_mlb = true;
 				}
-				if ($element['id'] == 'index_mlb' && $element['show'] == true &&
-				(!isset($displayed_physical_archive) || isset($displayed_index_mlb) && $displayed_index_mlb <> true))
-				{
-						echo '<td><a href="index.php?page=view_baskets&module=basket&baskets=IndexingBasket"><div class="bighome_indexing"><div class="label_for_bighome_indexing">'._INDEXING_MLB.'</div></div></a></td>';
-						$nb_max++;
-						$displayed_index_mlb = true;
-				}
+				
 			}
 		}
 		
