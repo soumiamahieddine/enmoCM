@@ -188,7 +188,7 @@ class list_show_with_template extends list_show
 		{
 
 			$return = "<a href='".$_SESSION['config']['businessappurl']."index.php?page=".$this->detail_destination."&amp;id=".$result[$theline][0][$key]."' title='". _DETAILS."'>
-			<img src='".$_SESSION['config']['businessappurl']."static.php?filename=picto_infos.gif'  alt='"._DETAILS."'  width='25' height='25' border='0' /></a>";
+			<img src='".$_SESSION['config']['businessappurl']."static.php?filename=picto_infos.gif'  alt='"._DETAILS."'   border='0' /></a>";
 
 			return $return;
 		}
@@ -201,7 +201,7 @@ class list_show_with_template extends list_show
 		if ($this->bool_detail == true)
 		{
 			$return = "<a href='".$_SESSION['config']['businessappurl']."index.php?page=details_cases&module=cases&amp;id=".$result[$theline][0]['case_id']."' title='". _DETAILS_CASES."'>
-			<img src='".$_SESSION['config']['businessappurl']."static.php?filename=picto_infos.gif'  alt='"._DETAILS."'  width='25' height='25' border='0' /></a>";
+			<img src='".$_SESSION['config']['businessappurl']."static.php?filename=picto_infos.gif'  alt='"._DETAILS."'  border='0' /></a>";
 
 			return $return;
 		}
@@ -730,7 +730,7 @@ class list_show_with_template extends list_show
 			}
 		}
 
-		$page_list1 = '<div class="block" style="height:30px;vertical" align="center" ><table width="100%" border="0"><tr><td align="center" width="15%"><b>'.$previous.'</b></td><td align="center" width="15%"><b>'.$next.'</b></td><td width="10px">|</td><td align="center" width="30%">'.$page_list1.'</td><td width="10px">|</td><td width="220px" align="center">'.$disp_dc.'</td><td width="5px">|</td><td align="right">'.$tdeto.'</td></tr></table></b></div>';
+		$page_list1 = '<div class="block" style="height:30px;vertical" align="center" ><table width="100%" border="0"><tr><td align="center" width="15%"><b>'.$previous.'</b></td><td align="center" width="15%"><b>'.$next.'</b></td><td width="10px">|</td><td align="center" width="30%">'.$page_list1.'</td><td width="10px">|</td><td width="210px" align="center">'.$disp_dc.'</td><td width="5px">|</td><td align="right">'.$tdeto.'</td></tr></table></b></div>';
 
 
 

@@ -284,7 +284,7 @@ class list_show extends functions
 				//$page_list1 = '<div class="block" style="height:20px;" align="center" ><b><div class="list_previous">'.$previous." &nbsp;</div>".$search_form." ".$page_list1."</select></div>".$next."</b>&nbsp;</form></div>";
 			}
 		//$str .= "<div class='block'>";
-		$page_list1 = '<div class="block" style="height:30px;vertical" align="center" ><table width="100%" border="0"><tr><td align="center" width="15%"><b>'.$previous.'</b></td><td align="center" width="15%"><b>'.$next.'</b></td><td width="10px">|</td><td align="center" width="30%">'.$page_list1.'</td><td width="10px">|</td><td width="240px" align="center">'.$disp_dc.'</td><td width="10px">|</td><td align="right">'.$tdeto.'</td></tr></table></b></div>';
+		$page_list1 = '<div class="block" style="height:30px;vertical" align="center" ><table width="100%" border="0"><tr><td align="center" width="15%"><b>'.$previous.'</b></td><td align="center" width="15%"><b>'.$next.'</b></td><td width="10px">|</td><td align="center" width="30%">'.$page_list1.'</td><td width="10px">|</td><td width="210px" align="center">'.$disp_dc.'</td><td width="10px">|</td><td align="right">'.$tdeto.'</td></tr></table></b></div>';
 
 			if($show_big_title)
 			{
