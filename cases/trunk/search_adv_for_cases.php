@@ -205,7 +205,7 @@ if($core_tools->is_module_loaded('entities'))
 {
 	$coll_id = 'letterbox_coll';
 	$where = $sec->get_where_clause_from_coll_id($coll_id);
-	$table = $sec->retrieve_table_from_coll($coll_id);
+	$table = $sec->retrieve_view_from_coll($coll_id);
 	if(empty($table))
 	{
 		$table = $sec->retrieve_view_from_coll_id($coll_id);
@@ -215,7 +215,7 @@ if($core_tools->is_module_loaded('entities'))
 		$where = ' and '.$where;
 	}
 	//$conn->query("select distinct r.destination as entity_id, e.entity_label from ".$table." r, ".$_SESSION['tablename']['ent_entities']." e where e.entity_id = r.destination ".$where." group by e.entity_label, r.destination");
-	$conn->query("select distinct r.destination, e.short_label from ".$table." r join ".$_SESSION['tablename']['ent_entities']." e on e.entity_id = r.destination ".$where." group by e.short_label, r.destination ");
+	$conn->query("select distinct destination, e.short_label from ".$table." join ".$_SESSION['tablename']['ent_entities']." e on e.entity_id = destination ".$where." group by e.short_label, destination ");
 	$arr_tmp = array();
 	while($res = $conn->fetch_object())
 	{
