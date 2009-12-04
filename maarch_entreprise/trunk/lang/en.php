@@ -36,7 +36,7 @@ if (!defined('_XML_PARAM_SERVICE_DESC')) define('_XML_PARAM_SERVICE_DESC', 'View
 if (!defined('_XML_PARAM_SERVICE')) define('_XML_PARAM_SERVICE', 'View servicex XML config');
 if (!defined('_MODULES_SERVICES')) define('_MODULES_SERVICES', 'Services defined by modules');
 if (!defined('_APPS_SERVICES')) define('_APPS_SERVICES', 'Services defined by the application');
-if (!defined('_ADMIN_STATUS_DESC')) define('_ADMIN_STATUS_DESC', 'Add or modify states.');
+if (!defined('_ADMIN_STATUS_DESC')) define('_ADMIN_STATUS_DESC', 'Add or modify status.');
 if (!defined('_ADMIN_ACTIONS_DESC')) define('_ADMIN_ACTIONS_DESC', 'Add or modify actions.');
 if (!defined('_ADMIN_SERVICES_UNKNOWN')) define('_ADMIN_SERVICES_UNKNOWN', 'Unknown administration service');
 if (!defined('_NO_RIGHTS_ON')) define('_NO_RIGHTS_ON', 'No rights for');
@@ -400,7 +400,7 @@ if (!defined('_IS_SYSTEM')) define('_IS_SYSTEM', 'System');
 if (!defined('_CAN_BE_SEARCHED')) define('_CAN_BE_SEARCHED', 'Can documents be searched?');
 if (!defined('_CAN_BE_MODIFIED')) define('_CAN_BE_MODIFIED', 'Can documents be modified?');
 if (!defined('_THE_STATUS')) define('_THE_STATUS', 'The status ');
-if (!defined('_ADMIN_STATUS')) define('_ADMIN_STATUS', 'States');
+if (!defined('_ADMIN_STATUS')) define('_ADMIN_STATUS', 'Status');
 /************* Actions **************/
 
 if (!defined('_ACTION_LIST')) define('_ACTION_LIST', 'Actions list');
@@ -717,7 +717,7 @@ if (!defined('_CHOOSE_SEARCH')) define('_CHOOSE_SEARCH', 'Choose a custom search
 if (!defined('_THIS_SEARCH')) define('_THIS_SEARCH', 'This search');
 if (!defined('_MY_SEARCHES')) define('_MY_SEARCHES', 'My searches');
 if (!defined('_CLEAR_SEARCH')) define('_CLEAR_SEARCH', 'Reset criteria');
-if (!defined('_CHOOSE_STATUS_SEARCH_TITLE')) define('_CHOOSE_STATUS_SEARCH_TITLE', 'Add states to refine the search');
+if (!defined('_CHOOSE_STATUS_SEARCH_TITLE')) define('_CHOOSE_STATUS_SEARCH_TITLE', 'Add status to refine the search');
 if (!defined('_ERROR_IE_SEARCH')) define('_ERROR_IE_SEARCH', 'This criterion is already selected');
 //if (!defined('_CIVILITIES')) define('_CIVILITIES', 'Civilit&eacute;(s)');
 //if (!defined('_CIVILITY')) define('_CIVILITY', 'Civilit&eacute;');
