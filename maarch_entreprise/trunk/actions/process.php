@@ -325,7 +325,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 			 // Displays the diffusion list (only copies)
 			require_once("modules".DIRECTORY_SEPARATOR."entities".DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_listdiff.php');
 			$diff_list = new diffusion_list();
-			$_SESSION['process']['diff_list'] = $diff_list->get_listinstance($res_id, true);
+			$_SESSION['process']['diff_list'] = $diff_list->get_listinstance($res_id);
 			$frm_str .= '<h2 onclick="new Effect.toggle(\'diff_list_div\', \'blind\', {delay:0.2});return false;"  class="categorie" style="width:90%;">';
 						$frm_str .= '<img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=plus.png" alt="" id="img_diff_list" />&nbsp;<b>'._DIFF_LIST_COPY.' :</b>';
 				$frm_str .= '<span class="lb1-details">&nbsp;</span>';
@@ -898,7 +898,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
 	{
 		require_once('modules'.DIRECTORY_SEPARATOR.'entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_listdiff.php');
 		$list = new diffusion_list();
-		$params = array('mode'=> 'listinstance', 'table' => $_SESSION['tablename']['ent_listinstance'], 'coll_id' => $coll_id, 'res_id' => $arr_id[0], 'user_id' => $_SESSION['user']['UserId'], 'concat_list' => true, 'only_cc' => true);
+		$params = array('mode'=> 'listinstance', 'table' => $_SESSION['tablename']['ent_listinstance'], 'coll_id' => $coll_id, 'res_id' => $arr_id[0], 'user_id' => $_SESSION['user']['UserId'], 'concat_list' => false, 'only_cc' => true);
 		$list->load_list_db($_SESSION['process']['diff_list'], $params); //pb enchainement avec action redirect
 	}
 	unset($_SESSION['redirection']);
