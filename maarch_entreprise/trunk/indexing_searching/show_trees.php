@@ -70,12 +70,10 @@ if($folderSystemId <> '')
 		{
 			$db->query("select distinct folder_id, folder_name, subject, folder_level, folders_system_id from ".$_SESSION['tablename']['fold_folders']." where parent_id = ".$resTmp->folders_system_id." or folders_system_id = ".$folderSystemId." order by folder_name");
 			$flagProject = true;
-			$db->show();
 		}
 		else
 		{
 			$db->query("select distinct folder_id, folder_name, subject, folder_level, folders_system_id, parent_id from ".$_SESSION['tablename']['fold_folders']." where folders_system_id = ".$folderSystemId." order by folder_name");
-			//$db->show();
 		}
 	}
 }
