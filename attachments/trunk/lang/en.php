@@ -22,4 +22,7 @@ if (!defined('_NEW_ATTACH_ADDED')) define('_NEW_ATTACH_ADDED', 'New attachment')
 if (!defined('_ATTACH_DELETED')) define('_ATTACH_DELETED', 'Attachment deleted');
 if (!defined('_ATTACHED_DOC')) define('_ATTACHED_DOC', 'Attachments');
 
+if (!defined('_INDEX_ATTACHMENT'))  define('_INDEX_ATTACHMENT', 'Add an attachment');
+if (!defined('_INDEX_ATTACHMENT_DESC'))  define('_INDEX_ATTACHMENT_DESC', 'Add an attachment');
+if (!defined('_ATTACH_TO_DOC'))  define('_ATTACH_TO_DOC', 'Add as answer to an existing document');
 ?>
