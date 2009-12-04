@@ -183,7 +183,10 @@ class indexing_searching_app extends dbquery
 		$request->query("select category_id from ".$view." where ".$where);
 		$res = $request->fetch_object();
 		$cat_id = $res->category_id;
-
+		if(empty($cat_id) || !isset($cat_id))
+		{
+			$cat_id = 'empty';
+		}
 		// Simple cases
 		foreach(array_keys($post) as $key)
 		{
@@ -390,7 +393,8 @@ class indexing_searching_app extends dbquery
 		//$this->show_array($post);
 		if(empty($_SESSION['error']))
 		{
-			//$request->show_array($data_ext);		
+			//$request->show_array($data_res);
+			//exit();		
 			$request->update($table, $data_res, $where, $_SESSION['config']['databasetype']);
 			if(count($data_ext) > 0)
 			{
