@@ -744,10 +744,10 @@ if (!defined('_ANSWER_TYPE')) define('_ANSWER_TYPE','Answer types');
 
 if (!defined('_INDEXATION_TITLE')) define('_INDEXATION_TITLE', 'Record a document');
 if (!defined('_CHOOSE_FILE')) define('_CHOOSE_FILE', 'Select a file');
-if (!defined('_CHOOSE_TYPE')) define('_CHOOSE_TYPE', 'Select the type of the document');
+if (!defined('_CHOOSE_TYPE')) define('_CHOOSE_TYPE', 'Select a document type');
 
 if (!defined('_FILE_LOADED_BUT_NOT_VISIBLE')) define('_FILE_LOADED_BUT_NOT_VISIBLE', 'The document has been saved on the server.<br/>');
-if (!defined('_ONLY_FILETYPES_AUTHORISED')) define('_ONLY_FILETYPES_AUTHORISED', 'Only following document can be displayed in your browser');
+if (!defined('_ONLY_FILETYPES_AUTHORISED')) define('_ONLY_FILETYPES_AUTHORISED', 'Only the following document types can be displayed in your browser');
 if (!defined('_PROBLEM_LOADING_FILE_TMP_DIR')) define('_PROBLEM_LOADING_FILE_TMP_DIR', 'An error occured while trying to copy the file on the server');
 if (!defined('_DOWNLOADED_FILE')) define('_DOWNLOADED_FILE', 'File saved');
 if (!defined('_WRONG_FILE_TYPE')) define('_WRONG_FILE_TYPE', 'This document type is not allowed');

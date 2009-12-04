@@ -872,7 +872,7 @@ else
 									$detailsExport .= "</tr>";
 									?>
 									<tr <?php echo $color;?> >
-										<td><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=manage_users_entities_b_small.gifamodule=entities" alt="<?php echo _USER;?>" title="<?php echo _USER;?>" /></td>
+										<td><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=manage_users_entities_b_small.gif&module=entities" alt="<?php echo _USER;?>" title="<?php echo _USER;?>" /></td>
 										<td ><?php echo $_SESSION['details']['diff_list']['copy']['users'][$i]['firstname'];?></td>
 										<td ><?php echo $_SESSION['details']['diff_list']['copy']['users'][$i]['lastname'];?></td>
 										<td><?php echo $_SESSION['details']['diff_list']['copy']['users'][$i]['entity_label'];?></td>
