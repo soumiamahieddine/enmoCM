@@ -83,7 +83,7 @@ $admin->load_header(_USER_ENTITIES_TITLE);
 					echo "&nbsp;&nbsp;&nbsp;&nbsp;";
 				}
 				?>
-				<input type="checkbox"  class="check" name="entities[]" value="<?php  echo $_SESSION['m_admin']['entity']['entities'][$theline]['ENTITY_ID']; ?>" ><?php  echo $_SESSION['m_admin']['entity']['entities'][$theline]['SHORT_LABEL'] ; ?><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><?php  echo $_SESSION['m_admin']['entity']['entities'][$theline]['ROLE']; ?></i><br/></input>
+				<input type="checkbox"  class="check" name="entities[]" value="<?php  echo $_SESSION['m_admin']['entity']['entities'][$theline]['ENTITY_ID']; ?>" ><?php if(isset($_SESSION['m_admin']['entity']['entities'][$theline]['SHORT_LABEL']) && !empty($_SESSION['m_admin']['entity']['entities'][$theline]['SHORT_LABEL'])){ echo $_SESSION['m_admin']['entity']['entities'][$theline]['SHORT_LABEL'] ; }else{ echo $_SESSION['m_admin']['entity']['entities'][$theline]['LABEL'];}?><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><?php  echo $_SESSION['m_admin']['entity']['entities'][$theline]['ROLE']; ?></i><br/></input>
 				<?php
 		}
 		 ?> <br/><input class="button" type="submit" name="removeEntity" value="<?php  echo _DELETE_ENTITY; ?>" /><br/><br/>
