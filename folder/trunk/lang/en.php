@@ -90,7 +90,7 @@ if (!defined('_THE_SOCIETY')) define('_THE_SOCIETY', 'The company ');
 if (!defined('_MISSING_DOC')) define('_MISSING_DOC', 'Missing document');
 if (!defined('_MISSING_DOC2')) define('_MISSING_DOC2', 'Missing document(s)');
 if (!defined('_PLEASE_SELECT_FOLDER')) define('_PLEASE_SELECT_FOLDER', 'You must select a folder');
-if (!defined('_FOLDER_HISTORY')) define('_FOLDER_HISTORY', 'History of the folder');
+if (!defined('_FOLDER_HISTORY')) define('_FOLDER_HISTORY', 'Folder history');
 if (!defined('_CHOOSE_FOLDERTYPE')) define('_CHOOSE_FOLDERTYPE', 'Select a folder type');
 
 if (!defined('_BROWSE_BY_FOLDER')) define('_BROWSE_BY_FOLDER', 'Search a folder');
