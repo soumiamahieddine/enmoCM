@@ -148,7 +148,7 @@ INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, ca
 INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched) VALUES ('RSV', 'Reserve', 'N', '', 'apps', 'N');
 INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched) VALUES ('DEL', 'Supprime', 'Y', NULL, 'apps', 'N');
 INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched) VALUES ('END', 'Clos', 'Y', 'mail_end.gif', 'apps', 'Y');
-INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched) VALUES ('VAL', 'A valider', 'Y', 'mail_new.gif', 'apps', 'N');
+INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched) VALUES ('VAL', 'A valider', 'Y', 'mail_new.gif', 'apps', 'Y');
 INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched) VALUES ('RET', 'Retour courrier', 'N', '', 'apps', 'Y');
 INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched) VALUES ('CHG', 'Vidéocodé', 'Y', 'mail_end.gif', 'apps', 'Y');
 INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched) VALUES ('BAD', 'Rejeté vidéocodage', 'Y', 'mail.gif', 'apps', 'Y');
