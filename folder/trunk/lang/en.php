@@ -107,7 +107,6 @@ if (!defined('_FOLDERTYPE_MISSING')) define('_FOLDERTYPE_MISSING', 'This file ty
 
 /************************** Fiche salarie ***************************/
 
-if (!defined('_CONTRACT_HISTORY')) define('_CONTRACT_HISTORY','History of contracts');
 if (!defined('_ARCHIVED_DOC')) define('_ARCHIVED_DOC', 'Archived documents');
 if (!defined('_SEND_RELANCE_MAIL')) define('_SEND_RELANCE_MAIL', 'Send an email reminder');
 if (!defined('_DIRECTION_DEP')) define('_DIRECTION_DEP', 'Direction/Dpt');
@@ -183,5 +182,11 @@ if (!defined('_MIN')) define('_MIN', 'minimum');
 if (!defined('_ERROR_COMPATIBILITY_FOLDER')) define('_ERROR_COMPATIBILITY_FOLDER', 'These file and document type are not vompatible');
 if (!defined('_ADDED_TO_FOLDER')) define('_ADDED_TO_FOLDER', ' add  to the file');
 if (!defined('_DELETED_FROM_FOLDER')) define('_DELETED_FROM_FOLDER', ' deleted from the file');
+if (!defined('_CHOOSE_PARENT_FOLDER'))  define('_CHOOSE_PARENT_FOLDER', 'Attach to an existing parent folder');
+if (!defined('_FOLDER_PARENT'))  define('_FOLDER_PARENT', 'Parent folder');
+if (!defined('_FOLDER_PARENT_DESC'))  define('_FOLDER_PARENT_DESC', 'You can create a sub-folder by attaching it to a folder of the same type. There are only two levels : folder and sub-folder.');
+if (!defined('_THIS_FOLDER'))  define('_THIS_FOLDER', 'this folder');
+if (!defined('_LABEL'))  define('_LABEL', 'Label');
+
 if (!defined('_ALL_FOLDERS')) define('_ALL_FOLDERS', 'All files');
 ?>
