@@ -812,7 +812,7 @@ if (!defined('_CREATION_DATE')) define( '_CREATION_DATE', 'Creation date');
 if (!defined('_NO_RESULTS')) define( '_NO_RESULTS', 'Aucun r&eacute;sultat');
 if (!defined('_FOUND_DOCS')) define('_FOUND_DOCS', 'document(s) found');
 if (!defined('_MY_CONTACTS')) define('_MY_CONTACTS', 'My contacts');
-if (!defined('_DETAILLED_PROPERTIES')) define('_DETAILLED_PROPERTIES', 'Details sheets');
+if (!defined('_DETAILLED_PROPERTIES')) define('_DETAILLED_PROPERTIES', 'Details');
 if (!defined('_VIEW_DOC_NUM')) define('_VIEW_DOC_NUM', 'View document nb.');
 if (!defined('_TO')) define('_TO', 'to');
 if (!defined('_FILE_PROPERTIES')) define('_FILE_PROPERTIES', 'file properties');
@@ -847,9 +847,9 @@ if (!defined('_DOCTYPE_MANDATORY')) define('_DOCTYPE_MANDATORY', 'Document type 
 if (!defined('_INDEX_UPDATED')) define('_INDEX_UPDATED', 'Indices updated');
 
 if (!defined('_QUICKLAUNCH')) define('_QUICKLAUNCH', 'Shortcut');
-if (!defined('_SHOW_DETAILS_DOC')) define('_SHOW_DETAILS_DOC', 'View this document&apos;s details sheet');
+if (!defined('_SHOW_DETAILS_DOC')) define('_SHOW_DETAILS_DOC', 'View document details');
 if (!defined('_VIEW_DOC_FULL')) define('_VIEW_DOC_FULL', 'View this document');
-if (!defined('_DETAILS_DOC_FULL')) define('_DETAILS_DOC_FULL', 'View this document&apos;s details sheet');
+if (!defined('_DETAILS_DOC_FULL')) define('_DETAILS_DOC_FULL', 'View document details');
 if (!defined('_IDENTIFIER')) define('_IDENTIFIER', 'Reference');
 if (!defined('_CHRONO_NUMBER')) define('_CHRONO_NUMBER', 'Chrono number');
 if (!defined('_NO_CHRONO_NUMBER_DEFINED')) define('_NO_CHRONO_NUMBER_DEFINED', 'Chrono number is not defined');
@@ -885,14 +885,13 @@ if (!defined('_FOR_MONTH')) define('_FOR_MONTH', 'for');
 if (!defined('_N_DAYS')) define('_N_DAYS','NB on days');
 
 /******************** Specific DGGT ************/
-if (!defined('_PROJECT')) define('_PROJECT', 'File');
-if (!defined('_MARKET')) define('_MARKET', 'Sub-file');
-if (!defined('_SEARCH_CUSTOMER')) define('_SEARCH_CUSTOMER', 'File consultation');
-if (!defined('_SEARCH_CUSTOMER_TITLE')) define('_SEARCH_CUSTOMER_TITLE', 'Search a file');
-if (!defined('_TO_SEARCH_DEFINE_A_SEARCH_ADV')) define('_TO_SEARCH_DEFINE_A_SEARCH_ADV', 'To start a search, please enter a file or sub-file number.');
+if (!defined('_PROJECT')) define('_PROJECT', 'Folder');
+if (!defined('_MARKET')) define('_MARKET', 'Sub-folder');
+if (!defined('_SEARCH_CUSTOMER')) define('_SEARCH_CUSTOMER', 'View a folder');
+if (!defined('_SEARCH_CUSTOMER_TITLE')) define('_SEARCH_CUSTOMER_TITLE', 'View a folder');
+if (!defined('_TO_SEARCH_DEFINE_A_SEARCH_ADV')) define('_TO_SEARCH_DEFINE_A_SEARCH_ADV', 'To start a search, please enter a folder or sub-folder id.');
 if (!defined('_DAYS')) define('_DAYS', 'days');
 if (!defined('_LAST_DAY')) define('_LAST_DAY', 'last day');
-
 
 
 /******************** Keywords Helper ************/
@@ -905,14 +904,14 @@ if (!defined('_TITLE_STATS_USER_LOG')) define('_TITLE_STATS_USER_LOG', 'Access t
 if (!defined('_DELETE_DOC')) define('_DELETE_DOC', 'Delete this document');
 if (!defined('_THIS_DOC')) define('_THIS_DOC', 'this document');
 if (!defined('_MODIFY_DOC')) define('_MODIFY_DOC', 'Modify this document information');
-if (!defined('_BACK_TO_WELCOME')) define('_BACK_TO_WELCOME', 'back to home page');
+if (!defined('_BACK_TO_WELCOME')) define('_BACK_TO_WELCOME', 'Back to home page');
 if (!defined('_CLOSE_MAIL')) define('_CLOSE_MAIL', 'Close this document');
 
 /************** R&eacute;ouverture courrier **************/
-if (!defined('_MAIL_SENTENCE2')) define('_MAIL_SENTENCE2', 'Enter the number of a document and switch its statute to "In progress".');
-if (!defined('_MAIL_SENTENCE3')) define('_MAIL_SENTENCE3', 'This feature enables to reopen a document that was closed to early.');
-if (!defined('_ENTER_DOC_ID')) define('_ENTER_DOC_ID', 'Enter the identifier of the document');
-if (!defined('_TO_KNOW_ID')) define('_TO_KNOW_ID', 'To know the identifier of the document, make a research or ask it the operator');
+if (!defined('_MAIL_SENTENCE2')) define('_MAIL_SENTENCE2', 'Enter the number of a document and switch its status to "In progress".');
+if (!defined('_MAIL_SENTENCE3')) define('_MAIL_SENTENCE3', ' This feature enables to reopen a document that was closed too early.');
+if (!defined('_ENTER_DOC_ID')) define('_ENTER_DOC_ID', 'Enter the document number');
+if (!defined('_TO_KNOW_ID')) define('_TO_KNOW_ID', 'To get the document number, perform a search or ask your administrator');
 if (!defined('_MODIFY_STATUS')) define('_MODIFY_STATUS', 'Modify the status');
 if (!defined('_REOPEN_MAIL')) define('_REOPEN_MAIL', 'Reopen mail');
 if (!defined('_REOPEN_THIS_MAIL')) define('_REOPEN_THIS_MAIL', 'Reopen the mail');
