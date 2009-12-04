@@ -390,9 +390,12 @@ class indexing_searching_app extends dbquery
 		//$this->show_array($post);
 		if(empty($_SESSION['error']))
 		{
-			//$request->show_array($data_res);
+			//$request->show_array($data_ext);		
 			$request->update($table, $data_res, $where, $_SESSION['config']['databasetype']);
-			$request->update($table_ext, $data_ext, $where, $_SESSION['config']['databasetype']);
+			if(count($data_ext) > 0)
+			{
+				$request->update($table_ext, $data_ext, $where, $_SESSION['config']['databasetype']);
+			}
 			$_SESSION['error'] = _INDEX_UPDATED." (".strtolower(_NUM).$id_to_update.")";
 
 			$hist->add($table, $id_to_update, "UP", $_SESSION['error'], $_SESSION['config']['databasetype'],'apps');
