@@ -138,12 +138,12 @@ if (!defined('_CHOOSE_DEPARTMENT')) define('_CHOOSE_DEPARTMENT', 'Select a depar
 if (!defined('_REDIRECTION')) define('_REDIRECTION', 'Redirection');
 if (!defined('_ENTITY_UPDATE')) define('_ENTITY_UPDATE', 'Department updated');
 // USER ABS
-if (!defined('_MY_ABS')) define('_MY_ABS', 'Manage my leave');
-if (!defined('_MY_ABS_TXT')) define('_MY_ABS_TXT', 'Allows you to redirect your baskets while on leave');
+if (!defined('_MY_ABS')) define('_MY_ABS', 'Manage my absence');
+if (!defined('_MY_ABS_TXT')) define('_MY_ABS_TXT', 'Allows you to redirect your baskets while not at the office');
 if (!defined('_MY_ABS_REDIRECT')) define('_MY_ABS_REDIRECT', 'Your mail are currently redirected to');
 if (!defined('_MY_ABS_DEL')) define('_MY_ABS_DEL', 'To cancel the redirection, click here');
 if (!defined('_ADMIN_ABS')) define('_ADMIN_ABS', 'Manage my leaves.');
-if (!defined('_ADMIN_ABS_TXT')) define('_ADMIN_ABS_TXT', 'Allows you to redirect this user baskets while on leave');
+if (!defined('_ADMIN_ABS_TXT')) define('_ADMIN_ABS_TXT', 'Allows you to redirect this user baskets while not at the office');
 if (!defined('_ADMIN_ABS_REDIRECT')) define('_ADMIN_ABS_REDIRECT', 'Redirection for leave enabled');
 if (!defined('_ADMIN_ABS_FIRST_PART')) define('_ADMIN_ABS_FIRST_PART', 'Mail of');
 if (!defined('_ADMIN_ABS_SECOND_PART')) define('_ADMIN_ABS_SECOND_PART', 'is currently redirected to ');
@@ -155,9 +155,9 @@ if (!defined('_REDIRECTED_MAIL')) define('_REDIRECTED_MAIL', 'Redirected mails')
 if (!defined('_PROCESS_MAIL_OF')) define('_PROCESS_MAIL_OF', 'Mail to process for');
 if (!defined('_MISSING')) define('_MISSING', 'absent');
 if (!defined('_BACK_FROM_VACATION')) define('_BACK_FROM_VACATION', ' back');
-if (!defined('_MISSING_ADVERT_TITLE')) define('_MISSING_ADVERT_TITLE','Leave management');
-if (defined(_MISSING_ADVERT_01)) define('_MISSING_ADVERT_01','This account is in leave mode and its mail are currently redirected to another user.');
-if (defined(_MISSING_ADVERT_02)) define('_MISSING_ADVERT_02','If you log in this account, this mode will be disabled.<br/>');
+if (!defined('_MISSING_ADVERT_TITLE')) define('_MISSING_ADVERT_TITLE','Absence management');
+if (!defined('_MISSING_ADVERT_01')) define('_MISSING_ADVERT_01','This account is in leave mode and its mail are currently redirected to another user.');
+if (!defined('_MISSING_ADVERT_02')) define('_MISSING_ADVERT_02','If you log in this account, this mode will be disabled.<br/>');
 if (!defined('_MISSING_CHOOSE')) define('_MISSING_CHOOSE','Do you want to continue?');
 
 
@@ -213,7 +213,7 @@ if (!defined('_BASK_BACK')) define('_BASK_BACK', 'Back');
 
 if (!defined('_CANCEL_ABS')) define('_CANCEL_ABS', 'Disable leave mode');
 if (!defined('_REALLY_CANCEL_ABS')) define('_REALLY_CANCEL_ABS', 'Do you really want to disable leave mode?');
-if (!defined('_ABS_MODE')) define('_ABS_MODE', 'Leave management');
+if (!defined('_ABS_MODE')) define('_ABS_MODE', 'Absence management');
 if (!defined('_REALLY_ABS_MODE')) define('_REALLY_ABS_MODE', 'Do you want to enablme leave mode?');
 
 if (!defined('_REDIRECT_TO_ACTION')) define('_REDIRECT_TO_ACTION', 'Redirect to an action');
