@@ -76,7 +76,7 @@ $db->connect();
 			{
 				if( trim($_SESSION['user']['baskets'][$i]['clause']) <> '')
 				{
-					$db->query('select RES_ID from '.$_SESSION['user']['baskets'][$i]['view']." where ".$_SESSION['user']['baskets'][$i]['clause']);
+					$db->query('select RES_ID from '.$_SESSION['user']['baskets'][$i]['view']." where ".$_SESSION['user']['baskets'][$i]['clause'], true);
 					$nb = $db->nb_result();
 				}
 			}
