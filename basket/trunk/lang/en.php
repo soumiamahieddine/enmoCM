@@ -184,8 +184,8 @@ if (!defined('_PROCESS_MAIL_OF')) define('_PROCESS_MAIL_OF', 'Mail to process fo
 if (!defined('_MISSING')) define('_MISSING', 'absent');
 if (!defined('_BACK_FROM_VACATION')) define('_BACK_FROM_VACATION', ' back');
 if (!defined('_MISSING_ADVERT_TITLE')) define('_MISSING_ADVERT_TITLE','Leave management');
-if (defined(_MONMAARCH)) define('_MISSING_ADVERT_01','This account is in leave mode and its mail are currently redirected to another user.');
-if (defined(_MONMAARCH)) define('_MISSING_ADVERT_02','If you log in this account, this mode will be disabled.<br/>');
+if (defined(_MISSING_ADVERT_01)) define('_MISSING_ADVERT_01','This account is in leave mode and its mail are currently redirected to another user.');
+if (defined(_MISSING_ADVERT_02)) define('_MISSING_ADVERT_02','If you log in this account, this mode will be disabled.<br/>');
 if (!defined('_MISSING_CHOOSE')) define('_MISSING_CHOOSE','Do you want to continue?');
 
 
