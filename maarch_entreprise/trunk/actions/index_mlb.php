@@ -49,7 +49,7 @@ $frm_height = '';
 * $mode_form  Mode of the modal : fullscreen
 */
 $mode_form = 'fullscreen';
-$_SESSION['validStep'] = "ko";
+//$_SESSION['validStep'] = "ko";
 include('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'definition_mail_categories.php');
 
 /**
@@ -787,6 +787,7 @@ function check_docserver($coll_id)
 	$d->close();
 	// Get the new filename
 	$docinfo = $docserver->filename();
+	
 	if($docserver->get_error() == "txt_error_when_sending_file")
 	{
 		$_SESSION['action_error'] = _FILE_SEND_ERROR;
@@ -1144,7 +1145,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
 		$_SESSION['action_error'] = _ERROR_MANAGE_FORM_ARGS;
 		return false;
 	}
-
+	$res_id = '';
 	require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
 	require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
 	require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_resource.php");
@@ -1179,6 +1180,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
 	if($attach == false)
 	{
 		$cat_id = get_value_fields($values_form, 'category_id');
+
 		$query_ext_fields .= 'category_id,' ;
 		$query_ext_values .= "'".$cat_id."'," ;
 
@@ -1340,7 +1342,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
 		}
 		//print_r($_SESSION['data']);
 		$res_id = $resource->load_into_db($table ,$_SESSION['indexing']['destination_dir'], $_SESSION['indexing']['file_destination_name'].".".$_SESSION['upfile']['format'], $_SESSION['indexing']['path_template'], $_SESSION['indexing']['docserver_id'],  $_SESSION['data'], $_SESSION['config']['databasetype']);
-
+		//echo 'load '.$res_id. " ";
 		if($res_id <> false)
 		{
 			//Create chrono number
@@ -1360,15 +1362,17 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
 			$query_ext_fields .= 'alt_identifier,';
 			$query_ext_values .= "'".$db->protect_string_db($my_chrono)."',";
 			//######
-
+		//	echo $res_id. " ";
 			$query_ext_fields = preg_replace('/,$/', ',res_id)', $query_ext_fields);
 			$query_ext_values = preg_replace('/,$/', ','.$res_id.')', $query_ext_values);
+		//	echo $res_id. " ";
 			$query_ext = " insert into ".$table_ext." ".$query_ext_fields.' values '.$query_ext_values ;
-
+		//	echo $query_ext;
 			$db->connect();
 			$db->query($query_ext);
 			if($core->is_module_loaded('folder') && !empty($folder_id) && $_SESSION['history']['folderup'])
 			{
+			//	echo 'folder '.$res_id. " ";
 				require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 				$hist = new history();
 				$hist->add($_SESSION['tablename']['fold_folders'], $folder_id, "UP", _DOC_NUM.$res_id._ADDED_TO_FOLDER, $_SESSION['config']['databasetype'],'apps');
@@ -1376,6 +1380,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
 			//$db->show();
 			if($core->is_module_loaded('entities'))
 			{
+			//	echo 'entities '.$res_id. " ";
 				if($load_list_diff)
 				{
 					require_once('modules'.DIRECTORY_SEPARATOR.'entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_listdiff.php');
@@ -1383,6 +1388,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
 					$params = array('mode'=> 'listinstance', 'table' => $_SESSION['tablename']['ent_listinstance'], 'coll_id' => $coll_id, 'res_id' => $res_id, 'user_id' => $_SESSION['user']['UserId']);
 					$diff_list->load_list_db($_SESSION['indexing']['diff_list'], $params);
 				}
+			//	echo 'entities '.$res_id. " ";
 			}
 		}
 		else
@@ -1390,6 +1396,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
 			$_SESSION['action_error'] = _ERROR_RES_ID;
 			return false;
 		}
+		
 		//$_SESSION['indexing'] = array();
 		unset($_SESSION['upfile']);
 		unset($_SESSION['data']);
