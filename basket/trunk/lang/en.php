@@ -92,34 +92,6 @@ if (!defined('_WAITING_DISTRIB_LIST')) define('_WAITING_DISTRIB_LIST', 'List of 
 if (!defined('_NO_REDIRECT_RIGHT')) define('_NO_REDIRECT_RIGHT', 'You have no redirection right on this basket');
 if (!defined('_CLICK_LINE_BASKET1')) define('_CLICK_LINE_BASKET1', 'Click on a line to qualify a document');
 
-//ENTITY
-if (!defined('_SELECT_ENTITY')) define('_SELECT_ENTITY', 'Select a department');
-if (!defined('_ENTITY')) define('_ENTITY', 'Department');
-if (!defined('_LABEL')) define('_LABEL', 'Label');
-if (!defined('_THE_ENTITY')) define('_THE_ENTITY', 'The department');
-if (!defined('_ENTITIES')) define('_ENTITIES', 'Departments');
-if (!defined('_ALL_ENTITIES')) define('_ALL_ENTITIES', 'All department');
-if (!defined('_ENTITY_LIST')) define('_ENTITY_LIST', 'List of departments');
-if (!defined('_SELECTED_ENTITIES')) define('_SELECTED_ENTITIES', 'Selected departments');
-if (!defined('_CHOOSE_ENTITY')) define('_CHOOSE_ENTITY', 'Select a department');
-if (!defined('_MUST_CHOOSE_AN_ENTITY')) define('_MUST_CHOOSE_AN_ENTITY', 'You must select a department');
-if (!defined('_ADMIN_ENTITIES')) define('_ADMIN_ENTITIES', 'Manage departments');
-if (!defined('_ADMIN_ENTITIES_DESC')) define('_ADMIN_ENTITIES_DESC', 'Manage departments and associated mailing lists');
-if (!defined('_ENTITIES_LIST')) define('_ENTITIES_LIST', 'List of departments');
-if (!defined('_ENTITY_ADDITION')) define('_ENTITY_ADDITION', 'Add a department');
-if (!defined('_ENTITY_MODIFICATION')) define('_ENTITY_MODIFICATION', 'Modify a department');
-if (!defined('_ENTITY_MISSING')) define('_ENTITY_MISSING', 'The department does not exist');
-if (!defined('_ENTITY_DELETION')) define('_ENTITY_DELETION', 'Delete an entity');
-if (!defined('_ENTITY_ADDITION')) define('_ENTITY_ADDITION', 'Add a department');
-if (!defined('_ENTITY_ADDED')) define('_ENTITY_ADDED', 'Department added');
-if (!defined('_ENTITY_UPDATED')) define('_ENTITY_UPDATED', 'Department modified');
-if (!defined('_ENTITY_BASKETS')) define('_ENTITY_BASKETS','Available departments');
-if (!defined('_PRINT_ENTITY_SEP')) define('_PRINT_ENTITY_SEP','Print the barcode separator');
-if (!defined('_PRINT_SEP_WILL_BE_START')) define('_PRINT_SEP_WILL_BE_START','Print will begin in a few seconds');
-if (!defined('_PRINT_SEP_TITLE')) define('_PRINT_SEP_TITLE','DOCUMENT SEPARATOR');
-if (!defined('_INGOING_UP')) define('_INGOING_UP','INCOMING');
-if (!defined('_ONGOING_UP')) define('_ONGOING_UP','OUTGOING');
-
 //DIFFUSION LIST
 if (!defined('_CHOOSE_DEPARTMENT_FIRST')) define('_CHOOSE_DEPARTMENT_FIRST', 'You must select a department befor you can edit the mailing list');
 if (!defined('_NO_LIST_DEFINED__FOR_THIS_MAIL')) define('_NO_LIST_DEFINED__FOR_THIS_MAIL', 'No mailing list defined for this mail');
@@ -226,11 +198,6 @@ if (!defined('_VIEW_BASKETS_TITLE')) define('_VIEW_BASKETS_TITLE', 'My baskets')
 
 if (!defined('_INVOICE_LIST_TO_VAL')) define('_INVOICE_LIST_TO_VAL', 'Invoices to approve');
 if (!defined('_POSTINDEXING_LIST')) define('_POSTINDEXING_LIST', 'Documents to check');
-if (!defined('_MY_BASKETS')) define('_MY_BASKETS', 'My baskets');
-
-
-if (!defined('_INVOICE_LIST_TO_VAL')) define('_INVOICE_LIST_TO_VAL', 'Invoices to validate');
-if (!defined('_POSTINDEXING_LIST')) define('_POSTINDEXING_LIST', 'Documents to validate');
 if (!defined('_MY_BASKETS')) define('_MY_BASKETS', 'My baskets');
 if (!defined('_REDIRECT_MY_BASKETS')) define('_REDIRECT_MY_BASKETS', 'Redirect the baskets');
 if (!defined('_NAME')) define('_NAME', 'Name');
