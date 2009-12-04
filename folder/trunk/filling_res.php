@@ -61,7 +61,7 @@ else
 		$where_clause = " and (".$where_clause.")";
 	}
 	$db->query("select distinct doctypes_first_level_id, doctypes_first_level_label, doctypes_second_level_id, doctypes_second_level_label, type_id, type_label, res_id from  ".$table_view." where folders_system_id = '".$_SESSION['current_folder_id']."' and type_id <> 0 and doctypes_first_level_id <> 0 and doctypes_second_level_id <> 0 and status<>'DEL' ".$where_clause." order by doctypes_first_level_label, doctypes_second_level_label, type_label, res_id ");
-	$db->show();
+	//$db->show();
 	$count_doc = 0;
 	while($res = $db->fetch_object())
 	{
