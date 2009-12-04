@@ -247,6 +247,10 @@ function get_general_data($coll_id, $res_id, $mode, $params = array())
 	{
 		$data['category_id'] =  $res->category_id;
 	}
+	if(!isset($cat_id) || empty($cat_id))
+	{
+		return '';
+	}
 	//Then we browse the $_ENV['categories'] array to get the other indexes
 	foreach(array_keys($_ENV['categories'][$cat_id]) as $field)
 	{

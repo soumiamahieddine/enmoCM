@@ -17,6 +17,10 @@
 			<id>market_document</id>
 			<label>_MARKET_DOCUMENT</label>
 		</category>
+		<category>
+			<id>empty</id>
+			<label>_EMPTY</label>
+		</category>
 		<default_category>incoming</default_category>
 	</categories>
 	<mail_natures>
