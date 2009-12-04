@@ -20,12 +20,9 @@
  */
 
 /*********************** CASES ***********************************/
-
 if (!defined('_CASES_COMMENT'))  define('_CASES_COMMENT', 'Affaires');
 if (!defined('_CASE_INFO'))  define('_CASE_INFO', 'Information sur l&rsquo;affaire');
-
 if (!defined('_JOIN_RES_CASE'))  define('_JOIN_RES_CASE','Attacher des courriers aux affaires');
-
 if (!defined('_CASE_NUM'))  define('_CASE_NUM', 'Num Affaire');
 if (!defined('_NUM_CASE'))  define('_NUM_CASE', 'Affaire num&eacute;ro');
 if (!defined('_CASE_DETAIL'))  define('_CASE_DETAIL', 'Fiche d&eacute;taill&eacute;e de l&rsquo;affaire');
@@ -35,17 +32,10 @@ if (!defined('_DOCUMENTS_LIST_IN_THIS_CASE'))  define('_DOCUMENTS_LIST_IN_THIS_C
 if (!defined('_NOTES_FOR_THIS_CASES'))  define('_NOTES_FOR_THIS_CASES', 'Annotations de cette affaire');
 if (!defined('_HISTORY_CASES'))  define('_HISTORY_CASES', 'Historique de l&rsquo;affaire');
 if (!defined('_CASE_CLOSED'))  define('_CASE_CLOSED', 'Affaire cl&ocirc;tur&eacute;e');
-
-
-
 if (!defined('_CASE_NUMBER'))  define('_CASE_NUMBER', 'Num&eacute;ro de l&rsquo;affaire');
 if (!defined('_CASE_NUMBER_HELP'))  define('_CASE_NUMBER_HELP', 'Recherche sur une affaire comprenant plusieurs courriers...');
 if (!defined('_N_CASE'))  define('_N_CASE', 'num&eacute;ro de l&rsquo;affaire');
-
-
 if (!defined('_CANT_SHOW_THIS_CASE'))  define('_CANT_SHOW_THIS_CASE', 'Impossible d\'afficher cette affaire');
-
-
 if (!defined('_CASE_ID'))  define('_CASE_ID','Identifiant de l&rsquo;affaire');
 if (!defined('_CASE_LABEL'))  define('_CASE_LABEL','Libell&eacute; de l&rsquo;affaire');
 if (!defined('_CASE_DESCRIPTION'))  define('_CASE_DESCRIPTION','Description de l&rsquo;affaire');
@@ -55,10 +45,7 @@ if (!defined('_CASE_LAST_UPDATE_DATE'))  define('_CASE_LAST_UPDATE_DATE','Derni&
 if (!defined('_CASE_CLOSING_DATE'))  define('_CASE_CLOSING_DATE','Date de cl&ocirc;ture');
 if (!defined('_CASES_INDEXES'))  define('_CASES_INDEXES','Index de l&rsquo;affaire');
 if (!defined('_RESSOURCES_REPORTS'))  define('_RESSOURCES_REPORTS','Contenu de l&rsquo;affaire');
-
-
 if (!defined('_UPDATE_CASE'))  define('_UPDATE_CASE','Mise &agrave; jour d&rsquo;affaire');
-
 if (!defined('_NEW_CASE'))  define('_NEW_CASE','Nouvelle affaire');
 if (!defined('_RES_ATTACH_ON_CASE'))  define('_RES_ATTACH_ON_CASE','Courrier attach&eacute; &agrave; l&rsquo;affaire');
 if (!defined('_RES_DETTACH_ON_CASE'))  define('_RES_DETTACH_ON_CASE','Courrier dettach&eacute; &agrave; l&rsquo;affaire');
@@ -67,16 +54,11 @@ if (!defined('_MODIFY_CASE'))  define('_MODIFY_CASE','Attacher &agrave; une autr
 if (!defined('_JOIN_RES_ON_THIS_CASE'))  define('_JOIN_RES_ON_THIS_CASE','Attacher un courrier &agrave; l&rsquo;affaire');
 if (!defined('_RESSOURCES_LINKED'))  define('_RESSOURCES_LINKED','Courrier attach&eacute;');
 if (!defined('_RESSOURCES_NOT_LINKED'))  define('_RESSOURCES_NOT_LINKED','Ce courrier est d&eacute;j&agrave; attach&eacute;');
-
-
-
-
 if (!defined('_CASE'))  define('_CASE','Affaire');
 if (!defined('_SEARCH_A_CASE'))  define('_SEARCH_A_CASE','Rechercher une affaire');
 if (!defined('_CLOSED_CASE'))  define('_CLOSED_CASE','Cl&ocirc;tur&eacute;e');
 if (!defined('_SEARCH_A_RES'))  define('_SEARCH_A_RES','Rechercher une courrier');
 if (!defined('_CREATE_NEW_CASE'))  define('_CREATE_NEW_CASE','Cr&eacute;er une nouvelle affaire');
-
 if (!defined('_CASE_DESCRIPTION_HELP'))  define('_CASE_DESCRIPTION_HELP','Saisissez les mots cl&eacute;s de la description de l&rsquo;affaire...');
 if (!defined('_CASE_LABEL_HELP'))  define('_CASE_LABEL_HELP','Recherchez sur le libell&eacute; de l&rsquo;affaire...');
 if (!defined('_FOUND_CASE'))  define('_FOUND_CASE','affaire(s) trouv&eacute;e(s)');
@@ -88,7 +70,4 @@ if (!defined('_CASE_CREATED'))  define('_CASE_CREATED','Affaire cr&eacute;e');
 if (!defined('_JOIN_RES_CASE_IN_PROCESS'))  define('_JOIN_RES_CASE_IN_PROCESS','Attacher des courriers aux affaires (corbeille de traitement)');
 if (!defined('_CLOSE_CASE'))  define('_CLOSE_CASE','Cl&ocirc;turer des affaires');
 if (!defined('_LINK_TO_CASE'))  define('_LINK_TO_CASE','Attacher &agrave; l&rsquo;affaire');
-
-
-
 ?>
