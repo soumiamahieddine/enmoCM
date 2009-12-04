@@ -440,11 +440,11 @@ else
 		<form name="pop_diff" method="post" >
 	<div align="center">
 	<?php
-	if(isset($_SESSION[$origin]['diff_list']['dest']['user_id']) && !empty($_SESSION[$origin]['diff_list']['dest']['user_id']))
-		{?>
+	//if(isset($_SESSION[$origin]['diff_list']['dest']['user_id']) && !empty($_SESSION[$origin]['diff_list']['dest']['user_id']))
+		//{?>
 	<input align="middle" type="button" value="<?php echo _VALIDATE;?>" class="button" name="valid" onclick="change_diff_list('<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=load_listinstance&origin='.$origin; if($only_cc){echo '&only_cc';}?>', <?php echo "'".$display_value."'"; if($_REQUEST['origin'] == 'redirect'){echo ",'diff_list_div_redirect'";}?>);" />
-	<?php } ?>
-	<input align="middle" type="button" value="<?php echo _CANCEL;?>"  onclick="self.close();" class="button"/>
+	<?php //} ?>
+	<!--<input align="middle" type="button" value="<?php echo _CANCEL;?>"  onclick="self.close();" class="button"/>-->
 
 	</div>
 	</form>
