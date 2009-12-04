@@ -863,6 +863,7 @@ function expertmodeview(coll_id)
 		width = (screen.availWidth-10)+'px';
 		height = (screen.availHeight-10)+'px';
 	}
+
 	if(id_mod && id_mod!='')
 	{
 		id_layer = id_mod+'_layer';
@@ -884,7 +885,7 @@ function expertmodeview(coll_id)
 	}
 	else
 	{
-		var fenetre = new Element('div', {'id' :id_mod,'class' : 'modal', 'style' :'top:50px;left:50px;'+'width:'+width+';height:'+height+";z-index:"+get_z_indexes()['modal']+";margin-top:"+getScrollXY()[1]+15+'px;margin-left:'+getScrollXY()[0]+15+'px;position:absolute;' });
+		var fenetre = new Element('div', {'id' :id_mod,'class' : 'modal', 'style' :'top:50px;left:50px;'+'width:'+width+';height:'+height+";z-index:"+get_z_indexes()['modal']+";margin-top:30px;margin-left:40px;position:absolute;" });
 	}
 
 	//~ if( mode_frm == 'fullscreen')
@@ -984,9 +985,11 @@ function get_z_indexes()
  */
  function getScrollXY(){
     if (window.top.scrollX || window.top.scrollY){
+		alert("1");
         var scrollX = window.scrollX;
         var scrollY = window.scrollY;
     }else{
+		alert("2");
         var scrollX = document.body.scrollLeft;
         var scrollY = document.body.scrollTop;
     }
