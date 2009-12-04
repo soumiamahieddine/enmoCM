@@ -134,6 +134,16 @@ $_ENV['categories']['market_document']['subject'] = array('type_form' => 'string
 $_ENV['categories']['market_document']['author'] = array('type_form' => 'string', 'type_field' => 'string', 'mandatory' => true, 'label' => _AUTHOR, 'table' => 'res', 'img' => $_SESSION['config']['businessappurl'].'static.php?filename=author.gif', 'modify' => true, 'form_show' => 'textfield');
 
 
+/////////////////////////////EMPTY////////////////////////////////////////////////
+$_ENV['categories']['empty'] = array();
+$_ENV['categories']['empty']['img_cat'] = $_SESSION['config']['businessappurl'].'static.php?filename=cat_doc_market.gif';
+$_ENV['categories']['empty']['other_cases'] = array();
+$_ENV['categories']['empty']['type_id'] = array('type_form' => 'integer', 'type_field' => 'integer', 'mandatory' => true, 'label' => _DOCTYPE, 'table' => 'res', 'img' => $_SESSION['config']['businessappurl'].'static.php?filename=mini_type.gif', 'modify' => true, 'form_show' => 'select');
+$_ENV['categories']['empty']['doc_date'] = array( 'type_form' => 'date', 'type_field' => 'date', 'mandatory' => true, 'label' => _DOC_DATE, 'table' => 'res', 'img' => $_SESSION['config']['businessappurl'].'static.php?filename=small_calend.gif', 'modify' => true, 'form_show' => 'date');
+$_ENV['categories']['empty']['title'] = array('type_form' => 'string', 'type_field' => 'string', 'mandatory' => true, 'label' => _INVOICE_NUMBER, 'table' => 'res', 'img' => $_SESSION['config']['businessappurl'].'static.php?filename=title.gif', 'modify' => true, 'form_show' => 'textfield');
+$_ENV['categories']['empty']['identifier'] = array('type_form' => 'string', 'type_field' => 'string', 'mandatory' => true, 'label' => INVOICE_NUMBER, 'table' => 'res', 'img' => $_SESSION['config']['businessappurl'].'static.php?filename=identifier.gif', 'modify' => true, 'form_show' => 'textfield');
+
+
 /////////////////////////////MODULES SPECIFIC////////////////////////////////////////////////
 $core = new core_tools();
 if($core->is_module_loaded('entities'))
@@ -249,7 +259,7 @@ function get_general_data($coll_id, $res_id, $mode, $params = array())
 	}
 	if(!isset($cat_id) || empty($cat_id))
 	{
-		return '';
+		$cat_id = 'empty';
 	}
 	//Then we browse the $_ENV['categories'] array to get the other indexes
 	foreach(array_keys($_ENV['categories'][$cat_id]) as $field)
