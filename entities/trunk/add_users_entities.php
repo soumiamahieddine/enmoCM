@@ -56,7 +56,7 @@ else
 		for($i=0; $i<count($entities);$i++)
 		{
 		?>
-			<option value="<?php  echo $entities[$i]['ID'];?>" ><?php  echo $entities[$i]['LABEL'];?></option><?php
+			<option value="<?php  echo $entities[$i]['ID'];?>" ><?php  echo $entities[$i]['SHORT_LABEL'];?></option><?php
 		}
 	?>
 	</select>

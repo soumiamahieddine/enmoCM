@@ -43,7 +43,7 @@ class users_entities extends dbquery
 	public function load_entities_session($user_id)
 	{
 		$this->connect();
-		$this->query("select  ue.entity_id, ue.primary_entity, ue.user_role, e.entity_label from ".$_SESSION['tablename']['ent_users_entities']." ue, ".$_SESSION['tablename']['ent_entities']." e where ue.user_id = '".$this->protect_string_db(trim($user_id))."' and ue.entity_id = e.entity_id");
+		$this->query("select  ue.entity_id, ue.primary_entity, ue.user_role, e.entity_label, e.short_label from ".$_SESSION['tablename']['ent_users_entities']." ue, ".$_SESSION['tablename']['ent_entities']." e where ue.user_id = '".$this->protect_string_db(trim($user_id))."' and ue.entity_id = e.entity_id");
 		if($this->nb_result() == 0)
 		{
 			$_SESSION['m_admin']['entity']['entities'] = array();
@@ -53,7 +53,7 @@ class users_entities extends dbquery
 			$entitytab = array();
 			while($res = $this->fetch_object())
 			{
-				array_push($entitytab, array("USER_ID" => $user_id,"ENTITY_ID" => $res->entity_id, "LABEL" => $this->show_string($res->entity_label), "PRIMARY" => $res->primary_entity, "ROLE" => $this->show_string($res->user_role) ));
+				array_push($entitytab, array("USER_ID" => $user_id,"ENTITY_ID" => $res->entity_id, "LABEL" => $this->show_string($res->entity_label),"SHORT_LABEL" => $this->show_string($res->short_label), "PRIMARY" => $res->primary_entity, "ROLE" => $this->show_string($res->user_role) ));
 			}
 			$_SESSION['m_admin']['entity']['entities'] = $entitytab;
 

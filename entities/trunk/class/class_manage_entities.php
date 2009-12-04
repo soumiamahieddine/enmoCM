@@ -398,6 +398,7 @@ class entity extends dbquery
 
 		if(is_array($parent))
 		{
+			//print_r($parent);
 			for ($i=0; $i < count($parent); $i++)
 			{
 				$tmp = array();
@@ -405,7 +406,7 @@ class entity extends dbquery
 				{
 					if ($root)
 					{
-						array_push($entities, array('ID' =>$parent[$i]['ENTITY_ID'], 'LABEL' => $this->show_string($parent[$i]['ENTITY_LABEL']), 'KEYWORD' => false));
+						array_push($entities, array('ID' =>$parent[$i]['ENTITY_ID'], 'LABEL' => $this->show_string($parent[$i]['ENTITY_LABEL']),'SHORT_LABEL' => $this->show_string($parent[$i]['SHORT_LABEL']), 'KEYWORD' => false));
 					}
 
 					$tmp = $this->getEntityChildrenTree($tmp, $parent[$i]['ENTITY_ID'], $tabspace, $except, $where);

@@ -351,7 +351,11 @@ else
 		<script type="text/javascript">repost('<? echo $link;?>',new Array('diff_list'),new Array('what_users','what_services'),'keyup',250);</script>
 		<br/></br><br/></br><br/></br>
 		</div>
-		<?php if((isset($_GET['what_users']) && !empty($_GET['what_users'])) || (isset($_GET['what_services']) && !empty($_GET['what_services'])) || !empty($_SESSION[$origin]['diff_list']['dest']['user_id']	) )
+		<?php if(
+		(isset($_GET['what_users']) && !empty($_GET['what_users']))
+		 || (isset($_GET['what_services']) && !empty($_GET['what_services']))
+		 || ( !empty($_SESSION[$origin]['diff_list']['dest']['user_id']) && !$only_cc) 
+		 || ( $only_cc && (count($_SESSION[$origin]['diff_list']['copy']['users']) > 0 || count($_SESSION[$origin]['diff_list']['copy']['entities']) > 0)))
 		{ ?>
 
 		<div id="diff_list" align="center">
@@ -373,8 +377,10 @@ else
 	</table>
 	<?php } ?>
 	<br/>
-	<?php if( count($_SESSION[$origin]['diff_list']['copy']['users']) > 0 || count($_SESSION[$origin]['diff_list']['copy']['entities']) > 0)
+	<?php
+	 if( count($_SESSION[$origin]['diff_list']['copy']['users']) > 0 || count($_SESSION[$origin]['diff_list']['copy']['entities']) > 0)
 		{
+		
 			?>
 			<h2 class="sstit"><?php echo _TO_CC;?></h2>
 			<table cellpadding="0" cellspacing="0" border="0" class="listing liste_diff spec">
