@@ -68,13 +68,13 @@ if($folderSystemId <> '')
 	{
 		if($resTmp->folder_level == '1')
 		{
-			$db->query("select distinct folder_id, folder_name, subject, folder_level, folders_system_id from ".$_SESSION['tablename']['fold_folders']." where parent_id = ".$resTmp->folders_system_id." or folders_system_id = ".$folderSystemId." ");
+			$db->query("select distinct folder_id, folder_name, subject, folder_level, folders_system_id from ".$_SESSION['tablename']['fold_folders']." where parent_id = ".$resTmp->folders_system_id." or folders_system_id = ".$folderSystemId." order by folder_name");
 			$flagProject = true;
-			//$db->show();
+			$db->show();
 		}
 		else
 		{
-			$db->query("select distinct folder_id, folder_name, subject, folder_level, folders_system_id, parent_id from ".$_SESSION['tablename']['fold_folders']." where folders_system_id = ".$folderSystemId);
+			$db->query("select distinct folder_id, folder_name, subject, folder_level, folders_system_id, parent_id from ".$_SESSION['tablename']['fold_folders']." where folders_system_id = ".$folderSystemId." order by folder_name");
 			//$db->show();
 		}
 	}
@@ -116,18 +116,19 @@ if(isset($_SESSION['chosen_name_folder']) && !empty($_SESSION['chosen_name_folde
 			break;
 		}
 		$f_level = array();
-		$db1->query("select distinct doctypes_first_level_id, doctypes_first_level_label from ".$_SESSION['collections'][0]['view']." where folder_id = '".$actual_custom_t1."' and (".$where_clause.")");
+		$db1->query("select distinct doctypes_first_level_id, doctypes_first_level_label from ".$_SESSION['collections'][0]['view']." where folder_id = '".$actual_custom_t1."' and (".$where_clause.") order by doctypes_first_level_label asc");
+		//$db1->show();
 		while($res1 = $db1->fetch_object())
 		{
 			$s_level = array();
-			$db2->query("select distinct doctypes_second_level_id, doctypes_second_level_label from ".$_SESSION['collections'][0]['view']." where (doctypes_first_level_id = ".$res1->doctypes_first_level_id." and folder_id = '".$actual_custom_t1."') and (".$where_clause.")");
+			$db2->query("select distinct doctypes_second_level_id, doctypes_second_level_label from ".$_SESSION['collections'][0]['view']." where (doctypes_first_level_id = ".$res1->doctypes_first_level_id." and folder_id = '".$actual_custom_t1."') and (".$where_clause.") order by doctypes_second_level_label desc");
 			//$db2->show();
 			//echo $res1->doctypes_first_level_label."<br>";
 			while($res2 = $db2->fetch_object())
 			{
 				$doctypes = array();
 				//echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".$res2->doctypes_second_level_label."<br>";
-				$db3->query("select distinct type_id, type_label as description from ".$_SESSION['collections'][0]['view']." where (doctypes_first_level_id = ".$res1->doctypes_first_level_id." and doctypes_second_level_id = ".$res2->doctypes_second_level_id." and folder_id = '".$actual_custom_t1."') and (".$where_clause.")");
+				$db3->query("select distinct type_id, type_label as description from ".$_SESSION['collections'][0]['view']." where (doctypes_first_level_id = ".$res1->doctypes_first_level_id." and doctypes_second_level_id = ".$res2->doctypes_second_level_id." and folder_id = '".$actual_custom_t1."') and (".$where_clause.") order by type_label desc");
 				//$db3->show();
 				while($res3 = $db3->fetch_object())
 				{
@@ -167,6 +168,7 @@ if(isset($_SESSION['chosen_name_folder']) && !empty($_SESSION['chosen_name_folde
 		}
 		array_push($search_customer_results, array('folder_id' => $res->folder_id,'folder_name' => $res->folder_name, 'folder_subject' => $res->subject, 'content' => $f_level));
 	}
+	//print_r($search_customer_results);
 	//$core_tools->show_array($search_customer_results);
 	if($idProject <> "")
 	{
