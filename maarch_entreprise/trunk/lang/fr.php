@@ -417,6 +417,7 @@ if (!defined('_NEW_ACTION')) define( '_NEW_ACTION', 'Nouvelle action');
 if (!defined('_THE_ACTION')) define( '_THE_ACTION', 'L&rsquo;action ');
 if (!defined('_ADMIN_ACTIONS')) define( '_ADMIN_ACTIONS', 'Actions');
 
+
 /************** Historique**************/
 if (!defined('_HISTORY_TITLE')) define( '_HISTORY_TITLE', 'Historique des &eacute;v&egrave;nements');
 if (!defined('_HISTORY_BATCH_TITLE')) define( '_HISTORY_BATCH_TITLE', 'Historique des &eacute;v&egrave;nements des batchs');
@@ -542,6 +543,9 @@ if (!defined('_OCTOBER')) define( '_OCTOBER', 'Octobre');
 if (!defined('_NOVEMBER')) define( '_NOVEMBER', 'Novembre');
 if (!defined('_DECEMBER')) define( '_DECEMBER', 'D&eacute;cembre');
 
+
+
+
 if (!defined('_NOW_LOGOUT')) define( '_NOW_LOGOUT', 'Vous &ecirc;tes maintenant d&eacute;connect&eacute;.');
 
 if (!defined('_WELCOME2')) define( '_WELCOME2', 'Bienvenue');
@@ -612,6 +616,8 @@ if (!defined('_NO_STRUCTURE_ATTACHED')) define( '_NO_STRUCTURE_ATTACHED', 'Ce ty
 
 ///// Credits
 if (!defined('_MAARCH_CREDITS')) define( '_MAARCH_CREDITS', 'A propos de Maarch&nbsp;');
+
+
 if (!defined('_CR_LONGTEXT_INFOS')) define( '_CR_LONGTEXT_INFOS', '<p>Maarch Framework 3 est une infrastructure de <b>GED de Production</b>, r&eacute;pondant en standard &agrave; la plupart des besoins de gestion op&eacute;rationnelle de contenu d\'une organisation. La tr&egrave;s grande majorit&eacute; des composants du Framework est diffusé sous les termes de la licence open source GNU GPLv3, de sorte que le coût d\'impl&eacute;mentation rend la solution aborbable pour tout type d\'organisation (public, priv&eacute;, parapublic, monde associatif).</p> <p>Pour autant, Maarch Framework ayant &eacute;t&eacute; conçu par deux consultants cumulant &agrave; eux deux plus de 20 ans d\'expertise en Syst&egrave;mes d\'Archivage &Eacute;lectronique et en &Eacute;ditique, le produit offre <b>toutes les garanties de robustesse, d\'int&eacute;grit&eacute;, de performance</b> que l\'on doit attendre de ce type de produit. Un grand soin a &eacute;t&eacute; port&eacute; sur l\'architecture afin d\'autoriser des performances maximales sur du mat&eacute;riel standard.</p><p>Maarch est d&eacute;velopp&eacute; en PHP5 objet. Il est compatible avec les 4 moteurs de bases de donn&eacute;es suivants&nbsp;: MySQL, PostgreSQL, SQLServer, et bientôt Oracle.</p> <p>Maarch est <b>totalement modulaire</b>&nbsp;: toutes les fonctionnalit&eacute;s sont regroup&eacute;es dans des modules exposant des services qui peuvent être activ&eacute;s/d&eacute;sactiv&eacute;s en fonction du profil de l\'utilisateur. Un ing&eacute;nieur exp&eacute;riment&eacute; peut ajouter ou remplacer un module existant sans toucher au coeur du syst&egrave;me.</p><p>Maarch propose un sch&eacute;ma global et <b>tous les outils pour acqu&eacute;rir, g&eacute;rer, conserver puis restituer les flux documentaires de production</b>.');
 
 if (!defined('_PROCESSING_DATE')) define( '_PROCESSING_DATE', 'Date limite de traitement');
@@ -706,6 +712,7 @@ if (!defined('_SAVE_QUERY')) define( '_SAVE_QUERY', 'Enregistrer ma recherche');
 if (!defined('_SAVE_QUERY_TITLE')) define( '_SAVE_QUERY_TITLE', 'Enregistrement de recherche');
 if (!defined('_QUERY_NAME')) define( '_QUERY_NAME', 'Nom de ma recherche');
 if (!defined('_QUERY_SAVED')) define( '_QUERY_SAVED', 'Recherche sauvegard&eacute;e');
+
 //if (!defined('_SQL_ERROR')) define( '_SQL_ERROR', 'Erreur SQL lors de l&acute;enregistrement de la recherche');
 if (!defined('_LOAD_QUERY')) define( '_LOAD_QUERY', 'Charger la recherche');
 if (!defined('_DELETE_QUERY')) define( '_DELETE_QUERY', 'Supprimer la recherche');
@@ -778,6 +785,7 @@ if (!defined('_CONTACT_DELETED')) define( '_CONTACT_DELETED', 'Contact supprim&e
 if (!defined('_MODIFY_CONTACT')) define( '_MODIFY_CONTACT', 'Modifier un contact');
 if (!defined('_IS_CORPORATE_PERSON')) define( '_IS_CORPORATE_PERSON', 'Personne morale');
 if (!defined('_TITLE2')) define( '_TITLE2', 'Civilit&eacute;');
+
 if (!defined('_YOU_MUST_SELECT_CONTACT')) define( '_YOU_MUST_SELECT_CONTACT', 'Vous devez s&eacute;lectionner un contact ');
 if (!defined('_CONTACT_INFO')) define( '_CONTACT_INFO', 'Fiche contact');
 
@@ -908,6 +916,7 @@ if (!defined('_MAIL_SENTENCE2')) define( '_MAIL_SENTENCE2', 'En saisissant le n&
 if (!defined('_MAIL_SENTENCE3')) define( '_MAIL_SENTENCE3', 'Cette fonction a pour but d&rsquo;ouvrir un courrier ferm&eacute; pr&eacute;matur&eacute;ment.');
 if (!defined('_ENTER_DOC_ID')) define( '_ENTER_DOC_ID', 'Saisissez l&rsquo;identifiant du document');
 if (!defined('_TO_KNOW_ID')) define( '_TO_KNOW_ID', 'Pour conna&icirc;tre l&rsquo;identifiant du document, effectuez une recherche ou demandez-le &agrave; l&rsquo;op&eacute;rateur');
+
 if (!defined('_REOPEN_MAIL')) define( '_REOPEN_MAIL', 'R&eacute;ouverture de courrier');
 if (!defined('_REOPEN_THIS_MAIL')) define( '_REOPEN_THIS_MAIL', 'R&eacute;ouverture du courrier');
 
@@ -930,7 +939,7 @@ if (!defined('_CUSTOM_D1')) define( '_CUSTOM_D1', 'Champ Date');
 if (!defined('_CUSTOM_N1')) define( '_CUSTOM_N1', 'Champ Entier');
 if (!defined('_CUSTOM_F1')) define( '_CUSTOM_F1', 'Champ Flottant');
 
-if (!defined('_ITEM_NOT_IN_LIST')) define( '_ITEM_NOT_IN_LIST', '&eacute;l&egrave;ment absent de la liste des valeurs autoris&eacute;es');
+if (!defined('_ITEM_NOT_IN_LIST')) define( '_ITEM_NOT_IN_LIST', 'El&egrave;ment absent de la liste des valeurs autoris&eacute;es');
 if (!defined('_PB_WITH_FINGERPRINT_OF_DOCUMENT')) define( '_PB_WITH_FINGERPRINT_OF_DOCUMENT', 'L&rsquo;empreinte num&eacute;rique itiniale du document ne correspond pas avec celle du document affich&eacute;e');
 if (!defined('_MISSING')) define( '_MISSING', 'manquant(e)');
 if (!defined('_NATURE')) define( '_NATURE', 'Nature');
@@ -951,4 +960,31 @@ if (!defined('_DB_PORT')) define( '_DB_PORT', 'Port');
 if (!defined('_DB_TYPE')) define( '_DB_TYPE', 'Type');
 if (!defined('_DB_USER')) define( '_DB_USER', 'Utilisateur');
 if (!defined('_DATABASE')) define( '_DATABASE', 'Base');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ?>

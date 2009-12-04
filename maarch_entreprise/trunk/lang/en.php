@@ -27,7 +27,7 @@ if (!defined('_ADMIN_GROUPS_DESC')) define('_ADMIN_GROUPS_DESC', 'Add, suspend, 
 if (!defined('_ADMIN_ARCHITECTURE')) define('_ADMIN_ARCHITECTURE', 'Classification scheme');
 if (!defined('_ADMIN_ARCHITECTURE_DESC')) define('_ADMIN_ARCHITECTURE_DESC', 'Define classification schemes structure (File / sub-file / document type). For each, define their associated descriptors and whether they are mandatory for a file to be complete.');
 if (!defined('_VIEW_HISTORY')) define('_VIEW_HISTORY', 'Logs');
-if (!defined('_VIEW_HISTORY_BATCH')) define('_VIEW_HISTORY_BATCH', 'Logs of batchs');
+if (!defined('_VIEW_HISTORY_BATCH')) define('_VIEW_HISTORY_BATCH', 'Batches logs');
 if (!defined('_VIEW_HISTORY_DESC')) define('_VIEW_HISTORY_DESC', 'View the log of actions done in Maarch DMS.');
 if (!defined('_VIEW_HISTORY_BATCH_DESC')) define('_VIEW_HISTORY_BATCH_DESC', 'View the log of batchs');
 if (!defined('_ADMIN_MODULES')) define('_ADMIN_MODULES', 'Manage modules');
@@ -36,7 +36,7 @@ if (!defined('_XML_PARAM_SERVICE_DESC')) define('_XML_PARAM_SERVICE_DESC', 'View
 if (!defined('_XML_PARAM_SERVICE')) define('_XML_PARAM_SERVICE', 'View servicex XML config');
 if (!defined('_MODULES_SERVICES')) define('_MODULES_SERVICES', 'Services defined by modules');
 if (!defined('_APPS_SERVICES')) define('_APPS_SERVICES', 'Services defined by the application');
-if (!defined('_ADMIN_STATUS_DESC')) define('_ADMIN_STATUS_DESC', 'Add or modify statuses.');
+if (!defined('_ADMIN_STATUS_DESC')) define('_ADMIN_STATUS_DESC', 'Add or modify states.');
 if (!defined('_ADMIN_ACTIONS_DESC')) define('_ADMIN_ACTIONS_DESC', 'Add or modify actions.');
 if (!defined('_ADMIN_SERVICES_UNKNOWN')) define('_ADMIN_SERVICES_UNKNOWN', 'Unknown administration service');
 if (!defined('_NO_RIGHTS_ON')) define('_NO_RIGHTS_ON', 'No rights for');
@@ -49,9 +49,9 @@ if (!defined('_FOLDERTYPE_DELETION')) define('_FOLDERTYPE_DELETION', 'File type 
 
 
 
-/*********************** communs ***********************************/
+/*********************** commons ***********************************/
 
-/************** Listes **************/
+/************** Lists **************/
 if (!defined('_GO_TO_PAGE')) define('_GO_TO_PAGE', 'Go to page');
 if (!defined('_NEXT')) define('_NEXT', 'Next');
 if (!defined('_PREVIOUS')) define('_PREVIOUS', 'Previous');
@@ -99,7 +99,7 @@ if (!defined('_INFOS_ACTIONS')) define('_INFOS_ACTIONS', 'You must choose at lea
 
 
 
-/************** Intitul&eacute;s formulaires et listes **************/
+/************** Forms ans lists **************/
 define('_ID', 'Id');
 define('_PASSWORD', 'Password');
 if (!defined('_GROUP')) define('_GROUP', 'Group');
@@ -133,7 +133,7 @@ if (!defined('_REALLY_AUTHORIZE')) define('_REALLY_AUTHORIZE', 'Do you really wa
 if (!defined('_REALLY_DELETE')) define('_REALLY_DELETE', 'Do you really want to remove ');
 if (!defined('_DEFINITIVE_ACTION')) define('_DEFINITIVE_ACTION', 'This action is definitive.');
 
-/************** Divers **************/
+/************** Misc **************/
 if (!defined('_YES')) define('_YES', 'yes');
 if (!defined('_NO')) define('_NO', 'No');
 if (!defined('_UNKNOWN')) define('_UNKNOWN', 'Unknown');
@@ -215,7 +215,7 @@ if (!defined('_WELCOME_ON')) define('_WELCOME_ON', 'Welcome to');
 
 /************************* Administration ***********************************/
 
-/**************Sommaire**************/
+/**************Summary**************/
 if (!defined('_MANAGE_GROUPS_APP')) define('_MANAGE_GROUPS_APP', 'Manage user groups');
 if (!defined('_MANAGE_USERS_APP')) define('_MANAGE_USERS_APP', 'Manage Users');
 if (!defined('_MANAGE_DIPLOMA_APP')) define('_MANAGE_DIPLOMA_APP', 'Manage diplomas');
@@ -226,7 +226,7 @@ if (!defined('_HISTORY_EXPLANATION')) define('_HISTORY_EXPLANATION', 'Monitor mo
 if (!defined('_ARCHI_EXP')) define('_ARCHI_EXP', 'Files, sub-files and document types');
 
 
-/************** Groupes : Liste + Formulaire**************/
+/************** Groups : Liste + Forms**************/
 
 if (!defined('_GROUPS_LIST')) define('_GROUPS_LIST', 'Group list');
 if (!defined('_ADMIN_GROUP')) define('_ADMIN_GROUP', 'Admin Group');
@@ -254,7 +254,7 @@ if (!defined('_UPDATE_RIGHTS')) define('_UPDATE_RIGHTS', 'update rights');
 if (!defined('_ADD_GRANT')) define('_ADD_GRANT', 'Add access');
 if (!defined('_USERS_LIST_IN_GROUP')) define('_USERS_LIST_IN_GROUP', 'List of users in the group');
 
-/************** Utilisateurs : Liste + Formulaire**************/
+/************** Users : Liste + Forms **************/
 
 if (!defined('_USERS_LIST')) define('_USERS_LIST', 'User list');
 if (!defined('_ADD_USER')) define('_ADD_USER', 'Add a user');
@@ -268,8 +268,8 @@ if (!defined('_NOTES')) define('_NOTES', 'Notes');
 if (!defined('_NOTE1')) define('_NOTE1', 'Mandatory fields are shown with a red star ');
 if (!defined('_NOTE2')) define('_NOTE2', 'The primary group is mandatory');
 if (!defined('_NOTE3')) define('_NOTE3', 'The first group selected will be the primary group of the user');
-if (!defined('_USER_GROUPS_TITLE')) define('_USER_GROUPS_TITLE', 'The user belongs to the following groups');
-if (!defined('_USER_ENTITIES_TITLE')) define('_USER_ENTITIES_TITLE', 'The User belongs to following department(s)');
+if (!defined('_USER_GROUPS_TITLE')) define('_USER_GROUPS_TITLE', 'The user belongs to the following group(s)');
+if (!defined('_USER_ENTITIES_TITLE')) define('_USER_ENTITIES_TITLE', 'The user belongs to the following department(s)');
 if (!defined('_DELETE_GROUPS')) define('_DELETE_GROUPS', 'Delete group(s)');
 if (!defined('_ADD_TO_GROUP')) define('_ADD_TO_GROUP', 'Add a group');
 if (!defined('_CHOOSE_PRIMARY_GROUP')) define('_CHOOSE_PRIMARY_GROUP', 'Choose as primary group');
@@ -296,7 +296,7 @@ if (!defined('_MUST_CHANGE_PSW')) define('_MUST_CHANGE_PSW', 'must change his/he
 
 if (!defined('_NEW_PASSWORD_USER')) define('_NEW_PASSWORD_USER', 'Resetting the password for the user');
 
-/************** Types de document : Liste + Formulaire**************/
+/************** Doctypes : Liste + Forms **************/
 
 if (!defined('_DOCTYPES_LIST')) define('_DOCTYPES_LIST', 'List of document types');
 if (!defined('_ADD_DOCTYPE')) define('_ADD_DOCTYPE', 'Add a document type');
@@ -336,7 +336,7 @@ if (!defined('_ITERATIVE')) define('_ITERATIVE', 'Iterative');
 
 if (!defined('_MASTER_TYPE')) define('_MASTER_TYPE', 'Master doc type');
 
-/************** structures : Liste + Formulaire**************/
+/************** structures : Liste + Forms**************/
 if (!defined('_STRUCTURE_LIST')) define('_STRUCTURE_LIST', 'Classification scheme list');
 if (!defined('_STRUCTURES')) define('_STRUCTURES', 'classification schemes');
 if (!defined('_STRUCTURE')) define('_STRUCTURE', 'classification scheme');
@@ -351,7 +351,7 @@ if (!defined('_DESC_STRUCTURE_MISSING')) define('_DESC_STRUCTURE_MISSING', 'The 
 if (!defined('_STRUCTURE_DEL')) define('_STRUCTURE_DEL', 'Delete of the classification scheme');
 if (!defined('_DELETED_STRUCTURE')) define('_DELETED_STRUCTURE', 'Classification scheme deleted');
 
-/************** sous-dossiers : Liste + Formulaire**************/
+/************** sous-dossiers : Liste + Forms**************/
 if (!defined('_SUBFOLDER_LIST')) define('_SUBFOLDER_LIST', 'Sub-file list');
 if (!defined('_SUBFOLDERS')) define('_SUBFOLDERS', 'sub-file');
 if (!defined('_ALL_SUBFOLDERS')) define('_ALL_SUBFOLDERS', 'All sub-file');
@@ -400,15 +400,12 @@ if (!defined('_IS_SYSTEM')) define('_IS_SYSTEM', 'System');
 if (!defined('_CAN_BE_SEARCHED')) define('_CAN_BE_SEARCHED', 'Can documents be searched?');
 if (!defined('_CAN_BE_MODIFIED')) define('_CAN_BE_MODIFIED', 'Can documents be modified?');
 if (!defined('_THE_STATUS')) define('_THE_STATUS', 'The status ');
-if (!defined('_ADMIN_STATUS')) define('_ADMIN_STATUS', 'Statuses');
-if (!defined('_ADMIN_STATUS_DESC')) define('_ADMIN_STATUS_DESC', 'Manage the available statuses for documents in this application');
+if (!defined('_ADMIN_STATUS')) define('_ADMIN_STATUS', 'States');
 /************* Actions **************/
 
 if (!defined('_ACTION_LIST')) define('_ACTION_LIST', 'Actions list');
 if (!defined('_ADD_ACTION')) define('_ADD_ACTION', 'Add a new action');
 if (!defined('_ALL_ACTIONS')) define('_ALL_ACTIONS', 'All actions');
-if (!defined('_ACTIONS')) define('_ACTIONS', 'actions');
-if (!defined('_ACTION')) define('_ACTION', 'action');
 if (!defined('_ACTION_HISTORY')) define('_ACTION_HISTORY', 'Log the action');
 
 if (!defined('_ACTION_DELETED')) define('_ACTION_DELETED', 'Delete the action');
@@ -421,7 +418,7 @@ if (!defined('_THE_ACTION')) define('_THE_ACTION', 'The action ');
 if (!defined('_ADMIN_ACTIONS')) define('_ADMIN_ACTIONS', 'Actions');
 if (!defined('_ADMIN_ACTIONS_DESC')) define('_ADMIN_ACTIONS_DESC', 'Manage available actions in the application');
 
-/************** Historique**************/
+/************** History **************/
 if (!defined('_HISTORY_TITLE')) define('_HISTORY_TITLE', 'Events log');
 if (!defined('_HISTORY_BATCH_TITLE')) define('_HISTORY_BATCH_TITLE', 'Batches event log');
 if (!defined('_HISTORY')) define('_HISTORY', 'Log');
@@ -434,7 +431,7 @@ if (!defined('_TOTAL_ERRORS')) define('_TOTAL_ERRORS', 'Total errors');
 if (!defined('_ONLY_ERRORS')) define('_ONLY_ERRORS', 'Only with errors');
 if (!defined('_INFOS')) define('_INFOS', 'Infos');
 
-/************** Admin de l'architecture  (plan de classement) **************/
+/************** Classification scheme **************/
 if (!defined('_ADMIN_ARCHI')) define('_ADMIN_ARCHI', 'Administration of classification schemes');
 if (!defined('_MANAGE_STRUCTURE')) define('_MANAGE_STRUCTURE', 'Manage files');
 if (!defined('_MANAGE_STRUCTURE_DESC')) define('_MANAGE_STRUCTURE_DESC', 'Manage files. They are the highest element of the hierarchy. If the "Folder" module is enabled, you can attach a file type to a sorting tree.');
@@ -442,7 +439,7 @@ if (!defined('_MANAGE_SUBFOLDER')) define('_MANAGE_SUBFOLDER', 'Manage sub-files
 if (!defined('_MANAGE_SUBFOLDER_DESC')) define('_MANAGE_SUBFOLDER_DESC', 'Manage sub-files in files.');
 if (!defined('_ARCHITECTURE')) define('_ARCHITECTURE', 'classification scheme');
 
-/************************* Messages d'erreurs ***********************************/
+/************************* Error Messages ***********************************/
 if (!defined('_MORE_INFOS')) define('_MORE_INFOS', 'Contact your admin for more information ');
 if (!defined('_ALREADY_EXISTS')) define('_ALREADY_EXISTS', 'already exists!');
 
@@ -506,7 +503,7 @@ if (!defined('_MESSAGE')) define('_MESSAGE', 'Message');
 if (!defined('_QUERY')) define('_QUERY', 'Query');
 if (!defined('_LAST_QUERY')) define('_LAST_QUERY', 'Latest query');
 
-//Autres
+//Other
 if (!defined('_NO_GROUP_SELECTED')) define('_NO_GROUP_SELECTED', 'No group selected');
 if (!defined('_NOW_LOG_OUT')) define('_NOW_LOG_OUT', 'You are logged out');
 if (!defined('_DOC_NOT_FOUND')) define('_DOC_NOT_FOUND', 'The document cannot be found');
@@ -516,6 +513,7 @@ if (!defined('_INEXPLICABLE_ERROR')) define('_INEXPLICABLE_ERROR', 'An unattende
 if (!defined('_TRY_AGAIN_SOON')) define('_TRY_AGAIN_SOON', 'Please try again in a few seconds');
 if (!defined('_NO_OTHER_RECIPIENT')) define('_NO_OTHER_RECIPIENT', 'There is no other recipient for this document');
 if (!defined('_WAITING_INTEGER')) define('_WAITING_INTEGER', 'Integer expected');
+if (!defined('_WAITING_FLOAT')) define( '_WAITING_FLOAT', 'Floating number awaited');
 
 if (!defined('_DEFINE')) define('_DEFINE', 'Complementary information :');
 if (!defined('_NUM')) define('_NUM', '#');
@@ -531,7 +529,7 @@ if (!defined('_CONSULT_EXTRACTION')) define('_CONSULT_EXTRACTION', 'You can cons
 if (!defined('_SERVICE')) define('_SERVICE', 'Service');
 if (!defined('_AVAILABLE_SERVICES')) define('_AVAILABLE_SERVICES', 'Available services');
 
-// Mois
+// Months
 if (!defined('_JANUARY')) define('_JANUARY', 'January');
 if (!defined('_FEBRUARY')) define('_FEBRUARY', 'February');
 if (!defined('_MARCH')) define('_MARCH', 'March');
@@ -546,7 +544,7 @@ if (!defined('_NOVEMBER')) define('_NOVEMBER', 'November');
 if (!defined('_DECEMBER')) define('_DECEMBER', 'December');
 
 if (!defined('_NOW_LOGOUT')) define('_NOW_LOGOUT', 'You are logged out');
-if (!defined('_LOGOUT')) define('_LOGOUT', 'Logout');
+
 
 if (!defined('_WELCOME2')) define('_WELCOME2', 'Welcome');
 if (!defined('_WELCOME_NOTES1')) define('_WELCOME_NOTES1', 'To access the different parts of the application');
@@ -556,7 +554,6 @@ if (!defined('_WELCOME_NOTES5')) define('_WELCOME_NOTES5', 'Refer to <u><a href=
 if (!defined('_WELCOME_NOTES6')) define('_WELCOME_NOTES6', 'You can also visit our <u><a href="http://www.maarch.org/">community website</a></u> or Maarch <u><a href="http://www.maarch.org/maarch_forum/">forum</a></u>.');
 if (!defined('_WELCOME_NOTES7')) define('_WELCOME_NOTES7', 'If you need professional support or spefific integration, check <u><a href="http://www.maarch.fr/">our services offer</a></u>.');
 if (!defined('_WELCOME_COUNT')) define('_WELCOME_COUNT', 'Number of resources in the collection');
-
 if (!defined('_CONTRACT_HISTORY')) define('_CONTRACT_HISTORY', 'Contracts history');
 
 if (!defined('_CLICK_CALENDAR')) define('_CLICK_CALENDAR', 'Clic to choose a date');
@@ -603,11 +600,10 @@ if (!defined('_ACTION_PAGE_MISSING')) define('_ACTION_PAGE_MISSING', 'The result
 if (!defined('_ERROR_SCRIPT')) define('_ERROR_SCRIPT', 'Action result page : an error occured in the script or a function is missing');
 if (!defined('_SERVER_ERROR')) define('_SERVER_ERROR', 'Server error');
 if (!defined('_CHOOSE_ONE_DOC')) define('_CHOOSE_ONE_DOC', 'Select at least one document');
+if (!defined('_CHOOSE_ONE_OBJECT')) define( '_CHOOSE_ONE_OBJECT', 'Choisissez au moins un &eacute;l&eacute;ment');
 
 if (!defined('_CLICK_LINE_TO_CHECK_INVOICE')) define('_CLICK_LINE_TO_CHECK_INVOICE', 'Claick on a line to check an invoice.');
 if (!defined('_FOUND_INVOICES')) define('_FOUND_INVOICES', ' Invoice(s) found');
-if (!defined('_TO_PROCESS')) define('_TO_PROCESS', 'New invoice');
-if (!defined('_IN_PROGRESS')) define('_IN_PROGRESS', 'Ongoing invoice');
 if (!defined('_SIMPLE_CONFIRM')) define('_SIMPLE_CONFIRM', 'Simple confirmation');
 if (!defined('_CHECK_INVOICE')) define('_CHECK_INVOICE', 'Verify invoice');
 
@@ -619,13 +615,11 @@ if (!defined('_NO_STRUCTURE_ATTACHED')) define('_NO_STRUCTURE_ATTACHED', 'This t
 if (!defined('_MAARCH_CREDITS')) define('_MAARCH_CREDITS', 'About Maarch&nbsp;');
 if (!defined('_CR_LONGTEXT_INFOS')) define('_CR_LONGTEXT_INFOS', '<p>Maarch Enterprise is a <b>DMS Platform</b>. It addresses most of the needs an organisation cas express to the operative management of its content. A vast majority of it components are released under the terms of the open source license GNU GPLv3. As a result, the total cost of ownership makes it affordable for any kind of organisation to use it (public sector, private companies associations, etc.).</p><p>Maarch Framework has been designed by two consultants whose experience in in records management and ADF sums up to 20 years. Thus this product <b>guarantees a level of stability, integrity and performance</b> one can expect for that type of product. The architecture of the software has been particularly designed so that it can run on standard servers.</p><p>Maarch is developed in PHP5 object. It is compatible with 4 database engines: MySQL, PostgreSQL, SQL Server and soon Oracle.</p><p>Maarch is <b>fully modular</b>: all functionalities are grouped in modules. The modules expose services, which can be enabled or disabled according to the user functional profile. A trained engineer can add or replace an existing module without modifying thr core of the program.</p><p>Maarch offers a global model and necessary tools to <b>acquire, manage, archive and retrieve production document streams</b>.<p>');
 
-if (!defined('_CLOSED')) define('_CLOSED', 'Approved');
-if (!defined('_PROCESS_SHORT')) define('_PROCESS_SHORT', 'Process');
+if (!defined('_CR_LONGTEXT_INFOS')) define( '_CR_LONGTEXT_INFOS', '<p>Maarch Framework 3 est une infrastructure de <b>GED de Production</b>, r&eacute;pondant en standard &agrave; la plupart des besoins de gestion op&eacute;rationnelle de contenu d\'une organisation. La tr&egrave;s grande majorit&eacute; des composants du Framework est diffusé sous les termes de la licence open source GNU GPLv3, de sorte que le coût d\'impl&eacute;mentation rend la solution aborbable pour tout type d\'organisation (public, priv&eacute;, parapublic, monde associatif).</p> <p>Pour autant, Maarch Framework ayant &eacute;t&eacute; conçu par deux consultants cumulant &agrave; eux deux plus de 20 ans d\'expertise en Syst&egrave;mes d\'Archivage &Eacute;lectronique et en &Eacute;ditique, le produit offre <b>toutes les garanties de robustesse, d\'int&eacute;grit&eacute;, de performance</b> que l\'on doit attendre de ce type de produit. Un grand soin a &eacute;t&eacute; port&eacute; sur l\'architecture afin d\'autoriser des performances maximales sur du mat&eacute;riel standard.</p><p>Maarch est d&eacute;velopp&eacute; en PHP5 objet. Il est compatible avec les 4 moteurs de bases de donn&eacute;es suivants&nbsp;: MySQL, PostgreSQL, SQLServer, et bientôt Oracle.</p> <p>Maarch est <b>totalement modulaire</b>&nbsp;: toutes les fonctionnalit&eacute;s sont regroup&eacute;es dans des modules exposant des services qui peuvent être activ&eacute;s/d&eacute;sactiv&eacute;s en fonction du profil de l\'utilisateur. Un ing&eacute;nieur exp&eacute;riment&eacute; peut ajouter ou remplacer un module existant sans toucher au coeur du syst&egrave;me.</p><p>Maarch propose un sch&eacute;ma global et <b>tous les outils pour acqu&eacute;rir, g&eacute;rer, conserver puis restituer les flux documentaires de production</b>.');
+
 if (!defined('_PROCESSING_DATE')) define('_PROCESSING_DATE', 'processing deadline');
 if (!defined('_PROCESS_NUM')) define('_PROCESS_NUM','Processing mail nb.');
 if (!defined('_PROCESS_LIMIT_DATE')) define('_PROCESS_LIMIT_DATE', 'Processing deadline');
-if (!defined('_TO_PROCESS')) define('_TO_PROCESS', 'To process');
-if (!defined('_IN_PROGRESS')) define('_IN_PROGRESS', 'In progress');
 if (!defined('_LATE_PROCESS')) define('_LATE_PROCESS', 'Late');
 if (!defined('_PROCESS_DELAY')) define('_PROCESS_DELAY', 'Processing period');
 if (!defined('_ALARM1_DELAY')) define('_ALARM1_DELAY', 'Period before 1st reminder');
@@ -709,13 +703,13 @@ if (!defined('_ADD_PARAMETERS_HELP')) define('_ADD_PARAMETERS_HELP', 'Add criter
 if (!defined('_MAIL_OBJECT_HELP')) define('_MAIL_OBJECT_HELP', 'Add object keywords');
 if (!defined('_N_GED_HELP')) define('_N_GED_HELP', '');
 if (!defined('_CHOOSE_RECIPIENT_SEARCH_TITLE')) define('_CHOOSE_RECIPIENT_SEARCH_TITLE', 'Add recipients to refine the search');
-if (!defined('_MULTI_FIELD')) define('_MULTI_FIELD','multi-field');
+if (!defined('_MULTI_FIELD')) define('_MULTI_FIELD','Multi-field');
 if (!defined('_MULTI_FIELD_HELP')) define('_MULTI_FIELD_HELP','Object, description, title, chrono number, processing notes...');
 if (!defined('_SAVE_QUERY')) define('_SAVE_QUERY', 'Save your search');
 if (!defined('_SAVE_QUERY_TITLE')) define('_SAVE_QUERY_TITLE', 'Save your search criteria');
 if (!defined('_QUERY_NAME')) define('_QUERY_NAME', 'Name');
 if (!defined('_QUERY_SAVED')) define('_QUERY_SAVED', 'Search criteria saved');
-if (!defined('_SERVER_ERROR')) define('_SERVER_ERROR', 'An unknown server error occured during the request');
+
 //if (!defined('_SQL_ERROR')) define('_SQL_ERROR', 'Erreur SQL lors de l&acute;enregistrement de la recherche');
 if (!defined('_LOAD_QUERY')) define('_LOAD_QUERY', 'Load custom search');
 if (!defined('_DELETE_QUERY')) define('_DELETE_QUERY', 'Delete custom search');
@@ -723,7 +717,7 @@ if (!defined('_CHOOSE_SEARCH')) define('_CHOOSE_SEARCH', 'Choose a custom search
 if (!defined('_THIS_SEARCH')) define('_THIS_SEARCH', 'This search');
 if (!defined('_MY_SEARCHES')) define('_MY_SEARCHES', 'My searches');
 if (!defined('_CLEAR_SEARCH')) define('_CLEAR_SEARCH', 'Reset criteria');
-if (!defined('_CHOOSE_STATUS_SEARCH_TITLE')) define('_CHOOSE_STATUS_SEARCH_TITLE', 'Add statuses to refine the search');
+if (!defined('_CHOOSE_STATUS_SEARCH_TITLE')) define('_CHOOSE_STATUS_SEARCH_TITLE', 'Add states to refine the search');
 if (!defined('_ERROR_IE_SEARCH')) define('_ERROR_IE_SEARCH', 'This criterion is already selected');
 //if (!defined('_CIVILITIES')) define('_CIVILITIES', 'Civilit&eacute;(s)');
 //if (!defined('_CIVILITY')) define('_CIVILITY', 'Civilit&eacute;');
@@ -814,6 +808,8 @@ if (!defined('_LIMIT_DATE_PROCESS')) define('_LIMIT_DATE_PROCESS','Processing de
 
 //// INDEXING SEARCHING
 if (!defined('_NO_RESULTS')) define('_NO_RESULTS', 'No result found');
+if (!defined('_CREATION_DATE')) define( '_CREATION_DATE', 'Creation date');
+if (!defined('_NO_RESULTS')) define( '_NO_RESULTS', 'Aucun r&eacute;sultat');
 if (!defined('_FOUND_DOCS')) define('_FOUND_DOCS', 'document(s) found');
 if (!defined('_MY_CONTACTS')) define('_MY_CONTACTS', 'My contacts');
 if (!defined('_DETAILLED_PROPERTIES')) define('_DETAILLED_PROPERTIES', 'Details sheets');
@@ -934,4 +930,58 @@ if (!defined('_WARNING')) define('_WARNING', 'Warning ');
 if (!defined('_STRING')) define('_STRING', 'String');
 if (!defined('_INTEGER')) define('_INTEGER', 'Integer');
 if (!defined('_FLOAT')) define('_FLOAT', 'Float');
+if (!defined('_CUSTOM_T1')) define( '_CUSTOM_T1', 'Text field 1');
+if (!defined('_CUSTOM_T2')) define( '_CUSTOM_T2', 'Text field 2');
+if (!defined('_CUSTOM_D1')) define( '_CUSTOM_D1', 'Date field');
+if (!defined('_CUSTOM_N1')) define( '_CUSTOM_N1', 'Integer field');
+if (!defined('_CUSTOM_F1')) define( '_CUSTOM_F1', 'Floating field');
+
+if (!defined('_ITEM_NOT_IN_LIST')) define( '_ITEM_NOT_IN_LIST', 'item not in authorised values');
+if (!defined('_PB_WITH_FINGERPRINT_OF_DOCUMENT')) define( '_PB_WITH_FINGERPRINT_OF_DOCUMENT', 'Document checksum does not fit ! Issue with document integrity');
+if (!defined('_MISSING')) define( '_MISSING', 'missing');
+if (!defined('_NATURE')) define( '_NATURE', 'Nature');
+if (!defined('_NO_DEFINED_TREES')) define( '_NO_DEFINED_TREES', 'No defined tree');
+
+if (!defined('_IF_CHECKS_MANDATORY_MUST_CHECK_USE')) define( '_IF_CHECKS_MANDATORY_MUST_CHECK_USE', 'If you check &rsquo;mandatory&rsquo;, you must also check &rsquo;used&rsquo;');
+
+if (!defined('_SEARCH_DOC')) define( '_SEARCH_DOC', 'Search document');
+if (!defined('_DOCSERVER_COPY_ERROR')) define( '_DOCSERVER_COPY_ERROR', ' Error during copy to docserver');
+if (!defined('_MAKE_NEW_SEARCH')) define( '_MAKE_NEW_SEARCH', 'Perform a new search');
+if (!defined('_NO_PAGE')) define( '_NO_PAGE', 'No page');
+if (!defined('_VALIDATE_QUALIF')) define( '_VALIDATE_QUALIF', 'Validation/Qualification');
+
+
+if (!defined('_DB_CONNEXION_ERROR')) define( '_DB_CONNEXION_ERROR', 'Database connection error');
+if (!defined('_DATABASE_SERVER')) define( '_DATABASE_SERVER', 'Database server');
+if (!defined('_DB_PORT')) define( '_DB_PORT', 'Port');
+if (!defined('_DB_TYPE')) define( '_DB_TYPE', 'Type');
+if (!defined('_DB_USER')) define( '_DB_USER', 'User');
+if (!defined('_DATABASE')) define( '_DATABASE', 'Database');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ?>
