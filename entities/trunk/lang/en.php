@@ -95,16 +95,16 @@ if (!defined('_MY_PRIMARY_ENTITY')) define('_MY_PRIMARY_ENTITY', 'Primary depart
 if (!defined('_SAME_LEVEL_ENTITIES')) define('_SAME_LEVEL_ENTITIES', 'Every sister departments of primary one');
 
 if (!defined('_INDEXING_ENTITIES')) define('_INDEXING_ENTITIES', 'Record for departments');
-if (!defined('_SEARCH_DIFF_LIST')) define('_SEARCH_DIFF_LIST', 'search a department or a user');
-if (!defined('_ADD_CC')) define('_ADD_CC', 'add in copy');
+if (!defined('_SEARCH_DIFF_LIST')) define('_SEARCH_DIFF_LIST', 'Search a department or a user');
+if (!defined('_ADD_CC')) define('_ADD_CC', 'Add in copy');
 if (!defined('_TO_DEST')) define('_TO_DEST', 'To');
 
 if (!defined('_NO_DIFF_LIST_ASSOCIATED')) define('_NO_DIFF_LIST_ASSOCIATED', 'No mailing list associated');
 if (!defined('_PRINCIPAL_RECIPIENT')) define('_PRINCIPAL_RECIPIENT', 'Main recipient');
 if (!defined('_ADD_COPY_IN_PROCESS')) define('_ADD_COPY_IN_PROCESS', 'Add users in copy');
-if (!defined('_DIFF_LIST_COPY')) define('_DIFF_LIST_COPY', 'Liste de diffusion, copies');
-if (!defined('_NO_COPY')) define('_NO_COPY', 'no user in copy');
-if (!defined('_DIFF_LIST')) define('_DIFF_LIST', 'mailing list');
+if (!defined('_DIFF_LIST_COPY')) define('_DIFF_LIST_COPY', 'Mailing list');
+if (!defined('_NO_COPY')) define('_NO_COPY', 'No user in copy');
+if (!defined('_DIFF_LIST')) define('_DIFF_LIST', 'Mailing list');
 
 if (!defined('_NO_USER')) define('_NO_USER', 'No user');
 
