@@ -55,6 +55,22 @@ else
 {
 	$_SESSION['folder_search']['foldertype_id'] = "";
 }
+if(isset($_REQUEST['folder_name']) && !empty($_REQUEST['folder_name']))
+{
+	$_SESSION['folder_search']['folder_name'] = trim($_REQUEST['folder_name']);
+	if($_SESSION['config']['databasetype'] == "POSTGRESQL")
+	{
+		$where_request .= " ".$_SESSION['tablename']['fold_folders'].".folder_name ilike '%".$func->protect_string_db($_SESSION['folder_search']['folder_name'],$_SESSION['config']['databasetype'])."%' and ";
+	}
+	else
+	{
+		$where_request .= " ".$_SESSION['tablename']['fold_folders'].".folder_name like '%".$func->protect_string_db($_SESSION['folder_search']['folder_name'],$_SESSION['config']['databasetype'])."%' and ";
+	}
+}
+else
+{
+	$_SESSION['folder_search']['foldertype_id'] = "";
+}
 
 // Folder id
 if(isset($_REQUEST['folder_id']) && !empty($_REQUEST['folder_id']))
