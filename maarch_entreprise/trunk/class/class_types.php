@@ -426,7 +426,7 @@ class types extends dbquery
 		}
 
 		$this->connect();
-		$this->query("select type_id, description from ".$_SESSION['tablename']['doctypes']." where coll_id = '".$coll_id."' and enabled = 'Y'");
+		$this->query("select type_id, description from ".$_SESSION['tablename']['doctypes']." where coll_id = '".$coll_id."' and enabled = 'Y' order by description");
 		while($res = $this->fetch_object())
 		{
 			array_push($types, array('ID' => $res->type_id, 'LABEL' => $this->show_string($res->description)));

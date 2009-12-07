@@ -93,7 +93,14 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 	$b = new basket();
 	$core_tools =new core_tools();
 	$business = new business_app_tools();
-	$doctypes = $type-> getArrayStructTypes($coll_id);
+	if($_SESSION['features']['show_types_tree'] == 'true')
+	{
+		$doctypes = $type->getArrayStructTypes($coll_id);
+	}
+	else
+	{
+		$doctypes = $type->getArrayTypes($coll_id);
+	}
 	$today = date('d-m-Y');
 	$tmp = $business->get_titles();
 	$titles = $tmp['titles'];
@@ -198,16 +205,27 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 					$frm_str .='<td>&nbsp;</td>';
 					$frm_str .='<td class="indexing_field"><select name="type_id" id="type_id" onchange="clear_error(\'frm_error_'.$id_action.'\');change_doctype(this.options[this.selectedIndex].value, \''.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=change_doctype\', \''._ERROR_DOCTYPE.'\', \''.$id_action.'\', \''.$_SESSION['config']['businessappurl'].'index.php?display=true&page=get_content_js\');">';
 							$frm_str .='<option value="">'._CHOOSE_TYPE.'</option>';
-							for($i=0; $i<count($doctypes);$i++)
+							if($_SESSION['features']['show_types_tree'] == 'true')
 							{
-								$frm_str .='<option value="" class="doctype_level1">'. $doctypes[$i]['label'].'</option>';
-								for($j=0; $j<count($doctypes[$i]['level2']);$j++)
+								for($i=0; $i<count($doctypes);$i++)
 								{
-									$frm_str .='<option value="" class="doctype_level2">&nbsp;&nbsp;'.$doctypes[$i]['level2'][$j]['label'].'</option>';
-									for($k=0; $k<count($doctypes[$i]['level2'][$j]['types']);$k++)
+									$frm_str .='<option value="" class="doctype_level1">'. $doctypes[$i]['label'].'</option>';
+									for($j=0; $j<count($doctypes[$i]['level2']);$j++)
 									{
-										$frm_str .='<option value="'.$doctypes[$i]['level2'][$j]['types'][$k]['id'].'" >&nbsp;&nbsp;&nbsp;&nbsp;'.$doctypes[$i]['level2'][$j]['types'][$k]['label'].'</option>';
+										$frm_str .='<option value="" class="doctype_level2">&nbsp;&nbsp;'.$doctypes[$i]['level2'][$j]['label'].'</option>';
+										for($k=0; $k<count($doctypes[$i]['level2'][$j]['types']);$k++)
+										{
+											$frm_str .='<option value="'.$doctypes[$i]['level2'][$j]['types'][$k]['id'].'" >&nbsp;&nbsp;&nbsp;&nbsp;'.$doctypes[$i]['level2'][$j]['types'][$k]['label'].'</option>';
+										}
 									}
+								}
+							}
+							else
+							{
+								for($i=0; $i<count($doctypes);$i++)
+								{
+				
+									$frm_str .='<option value="'.$doctypes[$i]['ID'].'" >'.$doctypes[$i]['LABEL'].'</option>';
 								}
 							}
 							$frm_str .='</select></td>';

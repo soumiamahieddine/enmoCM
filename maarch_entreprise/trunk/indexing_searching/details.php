@@ -425,18 +425,29 @@ else
 									<?php
 										if($key == 'type_id')
 										{
-											for($k=0; $k<count($data[$key]['select']);$k++)
+											if($_SESSION['features']['show_types_tree'] == 'true')
 											{
-											?><option value="" class="doctype_level1"><?php echo $data[$key]['select'][$k]['label'];?></option><?
-												for($j=0; $j<count($data[$key]['select'][$k]['level2']);$j++)
+							
+												for($k=0; $k<count($data[$key]['select']);$k++)
 												{
-													?><option value="" class="doctype_level2">&nbsp;&nbsp;<?php echo $data[$key]['select'][$k]['level2'][$j]['label'];?></option><?
-													for($l=0; $l<count($data[$key]['select'][$k]['level2'][$j]['types']);$l++)
+												?><option value="" class="doctype_level1"><?php echo $data[$key]['select'][$k]['label'];?></option><?
+													for($j=0; $j<count($data[$key]['select'][$k]['level2']);$j++)
 													{
-														?><option
-														<?php if($data[$key]['value'] ==$data[$key]['select'][$k]['level2'][$j]['types'][$l]['id']){ echo 'selected="selected"';}?>
-														 value="<?php echo $data[$key]['select'][$k]['level2'][$j]['types'][$l]['id'];?>" >&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $data[$key]['select'][$k]['level2'][$j]['types'][$l]['label'];?></option><?
+														?><option value="" class="doctype_level2">&nbsp;&nbsp;<?php echo $data[$key]['select'][$k]['level2'][$j]['label'];?></option><?
+														for($l=0; $l<count($data[$key]['select'][$k]['level2'][$j]['types']);$l++)
+														{
+															?><option
+															<?php if($data[$key]['value'] ==$data[$key]['select'][$k]['level2'][$j]['types'][$l]['id']){ echo 'selected="selected"';}?>
+															 value="<?php echo $data[$key]['select'][$k]['level2'][$j]['types'][$l]['id'];?>" >&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $data[$key]['select'][$k]['level2'][$j]['types'][$l]['label'];?></option><?
+														}
 													}
+												}
+											}
+											else
+											{
+												for($k=0; $k<count($data[$key]['select']);$k++)
+												{
+													?><option <?php if($data[$key]['value'] ==$data[$key]['select'][$k]['ID']){ echo 'selected="selected"';}?> value="<?php echo $data[$key]['select'][$k]['ID'];?>" ><?php echo $data[$key]['select'][$k]['LABEL'];?></option><?
 												}
 											}
 										}

@@ -295,7 +295,14 @@ function get_general_data($coll_id, $res_id, $mode, $params = array())
 						{
 							require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_types.php");
 							$type = new types();
-							$data[$field]['select'] = $type->getArrayStructTypes($coll_id);
+							if($_SESSION['features']['show_types_tree'] == 'true')
+							{
+								$data[$field]['select'] = $type-> getArrayStructTypes($coll_id);
+							}
+							else
+							{
+								$data[$field]['select'] = $type->getArrayTypes($coll_id);
+							}
 						}
 						else if($field == 'destination')
 						{

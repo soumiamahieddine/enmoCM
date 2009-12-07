@@ -231,7 +231,7 @@ class business_app_tools extends dbquery
 		}
 	}
 
-	private function load_letterbox_var()
+	private function load_entreprise_var()
 	{
 		$core = new core_tools();
 		if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."entreprise.xml"))
@@ -306,20 +306,20 @@ class business_app_tools extends dbquery
 	{
 		$_SESSION['features'] = array();
 		//Defines all features by  default at 'false'
-		$_SESSION['features']['add_copy_in_process'] = "false";
 		$_SESSION['features']['personal_contact'] = "false";
 		$_SESSION['features']['search_notes'] = "false";
 		$_SESSION['features']['dest_to_copy_during_redirection'] = "false";
+		$_SESSION['features']['show_types_tree'] = "false";
 
 		$xmlfeatures = simplexml_load_file($xml_features);
 		if ($xmlfeatures)
 		{
 			foreach($xmlfeatures->FEATURES as $FEATURES)
 			{
-				$_SESSION['features']['add_copy_in_process'] = (string) $FEATURES->add_copy_in_process;
 				$_SESSION['features']['personal_contact'] = (string) $FEATURES->personal_contact;
 				$_SESSION['features']['search_notes'] = (string) $FEATURES->search_notes;
 				$_SESSION['features']['dest_to_copy_during_redirection'] = (string) $FEATURES->dest_to_copy_during_redirection;
+				$_SESSION['features']['show_types_tree'] = (string) $FEATURES->show_types_tree;
 			}
 		}
 	}
@@ -347,7 +347,7 @@ class business_app_tools extends dbquery
 	public function load_app_var_session()
 	{
 		$this->load_current_folder();
-		$this->load_letterbox_var();
+		$this->load_entreprise_var();
 		$this->load_features('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'features.xml');
 	}
 
