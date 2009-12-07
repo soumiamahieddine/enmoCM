@@ -94,7 +94,7 @@ if(count($userReports) > 0)
 						?>
 						<tr>
 							<td nowrap align="left" title="<?php  echo $authorized_reports_sort_by_parent[$value][$i]['desc'];?>">
-								<li><a class="printlink" href="#" onclick="fill_report_result('<?php echo $authorized_reports_sort_by_parent[$value][$i]['url']; ?>');"><?php  echo $authorized_reports_sort_by_parent[$value][$i]['label'];?> </a></li>
+								<li><a class="printlink" href="#" onclick="fill_report_result('<?php echo $authorized_reports_sort_by_parent[$value][$i]['url']; ?>');return false;"><?php  echo $authorized_reports_sort_by_parent[$value][$i]['label'];?> </a></li>
 
 							</td>
 
