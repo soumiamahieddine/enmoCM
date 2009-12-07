@@ -694,9 +694,10 @@ class folder extends request
 
 		if(!empty($table) && !empty($folder_sys_id))
 		{
-			$this->query("select folder_level from ".$_SESSION['tablename']['fold_folders']." where folders_system_id = ".$folder_sys_id);
+			$this->query("select folder_level, folder_id from ".$_SESSION['tablename']['fold_folders']." where folders_system_id = ".$folder_sys_id);
 			$res = $this->fetch_object();
 			$level = $res->folder_level;
+			$fold_id = $res->folder_id;
 			$where = '';
 
 			if($level == 1)
@@ -712,6 +713,7 @@ class folder extends request
 			}
 			$this->query("update ".$table." set status = 'DEL' where folders_system_id = ".$folder_sys_id.$where);
 			$this->query("update ".$_SESSION['tablename']['fold_folders']." set status = 'DEL' where folders_system_id = ".$folder_sys_id.$where);
+			$_SESSION['error'] = _FOLDER_DELETED." (".$fold_id.")";
 		}
 	}
 

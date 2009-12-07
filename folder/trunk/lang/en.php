@@ -189,4 +189,5 @@ if (!defined('_THIS_FOLDER'))  define('_THIS_FOLDER', 'this folder');
 if (!defined('_LABEL'))  define('_LABEL', 'Label');
 
 if (!defined('_ALL_FOLDERS')) define('_ALL_FOLDERS', 'All folders');
+if (!defined('_FOLDER_DELETED'))  define('_FOLDER_DELETED', 'Folder deleted');
 ?>

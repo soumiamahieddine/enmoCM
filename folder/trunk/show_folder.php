@@ -194,7 +194,7 @@ if(isset($_POST['delete_folder']))
 											else
 											{
 												?>
-												<input type="text" name="<?php echo $key;?>" id="<?php echo $key;?>" value="<?php echo $key;?>" size="40"  title="<?php echo $key;?>" alt="<?php echo $key;?>" />
+												<input type="text" name="<?php echo $key;?>" id="<?php echo $key;?>" value="<?php echo $value;?>" size="40"  title="<?php echo $value;?>" alt="<?php echo $value;?>" />
 												<?php
 											}
 										}
