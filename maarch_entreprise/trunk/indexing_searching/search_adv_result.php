@@ -248,6 +248,20 @@ if(count($_REQUEST['meta']) > 0)
 					$where_request .= " (folder_name like '%".$func->protect_string_db($project)."%' or folder_id like '%".$func->protect_string_db($project)."%' or folders_system_id in (select parent_id from ".$_SESSION['tablename']['fold_folders']." where folder_name like '".$func->protect_string_db($project)."%' or folder_id like '%".$func->protect_string_db($project)."%')) and ";
 				}
 			}
+		
+			else if($tab_id_fields[$j] == 'folder_name' && !empty($_REQUEST['folder_name']))
+			{
+				$json_txt .= " 'folder_name' : ['".addslashes(trim($_REQUEST['folder_name']))."'],";
+				$folder_name = $func->wash($_REQUEST['folder_name'], "no", _FOLDER_NAME,"no");
+				if($_SESSION['config']['databasetype'] == "POSTGRESQL")
+				{
+					$where_request .= " (folder_name ilike '%".$func->protect_string_db($folder_name)."%' and ";
+				}
+				else
+				{
+					$where_request .= " (folder_name like '%".$func->protect_string_db($folder_name)."%' and ";
+				}
+			}
 			// DEST
 			else if($tab_id_fields[$j] == 'dest' && !empty($_REQUEST['dest']))
 			{
