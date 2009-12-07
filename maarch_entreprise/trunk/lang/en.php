@@ -752,7 +752,7 @@ if (!defined('_PROBLEM_LOADING_FILE_TMP_DIR')) define('_PROBLEM_LOADING_FILE_TMP
 if (!defined('_DOWNLOADED_FILE')) define('_DOWNLOADED_FILE', 'File saved');
 if (!defined('_WRONG_FILE_TYPE')) define('_WRONG_FILE_TYPE', 'This document type is not allowed');
 
-if (!defined('_LETTERBOX')) define('_LETTERBOX', 'Mail management');
+if (!defined('_LETTERBOX')) define('_LETTERBOX', 'Main collection');
 if (!defined('_APA_COLL')) define('_APA_COLL', 'Physical archives - Do not use');
 if (!defined('_REDIRECT_TO_ACTION')) define('_REDIRECT_TO_ACTION', 'Redirect to an action');
 if (!defined('_DOCUMENTS_LIST')) define('_DOCUMENTS_LIST', 'List');
@@ -845,6 +845,7 @@ if (!defined('_FILE_NOT_SEND')) define('_FILE_NOT_SEND', 'The document has not b
 if (!defined('_TRY_AGAIN')) define('_TRY_AGAIN', 'Please, try again');
 if (!defined('_DOCTYPE_MANDATORY')) define('_DOCTYPE_MANDATORY', 'Document type is mandatory');
 if (!defined('_INDEX_UPDATED')) define('_INDEX_UPDATED', 'Indices updated');
+if (!defined('_DOC_DELETED')) define( '_DOC_DELETED', 'Document deleted');
 
 if (!defined('_QUICKLAUNCH')) define('_QUICKLAUNCH', 'Shortcut');
 if (!defined('_SHOW_DETAILS_DOC')) define('_SHOW_DETAILS_DOC', 'View document details');
@@ -884,7 +885,7 @@ if (!defined('_FOR_YEAR')) define('_FOR_YEAR', 'for year');
 if (!defined('_FOR_MONTH')) define('_FOR_MONTH', 'for');
 if (!defined('_N_DAYS')) define('_N_DAYS','NB on days');
 
-/******************** Specific DGGT ************/
+/******************** Specific  ************/
 if (!defined('_PROJECT')) define('_PROJECT', 'Folder');
 if (!defined('_MARKET')) define('_MARKET', 'Sub-folder');
 if (!defined('_SEARCH_CUSTOMER')) define('_SEARCH_CUSTOMER', 'View a folder');
@@ -892,6 +893,11 @@ if (!defined('_SEARCH_CUSTOMER_TITLE')) define('_SEARCH_CUSTOMER_TITLE', 'View a
 if (!defined('_TO_SEARCH_DEFINE_A_SEARCH_ADV')) define('_TO_SEARCH_DEFINE_A_SEARCH_ADV', 'To start a search, please enter a folder or sub-folder id.');
 if (!defined('_DAYS')) define('_DAYS', 'days');
 if (!defined('_LAST_DAY')) define('_LAST_DAY', 'last day');
+if (!defined('_CONTACT_NAME')) define( '_CONTACT_NAME', 'Invoice contact');
+if (!defined('_AMOUNT')) define( '_AMOUNT', 'Invoice amount');
+if (!defined('_CUSTOMER')) define( '_CUSTOMER', 'Invoice customer');
+if (!defined('_PO_NUMBER')) define( '_PO_NUMBER', 'Invoice PO');
+if (!defined('_INVOICE_NUMBER')) define( '_INVOICE_NUMBER', 'Invoice nb');
 
 
 /******************** Keywords Helper ************/

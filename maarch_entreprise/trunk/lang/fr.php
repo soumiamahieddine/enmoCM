@@ -43,7 +43,7 @@ if (!defined('_NO_RIGHTS_ON')) define( '_NO_RIGHTS_ON', 'Aucun droit sur');
 if (!defined('_NO_LABEL_FOUND')) define( '_NO_LABEL_FOUND', 'Aucun label trouv&eacute; pour ce service');
 
 if (!defined('_FOLDERTYPES_LIST')) define( '_FOLDERTYPES_LIST', 'Liste des types de dossier');
-if (!defined('_SELECTED_FOLDERTYPES')) define( '_SELECTED_FOLDERTYPES', 'Types des dossier s&eacute;lectionn&eacute;s');
+if (!defined('_SELECTED_FOLDERTYPES')) define( '_SELECTED_FOLDERTYPES', 'Types de dossier s&eacute;lectionn&eacute;s');
 if (!defined('_FOLDERTYPE_ADDED')) define( '_FOLDERTYPE_ADDED', 'Nouveau dossier ajout&eacute;');
 if (!defined('_FOLDERTYPE_DELETION')) define( '_FOLDERTYPE_DELETION', 'Dossier supprim&eacute;');
 
@@ -662,10 +662,10 @@ if (!defined('_LOW')) define( '_LOW', 'Basse');
 if (!defined('_VERY_LOW')) define( '_VERY_LOW', 'Tr&egrave;s Basse');
 
 
-if (!defined('_INDEXING_MLB')) define( '_INDEXING_MLB', 'Enregistrer un courrier');
-if (!defined('_ADV_SEARCH_MLB')) define( '_ADV_SEARCH_MLB', 'Rechercher un courrier');
+if (!defined('_INDEXING_MLB')) define( '_INDEXING_MLB', 'Enregistrer un document');
+if (!defined('_ADV_SEARCH_MLB')) define( '_ADV_SEARCH_MLB', 'Rechercher un document');
 
-if (!defined('_ADV_SEARCH_TITLE')) define( '_ADV_SEARCH_TITLE', 'Recherche avanc&eacute;e du courrier');
+if (!defined('_ADV_SEARCH_TITLE')) define( '_ADV_SEARCH_TITLE', 'Recherche avanc&eacute;e de document');
 if (!defined('_MAIL_OBJECT')) define( '_MAIL_OBJECT', 'Objet du courrier');
 //if (!defined('_SHIPPER')) define( '_SHIPPER', 'Emetteur');
 //if (!defined('_SENDER')) define( '_SENDER', 'Exp&eacute;diteur');
@@ -755,7 +755,7 @@ if (!defined('_PROBLEM_LOADING_FILE_TMP_DIR')) define( '_PROBLEM_LOADING_FILE_TM
 if (!defined('_DOWNLOADED_FILE')) define( '_DOWNLOADED_FILE', 'Fichier charg&eacute;');
 if (!defined('_WRONG_FILE_TYPE')) define( '_WRONG_FILE_TYPE', 'Ce type de fichier n&rsquo;est pas permis');
 
-if (!defined('_LETTERBOX')) define( '_LETTERBOX', 'Gestion de courrier');
+if (!defined('_LETTERBOX')) define( '_LETTERBOX', 'Collection principale');
 if (!defined('_APA_COLL')) define( '_APA_COLL', 'APA - ne pas utiliser');
 if (!defined('_REDIRECT_TO_ACTION')) define( '_REDIRECT_TO_ACTION', 'Rediriger vers une action');
 if (!defined('_DOCUMENTS_LIST')) define( '_DOCUMENTS_LIST', 'Liste');
@@ -848,6 +848,7 @@ if (!defined('_FILE_NOT_SEND')) define( '_FILE_NOT_SEND', 'Le fichier n&rsquo;a 
 if (!defined('_TRY_AGAIN')) define( '_TRY_AGAIN', 'Veuillez r&eacute;essayer');
 if (!defined('_DOCTYPE_MANDATORY')) define( '_DOCTYPE_MANDATORY', 'Le type de pi&egrave;ce est obligatoire');
 if (!defined('_INDEX_UPDATED')) define( '_INDEX_UPDATED', 'Index mis &agrave; jour');
+if (!defined('_DOC_DELETED')) define( '_DOC_DELETED', 'Document supprimé');
 
 if (!defined('_QUICKLAUNCH')) define( '_QUICKLAUNCH', 'Raccourcis');
 if (!defined('_SHOW_DETAILS_DOC')) define( '_SHOW_DETAILS_DOC', 'Voir les d&eacute;tails du document');
@@ -887,7 +888,7 @@ if (!defined('_FOR_YEAR')) define( '_FOR_YEAR', 'pour l&rsquo;ann&eacute;e');
 if (!defined('_FOR_MONTH')) define( '_FOR_MONTH', 'pour le mois de');
 if (!defined('_N_DAYS')) define( '_N_DAYS','NB JOURS');
 
-/******************** Specific DGGT ************/
+/******************** Specific ************/
 if (!defined('_PROJECT')) define( '_PROJECT', 'Dossier');
 if (!defined('_MARKET')) define( '_MARKET', 'Sous-dossier');
 if (!defined('_SEARCH_CUSTOMER')) define( '_SEARCH_CUSTOMER', 'Consultation Dossiers Sous-dossiers');
@@ -895,6 +896,11 @@ if (!defined('_SEARCH_CUSTOMER_TITLE')) define( '_SEARCH_CUSTOMER_TITLE', 'Reche
 if (!defined('_TO_SEARCH_DEFINE_A_SEARCH_ADV')) define( '_TO_SEARCH_DEFINE_A_SEARCH_ADV', 'Pour lancer une recherche vous devez saisir un n&deg; de dossier ou un nom de Dossier ou de Sous-dossier');
 if (!defined('_DAYS')) define( '_DAYS', 'jours');
 if (!defined('_LAST_DAY')) define( '_LAST_DAY', 'Dernier jour');
+if (!defined('_CONTACT_NAME')) define( '_CONTACT_NAME', 'Contact facture');
+if (!defined('_AMOUNT')) define( '_AMOUNT', 'Montant facture');
+if (!defined('_CUSTOMER')) define( '_CUSTOMER', 'Client facture');
+if (!defined('_PO_NUMBER')) define( '_PO_NUMBER', 'BDC facture');
+if (!defined('_INVOICE_NUMBER')) define( '_INVOICE_NUMBER', 'Num facture');
 
 
 
