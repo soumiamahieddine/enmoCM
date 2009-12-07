@@ -98,6 +98,7 @@ while($res = $db->fetch_object())
 	array_push($arr_status , array('id' => $res->id, 'label' => $res->label_status, 'is_system' => $res->is_system, 'img_filename' => $res->img_filename,
 	'module' => $res->module, 'can_be_searched' => $res->can_be_searched, 'can_be_modified' => $res->can_be_modified));
 }
+array_push($arr_status , array('id' => 'late', 'label' => _LATE));
 ?>
 <div align="center">
 	<script>

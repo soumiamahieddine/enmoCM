@@ -3417,3 +3417,8 @@ td.picto, th.picto,  td.action {
 {
 	width: 477px;
 }
+
+.tafelTree table
+{
+	border-collapse: collapse;
+}

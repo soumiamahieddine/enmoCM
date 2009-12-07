@@ -164,15 +164,32 @@ if(isset($_SESSION['auth_dep']['bask_chosen_contact']) && !empty($_SESSION['auth
 }
 if(isset($_SESSION['auth_dep']['bask_chosen_status']) && !empty($_SESSION['auth_dep']['bask_chosen_status']))
 {
-	if($where_concat <> "")
+	if($_SESSION['auth_dep']['bask_chosen_status'] == 'late')
 	{
-		$where_concat .= " and status = '".$bask->protect_string_db($_SESSION['auth_dep']['bask_chosen_status'])."'";
+		if($where_concat <> "")
+		{
+			$where_concat .= " and ( process_limit_date is not null and ".$request->current_datetime()." > ".$request->extract_date('process_limit_date')." )";
+		}
+		else
+		{
+			if(!empty($where))
+			{
+				$where_concat = "(".$where.") and ( process_limit_date is not null and ".$request->current_datetime()." > ".$request->extract_date('process_limit_date')." )";
+			}
+		}
 	}
 	else
 	{
-		if(!empty($where))
+		if($where_concat <> "")
 		{
-			$where_concat = "(".$where.") and status = '".$bask->protect_string_db($_SESSION['auth_dep']['bask_chosen_status'])."'";
+			$where_concat .= " and status = '".$bask->protect_string_db($_SESSION['auth_dep']['bask_chosen_status'])."'";
+		}
+		else
+		{
+			if(!empty($where))
+			{
+				$where_concat = "(".$where.") and status = '".$bask->protect_string_db($_SESSION['auth_dep']['bask_chosen_status'])."'";
+			}
 		}
 	}
 	$search = true;
