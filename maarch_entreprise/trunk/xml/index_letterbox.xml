@@ -4,37 +4,37 @@
 		<column>custom_t1</column>
 		<label>_IDENTIFIER</label>
 		<type>string</type>
-		<img>default_string.gif</img>
+		<img>plus.png</img>
 	</INDEX>
 	<INDEX>
 		<column>custom_t2</column>
 		<label>_CONTACT_NAME</label>
 		<type>string</type>
-		<img>default_string.gif</img>
+		<img>plus.png</img>
 	</INDEX>
 	<INDEX>
 		<column>custom_t3</column>
 		<label>_COUNTRY</label>
 		<type>string</type>
-		<img>default_string.gif</img>
+		<img>plus.png</img>
 	</INDEX>
 	<INDEX>
 		<column>custom_n1</column>
 		<label>_AMOUNT</label>
 		<type>integer</type>
-		<img>default_number.gif</img>
+		<img>plus.png</img>
 	</INDEX>
 	<INDEX>
 		<column>custom_t4</column>
 		<label>_CUSTOMER</label>
 		<type>string</type>
-		<img>default_number.gif</img>
+		<img>plus.png</img>
 	</INDEX>
 	<INDEX>
 		<column>custom_t5</column>
 		<label>_PO_NUMBER</label>
 		<type>string</type>
-		<img>default_number.gif</img>
+		<img>plus.png</img>
 	</INDEX>
 <!--
 	<INDEX>
