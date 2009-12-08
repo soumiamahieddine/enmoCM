@@ -243,7 +243,7 @@ else
 
 				if($_SESSION['history']['attachup'] == "true")
 				{
-					require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR"class_history.php");
+					require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 					$hist = new history();
 					$hist->add($_SESSION['tablename']['attach_res_attachments'], $_SESSION['courrier']['res_id'],"UP", _ANSWER_UPDATED."  (".$_SESSION['courrier']['res_id'].")", $_SESSION['config']['databasetype'],'attachments');
 

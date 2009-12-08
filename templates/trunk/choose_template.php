@@ -45,7 +45,7 @@ $core_tools->load_header(_CHOOSE_TEMPLATE);
 <h2 class="tit"><?php  echo _CHOOSE_TEMPLATE;?> </h2>
 
 <div align="center"><b><?php  echo $erreur; ?></b></div>
-<form enctype="multipart/form-data" method="post" name="attachement" action="<?php  echo $_SESSION['config']['businessappurl'];?>inhdex.php?display=true&module=templates&page=choose_template"   >
+<form enctype="multipart/form-data" method="post" name="attachement" action="<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=templates&page=choose_template"   >
 	<input type="hidden" name="display"  value="true" />
 	<input type="hidden" name="module"  value="templates" />
 	<input type="hidden" name="page"  value="choose_template" />
