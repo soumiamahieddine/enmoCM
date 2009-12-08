@@ -67,8 +67,7 @@ Defines :
 									
 									##define_lang|_SORT_BY## :
 												##define_lang|_NUM_CASE##
-												<a href="##order_link|cases.case_id|desc##" title="##define_lang|_DESC_SORT##"><img src="##load_img|tri_down.gif##" border="0" alt="##define_lang|_DESC_SORT##" /> </a> <a href="##order_link|cases.case_id|asc##" title="##define_lang|_ASC_SORT##"> <img src="##load_img|tri_up.gif##" border="0" alt="##define_lang|_ASC_SORT##" /></a> 
-												&nbsp;
+												<a href="##order_link|cases.case_id|desc##" title="##define_lang|_DESC_SORT##"><img src="##load_img|tri_down.gif##" border="0" alt="##define_lang|_DESC_SORT##" /> </a> <a href="##order_link|cases.case_id|asc##" title="##define_lang|_ASC_SORT##"> <img src="##load_img|tri_up.gif##" border="0" alt="##defink|cases.case_creation_date|asc##" title="##define_lang|_ASC_SORT##"></a> 
 												##define_lang|_CASE_LABEL## 
 												<a href="##order_link|cases.case_label|desc##" title="##define_lang|_DESC_SORT##"><img src="##load_img|tri_down.gif##" border="0" alt="##define_lang|_DESC_SORT##" /> </a> <a href="##order_link|cases.case_label|asc##" title="##define_lang|_ASC_SORT##"> <img src="##load_img|tri_up.gif##" border="0" alt="##define_lang|_ASC_SORT##" /></a> 
 												&nbsp;
@@ -77,6 +76,7 @@ Defines :
 												&nbsp;
 												##define_lang|_CASE_CREATION_DATE## 
 												<a href="##order_link|cases.case_creation_date|desc##" title="##define_lang|_DESC_SORT##"><img src="##load_img|tri_down.gif##" border="0" alt="##define_lang|_DESC_SORT##" /> </a> <a href="##order_link|cases.case_creation_date|asc##" title="##define_lang|_ASC_SORT##"> <img src="##load_img|tri_up.gif##" border="0" alt="##define_lang|_ASC_SORT##" /></a> 
+												&nbsp;
 												&nbsp;
 												##define_lang|_CASE_TYPIST## 
 												<a href="##order_link|cases.case_typist|desc##" title="##define_lang|_DESC_SORT##"><img src="##load_img|tri_down.gif##" border="0" alt="##define_lang|_DESC_SORT##" /> </a> <a href="##order_link|cases.case_typist|asc##" title="##define_lang|_ASC_SORT##"> <img src="##load_img|tri_up.gif##" border="0" alt="##define_lang|_ASC_SORT##" /></a> 	
@@ -89,7 +89,7 @@ Defines :
 #!#RESULT
 <!-- ------------------------------------------------------------------------->
 			
-			   <tr  class="##css_line|col| ##" >
+			   <tr  class="##css_line|col| ##" onclick="new Effect.toggle('info##load_value|case_id##', 'blind');" onmouseover="document.body.style.cursor='pointer';" onmouseout="document.body.style.cursor='auto';" id="h23">
 			
 					<td width="10%" align="center"style="text-align:center"  >
 						<h2>##func_bool_radio_form## ##load_value|case_id##</h2>
@@ -104,7 +104,7 @@ Defines :
 						
 					</td>
 				</tr>	
-				<tr class="##css_line_reload##">
+				<tr class="##css_line_reload##" onclick="new Effect.toggle('info##load_value|case_id##', 'blind');" onmouseover="document.body.style.cursor='pointer';" onmouseout="document.body.style.cursor='auto';" id="h23">
 						<td style="text-align:center" style="font-size:13px;">
 							<div align="center">	
 								<img src="##load_img|box.gif##" alt="##load_value|status##" title="##load_value|status##" > 				</div>
@@ -114,15 +114,15 @@ Defines :
 						</td>
 						<td><p align="right">
 							
-							<img src="##load_img|arrow_down.gif##"  onclick="new Effect.toggle('info##load_value|case_id##', 'blind');" onmouseover="document.body.style.cursor='pointer';" onmouseout="document.body.style.cursor='auto';" id="h23">
+							
 							&nbsp;&nbsp;&nbsp;##func_include_by_module|cases##
 							</p>
 						</td>
 				</tr >
-				<tr  class="##css_line_reload##"  >
+				<tr  class="##css_line_reload##"   onmouseover="document.body.style.cursor='pointer';" onmouseout="document.body.style.cursor='auto';" id="h23">
 				<td colspan="3" class="white">
 				<div class="more ressources" id="info##load_value|case_id##" style="display:none">
-					##func_load_external_script|cases|case_extend_list.php##
+					##func_load_external_script|cases|case_extend_list_for_basket.php##
 				</div>
 				</td>
 				</tr>

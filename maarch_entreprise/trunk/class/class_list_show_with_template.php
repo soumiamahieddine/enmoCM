@@ -226,7 +226,7 @@ class list_show_with_template extends list_show
 
 
 
-	//Ldpohjidfojfhodhopfsdpofhofdjsp ############################################oad check form if this parameters is loaded in list_show and list_show_with_template
+	//Load check form if this parameters is loaded in list_show and list_show_with_template
 	public function tmplt_include_by_module($actual_string, $theline, $result, $key, $string_to_module)
 	{
 		$my_explode= explode ("|", $actual_string);
@@ -457,10 +457,6 @@ class list_show_with_template extends list_show
 		 * 							 [img] : html img to use for this template
 		 * 							 [label] : label to show in alt tag or title tag
 		 */
-
-		//delete from link template=....&
-		//$link = preg_replace("^template=(.*?)&", "TOTO", $link);
-
 		if ($this->hide_standard_list == true)
 			$standard = '';
 		else
@@ -530,7 +526,7 @@ class list_show_with_template extends list_show
 		$this->bool_view_document = $bool_view_document;
 		$this->bool_detail = $bool_detail;
 		$this->do_action = $do_action;
-		$this->id_action = $id_action;
+		$this->id_action = $id_action; /*To keep value for extended simples script =>*/ $_SESSION['extended_template']['id_default_action'] = $this->id_action;
 		$this->do_action_arr = $do_action_arr;
 		$this->hide_standard_list = $hide_standard_list;
 
@@ -575,7 +571,7 @@ class list_show_with_template extends list_show
 		//##############################################################
 		$list_trait = $this->get_template($file);
 		$tmp = explode("#!#", $list_trait);
-
+		
 
 
 		//Generate link for reloading file

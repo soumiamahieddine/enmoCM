@@ -1257,7 +1257,7 @@ class list_show extends functions
 	                    <?php
 						}
 					}
-					?>
+					?> 	
 					</td>
 					<?php  }
 					else if($bool_simple_list)
