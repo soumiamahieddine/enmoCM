@@ -224,7 +224,19 @@ class business_app_tools extends dbquery
 				{
 					$label = $tmp;
 				}
-				$_SESSION['actions_pages'][$i] = array("ID" => (string) $ACTIONPAGE->ID, "LABEL" => $label,"NAME" => (string) $ACTIONPAGE->NAME, "ORIGIN" => (string) $ACTIONPAGE->ORIGIN,"MODULE" => (string) $ACTIONPAGE->MODULE);
+				$keyword = '';
+				if(isset($ACTIONPAGE->KEYWORD) && !empty($ACTIONPAGE->KEYWORD))
+				{
+					$keyword = (string) $ACTIONPAGE->KEYWORD;
+				}
+				$flag_create = 'N';
+				if(isset($ACTIONPAGE->FLAG_CREATE) && (string) $ACTIONPAGE->FLAG_CREATE == 'true')
+				{
+					$flag_create = 'Y';
+				}
+				
+				$_SESSION['actions_pages'][$i] = array("ID" => (string) $ACTIONPAGE->ID, "LABEL" => $label,"NAME" => (string) $ACTIONPAGE->NAME, "ORIGIN" => (string) $ACTIONPAGE->ORIGIN,"MODULE" => (string) $ACTIONPAGE->MODULE, "KEYWORD" => $keyword, "FLAG_CREATE" => $flag_create);
+				
 				$i++;
 
 			}

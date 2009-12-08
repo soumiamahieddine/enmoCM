@@ -62,6 +62,21 @@ class AdminActions extends dbquery
 		{
 			$_SESSION['m_admin']['action']['ACTION_PAGE'] = trim($_REQUEST['action_page']);
 		}
+		$_SESSION['m_admin']['action']['KEYWORD'] = '';
+		$_SESSION['m_admin']['action']['FLAG_CREATE'] = 'N';
+		if($_SESSION['m_admin']['action']['ACTION_PAGE'] <> "")
+		{
+			for($i=0; $i<count($_SESSION['actions_pages']);$i++)
+			{
+				if($_SESSION['m_admin']['action']['ACTION_PAGE'] == $_SESSION['actions_pages'][$i]['ID'])
+				{
+					$_SESSION['m_admin']['action']['KEYWORD'] = $_SESSION['actions_pages'][$i]['KEYWORD'];
+					$_SESSION['m_admin']['action']['FLAG_CREATE'] = $_SESSION['actions_pages'][$i]['FLAG_CREATE'];
+					break;
+				}
+			}
+		}
+		
 		$_SESSION['m_admin']['action']['HISTORY'] = $func->wash($_REQUEST['history'], "no", _HISTORY." ");
 
 		$_SESSION['m_admin']['action']['order'] = $_REQUEST['order'];
@@ -111,14 +126,14 @@ class AdminActions extends dbquery
 
 			if($mode == "add")
 			{
-				$this->query("INSERT INTO ".$_SESSION['tablename']['actions']." ( label_action, id_status, action_page, history)
+				$this->query("INSERT INTO ".$_SESSION['tablename']['actions']." ( label_action, id_status, action_page, history, keyword, create_id)
 				VALUES (  '".$this->protect_string_db($_SESSION['m_admin']['action']['LABEL'])."',
 				'".$this->protect_string_db($_SESSION['m_admin']['action']['ID_STATUS'])."', '".$this->protect_string_db($_SESSION['m_admin']['action']['ACTION_PAGE'])."',
-				'".$this->protect_string_db($_SESSION['m_admin']['action']['HISTORY'])."' )");
+				'".$this->protect_string_db($_SESSION['m_admin']['action']['HISTORY'])."', '".$this->protect_string_db($_SESSION['m_admin']['action']['KEYWORD'])."', '".$this->protect_string_db($_SESSION['m_admin']['action']['FLAG_CREATE'])."' )");
 
 				if($_SESSION['history']['actionadd'])
 				{
-					$this->query("select id from ".$_SESSION['tablename']['actions']." where label_action = '".$this->protect_string_db($_SESSION['m_admin']['action']['LABEL'])."' and id_status = '".$this->protect_string_db($_SESSION['m_admin']['action']['ID_STATUS'])."' and action_page = '".$this->protect_string_db($_SESSION['m_admin']['action']['ACTION_PAGE'])."' and history = '".$this->protect_string_db($_SESSION['m_admin']['action']['HISTORY'])."'");
+					$this->query("select id from ".$_SESSION['tablename']['actions']." where label_action = '".$this->protect_string_db($_SESSION['m_admin']['action']['LABEL'])."' and id_status = '".$this->protect_string_db($_SESSION['m_admin']['action']['ID_STATUS'])."' and action_page = '".$this->protect_string_db($_SESSION['m_admin']['action']['ACTION_PAGE'])."' and history = '".$this->protect_string_db($_SESSION['m_admin']['action']['HISTORY'])."' and keyword = '".$this->protect_string_db($_SESSION['m_admin']['action']['KEYWORD'])."' and create_id = '".$this->protect_string_db($_SESSION['m_admin']['action']['FLAG_CREATE'])."'");
 					$res = $this->fetch_object();
 					$id = $res->id;
 					require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_history.php');
@@ -133,7 +148,7 @@ class AdminActions extends dbquery
 			}
 			elseif($mode == "up")
 			{
-				$this->query("update ".$_SESSION['tablename']['actions']." set label_action = '".$this->protect_string_db($_SESSION['m_admin']['action']['LABEL'])."', id_status = '".$this->protect_string_db($_SESSION['m_admin']['action']['ID_STATUS'])."', action_page = '".$this->protect_string_db($_SESSION['m_admin']['action']['ACTION_PAGE'])."', history = '".$this->protect_string_db($_SESSION['m_admin']['action']['HISTORY'])."' where id = ".$_SESSION['m_admin']['action']['ID']."");
+				$this->query("update ".$_SESSION['tablename']['actions']." set label_action = '".$this->protect_string_db($_SESSION['m_admin']['action']['LABEL'])."', id_status = '".$this->protect_string_db($_SESSION['m_admin']['action']['ID_STATUS'])."', action_page = '".$this->protect_string_db($_SESSION['m_admin']['action']['ACTION_PAGE'])."', history = '".$this->protect_string_db($_SESSION['m_admin']['action']['HISTORY'])."', keyword = '".$this->protect_string_db($_SESSION['m_admin']['action']['KEYWORD'])."', create_id = '".$this->protect_string_db($_SESSION['m_admin']['action']['FLAG_CREATE'])."' where id = ".$_SESSION['m_admin']['action']['ID']."");
 
 				if($_SESSION['history']['actionup'])
 				{
