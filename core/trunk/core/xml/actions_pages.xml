@@ -1,52 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+An action page is described in a ACTIONPAGE tag :
+	<ACTIONPAGE>
+		<ID>redirect</ID>  => Action identifier 
+		<LABEL>_REDIRECTION</LABEL> => Action label, can be a language constant or not
+    	<NAME>redirect</NAME> => name of the action page without the .php, here the action page is redirect.php
+        <ORIGIN>module</ORIGIN> => action origin : apps or module 
+		<MODULE>entities</MODULE> => If origin is module, the module name
+		<KEYWORD>redirect</KEYWORD> => Keyword used for special parameters (tag not mandatory)
+		<FLAG_CREATE>false</FLAG_CREATE> => true if the action create a new ressource, false otherwise (we recommend to leave it at false except for the indexing action page
+    </ACTIONPAGE>
+-->
 <ROOT>
 	<ACTIONPAGE>
 		<ID>redirect</ID>
 		<LABEL>_REDIRECTION</LABEL>
     	<NAME>redirect</NAME>
-        <ORIGIN>module</ORIGIN> <!-- apps or module -->
+        <ORIGIN>module</ORIGIN>
 		<MODULE>entities</MODULE>
+		<KEYWORD>redirect</KEYWORD>
+		<FLAG_CREATE>false</FLAG_CREATE>
     </ACTIONPAGE>
 	<ACTIONPAGE>
 		<ID>confirm_status</ID>
 		<LABEL>_SIMPLE_CONFIRM</LABEL>
     	<NAME>confirm_status</NAME>
-        <ORIGIN>apps</ORIGIN> <!-- apps or module -->
+        <ORIGIN>apps</ORIGIN> 
 		<MODULE></MODULE>
+		<FLAG_CREATE>false</FLAG_CREATE>
     </ACTIONPAGE>
 	<ACTIONPAGE>
 		<ID>process</ID>
 		<LABEL>_PROCESS</LABEL>
     	<NAME>process</NAME>
-        <ORIGIN>apps</ORIGIN> <!-- apps or module -->
+        <ORIGIN>apps</ORIGIN> 
 		<MODULE></MODULE>
+		<FLAG_CREATE>false</FLAG_CREATE>
     </ACTIONPAGE>
 	<ACTIONPAGE>
 		<ID>index_mlb</ID>
 		<LABEL>_INDEX_FILE</LABEL>
     	<NAME>index_mlb</NAME>
-        <ORIGIN>apps</ORIGIN> <!-- apps or module -->
+        <ORIGIN>apps</ORIGIN> 
 		<MODULE></MODULE>
+		<KEYWORD>indexing</KEYWORD>
+		<FLAG_CREATE>true</FLAG_CREATE>
     </ACTIONPAGE>
 	<ACTIONPAGE>
 		<ID>validate_mail</ID>
 		<LABEL>_VALIDATE_QUALIF</LABEL>
     	<NAME>validate_mail</NAME>
-        <ORIGIN>apps</ORIGIN> <!-- apps or module -->
+        <ORIGIN>apps</ORIGIN> 
 		<MODULE></MODULE>
+		<FLAG_CREATE>false</FLAG_CREATE>
     </ACTIONPAGE>
 	<ACTIONPAGE>
 		<ID>view</ID>
 		<LABEL>_VIEW_DOC</LABEL>
     	<NAME>view</NAME>
-        <ORIGIN>apps</ORIGIN> <!-- apps or module -->
+        <ORIGIN>apps</ORIGIN>
 		<MODULE></MODULE>
+		<FLAG_CREATE>false</FLAG_CREATE>
     </ACTIONPAGE>
 	<ACTIONPAGE>
 		<ID>close_mail</ID>
 		<LABEL>_CLOSE_MAIL</LABEL>
     	<NAME>close_mail</NAME>
-        <ORIGIN>apps</ORIGIN> <!-- apps or module -->
+        <ORIGIN>apps</ORIGIN> 
 		<MODULE></MODULE>
+		<FLAG_CREATE>false</FLAG_CREATE>
     </ACTIONPAGE>
 </ROOT>
