@@ -351,7 +351,7 @@ function del_query_confirm()
 			<dd>
 				<h4><p align="center"><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_add_b.gif" alt="" /> <?php echo _CREATE_NEW_CASE; ?><p></h4>
 				<div class="blank_space">&nbsp;</div>
-				<form name="create_case" id="create_case" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php" method="post" >
+				<form name="create_case" id="create_case" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=cases&page=create_case" method="post" >
 					
 					<input type="hidden" name="display" value="true" />
 					<input type="hidden" name="module" value="cases" />
