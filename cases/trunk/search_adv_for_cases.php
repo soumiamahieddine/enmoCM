@@ -205,7 +205,7 @@ if($core_tools->is_module_loaded('entities'))
 {
 	$coll_id = 'letterbox_coll';
 	$where = $sec->get_where_clause_from_coll_id($coll_id);
-	$table = $sec->retrieve_view_from_coll($coll_id);
+	$table = $sec->retrieve_view_from_coll_id($coll_id);
 	if(empty($table))
 	{
 		$table = $sec->retrieve_view_from_coll_id($coll_id);
@@ -351,7 +351,8 @@ function del_query_confirm()
 			<dd>
 				<h4><p align="center"><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_add_b.gif" alt="" /> <?php echo _CREATE_NEW_CASE; ?><p></h4>
 				<div class="blank_space">&nbsp;</div>
-				<form name="create_case" id="create_case" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=cases&page=create_case" method="post" >
+				<form name="create_case" id="create_case" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php" method="post" >
+					
 					<input type="hidden" name="display" value="true" />
 					<input type="hidden" name="module" value="cases" />
 					<input type="hidden" name="page" value="create_case" />
@@ -422,8 +423,11 @@ function del_query_confirm()
 		</form>
 		<?php } ?>
 		<!--<form name="frmsearch2" method="get" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=search_adv_result&dir=indexing_searching"  id="frmsearch2" class="<?php echo $class_for_form; ?>">-->
-		<form name="frmsearch2" method="get" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&dir=indexing_searching&page=search_adv_result"  id="frmsearch2" class="<?php echo $class_for_form; ?>">
-
+		<form name="frmsearch2" method="get" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php"  id="frmsearch2" class="<?php echo $class_for_form; ?>">
+		<input type="hidden" name="display" value="true" />
+		<input type="hidden" name="dir" value="indexing_searching" />
+		<input type="hidden" name="page" value="search_adv_result" />
+		
 		<?php if ($_GET['schema'] <> '')
 		{ ?>
 			<input type="hidden" name="schema" value="<?php echo $_GET['schema']; ?>" />
