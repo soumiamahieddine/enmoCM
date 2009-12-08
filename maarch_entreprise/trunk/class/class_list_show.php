@@ -1414,7 +1414,7 @@ class list_show extends functions
                 <td ><?php
                         if($bool_view_document)
                         {
-                            echo "<a href='".$page_view."?id=".$result[$theline][0][$key]."' target=\"_blank\" title='"._VIEW_DOC."'>
+                            echo "<a href='".$page_view."&id=".$result[$theline][0][$key]."' target=\"_blank\" title='"._VIEW_DOC."'>
                             <img src='".$_SESSION['config']['businessappurl']."static.php?filename=picto_dld.gif' alt='"._VIEW_DOC."' border='0'/></a>";
                         }
 
@@ -1466,7 +1466,7 @@ class list_show extends functions
 				}
 				if($bool_del)
 				{?><td class="action" >
-						<a href="<?php  echo $page_del;?>?id=<?php  echo $result[$theline][0][$key];?>" class="delete"
+						<a href="<?php  echo $page_del;?>&id=<?php  echo $result[$theline][0][$key];?>" class="delete"
 					onclick="return(confirm('<?php  echo _REALLY_DELETE;?> ?\n\r\n\r<?php  echo _DEFINITIVE_ACTION; ?>'));"><?php  echo _DELETE;?></a>
 					</td>
                <?php  }
