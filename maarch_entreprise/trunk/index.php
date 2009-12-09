@@ -19,17 +19,20 @@ if(isset($_SESSION['config']['corepath']))
 	require_once("core/class/class_functions.php");
 	require_once("core/class/class_db.php");
 	require_once("core/class/class_core_tools.php");
+	$core_tools = new core_tools();
 }
 else
 {
 	require_once("../../core/class/class_functions.php");
 	require_once("../../core/class/class_db.php");
 	require_once("../../core/class/class_core_tools.php");	
+	$core_tools = new core_tools();
+	$_SESSION['custom_override_id'] = $core_tools->get_custom_id();
+	//echo  getcwd();
+	//echo "<br/>";
+	chdir("../..");
+	//echo  getcwd();
 }
-
-
-
-$core_tools = new core_tools();
 if(isset($_REQUEST['display']) )
 {
 	 $core_tools->insert_page();
@@ -48,6 +51,7 @@ if(!isset($_SESSION['user']['UserId']))
 	}
 	exit();
 }
+
 
 
 if(isset($_GET['show']))

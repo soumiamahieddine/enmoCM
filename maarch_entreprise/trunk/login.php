@@ -18,7 +18,6 @@ if(trim($_GET["coreurl"]) <> '')
 {
 	$_SESSION['config']['coreurl'] = $_GET["coreurl"];
 }
-
 if(!isset($_SESSION['config']['corename']) || empty($_SESSION['config']['corename']))
 {
 	if(isset($_SESSION['config']['corepath']) && !empty($_SESSION['config']['corepath'] ))
@@ -86,7 +85,6 @@ if(!isset($_SESSION['config']['corename']) || empty($_SESSION['config']['corenam
 	}	
 	chdir($_SESSION['config']['corepath']);
 }
-
 $_SESSION['config']['app_id'] = $_SESSION['businessapps'][0]['appid'];
 //print_r($_REQUEST);
 if(isset($_GET['target_page']) && trim($_GET['target_page']) <> "")
