@@ -2474,7 +2474,9 @@ text-align:right;
 #indexingfrmcontact
 {
 	width:480px;
-	margin-left:10px;
+	margin-left:auto;
+	margin-right:auto;
+	margin-bottom: 10px;
 }
 
 #indexingfrmcontact input, #indexingfrmcontact textarea

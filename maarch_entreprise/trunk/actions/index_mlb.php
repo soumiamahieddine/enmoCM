@@ -201,7 +201,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 				  $frm_str .= '</tr>';
 				   /*** Doctype ***/
 				  $frm_str .= '<tr id="type_id_tr" style="display:'.$display_value.';">';
-				  	$frm_str .='<td><span class="form_title" id="doctype_res" style="display:none;">'._DOCTYPE.'</span><span class="form_title" id="doctype_mail" style="display:inline;">'._DOCTYPE_MAIL.'</span></td>';
+				  	$frm_str .='<td><label for="type_id"><span class="form_title" id="doctype_res" style="display:none;">'._DOCTYPE.'</span><span class="form_title" id="doctype_mail" style="display:inline;">'._DOCTYPE_MAIL.'</span></label></td>';
 					$frm_str .='<td>&nbsp;</td>';
 					$frm_str .='<td class="indexing_field"><select name="type_id" id="type_id" onchange="clear_error(\'frm_error_'.$id_action.'\');change_doctype(this.options[this.selectedIndex].value, \''.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=change_doctype\', \''._ERROR_DOCTYPE.'\', \''.$id_action.'\', \''.$_SESSION['config']['businessappurl'].'index.php?display=true&page=get_content_js\');">';
 							$frm_str .='<option value="">'._CHOOSE_TYPE.'</option>';
@@ -330,7 +330,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 				  $frm_str .= '</tr>';
 				  $frm_str .= '<tr id="diff_list_tr" style="display:none;">';
 				  		$frm_str .= '<td colspan="3">';
-				  		$frm_str .= '<div id="diff_list_div" class="scroll_div" style="height:150px;"></div>';
+				  		$frm_str .= '<div id="diff_list_div" class="scroll_div" style="height:150px; border: 1px solid;"></div>';
 						$frm_str .= '</td>';
 				  $frm_str .= '</tr>';
 				}
@@ -428,6 +428,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 		$frm_str .= '<div id="validright">';
 		$frm_str .= '<div id="create_contact_div" style="display:none">';
 			$frm_str .= '<div >';
+			$frm_str .= '<fieldset style="border:1px solid;">';
+			$frm_str .= '<legend ><b>'._CREATE_CONTACT.'</b></legend>';
 	$frm_str .= '<form name="indexingfrmcontact" id="indexingfrmcontact" method="post" action="'.$_SESSION['config']['businessappurl'].'index.php?display=true&page=contact_info" >';
 
 			$frm_str .= '<table>';
@@ -623,6 +625,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 			}
 			$frm_str .=' <input name="cancel" type="button" value="'._CANCEL.'"  onclick="new Effect.toggle(\'create_contact_div\', \'blind\', {delay:0.2});clear_form(\'indexingfrmcontact\');return false;" class="button" />';
 		$frm_str .='</div>';
+		$frm_str .= '</fieldset >';
 		$frm_str .='</form >';
 			$frm_str .= '</div><br/>';
 		$frm_str .= '</div>';
