@@ -44,6 +44,7 @@ $db->connect();
 $db2->connect();
 $ent = new entity();
 $bask = new basket();
+$_SESSION['auth_dep'] = array();
 if(!empty($_REQUEST['clear']))
 {
 	$_SESSION['auth_dep'] = array();
