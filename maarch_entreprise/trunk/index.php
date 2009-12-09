@@ -26,6 +26,9 @@ else
 	require_once("../../core/class/class_db.php");
 	require_once("../../core/class/class_core_tools.php");	
 }
+
+
+
 $core_tools = new core_tools();
 if(isset($_REQUEST['display']) )
 {
@@ -45,7 +48,6 @@ if(!isset($_SESSION['user']['UserId']))
 	}
 	exit();
 }
-
 
 
 if(isset($_GET['show']))
