@@ -424,7 +424,7 @@ if(count($_REQUEST['meta']) > 0)
 				}
 				else
 				{
-					$where_request .= " (creation_date >= '".$func->format_date_db($_REQUEST['creation_date_from'])."') and ";
+					$where_request .= " (date(creation_date) >= '".$func->format_date_db($_REQUEST['creation_date_from'])."') and ";
 					$json_txt .= " 'creation_date_from' : ['".trim($_REQUEST['creation_date_from'])."'],";
 				}
 			}
@@ -437,7 +437,7 @@ if(count($_REQUEST['meta']) > 0)
 				}
 				else
 				{
-					$where_request .= " (creation_date <=	'".$func->format_date_db($_REQUEST['creation_date_to'])."') and ";
+					$where_request .= " (date(creation_date) <=	'".$func->format_date_db($_REQUEST['creation_date_to'])."') and ";
 					$json_txt .= " 'creation_date_to' : ['".trim($_REQUEST['creation_date_to'])."'],";
 				}
 			}
@@ -450,7 +450,7 @@ if(count($_REQUEST['meta']) > 0)
 				}
 				else
 				{
-					$where_request .= " (closing_date >= '".$func->format_date_db($_REQUEST['closing_date_from'])."') and ";
+					$where_request .= " (date(closing_date) >= '".$func->format_date_db($_REQUEST['closing_date_from'])."') and ";
 					$json_txt .= "'closing_date_from' : ['".trim($_REQUEST['closing_date_from'])."'],";
 				}
 			}
@@ -463,7 +463,7 @@ if(count($_REQUEST['meta']) > 0)
 				}
 				else
 				{
-					$where_request .= " (closing_date <= '".$func->format_date_db($_REQUEST['closing_date_to'])."') and ";
+					$where_request .= " (date(closing_date) <= '".$func->format_date_db($_REQUEST['closing_date_to'])."') and ";
 					$json_txt .= "'closing_date_to' : ['".trim($_REQUEST['closing_date_to'])."'],";
 				}
 			}
@@ -476,7 +476,7 @@ if(count($_REQUEST['meta']) > 0)
 				}
 				else
 				{
-					$where_request .= " (process_limit_date >= '".$func->format_date_db($_REQUEST['lim_date_from'])."') and ";
+					$where_request .= " (date(process_limit_date) >= '".$func->format_date_db($_REQUEST['process_limit_date_from'])."') and ";
 					$json_txt .= "'process_limit_date_from' : ['".trim($_REQUEST['process_limit_date_from'])."'],";
 				}
 			}
@@ -489,7 +489,7 @@ if(count($_REQUEST['meta']) > 0)
 				}
 				else
 				{
-					$where_request .= " (process_limit_date <= '".$func->format_date_db($_REQUEST['process_limit_date_to'])."') and ";
+					$where_request .= " (date(process_limit_date) <= '".$func->format_date_db($_REQUEST['process_limit_date_to'])."') and ";
 					$json_txt .= "'process_limit_date_to' : ['".trim($_REQUEST['process_limit_date_to'])."'],";
 				}
 			}
@@ -663,7 +663,7 @@ if(count($_REQUEST['meta']) > 0)
 				}
 				else
 				{
-					$where_request .= " (admission_date >= '".$func->format_date_db($_REQUEST['admission_date_from'])."') and ";
+					$where_request .= " (date(admission_date) >= '".$func->format_date_db($_REQUEST['admission_date_from'])."') and ";
 					$json_txt .= " 'admission_date_from' : ['".trim($_REQUEST['admission_date_from'])."'],";
 				}
 			}
@@ -676,20 +676,20 @@ if(count($_REQUEST['meta']) > 0)
 				}
 				else
 				{
-					$where_request .= " (admission_date <=	'".$func->format_date_db($_REQUEST['admission_date_to'])."') and ";
+					$where_request .= " (date(admission_date) <=	'".$func->format_date_db($_REQUEST['admission_date_to'])."') and ";
 					$json_txt .= " 'admission_date_to' : ['".trim($_REQUEST['admission_date_to'])."'],";
 				}
 			}
 			// DOC DATE : FROM
 			else if($tab_id_fields[$j] == 'doc_date_from' && !empty($_REQUEST['doc_date_from']))
 			{
-				if( preg_match($_ENV['date_pattern'],$_REQUEST['date_start_from'])==false )
+				if( preg_match($_ENV['date_pattern'],$_REQUEST['doc_date_from'])==false )
 				{
 					$_SESSION['error'] .= _WRONG_DATE_FORMAT.' : '.$_REQUEST['doc_date_from'];
 				}
 				else
 				{
-					$where_request .= " (doc_date >= '".$func->format_date_db($_REQUEST['doc_date_from'])."') and ";
+					$where_request .= " (date(doc_date) >= '".$func->format_date_db($_REQUEST['doc_date_from'])."') and ";
 					$json_txt .= " 'doc_date_from' : ['".trim($_REQUEST['doc_date_from'])."'],";
 				}
 			}
@@ -702,7 +702,7 @@ if(count($_REQUEST['meta']) > 0)
 				}
 				else
 				{
-					$where_request .= " (r.doc_date <=	'".$func->format_date_db($_REQUEST['doc_date_to'])."') and ";
+					$where_request .= " (date(doc_date) <=	'".$func->format_date_db($_REQUEST['doc_date_to'])."') and ";
 					$json_txt .= " 'doc_date_to' : ['".trim($_REQUEST['doc_date_to'])."'],";
 				}
 			}
@@ -733,7 +733,7 @@ if(!empty($_SESSION['error']))
 {
 	if($mode == 'normal')
 	{
-		$_SESSION['error_search'] = 'normal<br /><div class="error">'._MUST_CORRECT_ERRORS.' : <br /><br /><strong>'.$_SESSION['error_search'].'<br /><a href="'.$_SESSION['config']['businessappurl'].'index.php?page=search_adv&dir=indexing_searching">'._CLICK_HERE_TO_CORRECT.'</a></strong></div>';
+		$_SESSION['error_search'] = '<br /><div class="error">'._MUST_CORRECT_ERRORS.' : <br /><br /><strong>'.$_SESSION['error_search'].'<br /><a href="'.$_SESSION['config']['businessappurl'].'index.php?page=search_adv&dir=indexing_searching">'._CLICK_HERE_TO_CORRECT.'</a></strong></div>';
 		?>
 		<script language="javascript" type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?page=search_adv_error&dir=indexing_searching';?>';</script>
 		<?php
