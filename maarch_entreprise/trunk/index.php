@@ -28,10 +28,22 @@ else
 	require_once("../../core/class/class_core_tools.php");	
 	$core_tools = new core_tools();
 	$_SESSION['custom_override_id'] = $core_tools->get_custom_id();
-	//echo  getcwd();
-	//echo "<br/>";
 	chdir("../..");
-	//echo  getcwd();
+}
+if(isset($_SESSION['user']['UserId']) && !empty($_SESSION['user']['UserId']) && $_GET['page'] <> 'login' && $_GET['page'] <> 'log' && $_GET['page'] <> 'logout')
+{
+	$db = new dbquery();
+	$key = md5(time()."%".$_SESSION['user']['FirstName']."%".$_SESSION['user']['UserId']."%".$_SESSION['user']['UserId']."%".date("dmYHmi")."%");
+
+	if ($_SESSION['config']['databasetype'] == "ORACLE")
+	{
+		$db->query("update ".$_SESSION['tablename']['users']." set cookie_key = '".$key."', cookie_date = SYSDATE where user_id = '".$_SESSION['user']['UserId']."' and mail = '".$_SESSION['user']['Mail']."'", 1);
+	}
+	else
+	{
+		$db->query("update ".$_SESSION['tablename']['users']." set cookie_key = '".$key."', cookie_date = '".date("Y-m-d")." ".date("H:m:i")."' where user_id = '".$_SESSION['user']['UserId']."' and mail = '".$_SESSION['user']['Mail']."'", 1);
+	}
+	setcookie("maarch", "UserId=".$_SESSION['user']['UserId']."&key=".$key,time()+($_SESSION['config']['cookietime']*1000));
 }
 if(isset($_REQUEST['display']) )
 {

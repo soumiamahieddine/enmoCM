@@ -834,7 +834,7 @@ function expertmodeview(coll_id)
 	label1.className  = "input_expert_show";
 	label2.className  = "input_expert_hide";
 	//document.location.reload();
-	document.location.href = 'add_grant.php?expertmode=true&collection=' + coll_id;
+	document.location.href = 'index.php?display=true&page=add_grant&admin=groups&expertmode=true&collection=' + coll_id;
 }
 /********************************/
 
@@ -985,11 +985,11 @@ function get_z_indexes()
  */
  function getScrollXY(){
     if (window.top.scrollX || window.top.scrollY){
-		alert("1");
+		//alert("1");
         var scrollX = window.scrollX;
         var scrollY = window.scrollY;
     }else{
-		alert("2");
+		//alert("2");
         var scrollX = document.body.scrollLeft;
         var scrollY = document.body.scrollTop;
     }
@@ -1016,7 +1016,6 @@ var do_nothing = false;
  */
 function end_actions()
 {
-
 	var req_action = pile_actions.action_pop();
 	if(req_action)
 	{
