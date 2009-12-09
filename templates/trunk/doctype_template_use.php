@@ -20,7 +20,7 @@ if($db->nb_result() > 0)
 	$template = $res->template_id;
 }
 
-array_push($_SESSION['indexing_services'], array('script' => $_SESSION['config']['coreurl'].'modules/templates/js/change_doctype.js', 'function_to_execute' => 'doctype_template', 'arguments' => array(
+array_push($_SESSION['indexing_services'], array('script' => 'modules/templates/js/change_doctype.js', 'function_to_execute' => 'doctype_template', 'arguments' => array(
 array('id' => 'is_generated' , 'value' =>$is_generated),
 array('id'=> 'template_id', 'value' => $template),
 array('id'=> 'doc_frame', 'value' => $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=file_iframe'),
