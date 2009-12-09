@@ -39,9 +39,13 @@ if(empty($_REQUEST['scripts']))
 }
 
 $arr_scripts = explode('$$', $_REQUEST['scripts']);
+//print_r($arr_scripts);
 for($i=0; $i<count($arr_scripts ); $i++)
 {
-	echo file_get_contents($arr_scripts[$i]);
+	if($arr_scripts[$i] <> '')
+	{
+		echo file_get_contents($arr_scripts[$i]);
+	}
 }
 exit();
 ?>
