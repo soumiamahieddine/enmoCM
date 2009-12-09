@@ -193,7 +193,7 @@ $_SESSION['error_page'] = '';
 		array_push($template_list, array( "name"=>"attach_to_case", "img"=>"extend_list.gif", "label"=> _ACCESS_LIST_EXTEND));
 	
 	if($_REQUEST['template'] == 'group_case')
-		array_push($template_list, array( "name"=>"group_case", "img"=>"box.gif", "label"=> _ACCESS_LIST_CASE));
+		array_push($template_list, array( "name"=>"group_case", "img"=>"case_list.gif", "label"=> _ACCESS_LIST_CASE));
 	
 	if(!$_REQUEST['template'])
 		$template_to_use = $template_list[0]["name"];
@@ -410,7 +410,7 @@ $_SESSION['error_page'] = '';
     <div id="inner_content"><?php
 
 $details = 'details';
-	$list->list_doc($tab,$i,'','res_id','list_results_mlb_frame','res_id',$details.'&dir=indexing_searching',true,true,'post',$_SESSION['config']['businessappurl']."index.php?display=true&module=cases&page=execute_attachement&searched_item=".$_GET['searched_item']."&searched_value=".$_GET['searched_value'],_LINK_TO_CASE,false,true,true, false,false,false,true,true,'', '',false,'','','listing spec', '', false, false, null, '<input type="hidden" name="display" value="true"/><input type="hidden" name="module" value="cases" /><input type="hidden" name="page" value="execute_attachement" />', '{}', true, '', true, array(), true, $template_list, $template_to_use, false, true  );
+	$list->list_doc($tab,$i,'','res_id','list_results_mlb_frame&module=cases','res_id',$details.'&dir=indexing_searching',true,true,'post',$_SESSION['config']['businessappurl']."index.php?display=true&module=cases&page=execute_attachement&searched_item=".$_GET['searched_item']."&searched_value=".$_GET['searched_value'],_LINK_TO_CASE,false,true,true, false,false,false,true,true,'', '',false,'','','listing spec', '', false, false, null, '<input type="hidden" name="display" value="true"/><input type="hidden" name="module" value="cases" /><input type="hidden" name="page" value="execute_attachement" />', '{}', true, '', true, array(), true, $template_list, $template_to_use, false, true  );
 	?></div><?php
 }
 else

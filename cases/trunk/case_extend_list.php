@@ -88,7 +88,7 @@ if ($db_external->nb_result() >0)
 					if($right==false)
 						$external .='<tr class="col"  style="color:#BBBBBB;"> <a href="'.$_SESSION['config']['businessappurl'].'index.php?page='.$this->detail_destination.'&amp;id='.$ext_result->res_id.'" title="'. _DETAILS.'">';
 					else
-						$external .='<tr class="col"  onmouseover="document.body.style.cursor=\'pointer\';" onmouseout="document.body.style.cursor=\'auto\';"><a href="'.$_SESSION['config']['businessappurl'].'index.php?page='.$this->detail_destination.'&amp;id='.$ext_result->res_id.'" title="'. _DETAILS.'">';
+						$external .='<tr class="col"  onclick="location.href=\''.$_SESSION['config']['businessappurl'].'index.php?page='.$this->detail_destination.'&amp;id='.$ext_result->res_id.'\';" onmouseover="document.body.style.cursor=\'pointer\';" onmouseout="document.body.style.cursor=\'auto\';"><a href="'.$_SESSION['config']['businessappurl'].'index.php?page='.$this->detail_destination.'&amp;id='.$ext_result->res_id.'" title="'. _DETAILS.'">';
 					
 					
 					$external .='<td width="8%" >&nbsp;</td>';
