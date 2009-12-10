@@ -33,13 +33,13 @@ $core = new core_tools();
 $core->load_lang();
 $res_action = array();
 
-/**
+/*
 * Puts the values that are in a string into an array.
 * $$ field separator, # field_name / value separator
 *
 * @param $val string Values to split
 * @return array Values in array
-**/
+*/
 function get_values_in_array($val)
 {
 	$tab = explode('$$',$val);
@@ -112,16 +112,39 @@ if($_POST['req'] == 'valid_form' && !empty($_POST['action_id']) && isset($_POST[
 		exit();
 	}
 }
+elseif($_POST['req'] == 'change_status' && !empty($_POST['values']) && !empty($_POST['new_status']) && !empty($_POST['table']))
+{
+	$arr_id = explode(',', $_POST['values']);
+	$result = '';
+	$db->connect();
+	for($i=0; $i<count($arr_id );$i++)
+	{
+		$arr_id[$i] = str_replace('#', '', $arr_id[$i]);
+		$result .= $arr_id[$i].'#';
+		$query_str = "update ".$_POST['table']. " set status = '".$_POST['new_status']."' where res_id = ".$arr_id[$i];
+	//	echo $query_str;
+		$req = $db->query($query_str, true);
+		if(!$req)
+		{
+			$_SESSION['action_error'] = _SQL_ERROR.' : '.$query_str;
+			echo "{status : 1, error_txt : '".addslashes(_ERROR_WITH_STATUS)." ".$query_str."'}";
+			exit();
+		}
+	}
+	echo "{status : 0, error_txt : '".addslashes(_STATUS_UPDATED.' : '.$_POST['new_status'])."}";
+	exit();
+}
 // Post variables error
 else if(empty($_POST['values']) || !isset($_POST['action_id']) || empty($_POST['action_id']) ||
 ($_POST['mode'] <> 'mass' && $_POST['mode'] <> 'page')  || empty($_POST['table'])
-|| empty($_POST['coll_id']) || empty($_POST['module']) || ($_POST['req'] <> 'first_request' && $_POST['req'] <> 'second_request'))
+|| empty($_POST['coll_id']) || empty($_POST['module']) || ($_POST['req'] <> 'first_request' && $_POST['req'] <> 'second_request' && $_POST['req'] <> 'change_status'))
 {
 	$tmp = 'values : '.$_POST['values'].', action_id : '.$_POST['action_id'].', mode : '. $_POST['mode'].', table : '.$_POST['table'].', coll_id : '.$_POST['coll_id'].', module : '.$_POST['module'].', req : '.$_POST['req'];
 	$_SESSION['action_error'] = $tmp._AJAX_PARAM_ERROR;
 	echo "{status : 1, error_txt : '".$id_action.addslashes($_SESSION['action_error'])."'}";
 	exit();
 }
+
 else
 {
 	// Puts the res_id into an array
@@ -182,6 +205,7 @@ else
 		$_SESSION['action_error'] = _ACTION_DONE.' : '.$label_action;
 		echo "{status : 0, error_txt : '".addslashes($_SESSION['action_error']).", status : ".$status.", ".$_POST['values']."', page_result	: ''}";
 
+
 	}
 	// There is a script for the action
 	else
@@ -201,42 +225,48 @@ else
 		if($_POST['req'] == 'first_request' && in_array('form', $etapes))
 		{
 			$frm_test = get_form_txt($arr_id, $_SESSION['config']['businessappurl'].'index.php?display=true&page=manage_action&module=core', $id_action, $_POST['table'],$_POST['module'], $_POST['coll_id'],  $_POST['mode'] );
-			echo "{status : 3, form_content : '".$frm_test."', height : '".$frm_height."', width : '".$frm_width."', 'mode_frm' : '".$mode_form."'}";
+			echo "{status : 3, form_content : '".$frm_test."', height : '".$frm_height."', width : '".$frm_width."', 'mode_frm' : '".$mode_form."', 'action_status' : '".$status."'}";
 			exit();
 		}
 		elseif( $_POST['req'] == 'first_request' && $confirm == true)
 		{
-			echo "{status : 2, confirm_content : '".addslashes(_ACTION_CONFIRM." ".$label_action)."', validate : '"._VALIDATE."', cancel : '"._CANCEL."', label_action : '".addslashes($label_action)."'}";
+			echo "{status : 2, confirm_content : '".addslashes(_ACTION_CONFIRM." ".$label_action)."', validate : '"._VALIDATE."', cancel : '"._CANCEL."', label_action : '".addslashes($label_action)."', 'action_status' : '".$status."'}";
 			exit();
 		}
 		else
 		{
-			$_SESSION['action_error'] = $label_action.' : '._ERROR_SCRIPT;
+			if($confirm == false)
+			{
+				$_SESSION['action_error'] = $label_action.' : '._ERROR_SCRIPT;
+			}
 			for($i=0; $i<count($etapes);$i++)
 			{
-				if( function_exists('manage_'.$etapes[$i]))
+				if($etapes[$i] <> 'status')
 				{
-					try
+					if( function_exists('manage_'.$etapes[$i]) )
 					{
-						if($_POST['req'] == 'second_request')
+						try
 						{
-							$res_action = call_user_func('manage_'.$etapes[$i],$arr_id, $bool_history, $id_action, $label_action, $status, $_POST['coll_id'], $_POST['table'], get_values_in_array($_POST['form_values'])  );
+							if($_POST['req'] == 'second_request')
+							{
+								$res_action = call_user_func('manage_'.$etapes[$i],$arr_id, $bool_history, $id_action, $label_action, $status, $_POST['coll_id'], $_POST['table'], get_values_in_array($_POST['form_values'])  );
+							}
+							else
+							{
+								$res_action = call_user_func('manage_'.$etapes[$i],$arr_id, $bool_history, $id_action, $label_action, $status, $_POST['coll_id'], $_POST['table']);
+							}
 						}
-						else
+						catch(Exception $e)
 						{
-							$res_action = call_user_func('manage_'.$etapes[$i],$arr_id, $bool_history, $id_action, $label_action, $status, $_POST['coll_id'], $_POST['table']);
+							echo "{status : 9, error_txt : '".addslashes($_SESSION['action_error'])."'}";
+							exit();
 						}
 					}
-					catch(Exception $e)
+					else
 					{
 						echo "{status : 9, error_txt : '".addslashes($_SESSION['action_error'])."'}";
 						exit();
 					}
-				}
-				else
-				{
-					echo "{status : 9, error_txt : '".addslashes($_SESSION['action_error'])."'}";
-					exit();
 				}
 			}
 			if($res_action == false)
