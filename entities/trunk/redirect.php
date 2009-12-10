@@ -188,23 +188,6 @@ $frm_height = '500px';
 	return false;
  }
 
-
-function manage_status($arr_id, $history, $id_action, $label_action, $status, $coll_id, $table)
-{
-	$db = new dbquery();
-	$db->connect();
-	for($i=0; $i<count($arr_id );$i++)
-	{
-		$req = $db->query("update ".$table. " set status = '".$status."' where res_id = ".$arr_id[$i], true);
-		if(!$req)
-		{
-			$_SESSION['action_error'] = _SQL_ERROR;
-			return false;
-		}
-	}
-	return true;
- }
-
 function manage_unlock($arr_id, $history, $id_action, $label_action, $status, $coll_id, $table)
 {
 	$db = new dbquery();
