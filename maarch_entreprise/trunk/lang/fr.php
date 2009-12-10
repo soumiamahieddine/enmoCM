@@ -946,7 +946,7 @@ if (!defined('_CUSTOM_N1')) define( '_CUSTOM_N1', 'Champ Entier');
 if (!defined('_CUSTOM_F1')) define( '_CUSTOM_F1', 'Champ Flottant');
 
 if (!defined('_ITEM_NOT_IN_LIST')) define( '_ITEM_NOT_IN_LIST', 'El&egrave;ment absent de la liste des valeurs autoris&eacute;es');
-if (!defined('_PB_WITH_FINGERPRINT_OF_DOCUMENT')) define( '_PB_WITH_FINGERPRINT_OF_DOCUMENT', 'L&rsquo;empreinte num&eacute;rique itiniale du document ne correspond pas avec celle du document affich&eacute;e');
+if (!defined('_PB_WITH_FINGERPRINT_OF_DOCUMENT')) define( '_PB_WITH_FINGERPRINT_OF_DOCUMENT', 'L&rsquo;empreinte num&eacute;rique initiale du document ne correspond pas &agrave; celle du document r&eacute;f&eacute;renc&eacute;');
 if (!defined('_MISSING')) define( '_MISSING', 'manquant(e)');
 if (!defined('_NATURE')) define( '_NATURE', 'Nature');
 if (!defined('_NO_DEFINED_TREES')) define( '_NO_DEFINED_TREES', 'Aucun arbre d&eacute;fini');
