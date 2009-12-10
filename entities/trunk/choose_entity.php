@@ -17,7 +17,6 @@ require($path);
 $core_tools = new core_tools();
 $func = new functions();
 
-s
 $core_tools->load_lang();
 $core_tools->load_html();
 $core_tools->load_header();
@@ -35,15 +34,16 @@ if(isset($_REQUEST['entityid'])  )
 }
 $ent = new entity();
 $entities = array();
+
 if($_SESSION['user']['UserId'] == 'superadmin')
 {
-	$entities = $ent->getShortEntityTree($entities,'all', '', $except = array());
+	$entities = $ent->getShortEntityTree($entities,'all', '', $except);
 }
 else
 {
-	$entities = $ent->getShortEntityTree($entities,$_SESSION['user']['entities'],  '' , $except = array(), '', false);
+	$entities = $ent->getShortEntityTree($entities,$_SESSION['user']['entities'],  '' , $except);
 }
-
+//print_r($entities);
 ?>
 <body>
 <form name="choose_entity" method="get" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php" class="forms" >

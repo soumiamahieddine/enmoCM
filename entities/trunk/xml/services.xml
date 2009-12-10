@@ -17,7 +17,7 @@
 <SERVICE>
 		<id>choose_entity</id>
 		<name>_CHOOSE_ENTITY</name>
-		<servicepage>choose_entity.php</servicepage>
+		<servicepage>choose_entity</servicepage>
 		<servicetype>use</servicetype>
 		<system_service>true</system_service>
 		<enabled>true</enabled>
