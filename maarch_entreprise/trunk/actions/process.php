@@ -898,7 +898,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
 	{
 		require_once('modules'.DIRECTORY_SEPARATOR.'entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_listdiff.php');
 		$list = new diffusion_list();
-		$params = array('mode'=> 'listinstance', 'table' => $_SESSION['tablename']['ent_listinstance'], 'coll_id' => $coll_id, 'res_id' => $arr_id[0], 'user_id' => $_SESSION['user']['UserId'], 'concat_list' => false, 'only_cc' => true);
+		$params = array('mode'=> 'listinstance', 'table' => $_SESSION['tablename']['ent_listinstance'], 'coll_id' => $coll_id, 'res_id' => $arr_id[0], 'user_id' => $_SESSION['user']['UserId'], 'concat_list' => true, 'only_cc' => true);
 		$list->load_list_db($_SESSION['process']['diff_list'], $params); //pb enchainement avec action redirect
 	}
 	unset($_SESSION['redirection']);
