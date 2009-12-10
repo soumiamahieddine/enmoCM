@@ -1010,6 +1010,11 @@ var pile_actions = { values :[],
 			};
 var res_ids = '';
 var do_nothing = false;
+
+var actions_status = { values :[],
+			 action_push:function(val){this.values.push(val);},
+			  action_pop:function(){return this.values.pop();}
+			};
 /**
  * Executes the last actions in the actions pile
  *
@@ -1025,6 +1030,7 @@ function end_actions()
 			do_nothing = true;
 		}
 		//console.log('end_action : '+req_action);
+		//alert('end_action : '+req_action);
 		try{
 			eval(req_action);
 		}
@@ -1033,13 +1039,14 @@ function end_actions()
 			alert('Error during pop action : '+req_action);
 		}
 	}
+	
 }
 
 /**
  * If the action has open a modal, destroy the action modal, and if this is the last action of the pile, reload the opener window
  *
  */
-function close_action(id_action, page)
+function close_action(id_action, page, path_manage_script, mode_req, res_id_values, tablename, id_coll)
 {
 	var modal = $('modal_'+id_action);
 	if(modal)
@@ -1048,10 +1055,12 @@ function close_action(id_action, page)
 	}
 	if(pile_actions.values.length == 0)
 	{
-		//console.log('close');
-//		alert('close');
-		//console.log(page);
-
+		if(actions_status.values.length > 0)
+		{
+			var status = actions_status.values[actions_status.values.length -1];
+			action_change_status(path_manage_script, mode_req, res_id_values, tablename, id_coll, status);
+			actions_status.values = [];
+		}
 		if(page != '' && page != NaN && page && page != null )
 		{
 			do_nothing = false;
@@ -1268,18 +1277,26 @@ function action_send_first_request( path_manage_script, mode_req,  id_action, re
 							  },
 		        onSuccess: function(answer){
 				eval("response = "+answer.responseText);
-			//	console.log(answer.responseText);
+				console.log(answer.responseText);
 				//alert(answer.responseText);
 				var page_result = response.page_result;
 				if(response.status == 0 ) // No confirm or form asked
 				{
+					if(response.action_status != '' && response.action_status != 'NONE')
+					{
+						actions_status.action_push(response.action_status);
+					}
 					//console.log('action_send_first_request OK');
 					end_actions();
-					close_action(id_action, page_result);
+					close_action(id_action, page_result, path_manage_script, mode_req, res_id_values, tablename, id_coll);
 
 				}
 				else if(response.status == 2) // Confirm asked to the user
 				{
+					if(response.action_status != '' && response.action_status != 'NONE')
+					{
+						actions_status.action_push(response.action_status);
+					}
 					//console.log('confirm');
 					//alert('confirm');
 					var modal_txt='<h2>'+response.confirm_content+'</h2>';
@@ -1291,6 +1308,11 @@ function action_send_first_request( path_manage_script, mode_req,  id_action, re
 				}
 				else if(response.status == 3) // Form to fill by the user
 				{
+					if(response.action_status != '' && response.action_status != 'NONE')
+					{
+						actions_status.action_push(response.action_status);
+					}
+					console.log(actions_status);
 					//alert('test');
 					window.top.createModal(response.form_content,'modal_'+id_action, response.height, response.width, response.mode_frm);
 				}
@@ -1388,11 +1410,53 @@ function action_send_form_confirm_result(path_manage_script, mode_req, id_action
 					//	alert(res_ids);
 						end_actions();
 						var page_result = response.page_result;
-						close_action(id_action, page_result);
+						close_action(id_action, page_result, path_manage_script, mode_req, res_id_values, tablename, id_coll);
 					}
 					else //  Form Params errors
 					{
 						//console.log(response.error_txt);
+						try{
+							//$('frm_error').updateContent(response.error_txt); // update the error div in the modal form
+							$('frm_error').innerHTML = response.error_txt;
+							}
+						catch(e){}
+					}
+				},
+				onFailure: function(){
+				//console.log('dans ton c** !!');
+				}
+			});
+		}
+}
+
+function action_change_status(path_manage_script, mode_req, res_id_values, tablename, id_coll, status)
+{
+	//alert('action_change_status');
+	if(res_id_values != '' && (mode_req == 'mass' || mode_req == 'page')
+			  && tablename != '' &&  id_coll != '')
+		{
+
+			new Ajax.Request(path_manage_script,
+			{
+				method:'post',
+				parameters: { values : res_id_values,
+							  mode : mode_req,
+							  req : 'change_status',
+							  table : tablename,
+							  coll_id : id_coll,
+							  new_status : status
+							  },
+				onSuccess: function(answer){
+				//	console.log('answer '+answer.responseText);
+					//alert('answer '+answer.responseText);
+					eval('response='+answer.responseText);
+					if(response.status == 0 ) 
+					{
+						// Status changed
+					}
+					else 
+					{
+						alert(response.error_txt);
 						try{
 							//$('frm_error').updateContent(response.error_txt); // update the error div in the modal form
 							$('frm_error').innerHTML = response.error_txt;

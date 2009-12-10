@@ -1455,26 +1455,4 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
 	}
 }
 
-function manage_status($arr_id, $history, $id_action, $label_action, $status)
-{
-	$result = '';
-	$db = new dbquery();
-	$db->connect();
-	for($i=0; $i<count($arr_id );$i++)
-	{
-		$result .= $arr_id[$i].'#';
-		$db->query("select status from ".$_POST['table']." where res_id = ".$arr_id[$i]);
-		$res = $db->fetch_object();
-		if($res->status == 'NEW')
-		{
-			$req = $db->query("update ".$_POST['table']. " set status = '".$status."' where res_id = ".$arr_id[$i], true);
-			if(!$req)
-			{
-				$_SESSION['action_error'] = _SQL_ERROR;
-				return false;
-			}
-		}
-	}
-	return array('result' => $result, 'history_msg' => '');
- }
 ?>

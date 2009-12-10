@@ -37,7 +37,7 @@ $confirm = false;
 /**
 * $etapes  array Contains 2 etaps : form and status (order matters)
 */
-$etapes = array('form', 'status');
+$etapes = array('form');
 /**
 * $frm_width  Width of the modal (empty)
 */
@@ -926,31 +926,4 @@ function manage_unlock($arr_id, $history, $id_action, $label_action, $status, $c
 	return array('result' => $result, 'history_msg' => '');
  }
 
-/**
-* Manages a status (All params must be declared, even if not used, to corresponds to the action management of the core)
-*
-* @param  $arr_id  array Contains the res_id to be modified
-* @param  $history  string Not Used here
-* @param  $id_action string Action identifier
-* @param  $label_action string Action label
-* @param  $status string New status
-* @return bool false in sql error case, true otherwise
-*/
-function manage_status($arr_id, $history, $id_action, $label_action, $status)
-{
-	$db = new dbquery();
-	$db->connect();
-	$result = '';
-	for($i=0; $i<count($arr_id );$i++)
-	{
-		$result .= $arr_id[$i].'#';
-		$req = $db->query("update ".$_POST['table']. " set status = '".$status."' where res_id = ".$arr_id[$i], true);
-		if(!$req)
-		{
-			$_SESSION['action_error'] = _SQL_ERROR;
-			return false;
-		}
-	}
-	return array('result' => $result, 'history_msg' => '');
- }
 ?>
