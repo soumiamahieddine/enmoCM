@@ -477,15 +477,19 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 					$frm_str .='<td class="indexing_label"><label for="arbox_id" class="form_title" id="label_box" style="display:inline;" >'._BOX_ID.'</label></td>';
 					$frm_str .='<td>&nbsp;</td>';
 					$frm_str .='<td class="indexing_field"><select name="arbox_id" id="arbox_id" onchange="clear_error(\'frm_error_'.$id_action.'\');" ';
-					if($data['arbox_id'] <> "" && $data['arbox_id'] <> 1 )
+					
+					//if($data['arbox_id'] <> "" && $data['arbox_id'] <> 1 )
+					if($data['arbox_id'] <> "" )
 					{
 						$frm_str .='disabled="disabled">';
+						$frm_str .='<option value="'.$data['arbox_id'].'">'.$data['arbox_id'].'</option>';
 					}
 					else
 					{
 						$frm_str .='>';
+						$frm_str .='<option value="">'._CHOOSE_BOX.'</option>';
 					}
-					$frm_str .='<option value="">'._CHOOSE_BOX.'</option>';
+					
 
 					for($i=0; $i < count($boxes); $i++)
 					{
