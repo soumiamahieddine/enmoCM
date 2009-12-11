@@ -73,6 +73,10 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('EMPLOYEES', 'vie
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('EMPLOYEES', 'add_copy_in_process');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('EMPLOYEES', 'folder_search');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('EMPLOYEES', 'modify_folder');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('EMPLOYEES', 'update_case');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('EMPLOYEES', 'join_res_case');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('EMPLOYEES', 'join_res_case_in_process');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('EMPLOYEES', 'close_case');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('MANAGERS', 'adv_search_mlb');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('MANAGERS', 'search_customer');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('MANAGERS', 'my_alerts');
