@@ -1017,6 +1017,7 @@ class core_tools extends functions
 	public function insert_page()
 	{
 		// Cleans the page variables and looks if she exists or not before including her
+		
 		if(isset($_GET['page']))
 		{
 			$this->f_page = $this->wash($_GET['page'],"file","","yes");
@@ -1026,6 +1027,7 @@ class core_tools extends functions
 			$this->loadDefaultPage();
 			return true;
 		}
+		
 		// Page is defined in a module
 		if(isset($_GET['module']) && $_GET['module'] <> "core")
 		{
@@ -1094,6 +1096,7 @@ class core_tools extends functions
 			}
 			else
 			{
+				
 				require_once('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
 				$app = new business_app_tools();
 				$path = $app->insert_app_page($this->f_page);
