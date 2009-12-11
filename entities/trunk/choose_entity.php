@@ -34,6 +34,7 @@ if(isset($_REQUEST['entityid'])  )
 }
 $ent = new entity();
 $entities = array();
+$except = array();
 
 if($_SESSION['user']['UserId'] == 'superadmin')
 {
