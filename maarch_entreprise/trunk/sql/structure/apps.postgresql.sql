@@ -394,7 +394,6 @@ CREATE OR REPLACE VIEW res_view_letterbox AS
 ALTER TABLE res_view_letterbox OWNER TO postgres;
 
 
-ALTER TABLE res_view_letterbox OWNER TO postgres;
 
 CREATE OR REPLACE VIEW res_view_apa AS
  select * from res_apa;
