@@ -990,7 +990,7 @@ class core_tools extends functions
 	{
 		?>
 		<script type="text/javascript" >
-			var app_path = '<?php  echo $_SESSION['config']['businessappurl'];?>';
+			var app_path = '<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=';
 		</script>
 		<?php
 		if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR."apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."js".DIRECTORY_SEPARATOR."functions.js") || file_exists($_SESSION['config']['corepath']."apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."js".DIRECTORY_SEPARATOR."functions.js"))
