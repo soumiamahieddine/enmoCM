@@ -90,9 +90,12 @@ if(isset($_GET['filename']) && !empty($_GET['filename']))
 	//echo $path;
 	if(!empty($mime_type) && !empty($path))
 	{
+		$date = mktime(0,0,0,date("m" ) + 2  ,date("d" ) ,date("Y" )  );
+		$date = date("D, d M Y H:i:s", $date);
+		$time = 30*12*60*60;
 		header("Pragma: public");
-		//header("Expires: 0");
-		//header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+		header("Expires: ".$date." GMT");
+		header("Cache-Control: max-age=".$time.", must-revalidate");
 		//header("Cache-Control: public");
 		header("Content-Description: File Transfer");
 		header("Content-Type: ".$mime_type);

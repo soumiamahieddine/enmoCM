@@ -88,8 +88,6 @@ $time = $core_tools->get_session_time_expire();
 
 ?>
 <body onLoad="HideMenu('menunav');session_expirate(<?php  echo $time;?>, '<?php  echo $_SESSION['config']['coreurl'];?>');">
-<!--<script type='text/javascript'
-        src='http://getfirebug.com/releases/lite/1.2/firebug-lite-compressed.js'></script>-->
 	<div id="header">
         <div id="nav">
             <div id="menu" onMouseOver="ShowHideMenu('menunav','on');" onMouseOut="ShowHideMenu('menunav','off');" class="off">
@@ -115,22 +113,12 @@ $time = $core_tools->get_session_time_expire();
                    	echo ''._MAARCH_CREDITS.'</a></div>';?>
                 </div>
         	</div>
-			<div><p id="ariane"><?php  //$core_tools->where_am_i();
+			<div><p id="ariane"><?php 
 			?></p></div>
 			<p id="gauchemenu"><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=bando_tete_gche.gif" alt=""></p>
 			<p id="logo"><a href="index.php"><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=bando_tete_dte.gif" alt="<?php  echo _LOGO_ALT;?>" /></a></p>
        </div>
-		<!--
-		<dl class="protohud" id="protohudInde">
-			<dt class="trig">Tab 1</dt>
-			<dd class="targ">
-				<p>Panel 1</p>
-			</dd>
-			<dt class="trig">Tab 2</dt>
-			<dd class="targ">
-				<p>Panel 2</p>
-			</dd>
-		</dl>-->
+	
 	<div id="container">
         <div id="content">
             <div class="error" id="main_error">

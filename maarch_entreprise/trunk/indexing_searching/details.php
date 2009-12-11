@@ -1010,7 +1010,9 @@ else
 				</dd>
 				<dt><?php echo _DOC_HISTORY;?></dt>
 				<dd>
-					<?php include('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."indexing_searching".DIRECTORY_SEPARATOR."hist_doc.php");?>
+					<iframe src="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&dir=indexing_searching&page=hist_doc&id=<?php echo $s_id;?>" name="hist_doc_process" width="800" height="650" align="left" scrolling="auto" frameborder="0" id="hist_doc_process"></iframe>
+			
+					<?php ///include('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."indexing_searching".DIRECTORY_SEPARATOR."hist_doc.php");?>
 				</dd>
 				<?php
 				if($core_tools->is_module_loaded('notes'))
