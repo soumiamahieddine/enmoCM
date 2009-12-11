@@ -24,7 +24,7 @@ if (!defined('_ADMIN_FOLDERTYPES'))  define('_ADMIN_FOLDERTYPES', 'Types de doss
 if (!defined('_ADMIN_FOLDERTYPES_DESC'))  define('_ADMIN_FOLDERTYPES_DESC', 'Administrer les types de dossier. D&eacute;finir pour chaque type les qualificateurs li&eacute;s et les types de documents obligatoires pour la compl&eacute;tude du dossier.');
 
 /*********************** Menu ***********************************/
-if (!defined('_FOLDER_SEARCH'))  define('_FOLDER_SEARCH', 'Recherche dossier');
+if (!defined('_FOLDER_SEARCH'))  define('_FOLDER_SEARCH', 'Rechercher un dossier');
 if (!defined('_SALARY_SHEET'))  define('_SALARY_SHEET', 'Fiche dossier');
 if (!defined('_FOLDER_OUT'))  define('_FOLDER_OUT', 'D&eacute;sarchivage');
 //////////////Recherche dossier
