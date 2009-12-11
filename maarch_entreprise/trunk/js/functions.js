@@ -1277,7 +1277,7 @@ function action_send_first_request( path_manage_script, mode_req,  id_action, re
 							  },
 		        onSuccess: function(answer){
 				eval("response = "+answer.responseText);
-				console.log(answer.responseText);
+				//console.log(answer.responseText);
 				//alert(answer.responseText);
 				var page_result = response.page_result;
 				if(response.status == 0 ) // No confirm or form asked
@@ -1312,7 +1312,7 @@ function action_send_first_request( path_manage_script, mode_req,  id_action, re
 					{
 						actions_status.action_push(response.action_status);
 					}
-					console.log(actions_status);
+				//	console.log(actions_status);
 					//alert('test');
 					window.top.createModal(response.form_content,'modal_'+id_action, response.height, response.width, response.mode_frm);
 				}
