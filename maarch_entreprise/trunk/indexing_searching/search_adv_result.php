@@ -773,7 +773,7 @@ if(empty($_SESSION['error_search']))
 	//##################
 	$page = 'list_results_mlb';
 	?>
-	<script language="javascript" type="text/javascript">window.top.location.href='<?php if($mode == 'normal'){ echo $_SESSION['config']['businessappurl'].'index.php?page='.$page.'&dir=indexing_searching'.$extend_link_case;} elseif($mode=='frame' || $mode == 'popup'){echo $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page='.$page.'&mode='.$mode.'&action_form='.$_REQUEST['action_form'].'&module='.$_REQUEST['module'];} if(isset($_REQUEST['nodetails'])){echo '&nodetails';}?>';</script>
+	<script language="javascript" type="text/javascript">window.top.location.href='<?php if($mode == 'normal'){ echo $_SESSION['config']['businessappurl'].'index.php?page='.$page.'&dir=indexing_searching'.$extend_link_case;} elseif($mode=='frame' || $mode == 'popup'){echo $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page='.$page.'&mode='.$mode.'&action_form='.$_REQUEST['action_form'].'&modulename='.$_REQUEST['modulename'];} if(isset($_REQUEST['nodetails'])){echo '&nodetails';}?>';</script>
 	<?php
 	exit();
 }

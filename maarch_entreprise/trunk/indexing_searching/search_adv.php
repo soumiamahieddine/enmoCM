@@ -402,14 +402,13 @@ function del_query_confirm()
 </form>
 <?php } ?>
 <form name="frmsearch2" method="get" action="<?php if($mode == 'normal') {echo $_SESSION['config']['businessappurl'].'index.php'; } elseif($mode == 'frame' || $mode == 'popup'){ echo $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=search_adv_result';}?>"  id="frmsearch2" class="<?php echo $class_for_form; ?>">
-<?php if($mode == 'normal')
-{?><input type="hidden" name="page" value="search_adv_result" />
-	<input type="hidden" name="dir" value="indexing_searching" />
-<?php } ?>
+<input type="hidden" name="dir" value="indexing_searching" />
+	<input type="hidden" name="page" value="search_adv_result" />
 <input type="hidden" name="mode" value="<?php echo $mode;?>" />
 <?php if($mode == 'frame' || $mode == 'popup'){?>
+	<input type="hidden" name="display" value="true" />
 	<input type="hidden" name="action_form" value="<?php echo $_REQUEST['action_form'];?>" />
-	<input type="hidden" name="module" value="<?php echo $_REQUEST['module'];?>" />
+	<input type="hidden" name="modulename" value="<?php echo $_REQUEST['modulename'];?>" />
 <?php
 }
 if(isset($_REQUEST['nodetails']))

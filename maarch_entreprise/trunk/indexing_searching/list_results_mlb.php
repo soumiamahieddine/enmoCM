@@ -380,21 +380,25 @@ $_SESSION['error_page'] = '';
 		$method = '';
 		$action = '';
 		$button_label = '';
+		$hidden_fields = '';
 	}
 	else
 	{
 		$bool_radio_form = true;
 		$method = 'get';
 		$button_label = _VALIDATE;
-		if(isset($_REQUEST['module'])&& !empty($_REQUEST['module']))
+		$hidden_fields = '<input type="hidden" name="display" value="true" /><input type="hidden" name="page" value="'.$_REQUEST['action_form'].'" />';
+		if(isset($_REQUEST['modulename'])&& !empty($_REQUEST['modulename']))
 		{
 			//$action = $_SESSION['urltomodules'].$_REQUEST['module'].'/'.$_REQUEST['action_form'].'.php';
-			$action = $_SESSION['config']['businessappurl'].".index.php?display=true&page=".$_REQUEST['action_form']."&module=".$_REQUEST['module'];
+			$action = $_SESSION['config']['businessappurl']."index.php?display=true&page=".$_REQUEST['action_form']."&module=".$_REQUEST['modulename'];
+			$hidden_fields .= '<input type="hidden" name="module" value="'.$_REQUEST['modulename'].'" />';
 		}
 		else
 		{
 			//$action = $_SESSION['config']['businessappurl'].$_REQUEST['action_form'].'.php';
-			$action = $_SESSION['config']['businessappurl'].".index.php?display=true&page=".$_REQUEST['action_form'];
+			$action = $_SESSION['config']['businessappurl']."index.php?display=true&page=".$_REQUEST['action_form'];
+			
 		}
 	}
 	if($mode == 'popup')
@@ -433,7 +437,7 @@ $_SESSION['error_page'] = '';
 	}
 	$comp_link = '&mode='.$mode;
 
-	$list->list_doc($tab,$i,'','res_id',$name,'res_id','details&dir=indexing_searching',true,$bool_radio_form,$method,$action,$button_label,$show_details,true,$special, $export,$show_close,false,true,false,'', '',false,'','','listing spec', $comp_link, false, false, array(), '', '{}', false, '', true, array(), $use_template, $template_list, $template_to_use );
+	$list->list_doc($tab,$i,'','res_id',$name,'res_id','details&dir=indexing_searching',true,$bool_radio_form,$method,$action,$button_label,$show_details,true,$special, $export,$show_close,false,true,false,'', '',false,'','','listing spec', $comp_link, false, false, array(), $hidden_fields, '{}', false, '', true, array(), $use_template, $template_list, $template_to_use );
 	?></div><?php
 }
 else
