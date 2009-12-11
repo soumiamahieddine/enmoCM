@@ -91,7 +91,7 @@ $select = array();
 //$select[$_SESSION['searching']['coll_view']]= array();
 $select[$view]= array();
 $where_request = $_SESSION['searching']['where_request'];
-array_push($select[$view], "res_id", "status", "subject", "dest_user", "type_label", "creation_date", "destination", "category_id, exp_user_id", "category_id as category_img" );
+array_push($select[$view], "res_id", "status", "subject", "dest_user", "type_label", "creation_date", "entity_label", "category_id, exp_user_id", "category_id as category_img" );
 
 if($core_tools->is_module_loaded("cases") == true)
 {
@@ -279,7 +279,7 @@ $_SESSION['error_page'] = '';
 							$tab[$i][$j]["value"] = $request->format_date_db($tab[$i][$j]['value'], false);
 							$tab[$i][$j]["order"]="creation_date";
 						}
-						if($tab[$i][$j][$value]=="destination")
+						if($tab[$i][$j][$value]=="entity_label")
 						{
 							$tab[$i][$j]["label"]=_ENTITY;
 							$tab[$i][$j]['value'] = $request->show_string($tab[$i][$j]['value']);
@@ -289,7 +289,7 @@ $_SESSION['error_page'] = '';
 							$tab[$i][$j]["valign"]="bottom";
 							$tab[$i][$j]["show"]=false;
 							$tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
-							$tab[$i][$j]["order"]="destination";
+							$tab[$i][$j]["order"]="entity_label";
 						}
 						if($tab[$i][$j][$value]=="category_id")
 						{
