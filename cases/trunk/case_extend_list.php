@@ -73,7 +73,7 @@ $where_request = str_replace("and ()", "", $where_request);
 //$request = new request();
 //$tab=$request->select($select,$where_request,$orderstr,$_SESSION['config']['databasetype']);
  
-$db_external->query("select res_id, status, subject, dest_user, type_label, creation_date, destination, category_id, exp_user_id, category_id as category_img, process_limit_date, priority  from ".$_SESSION['collections'][0]['view']." where ".$where_request." order by priority,process_limit_date desc" );
+$db_external->query("select res_id, status, subject, dest_user, type_label, creation_date, entity_label, category_id, exp_user_id, category_id as category_img, process_limit_date, priority  from ".$_SESSION['collections'][0]['view']." where ".$where_request." order by priority,process_limit_date desc" );
 
 if ($db_external->nb_result() >0)
 {
@@ -98,7 +98,7 @@ if ($db_external->nb_result() >0)
 					$external .='<td ><p title="'._SUBJECT.' : '.$request->show_string($ext_result->subject).'" alt="'.SUBJECT.' : '.$request->show_string($ext_result->subject).'">'.$func->cut_string($request->show_string($ext_result->subject),70).'</p></td>';
 					//$external .='<td width="100px"><p>'.$ext_result->dest_user.'</td></p>';
 					$external .='<td  ><p title="'._TYPE.' : '.$request->show_string($ext_result->type_label).'" alt="'._TYPE.' : '.$request->show_string($ext_result->type_label).'">('.$request->show_string($ext_result->type_label).')</p></td>';
-					$external .='<td  ><p title="'._ENTITY.' : '.$request->show_string($ext_result->destination).'" alt="'._ENTITY.' : '.$request->show_string($ext_result->destination).'"><b>'.$request->show_string($ext_result->destination).'</b></p></td>';
+					$external .='<td  ><p title="'._ENTITY.' : '.$request->show_string($ext_result->entity_label).'" alt="'._ENTITY.' : '.$request->show_string($ext_result->entity_label).'"><b>'.$request->show_string($ext_result->entity_label).'</b></p></td>';
 					$external .='<td ><p title="'._PROCESS_LIMIT_DATE.' : '.$request->format_date_db($ext_result->process_limit_date,false).'" alt="'._PROCESS_LIMIT_DATE.' : '.$request->format_date_db($ext_result->process_limit_date,false).'">'.$request->format_date_db($ext_result->process_limit_date,false).'</p></td>';
 					$external .='</a></tr>';
 	 }
