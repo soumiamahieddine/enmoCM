@@ -1827,11 +1827,11 @@ class core_tools extends functions
 		$path = $arr[1];
 		//echo $path;
 		$xml = simplexml_load_file($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.'custom.xml');
+		var_dump($xml);
 		foreach($xml->custom as $custom)
 		{
 			if(trim($path) <> "" && isset( $custom->path) && $custom->path == trim($path))
 			{
-				echo 'OK';
 				return (string) $custom->custom_id;
 			}
 			if($custom->ip == $_SERVER['SERVER_ADDR'])
