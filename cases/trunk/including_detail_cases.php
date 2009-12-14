@@ -36,6 +36,8 @@ if ($case_properties['case_id'] <> '')
 									<b><?php  echo _LINKED_TO_CASE;?></b>
 								</span>
 								</h2>
+								<?php echo "<p align='right'><b><img src='".$_SESSION['config']['businessappurl']."static.php?filename=big_case.gif&dir=indexing_searching' border='0' alt='' /> <a href = '".$_SESSION['config']['businessappurl']."index.php?page=details_cases&module=cases&id=".$case_properties['case_id']."'>("._CLICK_HERE_TO_ACCESS_CASE.")</a></b></p>"; ?>
+			
 								<br/>
 								<table cellpadding="2" cellspacing="2" border="0" class="block forms details" width="100%">
 									<tr>
