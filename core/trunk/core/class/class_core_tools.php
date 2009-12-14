@@ -1831,6 +1831,7 @@ class core_tools extends functions
 		{
 			if(trim($path) <> "" && isset( $custom->path) && $custom->path == trim($path))
 			{
+				echo 'OK';
 				return (string) $custom->custom_id;
 			}
 			if($custom->ip == $_SERVER['SERVER_ADDR'])
