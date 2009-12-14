@@ -1826,11 +1826,11 @@ class core_tools extends functions
 		$arr = explode('/', $_SERVER['SCRIPT_NAME']);
 		$path = $arr[1];
 		//echo $path;
-		echo $_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.'custom.xml';
+		//echo $_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.'custom.xml';
 		$xml = simplexml_load_file($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.'custom.xml');
 	
 		foreach($xml->custom as $custom)
-		{var_dump($custom);
+		{
 			if(trim($path) <> "" && isset( $custom->path) && $custom->path == trim($path))
 			{
 				return (string) $custom->custom_id;
