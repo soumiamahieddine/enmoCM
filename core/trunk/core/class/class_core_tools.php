@@ -1823,9 +1823,16 @@ class core_tools extends functions
 			return '';
 		}
 		
+		$arr = explode('/', $_SERVER['SCRIPT_NAME']);
+		print_r($arr);
+		$path = $arr[1];
 		$xml = simplexml_load_file($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.'custom.xml');
 		foreach($xml->custom as $custom)
 		{
+			if($custom->path == $path)
+			{
+				return (string) $custom->custom_id;
+			}
 			if($custom->ip == $_SERVER['SERVER_ADDR'])
 			{
 				return (string) $custom->custom_id;
