@@ -14,6 +14,7 @@
 */
 
 include_once('../../core/init.php');
+echo $_SESSION['custom_override_id'];
 if(isset($_SESSION['config']['corepath']))
 {
 	require_once("core/class/class_functions.php");

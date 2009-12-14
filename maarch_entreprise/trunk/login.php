@@ -165,8 +165,6 @@ $time = $core_tools->get_session_time_expire();
 
 ?>
 <body id="bodylogin" onload="setTimeout('window.location.reload(true)', <?php  echo $time;?>*60*1000);">
-<?php $arr = explode('/', $_SERVER['SCRIPT_NAME']);
-		$path = $arr[1]; ?>
     <div id="loginpage">
         <p id="logo"><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=default_maarch.gif" alt="Maarch" /></p>
         <form name="formlogin" id="formlogin" method="post" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=log" class="forms">
