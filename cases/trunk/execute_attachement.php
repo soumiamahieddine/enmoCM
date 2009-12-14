@@ -32,7 +32,9 @@ if (($core_tools->test_service('join_res_case', 'cases', false) == 1) || ($core_
 				}
 				?>
 				<script language="javascript">
-				window.opener.top.location.reload();self.close();
+				window.opener.top.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=details_cases&module=cases&id=<?php echo $_GET['searched_value']; ?>';
+				//window.opener.top.location.reload();
+				self.close();
 				</script>
 				<?php
 			}
@@ -98,8 +100,7 @@ if (($core_tools->test_service('join_res_case', 'cases', false) == 1) || ($core_
 				$return_description = $cases_return->get_case_info($case_id_to_insert);
 
 				?>
-				<script language="javascript">
-					
+				<script language="javascript">	
 				var case_id = window.opener.$('case_id');
 				var case_label = window.opener.$('case_label');
 				var case_description = window.opener.$('case_description');

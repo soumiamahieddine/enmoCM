@@ -410,14 +410,15 @@ $_SESSION['error_page'] = '';
     <div id="inner_content"><?php
 
 $details = 'details';
-	$list->list_doc($tab,$i,'','res_id','list_results_mlb_frame&module=cases','res_id',$details.'&dir=indexing_searching',true,true,'post',$_SESSION['config']['businessappurl']."index.php?display=true&module=cases&page=execute_attachement&searched_item=".$_GET['searched_item']."&searched_value=".$_GET['searched_value'],_LINK_TO_CASE,false,true,true, false,false,false,true,true,'', '',false,'','','listing spec', '', false, false, null, '<input type="hidden" name="display" value="true"/><input type="hidden" name="module" value="cases" /><input type="hidden" name="page" value="execute_attachement" />', '{}', true, '', true, array(), true, $template_list, $template_to_use, false, true  );
+	$list->list_doc($tab,$i,'','res_id','list_results_mlb_frame&module=cases&searched_item='.$_GET['searched_item'].'&searched_value='.$_GET['searched_value'],'res_id',$details.'&dir=indexing_searching',true,true,'post',$_SESSION['config']['businessappurl']."index.php?display=true&module=cases&page=execute_attachement&searched_item=".$_GET['searched_item']."&searched_value=".$_GET['searched_value'],_LINK_TO_CASE,false,true,true, false,false,false,true,true,'', '',false,'','','listing spec', '', false, false, null, '<input type="hidden" name="display" value="true"/><input type="hidden" name="module" value="cases" /><input type="hidden" name="page" value="execute_attachement" />', '{}', true, '', true, array(), true, $template_list, $template_to_use, false, true  );
+		echo  "<p align='center'><a href=\"".$_SESSION['config']['businessappurl'].'index.php?display=true&module=cases&page=search_adv_for_cases&searched_item='.$_GET['searched_item'].'&searched_value='.$_GET['searched_value'].'">'._MAKE_NEW_SEARCH.'</a></strong></div></p>';
 	?></div><?php
 }
 else
 {
-	echo  "<p class=\"error\"><img src=\"".$_SESSION['config']['businessappurl']."static.php?filename=noresult.gif\" /><br />"._NO_RESULTS."</p>";
+	echo  "<p class=\"error\"><img src=\"".$_SESSION['config']['businessappurl']."static.php?filename=noresult.gif\" /><br />"._NO_RESULTS."</p><p align='center'><a href=\"".$_SESSION['config']['businessappurl'].'index.php?display=true&module=cases&page=search_adv_for_cases&searched_item='.$_GET['searched_item'].'&searched_value='.$_GET['searched_value'].'">'._MAKE_NEW_SEARCH.'</a></strong></div></p>';
 	?>
-	<!--<script language="javascript" type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=search_adv_error';?>';</script>-->
+	<!--<script language="javascript" type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=cases&page=search_adv_error';?>';</script>-->
 	<?php
 }
 ?>

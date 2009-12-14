@@ -67,7 +67,6 @@ if(isset($_GET['id']))
 				</dd>
 </dl>
 
-
 </div>
 <script type="text/javascript">
  var item  = $('details_div');
