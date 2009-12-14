@@ -1828,9 +1828,9 @@ class core_tools extends functions
 		//echo $path;
 		echo $_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.'custom.xml';
 		$xml = simplexml_load_file($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.'custom.xml');
-		var_dump($xml);
+	
 		foreach($xml->custom as $custom)
-		{
+		{var_dump($custom);
 			if(trim($path) <> "" && isset( $custom->path) && $custom->path == trim($path))
 			{
 				return (string) $custom->custom_id;
