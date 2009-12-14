@@ -1430,9 +1430,9 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
 		$title = get_value_fields($values_form, 'attach_title');
 		$id_doc = get_value_fields($values_form, 'res_id');
 
-		array_push($_SESSION['data'], array('column' => "title", 'value' => $title, 'type' => "string"));
+		array_push($_SESSION['data'], array('column' => "title", 'value' => $db->protect_string_db($title), 'type' => "string"));
 		array_push($_SESSION['data'], array('column' => "res_id_master", 'value' => $id_doc, 'type' => "integer"));
-		array_push($_SESSION['data'], array('column' => "coll_id", 'value' => $coll_id, 'type' => "string"));
+		array_push($_SESSION['data'], array('column' => "coll_id", 'value' => $db->protect_string_db($coll_id), 'type' => "string"));
 
 		$res_id = $resource->load_into_db($_SESSION['tablename']['attach_res_attachments'],$_SESSION['indexing']['destination_dir'], $_SESSION['indexing']['file_destination_name'].".".$_SESSION['upfile']['format'], $_SESSION['indexing']['path_template'], $_SESSION['indexing']['docserver_id'],  $_SESSION['data'], $_SESSION['config']['databasetype']);
 

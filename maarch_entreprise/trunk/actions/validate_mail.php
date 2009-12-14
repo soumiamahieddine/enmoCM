@@ -1431,9 +1431,9 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
 		$title = get_value_fields($values_form, 'attach_title');
 		$id_doc = get_value_fields($values_form, 'res_id');
 
-		array_push($data, array('column' => "title", 'value' => $title, 'type' => "string"));
+		array_push($data, array('column' => "title", 'value' => $db->protect_string_db($title), 'type' => "string"));
 		array_push($data, array('column' => "res_id_master", 'value' => $id_doc, 'type' => "integer"));
-		array_push($data, array('column' => "coll_id", 'value' => $coll_id, 'type' => "string"));
+		array_push($data, array('column' => "coll_id", 'value' => $db->protect_string_db($coll_id), 'type' => "string"));
 		$path = $res->path;
 		$filename = $res->filename;
 		$docserver_id = $res->docserver_id;
