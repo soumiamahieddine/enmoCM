@@ -71,4 +71,5 @@ if (!defined('_JOIN_RES_CASE_IN_PROCESS'))  define('_JOIN_RES_CASE_IN_PROCESS','
 if (!defined('_CLOSE_CASE'))  define('_CLOSE_CASE','Cl&ocirc;turer des affaires');
 if (!defined('_LINK_TO_CASE'))  define('_LINK_TO_CASE','Attacher &agrave; l&rsquo;affaire');
 if (!defined('_ACCESS_LIST_CASE'))  define('_ACCESS_LIST_CASE','Regroupement par affaire');
+if (!defined('_CLICK_HERE_TO_ACCESS_CASE'))  define('_CLICK_HERE_TO_ACCESS_CASE','Cliquez ici pour acc&eacute;der &agrave; la fiche d&eacute;taill&eacute;e de l&rsquo;affaire');
 ?>

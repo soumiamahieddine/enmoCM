@@ -71,4 +71,5 @@ if (!defined('_JOIN_RES_CASE_IN_PROCESS'))  define('_JOIN_RES_CASE_IN_PROCESS','
 if (!defined('_CLOSE_CASE'))  define('_CLOSE_CASE','Close case(s)');
 if (!defined('_LINK_TO_CASE'))  define('_LINK_TO_CASE','Attach to case');
 if (!defined('_ACCESS_LIST_CASE'))  define('_ACCESS_LIST_CASE','Sort by case');
+if (!defined('_CLICK_HERE_TO_ACCESS_CASE'))  define('_CLICK_HERE_TO_ACCESS_CASE','View all information for this case');
 ?>
