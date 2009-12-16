@@ -241,10 +241,10 @@ if($core_tools->is_module_loaded('entities'))
 {
 	$coll_id = 'letterbox_coll';
 	$where = $sec->get_where_clause_from_coll_id($coll_id);
-	$table = $sec->retrieve_table_from_coll($coll_id);
+	$table = $sec->retrieve_view_from_coll_id($coll_id);
 	if(empty($table))
 	{
-		$table = $sec->retrieve_view_from_coll_id($coll_id);
+		$table = $sec->retrieve_table_from_coll($coll_id);	
 	}
 	if(!empty($where))
 	{
