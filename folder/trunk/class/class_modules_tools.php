@@ -273,8 +273,8 @@ class folder extends request
 			else
 			{
 				$this->connect();
-				$this->query("INSERT INTO ".$_SESSION['tablename']['fold_folders']." (folder_id, folder_name, foldertype_id,creation_date, typist, last_modified_date, parent_id,folder_level) VALUES ('".$this->show_string($_SESSION['m_admin']['folder']['folder_id'])."', '".$this->show_string($_SESSION['m_admin']['folder']['folder_name'])."',".$_SESSION['m_admin']['folder']['foldertype_id'].",  ".$this->current_datetime().", '".$_SESSION['user']['UserId']."', ".$this->current_datetime().", ".$_SESSION['m_admin']['folder']['folder_parent'].", ".$_SESSION['m_admin']['folder']['folder_level']." );");
-				$this->query('select folders_system_id from '.$_SESSION['tablename']['fold_folders']." where folder_id = '".$this->show_string($_SESSION['m_admin']['folder']['folder_id'])."';");
+				$this->query("INSERT INTO ".$_SESSION['tablename']['fold_folders']." (folder_id, folder_name, foldertype_id,creation_date, typist, last_modified_date, parent_id,folder_level) VALUES ('".$this->protect_string_db($_SESSION['m_admin']['folder']['folder_id'])."', '".$this->protect_string_db($_SESSION['m_admin']['folder']['folder_name'])."',".$_SESSION['m_admin']['folder']['foldertype_id'].",  ".$this->current_datetime().", '".$_SESSION['user']['UserId']."', ".$this->current_datetime().", ".$_SESSION['m_admin']['folder']['folder_parent'].", ".$_SESSION['m_admin']['folder']['folder_level']." );");
+				$this->query('select folders_system_id from '.$_SESSION['tablename']['fold_folders']." where folder_id = '".$this->protect_string_db($_SESSION['m_admin']['folder']['folder_id'])."';");
 				$res = $this->fetch_object();
 				$id = $res->folders_system_id;
 
