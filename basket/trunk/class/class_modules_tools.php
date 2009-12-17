@@ -232,7 +232,7 @@ class basket extends dbquery
 
 		$db = new dbquery();
 		$db->connect();
-		$db->query("select basket_id from ".$_SESSION['tablename']['bask_groupbasket']." where group_id = '".$_SESSION['user']['primarygroup']."' ");
+		$db->query("select gb.basket_id from ".$_SESSION['tablename']['bask_groupbasket']." gb, ".$_SESSION['tablename']['bask_baskets']." b where gb.group_id = '".$_SESSION['user']['primarygroup']."' and gb.basket_id = b.basket_id order by b.basket_name ");
 		//$db->show();
 		while($res = $db->fetch_object())
 		{
