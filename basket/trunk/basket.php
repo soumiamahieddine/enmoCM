@@ -77,7 +77,7 @@ if(isset($_REQUEST['order']) && !empty($_REQUEST['order']))
 {
 	$order = trim($_REQUEST['order']);
 }
-$field = 'basket_id';
+$field = 'basket_name';
 if(isset($_REQUEST['order_field']) && !empty($_REQUEST['order_field']))
 {
 	$field = trim($_REQUEST['order_field']);
