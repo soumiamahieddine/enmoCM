@@ -129,7 +129,7 @@ if(count($_SESSION['user']['baskets'])> 0)
 				{
 					?>
 					<option value="<?php echo $_SESSION['user']['baskets'][$i]['id'];?>" <?php if($_SESSION['current_basket']['id'] == $_SESSION['user']['baskets'][$i]['id']) { echo 'selected="selected"'; }?>>
-						<?php echo $_SESSION['user']['baskets'][$i]['desc'];?>
+						<?php echo $_SESSION['user']['baskets'][$i]['name'];?>
 					  </option>
 					<?php
 				}
