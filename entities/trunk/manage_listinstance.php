@@ -113,7 +113,6 @@ $db->connect();
 $db->query("select u.user_id, u.firstname, u.lastname,e.entity_id,  e.entity_label
 FROM ".$_SESSION['tablename']['users']." u, ".$_SESSION['tablename']['ent_entities']." e, ".$_SESSION['tablename']['ent_users_entities']." ue
 WHERE u.status <> 'DEL' and u.enabled = 'Y' and  e.entity_id = ue.entity_id and u.user_id = ue.user_id and e.enabled = 'Y' ".$where_users.$orderby_users);
-$db->show();
 
 $i=0;
 while($line = $db->fetch_object())
