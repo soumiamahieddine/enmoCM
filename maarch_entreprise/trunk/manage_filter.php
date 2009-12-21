@@ -40,7 +40,7 @@ if(isset($_REQUEST['order']) && !empty($_REQUEST['order']))
 }
 else
 {
-	$order = 'asc';
+	$order = 'desc';
 }
 $order_field = '';
 if(isset($_REQUEST['order_field']) && !empty($_REQUEST['order_field']))
@@ -49,7 +49,7 @@ if(isset($_REQUEST['order_field']) && !empty($_REQUEST['order_field']))
 }
 elseif($_REQUEST['template']<> 'group_case_for_basket')
 {
-	$order_field = 'creation_date';
+	$order_field = 'priority, creation_date, res_id';
 }
 else
 {
