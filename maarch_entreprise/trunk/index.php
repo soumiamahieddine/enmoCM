@@ -20,6 +20,10 @@ if(isset($_SESSION['config']['corepath']))
 	require_once("core/class/class_db.php");
 	require_once("core/class/class_core_tools.php");
 	$core_tools = new core_tools();
+	if(!isset($_SESSION['custom_override_id']) || empty($_SESSION['custom_override_id']))
+	{
+		$_SESSION['custom_override_id'] = $core_tools->get_custom_id();
+	}
 }
 else
 {
