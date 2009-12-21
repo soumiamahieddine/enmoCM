@@ -188,7 +188,7 @@ else if(isset($_GET['action']) && $_GET['action'] == "add_user" )
 		}
 		elseif( empty( $_SESSION['m_admin']['entity']['listmodel']['dest']['user_id']) || !isset( $_SESSION['m_admin']['entity']['listmodel']['dest']['user_id']))
 		{
-			$db->query("SELECT u.firstname, u.lastname, u.department, e.entity_id,  e.entity_label FROM ".$_SESSION['tablename']['users']." u,  ".$_SESSION['tablename']['ent_entities']." e, ".$_SESSION['tablename']['ent_users_entities']." ue WHERE  u.user_id='".$db->protect_string_db($id)."' and  e.entity_id = ue.entity_id and u.user_id = ue.user_id");
+			$db->query("SELECT u.firstname, u.lastname, u.department, e.entity_id,  e.entity_label FROM ".$_SESSION['tablename']['users']." u,  ".$_SESSION['tablename']['ent_entities']." e, ".$_SESSION['tablename']['ent_users_entities']." ue WHERE  u.user_id='".$db->protect_string_db($id)."' and  e.entity_id = ue.entity_id and u.user_id = ue.user_id and ue.primary_entity = 'Y'");
 			$line = $db->fetch_object();
 			$_SESSION['m_admin']['entity']['listmodel']['dest']['user_id'] = $db->show_string($id);
 			$_SESSION['m_admin']['entity']['listmodel']['dest']['firstname'] = $db->show_string($line->firstname);
@@ -209,7 +209,7 @@ else if(isset($_GET['action']) && $_GET['action'] == "add_user" )
 
 			if( $find == false)
 			{
-				$db->query("SELECT u.firstname, u.lastname, u.department, e.entity_id,  e.entity_label FROM ".$_SESSION['tablename']['users']." u,  ".$_SESSION['tablename']['ent_entities']." e, ".$_SESSION['tablename']['ent_users_entities']." ue WHERE  u.user_id='".$db->protect_string_db($id)."' and  e.entity_id = ue.entity_id and u.user_id = ue.user_id");
+				$db->query("SELECT u.firstname, u.lastname, u.department, e.entity_id,  e.entity_label FROM ".$_SESSION['tablename']['users']." u,  ".$_SESSION['tablename']['ent_entities']." e, ".$_SESSION['tablename']['ent_users_entities']." ue WHERE  u.user_id='".$db->protect_string_db($id)."' and  e.entity_id = ue.entity_id and u.user_id = ue.user_id and ue.primary_entity = 'Y'");
 				$line = $db->fetch_object();
 				array_push($_SESSION['m_admin']['entity']['listmodel']['copy']['users'], array(  'user_id' => $db->show_string($id),
 															'firstname' =>$db->show_string($line->firstname),
@@ -511,10 +511,10 @@ else
 	<table width="79%" border="0">
     <tr>
       <td><p align="center"><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=separateur_1.jpg" width="800" height="1" alt="" /><br/><?php echo _WELCOME_MODEL_LIST_TITLE;?>.<br/><br/>
-          <?php echo _MODEL_LIST_EXPLANATION1;?>.</p>
-        <p align="center"><?php echo _ADD_USER_TO_LIST_EXPLANATION.', '._CLICK_ON;?> : <img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_change.gif" width="21" height="21" alt="" />.</p>
+          <?php //echo _MODEL_LIST_EXPLANATION1;?>.</p>
+       <!-- <p align="center"><?php echo _ADD_USER_TO_LIST_EXPLANATION.', '._CLICK_ON;?> : <img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_change.gif" width="21" height="21" alt="" />.</p>
         <p align="center"><?php echo _REMOVE_USER_FROM_LIST_EXPLANATION.', '._CLICK_ON;?> : <img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_delete.gif" width="19" height="19" alt="" />.</p>
-        <p align="center"><?php echo _TO_MODIFY_LIST_ORDER_EXPLANATION;?> <img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=arrow_down.gif" width="16" height="16" alt="" /> <?php echo _AND;?> <img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=arrow_up.gif" width="16" height="16" alt=""/>. <br/><br/><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=separateur_1.jpg" width="800" height="1" alt=""/></p>
+        <p align="center"><?php echo _TO_MODIFY_LIST_ORDER_EXPLANATION;?> <img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=arrow_down.gif" width="16" height="16" alt="" /> <?php echo _AND;?> <img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=arrow_up.gif" width="16" height="16" alt=""/>. <br/><br/><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=separateur_1.jpg" width="800" height="1" alt=""/></p>-->
         </td>
     </tr>
     </table>
