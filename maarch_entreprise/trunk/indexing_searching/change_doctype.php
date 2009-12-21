@@ -194,11 +194,6 @@ if(!$core->is_module_loaded('alert_diffusion'))
 	exit();
 }
 
-
-require_once('modules'.DIRECTORY_SEPARATOR.'alert_diffusion'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_alert_engine.php');
-$alert_engine = new alert_engine();
-$date = $alert_engine->date_max_treatment($delay, false);
-$process_date = $db->dateformat($date, '-');
 $services = '[';
 $_SESSION['indexing_services'] = array();
 $_SESSION['indexing_type_id'] = $_REQUEST['type_id'];
@@ -219,6 +214,18 @@ $services = preg_replace('/, $/', '', $services);
 $services .= ']';
 unset($_SESSION['indexing_type_id']);
 unset($_SESSION['indexing_services']);
-echo "{status : 0, process_date : '".trim($process_date)."', opt_indexes : '".addslashes($opt_indexes)."', services : ".$services."}";
-exit();
+if(isset($delay) && $delay > 0)
+{
+	require_once('modules'.DIRECTORY_SEPARATOR.'alert_diffusion'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_alert_engine.php');
+	$alert_engine = new alert_engine();
+	$date = $alert_engine->date_max_treatment($delay, false);
+	$process_date = $db->dateformat($date, '-');
+	echo "{status : 0, process_date : '".trim($process_date)."', opt_indexes : '".addslashes($opt_indexes)."', services : ".$services."}";
+	exit();
+}
+else
+{
+	echo "{status : 1, opt_indexes : '".addslashes($opt_indexes)."', services : ".$services."}";
+	exit();
+}
 ?>

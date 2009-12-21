@@ -7,7 +7,7 @@
  * @param error_empty_type String Error label displayed when the document type is empty
  * @param action_id String Action identifier
  **/
-function change_doctype(doctype_id, path_manage_script, error_empty_type, action_id, get_js_script, id_res, id_coll)
+function change_doctype(doctype_id, path_manage_script, error_empty_type, action_id, get_js_script, display_value, id_res, id_coll)
 {
 	var tmp_res_id = id_res || null;
 	var tmp_coll_id = id_coll || null;
@@ -25,14 +25,30 @@ function change_doctype(doctype_id, path_manage_script, error_empty_type, action
 		        onSuccess: function(answer){
 				eval("response = "+answer.responseText);
 			//	alert(answer.responseText);
-				if(response.status == 0 )
+				if(response.status == 0  || response.status == 1)
 				{
-					var process_date = $('process_limit_date');
-					if(process_date != null)
+					if(response.status == 0)
 					{
-						process_date.value = response.process_date;
+						var process_date = $('process_limit_date');
+						if(process_date != null)
+						{
+							process_date.value = response.process_date;
+						}
 					}
-
+					else
+					{
+					
+						var limit_use = $('process_limit_date_use_no');
+						if(limit_use)
+						{
+							limit_use.checked = true;
+						}
+						var process_date = $('process_limit_date_tr');
+						if(process_date != null)
+						{
+							Element.setStyle(process_date, {display : 'none'})
+						}
+					}
 					var indexes = response.opt_indexes;
 					var div_indexes = $('comp_indexes');
 					if(div_indexes )
