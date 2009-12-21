@@ -467,7 +467,7 @@ else
 									if($key == 'project')
 									{
 										//$('market').value='';return false;
-									?><input type="text" name="project" id="project" onblur="" value="<?php echo $data['project']['show_value']; ?>" /><div id="show_project" class="autocomplete"></div><script type="text/javascript">launch_autocompleter_folders('<?php echo $_SESSION['config']['businessappurl'];?>index.pĥp?display=true&module=folder&page=autocomplete_folders&mode=project', 'project');</script>
+									?><input type="text" name="project" id="project" onblur="" value="<?php echo $data['project']['show_value']; ?>" /><div id="show_project" class="autocomplete"></div><script type="text/javascript">launch_autocompleter_folders('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=folder&page=autocomplete_folders&mode=project', 'project');</script>
 									<?php
 									}
 									else if($key == 'market')
