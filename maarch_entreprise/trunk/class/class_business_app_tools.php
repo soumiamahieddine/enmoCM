@@ -42,6 +42,11 @@ class business_app_tools extends dbquery
 			$_SESSION['config']['businessappname'] = (string) $CONFIG->businessappname;
 			//$_SESSION['config']['businessapppath'] = (string) $CONFIG->businessapppath;
 			//##############
+			
+			if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == "on")
+				$protocol = "https";
+			else
+				$protocol = "http";
 			if ($_SERVER['SERVER_PORT'] <> 443 && $protocol == "https")		
 			{
 				$server_port = ":".$_SERVER['SERVER_PORT'];
@@ -54,15 +59,9 @@ class business_app_tools extends dbquery
 			{
 					$server_port = "";
 			}	
-				
-			if ($_SERVER['HTTPS'] == "on")
-				$protocol = "https";
-			else
-				$protocol = "http";
-				
-				
+
 			//##############
-			if($_SERVER['HTTP_X_FORWARDED_HOST'] <> "")
+			if(isset($_SERVER['HTTP_X_FORWARDED_HOST']) && $_SERVER['HTTP_X_FORWARDED_HOST'] <> "")
 			{
 					$host = $_SERVER['HTTP_X_FORWARDED_HOST'];
 			}

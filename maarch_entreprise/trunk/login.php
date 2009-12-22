@@ -31,7 +31,7 @@ if(!isset($_SESSION['config']['corename']) || empty($_SESSION['config']['corenam
 	$xmlconfig = simplexml_load_file($path );
 	
 	
-	if ($_SERVER['HTTPS'] == "on")
+	if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == "on")
 		$protocol = "https";
 	else
 		$protocol = "http";
