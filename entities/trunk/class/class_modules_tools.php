@@ -103,7 +103,7 @@ class entities extends dbquery
 		if(preg_match('/@my_entities/', $where))
 		{
 			$entities = '';
-			if($user == $_SESSION['user']['UserId'])
+			if($user_id == $_SESSION['user']['UserId'])
 			{
 				for($i=0; $i< count($_SESSION['user']['entities']);$i++)
 				{
