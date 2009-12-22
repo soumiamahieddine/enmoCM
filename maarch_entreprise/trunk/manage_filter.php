@@ -27,7 +27,7 @@ else
 $_SESSION['collection_id_choice'] = $_SESSION['current_basket']['coll_id'];
 $select[$table]= array();
 $where = $_SESSION['current_basket']['clause'];
-array_push($select[$table],"res_id","status","category_id","category_id as category_img", "priority", "admission_date", "subject", "process_limit_date", "entity_label", "dest_user", "type_label", "exp_user_id" );
+array_push($select[$table],"res_id","status","category_id","category_id as category_img", "priority", "creation_date", "admission_date", "subject", "process_limit_date", "entity_label", "dest_user", "type_label", "exp_user_id" );
 
 if($core_tools->is_module_loaded("cases") == true)
 {
@@ -278,7 +278,18 @@ else
 					$tab[$i][$j]["order"]='res_id';
 					$_SESSION['mlb_search_current_res_id'] = $tab[$i][$j]["value"];
 				}
-				if($tab[$i][$j][$value]=="admission_date")
+				if($tab[$i][$j][$value]=="creation_date")
+				{
+					$tab[$i][$j]["value"]=$core_tools->format_date_db($tab[$i][$j]["value"], false);
+					$tab[$i][$j]["label"]=_CREATION_DATE;
+					$tab[$i][$j]["size"]="10";
+					$tab[$i][$j]["label_align"]="left";
+					$tab[$i][$j]["align"]="left";
+					$tab[$i][$j]["valign"]="bottom";
+					$tab[$i][$j]["show"]=true;
+					$tab[$i][$j]["order"]='creation_date';
+				}
+				/*if($tab[$i][$j][$value]=="admission_date")
 				{
 					$tab[$i][$j]["value"]=$core_tools->format_date_db($tab[$i][$j]["value"], false);
 					$tab[$i][$j]["label"]=_ADMISSION_DATE;
@@ -288,7 +299,7 @@ else
 					$tab[$i][$j]["valign"]="bottom";
 					$tab[$i][$j]["show"]=true;
 					$tab[$i][$j]["order"]='admission_date';
-				}
+				}*/
 				if($tab[$i][$j][$value]=="process_limit_date")
 				{
 					$tab[$i][$j]["value"]=$core_tools->format_date_db($tab[$i][$j]["value"], false);
