@@ -5,6 +5,7 @@
 		<tmppath>C:\xampp\htdocs\maarch_entreprise\tmp\</tmppath>
 		<defaultpage>C:\xampp\htdocs\maarch_entreprise\index.php</defaultpage>
 		<defaultlanguage>fr</defaultlanguage>
+		<default_timezone>Europe/Paris</default_timezone>
 	</CONFIG>
 	<BUSINESSAPPS>
 		<appid>maarch_entreprise</appid> <!-- same name as the app directory -->

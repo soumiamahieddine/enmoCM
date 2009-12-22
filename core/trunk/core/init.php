@@ -1,7 +1,16 @@
 <?php
 session_name('maarch_entreprise');
 session_start();
-
+if(isset($_SESSION['config']['default_timezone']) && !empty($_SESSION['config']['default_timezone']))
+{
+	ini_set('date.timezone', $_SESSION['config']['default_timezone']);
+	date_default_timezone_set($_SESSION['config']['default_timezone']);
+}
+else
+{
+	ini_set('date.timezone', 'Europe/Paris');
+	date_default_timezone_set('Europe/Paris');
+}
 if(isset($_SESSION['config']['corepath']) && !empty($_SESSION['config']['corepath']))
 {
 	chdir($_SESSION['config']['corepath']);
@@ -15,7 +24,6 @@ if (isset($_SESSION['custom_override_id']) && !empty($_SESSION['custom_override_
 }
 elseif(isset($_SESSION['config']['corepath']) && !empty($_SESSION['config']['corepath']))
 {
-	
 	set_include_path($_SESSION['config']['corepath']);	
 }
 
