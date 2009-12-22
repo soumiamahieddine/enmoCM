@@ -90,6 +90,7 @@ if(isset($_GET['filename']) && !empty($_GET['filename']))
 	//echo $path;
 	if(!empty($mime_type) && !empty($path))
 	{
+		
 		$date = mktime(0,0,0,date("m" ) + 2  ,date("d" ) ,date("Y" )  );
 		$date = date("D, d M Y H:i:s", $date);
 		$time = 30*12*60*60;

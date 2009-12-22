@@ -46,6 +46,14 @@ if(!isset($_SESSION['config']['corename']) || empty($_SESSION['config']['corenam
 		$_SESSION['config']['unixserver'] = (string) $CONFIG->unixserver;
 		$_SESSION['config']['defaultpage'] = (string) $CONFIG->defaultpage;
 		$_SESSION['config']['defaultlang'] = (string) $CONFIG->defaultlanguage;
+		if(isset($CONFIG->default_timezone) && !empty($CONFIG->default_timezone))
+		{
+			$_SESSION['config']['default_timezone'] = (string) $CONFIG->default_timezone;
+		}
+		else
+		{
+			$_SESSION['config']['default_timezone'] = 'Europe/Paris';
+		}
 		//$_SESSION['config']['coreurl'] = (string) $CONFIG->coreurl;
 		if(!isset($_SESSION['config']['coreurl']))
 		{
