@@ -59,7 +59,7 @@ class portal extends functions
 			{
 				$_SESSION['config']['default_timezone'] = 'Europe/Paris';
 			}
-			if ($_SERVER['HTTPS'] == "on")
+			if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == "on")
 				$protocol = "https";
 			else
 				$protocol = "http";
@@ -76,14 +76,14 @@ class portal extends functions
 			{
 				$server_port = '';
 			}
-			if($_SERVER['HTTP_X_FORWARDED_HOST'] <> "")
-                        {
-                                $host = $_SERVER['HTTP_X_FORWARDED_HOST'];
-                        }
-                        else
-                        {
-                                $host = $_SERVER['HTTP_HOST'];
-                        }
+			if(isset($_SERVER['HTTP_X_FORWARDED_HOST']) && $_SERVER['HTTP_X_FORWARDED_HOST'] <> "")
+			{
+					$host = $_SERVER['HTTP_X_FORWARDED_HOST'];
+			}
+			else
+			{
+					$host = $_SERVER['HTTP_HOST'];
+			}
 			$_SESSION['config']['coreurl'] = $protocol."://".$host.$server_port.str_replace('index.php','',$_SERVER['SCRIPT_NAME']);
 		}
 		$i=0;
