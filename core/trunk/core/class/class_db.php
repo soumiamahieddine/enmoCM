@@ -605,7 +605,7 @@ class dbquery extends functions
 	*
 	* @return integer  last increment id
 	*/
-	public function last_insert_id()
+	public function last_insert_id($sequence_name ='')
 	{
 		if($this->databasetype == "MYSQL")
 		{
@@ -613,7 +613,10 @@ class dbquery extends functions
 		}
 		elseif($this->databasetype == "POSTGRESQL")
 		{
-
+			$this->query = @pg_query("select currval('".$sequence_name."')as lastinsertid");
+			$line = @pg_fetch_object($this->query);
+			
+			return $line->lastinsertid;
 		}
 		elseif($this->databasetype == "SQLSERVER")
 		{
