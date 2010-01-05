@@ -1219,7 +1219,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
 		$cat_id = get_value_fields($values_form, 'category_id');
 
 		$query_ext .= " category_id = '".$cat_id."' " ;
-		$query_res .= " status = 'NEW' " ;
+	//	$query_res .= " status = 'NEW' " ;
 
 
 		// Specific indexes : values from the form
@@ -1386,6 +1386,8 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
 			$pa_return_value = $physical_archive->load_box_db($box_id, $cat_id, $_SESSION['user']['UserId']);
 			$query_res .= ", arbatch_id = ".$pa_return_value."";
 		}
+		$query_res = preg_replace('/set ,/', 'set ', $query_res);
+		//$query_res = substr($query_res, strpos($query_string, ','));
 		$_SESSION['arbox_id'] = "";
 		$db->connect();
 		$db->query($query_res." where res_id =".$res_id);

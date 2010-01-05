@@ -1,4 +1,4 @@
-<?php
+<?php 
 //Arguments
 
 if( !isset($argv) )
@@ -136,7 +136,7 @@ function createUserNode($parent,$user)
 			
 			for($i=0;$i<count($v_fd);$i++)
 			{
-				$tmp_g_inf = groupInfo($v_fd[$i]); 
+				$tmp_g_inf = groupInfo($v_fd[$i]);
 				
 				if( !empty( $tmp_g_inf ) )
 				{
@@ -183,6 +183,7 @@ function createGroupNode($parent,$group)
 			for($i=0;$i<count($v_fd);$i++)
 			{
 				$tmp_g_inf = groupInfo($v_fd[$i]);
+				
 				if( !empty( $tmp_g_inf ) )
 					$mbof->appendChild( createGroupNode($mbof,$tmp_g_inf) );
 			}
@@ -212,7 +213,11 @@ function groupInfo($group_dn)
 			
 		if( !empty($tmp_g_inf) )
 		{
-			return array_combine(array_keys($group_fields),array_values($tmp_g_inf));
+			$group_node = array();
+			foreach($group_fields as $k_gf => $v_gf)
+				$group_node[$k_gf] = $tmp_g_inf[$v_gf];
+		
+			return $group_node;
 		}
 	}
 	return null;
@@ -234,15 +239,23 @@ foreach($dn_and_filter as $dn_fil)
 	$list_users = array();
 	$list_users = $ad->all_users(array_values($user_fields),$dn_fil['id'],$dn_fil['user']);
 	
+	$user_node = array();
 	foreach($list_users as $user)
 	{
-		$dn->appendChild(createUserNode($dn,array_combine( array_keys($user_fields),array_values($user)) ) );
+		foreach($user_fields as $k_uf => $v_uf)
+			$user_node[$k_uf] = $user[$v_uf];
+		
+		$dn->appendChild(createUserNode($dn,$user_node));
 	}
+	unset($user_node);
 }
+
+
 
 //**********************************//
 //			TYPE OF GROUP	 		//
 //**********************************//
+
 $xp_out_xml = new domxpath($out_xml);
 
 if(!empty($dn_and_filter))
@@ -255,14 +268,19 @@ foreach($dn_and_filter as $dn_fil)
 	if(!empty($group_users))
 	foreach($group_users as $group)
 	{
-		$group = array_combine(array_keys($group_fields),array_values($group));
+		$group_node = array();
 		
-		$update_type = $xp_out_xml->query("//group[@ext_id='".$group['ext_id']."']");
+		foreach($group_fields as $k_gf => $v_gf)
+			$group_node[$k_gf] = $group[$v_gf];
+	
+		$update_type = $xp_out_xml->query("//group[@ext_id='".$group_node['ext_id']."']");
 		
 		foreach($update_type as $ut)
 		{
 			$ut->setAttribute("type",$dn_fil["type"]);
 		}
+		
+		unset($group_node);
 	}
 }
 
