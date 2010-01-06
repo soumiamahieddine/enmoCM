@@ -574,7 +574,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 				$frm_str .='</select> ';
 				$frm_str .= '<input type="button" name="send" id="send" value="'._VALIDATE.'" class="button" onclick="valid_action_form( \'process\', \''.$path_manage_action.'\', \''. $id_action.'\', \''.$res_id.'\', \''.$table.'\', \''.$module.'\', \''.$coll_id.'\', \''.$mode.'\');"/> ';
 			}
-			$frm_str .= '<input name="close" id="close" type="button" value="'._CANCEL.'" class="button" onClick="javascript:$(\'baskets\').style.visibility=\'visible\';$(\'entity\').style.visibility=\'visible\';$(\'category\').style.visibility=\'visible\';destroyModal(\'modal_'.$id_action.'\');reinit();"/>';
+			$frm_str .= '<input name="close" id="close" type="button" value="'._CANCEL.'" class="button" onClick="javascript:var tmp_bask=$(\'baskets\');if(tmp_bask){tmp_bask.style.visibility=\'visible\';}var tmp_ent =$(\'entity\');if(tmp_ent){tmp_ent.style.visibility=\'visible\';} var tmp_cat =$(\'category\'); if(tmp_cat){tmp_cat.style.visibility=\'visible\';}destroyModal(\'modal_'.$id_action.'\');reinit();"/>';
 		$frm_str .= '</p>';
 	$frm_str .= '</form>';
 	$frm_str .= '</div>';
