@@ -103,7 +103,7 @@ class entities extends dbquery
 		if(preg_match('/@my_entities/', $where))
 		{
 			$entities = '';
-			if($user_id == $_SESSION['user']['UserId'])
+			if($user == $_SESSION['user']['UserId'])
 			{
 				for($i=0; $i< count($_SESSION['user']['entities']);$i++)
 				{
@@ -451,11 +451,13 @@ class entities extends dbquery
 				$entities .= $this->translate_entity_keyword($line->keyword).", ";
 			}
 		}
+		
 		$entities = preg_replace("/, $/", '', $entities);
 		$entities = $this->process_where_clause($entities, $user_id);
 		$entities = preg_replace("/^,/", '', $entities);
 		$entities = preg_replace("/, ,/", ',', $entities);
-
+		$entities = preg_replace("/, $/", '', $entities);
+		
 		$db->query("select entity_id, keyword from ".$_SESSION['tablename']['ent_groupbasket_redirect']." where basket_id = '".$this->protect_string_db(trim($basket_id))."' and group_id = '".$this->protect_string_db(trim($group_id))."' and redirect_mode = 'USERS' and action_id = ".$action_id);
 		//$db->show();
 		$users = '';
@@ -471,11 +473,13 @@ class entities extends dbquery
 			//	echo '<br/>'.$users.'<br/>';
 			}
 		}
+
 		$users = preg_replace("/, $/", '', $users);
 		$users = $this->process_where_clause($users, $user_id);
 		$users = preg_replace("/^,/", '', $users);
 		$users = preg_replace("/, ,/", ',', $users);
-	//	echo $users;
+		$users = preg_replace("/, $/", '', $users);
+
 		$arr['entities'] = $entities;
 		$arr['users'] = $users;
 		//print_r($arr);
