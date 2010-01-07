@@ -1059,7 +1059,6 @@ function close_action(id_action, page, path_manage_script, mode_req, res_id_valu
 		{
 			var status = actions_status.values[actions_status.values.length -1];
 			action_change_status(path_manage_script, mode_req, res_id_values, tablename, id_coll, status);
-			actions_status.values = [];
 		}
 		if(page != '' && page != NaN && page && page != null )
 		{
