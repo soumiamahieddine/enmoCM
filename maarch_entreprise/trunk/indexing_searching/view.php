@@ -161,7 +161,14 @@ else
 						$Arguments = "#search=". $_SESSION['search']['plain_text'] ."";
 					}
 					@copy($file, $_SESSION['config']['tmppath'].DIRECTORY_SEPARATOR.'tmp_file_'.$md5.$_SESSION['user']['UserId'].'.'.$format);
-					echo "<iframe frameborder=\"0\" scrolling=\"no\" width=\"100%\" HEIGHT=\"100%\" src=\"". $_SESSION['config']['businessappurl'] ."/tmp/tmp_file_".$md5.$_SESSION['user']['UserId'].".".$format ."$Arguments\">"._FRAME_ARE_NOT_AVAILABLE_FOR_YOUR_BROWSER."</iframe>";
+					if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'tmp'.DIRECTORY_SEPARATOR.'tmp_file_'.$md5.$_SESSION['user']['UserId'].'.'.$format))
+					{
+						echo "<iframe frameborder=\"0\" scrolling=\"no\" width=\"100%\" HEIGHT=\"100%\" src=\"". $_SESSION['config']['coreurl'].'/custom/'.$_SESSION['custom_override_id'].'/apps/'.$_SESSION['config']['app_id'].'/tmp/tmp_file_'.$md5.$_SESSION['user']['UserId'].'.'.$format ."$Arguments\">"._FRAME_ARE_NOT_AVAILABLE_FOR_YOUR_BROWSER."</iframe>";
+					}
+					else
+					{
+						echo "<iframe frameborder=\"0\" scrolling=\"no\" width=\"100%\" HEIGHT=\"100%\" src=\"". $_SESSION['config']['businessappurl'] ."/tmp/tmp_file_".$md5.$_SESSION['user']['UserId'].".".$format ."$Arguments\">"._FRAME_ARE_NOT_AVAILABLE_FOR_YOUR_BROWSER."</iframe>";
+					}
 				}
 				elseif($use_tiny_mce && strtolower($format) ==  'maarch')
 				{

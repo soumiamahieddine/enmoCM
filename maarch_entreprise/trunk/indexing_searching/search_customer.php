@@ -41,11 +41,6 @@ if ($_GET['erase'] == 'true')
 	$_SESSION['search'] = array();
 }
 $_SESSION['origin'] = "search_customer";
-if($_REQUEST['num_folder'] <> "")
-{
-	$_REQUEST['num_folder'] = $appTools->control_abo($_REQUEST['num_folder']);
-	$_SESSION['search']['chosen_num_folder'] = $_REQUEST['num_folder'];
-}
 if($_REQUEST['name_folder'] <> "")
 {
 	$_SESSION['search']['chosen_name_folder'] = $_REQUEST['name_folder'];
@@ -73,14 +68,6 @@ if($_REQUEST['name_folder'] <> "")
 			</tr>
 		</table>
 	</div>
-	<script language="javascript">
-		launch_autocompleter_folders('<?php echo $_SESSION['config']['businessappurl']?>index.php?display=true&module=folder&page=autocomplete_folders&mode=project', 'project');
-		launch_autocompleter_folders('<?php echo $_SESSION['config']['businessappurl']?>index.php?display=true&module=folder&page=autocomplete_folders&mode=market', 'market');
-		function submitForm()
-		{
-			window.frames['show_trees'].location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&dir=indexing_searching&page=show_trees&project='+window.document.getElementById("project").value+'&market='+window.document.getElementById("market").value;
-		}
-	</script>
 	<div class="clearsearch">
 		<br>
 		<a href="<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=search_customer&dir=indexing_searching&erase=true"><img src="<?php  echo $_SESSION['config']['businessappurl']."static.php?filename=reset.gif";?>" alt="" height="15px" width="15px" /><?php  echo _NEW_SEARCH; ?></a>
@@ -97,3 +84,37 @@ if($_REQUEST['name_folder'] <> "")
 		</tr>
 	</table>
 </div>
+<script language="javascript">
+	launch_autocompleter_folders('<?php echo $_SESSION['config']['businessappurl']?>index.php?display=true&module=folder&page=autocomplete_folders&mode=project', 'project');
+	launch_autocompleter_folders('<?php echo $_SESSION['config']['businessappurl']?>index.php?display=true&module=folder&page=autocomplete_folders&mode=market', 'market');
+	function submitForm()
+	{
+		window.frames['show_trees'].location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&dir=indexing_searching&page=show_trees&project='+window.document.getElementById("project").value+'&market='+window.document.getElementById("market").value;
+	}
+	<?
+	if($_REQUEST['num_folder'] <> "")
+	{
+		$db = new dbquery();
+		$db->connect();
+		$db->query("select folder_name, subject, folders_system_id from ".$_SESSION['tablename']['fold_folders']." where folder_name = '".$_REQUEST['num_folder']."'");
+		$res = $db->fetch_object();
+		$chosen_num_folder = $res->folder_name.", ".$res->subject." (".$res->folders_system_id.")";
+		?>
+		window.document.getElementById("project").value = "<?php echo $chosen_num_folder;?>";
+		submitForm();
+		<?php
+	}
+	if($_REQUEST['num_subfolder'] <> "")
+	{
+		$db = new dbquery();
+		$db->connect();
+		$db->query("select folder_name, subject, folders_system_id from ".$_SESSION['tablename']['fold_folders']." where folder_name = '".$_REQUEST['num_subfolder']."'");
+		$res = $db->fetch_object();
+		$chosen_num_folder = $res->folder_name.", ".$res->subject." (".$res->folders_system_id.")";
+		?>
+		window.document.getElementById("market").value = "<?php echo $chosen_num_folder;?>";
+		submitForm();
+		<?php
+	}
+	?>
+</script>

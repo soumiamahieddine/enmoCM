@@ -460,7 +460,7 @@ class list_show_with_template extends list_show
 		if ($this->hide_standard_list == true)
 			$standard = '';
 		else
-			$standard = "<a href='".$link."&template='><img src='".$_SESSION['config']['businessappurl']."static.php?filename=standard_list.gif' alt='"._ACCESS_LIST_STANDARD."' title='"._ACCESS_LIST_STANDARD."' ></a>";
+			$standard = "<a href='".$link."&template='><img src='".$_SESSION['config']['businessappurl']."static.php?filename=standard_list.gif' alt='"._ACCESS_LIST_STANDARD."' ></a>";
 
 		$extend = "";
 		foreach ($template_list as $temp)
@@ -542,8 +542,14 @@ class list_show_with_template extends list_show
 
 		/* ---------------------- */
 
-
-		$file = 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."template".DIRECTORY_SEPARATOR.$actual_template.".html";
+		if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."template".DIRECTORY_SEPARATOR.$actual_template.".html"))
+		{	
+			$file = $_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."template".DIRECTORY_SEPARATOR.$actual_template.".html";
+		}
+		else
+		{
+			$file = 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."template".DIRECTORY_SEPARATOR.$actual_template.".html";
+		}
 
 
 		//To load including values template Use for case by exemple
