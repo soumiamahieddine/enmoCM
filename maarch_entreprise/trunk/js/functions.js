@@ -1431,6 +1431,7 @@ function action_send_form_confirm_result(path_manage_script, mode_req, id_action
 
 function action_change_status(path_manage_script, mode_req, res_id_values, tablename, id_coll, status)
 {
+//alert('path '+path_manage_script);
 	//alert('action_change_status');
 	if(res_id_values != '' && (mode_req == 'mass' || mode_req == 'page')
 			  && tablename != '' &&  id_coll != '')
@@ -1452,6 +1453,7 @@ function action_change_status(path_manage_script, mode_req, res_id_values, table
 					eval('response='+answer.responseText);
 					if(response.status == 0 ) 
 					{
+						actions_status.values = [];
 						// Status changed
 					}
 					else 
