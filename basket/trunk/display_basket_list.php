@@ -69,8 +69,7 @@ $db->connect();
 			$nb = '';
 			if(preg_match('/^CopyMailBasket/', $_SESSION['user']['baskets'][$i]['id']) && !empty($_SESSION['user']['baskets'][$i]['view']))
 			{
-				//$db->query('select r.RES_ID from '.$_SESSION['user']['baskets'][$i]['view']." r, ".$_SESSION['tablename']['ent_listinstance']." l where ".$_SESSION['user']['baskets'][$i]['clause']);
-				$db->query('select RES_ID from '.$_SESSION['user']['baskets'][$i]['view']." where ".$_SESSION['user']['baskets'][$i]['clause'], true);
+				$db->query('select RES_ID from '.$_SESSION['user']['baskets'][$i]['view']." where ".$_SESSION['user']['baskets'][$i]['clause']);
 				$nb = $db->nb_result();
 			}
 			elseif(!empty($_SESSION['user']['baskets'][$i]['table']))
