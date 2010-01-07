@@ -460,7 +460,7 @@ class list_show_with_template extends list_show
 		if ($this->hide_standard_list == true)
 			$standard = '';
 		else
-			$standard = "<a href='".$link."&template='><img src='".$_SESSION['config']['businessappurl']."static.php?filename=standard_list.gif' alt='"._ACCESS_LIST_STANDARD."' ></a>";
+			$standard = "<a href='".$link."&template='><img src='".$_SESSION['config']['businessappurl']."static.php?filename=standard_list.gif' alt='"._ACCESS_LIST_STANDARD."' title='"._ACCESS_LIST_STANDARD."' ></a>";
 
 		$extend = "";
 		foreach ($template_list as $temp)
