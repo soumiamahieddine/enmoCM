@@ -338,5 +338,19 @@ class diffusion_list extends dbquery
 
 		return $listinstance;
 	}
+	
+	public function set_main_dest($dest, $coll_id, $res_id, $listinstance_type = 'DOC', $item_type = 'user_id')
+	{
+		$this->connect();
+		$this->query("select item_id from ".$_SESSION['tablename']['ent_listinstance']." where res_id = ".$res_id." and coll_id = '".$this->protect_string_db($coll_id)."' and listinstance_type = '".$this->protect_string_db($listinstance_type)."' and sequence = 0 and item_type = '".$this->protect_string_db($item_type)."' and item_mode = 'dest'");
+		if($this->nb_result() == 1)
+		{
+			$this->query("update ".$_SESSION['tablename']['ent_listinstance']." set item_id = '".$this->protect_string_db($dest)."' where res_id = ".$res_id." and coll_id = '".$this->protect_string_db($coll_id)."' and listinstance_type = '".$this->protect_string_db($listinstance_type)."' and sequence = 0 and item_type = '".$this->protect_string_db($item_type)."' and item_mode = 'dest'");
+		}
+		else
+		{
+			$this->query("insert into ".$_SESSION['tablename']['ent_listinstance']." (coll_id, res_id, listinstance_type, item_id, item_type, item_mode) values ('".$this->protect_string_db($coll_id)."', ".$res_id.", '".$this->protect_string_db($listinstance_type)."', '".$this->protect_string_db($dest)."', '".$this->protect_string_db($item_type)."', 'dest', 0);");
+		}
+	}
 }
 ?>

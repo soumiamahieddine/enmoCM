@@ -166,6 +166,7 @@ $frm_height = '500px';
 				$arr_list .= $arr_id[$i].'#';
 				// Update dest_user in res table
 				$db->query("update ".$table." set dest_user = '".$db->protect_string_db($values_form[$j]['VALUE'])."' where res_id = ".$arr_id[$i]);
+				$list->set_main_dest($values_form[$j]['VALUE'], $coll_id,$arr_id[$i]);
 				//$db->show();
 				// Update listinstance
 				$difflist['dest'] = array();
