@@ -547,6 +547,15 @@ function get_general_data($coll_id, $res_id, $mode, $params = array())
 			{
 				$data[$arr[$i]]['show_value'] = $_SESSION['mail_priorities'][$line->$arr[$i]];
 			}
+			elseif($arr[$i] == 'destination')
+			{
+				$db2->query('select entity_label from '.$_SESSION['tablename']['ent_entities']." where entity_id = '".$line->$arr[$i]."'");
+				if($db2->nb_result() == 1)
+				{
+					$res2 = $db2->fetch_object();
+					$data[$arr[$i]]['show_value'] = $db->show_string($res2->entity_label, true );
+				}
+			}
 			elseif($arr[$i] == 'nature_id')
 			{
 				$data[$arr[$i]]['show_value'] = $_SESSION['mail_natures'][$line->$arr[$i]];
