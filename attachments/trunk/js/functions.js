@@ -3,6 +3,7 @@ function hide_index(mode_hide, display_val)
 	var tr_link = $('attach_link_tr');
 	var tr_title = $('attach_title_tr');
 	var indexes = $('indexing_fields');
+	var comp_index = $('comp_indexes');
 	if(mode_hide == true)
 	{
 		if(tr_link && display_val)
@@ -13,6 +14,10 @@ function hide_index(mode_hide, display_val)
 		if(indexes)
 		{
 			Element.setStyle(indexes, {display : 'none'});
+		}
+		if(comp_index)
+		{
+			Element.setStyle(comp_index, {display : 'none'});
 		}
 		//show link and hide index
 	}
@@ -27,6 +32,10 @@ function hide_index(mode_hide, display_val)
 		{
 			Element.setStyle(indexes, {display : display_val});
 
+		}
+		if(comp_index)
+		{
+			Element.setStyle(comp_index, {display : 'block'});
 		}
 		//hide link and show index
 	}
