@@ -568,7 +568,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 			$frm_str .= '</tr>';
 		}
 			$frm_str .= '</table>';
-			$frm_str .= '<div id="comp_indexes">';
+			$frm_str .= '<div id="comp_indexes" style="display:block;">';
 		$frm_str .= '</div>';
 		$frm_str .= '</div>';
 		/*** Actions ***/
