@@ -11,7 +11,7 @@
 * @author  Loïc Vinet  <dev@maarch.org>
 */
 
-function show_helper()
+function show_helper($mode)
 {
 	$core_tools = new core_tools();
 	$core_tools->load_lang();
