@@ -49,17 +49,27 @@ function show_helper()
 	}
 	echo "</div>";
 	echo "<div class='block_end'>&nbsp;</div>";
+	if($mode == 'popup')
+	{
+		echo '<div align="center"><input type="button" name="close" value="'._CLOSE_WINDOW.'" onclick="self.close();"</div>';
+	}
 }
 
-
-
+if(isset($_REQUEST['mode']))
+{
+	$mode = trim($_REQUEST['mode']);
+}
+else
+{
+	$mode = '';
+}
 
 $core_tools = new core_tools();
 $core_tools->load_lang();
 $core_tools->load_html();
 $core_tools->load_header();
 echo '<div id="header">';
-show_helper();
+show_helper($mode);
 echo '</div>';
 
 
