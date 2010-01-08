@@ -40,7 +40,7 @@ function show_helper()
 				echo "<p><b>@my_primary_entity : </b><em>"._HELP_KEYWORD2."</em></p>";
 				echo "<p><b>@subentities[(entity_1,...,entity_n)] : </b><em>"._HELP_KEYWORD3."</em><br/></p>";
 				echo "<p><b>@parent_entity[entity_id] : <em></b>"._HELP_KEYWORD4."</em><br/></p>";
-				echo "<p><b>@sisters[entity_id] : <em></b>"._HELP_KEYWORD5."</em><br/></p>";
+				echo "<p><b>@sisters_entities[entity_id] : <em></b>"._HELP_KEYWORD5."</em><br/></p>";
 				echo "<p><b>@all_entities : <em></b>"._HELP_KEYWORD6."</em><br/></p>";
 				echo "<p><b>@immediate_children[entity_1,..., entity_id] : </b><em>"._HELP_KEYWORD7."</em><br/></p>";
 				echo "<br/>"._HELP_KEYWORD_EXEMPLE_TITLE."<br/><br/>";
