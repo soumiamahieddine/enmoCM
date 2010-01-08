@@ -161,7 +161,7 @@
 			else
 			{
 				$this->connect();
-				$this->query("select res_id from ".$table_res." where docserver_id = '".$docserver_id."' and path = '".$path."' and filename= '".$filename."' and typist ='".$_SESSION['user']['UserId']."' order by res_id desc ");
+				$this->query("select res_id from ".$table_res." where docserver_id = '".$docserver_id."' and path = '".$path."' and filename= '".$filename."'  order by res_id desc ");
 				$res = $this->fetch_object();
 				return $res->res_id;
 			}
