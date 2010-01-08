@@ -51,7 +51,7 @@ function show_helper($mode)
 	echo "<div class='block_end'>&nbsp;</div>";
 	if($mode == 'popup')
 	{
-		echo '<div align="center"><input type="button" name="close" value="'._CLOSE_WINDOW.'" onclick="self.close();"</div>';
+		echo '<br/><div align="center"><input type="button" class="button" name="close" value="'._CLOSE_WINDOW.'" onclick="self.close();"</div>';
 	}
 }
 
