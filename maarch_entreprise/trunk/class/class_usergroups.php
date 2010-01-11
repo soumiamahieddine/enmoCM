@@ -160,7 +160,7 @@ class usergroups extends dbquery
 									<?php  echo _DESC; ?> :
 								</td>
 								<td align="left">
-									<input name="desc" id="desc" class="text" type="text" value="<?php  echo $_SESSION['m_admin']['groups']['desc']; ?>" />
+									<input name="desc" id="desc" class="text" type="text" value="<?php  echo $_SESSION['m_admin']['groups']['desc']; ?>"  alt="<?php  echo $_SESSION['m_admin']['groups']['desc']; ?>" title="<?php  echo $_SESSION['m_admin']['groups']['desc']; ?>"/>
 								</td>
 							</tr>
 						</table>

@@ -81,7 +81,7 @@ if(isset($_REQUEST['modifyAccess']))
 	if(count($_REQUEST['security'])>0)
 	{
 		?>
-		<script type="text/javascript" language="javascript">window.open('<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&admin=groups&page=add_grant&collection=<?php  echo $_REQUEST['security'][0];?>','modify','toolbar=no,status=no,width=800,height=450,left=150,top=300,scrollbars=auto,location=no,menubar=no,resizable=yes');</script>
+		<script type="text/javascript" language="javascript">window.open('<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&admin=groups&page=add_grant&collection=<?php  echo $_REQUEST['security'][0];?>','modify','toolbar=no,status=no,width=800,height=550,left=150,top=300,scrollbars=auto,location=no,menubar=no,resizable=yes');</script>
 		<?php
 	}
 }
@@ -166,7 +166,7 @@ $core_tools->load_header(_MANAGE_RIGHTS);
 	if (count($_SESSION['collections']) > count($_SESSION['m_admin']['groups']['security']))
 	{
 		?>
-		<input type="button" name="addGrant" class="button" onClick="window.open('<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&admin=groups&page=add_grant','add','toolbar=no,status=no,width=800,height=450,left=150,top=300,scrollbars=auto,location=no,menubar=no,resizable=yes');" value="<?php  echo _ADD_GRANT; ?>" />
+		<input type="button" name="addGrant" class="button" onClick="window.open('<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&admin=groups&page=add_grant','add','toolbar=no,status=no,width=800,height=550,left=150,top=300,scrollbars=auto,location=no,menubar=no,resizable=yes');" value="<?php  echo _ADD_GRANT; ?>" />
 		<?php
 	}
 	/*

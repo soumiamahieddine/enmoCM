@@ -218,7 +218,7 @@ $time = $core_tools->get_session_time_expire();
 		{
 			?>
 	    	<div align="center">
-			<iframe name="choose_coll" id="choose_coll" scrolling="auto" width="100%" height="25" frameborder="0" src="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&admin=groups&page=choose_coll"></iframe></div>
+			<iframe name="choose_coll" id="choose_coll" scrolling="auto" width="100%" height="35" frameborder="0" src="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&admin=groups&page=choose_coll"></iframe></div>
 			<?php
 		}
 		?>
