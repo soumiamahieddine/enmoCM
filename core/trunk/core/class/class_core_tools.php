@@ -1813,7 +1813,6 @@ class core_tools extends functions
 		}
 		return false;
 	}
-preg_replace(
 
 	
 	public function get_custom_id()
