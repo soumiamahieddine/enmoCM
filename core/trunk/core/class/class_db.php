@@ -533,10 +533,15 @@ class dbquery extends functions
 		if($this->what_sql_error == 1)
 		{
 			// Shows the connexion data (server, port, user, pass)
-			echo "- <b>"._DB_CONNEXION_ERROR."</b> -<br /><br />"._DATABASE_SERVER." : ".$this->server."<br/>"._DB_PORT.' : '.$this->port."<br/>"._DB_TYPE." : ".$this->databasetype."<br/>"._DB_USER." : ".$this->user."<br/>"._PASSWORD." : ".$this->pass;
-			if($this->databasetype == "POSTGRESQL")
+			echo "- <b>"._DB_CONNEXION_ERROR."</b>";
+			if($_SESSION['config']['debug'] == 'true')
 			{
-				echo "<br/>"._DATABASE.' : '.$this->base;
+				
+				echo " -<br /><br />"._DATABASE_SERVER." : ".$this->server."<br/>"._DB_PORT.' : '.$this->port."<br/>"._DB_TYPE." : ".$this->databasetype."<br/>"._DB_USER." : ".$this->user."<br/>"._PASSWORD." : ".$this->pass;
+				if($this->databasetype == "POSTGRESQL")
+				{
+					echo "<br/>"._DATABASE.' : '.$this->base;
+				}
 			}
 			exit();
 		}
@@ -544,7 +549,11 @@ class dbquery extends functions
 		// Selection error
 		if($this->what_sql_error == 2)
 		{
-			echo "- <b>"._SELECTION_BASE_ERROR."</b> -<br /><br />"._DATABASE." : ".$this->base;
+			echo "- <b>"._SELECTION_BASE_ERROR."</b>";
+			if($_SESSION['config']['debug'] == 'true')
+			{
+				echo " -<br /><br />"._DATABASE." : ".$this->base;
+			}
 			exit();
 		}
 
