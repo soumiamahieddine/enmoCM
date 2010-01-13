@@ -913,6 +913,8 @@ function process_category_check($cat_id, $values)
 	$test_type = $type->check_indexes($type_id, $coll_id,$val_indexes );
 	if(!$test_type)
 	{
+		$_SESSION['action_error'] .= $_SESSION['error'];
+		$_SESSION['error'] = '';
 		return false;
 	}
 

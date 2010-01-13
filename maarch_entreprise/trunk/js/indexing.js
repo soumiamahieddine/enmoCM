@@ -34,10 +34,10 @@ function change_doctype(doctype_id, path_manage_script, error_empty_type, action
 						{
 							limit_use.checked = true;
 						}
-						var process_date = $('process_limit_date_tr');
-						if(process_date != null)
+						var process_date_tr = $('process_limit_date_tr');
+						if(process_date_tr != null)
 						{
-							Element.setStyle(process_date, {display : display_value_tr})
+							Element.setStyle(process_date_tr, {display : display_value_tr})
 						}
 						var process_date = $('process_limit_date');
 						if(process_date != null)
@@ -53,10 +53,10 @@ function change_doctype(doctype_id, path_manage_script, error_empty_type, action
 						{
 							limit_use.checked = true;
 						}
-						var process_date = $('process_limit_date_tr');
-						if(process_date != null)
+						var process_date_tr = $('process_limit_date_tr');
+						if(process_date_tr != null)
 						{
-							Element.setStyle(process_date, {display : 'none'})
+							Element.setStyle(process_date_tr, {display : 'none'})
 						}
 					}
 					var indexes = response.opt_indexes;
