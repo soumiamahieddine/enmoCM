@@ -124,7 +124,7 @@ else
 	}
 	$where_request = $where_clause;
 }
-$where_request = str_replace("()", "(1=-1)", $where_request);
+$where_request = str_replace(" ()", "(1=-1)", $where_request);
 $where_request = str_replace("and ()", "", $where_request);
 $list=new list_show();
 $order = '';
