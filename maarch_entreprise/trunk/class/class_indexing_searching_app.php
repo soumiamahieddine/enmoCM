@@ -190,53 +190,56 @@ class indexing_searching_app extends dbquery
 		// Simple cases
 		foreach(array_keys($post) as $key)
 		{
-			if($_ENV['categories'][$cat_id][$key]['mandatory'] == true  && $post[$key] == '' )
+			if($_ENV['categories'][$cat_id][$key]['modify'] == true)
 			{
-				$_SESSION['error'] .= $_ENV['categories'][$cat_id][$key]['label'].' '._IS_EMPTY.'<br/>';
-			}
-			if($_ENV['categories'][$cat_id][$key]['type_form'] == 'date' && !empty($post[$key]) && preg_match($_ENV['date_pattern'],$post[$key])== 0)
-			{
-				$_SESSION['error'] .= $_ENV['categories'][$cat_id][$key]['label']." "._WRONG_FORMAT." <br/>";
-			}
-			else if($_ENV['categories'][$cat_id][$key]['type_field'] == 'date' && $_ENV['categories'][$cat_id][$key]['table'] <> 'none' && !empty($post[$key]))
-			{
-				if($_ENV['categories'][$cat_id][$key]['table'] == 'res')
+				if($_ENV['categories'][$cat_id][$key]['mandatory'] == true  && $post[$key] == '' )
 				{
-					array_push($data_res, array('column' => $key, 'value' => $func->format_date_db($post[$key]), 'type' => "date"));
+					$_SESSION['error'] .= $_ENV['categories'][$cat_id][$key]['label'].' '._IS_EMPTY.'<br/>';
 				}
-				else if($_ENV['categories'][$cat_id][$key]['table'] == 'coll_ext')
+				if($_ENV['categories'][$cat_id][$key]['type_form'] == 'date' && !empty($post[$key]) && preg_match($_ENV['date_pattern'],$post[$key])== 0)
 				{
-					array_push($data_ext, array('column' => $key, 'value' => $func->format_date_db($post[$key]), 'type' => "date"));
+					$_SESSION['error'] .= $_ENV['categories'][$cat_id][$key]['label']." "._WRONG_FORMAT." <br/>";
 				}
-			}
-			if($_ENV['categories'][$cat_id][$key]['type_form'] == 'integer' && !empty($post[$key]) && preg_match("/^[0-9]*$/",$post[$key])== 0)
-			{
-				$_SESSION['error'] .= $_ENV['categories'][$cat_id][$key]['label']." "._WRONG_FORMAT." <br/>";
-			}
-			else if($_ENV['categories'][$cat_id][$key]['type_field'] == 'integer' && $_ENV['categories'][$cat_id][$key]['table'] <> 'none' && $post[$key] != '')
-			{
-				if($_ENV['categories'][$cat_id][$key]['table'] == 'res')
+				else if($_ENV['categories'][$cat_id][$key]['type_field'] == 'date' && $_ENV['categories'][$cat_id][$key]['table'] <> 'none' && !empty($post[$key]))
 				{
-					array_push($data_res, array('column' => $key, 'value' => $post[$key], 'type' => "integer"));
+					if($_ENV['categories'][$cat_id][$key]['table'] == 'res')
+					{
+						array_push($data_res, array('column' => $key, 'value' => $func->format_date_db($post[$key]), 'type' => "date"));
+					}
+					else if($_ENV['categories'][$cat_id][$key]['table'] == 'coll_ext')
+					{
+						array_push($data_ext, array('column' => $key, 'value' => $func->format_date_db($post[$key]), 'type' => "date"));
+					}
 				}
-				else if($_ENV['categories'][$cat_id][$values_form[$i]['ID']]['table'] == 'coll_ext')
+				if($_ENV['categories'][$cat_id][$key]['type_form'] == 'integer' && !empty($post[$key]) && preg_match("/^[0-9]*$/",$post[$key])== 0)
 				{
-					array_push($data_ext, array('column' => $key, 'value' => $post[$key], 'type' => "integer"));
+					$_SESSION['error'] .= $_ENV['categories'][$cat_id][$key]['label']." "._WRONG_FORMAT." <br/>";
 				}
-			}
-			if($_ENV['categories'][$cat_id][$key]['type_form'] == 'radio' && !empty($post[$key]) && !in_array($post[$key], $_ENV['categories'][$cat_id][$key]['values']))
-			{
-				$_SESSION['error'] .= $_ENV['categories'][$cat_id][$key]['label']." "._WRONG_FORMAT." <br/>";
-			}
-			if($_ENV['categories'][$cat_id][$key]['type_field'] == 'string' && $_ENV['categories'][$cat_id][$key]['table'] <> 'none' && !empty($post[$key]))
-			{
-				if($_ENV['categories'][$cat_id][$key]['table'] == 'res')
+				else if($_ENV['categories'][$cat_id][$key]['type_field'] == 'integer' && $_ENV['categories'][$cat_id][$key]['table'] <> 'none' && $post[$key] != '')
 				{
-					array_push($data_res, array('column' => $key, 'value' => $func->protect_string_db($post[$key]), 'type' => "string"));
+					if($_ENV['categories'][$cat_id][$key]['table'] == 'res')
+					{
+						array_push($data_res, array('column' => $key, 'value' => $post[$key], 'type' => "integer"));
+					}
+					else if($_ENV['categories'][$cat_id][$values_form[$i]['ID']]['table'] == 'coll_ext')
+					{
+						array_push($data_ext, array('column' => $key, 'value' => $post[$key], 'type' => "integer"));
+					}
 				}
-				else if($_ENV['categories'][$cat_id][$key]['table'] == 'coll_ext')
+				if($_ENV['categories'][$cat_id][$key]['type_form'] == 'radio' && !empty($post[$key]) && !in_array($post[$key], $_ENV['categories'][$cat_id][$key]['values']))
 				{
-					array_push($data_ext, array('column' => $key, 'value' => $func->protect_string_db($post[$key]), 'type' => "string"));
+					$_SESSION['error'] .= $_ENV['categories'][$cat_id][$key]['label']." "._WRONG_FORMAT." <br/>";
+				}
+				if($_ENV['categories'][$cat_id][$key]['type_field'] == 'string' && $_ENV['categories'][$cat_id][$key]['table'] <> 'none' && !empty($post[$key]))
+				{
+					if($_ENV['categories'][$cat_id][$key]['table'] == 'res')
+					{
+						array_push($data_res, array('column' => $key, 'value' => $func->protect_string_db($post[$key]), 'type' => "string"));
+					}
+					else if($_ENV['categories'][$cat_id][$key]['table'] == 'coll_ext')
+					{
+						array_push($data_ext, array('column' => $key, 'value' => $func->protect_string_db($post[$key]), 'type' => "string"));
+					}
 				}
 			}
 		}

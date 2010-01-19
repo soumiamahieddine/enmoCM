@@ -314,7 +314,9 @@ else
 			        </h2>
 					<br/>
 				<form method="post" name="index_doc" id="index_doc" action="index.php?page=details&dir=indexing_searching&id=<?php  echo $s_id; ?>">
-					<?php $detailsExport .= "<table cellpadding='2' cellspacing='2' border='0' class='block forms details' width='100%'>";?>
+					<?php $detailsExport .= "<table cellpadding='2' cellspacing='2' border='0' class='block forms details' width='100%'>";
+					//$db->show_array($data);
+					?>
 					<table cellpadding="2" cellspacing="2" border="0" class="block forms details" width="100%">
 						<?php
 						$i=0;
