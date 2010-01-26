@@ -38,8 +38,13 @@ $core_tools->load_html();
 //here we building the header
 $core_tools->load_header();
 $sec = new security();
+$mode = 'small';
+if(isset($_REQUEST['mode']) && $_REQUEST['mode'] == 'normal')
+{
+	$mode = 'normal';
+}
 ?>
-<body <?php  if($_SESSION['req'] == 'action'){?>id="hist_action_frame"<?php  }else{?>id="hist_courrier_frame"<?php  }?>>
+<body <?php  if($_SESSION['req'] == 'action'){?>id="hist_action_frame"<?php  }else if($mode =='small'){?>id="hist_courrier_frame"<?php  }?>>
 <?php
 $func = new functions();
 $db_hist = new dbquery();
@@ -80,7 +85,7 @@ elseif(!empty($view) && !empty($table)&& $view <> false && $table <> false)
 $db_hist->query($query);
 //$db_hist->show();
 ?>
-<table cellpadding="0" cellspacing="0" border="0" class="listing2">
+<table cellpadding="0" cellspacing="0" border="0" class="<?php if($mode == 'normal'){echo 'listing spec';}else{echo'listing2';}?>">
     <thead>
         <tr>
             <th><?php  echo _DATE;?></th>

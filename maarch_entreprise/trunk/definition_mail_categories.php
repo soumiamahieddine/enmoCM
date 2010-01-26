@@ -505,7 +505,7 @@ function get_general_data($coll_id, $res_id, $mode, $params = array())
 		array_push($arr, 'arbox_id');
 	}
 
-	if($mode == 'full')
+	if($mode == 'full' || $mode == 'form')
 	{
 		$fields = preg_replace('/,$/', ',type_label', $fields);
 	}
