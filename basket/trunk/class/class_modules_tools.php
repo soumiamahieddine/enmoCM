@@ -853,7 +853,7 @@ class basket extends dbquery
 		while($res = $this->fetch_object())
 		{
 			$db->query("delete from ".$_SESSION['tablename']['bask_users_abs']." where is_virtual ='Y' and basket_id = '".$this->protect_string_db($res->basket_id)."' and basket_owner = '".$this->protect_string_db($res->basket_owner)."'");
-			$this->show();
+			//$this->show();
 			$i++;
 		}
 		// then we delete all baskets where the user was the missing user
