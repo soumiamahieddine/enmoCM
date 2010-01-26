@@ -100,12 +100,23 @@ for ($ind_att1=0;$ind_att1<count($tab_attach);$ind_att1++)
 $core_tools->load_html();
 //here we building the header
 $core_tools->load_header();
+$mode = "small";
+if(isset($_REQUEST['mode']) && $_REQUEST['mode'] == 'normal')
+{
+	$mode = 'normal';
+}
+
 ?>
-<body id="iframe">
+<body <?php if($mode == 'small'){ echo 'id="iframe"';}?>>
  <?php
 $list_attach = new list_show();
 
-	$list_attach->list_simple($tab_attach, count($tab_attach), '','res_id','res_id', true, $_SESSION['config']['businessappurl']."index.php?display=true&module=attachments&page=view_attachment",'listingsmall',$_SESSION['config']['businessappurl']."index.php?display=true&module=templates&page=generate_attachment&mode=up",450,  500, $page_del = $_SESSION['config']['businessappurl']."index.php?display=true&module=attachments&page=del_attachment");
+$used_css = 'listingsmall';
+if($mode == 'normal')
+{
+	$used_css = 'listing spec';
+} 
+	$list_attach->list_simple($tab_attach, count($tab_attach), '','res_id','res_id', true, $_SESSION['config']['businessappurl']."index.php?display=true&module=attachments&page=view_attachment",$used_css,$_SESSION['config']['businessappurl']."index.php?display=true&module=templates&page=generate_attachment&mode=up",450,  500, $page_del = $_SESSION['config']['businessappurl']."index.php?display=true&module=attachments&page=del_attachment");
 
 ?></body>
 </html>
