@@ -61,17 +61,20 @@ else
 
 	//delete subfolders depending on that structure
 	$db->query("update ".$_SESSION['tablename']['doctypes_second_level']." set enabled = 'N' where doctypes_first_level_id = ".$id);
-
-	$db->query("delete from ".$_SESSION['tablename']['fold_foldertypes_doctypes_level1']." where doctypes_first_level_id = ".$id);
-
-	$db->query("select type_id from ".$_SESSION['tablename']['doctypes']." where doctypes_first_level_id = ".$id);
-
 	$db2 = new dbquery();
 	$db2->connect();
-	while($res = $db->fetch_object())
+	if($core_tools->is_module_loaded('folder') == true)
 	{
-		//delete the doctypes from the foldertypes_doctypes table
-		$db2->query("delete from  ".$_SESSION['tablename']['fold_foldertypes_doctypes']."  where doctype_id = ".$res->type_id);
+		$db->query("delete from ".$_SESSION['tablename']['fold_foldertypes_doctypes_level1']." where doctypes_first_level_id = ".$id);
+	
+		$db->query("select type_id from ".$_SESSION['tablename']['doctypes']." where doctypes_first_level_id = ".$id);
+
+		
+		while($res = $db->fetch_object())
+		{
+			//delete the doctypes from the foldertypes_doctypes table
+			$db2->query("delete from  ".$_SESSION['tablename']['fold_foldertypes_doctypes']."  where doctype_id = ".$res->type_id);
+		}
 	}
 	// delete the doctypes
 	$db2->query("update ".$_SESSION['tablename']['doctypes']." set enabled = 'N' where doctypes_first_level_id = ".$id);

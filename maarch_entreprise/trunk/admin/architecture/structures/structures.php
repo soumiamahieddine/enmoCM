@@ -132,16 +132,18 @@ while($res = $request->fetch_object())
 {
 	array_push($_SESSION['m_admin']['sous_dossiers'], array("ID" => $res->doctypes_second_level_id, "LABEL" => $request->show_string($res->doctypes_second_level_label)));
 }
-$db = new dbquery();
-$db->connect();
 
-$_SESSION['m_admin']['foldertypes'] = array();
-$db->query("select foldertype_id, foldertype_label from ".$_SESSION['tablename']['fold_foldertypes']);
-while($res = $db->fetch_object())
+if($admin->is_module_loaded('folder') == true)
 {
-	array_push($_SESSION['m_admin']['foldertypes'], array('id' => $res->foldertype_id, 'label' => $db->show_string($res->foldertype_label)));
+	$db = new dbquery();
+	$db->connect();
+	$_SESSION['m_admin']['foldertypes'] = array();
+	$db->query("select foldertype_id, foldertype_label from ".$_SESSION['tablename']['fold_foldertypes']);
+	while($res = $db->fetch_object())
+	{
+		array_push($_SESSION['m_admin']['foldertypes'], array('id' => $res->foldertype_id, 'label' => $db->show_string($res->foldertype_label)));
+	}
 }
-
 $autoCompletionArray = array();
 $autoCompletionArray["list_script_url"] = $_SESSION['config']['businessappurl']."index.php?display=true&page=structures_list_by_name";
 $autoCompletionArray["number_to_begin"] = 1;

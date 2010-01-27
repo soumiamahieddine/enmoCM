@@ -45,13 +45,16 @@ if(isset($_GET['id']) && !empty($_GET['id']))
 	$res = $db->fetch_object();
 	$desc = $db->show_string($res->doctypes_first_level_label);
 
-	$db->query('select ffdl.foldertype_id, f.foldertype_label  from '.$_SESSION['tablename']['fold_foldertypes_doctypes_level1']." ffdl, ".$_SESSION['tablename']['fold_foldertypes']." f where ffdl.doctypes_first_level_id = ".$id." and ffdl.foldertype_id = f.foldertype_id");
-
-	//$_SESSION['m_admin']['loaded_foldertypes']= array();
-	while($res = $db->fetch_object())
+	if($core_tools->is_module_loaded('folder') == true)
 	{
-		//array_push($_SESSION['m_admin']['loaded_foldertypes'], $res->foldertype_id);
-		array_push($arr_ft , $res->foldertype_id);
+		$db->query('select ffdl.foldertype_id, f.foldertype_label  from '.$_SESSION['tablename']['fold_foldertypes_doctypes_level1']." ffdl, ".$_SESSION['tablename']['fold_foldertypes']." f where ffdl.doctypes_first_level_id = ".$id." and ffdl.foldertype_id = f.foldertype_id");
+
+		//$_SESSION['m_admin']['loaded_foldertypes']= array();
+		while($res = $db->fetch_object())
+		{
+			//array_push($_SESSION['m_admin']['loaded_foldertypes'], $res->foldertype_id);
+			array_push($arr_ft , $res->foldertype_id);
+		}
 	}
 }
 
@@ -74,11 +77,14 @@ if( isset($_REQUEST['valid']))
 		$erreur .= _DESC_STRUCTURE_MISSING.".<br/>";
 	}
 
-	if(!isset($_REQUEST['foldertypes']) || count($_REQUEST['foldertypes']) == 0)
+	if($core_tools->is_module_loaded('folder') == true)
 	{
-		$erreur .= _FOLDERTYPE_MISSING.".<br/>";
+		if(!isset($_REQUEST['foldertypes']) || count($_REQUEST['foldertypes']) == 0)
+		{
+			$erreur .= _FOLDERTYPE_MISSING.".<br/>";
+		}
 	}
-
+	
 	if(empty($erreur))
 	{
 		$db->connect();
@@ -98,11 +104,14 @@ if( isset($_REQUEST['valid']))
 					$id = $_REQUEST['ID_structure'];
 					$db->query("UPDATE ".$_SESSION['tablename']['doctypes_first_level']." set doctypes_first_level_label = '".$desc."' WHERE doctypes_first_level_id = ".$id."");
 
-					$db->query("delete from ".$_SESSION['tablename']['fold_foldertypes_doctypes_level1']." where doctypes_first_level_id = ".$id."");
-
-					for($i=0; $i < count($_REQUEST['foldertypes']);$i++)
+					if($core_tools->is_module_loaded('folder') == true)
 					{
-						$db->query("insert into ".$_SESSION['tablename']['fold_foldertypes_doctypes_level1']." values (".$_REQUEST['foldertypes'][$i].", ".$id.")");
+						$db->query("delete from ".$_SESSION['tablename']['fold_foldertypes_doctypes_level1']." where doctypes_first_level_id = ".$id."");
+
+						for($i=0; $i < count($_REQUEST['foldertypes']);$i++)
+						{
+							$db->query("insert into ".$_SESSION['tablename']['fold_foldertypes_doctypes_level1']." values (".$_REQUEST['foldertypes'][$i].", ".$id.")");
+						}
 					}
 					if($_SESSION['history']['structureup'] == "true")
 					{
@@ -127,9 +136,12 @@ if( isset($_REQUEST['valid']))
 				$res = $db->fetch_object();
 				$id = $res->doctypes_first_level_id;
 
-				for($i=0; $i < count($_REQUEST['foldertypes']);$i++)
+				if($core_tools->is_module_loaded('folder') == true)
 				{
-					$db->query("insert into ".$_SESSION['tablename']['fold_foldertypes_doctypes_level1']." values (".$_REQUEST['foldertypes'][$i].", ".$id.")");
+					for($i=0; $i < count($_REQUEST['foldertypes']);$i++)
+					{
+						$db->query("insert into ".$_SESSION['tablename']['fold_foldertypes_doctypes_level1']." values (".$_REQUEST['foldertypes'][$i].", ".$id.")");
+					}
 				}
 				if($_SESSION['history']['structureadd'] == "true")
 				{
@@ -194,7 +206,8 @@ $time = $core_tools->get_session_time_expire();
     	<label><?php  echo _DESC.' '._STRUCTURE;?></label>
 		<input type="text"  name="desc_structure" value="<?php  echo $desc; ?>"   />
      </p>
-
+<?php if($core_tools->is_module_loaded('folder') == true)
+{?>
      <p>
      	<!--<iframe name="choose_foldertypes" id="choose_foldertypes" src="choose_foldertypes.php" frameborder="0" width="100%" scrolling="auto" height="360"></iframe>-->
 		<table align="left" border="0" width="100%">
@@ -268,6 +281,7 @@ $time = $core_tools->get_session_time_expire();
 	<tr> <td height="10">&nbsp;</td></tr>
 		</table>
      </p>
+    <?php  } ?>
 <p class="buttons">
 	<input type="submit" name="valid" class="button" value="<?php  echo _VALIDATE;?>" onclick="selectall($('foldertypes'));"/>
 	<input type="button" class="button"  name="cancel" value="<?php  echo _CANCEL;?>" onClick="self.close();" />
