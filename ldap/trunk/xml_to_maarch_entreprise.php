@@ -473,10 +473,7 @@ while($field = $db->fetch_object())
 	$lb_users_fields[] = $field->field;
 
 $update_users_fields = array_values(array_uintersect($xml_user_fields,$lb_users_fields,"strcasecmp"));
-if( $pass_is_login == 'true' )
-	$update_users_fields[] = 'password';
 
-	
 //On importe tous les users
 if($lost_users == "true")
 {
@@ -544,15 +541,19 @@ foreach($insert_users as $iu)
 				SELECT '".$iu."','user_id','".$xp_in_xml->query("//user[@ext_id=\"".$iu."\"]/user_id")->item(0)->nodeValue."','".$type_ldap."'
 				WHERE NOT EXISTS (SELECT reference_id FROM ext_references WHERE reference_id = '".$iu."')");
 	
+	if( $pass_is_login == 'true' )
+	{
+		$sql_insert = "INSERT INTO users ( change_password , password, ".implode(",",$update_users_fields)." ) SELECT 'N', md5('".$xp_in_xml->query("//user[@ext_id=\"".$iu."\"]/user_id")->item(0)->nodeValue."'),'";
+	}
+	else
+	{
+		$sql_insert = "INSERT INTO users ( change_password , password, ".implode(",",$update_users_fields)." ) SELECT 'Y',md5('maarch'),'";
+	}
 		
-	$sql_insert = "INSERT INTO users ( change_password ,".implode(",",$update_users_fields)." ) SELECT 'N','";
 	
 	foreach($update_users_fields as $uuf)
 	{
-		if($uuf == 'password')
-			$sql_insert .= md5($xp_in_xml->query("//user[@ext_id=\"".$iu."\"]/user_id")->item(0)->nodeValue)."','";
-		else
-			$sql_insert .= addslashes(trim($xp_in_xml->query("//user[@ext_id=\"".$iu."\"]/".$uuf)->item(0)->nodeValue))."','";
+		$sql_insert .= addslashes(trim($xp_in_xml->query("//user[@ext_id=\"".$iu."\"]/".$uuf)->item(0)->nodeValue))."','";
 	}
 	
 	$sql_insert = substr($sql_insert,0,-2);
@@ -590,10 +591,7 @@ foreach($update_users as $uu)
 	
 	foreach($update_users_fields as $uuf)
 	{
-		if($uuf == 'password')
-			$sql_update .= "password = '".md5($xp_in_xml->query("//user[@ext_id=\"".$uu."\"]/user_id")->item(0)->nodeValue)."', ";
-		else
-			$sql_update .= $uuf." = '".addslashes(trim($xp_in_xml->query("//user[@ext_id=\"".$uu."\"]/".$uuf)->item(0)->nodeValue))."', ";
+		$sql_update .= $uuf." = '".addslashes(trim($xp_in_xml->query("//user[@ext_id=\"".$uu."\"]/".$uuf)->item(0)->nodeValue))."', ";
 	}
 	
 	$sql_update = substr($sql_update,0,-2)." WHERE user_id IN 
@@ -726,7 +724,9 @@ foreach($insert_users as $iu)
 		$sql_insert_service = 
 		"UPDATE usergroup_content SET primary_group = 'Y'
 		WHERE user_id ='".addslashes(trim($xp_in_xml->query("//user[@ext_id=\"".$iu."\"]/user_id")->item(0)->nodeValue))."' 
-		AND group_id = '".$group_rights_group_id[0]."'";
+		AND group_id = '".$group_rights_group_id[0]."' 
+		AND NOT EXISTS (SELECT primary_group FROM usergroup_content WHERE user_id = '".addslashes(trim($xp_in_xml->query("//user[@ext_id=\"".$iu."\"]/user_id")->item(0)->nodeValue))."' 
+		AND primary_group = 'Y')";
 	
 		$db->query($sql_insert_service);
 		$log->add_notice($sql_insert_service);
@@ -738,7 +738,9 @@ foreach($insert_users as $iu)
 		$sql_insert_service = 
 		"UPDATE users_entities SET primary_entity = 'Y'
 		WHERE user_id ='".addslashes(trim($xp_in_xml->query("//user[@ext_id=\"".$iu."\"]/user_id")->item(0)->nodeValue))."' 
-		AND entity_id  = '".$primary_groups_group_id[0]."'";
+		AND entity_id  = '".$primary_groups_group_id[0]."'
+		AND NOT EXISTS (SELECT primary_entity FROM users_entities WHERE user_id = '".addslashes(trim($xp_in_xml->query("//user[@ext_id=\"".$iu."\"]/user_id")->item(0)->nodeValue))."' 
+		AND primary_entity = 'Y')";
 	
 		$db->query($sql_insert_service);
 		$log->add_notice($sql_insert_service);
@@ -839,7 +841,7 @@ foreach($update_users as $uu)
 			$primary_entity = 'N';
 		else
 			$primary_entity = 'Y';
-	
+			
 		$sql_insert_users_entities = "INSERT INTO users_entities (entity_id,primary_entity,".implode(",",$update_usergroup_content_fields)." )
 									  SELECT '".addslashes($eli_group_id)."','".$primary_entity."','";
 		
