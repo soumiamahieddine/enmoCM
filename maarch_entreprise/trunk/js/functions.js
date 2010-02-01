@@ -1058,19 +1058,23 @@ function close_action(id_action, page, path_manage_script, mode_req, res_id_valu
 		if(actions_status.values.length > 0)
 		{
 			var status = actions_status.values[actions_status.values.length -1];
-			action_change_status(path_manage_script, mode_req, res_id_values, tablename, id_coll, status);
+			action_done = action_change_status(path_manage_script, mode_req, res_id_values, tablename, id_coll, status,page);
 		}
-		if(page != '' && page != NaN && page && page != null )
+		else
 		{
-			do_nothing = false;
-			window.top.location.href=page;
+			if(page != '' && page != NaN && page && page != null )
+			{
+				do_nothing = false;
+				window.top.location.href=page;
 
+			}
+			else if(do_nothing == false)
+			{
+				window.top.location.reload();
+			}
+			do_nothing = false;
 		}
-		else if(do_nothing == false)
-		{
-			window.top.location.reload();
-		}
-		do_nothing = false;
+		
 	}
 }
 
@@ -1314,8 +1318,6 @@ function action_send_first_request( path_manage_script, mode_req,  id_action, re
 					{
 						actions_status.action_push(response.action_status);
 					}
-				//	console.log(actions_status);
-					//alert('test');
 					window.top.createModal(response.form_content,'modal_'+id_action, response.height, response.width, response.mode_frm);
 				}
 				else // Param errors
@@ -1431,17 +1433,16 @@ function action_send_form_confirm_result(path_manage_script, mode_req, id_action
 		}
 }
 
-function action_change_status(path_manage_script, mode_req, res_id_values, tablename, id_coll, status)
+function action_change_status(path_manage_script, mode_req, res_id_values, tablename, id_coll, status,page)
 {
-//alert('path '+path_manage_script);
-	//alert('action_change_status');
+   //alert('path '+path_manage_script+', mode '+mode_req);
 	if(res_id_values != '' && (mode_req == 'mass' || mode_req == 'page')
 			  && tablename != '' &&  id_coll != '')
 		{
-
 			new Ajax.Request(path_manage_script,
 			{
 				method:'post',
+				//asynchronous : false,
 				parameters: { values : res_id_values,
 							  mode : mode_req,
 							  req : 'change_status',
@@ -1450,29 +1451,49 @@ function action_change_status(path_manage_script, mode_req, res_id_values, table
 							  new_status : status
 							  },
 				onSuccess: function(answer){
-				//	console.log('answer '+answer.responseText);
+					//console.log('answer '+answer.responseText);
 					//alert('answer '+answer.responseText);
 					eval('response='+answer.responseText);
 					if(response.status == 0 ) 
 					{
 						actions_status.values = [];
+						if(console)
+						{
+							console.log("status changed");
+						}
+						
 						// Status changed
 					}
 					else 
-					{
-						alert(response.error_txt);
+					{ 
 						try{
 							//$('frm_error').updateContent(response.error_txt); // update the error div in the modal form
 							$('frm_error').innerHTML = response.error_txt;
 							}
 						catch(e){}
 					}
+					
+					if(page != '' && page != NaN && page && page != null )
+					{
+						do_nothing = false;
+						window.top.location.href=page;
+
+					}
+					else if(do_nothing == false)
+					{
+						window.top.location.reload();
+					}
+					do_nothing = false;
 				},
 				onFailure: function(){
-				//console.log('dans ton c** !!');
+					if(console)
+					{
+						console.log('dans ton c** !!');
+					}
 				}
 			});
 		}
+		return true;
 }
 /***********************************************************************/
 
