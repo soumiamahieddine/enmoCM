@@ -584,7 +584,7 @@ class types extends dbquery
 			{
 				$arr_tmp = array('column' => (STRING) $item->column, 'label' => $label, 'type' => (STRING) $item->type, 'img' => $_SESSION['config']['businessappurl'].'static.php?filename='.$img, 'type_field' => 'input', 'default_value' => $default);
 			}
-			$this->show_array($arr_tmp);
+			//$this->show_array($arr_tmp);
 			array_push($indexes, $arr_tmp);
 		}
 		return $indexes;
