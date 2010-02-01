@@ -333,6 +333,10 @@ if (!defined('_FIELD')) define( '_FIELD', 'Champ');
 if (!defined('_USED')) define( '_USED', 'Utilis&eacute;');
 if (!defined('_MANDATORY')) define( '_MANDATORY', 'Obligatoire');
 if (!defined('_ITERATIVE')) define( '_ITERATIVE', 'It&eacute;ratif');
+if (!defined('_NATURE_FIELD')) define( '_NATURE_FIELD', 'Nature champ');
+if (!defined('_TYPE_FIELD')) define( '_TYPE_FIELD', 'Type champ');
+if (!defined('_DB_COLUMN')) define( '_DB_COLUMN', 'Colonne BDD');
+if (!defined('_FIELD_VALUES')) define( '_FIELD_VALUES', 'Valeurs');
 
 if (!defined('_MASTER_TYPE')) define( '_MASTER_TYPE', 'Type ma&icirc;tre');
 

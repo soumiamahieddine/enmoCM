@@ -33,17 +33,20 @@ if(!isset($_REQUEST['coll_id']) || empty($_REQUEST['coll_id']))
 }
 
 $indexes = $type->get_all_indexes($_REQUEST['coll_id']);
-
+//$core_tools->show_array($indexes);
 if(count($indexes) > 0)
 {
 	$content .= '<hr/>';
     $content .= '<table>';
         $content .= '<tr>';
-            $content .= '<th width="500px">'._FIELD.'</th>';
+            $content .= '<th width="600px">'._FIELD.'</th>';
             $content .= '<th align="center" width="100px">'._USED.'</th>';
             $content .= '<th align="center" width="100px">'._MANDATORY.'</th>';
+            $content .= '<th align="left" width="100px">'._TYPE_FIELD.'</th>';
+            $content .= '<th align="left" width="100px">'._NATURE_FIELD.'</th>';
+            $content .= '<th align="left" width="100px">'._DB_COLUMN.'</th>';
+            $content .= '<th align="left" width="200px">'._FIELD_VALUES.'</th>';
         $content .= '</tr>';
-
 	for($i=0;$i<count($indexes);$i++)
 	{
 		$content .= '<tr>';
@@ -64,6 +67,27 @@ if(count($indexes) > 0)
 					$content .= ' checked="checked"';
 				}
 				$content .= ' onclick="$(\'field_'.$indexes[$i]['column'].'\').checked=true;"/>';
+			$content .= '</td>';
+			$content.= '<td align="left" width="100px">';
+				$content .= $indexes[$i]['type'];
+			$content .= '</td>';
+			$content.= '<td align="left" width="100px">';
+				$content .= $indexes[$i]['type_field'];
+			$content .= '</td>';
+			$content.= '<td align="left" width="100px">';
+				$content .= $indexes[$i]['column'];
+			$content .= '</td>';
+			$content.= '<td align="left" width="200px">';
+				if(count($indexes[$i]['values']) > 0)
+				{
+					$content.= '<p id="valuesList'.$indexes[$i]['column'].'" name="valuesList'.$indexes[$i]['column'].'" style="display:none">';
+						for($cptValues=0;$cptValues<count($indexes[$i]['values']);$cptValues++)
+						{						
+							$content .= '<a onclick="showValuesList(\'valuesList'.$indexes[$i]['column'].'\', \'valuesSpan'.$indexes[$i]['column'].'\');">'.$indexes[$i]['values'][$cptValues]['id'].' : '.$indexes[$i]['values'][$cptValues]['label'].'</a><br>';
+						}
+					$content.= '<p>';
+					$content.= '<span id="valuesSpan'.$indexes[$i]['column'].'" name="valuesSpan'.$indexes[$i]['column'].'" onclick="showValuesList(\'valuesList'.$indexes[$i]['column'].'\', \'valuesSpan'.$indexes[$i]['column'].'\');">>>></span>';
+				}
 			$content .= '</td>';
 		$content .= '</tr>';
 	}
