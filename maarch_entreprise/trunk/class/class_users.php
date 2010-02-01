@@ -239,9 +239,9 @@ class users extends dbquery
                      <div class="block_end">&nbsp;</div>
                      </div>
 
-                     	<form name="frmuser" id="frmuser" method="post" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php" class="forms addforms">
+                     	<form name="frmuser" id="frmuser" method="post" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&admin=users&page=user_modif" class="forms addforms">
 							<input type="hidden" name="display" value="true" />
-							<input type="hidden" name="adminh" value="users" />
+							<input type="hidden" name="admin" value="users" />
 							<input type="hidden" name="page" value="user_modif" />
 						<div class="">
 					<p>
