@@ -112,7 +112,7 @@ if($_POST['req'] == 'valid_form' && !empty($_POST['action_id']) && isset($_POST[
 		exit();
 	}
 }
-elseif($_POST['req'] == 'change_status' && !empty($_POST['values']) && !empty($_POST['new_status']) && !empty($_POST['table']))
+elseif(trim($_POST['req']) == 'change_status' && !empty($_POST['values']) && !empty($_POST['new_status']) && !empty($_POST['table']))
 {
 	$arr_id = explode(',', $_POST['values']);
 	$result = '';
@@ -131,7 +131,7 @@ elseif($_POST['req'] == 'change_status' && !empty($_POST['values']) && !empty($_
 			exit();
 		}
 	}
-	echo "{status : 0, error_txt : '".addslashes(_STATUS_UPDATED.' : '.$_POST['new_status'])."}";
+	echo "{status : 0, error_txt : '".addslashes(_STATUS_UPDATED.' : '.$_POST['new_status'])."'}";
 	exit();
 }
 // Post variables error
@@ -302,6 +302,7 @@ else
 			}
 		}
 	}
+
 	exit();
 }
 ?>
