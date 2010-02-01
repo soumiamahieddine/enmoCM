@@ -1147,7 +1147,10 @@ function valid_action_form(current_form_id, path_manage_script, id_action, value
 						}
 						else
 						{
-							pile_actions.action_push("action_send_first_request( '"+path_manage_script+"', '"+mode+"', '"+chosen_action_id+"', 'to_define','"+table+"', '"+module+"','"+coll_id+"');");
+							if(chosen_action_id != 'end_action')
+							{
+								pile_actions.action_push("action_send_first_request( '"+path_manage_script+"', '"+mode+"', '"+chosen_action_id+"', 'to_define','"+table+"', '"+module+"','"+coll_id+"');");
+							}
 							action_send_form_confirm_result(path_manage_script, mode, id_action, values, table, module, coll_id, frm_values);
 						}
 					}
@@ -1410,6 +1413,10 @@ function action_send_form_confirm_result(path_manage_script, mode_req, id_action
 					if(response.status == 0 ) //Form or confirm processed ok
 					{
 						res_ids = response.result_id;
+						if(res_id_values == 'none' && res_ids != '')
+						{
+							res_id_values = res_ids;
+						}
 						//console.log(res_ids);
 					//	alert(res_ids);
 						end_actions();
@@ -1457,11 +1464,6 @@ function action_change_status(path_manage_script, mode_req, res_id_values, table
 					if(response.status == 0 ) 
 					{
 						actions_status.values = [];
-						if(console)
-						{
-							console.log("status changed");
-						}
-						
 						// Status changed
 					}
 					else 
@@ -1472,7 +1474,7 @@ function action_change_status(path_manage_script, mode_req, res_id_values, table
 							}
 						catch(e){}
 					}
-					
+					//alert(page);
 					if(page != '' && page != NaN && page && page != null )
 					{
 						do_nothing = false;
@@ -1488,7 +1490,7 @@ function action_change_status(path_manage_script, mode_req, res_id_values, table
 				onFailure: function(){
 					if(console)
 					{
-						console.log('dans ton c** !!');
+						//console.log('dans ton c** !!');
 					}
 				}
 			});
