@@ -86,7 +86,7 @@ if(count($indexes) > 0)
 							$content .= '<a onclick="showValuesList(\'valuesList'.$indexes[$i]['column'].'\', \'valuesSpan'.$indexes[$i]['column'].'\');">'.$indexes[$i]['values'][$cptValues]['id'].' : '.$indexes[$i]['values'][$cptValues]['label'].'</a><br>';
 						}
 					$content.= '<p>';
-					$content.= '<span id="valuesSpan'.$indexes[$i]['column'].'" name="valuesSpan'.$indexes[$i]['column'].'" onclick="showValuesList(\'valuesList'.$indexes[$i]['column'].'\', \'valuesSpan'.$indexes[$i]['column'].'\');">>>></span>';
+					$content.= '<span id="valuesSpan'.$indexes[$i]['column'].'" name="valuesSpan'.$indexes[$i]['column'].'" onclick="showValuesList(\'valuesList'.$indexes[$i]['column'].'\', \'valuesSpan'.$indexes[$i]['column'].'\');">...</span>';
 				}
 			$content .= '</td>';
 		$content .= '</tr>';
