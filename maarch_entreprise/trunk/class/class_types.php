@@ -164,7 +164,7 @@ class types extends dbquery
 					?>
 					<p>
 						<label for="label"><? echo _WORDING; ?> : </label>
-						<input name="label" type="text" class="textbox" id="label" value="<? echo $func->show_string($_SESSION['m_admin']['doctypes']['LABEL']); ?>"/>
+						<input name="label" type="text" class="textbox" id="label" value="<? echo $func->show($_SESSION['m_admin']['doctypes']['LABEL']); ?>"/>
 					</p>
 					<?php
 					$_SESSION['service_tag'] = 'frm_doctype';
@@ -553,10 +553,38 @@ class types extends dbquery
 				}
 				$arr_tmp = array('column' => (STRING) $item->column, 'label' => $label, 'type' => (STRING) $item->type, 'img' => $_SESSION['config']['businessappurl'].'static.php?filename='.$img, 'type_field' => 'select', 'values' => $values, 'default_value' => $default);
 			}
+			elseif(isset($item->table))
+			{
+				$values = array();
+				$tableXml = $item->table;
+				//$this->show_array($tableXml);
+				$tableName = $tableXml->table_name;
+				$foreignKey = $tableXml->foreign_key;
+				$foreignLabel = $tableXml->foreign_label;
+				$whereClause = $tableXml->where_clause;
+				$order = $tableXml->order;
+				$query = "select ".$foreignKey.", ".$foreignLabel." from ".$tableName;
+				if(isset($whereClause) && !empty($whereClause))
+				{
+					$query .= " where ".$whereClause;
+				}
+				if(isset($order) && !empty($order))
+				{
+					$query .= ' '.$order;
+				}
+				$this->connect();
+				$this->query($query);
+				while($res = $this->fetch_object())
+				{
+					 array_push($values, array('id' => (string) $res->$foreignKey, 'label' => $res->$foreignLabel));
+				}
+				$arr_tmp = array('column' => (STRING) $item->column, 'label' => $label, 'type' => (STRING) $item->type, 'img' => $_SESSION['config']['businessappurl'].'static.php?filename='.$img, 'type_field' => 'select', 'values' => $values, 'default_value' => $default);
+			}
 			else
 			{
 				$arr_tmp = array('column' => (STRING) $item->column, 'label' => $label, 'type' => (STRING) $item->type, 'img' => $_SESSION['config']['businessappurl'].'static.php?filename='.$img, 'type_field' => 'input', 'default_value' => $default);
 			}
+			$this->show_array($arr_tmp);
 			array_push($indexes, $arr_tmp);
 		}
 		return $indexes;
@@ -655,6 +683,33 @@ class types extends dbquery
 							$label_val = $tmp;
 						}
 						array_push($values, array('id' => (string) $val->id, 'label' => $label_val));
+					}
+					$indexes[$col] = array( 'label' => $label, 'type' => (STRING) $item->type, 'img' => $_SESSION['config']['businessappurl'].'static.php?filename='.$img, 'type_field' => 'select', 'values' => $values, 'default_value' => $default);
+				}
+				elseif(isset($item->table))
+				{
+					$values = array();
+					$tableXml = $item->table;
+					//$this->show_array($tableXml);
+					$tableName = $tableXml->table_name;
+					$foreignKey = $tableXml->foreign_key;
+					$foreignLabel = $tableXml->foreign_label;
+					$whereClause = $tableXml->where_clause;
+					$order = $tableXml->order;
+					$query = "select ".$foreignKey.", ".$foreignLabel." from ".$tableName;
+					if(isset($whereClause) && !empty($whereClause))
+					{
+						$query .= " where ".$whereClause;
+					}
+					if(isset($order) && !empty($order))
+					{
+						$query .= ' '.$order;
+					}
+					$this->connect();
+					$this->query($query);
+					while($res = $this->fetch_object())
+					{
+						 array_push($values, array('id' => (string) $res->$foreignKey, 'label' => $res->$foreignLabel));
 					}
 					$indexes[$col] = array( 'label' => $label, 'type' => (STRING) $item->type, 'img' => $_SESSION['config']['businessappurl'].'static.php?filename='.$img, 'type_field' => 'select', 'values' => $values, 'default_value' => $default);
 				}
