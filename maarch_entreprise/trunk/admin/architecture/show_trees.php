@@ -89,6 +89,7 @@ else
 			$fLabel = $_SESSION['tree_foldertypes'][$i]['LABEL'];
 		}
 		array_push($search_customer_results, array('folder_id' => $fLabel, 'content' => $f_level));
+		//$core_tools->show_array($search_customer_results);
 		?>
 		<script type="text/javascript">
 			function funcOpen(branch, response) {
@@ -208,7 +209,7 @@ else
 																								{
 																									<?php
 																									?>
-																									'txt':'<span style="font-style:italic;"><small><small><?php  echo addslashes($search_customer_results[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['description']);?></small></small></span>',
+																									'txt':'<span style="font-style:italic;"><small><small><a href="#" onclick="window.open(\'<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=types_up&id=<?php echo $search_customer_results[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['type_id'];?>\');"><?php  echo addslashes($search_customer_results[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['description']);?></a></small></small></span>',
 																									'img':'empty.gif'
 																								}
 																								<?php
