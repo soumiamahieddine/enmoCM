@@ -177,6 +177,23 @@
  	{
  		return $this->res_id;
  	}
+	/**
+	* Gets the resource filename
+	*
+	* @return integer Resource name (filemane)
+	*/
+	public function get_filename($id,$coll_id)
+ 	{
+		require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
+		$sec = new security(); 
+		$resource_table = $sec->retrieve_table_from_coll($coll_id);
+		if ($resource_table == '')
+			echo "error with coll_id";
+		$this->connect();
+		$this->query("select filename from ".$resource_table." where res_id='".$id."'");
+ 		$result = $this->fetch_object();
+ 		return $result->filename;
+ 	}
 
 	/**
 	* Gets the error message of the resource object
