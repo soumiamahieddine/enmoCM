@@ -172,16 +172,19 @@ if(count($indexes) > 0)
 				$opt_indexes .= '</select>';
 			}
 			$opt_indexes .='</td>';
-			$opt_indexes .='<td><span class="red_asterisk" id="'.$key.'_mandatory" style="display:';
+			//$opt_indexes .='<td><span class="red_asterisk" id="'.$key.'_mandatory" style="display:';
+			$opt_indexes .='<td><span class="red_asterisk" id="'.$key.'_mandatory" >';
 			if($mandatory)
 			{
-				$opt_indexes .= 'inline';
+				//$opt_indexes .= 'inline';
+				$opt_indexes .= '*</span>&nbsp;</td>';
 			}
 			else
 			{
-				$opt_indexes .= 'none';
+				//$opt_indexes .= 'none';
+				$opt_indexes .= '&nbsp;</span>&nbsp;</td>';
 			}
-			$opt_indexes .= ';">*</span>&nbsp;</td>';
+			//$opt_indexes .= ';">*</span>&nbsp;</td>';
 		$opt_indexes .= '</tr>';
 	}
 	$opt_indexes .= '</table>';

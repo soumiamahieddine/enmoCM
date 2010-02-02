@@ -531,7 +531,7 @@ input.button {
 
 .listing, .spec {
 	margin: 10px 0px 0;
-	width: 980px;
+	width: 1000px;
 }
 
 .detailtabricatordebug{
@@ -3417,7 +3417,8 @@ td.picto, th.picto,  td.action {
 
 #comp_indexes
 {
-	width: 400px;
+	display: block;
+	width: 470px;
 }
 
 .tafelTree table
