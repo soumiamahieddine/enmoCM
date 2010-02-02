@@ -125,7 +125,7 @@ $time = $core_tools->get_session_time_expire();
 		<p>&nbsp;</p>
 		<p>
 			<label><?php echo _DEFAULT_ACTION_LIST;?> :</label>
-			<select name="default_action_page" id="default_action_page" onchange="manage_actions(this.options[this.selectedIndex].value, true);">
+			<select name="default_action_page" id="default_action_page" onchange="manage_actions(this.options[this.selectedIndex].value, true, '<?php echo $_SESSION['config']['businessappurl']."index.php?display=true&module=basket&page=check_action";?>');">
 				<option value=""><?php echo _NO_ACTION_DEFINED;?></option>
 				<?php
 				for($i=0; $i < count($_SESSION['m_admin']['basket']['all_actions']); $i++)
@@ -171,10 +171,10 @@ $time = $core_tools->get_session_time_expire();
 					{
 						echo 'colspan="2"';
 					}?>
-					><div style='font-size:10px;'><input type="checkbox"  name="actions[]" value="<?php echo $_SESSION['m_admin']['basket']['all_actions'][$i]['ID']; ?>" class="check group_action" id="checkbox_<?php echo $_SESSION['m_admin']['basket']['all_actions'][$i]['ID'] ?>"
+					><div style='font-size:10px;'><input type="checkbox"  name="actions[]" value="<?php echo $_SESSION['m_admin']['basket']['all_actions'][$i]['ID']; ?>" class="check group_action" id="checkbox_<?php echo $_SESSION['m_admin']['basket']['all_actions'][$i]['ID'] ?>" 
 					<?php if($bask->is_action_defined_for_the_group($_SESSION['m_admin']['basket']['all_actions'][$i]['ID'], $_SESSION['m_admin']['basket']['ind_group']) || count($_SESSION['m_admin']['basket_popup']['actions'][$_SESSION['m_admin']['basket']['all_actions'][$i]['ID']]) > 0){echo 'checked="checked"';}?> <?php if($_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['DEFAULT_ACTION'] == $_SESSION['m_admin']['basket']['all_actions'][$i]['ID']){echo 'disabled="disabled"';}?>/>
-					<?php echo $_SESSION['m_admin']['basket']['all_actions'][$i]['LABEL'];  $tr++;     ?>
-					<a href="javascript://" onclick="check_this_box('checkbox_<?php echo $_SESSION['m_admin']['basket']['all_actions'][$i]['ID'] ?>');show_config_action(<?php echo $_SESSION['m_admin']['basket']['all_actions'][$i]['ID']; ?>, true, <?php if(!empty($_SESSION['m_admin']['basket']['all_actions'][$i]['KEYWORD'])){ echo 'true';}else{ echo 'false';}?>);" class="config"><?php echo _CONFIG;?></a></div>
+					<span id="label_<?php echo $_SESSION['m_admin']['basket']['all_actions'][$i]['ID']; ?>"><?php echo $_SESSION['m_admin']['basket']['all_actions'][$i]['LABEL'];  $tr++;     ?></span>
+					<a href="javascript://" onclick="check_this_box('checkbox_<?php echo $_SESSION['m_admin']['basket']['all_actions'][$i]['ID'] ?>');show_config_action(<?php echo $_SESSION['m_admin']['basket']['all_actions'][$i]['ID']; ?>, true, <?php if(!empty($_SESSION['m_admin']['basket']['all_actions'][$i]['KEYWORD'])){ echo 'true';}else{ echo 'false';}?>);" class="config" id="link_<?php echo $_SESSION['m_admin']['basket']['all_actions'][$i]['ID']; ?>" style="display:inline;"><?php echo _CONFIG;?></a></div>
 					</td>
 					<!--</li>-->
 					<?php
@@ -250,6 +250,7 @@ $time = $core_tools->get_session_time_expire();
 			<script type="text/javascript">
 				sb = new ScrollBox(document.getElementById('allowed_basket_actions'), {auto_hide: true});
 				sb2 = new ScrollBox(document.getElementById('config_actions'), {auto_hide: true});
+				manage_actions('<?php echo $_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['DEFAULT_ACTION'];?>', true, '<?php echo $_SESSION['config']['businessappurl']."index.php?display=true&module=basket&page=check_action";?>');
 			</script>
 			<p>&nbsp;</p>
 			<p class="buttons">

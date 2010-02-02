@@ -52,23 +52,82 @@
  }
 
 
- function manage_actions(id, inside_scrollbox)
+ function manage_actions(id, inside_scrollbox, path_manage_script)
  {
-
-	var elem = $('allowed_basket_actions').getElementsByTagName('input');
-		//var elem = document.getElementsByClassName('group_action');
-	for(var i=0; i < elem.length; i++)
+	var hide_other_actions = false;
+	new Ajax.Request(path_manage_script,
 	{
-		if(elem[i].id == 'checkbox_'+id )
+		method:'post',
+		parameters: { id_action : id},
+		onSuccess: function(answer)
 		{
-			elem[i].checked = false;
-			elem[i].disabled = true;
-		}
-		else
-		{
-			elem[i].disabled = false;
-		}
-	}
+			
+			eval('response='+answer.responseText);
+			if(response.status == 1 ) 
+			{
+				hide_other_actions = true;		
+			}
+			var elem = $('allowed_basket_actions').getElementsByTagName('input');
+			for(var i=0; i < elem.length; i++)
+			{
+				var id_action = elem[i].id.substring(9);
+				var label_action = $('label_'+id_action);
+				var param_action = $('link_'+id_action);
+				if(label_action)
+				{
+					label_action.style.fontWeight='normal';
+					label_action.style.fontStyle='normal';
+				}
+				if(param_action)
+				{
+					param_action.style.display='inline';
+				}
+				if(hide_other_actions)
+				{
+					if(elem[i].id == 'checkbox_'+id )
+					{
+						elem[i].checked = false;
+						elem[i].disabled = true;
+						if(label_action)
+						{
+							label_action.style.fontWeight='bold';
+						}			
+					}
+					else
+					{
+						elem[i].disabled = true;
+						if(label_action)
+						{
+							label_action.style.fontStyle='italic';
+						}
+						if(param_action)
+						{
+							param_action.style.display="none";
+						}
+					}
+				}
+				else
+				{
+					if(elem[i].id == 'checkbox_'+id )
+					{
+						elem[i].checked = false;
+						elem[i].disabled = true;
+						if(label_action)
+						{
+							label_action.style.fontWeight='bold';
+						}	
+					}
+					else
+					{
+						elem[i].disabled = false;
+					}
+					
+				}
+			}		
+		},
+		onFailure: function(){}
+	});
+	
 
 	var main_div = $('config_actions');
 	if(main_div != null)
