@@ -81,18 +81,33 @@ if($_POST['req'] == 'valid_form' && !empty($_POST['action_id']) && isset($_POST[
 		echo "{status : 5, error_txt : '".addslashes($_SESSION['action_error'])."'}";
 		exit();
 	}
-
+	$custom_path = '';
 	$path_action_page = $core->get_path_action_page($action_page);
-	// Invalid path to script
-	if(!file_exists($path_action_page))
+	
+	if(isset($_SESSION['custom_override_id']) && !empty($_SESSION['custom_override_id']))
 	{
-		$_SESSION['action_error'] = $label_action.' '._ACTION_PAGE_MISSING;
-		echo "{status : 8, error_txt : '".addslashes($_SESSION['action_error'])."'}";
-		exit();
+		$custom_path = 'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.$path_action_page;
 	}
-
-	// If no error, includes script file and checks the form
-	include($path_action_page);
+	if($custom_path <> '' && file_exists($_SESSION['config']['corepath'].$custom_path))
+	{
+		include($custom_path);
+	}
+	else
+	{
+		if(file_exists($path_action_page))
+		{
+			include($path_action_page);
+		}
+		else
+		{
+			// Invalid path to script
+			$_SESSION['action_error'] = $label_action.' '._ACTION_PAGE_MISSING;
+			echo "{status : 8, error_txt: '".addslashes($_SESSION['action_error'])."'}";
+			exit();
+		}
+	}
+	
+	
 	$frm_error = check_form(trim($_POST['form_to_check']),get_values_in_array($_POST['form_values']));
 	if($frm_error == false)
 	{
@@ -210,18 +225,31 @@ else
 	// There is a script for the action
 	else
 	{
+		$custom_path = '';
 		$path_action_page = $core->get_path_action_page($action_page);
-
-		// Invalid path to the action script
-		if(!file_exists($path_action_page))
+		
+		if(isset($_SESSION['custom_override_id']) && !empty($_SESSION['custom_override_id']))
 		{
-			$_SESSION['action_error'] = $label_action.' '._ACTION_PAGE_MISSING.$path_action_page;
-			echo "{status : 8, error_txt : '".addslashes($_SESSION['action_error'])."'}";
-			exit();
+			$custom_path = 'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.$path_action_page;
 		}
-
-		// Include the action file
-		include($path_action_page);
+		if($custom_path <> '' && file_exists($_SESSION['config']['corepath'].$custom_path))
+		{
+			include($custom_path);
+		}
+		else
+		{
+			if(file_exists($path_action_page))
+			{
+				include($path_action_page);
+			}
+			else
+			{
+				// Invalid path to script
+				$_SESSION['action_error'] = $label_action.' '._ACTION_PAGE_MISSING;
+				echo "{status : 8, error_txt: '".addslashes($_SESSION['action_error'])."'}";
+				exit();
+			}
+		}
 		if($_POST['req'] == 'first_request' && in_array('form', $etapes))
 		{
 			$frm_test = get_form_txt($arr_id, $_SESSION['config']['businessappurl'].'index.php?display=true&page=manage_action&module=core', $id_action, $_POST['table'],$_POST['module'], $_POST['coll_id'],  $_POST['mode'] );
