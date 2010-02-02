@@ -972,6 +972,9 @@ if (!defined('_DB_USER')) define( '_DB_USER', 'Utilisateur');
 if (!defined('_DATABASE')) define( '_DATABASE', 'Base');
 
 
+if (!defined('_TREE_ROOT')) define( '_TREE_ROOT', 'Racine');
+
+
 
 
 

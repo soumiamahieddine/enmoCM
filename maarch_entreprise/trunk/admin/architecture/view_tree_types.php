@@ -49,23 +49,32 @@ $page_id = "view_tree_types";
 $admin->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
 unset($_SESSION['m_admin']);
-$_SESSION['tree_foldertypes'] = array();
-$db->query("select distinct foldertype_id, foldertype_label from ".$_SESSION['tablename']['fold_foldertypes']." order by foldertype_label");
-
-
-while($res = $db->fetch_object())
+if($admin->is_module_loaded('folder') == true)
 {
-	array_push($_SESSION['tree_foldertypes'], array("ID" => $res->foldertype_id, "LABEL" => $res->foldertype_label));
+	$_SESSION['tree_foldertypes'] = array();
+	$db->query("select distinct foldertype_id, foldertype_label from ".$_SESSION['tablename']['fold_foldertypes']." order by foldertype_label");
+
+	while($res = $db->fetch_object())
+	{
+		array_push($_SESSION['tree_foldertypes'], array("ID" => $res->foldertype_id, "LABEL" => $res->foldertype_label));
+	}
+}
+else
+{
+	
 }
 ?>
 <h1><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=manage_architecture_b.gif" alt="" /> <?php  echo _VIEW_TREE_DOCTYPES;?></h1>
 <div id="inner_content" class="clearfix">
 	<table width="100%" border="0">
+	<?php if($admin->is_module_loaded('folder') == true)
+	{?>
 		<tr>
 	    	<td>
 				<iframe name="choose_tree" id="choose_tree" width="900px" height="40px" frameborder="0" scrolling="no" src="<?php  echo $_SESSION['config']['businessappurl']."index.php?display=true&admin=architecture&page=choose_tree";?>"></iframe>
 			</td>
 		</tr>
+	<?php  }?>
 		<tr>
 			<td>
 				<iframe name="show_trees" id="show_trees" width="900px" height="600px" frameborder="0" scrolling="auto" src="<?php  echo $_SESSION['config']['businessappurl']."index.php?display=true&admin=architecture&page=show_trees";?>"></iframe>
