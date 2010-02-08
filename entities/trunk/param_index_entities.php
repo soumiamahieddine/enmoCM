@@ -1,6 +1,5 @@
 <?php
 
-
 // Group - Basket Form : actions params
 if($_SESSION['service_tag'] == 'group_basket')
 {
@@ -128,10 +127,10 @@ elseif($_SESSION['service_tag'] == 'manage_groupbasket')
 	}
 	$ind = -1;
 	for($i=0; $i < count($_SESSION['m_admin']['basket']['groups']); $i++)
-	{
-		$chosen_entities = array();
+	{	
 		for($j=0; $j<count($_SESSION['m_admin']['basket']['groups'][$i]['ACTIONS']);$j++)
 		{
+			$chosen_entities = array();
 			if(isset($_REQUEST[$_SESSION['m_admin']['basket']['groups'][$i]['ACTIONS'][$j]['ID_ACTION'].'_entities_chosen']) && count($_REQUEST[$_SESSION['m_admin']['basket']['groups'][$i]['ACTIONS'][$j]['ID_ACTION'].'_entities_chosen']) > 0)
 			{
 				for($k=0; $k < count($_REQUEST[$_SESSION['m_admin']['basket']['groups'][$i]['ACTIONS'][$j]['ID_ACTION'].'_entities_chosen']); $k++)
@@ -165,7 +164,6 @@ elseif($_SESSION['service_tag'] == 'manage_groupbasket')
 
 		if(isset($_REQUEST[$_SESSION['m_admin']['basket']['groups'][$ind]['DEFAULT_ACTION'].'_entities_chosen']) && count($_REQUEST[$_SESSION['m_admin']['basket']['groups'][$ind]['DEFAULT_ACTION'].'_entities_chosen']) > 0)
 		{
-
 			for($l=0; $l < count($_REQUEST[$_SESSION['m_admin']['basket']['groups'][$ind]['DEFAULT_ACTION'].'_entities_chosen']); $l++)
 			{
 				$arr = $ent->get_info_entity($_REQUEST[$_SESSION['m_admin']['basket']['groups'][$ind]['DEFAULT_ACTION'].'_entities_chosen'][$l]);
@@ -175,6 +173,7 @@ elseif($_SESSION['service_tag'] == 'manage_groupbasket')
 			}
 		}
 	}
+	$_SESSION['m_admin']['load_groupbasket'] = false;
 }
 elseif($_SESSION['service_tag'] == 'load_basket_session')
 {
@@ -197,7 +196,7 @@ elseif($_SESSION['service_tag'] == 'load_basket_session')
 	}
 }
 elseif($_SESSION['service_tag'] == 'load_basket_db')
-{
+{ 
 	require_once('modules'.DIRECTORY_SEPARATOR.'entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php');
 	$ent = new entities();
 	$indexing_actions = array();
@@ -222,7 +221,6 @@ elseif($_SESSION['service_tag'] == 'load_basket_db')
 			}
 		}
 	}
-
 }
 else if($_SESSION['service_tag'] == 'del_basket' && !empty($_SESSION['temp_basket_id']))
 {
