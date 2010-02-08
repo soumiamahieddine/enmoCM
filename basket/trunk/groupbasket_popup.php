@@ -223,8 +223,7 @@ $time = $core_tools->get_session_time_expire();
 							<td width="20%">&nbsp;&nbsp;</td>
 							<td><?php echo _USE_ONE; ?></td>
 
-							<td><input type="checkbox" class="check" name="action_<?php echo $_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID'];?>_page_use" value="Y"
-							<?php if($bask->get_infos_groupbasket_session($_SESSION['m_admin']['basket']['ind_group'],$_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID'], 'PAGE_USE' ) == 'Y' ||  $_SESSION['m_admin']['basket_popup']['actions'][$_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID']]['PAGE_USE'] == 'Y'){ echo 'checked="checked"';}elseif( $_SESSION['m_admin']['basket_popup']['actions'][$_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID']]['PAGE_USE'] <> 'N'){echo 'checked="checked"';}?> /></td>
+							<td><input type="checkbox" class="check" name="action_<?php echo $_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID'];?>_page_use" value="Y" <?php if($bask->get_infos_groupbasket_session($_SESSION['m_admin']['basket']['ind_group'],$_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID'], 'PAGE_USE' ) == 'Y' ||  $_SESSION['m_admin']['basket_popup']['actions'][$_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID']]['PAGE_USE'] == 'Y'){ echo 'checked="checked"';}?> /></td>
 						</tr>
 					</table>
 				</div>
@@ -254,7 +253,7 @@ $time = $core_tools->get_session_time_expire();
 			</script>
 			<p>&nbsp;</p>
 			<p class="buttons">
-				<input type="submit" name="submit" class="button" value="<?php if(empty($group)){ echo _ADD_THIS_GROUP;}else{ echo _MODIFY_THIS_GROUP;}?>" />
+				<input type="button" name="submit_form" class="button" value="<?php if(empty($group)){ echo _ADD_THIS_GROUP;}else{ echo _MODIFY_THIS_GROUP;}?>" onclick="valid_actions_param('group_basket');console.log(this.form);this.form.submit();" />
 				<input type="submit" name="cancel" value="<?php echo _CANCEL;?>"  class="button"/>
 			</p>
 	</form>

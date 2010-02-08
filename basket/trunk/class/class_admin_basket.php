@@ -478,7 +478,10 @@ class admin_basket extends dbquery
 
 		$_SESSION['service_tag'] = 'load_basket_db';
 		$core = new core_tools();
-		echo $core->execute_modules_services($_SESSION['modules_services'], 'load_groupbasket_db', "include");
+		### Le chargement de plusieurs services ne fonctionne pas... Obligation de les nommer un par
+		//$core->execute_modules_services($_SESSION['modules_services'], 'load_groupbasket_db', "include");
+		$core->execute_modules_services($_SESSION['modules_services'], 'load_groupbasket_db', "include", 'param_redirect_action', 'entities');
+		$core->execute_modules_services($_SESSION['modules_services'], 'load_groupbasket_db', "include", 'param_index_entities', 'entities');
 		$_SESSION['service_tag'] = '';
 	}
 

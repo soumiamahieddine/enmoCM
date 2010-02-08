@@ -211,4 +211,23 @@ function check_form_baskets(id_form)
 	}
 
 }
+
+/**
+ * Validates the groupbasket popup form, selects all list options ending with _chosen (type select_multiple) to avoid missing elements
+ *
+ * @param id_form String Search form identifier
+ **/
+function valid_actions_param(id_form)
+{
+	var frm = $(id_form);
+	//var reg_chosen = new RegExp("_chosen$");
+	var selects = frm.getElementsByTagName('select'); //Array
+	for(var i=0; i< selects.length;i++)
+	{
+		if(selects[i].multiple && selects[i].id.indexOf('_chosen') >= 0)
+		{
+			selectall_ext(selects[i].id);
+		}
+	}
+}
 -->
