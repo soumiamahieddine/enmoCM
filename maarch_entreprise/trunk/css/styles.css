@@ -583,7 +583,8 @@ input.button {
 	width: 450px;
 }
 
-#hist_iframe .listing,   #missing_iframe .listing, #contract_history_frame .listing, #filling_res_frame .listing {
+#hist_iframe .listing,   #missing_iframe .listing, #contract_history_frame .listing, #filling_res_frame .listing, #users_popup .listing
+{
 	margin: 5px 8px 0 5px;
 	width: 90%;
 }
