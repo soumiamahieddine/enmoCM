@@ -576,7 +576,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 		$frm_str .= '<p align="center">';
 			$frm_str .= '<b>'._ACTIONS.' : </b>';
 
-			$actions  = $b->get_actions_from_current_basket($res_id, $coll_id, 'PAGE_USE', false);
+			$actions  = $b->get_actions_from_current_basket($res_id, $coll_id, 'PAGE_USE');
 			if(count($actions) > 0)
 			{
 				$frm_str .='<select name="chosen_action" id="chosen_action">';
