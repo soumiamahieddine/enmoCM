@@ -370,7 +370,10 @@ function clear_search_form(id_form,id_list)
 		}
 	}
 	var copie_false = $('copies_false');
-	copie_false.checked = true;
+	if(copie_false)
+	{
+		copie_false.checked = true;
+	}
 
 }
 
