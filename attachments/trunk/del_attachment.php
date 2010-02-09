@@ -17,6 +17,11 @@ if($_SESSION['history']['attachdel'] == "true")
 {
 	require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 	$users = new history();
+	if(!isset($_SESSION['collection_id_choice']) || empty($_SESSION['collection_id_choice']))
+	{
+		$_SESSION['collection_id_choice'] = $_SESSION['user']['collections'][0];
+	}
+	//$users->add($_SESSION['tablename']['attach_res_attachments'], $_REQUEST['id'],"DEL", _ATTACH_DELETED." : ".$_REQUEST['id'], $_SESSION['config']['databasetype'],"attachments");
 	$users->add($_SESSION['tablename']['attach_res_attachments'], $_REQUEST['id'],"DEL", _ATTACH_DELETED." : ".$_REQUEST['id'], $_SESSION['config']['databasetype'],"attachments");
 
 }
