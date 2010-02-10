@@ -321,8 +321,17 @@ class business_app_tools extends dbquery
 		$_SESSION['features']['search_notes'] = "false";
 		$_SESSION['features']['dest_to_copy_during_redirection'] = "false";
 		$_SESSION['features']['show_types_tree'] = "false";
+		
+		if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.$xml_features))
+		{
+			$path = $_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.$xml_features;
+		}
+		else
+		{
+			$path = $xml_features;
+		}
 
-		$xmlfeatures = simplexml_load_file($xml_features);
+		$xmlfeatures = simplexml_load_file($path);
 		if ($xmlfeatures)
 		{
 			foreach($xmlfeatures->FEATURES as $FEATURES)
