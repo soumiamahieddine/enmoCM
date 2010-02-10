@@ -449,6 +449,23 @@ class types extends dbquery
 		return $types;
 	}
 
+		/**
+	* Return in an array all enabled doctypes_second_level
+	*
+	* @param string 
+	*/
+	public function getArrayDoctypesSecondLevel()
+	{
+		$second_level = array();
+		
+		$this->connect();
+		$this->query("select doctypes_second_level_id, doctypes_second_level_label from ".$_SESSION['tablename']['doctypes_second_level']." where enabled = 'Y' order by doctypes_second_level_label");
+		while($res = $this->fetch_object())
+		{
+			array_push($second_level, array('ID' => $res->doctypes_second_level_id, 'LABEL' => $this->show_string($res->doctypes_second_level_label)));
+		}
+		return $second_level;
+	}
 	/**
 	* Returns in an array all enabled doctypes for a given collection with the structure
 	*
