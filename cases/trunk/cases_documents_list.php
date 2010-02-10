@@ -55,9 +55,7 @@ $select = array();
 
 $select[$view]= array();
 $where_request = $_SESSION['searching']['cases_request'];
-array_push($select[$view], "res_id", "status", "subject", "dest_user", "type_label", "creation_date", "destination", "category_id, exp_user_id", "category_id as category_img" );
-
-
+array_push($select[$view], "res_id", "status", "subject", "category_id as category_img", "contact_firstname", "contact_lastname", "contact_society", "user_lastname", "user_firstname", "dest_user", "type_label", "creation_date", "destination", "category_id, exp_user_id");
 
 $status = $status_obj->get_not_searchable_status();
 $status_str = '';
@@ -112,8 +110,6 @@ $request = new request();
 $tab=$request->select($select,$where_request,$orderstr,$_SESSION['config']['databasetype']);
 //$request->show();
 $_SESSION['error_page'] = '';
-
-
 
 //build the tab with right format for list_doc function
 if (count($tab) > 0)
@@ -221,7 +217,6 @@ if (count($tab) > 0)
 					$tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
 					$tab[$i][$j]["value"] = $_SESSION['mail_categories'][$tab[$i][$j]['value']];
 					$tab[$i][$j]["order"]="category_id";
-
 				}
 				if($tab[$i][$j][$value]=="category_img")
 				{
@@ -237,6 +232,31 @@ if (count($tab) > 0)
 					$tab[$i][$j]["value"] = $tab[$i][$j]['value'];
 					$tab[$i][$j]["order"]="category_id";
 				}
+				if($tab[$i][$j][$value]=="contact_firstname")
+				{
+					$contact_firstname = $tab[$i][$j]["value"];
+					$tab[$i][$j]["show"]=false;
+				}
+				if($tab[$i][$j][$value]=="contact_lastname")
+				{
+					$contact_lastname = $tab[$i][$j]["value"];
+					$tab[$i][$j]["show"]=false;
+				}
+				if($tab[$i][$j][$value]=="contact_society")
+				{
+					$contact_society = $tab[$i][$j]["value"];
+					$tab[$i][$j]["show"]=false;
+				}
+				if($tab[$i][$j][$value]=="user_firstname")
+				{
+					$user_firstname = $tab[$i][$j]["value"];
+					$tab[$i][$j]["show"]=false;
+				}
+				if($tab[$i][$j][$value]=="user_lastname")
+				{
+					$user_lastname = $tab[$i][$j]["value"];
+					$tab[$i][$j]["show"]=false;
+				}
 				if($tab[$i][$j][$value]=="exp_user_id")
 				{
 					$tab[$i][$j]["label"]=_CONTACT;
@@ -246,10 +266,9 @@ if (count($tab) > 0)
 					$tab[$i][$j]["valign"]="bottom";
 					$tab[$i][$j]["show"]=false;
 					$tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
-					$tab[$i][$j]["value"] = $contact->get_contact_information($_SESSION['mlb_search_current_res_id'],$_SESSION['mlb_search_current_category_id'],$view);
+					$tab[$i][$j]["value"] = $contact->get_contact_information_from_view($_SESSION['mlb_search_current_category_id'], $contact_lastname, $contact_firstname, $contact_society, $user_lastname, $user_firstname);
 					$tab[$i][$j]["order"]=false;
-				}
-			
+				}			
 			}
 		}
 	}
