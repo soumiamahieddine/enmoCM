@@ -639,7 +639,8 @@ class contacts extends dbquery
 			}
 		}
 	}
-		function get_contact_information($res_id, $category_id,$view )
+	
+	function get_contact_information($res_id, $category_id,$view )
 	//Get contact full information for each case: incoming document or outgoing document
 	{
 		$stopthis=false;
@@ -654,7 +655,7 @@ class contacts extends dbquery
 		if ($category_id == 'incoming')
 		{
 
-			$prefix = _TO_CONTACT_C;
+			$prefix = "<b>"._TO_CONTACT_C."</b>";
 			$this->query("SELECT exp_user_id, exp_contact_id from ".$view." WHERE res_id = ".$res_id);
 
 			$compar = $this->fetch_object();
@@ -681,7 +682,7 @@ class contacts extends dbquery
 		}
 		elseif ($category_id == 'outgoing'  || $category_id == 'internal')
 		{
-				$prefix = _FOR_CONTACT_C;
+				$prefix = "<b>"._FOR_CONTACT_C."</b>";
 
 				$this->query("SELECT dest_user_id, dest_contact_id from ".$view." WHERE res_id = ".$res_id);
 
@@ -747,6 +748,42 @@ class contacts extends dbquery
 		return $the_contact;
 
 	}
-
+	
+	function get_contact_information_from_view($category_id, $contact_lastname="", $contact_firstname="", $contact_society="", $user_lastname="", $user_firstname="")
+	{
+		if ($category_id == 'incoming')
+		{
+			$prefix = "<b>"._TO_CONTACT_C."</b>";
+		}
+		elseif ($category_id == 'outgoing'  || $category_id == 'internal')
+		{
+			$prefix = "<b>"._FOR_CONTACT_C."</b>";
+		}
+		if($contact_lastname <> "")
+		{
+			$lastname = $contact_lastname;
+			$firstname = $contact_firstname;
+		}
+		else
+		{
+			$lastname = $user_lastname;
+			$firstname = $user_firstname;
+		}
+		if($contact_society <> "")
+		{
+			if ($firstname =='' && $lastname == '')
+			{
+				$society = $contact_society;
+			}
+			else
+			{
+				$society = " (".$contact_society.") ";
+			}
+		}
+		else
+			$society = "";
+		$the_contact =$prefix." ".$firstname." ".$lastname." ".$society;
+		return $the_contact;
+	}
 }
 ?>
