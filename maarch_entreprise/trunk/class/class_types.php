@@ -449,7 +449,32 @@ class types extends dbquery
 		return $types;
 	}
 
-		/**
+
+	/**
+	* Return architecture for one doctype
+	* 
+	* @param string $doctype 
+	*/
+	public function GetFullStructure($doctype)
+	{
+		$structure = array();
+		
+		
+		$level_query = "select doctypes_first_level_id, doctypes_second_level_id from ".$_SESSION['tablename']['doctypes']." where type_id = '".$doctype."'";
+		$this->connect();
+		$this->query($level_query);
+		$result = $this->fetch_object();
+		if ($this->nb_result() == 0){
+			return false;
+		}
+		else {
+			array_push($structure, array("doctype"=>$doctype, "first_level"=>$result->doctypes_first_level_id, "second_level"=>$result->doctypes_second_level_id));
+			return $structure;
+		}
+		
+	}
+
+	/**
 	* Return in an array all enabled doctypes_second_level
 	*
 	* @param string 
