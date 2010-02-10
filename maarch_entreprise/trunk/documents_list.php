@@ -57,7 +57,7 @@ else
 $_SESSION['collection_id_choice'] = $_SESSION['current_basket']['coll_id'];
 $select[$table]= array();
 $where = $_SESSION['current_basket']['clause'];
-array_push($select[$table],"res_id", "status", "category_id","category_id as category_img", "priority", "admission_date", "subject", "process_limit_date", "destination", "dest_user", "type_label", "exp_user_id");
+array_push($select[$table],"res_id", "status", "category_id","category_id as category_img", "priority", "admission_date", "subject", "process_limit_date", "destination", "dest_user", "type_label");
 $order = '';
 if(isset($_REQUEST['order']) && !empty($_REQUEST['order']))
 {
@@ -222,18 +222,6 @@ for ($i=0;$i<count($tab);$i++)
 				$tab[$i][$j]["valign"]="bottom";
 				$tab[$i][$j]["show"]=true;
 				$tab[$i][$j]["order"]='status';
-			}
-			if($tab[$i][$j][$value]=="exp_user_id")
-			{
-				$tab[$i][$j]["label"]=_CONTACT;
-				$tab[$i][$j]["size"]="10";
-				$tab[$i][$j]["label_align"]="left";
-				$tab[$i][$j]["align"]="left";
-				$tab[$i][$j]["valign"]="bottom";
-				$tab[$i][$j]["show"]=false;
-				$tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
-				$tab[$i][$j]["value"] = $contact->get_contact_information($_SESSION['mlb_search_current_res_id'],$_SESSION['mlb_search_current_category_id'],$table);
-				$tab[$i][$j]["order"]=false;
 			}
 			if($tab[$i][$j][$value]=="category_img")
 			{

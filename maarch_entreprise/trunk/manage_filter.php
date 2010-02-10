@@ -27,7 +27,7 @@ else
 $_SESSION['collection_id_choice'] = $_SESSION['current_basket']['coll_id'];
 $select[$table]= array();
 $where = $_SESSION['current_basket']['clause'];
-array_push($select[$table],"res_id","status","category_id","category_id as category_img", "priority", "creation_date", "admission_date", "subject", "process_limit_date", "entity_label", "dest_user", "type_label", "exp_user_id" );
+array_push($select[$table],"res_id", "status", "category_id", "category_id as category_img", "contact_firstname", "contact_lastname", "contact_society", "user_lastname", "user_firstname", "priority", "creation_date", "admission_date", "subject", "process_limit_date", "entity_label", "dest_user", "type_label", "exp_user_id" );
 
 if($core_tools->is_module_loaded("cases") == true)
 {
@@ -204,8 +204,6 @@ if(isset($_SESSION['auth_dep']['bask_chosen_status']) && !empty($_SESSION['auth_
 	$search = true;
 }
 
-
-
 if(($_REQUEST['template']== 'group_case_for_basket') && ($core_tools->is_module_loaded('cases')))
 {
 	unset($select);
@@ -221,16 +219,14 @@ else
 {
 	$tab=$request->select($select,$where_concat,$orderstr,$_SESSION['config']['databasetype'], $_SESSION['config']['databasesearchlimit']);
 }
-//$request->show();
-
+	//$request->show();
 	//Manage of template list
 	//###################
-
 	//Defines template allowed for this list
 	$template_list=array();
-	array_push($template_list, array( "name"=>"document_list_extend", "img"=>"extend_list.gif", "label"=> _ACCESS_LIST_EXTEND));
+	array_push($template_list, array("name"=>"document_list_extend", "img"=>"extend_list.gif", "label"=> _ACCESS_LIST_EXTEND));
 	if($core_tools->is_module_loaded('cases'))	
-		array_push($template_list, array( "name"=>"group_case_for_basket", "img"=>"case_list.gif", "label"=> _ACCESS_LIST_CASE));
+		array_push($template_list, array("name"=>"group_case_for_basket", "img"=>"case_list.gif", "label"=> _ACCESS_LIST_CASE));
 	if(!$_REQUEST['template'])
 	{
 		$template_to_use = $template_list[0]["name"];
@@ -244,13 +240,11 @@ else
 		$template_to_use = $_REQUEST['template'];
 	}
 
-
 	//For status icon
 	$extension_icon = '';
 	if($template_to_use <> '')
 		$extension_icon = "_big";
 	//###################
-
 
 	//Specific View for group_case_template, we don' need to load the standard list_result_mlb
 	//#########################
@@ -341,6 +335,31 @@ else
 					$tab[$i][$j]["order"]='category_id';
 					//echo "table : ".$table." res_id : ".$_SESSION['mlb_search_current_res_id']." categorie : ".$_SESSION['mlb_search_current_category_id']."<br>";
 				}
+				if($tab[$i][$j][$value]=="contact_firstname")
+				{
+					$contact_firstname = $tab[$i][$j]["value"];
+					$tab[$i][$j]["show"]=false;
+				}
+				if($tab[$i][$j][$value]=="contact_lastname")
+				{
+					$contact_lastname = $tab[$i][$j]["value"];
+					$tab[$i][$j]["show"]=false;
+				}
+				if($tab[$i][$j][$value]=="contact_society")
+				{
+					$contact_society = $tab[$i][$j]["value"];
+					$tab[$i][$j]["show"]=false;
+				}
+				if($tab[$i][$j][$value]=="user_firstname")
+				{
+					$user_firstname = $tab[$i][$j]["value"];
+					$tab[$i][$j]["show"]=false;
+				}
+				if($tab[$i][$j][$value]=="user_lastname")
+				{
+					$user_lastname = $tab[$i][$j]["value"];
+					$tab[$i][$j]["show"]=false;
+				}
 				if($tab[$i][$j][$value]=="priority")
 				{
 					$tab[$i][$j]["value"] = $_SESSION['mail_priorities'][$tab[$i][$j]["value"]];
@@ -396,7 +415,7 @@ else
 					$tab[$i][$j]["valign"]="bottom";
 					$tab[$i][$j]["show"]=false;
 					$tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
-					$tab[$i][$j]["value"] = $contact->get_contact_information($_SESSION['mlb_search_current_res_id'],$_SESSION['mlb_search_current_category_id'],$table);
+					$tab[$i][$j]["value"] = $contact->get_contact_information_from_view($_SESSION['mlb_search_current_category_id'], $contact_lastname, $contact_firstname, $contact_society, $user_lastname, $user_firstname);
 					$tab[$i][$j]["order"]=false;
 				}
 				if($tab[$i][$j][$value]=="category_img")
@@ -434,7 +453,6 @@ else
 					$tab[$i][$j]["valign"]="bottom";
 					$tab[$i][$j]["show"]=true;
 					$tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
-					//$tab[$i][$j]["value"] = $contact->get_contact_information($_SESSION['mlb_search_current_res_id'],$_SESSION['mlb_search_current_category_id'],$view);
 					$tab[$i][$j]["order"]="case_id";
 				}
 			}
