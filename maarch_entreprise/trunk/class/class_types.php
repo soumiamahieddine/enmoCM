@@ -917,15 +917,18 @@ class types extends dbquery
 		$table = $sec->retrieve_table_from_coll($coll_id);
 
 		$indexes = $this->get_all_indexes( $coll_id);
-		$query = "update ".$table." set ";
-		for($i=0; $i<count($indexes);$i++)
+		if(count($indexes) > 0)
 		{
-			$query .= $indexes[$i]['column']." = NULL, ";
-		}
-		$query = preg_replace('/, $/', ' where res_id = '.$res_id, $query);
+			$query = "update ".$table." set ";
+			for($i=0; $i<count($indexes);$i++)
+			{
+				$query .= $indexes[$i]['column']." = NULL, ";
+			}
+			$query = preg_replace('/, $/', ' where res_id = '.$res_id, $query);
 
-		$this->connect();
-		$this->query($query);
+			$this->connect();
+			$this->query($query);
+		}
 	}
 
 	/**
