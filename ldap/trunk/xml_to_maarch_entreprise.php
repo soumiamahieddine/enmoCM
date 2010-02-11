@@ -604,7 +604,7 @@ foreach($update_users as $uu)
 	
 	// On change le status que s'il était à DEL
 	$db->query("UPDATE users SET status = 'OK' WHERE status = 'DEL' and user_id IN 
-					(SELECT value FROM ext_references 
+					(SELECT vaue FROM ext_references 
 					WHERE reference_id = '".addslashes($uu)."'
 					AND field = 'user_id'
 					AND type = '".$type_ldap."')"
