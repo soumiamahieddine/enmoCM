@@ -1383,8 +1383,12 @@ class list_show extends functions
         <table border="0" cellspacing="0" class="<?php  echo $used_css;?>">
              <thead>
 				<tr>
+				<?php  
+				if($bool_view_document)
+                {?>
 					<th width="3%">&nbsp;</th>
 					<?php
+				}
 					for($count_column = 0;$count_column < count($listcolumn);$count_column++)
 					{
 						if($listshow[$count_column]==true)
@@ -1414,15 +1418,13 @@ class list_show extends functions
 			}
 			?>
             <tr <?php  echo $color; ?>>
-                <td ><?php
-                        if($bool_view_document)
-                        {
-                            echo "<a href='".$page_view."&id=".$result[$theline][0][$key]."' target=\"_blank\" title='"._VIEW_DOC."'>
-                            <img src='".$_SESSION['config']['businessappurl']."static.php?filename=picto_dld.gif' alt='"._VIEW_DOC."' border='0'/></a>";
-                        }
+            <?php
+                 if($bool_view_document)
+                 {
+					echo " <td ><a href='".$page_view."&id=".$result[$theline][0][$key]."' target=\"_blank\" title='"._VIEW_DOC."'>
+                            <img src='".$_SESSION['config']['businessappurl']."static.php?filename=picto_dld.gif' alt='"._VIEW_DOC."' border='0'/></a></td>";
+                 }
 
-                        ?></td>
-                <?php
 				$bool_modify = false;
 				$bool_del = false;
                 for($count_column = 0;$count_column < count($listcolumn);$count_column++)
