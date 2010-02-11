@@ -137,7 +137,10 @@ class list_show extends functions
 			$listshow = array();
 			$listformat = array();
 			$ordercol = array();
-
+			if($_REQUEST['start'] > $nb_total)
+			{
+				$_REQUEST['start'] = 0;
+			}
 			// put in tab the different label of the column
 			for ($j=0;$j<count($result[0]);$j++)
 			{

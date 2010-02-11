@@ -515,11 +515,8 @@ class list_show_with_template extends list_show
 	$whatname = '', $used_css = 'listing spec', $comp_link = "", $link_in_line = false, $bool_show_actions_list = false, $actions = array(),
 	$hidden_fields = '', $actions_json= '{}', $do_action = false, $id_action = '', $open_details_popup = true, $do_actions_arr = array(), $template = false, $template_list = array(), $actual_template = '', $mode_string = false, $hide_standard_list = false)
 	{
-
-
 		$core_tools = new core_tools();
 		$core_tools->load_lang();
-
 		$this->detail_destination = $detail_destination;
 		$this->bool_radio_form = $bool_radio_form;
 		$this->bool_check_form = $bool_check_form;
@@ -529,7 +526,10 @@ class list_show_with_template extends list_show
 		$this->id_action = $id_action; /*To keep value for extended simples script =>*/ $_SESSION['extended_template']['id_default_action'] = $this->id_action;
 		$this->do_action_arr = $do_action_arr;
 		$this->hide_standard_list = $hide_standard_list;
-
+		if($_REQUEST['start'] > $nb_total)
+		{
+			$_REQUEST['start'] = 0;
+		}
 		if(isset($_REQUEST['start']) && !empty($_REQUEST['start']))
 		{
 			$start = strip_tags($_REQUEST['start']);
@@ -538,50 +538,41 @@ class list_show_with_template extends list_show
 		{
 			$start = 0;
 		}
-
-
 		/* ---------------------- */
-
 		if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."template".DIRECTORY_SEPARATOR.$actual_template.".html"))
-		{	
+		{
 			$file = $_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."template".DIRECTORY_SEPARATOR.$actual_template.".html";
 		}
 		else
 		{
 			$file = 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."template".DIRECTORY_SEPARATOR.$actual_template.".html";
 		}
-
-
 		//To load including values template Use for case by exemple
 		//##############################################################
 		if($core_tools->is_module_loaded("cases") == true)
 		{
-				$case_file = "modules".DIRECTORY_SEPARATOR."cases".DIRECTORY_SEPARATOR."template_addon".DIRECTORY_SEPARATOR.$actual_template.".html";
-				if (file_exists($case_file))
+			$case_file = "modules".DIRECTORY_SEPARATOR."cases".DIRECTORY_SEPARATOR."template_addon".DIRECTORY_SEPARATOR.$actual_template.".html";
+			if (file_exists($case_file))
+			{
+				$addon_list_trait = $this->get_template($case_file);
+				$addon_tmp = explode("#!#", $addon_list_trait);
+				foreach($addon_tmp as $including_file)
 				{
-					$addon_list_trait = $this->get_template($case_file);
-					$addon_tmp = explode("#!#", $addon_list_trait);
-					foreach($addon_tmp as $including_file)
-					{
-						if (substr($including_file , 0, 5) == "TABLE")
-							$including_table = substr($including_file, 5);
-						if (substr($including_file , 0, 4) == "HEAD")
-							$including_head = substr($including_file, 4);
-						if (substr($including_file , 0, 6) == "RESULT")
-							$including_result = substr($including_file, 6);
-						if (substr($including_file , 0, 6) == "FOOTER")
-							$including_footer = substr($including_file, 6);
-					}
+					if (substr($including_file , 0, 5) == "TABLE")
+						$including_table = substr($including_file, 5);
+					if (substr($including_file , 0, 4) == "HEAD")
+						$including_head = substr($including_file, 4);
+					if (substr($including_file , 0, 6) == "RESULT")
+						$including_result = substr($including_file, 6);
+					if (substr($including_file , 0, 6) == "FOOTER")
+						$including_footer = substr($including_file, 6);
+				}
 			}
 		}
 		//##############################################################
 		$list_trait = $this->get_template($file);
 		$tmp = explode("#!#", $list_trait);
-		
-
-
 		//Generate link for reloading file
-
 		if($bool_frame)
 		{
 			//$link = $name.".php?search=".$what;
@@ -629,12 +620,8 @@ class list_show_with_template extends list_show
 		{
 			$orderfield = '';
 		}
-
 		$link .= "&amp;order_field=".$orderfield;
 		$link .= $comp_link;
-
-
-
 		if($actual_template <> '')
 		{
 			$link .= "&amp;template=".$actual_template;
@@ -643,14 +630,12 @@ class list_show_with_template extends list_show
 		{
 			$link .= "&amp;template=";
 		}
-
 		// Load object to switch template
 		if ($template == true)
 		{
 			$tdeto = $this->display_template_for_user($template_list, $link);
 			//$tdeto = _DISPLAY." : ".$tdeto;
 		}
-
 		//########################
 		//require_once("core/class/class_core_tools.php");
 		$core_tools = new core_tools();
@@ -662,11 +647,7 @@ class list_show_with_template extends list_show
 			$disp_dc = $doc_converter->convert_list($result, true);
 		}
 		//########################
-
-
 		$this->the_link = $link;
-
-
 		$nb_show = $_SESSION['config']['nblinetoshow'];
 		$nb_pages = ceil($nb_total/$nb_show);
 		$end = $start + $nb_show;
@@ -674,7 +655,6 @@ class list_show_with_template extends list_show
 		{
 			$end = $nb_total;
 		}
-
 		if($show_big_title)
 		{
 			$list_title .= '<h1>';
@@ -689,9 +669,7 @@ class list_show_with_template extends list_show
 			{ $list_title .= '<img src="'.$picto_path.'" alt="" class="title_img" /> ';}
 			$list_title .= $title.'</b>';
 		}
-
-
-		// if they are more 1 page we do pagination with 2 forms
+		//if they are more 1 page we do pagination with 2 forms
 		if($nb_pages > 1)
 		{
 			$next_start = 0;
@@ -723,7 +701,6 @@ class list_show_with_template extends list_show
 				$start_prev = $start - $nb_show;
 				$previous = "&lt; <a href=\"".$link."&amp;start=".$start_prev."\">"._PREVIOUS."</a> ";
 			}
-
 			if($start <> $lastpage)
 			{
 				$start_next = $start + $nb_show;
@@ -731,11 +708,7 @@ class list_show_with_template extends list_show
 				$next = "<a href=\"".$link."&amp;start=".$start_next."\">"._NEXT."</a> >";
 			}
 		}
-
 		$page_list1 = '<div class="block" style="height:30px;vertical" align="center" ><table width="100%" border="0"><tr><td align="center" width="15%"><b>'.$previous.'</b></td><td align="center" width="15%"><b>'.$next.'</b></td><td width="10px">|</td><td align="center" width="30%">'.$page_list1.'</td><td width="10px">|</td><td width="210px" align="center">'.$disp_dc.'</td><td width="5px">|</td><td align="right">'.$tdeto.'</td></tr></table></b></div>';
-
-
-
 		//Script for action
 		//#################
 		if($bool_radio_form || $bool_check_form || ($do_action && !empty($id_action)))
@@ -752,8 +725,6 @@ class list_show_with_template extends list_show
 			$str .= $temp;
 			$str .= $hidden_fields;
 		}
-
-
 		//Exploding template to lunch funtion in load_var_sys()
 		$table = '';
 		$head = '';
@@ -796,34 +767,18 @@ class list_show_with_template extends list_show
 				$footer = substr($ac_tmp, 6);
 			}
 		}
-
 		$content_list = '';
-
-
-
-
-
-
 		for($theline = $start; $theline < $end ; $theline++)
 		{
-
-
 			$true_content=$content;
-
-
 			preg_match_all('/##(.*?)##/', $true_content, $out);
-
-
-
 			for($i=0;$i<count($out[0]);$i++)
 			{
 				$remplacement = $this->load_var_sys($out[1][$i], $theline, $result, $key,$including_result);
 				$true_content = str_replace($out[0][$i],$remplacement,$true_content);
 			}
-
 			$content_list .= $true_content;
 		}
-
 		if( (($bool_radio_form || $bool_check_form) && count($result) > 0 && $bool_show_actions_list) || ($do_action && !empty($id_action)))
 		{
 			$str .= '<script type="text/javascript">';
@@ -834,7 +789,7 @@ class list_show_with_template extends list_show
 										$str .= ' \'choose_action\' : \''._CHOOSE_ACTION.'\',';
 										$str .= ' \'choose_one_doc\' : \''._CHOOSE_ONE_DOC.'\'';
 						$str .= ' };';
-		//	$str .= ' console.log(arr_msg_error);';
+			//$str .= ' console.log(arr_msg_error);';
 			$str .= ' valid_form=function(mode, res_id, id_action)';
 			$str .= '{';
 			$str .= 'if(!isAlreadyClick){';
@@ -892,12 +847,6 @@ class list_show_with_template extends list_show
 			$str .= ' </script>';
 		}
 		//#################
-
-
-
-
-
-
 		//#################### Action module
 		if(($bool_radio_form || $bool_check_form) && count($result) > 0 && !$bool_show_actions_list)
 		{
@@ -932,30 +881,15 @@ class list_show_with_template extends list_show
 			$str_foot .= ' </form>';
 		}
 		//######################
-
-
-
-
-
-
-
-
-	   // Print in application the generated template list result
-
-	   if ($mode_string == false)
-	   {
+		// Print in application the generated template list result
+		if ($mode_string == false)
+		{
 			echo $list_title.$page_list1.$str.$table.$head.$content_list.$footer.$str_foot;
 		}
 		else
 		{
 			return $list_title.$page_list1.$str.$table.$head.$content_list.$footer.$str_foot;
 		}
-
-
-
-
 	}
-
 }
-
 ?>

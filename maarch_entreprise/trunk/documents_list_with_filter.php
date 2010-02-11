@@ -30,7 +30,6 @@
 */
 
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
-
 require_once("modules".DIRECTORY_SEPARATOR."basket".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
 require_once("modules".DIRECTORY_SEPARATOR."entities".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_manage_entities.php");
 require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");
@@ -63,10 +62,25 @@ else
 {
 	$table = $_SESSION['current_basket']['table'];
 }
+if(!empty($_REQUEST['entity_id']))
+{
+	$_SESSION['auth_dep']['bask_chosen_entity'] = $_REQUEST['entity_id'];
+}
+if(!empty($_REQUEST['bask_chosen_category']))
+{
+	$_SESSION['auth_dep']['bask_chosen_category'] = $_REQUEST['category_id'];
+}
+if(!empty($_REQUEST['status_id']))
+{
+	$_SESSION['auth_dep']['bask_chosen_status'] = $_REQUEST['status_id'];
+}
+if(!empty($_REQUEST['contact_id']))
+{
+	$_SESSION['auth_dep']['bask_chosen_contact'] = $_REQUEST['contact_id'];
+}
 $entity = '';
 $str = '';
 $entities = array();
-//$core_tools->show_array($_SESSION['status']);
 $where_tmp = '';
 $where = $_SESSION['current_basket']['clause'];
 $where = str_replace("and status <> 'VAL'", " ", $where);
@@ -82,18 +96,14 @@ else
 {
 	$db->query("select distinct(r.destination) as entity_id, count(distinct r.res_id) as total  from ".$table." r join  ".$_SESSION['tablename']['ent_entities']." e on e.entity_id = r.destination  ".$where_tmp." group by e.entity_label, r.destination");
 }
-//$db->show();
 while($res = $db->fetch_object())
 {
 	$db2->query("select entity_label, short_label from ".$_SESSION['tablename']['ent_entities']." e where e.entity_id = '".$res->entity_id."'");
 	$res2 = $db2->fetch_object();
 	array_push($entities, array('ID' => $res->entity_id, 'LABEL' => $res2->entity_label, 'SHORT_LABEL' => $res2->short_label, 'IN_ENTITY' => $ent->is_user_in_entity($_SESSION['user']['UserId'], $res->entity_id), 'TOTAL' => $res->total));
 }
-
 $db->query("select * from ".$_SESSION['tablename']['status']." order by label_status");
-
 $arr_status = array();
-
 while($res = $db->fetch_object())
 {
 	array_push($arr_status , array('id' => $res->id, 'label' => $res->label_status, 'is_system' => $res->is_system, 'img_filename' => $res->img_filename,
@@ -105,23 +115,29 @@ array_push($arr_status , array('id' => 'late', 'label' => _LATE));
 	<script>
 		function change_list_entity(id_entity, path_script)
 		{
-
 			//Defines template allowed for this list
-			<?php if(!$_REQUEST['template'])
-			{ 	?>
+			<?php
+			if(!$_REQUEST['template'])
+			{
+				?>
 				var templateVal = 'document_list_extend'; <?php
-			} ?>
-			<?php if(isset($_REQUEST['template']) && empty($_REQUEST['template']))
-			{ ?>
+			}
+			?>
+			<?php
+			if(isset($_REQUEST['template']) && empty($_REQUEST['template']))
+			{
+				?>
 				var templateVal = ''; <?php
-			} ?>
-			<? if($_REQUEST['template'])
-			{	 ?>
-				var templateVal = '<? echo $_REQUEST['template']; ?>'; <?
-			}	?>
+			}
+			?>
+			<?php
+			if($_REQUEST['template'])
+			{
+				?>
+				var templateVal = '<?php echo $_REQUEST['template']; ?>'; <?php
+			}
+			?>
 			//###################
-
-
 			//console.log(id_entity);
 			var startVal = '<?php echo $_REQUEST['start'];?>';
 			var orderVal = '<?php echo $_REQUEST['order'];?>';
@@ -147,22 +163,28 @@ array_push($arr_status , array('id' => 'late', 'label' => _LATE));
 
 		function change_list_category(id_category, path_script)
 		{
-
 			//Defines template allowed for this list
-			<?php if(!$_REQUEST['template'])
-			{ 	?>
+			<?php
+			if(!$_REQUEST['template'])
+			{
+				?>
 				var templateVal = 'document_list_extend'; <?php
-			} ?>
+			}
+			?>
 			<?php if(isset($_REQUEST['template']) && empty($_REQUEST['template']))
-			{ ?>
+			{
+				?>
 				var templateVal = ''; <?php
-			} ?>
-			<? if($_REQUEST['template'])
-			{	 ?>
-				var templateVal = '<? echo $_REQUEST['template']; ?>'; <?
-			}	?>
+			}
+			?>
+			<?php
+			if($_REQUEST['template'])
+			{
+				?>
+				var templateVal = '<?php echo $_REQUEST['template']; ?>'; <?php
+			}
+			?>
 			//###################
-
 			//console.log(id_category);
 			var startVal = '<?php echo $_REQUEST['start'];?>';
 			var orderVal = '<?php echo $_REQUEST['order'];?>';
@@ -188,20 +210,27 @@ array_push($arr_status , array('id' => 'late', 'label' => _LATE));
 
 		function change_list_status(id_status, path_script)
 		{
-
 			//Defines template allowed for this list
-			<?php if(!$_REQUEST['template'])
-			{ 	?>
+			<?php
+			if(!$_REQUEST['template'])
+			{
+				?>
 				var templateVal = 'document_list_extend'; <?php
-			} ?>
+			}
+			?>
 			<?php if(isset($_REQUEST['template']) && empty($_REQUEST['template']))
-			{ ?>
+			{
+				?>
 				var templateVal = ''; <?php
-			} ?>
-			<? if($_REQUEST['template'])
-			{	 ?>
-				var templateVal = '<? echo $_REQUEST['template']; ?>'; <?
-			}	?>
+			}
+			?>
+			<?php
+			if($_REQUEST['template'])
+			{
+				?>
+				var templateVal = '<?php echo $_REQUEST['template']; ?>'; <?php
+			}
+			?>
 			//###################
 			//console.log(id_status);
 			var startVal = '<?php echo $_REQUEST['start'];?>';
@@ -229,20 +258,28 @@ array_push($arr_status , array('id' => 'late', 'label' => _LATE));
 		function change_contact(id_contact, path_script)
 		{
 			//Defines template allowed for this list
-			<?php if(!$_REQUEST['template'])
-			{ 	?>
+			<?php
+			if(!$_REQUEST['template'])
+			{
+				?>
 				var templateVal = 'document_list_extend'; <?php
-			} ?>
-			<?php if(isset($_REQUEST['template']) && empty($_REQUEST['template']))
-			{ ?>
+			}
+			?>
+			<?php
+			if(isset($_REQUEST['template']) && empty($_REQUEST['template']))
+			{
+				?>
 				var templateVal = ''; <?php
-			} ?>
-			<? if($_REQUEST['template'])
-			{	 ?>
-				var templateVal = '<? echo $_REQUEST['template']; ?>'; <?
-			}	?>
+			}
+			?>
+			<?php
+			if($_REQUEST['template'])
+			{
+				?>
+				var templateVal = '<?php echo $_REQUEST['template']; ?>'; <?php
+			}
+			?>
 			//###################
-
 			//console.log(id_contact);
 			var startVal = '<?php echo $_REQUEST['start'];?>';
 			var orderVal = '<?php echo $_REQUEST['order'];?>';
@@ -273,19 +310,25 @@ array_push($arr_status , array('id' => 'late', 'label' => _LATE));
 			<script language="javascript">
 				//Defines template allowed for this list
 				<?php if(!$_REQUEST['template'])
-				{ 	?>
+				{
+					?>
 					var templateVal = 'document_list_extend'; <?php
-				} ?>
+				}
+				?>
 				<?php if(isset($_REQUEST['template']) && empty($_REQUEST['template']))
-				{ ?>
+				{
+					?>
 					var templateVal = ''; <?php
-				} ?>
-				<? if($_REQUEST['template'])
-				{	 ?>
-					var templateVal = '<? echo $_REQUEST['template']; ?>'; <?
-				}	?>
+				}
+				?>
+				<?php
+				if($_REQUEST['template'])
+				{
+					?>
+					var templateVal = '<?php echo $_REQUEST['template']; ?>'; <?php
+				}
+				?>
 				//###################
-
 				var startVal = '<?php echo $_REQUEST['start'];?>';
 				var orderVal = '<?php echo $_REQUEST['order'];?>';
 				var order_fieldVal = '<?php echo $_REQUEST['order_field'];?>';
@@ -367,7 +410,7 @@ array_push($arr_status , array('id' => 'late', 'label' => _LATE));
 						onfocus="if(this.value=='[<?php echo _CONTACT;?>]'){this.value='';}"
 						<?php
 					}
-					?> size="40" onKeyPress="if(event.keyCode == 9)change_contact(this.value, '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&amp;page=manage_filter');" onBlur="change_contact(this.value, '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&amp;page=manage_filter');"  />
+					?> size="40" onKeyPress="if(event.keyCode == 9)change_contact(this.value, '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=manage_filter');" onBlur="change_contact(this.value, '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=manage_filter');"  />
 		<div id="contactListByName" class="autocomplete"></div>
 		<script type="text/javascript">
 			initList('contact_id', 'contactListByName', '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=contact_list_by_name', 'what', '2');
@@ -379,7 +422,7 @@ array_push($arr_status , array('id' => 'late', 'label' => _LATE));
 	{
 		?>
 		<script>
-			change_list_entity('<?php echo $_SESSION['auth_dep']['bask_chosen_entity'];?>', '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&amp;page=manage_filter');
+			change_list_entity('<?php echo $_SESSION['auth_dep']['bask_chosen_entity'];?>', '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=manage_filter');
 		</script>
 		<?php
 	}
@@ -387,7 +430,7 @@ array_push($arr_status , array('id' => 'late', 'label' => _LATE));
 	{
 		?>
 		<script>
-			change_list_category('<?php echo $_SESSION['auth_dep']['bask_chosen_category'];?>', '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&amp;page=manage_filter');
+			change_list_category('<?php echo $_SESSION['auth_dep']['bask_chosen_category'];?>', '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=manage_filter');
 		</script>
 		<?php
 	}
@@ -395,7 +438,7 @@ array_push($arr_status , array('id' => 'late', 'label' => _LATE));
 	{
 		?>
 		<script>
-			change_list_status('<?php echo $_SESSION['auth_dep']['bask_chosen_status'];?>', '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&amp;page=manage_filter');
+			change_list_status('<?php echo $_SESSION['auth_dep']['bask_chosen_status'];?>', '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=manage_filter');
 		</script>
 		<?php
 	}
@@ -403,7 +446,7 @@ array_push($arr_status , array('id' => 'late', 'label' => _LATE));
 	{
 		?>
 		<script>
-			change_contact('<?php echo $_SESSION['auth_dep']['bask_chosen_contact'];?>', '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&amp;page=manage_filter');
+			change_contact('<?php echo $_SESSION['auth_dep']['bask_chosen_contact'];?>', '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=manage_filter');
 		</script>
 		<?php
 	}

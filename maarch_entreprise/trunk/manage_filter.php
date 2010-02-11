@@ -1,12 +1,10 @@
 <?php
-
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
 require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
 require_once("modules".DIRECTORY_SEPARATOR."basket".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_manage_status.php");
 require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR.'class_contacts.php');
-
 include_once('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'definition_mail_categories.php');
 $status_obj = new manage_status();
 $security = new security();
@@ -55,12 +53,10 @@ else
 {
 	$order_field = '';
 }
-
 $list=new list_show();
 $orderstr = $list->define_order($order, $order_field);
 $bask->connect();
 $do_actions_arr = array();
-
 if($_REQUEST['template'] <> 'group_case_for_basket')
 {
 	if(!empty($_SESSION['current_basket']['clause']))
@@ -138,7 +134,14 @@ if(isset($_SESSION['auth_dep']['bask_chosen_category']) && !empty($_SESSION['aut
 {
 	if(!empty($where))
 	{
-		$where_concat = "(".$where.") and category_id = '".$bask->protect_string_db($_SESSION['auth_dep']['bask_chosen_category'])."'";
+		if($where_concat <> "")
+		{
+			$where_concat .= "and (".$where.") and category_id = '".$bask->protect_string_db($_SESSION['auth_dep']['bask_chosen_category'])."'";
+		}
+		else
+		{
+			$where_concat = "(".$where.") and category_id = '".$bask->protect_string_db($_SESSION['auth_dep']['bask_chosen_category'])."'";
+		}
 	}
 	$search = true;
 }
@@ -203,7 +206,6 @@ if(isset($_SESSION['auth_dep']['bask_chosen_status']) && !empty($_SESSION['auth_
 	}
 	$search = true;
 }
-
 if(($_REQUEST['template']== 'group_case_for_basket') && ($core_tools->is_module_loaded('cases')))
 {
 	unset($select);
@@ -212,48 +214,45 @@ if(($_REQUEST['template']== 'group_case_for_basket') && ($core_tools->is_module_
 	$select[$table]= array();
 	array_push($select[$_SESSION['tablename']['cases']], "case_id", "case_label", "case_description", "case_typist", "case_creation_date");
 	$where = " ".$_SESSION['tablename']['cases'].".case_id = ".$table.".case_id  and ";
-	$tab=$request->select($select,$where.$where_concat,$orderstr,$_SESSION['config']['databasetype'], "default", false, "", "", "", true, false, true);
-
+	$tab=$request->select($select, $where.$where_concat, $orderstr, $_SESSION['config']['databasetype'], "default", false, "", "", "", true, false, true);
 }
 else
 {
-	$tab=$request->select($select,$where_concat,$orderstr,$_SESSION['config']['databasetype'], $_SESSION['config']['databasesearchlimit']);
+	$tab=$request->select($select, $where_concat, $orderstr, $_SESSION['config']['databasetype'], $_SESSION['config']['databasesearchlimit']);
 }
-	//$request->show();
-	//Manage of template list
-	//###################
-	//Defines template allowed for this list
-	$template_list=array();
-	array_push($template_list, array("name"=>"document_list_extend", "img"=>"extend_list.gif", "label"=> _ACCESS_LIST_EXTEND));
-	if($core_tools->is_module_loaded('cases'))	
-		array_push($template_list, array("name"=>"group_case_for_basket", "img"=>"case_list.gif", "label"=> _ACCESS_LIST_CASE));
-	if(!$_REQUEST['template'])
-	{
-		$template_to_use = $template_list[0]["name"];
-	}
-	if(isset($_REQUEST['template']) && empty($_REQUEST['template']))
-	{
-		$template_to_use = '';
-	}
-	if($_REQUEST['template'])
-	{
-		$template_to_use = $_REQUEST['template'];
-	}
-
-	//For status icon
-	$extension_icon = '';
-	if($template_to_use <> '')
-		$extension_icon = "_big";
-	//###################
-
-	//Specific View for group_case_template, we don' need to load the standard list_result_mlb
-	//#########################
-	if(($_REQUEST['template']== 'group_case_for_basket' )&& ($core_tools->is_module_loaded('cases')))
-	{
-		include("modules".DIRECTORY_SEPARATOR."cases".DIRECTORY_SEPARATOR.'mlb_list_group_case_addon.php');
-	}
-	else
-	{
+//$request->show();$core_tools->show_array($_SESSION['auth_dep']);
+//Manage of template list
+//###################
+//Defines template allowed for this list
+$template_list=array();
+array_push($template_list, array("name"=>"document_list_extend", "img"=>"extend_list.gif", "label"=> _ACCESS_LIST_EXTEND));
+if($core_tools->is_module_loaded('cases'))	
+	array_push($template_list, array("name"=>"group_case_for_basket", "img"=>"case_list.gif", "label"=> _ACCESS_LIST_CASE));
+if(!$_REQUEST['template'])
+{
+	$template_to_use = $template_list[0]["name"];
+}
+if(isset($_REQUEST['template']) && empty($_REQUEST['template']))
+{
+	$template_to_use = '';
+}
+if($_REQUEST['template'])
+{
+	$template_to_use = $_REQUEST['template'];
+}
+//For status icon
+$extension_icon = '';
+if($template_to_use <> '')
+	$extension_icon = "_big";
+//###################
+//Specific View for group_case_template, we don' need to load the standard list_result_mlb
+//#########################
+if(($_REQUEST['template']== 'group_case_for_basket' )&& ($core_tools->is_module_loaded('cases')))
+{
+	include("modules".DIRECTORY_SEPARATOR."cases".DIRECTORY_SEPARATOR.'mlb_list_group_case_addon.php');
+}
+else
+{
 	for ($i=0;$i<count($tab);$i++)
 	{
 		for ($j=0;$j<count($tab[$i]);$j++)
@@ -333,7 +332,6 @@ else
 					$tab[$i][$j]["valign"]="bottom";
 					$tab[$i][$j]["show"]=true;
 					$tab[$i][$j]["order"]='category_id';
-					//echo "table : ".$table." res_id : ".$_SESSION['mlb_search_current_res_id']." categorie : ".$_SESSION['mlb_search_current_category_id']."<br>";
 				}
 				if($tab[$i][$j][$value]=="contact_firstname")
 				{
@@ -461,19 +459,17 @@ else
 }
 if(count($tab) > 0)
 {
-
 	$i = count($tab);
 	$title = _RESULTS." : ".$i." "._FOUND_DOCS;
 	$_SESSION['origin'] = 'basket';
 	$_SESSION['collection_id_choice'] = $_SESSION['current_basket']['coll_id'];
 	$details = 'details&dir=indexing_searching';
-
-	$param_list = array('values' => $tab, 'title' => $title, 'key' => 'res_id', 'page_name' => 'view_baskets&module=basket&baskets='.$_SESSION['current_basket']['id'] ,
+	$param_list = array('values' => $tab, 'title' => $title, 'key' => 'res_id', 'page_name' => 'view_baskets&module=basket&baskets='.$_SESSION['current_basket']['id'].'&entity_id='.$_SESSION['auth_dep']['bask_chosen_entity'].'&category_id='.$_SESSION['auth_dep']['bask_chosen_category'].'&status_id='.$_SESSION['auth_dep']['bask_chosen_status'].'&contact_id='.$_SESSION['auth_dep']['bask_chosen_contact'],
 	'what' => 'res_id', 'detail_destination' =>$details, 'details_page' => '', 'view_doc' => true,  'bool_details' => true, 'bool_order' => true,
 	'bool_frame' => false, 'module' => '', 'css' => 'listing spec',
 	'hidden_fields' => '<input type="hidden" name="module" id="module" value="basket" /><input type="hidden" name="table" id="table" value="'.$_SESSION['current_basket']['table'].'"/>
 	<input type="hidden" name="coll_id" id="coll_id" value="'.$_SESSION['current_basket']['coll_id'].'"/>', 'open_details_popup' => false, 'do_actions_arr' => $do_actions_arr, 'template' => true,
 	'template_list'=> $template_list, 'actual_template'=>$template_to_use, 'bool_export'=>true , 'mode_string' => true);
-	 echo $bask->basket_list_doc($param_list, $_SESSION['current_basket']['actions'], _CLICK_LINE_TO_PROCESS);
+	echo $bask->basket_list_doc($param_list, $_SESSION['current_basket']['actions'], _CLICK_LINE_TO_PROCESS);
 }
 ?>
