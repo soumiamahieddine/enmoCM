@@ -47,7 +47,7 @@ CREATE TABLE res_attachments
   burn_batch character varying(50) DEFAULT NULL::character varying,
   scan_postmark character varying(50) DEFAULT NULL::character varying,
   envelop_id bigint,
-  status character varying(3) DEFAULT NULL::character varying,
+  status character varying(10) DEFAULT NULL::character varying,
   destination character varying(50) DEFAULT NULL::character varying,
   approver character varying(50) DEFAULT NULL::character varying,
   validation_date timestamp without time zone,

@@ -39,7 +39,7 @@ CREATE TABLE res_attachments
   burn_batch varchar(50) DEFAULT NULL,
   scan_postmark varchar(50) DEFAULT NULL,
   envelop_id bigint,
-  status varchar(3) DEFAULT NULL,
+  status varchar(10) DEFAULT NULL,
   destination varchar(50) DEFAULT NULL,
   approver varchar(50) DEFAULT NULL,
   validation_date datetime,
