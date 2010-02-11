@@ -11,7 +11,7 @@ $func = new functions();
 $db = new dbquery();
 $db->connect();
 
-$db->query("update ".$_SESSION['tablename']['attach_res_attachments']." set status = 'DEL' where res_id = ".$_REQUEST['id']);
+$db->query("UPDATE ".$_SESSION['tablename']['attach_res_attachments']." SET status = 'DEL' WHERE res_id = ".$_REQUEST['id']);
 
 if($_SESSION['history']['attachdel'] == "true")
 {
@@ -21,7 +21,12 @@ if($_SESSION['history']['attachdel'] == "true")
 	{
 		$_SESSION['collection_id_choice'] = $_SESSION['user']['collections'][0];
 	}
-	//$users->add($_SESSION['tablename']['attach_res_attachments'], $_REQUEST['id'],"DEL", _ATTACH_DELETED." : ".$_REQUEST['id'], $_SESSION['config']['databasetype'],"attachments");
+	$sec = new security();
+	$view = $sec->retrieve_view_from_coll_id($_SESSION['collection_id_choice']);
+	$db->query("SELECT res_id_master FROM ".$_SESSION['tablename']['attach_res_attachments']." WHERE res_id = ".$_REQUEST['id']);
+	$res = $db->fetch_object();
+	$res_id_master = $res->res_id_master;
+	$users->add($view, $res_id_master,"DEL", _ATTACH_DELETED.' '._ON_DOC_NUM.$res_id_master."  (".$_REQUEST['id'].')', $_SESSION['config']['databasetype'],"attachments");
 	$users->add($_SESSION['tablename']['attach_res_attachments'], $_REQUEST['id'],"DEL", _ATTACH_DELETED." : ".$_REQUEST['id'], $_SESSION['config']['databasetype'],"attachments");
 
 }

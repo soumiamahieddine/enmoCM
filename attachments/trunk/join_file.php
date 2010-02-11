@@ -183,6 +183,8 @@ if($_POST['valid'])
 										{
 											require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 											$users = new history();
+											$view = $sec->retrieve_view_from_coll_id($coll_id);
+											$users->add($view, $_SESSION['doc_id'], "ADD",  ucfirst(_DOC_NUM).$id.' '._ADDED_TO_FOLDER_NUM.$_SESSION['doc_id'], $_SESSION['config']['databasetype'],'apps');
 											$_SESSION['error'] = _NEW_ATTACH_ADDED;
 											$users->add($_SESSION['tablename']['attach_res_attachments'], $id, "ADD", $_SESSION['error']." (".$title.") ", $_SESSION['config']['databasetype'],'attachments');
 										}
