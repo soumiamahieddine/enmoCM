@@ -214,8 +214,9 @@ if($_POST['valid'])
 $core_tools->load_html();
 //here we building the header
 $core_tools->load_header(_ATTACH_ANSWER);
+$time = $core_tools->get_session_time_expire();
 ?>
-<body id="pop_up"  >
+<body id="pop_up" onload="setTimeout(window.close, <?php  echo $time;?>*60*1000);" >
 <div class="error"><?php  echo $_SESSION['error']; $_SESSION['error']=""; ?></div>
 <h2 class="tit"><?php  echo _ATTACH_ANSWER;?> </h2>
 
