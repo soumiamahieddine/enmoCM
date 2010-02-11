@@ -587,7 +587,7 @@ foreach($update_users as $uu)
 {
 	//Maj de user
 	
-	$sql_update = "UPDATE users SET status = 'OK', ";
+	$sql_update = "UPDATE users SET  "; 
 	
 	foreach($update_users_fields as $uuf)
 	{
@@ -601,6 +601,14 @@ foreach($update_users as $uu)
 					AND type = '".$type_ldap."')";
 	
 	$db->query($sql_update);
+	
+	// On change le status que s'il était à DEL
+	$db->query("UPDATE users SET status = 'OK' WHERE status = 'DEL' and user_id IN 
+					(SELECT value FROM ext_references 
+					WHERE reference_id = '".addslashes($uu)."'
+					AND field = 'user_id'
+					AND type = '".$type_ldap."')"
+					
 	$log->add_notice($sql_update);
 	unset($sql_update);
 }
