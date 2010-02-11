@@ -607,7 +607,7 @@ foreach($update_users as $uu)
 					(SELECT vaue FROM ext_references 
 					WHERE reference_id = '".addslashes($uu)."'
 					AND field = 'user_id'
-					AND type = '".$type_ldap."')"
+					AND type = '".$type_ldap."')";
 					
 	$log->add_notice($sql_update);
 	unset($sql_update);
