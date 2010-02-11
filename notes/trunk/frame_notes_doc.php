@@ -65,12 +65,12 @@ for ($ind_notes1=0;$ind_notes1<count($tabNotes);$ind_notes1++)
 			if($tabNotes[$ind_notes1][$ind_notes2][$value]=="id")
 			{
 				$tabNotes[$ind_notes1][$ind_notes2]["id"]=$tabNotes[$ind_notes1][$ind_notes2]['value'];
-				$tabNotes[$ind_notes1][$ind_notes2]["label"]= _ID;
+				$tabNotes[$ind_notes1][$ind_notes2]["label"]= 'ID';
 				$tabNotes[$ind_notes1][$ind_notes2]["size"]=$size_small;
 				$tabNotes[$ind_notes1][$ind_notes2]["label_align"]="left";
 				$tabNotes[$ind_notes1][$ind_notes2]["align"]="left";
 				$tabNotes[$ind_notes1][$ind_notes2]["valign"]="bottom";
-				$tabNotes[$ind_notes1][$ind_notes2]["show"]=false;
+				$tabNotes[$ind_notes1][$ind_notes2]["show"]=true;
 				$ind_notes1d = $tabNotes[$ind_notes1][$ind_notes2]['value'];
 			}
 			if($tabNotes[$ind_notes1][$ind_notes2][$value]=="user_id")

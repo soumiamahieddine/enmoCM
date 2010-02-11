@@ -10,10 +10,11 @@
 * @license GPL
 * @author  Claire Figueras  <dev@maarch.org>
 */ 
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
 
 $core_tools = new core_tools();
 $core_tools->load_lang();
-
+$sec = new security();
 $func = new functions();
 $db = new dbquery();
 $db->connect();
@@ -23,14 +24,18 @@ $user = '';
 $text = "";
 $user_id = '';
 $date = "";
+$identifier = '';
 if(empty($_SESSION['collection_id_choice']))
 {
-	$_SESSION['collection_id_choice']= $_SESSION['user']['collections'][0];
+	$_SESSION['collection_id_choice'] = $_SESSION['user']['collections'][0];
 }
+$coll_id = $_SESSION['collection_id_choice'] ;
+$view = $sec->retrieve_view_from_coll_id($coll_id);
 $error = '';
 if(isset($_REQUEST['modify']) )
 {
 	$id = $_REQUEST['id'];
+	$identifier = $_REQUEST['identifier'];
 	$table = $_REQUEST['table'];
 	$coll_id = $_REQUEST['coll_id'];
 	
@@ -49,7 +54,8 @@ if(isset($_REQUEST['modify']) )
 		{
 			require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 			$hist = new history();								
-			$hist->add($_SESSION['tablename']['not_notes'], $id ,"UP", _NOTE_UPDATED, $_SESSION['config']['databasetype'], 'notes');
+			$hist->add($_SESSION['tablename']['not_notes'], $id ,"UP", _NOTE_UPDATED.' ('.$id.')', $_SESSION['config']['databasetype'], 'notes');
+			$hist->add($view, $identifier ,"UP", _NOTE_UPDATED._ON_DOC_NUM.$identifier.' ('.$id.')', $_SESSION['config']['databasetype'], 'notes');
 		}
 		$_SESSION['error'] = _NOTES_MODIFIED;
 		?>
@@ -62,6 +68,7 @@ if(isset($_REQUEST['modify']) )
 if(isset($_REQUEST['delete']) )
 {
 	$id = $_REQUEST['id'];
+	$identifier = $_REQUEST['identifier'];
 	
 	$db->query("delete from ".$_SESSION['tablename']['not_notes']." where id = ".$id);
 				
@@ -69,7 +76,8 @@ if(isset($_REQUEST['delete']) )
 	{
 		require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 		$hist = new history();								
-		$hist->add($_SESSION['tablename']['not_notes'], $id ,"DEL", _NOTES_DELETED, $_SESSION['config']['databasetype'], 'notes');
+		$hist->add($_SESSION['tablename']['not_notes'], $id ,"DEL", _NOTES_DELETED.' ('.$id.')', $_SESSION['config']['databasetype'], 'notes');
+		$hist->add($view, $identifier ,"DEL", _NOTES_DELETED._ON_DOC_NUM.$identifier.' ('.$id.')', $_SESSION['config']['databasetype'], 'notes');
 	}
 	$_SESSION['error'] = _NOTES_DELETED;
 	?>
@@ -86,6 +94,10 @@ else
 {
 	$s_id = "";
 }
+if(isset($_REQUEST['identifier']))
+{
+	$identifier = $_REQUEST['identifier'];
+}
 if(isset($_REQUEST['table']) && empty($table))
 {
 	$table = $_REQUEST['table'];
@@ -98,9 +110,10 @@ if(isset($_REQUEST['coll_id'])&& empty($coll_id))
 
 $core_tools->load_html();
 //here we building the header
-$core_tools->load_header(_NOTE);	
+$core_tools->load_header(_NOTES);
+$time = $core_tools->get_session_time_expire();	
 ?>
-<body id="pop_up">
+<body id="pop_up" onload="resizeTo(410, 380);setTimeout(window.close, <?php  echo $time;?>*60*1000);">
 <?php 
 if(empty($table) && empty($coll_id))
 {
@@ -108,6 +121,7 @@ if(empty($table) && empty($coll_id))
 }
 else
 {
+
 	if(!empty($coll_id))
 	{
 		$where = " and coll_id = '".$coll_id."'";
@@ -116,7 +130,7 @@ else
 	{
 		$where = " and tablename = '".$table."'";
 	}
-	$db->query("select  n.date, n.user_id, n.note_text, u.lastname, u.firstname 
+	$db->query("select n.identifier, n.date, n.user_id, n.note_text, u.lastname, u.firstname 
 	from ".$_SESSION['tablename']['not_notes']." n
 	inner join ".$_SESSION['tablename']['users']." u on n.user_id  = u.user_id 
 	where n.id = ".$s_id." ".$where);
@@ -126,6 +140,7 @@ else
 	$text = $func->show_string($line->note_text);
 	$user_id = $line->user_id;
 	$date = $line->date;
+	$identifier = $line->identifier;
 }	
 
 $can_modify = false;
@@ -146,6 +161,7 @@ if(trim($user_id) == $_SESSION['user']['UserId'])
 		<textarea  <?php  if(!$can_modify){?>readonly="readonly" class="readonly" <?php  } ?>style="width:380px" cols="70" rows="10"  name="notes"  id="notes"><?php  echo $text; ?></textarea>
 	  
       	<input type="hidden" name="id" id="id" value="<?php  echo $s_id; ?>"/>
+      	<input type="hidden" name="identifier" id="identifier" value="<?php  echo $identifier; ?>"/>
         <input type="hidden" name="table" id="table" value="<?php  echo $table; ?>"/>
         <input type="hidden" name="coll_id" id="coll_id" value="<?php  echo $coll_id; ?>"/>
       

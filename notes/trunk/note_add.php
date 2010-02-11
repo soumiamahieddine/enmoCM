@@ -22,7 +22,7 @@ $db->connect();
 $core_tools->load_html();
 //here we building the header
 $core_tools->load_header(_ADD_NOTE);
-
+$time = $core_tools->get_session_time_expire();
 $identifier = '';
 $table = '';
 $coll_id = '';
@@ -48,21 +48,24 @@ if(isset($_REQUEST['table']) && !empty($_REQUEST['table']))
 	$table = trim($_REQUEST['table']);
 }
 ?>
-<body id="pop_up">
+<body id="pop_up" onload="resizeTo(450, 350);setTimeout(window.close, <?php  echo $time;?>*60*1000);">
 <?php
 
 if (isset($_REQUEST['notes'])&& !empty($_REQUEST['notes']))
 {
-
+	$date = date("Y")."-".date("m")."-".date("d")." ".date("H:i:s");
 	$db->query("INSERT INTO ".$_SESSION['tablename']['not_notes']."
-		( identifier, note_text, date, user_id, coll_id, tablename) VALUES (".$identifier.", '".$db->protect_string_db($_REQUEST['notes'])."', '".date("Y")."-".date("m")."-".date("d")." ".date("H:i:s")."', '".$_SESSION['user']['UserId']."', '".$coll_id."', '".$table."')");
+		( identifier, note_text, date, user_id, coll_id, tablename) VALUES (".$identifier.", '".$db->protect_string_db($_REQUEST['notes'])."', '".$date."', '".$_SESSION['user']['UserId']."', '".$coll_id."', '".$table."')");
 
 		if($_SESSION['history']['noteadd'])
 		{
-
 			require_once("core/class/class_history.php");
 			$hist = new history();
-			$hist->add($view, $identifier ,"ADD", _ADDITION_NOTE._ON_DOC_NUM.$identifier, $_SESSION['config']['databasetype'], 'notes');
+			$db->query("SELECT id FROM ".$_SESSION['tablename']['not_notes']." WHERE date = '".$date."' and note_text = '".$db->protect_string_db($_REQUEST['notes'])."' and identifier = ".$identifier." and user_id = '".$_SESSION['user']['UserId']."' and coll_id = '".$coll_id."' ");
+			$res = $db->fetch_object();
+			$id = $res->id;
+			$hist->add($view, $identifier ,"ADD", _ADDITION_NOTE._ON_DOC_NUM.$identifier.' ('.$id.')', $_SESSION['config']['databasetype'], 'notes');
+			$hist->add($_SESSION['tablename']['not_notes'], $id ,"ADD", _ADDITION_NOTE._ON_DOC_NUM.$identifier, $_SESSION['config']['databasetype'], 'notes');
 
 		}
 		if($_SESSION['origin'] <> 'valid' && $_SESSION['origin'] <> 'qualify')
