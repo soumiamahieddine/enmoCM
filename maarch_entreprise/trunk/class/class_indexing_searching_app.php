@@ -530,7 +530,7 @@ class indexing_searching_app extends dbquery
 			}
 			for($i=0; $i<count($param['options']);$i++)
 			{
-				$str .= '<option value="'.addslashes($param['options'][$i]['VALUE']).'">'.addslashes($param['options'][$i]['LABEL']).'</option>';
+				$str .= '<option value="'.addslashes($param['options'][$i]['VALUE']).'" alt="'.addslashes($param['options'][$i]['LABEL']).'" title="'.addslashes($param['options'][$i]['LABEL']).'">'.addslashes($param['options'][$i]['LABEL']).'</option>';
 			}
 			$str .= '</select>';
 			$str .= '<input type="hidden" name="meta[]" value="'.$id.'#'.$id.'#select_simple" />'.$end;
@@ -543,7 +543,7 @@ class indexing_searching_app extends dbquery
 					$str .= '<select name="'.$param['id'].'_available[]" id="'.$param['id'].'_available" size="10" ondblclick="moveclick_ext('." '".$param['id']."_available', '".$param['id']."_chosen'".');" multiple="multiple" >';
 						for($i=0; $i<count($param['options']);$i++)
 						{
-							$str .= '<option value="'.$param['options'][$i]['VALUE'].'">'.$param['options'][$i]['LABEL'].'</option>';
+							$str .= '<option value="'.$param['options'][$i]['VALUE'].'"  alt="'.addslashes($param['options'][$i]['LABEL']).'" title="'.addslashes($param['options'][$i]['LABEL']).'">'.$param['options'][$i]['LABEL'].'</option>';
 						}
 					$str .='</select>';
 					$str .= "<br/><em><a href=\"javascript:selectall_ext( '".$param['id']."_available');\" >"._SELECT_ALL.'</a></em>';
