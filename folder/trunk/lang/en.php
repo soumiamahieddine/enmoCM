@@ -152,7 +152,7 @@ if (!defined('_VIEW_FOLDER')) define('_VIEW_FOLDER', 'View the folder');
 if (!defined('_TITLE_STATS_CHOICE_FOLDER_TYPE')) define('_TITLE_STATS_CHOICE_FOLDER_TYPE','By folder type');
 if (!defined('_TITLE_STATS_CHOICE_GROUP')) define('_TITLE_STATS_CHOICE_GROUP','by user groups');
 if (!defined('_TITLE_STATS_CHOICE_USER')) define('_TITLE_STATS_CHOICE_USER','For a user');
-if (!defined('_TITLE_STATS_CHOICE_PERIOD')) define('_TITLE_STATS_CHOICE_PERIOD','For a given period');
+
 if (!defined('_TITLE_STATS_CHOICE_USER2')) define('_TITLE_STATS_CHOICE_USER2','by the user');
 
 if (!defined('_TITLE_STATS_NO_FOLDERS_VIEW')) define('_TITLE_STATS_NO_FOLDERS_VIEW','No folder has been viewed on given period');

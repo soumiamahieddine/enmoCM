@@ -158,7 +158,6 @@ if (!defined('_VIEW_FOLDER'))  define('_VIEW_FOLDER', 'Visualisation du dossier'
 if (!defined('_TITLE_STATS_CHOICE_FOLDER_TYPE'))  define('_TITLE_STATS_CHOICE_FOLDER_TYPE','Par type de dossier');
 if (!defined('_TITLE_STATS_CHOICE_GROUP'))  define('_TITLE_STATS_CHOICE_GROUP','Par groupe d&rsquo;utilisateurs');
 if (!defined('_TITLE_STATS_CHOICE_USER'))  define('_TITLE_STATS_CHOICE_USER','Pour un utilisateur');
-if (!defined('_TITLE_STATS_CHOICE_PERIOD'))  define('_TITLE_STATS_CHOICE_PERIOD','Pour une p&eacute;riode');
 if (!defined('_TITLE_STATS_CHOICE_USER2'))  define('_TITLE_STATS_CHOICE_USER2','par l&rsquo;utilisateur');
 
 if (!defined('_TITLE_STATS_NO_FOLDERS_VIEW'))  define('_TITLE_STATS_NO_FOLDERS_VIEW','Aucun dossier consult&eacute; pour la p&eacute;riode');
