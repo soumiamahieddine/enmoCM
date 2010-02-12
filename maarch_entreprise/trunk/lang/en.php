@@ -964,7 +964,9 @@ if (!defined('_DB_USER')) define( '_DB_USER', 'User');
 if (!defined('_DATABASE')) define( '_DATABASE', 'Database');
 
 
+if (!defined('_TREE_ROOT')) define( '_TREE_ROOT', 'Tree root');
 
+if (!defined('_TITLE_STATS_CHOICE_PERIOD')) define('_TITLE_STATS_CHOICE_PERIOD','For a given period');
 
 
 

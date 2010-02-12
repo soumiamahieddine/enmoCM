@@ -974,6 +974,7 @@ if (!defined('_DATABASE')) define( '_DATABASE', 'Base');
 
 if (!defined('_TREE_ROOT')) define( '_TREE_ROOT', 'Racine');
 
+if (!defined('_TITLE_STATS_CHOICE_PERIOD'))  define('_TITLE_STATS_CHOICE_PERIOD','Pour une p&eacute;riode');
 
 
 
