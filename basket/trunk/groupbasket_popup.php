@@ -253,7 +253,7 @@ $time = $core_tools->get_session_time_expire();
 			</script>
 			<p>&nbsp;</p>
 			<p class="buttons">
-				<input type="button" name="submit_form" class="button" value="<?php if(empty($group)){ echo _ADD_THIS_GROUP;}else{ echo _MODIFY_THIS_GROUP;}?>" onclick="valid_actions_param('group_basket');console.log(this.form);this.form.submit();" />
+				<input type="button" name="submit_form" class="button" value="<?php if(empty($group)){ echo _ADD_THIS_GROUP;}else{ echo _MODIFY_THIS_GROUP;}?>" onclick="valid_actions_param('group_basket');this.form.submit();" />
 				<input type="submit" name="cancel" value="<?php echo _CANCEL;?>"  class="button"/>
 			</p>
 	</form>
