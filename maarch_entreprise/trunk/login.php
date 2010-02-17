@@ -153,7 +153,7 @@ else
 	require("class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
 	$path_core_config = "..".DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR.'core'.DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'config.xml';
 }
-
+echo get_include_path();
 $core_tools = new core_tools();
 $business_app_tools = new business_app_tools();
 $func = new functions();
