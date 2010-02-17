@@ -12,9 +12,9 @@
 * @author  Claire Figueras  <dev@maarch.org>
 * @author  Loïc Vinet <dev@maarch.org>
 */
-echo $_SESSION['custom_override_id'].'<br/>';
+echo 'a'.$_SESSION['custom_override_id'].'<br/>';
 include_once('../../core/init.php');
-echo $_SESSION['custom_override_id'].'<br/>';
+echo 'b'.$_SESSION['custom_override_id'].'<br/>';
 if(isset($_SESSION['config']['corepath']))
 {
 	require_once("core/class/class_functions.php");
