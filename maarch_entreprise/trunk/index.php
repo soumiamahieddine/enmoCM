@@ -37,6 +37,11 @@ else
 	$core_tools = new core_tools();
 	$_SESSION['custom_override_id'] = $core_tools->get_custom_id();
 	chdir("../..");
+	if(!empty($_SESSION['custom_override_id']))
+	{
+		$path = $_SESSION['config']['corepath']."custom".DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR;
+		set_include_path( $path.PATH_SEPARATOR.$_SESSION['config']['corepath']);
+	}
 }
 if(isset($_SESSION['user']['UserId']) && !empty($_SESSION['user']['UserId']) && $_GET['page'] <> 'login' && $_GET['page'] <> 'log' && $_GET['page'] <> 'logout')
 {
