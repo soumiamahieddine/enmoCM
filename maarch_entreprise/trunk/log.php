@@ -62,6 +62,7 @@ if(count($_SESSION['config']) <= 0)
 	//$func->show_array($_SESSION['modules_loaded']);
 	//$func->show_array($_SESSION['menu']);
 	$func->show_array($_SESSION['tablename']);
+	exit();
 	//$func->show_array($_SESSION['core_admin_board']);
 	//$func->show_array($_SESSION['modules_admin_board']);
 }
