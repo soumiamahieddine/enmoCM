@@ -35,6 +35,7 @@ class business_app_tools extends dbquery
 		{
 			$path = 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'config.xml';
 		}
+		echo $path;exit();
 		$xmlconfig = simplexml_load_file($path);
 		if( $xmlconfig <> false)
 		{
