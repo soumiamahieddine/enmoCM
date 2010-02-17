@@ -12,9 +12,7 @@
 * @author  Claire Figueras  <dev@maarch.org>
 * @author  Loïc Vinet <dev@maarch.org>
 */
-echo 'a'.$_SESSION['custom_override_id'].'<br/>';
 include_once('../../core/init.php');
-echo 'b'.$_SESSION['custom_override_id'].'<br/>';
 if(isset($_SESSION['config']['corepath']))
 {
 	require_once("core/class/class_functions.php");
@@ -24,6 +22,11 @@ if(isset($_SESSION['config']['corepath']))
 	if(!isset($_SESSION['custom_override_id']) || empty($_SESSION['custom_override_id']))
 	{
 		$_SESSION['custom_override_id'] = $core_tools->get_custom_id();
+		if(!empty($_SESSION['custom_override_id']))
+		{
+			$path = $_SESSION['config']['corepath']."custom".DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR;
+			set_include_path( $path.PATH_SEPARATOR.$_SESSION['config']['corepath']);
+		}
 	}
 }
 else
