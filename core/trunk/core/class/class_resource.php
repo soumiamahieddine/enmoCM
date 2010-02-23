@@ -196,6 +196,24 @@
  	}
 
 	/**
+	* Gets the resource path
+	*
+	* @return integer Resource path (path)
+	*/
+	public function get_path($id,$coll_id)
+ 	{
+		require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
+		$sec = new security(); 
+		$resource_table = $sec->retrieve_table_from_coll($coll_id);
+		if ($resource_table == '')
+			echo "error with coll_id";
+		$this->connect();
+		$this->query("select path from ".$resource_table." where res_id='".$id."'");
+ 		$result = $this->fetch_object();
+ 		return str_replace('#', DIRECTORY_SEPARATOR, $result->path);
+ 	}
+
+	/**
 	* Gets the error message of the resource object
 	*
 	* @return string Error message of the resource object
