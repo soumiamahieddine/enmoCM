@@ -392,7 +392,7 @@ class core_tools extends functions
 		echo '<li id="account" onmouseover="this.className=\'on\';" onmouseout="this.className=\'\';">
 		<a href="'.$_SESSION['config']['businessappurl'].'index.php?page=modify_user&admin=users&reinit=true"><span><span>'._MY_INFO.'</span></span></a></li>';
 		echo '<li id="logout" onmouseover="this.className=\'on\';" onmouseout="this.className=\'\';">
-		<a href="'.$_SESSION['config']['businessappurl'].'index.php?display=true&page=logout&coreurl='.$_SESSION['config']['coreurl'].'"><span><span>'._LOGOUT.'</span></span></a></li>';
+		<a href="'.$_SESSION['config']['businessappurl'].'index.php?display=true&page=logout&coreurl='.$_SESSION['config']['coreurl'].'&logout=true"><span><span>'._LOGOUT.'</span></span></a></li>';
 	}
 
 	/**
