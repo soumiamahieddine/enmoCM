@@ -977,6 +977,16 @@ if (!defined('_TREE_ROOT')) define( '_TREE_ROOT', 'Racine');
 if (!defined('_TITLE_STATS_CHOICE_PERIOD'))  define('_TITLE_STATS_CHOICE_PERIOD','Pour une p&eacute;riode');
 
 
+/******************** Authentification method  ************/
+
+
+if (!defined('_STANDARD_LOGIN')) define( '_STANDARD_LOGIN', 'Authentification Maarch');
+if (!defined('_ACTIVEX_LOGIN')) define( '_ACTIVEX_LOGIN', 'Authentification Ms Internet Explorer - ActiveX');
+if (!defined('_HOW_CAN_I_LOGIN')) define( '_HOW_CAN_I_LOGIN', 'Je n\'arrive pas &agrave; me connecter...');
+if (!defined('_CONNECT')) define( '_CONNECT', 'Se connecter');
+if (!defined('_LOGIN_MODE')) define( '_LOGIN_MODE', 'Type d\'authentification');
+
+
 
 
 

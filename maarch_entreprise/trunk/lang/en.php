@@ -973,7 +973,13 @@ if (!defined('_TITLE_STATS_CHOICE_PERIOD')) define('_TITLE_STATS_CHOICE_PERIOD',
 
 
 
+/******************** Authentification method  ************/
 
+if (!defined('_STANDARD_LOGIN')) define( '_STANDARD_LOGIN', 'Standard authentification');
+if (!defined('_ACTIVEX_LOGIN')) define( '_ACTIVEX_LOGIN', 'Ms Ie - ActiveX authentification');
+if (!defined('_HOW_CAN_I_LOGIN')) define( '_HOW_CAN_I_LOGIN', 'Read me if i can\'t log into Maarch..');
+if (!defined('_CONNECT')) define( '_CONNECT', 'Connect');
+if (!defined('_LOGIN_MODE')) define( '_LOGIN_MODE', 'Login process type');
 
 
 
