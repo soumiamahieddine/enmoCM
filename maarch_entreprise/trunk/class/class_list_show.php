@@ -458,14 +458,22 @@ class list_show extends functions
 							}
 							elseif($bool_check_form)
 							{
-								if(count($do_actions_arr) == 0 ||  $do_actions_arr[$theline] == true)
-						{
-							$str .= '<input type="checkbox"  class="check" name="field" class="check" value="'.$result[$theline][0]['value'].'" />&nbsp;&nbsp;';
+								
+						if(!$bool_show_actions_list	){
+							$str .= '<input type="checkbox"  class="check" name="field[]" class="check" value="'.$result[$theline][0]['value'].'" />&nbsp;&nbsp;';
+						}else{
+								
+									
+							if(count($do_actions_arr) == 0 ||  $do_actions_arr[$theline] == true)
+							{
+								$str .= '<input type="checkbox"  class="check" name="field" class="check" value="'.$result[$theline][0]['value'].'" />&nbsp;&nbsp;';
+							}
+							else
+							{
+								$str .= '<img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=cadenas_rouge.png" alt="'._DOC_LOCKED.'" border="0"/>';
+							}
 						}
-						else
-						{
-							$str .= '<img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=cadenas_rouge.png" alt="'._DOC_LOCKED.'" border="0"/>';
-						}
+
 					}
 					$str .= ' </div>';
 					$str .= ' </td>';
