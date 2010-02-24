@@ -88,8 +88,8 @@ class types extends dbquery
 			$_SESSION['service_tag'] = '';
 		}
 		?>
-		<h1><img src="<? echo $_SESSION['config']['businessappurl'];?>static.php?filename=manage_doctypes_b.gif" alt="" />
-			<?
+		<h1><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=manage_doctypes_b.gif" alt="" />
+			<?php
             if($mode == "up")
             {
                 echo _DOCTYPE_MODIFICATION;
@@ -101,7 +101,7 @@ class types extends dbquery
             ?>
         </h1>
 		<div id="inner_content" class="clearfix">
-			<?
+			<?php
 			if($state == false)
 			{
 				echo "<br /><br /><br /><br />"._DOCTYPE.' '._UNKOWN."<br /><br /><br /><br />";
@@ -111,24 +111,24 @@ class types extends dbquery
 				$array_coll = $sec->retrieve_insert_collections();
 				?>
 				<br/><br/>
-					<form name="frmtype" id="frmtype" method="post" action="<? echo $_SESSION['config']['businessappurl'];?>index.php?page=types_up_db" class="forms">
+					<form name="frmtype" id="frmtype" method="post" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=types_up_db" class="forms">
 					<input type="hidden" name="order" id="order" value="<?php echo $_REQUEST['order'];?>" />
 					<input type="hidden" name="order_field" id="order_field" value="<?php echo $_REQUEST['order_field'];?>" />
 					<input type="hidden" name="what" id="what" value="<?php echo $_REQUEST['what'];?>" />
 					<input type="hidden" name="start" id="start" value="<?php echo $_REQUEST['start'];?>" />
 				<div class="block">
 
-						<input  type="hidden" name="mode" value="<? echo $mode; ?>" />
+						<input  type="hidden" name="mode" value="<?php echo $mode; ?>" />
 						<p>
-							<label><? echo _ATTACH_SUBFOLDER;?> : </label>
+							<label><?php echo _ATTACH_SUBFOLDER;?> : </label>
 							<select name="sous_dossier" id="sous_dossier" class="listext" onchange="">
-								<option value=""><? echo _CHOOSE_SUBFOLDER;?></option>
-								<?
+								<option value=""><?php echo _CHOOSE_SUBFOLDER;?></option>
+								<?php
 								for($i=0; $i< count($_SESSION['sous_dossiers']); $i++)
 								{
 									?>
-										<option value="<? echo $_SESSION['sous_dossiers'][$i]['ID']; ?>" <? if($_SESSION['sous_dossiers'][$i]['ID'] == $_SESSION['m_admin']['doctypes']['SUB_FOLDER']) { echo "selected=\"selected\"" ;}?>><? echo $_SESSION['sous_dossiers'][$i]['LABEL']; ?></option>
-									<?
+										<option value="<?php echo $_SESSION['sous_dossiers'][$i]['ID']; ?>" <?php if($_SESSION['sous_dossiers'][$i]['ID'] == $_SESSION['m_admin']['doctypes']['SUB_FOLDER']) { echo "selected=\"selected\"" ;}?>><?php echo $_SESSION['sous_dossiers'][$i]['LABEL']; ?></option>
+									<?php
 								}
 								?>
 							</select>
@@ -155,16 +155,16 @@ class types extends dbquery
 					{
 						?>
 						<p>
-							<label for="id"><? echo _ID;?> : </label>
-	                        <input type="text" class="readonly" readonly="readonly" name="idbis" value="<?  echo $id;?>" />
-	                        <input type="hidden" name="id" value="<? echo $id; ?>" />
+							<label for="id"><?php echo _ID;?> : </label>
+	                        <input type="text" class="readonly" readonly="readonly" name="idbis" value="<?php  echo $id;?>" />
+	                        <input type="hidden" name="id" value="<?php echo $id; ?>" />
 	                    </p>
-						<?
+						<?php
 					}
 					?>
 					<p>
-						<label for="label"><? echo _WORDING; ?> : </label>
-						<input name="label" type="text" class="textbox" id="label" value="<? echo $func->show($_SESSION['m_admin']['doctypes']['LABEL']); ?>"/>
+						<label for="label"><?php echo _WORDING; ?> : </label>
+						<input name="label" type="text" class="textbox" id="label" value="<?php echo $func->show($_SESSION['m_admin']['doctypes']['LABEL']); ?>"/>
 					</p>
 					<?php
 					$_SESSION['service_tag'] = 'frm_doctype';
@@ -174,7 +174,7 @@ class types extends dbquery
 					</div>
 					<div class="block_end">&nbsp;</div>
 					<br/>
-					<?
+					<?php
 
 					$core_tools->execute_modules_services($_SESSION['modules_services'], 'doctype_up', "include");
 					$_SESSION['service_tag'] = '';
@@ -182,21 +182,21 @@ class types extends dbquery
 
 	                <div id="opt_index"></div>
 					<p class="buttons">
-						<?
+						<?php
 						if($mode == "up")
 						{
 							?>
-							<input class="button" type="submit" name="Submit" value="<? echo _MODIFY_DOCTYPE; ?>"/>
-							<?
+							<input class="button" type="submit" name="Submit" value="<?php echo _MODIFY_DOCTYPE; ?>"/>
+							<?php
 						}
 						elseif($mode == "add")
 						{
 							?>
-							<input type="submit" class="button"  name="Submit" value="<? echo _ADD_DOCTYPE; ?>" />
-							<?
+							<input type="submit" class="button"  name="Submit" value="<?php echo _ADD_DOCTYPE; ?>" />
+							<?php
 						}
 						?>
-						 <input type="button" class="button"  name="cancel" value="<?php echo _CANCEL; ?>" onclick="javascript:window.location.href='<? echo $_SESSION['config']['businessappurl'];?>index.php?page=types';"/>
+						 <input type="button" class="button"  name="cancel" value="<?php echo _CANCEL; ?>" onclick="javascript:window.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=types';"/>
 					</p>
                 </form>
                 </div>
@@ -219,11 +219,11 @@ class types extends dbquery
 						}
 					}
 				</script>
-			<?
+			<?php
 			}
 			?>
 		</div>
-	<?
+	<?php
 	}
 
 	/**
@@ -309,22 +309,22 @@ class types extends dbquery
 			{
 				if(!empty($_SESSION['m_admin']['doctypes']['TYPE_ID']))
 				{
-				?><script language="javascript" type="text/javascript">window.top.location.href='<? echo $_SESSION['config']['businessappurl']."index.php?page=types_up&id=".$_SESSION['m_admin']['doctypes']['TYPE_ID'];?>';</script>
-                <?
+				?><script language="javascript" type="text/javascript">window.top.location.href='<?php echo $_SESSION['config']['businessappurl']."index.php?page=types_up&id=".$_SESSION['m_admin']['doctypes']['TYPE_ID'];?>';</script>
+                <?php
 					exit();
 				}
 				else
 				{
 				?>
-               	 <script language="javascript" type="text/javascript">window.top.location.href='<? echo $_SESSION['config']['businessappurl']."index.php?page=types&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what;?>';</script>
-                <?
+               	 <script language="javascript" type="text/javascript">window.top.location.href='<?php echo $_SESSION['config']['businessappurl']."index.php?page=types&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what;?>';</script>
+                <?php
 					exit();
 				}
 			}
 			elseif($_REQUEST['mode'] == "add" )
 			{
-			?> <script language="javascript" type="text/javascript">window.top.location.href='<? echo $_SESSION['config']['businessappurl']."index.php?page=types_add";?>';</script>
-                <?
+			?> <script language="javascript" type="text/javascript">window.top.location.href='<?php echo $_SESSION['config']['businessappurl']."index.php?page=types_add";?>';</script>
+                <?php
 				exit();
 			}
 		}
@@ -367,8 +367,8 @@ class types extends dbquery
 
 				$this->cleartypeinfos();
 				?>
-				<script language="javascript" type="text/javascript">window.top.location.href='<? echo $_SESSION['config']['businessappurl']."index.php?page=types&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what;?>';</script>
-                <?
+				<script language="javascript" type="text/javascript">window.top.location.href='<?php echo $_SESSION['config']['businessappurl']."index.php?page=types&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what;?>';</script>
+                <?php
 				exit();
 			}
 			else
@@ -410,8 +410,8 @@ class types extends dbquery
 				}
 				$this->cleartypeinfos();
 				//header("location: ".$url);
-				?> <script language="javascript" type="text/javascript">window.top.location.href='<? echo $_SESSION['config']['businessappurl']."index.php?page=types&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what;?>';</script>
-                <?
+				?> <script language="javascript" type="text/javascript">window.top.location.href='<?php echo $_SESSION['config']['businessappurl']."index.php?page=types&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what;?>';</script>
+                <?php
 				exit();
 			}
 		}
