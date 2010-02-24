@@ -23,6 +23,7 @@
 		<tmppath>c:\xampp\htdocs\maarch_entreprise\apps\maarch_entreprise\tmp\</tmppath>
 		<CookieTime>60</CookieTime><!-- minutes -->
 		<ldap>false</ldap>
+		<userdefaultpassword>maarch</userdefaultpassword><!-- default user's password -->
 	</CONFIG>
 	<TABLENAME>
 		<doctypes_first_level>doctypes_first_level</doctypes_first_level>

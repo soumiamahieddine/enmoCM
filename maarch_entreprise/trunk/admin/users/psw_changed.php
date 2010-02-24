@@ -33,7 +33,9 @@ $core_tools->load_lang();
 
 $db = new dbquery();
 $db->connect();
-$db->query("UPDATE ".$_SESSION['tablename']['users']." set password = '".md5("maarch")."' , change_password ='Y' where user_id = '".$_SESSION['m_admin']['users']['UserId']."'");
+$default_password = md5($_SESSION['config']['userdefaultpassword']);
+
+$db->query("UPDATE ".$_SESSION['tablename']['users']." set password = '".$default_password."' , change_password ='Y' where user_id = '".$_SESSION['m_admin']['users']['UserId']."'");
 if($_SESSION['history']['usersadd'] == "true")
 {
 	require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
@@ -54,8 +56,7 @@ $time = $core_tools->get_session_time_expire();
 
 <p ><?php  echo _PASSWORD_FOR_USER;?> <b><?php  echo $_SESSION['m_admin']['users']['UserId'] ; ?></b> <?php  echo _HAS_BEEN_RESET;?>.
 </p>
-<p >
-<?php  echo _NEW_PASW_IS;?> 'maarch'. </p>
+<p><?php  echo _NEW_PASW_IS." '".$_SESSION['config']['userdefaultpassword']."'";?></p>
 <p >
 <?php  echo _DURING_NEXT_CONNEXION;?>, <?php  echo $_SESSION['m_admin']['users']['UserId'] ; ?> <?php  echo _MUST_CHANGE_PSW;?>.
 </p>
