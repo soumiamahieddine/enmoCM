@@ -15,7 +15,6 @@ class admin_templates extends dbquery
 		$_SESSION['m_admin']['template']['DATE'] = "";
 		$_SESSION['m_admin']['template']['CONTENT'] = "";
 		$_SESSION['m_admin']['template']['ENTITIES'] = array();
-
 	}
 
 	/**
@@ -28,14 +27,11 @@ class admin_templates extends dbquery
 	{
 		$core = new core_tools();
 		$func = new functions();
-
 		$state = true;
-
 		if(!isset($_SESSION['m_admin']['template']))
 		{
 			$this->cleartemplateinfos();
 		}
-
 		if( $mode <> "add")
 		{
 			$this->connect();
@@ -80,9 +76,9 @@ class admin_templates extends dbquery
 			<?php
 			if($state == false)
 			{
-			?>
-            	<script language="javascript" type="text/javascript">window.document.location.href='<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=templates&module=templates';</script>
-            <?php
+				?>
+					<script language="javascript" type="text/javascript">window.document.location.href='<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=templates&module=templates';</script>
+				<?php
 			}
 			else
 			{
@@ -95,7 +91,7 @@ class admin_templates extends dbquery
 					<input type="hidden" name="order_field" id="order_field" value="<?php echo $_REQUEST['order_field'];?>" />
 					<input type="hidden" name="what" id="what" value="<?php echo $_REQUEST['what'];?>" />
 					<input type="hidden" name="start" id="start" value="<?php echo $_REQUEST['start'];?>" />
-				<input type="hidden" name="mode" id="mode" value="<?php  echo $mode;?>" />
+					<input type="hidden" name="mode" id="mode" value="<?php  echo $mode;?>" />
 						<?php  if($mode == "up")
 						{
 						?>
@@ -123,7 +119,7 @@ class admin_templates extends dbquery
                        		<input type="button" onclick="javascript:window.location.href='<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=templates&module=templates';" class="button"  name="cancel" value="<?php  echo _CANCEL; ?>" />
 						</p>
 					</form >
-			<?php
+				<?php
 			}
 			?>
 		</div>
@@ -210,7 +206,6 @@ class admin_templates extends dbquery
 		{
 			$core = new core_tools();
 			$_SESSION['service_tag'] = 'load_template_db';
-
 			$this->connect();
 			if( $_REQUEST['mode'] <> "add")
 			{
@@ -228,7 +223,6 @@ class admin_templates extends dbquery
 						$users->add($_SESSION['tablename']['temp_templates'], $_SESSION['m_admin']['template']['ID'],"UP",_TEMPLATE_MODIFICATION." : ".$_SESSION['m_admin']['template']['LABEL'], $_SESSION['config']['databasetype'], 'templates');
 					}
 				}
-
 				$this->cleartemplateinfos();
 				header("location: ".$_SESSION['config']['businessappurl']."index.php?page=templates&module=templates&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what);
 				exit;
@@ -236,7 +230,6 @@ class admin_templates extends dbquery
 			else
 			{
 				$this->query("select label from ".$_SESSION['tablename']['temp_templates']." where label = '".$_SESSION['m_admin']['template']['LABEL']."'");
-
 				if($this->nb_result() > 0)
 				{
 					$_SESSION['error'] = _THE_TEMPLATE.' '.$_SESSION['m_admin']['template']['LABEL'].' '._ALREADY_EXISTS;
@@ -245,36 +238,38 @@ class admin_templates extends dbquery
 				}
 				else
 				{
-
 					$this->connect();
 					require("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
+					require("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
 					$users = new history();
-
-					 if( $_REQUEST['mode'] == "add")
-					 {
-						$this->query("INSERT INTO ".$_SESSION['tablename']['temp_templates']." ( label, creation_date, template_comment, content  ) VALUES ( '".$_SESSION['m_admin']['template']['LABEL']."', now(),'".$_SESSION['m_admin']['template']['COMMENT']."', '".$_SESSION['m_admin']['template']['CONTENT']."')");
-						$this->query("select id from ".$_SESSION['tablename']['temp_templates']." where label = '".$_SESSION['m_admin']['template']['LABEL']."' and template_comment = '".$_SESSION['m_admin']['template']['COMMENT']."' and content = '".$_SESSION['m_admin']['template']['CONTENT']."'");
+					$request = new request();
+					if( $_REQUEST['mode'] == "add")
+					{
+						$this->query("INSERT INTO ".$_SESSION['tablename']['temp_templates']." (label, creation_date, template_comment, content) VALUES ('".$_SESSION['m_admin']['template']['LABEL']."', ".$request->current_datetime().",'".$_SESSION['m_admin']['template']['COMMENT']."', '".$_SESSION['m_admin']['template']['CONTENT']."')");
+						if($_SESSION['config']['databasetype'] == "POSTGRESQL")
+						{
+							$this->query("select id from ".$_SESSION['tablename']['temp_templates']." where label = '".$request->protect_string_db($_SESSION['m_admin']['template']['LABEL'])."' and template_comment = '".$request->protect_string_db($_SESSION['m_admin']['template']['COMMENT'])."' and content ilike '".$request->protect_string_db($_SESSION['m_admin']['template']['CONTENT'])."'");
+						}
+						else
+						{
+							$this->query("select id from ".$_SESSION['tablename']['temp_templates']." where label = '".$request->protect_string_db($_SESSION['m_admin']['template']['LABEL'])."' and template_comment = '".$request->protect_string_db($_SESSION['m_admin']['template']['COMMENT'])."' and content like '".$request->protect_string_db($_SESSION['m_admin']['template']['CONTENT'])."'");
+						}
 						$res = $this->fetch_object();
 						$_SESSION['m_admin']['template']['ID'] = $res->id;
-
 						if($_SESSION['history']['templateadd'] == "true")
 						{
 							$users->add($_SESSION['tablename']['temp_templates'], $_SESSION['m_admin']['template']['ID'],"ADD", _TEMPLATE_ADDED." : ".$_SESSION['m_admin']['template']['LABEL'], $_SESSION['config']['databasetype'], 'templates');
 						}
-					 }
-
+					}
 					echo $core->execute_modules_services($_SESSION['modules_services'], 'uptemplate', "include");
 					$_SESSION['error'] = _TEMPLATE_ADDED;
 				}
-
 				$_SESSION['error'] = "";
 			}
-
 			if ($_REQUEST['mode'] == "add")
 			{
 				$url = $_SESSION['config']['businessappurl']."index.php?page=templates&module=templates&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what;
 			}
-
 			$this->cleartemplateinfos();
 			header("location: ".$url);
 			exit();

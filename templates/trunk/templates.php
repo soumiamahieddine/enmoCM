@@ -14,7 +14,7 @@
 $_SESSION['m_admin'] = array();
 $admin = new core_tools();
 $admin->test_admin('admin_templates', 'templates');
- /****************Management of the location bar  ************/
+/****************Management of the location bar  ************/
 $init = false;
 if($_REQUEST['reinit'] == "true")
 {
@@ -30,22 +30,22 @@ $page_label = _TEMPLATES_LIST;
 $page_id = "templates";
 $admin->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
- require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
- require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
+require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");
 
- $func = new functions();
+$func = new functions();
 
 $select[$_SESSION['tablename']['temp_templates']] = array();
 array_push($select[$_SESSION['tablename']['temp_templates']],"id","label", 'template_comment' );
 $_SESSION['origin'] = 'templates';
 $what = "";
 $where ="";
-if(isset($_REQUEST['what']))
+if(isset($_REQUEST['what']) && !empty($_REQUEST['what']))
 {
 	$what = addslashes($func->wash($_REQUEST['what'], "alphanum", "", "no"));
 	if($_SESSION['config']['databasetype'] == "POSTGRESQL")
 	{
-		$where .= "  ( label ilike '".$func->protect_string_db($what,$_SESSION['config']['databasetype'])."%') ";
+		$where .= "  (label ilike '".$func->protect_string_db($what,$_SESSION['config']['databasetype'])."%') ";
 	}
 	else
 	{
@@ -70,52 +70,50 @@ $request= new request;
 $tab=$request->select($select,$where,$orderstr ,$_SESSION['config']['databasetype']);
 //$request->show_array($tab);
 for ($i=0;$i<count($tab);$i++)
+{
+	for ($j=0;$j<count($tab[$i]);$j++)
 	{
-		for ($j=0;$j<count($tab[$i]);$j++)
+		foreach(array_keys($tab[$i][$j]) as $value)
 		{
-			foreach(array_keys($tab[$i][$j]) as $value)
+
+			if($tab[$i][$j][$value]=="id")
 			{
-
-				if($tab[$i][$j][$value]=="id")
-				{
-					$tab[$i][$j]["id"]=$tab[$i][$j]['value'];
-					$tab[$i][$j]["label"]= _ID;
-					$tab[$i][$j]["size"]="20";
-					$tab[$i][$j]["label_align"]="left";
-					$tab[$i][$j]["align"]="left";
-					$tab[$i][$j]["valign"]="bottom";
-					$tab[$i][$j]["show"]=true;
-					$tab[$i][$j]["order"]='id';
-
-				}
-				if($tab[$i][$j][$value]=="label")
-				{
-					$tab[$i][$j]["value"]=$request->show_string($tab[$i][$j]['value']);
-					$tab[$i][$j]["label"]=$tab[$i][$j]['value'];
-					$tab[$i][$j]["label"]=_NAME;
-					$tab[$i][$j]["size"]="20";
-					$tab[$i][$j]["label_align"]="left";
-					$tab[$i][$j]["align"]="left";
-					$tab[$i][$j]["valign"]="bottom";
-					$tab[$i][$j]["show"]=true;
-					$tab[$i][$j]["order"]='label';
-				}
-				if($tab[$i][$j][$value]=="template_comment")
-				{
-					$tab[$i][$j]["value"]=$request->show_string($tab[$i][$j]['value']);
-					$tab[$i][$j]["label"]=$tab[$i][$j]['value'];
-					$tab[$i][$j]["label"]=_DESC;
-					$tab[$i][$j]["size"]="45";
-					$tab[$i][$j]["label_align"]="left";
-					$tab[$i][$j]["align"]="left";
-					$tab[$i][$j]["valign"]="bottom";
-					$tab[$i][$j]["show"]=true;
-					$tab[$i][$j]["order"]='template_comment';
-				}
+				$tab[$i][$j]["id"]=$tab[$i][$j]['value'];
+				$tab[$i][$j]["label"]= _ID;
+				$tab[$i][$j]["size"]="20";
+				$tab[$i][$j]["label_align"]="left";
+				$tab[$i][$j]["align"]="left";
+				$tab[$i][$j]["valign"]="bottom";
+				$tab[$i][$j]["show"]=true;
+				$tab[$i][$j]["order"]='id';
+			}
+			if($tab[$i][$j][$value]=="label")
+			{
+				$tab[$i][$j]["value"]=$request->show_string($tab[$i][$j]['value']);
+				$tab[$i][$j]["label"]=$tab[$i][$j]['value'];
+				$tab[$i][$j]["label"]=_NAME;
+				$tab[$i][$j]["size"]="20";
+				$tab[$i][$j]["label_align"]="left";
+				$tab[$i][$j]["align"]="left";
+				$tab[$i][$j]["valign"]="bottom";
+				$tab[$i][$j]["show"]=true;
+				$tab[$i][$j]["order"]='label';
+			}
+			if($tab[$i][$j][$value]=="template_comment")
+			{
+				$tab[$i][$j]["value"]=$request->show_string($tab[$i][$j]['value']);
+				$tab[$i][$j]["label"]=$tab[$i][$j]['value'];
+				$tab[$i][$j]["label"]=_DESC;
+				$tab[$i][$j]["size"]="45";
+				$tab[$i][$j]["label_align"]="left";
+				$tab[$i][$j]["align"]="left";
+				$tab[$i][$j]["valign"]="bottom";
+				$tab[$i][$j]["show"]=true;
+				$tab[$i][$j]["order"]='template_comment';
 			}
 		}
 	}
-
+}
 
 $page_name = "templates";
 $page_name_up = "template_up";
