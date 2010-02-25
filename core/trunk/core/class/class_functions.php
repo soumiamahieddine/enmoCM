@@ -638,12 +638,24 @@ class functions
 			$ar_test = explode(" ",$date);
 			$date = $ar_test[0];
 			$time = $ar_test[1];
-			if(preg_match('/\./',$time))
+			if(preg_match('/\./',$time)) // POSTGRES date
 			{
 				$tmp = explode('.', $time);
 				$time = $tmp[0];
 			}
-			$ar_date = explode("-",$date);
+			else if(preg_match('/,/',$time)) // ORACLE date
+			{
+				$tmp = explode(',', $time);
+				$time = $tmp[0];
+			}
+			if(preg_match('/-/',$date))
+			{
+				$ar_date = explode("-",$date);
+			}
+			elseif(preg_match('@\/@',$date))
+			{
+				$ar_date = explode("/",$date);
+			}
 			if(substr($ar_test[1],0,2) == "00")
 			{
 				return $ar_date[2].$sep.$ar_date[1].$sep.$ar_date[0];
@@ -849,19 +861,25 @@ class functions
 		if ($date <> "" )
 		{
 			$var=explode("-",$date) ;
+			
+			if(preg_match('/\s/', $var[2]))
+			{
+				$tmp = explode(' ', $var[2]);
+				$var[2]= $tmp[0];
+			}
 			if(preg_match('/^[0-3][0-9]$/', $var[0]))
 			{
-				$jour = $var[0];
-				$mois= $var[1];
-				$annee =  $var[2];
+				$day = $var[0];
+				$month= $var[1];
+				$year =  $var[2];
 			}
 			else
 			{
-				$annee = $var[0];
-				$mois= $var[1];
-				$jour =  substr($var[2], 0,2);
+				$year = $var[0];
+				$month= $var[1];
+				$day =  substr($var[2], 0,2);
 			}
-			if ($annee <= "1900")
+			if ($year <= "1900")
 			{
 				return '';
 			}
@@ -869,31 +887,31 @@ class functions
 			{
 				if($_SESSION['config']['databasetype'] == "SQLSERVER")
 				{
-					return  $jour."-".$mois."-".$annee;
+					return  $day."-".$month."-".$year;
 				}
 				elseif($_SESSION['config']['databasetype'] == "POSTGRESQL")
 				{
 					if($_SESSION['config']['lang'] == "fr")
 					{
-						return $jour."-".$mois."-".$annee;
+						return $day."-".$month."-".$year;
 					}
 					else
 					{
-						return $annee."-".$mois."-".$jour;
+						return $year."-".$month."-".$day;
 					}
 				}
 				elseif($_SESSION['config']['databasetype'] == "ORACLE")
 				{
 
-					return  $jour."-".$mois."-".$annee;
+					return  $day."-".$month."-".$year;
 				}
 				elseif($_SESSION['config']['databasetype'] == "MYSQL" && $insert)
 				{
-					return $annee."-".$mois."-".$jour;
+					return $year."-".$month."-".$day;
 				}
 				elseif($_SESSION['config']['databasetype'] == "MYSQL" && !$insert)
 				{
-					return  $jour."-".$mois."-".$annee;
+					return  $day."-".$month."-".$year;
 				}
 			}
 		}

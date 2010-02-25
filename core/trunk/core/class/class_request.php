@@ -157,8 +157,12 @@ class request extends dbquery
 			$query = "SELECT ".$dist.$field_string." FROM ".$table_string.' '.$join.' '.$where_string." ".$orcl_limit." ".$other." ";
 		}
 		$this->connect();
-		$this->query($query, $catch_error);
-
+		
+		$res_query = $this->query($query, $catch_error);
+		if($catch_error && !$res_query)
+		{
+			return false;
+		}
 		$result=array();
 		while($line = $this->fetch_array())
 		{
@@ -178,6 +182,10 @@ class request extends dbquery
             	}
             }
 			array_push($result,$temp);
+		}
+		if(count($result) == 0 && $catch_error)
+		{
+			return true;
 		}
 		return $result;
 	}
@@ -242,7 +250,14 @@ class request extends dbquery
 				}
 				else
 				{
-					$update_string .= $data[$i]['column']."='".$data[$i]['value']."',";
+					if(trim(strtoupper($data[$i]['value'])) == "SYSDATE")
+					{
+						$update_string .= $data[$i]['column']."=sysdate,";
+					}
+					else
+					{
+						$update_string .= $data[$i]['column']."='".$data[$i]['value']."',";
+					}
 				}
 			}
 			else
@@ -261,9 +276,10 @@ class request extends dbquery
 		}
 		//Time to create the SQL Query
 		$query = "";
-		$query = "UPDATE ".$table." SET ".$update_string.$where_string ;
+		$query = "UPDATE ".$table." SET ".$update_string.$where_string;
+		//echo $query;
 		$this->connect();
-		$this->query($query);
+		return $this->query($query, true);
 	}
 
 	/**
@@ -284,7 +300,7 @@ class request extends dbquery
 		}
 		elseif($_SESSION['config']['databasetype'] == "ORACLE")
 		{
-			return ' current_date ';
+			return ' sysdate ';
 		}
 	}
 
@@ -356,8 +372,23 @@ class request extends dbquery
 		}
 		elseif($_SESSION['config']['databasetype'] == "ORACLE")
 		{
-			// TO DO
-			return $date_field;
+			switch($arg)
+			{
+				case 'year' :
+					return " to_char(".$date_field.", 'YYYY')";
+				case 'month' :
+					return " to_char(".$date_field.", 'MM')";
+				case 'day' :
+					return " to_char(".$date_field.", 'DD')";
+				case 'hour' :
+					return " to_char(".$date_field.", 'HH24')";
+				case 'minute' :
+					return " to_char(".$date_field.", 'MI')";
+				case 'second' :
+					return " to_char(".$date_field.", 'SS')";
+				default	 :
+					return " to_char(".$date_field.", 'DD/MM/YYYY')";
+			}
 		}
 	}
 
@@ -373,7 +404,7 @@ class request extends dbquery
 		}
 		elseif($_SESSION['config']['databasetype'] == "ORACLE")
 		{
-				// TO DO
+			return $this->extract_date($date1).' - '.$this->extract_date($date2);
 			return '';
 		}
 		else if($_SESSION['config']['databasetype'] == "SQLSERVER")

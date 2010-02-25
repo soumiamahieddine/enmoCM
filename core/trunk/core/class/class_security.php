@@ -108,7 +108,7 @@ class security extends dbquery
 			$_SESSION['m_admin']['groups']['services']=array();
 			while($value = $this->fetch_object())
 			{
-				array_push($_SESSION['m_admin']['groups']['services'],$value->service_id);
+				array_push($_SESSION['m_admin']['groups']['services'],trim($value->service_id));
 			}
 		}
 		$_SESSION['m_admin']['load_services'] = false;
@@ -280,8 +280,8 @@ class security extends dbquery
 				}
 				$where = str_replace("where", " ", $where);
 				$tabResult = $request->select($selectWhereTest, $where, "", $_SESSION['config']['databasetype'], 10, false, "", "", "", true, true);
-				//$this->query("SELECT count(*) from ".$_SESSION['collections'][$ind]['view']." ".$where, true);
-				if(!$request->query  && $_SESSION['config']['databasetype'] <> "ORACLE")
+				
+				if(!$tabResult )
 				{
 					$_SESSION['error'] .= " ".$_SESSION['m_admin']['groups']['security'][$i]['COLL_ID'];
 					$res2 = false;
@@ -369,69 +369,73 @@ class security extends dbquery
 
 		if($user_id == "superadmin")
 		{
-			$this->query("select s.group_id, s.coll_id, s.where_clause , s.can_insert, s.can_update, s.can_delete  from ".$_SESSION['tablename']['security']." s, ".$_SESSION['tablename']['usergroups']." u where  u.group_id = s.group_id and u.enabled = 'Y'");
+			for($i=0; $i<count($_SESSION['collections']);$i++)
+			{
+				array_push($tab['security'], array('coll_id' => $_SESSION['collections'][$i]['id'], 'table'  => $_SESSION['collections'][$i]['table'], 'label_coll'  => $_SESSION['collections'][$i]['label'],'view'  => $_SESSION['collections'][$i]['view'], 'where' =>" (1=1) ", 'can_insert' => 'Y', 'can_update' => 'Y', 'can_delete' => 'Y' ));
+				array_push($tab['collections'], $_SESSION['collections'][$i]['id']);
+			}
 		}
 		else
 		{
 			$this->query("select s.group_id, s.coll_id, s.where_clause , s.can_insert, s.can_update,s.can_delete  from ".$_SESSION['tablename']['security']." s, ".$_SESSION['tablename']['usergroup_content']." ugc , ".$_SESSION['tablename']['usergroups']." u where ugc.user_id='".$user_id."' and ugc.group_id = s.group_id and ugc.group_id = u.group_id and u.enabled = 'Y'");
-		}
-		$i =0;
-		$can_index = false;
-		$can_postindex = false;
-		while($line = $this->fetch_object())
-		{
-			$where_clause = $line->where_clause;
-			$where_clause = $this->process_security_where_clause($where_clause, $user_id);
-			$where_clause = str_replace('where', '', $where_clause);
-			if( ! in_array($line->coll_id, $tab['collections'] ) )
+			
+			$i =0;
+			$can_index = false;
+			$can_postindex = false;
+			while($line = $this->fetch_object())
 			{
-				$tab['security'][$i]['coll_id'] = $line->coll_id;
-				$ind = $this->get_ind_collection($line->coll_id);
-				$tab['security'][$i]['table'] = $_SESSION['collections'][$ind]['table'];
-				$tab['security'][$i]['label_coll'] = $_SESSION['collections'][$ind]['label'];
-				$tab['security'][$i]['view'] =  $_SESSION['collections'][$ind]['view'];
-				if(trim($where_clause) <> "" && $where_clause <> " "  )
+				$where_clause = $line->where_clause;
+				$where_clause = $this->process_security_where_clause($where_clause, $user_id);
+				$where_clause = str_replace('where', '', $where_clause);
+				if( ! in_array($line->coll_id, $tab['collections'] ) )
 				{
-					$where =  "( ".$this->show_string($where_clause)." )";
+					$tab['security'][$i]['coll_id'] = $line->coll_id;
+					$ind = $this->get_ind_collection($line->coll_id);
+					$tab['security'][$i]['table'] = $_SESSION['collections'][$ind]['table'];
+					$tab['security'][$i]['label_coll'] = $_SESSION['collections'][$ind]['label'];
+					$tab['security'][$i]['view'] =  $_SESSION['collections'][$ind]['view'];
+					if(trim($where_clause) <> "" && $where_clause <> " "  )
+					{
+						$where =  "( ".$this->show_string($where_clause)." )";
+					}
+					else
+					{
+						$where = "( 1=1 )";
+					}
+					$tab['security'][$i]['where'] = $where;
+					$tab['security'][$i]['can_insert'] = $line->can_insert;
+					$tab['security'][$i]['can_update'] = $line->can_update;
+					$tab['security'][$i]['can_delete'] = $line->can_delete;
+					array_push($tab['collections'] , $line->coll_id);
+					$i++;
 				}
 				else
 				{
-					$where = "( 1=1 )";
-				}
-				$tab['security'][$i]['where'] = $where;
-				$tab['security'][$i]['can_insert'] = $line->can_insert;
-				$tab['security'][$i]['can_update'] = $line->can_update;
-				$tab['security'][$i]['can_delete'] = $line->can_delete;
-				array_push($tab['collections'] , $line->coll_id);
-				$i++;
-			}
-			else
-			{
-				$key = array_search($line->coll_id, $tab['collections'] );
-				if(trim($where_clause) == "")
-				{
-					$where = "( 1=1 )";
-				}
-				else
-				{
-					$where =  "( ".$this->show_string($where_clause)." )";
-				}
-				$tab['security'][$key]['where'] .= " or ".$where;
-				if($line->can_insert == 'Y')
-				{
-					$tab['security'][$key]['can_insert'] = $line->can_insert;
-				}
-				if($line->can_update == 'Y')
-				{
-					$tab['security'][$key]['can_update'] = $line->can_update;
-				}
-				if($line->can_delete == 'Y')
-				{
-					$tab['security'][$key]['can_delete'] = $line->can_update;
+					$key = array_search($line->coll_id, $tab['collections'] );
+					if(trim($where_clause) == "")
+					{
+						$where = "( 1=1 )";
+					}
+					else
+					{
+						$where =  "( ".$this->show_string($where_clause)." )";
+					}
+					$tab['security'][$key]['where'] .= " or ".$where;
+					if($line->can_insert == 'Y')
+					{
+						$tab['security'][$key]['can_insert'] = $line->can_insert;
+					}
+					if($line->can_update == 'Y')
+					{
+						$tab['security'][$key]['can_update'] = $line->can_update;
+					}
+					if($line->can_delete == 'Y')
+					{
+						$tab['security'][$key]['can_delete'] = $line->can_update;
+					}
 				}
 			}
 		}
-		
 		return $tab;
 	}
 

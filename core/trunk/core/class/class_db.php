@@ -239,9 +239,10 @@ class dbquery extends functions
 		}
 		elseif($this->databasetype == "ORACLE")
 		{
-			$this->sql_link = oci_connect($this->user, $this->pass, "//".$this->server."/".$this->base,'UTF8');
+			$this->sql_link = @oci_connect($this->user, $this->pass, "//".$this->server."/".$this->base,'UTF8');
+			// ALTER SESSIONS MUST BE MANAGED BY TRIGGERS DIRECTLY IN THE DB
 			//$this->sql_link = oci_connect($user, $pass, $this->base ,'UTF8');
-			$this->query("alter session set nls_date_format='dd-mm-yyyy'");
+			//$this->query("alter session set nls_date_format='dd-mm-yyyy'");
 		}
 		else
 		{
@@ -302,10 +303,14 @@ class dbquery extends functions
 		}
 		elseif($this->databasetype == "ORACLE")
 		{
-			$this->statement = oci_parse($this->sql_link, $q_sql);
+			$this->statement = @oci_parse($this->sql_link, $q_sql);
 			if($this->statement == false)
 			{ 
-				$this->what_sql_error = 5;
+				if($catch_error)
+				{
+					return false;
+				}
+				$this->what_sql_error = 6;
 				$this->error();
 				exit();
 			}
@@ -313,11 +318,16 @@ class dbquery extends functions
 			{
 				if (!@oci_execute($this->statement))
 				{
-					$error = oci_error($this->statement);
-					print_r($error);
+					if($catch_error)
+					{
+						return false;
+					}
+					//$error = oci_error($this->statement);
+					$this->what_sql_error = 3;
+					$this->error();
+					//print_r($error);
 				}
-			}
-			
+			}		
 		}
 		else
 		{
@@ -363,8 +373,20 @@ class dbquery extends functions
 			{
 				foreach($myObject as $key => $value)
 				{
-					$key2 = strtolower($key);
-					$myLowerObject->$key2 = $myObject->$key;
+					if(oci_field_type($this->statement, $key) == 'CLOB')
+					{
+						$key2 = strtolower($key);
+						$MyBlob = $myObject->$key;		
+						if(isset($MyBlob))
+						{
+							$myLowerObject->$key2 = $MyBlob->read($MyBlob->size());
+						}
+					}
+					else
+					{
+						$key2 = strtolower($key);
+						$myLowerObject->$key2 = $myObject->$key;
+					}
 				}
 				return $myLowerObject;
 			}
@@ -402,8 +424,21 @@ class dbquery extends functions
 		{
 			$tmp_statement = array();
 			$tmp_statement = @oci_fetch_array($this->statement);
+		
 			if (is_array($tmp_statement))
 			{
+				//$this->show_array($tmp_statement);
+				foreach(array_keys($tmp_statement) as $key)
+				{
+					if(!is_numeric($key) && oci_field_type($this->statement, $key) == 'CLOB')
+					{
+						if(isset($tmp_statement[$key]))
+						{
+							$tmp = $tmp_statement[$key];
+							$tmp_statement[$key] = $tmp->read($tmp->size());
+						}
+					}
+				}
 				return array_change_key_case($tmp_statement ,CASE_LOWER);
 			}
 		}
@@ -537,11 +572,8 @@ class dbquery extends functions
 			if($_SESSION['config']['debug'] == 'true')
 			{
 				
-				echo " -<br /><br />"._DATABASE_SERVER." : ".$this->server."<br/>"._DB_PORT.' : '.$this->port."<br/>"._DB_TYPE." : ".$this->databasetype."<br/>"._DB_USER." : ".$this->user."<br/>"._PASSWORD." : ".$this->pass;
-				if($this->databasetype == "POSTGRESQL")
-				{
-					echo "<br/>"._DATABASE.' : '.$this->base;
-				}
+				echo " -<br /><br />"._DATABASE_SERVER." : ".$this->server."<br/>"._DB_PORT.' : '.$this->port."<br/>"._DB_TYPE." : ".$this->databasetype."<br/>"._DB_NAME.". : ".$this->base."<br/>"._DB_USER." : ".$this->user."<br/>"._PASSWORD." : ".$this->pass;
+				
 			}
 			exit();
 		}
@@ -579,7 +611,7 @@ class dbquery extends functions
 			elseif($this->databasetype == "ORACLE")
 			{
 				$res = @oci_error($this->statement);
-				echo  $res['message'];
+				echo $res['message'];
 			}
 			echo "<br/>"._QUERY." : <textarea cols=\"70\" rows=\"10\">".$this->debug_query."</textarea>";
 			exit();
@@ -596,6 +628,12 @@ class dbquery extends functions
 		if($this->what_sql_error == 5)
 		{
 			echo "- <b>"._DB_INIT_ERROR."</b> <br />";
+			exit();
+		}
+		// QUery Preparation error (ORACLE)
+		if($this->what_sql_error == 6)
+		{
+			echo "- <b>"._QUERY_PREP_ERROR."</b> <br />";
 			exit();
 		}
 	}

@@ -59,27 +59,36 @@ class manage_status extends dbquery
 			$img_name = $res->img_filename;
 			if(!empty($img_name))
 			{
-				$temp_explode = explode( ".", $img_name);
-				$temp_explode[0] = $temp_explode[0].$extension;
-				$img_name = implode(".", $temp_explode);
+				//For standard
+				//$temp_explode = explode( ".", $img_name);
+				//$temp_explode[0] = $temp_explode[0].$extension;
+				//$img_name = implode(".", $temp_explode);
+				
+				//For big
+				$big_temp_explode = explode( ".", $img_name);
+				$big_temp_explode[0] = $big_temp_explode[0]."_big";
+				$big_img_name = implode(".", $big_temp_explode);
 			}
 			if($maarch_module == 'apps' && isset($img_name) && !empty($img_name))
 			{
 				$img_path = $_SESSION['config']['businessappurl'].'static.php?filename='.$img_name;
+				$big_img_path = $_SESSION['config']['businessappurl'].'static.php?filename='.$big_img_name;
 			}
 			else if(!empty($maarch_module) && isset($maarch_module)&& isset($img_name) && !empty($img_name))
 			{
 				$img_path = $_SESSION['config']['businessappurl'].'static.php?filename='.$img_name."&module=".$maarch_module;
+				$big_img_path = $_SESSION['config']['businessappurl'].'static.php?filename='.$big_img_name."&module=".$maarch_module;
 			}
 			else
 			{
 				$img_path = $_SESSION['config']['businessappurl'].'static.php?filename=default_status'.$extension.'.gif';
+				$big_img_path = $_SESSION['config']['businessappurl'].'static.php?filename=default_status_big.gif';
 			}
 			if(empty($status_txt) || !isset($status_txt))
 			{
 				$status_txt = $id_status;
 			}
-			array_push($this->statusArr, array('ID' => $id_status, 'LABEL' => $status_txt, 'IMG_SRC' => $img_path));
+			array_push($this->statusArr, array('ID' => $id_status, 'LABEL' => $status_txt, 'IMG_SRC' => $img_path , 'IMG_SRC_BIG' => $big_img_path));
 		}
 	}
 	
@@ -90,7 +99,10 @@ class manage_status extends dbquery
 			if($id_status == $this->statusArr[$cptStatusArr]['ID'])
 			{
 				$status_txt = $this->statusArr[$cptStatusArr]['LABEL'];
-				$img_path = $this->statusArr[$cptStatusArr]['IMG_SRC'];
+				if ($extension == "_big")
+					$img_path = $this->statusArr[$cptStatusArr]['IMG_SRC_BIG'];
+				else
+					$img_path = $this->statusArr[$cptStatusArr]['IMG_SRC'];
 			}
 		}
 		return array('ID'=> $id_status, 'LABEL'=> $status_txt, 'IMG_SRC' => $img_path);
