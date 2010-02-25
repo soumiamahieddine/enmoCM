@@ -189,7 +189,7 @@ class diffusion_list extends dbquery
 			{
 				// If dest_user is set , deletes the dest_user (concat or not concat)
 				$this->query("delete from ".$params['table']." where coll_id = '".$this->protect_string_db(trim($params['coll_id']))."'  and listinstance_type = '".$this->protect_string_db(trim($list_type))."' and res_id = ".$params['res_id']." and item_mode = 'dest'");
-
+				
 				if($concat)
 				{
 					// Deletes the dest user if he is in copy to avoid duplicate entry
@@ -200,7 +200,7 @@ class diffusion_list extends dbquery
 			if(isset($diff_list['dest']['user_id']) && !empty($diff_list['dest']['user_id']))
 			{
 				$this->query("insert into ".$params['table']." (coll_id, res_id, listinstance_type,  sequence, item_id, item_type, item_mode, added_by_user, added_by_entity  ) values ('".$this->protect_string_db(trim($params['coll_id']))."', ".$params['res_id']." , '".$this->protect_string_db(trim($list_type))."', 0, '".$this->protect_string_db(trim($diff_list['dest']['user_id']))."', 'user_id' , 'dest', '".$this->protect_string_db(trim($creator_user))."', '".$this->protect_string_db(trim($creator_entity))."' )");
-			//	$this->show();
+				//$this->show();
 			}
 
 			$max_seq = 0;
@@ -220,7 +220,7 @@ class diffusion_list extends dbquery
 				if($concat)
 				{
 					$this->query("select res_id from ".$params['table']." where coll_id = '".$this->protect_string_db(trim($params['coll_id']))."' and res_id = ".$params['res_id']." and listinstance_type = '".$this->protect_string_db(trim($list_type))."'  and item_id = '".$this->protect_string_db(trim($diff_list['copy']['users'][$i]['user_id']))."' and item_type = 'user_id' and item_mode= 'cc'");
-				//	$this->show();
+					//$this->show();
 					if($this->nb_result() == 0)
 					{
 						$insert = true;
@@ -242,7 +242,7 @@ class diffusion_list extends dbquery
 			if($concat)
 			{
 				$this->query("select max(sequence) as max_seq from ".$params['table']." where coll_id = '".$this->protect_string_db(trim($params['coll_id']))."' and res_id = ".$params['res_id']." and listinstance_type = '".$this->protect_string_db(trim($list_type))."' and item_type = 'entity_id' and item_mode= 'cc'");
-			//	$this->show();
+				//$this->show();
 				$res = $this->fetch_object();
 				if($res->max_seq > -1)
 				{
@@ -255,7 +255,7 @@ class diffusion_list extends dbquery
 				if($concat)
 				{
 					$this->query("select res_id from ".$params['table']." where coll_id = '".$this->protect_string_db(trim($params['coll_id']))."' and res_id = ".$params['res_id']." and listinstance_type = '".$this->protect_string_db(trim($list_type))."'  and item_id = '".$this->protect_string_db(trim($diff_list['copy']['entities'][$i]['entity_id']))."' and item_type = 'entity_id' and item_mode= 'cc'");
-				//	$this->show();
+					//$this->show();
 					if($this->nb_result() == 0)
 					{
 						$insert = true;

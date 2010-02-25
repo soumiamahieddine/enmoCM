@@ -84,8 +84,10 @@ class entities extends dbquery
 		{
 			$_SESSION['entities_types'][] = array('id' =>  (string) $TYPE->id, 'label' =>  (string) $TYPE->label, 'level'=>  (string) $TYPE->typelevel);
 		}
-
-		$this->load_redirect_groupbasket_session();
+		$_SESSION['user']['redirect_groupbasket'] = array();
+		$arr1 = $this->load_redirect_groupbasket_session($_SESSION['user']['primarygroup'], $_SESSION['user']['UserId']);
+		$arr2 = $this->load_redirect_groupbasket_session_for_abs($_SESSION['user']['UserId']);
+		$_SESSION['user']['redirect_groupbasket']  = array_merge($arr1, $arr2);
 	}
 
 	public function process_where_clause($where_clause, $user_id)
@@ -122,7 +124,14 @@ class entities extends dbquery
 
 			if($entities == '' && $user_id == 'superadmin')
 			{
-				$entities = "''";
+				if($_SESSION['config']['databasetype'] == "ORACLE" || $_SESSION['config']['databasetype'] == "SQLSERVER")
+				{
+					$entities = "''''";
+				}
+				else
+				{
+					$entities = "''";
+				}
 			}
 			$where = str_replace("@my_entities",$entities, $where);
 		}
@@ -155,7 +164,14 @@ class entities extends dbquery
 			}
 			if($prim_entity == '' && $user_id == 'superadmin')
 			{
-				$prim_entity = "''";
+				if($_SESSION['config']['databasetype'] == "ORACLE" || $_SESSION['config']['databasetype'] == "SQLSERVER")
+				{
+					$prim_entity = "''''";
+				}
+				else
+				{
+					$prim_entity = "''";
+				}
 			}
 			$where = str_replace("@my_primary_entity",$prim_entity, $where);
 		}
@@ -191,7 +207,14 @@ class entities extends dbquery
 				$entities = preg_replace("|, $|", '', $entities);
 				if($entities == '' && $user_id == 'superadmin')
 				{
-					$entities = "''";
+					if($_SESSION['config']['databasetype'] == "ORACLE" || $_SESSION['config']['databasetype'] == "SQLSERVER")
+					{
+						$entities = "''''";
+					}
+					else
+					{
+						$entities = "''";
+					}
 				}
 				$where = preg_replace("|@subentities\['[^\]]*'\]|",$entities, $where, 1);
 			}
@@ -228,7 +251,15 @@ class entities extends dbquery
 				$entities = preg_replace("|, $|", '', $entities);
 				if($entities == '' && $user_id == 'superadmin')
 				{
-					$entities = "''";
+					
+					if($_SESSION['config']['databasetype'] == "ORACLE" || $_SESSION['config']['databasetype'] == "SQLSERVER")
+					{
+						$entities = "''''";
+					}
+					else
+					{
+						$entities = "''";
+					}
 				}
 				$where = preg_replace("|@immediate_children\['[^\]]*'\]|",$entities, $where, 1);
 			}
@@ -250,7 +281,14 @@ class entities extends dbquery
 				$sisters = preg_replace("|, $|", '', $sisters);
 				if($sisters == '' && $user_id == 'superadmin')
 				{
-					$sisters = "''";
+					if($_SESSION['config']['databasetype'] == "ORACLE" || $_SESSION['config']['databasetype'] == "SQLSERVER")
+					{
+						$sisters = "''''";
+					}
+					else
+					{
+						$sisters = "''";
+					}
 				}
 				$where = preg_replace("|@sisters_entities\['[^\]]*'\]|",$sisters, $where, 1);
 			}
@@ -267,7 +305,14 @@ class entities extends dbquery
 				$entity = "'".$entity."'";
 				if($entity == '' && $user_id == 'superadmin')
 				{
-					$entity = "''";
+					if($_SESSION['config']['databasetype'] == "ORACLE" || $_SESSION['config']['databasetype'] == "SQLSERVER")
+					{
+						$entity = "''''";
+					}
+					else
+					{
+						$entity = "''";
+					}
 				}
 				$where = preg_replace("|@parent_entity\['[^\]]*'\]|",$entity, $where, 1);
 			}
@@ -405,11 +450,12 @@ class entities extends dbquery
 		return $arr;
 	}
 
-	public function load_redirect_groupbasket_session()
+	public function load_redirect_groupbasket_session($primary_group, $user_id)
 	{
-		$_SESSION['user']['redirect_groupbasket'] = array();
+		//$_SESSION['user']['redirect_groupbasket'] = array();
+		$arr = array();
 		$this->connect();
-		$this->query('select distinct basket_id from '.$_SESSION['tablename']['ent_groupbasket_redirect']." where group_id = '".$this->protect_string_db(trim($_SESSION['user']['primarygroup']))."'");
+		$this->query('select distinct basket_id from '.$_SESSION['tablename']['ent_groupbasket_redirect']." where group_id = '".$this->protect_string_db(trim($primary_group))."'");
 
 		$db = new dbquery();
 		$db->connect();
@@ -417,21 +463,63 @@ class entities extends dbquery
 		{
 			//echo "basket ".$res->basket_id.'<br/>';
 			$basket_id = $res->basket_id;
-			$_SESSION['user']['redirect_groupbasket'][$basket_id] = array();
+			$arr[$basket_id] = array();
 
-			$db->query("select distinct action_id from ".$_SESSION['tablename']['ent_groupbasket_redirect']." where group_id = '".$this->protect_string_db(trim($_SESSION['user']['primarygroup']))."' and basket_id = '".$this->protect_string_db(trim($basket_id))."'");
+			$db->query("select distinct action_id from ".$_SESSION['tablename']['ent_groupbasket_redirect']." where group_id = '".$this->protect_string_db(trim($primary_group))."' and basket_id = '".$this->protect_string_db(trim($basket_id))."'");
 			while($line = $db->fetch_object())
 			{
 				$action_id = $line->action_id;
-				$_SESSION['user']['redirect_groupbasket'][$basket_id][$action_id]['entities'] = '';
-				$_SESSION['user']['redirect_groupbasket'][$basket_id][$action_id]['users_entities'] = '';
-				$tmp_arr = $this->get_redirect_groupbasket($_SESSION['user']['primarygroup'], $basket_id, $_SESSION['user']['UserId'], $action_id);
-				$_SESSION['user']['redirect_groupbasket'][$basket_id][$action_id]['entities'] = $tmp_arr['entities'];
-				$_SESSION['user']['redirect_groupbasket'][$basket_id][$action_id]['users_entities'] = $tmp_arr['users'];
+				$arr[$basket_id][$action_id]['entities'] = '';
+				$arr[$basket_id][$action_id]['users_entities'] = '';
+				$tmp_arr = $this->get_redirect_groupbasket($primary_group, $basket_id, $user_id, $action_id);
+				$arr[$basket_id][$action_id]['entities'] = $tmp_arr['entities'];
+				$arr[$basket_id][$action_id]['users_entities'] = $tmp_arr['users'];
 			}
 		}
+		return $arr;
 	}
 
+	public function load_redirect_groupbasket_session_for_abs($user_id)
+	{
+		$arr = array();
+		$db = new dbquery();
+		$db->connect();
+		if(!isset($_SESSION['user']['baskets']))
+		{
+			require_once('modules/basket/class/class_modules_tools.php');
+			$bask = new basket();
+			$bask_abs = $bask->load_basket_abs($user_id);
+		}
+		else
+		{
+			$bask_abs = $_SESSION['user']['baskets'];
+		}
+		for($i=0; $i<count($bask_abs); $i++)
+		{
+			if($bask_abs[$i]['abs_basket'])
+			{
+				$db->query("select uc.group_id from ".$_SESSION['tablename']['usergroup_content']." uc , ".$_SESSION['tablename']['usergroups']." u where uc.user_id ='".$user_id."' and u.group_id = uc.group_id and u.enabled= 'Y' and uc.primary_group = 'Y'");
+				//$db->show();
+				$res = $db->fetch_object();
+				$primary_group = $res->group_id;
+				$tmp_basket_id = preg_replace('/_'.$bask_abs[$i]['basket_owner'].'$/', '', $bask_abs[$i]['id']);
+				$db->query("select distinct action_id from ".$_SESSION['tablename']['ent_groupbasket_redirect']." where group_id = '".$this->protect_string_db(trim($primary_group))."' and basket_id = '".$this->protect_string_db(trim($tmp_basket_id))."'");
+				//$db->show();
+				while($line = $db->fetch_object())
+				{
+					$action_id = $line->action_id;
+					$arr[$bask_abs[$i]['id']][$action_id]['entities'] = '';
+					$arr[$bask_abs[$i]['id']][$action_id]['users_entities'] = '';
+					$tmp_arr = $this->get_redirect_groupbasket($primary_group, $tmp_basket_id, $user_id, $action_id);
+					$arr[$bask_abs[$i]['id']][$action_id]['entities'] = $tmp_arr['entities'];
+					$arr[$bask_abs[$i]['id']][$action_id]['users_entities'] = $tmp_arr['users'];
+				}
+			}
+		}
+		return $arr;
+	}
+	
+	
 	public function get_redirect_groupbasket($group_id, $basket_id, $user_id, $action_id)
 	{
 		$arr = array();

@@ -153,6 +153,7 @@ $frm_height = '500px';
 					array_push($_SESSION['redirect']['diff_list']['copy']['users'] ,array('user_id' => $_SESSION['user']['UserId'], 'lastname' => $_SESSION['user']['LastName'], 'firstname' => $_SESSION['user']['FirstName'], 'entity_id' => $_SESSION['user']['primaryentity']['id']) );
 				}
 				$params = array('mode'=> 'listinstance', 'table' => $_SESSION['tablename']['ent_listinstance'], 'coll_id' => $coll_id, 'res_id' => $arr_id[$i], 'user_id' => $_SESSION['user']['UserId'], 'concat_list' => true);
+				//print_r($_SESSION['redirect']['diff_list']);exit();
 				$list->load_list_db($_SESSION['redirect']['diff_list'], $params);
 			}
 			$_SESSION['action_error'] = _REDIRECT_TO_DEP_OK;

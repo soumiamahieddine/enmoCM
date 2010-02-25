@@ -62,11 +62,11 @@ class entity extends dbquery
 		$entities = array();
 		if($_SESSION['user']['UserId'] == 'superadmin')
 		{
-			$entities = $this->getShortEntityTree($entities,'all', '', $except );
+			$entities = $this->getShortEntityTree($entities, 'all', '', $except );
 		}
 		else
 		{
-			$entities = $this->getShortEntityTree($entities,$_SESSION['user']['entities'],  '' , $except);
+			$entities = $this->getShortEntityTree($entities, $_SESSION['user']['entities'], '' , $except);
 		}
 		?>
 		<div id="inner_content" class="clearfix">
@@ -332,8 +332,15 @@ class entity extends dbquery
 	public function getEntityChildrenTree($entities, $parent = '', $tabspace = '', $except = array(), $where = '')
 	{
 		$this->connect();
-		$this->query('select entity_id, entity_label, short_label from '.$_SESSION['tablename']['ent_entities']." where enabled = 'Y' and parent_entity_id = '".$this->protect_string_db(trim($parent))."'".$where);
-
+		if($this->protect_string_db(trim($parent)) == "")
+		{
+			$this->query('select entity_id, entity_label, short_label from '.$_SESSION['tablename']['ent_entities']." where enabled = 'Y' and (parent_entity_id ='' or parent_entity_id is null) ".$where);
+		}
+		else
+		{
+			$this->query('select entity_id, entity_label, short_label from '.$_SESSION['tablename']['ent_entities']." where enabled = 'Y' and parent_entity_id = '".$this->protect_string_db(trim($parent))."'".$where);
+		}
+		//$this->show();
 		if($this->nb_result() > 0)
 		{
 			$espace = $tabspace.'&emsp;';
@@ -416,7 +423,7 @@ class entity extends dbquery
 		}
 		elseif($parent == 'all')
 		{
-			 $entities = $this->getEntityChildrenTree($entities,'',  $tabspace, $except, $where);
+			$entities = $this->getEntityChildrenTree($entities,'',  $tabspace, $except, $where);
 		}
 		return $entities;
 	}

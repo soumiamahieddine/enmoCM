@@ -37,8 +37,7 @@ unset($_SESSION['m_admin']);
 $_SESSION['tree_entities'] = array();
 //$db->query("select distinct foldertype_id, foldertype_label from ".$_SESSION['tablename']['fold_foldertypes']." order by foldertype_label");
 
-$db->query("select entity_id, entity_label from ".$_SESSION['tablename']['ent_entities']." where parent_entity_id = '' order by entity_label");
-
+$db->query("select entity_id, entity_label from ".$_SESSION['tablename']['ent_entities']." where parent_entity_id = '' or parent_entity_id is null order by entity_label");
 while($res = $db->fetch_object())
 {
 	array_push($_SESSION['tree_entities'], array("ID" => $res->entity_id, "LABEL" => $res->entity_label));
