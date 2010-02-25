@@ -149,6 +149,37 @@
 	 CONSTRAINT "FOLDERTYPES_DOCTYPES_LEVE_PK" PRIMARY KEY ("FOLDERTYPE_ID", "DOCTYPES_FIRST_LEVEL_ID") ENABLE
    ) ;
    
+   
+   
+
+CREATE TABLE FOLDERTYPES_INDEXES
+(
+  FOLDERTYPE_ID  NUMBER                         NOT NULL,
+  FIELD_NAME     VARCHAR2(255 BYTE)             NOT NULL,
+  MANDATORY      CHAR(1 BYTE)                   DEFAULT 'N'                  
+)
+PCTUSED    0
+PCTFREE    10
+INITRANS   1
+MAXTRANS   255
+STORAGE    (
+            INITIAL          64K
+            MINEXTENTS       1
+            MAXEXTENTS       2147483645
+            PCTINCREASE      0
+            BUFFER_POOL      DEFAULT
+           )
+LOGGING 
+NOCOMPRESS 
+NOCACHE
+NOPARALLEL
+MONITORING;
+
+ALTER TABLE FOLDERTYPES_INDEXES ADD (
+  CONSTRAINT FOLDERTYPES_INDEXES_PKEY
+ PRIMARY KEY
+ (FOLDERTYPE_ID, FIELD_NAME));
+
 --------------------------------------------------------
 --  SEQUENCES AND TRIGGERS
 --------------------------------------------------------   
