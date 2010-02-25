@@ -21,7 +21,7 @@ function show_helper($mode)
 
 
 	<h3><img src ="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_detail_b.gif" /> <? echo _HELP_KEYWORDS; ?></h3>
-	<? 
+	<?php
 
 		echo "<p align='right'>";
 			echo "<b><u>"._HELP_BY_CORE.":</u></b><br/><br/>";
@@ -70,6 +70,6 @@ $core_tools->load_html();
 $core_tools->load_header();
 echo '<div id="header">';
 show_helper($mode);
-echo '</div>';
+echo '</div></body></html>';
 
 

@@ -55,7 +55,7 @@ $select[$_SESSION['tablename']['status']] = array();
 array_push($select[$_SESSION['tablename']['status']],"id", "label_status","is_system","can_be_searched");
 $what = "";
 $where ="";
-if(isset($_REQUEST['what']))
+if(isset($_REQUEST['what']) && !empty($_REQUEST['what']))
 {
 	$what = $func->protect_string_db($_REQUEST['what']);
 	if($_SESSION['config']['databasetype'] == "POSTGRESQL")

@@ -374,7 +374,6 @@ function clear_search_form(id_form,id_list)
 	{
 		copie_false.checked = true;
 	}
-
 }
 
 /**

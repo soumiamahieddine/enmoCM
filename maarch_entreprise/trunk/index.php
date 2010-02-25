@@ -12,6 +12,7 @@
 * @author  Claire Figueras  <dev@maarch.org>
 * @author  Loïc Vinet <dev@maarch.org>
 */
+
 include_once('../../core/init.php');
 if(isset($_SESSION['config']['corepath']))
 {
@@ -46,6 +47,7 @@ else
 if(isset($_SESSION['user']['UserId']) && !empty($_SESSION['user']['UserId']) && $_GET['page'] <> 'login' && $_GET['page'] <> 'log' && $_GET['page'] <> 'logout')
 {
 	$db = new dbquery();
+	$db->connect();
 	$key = md5(time()."%".$_SESSION['user']['FirstName']."%".$_SESSION['user']['UserId']."%".$_SESSION['user']['UserId']."%".date("dmYHmi")."%");
 
 	if ($_SESSION['config']['databasetype'] == "ORACLE")

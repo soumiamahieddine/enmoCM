@@ -199,6 +199,7 @@ class usergroups extends dbquery
 								$label = $_SESSION['modules_loaded'][$value]['comment'];
 							}
 							//$this->show_array($enabled_services_sort_by_parent[$value]);
+							//$this->show_array($_SESSION['m_admin']['groups']['services']);
 							//echo $_SESSION['cpt']."<br>";
 
 							if(count($enabled_services_sort_by_parent[$value]) > 0)
@@ -224,7 +225,7 @@ class usergroups extends dbquery
 													<?php  echo $enabled_services_sort_by_parent[$value][$i]['label'];?> <?php  if(  $enabled_services_sort_by_parent[$value][$i]['type'] == "admin") {?>(<?php echo _ADMIN;?>) <?php  }elseif($enabled_services_sort_by_parent[$value][$i]['type'] == "menu"){?>(<?php echo _MENU;?>)<?php } ?>  :
 												</td>
 												<td width="50px" align="left">
-													<input type="checkbox"  class="check" name="services[]" value="<?php  echo $enabled_services_sort_by_parent[$value][$i]['id'];?>" <?php  if(in_array($enabled_services_sort_by_parent[$value][$i]['id'],$_SESSION['m_admin']['groups']['services']) || $mode == "add"){ echo 'checked="checked"';}?>  />
+													<input type="checkbox"  class="check" name="services[]" value="<?php  echo $enabled_services_sort_by_parent[$value][$i]['id'];?>" <?php  if(in_array(trim($enabled_services_sort_by_parent[$value][$i]['id']),$_SESSION['m_admin']['groups']['services']) || $mode == "add"){ echo 'checked="checked"';}?>  />
 												</td>
 											</tr>
 											<?php
@@ -311,7 +312,26 @@ class usergroups extends dbquery
 		$order_field = $_SESSION['m_admin']['groups']['order_field'];
 		$what = $_SESSION['m_admin']['groups']['what'];
 		$start = $_SESSION['m_admin']['groups']['start'];
-
+		if($_SESSION['m_admin']['groups']['admin'] == "");
+		{
+			$_SESSION['m_admin']['groups']['admin'] = "N";
+		}
+		if($_SESSION['m_admin']['groups']['stagiaire'] == "");
+		{
+			$_SESSION['m_admin']['groups']['stagiaire'] = "N";
+		}
+		if($_SESSION['m_admin']['groups']['view'] == "");
+		{
+			$_SESSION['m_admin']['groups']['view'] = "N";
+		}
+		if($_SESSION['m_admin']['groups']['stats'] == "");
+		{
+			$_SESSION['m_admin']['groups']['stats'] = "N";
+		}
+		if($_SESSION['m_admin']['groups']['del'] == "");
+		{
+			$_SESSION['m_admin']['groups']['del'] = "N";
+		}
 		if(!empty($_SESSION['error']))
 		{
 			if($mode == "up")

@@ -289,6 +289,7 @@ class types extends dbquery
 		$_SESSION['m_admin']['doctypes']['order_field'] = $_REQUEST['order_field'];
 		$_SESSION['m_admin']['doctypes']['what'] = $_REQUEST['what'];
 		$_SESSION['m_admin']['doctypes']['start'] = $_REQUEST['start'];
+		
 	}
 
 	/**
@@ -303,6 +304,7 @@ class types extends dbquery
 		$order_field = $_SESSION['m_admin']['doctypes']['order_field'];
 		$what = $_SESSION['m_admin']['doctypes']['what'];
 		$start = $_SESSION['m_admin']['doctypes']['start'];
+		
 		if(!empty($_SESSION['error']))
 		{
 			if($_REQUEST['mode'] == "up")
@@ -330,6 +332,7 @@ class types extends dbquery
 		}
 		else
 		{
+			
 			$this->connect();
 			if($_REQUEST['mode'] <> "prop" && $_REQUEST['mode'] <> "add")
 			{
@@ -382,7 +385,6 @@ class types extends dbquery
 					$this->query("insert into ".$_SESSION['tablename']['doctypes']." (coll_id, description, doctypes_first_level_id, doctypes_second_level_id,  enabled ".$_SESSION['m_admin']['doctypes']['custom_query_insert_colums'].") VALUES ('".$_SESSION['m_admin']['doctypes']['COLL_ID']."', '".$tmp."',".$_SESSION['m_admin']['doctypes']['STRUCTURE'].",".$_SESSION['m_admin']['doctypes']['SUB_FOLDER'].", 'Y' ".$_SESSION['m_admin']['doctypes']['custom_query_insert_values'].")");
 					//$this->show();
 
-					//exit();
 					$this->query("select type_id from ".$_SESSION['tablename']['doctypes']." where coll_id = '".$_SESSION['m_admin']['doctypes']['COLL_ID']."' and description = '".$tmp."' and doctypes_first_level_id = ".$_SESSION['m_admin']['doctypes']['STRUCTURE']." and doctypes_second_level_id = ".$_SESSION['m_admin']['doctypes']['SUB_FOLDER']);
 					//$this->show();
 					$res = $this->fetch_object();
@@ -972,6 +974,8 @@ class types extends dbquery
 			$this->query($query);
 		}
 	}
+	
+
 
 	/**
 	* Makes the search checks for a given index, and builds the where query and json

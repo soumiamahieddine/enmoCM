@@ -473,7 +473,7 @@ class list_show extends functions
 								$str .= '<img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=cadenas_rouge.png" alt="'._DOC_LOCKED.'" border="0"/>';
 							}
 						}
-
+						
 					}
 					$str .= ' </div>';
 					$str .= ' </td>';
@@ -1391,7 +1391,7 @@ class list_show extends functions
         <table border="0" cellspacing="0" class="<?php  echo $used_css;?>">
              <thead>
 				<tr>
-				<?php  
+					<?php  
 				if($bool_view_document)
                 {?>
 					<th width="3%">&nbsp;</th>
@@ -1426,13 +1426,13 @@ class list_show extends functions
 			}
 			?>
             <tr <?php  echo $color; ?>>
-            <?php
+               <?php
                  if($bool_view_document)
                  {
 					echo " <td ><a href='".$page_view."&id=".$result[$theline][0][$key]."' target=\"_blank\" title='"._VIEW_DOC."'>
                             <img src='".$_SESSION['config']['businessappurl']."static.php?filename=picto_dld.gif' alt='"._VIEW_DOC."' border='0'/></a></td>";
                  }
-
+                 
 				$bool_modify = false;
 				$bool_del = false;
                 for($count_column = 0;$count_column < count($listcolumn);$count_column++)

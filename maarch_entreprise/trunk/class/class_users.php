@@ -480,6 +480,7 @@ class users extends dbquery
 		{
 			$_SESSION['m_admin']['users']['UserId'] = $this->wash($_POST['UserId'], "no", _THE_ID, 'yes', 0, 32);
 			$_SESSION['m_admin']['users']['pass'] = md5($_SESSION['config']['userdefaultpassword']);
+
 		}
 
 		if($mode == "up")

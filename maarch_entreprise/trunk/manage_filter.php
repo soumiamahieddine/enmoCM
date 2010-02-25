@@ -68,6 +68,7 @@ if($_REQUEST['template'] <> 'group_case_for_basket')
 		$bask->query("select res_id from ".$table."  ".$orderstr);
 	}
 }	
+$tmp = array();
 while($res = $bask->fetch_object())
 {
 	$tmp = $bask->check_reserved_time($res->res_id, $_SESSION['current_basket']['coll_id']);
@@ -220,7 +221,9 @@ else
 {
 	$tab=$request->select($select, $where_concat, $orderstr, $_SESSION['config']['databasetype'], $_SESSION['config']['databasesearchlimit']);
 }
-//$request->show();$core_tools->show_array($_SESSION['auth_dep']);
+
+//$request->show();
+//$core_tools->show_array($tab);
 //Manage of template list
 //###################
 //Defines template allowed for this list
@@ -244,6 +247,8 @@ if($_REQUEST['template'])
 $extension_icon = '';
 if($template_to_use <> '')
 	$extension_icon = "_big";
+	
+	
 //###################
 //Specific View for group_case_template, we don' need to load the standard list_result_mlb
 //#########################

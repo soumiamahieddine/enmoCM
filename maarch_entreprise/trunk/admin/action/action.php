@@ -66,6 +66,7 @@ if(isset($_REQUEST['what']) && !empty($_REQUEST['what']))
 		$where .= " and (label_action like '".$func->protect_string_db($what,$_SESSION['config']['databasetype'])."%'   ) ";
 	}
 }
+
 $list = new list_show();
 $order = 'asc';
 if(isset($_REQUEST['order']) && !empty($_REQUEST['order']))
@@ -83,7 +84,7 @@ $orderstr = $list->define_order($order, $field);
 $request= new request;
 $tab=$request->select($select,$where,$orderstr,$_SESSION['config']['databasetype']);
 //$request->show();
-$del = array();
+//$del = array();
 for ($i=0;$i<count($tab);$i++)
 {
 	for ($j=0;$j<count($tab[$i]);$j++)
@@ -102,11 +103,13 @@ for ($i=0;$i<count($tab);$i++)
 					$tab[$i][$j]["valign"]="bottom";
 					$tab[$i][$j]["show"]=true;
 					$tab[$i][$j]["order"]='id';
+/*
 				if(!$load)
 				{
 					array_push($del, $i);
 				//unset($tab[$i]);
 				}
+*/
 			}
 			if($tab[$i][$j][$value]=="label_action")
 			{
@@ -146,10 +149,12 @@ for ($i=0;$i<count($tab);$i++)
 		}
 	}
 }
+/*
 for($i=0; $i<count($del);$i++)
 {
 	array_splice($tab, $del[$i], 1);
-}
+
+}*/
 //$request->show_array($tab);
 $page_name = "action";
 $page_name_up = "action_up";

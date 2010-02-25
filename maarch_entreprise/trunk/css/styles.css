@@ -3426,3 +3426,44 @@ td.picto, th.picto,  td.action {
 {
 	border-collapse: collapse;
 }
+/**
+Gestion du style de la legende (Ajout yck)
+**/
+a.legend
+{
+	text-decoration: none;
+	color: black;
+	/* font-size: 15px; */
+}
+a.legend span 
+{
+	display: none;
+	font-size: 10px; 
+	font-weight: normal;
+}
+a.legend:hover,a.legend:focus,a.legend:active
+{
+	background: none; /* correction d'un bug IE */
+}
+a.legend:hover span,a.legend:focus span,a.legend:active span 
+{
+	display: inline;
+	position: absolute;
+	z-index: 500;
+	margin:0.2em 0 0 0.1em;
+	background: #FBF7D4;
+	text-align: left;
+	color: gray;
+	padding: 2px;
+	width: 200px;
+	border: 1px solid #F4EAA2;
+}
+a.legend hr 
+{
+	height: 0.2em;
+	margin: 0.2em 0 0.2em 0;
+	padding: 0;
+	color: gray;
+	background-color: gray;
+	border: 0.2em gray;
+}

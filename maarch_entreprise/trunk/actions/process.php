@@ -108,6 +108,7 @@ function get_folder_data($coll_id, $res_id)
  **/
 function get_form_txt($values, $path_manage_action,  $id_action, $table, $module, $coll_id, $mode )
 {
+	//print_r($_SESSION['current_basket']);
 	if (preg_match("/MSIE 6.0/", $_SERVER["HTTP_USER_AGENT"]))
 	{
 		$browser_ie = true;
@@ -425,10 +426,10 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 			$select_notes[$_SESSION['tablename']['users']] = array();
 			array_push($select_notes[$_SESSION['tablename']['users']],"user_id","lastname","firstname");
 			$select_notes[$_SESSION['tablename']['not_notes']] = array();
-			array_push($select_notes[$_SESSION['tablename']['not_notes']],"id", "date", "note_text", "user_id");
+			array_push($select_notes[$_SESSION['tablename']['not_notes']],"id", "date_note", "note_text", "user_id");
 			$where_notes = " identifier = ".$res_id." ";
 			$request_notes = new request;
-			$tab_notes=$request_notes->select($select_notes,$where_notes,"order by ".$_SESSION['tablename']['not_notes'].".date desc",$_SESSION['config']['databasetype'], "500", true,$_SESSION['tablename']['not_notes'], $_SESSION['tablename']['users'], "user_id" );
+			$tab_notes=$request_notes->select($select_notes,$where_notes,"order by ".$_SESSION['tablename']['not_notes'].".date_note desc",$_SESSION['config']['databasetype'], "500", true,$_SESSION['tablename']['not_notes'], $_SESSION['tablename']['users'], "user_id" );
 			$frm_str .= '<h2 onclick="new Effect.toggle(\'notes_div\', \'blind\', {delay:0.2});return false;"  class="categorie" style="width:90%;">';
 			$frm_str .= '<img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=plus.png" alt="" />&nbsp;<b>'._NOTES." (".count($tab_notes).")".' :</b>';
 			$frm_str .= '<span class="lb1-details">&nbsp;</span>';
@@ -471,43 +472,43 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 									{
 										$frm_str .= 'checked="checked"';
 									}
-									$frm_str .= ' />'._DIRECT_CONTACT.'<br/>';
+									$frm_str .= ' onclick="unmark_empty_process(\'no_answer\');" />'._DIRECT_CONTACT.'<br/>';
 									$frm_str .= '<input type="checkbox"  class="check" name="fax" id="fax" value="true"';
 									if($process_data['fax'])
 									{
 										$frm_str .= 'checked="checked"';
 									}
-									$frm_str .=' />'._FAX.'<br/>';
+									$frm_str .=' onclick="unmark_empty_process(\'no_answer\');" />'._FAX.'<br/>';
 									$frm_str .= '<input type="checkbox"  class="check" name="email" id="email"  value="true"';
 									if($process_data['email'])
 									{
 										$frm_str .= 'checked="checked"';
 									}
-									$frm_str .=' />'._EMAIL.'<br/>';
+									$frm_str .='onclick="unmark_empty_process(\'no_answer\');" />'._EMAIL.'<br/>';
 									$frm_str .= '<input type="checkbox"  class="check" name="simple_mail" id="simple_mail"  value="true" ';
 									if($process_data['simple_mail'])
 									{
 										$frm_str .= 'checked="checked"';
 									}
-									$frm_str .= ' />'._SIMPLE_MAIL.'<br/>';
+									$frm_str .= 'onclick="unmark_empty_process(\'no_answer\');" />'._SIMPLE_MAIL.'<br/>';
 									$frm_str .= '<input type="checkbox"  class="check" name="registered_mail" id="registered_mail" value="true" ';
 									if($process_data['registered_mail'])
 									{
 										$frm_str .= 'checked="checked"';
 									}
-									$frm_str .='/>'._REGISTERED_MAIL.'<br/>';
+									$frm_str .='onclick="unmark_empty_process(\'no_answer\');" />'._REGISTERED_MAIL.'<br/>';
 									$frm_str .= '<input type="checkbox"  class="check" name="no_answer" id="no_answer" value="true"';
 									if($process_data['no_answer'])
 									{
 										$frm_str .= 'checked="checked"';
 									}
-									$frm_str .=' />'._NO_ANSWER.'<br/>';
+									$frm_str .='onclick="unmark_empty_process(\'no_answer\');" />'._NO_ANSWER.'<br/>';
 									$frm_str .= '<input type="checkbox"  class="check" name="other" id="other" value="true"';
 									if($process_data['other'])
 									{
 										$frm_str .= 'checked="checked"';
 									}
-									$frm_str .=' />'._OTHER.' : <input type="text" name="other_answer" id="other_answer" value="';
+									$frm_str .='onclick="unmark_empty_process(\'no_answer\');" />'._OTHER.' : <input type="text" name="other_answer" id="other_answer" value="';
 									if(!empty($process_data['other_answer_desc']))
 									{
 										$frm_str .= $process_data['other_answer_desc'];
@@ -591,6 +592,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 		$frm_str .='$(\'entity\').style.visibility=\'hidden\';';
 		$frm_str .='$(\'category\').style.visibility=\'hidden\';';
 		$frm_str .='$(\'baskets\').style.visibility=\'hidden\';</script>';
+		
+		
 	//}
 	return addslashes($frm_str);
 }

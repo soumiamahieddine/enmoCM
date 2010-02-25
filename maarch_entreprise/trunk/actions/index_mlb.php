@@ -148,12 +148,16 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 					$frm_str .= '<input type="hidden" name="req" id="req" value="second_request" />';
 
 			$frm_str .= '<div  style="display:block">';
-			if($_SESSION['FILE']['extension'] == "")
+			if (!isset($_SESSION['scan']['config']['scan_from_webtwain']) || $_SESSION['scan']['config']['scan_from_webtwain'] <> 'true') //Ajout yck
 			{
-			 $frm_str .= '<div  style="display:block" id="choose_file_div">';
+				if($_SESSION['FILE']['extension'] == "")
+				{
+					$frm_str .= '<div  style="display:block" id="choose_file_div">';
 					$frm_str .= '<iframe src="'.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=choose_file" name="choose_file" id="choose_file" frameborder="0" scrolling="no" width="100%" height="40"></iframe>';
-                 $frm_str .= '</div>';
+					$frm_str .= '</div>';
+				}
 			}
+			
 			if($core_tools->test_service('index_attachment', 'attachments', false))
 			{
 				$frm_str .= '<table width="100%" align="center" border="0" >';
@@ -630,7 +634,15 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 			$frm_str .= '</div><br/>';
 		$frm_str .= '</div>';
 		$frm_str .= '<script type="text/javascript">show_admin_contacts( true);</script>';
-		$frm_str .= '<iframe src="'.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=file_iframe" name="file_iframe" id="file_iframe" scrolling="auto" frameborder="0" ></iframe>';
+		
+		if (!isset($_SESSION['scan']['config']['scan_from_webtwain']) || $_SESSION['scan']['config']['scan_from_webtwain'] <> 'true') //Ajout yck
+		{
+			$frm_str .= '<iframe src="'.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=file_iframe" name="file_iframe" id="file_iframe" scrolling="auto" frameborder="0" ></iframe>';
+		}
+		else
+		{
+			$frm_str .= '<iframe src="'.$_SESSION['config']['businessappurl'].'index.php?display=true&module=webtwain&page=scan" name="file_iframe" id="file_iframe" scrolling="auto" frameborder="0" ></iframe>';
+		}
 		$frm_str .= '</div>';
 
 		/*** Extra javascript ***/

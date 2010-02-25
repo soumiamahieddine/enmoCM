@@ -223,10 +223,14 @@ else
 			foreach(array_keys($indexes) as $key)
 			{
 				$tmp = 'doc_'.$key;
+				if($indexes[$key]['type'] == "date")
+				{
+					$res->$tmp = $db->format_date_db($res->$tmp, false);
+				}
 				$indexes[$key]['value'] = $res->$tmp;
 				$indexes[$key]['show_value'] = $res->$tmp;
 			}
-		//	$db->show_array($indexes);
+			//$db->show_array($indexes);
 			$process_data = $is->get_process_data($coll_id, $s_id);
 			$status = $res->status;
 			if(!empty($status))
@@ -1019,10 +1023,11 @@ else
 				<?php
 				if($core_tools->is_module_loaded('notes'))
 				{
-					$selectNotes = "select id, identifier, user_id, date, note_text from ".$_SESSION['tablename']['not_notes']." where identifier = ".$s_id." and coll_id ='".$_SESSION['collection_id_choice']."' order by date desc";
+					$selectNotes = "select id, identifier, user_id, date_note, note_text from ".$_SESSION['tablename']['not_notes']." where identifier = ".$s_id." and coll_id ='".$_SESSION['collection_id_choice']."' order by date_note desc";
 					$dbNotes = new dbquery();
 					$dbNotes->connect();
 					$dbNotes->query($selectNotes);
+					//$dbNotes->show();
 					$nb_notes_for_title  = $dbNotes->nb_result();
 					if ($nb_notes_for_title == 0)
 					{
@@ -1048,7 +1053,7 @@ else
 						{
 							$detailsExport .= "<tr>";
 							$detailsExport .= "<td>".$resNotes->id."</td>";
-							$detailsExport .= "<td>".$resNotes->date."</td>";
+							$detailsExport .= "<td>".$resNotes->date_note."</td>";
 							$detailsExport .= "<td>".$resNotes->note_text."</td>";
 							$detailsExport .= "<td>".$resNotes->user_id."</td>";
 							$detailsExport .= "</tr>";
@@ -1057,10 +1062,10 @@ else
 						$select_notes[$_SESSION['tablename']['users']] = array();
 						array_push($select_notes[$_SESSION['tablename']['users']],"user_id","lastname","firstname");
 						$select_notes[$_SESSION['tablename']['not_notes']] = array();
-						array_push($select_notes[$_SESSION['tablename']['not_notes']],"id", "date", "note_text", "user_id");
+						array_push($select_notes[$_SESSION['tablename']['not_notes']],"id", "date_note", "note_text", "user_id");
 						$where_notes = " identifier = ".$s_id." ";
 						$request_notes = new request;
-						$tab_notes=$request_notes->select($select_notes,$where_notes,"order by ".$_SESSION['tablename']['not_notes'].".date desc",$_SESSION['config']['databasetype'], "500", true,$_SESSION['tablename']['not_notes'], $_SESSION['tablename']['users'], "user_id" );
+						$tab_notes=$request_notes->select($select_notes,$where_notes,"order by ".$_SESSION['tablename']['not_notes'].".date_note desc",$_SESSION['config']['databasetype'], "500", true,$_SESSION['tablename']['not_notes'], $_SESSION['tablename']['users'], "user_id" );
 						?>
 						<div style="text-align:center;">
 							<img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=modif_note.png&module=notes" border="0" alt="" /><a href="javascript://" onclick="ouvreFenetre('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=notes&page=note_add&size=full&identifier=<?php echo $s_id;?>&coll_id=<?php echo $coll_id;?>', 450, 300)" ><?php echo _ADD_NOTE;?></a>

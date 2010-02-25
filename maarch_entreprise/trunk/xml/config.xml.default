@@ -207,4 +207,8 @@
    		<moduleid>postindexing</moduleid>
 		<comment>_POSTINDEXING</comment>
 	</MODULES>
+	<MODULES>
+   		<moduleid>webtwain</moduleid>
+		<comment>_WEBTWAIN_COMMENT</comment>
+	</MODULES>
 </ROOT>

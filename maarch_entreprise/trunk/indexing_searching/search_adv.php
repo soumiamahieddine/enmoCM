@@ -324,8 +324,8 @@ $arr_tmp2 = array('label' => _CATEGORY, 'type' => 'select_simple', 'param' => ar
 $param['category'] = $arr_tmp2;//Arbox_id ; for physical_archive
 if ($core_tools->is_module_loaded('physical_archive') == true)
 {
-	//doc_type
-	$conn->query("select arbox_id, title  from  ".$_SESSION['tablename']['ar_boxes']." where status <> 'DEL' order by description asc");
+	//arbox_id
+	$conn->query("select arbox_id, title from  ".$_SESSION['tablename']['ar_boxes']." where status <> 'DEL' order by description asc");
 	$arr_tmp = array();
 	while ($res=$conn->fetch_object())
 	{

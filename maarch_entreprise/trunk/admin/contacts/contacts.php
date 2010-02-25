@@ -55,7 +55,7 @@ array_push($select[$_SESSION['tablename']['contacts']],"contact_id", "society","
 $what = "";
 //$where =" (user_id is null or user_id = '') and enabled = 'Y' ";
 $where ="  enabled = 'Y' ";
-if(isset($_REQUEST['what']))
+if(isset($_REQUEST['what']) && !empty($_REQUEST['what']))
 {
 	$what = $func->protect_string_db($func->wash($_REQUEST['what'], "alphanum", "", "no"));
 	if($_SESSION['config']['databasetype'] == "POSTGRESQL")

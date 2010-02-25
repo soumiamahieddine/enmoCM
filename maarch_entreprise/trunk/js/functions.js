@@ -1442,14 +1442,14 @@ function action_send_form_confirm_result(path_manage_script, mode_req, id_action
 
 function action_change_status(path_manage_script, mode_req, res_id_values, tablename, id_coll, status,page)
 {
-   //alert('path '+path_manage_script+', mode '+mode_req);
+  // alert('path '+path_manage_script+', mode '+mode_req+', status '+status+', res_id_value '+res_id_values+', coll '+id_coll+', table '+tablename);
 	if(res_id_values != '' && (mode_req == 'mass' || mode_req == 'page')
 			  && tablename != '' &&  id_coll != '')
 		{
 			new Ajax.Request(path_manage_script,
 			{
 				method:'post',
-				//asynchronous : false,
+				asynchronous : false,
 				parameters: { values : res_id_values,
 							  mode : mode_req,
 							  req : 'change_status',
@@ -2078,5 +2078,9 @@ function change_doctype_details(doctype_id, url, error_empty_type)
 			}
 		catch(e){}
 	}
+}
+function unmark_empty_process(id)
+{
+	$(id).checked=false;
 }
 -->

@@ -393,7 +393,6 @@ CREATE OR REPLACE VIEW res_view_letterbox AS
    LEFT JOIN users u ON mlb.exp_user_id::text = u.user_id::text OR mlb.dest_user_id::text = u.user_id::text
   WHERE r.type_id = d.type_id AND d.doctypes_first_level_id = dfl.doctypes_first_level_id AND d.doctypes_second_level_id = dsl.doctypes_second_level_id;
 
-
 ALTER TABLE res_view_letterbox OWNER TO postgres;
 
 

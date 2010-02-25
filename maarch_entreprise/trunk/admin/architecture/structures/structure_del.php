@@ -61,6 +61,7 @@ else
 
 	//delete subfolders depending on that structure
 	$db->query("update ".$_SESSION['tablename']['doctypes_second_level']." set enabled = 'N' where doctypes_first_level_id = ".$id);
+
 	$db2 = new dbquery();
 	$db2->connect();
 	if($core_tools->is_module_loaded('folder') == true)

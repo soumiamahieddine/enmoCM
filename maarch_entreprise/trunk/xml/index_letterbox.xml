@@ -36,6 +36,12 @@
 		<type>string</type>
 		<img>plus.png</img>
 	</INDEX>
+	<INDEX>
+		<column>custom_d1</column>
+		<label>_CUSTOM_D1</label>
+		<type>date</type>
+		<img>plus.png</img>
+	</INDEX>
 <!--
 	<INDEX>
 		<column>custom_t2</column>
