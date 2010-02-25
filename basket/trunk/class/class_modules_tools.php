@@ -94,10 +94,12 @@ class basket extends dbquery
 	*/
 	public function load_module_var_session()
 	{
+		$_SESSION['user']['baskets'] = array();
 		$this->load_activity_user();
 		$this->load_baskets_pages();
-		$this->load_basket();
-		$this->load_basket_abs();
+		$arr1 = $this->load_basket($_SESSION['user']['primarygroup'], $_SESSION['user']['UserId']);
+		$arr2 = $this->load_basket_abs($_SESSION['user']['UserId']);
+		$_SESSION['user']['baskets'] = array_merge($arr1, $arr2);
 	}
 
 	/**
@@ -226,37 +228,36 @@ class basket extends dbquery
 	* Loads the baskets datas into session variables
 	*
 	*/
-	public function load_basket()
+	public function load_basket($primary_group, $user_id)
 	{
-		$_SESSION['user']['baskets'] = array();
-
+		$arr = array();
 		$db = new dbquery();
 		$db->connect();
-		$db->query("select gb.basket_id from ".$_SESSION['tablename']['bask_groupbasket']." gb, ".$_SESSION['tablename']['bask_baskets']." b where gb.group_id = '".$_SESSION['user']['primarygroup']."' and gb.basket_id = b.basket_id order by b.basket_name ");
+		$db->query("select gb.basket_id from ".$_SESSION['tablename']['bask_groupbasket']." gb, ".$_SESSION['tablename']['bask_baskets']." b where gb.group_id = '".$primary_group."' and gb.basket_id = b.basket_id order by b.basket_name ");
 		//$db->show();
 		while($res = $db->fetch_object())
 		{
-			$tmp = $this->get_baskets_data($res->basket_id, $_SESSION['user']['UserId']);
+			$tmp = $this->get_baskets_data($res->basket_id, $user_id);
 			//$this->show_array($tmp);
-			array_push($_SESSION['user']['baskets'], $tmp );
+			array_push($arr, $tmp );
 		}
-		//$this->show_array($_SESSION['user']['baskets']);
-
+		return $arr;
 	}
 
-	public function load_basket_abs()
+	public function load_basket_abs($user_id)
 	{
 		$db = new dbquery();
 		$db->connect();
-		$db->query("select system_id, basket_id from ".$_SESSION['tablename']['bask_users_abs']." where new_user = '".$_SESSION['user']['UserId']."' ");
+		$arr = array();
+		$db->query("select system_id, basket_id from ".$_SESSION['tablename']['bask_users_abs']." where new_user = '".$user_id."' ");
 		//$db->show();
 		while($res = $db->fetch_object())
 		{
-			array_push($_SESSION['user']['baskets'], $this->get_abs_baskets_data($res->basket_id, $_SESSION['user']['UserId'], $res->system_id));
+			array_push($arr , $this->get_abs_baskets_data($res->basket_id, $user_id, $res->system_id));
 		}
-	//	$this->show_array($_SESSION['user']['baskets']);
-		//exit();
+		return $arr;
 	}
+
 
 	/**
 	* Get the actions for a group in a basket.

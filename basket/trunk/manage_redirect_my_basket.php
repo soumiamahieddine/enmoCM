@@ -104,13 +104,10 @@ if(!empty($_SESSION['error']))
 }
 else
 {
-	$query = "INSERT into ".$_SESSION['tablename']['bask_users_abs']." (user_abs, new_user, basket_id, is_virtual, basket_owner) VALUES ";
 	for($i=0; $i<count($res);$i++)
 	{
-		$query .= " ('".$baskets_owner."', '".$res[$i]['user_id']."', '".$res[$i]['basket_id']."', '".$res[$i]['is_virtual']."', '".$res[$i]['basket_owner']."'), ";
+		$bask->query("INSERT into ".$_SESSION['tablename']['bask_users_abs']." (user_abs, new_user, basket_id, is_virtual, basket_owner) VALUES ('".$baskets_owner."', '".$res[$i]['user_id']."', '".$res[$i]['basket_id']."', '".$res[$i]['is_virtual']."', '".$res[$i]['basket_owner']."')");
 	}
-	$query = preg_replace('/, $/', ';', $query);
-	$bask->query($query);
 	$bask->query("update ".$_SESSION['tablename']['users']." set status = 'ABS' where user_id = '".$baskets_owner."'");
 	if($_SESSION['history']['userabs'] == "true")
 	{

@@ -43,7 +43,6 @@ if(isset($_REQUEST['cancel']))
 	<?php
 	exit();
 }
-
 $groupe = "";
 $bask = new admin_basket();
 $func = new functions();
@@ -164,7 +163,6 @@ else
 		}
 		echo $core_tools->execute_modules_services($_SESSION['modules_services'], 'manage_group_basket.php', "include");
 	}
-
 
 if(!empty($_SESSION['error']))
 {

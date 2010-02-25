@@ -59,7 +59,7 @@ array_push($select[$_SESSION['tablename']['bask_baskets']],"basket_id","basket_n
 
 $what = "";
 $where ="";
-if(isset($_REQUEST['what']))
+if(isset($_REQUEST['what']) && !empty($_REQUEST['what']))
 {
 	$what = addslashes($func->wash($_REQUEST['what'], "nick", "", "no"));
 	if($_SESSION['config']['databasetype'] == "POSTGRESQL")
