@@ -26,7 +26,7 @@ $select[$_SESSION['tablename']['fold_foldertypes']] = array();
 array_push($select[$_SESSION['tablename']['fold_foldertypes']],"foldertype_id","foldertype_label" );
 $what = "";
 $where ="";
-if(isset($_REQUEST['what']))
+if(isset($_REQUEST['what']) && !empty($_REQUEST['what']))
 {
 	$what = $func->protect_string_db($_REQUEST['what']);
 	if($_SESSION['config']['databasetype'] == 'POSTGRESQL')

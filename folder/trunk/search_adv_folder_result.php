@@ -69,7 +69,7 @@ if(isset($_REQUEST['folder_name']) && !empty($_REQUEST['folder_name']))
 }
 else
 {
-	$_SESSION['folder_search']['foldertype_id'] = "";
+	$_SESSION['folder_search']['folder_name'] = "";
 }
 
 // Folder id
@@ -123,8 +123,7 @@ if(!empty($_REQUEST['creation_date_end']) && isset($_REQUEST['creation_date_end'
 if(isset($_SESSION['folder_search']['foldertype_id']) && !empty($_SESSION['folder_search']['foldertype_id']))
 {
 	$indexes = $foldertype->get_indexes($_SESSION['folder_search']['foldertype_id']) ;
-
-	foreach( array_keys($indexes) as $key)
+	foreach(array_keys($indexes) as $key)
 	{
 		if(isset($_REQUEST[$key]) && !empty($_REQUEST[$key]))
 		{

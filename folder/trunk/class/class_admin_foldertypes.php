@@ -376,8 +376,8 @@ class foldertype extends dbquery
 				{
 					$this->connect();
 					//echo $_SESSION['m_admin']['foldertype']['custom_query_insert_colums'];
-					$this->query("INSERT INTO ".$_SESSION['tablename']['fold_foldertypes']." (foldertype_label, maarch_comment, coll_id) VALUES ('".$this->show_string($_SESSION['m_admin']['foldertype']['desc'])."', '".$this->show_string($_SESSION['m_admin']['foldertype']['comment'])."',  '".$_SESSION['m_admin']['foldertype']['COLL_ID']."');");
-					$this->query('select foldertype_id from '.$_SESSION['tablename']['fold_foldertypes']." where foldertype_label = '".$this->show_string($_SESSION['m_admin']['foldertype']['desc'])."' and maarch_comment = '".$this->show_string($_SESSION['m_admin']['foldertype']['comment'])."';");
+					$this->query("INSERT INTO ".$_SESSION['tablename']['fold_foldertypes']." (foldertype_label, maarch_comment, coll_id) VALUES ('".$this->show_string($_SESSION['m_admin']['foldertype']['desc'])."', '".$this->show_string($_SESSION['m_admin']['foldertype']['comment'])."',  '".$_SESSION['m_admin']['foldertype']['COLL_ID']."')");
+					$this->query('select foldertype_id from '.$_SESSION['tablename']['fold_foldertypes']." where foldertype_label = '".$this->show_string($_SESSION['m_admin']['foldertype']['desc'])."' and maarch_comment = '".$this->show_string($_SESSION['m_admin']['foldertype']['comment'])."'");
 					$res = $this->fetch_object();
 					$_SESSION['m_admin']['foldertype']['foldertypeId'] = $res->foldertype_id;
 					$this->load_db();

@@ -40,7 +40,13 @@ if(isset($_SESSION['stringSearch'])and !empty($_SESSION['stringSearch']))
 	{
 		$where = " ".$_SESSION['tablename']['fold_folders'].".foldertype_id = ".$_SESSION['tablename']['fold_foldertypes'].".foldertype_id ";
 	}
-	$where .= " and (folder_id ilike '%".$_SESSION['stringSearch']."%' or folder_name ilike '%".$_SESSION['stringSearch']."%' or  subject ilike '%".$_SESSION['stringSearch']."%') and status <> 'DEL'";
+	if($_SESSION['config']['databasetype'] == "POSTGRESQL"){
+		$where .= " and (folder_id ilike '%".$_SESSION['stringSearch']."%' or folder_name ilike '%".$_SESSION['stringSearch']."%' or  subject ilike '%".$_SESSION['stringSearch']."%') and status <> 'DEL'";
+	}
+	else{
+		$where .= " and (folder_id like '%".$_SESSION['stringSearch']."%' or folder_name like '%".$_SESSION['stringSearch']."%' or  subject like '%".$_SESSION['stringSearch']."%') and status <> 'DEL'";
+	}
+	
 	$request= new request;
 	$tab=$request->select($select,$where," order by folder_name ",$_SESSION['config']['databasetype']);
 	//$request->show();
@@ -122,7 +128,7 @@ if(isset($_SESSION['stringSearch'])and !empty($_SESSION['stringSearch']))
 	//$request->show_array($tab);
 	$list=new list_show();
 	$ind = count($tab);
-	$list->list_doc($tab,$ind,_SEARCH_RESULTS." : ".$ind." "._FOUND_FOLDERS,"folders_system_id","result_folder","folders_system_id","folder_detail",false,true,"get",$_SESSION['config']['businessappurl']."index.php?display=true&module=folder&page=res_select_folder",_CHOOSE, false, false, true, false, false, false,  false, false, '', '', false, '', '', 'listing spec', '', false, false, array(), '<input type="hidden" name="display" value="true"/><input type="hidden" name="module" value="folder" /><input type="hidden" name="page" value="res_select_folder" />');
+	$list->list_doc($tab,$ind,_SEARCH_RESULTS." : ".$ind." "._FOUND_FOLDERS,"folders_system_id","result_folder&module=folder","folders_system_id","folder_detail",false,true,"get",$_SESSION['config']['businessappurl']."index.php?display=true&module=folder&page=res_select_folder",_CHOOSE, false, false, true, false, false, false,  false, false, '', '', false, '', '', 'listing spec', '', false, false, array(), '<input type="hidden" name="display" value="true"/><input type="hidden" name="module" value="folder" /><input type="hidden" name="page" value="res_select_folder" />');
 }
 ?>
 </body>
