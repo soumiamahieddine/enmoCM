@@ -105,9 +105,11 @@ class cases extends dbquery
 		$request = new request();
 		$current_date = $request->current_datetime();
 		$data = array();
+		$func = new functions();
+		
 		//Create a new batch when this box is empty
-		array_push($data, array('column' => "case_description", 'value' => addslashes($desc), "type" => "string"));
-		array_push($data, array('column' => "case_label", 'value' => addslashes($label), "type" => "string"));
+		array_push($data, array('column' => "case_description", 'value' => $func->protect_string_db($desc), "type" => "string"));
+		array_push($data, array('column' => "case_label", 'value' => $func->protect_string_db($label), "type" => "string"));
 		array_push($data, array('column' => "case_creation_date", 'value' => $current_date, "type" => ""));
 		array_push($data, array('column' => "case_last_update_date", 'value' => $current_date, "type" => ""));
 		array_push($data, array('column' => "case_typist", 'value' => $_SESSION['user']['UserId'], "type" => "string"));
@@ -311,7 +313,11 @@ class cases extends dbquery
 		$db->connect();
 		
 		$my_return = array();
-		$query = " select case_id, case_label, case_description, date(case_creation_date) as ccd, case_typist, case_parent, case_custom_t1, case_custom_t2, case_custom_t3, case_custom_t4, case_type, date(case_closing_date) as clo, date(case_last_update_date)	as cud   FROM ".$_SESSION['tablename']['cases']." WHERE  CASE_ID = '".$case_id."' ";
+		$request = new request();
+		$f_date = 
+		
+		//$query = " select case_id, case_label, case_description, date(case_creation_date) as ccd, case_typist, case_parent, case_custom_t1, case_custom_t2, case_custom_t3, case_custom_t4, case_type, date(case_closing_date) as clo, date(case_last_update_date)	as cud   FROM ".$_SESSION['tablename']['cases']." WHERE  CASE_ID = '".$case_id."' ";
+		$query = " select case_id, case_label, case_description, ".$request->extract_date('case_creation_date', 'date')." as ccd, case_typist, case_parent, case_custom_t1, case_custom_t2, case_custom_t3, case_custom_t4, case_type, ".$request->extract_date('case_closing_date', 'date')." as clo, ".$request->extract_date('case_last_update_date', 'date')." as cud   FROM ".$_SESSION['tablename']['cases']." WHERE  CASE_ID = '".$case_id."' ";
 
 		$db->query($query);
 		$res = $db->fetch_object();
@@ -406,7 +412,10 @@ class cases extends dbquery
 		$db = new dbquery();
 		$db->connect();
 
-		$query="UPDATE ".$_SESSION['tablename']['cases']." SET case_closing_date = now() where case_id = ".$case_id." ";
+		$req = new request();
+		$current_date = $req->current_datetime();
+
+		$query="UPDATE ".$_SESSION['tablename']['cases']." SET case_closing_date = ".$current_date." where case_id = ".$case_id." ";
 		
 		if ($db->query($query))
 			return true;

@@ -16,7 +16,7 @@
 							$tab[$i][$j]["valign"]="bottom";
 							$tab[$i][$j]["show"]=true;
 							$tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
-							$tab[$i][$j]["order"]='case_id';
+							$tab[$i][$j]["order"]='case_id'; 
 						}
 						if($tab[$i][$j][$value]=="case_label")
 						{

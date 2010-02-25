@@ -73,7 +73,7 @@ $view = $sec->retrieve_view_from_coll_id($_SESSION['collection_id_choice'] );
 $select[$view] = array();
 array_push($select[$view], "res_id",  "subject", "dest_user", "type_label", "creation_date", "destination", "category_id, exp_user_id", "category_id as category_img" );
 $select[$_SESSION['tablename']['not_notes']] = array();
-array_push($select[$_SESSION['tablename']['not_notes']],"id", "date", "note_text", "user_id");
+array_push($select[$_SESSION['tablename']['not_notes']],"id", "date_note", "note_text", "user_id");
 
 $where_request .= " and ".$_SESSION['tablename']['not_notes'].".identifier = ".$view.".res_id";
 
@@ -175,9 +175,9 @@ for ($ind_notes1=0;$ind_notes1<count($tabNotes);$ind_notes1++)
 				$tabNotes[$ind_notes1][$ind_notes2]["valign"]="bottom";
 				$tabNotes[$ind_notes1][$ind_notes2]["show"]=true;
 			}
-			if($tabNotes[$ind_notes1][$ind_notes2][$value]=="date")
+			if($tabNotes[$ind_notes1][$ind_notes2][$value]=="date_note")
 			{
-				$tabNotes[$ind_notes1][$ind_notes2]["date"]=$tabNotes[$ind_notes1][$ind_notes2]['value'];
+				$tabNotes[$ind_notes1][$ind_notes2]["date_note"]=$tabNotes[$ind_notes1][$ind_notes2]['value'];
 				$tabNotes[$ind_notes1][$ind_notes2]["label"]=_DATE;
 				$tabNotes[$ind_notes1][$ind_notes2]["size"]=$size_small;
 				$tabNotes[$ind_notes1][$ind_notes2]["label_align"]="left";
