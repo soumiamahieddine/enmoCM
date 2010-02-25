@@ -11,10 +11,12 @@
 * @author  Claire Figueras  <dev@maarch.org>
 */ 
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
 
 $core_tools = new core_tools();
 $core_tools->load_lang();
 $sec = new security();
+$req = new request();
 $func = new functions();
 $db = new dbquery();
 $db->connect();
@@ -47,9 +49,9 @@ if(isset($_REQUEST['modify']) )
 	{
 		$text = $func->protect_string_db($_REQUEST['notes']);
 		$db->query("UPDATE ".$_SESSION['tablename']['not_notes']." SET 
-		note_text = '".$text."', date = '".date("Y")."-".date("m")."-".date("d")." ".date("H:i:s")."' 
+		note_text = '".$text."', date_note = ".$req->current_datetime()."
 		WHERE id = ".$id);
-				
+		//$db->show();exit();
 		if($_SESSION['history']['noteup'])
 		{
 			require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
@@ -130,7 +132,7 @@ else
 	{
 		$where = " and tablename = '".$table."'";
 	}
-	$db->query("select n.identifier, n.date, n.user_id, n.note_text, u.lastname, u.firstname 
+	$db->query("select n.identifier, n.date_note, n.user_id, n.note_text, u.lastname, u.firstname 
 	from ".$_SESSION['tablename']['not_notes']." n
 	inner join ".$_SESSION['tablename']['users']." u on n.user_id  = u.user_id 
 	where n.id = ".$s_id." ".$where);
@@ -139,7 +141,7 @@ else
 	$user = $func->show_string($line->lastname." ".$line->firstname);
 	$text = $func->show_string($line->note_text);
 	$user_id = $line->user_id;
-	$date = $line->date;
+	$date = $line->date_note;
 	$identifier = $line->identifier;
 }	
 

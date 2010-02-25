@@ -41,6 +41,7 @@ if(isset($_REQUEST['coll_id']) && !empty($_REQUEST['coll_id']))
 {
 	$coll_id = trim($_REQUEST['coll_id']);
 	$view = $sec->retrieve_view_from_coll_id($coll_id);
+	$table = $sec->retrieve_table_from_coll($coll_id);
 }
 
 if(isset($_REQUEST['table']) && !empty($_REQUEST['table']))
@@ -53,15 +54,21 @@ if(isset($_REQUEST['table']) && !empty($_REQUEST['table']))
 
 if (isset($_REQUEST['notes'])&& !empty($_REQUEST['notes']))
 {
-	$date = date("Y")."-".date("m")."-".date("d")." ".date("H:i:s");
+	if($_SESSION['config']['databasetype'] == 'ORACLE')
+	{
+		$date = date("d")."-".date("m")."-".date("Y")." ".date("H:i:s");
+	}
+	else
+	{
+		$date = date("Y")."-".date("m")."-".date("d")." ".date("H:i:s");
+	}
 	$db->query("INSERT INTO ".$_SESSION['tablename']['not_notes']."
-		( identifier, note_text, date, user_id, coll_id, tablename) VALUES (".$identifier.", '".$db->protect_string_db($_REQUEST['notes'])."', '".$date."', '".$_SESSION['user']['UserId']."', '".$coll_id."', '".$table."')");
-
+		( identifier, note_text, date_note, user_id, coll_id, tablename) VALUES (".$identifier.", '".$db->protect_string_db($_REQUEST['notes'])."', '".$date."', '".$db->protect_string_db($_SESSION['user']['UserId'])."', '".$db->protect_string_db($coll_id)."', '".$db->protect_string_db($table)."')");
 		if($_SESSION['history']['noteadd'])
 		{
 			require_once("core/class/class_history.php");
 			$hist = new history();
-			$db->query("SELECT id FROM ".$_SESSION['tablename']['not_notes']." WHERE date = '".$date."' and note_text = '".$db->protect_string_db($_REQUEST['notes'])."' and identifier = ".$identifier." and user_id = '".$_SESSION['user']['UserId']."' and coll_id = '".$coll_id."' ");
+			$db->query("SELECT id FROM ".$_SESSION['tablename']['not_notes']." WHERE date_note = '".$date."' and  identifier = ".$identifier." and user_id = '".$_SESSION['user']['UserId']."' and coll_id = '".$coll_id."' ");
 			$res = $db->fetch_object();
 			$id = $res->id;
 			$hist->add($view, $identifier ,"ADD", _ADDITION_NOTE._ON_DOC_NUM.$identifier.' ('.$id.')', $_SESSION['config']['databasetype'], 'notes');

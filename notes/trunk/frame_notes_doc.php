@@ -28,10 +28,10 @@ $func = new functions();
 $select[$_SESSION['tablename']['users']] = array();
 array_push($select[$_SESSION['tablename']['users']],"user_id","lastname","firstname");
 $select[$_SESSION['tablename']['not_notes']] = array();
-array_push($select[$_SESSION['tablename']['not_notes']],"id", "date", "note_text", "user_id");
+array_push($select[$_SESSION['tablename']['not_notes']],"id", "date_note", "note_text", "user_id");
 $where = " identifier = ".$_SESSION['doc_id']." ";
 $request= new request;
-$tabNotes=$request->select($select,$where,"order by ".$_SESSION['tablename']['not_notes'].".date desc",$_SESSION['config']['databasetype'], "500", true,$_SESSION['tablename']['not_notes'], $_SESSION['tablename']['users'], "user_id" );
+$tabNotes=$request->select($select,$where,"order by ".$_SESSION['tablename']['not_notes'].".date_note desc",$_SESSION['config']['databasetype'], "500", true,$_SESSION['tablename']['not_notes'], $_SESSION['tablename']['users'], "user_id" );
 $ind_notes1d = '';
 
 
@@ -94,9 +94,9 @@ for ($ind_notes1=0;$ind_notes1<count($tabNotes);$ind_notes1++)
 				$tabNotes[$ind_notes1][$ind_notes2]["valign"]="bottom";
 				$tabNotes[$ind_notes1][$ind_notes2]["show"]=true;
 			}
-			if($tabNotes[$ind_notes1][$ind_notes2][$value]=="date")
+			if($tabNotes[$ind_notes1][$ind_notes2][$value]=="date_note")
 			{
-				$tabNotes[$ind_notes1][$ind_notes2]["date"]=$tabNotes[$ind_notes1][$ind_notes2]['value'];
+				$tabNotes[$ind_notes1][$ind_notes2]["date_note"]=$tabNotes[$ind_notes1][$ind_notes2]['value'];
 				$tabNotes[$ind_notes1][$ind_notes2]["label"]=_DATE;
 				$tabNotes[$ind_notes1][$ind_notes2]["size"]=$size_small;
 				$tabNotes[$ind_notes1][$ind_notes2]["label_align"]="left";
