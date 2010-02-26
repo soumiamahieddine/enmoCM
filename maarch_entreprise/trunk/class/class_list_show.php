@@ -380,6 +380,7 @@ class list_show extends functions
 						$str .= ' {';
 							$str .= ' val_frm[\'action_id\'] = id_action;';
 						$str .= ' }';
+						//$str .= 'alert(mode + "/" + val_frm[\'action_id\'] + "/" +  val_frm[\'values\'] + "/" +  val_frm[\'table\'] + "/" +  val_frm[\'module\'] + "/" +  val_frm[\'coll_id\']);';
 
 						$str .= ' action_send_first_request(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&page=manage_action&module=core\', mode,  val_frm[\'action_id\'], val_frm[\'values\'], val_frm[\'table\'], val_frm[\'module\'], val_frm[\'coll_id\']);';
 					$str .= ' }';
@@ -387,7 +388,16 @@ class list_show extends functions
 					$str .= ' {';
 						$str .= ' alert(\'Validation form error\');';
 					$str .= ' }';
-					$str .= 'isAlreadyClick = true;';
+					
+					$str .= 'if (mode == \'mass\')';
+					$str .= '{';
+					$str .= '	isAlreadyClick = false;';
+					$str .= '}';
+					$str .= 'else';
+					$str .= '{';
+					$str .= '	isAlreadyClick = true;';
+					$str .= '}';
+					
 				$str .= '}';
 				$str .= ' }';
 				$str .= ' </script>';
