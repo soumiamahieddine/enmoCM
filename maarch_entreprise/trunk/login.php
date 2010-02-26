@@ -146,12 +146,16 @@ else
 if(isset($_SESSION['config']['corepath']) && !empty($_SESSION['config']['corepath'] ))
 {
 	require('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
+	require('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_login.php");
 	$path_core_config = 'core'.DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'config.xml';
+	
 }
 else
 {
 	require("class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
+	require("class".DIRECTORY_SEPARATOR."class_login.php");
 	$path_core_config = "..".DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR.'core'.DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'config.xml';
+	
 }
 
 $core_tools = new core_tools();
@@ -171,30 +175,21 @@ $core_tools->load_html();
 $core_tools->load_header();
 $time = $core_tools->get_session_time_expire();
 
+$m_login = new login();
+$login_methods = array();
+$login_methods = $m_login->build_login_method();
 ?>
 <body id="bodylogin" onload="setTimeout('window.location.reload(true)', <?php  echo $time;?>*60*1000);">
     <div id="loginpage">
         <p id="logo"><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=default_maarch.gif" alt="Maarch" /></p>
-        <form name="formlogin" id="formlogin" method="post" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=log" class="forms">
-			<input type="hidden" name="display" value="true" />
-			<input type="hidden" name="page" value="log" />
-            <p>
-                <label for="login"><?php  echo _ID; ?> :</label>
-                <input name="login" id="login" value="" type="text"  />
-            </p>
+       
+       <?php 
+       
+       $m_login->execute_login_script($login_methods);
+		?>
 
-            <p>
-                <label for="pass"><?php  echo _PASSWORD; ?> :</label>
-                <input name="pass" id="pass" value="" type="password"  />
-            </p>
-            <p class="buttons">
-                <input type="submit" class="button" name="submit" value="<?php  echo _SEND; ?>" />
-            </p>
-            <div class="error"><?php  echo $error;
-            $_SESSION['error'] = '';
-            ?>
-            </div>
-        </form>
+       
+       
     </div>
 </body>
 </html>
