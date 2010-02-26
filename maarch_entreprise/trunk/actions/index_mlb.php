@@ -148,14 +148,17 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 					$frm_str .= '<input type="hidden" name="req" id="req" value="second_request" />';
 
 			$frm_str .= '<div  style="display:block">';
-			if (!isset($_SESSION['scan']['config']['scan_from_webtwain']) || $_SESSION['scan']['config']['scan_from_webtwain'] <> 'true') //Ajout yck
+			if($core_tools->is_module_loaded('webtwain') && $_SESSION['user']['services']['scan'] === true) //Ajout yck
 			{
-				if($_SESSION['FILE']['extension'] == "")
-				{
-					$frm_str .= '<div  style="display:block" id="choose_file_div">';
-					$frm_str .= '<iframe src="'.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=choose_file" name="choose_file" id="choose_file" frameborder="0" scrolling="no" width="100%" height="40"></iframe>';
-					$frm_str .= '</div>';
-				}
+				 $frm_str .= '<div style="display:block;" id="choose_scan"><a href="javascript://" onclick="hide_scan(true);">'._SCAN_DOCUMENT.'&nbsp;<img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=lot.gif" alt="'._SCAN_DOCUMENT.'"/></a></div>';
+				 $frm_str .= '<div style="display:none;" id="choose_file"><a href="javascript://" onclick="hide_scan(false);">'._SCAN_CHOOSE_FILE.'&nbsp;<img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=lot.gif" alt="'._SCAN_CHOOSE_FILE.'"/></a></div><br/>';
+			}
+
+			if($_SESSION['FILE']['extension'] == "")
+			{
+				$frm_str .= '<div  style="display:block" id="choose_file_div">';
+				$frm_str .= '<iframe src="'.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=choose_file" name="choose_file" id="choose_file" frameborder="0" scrolling="no" width="100%" height="40"></iframe>';
+				$frm_str .= '</div>';
 			}
 			
 			if($core_tools->test_service('index_attachment', 'attachments', false))
@@ -635,18 +638,19 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 		$frm_str .= '</div>';
 		$frm_str .= '<script type="text/javascript">show_admin_contacts( true);</script>';
 		
-		if (!isset($_SESSION['scan']['config']['scan_from_webtwain']) || $_SESSION['scan']['config']['scan_from_webtwain'] <> 'true') //Ajout yck
+		$frm_str .= '<iframe src="'.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=file_iframe" name="file_iframe" id="file_iframe" scrolling="auto" frameborder="0" style="display:block;" ></iframe>';
+		
+		if($core_tools->is_module_loaded('webtwain') && $_SESSION['user']['services']['scan'] === true) //Ajout yck
 		{
-			$frm_str .= '<iframe src="'.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=file_iframe" name="file_iframe" id="file_iframe" scrolling="auto" frameborder="0" ></iframe>';
+			//$frm_str .= '<iframe src="'.$_SESSION['config']['businessappurl'].'index.php?display=true&module=webtwain&page=scan" name="file_iframe" id="scan_iframe" scrolling="auto" frameborder="0" ></iframe>';
+			$frm_str .= $core_tools->execute_modules_services($_SESSION['modules_services'], 'index_mlb', 'frame', 'scan', 'webtwain' );
+			$str_js = 'resize_frame_process(\'modal_'.$id_action.'\', \'scan_iframe\', true, true);';
 		}
-		else
-		{
-			$frm_str .= '<iframe src="'.$_SESSION['config']['businessappurl'].'index.php?display=true&module=webtwain&page=scan" name="file_iframe" id="file_iframe" scrolling="auto" frameborder="0" ></iframe>';
-		}
+		
 		$frm_str .= '</div>';
 
 		/*** Extra javascript ***/
-		$frm_str .= '<script type="text/javascript">resize_frame_process(\'modal_'.$id_action.'\', \'file_iframe\', true, true);window.scrollTo(0,0);change_category(\''.$_SESSION['default_category'].'\', \''.$display_value.'\', \''.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=change_category\',  \''.$_SESSION['config']['businessappurl'].'index.php?display=true&page=get_content_js\');launch_autocompleter_contacts(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=autocomplete_contacts\');';
+		$frm_str .= '<script type="text/javascript">resize_frame_process(\'modal_'.$id_action.'\', \'file_iframe\', true, true); '.$str_js.'window.scrollTo(0,0);change_category(\''.$_SESSION['default_category'].'\', \''.$display_value.'\', \''.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=change_category\',  \''.$_SESSION['config']['businessappurl'].'index.php?display=true&page=get_content_js\');launch_autocompleter_contacts(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=autocomplete_contacts\');';
 		if($core_tools->is_module_loaded('folder'))
 		{
 		  $frm_str .= 'launch_autocompleter_folders(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=folder&page=autocomplete_folders&mode=project\', \'project\');launch_autocompleter_folders(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=folder&page=autocomplete_folders&mode=market\', \'market\');';
