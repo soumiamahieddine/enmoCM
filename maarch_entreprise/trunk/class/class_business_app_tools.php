@@ -70,7 +70,12 @@ class business_app_tools extends dbquery
 					$host = $_SERVER['HTTP_HOST'];
 			}
 
-			$_SESSION['config']['businessappurl'] = $protocol."://".$host.$server_port.str_replace('index.php','',$_SERVER['SCRIPT_NAME']);
+			$tmp = $host;
+			if(!preg_match('/:[0-9]+$/', $host))
+			{
+				$tmp =$host.$server_port;
+			}
+			$_SESSION['config']['businessappurl'] = $protocol."://".$tmp.str_replace('index.php','',$_SERVER['SCRIPT_NAME']);
 			$_SESSION['config']['databaseserver'] = (string) $CONFIG->databaseserver;
 			$_SESSION['config']['databaseserverport'] = (string) $CONFIG->databaseserverport;
 			$_SESSION['config']['databasetype'] = (string) $CONFIG->databasetype;
