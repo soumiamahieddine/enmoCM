@@ -37,6 +37,12 @@ $_SESSION = array();
 $_SESSION['custom_override_id'] = $custom;
 $_SESSION['config']['corepath'] = $core_path ;
 $_SESSION['config']['app_id'] = $app_id ;
-header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&page=login&coreurl=".$_GET['coreurl']);
+
+if ($_GET['logout'])
+	$logout_extension = "&logout=true";
+else
+	$logout_extension = "";
+
+header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&page=login".$logout_extension."&coreurl=".$_GET['coreurl']);
 exit();
 ?>
