@@ -482,7 +482,10 @@ class core_tools extends functions
 				{
 					$_SESSION['app_services'][$k]['whereamiused'][$l]['width'] = (string) $WHEREAMIUSED->width;
 				}
-
+				if(isset($WHEREAMIUSED->frame_id))
+				{
+					$_SESSION['app_services'][$k]['whereamiused'][$l]['frame_id'] = (string) $WHEREAMIUSED->frame_id;
+				}
 				if(isset($WHEREAMIUSED->height))
 				{
 					$_SESSION['app_services'][$k]['whereamiused'][$l]['height'] = (string) $WHEREAMIUSED->height;
@@ -490,6 +493,10 @@ class core_tools extends functions
 				if(isset($WHEREAMIUSED->scrolling))
 				{
 					$_SESSION['app_services'][$k]['whereamiused'][$l]['scrolling'] = (string) $WHEREAMIUSED->scrolling;
+				}
+				if(isset($WHEREAMIUSED->style))
+				{
+					$_SESSION['app_services'][$k]['whereamiused'][$l]['style'] = (string) $WHEREAMIUSED->style;
 				}
 				if(isset($WHEREAMIUSED->border))
 				{
@@ -604,6 +611,10 @@ class core_tools extends functions
 						{
 							$_SESSION['modules_services'][$modules[$i]['moduleid']][$k]['whereamiused'][$l]['tab_order'] = (string) $WHEREAMIUSED->tab_order;
 						}
+						if(isset($WHEREAMIUSED->frame_id))
+						{
+							$_SESSION['modules_services'][$modules[$i]['moduleid']][$k]['whereamiused'][$l]['frame_id'] = (string) $WHEREAMIUSED->frame_id;
+						}
 						if(isset($WHEREAMIUSED->width))
 						{
 							$_SESSION['modules_services'][$modules[$i]['moduleid']][$k]['whereamiused'][$l]['width'] = (string) $WHEREAMIUSED->width;
@@ -615,6 +626,10 @@ class core_tools extends functions
 						if(isset($WHEREAMIUSED->scrolling))
 						{
 							$_SESSION['modules_services'][$modules[$i]['moduleid']][$k]['whereamiused'][$l]['scrolling'] = (string) $WHEREAMIUSED->scrolling;
+						}						
+						if(isset($WHEREAMIUSED->style))
+						{
+							$_SESSION['modules_services'][$modules[$i]['moduleid']][$k]['whereamiused'][$l]['style'] = (string) $WHEREAMIUSED->style;
 						}
 						if(isset($WHEREAMIUSED->border))
 						{
@@ -663,18 +678,26 @@ class core_tools extends functions
 				{
 					for($k=0; $k < count($modules_services[$id_module][$i]['whereamiused']);$k++)
 					{
+						//$name = $id = $width = $height = $frameborder = $scrolling = '';
+						
 				 		if($modules_services[$id_module][$i]['whereamiused'][$k]['page'] == $whereami)
 						{
 							if($modules_services[$id_module][$i]['whereamiused'][$k]['nature'] == "frame" && $_SESSION['user']['services'][$modules_services[$id_module][$i]['id']] && !in_array($modules_services[$id_module][$i]['id'], $executed_services))
 							{
 								array_push($executed_services,$modules_services[$id_module][$i]['id']);
 								
-								?>
-								<br />
+								if (isset($modules_services[$id_module][$i]['whereamiused'][$k]['frame_id']) && !empty($modules_services[$id_module][$i]['whereamiused'][$k]['frame_id'])) { $name = 'name="'.$modules_services[$id_module][$i]['whereamiused'][$k]['frame_id'].'"';}
+								if (isset($modules_services[$id_module][$i]['whereamiused'][$k]['frame_id']) && !empty($modules_services[$id_module][$i]['whereamiused'][$k]['frame_id'])) { $id = 'id="'.$modules_services[$id_module][$i]['whereamiused'][$k]['frame_id'].'"'; }
+								if (isset($modules_services[$id_module][$i]['whereamiused'][$k]['width']) &&  strlen($modules_services[$id_module][$i]['whereamiused'][$k]['width']) >0) { $width = 'width="'.$modules_services[$id_module][$i]['whereamiused'][$k]['width'].'" '; }
+								if (isset($modules_services[$id_module][$i]['whereamiused'][$k]['height']) &&  strlen($modules_services[$id_module][$i]['whereamiused'][$k]['height']) > 0) { $height = 'height="'.$modules_services[$id_module][$i]['whereamiused'][$k]['height'].'"'; }
+								if (isset($modules_services[$id_module][$i]['whereamiused'][$k]['border']) && strlen($modules_services[$id_module][$i]['whereamiused'][$k]['border']) > 0) { $frameborder = 'frameborder="'.$modules_services[$id_module][$i]['whereamiused'][$k]['border'].'" '; }
+								if (isset($modules_services[$id_module][$i]['whereamiused'][$k]['scrolling']) && !empty($modules_services[$id_module][$i]['whereamiused'][$k]['scrolling'])) { $scrolling = 'scrolling="'.$modules_services[$id_module][$i]['whereamiused'][$k]['scrolling'].'"'; }
+								if (isset($modules_services[$id_module][$i]['whereamiused'][$k]['style']) && !empty($modules_services[$id_module][$i]['whereamiused'][$k]['style'])) { $style = 'style="'.$modules_services[$id_module][$i]['whereamiused'][$k]['style'].'"'; }
 								
-								<iframe src='<?php  echo $_SESSION['config']['businessappurl'].'index.php?display=true&module='.$id_module."&page=".$modules_services[$id_module][$i]['servicepage'];?>' name="<?php  echo $modules_services[$id_module][$i]['id'];?>" id="<?php  echo $modules_services[$id_module][$i]['id'];?>" width='<?php  echo $modules_services[$id_module][$i]['whereamiused'][$k]['width'];?>' height='<?php  echo $modules_services[$id_module][$i]['whereamiused'][$k]['height'];?>' frameborder='<?php  echo $modules_services[$id_module][$i]['whereamiused'][$k]['border'];?>' scrolling='<?php  echo $modules_services[$id_module][$i]['whereamiused'][$k]['scrolling'];?>'></iframe><br /><br />
-								<?php
-								break;
+								$str_iframe = '<iframe src="'.$_SESSION['config']['businessappurl'].'index.php?display=true&module='.$id_module.'&page='.$modules_services[$id_module][$i]['servicepage'].'" '.$name.' '.$id.' '.$width.' '.$height.' '.$frameborder.' '.$scrolling.' '.$style.'></iframe>';
+								
+								return $str_iframe;
+								//break;
 							}
 							elseif($modules_services[$id_module][$i]['whereamiused'][$k]['nature'] == "popup" && $_SESSION['user']['services'][$modules_services[$id_module][$i]['id']] && !in_array($modules_services[$id_module][$i]['id'], $executed_services))
 							{
@@ -727,10 +750,19 @@ class core_tools extends functions
 								if($modules_services[$value][$i]['whereamiused'][$k]['nature'] == "frame" && $_SESSION['user']['services'][$modules_services[$value][$i]['id']] && ($servicenature == "all" || $servicenature == "frame") && !in_array($modules_services[$value][$i]['id'], $executed_services))
 								{
 									array_push($executed_services,$modules_services[$value][$i]['id']);
-									?>
-									<br />
-									<iframe src='<?php  echo $_SESSION['config']['businessappurl'].'index.php?display=true&module='.$id_module."&page=".$modules_services[$id_module][$i]['servicepage'];?>' name="<?php  echo $modules_services[$value][$i]['id'];?>" id="<?php  echo $modules_services[$value][$i]['id'];?>" width='<?php  echo $modules_services[$value][$i]['whereamiused'][$k]['width'];?>' height='<?php  echo $modules_services[$value][$i]['whereamiused'][$k]['height'];?>' frameborder='<?php  echo $modules_services[$value][$i]['whereamiused'][$k]['border'];?>' scrolling='<?php  echo $modules_services[$value][$i]['whereamiused'][$k]['scrolling'];?>'></iframe><br /><br />
-									<?php
+										
+									if (isset($modules_services[$value][$i]['whereamiused'][$k]['frame_id']) && !empty($modules_services[$value][$i]['whereamiused'][$k]['frame_id'])) { $name = 'name="'.$modules_services[$value][$i]['whereamiused'][$k]['frame_id'].'"';}
+									if (isset($modules_services[$value][$i]['whereamiused'][$k]['frame_id']) && !empty($modules_services[$value][$i]['whereamiused'][$k]['frame_id'])) { $id = 'id="'.$modules_services[$value][$i]['whereamiused'][$k]['frame_id'].'"'; }
+									if (isset($modules_services[$value][$i]['whereamiused'][$k]['width']) &&  strlen($modules_services[$value][$i]['whereamiused'][$k]['width']) >0) { $width = 'width="'.$modules_services[$value][$i]['whereamiused'][$k]['width'].'" '; }
+									if (isset($modules_services[$value][$i]['whereamiused'][$k]['height']) &&  strlen($modules_services[$value][$i]['whereamiused'][$k]['height']) > 0) { $height = 'height="'.$modules_services[$value][$i]['whereamiused'][$k]['height'].'"'; }
+									if (isset($modules_services[$value][$i]['whereamiused'][$k]['border']) && strlen($modules_services[$value][$i]['whereamiused'][$k]['border']) > 0) { $frameborder = 'frameborder="'.$modules_services[$value][$i]['whereamiused'][$k]['border'].'" '; }
+									if (isset($modules_services[$value][$i]['whereamiused'][$k]['scrolling']) && !empty($modules_services[$value][$i]['whereamiused'][$k]['scrolling'])) { $scrolling = 'scrolling="'.$modules_services[$value][$i]['whereamiused'][$k]['scrolling'].'"'; }
+									if (isset($modules_services[$value][$i]['whereamiused'][$k]['style']) && !empty($modules_services[$value][$i]['whereamiused'][$k]['style'])) { $style = 'style="'.$modules_services[$value][$i]['whereamiused'][$k]['style'].'"'; }
+									
+									$str_iframe = '<iframe src="'.$_SESSION['config']['businessappurl'].'index.php?display=true&module='.$value.'&page='.$modules_services[$value][$i]['servicepage'].'" '.$name.' '.$id.' '.$width.' '.$height.' '.$frameborder.' '.$scrolling.' '.$style.'></iframe>';
+									
+									return $str_iframe;
+
 								}
 								elseif($modules_services[$value][$i]['whereamiused'][$k]['nature'] == "tab" && $_SESSION['user']['services'][$modules_services[$value][$i]['id']] && ($servicenature == "tab") && !in_array($modules_services[$value][$i]['id'], $executed_services))
 								{
