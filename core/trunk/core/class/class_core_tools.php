@@ -1831,7 +1831,7 @@ class core_tools extends functions
 		$db->connect();
 		$db->query("select origin from ".$_SESSION['tablename']['actions']." where id = ".$action_id);
 		$res = $db->fetch_object();
-		$origin = $res->origin;
+		$origin = strtolower($res->origin);
 
 		if($origin == 'apps' || $origin == 'core')
 		{
@@ -1839,7 +1839,7 @@ class core_tools extends functions
 		}
 		for($i=0; $i<count($_SESSION['modules']);$i++)
 		{
-			if($_SESSION['modules'][$i]['moduleid'] == $origin)
+			if(strtolower($_SESSION['modules'][$i]['moduleid']) == $origin)
 			{
 				return true;
 			}
