@@ -239,9 +239,15 @@ class dbquery extends functions
 		}
 		elseif($this->databasetype == "ORACLE")
 		{
-			$this->sql_link = @oci_connect($this->user, $this->pass, "//".$this->server."/".$this->base,'UTF8');
+			if($this->server <> "")
+			{
+				$this->sql_link = oci_connect($this->user, $this->pass, "//".$this->server."/".$this->base,'UTF8');
+			}
+			else
+			{
+				$this->sql_link = oci_connect($this->user, $this->pass, $this->base ,'UTF8');
+			}
 			// ALTER SESSIONS MUST BE MANAGED BY TRIGGERS DIRECTLY IN THE DB
-			//$this->sql_link = oci_connect($user, $pass, $this->base ,'UTF8');
 			//$this->query("alter session set nls_date_format='dd-mm-yyyy'");
 		}
 		else
@@ -498,7 +504,7 @@ class dbquery extends functions
 		}
 		elseif($this->databasetype == "ORACLE")
 		{
-			$db = new dbquery();
+			/*$db = new dbquery();
 			$db->connect();
 			$db->query($this->debug_query);			
 			$nb=0;
@@ -506,7 +512,14 @@ class dbquery extends functions
 			{
 				$nb++;
 			}		
-			return $nb;
+			return $nb;*/
+			
+			// 2eme version Maarch
+			$db = new dbquery();
+			$db->connect();
+			$db->query("SELECT COUNT(*) FROM  (".$this->debug_query.")");		
+			$row = $db->fetch_array();
+			return $row[0];	
 		}
 		else
 		{
