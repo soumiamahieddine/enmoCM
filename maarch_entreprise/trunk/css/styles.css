@@ -3467,3 +3467,13 @@ a.legend hr
 	background-color: gray;
 	border: 0.2em gray;
 }
+
+.doctype_level1
+{
+	background-color:#EFECCA;
+}
+
+.doctype_level2
+{
+	color: #002F2F;
+}
