@@ -90,11 +90,11 @@ if(!empty($where))
 }
 if($_SESSION['current_basket']['id'] == "DepartmentBasket")
 {
-	$db->query("select distinct(r.destination) as entity_id, count(distinct r.res_id) as total  from ".$table." r join ".$_SESSION['tablename']['ent_entities']." e on e.entity_id = r.destination ".$where_tmp." group by e.entity_label, r.destination");
+	$db->query("select distinct(r.destination) as entity_id, count(distinct r.res_id) as total, e.entity_label from ".$table." r join ".$_SESSION['tablename']['ent_entities']." e on e.entity_id = r.destination ".$where_tmp." group by e.entity_label, r.destination order by e.entity_label");
 }
 else
 {
-	$db->query("select distinct(r.destination) as entity_id, count(distinct r.res_id) as total  from ".$table." r join  ".$_SESSION['tablename']['ent_entities']." e on e.entity_id = r.destination  ".$where_tmp." group by e.entity_label, r.destination");
+	$db->query("select distinct(r.destination) as entity_id, count(distinct r.res_id) as total, e.entity_label from ".$table." r join ".$_SESSION['tablename']['ent_entities']." e on e.entity_id = r.destination ".$where_tmp." group by e.entity_label, r.destination order by e.entity_label");
 }
 while($res = $db->fetch_object())
 {
