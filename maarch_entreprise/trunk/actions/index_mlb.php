@@ -260,7 +260,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 				   $frm_str .= '<tr id="doc_date_tr" style="display:'.$display_value.';">';
 				 		$frm_str .='<td><label for="doc_date" class="form_title" id="mail_date_label" style="display:inline;" >'._MAIL_DATE.'</label><label for="doc_date" class="form_title" id="doc_date_label" style="display:none;" >'._DOC_DATE.'</label></td>';
 						$frm_str .='<td>&nbsp;</td>';
-						$frm_str .='<td class="indexing_field"><input name="doc_date" type="text" id="doc_date" value="'.$today.'" onclick="clear_error(\'frm_error_'.$id_action.'\');showCalender(this);" /></td>';
+						$frm_str .='<td class="indexing_field"><input name="doc_date" type="text" id="doc_date" value="" onclick="clear_error(\'frm_error_'.$id_action.'\');showCalender(this);" /></td>';
 						$frm_str .='<td><span class="red_asterisk" id="doc_date_mandatory" style="display:inline;">*</span>&nbsp;</td>';
 				  $frm_str .= '</tr >';
 				  /*** Author ***/
