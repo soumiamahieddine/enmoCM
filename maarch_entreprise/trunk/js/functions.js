@@ -1110,7 +1110,7 @@ function valid_action_form(current_form_id, path_manage_script, id_action, value
 		frm_values = frm_values.replace(/\n/g, ' ');
 	}
 	var chosen_action_id = get_chosen_action(current_form_id);
-	//console.log('values : '+values+', table : '+table+', module : '+module+', coll_id : '+coll_id+', chosen_action_id : '+chosen_action_id+', frm_values : '+frm_values);
+//	console.log('values : '+values+', table : '+table+', module : '+module+', coll_id : '+coll_id+', chosen_action_id : '+chosen_action_id+', frm_values : '+frm_values);
 	if(values &&  table && module && coll_id && chosen_action_id != '')
 	{
 		new Ajax.Request(path_manage_script,
@@ -1420,8 +1420,13 @@ function action_send_form_confirm_result(path_manage_script, mode_req, id_action
 						//console.log(res_ids);
 					//	alert(res_ids);
 						end_actions();
+						var table_name = tablename;
+						if(response.table && response.table != '')
+						{
+							table_name = response.table;
+						}
 						var page_result = response.page_result;
-						close_action(id_action, page_result, path_manage_script, mode_req, res_id_values, tablename, id_coll);
+						close_action(id_action, page_result, path_manage_script, mode_req, res_id_values, table_name, id_coll);
 					}
 					else //  Form Params errors
 					{
