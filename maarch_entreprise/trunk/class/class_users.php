@@ -21,7 +21,6 @@
 * @version 2.1
 */
 
-
 class users extends dbquery
 {
 	/**
@@ -348,6 +347,7 @@ class users extends dbquery
 					$_SESSION['m_admin']['users']['Department'] = $this->show_string($line->department);
 					$_SESSION['m_admin']['users']['Enabled'] = $line->enabled;
 					$_SESSION['m_admin']['users']['Status'] = $line->status;
+					$_SESSION['m_admin']['users']['LoginMode'] = $line->loginmode;
 				}
 
 				if (($_SESSION['m_admin']['load_group'] == true || ! isset($_SESSION['m_admin']['load_group'] )) && $_SESSION['m_admin']['users']['UserId'] <> "superadmin")
@@ -423,9 +423,6 @@ class users extends dbquery
 					<label for="FirstName"><?php  echo _FIRSTNAME; ?> :</label><br/>
 					<input name="FirstName" id="FirstName"  type="text" value="<?php  echo $this->show_string($_SESSION['m_admin']['users']['FirstName']); ?>" /><span class="red_asterisk">*</span>
 				</p>
-				<?php
-				//require_once("core/class/class_core_tools.php");
-				?>
 				<p>
 					<label for="Phone"><?php  echo _PHONE_NUMBER; ?> :</label><br/>
 					<input name="Phone" id="Phone"  type="text" value="<?php  echo $_SESSION['m_admin']['users']['Phone']; ?>" />
@@ -433,6 +430,30 @@ class users extends dbquery
 				<p>
 					<label for="Mail"><?php  echo _MAIL; ?> :</label><br/>
 					<input name="Mail" id="Mail"  type="text" value="<?php  echo $_SESSION['m_admin']['users']['Mail']; ?>" /><span class="red_asterisk">*</span>
+				</p>
+				<p>
+					<label for="LoginMode"><?php  echo _LOGIN_MODE; ?> :</label><br/>
+				<?php 
+				
+					
+				echo '<select name="LoginMode" id="LoginMode">';
+				
+					foreach($_SESSION['login_method_memory'] as $METHOD)
+					{
+						if($METHOD['ACTIVATED'] == 'true')
+						{
+							$vala = '';
+							if ($_SESSION['m_admin']['users']['LoginMode'] == $METHOD['ID'])
+								$vala = 'selected="selected"';
+								
+							echo '<option value="'.$METHOD['ID'].'" '.$vala.'  >'.constant($METHOD['BRUT_LABEL']).'</option>';
+						}
+					}
+					
+				echo '</select>';
+			
+				?>
+					<span class="red_asterisk">*</span>
 				</p>
 					<p class="buttons">
 									<?php
@@ -508,10 +529,16 @@ class users extends dbquery
 			$_SESSION['m_admin']['users']['Phone']  = $this->wash($_POST['Phone'], "no", _PHONE, 'yes', 0, 15);
 		}
 
+		if(isset($_POST['LoginMode']) && !empty($_POST['LoginMode']))
+		{
+			$_SESSION['m_admin']['users']['LoginMode']  = $this->wash($_POST['LoginMode'], "no", _LOGIN_MODE, 'yes', 0, 50);
+		}
 		if(isset($_POST['Mail']) && !empty($_POST['Mail']))
 		{
 			$_SESSION['m_admin']['users']['Mail']  = $this->wash($_POST['Mail'], "mail", _MAIL, 'yes', 0, 255);
 		}
+
+
 
 		if($_SESSION['m_admin']['users']['UserId'] <> "superadmin")
 		{
@@ -607,7 +634,7 @@ class users extends dbquery
 				$tmp_ln = $this->protect_string_db($_SESSION['m_admin']['users']['LastName']);
 				$tmp_dep = $this->protect_string_db($_SESSION['m_admin']['users']['Department']);
 
-					$this->query("INSERT INTO ".$_SESSION['tablename']['users']." (  user_id , password , firstname , lastname , phone , mail , department , cookie_key , cookie_date , enabled ) values ( '".$_SESSION['m_admin']['users']['UserId']."', '".$_SESSION['m_admin']['users']['pass']."', '".$tmp_fn."', '".$tmp_ln."', '".$_SESSION['m_admin']['users']['Phone']."', '".$_SESSION['m_admin']['users']['Mail']."', '".$tmp_dep."', '', ".$cookie_date.", 'Y')");
+					$this->query("INSERT INTO ".$_SESSION['tablename']['users']." (  user_id , password , firstname , lastname , phone , mail , department , cookie_key , cookie_date , enabled, loginmode ) values ( '".$_SESSION['m_admin']['users']['UserId']."', '".$_SESSION['m_admin']['users']['pass']."', '".$tmp_fn."', '".$tmp_ln."', '".$_SESSION['m_admin']['users']['Phone']."', '".$_SESSION['m_admin']['users']['Mail']."', '".$tmp_dep."', '', ".$cookie_date.", 'Y', '".$_SESSION['m_admin']['users']['LoginMode']."')");
 
 
 					require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_usergroup_content.php");
@@ -635,7 +662,7 @@ class users extends dbquery
 				$tmp_fn = $this->protect_string_db($_SESSION['m_admin']['users']['FirstName']);
 				$tmp_ln = $this->protect_string_db($_SESSION['m_admin']['users']['LastName']);
 				$tmp_dep = $this->protect_string_db($_SESSION['m_admin']['users']['Department']);
-					$this->query("update ".$_SESSION['tablename']['users']." set firstname = '".$tmp_fn."', lastname = '".$tmp_ln."', phone = '".$_SESSION['m_admin']['users']['Phone']."', mail = '".$_SESSION['m_admin']['users']['Mail']."' , department = '".$tmp_dep."' where user_id = '".$_SESSION['m_admin']['users']['UserId']."'");
+					$this->query("update ".$_SESSION['tablename']['users']." set firstname = '".$tmp_fn."', lastname = '".$tmp_ln."', phone = '".$_SESSION['m_admin']['users']['Phone']."', mail = '".$_SESSION['m_admin']['users']['Mail']."' , department = '".$tmp_dep."', loginmode = '".$_SESSION['m_admin']['users']['LoginMode']."' where user_id = '".$_SESSION['m_admin']['users']['UserId']."'");
 
 					if($_SESSION['m_admin']['users']['UserId'] <> "superadmin")
 					{
