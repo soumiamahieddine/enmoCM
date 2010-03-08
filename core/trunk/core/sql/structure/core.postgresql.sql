@@ -305,6 +305,7 @@ CREATE TABLE users
   change_password character(1) NOT NULL DEFAULT 'Y'::bpchar,
   delay timestamp without time zone,
   status character varying(10) NOT NULL DEFAULT 'OK'::character varying,
+  loginmode character varying(50),
   CONSTRAINT users_pkey PRIMARY KEY (user_id)
 )
 WITH (OIDS=FALSE);
