@@ -1452,9 +1452,14 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
 		}
 		else
 		{
+			$msg = '';
+			if($_SESSION['history']['attachadd'] == "true")
+			{
+				$msg = ucfirst(_DOC_NUM).$id.' '._ATTACH_TO_DOC_NUM.$res_id;
+			}
 			$db->query("update ".$table." set status = 'DEL' where res_id =".$res_id);
 			$_SESSION['action_error'] = _NEW_ATTACH_ADDED;
-			return array('result' => $res_id.'#', 'history_msg' => '');
+			return array('result' => $res_id.'#', 'history_msg' => $msg, 'table_dest' => $_SESSION['tablename']['attach_res_attachments']);
 		}
 	}
 }
