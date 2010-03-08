@@ -55,6 +55,7 @@ function get_values_in_array($val)
 // Form validation
 if($_POST['req'] == 'valid_form' && !empty($_POST['action_id']) && isset($_POST['action_id']) && !empty($_POST['form_to_check'])&& isset($_POST['form_to_check']))
 {
+
 	$id_action = $_POST['action_id'];
 	$db->connect();
 	// Gets the action informations from the database
@@ -297,6 +298,7 @@ else
 					}
 				}
 			}
+			//print_r($res_action);
 			if($res_action == false)
 			{
 				echo "{status : 9, error_txt : '".addslashes($_SESSION['action_error'])."'}";
@@ -306,6 +308,10 @@ else
 			if(isset($res_action['page_result']) && !empty($res_action['page_result']))
 			{
 				$comp = ", page_result	: '".$res_action['page_result']."'";
+			}
+			if(isset($res_action['table_dest']) && !empty($res_action['table_dest']))
+			{
+				$comp .= ", table : '".$res_action['table_dest']."'";
 			}
 			$_SESSION['action_error'] = _ACTION_DONE.' : '.$label_action;
 			echo "{status : 0, error_txt : '".addslashes($_SESSION['action_error'])."'".$comp.", result_id : '".$res_action['result']."'}";
@@ -324,7 +330,7 @@ else
 				$what = $label_action.'('._NUM.$arr_res[$i].') ';
 				if(isset($res_action['history_msg']) && !empty($res_action['history_msg']))
 				{
-					$what .= $res_action['history_msg'];
+					$what = $res_action['history_msg'];
 				}
 				$hist->add($_POST['table'],$arr_res[$i],'ACTION#'.$id_action,$what, $_SESSION['config']['databasetype'], $_POST['module']);
 			}
