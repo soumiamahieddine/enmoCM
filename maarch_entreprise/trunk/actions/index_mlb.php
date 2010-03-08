@@ -1465,7 +1465,12 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
 			unset($_SESSION['data']);
 			$_SESSION['action_error'] = _NEW_ATTACH_ADDED;
 			$_SESSION['indexation'] = true;
-			return array('result' => $res_id.'#', 'history_msg' => '', 'page_result' =>$_SESSION['config']['businessappurl'].'index.php?page=details&dir=indexing_searching&coll_id='.$coll_id.'&id='.$id_doc );
+			$msg = '';
+			if($_SESSION['history']['attachadd'] == "true")
+			{
+				$msg = ucfirst(_DOC_NUM).$res_id.' '._ATTACH_TO_DOC_NUM.$id_doc;
+			}
+			return array('result' => $id_doc.'#', 'history_msg' => $msg, 'page_result' =>$_SESSION['config']['businessappurl'].'index.php?page=details&dir=indexing_searching&coll_id='.$coll_id.'&id='.$id_doc, 'table_dest' => $_SESSION['tablename']['attach_res_attachments'] );
 		}
 	}
 }
