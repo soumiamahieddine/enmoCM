@@ -50,6 +50,7 @@ function launch_autocompleter_folders(path_script, mode)
 			 method:'get',
 			 paramName:'Input',
 			 parameters: 'mode=market',
+			 afterUpdateElement: change_action_for_ie,
 			 minChars: 2
 			 });
 		}
@@ -59,6 +60,7 @@ function launch_autocompleter_folders(path_script, mode)
 			 method:'get',
 			 paramName:'Input',
 			 parameters: 'mode=project',
+			 afterUpdateElement: change_action_for_ie,
 			 minChars: 2
 			 });
 		}
