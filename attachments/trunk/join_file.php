@@ -16,7 +16,7 @@ require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_reque
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_resource.php");
 $core_tools = new core_tools();
 $core_tools->load_lang();
-
+$sec = new security();
 $func = new functions();
 $req = new request();
 $_SESSION['error'] = "";
