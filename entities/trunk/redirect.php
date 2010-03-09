@@ -90,7 +90,8 @@ $frm_height = '500px';
  {
 	if($form_id == 'frm_redirect_dep')
 	{
-		if(count($values) < 1)
+		$dep = get_value_fields($values, 'department');
+		if($dep == '')
 		{
 			$_SESSION['action_error'] = _MUST_CHOOSE_DEP;
 			return false;
@@ -102,7 +103,8 @@ $frm_height = '500px';
 	}
 	else if($form_id == 'frm_redirect_user')
 	{
-		if(count($values) < 1)
+		$user = get_value_fields($values, 'user');
+		if($user == '')
 		{
 			$_SESSION['action_error'] = _MUST_CHOOSE_USER;
 			return false;
