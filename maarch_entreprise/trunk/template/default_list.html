@@ -1,0 +1,105 @@
+<!--
+
+* basket_list and search_adv_list template
+*
+*
+* @package  Maarch LetterBox 3.0
+* @version 3.0
+* @since 10/2005
+* @license GPL
+* @author  Loïc Vinet  <dev@maarch.org>
+*
+
+
+
+
+Parts : 
+	##HEAD< : Begining of the head part
+	##HEAD> : End of the head part
+	
+	##RESULT< : Begining of result list
+	##RESULT> : End fo result list
+	
+Functions : 
+	##load_css|arg1## : load css style - arg1= name of this class
+	##css_line|coll|nonecoll## : load css style for line arg1,arg2 : switch beetwin style on line one or line two
+	##css_line_reload## : reload last css style loaded by css_line
+	##order_link|arg1|arg2## : reload list and change order;  arg1=type; arg2=sort
+	
+	##url_docview## : open view of document; 
+	##url_docdetail## : open detail of document; 
+	##url_download## : download document;
+	
+	##load_img|arg1## : show loaded image; arg1= name of img file
+	
+	##load_value|arg|##: load value in the db; arg1= column's value  identifier
+	
+	
+	
+Mods :
+
+	##func_bool_radio_form## : Activate bool_radio_form in class_list_show.php
+	##func_bool_check_form## : Activate bool_check_form in class_list_show.php
+	##func_bool_view_doc## : Activate func to view documents
+	##func_bool_detail_doc## : Activate func to view documents detail's page
+	##func_display_category_img## : Return icon defined in the category
+	
+Defines :  
+	_NAME_OF_LANG_INSTANCE : u se constant define in lang.php
+	
+	
+	 
+-->
+
+
+#!#TABLE
+<!-- ------------------------------------------------------------------------->
+<table border="0" cellspacing="0" class="##load_css|listing spec zero_padding ##" id='test'  style = "width:100%;padding: 0px;">
+
+
+#!#HEAD
+<!-- ------------------------------------------------------------------------->
+             <thead>
+				<tr>
+									<th width="3%">&nbsp;</th>
+									<th width="3%">&nbsp;</th>
+									<th>##define_lang|_NUM_GED##<br/><br/>##func_bool_sort|res_id##</th>
+									<th>##define_lang|_TYPE##<br/><br/>##func_bool_sort|type_id##</th>
+									<th>##define_lang|_SUBJECT##<br/><br/>##func_bool_sort|subject##</th>
+									<th>##define_lang|_DEST_USER##<br/><br/>##func_bool_sort|dest_user##</th>
+									<th>##define_lang|_REG_DATE##<br/><br/>##func_bool_sort|creation_date##</th>
+									<th>##define_lang|_PRIORITY##<br/><br/>##func_bool_sort|priority##</th>	
+									<th>##define_lang|_ENTITY##<br/><br/>##func_bool_sort|destination##</th>
+									<th width="4%" valign="bottom">&nbsp;</th>
+									<th width="4%" valign="bottom">&nbsp;</th>
+					</tr>
+			</thead>
+			<!-- <tfoot>
+				<tr>
+					<td colspan="11" class="price"><span class="add clearfix">##func_display_add_button##</span></td>
+				</tr>
+			</tfoot> -->
+			<tbody> 
+#!#RESULT
+<!-- ------------------------------------------------------------------------->
+			
+				<tr class="##css_line|col| ##">
+						<td style="text-align:center" style="font-size:13px;"> ##func_bool_check_form##</td>
+						<td>##func_bool_view_doc##</td>
+						<td>##load_value|res_id##</td>
+						<td>##load_value|type_label##</td>
+						<td>##load_value|subject##</td>
+						<td>##load_value|dest_user##</td>
+						<td>##load_value|creation_date##</td>
+						<td>##load_value|priority##</td>
+						<td>##load_value|destination##</td>
+						<td width="4%"  align="center" nowrap>##func_display_action|0##</td>
+						<td>##func_bool_detail_doc##</td>
+				</tr >
+		      
+              
+ #!#FOOTER        
+ <!-- 	------------------------------------------------------------------------->
+            </tbody>
+        </table>
+
