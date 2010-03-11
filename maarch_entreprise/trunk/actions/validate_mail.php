@@ -277,10 +277,10 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 							{
 								for($i=0; $i<count($doctypes);$i++)
 								{
-									$frm_str .='<option value="" class="doctype_level1">'. $doctypes[$i]['label'].'</option>';
+									$frm_str .='<option value="" class="doctype_level1" title="'.$doctypes[$i]['label'].'" label="'.$doctypes[$i]['label'].'">'.$doctypes[$i]['label'].'</option>';
 									for($j=0; $j<count($doctypes[$i]['level2']);$j++)
 									{
-										$frm_str .='<option value="" class="doctype_level2">&nbsp;&nbsp;'.$doctypes[$i]['level2'][$j]['label'].'</option>';
+										$frm_str .='<option value="" class="doctype_level2" title="'.$doctypes[$i]['level2'][$j]['label'].'" label="'.$doctypes[$i]['level2'][$j]['label'].'">&nbsp;&nbsp;'.$doctypes[$i]['level2'][$j]['label'].'</option>';
 										for($k=0; $k<count($doctypes[$i]['level2'][$j]['types']);$k++)
 										{
 											if(!in_array($doctypes[$i]['level2'][$j]['types'][$k]['id'],$hidden_doctypes))
@@ -290,7 +290,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 												{
 													$frm_str .= ' selected="selected" ';
 												}
-												$frm_str .=' >&nbsp;&nbsp;&nbsp;&nbsp;'.$doctypes[$i]['level2'][$j]['types'][$k]['label'].'</option>';
+												$frm_str .=' title="'.$doctypes[$i]['level2'][$j]['types'][$k]['label'].'" label="'.$doctypes[$i]['level2'][$j]['types'][$k]['label'].'">&nbsp;&nbsp;&nbsp;&nbsp;'.$doctypes[$i]['level2'][$j]['types'][$k]['label'].'</option>';
 											}
 										}
 									}

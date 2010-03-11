@@ -286,10 +286,10 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 							{
 								for($i=0; $i<count($doctypes);$i++)
 								{
-									$frm_str .='<option value="" class="doctype_level1">'. $doctypes[$i]['label'].'</option>';
+									$frm_str .='<option value="" class="doctype_level1" title="'.$doctypes[$i]['label'].'" label="'.$doctypes[$i]['label'].'">'.$doctypes[$i]['label'].'</option>';
 									for($j=0; $j<count($doctypes[$i]['level2']);$j++)
 									{
-										$frm_str .='<option value="" class="doctype_level2">&nbsp;&nbsp;'.$doctypes[$i]['level2'][$j]['label'].'</option>';
+										$frm_str .='<option value="" class="doctype_level2" title="'.$doctypes[$i]['level2'][$j]['label'].'" label="'.$doctypes[$i]['level2'][$j]['label'].'">&nbsp;&nbsp;'.$doctypes[$i]['level2'][$j]['label'].'</option>';
 										for($k=0; $k<count($doctypes[$i]['level2'][$j]['types']);$k++)
 										{
 											if(!in_array($doctypes[$i]['level2'][$j]['types'][$k]['id'],$hidden_doctypes))
@@ -299,7 +299,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 												{
 													$frm_str .= ' selected="selected" ';
 												}
-												$frm_str .=' >&nbsp;&nbsp;&nbsp;&nbsp;'.$doctypes[$i]['level2'][$j]['types'][$k]['label'].'</option>';
+												$frm_str .=' title="'.$doctypes[$i]['level2'][$j]['types'][$k]['label'].'" label="'.$doctypes[$i]['level2'][$j]['types'][$k]['label'].'">&nbsp;&nbsp;&nbsp;&nbsp;'.$doctypes[$i]['level2'][$j]['types'][$k]['label'].'</option>';
 											}
 										}
 									}
@@ -586,11 +586,11 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 			$select_notes[$_SESSION['tablename']['users']] = array();
 			array_push($select_notes[$_SESSION['tablename']['users']],"user_id","lastname","firstname");
 			$select_notes[$_SESSION['tablename']['not_notes']] = array();
-			array_push($select_notes[$_SESSION['tablename']['not_notes']],"id", "date", "note_text", "user_id");
+			array_push($select_notes[$_SESSION['tablename']['not_notes']],"id", "date_note", "note_text", "user_id");
 			$where_notes = " identifier = ".$res_id." ";
 			$_SESSION['doc_id'] = $res_id;
 			$request_notes = new request;
-			$tab_notes=$request_notes->select($select_notes,$where_notes,"order by ".$_SESSION['tablename']['not_notes'].".date desc",$_SESSION['config']['databasetype'], "500", true,$_SESSION['tablename']['not_notes'], $_SESSION['tablename']['users'], "user_id" );
+			$tab_notes=$request_notes->select($select_notes,$where_notes,"order by ".$_SESSION['tablename']['not_notes'].".date_note desc",$_SESSION['config']['databasetype'], "500", true,$_SESSION['tablename']['not_notes'], $_SESSION['tablename']['users'], "user_id" );
 			$frm_str .= '<h2 onclick="new Effect.toggle(\'notes_div\', \'blind\', {delay:0.2});return false;"  class="categorie" style="width:90%;">';
 			$frm_str .= '<img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=plus.png" alt="" />&nbsp;<b><small>'._NOTES." (".count($tab_notes).")".' :</small></b>';
 			$frm_str .= '<span class="lb1-details">&nbsp;</span>';
