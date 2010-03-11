@@ -71,7 +71,7 @@ class admin_basket extends dbquery
 				}
 				else
 				{
-					array_push($actions, array('ID_ACTION' => $res->id_action, 'LABEL_ACTION' => $res->label_action, 'WHERE' => $res->where_clause, 'MASS_USE' => $res->mass, 'PAGE_USE' => $res->page));
+					array_push($actions, array('ID_ACTION' => $res->id_action, 'LABEL_ACTION' => $this->show_string($res->label_action), 'WHERE' => $this->show_string($res->where_clause), 'MASS_USE' => $res->mass, 'PAGE_USE' => $res->page));
 				}
 			}
 
