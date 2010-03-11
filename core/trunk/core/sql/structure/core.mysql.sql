@@ -85,13 +85,7 @@ CREATE TABLE IF NOT EXISTS ext_docserver (
   PRIMARY KEY  (doc_id)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-CREATE TABLE `fulltext` (
-`coll_id` VARCHAR( 32 ) NOT NULL ,
-`res_id` INT( 20 ) NOT NULL ,
-`text_type` VARCHAR( 10 ) NOT NULL DEFAULT 'CON',
-`fulltext_content` TEXT NOT NULL ,
-PRIMARY KEY ( `coll_id` , `res_id` )
-) ENGINE = MYISAM ;
+
 
 CREATE TABLE IF NOT EXISTS groupsecurity (
   group_id varchar(32) collate utf8_unicode_ci NOT NULL,

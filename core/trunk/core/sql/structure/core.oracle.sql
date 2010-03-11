@@ -95,17 +95,6 @@
 	"PATH" VARCHAR2(255)
    ) ;
 
---------------------------------------------------------
---  DDL for Table FULLTEXT
---------------------------------------------------------
-
-  CREATE TABLE "FULLTEXT"
-   (	"COLL_ID" VARCHAR2(32 CHAR) NOT NULL ENABLE,
-	"RES_ID" NUMBER NOT NULL ENABLE,
-	"TEXT_TYPE" VARCHAR2(10 CHAR) DEFAULT 'CON' NOT NULL ENABLE,
-	"FULLTEXT_CONTENT" VARCHAR2(4000 CHAR) NOT NULL ENABLE,
-	 CONSTRAINT "FULLTEXT_PK" PRIMARY KEY ("COLL_ID", "RES_ID") ENABLE
-   ) ;
 
 --------------------------------------------------------
 --  DDL for Table GROUPSECURITY
