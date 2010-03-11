@@ -582,7 +582,7 @@ class admin_basket extends dbquery
 	{
 		for($i=0; $i < count($_SESSION['m_admin']['basket']['groups'][$ind_group_session]['ACTIONS']); $i++)
 		{
-			if($id_action == $_SESSION['m_admin']['basket']['groups'][$ind_group_session]['ACTIONS'][$i]['ID_ACTION'])
+			if(trim($id_action) == trim($_SESSION['m_admin']['basket']['groups'][$ind_group_session]['ACTIONS'][$i]['ID_ACTION']))
 			{
 				return true;
 			}
