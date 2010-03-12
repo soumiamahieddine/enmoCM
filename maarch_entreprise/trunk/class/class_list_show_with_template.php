@@ -603,24 +603,30 @@ class list_show_with_template extends list_show
 			$start = 0;
 		}
 		$this->the_start = $start;
-		if(isset($_GET['order']))
+		$findme = 'order_field';
+		$pos = stripos($name, $findme);
+		if($pos === false)
 		{
-			$orderby = strip_tags($_GET['order']);
-		}
-		else
-		{
-			$orderby = 'asc';
-		}
-		$link .= "&amp;order=".$orderby;
-		if(isset($_GET['order_field']))
-		{
-			$orderfield = strip_tags($_GET['order_field']);
-		}
-		else
-		{
-			$orderfield = '';
-		}
-		$link .= "&amp;order_field=".$orderfield;
+			if(isset($_GET['order']))
+			{
+				$orderby = strip_tags($_GET['order']);
+			}
+			else
+			{
+				$orderby = 'asc';
+			}
+			$link .= "&amp;order=".$orderby;
+			if(isset($_GET['order_field']))
+			{
+				$orderfield = strip_tags($_GET['order_field']);
+			}
+			else
+			{
+				$orderfield = '';
+			}
+			$link .= "&amp;order_field=".$orderfield;
+		}	
+		//echo $link;exit;
 		$link .= $comp_link;
 		if($actual_template <> '')
 		{
