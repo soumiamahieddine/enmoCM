@@ -114,14 +114,14 @@ Defines :
 						</td>
 						<td><p align="right">
 							
-							<img src="##load_img|extend_button.gif##"  onclick="new Effect.toggle('info##load_value|case_id##', 'blind');" onmouseover="document.body.style.cursor='pointer';" onmouseout="document.body.style.cursor='auto';" id="h23">
+							<img src="##load_img|extend_button.gif##" class="case_img" onclick="new Effect.toggle('info##load_value|case_id##', 'blind');" onmouseover="document.body.style.cursor='pointer';" onmouseout="document.body.style.cursor='auto';" id="h23">
 							&nbsp;&nbsp;&nbsp;##func_include_by_module|cases##
 							</p>
 						</td>
 				</tr >
 				<tr  class="##css_line_reload##"  >
 				<td colspan="3" class="white">
-				<div class="more ressources" id="info##load_value|case_id##" style="display:none">
+				<div class="more_ressources" id="info##load_value|case_id##" style="display:none">
 					##func_load_external_script|cases|case_extend_list.php##
 				</div>
 				</td>
@@ -135,3 +135,10 @@ Defines :
             </tbody>
         </table>
 
+		<script language="javascript">
+			$$('.case_img').filter(function(el){
+				return !($(el).up('tr').next().down('.more_ressources').immediateDescendants().length);
+			}).each(function(el1){
+				el1.setStyle({display:'none'});
+			});
+		</script>
