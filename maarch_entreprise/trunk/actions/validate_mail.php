@@ -466,7 +466,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 					$frm_str .= '</h2>';
 					$frm_str .= '<div id="diff_list_div"  style="display:none">';
 						$frm_str .= '<div>ici</div>';
-						$frm_str .= '<div id="diff_list_div" class="scroll_div" style="height:150px;border: 1px solid;"></div>';
+						$frm_str .= '<div id="diff_list_div" class="scroll_div" style="height:200px;border: 1px solid;"></div>';
 						$frm_str .= '</td>';
 				  $frm_str .= '</tr>';
 				}
