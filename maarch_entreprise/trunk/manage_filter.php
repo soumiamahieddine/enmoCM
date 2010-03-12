@@ -376,7 +376,7 @@ else
 				}
 				if($tab[$i][$j][$value]=="subject")
 				{
-					$tab[$i][$j]["value"] = $request->show_string($tab[$i][$j]["value"]);
+					$tab[$i][$j]["value"] = $request->cut_string($request->show_string($tab[$i][$j]["value"]), 250);
 					$tab[$i][$j]["label"]=_SUBJECT;
 					$tab[$i][$j]["size"]="12";
 					$tab[$i][$j]["label_align"]="right";
