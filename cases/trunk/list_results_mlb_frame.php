@@ -161,7 +161,7 @@ if(($_REQUEST['template']== 'group_case')&& ($core_tools->is_module_loaded('case
 	$select[$_SESSION['tablename']['cases']]= array();
 	$select[$view]= array();
 	array_push($select[$_SESSION['tablename']['cases']], "case_id", "case_label", "case_description", "case_typist", "case_creation_date", "case_closing_date");
-	$where = " ".$_SESSION['tablename']['cases'].".case_id = ".$view.".case_id  and ";
+	//$where = " ".$_SESSION['tablename']['cases'].".case_id = ".$view.".case_id  and ";
 	$request = new request();
 	$tab=$request->select($select,$where.$where_request,$orderstr,$_SESSION['config']['databasetype'], "default", false, "", "", "", true, false, true);
 }
