@@ -200,8 +200,8 @@ else
 					{
 							?>
 							{
-								'id':'<?php  echo $search_customer_results[$i]['folder_id'];?>',
-								'txt':'<b><?php  echo $search_customer_results[$i]['folder_id'];?></b>',
+								'id':'<?php  echo addslashes($search_customer_results[$i]['folder_id']);?>',
+								'txt':'<b><?php  echo addslashes($search_customer_results[$i]['folder_id']);?></b>',
 								'items':[
 											<?php
 											for($j=0;$j<count($search_customer_results[$i]['content']);$j++)
