@@ -469,7 +469,7 @@ if(count($tab) > 0)
 	$_SESSION['origin'] = 'basket';
 	$_SESSION['collection_id_choice'] = $_SESSION['current_basket']['coll_id'];
 	$details = 'details&dir=indexing_searching';
-	$param_list = array('values' => $tab, 'title' => $title, 'key' => 'res_id', 'page_name' => 'view_baskets&module=basket&baskets='.$_SESSION['current_basket']['id'].'&entity_id='.$_SESSION['auth_dep']['bask_chosen_entity'].'&category_id='.$_SESSION['auth_dep']['bask_chosen_category'].'&status_id='.$_SESSION['auth_dep']['bask_chosen_status'].'&contact_id='.$_SESSION['auth_dep']['bask_chosen_contact'],
+	$param_list = array('values' => $tab, 'title' => $title, 'key' => 'res_id', 'page_name' => 'view_baskets&module=basket&baskets='.$_SESSION['current_basket']['id'].'&entity_id='.$_SESSION['auth_dep']['bask_chosen_entity'].'&category_id='.$_SESSION['auth_dep']['bask_chosen_category'].'&status_id='.$_SESSION['auth_dep']['bask_chosen_status'].'&contact_id='.$_SESSION['auth_dep']['bask_chosen_contact'].'&order_field='.$order_field.'&order='.$order,
 	'what' => 'res_id', 'detail_destination' =>$details, 'details_page' => '', 'view_doc' => true,  'bool_details' => true, 'bool_order' => true,
 	'bool_frame' => false, 'module' => '', 'css' => 'listing spec',
 	'hidden_fields' => '<input type="hidden" name="module" id="module" value="basket" /><input type="hidden" name="table" id="table" value="'.$_SESSION['current_basket']['table'].'"/>
