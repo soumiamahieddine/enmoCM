@@ -92,11 +92,11 @@ if(count($indexes) > 0)
 					$content .= '<option value="'.$indexes[$key]['values'][$i]['id'].'"';
 					if($indexes[$key]['values'][$i]['id'] == $_SESSION['m_admin']['folder']['indexes'][$key])
 					{
-						$content .= 'selected="selected"';
+						$content .= ' selected="selected"';
 					}
-					else if($indexes[$key]['default_value'] <> false && $indexes[$key]['values'][$i]['id'] == $indexes[$key]['default_value'])
+					else if($indexes[$key]['default_value'] <> false && $indexes[$key]['values'][$i]['id'] == $indexes[$key]['default_value'] && empty($_SESSION['m_admin']['folder']['indexes'][$key]))
 					{
-						$content .= 'selected="selected"';
+						$content .= ' selected="selected"';
 					}
 					$content .= ' >'.$indexes[$key]['values'][$i]['label'].'</option>';
 				}
