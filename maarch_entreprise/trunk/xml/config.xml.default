@@ -171,10 +171,10 @@
    		<moduleid>cases</moduleid>
 		<comment>_CASES_COMMENT</comment>
 	</MODULES>
-	<MODULES>
+	<!--<MODULES>
    		<moduleid>doc_converter</moduleid>
 		<comment>_DOC_CONVERTER_COMMENT</comment>
-	</MODULES>
+	</MODULES>-->
 	<MODULES>
    		<moduleid>entities</moduleid>
 		<comment>_ENTITIES_COMMENT</comment>
