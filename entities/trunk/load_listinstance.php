@@ -20,7 +20,11 @@ $diff_list = new diffusion_list();
 
 if((!isset($_REQUEST['id_entity']) || empty($_REQUEST['id_entity'])) && $_REQUEST['load_from_model'] == 'true' )
 {
-	$_SESSION['error'] = _ENTITY_ID.' '._IS_EMPTY;
+	if($_REQUEST['mandatory'] <> 'none')
+	{
+		$_SESSION['error'] = _ENTITY_ID.' '._IS_EMPTY;
+	}
+	$_SESSION['indexing']['diff_list'] = array();
 	echo "{status : 1, error_txt : '".addslashes($_SESSION['error'])."'}";
 	exit();
 }

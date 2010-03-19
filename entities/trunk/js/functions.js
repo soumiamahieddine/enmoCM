@@ -3,6 +3,7 @@ function change_entity(entity_id, path_manage_script, diff_list_id, origin_keywo
 	var div_id = diff_list_id || 'diff_list_div';
 	var tr_display_val = display_value_tr || 'table-row';
 	var origin_arg = origin_keyword || '';
+	var isMandatory = $('destination_mandatory').style.display;
 	if(entity_id != null)
 	{
 		new Ajax.Request(path_manage_script,
@@ -10,7 +11,8 @@ function change_entity(entity_id, path_manage_script, diff_list_id, origin_keywo
 		    method:'post',
 		    parameters: { id_entity : entity_id,
 						  load_from_model : 'true',
-						  origin : origin_arg
+						  origin : origin_arg,
+						  mandatory : isMandatory
 					},
 		        onSuccess: function(answer){
 				eval("response = "+answer.responseText);
@@ -34,6 +36,20 @@ function change_entity(entity_id, path_manage_script, diff_list_id, origin_keywo
 				}
 				else
 				{
+					var diff_list_tr = $('diff_list_tr');
+					var diff_list_div = $(div_id);
+					if(diff_list_div != null)
+					{
+						diff_list_div.innerHTML = '';
+					}
+					if(diff_list_tr)
+					{
+						diff_list_tr.style.display = tr_display_val;
+					}
+					else
+					{
+						diff_list_div.style.display = 'none';
+					}
 					try{
 						$('frm_error').innerHTML = response.error_txt;
 						}
