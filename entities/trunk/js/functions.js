@@ -3,7 +3,15 @@ function change_entity(entity_id, path_manage_script, diff_list_id, origin_keywo
 	var div_id = diff_list_id || 'diff_list_div';
 	var tr_display_val = display_value_tr || 'table-row';
 	var origin_arg = origin_keyword || '';
-	var isMandatory = $('destination_mandatory').style.display;
+	if($('destination_mandatory'))
+	{
+		var isMandatory = $('destination_mandatory').style.display;
+	}
+	else
+	{
+		var isMandatory = "none";
+	}
+	//alert(isMandatory);
 	if(entity_id != null)
 	{
 		new Ajax.Request(path_manage_script,
