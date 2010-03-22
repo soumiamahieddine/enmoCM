@@ -107,7 +107,7 @@ function check_category($coll_id, $res_id)
 	{
 		$ind_coll = $sec->get_ind_collection($coll_id);
 		$table_ext = $_SESSION['collections'][$ind_coll]['extensions'][0];
-		$db->query("insert into ".$table_ext." (res_id, category_id) VALUES (".$res_id.", '".$_SESSION['default_category']."');");
+		$db->query("insert into ".$table_ext." (res_id, category_id) VALUES (".$res_id.", '".$_SESSION['default_category']."')");
 		//$db->show();
 	}
 }
