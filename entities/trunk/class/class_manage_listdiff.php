@@ -172,6 +172,14 @@ class diffusion_list extends dbquery
 			{
 				$concat = $params['concat_list'];
 			}
+			if(!isset($params['only_cc']))
+			{
+				$only_cc = false;
+			}
+			else
+			{
+				$only_cc = $params['only_cc'];
+			}
 			if(isset($params['user_id']) && !empty($params['user_id']))
 			{
 				require_once('modules'.DIRECTORY_SEPARATOR.'entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_entities.php');
@@ -185,7 +193,7 @@ class diffusion_list extends dbquery
 			{
 				$this->query("delete from ".$params['table']." where coll_id = '".$this->protect_string_db(trim($params['coll_id']))."'  and listinstance_type = '".$this->protect_string_db(trim($list_type))."' and res_id = ".$params['res_id']." and item_mode = 'cc'");
 			}
-			if(isset($diff_list['dest']['user_id']) && !empty($diff_list['dest']['user_id']))
+			if(isset($diff_list['dest']['user_id']) && !empty($diff_list['dest']['user_id']) && !$only_cc)
 			{
 				// If dest_user is set , deletes the dest_user (concat or not concat)
 				$this->query("delete from ".$params['table']." where coll_id = '".$this->protect_string_db(trim($params['coll_id']))."'  and listinstance_type = '".$this->protect_string_db(trim($list_type))."' and res_id = ".$params['res_id']." and item_mode = 'dest'");
@@ -195,10 +203,6 @@ class diffusion_list extends dbquery
 					// Deletes the dest user if he is in copy to avoid duplicate entry
 					$this->query("delete from ".$params['table']." where coll_id = '".$this->protect_string_db(trim($params['coll_id']))."'  and listinstance_type = '".$this->protect_string_db(trim($list_type))."' and res_id = ".trim($params['res_id'])." and item_mode = 'cc' and item_type = 'user_id' and item_id = '".$this->protect_string_db(trim($diff_list['dest']['user_id']))."'");
 				}
-			}
-			//$this->show();
-			if(isset($diff_list['dest']['user_id']) && !empty($diff_list['dest']['user_id']))
-			{
 				$this->query("insert into ".$params['table']." (coll_id, res_id, listinstance_type,  sequence, item_id, item_type, item_mode, added_by_user, added_by_entity  ) values ('".$this->protect_string_db(trim($params['coll_id']))."', ".$params['res_id']." , '".$this->protect_string_db(trim($list_type))."', 0, '".$this->protect_string_db(trim($diff_list['dest']['user_id']))."', 'user_id' , 'dest', '".$this->protect_string_db(trim($creator_user))."', '".$this->protect_string_db(trim($creator_entity))."' )");
 				//$this->show();
 			}
