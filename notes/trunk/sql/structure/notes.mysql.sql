@@ -4,7 +4,7 @@ CREATE TABLE notes
   identifier bigint(8) NOT NULL,
   tablename varchar(50),
   user_id varchar(50) NOT NULL,
-  date date NOT NULL,
+  date_note date NOT NULL,
   note_text text NOT NULL,
   coll_id varchar(50),
  PRIMARY KEY (id)

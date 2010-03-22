@@ -12,7 +12,7 @@ CREATE TABLE notes
   identifier bigint NOT NULL,
   tablename character varying(50),
   user_id character varying(50) NOT NULL,
-  date date NOT NULL,
+  date_note date NOT NULL,
   note_text text NOT NULL,
   coll_id character varying(50),
   CONSTRAINT notes_pkey PRIMARY KEY (id)

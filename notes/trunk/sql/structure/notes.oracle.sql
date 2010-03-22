@@ -12,7 +12,7 @@ CREATE SEQUENCE NOTES_SEQ
   IDENTIFIER  NUMBER                            NOT NULL,
   TABLENAME   VARCHAR2(50 BYTE),
   USER_ID     VARCHAR2(50 BYTE)                 NOT NULL,
-  DATE_NOTES  DATE                              NOT NULL,
+  DATE_NOTE  DATE                              NOT NULL,
   NOTE_TEXT   CLOB                             ,
   COLL_ID     VARCHAR2(50 BYTE)
 )
