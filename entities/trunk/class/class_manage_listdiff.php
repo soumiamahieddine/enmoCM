@@ -349,7 +349,7 @@ class diffusion_list extends dbquery
 		}
 		else
 		{
-			$this->query("insert into ".$_SESSION['tablename']['ent_listinstance']." (coll_id, res_id, listinstance_type, item_id, item_type, item_mode) values ('".$this->protect_string_db($coll_id)."', ".$res_id.", '".$this->protect_string_db($listinstance_type)."', '".$this->protect_string_db($dest)."', '".$this->protect_string_db($item_type)."', 'dest', 0);");
+			$this->query("insert into ".$_SESSION['tablename']['ent_listinstance']." (coll_id, res_id, listinstance_type, item_id, item_type, item_mode, sequence,  added_by_user, added_by_entity) values ('".$this->protect_string_db($coll_id)."', ".$res_id.", '".$this->protect_string_db($listinstance_type)."', '".$this->protect_string_db($dest)."', '".$this->protect_string_db($item_type)."', 'dest', 0, '".$_SESSION['user']['UserId']."','".$_SESSION['primaryentity']['id']."');");
 		}
 	}
 }

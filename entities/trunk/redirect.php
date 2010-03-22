@@ -208,4 +208,24 @@ function manage_unlock($arr_id, $history, $id_action, $label_action, $status, $c
 	}
 	return true;
  }
+ 
+ /**
+ * Get the value of a given field in the values returned by the form
+ *
+ * @param $values Array Values of the form to check
+ * @param $field String the field
+ * @return String the value, false if the field is not found
+ **/
+function get_value_fields($values, $field)
+{
+	for($i=0; $i<count($values);$i++)
+	{
+		if($values[$i]['ID'] == $field)
+		{
+			return 	$values[$i]['VALUE'];
+		}
+	}
+	return false;
+}
+
 ?>
