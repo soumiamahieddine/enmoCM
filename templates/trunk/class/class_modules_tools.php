@@ -112,7 +112,7 @@ class templates extends dbquery
 			$this->query("select distinct what from ".$_SESSION['tablename']['temp_templates_association']);
 			while($res = $this->fetch_object())
 			{
-				$db->query("select ".$res->what." as what from ".$able." where res_id = ".$res_id );
+				$db->query("select ".$res->what." as what from ".$table." where res_id = ".$res_id );
 				$line = $db->fetch_object();
 				$what = $line->what;
 				$db->query("select ma.template_id, m.label, ma. from ".$_SESSION['tablename']['temp_templates_association']." ma, ".$_SESSION['tablename']['temp_templates']." m where m.id = ma.template_id and ma.value_field = '".$what."'");
@@ -123,7 +123,7 @@ class templates extends dbquery
 		}
 		else
 		{
-			$this->query("select ".$field." as what from ".$able." where res_id = ".$res_id );
+			$this->query("select ".$field." as what from ".$table." where res_id = ".$res_id );
 			$line = $this->fetch_object();
 			$what = $line->what;
 			$this->query("select ma.template_id, m.label, ma. from ".$_SESSION['tablename']['temp_templates_association']." ma, ".$_SESSION['tablename']['temp_templates']." m where m.id = ma.template_id and ma.value_field = '".$what."'");
