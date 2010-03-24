@@ -8,7 +8,7 @@
 * @version 1
 * @since 03/2009
 * @license GPL
-* @author  Cédric Ndoumba  <dev@maarch.org>
+* @author  Cï¿½dric Ndoumba  <dev@maarch.org>
 */
 
 class entities extends dbquery
@@ -375,7 +375,7 @@ class entities extends dbquery
 		{
 			if($res->entity_id <> '')
 			{
-				$db->query("select entity_label from ".$_SESSION['tablename']['ent_entities']." where entity_id = '".$this->protect_string_db(trim($res_entity_id))."'");
+				$db->query("select entity_label from ".$_SESSION['tablename']['ent_entities']." where entity_id = '".$this->protect_string_db(trim($res->entity_id))."'");
 				$line = $db->fetch_object();
 				$label = $db->show_string($line->entity_label);
 				$tab = array('ID' => $res->entity_id, 'LABEL' => $label, 'KEYWORD' => false);
@@ -405,7 +405,7 @@ class entities extends dbquery
 		{
 			if($res->entity_id <> '')
 			{
-				$db->query("select entity_label from ".$_SESSION['tablename']['ent_entities']." where entity_id = '".$this->protect_string_db(trim($res_entity_id))."'");
+				$db->query("select entity_label from ".$_SESSION['tablename']['ent_entities']." where entity_id = '".$this->protect_string_db(trim($res->entity_id))."'");
 				$line = $db->fetch_object();
 				$label = $db->show_string($line->entity_label);
 				$tab = array('ID' => $res->entity_id, 'LABEL' => $label, 'KEYWORD' => false);

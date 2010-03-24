@@ -9,7 +9,7 @@
 * @version 1
 * @since 03/2009
 * @license GPL
-* @author  Cédric Ndoumba  <dev@maarch.org>
+* @author  Cï¿½dric Ndoumba  <dev@maarch.org>
 */
 
 class users_entities extends dbquery
@@ -145,8 +145,6 @@ class users_entities extends dbquery
 			while($line = $this->fetch_object())
 			{
 				array_push($tmparray, $line->entity_id);
-				$count++;
-
 				$userEnt = new users_entities();
 				$userEnt->connect();
 				$userEnt->query('select entity_id from '.$_SESSION['tablename']['ent_entities']." where parent_entity_id = '".$this->protect_string_db(trim($line->entity_id))."'");
