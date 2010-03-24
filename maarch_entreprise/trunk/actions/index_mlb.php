@@ -71,7 +71,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 		$browser_ie = true;
 		$display_value = 'block';
    	}
-	elseif(preg_match('/msie/i', $_SERVER["HTTP_USER_AGENT"]) && !preg_match('/opera/i', $HTTP_USER_AGENT) )
+	elseif(preg_match('/msie/i', $_SERVER["HTTP_USER_AGENT"]) && !preg_match('/opera/i', $_SERVER["HTTP_USER_AGENT"]) )
 	{
 		$browser_ie = true;
 		$display_value = 'block';

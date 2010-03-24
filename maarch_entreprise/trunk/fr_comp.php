@@ -25,7 +25,7 @@ define('_UPDATE_MSG_TITLE', 'Modification du message d&acute;accueil de l&acute;
 define('_UPDATE_MSG_LINE01','Modifier le formulaire ci-dessous pour mettre &agrave; jour le message d&acute;accueil de l&acute;application.');
 define('_UPDATE_MSG_LINE02','Vous pouvez integrer &agrave; ce message des balises HTML pour mettre en forme le message.');
 
-define('_MANAGE_DEPARTMENT_LIST', 'G&eacute;rer la liste des services')
+define('_MANAGE_DEPARTMENT_LIST', 'G&eacute;rer la liste des services');
 define('_REOPEN_MAIl_EXPLANATION', 'Modifier le statut d&acute;un courrier en cas de cl&ocirc;ture trop rapide du traitement d&acute;un courrier');
 ;
 

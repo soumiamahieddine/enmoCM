@@ -524,7 +524,7 @@ class list_show_with_template extends list_show
 		$this->bool_detail = $bool_detail;
 		$this->do_action = $do_action;
 		$this->id_action = $id_action; /*To keep value for extended simples script =>*/ $_SESSION['extended_template']['id_default_action'] = $this->id_action;
-		$this->do_action_arr = $do_action_arr;
+		$this->do_action_arr = $do_actions_arr;
 		$this->hide_standard_list = $hide_standard_list;
 		if($_REQUEST['start'] > $nb_total)
 		{

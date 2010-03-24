@@ -393,8 +393,9 @@ if(strtoupper(substr(PHP_OS, 0, 3)) != "WIN" && strtoupper(substr(PHP_OS, 0, 3))
 else
 {
 	$_SESSION['slash_env'] = "\\";
-*/
 }
+*/
+
 if(!preg_match("/[/\\]$/",$path_server))
 {
 	$path_server = $path_server.DIRECTORY_SEPARATOR;
