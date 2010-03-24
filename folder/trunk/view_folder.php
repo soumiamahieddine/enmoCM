@@ -337,7 +337,7 @@ if(isset($_REQUEST['delete_doc']) && !empty($_REQUEST['coll_id']))
 		$is_master_type = false;
 	}*/
 	$indexing = new indexing_searching();
-	$indexing->delete_doc( $_SESSION["unique_res_id"], $_SESSION['collection_choice'];
+	$indexing->delete_doc( $_SESSION["unique_res_id"], $_SESSION['collection_choice']);
 	?>
 	<script language="javascript" type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?page=view_folder&module=folder&coll_id='.$_REQUEST['coll_id'].'&type_id='.$_SESSION['type'];?>';</script>
     <?php
@@ -367,7 +367,7 @@ if(isset($_REQUEST['delete_doc']) && !empty($_REQUEST['coll_id']))
                     if($show_list)
                     {
                         $list=new list_show();
-                        $list->list_doc($tab,$i,_SEARCH_RESULTS." : ".$i." "._FOUND_FOLDERS,"folder_id","view_folder","folder_id","folder_detail",false,true,"post",$_SESSION['config']['businessappurl']."index.php?page=view_folder&amp;module=folder",_CHOOSE, false, false, false, false, false, false, false,false, '', '',  true, _ALL_USERS,_USER'listing spec', '', false, false, array(), '<input type="hidden" name="module" value="folder" /><input type="hidden" name="page" value="view_folder" />');
+                        $list->list_doc($tab,$i,_SEARCH_RESULTS." : ".$i." "._FOUND_FOLDERS,"folder_id","view_folder","folder_id","folder_detail",false,true,"post",$_SESSION['config']['businessappurl']."index.php?page=view_folder&amp;module=folder",_CHOOSE, false, false, false, false, false, false, false,false, '', '',  true, _ALL_USERS,_USER, 'listing spec', '', false, false, array(), '<input type="hidden" name="module" value="folder" /><input type="hidden" name="page" value="view_folder" />');
                               
                         echo '<br/>';
                     }
