@@ -978,7 +978,7 @@ class functions
 		}
 		for($i=0;$i<count($chars_to_escape);$i++)
 		{
-			$string = str_replace($chars_toescape[$i], '\\'.$chars_to_escape, $string);
+			$string = str_replace($chars_to_escape[$i], '\\'.$chars_to_escape, $string);
 		}
 		$string = str_replace('"', "'", $string);
 		return trim($string);
@@ -988,7 +988,7 @@ class functions
 	{
 		for($i=0;$i<count($chars_to_escape);$i++)
 		{
-			$string = str_replace($chars_toescape[$i], '\\'.$chars_to_escape, $string);
+			$string = str_replace($chars_to_escape[$i], '\\'.$chars_to_escape, $string);
 		}
 		return trim($string);
 	}

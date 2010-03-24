@@ -405,7 +405,6 @@ class request extends dbquery
 		elseif($_SESSION['config']['databasetype'] == "ORACLE")
 		{
 			return $this->extract_date($date1).' - '.$this->extract_date($date2);
-			return '';
 		}
 		else if($_SESSION['config']['databasetype'] == "SQLSERVER")
 		{

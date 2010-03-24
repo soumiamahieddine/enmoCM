@@ -81,7 +81,7 @@ class manage_status extends dbquery
 			}
 			else
 			{
-				$img_path = $_SESSION['config']['businessappurl'].'static.php?filename=default_status'.$extension.'.gif';
+				$img_path = $_SESSION['config']['businessappurl'].'static.php?filename=default_status.gif';
 				$big_img_path = $_SESSION['config']['businessappurl'].'static.php?filename=default_status_big.gif';
 			}
 			if(empty($status_txt) || !isset($status_txt))
