@@ -446,32 +446,16 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 					$frm_str .= '</td>';
 					$frm_str .= '<td colspan="2">';
 						$frm_str .='<input type="radio" class="check" name="is_corporate" id="is_corporate_Y" value="Y" ';
-						if($contact_info['IS_CORPORATE_PERSON'] == 'Y')
-						{
+						
 							$frm_str .=' checked="checked"';
-						}elseif(empty($contact['IS_CORPORATE_PERSON']))
-						{
-							$frm_str .=' checked="checked"';
-						}
+						
 						$frm_str .= 'onclick="javascript:show_admin_contacts(true, \''.$display_value.'\');">'._YES;
 						$frm_str .='<input type="radio" id="is_corporate_N" class="check" name="is_corporate" value="N"';
-						if($contact_info['IS_CORPORATE_PERSON'] == 'N')
-						{
-							$frm_str .=' checked="checked"';
-						}
+						
 						$frm_str .=' onclick="javascript:show_admin_contacts( false, \''.$display_value.'\');"/>'._NO;
 					$frm_str .= '</td>';
 				$frm_str .= '</tr>';
-		 		$frm_str .= '<tr id="title_p" style="display:';
-				if($contact_info['IS_CORPORATE_PERSON'] == 'Y')
-				{
-					$frm_str .= 'none';
-				}
-				else
-				{
-					 $frm_str .= $display_value;
-				}
-				$frm_str .='">';
+		 		$frm_str .= '<tr id="title_p" style="display:none">';
 					$frm_str .= '<td  colspan="2">';
 						$frm_str .='<label for="title">'._TITLE2.' : </label>';
 					$frm_str .= '</td>';
@@ -490,39 +474,25 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 						$frm_str .='</select>';
 					$frm_str .= '</td>';
 				$frm_str .= '</tr>';
-		 $frm_str .= '<tr id="lastname_p" style="display:';
-			if($contact_info['IS_CORPORATE_PERSON'] == 'Y')
-			{
-				$frm_str .= 'none';
-			}
-			else
-			{
+		 $frm_str .= '<tr id="lastname_p" style="display:';	
 				$frm_str .= $display_value;
-			}
 			$frm_str .='">';
 				$frm_str .= '<td colspan="2">';
 						$frm_str .='<label for="lastname">'._LASTNAME.' : </label>';
 				$frm_str .= '</td>';
 				$frm_str .= '<td colspan="2">';
-					$frm_str .='<input name="lastname" type="text"  id="lastname" value="'.$core_tools->show($contact_info['LASTNAME']).'" /> ';
+					$frm_str .='<input name="lastname" type="text"  id="lastname" value="" /> ';
 					$frm_str .='<span class="red_asterisk" id="lastname_mandatory" style="display:inline;">*</span>';
 				$frm_str .= '</td>';
 			$frm_str .= '</tr>';
-		 	$frm_str .= '<tr id="firstname_p" style="display:';
-			if($contact_info['IS_CORPORATE_PERSON'] == 'Y')
-			{
-				$frm_str .= 'none';
-			}
-			else
-			{
-				$frm_str .= $display_value;
-			}
+		 	$frm_str .= '<tr id="firstname_p" style="display:';			
+					$frm_str .= $display_value;
 			$frm_str .='">';
 				$frm_str .= '<td colspan="2">';
 					$frm_str .='<label for="firstname">'._FIRSTNAME.' : </label>';
 				$frm_str .= '</td>';
 				$frm_str .= '<td colspan="2">';
-				$frm_str .='<input name="firstname" type="text"  id="firstname" value="'.$core_tools->show($contact_info['FIRSTNAME']).'"/>';
+				$frm_str .='<input name="firstname" type="text"  id="firstname" value=""/>';
 		 		$frm_str .= '</td>';
 			$frm_str .= '</tr>';
 
@@ -531,26 +501,19 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 					$frm_str .='<label for="society">'._SOCIETY.' : </label>';
 				$frm_str .= '</td>';
 				$frm_str .= '<td colspan="2">';
-					$frm_str .='<input name="society" type="text"  id="society" value="'.$core_tools->show($contact_info['SOCIETY']).'" />';
+					$frm_str .='<input name="society" type="text"  id="society" value="" />';
 					$frm_str .='<span class="red_asterisk" id="society_mandatory" style="display:inline;">*</span>';
 				$frm_str .= '</td>';
 			$frm_str .= '</tr>';
 
-			$frm_str .= '<tr id="function_p" style="display:';
-			if($contact_info['IS_CORPORATE_PERSON'] == 'Y')
-			{
-				$frm_str .= 'none';
-			}
-			else
-			{
+			$frm_str .= '<tr id="function_p" style="display:';	
 				$frm_str .= 'block';
-			}
 			$frm_str .='">';
 				$frm_str .= '<td colspan="2">';
 					$frm_str .='<label for="function">'._FUNCTION.' : </label>';
 				$frm_str .= '</td>';
 				$frm_str .= '<td colspan="2">';
-					$frm_str .='<input name="function" type="text"  id="function" value="'.$core_tools->show($contact_info['FUNCTION']).'" />';
+					$frm_str .='<input name="function" type="text"  id="function" value="" />';
 		 		$frm_str .= '</td>';
 			$frm_str .= '</tr>';
 			$frm_str .= '<tr>';
@@ -558,7 +521,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 					$frm_str .='<label for="phone">'._PHONE.' : </label>';
 				$frm_str .= '</td>';
 				$frm_str .= '<td colspan="2">';
-					$frm_str .='<input name="phone" type="text"  id="phone" value="'.$core_tools->show($contact_info['PHONE']).'" />';
+					$frm_str .='<input name="phone" type="text"  id="phone" value="" />';
 		 		$frm_str .= '</td>';
 			$frm_str .= '</tr>';
 
@@ -567,7 +530,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 					$frm_str .='<label for="mail">'._MAIL.' : </label>';
 				$frm_str .= '</td>';
 				$frm_str .= '<td colspan="2">';
-					$frm_str .='<input name="mail" type="text" id="mail" value="'.$core_tools->show($contact_info['MAIL']).'" />';
+					$frm_str .='<input name="mail" type="text" id="mail" value="" />';
 		 		$frm_str .= '</td>';
 			$frm_str .= '</tr>';
 
@@ -576,13 +539,13 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 					$frm_str .='<label for="num">'._NUM.' : </label>';
 				$frm_str .= '</td>';
 				$frm_str .= '<td>';
-					$frm_str .='<input name="num" type="text" class="small"  id="num" value="'.$core_tools->show($contact_info['ADD_NUM']).'" />';
+					$frm_str .='<input name="num" type="text" class="small"  id="num" value="" />';
 		 		$frm_str .= '</td>';
 				$frm_str .= '<td>';
 					$frm_str .='<label for="street">'._STREET.' : </label>';
 				$frm_str .= '</td>';
 				$frm_str .= '<td>';
-					$frm_str .='<input name="street" type="text" class="medium"  id="street" value="'.$core_tools->show($contact_info['ADD_STREET']).'" />';
+					$frm_str .='<input name="street" type="text" class="medium"  id="street" value="" />';
 		 		$frm_str .= '</td>';
 			$frm_str .= '</tr>';
 		 	$frm_str .= '<tr>';
@@ -590,7 +553,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 					$frm_str .='<label for="add_comp">'._COMPLEMENT.' : </label>';
 				$frm_str .= '</td>';
 				$frm_str .= '<td colspan="2">';
-					$frm_str .='<input name="add_comp" type="text"  id="add_comp" value="'.$core_tools->show($contact_info['ADD_COMP']).'" />';
+					$frm_str .='<input name="add_comp" type="text"  id="add_comp" value="" />';
 		 		$frm_str .= '</td>';
 			$frm_str .= '</tr>';
 		 	$frm_str .= '<tr>';
@@ -598,13 +561,13 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 					$frm_str .='<label for="cp">'._POSTAL_CODE.' : </label>';
 				$frm_str .= '</td>';
 				$frm_str .= '<td>';
-					$frm_str .='<input name="cp" type="text" id="cp" value="'.$core_tools->show($contact_info['ADD_CP']).'" class="small" />';
+					$frm_str .='<input name="cp" type="text" id="cp" value="" class="small" />';
 		 		$frm_str .= '</td>';
 				$frm_str .= '<td>';
 					$frm_str .='<label for="town">'._TOWN.' : </label>';
 				$frm_str .= '</td>';
 				$frm_str .= '<td>';
-					$frm_str .='<input name="town" type="text" id="town" value="'.$core_tools->show($contact_info['ADD_TOWN']).'" class="medium" />';
+					$frm_str .='<input name="town" type="text" id="town" value="" class="medium" />';
 		 		$frm_str .= '</td>';
 			$frm_str .= '</tr>';
 
@@ -613,7 +576,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 					$frm_str .='<label for="country">'._COUNTRY.' : </label>';
 				$frm_str .= '</td>';
 				$frm_str .= '<td colspan="2">';
-					$frm_str .='<input name="country" type="text"  id="country" value="'.$core_tools->show($contact_info['ADD_COUNTRY']).'" />';
+					$frm_str .='<input name="country" type="text"  id="country" value="" />';
 				$frm_str .= '</td>';
 			$frm_str .= '</tr>';
 		 	$frm_str .= '<tr>';
@@ -621,15 +584,11 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 					$frm_str .='<label for="comp_data">'._COMP_DATA.' : </label>';
 				$frm_str .= '</td>';
 				$frm_str .= '<td colspan="2">';
-					$frm_str .='<textarea name="comp_data" id="comp_data" >'.$core_tools->show($contact_info['OTHER_DATA']).'</textarea>';
+					$frm_str .='<textarea name="comp_data" id="comp_data" ></textarea>';
 		 		$frm_str .= '</td>';
 			$frm_str .= '</tr>';
 		$frm_str .= '</table>';
 			$frm_str .='<div align="center">';
-			if(!$readonly)
-			{
-				$frm_str .='<input name="submit" type="button" value="'._VALIDATE.'"  class="button" onclick="create_contact(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&page=create_contact\', \''.$id_action.'\');" />';
-			}
 			$frm_str .=' <input name="cancel" type="button" value="'._CANCEL.'"  onclick="new Effect.toggle(\'create_contact_div\', \'blind\', {delay:0.2});clear_form(\'indexingfrmcontact\');return false;" class="button" />';
 		$frm_str .='</div>';
 		$frm_str .= '</fieldset >';

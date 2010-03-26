@@ -1365,7 +1365,7 @@ class list_show extends functions
 	}
 
 
-	public function list_simple($result, $nb_total, $title,$what,$key,$bool_view_document, $page_view = "", $used_css = 'listing spec', $page_modify ='', $height_page_modify = 400, $width_page_modify = 500, $page_del ='', $link_in_line = false)
+	public function list_simple($result, $nb_total, $title,$what,$key,$bool_view_document, $page_view = "", $used_css = 'listing spec', $page_modify ='', $height_page_modify = 400, $width_page_modify = 500, $page_del ='')
 	{
 		//$this->show_array($result);
 
@@ -1449,18 +1449,9 @@ class list_show extends functions
                 {
                     if($result[$theline][$count_column]['show']==true)
                     {
-						if($link_in_line)
-						{
-						?>
-							<td width="<?php  echo $result[$theline][$count_column]['size'];?>%" align="<?php  echo $result[$theline][$count_column]['align'];?>" onclick="window.open('<?php  echo $action;?>?id=<?php  echo $result[$theline][0]['value'];?>', '_blank');"><?php  echo $func->show($this->thisword($result[$theline][$count_column]['value'],$what)); ?></td>
-						<?php
-						}
-						else
-						{
 						?>
 							<td width="<?php  echo $result[$theline][$count_column]['size'];?>%" align="<?php  echo $result[$theline][$count_column]['align'];?>"><?php  echo $func->show($this->thisword($result[$theline][$count_column]['value'],$what)); ?></td>
 						<?php
-						}
                     }
 					else
 					{

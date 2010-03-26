@@ -317,6 +317,25 @@ class business_app_tools extends dbquery
 			$i++;
 		}
 		$_SESSION['default_mail_priority'] = (string) $mail_priorities->default_priority;
+		
+		$_SESSION['mail_titles'] = array();
+		$mail_titles = $xmlfile->titles;
+		$i=0;
+		foreach($mail_titles->nature as $title )
+		{
+			$tmp = (string) $title->label;
+			$tmp2 = $this->retrieve_constant_lang($tmp, $path_lang);
+			if($tmp2 <> false)
+			{
+				$label = $tmp2;
+			}
+			else
+			{
+				$label = $tmp;
+			}
+			$_SESSION['mail_titles'][(string)$title->id] = $label;
+		}
+		$_SESSION['default_mail_title'] = (string) $mail_titles->default_title;
 	}
 
 	public function load_features($xml_features)

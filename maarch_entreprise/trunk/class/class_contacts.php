@@ -446,7 +446,7 @@ class contacts extends dbquery
 							foreach(array_keys($titles) as $key)
 							{
 								?><option value="<?php echo $key;?>" <?php
-								if(((!isset($_SESSION['m_admin']['contact']['TITLE']) || empty($_SESSION['m_admin']['contact']['TITLE']) ) && $key == $default_title) || ($key == $_SESSION['m_admin']['contact']['TITLE'] ))
+								if(((!isset($_SESSION['m_admin']['contact']['TITLE']) || empty($_SESSION['m_admin']['contact']['TITLE']) ) && $key == $_SESSION['default_mail_title'])  || ($key == $_SESSION['m_admin']['contact']['TITLE'] ))
 								{
 									echo 'selected="selected"';
 								}

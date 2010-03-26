@@ -67,7 +67,7 @@ function get_folder_data($coll_id, $res_id)
 	$view = $sec->retrieve_view_from_coll_id($coll_id);
 	if(empty($view))
 	{
-		$view = $table;
+		$view = $sec->retrieve_table_from_coll($coll_id);
 	}
 	$db = new dbquery();
 	$db->connect();

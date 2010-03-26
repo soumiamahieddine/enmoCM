@@ -221,7 +221,7 @@ class indexing_searching_app extends dbquery
 					{
 						array_push($data_res, array('column' => $key, 'value' => $post[$key], 'type' => "integer"));
 					}
-					else if($_ENV['categories'][$cat_id][$values_form[$i]['ID']]['table'] == 'coll_ext')
+					else if($_ENV['categories'][$cat_id][$key]['table'] == 'coll_ext')
 					{
 						array_push($data_ext, array('column' => $key, 'value' => $post[$key], 'type' => "integer"));
 					}
@@ -645,22 +645,22 @@ class indexing_searching_app extends dbquery
 			$str = $init.'<table align="center" border="0" width="100%" >';
 			$tmp = "";
 
-			for($i=0; $i<count($params['input_ids']) ;$i++)
+			for($i=0; $i<count($param['input_ids']) ;$i++)
 			{
-				$tmp .= $params['input_ids'][$i]['ID'].',';
+				$tmp .= $param['input_ids'][$i]['ID'].',';
 
 				if ($i%2 != 1 || $i==0) // pair
 				{
 					$str .= '<tr>';
 				}
-				$str .= '<td >'.addslashes($params['input_ids'][$i]['LABEL']).'</td><td><input type="text" name="'.$params['input_ids'][$i]['ID'].'" id="'.$params['input_ids'][$i]['ID'].'" value="" /></td>';
+				$str .= '<td >'.addslashes($param['input_ids'][$i]['LABEL']).'</td><td><input type="text" name="'.$param['input_ids'][$i]['ID'].'" id="'.$param['input_ids'][$i]['ID'].'" value="" /></td>';
 				if ($i%2 == 1 && $i!=0) // impair
 				{
    					echo '</tr>'	;
 				}
 				else
 				{
-					if($i+1 == count($params['input_ids']))
+					if($i+1 == count($param['input_ids']))
 					{
 						echo '<td  colspan="3">&nbsp;</td></tr>';
 					}
@@ -705,7 +705,7 @@ class indexing_searching_app extends dbquery
 									}
 									else
 									{
-										if($i+1 == count($params['input_ids']))
+										if($i+1 == count($param['input_ids']))
 										{
 											echo '<td  colspan="3">&nbsp;</td></tr>';
 										}
@@ -736,7 +736,7 @@ class indexing_searching_app extends dbquery
 		$view = $sec->retrieve_view_from_coll_id($coll_id);
 		if(empty($view))
 		{
-			$view = $table;
+			$view = $sec->retrieve_table_from_coll($coll_id);
 		}
 		$db = new dbquery();
 		$db->connect();

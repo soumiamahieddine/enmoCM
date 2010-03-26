@@ -72,7 +72,7 @@ if(isset($_REQUEST['user']) && $_REQUEST['user'] != '')
 			}
 		}
 		$title = _TITLE_STATS_USER_LOG.' :  '.$user_name.' ('.$_REQUEST['user'].')';
-		?><div align="center"><?php $list->list_simple($tab, $i, $title, 'folder_id', 'istats_result', false, "", 'listing spec', '', 400, 500, '', false);  ?></div>
+		?><div align="center"><?php $list->list_simple($tab, $i, $title, 'folder_id', 'istats_result', false, "", 'listing spec', '', 400, 500);  ?></div>
 		<?php
 	}
 	else
