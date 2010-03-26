@@ -136,7 +136,7 @@
 		<system_service>true</system_service>
 		<enabled>true</enabled>
 		<WHEREAMIUSED>
-			<page>user_up_init</page>
+			<page>user_init</page>
 			<nature>include</nature>
 		</WHEREAMIUSED>
 		<WHEREAMIUSED>
