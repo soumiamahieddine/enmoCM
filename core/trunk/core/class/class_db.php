@@ -375,6 +375,7 @@ class dbquery extends functions
 		elseif($this->databasetype == "ORACLE")
 		{
 			$myObject = @oci_fetch_object($this->statement);
+			$myLowerObject = false;
 			if(isset($myObject) && !empty($myObject))
 			{
 				foreach($myObject as $key => $value)
