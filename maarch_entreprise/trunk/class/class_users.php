@@ -374,7 +374,7 @@ class users extends dbquery
 					echo '<h1><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=picto_user_b.gif" alt="" /> '._USER_MODIFICATION.'</h1>';
 				}
 				$_SESSION['service_tag'] = 'user_init';
-				echo $core->execute_modules_services($_SESSION['modules_services'], 'user_up_init', "include");
+				echo $core->execute_modules_services($_SESSION['modules_services'], 'user_init', "include");
 				$_SESSION['service_tag'] = 'formuser';
 				echo $core->execute_modules_services($_SESSION['modules_services'], 'formuser', "include");
 

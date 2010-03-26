@@ -574,7 +574,7 @@ class types extends dbquery
 			{
 				$label = $tmp;
 			}
-			$img = (STRING) $item->img;
+			$img = (string) $item->img;
 			if(isset($item->default_value) && !empty($item->default_value))
 			{
 				$tmp = (string) $item->default_value;
@@ -610,7 +610,7 @@ class types extends dbquery
 					}
 					array_push($values, array('id' => (string) $val->id, 'label' => $label_val));
 				}
-				$arr_tmp = array('column' => (STRING) $item->column, 'label' => $label, 'type' => (STRING) $item->type, 'img' => $_SESSION['config']['businessappurl'].'static.php?filename='.$img, 'type_field' => 'select', 'values' => $values, 'default_value' => $default);
+				$arr_tmp = array('column' => (string) $item->column, 'label' => $label, 'type' => (string) $item->type, 'img' => $_SESSION['config']['businessappurl'].'static.php?filename='.$img, 'type_field' => 'select', 'values' => $values, 'default_value' => $default);
 			}
 			elseif(isset($item->table))
 			{
@@ -637,11 +637,11 @@ class types extends dbquery
 				{
 					 array_push($values, array('id' => (string) $res->$foreignKey, 'label' => $res->$foreignLabel));
 				}
-				$arr_tmp = array('column' => (STRING) $item->column, 'label' => $label, 'type' => (STRING) $item->type, 'img' => $_SESSION['config']['businessappurl'].'static.php?filename='.$img, 'type_field' => 'select', 'values' => $values, 'default_value' => $default);
+				$arr_tmp = array('column' => (string) $item->column, 'label' => $label, 'type' => (string) $item->type, 'img' => $_SESSION['config']['businessappurl'].'static.php?filename='.$img, 'type_field' => 'select', 'values' => $values, 'default_value' => $default);
 			}
 			else
 			{
-				$arr_tmp = array('column' => (STRING) $item->column, 'label' => $label, 'type' => (STRING) $item->type, 'img' => $_SESSION['config']['businessappurl'].'static.php?filename='.$img, 'type_field' => 'input', 'default_value' => $default);
+				$arr_tmp = array('column' => (string) $item->column, 'label' => $label, 'type' => (string) $item->type, 'img' => $_SESSION['config']['businessappurl'].'static.php?filename='.$img, 'type_field' => 'input', 'default_value' => $default);
 			}
 			//$this->show_array($arr_tmp);
 			array_push($indexes, $arr_tmp);
@@ -704,8 +704,8 @@ class types extends dbquery
 			{
 				$label = $tmp;
 			}
-			$col = (STRING) $item->column;
-			$img = (STRING) $item->img;
+			$col = (string) $item->column;
+			$img = (string) $item->img;
 			if(isset($item->default_value) && !empty($item->default_value))
 			{
 				$tmp = (string) $item->default_value;
@@ -743,7 +743,7 @@ class types extends dbquery
 						}
 						array_push($values, array('id' => (string) $val->id, 'label' => $label_val));
 					}
-					$indexes[$col] = array( 'label' => $label, 'type' => (STRING) $item->type, 'img' => $_SESSION['config']['businessappurl'].'static.php?filename='.$img, 'type_field' => 'select', 'values' => $values, 'default_value' => $default);
+					$indexes[$col] = array( 'label' => $label, 'type' => (string) $item->type, 'img' => $_SESSION['config']['businessappurl'].'static.php?filename='.$img, 'type_field' => 'select', 'values' => $values, 'default_value' => $default);
 				}
 				elseif(isset($item->table))
 				{
@@ -770,11 +770,11 @@ class types extends dbquery
 					{
 						 array_push($values, array('id' => (string) $res->$foreignKey, 'label' => $res->$foreignLabel));
 					}
-					$indexes[$col] = array( 'label' => $label, 'type' => (STRING) $item->type, 'img' => $_SESSION['config']['businessappurl'].'static.php?filename='.$img, 'type_field' => 'select', 'values' => $values, 'default_value' => $default);
+					$indexes[$col] = array( 'label' => $label, 'type' => (string) $item->type, 'img' => $_SESSION['config']['businessappurl'].'static.php?filename='.$img, 'type_field' => 'select', 'values' => $values, 'default_value' => $default);
 				}
 				else
 				{
-					$indexes[$col] = array( 'label' => $label, 'type' => (STRING) $item->type, 'img' => $_SESSION['config']['businessappurl'].'static.php?filename='.$img, 'type_field' => 'input', 'default_value' => $default);
+					$indexes[$col] = array( 'label' => $label, 'type' => (string) $item->type, 'img' => $_SESSION['config']['businessappurl'].'static.php?filename='.$img, 'type_field' => 'input', 'default_value' => $default);
 				}
 			}
 		}
