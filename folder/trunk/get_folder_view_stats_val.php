@@ -78,7 +78,7 @@ if(isset($_REQUEST['type_report']) && $_REQUEST['type_report'] == 'foldertype')
 		}
 		$title = _NB_VIEWED_FOLDERS.' '._TITLE_STATS_CHOICE_FOLDER_TYPE;
 		?>
-		<div align="center"><?php $list->list_simple($tab, $i, $title, 'foldertype_id', 'istats_result', false, '', 'listing spec', '', 400, 500, '', false); ?></div>
+		<div align="center"><?php $list->list_simple($tab, $i, $title, 'foldertype_id', 'istats_result', false, '', 'listing spec', '', 400, 500); ?></div>
 		<?php
 	}
 } // FIN 
@@ -145,7 +145,7 @@ elseif(isset($_REQUEST['type_report']) && $_REQUEST['type_report'] == 'usergroup
 		}
 		$title = _FOLDER_VIEW_STAT.' '._TITLE_STATS_CHOICE_GROUP;
 		?>
-		<div align="center"><?php $list->list_simple($tab, $i, $title, 'id', 'istats_result', false, '', 'listing spec', '', 400, 500, '', false);?></div>
+		<div align="center"><?php $list->list_simple($tab, $i, $title, 'id', 'istats_result', false, '', 'listing spec', '', 400, 500);?></div>
 		<?php
 	}
 
@@ -238,7 +238,7 @@ elseif(isset($_REQUEST['type_report']) && $_REQUEST['type_report'] == 'user')
 			}
 			$title = _FOLDER_VIEW_STAT.' '._TITLE_STATS_CHOICE_USER2.' "'.$_REQUEST['user'].'" : '.$line['nbr'];
 			?>
-			<div align="center"><?php $list->list_simple($tab, $i, $title, 'id', 'istats_result', false, '', 'listing spec', '', 400, 500, '', false);?></div>
+			<div align="center"><?php $list->list_simple($tab, $i, $title, 'id', 'istats_result', false, '', 'listing spec', '', 400, 500);?></div>
 			<?php
 		}
 	}
