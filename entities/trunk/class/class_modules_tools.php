@@ -105,20 +105,11 @@ class entities extends dbquery
 		if(preg_match('/@my_entities/', $where))
 		{
 			$entities = '';
-			if($user_id == $_SESSION['user']['UserId'])
+			
+			$db->query("select entity_id from ".$_SESSION['tablename']['ent_users_entities']." where user_id = '".$this->protect_string_db(trim($user_id))."'");
+			while($res = $db->fetch_object())
 			{
-				for($i=0; $i< count($_SESSION['user']['entities']);$i++)
-				{
-					$entities .= "'".$_SESSION['user']['entities'][$i]['ENTITY_ID']."', ";
-				}
-			}
-			else
-			{
-				$db->query("select entity_id from ".$_SESSION['tablename']['ent_users_entities']." where user_id = '".$this->protect_string_db(trim($user_id))."'");
-				while($res = $db->fetch_object())
-				{
-					$entities .= "'".$res->entity_id."', ";
-				}
+				$entities .= "'".$res->entity_id."', ";
 			}
 			$entities = preg_replace('/, $/', '', $entities);
 
