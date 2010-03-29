@@ -229,6 +229,14 @@ else
 				}
 				$indexes[$key]['value'] = $res->$tmp;
 				$indexes[$key]['show_value'] = $res->$tmp;
+				if($indexes[$key]['type'] == "string")
+				{
+					$indexes[$key]['show_value'] = $db->show_string($res->$tmp);
+				}
+				elseif($indexes[$key]['type'] == "date")
+				{
+					$indexes[$key]['show_value'] = $db->format_date_db($res->$tmp, true);
+				}
 			}
 			//$db->show_array($indexes);
 			$process_data = $is->get_process_data($coll_id, $s_id);
@@ -1016,9 +1024,7 @@ else
 				</dd>
 				<dt><?php echo _DOC_HISTORY;?></dt>
 				<dd>
-					<iframe src="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&dir=indexing_searching&page=hist_doc&id=<?php echo $s_id;?>" name="hist_doc_process" width="800" height="650" align="left" scrolling="auto" frameborder="0" id="hist_doc_process"></iframe>
-			
-					<?php ///include('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."indexing_searching".DIRECTORY_SEPARATOR."hist_doc.php");?>
+					<iframe src="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&dir=indexing_searching&page=hist_doc&id=<?php echo $s_id;?>&mode=normal" name="hist_doc_process" width="100%" height="580" align="left" scrolling="auto" frameborder="0" id="hist_doc_process"></iframe>
 				</dd>
 				<?php
 				if($core_tools->is_module_loaded('notes'))

@@ -759,6 +759,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 			$frm_str .= '</tr>';
 		$frm_str .= '</table>';
 			$frm_str .='<div align="center">';
+				$frm_str .='<input name="submit" type="button" value="'._VALIDATE.'"  class="button" onclick="create_contact(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&page=create_contact\', \''.$id_action.'\');" />';
 			$frm_str .=' <input name="cancel" type="button" value="'._CANCEL.'"  onclick="new Effect.toggle(\'create_contact_div\', \'blind\', {delay:0.2});clear_form(\'indexingfrmcontact\');return false;" class="button" />';
 		$frm_str .='</div>';
 		$frm_str .= '</fieldset >';

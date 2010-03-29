@@ -106,16 +106,16 @@ Defines :
 					<td width="90%" align="center" style="padding : 0px; vertical-align:top" colspan="3"  ##func_click_form##>
 						<table width="100%" border="0" cellspacing="0" cellpadding="0" >
 								<tr>
-									<td width="68%"   style="font-size:12px;"><b><!--##define_lang|_SUBJECT## :--></b><em>##load_value|subject##</em> </td>
+									<td width="68%"   style="font-size:12px;" ##func_click_form##><b><!--##define_lang|_SUBJECT## :--></b><em>##load_value|subject##</em> </td>
 									<td width="32%">
 										<table width="100%" border="0" cellspacing="0" cellpadding="0">
 											<tr>
-												<td width="40%" style="text-align:right">##define_lang|_CONTACT## :</td><td  style="text-align:right">##load_value|exp_user_id##</td>
+												<td width="40%" style="text-align:right" ##func_click_form##>##define_lang|_CONTACT## :</td><td  style="text-align:right">##load_value|exp_user_id##</td>
 											</tr>
 															
-											<tr><td> </td><td></td></tr>
+											<tr><td ##func_click_form##> </td><td ##func_click_form##></td></tr>
 											<tr>
-												<td style="text-align:right; vertical-align:top">##define_lang|_ENTITY## :</td><td  style="text-align:right">##load_value|entity_label##</td>
+												<td style="text-align:right; vertical-align:top" ##func_click_form##>##define_lang|_ENTITY## :</td><td  style="text-align:right">##load_value|entity_label##</td>
 											</tr>
 												##func_include_by_module|cases##
 										</table>
@@ -125,27 +125,27 @@ Defines :
 					</td>
 				</tr>	
 				<tr class="##css_line_reload##">
-						<td style="text-align:center" style="font-size:13px;"> ##func_bool_check_form##<b>##load_value|res_id##</b></td>
-						<td style="text-align:center">
+						<td style="text-align:center" style="font-size:13px;" ##func_click_form##> ##func_bool_check_form##<b>##load_value|res_id##</b></td>
+						<td style="text-align:center" ##func_click_form##>
 							<table width="100%" border="0" cellspacing="0" cellpadding="0" >
 									<tr>
-										<td style="font-size:10px;">##load_value|priority##</td>
+										<td style="font-size:10px;" ##func_click_form##>##load_value|priority##</td>
 										<td style="font-size:10px; width ="30px" alt="##define_lang|_CATEGORY##" title="##define_lang|_CATEGORY##"   ##func_click_form##>##load_value|category_img##</td>
-										<td style="font-size:10px; width ="150px">##load_value|category_id##</td>
+										<td style="font-size:10px; width ="150px" ##func_click_form##>##load_value|category_id##</td>
 										<td style="font-size:10px; width ="30px" alt="##define_lang|_CREATION_DATE##" title="##define_lang|_CREATION_DATE##"   ##func_click_form##><img src="##load_img|date_arriv.gif##"> </td>
-										<td style="font-size:10px; width ="100px">##load_value|creation_date##</td>
+										<td style="font-size:10px; width ="100px" ##func_click_form##>##load_value|creation_date##</td>
 										<td style="font-size:10px; width ="30px" alt="##define_lang|_PROCESS_LIMIT_DATE##" title="##define_lang|_PROCESS_LIMIT_DATE##"   ##func_click_form##><img src="##load_img|date_limit.gif##"> </td>
-										<td style="font-size:10px; width ="100px">##load_value|process_limit_date##</td>
+										<td style="font-size:10px; width ="100px" ##func_click_form##>##load_value|process_limit_date##</td>
 										<td style="font-size:10px; width ="30px" style="text-align:right" alt="##define_lang|_DEST_USER##" title="##define_lang|_DEST_USER##"   ##func_click_form##><img src="##load_img|manage_users_entities_b_small.gif##"></td>
 										<td style="font-size:10px; width ="110px" > ##load_value|dest_user##</td>
 										<td style="font-size:10px; width ="30px"  alt="##define_lang|_TYPE##" title="##define_lang|_TYPE##" style="text-align:right"  ##func_click_form##><img src="##load_img|mini_type.gif##">
-										<td style="font-size:10px; style="text-align:left">##load_value|type_label##</td>
+										<td style="font-size:10px; style="text-align:left" ##func_click_form##>##load_value|type_label##</td>
 										<td style="font-size:10px; width ="60px">##func_bool_detail_doc##</td>
 									</tr>
 							</table>
 						</td>
 				</tr >
-				<tr><td colspan="6" style="background-color: white;"></td></tr>
+				<tr><td colspan="6" style="background-color: white;" ##func_click_form##></td></tr>
 		      
               
  
