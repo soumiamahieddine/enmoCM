@@ -330,7 +330,7 @@ else
 				$what = $label_action.'('._NUM.$arr_res[$i].') ';
 				if(isset($res_action['history_msg']) && !empty($res_action['history_msg']))
 				{
-					$what = $res_action['history_msg'];
+					$what .= $res_action['history_msg'];
 				}
 				$hist->add($_POST['table'],$arr_res[$i],'ACTION#'.$id_action,$what, $_SESSION['config']['databasetype'], $_POST['module']);
 			}
