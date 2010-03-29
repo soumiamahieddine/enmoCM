@@ -21,7 +21,162 @@
 	 PRIMARY KEY ("DOCTYPES_SECOND_LEVEL_ID") ENABLE
    ) ;
    
+CREATE TABLE CONTACTS
+(
+  CONTACT_ID           NUMBER                   NOT NULL,
+  LASTNAME             VARCHAR2(255 BYTE),
+  FIRSTNAME            VARCHAR2(255 BYTE),
+  SOCIETY              VARCHAR2(255 BYTE),
+  FUNCTION             VARCHAR2(255 BYTE),
+  ADDRESS_NUM          VARCHAR2(255 BYTE),
+  ADDRESS_STREET       VARCHAR2(255 BYTE),
+  ADDRESS_COMPLEMENT   VARCHAR2(255 BYTE),
+  ADDRESS_TOWN         VARCHAR2(255 BYTE),
+  ADDRESS_POSTAL_CODE  VARCHAR2(255 BYTE),
+  ADDRESS_COUNTRY      VARCHAR2(255 BYTE),
+  EMAIL                VARCHAR2(255 BYTE),
+  PHONE                VARCHAR2(20 BYTE),
+  OTHER_DATA           CLOB,
+  IS_CORPORATE_PERSON  CHAR(1 BYTE)             DEFAULT 'Y'                   ,
+  USER_ID              VARCHAR2(32 BYTE),
+  TITLE                VARCHAR2(255 BYTE),
+  ENABLED              CHAR(1 BYTE)             DEFAULT 'Y'                   
+)
+PCTUSED    0
+PCTFREE    10
+INITRANS   1
+MAXTRANS   255
+STORAGE    (
+            INITIAL          64K
+            MINEXTENTS       1
+            MAXEXTENTS       2147483645
+            PCTINCREASE      0
+            BUFFER_POOL      DEFAULT
+           )
+LOGGING 
+NOCOMPRESS 
+NOCACHE
+NOPARALLEL
+MONITORING;
    
+   
+   CREATE TABLE MLB_COLL_EXT
+	(
+	  RES_ID               NUMBER                   NOT NULL,
+	  CATEGORY_ID          VARCHAR2(50 BYTE)        ,
+	  EXP_CONTACT_ID       INTEGER                  DEFAULT NULL,
+	  EXP_USER_ID          VARCHAR2(52 BYTE)        DEFAULT NULL,
+	  DEST_CONTACT_ID      INTEGER                  DEFAULT NULL,
+	  DEST_USER_ID         VARCHAR2(52 BYTE)        DEFAULT NULL,
+	  NATURE_ID            VARCHAR2(50 BYTE),
+	  ALT_IDENTIFIER       VARCHAR2(255 BYTE)       DEFAULT NULL,
+	  ADMISSION_DATE       DATE,
+	  ANSWER_TYPE_BITMASK  VARCHAR2(7 BYTE)         DEFAULT NULL,
+	  OTHER_ANSWER_DESC    VARCHAR2(255 BYTE)       DEFAULT NULL,
+	  PROCESS_LIMIT_DATE   DATE,
+	  PROCESS_NOTES        VARCHAR2(2048 BYTE)       DEFAULT NULL,
+	  CLOSING_DATE         DATE,
+	  ALARM1_DATE          DATE,
+	  ALARM2_DATE          DATE,
+	  FLAG_NOTIF           CHAR(1 BYTE)             DEFAULT 'N',
+	  FLAG_ALARM1          CHAR(1 BYTE)             DEFAULT 'N',
+	  FLAG_ALARM2          CHAR(1 BYTE)             DEFAULT 'N'
+	)
+	PCTUSED    0
+	PCTFREE    10
+	INITRANS   1
+	MAXTRANS   255
+	STORAGE    (
+	            INITIAL          64K
+	            MINEXTENTS       1
+	            MAXEXTENTS       2147483645
+	            PCTINCREASE      0
+	            BUFFER_POOL      DEFAULT
+	           )
+	LOGGING 
+	NOCOMPRESS 
+	NOCACHE
+	NOPARALLEL
+	MONITORING;
+   
+   
+   CREATE TABLE MLB_DOCTYPE_EXT
+	(
+	  TYPE_ID        NUMBER                         NOT NULL,
+	  PROCESS_DELAY  NUMBER                         DEFAULT '21'                  ,
+	  DELAY1         NUMBER                         DEFAULT '14'                  ,
+	  DELAY2         NUMBER                         DEFAULT '1'                   
+	)
+	PCTUSED    0
+	PCTFREE    10
+	INITRANS   1
+	MAXTRANS   255
+	STORAGE    (
+	            INITIAL          64K
+	            MINEXTENTS       1
+	            MAXEXTENTS       2147483645
+	            PCTINCREASE      0
+	            BUFFER_POOL      DEFAULT
+	           )
+	LOGGING 
+	NOCOMPRESS 
+	NOCACHE
+	NOPARALLEL
+	MONITORING;
+	
+	
+	CREATE TABLE DOCTYPES_INDEXES
+	(
+	  TYPE_ID     NUMBER                            NOT NULL,
+	  COLL_ID     VARCHAR2(32 BYTE)                 NOT NULL,
+	  FIELD_NAME  VARCHAR2(255 BYTE)                NOT NULL,
+	  MANDATORY   CHAR(1 BYTE)                      DEFAULT 'N'                  
+	)
+	PCTUSED    0
+	PCTFREE    10
+	INITRANS   1
+	MAXTRANS   255
+	STORAGE    (
+	            INITIAL          64K
+	            MINEXTENTS       1
+	            MAXEXTENTS       2147483645
+	            PCTINCREASE      0
+	            BUFFER_POOL      DEFAULT
+	           )
+	LOGGING 
+	NOCOMPRESS 
+	NOCACHE
+	NOPARALLEL
+	MONITORING;
+   
+   CREATE TABLE SAVED_QUERIES
+	(
+	  QUERY_ID                NUMBER                NOT NULL,
+	  USER_ID                 VARCHAR2(32 BYTE)     DEFAULT NULL,
+	  QUERY_NAME              VARCHAR2(255 BYTE)    NOT NULL,
+	  CREATION_DATE           DATE          DEFAULT sysdate,
+	  CREATED_BY              VARCHAR2(32 BYTE)     ,
+	  QUERY_TYPE              VARCHAR2(50 BYTE)     ,
+	  QUERY_TXT               CLOB                  ,
+	  LAST_MODIFICATION_DATE  DATE
+	)
+	PCTUSED    0
+	PCTFREE    10
+	INITRANS   1
+	MAXTRANS   255
+	STORAGE    (
+	            INITIAL          64K
+	            MINEXTENTS       1
+	            MAXEXTENTS       2147483645
+	            PCTINCREASE      0
+	            BUFFER_POOL      DEFAULT
+	           )
+	LOGGING 
+	NOCOMPRESS 
+	NOCACHE
+	NOPARALLEL
+	MONITORING;
+	   
 --------------------------------------------------------
 --  DDL for Table RES_X
 --------------------------------------------------------
