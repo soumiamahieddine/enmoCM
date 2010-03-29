@@ -465,7 +465,7 @@ class security extends dbquery
 				$query = "select * from ".$_SESSION['tablename']['users']." where user_id like '".$this->protect_string_db($s_login)."' and password = '".$pass."' and STATUS <> 'DEL' and loginmode = 'standard'";
 		}
 		$this->query($query);
-		
+		//$this->show();
 		if($this->nb_result() > 0)
 		{
 			$line = $this->fetch_object();
