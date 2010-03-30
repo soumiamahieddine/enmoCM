@@ -106,22 +106,23 @@ for($i=0; $i<count($status);$i++)
 }
 $status_str = preg_replace('/,$/', '', $status_str);
 $where_request.= "  status not in (".$status_str.") ";
-$where_clause = $sec->get_where_clause_from_coll_id($_SESSION['collection_id_choice']);
-if(!empty($where_request))
+
+if(isset($_SESSION['searching']['comp_query']) && trim($_SESSION['searching']['comp_query']) <> '')
 {
-	if($_SESSION['searching']['where_clause_bis'] <> "")
+	$add_security = false;
+	$where_clause = $sec->get_where_clause_from_coll_id($_SESSION['collection_id_choice']);
+	if(trim($where_request) <> '')
 	{
-		$where_clause = "((".$where_clause.") or (".$_SESSION['searching']['where_clause_bis']."))";
+		$where_request = '('.$where_request.') and (('.$where_clause.') or ('.$_SESSION['searching']['comp_query'].'))';
 	}
-	$where_request = '('.$where_request.') and ('.$where_clause.')';
+	else
+	{
+		$where_request = '('.$where_clause.' or '.$_SESSION['searching']['comp_query'].')';
+	}
 }
 else
 {
-	if($_SESSION['searching']['where_clause_bis'] <> "")
-	{
-		$where_clause = "((".$where_clause.") or (".$_SESSION['searching']['where_clause_bis']."))";
-	}
-	$where_request = $where_clause;
+	$add_security = true;
 }
 $where_request = str_replace(" ()", "(1=-1)", $where_request);
 $where_request = str_replace("and ()", "", $where_request);
@@ -153,7 +154,7 @@ if(($_REQUEST['template']== 'group_case')&& ($core_tools->is_module_loaded('case
 else
 {
 	$request = new request();
-	$tab=$request->select($select,$where_request,$orderstr,$_SESSION['config']['databasetype']);
+	$tab=$request->select($select,$where_request,$orderstr,$_SESSION['config']['databasetype'],"default", false, "", "", "", $add_security);
 	//$request->show();
 }
 //$request->show();

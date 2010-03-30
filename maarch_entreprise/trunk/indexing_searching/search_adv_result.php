@@ -42,13 +42,12 @@ $req = new request();
 $type = new types();
 $fields = "";
 $orderby = "";
-$copies = "";
+$baskets_clause = '';
 $coll_id = 'letterbox_coll';
 $indexes = $type->get_all_indexes($coll_id);
 //$func->show_array($indexes);
-$_SESSION['copies'] = "false";
-$_SESSION['searching']['where_clause_bis'] = "";
 $_SESSION['error_search'] = '';
+$_SESSION['searching']['comp_query'] = '';
 // define the row of the start
 if(isset($_REQUEST['start']))
 {
@@ -630,32 +629,24 @@ if(count($_REQUEST['meta']) > 0)
 				$where_request .= " category_id = '".$func->protect_string_db($_REQUEST['category'])."' AND ";
 				$json_txt .= "'category' : ['".addslashes($_REQUEST['category'])."'],";
 			}
-			// COPY
-			else if($tab_id_fields[$j] == 'copies_true'  && $_REQUEST['copies'] == "true" )
+			else if($tab_id_fields[$j] == 'baskets_clause_true'  && $_REQUEST['baskets_clause'] == "true" )
 			{
-				$_SESSION['searching']['where_clause_bis'] = "res_id in (select res_id from ".$_SESSION['tablename']['ent_listinstance']." where item_id = '".$_SESSION['user']['UserId']."' and item_type = 'user_id' and item_mode = 'cc')";
-				for($cptEntities=0;$cptEntities<count($_SESSION['user']['entities']);$cptEntities++)
+				for($ind_bask = 0; $ind_bask < count($_SESSION['user']['baskets']); $ind_bask++)
 				{
-					if($_SESSION['user']['entities'][$cptEntities]['ENTITY_ID'] <> "")
+					if(isset($_SESSION['user']['baskets'][$ind_bask]['clause']) && trim($_SESSION['user']['baskets'][$ind_bask]['clause']) <> '')
 					{
-						$whereEntities .= "item_id = '".$_SESSION['user']['entities'][$cptEntities]['ENTITY_ID']."' or ";
+						$_SESSION['searching']['comp_query'] .= ' or ('.$_SESSION['user']['baskets'][$ind_bask]['clause'].')';
 					}
 				}
-				if(trim($whereEntities) <> "")
-				{
-					$whereEntities = substr($whereEntities, 0, count($whereEntities) - 4);
-					$_SESSION['searching']['where_clause_bis'] .= " or (res_id in (select res_id from ".$_SESSION['tablename']['ent_listinstance']." where (".$whereEntities.") and item_type = 'entity_id' and item_mode = 'cc'))";
-				}
-				//echo $_SESSION['searching']['where_clause_bis'];exit;
-				$copies = ($_REQUEST['copies']);
-				$_SESSION['copies'] = $copies;
-				$json_txt .= " 'copies_true' : ['true'],";
+				$_SESSION['searching']['comp_query'] = preg_replace('/^ or/', '', $_SESSION['searching']['comp_query']);
+				$baskets_clause = ($_REQUEST['baskets_clause']);
+				$json_txt .= " 'baskets_clause_true' : ['true'],";
 			}
-			else if( $tab_id_fields[$j] == 'copies_false'  && $_REQUEST['copies'] == "false" )
+
+			else if( $tab_id_fields[$j] == 'baskets_clause_false'  && $_REQUEST['baskets_clause'] == "false" )
 			{
-				$copies  = "false";
-				$_SESSION['copies'] = "false";
-				$json_txt .= "'copies_false' : ['false'],";
+				$baskets_clause  = "false";
+				$json_txt .= "'baskets_clause_false' : ['false'],";
 			}
 			// ADMISSION DATE : FROM
 			else if($tab_id_fields[$j] == 'admission_date_from' && !empty($_REQUEST['admission_date_from']))
