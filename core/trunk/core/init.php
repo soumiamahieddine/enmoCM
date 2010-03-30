@@ -11,6 +11,7 @@ else
 	ini_set('date.timezone', 'Europe/Paris');
 	date_default_timezone_set('Europe/Paris');
 }
+
 if(isset($_SESSION['config']['corepath']) && !empty($_SESSION['config']['corepath']))
 {
 	chdir($_SESSION['config']['corepath']);

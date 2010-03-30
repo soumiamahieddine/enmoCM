@@ -939,7 +939,7 @@ class functions
 			$string = str_replace("'", "''", $string);
 			$string = str_replace("\\", "", $string);
 		}
-		else if($_SESSION['config']['databasetype'] == "MYSQL" || $_SESSION['config']['databasetype'] == "POSTGRESQL" && (ini_get('magic_quotes_gpc') <> true || phpversion() >= 6))
+		else if(($_SESSION['config']['databasetype'] == "MYSQL" || $_SESSION['config']['databasetype'] == "POSTGRESQL")  && !get_magic_quotes_runtime()) //&& (ini_get('magic_quotes_gpc') <> true && phpversion() >= 6)
 		{
 			$string = addslashes($string);
 		}

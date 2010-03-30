@@ -110,20 +110,23 @@ class request extends dbquery
 			$join .= $second_join_table." on ".$second_join_table.".".$join_key." = ".$first_join_table.".".$join_key;
 		}
 
-		$where2 = "";
-		for($i=0; $i < count($_SESSION['user']['security']); $i++)
+		if($add_security)
 		{
-			if(isset($_SESSION['user']['security'][$i]['table']) && isset($_SESSION['user']['security'][$i]['coll_id']))
+			for($i=0; $i < count($_SESSION['user']['security']); $i++)
 			{
-				if(preg_match('/'.$_SESSION['user']['security'][$i]['table'].'/',$table_string) )
+				if(isset($_SESSION['user']['security'][$i]['table']) && isset($_SESSION['user']['security'][$i]['coll_id']))
 				{
-					if(empty($where))
+					if(preg_match('/'.$_SESSION['user']['security'][$i]['table'].'/',$table_string) || preg_match('/'.$_SESSION['user']['security'][$i]['view'].'/',$table_string) )
 					{
-						$where2 = " where ( ".$_SESSION['user']['security'][$i]['where']." ) ";
-					}
-					else
-					{
-						$where2 = " and ( ".$_SESSION['user']['security'][$i]['where']." ) ";
+						if(empty($where_string))
+						{
+							$where_string = " where ( ".$_SESSION['user']['security'][$i]['where']." ) ";
+						}
+						else
+						{
+							$where_string = ''.$where_string." and ( ".$_SESSION['user']['security'][$i]['where']." ) ";
+						}
+						break;
 					}
 				}
 			}
