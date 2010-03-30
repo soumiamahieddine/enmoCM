@@ -230,6 +230,8 @@ if (!defined('_FILTER_BY_ENTITY'))  define('_FILTER_BY_ENTITY', 'Filtrer par ser
 if (!defined('_FILTER_BY'))  define('_FILTER_BY', 'Filtrer par');
 if (!defined('_OTHER_BASKETS'))  define('_OTHER_BASKETS', 'Autres corbeilles');
 
+if (!defined('_SPREAD_SEARCH_TO_BASKETS'))  define('_SPREAD_SEARCH_TO_BASKETS', 'Etendre la recherche aux corbeilles');
+
 
 if (!defined('_BASKET_WELCOME_TXT1'))  define('_BASKET_WELCOME_TXT1', 'Durant votre navigation dans les corbeilles,');
 if (!defined('_BASKET_WELCOME_TXT2'))  define('_BASKET_WELCOME_TXT2', 'cliquez, &agrave; tout moment, dans la liste ci-dessus <br/>pour changer de corbeille');

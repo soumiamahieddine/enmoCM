@@ -226,6 +226,7 @@ if (!defined('_FILTER_BY_ENTITY')) define('_FILTER_BY_ENTITY', 'filter by depart
 if (!defined('_FILTER_BY')) define('_FILTER_BY', 'filter by');
 if (!defined('_OTHER_BASKETS')) define('_OTHER_BASKETS', 'Other baskets');
 
+if (!defined('_SPREAD_SEARCH_TO_BASKETS'))  define('_SPREAD_SEARCH_TO_BASKETS', 'Spread search to baskets');
 
 if (!defined('_BASKET_WELCOME_TXT1')) define('_BASKET_WELCOME_TXT1', 'While browsing your baskets,');
 if (!defined('_BASKET_WELCOME_TXT2')) define('_BASKET_WELCOME_TXT2', 'you can click on the menu above to change basket');
