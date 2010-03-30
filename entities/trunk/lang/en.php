@@ -107,6 +107,7 @@ if (!defined('_NO_COPY')) define('_NO_COPY', 'No user in copy');
 if (!defined('_DIFF_LIST')) define('_DIFF_LIST', 'Mailing list');
 
 if (!defined('_NO_USER')) define('_NO_USER', 'No user');
+if (!defined('_MUST_CHOOSE_DEST'))  define('_MUST_CHOOSE_DEST', 'You must choose the main recipient')
 
 
 /******************** Keywords Helper ************/

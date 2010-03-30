@@ -115,6 +115,7 @@ if (!defined('_NO_COPY'))  define('_NO_COPY', 'Pas de copies');
 if (!defined('_DIFF_LIST'))  define('_DIFF_LIST', 'Liste de diffusion');
 
 if (!defined('_NO_USER'))  define('_NO_USER', 'Pas d&rsquo;utilisateur');
+if (!defined('_MUST_CHOOSE_DEST'))  define('_MUST_CHOOSE_DEST', 'Vous devez s&eacute;lectionner un destinataire principal');
 
 
 /******************** Keywords Helper ************/

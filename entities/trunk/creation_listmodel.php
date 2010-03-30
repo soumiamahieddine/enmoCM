@@ -276,8 +276,7 @@ else if(isset($_GET['action']) && $_GET['action'] == "copy_to_dest" )
 															'entity_id' =>$_SESSION['m_admin']['entity']['listmodel']['dest']['entity_id'],
 															'entity_label' =>$_SESSION['m_admin']['entity']['listmodel']['dest']['entity_label'],
 												));
-		unset( $_SESSION['m_admin']['entity']['listmodel']['dest'] );
-		usort($_SESSION['m_admin']['entity']['listmodel']['copy']['users'], "cmp_users");
+		unset( $_SESSION['m_admin']['entity']['listmodel']['dest'] );	
 	}
 	$rank = $_GET['rank'];
 	if(isset($_SESSION['m_admin']['entity']['listmodel']['copy']['users'][$rank]['user_id']) && !empty($_SESSION['m_admin']['entity']['listmodel']['copy']['users'][$rank]['user_id']))
@@ -290,6 +289,7 @@ else if(isset($_GET['action']) && $_GET['action'] == "copy_to_dest" )
 		unset( $_SESSION['m_admin']['entity']['listmodel']['copy']['users'][$rank]);
 		$_SESSION['m_admin']['entity']['listmodel']['copy']['users'] = array_values($_SESSION['m_admin']['entity']['listmodel']['copy']['users']);
 	}
+	usort($_SESSION['m_admin']['entity']['listmodel']['copy']['users'], "cmp_users");
 }
 
 $core_tools->load_html();
@@ -329,7 +329,7 @@ $time = $core_tools->get_session_time_expire();
 		<script type="text/javascript">repost('<? echo $link;?>',new Array('diff_list'),new Array('what_users','what_services'),'keyup',250);</script>
 		<br/></br><br/></br><br/></br>
 		</div>
-		<?php if((isset($_GET['what_users']) && !empty($_GET['what_users'])) || (isset($_GET['what_services']) && !empty($_GET['what_services'])) || !empty($_SESSION['m_admin']['entity']['listmodel']['dest']['user_id']	) )
+		<?php if((isset($_GET['what_users']) && !empty($_GET['what_users'])) || (isset($_GET['what_services']) && !empty($_GET['what_services'])) || !empty($_SESSION['m_admin']['entity']['listmodel']['dest']['user_id']	) || count($_SESSION['m_admin']['entity']['listmodel']['copy']['users']) > 0 || count($_SESSION['m_admin']['entity']['listmodel']['copy']['entities']) > 0)
 		{ ?>
 
 		<div id="diff_list" align="center">
@@ -416,7 +416,11 @@ $time = $core_tools->get_session_time_expire();
 	if(isset($_SESSION['m_admin']['entity']['listmodel']['dest']['user_id']) && !empty($_SESSION['m_admin']['entity']['listmodel']['dest']['user_id']))
 		{?>
 	<input align="middle" type="submit" value="<?php echo _VALIDATE;?>" class="button" name="valid"  />
-	<?php } ?>
+	<?php }
+	else
+	{
+		echo '<div class="error">'._MUST_CHOOSE_DEST.'</div>';
+	} ?>
 	<input align="middle" type="button" value="<?php echo _CANCEL;?>"  onclick="self.close();" class="button"/>
 
 	</div>
