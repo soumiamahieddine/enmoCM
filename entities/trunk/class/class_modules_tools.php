@@ -106,11 +106,12 @@ class entities extends dbquery
 		{
 			$entities = '';
 			
-			$db->query("select entity_id from ".$_SESSION['tablename']['ent_users_entities']." where user_id = '".$this->protect_string_db(trim($user_id))."'");
-			while($res = $db->fetch_object())
-			{
-				$entities .= "'".$res->entity_id."', ";
-			}
+				$db->query("select entity_id from ".$_SESSION['tablename']['ent_users_entities']." where user_id = '".$this->protect_string_db(trim($user_id))."'");
+				while($res = $db->fetch_object())
+				{
+					$entities .= "'".$res->entity_id."', ";
+				}
+			
 			$entities = preg_replace('/, $/', '', $entities);
 
 			if($entities == '' && $user_id == 'superadmin')
