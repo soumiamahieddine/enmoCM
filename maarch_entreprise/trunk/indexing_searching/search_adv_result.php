@@ -387,17 +387,19 @@ if(count($_REQUEST['meta']) > 0)
 			{
 				$json_txt .= " 'arbox_id_chosen' : [";
 				$arbox_id_chosen_tmp = " (";
-				for ($get_i = 0; $get_i <count($_REQUEST['arboxes_chosen']); $get_i++)
-				{
-					$arbox_id_chosen_tmp .= "'".$func->protect_string_db($_REQUEST['arboxes_chosen'][$get_i])."',";
-					$json_txt .= "'".$_REQUEST['arboxes_chosen'][$get_i]."',";
-				}
-				$arbox_id_chosen_tmp = substr($arbox_id_chosen_tmp, 0, -1);
-				$json_txt = substr($json_txt, 0, -1);
-				$arbox_id_chosen_tmp .= ") ";
+				if (count($_REQUEST['arboxes_chosen'])){
+					for ($get_i = 0; $get_i <count($_REQUEST['arboxes_chosen']); $get_i++)
+					{
+						$arbox_id_chosen_tmp .= "'".$func->protect_string_db($_REQUEST['arboxes_chosen'][$get_i])."',";
+						$json_txt .= "'".$_REQUEST['arboxes_chosen'][$get_i]."',";
+					}
+					$arbox_id_chosen_tmp = substr($arbox_id_chosen_tmp, 0, -1);
+					$json_txt = substr($json_txt, 0, -1);
+					$arbox_id_chosen_tmp .= ") ";
 
-				$where_request .= " arbox_id IN  ".$arbox_id_chosen_tmp." ";
-				$where_request .=" and  ";
+					$where_request .= " arbox_id IN  ".$arbox_id_chosen_tmp." ";
+					$where_request .=" and  ";
+				}
 				$json_txt .= '],';
 			}
 			// ARBATCH
