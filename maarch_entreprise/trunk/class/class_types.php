@@ -867,7 +867,7 @@ class types extends dbquery
 						break;
 					}
 				}
-				if(!$found)
+				if(!$found && $values[$key] <> "")
 				{
 					$_SESSION['error'] .= 	$indexes[$key]['label']." <br/>: "._ITEM_NOT_IN_LIST.".<br/>";
 					return false;
