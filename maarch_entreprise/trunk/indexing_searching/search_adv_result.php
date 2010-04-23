@@ -507,17 +507,17 @@ if(count($_REQUEST['meta']) > 0)
 					$json_txt .= "'".$_REQUEST['status_chosen'][$get_i]."',";
 					if ($_REQUEST['status_chosen'][$get_i]=="REL1")
 					{
-						$where_request .="( ".$req->extract_date('alarm1_date')." <= ".$req->current_datetime()." and ".$req->extract_date('alarm2_date')." > ".$req->current_datetime()." ) or ";
+						$where_request .="( ".$req->extract_date('alarm1_date')." <= ".$req->current_datetime()." and ".$req->extract_date('alarm2_date')." > ".$req->current_datetime()."  and status <> 'END' ) or ";
 					}
 					else
 					{
 						if ($_REQUEST['status_chosen'][$get_i]=="REL2")
 						{
-							$where_request .="( ".$req->current_datetime()." >= ".$req->extract_date('alarm2_date')." ) or ";
+							$where_request .="( ".$req->current_datetime()." >= ".$req->extract_date('alarm2_date')."  and status <> 'END' ) or ";
 						}
 						elseif ($_REQUEST['status_chosen'][$get_i]=="LATE")
 						{
-							$where_request .="( process_limit_date is not null and ".$req->current_datetime()." > ".$req->extract_date('process_limit_date')." ) or ";
+							$where_request .="( process_limit_date is not null and ".$req->current_datetime()." > ".$req->extract_date('process_limit_date')."  and status <> 'END' ) or ";
 						}
 						else
 						{
