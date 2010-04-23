@@ -1022,7 +1022,14 @@ class types extends dbquery
 				}
 				else
 				{
-					$where_request .= " (".$column." >= '".$this->format_date_db($val)."') and ";
+					if($indexes[$j]['column'].'_from' == $field_name || 'doc_'.$indexes[$j]['column'].'_from' == $field_name)
+					{
+						$where_request .= " (".$column." >= '".$this->format_date_db($val)."') and ";
+					}
+					else
+					{
+						$where_request .= " (".$column." <= '".$this->format_date_db($val)."') and ";
+					}
 					$json_txt .= " '".$field_name."' : ['".trim($val)."'],";
 				}
 				break;
