@@ -155,10 +155,11 @@ else
 				// ***************************************
 				if (strtolower($format) == "pdf")
 				{
-					$Arguments = "";
+					$Arguments = "#navpanes=0";
 					if(isset($_SESSION['search']['plain_text'])) if (strlen($_SESSION['search']['plain_text']) > 0)
 					{
-						$Arguments = "#search=". $_SESSION['search']['plain_text'] ."";
+						$Arguments .= "#search=". $_SESSION['search']['plain_text'] ."";
+						
 					}
 					@copy($file, $_SESSION['config']['tmppath'].DIRECTORY_SEPARATOR.'tmp_file_'.$md5.$_SESSION['user']['UserId'].'.'.$format);
 					if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'tmp'.DIRECTORY_SEPARATOR.'tmp_file_'.$md5.$_SESSION['user']['UserId'].'.'.$format))
