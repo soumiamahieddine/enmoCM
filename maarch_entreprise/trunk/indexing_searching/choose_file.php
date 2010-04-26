@@ -87,10 +87,11 @@ $core_tools->load_header();
 		}
 		?>
 		<script language="javascript" type="text/javascript">
-		var test = window.top.document.getElementById('file_iframe');
+			var test = window.top.document.getElementById('file_iframe');
 			if (test != null)
 			{
-				test.src = '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&dir=indexing_searching&page=file_iframe';
+				//fix pb with toolbar of pdf
+				test.src = '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&dir=indexing_searching&page=file_iframe&#navpanes=0';
 			}
 		</script>
 		<?php
