@@ -598,7 +598,15 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 		$frm_str .= '</div>';
 		$frm_str .= '<script type="text/javascript">show_admin_contacts( true);</script>';
 		
-		$frm_str .= '<iframe src="'.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=file_iframe" name="file_iframe" id="file_iframe" scrolling="auto" frameborder="0" style="display:block;" ></iframe>';
+		//$frm_str .= '<iframe src="'.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=file_iframe" name="file_iframe" id="file_iframe" scrolling="auto" frameborder="0" style="display:block;" ></iframe>';
+		if($_SESSION['origin'] == "scan")
+		{
+			$frm_str .= '<iframe src="'.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=file_iframe&#navpanes=0" name="file_iframe" id="file_iframe" scrolling="auto" frameborder="0" style="display:block;"></iframe>';
+		}
+		else
+		{
+			$frm_str .= '<iframe src="'.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=file_iframe" name="file_iframe" id="file_iframe" scrolling="auto" frameborder="0" style="display:block;"></iframe>';
+		}
 		
 		if($core_tools->is_module_loaded('webtwain') && $_SESSION['user']['services']['scan'] === true) //Ajout yck
 		{
