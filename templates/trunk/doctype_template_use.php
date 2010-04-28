@@ -19,10 +19,18 @@ if($db->nb_result() > 0)
 	$is_generated = $res->is_generated;
 	$template = $res->template_id;
 }
+if($_SESSION['origin'] == "scan")
+{
+	$otherArg = "&#navpanes=0";
+}
+else
+{
+	$otherArg = "";
+}
 
 array_push($_SESSION['indexing_services'], array('script' => 'modules/templates/js/change_doctype.js', 'function_to_execute' => 'doctype_template', 'arguments' => array(
 array('id' => 'is_generated' , 'value' =>$is_generated),
 array('id'=> 'template_id', 'value' => $template),
-array('id'=> 'doc_frame', 'value' => $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=file_iframe'),
+array('id'=> 'doc_frame', 'value' => $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=file_iframe'.$otherArg),
 array('id'=> 'model_frame', 'value' =>$_SESSION['config']['businessappurl'].'index.php?display=true&module=templates&page=file_iframe&model_id='.$template))));
 ?>
