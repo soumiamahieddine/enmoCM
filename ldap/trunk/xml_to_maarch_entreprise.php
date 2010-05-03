@@ -54,6 +54,7 @@ else
 	exit("Unable to load the config.xml file");
 
 
+
 //PHP File to include
 $include_file = array("class_functions.php","class_db.php");
 foreach($include_file as $if)
@@ -161,6 +162,8 @@ $_SESSION['config']['force_client_utf8'] = $config_xml->getElementsByTagName("fo
 $db = new dbquery();
 $db->connect();
 
+$func = new functions();
+
 //**********************************//
 //				MAPPING	         	//
 //**********************************//
@@ -180,23 +183,28 @@ foreach( $xp_ldap_conf->query("/root/mapping/group/@* | /root/mapping/group/* | 
 //**********************************//
 
 //Cree la table ext_references si elle n'existe pas
-$db->query("create or replace function create_table_if_exists() returns void as
-$$
-begin
-    if not exists(select * from information_schema.tables where table_name = 'ext_references') then
-       CREATE TABLE ext_references
-		(
-		  reference_id character varying(32) NOT NULL DEFAULT '0'::character varying,
-		  type character varying(32) DEFAULT NULL::character varying,
-		  field character varying(32) DEFAULT NULL::character varying,
-		  value character varying(32) DEFAULT NULL::character varying,
-		  CONSTRAINT ext_references_pkey PRIMARY KEY (reference_id,type)
-		);
-	end if;
-end;
-$$
-language 'plpgsql';
-SELECT create_table_if_exists();");
+
+if($_SESSION['config']['databasetype'] <> 'ORACLE')
+{
+	// type => type_ldap
+	$db->query("create or replace function create_table_if_exists() returns void as
+	$$
+	begin
+		if not exists(select * from information_schema.tables where table_name = 'ext_references') then
+		   CREATE TABLE ext_references
+			(
+			  reference_id character varying(32) NOT NULL DEFAULT '0'::character varying,
+			  type_ldap character varying(32) DEFAULT NULL::character varying, 
+			  field character varying(32) DEFAULT NULL::character varying,
+			  value character varying(32) DEFAULT NULL::character varying,
+			  CONSTRAINT ext_references_pkey PRIMARY KEY (reference_id,type_ldap)
+			);
+		end if;
+	end;
+	$$
+	language 'plpgsql';
+	SELECT create_table_if_exists();");
+}
 
 	
 //**********************************//
@@ -207,9 +215,17 @@ $log->add_notice("*** GROUPS  UPDATE ***");
 //Prepare les champs pour l'update ou l'insert
 //On enleve le champ group_id qui est traité par un increment ici
 //On insert que les groupes de type "rights"
-$db->query("SELECT column_name as field FROM information_schema.columns WHERE table_name ='usergroups'");
+if($_SESSION['config']['databasetype'] == 'ORACLE')
+{
+	$db->query('SELECT column_name as field  FROM user_tab_columns WHERE table_name=\'usergroups\'');
+}
+else
+{
+	$db->query("SELECT column_name as field FROM information_schema.columns WHERE table_name ='usergroups'");
+}
+
 while($field = $db->fetch_object())
-	if($field->field != "group_id")
+	if(strtolower($field->field) != "group_id")
 		$lb_groups_fields[] = $field->field;
 
 $update_groups_fields = array_values(array_uintersect($xml_group_fields,$lb_groups_fields,"strcasecmp"));
@@ -231,63 +247,70 @@ $old_xml_groups_id = array_unique($old_xml_groups_id);
 $insert_groups = array_values(array_diff($xml_groups_id,$old_xml_groups_id));
 foreach($insert_groups as $ig)
 {
-	$db->query("SELECT value AS group_id FROM ext_references 
-				WHERE reference_id = '".$ig."'
-				AND ( field = 'group_id' OR field = 'entity_id')
-				AND type = '".$type_ldap."'");
-				
+	$db->query("SELECT value AS group_id FROM ext_references WHERE reference_id = '".$ig."' AND ( field = 'group_id' OR field = 'entity_id') AND type_ldap = '".$type_ldap."'");
+	//$db->show();			
 	if($group_id = $db->fetch_object()->group_id)
 	{
 		//Le groupe exise deja : on le supprime dans usergroups, on le maj dans ext_reference
 		$db->query("DELETE FROM usergroups WHERE group_id = '".$group_id."'");
 		$log->add_notice("DELETE FROM usergroups WHERE group_id = '".$group_id."'");
 		
-		$db->query("UPDATE ext_references SET value = '".$group_id."', field = 'group_id' 
-					WHERE reference_id = '".$ig."'");
-					
-		$log->add_notice("UPDATE ext_references SET value = '".$group_id."', field = 'group_id' 
-					WHERE reference_id = '".$ig."'");
+		$query_str = "UPDATE ext_references SET value = '".$group_id."', field = 'group_id' WHERE reference_id = '".$ig."'";
+		$db->query($query_str );			
+		$log->add_notice($query_str);
+		unset($query_str);
 	}
 	else
 	{
 		//Il n'existe pas : on l'insert dans ext_reference
 		
 		//On insert un group_id = <group_prefix_ldap>{numero}
-		
-		$db->query("SELECT MAX(CAST(SUBSTRING(value,CHAR_LENGTH('".$group_prefix_ldap."')+1) as INTEGER )) as max_group_id
+		if($_SESSION['config']['databasetype'] == 'ORACLE')
+		{
+			$db->query("SELECT MAX(CAST(SUBSTR(value,LENGTH('".$group_prefix_ldap."')+1) as INTEGER )) as max_group_id
 					FROM ext_references 
 					WHERE (field = 'group_id' OR field = 'entity_id')
-					AND type = '".$type_ldap."'");
-		
+					AND type_ldap = '".$type_ldap."'");			
+		}
+		else
+		{
+			$db->query("SELECT MAX(CAST(SUBSTRING(value,CHAR_LENGTH('".$group_prefix_ldap."')+1) as INTEGER )) as max_group_id
+					FROM ext_references 
+					WHERE (field = 'group_id' OR field = 'entity_id')
+					AND type_ldap = '".$type_ldap."'");
+		}
 		$max_group_id = $db->fetch_object()->max_group_id;
 		
 		if(!isset($max_group_id))
 			$max_group_id = 0;
 			
 		$group_id = $group_prefix_ldap.($max_group_id + 1);
-		
-		$db->query("INSERT INTO ext_references (reference_id,field,value,type)
-					SELECT '".$ig."','group_id','".$group_id."','".$type_ldap."'
-					WHERE NOT EXISTS (SELECT reference_id FROM ext_references WHERE reference_id = '".$ig."' AND type = '".$type_ldap."');");
-					
-		$log->add_notice("INSERT INTO ext_references (reference_id,field,value,type)
-					SELECT '".$ig."','group_id','".$group_id."','".$type_ldap."'
-					WHERE NOT EXISTS (SELECT reference_id FROM ext_references WHERE reference_id = '".$ig."' AND type = '".$type_ldap."');");
-		
+
+		$db->query("select reference_id from ext_references where reference_id = '".$ig."' AND type_ldap = '".$type_ldap."'");
+		if($db->nb_result() == 0)
+		{
+			$query_str = "INSERT INTO ext_references (reference_id,field,value,type_ldap) values ( '".$ig."','group_id','".$group_id."','".$type_ldap."')";
+			$db->query($query_str);
+			$log->add_notice($query_str);
+			unset($query_str);
+		}
 	}
 		
-	$sql_insert = "INSERT INTO usergroups ( group_id, ".implode(",",$update_groups_fields)." ) SELECT '".$group_id."','";
-	
-	foreach($update_groups_fields as $ugf)
+	$db->query("select group_id from usergroups where group_id = '".$func->protect_string_db($group_id)."'");
+	if($db->nb_result() == 0)
 	{
-		$sql_insert .= addslashes($xp_in_xml->query("//group[@ext_id=\"".$ig."\"]/".$ugf)->item(0)->nodeValue)."','";
+		$sql_insert = "INSERT INTO usergroups ( group_id, ".implode(",",$update_groups_fields)." ) values ( '".$func->protect_string_db($group_id)."', ";
+		foreach($update_groups_fields as $ugf)
+		{
+			$sql_insert .= "'".$func->protect_string_db($xp_in_xml->query("//group[@ext_id=\"".$ig."\"]/".$ugf)->item(0)->nodeValue)."','";
+		}
+		$sql_insert = substr($sql_insert,0,-2);
+		$sql_insert .= ")";
+		$db->query($sql_insert);
+		$log->add_notice($sql_insert);
+		unset($sql_insert);
 	}
-	
-	$sql_insert = substr($sql_insert,0,-2);
-	$sql_insert .= " WHERE NOT EXISTS (SELECT group_id FROM usergroups WHERE group_id = '".$group_id."');";
-	
-	$db->query($sql_insert);
-	$log->add_notice($sql_insert);
+
 }
 
 //DELETE GROUPS
@@ -297,9 +320,9 @@ foreach($delete_groups as $dg)
 	//Maj enabled N
 	$sql_disabled = "UPDATE usergroups SET enabled = 'N' WHERE group_id IN
 					(SELECT value FROM ext_references 
-					WHERE reference_id = '".addslashes($dg)."'
+					WHERE reference_id = '".$func->protect_string_db($dg)."'
 					AND field = 'group_id'
-					AND type = '".$type_ldap."')";
+					AND type_ldap = '".$type_ldap."')";
 	
 	$db->query($sql_disabled);
 	$log->add_notice($sql_disabled);
@@ -316,14 +339,14 @@ foreach($update_groups as $ug)
 	
 	foreach($update_groups_fields as $ugf)
 	{
-		$sql_update .= $ugf." = '".addslashes($xp_in_xml->query("//group[@ext_id=\"".$ug."\"]/".$ugf)->item(0)->nodeValue)."', ";
+		$sql_update .= $ugf." = '".$func->protect_string_db($xp_in_xml->query("//group[@ext_id=\"".$ug."\"]/".$ugf)->item(0)->nodeValue)."', ";
 	}
 	
 	$sql_update = substr($sql_update,0,-2)." WHERE group_id IN 
 					(SELECT value FROM ext_references 
-					WHERE reference_id = '".addslashes($ug)."'
+					WHERE reference_id = '".$func->protect_string_db($ug)."'
 					AND field = 'group_id'
-					AND type = '".$type_ldap."')";
+					AND type_ldap = '".$type_ldap."')";
 	
 	$db->query($sql_update);
 	$log->add_notice($sql_update);
@@ -359,66 +382,77 @@ foreach($insert_services as $is)
 	$db->query("SELECT value AS entity_id FROM ext_references 
 				WHERE reference_id = '".$is."'
 				AND ( field = 'entity_id' OR field = 'group_id' )
-				AND type = '".$type_ldap."'");
-
+				AND type_ldap = '".$type_ldap."'");
+	
 	if($service_id = $db->fetch_object()->entity_id)
 	{
 		//Le service existe deja : on le supprime dans services
 		$db->query("DELETE FROM entities WHERE entity_id = '".$service_id."'");
 		$log->add_notice("DELETE FROM entities WHERE entity_id = '".$service_id."'");
 		
-		$db->query("UPDATE ext_references SET value = '".$service_id."', field = 'entity_id' 
-					WHERE reference_id = '".$is."'");
-					
-		$log->add_notice("UPDATE ext_references SET value = '".$service_id."', field = 'entity_id' 
-						  WHERE reference_id = '".$is."'");
-		
+		$query_str = "UPDATE ext_references SET value = '".$service_id."', field = 'entity_id' 
+					WHERE reference_id = '".$is."'";
+		$db->query($query_str);			
+		$log->add_notice($query_str);	
+		unset($query_str);
 	}
 	else
 	{
 		//Il n'existe pas : on l'insert dans ext_reference
 		
 		//On insert un group_id = <group_prefix_ldap>{numero}
-		
-		$db->query("SELECT MAX(CAST(SUBSTRING(value,CHAR_LENGTH('".$group_prefix_ldap."')+1) as INTEGER )) as max_group_id
+		if($_SESSION['config']['databasetype'] == 'ORACLE')
+		{
+			$db->query("SELECT MAX(CAST(SUBSTR(value,LENGTH('".$group_prefix_ldap."')+1) as INTEGER )) as max_group_id
 					FROM ext_references 
 					WHERE (field = 'group_id' OR field = 'entity_id')
-					AND type = '".$type_ldap."'");
+					AND type_ldap = '".$type_ldap."'");
+		}
+		else
+		{		
+			$db->query("SELECT MAX(CAST(SUBSTRING(value,CHAR_LENGTH('".$group_prefix_ldap."')+1) as INTEGER )) as max_group_id
+					FROM ext_references 
+					WHERE (field = 'group_id' OR field = 'entity_id')
+					AND type_ldap = '".$type_ldap."'");
+		}
 		
 		$max_group_id = $db->fetch_object()->max_group_id;
-		
 		if(!isset($max_group_id))
 			$max_group_id = 0;
 			
 		$service_id = $group_prefix_ldap.($max_group_id + 1);
 		
-		$db->query("INSERT INTO ext_references (reference_id,field,value,type)
-					SELECT '".$is."','entity_id','".$service_id."','".$type_ldap."'
-					WHERE NOT EXISTS (SELECT reference_id FROM ext_references WHERE reference_id = '".$is."' AND type = '".$type_ldap."');");
-					
-		$log->add_notice("INSERT INTO ext_references (reference_id,field,value,type)
-					SELECT '".$is."','entity_id','".$service_id."','".$type_ldap."'
-					WHERE NOT EXISTS (SELECT reference_id FROM ext_references WHERE reference_id = '".$is."' AND type = '".$type_ldap."');");
-					
-		
+		$db->query("SELECT reference_id FROM ext_references WHERE reference_id = '".$is."' AND type_ldap = '".$type_ldap."'");
+		if($db->nb_result() == 0)
+		{
+			$query_str = "INSERT INTO ext_references (reference_id,field,value,type_ldap)
+					values ('".$is."','entity_id','".$service_id."','".$type_ldap."' )";
+			$db->query($query_str);			
+			$log->add_notice($query_str);
+			unset($query_str);
+		}				
 	}
 	
-	$sql_insert = "INSERT INTO entities ( entity_id, ".implode(",",array_keys($update_services_fields)).",entity_type ) SELECT '".$service_id."','";
-	
-	foreach($update_services_fields as $k_usf => $d_usf)
+	$db->query("SELECT entity_id FROM entities WHERE entity_id = '".$service_id."'");
+	if($db->nb_result() == 0)
 	{
-		$sql_insert .= addslashes(trim($xp_in_xml->query("//group[@ext_id=\"".$is."\"]/".$d_usf)->item(0)->nodeValue))."','";
+		$sql_insert = "INSERT INTO entities ( entity_id, ".implode(",",array_keys($update_services_fields)).",entity_type ) VALUES ( '".$service_id."','";
+		
+		foreach($update_services_fields as $k_usf => $d_usf)
+		{
+			$sql_insert .= $func->protect_string_db(trim($xp_in_xml->query("//group[@ext_id=\"".$is."\"]/".$d_usf)->item(0)->nodeValue))."','";
+		}
+		
+		//Ajout entity_type
+		$sql_insert .= $entity_type."','";
+		
+		$sql_insert = substr($sql_insert,0,-2);
+		$sql_insert .= ")";
+		
+		$db->query($sql_insert);
+		$log->add_notice($sql_insert);
+		unset($sql_insert);
 	}
-	
-	//Ajout entity_type
-	$sql_insert .= $entity_type."','";
-	
-	$sql_insert = substr($sql_insert,0,-2);
-	$sql_insert .= " WHERE NOT EXISTS  (SELECT entity_id FROM entities WHERE entity_id = '".$service_id."');";
-	
-	$db->query($sql_insert);
-	$log->add_notice($sql_insert);
-	unset($sql_insert);
 	
 }
 
@@ -429,9 +463,9 @@ foreach($delete_services as $ds)
 	//Maj enabled N
 	$sql_disabled = "UPDATE entities SET enabled = 'N' WHERE entity_id IN
 					(SELECT value FROM ext_references 
-					WHERE reference_id = '".addslashes($ds)."'
+					WHERE reference_id = '".$func->protect_string_db($ds)."'
 					AND field = 'entity_id'
-					AND type = '".$type_ldap."')";
+					AND type_ldap = '".$type_ldap."')";
 	
 	$db->query($sql_disabled);
 	$log->add_notice($sql_disabled);
@@ -440,7 +474,6 @@ foreach($delete_services as $ds)
 
 //UPDATE SERVICES
 $update_services = array_values(array_intersect($xml_services_id,$old_xml_services_id));
-
 foreach($update_services as $us)
 {
 	//Maj de service
@@ -448,14 +481,14 @@ foreach($update_services as $us)
 	
 	foreach($update_services_fields as $k_usf => $d_usf)
 	{
-		$sql_update .= $k_usf." = '".addslashes(trim($xp_in_xml->query("//group[@ext_id=\"".$us."\"]/".$d_usf)->item(0)->nodeValue))."', ";
+		$sql_update .= $k_usf." = '".$func->protect_string_db(trim($xp_in_xml->query("//group[@ext_id=\"".$us."\"]/".$d_usf)->item(0)->nodeValue))."', ";
 	}
 	
 	$sql_update = substr($sql_update,0,-2)." WHERE entity_id IN 
 					(SELECT value FROM ext_references 
-					WHERE reference_id = '".addslashes($us)."'
+					WHERE reference_id = '".$func->protect_string_db($us)."'
 					AND field = 'entity_id'
-					AND type = '".$type_ldap."')";
+					AND type_ldap = '".$type_ldap."')";
 	
 	$db->query($sql_update);
 	$log->add_notice($sql_update);
@@ -468,7 +501,14 @@ foreach($update_services as $us)
 $log->add_notice("*** USERS UPDATE ***");
 
 //Prepare les champs pour l'update ou l'insert dans users
-$db->query("SELECT column_name as field FROM information_schema.columns WHERE table_name ='users'");
+if($_SESSION['config']['databasetype'] == 'ORACLE')
+{
+	$db->query('SELECT column_name as field  FROM user_tab_columns WHERE table_name=\'users\'');
+}
+else
+{
+	$db->query("SELECT column_name as field FROM information_schema.columns WHERE table_name ='users'");
+}
 while($field = $db->fetch_object())
 	$lb_users_fields[] = $field->field;
 
@@ -513,7 +553,7 @@ foreach($insert_users as $iu)
 	$db->query("SELECT value FROM ext_references 
 				WHERE reference_id = '".$iu."'
 				AND field = 'user_id'
-				AND type = '".$type_ldap."'");
+				AND type_ldap = '".$type_ldap."'");
 
 	if($value = $db->fetch_object()->value)
 	{
@@ -524,43 +564,51 @@ foreach($insert_users as $iu)
 		$db->query("DELETE FROM ext_references 
 					WHERE reference_id = '".$iu."'
 					AND field = 'user_id'
-					AND type = '".$type_ldap."'");
+					AND type_ldap = '".$type_ldap."'");
 		
 		$log->add_notice("DELETE FROM ext_references 
 					WHERE reference_id = '".$iu."'
 					AND field = 'user_id'
-					AND type = '".$type_ldap."'");
+					AND type_ldap = '".$type_ldap."'");
 	}
 		
 	//Il n'existe pas : on l'insert dans ext_reference
-	$db->query("INSERT INTO ext_references (reference_id,field,value,type)
-				SELECT '".$iu."','user_id','".$xp_in_xml->query("//user[@ext_id=\"".$iu."\"]/user_id")->item(0)->nodeValue."','".$type_ldap."'
-				WHERE NOT EXISTS (SELECT reference_id FROM ext_references WHERE reference_id = '".$iu."')");
-				
-	$log->add_notice("INSERT INTO ext_references (reference_id,field,value,type)
-				SELECT '".$iu."','user_id','".$xp_in_xml->query("//user[@ext_id=\"".$iu."\"]/user_id")->item(0)->nodeValue."','".$type_ldap."'
-				WHERE NOT EXISTS (SELECT reference_id FROM ext_references WHERE reference_id = '".$iu."')");
+	$db->query("SELECT reference_id FROM ext_references WHERE reference_id = '".$iu."'");
+	if($db->nb_result() == 0)
+	{
+		$sql_str = "INSERT INTO ext_references (reference_id,field,value,type_ldap)
+					VALUES ('".$iu."','user_id','".$xp_in_xml->query("//user[@ext_id=\"".$iu."\"]/user_id")->item(0)->nodeValue."','".$type_ldap."')";
+		$db->query($sql_str);				
+		$log->add_notice($sql_str);
+		unset($sql_str);
+	}	
 	
-	if( $pass_is_login == 'true' )
+	$db->query("SELECT user_id FROM users WHERE user_id = '".$xp_in_xml->query("//user[@ext_id=\"".$iu."\"]/user_id")->item(0)->nodeValue."'");
+	if($db->nb_result() == 0)
 	{
-		$sql_insert = "INSERT INTO users ( change_password , password, ".implode(",",$update_users_fields)." ) SELECT 'N', md5('".$xp_in_xml->query("//user[@ext_id=\"".$iu."\"]/user_id")->item(0)->nodeValue."'),'";
-	}
-	else
-	{
-		$sql_insert = "INSERT INTO users ( change_password , password, ".implode(",",$update_users_fields)." ) SELECT 'Y',md5('maarch'),'";
-	}
+		if( $pass_is_login == 'true' )
+		{
+			$md5 = md5($xp_in_xml->query("//user[@ext_id=\"".$iu."\"]/user_id")->item(0)->nodeValue);
+			$sql_insert = "INSERT INTO users ( change_password , password, ".implode(",",$update_users_fields)." ) VALUES ('N', '".$md5."','";
+		}
+		else
+		{
+			$md5 = md5('maarch');
+			$sql_insert = "INSERT INTO users ( change_password , password, ".implode(",",$update_users_fields)." ) VALUES ( 'Y','".$md5."','";
+		}
+		unset($md5);
 		
-	
-	foreach($update_users_fields as $uuf)
-	{
-		$sql_insert .= addslashes(trim($xp_in_xml->query("//user[@ext_id=\"".$iu."\"]/".$uuf)->item(0)->nodeValue))."','";
+		foreach($update_users_fields as $uuf)
+		{
+			$sql_insert .= $func->protect_string_db(trim($xp_in_xml->query("//user[@ext_id=\"".$iu."\"]/".$uuf)->item(0)->nodeValue))."','";
+		}
+		
+		$sql_insert = substr($sql_insert,0,-2);
+		$sql_insert .= " )";
+		$db->query($sql_insert);
+		$log->add_notice($sql_insert);
+		unset($sql_insert);
 	}
-	
-	$sql_insert = substr($sql_insert,0,-2);
-	$sql_insert .= " WHERE NOT EXISTS (SELECT user_id FROM users WHERE user_id = '".$xp_in_xml->query("//user[@ext_id=\"".$iu."\"]/user_id")->item(0)->nodeValue."');";
-	$db->query($sql_insert);
-	$log->add_notice($sql_insert);
-	unset($sql_insert);
 	
 }
 
@@ -571,9 +619,9 @@ foreach($delete_users as $du)
 	//Maj status DEL
 	$sql_disabled = "UPDATE users SET status = 'DEL' WHERE user_id IN
 					(SELECT value FROM ext_references 
-					WHERE reference_id = '".addslashes($du)."'
+					WHERE reference_id = '".$func->protect_string_db($du)."'
 					AND field = 'user_id'
-					AND type = '".$type_ldap."')";
+					AND type_ldap = '".$type_ldap."')";
 	
 	$db->query($sql_disabled);
 	$log->add_notice($sql_disabled);
@@ -591,23 +639,23 @@ foreach($update_users as $uu)
 	
 	foreach($update_users_fields as $uuf)
 	{
-		$sql_update .= $uuf." = '".addslashes(trim($xp_in_xml->query("//user[@ext_id=\"".$uu."\"]/".$uuf)->item(0)->nodeValue))."', ";
+		$sql_update .= $uuf." = '".$func->protect_string_db(trim($xp_in_xml->query("//user[@ext_id=\"".$uu."\"]/".$uuf)->item(0)->nodeValue))."', ";
 	}
 	
 	$sql_update = substr($sql_update,0,-2)." WHERE user_id IN 
 					(SELECT value FROM ext_references 
-					WHERE reference_id = '".addslashes($uu)."'
+					WHERE reference_id = '".$func->protect_string_db($uu)."'
 					AND field = 'user_id'
-					AND type = '".$type_ldap."')";
+					AND type_ldap = '".$type_ldap."')";
 	
 	$db->query($sql_update);
 	
 	// On change le status que s'il était à DEL
 	$db->query("UPDATE users SET status = 'OK' WHERE status = 'DEL' and user_id IN 
-					(SELECT vaue FROM ext_references 
-					WHERE reference_id = '".addslashes($uu)."'
+					(SELECT value FROM ext_references 
+					WHERE reference_id = '".$func->protect_string_db($uu)."'
 					AND field = 'user_id'
-					AND type = '".$type_ldap."')");
+					AND type_ldap = '".$type_ldap."')");
 					
 	$log->add_notice($sql_update);
 	unset($sql_update);
@@ -619,7 +667,14 @@ foreach($update_users as $uu)
 $log->add_notice("*** GROUPS / SERVICES USERS LINKS ***");
 
 //Prepare les champs pour l'update ou l'insert dans usergroup_content
-$db->query("SELECT column_name as field FROM information_schema.columns WHERE table_name ='usergroup_content'");
+if($_SESSION['config']['databasetype'] == 'ORACLE')
+{
+	$db->query('SELECT column_name as field  FROM user_tab_columns WHERE table_name=\'usergroup_content\'');
+}
+else
+{
+	$db->query("SELECT column_name as field FROM information_schema.columns WHERE table_name ='usergroup_content'");
+}
 while($field = $db->fetch_object())
 	$lb_usergroup_content_fields[] = $field->field;
 
@@ -669,10 +724,9 @@ foreach($insert_users as $iu)
 	foreach($xp_in_xml->query("//user[@ext_id=\"".$iu."\"]/memberof/group[@type =\"organization\"]/@ext_id") as $node_ext_id)
 	{
 		$db->query("SELECT value FROM ext_references 
-				WHERE reference_id = '".addslashes($node_ext_id->nodeValue)."'
+				WHERE reference_id = '".$func->protect_string_db($node_ext_id->nodeValue)."'
 				AND field = 'entity_id'
-				AND type = '".$type_ldap."'");
-				
+				AND type_ldap = '".$type_ldap."'");	
 		$primary_groups_group_id[] = $db->fetch_object()->value;
 	}
 	
@@ -681,9 +735,9 @@ foreach($insert_users as $iu)
 	foreach($xp_in_xml->query("//user[@ext_id=\"".$iu."\"]//group[@type=\"rights\"]/@ext_id") as $group_rights_ext_id)
 	{
 		$db->query("SELECT value FROM ext_references 
-				WHERE reference_id = '".addslashes($group_rights_ext_id->nodeValue)."'
+				WHERE reference_id = '".$func->protect_string_db($group_rights_ext_id->nodeValue)."'
 				AND field = 'group_id'
-				AND type = '".$type_ldap."'");
+				AND type_ldap = '".$type_ldap."'");
 				
 		$group_rights_group_id[] = $db->fetch_object()->value;
 	}
@@ -691,39 +745,47 @@ foreach($insert_users as $iu)
 	//INSERT USER / RIGHTS GROUP(S) LINK(S)
 	foreach($group_rights_group_id as $grgi)
 	{
-		$sql_insert_usergroup_content = "INSERT INTO usergroup_content (group_id, primary_group, ".implode(",",$update_usergroup_content_fields)." )
-										 SELECT '".addslashes($grgi)."','N','";
-		
-		foreach($update_usergroup_content_fields as $uugf)
+		$db->query("SELECT group_id FROM usergroup_content WHERE group_id = '".$grgi."' 
+										   AND user_id = '".$func->protect_string_db(trim($xp_in_xml->query("//user[@ext_id=\"".$iu."\"]/user_id")->item(0)->nodeValue))."'");
+		if($db->nb_result() == 0)
 		{
-			$sql_insert_usergroup_content .= addslashes(trim($xp_in_xml->query("//user[@ext_id=\"".$iu."\"]/".$uugf)->item(0)->nodeValue))."','";
+			$sql_insert_usergroup_content = "INSERT INTO usergroup_content (group_id, primary_group, ".implode(",",$update_usergroup_content_fields)." )
+											VALUES ('".$func->protect_string_db($grgi)."','N','";
+			
+			foreach($update_usergroup_content_fields as $uugf)
+			{
+				$sql_insert_usergroup_content .= $func->protect_string_db(trim($xp_in_xml->query("//user[@ext_id=\"".$iu."\"]/".$uugf)->item(0)->nodeValue))."','";
+			}
+			
+			$sql_insert_usergroup_content = substr($sql_insert_usergroup_content,0,-2);
+			$sql_insert_usergroup_content .= " )";
+			$db->query($sql_insert_usergroup_content);
+			$log->add_notice($sql_insert_usergroup_content);
+			unset($sql_insert_usergroup_content);
 		}
-		
-		$sql_insert_usergroup_content = substr($sql_insert_usergroup_content,0,-2);
-		$sql_insert_usergroup_content .= " WHERE NOT EXISTS (SELECT group_id FROM usergroup_content WHERE group_id = '".$grgi."' 
-										   AND user_id = '".addslashes(trim($xp_in_xml->query("//user[@ext_id=\"".$iu."\"]/user_id")->item(0)->nodeValue))."')";
-		$db->query($sql_insert_usergroup_content);
-		$log->add_notice($sql_insert_usergroup_content);
-		unset($sql_insert_usergroup_content);
 	}
 	
 	//INSERT USER / ORGA GROUP(S) LINK(S)
 	foreach($primary_groups_group_id as $pggi)
 	{
-		$sql_insert_users_entities = "INSERT INTO users_entities (entity_id, primary_entity, ".implode(",",$update_usergroup_content_fields)." )
-									  SELECT '".addslashes($pggi)."','N','";
-		
-		foreach($update_usergroup_content_fields as $uugf)
+		$db->query("SELECT entity_id FROM users_entities WHERE entity_id = '".$func->protect_string_db($pggi)."'
+										AND user_id = '".$func->protect_string_db(trim($xp_in_xml->query("//user[@ext_id=\"".$iu."\"]/user_id")->item(0)->nodeValue))."'");
+		if($db->nb_result() == 0)
 		{
-			$sql_insert_users_entities .= addslashes(trim($xp_in_xml->query("//user[@ext_id=\"".$iu."\"]/".$uugf)->item(0)->nodeValue))."','";
+			$sql_insert_users_entities = "INSERT INTO users_entities (entity_id, primary_entity, ".implode(",",$update_usergroup_content_fields)." )
+										  VALUES ('".$func->protect_string_db($pggi)."','N','";
+			
+			foreach($update_usergroup_content_fields as $uugf)
+			{
+				$sql_insert_users_entities .= $func->protect_string_db(trim($xp_in_xml->query("//user[@ext_id=\"".$iu."\"]/".$uugf)->item(0)->nodeValue))."','";
+			}
+			
+			$sql_insert_users_entities = substr($sql_insert_users_entities,0,-2);
+			$sql_insert_users_entities .= " )";
+			$db->query($sql_insert_users_entities);
+			$log->add_notice($sql_insert_users_entities);
+			unset($sql_insert_users_entities);
 		}
-		
-		$sql_insert_users_entities = substr($sql_insert_users_entities,0,-2);
-		$sql_insert_users_entities .= " WHERE NOT EXISTS (SELECT entity_id FROM users_entities WHERE entity_id = '".$pggi."'
-										AND user_id = '".addslashes(trim($xp_in_xml->query("//user[@ext_id=\"".$iu."\"]/user_id")->item(0)->nodeValue))."')";
-		$db->query($sql_insert_users_entities);
-		$log->add_notice($sql_insert_users_entities);
-		unset($sql_insert_users_entities);
 	}
 	
 	//INSERT PRIMARY GROUP
@@ -731,9 +793,9 @@ foreach($insert_users as $iu)
 	{
 		$sql_insert_service = 
 		"UPDATE usergroup_content SET primary_group = 'Y'
-		WHERE user_id ='".addslashes(trim($xp_in_xml->query("//user[@ext_id=\"".$iu."\"]/user_id")->item(0)->nodeValue))."' 
+		WHERE user_id ='".$func->protect_string_db(trim($xp_in_xml->query("//user[@ext_id=\"".$iu."\"]/user_id")->item(0)->nodeValue))."' 
 		AND group_id = '".$group_rights_group_id[0]."' 
-		AND NOT EXISTS (SELECT primary_group FROM usergroup_content WHERE user_id = '".addslashes(trim($xp_in_xml->query("//user[@ext_id=\"".$iu."\"]/user_id")->item(0)->nodeValue))."' 
+		AND NOT EXISTS (SELECT primary_group FROM usergroup_content WHERE user_id = '".$func->protect_string_db(trim($xp_in_xml->query("//user[@ext_id=\"".$iu."\"]/user_id")->item(0)->nodeValue))."' 
 		AND primary_group = 'Y')";
 	
 		$db->query($sql_insert_service);
@@ -745,9 +807,9 @@ foreach($insert_users as $iu)
 	{
 		$sql_insert_service = 
 		"UPDATE users_entities SET primary_entity = 'Y'
-		WHERE user_id ='".addslashes(trim($xp_in_xml->query("//user[@ext_id=\"".$iu."\"]/user_id")->item(0)->nodeValue))."' 
+		WHERE user_id ='".$func->protect_string_db(trim($xp_in_xml->query("//user[@ext_id=\"".$iu."\"]/user_id")->item(0)->nodeValue))."' 
 		AND entity_id  = '".$primary_groups_group_id[0]."'
-		AND NOT EXISTS (SELECT primary_entity FROM users_entities WHERE user_id = '".addslashes(trim($xp_in_xml->query("//user[@ext_id=\"".$iu."\"]/user_id")->item(0)->nodeValue))."' 
+		AND NOT EXISTS (SELECT primary_entity FROM users_entities WHERE user_id = '".$func->protect_string_db(trim($xp_in_xml->query("//user[@ext_id=\"".$iu."\"]/user_id")->item(0)->nodeValue))."' 
 		AND primary_entity = 'Y')";
 	
 		$db->query($sql_insert_service);
@@ -794,15 +856,15 @@ foreach($update_users as $uu)
 	foreach($usergroup_link_insert as $uli)
 	{
 		$db->query("SELECT value FROM ext_references 
-				WHERE reference_id = '".addslashes($uli)."'
+				WHERE reference_id = '".$func->protect_string_db($uli)."'
 				AND field = 'group_id'
-				AND type = '".$type_ldap."'");
+				AND type_ldap = '".$type_ldap."'");
 				
 		$uli_group_id = $db->fetch_object()->value;
 		
 		
 		//Primary group or not
-		$db->query("SELECT user_id FROM usergroup_content WHERE user_id = '".addslashes($xp_in_xml->query("//user[@ext_id=\"".$uu."\"]/user_id")->item(0)->nodeValue)."'
+		$db->query("SELECT user_id FROM usergroup_content WHERE user_id = '".$func->protect_string_db($xp_in_xml->query("//user[@ext_id=\"".$uu."\"]/user_id")->item(0)->nodeValue)."'
 					AND primary_group = 'Y'");
 		
 		if( $db->fetch_object()->user_id )
@@ -810,24 +872,27 @@ foreach($update_users as $uu)
 		else
 			$primary_group = 'Y';
 		
-		$sql_insert_usergroup_content = "INSERT INTO usergroup_content (group_id, primary_group, ".implode(",",$update_usergroup_content_fields)." )
-										SELECT '".addslashes($uli_group_id)."','".$primary_group."','";
-		
-		foreach($update_usergroup_content_fields as $uugf)
+		$db->query("SELECT group_id FROM usergroup_content WHERE group_id = '".$func->protect_string_db($uli_group_id)."' AND user_id = '".$func->protect_string_db($xp_in_xml->query("//user[@ext_id=\"".$uu."\"]/user_id")->item(0)->nodeValue)."'");
+		if($db->nb_result() == 0)
 		{
-			if($uugf == 'user_id')
-				$sql_insert_usergroup_content .= addslashes(trim($xp_in_xml->query("//user[@ext_id=\"".$uu."\"]/user_id")->item(0)->nodeValue))."','";
-			else
-				$sql_insert_usergroup_content .= addslashes(trim($xp_in_xml->query("//user[@ext_id=\"".$uli->nodeValue."\"]/".$uugf)->item(0)->nodeValue))."','";
+			$sql_insert_usergroup_content = "INSERT INTO usergroup_content (group_id, primary_group, ".implode(",",$update_usergroup_content_fields)." )
+											VALUES ('".$func->protect_string_db($uli_group_id)."','".$primary_group."','";
+			
+			foreach($update_usergroup_content_fields as $uugf)
+			{
+				if($uugf == 'user_id')
+					$sql_insert_usergroup_content .= $func->protect_string_db(trim($xp_in_xml->query("//user[@ext_id=\"".$uu."\"]/user_id")->item(0)->nodeValue))."','";
+				else
+					$sql_insert_usergroup_content .= $func->protect_string_db(trim($xp_in_xml->query("//user[@ext_id=\"".$uli->nodeValue."\"]/".$uugf)->item(0)->nodeValue))."','";
+			}
+			
+			$sql_insert_usergroup_content = substr($sql_insert_usergroup_content,0,-2);
+			$sql_insert_usergroup_content .= " )";
+											   
+			$db->query($sql_insert_usergroup_content);
+			$log->add_notice($sql_insert_usergroup_content);
+			unset($sql_insert_usergroup_content);
 		}
-		
-		$sql_insert_usergroup_content = substr($sql_insert_usergroup_content,0,-2);
-		$sql_insert_usergroup_content .= " WHERE NOT EXISTS (SELECT group_id FROM usergroup_content WHERE group_id = '".addslashes($uli_group_id)."'
-										   AND user_id = '".addslashes($xp_in_xml->query("//user[@ext_id=\"".$uu."\"]/user_id")->item(0)->nodeValue)."')";
-										   
-		$db->query($sql_insert_usergroup_content);
-		$log->add_notice($sql_insert_usergroup_content);
-		unset($sql_insert_usergroup_content);
 	}
 	
 	//INSERT ORGANIZATION GROUPS
@@ -835,39 +900,42 @@ foreach($update_users as $uu)
 	foreach($entities_link_insert as $eli)
 	{
 		$db->query("SELECT value FROM ext_references 
-				WHERE reference_id = '".addslashes($eli)."'
+				WHERE reference_id = '".$func->protect_string_db($eli)."'
 				AND field = 'entity_id'
-				AND type = '".$type_ldap."'");
+				AND type_ldap = '".$type_ldap."'");
 				
 		$eli_group_id = $db->fetch_object()->value;
 		
 		//Primary entity or not
-		$db->query("SELECT user_id FROM users_entities WHERE user_id = '".addslashes($xp_in_xml->query("//user[@ext_id=\"".$uu."\"]/user_id")->item(0)->nodeValue)."'
+		$db->query("SELECT user_id FROM users_entities WHERE user_id = '".$func->protect_string_db($xp_in_xml->query("//user[@ext_id=\"".$uu."\"]/user_id")->item(0)->nodeValue)."'
 					AND primary_entity = 'Y'");
 		
 		if( $db->fetch_object()->user_id )
 			$primary_entity = 'N';
 		else
 			$primary_entity = 'Y';
-			
-		$sql_insert_users_entities = "INSERT INTO users_entities (entity_id,primary_entity,".implode(",",$update_usergroup_content_fields)." )
-									  SELECT '".addslashes($eli_group_id)."','".$primary_entity."','";
 		
-		foreach($update_usergroup_content_fields as $uugf)
+		$db->query("SELECT entity_id FROM users_entities WHERE entity_id = '".$func->protect_string_db($eli_group_id)."' AND user_id = '".$func->protect_string_db($xp_in_xml->query("//user[@ext_id=\"".$uu."\"]/user_id")->item(0)->nodeValue)."'");
+		if($db->nb_result() == 0)
 		{
-			if($uugf == 'user_id')
-				$sql_insert_users_entities .= addslashes(trim($xp_in_xml->query("//user[@ext_id=\"".$uu."\"]/user_id")->item(0)->nodeValue))."','";
-			else
-				$sql_insert_users_entities .= addslashes(trim($xp_in_xml->query("//user[@ext_id=\"".$eli->nodeValue."\"]/".$uugf)->item(0)->nodeValue))."','";
+			$sql_insert_users_entities = "INSERT INTO users_entities (entity_id,primary_entity,".implode(",",$update_usergroup_content_fields)." )
+										 VALUES ('".$func->protect_string_db($eli_group_id)."','".$primary_entity."','";
+			
+			foreach($update_usergroup_content_fields as $uugf)
+			{
+				if($uugf == 'user_id')
+					$sql_insert_users_entities .= $func->protect_string_db(trim($xp_in_xml->query("//user[@ext_id=\"".$uu."\"]/user_id")->item(0)->nodeValue))."','";
+				else
+					$sql_insert_users_entities .= $func->protect_string_db(trim($xp_in_xml->query("//user[@ext_id=\"".$eli->nodeValue."\"]/".$uugf)->item(0)->nodeValue))."','";
+			}
+			
+			$sql_insert_users_entities = substr($sql_insert_users_entities,0,-2);
+			$sql_insert_users_entities .= " )";
+			
+			$db->query($sql_insert_users_entities);
+			$log->add_notice($sql_insert_users_entities);
+			unset($sql_insert_users_entities);
 		}
-		
-		$sql_insert_users_entities = substr($sql_insert_users_entities,0,-2);
-		$sql_insert_users_entities .= " WHERE NOT EXISTS (SELECT entity_id FROM users_entities WHERE entity_id = '".addslashes($eli_group_id)."'
-										AND user_id = '".addslashes($xp_in_xml->query("//user[@ext_id=\"".$uu."\"]/user_id")->item(0)->nodeValue)."')";
-		
-		$db->query($sql_insert_users_entities);
-		$log->add_notice($sql_insert_users_entities);
-		unset($sql_insert_users_entities);
 	}
 	
 	//DELETE RIGHTS GROUPS
@@ -876,15 +944,15 @@ foreach($update_users as $uu)
 	foreach($usergroup_link_delete as $uld)
 	{
 		$db->query("SELECT value FROM ext_references 
-				WHERE reference_id = '".addslashes($uld)."'
+				WHERE reference_id = '".$func->protect_string_db($uld)."'
 				AND field = 'group_id'
-				AND type = '".$type_ldap."'");
+				AND type_ldap = '".$type_ldap."'");
 				
 		$uld_group_id = $db->fetch_object()->value;
 		
 		$sql_delete_usergroup_content = "DELETE FROM usergroup_content 
-										WHERE user_id = '".addslashes(trim($xp_in_xml->query("//user[@ext_id=\"".$uu."\"]/user_id")->item(0)->nodeValue))."'
-										AND group_id = '".addslashes(trim($uld_group_id))."' ";
+										WHERE user_id = '".$func->protect_string_db(trim($xp_in_xml->query("//user[@ext_id=\"".$uu."\"]/user_id")->item(0)->nodeValue))."'
+										AND group_id = '".$func->protect_string_db(trim($uld_group_id))."' ";
 		
 		$db->query($sql_delete_usergroup_content);
 		$log->add_notice($sql_delete_usergroup_content);
@@ -896,15 +964,15 @@ foreach($update_users as $uu)
 	foreach($entities_link_delete as $eld)
 	{
 		$db->query("SELECT value FROM ext_references 
-				WHERE reference_id = '".addslashes($eld)."'
+				WHERE reference_id = '".$func->protect_string_db($eld)."'
 				AND field = 'entity_id'
-				AND type = '".$type_ldap."'");
+				AND type_ldap = '".$type_ldap."'");
 				
 		$eld_group_id = $db->fetch_object()->value;
 		
 		$sql_delete_entities = "DELETE FROM users_entities
-								WHERE user_id = '".addslashes(trim($xp_in_xml->query("//user[@ext_id=\"".$uu."\"]/user_id")->item(0)->nodeValue))."'
-								AND entity_id = '".addslashes(trim($eld_group_id))."' ";
+								WHERE user_id = '".$func->protect_string_db(trim($xp_in_xml->query("//user[@ext_id=\"".$uu."\"]/user_id")->item(0)->nodeValue))."'
+								AND entity_id = '".$func->protect_string_db(trim($eld_group_id))."' ";
 		
 		$db->query($sql_delete_entities);
 		$log->add_notice($sql_delete_entities);
@@ -918,28 +986,28 @@ foreach($update_users as $uu)
 	{
 		//Maj des liens groupes de droit (cas ou le user_id change)
 		$db->query("UPDATE usergroup_content
-					SET user_id = '".addslashes($xp_in_xml->query("//user[@ext_id=\"".$uu."\"]/user_id")->item(0)->nodeValue)."'
+					SET user_id = '".$func->protect_string_db($xp_in_xml->query("//user[@ext_id=\"".$uu."\"]/user_id")->item(0)->nodeValue)."'
 					WHERE user_id IN
 					(SELECT value FROM ext_references 
-						WHERE reference_id = '".addslashes($uu)."'
+						WHERE reference_id = '".$func->protect_string_db($uu)."'
 						AND field = 'user_id'
-						AND type = '".$type_ldap."') AND group_id IN
+						AND type_ldap = '".$type_ldap."') AND group_id IN
 					(SELECT value FROM ext_references 
-						WHERE reference_id = '".addslashes($ulu)."'
+						WHERE reference_id = '".$func->protect_string_db($ulu)."'
 						AND field = 'group_id'
-						AND type = '".$type_ldap."')");
+						AND type_ldap = '".$type_ldap."')");
 						
 		$log->add_notice("UPDATE usergroup_content
-					SET user_id = '".addslashes($xp_in_xml->query("//user[@ext_id=\"".$uu."\"]/user_id")->item(0)->nodeValue)."'
+					SET user_id = '".$func->protect_string_db($xp_in_xml->query("//user[@ext_id=\"".$uu."\"]/user_id")->item(0)->nodeValue)."'
 					WHERE user_id IN
 					(SELECT value FROM ext_references 
-						WHERE reference_id = '".addslashes($uu)."'
+						WHERE reference_id = '".$func->protect_string_db($uu)."'
 						AND field = 'user_id'
-						AND type = '".$type_ldap."') AND group_id IN
+						AND type_ldap = '".$type_ldap."') AND group_id IN
 					(SELECT value FROM ext_references 
-						WHERE reference_id = '".addslashes($ulu)."'
+						WHERE reference_id = '".$func->protect_string_db($ulu)."'
 						AND field = 'group_id'
-						AND type = '".$type_ldap."')");
+						AND type_ldap = '".$type_ldap."')");
 	}
 	
 	
@@ -949,43 +1017,43 @@ foreach($update_users as $uu)
 	{
 		//Maj des liens services (cas ou le user_id change)
 		$db->query("UPDATE users_entities
-					SET user_id = '".addslashes($xp_in_xml->query("//user[@ext_id=\"".$uu."\"]/user_id")->item(0)->nodeValue)."'
+					SET user_id = '".$func->protect_string_db($xp_in_xml->query("//user[@ext_id=\"".$uu."\"]/user_id")->item(0)->nodeValue)."'
 					WHERE user_id IN
 					(SELECT value FROM ext_references 
-						WHERE reference_id = '".addslashes($uu)."'
+						WHERE reference_id = '".$func->protect_string_db($uu)."'
 						AND field = 'user_id'
-						AND type = '".$type_ldap."') AND entity_id IN
+						AND type_ldap = '".$type_ldap."') AND entity_id IN
 					(SELECT value FROM ext_references 
-						WHERE reference_id = '".addslashes($elu)."'
+						WHERE reference_id = '".$func->protect_string_db($elu)."'
 						AND field = 'entity_id'
-						AND type = '".$type_ldap."')");
+						AND type_ldap = '".$type_ldap."')");
 						
 		$log->add_notice("UPDATE users_entities
-					SET user_id = '".addslashes($xp_in_xml->query("//user[@ext_id=\"".$uu."\"]/user_id")->item(0)->nodeValue)."'
+					SET user_id = '".$func->protect_string_db($xp_in_xml->query("//user[@ext_id=\"".$uu."\"]/user_id")->item(0)->nodeValue)."'
 					WHERE user_id IN
 					(SELECT value FROM ext_references 
-						WHERE reference_id = '".addslashes($uu)."'
+						WHERE reference_id = '".$func->protect_string_db($uu)."'
 						AND field = 'user_id'
-						AND type = '".$type_ldap."') AND entity_id IN
+						AND type_ldap = '".$type_ldap."') AND entity_id IN
 					(SELECT value FROM ext_references 
-						WHERE reference_id = '".addslashes($elu)."'
+						WHERE reference_id = '".$func->protect_string_db($elu)."'
 						AND field = 'entity_id'
-						AND type = '".$type_ldap."')");
+						AND type_ldap = '".$type_ldap."')");
 	}
 	
 	//UPDATE EXT_REFERENCES (USER_ID COULD CHANGE)
 	
 	$db->query("UPDATE ext_references
-				SET value = '".addslashes($xp_in_xml->query("//user[@ext_id=\"".$uu."\"]/user_id")->item(0)->nodeValue)."'
-				WHERE reference_id = '".addslashes($uu)."'
+				SET value = '".$func->protect_string_db($xp_in_xml->query("//user[@ext_id=\"".$uu."\"]/user_id")->item(0)->nodeValue)."'
+				WHERE reference_id = '".$func->protect_string_db($uu)."'
 				AND field = 'user_id'
-				AND type = '".$type_ldap."'");
+				AND type_ldap = '".$type_ldap."'");
 				
 	$log->add_notice("UPDATE ext_references
-				SET value = '".addslashes($xp_in_xml->query("//user[@ext_id=\"".$uu."\"]/user_id")->item(0)->nodeValue)."'
-				WHERE reference_id = '".addslashes($uu)."'
+				SET value = '".$func->protect_string_db($xp_in_xml->query("//user[@ext_id=\"".$uu."\"]/user_id")->item(0)->nodeValue)."'
+				WHERE reference_id = '".$func->protect_string_db($uu)."'
 				AND field = 'user_id'
-				AND type = '".$type_ldap."'");
+				AND type_ldap = '".$type_ldap."'");
 }
 
 //***********************************//
@@ -998,7 +1066,7 @@ foreach($delete_users as $du)
 {
 	//DELETE RIGHTS GROUPS
 	$sql_delete_usergroup_content = "DELETE FROM usergroup_content 
-									WHERE user_id = '".addslashes(trim($xp_in_xml->query("//user[@ext_id=\"".$du."\"]/user_id")->item(0)->nodeValue))."'";
+									WHERE user_id = '".$func->protect_string_db(trim($xp_in_xml->query("//user[@ext_id=\"".$du."\"]/user_id")->item(0)->nodeValue))."'";
 	
 	$db->query($sql_delete_usergroup_content);
 	$log->add_notice($sql_delete_usergroup_content);
@@ -1006,7 +1074,7 @@ foreach($delete_users as $du)
 	
 	//DELETE ORGANIZATION GROUPS
 	$sql_delete_entities = "DELETE FROM users_entities
-							WHERE user_id = '".addslashes(trim($xp_in_xml->query("//user[@ext_id=\"".$du."\"]/user_id")->item(0)->nodeValue))."'";
+							WHERE user_id = '".$func->protect_string_db(trim($xp_in_xml->query("//user[@ext_id=\"".$du."\"]/user_id")->item(0)->nodeValue))."'";
 	
 	$db->query($sql_delete_entities);
 	$log->add_notice($sql_delete_entities);
@@ -1048,18 +1116,22 @@ foreach($group_rights_insert as $gri)
 {
 	//Security
 	$db->query("SELECT value FROM ext_references 
-				WHERE reference_id = '".addslashes($gri)."'
+				WHERE reference_id = '".$func->protect_string_db($gri)."'
 				AND field = 'group_id'
-				AND type = '".$type_ldap."'");
+				AND type_ldap = '".$type_ldap."'");
 	
 	$gri_id = $db->fetch_object()->value;
 	
-	$sql_security_insert = "INSERT INTO security (group_id,coll_id,where_clause,can_insert,can_update,can_delete) 
-							SELECT '".$gri_id."','".$security['coll_id']."','".addslashes($security['where_clause'])."','".$security['can_insert']."','".$security['can_update']."','".$security['can_delete']."'
-							WHERE NOT EXISTS (SELECT group_id FROM security WHERE group_id = '".$gri_id."')";
+	$db->query("SELECT group_id FROM security WHERE group_id = '".$gri_id."'");
+	if($db->nb_result() == 0)
+	{
+		$sql_security_insert = "INSERT INTO security (group_id,coll_id,where_clause,can_insert,can_update,can_delete) 
+							VALUES ( '".$gri_id."','".$security['coll_id']."','".$func->protect_string_db($security['where_clause'])."','".$security['can_insert']."','".$security['can_update']."','".$security['can_delete']."')";
 	
-	$db->query($sql_security_insert);
-	$log->add_notice($sql_security_insert);
+		$db->query($sql_security_insert);
+		$log->add_notice($sql_security_insert);
+		unset($sql_security_insert);
+	}
 }
 
 $group_rights_delete = array_values(array_diff($old_group_rights,$group_rights));
@@ -1068,9 +1140,9 @@ $group_rights_delete = array_values(array_diff($old_group_rights,$group_rights))
 foreach($group_rights_delete as $grd)
 {
 	$db->query("SELECT value FROM ext_references 
-				WHERE reference_id = '".addslashes($grd)."'
+				WHERE reference_id = '".$func->protect_string_db($grd)."'
 				AND field = 'group_id'
-				AND type = '".$type_ldap."'");
+				AND type_ldap = '".$type_ldap."'");
 	
 	$grd_id = $db->fetch_object()->value;
 	
@@ -1086,9 +1158,9 @@ foreach($group_rights_update as $gru)
 	//On regarde l'etat actuel de security
 	$db->query("SELECT group_id,coll_id,where_clause,can_insert,can_update,can_delete FROM security 
 				WHERE group_id IN 
-				(SELECT value FROM ext_references WHERE reference_id = '".addslashes($gru)."'
+				(SELECT value FROM ext_references WHERE reference_id = '".$func->protect_string_db($gru)."'
 				AND field = 'group_id'
-				AND type = '".$type_ldap."')");
+				AND type_ldap = '".$type_ldap."')");
 	
 	while( $sec = $db->fetch_object() )
 	{
@@ -1098,7 +1170,7 @@ foreach($group_rights_update as $gru)
 		
 			//On met à jour les champs si il n'y a pas eu de changement à la main
 			if( $sec->where_clause ==  $old_security['where_clause'] )
-				$security_update .= ", where_clause = '".addslashes($security['where_clause'])."'";
+				$security_update .= ", where_clause = '".$func->protect_string_db($security['where_clause'])."'";
 			
 			if( $sec->can_insert ==  $old_security['can_insert'] )
 				$security_update .= ", can_insert = '".$security['can_insert']."'";
@@ -1142,9 +1214,9 @@ foreach($dns as $dn)
 	foreach($group_orga as $go)
 	{
 		$db->query("SELECT value FROM ext_references 
-					WHERE reference_id = '".addslashes($go)."'
+					WHERE reference_id = '".$func->protect_string_db($go)."'
 					AND field = 'entity_id'
-					AND type = '".$type_ldap."'");
+					AND type_ldap = '".$type_ldap."'");
 	
 		$entity_id = $db->fetch_object()->value;
 	
@@ -1154,9 +1226,9 @@ foreach($dns as $dn)
 		if( $parent != $old_parent )
 		{
 			$db->query("SELECT value FROM ext_references 
-						WHERE reference_id = '".addslashes($parent)."'
+						WHERE reference_id = '".$func->protect_string_db($parent)."'
 						AND field = 'entity_id'
-						AND type = '".$type_ldap."'");
+						AND type_ldap = '".$type_ldap."'");
 			
 			$parent_entity_id = $db->fetch_object()->value;
 		
