@@ -88,10 +88,6 @@
     <system_service>false</system_service>
    <style>fold_admin_foldertypes</style>
    <enabled>true</enabled>
-   <WHEREAMIUSED>
-     <page>admin.php</page>
-     <nature>listelement</nature>
-   </WHEREAMIUSED>
  </SERVICE>
   <SERVICE>
    <id>create_folder</id>

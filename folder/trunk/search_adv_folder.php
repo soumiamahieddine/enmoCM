@@ -76,7 +76,7 @@ if($choose_coll)
 			</select>
 		</p>
 	</div>
-	<?
+	<?php
 }
 else
 {
