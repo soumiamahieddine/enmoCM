@@ -402,7 +402,7 @@ function del_query_confirm()
 			$title_search = _ERROR
 		?>
 
-			<dt><? echo $title_search ; ?></dt>
+			<dt><?php echo $title_search ; ?></dt>
 			<dd>
 				<h4><p align="center"><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_search_b.gif" alt="" /> <?php  echo $title_search ; ?></h4></p>
 				<hr/>
