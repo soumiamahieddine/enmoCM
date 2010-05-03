@@ -9,10 +9,6 @@
 		<system_service>false</system_service>
 		<style>ent_manage_entities</style>
 		<enabled>true</enabled>
-		<WHEREAMIUSED>
-			<page>admin.php</page>
-			<nature>listelement</nature>
-		</WHEREAMIUSED>
 	</SERVICE>
 <SERVICE>
 		<id>choose_entity</id>

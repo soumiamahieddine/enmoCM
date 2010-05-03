@@ -53,7 +53,7 @@ if($_SESSION['service_tag'] == 'group_basket')
 					if($state_entity == false)
 					{
 						?>
-						<option alt="<?php  echo $_SESSION['m_admin']['entities'][$i]['LABEL']; ?>" title="<?php  echo $_SESSION['m_admin']['entities'][$i]['LABEL']; ?>" value="<?php  echo $_SESSION['m_admin']['entities'][$i]['ID']; ?>"><?php  echo $_SESSION['m_admin']['entities'][$i]['LABEL']; ?></option>
+						<option value="<?php  echo $_SESSION['m_admin']['entities'][$i]['ID']; ?>"><?php  echo $_SESSION['m_admin']['entities'][$i]['LABEL']; ?></option>
 					<?php
 					}
 				}
@@ -100,7 +100,7 @@ if($_SESSION['service_tag'] == 'group_basket')
 					if($state_entity == true)
 					{
 					?>
-						<option alt="<?php  echo $_SESSION['m_admin']['entities'][$i]['LABEL']; ?>" title="<?php  echo $_SESSION['m_admin']['entities'][$i]['LABEL']; ?>" value="<?php  echo $_SESSION['m_admin']['entities'][$i]['ID']; ?>" selected="selected" ><?php  echo $_SESSION['m_admin']['entities'][$i]['LABEL']; ?></option>
+						<option value="<?php  echo $_SESSION['m_admin']['entities'][$i]['ID']; ?>" selected="selected" ><?php  echo $_SESSION['m_admin']['entities'][$i]['LABEL']; ?></option>
 					<?php
 					}
 				}

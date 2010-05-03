@@ -348,7 +348,7 @@ else
 			</tr>
 		</table>
 		</form>
-		<script type="text/javascript">repost('<? echo $link;?>',new Array('diff_list'),new Array('what_users','what_services'),'keyup',250);</script>
+		<script type="text/javascript">repost('<?php echo $link;?>',new Array('diff_list'),new Array('what_users','what_services'),'keyup',250);</script>
 		<br/></br><br/></br><br/></br>
 		</div>
 		<?php if(
@@ -367,7 +367,7 @@ else
 			<h2 class="sstit"><?php echo _PRINCIPAL_RECIPIENT;?></h2>
 			<table cellpadding="0" cellspacing="0" border="0" class="listing spec">
 			 <tr >
-			 <td><img src="<?php echo $_SESSION['config']['businessappurl'].'static.php?filename=manage_users_entities_b.gif&module=entities';?>" alt="<? echo _USER;?>" title="<? echo _USER;?>" /></td>
+			 <td><img src="<?php echo $_SESSION['config']['businessappurl'].'static.php?filename=manage_users_entities_b.gif&module=entities';?>" alt="<?php echo _USER;?>" title="<?php echo _USER;?>" /></td>
 			 	 <td ><?php echo $_SESSION[$origin]['diff_list']['dest']['lastname'];?></td>
 				 <td ><?php echo $_SESSION[$origin]['diff_list']['dest']['firstname'];?></td>
 				<td><?php echo $_SESSION[$origin]['diff_list']['dest']['entity_label']; ?></td>
@@ -397,10 +397,10 @@ else
 					}
 					?>
 			 <tr <?php echo $color; ?> >
-					<td><img src="<?php echo $_SESSION['config']['businessappurl'].'static.php?filename=manage_entities_b.gif&module=entities';?>" alt="<? echo _ENTITY;?>" title="<? echo _ENTITY;?>" /></td>
+					<td><img src="<?php echo $_SESSION['config']['businessappurl'].'static.php?filename=manage_entities_b.gif&module=entities';?>" alt="<?php echo _ENTITY;?>" title="<?php echo _ENTITY;?>" /></td>
 					<td ><?php echo $_SESSION[$origin]['diff_list']['copy']['entities'][$i]['entity_id'];?></td>
 					<td colspan="2"><?php echo $_SESSION[$origin]['diff_list']['copy']['entities'][$i]['entity_label'];?></td>
-					<td class="action_entities"><a href="<? echo $link;?>&what_users=<?php echo $what_users; ?>&what_services=<?php echo $what_services; ?>&action=remove_entity&rank=<?php echo $i;?>&id=<?php echo $_SESSION[$origin]['diff_list']['copy']['entities'][$i]['entity_id'];?>" class="delete"><?php echo _DELETE;?></a></td>
+					<td class="action_entities"><a href="<?php echo $link;?>&what_users=<?php echo $what_users; ?>&what_services=<?php echo $what_services; ?>&action=remove_entity&rank=<?php echo $i;?>&id=<?php echo $_SESSION[$origin]['diff_list']['copy']['entities'][$i]['entity_id'];?>" class="delete"><?php echo _DELETE;?></a></td>
 
 					<td  >&nbsp;</td>
 			</tr>
@@ -417,12 +417,12 @@ else
 			}
 				?>
 			<tr <?php echo $color; ?> >
-				<td><img src="<?php echo $_SESSION['config']['businessappurl'].'static.php?filename=manage_users_entities_b.gif&module=entities';?>" alt="<? echo _USER;?>" title="<? echo _USER;?>" /></td>
+				<td><img src="<?php echo $_SESSION['config']['businessappurl'].'static.php?filename=manage_users_entities_b.gif&module=entities';?>" alt="<?php echo _USER;?>" title="<?php echo _USER;?>" /></td>
 				<td ><?php echo $_SESSION[$origin]['diff_list']['copy']['users'][$i]['lastname'];?></td>
 				<td ><?php echo $_SESSION[$origin]['diff_list']['copy']['users'][$i]['firstname'];?></td>
 				<td><?php echo $_SESSION[$origin]['diff_list']['copy']['users'][$i]['entity_label']; ?></td>
-				<td class="action_entities"><a href="<? echo $link;?>&what_users=<?php echo $what_users; ?>&what_services=<?php echo $what_services; ?>&action=remove_user&rank=<?php echo $i;?>&id=<?php echo $_SESSION[$origin]['diff_list']['copy']['users'][$i]['user_id'];?>" class="delete"><?php echo _DELETE;?></a></td>
-				<td class="action_entities"><?php if(!$only_cc){?><a href="<? echo $link;?>&what_users=<?php echo $what_users; ?>&what_services=<?php echo $what_services; ?>&action=copy_to_dest&rank=<?php echo $i;?>" class="up"><?php echo _TO_DEST;?></a><?php }?>&nbsp;</td>
+				<td class="action_entities"><a href="<?php echo $link;?>&what_users=<?php echo $what_users; ?>&what_services=<?php echo $what_services; ?>&action=remove_user&rank=<?php echo $i;?>&id=<?php echo $_SESSION[$origin]['diff_list']['copy']['users'][$i]['user_id'];?>" class="delete"><?php echo _DELETE;?></a></td>
+				<td class="action_entities"><?php if(!$only_cc){?><a href="<?php echo $link;?>&what_users=<?php echo $what_users; ?>&what_services=<?php echo $what_services; ?>&action=copy_to_dest&rank=<?php echo $i;?>" class="up"><?php echo _TO_DEST;?></a><?php }?>&nbsp;</td>
 			</tr>
 	<?php }
 			?>
@@ -480,7 +480,7 @@ else
 				<tr <?php echo $color; ?>>
 					<td><?php echo $entities[$j]['ID'];?></td>
 					<td><?php echo $entities[$j]['DEP']; ?></td>
-					<td class="action_entities"><a href="<? echo $link;?>&what_users=<?php echo $what_users; ?>&what_services=<?php echo $what_services; ?>&action=add_entity&id=<?php echo $entities[$j]['ID'];?>" class="change"><?php echo _ADD_CC;?></a></td>
+					<td class="action_entities"><a href="<?php echo $link;?>&what_users=<?php echo $what_users; ?>&what_services=<?php echo $what_services; ?>&action=add_entity&id=<?php echo $entities[$j]['ID'];?>" class="change"><?php echo _ADD_CC;?></a></td>
 			</tr>
 			<?php }
 			?>
@@ -517,7 +517,7 @@ else
 				<td><?php echo $users[$j]['NOM']; ?></td>
 				<td><?php echo $users[$j]['PRENOM']; ?></td>
 				<td><?php echo $users[$j]['DEP'];?></td>
-				<td class="action_entities"><a href="<? echo $link;?>&what_users=<?php echo $what_users; ?>&what_services=<?php echo $what_services; ?>&action=add_user&id=<?php echo $users[$j]['ID'];?>" class="change"><?php echo _ADD;?></a></td>
+				<td class="action_entities"><a href="<?php echo $link;?>&what_users=<?php echo $what_users; ?>&what_services=<?php echo $what_services; ?>&action=add_user&id=<?php echo $users[$j]['ID'];?>" class="change"><?php echo _ADD;?></a></td>
 			</tr>
 			<?php }
 			?>
