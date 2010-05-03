@@ -1,4 +1,4 @@
-<?
+<?php
 /**
 * Contacts Class
 *
@@ -372,7 +372,7 @@ class contacts extends dbquery
 		$tmp = $business->get_titles();
 		$titles = $tmp['titles'];
 		?>
-		<h1><img src="<? echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_add_b.gif" alt="" />
+		<h1><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_add_b.gif" alt="" />
 			<?php
 			if($mode == "up")
 			{
@@ -398,7 +398,7 @@ class contacts extends dbquery
 					$action = $_SESSION['config']['businessappurl']."index.php?display=true&dir=my_contacts&page=my_contact_up_db";
 				}
 				?>
-				<form name="frmcontact" id="frmcontact" method="post" action="<? echo $action;?>" class="forms">
+				<form name="frmcontact" id="frmcontact" method="post" action="<?php echo $action;?>" class="forms">
 					<input type="hidden" name="display"  value="true" />
 					<?php if(!$admin)
 					{?>
@@ -432,12 +432,12 @@ class contacts extends dbquery
 					<tr>
 						<td><label for="is_corporate"><?php echo _IS_CORPORATE_PERSON; ?> : </label></td>
 						<td>&nbsp;</td>
-						<td class="indexing_field"><input type="radio"  class="check" name="is_corporate"  value="Y" <? if($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'Y'){?> checked="checked"<? } ?>/ onClick="javascript:show_admin_contacts( true, '<?echo $display_value;?>');"><? echo _YES;?>
-							<input type="radio"  class="check" name="is_corporate" value="N" <? if($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'N'){?> checked="checked"<? } ?> onClick="javascript:show_admin_contacts( false, '<?echo $display_value;?>');"/><? echo _NO;?>
+						<td class="indexing_field"><input type="radio"  class="check" name="is_corporate"  value="Y" <?php if($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'Y'){?> checked="checked"<?php } ?>/ onClick="javascript:show_admin_contacts( true, '<?php echo $display_value;?>');"><?php echo _YES;?>
+							<input type="radio"  class="check" name="is_corporate" value="N" <?php if($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'N'){?> checked="checked"<?php } ?> onClick="javascript:show_admin_contacts( false, '<?php echo $display_value;?>');"/><?php echo _NO;?>
 						</td>
 						<td>&nbsp;</td>
 					</tr>
-					<tr id="title_p" style="display:<? if($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'Y'){ echo 'none';}else{ echo $display_value;}?>">
+					<tr id="title_p" style="display:<?php if($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'Y'){ echo 'none';}else{ echo $display_value;}?>">
 						<td><label for="title"><?php echo _TITLE2; ?> : </label></td>
 						<td>&nbsp;</td>
 						<td class="indexing_field"><select name="title" id="title" >
@@ -455,13 +455,13 @@ class contacts extends dbquery
 						</select></td>
 						<td>&nbsp;</td>
 					</tr>
-					<tr id="lastname_p" style="display:<? if($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'Y'){ echo 'none';}else{ echo $display_value;}?>">
+					<tr id="lastname_p" style="display:<?php if($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'Y'){ echo 'none';}else{ echo $display_value;}?>">
 						<td><label for="lastname"><?php echo _LASTNAME; ?> : </label></td>
 						<td>&nbsp;</td>
 						<td class="indexing_field"><input name="lastname" type="text"  id="lastname" value="<?php echo $func->show($_SESSION['m_admin']['contact']['LASTNAME']); ?>"/></td>
 						<td><span id="lastname_mandatory" class="red_asterisk" style="visibility:hidden;">*</span></td>
 					</tr>
-					<tr id="firstname_p" style="display:<? if($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'Y'){ echo 'none';}else{ echo $display_value;}?>">
+					<tr id="firstname_p" style="display:<?php if($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'Y'){ echo 'none';}else{ echo $display_value;}?>">
 						<td><label for="firstname"><?php echo _FIRSTNAME; ?> : </label></td>
 						<td>&nbsp;</td>
 						<td class="indexing_field"><input name="firstname" type="text"  id="firstname" value="<?php echo $func->show($_SESSION['m_admin']['contact']['FIRSTNAME']); ?>"/></td>
@@ -473,7 +473,7 @@ class contacts extends dbquery
 						<td class="indexing_field"><input name="society" type="text"  id="society" value="<?php echo $func->show($_SESSION['m_admin']['contact']['SOCIETY']); ?>"/></td>
 						<td class="indexing_field"><span class="red_asterisk" style="visibility:visible;" id="society_mandatory">*</span></td>
 					</tr>
-					<tr id="function_p" style="display:<? if($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'Y'){ echo 'none';}else{ echo $display_value;}?>">
+					<tr id="function_p" style="display:<?php if($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'Y'){ echo 'none';}else{ echo $display_value;}?>">
 						<td><label for="function"><?php echo _FUNCTION; ?> : </label></td>
 						<td>&nbsp;</td>
 						<td class="indexing_field"><input name="function" type="text"  id="function" value="<?php echo $func->show($_SESSION['m_admin']['contact']['FUNCTION']); ?>"/></td>
@@ -492,7 +492,7 @@ class contacts extends dbquery
 						<td>&nbsp;</td>
 					</tr>
 					<tr>
-						<td colspan="4"><label><b><? echo _ADDRESS;?> </b></label></td>
+						<td colspan="4"><label><b><?php echo _ADDRESS;?> </b></label></td>
 					</tr>
 					<tr>
 						<td><label for="num"><?php echo _NUM; ?> : </label></td>
@@ -531,7 +531,7 @@ class contacts extends dbquery
 						<td>&nbsp;</td>
 					</tr>
 					<tr>
-						<td colspan="4"><label><b><? echo _COMP;?> </b></label></td>
+						<td colspan="4"><label><b><?php echo _COMP;?> </b></label></td>
 					</tr>
 					<tr>
 						<td><label for="comp_data"><?php echo _COMP_DATA; ?> : </label></td>
@@ -540,7 +540,7 @@ class contacts extends dbquery
 						<td>&nbsp;</td>
 					</tr>
 				</table>
-						<input name="mode" type="hidden" value="<? echo $mode; ?>" />
+						<input name="mode" type="hidden" value="<?php echo $mode; ?>" />
 					<p class="buttons">
 					<?php
 
@@ -554,7 +554,7 @@ class contacts extends dbquery
 					{
 						?>
 						<input type="submit" class="button"  name="Submit" value="<?php echo _ADD_CONTACT; ?>" />
-						<?
+						<?php
 					}
 					$cancel_target = $_SESSION['config']['businessappurl'].'index.php?page=contacts&amp;admin=contacts';
 					if(!$admin)
