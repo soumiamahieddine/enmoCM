@@ -133,7 +133,7 @@ $core_tools->load_html();
 //here we building the header
 $core_tools->load_header();
 ?>
-<body id="<? echo $body; ?>">
+<body id="<?php echo $body; ?>">
 <?php
 $title = '';
 $list_notes = new list_show();
