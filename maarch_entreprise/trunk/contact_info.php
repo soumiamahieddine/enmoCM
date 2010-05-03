@@ -251,8 +251,8 @@ else if($_REQUEST['mode'] == 'add')
 				 }
 			else
 			{?>
-			<input type="radio"  class="check" name="is_corporate" value="Y" <? if($contact_info['IS_CORPORATE_PERSON'] == 'Y'){?> checked="checked"<? }elseif(empty($contact['IS_CORPORATE_PERSON'])){ ?> checked="checked"<? } ?> onclick="javascript:show_admin_contacts(true);"/><? echo _YES;?>
-			<input type="radio"  class="check" name="is_corporate" value="N" <? if($contact_info['IS_CORPORATE_PERSON'] == 'N'){?> checked="checked"<? } ?> onclick="javascript:show_admin_contacts( false);"/><? echo _NO;
+			<input type="radio"  class="check" name="is_corporate" value="Y" <?php if($contact_info['IS_CORPORATE_PERSON'] == 'Y'){?> checked="checked"<?php }elseif(empty($contact['IS_CORPORATE_PERSON'])){ ?> checked="checked"<?php } ?> onclick="javascript:show_admin_contacts(true);"/><?php echo _YES;?>
+			<input type="radio"  class="check" name="is_corporate" value="N" <?php if($contact_info['IS_CORPORATE_PERSON'] == 'N'){?> checked="checked"<?php } ?> onclick="javascript:show_admin_contacts( false);"/><?php echo _NO;
 			}?>
 		</p>
 		 <p id="title_p" style="display:<?php if($contact_info['IS_CORPORATE_PERSON'] == 'Y'){ echo 'none';}else{ echo 'block';}?>">

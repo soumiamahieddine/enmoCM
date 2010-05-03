@@ -314,7 +314,7 @@ class AdminActions extends dbquery
 						<?php
 						}
 						?>
-                       <input type="button" class="button"  name="cancel" value="<?php echo _CANCEL; ?>" onclick="javascript:window.location.href='<? echo $_SESSION['config']['businessappurl'];?>index.php?page=action&amp;admin=action';"/>
+                       <input type="button" class="button"  name="cancel" value="<?php echo _CANCEL; ?>" onclick="javascript:window.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=action&amp;admin=action';"/>
 					</p>
 				</form >
 

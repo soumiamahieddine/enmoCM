@@ -480,7 +480,7 @@ else
 			var q_name = form.query_name.value;
 			$('modal').innerHTML = '<img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=loading.gif" />';
 
-			new Ajax.Request('<? echo $_SESSION['config']['businessappurl'];?>index.php?display=true&dir=indexing_searching&page=manage_query',
+			new Ajax.Request('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&dir=indexing_searching&page=manage_query',
 			{
 				method:'post',
 				parameters: {name: q_name,

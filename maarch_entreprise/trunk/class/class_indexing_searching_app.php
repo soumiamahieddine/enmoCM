@@ -211,7 +211,7 @@ class indexing_searching_app extends dbquery
 						array_push($data_ext, array('column' => $key, 'value' => $func->format_date_db($post[$key]), 'type' => "date"));
 					}
 				}
-				if($_ENV['categories'][$cat_id][$key]['type_form'] == 'integer' && !empty($post[$key]) && preg_match("/^[0-9]*$/",$post[$key])== 0)
+				if($_ENV['categories'][$cat_id][$key]['type_form'] == 'integer'  && preg_match("/^[0-9]+$/",$post[$key])== 0)
 				{
 					$_SESSION['error'] .= $_ENV['categories'][$cat_id][$key]['label']." "._WRONG_FORMAT." <br/>";
 				}

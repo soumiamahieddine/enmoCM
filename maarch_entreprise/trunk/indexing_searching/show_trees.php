@@ -345,7 +345,7 @@ if(isset($_SESSION['chosen_name_folder']) && !empty($_SESSION['chosen_name_folde
 																													?>
 																													'imgBase' : '<?php  echo $_SESSION['config']['businessappurl'].'tools/tafelTree/';?>imgs/',
 																													//'onbeforeopen' : MyBeforeOpen,
-																													//'script' : 'window.opener.frames["view"].location.href="<? echo addslashes($search_customer_results[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['results'][$m]['res_id']);?>" '
+																													//'script' : 'window.opener.frames["view"].location.href="<?php echo addslashes($search_customer_results[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['results'][$m]['res_id']);?>" '
 																													//'onclick' : 'javascript:window.top.frames["view"].location.href="<?php echo $_SESSION['urltomodules']."indexing_searching/view_type_folder.php?id=".addslashes($search_customer_results[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['results'][$m]['res_id']);?>" '
 																													"onclick" : myClick,
 																													"onmouseover" : myMouseOver,

@@ -444,15 +444,15 @@ else
 							
 												for($k=0; $k<count($data[$key]['select']);$k++)
 												{
-												?><option value="" class="doctype_level1"><?php echo $data[$key]['select'][$k]['label'];?></option><?
+												?><option value="" class="doctype_level1"><?php echo $data[$key]['select'][$k]['label'];?></option><?php
 													for($j=0; $j<count($data[$key]['select'][$k]['level2']);$j++)
 													{
-														?><option value="" class="doctype_level2">&nbsp;&nbsp;<?php echo $data[$key]['select'][$k]['level2'][$j]['label'];?></option><?
+														?><option value="" class="doctype_level2">&nbsp;&nbsp;<?php echo $data[$key]['select'][$k]['level2'][$j]['label'];?></option><?php
 														for($l=0; $l<count($data[$key]['select'][$k]['level2'][$j]['types']);$l++)
 														{
 															?><option
 															<?php if($data[$key]['value'] ==$data[$key]['select'][$k]['level2'][$j]['types'][$l]['id']){ echo 'selected="selected"';}?>
-															 value="<?php echo $data[$key]['select'][$k]['level2'][$j]['types'][$l]['id'];?>" >&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $data[$key]['select'][$k]['level2'][$j]['types'][$l]['label'];?></option><?
+															 value="<?php echo $data[$key]['select'][$k]['level2'][$j]['types'][$l]['id'];?>" >&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $data[$key]['select'][$k]['level2'][$j]['types'][$l]['label'];?></option><?php
 														}
 													}
 												}
@@ -461,7 +461,7 @@ else
 											{
 												for($k=0; $k<count($data[$key]['select']);$k++)
 												{
-													?><option <?php if($data[$key]['value'] ==$data[$key]['select'][$k]['ID']){ echo 'selected="selected"';}?> value="<?php echo $data[$key]['select'][$k]['ID'];?>" ><?php echo $data[$key]['select'][$k]['LABEL'];?></option><?
+													?><option <?php if($data[$key]['value'] ==$data[$key]['select'][$k]['ID']){ echo 'selected="selected"';}?> value="<?php echo $data[$key]['select'][$k]['ID'];?>" ><?php echo $data[$key]['select'][$k]['LABEL'];?></option><?php
 												}
 											}
 										}
@@ -1090,7 +1090,7 @@ else
 						 if ($core_tools->test_service('join_res_case', 'cases',false) == 1)
 						{
 						?><div align="center">
-							<input type="button" class="button" name="back_welcome" id="back_welcome" value="<?php if($res->case_id<>'') echo _MODIFY_CASE; else echo _JOIN_CASE;?>" onclick="window.open('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=cases&page=search_adv_for_cases&searched_item=res_id&searched_value=<? echo $s_id;?>','', 'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=1020,height=710');"/></div><?php
+							<input type="button" class="button" name="back_welcome" id="back_welcome" value="<?php if($res->case_id<>'') echo _MODIFY_CASE; else echo _JOIN_CASE;?>" onclick="window.open('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=cases&page=search_adv_for_cases&searched_item=res_id&searched_value=<?php echo $s_id;?>','', 'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=1020,height=710');"/></div><?php
 						}
 						?>
 					</dd>

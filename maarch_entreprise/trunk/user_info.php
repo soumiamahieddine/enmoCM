@@ -47,7 +47,7 @@ else
 	<script type="text/javascript">window.resizeTo(500, 350);</script>
 <div class="popup_content">
 	<br/>
-	<h2 align="center"><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=account_off.gif" alt="<? echo _USER_DATA;?>" /> <? echo _USER_DATA;?></h2>	<br/>
+	<h2 align="center"><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=account_off.gif" alt="<?php echo _USER_DATA;?>" /> <?php echo _USER_DATA;?></h2>	<br/>
 	<form name="frmuserdata" id="frmuserdata" method="post" action="#" class="forms addforms">
 
 		 <p id="lastname_p">
@@ -96,7 +96,7 @@ else
 		}
 		 ?>
 		<p class="buttons">
-			<input name="close" type="button" value="<? echo _CLOSE;?>"  onclick="self.close();" class="button" />
+			<input name="close" type="button" value="<?php echo _CLOSE;?>"  onclick="self.close();" class="button" />
 		</p>
 	</form >
 </div>

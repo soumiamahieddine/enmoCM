@@ -49,7 +49,7 @@ $core_tools->load_header();
 				var test = window.top.document.getElementById('file_iframe');
 				if (test != null)
 				{
-					test.src = '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&dir=indexing_searching&page=file_iframe';
+					test.src = '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&dir=indexing_searching&page=file_iframe&#navpanes=0';
 				}
 			</script>
 	        <?php

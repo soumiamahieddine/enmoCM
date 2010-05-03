@@ -816,11 +816,12 @@ class types extends dbquery
 		$ind_coll = $sec->get_ind_collection($coll_id);
 		$indexes = $this->get_indexes($type_id, $coll_id);
 		$mandatory_indexes = $this->get_mandatory_indexes($type_id, $coll_id);
-
+		
 		// Checks the manadatory indexes
 		for($i=0; $i<count($mandatory_indexes);$i++)
 		{
-			if( empty($values[$mandatory_indexes[$i]]) )  // && ($values[$i]['VALUE'] == 0 && $_ENV['categories'][$cat_id][$values[$i]['ID']]['type_form'] <> 'integer')
+			if( ($indexes[$mandatory_indexes[$i]]['type'] == 'string' && trim($values[$mandatory_indexes[$i]]) == '') ||
+				(($indexes[$mandatory_indexes[$i]]['type'] == 'integer' || $indexes[$mandatory_indexes[$i]]['type'] == 'float') && preg_match("/^[0-9]+$/",$values[$mandatory_indexes[$i]])== 0) || (empty($values[$mandatory_indexes[$i]]) && $indexes[$mandatory_indexes[$i]]['type'] == 'date'))  
 			{
 				$_SESSION['error'] = $indexes[$mandatory_indexes[$i]]['label'].' <br/>'._IS_EMPTY.'<br/>';
 				return false;
@@ -843,15 +844,15 @@ class types extends dbquery
 					return false;
 				}
 			}
-			else if($indexes[$key]['type'] == 'string'  && !empty($values[$key]))
+			else if($indexes[$key]['type'] == 'string'  && trim($values[$key]) <> '')
 			{
 				$field_value = $this->wash($values[$key],"no",$indexes[$key]['label']);
 			}
-			else if($indexes[$key]['type'] == 'float'  && !empty($values[$key])) // && $values[$key] >= 0
+			else if($indexes[$key]['type'] == 'float'  && preg_match("/^[0-9]+$/",$values[$key])== 1) // && $values[$key] >= 0
 			{
 				$field_value = $this->wash($values[$key],"float",$indexes[$key]['label']);
 			}
-			else if($indexes[$key]['type'] == 'integer'  && !empty($values[$key])) // && $values[$key] >= 0
+			else if($indexes[$key]['type'] == 'integer'  && preg_match("/^[0-9]+$/",$values[$key])== 1 ) // && $values[$key] >= 0 //!empty($values[$key]
 			{
 				$field_value = $this->wash($values[$key],"num",$indexes[$key]['label']);
 			}
@@ -932,15 +933,15 @@ class types extends dbquery
 			{
 				array_push($data, array('column' => $key, 'value' => $this->format_date_db($values[$key]), 'type' => "date"));
 			}
-			else if($indexes[$key]['type'] == 'string' && !empty($values[$key]))
+			else if($indexes[$key]['type'] == 'string' && trim($values[$key]) <> '')
 			{
 				array_push($data, array('column' => $key, 'value' => $this->protect_string_db($values[$key]), 'type' => "string"));
 			}
-			else if($indexes[$key]['type'] == 'float' && !empty($values[$key]))
+			else if($indexes[$key]['type'] == 'float' && preg_match("/^[0-9]+$/",$values[$key])== 1)
 			{
 				array_push($data, array('column' => $key, 'value' => $values[$key], 'type' => "float"));
 			}
-			else if($indexes[$key]['type'] == 'integer' && !empty($values[$key]))
+			else if($indexes[$key]['type'] == 'integer' && preg_match("/^[0-9]+$/",$values[$key])== 1)
 			{
 				array_push($data, array('column' => $key, 'value' => $values[$key], 'type' => "integer"));
 			}

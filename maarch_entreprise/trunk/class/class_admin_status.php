@@ -1,4 +1,4 @@
-<?
+<?php
 /**
 * Admin status Class
 *
@@ -185,7 +185,7 @@ class AdminStatus extends dbquery
 			$_SESSION['m_admin']['status']['CAN_BE_MODIFIED'] = 'Y';
 		}
 		?>
-		<h1><img src="<? echo $_SESSION['config']['businessappurl'];?>static.php?filename=manage_status_b.gif" alt="" />
+		<h1><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=manage_status_b.gif" alt="" />
 				<?php
 				if($mode == "up")
 				{
@@ -210,19 +210,19 @@ class AdminStatus extends dbquery
 			else
 			{
 				?>
-				<form name="frmstatus" id="frmstatus" method="post" action="<? echo $_SESSION['config']['businessappurl']."index.php?display=true&admin=status&page=status_up_db";?>" class="forms addforms">
+				<form name="frmstatus" id="frmstatus" method="post" action="<?php echo $_SESSION['config']['businessappurl']."index.php?display=true&admin=status&page=status_up_db";?>" class="forms addforms">
 					<input type="hidden" name="display" value="true" />
 					<input type="hidden" name="admin" value="status" />
 					<input type="hidden" name="page" value="status_up_db" />
-					<input type="hidden" name="is_system" id="is_system" value="<? echo $_SESSION['m_admin']['status']['IS_SYSTEM'];?>" />
-					<input type="hidden" name="mode" id="mode" value="<? echo $mode;?>" />
+					<input type="hidden" name="is_system" id="is_system" value="<?php echo $_SESSION['m_admin']['status']['IS_SYSTEM'];?>" />
+					<input type="hidden" name="mode" id="mode" value="<?php echo $mode;?>" />
 					<input type="hidden" name="order" id="order" value="<?php echo $_REQUEST['order'];?>" />
 					<input type="hidden" name="order_field" id="order_field" value="<?php echo $_REQUEST['order_field'];?>" />
 					<input type="hidden" name="what" id="what" value="<?php echo $_REQUEST['what'];?>" />
 					<input type="hidden" name="start" id="start" value="<?php echo $_REQUEST['start'];?>" />
 					<p>
 					 	<label for="id"><?php echo _ID; ?> : </label>
-						<input name="id" type="text"  id="id" value="<?php echo $func->show($_SESSION['m_admin']['status']['ID']); ?>" <? if($mode == "up"){ echo 'readonly="readonly" class="readonly"';}?>/>
+						<input name="id" type="text"  id="id" value="<?php echo $func->show($_SESSION['m_admin']['status']['ID']); ?>" <?php if($mode == "up"){ echo 'readonly="readonly" class="readonly"';}?>/>
 					</p>
 					<p>
 					 	<label for="label"><?php echo _DESC; ?> : </label>
@@ -230,13 +230,13 @@ class AdminStatus extends dbquery
 					</p>
 					<p>
                         <label ><?php echo _CAN_BE_SEARCHED; ?> : </label>
-                        <input type="radio"  class="check" name="can_be_searched" value="Y" <? if($_SESSION['m_admin']['status']['CAN_BE_SEARCHED'] == 'Y'){?> checked="checked"<? } ?> /><? echo _YES;?>
-                        <input type="radio" name="can_be_searched" class="check"  value="N" <? if($_SESSION['m_admin']['status']['CAN_BE_SEARCHED'] == 'N'){?> checked="checked"<? } ?> /><? echo _NO;?>
+                        <input type="radio"  class="check" name="can_be_searched" value="Y" <?php if($_SESSION['m_admin']['status']['CAN_BE_SEARCHED'] == 'Y'){?> checked="checked"<?php } ?> /><?php echo _YES;?>
+                        <input type="radio" name="can_be_searched" class="check"  value="N" <?php if($_SESSION['m_admin']['status']['CAN_BE_SEARCHED'] == 'N'){?> checked="checked"<?php } ?> /><?php echo _NO;?>
                     </p>
 					<p>
                         <label ><?php echo _CAN_BE_MODIFIED; ?> : </label>
-                        <input type="radio"  class="check" name="can_be_modified" value="Y" <? if($_SESSION['m_admin']['status']['CAN_BE_MODIFIED'] == 'Y'){?> checked="checked"<? } ?> /><? echo _YES;?>
-                        <input type="radio" name="can_be_modified" class="check"  value="N" <? if($_SESSION['m_admin']['status']['CAN_BE_MODIFIED'] == 'N'){?> checked="checked"<? } ?> /><? echo _NO;?>
+                        <input type="radio"  class="check" name="can_be_modified" value="Y" <?php if($_SESSION['m_admin']['status']['CAN_BE_MODIFIED'] == 'Y'){?> checked="checked"<?php } ?> /><?php echo _YES;?>
+                        <input type="radio" name="can_be_modified" class="check"  value="N" <?php if($_SESSION['m_admin']['status']['CAN_BE_MODIFIED'] == 'N'){?> checked="checked"<?php } ?> /><?php echo _NO;?>
                     </p>
 
 					 <p class="buttons">
@@ -253,10 +253,10 @@ class AdminStatus extends dbquery
 						{
 						?>
 							<input type="submit" class="button"  name="Submit" value="<?php echo _ADD_STATUS; ?>" />
-						<?
+						<?php
 						}
 						?>
-                       <input type="button" class="button"  name="cancel" value="<?php echo _CANCEL; ?>" onclick="javascript:window.location.href='<? echo $_SESSION['config']['businessappurl'];?>index.php?page=status&amp;admin=status';"/>
+                       <input type="button" class="button"  name="cancel" value="<?php echo _CANCEL; ?>" onclick="javascript:window.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=status&amp;admin=status';"/>
 					</p>
 				</form >
 

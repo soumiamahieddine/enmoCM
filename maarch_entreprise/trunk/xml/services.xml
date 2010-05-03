@@ -40,10 +40,6 @@
    <system_service>false</system_service>
    <style>admin_users</style>
    <enabled>true</enabled>
-   <WHEREAMIUSED>
-     <page>admin.php</page>
-     <nature>listelement</nature>
-   </WHEREAMIUSED>
  </SERVICE>
  <SERVICE>
    <id>admin_groups</id>
@@ -54,10 +50,6 @@
    <system_service>false</system_service>
    <style>admin_groups</style>
    <enabled>true</enabled>
-   <WHEREAMIUSED>
-     <page>admin.php</page>
-     <nature>listelement</nature>
-   </WHEREAMIUSED>
  </SERVICE>
  <SERVICE>
    <id>admin_architecture</id>
@@ -68,10 +60,6 @@
    <system_service>false</system_service>
    <style>admin_architecture</style>
    <enabled>true</enabled>
-   <WHEREAMIUSED>
-     <page>admin.php</page>
-     <nature>listelement</nature>
-   </WHEREAMIUSED>
  </SERVICE>
  <SERVICE>
    <id>view_history</id>
@@ -82,10 +70,6 @@
    <system_service>false</system_service>
    <style>view_history</style>
    <enabled>true</enabled>
-   <WHEREAMIUSED>
-     <page>admin.php</page>
-     <nature>listelement</nature>
-   </WHEREAMIUSED>
  </SERVICE>
  <SERVICE>
    <id>view_history_batch</id>
@@ -96,10 +80,6 @@
    <system_service>false</system_service>
    <style>view_history</style>
    <enabled>true</enabled>
-   <WHEREAMIUSED>
-     <page>admin.php</page>
-     <nature>listelement</nature>
-   </WHEREAMIUSED>
  </SERVICE>
  <SERVICE>
    <id>xml_param_services</id>
@@ -110,10 +90,6 @@
    <system_service>false</system_service>
    <style>xml_param_services</style>
    <enabled>true</enabled>
-   <WHEREAMIUSED>
-     <page>admin.php</page>
-     <nature>listelement</nature>
-   </WHEREAMIUSED>
  </SERVICE>
  <SERVICE>
    <id>admin_status</id>
@@ -124,10 +100,6 @@
    <style>admin_status</style>
    <system_service>false</system_service>
    <enabled>true</enabled>
-   <WHEREAMIUSED>
-     <page>admin/admin.php</page>
-     <nature>listelement</nature>
-   </WHEREAMIUSED>
  </SERVICE>
   <SERVICE>
    <id>admin_actions</id>
@@ -138,10 +110,6 @@
    <style>admin_actions</style>
    <system_service>false</system_service>
    <enabled>true</enabled>
-   <WHEREAMIUSED>
-     <page>admin.php</page>
-     <nature>listelement</nature>
-   </WHEREAMIUSED>
  </SERVICE>
  <SERVICE>
    <id>param_mlb_doctypes</id>
@@ -203,10 +171,6 @@
    <style>admin_contacts</style>
    <system_service>false</system_service>
    <enabled>true</enabled>
-   <WHEREAMIUSED>
-     <page>admin/admin.php</page>
-     <nature>listelement</nature>
-   </WHEREAMIUSED>
  </SERVICE>
  <SERVICE>
    <id>my_contacts</id> <!-- if servicetype = menu, this id must be equal to the id of the menu item -->
@@ -225,9 +189,5 @@
    <style>admin_reopen_mail</style>
    <system_service>false</system_service>
    <enabled>true</enabled>
-   <WHEREAMIUSED>
-     <page>admin/admin.php</page>
-     <nature>listelement</nature>
-   </WHEREAMIUSED>
  </SERVICE>
 </root>

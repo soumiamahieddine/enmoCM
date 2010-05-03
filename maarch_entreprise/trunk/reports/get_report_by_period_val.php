@@ -250,7 +250,7 @@ if($id_report == 'process_delay')
 		if($report_type == 'graph')
 		{
 		?>
-			<img src="<? echo $src1;?>" alt="<? echo $title;?>"/><?
+			<img src="<?php echo $src1;?>" alt="<?php echo $title;?>"/><?
 		 }
 		elseif($report_type == 'array')
 		{
@@ -319,8 +319,8 @@ else if($id_report == 'mail_typology')
 		if($report_type == 'graph')
 		{
 			?>
-	 			<img src="<? echo $src1;?>" alt=""/><br/><br/>
-			<?
+	 			<img src="<?php echo $src1;?>" alt=""/><br/><br/>
+			<?php
 		}
 		elseif($report_type == 'array')
 		{
@@ -386,8 +386,8 @@ else if($id_report == 'mail_vol_by_cat')
 		if($report_type == 'graph')
 		{
 			?>
-	 			<img src="<? echo $src1;?>" alt=""/><br/><br/>
-			<?
+	 			<img src="<?php echo $src1;?>" alt=""/><br/><br/>
+			<?php
 		}
 		elseif($report_type == 'array')
 		{

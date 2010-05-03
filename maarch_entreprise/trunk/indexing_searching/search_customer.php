@@ -91,7 +91,7 @@ if($_REQUEST['name_folder'] <> "")
 	{
 		window.frames['show_trees'].location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&dir=indexing_searching&page=show_trees&project='+window.document.getElementById("project").value+'&market='+window.document.getElementById("market").value;
 	}
-	<?
+	<?php
 	if($_REQUEST['num_folder'] <> "")
 	{
 		$db = new dbquery();
