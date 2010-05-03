@@ -204,6 +204,7 @@ class AdminActions extends dbquery
 				$_SESSION['m_admin']['action']['IS_SYSTEM'] = $this->show_string($line->is_system);
 				$_SESSION['m_admin']['action']['ACTION_PAGE'] = $this->show_string($line->action_page);
 				$_SESSION['m_admin']['action']['HISTORY'] = $this->show_string($line->history);
+				$_SESSION['m_admin']['action']['KEYWORD'] = $line->keyword;
 			}
 		}
 		else if($mode == 'add')
@@ -223,7 +224,7 @@ class AdminActions extends dbquery
 			'module' => $res->module, 'can_be_searched' => $res->can_be_searched, 'can_be_modified' => $res->can_be_modified));
 		}
 		?>
-		<h1><img src="<? echo $_SESSION['config']['businessappurl'];?>static.php?filename=manage_actions_b.gif" alt="" />
+		<h1><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=manage_actions_b.gif" alt="" />
 				<?php
 				if($mode == "up")
 				{
@@ -249,12 +250,12 @@ class AdminActions extends dbquery
 			{
 
 				?>
-				<form name="frmaction" id="frmaction" method="post" action="<? echo $_SESSION['config']['businessappurl']."index.php?display=true&admin=action&page=action_up_db";?>" class="forms addforms">
+				<form name="frmaction" id="frmaction" method="post" action="<?php echo $_SESSION['config']['businessappurl']."index.php?display=true&admin=action&page=action_up_db";?>" class="forms addforms">
 					<input type="hidden" name="display"  value="true" />
 					<input type="hidden" name="admin"  value="action" />
 					<input type="hidden" name="page"  value="action_up_db" />
-					<input type="hidden" name="mode" id="mode" value="<? echo $mode;?>" />
-					<input type="hidden" name="id" id="id" value="<? echo $_SESSION['m_admin']['action']['ID'];?>" />
+					<input type="hidden" name="mode" id="mode" value="<?php echo $mode;?>" />
+					<input type="hidden" name="id" id="id" value="<?php echo $_SESSION['m_admin']['action']['ID'];?>" />
 					<input type="hidden" name="order" id="order" value="<?php echo $_REQUEST['order'];?>" />
 					<input type="hidden" name="order_field" id="order_field" value="<?php echo $_REQUEST['order_field'];?>" />
 					<input type="hidden" name="what" id="what" value="<?php echo $_REQUEST['what'];?>" />
@@ -263,7 +264,7 @@ class AdminActions extends dbquery
 					 	<label for="label"><?php echo _DESC; ?> : </label>
 						<input name="label" type="text"  id="label" value="<?php echo $func->show($_SESSION['m_admin']['action']['LABEL']); ?>"/>
 					</p>
-					<? if($_SESSION['m_admin']['action']['IS_SYSTEM']  == 'Y')
+					<?php if($_SESSION['m_admin']['action']['IS_SYSTEM']  == 'Y')
 					{
 
 						echo '<div class="error">'._DO_NOT_MODIFY_UNLESS_EXPERT.'</div><br/>';
@@ -273,53 +274,51 @@ class AdminActions extends dbquery
                         <label ><?php echo _ASSOCIATED_STATUS; ?> : </label>
 
                         <select name="status" id="status">
-							<option value=""><? echo _CHOOSE_STATUS;?></option>
-							<?
+							<option value=""><?php echo _CHOOSE_STATUS;?></option>
+							<?php
 								for($i=0; $i<count($arr_status);$i++)
 								{
-									?><option value="<? echo $arr_status[$i]['id'];?>" <? if($_SESSION['m_admin']['action']['ID_STATUS'] == $arr_status[$i]['id']) { echo 'selected="selected"';}?>><? echo $arr_status[$i]['label'];?></option><?
+									?><option value="<?php echo $arr_status[$i]['id'];?>" <?php if($_SESSION['m_admin']['action']['ID_STATUS'] == $arr_status[$i]['id']) { echo 'selected="selected"';}?>><?php echo $arr_status[$i]['label'];?></option><?php
 								}
 							?>
 						</select>
 
                     </p>
 					<p>
-						<label><? echo _ACTION_PAGE;?> : </label>
+						<label><?php echo _ACTION_PAGE;?> : </label>
 						<select name="action_page" id="action_page">
-							<option value=""><? echo _NO_PAGE;?></option>
-						<? for($i=0; $i< count($_SESSION['actions_pages']); $i++)
+							<option value=""><?php echo _NO_PAGE;?></option>
+						<?php for($i=0; $i< count($_SESSION['actions_pages']); $i++)
 						{
-							?><option value="<? echo $_SESSION['actions_pages'][$i]['ID'];?>" <? if($_SESSION['actions_pages'][$i]['ID'] == $_SESSION['m_admin']['action']['ACTION_PAGE']){ echo 'selected="selected"';}?> ><? echo $_SESSION['actions_pages'][$i]['LABEL'];?></option><?
+							?><option value="<?php echo $_SESSION['actions_pages'][$i]['ID'];?>" <?php if($_SESSION['actions_pages'][$i]['ID'] == $_SESSION['m_admin']['action']['ACTION_PAGE']){ echo 'selected="selected"';}?> ><?php echo $_SESSION['actions_pages'][$i]['LABEL'];?></option><?php
 						}?>
 						</select>
 					</p>
                      <p>
 					 	<label for="history"><?php echo _ACTION_HISTORY; ?> : </label>
-						<input type="radio"  class="check" name="history" value="Y" <? if($_SESSION['m_admin']['action']['HISTORY'] == 'Y'){ echo 'checked="checked"';}?> /><? echo _YES;?>
-						<input type="radio"  class="check" name="history" value="N" <? if($_SESSION['m_admin']['action']['HISTORY'] == 'N'){ echo 'checked="checked"';}?>/><? echo _NO;?>
+						<input type="radio"  class="check" name="history" value="Y" <?php if($_SESSION['m_admin']['action']['HISTORY'] == 'Y'){ echo 'checked="checked"';}?> /><?php echo _YES;?>
+						<input type="radio"  class="check" name="history" value="N" <?php if($_SESSION['m_admin']['action']['HISTORY'] == 'N'){ echo 'checked="checked"';}?>/><?php echo _NO;?>
 					</p>
 					 <p class="buttons">
 						<?php
-
 					if($mode == "up")
-						{
+					{
 						?>
 							<input class="button" type="submit" name="Submit" value="<?php echo _MODIFY_ACTION; ?>" />
 						<?php
-						}
-
-						elseif($mode == "add")
-						{
+					}
+					elseif($mode == "add")
+					{
 						?>
 							<input type="submit" class="button"  name="Submit" value="<?php echo _ADD_ACTION; ?>" />
-						<?
+						<?php
 						}
 						?>
                        <input type="button" class="button"  name="cancel" value="<?php echo _CANCEL; ?>" onclick="javascript:window.location.href='<? echo $_SESSION['config']['businessappurl'];?>index.php?page=action&amp;admin=action';"/>
 					</p>
 				</form >
 
-				<div class="infos"><? echo _INFOS_ACTIONS;?></div>
+				<div class="infos"><?php echo _INFOS_ACTIONS;?></div>
 			<?php
 			}
 			?>
