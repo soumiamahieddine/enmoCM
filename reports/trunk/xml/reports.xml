@@ -5,7 +5,7 @@
 		<LABEL>_APA_PRINT_INVENTORY_LIST_CUSTOMER_NAT</LABEL>
 		<DESCRIPTION>_APA_PRINT_INVENTORY_LIST_CUSTOMER_NAT_DESC</DESCRIPTION>
 		<URL>apa_print_form_report&amp;id=cust_nat</URL>
-		<IN_MENU_REPORTS>true</IN_MENU_REPORTS><!-- is the report cant be accessed by the menu report -->
+		<IN_MENU_REPORTS>true</IN_MENU_REPORTS><!--  the report can be accessed by the menu report -->
 		<ENABLED>true</ENABLED>
 		<ORIGIN>module</ORIGIN> <!-- apps or module -->
 		<MODULE>advanced_physical_archive</MODULE>

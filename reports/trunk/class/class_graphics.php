@@ -375,21 +375,21 @@ public function camembert($width, $height, $values, $title, $labels)
 		$nb_coll = count($data[0]);
 		$keys = array_keys($data[0]);
 		?><div align="center">
-			<div><b><? echo $title;?></b></div>
+			<div><b><?php echo $title;?></b></div>
              <br/>
              <table  border="0" cellspacing="0" class="listing spec">
              	<thead>
 				<tr>
-                <? for($i=0; $i< $nb_coll;$i++)
+                <?php for($i=0; $i< $nb_coll;$i++)
 				{?>
-                	<th><? echo $data[0][$keys[$i]];?></th>
-                <?
+                	<th><?php echo $data[0][$keys[$i]];?></th>
+                <?php
 				}?>
                 </tr>
                 </thead>
                	<tbody>
 
-                     <?
+                     <?php
 					 $color = "";
 					 for($i=1; $i< count($data);$i++)
 					{
@@ -401,20 +401,20 @@ public function camembert($width, $height, $values, $title, $labels)
 						{
 							$color = ' class="col"';
 						}?>
-                    	<tr <? echo $color;?>>
-                        	<?
+                    	<tr <?php echo $color;?>>
+                        	<?php
 							for($j=0; $j< $nb_coll;$j++)
 							{?>
-								<td><? echo $data[$i][$keys[$j]];?></td>
-								<?
+								<td><?php echo $data[$i][$keys[$j]];?></td>
+								<?php
 							}?>
                          </tr>
-                    <?
+                    <?php
 					}?>
 
                 </tbody>
              </table>
-        </div><?
+        </div><?php
 	}
 }
 ?>

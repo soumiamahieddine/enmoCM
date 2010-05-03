@@ -59,10 +59,10 @@ if($rep->is_module_loaded('folder'))
 <h1><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=reports_b.gif&module=reports" alt="" /> <?php echo _REPORTS;?></h1>
 <div id="inner_content" class="clearfix">
 <p>
-	<img src="<? echo $_SESSION['config']['businessappurl'];?>static.php?filename=contrat_mini.png" alt=""  /> <? echo _NB_TOTAL_DOC;?> : <b><? echo $count_piece->total; ?></b>
+	<img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=contrat_mini.png" alt=""  /> <?php echo _NB_TOTAL_DOC;?> : <b><?php echo $count_piece->total; ?></b>
 	<?php if($rep->is_module_loaded('folder'))
 {?>
-	&nbsp;&nbsp; <img src="<? echo $_SESSION['config']['businessappurl'];?>static.php?filename=folder_documents_mini.png" alt=""  /> <? echo _NB_TOTAL_FOLDER;?> : <b><? echo $count_folder->total; ?></b><?php 
+	&nbsp;&nbsp; <img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=folder_documents_mini.png" alt=""  /> <?php echo _NB_TOTAL_FOLDER;?> : <b><?php echo $count_folder->total; ?></b><?php 
 }?>
 	</p>
 <?php include('modules'.DIRECTORY_SEPARATOR.'reports'.DIRECTORY_SEPARATOR.'user_reports.php');?>
