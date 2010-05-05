@@ -459,6 +459,38 @@ class indexing_searching_app extends dbquery
 		}
 	}
 
+	public function update_doc_status($idDoc, $coll_id, $status)
+	{
+		require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
+		$sec = new security();
+		$table = $sec->retrieve_table_from_coll($coll_id);
+		if(!$table)
+		{
+			$_SESSION['error'] .= _COLL_HAS_NO_TABLE;
+		}
+		if(!empty($_SESSION['error']))
+		{
+			?>
+			<script language="javascript" type="text/javascript">
+                window.opener.reload();
+            </script>
+			<?php
+		}
+		else
+		{
+			require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
+			$request = new request();
+			$data = array();
+			array_push($data, array('column' => 'status', 'value' => $status, 'type' => 'string'));
+			$where = "res_id = ".$idDoc;
+			$request->update($table, $data, $where, $_SESSION['config']['databasetype']);
+			$_SESSION['error'] = _UPDATE_DOC_STATUS." ("._NUM." : ".$idDoc.") "._TO." ".$status;
+			require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
+			$hist = new history();
+			$hist->add($table, $idDoc, $status, $_SESSION['error'], $_SESSION['config']['databasetype'],'indexing_searching');
+		}
+	}
+
 	public function send_criteria_data($param)
 	{
 		/*list_criteres = Array ("num_courrier" => Array (label => "reference courrier',
