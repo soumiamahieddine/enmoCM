@@ -43,7 +43,7 @@ $core_tools = new core_tools();
 $core_tools->test_user();
 $core_tools->load_lang();
 $core_tools->load_html();
-$core_tools->load_header();
+$core_tools->load_header('', true, false);
 $sec = new security();
 $status_obj = new manage_status();
 $contact = new contacts();
@@ -281,6 +281,6 @@ $details = 'details';
 	$list->list_doc($tab,$i,'','res_id','cases_documents_list','res_id',$details.'&dir=indexing_searching',false,false,'','','',true,true,true, false,false,false,true,false,'', '',false,'','','listing2 smallfont ', '', false, false, null, '', '{}', false, '', true, '', false);
 	?><?php
 }
-
+$core_tools->load_js();
 ?>
 </body>

@@ -21,7 +21,7 @@ $core_tools = new core_tools();
 $core_tools->test_user();
 $core_tools->load_lang();
 $core_tools->load_html();
-$core_tools->load_header();
+$core_tools->load_header('', true, false);
 $sec = new security();
 $cases = new cases();
 $db = new dbquery();
@@ -85,4 +85,5 @@ if (($core_tools->test_service('join_res_case', 'cases', false) == 1) || ($core_
 		<?php
 	}
 }
+$core_tools->load_js();
 ?>

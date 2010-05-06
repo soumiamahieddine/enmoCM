@@ -38,7 +38,7 @@ $core_tools = new core_tools();
 $core_tools->test_user();
 $core_tools->load_lang();
 $core_tools->load_html();
-$core_tools->load_header();
+$core_tools->load_header('', true, false);
 $core_tools->test_service('adv_search_mlb', 'apps');
 $type = new types();
 $_SESSION['indexation'] = false;
@@ -323,6 +323,7 @@ $tab = $search_obj->send_criteria_data($param);
 $src_tab = $tab[0];
 
 $string = '';
+$core_tools->load_js();
 ?>
 
 <script type="text/javascript" src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=search_adv.js" ></script>

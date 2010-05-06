@@ -43,7 +43,7 @@ $core_tools = new core_tools();
 $core_tools->test_user();
 $core_tools->load_lang();
 $core_tools->load_html();
-$core_tools->load_header();
+$core_tools->load_header('', true, false);
 $sec = new security();
 $status_obj = new manage_status();
 $contact = new contacts();
@@ -423,6 +423,7 @@ else
 	<!--<script language="javascript" type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=cases&page=search_adv_error';?>';</script>-->
 	<?php
 }
+$core_tools->load_js();
 ?>
 	<script type="text/javascript">
 	<!--
