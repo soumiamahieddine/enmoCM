@@ -37,7 +37,7 @@ if(!$core_tools->is_module_loaded("folder"))
 
 $core_tools->load_lang();
 $core_tools->load_html();
-$core_tools->load_header();
+$core_tools->load_header('', true, false);
  ?>
 <body>
 <br/><br/>
@@ -117,6 +117,7 @@ $core_tools->load_header();
 	}
 	$list=new list_show();
 	$list->list_doc($tab,$i,$title,"folder_system_id","folders_list","folder_system_id","folder_detail",false,true,"get",$_SESSION['config']['businessappurl']."index.php?display=true&module=folder&page=res_folders_list",_CHOOSE, false, false, true, false, false, false,  false, false, '', '', false, '', '', 'listing spec', '', false, false, array(), '<input type="hidden" name="display" value="true"/><input type="hidden" name="module" value="folder" /><input type="hidden" name="page" value="res_folders_list" />');
+	$core_tools->load_js();
 ?>
 </body>
 </html>

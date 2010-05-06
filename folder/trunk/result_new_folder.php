@@ -21,7 +21,7 @@ require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_
 
  $core_tools->load_html();
 //here we building the header
-$core_tools->load_header( );
+$core_tools->load_header('', true, false );
 ?>
 
 <body>
@@ -136,6 +136,7 @@ $core_tools->load_header( );
 <?php
 	$list=new list_show();
 	$list->list_doc($tab,$i,_NEW_FOLDERS_LIST." : ".$i." "._FOLDERS,'res_id',"select_folder","folders_system_id","folder_detail",false,false,"","",'', false, false, "false", false, false);
+	$core_tools->load_js();
 ?>
 </div>
 </body>

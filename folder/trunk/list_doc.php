@@ -21,7 +21,7 @@ require_once("modules".DIRECTORY_SEPARATOR."folder".DIRECTORY_SEPARATOR."class".
 $func = new functions();
 $core_tools->load_html();
 //here we building the header
-$core_tools->load_header();
+$core_tools->load_header('', true, false);
 for($i=0; $i<count($_SESSION['user']['security']);$i++)
 {
 	if($_SESSION['user']['security'][$i]['coll_id'] == $_SESSION['current_foldertype_coll_id'])
@@ -106,6 +106,7 @@ else
 	//echo "_SELECT_SUBFOLDER";
 }
 $_SESSION['where_list_doc'] = "";
+$core_tools->load_js();
 ?>
 </body>
 </html>

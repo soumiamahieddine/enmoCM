@@ -17,7 +17,7 @@ $core_tools->load_lang();
 
 require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");
  $core_tools->load_html();
-$core_tools->load_header();
+$core_tools->load_header('',true, false);
 ?>
 <body>
 <?php
@@ -73,7 +73,7 @@ if (count($tab) > 0)
 $list=new list_show();
 ?><div align="center"><?php
 $list->list_doc($tab,$i,$title,'res_id','isearch_adv_result','res_id','',false,false,'','','',false,false,false,false,true);
-
+$core_tools->load_js();
 ?>
 </div>
 </body>

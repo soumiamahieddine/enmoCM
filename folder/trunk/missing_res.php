@@ -34,7 +34,7 @@ if(isset($_SESSION['current_folder_id']) && !empty($_SESSION['current_folder_id'
 }
 $core_tools->load_html();
 //here we building the header
-$core_tools->load_header();
+$core_tools->load_header('', true, false);
 ?>
 <body id="missing_iframe">
 <?php
@@ -85,6 +85,7 @@ else
 		</table>
 	<?php
 }
+$core_tools->load_js();
 ?>
 </body>
 </html>

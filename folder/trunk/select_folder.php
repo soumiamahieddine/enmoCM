@@ -58,7 +58,7 @@ elseif( isset($_REQUEST['nom']) and !empty($_REQUEST['nom']))
 //echo $_SESSION['stringSearch'];
 $core_tools->load_html();
 //here we building the header
-$core_tools->load_header(_SELECT_FOLDER_TITLE);
+$core_tools->load_header(_SELECT_FOLDER_TITLE, true, false);
 $time = $core_tools->get_session_time_expire();
 if($_SESSION['origin'] == "qualify")
 {
@@ -183,6 +183,7 @@ if($_SESSION['origin'] <> "qualify")
     }
     ?>  <?php
 }
+$core_tools->load_js();
 ?>
 </body>
 </html>

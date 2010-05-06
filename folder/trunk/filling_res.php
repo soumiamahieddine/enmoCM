@@ -28,7 +28,7 @@ $missing_res = array();
 
 $core_tools->load_html();
 //here we building the header
-$core_tools->load_header( );
+$core_tools->load_header('', true, false );
 ?>
 <body id="filling_res_frame">
 <?php
@@ -243,6 +243,7 @@ else
 		echo _FOLDERHASNODOC.".<br>";
 	}
 }
+$core_tools->load_js();
 ?>
 </body>
 </html>

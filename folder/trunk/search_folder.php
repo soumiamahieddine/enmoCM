@@ -5,7 +5,7 @@ $core_tools = new core_tools();
 $core_tools->load_lang();
 $core_tools->load_html();
 //here we building the header
-$core_tools->load_header();
+$core_tools->load_header('', true, false);
 if(isset($_SESSION['current_foldertype']) && !empty($_SESSION['current_foldertype']))
 {
 	$label = '';
@@ -63,5 +63,6 @@ if(isset($_REQUEST['search']))
     	<input class="button" name="search" id="search" type="submit"  value="<?php  echo _SEARCH;?>"/>
     </p>
 </form>
+<?php $core_tools->load_js();?>
 </body>
 </html>
