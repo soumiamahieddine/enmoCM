@@ -136,7 +136,7 @@ else
 {
 	$title =  _GENERATE_ANSWER;
 }
-$core_tools->load_header($title);
+$core_tools->load_header($title, true, false);
 
 ?>
 <body onload="moveTo(0,0);resizeTo(screen.width, screen.height);setTimeout(window.close, <?php  echo $time;?>*60*1000);">
@@ -173,5 +173,6 @@ $_SESSION['mode_editor'] = false;
 	</p>
 	</form>
 </div>
+<?php $core_tools->load_js();?>
 </body>
 </html>

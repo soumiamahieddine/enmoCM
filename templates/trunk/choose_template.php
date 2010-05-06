@@ -38,7 +38,7 @@ while($res = $db->fetch_object())
 $core_tools->load_html();
 $time = $core_tools->get_session_time_expire();
 //here we building the header
-$core_tools->load_header(_CHOOSE_TEMPLATE);
+$core_tools->load_header(_CHOOSE_TEMPLATE, true, false);
 
 ?>
 <body id="pop_up"  onLoad="setTimeout(window.close, <?php  echo $time;?>*60*1000);">
@@ -73,5 +73,6 @@ $core_tools->load_header(_CHOOSE_TEMPLATE);
 	<input type="button" value="<?php  echo _CANCEL;?>" name="cancel" class="button"  onclick="self.close();"/>
 
  </form>
+<?php $core_tools->load_js();?>
 </body>
 </html>

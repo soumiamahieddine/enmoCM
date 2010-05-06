@@ -51,7 +51,7 @@ else
 $templates = array();
 $core_tools->load_html();
 //here we building the header
-$core_tools->load_header(_MANAGE_RIGHTS);
+$core_tools->load_header(_MANAGE_RIGHTS, true, false);
 $db->query("select id, label from ".$_SESSION['tablename']['temp_templates']." ");
 while($res = $db->fetch_object())
 {
@@ -98,6 +98,7 @@ while($res = $db->fetch_object())
        </p>
        <?php
 	   }
+	   $core_tools->load_js();
   ?>
 </form>
 </body>
