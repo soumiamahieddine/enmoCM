@@ -77,7 +77,7 @@ $res = array_values($res);
 //here we loading the html
 $core_tools->load_html();
 //here we building the header
-$core_tools->load_header();
+$core_tools->load_header('', true, false);
 $time = $core_tools->get_session_time_expire();
 ?>
 <body onLoad="setTimeout(window.close, <?php  echo $time;?>*60*1000);">
@@ -118,5 +118,6 @@ for($j=0; $j<count($res); $j++)
 
 </form>
 </div>
+<?php $core_tools->load_js();?>
 </body>
 </html>

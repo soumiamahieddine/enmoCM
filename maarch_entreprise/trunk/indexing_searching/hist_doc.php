@@ -36,7 +36,7 @@ $core_tools->load_lang();
 //here we loading the html
 $core_tools->load_html();
 //here we building the header
-$core_tools->load_header();
+$core_tools->load_header('', true, false);
 $sec = new security();
 $mode = 'small';
 if(isset($_REQUEST['mode']) && $_REQUEST['mode'] == 'normal')
@@ -121,5 +121,6 @@ $db_hist->query($query);
         ?>
     </tbody>
 </table>
+<?php $core_tools->load_js();?>
 </body>
 </html>

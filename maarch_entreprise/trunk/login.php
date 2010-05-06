@@ -172,14 +172,11 @@ $core_tools->load_modules_services($_SESSION['modules']);
 //$core_tools->load_menu($_SESSION['modules']); // transfer in class_security (login + reopen)
 
 $core_tools->load_html();
-$core_tools->load_header();
+$core_tools->load_header('', true, false);
 $time = $core_tools->get_session_time_expire();
 
-$m_login = new login();
-$login_methods = array();
-$login_methods = $m_login->build_login_method();
 ?>
-<body id="bodylogin" onload="setTimeout('window.location.reload(true)', <?php  echo $time;?>*60*1000);">
+<body id="bodylogin" onload="session_expirate(<?php  echo $time;?>, '<?php  echo $_SESSION['config']['coreurl'];?>');">
     <div id="loginpage">
         <p id="logo"><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=default_maarch.gif" alt="Maarch" /></p>
        
@@ -191,5 +188,6 @@ $login_methods = $m_login->build_login_method();
        
        
     </div>
+<?php $core_tools->load_js();?>
 </body>
 </html>

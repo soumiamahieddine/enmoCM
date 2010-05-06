@@ -22,7 +22,7 @@ $db4 = new dbquery();
 $db4->connect();
 $nb_trees = count($_SESSION['user']['trees']);
 $core_tools->load_html();
-$core_tools->load_header();
+$core_tools->load_header('', true, false);
 //Définition de la collection en dur
 //print_r($_REQUEST);exit;
 $res_view = $_SESSION['user']['security'][0]['view'];
@@ -432,6 +432,7 @@ else
 {
 	echo '<br><br><p align="center"><b>'._TO_SEARCH_DEFINE_A_SEARCH_ADV.'</b></p>';
 }
+$core_tools->load_js();
 ?>
 </body>
 </html>

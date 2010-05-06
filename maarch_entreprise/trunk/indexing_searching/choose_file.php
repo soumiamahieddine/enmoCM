@@ -34,7 +34,7 @@ $func = new functions();
 $db = new dbquery();
 $db->connect();
 $core_tools->load_html();
-$core_tools->load_header();
+$core_tools->load_header('', true, false);
 ?>
 <body >
 	<?php
@@ -116,5 +116,6 @@ $core_tools->load_header();
             ?>
         </p>
     </form>
+<?php $core_tools->load_js();?>
 </body>
 </html>

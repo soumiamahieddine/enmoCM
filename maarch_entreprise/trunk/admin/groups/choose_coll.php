@@ -94,7 +94,7 @@ $core_tools->load_lang();
 $core_tools->test_admin('admin_groups', 'apps');
 $core_tools->load_html();
 //here we building the header
-$core_tools->load_header();
+$core_tools->load_header('', true, false);
 ?>
 <body>
 <form name="choose_coll"  method="get" class="forms">
@@ -116,5 +116,6 @@ $core_tools->load_header();
 		</select>
 	</p>
 </form>
+<?php $core_tools->load_js();?>
 </body>
 </html>

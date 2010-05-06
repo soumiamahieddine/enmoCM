@@ -32,7 +32,7 @@ $core_tools = new core_tools();
 $core_tools->load_lang();
 
 $core_tools->load_html();
-$core_tools->load_header();
+$core_tools->load_header('', true, false);
 
 if(isset($_REQUEST['valid']) && isset($_SESSION['m_admin']['doctypes']['COLL_ID']) && !empty($_SESSION['m_admin']['doctypes']['COLL_ID']))
 {
@@ -172,5 +172,6 @@ if(isset($_REQUEST['valid']) && isset($_SESSION['m_admin']['doctypes']['COLL_ID'
         </form>
 <?php } ?>
     </div>
+<?php $core_tools->load_js();?>
 </body>
 </html>

@@ -23,7 +23,7 @@ $core_tools = new core_tools();
 $core_tools->load_lang();
  $core_tools->load_html();
 //here we building the header
-$core_tools->load_header( );
+$core_tools->load_header( '', true, false );
 
 if($_SESSION['m_admin']['mode'] == "up" && $_SESSION['m_admin']['init'] == true)
 {
@@ -146,6 +146,6 @@ elseif(isset($_REQUEST['foldertypes']) && count($_REQUEST['foldertypes']) <= 0)
 	<tr> <td height="10">&nbsp;</td></tr>
 		</table>
 		</form>
-
+<?php $core_tools->load_js();?>
 </body>
 </html>

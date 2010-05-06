@@ -17,7 +17,7 @@ $core_tools = new core_tools();
 $business = new business_app_tools();
 $core_tools->load_lang();
 $core_tools->load_html();
-$core_tools->load_header();
+$core_tools->load_header('', true, false);
 $func = new functions();
 $db = new dbquery();
 $db->connect();
@@ -235,6 +235,7 @@ else if($_REQUEST['mode'] == 'add')
 	$readonly = false;
 	$contact_info['IS_CORPORATE_PERSON'] == 'Y';
 }
+$core_tools->load_js();
 ?>
 <script type="text/javascript">window.resizeTo(600, 570);</script>
 <br/>

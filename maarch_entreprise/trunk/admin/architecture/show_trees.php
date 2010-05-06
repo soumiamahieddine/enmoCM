@@ -45,7 +45,7 @@ $db4 = new dbquery();
 $db4->connect();
 $nb_trees = count($_SESSION['doctypes_chosen_tree']);
 $core_tools->load_html();
-$core_tools->load_header();
+$core_tools->load_header('', true, false);
 $f_level = array();
 $folder_module = $core_tools->is_module_loaded('folder');
 ?>
@@ -274,6 +274,7 @@ else
 		<?php
 	}
 }
+$core_tools->load_js();
 ?>
 </body>
 </html>

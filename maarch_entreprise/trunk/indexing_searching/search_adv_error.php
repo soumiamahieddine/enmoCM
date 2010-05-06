@@ -62,7 +62,7 @@ elseif($mode == 'popup' || $mode == 'frame')
 {
 	$core_tools->load_html();
 	$core_tools->load_header();
-	$time = $core_tools->get_session_time_expire();
+	$time = $core_tools->get_session_time_expire('', true, false);
 	?><body>
 	<div id="container">
 
@@ -93,5 +93,6 @@ elseif($mode == 'popup' || $mode == 'frame')
  	{
 	?><br/><div align="center"><input type="button" name="close" class="button" value="<?php echo _CLOSE_WINDOW;?>" onclick="self.close();" /></div> <?php
 	}
+	$core_tools->load_js();
  	echo '</body></html>';
 }

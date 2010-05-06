@@ -29,7 +29,7 @@ if(count($_GET['children_id']) > 0)
 	$children = $_GET['children_id'];
 }
 $core_tools->load_html();
-$core_tools->load_header();
+$core_tools->load_header('', true, false);
 ?>
 <body id="iframe">
 <?php  if(isset($_GET['script']) && !empty($_GET['script']))
@@ -48,6 +48,8 @@ $core_tools->load_header();
 else
 {
 
-}?>
+}
+$core_tools->load_js();
+?>
 </body>
 </html>

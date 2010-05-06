@@ -13,7 +13,7 @@
 $core_tools = new core_tools();
 $core_tools->test_user();
 $core_tools->load_lang();
-$core_tools->load_header();
+$core_tools->load_header('', true, false);
 
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_docserver.php");
@@ -371,5 +371,6 @@ else
 		}
 	}
 }
+$core_tools->load_js();
 ?>
 </div>

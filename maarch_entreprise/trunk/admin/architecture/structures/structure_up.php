@@ -173,7 +173,7 @@ if($mode == "up")
 {
 	$title = _NEW_STRUCTURE_ADDED;
 }
-$core_tools->load_header($title);
+$core_tools->load_header($title, true, false);
 $time = $core_tools->get_session_time_expire();
 ?>
 <body onLoad="setTimeout(window.close, <?php  echo $time;?>*60*1000);window.resizeTo(600, 700);">
@@ -290,5 +290,6 @@ $time = $core_tools->get_session_time_expire();
 </form>
 </div>
 <div class="block_end">&nbsp;</div>
+<?php $core_tools->load_js();?>
 </body>
 </html>

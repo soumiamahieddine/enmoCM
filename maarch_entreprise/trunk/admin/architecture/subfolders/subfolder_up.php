@@ -132,7 +132,7 @@ if( isset($_REQUEST['valid']))
 	}
 }
 
-$core_tools->load_html();
+$core_tools->load_html('', true, false);
 
 if($mode == "up")
 {
@@ -193,5 +193,6 @@ $time = $core_tools->get_session_time_expire();
 </form>
 </div>
 <div class="block_end">&nbsp;</div>
+<?php $core_tools->load_js();?>
 </body>
 </html>

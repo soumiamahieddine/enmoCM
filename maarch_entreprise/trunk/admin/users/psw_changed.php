@@ -46,7 +46,7 @@ if($_SESSION['history']['usersadd'] == "true")
 //here we loading the html
 $core_tools->load_html();
 //here we building the header
-$core_tools->load_header(_PASSWORD_MODIFICATION);
+$core_tools->load_header(_PASSWORD_MODIFICATION, true, false);
 $time = $core_tools->get_session_time_expire();
 ?>
 
@@ -62,6 +62,6 @@ $time = $core_tools->get_session_time_expire();
 </p>
 <br/>
 <p class="buttons" ><input type="button" class="button" onclick="window.close()" name="close" value="<?php  echo _CLOSE_WINDOW;?>" /></p>
-
+<?php $core_tools->load_js();?>
 </body>
 </html>

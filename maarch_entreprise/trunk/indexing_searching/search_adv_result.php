@@ -342,6 +342,7 @@ if(count($_REQUEST['meta']) > 0)
 				   if(!$func->isDirEmpty($path_to_lucene_index))
 					{
 						$index = Zend_Search_Lucene::open($path_to_lucene_index);
+					    //$hits = $index->find($_REQUEST['fulltext']."~");
 					    $hits = $index->find($_REQUEST['fulltext']);
 						$Liste_Ids = "0";
 						foreach ($hits as $hit)
@@ -507,17 +508,17 @@ if(count($_REQUEST['meta']) > 0)
 					$json_txt .= "'".$_REQUEST['status_chosen'][$get_i]."',";
 					if ($_REQUEST['status_chosen'][$get_i]=="REL1")
 					{
-						$where_request .="( ".$req->extract_date('alarm1_date')." <= ".$req->current_datetime()." and ".$req->extract_date('alarm2_date')." > ".$req->current_datetime()."  and status <> 'END' ) or ";
+						$where_request .="( ".$req->extract_date('alarm1_date')." <= ".$req->current_datetime()." and ".$req->extract_date('alarm2_date')." > ".$req->current_datetime()." and status <> 'END') or ";
 					}
 					else
 					{
 						if ($_REQUEST['status_chosen'][$get_i]=="REL2")
 						{
-							$where_request .="( ".$req->current_datetime()." >= ".$req->extract_date('alarm2_date')."  and status <> 'END' ) or ";
+							$where_request .="( ".$req->current_datetime()." >= ".$req->extract_date('alarm2_date')."  and status <> 'END') or ";
 						}
 						elseif ($_REQUEST['status_chosen'][$get_i]=="LATE")
 						{
-							$where_request .="( process_limit_date is not null and ".$req->current_datetime()." > ".$req->extract_date('process_limit_date')."  and status <> 'END' ) or ";
+							$where_request .="( process_limit_date is not null and ".$req->current_datetime()." > ".$req->extract_date('process_limit_date')."  and status <> 'END') or ";
 						}
 						else
 						{

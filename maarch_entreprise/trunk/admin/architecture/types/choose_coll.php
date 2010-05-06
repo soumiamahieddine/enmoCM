@@ -32,7 +32,7 @@
 $core_tools = new core_tools();
 $core_tools->load_lang();
 $core_tools->load_html();
-$core_tools->load_header();
+$core_tools->load_header('', true, false);
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
 $sec = new security();
 $array_coll = $sec->retrieve_insert_collections();
@@ -67,5 +67,6 @@ if(isset($_REQUEST['collection']) && !empty($_REQUEST['collection']) )
 	</select>
   </p>
 </form>
+<?php $core_tools->load_js();?>
 </body>
 </html>

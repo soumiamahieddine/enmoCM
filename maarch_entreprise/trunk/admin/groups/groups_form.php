@@ -105,7 +105,7 @@ if(isset($_REQUEST['removeAccess']))
 //here we loading the html
 $core_tools->load_html();
 //here we building the header
-$core_tools->load_header(_MANAGE_RIGHTS);
+$core_tools->load_header(_MANAGE_RIGHTS, true, false);
 ?>
 <body id="iframe">
 <div class="block" >
@@ -181,6 +181,6 @@ $core_tools->load_header(_MANAGE_RIGHTS);
 	<br/><br/>
 </form>
 </div>
-
+<?php $core_tools->load_js();?>
 </body>
 </html>

@@ -77,7 +77,7 @@ $core_tools->manage_location_bar($page_path, $page_label, $page_id, $init, $leve
 elseif($mode == 'popup' || $mode == 'frame')
 {
 	$core_tools->load_html();
-	$core_tools->load_header();
+	$core_tools->load_header('', true, false);
 	$time = $core_tools->get_session_time_expire();
 	?><body>
 	<div id="container">
@@ -361,6 +361,7 @@ $tab = $search_obj->send_criteria_data($param);
 // criteria list options
 $src_tab = $tab[0];
 
+$core_tools->load_js();
 ?>
 <?php // echo $_SESSION['current_search_query'];?>
 <script type="text/javascript" src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=search_adv.js" ></script>

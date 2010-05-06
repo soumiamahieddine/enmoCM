@@ -98,11 +98,11 @@ $core_tools->load_lang();
 //here we loading the html
 $core_tools->load_html();
 //here we building the header
-$core_tools->load_header();
+$core_tools->load_header('', true, false);
 $time = $core_tools->get_session_time_expire();
 
 ?>
-<body onLoad="HideMenu('menunav');session_expirate(<?php  echo $time;?>, '<?php  echo $_SESSION['config']['coreurl'];?>');">
+<body onLoad="session_expirate(<?php  echo $time;?>, '<?php  echo $_SESSION['config']['coreurl'];?>');">
 	<div id="header">
         <div id="nav">
             <div id="menu" onMouseOver="ShowHideMenu('menunav','on');" onMouseOut="ShowHideMenu('menunav','off');" class="off">
@@ -165,5 +165,7 @@ $time = $core_tools->get_session_time_expire();
         ?>
 	</div>
 </div>
+<?php $core_tools->load_js();?>
+<script>HideMenu('menunav');</script>
 </body>
 </html>

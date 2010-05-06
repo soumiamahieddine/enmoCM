@@ -67,7 +67,7 @@ if(isset($_REQUEST['setPrimary']))
 //here we loading the html
 $core_tools->load_html();
 //here we building the header
-$core_tools->load_header(_USER_GROUPS_TITLE);
+$core_tools->load_header(_USER_GROUPS_TITLE, true, false);
 ?>
 <body id="iframe">
 <div class="block">
@@ -120,5 +120,6 @@ $core_tools->load_header(_USER_GROUPS_TITLE);
 	?>
 	</form>
 	</div>
+<?php $core_tools->load_js();?>
 </body>
 </html>

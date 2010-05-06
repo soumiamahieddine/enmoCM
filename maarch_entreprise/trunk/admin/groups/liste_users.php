@@ -68,7 +68,7 @@ else
 //here we loading the html
 $core_tools->load_html();
 //here we building the header
-$core_tools->load_header(_USERS_LIST_IN_GROUP.' '.$group);
+$core_tools->load_header(_USERS_LIST_IN_GROUP.' '.$group, true, false);
 $time = $core_tools->get_session_time_expire();
 ?>
 <body onload="setTimeout(window.close, <?php  echo $time;?>*60*1000);" class="popup_content" id="users_popup" >
@@ -112,5 +112,6 @@ $color = ' class="col"';
 <div align="center">
 <input type="button" class="button" onclick="self.close()" value="<?php  echo _CLOSE_WINDOW;?>" align="middle">
 </div>
+<?php $core_tools->load_js();?>
 </body>
 </html>

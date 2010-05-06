@@ -14,7 +14,7 @@
 $core_tools = new core_tools();
 $core_tools->load_lang();
 $core_tools->load_html();
-$core_tools->load_header();
+$core_tools->load_header('', true, false);
 $func = new functions();
 $db = new dbquery();
 $db->connect();
@@ -102,4 +102,5 @@ else
 </div>
 	<?
 }
+$core_tools->load_js();
 ?>

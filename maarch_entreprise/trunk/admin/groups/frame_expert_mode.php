@@ -130,7 +130,7 @@ if(isset($_SESSION['doctypes_choosen']))
 //here we loading the html
 $core_tools->load_html();
 //here we building the header
-$core_tools->load_header(_MANAGE_RIGHTS);
+$core_tools->load_header(_MANAGE_RIGHTS, true, false);
 ?>
 <body id="iframe">
 <br/>
@@ -288,5 +288,6 @@ $core_tools->load_header(_MANAGE_RIGHTS);
 		</tr>
 	</table>
 </form>
+<?php $core_tools->load_js();?>
 </body>
 </html>

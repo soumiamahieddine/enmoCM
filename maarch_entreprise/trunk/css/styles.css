@@ -1074,13 +1074,17 @@ left: -100em;
 	cursor: pointer;
 }
 
+/*
 #menu p.off img {
 	margin-top: 0 !important;
 }
+*/
 
+/*
 #menu.on p img {
 	margin-top: -30px;
 }
+*/
 
 #menunav {
 	width: 100%;;
@@ -1118,38 +1122,6 @@ left: -100em;
 	margin: 0px;
 }
 
-#menunav li#admin span span {
-	background-image: url(static.php?filename=picto_menu_admin.gif);
-}
-
-
-#menunav li#aide span span {
-	background-image: url(static.php?filename=picto_menu_help.gif);
-}
-#menunav li#add span span {
-	background-image: url(static.php?filename=picto_menu_fileindex.gif);
-}
-
-#menunav li#post span span {
-	background-image: url(static.php?filename=picto_menu_postindex.gif);
-}
-
-#menunav li#browse span span {
-	background-image: url(static.php?filename=stats_menu_off.gif);
-}
-#menunav li#valid_mail span span {
-	background-image: url(static.php?filename=valid_menu_off.gif);
-}
-
-#menunav li#maarch_credits span span {
-	background-image: url(static.php?filename=picto_menu_help.gif);
-}
-#menunav li#logout span span {
-	background-image: url(static.php?filename=logout_off.gif);
-}
-#menunav li#manbask span span {
-	background-image: url(static.php?filename=manage_baskets_off.gif);
-}
 #menunav li.on {
 	padding-left: 3px;
 }
@@ -1162,65 +1134,104 @@ left: -100em;
 #menunav li.on span {
 	background-image: url(static.php?filename=bg_menu_span_on.gif);
 }
-
-#menunav li#admin.on span span {
+li#admin .menu_item {
+	background-image: url(static.php?filename=picto_menu_admin.gif);
+}
+li#admin.on .menu_item {
 	background-image: url(static.php?filename=picto_menu_admin_on.gif);
 }
-#menunav li#aide.on span span {
+
+li#aide .menu_item {
+	background-image: url(static.php?filename=picto_menu_help.gif);
+}
+li#aide.on .menu_item  {
 	background-image: url(static.php?filename=picto_menu_help_on.gif);
 }
-#menunav li#searching span span {
-	background-image: url(static.php?filename=searching_off.gif);
+
+li#add .menu_item {
+	background-image: url(static.php?filename=picto_menu_fileindex.gif);
 }
-#menunav li#searching.on span span {
-	background-image: url(static.php?filename=searching_on.gif);
-}
-#menunav li#market_search span span {
-	background-image: url(static.php?filename=search_proj_off.gif);
-}
-#menunav li#market_search.on span span {
-	background-image: url(static.php?filename=search_proj_on.gif);
-}
-#menunav li#add.on span span {
+li#add.on .menu_item{
 	background-image: url(static.php?filename=picto_menu_fileindex_on.gif);
 }
 
-#menunav li#post.on span span {
+li#post .menu_item {
+	background-image: url(static.php?filename=picto_menu_postindex.gif);
+}
+li#post.on .menu_item {
 	background-image: url(static.php?filename=picto_menu_postindex_on.gif);
 }
-#menunav li#valid_mail.on span span {
-	background-image: url(static.php?filename=valid_menu_on.gif);
+
+li#browse .menu_item  {
+	background-image: url(static.php?filename=stats_menu_off.gif);
 }
-#menunav li#browse.on span span {
+li#browse.on .menu_item {
 	background-image: url(static.php?filename=stats_menu_on.gif);
 }
-#menunav li#account span span {
-	background-image: url(static.php?filename=account_off.gif);
+
+li#valid_mail .menu_item  {
+	background-image: url(static.php?filename=valid_menu_off.gif);
 }
-#menunav li#account.on span span {
-	background-image: url(static.php?filename=account_on.gif);
+li#valid_mail.on .menu_item  {
+	background-image: url(static.php?filename=valid_menu_on.gif);
 }
-#menunav li#my_contacts span span {
-	background-image: url(static.php?filename=my_contacts_off.gif);
+
+li#maarch_credits .menu_item  {
+	background-image: url(static.php?filename=picto_menu_help.gif);
 }
-#menunav li#my_contacts.on span span {
-	background-image: url(static.php?filename=my_contacts_on.gif);
-}
-#menunav li#maarch_credits.on span span {
+ li#maarch_credits.on .menu_item  {
 	background-image: url(static.php?filename=picto_menu_help_on.gif);
 }
-#menunav li#logout.on span span {
+
+li#logout .menu_item  {
+	background-image: url(static.php?filename=logout_off.gif);
+}
+li#logout.on .menu_item {
 	background-image: url(static.php?filename=logout_on.gif);
 }
-#menunav li#manbask.on span span {
+
+li#manbask .menu_item  {
+	background-image: url(static.php?filename=manage_baskets_off.gif);
+}
+li#manbask.on .menu_item {
 	background-image: url(static.php?filename=manage_baskets_on.gif);
 }
-#menunav li#indexing span span {
+
+li#searching .menu_item {
+	background-image: url(static.php?filename=searching_off.gif);
+}
+li#searching.on .menu_item {
+	background-image: url(static.php?filename=searching_on.gif);
+}
+
+li#market_search .menu_item {
+	background-image: url(static.php?filename=search_proj_off.gif);
+}
+li#market_search.on .menu_item {
+	background-image: url(static.php?filename=search_proj_on.gif);
+}
+
+li#account .menu_item{
+	background-image: url(static.php?filename=account_off.gif);
+}
+li#account.on .menu_item {
+	background-image: url(static.php?filename=account_on.gif);
+}
+
+li#my_contacts .menu_item{
+	background-image: url(static.php?filename=my_contacts_off.gif);
+}
+li#my_contacts.on .menu_item {
+	background-image: url(static.php?filename=my_contacts_on.gif);
+}
+
+li#indexing .menu_item{
 	background-image: url(static.php?filename=indexing_off.gif);
 }
-#menunav li#indexing.on span span {
+li#indexing.on .menu_item{
 	background-image: url(static.php?filename=indexing_on.gif);
 }
+
 #menunav li ol {
 	font-size: .9em;
 }

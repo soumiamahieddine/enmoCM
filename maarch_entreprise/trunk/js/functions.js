@@ -1,16 +1,16 @@
 <!--
 // Adding prototype and other js scripts
-document.write('<script type="text/javascript" src="'+app_path+'prototype.js"></script>');
-document.write('<script type="text/javascript" src="'+app_path+'scriptaculous.js&load=effects,slider"></script>');
-document.write('<script type="text/javascript" src="'+app_path+'maarch.js"></script>');
-document.write('<script type="text/javascript" src="'+app_path+'scrollbox.js"></script>');
-document.write('<script type="text/javascript" src="'+app_path+'effects.js"></script>');
-document.write('<script type="text/javascript" src="'+app_path+'controls.js"></script>');
-document.write('<script type="text/javascript" src="'+app_path+'concertina.js"></script>');
-document.write('<script type="text/javascript" src="'+app_path+'protohuds.js"></script>');
-document.write('<script type="text/javascript" src="'+app_path+'tabricator.js"></script>');
-
-document.write('<script type="text/javascript" src="'+app_path+'indexing.js"></script>');
+//~ document.write('<script type="text/javascript" src="'+app_path+'prototype.js"></script>');
+//~ document.write('<script type="text/javascript" src="'+app_path+'scriptaculous.js&load=effects,slider"></script>');
+//~ document.write('<script type="text/javascript" src="'+app_path+'maarch.js"></script>');
+//~ document.write('<script type="text/javascript" src="'+app_path+'scrollbox.js"></script>');
+//~ document.write('<script type="text/javascript" src="'+app_path+'effects.js"></script>');
+//~ document.write('<script type="text/javascript" src="'+app_path+'controls.js"></script>');
+//~ document.write('<script type="text/javascript" src="'+app_path+'concertina.js"></script>');
+//~ document.write('<script type="text/javascript" src="'+app_path+'protohuds.js"></script>');
+//~ document.write('<script type="text/javascript" src="'+app_path+'tabricator.js"></script>');
+//~ 
+//~ document.write('<script type="text/javascript" src="'+app_path+'indexing.js"></script>');
 
 var isAlreadyClick = false;
 

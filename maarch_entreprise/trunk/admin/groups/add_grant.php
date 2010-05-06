@@ -191,7 +191,7 @@ else
 //here we loading the html
 $core_tools->load_html();
 //here we building the header
-$core_tools->load_header();
+$core_tools->load_header('', true, false);
 $time = $core_tools->get_session_time_expire();
 ?>
 <body onload="setTimeout(window.close, <?php  echo $time;?>*60*1000);">
@@ -274,6 +274,6 @@ $time = $core_tools->get_session_time_expire();
 	include("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."keywords_help.php"); ?>
 </td>
 </tr>
-
+<?php $core_tools->load_js();?>
 </body>
 </html>

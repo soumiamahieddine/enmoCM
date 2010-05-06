@@ -118,6 +118,7 @@ else
 			$db = new dbquery();
 			$db->connect();
 
+
 			if ($_SESSION['config']['databasetype'] == "POSTGRESQL")
 				$query = "select * from ".$_SESSION['tablename']['users']." where user_id ilike '".$this->protect_string_db($s_login)."' ";
 			else

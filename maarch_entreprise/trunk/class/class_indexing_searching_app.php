@@ -458,7 +458,7 @@ class indexing_searching_app extends dbquery
 			}
 		}
 	}
-
+	
 	public function update_doc_status($idDoc, $coll_id, $status)
 	{
 		require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
