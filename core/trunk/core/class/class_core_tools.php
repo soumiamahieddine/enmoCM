@@ -383,16 +383,16 @@ class core_tools extends functions
 					$tmp .= "&amp;reinit=true";
 				}
 				?>
-				<li id="<?php  echo $menu[$i]['style'];?>" onmouseover="this.className='on';" onmouseout="this.className='';"><a href="#" onclick="window.open('<?php  echo $tmp;?>', '<?php  if($menu[$i]['target'] <> ''){echo $menu[$i]['target'];}else{echo '_self';}?>');"><span><span><?php  echo trim($menu[$i]['libconst']);?></span></span></a></li>
+				<li id="<?php  echo $menu[$i]['style'];?>" onmouseover="this.className='on';" onmouseout="this.className='';"><a href="#" onclick="window.open('<?php  echo $tmp;?>', '<?php  if($menu[$i]['target'] <> ''){echo $menu[$i]['target'];}else{echo '_self';}?>');"><span><span class="menu_item"><?php  echo trim($menu[$i]['libconst']);?></span></span></a></li>
 				<?php
 			}
 		}
 
 		// Menu items always displayed
 		echo '<li id="account" onmouseover="this.className=\'on\';" onmouseout="this.className=\'\';">
-		<a href="'.$_SESSION['config']['businessappurl'].'index.php?page=modify_user&admin=users&reinit=true"><span><span>'._MY_INFO.'</span></span></a></li>';
+		<a href="'.$_SESSION['config']['businessappurl'].'index.php?page=modify_user&admin=users&reinit=true"><span class="menu_item"><span>'._MY_INFO.'</span></span></a></li>';
 		echo '<li id="logout" onmouseover="this.className=\'on\';" onmouseout="this.className=\'\';">
-		<a href="'.$_SESSION['config']['businessappurl'].'index.php?display=true&page=logout&coreurl='.$_SESSION['config']['coreurl'].'&logout=true"><span><span>'._LOGOUT.'</span></span></a></li>';
+		<a href="'.$_SESSION['config']['businessappurl'].'index.php?display=true&page=logout&coreurl='.$_SESSION['config']['coreurl'].'&logout=true"><span><span  class="menu_item">'._LOGOUT.'</span></span></a></li>';
 	}
 
 	/**
@@ -987,59 +987,24 @@ class core_tools extends functions
 	private function load_css()
 	{
 		?>
-        <link rel="stylesheet" type="text/css" href="<?php  echo $_SESSION['config']['businessappurl'].'static.php?filename=styles.css'; ?>" media="screen" />
-
-        <!--[if lt IE 7.0]>  <link rel="stylesheet" type="text/css" href="<?php  echo $_SESSION['config']['businessappurl'].'static.php?filename=style_ie.css'; ?>" media="screen" />  <![endif]-->
-        <!--[if gte IE 7.0]>  <link rel="stylesheet" type="text/css" href="<?php  echo $_SESSION['config']['businessappurl'].'static.php?filename=style_ie7.css'; ?>" media="screen" />  <![endif]-->
-        <?php
-		foreach(array_keys($_SESSION['modules_loaded']) as $value)
-		{
-			if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'modules'.DIRECTORY_SEPARATOR.$_SESSION['modules_loaded'][$value]['name'].DIRECTORY_SEPARATOR."css".DIRECTORY_SEPARATOR."module.css") || file_exists($_SESSION['config']['corepath'].'modules'.DIRECTORY_SEPARATOR.$_SESSION['modules_loaded'][$value]['name'].DIRECTORY_SEPARATOR."css".DIRECTORY_SEPARATOR."module.css"))
-			{
-				?>
-				<link rel="stylesheet" type="text/css" href="<?php  echo $_SESSION['config']['businessappurl'].'static.php?filename=module.css&module='.$_SESSION['modules_loaded'][$value]['name']; ?>" media="screen" />
-				<?php
-			}
-			if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'modules'.DIRECTORY_SEPARATOR.$_SESSION['modules_loaded'][$value]['name'].DIRECTORY_SEPARATOR."css".DIRECTORY_SEPARATOR."module_IE.css") || file_exists($_SESSION['config']['corepath'].'modules'.DIRECTORY_SEPARATOR.$_SESSION['modules_loaded'][$value]['name'].DIRECTORY_SEPARATOR."css".DIRECTORY_SEPARATOR."module_IE.css"))
-			{
-				?>
-				<!--[if lt IE 7.0]>  <link rel="stylesheet" type="text/css" href="<?php  echo $_SESSION['config']['businessappurl'].'static.php?filename=module_IE.css&module='.$_SESSION['modules_loaded'][$value]['name']; ?>" media="screen" />  <![endif]-->
-				<?php
-			}
-			if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'modules'.DIRECTORY_SEPARATOR.$_SESSION['modules_loaded'][$value]['name'].DIRECTORY_SEPARATOR."css".DIRECTORY_SEPARATOR."module_IE7.css") || file_exists($_SESSION['config']['corepath'].'modules'.DIRECTORY_SEPARATOR.$_SESSION['modules_loaded'][$value]['name'].DIRECTORY_SEPARATOR."css".DIRECTORY_SEPARATOR."module_IE7.css"))
-			{
-				?>
-				<!--[if gte IE 7.0]>  <link rel="stylesheet" type="text/css" href="<?php  echo $_SESSION['config']['businessappurl'].'static.php?filename=module_IE7.css&module='.$_SESSION['modules_loaded'][$value]['name']; ?>" media="screen" />  <![endif]-->
-				<?php
-			}
-		}
+		<link rel="stylesheet" type="text/css" href="<?php  echo $_SESSION['config']['businessappurl'].'merged_css.php'; ?>" media="screen" />
+		<!--[if lt IE 7.0]>  <link rel="stylesheet" type="text/css" href="<?php  echo $_SESSION['config']['businessappurl'].'merged_css.php?ie'; ?>" media="screen" />  <![endif]-->
+        <!--[if gte IE 7.0]>  <link rel="stylesheet" type="text/css" href="<?php  echo $_SESSION['config']['businessappurl'].'merged_css.php?ie7'; ?>" media="screen" />  <![endif]-->
+		<?php
 	}
 
 	/**
 	* Loads the javascript files of the application and modules
 	*/
-	private function load_js()
+	public function load_js()
 	{
 		?>
-		<script type="text/javascript" >
+		<!--<script type="text/javascript" >
 			var app_path = '<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=';
-		</script>
+		</script>-->
+		<script type="text/javascript" src="<?php  echo $_SESSION['config']['businessappurl'];?>merged_js.php"></script>
 		<?php
-		if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR."apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."js".DIRECTORY_SEPARATOR."functions.js") || file_exists($_SESSION['config']['corepath']."apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."js".DIRECTORY_SEPARATOR."functions.js"))
-		{
-			?>
-			<script type="text/javascript" src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=functions.js"></script>
-			<?php
-		}
-		foreach(array_keys($_SESSION['modules_loaded']) as $value)
-		{
-			if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'modules'.DIRECTORY_SEPARATOR.$_SESSION['modules_loaded'][$value]['name'].DIRECTORY_SEPARATOR."js".DIRECTORY_SEPARATOR."functions.js") || file_exists($_SESSION['config']['corepath'].'modules'.DIRECTORY_SEPARATOR.$_SESSION['modules_loaded'][$value]['name'].DIRECTORY_SEPARATOR."js".DIRECTORY_SEPARATOR."functions.js"))
-			{
-				?>
-				<script type="text/javascript" src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=functions.js&module=<?php echo $_SESSION['modules_loaded'][$value]['name'];?>"></script>
-				<?php
-			}
-		}
+
 	}
 
 	/**

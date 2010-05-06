@@ -578,6 +578,7 @@ class dbquery extends functions
 	*/
 	private function error()
 	{
+	
 		// Connexion error
 		if($this->what_sql_error == 1)
 		{
@@ -590,6 +591,7 @@ class dbquery extends functions
 				
 			}
 			exit();
+			
 		}
 
 		// Selection error

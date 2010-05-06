@@ -8,7 +8,7 @@ An action page is described in a ACTIONPAGE tag :
         <ORIGIN>module</ORIGIN> => action origin : apps or module 
 		<MODULE>entities</MODULE> => If origin is module, the module name
 		<KEYWORD>redirect</KEYWORD> => Keyword used for special parameters (tag not mandatory)
-		<FLAG_CREATE>false</FLAG_CREATE> => true if the action create a new ressource, false otherwise (we recommend to leave it at false except for the indexing action page
+		<FLAG_CREATE>false</FLAG_CREATE> => true if the action create a new ressource, false otherwise (we recommend to leave it at false except for the indexing action page)
     </ACTIONPAGE>
 -->
 <ROOT>
