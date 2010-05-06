@@ -294,7 +294,7 @@ else if(isset($_GET['action']) && $_GET['action'] == "copy_to_dest" )
 }
 
 $core_tools->load_html();
-$core_tools->load_header(_USER_ENTITIES_TITLE);
+$core_tools->load_header(_USER_ENTITIES_TITLE, true, false);
 $time = $core_tools->get_session_time_expire();
 if (preg_match("/MSIE 6.0/", $_SERVER["HTTP_USER_AGENT"]))
 {
@@ -536,5 +536,6 @@ else
 		?>
 
 <br/>
+<?php $core_tools->load_js();?>
 </body>
 </html>

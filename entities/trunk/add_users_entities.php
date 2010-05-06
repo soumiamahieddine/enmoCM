@@ -29,7 +29,7 @@ for($i = 0; $i < count($_SESSION['m_admin']['entity']['entities']); $i++)
 //here we loading the html
 $admin->load_html();
 //here we building the header
-$admin->load_header();
+$admin->load_header('', true, false);
 $time = $admin->get_session_time_expire();
 
 $entities = array();
@@ -75,5 +75,6 @@ else
 
 </form>
 </div>
+<?php $core_tools->load_js();?>
 </body>
 </html>

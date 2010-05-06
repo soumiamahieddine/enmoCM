@@ -19,7 +19,7 @@ $func = new functions();
 
 $core_tools->load_lang();
 $core_tools->load_html();
-$core_tools->load_header();
+$core_tools->load_header('', true, false);
 
 if(isset($_REQUEST['entityid'])  )
 {
@@ -65,5 +65,6 @@ else
 		</select><span class="red_asterisk">*</span>
 	</p>
 </form>
+<?php $core_tools->load_js();?>
 </body>
 </html>
