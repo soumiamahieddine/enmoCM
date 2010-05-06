@@ -215,7 +215,7 @@ if($_POST['valid'])
 //here we loading the html
 $core_tools->load_html();
 //here we building the header
-$core_tools->load_header(_ATTACH_ANSWER);
+$core_tools->load_header(_ATTACH_ANSWER, true, false);
 $time = $core_tools->get_session_time_expire();
 ?>
 <body id="pop_up" onload="setTimeout(window.close, <?php  echo $time;?>*60*1000);" >
@@ -239,5 +239,6 @@ $time = $core_tools->get_session_time_expire();
 	<input type="button" value="<?php  echo _CANCEL;?>" name="cancel" class="button"  onclick="self.close();"/>
   </p>
  </form>
+<?php $core_tools->load_js();?>
 </body>
 </html>
