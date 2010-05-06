@@ -131,13 +131,14 @@ for ($ind_notes1=0;$ind_notes1<count($tabNotes);$ind_notes1++)
 //$request->show_array($tabNotes);
 $core_tools->load_html();
 //here we building the header
-$core_tools->load_header();
+$core_tools->load_header('', true, false);
 ?>
 <body id="<?php echo $body; ?>">
 <?php
 $title = '';
 $list_notes = new list_show();
 $list_notes->list_simple($tabNotes, count($tabNotes), $title,'id','id', false, '',$css);
+$core_tools->load_js();
 ?>
 </body>
 </html>

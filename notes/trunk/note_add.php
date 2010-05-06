@@ -21,7 +21,7 @@ $db = new dbquery();
 $db->connect();
 $core_tools->load_html();
 //here we building the header
-$core_tools->load_header(_ADD_NOTE);
+$core_tools->load_header(_ADD_NOTE, true, false);
 $time = $core_tools->get_session_time_expire();
 $identifier = '';
 $table = '';
@@ -127,7 +127,8 @@ else
       </form>
 	</div>
 	<div class="block_end">&nbsp;</div>
- <?php  } ?>
-
+ <?php  }
+ $core_tools->load_js();
+  ?>
 </body>
 </html>
