@@ -58,7 +58,7 @@ if(isset($_REQUEST['remove']))
 	$_SESSION['m_admin']['load_groupbasket'] = false;
 }
 $core_tools->load_html();
-$core_tools->load_header();
+$core_tools->load_header('', true, false);
  ?>
 <body id="iframe" >
 	<div align="center">
@@ -102,5 +102,6 @@ $core_tools->load_header();
 	}
 	?>
 	</form>
+<?php $core_tools->load_js();?>
 </body>
 </html>

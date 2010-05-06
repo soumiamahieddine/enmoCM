@@ -66,7 +66,7 @@ for($i=0;$i<count($_SESSION['groups']);$i++)
 	}
 }
 $core_tools->load_html();
-$core_tools->load_header(_TITLE_GROUP_BASKET);
+$core_tools->load_header(_TITLE_GROUP_BASKET, true, false);
 $time = $core_tools->get_session_time_expire();
 //$core_tools->show_array( $_SESSION['m_admin']['basket']['groups']);
 //$core_tools->show_array( $_SESSION['m_admin']['basket']['all_actions']);
@@ -244,6 +244,7 @@ $time = $core_tools->get_session_time_expire();
 				<?php
 				} ?></div><?php
 		}
+		$core_tools->load_js();
 	//	$bask->show_array($_SESSION['m_admin']['basket']['all_actions']);
 		?>  </div>
 			<script type="text/javascript">

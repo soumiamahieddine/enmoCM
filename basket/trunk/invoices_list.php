@@ -36,7 +36,7 @@ $security = new security();
 $core_tools = new core_tools();
 $core_tools->load_lang();
 $core_tools->load_html();
-$core_tools->load_header();
+$core_tools->load_header('', true, false);
 $request= new request();
 require_once("modules".DIRECTORY_SEPARATOR."basket".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
 
@@ -187,6 +187,7 @@ $param_list = array('values' => $tab, 'title' => $title, 'key' => 'res_id', 'pag
  <input type="hidden" name="module" id="module" value="basket" /><input type="hidden" name="coll_id" id="coll_id" value="'.$_SESSION['current_basket']['coll_id'].'"/>', 'open_details_popup' => false );
 
 $bask->basket_list_doc($param_list, $_SESSION['current_basket']['actions'],_CLICK_LINE_TO_CHECK_INVOICE);
+$core_tools->load_js();
 ?>
 </body>
 </html>

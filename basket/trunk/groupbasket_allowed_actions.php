@@ -39,7 +39,7 @@ if(isset($_REQUEST['ind']) && !empty($_REQUEST['ind']))
 	$ind = $_REQUEST['ind'];
 }
 $core_tools->load_html();
-$core_tools->load_header();
+$core_tools->load_header('', true, false);
  ?>
 <body id="iframe">
 	<form name="manage" id="manage" method="get" action="-<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=basket&page=groupbasket_allowed_actions">
@@ -83,6 +83,7 @@ $core_tools->load_header();
 	?>
 	</div>
 	</form>
+	<?php $core_tools->load_js();?>
 	<script type="text/javascript">
 		sb = new ScrollBox(document.getElementById('actions'), {auto_hide: true});
 	</script>
