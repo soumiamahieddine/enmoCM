@@ -165,10 +165,11 @@ Function indexFullTextPdf($pathToFile, $indexFileDirectory, $Id)
 	if(is_file($pathToFile))
 	{
 		$tmpFile = $_ENV["base_directory"].DIRECTORY_SEPARATOR."tmp".DIRECTORY_SEPARATOR.basename($pathToFile).".ftx";
-		$pathToFile = str_replace("\\\\", "\\", $pathToFile);
+		//$pathToFile = str_replace("\\\\", "\\", $pathToFile);
 		if($_ENV['osname'] == "WINDOWS")
 		{
-			$resultExtraction = exec("\""."\"".$_ENV['maarch_tools_path']."pdftotext".DIRECTORY_SEPARATOR.$_ENV['pdftotext']."\" \"".$pathToFile."\" \"".$tmpFile."\""."\"");
+			//$resultExtraction = exec("\""."\"".$_ENV['maarch_tools_path']."pdftotext".DIRECTORY_SEPARATOR.$_ENV['pdftotext']."\" \"".$pathToFile."\" \"".$tmpFile."\""."\"");
+			$resultExtraction = exec("\"".$_ENV['maarch_tools_path']."pdftotext".DIRECTORY_SEPARATOR.$_ENV['pdftotext']."\" \"".$pathToFile."\" \"".$tmpFile."\"");
 			writeLog("\""."\"".$_ENV['maarch_tools_path']."pdftotext".DIRECTORY_SEPARATOR.$_ENV['pdftotext']."\" \"".$pathToFile."\" \"".$tmpFile."\""."\"");
 		}
 		elseif($_ENV['osname'] == "UNIX")
