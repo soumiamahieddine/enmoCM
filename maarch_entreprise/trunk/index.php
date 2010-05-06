@@ -98,7 +98,7 @@ $core_tools->load_lang();
 //here we loading the html
 $core_tools->load_html();
 //here we building the header
-$core_tools->load_header('', true, false);
+$core_tools->load_header();
 $time = $core_tools->get_session_time_expire();
 
 ?>
@@ -165,7 +165,7 @@ $time = $core_tools->get_session_time_expire();
         ?>
 	</div>
 </div>
-<?php $core_tools->load_js();?>
+<?php //$core_tools->load_js();?>
 <script>HideMenu('menunav');</script>
 </body>
 </html>
