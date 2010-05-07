@@ -1,4 +1,3 @@
-﻿<!--
 // Fonction pour gérer les changements dynamiques de sous-menu.
 // Prend en variable le numéro du sous-menu à afficher.
 
@@ -170,4 +169,3 @@ function show_special_form(id, var_visible)
 		elem.style.display = var_visible;
 	}
 }
-// -->
