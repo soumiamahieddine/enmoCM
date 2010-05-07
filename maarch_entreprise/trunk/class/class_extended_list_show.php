@@ -2152,6 +2152,7 @@ class extended_list_show extends functions
 	*/
 	public function extended_basket_to_actions_list($basket_array, $param_list)
 	{
+		//Liste des actions disponibles
 		if(count($basket_array['actions']) > 0)
 		{
 			$param_list['actions_combo'] = array();
@@ -2163,17 +2164,19 @@ class extended_list_show extends functions
 					array_push($param_list['actions_combo'], array('value' => $basket_array['actions'][$i]['ID'], 'label' => addslashes($basket_array['actions'][$i]['LABEL'])));
 				}
 			}
-			
-			if(count($param_list['actions_combo']) > 0)
-			{
-				$param_list['bool_check_form'] = true;
-			}
-
-			if(!empty($basket_array['default_action']))
-			{
-				$param_list['bool_do_action'] = true;
-				$param_list['id_action'] = $basket_array['default_action'];
-			}
+		}
+		
+		//Si au moins une action, afficher les case à cocher
+		if(count($param_list['actions_combo']) > 0)
+		{
+			$param_list['bool_check_form'] = true;
+		}
+		
+		//Action par defaut en cliquant sur une ligne de la liste
+		if(!empty($basket_array['default_action']))
+		{
+			$param_list['bool_do_action'] = true;
+			$param_list['id_action'] = $basket_array['default_action'];
 		}
 		
 		return $param_list;
