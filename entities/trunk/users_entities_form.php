@@ -106,6 +106,6 @@ $admin->load_header(_USER_ENTITIES_TITLE, true, false);
 	?>
 	</form>
 	</div>
-<?php $core_tools->load_js();?>
+<?php $admin->load_js();?>
 </body>
 </html>
