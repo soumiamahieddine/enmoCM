@@ -1,4 +1,4 @@
-<?
+<?php
 
 if($_SESSION['service_tag'] == 'doctype_up')
 {
@@ -43,7 +43,7 @@ elseif($_SESSION['service_tag'] == 'frm_doctype')
 		<label for="label"><?php echo _ALARM2_DELAY; ?> : </label>
 		<input name="delay2" type="text" class="textbox" id="label" maxlength="2" value="<?php echo $func->show($_SESSION['m_admin']['doctypes']['delay2']); ?>"/>
 	</p>
-	<?
+	<?php
 }
 elseif($_SESSION['service_tag'] == "doctype_info")
 {
