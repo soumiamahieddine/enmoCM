@@ -56,7 +56,7 @@ elseif($_SESSION['service_tag'] == 'frm_doctype')
 			?>
         </select><span class="red_asterisk">*</span>
 	</div>
-	<?
+	<?php
 }
 elseif($_SESSION['service_tag'] == "doctype_info")
 {
