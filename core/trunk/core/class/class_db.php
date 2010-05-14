@@ -286,6 +286,37 @@ class dbquery extends functions
 	}
 
 	/**
+	* Test if the specified column exists in the database
+	*
+	* @param  $table : Name of searched table
+	* @param  $field : Name of searched field in table
+	*  ==Return : true is field is founed, false is not
+	*/
+	public function test_column($table, $field)
+	{
+		if($this->databasetype == "SQLSERVER"){
+			return true;
+		}
+		elseif($this->databasetype == "MYSQL"){
+			return true;
+		}
+		elseif($this->databasetype == "POSTGRESQL"){
+			$this->query("select column_name from information_schema.columns where table_name = '".$table."' and column_name = '".$field."'");
+			if ($this->nb_result() > 0)
+				return true;
+			else
+				return false;
+		}
+		elseif($this->databasetype == "ORACLE"){
+			$this->query("SELECT * from USER_TAB_COLUMNS where TABLE_NAME = '".$table."' AND COLUMN_NAME = '".$field."'");
+			if ($this->nb_result() > 0)
+				return true;
+			else
+				return false;
+		}
+	}
+
+	/**
 	* Execution the sql query
 	*
 	* @param  $q_sql string SQL query
@@ -505,15 +536,6 @@ class dbquery extends functions
 		}
 		elseif($this->databasetype == "ORACLE")
 		{
-			/*$db = new dbquery();
-			$db->connect();
-			$db->query($this->debug_query);			
-			$nb=0;
-			while($line = $db->fetch_object($db))
-			{
-				$nb++;
-			}		
-			return $nb;*/
 			
 			// 2eme version Maarch
 			$db = new dbquery();
