@@ -172,6 +172,9 @@ $core_tools->load_html();
 $core_tools->load_header('', true, false);
 $time = $core_tools->get_session_time_expire();
 
+$m_login = new login();
+$login_methods = array();
+$login_methods = $m_login->build_login_method();
 if(isset($_SESSION['error']))
 {
 	$error = $_SESSION['error'];
