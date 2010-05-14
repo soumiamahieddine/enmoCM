@@ -135,14 +135,7 @@ $path_server = implode(DIRECTORY_SEPARATOR,array_slice($path_tmp,0,array_search(
 
 $_SESSION['urltomodules'] = $_SESSION['config']['coreurl']."modules/";
 $_SESSION['urltocore'] = $_SESSION['config']['coreurl'].'core/';
-if(isset($_SESSION['error']))
-{
-	$error = $_SESSION['error'];
-}
-else
-{
-	$error ='';
-}
+
 if(isset($_SESSION['config']['corepath']) && !empty($_SESSION['config']['corepath'] ))
 {
 	require('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
@@ -164,6 +157,8 @@ $func = new functions();
 
 $core_tools->build_core_config($path_core_config );
 $business_app_tools->build_business_app_config();
+
+
 $core_tools->load_modules_config($_SESSION['modules']);
 $core_tools->load_lang();
 //$func->show_array($_SESSION);
@@ -171,9 +166,20 @@ $core_tools->load_app_services();
 $core_tools->load_modules_services($_SESSION['modules']);
 //$core_tools->load_menu($_SESSION['modules']); // transfer in class_security (login + reopen)
 
+//Reading base version
+$business_app_tools->compare_base_version('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."database_version.xml");
 $core_tools->load_html();
 $core_tools->load_header('', true, false);
 $time = $core_tools->get_session_time_expire();
+
+if(isset($_SESSION['error']))
+{
+	$error = $_SESSION['error'];
+}
+else
+{
+	$error ='';
+}
 
 ?>
 <body id="bodylogin" onload="session_expirate(<?php  echo $time;?>, '<?php  echo $_SESSION['config']['coreurl'];?>');">
