@@ -448,21 +448,31 @@ class security extends dbquery
 	public function login($s_login,$pass, $method = false)
 	{
 		$this->connect();
-		if ($method == 'activex')
+		if ($this->test_column($_SESSION['tablename']['users'], 'loginmode')) //Compatibility test, if loginmode column doesn't exists, Maarch can't crash
 		{
-			if ($_SESSION['config']['databasetype'] == "POSTGRESQL")
-				$query = "select * from ".$_SESSION['tablename']['users']." where user_id ilike '".$this->protect_string_db($s_login)."' and STATUS <> 'DEL' and loginmode = 'activex'";
+			if ($method == 'activex')
+			{
+				if ($_SESSION['config']['databasetype'] == "POSTGRESQL")
+					$query = "select * from ".$_SESSION['tablename']['users']." where user_id ilike '".$this->protect_string_db($s_login)."' and STATUS <> 'DEL' and loginmode = 'activex'";
 
+				else
+					$query = "select * from ".$_SESSION['tablename']['users']." where user_id like '".$this->protect_string_db($s_login)."'  and STATUS <> 'DEL' and loginmode = 'activex'";
+			}
 			else
-				$query = "select * from ".$_SESSION['tablename']['users']." where user_id like '".$this->protect_string_db($s_login)."'  and STATUS <> 'DEL' and loginmode = 'activex'";
+			{
+				if ($_SESSION['config']['databasetype'] == "POSTGRESQL")
+					$query = "select * from ".$_SESSION['tablename']['users']." where user_id ilike '".$this->protect_string_db($s_login)."' and password = '".$pass."' and STATUS <> 'DEL' and loginmode = 'standard'";
+
+				else
+					$query = "select * from ".$_SESSION['tablename']['users']." where user_id like '".$this->protect_string_db($s_login)."' and password = '".$pass."' and STATUS <> 'DEL' and loginmode = 'standard'";
+			}
 		}
 		else
 		{
 			if ($_SESSION['config']['databasetype'] == "POSTGRESQL")
-				$query = "select * from ".$_SESSION['tablename']['users']." where user_id ilike '".$this->protect_string_db($s_login)."' and password = '".$pass."' and STATUS <> 'DEL' and loginmode = 'standard'";
-
+				$query = "select * from ".$_SESSION['tablename']['users']." where user_id ilike '".$this->protect_string_db($s_login)."' and password = '".$pass."' and STATUS <> 'DEL'";
 			else
-				$query = "select * from ".$_SESSION['tablename']['users']." where user_id like '".$this->protect_string_db($s_login)."' and password = '".$pass."' and STATUS <> 'DEL' and loginmode = 'standard'";
+				$query = "select * from ".$_SESSION['tablename']['users']." where user_id like '".$this->protect_string_db($s_login)."' and password = '".$pass."' and STATUS <> 'DEL'";
 		}
 		$this->query($query);
 		//$this->show();
