@@ -46,7 +46,7 @@ if (!defined('_FOLDERTYPES_LIST')) define( '_FOLDERTYPES_LIST', 'Liste des types
 if (!defined('_SELECTED_FOLDERTYPES')) define( '_SELECTED_FOLDERTYPES', 'Types de dossier s&eacute;lectionn&eacute;s');
 if (!defined('_FOLDERTYPE_ADDED')) define( '_FOLDERTYPE_ADDED', 'Nouveau dossier ajout&eacute;');
 if (!defined('_FOLDERTYPE_DELETION')) define( '_FOLDERTYPE_DELETION', 'Dossier supprim&eacute;');
-
+if (!defined('_VERSION_BASE_AND_XML_BASEVERSION_NOT_MATCH')) define( '_VERSION_BASE_AND_XML_BASEVERSION_NOT_MATCH', 'Attention: Le mod&egrave;le de donn&eacute;es de Maarch Entreprise doit &ecirc;tre mis &agrave; jour...');
 
 
 /*********************** communs ***********************************/

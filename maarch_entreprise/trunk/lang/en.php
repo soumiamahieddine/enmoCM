@@ -46,7 +46,7 @@ if (!defined('_FOLDERTYPES_LIST')) define('_FOLDERTYPES_LIST', 'List of file typ
 if (!defined('_SELECTED_FOLDERTYPES')) define('_SELECTED_FOLDERTYPES', 'Selected file types');
 if (!defined('_FOLDERTYPE_ADDED')) define('_FOLDERTYPE_ADDED', 'New file type added');
 if (!defined('_FOLDERTYPE_DELETION')) define('_FOLDERTYPE_DELETION', 'File type deleted');
-
+if (!defined('_VERSION_BASE_AND_XML_BASEVERSION_NOT_MATCH')) define( '_VERSION_BASE_AND_XML_BASEVERSION_NOT_MATCH', 'Warning: Database need to be updated...');
 
 
 /*********************** commons ***********************************/
