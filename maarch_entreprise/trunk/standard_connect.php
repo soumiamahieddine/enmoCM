@@ -15,7 +15,7 @@ echo '<form name="formlogin" id="formlogin" method="post" action="'.$_SESSION['c
             echo '<p class="buttons">';
                 echo '<input type="submit" class="button" name="submit" value="'._SEND.'" />';
             echo '</p>';
-            echo '<div class="error">'.$error;
+            echo '<div class="error">'.$_SESSION['error'];
             $_SESSION['error'] = '';
             
             echo '</div>';
