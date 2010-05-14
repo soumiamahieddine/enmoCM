@@ -338,6 +338,46 @@ class business_app_tools extends dbquery
 		$_SESSION['default_mail_title'] = (string) $mail_titles->default_title;
 	}
 
+	public function compare_base_version($xml_versionbase){
+		//Compare version value beetwen version base xml file and version base value in the database
+		if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.$xml_versionbase))
+		{
+			$path = $_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.$xml_versionbase;
+		}
+		else
+		{
+			$path = $xml_versionbase;
+		}
+		$xml_base = simplexml_load_file($path);
+		if ($xml_base) //Find value in the xml database_version tag
+		{
+			$_SESSION['maarch_entreprise']['xml_versionbase'] = (string) $xml_base->database_version;
+		}
+		else{
+			$_SESSION['maarch_entreprise']['xml_versionbase'] = "none";
+		}
+		$vef_base = new dbquery();
+		$vef_base->connect();
+		$query="select param_value_int from ".$_SESSION['tablename']['param']." where id='database_version'";
+		
+		$vef_base->query($query); //Find value in parameters table on database
+		if ($vef_base->nb_result() == 0){
+			$_SESSION['maarch_entreprise']['database_version'] = "none";
+		}
+		else
+		{
+			$vbg = $vef_base->fetch_object();
+			$_SESSION['maarch_entreprise']['database_version'] = $vbg->param_value_int;
+		}
+		//If this two parameters is not find, this is the end of this function
+		if ($_SESSION['maarch_entreprise']['xml_versionbase'] <>"none" && $_SESSION['maarch_entreprise']['database_version']<>"none"){
+			if ($_SESSION['maarch_entreprise']['xml_versionbase'] > $_SESSION['maarch_entreprise']['database_version']){
+				$_SESSION['error'] .= "<p style=\"color:#346DC4;border:1px solid blue\">"._VERSION_BASE_AND_XML_BASEVERSION_NOT_MATCH."</p>";}
+		}
+	}
+	
+	
+	
 	public function load_features($xml_features)
 	{
 		$_SESSION['features'] = array();
