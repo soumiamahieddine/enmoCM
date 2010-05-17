@@ -370,8 +370,8 @@ class business_app_tools extends dbquery
 			$_SESSION['maarch_entreprise']['database_version'] = $vbg->param_value_int;
 		}
 		//If this two parameters is not find, this is the end of this function
-		if ($_SESSION['maarch_entreprise']['xml_versionbase'] <>"none" && $_SESSION['maarch_entreprise']['database_version']<>"none"){
-			if ($_SESSION['maarch_entreprise']['xml_versionbase'] > $_SESSION['maarch_entreprise']['database_version']){
+		if ($_SESSION['maarch_entreprise']['xml_versionbase'] <>"none" ){
+			if (($_SESSION['maarch_entreprise']['xml_versionbase'] > $_SESSION['maarch_entreprise']['database_version'])||($_SESSION['maarch_entreprise']['database_version'] == "none")){
 				$_SESSION['error'] .= "<p style=\"color:#346DC4;border:1px solid blue\">"._VERSION_BASE_AND_XML_BASEVERSION_NOT_MATCH."</p>";}
 		}
 	}
