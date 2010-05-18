@@ -80,7 +80,7 @@ $list=new list_show();
 $orderstr = $list->define_order($order, $order_field);
 $bask->connect();
 $do_actions_arr = array();
-$tab=$request->select($select,$where,$orderstr,$_SESSION['config']['databasetype'], '1000', false);
+$tab=$request->select($select,$where,$orderstr,$_SESSION['config']['databasetype'], '1000', false, '', '', '', false);
 //$request->show();
 
 	//Manage of template list
