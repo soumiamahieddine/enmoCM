@@ -251,14 +251,12 @@ if($core_tools->is_module_loaded('entities'))
 		$where = ' where '.$where;
 	}
 	//$conn->query("select distinct r.destination from ".$table." r join ".$_SESSION['tablename']['ent_entities']." e on e.entity_id = r.destination ".$where." group by r.destination ");
-	$conn->query("select distinct r.destination, e.short_label from ".$table." r join ".$_SESSION['tablename']['ent_entities']." e on e.entity_id = r.destination ".$where." group by e.short_label, r.destination ");
+	$conn->query("select distinct r.destination, e.short_label from ".$table." r join ".$_SESSION['tablename']['ent_entities']." e on e.entity_id = r.destination ".$where." group by e.short_label, r.destination order by e.short_label");
 	//	$conn->show();
 	$arr_tmp = array();
 	while($res = $conn->fetch_object())
 	{
-
 		array_push($arr_tmp, array('VALUE' => $res->destination, 'LABEL' => $res->short_label));
-
 	}
 
 	$param['destination_mu'] = array('label' => _DESTINATION_SEARCH, 'type' => 'select_multiple', 'param' => array('field_label' => _DESTINATION_SEARCH, 'label_title' => _CHOOSE_ENTITES_SEARCH_TITLE,
