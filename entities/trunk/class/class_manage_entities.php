@@ -221,9 +221,7 @@ class entity extends dbquery
 	public function havechild($id)
 	{
 		$this->connect();
-
 		$this->query('select entity_id from '.$_SESSION['tablename']['ent_entities']." where parent_entity_id = '".$this->protect_string_db(trim($id))."'");
-
 		if($this->nb_result() == 0){ return false; }
 		else{ return true; }
 	}
@@ -236,9 +234,7 @@ class entity extends dbquery
 	public function isRelated($id)
 	{
 		$this->connect();
-
 		$this->query('select ue.entity_id from '.$_SESSION['tablename']['ent_users_entities']." ue, ".$_SESSION['tablename']['users']." u where ue.user_id = u.user_id and ue.entity_id = '".$this->protect_string_db(trim($id))."'");
-
 		if($this->nb_result() == 0){ return false; }
 		else{ return true; }
 	}
@@ -617,19 +613,23 @@ class entity extends dbquery
 		$what = $_REQUEST['what'];
 		if(!empty($_SESSION['error']))
 		{
-			header('location: '.$_SESSION['config']['businessappurl'].'index.php?page=manage_entities&module=entities&order='.$order."&order_field=".$order_field."&start=".$start."&what=".$what);
+			?>
+			<script>window.top.location.href='<?php echo $_SESSION['config']['businessappurl'].'index.php?page=manage_entities&module=entities&order='.$order."&order_field=".$order_field."&start=".$start."&what=".$what;?>';</script>
+			<?php
+			//header('location: '.$_SESSION['config']['businessappurl'].'index.php?page=manage_entities&module=entities&order='.$order."&order_field=".$order_field."&start=".$start."&what=".$what);
 			exit();
 		}
 		else
 		{
 			$this->connect();
-
 			$this->query('select entity_id from '.$_SESSION['tablename']['ent_entities']." where entity_id = '".$this->protect_string_db(trim($id))."'");
-
 			if($this->nb_result() == 0)
 			{
 				$_SESSION['error'] = _ENTITY.' '._UNKNWON;
-				header('location: '.$_SESSION['config']['businessappurl'].'index.php?page=manage_entities&module=entities&order='.$order."&order_field=".$order_field."&start=".$start."&what=".$what);
+				//header('location: '.$_SESSION['config']['businessappurl'].'index.php?page=manage_entities&module=entities&order='.$order."&order_field=".$order_field."&start=".$start."&what=".$what);
+				?>
+				<script>window.top.location.href='<?php echo $_SESSION['config']['businessappurl'].'index.php?page=manage_entities&module=entities&order='.$order."&order_field=".$order_field."&start=".$start."&what=".$what;?>';</script>
+				<?php
 				exit;
 			}
 			else
@@ -637,7 +637,6 @@ class entity extends dbquery
 				if($mode == 'allow')
 				{
 					$this->allowbanentity($id, $mode);
-
 				}
 				elseif($mode == 'ban')
 				{
@@ -653,7 +652,8 @@ class entity extends dbquery
 					{
 						$_SESSION['error'] = _ENTITY_IS_RELATED;
 					}
-					else{
+					else
+					{
 						$this->query("delete from ".$_SESSION['tablename']['ent_entities']." where entity_id = '".$this->protect_string_db(trim($id))."'");
 						if($_SESSION['history']['entitydel'] == "true")
 						{
@@ -661,10 +661,15 @@ class entity extends dbquery
 							$users = new history();
 							$users->add($_SESSION['tablename']['ent_entities'], $id,'DEL',_ENTITY_DELETION." : ".$this->protect_string_db(trim($id)), $_SESSION['config']['databasetype']);
 						}
-						$_SESSION['error'] = _ENTITY_DELETED;
+						$_SESSION['error'] = $id." "._ENTITY_DELETED;
 					}
 				}
-				header('location: '.$_SESSION['config']['businessappurl'].'index.php?page=manage_entities&module=entities&order='.$order."&order_field=".$order_field."&start=".$start."&what=".$what);
+				//header('location: '.$_SESSION['config']['businessappurl'].'index.php?page=manage_entities&module=entities&order='.$order."&order_field=".$order_field."&start=".$start."&what=".$what);
+				?>
+				<script language="javascript">
+					window.top.location.href='<?php echo $_SESSION['config']['businessappurl'].'index.php?page=manage_entities&module=entities&order='.$order."&order_field=".$order_field."&start=".$start."&what=".$what;?>';
+				</script>
+				<?php
 				exit();
 			}
 		}
@@ -1043,6 +1048,193 @@ class entity extends dbquery
 		$this->query("select ue.entity_id, ue.user_role, e.entity_label, e.short_label from ".$_SESSION['tablename']['ent_entities']." e, ".$_SESSION['tablename']['ent_users_entities']." ue where ue.user_id = '".$this->protect_string_db(trim($user_id))."' and ue.entity_id = e.entity_id and ue.primary_entity = 'Y'");
 		$res = $this->fetch_object();
 		return array('ID' => $res->entity_id, 'LABEL' => $res->entity_label, 'SHORT_LABEL' => $res->short_label, 'ROLE' => $res->user_role);
+	}
+	
+	public function formDeleteEntity($s_id, $label, $entities, $admin)
+	{
+		echo '<h1><img src="'.$_SESSION["config"]["businessappurl"].'static.php?filename=manage_entities_b.gif&module=entities" alt="" />'._ENTITY_DELETION.'</h1>';
+		$this->connect();
+		$element_found = false;
+		$haveChild = false;
+		$tables = array();
+		$nb_docs = 0;
+		$nb_users = 0;
+		$nb_redirect_baskets = 0;
+		$nb_templates = 0;
+		$nb_listmodels = 0;
+		$nb_listinstances = 0;
+		if($admin->is_module_loaded('advanced_physical_archive'))
+		{
+			$nb_boxes = 0;
+			$nb_containers = 0;
+			$nb_headers = 0;
+			$nb_natures = 0;
+			$nb_sites = 0;
+		}
+		elseif($admin->is_module_loaded('physical_archive'))
+		{
+			$nb_boxes = 0;
+		}
+		if(!empty($s_id))
+		{
+			if($this->havechild($s_id))
+			{
+				$element_found = true;
+				$haveChild = true;
+			}
+			for($i=0; $i<count($_SESSION['collections']); $i++)
+			{
+				$this->query("select res_id from ".$_SESSION['collections'][$i]['view']." where destination = '".$this->protect_string_db($s_id)."'");
+				if($this->nb_result() > 0)
+				{
+					$element_found = true;
+					$nb_docs = $nb_docs + $this->nb_result();
+					array_push($tables, $_SESSION['collections'][$i]['table']);
+				}
+			}
+			$this->query("select user_id from ".$_SESSION['tablename']['ent_users_entities']." where entity_id = '".$this->protect_string_db($s_id)."'");
+			if($this->nb_result() > 0)
+			{
+				$element_found = true;
+				$nb_users = $this->nb_result();
+			}
+			$this->query("select system_id from ".$_SESSION['tablename']['ent_groupbasket_redirect']." where entity_id = '".$this->protect_string_db($s_id)."'");
+			if($this->nb_result() > 0)
+			{
+				$element_found = true;
+				$nb_redirect_baskets = $this->nb_result();
+			}
+			$this->query("select template_id from ".$_SESSION['tablename']['temp_templates_association']." where value_field = '".$this->protect_string_db($s_id)."' and what = 'destination'");
+			if($this->nb_result() > 0)
+			{
+				$element_found = true;
+				$nb_templates = $this->nb_result();
+			}
+			$this->query("select res_id from ".$_SESSION['tablename']['ent_listinstance']." where item_id = '".$this->protect_string_db($s_id)."' and item_type = 'entity_id'");
+			if($this->nb_result() > 0)
+			{
+				$element_found = true;
+				$nb_listinstances = $this->nb_result();
+			}
+			$this->query("select object_id from ".$_SESSION['tablename']['ent_listmodels']." where object_id = '".$this->protect_string_db($s_id)."'");
+			if($this->nb_result() > 0)
+			{
+				$nb_listmodels = $this->nb_result();
+			}
+			if($admin->is_module_loaded('advanced_physical_archive'))
+			{
+				$this->query("select arbox_id from ".$_SESSION['tablename']['apa_boxes']." where entity_id = '".$this->protect_string_db($s_id)."'");
+				if($this->nb_result() > 0)
+				{
+					$element_found = true;
+					$nb_boxes = $this->nb_result();
+				}
+				$this->query("select arcontainer_id from ".$_SESSION['tablename']['apa_containers']." where entity_id = '".$this->protect_string_db($s_id)."'");
+				if($this->nb_result() > 0)
+				{
+					$element_found = true;
+					$nb_containers = $this->nb_result();
+				}
+				$this->query("select header_id from ".$_SESSION['tablename']['apa_header']." where entity_id = '".$this->protect_string_db($s_id)."'");
+				if($this->nb_result() > 0)
+				{
+					$element_found = true;
+					$nb_headers = $this->nb_result();
+				}
+				$this->query("select arnature_id from ".$_SESSION['tablename']['apa_natures']." where entity_id = '".$this->protect_string_db($s_id)."'");
+				if($this->nb_result() > 0)
+				{
+					$element_found = true;
+					$nb_natures = $this->nb_result();
+				}
+				$this->query("select site_id from ".$_SESSION['tablename']['apa_sites']." where entity_id = '".$this->protect_string_db($s_id)."'");
+				if($this->nb_result() > 0)
+				{
+					$element_found = true;
+					$nb_sites = $this->nb_result();
+				}
+			}
+			elseif($admin->is_module_loaded('physical_archive'))
+			{
+				$this->query("select count(*) from ".$_SESSION['tablename']['ar_boxes']." where entity_id = '".$this->protect_string_db($s_id)."'");
+				if($this->nb_result() > 0)
+				{
+					$element_found = true;
+					$nb_boxes = $this->nb_result();
+				}
+			}
+		}
+		if($element_found)
+		{
+			echo "<div class='error' id='main_error'>".$_SESSION['error']."</div>";
+			$_SESSION['error'] = "";
+			?>
+			<br>
+			<div id="main_error">
+				<b><?php
+				echo _WARNING_MESSAGE_DEL_ENTITY;
+				?></b>
+			</div>
+			<br>
+			<form name="entity_del" id="entity_del" method="post" class="forms">
+				<input type="hidden" value="<?php echo $s_id;?>" name="id">
+				<h2 class="tit"><?php echo _ENTITY_DELETION." : <i>".$label."</i>";?></h2>
+				<?php 
+				if($element_found)
+				{
+					if($this->havechild($s_id))
+					{
+						echo "<br> - "._ENTITY_HAVE_CHILD;
+					}
+					echo "<br> - ".$nb_docs." "._DOC_IN_THE_DEPARTMENT;
+					echo "<br> - ".$nb_users." "._USERS_LINKED_TO;
+					echo "<br> - ".$nb_redirect_baskets." "._BASKET_REDIRECTIONS_OCCURS_LINKED_TO;
+					echo "<br> - ".$nb_templates." "._TEMPLATES_LINKED_TO;
+					echo "<br> - ".$nb_listinstances." "._LISTISTANCES_OCCURS_LINKED_TO;
+					echo "<br> - ".$nb_listmodels." "._LISTMODELS_OCCURS_LINKED_TO;
+					if($admin->is_module_loaded('advanced_physical_archive'))
+					{
+						echo "<br> - ".$nb_boxes." "._BOXES_IN_THE_DEPARTMENT;
+						echo "<br> - ".$nb_containers." "._CONTAINERS_IN_THE_DEPARTMENT;
+						echo "<br> - ".$nb_headers." "._HEADERS_IN_THE_DEPARTMENT;
+						echo "<br> - ".$nb_natures." "._NATURES_IN_THE_DEPARTMENT;
+						echo "<br> - ".$nb_sites." "._SITES_IN_THE_DEPARTMENT;
+					}
+					elseif($admin->is_module_loaded('physical_archive'))
+					{
+						echo "<br> - ".$nb_boxes." "._BOXES_IN_THE_DEPARTMENT;
+					}
+					?>
+					<br>
+					<br>
+					<input type="hidden" value="documents" name="documents">
+					<select name="doc_entity_id" id="doc_entity_id">
+						<option value=""><?php echo _CHOOSE_REPLACEMENT_DEPARTMENT;?></option>
+						<?php
+						for($i=0; $i < count($entities); $i++)
+						{
+							?>
+							<option value="<?php echo $entities[$i]['ID'];?>"><?php echo $entities[$i]['LABEL'];?></option>
+							<?php
+						}
+						?>
+					</select>
+					<br/>
+					<?php
+				}
+				?>
+				<br/>
+				<p class="buttons">
+					<input type="submit" value="<?php echo _DEL_AND_REAFFECT;?>" name="valid" class="button" onclick="return(confirm('<?php  echo _REALLY_DELETE;  if($page_name == "users"){ echo $complete_name;} else { echo " ".$admin_id; }?> ?\n\r\n\r<?php  echo _DEFINITIVE_ACTION; ?>'));"/>
+					<input type="button" value="<?php echo _CANCEL;?>" onclick="window.location.href='<?php echo $_SESSION['config']['businessappurl'].'index.php?page=manage_entities&module=entities&order='.$order."&order_field=".$order_field."&start=".$start."&what=".$what;?>';"" class="button" />
+				</p>
+			</form>
+			<?php
+		}
+		else
+		{
+			$this->adminentity($s_id, 'del');
+		}
 	}
 }
 ?>

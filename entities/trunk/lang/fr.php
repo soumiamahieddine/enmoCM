@@ -40,8 +40,8 @@ if (!defined('_MANAGE_ENTITIES_DESC'))  define('_MANAGE_ENTITIES_DESC', 'Adminis
 if (!defined('_ENTITY_MISSING'))  define('_ENTITY_MISSING', 'Cette entit&eacute; n&rsquo;existe pas');
 if (!defined('_ENTITY_TREE'))  define('_ENTITY_TREE', 'Arborescence des entit&eacute;s');
 if (!defined('_ENTITY_TREE_DESC'))  define('_ENTITY_TREE_DESC', 'Voir l&rsquo;arborescence des entit&eacute;s');
-if (!defined('_ENTITY_HAVE_CHILD'))  define('_ENTITY_HAVE_CHILD', 'Cette entit&eacute; poss&egrave;de des sous entit&eacute;s');
-if (!defined('_ENTITY_IS_RELATED'))  define('_ENTITY_IS_RELATED', 'Cette entit&eacute; est reli&eacute;e &agrave; des utilisateurs');
+if (!defined('_ENTITY_HAVE_CHILD'))  define('_ENTITY_HAVE_CHILD', 'cette entit&eacute; poss&egrave;de des sous entit&eacute;s');
+if (!defined('_ENTITY_IS_RELATED'))  define('_ENTITY_IS_RELATED', 'cette entit&eacute; est reli&eacute;e &agrave; des utilisateurs');
 
 
 if (!defined('_TYPE'))  define('_TYPE', 'Type');
@@ -117,6 +117,15 @@ if (!defined('_DIFF_LIST'))  define('_DIFF_LIST', 'Liste de diffusion');
 if (!defined('_NO_USER'))  define('_NO_USER', 'Pas d&rsquo;utilisateur');
 if (!defined('_MUST_CHOOSE_DEST'))  define('_MUST_CHOOSE_DEST', 'Vous devez s&eacute;lectionner un destinataire principal');
 
+if (!defined('_ENTITIES__DEL'))  define('_ENTITIES__DEL', 'Suppression');
+if (!defined('_ENTITY_DELETION'))  define('_ENTITY_DELETION', 'Suppression d&rsquo;entit&eacute;');
+if (!defined('_THERE_ARE_NOW'))  define('_THERE_ARE_NOW', 'Il y a actuellement');
+if (!defined('_DOC_IN_THE_DEPARTMENT'))  define('_DOC_IN_THE_DEPARTMENT', 'document(s) associ&eacute;(s) &agrave; l&rsquo;entit&eacute;');
+if (!defined('_DEL_AND_REAFFECT'))  define('_DEL_AND_REAFFECT', 'Supprimer et r&eacute;affecter');
+if (!defined('_THE_ENTITY'))  define('_THE_ENTITY', 'L&rsquo;entit&eacute;');
+if (!defined('_USERS_LINKED_TO'))  define('_USERS_LINKED_TO', 'utilisateur(s) associ&eacute;(s) &agrave l&rsquo;entit&eacute;');
+if (!defined('_ENTITY_MANDATORY_FOR_DOCUMENTS'))  define('_ENTITY_MANDATORY_FOR_REDIRECTION', 'Entit&eacute; obligatoire pour la r&eacute;affectation');
+if (!defined('_WARNING_MESSAGE_DEL_ENTITY'))  define('_WARNING_MESSAGE_DEL_ENTITY', 'Avertissement :<br> La suppression d&rsquo;une entit&eacute; entraine la r&eacute;affectation des documents et utilisateurs &agrave une nouvelle entit&eacute; mais r&eacute;affecte &eacute;galement les documents (courriers) en attente de traitement, les mod&egrave;les de liste de diffusion, les mod&egrave;les de r&eacute;ponses et les unit&eacute;s d&rsquo;archivage vers l&rsquo;entit&eacute de remplacement.');
 
 /******************** Keywords Helper ************/
 if (!defined('_HELP_KEYWORD1'))  define('_HELP_KEYWORD1', 'toutes les entit&eacute;s rattach&eacute;es &agrave; l&rsquo;utilisateur connect&eacute;. N&rsquo;inclue pas les sous-entit&eacute;s');
@@ -130,4 +139,12 @@ if (!defined('_HELP_KEYWORDS'))  define('_HELP_KEYWORDS', 'Aide sur les mots cl&
 if (!defined('_HELP_KEYWORD_EXEMPLE_TITLE'))  define('_HELP_KEYWORD_EXEMPLE_TITLE', 'Exemple dans la d&eacute;finition de la s&eacute;curit&eacute; d&rsquo;un groupe ("where clause") : acc&egrave;s sur les ressources concernant le service d&rsquo;appartenance principal de l&rsquo;utilisateur connect&eacute;, ou les sous-services de ce service.');
 if (!defined('_HELP_KEYWORD_EXEMPLE'))  define('_HELP_KEYWORD_EXEMPLE', 'where_clause : (DESTINATION = @my_primary_entity or DESTINATION in (@subentities[@my_primary_entity])');
 if (!defined('_HELP_BY_ENTITY'))  define('_HELP_BY_ENTITY', 'Mots cl&eacute;s du module Entit&eacute;s');
+
+if (!defined('_BASKET_REDIRECTIONS_OCCURS_LINKED_TO'))  define('_BASKET_REDIRECTIONS_OCCURS_LINKED_TO', 'occurence(s) de redirection(s) de corbeille(s) associ&eacute;(s) &agrave l&rsquo;entit&eacute;');
+if (!defined('_TEMPLATES_LINKED_TO'))  define('_TEMPLATES_LINKED_TO', 'mod&egrave;le(s) de r&eacute;ponse(s) associ&eacute;(s) &agrave l&rsquo;entit&eacute;');
+if (!defined('_LISTISTANCES_OCCURS_LINKED_TO'))  define('_LISTISTANCES_OCCURS_LINKED_TO', 'occurence(s) de courrier(s) &agrave; traiter ou en copie(s) associ&eacute;(s) &agrave l&rsquo;entit&eacute;');
+if (!defined('_LISTMODELS_OCCURS_LINKED_TO'))  define('_LISTMODELS_OCCURS_LINKED_TO', 'mod&egrave;le de diffusion associ&eacute; &agrave l&rsquo;entit&eacute;');
+
+if (!defined('_CHOOSE_REPLACEMENT_DEPARTMENT'))  define('_CHOOSE_REPLACEMENT_DEPARTMENT', 'Choisissez un service rempla&ccedil;ant');
+
 ?>

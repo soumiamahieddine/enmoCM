@@ -18,7 +18,9 @@
 *   You should have received a copy of the GNU General Public License
 *    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
 *
-*	@author  Cédric Ndoumba  <dev@maarch.org>
+*	@author  Cedric Ndoumba  <dev@maarch.org>
+*	@author  Claire Figueras  <dev@maarch.org>
+*   @author  Laurent Giovannoni  <dev@maarch.org>
 */
 
 $admin = new core_tools();
@@ -171,5 +173,5 @@ $autoCompletionArray = array();
 $autoCompletionArray["list_script_url"] = $_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=entities_list_by_label';
 $autoCompletionArray["number_to_begin"] = 1;
 
-$list->admin_list($tab, $i, $title, 'entity_id','manage_entities','entities', 'entity_id', true, $page_name_up, $page_name_val, $page_name_ban, $page_name_del, $page_name_add, $label_add, false, false, _ALL_ENTITIES, _ENTITY, $_SESSION['config']['businessappurl'].'static.php?module=entities&filename=manage_entities_b.gif', true, true, false, true, "", true, $autoCompletionArray);
+$list->admin_list($tab, $i, $title, 'entity_id','manage_entities','entities', 'entity_id', true, $page_name_up, $page_name_val, $page_name_ban, $page_name_del, $page_name_add, $label_add, false, false, _ALL_ENTITIES, _ENTITY, $_SESSION['config']['businessappurl'].'static.php?module=entities&filename=manage_entities_b.gif', true, true, false, true, "", true, $autoCompletionArray, false, true);
 ?>
