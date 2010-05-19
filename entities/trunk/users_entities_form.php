@@ -52,7 +52,7 @@ if(isset($_REQUEST['setPrimary']))
 //here we loading the html
 $admin->load_html();
 //here we building the header
-$admin->load_header(_USER_ENTITIES_TITLE, true, false);
+$admin->load_header(_USER_ENTITIES_TITLE);
 ?>
 
 <body id="iframe">
@@ -106,6 +106,5 @@ $admin->load_header(_USER_ENTITIES_TITLE, true, false);
 	?>
 	</form>
 	</div>
-<?php $admin->load_js();?>
 </body>
 </html>

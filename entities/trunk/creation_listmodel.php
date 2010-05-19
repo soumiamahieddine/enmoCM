@@ -293,7 +293,7 @@ else if(isset($_GET['action']) && $_GET['action'] == "copy_to_dest" )
 }
 
 $core_tools->load_html();
-$core_tools->load_header(_USER_ENTITIES_TITLE, true, false);
+$core_tools->load_header(_USER_ENTITIES_TITLE);
 $time = $core_tools->get_session_time_expire();
 ?>
 <body onLoad="setTimeout(window.close, <?php echo $time;?>*60*1000);">
@@ -528,6 +528,5 @@ else
 		?>
 
 <br/>
-<?php $core_tools->load_js();?>
 </body>
 </html>
