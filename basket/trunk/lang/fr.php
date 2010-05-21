@@ -225,6 +225,7 @@ if (!defined('_REALLY_ABS_MODE'))  define('_REALLY_ABS_MODE', 'Voulez-vous vraim
 if (!defined('_DOCUMENTS_LIST_WITH_FILTERS'))  define('_DOCUMENTS_LIST_WITH_FILTERS', 'Liste avec filtres');
 if (!defined('_AUTHORISED_ENTITIES'))  define('_AUTHORISED_ENTITIES', 'Liste services autoris&eacute;s');
 if (!defined('_ARCHIVE_LIST'))  define('_ARCHIVE_LIST', 'Liste d&rsquo;unit&eacute;s d&rsquo;archive');
+if (!defined('_COUNT_LIST'))  define('_COUNT_LIST', 'Liste des copies');
 
 if (!defined('_FILTER_BY_ENTITY'))  define('_FILTER_BY_ENTITY', 'Filtrer par service');
 if (!defined('_FILTER_BY'))  define('_FILTER_BY', 'Filtrer par');
@@ -236,6 +237,6 @@ if (!defined('_SPREAD_SEARCH_TO_BASKETS'))  define('_SPREAD_SEARCH_TO_BASKETS', 
 if (!defined('_BASKET_WELCOME_TXT1'))  define('_BASKET_WELCOME_TXT1', 'Durant votre navigation dans les corbeilles,');
 if (!defined('_BASKET_WELCOME_TXT2'))  define('_BASKET_WELCOME_TXT2', 'cliquez, &agrave; tout moment, dans la liste ci-dessus <br/>pour changer de corbeille');
 
-
+if (!defined('_VIEWED'))  define('_VIEWED', 'Vu?');
 
 ?>

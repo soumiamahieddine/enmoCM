@@ -35,10 +35,17 @@
 		<ORIGIN>module</ORIGIN>
 		<MODULE>advanced_physical_archive</MODULE>
     </BASKETPAGE>
-	 <BASKETPAGE>
+	<BASKETPAGE>
 		<ID>auth_dep</ID>
 		<LABEL>_DOCUMENTS_LIST_WITH_FILTERS</LABEL>
 		<NAME>documents_list_with_filter</NAME>
+		<ORIGIN>apps</ORIGIN>
+		<MODULE></MODULE>
+	</BASKETPAGE>
+	<BASKETPAGE>
+		<ID>count_list</ID>
+		<LABEL>_COUNT_LIST</LABEL>
+		<NAME>count_list</NAME>
 		<ORIGIN>apps</ORIGIN>
 		<MODULE></MODULE>
 	</BASKETPAGE>
