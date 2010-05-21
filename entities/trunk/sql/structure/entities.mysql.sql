@@ -27,7 +27,8 @@ item_id VARCHAR( 50) NOT NULL ,
 item_type VARCHAR( 255 ) NOT NULL ,
 item_mode VARCHAR( 50 ) NOT NULL,
 added_by_user VARCHAR( 50 ) NOT NULL,
- added_by_entity VARCHAR( 50 ) NOT NULL
+added_by_entity VARCHAR( 50 ) NOT NULL,
+viewed BIGINT
 ) ENGINE = MYISAM ;
 
 CREATE TABLE listmodels (

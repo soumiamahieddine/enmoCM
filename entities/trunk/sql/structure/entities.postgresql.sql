@@ -30,7 +30,8 @@ CREATE TABLE listinstance
   item_type character varying(255) NOT NULL,
   item_mode character varying(50) NOT NULL,
   added_by_user character varying(50) NOT NULL,
-  added_by_entity character varying(50) NOT NULL
+  added_by_entity character varying(50) NOT NULL,
+  viewed bigint
 )
 WITH (OIDS=FALSE);
 ALTER TABLE listinstance OWNER TO postgres;

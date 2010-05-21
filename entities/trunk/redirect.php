@@ -129,7 +129,6 @@ $frm_height = '500px';
 	}
 	$db = new dbquery();
 	$db->connect();
-
 	require_once('modules'.DIRECTORY_SEPARATOR.'entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_listdiff.php');
 	$list = new diffusion_list();
 	$arr_list = '';
@@ -141,7 +140,7 @@ $frm_height = '500px';
 		{
 			for($i=0; $i < count($arr_id); $i++)
 			{
-				$arr_list .= $arr_id[$i].'#';;
+				$arr_list .= $arr_id[$i].'#';
 				$db2 = new dbquery();
 				$db2->connect();
 				$db->query("update ".$table." set destination = '".$db->protect_string_db($values_form[$j]['VALUE'])."' where res_id = ".$arr_id[$i]);
@@ -149,10 +148,35 @@ $frm_height = '500px';
 				{
 					$db->query("update ".$table." set dest_user = '".$db->protect_string_db($_SESSION['redirect']['diff_list']['dest']['user_id'])."' where res_id = ".$arr_id[$i]);
 				}
-
+				$newDestViewed = 0;
+				// Récupère le nombre de fois où le futur destinataire principal a vu le document
+				$db->query("select viewed from ".$_SESSION['tablename']['ent_listinstance']." where coll_id = '".$db->protect_string_db($coll_id)."' and res_id = ".$arr_id[$i]." and item_type = 'user_id' and item_id = '".$_SESSION['redirect']['diff_list']['dest']['user_id']."'");
+				//$db->show();
+				$res = $db->fetch_object();
+				if($res->viewed <> "")
+				{
+					$_SESSION['redirect']['diff_list']['dest']['viewed'] = $res->viewed;
+					$newDestViewed = $res->viewed;
+				}
 				if($_SESSION['features']['dest_to_copy_during_redirection'] == 'true')
 				{
-					array_push($_SESSION['redirect']['diff_list']['copy']['users'] ,array('user_id' => $_SESSION['user']['UserId'], 'lastname' => $_SESSION['user']['LastName'], 'firstname' => $_SESSION['user']['FirstName'], 'entity_id' => $_SESSION['user']['primaryentity']['id']) );
+					$lastDestViewed = 0;
+					// Récupère le nombre de fois où l'ancien destinataire principal a vu le document
+					$db->query("select viewed from ".$_SESSION['tablename']['ent_listinstance']." where coll_id = '".$db->protect_string_db($coll_id)."' and res_id = ".$arr_id[$i]." and item_type = 'user_id' and item_mode = 'dest'");
+					//$db->show();
+					$res = $db->fetch_object();
+					if($res->viewed <> "")
+					{
+						$lastDestViewed = $res->viewed;
+					}
+					for($cptCopy=0;$cptCopy<count($_SESSION['redirect']['diff_list']['copy']['users']);$cptCopy++)
+					{
+						if($_SESSION['redirect']['diff_list']['copy']['users'][$cptCopy]['user_id'] == $_SESSION['user']['UserId'])
+						{
+							$_SESSION['redirect']['diff_list']['copy']['users'][$cptCopy]['viewed'] = $lastDestViewed;
+						}
+					}
+					array_push($_SESSION['redirect']['diff_list']['copy']['users'], array('user_id' => $_SESSION['user']['UserId'], 'lastname' => $_SESSION['user']['LastName'], 'firstname' => $_SESSION['user']['FirstName'], 'entity_id' => $_SESSION['user']['primaryentity']['id'], 'viewed' => $lastDestViewed));
 				}
 				$params = array('mode'=> 'listinstance', 'table' => $_SESSION['tablename']['ent_listinstance'], 'coll_id' => $coll_id, 'res_id' => $arr_id[$i], 'user_id' => $_SESSION['user']['UserId'], 'concat_list' => true);
 				//print_r($_SESSION['redirect']['diff_list']);exit();
@@ -164,23 +188,40 @@ $frm_height = '500px';
 		}
 		elseif($values_form[$j]['ID'] == "user")
 		{
-			for($i=0; $i < count($arr_id); $i++)
+			for($i=0;$i<count($arr_id);$i++)
 			{
-				$arr_list .= $arr_id[$i].'#';
-				// Update dest_user in res table
-				$db->query("update ".$table." set dest_user = '".$db->protect_string_db($values_form[$j]['VALUE'])."' where res_id = ".$arr_id[$i]);
-				$list->set_main_dest($values_form[$j]['VALUE'], $coll_id,$arr_id[$i]);
-				//$db->show();
 				// Update listinstance
 				$difflist['dest'] = array();
 				$difflist['copy'] = array();
 				$difflist['copy']['users'] = array();
 				$difflist['copy']['entities'] = array();
-
 				$difflist['dest']['user_id'] = $values_form[$j]['VALUE'];
+				$arr_list .= $arr_id[$i].'#';
+				// Récupère le nombre de fois où le futur destinataire principal a vu le document
+				$db->query("select viewed from ".$_SESSION['tablename']['ent_listinstance']." where coll_id = '".$db->protect_string_db($coll_id)."' and res_id = ".$arr_id[$i]." and item_type = 'user_id' and item_id = '".$difflist['dest']['user_id']."'");
+				//$db->show();
+				$res = $db->fetch_object();
+				$newDestViewed = 0;
+				if($res->viewed <> "")
+				{
+					$difflist['dest']['viewed'] = $res->viewed;
+					$newDestViewed = $res->viewed;
+				}
+				// Récupère le nombre de fois où l'ancien destinataire principal a vu le document
+				$db->query("select viewed from ".$_SESSION['tablename']['ent_listinstance']." where coll_id = '".$db->protect_string_db($coll_id)."' and res_id = ".$arr_id[$i]." and item_type = 'user_id' and item_mode = 'dest'");
+				//$db->show();
+				$res = $db->fetch_object();
+				$lastDestViewed = 0;
+				if($res->viewed <> "")
+				{
+					$lastDestViewed = $res->viewed;
+				}
+				// Update dest_user in res table
+				$db->query("update ".$table." set dest_user = '".$db->protect_string_db($values_form[$j]['VALUE'])."' where res_id = ".$arr_id[$i]);
+				$list->set_main_dest($values_form[$j]['VALUE'], $coll_id, $arr_id[$i], 'DOC', 'user_id', $newDestViewed);
 				if($_SESSION['features']['dest_to_copy_during_redirection'] == 'true')
 				{
-					array_push($difflist['copy']['users'],array('user_id' => $_SESSION['user']['UserId'], 'lastname' => $_SESSION['user']['LastName'], 'firstname' => $_SESSION['user']['FirstName'], 'entity_id' => $_SESSION['user']['primaryentity']['id'] ));
+					array_push($difflist['copy']['users'],array('user_id' => $_SESSION['user']['UserId'], 'lastname' => $_SESSION['user']['LastName'], 'firstname' => $_SESSION['user']['FirstName'], 'entity_id' => $_SESSION['user']['primaryentity']['id'], 'viewed' => $lastDestViewed));
 				}
 				$params = array('mode'=> 'listinstance', 'table' => $_SESSION['tablename']['ent_listinstance'], 'coll_id' => $coll_id, 'res_id' => $arr_id[$i], 'user_id' => $_SESSION['user']['UserId'], 'concat_list' => true);
 				$list->load_list_db($difflist, $params);
@@ -190,7 +231,7 @@ $frm_height = '500px';
 		}
 	}
 	return false;
- }
+}
 
 function manage_unlock($arr_id, $history, $id_action, $label_action, $status, $coll_id, $table)
 {
