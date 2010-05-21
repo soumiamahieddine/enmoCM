@@ -23,6 +23,7 @@
 *
 * @file view.php
 * @author Claire Figueras <dev@maarch.org>
+* @author Laurent Giovannoni <dev@maarch.org>
 * @date $date$
 * @version $Revision$
 * @ingroup indexing_searching_mlb
@@ -44,7 +45,6 @@ else
 {
 	$s_id = "";
 }
-
 if($s_id =='' )
 {
 	$_SESSION['error'] = _THE_DOC.' '._IS_EMPTY;
@@ -56,7 +56,6 @@ else
 	$connexion = new dbquery();
 	$connexion->connect();
 	$table ="";
-
 	if(isset($_SESSION['collection_id_choice']) && !empty($_SESSION['collection_id_choice']))
 	{
 		$table = $sec->retrieve_view_from_coll_id($_SESSION['collection_id_choice']);
@@ -77,9 +76,7 @@ else
 			$table = $_SESSION['collections'][0]['table'];
 		}
 	}
-
 	$where2 = "";
-
 	if($_SESSION['origin'] <> "basket" && $_SESSION['origin'] <> "workflow")
 	{
 		$cpt_access_to_coll = 0;
@@ -107,7 +104,6 @@ else
 	else
 	{
 		$line = $connexion->fetch_object();
-
 		$docserver = $line->docserver_id;
 		$path = $line->path;
 		$filename = $line->filename;
@@ -121,7 +117,6 @@ else
 		$file = $docserver.$path.$filename;
 		$file = str_replace("#",DIRECTORY_SEPARATOR,$file);
 		$use_tiny_mce = false;
-
 		if(strtolower($format) ==  'maarch' && $core_tools->is_module_loaded('templates'))
 		{
 			$type_state = true;
@@ -145,7 +140,13 @@ else
 					$users = new history();
 					$users->add($table, $s_id ,"VIEW", _VIEW_DOC_NUM."".$s_id, $_SESSION['config']['databasetype'],'indexing_searching');
 				}
-
+				//count number of viewed in listinstance for the user
+				if($core_tools->is_module_loaded('entities'))
+				{
+					require_once("modules".DIRECTORY_SEPARATOR."entities".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_manage_entities.php");
+					$ent = new entity();
+					$ent->increaseListinstanceViewed($s_id);
+				}
 				if(!$use_tiny_mce || strtolower($format) <>  'maarch')
 				{
 					$mime_type = $is->get_mime_type($format);
@@ -174,7 +175,6 @@ else
 				elseif($use_tiny_mce && strtolower($format) ==  'maarch')
 				{
 					$myfile = fopen($file, "r");
-
 					$data = fread($myfile, filesize($file));
 					fclose($myfile);
 					$content = stripslashes($data);
@@ -182,13 +182,12 @@ else
 					$core_tools->load_header();
 					?>
                     <body id="validation_page" onLoad="javascript:moveTo(0,0);resizeTo(screen.width, screen.height);">
-                     <div id="template_content" style="width:100%;"  >
-
-                    <?php  echo $content;?>
-
-                    </div>
+                    	<div id="template_content" style="width:100%;"  >
+                    	<?php  echo $content;?>
+                    	</div>
                     </body>
-                    </html> <?php
+                    </html> 
+                    <?php
 				}
 				else
 				{
