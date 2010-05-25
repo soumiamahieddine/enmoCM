@@ -429,7 +429,14 @@ if(count($_REQUEST['meta']) > 0)
 				}
 				else
 				{
-					$where_request .= " (".$req->extract_date("creation_date")." >= '".$func->format_date_db($_REQUEST['creation_date_from'])."') and ";
+					if($_SESSION['config']['databasetype'] == 'ORACLE')
+					{
+						$where_request .= " (creation_date >= to_date('".$func->format_date_db($_REQUEST['creation_date_from'])."', 'DD/MM/YYYY') ) and ";
+					}
+					else
+					{
+						$where_request .= " (".$req->extract_date("creation_date")." >= '".$func->format_date_db($_REQUEST['creation_date_from'])."') and ";
+					}
 					$json_txt .= " 'creation_date_from' : ['".trim($_REQUEST['creation_date_from'])."'],";
 				}
 			}
@@ -455,7 +462,14 @@ if(count($_REQUEST['meta']) > 0)
 				}
 				else
 				{
-					$where_request .= " (".$req->extract_date("closing_date")." >= '".$func->format_date_db($_REQUEST['closing_date_from'])."') and ";
+					if($_SESSION['config']['databasetype'] == 'ORACLE')
+					{
+						$where_request .= " (closing_date >= to_date('".$func->format_date_db($_REQUEST['closing_date_from'])."', 'DD/MM/YYYY') ) and ";
+					}
+					else
+					{
+						$where_request .= " (".$req->extract_date("closing_date")." >= '".$func->format_date_db($_REQUEST['closing_date_from'])."') and ";
+					}
 					$json_txt .= "'closing_date_from' : ['".trim($_REQUEST['closing_date_from'])."'],";
 				}
 			}
@@ -468,7 +482,14 @@ if(count($_REQUEST['meta']) > 0)
 				}
 				else
 				{
-					$where_request .= " (".$req->extract_date("closing_date")." <= '".$func->format_date_db($_REQUEST['closing_date_to'])."') and ";
+					if($_SESSION['config']['databasetype'] == 'ORACLE')
+					{
+						$where_request .= " (closing_date <= to_date('".$func->format_date_db($_REQUEST['closing_date_to'])."', 'DD/MM/YYYY') ) and ";
+					}
+					else
+					{
+						$where_request .= " (".$req->extract_date("closing_date")." <= '".$func->format_date_db($_REQUEST['closing_date_to'])."') and ";
+					}
 					$json_txt .= "'closing_date_to' : ['".trim($_REQUEST['closing_date_to'])."'],";
 				}
 			}
@@ -481,7 +502,14 @@ if(count($_REQUEST['meta']) > 0)
 				}
 				else
 				{
-					$where_request .= " (".$req->extract_date("process_limit_date")." >= '".$func->format_date_db($_REQUEST['process_limit_date_from'])."') and ";
+					if($_SESSION['config']['databasetype'] == 'ORACLE')
+					{
+						$where_request .= " (process_limit_date >= to_date('".$func->format_date_db($_REQUEST['process_limit_date_from'])."', 'DD/MM/YYYY') ) and ";
+					}
+					else
+					{
+						$where_request .= " (".$req->extract_date("process_limit_date")." >= '".$func->format_date_db($_REQUEST['process_limit_date_from'])."') and ";
+					}
 					$json_txt .= "'process_limit_date_from' : ['".trim($_REQUEST['process_limit_date_from'])."'],";
 				}
 			}
@@ -494,7 +522,14 @@ if(count($_REQUEST['meta']) > 0)
 				}
 				else
 				{
-					$where_request .= " (".$req->extract_date("process_limit_date")." <= '".$func->format_date_db($_REQUEST['process_limit_date_to'])."') and ";
+					if($_SESSION['config']['databasetype'] == 'ORACLE')
+					{
+						$where_request .= " (process_limit_date <= to_date('".$func->format_date_db($_REQUEST['process_limit_date_to'])."', 'DD/MM/YYYY') ) and ";
+					}
+					else
+					{
+						$where_request .= " (".$req->extract_date("process_limit_date")." <= '".$func->format_date_db($_REQUEST['process_limit_date_to'])."') and ";
+					}
 					$json_txt .= "'process_limit_date_to' : ['".trim($_REQUEST['process_limit_date_to'])."'],";
 				}
 			}
@@ -508,17 +543,41 @@ if(count($_REQUEST['meta']) > 0)
 					$json_txt .= "'".$_REQUEST['status_chosen'][$get_i]."',";
 					if ($_REQUEST['status_chosen'][$get_i]=="REL1")
 					{
-						$where_request .="( ".$req->extract_date('alarm1_date')." <= ".$req->current_datetime()." and ".$req->extract_date('alarm2_date')." > ".$req->current_datetime()." and status <> 'END') or ";
+						if($_SESSION['config']['databasetype'] == 'ORACLE')
+						{
+							$where_request .= " (alarm1_date <= ".$req->current_datetime()." and alarm2_date > ".$req->current_datetime()." and status <> 'END') or ";
+						}
+						else
+						{
+							$where_request .="( ".$req->extract_date('alarm1_date')." <= ".$req->current_datetime()." and ".$req->extract_date('alarm2_date')." > ".$req->current_datetime()." and status <> 'END') or ";
+						}
+						
 					}
 					else
 					{
 						if ($_REQUEST['status_chosen'][$get_i]=="REL2")
 						{
-							$where_request .="( ".$req->current_datetime()." >= ".$req->extract_date('alarm2_date')."  and status <> 'END') or ";
+							if($_SESSION['config']['databasetype'] == 'ORACLE')
+							{
+								$where_request .="( ".$req->current_datetime()." >= alarm2_date and status <> 'END') or ";
+							}
+							else
+							{
+								$where_request .="( ".$req->current_datetime()." >= ".$req->extract_date('alarm2_date')."  and status <> 'END') or ";
+							}
+							
 						}
 						elseif ($_REQUEST['status_chosen'][$get_i]=="LATE")
 						{
-							$where_request .="( process_limit_date is not null and ".$req->current_datetime()." > ".$req->extract_date('process_limit_date')."  and status <> 'END') or ";
+							if($_SESSION['config']['databasetype'] == 'ORACLE')
+							{
+								$where_request .="( process_limit_date is not null and ".$req->current_datetime()." > process_limit_date  and status <> 'END') or ";
+							}
+							else
+							{
+								$where_request .="( process_limit_date is not null and ".$req->current_datetime()." > ".$req->extract_date('process_limit_date')."  and status <> 'END') or ";
+							}
+							
 						}
 						else
 						{
@@ -660,7 +719,14 @@ if(count($_REQUEST['meta']) > 0)
 				}
 				else
 				{
-					$where_request .= " (".$req->extract_date("admission_date")."  >= '".$func->format_date_db($_REQUEST['admission_date_from'])."') and ";
+					if($_SESSION['config']['databasetype'] == 'ORACLE')
+					{
+						$where_request .= " (admission_date >= to_date('".$func->format_date_db($_REQUEST['admission_date_from'])."', 'DD/MM/YYYY') ) and ";
+					}
+					else
+					{
+						$where_request .= " (".$req->extract_date("admission_date")." >= '".$func->format_date_db($_REQUEST['admission_date_from'])."') and ";
+					}
 					$json_txt .= " 'admission_date_from' : ['".trim($_REQUEST['admission_date_from'])."'],";
 				}
 			}
@@ -673,7 +739,15 @@ if(count($_REQUEST['meta']) > 0)
 				}
 				else
 				{
-					$where_request .= " (".$req->extract_date("admission_date")." <=	'".$func->format_date_db($_REQUEST['admission_date_to'])."') and ";
+					if($_SESSION['config']['databasetype'] == 'ORACLE')
+					{
+						$where_request .= " (admission_date <= to_date('".$func->format_date_db($_REQUEST['admission_date_to'])."', 'DD/MM/YYYY') ) and ";
+					}
+					else
+					{
+						$where_request .= " (".$req->extract_date("admission_date")." <= '".$func->format_date_db($_REQUEST['admission_date_to'])."') and ";
+					}
+					
 					$json_txt .= " 'admission_date_to' : ['".trim($_REQUEST['admission_date_to'])."'],";
 				}
 			}
@@ -686,7 +760,14 @@ if(count($_REQUEST['meta']) > 0)
 				}
 				else
 				{
-					$where_request .= " (".$req->extract_date("doc_date")." >= '".$func->format_date_db($_REQUEST['doc_date_from'])."') and ";
+					if($_SESSION['config']['databasetype'] == 'ORACLE')
+					{
+						$where_request .= " (doc_date >= to_date('".$func->format_date_db($_REQUEST['doc_date_from'])."', 'DD/MM/YYYY') ) and ";
+					}
+					else
+					{
+						$where_request .= " (".$req->extract_date("doc_date")." >= '".$func->format_date_db($_REQUEST['doc_date_from'])."') and ";
+					}
 					$json_txt .= " 'doc_date_from' : ['".trim($_REQUEST['doc_date_from'])."'],";
 				}
 			}
@@ -699,7 +780,15 @@ if(count($_REQUEST['meta']) > 0)
 				}
 				else
 				{
-					$where_request .= " (".$req->extract_date("doc_date")." <=	'".$func->format_date_db($_REQUEST['doc_date_to'])."') and ";
+					if($_SESSION['config']['databasetype'] == 'ORACLE')
+					{
+						$where_request .= " (doc_date <= to_date('".$func->format_date_db($_REQUEST['doc_date_to'])."', 'DD/MM/YYYY') ) and ";
+					}
+					else
+					{
+						$where_request .= " (".$req->extract_date("doc_date")." <= '".$func->format_date_db($_REQUEST['doc_date_to'])."') and ";
+					}
+					
 					$json_txt .= " 'doc_date_to' : ['".trim($_REQUEST['doc_date_to'])."'],";
 				}
 			}
