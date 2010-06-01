@@ -324,6 +324,7 @@ INSERT INTO parameters (id, param_value_string, param_value_int) VALUES
 ('ar_index_pparker_market_document', NULL, 3),
 ('postindexing_max_files', NULL, 15),
 ('postindexing_workbatch', NULL, 40),
+('database_version', NULL, 112),
 ('postindexing_max_time', NULL, 600);
 
 INSERT INTO templates (id, label, creation_date, template_comment, content) VALUES (2, 'AR_MAARCH', '2009-08-20 16:01:00', 'Accusé de réception Maarch', '<p style="TEXT-ALIGN: left"><img src="img/default_maarch.gif" alt="" width="278" height="80" />&nbsp;</p>
@@ -592,6 +593,7 @@ INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos
 INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (67, 'FR01', 'C', 3, 1, 4, 4);
 INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (68, 'FR01', 'C', 3, 2, 4, 4);
 INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (69, 'FR01', 'C', 3, 3, 4, 4);
+
 INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (70, 'FR01', 'C', 4, 1, 4, 4);
 INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (71, 'FR01', 'C', 4, 2, 4, 4);
 INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos_max_uc, pos_available_uc) VALUES (72, 'FR01', 'C', 4, 3, 4, 4);
