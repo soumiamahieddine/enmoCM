@@ -3,6 +3,8 @@
 * File : login.php
 *
 * Identification form : Login page
+* Identification form : Login page
+* Identification form : Login page
 *
 * @package  Maarch PeopleBox 1.1
 * @version 1.1
