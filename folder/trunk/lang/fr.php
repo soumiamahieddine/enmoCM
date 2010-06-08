@@ -62,6 +62,7 @@ if (!defined('_FOLDERTYPE_LABEL'))  define('_FOLDERTYPE_LABEL','Libell&eacute; d
 if (!defined('_INFOS_FOLDERS'))  define('_INFOS_FOLDERS','Infos dossier');
 
 if (!defined('_CHOOSE_FOLDER'))  define('_CHOOSE_FOLDER', 'Choisissez un dossier');
+if (!defined('_ON_FOLDER_NUM'))  define('_ON_FOLDER_NUM', ' sur le dossier n&deg;');
 
 
 //////////////create_folder.php

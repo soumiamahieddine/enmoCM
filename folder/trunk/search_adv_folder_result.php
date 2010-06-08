@@ -185,9 +185,9 @@ if(empty($_SESSION['error']))
 		$order = trim($_REQUEST['order']);
 	}
 	$field = '';
-	if(isset($_REQUEST['field']) && !empty($_REQUEST['field']))
+	if(isset($_REQUEST['order_field']) && !empty($_REQUEST['order_field']))
 	{
-		$field = trim($_REQUEST['field']);
+		$field = trim($_REQUEST['order_field']);
 	}
 	$orderstr = $list->define_order($order, $field);
 
