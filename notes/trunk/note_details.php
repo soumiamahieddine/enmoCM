@@ -30,9 +30,16 @@ $identifier = '';
 if(empty($_SESSION['collection_id_choice']))
 {
 	$_SESSION['collection_id_choice'] = $_SESSION['user']['collections'][0];
+	$coll_id = $_SESSION['collection_id_choice'] ;
 }
-$coll_id = $_SESSION['collection_id_choice'] ;
+elseif(isset($_REQUEST['coll_id'])&& empty($coll_id))
+{
+	$coll_id = $_REQUEST['coll_id'];
+}
+
 $view = $sec->retrieve_view_from_coll_id($coll_id);
+$table = $sec->retrieve_table_from_coll($coll_id);
+
 $error = '';
 if(isset($_REQUEST['modify']) )
 {
@@ -57,9 +64,16 @@ if(isset($_REQUEST['modify']) )
 			require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 			$hist = new history();								
 			$hist->add($_SESSION['tablename']['not_notes'], $id ,"UP", _NOTE_UPDATED.' ('.$id.')', $_SESSION['config']['databasetype'], 'notes');
-			$hist->add($view, $identifier ,"UP", _NOTE_UPDATED._ON_DOC_NUM.$identifier.' ('.$id.')', $_SESSION['config']['databasetype'], 'notes');
+			if($_SESSION['origin'] == "show_folder" )
+			{
+				$hist->add($table, $identifier ,"UP", _NOTE_UPDATED._ON_FOLDER_NUM.$identifier.' ('.$id.')', $_SESSION['config']['databasetype'], 'notes');
+			}
+			else
+			{
+				$hist->add($view, $identifier ,"UP", _NOTE_UPDATED._ON_DOC_NUM.$identifier.' ('.$id.')', $_SESSION['config']['databasetype'], 'notes');
+			}
 		}
-		$_SESSION['error'] = _NOTES_MODIFIED;
+		//$_SESSION['error'] = _NOTES_MODIFIED;
 		?>
        <script language="javascript">window.opener.location.reload();self.close();</script>
         <?php 
@@ -79,9 +93,16 @@ if(isset($_REQUEST['delete']) )
 		require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 		$hist = new history();								
 		$hist->add($_SESSION['tablename']['not_notes'], $id ,"DEL", _NOTES_DELETED.' ('.$id.')', $_SESSION['config']['databasetype'], 'notes');
-		$hist->add($view, $identifier ,"DEL", _NOTES_DELETED._ON_DOC_NUM.$identifier.' ('.$id.')', $_SESSION['config']['databasetype'], 'notes');
+		if($_SESSION['origin'] == "show_folder" )
+		{
+		$hist->add($table, $identifier ,"DEL", _NOTES_DELETED._ON_FOLDER_NUM.$identifier.' ('.$id.')', $_SESSION['config']['databasetype'], 'notes');
+		}
+		else
+		{
+			$hist->add($view, $identifier ,"DEL", _NOTES_DELETED._ON_DOC_NUM.$identifier.' ('.$id.')', $_SESSION['config']['databasetype'], 'notes');
+		}
 	}
-	$_SESSION['error'] = _NOTES_DELETED;
+	//$_SESSION['error'] = _NOTES_DELETED;
 	?>
       <script language="javascript">window.opener.location.reload();self.close();</script>
        <?php 
@@ -136,7 +157,7 @@ else
 	from ".$_SESSION['tablename']['not_notes']." n
 	inner join ".$_SESSION['tablename']['users']." u on n.user_id  = u.user_id 
 	where n.id = ".$s_id." ".$where);
-	
+	//$db->show();
 	$line = $db->fetch_object();
 	$user = $func->show_string($line->lastname." ".$line->firstname);
 	$text = $func->show_string($line->note_text);

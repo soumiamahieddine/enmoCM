@@ -22,6 +22,7 @@
 if (!defined('_ADD_NOTE'))  define('_ADD_NOTE','Ajouter une note');
 if (!defined('_READ'))  define('_READ', 'Lire');
 if (!defined('_ADDITION_NOTE'))  define('_ADDITION_NOTE', 'Ajout d&rsquo;une note');
+if (!defined('_NOTES_ADDED'))  define('_NOTES_ADDED', 'Note ajout&eacute;e');
 if (!defined('_NOTES_DELETED'))  define('_NOTES_DELETED', 'Note supprim&eacute;e');
 if (!defined('_NOTES_MODIFIED'))  define('_NOTES_MODIFIED', 'Note modifi&eacute;e');
 if (!defined('_NOTE_UPDATED'))  define('_NOTE_UPDATED', 'Note modifi&eacute;e');
