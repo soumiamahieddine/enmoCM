@@ -32,10 +32,20 @@ if($_SESSION['mode_editor'])
 		theme_advanced_toolbar_location : "top",
 		//invalid_elements : "a",
 		theme_<?php  echo $theme;?>_styles : "Header 1=header1;Header 2=header2;Header 3=header3;Table Row=tableRow1" // Theme specific setting CSS classes
-		<?php  if($show_maarch_list)
+		<?php  
+		if($show_maarch_list)
 		{
-			echo ', mapping_file : "'.$_SESSION['config']['coreurl'].'modules/templates/xml/mapping_file.xml"';
-		}?>
+			//echo ', mapping_file : "'.$_SESSION['config']['coreurl'].'modules/templates/xml/mapping_file.xml"';
+			if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR."modules".DIRECTORY_SEPARATOR."templates".DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."mapping_file.xml"))
+			{
+				echo ', mapping_file : "'.$_SESSION['config']['coreurl'].'custom/'.$_SESSION['custom_override_id'].'/modules/templates/xml/mapping_file.xml"';
+			}
+			else
+			{
+				echo ', mapping_file : "'.$_SESSION['config']['coreurl'].'modules/templates/xml/mapping_file.xml"';
+			}
+		}
+		?>
 	});
 
 	// Custom save callback, gets called when the contents is to be submitted
