@@ -1116,6 +1116,7 @@ class entity extends dbquery
 				$element_found = true;
 				$haveChild = true;
 			}
+			
 			for($i=0; $i<count($_SESSION['collections']); $i++)
 			{
 				$this->query("select res_id from ".$_SESSION['collections'][$i]['view']." where destination = '".$this->protect_string_db($s_id)."'");
@@ -1126,24 +1127,32 @@ class entity extends dbquery
 					array_push($tables, $_SESSION['collections'][$i]['table']);
 				}
 			}
-			$this->query("select user_id from ".$_SESSION['tablename']['ent_users_entities']." where entity_id = '".$this->protect_string_db($s_id)."'");
-			if($this->nb_result() > 0)
+			if($admin->is_module_loaded('entities'))
 			{
-				$element_found = true;
-				$nb_users = $this->nb_result();
+				$this->query("select user_id from ".$_SESSION['tablename']['ent_users_entities']." where entity_id = '".$this->protect_string_db($s_id)."'");
+				if($this->nb_result() > 0)
+				{
+					$element_found = true;
+					$nb_users = $this->nb_result();
+				}
+				
+				$this->query("select system_id from ".$_SESSION['tablename']['ent_groupbasket_redirect']." where entity_id = '".$this->protect_string_db($s_id)."'");
+				if($this->nb_result() > 0)
+				{
+					$element_found = true;
+					$nb_redirect_baskets = $this->nb_result();
+				}
 			}
-			$this->query("select system_id from ".$_SESSION['tablename']['ent_groupbasket_redirect']." where entity_id = '".$this->protect_string_db($s_id)."'");
-			if($this->nb_result() > 0)
+			if($admin->is_module_loaded('templates'))
 			{
-				$element_found = true;
-				$nb_redirect_baskets = $this->nb_result();
+				$this->query("select template_id from ".$_SESSION['tablename']['temp_templates_association']." where value_field = '".$this->protect_string_db($s_id)."' and what = 'destination'");
+				if($this->nb_result() > 0)
+				{
+					$element_found = true;
+					$nb_templates = $this->nb_result();
+				}
 			}
-			$this->query("select template_id from ".$_SESSION['tablename']['temp_templates_association']." where value_field = '".$this->protect_string_db($s_id)."' and what = 'destination'");
-			if($this->nb_result() > 0)
-			{
-				$element_found = true;
-				$nb_templates = $this->nb_result();
-			}
+
 			$this->query("select res_id from ".$_SESSION['tablename']['ent_listinstance']." where item_id = '".$this->protect_string_db($s_id)."' and item_type = 'entity_id'");
 			if($this->nb_result() > 0)
 			{

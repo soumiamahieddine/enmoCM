@@ -303,11 +303,12 @@ class diffusion_list extends dbquery
 				}
 				//$this->show();
 			}
+		
+			$this->query("select item_id from ".$params['table']." where coll_id = '".$this->protect_string_db(trim($params['coll_id']))."' and res_id = ".$params['res_id']." and listinstance_type = '".$this->protect_string_db(trim($list_type))."' and item_type = 'user_id' and item_mode= 'dest'");
+			$result = $this->fetch_object();
+			$itemId = $result->item_id;
+			$this->query("delete from ".$params['table']." where coll_id = '".$this->protect_string_db(trim($params['coll_id']))."'  and listinstance_type = '".$this->protect_string_db(trim($list_type))."' and res_id = ".trim($params['res_id'])." and item_mode = 'cc' and item_type = 'user_id' and item_id = '".$itemId."'");
 		}
-		$this->query("select item_id from ".$params['table']." where coll_id = '".$this->protect_string_db(trim($params['coll_id']))."' and res_id = ".$params['res_id']." and listinstance_type = '".$this->protect_string_db(trim($list_type))."' and item_type = 'user_id' and item_mode= 'dest'");
-		$result = $this->fetch_object();
-		$itemId = $result->item_id;
-		$this->query("delete from ".$params['table']." where coll_id = '".$this->protect_string_db(trim($params['coll_id']))."'  and listinstance_type = '".$this->protect_string_db(trim($list_type))."' and res_id = ".trim($params['res_id'])." and item_mode = 'cc' and item_type = 'user_id' and item_id = '".$itemId."'");
 	}
 
 	/**
