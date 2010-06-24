@@ -821,7 +821,7 @@ class types extends dbquery
 		for($i=0; $i<count($mandatory_indexes);$i++)
 		{
 			if( ($indexes[$mandatory_indexes[$i]]['type'] == 'string' && trim($values[$mandatory_indexes[$i]]) == '') ||
-				(($indexes[$mandatory_indexes[$i]]['type'] == 'integer' || $indexes[$mandatory_indexes[$i]]['type'] == 'float') && preg_match("/^[0-9]+$/",$values[$mandatory_indexes[$i]])== 0) || (empty($values[$mandatory_indexes[$i]]) && $indexes[$mandatory_indexes[$i]]['type'] == 'date'))  
+				(($indexes[$mandatory_indexes[$i]]['type'] == 'integer' || $indexes[$mandatory_indexes[$i]]['type'] == 'float') && preg_match("/^[0-9.]+$/",$values[$mandatory_indexes[$i]])== 0) || (empty($values[$mandatory_indexes[$i]]) && $indexes[$mandatory_indexes[$i]]['type'] == 'date'))  
 			{
 				$_SESSION['error'] = $indexes[$mandatory_indexes[$i]]['label'].' <br/>'._IS_EMPTY.'<br/>';
 				return false;
@@ -848,7 +848,7 @@ class types extends dbquery
 			{
 				$field_value = $this->wash($values[$key],"no",$indexes[$key]['label']);
 			}
-			else if($indexes[$key]['type'] == 'float'  && preg_match("/^[0-9]+$/",$values[$key])== 1) // && $values[$key] >= 0
+			else if($indexes[$key]['type'] == 'float'  && preg_match("/^[0-9.]+$/",$values[$key])== 1) // && $values[$key] >= 0
 			{
 				$field_value = $this->wash($values[$key],"float",$indexes[$key]['label']);
 			}
@@ -937,7 +937,7 @@ class types extends dbquery
 			{
 				array_push($data, array('column' => $key, 'value' => $this->protect_string_db($values[$key]), 'type' => "string"));
 			}
-			else if($indexes[$key]['type'] == 'float' && preg_match("/^[0-9]+$/",$values[$key])== 1)
+			else if($indexes[$key]['type'] == 'float' && preg_match("/^[0-9.]+$/",$values[$key])== 1)
 			{
 				array_push($data, array('column' => $key, 'value' => $values[$key], 'type' => "float"));
 			}
