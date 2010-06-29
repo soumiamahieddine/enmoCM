@@ -75,6 +75,6 @@ else
 
 </form>
 </div>
-<?php $admin->load_js();?>
+<?php $core_tools->load_js();?>
 </body>
 </html>

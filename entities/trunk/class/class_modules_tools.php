@@ -490,13 +490,13 @@ class entities extends dbquery
 		{
 			if($bask_abs[$i]['abs_basket'])
 			{
-				$db->query("select uc.group_id from ".$_SESSION['tablename']['usergroup_content']." uc , ".$_SESSION['tablename']['usergroups']." u where uc.user_id ='".$user_id."' and u.group_id = uc.group_id and u.enabled= 'Y' and uc.primary_group = 'Y'");
+				$db->query("select uc.group_id from ".$_SESSION['tablename']['usergroup_content']." uc , ".$_SESSION['tablename']['usergroups']." u where uc.user_id ='".$bask_abs[$i]['basket_owner']."' and u.group_id = uc.group_id and u.enabled= 'Y' and uc.primary_group = 'Y'");
 				//$db->show();
 				$res = $db->fetch_object();
 				$primary_group = $res->group_id;
 				$tmp_basket_id = preg_replace('/_'.$bask_abs[$i]['basket_owner'].'$/', '', $bask_abs[$i]['id']);
 				$db->query("select distinct action_id from ".$_SESSION['tablename']['ent_groupbasket_redirect']." where group_id = '".$this->protect_string_db(trim($primary_group))."' and basket_id = '".$this->protect_string_db(trim($tmp_basket_id))."'");
-				//$db->show();
+			//	$db->show();
 				while($line = $db->fetch_object())
 				{
 					$action_id = $line->action_id;

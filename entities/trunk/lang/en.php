@@ -109,6 +109,12 @@ if (!defined('_DIFF_LIST')) define('_DIFF_LIST', 'Mailing list');
 if (!defined('_NO_USER')) define('_NO_USER', 'No user');
 if (!defined('_MUST_CHOOSE_DEST'))  define('_MUST_CHOOSE_DEST', 'You must choose the main recipient');
 
+if (!defined('_ENTITIES__DEL'))  define('_ENTITIES__DEL', 'Deletion');
+if (!defined('_ENTITY_DELETION'))  define('_ENTITY_DELETION', 'Entity deletion');
+if (!defined('_THERE_ARE_NOW'))  define('_THERE_ARE_NOW', 'There are now');
+if (!defined('_DOC_IN_THE_DEPARTMENT'))  define('_DOC_IN_THE_DEPARTMENT', 'documenys in the department');
+if (!defined('_DEL_AND_REAFFECT'))  define('_DEL_AND_REAFFECT', 'Delete and reaffect');
+if (!defined('_THE_ENTITY'))  define('_THE_ENTITY', 'The entity');
 
 /******************** Keywords Helper ************/
 if (!defined('_HELP_KEYWORD1')) define('_HELP_KEYWORD1', 'Every department the user belongs to. Does not include sub-departments');

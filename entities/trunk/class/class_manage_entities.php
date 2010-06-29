@@ -863,11 +863,10 @@ class entity extends dbquery
 			elseif($mode == 'up')
 			{
 				$this->query('UPDATE '.$_SESSION['tablename']['ent_entities']." set entity_label = '".$this->protect_string_db($_SESSION['m_admin']['entity']['label'])."' , short_label = '".$this->protect_string_db($_SESSION['m_admin']['entity']['short_label'])."' , adrs_1 = '".$this->protect_string_db($_SESSION['m_admin']['entity']['adrs1'])."', adrs_2 = '".$this->protect_string_db($_SESSION['m_admin']['entity']['adrs2'])."', adrs_3 = '".$this->protect_string_db($_SESSION['m_admin']['entity']['adrs3'])."', zipcode = '".$this->protect_string_db($_SESSION['m_admin']['entity']['zcode'])."', city = '".$this->protect_string_db($_SESSION['m_admin']['entity']['city'])."', country = '".$this->protect_string_db($_SESSION['m_admin']['entity']['country'])."', email = '".$this->protect_string_db($_SESSION['m_admin']['entity']['email'])."', business_id = '".$this->protect_string_db($_SESSION['m_admin']['entity']['business'])."', parent_entity_id = '".$_SESSION['m_admin']['entity']['parent']."', entity_type = '".$_SESSION['m_admin']['entity']['type']."' where entity_id = '".$_SESSION['m_admin']['entity']['entityId'] ."'");
-					$_SESSION['service_tag'] = 'entity_up_db';
-					$core->execute_modules_services($_SESSION['modules_services'], 'entity_up_db', "include");
-					$core->execute_app_services($_SESSION['app_services'], 'entity_up_db', 'include');
-					$_SESSION['service_tag'] = '';
-
+				$_SESSION['service_tag'] = 'entity_up_db';
+				$core->execute_modules_services($_SESSION['modules_services'], 'entity_up_db', "include");
+				$core->execute_app_services($_SESSION['app_services'], 'entity_up_db', 'include');
+				$_SESSION['service_tag'] = '';
 				if($_SESSION['history']['entityup'] == "true")
 				{
 					require('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_history.php');
@@ -1127,21 +1126,17 @@ class entity extends dbquery
 					array_push($tables, $_SESSION['collections'][$i]['table']);
 				}
 			}
-			if($admin->is_module_loaded('entities'))
+			$this->query("select user_id from ".$_SESSION['tablename']['ent_users_entities']." where entity_id = '".$this->protect_string_db($s_id)."'");
+			if($this->nb_result() > 0)
 			{
-				$this->query("select user_id from ".$_SESSION['tablename']['ent_users_entities']." where entity_id = '".$this->protect_string_db($s_id)."'");
-				if($this->nb_result() > 0)
-				{
-					$element_found = true;
-					$nb_users = $this->nb_result();
-				}
-				
-				$this->query("select system_id from ".$_SESSION['tablename']['ent_groupbasket_redirect']." where entity_id = '".$this->protect_string_db($s_id)."'");
-				if($this->nb_result() > 0)
-				{
-					$element_found = true;
-					$nb_redirect_baskets = $this->nb_result();
-				}
+				$element_found = true;
+				$nb_users = $this->nb_result();
+			}
+			$this->query("select system_id from ".$_SESSION['tablename']['ent_groupbasket_redirect']." where entity_id = '".$this->protect_string_db($s_id)."'");
+			if($this->nb_result() > 0)
+			{
+				$element_found = true;
+				$nb_redirect_baskets = $this->nb_result();
 			}
 			if($admin->is_module_loaded('templates'))
 			{
@@ -1152,7 +1147,6 @@ class entity extends dbquery
 					$nb_templates = $this->nb_result();
 				}
 			}
-
 			$this->query("select res_id from ".$_SESSION['tablename']['ent_listinstance']." where item_id = '".$this->protect_string_db($s_id)."' and item_type = 'entity_id'");
 			if($this->nb_result() > 0)
 			{
