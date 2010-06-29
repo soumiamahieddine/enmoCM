@@ -1,4 +1,4 @@
-<!--
+
 /**
  * Load a query in the Advanced Search page
  *
@@ -507,4 +507,4 @@ function del_query_db( id_query, id_list, id_form_to_load, sql_error_txt, server
 	    });
 	}
 }
--->
+

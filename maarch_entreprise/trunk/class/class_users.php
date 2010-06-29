@@ -538,8 +538,6 @@ class users extends dbquery
 			$_SESSION['m_admin']['users']['Mail']  = $this->wash($_POST['Mail'], "mail", _MAIL, 'yes', 0, 255);
 		}
 
-
-
 		if($_SESSION['m_admin']['users']['UserId'] <> "superadmin")
 		{
 			$ugc = new usergroup_content();

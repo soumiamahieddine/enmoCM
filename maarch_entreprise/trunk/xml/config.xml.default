@@ -171,7 +171,7 @@
    		<moduleid>cases</moduleid>
 		<comment>_CASES_COMMENT</comment>
 	</MODULES>
-	<!--<MODULES>
+<!--	<MODULES>
    		<moduleid>doc_converter</moduleid>
 		<comment>_DOC_CONVERTER_COMMENT</comment>
 	</MODULES>-->
@@ -203,7 +203,7 @@
    		<moduleid>reports</moduleid>
 		<comment>_REPORTS_COMMENT</comment>
 	</MODULES>
-		<MODULES>
+	<!--	<MODULES>
    		<moduleid>postindexing</moduleid>
 		<comment>_POSTINDEXING</comment>
 	</MODULES>

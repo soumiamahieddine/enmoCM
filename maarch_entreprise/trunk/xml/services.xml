@@ -81,7 +81,7 @@
    <style>view_history</style>
    <enabled>true</enabled>
  </SERVICE>
- <SERVICE>
+ <!--<SERVICE>
    <id>xml_param_services</id>
    <name>_XML_PARAM_SERVICE</name>
    <comment>_XML_PARAM_SERVICE_DESC</comment>
@@ -90,7 +90,7 @@
    <system_service>false</system_service>
    <style>xml_param_services</style>
    <enabled>true</enabled>
- </SERVICE>
+ </SERVICE>-->
  <SERVICE>
    <id>admin_status</id>
    <name>_ADMIN_STATUS</name>

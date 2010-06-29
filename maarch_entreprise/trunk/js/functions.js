@@ -1,4 +1,4 @@
-<!--
+
 // Adding prototype and other js scripts
 //~ document.write('<script type="text/javascript" src="'+app_path+'prototype.js"></script>');
 //~ document.write('<script type="text/javascript" src="'+app_path+'scriptaculous.js&load=effects,slider"></script>');
@@ -317,7 +317,7 @@ function repost(php_file,update_divs,fields,action,timeout)
 	/************** fonction pour afficher/cacher le menu     ***********/
 
 	function ShowHideMenu(menu,onouoff) {
-		if ($) {
+		if (typeof($) == 'function') {
 			monmenu = $(menu);
 			mondivmenu = $("menu");
 			monadmin = $("admin");
@@ -362,7 +362,7 @@ function repost(php_file,update_divs,fields,action,timeout)
 
 	function HideMenu(menu) {
 		var massnav = null ;
-		if ($) {
+		if (typeof($) == 'function') {
 
 			if (menu == "ssnav")
 			{
@@ -860,8 +860,8 @@ function expertmodeview(coll_id)
 	}
 	if( mode_frm == 'fullscreen')
 	{
-		width = (screen.availWidth-10)+'px';
-		height = (screen.availHeight-10)+'px';
+		width = (screen.availWidth)+'px';
+		height = (screen.availHeight)+'px';
 	}
 
 	if(id_mod && id_mod!='')
@@ -876,7 +876,13 @@ function expertmodeview(coll_id)
 	var tmp_width = width;
 	var tmp_height = height;
 
-    var layer = new Element('div', {'id':id_layer, 'class' : 'lb1-layer', 'style' : "display:block;filter:alpha(opacity=70);opacity:.70;z-index:"+get_z_indexes()['layer']+';width :'+document.getElementsByTagName('html')[0].offsetWidth+"px;height:"+(document.getElementsByTagName('body')[0].offsetHeight - 20)+'px;'});
+	var layer_height = $('container').clientHeight;
+	if(layer_height < $('container').scrollHeight)
+	{
+		layer_height = 5 * layer_height;
+	}
+	
+    var layer = new Element('div', {'id':id_layer, 'class' : 'lb1-layer', 'style' : "display:block;filter:alpha(opacity=70);opacity:.70;z-index:"+get_z_indexes()['layer']+';width :'+ (document.getElementsByTagName('html')[0].offsetWidth)+"px;height:"+layer_height+'px;'});
 
 
 	if( mode_frm == 'fullscreen')
@@ -885,43 +891,22 @@ function expertmodeview(coll_id)
 	}
 	else
 	{
-		var fenetre = new Element('div', {'id' :id_mod,'class' : 'modal', 'style' :'top:50px;left:50px;'+'width:'+width+';height:'+height+";z-index:"+get_z_indexes()['modal']+";margin-top:30px;margin-left:40px;position:absolute;" });
+		var fenetre = new Element('div', {'id' :id_mod,'class' : 'modal', 'style' :'top:0px;left:0px;'+'width:'+width+';height:'+height+";z-index:"+get_z_indexes()['modal']+";margin-top:0px;margin-left:0px;position:absolute;" });
 	}
 
-	//~ if( mode_frm == 'fullscreen')
-	//~ {
-		//~ //fenetre.writeAttribute('style','top:0px;left:0px;width:'+width+';height:'+height+";z-index:"+get_z_indexes()['modal']+";");
-		//~ fenetre.setStyle({top: '0px', left :'0px', width: tmp_width, height :tmp_height, zIndex:get_z_indexes()['modal']});
-	//~ }
-	//~ else
-	//~ {
-		//~ fenetre.writeAttribute('style','top:50px;left:50px;'+'width:'+width+';height:'+height+";z-index:"+get_z_indexes()['modal']+";");
-		//~ fenetre.style.marginTop = getScrollXY()[1]+15+'px';
-		//~ fenetre.style.marginLeft = getScrollXY()[0]+15+'px';
-	//~ }
-	//alert('test 5');
-	//$(document.body).insert(layer);
-	//$(document.body).insert(fenetre);
 	Element.insert(document.body,layer);
 	Element.insert(document.body,fenetre);
-   // layer.style.width=document.getElementsByTagName('html')[0].offsetWidth+"px";
-	//alert('test 6');
-	//var layer_height = document.getElementsByTagName('body')[0].offsetHeight + 500;
-    //layer.style.height=layer_height+'px';
-	//layer.style.height=(document.getElementsByTagName('body')[0].offsetHeight - 20)+'px';
-	//alert('test 7');
+  
 	if( mode_frm == 'fullscreen')
 	{
 		fenetre.style.width = (document.getElementsByTagName('html')[0].offsetWidth - 30)+"px";
-		fenetre.style.height = layer.style.height;
+		fenetre.style.height = (document.getElementsByTagName('body')[0].offsetHeight - 20)+"px";
 	}
-//	alert('test 8');
-	//fenetre.update(txt);
+
 	Element.update(fenetre,txt);
-//	alert('test 9');
     Event.observe(layer, 'mousewheel', function(event){Event.stop(event);}.bindAsEventListener(), true);
-    Event.observe(layer, 'DOMMouseScroll', function(event){Event.stop(event);}.bindAsEventListener(), true);
-	//alert('test 10');
+    Event.observe(layer, 'DOMMouseScroll', function(event){Event.stop(event);}.bindAsEventListener(), false);
+
 }
 
 /**
@@ -955,8 +940,7 @@ function destroyModal(id_mod){
 function get_z_indexes()
 {
 
-	//var elem = document.getElementsByClassName('modal');
-	var elem = $$('modal');
+	var elem = document.getElementsByClassName('modal');
 	if(elem == undefined || elem == NaN)
 	{
 		return {layer : 995, modal : 1000};
@@ -966,7 +950,7 @@ function get_z_indexes()
 		var max_modal = 1000;
 		for(var i=0; i< elem.length; i++)
 		{
-			if(elem[i].style.zIndex > max_modal)
+			if(elem[i].style.zIndex >= max_modal)
 			{
 				max_modal = elem[i].style.zIndex;
 			}
@@ -2088,4 +2072,4 @@ function unmark_empty_process(id)
 {
 	$(id).checked=false;
 }
--->
+

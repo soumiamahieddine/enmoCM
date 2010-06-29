@@ -60,7 +60,7 @@ if(isset($_SESSION['user']['UserId']) && !empty($_SESSION['user']['UserId']) && 
 	}
 	setcookie("maarch", "UserId=".$_SESSION['user']['UserId']."&key=".$key,time()+($_SESSION['config']['cookietime']*1000));
 }
-if(isset($_REQUEST['display']) )
+if(isset($_REQUEST['display']))
 {
 	 $core_tools->insert_page();
 	 exit();
@@ -102,10 +102,10 @@ $core_tools->load_header();
 $time = $core_tools->get_session_time_expire();
 
 ?>
-<body onLoad="session_expirate(<?php  echo $time;?>, '<?php  echo $_SESSION['config']['coreurl'];?>');">
+<body onLoad="session_expirate(<?php  echo $time;?>, '<?php  echo $_SESSION['config']['coreurl'];?>');" id="maarch_body">
 	<div id="header">
         <div id="nav">
-            <div id="menu" onMouseOver="ShowHideMenu('menunav','on');" onMouseOut="ShowHideMenu('menunav','off');" class="off">
+            <div id="menu" onmouseover="ShowHideMenu('menunav','on');" onmouseout="ShowHideMenu('menunav','off');" class="off">
                 <p>
                 	<img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=but_menu.gif" alt="<?php  echo _MENU;?>" />
                 </p>
@@ -165,7 +165,7 @@ $time = $core_tools->get_session_time_expire();
         ?>
 	</div>
 </div>
-<?php //$core_tools->load_js();?>
+<?php // $core_tools->load_js();?>
 <script>HideMenu('menunav');</script>
 </body>
 </html>

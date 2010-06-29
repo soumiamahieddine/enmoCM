@@ -850,6 +850,10 @@ if (!defined('_FULLTEXT')) define( '_FULLTEXT', 'Plein texte');
 if (!defined('_FULLTEXT_HELP')) define( '_FULLTEXT_HELP', 'Recherche plein texte avec le moteur Luc&egrave;ne...');
 if (!defined('_FILE_NOT_SEND')) define( '_FILE_NOT_SEND', 'Le fichier n&rsquo;a pas &eacute;t&eacute; envoy&eacute;');
 if (!defined('_TRY_AGAIN')) define( '_TRY_AGAIN', 'Veuillez r&eacute;essayer');
+if (!defined('_INDEX_UPDATED')) define( '_INDEX_UPDATED', 'Index mis &agrave; jour');
+if (!defined('_DOC_DELETED')) define( '_DOC_DELETED', 'Document supprimé');
+if (!defined('_UPDATE_DOC_STATUS')) define( '_UPDATE_DOC_STATUS', 'Statut du document mis à jour');
+
 if (!defined('_DOCTYPE_MANDATORY')) define( '_DOCTYPE_MANDATORY', 'Le type de pi&egrave;ce est obligatoire');
 if (!defined('_INDEX_UPDATED')) define( '_INDEX_UPDATED', 'Index mis &agrave; jour');
 if (!defined('_DOC_DELETED')) define( '_DOC_DELETED', 'Document supprimé');

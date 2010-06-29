@@ -1985,17 +1985,13 @@ height:auto;
 .indexingform .form_title
 {
 	font-weight:normal;
-	width: 180px;
+	width: 150px;
 }
 
 
 .indexingform .indexing_field
 {
 	text-align: right;
-}
-.indexingform .indexing_middle
-{
-	width:50px;
 }
 
 
@@ -3188,8 +3184,8 @@ background: url(static.php?filename=scrollbox_blank.gif) top left no-repeat;
 
 .scrollbox_up_button {
 background:  url(static.php?filename=scrollbox_up.png) no-repeat scroll right top;
-	_background:none;
-	_filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../static.php?filename=scrollbox_up.png', sizingMethod='crop');
+	/*_background:none;
+	_filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../static.php?filename=scrollbox_up.png', sizingMethod='crop');*/
 height:7px;
 
 width:10px;
@@ -3202,8 +3198,8 @@ padding:0;
 
 .scrollbox_down_button {
 background:url(static.php?filename=down.png) no-repeat scroll right top;
-	_background:none;
-	_filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../static.php?filename=scrollbox_down.png', sizingMethod='crop');
+	/*_background:none;
+	_filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../static.php?filename=scrollbox_down.png', sizingMethod='crop');*/
 height:7px;
 width:10px;
 display:block;
@@ -3213,8 +3209,8 @@ padding:0;
 }
 .scrollbox_handle {
      background:url(static.php?filename=scrollbox_middle.png) top left no-repeat;
-	_background:none;
-	_filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../static.php?filename=scrollbox_middle.png', sizingMethod='crop');
+/*	_background:none;
+	_filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../static.php?filename=scrollbox_middle.png', sizingMethod='crop');*/
 	width:10px;
 	height:10px;
 	display:block;

@@ -30,7 +30,6 @@
 */
 
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
-
 $core_tools = new core_tools();
 $core_tools->test_user();
 //here we loading the lang vars

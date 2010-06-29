@@ -380,7 +380,6 @@ class list_show extends functions
 						$str .= ' {';
 							$str .= ' val_frm[\'action_id\'] = id_action;';
 						$str .= ' }';
-						//$str .= 'alert(mode + "/" + val_frm[\'action_id\'] + "/" +  val_frm[\'values\'] + "/" +  val_frm[\'table\'] + "/" +  val_frm[\'module\'] + "/" +  val_frm[\'coll_id\']);';
 
 						$str .= ' action_send_first_request(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&page=manage_action&module=core\', mode,  val_frm[\'action_id\'], val_frm[\'values\'], val_frm[\'table\'], val_frm[\'module\'], val_frm[\'coll_id\']);';
 					$str .= ' }';
@@ -787,7 +786,7 @@ class list_show extends functions
 	* @param string $show_big_title
 	* @param string $flag_not_admin
 	*/
-	public function admin_list($result, $nb_total, $title, $expr, $name, $admin, $key, $bool_order, $page_name_up, $page_name_val, $page_name_ban, $page_name_del, $page_name_add, $label_add, $bool_history = FALSE, $bool_simple_list = FALSE, $all_sentence='', $whatname='', $picto_path ='', $is_part_of_module = FALSE, $show_big_title = true, $flag_not_admin = false, $show_listletters = true, $what ="", $autoCompletion = false, $autoCompletionArray = array(), $is_in_apps_dir = false)
+	public function admin_list($result, $nb_total, $title, $expr, $name, $admin, $key, $bool_order, $page_name_up, $page_name_val, $page_name_ban, $page_name_del, $page_name_add, $label_add, $bool_history = FALSE, $bool_simple_list = FALSE, $all_sentence='', $whatname='', $picto_path ='', $is_part_of_module = FALSE, $show_big_title = true, $flag_not_admin = false, $show_listletters = true, $what ="", $autoCompletion = false, $autoCompletionArray = array(), $is_in_apps_dir = false, $is_del_page_popup = false)
 	{
 		// show the document list in result of the search
 		$page_list1 = "";
@@ -1248,22 +1247,27 @@ class list_show extends functions
 						if(!$is_part_of_module && !$flag_not_admin && !$is_in_apps_dir)
 						{
 							//$path_del = $_SESSION['config']['businessappurl'].'admin/'.$admin.'/'.$page_name_del.".php?id=".$result[$theline][0][$key]."&amp;admin=".$admin;
-							$path_del = $_SESSION['config']['businessappurl'].'index.php?display=true&page='.$page_name_del."&id=".$result[$theline][0][$key]."&amp;admin=".$admin;
+							$path_del = $_SESSION['config']['businessappurl'].'index.php?page='.$page_name_del."&id=".$result[$theline][0][$key]."&amp;admin=".$admin;
 						}
 						elseif($flag_not_admin && !$is_in_apps_dir)
 						{
+							$is_del_page_popup = true;
 							//$path_del = "index.php?page=".$page_name_del."&id=".$result[$theline][0][$key];
 							$path_del =  $_SESSION['config']['businessappurl']."index.php?page=".$page_name_del."&id=".$result[$theline][0][$key];
 						}
 						elseif($is_in_apps_dir)
 						{
 							//$path_del = $_SESSION['config']['businessappurl'].$admin.'/'.$page_name_del.".php?id=".$result[$theline][0][$key]."&amp;dir=".$admin;
-							$path_del = $_SESSION['config']['businessappurl'].'index.php?display=true&page='.$page_name_del."&id=".$result[$theline][0][$key]."&amp;dir=".$admin;
+							$path_del = $_SESSION['config']['businessappurl'].'index.php?page='.$page_name_del."&id=".$result[$theline][0][$key]."&amp;dir=".$admin;
 						}
 						else
 						{
 							//$path_del = $_SESSION['urltomodules'].$admin.'/'.$page_name_del.".php?id=".$result[$theline][0][$key]."&amp;module=".$admin;
-							$path_del = $_SESSION['config']['businessappurl'].'index.php?display=true&page='.$page_name_del."&id=".$result[$theline][0][$key]."&amp;module=".$admin;
+							$path_del = $_SESSION['config']['businessappurl'].'index.php?page='.$page_name_del."&id=".$result[$theline][0][$key]."&amp;module=".$admin;
+						}
+						if(!$is_del_page_popup)
+						{
+							$path_del .= '&display=true';
 						}
 						if( $can_delete == false || $name == "users" &&  $result[$theline][0][$key] == "superadmin")
 						{

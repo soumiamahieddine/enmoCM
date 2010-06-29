@@ -15,10 +15,10 @@ function compress($buffer) {
 	header("Pragma: public");
 	header("Expires: ".$date." GMT");
 	header("Cache-Control: max-age=".$time.", must-revalidate");
-	header('Content-type: text/css');
+	header('Content-type: text/css; charset=utf-8');
 	
 	ob_start("compress");
-  
+
 	if(isset($_GET['ie']))
 	{
 		include('apps/'.$_SESSION['config']['app_id'] .'/css/style_ie.css');

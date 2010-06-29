@@ -188,8 +188,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 			$frm_str .= '<table width="100%" align="center" border="0" id="indexing_fields" style="display:block;">';
 				  /*** Category ***/
 				  $frm_str .= '<tr id="category_tr" style="display:'.$display_value.';">';
-				  	$frm_str .='<td class="indexing_label"><label for="category_id" class="form_title" >'._CATEGORY.'</label></td>';
-					$frm_str .='<td>&nbsp;</td>';
+				  	$frm_str .='<td style="width:200px;"><label for="category_id" class="form_title" >'._CATEGORY.'</label></td>';
+					$frm_str .='<td style="width:10px;">&nbsp;</td>';
 					$frm_str .='<td class="indexing_field"><select name="category_id" id="category_id" onchange="clear_error(\'frm_error_'.$id_action.'\');change_category(this.options[this.selectedIndex].value, \''.$display_value.'\',  \''.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=change_category\',  \''.$_SESSION['config']['businessappurl'].'index.php?display=true&page=get_content_js\');">';
 								$frm_str .='<option value="">'._CHOOSE_CATEGORY.'</option>';
 							foreach(array_keys($_SESSION['mail_categories']) as $cat_id)

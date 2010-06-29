@@ -81,9 +81,9 @@ if( isset($_REQUEST['valid']))
 					{
 						$id = $db->protect_string_db($_REQUEST['ID_sd']);
 						$db->query("UPDATE ".$_SESSION['tablename']['doctypes_second_level']." set doctypes_second_level_label = '".$desc."', doctypes_first_level_id = ".$structure." where doctypes_second_level_id = ".$id."");
+						$db->query("update ".$_SESSION['tablename']['doctypes']." set doctypes_first_level_id = ".$structure." where doctypes_second_level_id = ".$id);
 						if($_SESSION['history']['subfolderup'] == "true")
 						{
-
 							require("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 							$hist = new history();
 							$hist->add($_SESSION['tablename']['doctypes_second_level'], $id,"UP",_SUBFOLDER_MODIF." ".strtolower(_NUM).$id." (".$info.")", $_SESSION['config']['databasetype']);

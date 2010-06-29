@@ -347,14 +347,18 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 				  $frm_str .= '</tr >';
 				  /*** Author ***/
 				   $frm_str .= '<tr id="author_tr" style="display:'.$display_value.';">';
-				 		$frm_str .='<td class="indexing_label"><label for="author" class="form_title" >'._AUTHOR.'</label></td>';
+				 		$frm_str .='<td class="indexing_label"><label for="author" class="form_title"  >'._AUTHOR.'</label></td>';
 						$frm_str .='<td>&nbsp;</td>';
 						$frm_str .='<td class="indexing_field"><input name="author" type="text" id="author" onchange="clear_error(\'frm_error_'.$id_action.'\');"';
 						if(isset($data['author'])&& !empty($data['author']))
 						{
 							$frm_str .= ' value="'.$data['author'].'" ';
 						}
-						'/></td>';
+						else
+						{
+							$frm_str .= ' value="" ';
+						}
+						$frm_str .= '/></td>';
 						$frm_str .= '<td><span class="red_asterisk" id="author_mandatory" style="display:inline;">*</span>&nbsp;</td>';
 				  $frm_str .= '</tr>';
 				  /*** Admission date ***/
