@@ -390,7 +390,7 @@ class core_tools extends functions
 
 		// Menu items always displayed
 		echo '<li id="account" onmouseover="this.className=\'on\';" onmouseout="this.className=\'\';">
-		<a href="'.$_SESSION['config']['businessappurl'].'index.php?page=modify_user&admin=users&reinit=true"><span class="menu_item"><span>'._MY_INFO.'</span></span></a></li>';
+		<a href="'.$_SESSION['config']['businessappurl'].'index.php?page=modify_user&admin=users&reinit=true"><span><span  class="menu_item">'._MY_INFO.'</span></span></a></li>';
 		echo '<li id="logout" onmouseover="this.className=\'on\';" onmouseout="this.className=\'\';">
 		<a href="'.$_SESSION['config']['businessappurl'].'index.php?display=true&page=logout&coreurl='.$_SESSION['config']['coreurl'].'&logout=true"><span><span  class="menu_item">'._LOGOUT.'</span></span></a></li>';
 	}

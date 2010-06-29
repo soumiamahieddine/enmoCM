@@ -536,6 +536,7 @@ class dbquery extends functions
 		}
 		elseif($this->databasetype == "ORACLE")
 		{
+
 			
 			// 2eme version Maarch
 			$db = new dbquery();
