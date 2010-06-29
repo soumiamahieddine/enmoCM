@@ -30,6 +30,7 @@
      <nature>include</nature>
    </WHEREAMIUSED>
  </SERVICE>
+<!--
  <SERVICE>
    <id>attach_doc_indexing</id>
    <name>_ATTACH_DOC_INDEXING</name>
@@ -43,6 +44,7 @@
      <nature>include</nature>
    </WHEREAMIUSED>
  </SERVICE>
+-->
    <SERVICE>
    <id>index_attachment</id>
    <name>_INDEX_ATTACHMENT</name>
