@@ -1,4 +1,4 @@
-<!--
+
 //document.write('<script type="text/javascript" src="js/scrollbox.js"></script>');
  function show_config_action( id_action, inside_scrollbox, show_when_disabled)
  {
@@ -230,4 +230,4 @@ function valid_actions_param(id_form)
 		}
 	}
 }
--->
+
