@@ -32,7 +32,7 @@ if($_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4
 {
 	$level = $_REQUEST['level'];
 }
-$page_path = $_SESSION['config']['businessappurl'].'index.php?page=show_folder&module=folder&id='.$_REQUEST['id'];
+$page_path = $_SESSION['config']['businessappurl'].'index.php?page=show_folder&module=folder&folder_id='.$_REQUEST['id'];
 $page_label = _SHOW_FOLDER;
 $page_id = "fold_show_folder";
 $core_tools->manage_location_bar($page_path, $page_label,$page_id, $init, $level);
