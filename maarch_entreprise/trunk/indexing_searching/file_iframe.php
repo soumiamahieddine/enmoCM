@@ -62,12 +62,13 @@ elseif(isset($_SESSION['upfile']['mime']) && !empty($_SESSION['upfile']['mime'])
 {
 	if($show_file)
 	{
+		$mime_type = $is->get_mime_type($_SESSION['upfile']['mime']);
 		header("Pragma: public");
 		header("Expires: 0");
 		header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
 		header("Cache-Control: public");
 		header("Content-Description: File Transfer");
-		header("Content-Type: ".$_SESSION['upfile']['mime']);
+		header("Content-Type: ".$mime_type);
 		header("Content-Disposition: inline; filename=".basename('maarch').".".$ext.";");
 		header("Content-Transfer-Encoding: binary");
 		$ext = strtolower($_SESSION['upfile']['format']);
