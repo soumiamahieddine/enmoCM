@@ -549,8 +549,8 @@ class entity extends dbquery
 		}
 		else{
 			$action  = 'Y';
-			$HistKey = 'VAL';
-			$HistLabel = _ENTITY_AUTORIZATION;
+			$histKey = 'VAL';
+			$histLabel = _ENTITY_AUTORIZATION;
 			$hist = 'entityval';
 			$msgError = _ENTITY_AUTORIZED;
 		}
