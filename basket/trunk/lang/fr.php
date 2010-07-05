@@ -239,4 +239,7 @@ if (!defined('_BASKET_WELCOME_TXT2'))  define('_BASKET_WELCOME_TXT2', 'cliquez, 
 
 if (!defined('_VIEWED'))  define('_VIEWED', 'Vu?');
 
+if (!defined('_SEE_BASKETS_RELATED'))  define('_SEE_BASKETS_RELATED', 'Voir les corbeilles associ&eacute;es');
+if (!defined('_GO_MANAGE_BASKET'))  define('_GO_MANAGE_BASKET', 'Modifier');
+
 ?>
