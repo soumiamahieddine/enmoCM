@@ -224,11 +224,19 @@ $time = $core_tools->get_session_time_expire();
 		?>
 	<br/>
 	<p>
+		<label><?php echo _WHERE_CLAUSE_TARGET;?> : </label>
+		<input type="radio"  class="check" name="target[]"  value="ALL"   /><?php echo _ALL;?> 
+		<input type="radio"  class="check" name="target[]"  value="DOC"   /><?php echo _DOCS;?> 
+		<input type="radio"  class="check" name="target[]"  value="SCHEME"   /><?php echo _CLASS_SCHEME;?> 
+	</p>
+	<br/>
+	<p>
 		<label><?php  echo _WHERE_CLAUSE;?> : </label>
 	<!--	<div id="label_expert_hide">
 			<h5><a href="#" onclick="javascript:expertmodehide();"><i><?php  echo _EDIT_WITH_ASSISTANT;?></i></a></h5>
 		</div>-->
 	</p>
+	
 	<p>
 		<label>&nbsp;</label>
 		<textarea rows="6" cols="100" name="where" id="where" /><?php  echo stripslashes($_SESSION['choosen_where_clause']);?></textarea>
@@ -239,24 +247,28 @@ $time = $core_tools->get_session_time_expire();
 			<a href="#" onclick="javascript:expertmodeview('<?php  echo $_SESSION['m_admin']['group']['coll_id'];?>');"><h5><i><b><?php  echo _VALID_THE_WHERE_CLAUSE;?>!!!</b></i></h5></a>
 		</div>
 	</p>
-	<br>
+	<br/>
 	<p>
 		<label><?php  echo _COMMENTS;?>: </label>
 		<input type="text" name="comment" value="<?php  echo $comment;?>" />
 	</p>
 	<br/>
 	<p>
+		<label><?php echo _TASKS;?></label>
+		<input type="checkbox"  class="check" name="insert[]"  value="Y" <?php  if($insert == "Y"){ echo 'checked="checked"'; } ?> <?php  if(!$show_checkbox){ echo 'disabled="disabled"';}?>  />
+	</p>
+<!--	<p>
 		<label><?php  echo _INSERT;?> :</label>
-		<input type="checkbox"  class="check" name="insert[]" class="check" value="Y" <?php  if($insert == "Y"){ echo 'checked="checked"'; } ?> <?php  if(!$show_checkbox){ echo 'disabled="disabled"';}?>  />
+		<input type="checkbox"  class="check" name="insert[]"  value="Y" <?php  if($insert == "Y"){ echo 'checked="checked"'; } ?> <?php  if(!$show_checkbox){ echo 'disabled="disabled"';}?>  />
 	</p>
 	<p>
 		<label><?php  echo _UPDATE;?>  :</label>
-		<input type="checkbox"  class="check" name="update[]" class="check" value="Y" <?php  if($update == "Y"){ echo 'checked="checked"'; }?> <?php  if(!$show_checkbox){ echo 'disabled="disabled"';}?>/>
+		<input type="checkbox"  class="check" name="update[]" value="Y" <?php  if($update == "Y"){ echo 'checked="checked"'; }?> <?php  if(!$show_checkbox){ echo 'disabled="disabled"';}?>/>
 	</p>
 	<p>
 		<label><?php  echo _DELETE_SHORT;?>  :</label>
-		<input type="checkbox"  class="check" name="delete[]" class="check"  value="Y" <?php  if($delete == "Y"){ echo 'checked="checked"'; }?> <?php  if(!$show_checkbox){ echo 'disabled="disabled"';}?>/>
-	</p>
+		<input type="checkbox"  class="check" name="delete[]"  value="Y" <?php  if($delete == "Y"){ echo 'checked="checked"'; }?> <?php  if(!$show_checkbox){ echo 'disabled="disabled"';}?>/>
+	</p>-->
 	<br/>
 
 	<br/>

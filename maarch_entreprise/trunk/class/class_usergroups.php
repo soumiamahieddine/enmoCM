@@ -45,7 +45,9 @@ class usergroups extends dbquery
 		$core_tools = new core_tools();
 		$state = true;
 		$tab = array();
-
+		$users = array();
+		$baskets = array();
+		
 		if($mode == "up")
 		{
 			$_SESSION['m_admin']['mode'] = "up";
@@ -85,6 +87,37 @@ class usergroups extends dbquery
 					$sec->load_services_group($id);
 					$_SESSION['m_admin']['load_services'] = false ;
 				}
+				
+				if($core_tools->is_module_loaded('entities'))
+				{
+					$this->query("select  u.lastname , u.firstname  , u.user_id , e.entity_label
+								from ".$_SESSION['tablename']['usergroup_content']." uc, ".$_SESSION['tablename']['users']." u, ".$_SESSION['tablename']['ent_users_entities']." ue, ".$_SESSION['tablename']['ent_entities']." e where ue.user_id = u.user_id AND ue.entity_id = e.entity_id AND uc.user_id = u.user_id AND u.enabled = 'Y' AND uc.group_id = '".$id."' and ue.primary_entity = 'Y' order by u.lastname asc");
+
+					while($res = $this->fetch_object())
+					{
+						array_push($users, array( 'ID' => $res->user_id, 'LASTNAME' => $res->lastname, 'FIRSTNAME' => $res->firstname, 'DEPARTMENT' => $res->entity_label));
+					}
+				}
+				else
+				{
+					$this->query("select  u.department, u.lastname , u.firstname  , u.user_id 
+								from ".$_SESSION['tablename']['usergroup_content']." uc, ".$_SESSION['tablename']['users']." u where uc.user_id = u.user_id AND u.enabled = 'Y' AND uc.group_id = '".$group."' order by u.lastname asc");
+
+					while($res = $this->fetch_object())
+					{
+						array_push($users, array( 'ID' => $res->user_id, 'LASTNAME' => $res->lastname, 'FIRSTNAME' => $res->firstname, 'DEPARTMENT' => $res->department));
+					}
+				}
+				if($core_tools->is_module_loaded('basket'))
+				{
+					$this->query("select b.basket_name, b.basket_id, b.basket_desc, b.coll_id
+										from ".$_SESSION['tablename']['bask_baskets']." b, ".$_SESSION['tablename']['bask_groupbasket']." bg where b.basket_id = bg.basket_id AND bg.group_id = '".$id."' order by b.basket_name asc");
+
+					while($res = $this->fetch_object())
+					{
+						array_push($baskets, array( 'ID' => $res->basket_id, 'NAME' => $res->basket_name, 'DESC' => $res->basket_desc, 'COLL_ID' => $res->coll_id));
+					}
+				}
 			}
 		}
 		elseif($mode == "add")
@@ -119,13 +152,108 @@ class usergroups extends dbquery
 			{
 				?>
 				<div id="inner_content" class="clearfix">
-					<div id="group_box" class="bloc" style = "width:445px;" >
+					<div id="group_box" class="bloc" >
 						<?php
 						if($mode == "up")
 						{
-						?>
-							<a href="javascript://" onclick="window.open('<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&admin=groups&page=liste_users&id=<?php  echo $id;?>&admin=groups', '', 'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=920,height=400')"><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=membres_groupe_b.gif" alt="" /><i><?php  echo _SEE_GROUP_MEMBERS;?></i></a><br/><br/>
+						?><div onclick="new Effect.toggle('users_list', 'blind', {delay:0.2});return false;" >
+							&nbsp;<img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=membres_groupe_b.gif" alt="" /><i><?php  echo _SEE_GROUP_MEMBERS;?></i> <img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=plus.png" alt="" />
+							<span class="lb1-details">&nbsp;</span></div>
+							<div class="desc" id="users_list" style="display:none;">
+								<div class="ref-unit">
+									<table cellpadding="0" cellspacing="0" border="0" class="listingsmall">
+										<thead>
+											<tr>
+												<th><?php  echo _LASTNAME;?></th>
+												<th ><?php  echo _FIRSTNAME;?></th>
+												<th  ><?php  echo _ENTITY;?></th>
+												<th></th>
+											</tr>
+										</thead>
+
+									<tbody>
+										 <?php
+									$color = ' class="col"';
+									 for($i=0;$i<count($users);$i++)
+										{
+											if($color == ' class="col"')
+											{
+												$color = '';
+											}
+											else
+											{
+												$color = ' class="col"';
+											}
+												?>
+										 <tr <?php  echo $color; ?> >
+												   <td width="25%"><?php  echo $users[$i]['LASTNAME'];?></td>
+													  <td width="25%"><?php  echo $users[$i]['FIRSTNAME'];?></td>
+												   <td><?php  echo $users[$i]['DEPARTMENT']; ?></td>
+												   <td ><?php 
+													if($core_tools->test_service('admin_users', 'apps', false))
+													{?>
+												   <a class="change" href="<?php echo $_SESSION['config']['businessappurl'].'index.php?page=users_up&admin=users&id='.$users[$i]['ID']; ?>" alt="<?php echo _GO_MANAGE_USER;?>" title="<?php echo _GO_MANAGE_USER;?>"><i><?php echo _GO_MANAGE_USER;?></i></a><?php }?></td>
+										</tr>
+												<?php
+										}
+									?>
+									</tbody>
+									</table>
+									<br/>
+								</div>
+							</div>
+							
 						<?php
+							if($core_tools->is_module_loaded('basket'))
+							{?>
+								<div onclick="new Effect.toggle('baskets_list2', 'blind', {delay:0.2});return false;" >
+							&nbsp;<img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=membres_groupe_b.gif" alt="" /><i><?php  echo _SEE_BASKETS_RELATED;?></i> <img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=plus.png" alt="" />
+							<span class="lb1-details">&nbsp;</span></div>
+							<div class="desc" id="baskets_list2" style="display:none;">
+								<div class="ref-unit">
+									<table cellpadding="0" cellspacing="0" border="0" class="listingsmall">
+										<thead>
+											<tr>
+												<th><?php  echo NAME;?></th>
+												<th ><?php  echo DESC;?></th>
+												<th></th>
+											</tr>
+										</thead>
+
+									<tbody>
+										 <?php
+									$color = ' class="col"';
+									 for($i=0;$i<count($baskets);$i++)
+										{
+											if($color == ' class="col"')
+											{
+												$color = '';
+											}
+											else
+											{
+												$color = ' class="col"';
+											}
+												?>
+										 <tr <?php  echo $color; ?> >
+												   <td width="30%"><?php  echo $baskets[$i]['NAME'];?></td>
+												  <td width="50%"><?php  echo $baskets[$i]['DESC'];?></td>
+												   <td >
+												   <?php if($core_tools->test_service('admin_baskets', 'basket', false))
+													{?>
+												    <a class="change" href="<?php echo $_SESSION['config']['businessappurl'].'index.php?page=basket_up&module=basket&id='.$baskets[$i]['ID']; ?>" alt="<?php echo _GO_MANAGE_BASKET;?>" title="<?php echo _GO_MANAGE_BASKET;?>"><i><?php echo _GO_MANAGE_BASKET;?></i></a>
+												   <?php } ?> 
+												    </td>
+										</tr>
+												<?php
+										}
+									?>
+									</tbody>
+									</table>
+									<br/>
+									<br/>
+								</div>
+							</div>
+						<?php	}
 						}
 						?>
 						<iframe name="group_form" id="group_form" class="frameform4" src="<?php  echo $_SESSION['config']['businessappurl'].'index.php?display=true&admin=groups&page=groups_form';?>" frameborder="0" scrolling="auto"></iframe>

@@ -994,27 +994,10 @@ if (!defined('_LOGIN_MODE')) define( '_LOGIN_MODE', 'Type d\'authentification');
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+if (!defined('_WHERE_CLAUSE_TARGET')) define( '_WHERE_CLAUSE_TARGET', 'Cible de la clause WHERE');
+if (!defined('_CLASS_SCHEME')) define( '_CLASS_SCHEME', 'Plan de classement');
+if (!defined('_DOCS')) define( '_DOCS', 'Documents');
+if (!defined('_GO_MANAGE_USER')) define( '_GO_MANAGE_USER', 'Modifier');
 
 
 ?>
