@@ -36,6 +36,8 @@ $core_tools->load_lang();
 $core_tools->test_admin('admin_groups', 'apps');
 
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
+include('apps/maarch_entreprise/security_bitmask.php');
+include('core/manage_bitmask.php');
 
 $func = new functions();
 $sec= new security();
@@ -81,7 +83,7 @@ if(isset($_REQUEST['modifyAccess']))
 	if(count($_REQUEST['security'])>0)
 	{
 		?>
-		<script type="text/javascript" language="javascript">window.open('<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&admin=groups&page=add_grant&collection=<?php  echo $_REQUEST['security'][0];?>','modify','toolbar=no,status=no,width=800,height=550,left=150,top=300,scrollbars=auto,location=no,menubar=no,resizable=yes');</script>
+		<script type="text/javascript" language="javascript">window.open('<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&admin=groups&page=add_grant&collection=<?php  echo $_REQUEST['security'][0];?>','modify','toolbar=no,status=no,width=850,height=650,left=150,top=300,scrollbars=auto,location=no,menubar=no,resizable=yes');</script>
 		<?php
 	}
 }
@@ -109,7 +111,7 @@ $core_tools->load_header(_MANAGE_RIGHTS, true, false);
 ?>
 <body id="iframe">
 <div class="block" >
-<?php  //$func->show_array($_SESSION['m_admin']['groups']['security']);
+<?php //$func->show_array($_ENV['security_bitmask']); //$func->show_array($_SESSION['m_admin']['groups']['security']);
 ?>
 <h2 class="tit"><small><?php  echo _MANAGE_RIGHTS;?> : </small></h2>
 <form name="security_form" method="get" >
@@ -127,28 +129,69 @@ $core_tools->load_header(_MANAGE_RIGHTS, true, false);
 		?>
 		<table width="100%" border = "0">
 			<tr >
-				<td width="20">&nbsp;</td>
-				<td width="90" class="column"><?php  echo _COLLECTION;?></td>
-				<td width="250" class="column"><?php  echo _WHERE_CLAUSE;?></td>
-				<td width="60" class="column"><?php  echo _INSERT; ?></td>
-				<td width="90" class="column"><?php  echo _UPDATE; ?></td>
-				<td width="90" class="column"><?php  echo _DELETE_SHORT; ?></td>
+				<td width="5%">&nbsp;</td>
+				<td class="column"><?php  echo _COLLECTION;?></td>
+				<td class="column"><?php  echo _WHERE_TARGET;?></td>
+				<td class="column"><?php  echo _WHERE_CLAUSE;?></td>
+				<td class="column"><?php  echo _TASKS; ?></td>
+				<td class="column"><?php  echo _SINCE; ?></td>
+				<td class="column"><?php  echo _FOR; ?></td>
 			</tr>
 		<?php
-		for($i=0; $i < count($_SESSION['m_admin']['groups']['security']); $i++)
+		
+		foreach(array_keys($_SESSION['m_admin']['groups']['security']) as $coll)
 		{
-			if($_SESSION['m_admin']['groups']['security'][$i] <> "")
+			for($i=0; $i < count($_SESSION['m_admin']['groups']['security'][$coll]); $i++)
 			{
-				?>
-				<tr>
-					<td width="20"><input type="checkbox"  class="check" name="security[]" value="<?php  echo $_SESSION['m_admin']['groups']['security'][$i]['COLL_ID']; ?>" /></td>
-					<td width="90"><?php  echo $_SESSION['collections'][$_SESSION['m_admin']['groups']['security'][$i]['IND_COLL_SESSION']]['label']; ?></td>
-					<td width="250"><?php  echo $func->cut_string(stripslashes($func->show_string($_SESSION['m_admin']['groups']['security'][$i]['WHERE_CLAUSE'])),50); ?></td>
-					<td width="60"><input type="checkbox"  class="check" name="rights_insert[]" value="<?php  echo $_SESSION['m_admin']['groups']['security'][$i]['COLL_ID']; ?>" <?php  if($_SESSION['m_admin']['groups']['security'][$i]['CAN_INSERT'] == 'Y') { echo 'checked="checked"';} ?> disabled="disabled" /></td>
-					<td width="90"><input type="checkbox"  class="check" name="rights_update[]" value="<?php  echo $_SESSION['m_admin']['groups']['security'][$i]['COLL_ID']; ?>" <?php  if($_SESSION['m_admin']['groups']['security'][$i]['CAN_UPDATE'] == 'Y') { echo 'checked="checked"';} ?>disabled="disabled" /></td>
-					<td width="90"><input type="checkbox"  class="check" name="rights_delete[]" value="<?php  echo $_SESSION['m_admin']['groups']['security'][$i]['COLL_ID']; ?>" <?php  if($_SESSION['m_admin']['groups']['security'][$i]['CAN_DELETE'] == 'Y') { echo 'checked="checked"';} ?> disabled="disabled"/></td>
-				</tr>
-				<?php
+				if($_SESSION['m_admin']['groups']['security'][$coll][$i] <> "")
+				{
+					?>
+					<tr>
+						<td width="5%"><input type="checkbox"  class="check" name="security[]" value="<?php  echo $_SESSION['m_admin']['groups']['security'][$coll][$i]['COLL_ID']; ?>" /></td>
+						<td ><?php  echo $_SESSION['collections'][$_SESSION['m_admin']['groups']['security'][$coll][$i]['IND_COLL_SESSION']]['label']; ?></td>
+						<td><?php 
+						if( $_SESSION['m_admin']['groups']['security'][$coll][$i]['WHERE_TARGET'] == 'DOC')
+						{
+							echo _DOCS;
+						}
+						elseif($_SESSION['m_admin']['groups']['security'][$coll][$i]['WHERE_TARGET'] == 'CLASS')
+						{
+							echo _CLASS_SCHEME;
+						}
+						else
+						{
+							echo _ALL;
+						}?></td>
+						<td ><?php  echo $func->cut_string(stripslashes($func->show_string($_SESSION['m_admin']['groups']['security'][$coll][$i]['WHERE_CLAUSE'])),50); ?></td>
+						<td><div onclick="new Effect.toggle('tasks_list', 'blind', {delay:0.2});return false;" >
+								&nbsp;<i><?php  echo _SEE_TASKS;?></i> <img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=plus.png" alt="<?php _SEE_TASKS;?>" />
+								<span class="lb1-details">&nbsp;</span></div>
+								<div class="desc" id="tasks_list" style="display:none;">
+									<div class="ref-unit">
+										<ul align="right">
+										<?php  for($k=0;$k<count($_ENV['security_bitmask']); $k++)
+											{
+												echo "<li>".$_ENV['security_bitmask'][$k]['LABEL'].'<img ';
+												
+												if(check_right($_SESSION['m_admin']['groups']['security'][$coll][$i]['RIGHTS_BITMASK'] , $_ENV['security_bitmask'][$k]['ID']))
+												{
+													echo 'src="'.$_SESSION['config']['businessappurl'].'static.php?filename=picto_stat_enabled.gif" alt="'._ENABLED.'"';
+												}
+												else
+												{
+													echo 'src="'.$_SESSION['config']['businessappurl'].'static.php?filename=picto_stat_disabled.gif" alt="'._ENABLED.'"';
+												}
+												echo " /></li>";
+											} ?>
+										</ul>
+									</div>
+								</div>
+						</td>
+						<td><?php echo $func->format_date($_SESSION['m_admin']['groups']['security'][$coll][$i]['START_DATE']);?></td>
+						<td><?php echo $func->format_date($_SESSION['m_admin']['groups']['security'][$coll][$i]['STOP_DATE']);?></td>
+					</tr>
+					<?php
+				}
 			}
 		}
 		?>
@@ -166,7 +209,7 @@ $core_tools->load_header(_MANAGE_RIGHTS, true, false);
 	if (count($_SESSION['collections']) > count($_SESSION['m_admin']['groups']['security']))
 	{
 		?>
-		<input type="button" name="addGrant" class="button" onClick="window.open('<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&admin=groups&page=add_grant','add','toolbar=no,status=no,width=800,height=550,left=150,top=300,scrollbars=auto,location=no,menubar=no,resizable=yes');" value="<?php  echo _ADD_GRANT; ?>" />
+		<input type="button" name="addGrant" class="button" onClick="window.open('<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&admin=groups&page=add_grant','add','toolbar=no,status=no,width=850,height=650,left=150,top=300,scrollbars=auto,location=no,menubar=no,resizable=yes');" value="<?php  echo _ADD_GRANT; ?>" />
 		<?php
 	}
 	/*

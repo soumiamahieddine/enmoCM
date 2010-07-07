@@ -993,11 +993,24 @@ if (!defined('_CONNECT')) define( '_CONNECT', 'Se connecter');
 if (!defined('_LOGIN_MODE')) define( '_LOGIN_MODE', 'Type d\'authentification');
 
 
+/******** Admin groups **********/
 
 if (!defined('_WHERE_CLAUSE_TARGET')) define( '_WHERE_CLAUSE_TARGET', 'Cible de la clause WHERE');
+if (!defined('_WHERE_TARGET')) define( '_WHERE_TARGET', 'Cible');
 if (!defined('_CLASS_SCHEME')) define( '_CLASS_SCHEME', 'Plan de classement');
 if (!defined('_DOCS')) define( '_DOCS', 'Documents');
 if (!defined('_GO_MANAGE_USER')) define( '_GO_MANAGE_USER', 'Modifier');
+if (!defined('_TASKS')) define( '_TASKS', 'Actions disponibles');
+if (!defined('_PERIOD')) define( '_PERIOD', 'P&eacute;riode');
 
+/******* Security Bitmask label ********/
 
+if (!defined('_ADD_DOCUMENT_LABEL')) define( '_ADD_DOCUMENT_LABEL', 'Ajout de document');
+if (!defined('_CREATE_SERIE_LABEL')) define( '_CREATE_SERIE_LABEL', 'Ajout de s&eacute;rie');
+if (!defined('_CREATE_OTHER_AGREGATE_LABEL')) define( '_CREATE_OTHER_AGREGATE_LABEL', 'Ajout de dossier/sous-dossier/volume');
+if (!defined('_DATA_MODIFICATION_LABEL')) define( '_DATA_MODIFICATION_LABEL', 'Modification des informations');
+if (!defined('_DELETE_DOCUMENT_LABEL')) define( '_DELETE_DOCUMENT_LABEL', 'Suppression de document');
+if (!defined('_DELETE_SERIE_LABEL')) define( '_DELETE_SERIE_LABEL', 'Suppression de s&eacute;rie');
+if (!defined('_DELETE_OTHER_AGREGATE_LABEL')) define( '_DELETE_OTHER_AGREGATE_LABEL', 'Suppression de dossier/sous-dossier/volume');
+if (!defined('_VIEW_LOG_LABEL')) define( '_VIEW_LOG_LABEL', 'Visualisation de l&rsquo;historique');
 ?>

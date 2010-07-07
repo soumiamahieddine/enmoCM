@@ -29,6 +29,8 @@
 */
 
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
+include('apps/maarch_entreprise/security_bitmask.php');
+include('core/manage_bitmask.php');
 $core_tools = new core_tools();
 $core_tools->load_lang();
 $core_tools->test_admin('admin_groups', 'apps');
@@ -37,9 +39,10 @@ $coll = '';
 $coll_label = '';
 $clause = '';
 $comment = '';
-$insert = '';
-$update = '';
-$delete = '';
+$start_date = '';
+$stop_date = '';
+$target = 'ALL';
+$rights_bitmask = 0;
 $tabdiff=array();
 $mode = "add";
 $sec = new security();
@@ -55,17 +58,18 @@ if(isset($_REQUEST['collection']) && !empty($_REQUEST['collection']))
 			$_SESSION['m_admin']['group']['coll_id'] = trim($_REQUEST['collection']);
 			$ind = $sec->get_ind_collection($_SESSION['m_admin']['group']['coll_id']);
 			$coll_label = $_SESSION['collections'][$ind]['label'];
+			$target = $_SESSION['m_admin']['groups']['security'][$i]['WHERE_TARGET'];
 			$clause = $func->show_string($_SESSION['m_admin']['groups']['security'][$i]['WHERE_CLAUSE']);
 			$comment = $_SESSION['m_admin']['groups']['security'][$i]['COMMENT'];
+			$start_date = $func->format_date_db($_SESSION['m_admin']['groups']['security'][$i]['START_DATE'], false);
+			$stop_date = $func->format_date_db($_SESSION['m_admin']['groups']['security'][$i]['STOP_DATE'], false);
 			if(!isset($_SESSION['collections'][$ind]['table']) || empty($_SESSION['collections'][$ind]['table']))
 			{
 				$show_checkbox = false;
 			}
 			else
 			{
-				$insert = $_SESSION['m_admin']['groups']['security'][$i]['CAN_INSERT'];
-				$update = $_SESSION['m_admin']['groups']['security'][$i]['CAN_UPDATE'];
-				$delete = $_SESSION['m_admin']['groups']['security'][$i]['CAN_DELETE'];
+				$rights_bitmask = $_SESSION['m_admin']['groups']['security'][$i]['RIGHTS_BITMASK'];
 			}
 		}
 	}
@@ -80,7 +84,7 @@ else
 {
 	$show_checkbox = $_SESSION['m_admin']['group']['show_check'];
 }
-if($core_tools->is_module_loaded("basket"))
+/*if($core_tools->is_module_loaded("basket"))
 {
 	$_SESSION['entities_choosen'] = array();
 }
@@ -187,10 +191,9 @@ else
 		}
 	}
 }
+*/
 
-//here we loading the html
 $core_tools->load_html();
-//here we building the header
 $core_tools->load_header('', true, false);
 $time = $core_tools->get_session_time_expire();
 ?>
@@ -225,9 +228,9 @@ $time = $core_tools->get_session_time_expire();
 	<br/>
 	<p>
 		<label><?php echo _WHERE_CLAUSE_TARGET;?> : </label>
-		<input type="radio"  class="check" name="target[]"  value="ALL"   /><?php echo _ALL;?> 
-		<input type="radio"  class="check" name="target[]"  value="DOC"   /><?php echo _DOCS;?> 
-		<input type="radio"  class="check" name="target[]"  value="SCHEME"   /><?php echo _CLASS_SCHEME;?> 
+		<input type="radio"  class="check" name="target[]"  value="ALL" <?php if($target == 'ALL'){ echo 'checked="checked"';}?>  /><?php echo _ALL;?> 
+		<input type="radio"  class="check" name="target[]"  value="DOC"  <?php if($target == 'DOC'){ echo 'checked="checked"';}?>  /><?php echo _DOCS;?> 
+		<input type="radio"  class="check" name="target[]"  value="CLASS"  <?php if($target == 'CLASS'){ echo 'checked="checked"';}?>  /><?php echo _CLASS_SCHEME;?> 
 	</p>
 	<br/>
 	<p>
@@ -253,24 +256,30 @@ $time = $core_tools->get_session_time_expire();
 		<input type="text" name="comment" value="<?php  echo $comment;?>" />
 	</p>
 	<br/>
-	<p>
-		<label><?php echo _TASKS;?></label>
-		<input type="checkbox"  class="check" name="insert[]"  value="Y" <?php  if($insert == "Y"){ echo 'checked="checked"'; } ?> <?php  if(!$show_checkbox){ echo 'disabled="disabled"';}?>  />
+	<p >
+		<label><?php echo _TASKS;?> : </label><br/>
+		<div style="margin-left:40%;">
+		<?php  for($k=0;$k<count($_ENV['security_bitmask']); $k++)
+		{
+			?>
+			<input type="checkbox"  class="check" name="rights_bitmask []"  value="<?php echo $_ENV['security_bitmask'][$k]['ID'];?>" <?php  if(check_right($_SESSION['m_admin']['groups']['security'][$i]['RIGHTS_BITMASK'] , $_ENV['security_bitmask'][$k]['ID'])){ echo 'checked="checked"'; } ?> <?php  if(!$show_checkbox){ echo 'disabled="disabled"';}?>  /> 
+		<?php echo  $_ENV['security_bitmask'][$k]['LABEL'].'<br/>';
+		}?>
+		</div>
 	</p>
-<!--	<p>
-		<label><?php  echo _INSERT;?> :</label>
-		<input type="checkbox"  class="check" name="insert[]"  value="Y" <?php  if($insert == "Y"){ echo 'checked="checked"'; } ?> <?php  if(!$show_checkbox){ echo 'disabled="disabled"';}?>  />
-	</p>
-	<p>
-		<label><?php  echo _UPDATE;?>  :</label>
-		<input type="checkbox"  class="check" name="update[]" value="Y" <?php  if($update == "Y"){ echo 'checked="checked"'; }?> <?php  if(!$show_checkbox){ echo 'disabled="disabled"';}?>/>
-	</p>
-	<p>
-		<label><?php  echo _DELETE_SHORT;?>  :</label>
-		<input type="checkbox"  class="check" name="delete[]"  value="Y" <?php  if($delete == "Y"){ echo 'checked="checked"'; }?> <?php  if(!$show_checkbox){ echo 'disabled="disabled"';}?>/>
-	</p>-->
 	<br/>
-
+	<p>
+		<label><?php echo _PERIOD;?> : </label>
+		<p>
+			<label><?php echo _SINCE;?></label>
+			<input type="text" id="start_date" value="" onclick="showCalender(this);"/>
+		</p>
+		<br/>
+		<p>
+			<label><?php echo _FOR;?></label>
+			<input type="text" id="stop_date" value="" onclick="showCalender(this);"/>
+		</p>
+	</p>
 	<br/>
 	<p class="buttons">
 		<input type="submit" name="Submit" value="<?php  echo _VALIDATE;?>" class="button"  />

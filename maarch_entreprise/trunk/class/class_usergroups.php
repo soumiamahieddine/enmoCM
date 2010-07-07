@@ -78,7 +78,7 @@ class usergroups extends dbquery
 
 				if (! isset($_SESSION['m_admin']['load_security']) || $_SESSION['m_admin']['load_security'] == true)
 				{
-					$sec->load_security_group($id);
+					$_SESSION['m_admin']['groups']['security']=$sec->load_security_group($id);
 					$_SESSION['m_admin']['load_security'] = false ;
 				}
 
