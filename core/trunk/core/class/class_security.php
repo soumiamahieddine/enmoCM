@@ -51,25 +51,32 @@ class security extends dbquery
 	*/
 	public function load_security_group($group_id)
 	{
-		$tab = array();
+		$security_group = array();
+		
 		$this->connect();
-		$this->query("select * from ".$_SESSION['tablename']['security'] ." where group_id = '".$group_id."'");
-
-		if($this->nb_result() == 0)
+		$this->query("select distinct coll_id from ".$_SESSION['tablename']['security'] ." where group_id = '".$group_id."'");
+		
+		if($this->nb_result() > 0)
 		{
-			$_SESSION['m_admin']['groups']['security'] = array();
-		}
-		else
-		{
-			$_SESSION['m_admin']['groups']['security'] = array();
-
+			$collections = array();
 			while($res = $this->fetch_object())
 			{
-				$ind = $this->get_ind_collection($res->coll_id);
-				array_push($_SESSION['m_admin']['groups']['security'],array("GROUP_ID" => $res->group_id,"COLL_ID" => $res->coll_id, "IND_COLL_SESSION" => $ind, "WHERE_CLAUSE" => $res->where_clause, "MAARCH_COMMENT" => $res->commment ,"CAN_INSERT" => $res->can_insert ,"CAN_UPDATE" => $res->can_update, "CAN_DELETE" => $res->can_delete));
+				$security_group[$res->coll_id] = array();
+				array_push($collections, $res->coll_id);
+			}
+			for($i=0; $i<count($collections); $i++)
+			{
+				$this->query("select * from ".$_SESSION['tablename']['security'] ." where group_id = '".$group_id."' and coll_id = '".$collections[$i]."'");
+				
+				while($res = $this->fetch_object())
+				{
+					array_push($security_group[$collections[$i]], array('SECURITY_ID' => $res->security_id,'GROUP_ID' => $res->group_id,'COLL_ID' => $res->coll_id, 'IND_COLL_SESSION' => $ind, 'WHERE_CLAUSE' => $res->where_clause, 'MAARCH_COMMENT' => $res->commment ,'CAN_INSERT' => $res->can_insert ,'CAN_UPDATE' => $res->can_update, 'CAN_DELETE' => $res->can_delete, 'WHERE_TARGET'=> $res->where_target, 'START_DATE' => $res->mr_start_date, 'STOP_DATE' => $res->mr_stop_date, 'RIGHTS_BITMASK' => $res->rights_bitmask));
+				//$ind = $this->get_ind_collection($res->coll_id);
+					//array_push($_SESSION['m_admin']['groups']['security'],array(
+				}
 			}
 		}
-		$_SESSION['m_admin']['load_security'] = false;
+		return $security_group;
 	}
 
 	/**
