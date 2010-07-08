@@ -59,6 +59,7 @@ class security extends dbquery
 		if($this->nb_result() > 0)
 		{
 			$collections = array();
+			$ind = -1;
 			while($res = $this->fetch_object())
 			{
 				$security_group[$res->coll_id] = array();
@@ -67,12 +68,10 @@ class security extends dbquery
 			for($i=0; $i<count($collections); $i++)
 			{
 				$this->query("select * from ".$_SESSION['tablename']['security'] ." where group_id = '".$group_id."' and coll_id = '".$collections[$i]."'");
-				
+				$ind = $this->get_ind_collection($collections[$i]);
 				while($res = $this->fetch_object())
 				{
-					array_push($security_group[$collections[$i]], array('SECURITY_ID' => $res->security_id,'GROUP_ID' => $res->group_id,'COLL_ID' => $res->coll_id, 'IND_COLL_SESSION' => $ind, 'WHERE_CLAUSE' => $res->where_clause, 'MAARCH_COMMENT' => $res->commment ,'CAN_INSERT' => $res->can_insert ,'CAN_UPDATE' => $res->can_update, 'CAN_DELETE' => $res->can_delete, 'WHERE_TARGET'=> $res->where_target, 'START_DATE' => $res->mr_start_date, 'STOP_DATE' => $res->mr_stop_date, 'RIGHTS_BITMASK' => $res->rights_bitmask));
-				//$ind = $this->get_ind_collection($res->coll_id);
-					//array_push($_SESSION['m_admin']['groups']['security'],array(
+					array_push($security_group[$collections[$i]], array('SECURITY_ID' => $res->security_id,'GROUP_ID' => $res->group_id,'COLL_ID' => $res->coll_id, 'IND_COLL_SESSION' => $ind, 'WHERE_CLAUSE' => $res->where_clause, 'COMMENT' => $res->maarch_comment ,'CAN_INSERT' => $res->can_insert ,'CAN_UPDATE' => $res->can_update, 'CAN_DELETE' => $res->can_delete, 'WHERE_TARGET'=> $res->where_target, 'START_DATE' => $res->mr_start_date, 'STOP_DATE' => $res->mr_stop_date, 'RIGHTS_BITMASK' => $res->rights_bitmask));
 				}
 			}
 		}
@@ -139,6 +138,7 @@ class security extends dbquery
 	* Inits to ‘N’ (no) the rights in the session variables related to the user group administration.
 	*
 	*/
+/*
 	public function init_rights_session()
 	{
 		for($i=0; $i < count($_SESSION['m_admin']['groups']['security']); $i++)
@@ -148,6 +148,7 @@ class security extends dbquery
 			$_SESSION['m_admin']['groups']['security'][$i]['CAN_DELETE'] = 'N';
 		}
 	}
+*/
 
 	/**
 	* Set the rights (insert or update, depending on the parameter) for the collection passed on parameters.
@@ -155,6 +156,7 @@ class security extends dbquery
 	* @param   $coll_id string Collection identifier
 	* @param  $where  string 'CAN_INSERT', 'CAN_DELETE', or 'CAN_UPDATE'
 	*/
+/*
 	public function set_rights_session($coll_id, $where)
 	{
 		for($i=0; $i < count($_SESSION['m_admin']['groups']['security']); $i++)
@@ -166,27 +168,34 @@ class security extends dbquery
 		}
 		$tab = array();
 	}
+*/
 
 	/**
 	* Removes the security rights on the collections passed in parameters.
 	*
-	* @param   $tab array  Collections rights array
+	* @param   $security_ids array  security identifiers 
 	*/
-	public function remove_security($tab)
+	public function remove_security($security_ids, $security_array)
 	{
-		$unset_id = array();
-		for($j=0;$j<count($tab);$j++)
+		for($j=0;$j<count($security_ids);$j++)
 		{
-			for($i=0;$i<count($_SESSION['m_admin']['groups']['security']);$i++)
+			foreach(array_keys($security_array) as $coll_id)
 			{
-				if(trim($_SESSION['m_admin']['groups']['security'][$i]['COLL_ID']) == trim($tab[$j]))
+				for($i=0; $i<count($security_array[$coll_id]); $i++)
 				{
-					unset($_SESSION['m_admin']['groups']['security'][$i]);
-				//	array_push($_SESSION['m_admin']['groups']['security'], $i);
+					if(trim($security_array[$coll_id][$i]['SECURITY_ID']) == trim($security_ids[$j]))
+					{
+						unset($security_array[$coll_id][$i]);
+					}
+				}
+				$security_array = array_values($security_array[$coll_id]);
+				if(count($security_array[$coll_id]) == 0)
+				{
+					unset($security_array[$coll_id]);
 				}
 			}
 		}
-		$_SESSION['m_admin']['groups']['security'] = array_values($_SESSION['m_admin']['groups']['security']);
+		return $security_array;
 	}
 
 	/**
@@ -225,7 +234,7 @@ class security extends dbquery
 		{
 			$ind = $this->get_ind_collection($coll_id);
 			$tab = array();
-			$tab[0] = array("GROUP_ID" => "" , "COLL_ID" => $coll_id , "IND_COLL_SESSION" => $ind,"WHERE_CLAUSE" => $where, "MAARCH_COMMENT" => $comment ,"CAN_INSERT" => $insert ,"CAN_UPDATE" => $update, 'CAN_DELETE' => $delete);
+			$tab[0] = array("GROUP_ID" => "" , "COLL_ID" => $coll_id , "IND_COLL_SESSION" => $ind,"WHERE_CLAUSE" => $where, "COMMENT" => $comment ,"CAN_INSERT" => $insert ,"CAN_UPDATE" => $update, 'CAN_DELETE' => $delete);
 			array_push($_SESSION['m_admin']['groups']['security'] , $tab[0]);
 			$_SESSION['m_admin']['load_security'] = false;
 		}
