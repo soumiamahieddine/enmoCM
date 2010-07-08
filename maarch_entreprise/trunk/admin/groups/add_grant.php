@@ -227,6 +227,11 @@ $time = $core_tools->get_session_time_expire();
 		?>
 	<br/>
 	<p>
+		<label><?php  echo _DESC;?>: </label>
+		<input type="text" name="comment" value="<?php  echo $comment;?>" />
+	</p>
+	<br/>
+	<p>
 		<label><?php echo _WHERE_CLAUSE_TARGET;?> : </label>
 		<input type="radio"  class="check" name="target[]"  value="ALL" <?php if($target == 'ALL'){ echo 'checked="checked"';}?>  /><?php echo _ALL;?> 
 		<input type="radio"  class="check" name="target[]"  value="DOC"  <?php if($target == 'DOC'){ echo 'checked="checked"';}?>  /><?php echo _DOCS;?> 
@@ -251,19 +256,14 @@ $time = $core_tools->get_session_time_expire();
 		</div>
 	</p>
 	<br/>
-	<p>
-		<label><?php  echo _COMMENTS;?>: </label>
-		<input type="text" name="comment" value="<?php  echo $comment;?>" />
-	</p>
-	<br/>
 	<p >
 		<label><?php echo _TASKS;?> : </label><br/>
 		<div style="margin-left:40%;">
 		<?php  for($k=0;$k<count($_ENV['security_bitmask']); $k++)
 		{
 			?>
-			<input type="checkbox"  class="check" name="rights_bitmask []"  value="<?php echo $_ENV['security_bitmask'][$k]['ID'];?>" <?php  if(check_right($_SESSION['m_admin']['groups']['security'][$i]['RIGHTS_BITMASK'] , $_ENV['security_bitmask'][$k]['ID'])){ echo 'checked="checked"'; } ?> <?php  if(!$show_checkbox){ echo 'disabled="disabled"';}?>  /> 
-		<?php echo  $_ENV['security_bitmask'][$k]['LABEL'].'<br/>';
+			<input type="checkbox"  class="check" name="rights_bitmask[]"  value="<?php echo $_ENV['security_bitmask'][$k]['ID'];?>" <?php  if(check_right($_SESSION['m_admin']['groups']['security'][$i]['RIGHTS_BITMASK'] , $_ENV['security_bitmask'][$k]['ID'])){ echo 'checked="checked"'; } ?> <?php  if(!$show_checkbox){ echo 'disabled="disabled"';}?>  /> 
+		<?php echo $_ENV['security_bitmask'][$k]['LABEL'].'<br/>';
 		}?>
 		</div>
 	</p>

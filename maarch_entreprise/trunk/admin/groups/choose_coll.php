@@ -32,6 +32,7 @@ require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_secur
 
 $_SESSION['m_admin']['group']['show_check'] = false;
 $sec = new security();
+/*
 $tabdiff = array();
 $tab1 = array();
 for($cpt_0=0; $cpt_0 < count($_SESSION['collections']); $cpt_0++)
@@ -71,8 +72,9 @@ if(count($tab_diff) == 1)
 {
 	 $_SESSION['m_admin']['group']['coll_id'] = $tabdiff[0];
 	 $_SESSION['m_admin']['group']['show_check'] = true;
-}
 
+}
+*/
 if(isset($_REQUEST['collselect']) && !empty($_REQUEST['collselect']))
 {
 	$_SESSION['m_admin']['group']['coll_id'] = $_REQUEST['collselect'];
@@ -89,11 +91,9 @@ if(isset($_REQUEST['collselect']) && !empty($_REQUEST['collselect']))
 }
 
 $core_tools = new core_tools();
-//here we loading the lang vars
 $core_tools->load_lang();
 $core_tools->test_admin('admin_groups', 'apps');
 $core_tools->load_html();
-//here we building the header
 $core_tools->load_header('', true, false);
 ?>
 <body>
@@ -106,10 +106,18 @@ $core_tools->load_header('', true, false);
 		<select name="collselect" id="collselect" onchange="this.form.submit();return false;">
 			<option value=""><?php  echo _CHOOSE_COLLECTION;?></option>
 			<?php
+/*
 				for($cpt_4=0; $cpt_4 < count($tabdiff); $cpt_4++)
 				{
 					?>
 					<option value="<?php  echo $tabdiff[$cpt_4]['id']; ?>" <?php  if ($_SESSION['m_admin']['group']['coll_id'] == $tabdiff[$cpt_4]['id']) {echo 'selected="selected"';  $_SESSION['m_admin']['group']['show_check'] = true;}?>><?php  echo $tabdiff[$cpt_4]['label']; ?></option>
+					<?php
+				}
+*/
+				for($i=0; $i < count($_SESSION['collections']); $i++)
+				{
+					?>
+					<option value="<?php  echo $_SESSION['collections'][$i]['id']; ?>" <?php  if ($_SESSION['m_admin']['group']['coll_id'] == $_SESSION['collections'][$i]['id']) {echo 'selected="selected"';  $_SESSION['m_admin']['group']['show_check'] = true;}?>><?php  echo $_SESSION['collections'][$i]['label']; ?></option>
 					<?php
 				}
 				?>

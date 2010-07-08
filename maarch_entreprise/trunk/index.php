@@ -4,7 +4,7 @@
 *
 * Maarch index
 *
-* @package  Maarch PeopleBox 1.0
+* @package  Maarch Entreprise 1.0
 * @version 2.1
 * @since 10/2005
 * @license GPL
@@ -90,14 +90,11 @@ else
 	$show = "true";
 }
 
-//$core_tools->test_user();
 $core_tools->start_page_stat();
 $core_tools->configPosition();
-//here we loading the lang vars
+
 $core_tools->load_lang();
-//here we loading the html
 $core_tools->load_html();
-//here we building the header
 $core_tools->load_header();
 $time = $core_tools->get_session_time_expire();
 
@@ -115,7 +112,6 @@ $time = $core_tools->get_session_time_expire();
 				echo '<div class="header_menu_blank">&nbsp;</div>';?>
                 <ul  >
                     <?php
-                    //Username for menu
 
                     //here we building the maarch menu
                     $core_tools->build_menu($_SESSION['menu']);
@@ -165,7 +161,6 @@ $time = $core_tools->get_session_time_expire();
         ?>
 	</div>
 </div>
-<?php // $core_tools->load_js();?>
 <script>HideMenu('menunav');</script>
 </body>
 </html>

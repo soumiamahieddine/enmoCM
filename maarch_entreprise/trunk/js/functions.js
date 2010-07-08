@@ -836,6 +836,35 @@ function expertmodeview(coll_id)
 	//document.location.reload();
 	document.location.href = 'index.php?display=true&page=add_grant&admin=groups&expertmode=true&collection=' + coll_id;
 }
+//alert('tesssst');
+function removeAccess( path_manage_script, sec_array)
+{
+	alert('removeaccess');
+	new Ajax.Request(path_manage_script,
+	{
+		    method:'post',
+		    parameters: { security : sec_array
+						},
+		        onSuccess: function(answer){
+				eval("response = "+answer.responseText);
+			//	alert(answer.responseText);
+				if(response.status == 0  )
+				{
+					
+					
+				}
+			}
+		});
+		alert('removeaccess');
+}
+
+function showAccess(path_manage_script)
+{
+	new Ajax.Updater('access',path_manage_script , {
+	parameters: { }
+});
+
+}
 /********************************/
 
 /*************** Modal functions *****************/

@@ -255,8 +255,8 @@ class usergroups extends dbquery
 							</div>
 						<?php	}
 						}
-						?>
-						<iframe name="group_form" id="group_form" class="frameform4" src="<?php  echo $_SESSION['config']['businessappurl'].'index.php?display=true&admin=groups&page=groups_form';?>" frameborder="0" scrolling="auto"></iframe>
+						?><div id="access"></div>
+						<!--<iframe name="group_form" id="group_form" class="frameform4" src="<?php  echo $_SESSION['config']['businessappurl'].'index.php?display=true&admin=groups&page=groups_form';?>" frameborder="0" scrolling="auto"></iframe>-->
 					</div>
 					<form name="formgroup" method="post"  class="forms" action="<?php  if($mode == "up") { echo $_SESSION['config']['businessappurl']."index.php?display=true&admin=groups&page=group_up_db"; } elseif($mode == "add") { echo "index.php?display=true&admin=groups&page=group_add_db"; } ?>" >
 					<input type="hidden" name="display" value="value" />
@@ -389,6 +389,7 @@ class usergroups extends dbquery
 						<p>&nbsp;</p>
 					</form>
 				</div>
+				<script>showAccess('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=groups_form&admin=groups');</script>
 			<?php
 			}
 	}

@@ -3484,3 +3484,18 @@ a.legend hr
 {
 	color: #002F2F;
 }
+
+.access_info
+{
+	margin-left: 5%;
+	background-color: #EFFAFF;
+	padding:5px;
+}
+
+.task
+{
+	background-color: #EFFAFF;
+	width:50%;
+	float:left;
+	height: 41px;
+}
