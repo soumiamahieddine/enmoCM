@@ -54,25 +54,17 @@ class security extends dbquery
 		$security_group = array();
 		
 		$this->connect();
-		$this->query("select distinct coll_id from ".$_SESSION['tablename']['security'] ." where group_id = '".$group_id."'");
+		$this->query("select * from ".$_SESSION['tablename']['security'] ." where group_id = '".$group_id."'");
 		
 		if($this->nb_result() > 0)
 		{
 			$collections = array();
 			$ind = -1;
+			
 			while($res = $this->fetch_object())
 			{
-				$security_group[$res->coll_id] = array();
-				array_push($collections, $res->coll_id);
-			}
-			for($i=0; $i<count($collections); $i++)
-			{
-				$this->query("select * from ".$_SESSION['tablename']['security'] ." where group_id = '".$group_id."' and coll_id = '".$collections[$i]."'");
-				$ind = $this->get_ind_collection($collections[$i]);
-				while($res = $this->fetch_object())
-				{
-					array_push($security_group[$collections[$i]], array('SECURITY_ID' => $res->security_id,'GROUP_ID' => $res->group_id,'COLL_ID' => $res->coll_id, 'IND_COLL_SESSION' => $ind, 'WHERE_CLAUSE' => $res->where_clause, 'COMMENT' => $res->maarch_comment ,'CAN_INSERT' => $res->can_insert ,'CAN_UPDATE' => $res->can_update, 'CAN_DELETE' => $res->can_delete, 'WHERE_TARGET'=> $res->where_target, 'START_DATE' => $res->mr_start_date, 'STOP_DATE' => $res->mr_stop_date, 'RIGHTS_BITMASK' => $res->rights_bitmask));
-				}
+				$ind = $this->get_ind_collection($res->coll_id);
+				array_push($security_group, array('SECURITY_ID' => $res->security_id, 'GROUP_ID' => $res->group_id,'COLL_ID' => $res->coll_id, 'IND_COLL_SESSION' => $ind, 'WHERE_CLAUSE' => $res->where_clause, 'COMMENT' => $res->maarch_comment ,'CAN_INSERT' => $res->can_insert ,'CAN_UPDATE' => $res->can_update, 'CAN_DELETE' => $res->can_delete, 'WHERE_TARGET'=> $res->where_target, 'START_DATE' => $res->mr_start_date, 'STOP_DATE' => $res->mr_stop_date, 'RIGHTS_BITMASK' => $res->rights_bitmask));
 			}
 		}
 		return $security_group;
@@ -209,7 +201,7 @@ class security extends dbquery
 	* @param   $delete string Update right : Y/N
 	* @param   $mode string Mode : 'up' or 'add'
 	*/
-	public function add_grouptmp_session($coll_id, $where, $comment, $insert, $update, $delete, $mode)
+	public function add_grouptmp_session($coll_id, $where , $target, $bitmask, $comment, $mode, $start_date, $stop_date)
 	{
 		if(empty($mode))
 		{
@@ -223,9 +215,11 @@ class security extends dbquery
 				{
 					$_SESSION['m_admin']['groups']['security'][$i]['WHERE_CLAUSE'] = $where;
 					$_SESSION['m_admin']['groups']['security'][$i]['COMMENT'] = $comment;
-					$_SESSION['m_admin']['groups']['security'][$i]['CAN_INSERT'] = $insert;
-					$_SESSION['m_admin']['groups']['security'][$i]['CAN_UPDATE'] = $update;
-					$_SESSION['m_admin']['groups']['security'][$i]['CAN_DELETE'] = $delete;
+					$_SESSION['m_admin']['groups']['security'][$i]['WHERE_TARGET'] = $target;
+					$_SESSION['m_admin']['groups']['security'][$i]['RIGHTS_BITMASK'] = $bitmask;
+					$_SESSION['m_admin']['groups']['security'][$i]['START_DATE'] = $start_date;
+					$_SESSION['m_admin']['groups']['security'][$i]['STOP_DATE'] = $stop_date;
+					
 					break;
 				}
 			}
@@ -233,9 +227,7 @@ class security extends dbquery
 		else
 		{
 			$ind = $this->get_ind_collection($coll_id);
-			$tab = array();
-			$tab[0] = array("GROUP_ID" => "" , "COLL_ID" => $coll_id , "IND_COLL_SESSION" => $ind,"WHERE_CLAUSE" => $where, "COMMENT" => $comment ,"CAN_INSERT" => $insert ,"CAN_UPDATE" => $update, 'CAN_DELETE' => $delete);
-			array_push($_SESSION['m_admin']['groups']['security'] , $tab[0]);
+			array_push($_SESSION['m_admin']['groups']['security'] , array('GROUP_ID' => '' , 'COLL_ID' => $coll_id , 'IND_COLL_SESSION' => $ind,'WHERE_CLAUSE' => $where, 'COMMENT' => $comment , 'WHERE_TARGET' => $target, 'RIGHTS_BITMASK' => $bitmask, 'START_DATE' => $start_date, 'STOP_DATE' => $stop_date));
 			$_SESSION['m_admin']['load_security'] = false;
 		}
 	}
@@ -255,6 +247,79 @@ class security extends dbquery
 				$this->query("INSERT INTO ".$_SESSION['tablename']['security']." VALUES ('".$_SESSION['m_admin']['groups']['GroupId']."', '".$_SESSION['m_admin']['groups']['security'][$i]['COLL_ID']."', '".$this->protect_string_db($_SESSION['m_admin']['groups']['security'][$i]['WHERE_CLAUSE'])."', '".$_SESSION['m_admin']['groups']['security'][$i]['COMMENT']."', '".$_SESSION['m_admin']['groups']['security'][$i]['CAN_INSERT']."' , '".$_SESSION['m_admin']['groups']['security'][$i]['CAN_UPDATE']."', '".$_SESSION['m_admin']['groups']['security'][$i]['CAN_DELETE']."')");
 			}
 		}
+	}
+
+	public function check_where_clause($coll_id, $target, $where_clause)
+	{
+		$res = array('RESULT' => false, 'TXT' => '');
+		
+		if(empty($coll_id) || empty($target) || empty($where))
+		{
+			$res['TXT'] = _ERROR_PARAMETERS_FUNCTION;
+			return $res;
+		}
+		
+		$ind = $this->get_ind_collection($coll_id);
+		$where = " ".$where_clause;
+		$where = str_replace("\\", "", $where);
+		$where = $this->process_security_where_clause($where, $_SESSION['user']['UserId']);
+		
+		$this->connect();
+		
+		if($target == 'ALL' || $target == 'DOC')
+		{
+			$selectWhereTest = array();
+			$selectWhereTest[$_SESSION['collections'][$ind]['view']]= array();
+			array_push($selectWhereTest[$_SESSION['collections'][$ind]['view']],"res_id");
+			$tabResult = array();
+			require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
+			$request = new request();
+			if(str_replace(" ", "", $where) == "")
+			{
+				$where = "";
+			}
+			$where = str_replace("where", " ", $where);
+			$tabResult = $request->select($selectWhereTest, $where, "", $_SESSION['config']['databasetype'], 10, false, "", "", "", true, true);
+					
+			if(!$tabResult )
+			{
+				$res['TXT'] = _SYNTAX_ERROR_WHERE_CLAUSE;
+				return $res;
+			}
+			else
+			{
+				$res['TXT'] = _SYNTAX_OK;
+				$res['RESULT'] = true;
+			}
+		}
+		/// TO DO : définir le nom de la vue
+		if($target == 'ALL' || $target == 'CLASS')
+		{
+			$selectWhereTest = array();
+			$selectWhereTest[_CLASSIFICATION_VIEW]= array();
+			array_push($selectWhereTest[_CLASSIFICATION_VIEW],"agregation_id");
+			$tabResult = array();
+			require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
+			$request = new request();
+			if(str_replace(" ", "", $where) == "")
+			{
+				$where = "";
+			}
+			$where = str_replace("where", " ", $where);
+			$tabResult = $request->select($selectWhereTest, $where, "", $_SESSION['config']['databasetype'], 10, false, "", "", "", true, true);
+					
+			if(!$tabResult )
+			{
+				$res['TXT'] = _SYNTAX_ERROR_WHERE_CLAUSE;
+				return $res;
+			}
+			else
+			{
+				$res['TXT'] = _SYNTAX_OK;
+				$res['RESULT'] = true;
+			}
+		}
+		return $res;
 	}
 
 	/**
