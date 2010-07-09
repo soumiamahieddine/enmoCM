@@ -46,7 +46,11 @@ $_SESSION['doctypes_choosen'] = array();
 
 $_SESSION['m_admin']['collection_choice'] = "coll_1";
 
-
+function cmp($a, $b)
+{
+   	return strcmp($a["COLL_ID"], $b["COLL_ID"]);
+}
+usort($_SESSION['m_admin']['groups']['security'], "cmp");
 //$core_tools->load_html();
 //$core_tools->load_header(_MANAGE_RIGHTS);
 ?>
@@ -71,50 +75,49 @@ $_SESSION['m_admin']['collection_choice'] = "coll_1";
 		<table width="100%" border = "0">
 		
 		<?php
-		
-		foreach(array_keys($_SESSION['m_admin']['groups']['security']) as $coll)
-		{
-			for($i=0; $i < count($_SESSION['m_admin']['groups']['security'][$coll]); $i++)
+			for($i=0; $i<count($_SESSION['m_admin']['groups']['security']);$i++)
 			{
-				if($_SESSION['m_admin']['groups']['security'][$coll][$i] <> "")
+				if(isset($_SESSION['m_admin']['groups']['security'][$i]) && count($_SESSION['m_admin']['groups']['security'][$i]) > 0)
 				{
 					?>
 					<tr>
 						<td>
-							<div align="left" id="access_<?php echo $_SESSION['m_admin']['groups']['security'][$coll][$i]['SECURITY_ID'];?>">
+							<div align="left" id="access_<?php echo $_SESSION['m_admin']['groups']['security'][$i]['SECURITY_ID'];?>">
 								<div style="float:left;">
-									<input type="checkbox"  class="check" name="security[]" value="<?php  echo $_SESSION['m_admin']['groups']['security'][$coll][$i]['SECURITY_ID']; ?>" />
+									<input type="checkbox"  class="check" name="security[]" value="<?php  echo $_SESSION['m_admin']['groups']['security'][$i]['SECURITY_ID']; ?>" />
 								</div>
 								<div>
-									<?php echo $func->show_string($_SESSION['m_admin']['groups']['security'][$coll][$i]['COMMENT']);?>
+									<?php echo $func->show_string($_SESSION['m_admin']['groups']['security'][$i]['COMMENT']);?>
 								</div>
 								<div align="left" style="margin-left:5%;">
 								
-									<span ><?php echo _COLLECTION;?> : </span><span><?php echo $_SESSION['collections'][$_SESSION['m_admin']['groups']['security'][$coll][$i]['IND_COLL_SESSION']]['label']; ?></span>
-									<span align="right">
-									<?php if(!empty($_SESSION['m_admin']['groups']['security'][$coll][$i]['START_DATE']) )
+									<span ><?php echo _COLLECTION;?> : </span><span><?php echo $_SESSION['collections'][$_SESSION['m_admin']['groups']['security'][$i]['IND_COLL_SESSION']]['label']; ?></span>
+								</div>
+								<div style="margin-left:5%;">
+									<span >
+									<?php if(!empty($_SESSION['m_admin']['groups']['security'][$i]['START_DATE']) )
 									{
-										echo _SINCE.' : '.$func->format_date_db($_SESSION['m_admin']['groups']['security'][$coll][$i]['START_DATE']);
+										echo _SINCE.' : '.$func->format_date_db($_SESSION['m_admin']['groups']['security'][$i]['START_DATE']);
 									}
 									echo '&nbsp;';
-									if(!empty($_SESSION['m_admin']['groups']['security'][$coll][$i]['STOP_DATE']) )
+									if(!empty($_SESSION['m_admin']['groups']['security'][$i]['STOP_DATE']) )
 									{
-										echo _FOR.' : '.$func->format_date_db($_SESSION['m_admin']['groups']['security'][$coll][$i]['STOP_DATE']);
+										echo _FOR.' : '.$func->format_date_db($_SESSION['m_admin']['groups']['security'][$i]['STOP_DATE']);
 									}?>
 									</span>
 								</div>
-								<div align="right" onclick="new Effect.toggle('access_info_<?php echo $_SESSION['m_admin']['groups']['security'][$coll][$i]['SECURITY_ID'];?>', 'blind', {delay:0.2});return false;" >
+								<div align="right" onclick="new Effect.toggle('access_info_<?php echo $_SESSION['m_admin']['groups']['security'][$i]['SECURITY_ID'];?>', 'blind', {delay:0.2});return false;" >
 								 <img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_add_b.gif" alt="<?php _MORE_INFOS;?>" title="<?php _MORE_INFOS;?>" /><span class="lb1-details">&nbsp;</span>
 								</div>
-								<div style="display:none;" id="access_info_<?php echo $_SESSION['m_admin']['groups']['security'][$coll][$i]['SECURITY_ID'];?>" class="access_info desc">
+								<div style="display:none;" id="access_info_<?php echo $_SESSION['m_admin']['groups']['security'][$i]['SECURITY_ID'];?>" class="access_info desc">
 									<div class="ref-unit">
 										<div>
 										<?php echo _WHERE_CLAUSE_TARGET.' : ';
-										if( $_SESSION['m_admin']['groups']['security'][$coll][$i]['WHERE_TARGET'] == 'DOC')
+										if( $_SESSION['m_admin']['groups']['security'][$i]['WHERE_TARGET'] == 'DOC')
 										{
 											echo _DOCS;
 										}
-										elseif($_SESSION['m_admin']['groups']['security'][$coll][$i]['WHERE_TARGET'] == 'CLASS')
+										elseif($_SESSION['m_admin']['groups']['security'][$i]['WHERE_TARGET'] == 'CLASS')
 										{
 											echo _CLASS_SCHEME;
 										}
@@ -123,7 +126,7 @@ $_SESSION['m_admin']['collection_choice'] = "coll_1";
 											echo _ALL;
 										}?></div>
 										<div> 
-											<?php echo _WHERE_CLAUSE.' : '.$func->show_string($_SESSION['m_admin']['groups']['security'][$coll][$i]['WHERE_CLAUSE']);?>
+											<?php echo _WHERE_CLAUSE.' : '.$func->show_string($_SESSION['m_admin']['groups']['security'][$i]['WHERE_CLAUSE']);?>
 										</div>
 										<div>
 											<span><?php echo _TASKS;?> :</span><br/>
@@ -131,7 +134,7 @@ $_SESSION['m_admin']['collection_choice'] = "coll_1";
 												for($k=0;$k<count($_ENV['security_bitmask']); $k++)
 												{
 													echo '<div class="task"><img ';
-													if(check_right($_SESSION['m_admin']['groups']['security'][$coll][$i]['RIGHTS_BITMASK'] , $_ENV['security_bitmask'][$k]['ID']))
+													if(check_right($_SESSION['m_admin']['groups']['security'][$i]['RIGHTS_BITMASK'] , $_ENV['security_bitmask'][$k]['ID']))
 													{
 														echo 'src="'.$_SESSION['config']['businessappurl'].'static.php?filename=picto_stat_enabled.gif" alt="'._ENABLED.'"';
 													}
@@ -154,7 +157,6 @@ $_SESSION['m_admin']['collection_choice'] = "coll_1";
 					<?php
 				}
 			}
-		}
 		?>
 			<tr><td height="20">&nbsp;</td></tr>
 		</table>
@@ -163,12 +165,14 @@ $_SESSION['m_admin']['collection_choice'] = "coll_1";
 	if (count($_SESSION['m_admin']['groups']['security']) > 0)
 	{
 		?>
-		<input type="button" name="modifyAccess" value="<?php  echo _MODIFY_ACCESS; ?>" class="button" onclick="window.open('<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&admin=groups&page=add_grant&collection=<?php  echo $_REQUEST['security'][0];?>','modify','toolbar=no,status=no,width=850,height=650,left=150,top=300,scrollbars=auto,location=no,menubar=no,resizable=yes');" />
+		<input type="button" name="modifyAccess" value="<?php  echo _MODIFY_ACCESS; ?>" class="button" onclick="console.log(document.getElementsByName('security[]'[0]));window.open('<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&admin=groups&page=add_grant&security_id=<?php  echo $_REQUEST['security'][0];?>','modify','toolbar=no,status=no,width=850,height=650,left=150,top=300,scrollbars=auto,location=no,menubar=no,resizable=yes');" />
 		<input type="button" name="removeAccess" value="<?php  echo _REMOVE_ACCESS; ?>" class="button" onclick="removeAccess('apps/maarch_entreprise/admin/groups/remove_access.php', document.getElementsByName('security[]'));"/>
 		<?php
 	}
 		?>
-		<input type="button" name="addGrant" class="button" onclick="window.open('<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&admin=groups&page=add_grant','add','toolbar=no,status=no,width=850,height=650,left=150,top=300,scrollbars=auto,location=no,menubar=no,resizable=yes');" value="<?php  echo _ADD_GRANT; ?>" />
+		<input type="button" name="addGrant" class="button" 
+		 onclick="displayModal('<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&admin=groups&page=add_grant&mode=add', 'add_grant', 850, 650);"
+		value="<?php  echo _ADD_GRANT; ?>" />
 	<br/><br/>
 </form>
 </div>

@@ -32,49 +32,7 @@ require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_secur
 
 $_SESSION['m_admin']['group']['show_check'] = false;
 $sec = new security();
-/*
-$tabdiff = array();
-$tab1 = array();
-for($cpt_0=0; $cpt_0 < count($_SESSION['collections']); $cpt_0++)
-{
-	array_push($tab1, $_SESSION['collections'][$cpt_0]['id']);
-}
 
-$tab2 = array();
-for($cpt_1=0; $cpt_1 < count($_SESSION['m_admin']['groups']['security'][$cpt_1]); $cpt_1++)
-{
-	array_push($tab2, $_SESSION['m_admin']['groups']['security'][$cpt_1]['COLL_ID']);
-}
-
-for($cpt_2=0; $cpt_2 < count($tab1); $cpt_2++)
-{
-	if(!in_array($tab1[$cpt_2], $tab2))
-	{
-		array_push($tabdiff, $tab1[$cpt_2]);
-	}
-}
-
-$tmp = array();
-
-for($cpt_3=0; $cpt_3 < count($tabdiff); $cpt_3++)
-{
-	$j = $sec->get_ind_collection($tabdiff[$cpt_3]);
-
-	if(!isset($_SESSION['collections'][$j]['table'])|| empty($_SESSION['collections'][$j]['table']))
-	{
-		$show_checkbox = false;
-	}
-	array_push($tmp, array('id' => $tabdiff[$cpt_3], 'label' => $_SESSION['collections'][$j]['label']));
-
-}
-$tabdiff = $tmp;
-if(count($tab_diff) == 1)
-{
-	 $_SESSION['m_admin']['group']['coll_id'] = $tabdiff[0];
-	 $_SESSION['m_admin']['group']['show_check'] = true;
-
-}
-*/
 if(isset($_REQUEST['collselect']) && !empty($_REQUEST['collselect']))
 {
 	$_SESSION['m_admin']['group']['coll_id'] = $_REQUEST['collselect'];
@@ -106,14 +64,6 @@ $core_tools->load_header('', true, false);
 		<select name="collselect" id="collselect" onchange="this.form.submit();return false;">
 			<option value=""><?php  echo _CHOOSE_COLLECTION;?></option>
 			<?php
-/*
-				for($cpt_4=0; $cpt_4 < count($tabdiff); $cpt_4++)
-				{
-					?>
-					<option value="<?php  echo $tabdiff[$cpt_4]['id']; ?>" <?php  if ($_SESSION['m_admin']['group']['coll_id'] == $tabdiff[$cpt_4]['id']) {echo 'selected="selected"';  $_SESSION['m_admin']['group']['show_check'] = true;}?>><?php  echo $tabdiff[$cpt_4]['label']; ?></option>
-					<?php
-				}
-*/
 				for($i=0; $i < count($_SESSION['collections']); $i++)
 				{
 					?>

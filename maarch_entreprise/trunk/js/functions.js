@@ -1,17 +1,4 @@
 
-// Adding prototype and other js scripts
-//~ document.write('<script type="text/javascript" src="'+app_path+'prototype.js"></script>');
-//~ document.write('<script type="text/javascript" src="'+app_path+'scriptaculous.js&load=effects,slider"></script>');
-//~ document.write('<script type="text/javascript" src="'+app_path+'maarch.js"></script>');
-//~ document.write('<script type="text/javascript" src="'+app_path+'scrollbox.js"></script>');
-//~ document.write('<script type="text/javascript" src="'+app_path+'effects.js"></script>');
-//~ document.write('<script type="text/javascript" src="'+app_path+'controls.js"></script>');
-//~ document.write('<script type="text/javascript" src="'+app_path+'concertina.js"></script>');
-//~ document.write('<script type="text/javascript" src="'+app_path+'protohuds.js"></script>');
-//~ document.write('<script type="text/javascript" src="'+app_path+'tabricator.js"></script>');
-//~ 
-//~ document.write('<script type="text/javascript" src="'+app_path+'indexing.js"></script>');
-
 var isAlreadyClick = false;
 
 function repost(php_file,update_divs,fields,action,timeout)
@@ -836,7 +823,7 @@ function expertmodeview(coll_id)
 	//document.location.reload();
 	document.location.href = 'index.php?display=true&page=add_grant&admin=groups&expertmode=true&collection=' + coll_id;
 }
-//alert('tesssst');
+
 function removeAccess( path_manage_script, sec_array)
 {
 	alert('removeaccess');
@@ -858,16 +845,97 @@ function removeAccess( path_manage_script, sec_array)
 		alert('removeaccess');
 }
 
-function showAccess(path_manage_script)
+function checkAccess(current_form_id, url_check, url_manage, url_display_access, protect_string)
 {
-	new Ajax.Updater('access',path_manage_script , {
-	parameters: { }
-});
-
+	var frm_values = get_form_values(current_form_id);
+	if(protect_string == false)
+	{
+		var protect = false;
+	}
+	else
+	{
+		var protect = true;
+	}
+	if(protect)
+	{
+		frm_values = frm_values.replace(/\'/g, "\\'");
+		frm_values = frm_values.replace(/\"/g, '\\"');
+		frm_values = frm_values.replace(/\r\n/g, ' ');
+		frm_values = frm_values.replace(/\r/g, ' ');
+		frm_values = frm_values.replace(/\n/g, ' ');
+	}
+	//alert(frm_values);
+	new Ajax.Request(url_check,
+	{
+		method:'post',
+		parameters: {
+					  form_values : frm_values
+					},
+			onSuccess: function(answer){
+			eval("response = "+answer.responseText);
+		//	alert(answer.responseText);
+			if(response.status == 0  )
+			{
+				manageAccess(url_manage,url_display_access, frm_values);
+			}
+			else //  Form Params errors
+			{
+				//console.log(response.error_txt);
+				try{
+						$('frm_error').innerHTML = response.error_txt;
+					}
+				catch(e){}
+			}
+		}
+	});	
 }
+
+function manageAccess(url_manage, url_display_access, frm_values)
+{
+	new Ajax.Request(url_manage,
+	{
+		method:'post',
+		parameters: { 
+					  form_values : frm_values
+					},
+			onSuccess: function(answer){
+			eval("response = "+answer.responseText);
+		//	alert(answer.responseText);
+			if(response.status == 0  )
+			{
+				updateContent(url_display_access, 'access');
+				destroyModal('add_grant');
+			}
+			else 
+			{
+				//console.log(response.error_txt);
+				try{
+						$('frm_error').innerHTML = response.error_txt;
+					}
+				catch(e){}
+			}
+		}
+	});	
+}
+
 /********************************/
 
 /*************** Modal functions *****************/
+
+function displayModal(url, id_mod, height, width, mode_frm )
+{
+	new Ajax.Request(url,
+		{
+			method:'post',
+			parameters: { 
+					},
+				onSuccess: function(answer){
+				createModal(answer.responseText,id_mod, height, width, mode_frm );
+				},
+				onFailure: function(){
+				}
+			});
+}
 
 /**
  * Create a modal window
@@ -998,11 +1066,9 @@ function get_z_indexes()
  */
  function getScrollXY(){
     if (window.top.scrollX || window.top.scrollY){
-		//alert("1");
         var scrollX = window.scrollX;
         var scrollY = window.scrollY;
     }else{
-		//alert("2");
         var scrollX = document.body.scrollLeft;
         var scrollY = document.body.scrollTop;
     }
@@ -1118,7 +1184,7 @@ function valid_action_form(current_form_id, path_manage_script, id_action, value
 	{
 		frm_values = frm_values.replace(/\'/g, "\\'");
 		frm_values = frm_values.replace(/\"/g, '\\"');
-			frm_values = frm_values.replace(/\r\n/g, ' ');
+		frm_values = frm_values.replace(/\r\n/g, ' ');
 		frm_values = frm_values.replace(/\r/g, ' ');
 		frm_values = frm_values.replace(/\n/g, ' ');
 	}
@@ -1254,7 +1320,6 @@ function get_form_values(form_id)
 		}
 		val.substring(0, val.length -3);
 	}
-	//console.log(val);
 	return val;
 }
 
@@ -2102,3 +2167,10 @@ function unmark_empty_process(id)
 	$(id).checked=false;
 }
 
+function updateContent(url,id_div_to_update)
+{
+	new Ajax.Updater(id_div_to_update,url , {
+	parameters: { }
+});
+
+}

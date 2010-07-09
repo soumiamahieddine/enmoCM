@@ -29,42 +29,61 @@
 */
 
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
-
+include('apps/maarch_entreprise/security_bitmask.php');
+include('core/manage_bitmask.php');
+$core_tools = new core_tools();
+$core_tools->load_js();
 $_SESSION['error'] = "";
 if(!empty($_SESSION['m_admin']['group']['coll_id']) && isset($_SESSION['m_admin']['group']['coll_id']))
 {
-	$insert = 'N';
-	if(isset($_REQUEST['insert']) && count($_REQUEST['insert']) > 0)
-	{
-		 $insert = 'Y';
-	}
-	$update = 'N';
-	if (isset($_REQUEST['update']) && count($_REQUEST['update']) > 0)
-	{
-		 $update = 'Y';
-	}
-	$delete = 'N';
-	if(isset($_REQUEST['delete']) && count($_REQUEST['delete']) > 0)
-	{
-		 $delete = 'Y';
-	}
 	$comment = "";
 	if(isset($_REQUEST['comment']))
 	{
 		$comment = $_REQUEST['comment'];
+	}
+	$target = 'ALL';
+	if(isset($_REQUEST['target']))
+	{
+		$target = $_REQUEST['target'];
+	}
+	$where = '';
+	if(isset($_REQUEST['where']))
+	{
+		$where = $_REQUEST['where'];
 	}
 	$mode = '';
 	if (isset($_REQUEST['mode']))
 	{
 		$mode = $_REQUEST['mode'];
 	}
+	$start_date = '';
+	if (isset($_REQUEST['start_date']))
+	{
+		$start_date = $_REQUEST['start_date'];
+	}
+	$stop_date = '';
+	if (isset($_REQUEST['stop_date']))
+	{
+		$stop_date = $_REQUEST['stop_date'];
+	}
+	
+	$bitmask = 0; 
+	if(isset($_REQUEST['rights_bitmask']) && count($_REQUESt['rights_bitmask']) > 0)
+	{
+		for($i=0; $i<count($_REQUEST['rights_bitmask']);$i++)
+		{
+			$bitmask = set_right($bitmask, $_REQUEST['rights_bitmask'][$i]);
+		}
+	}
 	$sec = new security();
-	$sec->add_grouptmp_session($_SESSION['m_admin']['group']['coll_id'], $_REQUEST['where'], $comment, $insert, $update, $delete, $mode);
+	$sec->add_grouptmp_session($_SESSION['m_admin']['group']['coll_id'], $where , $target, $bitmask, $comment, $mode, $start_date, $stop_date);
 }
 else
 {
 }
 ?>
 <script language="javascript">
-window.opener.top.frames['group_form'].location.href='<?php $_SESSION['config']['businessappurl'];?>index.php?display&page=groups_form&admin=groups';self.close();
+updateContent('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=groups_form&admin=groups', window.opener.$('access'));self.close();
+//window.opener.top.frames['group_form'].location.href='<?php $_SESSION['config']['businessappurl'];?>index.php?display&page=groups_form&admin=groups';self.close();
 </script>
+<?php exit();?>

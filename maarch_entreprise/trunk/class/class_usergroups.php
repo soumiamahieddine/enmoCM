@@ -389,7 +389,7 @@ class usergroups extends dbquery
 						<p>&nbsp;</p>
 					</form>
 				</div>
-				<script>showAccess('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=groups_form&admin=groups');</script>
+				<script>updateContent('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=groups_form&admin=groups', 'access');</script>
 			<?php
 			}
 	}

@@ -34,9 +34,9 @@ include('core/manage_bitmask.php');
 $core_tools = new core_tools();
 $core_tools->load_lang();
 $core_tools->test_admin('admin_groups', 'apps');
+$mode = "add";
+$sec = new security();
 $func = new functions();
-$coll = '';
-$coll_label = '';
 $clause = '';
 $comment = '';
 $start_date = '';
@@ -44,216 +44,66 @@ $stop_date = '';
 $target = 'ALL';
 $rights_bitmask = 0;
 $tabdiff=array();
-$mode = "add";
-$sec = new security();
-$show_checkbox = true;
+$coll_id = $_SESSION['collections'][0]['id'];
+$ind = 0;
 
-if(isset($_REQUEST['collection']) && !empty($_REQUEST['collection']))
+if(isset($_REQUEST['security_id']) && !empty($_REQUEST['security_id']))
 {
 	$mode = "up";
-	for($i=0;$i< count($_SESSION['m_admin']['groups']['security']);$i++)
-	{
-		if($_SESSION['m_admin']['groups']['security'][$i]['COLL_ID'] == trim($_REQUEST['collection']))
-		{
-			$_SESSION['m_admin']['group']['coll_id'] = trim($_REQUEST['collection']);
-			$ind = $sec->get_ind_collection($_SESSION['m_admin']['group']['coll_id']);
-			$coll_label = $_SESSION['collections'][$ind]['label'];
-			$target = $_SESSION['m_admin']['groups']['security'][$i]['WHERE_TARGET'];
-			$clause = $func->show_string($_SESSION['m_admin']['groups']['security'][$i]['WHERE_CLAUSE']);
-			$comment = $_SESSION['m_admin']['groups']['security'][$i]['COMMENT'];
-			$start_date = $func->format_date_db($_SESSION['m_admin']['groups']['security'][$i]['START_DATE'], false);
-			$stop_date = $func->format_date_db($_SESSION['m_admin']['groups']['security'][$i]['STOP_DATE'], false);
-			if(!isset($_SESSION['collections'][$ind]['table']) || empty($_SESSION['collections'][$ind]['table']))
-			{
-				$show_checkbox = false;
-			}
-			else
-			{
-				$rights_bitmask = $_SESSION['m_admin']['groups']['security'][$i]['RIGHTS_BITMASK'];
-			}
-		}
-	}
-	if($coll_label == "")
-	{
-		$ind = $sec->get_ind_collection($_SESSION['m_admin']['group']['coll_id']);
-		$coll_label = $_SESSION['collections'][$ind]['label'];
-		$mode = "add";
-	}
+	$security_id = trim($_REQUEST['security_id']);
+	$coll_id = $_SESSION['m_admin']['groups']['security'][$security_id]['COLL_ID'];
+	$ind = $sec->get_ind_collection($coll_id);
+	$coll_label = $_SESSION['collections'][$ind]['label'];
+	$target = $_SESSION['m_admin']['groups']['security'][$security_id]['WHERE_TARGET'];
+	$clause = $func->show_string($_SESSION['m_admin']['groups']['security'][$security_id]['WHERE_CLAUSE']);
+	$comment = $_SESSION['m_admin']['groups']['security'][$security_id]['COMMENT'];
+	$start_date = $func->format_date_db($_SESSION['m_admin']['groups']['security'][$security_id]['START_DATE'], false);
+	$stop_date = $func->format_date_db($_SESSION['m_admin']['groups']['security'][$security_id]['STOP_DATE'], false);
+	$rights_bitmask = $_SESSION['m_admin']['groups']['security'][$security_id]['RIGHTS_BITMASK'];	
 }
-else
-{
-	$show_checkbox = $_SESSION['m_admin']['group']['show_check'];
-}
-/*if($core_tools->is_module_loaded("basket"))
-{
-	$_SESSION['entities_choosen'] = array();
-}
-$_SESSION['doctypes_choosen'] = array();
-if($_SESSION['m_admin']['mode'] == "up" && $_SESSION['m_admin']['init'] == true)
-{
-	$where = "";
-	for($i=0;$i<count($_SESSION['m_admin']['groups']['security']);$i++)
-	{
-		if($_SESSION['m_admin']['groups']['security'][$i]['COLL_ID'] == $_SESSION['m_admin']['group']['coll_id'])
-		{
-			$_SESSION['m_admin']['groups']['coll_id'] = $_SESSION['m_admin']['groups']['security'][$i]['COLL_ID'];
-			$_SESSION['m_admin']['groups']['where_clause'] = $func->show_string($_SESSION['m_admin']['groups']['security'][$i]['WHERE_CLAUSE']);
-		}
-	}
-	$where = $func->show_string(trim($_SESSION['m_admin']['groups']['where_clause']));
-	if($core_tools->is_module_loaded("basket"))
-	{
-		$where = str_replace("DESTINATION IN (", "", $where);
-	}
-	$where = str_replace("TYPE_ID IN (", "", $where);
-	$where = str_replace(")", "", $where);
-	$where = str_replace("'", "", $where);
-	if(preg_match("/,/", $where))
-	{
-		if($core_tools->is_module_loaded("basket"))
-		{
-			$where_init = explode(" AND ", $func->show_string($where));
-			$_SESSION['entities_choosen'] = explode(",", $where_init[0]);
-			$_SESSION['doctypes_choosen'] = explode(",", $where_init[1]);
-			for($i=0; $i<count($_SESSION['entities_choosen']);$i++)
-			{
-				$_SESSION['entities_choosen'][$i] = trim($_SESSION['entities_choosen'][$i]);
-			}
-			for($j=0; $j<count($_SESSION['doctypes_choosen']);$j++)
-			{
-				$_SESSION['doctypes_choosen'][$j] = trim($_SESSION['doctypes_choosen'][$j]);
-			}
-		}
-		else
-		{
-			$_SESSION['doctypes_choosen'] = explode(",", $where);
-			for($j=0; $j<count($_SESSION['doctypes_choosen']);$j++)
-			{
-				$_SESSION['doctypes_choosen'][$j] = trim($_SESSION['doctypes_choosen'][$j]);
-			}
-		}
-	}
-	else
-	{
-		if($core_tools->is_module_loaded("basket"))
-		{
-			array_push($_SESSION['entities_choosen'], trim($where));
-		}
-	}
-
-	$_SESSION['m_admin']['init'] = false;
-}
-if($core_tools->is_module_loaded("basket"))
-{
-	if($_SESSION['entities_choosen_where_clause'] == " DESTINATION IN ('')")
-	{
-		$_SESSION['entities_choosen_where_clause'] = "";
-	}
-}
-if($_SESSION['doctypes_choosen_where_clause'] == " TYPE_ID IN ('')")
-{
-	$_SESSION['doctypes_choosen_where_clause'] = "";
-}
-if($_REQUEST['expertmode'] <> "true")
-{
-	$_SESSION['choosen_where_clause'] = $clause;
-}
-else
-{
-	if($core_tools->is_module_loaded("basket"))
-	{
-		if(trim($_SESSION['entities_choosen_where_clause']) <> "" and trim($_SESSION['doctypes_choosen_where_clause']) <> "")
-		{
-			$_SESSION['choosen_where_clause'] = stripslashes($_SESSION['entities_choosen_where_clause'])." AND ".stripslashes($_SESSION['doctypes_choosen_where_clause']);
-		}
-		elseif(trim($_SESSION['entities_choosen_where_clause']) <> "" and trim($_SESSION['doctypes_choosen_where_clause']) == "")
-		{
-			$_SESSION['choosen_where_clause'] = stripslashes($_SESSION['entities_choosen_where_clause']);
-		}
-		elseif(trim($_SESSION['entities_choosen_where_clause']) == "" and trim($_SESSION['doctypes_choosen_where_clause']) <> "")
-		{
-			$_SESSION['choosen_where_clause'] = stripslashes($_SESSION['doctypes_choosen_where_clause']);
-		}
-		elseif(trim($_SESSION['entities_choosen_where_clause']) == "" and trim($_SESSION['doctypes_choosen_where_clause']) == "")
-		{
-			$_SESSION['choosen_where_clause'] = "";
-		}
-	}
-	else
-	{
-		if(trim($_SESSION['doctypes_choosen_where_clause']) <> "")
-		{
-			$_SESSION['choosen_where_clause'] = stripslashes($_SESSION['doctypes_choosen_where_clause']);
-		}
-		elseif(trim($_SESSION['doctypes_choosen_where_clause']) == "")
-		{
-			$_SESSION['choosen_where_clause'] = "";
-		}
-	}
-}
-*/
-
-$core_tools->load_html();
-$core_tools->load_header('', true, false);
-$time = $core_tools->get_session_time_expire();
 ?>
-<body onload="setTimeout(window.close, <?php  echo $time;?>*60*1000);">
 
 <h2 class="tit"><?php  echo _ADD_GRANT;?></h2>
+<div id="frm_error" class="error"></div>
 <table  width="100%">
 <tr>
 <td>
 <div class="popup_content">
-<form name="addGrant" method="post" action="<?php  echo $_SESSION['config']['businessappurl']."index.php?display=true&admin=groups&page=add_grant_table";?>" class="forms">
-	<input type="hidden" name="mode" value="<?php  echo $mode;?>" />
-		<?php
-		if(isset($_REQUEST['collection']) && !empty($_REQUEST['collection']))
-		{
-			?>
-			<p>
-			<label><?php  echo _COLLECTION;?> : </label>
-		    <input type="text" readonly="readonly" name="coll" class="readonly" value="<?php  echo $coll_label;?>" />
-		    <input type="hidden" readonly="readonly" name="collselect" class="readonly" value="<?php  echo $_SESSION['m_admin']['group']['coll_id'];?>" />
-		    </p>
-		    <?php
-		}
-		else
-		{
-			?>
-	    	<div align="center">
-			<iframe name="choose_coll" id="choose_coll" scrolling="auto" width="100%" height="35" frameborder="0" src="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&admin=groups&page=choose_coll"></iframe></div>
+<form name="addGrantForm" id="addGrantForm" method="post" action="#" class="forms">
+	<input type="hidden"  id="mode" value="<?php  echo $mode;?>" />
+	<p>
+		<label><?php  echo _COLLECTION;?> :</label>
+		<select name="coll_id" id="coll_id" >
+			<option value=""><?php  echo _CHOOSE_COLLECTION;?></option>
 			<?php
-		}
-		?>
+				for($i=0; $i < count($_SESSION['collections']); $i++)
+				{
+					?>
+					<option value="<?php  echo $_SESSION['collections'][$i]['id']; ?>" <?php  if ($coll_id == $_SESSION['collections'][$i]['id']) {echo 'selected="selected"'; }?>><?php  echo $_SESSION['collections'][$i]['label']; ?></option>
+					<?php
+				}
+				?>
+		</select>
+		<span class="red_asterisk" >*</span>
+	</p>
 	<br/>
 	<p>
 		<label><?php  echo _DESC;?>: </label>
-		<input type="text" name="comment" value="<?php  echo $comment;?>" />
+		<input type="text" name="comment" id="comment" value="<?php  echo $comment;?>" />
+		<span class="red_asterisk" >*</span>
 	</p>
 	<br/>
 	<p>
 		<label><?php echo _WHERE_CLAUSE_TARGET;?> : </label>
-		<input type="radio"  class="check" name="target[]"  value="ALL" <?php if($target == 'ALL'){ echo 'checked="checked"';}?>  /><?php echo _ALL;?> 
-		<input type="radio"  class="check" name="target[]"  value="DOC"  <?php if($target == 'DOC'){ echo 'checked="checked"';}?>  /><?php echo _DOCS;?> 
-		<input type="radio"  class="check" name="target[]"  value="CLASS"  <?php if($target == 'CLASS'){ echo 'checked="checked"';}?>  /><?php echo _CLASS_SCHEME;?> 
+		<input type="radio"  class="check" name="target"  value="ALL" id="target_all" <?php if($target == 'ALL'){ echo 'checked="checked"';}?>  /><?php echo _ALL;?> 
+		<input type="radio"  class="check" name="target"  value="DOC" id="target_doc"  <?php if($target == 'DOC'){ echo 'checked="checked"';}?>  /><?php echo _DOCS;?> 
+		<input type="radio"  class="check" name="target"  value="CLASS" id="target_class" <?php if($target == 'CLASS'){ echo 'checked="checked"';}?>  /><?php echo _CLASS_SCHEME;?><span class="red_asterisk" >*</span>
 	</p>
 	<br/>
 	<p>
 		<label><?php  echo _WHERE_CLAUSE;?> : </label>
-	<!--	<div id="label_expert_hide">
-			<h5><a href="#" onclick="javascript:expertmodehide();"><i><?php  echo _EDIT_WITH_ASSISTANT;?></i></a></h5>
-		</div>-->
-	</p>
-	
-	<p>
-		<label>&nbsp;</label>
 		<textarea rows="6" cols="100" name="where" id="where" /><?php  echo stripslashes($_SESSION['choosen_where_clause']);?></textarea>
-	</p>
-	<p>
-		<iframe name="frm_expert_mode" id="frm_expert_mode" src="<?php  echo $_SESSION['config']['businessappurl'].'index.php?display=true&admin=groups&page=frame_expert_mode';?>" width="1" height="1" frameborder="0" scrolling="auto"></iframe>
-		<div id="label_expert_show" class="input_expert_hide">
-			<a href="#" onclick="javascript:expertmodeview('<?php  echo $_SESSION['m_admin']['group']['coll_id'];?>');"><h5><i><b><?php  echo _VALID_THE_WHERE_CLAUSE;?>!!!</b></i></h5></a>
-		</div>
+		<span class="red_asterisk" >*</span>
 	</p>
 	<br/>
 	<p >
@@ -262,9 +112,10 @@ $time = $core_tools->get_session_time_expire();
 		<?php  for($k=0;$k<count($_ENV['security_bitmask']); $k++)
 		{
 			?>
-			<input type="checkbox"  class="check" name="rights_bitmask[]"  value="<?php echo $_ENV['security_bitmask'][$k]['ID'];?>" <?php  if(check_right($_SESSION['m_admin']['groups']['security'][$i]['RIGHTS_BITMASK'] , $_ENV['security_bitmask'][$k]['ID'])){ echo 'checked="checked"'; } ?> <?php  if(!$show_checkbox){ echo 'disabled="disabled"';}?>  /> 
+			<input type="checkbox"  class="check" name="rights_bitmask[]" id="<?php echo $_ENV['security_bitmask'][$k]['ID'];?>" value="true" <?php  if(check_right($rights_bitmask , $_ENV['security_bitmask'][$k]['ID'])){ echo 'checked="checked"'; } ?>  /> 
 		<?php echo $_ENV['security_bitmask'][$k]['LABEL'].'<br/>';
 		}?>
+		
 		</div>
 	</p>
 	<br/>
@@ -272,18 +123,18 @@ $time = $core_tools->get_session_time_expire();
 		<label><?php echo _PERIOD;?> : </label>
 		<p>
 			<label><?php echo _SINCE;?></label>
-			<input type="text" id="start_date" value="" onclick="showCalender(this);"/>
+			<input type="text" id="start_date" name="start_date" value="" onclick="showCalender(this);"/>
 		</p>
 		<br/>
 		<p>
 			<label><?php echo _FOR;?></label>
-			<input type="text" id="stop_date" value="" onclick="showCalender(this);"/>
+			<input type="text" id="stop_date" name="stop_date" value="" onclick="showCalender(this);"/>
 		</p>
 	</p>
 	<br/>
 	<p class="buttons">
-		<input type="submit" name="Submit" value="<?php  echo _VALIDATE;?>" class="button"  />
-		<input type="button" name="cancel" value="<?php  echo _CANCEL;?>" class="button"  onclick="window.close()"/>
+		<input type="button" name="Submit" value="<?php  echo _VALIDATE;?>" class="button" onclick="checkAccess('addGrantForm', '<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&admin=groups&page=check_access';?>', '<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&admin=groups&page=manage_access';?>', '<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&admin=groups&page=groups_form';?>');"  />
+		<input type="button" name="cancel" value="<?php  echo _CANCEL;?>" class="button"  onclick="destroyModal('add_grant');"/>
 	</p>
 
 </form>
@@ -295,6 +146,4 @@ $time = $core_tools->get_session_time_expire();
 	include("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."keywords_help.php"); ?>
 </td>
 </tr>
-<?php $core_tools->load_js();?>
-</body>
-</html>
+</table>
