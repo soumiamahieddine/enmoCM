@@ -555,7 +555,7 @@ class dbquery extends functions
 	* Closes database connexion
 	*
 	*/
-	public function close_conn()
+	public function disconnect()
 	{
 		if($this->databasetype == "MYSQL")
 		{

@@ -167,6 +167,7 @@ class security extends dbquery
 	*
 	* @param   $security_ids array  security identifiers 
 	*/
+/*
 	public function remove_security($security_ids, $security_array)
 	{
 		for($j=0;$j<count($security_ids);$j++)
@@ -189,6 +190,7 @@ class security extends dbquery
 		}
 		return $security_array;
 	}
+*/
 
 	/**
 	* Adds security parameters of a group in the session variables related to the user group administration.
@@ -236,7 +238,7 @@ class security extends dbquery
 	* Updates the database with the user groups security of the administration variables in session.
 	*
 	*/
-	public function load_db()
+	public function load_access_db()
 	{
 		$this->connect();
 		$this->query("DELETE FROM ".$_SESSION['tablename']['security'] ." where group_id = '".$_SESSION['m_admin']['groups']['GroupId']."'");
@@ -244,7 +246,29 @@ class security extends dbquery
 		{
 			if($_SESSION['m_admin']['groups']['security'][$i] <> "")
 			{
-				$this->query("INSERT INTO ".$_SESSION['tablename']['security']." VALUES ('".$_SESSION['m_admin']['groups']['GroupId']."', '".$_SESSION['m_admin']['groups']['security'][$i]['COLL_ID']."', '".$this->protect_string_db($_SESSION['m_admin']['groups']['security'][$i]['WHERE_CLAUSE'])."', '".$_SESSION['m_admin']['groups']['security'][$i]['COMMENT']."', '".$_SESSION['m_admin']['groups']['security'][$i]['CAN_INSERT']."' , '".$_SESSION['m_admin']['groups']['security'][$i]['CAN_UPDATE']."', '".$_SESSION['m_admin']['groups']['security'][$i]['CAN_DELETE']."')");
+
+				$query_coll = 'group_id, coll_id, where_clause, maarch_comment, where_target, rights_bitmask';
+				
+				$bitmask = '0';
+				if(isset($_SESSION['m_admin']['groups']['security'][$i]['RIGHTS_BITMASK']) && !empty($_SESSION['m_admin']['groups']['security'][$i]['RIGHTS_BITMASK']))
+				{
+					$bitmask = (string) $_SESSION['m_admin']['groups']['security'][$i]['RIGHTS_BITMASK'];
+				}
+				$query_val = "'".$_SESSION['m_admin']['groups']['GroupId']."', '".$this->protect_string_db($_SESSION['m_admin']['groups']['security'][$i]['COLL_ID'])."', '".$this->protect_string_db($_SESSION['m_admin']['groups']['security'][$i]['WHERE_CLAUSE'])."', '".$this->protect_string_db($_SESSION['m_admin']['groups']['security'][$i]['COMMENT'])."', '".$this->protect_string_db($_SESSION['m_admin']['groups']['security'][$i]['WHERE_TARGET'])."', ".$bitmask;
+				
+				if(isset($_SESSION['m_admin']['groups']['security'][$i]['START_DATE']) && !empty($_SESSION['m_admin']['groups']['security'][$i]['START_DATE']))
+				{
+					$query_coll .= ',mr_start_date';
+					$query_val .= ",'".$this->format_date_db($_SESSION['m_admin']['groups']['security'][$i]['START_DATE'])."'";
+				}
+				if(isset($_SESSION['m_admin']['groups']['security'][$i]['STOP_DATE']) && !empty($_SESSION['m_admin']['groups']['security'][$i]['STOP_DATE']))
+				{
+					$query_coll .= ',mr_stop_date';
+					$query_val .= ",'".$this->format_date_db($_SESSION['m_admin']['groups']['security'][$i]['STOP_DATE'])."'";
+				}
+				
+
+				$this->query("INSERT INTO ".$_SESSION['tablename']['security']." (".$query_coll.") VALUES (".$query_val.")");
 			}
 		}
 	}
