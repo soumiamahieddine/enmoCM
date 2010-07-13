@@ -67,7 +67,7 @@ class history extends dbquery
 	//	$what = $this->protect_string_db($what);
 		$this->connect();
 		$this->query("INSERT INTO ".$_SESSION['tablename']['history']." (table_name, record_id , event_type , user_id , event_date , info , id_module, remote_ip) VALUES ('".$where."', '".$id."', '".$how."', '".$_SESSION['user']['UserId']."', ".$date_now.", '".$what."', '".$id_module."' , '".$remote_ip."')");
-		$this->close_conn();
+		$this->disconnect();
 	}
 	
 	/**
