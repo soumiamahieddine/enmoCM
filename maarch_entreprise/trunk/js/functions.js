@@ -795,54 +795,84 @@ function opentab_window(eleframe, url)
 
 /*************** Usergroups administration functions *****************/
 
-function expertmodehide()
-{
-	var frm = $('frm_expert_mode');
-	var input = $('where');
-	var label1 = $('label_expert_hide');
-	var label2 = $('label_expert_show');
-	frm.width = "1000";
-	frm.height = "370";
-	input.className  = "input_expert_hide";
-	label1.className  = "input_expert_hide";
-	label2.className  = "input_expert_show";
+//~ function expertmodehide()
+//~ {
+	//~ var frm = $('frm_expert_mode');
+	//~ var input = $('where');
+	//~ var label1 = $('label_expert_hide');
+	//~ var label2 = $('label_expert_show');
+	//~ frm.width = "1000";
+	//~ frm.height = "370";
+	//~ input.className  = "input_expert_hide";
+	//~ label1.className  = "input_expert_hide";
+	//~ label2.className  = "input_expert_show";
+//~ 
+//~ }
+//~ 
+//~ function expertmodeview(coll_id)
+//~ {
+	//~ var frm = $('frm_expert_mode');
+	//~ var input = $('where');
+	//~ var label1 = $('label_expert_hide');
+	//~ var label2 = $('label_expert_show');
+	//~ frm.width = "1";
+	//~ frm.height = "1";
+	//~ input.className  = "input_expert_show";
+	//~ label1.className  = "input_expert_show";
+	//~ label2.className  = "input_expert_hide";
+	//~ //document.location.reload();
+	//~ document.location.href = 'index.php?display=true&page=add_grant&admin=groups&expertmode=true&collection=' + coll_id;
+//~ }
 
+function modifyAcess(url_modify)
+{
+	var accesses = document.getElementsByName('security[]');
+	var val = '';
+	if(accesses)
+	{
+		for(var i=0; i< accesses.length;i++)
+		{
+			if(accesses[i].checked == true)
+			{
+				val = '&val='+accesses[i].value;
+				break;	
+			}		
+		}
+	}
+	displayModal(url_modify+val, 'add_grant', 850, 650);
 }
 
-function expertmodeview(coll_id)
+function removeAccess( url_remove, url_display_access)
 {
-	var frm = $('frm_expert_mode');
-	var input = $('where');
-	var label1 = $('label_expert_hide');
-	var label2 = $('label_expert_show');
-	frm.width = "1";
-	frm.height = "1";
-	input.className  = "input_expert_show";
-	label1.className  = "input_expert_show";
-	label2.className  = "input_expert_hide";
-	//document.location.reload();
-	document.location.href = 'index.php?display=true&page=add_grant&admin=groups&expertmode=true&collection=' + coll_id;
-}
+	var accesses = document.getElementsByName('security[]');
+	var val = '';
+	if(accesses)
+	{
+		for(var i=0; i< accesses.length;i++)
+		{
+			if(accesses[i].checked == true)
+			{
+				val += accesses[i].value+'#';	
+			}		
+		}
+	}
+	//val.substring(0, val.length -3);
 
-function removeAccess( path_manage_script, sec_array)
-{
-	alert('removeaccess');
-	new Ajax.Request(path_manage_script,
+	new Ajax.Request(url_remove, 
 	{
 		    method:'post',
-		    parameters: { security : sec_array
+		    parameters: { 
+							security : val
 						},
 		        onSuccess: function(answer){
 				eval("response = "+answer.responseText);
 			//	alert(answer.responseText);
 				if(response.status == 0  )
 				{
-					
-					
+					updateContent(url_display_access, 'access');
 				}
 			}
 		});
-		alert('removeaccess');
 }
 
 function checkAccess(current_form_id, url_check, url_manage, url_display_access, protect_string)

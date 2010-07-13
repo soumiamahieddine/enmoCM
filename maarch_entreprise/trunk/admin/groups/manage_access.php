@@ -61,7 +61,7 @@ elseif(isset($target_class) && !empty($target_class))
 }
 
 $bitmask = 0;
-for($i+0; $i<count($_ENV['security_bitmask']); $i++)
+for($i=0; $i<count($_ENV['security_bitmask']); $i++)
 {
 	$tmp = get_value_fields($values, $_ENV['security_bitmask'][$i]['ID']);
 	if(isset($tmp) && $tmp == 'true')

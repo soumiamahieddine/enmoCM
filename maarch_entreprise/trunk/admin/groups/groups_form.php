@@ -59,7 +59,7 @@ usort($_SESSION['m_admin']['groups']['security'], "cmp");
 <?php //$func->show_array($_ENV['security_bitmask']); //$func->show_array($_SESSION['m_admin']['groups']['security']);
 ?>
 <h2 class="tit"><small><?php  echo _MANAGE_RIGHTS;?> : </small></h2>
-<form name="security_form" method="get" >
+<form name="security_form" id="security_form" method="get" >
 <input type="hidden" name="display" value="true" />
 <input type="hidden" name="admin" value="groups" />
 <input type="hidden" name="page" value="groups_form" />
@@ -84,7 +84,7 @@ usort($_SESSION['m_admin']['groups']['security'], "cmp");
 						<td>
 							<div align="left" id="access_<?php echo $_SESSION['m_admin']['groups']['security'][$i]['SECURITY_ID'];?>">
 								<div style="float:left;">
-									<input type="checkbox"  class="check" name="security[]" value="<?php  echo $_SESSION['m_admin']['groups']['security'][$i]['SECURITY_ID']; ?>" />
+									<input type="checkbox"  class="check" name="security[]" value="<?php  echo $i; ?>" />
 								</div>
 								<div>
 									<?php echo $func->show_string($_SESSION['m_admin']['groups']['security'][$i]['COMMENT']);?>
@@ -165,8 +165,8 @@ usort($_SESSION['m_admin']['groups']['security'], "cmp");
 	if (count($_SESSION['m_admin']['groups']['security']) > 0)
 	{
 		?>
-		<input type="button" name="modifyAccess" value="<?php  echo _MODIFY_ACCESS; ?>" class="button" onclick="console.log(document.getElementsByName('security[]'[0]));window.open('<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&admin=groups&page=add_grant&security_id=<?php  echo $_REQUEST['security'][0];?>','modify','toolbar=no,status=no,width=850,height=650,left=150,top=300,scrollbars=auto,location=no,menubar=no,resizable=yes');" />
-		<input type="button" name="removeAccess" value="<?php  echo _REMOVE_ACCESS; ?>" class="button" onclick="removeAccess('apps/maarch_entreprise/admin/groups/remove_access.php', document.getElementsByName('security[]'));"/>
+		<input type="button" name="modify_access" value="<?php  echo _MODIFY_ACCESS; ?>" class="button" onclick="modifyAcess('<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&admin=groups&page=add_grant&mode=up');" />
+		<input type="button" name="remove_access" value="<?php  echo _REMOVE_ACCESS; ?>" class="button" onclick="removeAccess('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&admin=groups&page=remove_access', '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&admin=groups&page=groups_form');"/>
 		<?php
 	}
 		?>

@@ -50,8 +50,6 @@ $core_tools2->manage_location_bar($page_path, $page_label, $page_id, $init, $lev
 
 require("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_usergroups.php");
 
-$func = new functions();
-
 $ug = new usergroups();
 
 $ug->formgroups("add");

@@ -34,7 +34,6 @@ include('core/manage_bitmask.php');
 $core_tools = new core_tools();
 $core_tools->load_lang();
 $core_tools->test_admin('admin_groups', 'apps');
-$mode = "add";
 $sec = new security();
 $func = new functions();
 $clause = '';
@@ -43,23 +42,33 @@ $start_date = '';
 $stop_date = '';
 $target = 'ALL';
 $rights_bitmask = 0;
-$tabdiff=array();
 $coll_id = $_SESSION['collections'][0]['id'];
 $ind = 0;
 
-if(isset($_REQUEST['security_id']) && !empty($_REQUEST['security_id']))
+$mode = "add" ;
+$access_ind = -1;
+if(isset($_REQUEST['mode']) && !empty($_REQUEST['mode']))
 {
-	$mode = "up";
-	$security_id = trim($_REQUEST['security_id']);
-	$coll_id = $_SESSION['m_admin']['groups']['security'][$security_id]['COLL_ID'];
+	$mode = trim($_REQUEST['mode']);
+}
+
+if(isset($_REQUEST['val']) && $_REQUEST['val'] >= 0)
+{
+	$access_ind = $_REQUEST['val'];
+}
+
+if($mode == "up" && $access_ind >= 0)
+{
+	$security_id = $_SESSION['m_admin']['groups']['security'][$access_ind]['SECURITY_ID'];
+	$coll_id = $_SESSION['m_admin']['groups']['security'][$access_ind]['COLL_ID'];
 	$ind = $sec->get_ind_collection($coll_id);
 	$coll_label = $_SESSION['collections'][$ind]['label'];
-	$target = $_SESSION['m_admin']['groups']['security'][$security_id]['WHERE_TARGET'];
-	$clause = $func->show_string($_SESSION['m_admin']['groups']['security'][$security_id]['WHERE_CLAUSE']);
-	$comment = $_SESSION['m_admin']['groups']['security'][$security_id]['COMMENT'];
-	$start_date = $func->format_date_db($_SESSION['m_admin']['groups']['security'][$security_id]['START_DATE'], false);
-	$stop_date = $func->format_date_db($_SESSION['m_admin']['groups']['security'][$security_id]['STOP_DATE'], false);
-	$rights_bitmask = $_SESSION['m_admin']['groups']['security'][$security_id]['RIGHTS_BITMASK'];	
+	$target = $_SESSION['m_admin']['groups']['security'][$access_ind]['WHERE_TARGET'];
+	$clause = $func->show_string($_SESSION['m_admin']['groups']['security'][$access_ind]['WHERE_CLAUSE']);
+	$comment = $func->show_string($_SESSION['m_admin']['groups']['security'][$access_ind]['COMMENT']);
+	$start_date = $func->format_date_db($_SESSION['m_admin']['groups']['security'][$access_ind]['START_DATE'], false);
+	$stop_date = $func->format_date_db($_SESSION['m_admin']['groups']['security'][$access_ind]['STOP_DATE'], false);
+	$rights_bitmask = $_SESSION['m_admin']['groups']['security'][$access_ind]['RIGHTS_BITMASK'];	
 }
 ?>
 
@@ -113,7 +122,7 @@ if(isset($_REQUEST['security_id']) && !empty($_REQUEST['security_id']))
 		{
 			?>
 			<input type="checkbox"  class="check" name="rights_bitmask[]" id="<?php echo $_ENV['security_bitmask'][$k]['ID'];?>" value="true" <?php  if(check_right($rights_bitmask , $_ENV['security_bitmask'][$k]['ID'])){ echo 'checked="checked"'; } ?>  /> 
-		<?php echo $_ENV['security_bitmask'][$k]['LABEL'].'<br/>';
+		<?php echo constant($_ENV['security_bitmask'][$k]['LABEL']).'<br/>';
 		}?>
 		
 		</div>

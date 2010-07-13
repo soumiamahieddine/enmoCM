@@ -441,6 +441,7 @@ class usergroups extends dbquery
 		$order_field = $_SESSION['m_admin']['groups']['order_field'];
 		$what = $_SESSION['m_admin']['groups']['what'];
 		$start = $_SESSION['m_admin']['groups']['start'];
+/*
 		if($_SESSION['m_admin']['groups']['admin'] == "");
 		{
 			$_SESSION['m_admin']['groups']['admin'] = "N";
@@ -461,6 +462,7 @@ class usergroups extends dbquery
 		{
 			$_SESSION['m_admin']['groups']['del'] = "N";
 		}
+*/
 		if(!empty($_SESSION['error']))
 		{
 			if($mode == "up")
@@ -486,6 +488,8 @@ class usergroups extends dbquery
 		else
 		{
 			$this->connect();
+			require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
+			$sec = new security();
 			if($mode == "add")
 			{
 				$this->query("select group_id from ".$_SESSION['tablename']['usergroups']." where group_id= '".$_SESSION['m_admin']['groups']['GroupId']."'");
@@ -498,11 +502,10 @@ class usergroups extends dbquery
 				}
 				else
 				{
-					require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
-					$sec = new security();
-					$syntax = true;
-					$syntax = $sec->where_test();
+					//$syntax = true;
+				//	$syntax = $sec->where_test();
 
+/*
 					if($syntax <> true)
 					{
 					 	$_SESSION['error'] .= " : "._SYNTAX_ERROR_WHERE_CLAUSE."." ;
@@ -511,10 +514,11 @@ class usergroups extends dbquery
 					}
 					else
 					{
+*/
 						$tmp = $this->protect_string_db($_SESSION['m_admin']['groups']['desc']);
 						$this->query("insert into ".$_SESSION['tablename']['usergroups']." (group_id , group_desc , enabled) values ('".$_SESSION['m_admin']['groups']['GroupId']."'," ." '".$tmp."','Y')");
 
-						$sec->load_db();
+						$sec->load_access_db();
 						$sec->load_services_db($_REQUEST['services'],$_SESSION['m_admin']['groups']['GroupId']);
 
 						if($_SESSION['history']['usergroupsadd'] == "true")
@@ -527,7 +531,7 @@ class usergroups extends dbquery
 						$_SESSION['error'] =  _GROUP_ADDED;
 						header("location: ".$_SESSION['config']['businessappurl']."index.php?page=groups&admin=groups&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what);
 						exit();
-					}
+				//	}
 				}
 			}
 			elseif($mode == "up")
@@ -535,9 +539,9 @@ class usergroups extends dbquery
 					$this->query("UPDATE ".$_SESSION['tablename']['usergroups']." set group_desc = '".$this->protect_string_db($_SESSION['m_admin']['groups']['desc'])."' , administrator = '".$_SESSION['m_admin']['groups']['admin']."'," ." custom_right1 = '".$_SESSION['m_admin']['groups']['stagiaire']."', custom_right2 = '".$_SESSION['m_admin']['groups']['view']."', custom_right3 = '".$_SESSION['m_admin']['groups']['stats']."'" .", custom_right4 = '".$_SESSION['m_admin']['groups']['del']."' where group_id = '".$_SESSION['m_admin']['groups']['GroupId']."'");
 					$tmp = $this->protect_string_db($_SESSION['m_admin']['groups']['desc']);
 					$this->query("UPDATE ".$_SESSION['tablename']['usergroups']." set group_desc = '".$this->protect_string_db($tmp)."'  where group_id = '".$_SESSION['m_admin']['groups']['GroupId']."'");
-					require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
-					$sec = new security();
+					
 
+/*
 					if($sec->where_test() == false)
 					 {
 					 	$_SESSION['error'] .= " : "._SYNTAX_ERROR_WHERE_CLAUSE."." ;
@@ -546,7 +550,8 @@ class usergroups extends dbquery
 					}
 					else
 					{
-						$sec->load_db();
+*/
+						$sec->load_access_db();
 						$sec->load_services_db($_REQUEST['services'],$_SESSION['m_admin']['groups']['GroupId']);
 						if($_SESSION['history']['usergroupsup'] == "true")
 						{
@@ -575,7 +580,7 @@ class usergroups extends dbquery
 						header("location: ".$_SESSION['config']['businessappurl']."index.php?page=groups&admin=groups&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what);
 						exit();
 					}
-			}
+				//}
 		}
 	}
 
@@ -631,7 +636,6 @@ class usergroups extends dbquery
 		else
 		{
 			$this->connect();
-
 			$this->query("select group_id from ".$_SESSION['tablename']['usergroups']." where group_id = '".$id."'");
 
 			if($this->nb_result() == 0)

@@ -1,24 +1,17 @@
 <?php
 
-if(isset($_REQUEST['security']))
+if(isset($_REQUEST['security']) && $_REQUEST['security'] >= 0)
 {
-	include_once('../../../../core/init.php');
-
-	require_once("core/class/class_functions.php");
-	require_once("core/class/class_db.php");
-	require_once("core/class/class_security.php");
+	$access_ind = explode('#', $_REQUEST['security']);
 	
-	$sec = new security();
-
-	$tmp_array= array();
-	if(count($_REQUEST['security'])>0)
+	for($i=0;$i<count($access_ind);$i++)
 	{
-		for($i=0; $i<count($_REQUEST['security']); $i++)
+		if($access_ind <> '')
 		{
-			array_push($tmp_array,$_REQUEST['security'][$i]);
+			unset($_SESSION['m_admin']['groups']['security'][$access_ind[$i]]);
 		}
-		$_SESSION['m_admin']['groups']['security'] = $sec->remove_security($tmp_array, $_SESSION['m_admin']['groups']['security']);
 	}
+	array_unique($_SESSION['m_admin']['groups']['security']);
 	$_SESSION['m_admin']['load_security'] = false;
 	echo "{ status : 0 }";
 }
