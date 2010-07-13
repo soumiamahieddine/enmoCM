@@ -14,6 +14,6 @@
 	<HISTORY>
 		<lcadd>true</lcadd>
 		<lcup>true</lcup>
-		<lcdel>false</lcdel>
+		<lcdel>true</lcdel>
 	</HISTORY>
 </root>
