@@ -16,12 +16,13 @@ try {
 class UserControler{
 	
 	private static $db;
-	public static $users_table;
+	public static $users_table ;
 	
 	public function connect()
 	{
 		$db = new dbquery();
 		$db->connect();
+		self::$users_table = $_SESSION['tablename']['users'];
 		
 		self::$db=$db;
 	}	
@@ -38,11 +39,12 @@ class UserControler{
 			// Nothing to get
 			return null;
 		} 
+		self::connect();
 		// Querying database
 		$query = "select * from ".self::$users_table." where user_id = '".$user_id."' and enabled = 'Y'";
 		try{
-			if(_DEBUG){echo $select.' // ';}
-			self::$db->query($select);
+			if(_DEBUG){echo $query.' // ';}
+			self::$db->query($query);
 		} catch (Exception $e){
 			echo _NO_USER_WITH_ID.' '.$user_id.' // ';
 		}
@@ -52,6 +54,7 @@ class UserControler{
 		foreach($queryResult as $key => $value){
 			$user->$key=$value;
 		}
+		self::disconnect();
 		return $user;
 	}
 	
@@ -69,6 +72,7 @@ class UserControler{
 	
 	private function insert($user)
 	{
+		self::connect();
 		$prep_query = self::insert_prepare($user);
 		
 		// Inserting object
@@ -83,11 +87,13 @@ class UserControler{
 		} catch (Exception $e){
 			echo _CANNOT_INSERT_USER." ".$user->toString().' // ';
 		}
+		self::disconnect();
 	}
 
 	private function update($user)
 	{
-		$query="update ".self::$users_table." "
+		self::connect();
+		$query="update ".self::$users_table." set "
 					.self::update_prepare($user)
 					." where user_id='".$user->user_id."'"; 
 					
@@ -97,16 +103,20 @@ class UserControler{
 		} catch (Exception $e){
 			echo _CANNOT_UPDATE_USER." ".$user->toString().' // ';
 		}
+		self::disconnect();
 	}
 	
-	public function delete($user_id){
+	public function delete($user_id)
+	{
+		self::connect();
 		$query="delete from ".self::$users_table." where user_id='".$user_id."'";
 		try{
-			if(DEBUG){echo $query.' // ';}
+			if(_DEBUG){echo $query.' // ';}
 			self::$db->query($query);
 		} catch (Exception $e){
 			echo _CANNOT_DELETE_USER_ID." ".$user_id.' // ';
 		}
+		self::disconnect();
 	}
 	
 	private function update_prepare($user)
@@ -148,6 +158,7 @@ class UserControler{
 	
 	public function disable($user_id)
 	{
+		self::connect();
 		$query="update ".self::$users_table." set enabled = 'N' where user_id='".$user_id."'"; 
 					
 		try{
@@ -156,10 +167,12 @@ class UserControler{
 		} catch (Exception $e){
 			echo _CANNOT_DISABLE_USER." ".$user_id.' // ';
 		}
+		self::disconnect();
 	}
 	
 	public function enable($user_id)
 	{
+		self::connect();
 		$query="update ".self::$users_table." set enabled = 'Y' where user_id='".$user_id."'"; 
 					
 		try{
@@ -168,6 +181,7 @@ class UserControler{
 		} catch (Exception $e){
 			echo _CANNOT_ENABLE_USER." ".$user_id.' // ';
 		}
+		self::disconnect();
 	}
 }
 ?>

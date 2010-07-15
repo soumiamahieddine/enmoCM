@@ -4,10 +4,11 @@ try {
 } catch (Exception $e){
 	echo $e->getMessage().' // ';
 }
-class Usergroup extends BaseObject
+class Usergroup  extends BaseObject
 {
 	function __toString(){
 		return $this->group_desc; 
 	}
+	
 }
 ?>
