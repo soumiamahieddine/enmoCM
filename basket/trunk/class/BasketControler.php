@@ -23,6 +23,8 @@ class BasketControler{
 	{
 		$db = new dbquery();
 		$db->connect();
+		self::$baskets_table = $_SESSION['tablename']['bask_baskets'];
+		self::$groupbasket_table = $_SESSION['tablename']['bask_groupbasket'];
 		
 		self::$db=$db;
 	}	
@@ -39,11 +41,12 @@ class BasketControler{
 			// Nothing to get
 			return null;
 		} 
+		self::connect();
 		// Querying database
 		$query = "select * from ".self::$baskets_table." where basket_id = '".$basket_id."' and enabled = 'Y'";
 		try{
-			if(_DEBUG){echo $select.' // ';}
-			self::$db->query($select);
+			if(_DEBUG){echo $query.' // ';}
+			self::$db->query($query);
 		} catch (Exception $e){
 			echo _NO_BASKET_WITH_ID.' '.$basket_id.' // ';
 		}
@@ -53,6 +56,7 @@ class BasketControler{
 		foreach($queryResult as $key => $value){
 			$basket->$key=$value;
 		}
+		self::disconnect();
 		return $basket;
 	}
 	
@@ -70,6 +74,7 @@ class BasketControler{
 	
 	private function insert($basket)
 	{
+		self::connect();
 		$prep_query = self::insert_prepare($basket);
 		
 		// Inserting object
@@ -84,11 +89,13 @@ class BasketControler{
 		} catch (Exception $e){
 			echo _CANNOT_INSERT_BASKET." ".$basket->toString().' // ';
 		}
+		self::disconnect();
 	}
 
 	private function update($basket)
 	{
-		$query="update ".self::$baskets_table." "
+		self::connect();
+		$query="update ".self::$baskets_table." set "
 					.self::update_prepare($basket)
 					." where basket_id='".$basket->basket_id."'"; 
 					
@@ -98,16 +105,20 @@ class BasketControler{
 		} catch (Exception $e){
 			echo _CANNOT_UPDATE_BASKET." ".$basket->toString().' // ';
 		}
+		self::disconnect();
 	}
 	
-	public function delete($basket_id){
+	public function delete($basket_id)
+	{
+		self::connect();
 		$query="delete from ".self::$baskets_table." where basket_id='".$basket_id."'";
 		try{
-			if(DEBUG){echo $query.' // ';}
+			if(_DEBUG){echo $query.' // ';}
 			self::$db->query($query);
 		} catch (Exception $e){
 			echo _CANNOT_DELETE_BASKET_ID." ".$basket_id.' // ';
 		}
+		self::disconnect();
 	}
 	
 	private function update_prepare($basket)
@@ -145,6 +156,7 @@ class BasketControler{
 	
 	public function disable($basket_id)
 	{
+		self::connect();
 		$query="update ".self::$baskets_table." set enabled = 'N' where basket_id='".$basket_id."'"; 
 					
 		try{
@@ -153,10 +165,12 @@ class BasketControler{
 		} catch (Exception $e){
 			echo _CANNOT_DISABLE_BASKET." ".$basket_id.' // ';
 		}
+		self::disconnect();
 	}
 	
 	public function enable($basket_id)
 	{
+		self::connect();
 		$query="update ".self::$baskets_table." set enabled = 'Y' where basket_id='".$basket_id."'"; 
 					
 		try{
@@ -165,6 +179,7 @@ class BasketControler{
 		} catch (Exception $e){
 			echo _CANNOT_ENABLE_BASKET." ".basket_id.' // ';
 		}
+		self::disconnect();
 	}
 }
 ?>
