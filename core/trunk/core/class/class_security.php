@@ -64,7 +64,7 @@ class security extends dbquery
 			while($res = $this->fetch_object())
 			{
 				$ind = $this->get_ind_collection($res->coll_id);
-				array_push($security_group, array('SECURITY_ID' => $res->security_id, 'GROUP_ID' => $res->group_id,'COLL_ID' => $res->coll_id, 'IND_COLL_SESSION' => $ind, 'WHERE_CLAUSE' => $res->where_clause, 'COMMENT' => $res->maarch_comment ,'CAN_INSERT' => $res->can_insert ,'CAN_UPDATE' => $res->can_update, 'CAN_DELETE' => $res->can_delete, 'WHERE_TARGET'=> $res->where_target, 'START_DATE' => $res->mr_start_date, 'STOP_DATE' => $res->mr_stop_date, 'RIGHTS_BITMASK' => $res->rights_bitmask));
+				array_push($security_group, array('SECURITY_ID' => $res->security_id, 'GROUP_ID' => $res->group_id,'COLL_ID' => $res->coll_id, 'IND_COLL_SESSION' => $ind, 'WHERE_CLAUSE' => $res->where_clause, 'COMMENT' => $res->maarch_comment ,'WHERE_TARGET'=> $res->where_target, 'START_DATE' => $res->mr_start_date, 'STOP_DATE' => $res->mr_stop_date, 'RIGHTS_BITMASK' => $res->rights_bitmask));
 			}
 		}
 		return $security_group;
@@ -112,11 +112,12 @@ class security extends dbquery
 		$_SESSION['m_admin']['load_services'] = false;
 	}
 
+
 	/**
 	* Inits the session variables related to the user group administration.
 	*
 	*/
-	public function init_session()
+/*	public function init_session()
 	{
 		$_SESSION['m_admin']['groups'] = array();
 		$_SESSION['m_admin']['groups']['GroupId'] = "";
@@ -125,6 +126,7 @@ class security extends dbquery
 		$_SESSION['m_admin']['groups']['services'] = array();
 		$_SESSION['m_admin']['init'] = false;
 	}
+*/
 
 	/**
 	* Inits to ‘N’ (no) the rights in the session variables related to the user group administration.

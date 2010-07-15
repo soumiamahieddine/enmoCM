@@ -1,5 +1,5 @@
 <?php
-abstract class BaseObject {
+class BaseObject {
 	private $data = array(); 
 
 	/**
@@ -45,6 +45,10 @@ abstract class BaseObject {
 		return $this->data;
 	}
 	
-	abstract function toString();
+	public function setArray($array) {
+		$this->data = $array;
+	}
+	
+	//abstract function toString();
 }
 ?>

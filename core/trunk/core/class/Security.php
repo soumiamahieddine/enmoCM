@@ -4,7 +4,8 @@ try {
 } catch (Exception $e){
 	echo $e->getMessage().' // ';
 }
-class Security extends BaseObject() {
+class SecurityObj extends BaseObject
+{
 
 	function __toString(){
 		return $this->maarch_comment ; 

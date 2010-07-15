@@ -23,6 +23,7 @@ class SecurityControler{
 		$db = new dbquery();
 		$db->connect();
 		
+		self::$security_table = $_SESSION['tablename']['security'];
 		self::$db=$db;
 	}	
 	
@@ -38,20 +39,22 @@ class SecurityControler{
 			// Nothing to get
 			return null;
 		} 
+		self::connect();
 		// Querying database
 		$query = "select * from ".self::$security_table." where security_id = ".$security_id;
 		try{
-			if(_DEBUG){echo $select.' // ';}
-			self::$db->query($select);
+			if(_DEBUG){echo $query.' // ';}
+			self::$db->query($query);
 		} catch (Exception $e){
 			echo _NO_ACCESS_WITH_ID.' '.$security_id.' // ';
 		}
 		// Constructing object
-		$access=new Security();
+		$access=new SecurityObj();
 		$queryResult=self::$db->fetch_object();  
 		foreach($queryResult as $key => $value){
 			$access->$key=$value;
 		}
+		self::disconnect();
 		return $access;
 	}
 	
@@ -62,12 +65,12 @@ class SecurityControler{
 			// Nothing to get
 			return null;
 		} 
-		
+		self::connect();
 		// Querying database
 		$query = "select * from ".self::$security_table." where group_id = '".$group_id."'";
 		try{
-			if(_DEBUG){echo $select.' // ';}
-			self::$db->query($select);
+			if(_DEBUG){echo $query.' // ';}
+			self::$db->query($query);
 		} catch (Exception $e){
 			echo _NO_GROUP_WITH_ID.' '.$group_id.' // ';
 		}
@@ -75,25 +78,30 @@ class SecurityControler{
 		$security = array();
 		while($queryResult = self::$db->fetch_object())
 		{
-			$access=new Security();
+			$access=new SecurityObj();
 			foreach($queryResult as $key => $value){
 				$access->$key=$value;
 			}
 			array_push($security, $access);
 		}
+		self::disconnect();
 		return $security;
 	}
 	
-	public function save($security_id){
-		if($security->security_id > 0){
+	public function save($security, $mode="add")
+	{
+		if($mode == "up")
+		{
 			self::update($security);
-		} else {
+		} 
+		else {
 			self::insert($security);
 		}
 	}
 	
 	private function insert($security)
 	{
+		self::connect();
 		$prep_query = self::insert_prepare($security);
 		
 		// Inserting object
@@ -108,11 +116,13 @@ class SecurityControler{
 		} catch (Exception $e){
 			echo _CANNOT_INSERT_ACCESS." ".$security->toString().' // ';
 		}
+		self::disconnect();
 	}
 
 	private function update($security)
 	{
-		$query="update ".self::$security_table." "
+		self::connect();
+		$query="update ".self::$security_table." set "
 					.self::update_prepare($security)
 					." where security_id=".$security->security_id; 
 					
@@ -122,16 +132,33 @@ class SecurityControler{
 		} catch (Exception $e){
 			echo _CANNOT_UPDATE_ACCESS." ".$security->toString().' // ';
 		}
+		self::disconnect();
 	}
 	
-	public function delete($security_id){
+	public function delete($security_id)
+	{
+		self::connect();
 		$query="delete from ".self::$security_table." where security_id=".$security_id;
 		try{
-			if(DEBUG){echo $query.' // ';}
+			if(_DEBUG){echo $query.' // ';}
 			self::$db->query($query);
 		} catch (Exception $e){
 			echo _CANNOT_DELETE_SECURITY_ID." ".$security_id.' // ';
 		}
+		self::disconnect();
+	}
+	
+	public function deleteForGroup($group_id)
+	{
+		self::connect();
+		$query="delete from ".self::$security_table." where group_id='".$group_id."'";
+		try{
+			if(_DEBUG){echo $query.' // ';}
+			self::$db->query($query);
+		} catch (Exception $e){
+			echo _CANNOT_DELETE.' '._GROUP_ID." ".$group_id.' // ';
+		}
+		self::disconnect();
 	}
 	
 	private function update_prepare($security)
@@ -154,7 +181,8 @@ class SecurityControler{
 		return implode(",",$result);
 	} 
 	
-	private function insert_prepare($security){
+	private function insert_prepare($security)
+	{
 		$columns=array();
 		$values=array();
 		foreach($security->getArray() as $key => $value)

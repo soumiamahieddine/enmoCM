@@ -15,15 +15,5 @@ try {
 class ServiceControler
 {
 
-	public function get($service_id, $module_id)
-	{
-		if(empty($service_id))
-		{
-			// Nothing to get
-			return null;
-		} 
-		
-	}
-	
 }
 ?>
