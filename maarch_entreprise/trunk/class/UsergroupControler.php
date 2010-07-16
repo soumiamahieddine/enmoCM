@@ -1,6 +1,6 @@
 <?php
 
-define ("_DEBUG", false);
+define("_DEBUG", false);
 /*
 define("_CODE_SEPARATOR","/");
 define("_CODE_INCREMENT",1);

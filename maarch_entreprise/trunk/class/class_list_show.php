@@ -149,8 +149,6 @@ class list_show extends functions
 				array_push($ordercol,$result[0][$j]["order"]);
 			}
 
-			$func = new functions();
-
 			if($bool_frame)
 			{
 				$link = $_SESSION['config']['businessappurl'].'index.php?display=true&page='.$name.'&search='.$what;
@@ -228,9 +226,7 @@ class list_show extends functions
 
 
 			//########################
-			//require_once("core/class/class_core_tools.php");
-			$core_tools = new core_tools();
-			if($core_tools->is_module_loaded("doc_converter") && $bool_export)
+			if(core_tools::is_module_loaded("doc_converter") && $bool_export)
 			{
 				$_SESSION['doc_convert'] = array();
 				require_once("modules".DIRECTORY_SEPARATOR."doc_converter".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
@@ -305,7 +301,7 @@ class list_show extends functions
 			}
 			if($bool_show_listletters)
 			{
-				$str.=$this->listletters($link,$name,$all_sentence,_SEARCH." ".$whatname,_ALPHABETICAL_LIST, false, false, array(), true);
+				$str.=self::listletters($link,$name,$all_sentence,_SEARCH." ".$whatname,_ALPHABETICAL_LIST, false, false, array(), true);
 			}
 			$str .= $page_list1;
 			$str .= ' <div align="center">';
@@ -506,12 +502,12 @@ class list_show extends functions
 						{
 							if($do_action && !empty($id_action) && (count($do_actions_arr) == 0 ||  $do_actions_arr[$theline] == true) )
 							{
-								$str .= ' <td width="'.$result[$theline][$count_column]['size'].'%" align="'.$result[$theline][$count_column]['align'].'" onclick="valid_form( \'page\', \''.$result[$theline][0]['value'].'\', \''.$id_action.'\');" '.$result[$theline][$count_column]['css_style'].'>'.$func->show($this->thisword($result[$theline][$count_column]['value'],$what)).'</td>';
+								$str .= ' <td width="'.$result[$theline][$count_column]['size'].'%" align="'.$result[$theline][$count_column]['align'].'" onclick="valid_form( \'page\', \''.$result[$theline][0]['value'].'\', \''.$id_action.'\');" '.$result[$theline][$count_column]['css_style'].'>'.functions::show(self::thisword($result[$theline][$count_column]['value'],$what)).'</td>';
 
 							}
 							else if($do_action && !empty($id_action) &&  $do_actions_arr[$theline] == false)
 							{
-								$str .= ' <td width="'.$result[$theline][$count_column]['size'].'%" align="'.$result[$theline][$count_column]['align'].'" '.$result[$theline][$count_column]['css_style'].'><em>'.$func->show($this->thisword($result[$theline][$count_column]['value'],$what)).'</em></td>';
+								$str .= ' <td width="'.$result[$theline][$count_column]['size'].'%" align="'.$result[$theline][$count_column]['align'].'" '.$result[$theline][$count_column]['css_style'].'><em>'.functions::show(self::thisword($result[$theline][$count_column]['value'],$what)).'</em></td>';
 
 							}
 							else if($link_in_line)
@@ -533,11 +529,11 @@ class list_show extends functions
 									$str .= ' }';
 								$str .= ' </script>';
 
-								$str .= ' <td width="'.$result[$theline][$count_column]['size'].'%" align="'.$result[$theline][$count_column]['align'].'" onclick="openpopup(\''.$detail_destination.'?id='.$result[$theline][0]['value'].'\');" '.$result[$theline][$count_column]['css_style'].'>'.$func->show($this->thisword($result[$theline][$count_column]['value'],$what)).'</td>';
+								$str .= ' <td width="'.$result[$theline][$count_column]['size'].'%" align="'.$result[$theline][$count_column]['align'].'" onclick="openpopup(\''.$detail_destination.'?id='.$result[$theline][0]['value'].'\');" '.$result[$theline][$count_column]['css_style'].'>'.functions::show(self::thisword($result[$theline][$count_column]['value'],$what)).'</td>';
 						}
 						else
 						{
-							$str .= ' <td width="'.$result[$theline][$count_column]['size'].'%" align="'.$result[$theline][$count_column]['align'].'" '.$result[$theline][$count_column]['css_style'].'>'.$func->show($this->thisword($result[$theline][$count_column]['value'],$what)).'</td>';
+							$str .= ' <td width="'.$result[$theline][$count_column]['size'].'%" align="'.$result[$theline][$count_column]['align'].'" '.$result[$theline][$count_column]['css_style'].'>'.functions::show(self::thisword($result[$theline][$count_column]['value'],$what)).'</td>';
 						}
 					}
 				}
@@ -958,11 +954,11 @@ class list_show extends functions
 			{
 				if(!$autoCompletion)
 				{
-					$this->listletters($link, $name, $all_sentence, _SEARCH." ".$whatname, _ALPHABETICAL_LIST);
+					self::listletters($link, $name, $all_sentence, _SEARCH." ".$whatname, _ALPHABETICAL_LIST);
 				}
 				else
 				{
-					$this->listletters($link, $name, $all_sentence, _SEARCH." ".$whatname, _ALPHABETICAL_LIST, true, $autoCompletion, $autoCompletionArray);
+					self::listletters($link, $name, $all_sentence, _SEARCH." ".$whatname, _ALPHABETICAL_LIST, true, $autoCompletion, $autoCompletionArray);
 				}
 			}
 		}
@@ -1130,7 +1126,7 @@ class list_show extends functions
 									}
 									else
 									{
-										echo $func->show($this->thisword($result[$theline][$count_column]['value'],$expr, TRUE));
+										echo functions::show(self::thisword($result[$theline][$count_column]['value'],$expr, TRUE));
 									}
 
 								}
@@ -1345,8 +1341,8 @@ class list_show extends functions
 		</div>
 		<?php
 		//require_once("core/class/class_core_tools.php");
-		$core_tools = new core_tools();
-		if($core_tools->is_module_loaded("doc_converter"))
+		
+		if(core_tools::is_module_loaded("doc_converter"))
 		{
 			$_SESSION['doc_convert'] = array();
 			require_once("modules".DIRECTORY_SEPARATOR."doc_converter".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
@@ -1371,7 +1367,7 @@ class list_show extends functions
 
 	public function list_simple($result, $nb_total, $title,$what,$key,$bool_view_document, $page_view = "", $used_css = 'listing spec', $page_modify ='', $height_page_modify = 400, $width_page_modify = 500, $page_del ='')
 	{
-		//$this->show_array($result);
+		//self::show_array($result);
 
 		$listcolumn = array();
 		$listshow = array();
@@ -1388,8 +1384,8 @@ class list_show extends functions
 				array_push($listshow,$result[$i][$j]["show"]);
 			}
 		}
-		//$this->show_array($listcolumn);
-		//$this->show_array($listshow);
+		//self::show_array($listcolumn);
+		//self::show_array($listshow);
 		$func = new functions();
 
 		$nb_show = $_SESSION['config']['nblinetoshow'];
@@ -1454,7 +1450,7 @@ class list_show extends functions
                     if($result[$theline][$count_column]['show']==true)
                     {
 						?>
-							<td width="<?php  echo $result[$theline][$count_column]['size'];?>%" align="<?php  echo $result[$theline][$count_column]['align'];?>"><?php  echo $func->show($this->thisword($result[$theline][$count_column]['value'],$what)); ?></td>
+							<td width="<?php  echo $result[$theline][$count_column]['size'];?>%" align="<?php  echo $result[$theline][$count_column]['align'];?>"><?php  echo functions::show(self::thisword($result[$theline][$count_column]['value'],$what)); ?></td>
 						<?php
                     }
 					else
