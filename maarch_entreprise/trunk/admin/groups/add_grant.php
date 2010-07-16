@@ -27,15 +27,18 @@
 * @version $Revision$
 * @ingroup admin
 */
+try{
+	require_once('core/class/class_security.php');
+	include('apps/'.$_SESSION['config']['app_id'].'/security_bitmask.php');
+	include('core/manage_bitmask.php');
+} catch (Exception $e){
+	echo $e->getMessage();
+}
 
-require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
-include('apps/maarch_entreprise/security_bitmask.php');
-include('core/manage_bitmask.php');
-$core_tools = new core_tools();
-$core_tools->load_lang();
-$core_tools->test_admin('admin_groups', 'apps');
-$sec = new security();
-$func = new functions();
+
+core_tools::load_lang();
+core_tools::test_admin('admin_groups', 'apps');
+
 $clause = '';
 $comment = '';
 $start_date = '';
@@ -44,9 +47,9 @@ $target = 'ALL';
 $rights_bitmask = 0;
 $coll_id = $_SESSION['collections'][0]['id'];
 $ind = 0;
-
 $mode = "add" ;
 $access_ind = -1;
+
 if(isset($_REQUEST['mode']) && !empty($_REQUEST['mode']))
 {
 	$mode = trim($_REQUEST['mode']);
@@ -61,13 +64,13 @@ if($mode == "up" && $access_ind >= 0)
 {
 	$security_id = $_SESSION['m_admin']['groups']['security'][$access_ind]['SECURITY_ID'];
 	$coll_id = $_SESSION['m_admin']['groups']['security'][$access_ind]['COLL_ID'];
-	$ind = $sec->get_ind_collection($coll_id);
+	$ind = security::get_ind_collection($coll_id);
 	$coll_label = $_SESSION['collections'][$ind]['label'];
 	$target = $_SESSION['m_admin']['groups']['security'][$access_ind]['WHERE_TARGET'];
-	$clause = $func->show_string($_SESSION['m_admin']['groups']['security'][$access_ind]['WHERE_CLAUSE']);
-	$comment = $func->show_string($_SESSION['m_admin']['groups']['security'][$access_ind]['COMMENT']);
-	$start_date = $func->format_date_db($_SESSION['m_admin']['groups']['security'][$access_ind]['START_DATE'], false);
-	$stop_date = $func->format_date_db($_SESSION['m_admin']['groups']['security'][$access_ind]['STOP_DATE'], false);
+	$clause = functions::show_string($_SESSION['m_admin']['groups']['security'][$access_ind]['WHERE_CLAUSE']);
+	$comment = functions::show_string($_SESSION['m_admin']['groups']['security'][$access_ind]['COMMENT']);
+	$start_date = functions::format_date_db($_SESSION['m_admin']['groups']['security'][$access_ind]['START_DATE'], false);
+	$stop_date = functions::format_date_db($_SESSION['m_admin']['groups']['security'][$access_ind]['STOP_DATE'], false);
 	$rights_bitmask = $_SESSION['m_admin']['groups']['security'][$access_ind]['RIGHTS_BITMASK'];	
 }
 ?>
@@ -111,7 +114,7 @@ if($mode == "up" && $access_ind >= 0)
 	<br/>
 	<p>
 		<label><?php  echo _WHERE_CLAUSE;?> : </label>
-		<textarea rows="6" cols="100" name="where" id="where" /><?php  echo stripslashes($_SESSION['choosen_where_clause']);?></textarea>
+		<textarea rows="6" cols="100" name="where" id="where" /><?php  echo $clause;?></textarea>
 		<span class="red_asterisk" >*</span>
 	</p>
 	<br/>
@@ -132,12 +135,12 @@ if($mode == "up" && $access_ind >= 0)
 		<label><?php echo _PERIOD;?> : </label>
 		<p>
 			<label><?php echo _SINCE;?></label>
-			<input type="text" id="start_date" name="start_date" value="" onclick="showCalender(this);"/>
+			<input type="text" id="start_date" name="start_date" value="<?php echo $start_date;?>" onclick="showCalender(this);"/>
 		</p>
 		<br/>
 		<p>
 			<label><?php echo _FOR;?></label>
-			<input type="text" id="stop_date" name="stop_date" value="" onclick="showCalender(this);"/>
+			<input type="text" id="stop_date" name="stop_date" value="<?php echo $stop_date;?>" onclick="showCalender(this);"/>
 		</p>
 	</p>
 	<br/>

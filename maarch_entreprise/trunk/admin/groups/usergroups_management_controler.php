@@ -1,21 +1,37 @@
 <?php
 
 $basket_loaded = false;
-$core_tools = new core_tools();
-if($core_tools->is_module_loaded('basket'))
-{
+$entities_loaded = false;
+
+if(core_tools::is_module_loaded('basket'))
 	$basket_loaded = true;
+if(core_tools::is_module_loaded('entities'))
+	$entities_loaded = true;
+
+$mode = 'add';
+if(isset($_REQUEST['mode']) && !empty($_REQUEST['mode']))
+{
+	$mode = $_REQUEST['mode'];
 }
+
+$page_labels = array('add' => _ADDITION, 'up' => _MODIFICATION, 'list' => _GROUPS_LIST);
+$page_ids = array('add' => 'group_add', 'up' => 'group_up', 'list' => 'groups_list');
 
 try{
 	require_once("apps/maarch_entreprise/class/UsergroupControler.php");
 	require_once("apps/maarch_entreprise/class/UserControler.php");
 	require_once("core/class/SecurityControler.php");
 	require_once("core/class/class_security.php");
-	if($basket_loaded)
+	if($mode == 'list')
 	{
-		require_once("modules/basket/class/BasketControler.php");
+		require_once("core/class/class_request.php");
+		require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");
 	}
+	if($basket_loaded)
+		require_once("modules/basket/class/BasketControler.php");
+	if($mode == 'del' && $entities_loaded)
+		require_once("modules/entities/class/EntityControler.php");
+
 } catch (Exception $e){
 	echo $e->getMessage();
 }
@@ -51,8 +67,6 @@ function transform_security_object_into_array($security)
 	$ind = $sec->get_ind_collection($coll_id);
 	
 	return array('SECURITY_ID' => $sec_id , 'GROUP_ID' => $group_id ,'COLL_ID' => $coll_id, 'IND_COLL_SESSION' => $ind, 'WHERE_CLAUSE' => $where, 'COMMENT' => $comment ,'WHERE_TARGET'=> $target, 'START_DATE' => $start_date, 'STOP_DATE' => $stop_date, 'RIGHTS_BITMASK' => $rights_bitmask);
-
-
 }
 
 function transform_array_of_security_object($array_sec)
@@ -69,16 +83,11 @@ function transform_array_of_security_object($array_sec)
 // passer le mode en param + id si mode up
 // 
 
-if(isset($_REQUEST['group_id']) && !empty($_REQUEST['group_id']))
+if(isset($_REQUEST['id']) && !empty($_REQUEST['id']))
 {
-	$group_id = $_REQUEST['group_id'];
+	$group_id = $_REQUEST['id'];
 }
 
-$mode = 'add';
-if(isset($_REQUEST['mode']) && !empty($_REQUEST['mode']))
-{
-	$mode = $_REQUEST['mode'];
-}
 
 if(isset($_REQUEST['group_submit']))
 {
@@ -120,7 +129,7 @@ if(isset($_REQUEST['group_submit']))
 			}
 			else
 			{
-				header("location: ".$_SESSION['config']['businessappurl']."index.php?page=groups&admin=groups&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what);
+				header("location: ".$_SESSION['config']['businessappurl']."index.php?page=usergroups_management_controler&mode=list&admin=groups&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what);
 				exit;
 			}
 		}
@@ -217,12 +226,10 @@ if(isset($_REQUEST['group_submit']))
 			}
 		}
 						
-		header("location: ".$_SESSION['config']['businessappurl']."index.php?page=groups&admin=groups&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what);
-						
+		header("location: ".$_SESSION['config']['businessappurl']."index.php?page=usergroups_management_controler&mode=list&admin=groups&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what);
 	}
 	exit();	
 }
-
 
 $users = array();
 $baskets = array();
@@ -232,12 +239,10 @@ $state = true;
 
 if($mode == "up")
 {
+	$usergroup = UsergroupControler::get($group_id ); // ramène l'objet usergroup
 	//$_SESSION['m_admin']['mode'] = "up";
 	//if(empty($_SESSION['error']))
 	//{		
-
-	$usergroup = UsergroupControler::get($group_id ); // ramène l'objet usergroup
-
 	if(!isset($usergroup))
 	{
 		$state = false;
@@ -249,7 +254,7 @@ if($mode == "up")
 
 	//	if (! isset($_SESSION['m_admin']['load_security']) || $_SESSION['m_admin']['load_security'] == true)
 		//{
-			$access = SecurityControler::get_access_for_group($group_id); // ramène le tableau des accès
+			$access = SecurityControler::getAccessForGroup($group_id); // ramène le tableau des accès
 			$_SESSION['m_admin']['groups']['security'] = transform_array_of_security_object($access);
 			$_SESSION['m_admin']['load_security'] = false ;
 	//	}
@@ -264,14 +269,23 @@ if($mode == "up")
 
 		for($i=0; $i<count($users_id);$i++)
 		{
-			array_push($users, UserControler::get($users_id[$i]));
+			$tmp_user = UserControler::get($users_id[$i]);
+			if(isset($tmp_user))
+			{
+				array_push($users, $tmp_user);
+			}	
 		}
+		unset($tmp_user);
 		
 		if($basket_loaded)
 		{
 			for($i=0; $i<count($baskets_id);$i++)
 			{
-				array_push($baskets, BasketControler::get($baskets_id[$i]));
+				$tmp_bask = BasketControler::get($baskets_id[$i]);
+				if(isset($tmp_bask))
+				{
+					array_push($baskets, $tmp_bask);
+				}
 			}
 		}
 
@@ -285,23 +299,147 @@ elseif($mode == "add")
 		init_session();
 	}
 }
-
- /****************Management of the location bar  ************/
-$init = false;
-if($_REQUEST['reinit'] == "true")
+elseif($mode == "list")
 {
-	$init = true;
-}
-$level = "";
-if($_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1)
-{
-	$level = $_REQUEST['level'];
-}
-$page_path = $_SESSION['config']['businessappurl'].'index.php?page=usergroups_management_controler&admin=groups&mode='.$mode;
-$page_label = _MODIFICATION;
-$page_id = "usergroups_management_controler";
-$core_tools->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
-/***********************************************************/
+	$_SESSION['m_admin'] = array();
+	init_session();
+	
+	$select[$_SESSION['tablename']['usergroups']] = array();
+	array_push($select[$_SESSION['tablename']['usergroups']],"group_id","group_desc","enabled");
+	$what = "";
+	$where ="";
+	if(isset($_REQUEST['what']) && !empty($_REQUEST['what']))
+	{
+		$what = functions::protect_string_db($_REQUEST['what']);
+		if($_SESSION['config']['databasetype'] == "POSTGRESQL")
+		{
+			$where = "group_desc ilike '".strtolower($what)."%' or group_id ilike '".strtoupper($what)."%' ";
+		}
+		else
+		{
+			$where = "group_desc like '".strtolower($what)."%' or group_id like '".strtoupper($what)."%' ";
+		}
+	}
 
-include('usergroups_management.php');
+	$order = 'asc';
+	if(isset($_REQUEST['order']) && !empty($_REQUEST['order']))
+	{
+		$order = trim($_REQUEST['order']);
+	}
+	$field = 'group_id';
+	if(isset($_REQUEST['order_field']) && !empty($_REQUEST['order_field']))
+	{
+		$field = trim($_REQUEST['order_field']);
+	}
+
+	$orderstr = list_show::define_order($order, $field);
+	$request = new request();
+	$tab=$request->select($select,$where,$orderstr,$_SESSION['config']['databasetype']);
+	for ($i=0;$i<count($tab);$i++)
+	{
+		for ($j=0;$j<count($tab[$i]);$j++)
+		{
+			foreach(array_keys($tab[$i][$j]) as $value)
+			{
+				if($tab[$i][$j][$value]=="group_id")
+				{
+					$tab[$i][$j]["group_id"]=$tab[$i][$j]['value'];
+					$tab[$i][$j]["label"]= _ID;
+					$tab[$i][$j]["size"]="18";
+					$tab[$i][$j]["label_align"]="left";
+					$tab[$i][$j]["align"]="left";
+					$tab[$i][$j]["valign"]="bottom";
+					$tab[$i][$j]["show"]=true;
+					$tab[$i][$j]["order"]='group_id';
+				}
+				if($tab[$i][$j][$value]=="group_desc")
+				{
+					$tab[$i][$j]['value']=functions::show_string($tab[$i][$j]['value']);
+					$tab[$i][$j]["group_desc"]=$tab[$i][$j]['value'];
+					$tab[$i][$j]["label"]=_DESC;
+					$tab[$i][$j]["size"]="30";
+					$tab[$i][$j]["label_align"]="left";
+					$tab[$i][$j]["align"]="left";
+					$tab[$i][$j]["valign"]="bottom";
+					$tab[$i][$j]["show"]=true;
+					$tab[$i][$j]["order"]='group_desc';
+				}
+				if($tab[$i][$j][$value]=="enabled")
+				{
+					$tab[$i][$j]["enabled"]= $tab[$i][$j]['value'];
+					$tab[$i][$j]["label"]=_STATUS;
+					$tab[$i][$j]["size"]="6";
+					$tab[$i][$j]["label_align"]="center";
+					$tab[$i][$j]["align"]="center";
+					$tab[$i][$j]["valign"]="bottom";
+					$tab[$i][$j]["show"]=true;
+					$tab[$i][$j]["order"]='enabled';
+				}
+			}
+		}
+	}
+	$page_name = "usergroups_management_controler&mode=list";
+	$page_name_up = "usergroups_management_controler&mode=up";
+	$page_name_del = "usergroups_management_controler&mode=del";
+	$page_name_val= "usergroups_management_controler&mode=allow";
+	$page_name_ban = "usergroups_management_controler&mode=ban";
+	$page_name_add = "usergroups_management_controler&mode=add";
+	$label_add = _GROUP_ADDITION;
+	$_SESSION['m_admin']['load_security']  = true;
+	$_SESSION['m_admin']['load_services'] = true;
+	$_SESSION['m_admin']['init'] = true;
+	$title = _GROUPS_LIST." : ".$i." "._GROUPS;
+	$autoCompletionArray = array();
+	$autoCompletionArray["list_script_url"] = $_SESSION['config']['businessappurl']."index.php?display=true&admin=groups&page=groups_list_by_name";
+	$autoCompletionArray["number_to_begin"] = 1;
+}
+elseif((!isset($group_id) || empty($group_id) || ! UsergroupControler::groupExists($group_id)) &&($mode == "del" ||$mode == "ban" || $mode == "allow"))
+{
+	$_SESSION['error'] = _GROUP.' '._UNKNOWN;
+}
+elseif($mode == "ban")
+{
+	UsergroupControler::disable($group_id);
+}
+elseif($mode == "allow")
+{
+	UsergroupControler::enable($group_id);
+}
+elseif($mode == "del")
+{
+	UsergroupControler::delete($group_id);
+	if($basket_loaded)
+		BasketControler::cleanFullGroupbasket($group_id, 'group_id');
+	if($entities_loaded)
+		EntityControler::cleanGroupbasketRedirect($group_id, 'group_id');
+}
+
+if($mode == "ban" || $mode == "allow" || $mode == "del")
+{
+	?><script>window.top.location='<?php echo $_SESSION['config']['businessappurl']."index.php?page=usergroups_management_controler&mode=list&admin=groups&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what;?>';</script>
+	<?php
+	exit;
+}
+
+if($mode == "add" || $mode == "up" || $mode == "list")
+{
+	 /****************Management of the location bar  ************/
+	$init = false;
+	if($_REQUEST['reinit'] == "true")
+	{
+		$init = true;
+	}
+	$level = "";
+	if($_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1)
+	{
+		$level = $_REQUEST['level'];
+	}
+	$page_path = $_SESSION['config']['businessappurl'].'index.php?page=usergroups_management_controler&admin=groups&mode='.$mode;
+	$page_label = $page_labels[$mode];
+	$page_id = $page_ids[$mode];
+	core_tools::manage_location_bar($page_path, $page_label, $page_id, $init, $level);
+	/***********************************************************/
+
+	include('usergroups_management.php');
+}
 ?>

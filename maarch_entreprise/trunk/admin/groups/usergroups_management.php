@@ -1,7 +1,14 @@
 <?php
+
 /* Affichage */
-?>
-<h1><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=manage_groupe_b.gif" alt="" />
+if($mode == "list")
+{
+	list_show::admin_list($tab, $i, $title, 'group_id','usergroups_management_controler&mode=list','groups', 'group_id', true, $page_name_up, $page_name_val, $page_name_ban, $page_name_del, $page_name_add, $label_add, false, false, _ALL_GROUPS, _GROUP, $_SESSION['config']['businessappurl'].'static.php?filename=manage_groupe_b.gif', false, true, false, true, "", true, $autoCompletionArray);
+}
+elseif($mode == "up" || $mode == "add")
+{
+	?><script type="text/javascript" src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=usergroups_management.js"></script>
+	<h1><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=manage_groupe_b.gif" alt="" />
 	<?php
 	if($mode == "add")
 	{
@@ -12,15 +19,15 @@
 		echo _GROUP_MODIFICATION;
 	}
 	?>
-</h1>
+	</h1>
 
-<?php
-if($state == false)
-{
-	echo "<br /><br /><br /><br />"._GROUP.' '._UNKNOWN."<br /><br /><br /><br />";
-}
-else
-{
+	<?php
+	if($state == false)
+	{
+		echo "<br /><br /><br /><br />"._GROUP.' '._UNKNOWN."<br /><br /><br /><br />";
+	}
+	else
+	{
 	?>
 	<div id="inner_content" class="clearfix">
 		<div id="group_box" class="bloc" >
@@ -237,14 +244,14 @@ else
 			?>
 			<p class="buttons">
 				<input type="submit" name="group_submit" id="group_submit" value="<?php  echo _VALIDATE; ?>" class="button"/>
-				 <input type="button" class="button"  name="cancel" value="<?php  echo _CANCEL; ?>" onclick="javascript:window.location.href='<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=groups&amp;admin=groups';"/>
+				 <input type="button" class="button"  name="cancel" value="<?php  echo _CANCEL; ?>" onclick="javascript:window.location.href='<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=usergroups_management_controler&amp;mode=list&amp;admin=groups';"/>
 			</p>
 			<p>&nbsp;</p>
 			<p>&nbsp;</p>
 		</form>
 	</div>
 	<script>updateContent('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=groups_form&admin=groups', 'access');</script>
-<?php 
+	<?php 
+	}
 }
-?>
 

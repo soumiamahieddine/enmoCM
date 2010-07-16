@@ -45,7 +45,7 @@
    <id>admin_groups</id>
    <name>_ADMIN_GROUPS</name>
    <comment>_ADMIN_GROUPS_DESC</comment>
-   <servicepage>index.php?page=groups&amp;admin=groups</servicepage>
+   <servicepage>index.php?page=usergroups_management_controler&amp;mode=list&amp;admin=groups</servicepage>
    <servicetype>admin</servicetype>
    <system_service>false</system_service>
    <style>admin_groups</style>

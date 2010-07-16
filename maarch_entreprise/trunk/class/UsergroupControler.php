@@ -1,6 +1,6 @@
 <?php
 
-define("_DEBUG", false);
+$_ENV['DEBUG'] = false;
 /*
 define("_CODE_SEPARATOR","/");
 define("_CODE_INCREMENT",1);
@@ -40,46 +40,52 @@ class UsergroupControler
 		self::$db->disconnect();
 	}	
 	
-	public function get($group_id)
+	public function get($group_id, $can_be_disabled = false)
 	{	
 		if(empty($group_id))
-		{
-			// Nothing to get
 			return null;
-		} 
+
 		self::connect();
-		// Querying database
-		$query = "select * from ".self::$usergroups_table." where group_id = '".$group_id."' and enabled = 'Y'";
+		$query = "select * from ".self::$usergroups_table." where group_id = '".$group_id."' ";
+		
+		if(!$can_be_disabled)
+			$query .= " and enabled = 'Y'";
 
 		try{
-			if(_DEBUG){echo $query.' // ';}
+			if($_ENV['DEBUG'])
+				echo $query.' // ';
 			self::$db->query($query);
 		} catch (Exception $e){
 			echo _NO_GROUP_WITH_ID.' '.$group_id.' // ';
 		}
-
-		// Constructing object
-		$group=new Usergroup();
-		$queryResult=self::$db->fetch_object();
-		foreach($queryResult as $key => $value){
-			$group->$key=$value;
+		if(self::$db->nb_result() > 0)
+		{
+			// Constructing object
+			$group=new Usergroup();
+			$queryResult=self::$db->fetch_object();
+			foreach($queryResult as $key => $value){
+				$group->$key=$value;
+			}
+			self::disconnect();
+			return $group;
 		}
-		self::disconnect();
-		return $group;
+		else
+		{
+			self::disconnect();
+			return null;
+		}
 	}
 	
 	public function getUsers($group_id)
 	{	
 		$users = array();
 		if(empty($group_id))
-		{
-			// Nothing to get
 			return null;
-		}
+
 		self::connect();
 		$query = "select user_id from ".self::$usergroup_content_table." where group_id = '".$group_id."'";
 		try{
-			if(_DEBUG){echo $query.' // ';}
+			if($_ENV['DEBUG']){echo $query.' // ';}
 					self::$db->query($query);
 		} catch (Exception $e){
 					echo _NO_GROUP_WITH_ID.' '.$group_id.' // ';
@@ -97,14 +103,12 @@ class UsergroupControler
 	{
 		$baskets = array();
 		if(empty($group_id))
-		{
-			// Nothing to get
 			return null;
-		}
+
 		self::connect();
 		$query = "select basket_id from ".self::$groupbasket_table." where group_id = '".$group_id."'";
 		try{
-			if(_DEBUG){echo $query.' // ';}
+			if($_ENV['DEBUG']){echo $query.' // ';}
 					self::$db->query($query);
 		} catch (Exception $e){
 					echo _NO_GROUP_WITH_ID.' '.$group_id.' // ';
@@ -121,15 +125,13 @@ class UsergroupControler
 	public function getServices($group_id)
 	{
 		if(empty($group_id))
-		{
-			// Nothing to get
 			return null;
-		} 
+
 		self::connect();
 		// Querying database
 		$query = "select service_id from ".self::$groups_services_table." where group_id = '".$group_id."'";
 		try{
-			if(_DEBUG){echo $query.' // ';}
+			if($_ENV['DEBUG']){echo $query.' // ';}
 			self::$db->query($query);
 		} catch (Exception $e){
 			echo _NO_GROUP_WITH_ID.' '.$group_id.' // ';
@@ -146,17 +148,22 @@ class UsergroupControler
 	
 	public function save($group, $mode)
 	{
-		if($mode == "up"){
-			// Update existing aggregation
-			self::update($group);
-		} else {
-			// Insert new aggregation
-			self::insert($group);
-		}
+		if(!isset($group) )
+			return false;
+			
+		if($mode == "up")
+			return self::update($group);
+		elseif($mode =="add") 
+			return self::insert($group);
+		
+		return false;
 	}
 	
 	private function insert($group)
 	{
+		if(!isset($group) )
+			return false;
+			
 		self::connect();
 		$prep_query = self::insert_prepare($group);
 		
@@ -167,41 +174,83 @@ class UsergroupControler
 					.$prep_query['VALUES']
 					.")";
 		try{
-			if(_DEBUG){ echo $query.' // '; }
+			if($_ENV['DEBUG']){ echo $query.' // '; }
 			self::$db->query($query);
+			$ok = true;
 		} catch (Exception $e){
 			echo _CANNOT_INSERT_GROUP." ".$group->toString().' // ';
+			$ok = false;
 		}
 		self::disconnect();
+		return $ok;
 	}
 
 	private function update($group)
 	{
+		if(!isset($group) )
+			return false;
+
 		self::connect();
 		$query="update ".self::$usergroups_table." set "
 					.self::update_prepare($group)
 					." where group_id='".$group->group_id."'"; 
 					
 		try{
-			if(_DEBUG){echo $query.' // ';}
+			if($_ENV['DEBUG']){echo $query.' // ';}
 			self::$db->query($query);
+			$ok = true;
 		} catch (Exception $e){
 			echo _CANNOT_UPDATE_GROUP." ".$group->toString().' // ';
+			$ok = false;
 		}
 		self::disconnect();
+		return $ok;
 	}
 	
 	public function delete($group_id)
 	{
+		if(!isset($group_id)|| empty($group_id) )
+			return false;
+		if(! self::groupExists($group_id))
+			return false;
+			
 		self::connect();
 		$query="delete from ".self::$usergroups_table." where group_id='".$group_id."'";
 		try{
-			if(_DEBUG){echo $query.' // ';}
+			if($_ENV['DEBUG']){echo $query.' // ';}
 			self::$db->query($query);
+			$ok = true;
 		} catch (Exception $e){
 			echo _CANNOT_DELETE_GROUP_ID." ".$group_id.' // ';
+			$ok = false;
 		}
 		self::disconnect();
+		if($ok)
+			$ok = cleanUsergroupContent($group_id);
+
+		if($ok)
+			$ok = deleteServicesForGroup($group_id);
+
+		return $ok;
+	}
+	
+	private function cleanUsergroupContent($group_id)
+	{
+		if(!isset($group_id)|| empty($group_id) )
+			return false;
+		
+		self::connect();
+		$query="delete from ".self::$usergroup_content_table." where group_id='".$group_id."'";
+		try{
+			if($_ENV['DEBUG']){echo $query.' // ';}
+			self::$db->query($query);
+			$ok = true;
+		} catch (Exception $e){
+			echo _CANNOT_DELETE_GROUP_ID." ".$group_id.' // ';
+			$ok = false;
+		}
+		
+		return $ok;
 	}
 	
 	private function update_prepare($group)
@@ -243,43 +292,58 @@ class UsergroupControler
 	
 	public function disable($group_id)
 	{
+		if(!isset($group_id)|| empty($group_id) )
+			return false;
+		if(! self::groupExists($group_id))
+			return false;
+			
 		self::connect();
 		$query="update ".self::$usergroups_table." set enabled = 'N' where group_id='".$group_id."'"; 
 					
 		try{
-			if(_DEBUG){echo $query.' // ';}
+			if($_ENV['DEBUG']){echo $query.' // ';}
 			self::$db->query($query);
+			$ok = true;
 		} catch (Exception $e){
 			echo _CANNOT_DISABLE_GROUP." ".$group_id.' // ';
+			$ok = false;
 		}
 		self::disconnect();
+		return $ok;
 	}
 	
 	public function enable($group_id)
 	{
+		if(!isset($group_id)|| empty($group_id) )
+			return false;
+		if(! self::groupExists($group_id))
+			return false;
+			
 		self::connect();
 		$query="update ".self::$usergroups_table." set enabled = 'Y' where group_id='".$group_id."'"; 
 					
 		try{
-			if(_DEBUG){echo $query.' // ';}
+			if($_ENV['DEBUG']){echo $query.' // ';}
 			self::$db->query($query);
+			$ok = true;
 		} catch (Exception $e){
 			echo _CANNOT_ENABLE_GROUP." ".$group_id.' // ';
+			$ok = false;
 		}
 		self::disconnect();
+		return $ok;
 	}
 	
 	public function groupExists($group_id)
 	{
 		if(!isset($group_id) || empty($group_id))
-		{
 			return false;
-		}
+
 		self::connect();
 		$query = "select group_id from ".self::$usergroups_table." where group_id = '".$group_id."'";
 					
 		try{
-			if(_DEBUG){echo $query.' // ';}
+			if($_ENV['DEBUG']){echo $query.' // ';}
 			self::$db->query($query);
 		} catch (Exception $e){
 			echo _UNKNOWN._GROUP." ".$group_id.' // ';
@@ -296,37 +360,51 @@ class UsergroupControler
 	
 	public function deleteServicesForGroup($group_id)
 	{
+		if(!isset($group_id)|| empty($group_id) )
+			return false;
 		self::connect();
 		$query="delete from ".self::$groups_services_table." where group_id='".$group_id."'";
 		try{
-			if(_DEBUG){echo $query.' // ';}
+			if($_ENV['DEBUG']){echo $query.' // ';}
 			self::$db->query($query);
+			$ok = true;
 		} catch (Exception $e){
 			echo _CANNOT_DELETE_GROUP_ID." ".$group_id.' // ';
+			$ok = false;
 		}
 		self::disconnect();
+		return $ok;
 	}
 	
 	public function insertServiceForGroup($group_id, $service_id)
 	{
+		if(!isset($group_id)|| empty($group_id) || !isset($service_id)|| empty($service_id) )
+			return false;
+			
 		self::connect();
 		$query = "insert into ".self::$groups_services_table." (group_id, service_id) values ('".$group_id."', '".$service_id."')";
 		try{
-			if(_DEBUG){echo $query.' // ';}
+			if($_ENV['DEBUG']){echo $query.' // ';}
 			self::$db->query($query);
+			$ok = true;
 		} catch (Exception $e){
 			echo _CANNOT_INSERT." ".$group_id.' '.$service_id.' // ';
+			$ok = false;
 		}
 		self::disconnect();
+		return $ok;
 	}
 	
 	public function inGroup($user_id, $group_id)
 	{
+		if(!isset($group_id)|| empty($group_id) || !isset($user_id)|| empty($user_id) )
+			return false;
+			
 		self::connect();
 		$query = "select user_id from ".self::$usergroup_content_table." where user_id ='".$user_id."' and group_id = '".$group_id."'";
 
 		try{
-			if(_DEBUG){echo $query.' // ';}
+			if($_ENV['DEBUG']){echo $query.' // ';}
 			self::$db->query($query);
 		} catch (Exception $e){
 			echo _CANNOT_FIND." ".$group_id.' '.$user_id.' // ';
@@ -334,13 +412,9 @@ class UsergroupControler
 		self::disconnect();
 		
 		if(self::$db->nb_result() > 0)
-		{
 			return true;
-		}
 		else
-		{
 			return false;
-		}
 	}
 }
 ?>

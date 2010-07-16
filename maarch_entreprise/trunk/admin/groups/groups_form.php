@@ -19,7 +19,7 @@
 */
 
 /**
-* @brief  Form to manage the group security (iframe included in group management form)
+* @brief  Form to manage the group security 
 *
 *
 * @file
@@ -30,34 +30,22 @@
 * @ingroup admin
 */
 
-$core_tools = new core_tools();
-
-$core_tools->load_lang();
-$core_tools->test_admin('admin_groups', 'apps');
-
-require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
-
-include('apps/maarch_entreprise/security_bitmask.php');
-include('core/manage_bitmask.php');
-
-$func = new functions();
-$sec= new security();
-$_SESSION['doctypes_choosen'] = array();
-
-$_SESSION['m_admin']['collection_choice'] = "coll_1";
+core_tools::load_lang();
+core_tools::test_admin('admin_groups', 'apps');
+try{
+	include('apps/'.$_SESSION['config']['app_id'].'/security_bitmask.php');
+	include('core/manage_bitmask.php');
+} catch (Exception $e){
+	echo $e->getMessage();
+}
 
 function cmp($a, $b)
 {
    	return strcmp($a["COLL_ID"], $b["COLL_ID"]);
 }
 usort($_SESSION['m_admin']['groups']['security'], "cmp");
-//$core_tools->load_html();
-//$core_tools->load_header(_MANAGE_RIGHTS);
 ?>
-<!--<body id="iframe">-->
 <div class="block" >
-<?php //$func->show_array($_ENV['security_bitmask']); //$func->show_array($_SESSION['m_admin']['groups']['security']);
-?>
 <h2 class="tit"><small><?php  echo _MANAGE_RIGHTS;?> : </small></h2>
 <form name="security_form" id="security_form" method="get" >
 <input type="hidden" name="display" value="true" />
@@ -72,8 +60,7 @@ usort($_SESSION['m_admin']['groups']['security'], "cmp");
 	else
 	{
 		?>
-		<table width="100%" border = "0">
-		
+		<table width="100%" border = "0">	
 		<?php
 			for($i=0; $i<count($_SESSION['m_admin']['groups']['security']);$i++)
 			{
@@ -87,7 +74,7 @@ usort($_SESSION['m_admin']['groups']['security'], "cmp");
 									<input type="checkbox"  class="check" name="security[]" value="<?php  echo $i; ?>" />
 								</div>
 								<div>
-									<?php echo $func->show_string($_SESSION['m_admin']['groups']['security'][$i]['COMMENT']);?>
+									<?php echo functions::show_string($_SESSION['m_admin']['groups']['security'][$i]['COMMENT']);?>
 								</div>
 								<div align="left" style="margin-left:5%;">
 								
@@ -97,12 +84,12 @@ usort($_SESSION['m_admin']['groups']['security'], "cmp");
 									<span >
 									<?php if(!empty($_SESSION['m_admin']['groups']['security'][$i]['START_DATE']) )
 									{
-										echo _SINCE.' : '.$func->format_date_db($_SESSION['m_admin']['groups']['security'][$i]['START_DATE']);
+										echo _SINCE.' : '.functions::format_date_db($_SESSION['m_admin']['groups']['security'][$i]['START_DATE']);
 									}
 									echo '&nbsp;';
 									if(!empty($_SESSION['m_admin']['groups']['security'][$i]['STOP_DATE']) )
 									{
-										echo _FOR.' : '.$func->format_date_db($_SESSION['m_admin']['groups']['security'][$i]['STOP_DATE']);
+										echo _FOR.' : '.functions::format_date_db($_SESSION['m_admin']['groups']['security'][$i]['STOP_DATE']);
 									}?>
 									</span>
 								</div>
@@ -126,7 +113,7 @@ usort($_SESSION['m_admin']['groups']['security'], "cmp");
 											echo _ALL;
 										}?></div>
 										<div> 
-											<?php echo _WHERE_CLAUSE.' : '.$func->show_string($_SESSION['m_admin']['groups']['security'][$i]['WHERE_CLAUSE']);?>
+											<?php echo _WHERE_CLAUSE.' : '.functions::show_string($_SESSION['m_admin']['groups']['security'][$i]['WHERE_CLAUSE']);?>
 										</div>
 										<div>
 											<span><?php echo _TASKS;?> :</span><br/>
@@ -165,7 +152,7 @@ usort($_SESSION['m_admin']['groups']['security'], "cmp");
 	if (count($_SESSION['m_admin']['groups']['security']) > 0)
 	{
 		?>
-		<input type="button" name="modify_access" value="<?php  echo _MODIFY_ACCESS; ?>" class="button" onclick="modifyAcess('<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&admin=groups&page=add_grant&mode=up');" />
+		<input type="button" name="modify_access" value="<?php  echo _MODIFY_ACCESS; ?>" class="button" onclick="modifyAccess('<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&admin=groups&page=add_grant&mode=up');" />
 		<input type="button" name="remove_access" value="<?php  echo _REMOVE_ACCESS; ?>" class="button" onclick="removeAccess('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&admin=groups&page=remove_access', '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&admin=groups&page=groups_form');"/>
 		<?php
 	}
@@ -176,6 +163,3 @@ usort($_SESSION['m_admin']['groups']['security'], "cmp");
 	<br/><br/>
 </form>
 </div>
-<?php // $core_tools->load_js();?>
-<!--</body>
-</html>-->
