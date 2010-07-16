@@ -1,6 +1,6 @@
 <?php
 
-define ("_DEBUG", false);
+$_ENV['DEBUG'] = false;
 /*
 define("_CODE_SEPARATOR","/");
 define("_CODE_INCREMENT",1);
@@ -35,54 +35,62 @@ class SecurityControler{
 	public function get($security_id)
 	{
 		if(empty($security_id))
-		{
-			// Nothing to get
 			return null;
-		} 
+
 		self::connect();
 		// Querying database
 		$query = "select * from ".self::$security_table." where security_id = ".$security_id;
 		try{
-			if(_DEBUG){echo $query.' // ';}
+			if($_ENV['DEBUG']){echo $query.' // ';}
 			self::$db->query($query);
 		} catch (Exception $e){
 			echo _NO_ACCESS_WITH_ID.' '.$security_id.' // ';
 		}
-		// Constructing object
-		$access=new SecurityObj();
-		$queryResult=self::$db->fetch_object();  
-		foreach($queryResult as $key => $value){
-			$access->$key=$value;
+		
+		if(self::$db->nb_result() > 0)
+		{
+			$access=new SecurityObj();
+			$queryResult=self::$db->fetch_object();  
+			foreach($queryResult as $key => $value){
+				$access->$key=$value;
+			}
+			self::disconnect();
+			return $access;
 		}
-		self::disconnect();
-		return $access;
+		else
+		{
+			self::disconnect();
+			return null;
+		}
 	}
 	
-	public function get_access_for_group($group_id)
+	public function getAccessForGroup($group_id)
 	{
 		if(empty($group_id))
-		{
-			// Nothing to get
 			return null;
-		} 
+			
 		self::connect();
 		// Querying database
 		$query = "select * from ".self::$security_table." where group_id = '".$group_id."'";
+		
 		try{
-			if(_DEBUG){echo $query.' // ';}
+			if($_ENV['DEBUG']){echo $query.' // ';}
 			self::$db->query($query);
 		} catch (Exception $e){
 			echo _NO_GROUP_WITH_ID.' '.$group_id.' // ';
 		}
 		
 		$security = array();
-		while($queryResult = self::$db->fetch_object())
+		if(self::$db->nb_result() > 0)
 		{
-			$access=new SecurityObj();
-			foreach($queryResult as $key => $value){
-				$access->$key=$value;
+			while($queryResult = self::$db->fetch_object())
+			{
+				$access=new SecurityObj();
+				foreach($queryResult as $key => $value){
+					$access->$key=$value;
+				}
+				array_push($security, $access);
 			}
-			array_push($security, $access);
 		}
 		self::disconnect();
 		return $security;
@@ -90,17 +98,22 @@ class SecurityControler{
 	
 	public function save($security, $mode="add")
 	{
+		if(!isset($security))
+			return false;
+			
 		if($mode == "up")
-		{
-			self::update($security);
-		} 
-		else {
-			self::insert($security);
-		}
+			return self::update($security); 
+		elseif($mode == "add") 
+			return self::insert($security);
+			
+		return false;
 	}
 	
 	private function insert($security)
 	{
+		if(!isset($security))
+			return false;
+			
 		self::connect();
 		$prep_query = self::insert_prepare($security);
 		
@@ -111,54 +124,75 @@ class SecurityControler{
 					.$prep_query['VALUES']
 					.")";
 		try{
-			if(_DEBUG){ echo $query.' // '; }
+			if($_ENV['DEBUG']){ echo $query.' // '; }
 			self::$db->query($query);
+			$ok = true;
 		} catch (Exception $e){
 			echo _CANNOT_INSERT_ACCESS." ".$security->toString().' // ';
+			$ok = false;
 		}
 		self::disconnect();
+		return $ok;
 	}
 
 	private function update($security)
 	{
+		if(!isset($security))
+			return false;
+			
 		self::connect();
 		$query="update ".self::$security_table." set "
 					.self::update_prepare($security)
 					." where security_id=".$security->security_id; 
 					
 		try{
-			if(_DEBUG){echo $query.' // ';}
+			if($_ENV['DEBUG']){echo $query.' // ';}
 			self::$db->query($query);
+			$ok = true;
 		} catch (Exception $e){
 			echo _CANNOT_UPDATE_ACCESS." ".$security->toString().' // ';
+			$ok = false;
 		}
 		self::disconnect();
+		return $ok;
 	}
 	
 	public function delete($security_id)
 	{
+		if(!isset($security_id)|| empty($security_id) )
+			return false;
+			
 		self::connect();
 		$query="delete from ".self::$security_table." where security_id=".$security_id;
 		try{
-			if(_DEBUG){echo $query.' // ';}
+			if($_ENV['DEBUG']){echo $query.' // ';}
 			self::$db->query($query);
+			$ok = true;
 		} catch (Exception $e){
 			echo _CANNOT_DELETE_SECURITY_ID." ".$security_id.' // ';
+			$ok = false;
 		}
 		self::disconnect();
+		return $ok;
 	}
 	
 	public function deleteForGroup($group_id)
 	{
+		if(!isset($group_id)|| empty($group_id) )
+			return false;
+			
 		self::connect();
 		$query="delete from ".self::$security_table." where group_id='".$group_id."'";
 		try{
-			if(_DEBUG){echo $query.' // ';}
+			if($_ENV['DEBUG']){echo $query.' // ';}
 			self::$db->query($query);
+			$ok = true;
 		} catch (Exception $e){
 			echo _CANNOT_DELETE.' '._GROUP_ID." ".$group_id.' // ';
+			$ok = false;
 		}
 		self::disconnect();
+		return $ok;
 	}
 	
 	private function update_prepare($security)
@@ -172,9 +206,7 @@ class SecurityControler{
 			if(!empty($value))
 			{
 				if($key <> 'security_id')
-				{
 					$result[]=$key."='".$value."'";
-				}
 			}
 		}
 		// Return created string minus last ", "
