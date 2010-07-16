@@ -1418,5 +1418,38 @@ class functions
 		closedir($dir);
 		return $isEmpty;
 	}
+	
+	/**
+	* Convert an object to an array
+	* @param  $object object to convert
+	*/
+	public function object2array($object)
+	{
+		$return = NULL;
+		if(is_array($object))
+		{
+			foreach($object as $key => $value)
+			{
+				$return[$key] = $this->object2array($value);
+			}
+		}
+		else
+		{
+			if(is_object($object))
+			{
+				$var = get_object_vars($object);
+				if($var)
+				{
+					foreach($var as $key => $value)
+					{
+						$return[$key] = ($key && !$value) ? NULL : $this->object2array($value);
+					}
+				}
+				else return $object;
+			}
+			else return $object;
+		}
+		return $return;
+	}
 }
 ?>
