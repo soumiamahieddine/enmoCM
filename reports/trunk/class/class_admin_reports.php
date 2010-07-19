@@ -121,8 +121,7 @@ class admin_reports extends dbquery
 			$enabled_reports = $rep->get_reports_from_xml();
 			$this->connect();
 			//$_SESSION['user']['reports'] = array();
-			require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_usergroups.php");
-			$group = new usergroups();
+			require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."UsergroupControler.php");
 
 			foreach(array_keys($enabled_reports)as $key)
 			{
@@ -130,7 +129,7 @@ class admin_reports extends dbquery
 					$find = false;
 					while($res = $this->fetch_object())
 					{
-						if($group->in_group($user_id, $res->group_id) == true)
+						if(UsergroupControler::inGroup($user_id, $res->group_id) == true)
 						{
 							$find = true;
 							break;
