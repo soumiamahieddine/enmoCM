@@ -34,6 +34,7 @@ if(!isset($_REQUEST['form_values']) || empty($_REQUEST['form_values']))
 try{
 	include('apps/'.$_SESSION['config']['app_id'].'/security_bitmask.php');
 	include('core/manage_bitmask.php');
+	include('core/class/class_security.php');
 } catch (Exception $e){
 	echo $e->getMessage();
 }
@@ -93,7 +94,7 @@ if($mode == "up")
 }
 else
 {
-	$ind = $this->get_ind_collection($coll_id);
+	$ind = security::get_ind_collection($coll_id);
 	array_push($_SESSION['m_admin']['groups']['security'] , array('GROUP_ID' => '' , 'COLL_ID' => $coll_id , 'IND_COLL_SESSION' => $ind,'WHERE_CLAUSE' => $where, 'COMMENT' => $comment , 'WHERE_TARGET' => $target, 'RIGHTS_BITMASK' => $bitmask, 'START_DATE' => $start_date, 'STOP_DATE' => $stop_date));
 	$_SESSION['m_admin']['load_security'] = false;
 }

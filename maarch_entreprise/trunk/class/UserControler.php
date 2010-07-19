@@ -150,7 +150,7 @@ class UserControler{
 		}
 		
 		if($ok)
-			$ok = cleanUsergroupContent($user_id);
+			$ok = self::cleanUsergroupContent($user_id);
 		// suppression dans user_abs + user_entities à faire dans le controler de page si module entities chargé
 		self::disconnect();
 		return $ok;

@@ -226,10 +226,10 @@ class UsergroupControler
 		}
 		self::disconnect();
 		if($ok)
-			$ok = cleanUsergroupContent($group_id);
+			$ok = self::cleanUsergroupContent($group_id);
 
 		if($ok)
-			$ok = deleteServicesForGroup($group_id);
+			$ok = self::deleteServicesForGroup($group_id);
 
 		return $ok;
 	}
