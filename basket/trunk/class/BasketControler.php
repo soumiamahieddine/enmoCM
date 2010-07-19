@@ -19,7 +19,7 @@ class BasketControler{
 	public static $baskets_table;
 	public static $groupbasket_table;
 	public static $groupbasket_redirect_table;
-	public static $actions_groupbasket_table;
+	public static $actions_groupbaskets_table;
 	
 	public function connect()
 	{
@@ -154,7 +154,7 @@ class BasketControler{
 		}
 		
 		if($ok)
-			$ok = cleanFullGroupbasket($basket_id);
+			$ok = self::cleanFullGroupbasket($basket_id);
 		
 		self::disconnect();
 		return $ok;
@@ -165,10 +165,10 @@ class BasketControler{
 		if(!isset($id)|| empty($id) || !isset($field) || empty($field) )
 			return false;
 			
-		$ok = cleanGroupbasket($id, $field);
+		$ok = self::cleanGroupbasket($id, $field);
 		
 		if($ok)
-			$ok = cleanActionsGroupbasket($id, $field);
+			$ok = self::cleanActionsGroupbasket($id, $field);
 		
 		return $ok;
 	}
