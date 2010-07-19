@@ -622,10 +622,9 @@ class security extends dbquery
 		}
 		else
 		{
-			$this->connect();
 			//$_SESSION['user']['services'] = array();
-			require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_usergroups.php");
-			$group = new usergroups();
+			require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."UsergroupControler.php");
+			
 			for($i=0; $i< count($_SESSION['enabled_services']);$i++)
 			{
 				if($_SESSION['enabled_services'][$i]['system'] == true)
@@ -635,11 +634,12 @@ class security extends dbquery
 				}
 				else
 				{
+					$this->connect();
 					$this->query("select group_id from ".$_SESSION['tablename']['usergroup_services']." where service_id = '".$_SESSION['enabled_services'][$i]['id']."'");
 					$find = false;
 					while($res = $this->fetch_object())
 					{
-						if($group->in_group($user_id, $res->group_id) == true)
+						if(UsergroupControler::inGroup($user_id, $res->group_id) == true)
 						{
 							$find = true;
 							break;
