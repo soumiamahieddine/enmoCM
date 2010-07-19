@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ROOT>
+	<DOCSERVERS>
+		<OAIS>
+			<MODE>NONE</MODE>
+			<MODE>AIP_1</MODE>
+		</OAIS>
+		<SIGN>
+			<MODE>NONE</MODE>
+			<MODE>EJBCA</MODE>
+		</SIGN>
+		<COMPRESS>
+			<MODE>NONE</MODE>
+			<MODE>ZIP</MODE>
+			<MODE>TARZIP</MODE>
+			<MODE>XZ</MODE>
+		</COMPRESS>
+	</DOCSERVERS>
+	<LIFE_CYCLE>
+		<PROCESS>
+			<MODE>NONE</MODE>
+			<MODE>MOVE</MODE>
+			<MODE>COPY</MODE>
+			<MODE>DELETE</MODE>
+		</PROCESS>
+	</LIFE_CYCLE>
+</ROOT>

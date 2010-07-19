@@ -19,9 +19,11 @@
  *   along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*********************** SERVICES ***********************************/
+/*********************** ADMIN ***********************************/
 if (!defined('_LIFE_CYCLE'))  define('_LIFE_CYCLE', 'Cycle de vie');
-if (!defined('_ADMIN_LIFE_CYCLE'))  define('_ADMIN_LIFE_CYCLE', 'Cycle de vie');
-if (!defined('_ADMIN_LIFE_CYCLE_DESC'))  define('_ADMIN_LIFE_CYCLE_DESC', 'D&eacute;finir les cycles de vie.');
+if (!defined('_ADMIN_LIFE_CYCLE_SHORT'))  define('_ADMIN_LIFE_CYCLE_SHORT', ' Administration des cycles de vie');
+if (!defined('_ADMIN_LIFE_CYCLE'))  define('_ADMIN_LIFE_CYCLE', ' Administration des cycles de vie des ressources num&eacute;riques');
+if (!defined('_ADMIN_LIFE_CYCLE_DESC'))  define('_ADMIN_LIFE_CYCLE_DESC', 'Administration des cycles de vie des ressources num&eacute;riques.');
+if (!defined('_MANAGE_DOCSERVERS'))  define('_MANAGE_DOCSERVERS', 'G&eacute;rer les serveurs de documents ("docservers")');
 
 ?>

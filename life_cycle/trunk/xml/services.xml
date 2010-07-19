@@ -4,7 +4,7 @@
    <id>admin_life_cycle</id>
    <name>_ADMIN_LIFE_CYCLE</name>
    <comment>_ADMIN_LIFE_CYCLE_DESC</comment>
-   <servicepage>index.php?page=lc&amp;module=life_cycle</servicepage>
+   <servicepage>index.php?page=life_cycle_administration&amp;module=life_cycle</servicepage>
    <servicetype>admin</servicetype>
    <system_service>false</system_service>
    <style>lc_admin_lc</style>

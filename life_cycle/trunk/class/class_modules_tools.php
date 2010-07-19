@@ -48,6 +48,12 @@
 */
 class life_cycle extends dbquery
 {
+	function __construct()
+	{
+		parent::__construct();
+		$this->index = array();
+	}
+	
 	/**
 	* Loads life_cycle  tables into sessions vars from the life_cycle/xml/config.xml
 	* Loads life_cycle log setting into sessions vars from the life_cycle/xml/config.xml
@@ -77,6 +83,10 @@ class life_cycle extends dbquery
 		$_SESSION['history']['lcadd'] = (string) $HISTORY->lcadd;
 		$_SESSION['history']['lcup'] = (string) $HISTORY->lcup;
 		$_SESSION['history']['lcdel'] = (string) $HISTORY->lcdel;
+		$_SESSION['history']['docserversadd'] = (string) $HISTORY->docserversadd;
+		$_SESSION['history']['docserversdel'] = (string) $HISTORY->docserversdel;
+		$_SESSION['history']['docserversban'] = (string) $HISTORY->docserversban;
+		//$_SESSION['history']['docserversclose'] = (string) $HISTORY->docserversclose;
 	}
 
 	/**
@@ -84,7 +94,17 @@ class life_cycle extends dbquery
 	*/
 	public function load_module_var_session()
 	{
-		//
+		if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR."modules".DIRECTORY_SEPARATOR."life_cycle".DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."life_cycle_features.xml"))
+		{
+			$path = $_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR."modules".DIRECTORY_SEPARATOR."life_cycle".DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."life_cycle_features.xml";
+		}
+		else
+		{
+			$path = "modules".DIRECTORY_SEPARATOR."life_cycle".DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."life_cycle_features.xml";
+		}
+		$_SESSION['lifeCycleFeatures'] = array();
+		$_SESSION['lifeCycleFeatures'] = functions::object2array(simplexml_load_file($path));
+		//functions::show_array($_SESSION['lifeCycleFeatures']);
 	}
 }
 ?>

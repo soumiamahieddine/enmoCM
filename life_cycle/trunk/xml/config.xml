@@ -15,5 +15,9 @@
 		<lcadd>true</lcadd>
 		<lcup>true</lcup>
 		<lcdel>true</lcdel>
+		<docserversadd>true</docserversadd>
+		<docserversdel>true</docserversdel>
+		<docserversban>true</docserversban>
+		<!--<docserversclose>true</docserversclose>-->
 	</HISTORY>
 </root>
