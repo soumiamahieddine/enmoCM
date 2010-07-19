@@ -35,7 +35,7 @@
    <id>admin_users</id>
    <name>_ADMIN_USERS</name>
    <comment>_ADMIN_USERS_DESC</comment>
-   <servicepage>index.php?page=users&amp;admin=users</servicepage>
+   <servicepage>index.php?page=users_management_controler&amp;mode=list&amp;admin=users</servicepage>
    <servicetype>admin</servicetype>
    <system_service>false</system_service>
    <style>admin_users</style>

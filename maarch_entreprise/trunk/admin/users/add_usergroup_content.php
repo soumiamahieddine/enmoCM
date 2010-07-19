@@ -29,30 +29,19 @@
 * @ingroup admin
 */
 
-$core_tools = new core_tools();
-
-$core_tools->load_lang();
-$core_tools->test_admin('admin_users', 'apps');
-
-$ugc = new dbquery();
-//loading all the enabled groups in an array
-$ugc->connect();
-$ugc->query("select group_id, group_desc from ".$_SESSION['tablename']['usergroups']." where enabled = 'Y' order by group_desc asc");
-
-$tab=array();
-$i=0;
-while($value = $ugc->fetch_array())
-{
-	$tab[$i]['ID'] = $value[0] ;
-	$tab[$i]['LABEL'] = $ugc->show_string($value[1]);
-	$i++;
+try{
+	require_once("apps/".$_SESSION['config']['app_id']."/class/UsergroupControler.php");
+} catch (Exception $e){
+	echo $e->getMessage();
 }
+core_tools::load_lang();
+core_tools::test_admin('admin_users', 'apps');
+
+$tab = UsergroupControler::getAllUsergroups();
 
 $tab2 = array();
 if ( count($_SESSION['m_admin']['users']['groups']) > 0 )
 {
-
-	//$tabtmp = array();
 	for($i=0; $i < count($_SESSION['m_admin']['users']['groups']); $i++)
 	{
 		array_push($tab2, array('ID'=> $_SESSION['m_admin']['users']['groups'][$i]['GROUP_ID'], 'LABEL' => $_SESSION['m_admin']['users']['groups'][$i]['LABEL']));
@@ -64,7 +53,7 @@ for($j=0; $j < count($tab); $j++)
 {
 	for($k=0; $k < count($tab2); $k++)
 	{
-		if($tab[$j]['ID'] ==  $tab2[$k]['ID'])
+		if($tab[$j]->__get('group_id') ==  $tab2[$k]['ID'])
 		{
 			unset($res[$j]);
 			break;
@@ -72,32 +61,24 @@ for($j=0; $j < count($tab); $j++)
 	}
 }
 $res = array_values($res);
-
-
-//here we loading the html
-$core_tools->load_html();
-//here we building the header
-$core_tools->load_header('', true, false);
-$time = $core_tools->get_session_time_expire();
+unset($tab2);
+unset($tab);
 ?>
-<body onLoad="setTimeout(window.close, <?php  echo $time;?>*60*1000);">
 <div class="popup_content">
 <h2 class="tit"><?php  echo _ADD_GROUP;?></h2>
-<form name="chooseGroup" method="get" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php" class="forms">
-<input type="hidden" name="display" value="true" />
-<input type="hidden" name="admin" value="users" />
-<input type="hidden" name="page" value="choose_group" />
+<form name="chooseGroup" id="chooseGroup" method="get" action="#" class="forms">
 <p>
-	<label for="groupe"> <?php  echo _CHOOSE_GROUP;?> : </label>
-	<select name="groupe" id="groupe" >
+	<label for="group_id"> <?php  echo _CHOOSE_GROUP;?> : </label>
+	<select name="group_id" id="group_id" >
 <?php
 
 for($j=0; $j<count($res); $j++)
 {
-	if(!empty($res[$j]['LABEL']))
+	$desc = $res[$j]->__get('group_desc');
+	if(isset($res[$j]) && !empty($desc))
 	{
 ?>
-	<option value="<?php  echo $res[$j]['ID'] ?>"><?php   echo $res[$j]['LABEL']; ?></option>
+	<option value="<?php  echo $res[$j]->__get('group_id') ?>"><?php   echo $res[$j]->__get('group_desc'); ?></option>
 <?php
 	}
 }
@@ -111,13 +92,9 @@ for($j=0; $j<count($res); $j++)
 </p>
 <br/>
 <p class="buttons">
-	<input type="submit" class="button" name="Submit" value="<?php  echo _VALIDATE;?>"  />
-	<input type="button" name="cancel" class="button"  value="<?php  echo _CANCEL;?>" onClick="window.close()"/>
-	<input type="hidden" name="Submit" value="Validate"  />
+	<input type="button" name="Submit" value="<?php  echo _VALIDATE;?>" class="button" onclick="checkGroup('chooseGroup', '<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&admin=users&page=check_group';?>', '<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&admin=users&page=manage_group';?>', '<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&admin=users&page=ugc_form';?>');"  />
+	<input type="button" name="cancel" value="<?php  echo _CANCEL;?>" class="button"  onclick="destroyModal('add_ugc');"/>
 </p>
 
 </form>
 </div>
-<?php $core_tools->load_js();?>
-</body>
-</html>

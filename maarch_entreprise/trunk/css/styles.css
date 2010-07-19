@@ -204,7 +204,7 @@ acronym, abbr {
 
 }
 
-#desc_box .tit, #user_box .tit, #add_box .tit {
+#desc_box .tit, #user_box .tit, #ugc .tit {
 	/*color: #FFC200;*/
 	color: #1B99C4;
 }
@@ -1560,7 +1560,7 @@ vertical-align: middle;
 	margin: 0 10px 0 0;
 	padding: 20px 25px;
 }
-#add_box,#user_box,#group_box{
+#ugc,#user_box,#group_box{
 	border: 0px;
 	float: right;
 	width: 465px;
@@ -1663,7 +1663,7 @@ padding-left :15px;
 
 /* add/change a group, user or document type (width iframes) */
 
-#add_box {
+#ugc {
 	height: 350px;
 	width: 300px;
 }
@@ -1679,7 +1679,7 @@ padding-left :15px;
 	width: 350px;
 	height: 360px;
 }
-#add_box .frameform2 {
+#ugc .frameform2 {
 	height: 360px;
 
 }

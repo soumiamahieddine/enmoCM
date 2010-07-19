@@ -28,53 +28,10 @@
 * @version $Revision$
 * @ingroup admin
 */
-
-$core_tools = new core_tools();
-$core_tools->load_lang();
-
-require_once( "apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_usergroup_content.php");
-$func = new functions();
-
-if(isset($_REQUEST['removeGroup']) && !empty($_REQUEST['removeGroup']))
-{
-	if(count($_REQUEST['groups'])>0)
-	{
-		$tab = array();
-    	for ($i=0; $i<count($_REQUEST['groups']); $i++)
-		{
-			array_push($tab,$_REQUEST['groups'][$i]);
- 		}
-		$ugc = new usergroup_content();
-		$ugc->remove_session($tab);
-   	}
-	$_SESSION['m_admin']['load_group'] = false;
-
-}
-
-if(isset($_REQUEST['setPrimary']))
-{
-	if(count($_REQUEST['groups'])>0)
-	{
-    		$ugc = new usergroup_content();
-			$ugc->erase_primary_group_session();
-			$ugc->set_primary_group_session($_REQUEST['groups'][0]);
-   	}
-
-	$_SESSION['m_admin']['load_group'] = false;
-
-}
-
-//here we loading the html
-$core_tools->load_html();
-//here we building the header
-$core_tools->load_header(_USER_GROUPS_TITLE, true, false);
+core_tools::load_lang();
 ?>
-<body id="iframe">
 <div class="block">
-<form name="usergroup_content" method="get" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php" >
-<input type="hidden" name="display" value="true" />
-<input type="hidden" name="admin" value="users" />
-<input type="hidden" name="page" value="ugc_form" />
+<form name="usergroup_content" method="get" action="#" >
  <h2 class="tit"> <?php  echo _USER_GROUPS_TITLE; ?> :</h2>
 <?php
 
@@ -99,13 +56,13 @@ $core_tools->load_header(_USER_GROUPS_TITLE, true, false);
 				<input type="checkbox"  class="check" name="groups[]" value="<?php  echo  $_SESSION['m_admin']['users']['groups'][$theline]['GROUP_ID']; ?>" ><?php  echo $_SESSION['m_admin']['users']['groups'][$theline]['LABEL'] ; ?><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><?php  echo $_SESSION['m_admin']['users']['groups'][$theline]['ROLE']; ?></i><br/></input>
 				<?php
 		}
-		 ?> <br/><input class="button" type="submit" name="removeGroup" value="<?php  echo _DELETE_GROUPS; ?>" /><br/><br/>
+		 ?> <br/><input class="button" type="button" name="removeUsergroup" id="removeUsergroup" value="<?php  echo _DELETE_GROUPS; ?>" onclick="removeGroup('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&admin=users&page=remove_group', '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&admin=users&page=ugc_form')"/><br/><br/>
 <?php 	}
 
 	if (count($_SESSION['m_admin']['users']['groups']) < $_SESSION['m_admin']['nbgroups']  || empty($_SESSION['m_admin']['users']['groups']))
 	{
 	?>
-		<input class="button" type="button" name="addGroup" onClick="window.open('<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&admin=users&page=add_usergroup_content','add','toolbar=no,status=no,width=400,height=150,left=500,top=300,scrollbars=no,top=no,location=no,resizable=yes,menubar=no')" value="<?php  echo _ADD_TO_GROUP; ?>" />
+		<input class="button" type="button" name="addGroup" id="addGroup" onclick="displayModal('<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&admin=users&page=add_usergroup_content', 'add_ugc', 600, 150);" value="<?php  echo _ADD_TO_GROUP; ?>" />
 	<?php
 	}
 
@@ -114,12 +71,9 @@ $core_tools->load_header(_USER_GROUPS_TITLE, true, false);
 	<?php  if (count($_SESSION['m_admin']['users']['groups']) > 0)
 	{
 	?>
-		<input type="submit" class="button" name="setPrimary" value="<?php  echo _CHOOSE_PRIMARY_GROUP; ?>" />
+		<input type="submit" class="button" name="setPrimary" id="setPrimary" value="<?php  echo _CHOOSE_PRIMARY_GROUP; ?>"  onclick="setPrimaryGroup('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&admin=users&page=set_primary_group', '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&admin=users&page=ugc_form');"/>
 	<?php
 	}
 	?>
 	</form>
 	</div>
-<?php $core_tools->load_js();?>
-</body>
-</html>

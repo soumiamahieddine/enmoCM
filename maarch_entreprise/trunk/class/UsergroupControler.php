@@ -8,7 +8,7 @@ define("_CODE_INCREMENT",1);
 
 try {
 	require_once("core/class/class_db.php");
-	require_once("apps/maarch_entreprise/class/Usergroup.php");
+	require_once("apps/".$_SESSION['config']['app_id']."/class/Usergroup.php");
 } catch (Exception $e){
 	echo $e->getMessage().' // ';
 }
@@ -74,6 +74,33 @@ class UsergroupControler
 			self::disconnect();
 			return null;
 		}
+	}
+	
+	public function getAllUsergroups($order_str = "order by group_desc asc", $enabled_only = true)
+	{
+		self::connect();
+		$query = "select * from ".self::$usergroups_table." ";
+		if($enabled_only)
+			$query .= "where enabled = 'Y'";
+		
+		$query.= $order_str;
+		
+		try{
+			if($_ENV['DEBUG'])
+				echo $query.' // ';
+			self::$db->query($query);
+		} catch (Exception $e){}
+		
+		$groups = array();
+		while($res = self::$db->fetch_object())
+		{
+			$group=new Usergroup();
+			$tmp_array = array('group_id' => $res->group_id, 'group_desc' => $res->group_desc, 'enabled' => $res->enabled);
+			$group->setArray($tmp_array);
+			array_push($groups, $group);
+		}
+		self::disconnect();
+		return $groups;
 	}
 	
 	public function getUsers($group_id)
@@ -415,6 +442,25 @@ class UsergroupControler
 			return true;
 		else
 			return false;
+	}
+	
+	public function getUsergroupsCount($enabled_only = true)
+	{
+		$nb = 0;
+		self::connect();
+		
+		$query = "select group_id from ".self::$usergroups_table." " ;
+		if($enabled_only)
+			$query .= "where enabled ='Y'";
+		
+		try{
+			if($_ENV['DEBUG']){echo $query.' // ';}
+			self::$db->query($query);
+		} catch (Exception $e){}
+		
+		$nb = self::$db->nb_result();			
+		self::disconnect();
+		return $nb;
 	}
 }
 ?>

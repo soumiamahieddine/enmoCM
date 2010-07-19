@@ -18,8 +18,8 @@ $page_labels = array('add' => _ADDITION, 'up' => _MODIFICATION, 'list' => _GROUP
 $page_ids = array('add' => 'group_add', 'up' => 'group_up', 'list' => 'groups_list');
 
 try{
-	require_once("apps/maarch_entreprise/class/UsergroupControler.php");
-	require_once("apps/maarch_entreprise/class/UserControler.php");
+	require_once("apps/".$_SESSION['config']['app_id']."/class/UsergroupControler.php");
+	require_once("apps/".$_SESSION['config']['app_id']."/class/UserControler.php");
 	require_once("core/class/SecurityControler.php");
 	require_once("core/class/class_security.php");
 	if($mode == 'list')
@@ -45,6 +45,8 @@ function init_session()
 	$_SESSION['m_admin']['groups']['security'] = array();
 	$_SESSION['m_admin']['groups']['services'] = array();
 	$_SESSION['m_admin']['init'] = false;
+	$_SESSION['m_admin']['load_security']  = true;
+	$_SESSION['m_admin']['load_services'] = true;
 }
 
 function transform_security_object_into_array($security)
@@ -213,7 +215,7 @@ if(isset($_REQUEST['group_submit']))
 			{
 				$_SESSION['user']['groups'] = array();
 				$_SESSION['user']['security'] = array();
-				//$sec->load_groups($_SESSION['user']['UserId']);
+
 				$tmp = security::load_groups($_SESSION['user']['UserId']);
 				$_SESSION['user']['groups'] = $tmp['groups'];
 				$_SESSION['user']['primarygroup'] = $tmp['primarygroup'];
@@ -221,7 +223,7 @@ if(isset($_REQUEST['group_submit']))
 				$tmp = security::load_security($_SESSION['user']['UserId']);
 				$_SESSION['user']['collections'] = $tmp['collections'];
 				$_SESSION['user']['security'] = $tmp['security'];
-			//	$sec->load_security();
+
 				$_SESSION['user']['services'] = security::load_user_services($_SESSION['user']['UserId']);
 			}
 		}
@@ -252,18 +254,18 @@ if($mode == "up")
 		$_SESSION['m_admin']['groups']['GroupId'] = $usergroup->__get('group_id');
 		$_SESSION['m_admin']['groups']['desc'] = $usergroup->__get('group_desc');
 
-	//	if (! isset($_SESSION['m_admin']['load_security']) || $_SESSION['m_admin']['load_security'] == true)
-		//{
+		if (! isset($_SESSION['m_admin']['load_security']) || $_SESSION['m_admin']['load_security'] == true)
+		{
 			$access = SecurityControler::getAccessForGroup($group_id); // ramène le tableau des accès
 			$_SESSION['m_admin']['groups']['security'] = transform_array_of_security_object($access);
 			$_SESSION['m_admin']['load_security'] = false ;
-	//	}
-	//	if (! isset($_SESSION['m_admin']['load_services']) || $_SESSION['m_admin']['load_services'] == true)
-	//	{
+		}
+		if (! isset($_SESSION['m_admin']['load_services']) || $_SESSION['m_admin']['load_services'] == true)
+		{
 			$services = UsergroupControler::getServices($group_id);  // ramène le tableau des services
 			$_SESSION['m_admin']['groups']['services'] = $services;
 			$_SESSION['m_admin']['load_services'] = false ;
-	//	}
+		}
 		$users_id = UsergroupControler::getUsers($group_id ); //ramène le tableau des user_id appartenant au groupe
 		$baskets_id = UsergroupControler::getBaskets($group_id ); //ramène le tableau des basket_id associées au groupe
 

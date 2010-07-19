@@ -8,7 +8,7 @@ define("_CODE_INCREMENT",1);
 
 try {
 	require_once("core/class/class_db.php");
-	require_once("apps/maarch_entreprise/class/User.php");
+	require_once("apps/".$_SESSION['config']['app_id']."/class/User.php");
 } catch (Exception $e){
 	echo $e->getMessage().' // ';
 }
@@ -17,12 +17,14 @@ class UserControler{
 	
 	private static $db;
 	public static $users_table ;
+	public static $usergroup_content_table ;
 	
 	public function connect()
 	{
 		$db = new dbquery();
 		$db->connect();
 		self::$users_table = $_SESSION['tablename']['users'];
+		self::$usergroup_content_table = $_SESSION['tablename']['usergroup_content'];
 		
 		self::$db=$db;
 	}	
@@ -67,6 +69,28 @@ class UserControler{
 		}
 	}
 	
+	public function getGroups($user_id)
+	{	
+		$groups = array();
+		if(empty($user_id))
+			return null;
+
+		self::connect();
+		$query = "select group_id, primary_group, role from ".self::$usergroup_content_table." where user_id = '".$user_id."'";
+		try{
+			if($_ENV['DEBUG']){echo $query.' // ';}
+					self::$db->query($query);
+		} catch (Exception $e){
+					echo _NO_USER_WITH_ID.' '.$user_id.' // ';
+		}
+		
+		while($res = self::$db->fetch_object())
+		{
+			array_push($groups, array('USER_ID' => $user_id, 'GROUP_ID' => $res->group_id, 'PRIMARY' => $res->primary_group, 'ROLE' => $res->role));
+		}
+		self::disconnect();
+		return $groups;
+	}
 	
 	public function save($user, $mode)
 	{
