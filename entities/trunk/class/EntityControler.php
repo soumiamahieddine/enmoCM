@@ -71,6 +71,28 @@ class EntityControler{
 		}
 	}
 	
+	public function getUsersEntities($user_id)
+	{
+		if(empty($user_id))
+			return null;
+			
+		self::connect();
+		$query = "select entity_id, user_role, primary_entity from ".self::$users_entities_table." where user_id = '".functions::protect_string_db($user_id)."'";
+		
+		try{
+			if($_ENV['DEBUG']){echo $query.' // ';}
+			self::$db->query($query);
+		} catch (Exception $e){
+			echo _NO_USER_WITH_ID.' '.$user_id.' // ';
+		}
+		$entities = array();
+		while($res=self::$db->fetch_object())
+		{
+			array_push($entities, array('USER_ID' => $user_id, 'ENTITY_ID' => $res->entity_id, 'PRIMARY' => $res->primary_entity, 'ROLE' => $res->user_role));
+		}
+		self::disconnect();
+		return $entities;
+	}
 	
 	public function save($entity, $mode)
 	{
@@ -309,6 +331,25 @@ class EntityControler{
 		}
 		self::disconnect();
 		return $ok;
+	}
+	
+	public function getEntitiesCount($enabled_only = true)
+	{
+		$nb = 0;
+		self::connect();
+		
+		$query = "select entity_id  from ".self::$entities_table." " ;
+		if($enabled_only)
+			$query .= "where enabled ='Y'";
+		
+		try{
+			if($_ENV['DEBUG']){echo $query.' // ';}
+			self::$db->query($query);
+		} catch (Exception $e){}
+		
+		$nb = self::$db->nb_result();			
+		self::disconnect();
+		return $nb;
 	}
 }
 ?>
