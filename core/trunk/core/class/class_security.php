@@ -623,7 +623,7 @@ class security extends dbquery
 		else
 		{
 			//$_SESSION['user']['services'] = array();
-			require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."UsergroupControler.php");
+			require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."UsergroupControler.php");
 			
 			for($i=0; $i< count($_SESSION['enabled_services']);$i++)
 			{
