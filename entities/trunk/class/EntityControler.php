@@ -71,6 +71,35 @@ class EntityControler{
 		}
 	}
 	
+	public function getAllEntities($order_str = "order by short_label asc", $enabled_only = true)
+	{
+		self::connect();
+		$query = "select * from ".self::$entities_table." ";
+		if($enabled_only)
+			$query .= "where enabled = 'Y'";
+		
+		$query.= $order_str;
+		
+		try{
+			if($_ENV['DEBUG'])
+				echo $query.' // ';
+			self::$db->query($query);
+		} catch (Exception $e){}
+		
+		$entities = array();
+		while($res = self::$db->fetch_object())
+		{
+			$ent=new EntityObj();
+			foreach($res as $key => $value)
+				$tmp_array[$key] = $value;
+			
+			$ent->setArray($tmp_array);
+			array_push($entities, $ent);
+		}
+		self::disconnect();
+		return $entities;
+	}
+	
 	public function getUsersEntities($user_id)
 	{
 		if(empty($user_id))
@@ -185,20 +214,21 @@ class EntityControler{
 		return $ok;
 	}
 	
-	public function cleanUsersentities($entity_id)
+	public function cleanUsersentities($id, $field = 'entity_id')
 	{
-		if(!isset($entity_id)|| empty($entity_id) )
+		if(!isset($id)|| empty($id) )
 			return false;
 		
 		self::connect();
-		$query="delete from ".self::$users_entities_table." where entity_id='".$entity_id."'";
+		$query="delete from ".self::$users_entities_table." where ".$field."='".$id."'";
 		
 		try{
-			if($_ENV['DEBUG']){echo $query.' // ';}
+			if($_ENV['DEBUG'])
+				echo $query.' // ';
 			self::$db->query($query);
 			$ok = true;
 		} catch (Exception $e){
-			echo _CANNOT_DELETE_ENTITY." ".$entity_id.' // ';
+			echo _CANNOT_DELETE.' '.$field." ".$id.' // ';
 			$ok = false;
 		}
 
@@ -350,6 +380,36 @@ class EntityControler{
 		$nb = self::$db->nb_result();			
 		self::disconnect();
 		return $nb;
+	}
+	
+	public function loadDbUsersentities($user_id, $array)
+	{
+		if(!isset($user_id)|| empty($user_id) )
+			return false;
+		if(!isset($array) || count($array) == 0)
+			return false;
+			
+		self::connect();
+		$ok = true;
+		for($i=0; $i < count($array ); $i++)
+		{
+			if($ok) 
+			{
+				$query = "INSERT INTO ".self::$users_entities_table." (user_id, entity_id, primary_entity, user_role) VALUES ('".functions::protect_string_db($user_id)."', '".functions::protect_string_db($array[$i]['ENTITY_ID'])."', '".functions::protect_string_db($array[$i]['PRIMARY'])."', '".functions::protect_string_db($array[0]['ROLE'])."')";
+				try{
+					if($_ENV['DEBUG'])
+						echo $query.' // ';
+					self::$db->query($query);
+					$ok = true;
+				} catch (Exception $e){
+					$ok = false;
+				}
+			}
+			else
+				break;
+		}
+		self::disconnect();
+		return $ok;		
 	}
 }
 ?>

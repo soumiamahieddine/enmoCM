@@ -12,9 +12,9 @@
 * @author  Claire Figueras  <dev@maarch.org>
 */
 
-$admin = new core_tools();
-//$admin->test_admin('manage_entities', 'entities');
-$admin->load_lang();
+
+//core_tools::test_admin('manage_entities', 'entities');
+core_tools::load_lang();
 
 if(!empty($_REQUEST['entity']) && isset($_REQUEST['entity']))
 {

@@ -42,3 +42,16 @@ width: 320px;
 {
 	width: 280px;
 }
+
+#user_entities .tit {
+	/*color: #FFC200;*/
+	color: #1B99C4;
+}
+#user_entities{
+	border: 0px;
+	float: right;
+	margin: 0 10px 0 13px;
+	height: 350px;
+	width: 300px;
+}	
+	

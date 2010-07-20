@@ -1,8 +1,8 @@
 <?php
+require_once('modules/entities/class/EntityControler.php');
+
 if($_SESSION['service_tag'] == 'user_init')
 {
-	
-	require_once('modules/entities/class/EntityControler.php');
 	$_SESSION['m_admin']['nbentities'] = EntityControler::getEntitiesCount();
 	
 	$tmp_array = EntityControler::getUsersEntities($_SESSION['m_admin']['users']['UserId']);
@@ -18,15 +18,10 @@ if($_SESSION['service_tag'] == 'user_init')
 elseif($_SESSION['service_tag'] == 'formuser')
 {
 ?>
-<div id="inner_content" class="clearfix">
-	<div id="add_box" class="">
-        <p>
-            <?php  if($_SESSION['m_admin']['users']['UserId'] <> "superadmin")
-			{?>
-              <iframe name="user_entities" id="user_entities" class="frameform2" src="<?php  echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=users_entities_form';?>" frameborder="0"></iframe>
-            <?php  } ?>
-        </p>
-</div>
+<script type="text/javascript" src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?module=entities&filename=users_entities_management.js"></script>
+<div id="user_entities"></div>
+<script>updateContent('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=users_entities_form&module=entities', 'user_entities');</script>
+
 <?php
 
 }
@@ -37,14 +32,27 @@ elseif($_SESSION['service_tag'] == 'users_list_init')
 }
 elseif($_SESSION['service_tag'] == 'user_check')
 {
-	require_once('modules'.DIRECTORY_SEPARATOR.'entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_users_entities.php');
-	$ue = new users_entities();
-	$ue->checks_info($_SESSION['m_admin']['mode']);
+	$primary_set = false;
+	if(!empty($_SESSION['m_admin']['entity']['entities'])   )
+	{
+		for($i=0; $i < count($_SESSION['m_admin']['entity']['entities']); $i++)
+		{
+			if($_SESSION['m_admin']['entity']['entities'][$i]['PRIMARY'] == 'Y')
+			{
+				$primary_set = true;
+				break;
+			}
+		}
+
+		if ($primary_set == false)
+		{
+			$_SESSION['error'] = _NO_PRIMARY_ENTITY;
+		}
+	}
 }
-elseif($_SESSION['service_tag'] == 'users_add_db' || $_SESSION['service_tag'] == 'users_up_db')
+elseif($_SESSION['service_tag'] == 'user_add_' || $_SESSION['service_tag'] == 'user_up')
 {
-	require_once('modules'.DIRECTORY_SEPARATOR.'entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_users_entities.php');
-	$ue = new users_entities();
-	$ue->load_db(false);
+	EntityControler::cleanUsersentities($_SESSION['m_admin']['users']['UserId'], 'user_id');
+	EntityControler::loadDbUsersentities($_SESSION['m_admin']['users']['UserId'], $_SESSION['m_admin']['entity']['entities']);
 }
 ?>
