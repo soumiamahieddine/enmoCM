@@ -206,11 +206,13 @@ class diffusion_list extends dbquery
 			if(!$concat)
 			{
 				$this->query("delete from ".$params['table']." where coll_id = '".$this->protect_string_db(trim($params['coll_id']))."'  and listinstance_type = '".$this->protect_string_db(trim($list_type))."' and res_id = ".$params['res_id']." and item_mode = 'cc'");
+				//$this->show();
 			}
 			if(isset($diff_list['dest']['user_id']) && !empty($diff_list['dest']['user_id']) && !$only_cc)
 			{
 				// If dest_user is set, deletes the dest_user (concat or not concat)
 				$this->query("delete from ".$params['table']." where coll_id = '".$this->protect_string_db(trim($params['coll_id']))."'  and listinstance_type = '".$this->protect_string_db(trim($list_type))."' and res_id = ".$params['res_id']." and item_mode = 'dest'");
+				//$this->show();
 				if($concat)
 				{
 					// Deletes the dest user if he is in copy to avoid duplicate entry
@@ -268,6 +270,27 @@ class diffusion_list extends dbquery
 					//$this->show();
 				}
 			}
+			//found copies to delete
+			$this->query("select res_id, item_id from ".$params['table']." where coll_id = '".$this->protect_string_db(trim($params['coll_id']))."' and res_id = ".$params['res_id']." and listinstance_type = '".$this->protect_string_db(trim($list_type))."' and item_mode= 'cc'");
+			//$this->show();
+			while($resToDelete = $this->fetch_object())
+			{
+				$toDelete = true;
+				for($cptCopies=0;$cptCopies<count($diff_list['copy']['users']);$cptCopies++)
+				{
+					if($resToDelete->item_id == $diff_list['copy']['users'][$cptCopies]['user_id'])
+					{
+						$toDelete = false;
+					}
+				}
+				if($toDelete)
+				{
+					echo $toDelete." ".$resToDelete->item_id;
+					$this->query("delete from ".$params['table']." where coll_id = '".$this->protect_string_db(trim($params['coll_id']))."'  and listinstance_type = '".$this->protect_string_db(trim($list_type))."' and res_id = ".trim($params['res_id'])." and item_mode = 'cc' and item_id = '".$resToDelete->item_id."'");
+					//$this->show();
+				}
+				
+			}
 			$max_seq = 0;
 			if($concat)
 			{
@@ -306,11 +329,15 @@ class diffusion_list extends dbquery
 		}
 		if($params['mode'] == 'listinstance')
 		{
+			// Deletes the dest user if he is in copy to avoid duplicate entry
 			$this->query("select item_id from ".$params['table']." where coll_id = '".$this->protect_string_db(trim($params['coll_id']))."' and res_id = ".$params['res_id']." and listinstance_type = '".$this->protect_string_db(trim($list_type))."' and item_type = 'user_id' and item_mode= 'dest'");
+			//$this->show();
 			$result = $this->fetch_object();
 			$itemId = $result->item_id;
 			$this->query("delete from ".$params['table']." where coll_id = '".$this->protect_string_db(trim($params['coll_id']))."'  and listinstance_type = '".$this->protect_string_db(trim($list_type))."' and res_id = ".trim($params['res_id'])." and item_mode = 'cc' and item_type = 'user_id' and item_id = '".$itemId."'");
+			//$this->show();
 		}
+		//exit;
 	}
 
 	/**
