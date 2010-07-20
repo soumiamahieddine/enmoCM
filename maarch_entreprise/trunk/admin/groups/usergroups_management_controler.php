@@ -18,8 +18,8 @@ $page_labels = array('add' => _ADDITION, 'up' => _MODIFICATION, 'list' => _GROUP
 $page_ids = array('add' => 'group_add', 'up' => 'group_up', 'list' => 'groups_list');
 
 try{
-	require_once("apps/".$_SESSION['config']['app_id']."/class/UsergroupControler.php");
-	require_once("apps/".$_SESSION['config']['app_id']."/class/UserControler.php");
+	require_once("core/class/UsergroupControler.php");
+	require_once("core/class/UserControler.php");
 	require_once("core/class/SecurityControler.php");
 	require_once("core/class/class_security.php");
 	if($mode == 'list')

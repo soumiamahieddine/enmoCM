@@ -15,8 +15,8 @@ $page_labels = array('add' => _ADDITION, 'up' => _MODIFICATION, 'list' => _USERS
 $page_ids = array('add' => 'user_add', 'up' => 'user_up', 'list' => 'users_list');
 
 try{
-	require_once("apps/".$_SESSION['config']['app_id']."/class/UsergroupControler.php");
-	require_once("apps/".$_SESSION['config']['app_id']."/class/UserControler.php");
+	require_once("core/class/UsergroupControler.php");
+	require_once("core/class/UserControler.php");
 	if($mode == 'list')
 	{
 		require_once("core/class/class_request.php");

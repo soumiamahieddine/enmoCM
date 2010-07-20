@@ -32,7 +32,7 @@ if(!isset($_REQUEST['form_values']) || empty($_REQUEST['form_values']))
 }
 
 try{
-	require_once("apps/".$_SESSION['config']['app_id']."/class/UsergroupControler.php");
+	require_once("core/class/UsergroupControler.php");
 } catch (Exception $e){
 	echo $e->getMessage();
 }

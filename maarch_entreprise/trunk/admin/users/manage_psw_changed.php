@@ -3,8 +3,8 @@
 $error = '';
 
 try{
-	require_once("apps/".$_SESSION['config']['app_id']."/class/UserControler.php");
-	require_once("apps/".$_SESSION['config']['app_id']."/class/User.php");
+	require_once("core/class/UserControler.php");
+	require_once("core/class/User.php");
 } catch (Exception $e){
 	echo $e->getMessage();
 }
