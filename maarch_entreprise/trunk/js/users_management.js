@@ -43,7 +43,7 @@ function checkGroup(current_form_id, url_check, url_manage, url_display_access, 
 	});	
 }
 
-function removeGroup( url_remove, url_display_access)
+function doActionGroup( url_action, url_display_access)
 {
 	var groups = document.getElementsByName('groups[]');
 	var val = '';
@@ -59,7 +59,7 @@ function removeGroup( url_remove, url_display_access)
 	}
 	//val.substring(0, val.length -3);
 
-	new Ajax.Request(url_remove, 
+	new Ajax.Request(url_action, 
 	{
 		    method:'post',
 		    parameters: { 
@@ -91,6 +91,32 @@ function manageGroup(url_manage, url_display_access, frm_values)
 			{
 				updateContent(url_display_access, 'ugc');
 				destroyModal('add_ugc');
+			}
+			else 
+			{
+				//console.log(response.error_txt);
+				try{
+						$('frm_error').innerHTML = response.error_txt;
+					}
+				catch(e){}
+			}
+		}
+	});	
+}
+
+function changePassword(url)
+{
+	new Ajax.Request(url,
+	{
+		method:'post',
+		parameters: { 
+					},
+			onSuccess: function(answer){
+			eval("response = "+answer.responseText);
+		//	alert(answer.responseText);
+			if(response.status == 0  )
+			{
+				destroyModal('pwd_changed');
 			}
 			else 
 			{

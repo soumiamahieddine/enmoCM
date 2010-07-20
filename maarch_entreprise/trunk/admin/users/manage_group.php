@@ -45,6 +45,11 @@ $role = get_value_fields($values, 'role');
 $group = UsergroupControler::get($group_id);
 array_push($_SESSION['m_admin']['users']['groups'] , array('USER_ID' => '', 'GROUP_ID' => $group_id , 'LABEL' => $group->__get('group_desc'), 'PRIMARY' => 'N', 'ROLE' => functions::show_string($role)));
 
+if(count($_SESSION['m_admin']['users']['groups']) == 1)
+{
+	$_SESSION['m_admin']['users']['groups'][0]['PRIMARY'] = 'Y';
+}
+
 echo "{status : 0, error_txt : '".$error."'}";
 exit();
 ?>

@@ -55,7 +55,7 @@ if(isset($_REQUEST['user_submit']))
 {
 	if($mode == "add")
 	{
-		$_SESSION['m_admin']['users']['UserId'] = functions::wash($_REQUEST['UserId'], "no", _THE_ID, 'yes', 0, 32);
+		$_SESSION['m_admin']['users']['UserId'] = functions::wash($_REQUEST['user_id'], "no", _THE_ID, 'yes', 0, 32);
 		if(isset($_SESSION['config']['userdefaultpassword']) && !empty($_SESSION['config']['userdefaultpassword']))
 			$_SESSION['m_admin']['users']['pass'] = md5($_SESSION['config']['userdefaultpassword']);
 		else
@@ -63,7 +63,7 @@ if(isset($_REQUEST['user_submit']))
 	}
 
 	if($mode == "up")
-		$_SESSION['m_admin']['users']['UserId'] = functions::wash($_REQUEST['id'], "no", _THE_ID, 'yes', 0, 32);
+		$_SESSION['m_admin']['users']['UserId'] = functions::wash($_REQUEST['user_id'], "no", _THE_ID, 'yes', 0, 32);
 
 	$_SESSION['m_admin']['users']['order'] = $_REQUEST['order'];
 	$_SESSION['m_admin']['users']['order_field'] = $_REQUEST['order_field'];
@@ -85,12 +85,9 @@ if(isset($_REQUEST['user_submit']))
 	if(isset($_REQUEST['Mail']) && !empty($_REQUEST['Mail']))
 		$_SESSION['m_admin']['users']['Mail']  = functions::wash($_REQUEST['Mail'], "mail", _MAIL, 'yes', 0, 255);
 		
-	/********* A adapter *****/
+
 	if($_SESSION['m_admin']['users']['UserId'] <> "superadmin")
 	{
-		
-		$ugc = new usergroup_content();
-
 		$primary_set = false;
 		for($i=0; $i < count($_SESSION['m_admin']['users']['groups']);$i++)
 		{
@@ -101,12 +98,12 @@ if(isset($_REQUEST['user_submit']))
 			}
 		}
 		if ($primary_set == false)
-			$ugc->add_error(_NOTE2, "");
+			$_SESSION['error'] = _PRIMARY_GROUP.' '._MANDATORY;
 	}
 
 	$_SESSION['service_tag'] = 'user_check';
 	core_tools::execute_modules_services($_SESSION['modules_services'], 'user_check', "include");
-	/************/
+
 	
 	
 	if($mode == "add" && UserControler::userExists($_SESSION['m_admin']['users']['UserId']))
@@ -119,7 +116,7 @@ if(isset($_REQUEST['user_submit']))
 		{
 			if(!empty($_SESSION['m_admin']['users']['UserId']))
 			{
-				header("location: ".$_SESSION['config']['businessappurl']."index.php?page=users_management_controler&mode=up&user_id=".$_SESSION['m_admin']['users']['UserId']."&admin=users");
+				header("location: ".$_SESSION['config']['businessappurl']."index.php?page=users_management_controler&mode=up&id=".$_SESSION['m_admin']['users']['UserId']."&admin=users");
 				exit;
 			}
 			else
@@ -153,8 +150,12 @@ if(isset($_REQUEST['user_submit']))
 		$user->setArray($user_value);
 		
 		UserControler::save($user, $mode);
-	
-		// to do : usergroup_content
+		
+		UserControler::cleanUsergroupContent($_SESSION['m_admin']['users']['UserId']);
+		UserControler::loadDbUsergroupContent($_SESSION['m_admin']['users']['UserId'], $_SESSION['m_admin']['users']['groups']);
+		
+		$_SESSION['service_tag'] = 'user_'.$mode;
+		core_tools::execute_modules_services($_SESSION['modules_services'], 'users_add_db.php', "include");
 		
 		if($_SESSION['history']['usersadd'] == "true" && $mode == "add")
 		{
@@ -378,7 +379,8 @@ elseif($mode == "allow")
 elseif($mode == "del")
 {
 	UserControler::delete($user_id);
-	//to do : user_entities,user_abs, listmodel, listinstance
+	//to do : user_abs, listmodel
+	// to do ? :user_entities,, listinstance
 }
 
 if($mode == "ban" || $mode == "allow" || $mode == "del")

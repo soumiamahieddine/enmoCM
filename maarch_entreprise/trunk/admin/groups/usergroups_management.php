@@ -68,7 +68,7 @@ elseif($mode == "up" || $mode == "add")
 										  <td width="25%"><?php  echo $users[$i]->__get('firstname');?></td>
 									 <!--  <td><?php  //echo $users[$i]['DEPARTMENT']; ?></td>-->
 									   <td ><?php 
-										if($core_tools->test_service('admin_users', 'apps', false))
+										if(core_tools::test_service('admin_users', 'apps', false))
 										{?>
 									   <a class="change" href="<?php echo $_SESSION['config']['businessappurl'].'index.php?page=users_up&admin=users&id='.$users[$i]->__get('user_id'); ?>" alt="<?php echo _GO_MANAGE_USER;?>" title="<?php echo _GO_MANAGE_USER;?>"><i><?php echo _GO_MANAGE_USER;?></i></a><?php }?></td>
 							</tr>
@@ -116,7 +116,7 @@ elseif($mode == "up" || $mode == "add")
 									   <td width="30%"><?php  echo $baskets[$i]->__get('basket_name');?></td>
 									  <td width="50%"><?php  echo $baskets[$i]->__get('basket_desc');?></td>
 									   <td >
-									   <?php if($core_tools->test_service('admin_baskets', 'basket', false))
+									   <?php if(core_tools::test_service('admin_baskets', 'basket', false))
 										{?>
 										<a class="change" href="<?php echo $_SESSION['config']['businessappurl'].'index.php?page=basket_up&module=basket&id='.$baskets[$i]->__get('basket_id'); ?>" alt="<?php echo _GO_MANAGE_BASKET;?>" title="<?php echo _GO_MANAGE_BASKET;?>"><i><?php echo _GO_MANAGE_BASKET;?></i></a>
 									   <?php } ?> 
@@ -154,7 +154,7 @@ elseif($mode == "up" || $mode == "add")
 					<td align="left">
 						<?php  if($mode == "up") { echo functions::show($_SESSION['m_admin']['groups']['GroupId']); } ?>
 						<input name="group_id" type="<?php  if($mode == "up") { ?>hidden<?php  } elseif($mode == "add") { ?>text<?php  } ?>" id="group_id" value="<?php  echo $_SESSION['m_admin']['groups']['GroupId']; ?>" />
-						<!--<input type="hidden"  name="group_id" value="<?php  echo $group_id; ?>" />-->
+						<input type="hidden"  name="id" value="<?php  echo $group_id; ?>" />
 					</td>
 				</tr>
 				<tr>

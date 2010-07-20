@@ -41,7 +41,7 @@ class UserControler{
 
 		self::connect();
 		// Querying database
-		$query = "select * from ".self::$users_table." where user_id = '".$user_id."'";
+		$query = "select * from ".self::$users_table." where user_id = '".functions::protect_string_db($user_id)."'";
 		if(!$can_be_disabled)
 			$query .= " and enabled = 'Y'";
 		
@@ -76,7 +76,7 @@ class UserControler{
 			return null;
 
 		self::connect();
-		$query = "select group_id, primary_group, role from ".self::$usergroup_content_table." where user_id = '".$user_id."'";
+		$query = "select group_id, primary_group, role from ".self::$usergroup_content_table." where user_id = '".functions::protect_string_db($user_id)."'";
 		try{
 			if($_ENV['DEBUG']){echo $query.' // ';}
 					self::$db->query($query);
@@ -140,7 +140,7 @@ class UserControler{
 		self::connect();
 		$query="update ".self::$users_table." set "
 					.self::update_prepare($user)
-					." where user_id='".$user->user_id."'"; 
+					." where user_id='".functions::protect_string_db($user->user_id)."'"; 
 					
 		try{
 			if($_ENV['DEBUG']){echo $query.' // ';}
@@ -162,7 +162,7 @@ class UserControler{
 			return false;
 			
 		self::connect();
-		$query="update ".self::$users_table." set status = 'DEL' where user_id='".$user_id."'";
+		$query="update ".self::$users_table." set status = 'DEL' where user_id='".functions::protect_string_db($user_id)."'";
 		// On passe le status à DEL pour pouvoir conserver les infos
 		try{
 			if($_ENV['DEBUG']){echo $query.' // ';}
@@ -172,21 +172,21 @@ class UserControler{
 			echo _CANNOT_DELETE_USER_ID." ".$user_id.' // ';
 			$ok = false;
 		}
-		
+		self::disconnect();
 		if($ok)
 			$ok = self::cleanUsergroupContent($user_id);
 		// suppression dans user_abs + user_entities à faire dans le controler de page si module entities chargé
-		self::disconnect();
+		
 		return $ok;
 	}
 	
-	private function cleanUsergroupContent($user_id)
+	public function cleanUsergroupContent($user_id)
 	{
 		if(!isset($user_id)|| empty($user_id) )
 			return false;
 		
 		self::connect();
-		$query="delete from ".self::$usergroup_content_table."  where user_id='".$user_id."'";
+		$query="delete from ".self::$usergroup_content_table."  where user_id='".functions::protect_string_db($user_id)."'";
 		try{
 			if($_ENV['DEBUG']){echo $query.' // ';}
 			self::$db->query($query);
@@ -206,7 +206,7 @@ class UserControler{
 			return false;
 
 		self::connect();
-		$query = "select user_id from ".self::$users_table." where user_id = '".$user_id."'";
+		$query = "select user_id from ".self::$users_table." where user_id = '".functions::protect_string_db($user_id)."'";
 					
 		try{
 			if($_ENV['DEBUG']){echo $query.' // ';}
@@ -234,7 +234,7 @@ class UserControler{
 			// For now all fields in the users table are strings or dates
 			if(!empty($value))
 			{
-				$result[]=$key."='".$value."'";		
+				$result[]=$key."='".functions::protect_string_db($value)."'";		
 			}
 		}
 		// Return created string minus last ", "
@@ -256,7 +256,7 @@ class UserControler{
 			if(!empty($value))
 			{
 				$columns[]=$key;
-				$values[]="'".$value."'";
+				$values[]="'".functions::protect_string_db($value)."'";
 			}
 		}
 		return array('COLUMNS' => implode(",",$columns), 'VALUES' => implode(",",$values));
@@ -270,7 +270,7 @@ class UserControler{
 			return false;
 			
 		self::connect();
-		$query="update ".self::$users_table." set enabled = 'N' where user_id='".$user_id."'"; 
+		$query="update ".self::$users_table." set enabled = 'N' where user_id='".functions::protect_string_db($user_id)."'"; 
 					
 		try{
 			if($_ENV['DEBUG']){echo $query.' // ';}
@@ -292,7 +292,7 @@ class UserControler{
 			return false;
 		
 		self::connect();
-		$query="update ".self::$users_table." set enabled = 'Y' where user_id='".$user_id."'"; 
+		$query="update ".self::$users_table." set enabled = 'Y' where user_id='".functions::protect_string_db($user_id)."'"; 
 					
 		try{
 			if($_ENV['DEBUG']){echo $query.' // ';}
@@ -304,6 +304,35 @@ class UserControler{
 		}
 		self::disconnect();
 		return $ok;
+	}
+	
+	public function loadDbUsergroupContent($user_id, $array)
+	{
+		if(!isset($user_id)|| empty($user_id) )
+			return false;
+		if(!isset($array) || count($array) == 0)
+			return false;
+			
+		self::connect();
+		$ok = true;
+		for($i=0; $i < count($array ); $i++)
+		{
+			if($ok) 
+			{
+				$query = "INSERT INTO ".self::$usergroup_content_table." (user_id, group_id, primary_group, role) VALUES ('".functions::protect_string_db($user_id)."', '".functions::protect_string_db($array[$i]['GROUP_ID'])."', '".functions::protect_string_db($array[$i]['PRIMARY'])."', '".functions::protect_string_db($array[0]['ROLE'])."')";
+				try{
+					if($_ENV['DEBUG']){echo $query.' // ';}
+					self::$db->query($query);
+					$ok = true;
+				} catch (Exception $e){
+					$ok = false;
+				}
+			}
+			else
+				break;
+		}
+		self::disconnect();
+		return $ok;		
 	}
 }
 ?>

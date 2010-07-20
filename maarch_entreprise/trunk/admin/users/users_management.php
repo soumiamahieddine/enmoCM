@@ -16,10 +16,12 @@ elseif($mode == "up" || $mode == "add")
 	{
 		echo '<h1><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=picto_user_b.gif" alt="" /> '._USER_MODIFICATION.'</h1>';
 	}
+	echo '<br/>';
 	$_SESSION['service_tag'] = 'formuser';
 	core_tools::execute_modules_services($_SESSION['modules_services'], 'formuser', "include");
 	?>
 	<div id="ugc"></div>
+
    <!--  <div id="add_box">
         <p>
            <?php  if($_SESSION['m_admin']['users']['UserId'] <> "superadmin")
@@ -90,7 +92,7 @@ elseif($mode == "up" || $mode == "add")
 				if($mode == "up")
 				{
 					?>
-					<input type="button" name="reset_pwd" value="<?php  echo _RESET.' '._PASSWORD; ?>" class="button" onclick="window.open('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&admin=users&page=psw_changed', '', 'toolbar=no,status=yes,width=400,height=150,left=500,top=300,scrollbars=no,top=no,location=no,resize=yes,menubar=no')" />
+					<input type="button" name="reset_pwd" value="<?php  echo _RESET.' '._PASSWORD; ?>" class="button" onclick="displayModal('<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&admin=users&page=psw_changed', 'pwd_changed', 40, 150);"  />
 					<?php
 				}
 				?><br/>

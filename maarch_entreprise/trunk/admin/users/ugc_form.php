@@ -56,7 +56,7 @@ core_tools::load_lang();
 				<input type="checkbox"  class="check" name="groups[]" value="<?php  echo  $_SESSION['m_admin']['users']['groups'][$theline]['GROUP_ID']; ?>" ><?php  echo $_SESSION['m_admin']['users']['groups'][$theline]['LABEL'] ; ?><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><?php  echo $_SESSION['m_admin']['users']['groups'][$theline]['ROLE']; ?></i><br/></input>
 				<?php
 		}
-		 ?> <br/><input class="button" type="button" name="removeUsergroup" id="removeUsergroup" value="<?php  echo _DELETE_GROUPS; ?>" onclick="removeGroup('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&admin=users&page=remove_group', '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&admin=users&page=ugc_form')"/><br/><br/>
+		 ?> <br/><input class="button" type="button" name="removeUsergroup" id="removeUsergroup" value="<?php  echo _DELETE_GROUPS; ?>" onclick="doActionGroup('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&admin=users&page=remove_group', '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&admin=users&page=ugc_form')"/><br/><br/>
 <?php 	}
 
 	if (count($_SESSION['m_admin']['users']['groups']) < $_SESSION['m_admin']['nbgroups']  || empty($_SESSION['m_admin']['users']['groups']))
@@ -71,7 +71,7 @@ core_tools::load_lang();
 	<?php  if (count($_SESSION['m_admin']['users']['groups']) > 0)
 	{
 	?>
-		<input type="submit" class="button" name="setPrimary" id="setPrimary" value="<?php  echo _CHOOSE_PRIMARY_GROUP; ?>"  onclick="setPrimaryGroup('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&admin=users&page=set_primary_group', '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&admin=users&page=ugc_form');"/>
+		<input type="button" class="button" name="setPrimary" id="setPrimary" value="<?php  echo _CHOOSE_PRIMARY_GROUP; ?>"  onclick="doActionGroup('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&admin=users&page=set_primary_group', '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&admin=users&page=ugc_form');"/>
 	<?php
 	}
 	?>

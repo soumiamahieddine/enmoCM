@@ -28,31 +28,12 @@
 * @version $Revision$
 * @ingroup admin
 */
-$core_tools = new core_tools();
-$core_tools->load_lang();
 
-$db = new dbquery();
-$db->connect();
-$default_password = md5($_SESSION['config']['userdefaultpassword']);
-
-$db->query("UPDATE ".$_SESSION['tablename']['users']." set password = '".$default_password."' , change_password ='Y' where user_id = '".$_SESSION['m_admin']['users']['UserId']."'");
-if($_SESSION['history']['usersadd'] == "true")
-{
-	require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
-	$hist = new history();
-	$hist->add($_SESSION['tablename']['users'], $_SESSION['m_admin']['users']['UserId'],"UP",_NEW_PASSWORD_USER." : ".$_SESSION['m_admin']['users']['LastName']." ".$_SESSION['m_admin']['users']['FirstName'], $_SESSION['config']['databasetype']);
-}
-
-//here we loading the html
-$core_tools->load_html();
-//here we building the header
-$core_tools->load_header(_PASSWORD_MODIFICATION, true, false);
-$time = $core_tools->get_session_time_expire();
+core_tools::load_lang();
+if(!isset($_SESSION['config']['userdefaultpassword']) || empty($_SESSION['config']['userdefaultpassword']))
+	$_SESSION['config']['userdefaultpassword'] = 'maarch';
 ?>
-
-<body id="pop_up" onLoad="setTimeout(window.close, <?php  echo $time;?>*60*1000);">
 <h2 class="tit"><?php  echo _PASSWORD_MODIFICATION;?></h2>
-
 
 <p ><?php  echo _PASSWORD_FOR_USER;?> <b><?php  echo $_SESSION['m_admin']['users']['UserId'] ; ?></b> <?php  echo _HAS_BEEN_RESET;?>.
 </p>
@@ -61,7 +42,4 @@ $time = $core_tools->get_session_time_expire();
 <?php  echo _DURING_NEXT_CONNEXION;?>, <?php  echo $_SESSION['m_admin']['users']['UserId'] ; ?> <?php  echo _MUST_CHANGE_PSW;?>.
 </p>
 <br/>
-<p class="buttons" ><input type="button" class="button" onclick="window.close()" name="close" value="<?php  echo _CLOSE_WINDOW;?>" /></p>
-<?php $core_tools->load_js();?>
-</body>
-</html>
+<p class="buttons" ><input type="button" class="button" onclick="changePassword('<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&admin=users&page=manage_psw_changed';?>');" name="close" value="<?php  echo _CLOSE_WINDOW;?>" /></p>
