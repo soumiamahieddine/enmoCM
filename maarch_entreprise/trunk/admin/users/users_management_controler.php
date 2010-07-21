@@ -1,5 +1,5 @@
 <?php
-
+core_tools::load_lang();
 $entities_loaded = false;
 
 if(core_tools::is_module_loaded('entities'))
@@ -371,14 +371,17 @@ elseif((!isset($user_id) || empty($user_id) || ! UserControler::userExists($user
 elseif($mode == "ban")
 {
 	UserControler::disable($user_id);
+	$_SESSION['error'] = _SUSPENDED_USER.' : '.$user_id;
 }
 elseif($mode == "allow")
 {
 	UserControler::enable($user_id);
+	$_SESSION['error'] = _AUTORIZED_USER.' : '.$user_id;
 }
 elseif($mode == "del")
 {
 	UserControler::delete($user_id);
+	$_SESSION['error'] = _DELETED_USER.' : '.$user_id;
 	//to do : user_abs, listmodel
 	// to do ? :user_entities,, listinstance
 }

@@ -95,7 +95,7 @@
    <id>admin_status</id>
    <name>_ADMIN_STATUS</name>
    <comment>_ADMIN_STATUS_DESC</comment>
-   <servicepage>index.php?page=status&amp;admin=status</servicepage>
+   <servicepage>index.php?page=status_management_controler&amp;mode=list&amp;admin=status</servicepage>
    <servicetype>admin</servicetype>
    <style>admin_status</style>
    <system_service>false</system_service>

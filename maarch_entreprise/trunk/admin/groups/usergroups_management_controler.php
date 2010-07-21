@@ -36,6 +36,7 @@ try{
 	echo $e->getMessage();
 }
 
+core_tools::load_lang();
 
 function init_session()
 {
@@ -402,10 +403,12 @@ elseif((!isset($group_id) || empty($group_id) || ! UsergroupControler::groupExis
 elseif($mode == "ban")
 {
 	UsergroupControler::disable($group_id);
+	$_SESSION['error'] = _SUSPENDED_GROUP.' : '.$group_id;
 }
 elseif($mode == "allow")
 {
 	UsergroupControler::enable($group_id);
+	$_SESSION['error'] = _AUTORIZED_GROUP.' : '.$group_id;
 }
 elseif($mode == "del")
 {
@@ -414,6 +417,8 @@ elseif($mode == "del")
 		BasketControler::cleanFullGroupbasket($group_id, 'group_id');
 	if($entities_loaded)
 		EntityControler::cleanGroupbasketRedirect($group_id, 'group_id');
+		
+	$_SESSION['error'] = _DELETED_GROUP.' : '.$group_id;
 }
 
 if($mode == "ban" || $mode == "allow" || $mode == "del")

@@ -3,7 +3,7 @@
 /* Affichage */
 if($mode == "list")
 {
-	list_show::admin_list($tab, $i, $title, 'group_id','users_management_controler&mode=list','users', 'user_id', true, $page_name_up, $page_name_val, $page_name_ban, $page_name_del, $page_name_add, $label_add, false, false, _ALL_USERS, _USER, $_SESSION['config']['businessappurl'].'static.php?filename=manage_users_b.gif', false, true, false, true, "", true, $autoCompletionArray);
+	list_show::admin_list($tab, $i, $title, 'user_id','users_management_controler&mode=list','users', 'user_id', true, $page_name_up, $page_name_val, $page_name_ban, $page_name_del, $page_name_add, $label_add, false, false, _ALL_USERS, _USER, $_SESSION['config']['businessappurl'].'static.php?filename=manage_users_b.gif', false, true, false, true, "", true, $autoCompletionArray);
 }
 elseif($mode == "up" || $mode == "add")
 {
@@ -21,15 +21,6 @@ elseif($mode == "up" || $mode == "add")
 	core_tools::execute_modules_services($_SESSION['modules_services'], 'formuser', "include");
 	?>
 	<div id="ugc"></div>
-
-   <!--  <div id="add_box">
-        <p>
-           <?php  if($_SESSION['m_admin']['users']['UserId'] <> "superadmin")
-			{?>
-                <iframe name="usergroups_content" id="usergroups_content" class="frameform2" src="<?php  echo $_SESSION['config']['businessappurl'].'index.php?display=true&admin=users&page=ugc_form';?>" frameborder="0"></iframe>
-            <?php  } ?>
-        </p>
-	</div>-->
 	<?php
 	if($state == false)
 		echo "<br /><br /><br /><br />"._USER.' '._UNKNOWN."<br /><br /><br /><br />";
