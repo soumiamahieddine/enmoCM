@@ -77,6 +77,7 @@ class life_cycle extends dbquery
 		$_SESSION['tablename']['lc_cycle'] = (string) $TABLENAME->lc_cycle;
 		$_SESSION['tablename']['lc_cycle_seq'] = (string) $TABLENAME->lc_cycle_seq;
 		$_SESSION['tablename']['lc_stack'] = (string) $TABLENAME->lc_stack;
+		$_SESSION['tablename']['docserver_locations'] = (string) $TABLENAME->docserver_locations;
 
 		// Loads the log setting of the module life_cycle  into session ($_SESSION['history'] array)
 		$HISTORY = $xmlconfig->HISTORY;
@@ -87,6 +88,9 @@ class life_cycle extends dbquery
 		$_SESSION['history']['docserversdel'] = (string) $HISTORY->docserversdel;
 		$_SESSION['history']['docserversban'] = (string) $HISTORY->docserversban;
 		//$_SESSION['history']['docserversclose'] = (string) $HISTORY->docserversclose;
+		$_SESSION['history']['docserverslocationsadd'] = (string) $HISTORY->docserverslocationsadd;
+		$_SESSION['history']['docserverslocationsdel'] = (string) $HISTORY->docserverslocationsdel;
+		$_SESSION['history']['docserverslocationsban'] = (string) $HISTORY->docserverslocationsban;
 	}
 
 	/**

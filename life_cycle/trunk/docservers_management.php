@@ -2,7 +2,7 @@
 //functions::show_array($_REQUEST);
 if($mode == "list")
 {
-	list_show::admin_list($tab, $i, $title, 'docerver_id','docservers_management_controler&mode=list','life_cycle', 'docserver_id', true, $page_name_up, $page_name_val, $page_name_ban, $page_name_del, $page_name_add, $label_add, false, false, _ALL_DOSERVERS, _DOCSERVER, $_SESSION['config']['businessappurl'].'static.php?module=life_cycle&filename=manage_lc_b.gif', true, true, false, true, "", true, $autoCompletionArray);
+	list_show::admin_list($tab, $i, $title, 'docserver_id','docservers_management_controler&mode=list','life_cycle', 'docserver_id', true, $page_name_up, $page_name_val, $page_name_ban, $page_name_del, $page_name_add, $label_add, false, false, _ALL_DOCSERVERS, _DOCSERVER, $_SESSION['config']['businessappurl'].'static.php?module=life_cycle&filename=manage_lc_b.gif', true, true, false, true, "", true, $autoCompletionArray);
 }
 elseif($mode == "up" || $mode == "add")
 {
@@ -19,57 +19,6 @@ elseif($mode == "up" || $mode == "add")
 		}
 		?>
 	</h1>
-	<script language="javascript">
-		function convertSize()
-		{
-			if(!isNaN($('size_limit').value))
-			{
-				if($('size_format').value == "MB")
-				{
-					$('size_limit').value = $('size_limit_hidden').value / (1000 * 1000);
-					$('actual_size').value = $('actual_size_hidden').value / (1000 * 1000);
-				}
-				if($('size_format').value == "GB")
-				{
-					$('size_limit').value = $('size_limit_hidden').value / (1000 * 1000 * 1000);
-					$('actual_size').value = $('actual_size_hidden').value / (1000 * 1000 * 1000);
-				}
-				if($('size_format').value == "TB")
-				{
-					$('size_limit').value = $('size_limit_hidden').value / (1000 * 1000 * 1000 * 1000);
-					$('actual_size').value = $('actual_size_hidden').value / (1000 * 1000 * 1000 * 1000);
-				}
-			}
-			else
-			{
-				window.alert('WRONG FORMAT');
-			}
-		}
-		
-		function saveSizeInBytes()
-		{
-			if(!isNaN($('size_limit').value))
-			{
-				//$('size_limit_hidden').value = $('size_limit').value;
-				if($('size_format').value == "MB")
-				{
-					$('size_limit_hidden').value = $('size_limit').value * (1000 * 1000);
-				}
-				if($('size_format').value == "GB")
-				{
-					$('size_limit_hidden').value = $('size_limit').value * (1000 * 1000 * 1000);
-				}
-				if($('size_format').value == "TB")
-				{
-					$('size_limit_hidden').value = $('size_limit').value * (1000 * 1000 * 1000 * 1000);
-				}
-			}
-			else
-			{
-				window.alert('WRONG FORMAT');
-			}
-		}
-	</script>
 	<div id="inner_content" class="clearfix" align="center">
 		<br><br>
 		<?php
@@ -112,9 +61,9 @@ elseif($mode == "up" || $mode == "add")
 	            <p>
 				 	<label for="size_format"><?php echo _SIZE_FORMAT; ?> : </label>
 					<select name="size_format" id="size_format" onchange="javascript:convertSize();">
-						<option value="MB"><?php echo _MB;?></option>
 						<option value="GB"><?php echo _GB;?></option>
 						<option value="TB"><?php echo _TB;?></option>
+						<option value="MB"><?php echo _MB;?></option>
 					</select>
 				</p>
 	            <p>
@@ -200,7 +149,17 @@ elseif($mode == "up" || $mode == "add")
 				</p>
 				<p>
 				 	<label for="docserver_locations_docserver_location_id"><?php echo _DOCSERVER_LOCATION; ?> : </label>
-					<input name="docserver_locations_docserver_location_id" type="text"  id="docserver_locations_docserver_location_id" value="<?php echo functions::show($_SESSION['m_admin']['docservers']['docserver_locations_docserver_location_id']); ?>"/>
+					<select name="docserver_locations_docserver_location_id" id="docserver_locations_docserver_location_id">
+						<option value=""><?php echo _DOCSERVER_LOCATION;?></option>
+						<?php
+						for($cptLocation=0;$cptLocation<count($docserverLocationArray);$cptLocation++)
+						{
+							?>
+							<option value="<?php echo $docserverLocationArray[$cptLocation];?>" <?php if($_SESSION['m_admin']['docservers']['docserver_locations_docserver_location_id'] == $docserverLocationArray[$cptLocation]) { echo 'selected="selected"';}?>><?php echo $docserverLocationArray[$cptLocation];?></option>
+							<?php
+						}
+						?>
+					</select>
 				</p>
 				<p>
 					<label for="coll_id"><?php echo _COLLECTION; ?> : </label>
@@ -221,13 +180,13 @@ elseif($mode == "up" || $mode == "add")
 					if($mode == "up")
 					{
 						?>
-						<input class="button" type="submit" name="docserver_submit" value="<?php echo _MODIFY; ?>" />
+						<input class="button" type="submit" name="submit" value="<?php echo _MODIFY; ?>" />
 						<?php
 					}
 					elseif($mode == "add")
 					{
 						?>
-						<input type="submit" class="button"  name="docserver_submit" value="<?php echo _ADD; ?>" />
+						<input type="submit" class="button"  name="submit" value="<?php echo _ADD; ?>" />
 						<?php
 					}
 					?>
@@ -236,8 +195,8 @@ elseif($mode == "up" || $mode == "add")
 			</form>
 			<script language="javascript">
 				//on load
-				$('size_limit').value = $('size_limit').value / (1000 * 1000)
-				$('actual_size').value = $('actual_size').value / (1000 * 1000)
+				$('size_limit').value = $('size_limit').value / (1000 * 1000 * 1000)
+				$('actual_size').value = $('actual_size').value / (1000 * 1000 * 1000)
 			</script>
 			<?php
 		}

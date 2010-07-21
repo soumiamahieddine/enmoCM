@@ -15,7 +15,6 @@ try {
 
 class DocserverControler
 {
-	
 	private static $db;
 	private static $docservers_table;
 	
@@ -145,6 +144,12 @@ class DocserverControler
 			if($_ENV['DEBUG']){echo $query.' // ';}
 			self::$db->query($query);
 			$ok = true;
+			if($_SESSION['history']['docserversdel'] == "true")
+			{
+				require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
+				$history = new history();
+				$history->add($_SESSION['tablename']['docservers'], $docserver_id, "DEL", _DOCSERVER_DELETED." : ".$docserver_id, $_SESSION['config']['databasetype']);
+			}
 		} catch (Exception $e){
 			echo _CANNOT_DELETE_DOCSERVER_ID." ".$docserver_id.' // ';
 			$ok = false;
@@ -175,7 +180,8 @@ class DocserverControler
 	 * @param docserver $docserver
 	 * @return String
 	 */
-	private function insert_prepare($docserver){
+	private function insert_prepare($docserver)
+	{
 		$columns=array();
 		$values=array();
 		foreach($docserver->getArray() as $key => $value)

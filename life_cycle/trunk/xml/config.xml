@@ -10,6 +10,7 @@
 		<lc_cycle>lc_cycle</lc_cycle>
 		<lc_cycle_seq>lc_cycle_seq</lc_cycle_seq>
 		<lc_stack>lc_stack</lc_stack>
+		<docserver_locations>docserver_locations</docserver_locations>
 	</TABLENAME>
 	<HISTORY>
 		<lcadd>true</lcadd>
@@ -19,5 +20,8 @@
 		<docserversdel>true</docserversdel>
 		<docserversban>true</docserversban>
 		<!--<docserversclose>true</docserversclose>-->
+		<docserverslocationsadd>true</docserverslocationsadd>
+		<docserverslocationsdel>true</docserverslocationsdel>
+		<docserverslocationsban>true</docserverslocationsban>
 	</HISTORY>
 </root>

@@ -4,11 +4,11 @@ try {
 } catch (Exception $e){
 	echo $e->getMessage().' // ';
 }
-class Docserver extends BaseObject
+class Cycle extends BaseObject
 {
 	function __toString()
 	{
-		return $this->path_template; 
+		return $this->cycle_mode; 
 	}
 }
 ?>
