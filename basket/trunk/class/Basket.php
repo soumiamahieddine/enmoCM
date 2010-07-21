@@ -46,7 +46,7 @@ class Basket extends BaseObject
 	/**
 	* Returns the string representing the Basket object
 	*
-	* @return string The basket label (basket_name and basketçid)
+	* @return string The basket label (basket_name and basket_id)
 	*/
 	function __toString()
 	{
