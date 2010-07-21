@@ -19,7 +19,7 @@
 */
 
 /**
-* @brief  Contains the controler of the Service Object 
+* @brief  Contains the Status Object (herits of the BaseObject class)
 * 
 * 
 * @file
@@ -29,28 +29,27 @@
 * @ingroup core
 */
 
-
-// To activate de debug mode of the class
-$_ENV['DEBUG'] = false;
-/*
-define("_CODE_SEPARATOR","/");
-define("_CODE_INCREMENT",1);
-*/
-
 // Loads the required class
 try {
-	require_once("core/class/Service.php");
+	require_once("core/class/BaseObject.php");
 } catch (Exception $e){
 	echo $e->getMessage().' // ';
 }
 
 /**
-* @brief  Controler of the Service Object 
+* @brief  Status Object, herits of the BaseObject class 
 *
 * @ingroup core
 */
-class ServiceControler
+class Status extends BaseObject
 {
-
+	/**
+	* Returns the string representing the Status object
+	*
+	* @return string The status label (label_status)
+	*/
+	public function __toString(){
+		return $this->label_status ; 
+	}
 }
 ?>
