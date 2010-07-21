@@ -1,11 +1,42 @@
 <?php
+/*
+*    Copyright 2008,2009,2010 Maarch
+*
+*  This file is part of Maarch Framework.
+*
+*   Maarch Framework is free software: you can redistribute it and/or modify
+*   it under the terms of the GNU General Public License as published by
+*   the Free Software Foundation, either version 3 of the License, or
+*   (at your option) any later version.
+*
+*   Maarch Framework is distributed in the hope that it will be useful,
+*   but WITHOUT ANY WARRANTY; without even the implied warranty of
+*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*   GNU General Public License for more details.
+*
+*   You should have received a copy of the GNU General Public License
+*    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
+*/
 
+/**
+* @brief  Contains the controler of the Basket Object (create, save, modify, etc...)
+* 
+* 
+* @file
+* @author Claire Figueras <dev@maarch.org>
+* @date $date$
+* @version $Revision$
+* @ingroup core
+*/
+
+// To activate de debug mode of the class
 $_ENV['DEBUG'] = false;
 /*
 define("_CODE_SEPARATOR","/");
 define("_CODE_INCREMENT",1);
 */
 
+// Loads the required class
 try {
 	require_once("core/class/class_db.php");
 	require_once("modules/entities/class/Entity.php");
@@ -13,13 +44,41 @@ try {
 	echo $e->getMessage().' // ';
 }
 
-class EntityControler{
-	
+/**
+* @brief  Controler of the Entity Object 
+*
+*<ul>
+*  <li>Get an entity object from an id</li>
+*  <li>Save in the database an entity</li>
+*  <li>Manage the operation on the entities related tables in the database (insert, select, update, delete)</li>
+*</ul>
+* @ingroup core
+*/
+class EntityControler
+{
+	/**
+	* Dbquery object used to connnect to the database
+    */
 	private static $db;
+	
+	/**
+	* Entities table
+    */
 	public static $entities_table ;
+	
+	/**
+	* Users_entities table
+    */
 	public static $users_entities_table ;
+	
+	/**
+	* Groupbasket_redirect table
+    */
 	public static $groupbasket_redirect_table ;
 	
+	/**
+	* Opens a database connexion and values the tables variables
+	*/
 	public function connect()
 	{
 		$db = new dbquery();
@@ -31,18 +90,28 @@ class EntityControler{
 		self::$db=$db;
 	}	
 	
+	/**
+	* Close the database connexion
+	*/
 	public function disconnect()
 	{
 		self::$db->disconnect();
 	}	
 	
+	/**
+	* Returns an Entity Object based on a entity identifier
+	*
+	* @param  $entity_id string Entity identifier
+	* @param  $can_be_disabled bool  if true gets the basket even if it is disabled in the database (false by default)
+	* @return User object with properties from the database or null
+	*/
 	public function get($entity_id, $can_be_disabled = false)
 	{
 		if(empty($entity_id))
 			return null;
 
 		self::connect();
-		// Querying database
+
 		$query = "select * from ".self::$entities_table." where entity_id = '".$entity_id."'";
 		if(!$can_be_disabled)
 			$query .= " and enabled = 'Y'";
@@ -55,7 +124,6 @@ class EntityControler{
 		}
 		if(self::$db->nb_result() > 0)
 		{
-			// Constructing object
 			$entity = new EntityObj();
 			$queryResult=self::$db->fetch_object();  
 			foreach($queryResult as $key => $value){
@@ -71,6 +139,13 @@ class EntityControler{
 		}
 	}
 	
+	/**
+	* Returns all entities (enabled by default) from the database in an array of Entity Objects (ordered by group_desc by default)
+	*
+	* @param  $order_str string  Order string passed to the query ("order by short_label asc" by default)
+	* @param  $enabled_only bool  if true returns only the enabled entities, otherwise returns even the disabled (true by default)
+	* @return Array of Entity objects with properties from the database
+	*/
 	public function getAllEntities($order_str = "order by short_label asc", $enabled_only = true)
 	{
 		self::connect();
@@ -100,6 +175,12 @@ class EntityControler{
 		return $entities;
 	}
 	
+	/**
+	* Returns in an array all the members of an entity (user_id only) 
+	*
+	* @param  $user_id string  User identifier
+	* @return Array (user_id, user_role, primary_entity) or null
+	*/
 	public function getUsersEntities($user_id)
 	{
 		if(empty($user_id))
@@ -123,6 +204,13 @@ class EntityControler{
 		return $entities;
 	}
 	
+	/**
+	* Saves in the database an entity object 
+	*
+	* @param  $entity Entity object to be saved
+	* @param  $mode string  Saving mode : add or up
+	* @return bool true if the save is complete, false otherwise
+	*/
 	public function save($entity, $mode)
 	{
 		if(!isset($entity) )
@@ -136,7 +224,12 @@ class EntityControler{
 		return false;
 	}
 	
-	
+	/**
+	* Inserts in the database (entities table) an Entity object
+	*
+	* @param  $entity Entity object
+	* @return bool true if the insertion is complete, false otherwise
+	*/
 	private function insert($entity)
 	{
 		if(!isset($entity) )
@@ -144,8 +237,7 @@ class EntityControler{
 			
 		self::connect();
 		$prep_query = self::insert_prepare($entity);
-		
-		// Inserting object
+
 		$query="insert into ".self::$entities_table." ("
 					.$prep_query['COLUMNS']
 					.") values("
@@ -163,6 +255,12 @@ class EntityControler{
 		return $ok;
 	}
 
+	/**
+	* Updates an entity in the database (entities table) with an Entity object
+	*
+	* @param  $entity Entity object
+	* @return bool true if the update is complete, false otherwise
+	*/
 	private function update($entity)
 	{
 		if(!isset($entity) )
@@ -185,6 +283,12 @@ class EntityControler{
 		return $ok;
 	}
 	
+	/**
+	* Deletes in the database (entities related tables) a given entity (entity_id)
+	*
+	* @param  $entity_id string  Entity identifier
+	* @return bool true if the deletion is complete, false otherwise
+	*/
 	public function delete($entity_id)
 	{
 		if(!isset($entity_id)|| empty($entity_id) )
@@ -214,6 +318,13 @@ class EntityControler{
 		return $ok;
 	}
 	
+	/**
+	* Cleans the users_entities table in the database from a given field (entity_id by default)
+	*
+	* @param  $id string  object identifier
+	* @param  $field string  Field name (entity_id by default)
+	* @return bool true if the cleaning is complete, false otherwise
+	*/
 	public function cleanUsersentities($id, $field = 'entity_id')
 	{
 		if(!isset($id)|| empty($id) )
@@ -236,6 +347,13 @@ class EntityControler{
 		return $ok;
 	}
 	
+	/**
+	* Cleans the groupbasket_redirect table in the database from a given field (entity_id by default)
+	*
+	* @param  $id string  object identifier
+	* @param  $field string  Field name (entity_id by default)
+	* @return bool true if the cleaning is complete, false otherwise
+	*/
 	public function cleanGroupbasketRedirect($id, $field = 'entity_id')
 	{
 		if(!isset($id)|| empty($id) )
@@ -257,6 +375,12 @@ class EntityControler{
 		return $ok;
 	}
 	
+	/**
+	* Asserts if a given entity (entity_id) exists in the database
+	* 
+	* @param  $entity_id String Entity identifier
+	* @return bool true if the basket exists, false otherwise 
+	*/
 	public function entityExists($entity_id)
 	{
 		if(!isset($entity_id) || empty($entity_id))
@@ -281,10 +405,14 @@ class EntityControler{
 		return false;
 	}
 	
+	/**
+	* Prepares the update query for a given Entity object
+	*
+	* @param  $entity Entity object
+	* @return String containing the fields and the values 
+	*/
 	private function update_prepare($entity)
 	{
-		$prep_query = array('COLUMNS' => '', 'VALUES'	=> '');
-		
 		$result=array();
 		foreach($entity->getArray() as $key => $value)
 		{
@@ -299,10 +427,11 @@ class EntityControler{
 	} 
 	
 	/**
-	 * Prepare string for update query
-	 * @param User $user
-	 * @return String
-	 */
+	* Prepares the insert query for a given Entity object
+	*
+	* @param  $entity Entity object
+	* @return Array containing the fields and the values 
+	*/
 	private function insert_prepare($entity)
 	{
 		$columns=array();
@@ -319,6 +448,12 @@ class EntityControler{
 		return array('COLUMNS' => implode(",",$columns), 'VALUES' => implode(",",$values));
 	}
 	
+	/**
+	* Disables a given entity
+	* 
+	* @param  $entity_id String Entity identifier
+	* @return bool true if the disabling is complete, false otherwise 
+	*/
 	public function disable($entity_id)
 	{
 		if(!isset($entity_id)|| empty($entity_id) )
@@ -341,6 +476,12 @@ class EntityControler{
 		return $ok;
 	}
 	
+	/**
+	* Enables a given entity
+	* 
+	* @param  $entity_id String Entity identifier
+	* @return bool true if the enabling is complete, false otherwise 
+	*/
 	public function enable($entity_id)
 	{
 		if(!isset($entity_id)|| empty($entity_id) )
@@ -363,6 +504,12 @@ class EntityControler{
 		return $ok;
 	}
 	
+	/**
+	* Returns the number of entities of the entities table (only the enabled by default)
+	* 
+	* @param  $enabled_only Bool if true counts only the enabled ones, otherwise counts all entities even the disabled ones (true by default)
+	* @return Integer the number of entities in the entities table
+	*/
 	public function getEntitiesCount($enabled_only = true)
 	{
 		$nb = 0;
@@ -382,6 +529,13 @@ class EntityControler{
 		return $nb;
 	}
 	
+	/**
+	* Loads into the users_entities table the given data for a given user
+	* 
+	* @param  $user_id String User identifier
+	* @param  $array Array 
+	* @return bool true if the loadng is complete, false otherwise 
+	*/
 	public function loadDbUsersentities($user_id, $array)
 	{
 		if(!isset($user_id)|| empty($user_id) )
