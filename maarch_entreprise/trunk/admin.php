@@ -1,6 +1,6 @@
 <?php
 /**
-* File : admin.php
+* File : admin.php 
 *
 * Administration summary Page
 * {@internal this page calls an admin object (class admin)}}
