@@ -12,7 +12,7 @@
 * 
 */
 
-class modules_notification
+class notifications
 {
 
 /**
@@ -106,5 +106,15 @@ class modules_notification
 			$_SESSION['debug']['console'] = utf8_decode((string) $DEBUG->console);
 			
 		}
+	}
+	
+	function build_modules_tables() 
+	{
+		
+	}
+	
+	function load_module_var_session() 
+	{
+		
 	}
 }

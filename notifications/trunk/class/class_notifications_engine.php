@@ -157,7 +157,7 @@ class notifications extends request
 			
 		$result = array();	
 		$this->connect();	
-		$this->query("select l.res_id  from ".$_SESSION['ressources']['letterbox_view']." r, ".$_SESSION['tablename']['listinstance']." l  where r.res_id=l.res_id and l.item_id='".$user['ID']."'  and item_type = 'user_id' and  r.flag_notif = 'N' and (r.status = 'NEW' or r.status = 'COU') and l.item_mode = 'dest' and item_type='user_id';");
+		$this->query("select l.res_id  from ".$_SESSION['ressources']['letterbox_view']." r, ".$_SESSION['tablename']['listinstance']." l  where r.res_id=l.res_id and l.item_id='".$user['ID']."'  and item_type = 'user_id' and  r.flag_notif = 'N' and (r.status = 'NEW' or r.status = 'COU') and l.item_mode = 'dest' and item_type='user_id'");
 		if($this->nb_result() > 0)
 		{
 		
@@ -197,7 +197,7 @@ class notifications extends request
 		$result = array();	
 		$this->connect();	
 		//$this->query("select l.res_id  from ".$_SESSION['ressources']['letterbox_view']." r, ".$_SESSION['tablename']['listinstance']." l  where r.res_id=l.res_id and l.item_id='".$user['ID']."'  and item_type = 'user_id' and  r.flag_notif = 'N' and (r.status = 'NEW' or r.status = 'COU') and l.item_mode = 'cc' and item_type='user_id';");
-		$this->query("select distinct l.res_id  from ".$_SESSION['ressources']['letterbox_view']." r, ".$_SESSION['tablename']['listinstance']." l  where r.res_id=l.res_id  and  r.flag_notif = 'N' and (r.status = 'NEW' or r.status = 'COU') and l.item_mode = 'cc' and ((l.item_id='".$user['ID']."'  and item_type = 'user_id') or (l.item_type = 'entity_id' and item_id in (".$visible_entities.") ));");
+		$this->query("select distinct l.res_id  from ".$_SESSION['ressources']['letterbox_view']." r, ".$_SESSION['tablename']['listinstance']." l  where r.res_id=l.res_id  and  r.flag_notif = 'N' and (r.status = 'NEW' or r.status = 'COU') and l.item_mode = 'cc' and ((l.item_id='".$user['ID']."'  and item_type = 'user_id') or (l.item_type = 'entity_id' and item_id in (".$visible_entities.") ))");
 		if($this->nb_result() > 0)
 		{
 		
@@ -223,7 +223,7 @@ class notifications extends request
 			
 		$result = array();	
 		$this->connect();	
-		$this->query("select l.res_id  from ".$_SESSION['ressources']['letterbox_view']." r, ".$_SESSION['tablename']['listinstance']." l  where r.res_id=l.res_id and l.item_id='".$user['ID']."'  and item_type = 'user_id' and  r.flag_alarm1 = 'N' and (r.status = 'NEW' or r.status = 'COU') and date(r.alarm1_date) =date(now()) and l.item_mode = 'dest' and item_type='user_id';");
+		$this->query("select l.res_id  from ".$_SESSION['ressources']['letterbox_view']." r, ".$_SESSION['tablename']['listinstance']." l  where r.res_id=l.res_id and l.item_id='".$user['ID']."'  and item_type = 'user_id' and  r.flag_alarm1 = 'N' and (r.status = 'NEW' or r.status = 'COU') and date(r.alarm1_date) =date(now()) and l.item_mode = 'dest' and item_type='user_id'");
 		if($this->nb_result() > 0)
 		{
 		
@@ -262,7 +262,7 @@ class notifications extends request
 
 		$result = array();	
 		$this->connect();	
-		$this->query("select distinct l.res_id  from ".$_SESSION['ressources']['letterbox_view']." r, ".$_SESSION['tablename']['listinstance']." l  where r.res_id=l.res_id  and  r.flag_alarm1 = 'N'and date(r.alarm1_date) =date(now())  and (r.status = 'NEW' or r.status = 'COU') and l.item_mode = 'cc' and ((l.item_id='".$user['ID']."'  and item_type = 'user_id') or (l.item_type = 'entity_id' and item_id in (".$visible_entities.") ));");
+		$this->query("select distinct l.res_id  from ".$_SESSION['ressources']['letterbox_view']." r, ".$_SESSION['tablename']['listinstance']." l  where r.res_id=l.res_id  and  r.flag_alarm1 = 'N'and date(r.alarm1_date) =date(now())  and (r.status = 'NEW' or r.status = 'COU') and l.item_mode = 'cc' and ((l.item_id='".$user['ID']."'  and item_type = 'user_id') or (l.item_type = 'entity_id' and item_id in (".$visible_entities.") ))");
 		if($this->nb_result() > 0)
 		{
 		
@@ -289,7 +289,7 @@ class notifications extends request
 			
 		$result = array();	
 		$this->connect();	
-		$this->query("select l.res_id  from ".$_SESSION['ressources']['letterbox_view']." r, ".$_SESSION['tablename']['listinstance']." l  where r.res_id=l.res_id and l.item_id='".$user['ID']."'  and item_type = 'user_id' and  r.flag_alarm2 = 'N' and (r.status = 'NEW' or r.status = 'COU') and date(r.alarm2_date) =date(now()) and l.item_mode = 'dest' and item_type='user_id';");
+		$this->query("select l.res_id  from ".$_SESSION['ressources']['letterbox_view']." r, ".$_SESSION['tablename']['listinstance']." l  where r.res_id=l.res_id and l.item_id='".$user['ID']."'  and item_type = 'user_id' and  r.flag_alarm2 = 'N' and (r.status = 'NEW' or r.status = 'COU') and date(r.alarm2_date) =date(now()) and l.item_mode = 'dest' and item_type='user_id'");
 		if($this->nb_result() > 0)
 		{
 		
@@ -328,7 +328,7 @@ class notifications extends request
 
 		$result = array();	
 		$this->connect();	
-		$this->query("select distinct l.res_id  from ".$_SESSION['ressources']['letterbox_view']." r, ".$_SESSION['tablename']['listinstance']." l  where r.res_id=l.res_id  and  r.flag_alarm2 = 'N'and date(r.alarm2_date) =date(now())  and (r.status = 'NEW' or r.status = 'COU') and l.item_mode = 'cc' and ((l.item_id='".$user['ID']."'  and item_type = 'user_id') or (l.item_type = 'entity_id' and item_id in (".$visible_entities.") ));");
+		$this->query("select distinct l.res_id  from ".$_SESSION['ressources']['letterbox_view']." r, ".$_SESSION['tablename']['listinstance']." l  where r.res_id=l.res_id  and  r.flag_alarm2 = 'N'and date(r.alarm2_date) =date(now())  and (r.status = 'NEW' or r.status = 'COU') and l.item_mode = 'cc' and ((l.item_id='".$user['ID']."'  and item_type = 'user_id') or (l.item_type = 'entity_id' and item_id in (".$visible_entities.") ))");
 		if($this->nb_result() > 0)
 		{
 		
