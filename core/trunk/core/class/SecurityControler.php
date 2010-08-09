@@ -40,6 +40,7 @@ define("_CODE_INCREMENT",1);
 // Loads the required class
 try {
 	require_once("core/class/class_db.php");
+	require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
 	require_once("core/class/Security.php");
 } catch (Exception $e){
 	echo $e->getMessage().' // ';
@@ -341,5 +342,139 @@ class SecurityControler
 		return array('COLUMNS' => implode(",",$columns), 'VALUES' => implode(",",$values));
 	}
 	
+	// TO DO : USE TO CHECK WHERE CLAUSE
+	public function check_where_clause($coll_id, $target, $where_clause, $user_id)
+	{
+		$res = array('RESULT' => false, 'TXT' => '');
+		
+		if(empty($coll_id) || empty($target) || empty($where))
+		{
+			$res['TXT'] = _ERROR_PARAMETERS_FUNCTION;
+			return $res;
+		}
+		
+		$where = " ".$where_clause;
+		$where = str_replace("\\", "", $where);
+		$where = Security::process_security_where_clause($where, $user_id);
+		
+		$this->connect();
+		
+		if($target == 'ALL' || $target == 'DOC')
+		{
+			$selectWhereTest = array();
+			$selectWhereTest[$_SESSION['collections'][$coll_id]['view']]= array();
+			array_push($selectWhereTest[$_SESSION['collections'][$coll_id]['view']],"res_id");
+			$tabResult = array();
+			
+			$request = new request();
+			if(str_replace(" ", "", $where) == "")
+			{
+				$where = "";
+			}
+			$where = str_replace("where", " ", $where);
+			$tabResult = $request->select($selectWhereTest, $where, "", $_SESSION['config']['databasetype'], 10, false, "", "", "", true, true);
+					
+			if(!$tabResult )
+			{
+				$res['TXT'] = _SYNTAX_ERROR_WHERE_CLAUSE;
+				return $res;
+			}
+			else
+			{
+				$res['TXT'] = _SYNTAX_OK;
+				$res['RESULT'] = true;
+			}
+		}
+		/// TO DO : définir le nom de la vue
+		if($target == 'ALL' || $target == 'CLASS')
+		{
+			$selectWhereTest = array();
+			$selectWhereTest[_CLASSIFICATION_VIEW]= array();
+			array_push($selectWhereTest[_CLASSIFICATION_VIEW],"agregation_id");
+			$tabResult = array();
+			$request = new request();
+			if(str_replace(" ", "", $where) == "")
+			{
+				$where = "";
+			}
+			$where = str_replace("where", " ", $where);
+			$tabResult = $request->select($selectWhereTest, $where, "", $_SESSION['config']['databasetype'], 10, false, "", "", "", true, true);
+					
+			if(!$tabResult )
+			{
+				$res['TXT'] = _SYNTAX_ERROR_WHERE_CLAUSE;
+				return $res;
+			}
+			else
+			{
+				$res['TXT'] = _SYNTAX_OK;
+				$res['RESULT'] = true;
+			}
+		}
+		return $res;
+	}
+	
+	/**
+	* Process a where clause, using the process_where_clause methods of the modules, the core and the apps
+	*
+	* @param  $where_clause string Where clause to process
+	* @param  $user_id string User identifier
+	* @return string Proper where clause
+	*/
+	public function process_security_where_clause($where_clause, $user_id)
+	{
+		if(!empty($where_clause))
+		{
+			$where = ' where '.$where_clause;
+
+			// Process with the core vars
+			$where = $this->process_where_clause($where, $user_id);
+
+			// Process with the modules vars
+			foreach(array_keys($_SESSION['modules_loaded']) as $key)
+			{
+				$path_module_tools = $_SESSION['modules_loaded'][$key]['path']."class".DIRECTORY_SEPARATOR."class_modules_tools.php";
+				require_once($path_module_tools);
+				$object = new $key;
+				if(method_exists($object, 'process_where_clause'))
+				{
+					$where = $object->process_where_clause($where, $user_id);
+				}
+			}
+			$where = preg_replace('/, ,/', ',', $where);
+			$where = preg_replace('/\( ?,/', '(', $where);
+			$where = preg_replace('/, ?\)/', ')', $where);
+
+			// Process with the apps vars
+			require_once('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_business_app_tools.php');
+			$object = new business_app_tools();
+			if(method_exists($object, 'process_where_clause'))
+			{
+				$where = $object->process_where_clause($where, $user_id);
+			}
+			return $where;
+		}
+		else
+		{
+			return '';
+		}
+	}
+
+	/**
+	* Process a where clause with the core specific vars
+	*
+	* @param  $where_clause string Where clause to process
+	* @param  $user_id string User identifier
+	* @return string Proper where clause
+	*/
+	public function process_where_clause($where_clause, $user_id)
+	{
+		$where = $where_clause;
+		if(preg_match('/@user/', $where_clause))
+		{
+			$where = str_replace("@user","'".trim($user_id)."'", $where_clause);
+		}
+		return $where;
+	}
 }
 ?>
