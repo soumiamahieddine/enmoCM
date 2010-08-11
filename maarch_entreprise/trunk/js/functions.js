@@ -875,7 +875,7 @@ function displayModal(url, id_mod, height, width, mode_frm )
 	Element.update(fenetre,txt);
     Event.observe(layer, 'mousewheel', function(event){Event.stop(event);}.bindAsEventListener(), true);
     Event.observe(layer, 'DOMMouseScroll', function(event){Event.stop(event);}.bindAsEventListener(), false);
-
+	$(id_mod).focus();
 }
 
 /**

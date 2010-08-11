@@ -31,10 +31,16 @@ try{
 	require_once('core/class/class_security.php');
 	include('apps/'.$_SESSION['config']['app_id'].'/security_bitmask.php');
 	include('core/manage_bitmask.php');
+	include('core/where_targets.php');
 } catch (Exception $e){
 	echo $e->getMessage();
 }
 
+$target_all = false;
+if(count($_ENV['targets']) > 1 )
+{
+	$target_all = true;
+}
 
 core_tools::load_lang();
 core_tools::test_admin('admin_groups', 'apps');
@@ -107,9 +113,14 @@ if($mode == "up" && $access_ind >= 0)
 	<br/>
 	<p>
 		<label><?php echo _WHERE_CLAUSE_TARGET;?> : </label>
-		<input type="radio"  class="check" name="target"  value="ALL" id="target_all" <?php if($target == 'ALL'){ echo 'checked="checked"';}?>  /><?php echo _ALL;?> 
-		<input type="radio"  class="check" name="target"  value="DOC" id="target_doc"  <?php if($target == 'DOC'){ echo 'checked="checked"';}?>  /><?php echo _DOCS;?> 
-		<input type="radio"  class="check" name="target"  value="CLASS" id="target_class" <?php if($target == 'CLASS'){ echo 'checked="checked"';}?>  /><?php echo _CLASS_SCHEME;?><span class="red_asterisk" >*</span>
+		<?php if($target_all)
+		{?>
+		<input type="radio"  class="check" name="target"  value="ALL" id="target_ALL" <?php if($target == 'ALL'){ echo 'checked="checked"';}?>  /><?php echo _ALL;?> <?php } 
+		foreach(array_keys($_ENV['targets']) as $key)
+		{?>
+			<input type="radio"  class="check" name="target"  value="<?php echo $key;?>" id="target_<?php echo $key;?>"  <?php if($target == $key){ echo 'checked="checked"';}?>  /><?php echo constant($_ENV['targets'][$key]);?> 
+		<?php } ?>	
+			<span class="red_asterisk" >*</span>	
 	</p>
 	<br/>
 	<p>

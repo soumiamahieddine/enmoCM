@@ -41,29 +41,20 @@ $business_app_tools = new business_app_tools();
 if(count($_SESSION['config']) <= 0)
 {
 	//echo 'config vide <br/>';
-	$_SESSION['slash_env'] = DIRECTORY_SEPARATOR;
+	//$_SESSION['slash_env'] = DIRECTORY_SEPARATOR;
 	
 	$path_tmp = explode(DIRECTORY_SEPARATOR, str_replace('/', DIRECTORY_SEPARATOR,$_SERVER['SCRIPT_FILENAME']));
 	$path_server = implode(DIRECTORY_SEPARATOR,array_slice($path_tmp,0,array_search('apps',$path_tmp))).DIRECTORY_SEPARATOR;
 
-	//$core_tools->build_core_config($path_server."core".DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."config.xml");
 	$core_tools->build_core_config("core".DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."config.xml");
+	
 	$business_app_tools->build_business_app_config();
 	$core_tools->load_modules_config($_SESSION['modules']);
 	$core_tools->load_menu($_SESSION['modules']);
-	$core_tools->load_admin_core_board();
-	$core_tools->load_admin_module_board($_SESSION['modules']);
-	//loading app admin board
-	$core_tools->load_admin_app_board('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR);
-	//$func->show_array($_SESSION['config']);
-	//$func->show_array($_SESSION['ressources']);
-	//$func->show_array($_SESSION['history']);
-	//$func->show_array($_SESSION['modules']);
-	//$func->show_array($_SESSION['modules_loaded']);
-	//$func->show_array($_SESSION['menu']);
-	//$func->show_array($_SESSION['tablename']);
-	//$func->show_array($_SESSION['core_admin_board']);
-	//$func->show_array($_SESSION['modules_admin_board']);
+	
+	//$core_tools->load_admin_core_board();
+	//$core_tools->load_admin_module_board($_SESSION['modules']);
+	//$core_tools->load_admin_app_board('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR);
 }
 
 if(!empty($_SESSION['error']))

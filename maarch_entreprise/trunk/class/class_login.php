@@ -79,7 +79,7 @@ class login extends functions
 				if ($displayed_title == true)
 					echo "<h3 align='right'>".constant($KEY['BRUT_LABEL'])."</h3>";
 					 
-				$this->launch_login_method($KEY['SCRIPTNAME']);
+				self::launch_login_method($KEY['SCRIPTNAME']);
 				
 				if ($displayed_title == true)
 					echo "<hr/>";

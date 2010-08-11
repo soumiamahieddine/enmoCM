@@ -25,8 +25,12 @@ $core_tools->load_html();
 $core_tools->load_header('', true, false);
 //Définition de la collection en dur
 //print_r($_REQUEST);exit;
+/*
 $res_view = $_SESSION['user']['security'][0]['view'];
 $coll_id = $_SESSION['user']['security'][0]['coll_id'];
+*/
+$res_view = $_SESSION['user']['security'][$_SESSION['user']['collections'][0]]['DOC']['view'];
+$coll_id = $_SESSION['user']['collections'][0];
 $where_clause = $sec->get_where_clause_from_coll_id($_SESSION['collection_id_choice']);
 if(trim($where_clause) == "")
 {

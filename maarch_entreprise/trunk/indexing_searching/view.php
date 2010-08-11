@@ -78,6 +78,15 @@ else
 	$where2 = "";
 	if($_SESSION['origin'] <> "basket" && $_SESSION['origin'] <> "workflow")
 	{
+		if(isset($_SESSION['user']['security'][$_SESSION['collection_id_choice']] ) )
+		{
+			$where2 = " and ( ".$_SESSION['user']['security'][$_SESSION['collection_id_choice']]['DOC']['where']." ) ";
+		}
+		else
+		{
+			$where2 = " and 1=-1";
+		}
+/*
 		$cpt_access_to_coll = 0;
 		for($i=0; $i < count($_SESSION['user']['security']); $i++)
 		{
@@ -91,9 +100,11 @@ else
 		{
 			$where2 = " and 1=-1";
 		}
+*/
 	}
 	$connexion->query("select res_id, docserver_id, path, filename, format, fingerprint from ".$table." where res_id = ".$s_id.$where2);
-	//$connexion->show();
+//	$connexion->show();
+
 	if($connexion->nb_result() == 0)
 	{
 		//$_SESSION['error'] = _THE_DOC." "._EXISTS_OR_RIGHT."&hellip;";

@@ -34,6 +34,7 @@ core_tools::load_lang();
 core_tools::test_admin('admin_groups', 'apps');
 try{
 	include('apps/'.$_SESSION['config']['app_id'].'/security_bitmask.php');
+	include('core/where_targets.php');
 	include('core/manage_bitmask.php');
 } catch (Exception $e){
 	echo $e->getMessage();
@@ -100,18 +101,15 @@ usort($_SESSION['m_admin']['groups']['security'], "cmp");
 									<div class="ref-unit">
 										<div>
 										<?php echo _WHERE_CLAUSE_TARGET.' : ';
-										if( $_SESSION['m_admin']['groups']['security'][$i]['WHERE_TARGET'] == 'DOC')
+										if(isset($_ENV['targets'][$_SESSION['m_admin']['groups']['security'][$i]['WHERE_TARGET']] ))
 										{
-											echo _DOCS;
-										}
-										elseif($_SESSION['m_admin']['groups']['security'][$i]['WHERE_TARGET'] == 'CLASS')
-										{
-											echo _CLASS_SCHEME;
+											echo $_ENV['targets'][$_SESSION['m_admin']['groups']['security'][$i]['WHERE_TARGET']] ;
 										}
 										else
 										{
 											echo _ALL;
-										}?></div>
+										}
+										?></div>
 										<div> 
 											<?php echo _WHERE_CLAUSE.' : '.functions::show_string($_SESSION['m_admin']['groups']['security'][$i]['WHERE_CLAUSE']);?>
 										</div>

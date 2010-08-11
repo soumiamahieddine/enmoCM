@@ -32,7 +32,7 @@ $business_app_tools = new business_app_tools();
 
 if(count($_SESSION['config']) <= 0)
 {
-	$_SESSION['slash_env'] = DIRECTORY_SEPARATOR;
+	//$_SESSION['slash_env'] = DIRECTORY_SEPARATOR;
 	$path_tmp = explode(DIRECTORY_SEPARATOR, str_replace('/', DIRECTORY_SEPARATOR,$_SERVER['SCRIPT_FILENAME']));
 	$path_server = implode(DIRECTORY_SEPARATOR,array_slice($path_tmp,0,array_search('apps',$path_tmp))).DIRECTORY_SEPARATOR;
 	$core_tools->build_core_config("core".DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."config.xml");

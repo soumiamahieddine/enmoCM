@@ -36,9 +36,9 @@ if(!isset($_REQUEST['form_values']) || empty($_REQUEST['form_values']))
 $values = get_values_in_array($_REQUEST['form_values']);
 $coll_id = get_value_fields($values, 'coll_id');
 $comment = get_value_fields($values, 'comment');
-$target_all = get_value_fields($values, 'target_all');
-$target_doc = get_value_fields($values, 'target_doc');
-$target_class = get_value_fields($values, 'target_class');
+$target_all = get_value_fields($values, 'target_ALL');
+$target_doc = get_value_fields($values, 'target_DOC');
+$target_class = get_value_fields($values, 'target_CLASS');
 $mode = get_value_fields($values, 'mode');
 
 if(!isset($mode ) || $mode  == '')

@@ -48,9 +48,9 @@ $start_date = get_value_fields($values, 'start_date');
 $stop_date = get_value_fields($values, 'stop_date');
 $mode = get_value_fields($values, 'mode');
 
-$target_all = get_value_fields($values, 'target_all');
-$target_doc = get_value_fields($values, 'target_doc');
-$target_class = get_value_fields($values, 'target_class');
+$target_all = get_value_fields($values, 'target_ALL');
+$target_doc = get_value_fields($values, 'target_DOC');
+$target_class = get_value_fields($values, 'target_CLASS');
 $target = 'ALL';
 if(isset($target_all) && !empty($target_all))
 {
