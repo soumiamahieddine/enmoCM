@@ -111,7 +111,8 @@ class request extends dbquery
 		}
 
 		if($add_security)
-		{
+		{		
+/*
 			for($i=0; $i < count($_SESSION['user']['security']); $i++)
 			{
 				if(isset($_SESSION['user']['security'][$i]['table']) && isset($_SESSION['user']['security'][$i]['coll_id']))
@@ -125,6 +126,25 @@ class request extends dbquery
 						else
 						{
 							$where_string = ''.$where_string." and ( ".$_SESSION['user']['security'][$i]['where']." ) ";
+						}
+						break;
+					}
+				}
+			}
+*/
+			foreach(array_keys($_SESSION['user']['security']) as $coll)
+			{
+				if(isset($_SESSION['user']['security'][$coll]['DOC']['table']))
+				{
+					if(preg_match('/'.$_SESSION['user']['security'][$coll]['DOC']['table'].'/',$table_string) || preg_match('/'.$_SESSION['user']['security'][$coll]['DOC']['view'].'/',$table_string) )
+					{
+						if(empty($where_string))
+						{
+							$where_string = " where ( ".$_SESSION['user']['security'][$coll]['DOC']['where']." ) ";
+						}
+						else
+						{
+							$where_string = ''.$where_string." and ( ".$_SESSION['user']['security'][$coll]['DOC']['where']." ) ";
 						}
 						break;
 					}
@@ -288,7 +308,7 @@ class request extends dbquery
 	/**
 	* Return current datetime instruction for each SQL database
 	*
-	* @author  Loïc Vinet  <dev@maarch.org
+	* @author  Loïc Vinet  <dev@maarch.org>
 	*/
 	public function current_datetime()
 	{
@@ -306,7 +326,6 @@ class request extends dbquery
 			return ' sysdate ';
 		}
 	}
-
 	/**
 	* Returns the correct SQL instruction (depending of the database type) for extracting a date or a date part from a datetime field
 	*

@@ -40,6 +40,7 @@
 
 //Requires to launch history functions
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
+require_once("core/where_targets.php");
 
 class security extends dbquery
 {
@@ -215,7 +216,7 @@ class security extends dbquery
 				{
 
 					//$_SESSION['user']['groups'][$i]['GROUP_ID'] = $line->group_id;
-					$tab['groups'][$i]['GROUP_ID'] = $line->group_id;
+						$tab['groups'][$i]['GROUP_ID'] = $line->group_id;
 					$tab['groups'][$i]['ROLE'] = '';
 					//$_SESSION['user']['groups'][$i]['ROLE'] = '';
 					$i++;
@@ -267,24 +268,50 @@ class security extends dbquery
 		{
 			for($i=0; $i<count($_SESSION['collections']);$i++)
 			{
-				array_push($tab['security'], array('coll_id' => $_SESSION['collections'][$i]['id'], 'table'  => $_SESSION['collections'][$i]['table'], 'label_coll'  => $_SESSION['collections'][$i]['label'],'view'  => $_SESSION['collections'][$i]['view'], 'where' =>" (1=1) ", 'can_insert' => 'Y', 'can_update' => 'Y', 'can_delete' => 'Y' ));
+				$tab['security'][ $_SESSION['collections'][$i]['id']] = array();
+				foreach(array_keys($_ENV['targets']) as $key)
+				{
+					$tab['security'][ $_SESSION['collections'][$i]['id']][$key] = array('table'  => $_SESSION['collections'][$i]['table'], 'label_coll'  => $_SESSION['collections'][$i]['label'],'view'  => $_SESSION['collections'][$i]['view'], 'where' =>" (1=1) ");			
+				}
+				//$tab['security'][$_SESSION['collections'][$i]['id']] = array( 'table'  => $_SESSION['collections'][$i]['table'], 'label_coll'  => $_SESSION['collections'][$i]['label'],'view'  => $_SESSION['collections'][$i]['view'], 'where' =>" (1=1) ", 'can_insert' => 'Y', 'can_update' => 'Y', 'can_delete' => 'Y' );
 				array_push($tab['collections'], $_SESSION['collections'][$i]['id']);
 			}
 		}
 		else
 		{
-			$this->query("select s.group_id, s.coll_id, s.where_clause , s.can_insert, s.can_update,s.can_delete  from ".$_SESSION['tablename']['security']." s, ".$_SESSION['tablename']['usergroup_content']." ugc , ".$_SESSION['tablename']['usergroups']." u where ugc.user_id='".$user_id."' and ugc.group_id = s.group_id and ugc.group_id = u.group_id and u.enabled = 'Y'");
+			//$this->query("select s.group_id, s.coll_id, s.where_clause , s.can_insert, s.can_update,s.can_delete  from ".$_SESSION['tablename']['security']." s, ".$_SESSION['tablename']['usergroup_content']." ugc , ".$_SESSION['tablename']['usergroups']." u where ugc.user_id='".$user_id."' and ugc.group_id = s.group_id and ugc.group_id = u.group_id and u.enabled = 'Y'");
+			$this->query("select s.group_id, s.coll_id, s.where_clause, s.where_target, s.mr_start_date, s.mr_stop_date from ".$_SESSION['tablename']['security']." s, ".$_SESSION['tablename']['usergroup_content']." ugc , ".$_SESSION['tablename']['usergroups']." u where ugc.user_id='".$user_id."' and ugc.group_id = s.group_id and ugc.group_id = u.group_id and u.enabled = 'Y' ");
 			
-			$i =0;
-			$can_index = false;
-			$can_postindex = false;
+			//$i =0;
+			//$can_index = false;
+			//$can_postindex = false;
 			while($line = $this->fetch_object())
 			{
+				// TO DO : vérifie les dates
+				$start_date = $line->mr_start_date;
+				$stop_date = $line->mr_stop_date;
+				
+				$target = $line->where_target;
 				$where_clause = $line->where_clause;
 				$where_clause = $this->process_security_where_clause($where_clause, $user_id);
 				$where_clause = str_replace('where', '', $where_clause);
 				if( ! in_array($line->coll_id, $tab['collections'] ) )
 				{
+					$tab['security'][ $line->coll_id] = array();
+					$ind = $this->get_ind_collection($line->coll_id);
+					
+					if(trim($where_clause) <> "" && $where_clause <> " "  )
+					{
+						$where =  "( ".$this->show_string($where_clause)." )";
+					}
+					else
+					{
+						$where = " -1 ";
+					}
+					
+					$tab['security'][ $line->coll_id][$target] = array('table'  => $_SESSION['collections'][$ind]['table'], 'label_coll'  => $_SESSION['collections'][$ind]['label'],'view'  => $_SESSION['collections'][$ind]['view'], 'where'  => $where);	
+					array_push($tab['collections'] , $line->coll_id);		
+/*
 					$tab['security'][$i]['coll_id'] = $line->coll_id;
 					$ind = $this->get_ind_collection($line->coll_id);
 					$tab['security'][$i]['table'] = $_SESSION['collections'][$ind]['table'];
@@ -299,24 +326,36 @@ class security extends dbquery
 						$where = "( 1=1 )";
 					}
 					$tab['security'][$i]['where'] = $where;
-					$tab['security'][$i]['can_insert'] = $line->can_insert;
-					$tab['security'][$i]['can_update'] = $line->can_update;
-					$tab['security'][$i]['can_delete'] = $line->can_delete;
+					//$tab['security'][$i]['can_insert'] = $line->can_insert;
+					//$tab['security'][$i]['can_update'] = $line->can_update;
+					//$tab['security'][$i]['can_delete'] = $line->can_delete;
 					array_push($tab['collections'] , $line->coll_id);
 					$i++;
+*/
 				}
 				else
 				{
-					$key = array_search($line->coll_id, $tab['collections'] );
+					//$key = array_search($line->coll_id, $tab['collections'] );
 					if(trim($where_clause) == "")
 					{
-						$where = "( 1=1 )";
+						$where = "-1";
 					}
 					else
 					{
 						$where =  "( ".$this->show_string($where_clause)." )";
+						
 					}
-					$tab['security'][$key]['where'] .= " or ".$where;
+					
+					if(isset($tab['security'][ $line->coll_id][$target]) && count($tab['security'][ $line->coll_id][$target]) > 0)
+					{
+						$tab['security'][ $line->coll_id][$target]['where'] .= " or ".$where;
+					}
+					else
+					{
+						$ind = $this->get_ind_collection($line->coll_id);
+						$tab['security'][ $line->coll_id][$target] = array('table'  => $_SESSION['collections'][$ind]['table'], 'label_coll'  => $_SESSION['collections'][$ind]['label'],'view'  => $_SESSION['collections'][$ind]['view'], 'where'  => $where);	
+					}
+/*
 					if($line->can_insert == 'Y')
 					{
 						$tab['security'][$key]['can_insert'] = $line->can_insert;
@@ -329,6 +368,7 @@ class security extends dbquery
 					{
 						$tab['security'][$key]['can_delete'] = $line->can_update;
 					}
+*/
 				}
 			}
 		}
@@ -571,7 +611,7 @@ class security extends dbquery
 			{
 				if($_SESSION['modules_services'][$value][$i]['enabled'] == "true")
 				{
-					array_push($_SESSION['enabled_services'], array('id' => $_SESSION['modules_services'][$value][$i]['id'], 'label' => $_SESSION['modules_services'][$value][$i]['name'], 'comment' => $_SESSION['modules_services'][$value][$i]['comment'], 'type' => $_SESSION['modules_services'][$value][$i]['servicetype'],'parent' => $value, 'system' =>$_SESSION['modules_services'][$value][$i]['system_service'] ));
+					array_push($_SESSION['enabled_services'], array('id' => $_SESSION['modules_services'][$value][$i]['id'], 'label' => $_SESSION['modules_services'][$value][$i]['name'], 'comment' => $_SESSION['modules_services'][$value][$i]['comment'], 'type' => $_SESSION['modules_services'][$value][$i]['servicetype'],'parent' => $value, 'system' =>$_SESSION['modules_services']['system_service'] ));
 				}
 			}
 		}
@@ -873,6 +913,8 @@ class security extends dbquery
 	*/
 	public function retrieve_user_coll_id($table)
 	{
+
+/*
 		for($i=0; $i<count($_SESSION['user']['security']);$i++)
 		{
 			if($_SESSION['user']['security'][$i]['table'] == $table)
@@ -880,13 +922,19 @@ class security extends dbquery
 				return $_SESSION['user']['security'][$i]['coll_id'];
 			}
 		}
+*/
+		foreach(array_keys($_SESSION['user']['security']) as $coll_id)
+		{
+			if($_SESSION['user']['security'][$coll_id]['DOC']['table'] == $table)
+			{
+				return $coll_id;
+			}
+		}
 		return false;
 	}
 
-	/**
-	* Return all collections where the current user can insert new documents (with table)
-	*
-	*/
+
+//////////////////////// A REFAIRE
 	/**
 	* Return all collections where the current user can insert new documents (with table)
 	*
@@ -905,6 +953,7 @@ class security extends dbquery
 		}
 		return $arr;
 	}
+
 
 	/**
 	* Checks if the current user can do the action on the collection
@@ -926,6 +975,7 @@ class security extends dbquery
 		}
 		return $flag;
 	}
+/////////////////////////////
 
 	/**
 	* Returns where clause of the collection for the current user from the collection identifier
@@ -935,6 +985,11 @@ class security extends dbquery
 	*/
 	public function get_where_clause_from_coll_id($coll_id)
 	{
+		if(isset($_SESSION['user']['security'][$coll_id]['DOC']['where']))
+		{
+			return $_SESSION['user']['security'][$coll_id]['DOC']['where'];
+		}
+/*
 		for($i=0; $i < count($_SESSION['user']['security']);$i++)
 		{
 			if($_SESSION['user']['security'][$i]['coll_id'] == $coll_id)
@@ -942,6 +997,7 @@ class security extends dbquery
 				return $_SESSION['user']['security'][$i]['where'];
 			}
 		}
+*/
 		return '';
 	}
 
@@ -953,6 +1009,14 @@ class security extends dbquery
 	*/
 	public function get_where_clause_from_view($view)
 	{
+		foreach(array_keys($_SESSION['user']['security']) as $coll_id)
+		{
+			if($_SESSION['user']['security'][$coll_id]['DOC']['view'] == $view)
+			{
+				return $_SESSION['user']['security'][$coll_id]['DOC']['where'];
+			}
+		}
+/*
 		for($i=0; $i < count($_SESSION['user']['security']);$i++)
 		{
 			if($_SESSION['user']['security'][$i]['view'] == $view)
@@ -960,6 +1024,7 @@ class security extends dbquery
 				return $_SESSION['user']['security'][$i]['where'];
 			}
 		}
+*/
 		return '';
 	}
 
@@ -971,6 +1036,14 @@ class security extends dbquery
 	*/
 	public function retrieve_user_coll_table($view)
 	{
+		foreach(array_keys($_SESSION['user']['security']) as $coll_id)
+		{
+			if($_SESSION['user']['security'][$coll_id]['DOC']['view'] == $view)
+			{
+				return $_SESSION['user']['security'][$coll_id]['DOC']['where'];
+			}
+		}
+/*
 		for($i=0; $i<count($_SESSION['user']['security']);$i++)
 		{
 			if($_SESSION['user']['security'][$i]['view'] == $view)
@@ -978,6 +1051,7 @@ class security extends dbquery
 				return $_SESSION['user']['security'][$i]['table'];
 			}
 		}
+*/
 		return false;
 	}
 
