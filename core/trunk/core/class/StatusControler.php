@@ -128,7 +128,7 @@ class StatusControler
 	/**
 	* Saves in the database a Status object 
 	*
-	* @param  $group Status object to be saved
+	* @param  $status Status object to be saved
 	* @param  $mode string  Saving mode : add or up
 	* @return bool true if the save is complete, false otherwise
 	*/
@@ -146,7 +146,7 @@ class StatusControler
 	}
 	
 	/**
-	* Inserts in the database (statuss table) a Status object
+	* Inserts in the database (status table) a Status object
 	*
 	* @param  $status Status object
 	* @return bool true if the insertion is complete, false otherwise
