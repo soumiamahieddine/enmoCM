@@ -1002,6 +1002,7 @@ if (!defined('_DOCS')) define( '_DOCS', 'Documents');
 if (!defined('_GO_MANAGE_USER')) define( '_GO_MANAGE_USER', 'Modifier');
 if (!defined('_TASKS')) define( '_TASKS', 'Actions disponibles');
 if (!defined('_PERIOD')) define( '_PERIOD', 'P&eacute;riode');
+if (!defined('_COMMENTS _MANDATORY')) define( '_COMMENTS _MANDATORY', 'Description obligatoire');
 
 /******* Security Bitmask label ********/
 
@@ -1013,4 +1014,11 @@ if (!defined('_DELETE_DOCUMENT_LABEL')) define( '_DELETE_DOCUMENT_LABEL', 'Suppr
 if (!defined('_DELETE_SERIE_LABEL')) define( '_DELETE_SERIE_LABEL', 'Suppression de s&eacute;rie');
 if (!defined('_DELETE_OTHER_AGREGATE_LABEL')) define( '_DELETE_OTHER_AGREGATE_LABEL', 'Suppression de dossier/sous-dossier/volume');
 if (!defined('_VIEW_LOG_LABEL')) define( '_VIEW_LOG_LABEL', 'Visualisation de l&rsquo;historique');
+
+
+if (!defined('_PLUS')) define( '_PLUS', 'Plus');
+if (!defined('_MINUS')) define( '_MINUS', 'Moins');
+
+
+
 ?>
