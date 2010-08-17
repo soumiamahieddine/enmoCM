@@ -273,21 +273,16 @@ class security extends dbquery
 				{
 					$tab['security'][ $_SESSION['collections'][$i]['id']][$key] = array('table'  => $_SESSION['collections'][$i]['table'], 'label_coll'  => $_SESSION['collections'][$i]['label'],'view'  => $_SESSION['collections'][$i]['view'], 'where' =>" (1=1) ");			
 				}
-				//$tab['security'][$_SESSION['collections'][$i]['id']] = array( 'table'  => $_SESSION['collections'][$i]['table'], 'label_coll'  => $_SESSION['collections'][$i]['label'],'view'  => $_SESSION['collections'][$i]['view'], 'where' =>" (1=1) ", 'can_insert' => 'Y', 'can_update' => 'Y', 'can_delete' => 'Y' );
 				array_push($tab['collections'], $_SESSION['collections'][$i]['id']);
 			}
 		}
 		else
 		{
-			//$this->query("select s.group_id, s.coll_id, s.where_clause , s.can_insert, s.can_update,s.can_delete  from ".$_SESSION['tablename']['security']." s, ".$_SESSION['tablename']['usergroup_content']." ugc , ".$_SESSION['tablename']['usergroups']." u where ugc.user_id='".$user_id."' and ugc.group_id = s.group_id and ugc.group_id = u.group_id and u.enabled = 'Y'");
 			$this->query("select s.group_id, s.coll_id, s.where_clause, s.where_target, s.mr_start_date, s.mr_stop_date from ".$_SESSION['tablename']['security']." s, ".$_SESSION['tablename']['usergroup_content']." ugc , ".$_SESSION['tablename']['usergroups']." u where ugc.user_id='".$user_id."' and ugc.group_id = s.group_id and ugc.group_id = u.group_id and u.enabled = 'Y' ");
 			
-			//$i =0;
-			//$can_index = false;
-			//$can_postindex = false;
 			while($line = $this->fetch_object())
 			{
-				// TO DO : vérifie les dates
+				// TO DO : vérifier les dates
 				$start_date = $line->mr_start_date;
 				$stop_date = $line->mr_stop_date;
 				
@@ -295,80 +290,48 @@ class security extends dbquery
 				$where_clause = $line->where_clause;
 				$where_clause = $this->process_security_where_clause($where_clause, $user_id);
 				$where_clause = str_replace('where', '', $where_clause);
+				$ind = $this->get_ind_collection($line->coll_id);
+				if(trim($where_clause) == "")
+					$where = "-1";
+				else
+					$where =  "( ".$this->show_string($where_clause)." )";
+
 				if( ! in_array($line->coll_id, $tab['collections'] ) )
 				{
 					$tab['security'][ $line->coll_id] = array();
-					$ind = $this->get_ind_collection($line->coll_id);
 					
-					if(trim($where_clause) <> "" && $where_clause <> " "  )
+					if($target == 'ALL')
 					{
-						$where =  "( ".$this->show_string($where_clause)." )";
+						foreach(array_keys($_ENV['targets']) as $key)
+						{
+							$tab['security'][ $line->coll_id][$key] = array('table'  => $_SESSION['collections'][$ind]['table'], 'label_coll'  => $_SESSION['collections'][$ind]['label'],'view'  => $_SESSION['collections'][$ind]['view'], 'where'  => $where);	
+						}
 					}
 					else
 					{
-						$where = " -1 ";
+						$tab['security'][ $line->coll_id][$target] = array('table'  => $_SESSION['collections'][$ind]['table'], 'label_coll'  => $_SESSION['collections'][$ind]['label'],'view'  => $_SESSION['collections'][$ind]['view'], 'where'  => $where);	
 					}
-					
-					$tab['security'][ $line->coll_id][$target] = array('table'  => $_SESSION['collections'][$ind]['table'], 'label_coll'  => $_SESSION['collections'][$ind]['label'],'view'  => $_SESSION['collections'][$ind]['view'], 'where'  => $where);	
-					array_push($tab['collections'] , $line->coll_id);		
-/*
-					$tab['security'][$i]['coll_id'] = $line->coll_id;
-					$ind = $this->get_ind_collection($line->coll_id);
-					$tab['security'][$i]['table'] = $_SESSION['collections'][$ind]['table'];
-					$tab['security'][$i]['label_coll'] = $_SESSION['collections'][$ind]['label'];
-					$tab['security'][$i]['view'] =  $_SESSION['collections'][$ind]['view'];
-					if(trim($where_clause) <> "" && $where_clause <> " "  )
-					{
-						$where =  "( ".$this->show_string($where_clause)." )";
-					}
-					else
-					{
-						$where = "( 1=1 )";
-					}
-					$tab['security'][$i]['where'] = $where;
-					//$tab['security'][$i]['can_insert'] = $line->can_insert;
-					//$tab['security'][$i]['can_update'] = $line->can_update;
-					//$tab['security'][$i]['can_delete'] = $line->can_delete;
-					array_push($tab['collections'] , $line->coll_id);
-					$i++;
-*/
+					array_push($tab['collections'] , $line->coll_id);	
 				}
 				else
 				{
-					//$key = array_search($line->coll_id, $tab['collections'] );
-					if(trim($where_clause) == "")
-					{
-						$where = "-1";
-					}
-					else
-					{
-						$where =  "( ".$this->show_string($where_clause)." )";
-						
-					}
-					
+
 					if(isset($tab['security'][ $line->coll_id][$target]) && count($tab['security'][ $line->coll_id][$target]) > 0)
-					{
 						$tab['security'][ $line->coll_id][$target]['where'] .= " or ".$where;
+					elseif($target == 'ALL')
+					{
+						foreach(array_keys($_ENV['targets']) as $key)
+						{
+							if(isset($tab['security'][ $line->coll_id][$key]) && count($tab['security'][ $line->coll_id][$key]) > 0)
+								$tab['security'][ $line->coll_id][$key]['where'] .= " or ".$where;
+							else
+								$tab['security'][ $line->coll_id][$key] = array('table'  => $_SESSION['collections'][$ind]['table'], 'label_coll'  => $_SESSION['collections'][$ind]['label'],'view'  => $_SESSION['collections'][$ind]['view'], 'where'  => $where);
+						}
 					}
 					else
 					{
-						$ind = $this->get_ind_collection($line->coll_id);
 						$tab['security'][ $line->coll_id][$target] = array('table'  => $_SESSION['collections'][$ind]['table'], 'label_coll'  => $_SESSION['collections'][$ind]['label'],'view'  => $_SESSION['collections'][$ind]['view'], 'where'  => $where);	
 					}
-/*
-					if($line->can_insert == 'Y')
-					{
-						$tab['security'][$key]['can_insert'] = $line->can_insert;
-					}
-					if($line->can_update == 'Y')
-					{
-						$tab['security'][$key]['can_update'] = $line->can_update;
-					}
-					if($line->can_delete == 'Y')
-					{
-						$tab['security'][$key]['can_delete'] = $line->can_update;
-					}
-*/
 				}
 			}
 		}
