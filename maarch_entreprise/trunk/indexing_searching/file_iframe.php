@@ -62,7 +62,8 @@ elseif(isset($_SESSION['upfile']['mime']) && !empty($_SESSION['upfile']['mime'])
 {
 	if($show_file)
 	{
-		$mime_type = $is->get_mime_type($_SESSION['upfile']['mime']);
+		$mime_type = $is->get_mime_type($_SESSION['upfile']['format']);
+		//print_r($_SESSION['upfile']);exit;
 		header("Pragma: public");
 		header("Expires: 0");
 		header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
