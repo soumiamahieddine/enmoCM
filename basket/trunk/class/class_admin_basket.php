@@ -403,9 +403,8 @@ class admin_basket extends dbquery
 
 		if( !empty ($where_clause))
 		{
-			require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
-			$sec = new security();
-			$where = $sec->process_security_where_clause($where, $_SESSION['user']['UserId']);
+			require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."SecurityControler.php");
+			$where = SecurityControler::process_security_where_clause($where, $_SESSION['user']['UserId']);
 		 }
 		// Gets the basket collection
 		$ind = -1;

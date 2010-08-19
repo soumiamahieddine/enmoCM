@@ -498,12 +498,12 @@ class basket extends dbquery
 		else
 		{
 			require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
-			$sec =new security();
+	
 			$this->connect();
-			$table = $sec->retrieve_view_from_coll_id($coll_id);
+			$table = security::retrieve_view_from_coll_id($coll_id);
 			if(empty($table))
 			{
-				$table = $sec->retrieve_table_from_coll_id($coll_id);
+				$table = security::retrieve_table_from_coll_id($coll_id);
 			}
 			// If the view and the table of the collection is empty, return an empty array
 			if(empty($table))
@@ -612,16 +612,16 @@ class basket extends dbquery
 	{
 		$tab = array();
 		$this->connect();
+		require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."SecurityControler.php");
 		require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
-		$sec = new security();
 
 		$this->query("select basket_id, coll_id, basket_name, basket_desc, basket_clause, is_generic from ".$_SESSION['tablename']['bask_baskets']." where basket_id = '".$this->protect_string_db($basket_id)."' and enabled = 'Y'");
 
 		$res = $this->fetch_object();
 		$tab['id'] = $res->basket_id;
 		$tab['coll_id'] = $res->coll_id;
-		$tab['table'] = $sec->retrieve_table_from_coll($tab['coll_id']);
-		$tab['view'] = $sec->retrieve_view_from_coll_id($tab['coll_id']);
+		$tab['table'] = security::retrieve_table_from_coll($tab['coll_id']);
+		$tab['view'] = security::retrieve_view_from_coll_id($tab['coll_id']);
 		$tab['is_generic'] = $res->is_generic;
 
 		$tab['desc'] = $this->show_string($res->basket_desc);
@@ -664,9 +664,8 @@ class basket extends dbquery
 		$tab['is_virtual'] = $is_virtual;
 		$tab['basket_owner'] = $basket_owner;
 
-		//$tab['redirect_services'] = trim(stripslashes($res->redirect_basketlist));
-		//$tab['redirect_users'] = trim(stripslashes($res->redirect_grouplist));
-		$tab['clause'] = $sec->process_security_where_clause($tab['clause'], $user_id);
+
+		$tab['clause'] = SecurityControler::process_security_where_clause($tab['clause'], $user_id);
 		$tab['clause'] = str_replace('where', '',$tab['clause'] );
 
 		return $tab;
@@ -683,16 +682,16 @@ class basket extends dbquery
 	{
 		$tab = array();
 		$this->connect();
-			require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
-		$sec = new security();
+		require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."SecurityControler.php");
+		require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
 
 		$this->query("select basket_id, coll_id, basket_name, basket_desc, basket_clause from ".$_SESSION['tablename']['bask_baskets']." where basket_id = '".$basket_id."' and enabled = 'Y'");
 
 		$res = $this->fetch_object();
 		$tab['id'] = $res->basket_id;
 		$tab['coll_id'] = $res->coll_id;
-		$tab['table'] = $sec->retrieve_table_from_coll($tab['coll_id']);
-		$tab['view'] = $sec->retrieve_view_from_coll_id($tab['coll_id']);
+		$tab['table'] = security::retrieve_table_from_coll($tab['coll_id']);
+		$tab['view'] = security::retrieve_view_from_coll_id($tab['coll_id']);
 		$tab['is_generic'] = 'NO';
 
 		$tab['desc'] = $res->basket_desc;
@@ -764,7 +763,7 @@ class basket extends dbquery
 		$tab['redirect_users'] = trim(stripslashes($res->redirect_grouplist));
 		$tab['abs_basket'] = $abs_basket;
 
-		$tab['clause'] = $sec->process_security_where_clause($tab['clause'], $basket_owner);
+		$tab['clause'] = SecurityControler::process_security_where_clause($tab['clause'], $basket_owner);
 		$tab['clause'] = str_replace('where', '',$tab['clause'] );
 
 		return $tab;
@@ -865,8 +864,7 @@ class basket extends dbquery
 	public function check_reserved_time($res_id, $coll_id)
 	{
 		require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_security.php');
-		$sec = new security();
-		$table = $sec->retrieve_table_from_coll($coll_id);
+		$table = security::retrieve_table_from_coll($coll_id);
 		$db = new dbquery();
 		if(!empty($table) && !empty($res_id))
 		{
@@ -908,8 +906,8 @@ class basket extends dbquery
 			return false;
 		}
 		require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_security.php');
-		$sec = new security();
-		$table = $sec->retrieve_table_from_coll($coll_id);
+	
+		$table = security::retrieve_table_from_coll($coll_id);
 		if(empty($table))
 		{
 			return false;
