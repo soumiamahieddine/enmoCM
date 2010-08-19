@@ -214,18 +214,14 @@ if(isset($_REQUEST['group_submit']))
 			$_SESSION['error'] = _GROUP_UPDATED;
 			if(UsergroupControler::inGroup($_SESSION['user']['UserId'], $_SESSION['m_admin']['groups']['GroupId']) )
 			{
-				$_SESSION['user']['groups'] = array();
 				$_SESSION['user']['security'] = array();
+				$_SESSION['user']['primarygroup'] = UsergroupControler::getPrimaryGroup($_SESSION['user']['UserId']);
 
-				$tmp = security::load_groups($_SESSION['user']['UserId']);
-				$_SESSION['user']['groups'] = $tmp['groups'];
-				$_SESSION['user']['primarygroup'] = $tmp['primarygroup'];
-
-				$tmp = security::load_security($_SESSION['user']['UserId']);
+				$tmp = SecurityControler::load_security($_SESSION['user']['UserId']);
 				$_SESSION['user']['collections'] = $tmp['collections'];
 				$_SESSION['user']['security'] = $tmp['security'];
 
-				$_SESSION['user']['services'] = security::load_user_services($_SESSION['user']['UserId']);
+				$_SESSION['user']['services'] = ServiceControler::loadUserServices($_SESSION['user']['UserId']);
 			}
 		}
 						

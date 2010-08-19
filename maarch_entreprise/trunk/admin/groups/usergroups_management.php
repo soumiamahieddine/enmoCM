@@ -168,7 +168,7 @@ elseif($mode == "up" || $mode == "add")
 			</table>
 			<br><center><i><?php  echo _AVAILABLE_SERVICES;?> :</i></center>
 			<?php
-			//$this->show_array($_SESSION['enabled_services']);
+			//functions::show_array($_SESSION['enabled_services']);
 			$enabled_services_sort_by_parent = array();
 			$j=0;
 			for($i=0; $i<count($_SESSION['enabled_services']);$i++)
@@ -180,10 +180,10 @@ elseif($mode == "up" || $mode == "add")
 						$j=0;
 					}
 					$enabled_services_sort_by_parent[$_SESSION['enabled_services'][$i]['parent']][$j] = $_SESSION['enabled_services'][$i];
-				$j++;
+					$j++;
 				}
 			}
-			//$this->show_array($enabled_services_sort_by_parent);
+			//functions::show_array($enabled_services_sort_by_parent);
 
 			$_SESSION['cpt']=0;
 			foreach(array_keys($enabled_services_sort_by_parent) as $value)
@@ -219,7 +219,7 @@ elseif($mode == "up" || $mode == "add")
 							<?php
 							for($i=0; $i<count($enabled_services_sort_by_parent[$value]); $i++)
 							{
-								if($enabled_services_sort_by_parent[$value][$i]['system'] == false)
+								if($enabled_services_sort_by_parent[$value][$i]['system'] <> true)
 								{
 								?>
 								<tr>
