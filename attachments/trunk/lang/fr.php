@@ -25,4 +25,7 @@ if (!defined('_INDEX_ATTACHMENT'))  define('_INDEX_ATTACHMENT', 'Indexer une pi&
 if (!defined('_INDEX_ATTACHMENT_DESC'))  define('_INDEX_ATTACHMENT_DESC', 'Indexer une pi&egrave;ce jointe');
 if (!defined('_ATTACH_TO_DOC'))  define('_ATTACH_TO_DOC', 'Attacher en r&eacute;ponse &agrave; un courrier existant');
 if (!defined('_ATTACH_TO_DOC_NUM'))  define('_ATTACH_TO_DOC_NUM', 'attach&eacute; au document n&deg;');
+
+if (!defined('_VIEW_ATTACHMENTS'))  define('_VIEW_ATTACHMENTS', 'Voir les pi&eagrave;ces jointes');
+if (!defined('_MANAGE_ATTACHMENTS'))  define('_MANAGE_ATTACHMENTS', 'G&eacute;rer les pi&eagrave;ces jointes');
 ?>
