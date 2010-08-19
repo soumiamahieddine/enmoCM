@@ -216,6 +216,34 @@ class UsergroupControler
 	}
 	
 	/**
+	* Returns the id of the primary group for a given user_id
+	*
+	* @param  $user_id string  User identifier
+	* @return String  group_id or null
+	*/
+	public function getPrimaryGroup($user_id)
+	{		
+		if(empty($user_id))
+			return null;
+
+		$users = array();
+		self::connect();
+		$query = "select group_id from ".self::$usergroup_content_table." where user_id = '".$user_id."' and primary_group = 'Y'";
+
+		try{
+			if($_ENV['DEBUG']){echo $query.' // ';}
+					self::$db->query($query);
+		} catch (Exception $e){
+					echo _NO_USER_WITH_ID.' '.$user_id.' // ';
+		}
+		
+		$res = self::$db->fetch_object();
+		$group_id = $res->group_id;
+		self::disconnect();
+		return $group_id;
+	}
+	
+	/**
 	* Returns in an array all the baskets associated with a usergroup (basket_id only) 
 	*
 	* @param  $group_id string  Usergroup identifier

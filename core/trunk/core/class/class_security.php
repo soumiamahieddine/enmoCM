@@ -40,6 +40,7 @@
 
 //Requires to launch history functions
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."SecurityControler.php");
 require_once("core/where_targets.php");
 
 class security extends dbquery
@@ -64,280 +65,6 @@ class security extends dbquery
 	}
 
 	
-	// TO DO : USE TO CHECK WHERE CLAUSE
-	public function check_where_clause($coll_id, $target, $where_clause)
-	{
-		$res = array('RESULT' => false, 'TXT' => '');
-		
-		if(empty($coll_id) || empty($target) || empty($where))
-		{
-			$res['TXT'] = _ERROR_PARAMETERS_FUNCTION;
-			return $res;
-		}
-		
-		$ind = $this->get_ind_collection($coll_id);
-		$where = " ".$where_clause;
-		$where = str_replace("\\", "", $where);
-		$where = $this->process_security_where_clause($where, $_SESSION['user']['UserId']);
-		
-		$this->connect();
-		
-		if($target == 'ALL' || $target == 'DOC')
-		{
-			$selectWhereTest = array();
-			$selectWhereTest[$_SESSION['collections'][$ind]['view']]= array();
-			array_push($selectWhereTest[$_SESSION['collections'][$ind]['view']],"res_id");
-			$tabResult = array();
-			require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
-			$request = new request();
-			if(str_replace(" ", "", $where) == "")
-			{
-				$where = "";
-			}
-			$where = str_replace("where", " ", $where);
-			$tabResult = $request->select($selectWhereTest, $where, "", $_SESSION['config']['databasetype'], 10, false, "", "", "", true, true);
-					
-			if(!$tabResult )
-			{
-				$res['TXT'] = _SYNTAX_ERROR_WHERE_CLAUSE;
-				return $res;
-			}
-			else
-			{
-				$res['TXT'] = _SYNTAX_OK;
-				$res['RESULT'] = true;
-			}
-		}
-		/// TO DO : définir le nom de la vue
-		if($target == 'ALL' || $target == 'CLASS')
-		{
-			$selectWhereTest = array();
-			$selectWhereTest[_CLASSIFICATION_VIEW]= array();
-			array_push($selectWhereTest[_CLASSIFICATION_VIEW],"agregation_id");
-			$tabResult = array();
-			require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
-			$request = new request();
-			if(str_replace(" ", "", $where) == "")
-			{
-				$where = "";
-			}
-			$where = str_replace("where", " ", $where);
-			$tabResult = $request->select($selectWhereTest, $where, "", $_SESSION['config']['databasetype'], 10, false, "", "", "", true, true);
-					
-			if(!$tabResult )
-			{
-				$res['TXT'] = _SYNTAX_ERROR_WHERE_CLAUSE;
-				return $res;
-			}
-			else
-			{
-				$res['TXT'] = _SYNTAX_OK;
-				$res['RESULT'] = true;
-			}
-		}
-		return $res;
-	}
-
-	/**
-	* Tests the syntax of the where clause of all collections for a  usergroup
-	*
-	* @return bool True if the syntax is correct, False otherwise
-	*/
-	public function where_test()
-	{
-		$_SESSION['error'] = "";
-		$this->connect();
-		$where = "";
-		$res2 = true;
-		for($i=0; $i < count($_SESSION['m_admin']['groups']['security'] ); $i++)
-		{
-			if($_SESSION['m_admin']['groups']['security'][$i] <> "")
-			{
-				if(trim($_SESSION['m_admin']['groups']['security'][$i]['WHERE_CLAUSE']) == '')
-				{
-					$where = " ";
-					$_SESSION['m_admin']['groups']['security'][$i]['WHERE_CLAUSE'] = ' ';
-				}
-				else
-				{
-					$where = " ".$_SESSION['m_admin']['groups']['security'][$i]['WHERE_CLAUSE'] ;
-					$where = str_replace("\\", "", $where);
-					$where = $this->process_security_where_clause($where, $_SESSION['user']['UserId']);
-				}
-				$ind = $this->get_ind_collection($_SESSION['m_admin']['groups']['security'][$i]['COLL_ID']);
-				$selectWhereTest = array();
-				$selectWhereTest[$_SESSION['collections'][$ind]['view']]= array();
-				array_push($selectWhereTest[$_SESSION['collections'][$ind]['view']],"res_id");
-				$tabResult = array();
-				require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
-				$request = new request();
-				if(str_replace(" ", "", $where) == "")
-				{
-					$where = "";
-				}
-				$where = str_replace("where", " ", $where);
-				$tabResult = $request->select($selectWhereTest, $where, "", $_SESSION['config']['databasetype'], 10, false, "", "", "", true, true);
-				
-				if(!$tabResult )
-				{
-					$_SESSION['error'] .= " ".$_SESSION['m_admin']['groups']['security'][$i]['COLL_ID'];
-					$res2 = false;
-					break;
-				}
-			}
-		}
-		return $res2;
-	}
-
-	/**
-	* Loads data related to the user groups (group name, role, primary group or not) into session variables
-	*
-	*/
-	public function load_groups($user_id)
-	{
-		$tab['groups'] = array();
-		$tab['primarygroup'] = '';
-		//$_SESSION['user']['groups'] = array();
-		//$_SESSION['user']['primarygroup'] ="";
-		$this->connect();
-		if($user_id == "superadmin")
-		{
-			$this->query("select group_id from ".$_SESSION['tablename']['usergroups']." where enabled= 'Y'");
-			if($this->nb_result() < 1)
-			{
-				$_SESSION['error'] = _USER_NO_GROUP.'. '._MORE_INFOS." <a href=\"mailto:".$_SESSION['config']['adminmail']."\">".$_SESSION['config']['adminname']."</a>";
-				header("location: ".$_SESSION['config']['businessappurl']."index.php");
-				exit();
-			}
-			else
-			{
-				$i =0;
-				while($line = $this->fetch_object())
-				{
-
-					//$_SESSION['user']['groups'][$i]['GROUP_ID'] = $line->group_id;
-						$tab['groups'][$i]['GROUP_ID'] = $line->group_id;
-					$tab['groups'][$i]['ROLE'] = '';
-					//$_SESSION['user']['groups'][$i]['ROLE'] = '';
-					$i++;
-				}
-			}
-		}
-		else
-		{
-			$this->query("select uc.group_id, uc.primary_group, uc.role from ".$_SESSION['tablename']['usergroup_content']." uc , ".$_SESSION['tablename']['usergroups']." u where uc.user_id ='".$user_id."' and u.group_id = uc.group_id and u.enabled= 'Y'");
-			if($this->nb_result() < 1)
-			{
-				$_SESSION['error'] = _USER_NO_GROUP.'. '._MORE_INFOS." <a href=\"mailto:".$_SESSION['config']['adminmail']."\">".$_SESSION['config']['adminname']."</a>";
-				header("location: ".$_SESSION['config']['businessappurl']."index.php");
-				exit();
-			}
-			else
-			{
-				$i =0;
-				while($line = $this->fetch_object())
-				{
-					//$_SESSION['user']['groups'][$i]['GROUP_ID'] = $line->group_id;
-					$tab['groups'][$i]['GROUP_ID'] = $line->group_id;
-					if($line->primary_group == 'Y')
-					{
-						//$_SESSION['user']['primarygroup'] = $line->group_id;
-						$tab['primarygroup'] = $line->group_id;
-					}
-					//$_SESSION['user']['groups'][$i]['ROLE'] = $line->role;
-					$tab['groups'][$i]['ROLE'] = $line->role;
-					$i++;
-				}
-			}
-		}
-		return $tab;
-	}
-
-	/**
-	* Loads into session, the security parameters corresponding to the user groups.
-	*
-	*/
-	public function load_security($user_id)
-	{
-		$tab['collections'] = array();
-		$tab['security'] = array();
-
-		$this->connect();
-
-		if($user_id == "superadmin")
-		{
-			for($i=0; $i<count($_SESSION['collections']);$i++)
-			{
-				$tab['security'][ $_SESSION['collections'][$i]['id']] = array();
-				foreach(array_keys($_ENV['targets']) as $key)
-				{
-					$tab['security'][ $_SESSION['collections'][$i]['id']][$key] = array('table'  => $_SESSION['collections'][$i]['table'], 'label_coll'  => $_SESSION['collections'][$i]['label'],'view'  => $_SESSION['collections'][$i]['view'], 'where' =>" (1=1) ");			
-				}
-				array_push($tab['collections'], $_SESSION['collections'][$i]['id']);
-			}
-		}
-		else
-		{
-			$this->query("select s.group_id, s.coll_id, s.where_clause, s.where_target, s.mr_start_date, s.mr_stop_date from ".$_SESSION['tablename']['security']." s, ".$_SESSION['tablename']['usergroup_content']." ugc , ".$_SESSION['tablename']['usergroups']." u where ugc.user_id='".$user_id."' and ugc.group_id = s.group_id and ugc.group_id = u.group_id and u.enabled = 'Y' ");
-			
-			while($line = $this->fetch_object())
-			{
-				// TO DO : vérifier les dates
-				$start_date = $line->mr_start_date;
-				$stop_date = $line->mr_stop_date;
-				
-				$target = $line->where_target;
-				$where_clause = $line->where_clause;
-				$where_clause = $this->process_security_where_clause($where_clause, $user_id);
-				$where_clause = str_replace('where', '', $where_clause);
-				$ind = $this->get_ind_collection($line->coll_id);
-				if(trim($where_clause) == "")
-					$where = "-1";
-				else
-					$where =  "( ".$this->show_string($where_clause)." )";
-
-				if( ! in_array($line->coll_id, $tab['collections'] ) )
-				{
-					$tab['security'][ $line->coll_id] = array();
-					
-					if($target == 'ALL')
-					{
-						foreach(array_keys($_ENV['targets']) as $key)
-						{
-							$tab['security'][ $line->coll_id][$key] = array('table'  => $_SESSION['collections'][$ind]['table'], 'label_coll'  => $_SESSION['collections'][$ind]['label'],'view'  => $_SESSION['collections'][$ind]['view'], 'where'  => $where);	
-						}
-					}
-					else
-					{
-						$tab['security'][ $line->coll_id][$target] = array('table'  => $_SESSION['collections'][$ind]['table'], 'label_coll'  => $_SESSION['collections'][$ind]['label'],'view'  => $_SESSION['collections'][$ind]['view'], 'where'  => $where);	
-					}
-					array_push($tab['collections'] , $line->coll_id);	
-				}
-				else
-				{
-
-					if(isset($tab['security'][ $line->coll_id][$target]) && count($tab['security'][ $line->coll_id][$target]) > 0)
-						$tab['security'][ $line->coll_id][$target]['where'] .= " or ".$where;
-					elseif($target == 'ALL')
-					{
-						foreach(array_keys($_ENV['targets']) as $key)
-						{
-							if(isset($tab['security'][ $line->coll_id][$key]) && count($tab['security'][ $line->coll_id][$key]) > 0)
-								$tab['security'][ $line->coll_id][$key]['where'] .= " or ".$where;
-							else
-								$tab['security'][ $line->coll_id][$key] = array('table'  => $_SESSION['collections'][$ind]['table'], 'label_coll'  => $_SESSION['collections'][$ind]['label'],'view'  => $_SESSION['collections'][$ind]['view'], 'where'  => $where);
-						}
-					}
-					else
-					{
-						$tab['security'][ $line->coll_id][$target] = array('table'  => $_SESSION['collections'][$ind]['table'], 'label_coll'  => $_SESSION['collections'][$ind]['label'],'view'  => $_SESSION['collections'][$ind]['view'], 'where'  => $where);	
-					}
-				}
-			}
-		}
-		return $tab;
-	}
-
 	/**
 	* Logs a user
 	*
@@ -346,75 +73,61 @@ class security extends dbquery
 	*/
 	public function login($s_login,$pass, $method = false)
 	{
-		$this->connect();
+		require_once('core/class/UserControler.php');
 		if ($this->test_column($_SESSION['tablename']['users'], 'loginmode')) //Compatibility test, if loginmode column doesn't exists, Maarch can't crash
 		{
 			if ($method == 'activex')
-			{
-				if ($_SESSION['config']['databasetype'] == "POSTGRESQL")
-					$query = "select * from ".$_SESSION['tablename']['users']." where user_id ilike '".$this->protect_string_db($s_login)."' and STATUS <> 'DEL' and loginmode = 'activex'";
-
-				else
-					$query = "select * from ".$_SESSION['tablename']['users']." where user_id like '".$this->protect_string_db($s_login)."'  and STATUS <> 'DEL' and loginmode = 'activex'";
-			}
+				$comp =" and STATUS <> 'DEL' and loginmode = 'activex'";
 			else
-			{
-				if ($_SESSION['config']['databasetype'] == "POSTGRESQL")
-					$query = "select * from ".$_SESSION['tablename']['users']." where user_id ilike '".$this->protect_string_db($s_login)."' and password = '".$pass."' and STATUS <> 'DEL' and loginmode = 'standard'";
-
-				else
-					$query = "select * from ".$_SESSION['tablename']['users']." where user_id like '".$this->protect_string_db($s_login)."' and password = '".$pass."' and STATUS <> 'DEL' and loginmode = 'standard'";
-			}
+				$comp = " and password = '".$pass."' and STATUS <> 'DEL' and loginmode = 'standard'";
 		}
 		else
+			$comp = " and password = '".$pass."' and STATUS <> 'DEL'";
+			
+		$user = UserControler::get($s_login, $comp);
+	
+		if(isset($user))
 		{
-			if ($_SESSION['config']['databasetype'] == "POSTGRESQL")
-				$query = "select * from ".$_SESSION['tablename']['users']." where user_id ilike '".$this->protect_string_db($s_login)."' and password = '".$pass."' and STATUS <> 'DEL'";
-			else
-				$query = "select * from ".$_SESSION['tablename']['users']." where user_id like '".$this->protect_string_db($s_login)."' and password = '".$pass."' and STATUS <> 'DEL'";
-		}
-		$this->query($query);
-		//$this->show();
-		if($this->nb_result() > 0)
-		{
-			$line = $this->fetch_object();
-			if($line->enabled == "Y")
+			if($user->__get('enabled') == "Y")
 			{
-				$_SESSION['user']['change_pass'] = $line->change_password;
-				$_SESSION['user']['UserId'] = $line->user_id;
-				$_SESSION['user']['FirstName'] = $line->firstname;
-				$_SESSION['user']['LastName'] = $line->lastname;
-				$_SESSION['user']['Phone'] = $line->phone;
-				$_SESSION['user']['Mail'] = $line->mail;
-				$_SESSION['user']['department'] = $line->department;
+				require_once("core/class/UsergroupControler.php");
+				require_once("core/class/ServiceControler.php");
+				$_SESSION['user']['change_pass'] = $user->__get('change_password');
+				$_SESSION['user']['UserId'] = $user->__get('user_id');
+				$_SESSION['user']['FirstName'] = $user->__get('firstname');
+				$_SESSION['user']['LastName'] = $user->__get('lastname');
+				$_SESSION['user']['Phone'] = $user->__get('phone');
+				$_SESSION['user']['Mail'] = $user->__get('mail');
+				$_SESSION['user']['department'] = $user->__get('department');
 				$_SESSION['error'] =  "";
-				setcookie("maarch", "UserId=".$_SESSION['user']['UserId']."&key=".$line->cookie_key,time()-3600000);
+				setcookie("maarch", "UserId=".$_SESSION['user']['UserId']."&key=".$user->__get('cookie_key'),time()-3600000);
 				$key = md5(time()."%".$_SESSION['user']['FirstName']."%".$_SESSION['user']['UserId']."%".$_SESSION['user']['UserId']."%".date("dmYHmi")."%");
 
+				$user->__set('cookie_key', functions::protect_string_db($key));
 				if ($_SESSION['config']['databasetype'] == "ORACLE")
-					$this->query("update ".$_SESSION['tablename']['users']." set cookie_key = '".$key."', cookie_date = SYSDATE where user_id = '".$_SESSION['user']['UserId']."' and mail = '".$_SESSION['user']['Mail']."'");
+					$user->__set('cookie_date', 'SYSDATE');
 				else
-					$this->query("update ".$_SESSION['tablename']['users']." set cookie_key = '".$key."', cookie_date = '".date("Y-m-d")." ".date("H:m:i")."' where user_id = '".$_SESSION['user']['UserId']."' and mail = '".$_SESSION['user']['Mail']."'");
+					$user->__set('cookie_date',date("Y-m-d")." ".date("H:m:i"));
 
+				UserControler::save($user, 'up');
 				setcookie("maarch", "UserId=".$_SESSION['user']['UserId']."&key=".$key,time()+($_SESSION['config']['cookietime']*1000));
-				$tmp = $this->load_groups($_SESSION['user']['UserId']);
-				$_SESSION['user']['groups'] = $tmp['groups'];
-				$_SESSION['user']['primarygroup'] = $tmp['primarygroup'];
-				$tmp = $this->load_security($_SESSION['user']['UserId']);
+				
+				$_SESSION['user']['primarygroup'] = UsergroupControler::getPrimaryGroup($_SESSION['user']['UserId']);
+				$tmp = SecurityControler::load_security($_SESSION['user']['UserId']);
 				$_SESSION['user']['collections'] = $tmp['collections'];
 				$_SESSION['user']['security'] = $tmp['security'];
-				$this->load_enabled_services();
+				
+				ServiceControler::loadEnabledServices();
 				require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
 				$business_app_tools = new business_app_tools();
 				$core_tools = new core_tools();
 				$business_app_tools->load_app_var_session();
 				$core_tools->load_var_session($_SESSION['modules']);
-				$_SESSION['user']['services'] = $this->load_user_services($_SESSION['user']['UserId']);
+				$_SESSION['user']['services'] = ServiceControler::loadUserServices($_SESSION['user']['UserId']);
 				$core_tools->load_menu($_SESSION['modules']);
 
 				if($_SESSION['history']['userlogin'] == "true")
 				{
-					require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 					//add new instance in history table for the user's connexion
 					$hist = new history();
 					$ip = $_SERVER['REMOTE_ADDR'];
@@ -465,38 +178,43 @@ class security extends dbquery
 	public function reopen($s_UserId,$s_key)
 	{
 		$this->connect();
+		
+		$comp = " and cookie_key = '".$s_key."' and STATUS <> 'DEL'";
 
-		if ($_SESSION['config']['databasetype'] == "POSTGRESQL")
-			$query = "select * from ".$_SESSION['tablename']['users']." where user_id ilike '".$this->protect_string_db($s_UserId)."' and cookie_key = '".$s_key."' and STATUS <> 'DEL'";
-		else
-			$query = "select * from ".$_SESSION['tablename']['users']." where user_id like '".$this->protect_string_db($s_UserId)."' and cookie_key = '".$s_key."' and STATUS <> 'DEL'";
-
-		$this->query($query);
-		if($this->nb_result() > 0)
+		$user = UserControler::get($s_login, $comp);
+	
+		if(isset($user))
 		{
-			$line = $this->fetch_object();
-			if($line->enabled == "Y")
+			if($user->__get('enabled')  == "Y")
 			{
-				$_SESSION['user']['UserId'] = $line->user_id;
-				$_SESSION['user']['FirstName'] = $line->firstname;
-				$_SESSION['user']['LastName'] = $line->lastname;
-				$_SESSION['user']['Phone'] = $line->phone;
-				$_SESSION['user']['Mail'] = $line->mail;
-				$_SESSION['user']['department'] = $line->department;
+				require_once("core/class/UsergroupControler.php");
+				require_once("core/class/ServiceControler.php");
+				$_SESSION['user']['change_pass'] = $user->__get('change_password');
+				$_SESSION['user']['UserId'] = $user->__get('user_id');
+				$_SESSION['user']['FirstName'] = $user->__get('firstname');
+				$_SESSION['user']['LastName'] = $user->__get('lastname');
+				$_SESSION['user']['Phone'] = $user->__get('phone');
+				$_SESSION['user']['Mail'] = $user->__get('mail');
+				$_SESSION['user']['department'] = $user->__get('department');
 				$_SESSION['error'] =  "";
 				setcookie("maarch", "UserId=".$_SESSION['user']['UserId']."&key=".$line->cookie_key,time()-3600000);
 				$key = md5(time()."%".$_SESSION['user']['FirstName']."%".$_SESSION['user']['UserId']."%".$_SESSION['user']['UserId']."%".date("dmYHmi")."%");
-				$this->query("update ".$_SESSION['tablename']['users']." set cookie_key = '".$key."', cookie_date = '".date("Y-m-d")." ".date("H:m:i")."' where user_id = '".$_SESSION['user']['UserId']."' and mail = '".$_SESSION['user']['Mail']."'");
+				
+				$user->__set('cookie_key', functions::protect_string_db($key));
+				if ($_SESSION['config']['databasetype'] == "ORACLE")
+					$user->__set('cookie_date', 'SYSDATE');
+				else
+					$user->__set('cookie_date',date("Y-m-d")." ".date("H:m:i"));
+
+				UserControler::save($user, 'up');
 				setcookie("maarch", "UserId=".$_SESSION['user']['UserId']."&key=".$key,time()+($_SESSION['config']['cookietime']*60));
 
-				$tmp = $this->load_groups($_SESSION['user']['UserId']);
-				$_SESSION['user']['groups'] = $tmp['groups'];
-				$_SESSION['user']['primarygroup'] = $tmp['primarygroup'];
-
-				$tmp = $this->load_security($_SESSION['user']['UserId']);
+				$_SESSION['user']['primarygroup'] = UsergroupControler::getPrimaryGroup($_SESSION['user']['UserId']);
+				
+				$tmp = SecurityControler::load_security($_SESSION['user']['UserId']);
 				$_SESSION['user']['collections'] = $tmp['collections'];
 				$_SESSION['user']['security'] = $tmp['security'];
-				$this->load_enabled_services();
+				ServiceControler::loadEnabledServices();
 
 				require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
 			
@@ -505,7 +223,7 @@ class security extends dbquery
 				$business_app_tools->load_app_var_session();
 				$core_tools->load_var_session($_SESSION['modules']);
 
-				$_SESSION['user']['services'] = $this->load_user_services($_SESSION['user']['UserId']);
+				$_SESSION['user']['services'] = ServiceControler::loadUserServices($_SESSION['user']['UserId']);
 				$core_tools->load_menu($_SESSION['modules']);
 /*
 				if($_SESSION['history']['userlogin'] == "true")
@@ -552,116 +270,6 @@ class security extends dbquery
 			header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&page=login&coreurl=".$_SESSION['config']['coreurl']);
 			exit();
 		}
-	}
-
-	/**
-	* Loads the enabled services into session
-	*
-	*/
-	private function load_enabled_services()
-	{
-		$_SESSION['enabled_services'] = array();
-		for($i=0; $i<count($_SESSION['app_services']);$i++)
-		{
-			if($_SESSION['app_services'][$i]['enabled'] == "true")
-			{
-				array_push($_SESSION['enabled_services'], array('id' => $_SESSION['app_services'][$i]['id'], 'label' => $_SESSION['app_services'][$i]['name'], 'comment' =>$_SESSION['app_services'][$i]['comment'], 'type' => $_SESSION['app_services'][$i]['servicetype'],'parent' => 'application', 'system' => $_SESSION['app_services'][$i]['system_service']));
-			}
-		}
-		foreach(array_keys($_SESSION['modules_services']) as $value)
-		{
-			for($i=0; $i < count($_SESSION['modules_services'][$value]); $i++)
-			{
-				if($_SESSION['modules_services'][$value][$i]['enabled'] == "true")
-				{
-					array_push($_SESSION['enabled_services'], array('id' => $_SESSION['modules_services'][$value][$i]['id'], 'label' => $_SESSION['modules_services'][$value][$i]['name'], 'comment' => $_SESSION['modules_services'][$value][$i]['comment'], 'type' => $_SESSION['modules_services'][$value][$i]['servicetype'],'parent' => $value, 'system' =>$_SESSION['modules_services']['system_service'] ));
-				}
-			}
-		}
-	}
-
-	/**
-	* Loads into database the services for a user group
-	*
-	* @param  $services array Array os services
-	* @param  $group string User group identifier
-	*/
-	public function load_services_db($services, $group)
-	{
-		$this->connect();
-		$this->query("delete from ".$_SESSION['tablename']['usergroup_services']." where group_id = '".$group."'");
-		for($i=0; $i<count($services);$i++)
-		{
-			$this->query("insert into ".$_SESSION['tablename']['usergroup_services']." values ('".$group."', '".$services[$i]."')");
-		}
-	}
-
-	/**
-	* Loads into session all the services for the superadmin
-	*
-	*/
-	private function get_all_services()
-	{
-		$services = array();
-		for($i=0; $i< count($_SESSION['enabled_services']);$i++)
-		{
-		//	$_SESSION['user']['services'][$_SESSION['enabled_services'][$i]['id']] = true;
-			$services[$_SESSION['enabled_services'][$i]['id']] = true;
-		}
-		return $services;
-	}
-
-	/**
-	* Loads into session all the services for a user
-	*
-	* @param  $user_id  string User identifier
-	*/
-	public function load_user_services($user_id)
-	{
-		$services = array();
-		if($user_id == "superadmin")
-		{
-			$services = $this->get_all_services();
-		}
-		else
-		{
-			//$_SESSION['user']['services'] = array();
-			require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."UsergroupControler.php");
-			
-			for($i=0; $i< count($_SESSION['enabled_services']);$i++)
-			{
-				if($_SESSION['enabled_services'][$i]['system'] == true)
-				{
-					//$_SESSION['user']['services'][$_SESSION['enabled_services'][$i]['id']] = true;
-					$services[$_SESSION['enabled_services'][$i]['id']] = true;
-				}
-				else
-				{
-					$this->connect();
-					$this->query("select group_id from ".$_SESSION['tablename']['usergroup_services']." where service_id = '".$_SESSION['enabled_services'][$i]['id']."'");
-					$find = false;
-					while($res = $this->fetch_object())
-					{
-						if(UsergroupControler::inGroup($user_id, $res->group_id) == true)
-						{
-							$find = true;
-							break;
-						}
-					}
-					if($find == true)
-					{
-						//$_SESSION['user']['services'][$_SESSION['enabled_services'][$i]['id']] = true;
-						$services[$_SESSION['enabled_services'][$i]['id']] = true;
-					}
-					else
-					{
-						//$_SESSION['user']['services'][$_SESSION['enabled_services'][$i]['id']] = false;
-						$services[$_SESSION['enabled_services'][$i]['id']] = false;
-					}
-				}
-			}
-		}
-		return $services;
 	}
 
 	/******************* COLLECTION MANAGEMENT FUNCTIONS *******************/
@@ -874,18 +482,10 @@ class security extends dbquery
 	* @param  $table  string Tablename
 	* @return string Collection identifier or empty string if not found
 	*/
+/*
 	public function retrieve_user_coll_id($table)
 	{
 
-/*
-		for($i=0; $i<count($_SESSION['user']['security']);$i++)
-		{
-			if($_SESSION['user']['security'][$i]['table'] == $table)
-			{
-				return $_SESSION['user']['security'][$i]['coll_id'];
-			}
-		}
-*/
 		foreach(array_keys($_SESSION['user']['security']) as $coll_id)
 		{
 			if($_SESSION['user']['security'][$coll_id]['DOC']['table'] == $table)
@@ -895,6 +495,7 @@ class security extends dbquery
 		}
 		return false;
 	}
+*/
 
 
 //////////////////////// A REFAIRE
@@ -952,15 +553,6 @@ class security extends dbquery
 		{
 			return $_SESSION['user']['security'][$coll_id]['DOC']['where'];
 		}
-/*
-		for($i=0; $i < count($_SESSION['user']['security']);$i++)
-		{
-			if($_SESSION['user']['security'][$i]['coll_id'] == $coll_id)
-			{
-				return $_SESSION['user']['security'][$i]['where'];
-			}
-		}
-*/
 		return '';
 	}
 
@@ -979,15 +571,6 @@ class security extends dbquery
 				return $_SESSION['user']['security'][$coll_id]['DOC']['where'];
 			}
 		}
-/*
-		for($i=0; $i < count($_SESSION['user']['security']);$i++)
-		{
-			if($_SESSION['user']['security'][$i]['view'] == $view)
-			{
-				return $_SESSION['user']['security'][$i]['where'];
-			}
-		}
-*/
 		return '';
 	}
 
@@ -1006,109 +589,8 @@ class security extends dbquery
 				return $_SESSION['user']['security'][$coll_id]['DOC']['where'];
 			}
 		}
-/*
-		for($i=0; $i<count($_SESSION['user']['security']);$i++)
-		{
-			if($_SESSION['user']['security'][$i]['view'] == $view)
-			{
-				return $_SESSION['user']['security'][$i]['table'];
-			}
-		}
-*/
 		return false;
 	}
-
-	/***************DO NOT USE THESE FUNCTIONS : DEPRECATED****************/
-	/**
-	* Returns the collection view for the current user from the collection identifier (using $_SESSION['user']['security'])
-	*
-	* @param  $coll_id  string Collection identifier
-	* @return string View name or False if not found
-	*/
-	public function retrieve_user_view_from_coll_id($coll_id)
-	{
-		for($i=0; $i<count($_SESSION['user']['security']);$i++)
-		{
-			if($_SESSION['user']['security'][$i]['coll_id'] == $coll_id)
-			{
-				return $_SESSION['user']['security'][$i]['view'];
-			}
-		}
-		return false;
-	}
-
-	/**
-	* Returns the collection view for the current user from the collection table (using $_SESSION['user']['security'])
-	*
-	* @param  $table  string Table name
-	* @return string View name or False if not found
-	*/
-	public function retrieve_user_view_from_table($table)
-	{
-		for($i=0; $i<count($_SESSION['user']['security']);$i++)
-		{
-			if($_SESSION['user']['security'][$i]['table'] == $table)
-			{
-				return $_SESSION['user']['security'][$i]['view'];
-			}
-		}
-		return false;
-	}
-
-	/**
-	* Returns the collection table for the current user from the collection identifier (using $_SESSION['user']['security'])
-	*
-	* @param  $coll_id  string Collection identifier
-	* @return string Table name or False if not found
-	*/
-	public function retrieve_user_coll_table2($coll_id)
-	{
-		for($i=0; $i<count($_SESSION['user']['security']);$i++)
-		{
-			if($_SESSION['user']['security'][$i]['coll_id'] == $coll_id)
-			{
-				return $_SESSION['user']['security'][$i]['table'];
-			}
-		}
-		return false;
-	}
-
-	/**
-	* Returns the collection label for the current user from the collection table (using $_SESSION['user']['security'])
-	*
-	* @param  $table  string Table name
-	* @return string Collection label or False if not found
-	*/
-	public function retrieve_user_coll_label($table)
-	{
-		for($i=0; $i<count($_SESSION['user']['security']);$i++)
-		{
-			if($_SESSION['user']['security'][$i]['table'] == $table)
-			{
-				return $_SESSION['user']['security'][$i]['label_coll'];
-			}
-		}
-		return false;
-	}
-
-	/**
-	* Returns the collection label for the current user from the collection identifier (using $_SESSION['user']['security'])
-	*
-	* @param  $coll_id  string Collection identifier
-	* @return string Collection label or False if not found
-	*/
-	public function retrieve_user_coll_label2($coll_id)
-	{
-		for($i=0; $i<count($_SESSION['user']['security']);$i++)
-		{
-			if($_SESSION['user']['security'][$i]['coll_id'] == $coll_id)
-			{
-				return $_SESSION['user']['security'][$i]['label_coll'];
-			}
-		}
-		return false;
-	}
-	/*********************************************/
 
 	/**
 	* Checks the right on the document of a collection for the current user
@@ -1147,70 +629,6 @@ class security extends dbquery
 		{
 			return true;
 		}
-	}
-
-	/**
-	* Process a where clause, using the process_where_clause methods of the modules, the core and the apps
-	*
-	* @param  $where_clause string Where clause to process
-	* @param  $user_id string User identifier
-	* @return string Proper where clause
-	*/
-	public function process_security_where_clause($where_clause, $user_id)
-	{
-		if(!empty($where_clause))
-		{
-			$where = ' where '.$where_clause;
-
-			// Process with the core vars
-			$where = $this->process_where_clause($where, $user_id);
-	
-			require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
-			// Process with the modules vars
-			foreach(array_keys($_SESSION['modules_loaded']) as $key)
-			{
-				$path_module_tools = $_SESSION['modules_loaded'][$key]['path']."class".DIRECTORY_SEPARATOR."class_modules_tools.php";
-				require_once($path_module_tools);
-				$object = new $key;
-				if(method_exists($object, 'process_where_clause'))
-				{
-					$where = $object->process_where_clause($where, $user_id);
-				}
-			}
-			$where = preg_replace('/, ,/', ',', $where);
-			$where = preg_replace('/\( ?,/', '(', $where);
-			$where = preg_replace('/, ?\)/', ')', $where);
-
-			// Process with the apps vars
-			require_once('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_business_app_tools.php');
-			$object = new business_app_tools();
-			if(method_exists($object, 'process_where_clause'))
-			{
-				$where = $object->process_where_clause($where, $user_id);
-			}
-			return $where;
-		}
-		else
-		{
-			return '';
-		}
-	}
-
-	/**
-	* Process a where clause with the core specific vars
-	*
-	* @param  $where_clause string Where clause to process
-	* @param  $user_id string User identifier
-	* @return string Proper where clause
-	*/
-	public function process_where_clause($where_clause, $user_id)
-	{
-		$where = $where_clause;
-		if(preg_match('/@user/', $where_clause))
-		{
-			$where = str_replace("@user","'".trim($user_id)."'", $where_clause);
-		}
-		return $where;
 	}
 }
 ?>

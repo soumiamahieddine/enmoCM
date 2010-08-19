@@ -96,10 +96,11 @@ class UserControler
 	* Returns an User Object based on a user identifier
 	*
 	* @param  $user_id string  User identifier
+	* @param  $comp_where string  where clause arguments (must begin with and or or)
 	* @param  $can_be_disabled bool  if true gets the user even if it is disabled in the database (false by default)
 	* @return User object with properties from the database or null
 	*/
-	public function get($user_id, $can_be_disabled = false)
+	public function get($user_id, $comp_where = '', $can_be_disabled = false)
 	{
 		if(empty($user_id))
 			return null;
@@ -108,6 +109,7 @@ class UserControler
 		$query = "select * from ".self::$users_table." where user_id = '".functions::protect_string_db($user_id)."'";
 		if(!$can_be_disabled)
 			$query .= " and enabled = 'Y'";
+		$query .= $comp_where;
 		
 		try{
 			if($_ENV['DEBUG']){echo $query.' // ';}

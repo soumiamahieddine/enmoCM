@@ -300,16 +300,24 @@ class dbquery extends functions
 		elseif($this->databasetype == "MYSQL"){
 			return true;
 		}
-		elseif($this->databasetype == "POSTGRESQL"){
+		elseif($this->databasetype == "POSTGRESQL")
+		{
+			$this->connect();
 			$this->query("select column_name from information_schema.columns where table_name = '".$table."' and column_name = '".$field."'");
-			if ($this->nb_result() > 0)
+			$res = $this->nb_result();
+			$this->disconnect();
+			if ($res > 0)
 				return true;
 			else
 				return false;
 		}
-		elseif($this->databasetype == "ORACLE"){
+		elseif($this->databasetype == "ORACLE")
+		{
+			$this->connect();
 			$this->query("SELECT * from USER_TAB_COLUMNS where TABLE_NAME = '".$table."' AND COLUMN_NAME = '".$field."'");
-			if ($this->nb_result() > 0)
+			$res = $this->nb_result();
+			$this->disconnect();
+			if ($res > 0)
 				return true;
 			else
 				return false;

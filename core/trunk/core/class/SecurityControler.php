@@ -40,7 +40,7 @@ define("_CODE_INCREMENT",1);
 // Loads the required class
 try {
 	require_once("core/class/class_db.php");
-	require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
+	require_once("core/class/UserControler.php");
 	require_once("core/class/Security.php");
 } catch (Exception $e){
 	echo $e->getMessage().' // ';
@@ -189,7 +189,7 @@ class SecurityControler
 	/**
 	* Inserts in the database (security table) a Security object
 	*
-	* @param  $security Security object
+	* @param  $security Security objectgetAccessForGroup($group_id)
 	* @return bool true if the insertion is complete, false otherwise
 	*/
 	private function insert($security)
@@ -342,8 +342,9 @@ class SecurityControler
 		return array('COLUMNS' => implode(",",$columns), 'VALUES' => implode(",",$values));
 	}
 	
+
 	// TO DO : USE TO CHECK WHERE CLAUSE
-	public function check_where_clause($coll_id, $target, $where_clause, $user_id)
+	public function check_where_clause($coll_id, $target, $where_clause, $view, $user_id)
 	{
 		$res = array('RESULT' => false, 'TXT' => '');
 		
@@ -355,62 +356,31 @@ class SecurityControler
 		
 		$where = " ".$where_clause;
 		$where = str_replace("\\", "", $where);
-		$where = Security::process_security_where_clause($where, $user_id);
-		
-		$this->connect();
+		$where = self::process_security_where_clause($where, $user_id);
+		if(str_replace(" ", "", $where) == "")
+		{
+			$where = "";
+		}
+		$where = str_replace("where", " ", $where);
+		self::connect();
 		
 		if($target == 'ALL' || $target == 'DOC')
-		{
-			$selectWhereTest = array();
-			$selectWhereTest[$_SESSION['collections'][$coll_id]['view']]= array();
-			array_push($selectWhereTest[$_SESSION['collections'][$coll_id]['view']],"res_id");
-			$tabResult = array();
-			
-			$request = new request();
-			if(str_replace(" ", "", $where) == "")
-			{
-				$where = "";
-			}
-			$where = str_replace("where", " ", $where);
-			$tabResult = $request->select($selectWhereTest, $where, "", $_SESSION['config']['databasetype'], 10, false, "", "", "", true, true);
-					
-			if(!$tabResult )
-			{
-				$res['TXT'] = _SYNTAX_ERROR_WHERE_CLAUSE;
-				return $res;
-			}
-			else
-			{
-				$res['TXT'] = _SYNTAX_OK;
-				$res['RESULT'] = true;
-			}
-		}
-		/// TO DO : définir le nom de la vue
+			$query = "select res_id from ".$view." where  ".$where;
 		if($target == 'ALL' || $target == 'CLASS')
+			$query = "select mr_aggregation_id from ".$view." where  ".$where;
+
+		$ok = self::$db->query($query, true);
+		if(!$ok )
 		{
-			$selectWhereTest = array();
-			$selectWhereTest[_CLASSIFICATION_VIEW]= array();
-			array_push($selectWhereTest[_CLASSIFICATION_VIEW],"agregation_id");
-			$tabResult = array();
-			$request = new request();
-			if(str_replace(" ", "", $where) == "")
-			{
-				$where = "";
-			}
-			$where = str_replace("where", " ", $where);
-			$tabResult = $request->select($selectWhereTest, $where, "", $_SESSION['config']['databasetype'], 10, false, "", "", "", true, true);
-					
-			if(!$tabResult )
-			{
-				$res['TXT'] = _SYNTAX_ERROR_WHERE_CLAUSE;
-				return $res;
-			}
-			else
-			{
-				$res['TXT'] = _SYNTAX_OK;
-				$res['RESULT'] = true;
-			}
+			$res['TXT'] = _SYNTAX_ERROR_WHERE_CLAUSE;
+			return $res;
 		}
+		else
+		{
+			$res['TXT'] = _SYNTAX_OK;
+			$res['RESULT'] = true;
+		}
+		self::disconnect();
 		return $res;
 	}
 	
@@ -428,8 +398,8 @@ class SecurityControler
 			$where = ' where '.$where_clause;
 
 			// Process with the core vars
-			$where = $this->process_where_clause($where, $user_id);
-
+			$where = self::process_where_clause($where, $user_id);
+	
 			// Process with the modules vars
 			foreach(array_keys($_SESSION['modules_loaded']) as $key)
 			{
@@ -476,5 +446,121 @@ class SecurityControler
 		}
 		return $where;
 	}
+	
+	/**
+	* Loads into session, the security parameters corresponding to the user groups.
+	*
+	* @param  $user_id string User Identifier
+	*/
+	public function load_security($user_id)
+	{
+		$tab['collections'] = array();
+		$tab['security'] = array();
+
+		self::connect();
+
+		if($user_id == "superadmin")
+		{
+			for($i=0; $i<count($_SESSION['collections']);$i++)
+			{
+				$tab['security'][ $_SESSION['collections'][$i]['id']] = array();
+				foreach(array_keys($_ENV['targets']) as $key)
+				{
+					$tab['security'][ $_SESSION['collections'][$i]['id']][$key] = array('table'  => $_SESSION['collections'][$i]['table'], 'label_coll'  => $_SESSION['collections'][$i]['label'],'view'  => $_SESSION['collections'][$i]['view'], 'where' =>" (1=1) ");			
+				}
+				array_push($tab['collections'], $_SESSION['collections'][$i]['id']);
+			}
+		}
+		else
+		{
+			$groups = UserControler::getGroups($user_id);
+
+			$access = array();
+			for($i=0; $i<count($groups); $i++)
+			{
+				$tmp = self::getAccessForGroup($groups[$i]['GROUP_ID']);
+				for($j=0; $j<count($tmp);$j++)
+				{
+					array_push($access, $tmp[$j]);
+				}
+			}
+			for($i=0; $i<count($access); $i++)
+			{
+				// TO DO : vérifier les dates
+				$start_date = $access[$i]->__get('mr_start_date');
+				$stop_date = $access[$i]->__get('mr_stop_date');
+				
+				$target = $access[$i]->__get('where_target');
+				$coll_id = $access[$i]->__get('coll_id');
+				$where_clause = $access[$i]->__get('where_clause');
+				$where_clause = self::process_security_where_clause($where_clause, $user_id);
+				$where_clause = str_replace('where', '', $where_clause);
+				
+				$ind = self::get_ind_collection($coll_id);
+				
+				if(trim($where_clause) == "")
+					$where = "-1";
+				else
+					$where =  "( ".$this->show_string($where_clause)." )";
+					
+				if( ! in_array($coll_id, $tab['collections'] ) )
+				{
+					$tab['security'][$coll_id] = array();
+					
+					if($target == 'ALL')
+					{
+						foreach(array_keys($_ENV['targets']) as $key)
+						{
+							$tab['security'][$coll_id][$key] = array('table'  => $_SESSION['collections'][$ind]['table'], 'label_coll'  => $_SESSION['collections'][$ind]['label'],'view'  => $_SESSION['collections'][$ind]['view'], 'where'  => $where);	
+						}
+					}
+					else
+					{
+						$tab['security'][$coll_id][$target] = array('table'  => $_SESSION['collections'][$ind]['table'], 'label_coll'  => $_SESSION['collections'][$ind]['label'],'view'  => $_SESSION['collections'][$ind]['view'], 'where'  => $where);	
+					}
+					array_push($tab['collections'] ,$coll_id);	
+				}
+				else
+				{
+					if(isset($tab['security'][$coll_id][$target]) && count($tab['security'][$coll_id][$target]) > 0)
+						$tab['security'][ $coll_id][$target]['where'] .= " or ".$where;
+					elseif($target == 'ALL')
+					{
+						foreach(array_keys($_ENV['targets']) as $key)
+						{
+							if(isset($tab['security'][$coll_id][$key]) && count($tab['security'][$coll_id][$key]) > 0)
+								$tab['security'][$coll_id][$key]['where'] .= " or ".$where;
+							else
+								$tab['security'][$coll_id][$key] = array('table'  => $_SESSION['collections'][$ind]['table'], 'label_coll'  => $_SESSION['collections'][$ind]['label'],'view'  => $_SESSION['collections'][$ind]['view'], 'where'  => $where);
+						}
+					}
+					else
+					{
+						$tab['security'][$coll_id][$target] = array('table'  => $_SESSION['collections'][$ind]['table'], 'label_coll'  => $_SESSION['collections'][$ind]['label'],'view'  => $_SESSION['collections'][$ind]['view'], 'where'  => $where);	
+					}
+				}
+			}
+		}
+		return $tab;
+	}
+
+	/**
+	* Gets the indice of the collection in the  $_SESSION['collections'] array
+	*
+	* @param  $coll_id string  Collection identifier
+	* @return integer Indice of the collection in the $_SESSION['collections'] or -1 if not found
+	*/
+	public function get_ind_collection($coll_id)
+	{
+		for($i=0;$i< count($_SESSION['collections']); $i++)
+		{
+			if(trim($_SESSION['collections'][$i]['id']) == trim($coll_id))
+			{
+				return $i;
+			}
+		}
+		return -1;
+	}
+
 }
 ?>
