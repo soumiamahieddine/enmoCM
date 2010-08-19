@@ -222,13 +222,13 @@ $arr_tmp2 = array('label' => _PRIORITY, 'type' => 'select_simple', 'param' => ar
 $param['priority'] = $arr_tmp2;
 
 // dest
-$arr_tmp2 = array('label' => _DEST, 'type' => 'input_text', 'param' => array('field_label' => _DEST, 'other' => $size));
+/*$arr_tmp2 = array('label' => _DEST, 'type' => 'input_text', 'param' => array('field_label' => _DEST, 'other' => $size));
 $param['dest'] = $arr_tmp2;
 
 //shipper
 $arr_tmp2 = array('label' => _SHIPPER, 'type' => 'input_text', 'param' => array('field_label' => _SHIPPER, 'other' => $size));
 $param['shipper'] = $arr_tmp2;
-
+*/
 if($_SESSION['features']['search_notes'] == 'true')
 {
 	//annotations
@@ -484,35 +484,45 @@ if(isset($_REQUEST['nodetails']))
     	<td >
 		<div class="block">
 			<table border = "0" width="100%">
-			<tr>
-				<td width="70%"><label for="subject" class="bold" ><?php echo _MAIL_OBJECT;?>:</label>
-					<input type="text" name="subject" id="subject" <?php echo $size; ?>  />
-					<input type="hidden" name="meta[]" value="subject#subject#input_text" />
-				</td>
-				<td><em><?php echo _MAIL_OBJECT_HELP; ?></em></td>
-			</tr>
-			<tr>
-				<td width="70%"><label for="fulltext" class="bold" ><?php echo _FULLTEXT;?>:</label>
-					<input type="text" name="fulltext" id="fulltext" <?php echo $size; ?>  />
-					<input type="hidden" name="meta[]" value="fulltext#fulltext#input_text" />
-				</td>
-				<td><em><?php echo _FULLTEXT_HELP; ?></em></td>
-			</tr>
-			<tr>
-			<td width="70%"><label for="numged" class="bold"><?php echo _N_GED;?>:</label>
-				<input type="text" name="numged" id="numged" <?php echo $size; ?>  />
-				<input type="hidden" name="meta[]" value="numged#numged#input_text" />
-				</td>
-				<td><em><?php echo _N_GED_HELP; ?></em></td>
-			</tr>
-			<tr>
-				<td width="70%"><label for="multifield" class="bold" ><?php echo _MULTI_FIELD;?>:</label>
-					<input type="text" name="multifield" id="multifield" <?php echo $size; ?>  />
-					<input type="hidden" name="meta[]" value="multifield#multifield#input_text" />
-				</td>
-				<td><em><?php echo _MULTI_FIELD_HELP; ?></em></td>
-			</tr>
-
+				<tr>
+					<td width="70%"><label for="subject" class="bold" ><?php echo _MAIL_OBJECT;?>:</label>
+						<input type="text" name="subject" id="subject" <?php echo $size; ?>  />
+						<input type="hidden" name="meta[]" value="subject#subject#input_text" />
+					</td>
+					<td><em><?php echo _MAIL_OBJECT_HELP; ?></em></td>
+				</tr>
+				<tr>
+					<td width="70%"><label for="fulltext" class="bold" ><?php echo _FULLTEXT;?>:</label>
+						<input type="text" name="fulltext" id="fulltext" <?php echo $size; ?>  />
+						<input type="hidden" name="meta[]" value="fulltext#fulltext#input_text" />
+					</td>
+					<td><em><?php echo _FULLTEXT_HELP; ?></em></td>
+				</tr>
+				<tr>
+					<td width="70%"><label for="numged" class="bold"><?php echo _N_GED;?>:</label>
+						<input type="text" name="numged" id="numged" <?php echo $size; ?>  />
+						<input type="hidden" name="meta[]" value="numged#numged#input_text" />
+					</td>
+					<td><em><?php echo _N_GED_HELP; ?></em></td>
+				</tr>
+				<tr>
+					<td width="70%"><label for="multifield" class="bold" ><?php echo _MULTI_FIELD;?>:</label>
+						<input type="text" name="multifield" id="multifield" <?php echo $size; ?>  />
+						<input type="hidden" name="meta[]" value="multifield#multifield#input_text" />
+					</td>
+					<td><em><?php echo _MULTI_FIELD_HELP; ?></em></td>
+				</tr>
+				<tr>
+					<td width="70%"><label for="contactid" class="bold"><?php echo _CONTACT;?>:</label>
+						<input type="text" name="contactid" id="contactid" />
+						<input type="hidden" name="meta[]" value="contactid#contactid#input_text" />
+						<div id="contactListByName" class="autocomplete"></div>
+						<script type="text/javascript">
+							initList('contactid', 'contactListByName', '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=contact_list_by_name', 'what', '2');
+						</script>
+					</td>
+					<td><em><?php echo ""; ?></em></td>
+				</tr>
 			</table>
 			</div>
 			<div class="block_end">&nbsp;</div>

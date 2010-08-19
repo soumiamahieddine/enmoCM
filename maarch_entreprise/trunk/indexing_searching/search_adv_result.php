@@ -87,7 +87,7 @@ $json_txt = '{';
     [5] => doc_date#doc_date_from,doc_date_to#date_range
 )
 **/
-//$func->show_array($_REQUEST['meta']);
+//$func->show_array($_REQUEST['meta']);exit;
 if(count($_REQUEST['meta']) > 0)
 {
 	//Verif for parms sended by url
@@ -103,8 +103,9 @@ if(count($_REQUEST['meta']) > 0)
 	}
 	$opt_indexes = array();
 	$_SESSION['meta_search'] = $_REQUEST['meta'];
-	for($i=0; $i<count($_REQUEST['meta']);$i++)
+	for($i=0;$i<count($_REQUEST['meta']);$i++)
 	{
+		//echo $_REQUEST['meta'][$i]."<br>";
 		$tab = explode('#', $_REQUEST['meta'][$i]);
 		$id_val = $tab[0];
 		$json_txt .= "'".$tab[0]."' : { 'type' : '".$tab[2]."', 'fields' : {";
@@ -112,6 +113,7 @@ if(count($_REQUEST['meta']) > 0)
 		//$func->show_array($tab_id_fields);
 		for($j=0; $j<count($tab_id_fields);$j++)
 		{
+			//echo $tab_id_fields[$j]."<br>";
 			// ENTITIES
 			if($tab_id_fields[$j] == 'services_chosen' && isset($_REQUEST['services_chosen']))
 			{
@@ -792,6 +794,25 @@ if(count($_REQUEST['meta']) > 0)
 					$json_txt .= " 'doc_date_to' : ['".trim($_REQUEST['doc_date_to'])."'],";
 				}
 			}
+			// CONTACTS
+			else if($tab_id_fields[$j] == 'contactid' && !empty($_REQUEST['contactid']))
+			{
+				$json_txt .= " 'contactid' : ['".addslashes(trim($_REQUEST['contactid']))."'],";
+				//$where_request .= "res_id = ".$func->wash($_REQUEST['numged'], "num", _N_GED,"no")." and ";
+				$contactTmp = str_replace(')', '', substr($_REQUEST['contactid'], strrpos($_REQUEST['contactid'],'(')+1));
+				$find1 = strpos($contactTmp, ':');
+				$find2 =  $find1 + 1;
+				$contact_type = substr($contactTmp, 0, $find1);
+				$contact_id = substr($contactTmp, $find2, strlen($contactTmp));
+				if($contact_type == "user")
+				{
+					$where_request .= " (exp_user_id = '".$contact_id."' or dest_user_id = '".$contact_id."') and ";
+				}
+				elseif($contact_type == "contact")
+				{
+					$where_request .= " (exp_contact_id = '".$contact_id."' or dest_contact_id = '".$contact_id."') and ";
+				}
+			}
 			else  // opt indexes check
 			{
 				//echo $tab_id_fields[$j].' : '.$_REQUEST[$tab_id_fields[$j]].'<br/>';
@@ -806,6 +827,7 @@ if(count($_REQUEST['meta']) > 0)
 	}
 	$json_txt = preg_replace('/,$/', '', $json_txt);
 }
+//echo $where_request;exit;
 $json_txt = preg_replace("/,$/", "", $json_txt);
 $json_txt .= '}';
 /*
