@@ -59,6 +59,7 @@ if (!defined('_SEARCH_A_CASE'))  define('_SEARCH_A_CASE','Search a case');
 if (!defined('_CLOSED_CASE'))  define('_CLOSED_CASE','Closed');
 if (!defined('_SEARCH_A_RES'))  define('_SEARCH_A_RES','Search a document');
 if (!defined('_CREATE_NEW_CASE'))  define('_CREATE_NEW_CASE','Create a new case');
+if (!defined('_ADD_CASES'))  define('_ADD_CASES','Create cases');
 if (!defined('_CASE_DESCRIPTION_HELP'))  define('_CASE_DESCRIPTION_HELP','type keywords for the case...');
 if (!defined('_CASE_LABEL_HELP'))  define('_CASE_LABEL_HELP','Search on case description...');
 if (!defined('_FOUND_CASE'))  define('_FOUND_CASE','case(s) found');

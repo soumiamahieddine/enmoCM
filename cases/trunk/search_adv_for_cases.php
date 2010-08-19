@@ -346,50 +346,56 @@ function del_query_confirm()
 <div id="case_div" style="display:none;">
 	<div id="inner_content">
 		<dl id="tabricator2">
-		<?php if ($_GET['searched_item'] <> 'case')
-		{ ?>
-			<dt><?php echo _CREATE_NEW_CASE; ?></dt>
-			<dd>
-				<h4><p align="center"><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_add_b.gif" alt="" /> <?php echo _CREATE_NEW_CASE; ?><p></h4>
-				<p class="error"><?php echo $_SESSION['cases_error'];$_SESSION['cases_error'] = "";?></p>
-				<div class="blank_space">&nbsp;</div>
-				<form name="create_case" id="create_case" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=cases&page=create_case" method="post" >
-					
-					<input type="hidden" name="display" value="true" />
-					<input type="hidden" name="module" value="cases" />
-					<input type="hidden" name="page" value="create_case" />
-					<input type="hidden" name="searched_item" value="<?php echo $_GET['searched_item']; ?>" />
-					<input type="hidden" name="searched_value" value="<?php echo $_GET['searched_value']; ?>" />
-
-					<div align="center" style="display:block;" id="div_query">
-						<table align="center" border="0" width="100%" class="<?php echo $class_for_form; ?>">
-
-							<tr >
-								<td >
-									<table border = "0" width="100%">
-									<tr>
-										<td width="70%"><label for="subject" class="bold" ><?php echo _CASE_LABEL;?>:</label>
-											<input type="text" name="case_label" id="case_label" size="40"  />
-										</td>
-									</tr>
-									<tr >
-										<td width="70%"><label for="subject" class="bold" ><?php echo _CASE_DESCRIPTION;?>:</label>
-											<textarea name="case_description" id="case_description"  rows="4" ></textarea>
-										</td>
-										<td>
-											<p align="center">
-											<input class="button" name="imageField" type="button" value="<?php echo _CREATE_CASE; ?>" onclick="this.form.submit();" /></p>
-										 </td>
-									</tr>
-									</table>
-								</td>
-							</tr>
-						</table>
-					</div>
-				</form>
-			</dd>
-		<?php
-		} ?>
+		<?php 
+		if($_GET['searched_item'] <> 'case')
+		{
+			if($core_tools->test_service('add_cases', 'cases', false) == 1)
+			{
+				?>
+				<dt><?php echo _CREATE_NEW_CASE; ?></dt>
+				<dd>
+					<h4><p align="center"><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_add_b.gif" alt="" /> <?php echo _CREATE_NEW_CASE; ?><p></h4>
+					<p class="error"><?php echo $_SESSION['cases_error'];$_SESSION['cases_error'] = "";?></p>
+					<div class="blank_space">&nbsp;</div>
+					<form name="create_case" id="create_case" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=cases&page=create_case" method="post" >
+						
+						<input type="hidden" name="display" value="true" />
+						<input type="hidden" name="module" value="cases" />
+						<input type="hidden" name="page" value="create_case" />
+						<input type="hidden" name="searched_item" value="<?php echo $_GET['searched_item']; ?>" />
+						<input type="hidden" name="searched_value" value="<?php echo $_GET['searched_value']; ?>" />
+	
+						<div align="center" style="display:block;" id="div_query">
+							<table align="center" border="0" width="100%" class="<?php echo $class_for_form; ?>">
+	
+								<tr >
+									<td >
+										<table border = "0" width="100%">
+										<tr>
+											<td width="70%"><label for="subject" class="bold" ><?php echo _CASE_LABEL;?>:</label>
+												<input type="text" name="case_label" id="case_label" size="40"  />
+											</td>
+										</tr>
+										<tr >
+											<td width="70%"><label for="subject" class="bold" ><?php echo _CASE_DESCRIPTION;?>:</label>
+												<textarea name="case_description" id="case_description"  rows="4" ></textarea>
+											</td>
+											<td>
+												<p align="center">
+												<input class="button" name="imageField" type="button" value="<?php echo _CREATE_CASE; ?>" onclick="this.form.submit();" /></p>
+											 </td>
+										</tr>
+										</table>
+									</td>
+								</tr>
+							</table>
+						</div>
+					</form>
+				</dd>
+				<?php
+			}
+		} 
+		?>
 <!-- ##########################-->
 
 		<?php

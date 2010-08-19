@@ -45,7 +45,7 @@ if (!defined('_CASE_LAST_UPDATE_DATE'))  define('_CASE_LAST_UPDATE_DATE','Derni&
 if (!defined('_CASE_CLOSING_DATE'))  define('_CASE_CLOSING_DATE','Date de cl&ocirc;ture');
 if (!defined('_CASES_INDEXES'))  define('_CASES_INDEXES','Index de l&rsquo;affaire');
 if (!defined('_RESSOURCES_REPORTS'))  define('_RESSOURCES_REPORTS','Contenu de l&rsquo;affaire');
-if (!defined('_UPDATE_CASE'))  define('_UPDATE_CASE','Mise &agrave; jour d&rsquo;affaire');
+if (!defined('_UPDATE_CASE'))  define('_UPDATE_CASE','Mise &agrave; jour d&rsquo;affaires');
 if (!defined('_NEW_CASE'))  define('_NEW_CASE','Nouvelle affaire');
 if (!defined('_RES_ATTACH_ON_CASE'))  define('_RES_ATTACH_ON_CASE','Document attach&eacute; &agrave; l&rsquo;affaire');
 if (!defined('_RES_DETTACH_ON_CASE'))  define('_RES_DETTACH_ON_CASE','Document dettach&eacute; &agrave; l&rsquo;affaire');
@@ -59,6 +59,7 @@ if (!defined('_SEARCH_A_CASE'))  define('_SEARCH_A_CASE','Rechercher une affaire
 if (!defined('_CLOSED_CASE'))  define('_CLOSED_CASE','Cl&ocirc;tur&eacute;e');
 if (!defined('_SEARCH_A_RES'))  define('_SEARCH_A_RES','Rechercher un document');
 if (!defined('_CREATE_NEW_CASE'))  define('_CREATE_NEW_CASE','Cr&eacute;er une nouvelle affaire');
+if (!defined('_ADD_CASES'))  define('_ADD_CASES','Cr&eacute;er des affaires');
 if (!defined('_CASE_DESCRIPTION_HELP'))  define('_CASE_DESCRIPTION_HELP','Saisissez les mots cl&eacute;s de la description de l&rsquo;affaire...');
 if (!defined('_CASE_LABEL_HELP'))  define('_CASE_LABEL_HELP','Recherchez sur le libell&eacute; de l&rsquo;affaire...');
 if (!defined('_FOUND_CASE'))  define('_FOUND_CASE','affaire(s) trouv&eacute;e(s)');
