@@ -12,7 +12,7 @@
 * 
 */
 
-class modules_notification
+class notifications
 {
 
 /**

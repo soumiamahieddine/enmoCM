@@ -43,8 +43,8 @@ else
 		$maarch_directory =  implode(DIRECTORY_SEPARATOR, $maarch_directory).DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php";
 		require_once($maarch_directory);
 		
-		//Load notifications engine
-		$boot_notification = new modules_notification();
+		//Load notifications module
+		$boot_notification = new notifications();
 		$boot_notification->build_config($argv[1]);
 		
 		//Load default variables
@@ -80,7 +80,7 @@ else
 		$func = new functions();
 		
 		//Load notifications engine
-		$notification = new notifications();
+		$notification = new notification_engine();
 		
 		//Restore array of user
 		$users = array();

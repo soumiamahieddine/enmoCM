@@ -12,7 +12,7 @@
 * 
 */
 
-class notifications extends request
+class notification_engine extends request
 {
 	
 	function execute_engine($working_template,$my_docs, $user)
