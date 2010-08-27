@@ -246,13 +246,13 @@ class indexing_searching_app extends dbquery
 
 		require_once('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_types.php');
 		$type = new types();
-		$type->inits_opt_indexes($coll_id, $id_to_update);
+		
 		$type_id =  $post['type_id'];
-		$indexes = $type->get_indexes( $type_id,$coll_id, 'minimal');
+		$indexes = $type->get_indexes($type_id,$coll_id, 'minimal');
 		$val_indexes = array();
 		for($i=0; $i<count($indexes);$i++)
 		{
-			$val_indexes[$indexes[$i]] =  $post[$indexes[$i]];
+			$val_indexes[$indexes[$i]] = $post[$indexes[$i]];
 		}
 		$test_type = $type->check_indexes($type_id, $coll_id,$val_indexes );
 		if($test_type)
@@ -396,6 +396,7 @@ class indexing_searching_app extends dbquery
 		//$this->show_array($post);
 		if(empty($_SESSION['error']))
 		{
+			$type->inits_opt_indexes($coll_id, $id_to_update);
 			//$request->show_array($data_res);
 			//exit();		
 			$request->update($table, $data_res, $where, $_SESSION['config']['databasetype']);
@@ -410,16 +411,16 @@ class indexing_searching_app extends dbquery
 		//$_SESSION['error_page'] = $_SESSION['error'];
 		$error = $_SESSION['error'];
 		$_SESSION['error']= '';
-			?>
-			<script language="javascript" type="text/javascript">
-               // window.opener.reload();
-              	var error_div = $('main_error');
-               	if(error_div)
-               	{
-				 	error_div.innerHTML = '<?php echo $error;?>';
-				}
-            </script>
-			<?php
+		?>
+		<script language="javascript" type="text/javascript">
+			//window.opener.reload();
+			var error_div = $('main_error');
+			if(error_div)
+			{
+				error_div.innerHTML = '<?php echo $error;?>';
+			}
+		</script>
+		<?php
 	}
 
 	public function delete_doc( $id_to_delete, $coll_id)

@@ -818,24 +818,19 @@ class types extends dbquery
 		$mandatory_indexes = $this->get_mandatory_indexes($type_id, $coll_id);
 		
 		// Checks the manadatory indexes
-		for($i=0; $i<count($mandatory_indexes);$i++)
+		for($i=0;$i<count($mandatory_indexes);$i++)
 		{
 			if( ($indexes[$mandatory_indexes[$i]]['type'] == 'string' && trim($values[$mandatory_indexes[$i]]) == '') ||
 				(($indexes[$mandatory_indexes[$i]]['type'] == 'integer' || $indexes[$mandatory_indexes[$i]]['type'] == 'float') && preg_match("/^[0-9.]+$/",$values[$mandatory_indexes[$i]])== 0) || (empty($values[$mandatory_indexes[$i]]) && $indexes[$mandatory_indexes[$i]]['type'] == 'date'))  
 			{
-				$_SESSION['error'] = $indexes[$mandatory_indexes[$i]]['label'].' <br/>'._IS_EMPTY.'<br/>';
-				return false;
+				$_SESSION['error'] .= $indexes[$mandatory_indexes[$i]]['label'].' <br/>'._IS_EMPTY.'<br/>';
 			}
 		}
-
+		
 		// Checks type indexes
 		$date_pattern = "/^[0-3][0-9]-[0-1][0-9]-[1-2][0-9][0-9][0-9]$/";
 		foreach(array_keys($values)as $key)
 		{
-			if(!empty($_SESSION['error']))
-			{
-				return false;
-			}
 			if($indexes[$key]['type'] == 'date' && !empty($values[$key]))
 			{
 				if(preg_match( $date_pattern,$values[$key])== 0)
@@ -875,7 +870,14 @@ class types extends dbquery
 				}
 			}
 		}
-		return true;
+		if(!empty($_SESSION['error']))
+		{
+			return false;
+		}
+		else
+		{
+			return true;
+		}
 	}
 
 
