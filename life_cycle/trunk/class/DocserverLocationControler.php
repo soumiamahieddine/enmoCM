@@ -75,7 +75,7 @@ class DocserverLocationControler
 	public function getAllId($can_be_disabled = false)
 	{
 		self::connect();
-		$query = "select docserver_location_id from ".self::$docserver_locations_table." ";
+		$query = "select docserver_locations_id from ".self::$docserver_locations_table." ";
 		if(!$can_be_disabled)
 			$query .= " where enabled = 'Y'";
 		try{
@@ -91,7 +91,7 @@ class DocserverLocationControler
 			$cptId = 0;
 			while($queryResult = self::$db->fetch_object())
 			{
-				$result[$cptId] = $queryResult->docserver_location_id;
+				$result[$cptId] = $queryResult->docserver_locations_id;
 				$cptId++;
 			}
 			self::disconnect();
@@ -103,6 +103,40 @@ class DocserverLocationControler
 			return null;
 		}
 	}
+	
+	// TODO : put in docserver_types_controler
+	public function getAllDocserverTypes($can_be_disabled = false)
+	{
+		self::connect();
+		$query = "select docserver_types_id from docserver_types ";
+		if(!$can_be_disabled)
+			$query .= " where enabled = 'Y'";
+		try{
+			if($_ENV['DEBUG'])
+				echo $query.' // ';
+			self::$db->query($query);
+		} catch (Exception $e){
+			echo _NO_DOCSERVER_TYPE.' // ';
+		}
+		if(self::$db->nb_result() > 0)
+		{
+			$result = array();
+			$cptId = 0;
+			while($queryResult = self::$db->fetch_object())
+			{
+				$result[$cptId] = $queryResult->docserver_types_id;
+				$cptId++;
+			}
+			self::disconnect();
+			return $result;
+		}
+		else
+		{
+			self::disconnect();
+			return null;
+		}
+	}
+	
 	
 	public function save($docserverLocation, $mode)
 	{

@@ -7,9 +7,11 @@
 		<loaded>true</loaded>
 	</CONFIG>
 	<TABLENAME>
-		<lc_cycle>lc_cycle</lc_cycle>
-		<lc_cycle_seq>lc_cycle_seq</lc_cycle_seq>
+		<lc_policies>lc_policies</lc_policies>
+		<lc_cycles>lc_cycles</lc_cycles>
+		<lc_cycle_steps>lc_cycle_steps</lc_cycle_steps>
 		<lc_stack>lc_stack</lc_stack>
+		<docserver_types>docserver_types</docserver_types>
 		<docserver_locations>docserver_locations</docserver_locations>
 	</TABLENAME>
 	<HISTORY>
@@ -18,10 +20,12 @@
 		<lcdel>true</lcdel>
 		<docserversadd>true</docserversadd>
 		<docserversdel>true</docserversdel>
+		<docserversallow>true</docserversallow>
 		<docserversban>true</docserversban>
 		<!--<docserversclose>true</docserversclose>-->
 		<docserverslocationsadd>true</docserverslocationsadd>
 		<docserverslocationsdel>true</docserverslocationsdel>
+		<docserverslocationsallow>true</docserverslocationsallow>
 		<docserverslocationsban>true</docserverslocationsban>
 	</HISTORY>
 </root>

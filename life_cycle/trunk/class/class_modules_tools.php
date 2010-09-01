@@ -86,10 +86,12 @@ class life_cycle extends dbquery
 		$_SESSION['history']['lcdel'] = (string) $HISTORY->lcdel;
 		$_SESSION['history']['docserversadd'] = (string) $HISTORY->docserversadd;
 		$_SESSION['history']['docserversdel'] = (string) $HISTORY->docserversdel;
+		$_SESSION['history']['docserversallow'] = (string) $HISTORY->docserversallow;
 		$_SESSION['history']['docserversban'] = (string) $HISTORY->docserversban;
 		//$_SESSION['history']['docserversclose'] = (string) $HISTORY->docserversclose;
 		$_SESSION['history']['docserverslocationsadd'] = (string) $HISTORY->docserverslocationsadd;
 		$_SESSION['history']['docserverslocationsdel'] = (string) $HISTORY->docserverslocationsdel;
+		$_SESSION['history']['docserverslocationsallow'] = (string) $HISTORY->docserverslocationsallow;
 		$_SESSION['history']['docserverslocationsban'] = (string) $HISTORY->docserverslocationsban;
 	}
 

@@ -34,11 +34,11 @@ $db = new dbquery();
 $db->connect();
 if($_SESSION['config']['databasetype'] == "POSTGRESQL")
 {
-	$db->query("select docserver_id as tag from ".$_SESSION['tablename']['docservers']." where docserver_id ilike '".$_REQUEST['what']."%' order by docserver_id");
+	$db->query("select docservers_id as tag from ".$_SESSION['tablename']['docservers']." where docservers_id ilike '".$_REQUEST['what']."%' order by docservers_id");
 }
 else
 {
-	$db->query("select docserver_id as tag from ".$_SESSION['tablename']['docservers']." where docserver_id like '".$_REQUEST['what']."%' order by docserver_id");
+	$db->query("select docservers_id as tag from ".$_SESSION['tablename']['docservers']." where docservers_id like '".$_REQUEST['what']."%' order by docservers_id");
 }
 $listArray = array();
 while($line = $db->fetch_object())
