@@ -55,7 +55,7 @@ unset($_SESSION['m_admin']);
 
 <div id="inner_content" class="clearfix">
 <h2 class="admin_subtitle block" ><?php echo _ADMIN_LIFE_CYCLE;?></h1></h2>
-	<div class="admin_item" id="admin_docservers_locations" title="<?php  echo _MANAGE_DOCSERVERS_LOCATIONS;?>" onclick="window.top.location='<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=docservers_locations_management_controler&mode=list&module=life_cycle';">
+	<div class="admin_item" id="admin_docservers_locations" title="<?php  echo _MANAGE_DOCSERVERS_LOCATIONS;?>" onclick="window.top.location='<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=docserver_locations_management_controler&mode=list&module=life_cycle';">
 		<div class="sum_margin" >
 				<strong><?php  echo _MANAGE_DOCSERVERS_LOCATIONS;?></strong>
 		</div>
@@ -63,6 +63,11 @@ unset($_SESSION['m_admin']);
 	<div class="admin_item" id="admin_docservers" title="<?php  echo _MANAGE_DOCSERVERS;?>" onclick="window.top.location='<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=docservers_management_controler&mode=list&module=life_cycle';">
 		<div class="sum_margin" >
 				<strong><?php  echo _MANAGE_DOCSERVERS;?></strong>
+		</div>
+	</div>
+	<div class="admin_item" id="admin_docserver_types" title="<?php  echo _MANAGE_DOCSERVER_TYPES;?>" onclick="window.top.location='<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=docserver_types_management_controler&mode=list&module=life_cycle';">
+		<div class="sum_margin" >
+				<strong><?php  echo _MANAGE_DOCSERVER_TYPES;?></strong>
 		</div>
 	</div>
 	<div class="admin_item" id="admin_cycle" title="<?php  echo _MANAGE_CYCLE;?>" onclick="window.top.location='<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=cycles_management_controler&mode=list&module=life_cycle';">

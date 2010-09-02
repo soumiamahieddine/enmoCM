@@ -78,6 +78,7 @@ class life_cycle extends dbquery
 		$_SESSION['tablename']['lc_cycle_seq'] = (string) $TABLENAME->lc_cycle_seq;
 		$_SESSION['tablename']['lc_stack'] = (string) $TABLENAME->lc_stack;
 		$_SESSION['tablename']['docserver_locations'] = (string) $TABLENAME->docserver_locations;
+		$_SESSION['tablename']['docserver_types'] = (string) $TABLENAME->docserver_types;
 
 		// Loads the log setting of the module life_cycle  into session ($_SESSION['history'] array)
 		$HISTORY = $xmlconfig->HISTORY;

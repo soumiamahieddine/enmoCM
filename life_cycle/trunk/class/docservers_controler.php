@@ -28,7 +28,7 @@ class docservers_controler extends ClassifiedObjectControler implements ObjectCo
 	 * @return boolean
 	 */
 	public function save($docservers){
-		if($docservers->docservers_id <> ""){
+		if(self::docserversExists($docservers->docservers_id)){
 			// Update existing docservers
 			return self::update($docservers);
 		} else {
@@ -110,7 +110,7 @@ class docservers_controler extends ClassifiedObjectControler implements ObjectCo
 	}
 
 //////////////////////////////////////////////   OTHER PRIVATE BLOCK
-	public function docserverExists($docservers_id){
+	public function docserversExists($docservers_id){
 		if(!isset($docservers_id) || empty($docservers_id))
 			return false;
 		self::$db=new dbquery();

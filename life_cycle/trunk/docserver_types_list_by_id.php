@@ -19,7 +19,7 @@
 */
 
 /**
-* @brief  List of cycles locations for autocompletion
+* @brief  List of docserver_types for autocompletion
 *
 *
 * @file
@@ -34,11 +34,11 @@ $db = new dbquery();
 $db->connect();
 if($_SESSION['config']['databasetype'] == "POSTGRESQL")
 {
-	$db->query("select cycle_id as tag from ".$_SESSION['tablename']['lc_cycle']." where cycle_id ilike '".$_REQUEST['what']."%' order by cycle_id");
+	$db->query("select docserver_types_id as tag from ".$_SESSION['tablename']['docserver_types']." where docserver_types_id ilike '".$_REQUEST['what']."%' order by docserver_types_id");
 }
 else
 {
-	$db->query("select cycle_id as tag from ".$_SESSION['tablename']['lc_cycle']." where cycle_id like '".$_REQUEST['what']."%' order by cycle_id");
+	$db->query("select docserver_types_id as tag from ".$_SESSION['tablename']['docserver_types']." where docserver_types_id like '".$_REQUEST['what']."%' order by docserver_types_id");
 }
 $listArray = array();
 while($line = $db->fetch_object())

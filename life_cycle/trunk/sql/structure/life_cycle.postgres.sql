@@ -124,7 +124,7 @@ CREATE TABLE docserver_types
   dstype_label character varying(255) DEFAULT NULL::character varying,
   enabled character(1) NOT NULL DEFAULT 'Y'::bpchar,
   is_container boolean NOT NULL DEFAULT false,
-  container_max integer NOT NULL DEFAULT (0)::integer,
+  container_max_number integer NOT NULL DEFAULT (0)::integer,
   is_compressed boolean NOT NULL DEFAULT false,
   compression_mode character varying(32) DEFAULT NULL::character varying,
   is_meta boolean NOT NULL DEFAULT false,
