@@ -314,8 +314,9 @@ if(count($_REQUEST['meta']) > 0)
 				$json_txt = substr($json_txt, 0, -1);
 				$destinataire_chosen_tmp .= ") ";
 
-				$where_request .= " dest_user IN  ".$destinataire_chosen_tmp." ";
+				$where_request .= " (dest_user IN  ".$destinataire_chosen_tmp." or res_id in (select res_id from ".$_SESSION['tablename']['ent_listinstance']." where item_id in ".$destinataire_chosen_tmp." and item_mode = 'dest')) ";
 				$where_request .=" and  ";
+				//echo $where_request;exit;
 				$json_txt .= '],';
 			}
 			// SUBJECT
