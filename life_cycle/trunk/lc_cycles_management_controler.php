@@ -106,9 +106,16 @@ function location_bar_management($mode){
 }
 
 /**
+
+
+hum hum..
+In my modest opinion, the identification of the vehicule is not important in this photograph.It's not a Ferrari. It's a small tiny car like a mini Cooper (googlise it if you like). In my mind it's only the angry temperament of this car which is interessting. We need to drive it to have an idea of that. I use a fisheye lens to volontary transform the car and enhance this agressivity of her lines.
+People disturb you?? 
+For me, the orange satured totally contrast
+
  * Validate a submit (add or up),
  * up to saving object
- */
+ */ 
 function validate_cs_submit($mode){
 	$sessionName = "lc_cycles";
 	$pageName = "lc_cycles_management_controler";
@@ -119,20 +126,27 @@ function validate_cs_submit($mode){
 
 	$lc_cycles = new lc_cycles();
 	//$f->show_array($_REQUEST);exit;
+	
 	if(isset($_REQUEST['id']) && !empty($_REQUEST['id'])){
 		// Update, so values exist
-		$lc_cycles->lc_cycles_id=$f->protect_string_db($f->wash($_REQUEST['lc_cycles_id'], "nick", _THE_LC_CYCLE_ID." ", "yes", 0, 32));
+		$lc_cycles->lc_cycles_id=$f->protect_string_db($f->wash($_REQUEST['id'], "nick", _THE_LC_CYCLE_ID." ", "yes", 0, 32));
 	}
+	
+	
 	$lc_cycles->lc_policies_id=$f->protect_string_db($f->wash($_REQUEST['lc_policies_id'], "no", _LC_POLICIES_ID." ", 'yes', 0, 32));
 	$lc_cycles->cycle_desc=$f->protect_string_db($f->wash($_REQUEST['cycle_desc'], "no", _CYCLE_DESC." ", 'yes', 0, 255));
-	
-	//TODO numeric
 	$lc_cycles->sequence_number=$f->protect_string_db($f->wash($_REQUEST['sequence_number'], "num", _SEQUENCE_NUMBER." ", 'yes', 0, 255));
-	//TODO text
+	
+	// Traitement et contrôle du WHERE-CLAUSE
 	$lc_cycles->where_clause=$f->protect_string_db($f->wash($_REQUEST['where_clause'], "no", _WHERE_CLAUSE." ", 'yes', 0, 255));
 	
+	if(lc_cycles_controler::where_test_secure($lc_cycles->where_clause)) {
+		$_SESSION['error'] .= _WHERE_CLAUSE_NOT_SECURE."<br>";
+	} elseif (!lc_cycles_controler::where_test($lc_cycles->where_clause))  {
+		$_SESSION['error'] .= _PB_WITH_WHERE_CLAUSE."<br>";
+	}
+	
 	$lc_cycles->validation_mode=$f->protect_string_db($f->wash($_REQUEST['validation_mode'], "no", _VALIDATION_MODE." ", 'yes', 0, 32));
-
 
 	$status= array();
 	$status['order']=$_REQUEST['order'];
@@ -183,6 +197,8 @@ function validate_cs_submit($mode){
 		header("location: ".$_SESSION['config']['businessappurl']."index.php?page=".$pageName."&mode=list&module=life_cycle&order=".$status['order']."&order_field=".$status['order_field']."&start=".$status['start']."&what=".$status['what']);
 	}
 }
+
+
 
 /**
  * Initialize session parameters for update display

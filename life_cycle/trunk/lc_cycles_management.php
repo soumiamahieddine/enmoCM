@@ -64,15 +64,23 @@ elseif($mode == "up" || $mode == "add"){
 				</p>
 				<p>
 				 	<label for="lc_policies_id"><?php echo _LC_POLICIES_ID; ?> : </label>
-					<input name="lc_policies_id" type="text"  id="lc_policies_id" value="<?php echo functions::show($_SESSION['m_admin']['lc_cycles']['lc_cycles_id']); ?>" <?php if($mode == "up") echo " readonly='readonly' class='readonly'";?>/>
+					<input name="lc_policies_id" type="text"  id="lc_policies_id" value="<?php echo functions::show($_SESSION['m_admin']['lc_cycles']['lc_policies_id']); ?>" />
 				</p>
 				<p>
-				 	<label for="cycle"><?php echo _CYCLE_DESC; ?> : </label>
-					<input name="id" type="text"  id="id" value="<?php echo functions::show($_SESSION['m_admin']['lc_cycles']['lc_cycles_id']); ?>" <?php if($mode == "up") echo " readonly='readonly' class='readonly'";?>/>
+				 	<label for="cycle_desc"><?php echo _CYCLE_DESC; ?> : </label>
+					<input name="cycle_desc" type="text"  id="cycle_desc" value="<?php echo functions::show($_SESSION['m_admin']['lc_cycles']['cycle_desc']); ?>" />
 				</p>
 				<p>
-				 	<label for="id"><?php echo _SEQUENCE_NUMBER; ?> : </label>
-					<input name="id" type="text"  id="id" value="<?php echo functions::show($_SESSION['m_admin']['lc_cycles']['lc_cycles_id']); ?>" <?php if($mode == "up") echo " readonly='readonly' class='readonly'";?>/>
+				 	<label for="sequence_number"><?php echo _SEQUENCE_NUMBER; ?> : </label>
+					<input name="sequence_number" type="text"  id="sequence_number" value="<?php echo functions::show($_SESSION['m_admin']['lc_cycles']['sequence_number']); ?>" />
+				</p>
+				<p>
+				 	<label for="where_clause"><?php echo _WHERE_CLAUSE; ?> : </label>
+					<input name="where_clause" type="text"  id="where_clause" value="<?php echo functions::show($_SESSION['m_admin']['lc_cycles']['where_clause']); ?>" />
+				</p>
+				<p>
+				 	<label for="validation_mode"><?php echo _VALIDATION_MODE; ?> : </label>
+					<input name="validation_mode" type="text"  id="validation_mode" value="<?php echo functions::show($_SESSION['m_admin']['lc_cycles']['validation_mode']); ?>" />
 				</p>
 				
 				<p class="buttons">

@@ -15,7 +15,7 @@ abstract class ObjectControler {
 	static protected $db;
 	static protected $computed_properties=array(
 							);
-	static protected $foolish_ids=array("docservers_id", "docserver_types_id", "docserver_locations_id", "coll_id","lc_policies_id");
+	static protected $foolish_ids=array("docservers_id", "docserver_types_id", "docserver_locations_id", "coll_id","lc_policies_id","lc_cycles_id","lc_cycle_steps_id");
 									
 	/**
 	 * Insert given object in given table.
