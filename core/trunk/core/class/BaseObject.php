@@ -19,33 +19,21 @@
 */
 
 /**
-* @brief  Contains the BaseObject object (Object used as a base for more advanced object as User, Usergroup, ...)
-* 
-* 
-* @file
-* @author Claire Figueras <dev@maarch.org>
-* @date $date$
-* @version $Revision$
-* @ingroup core
-*/
-
-
-/**
-* @brief BaseObject Object
-*
-* @ingroup core
-*/
-class BaseObject 
-{
-	/**
-	* Array of all the object properties (key => value)
-    */
-	private $data = array(); 
+ * This object aims at giving a 
+ * standard structure for objects
+ * that come directly from the 
+ * table of a database.
+ * 
+ * @author boulio
+ *
+ */
+class BaseObject {
+	protected $data = array(); 
 
 	/**
 	 * Initializes an object
 	 */
-	function __construct(){
+	public function __construct(){
 	}
 
 	/**
@@ -54,8 +42,7 @@ class BaseObject
 	 * @param string $name Name of property to set
 	 * @param object $value Value of property $name
 	 */
-	function __set($name, $value)
-	{
+	public function __set($name, $value){
 		$this->data[$name] = $value;
 	}
 
@@ -66,8 +53,7 @@ class BaseObject
 	 * @return string Value of $name  or null
 	 * @exception $e Exception Sent if $name does not exist
 	 */
-	function __get($name) 
-	{
+	public function __get($name) {
 		try {
 			return $this->data[$name];
 		} catch (Exception $e) {
@@ -98,19 +84,24 @@ class BaseObject
 	 */
 	public function getArray() 
 	{
-		return $this->data;
+		if(is_null($this->data))
+			return null;
+		else
+			return $this->data;
 	}
 	
-	/**
-	 * Sets values of all properties of the current object 
-	 * 
-	 * @param Array $array Array of the properties to set
-	 */
 	public function setArray($array) 
 	{
 		$this->data = $array;
 	}
 	
-	//abstract function toString();
+	public function getLabel($name){
+		if(in_array($name, array_keys($data))){
+			return eval("_".strtoupper($name));
+		} else {
+			return "";
+		}
+	}
+
 }
 ?>

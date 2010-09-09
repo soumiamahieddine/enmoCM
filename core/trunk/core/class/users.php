@@ -41,7 +41,7 @@ try {
 *
 * @ingroup core
 */
-class User extends BaseObject
+class users extends BaseObject
  {	
 	
 	/**

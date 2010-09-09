@@ -40,7 +40,7 @@ define("_CODE_INCREMENT",1);
 // Loads the required class
 try {
 	require_once("core/class/Service.php");
-	require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."UsergroupControler.php");
+	require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."usergroups_controler.php");
 } catch (Exception $e){
 	echo $e->getMessage().' // ';
 }
@@ -134,7 +134,7 @@ class ServiceControler
 					$find = false;
 					while($res = self::$db->fetch_object())
 					{
-						if(UsergroupControler::inGroup($user_id, $res->group_id) == true)
+						if(usergroups_controler::inGroup($user_id, $res->group_id) == true)
 						{
 							$find = true;
 							break;

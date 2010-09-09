@@ -19,7 +19,7 @@
 */
 
 /**
-* @brief  Contains the controler of the Usergroup Object (create, save, modify, etc...)
+* @brief  Contains the controler of the usergroups object (create, save, modify, etc...)
 * 
 * 
 * @file
@@ -39,130 +39,57 @@ define("_CODE_INCREMENT",1);
 
 // Loads the required class
 try {
-	require_once("core/class/class_db.php");
-	require_once("core/class/Usergroup.php");
+	require_once("core/core_tables.php");
+	require_once("modules/basket/basket_tables.php");
+	require_once("core/class/usergroups.php");
+	require_once("core/class/ObjectControlerAbstract.php");
+	require_once("core/class/ObjectControlerIF.php");
+	require_once("core/class/SecurityControler.php");
+	
 } catch (Exception $e){
 	echo $e->getMessage().' // ';
 }
 
 
 /**
-* @brief  Controler of the Usergroup Object 
+* @brief  Controler of the usergroups object 
 *
 *<ul>
-*  <li>Get an usergroup object from an id</li>
+*  <li>Get an usergroups object from an id</li>
 *  <li>Save in the database a usergroup</li>
 *  <li>Manage the operation on the usergroups related tables in the database (insert, select, update, delete)</li>
 *</ul>
 * @ingroup core
 */
-class UsergroupControler
+class usergroups_controler extends ObjectControler implements ObjectControlerIF
 {
+
 	/**
-	* Dbquery object used to connnect to the database
-    */
-	static $db;
-	
-	/**
-	* Usergroups table
-    */
-	static $usergroups_table;
-	
-	/**
-	* Usergroup_content table
-    */
-	static $usergroup_content_table;
-	
-	/**
-	* Groupbasket table
-    */
-	static $groupbasket_table ;
-	
-	/**
-	* Usergroups_services table
-    */
-	static $groups_services_table;
-	
-	
-	/**
-	* Opens a database connexion and values the tables variables
-	*/
-	public function connect()
-	{
-		$db = new dbquery();
-		$db->connect();
-		
-		self::$usergroups_table = $_SESSION['tablename']['usergroups'];
-		self::$usergroup_content_table = $_SESSION['tablename']['usergroup_content'];
-		self::$groupbasket_table = $_SESSION['tablename']['bask_groupbasket'];
-		self::$groups_services_table = $_SESSION['tablename']['usergroup_services'];
-		
-		self::$db=$db;
-	}	
-	
-	/**
-	* Close the database connexion
-	*/
-	public function disconnect()
-	{
-		self::$db->disconnect();
-	}	
-	
-	/**
-	* Returns an Usergroup Object based on a usegroup identifier
+	* Returns an usergroups object based on a usegroup identifier
 	*
 	* @param  $group_id string  Usergroup identifier
 	* @param  $can_be_disabled bool  if true gets the group even if it is disabled in the database (false by default)
-	* @return Usergroup object with properties from the database or null
+	* @return usergroups object with properties from the database or null
 	*/
 	public function get($group_id, $can_be_disabled = false)
 	{	
-		// If no group_id specified return null
-		if(empty($group_id))
-			return null;
-		
-		self::connect();
-		$query = "select * from ".self::$usergroups_table." where group_id = '".$group_id."' ";
-		
-		if(!$can_be_disabled)
-			$query .= " and enabled = 'Y'";
-
-		try{
-			if($_ENV['DEBUG'])
-				echo $query.' // ';
-			self::$db->query($query);
-		} catch (Exception $e){
-			echo _NO_GROUP_WITH_ID.' '.$group_id.' // ';
-		}
-		
-		if(self::$db->nb_result() > 0)
-		{
-			$group=new Usergroup();
-			$queryResult=self::$db->fetch_object();
-			foreach($queryResult as $key => $value){
-				$group->$key=$value;
-			}
-			self::disconnect();
-			return $group;
-		}
-		else
-		{
-			self::disconnect();
-			return null;
-		}
+		self::set_foolish_ids(array('group_id'));
+		self::set_specific_id('group_id');
+		return self::advanced_get($group_id,USERGROUPS_TABLE);	
 	}
 	
 	/**
-	* Returns all usergroups (enabled by default) from the database in an array of Usergroup Objects (ordered by group_desc by default)
+	* Returns all usergroups (enabled by default) from the database in an array of usergroups objects (ordered by group_desc by default)
 	*
 	* @param  $order_str string  Order string passed to the query ("order by group_desc asc" by default)
 	* @param  $enabled_only bool  if true returns only the enabled usergroups, otherwise returns even the disabled (true by default)
-	* @return Array of Usergroup objects with properties from the database
+	* @return Array of usergroups objects with properties from the database
 	*/
 	public function getAllUsergroups($order_str = "order by group_desc asc", $enabled_only = true)
 	{
-		self::connect();
-		$query = "select * from ".self::$usergroups_table." ";
+		self::$db=new dbquery();
+		self::$db->connect();
+		$query = "select * from ".USERGROUPS_TABLE." ";
 		if($enabled_only)
 			$query .= "where enabled = 'Y'";
 		
@@ -177,12 +104,12 @@ class UsergroupControler
 		$groups = array();
 		while($res = self::$db->fetch_object())
 		{
-			$group=new Usergroup();
+			$group=new usergroups();
 			$tmp_array = array('group_id' => $res->group_id, 'group_desc' => $res->group_desc, 'enabled' => $res->enabled);
 			$group->setArray($tmp_array);
 			array_push($groups, $group);
 		}
-		self::disconnect();
+		self::$db->disconnect();
 		return $groups;
 	}
 	
@@ -198,8 +125,9 @@ class UsergroupControler
 			return null;
 
 		$users = array();
-		self::connect();
-		$query = "select user_id from ".self::$usergroup_content_table." where group_id = '".$group_id."'";
+		self::$db=new dbquery();
+		self::$db->connect();
+		$query = "select user_id from ".USERGROUP_CONTENT_TABLE." where group_id = '".$group_id."'";
 		try{
 			if($_ENV['DEBUG']){echo $query.' // ';}
 					self::$db->query($query);
@@ -211,7 +139,7 @@ class UsergroupControler
 		{
 			array_push($users, $res->user_id);
 		}
-		self::disconnect();
+		self::$db->disconnect();
 		return $users;
 	}
 	
@@ -227,8 +155,9 @@ class UsergroupControler
 			return null;
 
 		$users = array();
-		self::connect();
-		$query = "select group_id from ".self::$usergroup_content_table." where user_id = '".$user_id."' and primary_group = 'Y'";
+		self::$db=new dbquery();
+		self::$db->connect();
+		$query = "select group_id from ".USERGROUP_CONTENT_TABLE." where user_id = '".$user_id."' and primary_group = 'Y'";
 
 		try{
 			if($_ENV['DEBUG']){echo $query.' // ';}
@@ -239,7 +168,7 @@ class UsergroupControler
 		
 		$res = self::$db->fetch_object();
 		$group_id = $res->group_id;
-		self::disconnect();
+		self::$db->disconnect();
 		return $group_id;
 	}
 	
@@ -255,8 +184,9 @@ class UsergroupControler
 			return null;
 		
 		$baskets = array();
-		self::connect();
-		$query = "select basket_id from ".self::$groupbasket_table." where group_id = '".$group_id."'";
+		self::$db=new dbquery();
+		self::$db->connect();
+		$query = "select basket_id from ".GROUPBASKET_TABLE." where group_id = '".$group_id."'";
 		try{
 			if($_ENV['DEBUG']){echo $query.' // ';}
 					self::$db->query($query);
@@ -268,7 +198,7 @@ class UsergroupControler
 		{
 			array_push($baskets, $res->basket_id);
 		}
-		self::disconnect();
+		self::$db->disconnect();
 		return $baskets;
 	}
 	
@@ -283,8 +213,9 @@ class UsergroupControler
 		if(empty($group_id))
 			return null;
 
-		self::connect();
-		$query = "select service_id from ".self::$groups_services_table." where group_id = '".$group_id."'";
+		self::$db=new dbquery();
+		self::$db->connect();
+		$query = "select service_id from ".USERGROUPS_SERVICES_TABLE." where group_id = '".$group_id."'";
 		try{
 			if($_ENV['DEBUG']){echo $query.' // ';}
 			self::$db->query($query);
@@ -297,119 +228,75 @@ class UsergroupControler
 		{
 			array_push($services,trim($queryResult->service_id));
 		}
-		self::disconnect();
+		self::$db->disconnect();
 		return $services;
 	}
 	
 	/**
-	* Saves in the database a Usergroup object 
+	* Saves in the database a usergroups object 
 	*
-	* @param  $group Usergroup object to be saved
+	* @param  $group usergroups object to be saved
 	* @param  $mode string  Saving mode : add or up
 	* @return bool true if the save is complete, false otherwise
 	*/
-	public function save($group, $mode)
+	public function save($group)
 	{
 		if(!isset($group) )
 			return false;
-			
-		if($mode == "up")
+		
+		self::set_foolish_ids(array('group_id'));
+		self::set_specific_id('group_id');
+		if(self::groupExists($group->group_id))
 			return self::update($group);
-		elseif($mode =="add") 
+		else
 			return self::insert($group);
 		
 		return false;
 	}
 	
 	/**
-	* Inserts in the database (usergroups table) a Usergroup object
+	* Inserts in the database (usergroups table) a usergroups object
 	*
-	* @param  $group Usergroup object
+	* @param  $group usergroups object
 	* @return bool true if the insertion is complete, false otherwise
 	*/
 	private function insert($group)
 	{
-		if(!isset($group) )
-			return false;
-			
-		self::connect();
-		$prep_query = self::insert_prepare($group);
-		
-		// Inserting object
-		$query="insert into ".self::$usergroups_table." ("
-					.$prep_query['COLUMNS']
-					.") values("
-					.$prep_query['VALUES']
-					.")";
-		try{
-			if($_ENV['DEBUG']){ echo $query.' // '; }
-			self::$db->query($query);
-			$ok = true;
-		} catch (Exception $e){
-			echo _CANNOT_INSERT_GROUP." ".$group->toString().' // ';
-			$ok = false;
-		}
-		self::disconnect();
-		return $ok;
+		return self::advanced_insert($group);
 	}
 
 	/**
-	* Updates a usergroup in the database (usergroups table) with a Usergroup object
+	* Updates a usergroup in the database (usergroups table) with a usergroups object
 	*
-	* @param  $group Usergroup object
+	* @param  $group usergroups object
 	* @return bool true if the update is complete, false otherwise
 	*/
 	private function update($group)
 	{
-		if(!isset($group) )
-			return false;
-
-		self::connect();
-		$query="update ".self::$usergroups_table." set "
-					.self::update_prepare($group)
-					." where group_id='".$group->group_id."'"; 
-					
-		try{
-			if($_ENV['DEBUG']){echo $query.' // ';}
-			self::$db->query($query);
-			$ok = true;
-		} catch (Exception $e){
-			echo _CANNOT_UPDATE_GROUP." ".$group->toString().' // ';
-			$ok = false;
-		}
-		self::disconnect();
-		return $ok;
+		return self::advanced_update($group);
 	}
 	
 	/**
 	* Deletes in the database (usergroups related tables) a given usergroup (group_id)
 	*
-	* @param  $group_id string  Usergroup identifier
+	* @param  $group usergroups object
 	* @return bool true if the deletion is complete, false otherwise
 	*/
-	public function delete($group_id)
+	public function delete($group)
 	{
-		if(!isset($group_id)|| empty($group_id) )
-			return false;
-		if(! self::groupExists($group_id))
-			return false;
-			
-		self::connect();
-		$query="delete from ".self::$usergroups_table." where group_id='".$group_id."'";
-		try{
-			if($_ENV['DEBUG']){echo $query.' // ';}
-			self::$db->query($query);
-			$ok = true;
-		} catch (Exception $e){
-			echo _CANNOT_DELETE_GROUP_ID." ".$group_id.' // ';
-			$ok = false;
-		}
-		self::disconnect();
+		self::set_foolish_ids(array('group_id'));
+		self::set_specific_id('group_id');
+		
+		$group_id = $group->__get('group_id');
+		$ok = self::advanced_delete($group);
 		if($ok)
 			$ok = self::cleanUsergroupContent($group_id);
 
 		if($ok)
 			$ok = self::deleteServicesForGroup($group_id);
+		
+		if($ok)
+			$ok = SecurityControler::deleteForGroup($group_id);
 
 		return $ok;
 	}
@@ -425,8 +312,9 @@ class UsergroupControler
 		if(!isset($group_id)|| empty($group_id) )
 			return false;
 		
-		self::connect();
-		$query="delete from ".self::$usergroup_content_table." where group_id='".$group_id."'";
+		self::$db=new dbquery();
+		self::$db->connect();
+		$query="delete from ".USERGROUP_CONTENT_TABLE." where group_id='".$group_id."'";
 		try{
 			if($_ENV['DEBUG']){echo $query.' // ';}
 			self::$db->query($query);
@@ -439,103 +327,31 @@ class UsergroupControler
 		return $ok;
 	}
 	
-	/**
-	* Prepares the update query for a given Usergroup object
-	*
-	* @param  $group Usergroup object
-	* @return String containing the fields and the values 
-	*/
-	private function update_prepare($group)
-	{	
-		$result=array();
-		foreach($group->getArray() as $key => $value)
-		{
-			// For now all fields in the usergroups table are strings
-			if(!empty($value))
-			{
-				$result[]=$key."='".$value."'";
-			}
-		}
-
-		return implode(",",$result);
-	} 
-	
-	/**
-	* Prepares the insert query for a given Usergroup object
-	*
-	* @param  $group Usergroup object
-	* @return Array containing the fields and the values 
-	*/
-	private function insert_prepare($group)
-	{
-		$columns=array();
-		$values=array();
-		foreach($group->getArray() as $key => $value)
-		{
-			// For now all fields in the usergroups table are strings
-			if(!empty($value))
-			{
-				$columns[]=$key;
-				$values[]="'".$value."'";
-			}
-		}
-		return array('COLUMNS' => implode(",",$columns), 'VALUES' => implode(",",$values));
-	}
 	
 	/**
 	* Disables a given usergroup
 	* 
-	* @param  $group_id String Usergroup identifier
+	* @param  $group usergroups object
 	* @return bool true if the disabling is complete, false otherwise 
 	*/
-	public function disable($group_id)
+	public function disable($group)
 	{
-		if(!isset($group_id)|| empty($group_id) )
-			return false;
-		if(! self::groupExists($group_id))
-			return false;
-			
-		self::connect();
-		$query="update ".self::$usergroups_table." set enabled = 'N' where group_id='".$group_id."'"; 
-					
-		try{
-			if($_ENV['DEBUG']){echo $query.' // ';}
-			self::$db->query($query);
-			$ok = true;
-		} catch (Exception $e){
-			echo _CANNOT_DISABLE_GROUP." ".$group_id.' // ';
-			$ok = false;
-		}
-		self::disconnect();
-		return $ok;
+		self::set_foolish_ids(array('group_id'));
+		self::set_specific_id('group_id');
+		return self::advanced_disable($group);
 	}
 	
 	/**
 	* Enables a given usergroup
 	* 
-	* @param  $group_id String Usergroup identifier
+	* @param  $group usergroups object
 	* @return bool true if the enabling is complete, false otherwise 
 	*/
-	public function enable($group_id)
+	public function enable($group)
 	{
-		if(!isset($group_id)|| empty($group_id) )
-			return false;
-		if(! self::groupExists($group_id))
-			return false;
-			
-		self::connect();
-		$query="update ".self::$usergroups_table." set enabled = 'Y' where group_id='".$group_id."'"; 
-					
-		try{
-			if($_ENV['DEBUG']){echo $query.' // ';}
-			self::$db->query($query);
-			$ok = true;
-		} catch (Exception $e){
-			echo _CANNOT_ENABLE_GROUP." ".$group_id.' // ';
-			$ok = false;
-		}
-		self::disconnect();
-		return $ok;
+		self::set_foolish_ids(array('group_id'));
+		self::set_specific_id('group_id');
+		return self::advanced_enable($group);
 	}
 	
 	/**
@@ -549,8 +365,9 @@ class UsergroupControler
 		if(!isset($group_id) || empty($group_id))
 			return false;
 
-		self::connect();
-		$query = "select group_id from ".self::$usergroups_table." where group_id = '".$group_id."'";
+		self::$db=new dbquery();
+		self::$db->connect();
+		$query = "select group_id from ".USERGROUPS_TABLE." where group_id = '".$group_id."'";
 					
 		try{
 			if($_ENV['DEBUG']){echo $query.' // ';}
@@ -561,10 +378,10 @@ class UsergroupControler
 		
 		if(self::$db->nb_result() > 0)
 		{
-			self::disconnect();
+			self::$db->disconnect();
 			return true;
 		}
-		self::disconnect();
+		self::$db->disconnect();
 		return false;
 	}
 	
@@ -578,8 +395,9 @@ class UsergroupControler
 	{
 		if(!isset($group_id)|| empty($group_id) )
 			return false;
-		self::connect();
-		$query="delete from ".self::$groups_services_table." where group_id='".$group_id."'";
+		self::$db=new dbquery();
+		self::$db->connect();
+		$query="delete from ".USERGROUPS_SERVICES_TABLE." where group_id='".$group_id."'";
 		try{
 			if($_ENV['DEBUG']){echo $query.' // ';}
 			self::$db->query($query);
@@ -588,7 +406,7 @@ class UsergroupControler
 			echo _CANNOT_DELETE_GROUP_ID." ".$group_id.' // ';
 			$ok = false;
 		}
-		self::disconnect();
+		self::$db->disconnect();
 		return $ok;
 	}
 	
@@ -604,8 +422,9 @@ class UsergroupControler
 		if(!isset($group_id)|| empty($group_id) || !isset($service_id)|| empty($service_id) )
 			return false;
 			
-		self::connect();
-		$query = "insert into ".self::$groups_services_table." (group_id, service_id) values ('".$group_id."', '".$service_id."')";
+		self::$db=new dbquery();
+		self::$db->connect();
+		$query = "insert into ".USERGROUPS_SERVICES_TABLE." (group_id, service_id) values ('".$group_id."', '".$service_id."')";
 		try{
 			if($_ENV['DEBUG']){echo $query.' // ';}
 			self::$db->query($query);
@@ -614,7 +433,7 @@ class UsergroupControler
 			echo _CANNOT_INSERT." ".$group_id.' '.$service_id.' // ';
 			$ok = false;
 		}
-		self::disconnect();
+		self::$db->disconnect();
 		return $ok;
 	}
 	
@@ -630,8 +449,9 @@ class UsergroupControler
 		if(!isset($group_id)|| empty($group_id) || !isset($user_id)|| empty($user_id) )
 			return false;
 			
-		self::connect();
-		$query = "select user_id from ".self::$usergroup_content_table." where user_id ='".$user_id."' and group_id = '".$group_id."'";
+		self::$db=new dbquery();
+		self::$db->connect();
+		$query = "select user_id from ".USERGROUP_CONTENT_TABLE." where user_id ='".$user_id."' and group_id = '".$group_id."'";
 
 		try{
 			if($_ENV['DEBUG']){echo $query.' // ';}
@@ -639,7 +459,7 @@ class UsergroupControler
 		} catch (Exception $e){
 			echo _CANNOT_FIND." ".$group_id.' '.$user_id.' // ';
 		}
-		self::disconnect();
+		self::$db->disconnect();
 		
 		if(self::$db->nb_result() > 0)
 			return true;
@@ -656,9 +476,10 @@ class UsergroupControler
 	public function getUsergroupsCount($enabled_only = true)
 	{
 		$nb = 0;
-		self::connect();
+		self::$db=new dbquery();
+		self::$db->connect();
 		
-		$query = "select group_id from ".self::$usergroups_table." " ;
+		$query = "select group_id from ".USERGROUPS_TABLE." " ;
 		if($enabled_only)
 			$query .= "where enabled ='Y'";
 		
@@ -668,7 +489,7 @@ class UsergroupControler
 		} catch (Exception $e){}
 		
 		$nb = self::$db->nb_result();			
-		self::disconnect();
+		self::$db->disconnect();
 		return $nb;
 	}
 }

@@ -73,7 +73,7 @@ class security extends dbquery
 	*/
 	public function login($s_login,$pass, $method = false)
 	{
-		require_once('core/class/UserControler.php');
+		require_once('core/class/users_controler.php');
 		if ($this->test_column($_SESSION['tablename']['users'], 'loginmode')) //Compatibility test, if loginmode column doesn't exists, Maarch can't crash
 		{
 			if ($method == 'activex')
@@ -83,14 +83,14 @@ class security extends dbquery
 		}
 		else
 			$comp = " and password = '".$pass."' and STATUS <> 'DEL'";
-			
-		$user = UserControler::get($s_login, $comp);
-	
+
+		$user = users_controler::get($s_login, $comp);
+
 		if(isset($user))
 		{
 			if($user->__get('enabled') == "Y")
 			{
-				require_once("core/class/UsergroupControler.php");
+				require_once("core/class/usergroups_controler.php");
 				require_once("core/class/ServiceControler.php");
 				$_SESSION['user']['change_pass'] = $user->__get('change_password');
 				$_SESSION['user']['UserId'] = $user->__get('user_id');
@@ -108,12 +108,12 @@ class security extends dbquery
 					$user->__set('cookie_date', 'SYSDATE');
 				else
 					$user->__set('cookie_date',date("Y-m-d")." ".date("H:m:i"));
-
-				UserControler::save($user, 'up');
-				setcookie("maarch", "UserId=".$_SESSION['user']['UserId']."&key=".$key,time()+($_SESSION['config']['cookietime']*1000));
 				
-				$_SESSION['user']['primarygroup'] = UsergroupControler::getPrimaryGroup($_SESSION['user']['UserId']);
+				users_controler::save($user, 'up');
+				setcookie("maarch", "UserId=".$_SESSION['user']['UserId']."&key=".$key,time()+($_SESSION['config']['cookietime']*1000));
+				$_SESSION['user']['primarygroup'] = usergroups_controler::getPrimaryGroup($_SESSION['user']['UserId']);
 				$tmp = SecurityControler::load_security($_SESSION['user']['UserId']);
+
 				$_SESSION['user']['collections'] = $tmp['collections'];
 				$_SESSION['user']['security'] = $tmp['security'];
 				
@@ -181,13 +181,13 @@ class security extends dbquery
 		
 		$comp = " and cookie_key = '".$s_key."' and STATUS <> 'DEL'";
 
-		$user = UserControler::get($s_login, $comp);
+		$user = users_controler::get($s_login, $comp);
 	
 		if(isset($user))
 		{
 			if($user->__get('enabled')  == "Y")
 			{
-				require_once("core/class/UsergroupControler.php");
+				require_once("core/class/usergroups_controler.php");
 				require_once("core/class/ServiceControler.php");
 				$_SESSION['user']['change_pass'] = $user->__get('change_password');
 				$_SESSION['user']['UserId'] = $user->__get('user_id');
@@ -206,10 +206,10 @@ class security extends dbquery
 				else
 					$user->__set('cookie_date',date("Y-m-d")." ".date("H:m:i"));
 
-				UserControler::save($user, 'up');
+				users_controler::save($user, 'up');
 				setcookie("maarch", "UserId=".$_SESSION['user']['UserId']."&key=".$key,time()+($_SESSION['config']['cookietime']*60));
 
-				$_SESSION['user']['primarygroup'] = UsergroupControler::getPrimaryGroup($_SESSION['user']['UserId']);
+				$_SESSION['user']['primarygroup'] = usergroups_controler::getPrimaryGroup($_SESSION['user']['UserId']);
 				
 				$tmp = SecurityControler::load_security($_SESSION['user']['UserId']);
 				$_SESSION['user']['collections'] = $tmp['collections'];

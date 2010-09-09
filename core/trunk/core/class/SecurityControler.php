@@ -40,7 +40,7 @@ define("_CODE_INCREMENT",1);
 // Loads the required class
 try {
 	require_once("core/class/class_db.php");
-	require_once("core/class/UserControler.php");
+	require_once("core/class/users_controler.php");
 	require_once("core/class/Security.php");
 } catch (Exception $e){
 	echo $e->getMessage().' // ';
@@ -189,7 +189,7 @@ class SecurityControler
 	/**
 	* Inserts in the database (security table) a Security object
 	*
-	* @param  $security Security objectgetAccessForGroup($group_id)
+	* @param  $security Security object
 	* @return bool true if the insertion is complete, false otherwise
 	*/
 	private function insert($security)
@@ -342,7 +342,6 @@ class SecurityControler
 		return array('COLUMNS' => implode(",",$columns), 'VALUES' => implode(",",$values));
 	}
 	
-
 	// TO DO : USE TO CHECK WHERE CLAUSE
 	public function check_where_clause($coll_id, $target, $where_clause, $view, $user_id)
 	{
@@ -473,7 +472,7 @@ class SecurityControler
 		}
 		else
 		{
-			$groups = UserControler::getGroups($user_id);
+			$groups = users_controler::getGroups($user_id);
 
 			$access = array();
 			for($i=0; $i<count($groups); $i++)
@@ -562,5 +561,41 @@ class SecurityControler
 		return -1;
 	}
 
+
+/**
+	 * Give action bitmask for given $user_id over given
+	 * object
+	 * @param varchar(32) $user_id
+	 * @param bigint $object_id
+	 * @return bitmask
+	 */
+	public function getActions($user_id,$object_id){
+		// Select from security session table
+		
+		/********
+		 * FAKE *
+		 ********/
+		return ADD_RECORD+CREATE_CLASS+CREATE_OTHER_AGREGATION+DATA_MODIFICATION+DELETE_CLASS+DELETE_OTHER_AGREGATION;
+	}
+	
+	/**
+	 * Update security session table with
+	 * bitmask, according with given user 
+	 * and aggregation.
+	 * Return computed bitmask
+	 * @param varchar(32) $user_id
+	 * @param bigint $object_id
+	 * @return bitmask
+	 */
+	public function setActions($user_id,$object_id){
+		// Compute action bitmask 
+		
+		// Update security session table
+		
+		/********
+		 * FAKE *
+		 ********/
+		return ADD_RECORD+CREATE_CLASS+CREATE_OTHER_AGREGATION+DATA_MODIFICATION+DELETE_CLASS+DELETE_OTHER_AGREGATION;
+	}
 }
 ?>

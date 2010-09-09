@@ -42,7 +42,7 @@ try {
 *
 * @ingroup core
 */
-class Usergroup  extends BaseObject
+class usergroups  extends BaseObject
 {
 	/**
 	* Returns the string representing the Usergroup object

@@ -245,7 +245,7 @@
    ) ;
 
 --------------------------------------------------------
---  DDL for Table USERS
+--  DDL for Table USER
 --------------------------------------------------------
 
   CREATE TABLE "USERS"
@@ -263,7 +263,7 @@
 	"COOKIE_DATE" DATE DEFAULT sysdate,
 	"ENABLED" VARCHAR2(1) DEFAULT 'Y',
 	"CHANGE_PASSWORD" VARCHAR2(1) DEFAULT 'Y',
-	"DELAY" DATE DEFAULT sysdate,
+	"DELAY_NUMBER" NUMBER DEFAULT NULL,
 	"STATUS" VARCHAR2(10) DEFAULT 'OK',
 	"LOGINMODE" VARCHAR2(50) DEFAULT NULL,
 	

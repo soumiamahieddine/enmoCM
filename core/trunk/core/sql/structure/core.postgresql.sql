@@ -292,10 +292,10 @@ CREATE TABLE users
   cookie_date timestamp without time zone,
   enabled character(1) NOT NULL DEFAULT 'Y'::bpchar,
   change_password character(1) NOT NULL DEFAULT 'Y'::bpchar,
-  delay timestamp without time zone,
+  delay_number integer DEFAULT NULL,
   status character varying(10) NOT NULL DEFAULT 'OK'::character varying,
   loginmode character varying(50) DEFAULT NULL::character varying,
   CONSTRAINT users_pkey PRIMARY KEY (user_id)
 )
 WITH (OIDS=FALSE);
-ALTER TABLE users OWNER TO postgres;
+ALTER TABLE user OWNER TO postgres;

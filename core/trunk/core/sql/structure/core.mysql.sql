@@ -208,7 +208,7 @@ CREATE TABLE IF NOT EXISTS users (
   cookie_date datetime default NULL,
   enabled char(1) collate utf8_unicode_ci NOT NULL default 'Y',
   change_password char(1) collate utf8_unicode_ci NOT NULL default 'Y',
-  delay datetime default NULL,
+  delay_number int(8) default NULL,
   status varchar(10) NOT NULL DEFAULT 'OK',
   loginmode varying(50) collate utf8_unicode_ci default NULL,
   PRIMARY KEY  (user_id)
