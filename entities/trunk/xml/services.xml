@@ -152,7 +152,7 @@
 			<nature>include</nature>
 		</WHEREAMIUSED>
 		<WHEREAMIUSED>
-			<page>users_add_db.php</page>
+			<page>users_add_db</page>
 			<nature>include</nature>
 		</WHEREAMIUSED>
 	</SERVICE>

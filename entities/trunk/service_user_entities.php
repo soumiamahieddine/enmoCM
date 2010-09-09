@@ -1,11 +1,10 @@
 <?php
 require_once('modules/entities/class/EntityControler.php');
-
 if($_SESSION['service_tag'] == 'user_init')
 {
 	$_SESSION['m_admin']['nbentities'] = EntityControler::getEntitiesCount();
 	
-	$tmp_array = EntityControler::getUsersEntities($_SESSION['m_admin']['users']['UserId']);
+	$tmp_array = EntityControler::getUsersEntities($_SESSION['m_admin']['users']['user_id']);
 	for($i=0; $i<count($tmp_array);$i++)
 	{
 		$ent = EntityControler::get($tmp_array[$i]['ENTITY_ID']);
@@ -50,9 +49,9 @@ elseif($_SESSION['service_tag'] == 'user_check')
 		}
 	}
 }
-elseif($_SESSION['service_tag'] == 'user_add_' || $_SESSION['service_tag'] == 'user_up')
+elseif($_SESSION['service_tag'] == 'user_add' || $_SESSION['service_tag'] == 'user_up')
 {
-	EntityControler::cleanUsersentities($_SESSION['m_admin']['users']['UserId'], 'user_id');
-	EntityControler::loadDbUsersentities($_SESSION['m_admin']['users']['UserId'], $_SESSION['m_admin']['entity']['entities']);
+	EntityControler::cleanUsersentities($_SESSION['m_admin']['users']['user_id'], 'user_id');
+	EntityControler::loadDbUsersentities($_SESSION['m_admin']['users']['user_id'], $_SESSION['m_admin']['entity']['entities']);
 }
 ?>

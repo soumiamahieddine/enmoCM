@@ -24,9 +24,9 @@ class users_entities extends dbquery
 
 		if($mode == 'up')
 		{
-			if (($_SESSION['m_admin']['load_entities'] == true || ! isset($_SESSION['m_admin']['load_entities'] )) && $_SESSION['m_admin']['users']['UserId'] <> "superadmin")
+			if (($_SESSION['m_admin']['load_entities'] == true || ! isset($_SESSION['m_admin']['load_entities'] )) && $_SESSION['m_admin']['users']['user_id'] <> "superadmin")
 			{
-				$this->load_entities_session($_SESSION['m_admin']['users']['UserId']);
+				$this->load_entities_session($_SESSION['m_admin']['users']['user_id']);
 			}
 		}
 		else
@@ -285,7 +285,7 @@ class users_entities extends dbquery
 
 		if(!$from_module_entities_page)
 		{
-			$this->query("DELETE FROM ".$_SESSION['tablename']['ent_users_entities'] ." where user_id = '".$this->protect_string_db(trim($_SESSION['m_admin']['users']['UserId']))."'");
+			$this->query("DELETE FROM ".$_SESSION['tablename']['ent_users_entities'] ." where user_id = '".$this->protect_string_db(trim($_SESSION['m_admin']['users']['user_id']))."'");
 		}
 		else
 		{
@@ -296,7 +296,7 @@ class users_entities extends dbquery
 			$tmp_r = $this->protect_string_db($_SESSION['m_admin']['entity']['entities'][$i]['ROLE']);
 			if(!$from_module_entities_page)
 			{
-				$this->query("INSERT INTO ".$_SESSION['tablename']['ent_users_entities']." VALUES ('".$_SESSION['m_admin']['users']['UserId']."', '".$_SESSION['m_admin']['entity']['entities'][$i]['ENTITY_ID']."', '".$tmp_r."', '".$_SESSION['m_admin']['entity']['entities'][$i]['PRIMARY']."')");
+				$this->query("INSERT INTO ".$_SESSION['tablename']['ent_users_entities']." VALUES ('".$_SESSION['m_admin']['users']['user_id']."', '".$_SESSION['m_admin']['entity']['entities'][$i]['ENTITY_ID']."', '".$tmp_r."', '".$_SESSION['m_admin']['entity']['entities'][$i]['PRIMARY']."')");
 			}
 			else
 			{

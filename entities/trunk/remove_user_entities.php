@@ -20,7 +20,7 @@ if(isset($_REQUEST['entities']) && $_REQUEST['entities'] >= 0)
 	{
 		unset($_SESSION['m_admin']['entity']['entities'][$to_unset[$i]]);
 	}
-	array_unique($_SESSION['m_admin']['entity']['entities']);
+	$_SESSION['m_admin']['entity']['entities'] = array_values($_SESSION['m_admin']['entity']['entities']);
 	$_SESSION['m_admin']['load_entities'] = false;
 	echo "{ status : 0 }";
 }
