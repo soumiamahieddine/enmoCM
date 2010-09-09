@@ -38,8 +38,8 @@ if(isset($_REQUEST['submit']))
 	$db->connect();
 	require_once('modules'.DIRECTORY_SEPARATOR.'basket'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php');
 	$bask = new basket();
-	$bask->cancel_abs($_SESSION['m_admin']['users']['UserId']);
+	$bask->cancel_abs($_SESSION['m_admin']['users']['user_id']);
 
 }
 ?>
-<script >window.top.location='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=users_up&admin=users&id=<?php echo $_SESSION['m_admin']['users']['UserId'];?>';</script>
+<script >window.top.location='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=users_up&admin=users&id=<?php echo $_SESSION['m_admin']['users']['user_id'];?>';</script>

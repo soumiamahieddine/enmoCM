@@ -73,9 +73,9 @@ if($_SESSION['m_admin']['users']['Status'] == 'ABS')
     <?php
     require_once('modules'.DIRECTORY_SEPARATOR.'basket'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php');
 	$bask = new basket();
-	$arr_baskets = $bask->get_baskets($_SESSION['m_admin']['users']['UserId']);
+	$arr_baskets = $bask->get_baskets($_SESSION['m_admin']['users']['user_id']);
 	//print_r($arr_baskets);
-	$modal_content = $bask->redirect_my_baskets_list($arr_baskets, count($arr_baskets), $_SESSION['m_admin']['users']['UserId'],"listingbasket specsmall");
+	$modal_content = $bask->redirect_my_baskets_list($arr_baskets, count($arr_baskets), $_SESSION['m_admin']['users']['user_id'],"listingbasket specsmall");
 	echo "<div>";
 	?>
 		<script>
