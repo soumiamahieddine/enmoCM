@@ -269,7 +269,7 @@ class cases extends dbquery
 			if ($_SESSION['history']['casesunlink'] == "true")
 			{
 				$hist = new history();
-				$hist->add($_SESSION['tablename']['cases'], $_SESSION['m_admin']['users']['UserId'],"UNLINK",_RES_DETTACH_ON_CASE." ".$res_id, $_SESSION['config']['databasetype']);
+				$hist->add($_SESSION['tablename']['cases'], $_SESSION['m_admin']['users']['user_id'],"UNLINK",_RES_DETTACH_ON_CASE." ".$res_id, $_SESSION['config']['databasetype']);
 			}
 			
 		}
