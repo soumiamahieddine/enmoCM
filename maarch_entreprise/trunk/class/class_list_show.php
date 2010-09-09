@@ -213,8 +213,6 @@ class list_show extends functions
 				$end = $nb_total;
 			}
 
-
-
 			if($actual_template <> '')
 			{
 				$link .= "&amp;template=".$actual_template;

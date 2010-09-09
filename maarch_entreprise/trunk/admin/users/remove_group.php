@@ -20,7 +20,7 @@ if(isset($_REQUEST['usergroups']) && $_REQUEST['usergroups'] >= 0)
 	{
 		unset($_SESSION['m_admin']['users']['groups'][$to_unset[$i]]);
 	}
-	array_unique($_SESSION['m_admin']['users']['groups']);
+	$_SESSION['m_admin']['users']['groups'] = array_values($_SESSION['m_admin']['users']['groups']);
 	$_SESSION['m_admin']['load_group'] = false;
 	echo "{ status : 0 }";
 }

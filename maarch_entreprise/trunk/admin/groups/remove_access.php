@@ -11,7 +11,7 @@ if(isset($_REQUEST['security']) && $_REQUEST['security'] >= 0)
 			unset($_SESSION['m_admin']['groups']['security'][$access_ind[$i]]);
 		}
 	}
-	array_unique($_SESSION['m_admin']['groups']['security']);
+	$_SESSION['m_admin']['groups']['security'] = array_values($_SESSION['m_admin']['groups']['security']);
 	$_SESSION['m_admin']['load_security'] = false;
 	echo "{ status : 0 }";
 }

@@ -51,10 +51,6 @@ if(count($_SESSION['config']) <= 0)
 	$business_app_tools->build_business_app_config();
 	$core_tools->load_modules_config($_SESSION['modules']);
 	$core_tools->load_menu($_SESSION['modules']);
-	
-	//$core_tools->load_admin_core_board();
-	//$core_tools->load_admin_module_board($_SESSION['modules']);
-	//$core_tools->load_admin_app_board('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR);
 }
 
 if(!empty($_SESSION['error']))

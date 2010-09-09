@@ -3,8 +3,7 @@
 $error = '';
 
 try{
-	require_once("core/class/UserControler.php");
-	require_once("core/class/User.php");
+	require_once("core/class/users_controler.php");
 } catch (Exception $e){
 	echo $e->getMessage();
 }
@@ -13,11 +12,11 @@ if(!isset($_SESSION['config']['userdefaultpassword']) || empty($_SESSION['config
 	$_SESSION['config']['userdefaultpassword'] = 'maarch';
 $default_password = md5($_SESSION['config']['userdefaultpassword']);
 
-$val = array('user_id' => $_SESSION['m_admin']['users']['UserId'], 'password' => $default_password, 'change_password' => 'Y');
-$user = new User();
+$val = array('user_id' => $_SESSION['m_admin']['users']['user_id'], 'password' => $default_password, 'change_password' => 'Y');
+$user = new users();
 $user->setArray($val);
 
-$res = UserControler:: save($user, "up");
+$res = users_controler:: save($user, "up");
 
 if($res)
 {
@@ -25,7 +24,7 @@ if($res)
 	{
 		require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 		$hist = new history();
-		$hist->add($_SESSION['tablename']['users'], $_SESSION['m_admin']['users']['UserId'],"UP",_NEW_PASSWORD_USER." : ".$_SESSION['m_admin']['users']['LastName']." ".$_SESSION['m_admin']['users']['FirstName'], $_SESSION['config']['databasetype']);
+		$hist->add($_SESSION['tablename']['users'], $_SESSION['m_admin']['users']['user_id'],"UP",_NEW_PASSWORD_USER." : ".$_SESSION['m_admin']['users']['LastName']." ".$_SESSION['m_admin']['users']['FirstName'], $_SESSION['config']['databasetype']);
 
 	}
 

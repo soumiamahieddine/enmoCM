@@ -30,14 +30,14 @@
 */
 
 try{
-	require_once("core/class/UsergroupControler.php");
+	require_once("core/class/usergroups_controler.php");
 } catch (Exception $e){
 	echo $e->getMessage();
 }
 core_tools::load_lang();
 core_tools::test_admin('admin_users', 'apps');
 
-$tab = UsergroupControler::getAllUsergroups();
+$tab = usergroups_controler::getAllUsergroups();
 
 $tab2 = array();
 if ( count($_SESSION['m_admin']['users']['groups']) > 0 )

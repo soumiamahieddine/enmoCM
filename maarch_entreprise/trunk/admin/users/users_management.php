@@ -3,7 +3,33 @@
 /* Affichage */
 if($mode == "list")
 {
-	list_show::admin_list($tab, $i, $title, 'user_id','users_management_controler&mode=list','users', 'user_id', true, $page_name_up, $page_name_val, $page_name_ban, $page_name_del, $page_name_add, $label_add, false, false, _ALL_USERS, _USER, $_SESSION['config']['businessappurl'].'static.php?filename=manage_users_b.gif', false, true, false, true, "", true, $autoCompletionArray);
+	list_show::admin_list(
+					$users_list['tab'], 
+					count($users_list['tab']), 
+					$users_list['title'], 
+					'user_id',
+					'users_management_controler&mode=list',
+					'users','user_id', 
+					true, 
+					$users_list['page_name_up'], 
+					$users_list['page_name_val'], 
+					$users_list['page_name_ban'], 
+					$users_list['page_name_del'], 
+					$users_list['page_name_add'], 
+					$users_list['label_add'], 
+					false, 
+					false, 
+					_ALL_USERS, 
+					_USER, 
+					$_SESSION['config']['businessappurl'].'static.php?filename=manage_scheme.gif&module=moreq', 
+					false, 
+					true, 
+					false, 
+					true, 
+					$users_list['what'], 
+					true, 
+					$users_list['autoCompletionArray']
+				);
 }
 elseif($mode == "up" || $mode == "add")
 {
@@ -38,24 +64,24 @@ elseif($mode == "up" || $mode == "add")
 			<input type="hidden" name="start" id="start" value="<?php echo $_REQUEST['start'];?>" />
 			<p>
 				<label for="UserId"><?php  echo _ID; ?> :</label>
-					<?php  if($mode == "up") { echo functions::show_string($_SESSION['m_admin']['users']['UserId']); }else{ echo '<br/>'; } ?><input name="user_id"  type="<?php  if($mode == "up") { ?>hidden<?php  } elseif($mode == "add") { ?>text<?php  } ?>" id="user_id" value="<?php  echo functions::show_string($_SESSION['m_admin']['users']['UserId']); ?>" /><span class="red_asterisk">*</span>
+					<?php  if($mode == "up") { echo functions::show_string($_SESSION['m_admin']['users']['user_id']); }else{ echo '<br/>'; } ?><input name="user_id"  type="<?php  if($mode == "up") { ?>hidden<?php  } elseif($mode == "add") { ?>text<?php  } ?>" id="user_id" value="<?php  echo functions::show_string($_SESSION['m_admin']['users']['user_id']); ?>" /><span class="red_asterisk">*</span>
 					<!--<input type="hidden"  name="id" id="id" value="<?php  echo $id; ?>" />-->
 			</p>
             <p>
 				<label for="LastName"><?php  echo _LASTNAME; ?> :</label><br/>
-				<input name="LastName" id="LastName"  type="text" value="<?php  echo functions::show_string($_SESSION['m_admin']['users']['LastName']); ?>" /><span class="red_asterisk">*</span>
+				<input name="LastName" id="LastName"  type="text" value="<?php  echo functions::show_string($_SESSION['m_admin']['users']['lastname']); ?>" /><span class="red_asterisk">*</span>
 			</p>
 			<p>
 				<label for="FirstName"><?php  echo _FIRSTNAME; ?> :</label><br/>
-				<input name="FirstName" id="FirstName"  type="text" value="<?php  echo functions::show_string($_SESSION['m_admin']['users']['FirstName']); ?>" /><span class="red_asterisk">*</span>
+				<input name="FirstName" id="FirstName"  type="text" value="<?php  echo functions::show_string($_SESSION['m_admin']['users']['firstname']); ?>" /><span class="red_asterisk">*</span>
 			</p>
 			<p>
 				<label for="Phone"><?php  echo _PHONE_NUMBER; ?> :</label><br/>
-				<input name="Phone" id="Phone"  type="text" value="<?php  echo $_SESSION['m_admin']['users']['Phone']; ?>" />
+				<input name="Phone" id="Phone"  type="text" value="<?php  echo $_SESSION['m_admin']['users']['phone']; ?>" />
 			</p>
 			<p>
 				<label for="Mail"><?php  echo _MAIL; ?> :</label><br/>
-				<input name="Mail" id="Mail"  type="text" value="<?php  echo $_SESSION['m_admin']['users']['Mail']; ?>" /><span class="red_asterisk">*</span>
+				<input name="Mail" id="Mail"  type="text" value="<?php  echo $_SESSION['m_admin']['users']['mail']; ?>" /><span class="red_asterisk">*</span>
 			</p>
 			<p>
 				<label for="LoginMode"><?php  echo _LOGIN_MODE; ?> :</label><br/>
@@ -67,7 +93,7 @@ elseif($mode == "up" || $mode == "add")
 						if($METHOD['ACTIVATED'] == 'true')
 						{
 							$vala = '';
-							if ($_SESSION['m_admin']['users']['LoginMode'] == $METHOD['ID'])
+							if ($_SESSION['m_admin']['users']['loginmode'] == $METHOD['ID'])
 								$vala = 'selected="selected"';
 								
 							echo '<option value="'.$METHOD['ID'].'" '.$vala.'  >'.constant($METHOD['BRUT_LABEL']).'</option>';

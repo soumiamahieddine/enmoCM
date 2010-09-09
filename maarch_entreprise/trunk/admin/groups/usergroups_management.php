@@ -3,7 +3,33 @@
 /* Affichage */
 if($mode == "list")
 {
-	list_show::admin_list($tab, $i, $title, 'group_id','usergroups_management_controler&mode=list','groups', 'group_id', true, $page_name_up, $page_name_val, $page_name_ban, $page_name_del, $page_name_add, $label_add, false, false, _ALL_GROUPS, _GROUP, $_SESSION['config']['businessappurl'].'static.php?filename=manage_groupe_b.gif', false, true, false, true, "", true, $autoCompletionArray);
+	list_show::admin_list(
+					$groups_list['tab'], 
+					count($groups_list['tab']), 
+					$groups_list['title'], 
+					'group_id',
+					'usergroups_management_controler&mode=list',
+					'groups','group_id', 
+					true, 
+					$groups_list['page_name_up'], 
+					$groups_list['page_name_val'], 
+					$groups_list['page_name_ban'], 
+					$groups_list['page_name_del'], 
+					$groups_list['page_name_add'], 
+					$groups_list['label_add'], 
+					false, 
+					false, 
+					_ALL_GROUPS, 
+					_GROUP, 
+					$_SESSION['config']['businessappurl'].'static.php?filename=manage_scheme.gif&module=moreq', 
+					false, 
+					true, 
+					false, 
+					true, 
+					$groups_list['what'], 
+					true, 
+					$groups_list['autoCompletionArray']
+				);
 }
 elseif($mode == "up" || $mode == "add")
 {
@@ -152,8 +178,8 @@ elseif($mode == "up" || $mode == "add")
 						<?php  echo _GROUP; ?> :
 					</td>
 					<td align="left">
-						<?php  if($mode == "up") { echo functions::show($_SESSION['m_admin']['groups']['GroupId']); } ?>
-						<input name="group_id" type="<?php  if($mode == "up") { ?>hidden<?php  } elseif($mode == "add") { ?>text<?php  } ?>" id="group_id" value="<?php  echo $_SESSION['m_admin']['groups']['GroupId']; ?>" />
+						<?php  if($mode == "up") { echo functions::show($_SESSION['m_admin']['groups']['group_id']); } ?>
+						<input name="group_id" type="<?php  if($mode == "up") { ?>hidden<?php  } elseif($mode == "add") { ?>text<?php  } ?>" id="group_id" value="<?php  echo $_SESSION['m_admin']['groups']['group_id']; ?>" />
 						<input type="hidden"  name="id" value="<?php  echo $group_id; ?>" />
 					</td>
 				</tr>
@@ -162,7 +188,7 @@ elseif($mode == "up" || $mode == "add")
 						<?php  echo _DESC; ?> :
 					</td>
 					<td align="left">
-						<input name="desc" id="desc" class="text" type="text" value="<?php  echo $_SESSION['m_admin']['groups']['desc']; ?>"  alt="<?php  echo $_SESSION['m_admin']['groups']['desc']; ?>" title="<?php  echo $_SESSION['m_admin']['groups']['desc']; ?>"/>
+						<input name="desc" id="desc" class="text" type="text" value="<?php  echo $_SESSION['m_admin']['groups']['group_desc']; ?>"  alt="<?php  echo $_SESSION['m_admin']['groups']['desc']; ?>" title="<?php  echo $_SESSION['m_admin']['groups']['group_desc']; ?>"/>
 					</td>
 				</tr>
 			</table>
