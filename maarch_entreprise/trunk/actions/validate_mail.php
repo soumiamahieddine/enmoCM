@@ -597,7 +597,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 				$frm_str .='</select> ';
 				$frm_str .= '<input type="button" name="send" id="send" value="'._VALIDATE.'" class="button" onclick="valid_action_form( \'index_file\', \''.$path_manage_action.'\', \''. $id_action.'\', \''.$res_id.'\', \''.$table.'\', \''.$module.'\', \''.$coll_id.'\', \''.$mode.'\');"/> ';
 			}
-			$frm_str .= '<input name="close" id="close" type="button" value="'._CANCEL.'" class="button" onClick="javascript:$(\'baskets\').style.visibility=\'visible\';destroyModal(\'modal_'.$id_action.'\');reinit();"/>';
+			$frm_str .= '<input name="close" id="close" type="button" value="'._CANCEL.'" class="button" onclick="javascript:$(\'baskets\').style.visibility=\'visible\';destroyModal(\'modal_'.$id_action.'\');reinit();"/>';
 		$frm_str .= '</p>';
 	$frm_str .= '</form>';
 	$frm_str .= '</div>';

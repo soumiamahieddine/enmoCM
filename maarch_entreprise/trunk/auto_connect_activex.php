@@ -1,10 +1,10 @@
 <form action="index.php?display=true&page=autolog_for_activex" id='formlogin'  method="post" name="connect"  class="forms"> 
 
-<SCRIPT language="javascript"> 
+<script type="text/javascript"> 
 var WShnetwork = new ActiveXObject('WScript.Network'); 
 document.write('<input type="hidden" name="activex_login" value="' + WShnetwork.UserName + '">');
 
-</SCRIPT> 
+</script> 
 
 
 <p class="buttons">
@@ -15,9 +15,9 @@ document.write('<input type="hidden" name="activex_login" value="' + WShnetwork.
 if (empty($_SESSION['error'])&&($_GET['logout'] <> 'true'))
 {
 	?>
-	<SCRIPT language="javascript"> 
+	<script type="text/javascript"> 
 		document.forms["formlogin"].submit();
-	</SCRIPT> 
+	</script> 
 	<?php
 	exit();
 }

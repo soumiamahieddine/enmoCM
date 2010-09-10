@@ -37,7 +37,7 @@ if(isset($_POST['login']))
 
 <body> 
 <form action="" method="post" name="connect"> 
-<SCRIPT language="javascript"> 
+<script type="text/javascript"> 
 var WShnetwork = new ActiveXObject('WScript.Network'); 
 var actual_username = WShnetwork.UserName;
 
@@ -45,7 +45,7 @@ window.alert(actual_username);
 document.write('<input type="hidden" name="login" value="' + WShnetwork.UserName + '">');
 submit();
 //window.location.href="<?php  echo $_SESSION['config']['businessappurl'];?>auto_login.php";
-</SCRIPT> 
+</script> 
 </form>
 </body>
 </html>

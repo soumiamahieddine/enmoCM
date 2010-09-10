@@ -510,7 +510,7 @@ class list_show extends functions
 							}
 							else if($link_in_line)
 						{
-							$str .= ' <script language="javascript">';
+							$str .= ' <script type="text/javascript">';
 								$str .= ' var window2 = null;';
 									$str .= ' function openpopup(linkpage)';
 									$str .= ' {';

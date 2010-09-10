@@ -99,7 +99,7 @@ $core_tools->load_header();
 $time = $core_tools->get_session_time_expire();
 
 ?>
-<body onLoad="session_expirate(<?php  echo $time;?>, '<?php  echo $_SESSION['config']['coreurl'];?>');" id="maarch_body">
+<body onload="session_expirate(<?php  echo $time;?>, '<?php  echo $_SESSION['config']['coreurl'];?>');" id="maarch_body">
 	<div id="header">
         <div id="nav">
             <div id="menu" onmouseover="ShowHideMenu('menunav','on');" onmouseout="ShowHideMenu('menunav','off');" class="off">
@@ -120,13 +120,13 @@ $time = $core_tools->get_session_time_expire();
                 </ul>
                		 <?php
                 	echo '<div class="header_menu_blank">&nbsp;</div>';
-                   	echo '<div class="footer_menu"><a style="color:white;" href="'.$_SESSION['config']['businessappurl'].'index.php?page=maarch_credits"">';
+                   	echo '<div class="footer_menu"><a style="color:white;" href="'.$_SESSION['config']['businessappurl'].'index.php?page=maarch_credits">';
                    	echo ''._MAARCH_CREDITS.'</a></div>';?>
                 </div>
         	</div>
 			<div><p id="ariane"><?php 
 			?></p></div>
-			<p id="gauchemenu"><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=bando_tete_gche.gif" alt=""></p>
+			<p id="gauchemenu"><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=bando_tete_gche.gif" alt=""/></p>
 			<p id="logo"><a href="index.php"><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=bando_tete_dte.gif" alt="<?php  echo _LOGO_ALT;?>" /></a></p>
        </div>
 	

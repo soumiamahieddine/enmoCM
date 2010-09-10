@@ -116,7 +116,7 @@ if( isset($_REQUEST['valid']))
 				{
 					unset($_SESSION['m_admin']);
 					?>
-						<script language="javascript">window.opener.location.reload();self.close();</script>
+						<script type="text/javascript">window.opener.location.reload();self.close();</script>
 					<?php
 				}
 			}
@@ -145,7 +145,7 @@ if($mode == "up")
 $core_tools->load_header($title);
 $time = $core_tools->get_session_time_expire();
 ?>
-<body onLoad="setTimeout(window.close, <?php  echo $time;?>*60*1000);">
+<body onload="setTimeout(window.close, <?php  echo $time;?>*60*1000);">
 
 <div class="error">
 <?php  echo $erreur;
@@ -187,7 +187,7 @@ $time = $core_tools->get_session_time_expire();
 	</p>
 	<p class="buttons">
     	<input type="submit" class="button" name="valid" value="<?php  echo _VALIDATE;?>" />
-        <input type="button" class="button" name="cancel" value="<?php  echo _CANCEL;?>" onClick="self.close();" />
+        <input type="button" class="button" name="cancel" value="<?php  echo _CANCEL;?>" onclick="self.close();" />
     </p>
 <input type="hidden" name="mode" value="<?php  echo $mode;?>"/>
 </form>

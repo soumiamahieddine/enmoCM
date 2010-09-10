@@ -84,7 +84,7 @@ if($_REQUEST['name_folder'] <> "")
 		</tr>
 	</table>
 </div>
-<script language="javascript">
+<script type="text/javascript">
 	launch_autocompleter_folders('<?php echo $_SESSION['config']['businessappurl']?>index.php?display=true&module=folder&page=autocomplete_folders&mode=project', 'project');
 	launch_autocompleter_folders('<?php echo $_SESSION['config']['businessappurl']?>index.php?display=true&module=folder&page=autocomplete_folders&mode=market', 'market');
 	function submitForm()

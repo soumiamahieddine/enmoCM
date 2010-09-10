@@ -39,7 +39,7 @@ if(isset($_REQUEST['tree_id']) && !empty($_REQUEST['tree_id']))
 {
 	$_SESSION['doctypes_chosen_tree'] = $_REQUEST['tree_id'];
 	?>
-    <script language="javascript" type="text/javascript">window.top.frames['show_trees'].location.href='<?php  echo $_SESSION['config']['businessappurl']."index.php?display=true&admin=architecture&page=show_trees";?>';</script>
+    <script type="text/javascript">window.top.frames['show_trees'].location.href='<?php  echo $_SESSION['config']['businessappurl']."index.php?display=true&admin=architecture&page=show_trees";?>';</script>
     <?php
 }
 else

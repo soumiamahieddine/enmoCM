@@ -432,8 +432,8 @@ class contacts extends dbquery
 					<tr>
 						<td><label for="is_corporate"><?php echo _IS_CORPORATE_PERSON; ?> : </label></td>
 						<td>&nbsp;</td>
-						<td class="indexing_field"><input type="radio"  class="check" name="is_corporate"  value="Y" <?php if($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'Y'){?> checked="checked"<?php } ?>/ onClick="javascript:show_admin_contacts( true, '<?php echo $display_value;?>');"><?php echo _YES;?>
-							<input type="radio"  class="check" name="is_corporate" value="N" <?php if($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'N'){?> checked="checked"<?php } ?> onClick="javascript:show_admin_contacts( false, '<?php echo $display_value;?>');"/><?php echo _NO;?>
+						<td class="indexing_field"><input type="radio"  class="check" name="is_corporate"  value="Y" <?php if($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'Y'){?> checked="checked"<?php } ?>/ onclick="javascript:show_admin_contacts( true, '<?php echo $display_value;?>');"><?php echo _YES;?>
+							<input type="radio"  class="check" name="is_corporate" value="N" <?php if($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'N'){?> checked="checked"<?php } ?> onclick="javascript:show_admin_contacts( false, '<?php echo $display_value;?>');"/><?php echo _NO;?>
 						</td>
 						<td>&nbsp;</td>
 					</tr>

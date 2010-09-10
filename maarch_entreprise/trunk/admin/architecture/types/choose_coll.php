@@ -45,7 +45,7 @@ if(isset($_REQUEST['collection']) && !empty($_REQUEST['collection']) )
 	}
 	$_SESSION['m_admin']['doctypes']['COLL_ID'] = $_REQUEST['collection'];
 	?>
-    	<script language="javascript" type="text/javascript">window.top.frames['choose_index'].location.href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?display=true&page=choose_index';?>';</script>
+    	<script  type="text/javascript">window.top.frames['choose_index'].location.href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?display=true&page=choose_index';?>';</script>
     <?php
 }
 ?>
@@ -55,7 +55,7 @@ if(isset($_REQUEST['collection']) && !empty($_REQUEST['collection']) )
 <input type="hidden" name="page" value="choose_coll" />
   <p>
 	<label for="coll_id"><?php  echo _COLLECTION;?> : </label>
-	<select name="collection" onChange="this.form.submit();">
+	<select name="collection" onchange="this.form.submit();">
 		<option value="" ><?php  echo _CHOOSE_COLLECTION;?></option>
 		<?php  for($i=0; $i<count($array_coll);$i++)
 		{

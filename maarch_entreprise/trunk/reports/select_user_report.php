@@ -104,7 +104,7 @@ if(isset($_GET['what']) && !empty($_GET['what']))
 	if(isset($_REQUEST['field']) && !empty($_REQUEST['field']))
 	{
 		?>
-			<script language="javascript">
+			<script type="text/javascript">
 				var item = window.opener.$('user_id');
 				if(item)
 				{
@@ -122,12 +122,12 @@ $core_tools->load_html();
 $core_tools->load_header(_CHOOSE_USER2, true, false);
 $time = $core_tools->get_session_time_expire();
 ?>
-<body onLoad="javascript:setTimeout(window.close, <?php echo $time;?>*60*1000);">
+<body onload="javascript:setTimeout(window.close, <?php echo $time;?>*60*1000);">
 
 <?php
 $nb = count($tab);
 
-$list->list_doc($tab, $nb, _USERS_LIST,'user_id',$name = "select_user_report",'user_id','',false,true,'get',$_SESSION['config']['businessappurl'].'index.php?dipslay=true&dir=reports&page=select_user_report',_CHOOSE_USER2, false, true, true,false, true, true,  true, false, '', '',  true, _ALL_USERS,_USER, 'listing spec', '&dir=reports', false, false, array(), '<input type="hidden" name="display" value="true"/><input type="hidden" name="dir" value="reports" /><input type="hidden" name="page" value="select_user_report" />');
+$list->list_doc($tab, $nb, _USERS_LIST,'user_id',$name = "select_user_report",'user_id','',false,true,'get',$_SESSION['config']['businessappurl'].'index.php?dipslay=true&amp;dir=reports&amp;page=select_user_report',_CHOOSE_USER2, false, true, true,false, true, true,  true, false, '', '',  true, _ALL_USERS,_USER, 'listing spec', '&dir=reports', false, false, array(), '<input type="hidden" name="display" value="true"/><input type="hidden" name="dir" value="reports" /><input type="hidden" name="page" value="select_user_report" />');
 //$core_tools->load_js();
 ?>
 </body>

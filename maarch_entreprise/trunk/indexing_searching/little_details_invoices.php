@@ -136,7 +136,7 @@ else
 	if(!$right && $s_id <> "")
 	{
 		?>
-	    <script language="javascript" type="text/javascript">
+	    <script type="text/javascript">
 	    window.top.location.href = '<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=no_right';
 	    </script>
 	    <?php
@@ -350,7 +350,7 @@ else
 			if(!empty($_SESSION['error_page']))
 			{
 				?>
-				<script language="javascript" type="text/javascript">
+				<script type="text/javascript">
 					alert("<?php  echo $func->wash_html($_SESSION['error_page']);?>");
 					<?php
 					if(isset($_POST['delete_doc']))

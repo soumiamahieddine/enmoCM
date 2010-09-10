@@ -45,7 +45,7 @@ $core_tools->load_header('', true, false);
 		if($_SESSION['upfile']['error'] == 1)
 		{
 			?>
-	        <script language="javascript" type="text/javascript">
+	        <script type="text/javascript">
 				var test = window.top.document.getElementById('file_iframe');
 				if (test != null)
 				{
@@ -86,7 +86,7 @@ $core_tools->load_header('', true, false);
 			}
 		}
 		?>
-		<script language="javascript" type="text/javascript">
+		<script type="text/javascript">
 			var test = window.top.document.getElementById('file_iframe');
 			if (test != null)
 			{

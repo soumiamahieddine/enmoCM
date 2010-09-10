@@ -83,7 +83,7 @@ if(isset($_REQUEST['valid']) && isset($_SESSION['m_admin']['doctypes']['COLL_ID'
 	}
 
 	?>
-    <script language="javascript" type="text/javascript">window.parent.document.forms['frmtype'].submit();</script>
+    <script type="text/javascript">window.parent.document.forms['frmtype'].submit();</script>
     <?php
 	exit();
 }

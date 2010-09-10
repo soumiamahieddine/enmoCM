@@ -167,7 +167,7 @@ class indexing_searching_app extends dbquery
 			$error = $_SESSION['error'];
 			$_SESSION['error']= '';
 			?>
-			<script language="javascript" type="text/javascript">
+			<script type="text/javascript">
                // window.opener.reload();
               	var error_div = $('main_error');
                	if(error_div)
@@ -412,7 +412,7 @@ class indexing_searching_app extends dbquery
 		$error = $_SESSION['error'];
 		$_SESSION['error']= '';
 		?>
-		<script language="javascript" type="text/javascript">
+		<script type="text/javascript">
 			//window.opener.reload();
 			var error_div = $('main_error');
 			if(error_div)
@@ -437,7 +437,7 @@ class indexing_searching_app extends dbquery
 		{
 			//$_SESSION['error_page'] = $_SESSION['error'];
 			?>
-			<script language="javascript" type="text/javascript">
+			<script type="text/javascript">
                 window.opener.reload();
             </script>
 			<?php
@@ -472,7 +472,7 @@ class indexing_searching_app extends dbquery
 		if(!empty($_SESSION['error']))
 		{
 			?>
-			<script language="javascript" type="text/javascript">
+			<script  type="text/javascript">
                 window.opener.reload();
             </script>
 			<?php

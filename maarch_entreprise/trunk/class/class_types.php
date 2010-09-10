@@ -204,7 +204,7 @@ class types extends dbquery
                 var coll_list = $('collection');
                 get_opt_index('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=get_index', coll_list.options[coll_list.options.selectedIndex].value);
                 </script>
-                <script language="javascript">
+                <script type="text/javascript">
 					function showValuesList(listId, spanId)
 					{
 						if(window.document.getElementById(listId).style.display == 'none')
@@ -311,21 +311,21 @@ class types extends dbquery
 			{
 				if(!empty($_SESSION['m_admin']['doctypes']['TYPE_ID']))
 				{
-				?><script language="javascript" type="text/javascript">window.top.location.href='<?php echo $_SESSION['config']['businessappurl']."index.php?page=types_up&id=".$_SESSION['m_admin']['doctypes']['TYPE_ID'];?>';</script>
+				?><script type="text/javascript">window.top.location.href='<?php echo $_SESSION['config']['businessappurl']."index.php?page=types_up&id=".$_SESSION['m_admin']['doctypes']['TYPE_ID'];?>';</script>
                 <?php
 					exit();
 				}
 				else
 				{
 				?>
-               	 <script language="javascript" type="text/javascript">window.top.location.href='<?php echo $_SESSION['config']['businessappurl']."index.php?page=types&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what;?>';</script>
+               	 <script type="text/javascript">window.top.location.href='<?php echo $_SESSION['config']['businessappurl']."index.php?page=types&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what;?>';</script>
                 <?php
 					exit();
 				}
 			}
 			elseif($_REQUEST['mode'] == "add" )
 			{
-			?> <script language="javascript" type="text/javascript">window.top.location.href='<?php echo $_SESSION['config']['businessappurl']."index.php?page=types_add";?>';</script>
+			?> <script type="text/javascript">window.top.location.href='<?php echo $_SESSION['config']['businessappurl']."index.php?page=types_add";?>';</script>
                 <?php
 				exit();
 			}
@@ -370,7 +370,7 @@ class types extends dbquery
 
 				$this->cleartypeinfos();
 				?>
-				<script language="javascript" type="text/javascript">window.top.location.href='<?php echo $_SESSION['config']['businessappurl']."index.php?page=types&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what;?>';</script>
+				<script type="text/javascript">window.top.location.href='<?php echo $_SESSION['config']['businessappurl']."index.php?page=types&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what;?>';</script>
                 <?php
 				exit();
 			}
@@ -411,8 +411,7 @@ class types extends dbquery
 					}
 				}
 				$this->cleartypeinfos();
-				//header("location: ".$url);
-				?> <script language="javascript" type="text/javascript">window.top.location.href='<?php echo $_SESSION['config']['businessappurl']."index.php?page=types&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what;?>';</script>
+				?> <script  type="text/javascript">window.top.location.href='<?php echo $_SESSION['config']['businessappurl']."index.php?page=types&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what;?>';</script>
                 <?php
 				exit();
 			}

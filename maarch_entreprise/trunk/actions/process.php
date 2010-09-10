@@ -169,7 +169,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 		$frm_str .= '<h1 class="tit" id="action_title"><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=file_index_b.gif"  align="middle" alt="" />'._DOC_NUM." ".$res_id ;
 					$frm_str .= '</h1>';
 			$frm_str .= '<div>'._DOC_ALREADY_RSV.'</div>';
-			$frm_str .= '<div><input type="button" name="close" id="close" value="'._CLOSE_WINDOW.'" class="button" onClick="javascript:destroyModal(\'modal_'.$id_action.'\');reinit();"/></div>';
+			$frm_str .= '<div><input type="button" name="close" id="close" value="'._CLOSE_WINDOW.'" class="button" onclick="javascript:destroyModal(\'modal_'.$id_action.'\');reinit();"/></div>';
 			$frm_str .= '</div>';
 
 	}
@@ -575,7 +575,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 				$frm_str .='</select> ';
 				$frm_str .= '<input type="button" name="send" id="send" value="'._VALIDATE.'" class="button" onclick="valid_action_form( \'process\', \''.$path_manage_action.'\', \''. $id_action.'\', \''.$res_id.'\', \''.$table.'\', \''.$module.'\', \''.$coll_id.'\', \''.$mode.'\');"/> ';
 			}
-			$frm_str .= '<input name="close" id="close" type="button" value="'._CANCEL.'" class="button" onClick="javascript:var tmp_bask=$(\'baskets\');if(tmp_bask){tmp_bask.style.visibility=\'visible\';}var tmp_ent =$(\'entity\');if(tmp_ent){tmp_ent.style.visibility=\'visible\';} var tmp_cat =$(\'category\'); if(tmp_cat){tmp_cat.style.visibility=\'visible\';}destroyModal(\'modal_'.$id_action.'\');reinit();"/>';
+			$frm_str .= '<input name="close" id="close" type="button" value="'._CANCEL.'" class="button" onclick="javascript:var tmp_bask=$(\'baskets\');if(tmp_bask){tmp_bask.style.visibility=\'visible\';}var tmp_ent =$(\'entity\');if(tmp_ent){tmp_ent.style.visibility=\'visible\';} var tmp_cat =$(\'category\'); if(tmp_cat){tmp_cat.style.visibility=\'visible\';}destroyModal(\'modal_'.$id_action.'\');reinit();"/>';
 		$frm_str .= '</p>';
 	$frm_str .= '</form>';
 	$frm_str .= '</div>';

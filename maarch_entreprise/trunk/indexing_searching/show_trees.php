@@ -406,7 +406,7 @@ if(isset($_SESSION['chosen_name_folder']) && !empty($_SESSION['chosen_name_folde
 	if($directResId <> "")
 	{
 		?>
-		<script language="javascript">
+		<script type="text/javascript">
 			window.top.frames['view'].location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&dir=indexing_searching&page=little_details_invoices&id=<?php echo $directResId;?>';
 		</script>
 		<?php
@@ -414,7 +414,7 @@ if(isset($_SESSION['chosen_name_folder']) && !empty($_SESSION['chosen_name_folde
 	else
 	{
 		?>
-		<script language="javascript">
+		<script type="text/javascript">
 			window.top.frames['view'].location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&dir=indexing_searching&page=little_details_invoices';
 		</script>
 		<?php

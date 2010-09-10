@@ -174,8 +174,8 @@ class extended_list_show extends functions
 				
 				if ($this->params['bool_list_is_ajax'] === true)
 				{
-					$return = '<a href="#" onClick="goToLink(\''.$this->the_link.'&amp;display=true'.$this->the_template.'&amp;start='.$this->start.'&amp;order=desc&amp;order_field='.$col_id.'&amp;listreinit=true\', \''.$this->params['div_list_ajax'].'\');" title="'. _DESC_SORT.'"><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=tri_down.gif" border="0" alt="'._DESC_SORT.'" /></a>';
-					$return .= '<a href="#" onClick="goToLink(\''.$this->the_link.'&amp;display=true'.$this->the_template.'&amp;start='.$this->start.'&amp;order=asc&amp;order_field='.$col_id.'&amp;listreinit=true\', \''.$this->params['div_list_ajax'].'\');" title="'._ASC_SORT.'"> <img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=tri_up.gif" border="0" alt="'._ASC_SORT.'" /></a>';
+					$return = '<a href="#" onclick="goToLink(\''.$this->the_link.'&amp;display=true'.$this->the_template.'&amp;start='.$this->start.'&amp;order=desc&amp;order_field='.$col_id.'&amp;listreinit=true\', \''.$this->params['div_list_ajax'].'\');" title="'. _DESC_SORT.'"><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=tri_down.gif" border="0" alt="'._DESC_SORT.'" /></a>';
+					$return .= '<a href="#" onclick="goToLink(\''.$this->the_link.'&amp;display=true'.$this->the_template.'&amp;start='.$this->start.'&amp;order=asc&amp;order_field='.$col_id.'&amp;listreinit=true\', \''.$this->params['div_list_ajax'].'\');" title="'._ASC_SORT.'"> <img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=tri_up.gif" border="0" alt="'._ASC_SORT.'" /></a>';
 				}
 				else
 				{
@@ -701,8 +701,8 @@ class extended_list_show extends functions
 						if($this->params['bool_list_is_ajax'] && !empty($this->params['div_list_ajax']))
 						{
 							$header .= '<br/><br/>';
-							$header .= '<a href="#" onClick="goToLink(\''.$this->the_link.'&amp;display=true'.$this->the_template.'&amp;listreinit=true&amp;start='.$this->the_start.'&amp;order=desc&amp;order_field='.$ordercol[$count_column].'\', \''.$this->params['div_list_ajax'].'\');" title="'._DESC_SORT.'"><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=tri_down.gif" border="0" alt="'._DESC_SORT.'" /></a>';
-							$header .= '<a href="#" onClick="goToLink(\''.$this->the_link.'&amp;display=true'.$this->the_template.'&amp;listreinit=true&amp;start='.$this->the_start.'&amp;order=asc&amp;order_field='.$ordercol[$count_column].'\', \''.$this->params['div_list_ajax'].'\');" title="'._ASC_SORT.'"> <img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=tri_up.gif" border="0" alt="'._ASC_SORT.'" /></a>';
+							$header .= '<a href="#" onclick="goToLink(\''.$this->the_link.'&amp;display=true'.$this->the_template.'&amp;listreinit=true&amp;start='.$this->the_start.'&amp;order=desc&amp;order_field='.$ordercol[$count_column].'\', \''.$this->params['div_list_ajax'].'\');" title="'._DESC_SORT.'"><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=tri_down.gif" border="0" alt="'._DESC_SORT.'" /></a>';
+							$header .= '<a href="#" onclick="goToLink(\''.$this->the_link.'&amp;display=true'.$this->the_template.'&amp;listreinit=true&amp;start='.$this->the_start.'&amp;order=asc&amp;order_field='.$ordercol[$count_column].'\', \''.$this->params['div_list_ajax'].'\');" title="'._ASC_SORT.'"> <img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=tri_up.gif" border="0" alt="'._ASC_SORT.'" /></a>';
 						}
 						else //Put normal href link
 						{
@@ -1493,7 +1493,7 @@ class extended_list_show extends functions
 				//If Ajax link, call javascript redirection function
 				if($parameters['bool_list_is_ajax'] && !empty($parameters['div_list_ajax']))
 				{
-					$previous = "&lt; <a href=\"#\" onClick=\"goToLink('".$link."&amp;display=true".$this->the_template."&amp;start=".$start_prev."','".$parameters['div_list_ajax']."');\">"._PREVIOUS."</a> ";
+					$previous = "&lt; <a href=\"#\" onclick=\"goToLink('".$link."&amp;display=true".$this->the_template."&amp;start=".$start_prev."','".$parameters['div_list_ajax']."');\">"._PREVIOUS."</a> ";
 				}
 				else //Put normal href link
 				{
@@ -1508,7 +1508,7 @@ class extended_list_show extends functions
 				//If Ajax link, call javascript redirection function
 				if($parameters['bool_list_is_ajax'] && !empty($parameters['div_list_ajax']))
 				{
-					$next = " <a href=\"#\" onClick=\"goToLink('".$link."&amp;display=true".$this->the_template."&amp;start=".$start_next."','".$parameters['div_list_ajax']."');\">"._NEXT."</a> >";
+					$next = " <a href=\"#\" onclick=\"goToLink('".$link."&amp;display=true".$this->the_template."&amp;start=".$start_next."','".$parameters['div_list_ajax']."');\">"._NEXT."</a> >";
 				}
 				else //Put normal href link
 				{
@@ -2024,7 +2024,7 @@ class extended_list_show extends functions
 					if($this->params['bool_list_is_ajax'] && !empty($this->params['div_list_ajax']))
 					{
 					?>
-						<a href="javascript://" onClick="goToLink('<?php echo $link;?>&amp;display=true&amp;listreinit=true&amp;what=<?php echo chr($i);?>', '<?php  echo $this->params['div_list_ajax'];?>');"><?php echo chr($i);?></a> 
+						<a href="javascript://" onclick="goToLink('<?php echo $link;?>&amp;display=true&amp;listreinit=true&amp;what=<?php echo chr($i);?>', '<?php  echo $this->params['div_list_ajax'];?>');"><?php echo chr($i);?></a> 
                     <?php	
 					}
 					else //Put normal href link
@@ -2039,7 +2039,7 @@ class extended_list_show extends functions
 				if($this->params['bool_list_is_ajax'] && !empty($this->params['div_list_ajax']))
 				{
 				?>
-					- <a  href="javascript://" onClick="goToLink('<?php echo $link;?>&amp;display=true&amp;listreinit=true&amp;what=', '<?php  echo $this->params['div_list_ajax'];?>');"><?php echo _ALL; ?></a>
+					- <a  href="javascript://" onclick="goToLink('<?php echo $link;?>&amp;display=true&amp;listreinit=true&amp;what=', '<?php  echo $this->params['div_list_ajax'];?>');"><?php echo _ALL; ?></a>
 			   <?php	
 				}
 				else //Put normal href link
@@ -2208,7 +2208,7 @@ class extended_list_show extends functions
 				//If Ajax
 				if($this->params['bool_list_is_ajax'] && !empty($this->params['div_list_ajax']))
 				{
-					$tmpl .= '<a href="javascript://" onClick="goToLink(\''.$link.'&amp;display=true&amp;template=none\', \''.$this->params['div_list_ajax'].'\');"><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=no_template.gif" alt="'._ACCESS_LIST_STANDARD.'" ></a>';
+					$tmpl .= '<a href="javascript://" onclick="goToLink(\''.$link.'&amp;display=true&amp;template=none\', \''.$this->params['div_list_ajax'].'\');"><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=no_template.gif" alt="'._ACCESS_LIST_STANDARD.'" ></a>';
 				}
 				else //Put normal href link
 				{
@@ -2223,7 +2223,7 @@ class extended_list_show extends functions
 				//If Ajax
 				if($this->params['bool_list_is_ajax'] && !empty($this->params['div_list_ajax']))
 				{
-					$tmpl .= '<a href="javascript://" onClick="goToLink(\''.$link.'&amp;display=true&amp;template='.$temp['name'].'\', \''.$this->params['div_list_ajax'].'\');"><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename='.$img.'" alt="'.$temp['label'].'" title="'.$temp['label'].'"></a>';
+					$tmpl .= '<a href="javascript://" onclick="goToLink(\''.$link.'&amp;display=true&amp;template='.$temp['name'].'\', \''.$this->params['div_list_ajax'].'\');"><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename='.$img.'" alt="'.$temp['label'].'" title="'.$temp['label'].'"></a>';
 				}
 				else //Put normal href link
 				{
@@ -2448,7 +2448,7 @@ class extended_list_show extends functions
 		{
 			$filt .= "\n\n".'<div align="center"><form name="form_filter" action="#" method="post">'."\n";
 			$filt .= _FILTER_BY.': '."\n";
-			$filt .= '<script language="javascript">';
+			$filt .= '<script type="text/javascript">';
 			
 			$filterId = '';
 				
@@ -2491,7 +2491,7 @@ class extended_list_show extends functions
 			$filt .= ' 	{'."\n";
 			$filt .= ' 		method:\'post\','."\n";
 			$filt .= ' 		parameters: {'.$ajax_var.' start : startVal, order : orderVal, order_field : order_fieldVal, template : templateVal},'."\n";
-			$filt .= '		onLoading: function(answer)'."\n";
+			$filt .= '		onloading: function(answer)'."\n";
 			$filt .= '		{ '."\n";
 			$filt .= '			var div_to_fill = $(\''.$this->params['filter_div'].'\');'."\n";
 			$filt .= '			div_to_fill.innerHTML = \'<img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=loading.gif" border="0" alt="Loading..." />\';'."\n";

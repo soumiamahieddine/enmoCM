@@ -3,7 +3,7 @@ tinyMCEPopup.requireLangPack();
 var oldWidth, oldHeight, ed, url;
 
 if (url = tinyMCEPopup.getParam("media_external_list_url"))
-	document.write('<script language="javascript" type="text/javascript" src="' + tinyMCEPopup.editor.documentBaseURI.toAbsolute(url) + '"></script>');
+	document.write('<script type="text/javascript" src="' + tinyMCEPopup.editor.documentBaseURI.toAbsolute(url) + '"></script>');
 
 function init() {
 	var pl = "", f, val;

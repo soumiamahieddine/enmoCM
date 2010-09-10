@@ -92,7 +92,7 @@ else
 if(!$right)
 {
 	?>
-    <script language="javascript" type="text/javascript">
+    <script type="text/javascript">
     window.top.location.href = '<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=no_right';
     </script>
     <?php
@@ -115,7 +115,7 @@ if(isset($_POST['delete_doc']))
 {
 	$is ->delete_doc( $s_id, $coll_id);
 	?>
-		<script language="javascript" type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?page=search_adv&dir=indexing_searching';?>';</script>
+		<script type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?page=search_adv&dir=indexing_searching';?>';</script>
     <?php
 	exit();
 }

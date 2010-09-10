@@ -191,7 +191,7 @@ else
 					$core_tools->load_html();
 					$core_tools->load_header();
 					?>
-                    <body id="validation_page" onLoad="javascript:moveTo(0,0);resizeTo(screen.width, screen.height);">
+                    <body id="validation_page" onload="javascript:moveTo(0,0);resizeTo(screen.width, screen.height);">
                     	<div id="template_content" style="width:100%;"  >
                     	<?php  echo $content;?>
                     	</div>

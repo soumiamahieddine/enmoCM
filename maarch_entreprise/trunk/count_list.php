@@ -358,7 +358,7 @@ array_push($arr_status , array('id' => 'late', 'label' => _LATE));
 		if(empty($_SESSION['auth_dep']['bask_chosen_entity']) && empty($_SESSION['auth_dep']['bask_chosen_category']) && empty($_SESSION['auth_dep']['bask_chosen_status']) && empty($_SESSION['auth_dep']['bask_chosen_contact']))
 		{
 			?>
-			<script language="javascript">
+			<script type="text/javascript">
 				//Defines template allowed for this list
 				<?php if(!$_REQUEST['template'])
 				{
