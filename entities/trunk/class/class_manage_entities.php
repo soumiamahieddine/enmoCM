@@ -614,7 +614,7 @@ class entity extends dbquery
 		if(!empty($_SESSION['error']))
 		{
 			?>
-			<script>window.top.location.href='<?php echo $_SESSION['config']['businessappurl'].'index.php?page=manage_entities&module=entities&order='.$order."&order_field=".$order_field."&start=".$start."&what=".$what;?>';</script>
+			<script type="text/javascript">window.top.location.href='<?php echo $_SESSION['config']['businessappurl'].'index.php?page=manage_entities&module=entities&order='.$order."&order_field=".$order_field."&start=".$start."&what=".$what;?>';</script>
 			<?php
 			//header('location: '.$_SESSION['config']['businessappurl'].'index.php?page=manage_entities&module=entities&order='.$order."&order_field=".$order_field."&start=".$start."&what=".$what);
 			exit();
@@ -628,7 +628,7 @@ class entity extends dbquery
 				$_SESSION['error'] = _ENTITY.' '._UNKNWON;
 				//header('location: '.$_SESSION['config']['businessappurl'].'index.php?page=manage_entities&module=entities&order='.$order."&order_field=".$order_field."&start=".$start."&what=".$what);
 				?>
-				<script>window.top.location.href='<?php echo $_SESSION['config']['businessappurl'].'index.php?page=manage_entities&module=entities&order='.$order."&order_field=".$order_field."&start=".$start."&what=".$what;?>';</script>
+				<script type="text/javascript">window.top.location.href='<?php echo $_SESSION['config']['businessappurl'].'index.php?page=manage_entities&module=entities&order='.$order."&order_field=".$order_field."&start=".$start."&what=".$what;?>';</script>
 				<?php
 				exit;
 			}
