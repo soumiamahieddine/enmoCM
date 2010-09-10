@@ -7,8 +7,8 @@ if($_SESSION['mode_editor'])
 }
 ?>
 <!-- tinyMCE -->
-<script language="javascript" type="text/javascript" src="<?php  echo $_SESSION['config']['businessappurl'].'tools/';?>tiny_mce/tiny_mce.js"></script>
-<script language="javascript" type="text/javascript">
+<script  type="text/javascript" src="<?php  echo $_SESSION['config']['businessappurl'].'tools/';?>tiny_mce/tiny_mce.js"></script>
+<script type="text/javascript">
 	tinyMCE.init({
 		theme : "<?php  echo $theme;?>",
 		mode : "exact",

@@ -41,7 +41,7 @@ $time = $core_tools->get_session_time_expire();
 $core_tools->load_header(_CHOOSE_TEMPLATE, true, false);
 
 ?>
-<body id="pop_up"  onLoad="setTimeout(window.close, <?php  echo $time;?>*60*1000);">
+<body id="pop_up"  onload="setTimeout(window.close, <?php  echo $time;?>*60*1000);">
 <h2 class="tit"><?php  echo _CHOOSE_TEMPLATE;?> </h2>
 
 <div align="center"><b><?php  echo $erreur; ?></b></div>

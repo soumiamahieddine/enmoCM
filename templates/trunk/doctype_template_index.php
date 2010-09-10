@@ -68,11 +68,11 @@ while($res = $db->fetch_object())
 	<input type="hidden" name="page"  value="doctype_template_index" />
   <p>
     <label>
-      <input type="radio"  class="check" onClick="javascript:this.form.submit();" name="e_file" value="N"  <?php  if ($_SESSION['temp_admin']['GENERATE'] == 'N') { echo 'checked="checked"';} ?>/>
+      <input type="radio"  class="check" onclick="javascript:this.form.submit();" name="e_file" value="N"  <?php  if ($_SESSION['temp_admin']['GENERATE'] == 'N') { echo 'checked="checked"';} ?>/>
       <?php  echo _LOADED_FILE;?></label>
 
     <label>
-      <input type="radio"  class="check" onClick="javascript:this.form.submit();" name="e_file" value="Y"  <?php  if ($_SESSION['temp_admin']['GENERATE'] == 'Y') { echo 'checked="checked"';} ?> />
+      <input type="radio"  class="check" onclick="javascript:this.form.submit();" name="e_file" value="Y"  <?php  if ($_SESSION['temp_admin']['GENERATE'] == 'Y') { echo 'checked="checked"';} ?> />
       <?php  echo _GENERATED_FILE;?></label>
 
   <br/>
@@ -80,7 +80,7 @@ while($res = $db->fetch_object())
   	   {
 	   	?>
        	<?php  echo _CHOOSE_TEMPLATE;?> :
-       		<select name="templates" onChange="javascript:this.form.submit();" >
+       		<select name="templates" onchange="javascript:this.form.submit();" >
 				<?php
 
 					//$connexion -> show();

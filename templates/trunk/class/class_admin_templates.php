@@ -77,7 +77,7 @@ class admin_templates extends dbquery
 			if($state == false)
 			{
 				?>
-					<script language="javascript" type="text/javascript">window.document.location.href='<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=templates&module=templates';</script>
+					<script type="text/javascript">window.document.location.href='<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=templates&module=templates';</script>
 				<?php
 			}
 			else
