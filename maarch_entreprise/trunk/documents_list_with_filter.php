@@ -112,7 +112,7 @@ while($res = $db->fetch_object())
 array_push($arr_status , array('id' => 'late', 'label' => _LATE));
 ?>
 <div align="center">
-	<script>
+	<script type="text/javascript">
 		function change_list_entity(id_entity, path_script)
 		{
 			//Defines template allowed for this list
@@ -421,7 +421,7 @@ array_push($arr_status , array('id' => 'late', 'label' => _LATE));
 	if(isset($_SESSION['auth_dep']['bask_chosen_entity']) && !empty($_SESSION['auth_dep']['bask_chosen_entity']))
 	{
 		?>
-		<script>
+		<script type="text/javascript">
 			change_list_entity('<?php echo $_SESSION['auth_dep']['bask_chosen_entity'];?>', '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=manage_filter');
 		</script>
 		<?php
@@ -429,7 +429,7 @@ array_push($arr_status , array('id' => 'late', 'label' => _LATE));
 	if(isset($_SESSION['auth_dep']['bask_chosen_category']) && !empty($_SESSION['auth_dep']['bask_chosen_category']))
 	{
 		?>
-		<script>
+		<script type="text/javascript">
 			change_list_category('<?php echo $_SESSION['auth_dep']['bask_chosen_category'];?>', '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=manage_filter');
 		</script>
 		<?php
@@ -437,7 +437,7 @@ array_push($arr_status , array('id' => 'late', 'label' => _LATE));
 	if(isset($_SESSION['auth_dep']['bask_chosen_status']) && !empty($_SESSION['auth_dep']['bask_chosen_status']))
 	{
 		?>
-		<script>
+		<script type="text/javascript">
 			change_list_status('<?php echo $_SESSION['auth_dep']['bask_chosen_status'];?>', '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=manage_filter');
 		</script>
 		<?php
@@ -445,7 +445,7 @@ array_push($arr_status , array('id' => 'late', 'label' => _LATE));
 	if(isset($_SESSION['auth_dep']['bask_chosen_contact']) && !empty($_SESSION['auth_dep']['bask_chosen_contact']))
 	{
 		?>
-		<script>
+		<script type="text/javascript">
 			change_contact('<?php echo $_SESSION['auth_dep']['bask_chosen_contact'];?>', '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=manage_filter');
 		</script>
 		<?php

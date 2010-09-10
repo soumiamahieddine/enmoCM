@@ -276,7 +276,7 @@ elseif($mode == "up" || $mode == "add")
 			<p>&nbsp;</p>
 		</form>
 	</div>
-	<script>updateContent('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=groups_form&admin=groups', 'access');</script>
+	<script type="text/javascript">updateContent('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=groups_form&admin=groups', 'access');</script>
 	<?php 
 	}
 }

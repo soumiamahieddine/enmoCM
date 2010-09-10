@@ -1,21 +1,31 @@
 <?php
-/**
-* File : admin.php 
+/*
+*    Copyright 2008-2010 Maarch
 *
-* Administration summary Page
-* {@internal this page calls an admin object (class admin)}}
+*  This file is part of Maarch Framework.
 *
-* @package  Maarch Framework v3
-* @version 2.1
-* @since 10/2005
-* @license GPL
-* @author  Claire Figueras  <dev@maarch.org>
+*   Maarch Framework is free software: you can redistribute it and/or modify
+*   it under the terms of the GNU General Public License as published by
+*   the Free Software Foundation, either version 3 of the License, or
+*   (at your option) any later version.
+*
+*   Maarch Framework is distributed in the hope that it will be useful,
+*   but WITHOUT ANY WARRANTY; without even the implied warranty of
+*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*   GNU General Public License for more details.
+*
+*   You should have received a copy of the GNU General Public License
+*    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 /**
-* include the test admin page
-*
-* this page tests the user access level, and if the user is an admin or not
+* @brief Administration summary Page
+* 
+* @file {@internal this page calls an admin object (class admin)}}
+* @author Claire Figueras <dev@maarch.org>
+* @date $date$
+* @version $Revision$
+* @ingroup apps
 */
 
 require("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_admin.php");
@@ -44,10 +54,10 @@ unset($_SESSION['m_admin']);
 <h1><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_admin_b.gif" alt="" /> <?php  echo _ADMIN;?></h1>
 <div id="inner_content" class="clearfix">
 <?php
-$admin->retrieve_app_admin_services($_SESSION['app_services']);
+$admin->display_app_admin_services($_SESSION['app_services']);
 ?>
-<!--<hr />-->
+
 <?php
-$admin->retrieve_modules_admin_services($_SESSION['modules_services']);
+$admin->display_modules_admin_services($_SESSION['modules_services']);
 ?>
 </div>

@@ -35,7 +35,7 @@
    <id>admin_users</id>
    <name>_ADMIN_USERS</name>
    <comment>_ADMIN_USERS_DESC</comment>
-   <servicepage>index.php?page=users_management_controler&amp;mode=list&amp;admin=users</servicepage>
+   <servicepage>index.php?page=users_management_controler&amp;admin=users&amp;mode=list</servicepage>
    <servicetype>admin</servicetype>
    <system_service>false</system_service>
    <style>admin_users</style>
@@ -78,7 +78,7 @@
    <servicepage>index.php?page=history_batch&amp;admin=history_batch</servicepage>
    <servicetype>admin</servicetype>
    <system_service>false</system_service>
-   <style>view_history</style>
+   <style>view_history_batch</style>
    <enabled>true</enabled>
  </SERVICE>
  <!--<SERVICE>

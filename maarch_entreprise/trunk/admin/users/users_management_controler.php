@@ -224,7 +224,7 @@ function display_del($user_id)
 		users_controler::delete($user_id);
 		$_SESSION['error'] = _DELETED_USER.' : '.$user_id;
 		// NOTE: Why not calling display_list ?
-		?><script>window.top.location='<?php echo $_SESSION['config']['businessappurl']."index.php?page=users_management_controler&mode=list&admin=users&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what;?>';</script>
+		?><script type="text/javascript">window.top.location='<?php echo $_SESSION['config']['businessappurl']."index.php?page=users_management_controler&mode=list&admin=users&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what;?>';</script>
 		<?php
 		exit;
 	} 
@@ -248,7 +248,7 @@ function display_enable($user_id)
 		users_controler::enable($user);
 		$_SESSION['error'] = _AUTORIZED_USER.' : '.$user_id;
 		// NOTE: Why not calling display_list ?
-		?><script>window.top.location='<?php echo $_SESSION['config']['businessappurl']."index.php?page=users_management_controler&mode=list&admin=users&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what;?>';</script>
+		?><script type="text/javascript">window.top.location='<?php echo $_SESSION['config']['businessappurl']."index.php?page=users_management_controler&mode=list&admin=users&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what;?>';</script>
 		<?php
 		exit;
 	} 
@@ -272,7 +272,7 @@ function display_disable($user_id)
 		users_controler::disable($user);
 		$_SESSION['error'] = _SUSPENDED_USER.' : '.$user_id;
 		// NOTE: Why not calling display_list ?
-		?><script>window.top.location='<?php echo $_SESSION['config']['businessappurl']."index.php?page=users_management_controler&mode=list&admin=users&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what;?>';</script>
+		?><script type="text/javascript">window.top.location='<?php echo $_SESSION['config']['businessappurl']."index.php?page=users_management_controler&mode=list&admin=users&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what;?>';</script>
 		<?php
 		exit;
 	} 

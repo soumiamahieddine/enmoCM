@@ -1,6 +1,6 @@
 <?php
 /*
-*    Copyright 2008,2009 Maarch
+*    Copyright 2008-2010 Maarch
 *
 *  This file is part of Maarch Framework.
 *
@@ -24,15 +24,15 @@
 *
 * @file
 * @author Loic Vinet <dev@maarch.org>
+* @author Claire Figueras <dev@maarch.org>
 * @date $date$
 * @version $Revision$
-* @ingroup basket
+* @ingroup apps
 */
 
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
 $core_tools = new core_tools();
 $core_tools->test_user();
-//$core_tools->load_lang();
 $core_tools->test_service('quicklaunch', "apps");
 ?>
 <div id="welcome_box_left_quick_lunch" >
@@ -40,7 +40,7 @@ $core_tools->test_service('quicklaunch', "apps");
 		<h2><?php echo _QUICKLAUNCH; ?> : </h2>
 	</div>
 	<div class="blank_space">&nbsp;</div>
-	<table align="center">
+	<table class="center" summary="<?php echo _QUICKLAUNCH;?>">
 		<tr >
 		<?php
 		$nb_max = 0;
@@ -51,21 +51,21 @@ $core_tools->test_service('quicklaunch', "apps");
 			{
 				if($element['id'] == 'physical_archive' && $element['show'] == true && (!isset($displayed_physical_archive) || isset($displayed_physical_archive) && $displayed_physical_archive <> true))
 				{
-						echo '<td><a href="index.php?page=boxes&module=physical_archive&reinit=true"><div class="bighome_physical_archive"><div class="label_for_bighome_physical_archive">'._PHYSICAL_ARCHIVE.'</div></div></a></td>';
+						echo '<td><a href="index.php?page=boxes&amp;module=physical_archive&amp;reinit=true" class="bighome_physical_archive"><span >'._PHYSICAL_ARCHIVE.'</span></a></td>';
 						$nb_max++;
 						$displayed_physical_archive = true;
 				}
 				if ($element['id'] == 'index_mlb' && $element['show'] == true &&
 				(!isset($displayed_index_mlb) || $displayed_index_mlb <> true))
 				{
-						echo '<td><a href="index.php?page=view_baskets&module=basket&baskets=IndexingBasket"><div class="bighome_indexing"><div class="label_for_bighome_indexing">'._INDEXING_MLB.'</div></div></a></td>';
+						echo '<td><a href="index.php?page=view_baskets&amp;module=basket&amp;baskets=IndexingBasket" class="bighome_indexing"><span>'._INDEXING_MLB.'</span></a></td>';
 						$nb_max++;
 						$displayed_index_mlb = true;
 				}
 				if ($element['id'] == 'adv_search_mlb' && $element['show'] == true && 
 				(!isset($displayed_adv_search_mlb) || isset($displayed_index_mlb) && $displayed_adv_search_mlb <> true))
 				{
-						echo '<td><a href="index.php?page=search_adv&dir=indexing_searching&reinit=true"><div class="bighome_search_adv"><div class="label_for_bighome_search_adv">'._ADV_SEARCH_TITLE.'</div></div></a></td>';
+						echo '<td><a href="index.php?page=search_adv&amp;dir=indexing_searching&amp;reinit=true" class="bighome_search_adv"><span >'._ADV_SEARCH_TITLE.'</span></a></td>';
 						$nb_max++;
 						$displayed_adv_search_mlb = true;
 				}
@@ -76,7 +76,7 @@ $core_tools->test_service('quicklaunch', "apps");
 		if ($nb_max <3)
 		{
 		?>
-		<td><a href="index.php?page=modify_user&admin=users&reinit=true"><div class="bighome_userinfo"><div class="label_for_bighome_userinfo"><?php  echo _MY_INFO; ?></div></div></a> </td>
+		<td><a href="index.php?page=modify_user&amp;admin=users&amp;reinit=true" class="bighome_userinfo"><span ><?php  echo _MY_INFO; ?></span></a> </td>
 		<?php 
 		}
 		?> 

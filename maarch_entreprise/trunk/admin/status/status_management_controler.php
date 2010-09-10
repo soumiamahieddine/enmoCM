@@ -273,7 +273,7 @@ elseif($mode == "del")
 {
 	StatusControler::delete($status_id);
 	$_SESSION['error'] = _STATUS_DELETED." ".$status_id;
-	?><script>window.top.location='<?php echo $_SESSION['config']['businessappurl']."index.php?page=status_management_controler&mode=list&admin=status&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what;?>';</script>
+	?><script type="text/javascript">window.top.location='<?php echo $_SESSION['config']['businessappurl']."index.php?page=status_management_controler&mode=list&admin=status&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what;?>';</script>
 	<?php
 	exit;
 }

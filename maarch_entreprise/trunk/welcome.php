@@ -1,15 +1,34 @@
 <?php
-/**
-* File : welcome.php
+/*
+*   Copyright 2008-2010 Maarch
 *
-* French welcome page
+*  This file is part of Maarch Framework.
 *
-* @package  Maarch PeopleBox 1.0
-* @version 2.1
-* @since 10/2005
-* @license GPL
-* @author  Claire Figueras  <dev@maarch.org>
+*   Maarch Framework is free software: you can redistribute it and/or modify
+*   it under the terms of the GNU General Public License as published by
+*   the Free Software Foundation, either version 3 of the License, or
+*   (at your option) any later version.
+*
+*   Maarch Framework is distributed in the hope that it will be useful,
+*   but WITHOUT ANY WARRANTY; without even the implied warranty of
+*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*   GNU General Public License for more details.
+*
+*   You should have received a copy of the GNU General Public License
+*    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+/**
+* @brief  French welcome page
+* 
+* @file
+* @author  Loïc Vinet  <dev@maarch.org>
+* @author  Claire Figueras  <dev@maarch.org>
+* @date $date$
+* @version $Revision$
+* @ingroup apps
+*/
+
 $_SESSION['FOLDER']['SEARCH'] = array();
 
 $core_tools = new core_tools();

@@ -302,7 +302,7 @@ function display_del($group_id)
 			EntityControler::cleanGroupbasketRedirect($group_id, 'group_id');
 		$_SESSION['error'] = _DELETED_GROUP.' : '.$group_id;
 		// NOTE: Why not calling display_list ?
-		?><script>window.top.location='<?php echo $_SESSION['config']['businessappurl']."index.php?page=usergroups_management_controler&mode=list&admin=groups&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what;?>';</script>
+		?><script type="text/javascript">window.top.location='<?php echo $_SESSION['config']['businessappurl']."index.php?page=usergroups_management_controler&mode=list&admin=groups&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what;?>';</script>
 		<?php
 		exit;
 	} 
@@ -325,7 +325,7 @@ function display_enable($group_id)
 		usergroups_controler::enable($group);
 		$_SESSION['error'] = _AUTORIZED_GROUP.' : '.$group_id;
 		// NOTE: Why not calling display_list ?
-		?><script>window.top.location='<?php echo $_SESSION['config']['businessappurl']."index.php?page=usergroups_management_controler&mode=list&admin=groups&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what;?>';</script>
+		?><script type="text/javascript">window.top.location='<?php echo $_SESSION['config']['businessappurl']."index.php?page=usergroups_management_controler&mode=list&admin=groups&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what;?>';</script>
 		<?php
 		exit;
 	} 
@@ -349,7 +349,7 @@ function display_disable($group_id)
 		usergroups_controler::disable($group);
 		$_SESSION['error'] = _SUSPENDED_GROUP.' : '.$group_id;
 		// NOTE: Why not calling display_list ?
-		?><script>window.top.location='<?php echo $_SESSION['config']['businessappurl']."index.php?page=usergroups_management_controler&mode=list&admin=groups&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what;?>';</script>
+		?><script type="text/javascript">window.top.location='<?php echo $_SESSION['config']['businessappurl']."index.php?page=usergroups_management_controler&mode=list&admin=groups&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what;?>';</script>
 		<?php
 		exit;
 	} 

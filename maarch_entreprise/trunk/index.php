@@ -1,16 +1,33 @@
 <?php
+/*
+*   Copyright 2008-2010 Maarch
+*
+*  This file is part of Maarch Framework.
+*
+*   Maarch Framework is free software: you can redistribute it and/or modify
+*   it under the terms of the GNU General Public License as published by
+*   the Free Software Foundation, either version 3 of the License, or
+*   (at your option) any later version.
+*
+*   Maarch Framework is distributed in the hope that it will be useful,
+*   but WITHOUT ANY WARRANTY; without even the implied warranty of
+*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*   GNU General Public License for more details.
+*
+*   You should have received a copy of the GNU General Public License
+*    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 /**
-* File : index.php
-*
-* Maarch index
-*
-* @package  Maarch Entreprise 1.0
-* @version 2.1
-* @since 10/2005
-* @license GPL
-* @author  Laurent Giovannoni <dev@maarch.org>
+* @brief Maarch index page : every php page is loaded with this page
+* 
+* @file
 * @author  Claire Figueras  <dev@maarch.org>
-* @author  Loïc Vinet <dev@maarch.org>
+* @author  Laurent Giovannoni <dev@maarch.org>
+* @author  Loïc Vinet  <dev@maarch.org>
+* @date $date$
+* @version $Revision$
+* @ingroup apps
 */
 
 include_once('../../core/init.php');
@@ -69,26 +86,17 @@ if(isset($_REQUEST['display']))
 if(!isset($_SESSION['user']['UserId']))
 {
 	if(trim($_SERVER['argv'][0]) <> "")
-	{
 		header("location: reopen.php?".$_SERVER['argv'][0]);
-	}
 	else
-	{
 		header("location: reopen.php");
-	}
 	exit();
 }
 
 
-
 if(isset($_GET['show']))
-{
 	$show = $_GET['show'];
-}
 else
-{
 	$show = "true";
-}
 
 $core_tools->start_page_stat();
 $core_tools->configPosition();
@@ -97,7 +105,6 @@ $core_tools->load_lang();
 $core_tools->load_html();
 $core_tools->load_header();
 $time = $core_tools->get_session_time_expire();
-
 ?>
 <body onload="session_expirate(<?php  echo $time;?>, '<?php  echo $_SESSION['config']['coreurl'];?>');" id="maarch_body">
 	<div id="header">
@@ -112,10 +119,8 @@ $time = $core_tools->get_session_time_expire();
 				echo '<div class="header_menu_blank">&nbsp;</div>';?>
                 <ul  >
                     <?php
-
                     //here we building the maarch menu
                     $core_tools->build_menu($_SESSION['menu']);
-
                    ?>
                 </ul>
                		 <?php
@@ -161,6 +166,6 @@ $time = $core_tools->get_session_time_expire();
         ?>
 	</div>
 </div>
-<script>HideMenu('menunav');</script>
+<script type="text/javascript">HideMenu('menunav');</script>
 </body>
 </html>

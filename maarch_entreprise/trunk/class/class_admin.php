@@ -1,31 +1,51 @@
 <?php 
-/**
-*  Admin Class
+/*
+*    Copyright 2008-2010 Maarch
 *
-* Contains all the administration functions and content 
+*  This file is part of Maarch Framework.
 *
-* @package  Maarch PeopleBox 1.0
-* @version 2.1
-* @since 10/2005
-* @license GPL
-* @author  Claire Figueras  <dev@maarch.org>
-* 
+*   Maarch Framework is free software: you can redistribute it and/or modify
+*   it under the terms of the GNU General Public License as published by
+*   the Free Software Foundation, either version 3 of the License, or
+*   (at your option) any later version.
+*
+*   Maarch Framework is distributed in the hope that it will be useful,
+*   but WITHOUT ANY WARRANTY; without even the implied warranty of
+*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*   GNU General Public License for more details.
+*
+*   You should have received a copy of the GNU General Public License
+*    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 /**
-* Class admin : contains all the administration functions and the administration menu management
-*
-* @author  Claire Figueras  <dev@maarch.org>
-* @license GPL
-* @package  Maarch PeopleBox 1.0
-* @version 2.1
+* @brief  Contains the functions to load administration services
+* 
+* @file
+* @author Claire Figueras <dev@maarch.org>
+* @date $date$
+* @version $Revision$
+* @ingroup apps
+*/
+
+
+/**
+* @brief  Contains the functions to load administration services
+* 
+* @file
+* @author Claire Figueras <dev@maarch.org>
+* @date $date$
+* @version $Revision$
+* @ingroup apps
 */
 class admin extends functions
 {
 	/**
-	* Retrieve the board of the admin app
+	* Displays the administration services for the application
+	* 
+	* @param $app_services Array Application services
 	*/
-	public function retrieve_app_admin_services($app_services)
+	public function display_app_admin_services($app_services)
 	{
 		echo '<h2 class="admin_subtitle block" >Application</h2>';
 		echo '<div  id="admin_apps">';
@@ -34,7 +54,7 @@ class admin extends functions
 			if($app_services[$i]['servicetype'] == "admin" && $_SESSION['user']['services'][$app_services[$i]['id']])
 			{
 				?>
-                <div class="admin_item" id="<?php  echo $app_services[$i]['style'];?>" title="<?php  echo $app_services[$i]['comment'];?>" onclick="window.top.location='<?php  echo $app_services[$i]['servicepage'];?>';">
+                <div class="admin_item" id="<?php  echo $app_services[$i]['style']; ?>" title="<?php  echo $app_services[$i]['comment'];?>" onclick="window.top.location='<?php  echo $app_services[$i]['servicepage'] ;?>';">
                     <div class="sum_margin" >
                        
                             <strong><?php  echo $app_services[$i]['name'];?></strong>
@@ -49,9 +69,11 @@ class admin extends functions
 	}
 	
 	/**
-	* Retrieve the board of the admin app
+	* Displays the administration services for each module
+	* 
+	* @param $modules_services Array Modules services
 	*/
-	public function retrieve_modules_admin_services($modules_services)
+	public function display_modules_admin_services($modules_services)
 	{
 		echo '<h2 class="admin_subtitle block">Modules</h2>';
 		echo '<div id="admin_modules">';
@@ -68,15 +90,11 @@ class admin extends functions
 					}
 					$nb ++;
 					?>
-					<div class="admin_item" id="<?php  echo $modules_services[$value][$i]['style'];?>" title="<?php  echo 'Module '.$value.' : '.$modules_services[$value][$i]['comment'];?>" onclick="window.top.location='<?php  echo $modules_services[$value][$i]['servicepage'];?>';">
-						<div class="sum_margin">
-						
-								<strong><?php  echo $modules_services[$value][$i]['name'];?></strong><!--<br/>
-                                <em><?php  echo $modules_services[$value][$i]['comment'];?></em>-->
-						
+					<div class="admin_item" id="<?php  echo $modules_services[$value][$i]['style'];?>" title="<?php  echo 'Module '.$value.' : '.$modules_services[$value][$i]['comment'];?>" onclick="window.top.location='<?php  echo $modules_services[$value][$i]['servicepage'] ;?>';">
+						<div class="sum_margin">					
+							<strong><?php  echo $modules_services[$value][$i]['name'];?></strong>			
 						</div>
 					</div>
-                 <!--   <hr /> -->
 					<?php 	
 				}
 			}

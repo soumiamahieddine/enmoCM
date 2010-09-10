@@ -286,7 +286,7 @@ elseif($mode == "del")
 {
 	ActionControler::delete($action_id);
 	$_SESSION['error'] = _ACTION_DELETED." ".$action_id;
-	?><script>window.top.location='<?php echo $_SESSION['config']['businessappurl']."index.php?page=action_management_controler&mode=list&admin=action&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what;?>';</script>
+	?><script type="text/javascript">window.top.location='<?php echo $_SESSION['config']['businessappurl']."index.php?page=action_management_controler&mode=list&admin=action&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what;?>';</script>
 	<?php
 	exit;
 }

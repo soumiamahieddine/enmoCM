@@ -2643,100 +2643,46 @@ padding-right : 5px;
 background-color: #fefeee;
 }
 
-.bighome_search_adv{
-background:  url(static.php?filename=big_home_search.gif) no-repeat top;
+.bighome_search_adv, .bighome_userinfo, .bighome_workflow, .bighome_indexing, .bighome_physical_archive
+{
 width:187px;
 height:64px;
 color: #1B98C5;
 font-weight: bold;
 font-size: 1.2em;
-text-align: center;
 letter-spacing: 0.1em;
 cursor:pointer;
+display: table-cell;
+ text-align: center;
+ vertical-align: middle;
+}
+
+.bighome_search_adv{
+background:  url(static.php?filename=big_home_search.gif) no-repeat top;
 }
 
 .bighome_userinfo{
 background:  url(static.php?filename=big_home_account.gif) no-repeat top;
-width:187px;
-height:64px;
-color: #1B98C5;
-font-weight: bold;
-font-size: 1.2em;
-text-align: center;
-letter-spacing: 0.1em;
-cursor:pointer;
-}
-
-.bighome_physical_archive{
-background:  url(static.php?filename=big_home_physical.gif) no-repeat top;
-width:187px;
-height:64px;
-color: #1B98C5;
-font-weight: bold;
-font-size: 1.2em;
-text-align: center;
-letter-spacing: 0.1em;
-cursor:pointer;
 }
 
 .bighome_workflow{
 background:  url(static.php?filename=big_home_workflow.gif) no-repeat top;
-width:187px;
-height:64px;
-color: #1B98C5;
-font-weight: bold;
-font-size: 1.2em;
-text-align: center;
-letter-spacing: 0.1em;
-cursor:pointer;
+
 }
 .bighome_indexing{
 background:  url(static.php?filename=big_home_indexing.gif) no-repeat top;
-width:187px;
-height:64px;
-color: #1B98C5;
-font-weight: bold;
-font-size: 1.2em;
-text-align: center;
-letter-spacing: 0.1em;
-cursor:pointer;
 }
-.label_for_bighome_search_adv{
 
-margin-left:55px;
-width:137px;
-padding-top : 6px;
-
+.bighome_physical_archive{
+background:  url(static.php?filename=big_home_physical.gif) no-repeat top;
 }
-.label_for_bighome_userinfo{
 
-margin-left:55px;
-width:137px;
-padding-top : 20px;
-
-}
-.label_for_bighome_physical_archive{
-
-margin-left:55px;
-width:137px;
-padding-top : 20px;
-
-}
-.label_for_bighome_workflow{
-
-margin-left:55px;
-width:137px;
-padding-top : 15px;
-
-}
-.label_for_bighome_indexing{
-
-margin-left:55px;
-
-width:130px;
-padding-top : 15px;
-padding-top : 15px;
-}
+.bighome_search_adv span, .bighome_userinfo span, .bighome_workflow span, .bighome_indexing span, .bighome_physical_archive span {
+    vertical-align: middle;
+    margin-left: 55px;
+    display:block;
+    color: #1B99C4;
+} 
 
 .welcome{
 margin-right:120px;
@@ -3072,7 +3018,7 @@ hr{
 	color: grey;
 }
 
-#view_history {
+#view_history, #view_history_batch {
 	/*background:  url(static.php?filename=view_history.gif) no-repeat 2px top;*/
 	background-image : url(static.php?filename=view_history.gif);
 	background-repeat: no-repeat;
@@ -3498,4 +3444,26 @@ a.legend hr
 	width:50%;
 	float:left;
 	height: 41px;
+}
+
+#welcome_table
+{
+ width:100%;
+ height:300px;
+ background-image: url(static.php?filename=illustr_home.jpg);
+}
+
+#welcome_title
+{
+	font-size: 14px;
+}
+
+.underlined
+{
+	text-decoration:underline;
+}
+
+.center
+{
+	margin: auto auto;
 }
