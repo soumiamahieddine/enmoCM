@@ -1,5 +1,36 @@
 <?php
 
+/*
+*    Copyright 2008,2009,2010 Maarch
+*
+*  This file is part of Maarch Framework.
+*
+*   Maarch Framework is free software: you can redistribute it and/or modify
+*   it under the terms of the GNU General Public License as published by
+*   the Free Software Foundation, either version 3 of the License, or
+*   (at your option) any later version.
+*
+*   Maarch Framework is distributed in the hope that it will be useful,
+*   but WITHOUT ANY WARRANTY; without even the implied warranty of
+*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*   GNU General Public License for more details.
+*
+*   You should have received a copy of the GNU General Public License
+*    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+/**
+* @brief  Contains the life_cycle Object (herits of the BaseObject class)
+* 
+* 
+* @file
+* @author Luc KEULEYAN - BULL
+* @date $date$
+* @version $Revision$
+* @ingroup life_cycle
+*/
+
+
 try {
 	require_once("modules/life_cycle/class/ObjectControlerIF.php");
 	require_once("modules/life_cycle/class/ClassifiedObjectControlerAbstract.php");
@@ -28,7 +59,7 @@ class lc_cycle_steps_controler extends ClassifiedObjectControler implements Obje
 	 * @return boolean
 	 */
 	public function save($lc_cycle_steps){
-		if(self::docserverLocationsExists($lc_cycle_steps->lc_cycle_steps_id)){
+		if(self::cycle_stepsExists($lc_cycle_steps->lc_cycle_steps_id,$lc_cycle_steps->lc_cycles_id,$lc_cycle_steps->lc_policies_id)){
 			// Update existing lc_cycle_steps
 			return self::update($lc_cycle_steps);
 		} else {
@@ -108,12 +139,15 @@ class lc_cycle_steps_controler extends ClassifiedObjectControler implements Obje
 	}
 
 //////////////////////////////////////////////   OTHER PRIVATE BLOCK
-	public function docserverLocationsExists($lc_cycle_steps_id){
+	public function cycle_stepsExists($lc_cycle_steps_id,$lc_cycles_id,$lc_policies_id){
 		if(!isset($lc_cycle_steps_id) || empty($lc_cycle_steps_id))
 			return false;
 		self::$db=new dbquery();
 		self::$db->connect();
-		$query = "select lc_cycle_steps_id from "._LC_CYCLE_STEPS_TABLE_NAME." where lc_cycle_steps_id = '".$lc_cycle_steps_id."'";
+		
+		//LKE = BULL ===== SPEC FONC : ==== Cycles de vie : lc_cycle_steps (ID1)
+		// Ajout du contrôle pour vérifier l'existence de la combinaison "lc_cycle_steps_id" & "lc_cycles_id" & "lc_policies_id"
+		$query = "select lc_cycle_steps_id from "._LC_CYCLE_STEPS_TABLE_NAME." where lc_cycle_steps_id = '".$lc_cycle_steps_id."' and lc_cycles_id = '".$lc_cycles_id."' and lc_policies_id = '".$lc_policies_id."'";
 					
 		try{
 			if($_ENV['DEBUG']){echo $query.' // ';}

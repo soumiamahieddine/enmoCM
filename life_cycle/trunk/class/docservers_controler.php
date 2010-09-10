@@ -115,6 +115,9 @@ class docservers_controler extends ClassifiedObjectControler implements ObjectCo
 			return false;
 		self::$db=new dbquery();
 		self::$db->connect();
+		
+		//LKE = BULL ===== SPEC FONC : ==== Cycles de vie : docservers (ID1)
+		// Ajout du contrôle pour vérifier l'existence de la combinaison "docservers_id"
 		$query = "select docservers_id from "._DOCSERVERS_TABLE_NAME." where docservers_id = '".$docservers_id."'";
 					
 		try{

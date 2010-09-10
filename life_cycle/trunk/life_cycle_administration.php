@@ -85,11 +85,6 @@ unset($_SESSION['m_admin']);
 				<strong><?php  echo _MANAGE_DOCSERVER_TYPES;?></strong>
 		</div>
 	</div>
-	<div class="admin_item" id="admin_cycle" title="<?php  echo _MANAGE_CYCLE;?>" onclick="window.top.location='<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=cycles_management_controler&mode=list&module=life_cycle';">
-		<div class="sum_margin" >
-				<strong><?php  echo _MANAGE_CYCLE;?></strong>
-		</div>
-	</div>
     <!--<div class="admin_item" id="admin_folders" title="<?php  echo _READ_AGGREGATION;?>" onclick="window.top.location='<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=read_aggregation_controler&module=moreq';">
         <div class="sum_margin" >
 				<strong><?php  echo _READ_AGGREGATION;?></strong>

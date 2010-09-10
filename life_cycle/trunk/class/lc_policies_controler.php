@@ -1,5 +1,36 @@
 <?php
 
+/*
+*    Copyright 2008,2009,2010 Maarch
+*
+*  This file is part of Maarch Framework.
+*
+*   Maarch Framework is free software: you can redistribute it and/or modify
+*   it under the terms of the GNU General Public License as published by
+*   the Free Software Foundation, either version 3 of the License, or
+*   (at your option) any later version.
+*
+*   Maarch Framework is distributed in the hope that it will be useful,
+*   but WITHOUT ANY WARRANTY; without even the implied warranty of
+*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*   GNU General Public License for more details.
+*
+*   You should have received a copy of the GNU General Public License
+*    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+/**
+* @brief  Contains the life_cycle Object (herits of the BaseObject class)
+* 
+* 
+* @file
+* @author Luc KEULEYAN - BULL
+* @date $date$
+* @version $Revision$
+* @ingroup life_cycle
+*/
+
+
 try {
 	require_once("modules/life_cycle/class/ObjectControlerIF.php");
 	require_once("modules/life_cycle/class/ClassifiedObjectControlerAbstract.php");
@@ -28,7 +59,7 @@ class lc_policies_controler extends ClassifiedObjectControler implements ObjectC
 	 * @return boolean
 	 */
 	public function save($lc_policies){
-		if(self::docserverLocationsExists($lc_policies->lc_policies_id)){
+		if(self::policiesExists($lc_policies->lc_policies_id)){
 			// Update existing lc_policies
 			return self::update($lc_policies);
 		} else {
@@ -107,11 +138,14 @@ class lc_policies_controler extends ClassifiedObjectControler implements ObjectC
 	}
 
 //////////////////////////////////////////////   OTHER PRIVATE BLOCK
-	public function docserverLocationsExists($lc_policies_id){
+	public function policiesExists($lc_policies_id){
 		if(!isset($lc_policies_id) || empty($lc_policies_id))
 			return false;
 		self::$db=new dbquery();
 		self::$db->connect();
+		
+		//LKE = BULL ===== SPEC FONC : ==== Cycles de vie : lc_policies (ID1)
+		// Ajout du contrôle pour vérifier l'existence de la combinaison "lc_policies_id"	
 		$query = "select lc_policies_id from "._LC_POLICIES_TABLE_NAME." where lc_policies_id = '".$lc_policies_id."'";
 					
 		try{

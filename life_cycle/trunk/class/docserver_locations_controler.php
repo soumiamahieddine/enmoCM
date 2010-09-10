@@ -1,5 +1,36 @@
 <?php
 
+/*
+*    Copyright 2008,2009,2010 Maarch
+*
+*  This file is part of Maarch Framework.
+*
+*   Maarch Framework is free software: you can redistribute it and/or modify
+*   it under the terms of the GNU General Public License as published by
+*   the Free Software Foundation, either version 3 of the License, or
+*   (at your option) any later version.
+*
+*   Maarch Framework is distributed in the hope that it will be useful,
+*   but WITHOUT ANY WARRANTY; without even the implied warranty of
+*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*   GNU General Public License for more details.
+*
+*   You should have received a copy of the GNU General Public License
+*    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+/**
+* @brief  Contains the life_cycle Object (herits of the BaseObject class)
+* 
+* 
+* @file
+* @author Luc KEULEYAN - BULL
+* @date $date$
+* @version $Revision$
+* @ingroup life_cycle
+*/
+
+
 try {
 	require_once("modules/life_cycle/class/ObjectControlerIF.php");
 	require_once("modules/life_cycle/class/ClassifiedObjectControlerAbstract.php");
@@ -114,6 +145,9 @@ class docserver_locations_controler extends ClassifiedObjectControler implements
 			return false;
 		self::$db=new dbquery();
 		self::$db->connect();
+		
+		//LKE = BULL ===== SPEC FONC : ==== Cycles de vie : docserver_locations (ID1)
+		// Ajout du contrôle pour vérifier l'existence de la combinaison "docserver_locations_id"		
 		$query = "select docserver_locations_id from "._DOCSERVER_LOCATIONS_TABLE_NAME." where docserver_locations_id = '".$docserver_locations_id."'";
 					
 		try{

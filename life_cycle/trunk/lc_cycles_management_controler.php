@@ -1,4 +1,34 @@
 <?php
+/*
+*    Copyright 2008,2009,2010 Maarch
+*
+*  This file is part of Maarch Framework.
+*
+*   Maarch Framework is free software: you can redistribute it and/or modify
+*   it under the terms of the GNU General Public License as published by
+*   the Free Software Foundation, either version 3 of the License, or
+*   (at your option) any later version.
+*
+*   Maarch Framework is distributed in the hope that it will be useful,
+*   but WITHOUT ANY WARRANTY; without even the implied warranty of
+*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*   GNU General Public License for more details.
+*
+*   You should have received a copy of the GNU General Public License
+*    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+/**
+* @brief  Contains the life_cycle Object (herits of the BaseObject class)
+* 
+* 
+* @file
+* @author Luc KEULEYAN - BULL
+* @date $date$
+* @version $Revision$
+* @ingroup life_cycle
+*/
+
 //lgi +
 $sessionName = "lc_cycles";
 $pageName = "lc_cycles_management_controler";
@@ -48,7 +78,7 @@ if(isset($_REQUEST['submit'])){
 			display_add(); 
 			location_bar_management($mode);
 			break;
-		case "del" :
+		case "del" :			
 			display_del($lc_cycles_id); 
 			break;
 		case "list" :
@@ -154,7 +184,8 @@ function validate_cs_submit($mode){
 	$status['what']=$_REQUEST['what'];
 	$status['start']=$_REQUEST['start'];
 	
-	if($mode == "add" && lc_cycles_controler::docserverLocationsExists($lc_cycles->lc_cycles_id)){	
+	//LKE = BULL ===== SPEC FONC : ==== Cycles de vie : lc_cycles (ID1)
+	if($mode == "add" && lc_cycles_controler::cyclesExists($lc_cycles->lc_cycles_id,$lc_cycles->lc_policies_id)){	
 		$_SESSION['error'] = $lc_cycles->lc_cycles_id." "._ALREADY_EXISTS."<br />";
 	}
 	
@@ -306,6 +337,11 @@ function display_list(){
  * @param unknown_type $lc_cycles_id
  */
 function display_del($lc_cycles_id){
+
+	//TODO 2
+	// Ajout du contrôle pour vérifier l'absence de rattachement  "lc_cycle_steps" + "lc_stack" + "res_x" + "adr_x"
+	
+
 	$lc_cycles = lc_cycles_controler::get($lc_cycles_id);
 	if(isset($lc_cycles)){
 		// Deletion
