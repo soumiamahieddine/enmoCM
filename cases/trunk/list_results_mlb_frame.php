@@ -420,7 +420,7 @@ else
 {
 	echo  "<p class=\"error\"><img src=\"".$_SESSION['config']['businessappurl']."static.php?filename=noresult.gif\" /><br />"._NO_RESULTS."</p><p align='center'><a href=\"".$_SESSION['config']['businessappurl'].'index.php?display=true&module=cases&page=search_adv_for_cases&searched_item='.$_GET['searched_item'].'&searched_value='.$_GET['searched_value'].'">'._MAKE_NEW_SEARCH.'</a></strong></div></p>';
 	?>
-	<!--<script language="javascript" type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=cases&page=search_adv_error';?>';</script>-->
+	<!--<script  type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=cases&page=search_adv_error';?>';</script>-->
 	<?php
 }
 $core_tools->load_js();

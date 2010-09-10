@@ -44,7 +44,7 @@ if (($core_tools->test_service('join_res_case', 'cases', false) == 1) || ($core_
 				$case_redemption = new cases();
 				$case_id_newest = $case_redemption->get_case_id($actual_res_id);
 				?>
-				<script language="javascript">
+				<script type="text/javascript">
 				var case_id = window.opener.$('case_id');
 				var case_label = window.opener.$('case_label');
 				var case_description = window.opener.$('case_description');
@@ -62,7 +62,7 @@ if (($core_tools->test_service('join_res_case', 'cases', false) == 1) || ($core_
 			{	
 				$error = _CASE_CREATED;
 				?>
-				<script language="javascript">
+				<script type="text/javascript">
 				window.opener.top.location.reload();
 				var error_div = window.opener.$('main_error');
 				/*if(error_div)
@@ -79,7 +79,7 @@ if (($core_tools->test_service('join_res_case', 'cases', false) == 1) || ($core_
 	{
 		$_SESSION['cases_error'] = _LABEL_MANDATORY;
 		?>
-		<script language="javascript">
+		<script type="text/javascript">
 			window.history.back();
 		</script>
 		<?php

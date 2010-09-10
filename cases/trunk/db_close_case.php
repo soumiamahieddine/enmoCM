@@ -46,7 +46,7 @@ if ($_GET['case_id'])
 			$cases->close_case($case_id);
 			$_SESSION['error'] =  _THIS_CASE_IS_CLOSED;
 			?>
-			<script language="javascript">
+			<script type="text/javascript">
 			window.parent.top.location.reload();self.close();
 			</script>
 			<?php

@@ -31,7 +31,7 @@ if (($core_tools->test_service('join_res_case', 'cases', false) == 1) || ($core_
 					$_SESSION['error'] = _RESSOURCES_NOT_LINKED;
 				}
 				?>
-				<script language="javascript">
+				<script type="text/javascript">
 				window.opener.top.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=details_cases&module=cases&id=<?php echo $_GET['searched_value']; ?>';
 				//window.opener.top.location.reload();
 				self.close();
@@ -60,7 +60,7 @@ if (($core_tools->test_service('join_res_case', 'cases', false) == 1) || ($core_
 					$error = _RESSOURCES_NOT_LINKED;
 				}
 				?>
-				<script language="javascript">
+				<script type="text/javascript">
 				window.opener.top.location.reload();
 				var error_div = window.opener.$('main_error');
 				/*if(error_div)
@@ -100,7 +100,7 @@ if (($core_tools->test_service('join_res_case', 'cases', false) == 1) || ($core_
 				$return_description = $cases_return->get_case_info($case_id_to_insert);
 
 				?>
-				<script language="javascript">	
+				<script type="text/javascript">	
 				var case_id = window.opener.$('case_id');
 				var case_label = window.opener.$('case_label');
 				var case_description = window.opener.$('case_description');
