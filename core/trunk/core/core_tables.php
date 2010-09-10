@@ -11,6 +11,7 @@ define( 'HISTORY_BATCH_TABLE', 'history_batch');
 define( 'PARAM_TABLE', 'parameters');
 define( 'RESGROUPS_TABLE', 'resgroups');
 define( 'RESGROUP_CONTENT_TABLE', 'resgroup_content');
+define( 'SECURITY_TABLE', 'security');
 define( 'STATUS_TABLE', 'status');
 define( 'USERGROUPS_TABLE', 'usergroups');
 define( 'USERGROUP_CONTENT_TABLE', 'usergroup_content');

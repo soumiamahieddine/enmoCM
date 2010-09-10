@@ -19,7 +19,7 @@
 */
 
 /**
-* @brief  Contains the User Object (herits of the BaseObject class)
+* @brief  Contains the users Object (herits of the BaseObject class)
 * 
 * 
 * @file
@@ -37,7 +37,7 @@ try {
 }
 
 /**
-* @brief  User Object, herits of the BaseObject class 
+* @brief  users Object, herits of the BaseObject class 
 *
 * @ingroup core
 */
@@ -45,7 +45,7 @@ class users extends BaseObject
  {	
 	
 	/**
-	* Returns the string representing the User object
+	* Returns the string representing the users object
 	*
 	* @return string The user label (lastname, firstname and user_id)
 	*/

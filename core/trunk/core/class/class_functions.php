@@ -496,7 +496,7 @@ class functions
 	{
 		if(empty($_SESSION['location_bar']['level2']['path']))
 		{
-		?><script language="javascript" type="text/javascript">
+		?><script  type="text/javascript">
         	var bar = window.document.getElementById('ariane');
 			if(bar != null)
 			{
@@ -512,7 +512,7 @@ class functions
 		{
 			if(empty($_SESSION['location_bar']['level3']['path']))
 			{
-				?><script language="javascript" type="text/javascript">
+				?><script  type="text/javascript">
 					var bar = window.document.getElementById('ariane');
 					if(bar != null)
 					{
@@ -530,7 +530,7 @@ class functions
 			{
 				if(empty($_SESSION['location_bar']['level4']['path']))
 				{
-					?><script language="javascript" type="text/javascript">
+					?><script type="text/javascript">
 			        	var bar = window.document.getElementById('ariane');
 						if(bar != null)
 						{
@@ -553,7 +553,7 @@ class functions
 				}
 				else
 				{
-					?><script language="javascript" type="text/javascript">
+					?><script  type="text/javascript">
 			        	var bar = window.document.getElementById('ariane');
 						if(bar != null)
 						{

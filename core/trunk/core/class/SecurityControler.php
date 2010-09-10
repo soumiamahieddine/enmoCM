@@ -39,6 +39,7 @@ define("_CODE_INCREMENT",1);
 
 // Loads the required class
 try {
+	require_once("core/core_tables.php");
 	require_once("core/class/class_db.php");
 	require_once("core/class/users_controler.php");
 	require_once("core/class/Security.php");
@@ -77,7 +78,7 @@ class SecurityControler
 		$db = new dbquery();
 		$db->connect();
 		
-		self::$security_table = $_SESSION['tablename']['security'];
+		self::$security_table = SECURITY_TABLE;
 		self::$db=$db;
 	}	
 	

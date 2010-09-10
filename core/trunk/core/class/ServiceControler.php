@@ -71,7 +71,7 @@ class ServiceControler
 		$db = new dbquery();
 		$db->connect();
 		
-		self::$usergroups_services_table = $_SESSION['tablename']['usergroup_services'];
+		self::$usergroups_services_table = USERGROUPS_SERVICES_TABLE;
 		self::$db=$db;
 	}	
 	

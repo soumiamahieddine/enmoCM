@@ -382,6 +382,7 @@ class core_tools extends functions
 				{
 					$tmp .= "&amp;reinit=true";
 				}
+				$tmp = htmlentities  ( $tmp,ENT_COMPAT, 'UTF-8', true); // Encodes 
 				?>
 				<li id="<?php  echo $menu[$i]['style'];?>" onmouseover="this.className='on';" onmouseout="this.className='';"><a href="#" onclick="window.open('<?php  echo $tmp;?>', '<?php  if($menu[$i]['target'] <> ''){echo $menu[$i]['target'];}else{echo '_self';}?>');"><span><span class="menu_item"><?php  echo trim($menu[$i]['libconst']);?></span></span></a></li>
 				<?php
@@ -390,9 +391,9 @@ class core_tools extends functions
 
 		// Menu items always displayed
 		echo '<li id="account" onmouseover="this.className=\'on\';" onmouseout="this.className=\'\';">
-		<a href="'.$_SESSION['config']['businessappurl'].'index.php?page=modify_user&admin=users&reinit=true"><span><span  class="menu_item">'._MY_INFO.'</span></span></a></li>';
+		<a href="'.$_SESSION['config']['businessappurl'].'index.php?page=modify_user&amp;admin=users&amp;reinit=true"><span><span  class="menu_item">'._MY_INFO.'</span></span></a></li>';
 		echo '<li id="logout" onmouseover="this.className=\'on\';" onmouseout="this.className=\'\';">
-		<a href="'.$_SESSION['config']['businessappurl'].'index.php?display=true&page=logout&coreurl='.$_SESSION['config']['coreurl'].'&logout=true"><span><span  class="menu_item">'._LOGOUT.'</span></span></a></li>';
+		<a href="'.$_SESSION['config']['businessappurl'].'index.php?display=true&amp;page=logout&amp;coreurl='.$_SESSION['config']['coreurl'].'&amp;logout=true"><span><span  class="menu_item">'._LOGOUT.'</span></span></a></li>';
 	}
 
 	/**
@@ -1331,7 +1332,7 @@ class core_tools extends functions
 				{
 					$_SESSION['error'] = _SERVICE.' '._UNKNOWN.' : '.$id_service;
 					?>
-					<script type="text/javascript" language="javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'];?>index.php';</script>
+					<script type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'];?>index.php';</script>
 					<?php
 					exit();
 				}
@@ -1365,7 +1366,7 @@ class core_tools extends functions
 			{
 				$_SESSION['error'] = _ADMIN_SERVICE.' '._UNKNOWN;
 			?>
-				<script type="text/javascript" language="javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'];?>index.php';</script>
+				<script type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'];?>index.php';</script>
 				<?php
 				exit();
 			}
@@ -1383,7 +1384,7 @@ class core_tools extends functions
 					$label = $this->retrieve_label_service($id_service);
 					$_SESSION['error'] = _NO_RIGHTS_ON.' : '.$label;
 					?>
-					<script type="text/javascript" language="javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'];?>index.php';</script>
+					<script type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'];?>index.php';</script>
 					<?php
 					exit();
 				}
@@ -1433,7 +1434,7 @@ class core_tools extends functions
 				{
 					$_SESSION['error'] = _SERVICE.' '._UNKNOWN.' : '.$id_service;
 				?>
-					<script type="text/javascript" language="javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'];?>index.php';</script>
+					<script type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'];?>index.php';</script>
 					<?php
 					exit();
 
@@ -1468,7 +1469,7 @@ class core_tools extends functions
 			{
 				$_SESSION['error'] = _SERVICE.' '._UNKNOWN.' : '.$id_service;
 			?>
-				<script type="text/javascript" language="javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'];?>index.php';</script>
+				<script type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'];?>index.php';</script>
 				<?php
 				exit();
 
@@ -1487,7 +1488,7 @@ class core_tools extends functions
 					$label = $this->retrieve_label_service($id_service);
 					$_SESSION['error'] = _NO_RIGHTS_ON.' : '.$label;
 					?>
-					<script type="text/javascript" language="javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'];?>index.php';</script>
+					<script type="text/javascript" >window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'];?>index.php';</script>
 					<?php
 					exit();
 				}

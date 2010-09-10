@@ -19,7 +19,7 @@
 */
 
 /**
-* @brief  Contains the Usergroup Object (herits of the BaseObject class)
+* @brief  Contains the usergroups Object (herits of the BaseObject class)
 * 
 * 
 * @file
@@ -38,14 +38,14 @@ try {
 
 
 /**
-* @brief  Usergroup Object, herits of the BaseObject class 
+* @brief  usergroups Object, herits of the BaseObject class 
 *
 * @ingroup core
 */
 class usergroups  extends BaseObject
 {
 	/**
-	* Returns the string representing the Usergroup object
+	* Returns the string representing the usergroups object
 	*
 	* @return string The usergroup label (group_desc field in the usergroups table)
 	*/

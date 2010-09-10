@@ -236,7 +236,6 @@ class usergroups_controler extends ObjectControler implements ObjectControlerIF
 	* Saves in the database a usergroups object 
 	*
 	* @param  $group usergroups object to be saved
-	* @param  $mode string  Saving mode : add or up
 	* @return bool true if the save is complete, false otherwise
 	*/
 	public function save($group)
