@@ -23,7 +23,7 @@ if(isset($_REQUEST['foldertype']) && !empty($_REQUEST['foldertype']))
 	$_SESSION['current_foldertype'] = $_REQUEST['foldertype'];
 
 	?>
-    <script language="javascript" type="text/javascript">window.top.frames['search_folder'].location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=folder&page=search_folder';</script>
+    <script type="text/javascript">window.top.frames['search_folder'].location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=folder&page=search_folder';</script>
     <?php 
 
 }
@@ -34,7 +34,7 @@ if(isset($_REQUEST['foldertype']) && !empty($_REQUEST['foldertype']))
 	<input type="hidden" name="page"  value="choose_foldertype2" />
 	<p>
     	<label><?php  echo _FOLDERTYPE;?> : </label>
-        <select name="foldertype" id="foldertype" onChange="this.form.submit();">
+        <select name="foldertype" id="foldertype" onchange="this.form.submit();">
         	<option value=""><?php  echo _CHOOSE_FOLDERTYPE;?></option>
         	<?php  for($i=0; $i<count($types);$i++)
 			{

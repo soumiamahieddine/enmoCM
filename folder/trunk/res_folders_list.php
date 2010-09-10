@@ -34,7 +34,7 @@ else
 	$_SESSION['current_folder_id'] = $folder->get_field('folders_system_id');
 	$_SESSION['current_foldertype_coll_id'] = $folder->get_field('foldertype_coll_id');
 	?>
-	<script language="JavaScript" type="text/javascript" >
+	<script type="text/javascript" >
 	window.top.location ='<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=salary_sheet&module=folder&id=<?php  echo $_SESSION['current_folder_id'];?>';
 	</script>
 	<?php

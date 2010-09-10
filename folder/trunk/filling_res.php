@@ -79,7 +79,7 @@ else
 		$level1 = array();
 		$_SESSION['where_list_doc'] = "";
 		?>
-		<script language="javascript">
+		<script type="text/javascript">
 			function view_doc(id)
 			{
 				var eleframe1 = window.top.document.getElementById('view_doc');
@@ -168,7 +168,7 @@ else
 					}
 				}
 				?>
-				<div onClick="change2(<?php  echo $value_1;?>)" id="h2<?php  echo $value_1;?>" class="categorie">
+				<div onclick="change2(<?php  echo $value_1;?>)" id="h2<?php  echo $value_1;?>" class="categorie">
 					<?php  echo "<a href=javascript:view_doc('".$res_id_list."');>"?><img src="<?php  echo $_SESSION['config']['businessappurl']?>static.php?filename=folderopen.gif" alt="" />&nbsp;<b><?php  echo $_SESSION['array_struct_final']['level_1'][$value_1]['label'];?></b></a>
 					<span class="lb1-details">&nbsp;</span>
 				</div>
@@ -190,7 +190,7 @@ else
 							}
 							//echo $res_id_list;
 							?>
-							<div onClick="change2(<?php  echo $value_2;?>)" id="h2<?php  echo $value_2;?>" class="categorie">
+							<div onclick="change2(<?php  echo $value_2;?>)" id="h2<?php  echo $value_2;?>" class="categorie">
 								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php  echo "<a href=javascript:view_doc('".$res_id_list."');>"?><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=folderopen.gif" alt="" />&nbsp;<b><?php  echo $_SESSION['array_struct_final']['level_1'][$value_1]['level_2'][$value_2]['label'];?></b></a>
 								<span class="lb1-details">&nbsp;</span>
 							</div>

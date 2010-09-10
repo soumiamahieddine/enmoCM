@@ -30,7 +30,7 @@ if(isset($_REQUEST['search']))
 		$_SESSION['FOLDER']['SEARCH']['CUSTOM_T1'] = $_REQUEST['custom_t1'];
 	}
 	?>
-	<script language="javascript" type="text/javascript">
+	<script type="text/javascript">
 		window.top.location.href='<?php  echo $_SESSION['config']['businessappurl']."index.php?module=folder&page=".$_SESSION['origin'];?>';
 	</script>
     <?php 

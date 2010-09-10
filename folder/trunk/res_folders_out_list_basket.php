@@ -35,7 +35,7 @@ $core_tools->load_lang();
  {
  	$_SESSION['folder_out_id'] = $_REQUEST['field'];
  	?>
-	 	<script language="JavaScript" type="text/javascript" >
+	 	<script type="text/javascript" >
 	 	window.top.location = '<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=details_folder_out&origin=welcome&module=folder';
 	 	</script>
 	 	<?php

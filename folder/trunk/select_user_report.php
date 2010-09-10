@@ -107,7 +107,7 @@ for ($i=0;$i<count($tab);$i++)
 	{
 		//$_SESSION['chosen_user'] = $_REQUEST['field'];
 		?>
-			<script language="javascript">
+			<script type="text/javascript">
 				var item = window.opener.$('user_id');
 				if(item)
 				{
@@ -125,7 +125,7 @@ $core_tools->load_html();
 $core_tools->load_header(_CHOOSE_USER2, true, false);
 $time = $core_tools->get_session_time_expire();
 ?>
-<body onLoad="javascript:setTimeout(window.close, <?php echo $time;?>*60*1000);">
+<body onload="javascript:setTimeout(window.close, <?php echo $time;?>*60*1000);">
 
 <?php
 $nb = count($tab);

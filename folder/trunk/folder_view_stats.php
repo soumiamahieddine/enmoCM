@@ -16,7 +16,7 @@ $content .='<div id="params">';
 			$content .='</tr>';
 			$content .='<tr>';
 				$content .='<td align="left"><input type="radio" id="user" name="type_choice" value="byUser" /><label for="user">'._TITLE_STATS_CHOICE_USER.'</label> ';
-					$content .='<input type="text" name="user_id" id="user_id" value="" />&nbsp;<em><label for="user_id"><a href="javascript://" onClick="window.open(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=folder&page=select_user_report\',\'select_user\',\'width=800,height=700,resizable=yes\');" >'._CHOOSE_USER2.'</a></label></em></td>';
+					$content .='<input type="text" name="user_id" id="user_id" value="" />&nbsp;<em><label for="user_id"><a href="javascript://" onclick="window.open(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=folder&page=select_user_report\',\'select_user\',\'width=800,height=700,resizable=yes\');" >'._CHOOSE_USER2.'</a></label></em></td>';
 			$content .='</tr>';
 			$content .='<tr>';
 				$content .='<td align="left"><input type="radio" id="period" name="type_choice" value="byPeriod" /><label for="period">'._TITLE_STATS_CHOICE_PERIOD.'.&nbsp;</label>'._SINCE.'&nbsp;:&nbsp;<input name="datestart" type="text"  id="datestart" onclick="showCalender(this);" />&nbsp;'._FOR.'&nbsp;:&nbsp;<input name="datefin" type="text"  id="datefin" onclick="showCalender(this);" /></td>';

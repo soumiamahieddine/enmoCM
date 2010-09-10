@@ -22,7 +22,7 @@ $core_tools->load_lang();
  	$folder->load_folder(trim($_REQUEST['field']), $_SESSION['tablename']['folders']);
  	$_SESSION['current_folder'] = $folder;
  	?>
- 	<script language="JavaScript" type="text/javascript" >
+ 	<script type="text/javascript" >
  	window.top.opener.location.reload();window.top.close();
  	</script>
  	<?php

@@ -339,7 +339,7 @@ if(isset($_REQUEST['delete_doc']) && !empty($_REQUEST['coll_id']))
 	$indexing = new indexing_searching();
 	$indexing->delete_doc( $_SESSION["unique_res_id"], $_SESSION['collection_choice']);
 	?>
-	<script language="javascript" type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?page=view_folder&module=folder&coll_id='.$_REQUEST['coll_id'].'&type_id='.$_SESSION['type'];?>';</script>
+	<script type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?page=view_folder&module=folder&coll_id='.$_REQUEST['coll_id'].'&type_id='.$_SESSION['type'];?>';</script>
     <?php
 	exit();
 }
@@ -662,7 +662,7 @@ if(isset($_REQUEST['delete_doc']) && !empty($_REQUEST['coll_id']))
 							if(!empty($_SESSION['error_page']))
 							{
 								?>
-								<script language="javascript" type="text/javascript">
+								<script type="text/javascript">
 									alert("<?php  echo $func->wash_html($_SESSION['error_page']);?>");
 									<?php
 									if(isset($_REQUEST['delete_doc']))

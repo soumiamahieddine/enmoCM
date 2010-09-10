@@ -64,7 +64,7 @@ if(isset($_POST['delete_folder']))
 {
 	$folder_object->delete_folder($_REQUEST['id'], $_REQUEST['foldertype_id']);
 	?>
-		<script language="javascript" type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?page=search_adv_folder&module=folder';?>';</script>
+		<script type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?page=search_adv_folder&module=folder';?>';</script>
     <?php
 	exit();
 }

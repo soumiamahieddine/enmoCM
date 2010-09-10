@@ -670,7 +670,7 @@ class folder extends request
 		$_SESSION['error_page'] = $_SESSION['error'];
 		$_SESSION['error']= '';
 		?>
-		<script language="javascript" type="text/javascript">
+		<script  type="text/javascript">
 			//window.opener.reload();
 			var error_div = $('main_error');
 			if(error_div)

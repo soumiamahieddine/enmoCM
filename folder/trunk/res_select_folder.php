@@ -31,7 +31,7 @@ require_once("modules".DIRECTORY_SEPARATOR."folder".DIRECTORY_SEPARATOR."class".
 
 	 ?>
 
- 	<script language="JavaScript" type="text/javascript">
+ 	<script type="text/javascript">
 		//window.alert(window.top.location);
 		if(window.top.name == 'CreateFolder')
 		{

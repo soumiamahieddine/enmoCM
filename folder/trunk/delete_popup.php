@@ -49,7 +49,7 @@ if(isset($_REQUEST['id_value']) && !empty($_REQUEST['id_value']))
 		 $_SESSION['FOLDER']['SEARCH']['FOLDER_ID'] = '';
 	}
 		?>
-        <script language="javascript" type="text/javascript">window.opener.top.location.reload();window.top.close();</script>
+        <script  type="text/javascript">window.opener.top.location.reload();window.top.close();</script>
         <?php
 		exit();
 }
@@ -63,7 +63,7 @@ $core_tools->load_html();
 //here we building the header
 $core_tools->load_header(_DELETE_FOLDER);
 	?>
-		<body onLoad="setTimeout(window.close, <?php  echo $time;?>*60*1000);">
+		<body onload="setTimeout(window.close, <?php  echo $time;?>*60*1000);">
 		<br/>
         <h2><?php  echo _DELETE_FOLDER;?></h2>
 		 <br/>
@@ -76,7 +76,7 @@ $core_tools->load_header(_DELETE_FOLDER);
 		      <div align="center">
 				<input name="id_value" type="hidden" value="<?php  echo $_SESSION['current_folder_id']; ?>" />
 		        <input type="submit" name="valid" value="<?php  echo _DELETE;?>" class="button" />
-		      	 <input type="button" name="cancel" value="<?php  echo _CANCEL;?>" onClick="javascript:self.close();" class="button"  />
+		      	 <input type="button" name="cancel" value="<?php  echo _CANCEL;?>" onclick="javascript:self.close();" class="button"  />
               </div>
 		    </form>
 

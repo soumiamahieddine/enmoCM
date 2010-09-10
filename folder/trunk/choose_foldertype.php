@@ -24,7 +24,7 @@ if(isset($_REQUEST['foldertype']) && !empty($_REQUEST['foldertype']))
 {
 	$_SESSION['foldertype'] = $_REQUEST['foldertype'];
 	?>
-	<script language="javascript" type="text/javascript">window.parent.frames['frm_create_folder'].location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=folder&page=frm_create_folder';</script>
+	<script type="text/javascript">window.parent.frames['frm_create_folder'].location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=folder&page=frm_create_folder';</script>
     <?php
 }?>
 <form name="choose_foldertype_form" id="choose_foldertype_form" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=folder&page=choose_foldertype">
