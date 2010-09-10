@@ -75,7 +75,7 @@ if(isset($_REQUEST['modify']) )
 		}
 		//$_SESSION['error'] = _NOTES_MODIFIED;
 		?>
-       <script language="javascript">window.opener.location.reload();self.close();</script>
+       <script type="text/javascript">window.opener.location.reload();self.close();</script>
         <?php 
 		exit();
 	}
@@ -104,7 +104,7 @@ if(isset($_REQUEST['delete']) )
 	}
 	//$_SESSION['error'] = _NOTES_DELETED;
 	?>
-      <script language="javascript">window.opener.location.reload();self.close();</script>
+      <script type="text/javascript">window.opener.location.reload();self.close();</script>
        <?php 
 	exit();
 }
@@ -196,7 +196,7 @@ if(trim($user_id) == $_SESSION['user']['UserId'])
                 	<input type="submit" name="modify" id="modify" value="<?php  echo _MODIFY;?>"  class="button"/>
                     <input type="submit" name="delete" id="delete" value="<?php  echo _DELETE;?>"  class="button"/>
        		 <?php  }?>
-             <input type="button" name="close_button" value="<?php  echo _CLOSE_WINDOW;?>" onClick="javascript:self.close();" class="button"/>
+             <input type="button" name="close_button" value="<?php  echo _CLOSE_WINDOW;?>" onclick="javascript:self.close();" class="button"/>
             </p>
          	
       </form>

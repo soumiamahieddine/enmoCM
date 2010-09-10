@@ -88,7 +88,7 @@ if (isset($_REQUEST['notes'])&& !empty($_REQUEST['notes']))
 			//$_SESSION['error'] = _ADDITION_NOTE;
 		}
 		?>
-		<script language="javascript" type="text/javascript">
+		<script type="text/javascript">
 		<?php  if($_SESSION['origin'] == "process")
 		{?>
 			var eleframe1 =  window.opener.top.frames['process_frame'].document.getElementById('list_notes_doc');
@@ -147,7 +147,7 @@ else
 	   <br/>
         <p class="buttons">
 				<input type="submit" name="Submit" value="<?php  echo _ADD_NOTE;?>" class="button"/>
-             	<input type="submit" name="Submit2" value="<?php  echo _CANCEL;?>" onClick="javascript:self.close();" class="button"/>
+             	<input type="submit" name="Submit2" value="<?php  echo _CANCEL;?>" onclick="javascript:self.close();" class="button"/>
             </p>
 
       </form>
