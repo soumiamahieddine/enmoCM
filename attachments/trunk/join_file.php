@@ -103,7 +103,7 @@ if($_POST['valid'])
 					{
 						$_SESSION['error'] = $docserver->get_error();
 						?>
-						<script language="javascript" type="text/javascript">
+						<script type="text/javascript">
 							var eleframe1 =  window.opener.top.frames['process_frame'].document.getElementById('list_attach');
 							eleframe1.location.href = '<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=attachments&page=frame_list_attachments';
 						</script>
@@ -199,7 +199,7 @@ if($_POST['valid'])
 			if(empty($_SESSION['error']) || $_SESSION['error'] == _NEW_ATTACH_ADDED)
 			{
 				?>
-				<script language="javascript" type="text/javascript">
+				<script type="text/javascript">
 					var eleframe1 =  window.opener.top.document.getElementById('list_attach');
 					eleframe1.src = '<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=attachments&page=frame_list_attachments';
 					window.top.close();
