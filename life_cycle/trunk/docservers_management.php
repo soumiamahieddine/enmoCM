@@ -217,7 +217,7 @@ elseif($mode == "up" || $mode == "add"){
 	               <input type="button" class="button"  name="cancel" value="<?php echo _CANCEL; ?>" onclick="javascript:window.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=docservers_management_controler&amp;module=life_cycle&amp;mode=list';"/>
 				</p>
 			</form>
-			<script language="javascript">
+			<script type="text/javascript">
 				//on load
 				$('size_limit_number').value = $('size_limit_number').value / (1000 * 1000 * 1000)
 				$('actual_size').value = $('actual_size').value / (1000 * 1000 * 1000)
