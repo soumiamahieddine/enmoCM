@@ -666,7 +666,7 @@ class entity extends dbquery
 				}
 				//header('location: '.$_SESSION['config']['businessappurl'].'index.php?page=manage_entities&module=entities&order='.$order."&order_field=".$order_field."&start=".$start."&what=".$what);
 				?>
-				<script language="javascript">
+				<script type="text/javascript">
 					window.top.location.href='<?php echo $_SESSION['config']['businessappurl'].'index.php?page=manage_entities&module=entities&order='.$order."&order_field=".$order_field."&start=".$start."&what=".$what;?>';
 				</script>
 				<?php

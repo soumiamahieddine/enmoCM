@@ -11,7 +11,7 @@ if(isset($_REQUEST['tree_id']) && !empty($_REQUEST['tree_id']))
 {
 	$_SESSION['entities_chosen_tree'] = $_REQUEST['tree_id'];
 	?>
-    <script language="javascript" type="text/javascript">window.top.frames['show_trees'].location.href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=show_trees';?>';</script>
+    <script type="text/javascript">window.top.frames['show_trees'].location.href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=show_trees';?>';</script>
     <?php
 }
 else
@@ -26,7 +26,7 @@ else
 		<input type="hidden" name="page" value="choose_tree" />
     	<p align="left">
         	<label><?php  echo _ENTITY;?> :</label>
-            <select name="tree_id" id="tree_id" onChange="this.form.submit();">
+            <select name="tree_id" id="tree_id" onchange="this.form.submit();">
             	<option value=""><?php  echo _CHOOSE_ENTITY;?></option>
                 <?php
 				for($i=0;$i<count($_SESSION['tree_entities']);$i++)

@@ -26,7 +26,7 @@ if(isset($_POST['valid']))
 	$_SESSION["popup_suite"] = true;
 	//print_r($_SESSION['m_admin']['entity']['listmodel']);exit;
 	?>
-	<script language="javascript">window.parent.opener.location.reload();self.close();</script>
+	<script type="text/javascript">window.parent.opener.location.reload();self.close();</script>
 	<?php
 	exit;
 }
@@ -296,7 +296,7 @@ $core_tools->load_html();
 $core_tools->load_header(_USER_ENTITIES_TITLE);
 $time = $core_tools->get_session_time_expire();
 ?>
-<body onLoad="setTimeout(window.close, <?php echo $time;?>*60*1000);">
+<body onload="setTimeout(window.close, <?php echo $time;?>*60*1000);">
 <?php //$db->show_array($_SESSION['m_admin']['entity']['listmodel']);?>
 	<?php $link = $_SESSION['config']['businessappurl']."index.php?display=true&module=entities&page=creation_listmodel";
 		?>

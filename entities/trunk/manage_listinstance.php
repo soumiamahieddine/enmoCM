@@ -312,7 +312,7 @@ else
 	$display_value = ''.$display_value.'';
 }
 ?>
-<body onLoad="setTimeout(window.close, <?php echo $time;?>*60*1000);">
+<body onload="setTimeout(window.close, <?php echo $time;?>*60*1000);">
 <?php //$db->show_array($_SESSION[$origin]['diff_list']);?>
 	<?php $link = $_SESSION['config']['businessappurl']."index.php?display=true&module=entities&page=manage_listinstance&origin=".$origin;
 	if($only_cc)

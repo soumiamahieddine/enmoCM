@@ -37,6 +37,6 @@ else
 	exit;
 }
 ?>
-<script language="javascript">
+<script type="text/javascript">
 window.parent.opener.location.href='<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=entities&page=users_entities_form';self.close();
 </script>
