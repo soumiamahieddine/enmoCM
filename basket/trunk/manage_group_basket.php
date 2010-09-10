@@ -172,6 +172,6 @@ if(!empty($_SESSION['error']))
 $_SESSION['service_tag'] = '';
 unset($_SESSION['m_admin']['basket_popup']);
 ?>
-<script language="javascript">
+<script type="text/javascript">
 	window.parent.opener.location.reload();self.close();
 </script>

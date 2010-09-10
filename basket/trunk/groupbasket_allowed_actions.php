@@ -48,7 +48,7 @@ $core_tools->load_header('', true, false);
 		<input type="hidden" name="page" value="groupbasket_allowed_actions" />
 	<?php if(count($_SESSION['actions']) > count($_SESSION['m_admin']['basket']['actions']))
 	{?>
-		<input type="button" class="button" name="popuplink" id="popuplink" onClick="window.open('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=basket&page=groupbasket_action_popup', 'action','toolbar=no,status=yes,width=500,height=800,left=500,top=150,scrollbars=no,top=no,location=no,resize=yes,menubar=no');" value="<?php echo _ADD_ACTION; ?>"/>
+		<input type="button" class="button" name="popuplink" id="popuplink" onclick="window.open('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=basket&page=groupbasket_action_popup', 'action','toolbar=no,status=yes,width=500,height=800,left=500,top=150,scrollbars=no,top=no,location=no,resize=yes,menubar=no');" value="<?php echo _ADD_ACTION; ?>"/>
   <?php } ?>
 	<br/><br/>
 	<div align="center">

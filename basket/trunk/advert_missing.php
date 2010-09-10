@@ -51,7 +51,7 @@ if ($_POST['value'] == "submit")
 		$history->add($_SESSION['tablename']['users'],$this_user,"RET",$res->firstname." ".$res->lastname.' '._BACK_FROM_VACATION, $_SESSION['config']['databasetype']);
 	}
 	?>
-		 <script language="javascript"> window.location.href="<?php echo $_SESSION['config']['businessappurl'];?>index.php";</script>
+		 <script type="text/javascript"> window.location.href="<?php echo $_SESSION['config']['businessappurl'];?>index.php";</script>
 	<?php
 	exit();
 }

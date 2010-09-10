@@ -71,7 +71,7 @@ $time = $core_tools->get_session_time_expire();
 //$core_tools->show_array( $_SESSION['m_admin']['basket']['groups']);
 //$core_tools->show_array( $_SESSION['m_admin']['basket']['all_actions']);
 ?>
-<body onLoad="setTimeout(window.close, <?php echo $time;?>*60*1000);">
+<body onload="setTimeout(window.close, <?php echo $time;?>*60*1000);">
 
 	<div class="error"><?php echo $_SESSION['error']; $_SESSION['error'] = '';?></div>
 	<br/>

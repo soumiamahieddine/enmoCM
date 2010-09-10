@@ -60,5 +60,5 @@ if($_REQUEST['user_id'] == $_SESSION['user']['UserId'])
 }
 else
 {
-?>	<script language="javascript">window.top.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=users&admin=users';</script>	<?php
+?>	<script type="text/javascript">window.top.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=users&admin=users';</script>	<?php
 }?>

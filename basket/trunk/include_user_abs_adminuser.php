@@ -44,7 +44,7 @@ if($_SESSION['m_admin']['users']['Status'] == 'ABS')
  else
  {
   ?>
-	<script language="javascript">
+	<script type="text/javascript">
 		function test_form()
 		{
 			var error_num = check_form_baskets("redirect_my_baskets_to");
