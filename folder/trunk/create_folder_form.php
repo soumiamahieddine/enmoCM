@@ -95,7 +95,7 @@ while($res = $db->fetch_object())
 	</form>
 	<?php if(isset($_SESSION['m_admin']['folder']['foldertype_id']) && !empty($_SESSION['m_admin']['folder']['foldertype_id']))
 	{?>
-	<script>
+	<script type="text/javascript">
 	var ft_list = $('foldertype');
 	if(ft_list)
 	{
