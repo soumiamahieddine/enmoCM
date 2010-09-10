@@ -109,7 +109,7 @@ else
 				else
 				{
 					$_SESSION['error'] = _NO_DOC_OR_NO_RIGHTS."...";
-					?><script>window.opener.top.location.href='index.php';self.close();</script><?php
+					?><script type="text/javascript">window.opener.top.location.href='index.php';self.close();</script><?php
 				}
 			}
 			else
