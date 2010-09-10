@@ -1,6 +1,6 @@
 <?php
 /*
-*    Copyright 2008,2009 Maarch
+*    Copyright 2008-2010 Maarch
 *
 *  This file is part of Maarch Framework.
 *
@@ -24,6 +24,7 @@
 *
 * @file
 * @author Loic Vinet <dev@maarch.org>
+* @author Claire Figueras <dev@maarch.org>
 * @date $date$
 * @version $Revision$
 * @ingroup basket
@@ -56,8 +57,7 @@ $db->connect();
 			</div>
 			<div class="blank_space">&nbsp;</div>
 			<?php
-		}
-		?> <ul class="basket_elem"><?php
+			?> <ul class="basket_elem"><?php
 		$abs_basket = false;
 		for ($i=0;$i<count($_SESSION['user']['baskets']);$i++)
 		{
@@ -69,14 +69,14 @@ $db->connect();
 			$nb = '';
 			if(preg_match('/^CopyMailBasket/', $_SESSION['user']['baskets'][$i]['id']) && !empty($_SESSION['user']['baskets'][$i]['view']))
 			{
-				$db->query('select RES_ID from '.$_SESSION['user']['baskets'][$i]['view']." where ".$_SESSION['user']['baskets'][$i]['clause']);
+				$db->query('select res_id from '.$_SESSION['user']['baskets'][$i]['view']." where ".$_SESSION['user']['baskets'][$i]['clause']);
 				$nb = $db->nb_result();
 			}
 			elseif(!empty($_SESSION['user']['baskets'][$i]['table']))
 			{
 				if( trim($_SESSION['user']['baskets'][$i]['clause']) <> '')
 				{
-					$db->query('select RES_ID from '.$_SESSION['user']['baskets'][$i]['view']." where ".$_SESSION['user']['baskets'][$i]['clause'], true);
+					$db->query('select res_id from '.$_SESSION['user']['baskets'][$i]['view']." where ".$_SESSION['user']['baskets'][$i]['clause'], true);
 					$nb = $db->nb_result();
 				}
 			}
@@ -84,17 +84,16 @@ $db->connect();
 			if ($nb <> 0)
 				$nb = "(".$nb.")";
 			else
-				$nb = "";
+				$nb = "(0)";
 			if(!preg_match('/^IndexingBasket/', $_SESSION['user']['baskets'][$i]['id']))
 			{
-				echo '<li><a href="'.$_SESSION['config']['businessappurl'].'index.php?page=view_baskets&module=basket&baskets='.$_SESSION['user']['baskets'][$i]['id'].'"><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=manage_baskets_off.gif&module=basket" alt=""/> '.$_SESSION['user']['baskets'][$i]['name'].'  <b>'.$nb.'</b> </a></li>';
+				echo '<li><a href="'.$_SESSION['config']['businessappurl'].'index.php?page=view_baskets&amp;module=basket&amp;baskets='.$_SESSION['user']['baskets'][$i]['id'].'"><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=manage_baskets_off.gif&amp;module=basket" alt=""/> '.$_SESSION['user']['baskets'][$i]['name'].'  <b>'.$nb.'</b> </a></li>';
 			}
 		}
 		?>
-	</ul>
+	</ul><?php
+		}
+		?>
 	<div class="blank_space">&nbsp;</div>
 <?php }?>
 </div>
-
-
-

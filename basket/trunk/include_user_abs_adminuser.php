@@ -78,7 +78,7 @@ if($_SESSION['m_admin']['users']['Status'] == 'ABS')
 	$modal_content = $bask->redirect_my_baskets_list($arr_baskets, count($arr_baskets), $_SESSION['m_admin']['users']['user_id'],"listingbasket specsmall");
 	echo "<div>";
 	?>
-		<script>
+		<script type="text/javascript">
 			var modal_content = '<?php echo addslashes($modal_content);?>';
 		</script>
 		<h2><a href="javascript://" onclick="createModal(modal_content, 'modal_redirect', <?php if(count($arr_baskets) >0) {?>'400px', '800px'<?php }else{?>'100px', '320px'<?php }?>);autocomplete(<?php echo count($arr_baskets);?>, '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=basket&page=autocomplete_users_list')"><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=missing_user_big.gif&module=basket" alt="" /> <?php echo _ADMIN_ABS; ?> </a></h2>
