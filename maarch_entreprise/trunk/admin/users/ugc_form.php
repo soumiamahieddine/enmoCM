@@ -29,10 +29,11 @@
 * @ingroup admin
 */
 core_tools::load_lang();
+header("Content-Type: text/html", true);
 ?>
 <div class="block">
 <form name="usergroup_content" method="get" action="#" >
- <h2 class="tit"> <?php  echo _USER_GROUPS_TITLE; ?> :</h2>
+ <h2 class="tit"> <?php  echo html_entity_decode(_USER_GROUPS_TITLE); ?> :</h2>
 <?php
 
 	if(empty($_SESSION['m_admin']['users']['groups'])   )
@@ -53,16 +54,16 @@ core_tools::load_lang();
 					echo "&nbsp;&nbsp;&nbsp;&nbsp;";
 				}
 				?>
-				<input type="checkbox"  class="check" name="groups[]" value="<?php  echo  $_SESSION['m_admin']['users']['groups'][$theline]['GROUP_ID']; ?>" ><?php  echo $_SESSION['m_admin']['users']['groups'][$theline]['LABEL'] ; ?><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><?php  echo $_SESSION['m_admin']['users']['groups'][$theline]['ROLE']; ?></i><br/></input>
+				<input type="checkbox"  class="check" name="groups[]" value="<?php  echo  $_SESSION['m_admin']['users']['groups'][$theline]['GROUP_ID']; ?>" /><?php  echo $_SESSION['m_admin']['users']['groups'][$theline]['LABEL'] ; ?><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><?php  echo $_SESSION['m_admin']['users']['groups'][$theline]['ROLE']; ?></i><br/></input>
 				<?php
 		}
-		 ?> <br/><input class="button" type="button" name="removeUsergroup" id="removeUsergroup" value="<?php  echo _DELETE_GROUPS; ?>" onclick="doActionGroup('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&admin=users&page=remove_group', '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&admin=users&page=ugc_form')"/><br/><br/>
+		 ?> <br/><input class="button" type="button" name="removeUsergroup" id="removeUsergroup" value="<?php  echo _DELETE_GROUPS; ?>" onclick="doActionGroup('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&amp;admin=users&amp;page=remove_group', '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&amp;admin=users&amp;page=ugc_form')"/><br/><br/>
 <?php 	}
 
 	if (count($_SESSION['m_admin']['users']['groups']) < $_SESSION['m_admin']['nbgroups']  || empty($_SESSION['m_admin']['users']['groups']))
 	{
 	?>
-		<input class="button" type="button" name="addGroup" id="addGroup" onclick="displayModal('<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&admin=users&page=add_usergroup_content', 'add_ugc', 600, 150);" value="<?php  echo _ADD_TO_GROUP; ?>" />
+		<input class="button" type="button" name="addGroup" id="addGroup" onclick="displayModal('<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&amp;admin=users&amp;page=add_usergroup_content', 'add_ugc', 600, 150);" value="<?php echo _ADD_TO_GROUP; ?>" />
 	<?php
 	}
 
@@ -71,7 +72,7 @@ core_tools::load_lang();
 	<?php  if (count($_SESSION['m_admin']['users']['groups']) > 0)
 	{
 	?>
-		<input type="button" class="button" name="setPrimary" id="setPrimary" value="<?php  echo _CHOOSE_PRIMARY_GROUP; ?>"  onclick="doActionGroup('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&admin=users&page=set_primary_group', '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&admin=users&page=ugc_form');"/>
+		<input type="button" class="button" name="setPrimary" id="setPrimary" value="<?php  echo _CHOOSE_PRIMARY_GROUP; ?>"  onclick="doActionGroup('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&amp;admin=users&amp;page=set_primary_group', '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&amp;admin=users&amp;page=ugc_form');"/>
 	<?php
 	}
 	?>

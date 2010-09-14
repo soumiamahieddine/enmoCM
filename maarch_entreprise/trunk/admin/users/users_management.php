@@ -21,7 +21,7 @@ if($mode == "list")
 					false, 
 					_ALL_USERS, 
 					_USER, 
-					$_SESSION['config']['businessappurl'].'static.php?filename=manage_scheme.gif&module=moreq', 
+					$_SESSION['config']['businessappurl'].'static.php?filename=manage_users_b.gif', 
 					false, 
 					true, 
 					false, 
@@ -52,7 +52,8 @@ elseif($mode == "up" || $mode == "add")
 		echo "<br /><br /><br /><br />"._USER.' '._UNKNOWN."<br /><br /><br /><br />";
 	else
 	{?>
-		<form name="frmuser" id="frmuser" method="post" action="<?php echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&admin=users&page=users_management_controler&mode=<?php echo $mode;?>" class="forms addforms" style="width:300px">
+		<form  id="frmuser" method="post" action="<?php echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&amp;admin=users&amp;page=users_management_controler&amp;mode=<?php echo $mode;?>" class="forms addforms" style="width:300px">
+			<div>
 			<input type="hidden" name="display" value="true" />
 			<input type="hidden" name="admin" value="users" />
 			<input type="hidden" name="page" value="users_management_controler" />
@@ -63,7 +64,7 @@ elseif($mode == "up" || $mode == "add")
 			<input type="hidden" name="what" id="what" value="<?php echo $_REQUEST['what'];?>" />
 			<input type="hidden" name="start" id="start" value="<?php echo $_REQUEST['start'];?>" />
 			<p>
-				<label for="UserId"><?php  echo _ID; ?> :</label>
+				<label for="user_id"><?php  echo _ID; ?> :</label>
 					<?php  if($mode == "up") { echo functions::show_string($_SESSION['m_admin']['users']['user_id']); }else{ echo '<br/>'; } ?><input name="user_id"  type="<?php  if($mode == "up") { ?>hidden<?php  } elseif($mode == "add") { ?>text<?php  } ?>" id="user_id" value="<?php  echo functions::show_string($_SESSION['m_admin']['users']['user_id']); ?>" /><span class="red_asterisk">*</span>
 					<!--<input type="hidden"  name="id" id="id" value="<?php  echo $id; ?>" />-->
 			</p>
@@ -109,17 +110,20 @@ elseif($mode == "up" || $mode == "add")
 				if($mode == "up")
 				{
 					?>
-					<input type="button" name="reset_pwd" value="<?php  echo _RESET.' '._PASSWORD; ?>" class="button" onclick="displayModal('<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&admin=users&page=psw_changed', 'pwd_changed', 40, 150);"  />
+					<input type="button" name="reset_pwd" value="<?php  echo _RESET.' '._PASSWORD; ?>" class="button" onclick="displayModal('<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&amp;admin=users&amp;page=psw_changed', 'pwd_changed', 40, 150);"  />
 					<?php
 				}
 				?><br/>
 				<input type="submit" name="user_submit" value="<?php  echo _VALIDATE; ?>" class="button"/>
 				 <input type="button" class="button"  name="cancel" value="<?php  echo _CANCEL; ?>" onclick="javascript:window.location.href='<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=users_management_controler&amp;mode=list&amp;admin=users';"/>
 			</p>
+			</div>
 		</form>
-			 <?php core_tools::execute_modules_services($_SESSION['modules_services'], 'users_up.php', "include");?>
-	</div>
-	<script type="text/javascript">updateContent('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=ugc_form&admin=users', 'ugc');</script>
+			 <?php 
+			 if($mode == "up")
+				core_tools::execute_modules_services($_SESSION['modules_services'], 'users_up.php', "include");?>
+
+	<script type="text/javascript">updateContent('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&amp;page=ugc_form&amp;admin=users', 'ugc');</script>
 	<?php
 	}
 }

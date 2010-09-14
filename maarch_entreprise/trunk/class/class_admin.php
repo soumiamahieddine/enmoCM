@@ -54,7 +54,7 @@ class admin extends functions
 			if($app_services[$i]['servicetype'] == "admin" && $_SESSION['user']['services'][$app_services[$i]['id']])
 			{
 				?>
-                <div class="admin_item" id="<?php  echo $app_services[$i]['style']; ?>" title="<?php  echo $app_services[$i]['comment'];?>" onclick="window.top.location='<?php  echo $app_services[$i]['servicepage'] ;?>';">
+                <div class="admin_item" id="<?php  echo $app_services[$i]['style']; ?>" title="<?php  echo $app_services[$i]['comment'];?>" onclick="window.top.location='<?php  echo preg_replace("/(&(?!amp;))/", "&amp;", $app_services[$i]['servicepage']) ;?>';">
                     <div class="sum_margin" >
                        
                             <strong><?php  echo $app_services[$i]['name'];?></strong>
@@ -90,7 +90,7 @@ class admin extends functions
 					}
 					$nb ++;
 					?>
-					<div class="admin_item" id="<?php  echo $modules_services[$value][$i]['style'];?>" title="<?php  echo 'Module '.$value.' : '.$modules_services[$value][$i]['comment'];?>" onclick="window.top.location='<?php  echo $modules_services[$value][$i]['servicepage'] ;?>';">
+					<div class="admin_item" id="<?php  echo $modules_services[$value][$i]['style'];?>" title="<?php  echo 'Module '.$value.' : '.$modules_services[$value][$i]['comment'];?>" onclick="window.top.location='<?php  echo preg_replace("/(&(?!amp;))/", "&amp;", $modules_services[$value][$i]['servicepage']) ;?>';">
 						<div class="sum_margin">					
 							<strong><?php  echo $modules_services[$value][$i]['name'];?></strong>			
 						</div>

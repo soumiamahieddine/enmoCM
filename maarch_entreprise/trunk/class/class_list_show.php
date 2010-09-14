@@ -151,7 +151,7 @@ class list_show extends functions
 
 			if($bool_frame)
 			{
-				$link = $_SESSION['config']['businessappurl'].'index.php?display=true&page='.$name.'&search='.$what;
+				$link = $_SESSION['config']['businessappurl'].'index.php?display=true&amp;page='.$name.'&amp;search='.$what;
 				//$link = $name.".php?search=".$what;
 			}
 			else
@@ -281,7 +281,7 @@ class list_show extends functions
 				//$page_list1 = '<div class="block" style="height:20px;" align="center" ><b><div class="list_previous">'.$previous." &nbsp;</div>".$search_form." ".$page_list1."</select></div>".$next."</b>&nbsp;</form></div>";
 			}
 		//$str .= "<div class='block'>";
-		$page_list1 = '<div class="block" style="height:30px;vertical" align="center" ><table width="100%" border="0"><tr><td align="center" width="15%"><b>'.$previous.'</b></td><td align="center" width="15%"><b>'.$next.'</b></td><td width="10px">|</td><td align="center" width="30%">'.$page_list1.'</td><td width="10px">|</td><td width="210px" align="center">'.$disp_dc.'</td><td width="10px">|</td><td align="right">'.$tdeto.'</td></tr></table></b></div>';
+		$page_list1 = '<div class="block" style="height:30px;vertical" align="center" ><table width="100%" border="0" summary=""><tr><td align="center" width="15%"><b>'.$previous.'</b></td><td align="center" width="15%"><b>'.$next.'</b></td><td width="10px">|</td><td align="center" width="30%">'.$page_list1.'</td><td width="10px">|</td><td width="210px" align="center">'.$disp_dc.'</td><td width="10px">|</td><td align="right">'.$tdeto.'</td></tr></table></b></div>';
 
 			if($show_big_title)
 			{
@@ -306,7 +306,7 @@ class list_show extends functions
 
 			if($bool_radio_form || $bool_check_form || ($do_action && !empty($id_action)))
 			{
-				$temp = '<form name="form_select" id="form_select" action="'.$action.'" method="'.$method.'" class="forms';
+				$temp = '<form  id="form_select" action="'.$action.'" method="'.$method.'" class="forms';
 				if(!$show_full_list)
 				{
 					$temp .= " addforms2\" >";
@@ -375,7 +375,7 @@ class list_show extends functions
 							$str .= ' val_frm[\'action_id\'] = id_action;';
 						$str .= ' }';
 
-						$str .= ' action_send_first_request(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&page=manage_action&module=core\', mode,  val_frm[\'action_id\'], val_frm[\'values\'], val_frm[\'table\'], val_frm[\'module\'], val_frm[\'coll_id\']);';
+						$str .= ' action_send_first_request(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&amp;page=manage_action&amp;module=core\', mode,  val_frm[\'action_id\'], val_frm[\'values\'], val_frm[\'table\'], val_frm[\'module\'], val_frm[\'coll_id\']);';
 					$str .= ' }';
 					$str .= ' else';
 					$str .= ' {';
@@ -395,26 +395,26 @@ class list_show extends functions
 				$str .= ' }';
 				$str .= ' </script>';
 			}
-			$str .= ' <table border="0" cellspacing="0" class="'.$used_css.'" id="test">';
+			$str .= ' <table border="0" cellspacing="0" class="'.$used_css.'" summary="">';
 				$str .= ' <thead>';
 					$str .= ' <tr>';
 					  if($bool_view_document)
 					 {
-							$str .= ' <th width="3%">&nbsp;</th>';
+							$str .= ' <th style="width:3%;">&nbsp;</th>';
 					}
 					 if($bool_radio_form ||$bool_check_form)
 					 {
-						 $str .= ' <th width="3%">&nbsp;</th>';
+						 $str .= ' <th style="width:3%;">&nbsp;</th>';
 						}
 						for($count_column = 0;$count_column < count($listcolumn);$count_column++)
 						{
 							if($listshow[$count_column]==true)
 							{
 
-							$str .= ' <th width="'.$result[0][$count_column]['size'].'%" valign="'.$result[0][$count_column]['valign'].'"  align="'.$result[0][$count_column]['label_align'].'" ><span>'.$listcolumn[$count_column];
+							$str .= ' <th style="width:'.$result[0][$count_column]['size'].'%;" valign="'.$result[0][$count_column]['valign'].'"  align="'.$result[0][$count_column]['label_align'].'" ><span>'.$listcolumn[$count_column];
 								if($bool_order)
 								{
-									$str .= ' <br/><br/> <a href="'.$link.'&amp;start='.$start.'&amp;order=desc&amp;order_field='.$ordercol[$count_column].'" title="'._DESC_SORT.'"><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=tri_down.gif" border="0" alt="'._DESC_SORT.'" /> </a> <a href="'.$link.'&amp;start='.$start.'&amp;order=asc&amp;order_field='.$ordercol[$count_column].'" title="'._ASC_SORT.'"> <img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=tri_up.gif" border="0" alt="'._ASC_SORT.'" /></a>';
+									$str .= ' <br/><br/> <a href="'.$link.'&amp;start='.$start.'&amp;order=desc&amp;order_field='.$ordercol[$count_column].'" title="'._DESC_SORT.'"><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=tri_down.gif"  alt="'._DESC_SORT.'" /> </a> <a href="'.$link.'&amp;start='.$start.'&amp;order=asc&amp;order_field='.$ordercol[$count_column].'" title="'._ASC_SORT.'"> <img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=tri_up.gif"  alt="'._ASC_SORT.'" /></a>';
 								}
 							$str .= ' </span></th>';
 
@@ -422,7 +422,7 @@ class list_show extends functions
 							}
 							if($bool_detail)
 							{
-								 $str .= ' <th width="4%" valign="bottom" >&nbsp; </th>';
+								 $str .= ' <th style="width:4%;" valign="bottom" >&nbsp; </th>';
 							}
 					$str .= '</tr>';
 					$str .= ' </thead>';
@@ -445,7 +445,7 @@ class list_show extends functions
 
 				if($bool_radio_form || $bool_check_form)
 					{
-					$str .= ' <td width="3%">';
+					$str .= ' <td style="width:3%;">';
 					$str .= ' <div align="center">';
 
 							if($bool_radio_form)
@@ -483,11 +483,11 @@ class list_show extends functions
 					}
 					 if($bool_view_document)
 					 {
-						$str .= ' <td width="3%">';
+						$str .= ' <td style="width:3%;">';
 						$str .= ' <div align="center">';
 						if($bool_view_document)
 						{
-							$str .= '<a href="'.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=view&id='.$result[$theline][0][$key].'" target="_blank" title="'._VIEW_DOC.'">';
+							$str .= '<a href="'.$_SESSION['config']['businessappurl'].'index.php?display=true&amp;dir=indexing_searching&amp;page=view&amp;id='.$result[$theline][0][$key].'" target="_blank" title="'._VIEW_DOC.'">';
 							$str .= ' <img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=picto_dld.gif" alt="'._VIEW_DOC.'" border="0"/></a>';
 						}
 						$str .= ' </div>';
@@ -500,12 +500,12 @@ class list_show extends functions
 						{
 							if($do_action && !empty($id_action) && (count($do_actions_arr) == 0 ||  $do_actions_arr[$theline] == true) )
 							{
-								$str .= ' <td width="'.$result[$theline][$count_column]['size'].'%" align="'.$result[$theline][$count_column]['align'].'" onclick="valid_form( \'page\', \''.$result[$theline][0]['value'].'\', \''.$id_action.'\');" '.$result[$theline][$count_column]['css_style'].'>'.functions::show(self::thisword($result[$theline][$count_column]['value'],$what)).'</td>';
+								$str .= ' <td style="width:'.$result[$theline][$count_column]['size'].'%;" align="'.$result[$theline][$count_column]['align'].'" onclick="valid_form( \'page\', \''.$result[$theline][0]['value'].'\', \''.$id_action.'\');" '.$result[$theline][$count_column]['css_style'].'>'.functions::show(self::thisword($result[$theline][$count_column]['value'],$what)).'</td>';
 
 							}
 							else if($do_action && !empty($id_action) &&  $do_actions_arr[$theline] == false)
 							{
-								$str .= ' <td width="'.$result[$theline][$count_column]['size'].'%" align="'.$result[$theline][$count_column]['align'].'" '.$result[$theline][$count_column]['css_style'].'><em>'.functions::show(self::thisword($result[$theline][$count_column]['value'],$what)).'</em></td>';
+								$str .= ' <td style="width:'.$result[$theline][$count_column]['size'].'%;" align="'.$result[$theline][$count_column]['align'].'" '.$result[$theline][$count_column]['css_style'].'><em>'.functions::show(self::thisword($result[$theline][$count_column]['value'],$what)).'</em></td>';
 
 							}
 							else if($link_in_line)
@@ -527,11 +527,11 @@ class list_show extends functions
 									$str .= ' }';
 								$str .= ' </script>';
 
-								$str .= ' <td width="'.$result[$theline][$count_column]['size'].'%" align="'.$result[$theline][$count_column]['align'].'" onclick="openpopup(\''.$detail_destination.'?id='.$result[$theline][0]['value'].'\');" '.$result[$theline][$count_column]['css_style'].'>'.functions::show(self::thisword($result[$theline][$count_column]['value'],$what)).'</td>';
+								$str .= ' <td style="width:'.$result[$theline][$count_column]['size'].'%;" align="'.$result[$theline][$count_column]['align'].'" onclick="openpopup(\''.$detail_destination.'?id='.$result[$theline][0]['value'].'\');" '.$result[$theline][$count_column]['css_style'].'>'.functions::show(self::thisword($result[$theline][$count_column]['value'],$what)).'</td>';
 						}
 						else
 						{
-							$str .= ' <td width="'.$result[$theline][$count_column]['size'].'%" align="'.$result[$theline][$count_column]['align'].'" '.$result[$theline][$count_column]['css_style'].'>'.functions::show(self::thisword($result[$theline][$count_column]['value'],$what)).'</td>';
+							$str .= ' <td style="width:'.$result[$theline][$count_column]['size'].'%;" align="'.$result[$theline][$count_column]['align'].'" '.$result[$theline][$count_column]['css_style'].'>'.functions::show(self::thisword($result[$theline][$count_column]['value'],$what)).'</td>';
 						}
 					}
 				}
@@ -539,19 +539,19 @@ class list_show extends functions
 				{
 					if($bool_frame && $open_details_popup)
 					{
-						$str .= ' <td width="4%"  align="center"><div align="right">';
-								$str .= ' <a href="javascript:window.open(\''.$_SESSION['config']['businessappurl'].'index.php?page='.$detail_destination.'&id='.$result[$theline][0][$key].'\',\'_parent\',\'_parent\');" title="'._DETAILS.'"><img  src="'.$_SESSION['config']['businessappurl'].'static.php?filename=picto_infos.gif" alt="'._DETAILS.'" width="25" height="25" border="0" /></a></div>';
+						$str .= ' <td style="width:4%;"  align="center"><div align="right">';
+								$str .= ' <a href="javascript:window.open(\''.$_SESSION['config']['businessappurl'].'index.php?page='.$detail_destination.'&amp;id='.$result[$theline][0][$key].'\',\'_parent\',\'_parent\');" title="'._DETAILS.'"><img  src="'.$_SESSION['config']['businessappurl'].'static.php?filename=picto_infos.gif" alt="'._DETAILS.'" width="25" height="25" border="0" /></a></div>';
 							$str .= ' </td>';
 					}
 					elseif($bool_frame && !$open_details_popup)
 					{
-						$str .= '<td width="4%"  align="center">';
-							$str .= '<a href="#" title="'._DETAILS.'" onclick="javascript:window.top.location=\''.$_SESSION['config']['businessappurl'].'index.php?page='.$detail_destination.'&id='.$result[$theline][0][$key].'\';return false;"><img  src="'.$_SESSION['config']['businessappurl'].'static.php?filename=picto_infos.gif" alt="'._DETAILS.'" width="25" height="25" border="0" /></a>';
+						$str .= '<td style="width:4%;"  align="center">';
+							$str .= '<a href="#" title="'._DETAILS.'" onclick="javascript:window.top.location=\''.$_SESSION['config']['businessappurl'].'index.php?page='.$detail_destination.'&amp;id='.$result[$theline][0][$key].'\';return false;"><img  src="'.$_SESSION['config']['businessappurl'].'static.php?filename=picto_infos.gif" alt="'._DETAILS.'" width="25" height="25" border="0" /></a>';
 							$str .= ' </td>';
 					}
 					else
 					{
-						$str .= ' <td width="4%"  align="center"><div align="right">
+						$str .= ' <td style="width:4%;"  align="center"><div align="right">
 								<a href="'.$_SESSION['config']['businessappurl'].'index.php?page='.$detail_destination.'&amp;id='.$result[$theline][0][$key].'" title="'._DETAILS.'"><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=picto_infos.gif"  alt="'._DETAILS.'"  width="25" height="25" border="0" /></a></div>';
 						$str .= ' </td>';
 					}
@@ -706,11 +706,12 @@ class list_show extends functions
 	*/
 	public function listletters($link, $page, $all_text, $button_text, $alpha_list_text, $show_searchbox = true, $autoCompletion = false, $autoCompletionArray2 = array())
 	{
+		$link = preg_replace("/(&(?!amp;))/", "&amp;", $link);
 		?>
 		<div id="list_letter">
-		<table width="100%" border="0" cellpadding="0" cellspacing="0" class="forms">
+		<table width="100%" border="0" cellpadding="0" cellspacing="0" class="forms" summary="">
 		  <tr>
-			<td width="65%" height="30">
+			<td >
 				<strong><?php  echo $alpha_list_text; ?></strong> :
                 <?php  for($i=ord('A'); $i <= ord('Z');$i++)
 				{
@@ -721,13 +722,13 @@ class list_show extends functions
 				?>
 				- <a href="<?php  echo $link;?>&amp;what="><?php  echo $all_text; ?></a>
 			</td>
-			<td width="35%" align="right">
+			<td  align="right">
 			<?php
 			if($show_searchbox)
 			{
 				?>
-				<form action="<?php  echo $link;?>" method="post" name="frmletters">
-					
+				<form action="<?php  echo $link;?>" method="post" id="frmletters">
+					<div>
 					<input name="what" id="what" type="text" size="15"/>
 					<?php
 					if($autoCompletion)
@@ -735,12 +736,13 @@ class list_show extends functions
 						?>
 						<div id="whatList" class="autocomplete"></div>
 						<script type="text/javascript">
-							initList('what', 'whatList', '<?php  echo $autoCompletionArray2['list_script_url'];?>', 'what', '<?php  echo $autoCompletionArray2['number_to_begin'];?>');
+							initList('what', 'whatList', '<?php  echo preg_replace("/(&(?!amp;))/", "&amp;",$autoCompletionArray2['list_script_url']);?>', 'what', '<?php  echo $autoCompletionArray2['number_to_begin'];?>');
 						</script>
 						<?php
 					}
 					?>
 					<input name="Submit" class="button" type="submit" value="<?php  echo $button_text;?>"/>
+				</div>
 				</form>
                 <?php
 			}
@@ -878,12 +880,13 @@ class list_show extends functions
 			$link .= "&amp;what=".$what;
 		}
 
+		$link = preg_replace("/(&(?!amp;))/", "&amp;", $link);
 		// if they are more 1 page we do pagination with 2 forms
 		if($nb_pages > 1)
 		{
 			$next_start = 0;
 
-			$page_list1 = '<form name="newpage1" id="newpage1" method="get" action="'.urldecode($link).'" >
+			$page_list1 = '<form  id="newpage1" method="get" action="'.urldecode($link).'" >
 			<p>
 				<label for="startpage">'._GO_TO_PAGE.'</label>
 				<select name="startpage" id="startpage" class="small" onchange="window.location.href=\''.$link.'&amp;start=\'+document.newpage1.startpage.value;">';
@@ -943,7 +946,7 @@ class list_show extends functions
 			if(!empty($picto_path))
 			{ echo '<img src="'.$picto_path.'" alt="" class="title_img" /> ';}
 			echo $title.'</h2>';
-				echo ' <div align="center">';
+				echo ' <div class="text-align">';
 		}
 
 		if(!$bool_history)
@@ -962,7 +965,7 @@ class list_show extends functions
 		}
 		echo $page_list1;
 		?>
-		<table width="100%" border="0" cellspacing="0" class="listing spec">
+		<table width="100%" border="0" cellspacing="0" class="listing spec" summary="">
             <thead>
 				<tr>
 			<?php
@@ -972,12 +975,12 @@ class list_show extends functions
 					if($listshow[$count_column]==true)
 					{
 					?>
-						<th width="<?php  echo $result[0][$count_column]['size'];?>%" valign="<?php  echo $result[0][$count_column]['valign'];?>" align="<?php  echo $result[0][$count_column]['label_align'];?>"
+						<th style="width:<?php  echo $result[0][$count_column]['size'];?>%;" valign="<?php  echo $result[0][$count_column]['valign'];?>" align="<?php  echo $result[0][$count_column]['label_align'];?>"
 						<?php
 						 ?>
 						 ><span><?php  echo $listcolumn[$count_column]?>
 						 <?php  if($bool_order && !empty($ordercol[$count_column]))
-						{ ?> <br/> <a href="<?php  echo $link; ?>&amp;start=<?php  echo $start; ?>&amp;order=desc&amp;order_field=<?php  echo $ordercol[$count_column];?>" title="<?php  echo _DESC_SORT;?>"><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=tri_down.gif" border="0" alt="<?php  echo _DESC_SORT; ?>" /> </a> <a href="<?php  echo $link; ?>&amp;start=<?php  echo $start; ?>&amp;order=asc&amp;order_field=<?php  echo $ordercol[$count_column];?>" title="<?php  echo _ASC_SORT;?>"> <img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=tri_up.gif" border="0" alt="<?php  echo _ASC_SORT; ?>" /></a> <?php  }
+						{ ?> <br/> <a href="<?php  echo $link; ?>&amp;start=<?php  echo $start; ?>&amp;order=desc&amp;order_field=<?php  echo $ordercol[$count_column];?>" title="<?php  echo _DESC_SORT;?>"><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=tri_down.gif"  alt="<?php  echo _DESC_SORT; ?>" /> </a> <a href="<?php  echo $link; ?>&amp;start=<?php  echo $start; ?>&amp;order=asc&amp;order_field=<?php  echo $ordercol[$count_column];?>" title="<?php  echo _ASC_SORT;?>"> <img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=tri_up.gif" alt="<?php  echo _ASC_SORT; ?>" /></a> <?php  }
 
 						?></span></th>
 						<?php
@@ -1008,6 +1011,7 @@ class list_show extends functions
 				}
 				 if(!empty($page_name_add))
                 {
+					$path_add = preg_replace("/(&(?!amp;))/", "&amp;",$path_add);
 				?>
             	<tfoot>
                     <tr>
@@ -1030,12 +1034,12 @@ class list_show extends functions
 					if(!$is_part_of_module)
 					{
 						//$path_root = $_SESSION['config']['businessappurl']."admin/".$admin."/";
-						$path_root = $_SESSION['config']['businessappurl']."index.php?display=true&admin=".$admin;
+						$path_root = $_SESSION['config']['businessappurl']."index.php?display=true&amp;admin=".$admin;
 					}
 					else
 					{
 						//$path_root = $_SESSION['urltomodules'].$admin."/";
-						$path_root = $_SESSION['config']['businessappurl']."index.php?display=true&module=".$admin;
+						$path_root = $_SESSION['config']['businessappurl']."index.php?display=true&amp;module=".$admin;
 					}
 				}
 				if(!empty($page_name_add))
@@ -1044,7 +1048,7 @@ class list_show extends functions
 					<tfoot>
 		                 <tr>
 		                    <td colspan="<?php  if($name <> 'types'){ echo'7';} else{ echo '5'; }
-		                    ?>" class="price"><span class="add clearfix"><a href="javascript://" onclick="window.open('<?php  echo $path_root; if($name <> 'types'){ echo '&page='.$page_name_up;?>&mode=add<?php  } else{ echo  '&page='.$page_name_add; }?>','add','height=250, width=500, resizable=yes, scrollbars=yes');" ><span><?php  echo $label_add;?></span></a></span></td>
+		                    ?>" class="price"><span class="add clearfix"><a href="javascript://" onclick="window.open('<?php  echo $path_root; if($name <> 'types'){ echo '&amp;page='.$page_name_up;?>&amp;mode=add<?php  } else{ echo  '&amp;page='.$page_name_add; }?>','add','height=250, width=500, resizable=yes, scrollbars=yes');" ><span><?php  echo $label_add;?></span></a></span></td>
 		                </tr>
 					</tfoot>
 					<?php
@@ -1084,7 +1088,7 @@ class list_show extends functions
 						if($result[$theline][$count_column]['show']==true)
 						{
 					?>
-							<td width="<?php  echo $result[$theline][$count_column]['size'];?>%" align="<?php  echo $result[$theline][$count_column]['align'];?>">
+							<td style="width:<?php  echo $result[$theline][$count_column]['size'];?>%;" align="<?php  echo $result[$theline][$count_column]['align'];?>">
 
 							<?php
 								if($result[$theline][$count_column]['column'] == "enabled")
@@ -1094,14 +1098,14 @@ class list_show extends functions
 									if($result[$theline][$count_column]['enabled'] == "N")
 									 {
 									?>
-                                	<div align="center">
-									<img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_stat_disabled.gif" alt="<?php  echo _NOT_ENABLED;?>" title="<?php  echo _NOT_ENABLED;?>"/></div>
+                                	
+									<img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_stat_disabled.gif" alt="<?php  echo _NOT_ENABLED;?>" title="<?php  echo _NOT_ENABLED;?>"/>
 									<?php
 									 }
 					 				elseif($result[$theline][$count_column]['enabled'] == "Y")
 									{
-									?>  <div align="center">
-									<img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_stat_enabled.gif" alt="<?php  echo _ENABLED; ?>" title="<?php  echo _ENABLED; ?>"/></div>
+									?>  
+									<img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_stat_enabled.gif" alt="<?php  echo _ENABLED; ?>" title="<?php  echo _ENABLED; ?>"/>
 									<?php
 									}
 								}
@@ -1170,6 +1174,7 @@ class list_show extends functions
 						}
 						else
 						{
+							$path_up = preg_replace("/(&(?!amp;))/", "&amp;", $path_up);
 						?>
 						<a href="<?php  echo $path_up.$param_comp; ?>" class="change"><?php  echo _MODIFY;?></a>
 						<?php
@@ -1185,12 +1190,12 @@ class list_show extends functions
 								if(!$is_part_of_module)
 								 {
 								 	//$path_auth = $_SESSION['config']['businessappurl'].'admin/'.$admin.'/'.$page_name_val.".php?id=".$result[$theline][0][$key];
-								 	$path_auth = $_SESSION['config']['businessappurl'].'index.php?display=true&admin='.$admin.'&page='.$page_name_val."&id=".$result[$theline][0][$key];
+								 	$path_auth = $_SESSION['config']['businessappurl'].'index.php?display=true&amp;admin='.$admin.'&amp;page='.$page_name_val."&amp;id=".$result[$theline][0][$key];
 								 }
 								 else
 								 {
 								 	//$path_auth = $_SESSION['urltomodules'].$admin.'/'.$page_name_val.".php?id=".$result[$theline][0][$key];
-								 	$path_auth = $_SESSION['config']['businessappurl'].'index.php?display=true&module='.$admin.'&page='.$page_name_val."&id=".$result[$theline][0][$key];
+								 	$path_auth = $_SESSION['config']['businessappurl'].'index.php?display=true&amp;module='.$admin.'&amp;page='.$page_name_val."&amp;id=".$result[$theline][0][$key];
 								 }
 								if($name == "users" &&  $result[$theline][0][$key] == "superadmin")
 								{
@@ -1198,6 +1203,7 @@ class list_show extends functions
 								}
 								else
 								{
+									$path_auth = preg_replace("/(&(?!amp;))/", "&amp;", $path_auth);
 							?>
                                 <a href="<?php  echo $path_auth.$param_comp;?>" class="authorize" onclick="return(confirm('<?php  echo _REALLY_AUTHORIZE." "; if($page_name == "users"){ echo $complete_name;}
                                  else { echo $admin_id; } ?> ?'));"><?php  echo _AUTHORIZE;?></a>
@@ -1211,12 +1217,12 @@ class list_show extends functions
 								 if(!$is_part_of_module)
 								 {
 								 //	$path_ban = $_SESSION['config']['businessappurl'].'admin/'.$admin.'/'.$page_name_ban.".php?id=".$result[$theline][0][$key];
-								 	$path_ban = $_SESSION['config']['businessappurl'].'index.php?display=true&admin='.$admin.'&page='.$page_name_ban."&id=".$result[$theline][0][$key];
+								 	$path_ban = $_SESSION['config']['businessappurl'].'index.php?display=true&amp;admin='.$admin.'&amp;page='.$page_name_ban."&id=".$result[$theline][0][$key];
 								 }
 								 else
 								 {
 								 	//$path_ban = $_SESSION['urltomodules'].$admin.'/'.$page_name_ban.".php?id=".$result[$theline][0][$key];
-								 	$path_ban = $_SESSION['config']['businessappurl'].'index.php?display=true&module='.$admin.'&page='.$page_name_ban."&id=".$result[$theline][0][$key];
+								 	$path_ban = $_SESSION['config']['businessappurl'].'index.php?display=true&amp;module='.$admin.'&amp;page='.$page_name_ban."&amp;id=".$result[$theline][0][$key];
 								 }
 								if($name == "users" &&  $result[$theline][0][$key] == "superadmin")
 								{
@@ -1224,6 +1230,7 @@ class list_show extends functions
 								}
 								else
 								{
+									$path_ban = preg_replace("/(&(?!amp;))/", "&amp;", $path_ban);
 								?>
 							<a href="<?php  echo $path_ban.$param_comp; ?>" class="suspend" onclick="return(confirm('<?php  echo _REALLY_SUSPEND." ";  if($page_name == "users"){ echo $complete_name;} else { echo $admin_id; } ?> ?'));"><?php  echo _SUSPEND;?></a><?php  }
 								}
@@ -1241,27 +1248,27 @@ class list_show extends functions
 						if(!$is_part_of_module && !$flag_not_admin && !$is_in_apps_dir)
 						{
 							//$path_del = $_SESSION['config']['businessappurl'].'admin/'.$admin.'/'.$page_name_del.".php?id=".$result[$theline][0][$key]."&amp;admin=".$admin;
-							$path_del = $_SESSION['config']['businessappurl'].'index.php?page='.$page_name_del."&id=".$result[$theline][0][$key]."&amp;admin=".$admin;
+							$path_del = $_SESSION['config']['businessappurl'].'index.php?page='.$page_name_del."&amp;id=".$result[$theline][0][$key]."&amp;admin=".$admin;
 						}
 						elseif($flag_not_admin && !$is_in_apps_dir)
 						{
 							$is_del_page_popup = true;
 							//$path_del = "index.php?page=".$page_name_del."&id=".$result[$theline][0][$key];
-							$path_del =  $_SESSION['config']['businessappurl']."index.php?page=".$page_name_del."&id=".$result[$theline][0][$key];
+							$path_del =  $_SESSION['config']['businessappurl']."index.php?page=".$page_name_del."&amp;id=".$result[$theline][0][$key];
 						}
 						elseif($is_in_apps_dir)
 						{
 							//$path_del = $_SESSION['config']['businessappurl'].$admin.'/'.$page_name_del.".php?id=".$result[$theline][0][$key]."&amp;dir=".$admin;
-							$path_del = $_SESSION['config']['businessappurl'].'index.php?page='.$page_name_del."&id=".$result[$theline][0][$key]."&amp;dir=".$admin;
+							$path_del = $_SESSION['config']['businessappurl'].'index.php?page='.$page_name_del."&amp;id=".$result[$theline][0][$key]."&amp;dir=".$admin;
 						}
 						else
 						{
 							//$path_del = $_SESSION['urltomodules'].$admin.'/'.$page_name_del.".php?id=".$result[$theline][0][$key]."&amp;module=".$admin;
-							$path_del = $_SESSION['config']['businessappurl'].'index.php?page='.$page_name_del."&id=".$result[$theline][0][$key]."&amp;module=".$admin;
+							$path_del = $_SESSION['config']['businessappurl'].'index.php?page='.$page_name_del."&amp;id=".$result[$theline][0][$key]."&amp;module=".$admin;
 						}
 						if(!$is_del_page_popup)
 						{
-							$path_del .= '&display=true';
+							$path_del .= '&amp;display=true';
 						}
 						if( $can_delete == false || $name == "users" &&  $result[$theline][0][$key] == "superadmin")
 						{
@@ -1269,6 +1276,7 @@ class list_show extends functions
 						}
 						else
 						{
+							$path_del = preg_replace("/(&(?!amp;))/", "&amp;", $path_del);
 						?>
 							<a href="<?php  echo $path_del.$param_comp;?>"  class="delete"
 						onclick="return(confirm('<?php  echo _REALLY_DELETE." ";  if($page_name == "users"){ echo $complete_name;}
@@ -1297,26 +1305,22 @@ class list_show extends functions
 
 				if($admin == "types" || $admin == "structures" || $admin == "subfolders")
 				{
-					//$path_up2 = $_SESSION['config']['businessappurl']."admin/architecture/".$admin."/".$page_name_up.".php?mode=up&amp;id=".$result[$theline][0][$key]."&amp;admin=".$admin;
-					$path_up2 = $_SESSION['config']['businessappurl']."index.php?display=true&page=".$page_name_up."&mode=up&amp;id=".$result[$theline][0][$key];
-					//$path_del2 = $_SESSION['config']['businessappurl']."admin/architecture/".$admin."/".$page_name_del.".php?id=".$result[$theline][0][$key]."&amp;admin=".$admin;
-					$path_del2 = $_SESSION['config']['businessappurl']."index.php?display=true&page=".$page_name_del."&id=".$result[$theline][0][$key];
+					$path_up2 = $_SESSION['config']['businessappurl']."index.php?display=true&amp;page=".$page_name_up."&amp;mode=up&amp;id=".$result[$theline][0][$key];
+					$path_del2 = $_SESSION['config']['businessappurl']."index.php?display=true&amp;page=".$page_name_del."&amp;id=".$result[$theline][0][$key];
 				}
 				elseif(!$is_part_of_module)
 				{
-					//$path_up2 = $_SESSION['config']['businessappurl']."admin/".$admin."/".$page_name_up.".php?mode=up&amp;id=".$result[$theline][0][$key]."&amp;admin=".$admin;
-					$path_up2 = $_SESSION['config']['businessappurl']."index.php?display=true&page=".$page_name_up."&mode=up&amp;id=".$result[$theline][0][$key]."&amp;admin=".$admin;
-					//$path_del2 = $_SESSION['config']['businessappurl']."admin/".$admin."/".$page_name_del.".php?id=".$result[$theline][0][$key]."&amp;admin=".$admin;
-					$path_del2 = $_SESSION['config']['businessappurl']."index.php?display=true&page=".$page_name_del."&id=".$result[$theline][0][$key]."&amp;admin=".$admin;
+					$path_up2 = $_SESSION['config']['businessappurl']."index.php?display=true&amp;page=".$page_name_up."&amp;mode=up&amp;id=".$result[$theline][0][$key]."&amp;admin=".$admin;
+					$path_del2 = $_SESSION['config']['businessappurl']."index.php?display=true&amp;page=".$page_name_del."&amp;id=".$result[$theline][0][$key]."&amp;admin=".$admin;
 				}
 				else
 				{
-					//$path_up2 = $_SESSION['urltomodules'].$admin."/".$page_name_up.".php?mode=up&amp;id=".$result[$theline][0][$key]."&amp;module=".$admin;
-					$path_up2 =  $_SESSION['config']['businessappurl']."index.php?display=true&page=".$page_name_up."&mode=up&amp;id=".$result[$theline][0][$key]."&amp;module=".$admin;
-					//$path_del2 = $$_SESSION['urltomodules'].$admin."/".$page_name_del.".php?id=".$result[$theline][0][$key]."&amp;module=".$admin;
-					$path_del2 = $_SESSION['config']['businessappurl']."index.php?display=true&page=".$page_name_del.".&id=".$result[$theline][0][$key]."&amp;module=".$admin;
+					$path_up2 =  $_SESSION['config']['businessappurl']."index.php?display=true&amp;page=".$page_name_up."&amp;mode=up&amp;id=".$result[$theline][0][$key]."&amp;module=".$admin;
+					$path_del2 = $_SESSION['config']['businessappurl']."index.php?display=true&amp;page=".$page_name_del.".&amp;id=".$result[$theline][0][$key]."&amp;module=".$admin;
 
 				}
+				$path_up2 = preg_replace("/(&(?!amp;))/", "&amp;", $path_up2);
+				$path_del2 = preg_replace("/(&(?!amp;))/", "&amp;", $path_del2);
 						?>
 						<td class="action">
 						<a  href="javascript://" class="change" onclick="window.open('<?php  echo $path_up2;?>','','height=<?php echo $height;?>, width=450,scrollbars=yes,resizable=yes');" ><?php  echo _MODIFY;?></a>
@@ -1338,7 +1342,6 @@ class list_show extends functions
 		</table><br/>
 		</div>
 		<?php
-		//require_once("core/class/class_core_tools.php");
 		
 		if(core_tools::is_module_loaded("doc_converter"))
 		{
@@ -1402,7 +1405,7 @@ class list_show extends functions
 					<?php  
 				if($bool_view_document)
                 {?>
-					<th width="3%">&nbsp;</th>
+					<th style="width:3%;">&nbsp;</th>
 					<?php
 				}
 					for($count_column = 0;$count_column < count($listcolumn);$count_column++)
@@ -1410,11 +1413,11 @@ class list_show extends functions
 						if($listshow[$count_column]==true)
 						{
 							?>
-							<th width="<?php  echo $result[0][$count_column]['size'];?>%" valign="<?php  echo $result[0][$count_column]['valign'];?>"  align="<?php  echo $result[0][$count_column]['label_align'];?>" ><span><?php  echo $listcolumn[$count_column];?></span><?php
+							<th style="width:<?php  echo $result[0][$count_column]['size'];?>%;" valign="<?php  echo $result[0][$count_column]['valign'];?>"  align="<?php  echo $result[0][$count_column]['label_align'];?>" ><span><?php  echo $listcolumn[$count_column];?></span><?php
 						}
 					}
 					?>
-                    <th width="4%" valign="bottom" >&nbsp; </th>
+                    <th style="width:4%;" valign="bottom" >&nbsp; </th>
 				</tr>
 			</thead>
 			<tbody>
@@ -1437,8 +1440,8 @@ class list_show extends functions
                <?php
                  if($bool_view_document)
                  {
-					echo " <td ><a href='".$page_view."&id=".$result[$theline][0][$key]."' target=\"_blank\" title='"._VIEW_DOC."'>
-                            <img src='".$_SESSION['config']['businessappurl']."static.php?filename=picto_dld.gif' alt='"._VIEW_DOC."' border='0'/></a></td>";
+					echo " <td ><a href='".$page_view."&amp;id=".$result[$theline][0][$key]."' target=\"_blank\" title='"._VIEW_DOC."'>
+                            <img src='".$_SESSION['config']['businessappurl']."static.php?filename=picto_dld.gif' alt='"._VIEW_DOC."' /></a></td>";
                  }
                  
 				$bool_modify = false;
@@ -1448,7 +1451,7 @@ class list_show extends functions
                     if($result[$theline][$count_column]['show']==true)
                     {
 						?>
-							<td width="<?php  echo $result[$theline][$count_column]['size'];?>%" align="<?php  echo $result[$theline][$count_column]['align'];?>"><?php  echo functions::show(self::thisword($result[$theline][$count_column]['value'],$what)); ?></td>
+							<td style="width:<?php  echo $result[$theline][$count_column]['size'];?>%;" align="<?php  echo $result[$theline][$count_column]['align'];?>"><?php  echo functions::show(self::thisword($result[$theline][$count_column]['value'],$what)); ?></td>
 						<?php
                     }
 					else
@@ -1467,7 +1470,7 @@ class list_show extends functions
 				if($bool_modify)
 				{
 		       ?><td class="action">
-						<a  href="javascript://" class="change" onclick="window.open('<?php  echo $page_modify;?><?php  if(preg_match('/\?/',$page_modify)){echo "&";}else{echo "?";}?>id=<?php  echo $result[$theline][0][$key];?>','','height=<?php  echo $height_page_modify;?>, width=<?php  echo $width_page_modify;?>,scrollbars=yes,resizable=yes');" ><?php  echo _MODIFY;?></a>
+						<a  href="javascript://" class="change" onclick="window.open('<?php  echo $page_modify;?><?php  if(preg_match('/\?/',$page_modify)){echo "&amp;";}else{echo "?";}?>id=<?php  echo $result[$theline][0][$key];?>','','height=<?php  echo $height_page_modify;?>, width=<?php  echo $width_page_modify;?>,scrollbars=yes,resizable=yes');" ><?php  echo _MODIFY;?></a>
 					</td>
 				<?php  }
 				else

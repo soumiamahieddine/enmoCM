@@ -846,9 +846,14 @@ function displayModal(url, id_mod, height, width, mode_frm )
 	var tmp_height = height;
 
 	var layer_height = $('container').clientHeight;
+
 	if(layer_height < $('container').scrollHeight)
 	{
 		layer_height = 5 * layer_height;
+	}
+	else if(layer_height = $('container').scrollHeight)
+	{
+		layer_height = 2 * layer_height;
 	}
 	
     var layer = new Element('div', {'id':id_layer, 'class' : 'lb1-layer', 'style' : "display:block;filter:alpha(opacity=70);opacity:.70;z-index:"+get_z_indexes()['layer']+';width :'+ (document.getElementsByTagName('html')[0].offsetWidth)+"px;height:"+layer_height+'px;'});
@@ -1258,7 +1263,7 @@ function action_send_first_request( path_manage_script, mode_req,  id_action, re
 					}
 					//console.log('confirm');
 					//alert('confirm');
-					var modal_txt='<h2>'+response.confirm_content+'</h2>';
+					var modal_txt='<div class=h2_title>'+response.confirm_content+'</div>';
 					modal_txt += '<p class="buttons">';
 					modal_txt += '<input type="button" name="submit" id="submit" value="'+response.validate+'" class="button" onclick="action_send_form_confirm_result( \''+path_manage_script+'\', \''+mode_req+'\',\''+id_action+'\', \''+res_id_values+'\', \''+tablename+'\', \''+modulename+'\', \''+id_coll+'\');"/>';
 					modal_txt += ' <input type="button" name="cancel" id="cancel" value="'+response.cancel+'" class="button" onclick="destroyModal(\'modal_'+id_action+'\');"/></p>';

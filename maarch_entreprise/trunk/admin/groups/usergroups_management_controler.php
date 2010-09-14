@@ -180,7 +180,7 @@ function display_up($group_id)
 
 	for($i=0; $i<count($users_id);$i++)
 	{
-		$tmp_user = user_controler::get($users_id[$i]);
+		$tmp_user = users_controler::get($users_id[$i]);
 		if(isset($tmp_user))
 		{
 			array_push($users, $tmp_user);

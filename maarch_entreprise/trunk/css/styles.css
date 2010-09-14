@@ -3467,3 +3467,17 @@ a.legend hr
 {
 	margin: auto auto;
 }
+
+.center_text
+{
+	text-align:center;
+}
+
+.h2_title
+{
+	margin: 0;
+	padding: 0;
+	font-size: 16px;
+	font-weight: bold;
+	clear:both;
+}

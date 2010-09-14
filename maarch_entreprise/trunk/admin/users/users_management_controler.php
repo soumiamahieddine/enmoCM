@@ -430,16 +430,6 @@ function validate_user_submit(){
 function init_session()
 {
 	$_SESSION['m_admin']['users'] = array();
-/*
-	$_SESSION['m_admin']['users']['user_id'] = "";
-	$_SESSION['m_admin']['users']['password'] = "";
-	$_SESSION['m_admin']['users']['firstname'] = "";
-	$_SESSION['m_admin']['users']['lastName'] = "";
-	$_SESSION['m_admin']['users']['phone'] = "";
-	$_SESSION['m_admin']['users']['mail'] = "";
-	$_SESSION['m_admin']['users']['department'] = "";
-	$_SESSION['m_admin']['users']['enabled'] = "";
-*/
 	$_SESSION['m_admin']['users']['groups'] = array();
 	$_SESSION['m_admin']['users']['nbbelonginggroups'] = 0;
 	$_SESSION['m_admin']['init'] = false ;
