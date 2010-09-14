@@ -31,11 +31,11 @@
 if($_SESSION['m_admin']['users']['Status'] == 'ABS')
 {
 
- $content = '<h2>'._CANCEL_ABS.'</h2><div><form name="cancel_abs" id="cancel_abs" method="get" action="'.$_SESSION['config']['bussinesappurl'].'index.php?display=true&module=basket&page=manage_cancel_abs"><input type="hidden" name="diplay" value="true"/><input type="hidden" name="module" value="basket"/><input type="hidden" name="page" value="manage_cancel_abs"/><p>'._REALLY_CANCEL_ABS.'</p><input type="submit" name="submit" value="'._VALIDATE.'" class="button" /> <input type="button" name="cancel" value="'._CANCEL.'" onclick="destroyModal(\'modal_cancel_abs\');" class="button" /></form></div>';
+ $content = '<div class="h2_title">'._CANCEL_ABS.'</div><div><form name="cancel_abs" id="cancel_abs" method="get" action="'.$_SESSION['config']['bussinesappurl'].'index.php?display=true&module=basket&page=manage_cancel_abs"><input type="hidden" name="diplay" value="true"/><input type="hidden" name="module" value="basket"/><input type="hidden" name="page" value="manage_cancel_abs"/><p>'._REALLY_CANCEL_ABS.'</p><input type="submit" name="submit" value="'._VALIDATE.'" class="button" /> <input type="button" name="cancel" value="'._CANCEL.'" onclick="destroyModal(\'modal_cancel_abs\');" class="button" /></form></div>';
 
  ?><script >var abs_content = '<?php echo addslashes($content);?>';</script>
 	<div>
-        <h2<img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=missing_user_big.gif&module=basket" alt="" /> <?php echo _ADMIN_ABS; ?> </a></h2>
+        <div class="h2_title"><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=missing_user_big.gif&amp;module=basket" alt="" /> <?php echo _ADMIN_ABS; ?> </a></div>
         <p id="abs"><?php echo _USER_ABS; ?></p>
         <p><input type="button" onclick="createModal(abs_content, 'modal_cancel_abs', '100px', '300px');" value="<?php echo _CANCEL_ABS;?>" class="button"/></p>
     </div>
@@ -81,7 +81,7 @@ if($_SESSION['m_admin']['users']['Status'] == 'ABS')
 		<script type="text/javascript">
 			var modal_content = '<?php echo addslashes($modal_content);?>';
 		</script>
-		<h2><a href="javascript://" onclick="createModal(modal_content, 'modal_redirect', <?php if(count($arr_baskets) >0) {?>'400px', '800px'<?php }else{?>'100px', '320px'<?php }?>);autocomplete(<?php echo count($arr_baskets);?>, '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=basket&page=autocomplete_users_list')"><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=missing_user_big.gif&module=basket" alt="" /> <?php echo _ADMIN_ABS; ?> </a></h2>
+		 <div class="h2_title"><a href="javascript://" onclick="createModal(modal_content, 'modal_redirect', <?php if(count($arr_baskets) >0) {?>'400px', '800px'<?php }else{?>'100px', '320px'<?php }?>);autocomplete(<?php echo count($arr_baskets);?>, '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=basket&page=autocomplete_users_list')"><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=missing_user_big.gif&module=basket" alt="" /> <?php echo _ADMIN_ABS; ?> </a></div>
         <p id="abs"><?php echo _ADMIN_ABS_TXT; ?></p>
     </div>
 <?php } ?>
