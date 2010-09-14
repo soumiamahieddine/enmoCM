@@ -373,14 +373,15 @@ class core_tools extends functions
 		{
 			if($menu[$i]['show'] == true)
 			{
-				$tmp = preg_replace('/&module/', '&amp;module', $menu[$i]['url']);
+				$tmp = $menu[$i]['url'];
+		
 				if(preg_match('/php$/', $tmp))
 				{
 					$tmp .= "?reinit=true";
 				}
 				else
 				{
-					$tmp .= "&amp;reinit=true";
+					$tmp .= "&reinit=true";
 				}
 				$tmp = htmlentities  ( $tmp,ENT_COMPAT, 'UTF-8', true); // Encodes 
 				?>
@@ -945,7 +946,7 @@ class core_tools extends functions
 	*/
 	public function load_html()
 	{
-		?>
+		?><?xml version="1.0" encoding="UTF-8"?>
         <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 		<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php  echo $_SESSION['config']['lang']; ?>" lang="<?php  echo $_SESSION['config']['lang']; ?>">
         <?php

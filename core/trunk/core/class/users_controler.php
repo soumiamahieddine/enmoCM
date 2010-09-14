@@ -1,6 +1,6 @@
 <?php
 /*
-*    Copyright 2008,2009,2010 Maarch
+*    Copyright 2008-2010 Maarch
 *
 *  This file is part of Maarch Framework.
 *
@@ -71,7 +71,8 @@ class users_controler extends ObjectControler implements ObjectControlerIF
 		self::set_foolish_ids(array('user_id'));
 		self::set_specific_id('user_id');
 		$user = self::advanced_get($user_id,USERS_TABLE);	
-		if($user->__get('status') == 'OK')
+		
+		if(isset($user) && $user->__get('status') == 'OK')
 			return $user;
 		else
 			return null;
