@@ -429,17 +429,32 @@ else
 		$show_details = true;
 	}
 
-	if($mode == 'popup' || $mode == 'frame')
-	{
+	if($mode == 'frame'){
 		$export = false;
 		$save_mode = false;
 		$use_template = false;
 		$special = true;
 		//$name = $_SESSION['config']['businessappurl'].'indexing_searching/list_results_mlb';
-		$name = $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&pagelist_results_mlb';
-	}
-	else
-	{
+		$name = $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=list_results_mlb';
+	}elseif($mode == 'popup'){
+		$export = false;
+		$save_mode = false;
+		$use_template = false;
+		$special = true;
+		$name = 'list_results_mlb&dir=indexing_searching&action_form='.$_REQUEST['action_form'].'&modulename='.$_REQUEST['modulename'];
+		$bool_radio_form = true;
+		$method = 'get';
+		$button_label = _VALIDATE;
+		$hidden_fields = '<input type="hidden" name="display" value="true" /><input type="hidden" name="page" value="'.$_REQUEST['action_form'].'" />';
+		if(isset($_REQUEST['modulename'])&& !empty($_REQUEST['modulename'])){
+			//$action = $_SESSION['urltomodules'].$_REQUEST['module'].'/'.$_REQUEST['action_form'].'.php';
+			$action = $_SESSION['config']['businessappurl']."index.php?display=true&page=".$_REQUEST['action_form']."&module=".$_REQUEST['modulename'];
+			$hidden_fields .= '<input type="hidden" name="module" value="'.$_REQUEST['modulename'].'" />';
+		}else{
+			//$action = $_SESSION['config']['businessappurl'].$_REQUEST['action_form'].'.php';
+			$action = $_SESSION['config']['businessappurl']."index.php?display=true&page=".$_REQUEST['action_form'];
+		}
+	}else{
 		$export = true;
 		$save_mode = true;
 		$special = false;
