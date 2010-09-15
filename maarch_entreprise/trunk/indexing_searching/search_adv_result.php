@@ -132,17 +132,17 @@ if(count($_REQUEST['meta']) > 0)
 				$where_request .=" and  ";
 				$json_txt .= '],';
 			}
-			// MULTIFIELD : subject, title, doc_custom_t1
+			// MULTIFIELD : subject, title, doc_custom_t1, process notes
 			else if($tab_id_fields[$j] == 'multifield' && !empty($_REQUEST['multifield']))
 			{
 				$json_txt .= "'multifield' : ['".addslashes(trim($_REQUEST['multifield']))."'],";
 				if($_SESSION['config']['databasetype'] == "POSTGRESQL")
 				{
-					$where_request .= "(subject ilike  '%".$func->protect_string_db($_REQUEST['multifield'])."%' or alt_identifier ilike  '%".$func->protect_string_db($_REQUEST['multifield'])."%' or title ilike  '%".$func->protect_string_db($_REQUEST['multifield'])."%' or doc_custom_t1 ilike  '%".$func->protect_string_db($_REQUEST['multifield'])."%') ";
+					$where_request .= "(subject ilike  '%".$func->protect_string_db($_REQUEST['multifield'])."%' or alt_identifier ilike  '%".$func->protect_string_db($_REQUEST['multifield'])."%' or title ilike  '%".$func->protect_string_db($_REQUEST['multifield'])."%' or doc_custom_t1 ilike  '%".$func->protect_string_db($_REQUEST['multifield'])."%' or process_notes ilike '%".$func->protect_string_db($_REQUEST['multifield'])."%') ";
 				}
 				else //if($_SESSION['config']['databasetype'] == "MYSQL")
 				{
-					$where_request .= "(subject LIKE  '%".$func->protect_string_db($_REQUEST['multifield'])."%' or alt_identifier LIKE  '%".$func->protect_string_db($_REQUEST['multifield'])."%' or title LIKE  '%".$func->protect_string_db($_REQUEST['multifield'])."%' or doc_custom_t1 LIKE  '%".$func->protect_string_db($_REQUEST['multifield'])."%') ";
+					$where_request .= "(subject LIKE  '%".$func->protect_string_db($_REQUEST['multifield'])."%' or alt_identifier LIKE  '%".$func->protect_string_db($_REQUEST['multifield'])."%' or title LIKE  '%".$func->protect_string_db($_REQUEST['multifield'])."%' or doc_custom_t1 LIKE  '%".$func->protect_string_db($_REQUEST['multifield'])."%' or process_notes like '%".$func->protect_string_db($_REQUEST['multifield'])."%') ";
 				}
 
 				$where_request .=" and  ";
