@@ -978,7 +978,7 @@ class list_show extends functions
 						<th style="width:<?php  echo $result[0][$count_column]['size'];?>%;" valign="<?php  echo $result[0][$count_column]['valign'];?>" align="<?php  echo $result[0][$count_column]['label_align'];?>"
 						<?php
 						 ?>
-						 ><span><?php  echo $listcolumn[$count_column]?>
+						 ><span>&nbsp;<?php  echo $listcolumn[$count_column]?>
 						 <?php  if($bool_order && !empty($ordercol[$count_column]))
 						{ ?> <br/> <a href="<?php  echo $link; ?>&amp;start=<?php  echo $start; ?>&amp;order=desc&amp;order_field=<?php  echo $ordercol[$count_column];?>" title="<?php  echo _DESC_SORT;?>"><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=tri_down.gif"  alt="<?php  echo _DESC_SORT; ?>" /> </a> <a href="<?php  echo $link; ?>&amp;start=<?php  echo $start; ?>&amp;order=asc&amp;order_field=<?php  echo $ordercol[$count_column];?>" title="<?php  echo _ASC_SORT;?>"> <img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=tri_up.gif" alt="<?php  echo _ASC_SORT; ?>" /></a> <?php  }
 

@@ -123,7 +123,7 @@ elseif($mode == "up" || $mode == "add")
 			 if($mode == "up")
 				core_tools::execute_modules_services($_SESSION['modules_services'], 'users_up.php', "include");?>
 
-	<script type="text/javascript">updateContent('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&amp;page=ugc_form&amp;admin=users', 'ugc');</script>
+	<script type="text/javascript">updateContent('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=ugc_form&admin=users', 'ugc');</script>
 	<?php
 	}
 }
