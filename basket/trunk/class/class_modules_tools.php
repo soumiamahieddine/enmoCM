@@ -807,7 +807,7 @@ class basket extends dbquery
 		if($nb_total > 0)
 		{
 			ob_start();
-			?><h2><?php echo _REDIRECT_MY_BASKETS;?></h2><div align="center"><form name="redirect_my_baskets_to" id="redirect_my_baskets_to" method="post" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=basket&page=manage_redirect_my_basket"><input type="hidden" name="display" id="display" value="true" /><input type="hidden" name="page" id="page" value="manage_redirect_my_basket" /><input type="hidden" name="module" id="module" value="basket" /><input type="hidden" name="baskets_owner" id="baskets_owner" value="<?php echo $user_id;?>" /><table border="0" cellspacing="0" class="<?php echo $used_css;?>"><thead><tr><th><?php echo _ID; ?></th><th><?php echo _NAME; ?></th><th><?php echo _REDIRECT_TO; ?></th></tr></thead><tbody><?php
+			?><h2><?php echo _REDIRECT_MY_BASKETS;?></h2><div align="center"><form name="redirect_my_baskets_to" id="redirect_my_baskets_to" method="post" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&amp;module=basket&amp;page=manage_redirect_my_basket"><input type="hidden" name="display" id="display" value="true" /><input type="hidden" name="page" id="page" value="manage_redirect_my_basket" /><input type="hidden" name="module" id="module" value="basket" /><input type="hidden" name="baskets_owner" id="baskets_owner" value="<?php echo $user_id;?>" /><table border="0" cellspacing="0" class="<?php echo $used_css;?>"><thead><tr><th><?php echo _ID; ?></th><th><?php echo _NAME; ?></th><th><?php echo _REDIRECT_TO; ?></th></tr></thead><tbody><?php
 			$color = "";
 			for($theline = 0; $theline < $nb_total ; $theline++)
 			{
@@ -828,7 +828,7 @@ class basket extends dbquery
 		else
 		{
 			ob_start();
-			?><h2><?php echo _ABS_MODE;?></h2><div align="center"><form name="abs_mode" id="abs_mode" method="get" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=basket&page=manage_abs_mode"><input type="hidden" name="display" value="true"/><input type="hidden" name="module" value="basket"/><input type="hidden" name="page" value="manage_abs_mode"/><input type="hidden" name="user_id" value="<?php echo $user_id ;?>"/><p><?php echo _REALLY_ABS_MODE;?></p><input type="submit" name="submit" value="<?php echo _VALIDATE;?>" class="button" /> <input type="button" name="cancel" value="<?php echo _CANCEL;?>" onclick="destroyModal('modal_redirect');" class="button" /></form></div><?php
+			?><h2><?php echo _ABS_MODE;?></h2><div align="center"><form name="abs_mode" id="abs_mode" method="get" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&amp;module=basket&amp;page=manage_abs_mode"><input type="hidden" name="display" value="true"/><input type="hidden" name="module" value="basket"/><input type="hidden" name="page" value="manage_abs_mode"/><input type="hidden" name="user_id" value="<?php echo $user_id ;?>"/><p><?php echo _REALLY_ABS_MODE;?></p><input type="submit" name="submit" value="<?php echo _VALIDATE;?>" class="button" /> <input type="button" name="cancel" value="<?php echo _CANCEL;?>" onclick="destroyModal('modal_redirect');" class="button" /></form></div><?php
 			$content = ob_get_clean();
 		}
 		 return $content;
