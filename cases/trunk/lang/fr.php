@@ -21,7 +21,7 @@
 
 /*********************** CASES ***********************************/
 if (!defined('_CASES_COMMENT'))  define('_CASES_COMMENT', 'Affaires');
-if (!defined('_CASE_INFO'))  define('_CASE_INFO', 'Information sur l&rsquo;affaire');
+if (!defined('_CASE_INFO'))  define('_CASE_INFO', 'Informations sur l&rsquo;affaire');
 if (!defined('_JOIN_RES_CASE'))  define('_JOIN_RES_CASE','Attacher des courriers aux affaires');
 if (!defined('_CASE_NUM'))  define('_CASE_NUM', 'Num Affaire');
 if (!defined('_NUM_CASE'))  define('_NUM_CASE', 'Affaire num&eacute;ro');
