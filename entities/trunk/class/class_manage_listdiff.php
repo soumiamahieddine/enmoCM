@@ -285,7 +285,7 @@ class diffusion_list extends dbquery
 				}
 				if($toDelete)
 				{
-					echo $toDelete." ".$resToDelete->item_id;
+					//echo $toDelete." ".$resToDelete->item_id;
 					$this->query("delete from ".$params['table']." where coll_id = '".$this->protect_string_db(trim($params['coll_id']))."'  and listinstance_type = '".$this->protect_string_db(trim($list_type))."' and res_id = ".trim($params['res_id'])." and item_mode = 'cc' and item_id = '".$resToDelete->item_id."'");
 					//$this->show();
 				}
