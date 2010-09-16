@@ -186,13 +186,13 @@ $arr_tmp2 = array('label' => _PRIORITY, 'type' => 'select_simple', 'param' => ar
 $param['priority'] = $arr_tmp2;
 
 // dest
-$arr_tmp2 = array('label' => _DEST, 'type' => 'input_text', 'param' => array('field_label' => _DEST, 'other' => $size));
+/*$arr_tmp2 = array('label' => _DEST, 'type' => 'input_text', 'param' => array('field_label' => _DEST, 'other' => $size));
 $param['dest'] = $arr_tmp2;
 
 //shipper
 $arr_tmp2 = array('label' => _SHIPPER, 'type' => 'input_text', 'param' => array('field_label' => _SHIPPER, 'other' => $size));
 $param['shipper'] = $arr_tmp2;
-
+*/
 if($_SESSION['features']['search_notes'] == 'true')
 {
 	//annotations
@@ -228,13 +228,14 @@ if($core_tools->is_module_loaded('entities'))
 }
 
 // Folder
+/*
 if($core_tools->is_module_loaded('folder'))
 {
 	$arr_tmp2 = array('label' => _MARKET, 'type' => 'input_text', 'param' => array('field_label' => _MARKET, 'other' => $size));
 	$param['market'] = $arr_tmp2;
 	$arr_tmp2 = array('label' => _PROJECT, 'type' => 'input_text', 'param' => array('field_label' => _PROJECT, 'other' => $size));
 	$param['project'] = $arr_tmp2;
-}
+}*/
 
 //process notes
 $arr_tmp2 = array('label' => _PROCESS_NOTES, 'type' => 'textarea', 'param' => array('field_label' => _PROCESS_NOTES, 'other' => $size, 'id' => 'process_notes'));
@@ -283,10 +284,10 @@ foreach(array_keys($_SESSION['mail_categories']) as $cat_id)
 }
 $arr_tmp2 = array('label' => _CATEGORY, 'type' => 'select_simple', 'param' => array('field_label' => _CATEGORY,'default_label' => '', 'options' => $arr_tmp));
 $param['category'] = $arr_tmp2;//Arbox_id ; for physical_archive
-if ($core_tools->is_module_loaded('physical_archive') == true)
+/*if ($core_tools->is_module_loaded('physical_archive') == true)
 {
-	//doc_type
-	$conn->query("select arbox_id, title  from  ".$_SESSION['tablename']['ar_boxes']." where status <> 'DEL' order by description asc");
+	//arbox_id
+	$conn->query("select arbox_id, title from  ".$_SESSION['tablename']['ar_boxes']." where status <> 'DEL' order by description asc");
 	$arr_tmp = array();
 	while ($res=$conn->fetch_object())
 	{
@@ -298,9 +299,7 @@ if ($core_tools->is_module_loaded('physical_archive') == true)
 
 	$arr_tmp2 = array('label' => _ARBATCHES, 'type' => 'input_text', 'param' => array('field_label' => _ARBATCHES, 'other' => $size));
 	$param['arbatch_id'] = $arr_tmp2;
-
-
-}
+}*/
 
 //Answers types
 $arr_tmp = array(array('ID' => 'simple_mail','VALUE'=> 'true', 'LABEL' =>_SIMPLE_MAIL),array('ID' => 'AR','VALUE'=> 'true', 'LABEL' =>_REGISTERED_MAIL),array('ID' => 'fax','VALUE'=> 'true', 'LABEL' =>_FAX),array('ID' => 'courriel','VALUE'=> 'true', 'LABEL' =>_MAIL)
@@ -415,6 +414,7 @@ function del_query_confirm()
 				<hr/>
 		<?php if (count($queries) > 0)
 		{?>
+		<!--
 		<form name="choose_query" id="choose_query" action="#" method="post" >
 		<div align="center" style="display:block;" id="div_query">
 
@@ -429,6 +429,7 @@ function del_query_confirm()
 		<input name="del_query" id="del_query" value="<?php echo _DELETE_QUERY;?>" type="button"  onclick="del_query_confirm();" class="button" style="display:none" />
 		</div>
 		</form>
+		-->
 		<?php } ?>
 		<!--<form name="frmsearch2" method="get" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=search_adv_result&dir=indexing_searching"  id="frmsearch2" class="<?php echo $class_for_form; ?>">-->
 		<form name="frmsearch2" method="get" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php"  id="frmsearch2" class="<?php echo $class_for_form; ?>">
@@ -460,7 +461,7 @@ function del_query_confirm()
 		<!-- #############################################################################-->
 
 
-
+<!--
 		<table align="center" border="0" width="100%">
 			<tr>
 				<td align="left"><a href="#" onclick="clear_search_form('frmsearch2','select_criteria');clear_q_list();"><img src="<?php  echo $_SESSION['config']['businessappurl']."static.php?filename=reset.gif";?>" alt="<?php echo _CLEAR_SEARCH;?>" /> <?php  echo _CLEAR_SEARCH; ?></a></td>
@@ -471,6 +472,7 @@ function del_query_confirm()
 				</td>
 			</tr>
 		</table>
+-->
 		<table align="center" border="0" width="100%">
 
 			<?php
@@ -516,10 +518,15 @@ function del_query_confirm()
 					<p align="center">
 					</p>
 				</td>
+				<td>
+					<p align="center">
+					<input class="button_search_adv" name="imageField" type="button" value="" onclick="valid_search_form('frmsearch2');this.form.submit();"  />
+					<input class="button_search_adv_text" name="imageField" type="button" value="<?php echo _SEARCH; ?>" onclick="valid_search_form('frmsearch2');this.form.submit();" /></p>
+				 </td>
 			</tr>
 		<?php
 	}	 ?>
-
+<!--
 			<tr>
 				<td colspan="2" ><h2><?php echo _LETTER_INFO; ?></h2></td>
 			</tr>
@@ -560,11 +567,7 @@ function del_query_confirm()
 					</div>
 					<div class="block_end">&nbsp;</div>
 				</td>
-				<td>
-					<p align="center">
-					<input class="button_search_adv" name="imageField" type="button" value="" onclick="valid_search_form('frmsearch2');this.form.submit();"  />
-					<input class="button_search_adv_text" name="imageField" type="button" value="<?php echo _SEARCH; ?>" onclick="valid_search_form('frmsearch2');this.form.submit();" /></p>
-				 </td>
+				
 			</tr>
 			<tr><td colspan="2"><hr/></td></tr>
 		<tr>
@@ -586,7 +589,7 @@ function del_query_confirm()
 		 <div class="block_end">&nbsp;</div>
 		</td></tr>
 		</table>
-
+-->
 		</form>
 
 
