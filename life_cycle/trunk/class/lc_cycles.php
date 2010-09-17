@@ -1,13 +1,13 @@
 <?php
 
 try {
-	require_once("modules/moreq/class/TableObject.php");
+	require_once("core/class/BaseObject.php");
 } catch (Exception $e){
 	echo $e->getMessage().' // ';
 }
 define("_CODE_SEPARATOR","/");
 
-class lc_cycles extends TableObject {
+class lc_cycles extends BaseObject {
 	/**
 	 *Print a viewable string to render the object.
 	 * @return string Rendering of the object
