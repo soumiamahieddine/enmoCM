@@ -43,7 +43,7 @@ try {
 	require_once("core/class/class_db.php");
 	require_once("core/class/users_controler.php");
 	require_once("core/class/Security.php");
-	require_once("apps/".$_SESSION['businessapp'][0]['appid']."/security_bitmask.php");
+	require_once("apps/".$_SESSION['businessapps'][0]['appid']."/security_bitmask.php");
 } catch (Exception $e){
 	echo $e->getMessage().' // ';
 }

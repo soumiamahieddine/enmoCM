@@ -298,4 +298,4 @@ CREATE TABLE users
   CONSTRAINT users_pkey PRIMARY KEY (user_id)
 )
 WITH (OIDS=FALSE);
-ALTER TABLE user OWNER TO postgres;
+ALTER TABLE users OWNER TO postgres;
