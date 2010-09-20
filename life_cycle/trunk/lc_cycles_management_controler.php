@@ -24,6 +24,7 @@
 * 
 * @file
 * @author Luc KEULEYAN - BULL
+* @author Laurent Giovannoni
 * @date $date$
 * @version $Revision$
 * @ingroup life_cycle
@@ -43,25 +44,30 @@ echo "</pre>";*/
 
 core_tools::load_lang(); // NOTE : core_tools is not a static class
 
-if(isset($_REQUEST['mode']) && !empty($_REQUEST['mode'])){
+if(isset($_REQUEST['mode']) && !empty($_REQUEST['mode'])) {
 	$mode = $_REQUEST['mode'];
 } else {
 	$mode = 'list'; 
 }
 
-try{
+try {
 	require_once("modules/life_cycle/class/lc_cycles_controler.php");
+	require_once("modules/life_cycle/class/lc_policies_controler.php");
 	require_once("core/class/class_request.php");
-	// TODO : replace
-	if($mode == 'list'){
+	if($mode == 'list') {
 		require_once("modules/life_cycle/lang/fr.php");
 		require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");
 	}
-} catch (Exception $e){
+} catch (Exception $e) {
 	echo $e->getMessage();
 }
 
-if(isset($_REQUEST['submit'])){
+if($mode == "up" || $mode =="add"){
+	$policiesArray = array();
+	$policiesArray = lc_policies_controler::getAllId();
+}
+
+if(isset($_REQUEST['submit'])) {
 	// Action to do with db
 	validate_cs_submit($mode);
 } else {
@@ -95,14 +101,10 @@ if(isset($_REQUEST['submit'])){
 	include('lc_cycles_management.php');
 }
 
-// END of main block
-
-/////// PRIVATE BLOCK
-
 /**
  * Initialize session variables
  */
-function init_session(){
+function init_session() {
 	$sessionName = "lc_cycles";
 	$_SESSION['m_admin'][$sessionName] = array();
 }
@@ -110,7 +112,7 @@ function init_session(){
 /**
  * Management of the location bar  
  */
-function location_bar_management($mode){
+function location_bar_management($mode) {
 	$sessionName = "lc_cycles";
 	$pageName = "lc_cycles_management_controler";
 	$tableName = "lc_cycles";
@@ -132,21 +134,13 @@ function location_bar_management($mode){
 	$page_id = $page_ids[$mode];
 	$ct=new core_tools();
 	$ct->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
-
 }
 
 /**
-
-
-hum hum..
-In my modest opinion, the identification of the vehicule is not important in this photograph.It's not a Ferrari. It's a small tiny car like a mini Cooper (googlise it if you like). In my mind it's only the angry temperament of this car which is interessting. We need to drive it to have an idea of that. I use a fisheye lens to volontary transform the car and enhance this agressivity of her lines.
-People disturb you?? 
-For me, the orange satured totally contrast
-
  * Validate a submit (add or up),
  * up to saving object
- */ 
-function validate_cs_submit($mode){
+ */
+function validate_cs_submit($mode) {
 	$sessionName = "lc_cycles";
 	$pageName = "lc_cycles_management_controler";
 	$tableName = "lc_cycles";
@@ -156,12 +150,10 @@ function validate_cs_submit($mode){
 
 	$lc_cycles = new lc_cycles();
 	//$f->show_array($_REQUEST);exit;
-	
-	if(isset($_REQUEST['id']) && !empty($_REQUEST['id'])){
+	if(isset($_REQUEST['id']) && !empty($_REQUEST['id'])) {
 		// Update, so values exist
 		$lc_cycles->cycle_id=$f->protect_string_db($f->wash($_REQUEST['id'], "nick", _THE_LC_CYCLE_ID." ", "yes", 0, 32));
 	}
-	
 	
 	$lc_cycles->policy_id=$f->protect_string_db($f->wash($_REQUEST['policy_id'], "no", _POLICY_ID." ", 'yes', 0, 32));
 	$lc_cycles->cycle_desc=$f->protect_string_db($f->wash($_REQUEST['cycle_desc'], "no", _CYCLE_DESC." ", 'yes', 0, 255));
@@ -172,7 +164,7 @@ function validate_cs_submit($mode){
 	
 	if(lc_cycles_controler::where_test_secure($lc_cycles->where_clause)) {
 		$_SESSION['error'] .= _WHERE_CLAUSE_NOT_SECURE."<br>";
-	} elseif (!lc_cycles_controler::where_test($lc_cycles->where_clause))  {
+	} elseif (!lc_cycles_controler::where_test($lc_cycles->where_clause)) {
 		$_SESSION['error'] .= _PB_WITH_WHERE_CLAUSE."<br>";
 	}
 	
@@ -185,14 +177,14 @@ function validate_cs_submit($mode){
 	$status['start']=$_REQUEST['start'];
 	
 	//LKE = BULL ===== SPEC FONC : ==== Cycles de vie : lc_cycles (ID1)
-	if($mode == "add" && lc_cycles_controler::cyclesExists($lc_cycles->cycle_id,$lc_cycles->policy_id)){	
+	if($mode == "add" && lc_cycles_controler::cycleExists($lc_cycles->cycle_id)) {	
 		$_SESSION['error'] = $lc_cycles->cycle_id." "._ALREADY_EXISTS."<br />";
 	}
 	
 	if(!empty($_SESSION['error'])) {
 		// Error management depending of mode
-		put_in_session("status",$status);
-		put_in_session("lc_cycles",$lc_cycles->getArray());
+		put_in_session("status", $status);
+		put_in_session("lc_cycles", $lc_cycles->getArray());
 		
 		switch ($mode) {
 			case "up":
@@ -211,11 +203,11 @@ function validate_cs_submit($mode){
 		//$f->show_array($lc_cycles);
 		$lc_cycles=lc_cycles_controler::save($lc_cycles);
 		//history
-		if($_SESSION['history']['lc_cyclesadd'] == "true" && $mode == "add"){
+		if($_SESSION['history']['lc_cyclesadd'] == "true" && $mode == "add") {
 			require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 			$history = new history();
 			$history->add(_LC_CYCLES_TABLE_NAME, $_REQUEST['id'], "ADD",_LC_CYCLE_ADDED." : ".$_REQUEST['id'], $_SESSION['config']['databasetype']);
-		} elseif($_SESSION['history']['lc_cyclesadd'] == "true" && $mode == "up"){
+		} elseif($_SESSION['history']['lc_cyclesadd'] == "true" && $mode == "up") {
 			require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 			$history = new history();
 			$history->add(_LC_CYCLES_TABLE_NAME, $_REQUEST['id'], "UP",_LC_CYCLE_UPDATED." : ".$_REQUEST['id'], $_SESSION['config']['databasetype']);
@@ -229,13 +221,11 @@ function validate_cs_submit($mode){
 	}
 }
 
-
-
 /**
  * Initialize session parameters for update display
  * @param Long $cycle_id
  */
-function display_up($cycle_id){
+function display_up($cycle_id) {
 	$state=true;
 	$lc_cycles = lc_cycles_controler::get($cycle_id);
 	if(empty($lc_cycles))
@@ -249,7 +239,7 @@ function display_up($cycle_id){
 /**
  * Initialize session parameters for add display with given docserver
  */
-function display_add(){
+function display_add() {
 	$sessionName = "lc_cycles";
 	if(!isset($_SESSION['m_admin'][$sessionName]))
 		init_session();
@@ -258,7 +248,7 @@ function display_add(){
 /**
  * Initialize session parameters for list display
  */
-function display_list(){
+function display_list() {
 	$sessionName = "lc_cycles";
 	$pageName = "lc_cycles_management_controler";
 	$tableName = "lc_cycles";
@@ -269,12 +259,12 @@ function display_list(){
 	init_session();
 	
 	$select[_LC_CYCLES_TABLE_NAME] = array();
-	array_push($select[_LC_CYCLES_TABLE_NAME], $idName, "cycle_id", "policy_id", "cycle_desc", "sequence_number", "where_clause", "validation_mode");
+	array_push($select[_LC_CYCLES_TABLE_NAME], $idName, "policy_id", "cycle_desc", "sequence_number", "where_clause", "validation_mode");
 	$what = "";
 	$where ="";
-	if(isset($_REQUEST['what']) && !empty($_REQUEST['what'])){
+	if(isset($_REQUEST['what']) && !empty($_REQUEST['what'])) {
 		$what = functions::protect_string_db($_REQUEST['what']);
-		if($_SESSION['config']['databasetype'] == "POSTGRESQL"){
+		if($_SESSION['config']['databasetype'] == "POSTGRESQL") {
 			$where = $idName." ilike '".strtoupper($what)."%' ";
 		} else {
 			$where = $idName." like '".strtoupper($what)."%' ";
@@ -283,37 +273,29 @@ function display_list(){
 
 	// Checking order and order_field values
 	$order = 'asc';
-	if(isset($_REQUEST['order']) && !empty($_REQUEST['order'])){
+	if(isset($_REQUEST['order']) && !empty($_REQUEST['order'])) {
 		$order = trim($_REQUEST['order']);
 	}
 	$field = $idName;
-	if(isset($_REQUEST['order_field']) && !empty($_REQUEST['order_field'])){
+	if(isset($_REQUEST['order_field']) && !empty($_REQUEST['order_field'])) {
 		$field = trim($_REQUEST['order_field']);
 	}
 	$orderstr = list_show::define_order($order, $field);
 	$request = new request();
 	$tab=$request->select($select,$where,$orderstr,$_SESSION['config']['databasetype']);
+	//$request->show();
 	for ($i=0;$i<count($tab);$i++) {
 		foreach($tab[$i] as &$item) {
-			switch ($item['column']){
+			switch ($item['column']) {
 				case $idName:
 					format_item($item,_ID,"18","left","left","bottom",true); break;
-				case "cycle_id":
-					format_item($item,_CYCLE_ID,"15","left","left","bottom",true); break;
-				case "policy_name":
-					format_item($item,_CYCLE_NAME,"15","left","left","bottom",true); break;
-				case "policy_desc":
+				case "policy_id":
+					format_item($item,_POLICY_ID,"15","left","left","bottom",true); break;
+				case "cycle_desc":
 					format_item($item,_CYCLE_DESC,"15","left","left","bottom",true); break;
 			}
 		}
-			
 	}
-	/*
-	 * TODO Pour éviter les actions suivantes, il y a 2 solutions :
-	 * - La plus propre : créer un objet "PageList"
-	 * - La plus locale : si cela ne sert que pour admin_list dans docserver_management.php,
-	 *                    il est possible d'en construire directement la string et de la récupérer en return.
-	 */  
 	$result = array();
 	$result['tab']=$tab;
 	$result['what']=$what;
@@ -336,29 +318,26 @@ function display_list(){
  * Delete given docserver if exists and initialize session parameters
  * @param unknown_type $cycle_id
  */
-function display_del($cycle_id){
-
-	//TODO 2
-	// Ajout du contrôle pour vérifier l'absence de rattachement  "lc_cycle_steps" + "lc_stack" + "res_x" + "adr_x"
-	
+function display_del($cycle_id) {
 
 	$lc_cycles = lc_cycles_controler::get($cycle_id);
-	if(isset($lc_cycles)){
+	if(isset($lc_cycles)) {
 		// Deletion
-		lc_cycles_controler::delete($lc_cycles);
-		$_SESSION['error'] = _LC_CYCLE_DELETED." ".$cycle_id;
-		if($_SESSION['history']['lc_cyclesdel'] == "true"){
-			require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
-			$history = new history();
-			$history->add(_LC_CYCLES_TABLE_NAME, $cycle_id, "DEL", _LC_CYCLE_DELETED." : ".$cycle_id, $_SESSION['config']['databasetype']);
+		if(!lc_cycles_controler::delete($cycle_id)) {
+			$_SESSION['error'] = _YOU_CANNOT_DELETE." ".$cycle_id;
+		} else {
+			$_SESSION['error'] = _LC_CYCLE_DELETED." ".$cycle_id;
+			if($_SESSION['history']['lc_cyclesdel'] == "true") {
+				require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
+				$history = new history();
+				$history->add(_LC_CYCLES_TABLE_NAME, $cycle_id, "DEL", _LC_CYCLE_DELETED." : ".$cycle_id, $_SESSION['config']['databasetype']);
+			}
 		}
-		// NOTE: Why not calling display_list ?
 		$pageName = "lc_cycles_management_controler";
-		?><script>window.top.location='<?php echo $_SESSION['config']['businessappurl']."index.php?page=".$pageName."&mode=list&module=life_cycle&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what;?>';</script>
+		?><script>window.top.location='<?php echo $_SESSION['config']['businessappurl']."index.php?page=".$pageName."&mode=list&module=life_cycle";?>';</script>
 		<?php
 		exit;
-	} 
-	else{
+	} else {
 		// Error management
 		$_SESSION['error'] = _LC_CYCLE.' '._UNKNOWN;
 	}
@@ -368,24 +347,23 @@ function display_del($cycle_id){
  * allow given docserver if exists
  * @param unknown_type $cycle_id
  */
-function display_enable($cycle_id){
+function display_enable($cycle_id) {
 	$lc_cycles = lc_cycles_controler::get($cycle_id);
-	if(isset($lc_cycles)){
+	if(isset($lc_cycles)) {
 		// Disable
 		lc_cycles_controler::enable($lc_cycles);
 		$_SESSION['error'] = _LC_CYCLE_ENABLED." ".$cycle_id;
-		if($_SESSION['history']['lc_cyclesallow'] == "true"){
+		if($_SESSION['history']['lc_cyclesallow'] == "true") {
 			require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 			$history = new history();
 			$history->add(_LC_CYCLES_TABLE_NAME, $cycle_id, "VAL",_LC_CYCLE_ENABLED." : ".$cycle_id, $_SESSION['config']['databasetype']);
 		}
 		// NOTE: Why not calling display_list ?
 		$pageName = "lc_cycles_management_controler";
-		?><script>window.top.location='<?php echo $_SESSION['config']['businessappurl']."index.php?page=".$pageName."&mode=list&module=life_cycle&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what;?>';</script>
+		?><script>window.top.location='<?php echo $_SESSION['config']['businessappurl']."index.php?page=".$pageName."&mode=list&module=life_cycle";?>';</script>
 		<?php
 		exit;
-	}
-	else{
+	} else {
 		// Error management
 		$_SESSION['error'] = _LC_CYCLE.' '._UNKNOWN;
 	}
@@ -395,24 +373,23 @@ function display_enable($cycle_id){
  * ban given docserver if exists
  * @param unknown_type $cycle_id
  */
-function display_disable($cycle_id){
+function display_disable($cycle_id) {
 	$lc_cycles = lc_cycles_controler::get($cycle_id);
-	if(isset($lc_cycles)){
+	if(isset($lc_cycles)) {
 		// Disable
 		lc_cycles_controler::disable($lc_cycles);
 		$_SESSION['error'] = _LC_CYCLE_DISABLED." ".$cycle_id;
-		if($_SESSION['history']['lc_cyclesban'] == "true"){
+		if($_SESSION['history']['lc_cyclesban'] == "true") {
 			require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 			$history = new history();
 			$history->add(_LC_CYCLES_TABLE_NAME, $cycle_id, "BAN", _LC_CYCLE_DISABLED." : ".$cycle_id, $_SESSION['config']['databasetype']);
 		}
 		// NOTE: Why not calling display_list ?
 		$pageName = "lc_cycles_management_controler";
-		?><script>window.top.location='<?php echo $_SESSION['config']['businessappurl']."index.php?page=".$pageName."&mode=list&module=life_cycle&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what;?>';</script>
+		?><script>window.top.location='<?php echo $_SESSION['config']['businessappurl']."index.php?page=".$pageName."&mode=list&module=life_cycle";?>';</script>
 		<?php
 		exit;
-	} 
-	else{
+	} else {
 		// Error management
 		$_SESSION['error'] = _LC_CYCLE.' '._UNKNOWN;
 	}
@@ -431,7 +408,7 @@ function display_disable($cycle_id){
  * @param $valign
  * @param $show
  */
-function format_item(&$item,$label,$size,$label_align,$align,$valign,$show){
+function format_item(&$item,$label,$size,$label_align,$align,$valign,$show) {
 	$item['value']=functions::show_string($item['value']);	
 	$item[$item['column']]=$item['value'];
 	$item["label"]=$label;
@@ -449,8 +426,8 @@ function format_item(&$item,$label,$size,$label_align,$align,$valign,$show){
  * @param string $type
  * @param hashable $hashable
  */
-function put_in_session($type,$hashable){
-	foreach($hashable as $key=>$value){
+function put_in_session($type,$hashable) {
+	foreach($hashable as $key=>$value) {
 		// echo "Key: $key Value: $value f:".functions::show_string($value)." // ";
 		$_SESSION['m_admin'][$type][$key]=functions::show_string($value);
 	}

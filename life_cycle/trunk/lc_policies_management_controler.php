@@ -24,6 +24,7 @@
 * 
 * @file
 * @author Luc KEULEYAN - BULL
+* @author Laurent Giovannoni
 * @date $date$
 * @version $Revision$
 * @ingroup life_cycle
@@ -94,10 +95,6 @@ if(isset($_REQUEST['submit'])) {
 	}
 	include('lc_policies_management.php');
 }
-
-// END of main block
-
-/////// PRIVATE BLOCK
 
 /**
  * Initialize session variables
@@ -353,7 +350,6 @@ function display_enable($policy_id) {
 			$history = new history();
 			$history->add(_LC_POLICIES_TABLE_NAME, $policy_id, "VAL",_LC_POLICY_ENABLED." : ".$policy_id, $_SESSION['config']['databasetype']);
 		}
-		// NOTE: Why not calling display_list ?
 		$pageName = "lc_policies_management_controler";
 		?><script type="text/javascript">window.top.location='<?php echo $_SESSION['config']['businessappurl']."index.php?page=".$pageName."&mode=list&module=life_cycle";?>';</script>
 		<?php

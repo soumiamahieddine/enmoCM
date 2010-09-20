@@ -190,7 +190,7 @@ class lc_policies_controler extends ObjectControler implements ObjectControlerIF
 			}
 			self :: $db->query($query);
 		} catch (Exception $e) {
-			echo _UNKNOWN . _DOCSERVER . " " . $policy_id . ' // ';
+			echo _UNKNOWN . _LC_POLICY . " " . $policy_id . ' // ';
 		}
 
 		if (self :: $db->nb_result() > 0) {
@@ -240,18 +240,16 @@ class lc_policies_controler extends ObjectControler implements ObjectControlerIF
 		self::$db->disconnect();
 	}
 
-	public function getAllId($can_be_disabled = false) {
+	public function getAllId() {
 		self :: $db = new dbquery();
 		self :: $db->connect();
 		$query = "select policy_id from " . _LC_POLICIES_TABLE_NAME . " ";
-		if (!$can_be_disabled)
-			$query .= " where enabled = 'Y'";
 		try {
 			if ($_ENV['DEBUG'])
 				echo $query . ' // ';
 			self :: $db->query($query);
 		} catch (Exception $e) {
-			echo _NO_DOCSERVER_LOCATION . ' // ';
+			echo _NO_LC_POLICY_LOCATION . ' // ';
 		}
 		if (self :: $db->nb_result() > 0) {
 			$result = array ();

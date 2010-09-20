@@ -58,13 +58,34 @@ elseif($mode == "up" || $mode == "add"){
 				<input type="hidden" name="order_field" id="order_field" value="<?php echo $_REQUEST['order_field'];?>" />
 				<input type="hidden" name="what" id="what" value="<?php echo $_REQUEST['what'];?>" />
 				<input type="hidden" name="start" id="start" value="<?php echo $_REQUEST['start'];?>" />
+				<?php if($mode == "up") {
+					?>
+					<p>
+					 	<label for="policy_id"><?php echo _POLICY_ID; ?> : </label>
+						<input name="policy_id" type="text"  id="policy_id" value="<?php echo functions::show($_SESSION['m_admin']['lc_cycles']['policy_id']); ?>" readonly='readonly' class='readonly'/>
+					</p>
+					<?
+				} else {
+					?>
+					<p>
+					 	<label for="policy_id"><?php echo _POLICY_ID; ?> : </label>
+						<select name="policy_id" id="policy_id">
+							<option value=""><?php echo _POLICY_ID;?></option>
+							<?php
+							for($cptPolicies=0;$cptPolicies<count($policiesArray);$cptPolicies++){
+								?>
+								<option value="<?php echo $policiesArray[$cptPolicies];?>" <?php if($_SESSION['m_admin']['lc_cycles']['policy_id'] == $policiesArray[$cptPolicies]) { echo 'selected="selected"';}?>><?php echo $policiesArray[$cptPolicies];?></option>
+								<?php
+							}
+							?>
+						</select>
+					</p>
+					<?
+				}
+				?>
 				<p>
 				 	<label for="id"><?php echo _CYCLE_ID; ?> : </label>
 					<input name="id" type="text"  id="id" value="<?php echo functions::show($_SESSION['m_admin']['lc_cycles']['cycle_id']); ?>" <?php if($mode == "up") echo " readonly='readonly' class='readonly'";?>/>
-				</p>
-				<p>
-				 	<label for="policy_id"><?php echo _POLICY_ID; ?> : </label>
-					<input name="policy_id" type="text"  id="policy_id" value="<?php echo functions::show($_SESSION['m_admin']['lc_cycles']['policy_id']); ?>" />
 				</p>
 				<p>
 				 	<label for="cycle_desc"><?php echo _CYCLE_DESC; ?> : </label>

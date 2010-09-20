@@ -1,235 +1,266 @@
 <?php
 
+/*
+*    Copyright 2008-2010 Maarch
+*
+*  This file is part of Maarch Framework.
+*
+*   Maarch Framework is free software: you can redistribute it and/or modify
+*   it under the terms of the GNU General Public License as published by
+*   the Free Software Foundation, either version 3 of the License, or
+*   (at your option) any later version.
+*
+*   Maarch Framework is distributed in the hope that it will be useful,
+*   but WITHOUT ANY WARRANTY; without even the implied warranty of
+*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*   GNU General Public License for more details.
+*
+*   You should have received a copy of the GNU General Public License
+*    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+/**
+* @brief  Contains the controler of life_cycle object (create, save, modify, etc...)
+* 
+* 
+* @file
+* @author Luc KEULEYAN - BULL
+* @author Laurent Giovannoni
+* @date $date$
+* @version $Revision$
+* @ingroup life_cycle
+*/
+
+// To activate de debug mode of the class
+$_ENV['DEBUG'] = false;
+/*
+define("_CODE_SEPARATOR","/");
+define("_CODE_INCREMENT",1);
+*/
+
+// Loads the required class
 try {
-	require_once("modules/life_cycle/class/ObjectControlerIF.php");
-	require_once("modules/life_cycle/class/ClassifiedObjectControlerAbstract.php");
-	require_once("modules/life_cycle/class/lc_cycles.php");
-} catch (Exception $e){
-	echo $e->getMessage().' // ';
+	require_once ("modules/life_cycle/class/lc_cycles.php");
+	require_once ("modules/life_cycle/life_cycle_tables_definition.php");
+	require_once ("core/class/ObjectControlerAbstract.php");
+	require_once ("core/class/ObjectControlerIF.php");
+} catch (Exception $e) {
+	echo $e->getMessage() . ' // ';
 }
 
 define ("_DEBUG", false);
 define ("_ADVANCED_DEBUG",false);
 
 /**
- * Class for controling lc_cycles objects from database
- * data, and vice-versa.
- * @author boulio
- *
- */
-class lc_cycles_controler extends ClassifiedObjectControler implements ObjectControlerIF {
+* @brief  Controler of the lc_cycles object 
+*
+*<ul>
+*  <li>Get an lc_cycles object from an id</li>
+*  <li>Save in the database a lc_cycles</li>
+*  <li>Manage the operation on the lc_cycles related tables in the database (insert, select, update, delete)</li>
+*</ul>
+* @ingroup life_cycle
+*/
+class lc_cycles_controler extends ObjectControler implements ObjectControlerIF {
 	
 	/**
-	 * Save given object in database: 
-	 * - make an update if object already exists,
-	 * - make an insert if new object.
-	 * Return updated object.
-	 * @param lc_cycles $lc_cycles
-	 * @return boolean
-	 */
-	public function save($lc_cycles){
+	* Returns an lc_cycles object based on a lc_cycles identifier
+	*
+	* @param  $cycle_id string  lc_cycles identifier
+	* @param  $comp_where string  where clause arguments (must begin with and or or)
+	* @param  $can_be_disabled bool  if true gets the cycle even if it is disabled in the database (false by default)
+	* @return lc_cycles object with properties from the database or null
+	*/
+	public function get($cycle_id, $comp_where = '', $can_be_disabled = false) {
+		self :: set_foolish_ids(array('policy_id', 'cycle_id'));
+		self :: set_specific_id('cycle_id');
+		$cycle = self :: advanced_get($cycle_id, _LC_CYCLES_TABLE_NAME);
 
-	if(self::cyclesExists($lc_cycles->cycle_id,$lc_cycles->policy_id)){
-			// Update existing lc_cycles
-			return self::update($lc_cycles);
-		} else {
-			// Insert new lc_cycles
-			return self::insert($lc_cycles);
-		}
+		if (isset ($cycle_id))
+			return $cycle;
+		else
+			return null;
 	}
 
-///////////////////////////////////////////////////////   INSERT BLOCK	
 	/**
-	 * Add given lc_cycles to database.
-	 * @param lc_cycles $lc_cycles
-	 */
-	private function insert($lc_cycles){
-		// Giving automatised values
-		
-		// Inserting object
-		$result = self::advanced_insert($lc_cycles);
-		return $result;
-	}
-
-///////////////////////////////////////////////////////   UPDATE BLOCK
-	/**
-	 * Update given lc_cycles informations in database.
-	 * @param lc_cycles $lc_cycles
-	 */
-	private function update($lc_cycles){
-		// Updating automatised values of given object
-		
-		// Update given lc_cycles in database
-		$result = self::advanced_update($lc_cycles);
-	}
-
-///////////////////////////////////////////////    GET BLOCK
-	
-	/**
-	 * Get lc_cycles with given id.
-	 * Can return null if no corresponding object.
-	 * @param $id Id of lc_cycles to get
-	 * @return lc_cycles 
-	 */
-	public function get($id) {
-		return self::advanced_get($id,_LC_CYCLES_TABLE_NAME);
-	}
-
-///////////////////////////////////////////////////// DELETE BLOCK
-	/**
-	 * Delete given lc_cycles from database.
-	 * @param lc_cycles $lc_cycles
-	 */
-	public function delete($lc_cycles){
-	
-		if(self::RattachementExists($lc_cycles->cycle_id)){
-			// Deletion of given lc_cycles IMPOSSIBLE
-			echo "ERROR DELETE";
-		} else {
-			// Deletion of given lc_cycles
-			$result = self::advanced_delete($lc_cycles);
-		}
-		return $result;
-	}
-
-///////////////////////////////////////////////////// DISABLE BLOCK
-	/**
-	 * Disable given lc_cycles from database.
-	 * @param lc_cycles $lc_cycles
-	 */
-	public function disable($lc_cycles){
-		// Disable of given lc_cycles
-		$result = self::advanced_disable($lc_cycles);
-		return $result;
-	}
-
-///////////////////////////////////////////////////// ENABLE BLOCK
-	/**
-	 * Disable given lc_cycles from database.
-	 * @param lc_cycles $lc_cycles
-	 */
-	public function enable($lc_cycles){
-		// Disable of given lc_cycles
-		$result = self::advanced_enable($lc_cycles);
-		return $result;
-	}
-
-//////////////////////////////////////////////   OTHER PRIVATE BLOCK
-	public function cyclesExists($cycle_id, $policy_id){
-		if(!isset($cycle_id) || empty($cycle_id))
+	* Saves in the database a lc_cycles object 
+	*
+	* @param  $cycle lc_cycles object to be saved
+	* @return bool true if the save is complete, false otherwise
+	*/
+	public function save($cycle) {
+		if (!isset ($cycle))
 			return false;
-			
+
+		self :: set_foolish_ids(array('policy_id', 'cycle_id'));
+		self :: set_specific_id('cycle_id');
+		if (self :: cycleExists($cycle->cycle_id))
+			return self :: update($cycle);
+		else
+			return self :: insert($cycle);
+	}
+		
+	/**
+	* Inserts in the database (lc_cycles table) a lc_cycles object
+	*
+	* @param  $cycle lc_cycles object
+	* @return bool true if the insertion is complete, false otherwise
+	*/
+	private function insert($cycle) {
+		return self::advanced_insert($cycle);
+	}
+
+	/**
+	* Updates in the database (lc_cycles table) a lc_cycles object
+	*
+	* @param  $cycle lc_cycles object
+	* @return bool true if the update is complete, false otherwise
+	*/
+	private function update($cycle) {
+		return self::advanced_update($cycle);
+	}
+
+	/**
+	* Deletes in the database (lc_cycles related tables) a given lc_cycles (cycle_id)
+	*
+	* @param  $cycle_id string  lc_cycles identifier
+	* @return bool true if the deletion is complete, false otherwise
+	*/
+	public function delete($cycle_id) {
+		if(!isset($cycle_id)|| empty($cycle_id) )
+			return false;
+		
+		if(!self::cycleExists($cycle_id))
+			return false;
+				
+		if(self::linkExists($cycle_id))
+			return false;
+
+		self::$db=new dbquery();
+		self::$db->connect();
+		$query="delete from "._LC_CYCLES_TABLE_NAME." where cycle_id ='".functions::protect_string_db($cycle_id)."'";
+		
+		try {
+			if($_ENV['DEBUG']) {echo $query.' // ';}
+			self::$db->query($query);
+			$ok = true;
+		} catch (Exception $e) {
+			echo _CANNOT_DELETE_CYCLE_ID." ".$cycle_id.' // ';
+			$ok = false;
+		}
+		self::$db->disconnect();
+		
+		return $ok;
+	}
+
+	/**
+	* Disables a given lc_cycles
+	* 
+	* @param  $cycle lc_cycles object 
+	* @return bool true if the disabling is complete, false otherwise 
+	*/
+	public function disable($cycle) {
+		self :: set_foolish_ids(array('policy_id', 'cycle_id'));
+		self::set_specific_id('cycle_id');
+		return self::advanced_disable($cycle);
+	}
+	
+	/**
+	* Enables a given lc_cycles
+	* 
+	* @param  $cycle lc_cycles object  
+	* @return bool true if the enabling is complete, false otherwise 
+	*/
+	public function enable($cycle) {
+		self :: set_foolish_ids(array('policy_id', 'cycle_id'));
+		self::set_specific_id('cycle_id');
+		return self::advanced_enable($cycle);
+	}
+
+	public function cycleExists($cycle_id) {
+		if (!isset ($cycle_id) || empty ($cycle_id))
+			return false;
+		self :: $db = new dbquery();
+		self :: $db->connect();
+
+		$query = "select cycle_id from " . _LC_CYCLES_TABLE_NAME . " where cycle_id = '" . $cycle_id . "'";
+
+		try {
+			if ($_ENV['DEBUG']) {
+				echo $query . ' // ';
+			}
+			self :: $db->query($query);
+		} catch (Exception $e) {
+			echo _UNKNOWN . _LC_CYCLE . " " . $cycle_id . ' // ';
+		}
+
+		if (self :: $db->nb_result() > 0) {
+			self :: $db->disconnect();
+			return true;
+		}
+		self :: $db->disconnect();
+		return false;
+	}
+
+	public function linkExists($policy_id, $cycle_id) {
 		if(!isset($policy_id) || empty($policy_id))
 			return false;
-			
+		if(!isset($cycle_id) || empty($cycle_id))
+			return false;
 		self::$db=new dbquery();
 		self::$db->connect();
 		
-		//LKE = BULL ===== SPEC FONC : ==== Cycles de vie : lc_cycles (ID1)
-		// Ajout du contr�le pour v�rifier l'existence de la combinaison "cycle_id" & "policy_id"
-		$query = "select cycle_id from "._LC_CYCLES_TABLE_NAME." where cycle_id = '".$cycle_id."' and policy_id = '".$policy_id."'";
-					
-		try{
-			if($_ENV['DEBUG']){echo $query.' // ';}
-			self::$db->query($query);
-		} catch (Exception $e){
-			echo _UNKNOWN._DOCSERVER." ".$cycle_id.' // ';
-		}
-		
-		if(self::$db->nb_result() > 0){
+		$query = "select cycle_id from "._LC_STACK_TABLE_NAME." where cycle_id = '".$cycle_id."' and policy_id = '".$policy_id."'";
+		self::$db->query($query);
+		if (self::$db->nb_result()>0) {
 			self::$db->disconnect();
 			return true;
 		}
+		$query = "select cycle_id from "._LC_CYCLE_STEPS_TABLE_NAME." where cycle_id = '".$cycle_id."' and policy_id = '".$policy_id."'";
+		self::$db->query($query);
+		if (self::$db->nb_result()>0) {
+			self::$db->disconnect();
+			return true;
+		}
+		/*$query = "select cycle_id from "._LC_RES_X_TABLE_NAME." where cycle_id = '".$cycle_id."' and policy_id = '".$policy_id."'";
+		self::$db->query($query);
+		if (self::$db->nb_result()>0) {
+			self::$db->disconnect();
+			return true;
+		}
+		$query = "select cycle_id from "._LC_ADR_X_TABLE_NAME." where cycle_id = '".$cycle_id."' and policy_id = '".$policy_id."'";
+		self::$db->query($query);
+		if (self::$db->nb_result()>0) {
+			self::$db->disconnect();
+			return true;
+		}*/
 		self::$db->disconnect();
-		return false;
 	}
-	
-	
-	public function RattachementExists($cycle_id){
-		if(!isset($cycle_id) || empty($cycle_id))
-			return false;
-		self::$db=new dbquery();
-		self::$db->connect();
-		
-		//LKE = BULL ===== SPEC FONC : ==== Cycles de vie : lc_cycles (ID2)
-		// lors de la suppression d'un cycle d'archivage, v�rifier que ce dernier n'ait pas d'objets rattach�s (lc_stack) 
-		//$query1 = "select cycle_id from "._LC_STACK_TABLE_NAME." where cycle_id = '".$cycle_id."'";
-		
-		// lors de la suppression d'un cycle d'archivage, v�rifier que ce dernier n'ait pas d'objets rattach�s (lc_cycle_steps) 
-		$query2 = "select cycle_id from "._LC_CYCLE_STEPS_TABLE_NAME." where cycle_id = '".$cycle_id."'";
 
-		// lors de la suppression d'un cycle d'archivage, v�rifier que ce dernier n'ait pas d'objets rattach�s (res_x) 
-		//$query3 = "select cycle_id from "._LC_RES_X_TABLE_NAME." where cycle_id = '".$cycle_id."'";	
-
-		// lors de la suppression d'un cycle d'archivage, v�rifier que ce dernier n'ait pas d'objets rattach�s (adr_x) 
-		//$query4 = "select cycle_id from "._LC_ADR_X_TABLE_NAME." where cycle_id = '".$cycle_id."'";		
-		
-		try{
-			if (self::$db->query($query2)) 
-			{
-				/*if (!self::$db->query($query2)) 
-				{
-					if (!self::$db->query($query3)) 
-					{
-						if (!self::$db->query($query4)) 
-						{
-							self::$db->disconnect();
-							return false;
-						}
-						else{
-							self::$db->disconnect();
-							return true;
-						}
-					}
-					else{
-						self::$db->disconnect();
-						return true;
-					}
-				}
-				else{
-					self::$db->disconnect();
-					return true;
-				}*/
-				echo $query2;
-				self::$db->disconnect();
-				return False;
-			}
-			else{
-				echo $query2;
-				self::$db->disconnect();
-				return True;
-			}
-			
-		} catch (Exception $e){
-			echo _UNKNOWN._DOCSERVER." ".$cycle_id.' // ';
-		}
-	}
-	
-	
-	public function getAllId($can_be_disabled = false){
-		self::$db=new dbquery();
-		self::$db->connect();
-		$query = "select cycle_id from "._LC_CYCLES_TABLE_NAME." ";
-		if(!$can_be_disabled)
+	public function getAllId($can_be_disabled = false) {
+		self :: $db = new dbquery();
+		self :: $db->connect();
+		$query = "select cycle_id from " . _LC_CYCLES_TABLE_NAME . " ";
+		if (!$can_be_disabled)
 			$query .= " where enabled = 'Y'";
-		try{
-			if($_ENV['DEBUG'])
-				echo $query.' // ';
-			self::$db->query($query);
-		} catch (Exception $e){
-			echo _NO_DOCSERVER_LOCATION.' // ';
+		try {
+			if ($_ENV['DEBUG'])
+				echo $query . ' // ';
+			self :: $db->query($query);
+		} catch (Exception $e) {
+			echo _NO_LC_CYCLE_LOCATION . ' // ';
 		}
-		if(self::$db->nb_result() > 0){
-			$result = array();
+		if (self :: $db->nb_result() > 0) {
+			$result = array ();
 			$cptId = 0;
-			while($queryResult = self::$db->fetch_object()){
+			while ($queryResult = self :: $db->fetch_object()) {
 				$result[$cptId] = $queryResult->cycle_id;
 				$cptId++;
 			}
-			self::$db->disconnect();
+			self :: $db->disconnect();
 			return $result;
 		} else {
-			self::$db->disconnect();
+			self :: $db->disconnect();
 			return null;
 		}
 	}
