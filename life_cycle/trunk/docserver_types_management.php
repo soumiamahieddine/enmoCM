@@ -5,9 +5,9 @@ if($mode == "list"){
 					$docserver_types_list['tab'], 
 					count($docserver_types_list['tab']), 
 					$docserver_types_list['title'], 
-					'docserver_types_id',
+					'docserver_type_id',
 					'docserver_types_management_controler&mode=list',
-					'life_cycle','docserver_types_id', 
+					'life_cycle','docserver_type_id', 
 					true, 
 					$docserver_types_list['page_name_up'], 
 					$docserver_types_list['page_name_val'], 
@@ -60,11 +60,11 @@ elseif($mode == "up" || $mode == "add"){
 				<input type="hidden" name="start" id="start" value="<?php echo $_REQUEST['start'];?>" />
 				<p>
 				 	<label for="id"><?php echo _DOCSERVER_TYPE_ID; ?> : </label>
-					<input name="id" type="text"  id="id" value="<?php echo functions::show($_SESSION['m_admin']['docserver_types']['docserver_types_id']); ?>" <?php if($mode == "up") echo " readonly='readonly' class='readonly'";?>/>
+					<input name="id" type="text"  id="id" value="<?php echo functions::show($_SESSION['m_admin']['docserver_types']['docserver_type_id']); ?>" <?php if($mode == "up") echo " readonly='readonly' class='readonly'";?>/>
 				</p>
 				<p>
-				 	<label for="dstype_label"><?php echo _DSTYPE_LABEL; ?> : </label>
-					<input name="dstype_label" type="text"  id="dstype_label" value="<?php echo functions::show($_SESSION['m_admin']['docserver_types']['dstype_label']); ?>"/>
+				 	<label for="docserver_type_label"><?php echo _DOCSERVER_TYPE_LABEL; ?> : </label>
+					<input name="docserver_type_label" type="text"  id="docserver_type_label" value="<?php echo functions::show($_SESSION['m_admin']['docserver_types']['docserver_type_label']); ?>"/>
 				</p>
 	           	<p>
 	                <label><?php echo _IS_CONTAINER; ?> : </label>

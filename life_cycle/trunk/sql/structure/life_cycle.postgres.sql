@@ -120,8 +120,8 @@ CREATE OR REPLACE VIEW res_view_lc_a AS
 
 CREATE TABLE docserver_types
 (
-  docserver_types_id character varying(32) NOT NULL,
-  dstype_label character varying(255) DEFAULT NULL::character varying,
+  docserver_type_id character varying(32) NOT NULL,
+  docserver_type_label character varying(255) DEFAULT NULL::character varying,
   enabled character(1) NOT NULL DEFAULT 'Y'::bpchar,
   is_container boolean NOT NULL DEFAULT false,
   container_max_number integer NOT NULL DEFAULT (0)::integer,
@@ -133,14 +133,14 @@ CREATE TABLE docserver_types
   log_template character varying(32) DEFAULT NULL::character varying,
   is_signed boolean NOT NULL DEFAULT false,
   signature_mode character varying(32) DEFAULT NULL::character varying,
-  CONSTRAINT docserver_types_pkey PRIMARY KEY (docserver_types_id)
+  CONSTRAINT docserver_types_pkey PRIMARY KEY (docserver_type_id)
 )
 WITH (OIDS=FALSE);
 
 CREATE TABLE docservers
 (
-  docservers_id character varying(32) NOT NULL DEFAULT '1'::character varying,
-  docserver_types_id character varying(32) NOT NULL,
+  docserver_id character varying(32) NOT NULL DEFAULT '1'::character varying,
+  docserver_type_id character varying(32) NOT NULL,
   device_label character varying(255) DEFAULT NULL::character varying,
   is_readonly boolean NOT NULL DEFAULT false,
   enabled character(1) NOT NULL DEFAULT 'Y'::bpchar,
@@ -154,53 +154,53 @@ CREATE TABLE docservers
   closing_date timestamp without time zone,
   coll_id character varying(32) NOT NULL DEFAULT 'coll_1'::character varying,
   priority_number integer NOT NULL DEFAULT 10,
-  docserver_locations_id character varying(32) NOT NULL,
+  docserver_location_id character varying(32) NOT NULL,
   adr_priority_number integer NOT NULL DEFAULT 1,
-  CONSTRAINT docservers_pkey PRIMARY KEY (docservers_id)
+  CONSTRAINT docservers_pkey PRIMARY KEY (docserver_id)
 )
 WITH (OIDS=FALSE);
 
 CREATE TABLE docserver_locations
 (
-  docserver_locations_id character varying(32) NOT NULL,
+  docserver_location_id character varying(32) NOT NULL,
   ipv4 character varying(255) DEFAULT NULL::character varying,
   ipv6 character varying(255) DEFAULT NULL::character varying,
   net_domain character varying(32) DEFAULT NULL::character varying,
   mask character varying(255) DEFAULT NULL::character varying,
   enabled character(1) NOT NULL DEFAULT 'Y'::bpchar,
-  CONSTRAINT docserver_locations_pkey PRIMARY KEY (docserver_locations_id)
+  CONSTRAINT docserver_locations_pkey PRIMARY KEY (docserver_location_id)
 )
 WITH (OIDS=FALSE);
 
 CREATE TABLE lc_policies
 (
-   lc_policies_id character varying(32) NOT NULL, 
+   policy_id character varying(32) NOT NULL, 
    policy_name character varying(255) NOT NULL,
    policy_desc character varying(255) NOT NULL,
-   CONSTRAINT lc_policies_pkey PRIMARY KEY (lc_policies_id)
+   CONSTRAINT lc_policies_pkey PRIMARY KEY (policy_id)
 ) 
 WITH (OIDS = FALSE);
 
 
 CREATE TABLE lc_cycles
 (
-   lc_policies_id character varying(32) NOT NULL,
-   lc_cycles_id character varying(32) NOT NULL, 
+   policy_id character varying(32) NOT NULL,
+   cycle_id character varying(32) NOT NULL, 
    cycle_desc character varying(255) NOT NULL,
    sequence_number integer NOT NULL,
    where_clause text, 
    validation_mode character varying(32) NOT NULL, 
-   CONSTRAINT lc_cycle_pkey PRIMARY KEY (lc_policies_id, lc_cycles_id)
+   CONSTRAINT lc_cycle_pkey PRIMARY KEY (policy_id, cycle_id)
 ) 
 WITH (OIDS = FALSE);
 
 CREATE TABLE lc_cycle_steps
 (
-   lc_policies_id character varying(32) NOT NULL,
-   lc_cycles_id character varying(32) NOT NULL, 
-   lc_cycle_steps_id character varying(32) NOT NULL, 
-   step_desc character varying(255) NOT NULL,
-   docserver_types_id character varying(32) NOT NULL,
+   policy_id character varying(32) NOT NULL,
+   cycle_id character varying(32) NOT NULL, 
+   cycle_step_id character varying(32) NOT NULL, 
+   cycle_step_desc character varying(255) NOT NULL,
+   docserver_type_id character varying(32) NOT NULL,
    is_allow_failure boolean NOT NULL DEFAULT false,
    coll_id character varying(32) NOT NULL DEFAULT 'coll_1'::character varying,
    step_operation character varying(32) NOT NULL,
@@ -208,38 +208,38 @@ CREATE TABLE lc_cycle_steps
    is_must_complete boolean NOT NULL DEFAULT false,
    preprocess_script character varying(255) DEFAULT NULL, 
    postprocess_script character varying(255) DEFAULT NULL,
-   CONSTRAINT lc_cycle_steps_pkey PRIMARY KEY (lc_policies_id, lc_cycles_id, lc_cycle_steps_id, docserver_types_id)
+   CONSTRAINT lc_cycle_steps_pkey PRIMARY KEY (policy_id, cycle_id, cycle_step_id, docserver_type_id)
 ) 
 WITH (OIDS = FALSE);
 
 CREATE TABLE lc_stack
 (
-   lc_policies_id character varying(32) NOT NULL,
-   lc_cycles_id character varying(32) NOT NULL, 
-   lc_cycle_steps_id character varying(32) NOT NULL, 
+   policy_id character varying(32) NOT NULL,
+   cycle_id character varying(32) NOT NULL, 
+   cycle_step_id character varying(32) NOT NULL, 
    coll_id character varying(32) NOT NULL,
    res_id bigint NOT NULL, 
    cnt_retry integer DEFAULT NULL, 
    status character(1) NOT NULL,
    work_fields character varying(32),
-   CONSTRAINT lc_stack_pkey PRIMARY KEY (lc_policies_id, lc_cycles_id, lc_cycle_steps_id, res_id)
+   CONSTRAINT lc_stack_pkey PRIMARY KEY (policy_id, cycle_id, cycle_step_id, res_id)
 ) 
 WITH (OIDS = FALSE);
 
 CREATE TABLE adr_x
 (
   res_id bigint NOT NULL,
-  docservers_id character varying(32) NOT NULL,
+  docserver_id character varying(32) NOT NULL,
   path character varying(255) DEFAULT NULL::character varying,
   filename character varying(255) DEFAULT NULL::character varying,
   logical_adr character varying(255) DEFAULT NULL::character varying,
   fingerprint character varying(255) DEFAULT NULL::character varying,
   filesize bigint,
-  lc_policies_id character varying(32) NOT NULL,
-  lc_cycles_id character varying(32) NOT NULL, 
-  lc_cycle_steps_id character varying(32) NOT NULL, 
+  policy_id character varying(32) NOT NULL,
+  cycle_id character varying(32) NOT NULL, 
+  cycle_step_id character varying(32) NOT NULL, 
   adr_priority integer NOT NULL,
-  CONSTRAINT adr_x_pkey PRIMARY KEY (res_id, docservers_id)
+  CONSTRAINT adr_x_pkey PRIMARY KEY (res_id, docserver_id)
 )
 WITH (OIDS=FALSE);
 

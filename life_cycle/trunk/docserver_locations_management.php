@@ -5,9 +5,9 @@ if($mode == "list"){
 					$docserver_locations_list['tab'], 
 					count($docserver_locations_list['tab']), 
 					$docserver_locations_list['title'], 
-					'docserver_locations_id',
+					'docserver_location_id',
 					'docserver_locations_management_controler&mode=list',
-					'life_cycle','docserver_locations_id', 
+					'life_cycle','docserver_location_id', 
 					true, 
 					$docserver_locations_list['page_name_up'], 
 					$docserver_locations_list['page_name_val'], 
@@ -60,7 +60,7 @@ elseif($mode == "up" || $mode == "add"){
 				<input type="hidden" name="start" id="start" value="<?php echo $_REQUEST['start'];?>" />
 				<p>
 				 	<label for="id"><?php echo _DOCSERVER_LOCATION_ID; ?> : </label>
-					<input name="id" type="text"  id="id" value="<?php echo functions::show($_SESSION['m_admin']['docserver_locations']['docserver_locations_id']); ?>" <?php if($mode == "up") echo " readonly='readonly' class='readonly'";?>/>
+					<input name="id" type="text"  id="id" value="<?php echo functions::show($_SESSION['m_admin']['docserver_locations']['docserver_location_id']); ?>" <?php if($mode == "up") echo " readonly='readonly' class='readonly'";?>/>
 				</p>
 				<p>
 				 	<label for="ipv4"><?php echo _IPV4; ?> : </label>

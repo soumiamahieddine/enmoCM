@@ -29,7 +29,7 @@ class lc_cycles_controler extends ClassifiedObjectControler implements ObjectCon
 	 */
 	public function save($lc_cycles){
 
-	if(self::cyclesExists($lc_cycles->lc_cycles_id,$lc_cycles->lc_policies_id)){
+	if(self::cyclesExists($lc_cycles->cycle_id,$lc_cycles->policy_id)){
 			// Update existing lc_cycles
 			return self::update($lc_cycles);
 		} else {
@@ -82,7 +82,7 @@ class lc_cycles_controler extends ClassifiedObjectControler implements ObjectCon
 	 */
 	public function delete($lc_cycles){
 	
-		if(self::RattachementExists($lc_cycles->lc_cycles_id)){
+		if(self::RattachementExists($lc_cycles->cycle_id)){
 			// Deletion of given lc_cycles IMPOSSIBLE
 			echo "ERROR DELETE";
 		} else {
@@ -115,25 +115,25 @@ class lc_cycles_controler extends ClassifiedObjectControler implements ObjectCon
 	}
 
 //////////////////////////////////////////////   OTHER PRIVATE BLOCK
-	public function cyclesExists($lc_cycles_id,$lc_policies_id){
-		if(!isset($lc_cycles_id) || empty($lc_cycles_id))
+	public function cyclesExists($cycle_id, $policy_id){
+		if(!isset($cycle_id) || empty($cycle_id))
 			return false;
 			
-		if(!isset($lc_policies_id) || empty($lc_policies_id))
+		if(!isset($policy_id) || empty($policy_id))
 			return false;
 			
 		self::$db=new dbquery();
 		self::$db->connect();
 		
 		//LKE = BULL ===== SPEC FONC : ==== Cycles de vie : lc_cycles (ID1)
-		// Ajout du contrôle pour vérifier l'existence de la combinaison "lc_cycles_id" & "lc_policies_id"
-		$query = "select lc_cycles_id from "._LC_CYCLES_TABLE_NAME." where lc_cycles_id = '".$lc_cycles_id."' and lc_policies_id = '".$lc_policies_id."'";
+		// Ajout du contrï¿½le pour vï¿½rifier l'existence de la combinaison "cycle_id" & "policy_id"
+		$query = "select cycle_id from "._LC_CYCLES_TABLE_NAME." where cycle_id = '".$cycle_id."' and policy_id = '".$policy_id."'";
 					
 		try{
 			if($_ENV['DEBUG']){echo $query.' // ';}
 			self::$db->query($query);
 		} catch (Exception $e){
-			echo _UNKNOWN._DOCSERVER." ".$lc_cycles_id.' // ';
+			echo _UNKNOWN._DOCSERVER." ".$cycle_id.' // ';
 		}
 		
 		if(self::$db->nb_result() > 0){
@@ -145,26 +145,24 @@ class lc_cycles_controler extends ClassifiedObjectControler implements ObjectCon
 	}
 	
 	
-	public function RattachementExists($lc_cycles_id){
-		if(!isset($lc_cycles_id) || empty($lc_cycles_id))
+	public function RattachementExists($cycle_id){
+		if(!isset($cycle_id) || empty($cycle_id))
 			return false;
 		self::$db=new dbquery();
 		self::$db->connect();
 		
 		//LKE = BULL ===== SPEC FONC : ==== Cycles de vie : lc_cycles (ID2)
-		// lors de la suppression d'un cycle d'archivage, vérifier que ce dernier n'ait pas d'objets rattachés (lc_stack) 
-		//$query1 = "select lc_cycles_id from "._LC_STACK_TABLE_NAME." where lc_cycles_id = '".$lc_cycles_id."'";
+		// lors de la suppression d'un cycle d'archivage, vï¿½rifier que ce dernier n'ait pas d'objets rattachï¿½s (lc_stack) 
+		//$query1 = "select cycle_id from "._LC_STACK_TABLE_NAME." where cycle_id = '".$cycle_id."'";
 		
-		// lors de la suppression d'un cycle d'archivage, vérifier que ce dernier n'ait pas d'objets rattachés (lc_cycle_steps) 
-		$query2 = "select lc_cycles_id from "._LC_CYCLE_STEPS_TABLE_NAME." where lc_cycles_id = '".$lc_cycles_id."'";
+		// lors de la suppression d'un cycle d'archivage, vï¿½rifier que ce dernier n'ait pas d'objets rattachï¿½s (lc_cycle_steps) 
+		$query2 = "select cycle_id from "._LC_CYCLE_STEPS_TABLE_NAME." where cycle_id = '".$cycle_id."'";
 
-		// lors de la suppression d'un cycle d'archivage, vérifier que ce dernier n'ait pas d'objets rattachés (res_x) 
-		//$query3 = "select lc_cycles_id from "._LC_RES_X_TABLE_NAME." where lc_cycles_id = '".$lc_cycles_id."'";	
+		// lors de la suppression d'un cycle d'archivage, vï¿½rifier que ce dernier n'ait pas d'objets rattachï¿½s (res_x) 
+		//$query3 = "select cycle_id from "._LC_RES_X_TABLE_NAME." where cycle_id = '".$cycle_id."'";	
 
-		// lors de la suppression d'un cycle d'archivage, vérifier que ce dernier n'ait pas d'objets rattachés (adr_x) 
-		//$query4 = "select lc_cycles_id from "._LC_ADR_X_TABLE_NAME." where lc_cycles_id = '".$lc_cycles_id."'";		
-					
-		
+		// lors de la suppression d'un cycle d'archivage, vï¿½rifier que ce dernier n'ait pas d'objets rattachï¿½s (adr_x) 
+		//$query4 = "select cycle_id from "._LC_ADR_X_TABLE_NAME." where cycle_id = '".$cycle_id."'";		
 		
 		try{
 			if (self::$db->query($query2)) 
@@ -203,7 +201,7 @@ class lc_cycles_controler extends ClassifiedObjectControler implements ObjectCon
 			}
 			
 		} catch (Exception $e){
-			echo _UNKNOWN._DOCSERVER." ".$lc_cycles_id.' // ';
+			echo _UNKNOWN._DOCSERVER." ".$cycle_id.' // ';
 		}
 	}
 	
@@ -211,7 +209,7 @@ class lc_cycles_controler extends ClassifiedObjectControler implements ObjectCon
 	public function getAllId($can_be_disabled = false){
 		self::$db=new dbquery();
 		self::$db->connect();
-		$query = "select lc_cycles_id from "._LC_CYCLES_TABLE_NAME." ";
+		$query = "select cycle_id from "._LC_CYCLES_TABLE_NAME." ";
 		if(!$can_be_disabled)
 			$query .= " where enabled = 'Y'";
 		try{
@@ -225,7 +223,7 @@ class lc_cycles_controler extends ClassifiedObjectControler implements ObjectCon
 			$result = array();
 			$cptId = 0;
 			while($queryResult = self::$db->fetch_object()){
-				$result[$cptId] = $queryResult->lc_cycles_id;
+				$result[$cptId] = $queryResult->cycle_id;
 				$cptId++;
 			}
 			self::$db->disconnect();

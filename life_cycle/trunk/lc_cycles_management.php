@@ -5,9 +5,9 @@ if($mode == "list"){
 					$lc_cycles_list['tab'], 
 					count($lc_cycles_list['tab']), 
 					$lc_cycles_list['title'], 
-					'lc_cycles_id',
+					'cycle_id',
 					'lc_cycles_management_controler&mode=list',
-					'life_cycle','lc_cycles_id', 
+					'life_cycle','cycle_id', 
 					true, 
 					$lc_cycles_list['page_name_up'], 
 					$lc_cycles_list['page_name_val'], 
@@ -59,12 +59,12 @@ elseif($mode == "up" || $mode == "add"){
 				<input type="hidden" name="what" id="what" value="<?php echo $_REQUEST['what'];?>" />
 				<input type="hidden" name="start" id="start" value="<?php echo $_REQUEST['start'];?>" />
 				<p>
-				 	<label for="id"><?php echo _LC_CYCLE_ID; ?> : </label>
-					<input name="id" type="text"  id="id" value="<?php echo functions::show($_SESSION['m_admin']['lc_cycles']['lc_cycles_id']); ?>" <?php if($mode == "up") echo " readonly='readonly' class='readonly'";?>/>
+				 	<label for="id"><?php echo _CYCLE_ID; ?> : </label>
+					<input name="id" type="text"  id="id" value="<?php echo functions::show($_SESSION['m_admin']['lc_cycles']['cycle_id']); ?>" <?php if($mode == "up") echo " readonly='readonly' class='readonly'";?>/>
 				</p>
 				<p>
-				 	<label for="lc_policies_id"><?php echo _LC_POLICIES_ID; ?> : </label>
-					<input name="lc_policies_id" type="text"  id="lc_policies_id" value="<?php echo functions::show($_SESSION['m_admin']['lc_cycles']['lc_policies_id']); ?>" />
+				 	<label for="policy_id"><?php echo _POLICY_ID; ?> : </label>
+					<input name="policy_id" type="text"  id="policy_id" value="<?php echo functions::show($_SESSION['m_admin']['lc_cycles']['policy_id']); ?>" />
 				</p>
 				<p>
 				 	<label for="cycle_desc"><?php echo _CYCLE_DESC; ?> : </label>

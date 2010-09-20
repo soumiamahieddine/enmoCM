@@ -5,9 +5,9 @@ if($mode == "list"){
 					$lc_policies_list['tab'], 
 					count($lc_policies_list['tab']), 
 					$lc_policies_list['title'], 
-					'lc_policies_id',
+					'policy_id',
 					'lc_policies_management_controler&mode=list',
-					'life_cycle','lc_policies_id', 
+					'life_cycle','policy_id', 
 					true, 
 					$lc_policies_list['page_name_up'], 
 					$lc_policies_list['page_name_val'], 
@@ -28,28 +28,26 @@ if($mode == "list"){
 					true, 
 					$lc_policies_list['autoCompletionArray']
 				);
-}
-elseif($mode == "up" || $mode == "add"){
+} elseif($mode == "up" || $mode == "add") {
 	?>
 	<h1><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=manage_docserver_b.gif" alt="" />
 		<?php
-		if($mode == "add"){
+		if($mode == "add") {
 			echo _LC_POLICY_ADDITION;
 		}
-		elseif($mode == "up"){
+		elseif($mode == "up") {
 			echo _LC_POLICY_MODIFICATION;
 		}
 		?>
 	</h1>
 	<div id="inner_content" class="clearfix" align="center">
-		<br><br>
+		<br/><br/>
 		<?php
-		if($state == false){
+		if($state == false) {
 			echo "<br /><br />"._THE_LC_POLICY." "._UNKOWN."<br /><br /><br /><br />";
-		}
-		else{
+		} else {
 			?>
-			<form name="formdocserver" method="post" class="forms" action="<?php echo $_SESSION['config']['businessappurl']."index.php?display=true&page=lc_policies_management_controler&module=life_cycle&mode=".$mode;?>">
+			<form id="adminform" method="post" class="forms" action="<?php echo $_SESSION['config']['businessappurl']."index.php?display=true&page=lc_policies_management_controler&module=life_cycle&mode=".$mode;?>">
 				<input type="hidden" name="display" value="value" />
 				<input type="hidden" name="module" value="life_cycle" />
 				<input type="hidden" name="page" value="lc_policies_management_controler" />
@@ -60,26 +58,23 @@ elseif($mode == "up" || $mode == "add"){
 				<input type="hidden" name="start" id="start" value="<?php echo $_REQUEST['start'];?>" />
 				<p>
 				 	<label for="id"><?php echo _LC_POLICY_ID; ?> : </label>
-					<input name="id" type="text"  id="id" value="<?php echo functions::show($_SESSION['m_admin']['lc_policies']['lc_policies_id']); ?>" <?php if($mode == "up") echo " readonly='readonly' class='readonly'";?>/>
+					<input name="id" type="text"  id="id" value="<?php echo functions::show($_SESSION['m_admin']['lc_policies']['policy_id']); ?>" <?php if($mode == "up") echo " readonly='readonly' class='readonly'";?>/>
 				</p>
-				
 				<p>
 				 	<label for="policy_name"><?php echo _LC_POLICY_NAME; ?> : </label>
-					<input name="policy_name" type="text"  id="policy_name" value="<?php echo functions::show($_SESSION['m_admin']['lc_policies']['policy_name']); ?>" <?php if($mode == "up") echo " readonly='readonly' class='readonly'";?>/>
+					<input name="policy_name" type="text"  id="policy_name" value="<?php echo functions::show($_SESSION['m_admin']['lc_policies']['policy_name']); ?>" />
 				</p>
-				
 				<p>
 				 	<label for="policy_desc"><?php echo _POLICY_DESC; ?> : </label>
-					<input name="policy_desc" type="text"  id="policy_desc" value="<?php echo functions::show($_SESSION['m_admin']['lc_policies']['policy_desc']); ?>" <?php if($mode == "up") echo " readonly='readonly' class='readonly'";?>/>
+					<input name="policy_desc" type="text"  id="policy_desc" value="<?php echo functions::show($_SESSION['m_admin']['lc_policies']['policy_desc']); ?>" />
 				</p>
 				<p class="buttons">
 					<?php
-					if($mode == "up"){
+					if($mode == "up") {
 						?>
 						<input class="button" type="submit" name="submit" value="<?php echo _MODIFY; ?>" />
 						<?php
-					}
-					elseif($mode == "add"){
+					} elseif($mode == "add") {
 						?>
 						<input type="submit" class="button"  name="submit" value="<?php echo _ADD; ?>" />
 						<?php

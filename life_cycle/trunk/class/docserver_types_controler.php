@@ -59,7 +59,7 @@ class docserver_types_controler extends ClassifiedObjectControler implements Obj
 	 * @return boolean
 	 */
 	public function save($docserver_types){
-		if(self::docserverTypesExists($docserver_types->docserver_types_id)){
+		if(self::docserverTypesExists($docserver_types->docserver_type_id)){
 			// Update existing docserver_types
 			return self::update($docserver_types);
 		} else {
@@ -140,21 +140,21 @@ class docserver_types_controler extends ClassifiedObjectControler implements Obj
 	}
 
 //////////////////////////////////////////////   OTHER PRIVATE BLOCK
-	public function docserverTypesExists($docserver_types_id){
-		if(!isset($docserver_types_id) || empty($docserver_types_id))
+	public function docserverTypesExists($docserver_type_id){
+		if(!isset($docserver_type_id) || empty($docserver_type_id))
 			return false;
 		self::$db=new dbquery();
 		self::$db->connect();
 		
 		//LKE = BULL ===== SPEC FONC : ==== Cycles de vie : docserver_types (ID1)
-		// Ajout du contrôle pour vérifier l'existence de la combinaison "docserver_types_id"			
-		$query = "select docserver_types_id from "._DOCSERVER_TYPES_TABLE_NAME." where docserver_types_id = '".$docserver_types_id."'";
+		// Ajout du contrôle pour vérifier l'existence de la combinaison "docserver_type_id"			
+		$query = "select docserver_type_id from "._DOCSERVER_TYPES_TABLE_NAME." where docserver_type_id = '".$docserver_type_id."'";
 					
 		try{
 			if($_ENV['DEBUG']){echo $query.' // ';}
 			self::$db->query($query);
 		} catch (Exception $e){
-			echo _UNKNOWN._DOCSERVER." ".$docserver_types_id.' // ';
+			echo _UNKNOWN._DOCSERVER." ".$docserver_type_id.' // ';
 		}
 		
 		if(self::$db->nb_result() > 0){
@@ -168,7 +168,7 @@ class docserver_types_controler extends ClassifiedObjectControler implements Obj
 	public function getAllId($can_be_disabled = false){
 		self::$db=new dbquery();
 		self::$db->connect();
-		$query = "select docserver_types_id from "._DOCSERVER_TYPES_TABLE_NAME." ";
+		$query = "select docserver_type_id from "._DOCSERVER_TYPES_TABLE_NAME." ";
 		if(!$can_be_disabled)
 			$query .= " where enabled = 'Y'";
 		try{
@@ -182,7 +182,7 @@ class docserver_types_controler extends ClassifiedObjectControler implements Obj
 			$result = array();
 			$cptId = 0;
 			while($queryResult = self::$db->fetch_object()){
-				$result[$cptId] = $queryResult->docserver_types_id;
+				$result[$cptId] = $queryResult->docserver_type_id;
 				$cptId++;
 			}
 			self::$db->disconnect();

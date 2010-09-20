@@ -33,7 +33,7 @@
 $sessionName = "docserver_types";
 $pageName = "docserver_types_management_controler";
 $tableName = "docserver_types";
-$idName = "docserver_types_id";
+$idName = "docserver_type_id";
 
 $mode = 'add';
 
@@ -67,11 +67,11 @@ if(isset($_REQUEST['submit'])){
 } else {
 	// Display to do
 	if(isset($_REQUEST['id']) && !empty($_REQUEST['id']))
-		$docserver_types_id = $_REQUEST['id'];
+		$docserver_type_id = $_REQUEST['id'];
 	$state = true;
 	switch ($mode) {
 		case "up" :
-			$state=display_up($docserver_types_id); 
+			$state=display_up($docserver_type_id); 
 			location_bar_management($mode);
 			break;
 		case "add" :
@@ -79,17 +79,17 @@ if(isset($_REQUEST['submit'])){
 			location_bar_management($mode);
 			break;
 		case "del" :
-			display_del($docserver_types_id); 
+			display_del($docserver_type_id); 
 			break;
 		case "list" :
 			$docserver_types_list=display_list(); 
 			location_bar_management($mode);
 			break;
 		case "allow" :
-			display_enable($docserver_types_id); 
+			display_enable($docserver_type_id); 
 			location_bar_management($mode);
 		case "ban" :
-			display_disable($docserver_types_id); 
+			display_disable($docserver_type_id); 
 			location_bar_management($mode);
 	}
 	include('docserver_types_management.php');
@@ -114,7 +114,7 @@ function location_bar_management($mode){
 	$sessionName = "docserver_types";
 	$pageName = "docserver_types_management_controler";
 	$tableName = "docserver_types";
-	$idName = "docserver_types_id";
+	$idName = "docserver_type_id";
 	
 	$page_labels = array('add' => _ADDITION, 'up' => _MODIFICATION, 'list' => _DOCSERVER_TYPES_LIST);
 	$page_ids = array('add' => 'docserver_add', 'up' => 'docserver_up', 'list' => 'docserver_types_list');
@@ -143,7 +143,7 @@ function validate_cs_submit($mode){
 	$sessionName = "docserver_types";
 	$pageName = "docserver_types_management_controler";
 	$tableName = "docserver_types";
-	$idName = "docserver_types_id";
+	$idName = "docserver_type_id";
 	
 	$f=new functions();
 
@@ -151,9 +151,9 @@ function validate_cs_submit($mode){
 	//$f->show_array($_REQUEST);exit;
 	if(isset($_REQUEST['id']) && !empty($_REQUEST['id'])){
 		// Update, so values exist
-		$docserver_types->docserver_types_id=$f->protect_string_db($f->wash($_REQUEST['id'], "nick", _THE_DOCSERVER_TYPE_ID." ", "yes", 0, 32));
+		$docserver_types->docserver_type_id=$f->protect_string_db($f->wash($_REQUEST['id'], "nick", _THE_DOCSERVER_TYPE_ID." ", "yes", 0, 32));
 	}
-	$docserver_types->dstype_label=$f->protect_string_db($f->wash($_REQUEST['dstype_label'], "no", _DSTYPE_LABEL." ", 'yes', 0, 255));
+	$docserver_types->docserver_type_label=$f->protect_string_db($f->wash($_REQUEST['docserver_type_label'], "no", _DOCSERVER_TYPE_LABEL." ", 'yes', 0, 255));
 	$docserver_types->is_container=$f->protect_string_db($f->wash($_REQUEST['is_container'], "no", _IS_CONTAINER." ", 'yes', 0, '5'));
 	if($docserver_types->is_container == "false"){
 		$docserver_types->is_container=false;
@@ -197,8 +197,8 @@ function validate_cs_submit($mode){
 	
 	
 	//LKE = BULL ===== SPEC FONC : ==== Cycles de vie : docserver_types (ID1)		
-	if($mode == "add" && docserver_types_controler::docserverTypesExists($docserver_types->docserver_types_id)){	
-		$_SESSION['error'] = $docserver_types->docserver_types_id." "._ALREADY_EXISTS."<br />";
+	if($mode == "add" && docserver_types_controler::docserverTypesExists($docserver_types->docserver_type_id)){	
+		$_SESSION['error'] = $docserver_types->docserver_type_id." "._ALREADY_EXISTS."<br />";
 	}
 	
 	if(!empty($_SESSION['error'])) {
@@ -243,11 +243,11 @@ function validate_cs_submit($mode){
 
 /**
  * Initialize session parameters for update display
- * @param Long $docserver_types_id
+ * @param Long $docserver_type_id
  */
-function display_up($docserver_types_id){
+function display_up($docserver_type_id){
 	$state=true;
-	$docserver_types = docserver_types_controler::get($docserver_types_id);
+	$docserver_types = docserver_types_controler::get($docserver_type_id);
 	if(empty($docserver_types))
 		$state = false; 
 	else
@@ -272,14 +272,14 @@ function display_list(){
 	$sessionName = "docserver_types";
 	$pageName = "docserver_types_management_controler";
 	$tableName = "docserver_types";
-	$idName = "docserver_types_id";
+	$idName = "docserver_type_id";
 	
 	$_SESSION['m_admin'] = array();
 	
 	init_session();
 	
 	$select[_DOCSERVER_TYPES_TABLE_NAME] = array();
-	array_push($select[_DOCSERVER_TYPES_TABLE_NAME], $idName, "dstype_label", "is_container", "is_compressed", "enabled");
+	array_push($select[_DOCSERVER_TYPES_TABLE_NAME], $idName, "docserver_type_label", "is_container", "is_compressed", "enabled");
 	$what = "";
 	$where ="";
 	if(isset($_REQUEST['what']) && !empty($_REQUEST['what'])){
@@ -308,8 +308,8 @@ function display_list(){
 			switch ($item['column']){
 				case $idName:
 					format_item($item,_ID,"18","left","left","bottom",true); break;
-				case "dstype_label":
-					format_item($item,_DSTYPE_LABEL,"15","left","left","bottom",true); break;
+				case "docserver_type_label":
+					format_item($item,_DOCSERVER_TYPE_LABEL,"15","left","left","bottom",true); break;
 				case "is_container":
 					format_item($item,_IS_CONTAINER,"15","left","left","bottom",true); break;
 				case "is_compressed":
@@ -345,18 +345,18 @@ function display_list(){
 
 /**
  * Delete given docserver if exists and initialize session parameters
- * @param unknown_type $docserver_types_id
+ * @param unknown_type $docserver_type_id
  */
-function display_del($docserver_types_id){
-	$docserver_types = docserver_types_controler::get($docserver_types_id);
+function display_del($docserver_type_id){
+	$docserver_types = docserver_types_controler::get($docserver_type_id);
 	if(isset($docserver_types)){
 		// Deletion
 		docserver_types_controler::delete($docserver_types);
-		$_SESSION['error'] = _DOCSERVER_TYPE_DELETED." ".$docserver_types_id;
+		$_SESSION['error'] = _DOCSERVER_TYPE_DELETED." ".$docserver_type_id;
 		if($_SESSION['history']['docserver_typesdel'] == "true"){
 			require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 			$history = new history();
-			$history->add(_DOCSERVER_TYPES_TABLE_NAME, $docserver_types_id, "DEL", _DOCSERVER_TYPE_DELETED." : ".$docserver_types_id, $_SESSION['config']['databasetype']);
+			$history->add(_DOCSERVER_TYPES_TABLE_NAME, $docserver_type_id, "DEL", _DOCSERVER_TYPE_DELETED." : ".$docserver_type_id, $_SESSION['config']['databasetype']);
 		}
 		// NOTE: Why not calling display_list ?
 		$pageName = "docserver_types_management_controler";
@@ -372,18 +372,18 @@ function display_del($docserver_types_id){
 
 /**
  * allow given docserver if exists
- * @param unknown_type $docserver_types_id
+ * @param unknown_type $docserver_type_id
  */
-function display_enable($docserver_types_id){
-	$docserver_types = docserver_types_controler::get($docserver_types_id);
+function display_enable($docserver_type_id){
+	$docserver_types = docserver_types_controler::get($docserver_type_id);
 	if(isset($docserver_types)){
 		// Disable
 		docserver_types_controler::enable($docserver_types);
-		$_SESSION['error'] = _DOCSERVER_TYPE_ENABLED." ".$docserver_types_id;
+		$_SESSION['error'] = _DOCSERVER_TYPE_ENABLED." ".$docserver_type_id;
 		if($_SESSION['history']['docserver_typesallow'] == "true"){
 			require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 			$history = new history();
-			$history->add(_DOCSERVER_TYPES_TABLE_NAME, $docserver_types_id, "VAL",_DOCSERVER_TYPE_ENABLED." : ".$docserver_types_id, $_SESSION['config']['databasetype']);
+			$history->add(_DOCSERVER_TYPES_TABLE_NAME, $docserver_type_id, "VAL",_DOCSERVER_TYPE_ENABLED." : ".$docserver_type_id, $_SESSION['config']['databasetype']);
 		}
 		// NOTE: Why not calling display_list ?
 		$pageName = "docserver_types_management_controler";
@@ -399,18 +399,18 @@ function display_enable($docserver_types_id){
 
 /**
  * ban given docserver if exists
- * @param unknown_type $docserver_types_id
+ * @param unknown_type $docserver_type_id
  */
-function display_disable($docserver_types_id){
-	$docserver_types = docserver_types_controler::get($docserver_types_id);
+function display_disable($docserver_type_id){
+	$docserver_types = docserver_types_controler::get($docserver_type_id);
 	if(isset($docserver_types)){
 		// Disable
 		docserver_types_controler::disable($docserver_types);
-		$_SESSION['error'] = _DOCSERVER_TYPE_DISABLED." ".$docserver_types_id;
+		$_SESSION['error'] = _DOCSERVER_TYPE_DISABLED." ".$docserver_type_id;
 		if($_SESSION['history']['docserver_typesban'] == "true"){
 			require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 			$history = new history();
-			$history->add(_DOCSERVER_TYPES_TABLE_NAME, $docserver_types_id, "BAN", _DOCSERVER_TYPE_DISABLED." : ".$docserver_types_id, $_SESSION['config']['databasetype']);
+			$history->add(_DOCSERVER_TYPES_TABLE_NAME, $docserver_type_id, "BAN", _DOCSERVER_TYPE_DISABLED." : ".$docserver_type_id, $_SESSION['config']['databasetype']);
 		}
 		// NOTE: Why not calling display_list ?
 		$pageName = "docserver_types_management_controler";

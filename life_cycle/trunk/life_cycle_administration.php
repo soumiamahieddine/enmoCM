@@ -55,6 +55,11 @@ unset($_SESSION['m_admin']);
 
 <div id="inner_content" class="clearfix">
 <h2 class="admin_subtitle block" ><?php echo _ADMIN_LIFE_CYCLE;?></h1></h2>
+	<div class="admin_item" id="admin_lc_policies" title="<?php  echo _MANAGE_LC_POLICIES;?>" onclick="window.top.location='<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=lc_policies_management_controler&mode=list&module=life_cycle';">
+		<div class="sum_margin" >
+				<strong><?php  echo _MANAGE_LC_POLICIES;?></strong>
+		</div>
+	</div>
 	<div class="admin_item" id="admin_lc_cycles" title="<?php  echo _MANAGE_LC_CYCLES;?>" onclick="window.top.location='<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=lc_cycles_management_controler&mode=list&module=life_cycle';">
 		<div class="sum_margin" >
 				<strong><?php  echo _MANAGE_LC_CYCLES;?></strong>
@@ -63,11 +68,6 @@ unset($_SESSION['m_admin']);
 	<div class="admin_item" id="admin_lc_cycle_steps" title="<?php  echo _MANAGE_LC_CYCLE_STEPS;?>" onclick="window.top.location='<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=lc_cycle_steps_management_controler&mode=list&module=life_cycle';">
 		<div class="sum_margin" >
 				<strong><?php  echo _MANAGE_LC_CYCLE_STEPS;?></strong>
-		</div>
-	</div>
-	<div class="admin_item" id="admin_lc_policies" title="<?php  echo _MANAGE_LC_POLICIES;?>" onclick="window.top.location='<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=lc_policies_management_controler&mode=list&module=life_cycle';">
-		<div class="sum_margin" >
-				<strong><?php  echo _MANAGE_LC_POLICIES;?></strong>
 		</div>
 	</div>
 	<div class="admin_item" id="admin_docservers_locations" title="<?php  echo _MANAGE_DOCSERVERS_LOCATIONS;?>" onclick="window.top.location='<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=docserver_locations_management_controler&mode=list&module=life_cycle';">

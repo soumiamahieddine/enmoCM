@@ -28,7 +28,7 @@ class docservers_controler extends ClassifiedObjectControler implements ObjectCo
 	 * @return boolean
 	 */
 	public function save($docservers){
-		if(self::docserversExists($docservers->docservers_id)){
+		if(self::docserversExists($docservers->docserver_id)){
 			// Update existing docservers
 			return self::update($docservers);
 		} else {
@@ -110,21 +110,21 @@ class docservers_controler extends ClassifiedObjectControler implements ObjectCo
 	}
 
 //////////////////////////////////////////////   OTHER PRIVATE BLOCK
-	public function docserversExists($docservers_id){
-		if(!isset($docservers_id) || empty($docservers_id))
+	public function docserversExists($docserver_id){
+		if(!isset($docserver_id) || empty($docserver_id))
 			return false;
 		self::$db=new dbquery();
 		self::$db->connect();
 		
 		//LKE = BULL ===== SPEC FONC : ==== Cycles de vie : docservers (ID1)
-		// Ajout du contrôle pour vérifier l'existence de la combinaison "docservers_id"
-		$query = "select docservers_id from "._DOCSERVERS_TABLE_NAME." where docservers_id = '".$docservers_id."'";
+		// Ajout du contrôle pour vérifier l'existence de la combinaison "docserver_id"
+		$query = "select docserver_id from "._DOCSERVERS_TABLE_NAME." where docserver_id = '".$docserver_id."'";
 					
 		try{
 			if($_ENV['DEBUG']){echo $query.' // ';}
 			self::$db->query($query);
 		} catch (Exception $e){
-			echo _UNKNOWN._DOCSERVER." ".$docservers_id.' // ';
+			echo _UNKNOWN._DOCSERVER." ".$docserver_id.' // ';
 		}
 		
 		if(self::$db->nb_result() > 0){

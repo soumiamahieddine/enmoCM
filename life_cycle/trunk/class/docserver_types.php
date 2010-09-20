@@ -13,7 +13,7 @@ class docserver_types extends BaseObject {
 	 * @return string Rendering of the object
 	 */
 	public function __toString(){
-		return $this->dstype_label; 
+		return $this->docserver_type_label; 
 	}
 } 
 ?>

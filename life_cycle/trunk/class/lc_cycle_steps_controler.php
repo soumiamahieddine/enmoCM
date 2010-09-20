@@ -59,7 +59,7 @@ class lc_cycle_steps_controler extends ClassifiedObjectControler implements Obje
 	 * @return boolean
 	 */
 	public function save($lc_cycle_steps){
-		if(self::cycle_stepsExists($lc_cycle_steps->lc_cycle_steps_id,$lc_cycle_steps->lc_cycles_id,$lc_cycle_steps->lc_policies_id)){
+		if(self::cycle_stepsExists($lc_cycle_steps->cycle_step_id,$lc_cycle_steps->cycle_id,$lc_cycle_steps->policy_id)){
 			// Update existing lc_cycle_steps
 			return self::update($lc_cycle_steps);
 		} else {
@@ -139,21 +139,21 @@ class lc_cycle_steps_controler extends ClassifiedObjectControler implements Obje
 	}
 
 //////////////////////////////////////////////   OTHER PRIVATE BLOCK
-	public function cycle_stepsExists($lc_cycle_steps_id,$lc_cycles_id,$lc_policies_id){
-		if(!isset($lc_cycle_steps_id) || empty($lc_cycle_steps_id))
+	public function cycle_stepsExists($cycle_step_id,$cycle_id,$policy_id){
+		if(!isset($cycle_step_id) || empty($cycle_step_id))
 			return false;
 		self::$db=new dbquery();
 		self::$db->connect();
 		
 		//LKE = BULL ===== SPEC FONC : ==== Cycles de vie : lc_cycle_steps (ID1)
-		// Ajout du contrôle pour vérifier l'existence de la combinaison "lc_cycle_steps_id" & "lc_cycles_id" & "lc_policies_id"
-		$query = "select lc_cycle_steps_id from "._LC_CYCLE_STEPS_TABLE_NAME." where lc_cycle_steps_id = '".$lc_cycle_steps_id."' and lc_cycles_id = '".$lc_cycles_id."' and lc_policies_id = '".$lc_policies_id."'";
+		// Ajout du contrôle pour vérifier l'existence de la combinaison "cycle_step_id" & "cycle_id" & "policy_id"
+		$query = "select cycle_step_id from "._LC_CYCLE_STEPS_TABLE_NAME." where cycle_step_id = '".$cycle_step_id."' and cycle_id = '".$cycle_id."' and policy_id = '".$policy_id."'";
 					
 		try{
 			if($_ENV['DEBUG']){echo $query.' // ';}
 			self::$db->query($query);
 		} catch (Exception $e){
-			echo _UNKNOWN._DOCSERVER." ".$lc_cycle_steps_id.' // ';
+			echo _UNKNOWN._DOCSERVER." ".$cycle_step_id.' // ';
 		}
 		
 		if(self::$db->nb_result() > 0){
@@ -167,7 +167,7 @@ class lc_cycle_steps_controler extends ClassifiedObjectControler implements Obje
 	public function getAllId($can_be_disabled = false){
 		self::$db=new dbquery();
 		self::$db->connect();
-		$query = "select lc_cycle_steps_id from "._LC_CYCLE_STEPS_TABLE_NAME." ";
+		$query = "select cycle_step_id from "._LC_CYCLE_STEPS_TABLE_NAME." ";
 		if(!$can_be_disabled)
 			$query .= " where enabled = 'Y'";
 		try{
@@ -181,7 +181,7 @@ class lc_cycle_steps_controler extends ClassifiedObjectControler implements Obje
 			$result = array();
 			$cptId = 0;
 			while($queryResult = self::$db->fetch_object()){
-				$result[$cptId] = $queryResult->lc_cycle_steps_id;
+				$result[$cptId] = $queryResult->cycle_step_id;
 				$cptId++;
 			}
 			self::$db->disconnect();

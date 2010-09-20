@@ -33,7 +33,7 @@
 $sessionName = "docservers";
 $pageName = "docservers_management_controler";
 $tableName = "docservers";
-$idName = "docservers_id";
+$idName = "docserver_id";
 
 $mode = 'add';
 
@@ -76,11 +76,11 @@ if(isset($_REQUEST['submit'])){
 } else {
 	// Display to do
 	if(isset($_REQUEST['id']) && !empty($_REQUEST['id']))
-		$docservers_id = $_REQUEST['id'];
+		$docserver_id = $_REQUEST['id'];
 	$state = true;
 	switch ($mode) {
 		case "up" :
-			$state=display_up($docservers_id); 
+			$state=display_up($docserver_id); 
 			location_bar_management($mode);
 			break;
 		case "add" :
@@ -88,17 +88,17 @@ if(isset($_REQUEST['submit'])){
 			location_bar_management($mode);
 			break;
 		case "del" :
-			display_del($docservers_id); 
+			display_del($docserver_id); 
 			break;
 		case "list" :
 			$docservers_list=display_list(); 
 			location_bar_management($mode);
 			break;
 		case "allow" :
-			display_enable($docservers_id); 
+			display_enable($docserver_id); 
 			location_bar_management($mode);
 		case "ban" :
-			display_disable($docservers_id); 
+			display_disable($docserver_id); 
 			location_bar_management($mode);
 	}
 	include('docservers_management.php');
@@ -123,7 +123,7 @@ function location_bar_management($mode){
 	$sessionName = "docservers";
 	$pageName = "docservers_management_controler";
 	$tableName = "docservers";
-	$idName = "docservers_id";
+	$idName = "docserver_id";
 	
 	$page_labels = array('add' => _ADDITION, 'up' => _MODIFICATION, 'list' => _DOCSERVERS_LIST);
 	$page_ids = array('add' => 'docserver_add', 'up' => 'docserver_up', 'list' => 'docservers_list');
@@ -152,7 +152,7 @@ function validate_cs_submit($mode){
 	$sessionName = "docservers";
 	$pageName = "docservers_management_controler";
 	$tableName = "docservers";
-	$idName = "docservers_id";
+	$idName = "docserver_id";
 	
 	$f=new functions();
 
@@ -160,9 +160,9 @@ function validate_cs_submit($mode){
 	//$f->show_array($_REQUEST);exit;
 	if(isset($_REQUEST['id']) && !empty($_REQUEST['id'])){
 		// Update, so values exist
-		$docservers->docservers_id=$f->protect_string_db($f->wash($_REQUEST['id'], "nick", _THE_DOCSERVER_ID." ", "yes", 0, 32));
+		$docservers->docserver_id=$f->protect_string_db($f->wash($_REQUEST['id'], "nick", _THE_DOCSERVER_ID." ", "yes", 0, 32));
 	}
-	$docservers->docserver_types_id=$f->protect_string_db($f->wash($_REQUEST['docserver_types_id'], "no", _DOCSERVER_TYPES." ", 'yes', 0, 32));
+	$docservers->docserver_type_id=$f->protect_string_db($f->wash($_REQUEST['docserver_type_id'], "no", _DOCSERVER_TYPES." ", 'yes', 0, 32));
 	$docservers->device_label=$f->protect_string_db($f->wash($_REQUEST['device_label'], "no", _DEVICE_LABEL." ", 'yes', 0, 255));
 	$docservers->is_readonly=$f->protect_string_db($f->wash($_REQUEST['is_readonly'], "no", _IS_READONLY." ", 'yes', 0, 5));
 	if($docservers->is_readonly == "false"){
@@ -197,7 +197,7 @@ function validate_cs_submit($mode){
 
 	$docservers->coll_id=$f->protect_string_db($f->wash($_REQUEST['coll_id'], "no", _COLLECTION." ", 'yes', 0, 32));
 	$docservers->priority_number=$f->protect_string_db($f->wash($_REQUEST['priority_number'], "num", _PRIORITY." ", 'yes', 0, 6));
-	$docservers->docserver_locations_id=$f->protect_string_db($f->wash($_REQUEST['docserver_locations_id'], "no", _DOCSERVER_LOCATIONS." ", 'yes', 0, 32));
+	$docservers->docserver_location_id=$f->protect_string_db($f->wash($_REQUEST['docserver_location_id'], "no", _DOCSERVER_LOCATIONS." ", 'yes', 0, 32));
 	$docservers->adr_priority_number=$f->protect_string_db($f->wash($_REQUEST['adr_priority_number'], "num", _ADR_PRIORITY." ", 'yes', 0, 6));
 	$status= array();
 	$status['order']=$_REQUEST['order'];
@@ -206,8 +206,8 @@ function validate_cs_submit($mode){
 	$status['start']=$_REQUEST['start'];
 	
 	//LKE = BULL ===== SPEC FONC : ==== Cycles de vie : docservers (ID1)
-	if($mode == "add" && docservers_controler::docserversExists($docservers->docservers_id)){	
-		$_SESSION['error'] = $docservers->docservers_id." "._ALREADY_EXISTS."<br />";
+	if($mode == "add" && docservers_controler::docserversExists($docservers->docserver_id)){	
+		$_SESSION['error'] = $docservers->docserver_id." "._ALREADY_EXISTS."<br />";
 	}
 	
 	if(!empty($_SESSION['error'])) {
@@ -252,11 +252,11 @@ function validate_cs_submit($mode){
 
 /**
  * Initialize session parameters for update display
- * @param Long $docservers_id
+ * @param Long $docserver_id
  */
-function display_up($docservers_id){
+function display_up($docserver_id){
 	$state=true;
-	$docservers = docservers_controler::get($docservers_id);
+	$docservers = docservers_controler::get($docserver_id);
 	if(empty($docservers))
 		$state = false; 
 	else
@@ -281,14 +281,14 @@ function display_list(){
 	$sessionName = "docservers";
 	$pageName = "docservers_management_controler";
 	$tableName = "docservers";
-	$idName = "docservers_id";
+	$idName = "docserver_id";
 	
 	$_SESSION['m_admin'] = array();
 	
 	init_session();
 	
 	$select[_DOCSERVERS_TABLE_NAME] = array();
-	array_push($select[_DOCSERVERS_TABLE_NAME], $idName, "device_label", "docserver_types_id", "coll_id", "enabled");
+	array_push($select[_DOCSERVERS_TABLE_NAME], $idName, "device_label", "docserver_type_id", "coll_id", "enabled");
 	$what = "";
 	$where ="";
 	if(isset($_REQUEST['what']) && !empty($_REQUEST['what'])){
@@ -319,7 +319,7 @@ function display_list(){
 					format_item($item,_ID,"18","left","left","bottom",true); break;
 				case "device_label":
 					format_item($item,_DEVICE_LABEL,"15","left","left","bottom",true); break;
-				case "docserver_types_id":
+				case "docserver_type_id":
 					format_item($item,_DOCSERVER_TYPE,"15","left","left","bottom",true); break;
 				case "coll_id":
 					format_item($item,_COLL_ID,"15","left","left","bottom",true); break;
@@ -355,18 +355,18 @@ function display_list(){
 
 /**
  * Delete given docserver if exists and initialize session parameters
- * @param unknown_type $docservers_id
+ * @param unknown_type $docserver_id
  */
-function display_del($docservers_id){
-	$docservers = docservers_controler::get($docservers_id);
+function display_del($docserver_id){
+	$docservers = docservers_controler::get($docserver_id);
 	if(isset($docservers)){
 		// Deletion
 		docservers_controler::delete($docservers);
-		$_SESSION['error'] = _DOCSERVER_DELETED." ".$docservers_id;
+		$_SESSION['error'] = _DOCSERVER_DELETED." ".$docserver_id;
 		if($_SESSION['history']['docserversdel'] == "true"){
 			require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 			$history = new history();
-			$history->add(_DOCSERVERS_TABLE_NAME, $docservers_id, "DEL", _DOCSERVER_DELETED." : ".$docservers_id, $_SESSION['config']['databasetype']);
+			$history->add(_DOCSERVERS_TABLE_NAME, $docserver_id, "DEL", _DOCSERVER_DELETED." : ".$docserver_id, $_SESSION['config']['databasetype']);
 		}
 		// NOTE: Why not calling display_list ?
 		$pageName = "docservers_management_controler";
@@ -382,18 +382,18 @@ function display_del($docservers_id){
 
 /**
  * allow given docserver if exists
- * @param unknown_type $docservers_id
+ * @param unknown_type $docserver_id
  */
-function display_enable($docservers_id){
-	$docservers = docservers_controler::get($docservers_id);
+function display_enable($docserver_id){
+	$docservers = docservers_controler::get($docserver_id);
 	if(isset($docservers)){
 		// Disable
 		docservers_controler::enable($docservers);
-		$_SESSION['error'] = _DOCSERVER_ENABLED." ".$docservers_id;
+		$_SESSION['error'] = _DOCSERVER_ENABLED." ".$docserver_id;
 		if($_SESSION['history']['docserversallow'] == "true"){
 			require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 			$history = new history();
-			$history->add(_DOCSERVERS_TABLE_NAME, $docservers_id, "VAL",_DOCSERVER_ENABLED." : ".$docservers_id, $_SESSION['config']['databasetype']);
+			$history->add(_DOCSERVERS_TABLE_NAME, $docserver_id, "VAL",_DOCSERVER_ENABLED." : ".$docserver_id, $_SESSION['config']['databasetype']);
 		}
 		// NOTE: Why not calling display_list ?
 		$pageName = "docservers_management_controler";
@@ -409,18 +409,18 @@ function display_enable($docservers_id){
 
 /**
  * ban given docserver if exists
- * @param unknown_type $docservers_id
+ * @param unknown_type $docserver_id
  */
-function display_disable($docservers_id){
-	$docservers = docservers_controler::get($docservers_id);
+function display_disable($docserver_id){
+	$docservers = docservers_controler::get($docserver_id);
 	if(isset($docservers)){
 		// Disable
 		docservers_controler::disable($docservers);
-		$_SESSION['error'] = _DOCSERVER_DISABLED." ".$docservers_id;
+		$_SESSION['error'] = _DOCSERVER_DISABLED." ".$docserver_id;
 		if($_SESSION['history']['docserversban'] == "true"){
 			require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 			$history = new history();
-			$history->add(_DOCSERVERS_TABLE_NAME, $docservers_id, "BAN", _DOCSERVER_DISABLED." : ".$docservers_id, $_SESSION['config']['databasetype']);
+			$history->add(_DOCSERVERS_TABLE_NAME, $docserver_id, "BAN", _DOCSERVER_DISABLED." : ".$docserver_id, $_SESSION['config']['databasetype']);
 		}
 		// NOTE: Why not calling display_list ?
 		$pageName = "docservers_management_controler";

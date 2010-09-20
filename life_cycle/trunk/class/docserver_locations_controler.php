@@ -59,7 +59,7 @@ class docserver_locations_controler extends ClassifiedObjectControler implements
 	 * @return boolean
 	 */
 	public function save($docserver_locations){
-		if(self::docserverLocationsExists($docserver_locations->docserver_locations_id)){
+		if(self::docserverLocationsExists($docserver_locations->docserver_location_id)){
 			// Update existing docserver_locations
 			return self::update($docserver_locations);
 		} else {
@@ -140,21 +140,21 @@ class docserver_locations_controler extends ClassifiedObjectControler implements
 	}
 
 //////////////////////////////////////////////   OTHER PRIVATE BLOCK
-	public function docserverLocationsExists($docserver_locations_id){
-		if(!isset($docserver_locations_id) || empty($docserver_locations_id))
+	public function docserverLocationsExists($docserver_location_id){
+		if(!isset($docserver_location_id) || empty($docserver_location_id))
 			return false;
 		self::$db=new dbquery();
 		self::$db->connect();
 		
 		//LKE = BULL ===== SPEC FONC : ==== Cycles de vie : docserver_locations (ID1)
-		// Ajout du contrôle pour vérifier l'existence de la combinaison "docserver_locations_id"		
-		$query = "select docserver_locations_id from "._DOCSERVER_LOCATIONS_TABLE_NAME." where docserver_locations_id = '".$docserver_locations_id."'";
+		// Ajout du contrôle pour vérifier l'existence de la combinaison "docserver_location_id"		
+		$query = "select docserver_location_id from "._DOCSERVER_LOCATIONS_TABLE_NAME." where docserver_location_id = '".$docserver_location_id."'";
 					
 		try{
 			if($_ENV['DEBUG']){echo $query.' // ';}
 			self::$db->query($query);
 		} catch (Exception $e){
-			echo _UNKNOWN._DOCSERVER." ".$docserver_locations_id.' // ';
+			echo _UNKNOWN._DOCSERVER." ".$docserver_location_id.' // ';
 		}
 		
 		if(self::$db->nb_result() > 0){
@@ -168,7 +168,7 @@ class docserver_locations_controler extends ClassifiedObjectControler implements
 	public function getAllId($can_be_disabled = false){
 		self::$db=new dbquery();
 		self::$db->connect();
-		$query = "select docserver_locations_id from "._DOCSERVER_LOCATIONS_TABLE_NAME." ";
+		$query = "select docserver_location_id from "._DOCSERVER_LOCATIONS_TABLE_NAME." ";
 		if(!$can_be_disabled)
 			$query .= " where enabled = 'Y'";
 		try{
@@ -182,7 +182,7 @@ class docserver_locations_controler extends ClassifiedObjectControler implements
 			$result = array();
 			$cptId = 0;
 			while($queryResult = self::$db->fetch_object()){
-				$result[$cptId] = $queryResult->docserver_locations_id;
+				$result[$cptId] = $queryResult->docserver_location_id;
 				$cptId++;
 			}
 			self::$db->disconnect();

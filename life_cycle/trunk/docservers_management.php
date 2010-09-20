@@ -5,9 +5,9 @@ if($mode == "list"){
 					$docservers_list['tab'], 
 					count($docservers_list['tab']), 
 					$docservers_list['title'], 
-					'docservers_id',
+					'docserver_id',
 					'docservers_management_controler&mode=list',
-					'life_cycle','docservers_id', 
+					'life_cycle','docserver_id', 
 					true, 
 					$docservers_list['page_name_up'], 
 					$docservers_list['page_name_val'], 
@@ -62,16 +62,16 @@ elseif($mode == "up" || $mode == "add"){
 				<input type="hidden" name="actual_size_hidden" id="actual_size_hidden" value="<?php echo $_SESSION['m_admin']['docservers']['actual_size'];?>"/>
 				<p>
 				 	<label for="id"><?php echo _DOCSERVER_ID; ?> : </label>
-					<input name="id" type="text"  id="id" value="<?php echo functions::show($_SESSION['m_admin']['docservers']['docservers_id']); ?>" <?php if($mode == "up") echo " readonly='readonly' class='readonly'";?>/>
+					<input name="id" type="text"  id="id" value="<?php echo functions::show($_SESSION['m_admin']['docservers']['docserver_id']); ?>" <?php if($mode == "up") echo " readonly='readonly' class='readonly'";?>/>
 				</p>
 				<p>
-				 	<label for="docserver_types_id"><?php echo _DOCSERVER_TYPES; ?> : </label>
-					<select name="docserver_types_id" id="docserver_types_id">
+				 	<label for="docserver_type_id"><?php echo _DOCSERVER_TYPES; ?> : </label>
+					<select name="docserver_type_id" id="docserver_type_id">
 						<option value=""><?php echo _DOCSERVER_TYPES;?></option>
 						<?php
 						for($cptTypes=0;$cptTypes<count($docserverTypesArray);$cptTypes++){
 							?>
-							<option value="<?php echo $docserverTypesArray[$cptTypes];?>" <?php if($_SESSION['m_admin']['docservers']['docserver_types_id'] == $docserverTypesArray[$cptTypes]) { echo 'selected="selected"';}?>><?php echo $docserverTypesArray[$cptTypes];?></option>
+							<option value="<?php echo $docserverTypesArray[$cptTypes];?>" <?php if($_SESSION['m_admin']['docservers']['docserver_type_id'] == $docserverTypesArray[$cptTypes]) { echo 'selected="selected"';}?>><?php echo $docserverTypesArray[$cptTypes];?></option>
 							<?php
 						}
 						?>
@@ -185,13 +185,13 @@ elseif($mode == "up" || $mode == "add"){
 					<input name="priority_number" type="text"  id="priority_number" value="<?php echo functions::show($_SESSION['m_admin']['docservers']['priority_number']); ?>"/>
 				</p>
 				<p>
-				 	<label for="docserver_locations_id"><?php echo _DOCSERVER_LOCATIONS; ?> : </label>
-					<select name="docserver_locations_id" id="docserver_locations_id">
+				 	<label for="docserver_location_id"><?php echo _DOCSERVER_LOCATIONS; ?> : </label>
+					<select name="docserver_location_id" id="docserver_location_id">
 						<option value=""><?php echo _DOCSERVER_LOCATIONS;?></option>
 						<?php
 						for($cptLocation=0;$cptLocation<count($docserverLocationsArray);$cptLocation++){
 							?>
-							<option value="<?php echo $docserverLocationsArray[$cptLocation];?>" <?php if($_SESSION['m_admin']['docservers']['docserver_locations_id'] == $docserverLocationsArray[$cptLocation]) { echo 'selected="selected"';}?>><?php echo $docserverLocationsArray[$cptLocation];?></option>
+							<option value="<?php echo $docserverLocationsArray[$cptLocation];?>" <?php if($_SESSION['m_admin']['docservers']['docserver_location_id'] == $docserverLocationsArray[$cptLocation]) { echo 'selected="selected"';}?>><?php echo $docserverLocationsArray[$cptLocation];?></option>
 							<?php
 						}
 						?>
