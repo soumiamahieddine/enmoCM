@@ -145,6 +145,7 @@ CREATE TABLE IF NOT EXISTS resgroups (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS security (
+  security_id int(8) NOT NULL,
   group_id varchar(32) collate utf8_unicode_ci NOT NULL,
   coll_id varchar(32) collate utf8_unicode_ci NOT NULL,
   where_clause varchar(255) collate utf8_unicode_ci default NULL,
@@ -152,7 +153,11 @@ CREATE TABLE IF NOT EXISTS security (
   can_insert char(1) collate utf8_unicode_ci NOT NULL default 'N',
   can_update char(1) collate utf8_unicode_ci NOT NULL default 'N',
   can_delete char(1) collate utf8_unicode_ci NOT NULL default 'N',
-  PRIMARY KEY  (group_id,coll_id)
+  rights_bitmask int(8) NOT NULL,
+  mr_start_date date DEFAULT NULL,
+  mr_stop_date date DEFAULT NULL,
+  where_target varchar(15) DEFAULT 'DOC',
+  PRIMARY KEY  (security_id)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE status

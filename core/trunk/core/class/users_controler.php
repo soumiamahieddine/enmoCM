@@ -19,7 +19,7 @@
 */
 
 /**
-* @brief  Contains the controler of the users object (create, save, modify, etc...)
+* @brief  Contains the controler of the user object (create, save, modify, etc...)
 * 
 * 
 * @file
@@ -47,10 +47,10 @@ try {
 }
 
 /**
-* @brief  Controler of the users object 
+* @brief  Controler of the user object 
 *
 *<ul>
-*  <li>Get an users object from an id</li>
+*  <li>Get an user object from an id</li>
 *  <li>Save in the database a user</li>
 *  <li>Manage the operation on the users related tables in the database (insert, select, update, delete)</li>
 *</ul>
@@ -59,12 +59,12 @@ try {
 class users_controler extends ObjectControler implements ObjectControlerIF
 {
 	/**
-	* Returns an users object based on a user identifier
+	* Returns an user object based on a user identifier
 	*
 	* @param  $user_id string  User identifier
 	* @param  $comp_where string  where clause arguments (must begin with and or or)
 	* @param  $can_be_disabled bool  if true gets the user even if it is disabled in the database (false by default)
-	* @return users object with properties from the database or null
+	* @return user object with properties from the database or null
 	*/
 	public function get($user_id, $comp_where = '', $can_be_disabled = false)
 	{
@@ -109,9 +109,9 @@ class users_controler extends ObjectControler implements ObjectControlerIF
 	}
 	
 	/**
-	* Saves in the database a users object 
+	* Saves in the database a user object 
 	*
-	* @param  $group users object to be saved
+	* @param  $user user object to be saved
 	* @return bool true if the save is complete, false otherwise
 	*/
 	public function save($user)
@@ -130,9 +130,9 @@ class users_controler extends ObjectControler implements ObjectControlerIF
 	}
 	
 	/**
-	* Inserts in the database (users table) a users object
+	* Inserts in the database (users table) a user object
 	*
-	* @param  $user users object
+	* @param  $user user object
 	* @return bool true if the insertion is complete, false otherwise
 	*/
 	private function insert($user)
@@ -141,9 +141,9 @@ class users_controler extends ObjectControler implements ObjectControlerIF
 	}
 
 	/**
-	* Updates a user in the database (users table) with a users object
+	* Updates a user in the database (users table) with a user object
 	*
-	* @param  $user users object
+	* @param  $user user object
 	* @return bool true if the update is complete, false otherwise
 	*/
 	private function update($user)
@@ -247,7 +247,7 @@ class users_controler extends ObjectControler implements ObjectControlerIF
 	/**
 	* Disables a given user
 	* 
-	* @param  $user users object 
+	* @param  $user user object 
 	* @return bool true if the disabling is complete, false otherwise 
 	*/
 	public function disable($user)
@@ -260,7 +260,7 @@ class users_controler extends ObjectControler implements ObjectControlerIF
 	/**
 	* Enables a given user
 	* 
-	* @param  $user users object 
+	* @param  $user user object 
 	* @return bool true if the enabling is complete, false otherwise 
 	*/
 	public function enable($user)

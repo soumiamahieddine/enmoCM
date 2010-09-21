@@ -215,6 +215,7 @@ ALTER TABLE resgroups OWNER TO postgres;
 
 CREATE TABLE "security"
 (
+  security_id bigint NOT NULL DEFAULT nextval('security_security_id_seq'::regclass),
   group_id character varying(32) NOT NULL,
   coll_id character varying(32) NOT NULL,
   where_clause text,
@@ -222,10 +223,22 @@ CREATE TABLE "security"
   can_insert character(1) NOT NULL DEFAULT 'N'::bpchar,
   can_update character(1) NOT NULL DEFAULT 'N'::bpchar,
   can_delete character(1) NOT NULL DEFAULT 'N'::bpchar,
-  CONSTRAINT security_pkey PRIMARY KEY (group_id, coll_id)
+  rights_bitmask integer NOT NULL,
+  mr_start_date timestamp without time zone DEFAULT NULL,
+  mr_stop_date timestamp without time zone DEFAULT NULL,
+  where_target character varying(15) DEFAULT 'DOC'::character varying,
+  CONSTRAINT security_pkey PRIMARY KEY (security_id)
 )
 WITH (OIDS=FALSE);
 ALTER TABLE "security" OWNER TO postgres;
+
+CREATE SEQUENCE security_security_id_seq
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 20
+  CACHE 1;
+ALTER TABLE security_security_id_seq OWNER TO postgres;
 
 CREATE TABLE status
 (

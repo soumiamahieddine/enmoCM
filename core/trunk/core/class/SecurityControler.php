@@ -42,8 +42,10 @@ try {
 	require_once("core/core_tables.php");
 	require_once("core/class/class_db.php");
 	require_once("core/class/users_controler.php");
+	require_once("core/class/session_security_controler.php");
 	require_once("core/class/Security.php");
-	require_once("apps/".$_SESSION['businessapps'][0]['appid']."/security_bitmask.php");
+	if(!defined("_CLASSIFICATION_SCHEME_VIEW")) define("_CLASSIFICATION_SCHEME_VIEW","mr_classification_scheme_view");
+//	require_once("apps/".$_SESSION['businessapps'][0]['appid']."/security_bitmask.php"); must be called in the controler
 } catch (Exception $e){
 	echo $e->getMessage().' // ';
 }
@@ -571,13 +573,18 @@ class SecurityControler
 	 * @param bigint $object_id
 	 * @return bitmask
 	 */
-	public function getActions($user_id,$object_id){
-		// Select from security session table
-		
+	public function getActions($user_id,$object_id, $object_type = 'aggregation')
+	{
+		// Select from security session table	
+		$session_sec = session_security_controler::get($user_id);
+		if($session_sec->__get('last_object_id') == $object_id)
+			return $session_sec->__get('last_available_bitmask');
+		else
+			return setActions($user_id,$object_id, $object_type);
 		/********
 		 * FAKE *
 		 ********/
-		return ADD_RECORD+CREATE_CLASS+CREATE_OTHER_AGREGATION+DATA_MODIFICATION+DELETE_CLASS+DELETE_OTHER_AGREGATION;
+		//return ADD_RECORD+CREATE_CLASS+CREATE_OTHER_AGREGATION+DATA_MODIFICATION+DELETE_CLASS+DELETE_OTHER_AGREGATION;
 	}
 	
 	/**
@@ -589,15 +596,81 @@ class SecurityControler
 	 * @param bigint $object_id
 	 * @return bitmask
 	 */
-	public function setActions($user_id,$object_id){
+	public function setActions($user_id,$object_id, $object_type)
+	{
+
 		// Compute action bitmask 
+		$full_bitmask = 0;
+		$groups = users_controler::getGroups($user_id);
+		//print_r($groups);
+		
+		$full_where = "";
+		for($i=0; $i<count($groups); $i++)
+		{
+			$access = self::getAccessForGroup($groups[$i]['GROUP_ID']);
+			//var_dump($access);
+			for($j=0; $j<count($access);$j++)
+			{			
+				$target = $access[$j]->__get('where_target');
+				$coll_id = $access[$j]->__get('coll_id');
+				$where_clause = $access[$j]->__get('where_clause');
+				$where_clause = self::process_security_where_clause($where_clause, $user_id);
+				$where_clause = str_replace('where', '', $where_clause);
+				$bitmask = $access[$j]->__get('rights_bitmask');
+				
+				$ind = self::get_ind_collection($coll_id);
+				if(trim($where_clause) == "")
+					$where = "-1";
+				else
+					$where =  "( ".$this->show_string($where_clause)." )";
+				
+				//echo 'target : '.$target.', coll_id : '.$coll_id.', where : '.$where.', bitmask : '.decbin($bitmask).'';
+				$query = '';
+				if($object_type == 'aggregation' && ($target == 'CLASS' || $target == 'ALL'))
+				{
+					$query = "select mr_aggregation_id from "._CLASSIFICATION_SCHEME_VIEW." where (".$where.') and mr_aggregation_id = '.$object_id;
+				}
+				elseif($object_type == 'classification_scheme' && ($target == 'CLASS' || $target == 'ALL'))
+				{
+					$query = "select mr_classification_scheme_id from "._CLASSIFICATION_SCHEME_VIEW." where (".$where.') and mr_classification_scheme_id = '.$object_id;
+				}			
+				else if($object_type == 'doc' && ($target == 'DOC' || $target == 'ALL'))
+				{
+					$query = "select res_id from ".$_SESSION['collections'][$ind]['view']." where (".$where.') and res_id = '.$object_id;
+				}
+				//echo $query;
+				self::connect();
+				if(!empty($query))
+					self::$db->query($query);
+					
+				if(self::$db->nb_result() > 0)
+				{
+					if($bitmask > 0)
+					{
+						$full_bitmask = set_right($full_bitmask, $bitmask);
+					}
+					
+					if(!empty($full_where))
+						$full_where .= " and (".$where.") ";
+					else
+						$full_where .= $where;
+				}
+				self::disconnect();
+			}
+		}
 		
 		// Update security session table
+		$session_security = new session_security();
+		$session_security->setArray(array('user_id' => functions::protect_string_db($user_id), 'session_begin_date' => date("Y-m-d H:i"), 'full_where_clause' => functions::protect_string_db($full_where), 'last_available_bitmask' => $full_bitmask, 'last_object_id' => functions::protect_string_db($object_id))); // TO DO : calculate the session_end_date
 		
+		session_security_controler::save($session_security);
+		
+		return $full_bitmask;
 		/********
 		 * FAKE *
 		 ********/
-		return ADD_RECORD+CREATE_CLASS+CREATE_OTHER_AGREGATION+DATA_MODIFICATION+DELETE_CLASS+DELETE_OTHER_AGREGATION;
+		//return ADD_RECORD+CREATE_CLASS+CREATE_OTHER_AGREGATION+DATA_MODIFICATION+DELETE_CLASS+DELETE_OTHER_AGREGATION;
+		
 	}
 }
 ?>

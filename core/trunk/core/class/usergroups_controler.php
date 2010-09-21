@@ -19,7 +19,7 @@
 */
 
 /**
-* @brief  Contains the controler of the usergroups object (create, save, modify, etc...)
+* @brief  Contains the controler of the usergroup object (create, save, modify, etc...)
 * 
 * 
 * @file
@@ -52,10 +52,10 @@ try {
 
 
 /**
-* @brief  Controler of the usergroups object 
+* @brief  Controler of the usergroup object 
 *
 *<ul>
-*  <li>Get an usergroups object from an id</li>
+*  <li>Get an usergroup object from an id</li>
 *  <li>Save in the database a usergroup</li>
 *  <li>Manage the operation on the usergroups related tables in the database (insert, select, update, delete)</li>
 *</ul>
@@ -65,11 +65,11 @@ class usergroups_controler extends ObjectControler implements ObjectControlerIF
 {
 
 	/**
-	* Returns an usergroups object based on a usegroup identifier
+	* Returns an usergroup object based on a usegroup identifier
 	*
 	* @param  $group_id string  Usergroup identifier
 	* @param  $can_be_disabled bool  if true gets the group even if it is disabled in the database (false by default)
-	* @return usergroups object with properties from the database or null
+	* @return usergroup object with properties from the database or null
 	*/
 	public function get($group_id, $can_be_disabled = false)
 	{	
@@ -79,11 +79,11 @@ class usergroups_controler extends ObjectControler implements ObjectControlerIF
 	}
 	
 	/**
-	* Returns all usergroups (enabled by default) from the database in an array of usergroups objects (ordered by group_desc by default)
+	* Returns all usergroups (enabled by default) from the database in an array of usergroup objects (ordered by group_desc by default)
 	*
 	* @param  $order_str string  Order string passed to the query ("order by group_desc asc" by default)
 	* @param  $enabled_only bool  if true returns only the enabled usergroups, otherwise returns even the disabled (true by default)
-	* @return Array of usergroups objects with properties from the database
+	* @return Array of usergroup objects with properties from the database
 	*/
 	public function getAllUsergroups($order_str = "order by group_desc asc", $enabled_only = true)
 	{
@@ -233,7 +233,7 @@ class usergroups_controler extends ObjectControler implements ObjectControlerIF
 	}
 	
 	/**
-	* Saves in the database a usergroups object 
+	* Saves in the database a usergroup object 
 	*
 	* @param  $group usergroups object to be saved
 	* @return bool true if the save is complete, false otherwise
@@ -254,7 +254,7 @@ class usergroups_controler extends ObjectControler implements ObjectControlerIF
 	}
 	
 	/**
-	* Inserts in the database (usergroups table) a usergroups object
+	* Inserts in the database (usergroups table) a usergroup object
 	*
 	* @param  $group usergroups object
 	* @return bool true if the insertion is complete, false otherwise
@@ -265,9 +265,9 @@ class usergroups_controler extends ObjectControler implements ObjectControlerIF
 	}
 
 	/**
-	* Updates a usergroup in the database (usergroups table) with a usergroups object
+	* Updates a usergroup in the database (usergroups table) with an usergroup object
 	*
-	* @param  $group usergroups object
+	* @param  $group usergroup object
 	* @return bool true if the update is complete, false otherwise
 	*/
 	private function update($group)
@@ -276,9 +276,9 @@ class usergroups_controler extends ObjectControler implements ObjectControlerIF
 	}
 	
 	/**
-	* Deletes in the database (usergroups related tables) a given usergroup (group_id)
+	* Deletes in the database (usergroups related tables) a given usergroup 
 	*
-	* @param  $group usergroups object
+	* @param  $group usergroup object
 	* @return bool true if the deletion is complete, false otherwise
 	*/
 	public function delete($group)
@@ -330,7 +330,7 @@ class usergroups_controler extends ObjectControler implements ObjectControlerIF
 	/**
 	* Disables a given usergroup
 	* 
-	* @param  $group usergroups object
+	* @param  $group usergroup object
 	* @return bool true if the disabling is complete, false otherwise 
 	*/
 	public function disable($group)
@@ -343,7 +343,7 @@ class usergroups_controler extends ObjectControler implements ObjectControlerIF
 	/**
 	* Enables a given usergroup
 	* 
-	* @param  $group usergroups object
+	* @param  $group usergroup object
 	* @return bool true if the enabling is complete, false otherwise 
 	*/
 	public function enable($group)
