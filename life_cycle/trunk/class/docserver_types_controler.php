@@ -25,16 +25,26 @@
 * 
 * @file
 * @author Luc KEULEYAN - BULL
+* @author Laurent Giovannoni
 * @date $date$
 * @version $Revision$
 * @ingroup life_cycle
 */
 
+// To activate de debug mode of the class
+$_ENV['DEBUG'] = false;
+/*
+define("_CODE_SEPARATOR","/");
+define("_CODE_INCREMENT",1);
+*/
+
+// Loads the required class
 
 try {
-	require_once("modules/life_cycle/class/ObjectControlerIF.php");
-	require_once("modules/life_cycle/class/ClassifiedObjectControlerAbstract.php");
-	require_once("modules/life_cycle/class/docserver_types.php");
+	require_once ("modules/life_cycle/class/docserver_types.php");
+	require_once ("modules/life_cycle/life_cycle_tables_definition.php");
+	require_once ("core/class/ObjectControlerAbstract.php");
+	require_once ("core/class/ObjectControlerIF.php");
 } catch (Exception $e){
 	echo $e->getMessage().' // ';
 }
@@ -43,152 +53,198 @@ define ("_DEBUG", false);
 define ("_ADVANCED_DEBUG",false);
 
 /**
- * Class for controling docserver_types objects from database
- * data, and vice-versa.
- * @author boulio
- *
- */
-class docserver_types_controler extends ClassifiedObjectControler implements ObjectControlerIF {
+* @brief  Controler of the docserver_types_controler object 
+*
+*<ul>
+*  <li>Get an docserver_types_controler object from an id</li>
+*  <li>Save in the database a docserver_types_controler</li>
+*  <li>Manage the operation on the docserver_types_controler related tables in the database (insert, select, update, delete)</li>
+*</ul>
+* @ingroup life_cycle
+*/
+class docserver_types_controler extends ObjectControler implements ObjectControlerIF {
 	
 	/**
-	 * Save given object in database: 
-	 * - make an update if object already exists,
-	 * - make an insert if new object.
-	 * Return updated object.
-	 * @param docserver_types $docserver_types
-	 * @return boolean
-	 */
-	public function save($docserver_types){
-		if(self::docserverTypesExists($docserver_types->docserver_type_id)){
-			// Update existing docserver_types
-			return self::update($docserver_types);
-		} else {
-			// Insert new docserver_types
-			return self::insert($docserver_types);
+	* Returns an docserver_types object based on a docserver_types identifier
+	*
+	* @param  $docserver_type_id string  docserver_types identifier
+	* @param  $comp_where string  where clause arguments (must begin with and or or)
+	* @param  $can_be_disabled bool  if true gets the docserver_type even if it is disabled in the database (false by default)
+	* @return docserver_types object with properties from the database or null
+	*/
+	public function get($docserver_type_id, $comp_where = '', $can_be_disabled = false) {
+		self :: set_foolish_ids(array('docserver_type_id'));
+		self :: set_specific_id('docserver_type_id');
+		$docserver_type = self :: advanced_get($docserver_type_id, _DOCSERVER_TYPES_TABLE_NAME);
+
+		if (isset ($docserver_type_id))
+			return $docserver_type;
+		else
+			return null;
+	}
+
+	/**
+	* Saves in the database a docserver_types object 
+	*
+	* @param  $docserver_type docserver_types object to be saved
+	* @return bool true if the save is complete, false otherwise
+	*/
+	public function save($docserver_type) {
+		if (!isset ($docserver_type))
+			return false;
+
+		self :: set_foolish_ids(array('docserver_type_id'));
+		self :: set_specific_id('docserver_type_id');
+		if (self :: docserverTypeExists($docserver_type->docserver_type_id))
+			return self :: update($docserver_type);
+		else
+			return self :: insert($docserver_type);
+	}
+		
+	/**
+	* Inserts in the database (docserver_types table) a docserver_types object
+	*
+	* @param  $docserver_type docserver_types object
+	* @return bool true if the insertion is complete, false otherwise
+	*/
+	private function insert($docserver_type) {
+		return self::advanced_insert($docserver_type);
+	}
+
+	/**
+	* Updates in the database (docserver_types table) a docserver_types object
+	*
+	* @param  $docserver_type docserver_types object
+	* @return bool true if the update is complete, false otherwise
+	*/
+	private function update($docserver_type) {
+		return self::advanced_update($docserver_type);
+	}
+
+	/**
+	* Deletes in the database (docserver_types related tables) a given docserver_types (docserver_type_id)
+	*
+	* @param  $docserver_type_id string  docserver_types identifier
+	* @return bool true if the deletion is complete, false otherwise
+	*/
+	public function delete($docserver_type) {
+		if(!isset($docserver_type) || empty($docserver_type) )
+			return false;
+		
+		if(!self::docserverTypeExists($docserver_type->docserver_type_id))
+			return false;
+				
+		if(self::linkExists($docserver_type->docserver_type_id))
+			return false;
+
+		self::$db=new dbquery();
+		self::$db->connect();
+		$query="delete from "._DOCSERVER_TYPES_TABLE_NAME." where docserver_type_id ='".functions::protect_string_db($docserver_type->docserver_type_id)."'";
+		
+		try {
+			if($_ENV['DEBUG']) {echo $query.' // ';}
+			self::$db->query($query);
+			$ok = true;
+		} catch (Exception $e) {
+			echo _CANNOT_DELETE_CYCLE_ID." ".$docserver_type->docserver_type_id.' // ';
+			$ok = false;
 		}
-	}
-
-///////////////////////////////////////////////////////   INSERT BLOCK	
-	/**
-	 * Add given docserver_types to database.
-	 * @param docserver_types $docserver_types
-	 */
-	private function insert($docserver_types){
-		// Giving automatised values
-		$docserver_types->enabled="Y";
+		self::$db->disconnect();
 		
-		// Inserting object
-		$result = self::advanced_insert($docserver_types);
-		return $result;
+		return $ok;
 	}
 
-///////////////////////////////////////////////////////   UPDATE BLOCK
 	/**
-	 * Update given docserver_types informations in database.
-	 * @param docserver_types $docserver_types
-	 */
-	private function update($docserver_types){
-		// Updating automatised values of given object
-		
-		// Update given docserver_types in database
-		$result = self::advanced_update($docserver_types);
+	* Disables a given docserver_types
+	* 
+	* @param  $docserver_type docserver_types object 
+	* @return bool true if the disabling is complete, false otherwise 
+	*/
+	public function disable($docserver_type) {
+		self :: set_foolish_ids(array('docserver_type_id'));
+		self::set_specific_id('docserver_type_id');
+		if(self::linkExists($docserver_type->docserver_type_id)) {
+			return false;
+		}
+		return self::advanced_disable($docserver_type);
 	}
-
-///////////////////////////////////////////////    GET BLOCK
 	
 	/**
-	 * Get docserver_types with given id.
-	 * Can return null if no corresponding object.
-	 * @param $id Id of docserver_types to get
-	 * @return docserver_types 
-	 */
-	public function get($id) {
-		return self::advanced_get($id,_DOCSERVER_TYPES_TABLE_NAME);
+	* Enables a given docserver_types
+	* 
+	* @param  $docserver_type docserver_types object  
+	* @return bool true if the enabling is complete, false otherwise 
+	*/
+	public function enable($docserver_type) {
+		self :: set_foolish_ids(array('docserver_type_id'));
+		self::set_specific_id('docserver_type_id');
+		return self::advanced_enable($docserver_type);
 	}
 
-///////////////////////////////////////////////////// DELETE BLOCK
-	/**
-	 * Delete given docserver_types from database.
-	 * @param docserver_types $docserver_types
-	 */
-	public function delete($docserver_types){
-		// Deletion of given docserver_types
-		$result = self::advanced_delete($docserver_types);
-		return $result;
+	public function docserverTypeExists($docserver_type_id) {
+		if (!isset ($docserver_type_id) || empty ($docserver_type_id))
+			return false;
+		self :: $db = new dbquery();
+		self :: $db->connect();
+
+		$query = "select docserver_type_id from " . _DOCSERVER_TYPES_TABLE_NAME . " where docserver_type_id = '" . $docserver_type_id . "'";
+
+		try {
+			if ($_ENV['DEBUG']) {
+				echo $query . ' // ';
+			}
+			self :: $db->query($query);
+		} catch (Exception $e) {
+			echo _UNKNOWN . _LC_CYCLE . " " . $docserver_type_id . ' // ';
+		}
+
+		if (self :: $db->nb_result() > 0) {
+			self :: $db->disconnect();
+			return true;
+		}
+		self :: $db->disconnect();
+		return false;
 	}
 
-///////////////////////////////////////////////////// DISABLE BLOCK
-	/**
-	 * Disable given docserver_types from database.
-	 * @param docserver_types $docserver_types
-	 */
-	public function disable($docserver_types){
-		// Disable of given docserver_types
-		$result = self::advanced_disable($docserver_types);
-		return $result;
-	}
-
-///////////////////////////////////////////////////// ENABLE BLOCK
-	/**
-	 * Disable given docserver_types from database.
-	 * @param docserver_types $docserver_types
-	 */
-	public function enable($docserver_types){
-		// Disable of given docserver_types
-		$result = self::advanced_enable($docserver_types);
-		return $result;
-	}
-
-//////////////////////////////////////////////   OTHER PRIVATE BLOCK
-	public function docserverTypesExists($docserver_type_id){
+	public function linkExists($docserver_type_id) {
 		if(!isset($docserver_type_id) || empty($docserver_type_id))
 			return false;
 		self::$db=new dbquery();
 		self::$db->connect();
 		
-		//LKE = BULL ===== SPEC FONC : ==== Cycles de vie : docserver_types (ID1)
-		// Ajout du contrôle pour vérifier l'existence de la combinaison "docserver_type_id"			
-		$query = "select docserver_type_id from "._DOCSERVER_TYPES_TABLE_NAME." where docserver_type_id = '".$docserver_type_id."'";
-					
-		try{
-			if($_ENV['DEBUG']){echo $query.' // ';}
-			self::$db->query($query);
-		} catch (Exception $e){
-			echo _UNKNOWN._DOCSERVER." ".$docserver_type_id.' // ';
-		}
-		
-		if(self::$db->nb_result() > 0){
+		$query = "select docserver_type_id from "._DOCSERVERS_TABLE_NAME." where docserver_type_id = '".$docserver_type_id."'";
+		self::$db->query($query);
+		if (self::$db->nb_result()>0) {
 			self::$db->disconnect();
 			return true;
 		}
 		self::$db->disconnect();
-		return false;
 	}
-	
-	public function getAllId($can_be_disabled = false){
-		self::$db=new dbquery();
-		self::$db->connect();
-		$query = "select docserver_type_id from "._DOCSERVER_TYPES_TABLE_NAME." ";
-		if(!$can_be_disabled)
+
+	public function getAllId($can_be_disabled = false) {
+		self :: $db = new dbquery();
+		self :: $db->connect();
+		$query = "select docserver_type_id from " . _DOCSERVER_TYPES_TABLE_NAME . " ";
+		if (!$can_be_disabled)
 			$query .= " where enabled = 'Y'";
-		try{
-			if($_ENV['DEBUG'])
-				echo $query.' // ';
-			self::$db->query($query);
-		} catch (Exception $e){
-			echo _NO_DOCSERVER_LOCATION.' // ';
+		try {
+			if ($_ENV['DEBUG'])
+				echo $query . ' // ';
+			self :: $db->query($query);
+		} catch (Exception $e) {
+			echo _NO_DOCSERVER_TYPE . ' // ';
 		}
-		if(self::$db->nb_result() > 0){
-			$result = array();
+		if (self :: $db->nb_result() > 0) {
+			$result = array ();
 			$cptId = 0;
-			while($queryResult = self::$db->fetch_object()){
+			while ($queryResult = self :: $db->fetch_object()) {
 				$result[$cptId] = $queryResult->docserver_type_id;
 				$cptId++;
 			}
-			self::$db->disconnect();
+			self :: $db->disconnect();
 			return $result;
 		} else {
-			self::$db->disconnect();
+			self :: $db->disconnect();
 			return null;
 		}
 	}

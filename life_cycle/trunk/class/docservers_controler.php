@@ -1,9 +1,49 @@
 <?php
 
+/*
+*    Copyright 2008,2009,2010 Maarch
+*
+*  This file is part of Maarch Framework.
+*
+*   Maarch Framework is free software: you can redistribute it and/or modify
+*   it under the terms of the GNU General Public License as published by
+*   the Free Software Foundation, either version 3 of the License, or
+*   (at your option) any later version.
+*
+*   Maarch Framework is distributed in the hope that it will be useful,
+*   but WITHOUT ANY WARRANTY; without even the implied warranty of
+*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*   GNU General Public License for more details.
+*
+*   You should have received a copy of the GNU General Public License
+*    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+/**
+* @brief  Contains the docserver Object (herits of the BaseObject class)
+* 
+* 
+* @file
+* @author Luc KEULEYAN - BULL
+* @author Laurent Giovannoni
+* @date $date$
+* @version $Revision$
+* @ingroup life_cycle
+*/
+
+// To activate de debug mode of the class
+$_ENV['DEBUG'] = false;
+/*
+define("_CODE_SEPARATOR","/");
+define("_CODE_INCREMENT",1);
+*/
+
+// Loads the required class
 try {
-	require_once("modules/life_cycle/class/ObjectControlerIF.php");
-	require_once("modules/life_cycle/class/ClassifiedObjectControlerAbstract.php");
 	require_once("modules/life_cycle/class/docservers.php");
+	require_once ("modules/life_cycle/life_cycle_tables_definition.php");
+	require_once ("core/class/ObjectControlerAbstract.php");
+	require_once ("core/class/ObjectControlerIF.php");
 } catch (Exception $e){
 	echo $e->getMessage().' // ';
 }
@@ -13,11 +53,8 @@ define ("_ADVANCED_DEBUG",false);
 
 /**
  * Class for controling docservers objects from database
- * data, and vice-versa.
- * @author boulio
- *
  */
-class docservers_controler extends ClassifiedObjectControler implements ObjectControlerIF {
+class docservers_controler extends ObjectControler implements ObjectControlerIF {
 	
 	/**
 	 * Save given object in database: 
@@ -27,42 +64,47 @@ class docservers_controler extends ClassifiedObjectControler implements ObjectCo
 	 * @param docservers $docservers
 	 * @return boolean
 	 */
-	public function save($docservers){
-		if(self::docserversExists($docservers->docserver_id)){
+	public function save($docserver){
+		if (!isset ($docserver))
+			return false;
+
+		self :: set_foolish_ids(array('docserver_id'));
+		self :: set_specific_id('docserver_id');
+		if(self::docserversExists($docserver->docserver_id)){
 			// Update existing docservers
-			return self::update($docservers);
+			return self::update($docserver);
 		} else {
 			// Insert new docservers
-			return self::insert($docservers);
+			return self::insert($docserver);
 		}
 	}
 
-///////////////////////////////////////////////////////   INSERT BLOCK	
 	/**
-	 * Add given docservers to database.
-	 * @param docservers $docservers
-	 */
-	private function insert($docservers){
+	* Inserts in the database (docservers table) a docserver object
+	*
+	* @param  $docserver docserver object
+	* @return bool true if the insertion is complete, false otherwise
+	*/
+	private function insert($docserver){
 		// Giving automatised values
-		$docservers->enabled="Y";
-		$docservers->creation_date=request::current_datetime();
+		$docserver->enabled="Y";
+		$docserver->creation_date=request::current_datetime();
 		
 		// Inserting object
-		$result = self::advanced_insert($docservers);
+		$result = self::advanced_insert($docserver);
 		return $result;
 	}
-
-///////////////////////////////////////////////////////   UPDATE BLOCK
+	
 	/**
-	 * Update given docservers informations in database.
-	 * @param docservers $docservers
-	 */
-	private function update($docservers){
-		// Updating automatised values of given object
-		
-		// Update given docservers in database
-		$result = self::advanced_update($docservers);
+	* Updates in the database (docserver table) a docservers object
+	*
+	* @param  $docserver docserver object
+	* @return bool true if the update is complete, false otherwise
+	*/
+	private function update($docserver) {
+		return self::advanced_update($docserver);
 	}
+
 
 ///////////////////////////////////////////////    GET BLOCK
 	
@@ -78,35 +120,37 @@ class docservers_controler extends ClassifiedObjectControler implements ObjectCo
 
 ///////////////////////////////////////////////////// DELETE BLOCK
 	/**
-	 * Delete given docservers from database.
+	 * Delete given docserver from database.
 	 * @param docservers $docservers
 	 */
-	public function delete($docservers){
+	public function delete($docserver){
 		// Deletion of given docservers
-		$result = self::advanced_delete($docservers);
+		$result = self::advanced_delete($docserver);
 		return $result;
 	}
 
-///////////////////////////////////////////////////// DISABLE BLOCK
-	/**
-	 * Disable given docservers from database.
-	 * @param docservers $docservers
-	 */
-	public function disable($docservers){
-		// Disable of given docservers
-		$result = self::advanced_disable($docservers);
-		return $result;
+/**
+	* Disables a given docservers
+	* 
+	* @param  $docserver docservers object 
+	* @return bool true if the disabling is complete, false otherwise 
+	*/
+	public function disable($docserver) {
+		self :: set_foolish_ids(array('docserver_id'));
+		self::set_specific_id('docserver_id');
+		return self::advanced_disable($docserver_location);
 	}
 
-///////////////////////////////////////////////////// ENABLE BLOCK
-	/**
-	 * Disable given docservers from database.
-	 * @param docservers $docservers
-	 */
-	public function enable($docservers){
-		// Disable of given docservers
-		$result = self::advanced_enable($docservers);
-		return $result;
+/**
+	* Enables a given docserver
+	* 
+	* @param  $docserver docservers object  
+	* @return bool true if the enabling is complete, false otherwise 
+	*/
+	public function enable($docserver) {
+		self :: set_foolish_ids(array('docserver_id'));
+		self::set_specific_id('docserver_id');
+		return self::advanced_enable($docserver);
 	}
 
 //////////////////////////////////////////////   OTHER PRIVATE BLOCK

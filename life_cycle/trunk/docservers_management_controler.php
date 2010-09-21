@@ -19,17 +19,18 @@
 */
 
 /**
-* @brief  Contains the life_cycle Object (herits of the BaseObject class)
+* @brief  Contains the docserver Object (herits of the BaseObject class)
 * 
 * 
 * @file
 * @author Luc KEULEYAN - BULL
+* @author Laurent Giovannoni
 * @date $date$
 * @version $Revision$
 * @ingroup life_cycle
 */
-
 //lgi +
+
 $sessionName = "docservers";
 $pageName = "docservers_management_controler";
 $tableName = "docservers";

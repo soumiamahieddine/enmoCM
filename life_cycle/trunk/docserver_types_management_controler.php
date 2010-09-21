@@ -24,6 +24,7 @@
 * 
 * @file
 * @author Luc KEULEYAN - BULL
+* @author Laurent Giovannoni
 * @date $date$
 * @version $Revision$
 * @ingroup life_cycle
@@ -197,7 +198,7 @@ function validate_cs_submit($mode){
 	
 	
 	//LKE = BULL ===== SPEC FONC : ==== Cycles de vie : docserver_types (ID1)		
-	if($mode == "add" && docserver_types_controler::docserverTypesExists($docserver_types->docserver_type_id)){	
+	if($mode == "add" && docserver_types_controler::docserverTypeExists($docserver_types->docserver_type_id)){	
 		$_SESSION['error'] = $docserver_types->docserver_type_id." "._ALREADY_EXISTS."<br />";
 	}
 	
@@ -351,14 +352,16 @@ function display_del($docserver_type_id){
 	$docserver_types = docserver_types_controler::get($docserver_type_id);
 	if(isset($docserver_types)){
 		// Deletion
-		docserver_types_controler::delete($docserver_types);
-		$_SESSION['error'] = _DOCSERVER_TYPE_DELETED." ".$docserver_type_id;
-		if($_SESSION['history']['docserver_typesdel'] == "true"){
-			require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
-			$history = new history();
-			$history->add(_DOCSERVER_TYPES_TABLE_NAME, $docserver_type_id, "DEL", _DOCSERVER_TYPE_DELETED." : ".$docserver_type_id, $_SESSION['config']['databasetype']);
+		if(!docserver_types_controler::delete($docserver_types)) {
+			$_SESSION['error'] = _YOU_CANNOT_DELETE." ".$docserver_type_id;
+		} else {
+			$_SESSION['error'] = _DOCSERVER_TYPE_DELETED." ".$docserver_type_id;
+			if($_SESSION['history']['docserver_typesdel'] == "true"){
+				require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
+				$history = new history();
+				$history->add(_DOCSERVER_TYPES_TABLE_NAME, $docserver_type_id, "DEL", _DOCSERVER_TYPE_DELETED." : ".$docserver_type_id, $_SESSION['config']['databasetype']);
+			}
 		}
-		// NOTE: Why not calling display_list ?
 		$pageName = "docserver_types_management_controler";
 		?><script>window.top.location='<?php echo $_SESSION['config']['businessappurl']."index.php?page=".$pageName."&mode=list&module=life_cycle&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what;?>';</script>
 		<?php
@@ -405,14 +408,16 @@ function display_disable($docserver_type_id){
 	$docserver_types = docserver_types_controler::get($docserver_type_id);
 	if(isset($docserver_types)){
 		// Disable
-		docserver_types_controler::disable($docserver_types);
-		$_SESSION['error'] = _DOCSERVER_TYPE_DISABLED." ".$docserver_type_id;
-		if($_SESSION['history']['docserver_typesban'] == "true"){
-			require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
-			$history = new history();
-			$history->add(_DOCSERVER_TYPES_TABLE_NAME, $docserver_type_id, "BAN", _DOCSERVER_TYPE_DISABLED." : ".$docserver_type_id, $_SESSION['config']['databasetype']);
+		if(!docserver_types_controler::disable($docserver_types)) {
+			$_SESSION['error'] = _YOU_CANNOT_DISABLE." ".$docserver_type_id;
+		} else {		
+			$_SESSION['error'] = _DOCSERVER_TYPE_DISABLED." ".$docserver_type_id;
+			if($_SESSION['history']['docserver_typesban'] == "true"){
+				require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
+				$history = new history();
+				$history->add(_DOCSERVER_TYPES_TABLE_NAME, $docserver_type_id, "BAN", _DOCSERVER_TYPE_DISABLED." : ".$docserver_type_id, $_SESSION['config']['databasetype']);
+			}
 		}
-		// NOTE: Why not calling display_list ?
 		$pageName = "docserver_types_management_controler";
 		?><script>window.top.location='<?php echo $_SESSION['config']['businessappurl']."index.php?page=".$pageName."&mode=list&module=life_cycle&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what;?>';</script>
 		<?php

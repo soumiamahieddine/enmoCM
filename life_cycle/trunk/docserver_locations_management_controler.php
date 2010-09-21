@@ -24,6 +24,7 @@
 * 
 * @file
 * @author Luc KEULEYAN - BULL
+* @author Laurent Giovannoni
 * @date $date$
 * @version $Revision$
 * @ingroup life_cycle
@@ -132,7 +133,6 @@ function location_bar_management($mode){
 	$page_id = $page_ids[$mode];
 	$ct=new core_tools();
 	$ct->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
-
 }
 
 /**
@@ -165,7 +165,7 @@ function validate_cs_submit($mode){
 	$status['start']=$_REQUEST['start'];
 	
 	//LKE = BULL ===== SPEC FONC : ==== Cycles de vie : docserver_locations (ID1)
-	if($mode == "add" && docserver_locations_controler::docserverLocationsExists($docserver_locations->docserver_location_id)){	
+	if($mode == "add" && docserver_locations_controler::docserverLocationExists($docserver_locations->docserver_location_id)){	
 		$_SESSION['error'] = $docserver_locations->docserver_location_id." "._ALREADY_EXISTS."<br />";
 	}
 	
@@ -320,14 +320,16 @@ function display_del($docserver_location_id){
 	$docserver_locations = docserver_locations_controler::get($docserver_location_id);
 	if(isset($docserver_locations)){
 		// Deletion
-		docserver_locations_controler::delete($docserver_locations);
-		$_SESSION['error'] = _DOCSERVER_LOCATION_DELETED." ".$docserver_location_id;
-		if($_SESSION['history']['docserver_locationsdel'] == "true"){
-			require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
-			$history = new history();
-			$history->add(_DOCSERVER_LOCATIONS_TABLE_NAME, $docserver_location_id, "DEL", _DOCSERVER_LOCATION_DELETED." : ".$docserver_location_id, $_SESSION['config']['databasetype']);
+		if(!docserver_locations_controler::delete($docserver_locations)) {
+			$_SESSION['error'] = _YOU_CANNOT_DELETE." ".$docserver_location_id;
+		} else {
+			$_SESSION['error'] = _DOCSERVER_LOCATION_DELETED." ".$docserver_location_id;
+			if($_SESSION['history']['docserver_locationsdel'] == "true"){
+				require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
+				$history = new history();
+				$history->add(_DOCSERVER_LOCATIONS_TABLE_NAME, $docserver_location_id, "DEL", _DOCSERVER_LOCATION_DELETED." : ".$docserver_location_id, $_SESSION['config']['databasetype']);
+			}
 		}
-		// NOTE: Why not calling display_list ?
 		$pageName = "docserver_locations_management_controler";
 		?><script>window.top.location='<?php echo $_SESSION['config']['businessappurl']."index.php?page=".$pageName."&mode=list&module=life_cycle&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what;?>';</script>
 		<?php
@@ -346,7 +348,7 @@ function display_del($docserver_location_id){
 function display_enable($docserver_location_id){
 	$docserver_locations = docserver_locations_controler::get($docserver_location_id);
 	if(isset($docserver_locations)){
-		// Disable
+		// Enable
 		docserver_locations_controler::enable($docserver_locations);
 		$_SESSION['error'] = _DOCSERVER_LOCATION_ENABLED." ".$docserver_location_id;
 		if($_SESSION['history']['docserver_locationsallow'] == "true"){
@@ -374,14 +376,16 @@ function display_disable($docserver_location_id){
 	$docserver_locations = docserver_locations_controler::get($docserver_location_id);
 	if(isset($docserver_locations)){
 		// Disable
-		docserver_locations_controler::disable($docserver_locations);
-		$_SESSION['error'] = _DOCSERVER_LOCATION_DISABLED." ".$docserver_location_id;
-		if($_SESSION['history']['docserver_locationsban'] == "true"){
-			require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
-			$history = new history();
-			$history->add(_DOCSERVER_LOCATIONS_TABLE_NAME, $docserver_location_id, "BAN", _DOCSERVER_LOCATION_DISABLED." : ".$docserver_location_id, $_SESSION['config']['databasetype']);
+		if(!docserver_locations_controler::disable($docserver_locations)) {
+			$_SESSION['error'] = _YOU_CANNOT_DISABLE." ".$docserver_location_id;
+		} else {
+			$_SESSION['error'] = _DOCSERVER_LOCATION_DISABLED." ".$docserver_location_id;
+			if($_SESSION['history']['docserver_locationsban'] == "true"){
+				require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
+				$history = new history();
+				$history->add(_DOCSERVER_LOCATIONS_TABLE_NAME, $docserver_location_id, "BAN", _DOCSERVER_LOCATION_DISABLED." : ".$docserver_location_id, $_SESSION['config']['databasetype']);
+			}
 		}
-		// NOTE: Why not calling display_list ?
 		$pageName = "docserver_locations_management_controler";
 		?><script>window.top.location='<?php echo $_SESSION['config']['businessappurl']."index.php?page=".$pageName."&mode=list&module=life_cycle&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what;?>';</script>
 		<?php
