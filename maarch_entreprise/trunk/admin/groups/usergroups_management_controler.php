@@ -2,7 +2,7 @@
 
 $basket_loaded = false;
 $entities_loaded = false;
-
+$func = new functions();
 if(core_tools::is_module_loaded('basket'))
 	$basket_loaded = true;
 if(core_tools::is_module_loaded('entities'))
@@ -229,7 +229,9 @@ function display_list()
 	$select[USERGROUPS_TABLE] = array();
 	array_push($select[USERGROUPS_TABLE],'group_id','group_desc','enabled');
 	$where = "";
-	$what = functions::protect_string_db($_REQUEST['what']);
+	$what ="";
+	if(isset($_REQUEST['what']) && !empty($_REQUEST['what']))
+		$what = $func->protect_string_db($_REQUEST['what']);
 	if($_SESSION['config']['databasetype'] == "POSTGRESQL")
 		$where = "group_desc ilike '".strtolower($what)."%' or group_id ilike '".strtoupper($what)."%' ";
 	else
@@ -396,17 +398,17 @@ function validate_group_submit(){
 	
 	$group = new usergroups();
 	$mode = $_REQUEST['mode'];
-
-	$group->group_id=functions::protect_string_db(functions::wash($_REQUEST['group_id'], "alphanum", _THE_GROUP, 'yes', 0, 32));
+	$func = new functions();
+	$group->group_id=$func->protect_string_db($func->wash($_REQUEST['group_id'], "no", _THE_GROUP, 'yes', 0, 32));
 	
 	if (isset($_REQUEST['desc']) && !empty($_REQUEST['desc']))
 	{
-		$group->group_desc=functions::protect_string_db(functions::wash($_REQUEST['desc'], "no", _GROUP_DESC, 'yes', 0, 255));
+		$group->group_desc=$func->protect_string_db($func->wash($_REQUEST['desc'], "no", _GROUP_DESC, 'yes', 0, 255));
 	}
 	
 	if (count($_SESSION['m_admin']['groups']['security']) < 1  && count($_REQUEST['services']) < 1)
 	{
-		functions::add_error(_THE_GROUP.' '._NO_SECURITY_AND_NO_SERVICES, "");
+		$func->add_error(_THE_GROUP.' '._NO_SECURITY_AND_NO_SERVICES, "");
 	}
 	$status= array();
 	$status['order']=$_REQUEST['order'];
@@ -449,10 +451,10 @@ function validate_group_submit(){
 			if($_SESSION['m_admin']['groups']['security'][$i] <> "")
 			{
 				$values = array('group_id' => $_SESSION['m_admin']['groups']['group_id'],
-								'coll_id' =>functions::protect_string_db($_SESSION['m_admin']['groups']['security'][$i]['COLL_ID']), 
-								'where_clause' => functions::protect_string_db($_SESSION['m_admin']['groups']['security'][$i]['WHERE_CLAUSE']), 
-								'maarch_comment' => functions::protect_string_db($_SESSION['m_admin']['groups']['security'][$i]['COMMENT']), 
-								'where_target' => functions::protect_string_db($_SESSION['m_admin']['groups']['security'][$i]['WHERE_TARGET']));
+								'coll_id' =>$func->protect_string_db($_SESSION['m_admin']['groups']['security'][$i]['COLL_ID']), 
+								'where_clause' => $func->protect_string_db($_SESSION['m_admin']['groups']['security'][$i]['WHERE_CLAUSE']), 
+								'maarch_comment' => $func->protect_string_db($_SESSION['m_admin']['groups']['security'][$i]['COMMENT']), 
+								'where_target' => $func->protect_string_db($_SESSION['m_admin']['groups']['security'][$i]['WHERE_TARGET']));
 								 
 				$bitmask = '0';
 				if(isset($_SESSION['m_admin']['groups']['security'][$i]['RIGHTS_BITMASK']) && !empty($_SESSION['m_admin']['groups']['security'][$i]['RIGHTS_BITMASK']))
@@ -463,11 +465,11 @@ function validate_group_submit(){
 				
 				if(isset($_SESSION['m_admin']['groups']['security'][$i]['START_DATE']) && !empty($_SESSION['m_admin']['groups']['security'][$i]['START_DATE']))
 				{
-					$values['mr_start_date'] = functions::format_date_db($_SESSION['m_admin']['groups']['security'][$i]['START_DATE']);
+					$values['mr_start_date'] = $func->format_date_db($_SESSION['m_admin']['groups']['security'][$i]['START_DATE']);
 				}
 				if(isset($_SESSION['m_admin']['groups']['security'][$i]['STOP_DATE']) && !empty($_SESSION['m_admin']['groups']['security'][$i]['STOP_DATE']))
 				{
-					$values['mr_stop_date'] = functions::format_date_db($_SESSION['m_admin']['groups']['security'][$i]['STOP_DATE']);
+					$values['mr_stop_date'] = $func->format_date_db($_SESSION['m_admin']['groups']['security'][$i]['STOP_DATE']);
 				}
 				
 				$sec = new SecurityObj();

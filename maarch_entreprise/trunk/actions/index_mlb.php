@@ -110,7 +110,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 		$services = array();
 		$db = new dbquery();
 		$db->connect();
-		if(!empty($_SESSION['user']['redirect_groupbasket'][$_SESSION['current_basket']['id']][$id_action]['entities']))
+		
+		if(count($_SESSION['user']['redirect_groupbasket'][$_SESSION['current_basket']['id']][$id_action]['entities']) > 0)
 		{
 			$db->query("select entity_id, entity_label, short_label from ".$_SESSION['tablename']['ent_entities']." where entity_id in (".$_SESSION['user']['redirect_groupbasket'][$_SESSION['current_basket']['id']][$id_action]['entities'].") and enabled= 'Y' order by entity_label");
 			while($res = $db->fetch_object())
