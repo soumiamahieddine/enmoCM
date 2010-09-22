@@ -24,7 +24,8 @@
  * that come directly from the 
  * table of a database.
  * 
- * @author boulio
+ * @author Claire Figueras <dev@maarch.org>
+ * @author Boulio Nicolas
  *
  */
 class BaseObject {
@@ -41,9 +42,17 @@ class BaseObject {
 	 * 
 	 * @param string $name Name of property to set
 	 * @param object $value Value of property $name
+	 * @return boolean True if the set is ok, false otherwise
 	 */
-	public function __set($name, $value){
-		$this->data[$name] = $value;
+	public function __set($name, $value)
+	{
+		if(isset($name))
+		{
+			$this->data[$name] = $value;
+			return true;
+		}
+		return false;
+		
 	}
 
 	/**
