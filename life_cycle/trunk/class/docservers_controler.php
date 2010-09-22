@@ -68,8 +68,9 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
 		if (!isset ($docserver))
 			return false;
 
-		self :: set_foolish_ids(array('docserver_id'));
+		self :: set_foolish_ids(array('docserver_id', 'docserver_type_id', 'coll_id', 'docserver_location_id'));
 		self :: set_specific_id('docserver_id');
+		
 		if(self::docserversExists($docserver->docserver_id)){
 			// Update existing docservers
 			return self::update($docserver);
@@ -89,7 +90,6 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
 		// Giving automatised values
 		$docserver->enabled="Y";
 		$docserver->creation_date=request::current_datetime();
-		
 		// Inserting object
 		$result = self::advanced_insert($docserver);
 		return $result;
@@ -114,8 +114,14 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
 	 * @param $id Id of docservers to get
 	 * @return docservers 
 	 */
-	public function get($id) {
-		return self::advanced_get($id,_DOCSERVERS_TABLE_NAME);
+	public function get($docserver_id) {
+		self :: set_foolish_ids(array('docserver_id'));
+		self :: set_specific_id('docserver_id');
+		$docserver = self :: advanced_get($docserver_id, _DOCSERVERS_TABLE_NAME);
+		if (isset ($docserver_id))
+			return $docserver;
+		else
+			return null;
 	}
 
 ///////////////////////////////////////////////////// DELETE BLOCK
@@ -125,8 +131,28 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
 	 */
 	public function delete($docserver){
 		// Deletion of given docservers
-		$result = self::advanced_delete($docserver);
-		return $result;
+			
+		if(self::adrxLinkExists($docserver->docserver_id))
+			return false;
+			
+		if(self::resxLinkExists($docserver->docserver_id))
+			return false;
+			
+		self::$db=new dbquery();
+		self::$db->connect();
+		$query="delete from "._DOCSERVERS_TABLE_NAME." where docserver_id ='".functions::protect_string_db($docserver->docserver_id)."'";
+		
+		try {
+			if($_ENV['DEBUG']) {echo $query.' // ';}
+			self::$db->query($query);
+			$ok = true;
+		} catch (Exception $e) {
+			echo _CANNOT_DELETE_DOCSERVER_ID." ".$docserver->docserver_id.' // ';
+			$ok = false;
+		}
+		self::$db->disconnect();
+		
+		return $ok;
 	}
 
 /**
@@ -138,7 +164,7 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
 	public function disable($docserver) {
 		self :: set_foolish_ids(array('docserver_id'));
 		self::set_specific_id('docserver_id');
-		return self::advanced_disable($docserver_location);
+		return self::advanced_disable($docserver);
 	}
 
 /**
@@ -178,6 +204,99 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
 		self::$db->disconnect();
 		return false;
 	}
+	
+/** 
+	*Check if the docserver is linked to a ressource
+	*@param docserver_id docservers 
+	*@return bool true if it's linked  
+ */	
+	
+	public function resxLinkExists($docserver_id) {
+		
+		self::$db=new dbquery();
+		self::$db->connect();
+		
+		$query = "select "._ADR_X_TABLE_NAME.".docserver_id from "._RES_X_TABLE_NAME.", "._ADR_X_TABLE_NAME." where "._RES_X_TABLE_NAME.".res_id = "._ADR_X_TABLE_NAME.".res_id
+																						and "._ADR_X_TABLE_NAME.".docserver_id = '".$docserver_id."'";
+		self::$db->query($query);
+		if (self::$db->nb_result()>0) {
+			self::$db->disconnect();
+			return true;
+		}
+		self::$db->disconnect();
+	}
+
+/** 
+	*Check if the docserver is linked to a ressource address
+	*@param docserver_id docservers 
+	*@return bool true if it's linked  
+ */		
+	public function adrxLinkExists($docserver_id) {
+		
+		self::$db=new dbquery();
+		self::$db->connect();
+		
+		$query = "select docserver_id from "._ADR_X_TABLE_NAME." where docserver_id = '".$docserver_id."'";
+		self::$db->query($query);
+		if (self::$db->nb_result()>0) {
+			self::$db->disconnect();
+			return true;
+		}
+		self::$db->disconnect();
+	}
+	
+/**
+ 
+	* Check if two docservers have the same priorities
+	* 
+	* @param $docserver docservers object
+	* @return bool true if the control is ok
+	*/	
+	
+	public function adrPriorityNumberControl($docserver) {
+		if(!isset($docserver) || empty($docserver))
+		return false;
+		self::$db=new dbquery();
+		self::$db->connect();
+		
+		$query = "select adr_priority_number from "._DOCSERVERS_TABLE_NAME." where adr_priority_number = ".$docserver->adr_priority_number.
+																			" AND docserver_type_id = '".functions::protect_string_db($docserver->docserver_type_id)."'".
+																			" AND docserver_id <> '".functions::protect_string_db($docserver->docserver_id)."'";
+		self::$db->query($query);
+		if (self :: $db->nb_result() > 0) {
+			self :: $db->disconnect();
+			return false;
+		}
+		self :: $db->disconnect();
+		return true;
+	}
+	
+/**
+ 
+	* Check if two docservers have the same priorities
+	* 
+	* @param $docserver docservers object
+	* @return bool true if the control is ok
+	*/	
+	
+	public function priorityNumberControl($docserver) {
+		if(!isset($docserver) || empty($docserver))
+		return false;
+		self::$db=new dbquery();
+		self::$db->connect();
+		
+		$query = "select priority_number from "._DOCSERVERS_TABLE_NAME." where priority_number = ".$docserver->priority_number.
+																		" AND docserver_type_id = '".functions::protect_string_db($docserver->docserver_type_id)."'".
+																		" AND docserver_id <> '".functions::protect_string_db($docserver->docserver_id)."'";
+		self::$db->query($query);
+		if (self :: $db->nb_result() > 0) {
+			self :: $db->disconnect();
+			return false;
+		}
+		self :: $db->disconnect();
+		return true;
+	}	
+	
 }
 
 ?>

@@ -105,6 +105,10 @@ elseif($mode == "up" || $mode == "add"){
 					 	<label for="actual_size"><?php echo _ACTUAL_SIZE; ?> : </label>
 						<input name="actual_size" type="text" id="actual_size" value="<?php echo functions::show($_SESSION['m_admin']['docservers']['actual_size']); ?>" readonly="readonly" class="readonly"/>
 					</p>
+					<p>
+					 	<label for="percentage_full"><?php echo _PERCENTAGE_FULL; ?> : </label>
+						<input name="percentage_full" type="text" id="percentage_full" value="<?php echo functions::show(100*(1-($_SESSION['m_admin']['docservers']['actual_size_number']/$_SESSION['m_admin']['docservers']['size_limit_number']))); ?>" readonly="readonly" class="readonly"/>
+					</p>
 					<?php
 				}
 				?>

@@ -208,7 +208,15 @@ function validate_cs_submit($mode){
 	
 	//LKE = BULL ===== SPEC FONC : ==== Cycles de vie : docservers (ID1)
 	if($mode == "add" && docservers_controler::docserversExists($docservers->docserver_id)){	
-		$_SESSION['error'] = $docservers->docserver_id." "._ALREADY_EXISTS."<br />";
+		$_SESSION['error'] .= $docservers->docserver_id." "._ALREADY_EXISTS."<br />";
+	}
+	
+	if(!docservers_controler::adrPriorityNumberControl($docservers)){	
+		$_SESSION['error'] .= $docservers->adr_priority_number." "._ALREADY_EXISTS_FOR_THIS_TYPE_OF_DOCSERVER."<br />";
+	}
+	
+	if(!docservers_controler::priorityNumberControl($docservers)){	
+		$_SESSION['error'] .= $docservers->priority_number." "._ALREADY_EXISTS_FOR_THIS_TYPE_OF_DOCSERVER."<br />";
 	}
 	
 	if(!empty($_SESSION['error'])) {
@@ -289,7 +297,7 @@ function display_list(){
 	init_session();
 	
 	$select[_DOCSERVERS_TABLE_NAME] = array();
-	array_push($select[_DOCSERVERS_TABLE_NAME], $idName, "device_label", "docserver_type_id", "coll_id", "enabled");
+	array_push($select[_DOCSERVERS_TABLE_NAME], $idName, "device_label", "docserver_type_id", "actual_size_number", "coll_id", "enabled");
 	$what = "";
 	$where ="";
 	if(isset($_REQUEST['what']) && !empty($_REQUEST['what'])){
@@ -324,6 +332,8 @@ function display_list(){
 					format_item($item,_DOCSERVER_TYPE,"15","left","left","bottom",true); break;
 				case "coll_id":
 					format_item($item,_COLL_ID,"15","left","left","bottom",true); break;
+				case "actual_size_number":
+					format_item($item,_ACTUAL_SIZE_NUMBER,"5","left","left","bottom",true); break;
 				case "enabled":
 					format_item($item,_ENABLED,"5","left","left","bottom",true); break;
 			}
