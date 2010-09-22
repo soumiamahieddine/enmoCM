@@ -599,6 +599,10 @@ class SecurityControler
 	public function setActions($user_id,$object_id, $object_type)
 	{
 
+		if($user_id == 'superadmin')
+		{
+			return MAX_BITMASK;
+		}
 		// Compute action bitmask 
 		$full_bitmask = 0;
 		$groups = users_controler::getGroups($user_id);
@@ -666,11 +670,6 @@ class SecurityControler
 		session_security_controler::save($session_security);
 		
 		return $full_bitmask;
-		/********
-		 * FAKE *
-		 ********/
-		//return ADD_RECORD+CREATE_CLASS+CREATE_OTHER_AGREGATION+DATA_MODIFICATION+DELETE_CLASS+DELETE_OTHER_AGREGATION;
-		
 	}
 }
 ?>

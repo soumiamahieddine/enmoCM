@@ -213,6 +213,14 @@ CREATE TABLE resgroups
 WITH (OIDS=FALSE);
 ALTER TABLE resgroups OWNER TO postgres;
 
+CREATE SEQUENCE security_security_id_seq
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 20
+  CACHE 1;
+ALTER TABLE security_security_id_seq OWNER TO postgres;
+
 CREATE TABLE "security"
 (
   security_id bigint NOT NULL DEFAULT nextval('security_security_id_seq'::regclass),
@@ -232,13 +240,7 @@ CREATE TABLE "security"
 WITH (OIDS=FALSE);
 ALTER TABLE "security" OWNER TO postgres;
 
-CREATE SEQUENCE security_security_id_seq
-  INCREMENT 1
-  MINVALUE 1
-  MAXVALUE 9223372036854775807
-  START 20
-  CACHE 1;
-ALTER TABLE security_security_id_seq OWNER TO postgres;
+
 
 CREATE TABLE status
 (
