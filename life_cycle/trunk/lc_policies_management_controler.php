@@ -272,17 +272,15 @@ function display_list() {
 		foreach($tab[$i] as &$item) {
 			switch ($item['column']) {
 				case $idName:
-					format_item($item,_ID,"18","left","left","bottom",true); break;
-				case "policy_id":
-					format_item($item,_POLICY_ID,"15","left","left","bottom",true); break;
+					format_item($item,_ID,"20","left","left","bottom",true); break;
 				case "policy_name":
-					format_item($item,_POLICY_NAME,"15","left","left","bottom",true); break;
+					format_item($item,_POLICY_NAME,"20","left","left","bottom",true); break;
 				case "policy_desc":
-					format_item($item,_POLICY_DESC,"15","left","left","bottom",true); break;
+					format_item($item,_POLICY_DESC,"40","left","left","bottom",true); break;
 			}
-		}
-			
+		}	
 	}
+	
 	/**
 	 * - La plus propre : créer un objet "PageList"
 	 * - La plus locale : si cela ne sert que pour admin_list dans docserver_management.php,
@@ -294,8 +292,8 @@ function display_list() {
 	$result['page_name'] = $pageName."&mode=list";
 	$result['page_name_up'] = $pageName."&mode=up";
 	$result['page_name_del'] = $pageName."&mode=del";
-	$result['page_name_val']= $pageName."&mode=allow";
-	$result['page_name_ban'] = $pageName."&mode=ban";
+	//$result['page_name_val']= $pageName."&mode=allow";
+	//$result['page_name_ban'] = $pageName."&mode=ban";
 	$result['page_name_add'] = $pageName."&mode=add";
 	$result['label_add'] = _LC_POLICY_ADDITION;
 	$_SESSION['m_admin']['init'] = true;
@@ -327,57 +325,6 @@ function display_del($policy_id) {
 		$pageName = "lc_policies_management_controler";
 		?>
 		<script type="text/javascript">window.top.location='<?php echo $_SESSION['config']['businessappurl']."index.php?page=".$pageName."&mode=list&module=life_cycle";?>';</script>
-		<?php
-		exit;
-	} else {
-		// Error management
-		$_SESSION['error'] = _LC_POLICY.' '._UNKNOWN;
-	}
-}
-
-/**
- * allow given docserver if exists
- * @param unknown_type $policy_id
- */
-function display_enable($policy_id) {
-	$lc_policies = lc_policies_controler::get($policy_id);
-	if(isset($lc_policies)) {
-		// Disable
-		lc_policies_controler::enable($lc_policies);
-		$_SESSION['error'] = _LC_POLICY_ENABLED." ".$policy_id;
-		if($_SESSION['history']['lc_policiesallow'] == "true") {
-			require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
-			$history = new history();
-			$history->add(_LC_POLICIES_TABLE_NAME, $policy_id, "VAL",_LC_POLICY_ENABLED." : ".$policy_id, $_SESSION['config']['databasetype']);
-		}
-		$pageName = "lc_policies_management_controler";
-		?><script type="text/javascript">window.top.location='<?php echo $_SESSION['config']['businessappurl']."index.php?page=".$pageName."&mode=list&module=life_cycle";?>';</script>
-		<?php
-		exit;
-	} else {
-		// Error management
-		$_SESSION['error'] = _LC_POLICY.' '._UNKNOWN;
-	}
-}
-
-/**
- * ban given docserver if exists
- * @param unknown_type $policy_id
- */
-function display_disable($policy_id) {
-	$lc_policies = lc_policies_controler::get($policy_id);
-	if(isset($lc_policies)) {
-		// Disable
-		lc_policies_controler::disable($lc_policies);
-		$_SESSION['error'] = _LC_POLICY_DISABLED." ".$policy_id;
-		if($_SESSION['history']['lc_policiesban'] == "true") {
-			require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
-			$history = new history();
-			$history->add(_LC_POLICIES_TABLE_NAME, $policy_id, "BAN", _LC_POLICY_DISABLED." : ".$policy_id, $_SESSION['config']['databasetype']);
-		}
-		// NOTE: Why not calling display_list ?
-		$pageName = "lc_policies_management_controler";
-		?><script type="text/javascript">window.top.location='<?php echo $_SESSION['config']['businessappurl']."index.php?page=".$pageName."&mode=list&module=life_cycle";?>';</script>
 		<?php
 		exit;
 	} else {

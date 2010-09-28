@@ -259,7 +259,7 @@ function display_list() {
 	init_session();
 	
 	$select[_LC_CYCLES_TABLE_NAME] = array();
-	array_push($select[_LC_CYCLES_TABLE_NAME], $idName, "policy_id", "cycle_desc", "sequence_number", "where_clause", "validation_mode");
+	array_push($select[_LC_CYCLES_TABLE_NAME], $idName, "policy_id", "cycle_desc", "sequence_number");
 	$what = "";
 	$where ="";
 	if(isset($_REQUEST['what']) && !empty($_REQUEST['what'])) {
@@ -288,11 +288,13 @@ function display_list() {
 		foreach($tab[$i] as &$item) {
 			switch ($item['column']) {
 				case $idName:
-					format_item($item,_ID,"18","left","left","bottom",true); break;
+					format_item($item,_ID,"15","left","left","bottom",true); break;
 				case "policy_id":
 					format_item($item,_POLICY_ID,"15","left","left","bottom",true); break;
 				case "cycle_desc":
-					format_item($item,_CYCLE_DESC,"15","left","left","bottom",true); break;
+					format_item($item,_CYCLE_DESC,"40","left","left","bottom",true); break;
+				case "sequence_number":
+					format_item($item,_SEQUENCE_NUMBER,"15","left","left","bottom",true); break;
 			}
 		}
 	}
@@ -302,8 +304,8 @@ function display_list() {
 	$result['page_name'] = $pageName."&mode=list";
 	$result['page_name_up'] = $pageName."&mode=up";
 	$result['page_name_del'] = $pageName."&mode=del";
-	$result['page_name_val']= $pageName."&mode=allow";
-	$result['page_name_ban'] = $pageName."&mode=ban";
+	//$result['page_name_val']= $pageName."&mode=allow";
+	//$result['page_name_ban'] = $pageName."&mode=ban";
 	$result['page_name_add'] = $pageName."&mode=add";
 	$result['label_add'] = _LC_CYCLE_ADDITION;
 	$_SESSION['m_admin']['init'] = true;
@@ -319,7 +321,6 @@ function display_list() {
  * @param unknown_type $cycle_id
  */
 function display_del($cycle_id) {
-
 	$lc_cycles = lc_cycles_controler::get($cycle_id);
 	if(isset($lc_cycles)) {
 		// Deletion
@@ -343,57 +344,6 @@ function display_del($cycle_id) {
 	}
 }
 
-/**
- * allow given docserver if exists
- * @param unknown_type $cycle_id
- */
-function display_enable($cycle_id) {
-	$lc_cycles = lc_cycles_controler::get($cycle_id);
-	if(isset($lc_cycles)) {
-		// Disable
-		lc_cycles_controler::enable($lc_cycles);
-		$_SESSION['error'] = _LC_CYCLE_ENABLED." ".$cycle_id;
-		if($_SESSION['history']['lc_cyclesallow'] == "true") {
-			require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
-			$history = new history();
-			$history->add(_LC_CYCLES_TABLE_NAME, $cycle_id, "VAL",_LC_CYCLE_ENABLED." : ".$cycle_id, $_SESSION['config']['databasetype']);
-		}
-		// NOTE: Why not calling display_list ?
-		$pageName = "lc_cycles_management_controler";
-		?><script>window.top.location='<?php echo $_SESSION['config']['businessappurl']."index.php?page=".$pageName."&mode=list&module=life_cycle";?>';</script>
-		<?php
-		exit;
-	} else {
-		// Error management
-		$_SESSION['error'] = _LC_CYCLE.' '._UNKNOWN;
-	}
-}
-
-/**
- * ban given docserver if exists
- * @param unknown_type $cycle_id
- */
-function display_disable($cycle_id) {
-	$lc_cycles = lc_cycles_controler::get($cycle_id);
-	if(isset($lc_cycles)) {
-		// Disable
-		lc_cycles_controler::disable($lc_cycles);
-		$_SESSION['error'] = _LC_CYCLE_DISABLED." ".$cycle_id;
-		if($_SESSION['history']['lc_cyclesban'] == "true") {
-			require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
-			$history = new history();
-			$history->add(_LC_CYCLES_TABLE_NAME, $cycle_id, "BAN", _LC_CYCLE_DISABLED." : ".$cycle_id, $_SESSION['config']['databasetype']);
-		}
-		// NOTE: Why not calling display_list ?
-		$pageName = "lc_cycles_management_controler";
-		?><script>window.top.location='<?php echo $_SESSION['config']['businessappurl']."index.php?page=".$pageName."&mode=list&module=life_cycle";?>';</script>
-		<?php
-		exit;
-	} else {
-		// Error management
-		$_SESSION['error'] = _LC_CYCLE.' '._UNKNOWN;
-	}
-}
 
 /**
  * Format given item with given values, according with HTML formating.
