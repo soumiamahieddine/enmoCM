@@ -276,7 +276,7 @@ class lc_cycles_controler extends ObjectControler implements ObjectControlerIF {
 		self::$db=new dbquery();
 		self::$db->connect();
 		if(!empty($where_clause)) {
-			$res = self::$db->query("select count(*) from res_x where ".$where_clause, true);
+			$res = self::$db->query("select res_id from ".$_SESSION['collections'][0]['view']." where ".$where_clause, true);
 		}
 		if(!$res) {
 			$res = false;
