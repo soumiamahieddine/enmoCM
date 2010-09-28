@@ -248,7 +248,7 @@ class lc_cycles_controler extends ObjectControler implements ObjectControlerIF {
 				echo $query . ' // ';
 			self :: $db->query($query);
 		} catch (Exception $e) {
-			echo _NO_LC_CYCLE_LOCATION . ' // ';
+			echo _NO_LC_CYCLE . ' // ';
 		}
 		if (self :: $db->nb_result() > 0) {
 			$result = array ();

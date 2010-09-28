@@ -20,7 +20,7 @@
 */
 
 /**
-* @brief  Contains the users Object (herits of the BaseObject class)
+* @brief  Contains the lc_cycles Object (herits of the BaseObject class)
 * 
 * 
 * @file
