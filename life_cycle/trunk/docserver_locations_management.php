@@ -62,21 +62,24 @@ elseif($mode == "up" || $mode == "add"){
 				 	<label for="id"><?php echo _DOCSERVER_LOCATION_ID; ?> : </label>
 					<input name="id" type="text"  id="id" value="<?php echo functions::show($_SESSION['m_admin']['docserver_locations']['docserver_location_id']); ?>" <?php if($mode == "up") echo " readonly='readonly' class='readonly'";?>/>
 				</p>
-				<p>
+				<p class = "bulle">
 				 	<label for="ipv4"><?php echo _IPV4; ?> : </label>
 					<input name="ipv4" type="text"  id="ipv4" value="<?php echo functions::show($_SESSION['m_admin']['docserver_locations']['ipv4']); ?>"/>
+					<span>e.g: 127.0.0.1</span>
 				</p>
-	           	<p>
+	           	<p class = "bulle">
 				 	<label for="ipv6"><?php echo _IPV6; ?> : </label>
 					<input name="ipv6" type="text"  id="ipv6" value="<?php echo functions::show($_SESSION['m_admin']['docserver_locations']['ipv6']); ?>"/>
+					<span>e.g: 2001:db8:0:85a3::ac1f:8001</span>
 				</p>
 				<p>
 				 	<label for="net_domain"><?php echo _NET_DOMAIN; ?> : </label>
 					<input name="net_domain" type="text"  id="net_domain" value="<?php echo functions::show($_SESSION['m_admin']['docserver_locations']['net_domain']); ?>"/>
 				</p>
-				<p>
+				<p class = "bulle">
 				 	<label for="mask"><?php echo _MASK; ?> : </label>
 					<input name="mask" type="text"  id="mask" value="<?php echo functions::show($_SESSION['m_admin']['docserver_locations']['mask']); ?>"/>
+					<span>e.g: 255.255.255.0</span>
 				</p>
 				<p class="buttons">
 					<?php

@@ -44,6 +44,9 @@ try {
 	require_once ("modules/life_cycle/life_cycle_tables_definition.php");
 	require_once ("core/class/ObjectControlerAbstract.php");
 	require_once ("core/class/ObjectControlerIF.php");
+	//require_once("apps/maarch_entreprise/tools/Net_Ping-2.4.5/Ping.php");
+	//set_include_path("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."tools".DIRECTORY_SEPARATOR.PATH_SEPARATOR.get_include_path());
+	//require_once('Net_Ping-2.4.5'.DIRECTORY_SEPARATOR.'Ping.php');
 } catch (Exception $e){
 	echo $e->getMessage().' // ';
 }
@@ -219,6 +222,59 @@ class docserver_locations_controler extends ObjectControler implements ObjectCon
 		}
 		self::$db->disconnect();
 	}
+	
+	/** 
+	*Check if the docserver location ipV4 is valid
+	*@param ipv4 docservers 
+	*@return bool true if it's valid  
+	*/		
+	public function ipv4Control($ipv4) {
+		if(empty($ipv4))
+		return true;
+		$ipv4 = htmlspecialchars($ipv4);	
+		if(preg_match("/^([1-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])" .
+			"(\.([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])){3}$/", $ipv4)){		
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+	
+	
+	/** 
+	*Check if the docserver location ipV6 is valid
+	*@param ipv6 docservers 
+	*@return bool true if it's valid  
+	*/	
+	public function ipv6Control($ipv6) {
+		if(empty($ipv6))
+			return true;
+		$ipv6 = htmlspecialchars($ipv6);
+		$patternIpv6 = '/^((([0-9A-Fa-f]{1,4}:){7}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}:[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){5}:([0-9A-Fa-f]{1,4}:)?[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){4}:([0-9A-Fa-f]{1,4}:){0,2}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){3}:([0-9A-Fa-f]{1,4}:){0,3}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){2}:([0-9A-Fa-f]{1,4}:){0,4}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(([0-9A-Fa-f]{1,4}:){0,5}:((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(::([0-9A-Fa-f]{1,4}:){0,5}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|([0-9A-Fa-f]{1,4}::([0-9A-Fa-f]{1,4}:){0,5}[0-9A-Fa-f]{1,4})|(::([0-9A-Fa-f]{1,4}:){0,6}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){1,7}:))$/';		
+		if(preg_match($patternIpv6, $ipv6)){		
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+	
+	
+	/** 
+	*Check if the docserver location mask is valid
+	*@param mask docservers 
+	*@return bool true if it's valid  
+	*/	
+	public function maskControl($mask) {
+		$mask = htmlspecialchars($mask);
+		if(preg_match("/^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}0$/", $mask)){		
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
 
 	public function getAllId($can_be_disabled = false) {
 		self :: $db = new dbquery();
@@ -247,6 +303,24 @@ class docserver_locations_controler extends ObjectControler implements ObjectCon
 			return null;
 		}
 	}
+	
+/**Ping the ipv4
+ * @param ipv4 docservers
+ * return bool true if valid
+ * 	
+ \*
+	/*public function pingIpv4 ($ipv4) {
+		/*$ping = Net_Ping::factory();
+		if(PEAR::isError($ping)) {
+			echo $ping->getMessage();
+			return false;
+		} else {
+			$ping->setArgs(array('count' => 2));
+			var_dump($ping->ping($ipv4));
+			return true;
+		}
+	
+	}*/
 }
 
 ?>

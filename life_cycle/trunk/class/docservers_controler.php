@@ -297,6 +297,49 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
 		return true;
 	}	
 	
+/**
+ 
+	* Check if the docserver actual size is less than the size limit
+	* 
+	* @param $docserver docservers object
+	* @return bool true if the control is ok
+	*/	
+	
+	public function actualSizeNumberControl($actual_size_number, $size_limit_number) {
+		$size_limit_number = floatval($size_limit_number);
+		$actual_size_number = floatval($actual_size_number);
+	
+		if($size_limit_number < $actual_size_number){
+			return true;
+		}
+		else{
+			var_dump($actual_size_number); 
+			var_dump($size_limit_number);exit;
+			return false;
+		}
+	}	
+	
+/**
+ 
+	* Check if the docserver size has not reached the limit
+	* 
+	* @param $docserver docservers object
+	* @return bool true if the control is ok
+	*/	
+	
+	public function sizeLimitControl($docserver) {
+		$docserver->size_limit_number = floatval($docserver->size_limit_number);
+		$maxsizelimit = floatval($_SESSION['lifeCycleFeatures']['DOCSERVERS']['MAX_SIZE_LIMIT']);
+		if(!isset($docserver) || empty($docserver))
+			return false;
+		
+		if($docserver->size_limit_number < $maxsizelimit){
+			return false;
+		}
+		else{
+			return true;
+		}
+	}	
 }
 
 ?>

@@ -58,8 +58,8 @@ elseif($mode == "up" || $mode == "add"){
 				<input type="hidden" name="order_field" id="order_field" value="<?php echo $_REQUEST['order_field'];?>" />
 				<input type="hidden" name="what" id="what" value="<?php echo $_REQUEST['what'];?>" />
 				<input type="hidden" name="start" id="start" value="<?php echo $_REQUEST['start'];?>" />
-				<input type="hidden" name="size_limit_hidden" id="size_limit_hidden" value="<?php echo $_SESSION['m_admin']['docservers']['size_limit'];?>"/>
-				<input type="hidden" name="actual_size_hidden" id="actual_size_hidden" value="<?php echo $_SESSION['m_admin']['docservers']['actual_size'];?>"/>
+				<input type="hidden" name="size_limit_hidden" id="size_limit_hidden" value="<?php echo $_SESSION['m_admin']['docservers']['size_limit_number'];?>"/>
+				<input type="hidden" name="actual_size_hidden" id="actual_size_hidden" value="<?php echo $_SESSION['m_admin']['docservers']['actual_size_number'];?>"/>
 				<p>
 				 	<label for="id"><?php echo _DOCSERVER_ID; ?> : </label>
 					<input name="id" type="text"  id="id" value="<?php echo functions::show($_SESSION['m_admin']['docservers']['docserver_id']); ?>" <?php if($mode == "up") echo " readonly='readonly' class='readonly'";?>/>
@@ -102,12 +102,12 @@ elseif($mode == "up" || $mode == "add"){
 				if($mode == "up"){
 					?>
 					<p>
-					 	<label for="actual_size"><?php echo _ACTUAL_SIZE; ?> : </label>
-						<input name="actual_size" type="text" id="actual_size" value="<?php echo functions::show($_SESSION['m_admin']['docservers']['actual_size']); ?>" readonly="readonly" class="readonly"/>
+					 	<label for="actual_size_number"><?php echo _ACTUAL_SIZE; ?> : </label>
+						<input name="actual_size_number" type="text" id="actual_size_number" value="<?php echo functions::show($_SESSION['m_admin']['docservers']['actual_size_number']); ?>" readonly="readonly" class="readonly"/>
 					</p>
 					<p>
 					 	<label for="percentage_full"><?php echo _PERCENTAGE_FULL; ?> : </label>
-						<input name="percentage_full" type="text" id="percentage_full" value="<?php echo functions::show(100*(1-($_SESSION['m_admin']['docservers']['actual_size_number']/$_SESSION['m_admin']['docservers']['size_limit_number']))); ?>" readonly="readonly" class="readonly"/>
+						<input name="percentage_full" type="text" id="percentage_full" value="<?php echo functions::show((100*$_SESSION['m_admin']['docservers']['actual_size_number'])/$_SESSION['m_admin']['docservers']['size_limit_number']); ?>%" readonly="readonly" class="readonly"/>
 					</p>
 					<?php
 				}
@@ -222,9 +222,9 @@ elseif($mode == "up" || $mode == "add"){
 				</p>
 			</form>
 			<script type="text/javascript">
-				//on load
+				//on load in GB
 				$('size_limit_number').value = $('size_limit_number').value / (1000 * 1000 * 1000)
-				$('actual_size').value = $('actual_size').value / (1000 * 1000 * 1000)
+				$('actual_size_number').value = $('actual_size_number').value / (1000 * 1000 * 1000)
 			</script>
 			<?php
 		}

@@ -154,9 +154,24 @@ function validate_cs_submit($mode){
 		$docserver_locations->docserver_location_id=$f->protect_string_db($f->wash($_REQUEST['id'], "nick", _THE_DOCSERVER_LOCATION_ID." ", "yes", 0, 32));
 	}
 	$docserver_locations->ipv4=$f->protect_string_db($f->wash($_REQUEST['ipv4'], "no", _IPV4." ", 'yes', 0, 255));
+	if(!docserver_locations_controler::ipv4Control($docserver_locations->ipv4)){	
+		$_SESSION['error'] .= _IP_V4_FORMAT_NOT_VALID."<br>";
+	}
+	/*if(!docserver_locations_controler::pingIpv4($docserver_locations->ipv4)){
+		$_SESSION['error'] .= _IP_V4_ADRESS_NOT_VALID."<br>";
+	}*/
+		
 	$docserver_locations->ipv6=$f->protect_string_db($f->wash($_REQUEST['ipv6'], "no", _IPV6." ", 'no', 0, 255));
+	if(!docserver_locations_controler::ipv6Control($docserver_locations->ipv6)){	
+		$_SESSION['error'] .= _IP_V6_NOT_VALID."<br>";
+	}
+	
 	$docserver_locations->net_domain=$f->protect_string_db($f->wash($_REQUEST['net_domain'], "no", _NET_DOMAIN." ", 'no', 0, 32));
 	$docserver_locations->mask=$f->protect_string_db($f->wash($_REQUEST['mask'], "no", _MASK." ", 'no', 0, 255));
+	if(!docserver_locations_controler::maskControl($docserver_locations->mask)){	
+		$_SESSION['error'] .= _MASK_NOT_VALID."<br>";
+	}
+	
 
 	$status= array();
 	$status['order']=$_REQUEST['order'];

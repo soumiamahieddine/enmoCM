@@ -171,9 +171,18 @@ function validate_cs_submit($mode){
 	} else {
 		$docservers->is_readonly=true;
 	}
+	
 	if(isset($_REQUEST['size_limit_hidden']) && !empty($_REQUEST['size_limit_hidden'])){
 		$docservers->size_limit_number=$f->protect_string_db($f->wash($_REQUEST['size_limit_hidden'], "no", _SIZE_LIMIT." ", 'yes', 0, 255));
+		if(docservers_controler::sizeLimitControl($docservers)){	
+			$_SESSION['error'] .= _SIZE_LIMIT_UNAPPROACHABLE."<br>";
+		}
+		/*if(docservers_controler::actualSizeNumberControl($docservers->actal_size_number], $docservers->size_limit_number)){	
+			$_SESSION['error'] .= _SIZE_LIMIT_LESS_THAN_ACTUAL_SIZE."<br>";
+		}*/
 	}
+	
+	// add control on $_SESSION['lifeCycleFeatures']['DOCSERVERS']['MAX_SIZE_LIMIT']
 	$docservers->path_template=$f->protect_string_db($f->wash($_REQUEST['path_template'], "no", _PATH_TEMPLATE." ", 'yes', 0, 255));
 	if(!is_dir($docservers->path_template)){
 		$_SESSION['error'] .= _PATH_OF_DOCSERVER_UNAPPROACHABLE."<br>";
@@ -297,7 +306,7 @@ function display_list(){
 	init_session();
 	
 	$select[_DOCSERVERS_TABLE_NAME] = array();
-	array_push($select[_DOCSERVERS_TABLE_NAME], $idName, "device_label", "docserver_type_id", "actual_size_number", "coll_id", "enabled");
+	array_push($select[_DOCSERVERS_TABLE_NAME], $idName, "device_label", "docserver_type_id", "size_limit_number", "actual_size_number", "coll_id", "enabled");
 	$what = "";
 	$where ="";
 	if(isset($_REQUEST['what']) && !empty($_REQUEST['what'])){
@@ -332,8 +341,13 @@ function display_list(){
 					format_item($item,_DOCSERVER_TYPE,"15","left","left","bottom",true); break;
 				case "coll_id":
 					format_item($item,_COLL_ID,"15","left","left","bottom",true); break;
+				case "size_limit_number":
+					$sizeLimit = $item['value'];
+					format_item($item,_SIZE_LIMIT_NUMBER,"5","left","left","bottom",false); break;
 				case "actual_size_number":
-					format_item($item,_ACTUAL_SIZE_NUMBER,"5","left","left","bottom",true); break;
+					$item['value'] = number_format(($item['value']*100)/$sizeLimit, 0);
+					$item['value'] .= "%";
+					format_item($item,_PERCENTAGE_FULL,"5","left","left","bottom",true); break;
 				case "enabled":
 					format_item($item,_ENABLED,"5","left","left","bottom",true); break;
 			}
