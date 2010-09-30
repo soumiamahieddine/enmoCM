@@ -1,4 +1,5 @@
 <?php
+
 /*
 *   Copyright 2010 Maarch
 *
@@ -18,7 +19,7 @@
 *   along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-/*
+/**
 * @brief life cycle Administration summary Page
 *
 * life cycle Administration summary Page
@@ -70,34 +71,4 @@ unset($_SESSION['m_admin']);
 				<strong><?php  echo _MANAGE_LC_CYCLE_STEPS;?></strong>
 		</div>
 	</div>
-	<div class="admin_item" id="admin_docservers_locations" title="<?php  echo _MANAGE_DOCSERVERS_LOCATIONS;?>" onclick="window.top.location='<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=docserver_locations_management_controler&mode=list&module=life_cycle';">
-		<div class="sum_margin" >
-				<strong><?php  echo _MANAGE_DOCSERVERS_LOCATIONS;?></strong>
-		</div>
-	</div>
-	<div class="admin_item" id="admin_docservers" title="<?php  echo _MANAGE_DOCSERVERS;?>" onclick="window.top.location='<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=docservers_management_controler&mode=list&module=life_cycle';">
-		<div class="sum_margin" >
-				<strong><?php  echo _MANAGE_DOCSERVERS;?></strong>
-		</div>
-	</div>
-	<div class="admin_item" id="admin_docserver_types" title="<?php  echo _MANAGE_DOCSERVER_TYPES;?>" onclick="window.top.location='<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=docserver_types_management_controler&mode=list&module=life_cycle';">
-		<div class="sum_margin" >
-				<strong><?php  echo _MANAGE_DOCSERVER_TYPES;?></strong>
-		</div>
-	</div>
-    <!--<div class="admin_item" id="admin_folders" title="<?php  echo _READ_AGGREGATION;?>" onclick="window.top.location='<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=read_aggregation_controler&module=moreq';">
-        <div class="sum_margin" >
-				<strong><?php  echo _READ_AGGREGATION;?></strong>
-		</div>
-    </div>
-    <div class="admin_item" id="admin_folders" title="<?php  echo _UPDATE_AGGREGATION;?>" onclick="window.top.location='<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=update_aggregation_controler&module=moreq';">
-        <div class="sum_margin" >
-				<strong><?php  echo _UPDATE_AGGREGATION;?></strong>
-		</div>
-    </div>
-    <div class="admin_item" id="admin_folders" title="<?php  echo _DELETE_AGGREGATION;?>" onclick="window.top.location='<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=delete_aggregation_controler&module=moreq';">
-        <div class="sum_margin" >
-				<strong><?php  echo _DELETE_AGGREGATION;?></strong>
-		</div>
-    </div>-->
 </div>

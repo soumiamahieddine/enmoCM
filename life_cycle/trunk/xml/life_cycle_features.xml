@@ -1,40 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ROOT>
-	<DOCSERVERS>
-		<OAIS>
-			<MODE>NONE</MODE>
-			<MODE>AIP_1</MODE>
-		</OAIS>
-		<SIGN>
-			<MODE>NONE</MODE>
-			<MODE>EJBCA</MODE>
-		</SIGN>
-		<COMPRESS>
-			<MODE>NONE</MODE>
-			<MODE>ZIP</MODE>
-			<MODE>TARZIP</MODE>
-			<MODE>XZ</MODE>
-		</COMPRESS>
-		<META_TEMPLATE>
-			<MODE>NONE</MODE>
-			<MODE>OAIS_std.dtd</MODE>
-			<MODE>OAIS_maarch.dtd</MODE>
-			<MODE>OAIS_test.dtd</MODE>
-		</META_TEMPLATE>
-		<LOG_TEMPLATE>
-			<MODE>NONE</MODE>
-			<MODE>log_std.dtd</MODE>
-			<MODE>log_maarch.dtd</MODE>
-			<MODE>log_test.dtd</MODE>
-		</LOG_TEMPLATE>
-		<SIGNATURE_MODE>
-			<MODE>NONE</MODE>
-			<MODE>MD5</MODE>
-			<MODE>SHA256</MODE>
-			<MODE>SHA512</MODE>
-		</SIGNATURE_MODE>
-		<MAX_SIZE_LIMIT>100</MAX_SIZE_LIMIT> <!-- size in GB -->
-	</DOCSERVERS>
 	<LIFE_CYCLE>
 		<PROCESS>
 			<MODE>NONE</MODE>

@@ -11,21 +11,10 @@
 		<lc_cycles>lc_cycles</lc_cycles>
 		<lc_cycle_steps>lc_cycle_steps</lc_cycle_steps>
 		<lc_stack>lc_stack</lc_stack>
-		<docserver_types>docserver_types</docserver_types>
-		<docserver_locations>docserver_locations</docserver_locations>
 	</TABLENAME>
 	<HISTORY>
 		<lcadd>true</lcadd>
 		<lcup>true</lcup>
 		<lcdel>true</lcdel>
-		<docserversadd>true</docserversadd>
-		<docserversdel>true</docserversdel>
-		<docserversallow>true</docserversallow>
-		<docserversban>true</docserversban>
-		<!--<docserversclose>true</docserversclose>-->
-		<docserverslocationsadd>true</docserverslocationsadd>
-		<docserverslocationsdel>true</docserverslocationsdel>
-		<docserverslocationsallow>true</docserverslocationsallow>
-		<docserverslocationsban>true</docserverslocationsban>
 	</HISTORY>
 </root>
