@@ -177,9 +177,9 @@ function validate_cs_submit($mode){
 		if(docservers_controler::sizeLimitControl($docservers)){	
 			$_SESSION['error'] .= _SIZE_LIMIT_UNAPPROACHABLE."<br>";
 		}
-		/*if(docservers_controler::actualSizeNumberControl($docservers->actal_size_number], $docservers->size_limit_number)){	
+		if(docservers_controler::actualSizeNumberControl($docservers)){	
 			$_SESSION['error'] .= _SIZE_LIMIT_LESS_THAN_ACTUAL_SIZE."<br>";
-		}*/
+		}
 	}
 	
 	// add control on $_SESSION['lifeCycleFeatures']['DOCSERVERS']['MAX_SIZE_LIMIT']
@@ -221,11 +221,11 @@ function validate_cs_submit($mode){
 	}
 	
 	if(!docservers_controler::adrPriorityNumberControl($docservers)){	
-		$_SESSION['error'] .= $docservers->adr_priority_number." "._ALREADY_EXISTS_FOR_THIS_TYPE_OF_DOCSERVER."<br />";
+		$_SESSION['error'] .= $docservers->adr_priority_number." OR "._ALREADY_EXISTS_FOR_THIS_TYPE_OF_DOCSERVER."<br />";
 	}
 	
 	if(!docservers_controler::priorityNumberControl($docservers)){	
-		$_SESSION['error'] .= $docservers->priority_number." "._ALREADY_EXISTS_FOR_THIS_TYPE_OF_DOCSERVER."<br />";
+		$_SESSION['error'] .= $docservers->priority_number." OR "._ALREADY_EXISTS_FOR_THIS_TYPE_OF_DOCSERVER."<br />";
 	}
 	
 	if(!empty($_SESSION['error'])) {
@@ -386,20 +386,22 @@ function display_del($docserver_id){
 	$docservers = docservers_controler::get($docserver_id);
 	if(isset($docservers)){
 		// Deletion
-		docservers_controler::delete($docservers);
-		$_SESSION['error'] = _DOCSERVER_DELETED." ".$docserver_id;
-		if($_SESSION['history']['docserversdel'] == "true"){
-			require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
-			$history = new history();
-			$history->add(_DOCSERVERS_TABLE_NAME, $docserver_id, "DEL", _DOCSERVER_DELETED." : ".$docserver_id, $_SESSION['config']['databasetype']);
+		if(!docservers_controler::delete($docservers)) {
+			$_SESSION['error'] = _YOU_CANNOT_DELETE." ".$docserver_id;
+		} else {
+			$_SESSION['error'] = _DOCSERVER_DELETED." ".$docserver_id;
+			if($_SESSION['history']['docserversdel'] == "true"){
+				require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
+				$history = new history();
+				$history->add(_DOCSERVERS_TABLE_NAME, $docserver_id, "DEL", _DOCSERVER_DELETED." : ".$docserver_id, $_SESSION['config']['databasetype']);
+			}
 		}
 		// NOTE: Why not calling display_list ?
 		$pageName = "docservers_management_controler";
 		?><script>window.top.location='<?php echo $_SESSION['config']['businessappurl']."index.php?page=".$pageName."&mode=list&module=life_cycle&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what;?>';</script>
 		<?php
 		exit;
-	} 
-	else{
+	} else {
 		// Error management
 		$_SESSION['error'] = _DOCSERVER.' '._UNKNOWN;
 	}

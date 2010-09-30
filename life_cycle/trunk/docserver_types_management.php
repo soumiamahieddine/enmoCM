@@ -68,8 +68,8 @@ elseif($mode == "up" || $mode == "add"){
 				</p>
 	           	<p>
 	                <label><?php echo _IS_CONTAINER; ?> : </label>
-	                <input type="radio" class="check" name="is_container" value="true" <?php if($_SESSION['m_admin']['docserver_types']['is_container']){?> checked="checked"<?php } ?> /><?php echo _YES;?>
-	                <input type="radio" class="check" name="is_container" value="false" <?php if(!$_SESSION['m_admin']['docserver_types']['is_container'] || $_SESSION['m_admin']['docserver_types']['is_container'] == ''){?> checked="checked"<?php } ?> /><?php echo _NO;?>
+	                <input type="radio" class="check" name="is_container" id="is_container" value="true" <?php if($_SESSION['m_admin']['docserver_types']['is_container']){?> checked="checked"<?php } ?> onclick="hide_index(false, 'container_max_number');"/><?php echo _YES;?>
+	                <input type="radio" class="check" name="is_container" id="is_container" value="false" <?php if(!$_SESSION['m_admin']['docserver_types']['is_container'] || $_SESSION['m_admin']['docserver_types']['is_container'] == ''){?> checked="checked"<?php } ?> onclick="hide_index(true, 'container_max_number');"/><?php echo _NO;?>
 	            </p>
 				<p>
 				 	<label for="container_max_number"><?php echo _CONTAINER_MAX_NUMBER; ?> : </label>
@@ -77,15 +77,14 @@ elseif($mode == "up" || $mode == "add"){
 				</p>
 				<p>
 	                <label><?php echo _IS_COMPRESSED; ?> : </label>
-	                <input type="radio" class="check" name="is_compressed" value="true" <?php if($_SESSION['m_admin']['docserver_types']['is_compressed']){?> checked="checked"<?php } ?> /><?php echo _YES;?>
-	                <input type="radio" class="check" name="is_compressed" value="false" <?php if(!$_SESSION['m_admin']['docserver_types']['is_compressed'] || $_SESSION['m_admin']['docserver_types']['is_compressed'] == ''){?> checked="checked"<?php } ?> /><?php echo _NO;?>
+	                <input type="radio" class="check" name="is_compressed" id="is_compressed" value="true" <?php if($_SESSION['m_admin']['docserver_types']['is_compressed']){?> checked="checked"<?php } ?> onclick="hide_index(false, 'compression_mode');"/><?php echo _YES;?>
+	                <input type="radio" class="check" name="is_compressed" id="is_compressed" value="false" <?php if(!$_SESSION['m_admin']['docserver_types']['is_compressed'] || $_SESSION['m_admin']['docserver_types']['is_compressed'] == ''){?> checked="checked"<?php } ?> onclick="hide_index(true, 'compression_mode');"/><?php echo _NO;?>
 	            </p>
 				<p>
 					<label for="compression_mode"><?php echo _COMPRESS_MODE; ?> : </label>
 					<select name="compression_mode" id="compression_mode">
-						<option value=""><?php echo _CHOOSE_COMPRESS_MODE;?></option>
 						<?php
-						for($cptCompressMode=0;$cptCompressMode<count($_SESSION['lifeCycleFeatures']['DOCSERVERS']['COMPRESS']['MODE']);$cptCompressMode++){
+						for($cptCompressMode=1;$cptCompressMode<count($_SESSION['lifeCycleFeatures']['DOCSERVERS']['COMPRESS']['MODE']);$cptCompressMode++){
 							?>
 							<option value="<?php echo $_SESSION['lifeCycleFeatures']['DOCSERVERS']['COMPRESS']['MODE'][$cptCompressMode];?>" <?php if($_SESSION['m_admin']['docserver_types']['compression_mode'] == $_SESSION['lifeCycleFeatures']['DOCSERVERS']['COMPRESS']['MODE'][$cptCompressMode]) { echo 'selected="selected"';}?>><?php echo $_SESSION['lifeCycleFeatures']['DOCSERVERS']['COMPRESS']['MODE'][$cptCompressMode];?></option>
 							<?php
@@ -95,15 +94,14 @@ elseif($mode == "up" || $mode == "add"){
 				</p>
 				<p>
 	                <label><?php echo _IS_META; ?> : </label>
-	                <input type="radio" class="check" name="is_meta" value="true" <?php if($_SESSION['m_admin']['docserver_types']['is_meta']){?> checked="checked"<?php } ?> /><?php echo _YES;?>
-	                <input type="radio" class="check" name="is_meta" value="false" <?php if(!$_SESSION['m_admin']['docserver_types']['is_meta'] || $_SESSION['m_admin']['docserver_types']['is_meta'] == ''){?> checked="checked"<?php } ?> /><?php echo _NO;?>
+	                <input type="radio" class="check" name="is_meta" id="is_meta" value="true" <?php if($_SESSION['m_admin']['docserver_types']['is_meta']){?> checked="checked"<?php } ?> onclick="hide_index(false, 'meta_template');"/><?php echo _YES;?>
+	                <input type="radio" class="check" name="is_meta" id="is_meta" value="false"  <?php if(!$_SESSION['m_admin']['docserver_types']['is_meta'] || $_SESSION['m_admin']['docserver_types']['is_meta'] == ''){?> checked="checked"<?php } ?> onclick="hide_index(true, 'meta_template');"/><?php echo _NO;?>
 	            </p>
 				<p>
 					<label for="meta_template"><?php echo _META_TEMPLATE; ?> : </label>
 					<select name="meta_template" id="meta_template">
-						<option value=""><?php echo _CHOOSE_META_TEMPLATE;?></option>
 						<?php
-						for($cptCompressMode=0;$cptCompressMode<count($_SESSION['lifeCycleFeatures']['DOCSERVERS']['META_TEMPLATE']['MODE']);$cptCompressMode++){
+						for($cptCompressMode=1;$cptCompressMode<count($_SESSION['lifeCycleFeatures']['DOCSERVERS']['META_TEMPLATE']['MODE']);$cptCompressMode++){
 							?>
 							<option value="<?php echo $_SESSION['lifeCycleFeatures']['DOCSERVERS']['META_TEMPLATE']['MODE'][$cptCompressMode];?>" <?php if($_SESSION['m_admin']['docserver_types']['meta_template'] == $_SESSION['lifeCycleFeatures']['DOCSERVERS']['META_TEMPLATE']['MODE'][$cptCompressMode]) { echo 'selected="selected"';}?>><?php echo $_SESSION['lifeCycleFeatures']['DOCSERVERS']['META_TEMPLATE']['MODE'][$cptCompressMode];?></option>
 							<?php
@@ -113,36 +111,34 @@ elseif($mode == "up" || $mode == "add"){
 				</p>
 				<p>
 	                <label><?php echo _IS_LOGGED; ?> : </label>
-	                <input type="radio" class="check" name="is_logged" value="true" <?php if($_SESSION['m_admin']['docserver_types']['is_logged']){?> checked="checked"<?php } ?> /><?php echo _YES;?>
-	                <input type="radio" class="check" name="is_logged" value="false" <?php if(!$_SESSION['m_admin']['docserver_types']['is_logged'] || $_SESSION['m_admin']['docserver_types']['is_logged'] == ''){?> checked="checked"<?php } ?> /><?php echo _NO;?>
+	                <input type="radio" class="check" name="is_logged" id="is_logged" value="true" <?php if($_SESSION['m_admin']['docserver_types']['is_logged']){?> checked="checked"<?php } ?> onclick="hide_index(false, 'log_template');"/><?php echo _YES;?>
+	                <input type="radio" class="check" name="is_logged" id="is_logged" value="false" <?php if(!$_SESSION['m_admin']['docserver_types']['is_logged'] || $_SESSION['m_admin']['docserver_types']['is_logged'] == ''){?> checked="checked"<?php } ?> onclick="hide_index(true, 'log_template');"/><?php echo _NO;?>
 	            </p>
 				<p>
 					<label for="log_template"><?php echo _LOG_TEMPLATE; ?> : </label>
 					<select name="log_template" id="log_template">
-						<option value=""><?php echo _CHOOSE_LOG_TEMPLATE;?></option>
 						<?php
-						for($cptCompressMode=0;$cptCompressMode<count($_SESSION['lifeCycleFeatures']['DOCSERVERS']['LOG_TEMPLATE']['MODE']);$cptCompressMode++){
-							?>
-							<option value="<?php echo $_SESSION['lifeCycleFeatures']['DOCSERVERS']['LOG_TEMPLATE']['MODE'][$cptCompressMode];?>" <?php if($_SESSION['m_admin']['docserver_types']['log_template'] == $_SESSION['lifeCycleFeatures']['DOCSERVERS']['LOG_TEMPLATE']['MODE'][$cptCompressMode]) { echo 'selected="selected"';}?>><?php echo $_SESSION['lifeCycleFeatures']['DOCSERVERS']['LOG_TEMPLATE']['MODE'][$cptCompressMode];?></option>
-							<?php
-						}
+							for($cptCompressMode=1;$cptCompressMode<count($_SESSION['lifeCycleFeatures']['DOCSERVERS']['LOG_TEMPLATE']['MODE']);$cptCompressMode++){
+								?>
+								<option value="<?php echo $_SESSION['lifeCycleFeatures']['DOCSERVERS']['LOG_TEMPLATE']['MODE'][$cptCompressMode];?>" <?php if($_SESSION['m_admin']['docserver_types']['log_template'] == $_SESSION['lifeCycleFeatures']['DOCSERVERS']['LOG_TEMPLATE']['MODE'][$cptCompressMode]) { echo 'selected="selected"';}?>><?php echo $_SESSION['lifeCycleFeatures']['DOCSERVERS']['LOG_TEMPLATE']['MODE'][$cptCompressMode];?></option>
+								<?php
+							}
 						?>
 					</select>
 				</p>
 				<p>
 	                <label><?php echo _IS_SIGNED; ?> : </label>
-	                <input type="radio" class="check" name="is_signed" value="true" <?php if($_SESSION['m_admin']['docserver_types']['is_signed']){?> checked="checked"<?php } ?> /><?php echo _YES;?>
-	                <input type="radio" class="check" name="is_signed" value="false" <?php if(!$_SESSION['m_admin']['docserver_types']['is_signed'] || $_SESSION['m_admin']['docserver_types']['is_signed'] == ''){?> checked="checked"<?php } ?> /><?php echo _NO;?>
+	                <input type="radio" class="check" name="is_signed" id="is_signed" value="true" <?php if($_SESSION['m_admin']['docserver_types']['is_signed']){?> checked="checked"<?php } ?> onclick="hide_index(false, 'signature_mode');"/><?php echo _YES;?>
+	                <input type="radio" class="check" name="is_signed" id="is_signed" value="false" <?php if(!$_SESSION['m_admin']['docserver_types']['is_signed'] || $_SESSION['m_admin']['docserver_types']['is_signed'] == ''){?> checked="checked"<?php } ?> onclick="hide_index(true, 'signature_mode');"/><?php echo _NO;?>
 	            </p>
 				<p>
 					<label for="signature_mode"><?php echo _SIGNATURE_MODE; ?> : </label>
 					<select name="signature_mode" id="signature_mode">
-						<option value=""><?php echo _CHOOSE_SIGNATURE_MODE;?></option>
 						<?php
-						for($cptCompressMode=0;$cptCompressMode<count($_SESSION['lifeCycleFeatures']['DOCSERVERS']['SIGNATURE_MODE']['MODE']);$cptCompressMode++){
+						for($cptCompressMode=1;$cptCompressMode<count($_SESSION['lifeCycleFeatures']['DOCSERVERS']['SIGNATURE_MODE']['MODE']);$cptCompressMode++){
 							?>
 							<option value="<?php echo $_SESSION['lifeCycleFeatures']['DOCSERVERS']['SIGNATURE_MODE']['MODE'][$cptCompressMode];?>" <?php if($_SESSION['m_admin']['docserver_types']['signature_mode'] == $_SESSION['lifeCycleFeatures']['DOCSERVERS']['SIGNATURE_MODE']['MODE'][$cptCompressMode]) { echo 'selected="selected"';}?>><?php echo $_SESSION['lifeCycleFeatures']['DOCSERVERS']['SIGNATURE_MODE']['MODE'][$cptCompressMode];?></option>
-							<?php
+						<?php
 						}
 						?>
 					</select>
@@ -163,6 +159,36 @@ elseif($mode == "up" || $mode == "add"){
 	               <input type="button" class="button"  name="cancel" value="<?php echo _CANCEL; ?>" onclick="javascript:window.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=docserver_types_management_controler&amp;module=life_cycle&amp;mode=list';"/>
 				</p>
 			</form>
+			<script type="text/javascript">
+				//on load hide inputs
+				<?php
+				if(!$_SESSION['m_admin']['docserver_types']['is_container']) {
+					?>
+					hide_index(true, 'container_max_number');
+					<?php
+				}
+				if(!$_SESSION['m_admin']['docserver_types']['is_compressed']) {
+					?>
+					hide_index(true, 'compression_mode');
+					<?php
+				}
+				if(!$_SESSION['m_admin']['docserver_types']['is_meta']) {
+					?>
+					hide_index(true, 'meta_template');
+					<?php
+				}
+				if(!$_SESSION['m_admin']['docserver_types']['is_logged']) {
+					?>
+					hide_index(true, 'log_template');
+					<?php
+				}
+				if(!$_SESSION['m_admin']['docserver_types']['is_signed']) {
+					?>
+					hide_index(true, 'signature_mode');
+					<?php
+				}
+				?>
+			</script>
 			<?php
 		}
 		?>

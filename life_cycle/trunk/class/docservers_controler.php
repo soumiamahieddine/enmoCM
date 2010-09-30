@@ -44,6 +44,7 @@ try {
 	require_once ("modules/life_cycle/life_cycle_tables_definition.php");
 	require_once ("core/class/ObjectControlerAbstract.php");
 	require_once ("core/class/ObjectControlerIF.php");
+	require_once ("core/class/class_security.php");
 } catch (Exception $e){
 	echo $e->getMessage().' // ';
 }
@@ -72,8 +73,8 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
 		self :: set_specific_id('docserver_id');
 		
 		if(self::docserversExists($docserver->docserver_id)){
-			// Update existing docservers
-			return self::update($docserver);
+				// Update existing docservers
+				return self::update($docserver);
 		} else {
 			// Insert new docservers
 			return self::insert($docserver);
@@ -131,11 +132,16 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
 	 */
 	public function delete($docserver){
 		// Deletion of given docservers
+		if(!isset($docserver) || empty($docserver) )
+			return false;
+		
+		if(!self::docserversExists($docserver->docserver_id))
+				return false;
 			
 		if(self::adrxLinkExists($docserver->docserver_id))
 			return false;
-			
-		if(self::resxLinkExists($docserver->docserver_id))
+		
+		if(self::resxLinkExists($docserver->docserver_id, $docserver->coll_id))
 			return false;
 			
 		self::$db=new dbquery();
@@ -205,19 +211,19 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
 		return false;
 	}
 	
+	
 /** 
 	*Check if the docserver is linked to a ressource
 	*@param docserver_id docservers 
 	*@return bool true if it's linked  
  */	
 	
-	public function resxLinkExists($docserver_id) {
+	public function resxLinkExists($docserver_id, $coll_id) {
 		
 		self::$db=new dbquery();
 		self::$db->connect();
-		
-		$query = "select "._ADR_X_TABLE_NAME.".docserver_id from "._RES_X_TABLE_NAME.", "._ADR_X_TABLE_NAME." where "._RES_X_TABLE_NAME.".res_id = "._ADR_X_TABLE_NAME.".res_id
-																						and "._ADR_X_TABLE_NAME.".docserver_id = '".$docserver_id."'";
+		$tableName = security::retrieve_table_from_coll($coll_id);
+		$query = "select docserver_id from ".$tableName." where docserver_id = '".$docserver_id."'";
 		self::$db->query($query);
 		if (self::$db->nb_result()>0) {
 			self::$db->disconnect();
@@ -254,10 +260,11 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
 	*/	
 	
 	public function adrPriorityNumberControl($docserver) {
-		if(!isset($docserver) || empty($docserver))
+		if(!isset($docserver) || empty($docserver) || empty($docserver->adr_priority_number))
 		return false;
 		self::$db=new dbquery();
 		self::$db->connect();
+		
 		
 		$query = "select adr_priority_number from "._DOCSERVERS_TABLE_NAME." where adr_priority_number = ".$docserver->adr_priority_number.
 																			" AND docserver_type_id = '".functions::protect_string_db($docserver->docserver_type_id)."'".
@@ -280,7 +287,7 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
 	*/	
 	
 	public function priorityNumberControl($docserver) {
-		if(!isset($docserver) || empty($docserver))
+		if(!isset($docserver) || empty($docserver) || empty($docserver->priority_number))
 		return false;
 		self::$db=new dbquery();
 		self::$db->connect();
@@ -305,16 +312,25 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
 	* @return bool true if the control is ok
 	*/	
 	
-	public function actualSizeNumberControl($actual_size_number, $size_limit_number) {
-		$size_limit_number = floatval($size_limit_number);
-		$actual_size_number = floatval($actual_size_number);
+	public function actualSizeNumberControl($docserver) {
+		if(!isset($docserver) || empty($docserver))
+		return false;
+		
+		$size_limit_number = floatval($docserver->size_limit_number);
+		$size_limit_number = $size_limit_number*1000*1000*1000;
+		self::$db=new dbquery();
+		self::$db->connect();
+		
+		$query = "select actual_size_number from " ._DOCSERVERS_TABLE_NAME." where docserver_id = '".$docserver->docserver_id."'";
+		self::$db->query($query);
+		$queryResult = self :: $db->fetch_object();
+		
+		$actual_size_number = floatval($queryResult->actual_size_number);
 	
 		if($size_limit_number < $actual_size_number){
 			return true;
 		}
 		else{
-			var_dump($actual_size_number); 
-			var_dump($size_limit_number);exit;
 			return false;
 		}
 	}	
@@ -329,7 +345,7 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
 	
 	public function sizeLimitControl($docserver) {
 		$docserver->size_limit_number = floatval($docserver->size_limit_number);
-		$maxsizelimit = floatval($_SESSION['lifeCycleFeatures']['DOCSERVERS']['MAX_SIZE_LIMIT']);
+		$maxsizelimit = floatval($_SESSION['lifeCycleFeatures']['DOCSERVERS']['MAX_SIZE_LIMIT'])*1000*1000*1000;
 		if(!isset($docserver) || empty($docserver))
 			return false;
 		

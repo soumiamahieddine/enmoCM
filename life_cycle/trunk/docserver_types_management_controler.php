@@ -156,40 +156,50 @@ function validate_cs_submit($mode){
 	}
 	$docserver_types->docserver_type_label=$f->protect_string_db($f->wash($_REQUEST['docserver_type_label'], "no", _DOCSERVER_TYPE_LABEL." ", 'yes', 0, 255));
 	$docserver_types->is_container=$f->protect_string_db($f->wash($_REQUEST['is_container'], "no", _IS_CONTAINER." ", 'yes', 0, '5'));
-	if($docserver_types->is_container == "false"){
+	if($docserver_types->is_container == "false") {
 		$docserver_types->is_container=false;
+		$docserver_types->container_max_number = 0;
 	} else {
 		$docserver_types->is_container=true;
+		$docserver_types->container_max_number=$f->protect_string_db($f->wash($_REQUEST['container_max_number'], "no", _CONTAINER_MAX_NUMBER." ", 'yes', 0, 6));
 	}
-	$docserver_types->container_max_number=$f->protect_string_db($f->wash($_REQUEST['container_max_number'], "no", _CONTAINER_MAX_NUMBER." ", 'yes', 0, 6));
+	
 	$docserver_types->is_compressed=$f->protect_string_db($f->wash($_REQUEST['is_compressed'], "no", _IS_COMPRESSED." ", 'yes', 0, '5'));
-	if($docserver_types->is_compressed == "false"){
+	if($docserver_types->is_compressed == "false") {
 		$docserver_types->is_compressed=false;
+		$docserver_types->compression_mode = "NONE";
 	} else {
 		$docserver_types->is_compressed=true;
+		$docserver_types->compression_mode=$f->protect_string_db($f->wash($_REQUEST['compression_mode'], "no", _COMPRESSION_MODE." ", 'yes', 0, 32));
 	}
-	$docserver_types->compression_mode=$f->protect_string_db($f->wash($_REQUEST['compression_mode'], "no", _COMPRESSION_MODE." ", 'yes', 0, 32));
+	
 	$docserver_types->is_meta=$f->protect_string_db($f->wash($_REQUEST['is_meta'], "no", _IS_META." ", 'yes', 0, '5'));
-	if($docserver_types->is_meta == "false"){
+	if($docserver_types->is_meta == "false") {
 		$docserver_types->is_meta=false;
+		$docserver_types->meta_template = "NONE";
 	} else {
 		$docserver_types->is_meta=true;
+		$docserver_types->meta_template=$f->protect_string_db($f->wash($_REQUEST['meta_template'], "no", _META_TEMPLATE." ", 'yes', 0, 32));
 	}
-	$docserver_types->meta_template=$f->protect_string_db($f->wash($_REQUEST['meta_template'], "no", _META_TEMPLATE." ", 'yes', 0, 32));
+	
 	$docserver_types->is_logged=$f->protect_string_db($f->wash($_REQUEST['is_logged'], "no", _IS_LOGGED." ", 'yes', 0, '5'));
-	if($docserver_types->is_logged == "false"){
+	if($docserver_types->is_logged == "false") {
 		$docserver_types->is_logged=false;
+		$docserver_types->log_template = "NONE";
 	} else {
 		$docserver_types->is_logged=true;
+		$docserver_types->log_template=$f->protect_string_db($f->wash($_REQUEST['log_template'], "no", _LOG_TEMPLATE." ", 'yes', 0, 32));
 	}
-	$docserver_types->log_template=$f->protect_string_db($f->wash($_REQUEST['log_template'], "no", _LOG_TEMPLATE." ", 'yes', 0, 32));
+	
 	$docserver_types->is_signed=$f->protect_string_db($f->wash($_REQUEST['is_signed'], "no", _IS_SIGNED." ", 'yes', 0, '5'));
-	if($docserver_types->is_signed == "false"){
+	if($docserver_types->is_signed == "false") {
 		$docserver_types->is_signed=false;
+		$docserver_types->signature_mode = "NONE";
 	} else {
 		$docserver_types->is_signed=true;
+		$docserver_types->signature_mode=$f->protect_string_db($f->wash($_REQUEST['signature_mode'], "no", _SIGNATURE_MODE." ", 'yes', 0, 32));
 	}
-	$docserver_types->signature_mode=$f->protect_string_db($f->wash($_REQUEST['signature_mode'], "no", _SIGNATURE_MODE." ", 'yes', 0, 32));
+	
 	$status= array();
 	$status['order']=$_REQUEST['order'];
 	$status['order_field']=$_REQUEST['order_field'];
@@ -312,9 +322,19 @@ function display_list(){
 				case "docserver_type_label":
 					format_item($item,_DOCSERVER_TYPE_LABEL,"15","left","left","bottom",true); break;
 				case "is_container":
-					format_item($item,_IS_CONTAINER,"15","left","left","bottom",true); break;
+					if($item['value'] == "t") {
+						$item['value'] = "<img src='".$_SESSION['config']['businessappurl']."static.php?filename=picto_stat_enabled.gif' alt='"._CONTAINER."' title='"._CONTAINER."'/>";
+					} elseif($item['value'] == "f") {
+						$item['value'] = "<img src='".$_SESSION['config']['businessappurl']."static.php?filename=picto_stat_disabled.gif' alt='"._NOT_CONTAINER."' title='"._NOT_CONTAINER."'/>";
+					}
+					format_item($item,_IS_CONTAINER,"5","left","left","bottom",true); break;	
 				case "is_compressed":
-					format_item($item,_IS_COMPRESSED,"15","left","left","bottom",true); break;
+					if($item['value'] == "t") {
+						$item['value'] = "<img src='".$_SESSION['config']['businessappurl']."static.php?filename=picto_stat_enabled.gif' alt='"._COMPRESSED."' title='"._COMPRESSED."'/>";
+					} elseif($item['value'] == "f") {
+						$item['value'] = "<img src='".$_SESSION['config']['businessappurl']."static.php?filename=picto_stat_disabled.gif' alt='"._NOT_COMPRESSED."' title='"._NOT_COMPRESSED."'/>";
+					}
+					format_item($item,_IS_COMPRESSED,"5","left","left","bottom",true); break;
 				case "enabled":
 					format_item($item,_ENABLED,"5","left","left","bottom",true); break;
 			}
@@ -452,6 +472,7 @@ function format_item(&$item,$label,$size,$label_align,$align,$valign,$show){
 	$item["valign"]=$valign;
 	$item["show"]=$show;
 	$item["order"]=$item['column'];	
+	
 }
 
 /**

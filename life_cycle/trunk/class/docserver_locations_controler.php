@@ -44,9 +44,8 @@ try {
 	require_once ("modules/life_cycle/life_cycle_tables_definition.php");
 	require_once ("core/class/ObjectControlerAbstract.php");
 	require_once ("core/class/ObjectControlerIF.php");
-	//require_once("apps/maarch_entreprise/tools/Net_Ping-2.4.5/Ping.php");
-	//set_include_path("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."tools".DIRECTORY_SEPARATOR.PATH_SEPARATOR.get_include_path());
-	//require_once('Net_Ping-2.4.5'.DIRECTORY_SEPARATOR.'Ping.php');
+	require_once("apps/maarch_entreprise/tools/Net_Ping-2.4.5/Ping.php");
+	
 } catch (Exception $e){
 	echo $e->getMessage().' // ';
 }
@@ -267,6 +266,8 @@ class docserver_locations_controler extends ObjectControler implements ObjectCon
 	*@return bool true if it's valid  
 	*/	
 	public function maskControl($mask) {
+		if(empty($mask))
+			return true;
 		$mask = htmlspecialchars($mask);
 		if(preg_match("/^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}0$/", $mask)){		
 			return true;
@@ -308,19 +309,22 @@ class docserver_locations_controler extends ObjectControler implements ObjectCon
  * @param ipv4 docservers
  * return bool true if valid
  * 	
- \*
-	/*public function pingIpv4 ($ipv4) {
-		/*$ping = Net_Ping::factory();
+ */
+	public function pingIpv4 ($ipv4) {
+		$ping = Net_Ping::factory();
 		if(PEAR::isError($ping)) {
-			echo $ping->getMessage();
 			return false;
 		} else {
-			$ping->setArgs(array('count' => 2));
-			var_dump($ping->ping($ipv4));
-			return true;
+			$response = $ping->ping($ipv4);
+			if($response->getReceived() == $response->getTransmitted()) {
+				//print_r($response)."<br>";
+				return true;
+			} else {
+				return false;
+			}
 		}
 	
-	}*/
+	}
 }
 
 ?>

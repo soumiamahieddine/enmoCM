@@ -157,7 +157,8 @@ function validate_cs_submit($mode){
 	if(!docserver_locations_controler::ipv4Control($docserver_locations->ipv4)){	
 		$_SESSION['error'] .= _IP_V4_FORMAT_NOT_VALID."<br>";
 	}
-	/*if(!docserver_locations_controler::pingIpv4($docserver_locations->ipv4)){
+	/*
+	if(!docserver_locations_controler::pingIpv4($docserver_locations->ipv4)){
 		$_SESSION['error'] .= _IP_V4_ADRESS_NOT_VALID."<br>";
 	}*/
 		

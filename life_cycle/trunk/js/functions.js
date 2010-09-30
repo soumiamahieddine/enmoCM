@@ -46,6 +46,18 @@ function saveSizeInBytes()
 	else
 	{
 		window.alert('WRONG FORMAT');
+	}	
+}
+
+function hide_index(mode_hide, display_val) {
+	var displayVal = $(display_val);
+	if(mode_hide == true) {
+		if(displayVal) {
+			Element.setStyle(displayVal, {display : 'none'});
+		}
+	} else {
+		if(displayVal) {
+			Element.setStyle(displayVal, {display : 'block'});
+		}
 	}
-	
 }

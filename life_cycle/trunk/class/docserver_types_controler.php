@@ -134,7 +134,10 @@ class docserver_types_controler extends ObjectControler implements ObjectControl
 		if(!self::docserverTypeExists($docserver_type->docserver_type_id))
 			return false;
 				
-		if(self::linkExists($docserver_type->docserver_type_id))
+		if(self::docserverLinkExists($docserver_type->docserver_type_id))
+			return false;
+			
+		if(self::lcCycleStepsLinkExists($docserver_type->docserver_type_id))
 			return false;
 
 		self::$db=new dbquery();
@@ -163,7 +166,11 @@ class docserver_types_controler extends ObjectControler implements ObjectControl
 	public function disable($docserver_type) {
 		self :: set_foolish_ids(array('docserver_type_id'));
 		self::set_specific_id('docserver_type_id');
-		if(self::linkExists($docserver_type->docserver_type_id)) {
+		
+		if(self::docserverLinkExists($docserver_type->docserver_type_id)) { 
+			return false;
+		}
+		if(self::lcCycleStepsLinkExists($docserver_type->docserver_type_id)) { 
 			return false;
 		}
 		return self::advanced_disable($docserver_type);
@@ -206,13 +213,28 @@ class docserver_types_controler extends ObjectControler implements ObjectControl
 		return false;
 	}
 
-	public function linkExists($docserver_type_id) {
+	public function docserverLinkExists($docserver_type_id) {
 		if(!isset($docserver_type_id) || empty($docserver_type_id))
 			return false;
 		self::$db=new dbquery();
 		self::$db->connect();
 		
 		$query = "select docserver_type_id from "._DOCSERVERS_TABLE_NAME." where docserver_type_id = '".$docserver_type_id."'";
+		self::$db->query($query);
+		if (self::$db->nb_result()>0) {
+			self::$db->disconnect();
+			return true;
+		}
+		self::$db->disconnect();
+	}
+	
+	public function lcCycleStepsLinkExists($docserver_type_id) {
+		if(!isset($docserver_type_id) || empty($docserver_type_id))
+			return false;
+		self::$db=new dbquery();
+		self::$db->connect();
+		
+		$query = "select docserver_type_id from "._LC_CYCLE_STEPS_TABLE_NAME." where docserver_type_id = '".$docserver_type_id."'";
 		self::$db->query($query);
 		if (self::$db->nb_result()>0) {
 			self::$db->disconnect();
