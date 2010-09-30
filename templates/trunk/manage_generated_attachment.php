@@ -68,105 +68,76 @@ else
 			fwrite($myfile, $_REQUEST['template_content']);
 			fclose($myfile);
 
-			require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_docserver.php");
-			if(!isset($_SESSION['collection_id_choice']) || empty($_SESSION['collection_id_choice']))
-			{
+			require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."docservers_controler.php");
+			if(!isset($_SESSION['collection_id_choice']) || empty($_SESSION['collection_id_choice'])) {
 				$_SESSION['collection_id_choice'] = $_SESSION['user']['collections'][0];
 			}
-			$docserver = new docserver($_SESSION['tablename']['docservers'], $_SESSION['collection_id_choice']);
-
-			if(!empty($error))
-			{
-				$_SESSION['error'] = $error;
-				$location = "";
-			}
-			else
-			{
+			$docserverControler = new docservers_controler();
+			$docserver = $docserverControler->getDocserverToInsert($_SESSION['collection_id_choice']);
+			if(empty($docserver)) {
+					$_SESSION['error'] = _DOCSERVER_ERROR.' : '._NO_AVAILABLE_DOCSERVER.". "._MORE_INFOS.".";
+					$location = "";
+				} else {
 				// some checking on docserver size limit
-				$new_size = $docserver->check_size($_FILES['file']['size'], $_SESSION["config"]["lang"]);
-				if($new_size == 0)
-				{
-					$_SESSION['error'] = $docserver->get_error();
+				$new_size = $docserverControler->checkSize($docserver, $_SESSION['file']['size']);
+				if($new_size == 0) {
+					$_SESSION['error'] = _DOCSERVER_ERROR.' : '._NOT_ENOUGH_DISK_SPACE.". "._MORE_INFOS.".";
 					header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&module=templates&page=generate_attachment&template=".$_REQUEST['template_id']."&mode=".$_REQUEST['mode']);
 					exit();
-				}
-				else
-				{
-					$docinfo = $docserver->filename();
-					if($docserver->get_error() == "txt_error_when_sending_file")
-					{
-						$_SESSION['error'] = _FILE_SEND_ERROR;
-						header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&module=templates&page=generate_attachment&template=".$_REQUEST['template_id']."&mode=".$_REQUEST['mode']);
-					exit();
-					}
-					else
-					{
-
-						$destination_rept = $docinfo['destination_rept'];
-						$file_destination_name = $docinfo['file_destination_name'];
-						$docserver_id = $docserver->get_id();
-						$file_path = $destination_rept.$file_destination_name.".".$_SESSION['upfile']['format'];
-
-						if(file_exists( $destination_rept.$file_destination_name.".maarch"))
-						{
-							 $_SESSION['error'] .= _FILE_ALREADY_EXISTS.". "._MORE_INFOS." : <a href=\"mailto:".$_SESSION['config']['adminmail']."\">".$_SESSION['config']['adminname']."</a>.";
-							 header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&module=templates&page=generate_attachment&template=".$_REQUEST['template_id']."&mode=".$_REQUEST['mode']);
+				} else {
+					$docinfo = $docserverControler->filename($docserver);
+					$destination_rept = $docinfo['destination_rept'];
+					$file_destination_name = $docinfo['file_destination_name'];
+					$file_path = $destination_rept.$file_destination_name.".".$_SESSION['upfile']['format'];
+					if(file_exists( $destination_rept.$file_destination_name.".maarch")) {
+						 $_SESSION['error'] .= _FILE_ALREADY_EXISTS.". "._MORE_INFOS." : <a href=\"mailto:".$_SESSION['config']['adminmail']."\">".$_SESSION['config']['adminname']."</a>.";
+						 header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&module=templates&page=generate_attachment&template=".$_REQUEST['template_id']."&mode=".$_REQUEST['mode']);
+						exit();
+					} else {
+						if(!copy($path_tmp,$destination_rept.$file_destination_name.".maarch")) {
+							$_SESSION['error'] = _FILE_SEND_ERROR.". "._TRY_AGAIN.". "._MORE_INFOS." : <a href=\"mailto:".$_SESSION['config']['adminmail']."\">".$_SESSION['config']['adminname']."</a>.<br/>";
+							header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&module=templates&page=generate_attachment&template=".$_REQUEST['template_id']."&mode=".$_REQUEST['mode']);
 							exit();
-						}
-						else
-						{
-							if(!copy($path_tmp,$destination_rept.$file_destination_name.".maarch"))
+						} else {
+							if(!empty($path_tmp)) {
+								//unlink($path_tmp);
+							}
+							$path_template= $docserver->path_template;
+							$destination_rept = substr($destination_rept,strlen($path_template),4);
+							$destination_rept = str_replace(DIRECTORY_SEPARATOR,'#',$destination_rept);
+							$docserverControler->setSize($docserver, $new_size);
+							$res_attach = new resource();
+							$_SESSION['data'] = array();
+							array_push($_SESSION['data'], array('column' => "typist", 'value' => $_SESSION['user']['UserId'], 'type' => "string"));
+							array_push($_SESSION['data'], array('column' => "format", 'value' => 'maarch', 'type' => "string"));
+							array_push($_SESSION['data'], array('column' => "docserver_id", 'value' => $docserver->docserver_id, 'type' => "string"));
+							array_push($_SESSION['data'], array('column' => "status", 'value' => 'NEW', 'type' => "string"));
+							array_push($_SESSION['data'], array('column' => "offset_doc", 'value' => ' ', 'type' => "string"));
+							array_push($_SESSION['data'], array('column' => "logical_adr", 'value' => ' ', 'type' => "string"));
+							array_push($_SESSION['data'], array('column' => "title", 'value' => $_REQUEST['answer_title'], 'type' => "string"));
+							array_push($_SESSION['data'], array('column' => "coll_id", 'value' => $_SESSION['collection_id_choice'], 'type' => "string"));
+							array_push($_SESSION['data'], array('column' => "res_id_master", 'value' => $_SESSION['doc_id'], 'type' => "integer"));
+							array_push($_SESSION['data'], array('column' => "type_id", 'value' => 0, 'type' => "int"));
+							$id = $res_attach->load_into_db($_SESSION['tablename']['attach_res_attachments'],$destination_rept,$file_destination_name.".maarch", $docserver->path_template, $docserver->docserver_id,  $_SESSION['data'], $_SESSION['config']['databasetype']);
+							if($id == false)
 							{
-
-								$_SESSION['error'] = _FILE_SEND_ERROR.". "._TRY_AGAIN.". "._MORE_INFOS." : <a href=\"mailto:".$_SESSION['config']['adminmail']."\">".$_SESSION['config']['adminname']."</a>.<br/>";
+								$_SESSION['error'] = $res_attach->get_error();
 								header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&module=templates&page=generate_attachment&template=".$_REQUEST['template_id']."&mode=".$_REQUEST['mode']);
 								exit();
 							}
 							else
 							{
-								if(!empty($path_tmp))
+
+								if($_SESSION['history']['attachadd'] == "true")
 								{
-									//unlink($path_tmp);
-								}
-								$path_template= $docserver->get_path();
-								$destination_rept = substr($destination_rept,strlen($path_template),4);
-								$destination_rept = str_replace(DIRECTORY_SEPARATOR,'#',$destination_rept);
-								$docserver->set_size($new_size, $_SESSION['tablename']['docservers']);
-								$res_attach = new resource();
-
-								$_SESSION['data'] = array();
-								array_push($_SESSION['data'], array('column' => "typist", 'value' => $_SESSION['user']['UserId'], 'type' => "string"));
-								array_push($_SESSION['data'], array('column' => "format", 'value' => 'maarch', 'type' => "string"));
-								array_push($_SESSION['data'], array('column' => "docserver_id", 'value' => $docserver_id, 'type' => "string"));
-								array_push($_SESSION['data'], array('column' => "status", 'value' => 'NEW', 'type' => "string"));
-								array_push($_SESSION['data'], array('column' => "offset_doc", 'value' => ' ', 'type' => "string"));
-								array_push($_SESSION['data'], array('column' => "logical_adr", 'value' => ' ', 'type' => "string"));
-								array_push($_SESSION['data'], array('column' => "title", 'value' => $_REQUEST['answer_title'], 'type' => "string"));
-								array_push($_SESSION['data'], array('column' => "coll_id", 'value' => $_SESSION['collection_id_choice'], 'type' => "string"));
-								array_push($_SESSION['data'], array('column' => "res_id_master", 'value' => $_SESSION['doc_id'], 'type' => "integer"));
-								array_push($_SESSION['data'], array('column' => "type_id", 'value' => 0, 'type' => "int"));
-
-								$id = $res_attach->load_into_db($_SESSION['tablename']['attach_res_attachments'],$destination_rept,$file_destination_name.".maarch", $docserver->get_path(), $docserver_id,  $_SESSION['data'], $_SESSION['config']['databasetype']);
-								if($id == false)
-								{
-									$_SESSION['error'] = $res_attach->get_error();
-									header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&module=templates&page=generate_attachment&template=".$_REQUEST['template_id']."&mode=".$_REQUEST['mode']);
-									exit();
-								}
-								else
-								{
-
-									if($_SESSION['history']['attachadd'] == "true")
-									{
-										require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
-										$users = new history();
-										//$_SESSION['error'] = _NEW_ATTACH_ADDED;
-										$users->add($_SESSION['tablename']['attach_res_attachments'], $id, "ADD", _NEW_ATTACH_ADDED." (".$title.") ", $_SESSION['config']['databasetype'],'attachments');
-									}
-
+									require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
+									$users = new history();
+									//$_SESSION['error'] = _NEW_ATTACH_ADDED;
+									$users->add($_SESSION['tablename']['attach_res_attachments'], $id, "ADD", _NEW_ATTACH_ADDED." (".$title.") ", $_SESSION['config']['databasetype'],'attachments');
 								}
 
 							}
+
 						}
 					}
 				}
