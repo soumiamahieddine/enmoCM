@@ -26,13 +26,83 @@ if (!defined('_ADMIN_LIFE_CYCLE'))  define('_ADMIN_LIFE_CYCLE', ' Administration
 if (!defined('_ADMIN_LIFE_CYCLE_DESC'))  define('_ADMIN_LIFE_CYCLE_DESC', 'Administration des cycles de vie des ressources num&eacute;riques.');
 
 if (!defined('_MANAGE_LC_CYCLES'))  define('_MANAGE_LC_CYCLES', 'G&eacute;rer les cycles de vie ("lc_cycles")');
-if (!defined('_MANAGE_LC_CYCLE_STEPS'))  define('_MANAGE_LC_CYCLE_STEPS', 'G&eacute;rer les pas de cycle de vie ("lc_cycles_steps")');
+if (!defined('_MANAGE_LC_CYCLE_STEPS'))  define('_MANAGE_LC_CYCLE_STEPS', 'G&eacute;rer les étapes de cycle de vie ("lc_cycles_steps")');
 if (!defined('_MANAGE_LC_POLICIES'))  define('_MANAGE_LC_POLICIES', 'G&eacute;rer les polices de cycle de vie ("lc_policies")');
 
 if (!defined('_MANAGE_DOCSERVERS'))  define('_MANAGE_DOCSERVERS', 'G&eacute;rer les serveurs de documents ("docservers")');
 if (!defined('_MANAGE_DOCSERVERS_LOCATIONS'))  define('_MANAGE_DOCSERVERS_LOCATIONS', 'G&eacute;rer les emplacements des serveurs de documents ("docserver_locations")');
 if (!defined('_MANAGE_DOCSERVER_TYPES'))  define('_MANAGE_DOCSERVER_TYPES', 'G&eacute;rer les types de serveurs de documents ("docserver_types")');
 
+/*****************CYCLE_STEPS************************************/
+if (!defined('_LC_CYCLE_STEP'))  define('_LC_CYCLE_STEP', 'Etape de cycle de vie');
+if (!defined('_LC_CYCLE_STEPS_LIST'))  define('_LC_CYCLE_STEPS_LIST', 'Liste des étapes de cycle de vie');
+if (!defined('_ALL_LC_CYCLE_STEPS'))  define('_ALL_LC_CYCLE_STEPS', 'Tout afficher');
+if (!defined('_POLICY_ID'))  define('_POLICY_ID', 'ID Politique');
+if (!defined('_CYCLE_STEP_ID'))  define('_CYCLE_STEP_ID', 'ID Etape de cycle de vie ("lc_cycle_steps")');
+if (!defined('_CYCLE_STEP_DESC'))  define('_CYCLE_STEP_DESC', 'Description étape de cycle de vie');
+if (!defined('_STEPT_OPERATION'))  define('_STEP_OPERATION', 'Action sur les étapes de cycle de vie');
+if (!defined('_IS_ALLOW_FAILURE'))  define('_IS_ALLOW_FAILURE', 'Permettre des drapeaux échec');
+if (!defined('_PREPROCESS_SCRIPT'))  define('_PREPROCESS_SCRIPT', 'Script de pré-traitement');
+if (!defined('_POSTPROCESS_SCRIPT'))  define('_POSTPROCESS_SCRIPT', 'Script de post-traitement');
+if (!defined('_LC_CYCLE_STEP_ADDITION'))  define('_LC_CYCLE_STEP_ADDITION', 'Ajouter une étape de cycle de vie');
+if (!defined('_LC_CYCLE_STEP_UPDATED'))  define('_LC_CYCLE_STEP_UPDATED', 'Etape de cycle de vie mise à jour');
+if (!defined('_LC_CYCLE_STEP_ADDED'))  define('_LC_CYCLE_STEP_ADDED', 'Etape de cycle de vie ajoutée');
+if (!defined('_LC_CYCLE_STEP_DELETED'))  define('_LC_CYCLE_STEP_DELETED', 'Etape de cycle de vie supprimée');
 
 
+
+
+/****************CYCLES*************************************/
+if (!defined('_CYCLE_ID'))  define('_CYCLE_ID', 'ID Cycle');
+if (!defined('_LC_CYCLE_ID'))  define('_LC_CYCLE_ID', 'ID Cycle');
+if (!defined('_CYCLE_DESC'))  define('_CYCLE_DESC', 'Descriptif du cycle de vie');
+if (!defined('_VALIDATION_MODE'))  define('_VALIDATION_MODE', 'Mode de validation');
+if (!defined('_ALL_LC_CYCLES'))  define('_ALL_LC_CYCLES', 'Tout afficher');
+if (!defined('_LC_CYCLES_LIST'))  define('_LC_CYCLES_LIST', 'Liste des cycles de vie');
+if (!defined('_SEQUENCE_NUMBER'))  define('_SEQUENCE_NUMBER', 'Numéro de séquence');
+if (!defined('_LC_CYCLE_ADDITION'))  define('_LC_CYCLE_ADDITION', 'Ajouter un cycle de vie');
+
+
+/***************DOCSERVERS TYPES*************************************/
+if (!defined('_DOCSERVER_TYPE_ID'))  define('_DOCSERVER_TYPE_ID', 'ID Type de docserver ');
+if (!defined('_DOCSERVER_TYPE'))  define('_DOCSERVER_TYPE', 'Type de docserver ');
+if (!defined('_DOCSERVER_TYPES_LIST'))  define('_DOCSERVER_TYPES_LIST', 'Liste de types de docserver ');
+if (!defined('_ALL_DOCSERVER_TYPES'))  define('_ALL_DOCSERVER_TYPES', 'Tout afficher ');
+if (!defined('_DOCSERVER_TYPE_LABEL'))  define('_DOCSERVER_TYPE_LABEL', 'Label de Type de docserver ');
+if (!defined('_IS_COMPRESSED'))  define('_IS_COMPRESSED', 'Compressé');
+if (!defined('_IS_META'))  define('_IS_META', 'Contient des métadonnées');
+if (!defined('_DOCSERVER_TYPE_ADDITION'))  define('_DOCSERVER_TYPE_ADDITION', 'Ajouter un type de docserver ');
+if (!defined('_COMPRESS_MODE'))  define('_COMPRESS_MODE', 'Mode de compression');
+if (!defined('_META_TEMPLATE'))  define('_META_TEMPLATE', 'Modèle de métadonnées');
+if (!defined('_SIGNATURE_MODE'))  define('_SIGNATURE_MODE', 'Mode de signature');
+if (!defined('_CONTAINER_MAX_NUMBER'))  define('_CONTAINER_MAX_NUMBER', 'Taille maximale du conteneur');
+if (!defined('_DOCSERVER_TYPE_MODIFICATION'))  define('_DOCSERVER_TYPE_MODIFICATION', 'Modification de type de docserver ');
+
+/***************DOCSERVERS*********************************/
+if (!defined('_DOCSERVER_TYPES'))  define('_DOCSERVER_TYPES', 'Type de docserver ');
+//if (!defined('_DEVICE_LABEL'))  define('_DEVICE_LABEL', 'Type de docserver ');
+if (!defined('_SIZE_FORMAT'))  define('_SIZE_FORMAT', 'Format de la taille ');
+if (!defined('_SIZE_LIMIT'))  define('_SIZE_LIMIT', 'Taille maximale ');
+if (!defined('_ACTUAL_SIZE'))  define('_ACTUAL_SIZE', 'Taille actuelle ');
+if (!defined('_DOCSERVER_LOCATIONS'))  define('_DOCSERVER_LOCATIONS', 'Lieu de stockage des docservers ');
+if (!defined('_DOCSERVER_MODIFICATION'))  define('_DOCSERVER_MODIFICATION', 'Type de docserver ');
+
+
+
+
+
+
+
+/*************CYCLE POLICIES*************************************/
+if (!defined('_LC_POLICY'))  define('_LC_POLICY', 'Politique de cycle de vie');
+if (!defined('_POLICY_NAME'))  define('_POLICY_NAME', 'Nom de la politique');
+if (!defined('_LC_POLICY_ID'))  define('_LC_POLICY_ID', 'ID de la politique');
+if (!defined('_LC_POLICY_NAME'))  define('_LC_POLICY_NAME', 'Nom de la politique');
+if (!defined('_POLICY_DESC'))  define('_POLICY_DESC', 'Descriptif de la politique');
+if (!defined('_LC_POLICY_ADDITION'))  define('_LC_POLICY_ADDITION', 'Ajouter une politique de cycle de vie');
+if (!defined('_LC_POLICIES_LIST'))  define('_LC_POLICIES_LIST', 'Liste des politiques de cycle de vie');
+if (!defined('_ALL_LC_POLICIES'))  define('_ALL_LC_POLICIES', 'Tout afficher');
+if (!defined('_LC_POLICY_UPDATED'))  define('_LC_POLICY_UPDATED', 'Politique de cycle de vie mise à jour');
+if (!defined('_LC_POLICY_ADDED'))  define('_LC_POLICY_ADDED', 'Politique de cycle de vie ajoutée');
+if (!defined('_LC_POLICY_DELETED'))  define('_LC_POLICY_DELETED', 'Politique de cycle de vie supprimée');
 ?>

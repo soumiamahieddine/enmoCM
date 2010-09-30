@@ -93,7 +93,7 @@ class lc_cycle_steps_controler extends ObjectControler implements ObjectControle
 
 		self :: set_foolish_ids(array('policy_id', 'cycle_id', 'cycle_step_id', 'docserver_type_id'));
 		self :: set_specific_id('cycle_step_id');
-		if (self :: cycleExists($cycle->cycle_step_id))
+		if (self :: cycleStepExists($cycle->cycle_step_id))
 			return self :: update($cycle);
 		else
 			return self :: insert($cycle);
@@ -105,7 +105,7 @@ class lc_cycle_steps_controler extends ObjectControler implements ObjectControle
 	* @param  $cycle lc_cycle_steps object
 	* @return bool true if the insertion is complete, false otherwise
 	*/
-	private function insert($cycle) {
+	private function insert($cycle) {	
 		return self::advanced_insert($cycle);
 	}
 
@@ -129,10 +129,10 @@ class lc_cycle_steps_controler extends ObjectControler implements ObjectControle
 		if(!isset($cycle_step_id)|| empty($cycle_step_id) )
 			return false;
 		
-		if(!self::cycleExists($cycle_step_id))
+		if(!self::cycleStepExists($cycle_step_id))
 			return false;
 				
-		if(self::linkExists($cycle_step_id))
+		if(self::linkExists($policy_id, $cycle_step_id))
 			return false;
 
 		self::$db=new dbquery();
@@ -175,8 +175,12 @@ class lc_cycle_steps_controler extends ObjectControler implements ObjectControle
 		self::set_specific_id('cycle_step_id');
 		return self::advanced_enable($cycle);
 	}
-
-	public function cycleExists($cycle_step_id) {
+/**
+ * Check if the cycle step exists
+ * @param $cycle_step_id lc_cycle_steps object
+ * @return bool true if it exists
+ */
+	public function cycleStepExists($cycle_step_id) {
 		if (!isset ($cycle_step_id) || empty ($cycle_step_id))
 			return false;
 		self :: $db = new dbquery();
@@ -201,7 +205,7 @@ class lc_cycle_steps_controler extends ObjectControler implements ObjectControle
 		return false;
 	}
 
-	public function linkExists($policy_id, $cycle_step_id) {
+	public function LinkExists($policy_id, $cycle_step_id) {
 		if(!isset($policy_id) || empty($policy_id))
 			return false;
 		if(!isset($cycle_step_id) || empty($cycle_step_id))
