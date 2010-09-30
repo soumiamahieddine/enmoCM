@@ -1,9 +1,13 @@
 <?php
 if(!defined('ACTIONS_TABLE')) define( 'ACTIONS_TABLE', 'actions');
 if(!defined('AUTHORS_TABLE')) define( 'AUTHORS_TABLE', 'authors');
-if(!defined('DOCSERVER_TABLE')) define( 'DOCSERVER_TABLE', 'docservers');
-if(!defined('DOCTYPES_TABLE')) define( 'DOCTYPES_TABLE', 'doctypes');
+
+if(!defined('_DOCSERVERS_TABLE_NAME')) define('_DOCSERVERS_TABLE_NAME','docservers');
+if(!defined('_DOCSERVER_TYPES_TABLE_NAME')) define('_DOCSERVER_TYPES_TABLE_NAME','docserver_types');
+if(!defined('_DOCSERVER_LOCATIONS_TABLE_NAME')) define('_DOCSERVER_LOCATIONS_TABLE_NAME','docserver_locations');
 if(!defined('EXT_DOCSERVER_TABLE')) define( 'EXT_DOCSERVER_TABLE', 'ext_docserver');
+
+if(!defined('DOCTYPES_TABLE')) define( 'DOCTYPES_TABLE', 'doctypes');
 if(!defined('FULLTEXT_TABLE')) define( 'FULLTEXT_TABLE', 'fulltext');
 if(!defined('GROUPSECURITY_TABLE')) define( 'GROUPSECURITY_TABLE', 'groupsecurity');
 if(!defined('HISTORY_TABLE')) define( 'HISTORY_TABLE', 'history');
