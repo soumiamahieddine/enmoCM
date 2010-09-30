@@ -190,4 +190,14 @@
    <system_service>false</system_service>
    <enabled>true</enabled>
  </SERVICE>
+ <SERVICE>
+   <id>admin_docservers</id>
+   <name>_ADMIN_DOCSERVERS</name>
+   <comment>_ADMIN_DOCSERVERS_DESC</comment>
+   <servicepage>index.php?page=admin_docservers&amp;admin=docservers&amp;mode=list</servicepage>
+   <servicetype>admin</servicetype>
+   <system_service>false</system_service>
+   <style>admin_docservers</style>
+   <enabled>true</enabled>
+ </SERVICE>
 </root>

@@ -1,4 +1,5 @@
 <?php
+
 /*
 *    Copyright 2008,2009 Maarch
 *
@@ -706,84 +707,55 @@ function check_form($form_id,$values)
  * @param $cat_id String Collection identifier
  * @return Bool true if no error, false otherwise
  **/
-function check_docserver($coll_id)
-{
+function check_docserver($coll_id) {
 	if(isset($_SESSION['indexing']['path_template']) && !empty($_SESSION['indexing']['path_template']) &&
 	isset($_SESSION['indexing']['destination_dir']) && !empty($_SESSION['indexing']['destination_dir']) &&
 	isset($_SESSION['indexing']['docserver_id']) && !empty($_SESSION['indexing']['docserver_id']) &&
-	isset($_SESSION['indexing']['file_destination_name']) && !empty($_SESSION['indexing']['file_destination_name']))
-	{
+	isset($_SESSION['indexing']['file_destination_name']) && !empty($_SESSION['indexing']['file_destination_name'])) {
 		$_SESSION['action_error'] = _CHECK_FORM_OK;
 		return true;
 	}
-	require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_docserver.php");
+	require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."docservers_controler.php");
 	$core_tools =new core_tools();
-
+	$docserverControler = new docservers_controler();
 	// Gets the available docserver for the collection
-	$docserver = new docserver($_SESSION['tablename']['docservers'], $coll_id,$_SESSION["config"]["lang"]);
-	$error = $docserver->get_error();
-	if(!empty($error))
-	{
-		$_SESSION['action_error'] = _DOCSERVER_ERROR.' : '.$error;
+	$docserver = $docserverControler->getDocserverToInsert($coll_id);
+	if(empty($docserver)) {
+		$_SESSION['action_error'] = _DOCSERVER_ERROR.' : '._NO_AVAILABLE_DOCSERVER.". "._MORE_INFOS.".";
 		return false;
 	}
-
-	if($core_tools->is_module_loaded('templates') && $_SESSION['upfile']['format'] == "maarch")
-	{
-		if(!isset($_SESSION['template_content']) || empty($_SESSION['template_content']))
-		{
+	if($core_tools->is_module_loaded('templates') && $_SESSION['upfile']['format'] == "maarch") {
+		if(!isset($_SESSION['template_content']) || empty($_SESSION['template_content'])) {
 			$_SESSION['action_error'] = _TEMPLATE.' '._IS_EMPTY;
 			return false;
 		}
 		$path_tmp = $_SESSION['config']['tmppath'].DIRECTORY_SEPARATOR."tmp_file_".$_SESSION['user']['UserId'].".maarch";
-
 		$myfile = fopen($path_tmp, "w");
-
-		if(!$myfile)
-		{
+		if(!$myfile) {
 			$_SESSION['action_error'] .= _FILE_OPEN_ERROR.'.<br/>';
 			return false;
 		}
-
 		fwrite($myfile, $_SESSION['template_content']);
 		fclose($myfile);
 		$_SESSION['upfile']['size'] = filesize($path_tmp);
 	}
-
 	// Checks the size of the docserver
-	$new_size = $docserver->check_size($_SESSION['upfile']['size'], $_SESSION["config"]["lang"]);
-	if($new_size == 0)
-	{
-		$_SESSION['action_error'] = _DOCSERVER_ERROR.' : '.$docserver->get_error();
+	$new_size = $docserverControler->checkSize($docserver, $_SESSION['upfile']['size']);
+	if($new_size == 0) {
+		$_SESSION['action_error'] = _DOCSERVER_ERROR.' : '._NOT_ENOUGH_DISK_SPACE.". "._MORE_INFOS.".";
 		return false;
 	}
-
-/*
-	if($_SESSION['origin'] == "scan")
-	{
-		$tmp = 'modules/indexing_searching'.DIRECTORY_SEPARATOR.'tmp/';
-	}
-	else
-	{
-*/
-		$tmp = $_SESSION['config']['tmppath'];
-	//}
+	$tmp = $_SESSION['config']['tmppath'];
 	$d = dir($tmp);
 	$path_tmp = $d->path;
-	if($_SESSION['origin'] == "scan")
-	{
+	if($_SESSION['origin'] == "scan") {
 		$new_file_name = "tmp_file_".$_SESSION['upfile']['md5'].'.'.strtolower($_SESSION['upfile']['format']);
-	}
-	else
-	{
+	} else {
 		$new_file_name = "tmp_file_".$_SESSION['user']['UserId'].'.'.strtolower($_SESSION['upfile']['format']);
 	}
-
 	//tmp directory browsing
-	while($entry = $d->read())
-	{
-		if ($entry == $new_file_name )
-		{
+	while($entry = $d->read()) {
+		if ($entry == $new_file_name) {
 			$tmp_source_copy = $path_tmp.$entry;
 			$the_file = $entry;
 			break;
@@ -792,52 +764,36 @@ function check_docserver($coll_id)
 	//Directory closing
 	$d->close();
 	// Get the new filename
-	$docinfo = $docserver->filename();
-	
-	if($docserver->get_error() == "txt_error_when_sending_file")
-	{
-		$_SESSION['action_error'] = _FILE_SEND_ERROR;
-		return false;
-	}
+	$docinfo = $docserverControler->filename($docserver);
 	$destination_rept = $docinfo['destination_rept'];
 	$file_destination_name = $docinfo['file_destination_name'];
-	$docserver_id = $docserver->get_id();
 	$file_path = $destination_rept.$file_destination_name.".".$_SESSION['upfile']['format'];
 	$tmp_source_copy = str_replace("\\\\","\\",$tmp_source_copy);
-
 	// Tests the existence of the file
-	if(file_exists( $destination_rept.$file_destination_name.".".$_SESSION['upfile']['format']))
-	{
+	if(file_exists($destination_rept.$file_destination_name.".".$_SESSION['upfile']['format'])) {
 		 $_SESSION['action_error'].= _FILE_ALREADY_EXISTS.". "._MORE_INFOS." : <a href=\"mailto:".$_SESSION['config']['adminmail']."\">".$_SESSION['config']['adminname']."</a>.";
 		return false;
 	}
-
 	// Copy the file in the docserver
 	$cp = copy($tmp_source_copy , $destination_rept.$file_destination_name.".".$_SESSION['upfile']['format']);
-
 	$file_name = $entry;
-	if($cp == false)
-	{
+	if($cp == false) {
 		$_SESSION['action_error'] .= _DOCSERVER_COPY_ERROR;
 		return false;
-	}
-	else
-	{
+	} else {
 		//Delete tmp file on the tmp directory
 		$delete = unlink($tmp_source_copy);
-		if ($delete == false)
-		{
+		if($delete == false) {
 			$_SESSION['action_error'] .= _TMP_FILE_DEL_ERROR;
 			return false;
 		}
 	}
-	$_SESSION['indexing']['path_template'] =  $docserver->get_path();
+	$_SESSION['indexing']['path_template'] = $docserver->path_template;
 	$destination_rept = substr($destination_rept,strlen($_SESSION['indexing']['path_template']),4);
 	$_SESSION['indexing']['destination_dir'] = str_replace(DIRECTORY_SEPARATOR,'#',$destination_rept);
-	$docserver->set_size($new_size, $_SESSION['tablename']['docservers']);
-	$_SESSION['indexing']['docserver_id'] = $docserver_id;
+	$docserverControler->setSize($docserver, $new_size);
+	$_SESSION['indexing']['docserver_id'] = $docserver->docserver_id;
 	$_SESSION['indexing']['file_destination_name'] = $file_destination_name;
-
 	$_SESSION['action_error'] = _CHECK_FORM_OK;
 	return true;
 }

@@ -119,6 +119,15 @@
 		<statusadd>true</statusadd>
 		<statusup>true</statusup>
 		<statusdel>true</statusdel>
+		<docserversadd>true</docserversadd>
+		<docserversdel>true</docserversdel>
+		<docserversallow>true</docserversallow>
+		<docserversban>true</docserversban>
+		<!--<docserversclose>true</docserversclose>-->
+		<docserverslocationsadd>true</docserverslocationsadd>
+		<docserverslocationsdel>true</docserverslocationsdel>
+		<docserverslocationsallow>true</docserverslocationsallow>
+		<docserverslocationsban>true</docserverslocationsban>
 	</HISTORY>
 	<KEYWORDS>
 		<id>VIEW</id>

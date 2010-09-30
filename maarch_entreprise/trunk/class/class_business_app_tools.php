@@ -170,6 +170,15 @@ class business_app_tools extends dbquery
 			$_SESSION['history']['statusadd'] = (string) $HISTORY->statusadd;
 			$_SESSION['history']['statusup'] = (string) $HISTORY->statusup;
 			$_SESSION['history']['statusdel'] = (string) $HISTORY->statusdel;
+			$_SESSION['history']['docserversadd'] = (string) $HISTORY->docserversadd;
+			$_SESSION['history']['docserversdel'] = (string) $HISTORY->docserversdel;
+			$_SESSION['history']['docserversallow'] = (string) $HISTORY->docserversallow;
+			$_SESSION['history']['docserversban'] = (string) $HISTORY->docserversban;
+			//$_SESSION['history']['docserversclose'] = (string) $HISTORY->docserversclose;
+			$_SESSION['history']['docserverslocationsadd'] = (string) $HISTORY->docserverslocationsadd;
+			$_SESSION['history']['docserverslocationsdel'] = (string) $HISTORY->docserverslocationsdel;
+			$_SESSION['history']['docserverslocationsallow'] = (string) $HISTORY->docserverslocationsallow;
+			$_SESSION['history']['docserverslocationsban'] = (string) $HISTORY->docserverslocationsban;
 			$_SESSION['history_keywords'] = array();
 			foreach($xmlconfig->KEYWORDS as $keyword)
 			{
@@ -434,6 +443,13 @@ class business_app_tools extends dbquery
 		$this->load_current_folder();
 		$this->load_entreprise_var();
 		$this->load_features('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'features.xml');
+		if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'docservers_features.xml')) {
+			$path = $_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'docservers_features.xml';
+		} else {
+			$path = 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'docservers_features.xml';
+		}
+		$_SESSION['docserversFeatures'] = array();
+		$_SESSION['docserversFeatures'] = functions::object2array(simplexml_load_file($path));
 	}
 
 	/**
