@@ -31,17 +31,17 @@
 * @ingroup core
 */
 
-// To activate de debug mode of the class
+//To activate de debug mode of the class
 $_ENV['DEBUG'] = false;
 
-// Loads the required class
+//Loads the required class
 try {
 	require_once ("core/class/docservers.php");
 	require_once ("core/core_tables.php");
 	require_once ("core/class/ObjectControlerAbstract.php");
 	require_once ("core/class/ObjectControlerIF.php");
 	require_once ("core/class/class_security.php");
-} catch (Exception $e){
+} catch (Exception $e) {
 	echo $e->getMessage().' // ';
 }
 
@@ -61,18 +61,18 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
 	 * @param docservers $docservers
 	 * @return boolean
 	 */
-	public function save($docserver){
+	public function save($docserver) {
 		if (!isset ($docserver))
 			return false;
 
-		self :: set_foolish_ids(array('docserver_id', 'docserver_type_id', 'coll_id', 'docserver_location_id'));
-		self :: set_specific_id('docserver_id');
+		self::set_foolish_ids(array('docserver_id', 'docserver_type_id', 'coll_id', 'docserver_location_id'));
+		self::set_specific_id('docserver_id');
 		
 		if(self::docserversExists($docserver->docserver_id)){
-				// Update existing docservers
+				//Update existing docservers
 				return self::update($docserver);
 		} else {
-			// Insert new docservers
+			//Insert new docservers
 			return self::insert($docserver);
 		}
 	}
@@ -83,11 +83,11 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
 	* @param  $docserver docserver object
 	* @return bool true if the insertion is complete, false otherwise
 	*/
-	private function insert($docserver){
-		// Giving automatised values
+	private function insert($docserver) {
+		//Giving automatised values
 		$docserver->enabled="Y";
 		$docserver->creation_date=request::current_datetime();
-		// Inserting object
+		//Inserting object
 		$result = self::advanced_insert($docserver);
 		return $result;
 	}
@@ -109,9 +109,9 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
 	 * @return docservers 
 	 */
 	public function get($docserver_id) {
-		self :: set_foolish_ids(array('docserver_id'));
-		self :: set_specific_id('docserver_id');
-		$docserver = self :: advanced_get($docserver_id, _DOCSERVERS_TABLE_NAME);
+		self::set_foolish_ids(array('docserver_id'));
+		self::set_specific_id('docserver_id');
+		$docserver = self::advanced_get($docserver_id, _DOCSERVERS_TABLE_NAME);
 		if (isset ($docserver_id))
 			return $docserver;
 		else
@@ -122,8 +122,8 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
 	 * Delete given docserver from database.
 	 * @param docservers $docservers
 	 */
-	public function delete($docserver){
-		// Deletion of given docservers
+	public function delete($docserver) {
+		//Deletion of given docservers
 		if(!isset($docserver) || empty($docserver) )
 			return false;
 		
@@ -148,7 +148,6 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
 			$ok = false;
 		}
 		self::$db->disconnect();
-		
 		return $ok;
 	}
 
@@ -159,7 +158,7 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
 	* @return bool true if the disabling is complete, false otherwise 
 	*/
 	public function disable($docserver) {
-		self :: set_foolish_ids(array('docserver_id'));
+		self::set_foolish_ids(array('docserver_id'));
 		self::set_specific_id('docserver_id');
 		return self::advanced_disable($docserver);
 	}
@@ -171,12 +170,18 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
 	* @return bool true if the enabling is complete, false otherwise 
 	*/
 	public function enable($docserver) {
-		self :: set_foolish_ids(array('docserver_id'));
+		self::set_foolish_ids(array('docserver_id'));
 		self::set_specific_id('docserver_id');
 		return self::advanced_enable($docserver);
 	}
 
-	public function docserversExists($docserver_id){
+	/**
+	* Test if a given docserver exists
+	* 
+	* @param  $docserver docservers object  
+	* @return bool true if exists, false otherwise 
+	*/
+	public function docserversExists($docserver_id) {
 		if(!isset($docserver_id) || empty($docserver_id))
 			return false;
 		self::$db=new dbquery();
@@ -246,11 +251,11 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
 																			" AND docserver_type_id = '".functions::protect_string_db($docserver->docserver_type_id)."'".
 																			" AND docserver_id <> '".functions::protect_string_db($docserver->docserver_id)."'";
 		self::$db->query($query);
-		if (self :: $db->nb_result() > 0) {
-			self :: $db->disconnect();
+		if (self::$db->nb_result() > 0) {
+			self::$db->disconnect();
 			return false;
 		}
-		self :: $db->disconnect();
+		self::$db->disconnect();
 		return true;
 	}
 	
@@ -265,16 +270,15 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
 		return false;
 		self::$db=new dbquery();
 		self::$db->connect();
-		
 		$query = "select priority_number from "._DOCSERVERS_TABLE_NAME." where priority_number = ".$docserver->priority_number.
 																		" AND docserver_type_id = '".functions::protect_string_db($docserver->docserver_type_id)."'".
 																		" AND docserver_id <> '".functions::protect_string_db($docserver->docserver_id)."'";
 		self::$db->query($query);
-		if (self :: $db->nb_result() > 0) {
-			self :: $db->disconnect();
+		if (self::$db->nb_result() > 0) {
+			self::$db->disconnect();
 			return false;
 		}
-		self :: $db->disconnect();
+		self::$db->disconnect();
 		return true;
 	}	
 	
@@ -294,8 +298,9 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
 		self::$db->connect();
 		$query = "select actual_size_number from " ._DOCSERVERS_TABLE_NAME." where docserver_id = '".$docserver->docserver_id."'";
 		self::$db->query($query);
-		$queryResult = self :: $db->fetch_object();
+		$queryResult = self::$db->fetch_object();
 		$actual_size_number = floatval($queryResult->actual_size_number);
+		self::$db->disconnect();
 		if($size_limit_number < $actual_size_number) {
 			return true;
 		} else {
@@ -336,7 +341,7 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
 		$queryResult = self::$db->fetch_object();
 		self::$db->disconnect();
 		if($queryResult->docserver_id <> "") {
-			$docserver = self :: get($queryResult->docserver_id);
+			$docserver = self::get($queryResult->docserver_id);
 			if(isset($docserver->docserver_id))	
 				return $docserver;
 			else
@@ -347,9 +352,69 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
 	}
 	
 	/**
+	 * Store a new doc in a docserver.
+	 * @param  	$collId collection resource
+	 * @param  	$fileInfos infos of the doc to store, contains :
+	 * 			size : size of the doc
+	 * 			md5 : fingerprint of the doc
+	 * 			format : format of the doc
+	 * 			tmpFileName : file name of the doc in Maarch tmp directory
+	 * @return 	array of docserver data for res_x else return error
+	 */
+	public function storeResourceOnDocserver($collId, $fileInfos) {
+		$docserver = self::getDocserverToInsert($collId);
+		if(empty($docserver)) {
+			$storeInfos = array('error'=>_DOCSERVER_ERROR.' : '._NO_AVAILABLE_DOCSERVER.". "._MORE_INFOS.".");
+			return $storeInfos;
+		}
+		$newSize = self::checkSize($docserver, $fileInfos['size']);
+		if($newSize == 0) {
+			$storeInfos = array('error'=>_DOCSERVER_ERROR.' : '._NOT_ENOUGH_DISK_SPACE.". "._MORE_INFOS.".");
+			return $storeInfos;
+		}
+		$tmp = $_SESSION['config']['tmppath'];
+		$d = dir($tmp);
+		$pathTmp = $d->path;
+		while($entry = $d->read()) {
+			if($entry == $fileInfos['tmpFileName']) {
+				$tmpSourceCopy = $pathTmp.$entry;
+				$theFile = $entry;
+				break;
+			}
+		}
+		$d->close();
+		$docinfo = self::filename($docserver);
+		$destinationDir = $docinfo['destination_rept'];
+		$fileDestinationName = $docinfo['file_destination_name'];
+		$file_path = $destinationDir.$fileDestinationName.".".$fileInfos['format'];
+		$tmpSourceCopy = str_replace("\\\\","\\",$tmpSourceCopy);
+		if(file_exists($destinationDir.$fileDestinationName.".".$fileInfos['format'])) {
+			$storeInfos = array('error'=>_FILE_ALREADY_EXISTS.". "._MORE_INFOS." : <a href=\"mailto:".$_SESSION['config']['adminmail']."\">".$_SESSION['config']['adminname']."</a>.");
+			return $storeInfos;
+		}
+		$cp = copy($tmpSourceCopy, $destinationDir.$fileDestinationName.".".$fileInfos['format']);
+		$file_name = $entry;
+		if($cp == false) {
+			$storeInfos = array('error'=>_DOCSERVER_COPY_ERROR);
+			return $storeInfos;
+		} else {
+			$delete = unlink($tmpSourceCopy);
+			if($delete == false) {
+				$storeInfos = array('error'=>_TMP_FILE_DEL_ERROR);
+				return $storeInfos;
+			}
+		}
+		$destinationDir = substr($destinationDir, strlen($docserver->path_template),4);
+		$destinationDir = str_replace(DIRECTORY_SEPARATOR,'#',$destinationDir);
+		self::setSize($docserver, $newSize);
+		$storeInfos = array("path_template"=>$docserver->path_template, "destination_dir"=>$destinationDir, "docserver_id"=>$docserver->docserver_id, "file_destination_name"=>$fileDestinationName);
+		return $storeInfos;
+	}
+	
+	/**
 	* Checks the size of the docserver plus a new file to see if there is enough disk space
 	*
-	* @param $docserver docservers object
+	* @param  $docserver docservers object
 	* @param  $filesize integer File size
 	* @return integer New docserver size or 0 if not enough disk space available
 	*/
@@ -369,15 +434,15 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
 	*/
 	public function filename($docserver) {
 		$path_template = $docserver->path_template;
-		// Scans the docserver path
+		//Scans the docserver path
 		$file_tab = scandir($path_template);
-		// Removes . and .. lines
+		//Removes . and .. lines
 		array_shift($file_tab);
 		array_shift($file_tab);
 		$nb_files = count($file_tab);
-		// Docserver is empty
+		//Docserver is empty
 		if ($nb_files == 0 ) {
-			// Creates the directory
+			//Creates the directory
 			if (!mkdir($path_template."1",0000700)) {
 				//management of errors in the view controler
 				//$this->error = _FILE_SEND_ERROR;
@@ -391,7 +456,7 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
 			//Gets next usable subdirectory in the docserver
 			$destination_rept = $path_template.count($file_tab).DIRECTORY_SEPARATOR;
 			$file_tab2 = scandir($path_template.strval(count($file_tab)));
-			// Removes . and .. lines
+			//Removes . and .. lines
 			array_shift($file_tab2);
 			array_shift($file_tab2);
 			$nb_files2 = count($file_tab2);
@@ -408,7 +473,7 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
 					return array("destination_rept" => $destination_rept, "file_destination_name" => $file_destination_name);
 				}
 			} else {
-				// Docserver contains less than 2000 files
+				//Docserver contains less than 2000 files
 				$new_file_name = ($nb_files2) + 1;
 				$greater = $new_file_name;
 				for($n=0;$n<count($file_tab2);$n++) {
@@ -418,7 +483,7 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
 						if((int)$greater  == (int)$current_file_name[0]) {
 							$greater ++;
 						} else {
-							// $greater < current
+							//$greater < current
 							$greater = (int)$current_file_name[0] +1;
 						}
 					}
@@ -432,13 +497,14 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
 	/**
 	* Sets the size of the docserver
 	* @param $docserver docservers object
-	* @param $new_size integer New size of the docserver
+	* @param $newSize integer New size of the docserver
 	*/
-	public function setSize($docserver, $new_size) {
+	public function setSize($docserver, $newSize) {
 		self::$db=new dbquery();
 		self::$db->connect();
-		self::$db->query("update "._DOCSERVERS_TABLE_NAME." set actual_size_number=".$new_size." where docserver_id='".$docserver->docserver_id."'");
-		return $new_size;
+		self::$db->query("update "._DOCSERVERS_TABLE_NAME." set actual_size_number=".$newSize." where docserver_id='".$docserver->docserver_id."'");
+		self::$db->disconnect();
+		return $newSize;
 	}
 }
 
