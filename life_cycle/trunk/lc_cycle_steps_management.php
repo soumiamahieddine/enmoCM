@@ -64,12 +64,12 @@ elseif($mode == "up" || $mode == "add"){
 					 	<label for="policy_id"><?php echo _POLICY_ID; ?> : </label>
 						<input name="policy_id" type="text"  id="policy_id" value="<?php echo functions::show($_SESSION['m_admin']['lc_cycle_steps']['policy_id']); ?>" readonly='readonly' class='readonly'/>
 					</p>
-					<?
+					<?php
 				} else {
 					?>
 					<p>
 					 	<label for="policy_id"><?php echo _POLICY_ID; ?> : </label>
-						<select name="policy_id" id="policy_id">
+						<select name="policy_id" id="policy_id" onchange="changeCycle('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=life_cycle&page=change_cycle_list');">
 							<option value=""><?php echo _POLICY_ID;?></option>
 							<?php
 							for($cptPolicies=0;$cptPolicies<count($policiesArray);$cptPolicies++){
@@ -83,27 +83,49 @@ elseif($mode == "up" || $mode == "add"){
 					<?
 				}
 				?>
-				<p>
-				 	<label for="cycle_id"><?php echo _CYCLE_ID; ?> : </label>
-					<input name="cycle_id" type="text"  id="cycle_id" value="<?php echo functions::show($_SESSION['m_admin']['lc_cycle_steps']['cycle_id']); ?>" <?php if($mode == "up") echo " readonly='readonly' class='readonly'";?>/>
-				</p>
+				<?php if(!empty($_SESSION['m_admin']['lc_cycle_steps']['policy_id']) && $mode == "up") {
+					?>
+					<p>
+					 	<label for="cycle_id"><?php echo _CYCLE_ID; ?> : </label>
+						<input name="cycle_id" type="text"  id="cycle_id" value="<?php echo functions::show($_SESSION['m_admin']['lc_cycle_steps']['cycle_id']); ?>" readonly='readonly' class='readonly'/>
+					</p>
+				<?php	
+				} else {
+					?>
+					<div name="cycle_div" id="cycle_div"></div>
+					<?php
+					}
+				?>
 				<p>
 				 	<label for="id"><?php echo _CYCLE_STEP_ID; ?> : </label>
 					<input name="id" type="text"  id="id" value="<?php echo functions::show($_SESSION['m_admin']['lc_cycle_steps']['cycle_step_id']); ?>" <?php if($mode == "up") echo " readonly='readonly' class='readonly'";?>/>
 				</p>
 				<p>
 				 	<label for="cycle_step_desc"><?php echo _CYCLE_STEP_DESC; ?> : </label>
-					<input name="cycle_step_desc" type="text"  id="cycle_step_desc" value="<?php echo functions::show($_SESSION['m_admin']['lc_cycle_steps']['cycle_step_desc']); ?>" />
+					<textarea name="cycle_step_desc" type="text" id="cycle_step_desc" value="<?php echo functions::show($_SESSION['m_admin']['lc_cycle_steps']['cycle_step_desc']); ?>" ><?php echo $_SESSION['m_admin']['lc_cycle_steps']['cycle_step_desc'];?></textarea>
 				</p>
 				<p>
 				 	<label for="docserver_type_id"><?php echo _DOCSERVER_TYPE_ID; ?> : </label>
-					<input name="docserver_type_id" type="text"  id="docserver_type_id" value="<?php echo functions::show($_SESSION['m_admin']['lc_cycle_steps']['docserver_type_id']); ?>" />
+				 	<select name="docserver_type_id" id="docserver_type_id">
+							<option value=""><?php echo _DOCSERVER_TYPE_ID;?></option>
+							<?php
+							for($cptDocserverTypes=0;$cptDocserverTypes<count($docserverTypesArray);$cptDocserverTypes++){
+								?>
+								<option value="<?php echo $docserverTypesArray[$cptDocserverTypes];?>" <?php if($_SESSION['m_admin']['lc_cycle_steps']['docserver_type_id'] == $docserverTypesArray[$cptDocserverTypes]) { echo 'selected="selected"';}?>><?php echo $docserverTypesArray[$cptDocserverTypes];?></option>
+								<?php
+							}
+							?>
+					</select>
 				</p>
 				<p>
 	                <label><?php echo _IS_ALLOW_FAILURE; ?> : </label>
 	                <input type="radio" class="check" name="is_allow_failure" value="true" <?php if($_SESSION['m_admin']['docservers']['is_allow_failure']){?> checked="checked"<?php } ?> /><?php echo _YES;?>
 	                <input type="radio" class="check" name="is_allow_failure" value="false" <?php if(!$_SESSION['m_admin']['docservers']['is_allow_failure'] || $_SESSION['m_admin']['docservers']['is_allow_failure'] == ''){?> checked="checked"<?php } ?> /><?php echo _NO;?>
 	            </p>
+	             <p>
+				 	<label for="coll_id"><?php echo _COLLECTION_IDENTIFIER; ?> : </label>
+					<input name="coll_id" type="text"  id="coll_id" value="<?php echo functions::show($_SESSION['m_admin']['lc_cycle_steps']['coll_id']); ?>" />
+				</p>
 				<p>
 					<label for="step_operation"><?php echo _STEP_OPERATION; ?> : </label>
 					<select name="step_operation" id="step_operation">
@@ -133,9 +155,6 @@ elseif($mode == "up" || $mode == "add"){
 				 	<label for="postprocess_script"><?php echo _POSTPROCESS_SCRIPT; ?> : </label>
 					<input name="postprocess_script" type="text"  id="postprocess_script" value="<?php echo functions::show($_SESSION['m_admin']['lc_cycle_steps']['postprocess_script']); ?>" />
 				</p>
-				
-				
-				
 				<p class="buttons">
 					<?php
 					if($mode == "up"){
@@ -152,6 +171,18 @@ elseif($mode == "up" || $mode == "add"){
 	               <input type="button" class="button"  name="cancel" value="<?php echo _CANCEL; ?>" onclick="javascript:window.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=lc_cycle_steps_management_controler&amp;module=life_cycle&amp;mode=list';"/>
 				</p>
 			</form>
+			<?php 
+			?>
+			<script type="text/javascript">
+				//on load show cycle if necessary
+				<?php
+				if($_SESSION['m_admin']['lc_cycle_steps']['cycle_id'] <> "") {
+					?>
+					changeCycle('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=life_cycle&page=change_cycle_list');
+					<?php
+				}
+				?>
+			</script>
 			<?php
 		}
 		?>

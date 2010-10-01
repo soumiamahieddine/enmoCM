@@ -228,6 +228,32 @@ class lc_cycle_steps_controler extends ObjectControler implements ObjectControle
 		}
 		self::$db->disconnect();
 	}
+	
+	public function getAllId($policy_id) {
+		self :: $db = new dbquery();
+		self :: $db->connect();
+		$query = "select cycle_id from " . _LC_CYCLES_TABLE_NAME . " where policy_id = '" .$policy_id. "'";
+		try {
+			if ($_ENV['DEBUG'])
+				echo $query . ' // ';
+			self :: $db->query($query);
+		} catch (Exception $e) {
+			echo _NO_CYCLE_ID . ' // ';
+		}
+		if (self :: $db->nb_result() > 0) {
+			$result = array ();
+			$cptId = 0;
+			while ($queryResult = self :: $db->fetch_object()) {
+				$result[$cptId] = $queryResult->cycle_id;
+				$cptId++;
+			}
+			self :: $db->disconnect();
+			return $result;
+		} else {
+			self :: $db->disconnect();
+			return null;
+		}
+	}
 }
 
 ?>

@@ -89,7 +89,7 @@ elseif($mode == "up" || $mode == "add"){
 				</p>
 				<p>
 				 	<label for="cycle_desc"><?php echo _CYCLE_DESC; ?> : </label>
-					<input name="cycle_desc" type="text"  id="cycle_desc" value="<?php echo functions::show($_SESSION['m_admin']['lc_cycles']['cycle_desc']); ?>" />
+					<textarea name="cycle_desc" type="text"  id="cycle_desc" value="<?php echo functions::show($_SESSION['m_admin']['lc_cycles']['cycle_desc']); ?>" /><?php echo $_SESSION['m_admin']['lc_cycles']['cycle_desc'] ?></textarea>
 				</p>
 				<p>
 				 	<label for="sequence_number"><?php echo _SEQUENCE_NUMBER; ?> : </label>

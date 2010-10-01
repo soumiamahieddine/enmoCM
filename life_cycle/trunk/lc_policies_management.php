@@ -66,7 +66,7 @@ if($mode == "list"){
 				</p>
 				<p>
 				 	<label for="policy_desc"><?php echo _POLICY_DESC; ?> : </label>
-					<input name="policy_desc" type="text"  id="policy_desc" value="<?php echo functions::show($_SESSION['m_admin']['lc_policies']['policy_desc']); ?>" />
+					<textarea name="policy_desc" type="text"  id="policy_desc" value="<?php echo functions::show($_SESSION['m_admin']['lc_policies']['policy_desc']); ?>" /><?php echo $_SESSION['m_admin']['lc_policies']['policy_desc'] ?></textarea>
 				</p>
 				<p class="buttons">
 					<?php

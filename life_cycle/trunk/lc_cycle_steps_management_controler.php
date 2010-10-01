@@ -54,6 +54,7 @@ try {
 	require_once("modules/life_cycle/class/lc_cycle_steps_controler.php");
 	require_once("modules/life_cycle/class/lc_policies_controler.php");
 	require_once("core/class/class_request.php");
+	require_once("core/class/docserver_types_controler.php");
 	if($mode == 'list') {
 		require_once("modules/life_cycle/lang/fr.php");
 		require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");
@@ -64,7 +65,11 @@ try {
 
 if($mode == "up" || $mode =="add"){
 	$policiesArray = array();
+	$stepsArray = array();
+	$docserverTypesArray = array();
 	$policiesArray = lc_policies_controler::getAllId();
+	$stepsArray = lc_cycle_steps_controler::getAllId($_SESSION['m_admin']['lc_cycle_steps']['policy_id']);
+	$docserverTypesArray = docserver_types_controler::getAllId();
 }
 
 if(isset($_REQUEST['submit'])) {
