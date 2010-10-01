@@ -337,7 +337,6 @@ function display_del($cycle_step_id) {
 		if(!lc_cycle_steps_controler::delete($cycle_step_id)) {
 			$_SESSION['error'] = _YOU_CANNOT_DELETE." ".$cycle_step_id;
 		} else {
-			echo "ici"; exit;
 			$_SESSION['error'] = _LC_CYCLE_STEP_DELETED." ".$cycle_step_id;
 			if($_SESSION['history']['lc_cycle_stepsdel'] == "true") {
 				require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");

@@ -84,16 +84,16 @@ elseif($mode == "up" || $mode == "add"){
 				}
 				?>
 				<p>
+				 	<label for="cycle_id"><?php echo _CYCLE_ID; ?> : </label>
+					<input name="cycle_id" type="text"  id="cycle_id" value="<?php echo functions::show($_SESSION['m_admin']['lc_cycle_steps']['cycle_id']); ?>" <?php if($mode == "up") echo " readonly='readonly' class='readonly'";?>/>
+				</p>
+				<p>
 				 	<label for="id"><?php echo _CYCLE_STEP_ID; ?> : </label>
 					<input name="id" type="text"  id="id" value="<?php echo functions::show($_SESSION['m_admin']['lc_cycle_steps']['cycle_step_id']); ?>" <?php if($mode == "up") echo " readonly='readonly' class='readonly'";?>/>
 				</p>
 				<p>
 				 	<label for="cycle_step_desc"><?php echo _CYCLE_STEP_DESC; ?> : </label>
 					<input name="cycle_step_desc" type="text"  id="cycle_step_desc" value="<?php echo functions::show($_SESSION['m_admin']['lc_cycle_steps']['cycle_step_desc']); ?>" />
-				</p>
-				<p>
-				 	<label for="cycle_id"><?php echo _CYCLE_ID; ?> : </label>
-					<input name="cycle_id" type="text"  id="cycle_id" value="<?php echo functions::show($_SESSION['m_admin']['lc_cycle_steps']['cycle_id']); ?>" <?php if($mode == "up") echo " readonly='readonly' class='readonly'";?>/>
 				</p>
 				<p>
 				 	<label for="docserver_type_id"><?php echo _DOCSERVER_TYPE_ID; ?> : </label>

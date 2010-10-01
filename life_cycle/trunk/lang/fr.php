@@ -33,6 +33,7 @@ if (!defined('_MANAGE_DOCSERVERS'))  define('_MANAGE_DOCSERVERS', 'G&eacute;rer 
 if (!defined('_MANAGE_DOCSERVERS_LOCATIONS'))  define('_MANAGE_DOCSERVERS_LOCATIONS', 'G&eacute;rer les emplacements des serveurs de documents ("docserver_locations")');
 if (!defined('_MANAGE_DOCSERVER_TYPES'))  define('_MANAGE_DOCSERVER_TYPES', 'G&eacute;rer les types de serveurs de documents ("docserver_types")');
 
+
 /*****************CYCLE_STEPS************************************/
 if (!defined('_LC_CYCLE_STEP'))  define('_LC_CYCLE_STEP', 'Etape de cycle de vie');
 if (!defined('_LC_CYCLE_STEPS_LIST'))  define('_LC_CYCLE_STEPS_LIST', 'Liste des étapes de cycle de vie');
@@ -42,6 +43,7 @@ if (!defined('_CYCLE_STEP_ID'))  define('_CYCLE_STEP_ID', 'Identifiant de l\'eta
 if (!defined('_CYCLE_STEP_DESC'))  define('_CYCLE_STEP_DESC', 'Description de l\'étape de cycle de vie');
 if (!defined('_STEPT_OPERATION'))  define('_STEP_OPERATION', 'Action sur les étapes de cycle de vie');
 if (!defined('_IS_ALLOW_FAILURE'))  define('_IS_ALLOW_FAILURE', 'Permettre des drapeaux échec');
+if (!defined('_IS_MUST_COMPLETE'))  define('_IS_MUST_COMPLETE', 'IS_MUST_COMPLETE');
 if (!defined('_PREPROCESS_SCRIPT'))  define('_PREPROCESS_SCRIPT', 'Script de pré-traitement');
 if (!defined('_POSTPROCESS_SCRIPT'))  define('_POSTPROCESS_SCRIPT', 'Script de post-traitement');
 if (!defined('_LC_CYCLE_STEP_ADDITION'))  define('_LC_CYCLE_STEP_ADDITION', 'Ajouter une étape de cycle de vie');
@@ -55,12 +57,16 @@ if (!defined('_LC_CYCLE_STEP_DELETED'))  define('_LC_CYCLE_STEP_DELETED', 'Etape
 /****************CYCLES*************************************/
 if (!defined('_CYCLE_ID'))  define('_CYCLE_ID', 'Identifiant du cycle de vie');
 if (!defined('_LC_CYCLE_ID'))  define('_LC_CYCLE_ID', 'Identifiant du cycle de vie');
+if (!defined('_LC_CYCLE'))  define('_LC_CYCLE', 'cycle de vie');
 if (!defined('_CYCLE_DESC'))  define('_CYCLE_DESC', 'Descriptif du cycle de vie');
 if (!defined('_VALIDATION_MODE'))  define('_VALIDATION_MODE', 'Mode de validation');
 if (!defined('_ALL_LC_CYCLES'))  define('_ALL_LC_CYCLES', 'Tout afficher');
 if (!defined('_LC_CYCLES_LIST'))  define('_LC_CYCLES_LIST', 'Liste des cycles de vie');
 if (!defined('_SEQUENCE_NUMBER'))  define('_SEQUENCE_NUMBER', 'Numéro de séquence');
 if (!defined('_LC_CYCLE_ADDITION'))  define('_LC_CYCLE_ADDITION', 'Ajouter un cycle de vie');
+if (!defined('_LC_CYCLE_ADDED'))  define('_LC_CYCLE_ADDED', 'Cycle de vie ajouté');
+if (!defined('_LC_CYCLE_UPDATED'))  define('_LC_CYCLE_UPDATED', 'Cycle de vie mis à jour');
+if (!defined('_LC_CYCLE_DELETED'))  define('_LC_CYCLE_DELETED', 'Cycle de vie supprimé');
 
 
 /***************DOCSERVERS TYPES*************************************/
@@ -78,18 +84,15 @@ if (!defined('_SIGNATURE_MODE'))  define('_SIGNATURE_MODE', 'Mode de signature')
 if (!defined('_CONTAINER_MAX_NUMBER'))  define('_CONTAINER_MAX_NUMBER', 'Taille maximale du conteneur');
 if (!defined('_DOCSERVER_TYPE_MODIFICATION'))  define('_DOCSERVER_TYPE_MODIFICATION', 'Modification de type de docserver ');
 
+
 /***************DOCSERVERS*********************************/
 if (!defined('_DOCSERVER_TYPES'))  define('_DOCSERVER_TYPES', 'Type de docserver ');
-//if (!defined('_DEVICE_LABEL'))  define('_DEVICE_LABEL', 'Type de docserver ');
+if (!defined('_DEVICE_LABEL'))  define('_DEVICE_LABEL', 'Label dispositif ');
 if (!defined('_SIZE_FORMAT'))  define('_SIZE_FORMAT', 'Format de la taille ');
 if (!defined('_SIZE_LIMIT'))  define('_SIZE_LIMIT', 'Taille maximale ');
 if (!defined('_ACTUAL_SIZE'))  define('_ACTUAL_SIZE', 'Taille actuelle ');
 if (!defined('_DOCSERVER_LOCATIONS'))  define('_DOCSERVER_LOCATIONS', 'Lieu de stockage des docservers ');
 if (!defined('_DOCSERVER_MODIFICATION'))  define('_DOCSERVER_MODIFICATION', 'Type de docserver ');
-
-
-
-
 
 
 
