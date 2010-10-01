@@ -37,9 +37,9 @@ if (!defined('_MANAGE_DOCSERVER_TYPES'))  define('_MANAGE_DOCSERVER_TYPES', 'G&e
 if (!defined('_LC_CYCLE_STEP'))  define('_LC_CYCLE_STEP', 'Etape de cycle de vie');
 if (!defined('_LC_CYCLE_STEPS_LIST'))  define('_LC_CYCLE_STEPS_LIST', 'Liste des étapes de cycle de vie');
 if (!defined('_ALL_LC_CYCLE_STEPS'))  define('_ALL_LC_CYCLE_STEPS', 'Tout afficher');
-if (!defined('_POLICY_ID'))  define('_POLICY_ID', 'ID Politique');
-if (!defined('_CYCLE_STEP_ID'))  define('_CYCLE_STEP_ID', 'ID Etape de cycle de vie ("lc_cycle_steps")');
-if (!defined('_CYCLE_STEP_DESC'))  define('_CYCLE_STEP_DESC', 'Description étape de cycle de vie');
+if (!defined('_POLICY_ID'))  define('_POLICY_ID', 'Identifiant de la politique d\'archivage');
+if (!defined('_CYCLE_STEP_ID'))  define('_CYCLE_STEP_ID', 'Identifiant de l\'etape de cycle de vie ("lc_cycle_steps")');
+if (!defined('_CYCLE_STEP_DESC'))  define('_CYCLE_STEP_DESC', 'Description de l\'étape de cycle de vie');
 if (!defined('_STEPT_OPERATION'))  define('_STEP_OPERATION', 'Action sur les étapes de cycle de vie');
 if (!defined('_IS_ALLOW_FAILURE'))  define('_IS_ALLOW_FAILURE', 'Permettre des drapeaux échec');
 if (!defined('_PREPROCESS_SCRIPT'))  define('_PREPROCESS_SCRIPT', 'Script de pré-traitement');
@@ -53,8 +53,8 @@ if (!defined('_LC_CYCLE_STEP_DELETED'))  define('_LC_CYCLE_STEP_DELETED', 'Etape
 
 
 /****************CYCLES*************************************/
-if (!defined('_CYCLE_ID'))  define('_CYCLE_ID', 'ID Cycle');
-if (!defined('_LC_CYCLE_ID'))  define('_LC_CYCLE_ID', 'ID Cycle');
+if (!defined('_CYCLE_ID'))  define('_CYCLE_ID', 'Identifiant du cycle de vie');
+if (!defined('_LC_CYCLE_ID'))  define('_LC_CYCLE_ID', 'Identifiant du cycle de vie');
 if (!defined('_CYCLE_DESC'))  define('_CYCLE_DESC', 'Descriptif du cycle de vie');
 if (!defined('_VALIDATION_MODE'))  define('_VALIDATION_MODE', 'Mode de validation');
 if (!defined('_ALL_LC_CYCLES'))  define('_ALL_LC_CYCLES', 'Tout afficher');
@@ -64,7 +64,7 @@ if (!defined('_LC_CYCLE_ADDITION'))  define('_LC_CYCLE_ADDITION', 'Ajouter un cy
 
 
 /***************DOCSERVERS TYPES*************************************/
-if (!defined('_DOCSERVER_TYPE_ID'))  define('_DOCSERVER_TYPE_ID', 'ID Type de docserver ');
+if (!defined('_DOCSERVER_TYPE_ID'))  define('_DOCSERVER_TYPE_ID', 'Identifiant du type de docserver ');
 if (!defined('_DOCSERVER_TYPE'))  define('_DOCSERVER_TYPE', 'Type de docserver ');
 if (!defined('_DOCSERVER_TYPES_LIST'))  define('_DOCSERVER_TYPES_LIST', 'Liste de types de docserver ');
 if (!defined('_ALL_DOCSERVER_TYPES'))  define('_ALL_DOCSERVER_TYPES', 'Tout afficher ');
