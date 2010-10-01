@@ -1,4 +1,5 @@
 <?php
+
 /*
 *    Copyright 2008,2009 Maarch
 *
@@ -842,16 +843,16 @@ if(!empty($_SESSION['error']))
 {
 	if($mode == 'normal')
 	{
-		$_SESSION['error_search'] = '<br /><div class="error">'._MUST_CORRECT_ERRORS.' : <br /><br /><strong>'.$_SESSION['error_search'].'<br /><a href="'.$_SESSION['config']['businessappurl'].'index.php?page=search_adv&amp;dir=indexing_searching">'._CLICK_HERE_TO_CORRECT.'</a></strong></div>';
+		$_SESSION['error_search'] = '<br /><div class="error">'._MUST_CORRECT_ERRORS.' : <br /><br /><strong>'.$_SESSION['error_search'].'<br /><a href="'.$_SESSION['config']['businessappurl'].'index.php?page=search_adv&dir=indexing_searching">'._CLICK_HERE_TO_CORRECT.'</a></strong></div>';
 		?>
-		<script  type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?page=search_adv_error&amp;dir=indexing_searching';?>';</script>
+		<script  type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?page=search_adv_error&dir=indexing_searching';?>';</script>
 		<?php
 	}
 	else
 	{
-		$_SESSION['error_search'] = '<br /><div class="error">'._MUST_CORRECT_ERRORS.' : <br /><br /><strong>'.$_SESSION['error_search'].'<br /><a href="'.$_SESSION['config']['businessappurl'].'index.php?display=true&amp;dir=indexing_searching&amp;page=search_adv&amp;mode='.$mode.'">'._CLICK_HERE_TO_CORRECT.'</a></strong></div>';
+		$_SESSION['error_search'] = '<br /><div class="error">'._MUST_CORRECT_ERRORS.' : <br /><br /><strong>'.$_SESSION['error_search'].'<br /><a href="'.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=search_adv&mode='.$mode.'">'._CLICK_HERE_TO_CORRECT.'</a></strong></div>';
 		?>
-		<script type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?display=true&amp;dir=indexing_searching&amp;page=search_adv_error&amp;mode='.$mode;?>';</script>
+		<script type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=search_adv_error&mode='.$mode;?>';</script>
 		<?php
 	}
 	exit();
@@ -865,7 +866,7 @@ if($_REQUEST['specific_case'] == "attach_to_case")
 {
 	$page = 'list_results_mlb_frame';
 	?>
-	<script type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?display=true&amp;module=cases&amp;page='.$page.'&amp;searched_item='.$_REQUEST['searched_item'].'&amp;searched_value='.$_REQUEST['searched_value'].'&amp;template='.$_REQUEST['template'];?>';</script>
+	<script type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=cases&page='.$page.'&searched_item='.$_REQUEST['searched_item'].'&searched_value='.$_REQUEST['searched_value'].'&template='.$_REQUEST['template'];?>';</script>
 	<?php
 	exit();
 }
@@ -882,7 +883,7 @@ if(empty($_SESSION['error_search']))
 	//##################
 	$page = 'list_results_mlb';
 	?>
-	<script type="text/javascript">window.top.location.href='<?php if($mode == 'normal'){ echo $_SESSION['config']['businessappurl'].'index.php?page='.$page.'&amp;dir=indexing_searching'.$extend_link_case;} elseif($mode=='frame' || $mode == 'popup'){echo $_SESSION['config']['businessappurl'].'index.php?display=true&amp;dir=indexing_searching&amp;page='.$page.'&amp;mode='.$mode.'&amp;action_form='.$_REQUEST['action_form'].'&amp;modulename='.$_REQUEST['modulename'];} if(isset($_REQUEST['nodetails'])){echo '&amp;nodetails';}?>';</script>
+	<script type="text/javascript">window.top.location.href='<?php if($mode == 'normal'){ echo $_SESSION['config']['businessappurl'].'index.php?page='.$page.'&dir=indexing_searching'.$extend_link_case;} elseif($mode=='frame' || $mode == 'popup'){echo $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page='.$page.'&mode='.$mode.'&action_form='.$_REQUEST['action_form'].'&modulename='.$_REQUEST['modulename'];} if(isset($_REQUEST['nodetails'])){echo '&nodetails';}?>';</script>
 	<?php
 	exit();
 }

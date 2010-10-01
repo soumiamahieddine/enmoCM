@@ -702,7 +702,7 @@ function check_form($form_id,$values)
 }
 
 /**
- * Makes all the checks on the docserver
+ * Makes all the checks on the docserver and store the file
  *
  * @param $cat_id String Collection identifier
  * @return Bool true if no error, false otherwise
@@ -715,15 +715,7 @@ function check_docserver($coll_id) {
 		$_SESSION['action_error'] = _CHECK_FORM_OK;
 		return true;
 	}
-	require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."docservers_controler.php");
 	$core_tools =new core_tools();
-	$docserverControler = new docservers_controler();
-	// Gets the available docserver for the collection
-	$docserver = $docserverControler->getDocserverToInsert($coll_id);
-	if(empty($docserver)) {
-		$_SESSION['action_error'] = _DOCSERVER_ERROR.' : '._NO_AVAILABLE_DOCSERVER.". "._MORE_INFOS.".";
-		return false;
-	}
 	if($core_tools->is_module_loaded('templates') && $_SESSION['upfile']['format'] == "maarch") {
 		if(!isset($_SESSION['template_content']) || empty($_SESSION['template_content'])) {
 			$_SESSION['action_error'] = _TEMPLATE.' '._IS_EMPTY;
@@ -739,63 +731,27 @@ function check_docserver($coll_id) {
 		fclose($myfile);
 		$_SESSION['upfile']['size'] = filesize($path_tmp);
 	}
-	// Checks the size of the docserver
-	$new_size = $docserverControler->checkSize($docserver, $_SESSION['upfile']['size']);
-	if($new_size == 0) {
-		$_SESSION['action_error'] = _DOCSERVER_ERROR.' : '._NOT_ENOUGH_DISK_SPACE.". "._MORE_INFOS.".";
-		return false;
-	}
-	$tmp = $_SESSION['config']['tmppath'];
-	$d = dir($tmp);
-	$path_tmp = $d->path;
 	if($_SESSION['origin'] == "scan") {
 		$new_file_name = "tmp_file_".$_SESSION['upfile']['md5'].'.'.strtolower($_SESSION['upfile']['format']);
 	} else {
 		$new_file_name = "tmp_file_".$_SESSION['user']['UserId'].'.'.strtolower($_SESSION['upfile']['format']);
 	}
-	//tmp directory browsing
-	while($entry = $d->read()) {
-		if ($entry == $new_file_name) {
-			$tmp_source_copy = $path_tmp.$entry;
-			$the_file = $entry;
-			break;
-		}
-	}
-	//Directory closing
-	$d->close();
-	// Get the new filename
-	$docinfo = $docserverControler->filename($docserver);
-	$destination_rept = $docinfo['destination_rept'];
-	$file_destination_name = $docinfo['file_destination_name'];
-	$file_path = $destination_rept.$file_destination_name.".".$_SESSION['upfile']['format'];
-	$tmp_source_copy = str_replace("\\\\","\\",$tmp_source_copy);
-	// Tests the existence of the file
-	if(file_exists($destination_rept.$file_destination_name.".".$_SESSION['upfile']['format'])) {
-		 $_SESSION['action_error'].= _FILE_ALREADY_EXISTS.". "._MORE_INFOS." : <a href=\"mailto:".$_SESSION['config']['adminmail']."\">".$_SESSION['config']['adminname']."</a>.";
-		return false;
-	}
-	// Copy the file in the docserver
-	$cp = copy($tmp_source_copy , $destination_rept.$file_destination_name.".".$_SESSION['upfile']['format']);
-	$file_name = $entry;
-	if($cp == false) {
-		$_SESSION['action_error'] .= _DOCSERVER_COPY_ERROR;
+	require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."docservers_controler.php");
+	$docserverControler = new docservers_controler();
+	$fileInfos = array("size"=>$_SESSION['upfile']['size'], "md5"=>$_SESSION['upfile']['md5'], "format"=>$_SESSION['upfile']['format'], "tmpFileName"=>$new_file_name);
+	$storeResult = array();
+	$storeResult = $docserverControler->storeResourceOnDocserver($coll_id, $fileInfos);
+	if($storeResult['error'] <> "") {
+		$_SESSION['action_error'] = $storeResult['error'];
 		return false;
 	} else {
-		//Delete tmp file on the tmp directory
-		$delete = unlink($tmp_source_copy);
-		if($delete == false) {
-			$_SESSION['action_error'] .= _TMP_FILE_DEL_ERROR;
-			return false;
-		}
+		$_SESSION['indexing']['path_template'] = $storeResult['path_template'];
+		$_SESSION['indexing']['destination_dir'] = $storeResult['destination_dir'];
+		$_SESSION['indexing']['docserver_id'] = $storeResult['docserver_id'];
+		$_SESSION['indexing']['file_destination_name'] = $storeResult['file_destination_name'];
+		$_SESSION['action_error'] = _CHECK_FORM_OK;
+		return true;
 	}
-	$_SESSION['indexing']['path_template'] = $docserver->path_template;
-	$destination_rept = substr($destination_rept,strlen($_SESSION['indexing']['path_template']),4);
-	$_SESSION['indexing']['destination_dir'] = str_replace(DIRECTORY_SEPARATOR,'#',$destination_rept);
-	$docserverControler->setSize($docserver, $new_size);
-	$_SESSION['indexing']['docserver_id'] = $docserver->docserver_id;
-	$_SESSION['indexing']['file_destination_name'] = $file_destination_name;
-	$_SESSION['action_error'] = _CHECK_FORM_OK;
-	return true;
 }
 
 /**
@@ -807,7 +763,7 @@ function check_docserver($coll_id) {
  **/
 function process_category_check($cat_id, $values)
 {
-//	print_r($values);
+	//print_r($values);
 	$core = new core_tools();
 	// If No category : Error
 	if(!isset($_ENV['categories'][$cat_id]))
@@ -1326,12 +1282,12 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
 			$query_ext_fields .= 'alt_identifier,';
 			$query_ext_values .= "'".$db->protect_string_db($my_chrono)."',";
 			//######
-		//	echo $res_id. " ";
+			//echo $res_id. " ";
 			$query_ext_fields = preg_replace('/,$/', ',res_id)', $query_ext_fields);
 			$query_ext_values = preg_replace('/,$/', ','.$res_id.')', $query_ext_values);
-		//	echo $res_id. " ";
+			//echo $res_id. " ";
 			$query_ext = " insert into ".$table_ext." ".$query_ext_fields.' values '.$query_ext_values ;
-		//	echo $query_ext;
+			//echo $query_ext;
 			$db->connect();
 			$db->query($query_ext);
 			if($core->is_module_loaded('folder') && !empty($folder_id) && $_SESSION['history']['folderup'])
@@ -1376,8 +1332,8 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
 		array_push($_SESSION['data'], array('column' => "title", 'value' => $db->protect_string_db($title), 'type' => "string"));
 		array_push($_SESSION['data'], array('column' => "res_id_master", 'value' => $id_doc, 'type' => "integer"));
 		array_push($_SESSION['data'], array('column' => "coll_id", 'value' => $db->protect_string_db($coll_id), 'type' => "string"));
-
-		$res_id = $resource->load_into_db($_SESSION['tablename']['attach_res_attachments'],$_SESSION['indexing']['destination_dir'], $_SESSION['indexing']['file_destination_name'].".".$_SESSION['upfile']['format'], $_SESSION['indexing']['path_template'], $_SESSION['indexing']['docserver_id'],  $_SESSION['data'], $_SESSION['config']['databasetype']);
+		
+		$res_id = $resource->load_into_db($_SESSION['tablename']['attach_res_attachments'], $_SESSION['indexing']['destination_dir'], $_SESSION['indexing']['file_destination_name'].".".$_SESSION['upfile']['format'], $_SESSION['indexing']['path_template'], $_SESSION['indexing']['docserver_id'], $_SESSION['data'], $_SESSION['config']['databasetype']);
 
 		if($res_id == false)
 		{
