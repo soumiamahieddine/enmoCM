@@ -1006,14 +1006,10 @@ if (!defined('_COMMENTS _MANDATORY')) define( '_COMMENTS _MANDATORY', 'Descripti
 
 /******* Security Bitmask label ********/
 
-if (!defined('_ADD_DOCUMENT_LABEL')) define( '_ADD_DOCUMENT_LABEL', 'Ajout de document');
-if (!defined('_CREATE_SERIE_LABEL')) define( '_CREATE_SERIE_LABEL', 'Ajout de s&eacute;rie');
-if (!defined('_CREATE_OTHER_AGREGATE_LABEL')) define( '_CREATE_OTHER_AGREGATE_LABEL', 'Ajout de dossier/sous-dossier/volume');
-if (!defined('_DATA_MODIFICATION_LABEL')) define( '_DATA_MODIFICATION_LABEL', 'Modification des informations');
-if (!defined('_DELETE_DOCUMENT_LABEL')) define( '_DELETE_DOCUMENT_LABEL', 'Suppression de document');
-if (!defined('_DELETE_SERIE_LABEL')) define( '_DELETE_SERIE_LABEL', 'Suppression de s&eacute;rie');
-if (!defined('_DELETE_OTHER_AGREGATE_LABEL')) define( '_DELETE_OTHER_AGREGATE_LABEL', 'Suppression de dossier/sous-dossier/volume');
-if (!defined('_VIEW_LOG_LABEL')) define( '_VIEW_LOG_LABEL', 'Visualisation de l&rsquo;historique');
+if (!defined('_ADD_RECORD_LABEL')) define ('_ADD_RECORD_LABEL','Ajouter un document');
+if (!defined('_DATA_MODIFICATION_LABEL')) define ('_DATA_MODIFICATION_LABEL','Modifier');
+if (!defined('_DELETE_RECORD_LABEL')) define ('_DELETE_RECORD_LABEL','Supprimer un document');
+if (!defined('_VIEW_LOG_LABEL')) define ('_VIEW_LOG_LABEL','Voir les journaux');
 
 
 if (!defined('_PLUS')) define( '_PLUS', 'Plus');
