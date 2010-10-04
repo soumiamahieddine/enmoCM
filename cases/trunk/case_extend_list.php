@@ -72,8 +72,10 @@ $where_request = str_replace("and ()", "", $where_request);
 
 //$request = new request();
 //$tab=$request->select($select,$where_request,$orderstr,$_SESSION['config']['databasetype']);
- 
-$db_external->query("select res_id, status, subject, dest_user, type_label, creation_date, entity_label, category_id, exp_user_id, category_id as category_img, process_limit_date, priority  from ".$_SESSION['collections'][0]['view']." where ".$where_request." order by priority,process_limit_date desc" );
+require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR.'class_contacts.php');
+$contact = new contacts();
+
+$db_external->query("select res_id, status, subject, contact_firstname, contact_lastname, contact_society, user_lastname, user_firstname, dest_user, type_label, creation_date, entity_label, category_id, exp_user_id, category_id as category_img, process_limit_date, priority  from ".$_SESSION['collections'][0]['view']." where ".$where_request." order by priority,process_limit_date desc" );
 if($db_external->nb_result() >0)
 {
 	require_once("core/class/class_security.php");
@@ -83,17 +85,20 @@ if($db_external->nb_result() >0)
 	{
 		$res_status = $status_obj->get_status_data($ext_result->status);
 		$right = $security->test_right_doc($_SESSION['collections'][0]['id'],$ext_result->res_id);
-		if($right==false)
-			$external .='<tr class="col"  style="color:#BBBBBB;"> <a href="'.$_SESSION['config']['businessappurl'].'index.php?page='.$this->detail_destination.'&amp;id='.$ext_result->res_id.'" title="'. _DETAILS.'">';
-		else
+		if($right==false) {
+			$external .='<tr class="col"  style="color:#BBBBBB;"> <a href="#" title="'. _DETAILS.'">';
+		} else {
 			$external .='<tr class="col"  onclick="location.href=\''.$_SESSION['config']['businessappurl'].'index.php?page='.$this->detail_destination.'&amp;id='.$ext_result->res_id.'\';" onmouseover="document.body.style.cursor=\'pointer\';" onmouseout="document.body.style.cursor=\'auto\';"><a href="'.$_SESSION['config']['businessappurl'].'index.php?page='.$this->detail_destination.'&amp;id='.$ext_result->res_id.'" title="'. _DETAILS.'">';
+		}
 		$external .='<td width="8%" >&nbsp;</td>';
 		$external .='<td width="40px"><img src="'.$res_status['IMG_SRC'].'" alt = "'.$res_status['LABEL'].'" title = "'.$res_status['LABEL'].'"></td>';
 		$external .='<td width="40px"><p><img src="'. get_img_cat($ext_result->category_id,$extension_icon).'" title="'.$_SESSION['mail_categories'][$ext_result->category_id].'" alt="'.$_SESSION['mail_categories'][$ext_result->category_id].'"></p></td>';
 		$external .='<td width="40px" ><b><p align="center" title="'._GED_NUM.' : '.$ext_result->res_id.'" alt="'._GED_NUM.' : '.$ext_result->res_id.'">'.$func->cut_string($ext_result->res_id,50).'</td></b></p>';
 		$external .='<td ><p title="'._SUBJECT.' : '.$request->show_string($ext_result->subject).'" alt="'.SUBJECT.' : '.$request->show_string($ext_result->subject).'">'.$func->cut_string($request->show_string($ext_result->subject),70).'</p></td>';
 		//$external .='<td width="100px"><p>'.$ext_result->dest_user.'</td></p>';
-		$external .='<td  ><p title="'._TYPE.' : '.$request->show_string($ext_result->type_label).'" alt="'._TYPE.' : '.$request->show_string($ext_result->type_label).'">('.$request->show_string($ext_result->type_label).')</p></td>';
+		$contactInfo = $contact->get_contact_information_from_view($ext_result->category_id, $ext_result->contact_lastname, $ext_result->contact_firstname, $ext_result->contact_society, $ext_result->user_lastname, $ext_result->user_firstname);
+		$external .='<td  ><p title="'._CONTACT.' : '.$request->show_string($contactInfo).'" alt="'._CONTACT.' : '.$request->show_string($contactInfo).'">'.$request->show_string($contactInfo).'</p></td>';
+		//$external .='<td  ><p title="'._TYPE.' : '.$request->show_string($ext_result->type_label).'" alt="'._TYPE.' : '.$request->show_string($ext_result->type_label).'">('.$request->show_string($ext_result->type_label).')</p></td>';
 		$external .='<td  ><p title="'._ENTITY.' : '.$request->show_string($ext_result->entity_label).'" alt="'._ENTITY.' : '.$request->show_string($ext_result->entity_label).'"><b>'.$request->show_string($ext_result->entity_label).'</b></p></td>';
 		$external .='<td ><p title="'._PROCESS_LIMIT_DATE.' : '.$request->format_date_db($ext_result->process_limit_date,false).'" alt="'._PROCESS_LIMIT_DATE.' : '.$request->format_date_db($ext_result->process_limit_date,false).'">'.$request->format_date_db($ext_result->process_limit_date,false).'</p></td>';
 		$external .='</a></tr>';
