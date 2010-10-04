@@ -92,7 +92,7 @@ for($j=0; $j<count($res); $j++)
 </p>
 <br/>
 <p class="buttons">
-	<input type="button" name="Submit" value="<?php  echo _VALIDATE;?>" class="button" onclick="checkGroup('chooseGroup', '<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&admin=users&page=check_group';?>', '<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&amp;admin=users&amppage=manage_group';?>', '<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&amp;admin=users&amp;page=ugc_form';?>');"  />
+	<input type="button" name="Submit" value="<?php  echo _VALIDATE;?>" class="button" onclick="checkGroup('chooseGroup', '<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&admin=users&page=check_group';?>', '<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&amp;admin=users&amp;page=manage_group';?>', '<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&amp;admin=users&amp;page=ugc_form';?>');"  />
 	<input type="button" name="cancel" value="<?php  echo _CANCEL;?>" class="button"  onclick="destroyModal('add_ugc');"/>
 </p>
 

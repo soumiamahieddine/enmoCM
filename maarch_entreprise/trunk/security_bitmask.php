@@ -9,6 +9,8 @@ define('DELETE_SERIE', 32);
 define('DELETE_OTHER_AGREGATION', 64);
 define('VIEW_LOG', 128);
 
+define('MAX_BITMASK', 255); // If you add new bitmask, don't forget to increase this constant
+
 $_ENV['security_bitmask'] = array();
 array_push($_ENV['security_bitmask'], array('ID' => ADD_RECORD, 'LABEL' => _ADD_RECORD_LABEL));
 array_push($_ENV['security_bitmask'], array('ID' => CREATE_SERIE, 'LABEL' => _CREATE_CLASS_LABEL));
