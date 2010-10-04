@@ -580,7 +580,7 @@ class SecurityControler
 		if($session_sec->__get('last_object_id') == $object_id)
 			return $session_sec->__get('last_available_bitmask');
 		else
-			return setActions($user_id,$object_id, $object_type);
+			return self::setActions($user_id,$object_id, $object_type);
 		/********
 		 * FAKE *
 		 ********/
@@ -598,7 +598,6 @@ class SecurityControler
 	 */
 	public function setActions($user_id,$object_id, $object_type)
 	{
-
 		if($user_id == 'superadmin')
 		{
 			return MAX_BITMASK;
