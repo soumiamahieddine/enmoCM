@@ -20,14 +20,13 @@ abstract class ObjectControler {
 	
 	protected function set_foolish_ids($array)
 	{
-		if(isset($array) && is_array($array) && count($array) > 0 )
+		if(isset($array) && is_array($array) )
 			self::$foolish_ids = $array;
 	}
 	
 	protected function set_specific_id($id)
 	{
-		if(isset($id) && !empty($id) )
-			self::$specific_id = $id;
+        self::$specific_id = $id;
 	}
 	
 	/**

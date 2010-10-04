@@ -615,7 +615,7 @@ class dbquery extends functions
 		{
 			// Shows the connexion data (server, port, user, pass)
 			echo "- <b>"._DB_CONNEXION_ERROR."</b>";
-			if($_SESSION['config']['debug'] == 'true')
+			//if($_SESSION['config']['debug'] == 'true')
 			{
 				
 				echo " -<br /><br />"._DATABASE_SERVER." : ".$this->server."<br/>"._DB_PORT.' : '.$this->port."<br/>"._DB_TYPE." : ".$this->databasetype."<br/>"._DB_NAME.". : ".$this->base."<br/>"._DB_USER." : ".$this->user."<br/>"._PASSWORD." : ".$this->pass;

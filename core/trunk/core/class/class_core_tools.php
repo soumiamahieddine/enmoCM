@@ -128,12 +128,16 @@ class core_tools extends functions
 				$_SESSION['modules_loaded'][$modules[$i]['moduleid']]['fileprefix'] = (string) $CONFIG->fileprefix;
 				$_SESSION['modules_loaded'][$modules[$i]['moduleid']]['loaded'] = (string) $CONFIG->loaded;
 			}
+			
 			$path_module_tools = 'modules'.DIRECTORY_SEPARATOR.$modules[$i]['moduleid'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php";
-			require_once($path_module_tools);
-			$modules_tools = new $modules[$i]['moduleid'];
-			//Loads the tables of the module into session
-			$modules_tools->build_modules_tables();
-			//Loads log keywords of the module
+			if(file_exists($path_module_tools))
+			{
+					require_once($path_module_tools);
+				$modules_tools = new $modules[$i]['moduleid'];
+				//Loads the tables of the module into session
+				$modules_tools->build_modules_tables();
+				//Loads log keywords of the module
+			}
 			foreach($xmlconfig->KEYWORDS as $keyword)
 			{
 				$tmp = (string) $keyword->label;
@@ -194,9 +198,12 @@ class core_tools extends functions
 		for($i=0;$i<count($modules);$i++)
 		{
 			$path_module_tools = 'modules'.DIRECTORY_SEPARATOR.$modules[$i]['moduleid'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php";
-			require_once($path_module_tools);
-			$modules_tools = new $modules[$i]['moduleid'];
-			$modules_tools->load_module_var_session();
+			if(file_exists($path_module_tools))
+			{
+				require_once($path_module_tools);
+				$modules_tools = new $modules[$i]['moduleid'];
+				$modules_tools->load_module_var_session();
+			}
 		}
 	}
 

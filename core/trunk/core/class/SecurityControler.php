@@ -631,7 +631,11 @@ class SecurityControler
 				$query = '';
 				if($object_type == 'aggregation' && ($target == 'CLASS' || $target == 'ALL'))
 				{
-					$query = "select mr_aggregation_id from "._CLASSIFICATION_SCHEME_VIEW." where (".$where.') and mr_aggregation_id = '.$object_id;
+					$query = "select mr_aggregation_id from "._CLASSIFICATION_SCHEME_VIEW." where (".$where.') ';
+                    if(isset($object_id) && !empty($object_id))
+                    {
+                       $query .= 'and mr_aggregation_id = '.$object_id;
+                    }
 				}
 				elseif($object_type == 'classification_scheme' && ($target == 'CLASS' || $target == 'ALL'))
 				{
