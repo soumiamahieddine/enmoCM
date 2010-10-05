@@ -33,6 +33,7 @@ if (!defined('_MANAGE_DOCSERVERS'))  define('_MANAGE_DOCSERVERS', 'G&eacute;rer 
 if (!defined('_MANAGE_DOCSERVERS_LOCATIONS'))  define('_MANAGE_DOCSERVERS_LOCATIONS', 'G&eacute;rer les emplacements des serveurs de documents ("docserver_locations")');
 if (!defined('_MANAGE_DOCSERVER_TYPES'))  define('_MANAGE_DOCSERVER_TYPES', 'G&eacute;rer les types de serveurs de documents ("docserver_types")');
 
+if (!defined('_ADMIN_DOCSERVERS'))  define('_ADMIN_DOCSERVERS', ' Administration des docservers');
 
 /*****************CYCLE_STEPS************************************/
 if (!defined('_LC_CYCLE_STEP'))  define('_LC_CYCLE_STEP', 'une étape de cycle de vie');
@@ -71,7 +72,7 @@ if (!defined('_LC_CYCLE_DELETED'))  define('_LC_CYCLE_DELETED', 'Cycle de vie su
 
 /***************DOCSERVERS TYPES*************************************/
 if (!defined('_DOCSERVER_TYPE_ID'))  define('_DOCSERVER_TYPE_ID', 'Identifiant du type de docserver ');
-if (!defined('_DOCSERVER_TYPE'))  define('_DOCSERVER_TYPE', 'Type de docserver ');
+if (!defined('_DOCSERVER_TYPE'))  define('_DOCSERVER_TYPE', 'un type de docserver ');
 if (!defined('_DOCSERVER_TYPES_LIST'))  define('_DOCSERVER_TYPES_LIST', 'Liste de types de docserver ');
 if (!defined('_ALL_DOCSERVER_TYPES'))  define('_ALL_DOCSERVER_TYPES', 'Tout afficher ');
 if (!defined('_DOCSERVER_TYPE_LABEL'))  define('_DOCSERVER_TYPE_LABEL', 'Label de Type de docserver ');
@@ -83,6 +84,7 @@ if (!defined('_META_TEMPLATE'))  define('_META_TEMPLATE', 'Modèle de métadonn�
 if (!defined('_SIGNATURE_MODE'))  define('_SIGNATURE_MODE', 'Mode de signature');
 if (!defined('_CONTAINER_MAX_NUMBER'))  define('_CONTAINER_MAX_NUMBER', 'Taille maximale du conteneur');
 if (!defined('_DOCSERVER_TYPE_MODIFICATION'))  define('_DOCSERVER_TYPE_MODIFICATION', 'Modification de type de docserver ');
+if (!defined('_DOCSERVER_TYPE_ADDED'))  define('_DOCSERVER_TYPE_ADDED', 'Type de docserver ajouté ');
 
 
 /***************DOCSERVERS*********************************/
@@ -93,7 +95,23 @@ if (!defined('_SIZE_LIMIT'))  define('_SIZE_LIMIT', 'Taille maximale ');
 if (!defined('_ACTUAL_SIZE'))  define('_ACTUAL_SIZE', 'Taille actuelle ');
 if (!defined('_DOCSERVER_LOCATIONS'))  define('_DOCSERVER_LOCATIONS', 'Lieu de stockage des docservers ');
 if (!defined('_DOCSERVER_MODIFICATION'))  define('_DOCSERVER_MODIFICATION', 'Modification de docservers');
+if (!defined('_DOCSERVER_ADDITION'))  define('_DOCSERVER_ADDITION', 'Ajouter un docserver');
+if (!defined('_DOCSERVERS_LIST'))  define('_DOCSERVERS_LIST', 'Liste des docservers ');
+if (!defined('_ALL_DOCSERVERS'))  define('_ALL_DOCSERVERS', 'Tout afficher ');
+if (!defined('_DOCSERVER'))  define('_DOCSERVER', 'un docserver');
 
+
+/************DOCSERVER LOCATIONS******************************/
+if (!defined('_DOCSERVER_LOCATION_ADDITION'))  define('_DOCSERVER_LOCATION_ADDITION', 'Ajouter un lieu de stockage de docservers');
+if (!defined('_DOCSERVER_LOCATION_MODIFICATION'))  define('_DOCSERVER_LOCATION_MODIFICATION', 'Modification lieu de stockage de docservers');
+if (!defined('_ALL_DOCSERVER_LOCATIONS'))  define('_ALL_DOCSERVER_LOCATIONS', 'Tout afficher');
+if (!defined('_DOCSERVER_LOCATIONS_LIST'))  define('_DOCSERVER_LOCATIONS_LIST', 'Liste des lieux de stockage');
+if (!defined('_DOCSERVER_LOCATION'))  define('_DOCSERVER_LOCATION', 'un lieu de stockage de docservers');
+if (!defined('_IPV4'))  define('_IPV4', 'Adresse IPv4');
+if (!defined('_IPV6'))  define('_IPV6', 'Adresse IPv6');
+if (!defined('_NET_DOMAIN'))  define('_NET_DOMAIN', 'Domaine');
+if (!defined('_DOCSERVER_LOCATION_ID'))  define('_DOCSERVER_LOCATION_ID', 'Identifiant de lieu de stockage de docservers');
+if (!defined('_MASK'))  define('_MASK', 'Masque');
 
 
 /*************CYCLE POLICIES*************************************/
