@@ -116,6 +116,11 @@
 		<index_frame_show>false</index_frame_show>
 	</FORMAT>
 	<FORMAT>
+		<name>DWG</name>
+		<mime>application/acad</mime>
+		<index_frame_show>false</index_frame_show>
+	</FORMAT>
+	<FORMAT>
 		<name>ZIP</name>
 		<mime>application/zip</mime>
 		<index_frame_show>false</index_frame_show>
@@ -126,8 +131,13 @@
 		<index_frame_show>false</index_frame_show>
 	</FORMAT>
 	<FORMAT>
-		<name>DWG</name>
-		<mime>application/acad</mime>
+		<name>TGZ</name>
+		<mime>application/x-gzip</mime>
+		<index_frame_show>false</index_frame_show>
+	</FORMAT>
+	<FORMAT>
+		<name>TAR</name>
+		<mime>application/x-tar</mime>
 		<index_frame_show>false</index_frame_show>
 	</FORMAT>
 </ROOT>

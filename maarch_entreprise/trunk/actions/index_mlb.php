@@ -738,7 +738,7 @@ function check_docserver($coll_id) {
 	}
 	require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."docservers_controler.php");
 	$docserverControler = new docservers_controler();
-	$fileInfos = array("size"=>$_SESSION['upfile']['size'], "md5"=>$_SESSION['upfile']['md5'], "format"=>$_SESSION['upfile']['format'], "tmpFileName"=>$new_file_name);
+	$fileInfos = array("tmpDir"=>$_SESSION['config']['tmppath'], "size"=>$_SESSION['upfile']['size'], "md5"=>$_SESSION['upfile']['md5'], "format"=>$_SESSION['upfile']['format'], "tmpFileName"=>$new_file_name);
 	$storeResult = array();
 	$storeResult = $docserverControler->storeResourceOnDocserver($coll_id, $fileInfos);
 	if($storeResult['error'] <> "") {
