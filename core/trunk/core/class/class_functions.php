@@ -321,7 +321,7 @@ class functions
 						return "";
 					}
 				case "date":
-					if($_SESSION['config']['databasetype'] == "SQLSERVER")
+					if(isset($_SESSION['config']['databasetype']) && $_SESSION['config']['databasetype'] == "SQLSERVER")
 					{
 						$date_pattern = "/^[0-3][0-9]-[0-1][0-9]-[1-2][0-9][0-9][0-9]$/";
 					}
@@ -863,8 +863,13 @@ class functions
 	* @param  $insert bool If true format the date to insert in the database (true by default)
 	* @return Formated date or empty string if any error
 	*/
-	function format_date_db($date, $insert=true)
+	function format_date_db($date, $insert=true, $databasetype= '')
 	{
+        if(isset($_SESSION['config']['databasetype']) && !empty($_SESSION['config']['databasetype']))
+        {
+            $databasetype = $_SESSION['config']['databasetype'];
+        }
+        
 		if ($date <> "" )
 		{
 			$var=explode("-",$date) ;
@@ -892,11 +897,11 @@ class functions
 			}
 			else
 			{
-				if($_SESSION['config']['databasetype'] == "SQLSERVER")
+				if($databasetype == "SQLSERVER")
 				{
 					return  $day."-".$month."-".$year;
 				}
-				elseif($_SESSION['config']['databasetype'] == "POSTGRESQL")
+				elseif($databasetype== "POSTGRESQL")
 				{
 					if($_SESSION['config']['lang'] == "fr")
 					{
@@ -907,16 +912,16 @@ class functions
 						return $year."-".$month."-".$day;
 					}
 				}
-				elseif($_SESSION['config']['databasetype'] == "ORACLE")
+				elseif($databasetype == "ORACLE")
 				{
 
 					return  $day."-".$month."-".$year;
 				}
-				elseif($_SESSION['config']['databasetype'] == "MYSQL" && $insert)
+				elseif($databasetype == "MYSQL" && $insert)
 				{
 					return $year."-".$month."-".$day;
 				}
-				elseif($_SESSION['config']['databasetype'] == "MYSQL" && !$insert)
+				elseif($databasetype == "MYSQL" && !$insert)
 				{
 					return  $day."-".$month."-".$year;
 				}
@@ -934,22 +939,26 @@ class functions
 	* @param  $string string String to format
 	* @return Formated date
 	*/
-	public function protect_string_db($string)
+	public function protect_string_db($string, $databasetype = '')
 	{
-		if($_SESSION['config']['databasetype'] == "SQLSERVER")
-		{
-			$string = str_replace("'", "''", $string);
-			$string = str_replace("\\", "", $string);
-		}
-		else if($_SESSION['config']['databasetype'] == "ORACLE")
-		{
-			$string = str_replace("'", "''", $string);
-			$string = str_replace("\\", "", $string);
-		}
-		else if(($_SESSION['config']['databasetype'] == "MYSQL" || $_SESSION['config']['databasetype'] == "POSTGRESQL")  && !get_magic_quotes_runtime()) //&& (ini_get('magic_quotes_gpc') <> true && phpversion() >= 6)
-		{
-			$string = addslashes($string);
-		}
+        if(isset($_SESSION['config']['databasetype']) && !empty($_SESSION['config']['databasetype']))
+        {
+            $databasetype = $_SESSION['config']['databasetype'];
+        }
+        if($databasetype  == "SQLSERVER")
+        {
+            $string = str_replace("'", "''", $string);
+            $string = str_replace("\\", "", $string);
+        }
+        else if($databasetype  == "ORACLE")
+        {
+            $string = str_replace("'", "''", $string);
+            $string = str_replace("\\", "", $string);
+        }
+        else if(($databasetype  == "MYSQL" || $databasetype  == "POSTGRESQL")  && !get_magic_quotes_runtime()) //&& (ini_get('magic_quotes_gpc') <> true && phpversion() >= 6)
+        {
+            $string = addslashes($string);
+        }
 
 		return $string;
 	}
@@ -960,20 +969,24 @@ class functions
 	* @param  $string string String to format
 	* @return Formated string
 	*/
-	public function show_string($string, $replace_CR = false, $chars_to_escape = array())
+	public function show_string($string, $replace_CR = false, $chars_to_escape = array(), $databasetype = '')
 	{
-		if($_SESSION['config']['databasetype'] == "SQLSERVER")
+        if(isset($_SESSION['config']['databasetype']) && !empty($_SESSION['config']['databasetype']))
+        {
+            $databasetype = $_SESSION['config']['databasetype'];
+        }
+		if($databasetype == "SQLSERVER")
 		{
 			$string = str_replace("''", "'", $string);
 			$string = str_replace("\\", "", $string);
 		}
-		else if($_SESSION['config']['databasetype'] == "MYSQL" || $_SESSION['config']['databasetype'] == "POSTGRESQL" && (ini_get('magic_quotes_gpc') <> true || phpversion() >= 6))
+		else if($databasetype == "MYSQL" || $databasetype == "POSTGRESQL" && (ini_get('magic_quotes_gpc') <> true || phpversion() >= 6))
 		{
 			$string = stripslashes($string);
 			$string = str_replace("\\'", "'", $string);
 			$string = str_replace('\\"', '"', $string);
 		}
-		else if($_SESSION['config']['databasetype'] == "ORACLE")
+		else if($databasetype == "ORACLE")
 		{
 			$string = str_replace("''", "'", $string);
 			$string = str_replace("\\", "", $string);

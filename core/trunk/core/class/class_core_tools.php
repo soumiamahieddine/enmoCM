@@ -210,22 +210,36 @@ class core_tools extends functions
 	/**
 	* Loads language variables into session
 	*/
-	public function load_lang()
+	public function load_lang($lang = 'fr', $maarch_directory = '', $maarch_apps = '')
 	{
-		//Overload of language files with custom langage file
+        if(isset($_SESSION['config']['lang']) && !empty($_SESSION['config']['lang']))
+        {
+            $lang = $_SESSION['config']['lang'];
+        }
+        if(isset($_SESSION['config']['corepath']) && !empty($_SESSION['config']['corepath']))
+        {
+           $maarch_directory = $_SESSION['config']['corepath'];
+        }
+        if(isset($_SESSION['config']['app_id']) && !empty($_SESSION['config']['app_id']))
+        {
+           $maarch_apps = $_SESSION['config']['app_id'];
+        }
+		//Loading custom lang file if present, this means that language constants are defined in the custom language file before other language files
 		if (isset($_SESSION['custom_override_id']) && !empty($_SESSION['custom_override_id']))
 			$this->load_lang_custom_override($_SESSION['custom_override_id']);
 		
-		if(isset($_SESSION['config']['lang']) && file_exists($_SESSION['config']['corepath'].'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php'))
+		if(isset($lang) && file_exists($maarch_directory.'apps'.DIRECTORY_SEPARATOR.$maarch_apps.DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$lang.'.php'))
 		{
-			include($_SESSION['config']['corepath'].'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php');
+			include($maarch_directory.'apps'.DIRECTORY_SEPARATOR.$maarch_apps.DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$lang.'.php');
 		}
 		else
 		{
 			$_SESSION['error'] = "Language file missing...<br/>";
 		}
-		$this->load_lang_modules($_SESSION['modules']);
-		
+        if(isset($_SESSION['modules']))
+        {
+            $this->load_lang_modules($_SESSION['modules']);
+		}
 		
 	}
 
