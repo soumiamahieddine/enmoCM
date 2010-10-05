@@ -243,6 +243,36 @@ class docserver_types_controler extends ObjectControler implements ObjectControl
 		self::$db->disconnect();
 	}
 
+/**
+	* Returns in an array all the members of a docserver type (docserver_id only) 
+	*
+	* @param  $docserver_id string  Docserver identifier
+	* @return Array of docserver_id or null
+	*/
+	public function getDocservers($docserver_type_id) {		
+		if(empty($docserver_type_id))
+			return null;
+
+		$docservers = array();
+		self::$db=new dbquery();
+		self::$db->connect();
+		
+		$query = "select docserver_id from "._DOCSERVERS_TABLE_NAME." where docserver_type_id = '".$docserver_type_id."'";
+		try{
+			if($_ENV['DEBUG']){echo $query.' // ';}
+					self::$db->query($query);
+		} catch (Exception $e){
+					echo _NO_TYPE_WITH_ID.' '.$docserver_type_id.' // ';
+		}
+		
+		while($res = self::$db->fetch_object())
+		{
+			array_push($docservers, $res->docserver_id);
+		}
+		self::$db->disconnect();
+		return $docservers;
+	}
+	
 	public function getAllId($can_be_disabled = false) {
 		self :: $db = new dbquery();
 		self :: $db->connect();

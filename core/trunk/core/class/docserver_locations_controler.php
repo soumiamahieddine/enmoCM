@@ -275,6 +275,36 @@ class docserver_locations_controler extends ObjectControler implements ObjectCon
 			return false;
 		}
 	}
+	
+		/**
+	* Returns in an array all the docservers of a docserver location (docserver_id only) 
+	*
+	* @param  $docserver_location_id string  Docserver_location identifier
+	* @return Array of docserver_id or null
+	*/
+	public function getDocservers($docserver_location_id)
+	{		
+		if(empty($docserver_location_id))
+			return null;
+
+		$docservers = array();
+		self::$db=new dbquery();
+		self::$db->connect();
+		$query = "select docserver_id from "._DOCSERVERS_TABLE_NAME." where docserver_location_id = '".$docserver_location_id."'";
+		try{
+			if($_ENV['DEBUG']){echo $query.' // ';}
+					self::$db->query($query);
+		} catch (Exception $e){
+					echo _NO_DOCSERVER_LOCATION_WITH_ID.' '.$docserver_location_id.' // ';
+		}
+		
+		while($res = self::$db->fetch_object())
+		{
+			array_push($docservers, $res->docserver_id);
+		}
+		self::$db->disconnect();
+		return $docservers;
+	}
 
 	public function getAllId($can_be_disabled = false) {
 		self :: $db = new dbquery();
