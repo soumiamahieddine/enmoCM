@@ -355,6 +355,7 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
 	 * Store a new doc in a docserver.
 	 * @param  	$collId collection resource
 	 * @param  	$fileInfos infos of the doc to store, contains :
+	 * 			tmpDir : path to tmp directory
 	 * 			size : size of the doc
 	 * 			md5 : fingerprint of the doc
 	 * 			format : format of the doc
@@ -372,7 +373,12 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
 			$storeInfos = array('error'=>_DOCSERVER_ERROR.' : '._NOT_ENOUGH_DISK_SPACE.". "._MORE_INFOS.".");
 			return $storeInfos;
 		}
-		$tmp = $_SESSION['config']['tmppath'];
+		if($fileInfos['tmpDir'] == "") {
+			$tmp = $_SESSION['config']['tmppath'];
+		} else {
+			$tmp = $fileInfos['tmpDir'];
+		}
+		
 		$d = dir($tmp);
 		$pathTmp = $d->path;
 		while($entry = $d->read()) {
