@@ -30,12 +30,15 @@
 * @ingroup indexing_searching_mlb
 */
 
+require_once ("core" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . "class_request.php");
 require_once ("core" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . "class_security.php");
+require_once ("core" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . "class_resource.php");
 $core_tools = new core_tools();
 $core_tools->test_user();
 $core_tools->load_lang();
 $function = new functions();
 $sec = new security();
+//1:test the request
 if (isset ($_REQUEST['id'])) {
 	$s_id = $_REQUEST['id'];
 } else {
@@ -46,6 +49,7 @@ if ($s_id == '') {
 	header("location: " . $_SESSION['config']['businessappurl'] . "index.php");
 	exit ();
 } else {
+	//2:retrieve the view
 	$table = "";
 	if (isset ($_SESSION['collection_id_choice']) && !empty ($_SESSION['collection_id_choice'])) {
 		$table = $sec->retrieve_view_from_coll_id($_SESSION['collection_id_choice']);
@@ -59,6 +63,7 @@ if ($s_id == '') {
 			$table = $_SESSION['collections'][0]['table'];
 		}
 	}
+	//3:retrieve the where clause
 	$where2 = "";
 	if ($_SESSION['origin'] <> "basket" && $_SESSION['origin'] <> "workflow") {
 		if (isset ($_SESSION['user']['security'][$_SESSION['collection_id_choice']])) {
@@ -67,28 +72,62 @@ if ($s_id == '') {
 			$where2 = " and 1=-1";
 		}
 	}
-	$connexion = new dbquery();
-	$connexion->connect();
-	$connexion->query("select res_id, docserver_id, path, filename, format, fingerprint from " . $table . " where res_id = " . $s_id . $where2);
-	//$connexion->show();
-	if ($connexion->nb_result() == 0) {
-		//$_SESSION['error'] = _THE_DOC." "._EXISTS_OR_RIGHT."&hellip;";
+	//4:retrieve the adr of the resource
+	$adr = array();
+	$resource = new resource();
+	$adr = $resource->getResourceAdr($table, $s_id, $where2);
+	if ($adr['error']) {
 		header("location: " . $_SESSION['config']['businessappurl'] . "index.php?page=no_right");
 		exit ();
 	} else {
-		$line = $connexion->fetch_object();
-		$docserver = $line->docserver_id;
-		$path = $line->path;
-		$filename = $line->filename;
-		$format = $line->format;
-		$md5 = $line->fingerprint;
-		$fingerprint_from_db = $line->fingerprint;
+		$docserver = $adr['docserver_id'];
+		$path = $adr['path'];
+		$filename = $adr['filename'];
+		$format = $adr['format'];
+		$md5 = $adr['fingerprint'];
+		$fingerprint_from_db = $adr['fingerprint'];
+		$offset_doc = $adr['offset_doc'];
+		//5:retrieve infos of the docserver
 		require_once("core" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . "docservers_controler.php");
 		$docserverControler = new docservers_controler();
 		$docserverObject = $docserverControler->get($docserver);
 		$docserver = $docserverObject->path_template;
 		$file = $docserver . $path . $filename;
 		$file = str_replace("#", DIRECTORY_SEPARATOR, $file);
+		$fingerprint_from_docserver = @md5_file($file);
+		//echo md5_file($file)."<br>";
+		//echo filesize($file);
+		$adr['path_to_file'] = $file;
+		//6:retrieve infos of the docserver type
+		require_once("core" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . "docserver_types_controler.php");
+		$docserverTypeControler = new docserver_types_controler();
+		$docserverTypeObject = $docserverTypeControler->get($docserverObject->docserver_type_id);
+		if($docserverTypeObject->is_container && $offset_doc == "") {
+			$core_tools->load_html();
+			$core_tools->load_header('', true, false);
+			echo '<body>';
+			echo '<br/><div class="error">' . _PB_WITH_OFFSET_OF_THE_DOC_IN_THE_CONTAINER . '</div>';
+			echo '</body></html>';
+			exit;
+		}
+		//7:manage compressed resource
+		if($docserverTypeObject->is_compressed) {
+			$extract = array();
+			$extract = $docserverControler->extractArchive($adr);
+			if($extract['error'] <> "") {
+				$core_tools->load_html();
+				$core_tools->load_header('', true, false);
+				echo '<body>';
+				echo '<br/><div class="error">' . $extract['error'] . '</div>';
+				echo '</body></html>';
+				exit;
+			} else {
+				$file = $extract['path'];
+				$mime_type = $extract['mime_type'];
+				$format = $extract['format'];
+			}
+		}
+		//8:manage view of the file
 		$use_tiny_mce = false;
 		if (strtolower($format) == 'maarch' && $core_tools->is_module_loaded('templates')) {
 			$type_state = true;
@@ -97,9 +136,7 @@ if ($s_id == '') {
 			require_once ('apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id'] . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR . "class_indexing_searching_app.php");
 			$is = new indexing_searching_app();
 			$type_state = $is->is_filetype_allowed($format);
-			//control of the fingerprint of the document
 		}
-		$fingerprint_from_docserver = @md5_file($file);
 		if ($fingerprint_from_db == $fingerprint_from_docserver) {
 			if ($type_state <> false) {
 				if ($_SESSION['history']['resview'] == "true") {
@@ -113,7 +150,7 @@ if ($s_id == '') {
 					$ent = new entity();
 					$ent->increaseListinstanceViewed($s_id);
 				}
-				if (!$use_tiny_mce || strtolower($format) <> 'maarch') {
+				if ((!$use_tiny_mce || strtolower($format) <> 'maarch') && $mime_type == "") {
 					$mime_type = $is->get_mime_type($format);
 				}
 				// ***************************************
@@ -125,11 +162,12 @@ if ($s_id == '') {
 						if (strlen($_SESSION['search']['plain_text']) > 0) {
 							$Arguments .= "#search=" . $_SESSION['search']['plain_text'] . "";
 						}
-					@copy($file, $_SESSION['config']['tmppath'] . DIRECTORY_SEPARATOR . 'tmp_file_' . $md5 . $_SESSION['user']['UserId'] . '.' . $format);
-					if (file_exists($_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR . 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id'] . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . 'tmp_file_' . $md5 . $_SESSION['user']['UserId'] . '.' . $format)) {
-						echo "<iframe frameborder=\"0\" scrolling=\"no\" width=\"100%\" HEIGHT=\"100%\" src=\"" . $_SESSION['config']['coreurl'] . '/custom/' . $_SESSION['custom_override_id'] . '/apps/' . $_SESSION['config']['app_id'] . '/tmp/tmp_file_' . $md5 . $_SESSION['user']['UserId'] . '.' . $format . "$Arguments\">" . _FRAME_ARE_NOT_AVAILABLE_FOR_YOUR_BROWSER . "</iframe>";
+					$fileDestinationTmpName = 'tmp_file_' . rand(). '_'. $md5 .'_' . $_SESSION['user']['UserId'] . '.' . $format;
+					@copy($file, $_SESSION['config']['tmppath'] . DIRECTORY_SEPARATOR . $fileDestinationTmpName);
+					if (file_exists($_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR . 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id'] . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $fileDestinationTmpName)) {
+						echo "<iframe frameborder=\"0\" scrolling=\"no\" width=\"100%\" HEIGHT=\"100%\" src=\"" . $_SESSION['config']['coreurl'] . '/custom/' . $_SESSION['custom_override_id'] . '/apps/' . $_SESSION['config']['app_id'] . '/tmp/' . $fileDestinationTmpName . "$Arguments\">" . _FRAME_ARE_NOT_AVAILABLE_FOR_YOUR_BROWSER . "</iframe>";
 					} else {
-						echo "<iframe frameborder=\"0\" scrolling=\"no\" width=\"100%\" HEIGHT=\"100%\" src=\"" . $_SESSION['config']['businessappurl'] . "/tmp/tmp_file_" . $md5 . $_SESSION['user']['UserId'] . "." . $format . "$Arguments\">" . _FRAME_ARE_NOT_AVAILABLE_FOR_YOUR_BROWSER . "</iframe>";
+						echo "<iframe frameborder=\"0\" scrolling=\"no\" width=\"100%\" HEIGHT=\"100%\" src=\"" . $_SESSION['config']['businessappurl'] . "/tmp/" . $fileDestinationTmpName . "$Arguments\">" . _FRAME_ARE_NOT_AVAILABLE_FOR_YOUR_BROWSER . "</iframe>";
 					}
 				} elseif ($use_tiny_mce && strtolower($format) == 'maarch') {
 					$myfile = fopen($file, "r");

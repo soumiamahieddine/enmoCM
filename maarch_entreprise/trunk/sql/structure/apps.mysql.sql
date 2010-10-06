@@ -153,9 +153,9 @@ CREATE TABLE IF NOT EXISTS res_letterbox (
   format varchar(50) collate utf8_unicode_ci NOT NULL,
   typist varchar(50) collate utf8_unicode_ci NOT NULL,
   creation_date datetime NOT NULL,
-   fulltext_result varchar(10) DEFAULT NULL,
-   ocr_result varchar(10) DEFAULT NULL,
-   converter_result varchar(10) DEFAULT NULL,
+  fulltext_result varchar(10) DEFAULT NULL,
+  ocr_result varchar(10) DEFAULT NULL,
+  converter_result varchar(10) DEFAULT NULL,
   author varchar(255) collate utf8_unicode_ci default NULL,
   author_name text collate utf8_unicode_ci,
   identifier varchar(255) collate utf8_unicode_ci default NULL,
@@ -237,7 +237,22 @@ CREATE TABLE IF NOT EXISTS res_letterbox (
   PRIMARY KEY  (res_id)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci  ;
 
-
+CREATE TABLE IF NOT EXISTS adr_letterbox(
+  res_id bigint(8) NOT NULL,
+  docserver_id varchar(32) collate utf8_unicode_ci NOT NULL,
+  path varchar(255) collate utf8_unicode_ci default NULL,
+  filename varchar(255) collate utf8_unicode_ci default NULL,
+  offset_doc varchar(255) collate utf8_unicode_ci default NULL,
+  logical_adr varchar(255) collate utf8_unicode_ci default NULL,
+  fingerprint varchar(255) collate utf8_unicode_ci default NULL,
+  filesize bigint(8) default NULL,
+  policy_id varchar(32) collate utf8_unicode_ci NOT NULL,
+  cycle_id varchar(32) collate utf8_unicode_ci NOT NULL,
+  cycle_step_id varchar(32) collate utf8_unicode_ci NOT NULL,
+  adr_priority int(8) NOT NULL,
+  PRIMARY KEY  (res_id, docserver_id)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci  ;
+  
 
 CREATE TABLE IF NOT EXISTS mlb_coll_ext (
   res_id bigint(8) NOT NULL,
@@ -272,7 +287,7 @@ CREATE OR REPLACE VIEW res_view AS
  SELECT r.tablename, r.res_id, r.title, r.page_count, r.identifier, r.doc_date, r.type_id,
  d.description AS type_label, d.doctypes_first_level_id, dfl.doctypes_first_level_label, d.doctypes_second_level_id,
  dsl.doctypes_second_level_label, r.format, r.typist, r.creation_date, r.relation, r.docserver_id,
- r.folders_system_id, f.folder_id, r.path, r.filename, r.fingerprint, r.filesize, r.status,
+ r.folders_system_id, f.folder_id, r.path, r.filename, r.fingerprint, r.offset_doc, r.filesize, r.status,
  r.work_batch, r.arbatch_id, r.arbox_id,  r.is_paper, r.scan_date, r.scan_user,r.scan_location,r.scan_wkstation,
  r.scan_batch,r.doc_language,r.description,r.source,r.initiator,r.destination,r.dest_user,
  r.custom_t1 AS doc_custom_t1, r.custom_t2 AS doc_custom_t2, r.custom_t3 AS doc_custom_t3,

@@ -294,6 +294,24 @@ CREATE TABLE res_letterbox
 WITH (OIDS=FALSE);
 ALTER TABLE res_letterbox OWNER TO postgres;
 
+CREATE TABLE adr_letterbox
+(
+  res_id bigint NOT NULL,
+  docserver_id character varying(32) NOT NULL,
+  path character varying(255) DEFAULT NULL::character varying,
+  filename character varying(255) DEFAULT NULL::character varying,
+  offset_doc character varying(255) DEFAULT NULL::character varying,
+  logical_adr character varying(255) DEFAULT NULL::character varying,
+  fingerprint character varying(255) DEFAULT NULL::character varying,
+  filesize bigint,
+  policy_id character varying(32) NOT NULL,
+  cycle_id character varying(32) NOT NULL, 
+  cycle_step_id character varying(32) NOT NULL, 
+  adr_priority integer NOT NULL,
+  CONSTRAINT adr_letterbox_pkey PRIMARY KEY (res_id, docserver_id)
+)
+WITH (OIDS=FALSE);
+ALTER TABLE adr_letterbox OWNER TO postgres;
 
 CREATE TABLE mlb_coll_ext (
   res_id bigint NOT NULL,
@@ -333,7 +351,7 @@ CREATE OR REPLACE VIEW res_view AS
  SELECT r.tablename, r.res_id, r.title, r.page_count, r.identifier, r.doc_date, r.type_id,
  d.description AS type_label, d.doctypes_first_level_id, dfl.doctypes_first_level_label, d.doctypes_second_level_id,
  dsl.doctypes_second_level_label, r.format, r.typist, r.creation_date, r.relation, r.docserver_id,
- r.folders_system_id, f.folder_id, r.path, r.filename, r.fingerprint, r.filesize, r.status,
+ r.folders_system_id, f.folder_id, r.path, r.filename, r.fingerprint, r.offset_doc, r.filesize, r.status,
  r.work_batch, r.arbatch_id, r.arbox_id,  r.is_paper, r.scan_date, r.scan_user,r.scan_location,r.scan_wkstation,
  r.scan_batch,r.doc_language,r.description,r.source,r.initiator,r.destination,r.dest_user,
  r.custom_t1 AS doc_custom_t1, r.custom_t2 AS doc_custom_t2, r.custom_t3 AS doc_custom_t3,

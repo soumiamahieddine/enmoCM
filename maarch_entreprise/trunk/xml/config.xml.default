@@ -41,6 +41,7 @@
 		<label>_LETTERBOX</label>
 		<table>res_letterbox</table>
 		<view>res_view_letterbox</view>
+		<adr>adr_letterbox</adr>
 		<index_file>index_letterbox.xml</index_file>
 		<script_add>index_letterbox.php</script_add>
 		<script_search>search_letterbox.php</script_search>
@@ -56,6 +57,7 @@
 		<label>_APA_COLL</label>
 		<table>res_apa</table>
 		<view>res_view_apa</view>
+		<adr>adr_apa</adr>
 		<index_file>index.xml</index_file>
 		<script_add></script_add>
 		<script_search></script_search>

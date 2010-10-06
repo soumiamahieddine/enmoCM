@@ -125,12 +125,12 @@ class business_app_tools extends dbquery
 				}
 				if(isset($col->table) && !empty($col->table))
 				{
-					$_SESSION['collections'][$i] = array("id" => (string) $col->id, "label" => (string) $tmp, "table" => (string) $col->table,"view" => (string) $col->view, "index_file" => (string) $col->index_file, "script_add" => (string) $col->script_add, "script_search" => (string) $col->script_search, "script_search_result" => (string) $col->script_search_result, "script_details"=> (string) $col->script_details, "path_to_lucene_index"=> (string) $col->path_to_lucene_index, "extensions" => $tab);
+					$_SESSION['collections'][$i] = array("id" => (string) $col->id, "label" => (string) $tmp, "table" => (string) $col->table,"view" => (string) $col->view,"adr" => (string) $col->adr, "index_file" => (string) $col->index_file, "script_add" => (string) $col->script_add, "script_search" => (string) $col->script_search, "script_search_result" => (string) $col->script_search_result, "script_details"=> (string) $col->script_details, "path_to_lucene_index"=> (string) $col->path_to_lucene_index, "extensions" => $tab);
 					$i++;
 				}
 				else
 				{
-					$_SESSION['collections'][$i] = array("id" => (string) $col->id, "label" => (string) $tmp, "view" => (string) $col->view, "index_file" => (string) $col->index_file, "script_add" => (string) $col->script_add, "script_search" => (string) $col->script_search, "script_search_result" => (string) $col->script_search_result, "script_details"=> (string) $col->script_details, "path_to_lucene_index"=> (string) $col->path_to_lucene_index, "extensions" => $tab);
+					$_SESSION['collections'][$i] = array("id" => (string) $col->id, "label" => (string) $tmp, "view" => (string) $col->view, "adr" => (string) $col->adr, "index_file" => (string) $col->index_file, "script_add" => (string) $col->script_add, "script_search" => (string) $col->script_search, "script_search_result" => (string) $col->script_search_result, "script_details"=> (string) $col->script_details, "path_to_lucene_index"=> (string) $col->path_to_lucene_index, "extensions" => $tab);
 				}
 			}
 			$HISTORY = $xmlconfig->HISTORY;
