@@ -382,5 +382,33 @@
 			return true;
 		}
 	}
+	
+	/**
+	* get the adr of the document 
+	* 
+	* @param $view resource view
+	* @param $resId resource ID
+	* @param $whereClause security clause
+	* @return array of adr fields if is ok
+	*/
+	public function getResourceAdr($view, $resId, $whereClause) {
+		if(!isset($view) || empty($resId) || empty($whereClause)) {
+			$adr = array("error" => true);
+			return $adr;
+		}
+		$this->connect();
+		$query = "select res_id, docserver_id, path, filename, format, fingerprint, offset_doc from ".$view." where res_id = ".$resId." ".$whereClause;
+		$this->query($query);
+		if ($this->nb_result() > 0) {
+			$line = $this->fetch_object();
+			$adr = array("docserver_id" => $line->docserver_id, "path" => $line->path, "filename" => $line->filename, "format" => $line->format, "fingerprint" => $line->fingerprint, "offset_doc" => $line->offset_doc);
+			$this->disconnect();
+			return $adr;
+		} else {
+			$this->disconnect();
+			$adr = array("error" => true);
+			return $adr;
+		}
+	}
 }
 ?>

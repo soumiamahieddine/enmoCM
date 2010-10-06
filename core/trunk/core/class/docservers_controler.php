@@ -280,7 +280,7 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
 		}
 		self::$db->disconnect();
 		return true;
-	}	
+	}
 	
 	/**
 	* Check if the docserver actual size is less than the size limit
@@ -306,7 +306,7 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
 		} else {
 			return false;
 		}
-	}	
+	}
 	
 	/**
 	* Check if the docserver size has not reached the limit
@@ -348,7 +348,7 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
 				return null;
 		} else {
 			return null;
-		}	
+		}
 	}
 	
 	/**
@@ -511,6 +511,62 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
 		self::$db->query("update "._DOCSERVERS_TABLE_NAME." set actual_size_number=".$newSize." where docserver_id='".$docserver->docserver_id."'");
 		self::$db->disconnect();
 		return $newSize;
+	}
+	
+	/**
+	* get the mime type of a doc
+	* @param $filePath path of the file
+	* @return string of the mime type
+	*/
+	public function getMimeType($filePath) {
+		require_once 'MIME/Type.php';
+		return MIME_Type::autoDetect($filePath);
+	}
+	
+	/**
+	 * Extract a file from an archive
+	 * @param  	$fileInfos infos of the doc to store, contains :
+	 * 			tmpDir : path to tmp directory
+	 * 			path_to_file : path to the file in the docserver
+	 * 			filename : name of the file
+	 * 			offset_doc : offset of the doc in the container
+	 * @return 	array with path of the extracted doc
+	 */
+	public function extractArchive($fileInfos) {
+		if($fileInfos['tmpDir'] == "") {
+			$tmp = $_SESSION['config']['tmppath'];
+		} else {
+			$tmp = $fileInfos['tmpDir'];
+		}
+		//TODO:extract on the maarch tmp dir on server or on the fly in the docserver dir ?
+		$fileNameOnTmp = $tmp.rand()."_".md5_file($fileInfos['path_to_file'])."_".$fileInfos['filename'];
+		$cp = copy($fileInfos['path_to_file'], $fileNameOnTmp);
+		if($cp == false) {
+			$result = array('error'=>_TMP_COPY_ERROR);
+			return $result;
+		} else {
+			require_once "File/Archive.php";
+			$toExtract = $fileNameOnTmp.DIRECTORY_SEPARATOR.$fileInfos['offset_doc'];
+			$extract = File_Archive::extract(
+			    $toExtract,
+				$tmp
+				//File_Archive::toOutput()
+			);
+			//var_dump($extract);
+			$delete = unlink($fileNameOnTmp);
+			if($delete == false) {
+				$result = array('error'=>_TMP_FILE_DEL_ERROR);
+				return $result;
+			}
+			if($extract <> null) {
+				$result = array('error'=>_PB_WITH_EXTRACTION_OF_CONTAINER." : <br>".$extract->message);
+				return $result;
+			} else {
+				$format = substr($fileInfos['offset_doc'], strrpos($fileInfos['offset_doc'], '.') + 1);
+				$result = array('path'=>$tmp.$fileInfos['offset_doc'], 'mime_type'=>self::getMimeType($tmp.$fileInfos['offset_doc']), 'format'=>$format);
+				return $result;
+			}
+		}
 	}
 }
 
