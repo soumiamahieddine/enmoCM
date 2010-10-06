@@ -44,7 +44,7 @@ try {
 	require_once ("core/class/docserver_locations.php");
 	require_once ("core/class/ObjectControlerAbstract.php");
 	require_once ("core/class/ObjectControlerIF.php");
-	//require_once("apps/maarch_entreprise/tools/Net_Ping-2.4.5/Ping.php");
+	require_once("apps/maarch_entreprise/tools/Net_Ping-2.4.5/Ping.php");
 } catch (Exception $e){
 	echo $e->getMessage().' // ';
 }
@@ -346,9 +346,10 @@ class docserver_locations_controler extends ObjectControler implements ObjectCon
 		} else {
 			$response = $ping->ping($ipv4);
 			if($response->getReceived() == $response->getTransmitted()) {
-				//print_r($response)."<br>";
+				print_r($response)."<br>";
 				return true;
 			} else {
+				echo "erreur";
 				return false;
 			}
 		}
