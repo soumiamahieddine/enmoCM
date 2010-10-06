@@ -968,6 +968,10 @@ if (!defined('_TREE_ROOT')) define( '_TREE_ROOT', 'Tree root');
 
 if (!defined('_TITLE_STATS_CHOICE_PERIOD')) define('_TITLE_STATS_CHOICE_PERIOD','For a given period');
 
+/******************Docservers: List + form****************/
+if (!defined('_SEE_DOCSERVERS_')) define( '_SEE_DOCSERVERS_', 'Display docservers of this type');
+if (!defined('_GO_MANAGE_DOCSERVER'))  define('_GO_MANAGE_DOCSERVER', 'Modify');
+if (!defined('_SEE_DOCSERVERS_LOCATION')) define( '_SEE_DOCSERVERS_LOCATION', 'Display docservers of this location');
 
 
 

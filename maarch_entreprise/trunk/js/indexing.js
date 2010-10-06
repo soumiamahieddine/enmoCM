@@ -742,3 +742,35 @@ function display_contact_card(mode)
 		Element.setStyle(contact_card, {visibility : mode});
 	}
 }
+
+function changeCycle(path_manage_script) {
+	var policy_id = $('policy_id');
+	if(policy_id.value != '') {
+		new Ajax.Request(path_manage_script,
+		{
+			method:'post',
+			parameters: { policy_id : policy_id.value
+						},
+				onSuccess: function(answer){
+				eval("response = "+answer.responseText);
+				if(response.status == 0 || response.status == 1) {
+					if(response.status == 0) {
+						//response.selectClient;
+						$('cycle_div').innerHTML = response.selectCycle;
+					} else {
+						//
+					}
+				} else {
+					try {
+						$('frm_error').innerHTML = response.error_txt;
+					}
+					catch(e){}
+				}
+			}
+		});
+	} //else {
+		//if($('policy_id')) {
+			//Element.setStyle($('policy_id'), {display : 'none'})
+		//}
+	//}
+}

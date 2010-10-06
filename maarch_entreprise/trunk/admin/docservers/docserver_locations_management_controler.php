@@ -47,6 +47,7 @@ if(isset($_REQUEST['mode']) && !empty($_REQUEST['mode'])){
 
 try{
 	require_once("core/class/docserver_locations_controler.php");
+	require_once("core/class/docservers_controler.php");
 	require_once("core/class/class_request.php");
 	if($mode == 'list'){
 		require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");
@@ -65,7 +66,9 @@ if(isset($_REQUEST['submit'])){
 	$state = true;
 	switch ($mode) {
 		case "up" :
-			$state=display_up($docserver_location_id); 
+			$res=display_up($docserver_location_id); 
+			$state = $res['state'];
+			$docservers = $res['docservers'];
 			location_bar_management($mode);
 			break;
 		case "add" :
@@ -150,9 +153,10 @@ function validate_cs_submit($mode){
 	if(!docserver_locations_controler::ipv4Control($docserver_locations->ipv4)){	
 		$_SESSION['error'] .= _IP_V4_FORMAT_NOT_VALID."<br>";
 	}
-	/*
-	if(!docserver_locations_controler::pingIpv4($docserver_locations->ipv4)){
-		$_SESSION['error'] .= _IP_V4_ADRESS_NOT_VALID."<br>";
+	
+	/*if(!empty($_REQUEST['ipv4'])){
+		if(!docserver_locations_controler::pingIpv4($docserver_locations->ipv4))
+			$_SESSION['error'] .= _IP_V4_ADRESS_NOT_VALID."<br>";
 	}*/
 		
 	$docserver_locations->ipv6=$f->protect_string_db($f->wash($_REQUEST['ipv6'], "no", _IPV6." ", 'no', 0, 255));
@@ -222,15 +226,31 @@ function validate_cs_submit($mode){
  * Initialize session parameters for update display
  * @param Long $docserver_location_id
  */
-function display_up($docserver_location_id){
+function display_up($docserver_location_id) {
+	$docservers = array();
 	$state=true;
 	$docserver_locations = docserver_locations_controler::get($docserver_location_id);
 	if(empty($docserver_locations))
 		$state = false; 
 	else
 		put_in_session("docserver_locations", $docserver_locations->getArray()); 
+		
+	$docservers_id = docserver_locations_controler::getDocservers($docserver_location_id ); //ramène le tableau des user_id appartenant au groupe
+	for($i=0; $i<count($docservers_id);$i++)
+	{
+		$tmp_user = docservers_controler::get($docservers_id[$i]);
+		if(isset($tmp_user))
+		{
+			array_push($docservers, $tmp_user);
+		}	
+	}
 	
-	return $state;
+	unset($tmp_user);
+	
+	$res['state'] = $state;
+	$res['docservers'] = $docservers;
+	
+	return $res;
 }
 
 /**

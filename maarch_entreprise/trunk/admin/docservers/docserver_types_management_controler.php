@@ -49,6 +49,7 @@ if(isset($_REQUEST['mode']) && !empty($_REQUEST['mode'])) {
 try{
 	require_once("core/class/docserver_types_controler.php");
 	require_once("core/class/class_request.php");
+	require_once("core/class/docservers_controler.php");
 	if($mode == 'list') {
 		require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");
 	}
@@ -66,7 +67,9 @@ if(isset($_REQUEST['submit'])) {
 	$state = true;
 	switch ($mode) {
 		case "up" :
-			$state=display_up($docserver_type_id); 
+			$res=display_up($docserver_type_id); 
+			$state = $res['state'];
+			$docservers = $res['docservers'];
 			location_bar_management($mode);
 			break;
 		case "add" :
@@ -247,6 +250,8 @@ function validate_cs_submit($mode) {
  * @param Long $docserver_type_id
  */
 function display_up($docserver_type_id) {
+	
+	$docservers = array();
 	$state=true;
 	$docserver_types = docserver_types_controler::get($docserver_type_id);
 	if(empty($docserver_types))
@@ -254,7 +259,23 @@ function display_up($docserver_type_id) {
 	else
 		put_in_session("docserver_types", $docserver_types->getArray()); 
 	
-	return $state;
+	$docservers_id = docserver_types_controler::getDocservers($docserver_type_id ); //ramène le tableau des docserver_id appartenant au type
+	for($i=0; $i<count($docservers_id);$i++)
+	{ 
+		
+		$tmp_docserver = docservers_controler::get($docservers_id[$i]);
+		
+		if(isset($tmp_docserver))
+		{
+			array_push($docservers, $tmp_docserver);
+		}	
+	}	
+	unset($tmp_docserver);
+		
+	$res['state'] = $state;
+	$res['docservers'] = $docservers;
+	return $res;
+	
 }
 
 /**

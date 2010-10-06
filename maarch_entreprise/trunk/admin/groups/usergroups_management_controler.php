@@ -177,7 +177,6 @@ function display_up($group_id)
 	}
 	$users_id = usergroups_controler::getUsers($group_id ); //ramène le tableau des user_id appartenant au groupe
 	$baskets_id = usergroups_controler::getBaskets($group_id ); //ramène le tableau des basket_id associées au groupe
-
 	for($i=0; $i<count($users_id);$i++)
 	{
 		$tmp_user = users_controler::get($users_id[$i]);
@@ -186,6 +185,7 @@ function display_up($group_id)
 			array_push($users, $tmp_user);
 		}	
 	}
+	
 	unset($tmp_user);
 	
 	if($basket_loaded)

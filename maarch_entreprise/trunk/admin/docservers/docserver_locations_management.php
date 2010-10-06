@@ -46,6 +46,56 @@ if($mode == "list") {
 			echo "<br /><br />"._THE_DOCSERVER_LOCATION." "._UNKOWN."<br /><br /><br /><br />";
 		} else {
 			?>
+			<div id="inner_content" class="clearfix">
+			<?php
+			if($mode == "up") {
+				if(count($docservers) > 0) {
+				?><div onclick="new Effect.toggle('users_list', 'blind', {delay:0.2});return false;" >
+					&nbsp;<img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=manage_doctypes_b.gif" alt="" /><i><?php  echo _SEE_DOCSERVERS_LOCATION;?></i> <img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=plus.png" alt="" />
+					<span class="lb1-details">&nbsp;</span></div>
+					<div class="desc" id="users_list" style="display:none;">
+						<div class="ref-unit">
+							<table cellpadding="0" cellspacing="0" border="0" class="listingsmall" summary="">
+								<thead>
+									<tr>
+										<th><?php  echo _DOCSERVER_ID;?></th>
+										<th ><?php  echo _DEVICE_LABEL;?></th>
+										<th ><?php  echo _DOCSERVER_TYPE_ID;?></th>
+									</tr>
+								</thead>
+
+								<tbody>
+								<?php
+									$color = ' class="col"';
+						
+									for($i=0;$i<count($docservers);$i++) {
+										if($color == ' class="col"') {
+											$color = '';
+										} else {
+											$color = ' class="col"';
+										}
+										?>
+										<tr <?php  echo $color; ?> >
+											<td style="width:25%;"><?php  echo $docservers[$i]->__get('docserver_id');?></td>
+											<td style="width:25%;"><?php  echo $docservers[$i]->__get('device_label');?></td>
+											<td style="width:25%;"><?php  echo $docservers[$i]->__get('docserver_type_id');?></td>
+											<td ><?php 
+										if(core_tools::test_service('admin_docservers', 'apps', false)) {?>
+											<a class="change" href="<?php echo $_SESSION['config']['businessappurl'].'index.php?page=docservers_management_controler&amp;mode=up&amp;admin=docservers&amp;id='.$docservers[$i]->__get('docserver_id'); ?>"  title="<?php echo _GO_MANAGE_;?>"><i><?php echo _GO_MANAGE_DOCSERVER;?></i></a><?php }?></td>
+										</tr>
+									<?php
+									}
+								?>
+							</tbody>
+						</table>
+						<br/>
+					</div>
+				</div>
+			<?php
+				}
+			}
+			?>
+			<br/><br/>
 			<form name="formdocserver" method="post" class="forms" action="<?php echo $_SESSION['config']['businessappurl']."index.php?display=true&page=docserver_locations_management_controler&admin=docservers&mode=".$mode;?>">
 				<input type="hidden" name="display" value="value" />
 				<input type="hidden" name="admin" value="docservers" />

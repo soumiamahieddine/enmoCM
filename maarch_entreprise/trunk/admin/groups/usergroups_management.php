@@ -80,6 +80,7 @@ elseif($mode == "up" || $mode == "add")
 						<tbody>
 							 <?php
 						$color = ' class="col"';
+						
 						 for($i=0;$i<count($users);$i++)
 							{
 								if($color == ' class="col"')
