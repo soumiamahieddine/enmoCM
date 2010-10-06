@@ -36,15 +36,35 @@ CREATE TABLE actions
 WITH (OIDS=FALSE);
 ALTER TABLE actions OWNER TO postgres;
 
+CREATE TABLE docserver_types
+(
+  docserver_type_id character varying(32) NOT NULL,
+  docserver_type_label character varying(255) DEFAULT NULL::character varying,
+  enabled character(1) NOT NULL DEFAULT 'Y'::bpchar,
+  is_container boolean NOT NULL DEFAULT false,
+  container_max_number integer NOT NULL DEFAULT (0)::integer,
+  is_compressed boolean NOT NULL DEFAULT false,
+  compression_mode character varying(32) DEFAULT NULL::character varying,
+  is_meta boolean NOT NULL DEFAULT false,
+  meta_template character varying(32) DEFAULT NULL::character varying,
+  is_logged boolean NOT NULL DEFAULT false,
+  log_template character varying(32) DEFAULT NULL::character varying,
+  is_signed boolean NOT NULL DEFAULT false,
+  signature_mode character varying(32) DEFAULT NULL::character varying,
+  CONSTRAINT docserver_types_pkey PRIMARY KEY (docserver_type_id)
+)
+WITH (OIDS=FALSE);
+ALTER TABLE doctypes OWNER TO postgres;
+
 CREATE TABLE docservers
 (
   docserver_id character varying(32) NOT NULL DEFAULT '1'::character varying,
-  device_type character varying(32) DEFAULT NULL::character varying,
+  docserver_type_id character varying(32) NOT NULL,
   device_label character varying(255) DEFAULT NULL::character varying,
-  is_readonly character(1) NOT NULL DEFAULT 'N'::bpchar,
+  is_readonly boolean NOT NULL DEFAULT false,
   enabled character(1) NOT NULL DEFAULT 'Y'::bpchar,
-  size_limit bigint NOT NULL DEFAULT (0)::bigint,
-  actual_size bigint NOT NULL DEFAULT (0)::bigint,
+  size_limit_number bigint NOT NULL DEFAULT (0)::bigint,
+  actual_size_number bigint NOT NULL DEFAULT (0)::bigint,
   path_template character varying(255) NOT NULL,
   ext_docserver_info character varying(255) DEFAULT NULL::character varying,
   chain_before character varying(32) DEFAULT NULL::character varying,
@@ -52,11 +72,26 @@ CREATE TABLE docservers
   creation_date timestamp without time zone NOT NULL,
   closing_date timestamp without time zone,
   coll_id character varying(32) NOT NULL DEFAULT 'coll_1'::character varying,
-  priority integer NOT NULL DEFAULT 10,
+  priority_number integer NOT NULL DEFAULT 10,
+  docserver_location_id character varying(32) NOT NULL,
+  adr_priority_number integer NOT NULL DEFAULT 1,
   CONSTRAINT docservers_pkey PRIMARY KEY (docserver_id)
 )
 WITH (OIDS=FALSE);
-ALTER TABLE docservers OWNER TO postgres;
+ALTER TABLE doctypes OWNER TO postgres;
+
+CREATE TABLE docserver_locations
+(
+  docserver_location_id character varying(32) NOT NULL,
+  ipv4 character varying(255) DEFAULT NULL::character varying,
+  ipv6 character varying(255) DEFAULT NULL::character varying,
+  net_domain character varying(32) DEFAULT NULL::character varying,
+  mask character varying(255) DEFAULT NULL::character varying,
+  enabled character(1) NOT NULL DEFAULT 'Y'::bpchar,
+  CONSTRAINT docserver_locations_pkey PRIMARY KEY (docserver_location_id)
+)
+WITH (OIDS=FALSE);
+ALTER TABLE doctypes OWNER TO postgres;
 
 CREATE SEQUENCE doctypes_type_id_seq
   INCREMENT 1
