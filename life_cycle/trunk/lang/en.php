@@ -72,7 +72,7 @@ if (!defined('_LC_CYCLE_DELETED'))  define('_LC_CYCLE_DELETED', 'Life cycle dele
 
 
 /***************DOCSERVERS TYPES*************************************/
-if (!defined('_DOCSERVER_TYPE_ID'))  define('_DOCSERVER_TYPE_ID', 'Docserver ID ');
+if (!defined('_DOCSERVER_TYPE_ID'))  define('_DOCSERVER_TYPE_ID', 'Docserver type ID ');
 if (!defined('_DOCSERVER_TYPE'))  define('_DOCSERVER_TYPE', 'Docserver type');
 if (!defined('_DOCSERVER_TYPES_LIST'))  define('_DOCSERVER_TYPES_LIST', 'Docserver type list ');
 if (!defined('_ALL_DOCSERVER_TYPES'))  define('_ALL_DOCSERVER_TYPES', 'View all');
@@ -89,7 +89,8 @@ if (!defined('_DOCSERVER_TYPE_ADDED'))  define('_DOCSERVER_TYPE_ADDED', 'Docserv
 
 
 /***************DOCSERVERS*************************************/
-if (!defined('_DEVICE_LABEL'))  define('_DEVICE_LABEL', 'device label ');
+if (!defined('_DOCSERVER_ID'))  define('_DOCSERVER_ID', 'Docserver ID');
+if (!defined('_DEVICE_LABEL'))  define('_DEVICE_LABEL', 'Device label ');
 if (!defined('_SIZE_FORMAT'))  define('_SIZE_FORMAT', 'Size format ');
 if (!defined('_SIZE_LIMIT'))  define('_SIZE_LIMIT', 'Size limit');
 if (!defined('_ACTUAL_SIZE'))  define('_ACTUAL_SIZE', 'Actual size');
@@ -99,6 +100,16 @@ if (!defined('_DOCSERVER_ADDITION'))  define('_DOCSERVER_ADDITION', 'Add a docse
 if (!defined('_DOCSERVERS_LIST'))  define('_DOCSERVERS_LIST', 'Docservers list ');
 if (!defined('_ALL_DOCSERVERS'))  define('_ALL_DOCSERVERS', 'View all ');
 if (!defined('_DOCSERVER'))  define('_DOCSERVER', 'a docserver');
+if (!defined('_COLL_ID'))  define('_COLL_ID', 'Collection ID');
+if (!defined('_PERCENTAGE_FULL'))  define('_PERCENTAGE_FULL', 'Filling percentage');
+if (!defined('_IS_LOGGED'))  define('_IS_LOGGED', 'Is logged');
+if (!defined('_IS_CONTAINER'))  define('_IS_CONTAINER', 'Is contained');
+if (!defined('_LOG_TEMPLATE'))  define('_LOG_TEMPLATE', 'Templates for resources logged');
+if (!defined('_IS_SIGNED'))  define('_IS_SIGNED', 'Is signed');
+if (!defined('_SIGNATURE_MODE'))  define('_SIGNATURE_MODE', 'Signature mode');
+
+
+
 
 
 /************DOCSERVER LOCATIONS******************************/

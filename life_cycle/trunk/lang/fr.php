@@ -52,7 +52,8 @@ if (!defined('_LC_CYCLE_STEP_UPDATED'))  define('_LC_CYCLE_STEP_UPDATED', 'Etape
 if (!defined('_LC_CYCLE_STEP_ADDED'))  define('_LC_CYCLE_STEP_ADDED', 'Etape de cycle de vie ajoutée');
 if (!defined('_LC_CYCLE_STEP_DELETED'))  define('_LC_CYCLE_STEP_DELETED', 'Etape de cycle de vie supprimée');
 if (!defined('_COLLECTION_IDENTIFIER'))  define('_COLLECTION_IDENTIFIER', 'identifiant de la collection');
-
+if (!defined('_LC_CYCLE_STEP_MODIFICATION'))  define('_LC_CYCLE_STEP_MODIFICATION', 'Modification d\' une étape de cycle de vie');
+//if (!defined('_LC_CYCLE_STEPS'))  define('_LC_CYCLE_STEPS', 'une étape de cycle de vie');
 
 
 /****************CYCLES*************************************/
@@ -63,12 +64,12 @@ if (!defined('_CYCLE_DESC'))  define('_CYCLE_DESC', 'Descriptif du cycle de vie'
 if (!defined('_VALIDATION_MODE'))  define('_VALIDATION_MODE', 'Mode de validation');
 if (!defined('_ALL_LC_CYCLES'))  define('_ALL_LC_CYCLES', 'Tout afficher');
 if (!defined('_LC_CYCLES_LIST'))  define('_LC_CYCLES_LIST', 'Liste des cycles de vie');
-if (!defined('_SEQUENCE_NUMBER'))  define('_SEQUENCE_NUMBER', 'Numéro de séquence');
+if (!defined('_SEQUENCE_NUMBER'))  define('_SEQUENCE_NUMBER', 'Numero de séquence');
 if (!defined('_LC_CYCLE_ADDITION'))  define('_LC_CYCLE_ADDITION', 'Ajouter un cycle de vie');
 if (!defined('_LC_CYCLE_ADDED'))  define('_LC_CYCLE_ADDED', 'Cycle de vie ajouté');
 if (!defined('_LC_CYCLE_UPDATED'))  define('_LC_CYCLE_UPDATED', 'Cycle de vie mis à jour');
 if (!defined('_LC_CYCLE_DELETED'))  define('_LC_CYCLE_DELETED', 'Cycle de vie supprimé');
-
+if (!defined('_LC_CYCLE_MODIFICATION'))  define('_LC_CYCLE_MODIFICATION', 'Modification du cycle de vie');
 
 /***************DOCSERVERS TYPES*************************************/
 if (!defined('_DOCSERVER_TYPE_ID'))  define('_DOCSERVER_TYPE_ID', 'Identifiant du type de docserver ');
@@ -99,6 +100,8 @@ if (!defined('_DOCSERVER_ADDITION'))  define('_DOCSERVER_ADDITION', 'Ajouter un 
 if (!defined('_DOCSERVERS_LIST'))  define('_DOCSERVERS_LIST', 'Liste des docservers ');
 if (!defined('_ALL_DOCSERVERS'))  define('_ALL_DOCSERVERS', 'Tout afficher ');
 if (!defined('_DOCSERVER'))  define('_DOCSERVER', 'un docserver');
+if (!defined('_COLL_ID'))  define('_COLL_ID', 'Identifiant de la collection');
+if (!defined('_PERCENTAGE_FULL'))  define('_PERCENTAGE_FULL', 'Pourcentage de remplissage');
 
 
 /************DOCSERVER LOCATIONS******************************/
@@ -110,8 +113,9 @@ if (!defined('_DOCSERVER_LOCATION'))  define('_DOCSERVER_LOCATION', 'un lieu de 
 if (!defined('_IPV4'))  define('_IPV4', 'Adresse IPv4');
 if (!defined('_IPV6'))  define('_IPV6', 'Adresse IPv6');
 if (!defined('_NET_DOMAIN'))  define('_NET_DOMAIN', 'Domaine');
-if (!defined('_DOCSERVER_LOCATION_ID'))  define('_DOCSERVER_LOCATION_ID', 'Identifiant de lieu de stockage de docservers');
+if (!defined('_DOCSERVER_LOCATION_ID'))  define('_DOCSERVER_LOCATION_ID', 'Identifiant de lieu de stockage du docserver');
 if (!defined('_MASK'))  define('_MASK', 'Masque');
+if (!defined('_DOCSERVER_LOCATION_UPDATED'))  define('_DOCSERVER_LOCATION_UPDATED', 'Lieu de stockage mis à jour');
 
 
 /*************CYCLE POLICIES*************************************/
