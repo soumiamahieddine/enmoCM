@@ -46,8 +46,7 @@ elseif($mode == "up" || $mode == "add"){
 		<?php
 		if($state == false){
 			echo "<br /><br />"._THE_LC_CYCLE." "._UNKOWN."<br /><br /><br /><br />";
-		}
-		else{
+		} else {
 			?>
 			<form name="formdocserver" method="post" class="forms" action="<?php echo $_SESSION['config']['businessappurl']."index.php?display=true&page=lc_cycles_management_controler&module=life_cycle&mode=".$mode;?>">
 				<input type="hidden" name="display" value="value" />
@@ -64,7 +63,7 @@ elseif($mode == "up" || $mode == "add"){
 					 	<label for="policy_id"><?php echo _POLICY_ID; ?> : </label>
 						<input name="policy_id" type="text"  id="policy_id" value="<?php echo functions::show($_SESSION['m_admin']['lc_cycles']['policy_id']); ?>" readonly='readonly' class='readonly'/>
 					</p>
-					<?
+					<?php
 				} else {
 					?>
 					<p>
@@ -72,7 +71,7 @@ elseif($mode == "up" || $mode == "add"){
 						<select name="policy_id" id="policy_id">
 							<option value=""><?php echo _POLICY_ID;?></option>
 							<?php
-							for($cptPolicies=0;$cptPolicies<count($policiesArray);$cptPolicies++){
+							for($cptPolicies=0;$cptPolicies<count($policiesArray);$cptPolicies++) {
 								?>
 								<option value="<?php echo $policiesArray[$cptPolicies];?>" <?php if($_SESSION['m_admin']['lc_cycles']['policy_id'] == $policiesArray[$cptPolicies]) { echo 'selected="selected"';}?>><?php echo $policiesArray[$cptPolicies];?></option>
 								<?php

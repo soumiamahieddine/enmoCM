@@ -97,6 +97,7 @@ if (!defined('_ACTUAL_SIZE'))  define('_ACTUAL_SIZE', 'Taille actuelle ');
 if (!defined('_DOCSERVER_LOCATIONS'))  define('_DOCSERVER_LOCATIONS', 'Lieu de stockage des docservers ');
 if (!defined('_DOCSERVER_MODIFICATION'))  define('_DOCSERVER_MODIFICATION', 'Modification de docservers');
 if (!defined('_DOCSERVER_ADDITION'))  define('_DOCSERVER_ADDITION', 'Ajouter un docserver');
+if (!defined('_DOCSERVER_UPDATED'))  define('_DOCSERVER_UPDATED', 'Docserver mis à jour');
 if (!defined('_DOCSERVERS_LIST'))  define('_DOCSERVERS_LIST', 'Liste des docservers ');
 if (!defined('_ALL_DOCSERVERS'))  define('_ALL_DOCSERVERS', 'Tout afficher ');
 if (!defined('_DOCSERVER'))  define('_DOCSERVER', 'un docserver');
