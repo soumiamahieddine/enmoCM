@@ -29,38 +29,35 @@
 * @ingroup admin
 */
 
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
 $db = new dbquery();
 $db->connect();
-if($_SESSION['config']['databasetype'] == "POSTGRESQL")
-{
-	$db->query("select lastname as tag from ".$_SESSION['tablename']['contacts']." where lastname ilike '".$_REQUEST['what']."%' and (user_id = '' or user_id = null or user_id is null) order by lastname");
-}
-else
-{
-	$db->query("select lastname as tag from ".$_SESSION['tablename']['contacts']." where lastname like '".$_REQUEST['what']."%' and (user_id = '' or user_id = null or user_id is null) order by lastname");
-}
 $listArray = array();
-while($line = $db->fetch_object())
-{
-	array_push($listArray, $line->tag);
+if($_SESSION['config']['databasetype'] == "POSTGRESQL") {
+	$db->query("select is_corporate_person, society, lastname, firstname, contact_id from ".$_SESSION['tablename']['contacts']." where (lastname ilike '%".$db->protect_string_db($_REQUEST['what'])."%' or firstname ilike '".$db->protect_string_db($_REQUEST['what'])."%' or society ilike '%".$db->protect_string_db($_REQUEST['what'])."%') ");
+} else {
+	$db->query("select is_corporate_person, society, lastname, firstname, contact_id from ".$_SESSION['tablename']['contacts']." where (lastname like '%".$db->protect_string_db($_REQUEST['what'])."%' or firstname like '".$db->protect_string_db($_REQUEST['what'])."%' or society like '%".$db->protect_string_db($_REQUEST['what'])."%') ");
+}
+//$db->show();
+while($line = $db->fetch_object()) {
+	
+	if($line->is_corporate_person == "Y") {
+		array_push($listArray, $db->show_string($line->society));
+	} else {
+		array_push($listArray, $db->show_string($line->lastname)." ".$db->show_string($line->firstname));
+	}
 }
 echo "<ul>\n";
 $authViewList = 0;
-foreach($listArray as $what)
-{
-	if($authViewList >= 10)
-	{
+foreach($listArray as $what) {
+	if($authViewList >= 10) {
 		$flagAuthView = true;
 	}
-    if(stripos($what, $_REQUEST['what']) === 0)
-    {
-        echo "<li>".$what."</li>\n";
-		if($flagAuthView)
-		{
-			echo "<li>...</li>\n";
-			break;
-		}
-		$authViewList++;
-    }
+	echo "<li>".$what."</li>\n";
+	if($flagAuthView) {
+		echo "<li>...</li>\n";
+		break;
+	}
+	$authViewList++;
 }
 echo "</ul>";
