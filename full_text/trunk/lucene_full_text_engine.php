@@ -179,7 +179,7 @@ Function indexFullTextPdf($pathToFile, $indexFileDirectory, $Id)
 		}
 		$fileContent = trim(readFileF($tmpFile));
 		if(is_file($tmpFile)) unlink($tmpFile);
-		if(strlen($fileContent) > 1)
+		if(strlen($fileContent) > 50)
 		{
 			// Storing text in lucene index
 			set_include_path($_ENV['maarch_tools_path'].DIRECTORY_SEPARATOR.PATH_SEPARATOR.get_include_path());
