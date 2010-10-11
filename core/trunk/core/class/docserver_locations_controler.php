@@ -20,6 +20,11 @@
 */
 
 /**
+ * @defgroup 
+ */
+
+
+/**
 * @brief  Contains the docserver_locations_controler Object (herits of the BaseObject class)
 * 
 * 
@@ -64,14 +69,14 @@ define ("_ADVANCED_DEBUG",false);
 */
 class docserver_locations_controler extends ObjectControler implements ObjectControlerIF {
 	
-	/**
+/**
 	* Returns an docserver_locations object based on a docserver_locations identifier
 	*
 	* @param  $docserver_location_id string  docserver_locations identifier
 	* @param  $comp_where string  where clause arguments (must begin with and or or)
 	* @param  $can_be_disabled bool  if true gets the docserver_location even if it is disabled in the database (false by default)
 	* @return docserver_locations object with properties from the database or null
-	*/
+*/
 	public function get($docserver_location_id, $comp_where = '', $can_be_disabled = false) {
 		self :: set_foolish_ids(array('docserver_location_id'));
 		self :: set_specific_id('docserver_location_id');
@@ -83,12 +88,12 @@ class docserver_locations_controler extends ObjectControler implements ObjectCon
 			return null;
 	}
 
-	/**
+/**
 	* Saves in the database a docserver_locations object 
 	*
 	* @param  $docserver_location docserver_locations object to be saved
 	* @return bool true if the save is complete, false otherwise
-	*/
+*/
 	public function save($docserver_location) {
 		if (!isset ($docserver_location))
 			return false;
@@ -101,32 +106,32 @@ class docserver_locations_controler extends ObjectControler implements ObjectCon
 			return self :: insert($docserver_location);
 	}
 		
-	/**
+/**
 	* Inserts in the database (docserver_locations table) a docserver_locations object
 	*
 	* @param  $docserver_location docserver_locations object
 	* @return bool true if the insertion is complete, false otherwise
-	*/
+*/
 	private function insert($docserver_location) {
 		return self::advanced_insert($docserver_location);
 	}
 
-	/**
+/**
 	* Updates in the database (docserver_locations table) a docserver_locations object
 	*
 	* @param  $docserver_location docserver_locations object
 	* @return bool true if the update is complete, false otherwise
-	*/
+*/
 	private function update($docserver_location) {
 		return self::advanced_update($docserver_location);
 	}
 
-	/**
+/**
 	* Deletes in the database (docserver_locations related tables) a given docserver_locations (docserver_location_id)
 	*
 	* @param  $docserver_location_id string  docserver_locations identifier
 	* @return bool true if the deletion is complete, false otherwise
-	*/
+*/
 	public function delete($docserver_location) {
 		if(!isset($docserver_location) || empty($docserver_location) )
 			return false;
@@ -154,12 +159,12 @@ class docserver_locations_controler extends ObjectControler implements ObjectCon
 		return $ok;
 	}
 
-	/**
+/**
 	* Disables a given docserver_locations
 	* 
 	* @param  $docserver_location docserver_locations object 
 	* @return bool true if the disabling is complete, false otherwise 
-	*/
+*/
 	public function disable($docserver_location) {
 		self :: set_foolish_ids(array('docserver_location_id'));
 		self::set_specific_id('docserver_location_id');
@@ -169,18 +174,25 @@ class docserver_locations_controler extends ObjectControler implements ObjectCon
 		return self::advanced_disable($docserver_location);
 	}
 	
-	/**
+/**
 	* Enables a given docserver_locations
 	* 
 	* @param  $docserver_location docserver_locations object  
 	* @return bool true if the enabling is complete, false otherwise 
-	*/
+*/
 	public function enable($docserver_location) {
 		self :: set_foolish_ids(array('docserver_location_id'));
 		self::set_specific_id('docserver_location_id');
 		return self::advanced_enable($docserver_location);
 	}
 
+
+/** 
+ * Checks if a docserver_locations exists
+ * 
+ * @param $docserver_location_id docserver_locations object
+ * @return bool true if the docserver_locations exists
+ */
 	public function docserverLocationExists($docserver_location_id) {
 		if (!isset ($docserver_location_id) || empty ($docserver_location_id))
 			return false;
@@ -206,6 +218,12 @@ class docserver_locations_controler extends ObjectControler implements ObjectCon
 		return false;
 	}
 
+/**
+ *  Checks if a docserver_locations is linked
+ * 
+ * @param $docserver_location_id docserver_locations object
+ * @return bool true if the docserver_locations is linked
+ */
 	public function linkExists($docserver_location_id) {
 		if(!isset($docserver_location_id) || empty($docserver_location_id))
 			return false;
@@ -221,11 +239,13 @@ class docserver_locations_controler extends ObjectControler implements ObjectCon
 		self::$db->disconnect();
 	}
 	
-	/** 
-	*Check if the docserver location ipV4 is valid
-	*@param ipv4 docservers 
-	*@return bool true if it's valid  
-	*/		
+/** 
+ *  Check if the docserver location ipV4 is valid
+ * 
+ *  @param ipv4 docservers 
+ *  @return bool true if it's valid  
+ * 
+ */ 	
 	public function ipv4Control($ipv4) {
 		if(empty($ipv4))
 		return true;
@@ -233,57 +253,55 @@ class docserver_locations_controler extends ObjectControler implements ObjectCon
 		if(preg_match("/^([1-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])" .
 			"(\.([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])){3}$/", $ipv4)){		
 			return true;
-		}
-		else{
+		} else {
 			return false;
 		}
 	}
 	
 	
-	/** 
-	*Check if the docserver location ipV6 is valid
-	*@param ipv6 docservers 
-	*@return bool true if it's valid  
-	*/	
+/**
+ * Check if the docserver location ipV6 is valid
+ * 
+ * @param ipv6 docservers 
+ * @return bool true if it's valid 
+ */	
 	public function ipv6Control($ipv6) {
 		if(empty($ipv6))
 			return true;
 		$ipv6 = htmlspecialchars($ipv6);
 		$patternIpv6 = '/^((([0-9A-Fa-f]{1,4}:){7}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}:[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){5}:([0-9A-Fa-f]{1,4}:)?[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){4}:([0-9A-Fa-f]{1,4}:){0,2}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){3}:([0-9A-Fa-f]{1,4}:){0,3}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){2}:([0-9A-Fa-f]{1,4}:){0,4}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(([0-9A-Fa-f]{1,4}:){0,5}:((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(::([0-9A-Fa-f]{1,4}:){0,5}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|([0-9A-Fa-f]{1,4}::([0-9A-Fa-f]{1,4}:){0,5}[0-9A-Fa-f]{1,4})|(::([0-9A-Fa-f]{1,4}:){0,6}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){1,7}:))$/';		
-		if(preg_match($patternIpv6, $ipv6)){		
+		if(preg_match($patternIpv6, $ipv6)) {		
 			return true;
-		}
-		else{
+		} else {
 			return false;
 		}
 	}
 	
 	
-	/** 
-	*Check if the docserver location mask is valid
-	*@param mask docservers 
-	*@return bool true if it's valid  
-	*/	
+/** 
+ * Check if the docserver location mask is valid
+ * 
+ * @param mask docservers 
+ * @return bool true if it's valid  
+*/	
 	public function maskControl($mask) {
 		if(empty($mask))
 			return true;
 		$mask = htmlspecialchars($mask);
-		if(preg_match("/^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}0$/", $mask)){		
+		if(preg_match("/^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}0$/", $mask)) {		
 			return true;
-		}
-		else{
+		} else {
 			return false;
 		}
 	}
 	
-		/**
-	* Returns in an array all the docservers of a docserver location (docserver_id only) 
-	*
-	* @param  $docserver_location_id string  Docserver_location identifier
-	* @return Array of docserver_id or null
-	*/
-	public function getDocservers($docserver_location_id)
-	{		
+/**
+ * Returns in an array all the docservers of a docserver location (docserver_id only) 
+ * 
+ * @param  $docserver_location_id string  Docserver_location identifier
+ * @return Array of docserver_id or null
+*/
+	public function getDocservers($docserver_location_id) {		
 		if(empty($docserver_location_id))
 			return null;
 
@@ -294,17 +312,17 @@ class docserver_locations_controler extends ObjectControler implements ObjectCon
 		try{
 			if($_ENV['DEBUG']){echo $query.' // ';}
 					self::$db->query($query);
-		} catch (Exception $e){
+		} catch (Exception $e) {
 					echo _NO_DOCSERVER_LOCATION_WITH_ID.' '.$docserver_location_id.' // ';
 		}
 		
-		while($res = self::$db->fetch_object())
-		{
+		while($res = self::$db->fetch_object()) {
 			array_push($docservers, $res->docserver_id);
 		}
 		self::$db->disconnect();
 		return $docservers;
 	}
+
 
 	public function getAllId($can_be_disabled = false) {
 		self :: $db = new dbquery();
@@ -334,10 +352,11 @@ class docserver_locations_controler extends ObjectControler implements ObjectCon
 		}
 	}
 	
-/**Ping the ipv4
+/**
+ * Ping the ipv4
+ * 
  * @param ipv4 docservers
- * return bool true if valid
- * 	
+ * @return bool true if valid 	
  */
 	public function pingIpv4 ($ipv4) {
 		$ping = Net_Ping::factory();
@@ -346,14 +365,11 @@ class docserver_locations_controler extends ObjectControler implements ObjectCon
 		} else {
 			$response = $ping->ping($ipv4);
 			if($response->getReceived() == $response->getTransmitted()) {
-				print_r($response)."<br>";
 				return true;
 			} else {
-				echo "erreur";
 				return false;
 			}
 		}
-	
 	}
 }
 
