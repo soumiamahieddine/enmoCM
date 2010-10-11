@@ -27,7 +27,9 @@ define('_WHO_MUST_PROCESS_BEFORE', 'qui doit le traiter avant le');
 define('_ORIGINAL_PAPERS_ALREADY_SEND', 'Les originaux papier vous ont &eacute;t&eacute; adress&eacute;s');
 define('_WARNING', 'Attention');
 define('_YOU_MUST_BE_LOGGED', 'vous devez &ecirc;tre identifi&eacute; sur le logiciel avant de tenter d\'acc&eacute;der au courrier');
+
 define('_MAIL_TO_PROCESS_LIST','Liste des courriers pour traitement');
+
 define('_COPIES_MAIL_LIST', 'Liste des courriers pour information');
 define('_BY', 'par');
 define('_DEPARTMENT', 'le service');
