@@ -54,7 +54,7 @@ CREATE TABLE docserver_types
   CONSTRAINT docserver_types_pkey PRIMARY KEY (docserver_type_id)
 )
 WITH (OIDS=FALSE);
-ALTER TABLE doctypes OWNER TO postgres;
+ALTER TABLE docserver_types OWNER TO postgres;
 
 CREATE TABLE docservers
 (
@@ -78,7 +78,7 @@ CREATE TABLE docservers
   CONSTRAINT docservers_pkey PRIMARY KEY (docserver_id)
 )
 WITH (OIDS=FALSE);
-ALTER TABLE doctypes OWNER TO postgres;
+ALTER TABLE docservers OWNER TO postgres;
 
 CREATE TABLE docserver_locations
 (
@@ -91,7 +91,7 @@ CREATE TABLE docserver_locations
   CONSTRAINT docserver_locations_pkey PRIMARY KEY (docserver_location_id)
 )
 WITH (OIDS=FALSE);
-ALTER TABLE doctypes OWNER TO postgres;
+ALTER TABLE docserver_locations OWNER TO postgres;
 
 CREATE SEQUENCE doctypes_type_id_seq
   INCREMENT 1
