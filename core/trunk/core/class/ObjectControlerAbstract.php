@@ -72,7 +72,7 @@ abstract class ObjectControler {
      * @param string[] $computed_properties
      * @return string[]
      */
-    private function insert_prepare($object, $computed_properties){
+    protected function insert_prepare($object, $computed_properties){
         $result=array();
         $properties=array();
         $values=array();
