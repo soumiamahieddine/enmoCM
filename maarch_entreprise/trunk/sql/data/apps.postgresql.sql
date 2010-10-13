@@ -127,10 +127,6 @@ INSERT INTO "security" (group_id, coll_id, where_clause, maarch_comment, can_ins
 INSERT INTO "security" (group_id, coll_id, where_clause, maarch_comment, can_insert, can_update, can_delete) VALUES ('TYPISTS', 'letterbox_coll', 'DESTINATION = @my_primary_entity or TYPIST=@user', '', 'Y', 'Y', 'Y');
 INSERT INTO "security" (group_id, coll_id, where_clause, maarch_comment, can_insert, can_update, can_delete) VALUES ('CORRESPONDANTS', 'letterbox_coll', '(DESTINATION = @my_primary_entity or DESTINATION in (@subentities[@my_primary_entity])) or DESTINATION is NULL', '', 'N', 'N', 'N');
 
--- DOCSERVERS
-INSERT INTO docservers (docserver_id, device_type, device_label, is_readonly, enabled, size_limit, actual_size, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority) VALUES ('letterbox_ai', NULL, NULL, 'N', 'Y', 100000000, 3271717, 'C:\\maarch\\docserver\\letterbox_coll_ai\\', NULL, NULL, NULL, '2007-11-19 11:41:22', NULL, 'letterbox_coll', 20);
-INSERT INTO docservers (docserver_id, device_type, device_label, is_readonly, enabled, size_limit, actual_size, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority) VALUES ('letterbox', NULL, NULL, 'N', 'Y', 100000000, 7949134, 'C:\\maarch\\docserver\\letterbox_coll\\', NULL, NULL, NULL, '2007-11-19 11:41:22', NULL, 'letterbox_coll', 10);
-
 -- ACTIONS and BASKETS
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (15, '', 'Prelever une archive', 'OUT', 'N', 'Y', 'confirm_status', 'Y', 'advanced_physical_archive', 'N');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (16, '', 'Reintegrer une archive', 'POS', 'N', 'Y', 'confirm_status', 'Y', 'advanced_physical_archive', 'N');
