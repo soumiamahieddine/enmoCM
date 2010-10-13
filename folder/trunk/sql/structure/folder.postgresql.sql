@@ -65,7 +65,6 @@ CREATE TABLE folders
   CONSTRAINT folders_pkey PRIMARY KEY (folders_system_id)
 )
 WITH (OIDS=FALSE);
-ALTER TABLE folders OWNER TO postgres;
 
 CREATE TABLE folders_out (
   folder_out_id serial NOT NULL,
@@ -81,7 +80,6 @@ CREATE TABLE folders_out (
   CONSTRAINT folders_out_pkey PRIMARY KEY  (folder_out_id)
 )
 WITH (OIDS=FALSE);
-ALTER TABLE folders OWNER TO postgres;
 
 CREATE SEQUENCE foldertype_id_id_seq
   INCREMENT 1
@@ -135,7 +133,6 @@ CREATE TABLE foldertypes
   CONSTRAINT foldertypes_pkey PRIMARY KEY (foldertype_id)
 )
 WITH (OIDS=FALSE);
-ALTER TABLE foldertypes OWNER TO postgres;
 
 CREATE TABLE foldertypes_doctypes
 (
@@ -144,7 +141,6 @@ CREATE TABLE foldertypes_doctypes
   CONSTRAINT foldertypes_doctypes_pkey PRIMARY KEY (foldertype_id, doctype_id)
 )
 WITH (OIDS=FALSE);
-ALTER TABLE foldertypes_doctypes OWNER TO postgres;
 
 CREATE TABLE foldertypes_doctypes_level1
 (
@@ -153,7 +149,6 @@ CREATE TABLE foldertypes_doctypes_level1
   CONSTRAINT foldertypes_doctypes_level1_pkey PRIMARY KEY (foldertype_id, doctypes_first_level_id)
 )
 WITH (OIDS=FALSE);
-ALTER TABLE foldertypes_doctypes_level1 OWNER TO postgres;
 
 CREATE TABLE foldertypes_indexes
 (
@@ -163,4 +158,3 @@ CREATE TABLE foldertypes_indexes
   CONSTRAINT foldertypes_indexes_pkey PRIMARY KEY (foldertype_id, field_name)
 )
 WITH (OIDS=FALSE);
-ALTER TABLE foldertypes_indexes_pkey OWNER TO postgres;
