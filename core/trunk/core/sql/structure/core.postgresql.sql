@@ -34,7 +34,7 @@ CREATE TABLE actions
   CONSTRAINT actions_pkey PRIMARY KEY (id)
 )
 WITH (OIDS=FALSE);
-ALTER TABLE actions OWNER TO postgres;
+
 
 CREATE TABLE docserver_types
 (
@@ -54,7 +54,6 @@ CREATE TABLE docserver_types
   CONSTRAINT docserver_types_pkey PRIMARY KEY (docserver_type_id)
 )
 WITH (OIDS=FALSE);
-ALTER TABLE docserver_types OWNER TO postgres;
 
 CREATE TABLE docservers
 (
@@ -78,7 +77,6 @@ CREATE TABLE docservers
   CONSTRAINT docservers_pkey PRIMARY KEY (docserver_id)
 )
 WITH (OIDS=FALSE);
-ALTER TABLE docservers OWNER TO postgres;
 
 CREATE TABLE docserver_locations
 (
@@ -91,7 +89,6 @@ CREATE TABLE docserver_locations
   CONSTRAINT docserver_locations_pkey PRIMARY KEY (docserver_location_id)
 )
 WITH (OIDS=FALSE);
-ALTER TABLE docserver_locations OWNER TO postgres;
 
 CREATE SEQUENCE doctypes_type_id_seq
   INCREMENT 1
@@ -149,7 +146,6 @@ CREATE TABLE doctypes
   CONSTRAINT doctypes_pkey PRIMARY KEY (type_id)
 )
 WITH (OIDS=FALSE);
-ALTER TABLE doctypes OWNER TO postgres;
 
 CREATE TABLE ext_docserver
 (
@@ -158,7 +154,6 @@ CREATE TABLE ext_docserver
   CONSTRAINT ext_docserver_pkey PRIMARY KEY (doc_id)
 )
 WITH (OIDS=FALSE);
-ALTER TABLE ext_docserver OWNER TO postgres;
 
 CREATE TABLE groupsecurity
 (
@@ -170,7 +165,6 @@ CREATE TABLE groupsecurity
   CONSTRAINT groupsecurity_pkey PRIMARY KEY (group_id, resgroup_id)
 )
 WITH (OIDS=FALSE);
-ALTER TABLE groupsecurity OWNER TO postgres;
 
 CREATE SEQUENCE history_id_seq
   INCREMENT 1
@@ -193,7 +187,6 @@ CREATE TABLE history
   CONSTRAINT history_pkey PRIMARY KEY (id)
 )
 WITH (OIDS=FALSE);
-ALTER TABLE history OWNER TO postgres;
 
 CREATE SEQUENCE history_batch_id_seq
   INCREMENT 1
@@ -214,7 +207,6 @@ CREATE TABLE history_batch
   CONSTRAINT history_batch_pkey PRIMARY KEY (id)
 )
 WITH (OIDS=FALSE);
-ALTER TABLE history_batch OWNER TO postgres;
 
 CREATE TABLE parameters
 (
@@ -224,7 +216,6 @@ CREATE TABLE parameters
   CONSTRAINT parameters_pkey PRIMARY KEY (id)
 )
 WITH (OIDS=FALSE);
-ALTER TABLE parameters OWNER TO postgres;
 
 CREATE TABLE resgroup_content
 (
@@ -235,7 +226,6 @@ CREATE TABLE resgroup_content
   CONSTRAINT resgroup_content_pkey PRIMARY KEY (coll_id, res_id, resgroup_id)
 )
 WITH (OIDS=FALSE);
-ALTER TABLE resgroup_content OWNER TO postgres;
 
 CREATE TABLE resgroups
 (
@@ -246,7 +236,6 @@ CREATE TABLE resgroups
   CONSTRAINT resgroups_pkey PRIMARY KEY (resgroup_id)
 )
 WITH (OIDS=FALSE);
-ALTER TABLE resgroups OWNER TO postgres;
 
 CREATE SEQUENCE security_security_id_seq
   INCREMENT 1
@@ -254,7 +243,6 @@ CREATE SEQUENCE security_security_id_seq
   MAXVALUE 9223372036854775807
   START 20
   CACHE 1;
-ALTER TABLE security_security_id_seq OWNER TO postgres;
 
 CREATE TABLE "security"
 (
@@ -273,9 +261,6 @@ CREATE TABLE "security"
   CONSTRAINT security_pkey PRIMARY KEY (security_id)
 )
 WITH (OIDS=FALSE);
-ALTER TABLE "security" OWNER TO postgres;
-
-
 
 CREATE TABLE status
 (
@@ -289,7 +274,6 @@ CREATE TABLE status
   CONSTRAINT status_pkey PRIMARY KEY (id)
 )
 WITH (OIDS=FALSE);
-ALTER TABLE status OWNER TO postgres;
 
 CREATE TABLE usergroup_content
 (
@@ -300,7 +284,6 @@ CREATE TABLE usergroup_content
   CONSTRAINT usergroup_content_pkey PRIMARY KEY (user_id, group_id)
 )
 WITH (OIDS=FALSE);
-ALTER TABLE usergroup_content OWNER TO postgres;
 
 CREATE TABLE usergroups
 (
@@ -315,7 +298,6 @@ CREATE TABLE usergroups
   CONSTRAINT usergroups_pkey PRIMARY KEY (group_id)
 )
 WITH (OIDS=FALSE);
-ALTER TABLE usergroups OWNER TO postgres;
 
 CREATE TABLE usergroups_services
 (
@@ -324,7 +306,6 @@ CREATE TABLE usergroups_services
   CONSTRAINT usergroups_services_pkey PRIMARY KEY (group_id, service_id)
 )
 WITH (OIDS=FALSE);
-ALTER TABLE usergroups_services OWNER TO postgres;
 
 CREATE TABLE users
 (
@@ -348,4 +329,3 @@ CREATE TABLE users
   CONSTRAINT users_pkey PRIMARY KEY (user_id)
 )
 WITH (OIDS=FALSE);
-ALTER TABLE users OWNER TO postgres;
