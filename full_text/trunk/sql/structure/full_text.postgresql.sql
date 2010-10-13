@@ -9,4 +9,3 @@ CREATE TABLE fulltext
 WITH (
   OIDS=FALSE
 );
-ALTER TABLE fulltext OWNER TO postgres;
