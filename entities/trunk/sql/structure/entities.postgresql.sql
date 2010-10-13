@@ -18,7 +18,6 @@ CREATE TABLE entities
   CONSTRAINT entities_pkey PRIMARY KEY (entity_id)
 )
 WITH (OIDS=FALSE);
-ALTER TABLE entities OWNER TO postgres;
 
 CREATE TABLE listinstance
 (
@@ -34,7 +33,6 @@ CREATE TABLE listinstance
   viewed bigint
 )
 WITH (OIDS=FALSE);
-ALTER TABLE listinstance OWNER TO postgres;
 
 CREATE TABLE listmodels
 (
@@ -48,7 +46,6 @@ CREATE TABLE listmodels
   listmodel_type character varying(50) DEFAULT 'DOC'::character varying
 )
 WITH (OIDS=FALSE);
-ALTER TABLE listmodels OWNER TO postgres;
 
 CREATE TABLE users_entities
 (
@@ -59,7 +56,6 @@ CREATE TABLE users_entities
   CONSTRAINT users_entities_pkey PRIMARY KEY (user_id, entity_id)
 )
 WITH (OIDS=FALSE);
-ALTER TABLE users_entities OWNER TO postgres;
 
 CREATE SEQUENCE groupbasket_redirect_system_id_seq
   INCREMENT 1
@@ -80,4 +76,3 @@ CREATE TABLE groupbasket_redirect
   CONSTRAINT groupbasket_redirect_pkey PRIMARY KEY (system_id)
 )
 WITH (OIDS=FALSE);
-ALTER TABLE groupbasket_redirect OWNER TO postgres;
