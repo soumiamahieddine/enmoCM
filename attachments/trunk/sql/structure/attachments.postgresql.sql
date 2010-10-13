@@ -62,4 +62,3 @@ CREATE TABLE res_attachments
   CONSTRAINT res_attachments_pkey PRIMARY KEY (res_id)
 )
 WITH (OIDS=FALSE);
-ALTER TABLE res_attachments OWNER TO postgres;
