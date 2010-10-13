@@ -60,14 +60,14 @@ try {
 */
 class lc_policies_controler extends ObjectControler implements ObjectControlerIF {
 
-	/**
+/**
 	* Returns an lc_policies object based on a lc_policies identifier
 	*
 	* @param  $policy_id string  lc_policies identifier
 	* @param  $comp_where string  where clause arguments (must begin with and or or)
 	* @param  $can_be_disabled bool  if true gets the policy even if it is disabled in the database (false by default)
 	* @return lc_policies object with properties from the database or null
-	*/
+*/
 	public function get($policy_id, $comp_where = '', $can_be_disabled = false) {
 		self :: set_foolish_ids(array('policy_id'));
 		self :: set_specific_id('policy_id');
@@ -79,12 +79,12 @@ class lc_policies_controler extends ObjectControler implements ObjectControlerIF
 			return null;
 	}
 
-	/**
+/**
 	* Saves in the database a lc_policies object 
 	*
 	* @param  $policy lc_policies object to be saved
 	* @return bool true if the save is complete, false otherwise
-	*/
+*/
 	public function save($policy) {
 		if (!isset ($policy))
 			return false;
@@ -97,32 +97,32 @@ class lc_policies_controler extends ObjectControler implements ObjectControlerIF
 			return self :: insert($policy);
 	}
 		
-	/**
+/**
 	* Inserts in the database (lc_policies table) a lc_policies object
 	*
 	* @param  $policy lc_policies object
 	* @return bool true if the insertion is complete, false otherwise
-	*/
+*/
 	private function insert($policy) {
 		return self::advanced_insert($policy);
 	}
 
-	/**
+/**
 	* Updates in the database (lc_policies table) a lc_policies object
 	*
 	* @param  $policy lc_policies object
 	* @return bool true if the update is complete, false otherwise
-	*/
+*/
 	private function update($policy) {
 		return self::advanced_update($policy);
 	}
 
-	/**
+/**
 	* Deletes in the database (lc_policies related tables) a given lc_policies (policy_id)
 	*
 	* @param  $policy_id string  lc_policies identifier
 	* @return bool true if the deletion is complete, false otherwise
-	*/
+*/
 	public function delete($policy_id) {
 		if(!isset($policy_id)|| empty($policy_id) )
 			return false;
@@ -150,30 +150,36 @@ class lc_policies_controler extends ObjectControler implements ObjectControlerIF
 		return $ok;
 	}
 
-	/**
+/**
 	* Disables a given lc_policies
 	* 
 	* @param  $policy lc_policies object 
 	* @return bool true if the disabling is complete, false otherwise 
-	*/
+*/
 	public function disable($policy) {
 		self::set_foolish_ids(array('policy_id'));
 		self::set_specific_id('policy_id');
 		return self::advanced_disable($policy);
 	}
 	
-	/**
+/**
 	* Enables a given lc_policies
 	* 
 	* @param  $policy lc_policies object  
 	* @return bool true if the enabling is complete, false otherwise 
-	*/
+*/
 	public function enable($policy) {
 		self::set_foolish_ids(array('policy_id'));
 		self::set_specific_id('policy_id');
 		return self::advanced_enable($policy);
 	}
 
+/**
+ * checks if the lc_policy exists
+ * 
+ * @param $policy_id lc_policy identifier
+ * @return bool true if lc_policy exists
+*/
 	public function policyExists($policy_id) {
 		if (!isset ($policy_id) || empty ($policy_id))
 			return false;
@@ -201,6 +207,13 @@ class lc_policies_controler extends ObjectControler implements ObjectControlerIF
 		return false;
 	}
 
+
+/**
+ * checks if the lc_policy is linked
+ * 
+ * @param $policy_id lc_policy identifier
+ * @return bool true if lc_policy is linked
+*/
 	public function linkExists($policy_id) {
 		if(!isset($policy_id) || empty($policy_id))
 			return false;

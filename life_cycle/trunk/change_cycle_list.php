@@ -1,4 +1,10 @@
 <?php
+/**
+ *Change cycle list according to the life cycle policy 
+ * 
+ * 
+ * 
+ */
 require_once("core/class/class_core_tools.php");
 require_once("modules/life_cycle/class/lc_cycles_controler.php");
 $core_tools = new core_tools();

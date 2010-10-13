@@ -62,14 +62,14 @@ define ("_ADVANCED_DEBUG",false);
 */
 class lc_cycle_steps_controler extends ObjectControler implements ObjectControlerIF {
 	
-	/**
+/**
 	* Returns an lc_cycle_steps object based on a lc_cycle_steps identifier
 	*
 	* @param  $cycle_step_id string  lc_cycle_steps identifier
 	* @param  $comp_where string  where clause arguments (must begin with and or or)
 	* @param  $can_be_disabled bool  if true gets the cycle even if it is disabled in the database (false by default)
 	* @return lc_cycle_steps object with properties from the database or null
-	*/
+*/
 	public function get($cycle_step_id, $comp_where = '', $can_be_disabled = false) {
 		self :: set_foolish_ids(array('policy_id', 'cycle_id', 'cycle_step_id', 'docserver_type_id'));
 		self :: set_specific_id('cycle_step_id');
@@ -81,12 +81,12 @@ class lc_cycle_steps_controler extends ObjectControler implements ObjectControle
 			return null;
 	}
 
-	/**
+/**
 	* Saves in the database a lc_cycle_steps object 
 	*
 	* @param  $cycle lc_cycle_steps object to be saved
 	* @return bool true if the save is complete, false otherwise
-	*/
+*/
 	public function save($cycle) {
 		if (!isset ($cycle))
 			return false;
@@ -99,32 +99,32 @@ class lc_cycle_steps_controler extends ObjectControler implements ObjectControle
 			return self :: insert($cycle);
 	}
 		
-	/**
+/**
 	* Inserts in the database (lc_cycle_steps table) a lc_cycle_steps object
 	*
 	* @param  $cycle lc_cycle_steps object
 	* @return bool true if the insertion is complete, false otherwise
-	*/
+*/
 	private function insert($cycle) {	
 		return self::advanced_insert($cycle);
 	}
 
-	/**
+/**
 	* Updates in the database (lc_cycle_steps table) a lc_cycle_steps object
 	*
 	* @param  $cycle lc_cycle_steps object
 	* @return bool true if the update is complete, false otherwise
-	*/
+*/
 	private function update($cycle) {
 		return self::advanced_update($cycle);
 	}
 
-	/**
+/**
 	* Deletes in the database (lc_cycle_steps related tables) a given lc_cycle_steps (cycle_step_id)
 	*
 	* @param  $cycle_step_id string  lc_cycle_steps identifier
 	* @return bool true if the deletion is complete, false otherwise
-	*/
+*/
 	public function delete($cycle_step_id) {
 		if(!isset($cycle_step_id)|| empty($cycle_step_id) )
 			return false;
@@ -152,32 +152,34 @@ class lc_cycle_steps_controler extends ObjectControler implements ObjectControle
 		return $ok;
 	}
 
-	/**
+/**
 	* Disables a given lc_cycle_steps
 	* 
 	* @param  $cycle lc_cycle_steps object 
 	* @return bool true if the disabling is complete, false otherwise 
-	*/
+*/
 	public function disable($cycle) {
 		self :: set_foolish_ids(array('policy_id', 'cycle_id', 'cycle_step_id', 'docserver_type_id'));
 		self::set_specific_id('cycle_step_id');
 		return self::advanced_disable($cycle);
 	}
 	
-	/**
+/**
 	* Enables a given lc_cycle_steps
 	* 
 	* @param  $cycle lc_cycle_steps object  
 	* @return bool true if the enabling is complete, false otherwise 
-	*/
+*/
 	public function enable($cycle) {
 		self :: set_foolish_ids(array('policy_id', 'cycle_id', 'cycle_step_id', 'docserver_type_id'));
 		self::set_specific_id('cycle_step_id');
 		return self::advanced_enable($cycle);
 	}
+	
 /**
  * Check if the cycle step exists
- * @param $cycle_step_id lc_cycle_steps object
+ * 
+ * @param $cycle_step_id lc_cycle_steps identifier
  * @return bool true if it exists
  */
 	public function cycleStepExists($cycle_step_id) {
@@ -205,6 +207,13 @@ class lc_cycle_steps_controler extends ObjectControler implements ObjectControle
 		return false;
 	}
 
+/**
+ * Check if the cycle step is linked
+ * 
+ * @param $cycle_step_id lc_cycle_steps identifier
+ * @param $policy_id lc_policies identifier
+ * @return bool true if it exists
+ */
 	public function LinkExists($policy_id, $cycle_step_id) {
 		if(!isset($policy_id) || empty($policy_id))
 			return false;

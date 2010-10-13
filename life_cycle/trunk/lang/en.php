@@ -47,11 +47,13 @@ if (!defined('_STEPT_OPERATION'))  define('_STEP_OPERATION', 'Action on a life c
 if (!defined('_IS_ALLOW_FAILURE'))  define('_IS_ALLOW_FAILURE', 'Allow failure flag');
 if (!defined('_PREPROCESS_SCRIPT'))  define('_PREPROCESS_SCRIPT', 'Before process script');
 if (!defined('_POSTPROCESS_SCRIPT'))  define('_POSTPROCESS_SCRIPT', 'After process script');
+if (!defined('_IS_MUST_COMPLETE'))  define('_IS_MUST_COMPLETE', 'IS_MUST_COMPLETE');
+
 if (!defined('_LC_CYCLE_STEP_ADDITION'))  define('_LC_CYCLE_STEP_ADDITION', 'Add a life cycle step');
 if (!defined('_LC_CYCLE_STEP_UPDATED'))  define('_LC_CYCLE_STEP_UPDATED', 'Life cycle step updated');
 if (!defined('_LC_CYCLE_STEP_ADDED'))  define('_LC_CYCLE_STEP_ADDED', 'Life cycle step added');
 if (!defined('_LC_CYCLE_STEP_DELETED'))  define('_LC_CYCLE_STEP_DELETED', 'Life cycle step deleted');
-if (!defined('_IS_MUST_COMPLETE'))  define('_IS_MUST_COMPLETE', 'IS_MUST_COMPLETE');
+
 
 
 /****************CYCLES*************************************/
@@ -64,6 +66,7 @@ if (!defined('_VALIDATION_MODE'))  define('_VALIDATION_MODE', 'Validation mode')
 if (!defined('_ALL_LC_CYCLES'))  define('_ALL_LC_CYCLES', 'View all');
 if (!defined('_LC_CYCLES_LIST'))  define('_LC_CYCLES_LIST', 'Life cycle list');
 if (!defined('_SEQUENCE_NUMBER'))  define('_SEQUENCE_NUMBER', 'Sequence number');
+
 if (!defined('_LC_CYCLE_ADDITION'))  define('_LC_CYCLE_ADDITION', 'Add a life cycle');
 if (!defined('_LC_CYCLE_ADDED'))  define('_LC_CYCLE_ADDED', 'Life cycle added');
 if (!defined('_LC_CYCLE_UPDATED'))  define('_LC_CYCLE_UPDATED', 'Life cycle updated');
@@ -79,14 +82,15 @@ if (!defined('_ALL_DOCSERVER_TYPES'))  define('_ALL_DOCSERVER_TYPES', 'View all'
 if (!defined('_DOCSERVER_TYPE_LABEL'))  define('_DOCSERVER_TYPE_LABEL', 'Docserver type label ');
 if (!defined('_IS_COMPRESSED'))  define('_IS_COMPRESSED', 'Compressed');
 //if (!defined('_IS_META'))  define('_IS_META', 'Contient des métadonnées');
-if (!defined('_DOCSERVER_TYPE_ADDITION'))  define('_DOCSERVER_TYPE_ADDITION', 'Add a docserver type ');
 if (!defined('_COMPRESS_MODE'))  define('_COMPRESS_MODE', 'Compression mode');
 if (!defined('_META_TEMPLATE'))  define('_META_TEMPLATE', 'Meta template');
 if (!defined('_SIGNATURE_MODE'))  define('_SIGNATURE_MODE', 'Signature mode');
 if (!defined('_CONTAINER_MAX_NUMBER'))  define('_CONTAINER_MAX_NUMBER', 'Container max number');
+
 if (!defined('_DOCSERVER_TYPE_MODIFICATION'))  define('_DOCSERVER_TYPE_MODIFICATION', 'Docserver type modification');
 if (!defined('_DOCSERVER_TYPE_ADDED'))  define('_DOCSERVER_TYPE_ADDED', 'Docserver type added ');
-
+if (!defined('_DOCSERVER_TYPE_ADDITION'))  define('_DOCSERVER_TYPE_ADDITION', 'Add a docserver type ');
+if (!defined('_DOCSERVER_TYPE_DELETED'))  define('_DOCSERVER_TYPE_DELETED', 'Docserver type deleted ');
 
 /***************DOCSERVERS*************************************/
 if (!defined('_DOCSERVER_ID'))  define('_DOCSERVER_ID', 'Docserver ID');
@@ -94,9 +98,6 @@ if (!defined('_DEVICE_LABEL'))  define('_DEVICE_LABEL', 'Device label ');
 if (!defined('_SIZE_FORMAT'))  define('_SIZE_FORMAT', 'Size format ');
 if (!defined('_SIZE_LIMIT'))  define('_SIZE_LIMIT', 'Size limit');
 if (!defined('_ACTUAL_SIZE'))  define('_ACTUAL_SIZE', 'Actual size');
-if (!defined('_DOCSERVER_LOCATIONS'))  define('_DOCSERVER_LOCATIONS', 'Docserver locations ');
-if (!defined('_DOCSERVER_MODIFICATION'))  define('_DOCSERVER_MODIFICATION', 'Docserver modification');
-if (!defined('_DOCSERVER_ADDITION'))  define('_DOCSERVER_ADDITION', 'Add a docserver');
 if (!defined('_DOCSERVERS_LIST'))  define('_DOCSERVERS_LIST', 'Docservers list ');
 if (!defined('_ALL_DOCSERVERS'))  define('_ALL_DOCSERVERS', 'View all ');
 if (!defined('_DOCSERVER'))  define('_DOCSERVER', 'a docserver');
@@ -107,13 +108,17 @@ if (!defined('_IS_CONTAINER'))  define('_IS_CONTAINER', 'Is contained');
 if (!defined('_LOG_TEMPLATE'))  define('_LOG_TEMPLATE', 'Templates for resources logged');
 if (!defined('_IS_SIGNED'))  define('_IS_SIGNED', 'Is signed');
 if (!defined('_SIGNATURE_MODE'))  define('_SIGNATURE_MODE', 'Signature mode');
-
+if (!defined('_DOCSERVER_LOCATIONS'))  define('_DOCSERVER_LOCATIONS', 'Docserver locations ');
+if (!defined('_DOCSERVER_MODIFICATION'))  define('_DOCSERVER_MODIFICATION', 'Docserver modification');
+if (!defined('_DOCSERVER_ADDITION'))  define('_DOCSERVER_ADDITION', 'Add a docserver');
+if (!defined('_DOCSERVER_ADDED'))  define('_DOCSERVER_ADDED', 'Docserver added');
+if (!defined('_DOCSERVER_DELETED'))  define('_DOCSERVER_ADDED', 'Docserver deleted');
+if (!defined('_DOCSERVER_UPDATED'))  define('_DOCSERVER_UPDATED', 'Docserver updated');
 
 
 
 
 /************DOCSERVER LOCATIONS******************************/
-if (!defined('_DOCSERVER_LOCATION_ADDITION'))  define('_DOCSERVER_LOCATION_ADDITION', 'Add a docserver location');
 if (!defined('_ALL_DOCSERVER_LOCATIONS'))  define('_ALL_DOCSERVER_LOCATIONS', 'View all');
 if (!defined('_DOCSERVER_LOCATIONS_LIST'))  define('_DOCSERVER_LOCATIONS_LIST', 'Docserver location list');
 if (!defined('_DOCSERVER_LOCATION'))  define('_DOCSERVER_LOCATION', 'a docserver location');
@@ -123,7 +128,10 @@ if (!defined('_NET_DOMAIN'))  define('_NET_DOMAIN', 'Net domain');
 if (!defined('_DOCSERVER_LOCATION_ID'))  define('_DOCSERVER_LOCATION_ID', 'Docserver location ID');
 if (!defined('_MASK'))  define('_MASK', 'Mask');
 
-
+if (!defined('_DOCSERVER_LOCATION_ADDITION'))  define('_DOCSERVER_LOCATION_ADDITION', 'Add a docserver location');
+if (!defined('_DOCSERVER_LOCATION_ADDED'))  define('_DOCSERVER_LOCATION_ADDED', 'Docserver location added');
+if (!defined('_DOCSERVER_LOCATION_UPDATED'))  define('_DOCSERVER_LOCATION_UPDATED', 'Docserver location updated');
+if (!defined('_DOCSERVER_LOCATION_DELETED'))  define('_DOCSERVER_LOCATION_DELETED', 'Docserver location deleted');
 
 /*************CYCLE POLICIES*************************************/
 if (!defined('_LC_POLICY'))  define('_LC_POLICY', 'Life cycle policy');
@@ -131,9 +139,10 @@ if (!defined('_POLICY_NAME'))  define('_POLICY_NAME', 'Policy name');
 if (!defined('_LC_POLICY_ID'))  define('_LC_POLICY_ID', 'Policy ID');
 if (!defined('_LC_POLICY_NAME'))  define('_LC_POLICY_NAME', 'Life cycle policy name');
 if (!defined('_POLICY_DESC'))  define('_POLICY_DESC', 'Policy description');
-if (!defined('_LC_POLICY_ADDITION'))  define('_LC_POLICY_ADDITION', 'Add a life cycle policy');
 if (!defined('_LC_POLICIES_LIST'))  define('_LC_POLICIES_LIST', 'Life cycle policy list');
 if (!defined('_ALL_LC_POLICIES'))  define('_ALL_LC_POLICIES', 'View all');
+
+if (!defined('_LC_POLICY_ADDITION'))  define('_LC_POLICY_ADDITION', 'Add a life cycle policy');
 if (!defined('_LC_POLICY_UPDATED'))  define('_LC_POLICY_UPDATED', 'Life cycle policy updated');
 if (!defined('_LC_POLICY_ADDED'))  define('_LC_POLICY_ADDED', 'Life cycle policy added');
 if (!defined('_LC_POLICY_DELETED'))  define('_LC_POLICY_DELETED', 'Life cycle policy deleted');
