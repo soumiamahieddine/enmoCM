@@ -131,6 +131,50 @@ a:hover {
 	position: relative;
 	display: block;
 }
+
+/*admin docservers CSS*/
+#admin_docservers_locations {
+	background:  url(static.php?filename=maarch_box_tmp.gif) no-repeat 2px top;
+	width: 315px;
+	min-height: 110px;
+	float: left;
+	padding-top: 0px;
+	padding-right: 18px;
+	padding-bottom: 0px;
+	padding-left: 0px;
+	margin: 0px 0px 15px;
+	position: relative;
+	display: block;
+}
+
+#admin_docservers {
+	background:  url(static.php?filename=maarch_box_tmp.gif) no-repeat 2px top;
+	width: 315px;
+	min-height: 110px;
+	float: left;
+	padding-top: 0px;
+	padding-right: 18px;
+	padding-bottom: 0px;
+	padding-left: 0px;
+	margin: 0px 0px 15px;
+	position: relative;
+	display: block;
+}
+
+#admin_docserver_types {
+	background:  url(static.php?filename=maarch_box_tmp.gif) no-repeat 2px top;
+	width: 315px;
+	min-height: 110px;
+	float: left;
+	padding-top: 0px;
+	padding-right: 18px;
+	padding-bottom: 0px;
+	padding-left: 0px;
+	margin: 0px 0px 15px;
+	position: relative;
+	display: block;
+}
+
 /* floated blocks */
 
 .clear {

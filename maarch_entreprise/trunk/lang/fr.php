@@ -21,7 +21,9 @@
 
 /************** Administration **************/
 if (!defined('_ADMIN_USERS'))  define( '_ADMIN_USERS', 'Utilisateurs'); 
+if (!defined('_ADMIN_DOCSERVERS'))  define( '_ADMIN_DOCSERVERS', 'Zones de stockage'); 
 if (!defined('_ADMIN_USERS_DESC')) define( '_ADMIN_USERS_DESC', 'Ajouter, suspendre, ou modifier des profils utilisateurs. Placer les utilisateurs dans leurs groupes d&rsquo;appartenance et définir leur groupe primaire.');
+if (!defined('_ADMIN_DOCSERVERS_DESC')) define( '_ADMIN_DOCSERVERS_DESC', 'Ajouter, suspendre, ou modifier des zones de stockage. Placer les zones de stockages par type d&rsquo;appartenance et définir leur groupe primaire.');
 if (!defined('_ADMIN_GROUPS')) define( '_ADMIN_GROUPS', 'Groupes d&rsquo;utilisateurs');
 if (!defined('_ADMIN_GROUPS_DESC')) define( '_ADMIN_GROUPS_DESC', 'Ajouter, suspendre, ou modifier des groupes d&rsquo;utilisateurs. Attribuer des privil&egrave;ges ou des autorisations d&rsquo;acc&egrave;s aux ressources.');
 if (!defined('_ADMIN_ARCHITECTURE')) define( '_ADMIN_ARCHITECTURE', 'Plan de classement');
@@ -126,6 +128,7 @@ if (!defined('_RESSOURCES_COLLECTION')) define( '_RESSOURCES_COLLECTION','Collec
 if (!defined('_RECIPIENT')) define( '_RECIPIENT', 'Destinataire');
 if (!defined('_START')) define( '_START', 'D&eacute;but');
 if (!defined('_END')) define( '_END', 'Fin');
+
 
 /************** Messages pop up **************/
 if (!defined('_REALLY_SUSPEND')) define( '_REALLY_SUSPEND', 'Voulez-vous vraiment suspendre ');

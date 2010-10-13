@@ -144,7 +144,6 @@ function validate_cs_submit($mode){
 	$f=new functions();
 
 	$docserver_locations = new docserver_locations();
-	//$f->show_array($_REQUEST);exit;
 	if(isset($_REQUEST['id']) && !empty($_REQUEST['id'])){
 		// Update, so values exist
 		$docserver_locations->docserver_location_id=$f->protect_string_db($f->wash($_REQUEST['id'], "nick", _THE_DOCSERVER_LOCATION_ID." ", "yes", 0, 32));
@@ -154,15 +153,15 @@ function validate_cs_submit($mode){
 		$_SESSION['error'] .= _IP_V4_FORMAT_NOT_VALID."<br>";
 	}
 	
-	/*if(!empty($_REQUEST['ipv4'])){
+	if(!empty($_REQUEST['ipv4'])){
 		if(!docserver_locations_controler::pingIpv4($docserver_locations->ipv4))
 			$_SESSION['error'] .= _IP_V4_ADRESS_NOT_VALID."<br>";
-	}*/
+	}
 		
 	$docserver_locations->ipv6=$f->protect_string_db($f->wash($_REQUEST['ipv6'], "no", _IPV6." ", 'no', 0, 255));
-	if(!docserver_locations_controler::ipv6Control($docserver_locations->ipv6)){	
+	/*if(!docserver_locations_controler::ipv6Control($docserver_locations->ipv6)){	
 		$_SESSION['error'] .= _IP_V6_NOT_VALID."<br>";
-	}
+	}*/
 	
 	$docserver_locations->net_domain=$f->protect_string_db($f->wash($_REQUEST['net_domain'], "no", _NET_DOMAIN." ", 'no', 0, 32));
 	$docserver_locations->mask=$f->protect_string_db($f->wash($_REQUEST['mask'], "no", _MASK." ", 'no', 0, 255));
@@ -235,7 +234,7 @@ function display_up($docserver_location_id) {
 	else
 		put_in_session("docserver_locations", $docserver_locations->getArray()); 
 		
-	$docservers_id = docserver_locations_controler::getDocservers($docserver_location_id ); //ramène le tableau des user_id appartenant au groupe
+	$docservers_id = docserver_locations_controler::getDocservers($docserver_location_id ); //ramène le tableau des docserver_id appartenant au groupe
 	for($i=0; $i<count($docservers_id);$i++)
 	{
 		$tmp_user = docservers_controler::get($docservers_id[$i]);
