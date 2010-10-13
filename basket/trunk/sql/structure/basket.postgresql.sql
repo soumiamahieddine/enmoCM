@@ -10,7 +10,6 @@ CREATE TABLE actions_groupbaskets
   CONSTRAINT actions_groupbaskets_pkey PRIMARY KEY (id_action, group_id, basket_id)
 )
 WITH (OIDS=FALSE);
-ALTER TABLE actions_groupbaskets OWNER TO postgres;
 
 CREATE TABLE baskets
 (
@@ -24,7 +23,6 @@ CREATE TABLE baskets
   CONSTRAINT baskets_pkey PRIMARY KEY (coll_id, basket_id)
 )
 WITH (OIDS=FALSE);
-ALTER TABLE baskets OWNER TO postgres;
 
 CREATE TABLE groupbasket
 (
@@ -40,7 +38,6 @@ CREATE TABLE groupbasket
   CONSTRAINT groupbasket_pkey PRIMARY KEY (group_id, basket_id)
 )
 WITH (OIDS=FALSE);
-ALTER TABLE groupbasket OWNER TO postgres;
 
 CREATE SEQUENCE user_abs_seq
   INCREMENT 1
@@ -60,4 +57,3 @@ CREATE TABLE user_abs
   CONSTRAINT user_abs_pkey PRIMARY KEY (system_id)
 )
 WITH (OIDS=FALSE);
-ALTER TABLE user_abs OWNER TO postgres;
