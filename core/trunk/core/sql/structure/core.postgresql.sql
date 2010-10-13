@@ -254,7 +254,7 @@ CREATE TABLE "security"
   can_insert character(1) NOT NULL DEFAULT 'N'::bpchar,
   can_update character(1) NOT NULL DEFAULT 'N'::bpchar,
   can_delete character(1) NOT NULL DEFAULT 'N'::bpchar,
-  rights_bitmask integer NOT NULL,
+  rights_bitmask integer NOT NULL DEFAULT 0,
   mr_start_date timestamp without time zone DEFAULT NULL,
   mr_stop_date timestamp without time zone DEFAULT NULL,
   where_target character varying(15) DEFAULT 'DOC'::character varying,
@@ -262,6 +262,10 @@ CREATE TABLE "security"
 )
 WITH (OIDS=FALSE);
 
+<<<<<<< .mine
+
+=======
+>>>>>>> .r198
 CREATE TABLE status
 (
   id character varying(10) NOT NULL,
