@@ -18,4 +18,3 @@ CREATE TABLE notes
   CONSTRAINT notes_pkey PRIMARY KEY (id)
 )
 WITH (OIDS=FALSE);
-ALTER TABLE notes OWNER TO postgres;
