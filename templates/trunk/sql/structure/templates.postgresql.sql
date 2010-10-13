@@ -23,7 +23,6 @@ CREATE TABLE templates
   CONSTRAINT templates_pkey PRIMARY KEY (id)
 )
 WITH (OIDS=FALSE);
-ALTER TABLE templates OWNER TO postgres;
 
 CREATE TABLE templates_association
 (
@@ -35,8 +34,6 @@ CREATE TABLE templates_association
   CONSTRAINT templates_association_pkey PRIMARY KEY (system_id)
 )
 WITH (OIDS=FALSE);
-ALTER TABLE templates_association OWNER TO postgres;;
-
 
 CREATE TABLE templates_doctype_ext
 (
@@ -45,6 +42,3 @@ CREATE TABLE templates_doctype_ext
   is_generated character(1) NOT NULL DEFAULT 'N'::bpchar
 )
 WITH (OIDS=FALSE);
-ALTER TABLE templates_doctype_ext OWNER TO postgres;
-
-
