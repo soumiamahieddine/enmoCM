@@ -81,6 +81,11 @@ if(trim($_REQUEST['entity_id']) == "none")
 {
 	$_SESSION['auth_dep']['bask_chosen_entity'] = "";
 }
+if(trim($_REQUEST['isViewed']) == "")
+{
+	$_SESSION['auth_dep']['bask_chosen_viewed'] = "no";
+	$_REQUEST['isViewed'] = "no";
+}
 if(trim($_REQUEST['isViewed']) == "none")
 {
 	$_SESSION['auth_dep']['bask_chosen_viewed'] = "";

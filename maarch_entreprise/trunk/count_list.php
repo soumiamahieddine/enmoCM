@@ -446,7 +446,7 @@ array_push($arr_status , array('id' => 'late', 'label' => _LATE));
 		<select name="isViewed" id="isViewed" onchange="change_list_viewed(this.options[this.selectedIndex].value, '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=manage_filter_count_list');">
 			<option value="none"><?php echo _VIEWED;?></option>
 			<option value="yes" <?php if($_SESSION['auth_dep']['bask_chosen_viewed'] == "yes"){echo ' selected="selected"';}?>><?php echo _YES;?></option>
-			<option value="no"  <?php if($_SESSION['auth_dep']['bask_chosen_viewed'] == "no"){echo ' selected="selected"';}?>><?php echo _NO;?></option>
+			<option value="no"  <?php if($_SESSION['auth_dep']['bask_chosen_viewed'] == "no" || $_SESSION['auth_dep']['bask_chosen_viewed'] == ""){echo ' selected="selected"';}?>><?php echo _NO;?></option>
 		</select>
 		<input type="text" name="contact_id" id="contact_id"
 			value="<?php
