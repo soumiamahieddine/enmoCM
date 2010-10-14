@@ -19,7 +19,7 @@ if($mode == "list"){
 					false, 
 					_ALL_DOCSERVER_TYPES, 
 					_DOCSERVER_TYPE, 
-					$_SESSION['config']['businessappurl'].'static.php?filename=manage_docserver_types.gif&admin=docservers', 
+					$_SESSION['config']['businessappurl'].'static.php?filename=favicon.png&admin=docservers', 
 					false, 
 					true, 
 					false, 
@@ -31,7 +31,7 @@ if($mode == "list"){
 }
 elseif($mode == "up" || $mode == "add"){
 	?><script type="text/javascript" src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=docserver_types_management.js"></script>
-	<h1><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=manage_docserver_b.gif" alt="" />
+	<h1><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=favicon.png" alt="" />
 		<?php
 		if($mode == "add"){
 			echo _DOCSERVER_TYPE_ADDITION;
