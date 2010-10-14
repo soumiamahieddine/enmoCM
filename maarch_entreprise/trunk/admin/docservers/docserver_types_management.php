@@ -105,11 +105,11 @@ elseif($mode == "up" || $mode == "add"){
 				<input type="hidden" name="what" id="what" value="<?php echo $_REQUEST['what'];?>" />
 				<input type="hidden" name="start" id="start" value="<?php echo $_REQUEST['start'];?>" />
 				<p>
-				 	<label for="id"><?php echo _DOCSERVER_TYPE_ID; ?> : </label>
+				 	<label for="id"><?php echo _DOCSERVER_TYPE_ID; ?> (*): </label>
 					<input name="id" type="text"  id="id" value="<?php echo functions::show($_SESSION['m_admin']['docserver_types']['docserver_type_id']); ?>" <?php if($mode == "up") echo " readonly='readonly' class='readonly'";?>/>
 				</p>
 				<p>
-				 	<label for="docserver_type_label"><?php echo _DOCSERVER_TYPE_LABEL; ?> : </label>
+				 	<label for="docserver_type_label"><?php echo _DOCSERVER_TYPE_LABEL; ?> (*): </label>
 					<input name="docserver_type_label" type="text"  id="docserver_type_label" value="<?php echo functions::show($_SESSION['m_admin']['docserver_types']['docserver_type_label']); ?>"/>
 				</p>
 	           	<p>
