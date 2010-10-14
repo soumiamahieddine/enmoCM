@@ -19,7 +19,7 @@ if($mode == "list") {
 					false, 
 					_ALL_DOCSERVER_LOCATIONS, 
 					_DOCSERVER_LOCATION, 
-					$_SESSION['config']['businessappurl'].'static.php?filename=manage_docserver_locations.gif', 
+					$_SESSION['config']['businessappurl'].'static.php?filename=favicon.png', 
 					false, 
 					true, 
 					false, 
@@ -30,7 +30,7 @@ if($mode == "list") {
 				);
 } elseif($mode == "up" || $mode == "add") {
 	?>
-	<h1><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=manage_docserver_b.gif" alt="" />
+	<h1><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=favicon.png" alt="" />
 		<?php
 		if($mode == "add") {
 			echo _DOCSERVER_LOCATION_ADDITION;
