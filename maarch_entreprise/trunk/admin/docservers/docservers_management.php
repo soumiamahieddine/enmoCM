@@ -58,11 +58,11 @@ if($mode == "list") {
 				<input type="hidden" name="size_limit_hidden" id="size_limit_hidden" value="<?php echo $_SESSION['m_admin']['docservers']['size_limit_number'];?>"/>
 				<input type="hidden" name="actual_size_hidden" id="actual_size_hidden" value="<?php echo $_SESSION['m_admin']['docservers']['actual_size_number'];?>"/>
 				<p>
-				 	<label for="id"><?php echo _DOCSERVER_ID; ?> : </label>
+				 	<label for="id"><?php echo _DOCSERVER_ID; ?> (*): </label>
 					<input name="id" type="text"  id="id" value="<?php echo functions::show($_SESSION['m_admin']['docservers']['docserver_id']); ?>" <?php if($mode == "up") echo " readonly='readonly' class='readonly'";?>/>
 				</p>
 				<p>
-				 	<label for="docserver_type_id"><?php echo _DOCSERVER_TYPES; ?> : </label>
+				 	<label for="docserver_type_id"><?php echo _DOCSERVER_TYPES; ?> (*): </label>
 					<select name="docserver_type_id" id="docserver_type_id">
 						<option value=""><?php echo _DOCSERVER_TYPES;?></option>
 						<?php
@@ -75,7 +75,7 @@ if($mode == "list") {
 					</select>
 				</p>
 				<p>
-				 	<label for="device_label"><?php echo _DEVICE_LABEL; ?> : </label>
+				 	<label for="device_label"><?php echo _DEVICE_LABEL; ?> (*): </label>
 					<input name="device_label" type="text"  id="device_label" value="<?php echo functions::show($_SESSION['m_admin']['docservers']['device_label']); ?>"/>
 				</p>
 				<p>
@@ -110,7 +110,7 @@ if($mode == "list") {
 				}
 				?>
 				<p>
-				 	<label for="path_template"><?php echo _PATH_TEMPLATE; ?> : </label>
+				 	<label for="path_template"><?php echo _PATH_TEMPLATE; ?>(*) : </label>
 					<input name="path_template" type="text"  id="path_template" value="<?php echo functions::show($_SESSION['m_admin']['docservers']['path_template']); ?>"/>
 				</p>
 				<!--<p>
@@ -169,7 +169,7 @@ if($mode == "list") {
 					</select>
 				</p>-->
 				<p>
-					<label for="coll_id"><?php echo _COLLECTION; ?> : </label>
+					<label for="coll_id"><?php echo _COLLECTION; ?> (*): </label>
 					<select name="coll_id" id="coll_id">
 						<option value=""><?php echo _CHOOSE_COLLECTION;?></option>
 						<?php
@@ -186,7 +186,7 @@ if($mode == "list") {
 					<input name="priority_number" type="text"  id="priority_number" value="<?php echo functions::show($_SESSION['m_admin']['docservers']['priority_number']); ?>"/>
 				</p>
 				<p>
-				 	<label for="docserver_location_id"><?php echo _DOCSERVER_LOCATIONS; ?> : </label>
+				 	<label for="docserver_location_id"><?php echo _DOCSERVER_LOCATIONS; ?> (*): </label>
 					<select name="docserver_location_id" id="docserver_location_id">
 						<option value=""><?php echo _DOCSERVER_LOCATIONS;?></option>
 						<?php
@@ -199,7 +199,7 @@ if($mode == "list") {
 					</select>
 				</p>
 				<p>
-				 	<label for="adr_priority_number"><?php echo _ADR_PRIORITY; ?> : </label>
+				 	<label for="adr_priority_number"><?php echo _ADR_PRIORITY; ?> : (*)</label>
 					<input name="adr_priority_number" type="text"  id="adr_priority_number" value="<?php echo functions::show($_SESSION['m_admin']['docservers']['adr_priority_number']); ?>"/>
 				</p>
 				<p class="buttons">
