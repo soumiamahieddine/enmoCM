@@ -98,7 +98,7 @@ if (!defined('_ACTIONS')) define( '_ACTIONS', 'Actions');
 if (!defined('_ACTION_PAGE')) define( '_ACTION_PAGE', 'Page de r&eacute;sultat de l&rsquo;action');
 if (!defined('_DO_NOT_MODIFY_UNLESS_EXPERT')) define( '_DO_NOT_MODIFY_UNLESS_EXPERT', ' Ne pas modifier cette section &agrave; moins de savoir ce que vous faites. Un mauvais param&egrave;trage peut entrainer des dysfonctionnements de l&rsquo;application!');
 if (!defined('_INFOS_ACTIONS')) define( '_INFOS_ACTIONS', 'Vous devez choisir au moins un statut et / ou un script.');
-
+if (!defined('_INFOS_ACTIONS')) define( '_INFOS_ACTIONS', 'Vous devez choisir au moins un statut et / ou un script.');
 
 
 /************** Intitul&eacute;s formulaires et listes **************/
@@ -1021,13 +1021,31 @@ if (!defined('_VIEW_LOG_LABEL')) define ('_VIEW_LOG_LABEL','Voir les journaux');
 if (!defined('_PLUS')) define( '_PLUS', 'Plus');
 if (!defined('_MINUS')) define( '_MINUS', 'Moins');
 
+
+/**********DOCSERVERS****************/
+
+if (!defined('_YOU_CANNOT_DELETE')) define( '_YOU_CANNOT_DELETE', 'Suppression imposible');
+if (!defined('_UNKNOWN')) define( '_UNKNOWN', 'Inconnu');
+if (!defined('_YOU_CANNOT_DISABLE')) define( '_YOU_CANNOT_DISABLE', 'Suspension impossible');
+if (!defined('_DOCSERVER_TYPE_DISABLED')) define( '_DOCSERVER_TYPE_DISABLED', 'Type de zone de stockage suspendu');
+if (!defined('_SIZE_LIMIT_UNAPPROACHABLE')) define( '_SIZE_LIMIT_UNAPPROACHABLE', 'Taille limite inaccessible');
+if (!defined('_DOCSERVER_TYPE_ENABLED')) define( '_DOCSERVER_TYPE_ENABLED', 'Type de zone de stockage actif');
+if (!defined('_SIZE_LIMIT_LESS_THAN_ACTUAL_SIZE')) define( '_SIZE_LIMIT_LESS_THAN_ACTUAL_SIZE', 'Taille limite inférieure à la taille actuelle');
+if (!defined('_THE_DOCSERVER_DOES_NOT_HAVE_THE_ADEQUATE_RIGHTS')) define( '_THE_DOCSERVER_DOES_NOT_HAVE_THE_ADEQUATE_RIGHTS', 'Cette zone de stockage n\'autorisée');
+if (!defined('_DOCSERVER_DISABLED')) define( '_DOCSERVER_DISABLED', 'Zone de stockage suspendue');
+if (!defined('_DOCSERVER_ENABLED')) define( '_DOCSERVER_ENABLED', 'Zone de stockage active');
+if (!defined('_ALREADY_EXISTS_FOR_THIS_TYPE_OF_DOCSERVER')) define( '_ALREADY_EXISTS_FOR_THIS_TYPE_OF_DOCSERVER', 'existe déjà pour ce type');
+if (!defined('_DOCSERVER_LOCATION_ENABLED')) define( '_DOCSERVER_LOCATION_ENABLED', 'Lieu de stockage actif');
+if (!defined('_DOCSERVER_LOCATION_DISABLED')) define( '_DOCSERVER_LOCATION_DISABLED', 'Lieu de stockage suspendu');
+
 /***************DOCSERVERS TYPES*************************************/
-if (!defined('_DOCSERVER_TYPE_ID'))  define('_DOCSERVER_TYPE_ID', 'Identifiant du type de docserver ');
+
+if (!defined('_DOCSERVER_TYPE_ID'))  define('_DOCSERVER_TYPE_ID', 'Identifiant du type de zone de stockage ');
 if (!defined('_DOCSERVER_TYPE'))  define('_DOCSERVER_TYPE', 'un type de docserver ');
-if (!defined('_DOCSERVER_TYPES_LIST'))  define('_DOCSERVER_TYPES_LIST', 'Liste de types de docserver ');
+if (!defined('_DOCSERVER_TYPES_LIST'))  define('_DOCSERVER_TYPES_LIST', 'Liste de types de zone de stockage');
 if (!defined('_ALL_DOCSERVER_TYPES'))  define('_ALL_DOCSERVER_TYPES', 'Tout afficher ');
-if (!defined('_DOCSERVER_TYPE_LABEL'))  define('_DOCSERVER_TYPE_LABEL', 'Label de Type de docserver ');
-if (!defined('_DOCSERVER_TYPES'))  define('_DOCSERVER_TYPES', 'Type de docserver ');
+if (!defined('_DOCSERVER_TYPE_LABEL'))  define('_DOCSERVER_TYPE_LABEL', 'Label du type de zone de stockage ');
+if (!defined('_DOCSERVER_TYPES'))  define('_DOCSERVER_TYPES', 'Type de zone de stockage ');
 if (!defined('_IS_CONTAINER'))  define('_IS_CONTAINER', 'Conteneur');
 if (!defined('_IS_COMPRESSED'))  define('_IS_COMPRESSED', 'Compressé');
 if (!defined('_IS_META'))  define('_IS_META', 'Contient des métadonnées');
@@ -1038,11 +1056,11 @@ if (!defined('_META_TEMPLATE'))  define('_META_TEMPLATE', 'Modèle de métadonn�
 if (!defined('_LOG_TEMPLATE'))  define('_LOG_TEMPLATE', 'Modèle de connexion');
 if (!defined('_SIGNATURE_MODE'))  define('_SIGNATURE_MODE', 'Mode de signature');
 if (!defined('_CONTAINER_MAX_NUMBER'))  define('_CONTAINER_MAX_NUMBER', 'Taille maximale du conteneur');
-if (!defined('_DOCSERVER_TYPE_MODIFICATION'))  define('_DOCSERVER_TYPE_MODIFICATION', 'Modification de type de docserver ');
-if (!defined('_DOCSERVER_TYPE_ADDITION'))  define('_DOCSERVER_TYPE_ADDITION', 'Ajouter un type de docserver ');
-if (!defined('_DOCSERVER_TYPE_ADDED'))  define('_DOCSERVER_TYPE_ADDED', 'Type de docserver ajouté ');
-if (!defined('_DOCSERVER_TYPE_UPDATED'))  define('_DOCSERVER_TYPE_UPDATED', 'Type de docserver mis à jour ');
-if (!defined('_DOCSERVER_TYPE_DELETED'))  define('_DOCSERVER_TYPE_DELETED', 'Type de docserver supprimé ');
+if (!defined('_DOCSERVER_TYPE_MODIFICATION'))  define('_DOCSERVER_TYPE_MODIFICATION', 'Modification de type de zone de stockage ');
+if (!defined('_DOCSERVER_TYPE_ADDITION'))  define('_DOCSERVER_TYPE_ADDITION', 'Ajouter un type de zone de stockage');
+if (!defined('_DOCSERVER_TYPE_ADDED'))  define('_DOCSERVER_TYPE_ADDED', 'Type de zone de stockage ajouté ');
+if (!defined('_DOCSERVER_TYPE_UPDATED'))  define('_DOCSERVER_TYPE_UPDATED', 'Type de zone de stockage mis à jour ');
+if (!defined('_DOCSERVER_TYPE_DELETED'))  define('_DOCSERVER_TYPE_DELETED', 'Type de zone de stockage supprimé ');
 
 
 /***************DOCSERVERS*********************************/
@@ -1053,37 +1071,38 @@ if (!defined('_SIZE_LIMIT'))  define('_SIZE_LIMIT', 'Taille maximale ');
 if (!defined('_ACTUAL_SIZE'))  define('_ACTUAL_SIZE', 'Taille actuelle ');
 if (!defined('_COLL_ID'))  define('_COLL_ID', 'Identifiant de la collection');
 if (!defined('_PATH_TEMPLATE'))  define('_PATH_TEMPLATE', 'Chemin d\'accès');
-if (!defined('_ADR_PRIORITY'))  define('_ADR_PRIORITY', 'Priorité');
+if (!defined('_ADR_PRIORITY'))  define('_ADR_PRIORITY', 'Priorité de sequence de zone de stockage');
 if (!defined('_IS_READONLY'))  define('_IS_READONLY', 'Autorisé en lecture seule');
 if (!defined('_PERCENTAGE_FULL'))  define('_PERCENTAGE_FULL', 'Pourcentage de remplissage');
-
+if (!defined('_PATH_OF_DOCSERVER_UNAPPROACHABLE'))  define('_PATH_OF_DOCSERVER_UNAPPROACHABLE', 'Chemin inaccessible ');
 if (!defined('_ALL_DOCSERVERS'))  define('_ALL_DOCSERVERS', 'Tout afficher ');
 if (!defined('_DOCSERVER'))  define('_DOCSERVER', 'un docserver');
-if (!defined('_DOCSERVER_MODIFICATION'))  define('_DOCSERVER_MODIFICATION', 'Modification de docservers');
-if (!defined('_DOCSERVER_ADDITION'))  define('_DOCSERVER_ADDITION', 'Ajouter un docserver');
-if (!defined('_DOCSERVER_UPDATED'))  define('_DOCSERVER_UPDATED', 'Docserver mis à jour');
-if (!defined('_DOCSERVER_DELETED'))  define('_DOCSERVER_DELETED', 'Docserver supprimé');
-if (!defined('_DOCSERVER_ADDED'))  define('_DOCSERVER_ADDED', 'Docserver ajouté');
-if (!defined('_DOCSERVERS_LIST'))  define('_DOCSERVERS_LIST', 'Liste des docservers ');
+if (!defined('_DOCSERVER_MODIFICATION'))  define('_DOCSERVER_MODIFICATION', 'Modification de zone de stockage');
+if (!defined('_DOCSERVER_ADDITION'))  define('_DOCSERVER_ADDITION', 'Ajouter une zone de stockage');
+if (!defined('_DOCSERVER_UPDATED'))  define('_DOCSERVER_UPDATED', 'Zone de stockage mise à jour');
+if (!defined('_DOCSERVER_DELETED'))  define('_DOCSERVER_DELETED', 'Zone de stockage supprimée');
+if (!defined('_DOCSERVER_ADDED'))  define('_DOCSERVER_ADDED', 'Zone de stockage ajoutée');
+if (!defined('_DOCSERVERS_LIST'))  define('_DOCSERVERS_LIST', 'Liste des zones de stockage ');
+
+
+
 
 /************DOCSERVER LOCATIONS******************************/
-if (!defined('_DOCSERVER_LOCATION_ID'))  define('_DOCSERVER_LOCATION_ID', 'Identifiant de lieu de stockage du docserver');
-if (!defined('_DOCSERVER_LOCATIONS'))  define('_DOCSERVER_LOCATIONS', 'Lieu de stockage des docservers ');
+
+if (!defined('_DOCSERVER_LOCATION_ID'))  define('_DOCSERVER_LOCATION_ID', 'Identifiant de lieu de stockage ');
+if (!defined('_DOCSERVER_LOCATIONS'))  define('_DOCSERVER_LOCATIONS', 'Lieu de stockage ');
 if (!defined('_IPV4'))  define('_IPV4', 'Adresse IPv4');
 if (!defined('_IPV6'))  define('_IPV6', 'Adresse IPv6');
 if (!defined('_NET_DOMAIN'))  define('_NET_DOMAIN', 'Domaine');
 if (!defined('_MASK'))  define('_MASK', 'Masque');
 
-if (!defined('_DOCSERVER_LOCATION_ADDITION'))  define('_DOCSERVER_LOCATION_ADDITION', 'Ajouter un lieu de stockage de docservers');
-if (!defined('_DOCSERVER_LOCATION_MODIFICATION'))  define('_DOCSERVER_LOCATION_MODIFICATION', 'Modification lieu de stockage de docservers');
+if (!defined('_DOCSERVER_LOCATION_ADDITION'))  define('_DOCSERVER_LOCATION_ADDITION', 'Ajouter un lieu de stockage ');
+if (!defined('_DOCSERVER_LOCATION_MODIFICATION'))  define('_DOCSERVER_LOCATION_MODIFICATION', 'Modification lieu de stockage');
 if (!defined('_ALL_DOCSERVER_LOCATIONS'))  define('_ALL_DOCSERVER_LOCATIONS', 'Tout afficher');
 if (!defined('_DOCSERVER_LOCATIONS_LIST'))  define('_DOCSERVER_LOCATIONS_LIST', 'Liste des lieux de stockage');
-if (!defined('_DOCSERVER_LOCATION'))  define('_DOCSERVER_LOCATION', 'un lieu de stockage de docservers');
+if (!defined('_DOCSERVER_LOCATION'))  define('_DOCSERVER_LOCATION', 'un lieu de stockage');
 if (!defined('_DOCSERVER_LOCATION_UPDATED'))  define('_DOCSERVER_LOCATION_UPDATED', 'Lieu de stockage mis à jour');
 if (!defined('_DOCSERVER_LOCATION_ADDED'))  define('_DOCSERVER_LOCATION_ADDED', 'Lieu de stockage ajouté');
 if (!defined('_DOCSERVER_LOCATION_DELETED'))  define('_DOCSERVER_LOCATION_DELETED', 'Lieu de stockage supprimé');
-if (!defined('_IP_V4_ADRESS_NOT_VALID')) define('_IP_V4_ADRESS_NOT_VALID', 'Adresse IPV4 non valide');
-
-
-
+if (!defined('_IP_V4_ADRESS_NOT_VALID')) define('_IP_V4_ADRESS_NOT_VALID', 'Adresse IPV4 inaccessible');
 ?>
