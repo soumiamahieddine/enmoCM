@@ -7,6 +7,9 @@ if(!defined('_DOCSERVER_TYPES_TABLE_NAME')) define('_DOCSERVER_TYPES_TABLE_NAME'
 if(!defined('_DOCSERVER_LOCATIONS_TABLE_NAME')) define('_DOCSERVER_LOCATIONS_TABLE_NAME','docserver_locations');
 if(!defined('EXT_DOCSERVER_TABLE')) define( 'EXT_DOCSERVER_TABLE', 'ext_docserver');
 
+if(!defined('_LC_CYCLE_STEPS_TABLE_NAME')) define('_LC_CYCLE_STEPS_TABLE_NAME','lc_cycle_steps');
+if(!defined('_ADR_X_TABLE_NAME')) define('_ADR_X_TABLE_NAME','adr_x');
+
 if(!defined('DOCTYPES_TABLE')) define( 'DOCTYPES_TABLE', 'doctypes');
 if(!defined('FULLTEXT_TABLE')) define( 'FULLTEXT_TABLE', 'fulltext');
 if(!defined('GROUPSECURITY_TABLE')) define( 'GROUPSECURITY_TABLE', 'groupsecurity');
