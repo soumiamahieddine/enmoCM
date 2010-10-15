@@ -111,7 +111,7 @@ if($mode == "list") {
 				?>
 				<p>
 				 	<label for="path_template"><?php echo _PATH_TEMPLATE; ?> : </label>
-					<input name="path_template" type="text"  id="path_template" value="<?php echo functions::show($_SESSION['m_admin']['docservers']['path_template']); ?>"/>
+					<input name="path_template" type="text"  id="path_template" value="<?php echo $_SESSION['m_admin']['docservers']['path_template']; ?>"/>
 				</p>
 				<!--<p>
 				 	<label for="ext_docserver_info"><?php echo _EXT_DOCSERVER_INFO; ?> : </label>
