@@ -1022,6 +1022,18 @@ if (!defined('_PLUS')) define( '_PLUS', 'Plus');
 if (!defined('_MINUS')) define( '_MINUS', 'Moins');
 
 
+/*********ADMIN DOCSERVERS**********************/
+if (!defined('_MANAGE_DOCSERVERS'))  define('_MANAGE_DOCSERVERS', 'G&eacute;rer les zones de stockage ');
+if (!defined('_MANAGE_DOCSERVERS_DESC'))  define('_MANAGE_DOCSERVERS_DESC', 'Ajouter, modifier, supprimer les zones de stockage ');
+if (!defined('_MANAGE_DOCSERVERS_LOCATIONS'))  define('_MANAGE_DOCSERVERS_LOCATIONS', 'G&eacute;rer les lieux de stockage de documents ');
+if (!defined('_MANAGE_DOCSERVERS_LOCATIONS_DESC'))  define('_MANAGE_DOCSERVERS_LOCATIONS_DESC', 'Ajouter, supprimer, modifier les lieux de stockage de documents ');
+if (!defined('_MANAGE_DOCSERVER_TYPES'))  define('_MANAGE_DOCSERVER_TYPES', 'G&eacute;rer les types de zones de stockage ');
+if (!defined('_MANAGE_DOCSERVER_TYPES_DESC'))  define('_MANAGE_DOCSERVER_TYPES_DESC', 'Ajouter, modifier, supprimer les types de zones de stockage ');
+
+if (!defined('_ADMIN_DOCSERVERS'))  define('_ADMIN_DOCSERVERS', ' Administration des zones de stockage');
+if (!defined('_ADMIN_DOCSERVERS_DESC'))  define('_ADMIN_DOCSERVERS_DESC', ' Ajouter, modifier, supprimer des zones de stockage');
+if (!defined('_LIFE_CYCLE_COMMENT'))  define('_LIFE_CYCLE_COMMENT', 'Gestion du cycle de vie');
+
 /**********DOCSERVERS****************/
 
 if (!defined('_YOU_CANNOT_DELETE')) define( '_YOU_CANNOT_DELETE', 'Suppression imposible');
