@@ -1053,7 +1053,7 @@ if (!defined('_DOCSERVER_LOCATION_DISABLED')) define( '_DOCSERVER_LOCATION_DISAB
 /***************DOCSERVERS TYPES*************************************/
 
 if (!defined('_DOCSERVER_TYPE_ID'))  define('_DOCSERVER_TYPE_ID', 'Identifiant du type de zone de stockage ');
-if (!defined('_DOCSERVER_TYPE'))  define('_DOCSERVER_TYPE', 'un type de docserver ');
+if (!defined('_DOCSERVER_TYPE'))  define('_DOCSERVER_TYPE', 'Type de zone ');
 if (!defined('_DOCSERVER_TYPES_LIST'))  define('_DOCSERVER_TYPES_LIST', 'Liste de types de zone de stockage');
 if (!defined('_ALL_DOCSERVER_TYPES'))  define('_ALL_DOCSERVER_TYPES', 'Tout afficher ');
 if (!defined('_DOCSERVER_TYPE_LABEL'))  define('_DOCSERVER_TYPE_LABEL', 'Label du type de zone de stockage ');
