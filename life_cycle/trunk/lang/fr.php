@@ -21,20 +21,14 @@
 
 /*********************** ADMIN ***********************************/
 if (!defined('_LIFE_CYCLE'))  define('_LIFE_CYCLE', 'Cycle de vie');
+if (!defined('_LIFE_CYCLE_COMMENT'))  define('_LIFE_CYCLE_COMMENT', 'Gestion du cycle de vie');
 if (!defined('_ADMIN_LIFE_CYCLE_SHORT'))  define('_ADMIN_LIFE_CYCLE_SHORT', ' Administration des cycles de vie');
-if (!defined('_ADMIN_LIFE_CYCLE'))  define('_ADMIN_LIFE_CYCLE', ' Administration des cycles de vie des ressources num&eacute;riques');
-if (!defined('_ADMIN_LIFE_CYCLE_DESC'))  define('_ADMIN_LIFE_CYCLE_DESC', 'Administration des cycles de vie des ressources num&eacute;riques.');
-
+if (!defined('_ADMIN_LIFE_CYCLE'))  define('_ADMIN_LIFE_CYCLE', ' Politiques d&rsquo;archivage');
+if (!defined('_ADMIN_LIFE_CYCLE_DESC'))  define('_ADMIN_LIFE_CYCLE_DESC', 'Définition des politiques d&rsquo;archivage, cycles et étapes jusqu&rsquo;au sort final');
 if (!defined('_MANAGE_LC_CYCLES'))  define('_MANAGE_LC_CYCLES', 'G&eacute;rer les cycles de vie ');
 if (!defined('_MANAGE_LC_CYCLE_STEPS'))  define('_MANAGE_LC_CYCLE_STEPS', 'G&eacute;rer les étapes de cycle de vie');
 if (!defined('_MANAGE_LC_POLICIES'))  define('_MANAGE_LC_POLICIES', 'G&eacute;rer les politiques de cycle de vie ');
 
-if (!defined('_MANAGE_DOCSERVERS'))  define('_MANAGE_DOCSERVERS', 'G&eacute;rer les serveurs de documents ');
-if (!defined('_MANAGE_DOCSERVERS_LOCATIONS'))  define('_MANAGE_DOCSERVERS_LOCATIONS', 'G&eacute;rer les lieux de stockage de documents ');
-if (!defined('_MANAGE_DOCSERVER_TYPES'))  define('_MANAGE_DOCSERVER_TYPES', 'G&eacute;rer les types de serveurs de documents ');
-
-if (!defined('_ADMIN_DOCSERVERS'))  define('_ADMIN_DOCSERVERS', ' Administration des zones de stockage');
-if (!defined('_ADMIN_DOCSERVERS_DESC'))  define('_ADMIN_DOCSERVERS_DESC', ' Administration des zones de stockage');
 
 /*****************CYCLE_STEPS************************************/
 if (!defined('_LC_CYCLE_STEPS'))  define('_LC_CYCLE_STEPS', '');
@@ -63,7 +57,7 @@ if (!defined('_LC_CYCLE_STEP_MODIFICATION'))  define('_LC_CYCLE_STEP_MODIFICATIO
 if (!defined('_CYCLE_ID'))  define('_CYCLE_ID', 'Identifiant du cycle de vie');
 if (!defined('_LC_CYCLE_ID'))  define('_LC_CYCLE_ID', 'Identifiant du cycle de vie');
 if (!defined('_LC_CYCLE'))  define('_LC_CYCLE', 'un cycle de vie');
-if (!defined('_LC_CYCLES'))  define('_LC_CYCLES', '');
+if (!defined('_LC_CYCLES'))  define('_LC_CYCLES', 'Cycle(s) de vie');
 if (!defined('_CYCLE_DESC'))  define('_CYCLE_DESC', 'Descriptif du cycle de vie');
 if (!defined('_VALIDATION_MODE'))  define('_VALIDATION_MODE', 'Mode de validation');
 if (!defined('_ALL_LC_CYCLES'))  define('_ALL_LC_CYCLES', 'Tout afficher');
