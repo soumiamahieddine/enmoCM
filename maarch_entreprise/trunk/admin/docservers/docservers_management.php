@@ -110,7 +110,7 @@ if($mode == "list") {
 				}
 				?>
 				<p>
-				 	<label for="path_template"><?php echo _PATH_TEMPLATE; ?>(*) : </label>
+				 	<label for="path_template"><?php echo _PATH_TEMPLATE; ?> : </label>
 					<input name="path_template" type="text"  id="path_template" value="<?php echo functions::show($_SESSION['m_admin']['docservers']['path_template']); ?>"/>
 				</p>
 				<!--<p>

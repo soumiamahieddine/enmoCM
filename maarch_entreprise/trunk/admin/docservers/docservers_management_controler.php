@@ -185,6 +185,7 @@ function validate_cs_submit($mode){
 		if($inF = fopen($Fnm,"a")){
 			fwrite($inF,"test");
 			if(file_exists($Fnm)){
+				fclose($inF);
 				unlink($Fnm);
 			} else{
 				$isWriteable = false;
@@ -485,7 +486,7 @@ function format_item(&$item,$label,$size,$label_align,$align,$valign,$show){
 function put_in_session($type,$hashable){
 	foreach($hashable as $key=>$value){
 		// echo "Key: $key Value: $value f:".functions::show_string($value)." // ";
-		$_SESSION['m_admin'][$type][$key]=functions::show_string($value);
+		$_SESSION['m_admin'][$type][$key]=functions::show($value);
 	}
 }
 
