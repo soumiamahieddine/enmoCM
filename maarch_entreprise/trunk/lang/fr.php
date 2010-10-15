@@ -1060,8 +1060,8 @@ if (!defined('_DOCSERVER_TYPE_LABEL'))  define('_DOCSERVER_TYPE_LABEL', 'Label d
 if (!defined('_DOCSERVER_TYPES'))  define('_DOCSERVER_TYPES', 'Type de zone de stockage ');
 if (!defined('_IS_CONTAINER'))  define('_IS_CONTAINER', 'Conteneur');
 if (!defined('_IS_COMPRESSED'))  define('_IS_COMPRESSED', 'Compressé');
-if (!defined('_IS_META'))  define('_IS_META', 'Contient des métadonnées');
-if (!defined('_IS_LOGGED'))  define('_IS_LOGGED', 'Connecté');
+if (!defined('_IS_META'))  define('_IS_META', 'Contient les métadonnées');
+if (!defined('_IS_LOGGED'))  define('_IS_LOGGED', 'Contient les journaux');
 if (!defined('_IS_SIGNED'))  define('_IS_SIGNED', 'Signé');
 if (!defined('_COMPRESS_MODE'))  define('_COMPRESS_MODE', 'Mode de compression');
 if (!defined('_META_TEMPLATE'))  define('_META_TEMPLATE', 'Modèle de métadonnées');
