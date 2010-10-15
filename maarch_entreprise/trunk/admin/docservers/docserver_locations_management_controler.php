@@ -153,10 +153,10 @@ function validate_cs_submit($mode){
 		$_SESSION['error'] .= _IP_V4_FORMAT_NOT_VALID."<br>";
 	}
 	
-	if(!empty($_REQUEST['ipv4'])){
+	/*if(!empty($_REQUEST['ipv4'])){
 		if(!docserver_locations_controler::pingIpv4($docserver_locations->ipv4))
 			$_SESSION['error'] .= _IP_V4_ADRESS_NOT_VALID."<br>";
-	}
+	}*/
 		
 	$docserver_locations->ipv6=$f->protect_string_db($f->wash($_REQUEST['ipv6'], "no", _IPV6." ", 'no', 0, 255));
 	/*if(!docserver_locations_controler::ipv6Control($docserver_locations->ipv6)){	
