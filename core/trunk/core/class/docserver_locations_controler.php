@@ -49,7 +49,7 @@ try {
 	require_once ("core/class/docserver_locations.php");
 	require_once ("core/class/ObjectControlerAbstract.php");
 	require_once ("core/class/ObjectControlerIF.php");
-	require_once("apps/maarch_entreprise/tools/Net_Ping-2.4.5/Ping.php");
+	//require_once("apps/maarch_entreprise/tools/Net_Ping-2.4.5/Ping.php");
 } catch (Exception $e){
 	echo $e->getMessage().' // ';
 }
