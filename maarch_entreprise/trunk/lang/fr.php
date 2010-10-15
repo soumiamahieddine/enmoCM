@@ -1057,16 +1057,16 @@ if (!defined('_DOCSERVER_TYPE'))  define('_DOCSERVER_TYPE', 'Type de zone ');
 if (!defined('_DOCSERVER_TYPES_LIST'))  define('_DOCSERVER_TYPES_LIST', 'Liste de types de zone de stockage');
 if (!defined('_ALL_DOCSERVER_TYPES'))  define('_ALL_DOCSERVER_TYPES', 'Tout afficher ');
 if (!defined('_DOCSERVER_TYPE_LABEL'))  define('_DOCSERVER_TYPE_LABEL', 'Label du type de zone de stockage ');
-if (!defined('_DOCSERVER_TYPES'))  define('_DOCSERVER_TYPES', 'Type de zone de stockage ');
+if (!defined('_DOCSERVER_TYPES'))  define('_DOCSERVER_TYPES', 'Type(s) de zone de stockage ');
 if (!defined('_IS_CONTAINER'))  define('_IS_CONTAINER', 'Conteneur');
 if (!defined('_IS_COMPRESSED'))  define('_IS_COMPRESSED', 'Compressé');
 if (!defined('_IS_META'))  define('_IS_META', 'Contient les métadonnées');
 if (!defined('_IS_LOGGED'))  define('_IS_LOGGED', 'Contient les journaux');
-if (!defined('_IS_SIGNED'))  define('_IS_SIGNED', 'Signé');
+if (!defined('_IS_SIGNED'))  define('_IS_SIGNED', 'Contient une empreinte');
 if (!defined('_COMPRESS_MODE'))  define('_COMPRESS_MODE', 'Mode de compression');
 if (!defined('_META_TEMPLATE'))  define('_META_TEMPLATE', 'Modèle de métadonnées');
-if (!defined('_LOG_TEMPLATE'))  define('_LOG_TEMPLATE', 'Modèle de connexion');
-if (!defined('_SIGNATURE_MODE'))  define('_SIGNATURE_MODE', 'Mode de signature');
+if (!defined('_LOG_TEMPLATE'))  define('_LOG_TEMPLATE', 'Modèle de journal');
+if (!defined('_SIGNATURE_MODE'))  define('_SIGNATURE_MODE', 'Algorythme de calcul d\'empreinte');
 if (!defined('_CONTAINER_MAX_NUMBER'))  define('_CONTAINER_MAX_NUMBER', 'Taille maximale du conteneur');
 if (!defined('_DOCSERVER_TYPE_MODIFICATION'))  define('_DOCSERVER_TYPE_MODIFICATION', 'Modification de type de zone de stockage ');
 if (!defined('_DOCSERVER_TYPE_ADDITION'))  define('_DOCSERVER_TYPE_ADDITION', 'Ajouter un type de zone de stockage');
@@ -1076,7 +1076,7 @@ if (!defined('_DOCSERVER_TYPE_DELETED'))  define('_DOCSERVER_TYPE_DELETED', 'Typ
 
 
 /***************DOCSERVERS*********************************/
-if (!defined('_DOCSERVERS'))  define('_DOCSERVERS', '');
+if (!defined('_DOCSERVERS'))  define('_DOCSERVERS', 'Zone(s) de stockage ');
 if (!defined('_DEVICE_LABEL'))  define('_DEVICE_LABEL', 'Label dispositif ');
 if (!defined('_SIZE_FORMAT'))  define('_SIZE_FORMAT', 'Format de la taille ');
 if (!defined('_SIZE_LIMIT'))  define('_SIZE_LIMIT', 'Taille maximale ');
@@ -1095,6 +1095,9 @@ if (!defined('_DOCSERVER_UPDATED'))  define('_DOCSERVER_UPDATED', 'Zone de stock
 if (!defined('_DOCSERVER_DELETED'))  define('_DOCSERVER_DELETED', 'Zone de stockage supprimée');
 if (!defined('_DOCSERVER_ADDED'))  define('_DOCSERVER_ADDED', 'Zone de stockage ajoutée');
 if (!defined('_DOCSERVERS_LIST'))  define('_DOCSERVERS_LIST', 'Liste des zones de stockage ');
+if (!defined('_GB'))  define('_GB', 'Gigaoctets ');
+if (!defined('_TB'))  define('_TB', 'Teraoctets ');
+if (!defined('_MB'))  define('_MB', 'Megaoctets ');
 
 
 
@@ -1102,7 +1105,7 @@ if (!defined('_DOCSERVERS_LIST'))  define('_DOCSERVERS_LIST', 'Liste des zones d
 /************DOCSERVER LOCATIONS******************************/
 
 if (!defined('_DOCSERVER_LOCATION_ID'))  define('_DOCSERVER_LOCATION_ID', 'Identifiant de lieu de stockage ');
-if (!defined('_DOCSERVER_LOCATIONS'))  define('_DOCSERVER_LOCATIONS', 'Lieu de stockage ');
+if (!defined('_DOCSERVER_LOCATIONS'))  define('_DOCSERVER_LOCATIONS', 'Lieu(x) de stockage ');
 if (!defined('_IPV4'))  define('_IPV4', 'Adresse IPv4');
 if (!defined('_IPV6'))  define('_IPV6', 'Adresse IPv6');
 if (!defined('_NET_DOMAIN'))  define('_NET_DOMAIN', 'Domaine');

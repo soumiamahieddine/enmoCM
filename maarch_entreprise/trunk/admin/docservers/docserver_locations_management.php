@@ -106,11 +106,11 @@ if($mode == "list") {
 				<input type="hidden" name="what" id="what" value="<?php echo $_REQUEST['what'];?>" />
 				<input type="hidden" name="start" id="start" value="<?php echo $_REQUEST['start'];?>" />
 				<p>
-				 	<label for="id"><?php echo _DOCSERVER_LOCATION_ID; ?> (*): </label>
-					<input name="id" type="text"  id="id" value="<?php echo functions::show($_SESSION['m_admin']['docserver_locations']['docserver_location_id']); ?>" <?php if($mode == "up") echo " readonly='readonly' class='readonly'";?>/>
+				 	<label for="id"><?php echo _DOCSERVER_LOCATION_ID; ?> : </label>
+					<input name="id" type="text"  id="id" value="<?php echo functions::show($_SESSION['m_admin']['docserver_locations']['docserver_location_id']); ?>" <?php if($mode == "up") echo " readonly='readonly' class='readonly'";?>/><span class="red_asterisk">*</span>
 				</p>
 				<p class = "bulle">
-				 	<label for="ipv4"><?php echo _IPV4; ?> (*): </label>
+				 	<label for="ipv4"><?php echo _IPV4; ?> : </label>
 					<input name="ipv4" type="text"  id="ipv4" value="<?php echo functions::show($_SESSION['m_admin']['docserver_locations']['ipv4']); ?>"/>
 					<span>e.g: 127.0.0.1</span>
 				</p>
