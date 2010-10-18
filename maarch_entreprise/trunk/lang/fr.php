@@ -20,8 +20,8 @@
  */
 
 /************** Administration **************/
-if (!defined('_ADMIN_USERS'))  define( '_ADMIN_USERS', 'Utilisateurs'); 
-if (!defined('_ADMIN_DOCSERVERS'))  define( '_ADMIN_DOCSERVERS', 'Zones de stockage'); 
+if (!defined('_ADMIN_USERS'))  define( '_ADMIN_USERS', 'Utilisateurs');
+if (!defined('_ADMIN_DOCSERVERS'))  define( '_ADMIN_DOCSERVERS', 'Zones de stockage');
 if (!defined('_ADMIN_USERS_DESC')) define( '_ADMIN_USERS_DESC', 'Ajouter, suspendre, ou modifier des profils utilisateurs. Placer les utilisateurs dans leurs groupes d&rsquo;appartenance et définir leur groupe primaire.');
 if (!defined('_ADMIN_DOCSERVERS_DESC')) define( '_ADMIN_DOCSERVERS_DESC', 'Ajouter, suspendre, ou modifier des zones de stockage. Placer les zones de stockages par type d&rsquo;appartenance et définir leur groupe primaire.');
 if (!defined('_ADMIN_GROUPS')) define( '_ADMIN_GROUPS', 'Groupes d&rsquo;utilisateurs');
@@ -94,7 +94,7 @@ if (!defined('_DELETED')) define( '_DELETED', 'Supprim&eacute;');
 if (!defined('_CONTINUE')) define( '_CONTINUE', 'Continuer');
 if (!defined('_VIEW')) define( '_VIEW','Visualisation');
 if (!defined('_CHOOSE_ACTION')) define( '_CHOOSE_ACTION', 'Choisissez une action');
-if (!defined('_ACTIONS')) define( '_ACTIONS', 'Actions'); 
+if (!defined('_ACTIONS')) define( '_ACTIONS', 'Actions');
 if (!defined('_ACTION_PAGE')) define( '_ACTION_PAGE', 'Page de r&eacute;sultat de l&rsquo;action');
 if (!defined('_DO_NOT_MODIFY_UNLESS_EXPERT')) define( '_DO_NOT_MODIFY_UNLESS_EXPERT', ' Ne pas modifier cette section &agrave; moins de savoir ce que vous faites. Un mauvais param&egrave;trage peut entrainer des dysfonctionnements de l&rsquo;application!');
 if (!defined('_INFOS_ACTIONS')) define( '_INFOS_ACTIONS', 'Vous devez choisir au moins un statut et / ou un script.');
@@ -920,7 +920,7 @@ if (!defined('_INVOICE_NUMBER')) define( '_INVOICE_NUMBER', 'Num facture');
 
 
 /******************** Keywords Helper ************/
-if (!defined('_ACTIONS')) define( '_HELP_KEYWORD0', 'id de l&rsquo;utilisateur connect&eacute;');
+if (!defined('_HELP_KEYWORD0')) define( '_HELP_KEYWORD0', 'id de l&rsquo;utilisateur connect&eacute;');
 if (!defined('_HELP_BY_CORE')) define( '_HELP_BY_CORE', 'Mots cl&eacute;s de Maarch Core');
 
 if (!defined('_FIRSTNAME_UPPERCASE')) define( '_FIRSTNAME_UPPERCASE', 'PRENOM');
