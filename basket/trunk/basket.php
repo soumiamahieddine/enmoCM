@@ -35,14 +35,14 @@ $admin->test_admin('admin_baskets', 'basket');
 
  /****************Management of the location bar  ************/
 $init = false;
-if($_REQUEST['reinit'] == "true")
+if(isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true")
 {
-	$init = true;
+    $init = true;
 }
 $level = "";
-if($_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1)
+if(isset($_REQUEST['level']) && ($_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1))
 {
-	$level = $_REQUEST['level'];
+    $level = $_REQUEST['level'];
 }
 $page_path = $_SESSION['config']['businessappurl'].'index.php?page=basket&module=basket';
 $page_label = _BASKETS_LIST;
@@ -61,26 +61,26 @@ $what = "";
 $where ="";
 if(isset($_REQUEST['what']) && !empty($_REQUEST['what']))
 {
-	$what = addslashes($func->wash($_REQUEST['what'], "nick", "", "no"));
-	if($_SESSION['config']['databasetype'] == "POSTGRESQL")
-	{
-		$where .= "  ( basket_id ilike '".$func->protect_string_db($what,$_SESSION['config']['databasetype'])."%') ";
-	}
-	else
-	{
-		$where .= " (basket_id like '".$func->protect_string_db($what,$_SESSION['config']['databasetype'])."%') ";
-	}
+    $what = addslashes($func->wash($_REQUEST['what'], "nick", "", "no"));
+    if($_SESSION['config']['databasetype'] == "POSTGRESQL")
+    {
+        $where .= "  ( basket_id ilike '".$func->protect_string_db($what,$_SESSION['config']['databasetype'])."%') ";
+    }
+    else
+    {
+        $where .= " (basket_id like '".$func->protect_string_db($what,$_SESSION['config']['databasetype'])."%') ";
+    }
 }
 $list = new list_show();
 $order = 'asc';
 if(isset($_REQUEST['order']) && !empty($_REQUEST['order']))
 {
-	$order = trim($_REQUEST['order']);
+    $order = trim($_REQUEST['order']);
 }
 $field = 'basket_name';
 if(isset($_REQUEST['order_field']) && !empty($_REQUEST['order_field']))
 {
-	$field = trim($_REQUEST['order_field']);
+    $field = trim($_REQUEST['order_field']);
 }
 
 $orderstr = $list->define_order($order, $field);
@@ -90,64 +90,64 @@ $tab=$request->select($select,$where,$orderstr ,$_SESSION['config']['databasetyp
 
 for ($i=0;$i<count($tab);$i++)
 {
-	for ($j=0;$j<count($tab[$i]);$j++)
-	{
-		foreach(array_keys($tab[$i][$j]) as $value)
-		{
-			if($tab[$i][$j][$value]=="basket_id")
-			{
-				$tab[$i][$j]["basket_id"]=$tab[$i][$j]['value'];
-				$tab[$i][$j]["label"]= _ID;
-				$tab[$i][$j]["size"]="15";
-				$tab[$i][$j]["label_align"]="left";
-				$tab[$i][$j]["align"]="left";
-				$tab[$i][$j]["valign"]="bottom";
-				$tab[$i][$j]["show"]=true;
-				$tab[$i][$j]["order"]='basket_id';
-			}
-			if($tab[$i][$j][$value]=="basket_name")
-			{
-				$tab[$i][$j]["value"]=$request->show_string($tab[$i][$j]['value']);
-				$tab[$i][$j]["basket_name"]=$tab[$i][$j]['value'];
-				$tab[$i][$j]["label"]=_BASKET;
-				$tab[$i][$j]["size"]="15";
-				$tab[$i][$j]["label_align"]="left";
-				$tab[$i][$j]["align"]="left";
-				$tab[$i][$j]["valign"]="bottom";
-				$tab[$i][$j]["show"]=true;
-				$tab[$i][$j]["order"]='basket_name';
-			}
-			if($tab[$i][$j][$value]=="basket_desc")
-			{
-				$tab[$i][$j]["value"]=$request->show_string($tab[$i][$j]['value']);
-				$tab[$i][$j]["basket_desc"]=$tab[$i][$j]['value'];
-				$tab[$i][$j]["label"]=_DESC;
-				$tab[$i][$j]["size"]="15";
-				$tab[$i][$j]["label_align"]="left";
-				$tab[$i][$j]["align"]="left";
-				$tab[$i][$j]["valign"]="bottom";
-				$tab[$i][$j]["show"]=true;
-				$tab[$i][$j]["order"]='basket_desc';
-			}
-			if($tab[$i][$j][$value]=="is_generic")
-			{
-				$tab[$i][$j]["is_generic"]= $tab[$i][$j]['value'];
-				$tab[$i][$j]["show"]=false;
-				$tab[$i][$j]["order"]='is_generic';
-			}
-			if($tab[$i][$j][$value]=="enabled")
-			{
-				$tab[$i][$j]["enabled"]= $tab[$i][$j]['value'];
-				$tab[$i][$j]["label"]=_STATUS;
-				$tab[$i][$j]["size"]="6";
-				$tab[$i][$j]["label_align"]="center";
-				$tab[$i][$j]["align"]="center";
-				$tab[$i][$j]["valign"]="bottom";
-				$tab[$i][$j]["show"]=false;
-				$tab[$i][$j]["order"]='enabled';
-			}
-		}
-	}
+    for ($j=0;$j<count($tab[$i]);$j++)
+    {
+        foreach(array_keys($tab[$i][$j]) as $value)
+        {
+            if($tab[$i][$j][$value]=="basket_id")
+            {
+                $tab[$i][$j]["basket_id"]=$tab[$i][$j]['value'];
+                $tab[$i][$j]["label"]= _ID;
+                $tab[$i][$j]["size"]="15";
+                $tab[$i][$j]["label_align"]="left";
+                $tab[$i][$j]["align"]="left";
+                $tab[$i][$j]["valign"]="bottom";
+                $tab[$i][$j]["show"]=true;
+                $tab[$i][$j]["order"]='basket_id';
+            }
+            if($tab[$i][$j][$value]=="basket_name")
+            {
+                $tab[$i][$j]["value"]=$request->show_string($tab[$i][$j]['value']);
+                $tab[$i][$j]["basket_name"]=$tab[$i][$j]['value'];
+                $tab[$i][$j]["label"]=_BASKET;
+                $tab[$i][$j]["size"]="15";
+                $tab[$i][$j]["label_align"]="left";
+                $tab[$i][$j]["align"]="left";
+                $tab[$i][$j]["valign"]="bottom";
+                $tab[$i][$j]["show"]=true;
+                $tab[$i][$j]["order"]='basket_name';
+            }
+            if($tab[$i][$j][$value]=="basket_desc")
+            {
+                $tab[$i][$j]["value"]=$request->show_string($tab[$i][$j]['value']);
+                $tab[$i][$j]["basket_desc"]=$tab[$i][$j]['value'];
+                $tab[$i][$j]["label"]=_DESC;
+                $tab[$i][$j]["size"]="15";
+                $tab[$i][$j]["label_align"]="left";
+                $tab[$i][$j]["align"]="left";
+                $tab[$i][$j]["valign"]="bottom";
+                $tab[$i][$j]["show"]=true;
+                $tab[$i][$j]["order"]='basket_desc';
+            }
+            if($tab[$i][$j][$value]=="is_generic")
+            {
+                $tab[$i][$j]["is_generic"]= $tab[$i][$j]['value'];
+                $tab[$i][$j]["show"]=false;
+                $tab[$i][$j]["order"]='is_generic';
+            }
+            if($tab[$i][$j][$value]=="enabled")
+            {
+                $tab[$i][$j]["enabled"]= $tab[$i][$j]['value'];
+                $tab[$i][$j]["label"]=_STATUS;
+                $tab[$i][$j]["size"]="6";
+                $tab[$i][$j]["label_align"]="center";
+                $tab[$i][$j]["align"]="center";
+                $tab[$i][$j]["valign"]="bottom";
+                $tab[$i][$j]["show"]=false;
+                $tab[$i][$j]["order"]='enabled';
+            }
+        }
+    }
 }
 
 $page_name = "basket";
@@ -174,7 +174,7 @@ $_SESSION['m_admin']['non_generic_basket'] = array();
 $request->query("select basket_id, basket_name from ".$_SESSION['tablename']['bask_baskets']." where is_generic = 'N' ");
 while($line = $request->fetch_object())
 {
-	array_push($_SESSION['m_admin']['non_generic_basket'], array("BASKET_ID" => $line->basket_id, "BASKET_NAME" => $request->show_string($line->basket_name)));
+    array_push($_SESSION['m_admin']['non_generic_basket'], array("BASKET_ID" => $line->basket_id, "BASKET_NAME" => $request->show_string($line->basket_name)));
 }
 $request->query("select group_id from ".$_SESSION['tablename']['usergroups']." where enabled = 'Y' order by group_desc");
 
@@ -183,7 +183,7 @@ $line = "";
 
 while($line = $request->fetch_object())
 {
-	array_push($_SESSION['groups'],  $line->group_id);
+    array_push($_SESSION['groups'],  $line->group_id);
 }
 $_SESSION['m_admin']['load_groupbasket'] = true;
 
@@ -192,10 +192,10 @@ $request->query("select id, label_action, keyword, create_id from ".$_SESSION['t
 
 while($line = $request->fetch_object())
 {
-	if($admin->is_action_defined($line->id))
-	{
-		array_push($_SESSION['m_admin']['basket']['all_actions'] ,array('ID' => $line->id, 'LABEL' => $line->label_action, 'KEYWORD' => $line->keyword, 'CREATE_ID' => $line->create_id));
-	}
+    if($admin->is_action_defined($line->id))
+    {
+        array_push($_SESSION['m_admin']['basket']['all_actions'] ,array('ID' => $line->id, 'LABEL' => $line->label_action, 'KEYWORD' => $line->keyword, 'CREATE_ID' => $line->create_id));
+    }
 }
 $title = _BASKET_LIST." : ".$i." "._BASKETS;
 
