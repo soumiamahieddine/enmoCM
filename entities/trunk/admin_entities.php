@@ -34,14 +34,14 @@ $admin = new core_tools();
 $admin->test_admin('manage_entities', 'entities');
 /****************Management of the location bar  ************/
 $init = false;
-if($_REQUEST['reinit'] == "true")
+if(isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true")
 {
-	$init = true;
+    $init = true;
 }
 $level = "";
-if($_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1)
+if(isset($_REQUEST['level']) && ($_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1))
 {
-	$level = $_REQUEST['level'];
+    $level = $_REQUEST['level'];
 }
 $page_path = $_SESSION['config']['businessappurl'].'index.php?page=admin_entities&module=entities';
 $page_label = _ENTITIES;
@@ -57,12 +57,12 @@ unset($_SESSION['m_admin']);
 <h2 class="admin_subtitle block" ><?php  echo _ENTITIES;?></h2>
     <div class="admin_item" id="admin_entities_sub" title="<?php  echo _MANAGE_ENTITIES_DESC;?>" onclick="window.top.location='<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=manage_entities&amp;module=entities';">
         <div class="sum_margin" >
-				<strong><?php  echo _MANAGE_ENTITIES;?></strong>
-		</div>
+                <strong><?php  echo _MANAGE_ENTITIES;?></strong>
+        </div>
     </div>
     <div class="admin_item" id="admin_entities_tree_sub" title="<?php  echo _ENTITY_TREE_DESC;?>" onclick="window.top.location='<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=view_tree_entities&amp;module=entities';">
         <div class="sum_margin">
-				<strong><?php  echo _ENTITY_TREE;?></strong>
+                <strong><?php  echo _ENTITY_TREE;?></strong>
          </div>
     </div>
 </div>
