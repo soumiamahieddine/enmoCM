@@ -96,7 +96,7 @@ if ($s_id == '') {
 		$file = str_replace("#", DIRECTORY_SEPARATOR, $file);
 		$fingerprint_from_docserver = @md5_file($file);
 		//echo md5_file($file)."<br>";
-		//echo filesize($file);
+		//echo filesize($file)."<br>";
 		$adr['path_to_file'] = $file;
 		//6:retrieve infos of the docserver type
 		require_once("core" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . "docserver_types_controler.php");
@@ -127,6 +127,7 @@ if ($s_id == '') {
 				$format = $extract['format'];
 			}
 		}
+		//var_dump($extract);
 		//8:manage view of the file
 		$use_tiny_mce = false;
 		if (strtolower($format) == 'maarch' && $core_tools->is_module_loaded('templates')) {
@@ -214,6 +215,9 @@ if ($s_id == '') {
 			echo '<body>';
 			echo '<br/><div class="error">' . _PB_WITH_FINGERPRINT_OF_DOCUMENT . '</div>';
 			echo '</body></html>';
+		}
+		if(file_exists($extract['tmpArchive'])) {
+			$docserverControler->washTmp($extract['tmpArchive']);
 		}
 	}
 }
