@@ -85,6 +85,7 @@ CREATE TABLE docserver_locations
   ipv6 character varying(255) DEFAULT NULL::character varying,
   net_domain character varying(32) DEFAULT NULL::character varying,
   mask character varying(255) DEFAULT NULL::character varying,
+  net_link character varying(255) DEFAULT NULL::character varying,
   enabled character(1) NOT NULL DEFAULT 'Y'::bpchar,
   CONSTRAINT docserver_locations_pkey PRIMARY KEY (docserver_location_id)
 )
@@ -330,6 +331,7 @@ CREATE TABLE users
   delay_number integer DEFAULT NULL,
   status character varying(10) NOT NULL DEFAULT 'OK'::character varying,
   loginmode character varying(50) DEFAULT NULL::character varying,
+  docserver_location_id character varying(32) DEFAULT NULL::character varying,
   CONSTRAINT users_pkey PRIMARY KEY (user_id)
 )
 WITH (OIDS=FALSE);

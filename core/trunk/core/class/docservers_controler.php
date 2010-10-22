@@ -524,6 +524,25 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
 	}
 	
 	/**
+	 * del tmp files
+	 * @param  	$tmpPath infos of the doc to store, contains :
+	 * @return 	boolean
+	 */
+	public function washTmp($tmpPath) {
+		$classScan= dir($tmpPath);
+		while(($fileScan=$classScan->read())!=false) {
+			if($fileScan=='.'||$fileScan=='..') {
+		 		continue;
+			} elseif(is_dir($tmpPath.DIRECTORY_SEPARATOR.$fileScan)) {
+				self::washTmp($tmpPath.DIRECTORY_SEPARATOR.$fileScan);
+			} else {
+				unlink($tmpPath.DIRECTORY_SEPARATOR.$fileScan);
+			}
+		}
+		rmdir($tmpPath);
+	}
+	
+	/**
 	 * Extract a file from an archive
 	 * @param  	$fileInfos infos of the doc to store, contains :
 	 * 			tmpDir : path to tmp directory
@@ -533,6 +552,7 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
 	 * @return 	array with path of the extracted doc
 	 */
 	public function extractArchive($fileInfos) {
+		//var_dump($fileInfos);
 		if($fileInfos['tmpDir'] == "") {
 			$tmp = $_SESSION['config']['tmppath'];
 		} else {
@@ -541,11 +561,38 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
 		//TODO:extract on the maarch tmp dir on server or on the fly in the docserver dir ?
 		$fileNameOnTmp = $tmp.rand()."_".md5_file($fileInfos['path_to_file'])."_".$fileInfos['filename'];
 		$cp = copy($fileInfos['path_to_file'], $fileNameOnTmp);
+		//echo self::getMimeType($fileNameOnTmp);
 		if($cp == false) {
 			$result = array('error'=>_TMP_COPY_ERROR);
 			return $result;
 		} else {
-			require_once "File/Archive.php";
+			$_exec_error = '';
+			$tmpArchive = uniqid(rand());
+			if(mkdir($tmp.$tmpArchive)) {
+				$command = '7z e -y -o'.escapeshellarg($tmp.$tmpArchive).' '.escapeshellarg($fileNameOnTmp);
+				//echo $command."<br>";
+				$tmpCmd = "";
+				exec($command, $tmpCmd, $_exec_error);
+				if($_exec_error > 0) {
+					$result = array('error'=>_PB_WITH_EXTRACTION_OF_CONTAINER." : <br>".$_exec_error);
+					return $result;
+				}
+			} else {
+				$result = array('error'=>_PB_WITH_EXTRACTION_OF_CONTAINER." : <br>".$tmp.$tmpArchive);
+				return $result;
+			}
+			$format = substr($fileInfos['offset_doc'], strrpos($fileInfos['offset_doc'], '.') + 1);
+			$result = array('path'=>$tmp.$tmpArchive.DIRECTORY_SEPARATOR.$fileInfos['offset_doc'], 'mime_type'=>self::getMimeType($tmp.$tmpArchive.DIRECTORY_SEPARATOR.$fileInfos['offset_doc']), 'format'=>$format, 'tmpArchive'=>$tmp.$tmpArchive);
+			$classScan = dir($tmp.$tmpArchive);
+			/*while(($fileScan=$classScan->read())!=false) {
+				if($fileScan=='.'||$fileScan=='..') {
+			 		continue;
+				}
+				unlink($tmp.$tmpArchive.DIRECTORY_SEPARATOR.$fileScan);
+			}*/
+			unlink($fileNameOnTmp);
+			return $result;
+			/*require_once "File/Archive.php";
 			$toExtract = $fileNameOnTmp.DIRECTORY_SEPARATOR.$fileInfos['offset_doc'];
 			$extract = File_Archive::extract(
 			    $toExtract,
@@ -565,7 +612,7 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
 				$format = substr($fileInfos['offset_doc'], strrpos($fileInfos['offset_doc'], '.') + 1);
 				$result = array('path'=>$tmp.$fileInfos['offset_doc'], 'mime_type'=>self::getMimeType($tmp.$fileInfos['offset_doc']), 'format'=>$format);
 				return $result;
-			}
+			}*/
 		}
 	}
 }
