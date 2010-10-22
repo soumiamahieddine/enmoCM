@@ -263,10 +263,6 @@ CREATE TABLE "security"
 )
 WITH (OIDS=FALSE);
 
-<<<<<<< .mine
-
-=======
->>>>>>> .r198
 CREATE TABLE status
 (
   id character varying(10) NOT NULL,
