@@ -33,14 +33,14 @@ $db = new dbquery();
 $db->connect();
 /****************Management of the location bar  ************/
 $init = false;
-if($_REQUEST['reinit'] == "true")
+if(isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true")
 {
-	$init = true;
+    $init = true;
 }
 $level = "";
-if($_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1)
+if(isset($_REQUEST['level']) && $_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1)
 {
-	$level = $_REQUEST['level'];
+    $level = $_REQUEST['level'];
 }
 $page_path = $_SESSION['config']['businessappurl'].'index.php?page=reports&module=reports';
 $page_label = _REPORTS;
@@ -52,19 +52,19 @@ $db->query("SELECT count(*) as total from ".$_SESSION['collections'][0]['view'].
 $count_piece = $db->fetch_object();
 if($rep->is_module_loaded('folder'))
 {
-	$db->query("SELECT count(*) as total from ".$_SESSION['tablename']['fold_folders']." where status = 'NEW'");
-	$count_folder = $db->fetch_object();
+    $db->query("SELECT count(*) as total from ".$_SESSION['tablename']['fold_folders']." where status = 'NEW'");
+    $count_folder = $db->fetch_object();
 }
 ?>
 <h1><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=reports_b.gif&module=reports" alt="" /> <?php echo _REPORTS;?></h1>
 <div id="inner_content" class="clearfix">
 <p>
-	<img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=contrat_mini.png" alt=""  /> <?php echo _NB_TOTAL_DOC;?> : <b><?php echo $count_piece->total; ?></b>
-	<?php if($rep->is_module_loaded('folder'))
+    <img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=contrat_mini.png" alt=""  /> <?php echo _NB_TOTAL_DOC;?> : <b><?php echo $count_piece->total; ?></b>
+    <?php if($rep->is_module_loaded('folder'))
 {?>
-	&nbsp;&nbsp; <img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=folder_documents_mini.png" alt=""  /> <?php echo _NB_TOTAL_FOLDER;?> : <b><?php echo $count_folder->total; ?></b><?php 
+    &nbsp;&nbsp; <img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=folder_documents_mini.png" alt=""  /> <?php echo _NB_TOTAL_FOLDER;?> : <b><?php echo $count_folder->total; ?></b><?php
 }?>
-	</p>
+    </p>
 <?php include('modules'.DIRECTORY_SEPARATOR.'reports'.DIRECTORY_SEPARATOR.'user_reports.php');?>
 
 </div>
