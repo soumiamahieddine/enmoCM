@@ -40,72 +40,56 @@ class portal extends functions
 	/**
 	* Loads Maarch portal configuration into sessions  from an xml configuration file (core/xml/config.xml)
 	*/
-	public function build_config()
-	{
+	public function build_config() {
 		$xmlconfig = simplexml_load_file('core'.DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'config.xml');
-		foreach($xmlconfig->CONFIG as $CONFIG)
-		{
+		foreach($xmlconfig->CONFIG as $CONFIG) {
 			$_SESSION['config']['corename'] = (string) $CONFIG->corename;
 			$_SESSION['config']['corepath'] = (string) $CONFIG->corepath;
 			$_SESSION['config']['tmppath'] = (string) $CONFIG->tmppath;
 			$_SESSION['config']['unixserver'] = (string) $CONFIG->unixserver;
 			$_SESSION['config']['defaultpage'] = (string) $CONFIG->defaultpage;
 			$_SESSION['config']['defaultlang'] = (string) $CONFIG->defaultlanguage;
-			if(isset($CONFIG->default_timezone) && !empty($CONFIG->default_timezone))
-			{
+			if(isset($CONFIG->default_timezone) && !empty($CONFIG->default_timezone)) {
 				$_SESSION['config']['default_timezone'] = (string) $CONFIG->default_timezone;
-			}
-			else
-			{
+			} else {
 				$_SESSION['config']['default_timezone'] = 'Europe/Paris';
 			}
-			if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == "on")
+			if(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == "on")
 				$protocol = "https";
 			else
 				$protocol = "http";
 			
-			if ($_SERVER['SERVER_PORT'] <> 443 && $protocol == "https")		
-			{
+			if($_SERVER['SERVER_PORT'] <> 443 && $protocol == "https") {
 				$server_port = ":".$_SERVER['SERVER_PORT'];
-			}
-			elseif ($_SERVER['SERVER_PORT'] <> 80 && $protocol == "http")
-			{
+			} elseif ($_SERVER['SERVER_PORT'] <> 80 && $protocol == "http") {
 				$server_port = ":".$_SERVER['SERVER_PORT'];
-			}
-			else
-			{
+			} else {
 				$server_port = '';
 			}
-			if(isset($_SERVER['HTTP_X_FORWARDED_HOST']) && $_SERVER['HTTP_X_FORWARDED_HOST'] <> "")
-			{
+			if(isset($_SERVER['HTTP_X_FORWARDED_HOST']) && $_SERVER['HTTP_X_FORWARDED_HOST'] <> "") {
 					$host = $_SERVER['HTTP_X_FORWARDED_HOST'];
 			}
-			else
-			{
+			else {
 					$host = $_SERVER['HTTP_HOST'];
 			}
 			$tmp = $host;
-			if(!preg_match('/:[0-9]+$/', $host))
-			{
+			if(!preg_match('/:[0-9]+$/', $host)) {
 				$tmp =$host.$server_port;
 			}
-			
 			$_SESSION['config']['coreurl'] = $protocol."://".$tmp.str_replace('index.php','',$_SERVER['SCRIPT_NAME']);
 		}
 		$i=0;
-		foreach($xmlconfig->BUSINESSAPPS as $BUSINESSAPPS)
-		{
-			$_SESSION['businessapps'][$i] = array("appid" => (string) $BUSINESSAPPS->appid,
-																			"comment" => (string) $BUSINESSAPPS->comment);
-		$i++;
+		foreach($xmlconfig->BUSINESSAPPS as $BUSINESSAPPS) {
+			$_SESSION['businessapps'][$i] = array("appid" => (string) $BUSINESSAPPS->appid,	"comment" => (string) $BUSINESSAPPS->comment);
+			$i++;
 		}
 	}
 
 	/**
 	* Unset session variabless
 	*/
-	public function unset_session()
-	{
+	public function unset_session() {
+		unset($_SESSION);
 		unset($_SESSION['config']);
 		unset($_SESSION['businessapps']);
 	}
