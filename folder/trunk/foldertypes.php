@@ -5,14 +5,14 @@ $admin = new core_tools();
 $admin->test_admin('admin_foldertypes', 'folder');
 /****************Management of the location bar  ************/
 $init = false;
-if($_REQUEST['reinit'] == "true")
+if(isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true")
 {
-	$init = true;
+    $init = true;
 }
 $level = "";
-if($_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1)
+if(isset($_REQUEST['level']) && $_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1)
 {
-	$level = $_REQUEST['level'];
+    $level = $_REQUEST['level'];
 }
 $page_path = $_SESSION['config']['businessappurl'].'index.php?page=foldertypes&module=folder';
 $page_label = _FOLDERTYPES_LIST;
@@ -28,26 +28,26 @@ $what = "";
 $where ="";
 if(isset($_REQUEST['what']) && !empty($_REQUEST['what']))
 {
-	$what = $func->protect_string_db($_REQUEST['what']);
-	if($_SESSION['config']['databasetype'] == 'POSTGRESQL')
-	{
-		$where = "foldertype_label ilike '".strtolower($what)."%' or foldertype_label ilike '".strtoupper($what)."%' ";
-	}
-	else
-	{
-		$where = "foldertype_label like '".strtolower($what)."%' or foldertype_label like '".strtoupper($what)."%' ";
-	}
+    $what = $func->protect_string_db($_REQUEST['what']);
+    if($_SESSION['config']['databasetype'] == 'POSTGRESQL')
+    {
+        $where = "foldertype_label ilike '".strtolower($what)."%' or foldertype_label ilike '".strtoupper($what)."%' ";
+    }
+    else
+    {
+        $where = "foldertype_label like '".strtolower($what)."%' or foldertype_label like '".strtoupper($what)."%' ";
+    }
 }
 $list = new list_show();
 $order = 'asc';
 if(isset($_REQUEST['order']) && !empty($_REQUEST['order']))
 {
-	$order = trim($_REQUEST['order']);
+    $order = trim($_REQUEST['order']);
 }
 $field = 'foldertype_label';
 if(isset($_REQUEST['order_field']) && !empty($_REQUEST['order_field']))
 {
-	$field = trim($_REQUEST['order_field']);
+    $field = trim($_REQUEST['order_field']);
 }
 
 $orderstr = $list->define_order($order, $field);
@@ -57,36 +57,36 @@ $tab = $request->select($select, $where, $orderstr, $_SESSION['config']['databas
 
 for($i=0;$i<count($tab);$i++)
 {
-	for ($j=0;$j<count($tab[$i]);$j++)
-	{
-		foreach(array_keys($tab[$i][$j]) as $value)
-		{
+    for ($j=0;$j<count($tab[$i]);$j++)
+    {
+        foreach(array_keys($tab[$i][$j]) as $value)
+        {
 
-			if($tab[$i][$j][$value]=="foldertype_id")
-			{
-				$tab[$i][$j]["foldertype_id"]=$tab[$i][$j]['value'];
-				$tab[$i][$j]["label"]= _ID;
-				$tab[$i][$j]["size"]="20";
-				$tab[$i][$j]["label_align"]="left";
-				$tab[$i][$j]["align"]="left";
-				$tab[$i][$j]["valign"]="bottom";
-				$tab[$i][$j]["show"]=true;
-				$tab[$i][$j]["order"]='foldertype_id';
-			}
-			if($tab[$i][$j][$value]=="foldertype_label")
-			{
-				$tab[$i][$j]["value"]=$request->show_string($tab[$i][$j]['value']);
-				$tab[$i][$j]["foldertype_label"]=$tab[$i][$j]['value'];
-				$tab[$i][$j]["label"]=_DESC;
-				$tab[$i][$j]["size"]="45";
-				$tab[$i][$j]["label_align"]="left";
-				$tab[$i][$j]["align"]="left";
-				$tab[$i][$j]["valign"]="bottom";
-				$tab[$i][$j]["show"]=true;
-				$tab[$i][$j]["order"]='foldertype_label';
-			}
-		}
-	}
+            if($tab[$i][$j][$value]=="foldertype_id")
+            {
+                $tab[$i][$j]["foldertype_id"]=$tab[$i][$j]['value'];
+                $tab[$i][$j]["label"]= _ID;
+                $tab[$i][$j]["size"]="20";
+                $tab[$i][$j]["label_align"]="left";
+                $tab[$i][$j]["align"]="left";
+                $tab[$i][$j]["valign"]="bottom";
+                $tab[$i][$j]["show"]=true;
+                $tab[$i][$j]["order"]='foldertype_id';
+            }
+            if($tab[$i][$j][$value]=="foldertype_label")
+            {
+                $tab[$i][$j]["value"]=$request->show_string($tab[$i][$j]['value']);
+                $tab[$i][$j]["foldertype_label"]=$tab[$i][$j]['value'];
+                $tab[$i][$j]["label"]=_DESC;
+                $tab[$i][$j]["size"]="45";
+                $tab[$i][$j]["label_align"]="left";
+                $tab[$i][$j]["align"]="left";
+                $tab[$i][$j]["valign"]="bottom";
+                $tab[$i][$j]["show"]=true;
+                $tab[$i][$j]["order"]='foldertype_label';
+            }
+        }
+    }
 }
 $page_name = "foldertypes";
 $page_name_up = "foldertype_up";
