@@ -36,21 +36,21 @@ $core_tools->load_lang();
 $mode = 'normal';
 if(isset($_REQUEST['mode'])&& !empty($_REQUEST['mode']))
 {
-	$mode = $core_tools->wash($_REQUEST['mode'], "alphanum", _MODE);
+    $mode = $core_tools->wash($_REQUEST['mode'], "alphanum", _MODE);
 }
 if($mode == 'normal')
 {
-	$core_tools->test_service('adv_search_mlb', 'apps');
+    $core_tools->test_service('adv_search_mlb', 'apps');
 /****************Management of the location bar  ************/
 $init = false;
-if($_REQUEST['reinit'] == "true")
+if(isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true")
 {
-	$init = true;
+    $init = true;
 }
 $level = "3";
-if($_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1)
+if(isset($_REQUEST['level'] ) && ($_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1))
 {
-	$level = 3 ;
+    $level = 3 ;
 }
 $page_path = $_SESSION['config']['businessappurl'].'index.php?page=search_adv_result&dir=indexing_searching';
 $page_label = _RESULTS;
@@ -60,39 +60,39 @@ $core_tools->manage_location_bar($page_path, $page_label, $page_id, $init, $leve
 }
 elseif($mode == 'popup' || $mode == 'frame')
 {
-	$core_tools->load_html();
-	$core_tools->load_header();
-	$time = $core_tools->get_session_time_expire('', true, false);
-	?><body>
-	<div id="container">
+    $core_tools->load_html();
+    $core_tools->load_header();
+    $time = $core_tools->get_session_time_expire('', true, false);
+    ?><body>
+    <div id="container">
 
             <div class="error" id="main_error">
-				<?php  echo $_SESSION['error'];?>
+                <?php  echo $_SESSION['error'];?>
             </div>
-			<div class="info" id="main_info">
-				<?php  echo $_SESSION['info'];?>
+            <div class="info" id="main_info">
+                <?php  echo $_SESSION['info'];?>
             </div><?php
 }
 ?>
 <h1><img src="<?php  echo $_SESSION['config']['businessappurl']."static.php?filename=picto_search_b.gif";?>" alt="" /> <?php  echo _ADV_SEARCH_TITLE; ?></h1>
 <div id="inner_content">
-	<p>&nbsp;</p>
-	<p>&nbsp;</p>
-	<p>&nbsp;</p>
-	<p>&nbsp;</p>
-	<p>&nbsp;</p>
-	<p>&nbsp;</p>
-	<?php  echo $_SESSION['error_search'];
-	$_SESSION['error_search'] = "";
-	?>
+    <p>&nbsp;</p>
+    <p>&nbsp;</p>
+    <p>&nbsp;</p>
+    <p>&nbsp;</p>
+    <p>&nbsp;</p>
+    <p>&nbsp;</p>
+    <?php  echo $_SESSION['error_search'];
+    $_SESSION['error_search'] = "";
+    ?>
 </div>
 <?php if($mode == 'popup' || $mode == 'frame')
 {
- 	echo '</div>';
- 	if($mode == 'popup')
- 	{
-	?><br/><div align="center"><input type="button" name="close" class="button" value="<?php echo _CLOSE_WINDOW;?>" onclick="self.close();" /></div> <?php
-	}
-	$core_tools->load_js();
- 	echo '</body></html>';
+    echo '</div>';
+    if($mode == 'popup')
+    {
+    ?><br/><div align="center"><input type="button" name="close" class="button" value="<?php echo _CLOSE_WINDOW;?>" onclick="self.close();" /></div> <?php
+    }
+    $core_tools->load_js();
+    echo '</body></html>';
 }

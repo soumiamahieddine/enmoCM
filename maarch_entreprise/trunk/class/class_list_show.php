@@ -137,7 +137,7 @@ class list_show extends functions
             $listshow = array();
             $listformat = array();
             $ordercol = array();
-            if($_REQUEST['start'] > $nb_total)
+            if(isset($_REQUEST['start']) && $_REQUEST['start'] > $nb_total)
             {
                 $_REQUEST['start'] = 0;
             }
@@ -146,7 +146,14 @@ class list_show extends functions
             {
                 array_push($listcolumn,$result[0][$j]["label"]);
                 array_push($listshow,$result[0][$j]["show"]);
-                array_push($ordercol,$result[0][$j]["order"]);
+                if(isset($result[0][$j]["order"]))
+                {
+                    array_push($ordercol,$result[0][$j]["order"]);
+                }
+                else
+                {
+                     array_push($ordercol,'');
+                }
             }
 
             if($bool_frame)
@@ -158,9 +165,12 @@ class list_show extends functions
             {
                 $link = $_SESSION['config']['businessappurl']."index.php?page=".$name."&amp;search=".$what;
             }
-            for($i=0;$i<count($_SESSION['where']);$i++)
+            if(isset($_SESSION['where']))
             {
-                $link .= "&amp;where[]=".$_SESSION['where'][$i];
+                for($i=0;$i<count($_SESSION['where']);$i++)
+                {
+                    $link .= "&amp;where[]=".$_SESSION['where'][$i];
+                }
             }
             if(!empty($module))
             {
@@ -224,6 +234,7 @@ class list_show extends functions
 
 
             //########################
+            $disp_dc = '';
             if(core_tools::is_module_loaded("doc_converter") && $bool_export)
             {
                 $_SESSION['doc_convert'] = array();
@@ -233,6 +244,7 @@ class list_show extends functions
             }
             //########################
 
+            $tdeto = '';
             if ($template == true)
             {
                 require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR.'class_list_show_with_template.php');
@@ -241,7 +253,8 @@ class list_show extends functions
             }
 
             // if they are more 1 page we do pagination with 2 forms
-
+            $previous = "";
+            $next = "";
             if($nb_pages > 1)
             {
                 $next_start = 0;
@@ -265,8 +278,7 @@ class list_show extends functions
                 }
                 $page_list1 .= "</select>";
                 $lastpage = $lastpage - $nb_show;
-                $previous = "";
-                $next = "";
+
                 if($start > 0)
                 {
                     $start_prev = $start - $nb_show;
@@ -531,7 +543,12 @@ class list_show extends functions
                         }
                         else
                         {
-                            $str .= ' <td style="width:'.$result[$theline][$count_column]['size'].'%;" align="'.$result[$theline][$count_column]['align'].'" '.$result[$theline][$count_column]['css_style'].'>'.functions::show(self::thisword($result[$theline][$count_column]['value'],$what)).'</td>';
+                            $str .= ' <td style="width:'.$result[$theline][$count_column]['size'].'%;" align="'.$result[$theline][$count_column]['align'].'" ';
+                            if(isset($result[$theline][$count_column]['css_style']))
+                            {
+                                $str .= $result[$theline][$count_column]['css_style'];
+                            }
+                            $str .='>'.functions::show(self::thisword($result[$theline][$count_column]['value'],$what)).'</td>';
                         }
                     }
                 }
@@ -733,10 +750,11 @@ class list_show extends functions
                     <?php
                     if($autoCompletion)
                     {
+                        //preg_replace("/(&(?!amp;))/", "&amp;",$autoCompletionArray2['list_script_url'])
                         ?>
                         <div id="whatList" class="autocomplete"></div>
                         <script type="text/javascript">
-                            initList('what', 'whatList', '<?php  echo preg_replace("/(&(?!amp;))/", "&amp;",$autoCompletionArray2['list_script_url']);?>', 'what', '<?php  echo $autoCompletionArray2['number_to_begin'];?>');
+                            initList('what', 'whatList', '<?php  echo $autoCompletionArray2['list_script_url'];?>', 'what', '<?php  echo $autoCompletionArray2['number_to_begin'];?>');
                         </script>
                         <?php
                     }
@@ -892,7 +910,7 @@ class list_show extends functions
             $page_list1 = '<form  id="newpage1" method="get" action="'.urldecode($link).'" >
             <p>
                 <label for="startpage">'._GO_TO_PAGE.'</label>
-                <select name="startpage" id="startpage" class="small" onchange="window.location.href=\''.$link.'&amp;start=\'+document.newpage1.startpage.value;">';
+                <select name="startpage" id="startpage" class="small" onchange="window.location.href=\''.$link.'&amp;start=\'+$(\'newpage1\').startpage.value;">';
 
             $lastpage = 0;
 
@@ -1076,7 +1094,7 @@ class list_show extends functions
             <tr <?php  echo $color; ?>>
                     <?php
                     $enabled = "";
-                    if($page_name == "users")
+                    if(isset($page_name) && $page_name == "users")
                     {
                         $complete_name = "";
                     }
@@ -1114,7 +1132,7 @@ class list_show extends functions
                                 }
                                 else
                                 {
-                                    if($page_name == "users")
+                                    if(isset($page_name) && $page_name == "users")
                                     {
                                         if($result[$theline][$count_column]['column'] == "lastname" || $result[$theline][$count_column]['column'] == "firstname" )
                                         {
@@ -1235,7 +1253,7 @@ class list_show extends functions
                                 {
                                     $path_ban = preg_replace("/(&(?!amp;))/", "&amp;", $path_ban);
                                 ?>
-                            <a href="<?php  echo $path_ban.$param_comp; ?>" class="suspend" onclick="return(confirm('<?php  echo _REALLY_SUSPEND." ";  if($page_name == "users"){ echo $complete_name;} else { echo $admin_id; } ?> ?'));"><?php  echo _SUSPEND;?></a><?php  }
+                            <a href="<?php  echo $path_ban.$param_comp; ?>" class="suspend" onclick="return(confirm('<?php  echo _REALLY_SUSPEND." ";  if(isset($page_name) && $page_name == "users"){ echo $complete_name;} else { echo $admin_id; } ?> ?'));"><?php  echo _SUSPEND;?></a><?php  }
                                 }
                             }
                             ?>
@@ -1282,7 +1300,7 @@ class list_show extends functions
                             $path_del = preg_replace("/(&(?!amp;))/", "&amp;", $path_del);
                         ?>
                             <a href="<?php  echo $path_del.$param_comp;?>"  class="delete"
-                        onclick="return(confirm('<?php  echo _REALLY_DELETE." ";  if($page_name == "users"){ echo $complete_name;}
+                        onclick="return(confirm('<?php  echo _REALLY_DELETE." ";  if(isset($page_name) && $page_name == "users"){ echo $complete_name;}
                                  else { echo $admin_id; }?> ?\n\r\n\r<?php  echo _DEFINITIVE_ACTION; ?>'));"><?php  echo _DELETE;?></a>
                         <?php
                         }

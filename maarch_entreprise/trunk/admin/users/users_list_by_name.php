@@ -33,34 +33,35 @@ $db = new dbquery();
 $db->connect();
 if($_SESSION['config']['databasetype'] == "POSTGRESQL")
 {
-	$db->query("select lastname as tag from ".$_SESSION['tablename']['users']." where lastname ilike '".$_REQUEST['what']."%' order by lastname");
+    $db->query("select lastname as tag from ".$_SESSION['tablename']['users']." where lastname ilike '".$_REQUEST['what']."%' order by lastname");
 }
 else
 {
-	$db->query("select lastname as tag from ".$_SESSION['tablename']['users']." where lastname like '".$_REQUEST['what']."%' order by lastname");
+    $db->query("select lastname as tag from ".$_SESSION['tablename']['users']." where lastname like '".$_REQUEST['what']."%' order by lastname");
 }
 $listArray = array();
 while($line = $db->fetch_object())
 {
-	array_push($listArray, $line->tag);
+    array_push($listArray, $line->tag);
 }
 echo "<ul>\n";
 $authViewList = 0;
+$flagAuthView = false;
 foreach($listArray as $what)
 {
-	if($authViewList >= 10)
-	{
-		$flagAuthView = true;
-	}
+    if(isset($authViewList ) && $authViewList>= 10)
+    {
+        $flagAuthView = true;
+    }
     if(stripos($what, $_REQUEST['what']) === 0)
     {
         echo "<li>".$what."</li>\n";
-		if($flagAuthView)
-		{
-			echo "<li>...</li>\n";
-			break;
-		}
-		$authViewList++;
+        if($flagAuthView)
+        {
+            echo "<li>...</li>\n";
+            break;
+        }
+        $authViewList++;
     }
 }
 echo "</ul>";

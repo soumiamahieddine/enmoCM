@@ -15,14 +15,14 @@ $admin = new core_tools();
 $admin->test_admin('admin_architecture', 'apps');
 /****************Management of the location bar  ************/
 $init = false;
-if($_REQUEST['reinit'] == "true")
+if(isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true")
 {
-	$init = true;
+    $init = true;
 }
 $level = "";
-if($_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1)
+if(isset($_REQUEST['level']) && $_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1)
 {
-	$level = $_REQUEST['level'];
+    $level = $_REQUEST['level'];
 }
 $page_path = $_SESSION['config']['businessappurl'].'index.php?page=subfolders';
 $page_label = _SUBFOLDER_LIST;
@@ -38,26 +38,26 @@ $what = "";
 $where= " enabled = 'Y' ";
 if(isset($_REQUEST['what']) && !empty($_REQUEST['what']))
 {
-	$what = $func->protect_string_db($_REQUEST['what']);
-	if($_SESSION['config']['databasetype'] == "POSTGRESQL")
-	{
-		$where .= " and (doctypes_second_level_label ilike '".strtolower($what)."%' or doctypes_second_level_label ilike '".strtoupper($what)."%') ";
-	}
-	else
-	{
-		$where .= " and (doctypes_second_level_label like '".strtolower($what)."%' or doctypes_second_level_label like '".strtoupper($what)."%') ";
-	}
+    $what = $func->protect_string_db($_REQUEST['what']);
+    if($_SESSION['config']['databasetype'] == "POSTGRESQL")
+    {
+        $where .= " and (doctypes_second_level_label ilike '".strtolower($what)."%' or doctypes_second_level_label ilike '".strtoupper($what)."%') ";
+    }
+    else
+    {
+        $where .= " and (doctypes_second_level_label like '".strtolower($what)."%' or doctypes_second_level_label like '".strtoupper($what)."%') ";
+    }
 }
 $list = new list_show();
 $order = 'asc';
 if(isset($_REQUEST['order']) && !empty($_REQUEST['order']))
 {
-	$order = trim($_REQUEST['order']);
+    $order = trim($_REQUEST['order']);
 }
 $field = 'doctypes_second_level_label';
 if(isset($_REQUEST['order_field']) && !empty($_REQUEST['order_field']))
 {
-	$field = trim($_REQUEST['order_field']);
+    $field = trim($_REQUEST['order_field']);
 }
 
 $orderstr = $list->define_order($order, $field);
@@ -66,47 +66,47 @@ $request= new request;
 $tab=$request->select($select,$where,$orderstr ,$_SESSION['config']['databasetype']);
 for ($i=0;$i<count($tab);$i++)
 {
-	for ($j=0;$j<count($tab[$i]);$j++)
-	{
-		foreach(array_keys($tab[$i][$j]) as $value)
-		{
+    for ($j=0;$j<count($tab[$i]);$j++)
+    {
+        foreach(array_keys($tab[$i][$j]) as $value)
+        {
 
-			if($tab[$i][$j][$value]=="doctypes_second_level_id")
-			{
-				$tab[$i][$j]["doctypes_second_level_id"]=$tab[$i][$j]['value'];
-				$tab[$i][$j]["label"]=_ID;
-				$tab[$i][$j]["size"]="10";
-				$tab[$i][$j]["label_align"]="left";
-				$tab[$i][$j]["align"]="left";
-				$tab[$i][$j]["valign"]="bottom";
-				$tab[$i][$j]["show"]=true;
-				$tab[$i][$j]["order"]='doctypes_second_level_id';
-			}
-			if($tab[$i][$j][$value]=="doctypes_first_level_id")
-			{
-				$tab[$i][$j]["doctypes_first_level_id"]=$tab[$i][$j]['value'];
-				$tab[$i][$j]["label"]=_STRUCTURE;
-				$tab[$i][$j]["size"]="10";
-				$tab[$i][$j]["label_align"]="left";
-				$tab[$i][$j]["align"]="left";
-				$tab[$i][$j]["valign"]="bottom";
-				$tab[$i][$j]["show"]=true;
-				$tab[$i][$j]["order"]='doctypes_first_level_id';
-			}
-			if($tab[$i][$j][$value]=="doctypes_second_level_label")
-			{
-				$tab[$i][$j]['value']=$request->show_string($tab[$i][$j]['value']);
-				$tab[$i][$j]["doctypes_second_level_label"]=$tab[$i][$j]['value'];
-				$tab[$i][$j]["label"]=_DESC;
-				$tab[$i][$j]["size"]="30";
-				$tab[$i][$j]["label_align"]="left";
-				$tab[$i][$j]["align"]="left";
-				$tab[$i][$j]["valign"]="bottom";
-				$tab[$i][$j]["show"]=true;
-				$tab[$i][$j]["order"]='doctypes_second_level_label';
-			}
-		}
-	}
+            if($tab[$i][$j][$value]=="doctypes_second_level_id")
+            {
+                $tab[$i][$j]["doctypes_second_level_id"]=$tab[$i][$j]['value'];
+                $tab[$i][$j]["label"]=_ID;
+                $tab[$i][$j]["size"]="10";
+                $tab[$i][$j]["label_align"]="left";
+                $tab[$i][$j]["align"]="left";
+                $tab[$i][$j]["valign"]="bottom";
+                $tab[$i][$j]["show"]=true;
+                $tab[$i][$j]["order"]='doctypes_second_level_id';
+            }
+            if($tab[$i][$j][$value]=="doctypes_first_level_id")
+            {
+                $tab[$i][$j]["doctypes_first_level_id"]=$tab[$i][$j]['value'];
+                $tab[$i][$j]["label"]=_STRUCTURE;
+                $tab[$i][$j]["size"]="10";
+                $tab[$i][$j]["label_align"]="left";
+                $tab[$i][$j]["align"]="left";
+                $tab[$i][$j]["valign"]="bottom";
+                $tab[$i][$j]["show"]=true;
+                $tab[$i][$j]["order"]='doctypes_first_level_id';
+            }
+            if($tab[$i][$j][$value]=="doctypes_second_level_label")
+            {
+                $tab[$i][$j]['value']=$request->show_string($tab[$i][$j]['value']);
+                $tab[$i][$j]["doctypes_second_level_label"]=$tab[$i][$j]['value'];
+                $tab[$i][$j]["label"]=_DESC;
+                $tab[$i][$j]["size"]="30";
+                $tab[$i][$j]["label_align"]="left";
+                $tab[$i][$j]["align"]="left";
+                $tab[$i][$j]["valign"]="bottom";
+                $tab[$i][$j]["show"]=true;
+                $tab[$i][$j]["order"]='doctypes_second_level_label';
+            }
+        }
+    }
 }
 $page_name = "subfolders";
 $page_name_up = "subfolder_up";
@@ -120,7 +120,7 @@ $_SESSION['m_admin']['structures'] = array();
 $request->query("select * from ".$_SESSION['tablename']['doctypes_first_level']." where enabled = 'Y'");
 while($res = $request->fetch_object())
 {
-	array_push($_SESSION['m_admin']['structures'], array('ID' => $res->doctypes_first_level_id, 'LABEL'=> $request->show_string($res->doctypes_first_level_label)));
+    array_push($_SESSION['m_admin']['structures'], array('ID' => $res->doctypes_first_level_id, 'LABEL'=> $request->show_string($res->doctypes_first_level_label)));
 }
 $autoCompletionArray = array();
 $autoCompletionArray["list_script_url"] = $_SESSION['config']['businessappurl']."index.php?display=true&page=subfolders_list_by_name";

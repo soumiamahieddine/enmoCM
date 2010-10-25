@@ -34,14 +34,14 @@ $admin = new core_tools();
 $admin->test_admin('admin_architecture', 'apps');
 /****************Management of the location bar  ************/
 $init = false;
-if($_REQUEST['reinit'] == "true")
+if(isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true")
 {
-	$init = true;
+    $init = true;
 }
 $level = "";
-if($_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1)
+if(isset($_REQUEST['level']) && $_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1)
 {
-	$level = $_REQUEST['level'];
+    $level = $_REQUEST['level'];
 }
 $page_path = $_SESSION['config']['businessappurl'].'index.php?page=admin_archi&admin=architecture';
 $page_label = _ARCHITECTURE;
@@ -52,32 +52,32 @@ unset($_SESSION['m_admin']);
 ?>
 <h1><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=manage_architecture_b.gif" alt="" /> <?php  echo _ADMIN_ARCHI;?></h1>
 <div id="inner_content" class="clearfix">
-	<h2 class="admin_subtitle block" ><?php  echo _ARCHITECTURE;?></h2>
+    <h2 class="admin_subtitle block" ><?php  echo _ARCHITECTURE;?></h2>
     <div  class="admin_item" id="admin_structures" title="<?php  echo _MANAGE_STRUCTURE_DESC;?>" onclick="window.top.location='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=structures';">
         <div class="sum_margin">
-				<strong><?php  echo _MANAGE_STRUCTURE;?></strong><!--<br/>
-				<em><?php  echo _MANAGE_STRUCTURE_DESC;?></em>-->
-		</div>
+                <strong><?php  echo _MANAGE_STRUCTURE;?></strong><!--<br/>
+                <em><?php  echo _MANAGE_STRUCTURE_DESC;?></em>-->
+        </div>
     </div>
 
     <div class="admin_item" id="admin_subfolders" title="<?php  echo _MANAGE_SUBFOLDER_DESC;?>" onclick="window.top.location='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=subfolders';">
         <div class="sum_margin">
-				<strong><?php  echo _MANAGE_SUBFOLDER;?></strong><!--<br/>
-				<em><?php  echo _MANAGE_SUBFOLDER_DESC;?></em>-->
+                <strong><?php  echo _MANAGE_SUBFOLDER;?></strong><!--<br/>
+                <em><?php  echo _MANAGE_SUBFOLDER_DESC;?></em>-->
          </div>
     </div>
 
     <div class="admin_item" id="admin_types" title="<?php  echo _MANAGE_DOCTYPES_DESC;?>" onclick="window.top.location='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=types';">
         <div class="sum_margin">
-				<strong><?php  echo _MANAGE_DOCTYPES;?></strong><!--<br/>
-				<em><?php  echo _MANAGE_DOCTYPES_DESC;?></em>-->
+                <strong><?php  echo _MANAGE_DOCTYPES;?></strong><!--<br/>
+                <em><?php  echo _MANAGE_DOCTYPES_DESC;?></em>-->
          </div>
     </div>
 
-	<div class="admin_item" id="view_tree_types" title="<?php  echo _VIEW_TREE_DOCTYPES_DESC;?>" onclick="window.top.location='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=view_tree_types&admin=architecture';">
+    <div class="admin_item" id="view_tree_types" title="<?php  echo _VIEW_TREE_DOCTYPES_DESC;?>" onclick="window.top.location='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=view_tree_types&admin=architecture';">
         <div class="sum_margin">
-				<strong><?php  echo _VIEW_TREE_DOCTYPES;?></strong><!--<br/>
-				<em><?php  echo _VIEW_TREE_DOCTYPES_DESC;?></em>-->
+                <strong><?php  echo _VIEW_TREE_DOCTYPES;?></strong><!--<br/>
+                <em><?php  echo _VIEW_TREE_DOCTYPES_DESC;?></em>-->
          </div>
     </div>
 

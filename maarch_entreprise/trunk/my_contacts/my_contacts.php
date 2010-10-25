@@ -16,14 +16,14 @@ $admin->test_service('my_contacts', 'apps');
 $func = new functions();
 /****************Management of the location bar  ************/
 $init = false;
-if($_REQUEST['reinit'] == "true")
+if(isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true")
 {
-	$init = true;
+    $init = true;
 }
 $level = "";
-if($_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1)
+if(isset($_REQUEST['level']) && $_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1)
 {
-	$level = $_REQUEST['level'];
+    $level = $_REQUEST['level'];
 }
 $page_path = $_SESSION['config']['businessappurl'].'index.php?page=my_contacts&dir=my_contacts';
 $page_label = _CONTACTS_LIST;
@@ -38,73 +38,73 @@ $what = "";
 $where =" user_id  = '".$_SESSION['user']['UserId']."'  and enabled = 'Y' ";
 if(isset($_REQUEST['what']))
 {
-	$what = $func->protect_string_db($func->wash($_REQUEST['what'], "alphanum", "", "no"));
-	if($_SESSION['config']['databasetype'] == "POSTGRESQL")
-	{
-		$where .= " and (lastname ilike '".$func->protect_string_db($what,$_SESSION['config']['databasetype'])."%'  or society ilike '".$func->protect_string_db($what,$_SESSION['config']['databasetype'])."%' ) ";
-	}
-	else
-	{
-		$where .= " and (lastname like '".$func->protect_string_db($what,$_SESSION['config']['databasetype'])."%'  or society like '".$func->protect_string_db($what,$_SESSION['config']['databasetype'])."%' ) ";
-	}
+    $what = $func->protect_string_db($func->wash($_REQUEST['what'], "alphanum", "", "no"));
+    if($_SESSION['config']['databasetype'] == "POSTGRESQL")
+    {
+        $where .= " and (lastname ilike '".$func->protect_string_db($what,$_SESSION['config']['databasetype'])."%'  or society ilike '".$func->protect_string_db($what,$_SESSION['config']['databasetype'])."%' ) ";
+    }
+    else
+    {
+        $where .= " and (lastname like '".$func->protect_string_db($what,$_SESSION['config']['databasetype'])."%'  or society like '".$func->protect_string_db($what,$_SESSION['config']['databasetype'])."%' ) ";
+    }
 }
 $orderby = "order by lastname, society asc";
 $request= new request;
 $tab=$request->select($select,$where,$orderby,$_SESSION['config']['databasetype']);
 for ($i=0;$i<count($tab);$i++)
 {
-	for ($j=0;$j<count($tab[$i]);$j++)
-	{
-		foreach(array_keys($tab[$i][$j]) as $value)
-		{
-			if($tab[$i][$j][$value]=="contact_id")
-			{
-				$tab[$i][$j]["contact_id"]=$tab[$i][$j]['value'];
-				$tab[$i][$j]["label"]= _ID;
-				$tab[$i][$j]["size"]="18";
-				$tab[$i][$j]["label_align"]="left";
-				$tab[$i][$j]["align"]="left";
-				$tab[$i][$j]["valign"]="bottom";
-				$tab[$i][$j]["show"]=true;
-				$tab[$i][$j]["order"]= "contact_id";
-			}
-			if($tab[$i][$j][$value]=="society")
-			{
-				$tab[$i][$j]['value']=$request->show_string($tab[$i][$j]['value']);
-				$tab[$i][$j]["society"]=$tab[$i][$j]['value'];
-				$tab[$i][$j]["label"]=_SOCIETY;
-				$tab[$i][$j]["size"]="15";
-				$tab[$i][$j]["label_align"]="left";
-				$tab[$i][$j]["align"]="left";
-				$tab[$i][$j]["valign"]="bottom";
-				$tab[$i][$j]["show"]=true;
-				$tab[$i][$j]["order"]= "society";
-			}
-			if($tab[$i][$j][$value]=="lastname")
-			{
-				$tab[$i][$j]['value']=$request->show_string($tab[$i][$j]['value']);
-				$tab[$i][$j]["lastname"]=$tab[$i][$j]['value'];
-				$tab[$i][$j]["label"]=_LASTNAME;
-				$tab[$i][$j]["size"]="15";
-				$tab[$i][$j]["label_align"]="left";
-				$tab[$i][$j]["align"]="left";
-				$tab[$i][$j]["valign"]="bottom";
-				$tab[$i][$j]["show"]=true;
-				$tab[$i][$j]["order"]= "lastname";
-			}
-			if($tab[$i][$j][$value]=="firstname")
-			{
-				$tab[$i][$j]["firstname"]= $tab[$i][$j]['value'];
-				$tab[$i][$j]["label"]=_FIRSTNAME;
-				$tab[$i][$j]["size"]="15";
-				$tab[$i][$j]["label_align"]="center";
-				$tab[$i][$j]["align"]="center";
-				$tab[$i][$j]["valign"]="bottom";
-				$tab[$i][$j]["show"]=true;
-				$tab[$i][$j]["order"]= "firstname";
-			}
-		}
-	}
+    for ($j=0;$j<count($tab[$i]);$j++)
+    {
+        foreach(array_keys($tab[$i][$j]) as $value)
+        {
+            if($tab[$i][$j][$value]=="contact_id")
+            {
+                $tab[$i][$j]["contact_id"]=$tab[$i][$j]['value'];
+                $tab[$i][$j]["label"]= _ID;
+                $tab[$i][$j]["size"]="18";
+                $tab[$i][$j]["label_align"]="left";
+                $tab[$i][$j]["align"]="left";
+                $tab[$i][$j]["valign"]="bottom";
+                $tab[$i][$j]["show"]=true;
+                $tab[$i][$j]["order"]= "contact_id";
+            }
+            if($tab[$i][$j][$value]=="society")
+            {
+                $tab[$i][$j]['value']=$request->show_string($tab[$i][$j]['value']);
+                $tab[$i][$j]["society"]=$tab[$i][$j]['value'];
+                $tab[$i][$j]["label"]=_SOCIETY;
+                $tab[$i][$j]["size"]="15";
+                $tab[$i][$j]["label_align"]="left";
+                $tab[$i][$j]["align"]="left";
+                $tab[$i][$j]["valign"]="bottom";
+                $tab[$i][$j]["show"]=true;
+                $tab[$i][$j]["order"]= "society";
+            }
+            if($tab[$i][$j][$value]=="lastname")
+            {
+                $tab[$i][$j]['value']=$request->show_string($tab[$i][$j]['value']);
+                $tab[$i][$j]["lastname"]=$tab[$i][$j]['value'];
+                $tab[$i][$j]["label"]=_LASTNAME;
+                $tab[$i][$j]["size"]="15";
+                $tab[$i][$j]["label_align"]="left";
+                $tab[$i][$j]["align"]="left";
+                $tab[$i][$j]["valign"]="bottom";
+                $tab[$i][$j]["show"]=true;
+                $tab[$i][$j]["order"]= "lastname";
+            }
+            if($tab[$i][$j][$value]=="firstname")
+            {
+                $tab[$i][$j]["firstname"]= $tab[$i][$j]['value'];
+                $tab[$i][$j]["label"]=_FIRSTNAME;
+                $tab[$i][$j]["size"]="15";
+                $tab[$i][$j]["label_align"]="center";
+                $tab[$i][$j]["align"]="center";
+                $tab[$i][$j]["valign"]="bottom";
+                $tab[$i][$j]["show"]=true;
+                $tab[$i][$j]["order"]= "firstname";
+            }
+        }
+    }
 }
 $page_name = "my_contacts";
 $page_name_up = "my_contact_up";

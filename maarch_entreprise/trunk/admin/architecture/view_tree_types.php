@@ -34,14 +34,14 @@ $db = new dbquery();
 $db->connect();
 /****************Management of the location bar  ************/
 $init = false;
-if($_REQUEST['reinit'] == "true")
+if(isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true")
 {
-	$init = true;
+    $init = true;
 }
 $level = "";
-if($_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1)
+if(isset($_REQUEST['level']) && $_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1)
 {
-	$level = $_REQUEST['level'];
+    $level = $_REQUEST['level'];
 }
 $page_path = $_SESSION['config']['businessappurl'].'index.php?page=view_tree_types&admin=architecture';
 $page_label = _VIEW_TREE_DOCTYPES;
@@ -51,34 +51,34 @@ $admin->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 unset($_SESSION['m_admin']);
 if($admin->is_module_loaded('folder') == true)
 {
-	$_SESSION['tree_foldertypes'] = array();
-	$db->query("select distinct foldertype_id, foldertype_label from ".$_SESSION['tablename']['fold_foldertypes']." order by foldertype_label");
+    $_SESSION['tree_foldertypes'] = array();
+    $db->query("select distinct foldertype_id, foldertype_label from ".$_SESSION['tablename']['fold_foldertypes']." order by foldertype_label");
 
-	while($res = $db->fetch_object())
-	{
-		array_push($_SESSION['tree_foldertypes'], array("ID" => $res->foldertype_id, "LABEL" => $res->foldertype_label));
-	}
+    while($res = $db->fetch_object())
+    {
+        array_push($_SESSION['tree_foldertypes'], array("ID" => $res->foldertype_id, "LABEL" => $res->foldertype_label));
+    }
 }
 else
 {
-	
+
 }
 ?>
 <h1><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=manage_architecture_b.gif" alt="" /> <?php  echo _VIEW_TREE_DOCTYPES;?></h1>
 <div id="inner_content" class="clearfix">
-	<table width="100%" border="0">
-	<?php if($admin->is_module_loaded('folder') == true)
-	{?>
-		<tr>
-	    	<td>
-				<iframe name="choose_tree" id="choose_tree" width="900px" height="40px" frameborder="0" scrolling="no" src="<?php  echo $_SESSION['config']['businessappurl']."index.php?display=true&admin=architecture&page=choose_tree";?>"></iframe>
-			</td>
-		</tr>
-	<?php  }?>
-		<tr>
-			<td>
-				<iframe name="show_trees" id="show_trees" width="900px" height="600px" frameborder="0" scrolling="auto" src="<?php  echo $_SESSION['config']['businessappurl']."index.php?display=true&admin=architecture&page=show_trees";?>"></iframe>
-			</td>
-		</tr>
-	</table>
+    <table width="100%" border="0">
+    <?php if($admin->is_module_loaded('folder') == true)
+    {?>
+        <tr>
+            <td>
+                <iframe name="choose_tree" id="choose_tree" width="900px" height="40px" frameborder="0" scrolling="no" src="<?php  echo $_SESSION['config']['businessappurl']."index.php?display=true&admin=architecture&page=choose_tree";?>"></iframe>
+            </td>
+        </tr>
+    <?php  }?>
+        <tr>
+            <td>
+                <iframe name="show_trees" id="show_trees" width="900px" height="600px" frameborder="0" scrolling="auto" src="<?php  echo $_SESSION['config']['businessappurl']."index.php?display=true&admin=architecture&page=show_trees";?>"></iframe>
+            </td>
+        </tr>
+    </table>
 </div>
