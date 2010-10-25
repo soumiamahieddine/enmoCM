@@ -1,6 +1,6 @@
 <?php
-$session_name=md5(time());
-session_name($session_name);
+//$session_name=md5(time());
+//session_name($session_name);
 
 if(!isset($SOAP_dispatch_map)) {
     $SOAP_dispatch_map = Array();
@@ -12,8 +12,6 @@ if(!isset($SOAP_typedef)) {
     $SOAP_typedef = Array();
 }
 
-chdir('../../../');
-
 unset($_SESSION['config']);
 unset($_SESSION['businessapps']);
 
@@ -22,6 +20,7 @@ unset($_SESSION['businessapps']);
  * Import des services        *
  *                                           *
  ***********************/
+include_once("core".DIRECTORY_SEPARATOR."init.php");
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_functions.php");
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_portal.php");
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_db.php");
@@ -33,6 +32,7 @@ $portal->unset_session();
 $portal->build_config();
 
 $coreTools = new core_tools();
+$_SESSION['custom_override_id'] = $coreTools->get_custom_id();
 $coreTools->build_core_config("core".DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."config.xml");
 $_SESSION["config"]["app_id"] = $_SESSION["businessapps"][0]["appid"];
 require_once("apps".DIRECTORY_SEPARATOR.$_SESSION["businessapps"][0]["appid"].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
@@ -40,8 +40,8 @@ require_once("apps".DIRECTORY_SEPARATOR.$_SESSION["businessapps"][0]["appid"].DI
 $businessAppTools = new business_app_tools();
 $businessAppTools->build_business_app_config();
 
-//retrieveWSApps();
-//retrieveWSModules();
+//$coreTools->show_array($_SESSION);
+
 if($_SERVER["PHP_AUTH_USER"] && $_SERVER["PHP_AUTH_PW"] && preg_match("/^Basic /", $_SERVER["HTTP_AUTHORIZATION"])) {
     list($_SERVER["PHP_AUTH_USER"], $_SERVER["PHP_AUTH_PW"]) = explode(":", base64_decode(substr($_SERVER["HTTP_AUTHORIZATION"], 6)));
 }
@@ -68,21 +68,38 @@ if(!$authenticated) {
     }
 }
 
-/*function retrieveWSApps() {
-	if(file_exists($_SESSION['config']['businessapppath'].DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'ws.php')) {
-		require($_SESSION['config']['businessapppath'].DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'ws.php');
-	}
-}*/
+retrieveWSCore();
+retrieveWSApps();
+retrieveWSModules();
 
-/*function retrieveWSModules() {
+function retrieveWSCore() {
+	if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'ws.php')) {
+		require($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'ws.php');
+	} elseif(file_exists($_SESSION['config']['corepath'].DIRECTORY_SEPARATOR.'core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'ws.php')) {
+		require('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'ws.php');
+	}
+}
+
+function retrieveWSApps() {
+	if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['businessapps'][0]['appid'].DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'ws.php')) {
+		require($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['businessapps'][0]['appid'].DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'ws.php');
+	} else {
+		require('apps'.DIRECTORY_SEPARATOR.$_SESSION['businessapps'][0]['appid'].DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'ws.php');
+	}
+}
+
+function retrieveWSModules() {
 	for($cptModules=0;$cptModules<count($_SESSION['modules']);$cptModules++) {
-		if($_SESSION['modules'][$cptModules]['moduleid']<> "" && file_exists($_SESSION['pathtomodules'].$_SESSION['modules'][$cptModules]['moduleid'].DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'ws.php')){
+		if($_SESSION['modules'][$cptModules]['moduleid'] <> "" && file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'modules'.DIRECTORY_SEPARATOR.$_SESSION['modules'][$cptModules]['moduleid'].DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'ws.php')) {
+			require($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'modules'.DIRECTORY_SEPARATOR.$_SESSION['modules'][$cptModules]['moduleid'].DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'ws.php');
+		} elseif($_SESSION['modules'][$cptModules]['moduleid'] <> "" && file_exists($_SESSION['config']['corepath'].DIRECTORY_SEPARATOR.'modules'.DIRECTORY_SEPARATOR.$_SESSION['modules'][$cptModules]['moduleid'].DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'ws.php')) {
+			require('apps'.DIRECTORY_SEPARATOR.$_SESSION['businessapps'][0]['appid'].DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'ws.php');
+		}
+		if($_SESSION['modules'][$cptModules]['moduleid'] <> "" && file_exists($_SESSION['pathtomodules'].$_SESSION['modules'][$cptModules]['moduleid'].DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'ws.php')){
 			require($_SESSION['pathtomodules'].$_SESSION['modules'][$cptModules]['moduleid'].DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'ws.php');
 		}
 	}
-}*/
-
-require('services.php');
+}
 
 /********************************************************
  *                                                      *
@@ -116,7 +133,7 @@ class MySoapServer {
     }
 
     function __dispatch($methodname) {
-        if (isset($this->__dispatch_map[$methodname])){
+        if (isset($this->__dispatch_map[$methodname])) {
             return $this->__dispatch_map[$methodname];
         }
         return null;
