@@ -46,589 +46,593 @@ require_once("core/where_targets.php");
 class security extends dbquery
 {
 
-	/**
-	* Gets the indice of the collection in the  $_SESSION['collections'] array
-	*
-	* @param  $coll_id string  Collection identifier
-	* @return integer Indice of the collection in the $_SESSION['collections'] or -1 if not found
-	*/
-	public function get_ind_collection($coll_id)
-	{
-		for($i=0;$i< count($_SESSION['collections']); $i++)
-		{
-			if(trim($_SESSION['collections'][$i]['id']) == trim($coll_id))
-			{
-				return $i;
-			}
-		}
-		return -1;
-	}
+    /**
+    * Gets the indice of the collection in the  $_SESSION['collections'] array
+    *
+    * @param  $coll_id string  Collection identifier
+    * @return integer Indice of the collection in the $_SESSION['collections'] or -1 if not found
+    */
+    public function get_ind_collection($coll_id)
+    {
+        for($i=0;$i< count($_SESSION['collections']); $i++)
+        {
+            if(trim($_SESSION['collections'][$i]['id']) == trim($coll_id))
+            {
+                return $i;
+            }
+        }
+        return -1;
+    }
 
-	
-	/**
-	* Logs a user
-	*
-	* @param  $s_login  string User login
-	* @param  $pass string User password
-	*/
-	public function login($s_login,$pass, $method = false)
-	{
-		require_once('core/class/users_controler.php');
-		if ($this->test_column($_SESSION['tablename']['users'], 'loginmode')) //Compatibility test, if loginmode column doesn't exists, Maarch can't crash
-		{
-			if ($method == 'activex')
-				$comp =" and STATUS <> 'DEL' and loginmode = 'activex'";
-			else
-				$comp = " and password = '".$pass."' and STATUS <> 'DEL' and loginmode = 'standard'";
-		}
-		else
-			$comp = " and password = '".$pass."' and STATUS <> 'DEL'";
 
-		$user = users_controler::get($s_login, $comp);
+    /**
+    * Logs a user
+    *
+    * @param  $s_login  string User login
+    * @param  $pass string User password
+    */
+    public function login($s_login,$pass, $method = false)
+    {
+        require_once('core/class/users_controler.php');
+        if ($this->test_column($_SESSION['tablename']['users'], 'loginmode')) //Compatibility test, if loginmode column doesn't exists, Maarch can't crash
+        {
+            if ($method == 'activex')
+                $comp =" and STATUS <> 'DEL' and loginmode = 'activex'";
+            else
+                $comp = " and password = '".$pass."' and STATUS <> 'DEL' and loginmode = 'standard'";
+        }
+        else
+            $comp = " and password = '".$pass."' and STATUS <> 'DEL'";
 
-		if(isset($user))
-		{
-			if($user->__get('enabled') == "Y")
-			{
-				require_once("core/class/usergroups_controler.php");
-				require_once("core/class/ServiceControler.php");
-				$_SESSION['user']['change_pass'] = $user->__get('change_password');
-				$_SESSION['user']['UserId'] = $user->__get('user_id');
-				$_SESSION['user']['FirstName'] = $user->__get('firstname');
-				$_SESSION['user']['LastName'] = $user->__get('lastname');
-				$_SESSION['user']['Phone'] = $user->__get('phone');
-				$_SESSION['user']['Mail'] = $user->__get('mail');
-				$_SESSION['user']['department'] = $user->__get('department');
-				$_SESSION['error'] =  "";
-				setcookie("maarch", "UserId=".$_SESSION['user']['UserId']."&key=".$user->__get('cookie_key'),time()-3600000);
-				$key = md5(time()."%".$_SESSION['user']['FirstName']."%".$_SESSION['user']['UserId']."%".$_SESSION['user']['UserId']."%".date("dmYHmi")."%");
+        $user = users_controler::get($s_login, $comp);
 
-				$user->__set('cookie_key', functions::protect_string_db($key));
-				if ($_SESSION['config']['databasetype'] == "ORACLE")
-					$user->__set('cookie_date', 'SYSDATE');
-				else
-					$user->__set('cookie_date',date("Y-m-d")." ".date("H:m:i"));
-				
-				users_controler::save($user, 'up');
-				setcookie("maarch", "UserId=".$_SESSION['user']['UserId']."&key=".$key,time()+($_SESSION['config']['cookietime']*1000));
-				$_SESSION['user']['primarygroup'] = usergroups_controler::getPrimaryGroup($_SESSION['user']['UserId']);
-				$tmp = SecurityControler::load_security($_SESSION['user']['UserId']);
+        if(isset($user))
+        {
+            if($user->__get('enabled') == "Y")
+            {
+                require_once("core/class/usergroups_controler.php");
+                require_once("core/class/ServiceControler.php");
+                $_SESSION['user']['change_pass'] = $user->__get('change_password');
+                $_SESSION['user']['UserId'] = $user->__get('user_id');
+                $_SESSION['user']['FirstName'] = $user->__get('firstname');
+                $_SESSION['user']['LastName'] = $user->__get('lastname');
+                $_SESSION['user']['Phone'] = $user->__get('phone');
+                $_SESSION['user']['Mail'] = $user->__get('mail');
+                $_SESSION['user']['department'] = $user->__get('department');
+                $_SESSION['error'] =  "";
+                setcookie("maarch", "UserId=".$_SESSION['user']['UserId']."&key=".$user->__get('cookie_key'),time()-3600000);
+                $key = md5(time()."%".$_SESSION['user']['FirstName']."%".$_SESSION['user']['UserId']."%".$_SESSION['user']['UserId']."%".date("dmYHmi")."%");
 
-				$_SESSION['user']['collections'] = $tmp['collections'];
-				$_SESSION['user']['security'] = $tmp['security'];
-				
-				ServiceControler::loadEnabledServices();
-				require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
-				$business_app_tools = new business_app_tools();
-				$core_tools = new core_tools();
-				$business_app_tools->load_app_var_session();
-				$core_tools->load_var_session($_SESSION['modules']);
-				$_SESSION['user']['services'] = ServiceControler::loadUserServices($_SESSION['user']['UserId']);
-				$core_tools->load_menu($_SESSION['modules']);
+                $user->__set('cookie_key', functions::protect_string_db($key));
+                if ($_SESSION['config']['databasetype'] == "ORACLE")
+                    $user->__set('cookie_date', 'SYSDATE');
+                else
+                    $user->__set('cookie_date',date("Y-m-d")." ".date("H:m:i"));
 
-				if($_SESSION['history']['userlogin'] == "true")
-				{
-					//add new instance in history table for the user's connexion
-					$hist = new history();
-					$ip = $_SERVER['REMOTE_ADDR'];
-					$navigateur = addslashes($_SERVER['HTTP_USER_AGENT']);
+                users_controler::save($user, 'up');
+                setcookie("maarch", "UserId=".$_SESSION['user']['UserId']."&key=".$key,time()+($_SESSION['config']['cookietime']*1000));
+                $_SESSION['user']['primarygroup'] = usergroups_controler::getPrimaryGroup($_SESSION['user']['UserId']);
+                $tmp = SecurityControler::load_security($_SESSION['user']['UserId']);
 
-					$hist->add($_SESSION['tablename']['users'],$_SESSION['user']['UserId'],"LOGIN","IP : ".$ip.", BROWSER : ".$navigateur , $_SESSION['config']['databasetype']);
-				}
-				
-				if($_SESSION['user']['change_pass'] == 'Y')
-				{
-					header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&page=change_pass");
-					exit();
-				}
+                $_SESSION['user']['collections'] = $tmp['collections'];
+                $_SESSION['user']['security'] = $tmp['security'];
 
-				elseif(isset($_SESSION['requestUri']) && trim($_SESSION['requestUri']) <> ""&& !preg_match('/page=login/', $_SESSION['requestUri']))
-				{
-					header("location: ".$_SESSION['config']['businessappurl']."index.php?".$_SESSION['requestUri']);
-					exit();
-				}
-				else
-				{
-					header("location: ".$_SESSION['config']['businessappurl']."index.php");
-					exit();
-				}
-			}
-			else
-			{
-				$_SESSION['error'] = _SUSPENDED_ACCOUNT.'. '._MORE_INFOS." <a href=\"mailto:".$_SESSION['config']['adminmail']."\">".$_SESSION['config']['adminname']."</a>";
-				header("location: ".$_SESSION['config']['businessappurl']."index.php");
-				exit();
-			}
-		}
-		else
-		{
-			
-			$_SESSION['error'] = _BAD_LOGIN_OR_PSW."&hellip;";
-			header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&page=login&coreurl=".$_SESSION['config']['coreurl']);
-			exit();
-		}
-	}
+                ServiceControler::loadEnabledServices();
+                require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
+                $business_app_tools = new business_app_tools();
+                $core_tools = new core_tools();
+                $business_app_tools->load_app_var_session();
+                $core_tools->load_var_session($_SESSION['modules']);
+                $_SESSION['user']['services'] = ServiceControler::loadUserServices($_SESSION['user']['UserId']);
+                $core_tools->load_menu($_SESSION['modules']);
 
-	/**
-	* Reopens a session with the user's cookie
-	*
-	* @param  $s_UserId  string User identifier
-	* @param  $s_key string Cookie key
-	*/
-	public function reopen($s_UserId,$s_key)
-	{
-		$this->connect();
-		
-		$comp = " and cookie_key = '".$s_key."' and STATUS <> 'DEL'";
+                if($_SESSION['history']['userlogin'] == "true")
+                {
+                    //add new instance in history table for the user's connexion
+                    $hist = new history();
+                    $ip = $_SERVER['REMOTE_ADDR'];
+                    $navigateur = addslashes($_SERVER['HTTP_USER_AGENT']);
 
-		$user = users_controler::get($s_login, $comp);
-	
-		if(isset($user))
-		{
-			if($user->__get('enabled')  == "Y")
-			{
-				require_once("core/class/usergroups_controler.php");
-				require_once("core/class/ServiceControler.php");
-				$_SESSION['user']['change_pass'] = $user->__get('change_password');
-				$_SESSION['user']['UserId'] = $user->__get('user_id');
-				$_SESSION['user']['FirstName'] = $user->__get('firstname');
-				$_SESSION['user']['LastName'] = $user->__get('lastname');
-				$_SESSION['user']['Phone'] = $user->__get('phone');
-				$_SESSION['user']['Mail'] = $user->__get('mail');
-				$_SESSION['user']['department'] = $user->__get('department');
-				$_SESSION['error'] =  "";
-				setcookie("maarch", "UserId=".$_SESSION['user']['UserId']."&key=".$line->cookie_key,time()-3600000);
-				$key = md5(time()."%".$_SESSION['user']['FirstName']."%".$_SESSION['user']['UserId']."%".$_SESSION['user']['UserId']."%".date("dmYHmi")."%");
-				
-				$user->__set('cookie_key', functions::protect_string_db($key));
-				if ($_SESSION['config']['databasetype'] == "ORACLE")
-					$user->__set('cookie_date', 'SYSDATE');
-				else
-					$user->__set('cookie_date',date("Y-m-d")." ".date("H:m:i"));
+                    $hist->add($_SESSION['tablename']['users'],$_SESSION['user']['UserId'],"LOGIN","IP : ".$ip.", BROWSER : ".$navigateur , $_SESSION['config']['databasetype']);
+                }
 
-				users_controler::save($user, 'up');
-				setcookie("maarch", "UserId=".$_SESSION['user']['UserId']."&key=".$key,time()+($_SESSION['config']['cookietime']*60));
+                if($_SESSION['user']['change_pass'] == 'Y')
+                {
+                    header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&page=change_pass");
+                    exit();
+                }
 
-				$_SESSION['user']['primarygroup'] = usergroups_controler::getPrimaryGroup($_SESSION['user']['UserId']);
-				
-				$tmp = SecurityControler::load_security($_SESSION['user']['UserId']);
-				$_SESSION['user']['collections'] = $tmp['collections'];
-				$_SESSION['user']['security'] = $tmp['security'];
-				ServiceControler::loadEnabledServices();
+                elseif(isset($_SESSION['requestUri']) && trim($_SESSION['requestUri']) <> ""&& !preg_match('/page=login/', $_SESSION['requestUri']))
+                {
+                    header("location: ".$_SESSION['config']['businessappurl']."index.php?".$_SESSION['requestUri']);
+                    exit();
+                }
+                else
+                {
+                    header("location: ".$_SESSION['config']['businessappurl']."index.php");
+                    exit();
+                }
+            }
+            else
+            {
+                $_SESSION['error'] = _SUSPENDED_ACCOUNT.'. '._MORE_INFOS." <a href=\"mailto:".$_SESSION['config']['adminmail']."\">".$_SESSION['config']['adminname']."</a>";
+                header("location: ".$_SESSION['config']['businessappurl']."index.php");
+                exit();
+            }
+        }
+        else
+        {
 
-				require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
-			
-				$business_app_tools = new business_app_tools();
-				$core_tools = new core_tools();
-				$business_app_tools->load_app_var_session();
-				$core_tools->load_var_session($_SESSION['modules']);
+            $_SESSION['error'] = _BAD_LOGIN_OR_PSW."&hellip;";
+            header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&page=login&coreurl=".$_SESSION['config']['coreurl']);
+            exit();
+        }
+    }
 
-				$_SESSION['user']['services'] = ServiceControler::loadUserServices($_SESSION['user']['UserId']);
-				$core_tools->load_menu($_SESSION['modules']);
+    /**
+    * Reopens a session with the user's cookie
+    *
+    * @param  $s_UserId  string User identifier
+    * @param  $s_key string Cookie key
+    */
+    public function reopen($s_UserId,$s_key)
+    {
+        $this->connect();
+
+        $comp = " and cookie_key = '".$s_key."' and STATUS <> 'DEL'";
+
+        $user = users_controler::get($s_login, $comp);
+
+        if(isset($user))
+        {
+            if($user->__get('enabled')  == "Y")
+            {
+                require_once("core/class/usergroups_controler.php");
+                require_once("core/class/ServiceControler.php");
+                $_SESSION['user']['change_pass'] = $user->__get('change_password');
+                $_SESSION['user']['UserId'] = $user->__get('user_id');
+                $_SESSION['user']['FirstName'] = $user->__get('firstname');
+                $_SESSION['user']['LastName'] = $user->__get('lastname');
+                $_SESSION['user']['Phone'] = $user->__get('phone');
+                $_SESSION['user']['Mail'] = $user->__get('mail');
+                $_SESSION['user']['department'] = $user->__get('department');
+                $_SESSION['error'] =  "";
+                setcookie("maarch", "UserId=".$_SESSION['user']['UserId']."&key=".$line->cookie_key,time()-3600000);
+                $key = md5(time()."%".$_SESSION['user']['FirstName']."%".$_SESSION['user']['UserId']."%".$_SESSION['user']['UserId']."%".date("dmYHmi")."%");
+
+                $user->__set('cookie_key', functions::protect_string_db($key));
+                if ($_SESSION['config']['databasetype'] == "ORACLE")
+                    $user->__set('cookie_date', 'SYSDATE');
+                else
+                    $user->__set('cookie_date',date("Y-m-d")." ".date("H:m:i"));
+
+                users_controler::save($user, 'up');
+                setcookie("maarch", "UserId=".$_SESSION['user']['UserId']."&key=".$key,time()+($_SESSION['config']['cookietime']*60));
+
+                $_SESSION['user']['primarygroup'] = usergroups_controler::getPrimaryGroup($_SESSION['user']['UserId']);
+
+                $tmp = SecurityControler::load_security($_SESSION['user']['UserId']);
+                $_SESSION['user']['collections'] = $tmp['collections'];
+                $_SESSION['user']['security'] = $tmp['security'];
+                ServiceControler::loadEnabledServices();
+
+                require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
+
+                $business_app_tools = new business_app_tools();
+                $core_tools = new core_tools();
+                $business_app_tools->load_app_var_session();
+                $core_tools->load_var_session($_SESSION['modules']);
+
+                $_SESSION['user']['services'] = ServiceControler::loadUserServices($_SESSION['user']['UserId']);
+                $core_tools->load_menu($_SESSION['modules']);
 /*
-				if($_SESSION['history']['userlogin'] == "true")
-				{
-					//add new instance in history table for the user's connexion
-					$hist = new history();
-					$ip = $_SERVER['REMOTE_ADDR'];
-					$navigateur = addslashes($_SERVER['HTTP_USER_AGENT']);
+                if($_SESSION['history']['userlogin'] == "true")
+                {
+                    //add new instance in history table for the user's connexion
+                    $hist = new history();
+                    $ip = $_SERVER['REMOTE_ADDR'];
+                    $navigateur = addslashes($_SERVER['HTTP_USER_AGENT']);
 
-					$hist->add($_SESSION['tablename']['users'],$_SESSION['user']['UserId'],"LOGIN","IP : ".$ip.", BROWSER : ".$navigateur , $_SESSION['config']['databasetype']);
-				}
+                    $hist->add($_SESSION['tablename']['users'],$_SESSION['user']['UserId'],"LOGIN","IP : ".$ip.", BROWSER : ".$navigateur , $_SESSION['config']['databasetype']);
+                }
 */
-				if($_SESSION['user']['change_pass'] == 'Y')
-				{
-					header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&page=change_pass");
-					exit();
-				}
-				/*if($_SESSION['origin'] == "scan")
-				{
-					header("location: ../../modules/indexing_searching/index_file.php");
-					exit();
-				}
-				elseif($_SESSION['origin'] == "files")
-				{
-					header("location: ../../modules/indexing_searching/index_file.php");
-					exit();
-				}*/
-				else
-				{
-					header("location: ".$_SESSION['config']['businessappurl']."index.php");
-					exit();
-				}
-			}
-			else
-			{
-				$_SESSION['error'] = _SUSPENDED_ACCOUNT.'. '._MORE_INFOS." <a href=\"mailto:".$_SESSION['config']['adminmail']."\">".$_SESSION['config']['adminname']."</a>";
-				header("location: ".$_SESSION['config']['businessappurl']."index.php");
-				exit();
-			}
-		}
-		else
-		{
-			$_SESSION['error'] = _ERROR;
-			header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&page=login&coreurl=".$_SESSION['config']['coreurl']);
-			exit();
-		}
-	}
+                if($_SESSION['user']['change_pass'] == 'Y')
+                {
+                    header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&page=change_pass");
+                    exit();
+                }
+                /*if($_SESSION['origin'] == "scan")
+                {
+                    header("location: ../../modules/indexing_searching/index_file.php");
+                    exit();
+                }
+                elseif($_SESSION['origin'] == "files")
+                {
+                    header("location: ../../modules/indexing_searching/index_file.php");
+                    exit();
+                }*/
+                else
+                {
+                    header("location: ".$_SESSION['config']['businessappurl']."index.php");
+                    exit();
+                }
+            }
+            else
+            {
+                $_SESSION['error'] = _SUSPENDED_ACCOUNT.'. '._MORE_INFOS." <a href=\"mailto:".$_SESSION['config']['adminmail']."\">".$_SESSION['config']['adminname']."</a>";
+                header("location: ".$_SESSION['config']['businessappurl']."index.php");
+                exit();
+            }
+        }
+        else
+        {
+            $_SESSION['error'] = _ERROR;
+            header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&page=login&coreurl=".$_SESSION['config']['coreurl']);
+            exit();
+        }
+    }
 
-	/******************* COLLECTION MANAGEMENT FUNCTIONS *******************/
+    /******************* COLLECTION MANAGEMENT FUNCTIONS *******************/
 
-	/**
-	* Returns all collections where we can insert new documents (with tables)
-	*
-	* @return array Collections where inserts are allowed
-	*/
-	public function retrieve_insert_collections()
-	{
-		$arr = array();
-		for($i=0; $i<count($_SESSION['collections']);$i++)
-		{
-			if(isset($_SESSION['collections'][$i]['table']) && !empty($_SESSION['collections'][$i]['table']))
-			{
-				array_push($arr, $_SESSION['collections'][$i]);
-			}
-		}
-		return $arr;
-	}
+    /**
+    * Returns all collections where we can insert new documents (with tables)
+    *
+    * @return array Collections where inserts are allowed
+    */
+    public function retrieve_insert_collections()
+    {
+        $arr = array();
+        for($i=0; $i<count($_SESSION['collections']);$i++)
+        {
+            if(isset($_SESSION['collections'][$i]['table']) && !empty($_SESSION['collections'][$i]['table']))
+            {
+                array_push($arr, $_SESSION['collections'][$i]);
+            }
+        }
+        return $arr;
+    }
 
-	/**
-	* Returns a script related to a collection
-	*
-	* @param  $coll_id  string Collection identifier
-	* @param  $script_name  string Script name "script_add", "script_search", "script_search_result", "script_details"
-	* @return string Script name or empty string if not found
-	*/
-	public function get_script_from_coll($coll_id, $script_name)
-	{
-		for($i=0; $i < count($_SESSION['collections']);$i++)
-		{
-			if(trim($_SESSION['collections'][$i]['id']) == trim($coll_id))
-			{
-				return trim($_SESSION['collections'][$i][$script_name]);
-			}
-		}
-		return '';
-	}
+    /**
+    * Returns a script related to a collection
+    *
+    * @param  $coll_id  string Collection identifier
+    * @param  $script_name  string Script name "script_add", "script_search", "script_search_result", "script_details"
+    * @return string Script name or empty string if not found
+    */
+    public function get_script_from_coll($coll_id, $script_name)
+    {
+        for($i=0; $i < count($_SESSION['collections']);$i++)
+        {
+            if(trim($_SESSION['collections'][$i]['id']) == trim($coll_id))
+            {
+                return trim($_SESSION['collections'][$i][$script_name]);
+            }
+        }
+        return '';
+    }
 
-	/**
-	* Returns the collection identifier from a table
-	*
-	* @param  $table  string Tablename
-	* @return string Collection identifier or empty string if not found
-	*/
-	public function retrieve_coll_id_from_table($table)
-	{
-		for($i=0; $i<count($_SESSION['collections']);$i++)
-		{
-			if($_SESSION['collections'][$i]['table'] == $table)
-			{
-				return $_SESSION['collections'][$i]['id'];
-			}
-		}
-		return '';
-	}
+    /**
+    * Returns the collection identifier from a table
+    *
+    * @param  $table  string Tablename
+    * @return string Collection identifier or empty string if not found
+    */
+    public function retrieve_coll_id_from_table($table)
+    {
+        for($i=0; $i<count($_SESSION['collections']);$i++)
+        {
+            if($_SESSION['collections'][$i]['table'] == $table)
+            {
+                return $_SESSION['collections'][$i]['id'];
+            }
+        }
+        return '';
+    }
 
-	/**
-	* Returns the collection table from a view
-	*
-	* @param  $view string View
-	* @return string Collection table or empty string if not found
-	*/
-	public function retrieve_coll_table_from_view($view)
-	{
-		for($i=0; $i<count($_SESSION['collections']);$i++)
-		{
-			if($_SESSION['collections'][$i]['view'] == $view)
-			{
-				return $_SESSION['collections'][$i]['table'];
-			}
-		}
-		return '';
-	}
+    /**
+    * Returns the collection table from a view
+    *
+    * @param  $view string View
+    * @return string Collection table or empty string if not found
+    */
+    public function retrieve_coll_table_from_view($view)
+    {
+        for($i=0; $i<count($_SESSION['collections']);$i++)
+        {
+            if($_SESSION['collections'][$i]['view'] == $view)
+            {
+                return $_SESSION['collections'][$i]['table'];
+            }
+        }
+        return '';
+    }
 
-	/**
-	* Returns the collection identifier from a view
-	*
-	* @param  $view string View
-	* @return string Collection identifier or empty string if not found
-	*/
-	public function retrieve_coll_id_from_view($view)
-	{
-		for($i=0; $i<count($_SESSION['collections']);$i++)
-		{
-			if($_SESSION['collections'][$i]['view'] == $view)
-			{
-				return $_SESSION['collections'][$i]['id'];
-			}
-		}
-		return '';
-	}
+    /**
+    * Returns the collection identifier from a view
+    *
+    * @param  $view string View
+    * @return string Collection identifier or empty string if not found
+    */
+    public function retrieve_coll_id_from_view($view)
+    {
+        for($i=0; $i<count($_SESSION['collections']);$i++)
+        {
+            if($_SESSION['collections'][$i]['view'] == $view)
+            {
+                return $_SESSION['collections'][$i]['id'];
+            }
+        }
+        return '';
+    }
 
 
-	/**
-	* Returns the view of a collection from the collection identifier
-	*
-	* @param string $coll_id  Collection identifier
-	* @return string View name or empty string if not found
-	*/
-	public function retrieve_view_from_coll_id($coll_id)
-	{
-		for($i=0; $i<count($_SESSION['collections']);$i++)
-		{
-			if($_SESSION['collections'][$i]['id'] == $coll_id)
-			{
-				return $_SESSION['collections'][$i]['view'];
-			}
-		}
-		return '';
-	}
+    /**
+    * Returns the view of a collection from the collection identifier
+    *
+    * @param string $coll_id  Collection identifier
+    * @return string View name or empty string if not found
+    */
+    public function retrieve_view_from_coll_id($coll_id)
+    {
+        for($i=0; $i<count($_SESSION['collections']);$i++)
+        {
+            if($_SESSION['collections'][$i]['id'] == $coll_id)
+            {
+                return $_SESSION['collections'][$i]['view'];
+            }
+        }
+        return '';
+    }
 
-	/**
-	* Returns the view of a collection from the table of the collection
-	*
-	* @param string $table  Tablename
-	* @return string View name or empty string if not found
-	*/
-	public function retrieve_view_from_table($table)
-	{
-		for($i=0; $i<count($_SESSION['collections']);$i++)
-		{
-			if($_SESSION['collections'][$i]['table'] == $table)
-			{
-				return $_SESSION['collections'][$i]['view'];
-			}
-		}
-		return '';
-	}
+    /**
+    * Returns the view of a collection from the table of the collection
+    *
+    * @param string $table  Tablename
+    * @return string View name or empty string if not found
+    */
+    public function retrieve_view_from_table($table)
+    {
+        for($i=0; $i<count($_SESSION['collections']);$i++)
+        {
+            if($_SESSION['collections'][$i]['table'] == $table)
+            {
+                return $_SESSION['collections'][$i]['view'];
+            }
+        }
+        return '';
+    }
 
-	/**
-	* Returns the table of the collection from the collection identifier
-	*
-	* @param string $coll_id  Collection identifier
-	* @return string Table name or empty string if not found
-	*/
-	public function retrieve_table_from_coll($coll_id)
-	{
-		for($i=0; $i<count($_SESSION['collections']);$i++)
-		{
-			if($_SESSION['collections'][$i]['id'] == $coll_id)
-			{
-				return $_SESSION['collections'][$i]['table'];
-			}
-		}
-		return '';
-	}
+    /**
+    * Returns the table of the collection from the collection identifier
+    *
+    * @param string $coll_id  Collection identifier
+    * @return string Table name or empty string if not found
+    */
+    public function retrieve_table_from_coll($coll_id)
+    {
+        for($i=0; $i<count($_SESSION['collections']);$i++)
+        {
+            if($_SESSION['collections'][$i]['id'] == $coll_id)
+            {
+                return $_SESSION['collections'][$i]['table'];
+            }
+        }
+        return '';
+    }
 
-	/**
-	* Returns the table of the collection from the view of the collection
-	*
-	* @param string $view  View
-	* @return string Table name or empty string if not found
-	*/
-	public function retrieve_table_from_view($view)
-	{
-		for($i=0; $i<count($_SESSION['collections']);$i++)
-		{
-			if($_SESSION['collections'][$i]['view'] == $view)
-			{
-				return $_SESSION['collections'][$i]['table'];
-			}
-		}
-		return '';
-	}
+    /**
+    * Returns the table of the collection from the view of the collection
+    *
+    * @param string $view  View
+    * @return string Table name or empty string if not found
+    */
+    public function retrieve_table_from_view($view)
+    {
+        for($i=0; $i<count($_SESSION['collections']);$i++)
+        {
+            if($_SESSION['collections'][$i]['view'] == $view)
+            {
+                return $_SESSION['collections'][$i]['table'];
+            }
+        }
+        return '';
+    }
 
-	/**
-	* Returns the collection  label from the table of the collection
-	*
-	* @param string $table  Tablename
-	* @return string Collection label or empty string if not found
-	*/
-	public function retrieve_coll_label_from_table($table)
-	{
-		for($i=0; $i<count($_SESSION['collections']);$i++)
-		{
-			if($_SESSION['collections'][$i]['table'] == $table)
-			{
-				return $_SESSION['collections'][$i]['label'];
-			}
-		}
-		return '';
-	}
+    /**
+    * Returns the collection  label from the table of the collection
+    *
+    * @param string $table  Tablename
+    * @return string Collection label or empty string if not found
+    */
+    public function retrieve_coll_label_from_table($table)
+    {
+        for($i=0; $i<count($_SESSION['collections']);$i++)
+        {
+            if($_SESSION['collections'][$i]['table'] == $table)
+            {
+                return $_SESSION['collections'][$i]['label'];
+            }
+        }
+        return '';
+    }
 
-	/**
-	* Returns the collection  label from the collection identifier
-	*
-	* @param string $coll_id  Collection identifier
-	* @return string Collection label or empty string if not found
-	*/
-	public function retrieve_coll_label_from_coll_id($coll_id)
-	{
-		for($i=0; $i<count($_SESSION['collections']);$i++)
-		{
-			if($_SESSION['collections'][$i]['id'] == $coll_id)
-			{
-				return $_SESSION['collections'][$i]['label'];
-			}
-		}
-		return '';
-	}
+    /**
+    * Returns the collection  label from the collection identifier
+    *
+    * @param string $coll_id  Collection identifier
+    * @return string Collection label or empty string if not found
+    */
+    public function retrieve_coll_label_from_coll_id($coll_id)
+    {
+        for($i=0; $i<count($_SESSION['collections']);$i++)
+        {
+            if($_SESSION['collections'][$i]['id'] == $coll_id)
+            {
+                return $_SESSION['collections'][$i]['label'];
+            }
+        }
+        return '';
+    }
 
-	////////////////USER RELATED
+    ////////////////USER RELATED
 
-	/**
-	* Returns the collection identifier for the current user from the collection table (using $_SESSION['user']['security'])
-	*
-	* @param  $table  string Tablename
-	* @return string Collection identifier or empty string if not found
-	*/
+    /**
+    * Returns the collection identifier for the current user from the collection table (using $_SESSION['user']['security'])
+    *
+    * @param  $table  string Tablename
+    * @return string Collection identifier or empty string if not found
+    */
 /*
-	public function retrieve_user_coll_id($table)
-	{
+    public function retrieve_user_coll_id($table)
+    {
 
-		foreach(array_keys($_SESSION['user']['security']) as $coll_id)
-		{
-			if($_SESSION['user']['security'][$coll_id]['DOC']['table'] == $table)
-			{
-				return $coll_id;
-			}
-		}
-		return false;
-	}
+        foreach(array_keys($_SESSION['user']['security']) as $coll_id)
+        {
+            if($_SESSION['user']['security'][$coll_id]['DOC']['table'] == $table)
+            {
+                return $coll_id;
+            }
+        }
+        return false;
+    }
 */
 
 
 //////////////////////// A REFAIRE
-	/**
-	* Return all collections where the current user can insert new documents (with table)
-	*
-	* @return array Array of all collections where the current user can insert new documents
-	*/
-	public function retrieve_user_insert_coll()
-	{
-		$arr = array();
-		for($i=0; $i<count($_SESSION['user']['security']);$i++)
-		{
-			if(isset($_SESSION['user']['security'][$i]['table']) && !empty(	$_SESSION['user']['security'][$i]['table']) && $_SESSION['user']['security'][$i]['can_insert'] == 'Y')
-			{
-				$ind = $this->get_ind_collection($_SESSION['user']['security'][$i]['coll_id']);
-				array_push($arr, array('coll_id'=> $_SESSION['user']['security'][$i]['coll_id'], 'label_coll' => $_SESSION['collections'][$ind]['label'] , 'table' => $_SESSION['user']['security'][$i]['table']));
-			}
-		}
-		return $arr;
-	}
+    /**
+    * Return all collections where the current user can insert new documents (with table)
+    *
+    * @return array Array of all collections where the current user can insert new documents
+    */
+    public function retrieve_user_insert_coll()
+    {
+        $arr = array();
+        for($i=0; $i<count($_SESSION['user']['security']);$i++)
+        {
+            if(isset($_SESSION['user']['security'][$i]['table']) && !empty( $_SESSION['user']['security'][$i]['table']) && $_SESSION['user']['security'][$i]['can_insert'] == 'Y')
+            {
+                $ind = $this->get_ind_collection($_SESSION['user']['security'][$i]['coll_id']);
+                array_push($arr, array('coll_id'=> $_SESSION['user']['security'][$i]['coll_id'], 'label_coll' => $_SESSION['collections'][$ind]['label'] , 'table' => $_SESSION['user']['security'][$i]['table']));
+            }
+        }
+        return $arr;
+    }
 
 
-	/**
-	* Checks if the current user can do the action on the collection
-	*
-	* @param string $coll_id  Collection identifier
-	* @param string $action  can_insert, can_update, can_delete
-	* @return True if the user can do the action on the collection, False otherwise
-	*/
-	public function collection_user_right($coll_id, $action)
-	{
-		$func = new functions();
-		$flag = false;
-		for($i=0; $i<count($_SESSION['user']['security']);$i++)
-		{
-			if(($_SESSION['user']['security'][$i]['coll_id'] == $coll_id)  && $_SESSION['user']['security'][$i][$action] == 'Y')
-			{
-				$flag = true;
-			}
-		}
-		return $flag;
-	}
+    /**
+    * Checks if the current user can do the action on the collection
+    *
+    * @param string $coll_id  Collection identifier
+    * @param string $action  can_insert, can_update, can_delete
+    * @return True if the user can do the action on the collection, False otherwise
+    */
+    public function collection_user_right($coll_id, $action)
+    {
+        if(!isset($coll_id))
+        {
+            return false;
+        }
+        $func = new functions();
+        $flag = false;
+        for($i=0; $i<count($_SESSION['user']['security']);$i++)
+        {
+            if(($_SESSION['user']['security'][$i]['coll_id'] == $coll_id)  && $_SESSION['user']['security'][$i][$action] == 'Y')
+            {
+                $flag = true;
+            }
+        }
+        return $flag;
+    }
 /////////////////////////////
 
-	/**
-	* Returns where clause of the collection for the current user from the collection identifier
-	*
-	* @param  $coll_id string Collection identifier
-	* @return string Collection where clause or empty string if not found or the where clause is empty
-	*/
-	public function get_where_clause_from_coll_id($coll_id)
-	{
-		if(isset($_SESSION['user']['security'][$coll_id]['DOC']['where']))
-		{
-			return $_SESSION['user']['security'][$coll_id]['DOC']['where'];
-		}
-		return '';
-	}
+    /**
+    * Returns where clause of the collection for the current user from the collection identifier
+    *
+    * @param  $coll_id string Collection identifier
+    * @return string Collection where clause or empty string if not found or the where clause is empty
+    */
+    public function get_where_clause_from_coll_id($coll_id)
+    {
+        if(isset($_SESSION['user']['security'][$coll_id]['DOC']['where']))
+        {
+            return $_SESSION['user']['security'][$coll_id]['DOC']['where'];
+        }
+        return '';
+    }
 
-	/**
-	* Returns where clause of the collection for the current user from the collection view
-	*
-	* @param  $view string View
-	* @return string Collection where clause or empty string if not found or the where clause is empty
-	*/
-	public function get_where_clause_from_view($view)
-	{
-		foreach(array_keys($_SESSION['user']['security']) as $coll_id)
-		{
-			if($_SESSION['user']['security'][$coll_id]['DOC']['view'] == $view)
-			{
-				return $_SESSION['user']['security'][$coll_id]['DOC']['where'];
-			}
-		}
-		return '';
-	}
+    /**
+    * Returns where clause of the collection for the current user from the collection view
+    *
+    * @param  $view string View
+    * @return string Collection where clause or empty string if not found or the where clause is empty
+    */
+    public function get_where_clause_from_view($view)
+    {
+        foreach(array_keys($_SESSION['user']['security']) as $coll_id)
+        {
+            if($_SESSION['user']['security'][$coll_id]['DOC']['view'] == $view)
+            {
+                return $_SESSION['user']['security'][$coll_id]['DOC']['where'];
+            }
+        }
+        return '';
+    }
 
-	/**
-	* Returns the collection table for the current user from the collection view (using $_SESSION['user']['security'])
-	*
-	* @param  $table  string Tablename
-	* @return string Table name or False if not found
-	*/
-	public function retrieve_user_coll_table($view)
-	{
-		foreach(array_keys($_SESSION['user']['security']) as $coll_id)
-		{
-			if($_SESSION['user']['security'][$coll_id]['DOC']['view'] == $view)
-			{
-				return $_SESSION['user']['security'][$coll_id]['DOC']['where'];
-			}
-		}
-		return false;
-	}
+    /**
+    * Returns the collection table for the current user from the collection view (using $_SESSION['user']['security'])
+    *
+    * @param  $table  string Tablename
+    * @return string Table name or False if not found
+    */
+    public function retrieve_user_coll_table($view)
+    {
+        foreach(array_keys($_SESSION['user']['security']) as $coll_id)
+        {
+            if($_SESSION['user']['security'][$coll_id]['DOC']['view'] == $view)
+            {
+                return $_SESSION['user']['security'][$coll_id]['DOC']['where'];
+            }
+        }
+        return false;
+    }
 
-	/**
-	* Checks the right on the document of a collection for the current user
-	*
-	* @param  $coll_id string Collection identifier
-	* @param  $s_id string Document Identifier (res_id)
-	* @return bool True if the current user has the right, False otherwise
-	*/
-	public function test_right_doc($coll_id, $s_id)
-	{
-		if(empty($coll_id) || empty($s_id))
-		{
-			return false;
-		}
-		$view = $this->retrieve_view_from_coll_id($coll_id);
-		if(empty($view))
-		{
-			$view = $this->retrieve_table_from_coll($coll_id);
-		}
-		$where_clause = $this->get_where_clause_from_coll_id($coll_id);
+    /**
+    * Checks the right on the document of a collection for the current user
+    *
+    * @param  $coll_id string Collection identifier
+    * @param  $s_id string Document Identifier (res_id)
+    * @return bool True if the current user has the right, False otherwise
+    */
+    public function test_right_doc($coll_id, $s_id)
+    {
+        if(empty($coll_id) || empty($s_id))
+        {
+            return false;
+        }
+        $view = $this->retrieve_view_from_coll_id($coll_id);
+        if(empty($view))
+        {
+            $view = $this->retrieve_table_from_coll($coll_id);
+        }
+        $where_clause = $this->get_where_clause_from_coll_id($coll_id);
 
-		$query = "select res_id from ".$view." where res_id = ".$s_id;
+        $query = "select res_id from ".$view." where res_id = ".$s_id;
 
-		if(!empty($where_clause))
-		{
-			$query .= " and (".$where_clause.") ";
-		}
-		$this->connect();
-		$this->query($query);
+        if(!empty($where_clause))
+        {
+            $query .= " and (".$where_clause.") ";
+        }
+        $this->connect();
+        $this->query($query);
 
-		if($this->nb_result() < 1)
-		{
-			return false;
-		}
-		else
-		{
-			return true;
-		}
-	}
+        if($this->nb_result() < 1)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
 }
 ?>
