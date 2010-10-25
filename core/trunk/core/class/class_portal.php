@@ -89,7 +89,6 @@ class portal extends functions
 	* Unset session variabless
 	*/
 	public function unset_session() {
-		unset($_SESSION);
 		unset($_SESSION['config']);
 		unset($_SESSION['businessapps']);
 	}
