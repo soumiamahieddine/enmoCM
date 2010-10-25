@@ -18,8 +18,8 @@
 *   You should have received a copy of the GNU General Public License
 *    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
 *
-*	@author  Cedric Ndoumba  <dev@maarch.org>
-*	@author  Claire Figueras  <dev@maarch.org>
+*   @author  Cedric Ndoumba  <dev@maarch.org>
+*   @author  Claire Figueras  <dev@maarch.org>
 *   @author  Laurent Giovannoni  <dev@maarch.org>
 */
 
@@ -28,14 +28,14 @@ $admin->test_admin('manage_entities', 'entities');
 $_SESSION['m_admin']= array();
 /****************Management of the location bar  ************/
 $init = false;
-if($_REQUEST['reinit'] == "true")
+if(isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true")
 {
-	$init = true;
+    $init = true;
 }
 $level = "";
-if($_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1)
+if(isset($_REQUEST['level']) && $_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1)
 {
-	$level = $_REQUEST['level'];
+    $level = $_REQUEST['level'];
 }
 $page_path = $_SESSION['config']['businessappurl'].'index.php?page=manage_entities&module=entities';
 $page_label = _ENTITIES_LIST;
@@ -55,42 +55,42 @@ $where = '';
 
 if(isset($_REQUEST['what']) && !empty($_REQUEST['what']))
 {
-	$what = $func->protect_string_db($_REQUEST['what']);
-	if($_SESSION['config']['databasetype'] == 'POSTGRESQL')
-	{
-		$where = "(entity_label ilike '".strtolower($what)."%' or entity_label ilike '".strtoupper($what)."%') ";
-	}
-	else
-	{
-		$where = "(entity_label like '".strtolower($what)."%' or entity_label like '".strtoupper($what)."%') ";
-	}
+    $what = $func->protect_string_db($_REQUEST['what']);
+    if($_SESSION['config']['databasetype'] == 'POSTGRESQL')
+    {
+        $where = "(entity_label ilike '".strtolower($what)."%' or entity_label ilike '".strtoupper($what)."%') ";
+    }
+    else
+    {
+        $where = "(entity_label like '".strtolower($what)."%' or entity_label like '".strtoupper($what)."%') ";
+    }
 }
 
 if($_SESSION['user']['UserId'] != 'superadmin')
 {
-	$my_tab_entities_id = $ent->get_all_entities_id_user($_SESSION['user']['entities']);
-	if (count($my_tab_entities_id)>0)
-	{
-		if(isset($_REQUEST['what']) && !empty($_REQUEST['what']))
-		{
-			$where.= ' and ';
-		}
+    $my_tab_entities_id = $ent->get_all_entities_id_user($_SESSION['user']['entities']);
+    if (count($my_tab_entities_id)>0)
+    {
+        if(isset($_REQUEST['what']) && !empty($_REQUEST['what']))
+        {
+            $where.= ' and ';
+        }
 
-		//we need all entities that are managed by connected user
-		$where.= '('.$_SESSION['tablename']['ent_entities'].'.entity_id in ('.join(',', $my_tab_entities_id).'))';
-	}
+        //we need all entities that are managed by connected user
+        $where.= '('.$_SESSION['tablename']['ent_entities'].'.entity_id in ('.join(',', $my_tab_entities_id).'))';
+    }
 }
 
 $list = new list_show();
 $order = 'asc';
 if(isset($_REQUEST['order']) && !empty($_REQUEST['order']))
 {
-	$order = trim($_REQUEST['order']);
+    $order = trim($_REQUEST['order']);
 }
 $field = 'entity_label';
 if(isset($_REQUEST['order_field']) && !empty($_REQUEST['order_field']))
 {
-	$field = trim($_REQUEST['order_field']);
+    $field = trim($_REQUEST['order_field']);
 }
 
 $orderstr = $list->define_order($order, $field);
@@ -103,60 +103,60 @@ $tab = $request->select($select, $where, $orderstr, $_SESSION['config']['databas
 
 for ($i=0;$i<count($tab);$i++)
 {
-	for ($j=0;$j<count($tab[$i]);$j++)
-	{
-		foreach(array_keys($tab[$i][$j]) as $value)
-		{
-			if($tab[$i][$j][$value]=="entity_id")
-			{
-				$tab[$i][$j]["entity_id"]=$tab[$i][$j]['value'];
-				$tab[$i][$j]["label"]= _ID;
-				$tab[$i][$j]["size"]="18";
-				$tab[$i][$j]["label_align"]="left";
-				$tab[$i][$j]["align"]="left";
-				$tab[$i][$j]["order"]=$tab[$i][$j][$value];
-				$tab[$i][$j]["valign"]="bottom";
-				$tab[$i][$j]["show"]=true;
-			}
+    for ($j=0;$j<count($tab[$i]);$j++)
+    {
+        foreach(array_keys($tab[$i][$j]) as $value)
+        {
+            if($tab[$i][$j][$value]=="entity_id")
+            {
+                $tab[$i][$j]["entity_id"]=$tab[$i][$j]['value'];
+                $tab[$i][$j]["label"]= _ID;
+                $tab[$i][$j]["size"]="18";
+                $tab[$i][$j]["label_align"]="left";
+                $tab[$i][$j]["align"]="left";
+                $tab[$i][$j]["order"]=$tab[$i][$j][$value];
+                $tab[$i][$j]["valign"]="bottom";
+                $tab[$i][$j]["show"]=true;
+            }
 
-			if($tab[$i][$j][$value]=="entity_label")
-			{
-				$tab[$i][$j]['value']=$request->show_string($tab[$i][$j]['value']);
-				$tab[$i][$j]["entity_label"]=$tab[$i][$j]['value'];
-				$tab[$i][$j]["label"]=_DESC;
-				$tab[$i][$j]["size"]="25";
-				$tab[$i][$j]["label_align"]="left";
-				$tab[$i][$j]["align"]="left";
-				$tab[$i][$j]["order"]=$tab[$i][$j][$value];
-				$tab[$i][$j]["valign"]="bottom";
-				$tab[$i][$j]["show"]=true;
-			}
+            if($tab[$i][$j][$value]=="entity_label")
+            {
+                $tab[$i][$j]['value']=$request->show_string($tab[$i][$j]['value']);
+                $tab[$i][$j]["entity_label"]=$tab[$i][$j]['value'];
+                $tab[$i][$j]["label"]=_DESC;
+                $tab[$i][$j]["size"]="25";
+                $tab[$i][$j]["label_align"]="left";
+                $tab[$i][$j]["align"]="left";
+                $tab[$i][$j]["order"]=$tab[$i][$j][$value];
+                $tab[$i][$j]["valign"]="bottom";
+                $tab[$i][$j]["show"]=true;
+            }
 
-			if($tab[$i][$j][$value]=="entity_type")
-			{
-				$tab[$i][$j]['value']=$request->show_string($tab[$i][$j]['value']);
-				$tab[$i][$j]["entity_type"]=$tab[$i][$j]['value'];
-				$tab[$i][$j]["label"]=_TYPE;
-				$tab[$i][$j]["size"]="15";
-				$tab[$i][$j]["label_align"]="left";
-				$tab[$i][$j]["align"]="left";
-				$tab[$i][$j]["order"]=$tab[$i][$j][$value];
-				$tab[$i][$j]["valign"]="bottom";
-				$tab[$i][$j]["show"]=true;
-			}
+            if($tab[$i][$j][$value]=="entity_type")
+            {
+                $tab[$i][$j]['value']=$request->show_string($tab[$i][$j]['value']);
+                $tab[$i][$j]["entity_type"]=$tab[$i][$j]['value'];
+                $tab[$i][$j]["label"]=_TYPE;
+                $tab[$i][$j]["size"]="15";
+                $tab[$i][$j]["label_align"]="left";
+                $tab[$i][$j]["align"]="left";
+                $tab[$i][$j]["order"]=$tab[$i][$j][$value];
+                $tab[$i][$j]["valign"]="bottom";
+                $tab[$i][$j]["show"]=true;
+            }
 
-			if($tab[$i][$j][$value]=="enabled")
-			{
-				$tab[$i][$j]["enabled"]=$tab[$i][$j]['value'];
-				$tab[$i][$j]["label"]=_STATUS;
-				$tab[$i][$j]["size"]="10";
-				$tab[$i][$j]["label_align"]="center";
-				$tab[$i][$j]["align"]="center";
-				$tab[$i][$j]["valign"]="bottom";
-				$tab[$i][$j]["show"]=true;
-			}
-		}
-	}
+            if($tab[$i][$j][$value]=="enabled")
+            {
+                $tab[$i][$j]["enabled"]=$tab[$i][$j]['value'];
+                $tab[$i][$j]["label"]=_STATUS;
+                $tab[$i][$j]["size"]="10";
+                $tab[$i][$j]["label_align"]="center";
+                $tab[$i][$j]["align"]="center";
+                $tab[$i][$j]["valign"]="bottom";
+                $tab[$i][$j]["show"]=true;
+            }
+        }
+    }
 }
 
 $page_name = "manage_entities";

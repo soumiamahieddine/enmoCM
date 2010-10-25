@@ -15,14 +15,14 @@ $admin = new core_tools();
 $admin->test_admin('manage_entities', 'entities');
  /****************Management of the location bar  ************/
 $init = false;
-if($_REQUEST['reinit'] == "true")
+if(isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true")
 {
-	$init = true;
+    $init = true;
 }
 $level = "";
-if($_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1)
+if(isset($_REQUEST['level']) && $_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1)
 {
-	$level = $_REQUEST['level'];
+    $level = $_REQUEST['level'];
 }
 $page_path = $_SESSION['config']['businessappurl'].'index.php?page=entity_add&module=entities';
 $page_label = _MODIFICATION;
@@ -37,11 +37,11 @@ $ent = new entity();
 
 if(isset($_GET['id']))
 {
-	$id = addslashes($func->wash($_GET['id'], "alphanum", _THE_ID));
+    $id = addslashes($func->wash($_GET['id'], "alphanum", _THE_ID));
 }
 else
 {
-	$id = "";
+    $id = "";
 }
 
 $ent->formentity("up",$id);

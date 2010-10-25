@@ -19,14 +19,14 @@ $db = new dbquery();
 $db->connect();
 /****************Management of the location bar  ************/
 $init = false;
-if($_REQUEST['reinit'] == "true")
+if(isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true")
 {
-	$init = true;
+    $init = true;
 }
 $level = "";
-if($_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1)
+if(isset($_REQUEST['level']) && $_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1)
 {
-	$level = $_REQUEST['level'];
+    $level = $_REQUEST['level'];
 }
 $page_path = $_SESSION['config']['businessappurl'].'index.php?page=view_tree_entities&module=entities';
 $page_label = _ENTITY_TREE;
@@ -40,21 +40,21 @@ $_SESSION['tree_entities'] = array();
 $db->query("select entity_id, entity_label from ".$_SESSION['tablename']['ent_entities']." where parent_entity_id = '' or parent_entity_id is null order by entity_label");
 while($res = $db->fetch_object())
 {
-	array_push($_SESSION['tree_entities'], array("ID" => $res->entity_id, "LABEL" => $res->entity_label));
+    array_push($_SESSION['tree_entities'], array("ID" => $res->entity_id, "LABEL" => $res->entity_label));
 }
 ?>
 <h1><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=entity_tree_b.gif&module=entities" alt="" /> <?php  echo _ENTITY_TREE;?></h1>
 <div id="inner_content" class="clearfix">
-	<table width="100%" border="0">
-		<tr>
-	    	<td>
-				<iframe name="choose_tree" id="choose_tree" width="550" height="40" frameborder="0" scrolling="no" src="<?php  echo $_SESSION['config']['businessappurl']."index.php?display=true&module=entities&page=choose_tree";?>"></iframe>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<iframe name="show_trees" id="show_trees" width="550" height="600" frameborder="0" scrolling="auto" src="<?php  echo $_SESSION['config']['businesappurl']."index.php?display=true&module=entities&page=show_trees";?>"></iframe>
-			</td>
-		</tr>
-	</table>
+    <table width="100%" border="0">
+        <tr>
+            <td>
+                <iframe name="choose_tree" id="choose_tree" width="550" height="40" frameborder="0" scrolling="no" src="<?php  echo $_SESSION['config']['businessappurl']."index.php?display=true&module=entities&page=choose_tree";?>"></iframe>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <iframe name="show_trees" id="show_trees" width="550" height="600" frameborder="0" scrolling="auto" src="<?php  echo $_SESSION['config']['businesappurl']."index.php?display=true&module=entities&page=show_trees";?>"></iframe>
+            </td>
+        </tr>
+    </table>
 </div>

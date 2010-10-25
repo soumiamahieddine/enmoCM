@@ -124,7 +124,7 @@ if (!defined('_DOC_IN_THE_DEPARTMENT'))  define('_DOC_IN_THE_DEPARTMENT', 'docum
 if (!defined('_DEL_AND_REAFFECT'))  define('_DEL_AND_REAFFECT', 'Supprimer et r&eacute;affecter');
 if (!defined('_THE_ENTITY'))  define('_THE_ENTITY', 'L&rsquo;entit&eacute;');
 if (!defined('_USERS_LINKED_TO'))  define('_USERS_LINKED_TO', 'utilisateur(s) associ&eacute;(s) &agrave l&rsquo;entit&eacute;');
-if (!defined('_ENTITY_MANDATORY_FOR_DOCUMENTS'))  define('_ENTITY_MANDATORY_FOR_REDIRECTION', 'Entit&eacute; obligatoire pour la r&eacute;affectation');
+if (!defined('_ENTITY_MANDATORY_FOR_REDIRECTION'))  define('_ENTITY_MANDATORY_FOR_REDIRECTION', 'Entit&eacute; obligatoire pour la r&eacute;affectation');
 if (!defined('_WARNING_MESSAGE_DEL_ENTITY'))  define('_WARNING_MESSAGE_DEL_ENTITY', 'Avertissement :<br> La suppression d&rsquo;une entit&eacute; entraine la r&eacute;affectation des documents et utilisateurs &agrave une nouvelle entit&eacute; mais r&eacute;affecte &eacute;galement les documents (courriers) en attente de traitement, les mod&egrave;les de liste de diffusion, les mod&egrave;les de r&eacute;ponses et les unit&eacute;s d&rsquo;archivage vers l&rsquo;entit&eacute de remplacement.');
 
 /******************** Keywords Helper ************/

@@ -14,14 +14,14 @@ $admin = new core_tools();
 $admin->test_admin('manage_entities', 'entities');
  /****************Management of the location bar  ************/
 $init = false;
-if($_REQUEST['reinit'] == "true")
+if(isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true")
 {
-	$init = true;
+    $init = true;
 }
 $level = "";
-if($_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1)
+if(isset($_REQUEST['level']) && $_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1)
 {
-	$level = $_REQUEST['level'];
+    $level = $_REQUEST['level'];
 }
 $page_path = $_SESSION['config']['businessappurl'].'index.php?page=users_list&module=entities';
 $page_label = _ENTITIES_USERS_LIST;
@@ -39,31 +39,31 @@ $where = '';
 $my_tab_entities_id = array();
 if(isset($_REQUEST['what']) && !empty($_REQUEST['what']))
 {
-	$what = $func->protect_string_db($_REQUEST['what']);
-	if($_SESSION['config']['databasetype'] == 'POSTGRESQL')
-	{
-		$where = " (lastname ilike '".strtolower($what)."%' or lastname ilike '".strtoupper($what)."%') ";
-	}
-	else
-	{
-		$where = " (lastname like '".strtolower($what)."%' or lastname like '".strtoupper($what)."%') ";
-	}
+    $what = $func->protect_string_db($_REQUEST['what']);
+    if($_SESSION['config']['databasetype'] == 'POSTGRESQL')
+    {
+        $where = " (lastname ilike '".strtolower($what)."%' or lastname ilike '".strtoupper($what)."%') ";
+    }
+    else
+    {
+        $where = " (lastname like '".strtolower($what)."%' or lastname like '".strtoupper($what)."%') ";
+    }
 }
 
 if($_SESSION['user']['UserId'] != 'superadmin')
 {
-	$my_tab_entities_id = $ent->get_all_entities_id_user($_SESSION['user']['entities']);
-	if (count($my_tab_entities_id)>0)
-	{
-		if(isset($_REQUEST['what']) && !empty($_REQUEST['what']))
-		{
-			$where.= ' and ';
-		}
+    $my_tab_entities_id = $ent->get_all_entities_id_user($_SESSION['user']['entities']);
+    if (count($my_tab_entities_id)>0)
+    {
+        if(isset($_REQUEST['what']) && !empty($_REQUEST['what']))
+        {
+            $where.= ' and ';
+        }
 
-		//we need all users who aren't releated with an entity
-		// and all users who are releated with all entities that are managed by connected user
-		$where.= '('.$_SESSION['tablename']['users'].'.user_id not in (select distinct user_id from '.$_SESSION['tablename']['ent_users_entities'].') or '.$_SESSION['tablename']['ent_users_entities'].'.entity_id in ('.join(',', $my_tab_entities_id).'))';
-	}
+        //we need all users who aren't releated with an entity
+        // and all users who are releated with all entities that are managed by connected user
+        $where.= '('.$_SESSION['tablename']['users'].'.user_id not in (select distinct user_id from '.$_SESSION['tablename']['ent_users_entities'].') or '.$_SESSION['tablename']['ent_users_entities'].'.entity_id in ('.join(',', $my_tab_entities_id).'))';
+    }
 }
 
 $first_join_table = $_SESSION['tablename']['users'];
@@ -79,64 +79,64 @@ $tab = $request->select($select, $where, "order by lastname asc",$_SESSION['conf
 
 for ($i=0;$i<count($tab);$i++)
 {
-	for ($j=0;$j<count($tab[$i]);$j++)
-	{
-		foreach(array_keys($tab[$i][$j]) as $value)
-		{
-			if($tab[$i][$j][$value]=="user_id")
-			{
-				$tab[$i][$j]["user_id"]=$tab[$i][$j]['value'];
-				$tab[$i][$j]["label"]= _ID;
-				$tab[$i][$j]["size"]="15";
-				$tab[$i][$j]["label_align"]="left";
-				$tab[$i][$j]["align"]="left";
-				$tab[$i][$j]["valign"]="bottom";
-				$tab[$i][$j]["show"]=true;
-			}
-			if($tab[$i][$j][$value]=="lastname")
-			{
-				$tab[$i][$j]['value']= $request->show_string($tab[$i][$j]['value']);
-				$tab[$i][$j]["lastname"]=$tab[$i][$j]['value'];
-				$tab[$i][$j]["label"]=_LASTNAME;
-				$tab[$i][$j]["size"]="15";
-				$tab[$i][$j]["label_align"]="left";
-				$tab[$i][$j]["align"]="left";
-				$tab[$i][$j]["valign"]="bottom";
-				$tab[$i][$j]["show"]=true;
-			}
-			if($tab[$i][$j][$value]=="firstname")
-			{
-				$tab[$i][$j]['value']= $request->show_string($tab[$i][$j]['value']);
-				$tab[$i][$j]["firstname"]= $tab[$i][$j]['value'];
-				$tab[$i][$j]["label"]=_FIRSTNAME;
-				$tab[$i][$j]["size"]="15";
-				$tab[$i][$j]["label_align"]="left";
-				$tab[$i][$j]["align"]="left";
-				$tab[$i][$j]["valign"]="bottom";
-				$tab[$i][$j]["show"]=true;
-			}
-			if($tab[$i][$j][$value]=="enabled")
-			{
-				$tab[$i][$j]["enabled"]= $tab[$i][$j]['value'];
-				$tab[$i][$j]["label"]=_STATUS;
-				$tab[$i][$j]["size"]="3";
-				$tab[$i][$j]["label_align"]="left";
-				$tab[$i][$j]["align"]="center";
-				$tab[$i][$j]["valign"]="bottom";
-				$tab[$i][$j]["show"]=true;
-			}
-			if($tab[$i][$j][$value]=="mail")
-			{
-				$tab[$i][$j]["mail"] = $tab[$i][$j]['value'];
-				$tab[$i][$j]["label"]=_MAIL;
-				$tab[$i][$j]["size"]="10";
-				$tab[$i][$j]["label_align"]="left";
-				$tab[$i][$j]["align"]="left";
-				$tab[$i][$j]["valign"]="bottom";
-				$tab[$i][$j]["show"]=true;
-			}
-		}
-	}
+    for ($j=0;$j<count($tab[$i]);$j++)
+    {
+        foreach(array_keys($tab[$i][$j]) as $value)
+        {
+            if($tab[$i][$j][$value]=="user_id")
+            {
+                $tab[$i][$j]["user_id"]=$tab[$i][$j]['value'];
+                $tab[$i][$j]["label"]= _ID;
+                $tab[$i][$j]["size"]="15";
+                $tab[$i][$j]["label_align"]="left";
+                $tab[$i][$j]["align"]="left";
+                $tab[$i][$j]["valign"]="bottom";
+                $tab[$i][$j]["show"]=true;
+            }
+            if($tab[$i][$j][$value]=="lastname")
+            {
+                $tab[$i][$j]['value']= $request->show_string($tab[$i][$j]['value']);
+                $tab[$i][$j]["lastname"]=$tab[$i][$j]['value'];
+                $tab[$i][$j]["label"]=_LASTNAME;
+                $tab[$i][$j]["size"]="15";
+                $tab[$i][$j]["label_align"]="left";
+                $tab[$i][$j]["align"]="left";
+                $tab[$i][$j]["valign"]="bottom";
+                $tab[$i][$j]["show"]=true;
+            }
+            if($tab[$i][$j][$value]=="firstname")
+            {
+                $tab[$i][$j]['value']= $request->show_string($tab[$i][$j]['value']);
+                $tab[$i][$j]["firstname"]= $tab[$i][$j]['value'];
+                $tab[$i][$j]["label"]=_FIRSTNAME;
+                $tab[$i][$j]["size"]="15";
+                $tab[$i][$j]["label_align"]="left";
+                $tab[$i][$j]["align"]="left";
+                $tab[$i][$j]["valign"]="bottom";
+                $tab[$i][$j]["show"]=true;
+            }
+            if($tab[$i][$j][$value]=="enabled")
+            {
+                $tab[$i][$j]["enabled"]= $tab[$i][$j]['value'];
+                $tab[$i][$j]["label"]=_STATUS;
+                $tab[$i][$j]["size"]="3";
+                $tab[$i][$j]["label_align"]="left";
+                $tab[$i][$j]["align"]="center";
+                $tab[$i][$j]["valign"]="bottom";
+                $tab[$i][$j]["show"]=true;
+            }
+            if($tab[$i][$j][$value]=="mail")
+            {
+                $tab[$i][$j]["mail"] = $tab[$i][$j]['value'];
+                $tab[$i][$j]["label"]=_MAIL;
+                $tab[$i][$j]["size"]="10";
+                $tab[$i][$j]["label_align"]="left";
+                $tab[$i][$j]["align"]="left";
+                $tab[$i][$j]["valign"]="bottom";
+                $tab[$i][$j]["show"]=true;
+            }
+        }
+    }
 }
 $_SESSION['m_admin']['load_entities'] = true;
 
