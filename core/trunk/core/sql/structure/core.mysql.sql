@@ -125,6 +125,7 @@ CREATE TABLE IF NOT EXISTS parameters (
   id varchar(50) collate utf8_unicode_ci NOT NULL,
   param_value_string varchar(50) collate utf8_unicode_ci default NULL,
   param_value_int int(8) default NULL,
+  param_value_date datetime default NULL,
   PRIMARY KEY  (id)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
