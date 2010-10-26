@@ -615,6 +615,10 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
 			}*/
 		}
 	}
+	
+	public function docserverWs($theArg) {
+		return $theArg;
+	}
 }
 
 ?>

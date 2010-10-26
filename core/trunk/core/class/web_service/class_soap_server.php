@@ -30,53 +30,65 @@
 */
 
 //declaration of descriptions services vars
-if(!isset($SOAP_dispatch_map)) {
-    $SOAP_dispatch_map = Array();
+if(!isset ($SOAP_dispatch_map)) {
+	$SOAP_dispatch_map = Array ();
 }
-if(!isset($SOAP_typedef)) {
-    $SOAP_typedef = Array();
+if(!isset ($SOAP_typedef)) {
+	$SOAP_typedef = Array ();
 }
 
 /**
  * Class for manage SOAP web service
  */
-class MySoapServer {
-	
-    var $__dispatch_map;
-    var $__typedef;
+class MySoapServer extends webService {
 
-    function __construct() {
-        global $SOAP_dispatch_map, $SOAP_typedef;
-        $this->__dispatch_map = $SOAP_dispatch_map;
-        $this->__typedef = $SOAP_typedef;
-    }
+	var $__dispatch_map;
+	var $__typedef;
 
-    function __dispatch($methodname) {
-        if (isset($this->__dispatch_map[$methodname])) {
-            return $this->__dispatch_map[$methodname];
-        }
-        return null;
- 	}
+	function __construct() {
+		global $SOAP_dispatch_map, $SOAP_typedef;
+		$this->__dispatch_map = $SOAP_dispatch_map;
+		$this->__typedef = $SOAP_typedef;
+	}
 
-    public function __call($method, $args) {
-        return call_user_func_array($method, $args);
-    }
+	function __dispatch($methodname) {
+		if(isset($this->__dispatch_map[$methodname])) {
+			return $this->__dispatch_map[$methodname];
+		}
+		return null;
+	}
+
+	public function __call($method, $args) {
+		$webService = new webService();
+		$methodArray = array();
+		$methodArray = $webService->callRequestedMethod($method, $this->__dispatch_map);
+		if($methodArray['path'] == "custom") {
+			return call_user_func_array($method, $args);
+		} else {
+			if(file_exists($methodArray['path']) && $methodArray['object'] <> "" && $methodArray['method'] <> "") {
+				require_once($methodArray['path']);
+				$objectControler = new $methodArray['object']();
+				return call_user_func_array(array($objectControler, $methodArray['method']), $args);
+			}
+		}
+	}
 
 	/**
 	 * import of the SOAP library
 	 */
 	function importSOAPLibs() {
-		require('SOAP/Server.php');
-		require('SOAP/Disco.php');
+		require ('SOAP/Server.php');
+		require ('SOAP/Disco.php');
 	}
-	
+
 	/**
 	 * launch SOAP server
 	 */
 	function launchSOAPServer() {
 		$server = new SOAP_Server();
 		$webservice = new MySoapServer();
-		$server->addObjectMap($webservice,'urn:MySoapServer');
+		//var_dump($webservice);
+		$server->addObjectMap($webservice, 'urn:MySoapServer');
 		return $server;
 	}
 
@@ -86,11 +98,11 @@ class MySoapServer {
 	function makeWSDL() {
 		$this->importSOAPLibs();
 		$server = $this->launchSOAPServer();
-		$disco = new SOAP_DISCO_Server($server,'MySoapServer');
+		$disco = new SOAP_DISCO_Server($server, 'MySoapServer');
 		header("Content-type: text/xml");
 		echo $disco->getWSDL();
 	}
-	
+
 	/**
 	 * generate SOAP server
 	 */
@@ -107,11 +119,9 @@ class MySoapServer {
 	function makeDISCO() {
 		$this->importSOAPLibs();
 		$server = $this->launchSOAPServer();
-		$disco = new SOAP_DISCO_Server($server,'MySoapServer');
+		$disco = new SOAP_DISCO_Server($server, 'MySoapServer');
 		header("Content-type: text/xml");
 		echo $disco->getDISCO();
 	}
 }
-
-
 ?>

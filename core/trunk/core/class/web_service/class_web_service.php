@@ -64,10 +64,7 @@ class webService {
 			if($_SESSION['modules'][$cptModules]['moduleid'] <> "" && file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'modules'.DIRECTORY_SEPARATOR.$_SESSION['modules'][$cptModules]['moduleid'].DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'ws.php')) {
 				require($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'modules'.DIRECTORY_SEPARATOR.$_SESSION['modules'][$cptModules]['moduleid'].DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'ws.php');
 			} elseif($_SESSION['modules'][$cptModules]['moduleid'] <> "" && file_exists($_SESSION['config']['corepath'].DIRECTORY_SEPARATOR.'modules'.DIRECTORY_SEPARATOR.$_SESSION['modules'][$cptModules]['moduleid'].DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'ws.php')) {
-				require('apps'.DIRECTORY_SEPARATOR.$_SESSION['businessapps'][0]['appid'].DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'ws.php');
-			}
-			if($_SESSION['modules'][$cptModules]['moduleid'] <> "" && file_exists($_SESSION['pathtomodules'].$_SESSION['modules'][$cptModules]['moduleid'].DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'ws.php')){
-				require($_SESSION['pathtomodules'].$_SESSION['modules'][$cptModules]['moduleid'].DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'ws.php');
+				require($_SESSION['config']['corepath'].DIRECTORY_SEPARATOR.'modules'.DIRECTORY_SEPARATOR.$_SESSION['modules'][$cptModules]['moduleid'].DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'ws.php');
 			}
 		}
 	}
@@ -123,6 +120,49 @@ class webService {
 				$soapServer->makeDISCO();
 			}
 		}
+	}
+	
+	function callRequestedMethod($method, $methods) {
+		if(is_array($methods)){
+			require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_functions.php");
+			$arrayMethods = array();
+			$func = new functions();
+			//var_dump($methods);
+			$arrayMethods = $func->object2array($methods);
+			//$func->show_array($arrayMethods);
+			foreach(array_keys($arrayMethods) as $keyMethod) {
+				if($arrayMethods[$keyMethod]["method"] == "custom") {
+					$resultArray = array("path" => "custom", "method" => null);
+				} elseif($keyMethod == $method) {
+					$rootPathArray = array();
+					$stringMethod = $arrayMethods[$keyMethod]["method"];
+					$rootPathArray = explode("#",$stringMethod);
+					$rootPath = $rootPathArray[0];
+					$objectPath = $rootPathArray[1];
+					//echo "<br>generic path : ".$stringMethod."<br>";
+					//echo "root path : ".$rootPath."<br>";
+					//echo "object path : ".$objectPath."<br>";
+					$objectPathArray = array();
+					$objectPathArray = explode("::",$objectPath);
+					if($rootPath == "core") {
+						$path = "core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR.$objectPathArray[0]."_controler.php";
+					} elseif($rootPath == "apps") {
+						$path = "apps".DIRECTORY_SEPARATOR.$_SESSION['businessapps'][0]['appid'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR.$objectPathArray[0]."_controler.php";
+					} else {
+						preg_match("'modules'", $rootPath, $out);
+						if(count($out[0])) {
+							$modulePathArray = array();
+							$modulePathArray = explode("/",$rootPath);
+							$path = "modules".DIRECTORY_SEPARATOR.$modulePathArray[1].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR.$objectPathArray[0]."_controler.php";
+						}
+					}
+					$resultArray = array("path" => $path, "object" => $objectPathArray[0]."_controler", "method" => $objectPathArray[1]);
+				}
+			}
+		} else {
+			$resultArray = array("path" => null, "method" => null);
+		}
+		return $resultArray;
 	}
 }
 ?>
