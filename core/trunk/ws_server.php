@@ -37,7 +37,6 @@ require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_db.ph
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_core_tools.php");
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."web_service".DIRECTORY_SEPARATOR."class_web_service.php");
-require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."web_service".DIRECTORY_SEPARATOR."class_soap_server.php");
 //load Maarch session vars
 $portal = new portal();
 $portal->unset_session();
@@ -49,6 +48,7 @@ $_SESSION["config"]["app_id"] = $_SESSION["businessapps"][0]["appid"];
 require_once("apps".DIRECTORY_SEPARATOR.$_SESSION["businessapps"][0]["appid"].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
 $businessAppTools = new business_app_tools();
 $businessAppTools->build_business_app_config();
+$coreTools->load_modules_config($_SESSION['modules']);
 //load webservice engine
 $webService = new webService();
 //http Authentication
@@ -59,7 +59,7 @@ if($webService->authentication()) {
 	$webService->WSModulesCatalog();
 	$webService->WScustomCatalog();
 	//launch webservice engine
-$webService->launchWs();
+	$webService->launchWs();
 } else {
 	header("WWW-Authenticate: Basic realm=\"Maarch WebServer Engine\"");
 	if (preg_match("/Microsoft/", $_SERVER["SERVER_SOFTWARE"])) {
