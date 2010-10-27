@@ -3,19 +3,16 @@ global $SOAP_dispatch_map;
 global $XMLRPC_dispatch_map;
 global $SOAP_typedef;
 
-$XMLRPC_dispatch_map['echoStringSample'] = Array(
-                            'function' => 'echoStringSample',
+$XMLRPC_dispatch_map['addContact'] = Array(
+                            'function' => 'addContact',
                             'signature' => array(array('string','string')),
                             'docstring' => '',
-                            'method' => "apps#users::save"
+                            'method' => "apps#contacts::save"
                             );
 
-$SOAP_dispatch_map['echoStringSample'] = Array(
+$SOAP_dispatch_map['addContact'] = Array(
                                      'in'  => Array('in' => 'string'),
                                      'out' => Array('out' => 'string'),
-                                     'method' => "apps#users::save"
+                                     'method' => "apps#contacts::save"
                                      );
-function echoStringSample($in) {
-    return $in;
-}
 ?>
