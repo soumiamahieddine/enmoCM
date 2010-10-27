@@ -61,20 +61,127 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
 	 * @param docservers $docservers
 	 * @return boolean
 	 */
-	public function save($docserver) {
-		if (!isset ($docserver))
+	public function save($docserver, $mode = "") {
+		if (!isset($docserver))
 			return false;
-
+		if(is_array($docserver)) {
+			$docserver = self::fillObject($docserver);
+		}
 		self::set_foolish_ids(array('docserver_id', 'docserver_type_id', 'coll_id', 'docserver_location_id'));
 		self::set_specific_id('docserver_id');
-		
-		if(self::docserversExists($docserver->docserver_id)){
-				//Update existing docservers
-				return self::update($docserver);
+		$control = array();
+		if($mode == "up") {
+			$control = self::control($docserver, "up");
+			if($control['status'] == "ok") {
+				//Update existing docserver
+				$control['error'] = self::update($docserver);
+			}
 		} else {
-			//Insert new docservers
-			return self::insert($docserver);
+			$control = self::control($docserver, "add");
+			if($control['status'] == "ok") {
+				//Insert new docserver
+				$control['error'] = self::insert($docserver);
+			}
 		}
+		return $control;
+	}
+
+	/**
+	* control the docserver object before action
+	*
+	* @param  $docserver docserver object
+	* @return array ok if the object is well formated, ko otherwise
+	*/
+	private function control($docserver, $mode) {
+		$f = new functions();
+		$error = "";
+		if($mode == "add") {
+			// Update, so values exist
+			$docserver->docserver_id = $f->protect_string_db($f->wash($docserver->docserver_id, "nick", _THE_DOCSERVER_ID." ", "yes", 0, 32));
+		}
+		$docserver->docserver_type_id = $f->protect_string_db($f->wash($docserver->docserver_type_id, "no", _DOCSERVER_TYPES." ", 'yes', 0, 32));
+		$docserver->device_label = $f->protect_string_db($f->wash($docserver->device_label, "no", _DEVICE_LABEL." ", 'yes', 0, 255));
+		$docserver->is_readonly = $f->protect_string_db($f->wash($docserver->is_readonly, "no", _IS_READONLY." ", 'yes', 0, 5));
+		if($docserver->is_readonly == "false") {
+			$docserver->is_readonly = false;
+		} else {
+			$docserver->is_readonly = true;
+		}
+		if(isset($docserver->size_limit_number) && !empty($docserver->size_limit_number)) {
+			$docserver->size_limit_number = $f->protect_string_db($f->wash($docserver->size_limit_number, "no", _SIZE_LIMIT." ", 'yes', 0, 255));
+			if(docservers_controler::sizeLimitControl($docserver)) {
+				$error .= _SIZE_LIMIT_UNAPPROACHABLE."#";
+			}
+			if(docservers_controler::actualSizeNumberControl($docserver)) {
+				$error .= _SIZE_LIMIT_LESS_THAN_ACTUAL_SIZE."#";
+			}
+		}
+		$docserver->path_template = $f->protect_string_db($f->wash($docserver->path_template, "no", _PATH_TEMPLATE." ", 'yes', 0, 255));
+		if(!is_dir($docserver->path_template)) {
+			$error .= _PATH_OF_DOCSERVER_UNAPPROACHABLE."#";
+		} else {
+			$Fnm = $docserver->path_template."test_docserver.txt";
+			$isWriteable = true;
+			if($inF = fopen($Fnm,"a")) {
+				fwrite($inF,"test");
+				if(file_exists($Fnm)) {
+					fclose($inF);
+					unlink($Fnm);
+				} else {
+					$isWriteable = false;
+				}
+			} else {
+				$isWriteable = false;
+			}
+			if(!$isWriteable) {
+				$error .= _THE_DOCSERVER_DOES_NOT_HAVE_THE_ADEQUATE_RIGHTS;
+			}
+		}
+		$docserver->coll_id = $f->protect_string_db($f->wash($docserver->coll_id, "no", _COLLECTION." ", 'yes', 0, 32));
+		$docserver->priority_number = $f->protect_string_db($f->wash($docserver->priority_number, "num", _PRIORITY." ", 'yes', 0, 6));
+		$docserver->docserver_location_id = $f->protect_string_db($f->wash($docserver->docserver_location_id, "no", _DOCSERVER_LOCATIONS." ", 'yes', 0, 32));
+		$docserver->adr_priority_number = $f->protect_string_db($f->wash($docserver->adr_priority_number, "num", _ADR_PRIORITY." ", 'yes', 0, 6));
+		if($mode == "add" && docservers_controler::docserversExists($docserver->docserver_id)) {
+			$error .= $docserver->docserver_id." "._ALREADY_EXISTS."#";
+		}
+		if(!docservers_controler::adrPriorityNumberControl($docserver)) {
+			$error .= _PRIORITY." ".$docserver->adr_priority_number." "._ALREADY_EXISTS_FOR_THIS_TYPE_OF_DOCSERVER."#";
+		}
+		if(!docservers_controler::priorityNumberControl($docserver)) {
+			$error .= _ADR_PRIORITY.$docserver->priority_number."  "._ALREADY_EXISTS_FOR_THIS_TYPE_OF_DOCSERVER."#";
+		}
+		$error .= $_SESSION['error'];
+		//TODO:rewrite wash to return errors without html  
+		$error = str_replace("<br />", "#", $error);
+		$return = array();
+		if(!empty($error)) {
+				$return = array("status" => "ko", "value" => $docserver->docserver_id, "error" => $error);
+		} else {
+			//echo "ici";
+			$return = array("status" => "ok", "value" => $docserver->docserver_id);
+		}
+		return $return;
+	}
+
+	/**
+	* Return a docserver object since a array of docserver
+	*
+	* @param  $objectArray docserver array
+	* @return object docservers 
+	*/
+	private function fillObject($objectArray) {
+		$docserverObject = new docservers();
+		$docserverObject->docserver_id = $objectArray[0]->docserver_id;
+		$docserverObject->docserver_type_id = $objectArray[0]->docserver_type_id;
+		$docserverObject->device_label = $objectArray[0]->device_label;
+		$docserverObject->is_readonly = $objectArray[0]->is_readonly;
+		$docserverObject->size_limit_number = $objectArray[0]->size_limit_number;
+		$docserverObject->path_template = $objectArray[0]->path_template;
+		$docserverObject->coll_id = $objectArray[0]->coll_id;
+		$docserverObject->priority_number = $objectArray[0]->priority_number;
+		$docserverObject->docserver_location_id = $objectArray[0]->docserver_location_id;
+		$docserverObject->adr_priority_number = $objectArray[0]->adr_priority_number;
+		return $docserverObject;
 	}
 
 	/**
@@ -130,8 +237,8 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
 		if(!self::docserversExists($docserver->docserver_id))
 				return false;
 			
-		if(self::adrxLinkExists($docserver->docserver_id))
-			return false;
+		//if(self::adrxLinkExists($docserver->docserver_id))
+			//return false;
 		
 		if(self::resxLinkExists($docserver->docserver_id, $docserver->coll_id))
 			return false;

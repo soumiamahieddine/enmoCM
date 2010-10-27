@@ -41,27 +41,33 @@ if(!isset ($SOAP_typedef)) {
  * Class for manage SOAP web service
  */
 class MySoapServer extends webService {
-
+	
 	var $__dispatch_map;
 	var $__typedef;
-
+	
 	function __construct() {
 		global $SOAP_dispatch_map, $SOAP_typedef;
 		$this->__dispatch_map = $SOAP_dispatch_map;
 		$this->__typedef = $SOAP_typedef;
 	}
-
+	
 	function __dispatch($methodname) {
 		if(isset($this->__dispatch_map[$methodname])) {
 			return $this->__dispatch_map[$methodname];
 		}
 		return null;
 	}
-
+	
+	/**
+	 * parse the requested method and return path, object and method to call
+	 * @param  	$method string the methode in the signature
+	 * @param  	$args array array of method arguments 
+	 * @return 	call of the method
+	 */
 	public function __call($method, $args) {
 		$webService = new webService();
 		$methodArray = array();
-		$methodArray = $webService->callRequestedMethod($method, $this->__dispatch_map);
+		$methodArray = $webService->parseRequestedMethod($method, $this->__dispatch_map);
 		if($methodArray['path'] == "custom") {
 			return call_user_func_array($method, $args);
 		} else {
@@ -72,7 +78,7 @@ class MySoapServer extends webService {
 			}
 		}
 	}
-
+	
 	/**
 	 * import of the SOAP library
 	 */
@@ -80,7 +86,7 @@ class MySoapServer extends webService {
 		require ('SOAP/Server.php');
 		require ('SOAP/Disco.php');
 	}
-
+	
 	/**
 	 * launch SOAP server
 	 */
@@ -91,7 +97,7 @@ class MySoapServer extends webService {
 		$server->addObjectMap($webservice, 'urn:MySoapServer');
 		return $server;
 	}
-
+	
 	/**
 	 * generate WSDL
 	 */
@@ -102,7 +108,7 @@ class MySoapServer extends webService {
 		header("Content-type: text/xml");
 		echo $disco->getWSDL();
 	}
-
+	
 	/**
 	 * generate SOAP server
 	 */
@@ -112,7 +118,7 @@ class MySoapServer extends webService {
 		$server = $this->launchSOAPServer();
 		$server->service($HTTP_RAW_POST_DATA);
 	}
-
+	
 	/**
 	 * discover server
 	 */

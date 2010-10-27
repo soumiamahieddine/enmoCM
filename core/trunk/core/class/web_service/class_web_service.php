@@ -122,8 +122,14 @@ class webService {
 		}
 	}
 	
-	function callRequestedMethod($method, $methods) {
-		if(is_array($methods)){
+	/**
+	 * parse the requested method and return path, object and method to call
+	 * @param  	$method string the methode in the signature
+	 * @param  	$methods array array of signature
+	 * @return 	array with path, object and method
+	 */
+	function parseRequestedMethod($method, $methods) {
+		if(is_array($methods)) {
 			require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_functions.php");
 			$arrayMethods = array();
 			$func = new functions();
@@ -133,6 +139,7 @@ class webService {
 			foreach(array_keys($arrayMethods) as $keyMethod) {
 				if($arrayMethods[$keyMethod]["method"] == "custom") {
 					$resultArray = array("path" => "custom", "method" => null);
+					break;
 				} elseif($keyMethod == $method) {
 					$rootPathArray = array();
 					$stringMethod = $arrayMethods[$keyMethod]["method"];
@@ -157,6 +164,7 @@ class webService {
 						}
 					}
 					$resultArray = array("path" => $path, "object" => $objectPathArray[0]."_controler", "method" => $objectPathArray[1]);
+					break;
 				}
 			}
 		} else {
