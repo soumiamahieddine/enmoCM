@@ -264,7 +264,11 @@ if(($_REQUEST['template']== 'group_case_for_basket') && ($core_tools->is_module_
 }
 else
 {
-	$where_concat .= " and ".$table.".res_id = ".$_SESSION['tablename']['ent_listinstance'].".res_id and ".$_SESSION['tablename']['ent_listinstance'].".item_id = '".$_SESSION['user']['UserId']."'"; 
+	if($_SESSION['current_basket']['basket_owner'] <> "") {
+		$where_concat .= " and ".$table.".res_id = ".$_SESSION['tablename']['ent_listinstance'].".res_id and ".$_SESSION['tablename']['ent_listinstance'].".item_id = '".$_SESSION['current_basket']['basket_owner']."'";
+	} else {
+		$where_concat .= " and ".$table.".res_id = ".$_SESSION['tablename']['ent_listinstance'].".res_id and ".$_SESSION['tablename']['ent_listinstance'].".item_id = '".$_SESSION['user']['UserId']."'";
+	} 
 	$tab = $request->select($select, $where_concat, $orderstr, $_SESSION['config']['databasetype'], $_SESSION['config']['databasesearchlimit'], false,"", "", "", false);
 }
 //$request->show();
