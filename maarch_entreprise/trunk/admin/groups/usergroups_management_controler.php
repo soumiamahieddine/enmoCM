@@ -327,7 +327,8 @@ function display_enable($group_id)
         usergroups_controler::enable($group);
         $_SESSION['error'] = _AUTORIZED_GROUP.' : '.$group_id;
         // NOTE: Why not calling display_list ?
-        ?><script type="text/javascript">window.top.location='<?php echo $_SESSION['config']['businessappurl']."index.php?page=usergroups_management_controler&mode=list&admin=groups&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what;?>';</script>
+        $url = $_SESSION['config']['businessappurl']."index.php?page=usergroups_management_controler&mode=list&admin=groups&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what;
+        ?><script type="text/javascript">window.top.location='<?php echo $url;?>';</script>
         <?php
         exit;
     }
@@ -351,9 +352,10 @@ function display_disable($group_id)
         usergroups_controler::disable($group);
         $_SESSION['error'] = _SUSPENDED_GROUP.' : '.$group_id;
         // NOTE: Why not calling display_list ?
-        ?><script type="text/javascript">window.top.location='<?php echo $_SESSION['config']['businessappurl']."index.php?page=usergroups_management_controler&mode=list&admin=groups&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what;?>';</script>
+        $url = $_SESSION['config']['businessappurl']."index.php?page=usergroups_management_controler&mode=list&admin=groups&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what;
+        ?><script type="text/javascript">window.top.location='<?php echo $url;?>';</script>
         <?php
-        exit;
+        exit();
     }
     else
     {
@@ -513,7 +515,7 @@ function validate_group_submit(){
         else
         {
             $_SESSION['error'] = _GROUP_UPDATED;
-            if(usergroups_controler::inGroup($_SESSION['user']['UserId'], $_SESSION['m_admin']['groups']['group_id']) )
+            if(isset($_SESSION['m_admin']['groups']['group_id']) && usergroups_controler::inGroup($_SESSION['user']['UserId'], $_SESSION['m_admin']['groups']['group_id']) )
             {
                 $_SESSION['user']['security'] = array();
                 $_SESSION['user']['primarygroup'] = usergroups_controler::getPrimaryGroup($_SESSION['user']['UserId']);

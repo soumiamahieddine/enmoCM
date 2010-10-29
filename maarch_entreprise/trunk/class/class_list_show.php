@@ -818,8 +818,19 @@ class list_show extends functions
                 {
                     array_push($listcolumn,$result[$i][$j]['label']);
                 }
+                else
+                {
+                    array_push($listcolumn,'');
+                }
                 array_push($listshow,$result[$i][$j]['show']);
-                array_push($ordercol,$result[$i][$j]["order"]);
+                if(isset($result[$i][$j]["order"]))
+                {
+                    array_push($ordercol,$result[$i][$j]["order"]);
+                }
+                else
+                {
+                    array_push($ordercol,'');
+                }
             }
         }
 

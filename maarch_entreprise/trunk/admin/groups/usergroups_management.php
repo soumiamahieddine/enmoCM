@@ -207,7 +207,7 @@ elseif($mode == "up" || $mode == "add")
                 {
                     if( $_SESSION['enabled_services'][$i]['system'] == false)
                     {
-                        if($_SESSION['enabled_services'][$i]['parent'] <> $_SESSION['enabled_services'][$i - 1]['parent'])
+                        if($i > 0 && $_SESSION['enabled_services'][$i]['parent'] <> $_SESSION['enabled_services'][$i - 1]['parent'])
                         {
                             $j=0;
                         }

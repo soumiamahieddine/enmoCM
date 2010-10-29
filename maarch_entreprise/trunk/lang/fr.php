@@ -123,6 +123,7 @@ if (!defined('_DATE')) define( '_DATE', 'Date');
 if (!defined('_ACTION')) define( '_ACTION', 'Action');
 if (!defined('_COMMENTS')) define( '_COMMENTS', 'Commentaires');
 if (!defined('_ENABLED')) define( '_ENABLED', 'Autoris&eacute;');
+if (!defined('_DISABLED')) define( '_DISABLED', 'Suspendu');
 if (!defined('_NOT_ENABLED')) define( '_NOT_ENABLED', 'Suspendu');
 if (!defined('_RESSOURCES_COLLECTION')) define( '_RESSOURCES_COLLECTION','Collection documentaire');
 if (!defined('_RECIPIENT')) define( '_RECIPIENT', 'Destinataire');
