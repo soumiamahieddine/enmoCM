@@ -20,7 +20,7 @@
 */
 
 /**
-* @brief  Contains the docservers_controler Object (herits of the BaseObject class)
+* @brief Contains the docservers_controler Object (herits of the BaseObject class)
 * 
 * 
 * @file
@@ -41,6 +41,7 @@ try {
 	require_once ("core/class/ObjectControlerAbstract.php");
 	require_once ("core/class/ObjectControlerIF.php");
 	require_once ("core/class/class_security.php");
+	require_once ("core/class/class_history.php");
 } catch (Exception $e) {
 	echo $e->getMessage().' // ';
 }
@@ -52,7 +53,7 @@ define ("_ADVANCED_DEBUG",false);
  * Class for controling docservers objects from database
  */
 class docservers_controler extends ObjectControler implements ObjectControlerIF {
-	
+
 	/**
 	 * Save given object in database: 
 	 * - make an update if object already exists,
@@ -62,25 +63,46 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
 	 * @return boolean
 	 */
 	public function save($docserver, $mode = "") {
-		if (!isset($docserver))
-			return false;
-		if(is_array($docserver)) {
-			$docserver = self::fillObject($docserver);
+		//var_dump($docserver);
+		$control = array();
+		if(!isset($docserver) || empty($docserver)) {
+			$control = array("status" => "ko", "value" => "", "error" => _DOCSERVER_EMPTY);
+			return $control;
 		}
+		$docserver = self::isADocserver($docserver);
 		self::set_foolish_ids(array('docserver_id', 'docserver_type_id', 'coll_id', 'docserver_location_id'));
 		self::set_specific_id('docserver_id');
-		$control = array();
 		if($mode == "up") {
 			$control = self::control($docserver, "up");
 			if($control['status'] == "ok") {
-				//Update existing docserver
-				$control['error'] = self::update($docserver);
+				//Update existing docserver 
+				if(self::update($docserver)) {
+					$control = array("status" => "ok", "value" => $docserver->docserver_id);
+					//history
+					if($_SESSION['history']['docserversadd'] == "true") {
+						
+						$history = new history();
+						$history->add(_DOCSERVERS_TABLE_NAME, $docserver->docserver_id, "UP", _DOCSERVER_UPDATED." : ".$docserver->docserver_id, $_SESSION['config']['databasetype']);
+					}
+				} else {
+					$control = array("status" => "ko", "value" => "", "error" => _PB_WITH_DOCSERVER);
+				}
+				return $control;
 			}
 		} else {
 			$control = self::control($docserver, "add");
 			if($control['status'] == "ok") {
 				//Insert new docserver
-				$control['error'] = self::insert($docserver);
+				if(self::insert($docserver)) {
+					$control = array("status" => "ok", "value" => $docserver->docserver_id);
+					//history
+					if($_SESSION['history']['docserversadd'] == "true") {
+						$history = new history();
+						$history->add(_DOCSERVERS_TABLE_NAME, $docserver->docserver_id, "ADD", _DOCSERVER_ADDED." : ".$docserver->docserver_id, $_SESSION['config']['databasetype']);
+					}
+				} else {
+					$control = array("status" => "ko", "value" => "", "error" => _PB_WITH_DOCSERVER);
+				}
 			}
 		}
 		return $control;
@@ -101,6 +123,9 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
 		}
 		$docserver->docserver_type_id = $f->protect_string_db($f->wash($docserver->docserver_type_id, "no", _DOCSERVER_TYPES." ", 'yes', 0, 32));
 		$docserver->device_label = $f->protect_string_db($f->wash($docserver->device_label, "no", _DEVICE_LABEL." ", 'yes', 0, 255));
+		if($docserver->is_readonly == "") {
+			$docserver->is_readonly = "false";
+		}
 		$docserver->is_readonly = $f->protect_string_db($f->wash($docserver->is_readonly, "no", _IS_READONLY." ", 'yes', 0, 5));
 		if($docserver->is_readonly == "false") {
 			$docserver->is_readonly = false;
@@ -157,31 +182,9 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
 		if(!empty($error)) {
 				$return = array("status" => "ko", "value" => $docserver->docserver_id, "error" => $error);
 		} else {
-			//echo "ici";
 			$return = array("status" => "ok", "value" => $docserver->docserver_id);
 		}
 		return $return;
-	}
-
-	/**
-	* Return a docserver object since a array of docserver
-	*
-	* @param  $objectArray docserver array
-	* @return object docservers 
-	*/
-	private function fillObject($objectArray) {
-		$docserverObject = new docservers();
-		$docserverObject->docserver_id = $objectArray[0]->docserver_id;
-		$docserverObject->docserver_type_id = $objectArray[0]->docserver_type_id;
-		$docserverObject->device_label = $objectArray[0]->device_label;
-		$docserverObject->is_readonly = $objectArray[0]->is_readonly;
-		$docserverObject->size_limit_number = $objectArray[0]->size_limit_number;
-		$docserverObject->path_template = $objectArray[0]->path_template;
-		$docserverObject->coll_id = $objectArray[0]->coll_id;
-		$docserverObject->priority_number = $objectArray[0]->priority_number;
-		$docserverObject->docserver_location_id = $objectArray[0]->docserver_location_id;
-		$docserverObject->adr_priority_number = $objectArray[0]->adr_priority_number;
-		return $docserverObject;
 	}
 
 	/**
@@ -216,13 +219,35 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
 	 * @return docservers 
 	 */
 	public function get($docserver_id) {
+		//var_dump($docserver_id);
 		self::set_foolish_ids(array('docserver_id'));
 		self::set_specific_id('docserver_id');
 		$docserver = self::advanced_get($docserver_id, _DOCSERVERS_TABLE_NAME);
-		if (isset ($docserver_id))
-			return $docserver;
-		else
+		//var_dump($docserver);
+		if(get_class($docserver) <> "docservers") {
 			return null;
+		} else {
+			//var_dump($docserver);
+			return $docserver;
+		}
+	}
+
+	/**
+	 * get docservers with given id for a ws.
+	 * Can return null if no corresponding object.
+	 * @param $docserver_id of docservers to send
+	 * @return docservers 
+	 */
+	public function getWs($docserver_id) {
+		self::set_foolish_ids(array('docserver_id'));
+		self::set_specific_id('docserver_id');
+		$docserver = self::advanced_get($docserver_id, _DOCSERVERS_TABLE_NAME);
+		if(get_class($docserver) <> "docservers") {
+			return null;
+		} else {
+			$docserver = $docserver->getArray();
+			return $docserver;
+		}
 	}
 
 	/**
@@ -230,32 +255,40 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
 	 * @param docservers $docservers
 	 */
 	public function delete($docserver) {
-		//Deletion of given docservers
-		if(!isset($docserver) || empty($docserver) )
-			return false;
-		
-		if(!self::docserversExists($docserver->docserver_id))
-				return false;
-			
-		//if(self::adrxLinkExists($docserver->docserver_id))
-			//return false;
-		
-		if(self::resxLinkExists($docserver->docserver_id, $docserver->coll_id))
-			return false;
-					
+		$control = array();
+		if(!isset($docserver) || empty($docserver)) {
+			$control = array("status" => "ko", "value" => "", "error" => _DOCSERVER_EMPTY);
+			return $control;
+		}
+		$docserver = self::isADocserver($docserver);
+		if(!self::docserversExists($docserver->docserver_id)) {
+			$control = array("status" => "ko", "value" => "", "error" => _DOCSERVER_NOT_EXISTS);
+			return $control;
+		}
+		/*if(self::adrxLinkExists($docserver->docserver_id)) {
+			$control = array("status" => "ko", "value" => "", "error" => _DOCSERVER_ATTACHED_TO_ADR_X);
+			return $control;
+		}*/
+		if(self::resxLinkExists($docserver->docserver_id, $docserver->coll_id)) {
+			$control = array("status" => "ko", "value" => "", "error" => _DOCSERVER_ATTACHED_TO_RES_X);
+			return $control;
+		}
 		self::$db=new dbquery();
 		self::$db->connect();
 		$query="delete from "._DOCSERVERS_TABLE_NAME." where docserver_id ='".functions::protect_string_db($docserver->docserver_id)."'";
 		try {
 			if($_ENV['DEBUG']) {echo $query.' // ';}
 			self::$db->query($query);
-			$ok = true;
 		} catch (Exception $e) {
-			echo _CANNOT_DELETE_DOCSERVER_ID." ".$docserver->docserver_id.' // ';
-			$ok = false;
+			$control = array("status" => "ko", "value" => "", "error" => _CANNOT_DELETE_DOCSERVER_ID." ".$docserver->docserver_id);
 		}
 		self::$db->disconnect();
-		return $ok;
+		$control = array("status" => "ok", "value" => $docserver->docserver_id);
+		if($_SESSION['history']['docserversdel'] == "true") {
+			$history = new history();
+			$history->add(_DOCSERVERS_TABLE_NAME, $docserver->docserver_id, "DEL", _DOCSERVER_DELETED." : ".$docserver->docserver_id, $_SESSION['config']['databasetype']);
+		}
+		return $control;
 	}
 
 	/**
@@ -265,11 +298,26 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
 	* @return bool true if the disabling is complete, false otherwise 
 	*/
 	public function disable($docserver) {
+		$control = array();
+		if(!isset($docserver) || empty($docserver)) {
+			$control = array("status" => "ko", "value" => "", "error" => _DOCSERVER_EMPTY);
+			return $control;
+		}
+		$docserver = self::isADocserver($docserver);
 		self::set_foolish_ids(array('docserver_id'));
 		self::set_specific_id('docserver_id');
-		return self::advanced_disable($docserver);
+		if(self::advanced_disable($docserver)) {
+			$control = array("status" => "ok", "value" => $docserver->docserver_id);
+			if($_SESSION['history']['docserversban'] == "true") {
+				$history = new history();
+				$history->add(_DOCSERVERS_TABLE_NAME, $docserver->docserver_id, "BAN", _DOCSERVER_DISABLED." : ".$docserver->docserver_id, $_SESSION['config']['databasetype']);
+			}
+		} else {
+			$control = array("status" => "ko", "value" => "", "error" => _PB_WITH_DOCSERVER);
+		}
+		return $control;
 	}
-
+	
 	/**
 	* Enables a given docserver
 	* 
@@ -277,9 +325,45 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
 	* @return bool true if the enabling is complete, false otherwise 
 	*/
 	public function enable($docserver) {
+		$control = array();
+		if(!isset($docserver) || empty($docserver)) {
+			$control = array("status" => "ko", "value" => "", "error" => _DOCSERVER_EMPTY);
+			return $control;
+		}
+		$docserver = self::isADocserver($docserver);
 		self::set_foolish_ids(array('docserver_id'));
 		self::set_specific_id('docserver_id');
-		return self::advanced_enable($docserver);
+		if(self::advanced_enable($docserver)) {
+			$control = array("status" => "ok", "value" => $docserver->docserver_id);
+			if($_SESSION['history']['docserversallow'] == "true") {
+				$history = new history();
+				$history->add(_DOCSERVERS_TABLE_NAME, $docserver->docserver_id, "VAL",_DOCSERVER_ENABLED." : ".$docserver->docserver_id, $_SESSION['config']['databasetype']);
+			}
+		} else {
+			$control = array("status" => "ko", "value" => "", "error" => _PB_WITH_DOCSERVER);
+		}
+		return $control;
+	}
+	
+	/**
+	* Fill a docserver object with an object if it's not a docserver
+	*
+	* @param  $object ws docserver object
+	* @return object docservers 
+	*/
+	private function isADocserver($object) {
+		if(get_class($object) <> "docservers") {
+			$func = new functions();
+			$docserverObject = new docservers();
+			$array = array();
+			$array = $func->object2array($object);
+			foreach(array_keys($array) as $key) {
+				$docserverObject->$key = $array[$key];
+			}
+			return $docserverObject;
+		} else {
+			return $object;
+		}
 	}
 
 	/**
@@ -313,7 +397,7 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
 	*@param docserver_id docservers 
 	*@return bool true if it's linked  
 	*/
-	public function resxLinkExists($docserver_id, $coll_id) {	
+	private function resxLinkExists($docserver_id, $coll_id) {	
 		self::$db=new dbquery();
 		self::$db->connect();
 		$tableName = security::retrieve_table_from_coll($coll_id);
@@ -331,7 +415,7 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
 	*@param docserver_id docservers 
 	*@return bool true if it's linked  
 	*/		
-	public function adrxLinkExists($docserver_id) {
+	private function adrxLinkExists($docserver_id) {
 		self::$db=new dbquery();
 		self::$db->connect();
 		$query = "select docserver_id from "._ADR_X_TABLE_NAME." where docserver_id = '".$docserver_id."'";
@@ -349,7 +433,7 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
 	* @param $docserver docservers object
 	* @return bool true if the control is ok
 	*/
-	public function adrPriorityNumberControl($docserver) {
+	private function adrPriorityNumberControl($docserver) {
 		if(!isset($docserver) || empty($docserver) || empty($docserver->adr_priority_number))
 		return false;
 		self::$db=new dbquery();
@@ -372,7 +456,7 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
 	* @param $docserver docservers object
 	* @return bool true if the control is ok
 	*/
-	public function priorityNumberControl($docserver) {
+	private function priorityNumberControl($docserver) {
 		if(!isset($docserver) || empty($docserver) || empty($docserver->priority_number))
 		return false;
 		self::$db=new dbquery();
@@ -421,7 +505,7 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
 	* @param $docserver docservers object
 	* @return bool true if the control is ok
 	*/
-	public function sizeLimitControl($docserver) {
+	private function sizeLimitControl($docserver) {
 		$docserver->size_limit_number = floatval($docserver->size_limit_number);
 		$maxsizelimit = floatval($_SESSION['docserversFeatures']['DOCSERVERS']['MAX_SIZE_LIMIT'])*1000*1000*1000;
 		if(!isset($docserver) || empty($docserver))
@@ -545,7 +629,7 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
 	* @param $docserver docservers object
 	* @return array Contains 2 items : subdirectory path and new filename
 	*/
-	public function filename($docserver) {
+	private function filename($docserver) {
 		$path_template = $docserver->path_template;
 		//Scans the docserver path
 		$file_tab = scandir($path_template);
@@ -723,8 +807,91 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
 		}
 	}
 	
-	public function docserverWs($theArg) {
-		return $theArg;
+	/**
+	 * Extract a file from an archive
+	 * @param  	$fileInfos infos of the doc to store, contains :
+	 * 			tmpDir : path to tmp directory
+	 * 			path_to_file : path to the file in the docserver
+	 * 			filename : name of the file
+	 * 			offset_doc : offset of the doc in the container
+	 * @return 	array with path of the extracted doc
+	 */
+	public function extractArchiveTest($fileInfos) {
+		//var_dump($fileInfos);
+		if($fileInfos['tmpDir'] == "") {
+			$tmp = $_SESSION['config']['tmppath'];
+		} else {
+			$tmp = $fileInfos['tmpDir'];
+		}
+		//TODO:extract on the maarch tmp dir on server or on the fly in the docserver dir ?
+		$fileNameOnTmp = $tmp.rand()."_".md5_file($fileInfos['path_to_file'])."_".$fileInfos['filename'];
+		$cp = copy($fileInfos['path_to_file'], $fileNameOnTmp);
+		if($cp == false) {
+			$result = array("status" => "ko", "path" => "", "mime_type" => "", "format" => "", "tmpArchive" => "", "error" => _TMP_COPY_ERROR);
+			return $result;
+		} else {
+			$_exec_error = "";
+			$tmpArchive = uniqid(rand());
+			if(mkdir($tmp.$tmpArchive)) {
+				$command = "7z e -y -o".escapeshellarg($tmp.$tmpArchive)." ".escapeshellarg($fileNameOnTmp);
+				//echo $command."<br>";
+				$tmpCmd = "";
+				exec($command, $tmpCmd, $_exec_error);
+				if($_exec_error > 0) {
+					$result = array("status" => "ko", "path" => "", "mime_type" => "", "format" => "", "tmpArchive" => "", "error"=>_PB_WITH_EXTRACTION_OF_CONTAINER."#".$_exec_error);
+					return $result;
+				}
+			} else {
+				$result = array("status" => "ko", "path" => "", "mime_type" => "", "format" => "", "tmpArchive" => "", "error"=>_PB_WITH_EXTRACTION_OF_CONTAINER."#".$tmp.$tmpArchive);
+				return $result;
+			}
+			$format = substr($fileInfos['offset_doc'], strrpos($fileInfos['offset_doc'], '.') + 1);
+			$result = array("status" => "ok", "path"=>$tmp.$tmpArchive.DIRECTORY_SEPARATOR.$fileInfos['offset_doc'], "mime_type"=>self::getMimeType($tmp.$tmpArchive.DIRECTORY_SEPARATOR.$fileInfos['offset_doc']), "format"=>$format, "tmpArchive"=>$tmp.$tmpArchive, "error"=> "");
+			$classScan = dir($tmp.$tmpArchive);
+			/*while(($fileScan=$classScan->read())!=false) {
+				if($fileScan=='.'||$fileScan=='..') {
+			 		continue;
+				}
+				unlink($tmp.$tmpArchive.DIRECTORY_SEPARATOR.$fileScan);
+			}*/
+			unlink($fileNameOnTmp);
+			return $result;
+		}
+	}
+	
+	public function viewDocument($gedId, $tableName) {
+	    $result = array();
+		try {
+			$connexion = new dbquery();
+			$connexion->connect();
+			$connexion->query("select res_id, docserver_id, path, filename, format, fingerprint from ".$tableName." where res_id = ".$gedId);
+			$line = $connexion->fetch_object();
+			$docserver = $line->docserver_id;
+			$path = $line->path;
+			$filename = $line->filename;
+			$format = $line->format;
+			$md5 = $line->fingerprint;
+			$fingerprint_from_db = $line->fingerprint;
+			$connexion->query("select path_template from "._DOCSERVERS_TABLE_NAME." where docserver_id = '".$docserver."'");
+			$line_doc = $connexion->fetch_object();
+			$docserver = $line_doc->path_template;
+			$file = $docserver.$path.$filename;
+			$file = str_replace("#", DIRECTORY_SEPARATOR, $file);
+			if(file_exists($file)) {
+				$content = file_get_contents($file, FILE_BINARY);
+				$encodedContent = base64_encode($content);
+				$result[0] = true;
+				$result[1] = $encodedContent;
+			} else {
+				$content = "file not exists";
+				$result[0] = false;
+				$result[1] = $content;
+			}
+			return $result;
+		} catch (Exception $e) {
+			$fault = new SOAP_Fault($e->getMessage(),'1');
+	        return $fault->message();
+		}
 	}
 }
 
