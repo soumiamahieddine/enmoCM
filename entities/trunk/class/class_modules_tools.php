@@ -502,7 +502,7 @@ class entities extends dbquery
 					$action_id = $line->action_id;
 					$arr[$bask_abs[$i]['id']][$action_id]['entities'] = '';
 					$arr[$bask_abs[$i]['id']][$action_id]['users_entities'] = '';
-					$tmp_arr = $this->get_redirect_groupbasket($primary_group, $tmp_basket_id, $user_id, $action_id);
+					$tmp_arr = $this->get_redirect_groupbasket($primary_group, $tmp_basket_id, $bask_abs[$i]['basket_owner'], $action_id);
 					$arr[$bask_abs[$i]['id']][$action_id]['entities'] = $tmp_arr['entities'];
 					$arr[$bask_abs[$i]['id']][$action_id]['users_entities'] = $tmp_arr['users'];
 				}
