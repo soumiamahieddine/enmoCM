@@ -20,7 +20,7 @@
 */
 
 /**
-* @brief  Contains the docserver Object (herits of the BaseObject class)
+* @brief Contains the docserver controler page
 * 
 * 
 * @file
@@ -40,13 +40,13 @@ $mode = 'add';
 
 core_tools::load_lang(); // NOTE : core_tools is not a static class
 
-if(isset($_REQUEST['mode']) && !empty($_REQUEST['mode'])){
+if(isset($_REQUEST['mode']) && !empty($_REQUEST['mode'])) {
 	$mode = $_REQUEST['mode'];
 } else {
 	$mode = 'list'; 
 }
 
-try{
+try {
 	require_once("core/class/docservers_controler.php");
 	require_once("core/class/class_request.php");
 	require_once("core/class/docserver_locations_controler.php");
@@ -58,14 +58,14 @@ try{
 	echo $e->getMessage();
 }
 
-if($mode == "up" || $mode =="add"){
+if($mode == "up" || $mode =="add") {
 	$docserverLocationsArray = array();
 	$docserverLocationsArray = docserver_locations_controler::getAllId();
 	$docserverTypesArray = array();
 	$docserverTypesArray = docserver_types_controler::getAllId();
 }
 
-if(isset($_REQUEST['submit'])){
+if(isset($_REQUEST['submit'])) {
 	// Action to do with db
 	validate_cs_submit($mode);
 } else {
@@ -102,7 +102,7 @@ if(isset($_REQUEST['submit'])){
 /**
  * Initialize session variables
  */
-function init_session(){
+function init_session() {
 	$sessionName = "docservers";
 	$_SESSION['m_admin'][$sessionName] = array();
 }
@@ -110,7 +110,7 @@ function init_session(){
 /**
  * Management of the location bar  
  */
-function location_bar_management($mode){
+function location_bar_management($mode) {
 	$sessionName = "docservers";
 	$pageName = "docservers_management_controler";
 	$tableName = "docservers";
@@ -132,7 +132,6 @@ function location_bar_management($mode){
 	$page_id = $page_ids[$mode];
 	$ct=new core_tools();
 	$ct->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
-
 }
 
 /**
@@ -184,16 +183,6 @@ function validate_cs_submit($mode) {
 				exit;
 		}
 	} else {
-		//history
-		if($_SESSION['history']['docserversadd'] == "true" && $mode == "add"){
-			require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
-			$history = new history();
-			$history->add(_DOCSERVERS_TABLE_NAME, $_REQUEST['id'], "ADD",_DOCSERVER_ADDED." : ".$_REQUEST['id'], $_SESSION['config']['databasetype']);
-		} elseif($_SESSION['history']['docserversadd'] == "true" && $mode == "up"){
-			require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
-			$history = new history();
-			$history->add(_DOCSERVERS_TABLE_NAME, $_REQUEST['id'], "UP",_DOCSERVER_UPDATED." : ".$_REQUEST['id'], $_SESSION['config']['databasetype']);
-		}
 		if($mode == "add")
 			$_SESSION['error'] = _DOCSERVER_ADDED;
 		 else
@@ -207,8 +196,8 @@ function validate_cs_submit($mode) {
  * Initialize session parameters for update display
  * @param Long $docserver_id
  */
-function display_up($docserver_id){
-	$state=true;
+function display_up($docserver_id) {
+	$state = true;
 	$docservers = docservers_controler::get($docserver_id);
 	if(empty($docservers))
 		$state = false; 
@@ -221,7 +210,7 @@ function display_up($docserver_id){
 /**
  * Initialize session parameters for add display with given docserver
  */
-function display_add(){
+function display_add() {
 	$sessionName = "docservers";
 	if(!isset($_SESSION['m_admin'][$sessionName]))
 		init_session();
@@ -230,36 +219,32 @@ function display_add(){
 /**
  * Initialize session parameters for list display
  */
-function display_list(){
+function display_list() {
 	$sessionName = "docservers";
 	$pageName = "docservers_management_controler";
 	$tableName = "docservers";
 	$idName = "docserver_id";
-	
 	$_SESSION['m_admin'] = array();
-	
 	init_session();
-	
 	$select[_DOCSERVERS_TABLE_NAME] = array();
 	array_push($select[_DOCSERVERS_TABLE_NAME], $idName, "device_label", "docserver_type_id", "size_limit_number", "actual_size_number", "coll_id", "enabled");
 	$what = "";
 	$where ="";
-	if(isset($_REQUEST['what']) && !empty($_REQUEST['what'])){
+	if(isset($_REQUEST['what']) && !empty($_REQUEST['what'])) {
 		$what = functions::protect_string_db($_REQUEST['what']);
-		if($_SESSION['config']['databasetype'] == "POSTGRESQL"){
+		if($_SESSION['config']['databasetype'] == "POSTGRESQL") {
 			$where = $idName." ilike '".strtoupper($what)."%' ";
 		} else {
 			$where = $idName." like '".strtoupper($what)."%' ";
 		}
 	}
-
 	// Checking order and order_field values
 	$order = 'asc';
-	if(isset($_REQUEST['order']) && !empty($_REQUEST['order'])){
+	if(isset($_REQUEST['order']) && !empty($_REQUEST['order'])) {
 		$order = trim($_REQUEST['order']);
 	}
 	$field = $idName;
-	if(isset($_REQUEST['order_field']) && !empty($_REQUEST['order_field'])){
+	if(isset($_REQUEST['order_field']) && !empty($_REQUEST['order_field'])) {
 		$field = trim($_REQUEST['order_field']);
 	}
 	$orderstr = list_show::define_order($order, $field);
@@ -267,7 +252,7 @@ function display_list(){
 	$tab=$request->select($select,$where,$orderstr,$_SESSION['config']['databasetype']);
 	for ($i=0;$i<count($tab);$i++) {
 		foreach($tab[$i] as &$item) {
-			switch ($item['column']){
+			switch ($item['column']) {
 				case $idName:
 					format_item($item,_ID,"18","left","left","bottom",true); break;
 				case "device_label":
@@ -287,7 +272,6 @@ function display_list(){
 					format_item($item,_ENABLED,"5","left","left","bottom",true); break;
 			}
 		}
-			
 	}
 	/*
 	 * TODO Pour éviter les actions suivantes, il y a 2 solutions :
@@ -317,19 +301,16 @@ function display_list(){
  * Delete given docserver if exists and initialize session parameters
  * @param unknown_type $docserver_id
  */
-function display_del($docserver_id){
+function display_del($docserver_id) {
 	$docservers = docservers_controler::get($docserver_id);
-	if(isset($docservers)){
+	if(isset($docservers)) {
 		// Deletion
-		if(!docservers_controler::delete($docservers)) {
-			$_SESSION['error'] = _YOU_CANNOT_DELETE." ".$docserver_id;
+		$control = array();
+		$control = docservers_controler::delete($docservers);
+		if(!empty($control['error']) && $control['error'] <> 1) {
+			$_SESSION['error'] = str_replace("#", "<br />", $control['error']);
 		} else {
 			$_SESSION['error'] = _DOCSERVER_DELETED." ".$docserver_id;
-			if($_SESSION['history']['docserversdel'] == "true"){
-				require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
-				$history = new history();
-				$history->add(_DOCSERVERS_TABLE_NAME, $docserver_id, "DEL", _DOCSERVER_DELETED." : ".$docserver_id, $_SESSION['config']['databasetype']);
-			}
 		}
 		$pageName = "docservers_management_controler";
 		?><script>window.top.location='<?php echo $_SESSION['config']['businessappurl']."index.php?page=".$pageName."&mode=list&admin=docservers"?>';</script>
@@ -345,23 +326,22 @@ function display_del($docserver_id){
  * allow given docserver if exists
  * @param unknown_type $docserver_id
  */
-function display_enable($docserver_id){
+function display_enable($docserver_id) {
 	$docservers = docservers_controler::get($docserver_id);
-	if(isset($docservers)){
+	if(isset($docservers)) {
 		// Disable
-		docservers_controler::enable($docservers);
-		$_SESSION['error'] = _DOCSERVER_ENABLED." ".$docserver_id;
-		if($_SESSION['history']['docserversallow'] == "true"){
-			require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
-			$history = new history();
-			$history->add(_DOCSERVERS_TABLE_NAME, $docserver_id, "VAL",_DOCSERVER_ENABLED." : ".$docserver_id, $_SESSION['config']['databasetype']);
+		$control = array();
+		$control = docservers_controler::enable($docservers);
+		if(!empty($control['error']) && $control['error'] <> 1) {
+			$_SESSION['error'] = str_replace("#", "<br />", $control['error']);
+		} else {
+			$_SESSION['error'] = _DOCSERVER_ENABLED." ".$docserver_id;
 		}
 		$pageName = "docservers_management_controler";
 		?><script>window.top.location='<?php echo $_SESSION['config']['businessappurl']."index.php?page=".$pageName."&mode=list&admin=docservers";?>';</script>
 		<?php
 		exit;
-	}
-	else{
+	} else {
 		// Error management
 		$_SESSION['error'] = _DOCSERVER.' '._UNKNOWN;
 	}
@@ -371,23 +351,17 @@ function display_enable($docserver_id){
  * ban given docserver if exists
  * @param unknown_type $docserver_id
  */
-function display_disable($docserver_id){
+function display_disable($docserver_id) {
 	$docservers = docservers_controler::get($docserver_id);
-	if(isset($docservers)){
+	if(isset($docservers)) {
 		// Disable
 		docservers_controler::disable($docservers);
 		$_SESSION['error'] = _DOCSERVER_DISABLED." ".$docserver_id;
-		if($_SESSION['history']['docserversban'] == "true"){
-			require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
-			$history = new history();
-			$history->add(_DOCSERVERS_TABLE_NAME, $docserver_id, "BAN", _DOCSERVER_DISABLED." : ".$docserver_id, $_SESSION['config']['databasetype']);
-		}
 		$pageName = "docservers_management_controler";
 		?><script>window.top.location='<?php echo $_SESSION['config']['businessappurl']."index.php?page=".$pageName."&mode=list&admin=docservers"?>';</script>
 		<?php
 		exit;
-	} 
-	else{
+	} else {
 		// Error management
 		$_SESSION['error'] = _DOCSERVER.' '._UNKNOWN;
 	}
@@ -406,7 +380,7 @@ function display_disable($docserver_id){
  * @param $valign
  * @param $show
  */
-function format_item(&$item,$label,$size,$label_align,$align,$valign,$show){
+function format_item(&$item,$label,$size,$label_align,$align,$valign,$show) {
 	$item['value']=functions::show_string($item['value']);	
 	$item[$item['column']]=$item['value'];
 	$item["label"]=$label;
@@ -424,8 +398,8 @@ function format_item(&$item,$label,$size,$label_align,$align,$valign,$show){
  * @param string $type
  * @param hashable $hashable
  */
-function put_in_session($type,$hashable){
-	foreach($hashable as $key=>$value){
+function put_in_session($type,$hashable) {
+	foreach($hashable as $key=>$value) {
 		// echo "Key: $key Value: $value f:".functions::show_string($value)." // ";
 		$_SESSION['m_admin'][$type][$key]=$value;
 	}
