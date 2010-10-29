@@ -92,7 +92,7 @@ class users_controler extends ObjectControler implements ObjectControlerIF
 
         self::$db=new dbquery();
         self::$db->connect();
-        $query = "select group_id, primary_group, role from ".USERGROUP_CONTENT_TABLE." where user_id = '".functions::protect_string_db($user_id)."'";
+        $query = "select uc.group_id, uc.primary_group, uc.role from ".USERGROUP_CONTENT_TABLE." uc, ".USERGROUPS_TABLE." u where uc.user_id = '".functions::protect_string_db($user_id)."' and u.enabled = 'Y' and uc.group_id = u.group_id ";
         try{
             if($_ENV['DEBUG']){echo $query.' // ';}
                     self::$db->query($query);
