@@ -68,7 +68,7 @@ class users_controler extends ObjectControler implements ObjectControlerIF
     */
     public function get($user_id, $comp_where = '', $can_be_disabled = false)
     {
-        self::set_foolish_ids(array('user_id'));
+        self::set_foolish_ids(array('user_id', 'docserver_location_id'));
         self::set_specific_id('user_id');
         $user = self::advanced_get($user_id,USERS_TABLE);
 
@@ -120,7 +120,7 @@ class users_controler extends ObjectControler implements ObjectControlerIF
         if(!isset($user) )
             return false;
 
-        self::set_foolish_ids(array('user_id'));
+        self::set_foolish_ids(array('user_id', 'docserver_location_id'));
         self::set_specific_id('user_id');
         if(self::userExists($user->user_id))
             return self::update($user);
@@ -253,7 +253,7 @@ class users_controler extends ObjectControler implements ObjectControlerIF
     */
     public function disable($user)
     {
-        self::set_foolish_ids(array('user_id'));
+        self::set_foolish_ids(array('user_id', 'docserver_location_id'));
         self::set_specific_id('user_id');
         return self::advanced_disable($user);
     }
@@ -266,7 +266,7 @@ class users_controler extends ObjectControler implements ObjectControlerIF
     */
     public function enable($user)
     {
-        self::set_foolish_ids(array('user_id'));
+        self::set_foolish_ids(array('user_id', 'docserver_location_id'));
         self::set_specific_id('user_id');
         return self::advanced_enable($user);
     }
