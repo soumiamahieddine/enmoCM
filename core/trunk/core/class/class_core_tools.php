@@ -226,7 +226,7 @@ class core_tools extends functions
         }
         //Loading custom lang file if present, this means that language constants are defined in the custom language file before other language files
         if (isset($_SESSION['custom_override_id']) && !empty($_SESSION['custom_override_id']))
-            $this->load_lang_custom_override($_SESSION['custom_override_id']);
+            self::load_lang_custom_override($_SESSION['custom_override_id']);
 
         if(isset($lang) && file_exists($maarch_directory.'apps'.DIRECTORY_SEPARATOR.$maarch_apps.DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$lang.'.php'))
         {
@@ -238,7 +238,7 @@ class core_tools extends functions
         }
         if(isset($_SESSION['modules']))
         {
-            $this->load_lang_modules($_SESSION['modules']);
+            self::load_lang_modules($_SESSION['modules']);
         }
 
     }
