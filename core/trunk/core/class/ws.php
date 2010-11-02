@@ -19,6 +19,12 @@ $SOAP_typedef['returnArray'] = array(	'status'=>'string',
 										'value'=>'string',
 										'error'=>'string'
 									);
+$SOAP_typedef['returnViewResource'] = array('status'=>'string',
+										'mime_type'=>'string',
+										'ext'=>'string',
+										'file_content'=>'string',
+										'error'=>'string'
+									);
 $SOAP_dispatch_map['docserverSave'] = array(
 										'in'  => array('docserver' => '{urn:MySoapServer}docservers', 'mode' => 'string'),
 										'out' => array('out' => '{urn:MySoapServer}returnArray'),
@@ -44,9 +50,9 @@ $SOAP_dispatch_map['docserverGet'] = array(
 										'out' => array('out' => '{urn:MySoapServer}docservers'),
 										'method' => "core#docservers::getWs"
 									);
-$SOAP_dispatch_map['viewDocument'] = array(
+$SOAP_dispatch_map['viewResource'] = array(
 										'in'  => Array('gedId' => 'integer', 'tableName' => 'string'),
-										'out' => Array('out' => 'array'),
-										'method' => "core#docservers::viewDocument"
+										'out' => Array('out' => '{urn:MySoapServer}returnViewResource'),
+										'method' => "core#docservers::viewResource"
 									);
 ?>

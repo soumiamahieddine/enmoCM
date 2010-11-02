@@ -41,6 +41,7 @@ try {
 	require_once ("core/class/ObjectControlerAbstract.php");
 	require_once ("core/class/ObjectControlerIF.php");
 	require_once ("core/class/class_security.php");
+	require_once ("core/class/class_resource.php");
 	require_once ("core/class/class_history.php");
 } catch (Exception $e) {
 	echo $e->getMessage().' // ';
@@ -752,80 +753,6 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
 		//TODO:extract on the maarch tmp dir on server or on the fly in the docserver dir ?
 		$fileNameOnTmp = $tmp.rand()."_".md5_file($fileInfos['path_to_file'])."_".$fileInfos['filename'];
 		$cp = copy($fileInfos['path_to_file'], $fileNameOnTmp);
-		//echo self::getMimeType($fileNameOnTmp);
-		if($cp == false) {
-			$result = array('error'=>_TMP_COPY_ERROR);
-			return $result;
-		} else {
-			$_exec_error = '';
-			$tmpArchive = uniqid(rand());
-			if(mkdir($tmp.$tmpArchive)) {
-				$command = '7z e -y -o'.escapeshellarg($tmp.$tmpArchive).' '.escapeshellarg($fileNameOnTmp);
-				//echo $command."<br>";
-				$tmpCmd = "";
-				exec($command, $tmpCmd, $_exec_error);
-				if($_exec_error > 0) {
-					$result = array('error'=>_PB_WITH_EXTRACTION_OF_CONTAINER." : <br>".$_exec_error);
-					return $result;
-				}
-			} else {
-				$result = array('error'=>_PB_WITH_EXTRACTION_OF_CONTAINER." : <br>".$tmp.$tmpArchive);
-				return $result;
-			}
-			$format = substr($fileInfos['offset_doc'], strrpos($fileInfos['offset_doc'], '.') + 1);
-			$result = array('path'=>$tmp.$tmpArchive.DIRECTORY_SEPARATOR.$fileInfos['offset_doc'], 'mime_type'=>self::getMimeType($tmp.$tmpArchive.DIRECTORY_SEPARATOR.$fileInfos['offset_doc']), 'format'=>$format, 'tmpArchive'=>$tmp.$tmpArchive);
-			$classScan = dir($tmp.$tmpArchive);
-			/*while(($fileScan=$classScan->read())!=false) {
-				if($fileScan=='.'||$fileScan=='..') {
-			 		continue;
-				}
-				unlink($tmp.$tmpArchive.DIRECTORY_SEPARATOR.$fileScan);
-			}*/
-			unlink($fileNameOnTmp);
-			return $result;
-			/*require_once "File/Archive.php";
-			$toExtract = $fileNameOnTmp.DIRECTORY_SEPARATOR.$fileInfos['offset_doc'];
-			$extract = File_Archive::extract(
-			    $toExtract,
-				$tmp
-				//File_Archive::toOutput()
-			);
-			//var_dump($extract);
-			$delete = unlink($fileNameOnTmp);
-			if($delete == false) {
-				$result = array('error'=>_TMP_FILE_DEL_ERROR);
-				return $result;
-			}
-			if($extract <> null) {
-				$result = array('error'=>_PB_WITH_EXTRACTION_OF_CONTAINER." : <br>".$extract->message);
-				return $result;
-			} else {
-				$format = substr($fileInfos['offset_doc'], strrpos($fileInfos['offset_doc'], '.') + 1);
-				$result = array('path'=>$tmp.$fileInfos['offset_doc'], 'mime_type'=>self::getMimeType($tmp.$fileInfos['offset_doc']), 'format'=>$format);
-				return $result;
-			}*/
-		}
-	}
-	
-	/**
-	 * Extract a file from an archive
-	 * @param  	$fileInfos infos of the doc to store, contains :
-	 * 			tmpDir : path to tmp directory
-	 * 			path_to_file : path to the file in the docserver
-	 * 			filename : name of the file
-	 * 			offset_doc : offset of the doc in the container
-	 * @return 	array with path of the extracted doc
-	 */
-	public function extractArchiveTest($fileInfos) {
-		//var_dump($fileInfos);
-		if($fileInfos['tmpDir'] == "") {
-			$tmp = $_SESSION['config']['tmppath'];
-		} else {
-			$tmp = $fileInfos['tmpDir'];
-		}
-		//TODO:extract on the maarch tmp dir on server or on the fly in the docserver dir ?
-		$fileNameOnTmp = $tmp.rand()."_".md5_file($fileInfos['path_to_file'])."_".$fileInfos['filename'];
-		$cp = copy($fileInfos['path_to_file'], $fileNameOnTmp);
 		if($cp == false) {
 			$result = array("status" => "ko", "path" => "", "mime_type" => "", "format" => "", "tmpArchive" => "", "error" => _TMP_COPY_ERROR);
 			return $result;
@@ -848,50 +775,128 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
 			$format = substr($fileInfos['offset_doc'], strrpos($fileInfos['offset_doc'], '.') + 1);
 			$result = array("status" => "ok", "path"=>$tmp.$tmpArchive.DIRECTORY_SEPARATOR.$fileInfos['offset_doc'], "mime_type"=>self::getMimeType($tmp.$tmpArchive.DIRECTORY_SEPARATOR.$fileInfos['offset_doc']), "format"=>$format, "tmpArchive"=>$tmp.$tmpArchive, "error"=> "");
 			$classScan = dir($tmp.$tmpArchive);
-			/*while(($fileScan=$classScan->read())!=false) {
-				if($fileScan=='.'||$fileScan=='..') {
-			 		continue;
-				}
-				unlink($tmp.$tmpArchive.DIRECTORY_SEPARATOR.$fileScan);
-			}*/
 			unlink($fileNameOnTmp);
 			return $result;
 		}
 	}
 	
-	public function viewDocument($gedId, $tableName) {
-	    $result = array();
-		try {
-			$connexion = new dbquery();
-			$connexion->connect();
-			$connexion->query("select res_id, docserver_id, path, filename, format, fingerprint from ".$tableName." where res_id = ".$gedId);
-			$line = $connexion->fetch_object();
-			$docserver = $line->docserver_id;
-			$path = $line->path;
-			$filename = $line->filename;
-			$format = $line->format;
-			$md5 = $line->fingerprint;
-			$fingerprint_from_db = $line->fingerprint;
-			$connexion->query("select path_template from "._DOCSERVERS_TABLE_NAME." where docserver_id = '".$docserver."'");
-			$line_doc = $connexion->fetch_object();
-			$docserver = $line_doc->path_template;
+	public function retrieveDocserverNetLinkOfResource($gedId, $tableName) {
+		$adr = array();
+		$resource = new resource();
+		$whereClause = " and 1=1";
+		$adr = $resource->getResourceAdr($tableName, $gedId, $whereClause);
+		if($adr['status'] == "ko") {
+			$result = array("status" => "ko", "value" => "", "error" => _RESOURCE_NOT_EXISTS);
+		} else {
+			$docserver = $adr['docserver_id'];
+			//retrieve infos of the docserver
+			$docserverObject = self::get($docserver);
+			//retrieve infos of the docserver type
+			require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."docserver_locations_controler.php");
+			$docserverLocationControler = new docserver_locations_controler();
+			$docserverLocationObject = $docserverLocationControler->get($docserverObject->docserver_location_id);
+			$result = array("status" => "ok", "value" => $docserverLocationObject->net_link, "error" => "");
+		}
+		return $result;
+	}
+	
+	public function viewResource($gedId, $tableName) {
+		$coreTools = new core_tools();
+		$whereClause = "";
+		if($_SESSION['origin'] <> "basket" && $_SESSION['origin'] <> "workflow") {
+			if(isset($_SESSION['user']['security'][$_SESSION['collection_id_choice']])) {
+				$whereClause = " and( ".$_SESSION['user']['security'][$_SESSION['collection_id_choice']]['DOC']['where']." ) ";
+			} else {
+				$whereClause = " and 1=1";
+			}
+		}
+		$adr = array();
+		$resource = new resource();
+		$adr = $resource->getResourceAdr($tableName, $gedId, $whereClause);
+		//return $adr;exit;
+		if($adr['status'] == "ko") {
+			$result = array("status" => "ko", "mime_type" => "", "ext" => "", "file_content" => "", "error" => _NO_RIGHT_ON_RESOURCE_OR_RESOURCE_NOT_EXISTS);
+		} else {
+			$docserver = $adr['docserver_id'];
+			$path = $adr['path'];
+			$filename = $adr['filename'];
+			$format = $adr['format'];
+			$md5 = $adr['fingerprint'];
+			$fingerprint_from_db = $adr['fingerprint'];
+			$offset_doc = $adr['offset_doc'];
+			//retrieve infos of the docserver
+			$docserverObject = self::get($docserver);
+			$docserver = $docserverObject->path_template;
 			$file = $docserver.$path.$filename;
 			$file = str_replace("#", DIRECTORY_SEPARATOR, $file);
-			if(file_exists($file)) {
-				$content = file_get_contents($file, FILE_BINARY);
-				$encodedContent = base64_encode($content);
-				$result[0] = true;
-				$result[1] = $encodedContent;
-			} else {
-				$content = "file not exists";
-				$result[0] = false;
-				$result[1] = $content;
+			$fingerprint_from_docserver = @md5_file($file);
+			//echo md5_file($file)."<br>";
+			//echo filesize($file)."<br>";
+			$adr['path_to_file'] = $file;
+			//retrieve infos of the docserver type
+			require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."docserver_types_controler.php");
+			$docserverTypeControler = new docserver_types_controler();
+			$docserverTypeObject = $docserverTypeControler->get($docserverObject->docserver_type_id);
+			if($docserverTypeObject->is_container && $offset_doc == "") {
+				$result = array("status" => "ko", "mime_type" => "", "ext" => "", "file_content" => "", "error" => _PB_WITH_OFFSET_OF_THE_DOC_IN_THE_CONTAINER);
 			}
-			return $result;
-		} catch (Exception $e) {
-			$fault = new SOAP_Fault($e->getMessage(),'1');
-	        return $fault->message();
+			//manage compressed resource
+			if($docserverTypeObject->is_compressed) {
+				$extract = array();
+				$extract = self::extractArchive($adr);
+				if($extract['status'] == "ko") {
+					$result = array("status" => "ko", "mime_type" => "", "ext" => "", "file_content" => "", "error" => $extract['error']);
+				} else {
+					$file = $extract['path'];
+					$mimeType = $extract['mime_type'];
+					$format = $extract['format'];
+				}
+			}
+			//var_dump($extract);
+			//manage view of the file
+			$use_tiny_mce = false;
+			if(strtolower($format) == 'maarch' && $coreTools->is_module_loaded('templates')) {
+				$mode = "content";
+				$type_state = true;
+				$use_tiny_mce = true;
+				$mimeType = "application/maarch";
+			} else {
+				require_once('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR."class_indexing_searching_app.php");
+				$is = new indexing_searching_app();
+				$type_state = $is->is_filetype_allowed($format);
+			}
+			if($fingerprint_from_db == $fingerprint_from_docserver) {
+				if($type_state <> false) {
+					if($_SESSION['history']['resview'] == "true") {
+						require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
+						$users = new history();
+						$users->add($tableName, $gedId, "VIEW", _VIEW_DOC_NUM."".$gedId, $_SESSION['config']['databasetype'], 'indexing_searching');
+					}
+					//count number of viewed in listinstance for the user
+					if($coreTools->is_module_loaded('entities')) {
+						require_once("modules".DIRECTORY_SEPARATOR."entities".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_manage_entities.php");
+						$ent = new entity();
+						$ent->increaseListinstanceViewed($gedId);
+					}
+					if(file_exists($file)) {
+						$content = file_get_contents($file, FILE_BINARY);
+						$encodedContent = base64_encode($content);
+						$result = array("status" => "ok", "mime_type" => $mimeType, "ext" => $format, "file_content" => $encodedContent, "error" => "");
+					} else {
+						$result = array("status" => "ko", "mime_type" => "", "ext" => "", "file_content" => "", "error" => "file not exists");
+					}
+					
+				} else {
+					$result = array("status" => "ko", "mime_type" => "", "ext" => "", "file_content" => "", "error" => _FILE_TYPE.' '._UNKNOWN);
+				}
+			} else {
+				$result = array("status" => "ko", "mime_type" => "", "ext" => "", "file_content" => "", "error" => _PB_WITH_FINGERPRINT_OF_DOCUMENT);
+			}
+			if(file_exists($extract['tmpArchive'])) {
+				self::washTmp($extract['tmpArchive']);
+			}
 		}
+		return $result;
 	}
 }
 
