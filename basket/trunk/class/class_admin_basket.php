@@ -140,7 +140,7 @@ class admin_basket extends dbquery
         }
         ?>
         <div id="inner_content" class="clearfix">
-            <div id="add_box" class="bloc">
+            <div id="add_box_diff_list" >
                 <div class="block">
                 <p><iframe name="groupbasket_form" id="groupbasket_form" src="<?php echo $_SESSION['config']['businessappurl']."index.php?display=true&module=basket&page=groupbasket_form";?>"  frameborder="0" class="frameform2" width="280px"></iframe></p>
                 </div>
