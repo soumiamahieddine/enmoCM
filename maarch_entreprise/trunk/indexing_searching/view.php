@@ -64,7 +64,7 @@ if($s_id == '') {
 		}
 	}
 	//3:retrieve the where clause
-	$where2 = "";
+	$where2 = " and 1=1";
 	if($_SESSION['origin'] <> "basket" && $_SESSION['origin'] <> "workflow") {
 		if(isset($_SESSION['user']['security'][$_SESSION['collection_id_choice']])) {
 			$where2 = " and( ".$_SESSION['user']['security'][$_SESSION['collection_id_choice']]['DOC']['where']." ) ";
@@ -72,6 +72,7 @@ if($s_id == '') {
 			$where2 = " and 1=-1";
 		}
 	}
+	
 	//4:retrieve the adr of the resource
 	$adr = array();
 	$resource = new resource();
