@@ -1044,7 +1044,7 @@ class core_tools extends functions
     {
         // Cleans the page variables and looks if she exists or not before including her
 
-        if(isset($_GET['page']))
+        if(isset($_GET['page']) && !empty($_GET['page']))
         {
             $this->f_page = $this->wash($_GET['page'],"file","","yes");
         }
@@ -1053,12 +1053,11 @@ class core_tools extends functions
             $this->loadDefaultPage();
             return true;
         }
-
         // Page is defined in a module
         if(isset($_GET['module']) && $_GET['module'] <> "core")
         {
             if(file_exists($_SESSION['config']['corepath'].'modules'.DIRECTORY_SEPARATOR.$_GET['module'].DIRECTORY_SEPARATOR.$this->f_page.".php")
-            || file_exists($_SESSION['config']['corepath'].DIRECTORY_SEPARATOR.'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].'modules'.$_GET['module'].DIRECTORY_SEPARATOR.$this->f_page.".php")
+            || file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].'modules'.$_GET['module'].DIRECTORY_SEPARATOR.$this->f_page.".php")
             )
             {
                 require('modules'.DIRECTORY_SEPARATOR.$_GET['module'].DIRECTORY_SEPARATOR.$this->f_page.".php");
