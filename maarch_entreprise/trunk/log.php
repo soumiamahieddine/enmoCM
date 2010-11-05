@@ -136,8 +136,14 @@ else
 	}
 	else
 	{
-		$pass = md5($s_pass);
-		$sec->login($s_login,$pass);
+		if(empty($s_login) || empty($s_pass)) {
+			$_SESSION['error'] =  _BAD_LOGIN_OR_PSW."...";
+			header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&page=login&coreurl=".$_SESSION['config']['coreurl']);
+			exit;
+		} else {
+			$pass = md5($s_pass);
+			$sec->login($s_login,$pass);
+		}
 	}
 }
 ?>
