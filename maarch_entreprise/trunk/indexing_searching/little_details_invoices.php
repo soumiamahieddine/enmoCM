@@ -264,7 +264,7 @@ else
                         <div class="desc block_light admin" id="desc3" style="display:none">
                             <div class="ref-unit">
                                 <?php echo _MENU." : "; ?>
-                                <a href="<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=view&id=<?php  echo $s_id; ?>&dir=indexing_searching" target="_blank"><b><?php  echo _VIEW_DOC_FULL; ?></b> </a>
+                                <a href="<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=view_resource_controler&id=<?php  echo $s_id; ?>&dir=indexing_searching" target="_blank"><b><?php  echo _VIEW_DOC_FULL; ?></b> </a>
                                         |
                                 <a href="<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=details&dir=indexing_searching&id=<?php  echo $s_id; ?>" target="_blank"><b><?php  echo _DETAILS_DOC_FULL; ?> </b></a>
                                 <hr/>
@@ -331,7 +331,7 @@ else
                             </div>
                         </div>
                     </form>
-                <iframe name="view" id="view" width="100%" height="700" frameborder="0" scrolling="no" src="<?php  echo $_SESSION['config']['businessappurl']."index.php?display=true&dir=indexing_searching&page=view&id=".$s_id;?>"></iframe>
+                <iframe name="view" id="view" width="100%" height="700" frameborder="0" scrolling="no" src="<?php  echo $_SESSION['config']['businessappurl']."index.php?display=true&dir=indexing_searching&page=view_resource_controler&id=".$s_id;?>"></iframe>
                 <?php
             }
             else

@@ -72,7 +72,6 @@ if($s_id == '') {
 			$where2 = " and 1=-1";
 		}
 	}
-	
 	//4:retrieve the adr of the resource
 	$adr = array();
 	$resource = new resource();

@@ -29,6 +29,15 @@
 * @ingroup indexing_searching
 */
 
+if(!isset($_SESSION['user']['UserId']) && $_SESSION['user']['UserId'] == "") {
+	if(trim($_SERVER['argv'][0]) <> "") {
+		header("location: reopen.php?".$_SERVER['argv'][0]);
+	} else {
+		header("location: reopen.php");
+	}
+	exit();
+}
+
 try {
 	require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
 	require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
@@ -56,6 +65,9 @@ if($s_id == '') {
 } else {
 	//2:retrieve the view
 	$table = "";
+	if(isset($_REQUEST['collid']) && $_REQUEST['collid'] <> "") {
+		$_SESSION['collection_id_choice'] = $_REQUEST['collid'];
+	}
 	if(isset($_SESSION['collection_id_choice']) && !empty($_SESSION['collection_id_choice'])) {
 		$table = $sec->retrieve_view_from_coll_id($_SESSION['collection_id_choice']);
 		if(!$table) {
@@ -73,9 +85,18 @@ if($s_id == '') {
 	$docserverLocation = array();
 	$docserverLocation = $docserverControler->retrieveDocserverNetLinkOfResource($s_id, $table);
 	if($docserverLocation['value'] <> "" && $_SESSION['config']['coreurl'] <> $docserverLocation['value']) {
-		?>
-		<iframe frameborder="0" scrolling="no" width="100%" height="100%" src="<?php echo $docserverLocation['value']."apps/maarch_entreprise/index.php?display=true&dir=indexing_searching&page=view_resource_controler&id=".$s_id;?>"></iframe>
-		<?php
+		$connexion = new dbquery();
+		$connexion->connect();
+		$connexion->query("select password from ".$_SESSION['tablename']['users']." where user_id = '".$_SESSION['user']['UserId']."'");
+		$resultUser = $connexion->fetch_object();
+		if($core_tools->isEncrypted() == "true") {
+			$proxy1 = $core_tools->encrypt($_SESSION['user']['UserId']);
+			$proxy2 = $core_tools->encrypt($resultUser->password);
+		} else {
+			$proxy1 = $_SESSION['user']['UserId'];
+			$proxy2 = $resultUser->password;
+		}
+		header("location: ".$docserverLocation['value']."ws_client.php?id=".$s_id."&table=".$table."&proxy1=".$proxy1."&proxy2=".$proxy2);
 	} else {
 		$viewResourceArr = $docserverControler->viewResource($s_id, $table);
 		if($viewResourceArr['error'] <> "") {

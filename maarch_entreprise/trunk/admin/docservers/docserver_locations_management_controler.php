@@ -168,7 +168,7 @@ function validate_cs_submit($mode){
 	if(!docserver_locations_controler::maskControl($docserver_locations->mask)){	
 		$_SESSION['error'] .= _MASK_NOT_VALID."<br>";
 	}
-	
+	$docserver_locations->net_link=$f->protect_string_db($f->wash($_REQUEST['net_link'], "no", _NET_LINK." ", 'no', 0, 32));
 
 	$status= array();
 	$status['order']=$_REQUEST['order'];

@@ -25,6 +25,11 @@
 		<ldap>false</ldap>
 		<userdefaultpassword>maarch</userdefaultpassword><!-- default user's password -->
 	</CONFIG>
+	<CRYPT>
+		<encrypt>true</encrypt>
+		<pathtopublickey>/home/user/maarchkey</pathtopublickey>
+		<pathtoprivatekey>/var/www/maarchkey.pub</pathtoprivatekey>
+	</CRYPT>
 	<TABLENAME>
 		<doctypes_first_level>doctypes_first_level</doctypes_first_level>
 		<doctypes_second_level>doctypes_second_level</doctypes_second_level>

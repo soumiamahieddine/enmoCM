@@ -128,6 +128,10 @@ if($mode == "list") {
 					<input name="mask" type="text"  id="mask" value="<?php echo functions::show($_SESSION['m_admin']['docserver_locations']['mask']); ?>"/>
 					<span>e.g: 255.255.255.0</span>
 				</p>
+				<p>
+				 	<label for="net_link"><?php echo _NET_LINK; ?> : </label>
+					<input name="net_link" type="text"  id="net_link" value="<?php echo functions::show($_SESSION['m_admin']['docserver_locations']['net_link']); ?>"/>
+				</p>
 				<p class="buttons">
 					<?php
 					if($mode == "up") {

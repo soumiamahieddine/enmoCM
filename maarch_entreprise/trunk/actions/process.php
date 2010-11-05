@@ -582,7 +582,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 		$frm_str .= '</div>';
 
 		$frm_str .= '<div id="validright">';
-		$frm_str .= '<iframe src="'.$_SESSION['config']['businesappurl'].'index.php?display=true&dir=indexing_searching&page=view&id='.$res_id.'" name="viewframe" id="viewframe"  scrolling="auto" frameborder="0" ></iframe>';
+		$frm_str .= '<iframe src="'.$_SESSION['config']['businesappurl'].'index.php?display=true&dir=indexing_searching&page=view_resource_controler&id='.$res_id.'" name="viewframe" id="viewframe"  scrolling="auto" frameborder="0" ></iframe>';
 		$frm_str .= '</div>';
 		$frm_str .= '<script type="text/javascript">resize_frame_process("modal_'.$id_action.'", "viewframe", true, true);resize_frame_process("modal_'.$id_action.'", "hist_doc", true, false);window.scrollTo(0,0);';
 		if($core_tools->is_module_loaded('folder'))

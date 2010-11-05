@@ -314,7 +314,8 @@ else
                 </p>
 
                 <p id="viewdoc">
-                    <a href="<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&dir=indexing_searching&page=view&id=<?php  echo $s_id; ?>" target="_blank"><?php  echo _VIEW_DOC; ?></a> &nbsp;| &nbsp;
+                    <a href="<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&dir=indexing_searching&page=view_resource_controler&id=<?php  echo $s_id; ?>" target="_blank"><?php  echo _VIEW_DOC; ?></a> &nbsp;| &nbsp;
+                    <!--http://127.0.0.1/maarch_entreprise_trunk/apps/maarch_entreprise/index.php?display=true&dir=indexing_searching&page=view_resource_controler&id=129&collid=letterbox_coll-->
                 </p></b>&nbsp;
             </div>
             <br/>

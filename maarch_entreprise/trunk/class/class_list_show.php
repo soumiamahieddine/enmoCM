@@ -499,7 +499,7 @@ class list_show extends functions
                         $str .= ' <div align="center">';
                         if($bool_view_document)
                         {
-                            $str .= '<a href="'.$_SESSION['config']['businessappurl'].'index.php?display=true&amp;dir=indexing_searching&amp;page=view&amp;id='.$result[$theline][0][$key].'" target="_blank" title="'._VIEW_DOC.'">';
+                            $str .= '<a href="'.$_SESSION['config']['businessappurl'].'index.php?display=true&amp;dir=indexing_searching&amp;page=view_resource_controler&amp;id='.$result[$theline][0][$key].'" target="_blank" title="'._VIEW_DOC.'">';
                             $str .= ' <img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=picto_dld.gif" alt="'._VIEW_DOC.'" border="0"/></a>';
                         }
                         $str .= ' </div>';

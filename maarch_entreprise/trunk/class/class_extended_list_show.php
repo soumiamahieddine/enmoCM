@@ -108,7 +108,7 @@ class extended_list_show extends functions
 	//Generate link to view the document
 	private function url_docview($actual_string, $theline, $result, $key)
 	{
-		$return = $_SESSION['config']['businessappurl']."index.php?display=true&dir=indexing_searching&page=view&id=".$result[$theline][0][$key];
+		$return = $_SESSION['config']['businessappurl']."index.php?display=true&dir=indexing_searching&page=view_resource_controler&id=".$result[$theline][0][$key];
 		return $return;
 	}
 
@@ -246,7 +246,7 @@ class extended_list_show extends functions
 		if ($this->params['bool_view_document'] == true)
 		{
 
-			$return = "<a href='".$_SESSION['config']['businessappurl']."index.php?display=true&dir=indexing_searching&page=view&id=".$result[$theline][0][$key]."' target=\"_blank\" title='"._VIEW_DOC."'>
+			$return = "<a href='".$_SESSION['config']['businessappurl']."index.php?display=true&dir=indexing_searching&page=view_resource_controler&id=".$result[$theline][0][$key]."' target=\"_blank\" title='"._VIEW_DOC."'>
                             <img src='".$_SESSION['config']['businessappurl']."static.php?filename=picto_dld.gif' alt='"._VIEW_DOC."' border='0'/></a>";
 			return $return;
 		}
@@ -811,7 +811,7 @@ class extended_list_show extends functions
 		{
 			$content .= '<td width="3%">';
 	        $content .= '<div align="center">';
-		    $content .= '<a href="'.$_SESSION['config']['businessappurl'].'index.php?display=true&amp;dir=indexing_searching&amp;page=view&amp;id='.$result[$theline][0][$key].'" target="_blank" title="'._VIEW_DOC.'">';
+		    $content .= '<a href="'.$_SESSION['config']['businessappurl'].'index.php?display=true&amp;dir=indexing_searching&amp;page=view_resource_controler&amp;id='.$result[$theline][0][$key].'" target="_blank" title="'._VIEW_DOC.'">';
 			$content .= '<img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=picto_dld.gif" alt="'._VIEW_DOC.'" border="0"/>';
 			$content .= '</a>';
 	        $content .= '</div>';

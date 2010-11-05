@@ -128,7 +128,7 @@ class list_show_with_template extends list_show
 	//Generate link to view the document
 	public function url_docview($actual_string, $theline, $result, $key)
 	{
-		$return = $_SESSION['config']['businessappurl']."index.php?display=true&dir=indexing_searching&page=view&id=".$result[$theline][0][$key];
+		$return = $_SESSION['config']['businessappurl']."index.php?display=true&dir=indexing_searching&page=view_resource_controler&id=".$result[$theline][0][$key];
 		return $return;
 	}
 
@@ -216,7 +216,7 @@ class list_show_with_template extends list_show
 		if ($this->bool_view_document == true)
 		{
 
-			$return = "<a href='".$_SESSION['config']['businessappurl']."index.php?display=true&dir=indexing_searching&page=view&id=".$result[$theline][0][$key]."' target=\"_blank\" title='"._VIEW_DOC."'>
+			$return = "<a href='".$_SESSION['config']['businessappurl']."index.php?display=true&dir=indexing_searching&page=view_resource_controler&id=".$result[$theline][0][$key]."' target=\"_blank\" title='"._VIEW_DOC."'>
                             <img src='".$_SESSION['config']['businessappurl']."static.php?filename=picto_dld.gif' alt='"._VIEW_DOC."' border='0'/></a>";
 			return $return;
 		}

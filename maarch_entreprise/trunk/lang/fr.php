@@ -1111,6 +1111,7 @@ if (!defined('_IPV4'))  define('_IPV4', 'Adresse IPv4');
 if (!defined('_IPV6'))  define('_IPV6', 'Adresse IPv6');
 if (!defined('_NET_DOMAIN'))  define('_NET_DOMAIN', 'Domaine');
 if (!defined('_MASK'))  define('_MASK', 'Masque');
+if (!defined('_NET_LINK'))  define('_NET_LINK', 'URL du frontal');
 
 if (!defined('_DOCSERVER_LOCATION_ADDITION'))  define('_DOCSERVER_LOCATION_ADDITION', 'Ajouter un lieu de stockage ');
 if (!defined('_DOCSERVER_LOCATION_MODIFICATION'))  define('_DOCSERVER_LOCATION_MODIFICATION', 'Modification lieu de stockage');

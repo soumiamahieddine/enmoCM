@@ -808,7 +808,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 		$frm_str .= '<script type="text/javascript">show_admin_contacts( true);</script>';
 
 		$path_file = get_file_path($res_id, $coll_id);
-		$frm_str .= '<iframe src="'.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=view&id='.$res_id.'&coll_id='.$coll_id.'" name="viewframevalid" id="viewframevalid"  scrolling="auto" frameborder="0" ></iframe>';
+		$frm_str .= '<iframe src="'.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=view_resource_controler&id='.$res_id.'&coll_id='.$coll_id.'" name="viewframevalid" id="viewframevalid"  scrolling="auto" frameborder="0" ></iframe>';
 		$frm_str .= '</div>';
 
 		/*** Extra javascript ***/

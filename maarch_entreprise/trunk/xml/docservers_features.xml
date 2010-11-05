@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ROOT>
 	<DOCSERVERS>
+		<PATHTOCOMPRESSTOOL>C:\Program Files\7-Zip\7z.exe</PATHTOCOMPRESSTOOL>
 		<OAIS>
 			<MODE>NONE</MODE>
 			<MODE>AIP_1</MODE>
