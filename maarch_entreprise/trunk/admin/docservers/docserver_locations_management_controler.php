@@ -46,9 +46,9 @@ if(isset($_REQUEST['mode']) && !empty($_REQUEST['mode'])){
 }
 
 try{
+	require_once("core/class/class_request.php");
 	require_once("core/class/docserver_locations_controler.php");
 	require_once("core/class/docservers_controler.php");
-	require_once("core/class/class_request.php");
 	if($mode == 'list'){
 		require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");
 	}

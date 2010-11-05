@@ -47,8 +47,8 @@ if(isset($_REQUEST['mode']) && !empty($_REQUEST['mode'])) {
 }
 
 try {
-	require_once("core/class/docservers_controler.php");
 	require_once("core/class/class_request.php");
+	require_once("core/class/docservers_controler.php");
 	require_once("core/class/docserver_locations_controler.php");
 	require_once("core/class/docserver_types_controler.php");
 	if($mode == 'list') {
