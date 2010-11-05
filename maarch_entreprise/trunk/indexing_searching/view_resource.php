@@ -1,4 +1,4 @@
-<? 
+<?php
 /* View */
 if($viewResourceArr['status'] <> "ko") {
 	if(strtolower($viewResourceArr['mime_type']) == "application/maarch") {
