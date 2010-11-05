@@ -760,7 +760,8 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
 			$_exec_error = "";
 			$tmpArchive = uniqid(rand());
 			if(mkdir($tmp.$tmpArchive)) {
-				$command = "7z e -y -o".escapeshellarg($tmp.$tmpArchive)." ".escapeshellarg($fileNameOnTmp);
+				//$command = "7z e -y -o".escapeshellarg($tmp.$tmpArchive)." ".escapeshellarg($fileNameOnTmp);
+				$command = "\"C:\Program Files\\7-Zip\\7z.exe\" e -y -o".escapeshellarg($tmp.$tmpArchive)." ".escapeshellarg($fileNameOnTmp);
 				//echo $command."<br>";
 				$tmpCmd = "";
 				exec($command, $tmpCmd, $_exec_error);
