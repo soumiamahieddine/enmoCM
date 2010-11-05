@@ -1471,5 +1471,100 @@ class functions
 		}
 		return $return;
 	}
+	
+	/**
+	* Function to encode an url in base64
+	*/
+	function base64UrlEncode($data) {
+		return strtr(base64_encode($data), '+/', '-_,');
+	}
+	
+	/**
+	* Function to decode an url encoded in base64
+	*/
+	function base64UrlDecode($base64) {
+		return base64_decode(strtr($base64, '-_,', '+/'));
+	}
+	
+	/**
+	* Method to generates private and public keys
+	*/
+	public function generatePrivatePublicKey() {
+		if(!file_exists($this->getPrivateKeyPath())) {
+			$inF = fopen($this->getPrivateKeyPath(),"w");
+			fclose($inF);
+		}
+		if(!file_exists($this->getPublicKeyPath())) {
+			$inF = fopen($this->getPublicKeyPath(),"w");
+			fclose($inF);
+		}
+		$privateKey = openssl_pkey_new(array(
+			'private_key_bits' => 1024,
+			'private_key_type' => OPENSSL_KEYTYPE_RSA,
+		));
+		openssl_pkey_export_to_file($privateKey, $this->getPublicKeyPath(), $passphrase);
+		$keyDetails = openssl_pkey_get_details($privateKey);
+		file_put_contents($this->getPrivateKeyPath(), $keyDetails['key']);
+	}
+	
+	/**
+	* Encrypt a text
+	* @param $text string to encrypt
+	*/
+	public function encrypt($sensitiveData) {
+		//base 64 encode to use it in url
+		$pubKey = openssl_pkey_get_public('file://'.$this->getPublicKeyPath());
+		openssl_public_encrypt($sensitiveData, $encryptedData, $pubKey);
+		return $this->base64UrlEncode($encryptedData);
+	}
+	
+	/**
+	* Decrypt a text
+	* @param $text string to decrypt
+	*/
+	public function decrypt($encryptedData) {
+		$privateKey = openssl_pkey_get_private('file://'.$this->getPrivateKeyPath(), $passphrase);
+		openssl_private_decrypt($this->base64UrlDecode($encryptedData), $decryptedData, $privateKey);
+		return $decryptedData;
+	}
+	
+	/**
+	* return the path of the private key path
+	*/
+	public function getPrivateKeyPath() {
+		if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'config.xml')) {
+			$path = $_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'config.xml';
+		} else {
+			$path = 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'config.xml';
+		}
+		$xmlconfig = simplexml_load_file($path);
+		$CRYPT = $xmlconfig->CRYPT;
+		return (string) $CRYPT->pathtoprivatekey;
+	}
+	
+	/**
+	* return the path of the public key path
+	*/
+	public function getPublicKeyPath() {
+		if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'config.xml')) {
+			$path = $_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'config.xml';
+		} else {
+			$path = 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'config.xml';
+		}
+		$xmlconfig = simplexml_load_file($path);
+		$CRYPT = $xmlconfig->CRYPT;
+		return $CRYPT->pathtopublickey;
+	}
+	
+	public function isEncrypted() {
+		if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'config.xml')) {
+			$path = $_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'config.xml';
+		} else {
+			$path = 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'config.xml';
+		}
+		$xmlconfig = simplexml_load_file($path);
+		$CRYPT = $xmlconfig->CRYPT;
+		return $CRYPT->encrypt;
+	}
 }
 ?>

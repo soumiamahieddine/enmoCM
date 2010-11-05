@@ -760,9 +760,11 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
 			$_exec_error = "";
 			$tmpArchive = uniqid(rand());
 			if(mkdir($tmp.$tmpArchive)) {
-				//$command = "7z e -y -o".escapeshellarg($tmp.$tmpArchive)." ".escapeshellarg($fileNameOnTmp);
-				$command = "\"C:\Program Files\\7-Zip\\7z.exe\" e -y -o".escapeshellarg($tmp.$tmpArchive)." ".escapeshellarg($fileNameOnTmp);
-				//echo $command."<br>";
+				if(DIRECTORY_SEPARATOR == "/") {
+					$command = "7z e -y -o".escapeshellarg($tmp.$tmpArchive)." ".escapeshellarg($fileNameOnTmp);
+				} else {
+					$command = "\"".str_replace("\\", "\\\\", $_SESSION['docserversFeatures']['DOCSERVERS']['PATHTOCOMPRESSTOOL'])."\" e -y -o".escapeshellarg($tmp.$tmpArchive)." ".escapeshellarg($fileNameOnTmp);
+				}
 				$tmpCmd = "";
 				exec($command, $tmpCmd, $_exec_error);
 				if($_exec_error > 0) {
@@ -810,6 +812,8 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
 			} else {
 				$whereClause = " and 1=1";
 			}
+		} else {
+			$whereClause = " and 1=1";
 		}
 		$adr = array();
 		$resource = new resource();

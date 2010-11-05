@@ -87,9 +87,18 @@ class webService {
 		}
 		$authenticated = false;
 		if($_SERVER["PHP_AUTH_USER"] || $_SERVER["PHP_AUTH_PW"]) {
+			require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_functions.php");
+			$func = new functions();
 			$connexion = new dbquery();
 			$connexion->connect();
-			$connexion->query("select * from ".$_SESSION['tablename']['users']." where user_id = '".$_SERVER["PHP_AUTH_USER"]."' and password = '".md5($_SERVER["PHP_AUTH_PW"])."' and STATUS <> 'DEL'");
+			if($func->isEncrypted() == "true") {
+				$_SESSION['user']['UserId'] = $func->decrypt($_SERVER["PHP_AUTH_USER"]);
+				$password = $func->decrypt($_SERVER["PHP_AUTH_PW"]);
+			} else {
+				$_SESSION['user']['UserId'] = $_SERVER["PHP_AUTH_USER"];
+				$password = $_SERVER["PHP_AUTH_PW"];
+			}
+			$connexion->query("select * from ".$_SESSION['tablename']['users']." where user_id = '".$_SESSION['user']['UserId']."' and password = '".$password."' and STATUS <> 'DEL'");
 			if($connexion->nb_result() > 0) {
 				$authenticated = true;
 			}

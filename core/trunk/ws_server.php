@@ -54,7 +54,6 @@ $webService = new webService();
 //http Authentication
 if($webService->authentication()) {
 	$business = new business_app_tools();
-	$_SESSION['user']['UserId'] = $_SERVER["PHP_AUTH_USER"];
 	$business->load_app_var_session();
 	//retrieve Maarch web service catalog
 	$webService->WSCoreCatalog();
