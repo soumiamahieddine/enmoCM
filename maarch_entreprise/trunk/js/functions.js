@@ -2,401 +2,401 @@
 var isAlreadyClick = false;
 
 function repost(php_file,update_divs,fields,action,timeout)
-	{
-		//alert('php file : '+php_file);
-		var event_count = 0;
+    {
+        //alert('php file : '+php_file);
+        var event_count = 0;
 
-		//Observe fields
-		for (var i = 0; i < fields.length; ++i) {
+        //Observe fields
+        for (var i = 0; i < fields.length; ++i) {
 
-			$(fields[i]).observe(action,send);
-		}
+            $(fields[i]).observe(action,send);
+        }
 
-		function send(event)
-		{
-			params = '';
-			event_count++;
+        function send(event)
+        {
+            params = '';
+            event_count++;
 
-			for (var i = 0; i < fields.length; ++i)
-			{
-				params += $(fields[i]).serialize()+'&';
-			}
+            for (var i = 0; i < fields.length; ++i)
+            {
+                params += $(fields[i]).serialize()+'&';
+            }
 
-			setTimeout(function() {
-				event_count--;
+            setTimeout(function() {
+                event_count--;
 
-				if(event_count == 0)
-					new Ajax.Request(php_file,
-					  {
-						method:'post',
-					    onSuccess: function(transport){
+                if(event_count == 0)
+                    new Ajax.Request(php_file,
+                      {
+                        method:'post',
+                        onSuccess: function(transport){
 
-						var response = transport.responseText;
-						var reponse_div = new Element("div");
-						reponse_div.innerHTML = response;
-						var replace_div = reponse_div.select('div');
+                        var response = transport.responseText;
+                        var reponse_div = new Element("div");
+                        reponse_div.innerHTML = response;
+                        var replace_div = reponse_div.select('div');
 
-						for (var i = 0; i < replace_div.length; ++i)
-							for(var j = 0; j < update_divs.length; ++j)
-							{
-								if(replace_div[i].id == update_divs[j])
-									$(update_divs[j]).replace(replace_div[i]);
-							}
-						},
-					    onFailure: function(){ alert('Something went wrong...'); },
-						parameters: params
-					  });
-			}, timeout);
-		}
-	}
+                        for (var i = 0; i < replace_div.length; ++i)
+                            for(var j = 0; j < update_divs.length; ++j)
+                            {
+                                if(replace_div[i].id == update_divs[j])
+                                    $(update_divs[j]).replace(replace_div[i]);
+                            }
+                        },
+                        onFailure: function(){ alert('Something went wrong...'); },
+                        parameters: params
+                      });
+            }, timeout);
+        }
+    }
 
 
-	/**
-	* List used for autocompletion
-	*
-	*/
-	var initList = function (idField, idList, theUrlToListScript, paramNameSrv, minCharsSrv)
-	{
-	    new Ajax.Autocompleter(
-	        idField,
-	        idList,
-	        theUrlToListScript,
-	        {
-	            paramName: paramNameSrv,
-	            minChars: minCharsSrv
-	        });
-	};
+    /**
+    * List used for autocompletion
+    *
+    */
+    var initList = function (idField, idList, theUrlToListScript, paramNameSrv, minCharsSrv)
+    {
+        new Ajax.Autocompleter(
+            idField,
+            idList,
+            theUrlToListScript,
+            {
+                paramName: paramNameSrv,
+                minChars: minCharsSrv
+            });
+    };
 
 
 /*********** Init vars for the calendar ****************/
-	var allMonth=[31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-	var allNameOfWeekDays=["Lu","Ma", "Me", "Je", "Ve", "Sa", "Di"];
-	var allNameOfMonths=["Janvier","Fevrier","Mars","Avril","Mai","Juin","Juillet","Aout","Septembre","Octobre","Novembre","Decembre"];
-	var newDate=new Date();
-	var yearZero=newDate.getFullYear();
-	var monthZero=newDate.getMonth();
-	var day=newDate.getDate();
-	var currentDay=0, currentDayZero=0;
-	var month=monthZero, year=yearZero;
-	var yearMin=1950, yearMax=2050;
-	var target='';
-	var hoverEle=false;
+    var allMonth=[31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+    var allNameOfWeekDays=["Lu","Ma", "Me", "Je", "Ve", "Sa", "Di"];
+    var allNameOfMonths=["Janvier","Fevrier","Mars","Avril","Mai","Juin","Juillet","Aout","Septembre","Octobre","Novembre","Decembre"];
+    var newDate=new Date();
+    var yearZero=newDate.getFullYear();
+    var monthZero=newDate.getMonth();
+    var day=newDate.getDate();
+    var currentDay=0, currentDayZero=0;
+    var month=monthZero, year=yearZero;
+    var yearMin=1950, yearMax=2050;
+    var target='';
+    var hoverEle=false;
 /***************************************
 
 /***********Functions used by the calendar ****************/
-	function setTarget(e){
-		if(e) return e.target;
-		if(event) return event.srcElement;
-	}
-	function newElement(type, attrs, content, toNode) {
-		var ele=document.createElement(type);
-		if(attrs) {
-			for(var i=0; i<attrs.length; i++) {
-				eval('ele.'+attrs[i][0]+(attrs[i][2] ? '=\u0027' :'=')+attrs[i][1]+(attrs[i][2] ? '\u0027' :''));
-			}
-		}
-		if(content) ele.appendChild(document.createTextNode(content));
-		if(toNode) toNode.appendChild(ele);
-		return ele;
-	}
-	function setMonth(ele){month=parseInt(ele.value);calender()}
-	function setYear(ele){year=parseInt(ele.value);calender()}
-	function setValue(ele) {
-		if(ele.parentNode.className=='week' && ele.firstChild){
-			var dayOut=ele.firstChild.nodeValue;
-			if(dayOut < 10) dayOut='0'+dayOut;
-			var monthOut=month+1;
-			if(monthOut < 10) monthOut='0'+monthOut;
-			target.value=dayOut+'-'+monthOut+'-'+year;
-			removeCalender();
-		}
-	}
-	function removeCalender() {
-		var parentEle=$("calender");
-		while(parentEle.firstChild) parentEle.removeChild(parentEle.firstChild);
-		$('basis').parentNode.removeChild($('basis'));
-	}
-	function calender() {
-		var parentEle=$("calender");
-		parentEle.onmouseover=function(e) {
-			var ele=setTarget(e);
-			if(ele.parentNode.className=='week' && ele.firstChild && ele!=hoverEle) {
-				if(hoverEle) hoverEle.className=hoverEle.className.replace(/hoverEle ?/,'');
-				hoverEle=ele;
-				ele.className='hoverEle '+ele.className;
-			} else {
-				if(hoverEle) {
-					hoverEle.className=hoverEle.className.replace(/hoverEle ?/,'');
-					hoverEle=false;
-				}
-			}
-		}
-		while(parentEle.firstChild) parentEle.removeChild(parentEle.firstChild);
-		function check(){
-			if(year%4==0&&(year%100!=0||year%400==0))allMonth[1]=29;
-			else allMonth[1]=28;
-		}
-		function addClass (name) { if(!currentClass){currentClass=name} else {currentClass+=' '+name} };
-		if(month < 0){month+=12; year-=1}
-		if(month > 11){month-=12; year+=1}
-		if(year==yearMax-1) yearMax+=1;
-		if(year==yearMin) yearMin-=1;
-		check();
-		var close_window=newElement('p',[['id','close',1]],false,parentEle);
+    function setTarget(e){
+        if(e) return e.target;
+        if(event) return event.srcElement;
+    }
+    function newElement(type, attrs, content, toNode) {
+        var ele=document.createElement(type);
+        if(attrs) {
+            for(var i=0; i<attrs.length; i++) {
+                eval('ele.'+attrs[i][0]+(attrs[i][2] ? '=\u0027' :'=')+attrs[i][1]+(attrs[i][2] ? '\u0027' :''));
+            }
+        }
+        if(content) ele.appendChild(document.createTextNode(content));
+        if(toNode) toNode.appendChild(ele);
+        return ele;
+    }
+    function setMonth(ele){month=parseInt(ele.value);calender()}
+    function setYear(ele){year=parseInt(ele.value);calender()}
+    function setValue(ele) {
+        if(ele.parentNode.className=='week' && ele.firstChild){
+            var dayOut=ele.firstChild.nodeValue;
+            if(dayOut < 10) dayOut='0'+dayOut;
+            var monthOut=month+1;
+            if(monthOut < 10) monthOut='0'+monthOut;
+            target.value=dayOut+'-'+monthOut+'-'+year;
+            removeCalender();
+        }
+    }
+    function removeCalender() {
+        var parentEle=$("calender");
+        while(parentEle.firstChild) parentEle.removeChild(parentEle.firstChild);
+        $('basis').parentNode.removeChild($('basis'));
+    }
+    function calender() {
+        var parentEle=$("calender");
+        parentEle.onmouseover=function(e) {
+            var ele=setTarget(e);
+            if(ele.parentNode.className=='week' && ele.firstChild && ele!=hoverEle) {
+                if(hoverEle) hoverEle.className=hoverEle.className.replace(/hoverEle ?/,'');
+                hoverEle=ele;
+                ele.className='hoverEle '+ele.className;
+            } else {
+                if(hoverEle) {
+                    hoverEle.className=hoverEle.className.replace(/hoverEle ?/,'');
+                    hoverEle=false;
+                }
+            }
+        }
+        while(parentEle.firstChild) parentEle.removeChild(parentEle.firstChild);
+        function check(){
+            if(year%4==0&&(year%100!=0||year%400==0))allMonth[1]=29;
+            else allMonth[1]=28;
+        }
+        function addClass (name) { if(!currentClass){currentClass=name} else {currentClass+=' '+name} };
+        if(month < 0){month+=12; year-=1}
+        if(month > 11){month-=12; year+=1}
+        if(year==yearMax-1) yearMax+=1;
+        if(year==yearMin) yearMin-=1;
+        check();
+        var close_window=newElement('p',[['id','close',1]],false,parentEle);
 
-		var close_link = newElement('a', [['href','javascript:removeCalender()',1],['className','close_window',1]], 'Fermer', close_window);
-		var img_close=newElement('img', [['src','img/close_small.gif',1], ['id','img_close',1]], false, close_link);
-		var control=newElement('p',[['id','control',1]],false,parentEle);
-		var controlPlus=newElement('a', [['href','javascript:month=month-1;calender()',1],['className','controlPlus',1]], '<', control);
-		var select=newElement('select', [['onchange',function(){setMonth(this)}]], false, control);
-		for(var i=0; i<allNameOfMonths.length; i++) newElement('option', [['value',i,1]], allNameOfMonths[i], select);
-		select.selectedIndex=month;
-		select=newElement('select', [['onchange',function(){setYear(this)}]], false, control);
-		for(var i=yearMin; i<yearMax; i++) newElement('option', [['value',i,1]], i, select);
-		select.selectedIndex=year-yearMin;
-		controlPlus=newElement('a', [['href','javascript:month++;calender()',1],['className','controlPlus',1]], '>', control);
-		check();
-		currentDay=1-new Date(year,month,1).getDay();
-		if(currentDay > 0) currentDay-=7;
-		currentDayZero=currentDay;
-		var newMonth=newElement('table',[['cellSpacing',0,1],['onclick',function(e){setValue(setTarget(e))}]], false, parentEle);
-		var newMonthBody=newElement('tbody', false, false, newMonth);
-		var tr=newElement('tr', [['className','head',1]], false, newMonthBody);
-		tr=newElement('tr', [['className','weekdays',1]], false, newMonthBody);
-		for(i=0;i<7;i++) td=newElement('td', false, allNameOfWeekDays[i], tr);
-		tr=newElement('tr', [['className','week',1]], false, newMonthBody);
-		for(i=0; i<allMonth[month]-currentDayZero; i++){
-			var currentClass=false;
-			currentDay++;
-			if(currentDay==day && month==monthZero && year==yearZero) addClass ('today');
-			if(currentDay <= 0 ) {
-				if(currentDayZero!=-7) td=newElement('td', false, false, tr);
-			}
-			else {
-				if((currentDay-currentDayZero)%7==0) addClass ('holiday');
-				td=newElement('td', (!currentClass ? false : [['className',currentClass,1]] ), currentDay, tr);
-				if((currentDay-currentDayZero)%7==0) tr=newElement('tr', [['className','week',1]], false, newMonthBody);
-			}
-			if(i==allMonth[month]-currentDayZero-1){
-				i++;
-				while(i%7!=0){i++;td=newElement('td', false, false, tr)};
-			}
-		}
+        var close_link = newElement('a', [['href','javascript:removeCalender()',1],['className','close_window',1]], 'Fermer', close_window);
+        var img_close=newElement('img', [['src','img/close_small.gif',1], ['id','img_close',1]], false, close_link);
+        var control=newElement('p',[['id','control',1]],false,parentEle);
+        var controlPlus=newElement('a', [['href','javascript:month=month-1;calender()',1],['className','controlPlus',1]], '<', control);
+        var select=newElement('select', [['onchange',function(){setMonth(this)}]], false, control);
+        for(var i=0; i<allNameOfMonths.length; i++) newElement('option', [['value',i,1]], allNameOfMonths[i], select);
+        select.selectedIndex=month;
+        select=newElement('select', [['onchange',function(){setYear(this)}]], false, control);
+        for(var i=yearMin; i<yearMax; i++) newElement('option', [['value',i,1]], i, select);
+        select.selectedIndex=year-yearMin;
+        controlPlus=newElement('a', [['href','javascript:month++;calender()',1],['className','controlPlus',1]], '>', control);
+        check();
+        currentDay=1-new Date(year,month,1).getDay();
+        if(currentDay > 0) currentDay-=7;
+        currentDayZero=currentDay;
+        var newMonth=newElement('table',[['cellSpacing',0,1],['onclick',function(e){setValue(setTarget(e))}]], false, parentEle);
+        var newMonthBody=newElement('tbody', false, false, newMonth);
+        var tr=newElement('tr', [['className','head',1]], false, newMonthBody);
+        tr=newElement('tr', [['className','weekdays',1]], false, newMonthBody);
+        for(i=0;i<7;i++) td=newElement('td', false, allNameOfWeekDays[i], tr);
+        tr=newElement('tr', [['className','week',1]], false, newMonthBody);
+        for(i=0; i<allMonth[month]-currentDayZero; i++){
+            var currentClass=false;
+            currentDay++;
+            if(currentDay==day && month==monthZero && year==yearZero) addClass ('today');
+            if(currentDay <= 0 ) {
+                if(currentDayZero!=-7) td=newElement('td', false, false, tr);
+            }
+            else {
+                if((currentDay-currentDayZero)%7==0) addClass ('holiday');
+                td=newElement('td', (!currentClass ? false : [['className',currentClass,1]] ), currentDay, tr);
+                if((currentDay-currentDayZero)%7==0) tr=newElement('tr', [['className','week',1]], false, newMonthBody);
+            }
+            if(i==allMonth[month]-currentDayZero-1){
+                i++;
+                while(i%7!=0){i++;td=newElement('td', false, false, tr)};
+            }
+        }
 
-	}
-	function showCalender(ele) {
-		if($('basis')) { removeCalender() }
-		else {
-			target=$(ele.id.replace(/for_/,''));
-			var basis=ele.parentNode.insertBefore(document.createElement('div'),ele);
-			basis.id='basis';
-			newElement('div', [['id','calender',1]], false, basis);
-			calender();
-		}
-	}
+    }
+    function showCalender(ele) {
+        if($('basis')) { removeCalender() }
+        else {
+            target=$(ele.id.replace(/for_/,''));
+            var basis=ele.parentNode.insertBefore(document.createElement('div'),ele);
+            basis.id='basis';
+            newElement('div', [['id','calender',1]], false, basis);
+            calender();
+        }
+    }
 
 
-	if(!window.Node){
-	  var Node = {ELEMENT_NODE : 1, TEXT_NODE : 3};
-	}
+    if(!window.Node){
+      var Node = {ELEMENT_NODE : 1, TEXT_NODE : 3};
+    }
 
-	function checkNode(node, filter){
-	  return (filter == null || node.nodeType == Node[filter] || node.nodeName.toUpperCase() == filter.toUpperCase());
-	}
+    function checkNode(node, filter){
+      return (filter == null || node.nodeType == Node[filter] || node.nodeName.toUpperCase() == filter.toUpperCase());
+    }
 
-	function getChildren(node, filter){
-	  var result = new Array();
-	   if(node != null)
-	  {
-	  	var children = node.childNodes;
-	  	for(var i = 0; i < children.length; i++)
-		{
-			if(checkNode(children[i], filter)) result[result.length] = children[i];
-	 	}
-	  }
-	  return result;
-	}
+    function getChildren(node, filter){
+      var result = new Array();
+       if(node != null)
+      {
+        var children = node.childNodes;
+        for(var i = 0; i < children.length; i++)
+        {
+            if(checkNode(children[i], filter)) result[result.length] = children[i];
+        }
+      }
+      return result;
+    }
 
-	function getChildrenByElement(node){
-	  return getChildren(node, "ELEMENT_NODE");
-	}
+    function getChildrenByElement(node){
+      return getChildren(node, "ELEMENT_NODE");
+    }
 
-	function getFirstChild(node, filter){
-	  var child;
-	  var children = node.childNodes;
-	  for(var i = 0; i < children.length; i++){
-		child = children[i];
-		if(checkNode(child, filter)) return child;
-	  }
-	  return null;
-	}
+    function getFirstChild(node, filter){
+      var child;
+      var children = node.childNodes;
+      for(var i = 0; i < children.length; i++){
+        child = children[i];
+        if(checkNode(child, filter)) return child;
+      }
+      return null;
+    }
 
-	function getFirstChildByText(node){
-	  return getFirstChild(node, "TEXT_NODE");
-	}
+    function getFirstChildByText(node){
+      return getFirstChild(node, "TEXT_NODE");
+    }
 
-	function getNextSibling(node, filter){
-	  for(var sibling = node.nextSibling; sibling != null; sibling = sibling.nextSibling){
-		if(checkNode(sibling, filter)) return sibling;
-	  }
-	  return null;
-	}
-	function getNextSiblingByElement(node){
-			return getNextSibling(node, "ELEMENT_NODE");
-	}
+    function getNextSibling(node, filter){
+      for(var sibling = node.nextSibling; sibling != null; sibling = sibling.nextSibling){
+        if(checkNode(sibling, filter)) return sibling;
+      }
+      return null;
+    }
+    function getNextSiblingByElement(node){
+            return getNextSibling(node, "ELEMENT_NODE");
+    }
 /****************************************/
 
 
 /********** Menu Functions & Properties   ******************/
 
-	var activeMenu = null;
+    var activeMenu = null;
 
-	function showMenu() {
-	  if(activeMenu){
-		activeMenu.className = "";
-		getNextSiblingByElement(activeMenu).style.display = "none";
-	  }
-	  if(this == activeMenu){
-		activeMenu = null;
-	  } else {
-		this.className = "on";
-		getNextSiblingByElement(this).style.display = "block";
-		activeMenu = this;
-	  }
-	  return false;
-	}
+    function showMenu() {
+      if(activeMenu){
+        activeMenu.className = "";
+        getNextSiblingByElement(activeMenu).style.display = "none";
+      }
+      if(this == activeMenu){
+        activeMenu = null;
+      } else {
+        this.className = "on";
+        getNextSiblingByElement(this).style.display = "block";
+        activeMenu = this;
+      }
+      return false;
+    }
 
-	function initMenu(){
-	  var menus, menu, text, aRef, i;
-	  menus = getChildrenByElement($("menu"));
-	  for(i = 0; i < menus.length; i++){
-		menu = menus[i];
-		text = getFirstChildByText(menu);
-		aRef = document.createElement("a");
-		if(aRef == null){
-			menu.replaceChild(aRef, text);
-			aRef.appendChild(text);
-			aRef.href = "#";
-			aRef.onclick = showMenu;
-			aRef.onfocus = function(){this.blur()};
-		}
-	  }
-	}
+    function initMenu(){
+      var menus, menu, text, aRef, i;
+      menus = getChildrenByElement($("menu"));
+      for(i = 0; i < menus.length; i++){
+        menu = menus[i];
+        text = getFirstChildByText(menu);
+        aRef = document.createElement("a");
+        if(aRef == null){
+            menu.replaceChild(aRef, text);
+            aRef.appendChild(text);
+            aRef.href = "#";
+            aRef.onclick = showMenu;
+            aRef.onfocus = function(){this.blur()};
+        }
+      }
+    }
 
-	if(document.createElement) window.onload = initMenu;
+    if(document.createElement) window.onload = initMenu;
 
-	function cacher_menu() {
-		with ($('menu_container')){
-			if (className=='active')
-			{
-				className='inactive';
-				$('limage').src="images/sortirmenu.gif";
-			}
-			else
-			{
-				className='active';
-				$('limage').src="images/rentrermenu.gif";
-			}
-		}
-	}
+    function cacher_menu() {
+        with ($('menu_container')){
+            if (className=='active')
+            {
+                className='inactive';
+                $('limage').src="images/sortirmenu.gif";
+            }
+            else
+            {
+                className='active';
+                $('limage').src="images/rentrermenu.gif";
+            }
+        }
+    }
 
 
-	/************** fonction pour afficher/cacher le menu     ***********/
+    /************** fonction pour afficher/cacher le menu     ***********/
 
-	function ShowHideMenu(menu,onouoff) {
-		if (typeof($) == 'function') {
-			monmenu = $(menu);
-			mondivmenu = $("menu");
-			monadmin = $("admin");
-			monhelp = $("aide");
-		}
-		else if(document.all) {
-			monmenu = document.all[menu];
-			mondivmenu = document.all["menu"];
-			monadmin = document.all["admin"];
-			monhelp = document.all["aide"];
-		}
-		else return;
+    function ShowHideMenu(menu,onouoff) {
+        if (typeof($) == 'function') {
+            monmenu = $(menu);
+            mondivmenu = $("menu");
+            monadmin = $("admin");
+            monhelp = $("aide");
+        }
+        else if(document.all) {
+            monmenu = document.all[menu];
+            mondivmenu = document.all["menu"];
+            monadmin = document.all["admin"];
+            monhelp = document.all["aide"];
+        }
+        else return;
 
-		if (menu == "ssnav") {
-			if (onouoff == "fermee") {
-				monmenu.style.display = "block";
-				monadmin.className = "on";
-			} else if (onouoff == "ouverte") {
-				monmenu.style.display = "none";
-				monadmin.className = "off";
-			}
-		}
-		else if (menu == "ssnavaide") {
-			if (onouoff == "fermee") {
-				monmenu.style.display = "block";
-				monhelp.className = "on";
-			} else if (onouoff == "ouverte") {
-				monmenu.style.display = "none";
-				monhelp.className = "off";
-			}
-		}
-		else {
-			if (onouoff == "on") {
-				monmenu.style.display = "block";
-				mondivmenu.className = "on";
-			} else if (onouoff == "off") {
-				monmenu.style.display = "none";
-				mondivmenu.className = "off";
-			}
-		}
-	}
+        if (menu == "ssnav") {
+            if (onouoff == "fermee") {
+                monmenu.style.display = "block";
+                monadmin.className = "on";
+            } else if (onouoff == "ouverte") {
+                monmenu.style.display = "none";
+                monadmin.className = "off";
+            }
+        }
+        else if (menu == "ssnavaide") {
+            if (onouoff == "fermee") {
+                monmenu.style.display = "block";
+                monhelp.className = "on";
+            } else if (onouoff == "ouverte") {
+                monmenu.style.display = "none";
+                monhelp.className = "off";
+            }
+        }
+        else {
+            if (onouoff == "on") {
+                monmenu.style.display = "block";
+                mondivmenu.className = "on";
+            } else if (onouoff == "off") {
+                monmenu.style.display = "none";
+                mondivmenu.className = "off";
+            }
+        }
+    }
 
-	function HideMenu(menu) {
-		var massnav = null ;
-		if (typeof($) == 'function') {
+    function HideMenu(menu) {
+        var massnav = null ;
+        if (typeof($) == 'function') {
 
-			if (menu == "ssnav")
-			{
-				massnav = $("ssnav");
-			}
-			else if (menu == "ssnavaide")
-			{
-				massnav = $("ssnavaide");
-			}
-		}
-		else if(document.all) {
-			if (menu == "ssnav")
-			{
-				massnav = document.all["ssnav"];
-			}
-			else if (menu == "ssnavaide")
-			{
-				massnav = document.all["ssnavaide"];
-			}
-		}
-		else return;
+            if (menu == "ssnav")
+            {
+                massnav = $("ssnav");
+            }
+            else if (menu == "ssnavaide")
+            {
+                massnav = $("ssnavaide");
+            }
+        }
+        else if(document.all) {
+            if (menu == "ssnav")
+            {
+                massnav = document.all["ssnav"];
+            }
+            else if (menu == "ssnavaide")
+            {
+                massnav = document.all["ssnavaide"];
+            }
+        }
+        else return;
 
-		if(massnav != null)
-		{
-			massnav.style.display = "none";
-		}
-	}
+        if(massnav != null)
+        {
+            massnav.style.display = "none";
+        }
+    }
 /****************************************/
 
-	function changeCouleur(ligne,couleurPolice,isBold) { //, couleurFond
-			//ligne.style.backgroundColor = couleurFond;
-			ligne.style.color=couleurPolice;
-			}
+    function changeCouleur(ligne,couleurPolice,isBold) { //, couleurFond
+            //ligne.style.backgroundColor = couleurFond;
+            ligne.style.color=couleurPolice;
+            }
 
-	function changeCouleur2(cellule,couleurPolice,isBold)
-	{
-		var ligne = cellule.parentNode;
-		ligne.style.color=couleurPolice;
-	}
+    function changeCouleur2(cellule,couleurPolice,isBold)
+    {
+        var ligne = cellule.parentNode;
+        ligne.style.color=couleurPolice;
+    }
 
 
 
 function ouvreFenetre(page, largeur, hauteur)
-	 {
-	  window.open(page, "", "scrollbars=yes,menubar=no,toolbar=no,resizable=yes,width="
-	  + largeur + ",height=" + hauteur );
-	}
+     {
+      window.open(page, "", "scrollbars=yes,menubar=no,toolbar=no,resizable=yes,width="
+      + largeur + ",height=" + hauteur );
+    }
 
 /************** Fonction utilisées pour la gestion des listes multiples  ***********/
 
@@ -408,16 +408,16 @@ function ouvreFenetre(page, largeur, hauteur)
 */
 function Move(list1,list2)
 {
-	for (i=0;i<list1.length;i++)
-	{
-		if(list1[i].selected)
-		{
-			o = new Option(list1.options[list1.options.selectedIndex].text,list1.options[list1.options.selectedIndex].value,false, true);
-			list2.options[list2.options.length]=o;
-			list1.options[list1.options.selectedIndex]=null;
-			i--;
-		}
-	}
+    for (i=0;i<list1.length;i++)
+    {
+        if(list1[i].selected)
+        {
+            o = new Option(list1.options[list1.options.selectedIndex].text,list1.options[list1.options.selectedIndex].value,false, true);
+            list2.options[list2.options.length]=o;
+            list1.options[list1.options.selectedIndex]=null;
+            i--;
+        }
+    }
 }
 
 /**
@@ -428,9 +428,9 @@ function Move(list1,list2)
 */
 function moveclick(list1,list2)
 {
-	o = new Option(list1.options[list1.options.selectedIndex].text,list1.options[list1.options.selectedIndex].value,false, true);
-	list2.options[list2.options.length]=o;
-	list1.options[list1.options.selectedIndex]=null;
+    o = new Option(list1.options[list1.options.selectedIndex].text,list1.options[list1.options.selectedIndex].value,false, true);
+    list2.options[list2.options.length]=o;
+    list1.options[list1.options.selectedIndex]=null;
 }
 
 /**
@@ -440,10 +440,10 @@ function moveclick(list1,list2)
 */
 function selectall(list)
 {
-	for (i=0;i<list.length;i++)
-	{
-		list[i].selected = true;
-	}
+    for (i=0;i<list.length;i++)
+    {
+        list[i].selected = true;
+    }
 }
 
 /**
@@ -454,9 +454,9 @@ function selectall(list)
 */
 function moveclick_ext( id_list1, id_list2)
 {
-	var list1 = $(id_list1);
-	var list2 = $(id_list2);
-	moveclick(list1,list2);
+    var list1 = $(id_list1);
+    var list2 = $(id_list2);
+    moveclick(list1,list2);
 }
 
 /**
@@ -466,8 +466,8 @@ function moveclick_ext( id_list1, id_list2)
 */
 function selectall_ext(id_list)
 {
-	var list = $(id_list);
-	selectall(list);
+    var list = $(id_list);
+    selectall(list);
 }
 
 /**
@@ -478,126 +478,126 @@ function selectall_ext(id_list)
 */
 function Move_ext( id_list1, id_list2)
 {
-	var list1 = $(id_list1);
-	var list2 = $(id_list2);
-	Move(list1,list2);
+    var list1 = $(id_list1);
+    var list2 = $(id_list2);
+    Move(list1,list2);
 }
 /*********************************************************/
 
 
 var BrowserDetect = {
-	init: function () {
-		this.browser = this.searchString(this.dataBrowser) || "An unknown browser";
-		this.version = this.searchVersion(navigator.userAgent)
-			|| this.searchVersion(navigator.appVersion)
-			|| "an unknown version";
-		this.OS = this.searchString(this.dataOS) || "an unknown OS";
-	},
-	searchString: function (data) {
-		for (var i=0;i<data.length;i++)	{
-			var dataString = data[i].string;
-			var dataProp = data[i].prop;
-			this.versionSearchString = data[i].versionSearch || data[i].identity;
-			if (dataString) {
-				if (dataString.indexOf(data[i].subString) != -1)
-					return data[i].identity;
-			}
-			else if (dataProp)
-				return data[i].identity;
-		}
-	},
-	searchVersion: function (dataString) {
-		var index = dataString.indexOf(this.versionSearchString);
-		if (index == -1) return;
-		return parseFloat(dataString.substring(index+this.versionSearchString.length+1));
-	},
-	dataBrowser: [
-		{
-			string: navigator.userAgent,
-			subString: "Chrome",
-			identity: "Chrome"
-		},
-		{ 	string: navigator.userAgent,
-			subString: "OmniWeb",
-			versionSearch: "OmniWeb/",
-			identity: "OmniWeb"
-		},
-		{
-			string: navigator.vendor,
-			subString: "Apple",
-			identity: "Safari",
-			versionSearch: "Version"
-		},
-		{
-			prop: window.opera,
-			identity: "Opera"
-		},
-		{
-			string: navigator.vendor,
-			subString: "iCab",
-			identity: "iCab"
-		},
-		{
-			string: navigator.vendor,
-			subString: "KDE",
-			identity: "Konqueror"
-		},
-		{
-			string: navigator.userAgent,
-			subString: "Firefox",
-			identity: "Firefox"
-		},
-		{
-			string: navigator.vendor,
-			subString: "Camino",
-			identity: "Camino"
-		},
-		{		// for newer Netscapes (6+)
-			string: navigator.userAgent,
-			subString: "Netscape",
-			identity: "Netscape"
-		},
-		{
-			string: navigator.userAgent,
-			subString: "MSIE",
-			identity: "Explorer",
-			versionSearch: "MSIE"
-		},
-		{
-			string: navigator.userAgent,
-			subString: "Gecko",
-			identity: "Mozilla",
-			versionSearch: "rv"
-		},
-		{ 		// for older Netscapes (4-)
-			string: navigator.userAgent,
-			subString: "Mozilla",
-			identity: "Netscape",
-			versionSearch: "Mozilla"
-		}
-	],
-	dataOS : [
-		{
-			string: navigator.platform,
-			subString: "Win",
-			identity: "Windows"
-		},
-		{
-			string: navigator.platform,
-			subString: "Mac",
-			identity: "Mac"
-		},
-		{
-			   string: navigator.userAgent,
-			   subString: "iPhone",
-			   identity: "iPhone/iPod"
-	    },
-		{
-			string: navigator.platform,
-			subString: "Linux",
-			identity: "Linux"
-		}
-	]
+    init: function () {
+        this.browser = this.searchString(this.dataBrowser) || "An unknown browser";
+        this.version = this.searchVersion(navigator.userAgent)
+            || this.searchVersion(navigator.appVersion)
+            || "an unknown version";
+        this.OS = this.searchString(this.dataOS) || "an unknown OS";
+    },
+    searchString: function (data) {
+        for (var i=0;i<data.length;i++) {
+            var dataString = data[i].string;
+            var dataProp = data[i].prop;
+            this.versionSearchString = data[i].versionSearch || data[i].identity;
+            if (dataString) {
+                if (dataString.indexOf(data[i].subString) != -1)
+                    return data[i].identity;
+            }
+            else if (dataProp)
+                return data[i].identity;
+        }
+    },
+    searchVersion: function (dataString) {
+        var index = dataString.indexOf(this.versionSearchString);
+        if (index == -1) return;
+        return parseFloat(dataString.substring(index+this.versionSearchString.length+1));
+    },
+    dataBrowser: [
+        {
+            string: navigator.userAgent,
+            subString: "Chrome",
+            identity: "Chrome"
+        },
+        {   string: navigator.userAgent,
+            subString: "OmniWeb",
+            versionSearch: "OmniWeb/",
+            identity: "OmniWeb"
+        },
+        {
+            string: navigator.vendor,
+            subString: "Apple",
+            identity: "Safari",
+            versionSearch: "Version"
+        },
+        {
+            prop: window.opera,
+            identity: "Opera"
+        },
+        {
+            string: navigator.vendor,
+            subString: "iCab",
+            identity: "iCab"
+        },
+        {
+            string: navigator.vendor,
+            subString: "KDE",
+            identity: "Konqueror"
+        },
+        {
+            string: navigator.userAgent,
+            subString: "Firefox",
+            identity: "Firefox"
+        },
+        {
+            string: navigator.vendor,
+            subString: "Camino",
+            identity: "Camino"
+        },
+        {       // for newer Netscapes (6+)
+            string: navigator.userAgent,
+            subString: "Netscape",
+            identity: "Netscape"
+        },
+        {
+            string: navigator.userAgent,
+            subString: "MSIE",
+            identity: "Explorer",
+            versionSearch: "MSIE"
+        },
+        {
+            string: navigator.userAgent,
+            subString: "Gecko",
+            identity: "Mozilla",
+            versionSearch: "rv"
+        },
+        {       // for older Netscapes (4-)
+            string: navigator.userAgent,
+            subString: "Mozilla",
+            identity: "Netscape",
+            versionSearch: "Mozilla"
+        }
+    ],
+    dataOS : [
+        {
+            string: navigator.platform,
+            subString: "Win",
+            identity: "Windows"
+        },
+        {
+            string: navigator.platform,
+            subString: "Mac",
+            identity: "Mac"
+        },
+        {
+               string: navigator.userAgent,
+               subString: "iPhone",
+               identity: "iPhone/iPod"
+        },
+        {
+            string: navigator.platform,
+            subString: "Linux",
+            identity: "Linux"
+        }
+    ]
 
 };
 
@@ -613,102 +613,102 @@ BrowserDetect.init();
 */
 function resize_frame_process(id_modal, id_frame, resize_width, resize_height)
 {
-	var modal = $(id_modal);
-	if(modal)
-	{
-		var newwith = modal.getWidth();
-		//alert(newwith);
-		var newheight = modal.getHeight() - 30;
+    var modal = $(id_modal);
+    if(modal)
+    {
+        var newwith = modal.getWidth();
+        //alert(newwith);
+        var newheight = modal.getHeight() - 30;
 
-		//console.log('modal width '+newwith);
-		var frame2 = $(id_frame);
-		var div_left = $('validleft');
-		var windowSize = new Array();
-		if(resize_width == true && frame2 != null)
-		{
-			windowSize = getWindowSize();
-			//console.log('window '+windowSize);
-			navName = BrowserDetect.browser;
-			navVersion = BrowserDetect.version;
+        //console.log('modal width '+newwith);
+        var frame2 = $(id_frame);
+        var div_left = $('validleft');
+        var windowSize = new Array();
+        if(resize_width == true && frame2 != null)
+        {
+            windowSize = getWindowSize();
+            //console.log('window '+windowSize);
+            navName = BrowserDetect.browser;
+            navVersion = BrowserDetect.version;
 
-			if(id_frame == 'file_iframe')
-			{
-				//~ var div_right = $('validright');
-				//~ if(div_right && div_left)
-				//~ {
-					//~ Element.setStyle(div_right, {width : ((newwith - div_left.getWidth()) -50) +'px' });
-					//~ //div_right.style.width=((newwith - div_left.getWidth()) -50) +'px';
-					//~ newwith = (newwith - div_left.getWidth())- 30;
-				//~ }
-				if(navName == 'Explorer')
-				{
-					if(navVersion < 7)
-					{
-						newwith = (windowSize[0] - 800) - 10;
-					}
-					else
-					{
-						newwith = (windowSize[0] - 520) - 10;
-					}
-				}
-				else if(navName == 'Firefox' || navName == 'Mozilla')
-				{
-					 newwith = (windowSize[0] - 550) - 10;
-				}
-				else
-				{
-					newwith = (windowSize[0] - 550) - 10;
-				}
-			}
-			else if(id_frame == 'viewframe')
-			{
-				if(navName == 'Explorer')
-				{
-					if(navVersion < 7)
-					{
-						newwith = (windowSize[0] - 510);
-					}
-					else
-					{
-						newwith = (windowSize[0] - 480);
-					}
+            if(id_frame == 'file_iframe')
+            {
+                //~ var div_right = $('validright');
+                //~ if(div_right && div_left)
+                //~ {
+                    //~ Element.setStyle(div_right, {width : ((newwith - div_left.getWidth()) -50) +'px' });
+                    //~ //div_right.style.width=((newwith - div_left.getWidth()) -50) +'px';
+                    //~ newwith = (newwith - div_left.getWidth())- 30;
+                //~ }
+                if(navName == 'Explorer')
+                {
+                    if(navVersion < 7)
+                    {
+                        newwith = (windowSize[0] - 800) - 10;
+                    }
+                    else
+                    {
+                        newwith = (windowSize[0] - 520) - 10;
+                    }
+                }
+                else if(navName == 'Firefox' || navName == 'Mozilla')
+                {
+                     newwith = (windowSize[0] - 550) - 10;
+                }
+                else
+                {
+                    newwith = (windowSize[0] - 550) - 10;
+                }
+            }
+            else if(id_frame == 'viewframe')
+            {
+                if(navName == 'Explorer')
+                {
+                    if(navVersion < 7)
+                    {
+                        newwith = (windowSize[0] - 510);
+                    }
+                    else
+                    {
+                        newwith = (windowSize[0] - 480);
+                    }
 
-				}
-				else if(navName == 'Firefox')
-				{
-					newwith = (windowSize[0] - 500);
-				}
-				else
-				{
-					newwith = (windowSize[0] - 500);
-				}
-			}
-			else if(id_frame == 'viewframevalid')
-			{
-				if(navName == 'Explorer')
-				{
-					newwith = (windowSize[0] - 520) - 10;
-				}
-				else if(navName == 'Firefox')
-				{
-					newwith = (windowSize[0] - 550) - 10;
-				}
-				else
-				{
-					newwith = (windowSize[0] - 550) - 10;
-				}
-			}
-			else
-			{
-				newwith = (windowSize[0] - 600);
-			}
-			frame2.style.width =  newwith +"px";
-		}
-		if(resize_height == true && frame2 != null)
-		{
-			frame2.style.height = newheight +"px";
-		}
-	}
+                }
+                else if(navName == 'Firefox')
+                {
+                    newwith = (windowSize[0] - 500);
+                }
+                else
+                {
+                    newwith = (windowSize[0] - 500);
+                }
+            }
+            else if(id_frame == 'viewframevalid')
+            {
+                if(navName == 'Explorer')
+                {
+                    newwith = (windowSize[0] - 520) - 10;
+                }
+                else if(navName == 'Firefox')
+                {
+                    newwith = (windowSize[0] - 550) - 10;
+                }
+                else
+                {
+                    newwith = (windowSize[0] - 550) - 10;
+                }
+            }
+            else
+            {
+                newwith = (windowSize[0] - 600);
+            }
+            frame2.style.width =  newwith +"px";
+        }
+        if(resize_height == true && frame2 != null)
+        {
+            frame2.style.height = newheight +"px";
+        }
+    }
 }
 
 
@@ -722,37 +722,37 @@ function resize_frame_process(id_modal, id_frame, resize_width, resize_height)
 */
 function resize_frame_view(id_modal, id_frame, resize_width, resize_height)
 {
-	var modal = $(id_modal);
-	if(modal)
-	{
-		var newwidth = modal.getWidth();
-		var newheight = modal.getHeight() - 30;
-		var frame2 = $(id_frame);
-		var windowSize = new Array();
-		if(frame2 != null)
-		{
-			windowSize = getWindowSize();
-			newwidth = windowSize[0] - 40;
-			frame2.style.width = newwidth + "px";
-		}
-		if(resize_height == true && frame2 != null)
-		{
-			newheight = windowSize[1] - 90;
-			frame2.style.height = newheight + "px";
-		}
-	}
+    var modal = $(id_modal);
+    if(modal)
+    {
+        var newwidth = modal.getWidth();
+        var newheight = modal.getHeight() - 30;
+        var frame2 = $(id_frame);
+        var windowSize = new Array();
+        if(frame2 != null)
+        {
+            windowSize = getWindowSize();
+            newwidth = windowSize[0] - 40;
+            frame2.style.width = newwidth + "px";
+        }
+        if(resize_height == true && frame2 != null)
+        {
+            newheight = windowSize[1] - 90;
+            frame2.style.height = newheight + "px";
+        }
+    }
 }
 
 function getWindowSize(){
-	if (window.innerWidth || window.innerHeight){
-		var width = window.innerWidth;
-		var height = window.innerHeight;
-	}
-	else{
-		var width = $(document.documentElement).getWidth();
-		var height = $(document.documentElement).getHeight();
-	}
-	return [width,height];
+    if (window.innerWidth || window.innerHeight){
+        var width = window.innerWidth;
+        var height = window.innerHeight;
+    }
+    else{
+        var width = $(document.documentElement).getWidth();
+        var height = $(document.documentElement).getHeight();
+    }
+    return [width,height];
 }
 
 
@@ -774,21 +774,21 @@ function redirect_to_url(url)
  */
 function session_expirate(expiration, url)
 {
-	var chronoExpiration=setTimeout('redirect_to_url(\''+url+'\')', expiration*60*1000);
+    var chronoExpiration=setTimeout('redirect_to_url(\''+url+'\')', expiration*60*1000);
 }
 
 /*************** Tabs functions *****************/
 
 function opentab(eleframe, url)
 {
-	var eleframe1 = $(eleframe);
-	eleframe1.src = url;
+    var eleframe1 = $(eleframe);
+    eleframe1.src = url;
 }
 
 function opentab_window(eleframe, url)
 {
-	var eleframe1 = window.top.$(eleframe);
-	eleframe1.src = url;
+    var eleframe1 = window.top.$(eleframe);
+    eleframe1.src = url;
 }
 /********************************/
 
@@ -796,17 +796,17 @@ function opentab_window(eleframe, url)
 
 function displayModal(url, id_mod, height, width, mode_frm )
 {
-	new Ajax.Request(url,
-		{
-			method:'post',
-			parameters: { 
-					},
-				onSuccess: function(answer){
-				createModal(answer.responseText,id_mod, height, width, mode_frm );
-				},
-				onFailure: function(){
-				}
-			});
+    new Ajax.Request(url,
+        {
+            method:'post',
+            parameters: {
+                    },
+                onSuccess: function(answer){
+                createModal(answer.responseText,id_mod, height, width, mode_frm );
+                },
+                onFailure: function(){
+                }
+            });
 }
 
 /**
@@ -819,68 +819,68 @@ function displayModal(url, id_mod, height, width, mode_frm )
  * @param mode_frm String Modal mode : fullscreen or ''
  */
  function createModal(txt, id_mod,height, width, mode_frm){
-	if(height == undefined || height=='')
-	{
-		height = '100px';
-	}
-	if(width == undefined || width=='')
-	{
-		width = '400px';
-	}
-	if( mode_frm == 'fullscreen')
-	{
-		width = (screen.availWidth)+'px';
-		height = (screen.availHeight)+'px';
-	}
+    if(height == undefined || height=='')
+    {
+        height = '100px';
+    }
+    if(width == undefined || width=='')
+    {
+        width = '400px';
+    }
+    if( mode_frm == 'fullscreen')
+    {
+        width = (screen.availWidth)+'px';
+        height = (screen.availHeight)+'px';
+    }
 
-	if(id_mod && id_mod!='')
-	{
-		id_layer = id_mod+'_layer';
-	}
-	else
-	{
-		id_mod = 'modal';
-		id_layer = 'lb1-layer';
-	}
-	var tmp_width = width;
-	var tmp_height = height;
+    if(id_mod && id_mod!='')
+    {
+        id_layer = id_mod+'_layer';
+    }
+    else
+    {
+        id_mod = 'modal';
+        id_layer = 'lb1-layer';
+    }
+    var tmp_width = width;
+    var tmp_height = height;
 
-	var layer_height = $('container').clientHeight;
+    var layer_height = $('container').clientHeight;
 
-	if(layer_height < $('container').scrollHeight)
-	{
-		layer_height = 5 * layer_height;
-	}
-	else if(layer_height = $('container').scrollHeight)
-	{
-		layer_height = 2 * layer_height;
-	}
-	
+    if(layer_height < $('container').scrollHeight)
+    {
+        layer_height = 5 * layer_height;
+    }
+    else if(layer_height = $('container').scrollHeight)
+    {
+        layer_height = 2 * layer_height;
+    }
+
     var layer = new Element('div', {'id':id_layer, 'class' : 'lb1-layer', 'style' : "display:block;filter:alpha(opacity=70);opacity:.70;z-index:"+get_z_indexes()['layer']+';width :'+ (document.getElementsByTagName('html')[0].offsetWidth)+"px;height:"+layer_height+'px;'});
 
 
-	if( mode_frm == 'fullscreen')
-	{
-   		var fenetre = new Element('div', {'id' :id_mod,'class' : 'modal', 'style' :'top:0px;left:0px;width:'+width+';height:'+height+";z-index:"+get_z_indexes()['modal']+";position:absolute;" });
-	}
-	else
-	{
-		var fenetre = new Element('div', {'id' :id_mod,'class' : 'modal', 'style' :'top:0px;left:0px;'+'width:'+width+';height:'+height+";z-index:"+get_z_indexes()['modal']+";margin-top:0px;margin-left:0px;position:absolute;" });
-	}
+    if( mode_frm == 'fullscreen')
+    {
+        var fenetre = new Element('div', {'id' :id_mod,'class' : 'modal', 'style' :'top:0px;left:0px;width:'+width+';height:'+height+";z-index:"+get_z_indexes()['modal']+";position:absolute;" });
+    }
+    else
+    {
+        var fenetre = new Element('div', {'id' :id_mod,'class' : 'modal', 'style' :'top:0px;left:0px;'+'width:'+width+';height:'+height+";z-index:"+get_z_indexes()['modal']+";margin-top:0px;margin-left:0px;position:absolute;" });
+    }
 
-	Element.insert(document.body,layer);
-	Element.insert(document.body,fenetre);
-  
-	if( mode_frm == 'fullscreen')
-	{
-		fenetre.style.width = (document.getElementsByTagName('html')[0].offsetWidth - 30)+"px";
-		fenetre.style.height = (document.getElementsByTagName('body')[0].offsetHeight - 20)+"px";
-	}
+    Element.insert(document.body,layer);
+    Element.insert(document.body,fenetre);
 
-	Element.update(fenetre,txt);
+    if( mode_frm == 'fullscreen')
+    {
+        fenetre.style.width = (document.getElementsByTagName('html')[0].offsetWidth - 30)+"px";
+        fenetre.style.height = (document.getElementsByTagName('body')[0].offsetHeight - 20)+"px";
+    }
+
+    Element.update(fenetre,txt);
     Event.observe(layer, 'mousewheel', function(event){Event.stop(event);}.bindAsEventListener(), true);
     Event.observe(layer, 'DOMMouseScroll', function(event){Event.stop(event);}.bindAsEventListener(), false);
-	$(id_mod).focus();
+    $(id_mod).focus();
 }
 
 /**
@@ -889,19 +889,19 @@ function displayModal(url, id_mod, height, width, mode_frm )
  * @param id_mod String Modal identifier
  */
 function destroyModal(id_mod){
-	if(id_mod == undefined || id_mod=='')
-	{
-		id_mod = 'modal';
-		id_layer = 'lb1-layer';
-	}
-	else
-	{
-		id_layer = id_mod+'_layer';
-	}
-	if(isAlreadyClick)
-	{
-		isAlreadyClick = false;
-	}
+    if(id_mod == undefined || id_mod=='')
+    {
+        id_mod = 'modal';
+        id_layer = 'lb1-layer';
+    }
+    else
+    {
+        id_layer = id_mod+'_layer';
+    }
+    if(isAlreadyClick)
+    {
+        isAlreadyClick = false;
+    }
     document.getElementsByTagName('body')[0].removeChild($(id_mod));
     document.getElementsByTagName('body')[0].removeChild($(id_layer));
 }
@@ -914,26 +914,26 @@ function destroyModal(id_mod){
 function get_z_indexes()
 {
 
-	var elem = document.getElementsByClassName('modal');
-	if(elem == undefined || elem == NaN)
-	{
-		return {layer : 995, modal : 1000};
-	}
-	else
-	{
-		var max_modal = 1000;
-		for(var i=0; i< elem.length; i++)
-		{
-			if(elem[i].style.zIndex >= max_modal)
-			{
-				max_modal = elem[i].style.zIndex;
-			}
-		}
-		max_layer = max_modal +5;
-		max_modal = max_modal +10;
+    var elem = document.getElementsByClassName('modal');
+    if(elem == undefined || elem == NaN)
+    {
+        return {layer : 995, modal : 1000};
+    }
+    else
+    {
+        var max_modal = 1000;
+        for(var i=0; i< elem.length; i++)
+        {
+            if(elem[i].style.zIndex >= max_modal)
+            {
+                max_modal = elem[i].style.zIndex;
+            }
+        }
+        max_layer = max_modal +5;
+        max_modal = max_modal +10;
 
-		return {layer : max_layer, modal : max_modal};
-	}
+        return {layer : max_layer, modal : max_modal};
+    }
 }
 
 /**
@@ -961,41 +961,41 @@ function get_z_indexes()
 * Object
 */
 var pile_actions = { values :[],
-			 action_push:function(val){this.values.push(val);},
-			 action_pop:function(){return this.values.pop();}
-			};
+             action_push:function(val){this.values.push(val);},
+             action_pop:function(){return this.values.pop();}
+            };
 var res_ids = '';
 var do_nothing = false;
 
 var actions_status = { values :[],
-			 action_push:function(val){this.values.push(val);},
-			  action_pop:function(){return this.values.pop();}
-			};
+             action_push:function(val){this.values.push(val);},
+              action_pop:function(){return this.values.pop();}
+            };
 /**
  * Executes the last actions in the actions pile
  *
  */
 function end_actions()
 {
-	var req_action = pile_actions.action_pop();
-	if(req_action)
-	{
-		if(req_action.match('to_define'))
-		{
-			req_action = req_action.replace('to_define', res_ids);
-			do_nothing = true;
-		}
-		//console.log('end_action : '+req_action);
-		//alert('end_action : '+req_action);
-		try{
-			eval(req_action);
-		}
-		catch(e)
-		{
-			alert('Error during pop action : '+req_action);
-		}
-	}
-	
+    var req_action = pile_actions.action_pop();
+    if(req_action)
+    {
+        if(req_action.match('to_define'))
+        {
+            req_action = req_action.replace('to_define', res_ids);
+            do_nothing = true;
+        }
+        //console.log('end_action : '+req_action);
+        //alert('end_action : '+req_action);
+        try{
+            eval(req_action);
+        }
+        catch(e)
+        {
+            alert('Error during pop action : '+req_action);
+        }
+    }
+
 }
 
 /**
@@ -1004,34 +1004,34 @@ function end_actions()
  */
 function close_action(id_action, page, path_manage_script, mode_req, res_id_values, tablename, id_coll)
 {
-	var modal = $('modal_'+id_action);
-	if(modal)
-	{
-		destroyModal('modal_'+id_action);
-	}
-	if(pile_actions.values.length == 0)
-	{
-		if(actions_status.values.length > 0)
-		{
-			var status = actions_status.values[actions_status.values.length -1];
-			action_done = action_change_status(path_manage_script, mode_req, res_id_values, tablename, id_coll, status,page);
-		}
-		else
-		{
-			if(page != '' && page != NaN && page && page != null )
-			{
-				do_nothing = false;
-				window.top.location.href=page;
+    var modal = $('modal_'+id_action);
+    if(modal)
+    {
+        destroyModal('modal_'+id_action);
+    }
+    if(pile_actions.values.length == 0)
+    {
+        if(actions_status.values.length > 0)
+        {
+            var status = actions_status.values[actions_status.values.length -1];
+            action_done = action_change_status(path_manage_script, mode_req, res_id_values, tablename, id_coll, status,page);
+        }
+        else
+        {
+            if(page != '' && page != NaN && page && page != null )
+            {
+                do_nothing = false;
+                window.top.location.href=page;
 
-			}
-			else if(do_nothing == false)
-			{
-				window.top.location.reload();
-			}
-			do_nothing = false;
-		}
-		
-	}
+            }
+            else if(do_nothing == false)
+            {
+                window.top.location.reload();
+            }
+            do_nothing = false;
+        }
+
+    }
 }
 
 /**
@@ -1048,89 +1048,89 @@ function close_action(id_action, page, path_manage_script, mode_req, res_id_valu
  */
 function valid_action_form(current_form_id, path_manage_script, id_action, values, table, module, coll_id, mode, protect_string)
 {
-	var frm_values = get_form_values(current_form_id);
-	if(protect_string == false)
-	{
-		var protect = false;
-	}
-	else
-	{
-		var protect = true;
-	}
-	if(protect)
-	{
-		frm_values = frm_values.replace(/\'/g, "\\'");
-		frm_values = frm_values.replace(/\"/g, '\\"');
-		frm_values = frm_values.replace(/\r\n/g, ' ');
-		frm_values = frm_values.replace(/\r/g, ' ');
-		frm_values = frm_values.replace(/\n/g, ' ');
-	}
-	var chosen_action_id = get_chosen_action(current_form_id);
-//	console.log('values : '+values+', table : '+table+', module : '+module+', coll_id : '+coll_id+', chosen_action_id : '+chosen_action_id+', frm_values : '+frm_values);
-	if(values &&  table && module && coll_id && chosen_action_id != '')
-	{
-		new Ajax.Request(path_manage_script,
-		{
-			method:'post',
-			parameters: { action_id : id_action,
-					  form_to_check : current_form_id,
-					  req : 'valid_form',
-					  form_values : frm_values
-					},
-					onSuccess: function(answer){
-					//console.log('valid form answer  '+answer.responseText);
-					//alert('valid form answer  '+answer.responseText);
-					eval('response='+answer.responseText);
-					if(response.status == 0 ) //form values checked
-					{
-						if(response.manage_form_now == false)
-						{
-							//console.log('manage_form_now false');
-							pile_actions.action_push("action_send_form_confirm_result( '"+path_manage_script+"', '"+mode+"', '"+id_action+"', '"+values+"','"+table+"', '"+module+"','"+coll_id+"',  '"+frm_values+"');");
+    var frm_values = get_form_values(current_form_id);
+    if(protect_string == false)
+    {
+        var protect = false;
+    }
+    else
+    {
+        var protect = true;
+    }
+    if(protect)
+    {
+        frm_values = frm_values.replace(/\'/g, "\\'");
+        frm_values = frm_values.replace(/\"/g, '\\"');
+        frm_values = frm_values.replace(/\r\n/g, ' ');
+        frm_values = frm_values.replace(/\r/g, ' ');
+        frm_values = frm_values.replace(/\n/g, ' ');
+    }
+    var chosen_action_id = get_chosen_action(current_form_id);
+//  console.log('values : '+values+', table : '+table+', module : '+module+', coll_id : '+coll_id+', chosen_action_id : '+chosen_action_id+', frm_values : '+frm_values);
+    if(values &&  table && module && coll_id && chosen_action_id != '')
+    {
+        new Ajax.Request(path_manage_script,
+        {
+            method:'post',
+            parameters: { action_id : id_action,
+                      form_to_check : current_form_id,
+                      req : 'valid_form',
+                      form_values : frm_values
+                    },
+                    onSuccess: function(answer){
+                    //console.log('valid form answer  '+answer.responseText);
+                    //alert('valid form answer  '+answer.responseText);
+                    eval('response='+answer.responseText);
+                    if(response.status == 0 ) //form values checked
+                    {
+                        if(response.manage_form_now == false)
+                        {
+                            //console.log('manage_form_now false');
+                            pile_actions.action_push("action_send_form_confirm_result( '"+path_manage_script+"', '"+mode+"', '"+id_action+"', '"+values+"','"+table+"', '"+module+"','"+coll_id+"',  '"+frm_values+"');");
 
-							if(chosen_action_id == 'end_action')
-							{
-							//	alert('last_action');
-								//console.log('last_action');
-								end_actions();
-							}
-							else
-							{
-								//console.log('not last');
-								//alert('not last');
-								action_send_first_request(path_manage_script, mode, chosen_action_id, values, table, module, coll_id);
-							}
-						}
-						else
-						{
-							if(chosen_action_id != 'end_action')
-							{
-								pile_actions.action_push("action_send_first_request( '"+path_manage_script+"', '"+mode+"', '"+chosen_action_id+"', 'to_define','"+table+"', '"+module+"','"+coll_id+"');");
-							}
-							action_send_form_confirm_result(path_manage_script, mode, id_action, values, table, module, coll_id, frm_values);
-						}
-					}
-					else //  Form Params errors
-					{
-						//console.log(response.error_txt);
-						try{
-								$('frm_error_'+id_action).innerHTML = response.error_txt;
-							}
-						catch(e){}
-					}
-				},
-				onFailure: function(){
-				}
-			});
-	}
-	else
-	{
-		if(console)
-		{
-			console.log('Action Error!');
-		}
-		//alert('Action Error!');
-	}
+                            if(chosen_action_id == 'end_action')
+                            {
+                            //  alert('last_action');
+                                //console.log('last_action');
+                                end_actions();
+                            }
+                            else
+                            {
+                                //console.log('not last');
+                                //alert('not last');
+                                action_send_first_request(path_manage_script, mode, chosen_action_id, values, table, module, coll_id);
+                            }
+                        }
+                        else
+                        {
+                            if(chosen_action_id != 'end_action')
+                            {
+                                pile_actions.action_push("action_send_first_request( '"+path_manage_script+"', '"+mode+"', '"+chosen_action_id+"', 'to_define','"+table+"', '"+module+"','"+coll_id+"');");
+                            }
+                            action_send_form_confirm_result(path_manage_script, mode, id_action, values, table, module, coll_id, frm_values);
+                        }
+                    }
+                    else //  Form Params errors
+                    {
+                        //console.log(response.error_txt);
+                        try{
+                                $('frm_error_'+id_action).innerHTML = response.error_txt;
+                            }
+                        catch(e){}
+                    }
+                },
+                onFailure: function(){
+                }
+            });
+    }
+    else
+    {
+        if(console)
+        {
+            console.log('Action Error!');
+        }
+        //alert('Action Error!');
+    }
 }
 
 /**
@@ -1140,26 +1140,26 @@ function valid_action_form(current_form_id, path_manage_script, id_action, value
  */
 function get_chosen_action(form_id)
 {
-	var frm = $(form_id);
-	for(var i=0; i< frm.elements.length;i++)
-	{
-		if(frm.elements[i].id == 'chosen_action')
-		{
-			if(frm.elements[i].tagName == 'INPUT')
-			{
-				return frm.elements[i].value;
-			}
-			else if(frm.elements[i].tagName == 'SELECT')
-			{
-				return frm.elements[i].options[frm.elements[i].selectedIndex].value;
-			}
-			else
-			{
-				break;
-			}
-		}
-	}
-	return '';
+    var frm = $(form_id);
+    for(var i=0; i< frm.elements.length;i++)
+    {
+        if(frm.elements[i].id == 'chosen_action')
+        {
+            if(frm.elements[i].tagName == 'INPUT')
+            {
+                return frm.elements[i].value;
+            }
+            else if(frm.elements[i].tagName == 'SELECT')
+            {
+                return frm.elements[i].options[frm.elements[i].selectedIndex].value;
+            }
+            else
+            {
+                break;
+            }
+        }
+    }
+    return '';
 }
 
 /**
@@ -1168,36 +1168,89 @@ function get_chosen_action(form_id)
  * @param form_id String  Identifier of the form
  * @return String  Values of the form
  */
-function get_form_values(form_id)
+function get_form_values(form_id, return_string, include_buttons)
 {
-	var frm = $(form_id);
-	var val = '';
-	if(frm)
-	{
-		for(var i=0; i< frm.elements.length;i++)
-		{
-			if(frm.elements[i].tagName == 'INPUT' || frm.elements[i].tagName == 'TEXTAREA')
-			{
-				if((frm.elements[i].tagName == 'INPUT' && frm.elements[i].type != 'checkbox' && frm.elements[i].type != 'radio') || frm.elements[i].tagName == 'TEXTAREA' )
-				{
-					val += frm.elements[i].id+'#'+frm.elements[i].value+'$$';
-				}
-				else
-				{
-					if(frm.elements[i].checked == true)
-					{
-						val += frm.elements[i].id+'#'+frm.elements[i].value+'$$';
-					}
-				}
-			}
-			else if(frm.elements[i].tagName == 'SELECT') // to do : multiple list
-			{
-				val += frm.elements[i].id+'#'+frm.elements[i].options[frm.elements[i].selectedIndex].value+'$$';
-			}
-		}
-		val.substring(0, val.length -3);
-	}
-	return val;
+    if(typeof( return_string) == "undefined" || return_string === null)
+    {
+        var in_string =  true;
+    }
+    else
+    {
+         var in_string =  false;
+    }
+
+    if(typeof( include_buttons) == "undefined" || include_buttons === null)
+    {
+        var get_buttons =  true;
+    }
+    else
+    {
+         var get_buttons =  false;
+    }
+
+    var frm = $(form_id);
+
+    if(in_string == true)
+    {
+      var val = '';
+    }
+    else
+    {
+        var val = {};
+    }
+    if(frm)
+    {
+        for(var i=0; i< frm.elements.length;i++)
+        {
+            if(frm.elements[i].tagName == 'INPUT' || frm.elements[i].tagName == 'TEXTAREA')
+            {
+                if((frm.elements[i].tagName == 'INPUT' && frm.elements[i].type != 'checkbox' && frm.elements[i].type != 'radio') || frm.elements[i].tagName == 'TEXTAREA' )
+                {
+                    if(frm.elements[i].tagName == 'INPUT' && ( (get_buttons == true  && frm.elements[i].type == 'button' && frm.elements[i].type == 'submit') || (get_buttons == false && frm.elements[i].type != 'button' && frm.elements[i].type != 'submit')))
+                    {
+                        if(in_string == true)
+                        {
+                            val += frm.elements[i].id+'#'+frm.elements[i].value+'$$';
+                        }
+                        else
+                        {
+                            val[frm.elements[i].id] = frm.elements[i].value;
+                        }
+                    }
+                }
+                else
+                {
+                    if(frm.elements[i].checked == true)
+                    {
+                        if(in_string == true)
+                        {
+                            val += frm.elements[i].id+'#'+frm.elements[i].value+'$$';
+                        }
+                        else
+                        {
+                            val[frm.elements[i].id]= frm.elements[i].value;
+                        }
+                    }
+                }
+            }
+            else if(frm.elements[i].tagName == 'SELECT') // to do : multiple list
+            {
+                if(in_string == true)
+                {
+                    val += frm.elements[i].id+'#'+frm.elements[i].options[frm.elements[i].selectedIndex].value+'$$';
+                }
+                else
+                {
+                    val[frm.elements[i].id] = frm.elements[i].options[frm.elements[i].selectedIndex].value;
+                }
+            }
+        }
+        if(in_string == true)
+        {
+            val.substring(0, val.length -3);
+        }
+    }
+    return val;
 }
 
 /**
@@ -1213,89 +1266,89 @@ function get_form_values(form_id)
  */
 function action_send_first_request( path_manage_script, mode_req,  id_action, res_id_values, tablename, modulename, id_coll)
 {
-	//alert('action_send_first_request');
-	if(id_action == undefined || id_action == null || id_action  == '')
-	{
-		window.top.$('main_error').innerHTML = arr_msg_error['choose_action'];
-		//console.log('Choisissez une action !');
-	}
-	if(res_id_values == undefined || res_id_values == null || res_id_values == '')
-	{
-		window.top.$('main_error').innerHTML += '<br/>' + arr_msg_error['choose_one_doc'];
-		//console.log('Choisissez au moins un doc !');
-	}
-	//alert('res_id_values : '+res_id_values+', id_action '+id_action+', tablename '+tablename+', modulename : '+modulename+', id_coll : '+id_coll+', mode_req : '+mode_req);
-	if(res_id_values != ''  && id_action != '' && tablename != '' && modulename != ''  && id_coll != '' && (mode_req == 'page' || mode_req == 'mass'))
-	{
-		//alert('values : '+res_id_values+', id_action : '+id_action+', table : '+tablename+', module : '+modulename+', coll_id : '+id_coll+', mode : '+mode_req);
-		new Ajax.Request(path_manage_script,
-		{
-		    method:'post',
-		    parameters: { values : res_id_values,
-							  action_id : id_action,
-							  mode : mode_req,
-							  req : 'first_request',
-							  table : tablename,
-							  coll_id : id_coll,
-							  module : modulename
-							  },
-		        onSuccess: function(answer){
-				eval("response = "+answer.responseText);
-				//console.log(answer.responseText);
-				//alert(answer.responseText);
-				var page_result = response.page_result;
-				if(response.status == 0 ) // No confirm or form asked
-				{
-					if(response.action_status != '' && response.action_status != 'NONE')
-					{
-						actions_status.action_push(response.action_status);
-					}
-					//console.log('action_send_first_request OK');
-					end_actions();
-					close_action(id_action, page_result, path_manage_script, mode_req, res_id_values, tablename, id_coll);
+    //alert('action_send_first_request');
+    if(id_action == undefined || id_action == null || id_action  == '')
+    {
+        window.top.$('main_error').innerHTML = arr_msg_error['choose_action'];
+        //console.log('Choisissez une action !');
+    }
+    if(res_id_values == undefined || res_id_values == null || res_id_values == '')
+    {
+        window.top.$('main_error').innerHTML += '<br/>' + arr_msg_error['choose_one_doc'];
+        //console.log('Choisissez au moins un doc !');
+    }
+    //alert('res_id_values : '+res_id_values+', id_action '+id_action+', tablename '+tablename+', modulename : '+modulename+', id_coll : '+id_coll+', mode_req : '+mode_req);
+    if(res_id_values != ''  && id_action != '' && tablename != '' && modulename != ''  && id_coll != '' && (mode_req == 'page' || mode_req == 'mass'))
+    {
+        //alert('values : '+res_id_values+', id_action : '+id_action+', table : '+tablename+', module : '+modulename+', coll_id : '+id_coll+', mode : '+mode_req);
+        new Ajax.Request(path_manage_script,
+        {
+            method:'post',
+            parameters: { values : res_id_values,
+                              action_id : id_action,
+                              mode : mode_req,
+                              req : 'first_request',
+                              table : tablename,
+                              coll_id : id_coll,
+                              module : modulename
+                              },
+                onSuccess: function(answer){
+                eval("response = "+answer.responseText);
+                //console.log(answer.responseText);
+                //alert(answer.responseText);
+                var page_result = response.page_result;
+                if(response.status == 0 ) // No confirm or form asked
+                {
+                    if(response.action_status != '' && response.action_status != 'NONE')
+                    {
+                        actions_status.action_push(response.action_status);
+                    }
+                    //console.log('action_send_first_request OK');
+                    end_actions();
+                    close_action(id_action, page_result, path_manage_script, mode_req, res_id_values, tablename, id_coll);
 
-				}
-				else if(response.status == 2) // Confirm asked to the user
-				{
-					if(response.action_status != '' && response.action_status != 'NONE')
-					{
-						actions_status.action_push(response.action_status);
-					}
-					//console.log('confirm');
-					//alert('confirm');
-					var modal_txt='<div class=h2_title>'+response.confirm_content+'</div>';
-					modal_txt += '<p class="buttons">';
-					modal_txt += '<input type="button" name="submit" id="submit" value="'+response.validate+'" class="button" onclick="action_send_form_confirm_result( \''+path_manage_script+'\', \''+mode_req+'\',\''+id_action+'\', \''+res_id_values+'\', \''+tablename+'\', \''+modulename+'\', \''+id_coll+'\');"/>';
-					modal_txt += ' <input type="button" name="cancel" id="cancel" value="'+response.cancel+'" class="button" onclick="destroyModal(\'modal_'+id_action+'\');"/></p>';
-					//console.log(modal_txt);
-					window.top.createModal(modal_txt, 'modal_'+id_action, '150px', '300px');
-				}
-				else if(response.status == 3) // Form to fill by the user
-				{
-					if(response.action_status != '' && response.action_status != 'NONE')
-					{
-						actions_status.action_push(response.action_status);
-					}
-					window.top.createModal(response.form_content,'modal_'+id_action, response.height, response.width, response.mode_frm);
-				}
-				else // Param errors
-				{
-					if(console)
-					{
-						console.log('param error');
-					}
-					else
-					{
-						alert('param error');
-					}
-					//close_action(id_action,  page_result);
-				}
-		    },
-		    onFailure: function(){
-				//alert('erreur');
-				}
-		});
-	}
+                }
+                else if(response.status == 2) // Confirm asked to the user
+                {
+                    if(response.action_status != '' && response.action_status != 'NONE')
+                    {
+                        actions_status.action_push(response.action_status);
+                    }
+                    //console.log('confirm');
+                    //alert('confirm');
+                    var modal_txt='<div class=h2_title>'+response.confirm_content+'</div>';
+                    modal_txt += '<p class="buttons">';
+                    modal_txt += '<input type="button" name="submit" id="submit" value="'+response.validate+'" class="button" onclick="action_send_form_confirm_result( \''+path_manage_script+'\', \''+mode_req+'\',\''+id_action+'\', \''+res_id_values+'\', \''+tablename+'\', \''+modulename+'\', \''+id_coll+'\');"/>';
+                    modal_txt += ' <input type="button" name="cancel" id="cancel" value="'+response.cancel+'" class="button" onclick="destroyModal(\'modal_'+id_action+'\');"/></p>';
+                    //console.log(modal_txt);
+                    window.top.createModal(modal_txt, 'modal_'+id_action, '150px', '300px');
+                }
+                else if(response.status == 3) // Form to fill by the user
+                {
+                    if(response.action_status != '' && response.action_status != 'NONE')
+                    {
+                        actions_status.action_push(response.action_status);
+                    }
+                    window.top.createModal(response.form_content,'modal_'+id_action, response.height, response.width, response.mode_frm);
+                }
+                else // Param errors
+                {
+                    if(console)
+                    {
+                        console.log('param error');
+                    }
+                    else
+                    {
+                        alert('param error');
+                    }
+                    //close_action(id_action,  page_result);
+                }
+            },
+            onFailure: function(){
+                //alert('erreur');
+                }
+        });
+    }
 }
 
 /**
@@ -1312,17 +1365,17 @@ function get_elem( elem_id)
      }
      else
      {
-		var tab = window.frames;
+        var tab = window.frames;
          for(var i=0; i < tab.length;i++)
          {
-			if(tab[i].document)
-			{
-				return tab[i].$(elem_id);
-			}
-			else if(tab[i].contentDocument)
-			{
-				return tab[i].content$(elem_id);
-			}
+            if(tab[i].document)
+            {
+                return tab[i].$(elem_id);
+            }
+            else if(tab[i].contentDocument)
+            {
+                return tab[i].content$(elem_id);
+            }
          }
      }
      return false;
@@ -1342,120 +1395,120 @@ function get_elem( elem_id)
  */
 function action_send_form_confirm_result(path_manage_script, mode_req, id_action, res_id_values, tablename, modulename, id_coll, values_new_form)
 {
-	//console.log('debut send_form');
-	if(res_id_values != '' && (mode_req == 'mass' || mode_req == 'page')
-			&& id_action != ''  && tablename != ''
-			&& modulename!= '' &&  id_coll != '')
-		{
+    //console.log('debut send_form');
+    if(res_id_values != '' && (mode_req == 'mass' || mode_req == 'page')
+            && id_action != ''  && tablename != ''
+            && modulename!= '' &&  id_coll != '')
+        {
 
-			//console.log('avant obj : '+path_manage_script);
-			new Ajax.Request(path_manage_script,
-			{
-				method:'post',
-				parameters: { values : res_id_values,
-							  action_id : id_action,
-							  mode : mode_req,
-							  req : 'second_request',
-							  table : tablename,
-							  coll_id : id_coll,
-							  module : modulename,
-							  form_values : values_new_form
-							  },
-				onSuccess: function(answer){
-				//	console.log('answer '+answer.responseText);
-				//	alert('answer '+answer.responseText);
-					eval('response='+answer.responseText);
-					if(response.status == 0 ) //Form or confirm processed ok
-					{
-						res_ids = response.result_id;
-						if(res_id_values == 'none' && res_ids != '')
-						{
-							res_id_values = res_ids;
-						}
-						//console.log(res_ids);
-					//	alert(res_ids);
-						end_actions();
-						var table_name = tablename;
-						if(response.table && response.table != '')
-						{
-							table_name = response.table;
-						}
-						var page_result = response.page_result;
-						close_action(id_action, page_result, path_manage_script, mode_req, res_id_values, table_name, id_coll);
-					}
-					else //  Form Params errors
-					{
-						//console.log(response.error_txt);
-						try{
-							//$('frm_error').updateContent(response.error_txt); // update the error div in the modal form
-							$('frm_error').innerHTML = response.error_txt;
-							}
-						catch(e){}
-					}
-				},
-				onFailure: function(){
-				//console.log('dans ton c** !!');
-				}
-			});
-		}
+            //console.log('avant obj : '+path_manage_script);
+            new Ajax.Request(path_manage_script,
+            {
+                method:'post',
+                parameters: { values : res_id_values,
+                              action_id : id_action,
+                              mode : mode_req,
+                              req : 'second_request',
+                              table : tablename,
+                              coll_id : id_coll,
+                              module : modulename,
+                              form_values : values_new_form
+                              },
+                onSuccess: function(answer){
+                //  console.log('answer '+answer.responseText);
+                //  alert('answer '+answer.responseText);
+                    eval('response='+answer.responseText);
+                    if(response.status == 0 ) //Form or confirm processed ok
+                    {
+                        res_ids = response.result_id;
+                        if(res_id_values == 'none' && res_ids != '')
+                        {
+                            res_id_values = res_ids;
+                        }
+                        //console.log(res_ids);
+                    //  alert(res_ids);
+                        end_actions();
+                        var table_name = tablename;
+                        if(response.table && response.table != '')
+                        {
+                            table_name = response.table;
+                        }
+                        var page_result = response.page_result;
+                        close_action(id_action, page_result, path_manage_script, mode_req, res_id_values, table_name, id_coll);
+                    }
+                    else //  Form Params errors
+                    {
+                        //console.log(response.error_txt);
+                        try{
+                            //$('frm_error').updateContent(response.error_txt); // update the error div in the modal form
+                            $('frm_error').innerHTML = response.error_txt;
+                            }
+                        catch(e){}
+                    }
+                },
+                onFailure: function(){
+                //console.log('dans ton c** !!');
+                }
+            });
+        }
 }
 
 function action_change_status(path_manage_script, mode_req, res_id_values, tablename, id_coll, status,page)
 {
   // alert('path '+path_manage_script+', mode '+mode_req+', status '+status+', res_id_value '+res_id_values+', coll '+id_coll+', table '+tablename);
-	if(res_id_values != '' && (mode_req == 'mass' || mode_req == 'page')
-			  && tablename != '' &&  id_coll != '')
-		{
-			new Ajax.Request(path_manage_script,
-			{
-				method:'post',
-				asynchronous : false,
-				parameters: { values : res_id_values,
-							  mode : mode_req,
-							  req : 'change_status',
-							  table : tablename,
-							  coll_id : id_coll,
-							  new_status : status
-							  },
-				onSuccess: function(answer){
-					//console.log('answer '+answer.responseText);
-					//alert('answer '+answer.responseText);
-					eval('response='+answer.responseText);
-					if(response.status == 0 ) 
-					{
-						actions_status.values = [];
-						// Status changed
-					}
-					else 
-					{ 
-						try{
-							//$('frm_error').updateContent(response.error_txt); // update the error div in the modal form
-							$('frm_error').innerHTML = response.error_txt;
-							}
-						catch(e){}
-					}
-					//alert(page);
-					if(page != '' && page != NaN && page && page != null )
-					{
-						do_nothing = false;
-						window.top.location.href=page;
+    if(res_id_values != '' && (mode_req == 'mass' || mode_req == 'page')
+              && tablename != '' &&  id_coll != '')
+        {
+            new Ajax.Request(path_manage_script,
+            {
+                method:'post',
+                asynchronous : false,
+                parameters: { values : res_id_values,
+                              mode : mode_req,
+                              req : 'change_status',
+                              table : tablename,
+                              coll_id : id_coll,
+                              new_status : status
+                              },
+                onSuccess: function(answer){
+                    //console.log('answer '+answer.responseText);
+                    //alert('answer '+answer.responseText);
+                    eval('response='+answer.responseText);
+                    if(response.status == 0 )
+                    {
+                        actions_status.values = [];
+                        // Status changed
+                    }
+                    else
+                    {
+                        try{
+                            //$('frm_error').updateContent(response.error_txt); // update the error div in the modal form
+                            $('frm_error').innerHTML = response.error_txt;
+                            }
+                        catch(e){}
+                    }
+                    //alert(page);
+                    if(page != '' && page != NaN && page && page != null )
+                    {
+                        do_nothing = false;
+                        window.top.location.href=page;
 
-					}
-					else if(do_nothing == false)
-					{
-						window.top.location.reload();
-					}
-					do_nothing = false;
-				},
-				onFailure: function(){
-					if(console)
-					{
-						//console.log('dans ton c** !!');
-					}
-				}
-			});
-		}
-		return true;
+                    }
+                    else if(do_nothing == false)
+                    {
+                        window.top.location.reload();
+                    }
+                    do_nothing = false;
+                },
+                onFailure: function(){
+                    if(console)
+                    {
+                        //console.log('dans ton c** !!');
+                    }
+                }
+            });
+        }
+        return true;
 }
 /***********************************************************************/
 
@@ -1468,8 +1521,8 @@ function action_change_status(path_manage_script, mode_req, res_id_values, table
  * @param node Node Object Node to remove
  */
 function remove_tag(node){
-	if(!node.data.replace(/\s/g,''))
-		node.parentNode.removeChild(node);
+    if(!node.data.replace(/\s/g,''))
+        node.parentNode.removeChild(node);
 }
 
 /**
@@ -1479,22 +1532,22 @@ function remove_tag(node){
  */
 function clean_xml_doc(xml)
 {
-	// TO DO : remove comment, do not work yet
-	if(xml)
-	{
-		var nodes=xml.getElementsByTagName('*');
-		for(var i=0;i<nodes.length;i++){
-			a=nodes[i].previousSibling;
-			if(a && (a.nodeType==3 || a.nodeName=='#comment'))
-				remove_tag(a);
-			b=nodes[i].nextSibling;
-			if(b && (b.nodeType==3 || b.nodeName=='#comment'))
-				remove_tag(b);
-			c=nodes[i];
-		}
+    // TO DO : remove comment, do not work yet
+    if(xml)
+    {
+        var nodes=xml.getElementsByTagName('*');
+        for(var i=0;i<nodes.length;i++){
+            a=nodes[i].previousSibling;
+            if(a && (a.nodeType==3 || a.nodeName=='#comment'))
+                remove_tag(a);
+            b=nodes[i].nextSibling;
+            if(b && (b.nodeType==3 || b.nodeName=='#comment'))
+                remove_tag(b);
+            c=nodes[i];
+        }
 
-	}
-	return xml;
+    }
+    return xml;
 }
 
 /**
@@ -1504,24 +1557,24 @@ function clean_xml_doc(xml)
  */
 function load_xml_file(xmlfile)
 {
-	var xml;
-	if( window.ActiveXObject && /Win/.test(navigator.userAgent) )
-   	{
-    	xml= new ActiveXObject("Microsoft.XMLDOM");
-		xml.async = false;
-		xml.load(xmlfile);
-		return clean_xml_doc(xml);
-   	}
+    var xml;
+    if( window.ActiveXObject && /Win/.test(navigator.userAgent) )
+    {
+        xml= new ActiveXObject("Microsoft.XMLDOM");
+        xml.async = false;
+        xml.load(xmlfile);
+        return clean_xml_doc(xml);
+    }
     else if( document.implementation && document.implementation.createDocument )
     {
-	 	xml = document.implementation.createDocument("", "", null);
-		xml.async = false;
-		xml.load(xmlfile);
-		return clean_xml_doc(xml);
+        xml = document.implementation.createDocument("", "", null);
+        xml.async = false;
+        xml.load(xmlfile);
+        return clean_xml_doc(xml);
     }
     else
     {
-	   return false;
+       return false;
     }
 }
 /***********************************************************************/
@@ -1550,59 +1603,59 @@ resize(screen.width-10,screen.height-30);
  */
 function print_r(x, max, sep, l) {
 
-	    l = l || 0;
-	    max = max || 10;
-	    sep = sep || ' ';
+        l = l || 0;
+        max = max || 10;
+        sep = sep || ' ';
 
-	    if (l > max) {
-	        return "[WARNING: Too much recursion]\n";
-	    }
+        if (l > max) {
+            return "[WARNING: Too much recursion]\n";
+        }
 
-	    var
-	        i,
-	        r = '',
-	        t = typeof x,
-	        tab = '';
+        var
+            i,
+            r = '',
+            t = typeof x,
+            tab = '';
 
-	    if (x === null) {
-	        r += "(null)\n";
-	    } else if (t == 'object') {
+        if (x === null) {
+            r += "(null)\n";
+        } else if (t == 'object') {
 
-	        l++;
+            l++;
 
-	        for (i = 0; i < l; i++) {
-	            tab += sep;
-	        }
+            for (i = 0; i < l; i++) {
+                tab += sep;
+            }
 
-	        if (x && x.length) {
-	            t = 'array';
-	        }
+            if (x && x.length) {
+                t = 'array';
+            }
 
-	        r += '(' + t + ") :\n";
+            r += '(' + t + ") :\n";
 
-	        for (i in x) {
-	            try {
-	                r += tab + '[' + i + '] : ' + print_r(x[i], max, sep, (l + 1));
-	            } catch(e) {
-	                return "[ERROR: " + e + "]\n";
-	            }
-	        }
+            for (i in x) {
+                try {
+                    r += tab + '[' + i + '] : ' + print_r(x[i], max, sep, (l + 1));
+                } catch(e) {
+                    return "[ERROR: " + e + "]\n";
+                }
+            }
 
-	    } else {
+        } else {
 
-	        if (t == 'string') {
-	            if (x == '') {
-	                x = '(empty)';
-	            }
-	        }
+            if (t == 'string') {
+                if (x == '') {
+                    x = '(empty)';
+                }
+            }
 
-	        r += '(' + t + ') ' + x + "\n";
+            r += '(' + t + ') ' + x + "\n";
 
-	    }
+        }
 
-	    return r;
+        return r;
 
-	}
+    }
 
 /**
  * Includes a javascript file
@@ -1612,21 +1665,21 @@ function print_r(x, max, sep, l) {
  */
 function include_js(file_url, in_html)
 {
-	if(in_html == true)
-	{
-		var head = $$("head")[0];
-		//var head = document.getElementsByTagName("head")[0];
-		var node = document.createElement("script");
-		node.setAttribute('type','text/javascript');
-		node.setAttribute('src',file_url);
-		head.insert(node);
+    if(in_html == true)
+    {
+        var head = $$("head")[0];
+        //var head = document.getElementsByTagName("head")[0];
+        var node = document.createElement("script");
+        node.setAttribute('type','text/javascript');
+        node.setAttribute('src',file_url);
+        head.insert(node);
 
-		//head.appendChild(node);
-	}
-	else
-	{
-		document.write('<script type="text/javascript" src="'+file_url+'"></script>');
-	}
+        //head.appendChild(node);
+    }
+    else
+    {
+        document.write('<script type="text/javascript" src="'+file_url+'"></script>');
+    }
 }
 
 /**
@@ -1638,40 +1691,40 @@ function include_js(file_url, in_html)
  **/
 function unlock(path_script, id, coll)
 {
-	if(path_script && res_id && coll_id)
-	{
-		new Ajax.Request(path_script,
-		{
-			method:'post',
-			parameters: {
-							res_id : id,
-							coll_id : coll
-						  },
-			onSuccess: function(answer){
+    if(path_script && res_id && coll_id)
+    {
+        new Ajax.Request(path_script,
+        {
+            method:'post',
+            parameters: {
+                            res_id : id,
+                            coll_id : coll
+                          },
+            onSuccess: function(answer){
 
-				eval('response='+answer.responseText);
-				if(response.status == 0 )
-				{
+                eval('response='+answer.responseText);
+                if(response.status == 0 )
+                {
 
-						//console.log('Unlock OK');
+                        //console.log('Unlock OK');
 
-				}
-				else
-				{
-					if(console)
-					{
-						console.log('Pb unlock');
-					}
-					else
-					{
-						alert('Pb unlock');
-					}
-				}
-			},
-			onFailure: function(){
-			}
-		});
-	}
+                }
+                else
+                {
+                    if(console)
+                    {
+                        console.log('Pb unlock');
+                    }
+                    else
+                    {
+                        alert('Pb unlock');
+                    }
+                }
+            },
+            onFailure: function(){
+            }
+        });
+    }
 }
 
 /**
@@ -1681,67 +1734,67 @@ function unlock(path_script, id, coll)
  **/
 function show_admin_contacts( is_corporate, display)
 {
-	var display_value = display || 'inline';
-	var title = $("title_p");
-	var lastname = $("lastname_p");
-	var firstname = $("firstname_p");
-	var function_p = $("function_p");
-	var lastname_mandatory = $("lastname_mandatory");
-	var society_mandatory = $("society_mandatory");
-	if(is_corporate == true)
-	{
-		if(title)
-		{
-			title.style.display = "none";
-		}
-		if(lastname)
-		{
-			lastname.style.display = "none";
-		}
-		if(firstname)
-		{
-			firstname.style.display = "none";
-		}
-		if(function_p)
-		{
-			function_p.style.display = "none";
-		}
-		if(lastname_mandatory)
-		{
-			lastname_mandatory.style.visibility = 'hidden';
-		}
-		if(society_mandatory)
-		{
-			society_mandatory.style.visibility = 'visible';
-		}
-	}
-	else
-	{
-		if(title)
-		{
-			title.style.display = display_value;
-		}
-		if(lastname)
-		{
-			lastname.style.display = display_value;
-		}
-		if(firstname)
-		{
-			firstname.style.display = display_value;
-		}
-		if(function_p)
-		{
-			function_p.style.display = display_value;
-		}
-		if(lastname_mandatory)
-		{
-			lastname_mandatory.style.visibility = 'visible';
-		}
-		if(society_mandatory)
-		{
-			society_mandatory.style.visibility = 'hidden';
-		}
-	}
+    var display_value = display || 'inline';
+    var title = $("title_p");
+    var lastname = $("lastname_p");
+    var firstname = $("firstname_p");
+    var function_p = $("function_p");
+    var lastname_mandatory = $("lastname_mandatory");
+    var society_mandatory = $("society_mandatory");
+    if(is_corporate == true)
+    {
+        if(title)
+        {
+            title.style.display = "none";
+        }
+        if(lastname)
+        {
+            lastname.style.display = "none";
+        }
+        if(firstname)
+        {
+            firstname.style.display = "none";
+        }
+        if(function_p)
+        {
+            function_p.style.display = "none";
+        }
+        if(lastname_mandatory)
+        {
+            lastname_mandatory.style.visibility = 'hidden';
+        }
+        if(society_mandatory)
+        {
+            society_mandatory.style.visibility = 'visible';
+        }
+    }
+    else
+    {
+        if(title)
+        {
+            title.style.display = display_value;
+        }
+        if(lastname)
+        {
+            lastname.style.display = display_value;
+        }
+        if(firstname)
+        {
+            firstname.style.display = display_value;
+        }
+        if(function_p)
+        {
+            function_p.style.display = display_value;
+        }
+        if(lastname_mandatory)
+        {
+            lastname_mandatory.style.visibility = 'visible';
+        }
+        if(society_mandatory)
+        {
+            society_mandatory.style.visibility = 'hidden';
+        }
+    }
 }
 
 /**
@@ -1752,16 +1805,16 @@ function show_admin_contacts( is_corporate, display)
  **/
 function get_checked_values(name_input)
 {
-	var arr = [];
-	var items = document.getElementsByName(name_input);
-	for(var i=0; i< items.length; i++)
-	{
-		if(items[i].checked == true)
-		{
-			arr.push(items[i].value);
-		}
-	}
-	return arr;
+    var arr = [];
+    var items = document.getElementsByName(name_input);
+    for(var i=0; i< items.length; i++)
+    {
+        if(items[i].checked == true)
+        {
+            arr.push(items[i].value);
+        }
+    }
+    return arr;
 }
 
 /**
@@ -1771,35 +1824,35 @@ function get_checked_values(name_input)
  **/
 function clear_form(form_id)
 {
-	var frm = $(form_id);
-	if(frm)
-	{
-		var items = frm.getElementsByTagName('INPUT');
-		for(var i=0; i<items.length;i++)
-		{
-			if(items[i].type == "text")
-			{
-				items[i].value ='';
-			}
-		}
-		items = frm.getElementsByTagName('TEXTAREA');
-		for(var i=0; i<items.length;i++)
-		{
-			items[i].value ='';
-		}
-		items = frm.getElementsByTagName('SELECT');
-		for(var i=0; i<items.length;i++)
-		{
-			if(items[i].multiple == "true")
-			{
-				// TO DO
-			}
-			else
-			{
-				items[i].options[0].selected ='selected';
-			}
-		}
-	}
+    var frm = $(form_id);
+    if(frm)
+    {
+        var items = frm.getElementsByTagName('INPUT');
+        for(var i=0; i<items.length;i++)
+        {
+            if(items[i].type == "text")
+            {
+                items[i].value ='';
+            }
+        }
+        items = frm.getElementsByTagName('TEXTAREA');
+        for(var i=0; i<items.length;i++)
+        {
+            items[i].value ='';
+        }
+        items = frm.getElementsByTagName('SELECT');
+        for(var i=0; i<items.length;i++)
+        {
+            if(items[i].multiple == "true")
+            {
+                // TO DO
+            }
+            else
+            {
+                items[i].options[0].selected ='selected';
+            }
+        }
+    }
 }
 
 /*************** Apps Reports functions *****************/
@@ -1811,31 +1864,31 @@ function clear_form(form_id)
  **/
 function valid_userlogs(url)
 {
-	var user_div = $('user_id');
-	var user_id_val = '';
-	if(user_div)
-	{
-		user_id_val = user_div.value;
-	}
+    var user_div = $('user_id');
+    var user_id_val = '';
+    if(user_div)
+    {
+        user_id_val = user_div.value;
+    }
 
-	if( url )
-	{
-		new Ajax.Request(url,
-		{
-		    method:'post',
-		    parameters: {
-				user : user_id_val
-						},
-		        onSuccess: function(answer){
-			//	alert(answer.responseText);
-				var div_to_fill = $('result_userlogsstat');
-				if(div_to_fill)
-				{
-					div_to_fill.innerHTML = answer.responseText;
-				}
-			}
-		});
-	}
+    if( url )
+    {
+        new Ajax.Request(url,
+        {
+            method:'post',
+            parameters: {
+                user : user_id_val
+                        },
+                onSuccess: function(answer){
+            //  alert(answer.responseText);
+                var div_to_fill = $('result_userlogsstat');
+                if(div_to_fill)
+                {
+                    div_to_fill.innerHTML = answer.responseText;
+                }
+            }
+        });
+    }
 }
 
 /**
@@ -1845,91 +1898,91 @@ function valid_userlogs(url)
  **/
 function valid_report_by_period(url)
 {
-	var type_period = '';
-	var type_report = 'graph';
-	var datestart = '';
-	var dateend = '';
-	var year = '';
-	var month = '';
-	var error = '';
-	var report_id = '';
+    var type_period = '';
+    var type_report = 'graph';
+    var datestart = '';
+    var dateend = '';
+    var year = '';
+    var month = '';
+    var error = '';
+    var report_id = '';
 
-	var report_id_item = $('id_report');
-	if(report_id_item)
-	{
-		report_id = report_id_item.value;
-	}
+    var report_id_item = $('id_report');
+    if(report_id_item)
+    {
+        report_id = report_id_item.value;
+    }
 
-	var report = $('report_array');
-	if(report && report.checked)
-	{
-		type_report = 'array';
-	}
-	var period_custom = $('custom_period');
-	var period_year = $('period_by_year');
-	var period_month = $('period_by_month');
-	if(period_custom && period_custom.checked)
-	{
-		type_period = 'custom_period';
-		var datestart_item = $('datestart');
-		if(datestart_item)
-		{
-			datestart = datestart_item.value;
-		}
-		var dateend_item = $('dateend');
-		if(dateend_item)
-		{
-			dateend = dateend_item.value;
-		}
-	}
-	else if(period_year && period_year.checked)
-	{
-		type_period = 'period_year';
-		var years_list = $('the_year');
-		if(years_list)
-		{
-			year =  years_list.options[years_list.selectedIndex].value;
-		}
-	}
-	else if(period_month && period_month.checked)
-	{
-		type_period = 'period_month';
-		var months_list = $('the_month');
-		if(months_list)
-		{
-			month =  months_list.options[months_list.selectedIndex].value;
-		}
-	}
-	else
-	{
-		error = 'empty_type_period';
-	}
+    var report = $('report_array');
+    if(report && report.checked)
+    {
+        type_report = 'array';
+    }
+    var period_custom = $('custom_period');
+    var period_year = $('period_by_year');
+    var period_month = $('period_by_month');
+    if(period_custom && period_custom.checked)
+    {
+        type_period = 'custom_period';
+        var datestart_item = $('datestart');
+        if(datestart_item)
+        {
+            datestart = datestart_item.value;
+        }
+        var dateend_item = $('dateend');
+        if(dateend_item)
+        {
+            dateend = dateend_item.value;
+        }
+    }
+    else if(period_year && period_year.checked)
+    {
+        type_period = 'period_year';
+        var years_list = $('the_year');
+        if(years_list)
+        {
+            year =  years_list.options[years_list.selectedIndex].value;
+        }
+    }
+    else if(period_month && period_month.checked)
+    {
+        type_period = 'period_month';
+        var months_list = $('the_month');
+        if(months_list)
+        {
+            month =  months_list.options[months_list.selectedIndex].value;
+        }
+    }
+    else
+    {
+        error = 'empty_type_period';
+    }
 
-	if(type_period  != '' && url && error == '')
-	{
-		new Ajax.Request(url,
-		{
-		    method:'post',
-		    parameters: {
-				id_report : report_id,
-				report_type : type_report,
-				period_type : type_period,
-				the_year : year,
-				the_month : month,
-				date_start : datestart,
-				date_fin : dateend
-						},
-		        onSuccess: function(answer){
-			//	alert(answer.responseText);
-				var div_to_fill = $('result_period_report');
-			//	console.log(div_to_fill);
-				if(div_to_fill)
-				{
-					div_to_fill.innerHTML = answer.responseText;
-				}
-			}
-		});
-	}
+    if(type_period  != '' && url && error == '')
+    {
+        new Ajax.Request(url,
+        {
+            method:'post',
+            parameters: {
+                id_report : report_id,
+                report_type : type_report,
+                period_type : type_period,
+                the_year : year,
+                the_month : month,
+                date_start : datestart,
+                date_fin : dateend
+                        },
+                onSuccess: function(answer){
+            //  alert(answer.responseText);
+                var div_to_fill = $('result_period_report');
+            //  console.log(div_to_fill);
+                if(div_to_fill)
+                {
+                    div_to_fill.innerHTML = answer.responseText;
+                }
+            }
+        });
+    }
 }
 
 /**
@@ -1939,29 +1992,29 @@ function valid_report_by_period(url)
  **/
 function launch_autocompleter(path_script, id_text, id_div)
 {
-	var input = id_text ;
-	var div  = id_div ;
+    var input = id_text ;
+    var div  = id_div ;
 
-	if( path_script)
-	{
-		// Ajax autocompleter object creation
-	 		new Ajax.Autocompleter(input, div, path_script, {
-		 method:'get',
-		 paramName:'Input',
-		 minChars: 2
-		 });
-	}
-	else
-	{
-		if(console != null)
-		{
-			console.log('error parameters launch_autocompleter function');
-		}
-		else
-		{
-			alert('error parameters launch_autocompleter function');
-		}
-	}
+    if( path_script)
+    {
+        // Ajax autocompleter object creation
+            new Ajax.Autocompleter(input, div, path_script, {
+         method:'get',
+         paramName:'Input',
+         minChars: 2
+         });
+    }
+    else
+    {
+        if(console != null)
+        {
+            console.log('error parameters launch_autocompleter function');
+        }
+        else
+        {
+            alert('error parameters launch_autocompleter function');
+        }
+    }
 }
 
 /**
@@ -1972,24 +2025,24 @@ function launch_autocompleter(path_script, id_text, id_div)
  **/
 function get_opt_index(url, id_coll)
 {
-	if(url && id_coll)
-	{
-		new Ajax.Request(url,
-		{
-			method:'post',
-			parameters: {
-				coll_id : id_coll
-					},
-					onSuccess: function(answer){
-						var div_to_fill = $('opt_index');
-					//	console.log(div_to_fill);
-						if(div_to_fill)
-						{
-							div_to_fill.innerHTML = answer.responseText;
-						}
-					}
-		});
-	}
+    if(url && id_coll)
+    {
+        new Ajax.Request(url,
+        {
+            method:'post',
+            parameters: {
+                coll_id : id_coll
+                    },
+                    onSuccess: function(answer){
+                        var div_to_fill = $('opt_index');
+                    //  console.log(div_to_fill);
+                        if(div_to_fill)
+                        {
+                            div_to_fill.innerHTML = answer.responseText;
+                        }
+                    }
+        });
+    }
 }
 
 /**
@@ -2001,53 +2054,53 @@ function get_opt_index(url, id_coll)
  **/
 function change_doctype_details(doctype_id, url, error_empty_type)
 {
-	if(doctype_id != null && doctype_id != '' && doctype_id != NaN)
-	{
-		new Ajax.Request(url,
-		{
-		    method:'post',
-		    parameters: { type_id : doctype_id
-						},
-		        onSuccess: function(answer){
-				eval("response = "+answer.responseText);
-			//	alert(answer.responseText);
-				if(response.status == 0 )
-				{
-					var indexes = response.new_opt_indexes;
-					var div_indexes = $('opt_indexes');
-					if(div_indexes )
-					{
-						div_indexes.update(indexes);
-					}
+    if(doctype_id != null && doctype_id != '' && doctype_id != NaN)
+    {
+        new Ajax.Request(url,
+        {
+            method:'post',
+            parameters: { type_id : doctype_id
+                        },
+                onSuccess: function(answer){
+                eval("response = "+answer.responseText);
+            //  alert(answer.responseText);
+                if(response.status == 0 )
+                {
+                    var indexes = response.new_opt_indexes;
+                    var div_indexes = $('opt_indexes');
+                    if(div_indexes )
+                    {
+                        div_indexes.update(indexes);
+                    }
 
-				}
-				else
-				{
-					try{
-					//	$('main_error').innerHTML = response.error_txt;
-						}
-					catch(e){}
-				}
-			}
-		});
-	}
-	else
-	{
-		try{
-			//$('main_error').innerHTML = error_empty_type;
-			}
-		catch(e){}
-	}
+                }
+                else
+                {
+                    try{
+                    //  $('main_error').innerHTML = response.error_txt;
+                        }
+                    catch(e){}
+                }
+            }
+        });
+    }
+    else
+    {
+        try{
+            //$('main_error').innerHTML = error_empty_type;
+            }
+        catch(e){}
+    }
 }
 function unmark_empty_process(id)
 {
-	$(id).checked=false;
+    $(id).checked=false;
 }
 
 function updateContent(url,id_div_to_update)
 {
-	new Ajax.Updater(id_div_to_update,url , {
-	parameters: { }
+    new Ajax.Updater(id_div_to_update,url , {
+    parameters: { }
 });
 
 }
