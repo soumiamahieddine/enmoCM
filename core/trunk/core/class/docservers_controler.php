@@ -928,7 +928,7 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
 				$result = array("status" => "ko", "mime_type" => "", "ext" => "", "file_content" => "", "error" => _PB_WITH_FINGERPRINT_OF_DOCUMENT);
 			}
 			if(file_exists($extract['tmpArchive'])) {
-				self::washTmp($extract['tmpArchive']);
+				//self::washTmp($extract['tmpArchive']);
 			}
 		}
 		return $result;
