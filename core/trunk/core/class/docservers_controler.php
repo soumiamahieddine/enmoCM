@@ -720,19 +720,19 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
 	 * @param  	$tmpPath infos of the doc to store, contains :
 	 * @return 	boolean
 	 */
-	public function washTmp($tmpPath) {
-		$classScan= dir($tmpPath);
-		while(($fileScan=$classScan->read())!=false) {
-			if($fileScan=='.'||$fileScan=='..') {
-		 		continue;
-			} elseif(is_dir($tmpPath.DIRECTORY_SEPARATOR.$fileScan)) {
-				self::washTmp($tmpPath.DIRECTORY_SEPARATOR.$fileScan);
-			} else {
-				unlink($tmpPath.DIRECTORY_SEPARATOR.$fileScan);
+	function washTmp($dir) {
+		if (is_dir($dir)) {
+			$objects = scandir($dir);
+			foreach ($objects as $object) {
+				if ($object != "." && $object != "..") {
+					if (filetype($dir.DIRECTORY_SEPARATOR.$object) == "dir") self::washTmp($dir.DIRECTORY_SEPARATOR.$object); else unlink($dir.DIRECTORY_SEPARATOR.$object);
+				}
 			}
+		reset($objects);
+		rmdir($dir);
 		}
-		rmdir($tmpPath);
 	}
+	
 	
 	/**
 	 * Extract a file from an archive
@@ -928,7 +928,7 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
 				$result = array("status" => "ko", "mime_type" => "", "ext" => "", "file_content" => "", "error" => _PB_WITH_FINGERPRINT_OF_DOCUMENT);
 			}
 			if(file_exists($extract['tmpArchive'])) {
-				//self::washTmp($extract['tmpArchive']);
+				self::washTmp($extract['tmpArchive']);
 			}
 		}
 		return $result;
