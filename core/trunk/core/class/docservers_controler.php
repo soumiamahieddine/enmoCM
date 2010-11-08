@@ -776,8 +776,38 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
 				return $result;
 			}
 			$format = substr($fileInfos['offset_doc'], strrpos($fileInfos['offset_doc'], '.') + 1);
-			$result = array("status" => "ok", "path"=>$tmp.$tmpArchive.DIRECTORY_SEPARATOR.$fileInfos['offset_doc'], "mime_type"=>self::getMimeType($tmp.$tmpArchive.DIRECTORY_SEPARATOR.$fileInfos['offset_doc']), "format"=>$format, "tmpArchive"=>$tmp.$tmpArchive, "error"=> "");
-			$classScan = dir($tmp.$tmpArchive);
+			if(!file_exists($tmp.$tmpArchive.DIRECTORY_SEPARATOR.$fileInfos['offset_doc'])) {
+				$classScan = dir($tmp.$tmpArchive);
+				while(($fileScan=$classScan->read()) != false) {
+					if($fileScan=='.' || $fileScan=='..') {
+						continue;
+					} else {
+						$_exec_error_bis = "";
+						$tmpArchiveBis = uniqid(rand());
+						if(mkdir($tmp.$tmpArchive.DIRECTORY_SEPARATOR.$tmpArchiveBis)) {
+							if(DIRECTORY_SEPARATOR == "/") {
+								$commandBis = "7z e -y -o".escapeshellarg($tmp.$tmpArchive.DIRECTORY_SEPARATOR.$tmpArchiveBis)." ".escapeshellarg($tmp.$tmpArchive.DIRECTORY_SEPARATOR.$fileScan);
+							} else {
+								$commandBis = "\"".str_replace("\\", "\\\\", $_SESSION['docserversFeatures']['DOCSERVERS']['PATHTOCOMPRESSTOOL'])."\" e -y -o".escapeshellarg($tmp.$tmpArchive.DIRECTORY_SEPARATOR.$tmpArchiveBis)." ".escapeshellarg($tmp.$tmpArchive.DIRECTORY_SEPARATOR.$fileScan);
+							}
+							$tmpCmd = "";
+							exec($commandBis, $tmpCmd, $_exec_error_bis);
+							if($_exec_error_bis > 0) {
+								$result = array("status" => "ko", "path" => "", "mime_type" => "", "format" => "", "tmpArchive" => "", "error"=>_PB_WITH_EXTRACTION_OF_CONTAINER."#".$_exec_error_bis);
+								return $result;
+							}
+						} else {
+							$result = array("status" => "ko", "path" => "", "mime_type" => "", "format" => "", "tmpArchive" => "", "error"=>_PB_WITH_EXTRACTION_OF_CONTAINER."#".$tmp.$tmpArchive.DIRECTORY_SEPARATOR.$tmpArchiveBis);
+							return $result;
+						}
+						$result = array("status" => "ok", "path"=>$tmp.$tmpArchive.DIRECTORY_SEPARATOR.$tmpArchiveBis.DIRECTORY_SEPARATOR.$fileInfos['offset_doc'], "mime_type"=>self::getMimeType($tmp.$tmpArchive.DIRECTORY_SEPARATOR.$tmpArchiveBis.DIRECTORY_SEPARATOR.$fileInfos['offset_doc']), "format"=>$format, "tmpArchive"=>$tmp.$tmpArchive, "error"=> "");
+						unlink($tmp.$tmpArchive.DIRECTORY_SEPARATOR.$fileScan);
+						break;
+					}
+				}
+			} else {
+				$result = array("status" => "ok", "path"=>$tmp.$tmpArchive.DIRECTORY_SEPARATOR.$fileInfos['offset_doc'], "mime_type"=>self::getMimeType($tmp.$tmpArchive.DIRECTORY_SEPARATOR.$fileInfos['offset_doc']), "format"=>$format, "tmpArchive"=>$tmp.$tmpArchive, "error"=> "");
+			}
 			unlink($fileNameOnTmp);
 			return $result;
 		}
@@ -857,7 +887,7 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
 					$format = $extract['format'];
 				}
 			}
-			//var_dump($extract);
+			//var_dump($extract);exit;
 			//manage view of the file
 			$use_tiny_mce = false;
 			if(strtolower($format) == 'maarch' && $coreTools->is_module_loaded('templates')) {
