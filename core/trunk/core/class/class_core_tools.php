@@ -1847,7 +1847,7 @@ class core_tools extends functions
 
     public function get_custom_id()
     {
-        if(!file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.'custom.xml'))
+        if(!isset($_SESSION['config']) || !file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.'custom.xml'))
         {
             return '';
         }
