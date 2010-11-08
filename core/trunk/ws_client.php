@@ -8,7 +8,7 @@ $fileContentArray = array();
 $fileContentArray = $client->viewResource((integer) $_REQUEST['id'], $_REQUEST['table']);
 if($fileContentArray->status == "ok") {
 	$fileContent = base64_decode($fileContentArray->file_content);
-	$Fnm = "local.".strtolower($fileContentArray->ext);
+	$Fnm = $fileContentArray->tmp_path.DIRECTORY_SEPARATOR.rand()."_".md5($fileContent).".".strtolower($fileContentArray->ext);
 	$inF = fopen($Fnm, "w");
 	fwrite($inF, $fileContent);
 	fclose($inF);

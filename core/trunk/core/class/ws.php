@@ -23,6 +23,7 @@ $SOAP_typedef['returnViewResource'] = array('status'=>'string',
 										'mime_type'=>'string',
 										'ext'=>'string',
 										'file_content'=>'string',
+										'tmp_path'=>'string',
 										'error'=>'string'
 									);
 $SOAP_dispatch_map['docserverSave'] = array(

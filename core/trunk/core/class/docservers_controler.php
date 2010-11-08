@@ -850,7 +850,7 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
 		$adr = $resource->getResourceAdr($tableName, $gedId, $whereClause);
 		//return $adr;exit;
 		if($adr['status'] == "ko") {
-			$result = array("status" => "ko", "mime_type" => "", "ext" => "", "file_content" => "", "error" => _NO_RIGHT_ON_RESOURCE_OR_RESOURCE_NOT_EXISTS);
+			$result = array("status" => "ko", "mime_type" => "", "ext" => "", "file_content" => "", "tmp_path" => "", "error" => _NO_RIGHT_ON_RESOURCE_OR_RESOURCE_NOT_EXISTS);
 		} else {
 			$docserver = $adr['docserver_id'];
 			$path = $adr['path'];
@@ -873,14 +873,14 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
 			$docserverTypeControler = new docserver_types_controler();
 			$docserverTypeObject = $docserverTypeControler->get($docserverObject->docserver_type_id);
 			if($docserverTypeObject->is_container && $offset_doc == "") {
-				$result = array("status" => "ko", "mime_type" => "", "ext" => "", "file_content" => "", "error" => _PB_WITH_OFFSET_OF_THE_DOC_IN_THE_CONTAINER);
+				$result = array("status" => "ko", "mime_type" => "", "ext" => "", "file_content" => "", "tmp_path" => "", "error" => _PB_WITH_OFFSET_OF_THE_DOC_IN_THE_CONTAINER);
 			}
 			//manage compressed resource
 			if($docserverTypeObject->is_compressed) {
 				$extract = array();
 				$extract = self::extractArchive($adr);
 				if($extract['status'] == "ko") {
-					$result = array("status" => "ko", "mime_type" => "", "ext" => "", "file_content" => "", "error" => $extract['error']);
+					$result = array("status" => "ko", "mime_type" => "", "ext" => "", "file_content" => "", "tmp_path" => "", "error" => $extract['error']);
 				} else {
 					$file = $extract['path'];
 					$mimeType = $extract['mime_type'];
@@ -916,16 +916,15 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
 					if(file_exists($file)) {
 						$content = file_get_contents($file, FILE_BINARY);
 						$encodedContent = base64_encode($content);
-						$result = array("status" => "ok", "mime_type" => $mimeType, "ext" => $format, "file_content" => $encodedContent, "error" => "");
+						$result = array("status" => "ok", "mime_type" => $mimeType, "ext" => $format, "file_content" => $encodedContent, "tmp_path" => $_SESSION['config']['tmppath'], "error" => "");
 					} else {
-						$result = array("status" => "ko", "mime_type" => "", "ext" => "", "file_content" => "", "error" => "file not exists");
+						$result = array("status" => "ko", "mime_type" => "", "ext" => "", "file_content" => "", "tmp_path" => "", "error" => "file not exists");
 					}
-					
 				} else {
-					$result = array("status" => "ko", "mime_type" => "", "ext" => "", "file_content" => "", "error" => _FILE_TYPE.' '._UNKNOWN);
+					$result = array("status" => "ko", "mime_type" => "", "ext" => "", "file_content" => "", "tmp_path" => "", "error" => _FILE_TYPE.' '._UNKNOWN);
 				}
 			} else {
-				$result = array("status" => "ko", "mime_type" => "", "ext" => "", "file_content" => "", "error" => _PB_WITH_FINGERPRINT_OF_DOCUMENT);
+				$result = array("status" => "ko", "mime_type" => "", "ext" => "", "file_content" => "", "tmp_path" => "", "error" => _PB_WITH_FINGERPRINT_OF_DOCUMENT);
 			}
 			if(file_exists($extract['tmpArchive'])) {
 				self::washTmp($extract['tmpArchive']);
