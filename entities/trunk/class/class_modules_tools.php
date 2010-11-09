@@ -147,12 +147,15 @@ class entities extends dbquery
 			}
 			else
 			{
+				//echo "<br>l'entité primaire de l'utilisateur<br>";
 				$db->query("select entity_id from ".$_SESSION['tablename']['ent_users_entities']." where user_id = '".$this->protect_string_db(trim($user_id))."' and primary_entity = 'Y'");
+				//$db->show();
 				$res = $db->fetch_object();
 				if(isset($res->entity_id))
 				{
 					$prim_entity = "'".$res->entity_id."'";
 				}
+				//echo $prim_entity."<br>";
 			}
 			if($prim_entity == '' && $user_id == 'superadmin')
 			{
@@ -166,6 +169,7 @@ class entities extends dbquery
 				}
 			}
 			$where = str_replace("@my_primary_entity",$prim_entity, $where);
+			//echo "<br>".$where."<br>";
 		}
 		$total = preg_match_all("|@subentities\[('[^\]]*')\]|", $where, $arr_tmp, PREG_PATTERN_ORDER);
 		if($total > 0)
@@ -187,7 +191,8 @@ class entities extends dbquery
 				$children = array();
 				for($j=0; $j< count($entities_tab);$j++)
 				{
-					$arr = $obj->getTabChildrenId($entities_tab[$j]);
+					$tabChildren = array();
+					$arr = $obj->getTabChildrenId($tabChildren, $entities_tab[$j]);
 					$children = array_merge($children, $arr);
 				}
 				$entities = '';
@@ -214,7 +219,7 @@ class entities extends dbquery
 		$total = preg_match_all("|@immediate_children\[('[^\]]*')\]|", $where, $arr_tmp, PREG_PATTERN_ORDER);
 		if($total > 0)
 		{
-			//$this->show_array( $arr_tmp);
+			//$this->show_array($arr_tmp);
 			for($i=0; $i< $total;$i++)
 			{
 				$entities_tab = array();
@@ -231,9 +236,12 @@ class entities extends dbquery
 				$children = array();
 				for($j=0; $j< count($entities_tab);$j++)
 				{
-					$arr = $obj->getTabChildrenId($entities_tab[$j], '', true);
+					//echo "<br>entité avant getTabChildrenId : ".$entities_tab[$j]."<br>";
+					$tabChildren = array();
+					$arr = $obj->getTabChildrenId($tabChildren, $entities_tab[$j], '', true);
 					$children = array_merge($children, $arr);
 				}
+				//print_r($children);
 				$entities = '';
 				for($j=0; $j< count($children);$j++)
 				{
@@ -253,9 +261,12 @@ class entities extends dbquery
 						$entities = "''";
 					}
 				}
+				
 				$where = preg_replace("|@immediate_children\['[^\]]*'\]|",$entities, $where, 1);
-			}
+				
+			}//echo "<br><br><br>".$where;
 		}
+		
 		$total = preg_match_all("|@sisters_entities\[('[^\]]*')\]|", $where, $arr_tmp, PREG_PATTERN_ORDER);
 		if($total > 0)
 		{
@@ -463,6 +474,7 @@ class entities extends dbquery
 				$action_id = $line->action_id;
 				$arr[$basket_id][$action_id]['entities'] = '';
 				$arr[$basket_id][$action_id]['users_entities'] = '';
+				//echo "<br>get_redirect_groupbasket : ".$primary_group." ".$basket_id." ".$user_id." ".$action_id."<br>";
 				$tmp_arr = $this->get_redirect_groupbasket($primary_group, $basket_id, $user_id, $action_id);
 				$arr[$basket_id][$action_id]['entities'] = $tmp_arr['entities'];
 				$arr[$basket_id][$action_id]['users_entities'] = $tmp_arr['users'];
@@ -496,12 +508,13 @@ class entities extends dbquery
 				$primary_group = $res->group_id;
 				$tmp_basket_id = preg_replace('/_'.$bask_abs[$i]['basket_owner'].'$/', '', $bask_abs[$i]['id']);
 				$db->query("select distinct action_id from ".$_SESSION['tablename']['ent_groupbasket_redirect']." where group_id = '".$this->protect_string_db(trim($primary_group))."' and basket_id = '".$this->protect_string_db(trim($tmp_basket_id))."'");
-			//	$db->show();
+				//$db->show();
 				while($line = $db->fetch_object())
 				{
 					$action_id = $line->action_id;
 					$arr[$bask_abs[$i]['id']][$action_id]['entities'] = '';
 					$arr[$bask_abs[$i]['id']][$action_id]['users_entities'] = '';
+					//echo "<br>get_redirect_groupbasket : ".$primary_group." ".$tmp_basket_id." ".$bask_abs[$i]['basket_owner']." ".$action_id."<br>";
 					$tmp_arr = $this->get_redirect_groupbasket($primary_group, $tmp_basket_id, $bask_abs[$i]['basket_owner'], $action_id);
 					$arr[$bask_abs[$i]['id']][$action_id]['entities'] = $tmp_arr['entities'];
 					$arr[$bask_abs[$i]['id']][$action_id]['users_entities'] = $tmp_arr['users'];
@@ -533,8 +546,11 @@ class entities extends dbquery
 		}
 		
 		$entities = preg_replace("/, $/", '', $entities);
+		//echo $entities."<br>";
+		//echo $user_id."<br>";
 		$entities = $this->process_where_clause($entities, $user_id);
 		$entities = preg_replace("/^,/", '', $entities);
+		$entities = preg_replace("/^ ,/", '', $entities);
 		$entities = preg_replace("/, ,/", ',', $entities);
 		$entities = preg_replace("/, $/", '', $entities);
 		

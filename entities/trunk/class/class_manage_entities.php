@@ -427,38 +427,49 @@ class entity extends dbquery
 
 
 	/**
-	* Get array of identifiers of all entity's children of an entity (that are related to a user)
-	*
-	* @param string $parent the root of the tree
-	*/
-	public function getTabChildrenId($parent = '', $where = '', $immediate_children_only = false)
-	{
-		static $tab_children_id = array();
+    * Get array of identifiers of all entity's children of an entity (that are related to a user)
+    *
+    * @param string $parent the root of the tree
+    */
+    public function getTabChildrenId($tab_children_id, $parent = '', $where = '', $immediate_children_only = false)
+    {
+        //echo "<br>call getTabChildrenId parent : ".$parent."<br>";
+        if($immediate_children_only) {
+        	//echo "immediate_children_only<br>";
+        }
+        //static $tab_children_id = array();
 
-		$this->connect();
+        $this->connect();
 
-		$this->query('select entity_id from '.$_SESSION['tablename']['ent_entities']." where parent_entity_id = '".$this->protect_string_db(trim($parent))."'".$where);
+        $this->query('select entity_id from '.$_SESSION['tablename']['ent_entities']." where parent_entity_id = '".$this->protect_string_db(trim($parent))."'".$where);
+		//$this->show();
+        if($this->nb_result() > 0)
+        {
+            while($line = $this->fetch_object())
+            {
+               // echo "entité : ".$this->protect_string_db(trim($line->entity_id))."<br>";
+                $tab_children_id[] = "'".$this->protect_string_db(trim($line->entity_id))."'";
 
-		if($this->nb_result() > 0)
-		{
-			while($line = $this->fetch_object())
-			{
-				$tab_children_id[] = "'".$this->protect_string_db(trim($line->entity_id))."'";
-
-				if($immediate_children_only == false)
-				{
-					$db2 = new entity();
-					$db2->connect();
-					$db2->query('select entity_id from '.$_SESSION['tablename']['ent_entities']." where parent_entity_id = '".$this->protect_string_db(trim($line->entity_id))."'".$where);
-					if($db2->nb_result() > 0)
-					{
-						$db2->getTabChildrenId($line->entity_id, $where);
-					}
-				}
-			}
-		}
-		return $tab_children_id;
-	}
+                if($immediate_children_only == false)
+                {
+                    $db2 = new entity();
+                    $db2->connect();
+                    $db2->query('select entity_id from '.$_SESSION['tablename']['ent_entities']." where parent_entity_id = '".$this->protect_string_db(trim($line->entity_id))."'".$where);
+                    /*echo "<br>";
+                    $db2->show();
+                    echo "<br>";*/
+                    if($db2->nb_result() > 0)
+                    {
+                        $tab_children_id = $db2->getTabChildrenId($tab_children_id, $line->entity_id, $where);
+                    }
+                }
+            }
+        }
+        /*echo "<pre>";
+        print_r($tab_children_id);
+        echo "</pre>";*/
+        return $tab_children_id;
+    }
 
 	/**
 	* Get array of identifiers of all entities that are related to a user
@@ -500,13 +511,15 @@ class entity extends dbquery
 				if($entity = $this->isEnabledEntity($parent[$i]['ENTITY_ID']))
 				{
 					$tab_all_id[] = "'".$entity->entity_id."'";
-					$tab_all_id = array_merge($tab_all_id, $this->getTabChildrenId($parent[$i]['ENTITY_ID'], $where));
+					$tabChildren = array();
+					$tab_all_id = array_merge($tab_all_id, $this->getTabChildrenId($tabChildren, $parent[$i]['ENTITY_ID'], $where));
 				}
 			}
 		}
 		elseif($parent == 'all')
 		{
-			$tab_all_id = $this->getTabChildrenId('', $where);
+			$tabChildren = array();
+			$tab_all_id = $this->getTabChildrenId($tabChildren, '', $where);
 		}
 
 		return $tab_all_id;
