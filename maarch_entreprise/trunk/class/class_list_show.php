@@ -1360,7 +1360,7 @@ class list_show extends functions
 
                     <td class="action" >
                         <a href="<?php  echo $path_del2.$param_comp;?>" class="delete"
-                    onclick="return(confirm('<?php  echo _REALLY_DELETE;  if($page_name == "users"){ echo $complete_name;}
+                    onclick="return(confirm('<?php  echo _REALLY_DELETE;  if(isset($page_name) && $page_name == "users"){ echo $complete_name;}
                              else { echo " ".$admin_id; }?> ?\n\r\n\r<?php  echo _DEFINITIVE_ACTION; ?>'));"><?php  echo _DELETE;?></a>
                     </td>
                     <?php  } ?>
