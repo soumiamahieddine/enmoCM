@@ -599,7 +599,7 @@ if (!defined('_CANTCHANGECOLL')) define( '_CANTCHANGECOLL', 'Vous ne pouvez pas 
 if (!defined('_DOCUMENTS_EXISTS_FOR_COUPLE_FOLDER_TYPE_COLLECTION')) define( '_DOCUMENTS_EXISTS_FOR_COUPLE_FOLDER_TYPE_COLLECTION', 'documents existent pour le couple type de dossier/collection');
 
 if (!defined('_NO_RIGHT')) define( '_NO_RIGHT', 'Erreur');
-if (!defined('_NO_RIGHT_TXT')) define( '_NO_RIGHT_TXT', 'Vous avez tentez d&rsquo;acc&eacute;der &agrave; un document auquel vous n&rsquo;avez pas droit ou le document n&rsquo;existe pas...');
+if (!defined('_NO_RIGHT_TXT')) define( '_NO_RIGHT_TXT', 'Vous avez tent&eacute; d&rsquo;acc&eacute;der &agrave; un document auquel vous n&rsquo;avez pas droit ou le document n&rsquo;existe pas...');
 if (!defined('_NUM_GED')) define( '_NUM_GED', 'N&deg; GED');
 
 ///// Manage action error
