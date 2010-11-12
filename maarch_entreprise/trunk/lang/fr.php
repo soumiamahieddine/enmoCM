@@ -1034,6 +1034,7 @@ if (!defined('_MANAGE_DOCSERVER_TYPES_DESC'))  define('_MANAGE_DOCSERVER_TYPES_D
 if (!defined('_ADMIN_DOCSERVERS'))  define('_ADMIN_DOCSERVERS', ' Administration des zones de stockage');
 if (!defined('_ADMIN_DOCSERVERS_DESC'))  define('_ADMIN_DOCSERVERS_DESC', ' Ajouter, modifier, supprimer des zones de stockage');
 if (!defined('_LIFE_CYCLE_COMMENT'))  define('_LIFE_CYCLE_COMMENT', 'Gestion du cycle de vie');
+if (!defined('_DOCSERVER_ID'))  define('_DOCSERVER_ID', 'Identifiant docserver');
 
 /**********DOCSERVERS****************/
 
@@ -1044,7 +1045,7 @@ if (!defined('_DOCSERVER_TYPE_DISABLED')) define( '_DOCSERVER_TYPE_DISABLED', 'T
 if (!defined('_SIZE_LIMIT_UNAPPROACHABLE')) define( '_SIZE_LIMIT_UNAPPROACHABLE', 'Taille limite inaccessible');
 if (!defined('_DOCSERVER_TYPE_ENABLED')) define( '_DOCSERVER_TYPE_ENABLED', 'Type de zone de stockage actif');
 if (!defined('_SIZE_LIMIT_LESS_THAN_ACTUAL_SIZE')) define( '_SIZE_LIMIT_LESS_THAN_ACTUAL_SIZE', 'Taille limite inférieure à la taille actuelle');
-if (!defined('_THE_DOCSERVER_DOES_NOT_HAVE_THE_ADEQUATE_RIGHTS')) define( '_THE_DOCSERVER_DOES_NOT_HAVE_THE_ADEQUATE_RIGHTS', 'Cette zone de stockage n\'autorisée');
+if (!defined('_THE_DOCSERVER_DOES_NOT_HAVE_THE_ADEQUATE_RIGHTS')) define( '_THE_DOCSERVER_DOES_NOT_HAVE_THE_ADEQUATE_RIGHTS', 'Cette zone de stockage n\'a pas les droits suffisants...');
 if (!defined('_DOCSERVER_DISABLED')) define( '_DOCSERVER_DISABLED', 'Zone de stockage suspendue');
 if (!defined('_DOCSERVER_ENABLED')) define( '_DOCSERVER_ENABLED', 'Zone de stockage active');
 if (!defined('_ALREADY_EXISTS_FOR_THIS_TYPE_OF_DOCSERVER')) define( '_ALREADY_EXISTS_FOR_THIS_TYPE_OF_DOCSERVER', 'existe déjà pour ce type');
