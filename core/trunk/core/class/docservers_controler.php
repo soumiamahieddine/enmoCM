@@ -743,7 +743,7 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
         $fileNameOnTmp = $tmp.rand()."_".md5_file($fileInfos['path_to_file'])."_".$fileInfos['filename'];
         $cp = copy($fileInfos['path_to_file'], $fileNameOnTmp);
         if($cp == false) {
-            $result = array("status" => "ko", "path" => "", "mime_type" => "", "format" => "", "tmpArchive" => "", "error" => _TMP_COPY_ERROR);
+            $result = array("status" => "ko", "path" => "", "mime_type" => "", "format" => "", "tmpArchive" => "", "fingerprint" => "", "error" => _TMP_COPY_ERROR);
             return $result;
         } else {
             $_exec_error = "";
@@ -757,11 +757,11 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
                 $tmpCmd = "";
                 exec($command, $tmpCmd, $_exec_error);
                 if($_exec_error > 0) {
-                    $result = array("status" => "ko", "path" => "", "mime_type" => "", "format" => "", "tmpArchive" => "", "error"=>_PB_WITH_EXTRACTION_OF_CONTAINER."#".$_exec_error);
+                    $result = array("status" => "ko", "path" => "", "mime_type" => "", "format" => "", "tmpArchive" => "", "fingerprint" => "", "error"=>_PB_WITH_EXTRACTION_OF_CONTAINER."#".$_exec_error);
                     return $result;
                 }
             } else {
-                $result = array("status" => "ko", "path" => "", "mime_type" => "", "format" => "", "tmpArchive" => "", "error"=>_PB_WITH_EXTRACTION_OF_CONTAINER."#".$tmp.$tmpArchive);
+                $result = array("status" => "ko", "path" => "", "mime_type" => "", "format" => "", "tmpArchive" => "", "fingerprint" => "", "error"=>_PB_WITH_EXTRACTION_OF_CONTAINER."#".$tmp.$tmpArchive);
                 return $result;
             }
             $format = substr($fileInfos['offset_doc'], strrpos($fileInfos['offset_doc'], '.') + 1);
@@ -782,20 +782,20 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
                             $tmpCmd = "";
                             exec($commandBis, $tmpCmd, $_exec_error_bis);
                             if($_exec_error_bis > 0) {
-                                $result = array("status" => "ko", "path" => "", "mime_type" => "", "format" => "", "tmpArchive" => "", "error"=>_PB_WITH_EXTRACTION_OF_CONTAINER."#".$_exec_error_bis);
+                                $result = array("status" => "ko", "path" => "", "mime_type" => "", "format" => "", "tmpArchive" => "", "fingerprint" => "", "error"=>_PB_WITH_EXTRACTION_OF_CONTAINER."#".$_exec_error_bis);
                                 return $result;
                             }
                         } else {
-                            $result = array("status" => "ko", "path" => "", "mime_type" => "", "format" => "", "tmpArchive" => "", "error"=>_PB_WITH_EXTRACTION_OF_CONTAINER."#".$tmp.$tmpArchive.DIRECTORY_SEPARATOR.$tmpArchiveBis);
+                            $result = array("status" => "ko", "path" => "", "mime_type" => "", "format" => "", "tmpArchive" => "", "fingerprint" => "", "error"=>_PB_WITH_EXTRACTION_OF_CONTAINER."#".$tmp.$tmpArchive.DIRECTORY_SEPARATOR.$tmpArchiveBis);
                             return $result;
                         }
-                        $result = array("status" => "ok", "path"=>$tmp.$tmpArchive.DIRECTORY_SEPARATOR.$tmpArchiveBis.DIRECTORY_SEPARATOR.$fileInfos['offset_doc'], "mime_type"=>self::getMimeType($tmp.$tmpArchive.DIRECTORY_SEPARATOR.$tmpArchiveBis.DIRECTORY_SEPARATOR.$fileInfos['offset_doc']), "format"=>$format, "tmpArchive"=>$tmp.$tmpArchive, "error"=> "");
+                        $result = array("status" => "ok", "path"=>$tmp.$tmpArchive.DIRECTORY_SEPARATOR.$tmpArchiveBis.DIRECTORY_SEPARATOR.$fileInfos['offset_doc'], "mime_type"=>self::getMimeType($tmp.$tmpArchive.DIRECTORY_SEPARATOR.$tmpArchiveBis.DIRECTORY_SEPARATOR.$fileInfos['offset_doc']), "format"=>$format, "fingerprint" => md5_file($tmp.$tmpArchive.DIRECTORY_SEPARATOR.$tmpArchiveBis.DIRECTORY_SEPARATOR.$fileInfos['offset_doc']), "tmpArchive"=>$tmp.$tmpArchive, "error"=> "");
                         unlink($tmp.$tmpArchive.DIRECTORY_SEPARATOR.$fileScan);
                         break;
                     }
                 }
             } else {
-                $result = array("status" => "ok", "path"=>$tmp.$tmpArchive.DIRECTORY_SEPARATOR.$fileInfos['offset_doc'], "mime_type"=>self::getMimeType($tmp.$tmpArchive.DIRECTORY_SEPARATOR.$fileInfos['offset_doc']), "format"=>$format, "tmpArchive"=>$tmp.$tmpArchive, "error"=> "");
+                $result = array("status" => "ok", "path"=>$tmp.$tmpArchive.DIRECTORY_SEPARATOR.$fileInfos['offset_doc'], "mime_type"=>self::getMimeType($tmp.$tmpArchive.DIRECTORY_SEPARATOR.$fileInfos['offset_doc']), "format"=>$format, "tmpArchive"=>$tmp.$tmpArchive, "fingerprint" => md5_file($tmp.$tmpArchive.DIRECTORY_SEPARATOR.$fileInfos['offset_doc']), "error"=> "");
             }
             unlink($fileNameOnTmp);
             return $result;
@@ -877,6 +877,8 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
                         $file = $extract['path'];
                         $mimeType = $extract['mime_type'];
                         $format = $extract['format'];
+                        //to control fingerprint of the offset 
+                        $fingerprint_from_docserver = $extract['fingerprint'];
                     }
                 }
                 //var_dump($extract);exit;
@@ -892,7 +894,8 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
                     $is = new indexing_searching_app();
                     $type_state = $is->is_filetype_allowed($format);
                 }
-                if($fingerprint_from_db == $fingerprint_from_docserver) {
+                //if fingerprint from db = 0 we do not control fingerprint
+                if($fingerprint_from_db == 0 || ($fingerprint_from_db == $fingerprint_from_docserver)) {
                     if($type_state <> false) {
                         if($_SESSION['history']['resview'] == "true") {
                             require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");

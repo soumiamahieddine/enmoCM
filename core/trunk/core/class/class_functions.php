@@ -1490,21 +1490,24 @@ class functions
 	* Method to generates private and public keys
 	*/
 	public function generatePrivatePublicKey() {
-		if(!file_exists($this->getPrivateKeyPath())) {
-			$inF = fopen($this->getPrivateKeyPath(),"w");
+		$privateKeyPath = $this->getPrivateKeyPath();
+		$publicKeyPath = $this->getPublicKeyPath();
+		if(!file_exists($privateKeyPath)) {
+			$inF = fopen($privateKeyPath,"w");
 			fclose($inF);
 		}
-		if(!file_exists($this->getPublicKeyPath())) {
-			$inF = fopen($this->getPublicKeyPath(),"w");
+		if(!file_exists($publicKeyPath)) {
+			$inF = fopen($publicKeyPath,"w");
 			fclose($inF);
 		}
 		$privateKey = openssl_pkey_new(array(
 			'private_key_bits' => 1024,
 			'private_key_type' => OPENSSL_KEYTYPE_RSA,
 		));
-		openssl_pkey_export_to_file($privateKey, $this->getPublicKeyPath(), $passphrase);
+		$passphrase = "";
+		openssl_pkey_export_to_file($privateKey, $privateKeyPath, $passphrase);
 		$keyDetails = openssl_pkey_get_details($privateKey);
-		file_put_contents($this->getPrivateKeyPath(), $keyDetails['key']);
+		file_put_contents($publicKeyPath, $keyDetails['key']);
 	}
 	
 	/**
@@ -1512,10 +1515,20 @@ class functions
 	* @param $text string to encrypt
 	*/
 	public function encrypt($sensitiveData) {
-		//base 64 encode to use it in url
-		$pubKey = openssl_pkey_get_public('file://'.$this->getPublicKeyPath());
-		openssl_public_encrypt($sensitiveData, $encryptedData, $pubKey);
-		return $this->base64UrlEncode($encryptedData);
+		$publicKeyPath = $this->getPublicKeyPath();
+		if(file_exists($publicKeyPath)) {
+			$pubKey = openssl_pkey_get_public('file://'.$publicKeyPath);
+			if(!$pubKey) {
+				return false;
+			} else {
+				$encryptedData = "";
+				openssl_public_encrypt($sensitiveData, $encryptedData, $pubKey);
+				//base 64 encode to use it in url
+				return $this->base64UrlEncode($encryptedData);
+			}
+		} else{
+			return false;
+		}
 	}
 	
 	/**
@@ -1523,9 +1536,20 @@ class functions
 	* @param $text string to decrypt
 	*/
 	public function decrypt($encryptedData) {
-		$privateKey = openssl_pkey_get_private('file://'.$this->getPrivateKeyPath(), $passphrase);
-		openssl_private_decrypt($this->base64UrlDecode($encryptedData), $decryptedData, $privateKey);
-		return $decryptedData;
+		$privateKeyPath = $this->getPrivateKeyPath();
+		if(file_exists($privateKeyPath)) {
+			$passphrase = "";
+			$privateKey = openssl_pkey_get_private('file://'.$privateKeyPath, $passphrase);
+			if(!$privateKey) {
+				return false;
+			} else {
+				$decryptedData = "";
+				openssl_private_decrypt($this->base64UrlDecode($encryptedData), $decryptedData, $privateKey);
+				return $decryptedData;
+			}
+		} else {
+			return false;
+		}
 	}
 	
 	/**
