@@ -28,7 +28,7 @@
 	<CRYPT>
 		<encrypt>true</encrypt>
 		<pathtopublickey>/home/user/maarchkey</pathtopublickey>
-		<pathtoprivatekey>/var/www/maarchkey.pub</pathtoprivatekey>
+		<pathtoprivatekey>/home/user/maarchkey.pub</pathtoprivatekey>
 	</CRYPT>
 	<TABLENAME>
 		<doctypes_first_level>doctypes_first_level</doctypes_first_level>
