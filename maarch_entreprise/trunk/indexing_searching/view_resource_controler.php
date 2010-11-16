@@ -90,8 +90,14 @@ if($s_id == '') {
 		$connexion->query("select password from ".$_SESSION['tablename']['users']." where user_id = '".$_SESSION['user']['UserId']."'");
 		$resultUser = $connexion->fetch_object();
 		if($core_tools->isEncrypted() == "true") {
+			//$core_tools->generatePrivatePublicKey();
 			$proxy1 = $core_tools->encrypt($_SESSION['user']['UserId']);
 			$proxy2 = $core_tools->encrypt($resultUser->password);
+			if(!$proxy1 || !$proxy2) {
+				$_SESSION['error'] = _PB_WITH_PUBLIC_OR_PRIVATE_KEY;
+				header("location: ".$_SESSION['config']['businessappurl']."index.php");
+				exit();
+			}
 		} else {
 			$proxy1 = $_SESSION['user']['UserId'];
 			$proxy2 = $resultUser->password;
