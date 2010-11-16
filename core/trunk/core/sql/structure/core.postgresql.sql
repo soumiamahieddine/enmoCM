@@ -50,7 +50,7 @@ CREATE TABLE docserver_types
   is_logged boolean NOT NULL DEFAULT false,
   log_template character varying(32) DEFAULT NULL::character varying,
   is_signed boolean NOT NULL DEFAULT false,
-  signature_mode character varying(32) DEFAULT NULL::character varying,
+  fingerprint_mode character varying(32) DEFAULT NULL::character varying,
   CONSTRAINT docserver_types_pkey PRIMARY KEY (docserver_type_id)
 )
 WITH (OIDS=FALSE);
