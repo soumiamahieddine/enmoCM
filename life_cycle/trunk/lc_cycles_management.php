@@ -96,13 +96,16 @@ elseif($mode == "up" || $mode == "add"){
 				</p>
 				<p>
 				 	<label for="where_clause"><?php echo _WHERE_CLAUSE; ?> : </label>
-					<input name="where_clause" type="text"  id="where_clause" value="<?php echo functions::show($_SESSION['m_admin']['lc_cycles']['where_clause']); ?>" />
+					<textarea name="where_clause" type="text"  id="where_clause" value="<?php echo functions::show($_SESSION['m_admin']['lc_cycles']['where_clause']); ?>" /><?php echo $_SESSION['m_admin']['lc_cycles']['where_clause'] ?></textarea>
+				</p>
+				<p>
+				 	<label for="break_key"><?php echo _BREAK_KEY; ?> : </label>
+					<input name="break_key" type="text"  id="break_key" value="<?php echo functions::show($_SESSION['m_admin']['lc_cycles']['break_key']); ?>" />
 				</p>
 				<p>
 				 	<label for="validation_mode"><?php echo _VALIDATION_MODE; ?> : </label>
 					<input name="validation_mode" type="text"  id="validation_mode" value="<?php echo functions::show($_SESSION['m_admin']['lc_cycles']['validation_mode']); ?>" />
 				</p>
-				
 				<p class="buttons">
 					<?php
 					if($mode == "up"){

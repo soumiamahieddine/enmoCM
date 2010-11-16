@@ -158,6 +158,7 @@ function validate_cs_submit($mode) {
 	$lc_cycles->policy_id=$f->protect_string_db($f->wash($_REQUEST['policy_id'], "no", _POLICY_ID." ", 'yes', 0, 32));
 	$lc_cycles->cycle_desc=$f->protect_string_db($f->wash($_REQUEST['cycle_desc'], "no", _CYCLE_DESC." ", 'yes', 0, 255));
 	$lc_cycles->sequence_number=$f->protect_string_db($f->wash($_REQUEST['sequence_number'], "num", _SEQUENCE_NUMBER." ", 'yes', 0, 255));
+	$lc_cycles->break_key=$f->protect_string_db($f->wash($_REQUEST['break_key'], "no", _BREAK_KEY." ", 'no', 0, 255));
 	
 	// Traitement et contrôle du WHERE-CLAUSE
 	$lc_cycles->where_clause=$f->protect_string_db($f->wash($_REQUEST['where_clause'], "no", _WHERE_CLAUSE." ", 'yes', 0, 255));

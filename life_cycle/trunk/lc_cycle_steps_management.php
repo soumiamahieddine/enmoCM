@@ -122,10 +122,6 @@ elseif($mode == "up" || $mode == "add"){
 	                <input type="radio" class="check" name="is_allow_failure" value="true" <?php if($_SESSION['m_admin']['docservers']['is_allow_failure']){?> checked="checked"<?php } ?> /><?php echo _YES;?>
 	                <input type="radio" class="check" name="is_allow_failure" value="false" <?php if(!$_SESSION['m_admin']['docservers']['is_allow_failure'] || $_SESSION['m_admin']['docservers']['is_allow_failure'] == ''){?> checked="checked"<?php } ?> /><?php echo _NO;?>
 	            </p>
-	             <p>
-				 	<label for="coll_id"><?php echo _COLLECTION_IDENTIFIER; ?> : </label>
-					<input name="coll_id" type="text"  id="coll_id" value="<?php echo functions::show($_SESSION['m_admin']['lc_cycle_steps']['coll_id']); ?>" />
-				</p>
 				<p>
 					<label for="step_operation"><?php echo _STEP_OPERATION; ?> : </label>
 					<select name="step_operation" id="step_operation">

@@ -15,6 +15,7 @@ CREATE TABLE lc_cycles
    cycle_desc character varying(255) NOT NULL,
    sequence_number integer NOT NULL,
    where_clause text, 
+   break_key character varying(255) DEFAULT NULL,
    validation_mode character varying(32) NOT NULL, 
    CONSTRAINT lc_cycle_pkey PRIMARY KEY (policy_id, cycle_id)
 ) 
@@ -28,7 +29,6 @@ CREATE TABLE lc_cycle_steps
    cycle_step_desc character varying(255) NOT NULL,
    docserver_type_id character varying(32) NOT NULL,
    is_allow_failure boolean NOT NULL DEFAULT false,
-   coll_id character varying(32) NOT NULL DEFAULT 'coll_1'::character varying,
    step_operation character varying(32) NOT NULL,
    sequence_number integer NOT NULL,
    is_must_complete boolean NOT NULL DEFAULT false,
