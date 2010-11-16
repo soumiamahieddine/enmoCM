@@ -161,13 +161,12 @@ function validate_cs_submit($mode) {
 	$lc_cycles->break_key=$f->protect_string_db($f->wash($_REQUEST['break_key'], "no", _BREAK_KEY." ", 'no', 0, 255));
 	
 	// Traitement et contrôle du WHERE-CLAUSE
-	$lc_cycles->where_clause=$f->protect_string_db($f->wash($_REQUEST['where_clause'], "no", _WHERE_CLAUSE." ", 'yes', 0, 255));
-	
-	if(lc_cycles_controler::where_test_secure($lc_cycles->where_clause)) {
+	if(lc_cycles_controler::where_test_secure($_REQUEST['where_clause'])) {
 		$_SESSION['error'] .= _WHERE_CLAUSE_NOT_SECURE."<br>";
-	} elseif (!lc_cycles_controler::where_test($lc_cycles->where_clause)) {
+	} elseif (!lc_cycles_controler::where_test($_REQUEST['where_clause'])) {
 		$_SESSION['error'] .= _PB_WITH_WHERE_CLAUSE."<br>";
 	}
+	$lc_cycles->where_clause=$f->protect_string_db($f->wash($_REQUEST['where_clause'], "no", _WHERE_CLAUSE." ", 'yes', 0, 255));
 	
 	$lc_cycles->validation_mode=$f->protect_string_db($f->wash($_REQUEST['validation_mode'], "no", _VALIDATION_MODE." ", 'yes', 0, 32));
 
