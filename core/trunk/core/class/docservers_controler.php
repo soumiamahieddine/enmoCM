@@ -78,6 +78,7 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
             if($control['status'] == "ok") {
                 //Update existing docserver
                 if(self::update($docserver)) {
+                	self::createPackageInformation($docserver);
                     $control = array("status" => "ok", "value" => $docserver->docserver_id);
                     //history
                     if($_SESSION['history']['docserversadd'] == "true") {
@@ -95,6 +96,7 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
             if($control['status'] == "ok") {
                 //Insert new docserver
                 if(self::insert($docserver)) {
+                	self::createPackageInformation($docserver);
                     $control = array("status" => "ok", "value" => $docserver->docserver_id);
                     //history
                     if($_SESSION['history']['docserversadd'] == "true") {
@@ -142,16 +144,15 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
                 $error .= _SIZE_LIMIT_LESS_THAN_ACTUAL_SIZE."#";
             }
         }
-        $docserver->path_template = $f->protect_string_db($f->wash($docserver->path_template, "no", _PATH_TEMPLATE." ", 'yes', 0, 255));
-        if(!is_dir($docserver->path_template)) {
-            $error .= _PATH_OF_DOCSERVER_UNAPPROACHABLE."#";
+		$docserver->path_template = $f->protect_string_db($f->wash($docserver->path_template, "no", _PATH_TEMPLATE." ", 'yes', 0, 255));
+		if(!is_dir($docserver->path_template)) {
+			$error .= _PATH_OF_DOCSERVER_UNAPPROACHABLE."#";
         } else {
-           // $Fnm = $docserver->path_template."test_docserver.txt";
-            if(!is_writable($docserver->path_template) || !is_readable($docserver->path_template))
-            {
-              $error .= _THE_DOCSERVER_DOES_NOT_HAVE_THE_ADEQUATE_RIGHTS;
-            }
-        }
+			// $Fnm = $docserver->path_template."test_docserver.txt";
+			if(!is_writable($docserver->path_template) || !is_readable($docserver->path_template)) {
+				$error .= _THE_DOCSERVER_DOES_NOT_HAVE_THE_ADEQUATE_RIGHTS;
+			}
+		}
         $docserver->coll_id = $f->protect_string_db($f->wash($docserver->coll_id, "no", _COLLECTION." ", 'yes', 0, 32));
         $docserver->priority_number = $f->protect_string_db($f->wash($docserver->priority_number, "num", _PRIORITY." ", 'yes', 0, 6));
         $docserver->docserver_location_id = $f->protect_string_db($f->wash($docserver->docserver_location_id, "no", _DOCSERVER_LOCATIONS." ", 'yes', 0, 32));
@@ -176,6 +177,37 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
         }
         return $return;
     }
+
+	/**
+    * method to create package information file on the root of the docserver
+    * 
+    * @param  $docserver docserver object
+    */
+	private function createPackageInformation($docserver) {
+		if(is_writable($docserver->path_template) && is_readable($docserver->path_template)) {
+			require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."docserver_types_controler.php");
+			$docserverTypeControler = new docserver_types_controler();
+			$docserverTypeObject = $docserverTypeControler->get($docserver->docserver_type_id);
+			$Fnm = $docserver->path_template.DIRECTORY_SEPARATOR."package_information";
+			if(file_exists($Fnm)) {
+				unlink($Fnm);
+			}
+			$inF = fopen($Fnm, "a");
+			fwrite($inF, _DOCSERVER_TYPE_ID." : ".$docserverTypeObject->docserver_type_id."\r\n");
+			fwrite($inF, _DOCSERVER_TYPE_LABEL." : ".$docserverTypeObject->docserver_type_label."\r\n");
+			fwrite($inF, _IS_CONTAINER." : ".$docserverTypeObject->is_container."\r\n");
+			fwrite($inF, _CONTAINER_MAX_NUMBER." : ".$docserverTypeObject->container_max_number."\r\n");
+			fwrite($inF, _IS_COMPRESSED." : ".$docserverTypeObject->is_compressed."\r\n");
+			fwrite($inF, _COMPRESS_MODE." : ".$docserverTypeObject->compression_mode."\r\n");
+			fwrite($inF, _IS_META." : ".$docserverTypeObject->is_meta."\r\n");
+			fwrite($inF, _META_TEMPLATE." : ".$docserverTypeObject->meta_template."\r\n");
+			fwrite($inF, _IS_LOGGED." : ".$docserverTypeObject->is_logged."\r\n");
+			fwrite($inF, _LOG_TEMPLATE." : ".$docserverTypeObject->log_template."\r\n");
+			fwrite($inF, _IS_SIGNED." : ".$docserverTypeObject->is_signed."\r\n");
+			fwrite($inF, _FINGERPRINT_MODE." : ".$docserverTypeObject->fingerprint_mode."\r\n");
+			fclose($inF); 
+		}
+	}
 
     /**
     * Inserts in the database (docservers table) a docserver object
