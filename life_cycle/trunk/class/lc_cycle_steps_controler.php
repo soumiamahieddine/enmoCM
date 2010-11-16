@@ -131,8 +131,8 @@ class lc_cycle_steps_controler extends ObjectControler implements ObjectControle
 		
 		if(!self::cycleStepExists($cycle_step_id))
 			return false;
-				
-		if(self::linkExists($policy_id, $cycle_step_id))
+		$cycleStep = self::get($cycle_step_id);
+		if(self::linkExists($cycleStep->policy_id, $cycle_step_id))
 			return false;
 
 		self::$db=new dbquery();
@@ -229,12 +229,12 @@ class lc_cycle_steps_controler extends ObjectControler implements ObjectControle
 			return true;
 		}
 		
-		$query = "select cycle_step_id from "._LC_ADR_X_TABLE_NAME." where cycle_step_id = '".$cycle_step_id."' and policy_id = '".$policy_id."'";
+		/*$query = "select cycle_step_id from "._LC_ADR_X_TABLE_NAME." where cycle_step_id = '".$cycle_step_id."' and policy_id = '".$policy_id."'";
 		self::$db->query($query);
 		if (self::$db->nb_result()>0) {
 			self::$db->disconnect();
 			return true;
-		}
+		}*/
 		self::$db->disconnect();
 	}
 	
