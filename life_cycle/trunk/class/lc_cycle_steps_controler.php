@@ -131,6 +131,7 @@ class lc_cycle_steps_controler extends ObjectControler implements ObjectControle
 		
 		if(!self::cycleStepExists($cycle_step_id))
 			return false;
+		
 		$cycleStep = self::get($cycle_step_id);
 		if(self::linkExists($cycleStep->policy_id, $cycle_step_id))
 			return false;

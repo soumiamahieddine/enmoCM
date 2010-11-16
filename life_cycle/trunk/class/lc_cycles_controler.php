@@ -132,8 +132,9 @@ class lc_cycles_controler extends ObjectControler implements ObjectControlerIF {
 		
 		if(!self::cycleExists($cycle_id))
 			return false;
-				
-		if(self::linkExists($policy_id, $cycle_id))
+		
+		$cycle = self::get($cycle_id);
+		if(self::linkExists($cycle->policy_id, $cycle_id))
 			return false;
 
 		self::$db=new dbquery();
