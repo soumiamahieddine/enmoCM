@@ -182,17 +182,17 @@ elseif($mode == "up" || $mode == "add"){
 				</div>
 				<p>
 	                <label><?php echo _IS_SIGNED; ?> : </label>
-	                <input type="radio" class="check" name="is_signed" id="is_signed" value="true" <?php if($_SESSION['m_admin']['docserver_types']['is_signed']){?> checked="checked"<?php } ?> onclick="hide_index(false, 'signature_mode');"/><?php echo _YES;?>
-	                <input type="radio" class="check" name="is_signed" id="is_signed" value="false" <?php if(!$_SESSION['m_admin']['docserver_types']['is_signed'] || $_SESSION['m_admin']['docserver_types']['is_signed'] == ''){?> checked="checked"<?php } ?> onclick="hide_index(true, 'signature_mode');"/><?php echo _NO;?>
+	                <input type="radio" class="check" name="is_signed" id="is_signed" value="true" <?php if($_SESSION['m_admin']['docserver_types']['is_signed']){?> checked="checked"<?php } ?> onclick="hide_index(false, 'fingerprint_mode');"/><?php echo _YES;?>
+	                <input type="radio" class="check" name="is_signed" id="is_signed" value="false" <?php if(!$_SESSION['m_admin']['docserver_types']['is_signed'] || $_SESSION['m_admin']['docserver_types']['is_signed'] == ''){?> checked="checked"<?php } ?> onclick="hide_index(true, 'fingerprint_mode');"/><?php echo _NO;?>
 	            </p>
-	            <div class ="signature_mode" id="signature_mode">
+	            <div class ="fingerprint_mode" id="fingerprint_mode">
 				<p>
-					<label for="signature_mode"><?php echo _SIGNATURE_MODE; ?> : </label>
-					<select name="signature_mode" id="signature_mode">
+					<label for="fingerprint_mode"><?php echo _FINGERPRINT_MODE; ?> : </label>
+					<select name="fingerprint_mode" id="fingerprint_mode">
 						<?php
-						for($cptCompressMode=1;$cptCompressMode<count($_SESSION['docserversFeatures']['DOCSERVERS']['SIGNATURE_MODE']['MODE']);$cptCompressMode++){
+						for($cptCompressMode=1;$cptCompressMode<count($_SESSION['docserversFeatures']['DOCSERVERS']['FINGERPRINT_MODE']['MODE']);$cptCompressMode++){
 							?>
-							<option value="<?php echo $_SESSION['docserversFeatures']['DOCSERVERS']['SIGNATURE_MODE']['MODE'][$cptCompressMode];?>" <?php if($_SESSION['m_admin']['docserver_types']['signature_mode'] == $_SESSION['docserversFeatures']['DOCSERVERS']['SIGNATURE_MODE']['MODE'][$cptCompressMode]) { echo 'selected="selected"';}?>><?php echo $_SESSION['docserversFeatures']['DOCSERVERS']['SIGNATURE_MODE']['MODE'][$cptCompressMode];?></option>
+							<option value="<?php echo $_SESSION['docserversFeatures']['DOCSERVERS']['FINGERPRINT_MODE']['MODE'][$cptCompressMode];?>" <?php if($_SESSION['m_admin']['docserver_types']['fingerprint_mode'] == $_SESSION['docserversFeatures']['DOCSERVERS']['FINGERPRINT_MODE']['MODE'][$cptCompressMode]) { echo 'selected="selected"';}?>><?php echo $_SESSION['docserversFeatures']['DOCSERVERS']['FINGERPRINT_MODE']['MODE'][$cptCompressMode];?></option>
 						<?php
 						}
 						?>
@@ -240,7 +240,7 @@ elseif($mode == "up" || $mode == "add"){
 				}
 				if(!$_SESSION['m_admin']['docserver_types']['is_signed']) {
 					?>
-					hide_index(true, 'signature_mode');
+					hide_index(true, 'fingerprint_mode');
 					<?php
 				}
 				?>

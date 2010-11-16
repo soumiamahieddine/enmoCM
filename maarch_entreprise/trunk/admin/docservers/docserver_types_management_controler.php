@@ -190,10 +190,10 @@ function validate_cs_submit($mode) {
     $docserver_types->is_signed=$f->protect_string_db($f->wash($_REQUEST['is_signed'], "no", _IS_SIGNED." ", 'yes', 0, '5'));
     if($docserver_types->is_signed == "false") {
         $docserver_types->is_signed=false;
-        $docserver_types->signature_mode = "NONE";
+        $docserver_types->fingerprint_mode = "NONE";
     } else {
         $docserver_types->is_signed=true;
-        $docserver_types->signature_mode=$f->protect_string_db($f->wash($_REQUEST['signature_mode'], "no", _SIGNATURE_MODE." ", 'yes', 0, 32));
+        $docserver_types->fingerprint_mode=$f->protect_string_db($f->wash($_REQUEST['fingerprint_mode'], "no", _FINGERPRINT_MODE." ", 'yes', 0, 32));
     }
 
     $status= array();

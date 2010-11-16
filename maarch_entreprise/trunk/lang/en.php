@@ -615,7 +615,7 @@ if (!defined('_NO_STRUCTURE_ATTACHED')) define('_NO_STRUCTURE_ATTACHED', 'This t
 if (!defined('_MAARCH_CREDITS')) define('_MAARCH_CREDITS', 'About Maarch&nbsp;');
 if (!defined('_CR_LONGTEXT_INFOS')) define('_CR_LONGTEXT_INFOS', '<p>Maarch Enterprise is a <b>DMS Platform</b>. It addresses most of the needs an organisation cas express to the operative management of its content. A vast majority of it components are released under the terms of the open source license GNU GPLv3. As a result, the total cost of ownership makes it affordable for any kind of organisation to use it (public sector, private companies associations, etc.).</p><p>Maarch Framework has been designed by two consultants whose experience in in records management and ADF sums up to 20 years. Thus this product <b>guarantees a level of stability, integrity and performance</b> one can expect for that type of product. The architecture of the software has been particularly designed so that it can run on standard servers.</p><p>Maarch is developed in PHP5 object. It is compatible with 4 database engines: MySQL, PostgreSQL, SQL Server and soon Oracle.</p><p>Maarch is <b>fully modular</b>: all functionalities are grouped in modules. The modules expose services, which can be enabled or disabled according to the user functional profile. A trained engineer can add or replace an existing module without modifying thr core of the program.</p><p>Maarch offers a global model and necessary tools to <b>acquire, manage, archive and retrieve production document streams</b>.<p>');
 
-if (!defined('_CR_LONGTEXT_INFOS')) define( '_CR_LONGTEXT_INFOS', '<p>Maarch Framework 3 est une infrastructure de <b>GED de Production</b>, r&eacute;pondant en standard &agrave; la plupart des besoins de gestion op&eacute;rationnelle de contenu d\'une organisation. La tr&egrave;s grande majorit&eacute; des composants du Framework est diffusé sous les termes de la licence open source GNU GPLv3, de sorte que le coût d\'impl&eacute;mentation rend la solution aborbable pour tout type d\'organisation (public, priv&eacute;, parapublic, monde associatif).</p> <p>Pour autant, Maarch Framework ayant &eacute;t&eacute; conçu par deux consultants cumulant &agrave; eux deux plus de 20 ans d\'expertise en Syst&egrave;mes d\'Archivage &Eacute;lectronique et en &Eacute;ditique, le produit offre <b>toutes les garanties de robustesse, d\'int&eacute;grit&eacute;, de performance</b> que l\'on doit attendre de ce type de produit. Un grand soin a &eacute;t&eacute; port&eacute; sur l\'architecture afin d\'autoriser des performances maximales sur du mat&eacute;riel standard.</p><p>Maarch est d&eacute;velopp&eacute; en PHP5 objet. Il est compatible avec les 4 moteurs de bases de donn&eacute;es suivants&nbsp;: MySQL, PostgreSQL, SQLServer, et bientôt Oracle.</p> <p>Maarch est <b>totalement modulaire</b>&nbsp;: toutes les fonctionnalit&eacute;s sont regroup&eacute;es dans des modules exposant des services qui peuvent être activ&eacute;s/d&eacute;sactiv&eacute;s en fonction du profil de l\'utilisateur. Un ing&eacute;nieur exp&eacute;riment&eacute; peut ajouter ou remplacer un module existant sans toucher au coeur du syst&egrave;me.</p><p>Maarch propose un sch&eacute;ma global et <b>tous les outils pour acqu&eacute;rir, g&eacute;rer, conserver puis restituer les flux documentaires de production</b>.');
+if (!defined('_CR_LONGTEXT_INFOS')) define( '_CR_LONGTEXT_INFOS', '<p>Maarch Framework 3 est une infrastructure de <b>GED de Production</b>, r&eacute;pondant en standard &agrave; la plupart des besoins de gestion op&eacute;rationnelle de contenu d\'une organisation. La tr&egrave;s grande majorit&eacute; des composants du Framework est diffusï¿½ sous les termes de la licence open source GNU GPLv3, de sorte que le coï¿½t d\'impl&eacute;mentation rend la solution aborbable pour tout type d\'organisation (public, priv&eacute;, parapublic, monde associatif).</p> <p>Pour autant, Maarch Framework ayant &eacute;t&eacute; conï¿½u par deux consultants cumulant &agrave; eux deux plus de 20 ans d\'expertise en Syst&egrave;mes d\'Archivage &Eacute;lectronique et en &Eacute;ditique, le produit offre <b>toutes les garanties de robustesse, d\'int&eacute;grit&eacute;, de performance</b> que l\'on doit attendre de ce type de produit. Un grand soin a &eacute;t&eacute; port&eacute; sur l\'architecture afin d\'autoriser des performances maximales sur du mat&eacute;riel standard.</p><p>Maarch est d&eacute;velopp&eacute; en PHP5 objet. Il est compatible avec les 4 moteurs de bases de donn&eacute;es suivants&nbsp;: MySQL, PostgreSQL, SQLServer, et bientï¿½t Oracle.</p> <p>Maarch est <b>totalement modulaire</b>&nbsp;: toutes les fonctionnalit&eacute;s sont regroup&eacute;es dans des modules exposant des services qui peuvent ï¿½tre activ&eacute;s/d&eacute;sactiv&eacute;s en fonction du profil de l\'utilisateur. Un ing&eacute;nieur exp&eacute;riment&eacute; peut ajouter ou remplacer un module existant sans toucher au coeur du syst&egrave;me.</p><p>Maarch propose un sch&eacute;ma global et <b>tous les outils pour acqu&eacute;rir, g&eacute;rer, conserver puis restituer les flux documentaires de production</b>.');
 
 if (!defined('_PROCESSING_DATE')) define('_PROCESSING_DATE', 'processing deadline');
 if (!defined('_PROCESS_NUM')) define('_PROCESS_NUM','Processing mail nb.');
@@ -972,13 +972,66 @@ if (!defined('_TITLE_STATS_CHOICE_PERIOD')) define('_TITLE_STATS_CHOICE_PERIOD',
 if (!defined('_SEE_DOCSERVERS_')) define( '_SEE_DOCSERVERS_', 'Display docservers of this type');
 if (!defined('_GO_MANAGE_DOCSERVER'))  define('_GO_MANAGE_DOCSERVER', 'Modify');
 if (!defined('_SEE_DOCSERVERS_LOCATION')) define( '_SEE_DOCSERVERS_LOCATION', 'Display docservers of this location');
+if (!defined('_MANAGE_DOCSERVERS'))  define('_MANAGE_DOCSERVERS', 'Docservers management ("docservers")');
+if (!defined('_MANAGE_DOCSERVERS_LOCATIONS'))  define('_MANAGE_DOCSERVERS_LOCATIONS', 'Docservers locations management ("docserver_locations")');
+if (!defined('_MANAGE_DOCSERVER_TYPES'))  define('_MANAGE_DOCSERVER_TYPES', 'Docservers types management  ("docserver_types")');
+if (!defined('_ADMIN_DOCSERVERS'))  define('_ADMIN_DOCSERVERS', ' Docservers administration');
 
+/***************DOCSERVERS TYPES*************************************/
+if (!defined('_DOCSERVER_TYPE_ID'))  define('_DOCSERVER_TYPE_ID', 'Docserver type ID ');
+if (!defined('_DOCSERVER_TYPE'))  define('_DOCSERVER_TYPE', 'Docserver type');
+if (!defined('_DOCSERVER_TYPES_LIST'))  define('_DOCSERVER_TYPES_LIST', 'Docserver type list ');
+if (!defined('_ALL_DOCSERVER_TYPES'))  define('_ALL_DOCSERVER_TYPES', 'View all');
+if (!defined('_DOCSERVER_TYPE_LABEL'))  define('_DOCSERVER_TYPE_LABEL', 'Docserver type label ');
+if (!defined('_IS_COMPRESSED'))  define('_IS_COMPRESSED', 'Compressed');
+if (!defined('_COMPRESS_MODE'))  define('_COMPRESS_MODE', 'Compression mode');
+if (!defined('_META_TEMPLATE'))  define('_META_TEMPLATE', 'Meta template');
+if (!defined('_FINGERPRINT_MODE'))  define('_FINGERPRINT_MODE', 'Signature mode');
+if (!defined('_CONTAINER_MAX_NUMBER'))  define('_CONTAINER_MAX_NUMBER', 'Container max number');
+if (!defined('_DOCSERVER_TYPE_MODIFICATION'))  define('_DOCSERVER_TYPE_MODIFICATION', 'Docserver type modification');
+if (!defined('_DOCSERVER_TYPE_ADDED'))  define('_DOCSERVER_TYPE_ADDED', 'Docserver type added ');
+if (!defined('_DOCSERVER_TYPE_ADDITION'))  define('_DOCSERVER_TYPE_ADDITION', 'Add a docserver type ');
+if (!defined('_DOCSERVER_TYPE_DELETED'))  define('_DOCSERVER_TYPE_DELETED', 'Docserver type deleted ');
 
+/***************DOCSERVERS*************************************/
+if (!defined('_DOCSERVER_ID'))  define('_DOCSERVER_ID', 'Docserver ID');
+if (!defined('_DEVICE_LABEL'))  define('_DEVICE_LABEL', 'Device label ');
+if (!defined('_SIZE_FORMAT'))  define('_SIZE_FORMAT', 'Size format ');
+if (!defined('_SIZE_LIMIT'))  define('_SIZE_LIMIT', 'Size limit');
+if (!defined('_ACTUAL_SIZE'))  define('_ACTUAL_SIZE', 'Actual size');
+if (!defined('_DOCSERVERS_LIST'))  define('_DOCSERVERS_LIST', 'Docservers list ');
+if (!defined('_ALL_DOCSERVERS'))  define('_ALL_DOCSERVERS', 'View all ');
+if (!defined('_DOCSERVER'))  define('_DOCSERVER', 'a docserver');
+if (!defined('_COLL_ID'))  define('_COLL_ID', 'Collection ID');
+if (!defined('_PERCENTAGE_FULL'))  define('_PERCENTAGE_FULL', 'Filling percentage');
+if (!defined('_IS_LOGGED'))  define('_IS_LOGGED', 'Is logged');
+if (!defined('_IS_CONTAINER'))  define('_IS_CONTAINER', 'Is contained');
+if (!defined('_LOG_TEMPLATE'))  define('_LOG_TEMPLATE', 'Templates for resources logged');
+if (!defined('_IS_SIGNED'))  define('_IS_SIGNED', 'Is signed');
+if (!defined('_FINGERPRINT_MODE'))  define('_FINGERPRINT_MODE', 'Signature mode');
+if (!defined('_DOCSERVER_LOCATIONS'))  define('_DOCSERVER_LOCATIONS', 'Docserver locations ');
+if (!defined('_DOCSERVER_MODIFICATION'))  define('_DOCSERVER_MODIFICATION', 'Docserver modification');
+if (!defined('_DOCSERVER_ADDITION'))  define('_DOCSERVER_ADDITION', 'Add a docserver');
+if (!defined('_DOCSERVER_ADDED'))  define('_DOCSERVER_ADDED', 'Docserver added');
+if (!defined('_DOCSERVER_DELETED'))  define('_DOCSERVER_ADDED', 'Docserver deleted');
+if (!defined('_DOCSERVER_UPDATED'))  define('_DOCSERVER_UPDATED', 'Docserver updated');
 
+/************DOCSERVER LOCATIONS******************************/
+if (!defined('_ALL_DOCSERVER_LOCATIONS'))  define('_ALL_DOCSERVER_LOCATIONS', 'View all');
+if (!defined('_DOCSERVER_LOCATIONS_LIST'))  define('_DOCSERVER_LOCATIONS_LIST', 'Docserver location list');
+if (!defined('_DOCSERVER_LOCATION'))  define('_DOCSERVER_LOCATION', 'a docserver location');
+if (!defined('_IPV4'))  define('_IPV4', 'IPv4 Address');
+if (!defined('_IPV6'))  define('_IPV6', 'IPv6 Address');
+if (!defined('_NET_DOMAIN'))  define('_NET_DOMAIN', 'Net domain');
+if (!defined('_DOCSERVER_LOCATION_ID'))  define('_DOCSERVER_LOCATION_ID', 'Docserver location ID');
+if (!defined('_MASK'))  define('_MASK', 'Mask');
+if (!defined('_DOCSERVER_LOCATION_ADDITION'))  define('_DOCSERVER_LOCATION_ADDITION', 'Add a docserver location');
+if (!defined('_DOCSERVER_LOCATION_ADDED'))  define('_DOCSERVER_LOCATION_ADDED', 'Docserver location added');
+if (!defined('_DOCSERVER_LOCATION_UPDATED'))  define('_DOCSERVER_LOCATION_UPDATED', 'Docserver location updated');
+if (!defined('_DOCSERVER_LOCATION_DELETED'))  define('_DOCSERVER_LOCATION_DELETED', 'Docserver location deleted');
 
 
 /******************** Authentification method  ************/
-
 if (!defined('_STANDARD_LOGIN')) define( '_STANDARD_LOGIN', 'Standard authentification');
 if (!defined('_ACTIVEX_LOGIN')) define( '_ACTIVEX_LOGIN', 'Ms Ie - ActiveX authentification');
 if (!defined('_HOW_CAN_I_LOGIN')) define( '_HOW_CAN_I_LOGIN', 'Read me if i can\'t log into Maarch..');

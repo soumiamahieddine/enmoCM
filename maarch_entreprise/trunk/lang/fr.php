@@ -559,7 +559,7 @@ if (!defined('_DECEMBER')) define( '_DECEMBER', 'D&eacute;cembre');
 if (!defined('_NOW_LOGOUT')) define( '_NOW_LOGOUT', 'Vous &ecirc;tes maintenant d&eacute;connect&eacute;.');
 
 if (!defined('_WELCOME2')) define( '_WELCOME2', 'Bienvenue');
-if (!defined('_WELCOME_NOTES1')) define( '_WELCOME_NOTES1', 'Pour naviguer dans l\'application');
+if (!defined('_WELCOME_NOTES1')) define( '_WELCOME_NOTES1', 'Pour naviguer dans l&rsquo;application');
 if (!defined('_WELCOME_NOTES2')) define( '_WELCOME_NOTES2', 'utilisez le <b>menu</b> ci-dessus');
 if (!defined('_WELCOME_NOTES3')) define( '_WELCOME_NOTES3', 'L&rsquo;&eacute;quipe Maarch est tr&egrave;s fi&egrave;re de vous pr&eacute;senter ce nouveau Framework marquant une &eacute;tape importante dans le d&eacute;veloppement de Maarch.<br><br>Dans cette application d&rsquo;exemple, vous pouvez :<ul><li>o Cr&eacute;er des boites d&rsquo;archives afin d&rsquo;y ranger les documents papier num&eacute;ris&eacute;s <b>(module <i> Physical Archive</i>)</b></li><li>o Imprimer des s&eacute;parateurs code-barre <b>(module <i> Physical Archive</i>)</b></li><li>o Indexer de nouveaux documents dans deux collections documentaires distinctes (documents de production et factures client) <b>(module <i> Indexing & Searching</i>)</b></li><li>o Importer en masse des factures clients <b>(utilitaire <i> Maarch AutoImport</i>)</b></li><li>o Consulter les deux fonds documentaires d&rsquo;exemple <b>(module <i> Indexing & Searching</i>)</b></li><li>o Parcourir la collection des factures au travers d&rsquo;arbres dynamiques <b>(module <i> AutoFoldering</i>)</b></li></ul><br><br>');
 if (!defined('_WELCOME_NOTES5')) define( '_WELCOME_NOTES5', 'Consultez le <u><a href="http://www.maarch.org/maarch_wiki/Maarch_Framework_v3">wiki maarch</a></u> pour plus d&rsquo;informations.');
@@ -628,7 +628,7 @@ if (!defined('_NO_STRUCTURE_ATTACHED')) define( '_NO_STRUCTURE_ATTACHED', 'Ce ty
 if (!defined('_MAARCH_CREDITS')) define( '_MAARCH_CREDITS', 'A propos de Maarch&nbsp;');
 
 
-if (!defined('_CR_LONGTEXT_INFOS')) define( '_CR_LONGTEXT_INFOS', '<p>Maarch Framework 3 est une infrastructure de <b>GED de Production</b>, r&eacute;pondant en standard &agrave; la plupart des besoins de gestion op&eacute;rationnelle de contenu d\'une organisation. La tr&egrave;s grande majorit&eacute; des composants du Framework est diffusé sous les termes de la licence open source GNU GPLv3, de sorte que le coût d\'impl&eacute;mentation rend la solution aborbable pour tout type d\'organisation (public, priv&eacute;, parapublic, monde associatif).</p> <p>Pour autant, Maarch Framework ayant &eacute;t&eacute; conçu par deux consultants cumulant &agrave; eux deux plus de 20 ans d\'expertise en Syst&egrave;mes d\'Archivage &Eacute;lectronique et en &Eacute;ditique, le produit offre <b>toutes les garanties de robustesse, d\'int&eacute;grit&eacute;, de performance</b> que l\'on doit attendre de ce type de produit. Un grand soin a &eacute;t&eacute; port&eacute; sur l\'architecture afin d\'autoriser des performances maximales sur du mat&eacute;riel standard.</p><p>Maarch est d&eacute;velopp&eacute; en PHP5 objet. Il est compatible avec les 4 moteurs de bases de donn&eacute;es suivants&nbsp;: MySQL, PostgreSQL, SQLServer, et bientôt Oracle.</p> <p>Maarch est <b>totalement modulaire</b>&nbsp;: toutes les fonctionnalit&eacute;s sont regroup&eacute;es dans des modules exposant des services qui peuvent être activ&eacute;s/d&eacute;sactiv&eacute;s en fonction du profil de l\'utilisateur. Un ing&eacute;nieur exp&eacute;riment&eacute; peut ajouter ou remplacer un module existant sans toucher au coeur du syst&egrave;me.</p><p>Maarch propose un sch&eacute;ma global et <b>tous les outils pour acqu&eacute;rir, g&eacute;rer, conserver puis restituer les flux documentaires de production</b>.');
+if (!defined('_CR_LONGTEXT_INFOS')) define( '_CR_LONGTEXT_INFOS', '<p>Maarch Framework 3 est une infrastructure de <b>GED de Production</b>, r&eacute;pondant en standard &agrave; la plupart des besoins de gestion op&eacute;rationnelle de contenu d&rsquo;une organisation. La tr&egrave;s grande majorit&eacute; des composants du Framework est diffusé sous les termes de la licence open source GNU GPLv3, de sorte que le coût d&rsquo;impl&eacute;mentation rend la solution aborbable pour tout type d&rsquo;organisation (public, priv&eacute;, parapublic, monde associatif).</p> <p>Pour autant, Maarch Framework ayant &eacute;t&eacute; conçu par deux consultants cumulant &agrave; eux deux plus de 20 ans d&rsquo;expertise en Syst&egrave;mes d&rsquo;Archivage &Eacute;lectronique et en &Eacute;ditique, le produit offre <b>toutes les garanties de robustesse, d&rsquo;int&eacute;grit&eacute;, de performance</b> que l&rsquo;on doit attendre de ce type de produit. Un grand soin a &eacute;t&eacute; port&eacute; sur l&rsquo;architecture afin d&rsquo;autoriser des performances maximales sur du mat&eacute;riel standard.</p><p>Maarch est d&eacute;velopp&eacute; en PHP5 objet. Il est compatible avec les 4 moteurs de bases de donn&eacute;es suivants&nbsp;: MySQL, PostgreSQL, SQLServer, et bientôt Oracle.</p> <p>Maarch est <b>totalement modulaire</b>&nbsp;: toutes les fonctionnalit&eacute;s sont regroup&eacute;es dans des modules exposant des services qui peuvent être activ&eacute;s/d&eacute;sactiv&eacute;s en fonction du profil de l&rsquo;utilisateur. Un ing&eacute;nieur exp&eacute;riment&eacute; peut ajouter ou remplacer un module existant sans toucher au coeur du syst&egrave;me.</p><p>Maarch propose un sch&eacute;ma global et <b>tous les outils pour acqu&eacute;rir, g&eacute;rer, conserver puis restituer les flux documentaires de production</b>.');
 
 if (!defined('_PROCESSING_DATE')) define( '_PROCESSING_DATE', 'Date limite de traitement');
 if (!defined('_PROCESS_NUM')) define( '_PROCESS_NUM','Traitement du courrier n&deg;');
@@ -872,7 +872,7 @@ if (!defined('_VIEW_DOC_FULL')) define( '_VIEW_DOC_FULL', 'Voir le document');
 if (!defined('_DETAILS_DOC_FULL')) define( '_DETAILS_DOC_FULL', 'Voir la fiche du document');
 if (!defined('_IDENTIFIER')) define( '_IDENTIFIER', 'R&eacute;f&eacute;rence');
 if (!defined('_CHRONO_NUMBER')) define( '_CHRONO_NUMBER', 'Num&eacute;ro chrono');
-if (!defined('_NO_CHRONO_NUMBER_DEFINED')) define( '_NO_CHRONO_NUMBER_DEFINED', 'Le num&eacute;ro chrono n\'est pas d&eacute;fini');
+if (!defined('_NO_CHRONO_NUMBER_DEFINED')) define( '_NO_CHRONO_NUMBER_DEFINED', 'Le num&eacute;ro chrono n&rsquo;est pas d&eacute;fini');
 if (!defined('_FOR_CONTACT_C')) define( '_FOR_CONTACT_C', 'Pour');
 if (!defined('_TO_CONTACT_C')) define( '_TO_CONTACT_C', 'De');
 
@@ -994,9 +994,9 @@ if (!defined('_TITLE_STATS_CHOICE_PERIOD'))  define('_TITLE_STATS_CHOICE_PERIOD'
 
 if (!defined('_STANDARD_LOGIN')) define( '_STANDARD_LOGIN', 'Authentification Maarch');
 if (!defined('_ACTIVEX_LOGIN')) define( '_ACTIVEX_LOGIN', 'Authentification Ms Internet Explorer - ActiveX');
-if (!defined('_HOW_CAN_I_LOGIN')) define( '_HOW_CAN_I_LOGIN', 'Je n\'arrive pas &agrave; me connecter...');
+if (!defined('_HOW_CAN_I_LOGIN')) define( '_HOW_CAN_I_LOGIN', 'Je n&rsquo;arrive pas &agrave; me connecter...');
 if (!defined('_CONNECT')) define( '_CONNECT', 'Se connecter');
-if (!defined('_LOGIN_MODE')) define( '_LOGIN_MODE', 'Type d\'authentification');
+if (!defined('_LOGIN_MODE')) define( '_LOGIN_MODE', 'Type d&rsquo;authentification');
 
 
 /******** Admin groups **********/
@@ -1030,14 +1030,12 @@ if (!defined('_MANAGE_DOCSERVERS_LOCATIONS'))  define('_MANAGE_DOCSERVERS_LOCATI
 if (!defined('_MANAGE_DOCSERVERS_LOCATIONS_DESC'))  define('_MANAGE_DOCSERVERS_LOCATIONS_DESC', 'Ajouter, supprimer, modifier les lieux de stockage de documents ');
 if (!defined('_MANAGE_DOCSERVER_TYPES'))  define('_MANAGE_DOCSERVER_TYPES', 'G&eacute;rer les types de zones de stockage ');
 if (!defined('_MANAGE_DOCSERVER_TYPES_DESC'))  define('_MANAGE_DOCSERVER_TYPES_DESC', 'Ajouter, modifier, supprimer les types de zones de stockage ');
-
 if (!defined('_ADMIN_DOCSERVERS'))  define('_ADMIN_DOCSERVERS', ' Administration des zones de stockage');
 if (!defined('_ADMIN_DOCSERVERS_DESC'))  define('_ADMIN_DOCSERVERS_DESC', ' Ajouter, modifier, supprimer des zones de stockage');
 if (!defined('_LIFE_CYCLE_COMMENT'))  define('_LIFE_CYCLE_COMMENT', 'Gestion du cycle de vie');
 if (!defined('_DOCSERVER_ID'))  define('_DOCSERVER_ID', 'Identifiant docserver');
 
 /**********DOCSERVERS****************/
-
 if (!defined('_YOU_CANNOT_DELETE')) define( '_YOU_CANNOT_DELETE', 'Suppression imposible');
 if (!defined('_UNKNOWN')) define( '_UNKNOWN', 'Inconnu');
 if (!defined('_YOU_CANNOT_DISABLE')) define( '_YOU_CANNOT_DISABLE', 'Suspension impossible');
@@ -1045,7 +1043,7 @@ if (!defined('_DOCSERVER_TYPE_DISABLED')) define( '_DOCSERVER_TYPE_DISABLED', 'T
 if (!defined('_SIZE_LIMIT_UNAPPROACHABLE')) define( '_SIZE_LIMIT_UNAPPROACHABLE', 'Taille limite inaccessible');
 if (!defined('_DOCSERVER_TYPE_ENABLED')) define( '_DOCSERVER_TYPE_ENABLED', 'Type de zone de stockage actif');
 if (!defined('_SIZE_LIMIT_LESS_THAN_ACTUAL_SIZE')) define( '_SIZE_LIMIT_LESS_THAN_ACTUAL_SIZE', 'Taille limite inférieure à la taille actuelle');
-if (!defined('_THE_DOCSERVER_DOES_NOT_HAVE_THE_ADEQUATE_RIGHTS')) define( '_THE_DOCSERVER_DOES_NOT_HAVE_THE_ADEQUATE_RIGHTS', 'Cette zone de stockage n\'a pas les droits suffisants...');
+if (!defined('_THE_DOCSERVER_DOES_NOT_HAVE_THE_ADEQUATE_RIGHTS')) define( '_THE_DOCSERVER_DOES_NOT_HAVE_THE_ADEQUATE_RIGHTS', 'Cette zone de stockage n&rsquo;a pas les droits suffisants...');
 if (!defined('_DOCSERVER_DISABLED')) define( '_DOCSERVER_DISABLED', 'Zone de stockage suspendue');
 if (!defined('_DOCSERVER_ENABLED')) define( '_DOCSERVER_ENABLED', 'Zone de stockage active');
 if (!defined('_ALREADY_EXISTS_FOR_THIS_TYPE_OF_DOCSERVER')) define( '_ALREADY_EXISTS_FOR_THIS_TYPE_OF_DOCSERVER', 'existe déjà pour ce type');
@@ -1053,7 +1051,6 @@ if (!defined('_DOCSERVER_LOCATION_ENABLED')) define( '_DOCSERVER_LOCATION_ENABLE
 if (!defined('_DOCSERVER_LOCATION_DISABLED')) define( '_DOCSERVER_LOCATION_DISABLED', 'Lieu de stockage suspendu');
 
 /***************DOCSERVERS TYPES*************************************/
-
 if (!defined('_DOCSERVER_TYPE_ID'))  define('_DOCSERVER_TYPE_ID', 'Identifiant du type de zone de stockage ');
 if (!defined('_DOCSERVER_TYPE'))  define('_DOCSERVER_TYPE', 'Type de zone ');
 if (!defined('_DOCSERVER_TYPES_LIST'))  define('_DOCSERVER_TYPES_LIST', 'Liste de types de zone de stockage');
@@ -1068,7 +1065,7 @@ if (!defined('_IS_SIGNED'))  define('_IS_SIGNED', 'Contient une empreinte');
 if (!defined('_COMPRESS_MODE'))  define('_COMPRESS_MODE', 'Mode de compression');
 if (!defined('_META_TEMPLATE'))  define('_META_TEMPLATE', 'Modèle de métadonnées');
 if (!defined('_LOG_TEMPLATE'))  define('_LOG_TEMPLATE', 'Modèle de journal');
-if (!defined('_SIGNATURE_MODE'))  define('_SIGNATURE_MODE', 'Algorythme de calcul d\'empreinte');
+if (!defined('_FINGERPRINT_MODE'))  define('_FINGERPRINT_MODE', 'Algorythme de calcul d&rsquo;empreinte');
 if (!defined('_CONTAINER_MAX_NUMBER'))  define('_CONTAINER_MAX_NUMBER', 'Taille maximale du conteneur');
 if (!defined('_DOCSERVER_TYPE_MODIFICATION'))  define('_DOCSERVER_TYPE_MODIFICATION', 'Modification de type de zone de stockage ');
 if (!defined('_DOCSERVER_TYPE_ADDITION'))  define('_DOCSERVER_TYPE_ADDITION', 'Ajouter un type de zone de stockage');
@@ -1084,7 +1081,7 @@ if (!defined('_SIZE_FORMAT'))  define('_SIZE_FORMAT', 'Format de la taille ');
 if (!defined('_SIZE_LIMIT'))  define('_SIZE_LIMIT', 'Taille maximale ');
 if (!defined('_ACTUAL_SIZE'))  define('_ACTUAL_SIZE', 'Taille actuelle ');
 if (!defined('_COLL_ID'))  define('_COLL_ID', 'Identifiant de la collection');
-if (!defined('_PATH_TEMPLATE'))  define('_PATH_TEMPLATE', 'Chemin d\'accès');
+if (!defined('_PATH_TEMPLATE'))  define('_PATH_TEMPLATE', 'Chemin d&rsquo;accès');
 if (!defined('_ADR_PRIORITY'))  define('_ADR_PRIORITY', 'Priorité de sequence de zone de stockage');
 if (!defined('_IS_READONLY'))  define('_IS_READONLY', 'Autorisé en lecture seule');
 if (!defined('_PERCENTAGE_FULL'))  define('_PERCENTAGE_FULL', 'Pourcentage de remplissage');
@@ -1101,11 +1098,7 @@ if (!defined('_GB'))  define('_GB', 'Gigaoctets ');
 if (!defined('_TB'))  define('_TB', 'Teraoctets ');
 if (!defined('_MB'))  define('_MB', 'Megaoctets ');
 
-
-
-
 /************DOCSERVER LOCATIONS******************************/
-
 if (!defined('_DOCSERVER_LOCATION_ID'))  define('_DOCSERVER_LOCATION_ID', 'Identifiant de lieu de stockage ');
 if (!defined('_DOCSERVER_LOCATIONS'))  define('_DOCSERVER_LOCATIONS', 'Lieu(x) de stockage ');
 if (!defined('_IPV4'))  define('_IPV4', 'Adresse IPv4');
@@ -1113,7 +1106,6 @@ if (!defined('_IPV6'))  define('_IPV6', 'Adresse IPv6');
 if (!defined('_NET_DOMAIN'))  define('_NET_DOMAIN', 'Domaine');
 if (!defined('_MASK'))  define('_MASK', 'Masque');
 if (!defined('_NET_LINK'))  define('_NET_LINK', 'URL du frontal');
-
 if (!defined('_DOCSERVER_LOCATION_ADDITION'))  define('_DOCSERVER_LOCATION_ADDITION', 'Ajouter un lieu de stockage ');
 if (!defined('_DOCSERVER_LOCATION_MODIFICATION'))  define('_DOCSERVER_LOCATION_MODIFICATION', 'Modification lieu de stockage');
 if (!defined('_ALL_DOCSERVER_LOCATIONS'))  define('_ALL_DOCSERVER_LOCATIONS', 'Tout afficher');
