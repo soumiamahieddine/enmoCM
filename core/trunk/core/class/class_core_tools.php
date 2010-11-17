@@ -155,7 +155,6 @@ class core_tools extends functions
         }
         if(!$mode_batch)
         {
-
             //Loads logs keywords of the actions
             require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR."class_db.php");
             $db = new dbquery();
