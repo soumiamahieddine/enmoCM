@@ -77,6 +77,7 @@ class entities extends dbquery
 		{
 			$path = "modules".DIRECTORY_SEPARATOR."entities".DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."typentity.xml";
 		}
+
 		$xmltype = simplexml_load_file($path);
 		$entypes = array();
 

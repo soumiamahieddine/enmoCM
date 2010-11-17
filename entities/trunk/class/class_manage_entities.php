@@ -960,6 +960,7 @@ class entity extends dbquery
 		{
 			$path = "modules".DIRECTORY_SEPARATOR."entities".DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."typentity.xml";
 		}
+
 		$xmltypeentity = simplexml_load_file($path);
 		//echo "<br>";
 		foreach($xmltypeentity->TYPE as $ENTITYTYPE)
