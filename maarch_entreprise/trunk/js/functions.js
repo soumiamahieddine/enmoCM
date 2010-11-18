@@ -1176,7 +1176,7 @@ function get_form_values(form_id, return_string, include_buttons)
     }
     else
     {
-         var in_string =  false;
+         var in_string =  return_string;
     }
 
     if(typeof( include_buttons) == "undefined" || include_buttons === null)
@@ -1185,9 +1185,8 @@ function get_form_values(form_id, return_string, include_buttons)
     }
     else
     {
-         var get_buttons =  false;
+         var get_buttons =  include_buttons;
     }
-
     var frm = $(form_id);
 
     if(in_string == true)
@@ -1206,7 +1205,7 @@ function get_form_values(form_id, return_string, include_buttons)
             {
                 if((frm.elements[i].tagName == 'INPUT' && frm.elements[i].type != 'checkbox' && frm.elements[i].type != 'radio') || frm.elements[i].tagName == 'TEXTAREA' )
                 {
-                    if(frm.elements[i].tagName == 'INPUT' && ( (get_buttons == true  && frm.elements[i].type == 'button' && frm.elements[i].type == 'submit') || (get_buttons == false && frm.elements[i].type != 'button' && frm.elements[i].type != 'submit')))
+                    if(frm.elements[i].tagName == 'INPUT' && (get_buttons == true  || (get_buttons == false && frm.elements[i].type == 'text')))
                     {
                         if(in_string == true)
                         {
