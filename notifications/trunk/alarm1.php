@@ -12,7 +12,7 @@
 */ 
 session_name('PeopleBox');
 session_start();
-
+date_default_timezone_set('Europe/Paris');
 if($argc != 2 )
 {
 	$_ENV['log'] .= date('d m Y').' '.date('H:i:s')." ERROR 1 : You must specify the configuration file! \r\n";
