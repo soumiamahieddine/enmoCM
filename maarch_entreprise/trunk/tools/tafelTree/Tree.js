@@ -264,7 +264,6 @@ TafelTree.prototype = {
             width = (options.width) ? options.width : '100%';
             height = (options.height) ? options.height : 'auto';
         }
-        alert('width '+treeWidth);
         // Variables images
         this.imgBase = (imgBase) ? imgBase : 'imgs/';
         this.setLineStyle('line');
