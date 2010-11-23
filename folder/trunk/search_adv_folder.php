@@ -69,9 +69,10 @@ if($choose_coll)
             <label for="coll_id"><?php echo _COLLECTION;?> :</label>
             <select name="coll_id" id="coll_id" onchange="search_change_coll('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=folder&page=get_foldertypes', this.options[this.options.selectedIndex].value)">
                 <option value=""><?php echo _CHOOSE_COLLECTION;?></option>
-                <?php for($i=0; $i<count($_SESSION['user']['security']);$i++)
+                <?php
+                foreach (array_keys($_SESSION['user']['security']) as $coll)
                 {
-                    ?><option value="<?php echo $_SESSION['user']['security'][$i]['coll_id'];?>"><?php echo $_SESSION['user']['security'][$i]['label_coll'];?></option><?php
+                    ?><option value="<?php echo $coll;?>"><?php echo $_SESSION['user']['security'][$coll]['DOC']['label_coll'];?></option><?php
                 }?>
             </select>
         </p>
