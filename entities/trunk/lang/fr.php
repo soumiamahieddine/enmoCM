@@ -147,4 +147,14 @@ if (!defined('_LISTMODELS_OCCURS_LINKED_TO'))  define('_LISTMODELS_OCCURS_LINKED
 
 if (!defined('_CHOOSE_REPLACEMENT_DEPARTMENT'))  define('_CHOOSE_REPLACEMENT_DEPARTMENT', 'Choisissez un service rempla&ccedil;ant');
 
+/******************** For reports ************/
+if (!defined('_ENTITY_VOL_STAT'))  define('_ENTITY_VOL_STAT', 'Volume des courriers par entit&eacute;');
+if (!defined('_ENTITY_VOL_STAT_DESC'))  define('_ENTITY_VOL_STAT', 'Volume des courriers par entit&eacute;');
+if (!defined('_NO_DATA_MESSAGE'))  define('_NO_DATA_MESSAGE', 'Pas assez de données');
+if (!defined('_MAIL_VOL_BY_ENT_REPORT'))  define('_MAIL_VOL_BY_ENT_REPORT', 'Volume de courrier par service');
+if (!defined('_WRONG_DATE_FORMAT'))  define('_WRONG_DATE_FORMAT', 'Format de date incorrect');
+if (!defined('_ENTITY_PROCESS_DELAY'))  define('_ENTITY_PROCESS_DELAY', 'D&eacute;lai moyen de traitement par entit&eacute;');
+if (!defined('_ENTITY_LATE_MAIL'))  define('_ENTITY_LATE_MAIL', 'Volume de courrier en retard par entit&eacute;');
+
+
 ?>
