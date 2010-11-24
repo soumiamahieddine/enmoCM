@@ -53,4 +53,8 @@ if (!defined('_NO_DATA_MESSAGE'))  define('_NO_DATA_MESSAGE', 'Donn&eacute;es in
 if (!defined('_REPORT'))  define('_REPORT', 'Etat');
 if (!defined('_ERROR_REPORT_TYPE'))  define('_ERROR_REPORT_TYPE', 'Erreur avec le type d&rsquo;&eacute;tat');
 if (!defined('_ERROR_PERIOD_TYPE'))  define('_ERROR_PERIOD_TYPE', 'Erreur avec le type de p&eacute;riode');
+if (!defined('_REPORTS_EVO_PROCESS'))  define('_REPORTS_EVO_PROCESS', 'Evolution du d&eacute;lai moyen de traitement');
+if (!defined('_MONTH'))  define('_MONTH', 'Mois');
+if (!defined('_PROCESS_DELAI_AVG'))  define('_PROCESS_DELAI_AVG', 'D&eacute;lai moyen');
+
 ?>
