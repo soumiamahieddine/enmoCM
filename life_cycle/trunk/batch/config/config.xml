@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ROOT>
+    <CONFIG>
+        <lang>fr</lang>
+        <MaarchDirectory>/var/www/maarch_entreprise_trunk/</MaarchDirectory>
+        <MaarchApps>maarch_entreprise</MaarchApps>
+        <LogLevel>INFO</LogLevel>  <!-- DEBUG, INFO, NOTICE, WARNING, ERROR-->
+        <DisplayedLogLevel>INFO</DisplayedLogLevel> <!-- DEBUG, INFO, NOTICE, WARNING, ERROR-->
+    </CONFIG>
+    <CONFIG_BASE>
+        <databaseserver>127.0.0.1</databaseserver>
+        <databaseserverport>5432</databaseserverport>
+        <databasename>lagi</databasename>
+        <databasetype>POSTGRESQL</databasetype>
+        <databaseuser>maarch</databaseuser>
+        <databasepassword>maarch</databasepassword>
+    </CONFIG_BASE>
+</ROOT>
