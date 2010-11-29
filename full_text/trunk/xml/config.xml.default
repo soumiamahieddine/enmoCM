@@ -10,7 +10,7 @@
 		<PASSWORD>maarch</PASSWORD>	
 		<TABLE_NAME>res_letterbox</TABLE_NAME>  
 		<FULLTEXT_COLUMN_NAME>fulltext_result</FULLTEXT_COLUMN_NAME> <!-- Null or 0 = to do, 1 = OK, else KO -->
-		<MAARCH_TOOLS_PATH>C:\xampp\htdocs\maarch_entreprise\apps\maarch_entreprise\tools\</MAARCH_TOOLS_PATH> <!-- only windows -->
+		<MAARCH_TOOLS_PATH>C:\xampp\htdocs\maarch_entreprise\apps\maarch_entreprise\tools\</MAARCH_TOOLS_PATH>
 		<MAX_BATCH_SIZE>500</MAX_BATCH_SIZE>
 	</CONFIG>
 </ROOT>
