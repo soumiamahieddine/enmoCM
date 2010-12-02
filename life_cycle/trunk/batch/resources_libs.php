@@ -1,87 +1,66 @@
 <?php
 
 function getSourceResourcePath($resId) {
-	$query = "select res_id, docserver_id, path, filename from " . $GLOBALS['table'] . " where res_id = " . $resId;
+	$query = "select res_id, docserver_id, path, filename from " . $GLOBALS['adrTable'] . " where res_id = " .$resId . " order by adr_priority";
 	do_query($GLOBALS['db'], $query);
-	$resRecordset = $GLOBALS['db']->fetch_object();
+	if ($GLOBALS['db']->nb_result() == 0) {
+		$query = "select res_id, docserver_id, path, filename from " . $GLOBALS['table'] . " where res_id = " . $resId;
+		do_query($GLOBALS['db'], $query);
+		$resRecordset = $GLOBALS['db']->fetch_object();
+	} else {
+		$resRecordset = $GLOBALS['db']->fetch_object();
+	}
 	$sourceFilePath = $resRecordset->path.$resRecordset->filename;
 	if ($GLOBALS['docserverSourcePath'] == "") {
-		getDocserverSourcePath($resId);
+		$query = "select path_template from " . _DOCSERVERS_TABLE_NAME . " where docserver_id = '" . $resRecordset->docserver_id."'";
+		do_query($GLOBALS['db'], $query);
+		$docserverRecordset = $GLOBALS['db']->fetch_object();
+		$GLOBALS['docserverSourcePath'] = $docserverRecordset->path_template;
 		$GLOBALS['logger']->write("Docserver source path:".$GLOBALS['docserverSourcePath'], 'INFO');
 	}
 	$sourceFilePath = $GLOBALS['docserverSourcePath'] . $sourceFilePath;
 	$sourceFilePath = str_replace("#", DIRECTORY_SEPARATOR, $sourceFilePath);
+	//echo $sourceFilePath."\r\n";
 	return $sourceFilePath;
 }
 
-function getDocserverSourcePath($resId) {
-	$query = "select docserver_id from " . $GLOBALS['adrTable'] . " where res_id = " .$resId . " order by adr_priority";
-	do_query($GLOBALS['db'], $query);
-	if ($GLOBALS['db']->nb_result() == 0) {
-		$query = "select docserver_id from " . $GLOBALS['table'] . " where res_id = " . $resId;
-		do_query($GLOBALS['db'], $query);
-		$recordset = $GLOBALS['db']->fetch_object();
+function updateDatabase($currentRecordInStack, $resInContainer, $path, $fileName, $offsetDoc) {
+	if (is_array($resInContainer) && count($resInContainer) > 0) {
+		for ($cptRes=0;$cptRes<count($resInContainer);$cptRes++) {
+			do_update_db($resInContainer[$cptRes]['res_id'], $path, $fileName,$resInContainer[$cptRes]['offset_doc']);
+		}
 	} else {
-		$recordset = $GLOBALS['db']->fetch_object();
+		do_update_db($currentRecordInStack['res_id'], $path, $fileName, $offsetDoc);
 	}
-	$query = "select path_template from " . _DOCSERVERS_TABLE_NAME . " where docserver_id = '" . $recordset->docserver_id."'";
-	do_query($GLOBALS['db'], $query);
-	$docserverRecordset = $GLOBALS['db']->fetch_object();
-	$GLOBALS['docserverSourcePath'] = $docserverRecordset->path_template;
 }
 
-function updateDatabase($resId, $currentRecordInStack, $resInContainer, $path, $fileName) {
-	if (is_array($resInContainer) && count($resInContainer) > 0) {
-		for ($cptRes = 0;$cptRes<count($resInContainer);$cptRes++) {
-			$query = "update " . _LC_STACK_TABLE_NAME ." set status = 'P' where policy_id = '" . $GLOBALS['policy'] . "' and cycle_id = '" . $GLOBALS['cycle'] . "' and cycle_step_id = '" . $GLOBALS['currentStep'] . "' and coll_id = '" . $GLOBALS['collection'] . "' and res_id = " . $resInContainer[$cptRes];
-			do_query($GLOBALS['db'], $query);
-			$query = "update " . $GLOBALS['table'] . " set cycle_id = '" . $GLOBALS['cycle'] . "', is_multi_docservers = 'Y' where res_id = " . $resInContainer[$cptRes];
-			//echo $query."\r\n";
-			do_query($GLOBALS['db'], $query);
-			$query = "select * from " . $GLOBALS['adrTable'] . " where res_id = " .$resInContainer[$cptRes] . " order by adr_priority";
-			do_query($GLOBALS['db'], $query);
-			if ($GLOBALS['db']->nb_result() == 0) {
-				$query = "select docserver_id, path, filename, offset_doc from " . $GLOBALS['table'] . " where res_id = " . $resInContainer[$cptRes];
-				do_query($GLOBALS['db'], $query);
-				$recordset = $GLOBALS['db']->fetch_object();
-				$resDocserverId = $recordset->docserver_id;
-				$resPath = $recordset->path;
-				$resFilename = $recordset->filename;
-				$resOffsetDoc = $recordset->offset_doc;
-				$query = "select adr_priority_number from " . _DOCSERVERS_TABLE_NAME . " where docserver_id = '" . $resDocserverId . "'";
-				do_query($GLOBALS['db'], $query);
-				$recordset = $GLOBALS['db']->fetch_object();
-				$query = "insert into " . $GLOBALS['adrTable'] . " (res_id, docserver_id, path, filename, offset_doc, adr_priority) values (" . $resInContainer[$cptRes] . ", '" . $resDocserverId . "', '" . $resPath . "', '" . $resFilename . "', '" .  $resOffsetDoc . "', " . $recordset->adr_priority_number . ")";
-				do_query($GLOBALS['db'], $query);
-			}
-			$query = "insert into " . $GLOBALS['adrTable'] . " (res_id, docserver_id, path, filename, offset_doc, adr_priority) values (" . $resInContainer[$cptRes] . ", '" . $GLOBALS['docservers'][$GLOBALS['currentStep']]['docserver']['docserver_id'] . "', '" . $path . "', '" . $fileName . "', '" .  $offsetDoc . "', " . $GLOBALS['docservers'][$GLOBALS['currentStep']]['docserver']['adr_priority_number'] . ")";
-			//echo $query."\r\n";exit;
-			do_query($GLOBALS['db'], $query);
-		}
-	} else {
-		$query = "update "._LC_STACK_TABLE_NAME." set status = 'P' where policy_id = '".$GLOBALS['policy']."' and cycle_id = '".$GLOBALS['cycle']."' and cycle_step_id = '".$GLOBALS['currentStep']."' and coll_id = '".$GLOBALS['collection']."' and res_id = ".$currentRecordInStack['res_id'];
+function do_update_db($resId, $path, $fileName, $offsetDoc) {
+	$query = "update " . _LC_STACK_TABLE_NAME ." set status = 'P' where policy_id = '" . $GLOBALS['policy'] . "' and cycle_id = '" . $GLOBALS['cycle'] . "' and cycle_step_id = '" . $GLOBALS['currentStep'] . "' and coll_id = '" . $GLOBALS['collection'] . "' and res_id = " . $resId;
+	do_query($GLOBALS['db'], $query);
+	$query = "update " . $GLOBALS['table'] . " set cycle_id = '" . $GLOBALS['cycle'] . "', is_multi_docservers = 'Y' where res_id = " . $resId;
+	//echo $query."\r\n";
+	do_query($GLOBALS['db'], $query);
+	$query = "select * from " . $GLOBALS['adrTable'] . " where res_id = " .$resId . " order by adr_priority";
+	do_query($GLOBALS['db'], $query);
+	if ($GLOBALS['db']->nb_result() == 0) {
+		$query = "select docserver_id, path, filename, offset_doc from " . $GLOBALS['table'] . " where res_id = " . $resId;
+		//echo $query."\r\n";exit;
 		do_query($GLOBALS['db'], $query);
-		$query = "update " . $GLOBALS['table'] . " set cycle_id = '" . $GLOBALS['cycle'] . "', is_multi_docservers = 'Y' where res_id = " . $currentRecordInStack['res_id'];
+		$recordset = $GLOBALS['db']->fetch_object();
+		$resDocserverId = $recordset->docserver_id;
+		$resPath = $recordset->path;
+		$resFilename = $recordset->filename;
+		$resOffsetDoc = $recordset->offset_doc;
+		$query = "select adr_priority_number from " . _DOCSERVERS_TABLE_NAME . " where docserver_id = '" . $resDocserverId . "'";
 		do_query($GLOBALS['db'], $query);
-		$query = "select * from " . $GLOBALS['adrTable'] . " where res_id = " .$currentRecordInStack['res_id'] . " order by adr_priority";
-		do_query($GLOBALS['db'], $query);
-		if ($GLOBALS['db']->nb_result() == 0) {
-			$query = "select docserver_id, path, filename, offset_doc from " . $GLOBALS['table'] . " where res_id = " . $currentRecordInStack['res_id'];
-			do_query($GLOBALS['db'], $query);
-			$recordset = $GLOBALS['db']->fetch_object();
-			$resDocserverId = $recordset->docserver_id;
-			$resPath = $recordset->path;
-			$resFilename = $recordset->filename;
-			$resOffsetDoc = $recordset->offset_doc;
-			$query = "select adr_priority_number from " . _DOCSERVERS_TABLE_NAME . " where docserver_id = '" . $resDocserverId . "'";
-			do_query($GLOBALS['db'], $query);
-			$recordset = $GLOBALS['db']->fetch_object();
-			$query = "insert into " . $GLOBALS['adrTable'] . " (res_id, docserver_id, path, filename, offset_doc, adr_priority) values (" . $currentRecordInStack['res_id'] . ", '" . $resDocserverId . "', '" . $resPath . "', '" . $resFilename . "', '" .  $resOffsetDoc . "', " . $recordset->adr_priority_number . ")";
-			do_query($GLOBALS['db'], $query);
-		}
-		$query = "insert into " . $GLOBALS['adrTable'] . " (res_id, docserver_id, path, filename, offset_doc, adr_priority) values (" . $currentRecordInStack['res_id'] . ", '" . $GLOBALS['docservers'][$GLOBALS['currentStep']]['docserver']['docserver_id'] . "', '" . $path . "', '" . $fileName . "', '" .  $offsetDoc . "', " . $GLOBALS['docservers'][$GLOBALS['currentStep']]['docserver']['adr_priority_number'] . ")";
+		$recordset = $GLOBALS['db']->fetch_object();
+		$query = "insert into " . $GLOBALS['adrTable'] . " (res_id, docserver_id, path, filename, offset_doc, adr_priority) values (" . $resId . ", '" . $resDocserverId . "', '" . $resPath . "', '" . $resFilename . "', '" .  $resOffsetDoc . "', " . $recordset->adr_priority_number . ")";
 		do_query($GLOBALS['db'], $query);
 	}
+	$query = "insert into " . $GLOBALS['adrTable'] . " (res_id, docserver_id, path, filename, offset_doc, adr_priority) values (" . $resId . ", '" . $GLOBALS['docservers'][$GLOBALS['currentStep']]['docserver']['docserver_id'] . "', '" . $path . "', '" . $fileName . "', '" .  $offsetDoc . "', " . $GLOBALS['docservers'][$GLOBALS['currentStep']]['docserver']['adr_priority_number'] . ")";
+	//echo $query."\r\n";exit;
+	do_query($GLOBALS['db'], $query);
+	//history...
 }
 
 ?>

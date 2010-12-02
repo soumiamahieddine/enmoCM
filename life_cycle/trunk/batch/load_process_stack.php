@@ -28,6 +28,7 @@ try {
 // Globals variables definition
 $state = '';
 $configFile = '';
+$MaarchDirectory = '';
 $table = '';
 $adrTable = '';
 $policy = '';
@@ -163,7 +164,7 @@ if ($xmlconfig == FALSE) {
 }
 $CONFIG = $xmlconfig->CONFIG;
 $lang = (string) $CONFIG->lang;
-$MaarchDirectory = (string) $CONFIG->MaarchDirectory;
+$GLOBALS['MaarchDirectory'] = (string) $CONFIG->MaarchDirectory;
 $MaarchApps = (string) $CONFIG->MaarchApps;
 $log_level = (string) $CONFIG->LogLevel;
 $DisplayedLogLevel = (string) $CONFIG->DisplayedLogLevel;
@@ -179,18 +180,18 @@ if ($log_level == 'DEBUG') {
 $GLOBALS['logger']->change_handler_log_level($file, $log_level);
 $GLOBALS['logger']->change_handler_log_level($console, $DisplayedLogLevel);
 unset($xmlconfig);
-set_include_path(get_include_path() . PATH_SEPARATOR . $MaarchDirectory);
+set_include_path(get_include_path() . PATH_SEPARATOR . $GLOBALS['MaarchDirectory']);
 try {
-	MyInclude($MaarchDirectory . "core" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . "class_functions.php");
-	MyInclude($MaarchDirectory . "core" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . "class_db.php");
-	MyInclude($MaarchDirectory . "core" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . "class_core_tools.php");
-	MyInclude($MaarchDirectory . "core" . DIRECTORY_SEPARATOR . "core_tables.php");
-	MyInclude($MaarchDirectory . "modules" .DIRECTORY_SEPARATOR . "life_cycle" .DIRECTORY_SEPARATOR . "life_cycle_tables_definition.php");
+	MyInclude($GLOBALS['MaarchDirectory'] . "core" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . "class_functions.php");
+	MyInclude($GLOBALS['MaarchDirectory'] . "core" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . "class_db.php");
+	MyInclude($GLOBALS['MaarchDirectory'] . "core" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . "class_core_tools.php");
+	MyInclude($GLOBALS['MaarchDirectory'] . "core" . DIRECTORY_SEPARATOR . "core_tables.php");
+	MyInclude($GLOBALS['MaarchDirectory'] . "modules" .DIRECTORY_SEPARATOR . "life_cycle" .DIRECTORY_SEPARATOR . "life_cycle_tables_definition.php");
 } catch (IncludeFileError $e) {
 	$GLOBALS['logger']->write('Problem with the php include path:' . get_include_path(), 'ERROR', 14);
 	exit(14);
 }
-core_tools::load_lang($lang, $MaarchDirectory, $MaarchApps);
+core_tools::load_lang($lang, $GLOBALS['MaarchDirectory'], $MaarchApps);
 
 $GLOBALS['func'] = new functions();
 $GLOBALS['db'] = new dbquery($GLOBALS['configFile']);

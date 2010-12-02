@@ -207,7 +207,7 @@ while ($GLOBALS['state'] <> "END") {
 		/**********************************************************************************************/
 		case "ADD_RECORD" :
 			$cptResInContainer++;
-			array_push($resInContainer, $currentRecordInStack['res_id']);
+			array_push($resInContainer, array("res_id" => $currentRecordInStack['res_id'], "source_path" => $sourceFilePath));
 			$offsetDoc = "";
 			$query = "update "._LC_STACK_TABLE_NAME." set status = 'A' where policy_id = '".$GLOBALS['policy']."' and cycle_id = '".$GLOBALS['cycle']."' and cycle_step_id = '".$GLOBALS['currentStep']."' and coll_id = '".$GLOBALS['collection']."' and res_id = ".$currentRecordInStack['res_id'];
 			do_query($GLOBALS['db'], $query);
@@ -219,6 +219,10 @@ while ($GLOBALS['state'] <> "END") {
 			break;
 		/**********************************************************************************************/
 		case "CLOSE_CONTAINER" :
+			$resultAip = array();
+			$resultAip = createAip($resInContainer);
+			$sourceFilePath = $resultAip['newSourceFilePath'];
+			$resInContainer = $resultAip['resInContainer'];
 			$isAContainerOpened = false;
 			$cptResInContainer = 0;
 			$GLOBALS['state'] = "DO_COPY_OR_MOVE";break;
@@ -239,7 +243,7 @@ while ($GLOBALS['state'] <> "END") {
 			$GLOBALS['state'] = "UPDATE_DATABASE";break;
 		/**********************************************************************************************/
 		case "UPDATE_DATABASE" :
-			updateDatabase($resId, $currentRecordInStack, $resInContainer, $destinationDir, $fileDestinationName);
+			updateDatabase($currentRecordInStack, $resInContainer, $destinationDir, $fileDestinationName, $fileOffsetDoc);
 			$GLOBALS['state'] = "A_RECORD";break;
 		/**********************************************************************************************/
 		case "EMPTY_STACK" :

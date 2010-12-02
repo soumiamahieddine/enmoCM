@@ -1,5 +1,7 @@
 <?php 
 
+// DON'T FORGET TO ORGANIZE DOCSERVER LIKE AUTOIMPORT
+
 /**
 * Calculates the next file name in the docserver
 * @return array Contains 2 items : subdirectory path and new filename
@@ -111,6 +113,37 @@ function isCompleteFile($file, $delay=500, $pointer=0) {
 	} else {
 		return isCompleteFile($file, $delay, $currentPos);
 	}
+}
+
+function createAip($resInContainer) {
+	$fileList = "";
+	$tmpDir = $GLOBALS['MaarchDirectory'] . "modules" .DIRECTORY_SEPARATOR . "life_cycle" . DIRECTORY_SEPARATOR . "batch" . DIRECTORY_SEPARATOR . "tmp" . DIRECTORY_SEPARATOR . mt_rand();
+	mkdir($tmpDir);
+	$newSourceFilePath = $GLOBALS['MaarchDirectory'] . "modules" .DIRECTORY_SEPARATOR . "life_cycle" . DIRECTORY_SEPARATOR . "batch" . DIRECTORY_SEPARATOR . "tmp" . DIRECTORY_SEPARATOR . mt_rand();
+	for ($cptRes=0;$cptRes<count($resInContainer);$cptRes++) {
+		$cp = copy($resInContainer[$cptRes]['source_path'], $tmpDir.DIRECTORY_SEPARATOR.$cptRes);
+		if($cp == false) {
+			$storeInfos = array('error'=>_DOCSERVER_COPY_ERROR);
+			return $storeInfos;
+		}
+		$resInContainer[$cptRes]['offset_doc'] = $cptRes;
+		$fileList .= escapeshellarg($tmpDir.DIRECTORY_SEPARATOR.$cptRes) . " ";
+	}
+	if(DIRECTORY_SEPARATOR == "/") {
+		$command = "7z a -y " . escapeshellarg($newSourceFilePath) . " " . $fileList;
+	} else {
+		$command = "\"".str_replace("\\", "\\\\", $_SESSION['docserversFeatures']['DOCSERVERS']['PATHTOCOMPRESSTOOL']) . "\" a -y " . escapeshellarg($newSourceFilePath) . " " . $fileList;
+	}
+	$newSourceFilePath .= ".7z";
+	$tmpCmd = "";
+	exec($command, $tmpCmd, $ExecError);
+	if($ExecError > 0) {
+		print_r($ExecError);
+	}
+	$result = array();
+	$result['resInContainer'] = $resInContainer;
+	$result['newSourceFilePath'] = $newSourceFilePath;
+	return $result;
 }
 
 ?>
