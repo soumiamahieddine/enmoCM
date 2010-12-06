@@ -87,6 +87,7 @@ function copyOnDocserver($sourceFilePath, $infoFileNameInTargetDocserver) {
 	$destinationDir = substr($destinationDir, strlen($GLOBALS['docservers'][$GLOBALS['currentStep']]['docserver']['path_template']),4);
 	$destinationDir = str_replace(DIRECTORY_SEPARATOR,'#',$destinationDir);
 	$storeInfos = array("destinationDir" => $destinationDir, "fileDestinationName" => $fileDestinationName, "fileSize" => filesize($sourceFilePath));
+	washTmp($GLOBALS['MaarchDirectory'] . "modules" .DIRECTORY_SEPARATOR . "life_cycle" . DIRECTORY_SEPARATOR . "batch" . DIRECTORY_SEPARATOR . "tmp");
 	return $storeInfos;
 }
 
@@ -115,35 +116,39 @@ function isCompleteFile($file, $delay=500, $pointer=0) {
 	}
 }
 
-function createAip($resInContainer) {
-	$fileList = "";
-	$tmpDir = $GLOBALS['MaarchDirectory'] . "modules" .DIRECTORY_SEPARATOR . "life_cycle" . DIRECTORY_SEPARATOR . "batch" . DIRECTORY_SEPARATOR . "tmp" . DIRECTORY_SEPARATOR . mt_rand();
-	mkdir($tmpDir);
-	$newSourceFilePath = $GLOBALS['MaarchDirectory'] . "modules" .DIRECTORY_SEPARATOR . "life_cycle" . DIRECTORY_SEPARATOR . "batch" . DIRECTORY_SEPARATOR . "tmp" . DIRECTORY_SEPARATOR . mt_rand();
-	for ($cptRes=0;$cptRes<count($resInContainer);$cptRes++) {
-		$cp = copy($resInContainer[$cptRes]['source_path'], $tmpDir.DIRECTORY_SEPARATOR.$cptRes);
-		if($cp == false) {
-			$storeInfos = array('error'=>_DOCSERVER_COPY_ERROR);
-			return $storeInfos;
+/**
+ * del tmp files
+ * @param   $tmpPath infos of the doc to store, contains :
+ * @return  boolean
+ */
+function washTmp($dir) {
+	if (is_dir($dir)) {
+		$objects = scandir($dir);
+		foreach ($objects as $object) {
+			if ($object != "." && $object != "..") {
+				if (filetype($dir.DIRECTORY_SEPARATOR.$object) == "dir") washSubDir($dir.DIRECTORY_SEPARATOR.$object); else unlink($dir.DIRECTORY_SEPARATOR.$object);
+			}
 		}
-		$resInContainer[$cptRes]['offset_doc'] = $cptRes;
-		$fileList .= escapeshellarg($tmpDir.DIRECTORY_SEPARATOR.$cptRes) . " ";
+	reset($objects);
 	}
-	if(DIRECTORY_SEPARATOR == "/") {
-		$command = "7z a -y " . escapeshellarg($newSourceFilePath) . " " . $fileList;
-	} else {
-		$command = "\"".str_replace("\\", "\\\\", $_SESSION['docserversFeatures']['DOCSERVERS']['PATHTOCOMPRESSTOOL']) . "\" a -y " . escapeshellarg($newSourceFilePath) . " " . $fileList;
+}
+
+/**
+ * del tmp files
+ * @param   $tmpPath infos of the doc to store, contains :
+ * @return  boolean
+ */
+function washSubDir($dir) {
+	if (is_dir($dir)) {
+		$objects = scandir($dir);
+		foreach ($objects as $object) {
+			if ($object != "." && $object != "..") {
+				if (filetype($dir.DIRECTORY_SEPARATOR.$object) == "dir") washSubDir($dir.DIRECTORY_SEPARATOR.$object); else unlink($dir.DIRECTORY_SEPARATOR.$object);
+			}
+		}
+	reset($objects);
+	rmdir($dir);
 	}
-	$newSourceFilePath .= ".7z";
-	$tmpCmd = "";
-	exec($command, $tmpCmd, $ExecError);
-	if($ExecError > 0) {
-		print_r($ExecError);
-	}
-	$result = array();
-	$result['resInContainer'] = $resInContainer;
-	$result['newSourceFilePath'] = $newSourceFilePath;
-	return $result;
 }
 
 ?>

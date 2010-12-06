@@ -73,4 +73,13 @@ if (!defined('_LC_POLICY_ADDITION'))  define('_LC_POLICY_ADDITION', 'Add a life 
 if (!defined('_LC_POLICY_UPDATED'))  define('_LC_POLICY_UPDATED', 'Life cycle policy updated');
 if (!defined('_LC_POLICY_ADDED'))  define('_LC_POLICY_ADDED', 'Life cycle policy added');
 if (!defined('_LC_POLICY_DELETED'))  define('_LC_POLICY_DELETED', 'Life cycle policy deleted');
+
+/*************BATCH*************************************/
+if (!defined('_PI_COMMENT_ROOT'))  define('_PI_COMMENT_ROOT', 'Packaging information: Archival Information Package (AIP) content and usage');
+if (!defined('_PI_COMMENT_FINGERPRINT'))  define('_PI_COMMENT_FINGERPRINT', 'Fingerprint for <CONTENT_FILE>');
+if (!defined('_PI_COMMENT_AIU'))  define('_PI_COMMENT_AIU', 'Number of resources in AIP');
+if (!defined('_PI_COMMENT_CONTENT'))  define('_PI_COMMENT_CONTENT', 'Digital resources in native format, each having a sequential filename+extension');
+if (!defined('_PI_COMMENT_PDI'))  define('_PI_COMMENT_PDI', 'Container for Preservation Description Information. This is a catalog containing descriptors for Provenance, Reference, Fixity, Context, and Access Rights for each resource in <CONTENT_FILE>. For convenience, history is stored apart in <HISTORY_FILE>. See pdi.xsd for structure and comments');
+if (!defined('_HISTORY_COMMENT_ROOT'))  define('_HISTORY_COMMENT_ROOT', 'Preservation Description Information - History : List of events on resource, each event set being identified by resource filename in <CONTENT_FILE>. Ordered by ascending date');
+if (!defined('_PDI_COMMENT_ROOT'))  define('_PDI_COMMENT_ROOT', 'Preservation Description Information : List of qualifiers for resources, ordered by Provenance, Reference, Fixity, Context, and Access Rights. There is one set by resource, each set being identified by resource filename in <CONTENT_FILE>');
 ?>

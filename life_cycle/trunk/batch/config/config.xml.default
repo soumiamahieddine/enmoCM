@@ -11,6 +11,7 @@
         <AutofolderingUrl>http://127.0.0.1/maarch_entreprise/modules/autofoldering/</AutofolderingUrl>
         <LogLevel>INFO</LogLevel>  <!-- DEBUG, INFO, NOTICE, WARNING, ERROR-->
         <DisplayedLogLevel>INFO</DisplayedLogLevel> <!-- DEBUG, INFO, NOTICE, WARNING, ERROR-->
+        <lang>fr</lang> <!-- fr, en-->
     </CONFIG>
     <CONFIG_BASE>
         <databaseserver>127.0.0.1</databaseserver>

@@ -48,9 +48,11 @@
  *  15 : Problem with the include of step operation file
  */
 
-include("load_process_stack.php");
-include("resources_libs.php");
-include("docservers_libs.php");
+include("load_process_stack.inc");
+include("resources.inc");
+include("docservers.inc");
+include("oais.inc");
+include("custom.inc");
 
 /******************************************************************************************************/
 /* beginning */
@@ -255,6 +257,7 @@ while ($GLOBALS['state'] <> "END") {
 $GLOBALS['logger']->write("End of process", 'INFO');
 $GLOBALS['db']->disconnect();
 $GLOBALS['db2']->disconnect();
+$GLOBALS['db3']->disconnect();
 exit($GLOBALS['exitCode']);
 
 ?>

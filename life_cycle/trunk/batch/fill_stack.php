@@ -45,7 +45,7 @@
  *  12 : Problem with the php include path
  */
 
-include("load_fill_stack.php");
+include("load_fill_stack.inc");
 
 /******************************************************************************************************/
 /* beginning */
@@ -116,8 +116,8 @@ while($state <> "END") {
 			if ($cycleRecordset->break_key <> "") {
 				$ordeBy = " order by ".$cycleRecordset->break_key;
 			}
-			$query = "select res_id from ".$GLOBALS['table']." where policy_id = '".$GLOBALS['policy']."' and cycle_id = '".$cyclePreviousRecordset->cycle_id."' and ".$cycleRecordset->where_clause.$ordeBy;
-			//$query = "select res_id from ".$GLOBALS['table']." where policy_id = '".$GLOBALS['policy']."' and cycle_id = '".$cyclePreviousRecordset->cycle_id."' and ".$cycleRecordset->where_clause.$ordeBy." LIMIT 100";
+			//$query = "select res_id from ".$GLOBALS['table']." where policy_id = '".$GLOBALS['policy']."' and cycle_id = '".$cyclePreviousRecordset->cycle_id."' and ".$cycleRecordset->where_clause.$ordeBy;
+			$query = "select res_id from ".$GLOBALS['table']." where policy_id = '".$GLOBALS['policy']."' and cycle_id = '".$cyclePreviousRecordset->cycle_id."' and ".$cycleRecordset->where_clause.$ordeBy." LIMIT 100";
 			do_query($db, $query);
 			$resourcesArray = array();
 			if ($db->nb_result() > 0) {

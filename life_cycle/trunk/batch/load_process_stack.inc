@@ -31,6 +31,8 @@ $configFile = '';
 $MaarchDirectory = '';
 $table = '';
 $adrTable = '';
+$view = 'res_view';
+$coll = 'lagi_coll';
 $policy = '';
 $cycle = '';
 $steps = Array();
@@ -43,6 +45,7 @@ $running_date = date('Y-m-d H:i:s');
 $func = "";
 $db = "";
 $db2 = "";
+$db3 = "";
 
 function do_query($db_conn, $query_txt) {
 	$db_conn->connect();
@@ -174,6 +177,11 @@ $databaseserver = (string) $xmlconfig->CONFIG_BASE->databaseserver;
 $databaseserverport = (string) $xmlconfig->CONFIG_BASE->databaseserverport;
 $databaseuser = (string) $xmlconfig->CONFIG_BASE->databaseuser;
 $databasepassword = (string) $xmlconfig->CONFIG_BASE->databasepassword;
+
+if (file_exists($GLOBALS['MaarchDirectory'] . "modules" .DIRECTORY_SEPARATOR . "life_cycle" .DIRECTORY_SEPARATOR . "lang" . DIRECTORY_SEPARATOR . $lang . ".php")) {
+	include($GLOBALS['MaarchDirectory'] . "modules" .DIRECTORY_SEPARATOR . "life_cycle" .DIRECTORY_SEPARATOR . "lang" . DIRECTORY_SEPARATOR . $lang . ".php");
+}
+
 if ($log_level == 'DEBUG') {
 	error_reporting(E_ALL);
 }
@@ -196,7 +204,9 @@ core_tools::load_lang($lang, $GLOBALS['MaarchDirectory'], $MaarchApps);
 $GLOBALS['func'] = new functions();
 $GLOBALS['db'] = new dbquery($GLOBALS['configFile']);
 $GLOBALS['db2'] = new dbquery($GLOBALS['configFile']);
+$GLOBALS['db3'] = new dbquery($GLOBALS['configFile']);
 $GLOBALS['db']->connect();
 $GLOBALS['db2']->connect();
+$GLOBALS['db3']->connect();
 
 ?>
