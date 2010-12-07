@@ -258,6 +258,7 @@ if (!defined('_REMOVE_ACCESS')) define( '_REMOVE_ACCESS', 'Supprimer acc&egrave;
 if (!defined('_MODIFY_ACCESS')) define( '_MODIFY_ACCESS', 'Modifier acc&egrave;s');
 if (!defined('_UPDATE_RIGHTS')) define( '_UPDATE_RIGHTS', 'Mise &agrave; jour des droits');
 if (!defined('_ADD_GRANT')) define( '_ADD_GRANT', 'Ajouter acc&egrave;s');
+if (!defined('_UP_GRANT')) define( '_UP_GRANT', 'Modifier acc&egrave;s');
 if (!defined('_USERS_LIST_IN_GROUP')) define( '_USERS_LIST_IN_GROUP', 'Liste des utilisateurs du groupe');
 
 /************** Utilisateurs : Liste + Formulaire**************/
@@ -1009,7 +1010,7 @@ if (!defined('_GO_MANAGE_USER')) define( '_GO_MANAGE_USER', 'Modifier');
 if (!defined('_GO_MANAGE_DOCSERVER')) define( '_GO_MANAGE_DOCSERVER', 'Modifier');
 if (!defined('_TASKS')) define( '_TASKS', 'Actions disponibles');
 if (!defined('_PERIOD')) define( '_PERIOD', 'P&eacute;riode');
-if (!defined('_COMMENTS _MANDATORY')) define( '_COMMENTS _MANDATORY', 'Description obligatoire');
+if (!defined('_COMMENTS_MANDATORY')) define( '_COMMENTS_MANDATORY', 'Description obligatoire');
 
 /******* Security Bitmask label ********/
 

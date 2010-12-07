@@ -101,7 +101,6 @@ else
     array_push($_SESSION['m_admin']['groups']['security'] , array('GROUP_ID' => '' , 'COLL_ID' => $coll_id , 'IND_COLL_SESSION' => $ind,'WHERE_CLAUSE' => $where, 'COMMENT' => $comment , 'WHERE_TARGET' => $target, 'RIGHTS_BITMASK' => $bitmask, 'START_DATE' => $start_date, 'STOP_DATE' => $stop_date));
     $_SESSION['m_admin']['load_security'] = false;
 }
-
 echo "{status : 0, error_txt : '".$error."'}";
 exit();
 ?>

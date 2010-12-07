@@ -1,5 +1,6 @@
 <?php
 
+core_tools::load_lang();
 $error = '';
 
 function get_values_in_array($val)
@@ -58,7 +59,7 @@ if(!isset($coll_id ) || $coll_id  == '')
 
 if(!isset($comment) || $comment == '')
 {
-    $error = _COMMENTS.' '._MANDATORY."<br/>";
+    $error = _COMMENTS_MANDATORY."<br/>";
 }
 
 if((!isset($target_all) || $target_all == '') && (!isset($target_doc) || $target_doc == '') && (!isset($target_class) || $target_class == '') )

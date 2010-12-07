@@ -2782,7 +2782,7 @@ TafelTreeBaseBranch.prototype = {
         this.children[pos] = new TafelTreeBranch((this.isRoot) ? this : this.root, this, item, this.level + 1, isNotFirst, false, pos);
         this.struct.items[pos] = item;
         this.obj.appendChild(this.children[pos].obj);
-        this._manageAfterInsert(pos);
+       // this._manageAfterInsert(pos);
         return this.children[pos];
     },
 
