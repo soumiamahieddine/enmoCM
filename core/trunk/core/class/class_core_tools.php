@@ -251,10 +251,11 @@ class core_tools extends functions
     {
         for($i=0;$i<count($modules);$i++)
         {
-            if(isset($_SESSION['config']['lang']) && file_exists($_SESSION['config']['corepath'].'modules'.DIRECTORY_SEPARATOR.$modules[$i]['moduleid'].DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php'))
+			$file_path = $_SESSION['config']['corepath'].'modules'.DIRECTORY_SEPARATOR.$modules[$i]['moduleid'].DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php';
+            if(isset($_SESSION['config']['lang']) && file_exists($file_path ))
             {
-                $filename = ('modules'.DIRECTORY_SEPARATOR.$modules[$i]['moduleid'].DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php');
-                include($filename);
+                
+                include($file_path);
             }
             else
             {
