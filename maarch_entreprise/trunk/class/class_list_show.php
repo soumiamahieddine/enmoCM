@@ -176,9 +176,9 @@ class list_show extends functions
             {
                 $link .= "&amp;module=".$module;
             }
-            if(isset($_GET['what']))
+            if(isset($_REQUEST['what']))
             {
-                $link .= "&amp;what=".strip_tags($_GET['what']);
+                $link .= "&amp;what=".strip_tags($_REQUEST['what']);
             }
             if(isset($_REQUEST['start']) && !empty($_REQUEST['start']))
             {
@@ -189,27 +189,28 @@ class list_show extends functions
                 $start = 0;
             }
 
-            if(isset($_GET['order']))
+            if(isset($_REQUEST['order']))
             {
-                $orderby = strip_tags($_GET['order']);
+                $orderby = strip_tags($_REQUEST['order']);
             }
             else
             {
-                $orderby = 'asc';
+                //$orderby = 'asc';
+                $orderby = '';
             }
-            if(!preg_match('/order=/', $comp_link))
+            if(!preg_match('/order=/', $comp_link) && $order <> '')
             {
                 $link .= "&amp;order=".$orderby;
             }
-            if(isset($_GET['order_field']))
+            if(isset($_REQUEST['order_field']))
             {
-                $orderfield = strip_tags($_GET['order_field']);
+                $orderfield = strip_tags($_REQUEST['order_field']);
             }
             else
             {
                 $orderfield = '';
             }
-            if(!preg_match('/order_field=/', $comp_link))
+            if(!preg_match('/order_field=/', $comp_link) && $orderfield <> '')
             {
                 $link .= "&amp;order_field=".$orderfield;
             }
@@ -259,7 +260,7 @@ class list_show extends functions
             {
                 $next_start = 0;
                 //$search_form = "<div class='list_show_page'><form name=\"newpage1\" method=\"get\" >";
-                $page_list1 = _GO_TO_PAGE." <select name=\"startpage\" onchange=\"window.location.href='".$link."&amp;start='+this.value;\">";
+                $page_list1 = _GO_TO_PAGE." <select id=\"startpage_list\" name=\"startpage\" onchange=\"window.location.href='".$link."&amp;start='+this.value;\">";
                 $lastpage = 0;
                 for($i = 0;$i <> $nb_pages; $i++)
                 {
@@ -282,17 +283,15 @@ class list_show extends functions
                 if($start > 0)
                 {
                     $start_prev = $start - $nb_show;
-                    $previous = "&lt; <a href=\"".$link."&amp;start=".$start_prev."\">"._PREVIOUS."</a> ";
+                    $previous = "&lt; <a id=\"previous_items\" href=\"".$link."&amp;start=".$start_prev."\">"._PREVIOUS."</a> ";
                 }
 
                 if($start <> $lastpage)
                 {
                     $start_next = $start + $nb_show;
-                    $next = " <a href=\"".$link."&amp;start=".$start_next."\">"._NEXT."</a> >";
+                    $next = " <a id=\"next_items\" href=\"".$link."&amp;start=".$start_next."\">"._NEXT."</a> >";
                 }
-                //$page_list1 = '<div class="block" style="height:20px;" align="center" ><b><div class="list_previous">'.$previous." &nbsp;</div>".$search_form." ".$page_list1."</select></div>".$next."</b>&nbsp;</form></div>";
             }
-        //$str .= "<div class='block'>";
         $page_list1 = '<div class="block" style="height:30px;vertical" align="center" ><table width="100%" border="0" summary=""><tr><td align="center" width="15%"><b>'.$previous.'</b></td><td align="center" width="15%"><b>'.$next.'</b></td><td width="10px">|</td><td align="center" width="30%">'.$page_list1.'</td><td width="10px">|</td><td width="210px" align="center">'.$disp_dc.'</td><td width="10px">|</td><td align="right">'.$tdeto.'</td></tr></table></b></div>';
 
             if($show_big_title)
@@ -418,15 +417,19 @@ class list_show extends functions
                      {
                          $str .= ' <th style="width:3%;">&nbsp;</th>';
                         }
+                     
                         for($count_column = 0;$count_column < count($listcolumn);$count_column++)
                         {
                             if($listshow[$count_column]==true)
                             {
 
                             $str .= ' <th style="width:'.$result[0][$count_column]['size'].'%;" valign="'.$result[0][$count_column]['valign'].'"  align="'.$result[0][$count_column]['label_align'].'" ><span>'.$listcolumn[$count_column];
+                           
+									
                                 if($bool_order)
                                 {
-                                    $str .= ' <br/><br/> <a href="'.$link.'&amp;start='.$start.'&amp;order=desc&amp;order_field='.$ordercol[$count_column].'" title="'._DESC_SORT.'"><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=tri_down.gif"  alt="'._DESC_SORT.'" /> </a> <a href="'.$link.'&amp;start='.$start.'&amp;order=asc&amp;order_field='.$ordercol[$count_column].'" title="'._ASC_SORT.'"> <img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=tri_up.gif"  alt="'._ASC_SORT.'" /></a>';
+									
+                                    $str .= ' <br/><br/> <a class="order_items" href="'.$link.'&amp;start='.$start.'&amp;order=desc&amp;order_field='.$ordercol[$count_column].'" title="'._DESC_SORT.'"><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=tri_down.gif"  alt="'._DESC_SORT.'" /> </a> <a class="order_items" href="'.$link.'&amp;start='.$start.'&amp;order=asc&amp;order_field='.$ordercol[$count_column].'" title="'._ASC_SORT.'"> <img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=tri_up.gif"  alt="'._ASC_SORT.'" /></a>';
                                 }
                             $str .= ' </span></th>';
 
@@ -837,9 +840,9 @@ class list_show extends functions
 
         $func = new functions();
         $param_comp = '';
-        if(isset($_GET['start']) && !empty($_GET['start']))
+        if(isset($_REQUEST['start']) && !empty($_REQUEST['start']))
         {
-            $start = strip_tags($_GET['start']);
+            $start = strip_tags($_REQUEST['start']);
         }
         else
         {
@@ -867,9 +870,9 @@ class list_show extends functions
             }
         }
 
-        if(isset($_GET['order']))
+        if(isset($_REQUEST['order']))
         {
-            $orderby = strip_tags($_GET['order']);
+            $orderby = strip_tags($_REQUEST['order']);
         }
         else
         {
@@ -878,9 +881,9 @@ class list_show extends functions
         $param_comp .= "&amp;order=".$orderby;
         $link .= "&amp;order=".$orderby;
 
-        if(isset($_GET['order_field']))
+        if(isset($_REQUEST['order_field']))
         {
-            $orderfield = strip_tags($_GET['order_field']);
+            $orderfield = strip_tags($_REQUEST['order_field']);
         }
         else
         {
@@ -888,9 +891,9 @@ class list_show extends functions
         }
         $link .= "&amp;order_field=".$orderfield;
         $param_comp .= "&amp;order_field=".$orderfield;
-        if(isset($_GET['what']))
+        if(isset($_REQUEST['what']))
         {
-            $get_what = strip_tags($_GET['what']);
+            $get_what = strip_tags($_REQUEST['what']);
         }
         else
         {
