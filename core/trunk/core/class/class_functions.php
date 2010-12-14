@@ -40,907 +40,907 @@
 */
 class functions
 {
-	/**
-	*
-	* @deprecated
+    /**
+    *
+    * @deprecated
          */
-	private $f_page;
+    private $f_page;
 
-	/**
-	* To calculate the page generation time
-	* Integer
+    /**
+    * To calculate the page generation time
+    * Integer
          */
-	private $start_page;
+    private $start_page;
 
-	/**
-	* Loads in the start_page variable the start time of the page loading
-	*
-	*/
-	public function start_page_stat()
-	{
-		$this->start_page = microtime(true);
-	}
+    /**
+    * Loads in the start_page variable the start time of the page loading
+    *
+    */
+    public function start_page_stat()
+    {
+        $this->start_page = microtime(true);
+    }
 
-	/**
-	* Cuts a string at the maximum number of char to displayed
-	*
-	* @param	 $string string String value
-	* @param	 $max integer Maximum character number
-	*/
-	public function cut_string($string, $max)
-	{
-		if (strlen($string) >= $max)
-		{
-		  $string = substr($string, 0, $max);
-		  $espace = strrpos($string, " ");
-		  $string = substr($string, 0, $espace)."...";
-		  return $string;
-		}
-		else
-		{
-			return $string;
-		}
-	}
-
-	/**
-	* Ends the page loading time and displays it
-	*
-	*/
-	public function show_page_stat()
-	{
-		$end_page = microtime(true);
-		$page_total = round($end_page - $this->start_page,3);
-		if($page_total > 1)
-		{
-			$page_seconds = _SECONDS;
-		}
-		else
-		{
-			$page_seconds = _SECOND;
-		}
-		echo _PAGE_GENERATED_IN." <b>".$page_total."</b> ".$page_seconds;
-	}
-
-	/**
-	* Configures the actual position of the visitor with all query strings to go to the right page after the logging action
-	*
-	* @param	 $index string "index.php?" by default
-	*/
-	public function configPosition($index ="index.php?")
-	{
-		$querystring = $_SERVER['QUERY_STRING'];
-		$tab_query = explode("&",$querystring);
-		$querystring = "";
-
-		for($i=0;$i<count($tab_query);$i++)
-		{
-			if(substr($tab_query[$i],0,3) <> "css" && substr($tab_query[$i],0,3) <> "CSS")
-			{
-				$querystring .= $tab_query[$i]."&";
-			}
-		}
-		$querystring = substr($querystring,0,strlen($querystring)-1);
-		$_SESSION['position'] = $index.$querystring;
-	}
-
-	/**
-	* Adds en error to the errors log
-	*
-	* @param	 $msg  string Message to add
-	* @param  $var  string Language dependant message
-	*/
-	public function add_error($msg,$var)
-	{
-		$msg = trim($msg);
-		if(!empty($msg))
-		{
-			$_SESSION['error'] .= $msg." ".$var."<br />";
-			if(strlen(str_replace(array("<br />","<br />"),"",$_SESSION['error'])) < 6)
-			{
-				$_SESSION['error'] = "";
-			}
-		}
-	}
-
-	/**
-	* Cleans a variable with multiple possibility
-	*
-	* @param	 $what  string Variable to clean
-	* @param  $mask  string Mask, "no" by default
-	* @param	 $msg_error string Error message, empty by default
-	* @param	 $empty  string "yes" by default
-	* @param	 $min_limit integer Empty by default
-	* @param	 $max_limit integer Empty by default
-	* @return	string Cleaned variable or empty string
-	*/
-	public function wash($what, $mask = "no", $msg_error = "", $empty = "yes", $min_limit = "", $max_limit = "", $custom_pattern = '', $custom_error_msg = '')
-	{
-
-		//$w_var = addslashes(trim(strip_tags($what)));
-
-		$w_var = trim(strip_tags($what));
-		$test_empty = "ok";
-
-		if($empty == "yes")
-		{
-			// We use strlen instead of the php's empty function because for a var containing 0 return by a form (in string format)
-			// the empty function return that the var is empty but it contains à 0
-			if(strlen($w_var) == 0)
-			{
-				$test_empty = "no";
-			}
-			else
-			{
-				$test_empty = "ok";
-			}
-		}
-		if($test_empty == "no")
-		{
-			$this->add_error($msg_error, _IS_EMPTY);
-			return "";
-		}
-		else
-		{
-			if($msg_error <> '')
-			{
-				if($min_limit <> "")
-				{
-					if(strlen($w_var) < $min_limit)
-					{
-						if($min_limit > 1)
-						{
-							$this->add_error($msg_error,  _MUST_MAKE_AT_LEAST." ".$min_limit." "._CHARACTERS);
-						}
-						else
-						{
-							$this->add_error($msg_error, _MUST_MAKE_AT_LEAST." ".$min_limit." "._CHARACTERS);
-						}
-						return "";
-					}
-				}
-			}
-
-			if($max_limit <> "")
-			{
-				if(strlen($w_var) > $max_limit)
-				{
-					if($min_limit > 1)
-					{
-						$this->add_error($msg_error, MUST_BE_LESS_THAN." ".$max_limit." "._CHARACTERS);
-					}
-					else
-					{
-						$this->add_error($msg_error,  MUST_BE_LESS_THAN." ".$max_limit." "._CHARACTERS);
-					}
-
-					return "";
-				}
-			}
-
-			switch ($mask)
-			{
-				case "no":
-					return $w_var;
-
-				case "num":
-					if (preg_match("/^[0-9]+$/",$w_var))
-					{
-						return $w_var;
-					}
-					else
-					{
-						$this->add_error($msg_error, _WRONG_FORMAT." :<br/>"._WAITING_INTEGER);
-						return "";
-					}
-
-				case "float":
-					if (preg_match("/^[0-9.,]+$/",$w_var))
-					{
-						return $w_var;
-					}
-					else
-					{
-						$this->add_error($msg_error, _WRONG_FORMAT." "._WAITING_FLOAT);
-						return "";
-					}
-
-				case "letter":
-					if (preg_match("/^[a-zA-Z]+$/",$w_var))
-					{
-						return $w_var;
-					}
-					else
-					{
-						$this->add_error($msg_error, _WRONG_FORMAT);
-						return "";
-					}
-
-				case "alphanum":
-					if (preg_match("/^[a-zA-Z0-9]+$/",$w_var))
-					{
-						return $w_var;
-					}
-					else
-					{
-						$this->add_error($msg_error,_WRONG_FORMAT);
-						return "";
-					}
-
-				case "nick":
-					if (preg_match("/^[_a-zA-Z0-9.-]+$/",$w_var))
-					{
-						return $w_var;
-					}
-					else
-					{
-						$this->add_error($msg_error,_WRONG_FORMAT);
-						return "";
-					}
-
-				case "mail":
-					if (preg_match("/^[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]{2,4}$/",$w_var))
-					{
-						return $w_var;
-					}
-					else
-					{
-						$this->add_error($msg_error, _WRONG_FORMAT);
-						return "";
-					}
-
-				case "url":
-					if (preg_match("/^[www.]+[_a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/",$w_var))
-					{
-						return $w_var;
-					}
-					else
-					{
-						$this->add_error($msg_error, _WRONG_FORMAT);
-						return "";
-					}
-
-				case "file":
-					if (preg_match("/^[_a-zA-Z0-9.-? é&\/]+$/",$w_var))
-					{
-						return $w_var;
-					}
-					else
-					{
-						$this->add_error($msg_error, _WRONG_FORMAT);
-						return "";
-					}
-
-				case "name":
-					if (preg_match("/^[_a-zA-Z0-9.-? \'\/&éea]+$/",$w_var))
-					{
-						return $w_var;
-					}
-					else
-					{
-						$this->add_error($msg_error, _WRONG_FORMAT);
-						return "";
-					}
-				case "date":
-					if(isset($_SESSION['config']['databasetype']) && $_SESSION['config']['databasetype'] == "SQLSERVER")
-					{
-						$date_pattern = "/^[0-3][0-9]-[0-1][0-9]-[1-2][0-9][0-9][0-9]$/";
-					}
-					else // MYSQL & POSTGRESQL
-					{
-						$date_pattern = "/^[0-3][0-9]-[0-1][0-9]-[1-2][0-9][0-9][0-9]$/";
-					}
-					if(preg_match($date_pattern,$w_var))
-					{
-						return $w_var;
-					}
-					else
-					{
-						$this->add_error($msg_error, _WRONG_FORMAT." "._WAITING_DATE);
-						return "";
-					}
-				case "custom":
-					if(preg_match($custom_pattern,$w_var) == 0)
-					{
-						$this->add_error($msg_error, $custom_error_msg.' '.$custom_pattern.' '.$w_var);
-						return "";
-					}
-					else
-					{
-						return $w_var;
-					}
-			}
-		}
-	}
-
-	/**
-	* Returns a variable with personnal formating. It allows you to add formating action when you displays the variable the var
-	*
-	* @param	 $what string Variable to format
-	* @return string  Formated variable
-	*/
-	public function show($what)
-	{
-		return stripslashes($what);
-	}
-
-	/**
-	* Manages the location bar in session (4 levels max), then calls the where_am_i() function.
-	*
-	* @param	 $path  string Url (empty by default)
-	* @param   $label string Label to show in the location bar (empty by default)
-	* @param   $id_pagestring  Page identifier (empty by default)
-	* @param   $init bool If true reinits the location bar (true by default)
-	* @param   $level string Level in the location bar (empty by default)
-	*/
-	public function manage_location_bar($path = '', $label = '', $id_page = '', $init = true, $level = '')
-	{
-		//Fix un little php bug
-		if(strpos($label,"&rsquo;")!== false)
-		{
-			$label = str_replace("&rsquo;" , "\'", $label);
-		}
-
-		$_SESSION['location_bar']['level1']['path'] = "index.php?reinit=true";
-		$_SESSION['location_bar']['level1']['label'] = $_SESSION['config']['applicationname'];
-		$_SESSION['location_bar']['level1']['id'] = "welcome";
-
-		if(!empty($level))
-		{
-			if($level == 1)
-			{
-				$_SESSION['location_bar']['level2']['path']	= "";
-				$_SESSION['location_bar']['level2']['label'] = "";
-				$_SESSION['location_bar']['level2']['id'] = "" ;
-
-				$_SESSION['location_bar']['level3']['path'] = "";
-				$_SESSION['location_bar']['level3']['label'] = "";
-				$_SESSION['location_bar']['level3']['id'] = "" ;
-
-				$_SESSION['location_bar']['level4']['path'] = "";
-				$_SESSION['location_bar']['level4']['label'] = "";
-				$_SESSION['location_bar']['level4']['id'] = "" ;
-			}
-			elseif($level == 2)
-			{
-				$_SESSION['location_bar']['level3']['path'] = "";
-				$_SESSION['location_bar']['level3']['label'] = "";
-				$_SESSION['location_bar']['level3']['id'] = "" ;
-
-				$_SESSION['location_bar']['level4']['path'] = "";
-				$_SESSION['location_bar']['level4']['label'] = "";
-				$_SESSION['location_bar']['level4']['id'] = "" ;
-			}
-			elseif($level == 3)
-			{
-				$_SESSION['location_bar']['level4']['path'] = "";
-				$_SESSION['location_bar']['level4']['label'] = "";
-				$_SESSION['location_bar']['level4']['id'] = "" ;
-			}
-		}
-		else
-		{
-
-			if(trim($id_page) == trim($_SESSION['location_bar']['level1']['id']))
-			{
-				$_SESSION['location_bar']['level2']['path']	= "";
-				$_SESSION['location_bar']['level2']['label'] = "";
-				$_SESSION['location_bar']['level2']['id'] = "" ;
-
-				$_SESSION['location_bar']['level3']['path'] = "";
-				$_SESSION['location_bar']['level3']['label'] = "";
-				$_SESSION['location_bar']['level3']['id'] = "" ;
-
-				$_SESSION['location_bar']['level4']['path'] = "";
-				$_SESSION['location_bar']['level4']['label'] = "";
-				$_SESSION['location_bar']['level4']['id'] = "" ;
-			}
-			elseif(trim($id_page) == trim($_SESSION['location_bar']['level2']['id']))
-			{
-				$_SESSION['location_bar']['level3']['path'] = "";
-				$_SESSION['location_bar']['level3']['label'] = "";
-				$_SESSION['location_bar']['level3']['id'] = "" ;
-
-				$_SESSION['location_bar']['level4']['path'] = "";
-				$_SESSION['location_bar']['level4']['label'] = "";
-				$_SESSION['location_bar']['level4']['id'] = "" ;
-			}
-			elseif(trim($id_page) == trim($_SESSION['location_bar']['level3']['id']))
-			{
-				$_SESSION['location_bar']['level4']['path'] = "";
-				$_SESSION['location_bar']['level4']['label'] = "";
-				$_SESSION['location_bar']['level4']['id'] = "" ;
-			}
-			elseif($init || empty($_SESSION['location_bar']['level2']['id']))
-			{
-				$_SESSION['location_bar']['level2']['path']	= $path;
-				$_SESSION['location_bar']['level2']['path'] .= "&level=2";
-				$_SESSION['location_bar']['level2']['label'] = $this->wash_html($label);
-				$_SESSION['location_bar']['level2']['id'] = $id_page ;
-
-				$_SESSION['location_bar']['level3']['path'] = "";
-				$_SESSION['location_bar']['level3']['label'] = "";
-				$_SESSION['location_bar']['level3']['id'] = "" ;
-
-				$_SESSION['location_bar']['level4']['path'] = "";
-				$_SESSION['location_bar']['level4']['label'] = "";
-				$_SESSION['location_bar']['level4']['id'] = "" ;
-			}
-			else
-			{
-				if(empty($_SESSION['location_bar']['level3']['path']))
-				{
-					$_SESSION['location_bar']['level3']['path']	= $path."&level=3";
-					$_SESSION['location_bar']['level3']['label'] = $this->wash_html($label);
-					$_SESSION['location_bar']['level3']['id'] = $id_page ;
-
-					$_SESSION['location_bar']['level4']['path'] = "";
-					$_SESSION['location_bar']['level4']['label'] = "";
-					$_SESSION['location_bar']['level4']['id'] = "" ;
-				}
-				else
-				{
-					$_SESSION['location_bar']['level4']['path']	= $path."&level=4";
-					$_SESSION['location_bar']['level4']['label'] = $this->wash_html($label);
-					$_SESSION['location_bar']['level4']['id'] = $id_page ;
-				}
-			}
-		}
-		$this->where_am_i();
-	}
-
-	/**
-	* Uses javascript to rewrite the location bar
-	*
-	*/
-	private function where_am_i()
-	{
-		if(empty($_SESSION['location_bar']['level2']['path']))
-		{
-		?><script  type="text/javascript">
-        	var bar = window.document.getElementById('ariane');
-			if(bar != null)
-			{
-				var link1 = document.createElement("a");
-				link1.href='<?php  echo $_SESSION['location_bar']['level1']['path'];?>';
-				// link1.href='<?php  echo preg_replace("/(&(?!amp;))/", "&amp;",$_SESSION['location_bar']['level1']['path']);?>';
-				var label1 = document.createTextNode("<?php  echo $_SESSION['location_bar']['level1']['label'];?>");
-				link1.appendChild(label1);
-				bar.appendChild(link1);
-			}
-        </script><?php
-		}
-		else
-		{
-			if(empty($_SESSION['location_bar']['level3']['path']))
-			{
-				?><script  type="text/javascript">
-					var bar = window.document.getElementById('ariane');
-					if(bar != null)
-					{
-						var link1 = document.createElement("a");
-						//link1.href='<?php  echo preg_replace("/(&(?!amp;))/", "&amp;",$_SESSION['location_bar']['level1']['path']);?>';
-						link1.href='<?php  echo $_SESSION['location_bar']['level1']['path'];?>';
-						var label1 = document.createTextNode("<?php  echo $_SESSION['location_bar']['level1']['label'];?>");
-						link1.appendChild(label1);
-						bar.appendChild(link1);
-						var text1 = document.createTextNode(" > <?php  echo $_SESSION['location_bar']['level2']['label'];?>");
-						bar.appendChild(text1);
-					}
-				</script><?php
-			}
-			else
-			{
-				if(empty($_SESSION['location_bar']['level4']['path']))
-				{
-					?><script type="text/javascript">
-			        	var bar = window.document.getElementById('ariane');
-						if(bar != null)
-						{
-							var link1 = document.createElement("a");
-							//link1.href='<?php  echo preg_replace("/(&(?!amp;))/", "&amp;",$_SESSION['location_bar']['level1']['path']);?>';
-							link1.href='<?php  echo $_SESSION['location_bar']['level1']['path'];?>';
-							var label1 = document.createTextNode("<?php  echo $_SESSION['location_bar']['level1']['label'];?>");
-							link1.appendChild(label1);
-							bar.appendChild(link1);
-							var text1 = document.createTextNode(" > ");
-							bar.appendChild(text1);
-							var link2 = document.createElement("a");
-							//link2.href='<?php  echo preg_replace("/(&(?!amp;))/", "&amp;",$_SESSION['location_bar']['level2']['path']);?>';
-							link2.href='<?php  echo $_SESSION['location_bar']['level2']['path'];?>';
-							var label2 = document.createTextNode("<?php  echo $_SESSION['location_bar']['level2']['label'];?>");
-							link2.appendChild(label2);
-							bar.appendChild(link2);
-							var text2 = document.createTextNode(" > <?php  echo $_SESSION['location_bar']['level3']['label'];?>");
-							bar.appendChild(text2);
-						}
-					</script><?php
-				}
-				else
-				{
-					?><script  type="text/javascript">
-			        	var bar = window.document.getElementById('ariane');
-						if(bar != null)
-						{
-							var link1 = document.createElement("a");
-							//link1.href='<?php  echo preg_replace("/(&(?!amp;))/", "&amp;",$_SESSION['location_bar']['level1']['path']);?>';
-							link1.href='<?php  echo $_SESSION['location_bar']['level1']['path'];?>';
-							var label1 = document.createTextNode("<?php  echo $_SESSION['location_bar']['level1']['label'];?>");
-							link1.appendChild(label1);
-							bar.appendChild(link1);
-							var text1 = document.createTextNode(" > ");
-							bar.appendChild(text1);
-							var link2 = document.createElement("a");
-						//	link2.href='<?php  echo preg_replace("/(&(?!amp;))/", "&amp;",$_SESSION['location_bar']['level2']['path']);?>';
-							link2.href='<?php  echo $_SESSION['location_bar']['level2']['path'];?>';
-							var label2 = document.createTextNode("<?php  echo $_SESSION['location_bar']['level2']['label'];?>");
-							link2.appendChild(label2);
-							bar.appendChild(link2);
-							var text2 = document.createTextNode(" > ");
-							bar.appendChild(text2);
-							var link3 = document.createElement("a");
-							//link3.href='<?php  echo preg_replace("/(&(?!amp;))/", "&amp;",$_SESSION['location_bar']['level3']['path']);?>';
-							link3.href='<?php  echo $_SESSION['location_bar']['level3']['path'];?>';
-							var label3 = document.createTextNode("<?php  echo $_SESSION['location_bar']['level3']['label'];?>");
-							link3.appendChild(label3);
-							bar.appendChild(link3);
-							var text3 = document.createTextNode(" > <?php  echo $_SESSION['location_bar']['level4']['label'];?>");
-							bar.appendChild(text3);
-						}
-					</script><?php
-				}
-			}
-		}
-	}
-
-	/**
-	* For debug, displays an array in a more readable way
-	*
-	* @param   $arr array Array to display
-	*/
-	public function show_array($arr)
-	{
-		echo "<table width=\"550\"><tr><td align=\"left\">";
-		echo "<pre>";
-		print_r($arr);
-		echo "</pre>";
-		echo "</td></tr></table>";
-	}
-
-	/**
-	* Formats a datetime to a dd/mm/yyyy format (date)
-	*
-	* @param   $date datetime The date to format
-	* @return	datetime  The formated date
-	*/
-	public function format_date($date)
-	{
-		$last_date = '';
-		if($date <> "")
-		{
-			if(strpos($date," "))
-			{
-				$date_ex = explode(" ",$date);
-				$the_date = explode("-",$date_ex[0]);
-				$last_date = $the_date[2]."-".$the_date[1]."-".$the_date[0];
-			}
-			else
-			{
-				$the_date = explode("-",$date);
-				$last_date = $the_date[2]."-".$the_date[1]."-".$the_date[0];
-			}
-		}
-		return $last_date;
-	}
-
-	/**
-	* Formats a datetime to a dd/mm/yyyy hh:ii:ss format (timestamp)
-	*
-	* @param   $date  datetime The date to format
-	* @return	datetime  The formatted date
-	*/
-	public function dateformat($date, $sep = '/')
-	{
-		if($date <> "")
-		{
-			$ar_test = explode(" ",$date);
-			$date = $ar_test[0];
-			$time = $ar_test[1];
-			if(preg_match('/\./',$time)) // POSTGRES date
-			{
-				$tmp = explode('.', $time);
-				$time = $tmp[0];
-			}
-			else if(preg_match('/,/',$time)) // ORACLE date
-			{
-				$tmp = explode(',', $time);
-				$time = $tmp[0];
-			}
-			if(preg_match('/-/',$date))
-			{
-				$ar_date = explode("-",$date);
-			}
-			elseif(preg_match('@\/@',$date))
-			{
-				$ar_date = explode("/",$date);
-			}
-			if(substr($ar_test[1],0,2) == "00")
-			{
-				return $ar_date[2].$sep.$ar_date[1].$sep.$ar_date[0];
-			}
-			else
-			{
-				return $ar_date[2].$sep.$ar_date[1].$sep.$ar_date[0]." ".$time;
-			}
-		}
-	}
-
-	/**
-	* Writes an error in pre formating format with header and footer
-	*
-	* @param   $title string Error title
-	* @param	  $message  string Error message
-	* @param	  $type string If 'title' then displays the title otherwise do not displays it (empty by default)
-	* @param	  $img_src string Source of the image to show (empty by default)
-	*/
-	public function echo_error($title,$message, $type = '', $img_src = '')
-	{
-		if ($type == 'title' || $type <> '')
-		{
-			if($img_src <> '')
-			{
-				echo '<h1><img src="'.$img_src.'" alt="" />'.$title.'</h1>';
-			}
-			else
-			{
-				echo "<h1>".$title."</h1>";
-			}
-			echo '<div id="inner_content">';
-        } ?>
-		<p>&nbsp;</p>
-		<p>&nbsp;</p>
-		<p>&nbsp;</p>
-		<p>&nbsp;</p>
-		<p>&nbsp;</p>
-		<p>&nbsp;</p>
-		<?php echo $message;
-		if ($type <> '')
-		{
-        	echo '</div>';
+    /**
+    * Cuts a string at the maximum number of char to displayed
+    *
+    * @param     $string string String value
+    * @param     $max integer Maximum character number
+    */
+    public function cut_string($string, $max)
+    {
+        if (strlen($string) >= $max)
+        {
+          $string = substr($string, 0, $max);
+          $espace = strrpos($string, " ");
+          $string = substr($string, 0, $espace)."...";
+          return $string;
         }
-	}
+        else
+        {
+            return $string;
+        }
+    }
 
-	/**
-	* Checks a date and writes the error in session if any
-	*
-	* @param   $day string Day
-	* @param	  $month string Month
-	* @param	  $year string Year
-	*/
-	public function verif_date($day,$month,$year)
-	{
-		if($month > 12)
-		{
-			$_SESSION['error'] .= _BAD_MONTH_FORMAT.".<br />";
-			$_SESSION['monthstart'] = "";
-		}
-		if($day > 31)
-		{
-			$_SESSION['error'] .= _BAD_DAY_FORMAT.".<br />";
-			$_SESSION['daystart'] = "";
-		}
-		else
-		{
-			if($month == "2" || $month == "02")
-			{
-				if($day > 29)
-				{
-					$_SESSION['error'] .= _BAD_FEBRUARY.".<br />";
-					$_SESSION['daystart'] = "";
-				}
-			}
-			else
-			{
-				if($month == 2 || $month == 4 || $month == 6 || $month == 9 || $month == 11)
-				{
-					if($day > 30)
-					{
-						$_SESSION['error'] .= _BAD_DAY_FORMAT."t.<br />";
-						$_SESSION['daystart'] = "";
-					}
-				}
-			}
-		}
-	}
+    /**
+    * Ends the page loading time and displays it
+    *
+    */
+    public function show_page_stat()
+    {
+        $end_page = microtime(true);
+        $page_total = round($end_page - $this->start_page,3);
+        if($page_total > 1)
+        {
+            $page_seconds = _SECONDS;
+        }
+        else
+        {
+            $page_seconds = _SECOND;
+        }
+        echo _PAGE_GENERATED_IN." <b>".$page_total."</b> ".$page_seconds;
+    }
 
-	/**
-	*  Displays a variable with a label if the var is not empty
-	*
-	* @param   $what string The variable to display
-	* @param	  $label string The label
-	*/
-	public function writeifnotempty($what,$label)
-	{
-		if(!empty($what))
-		{
-			echo "<span class=\"title\">".$label."</span> : ".$what."<br />";
-		}
-	}
+    /**
+    * Configures the actual position of the visitor with all query strings to go to the right page after the logging action
+    *
+    * @param     $index string "index.php?" by default
+    */
+    public function configPosition($index ="index.php?")
+    {
+        $querystring = $_SERVER['QUERY_STRING'];
+        $tab_query = explode("&",$querystring);
+        $querystring = "";
 
-	/**
-	*  Extracts the user informations from database and puts the result in an array
-	*
-	* @param  $id integer User identifier
-	*/
-	public function infouser($id)
-	{
-		$conn = new dbquery();
-		$conn->connect();
+        for($i=0;$i<count($tab_query);$i++)
+        {
+            if(substr($tab_query[$i],0,3) <> "css" && substr($tab_query[$i],0,3) <> "CSS")
+            {
+                $querystring .= $tab_query[$i]."&";
+            }
+        }
+        $querystring = substr($querystring,0,strlen($querystring)-1);
+        $_SESSION['position'] = $index.$querystring;
+    }
 
-		$conn->query("select * from ".$_SESSION['tablename']['users']." where user_id = '".$id."'");
-		if($conn->nb_result() == 0)
-		{
-			return array("UserId" => "",
-							"FirstName" => "",
-							"LastName" => "",
-							"Phone" => "",
-							"Mail" => "",
-							"department" => ""
-						);
-		}
-		else
-		{
-			$line = $conn->fetch_object();
-			return array("UserId" => $line->user_id,
-							"FirstName" => $this->show_string($line->firstname),
-							"LastName" => $this->show_string($line->lastname),
-							"Phone" => $line->phone,
-							"Mail" => $line->mail ,
-							"department" => $this->show_string($line->department)
-						);
-		}
-	}
+    /**
+    * Adds en error to the errors log
+    *
+    * @param     $msg  string Message to add
+    * @param  $var  string Language dependant message
+    */
+    public function add_error($msg,$var)
+    {
+        $msg = trim($msg);
+        if(!empty($msg))
+        {
+            $_SESSION['error'] .= $msg." ".$var."<br />";
+            if(strlen(str_replace(array("<br />","<br />"),"",$_SESSION['error'])) < 6)
+            {
+                $_SESSION['error'] = "";
+            }
+        }
+    }
+
+    /**
+    * Cleans a variable with multiple possibility
+    *
+    * @param     $what  string Variable to clean
+    * @param  $mask  string Mask, "no" by default
+    * @param     $msg_error string Error message, empty by default
+    * @param     $empty  string "yes" by default
+    * @param     $min_limit integer Empty by default
+    * @param     $max_limit integer Empty by default
+    * @return   string Cleaned variable or empty string
+    */
+    public function wash($what, $mask = "no", $msg_error = "", $empty = "yes", $min_limit = "", $max_limit = "", $custom_pattern = '', $custom_error_msg = '')
+    {
+
+        //$w_var = addslashes(trim(strip_tags($what)));
+
+        $w_var = trim(strip_tags($what));
+        $test_empty = "ok";
+
+        if($empty == "yes")
+        {
+            // We use strlen instead of the php's empty function because for a var containing 0 return by a form (in string format)
+            // the empty function return that the var is empty but it contains à 0
+            if(strlen($w_var) == 0)
+            {
+                $test_empty = "no";
+            }
+            else
+            {
+                $test_empty = "ok";
+            }
+        }
+        if($test_empty == "no")
+        {
+            $this->add_error($msg_error, _IS_EMPTY);
+            return "";
+        }
+        else
+        {
+            if($msg_error <> '')
+            {
+                if($min_limit <> "")
+                {
+                    if(strlen($w_var) < $min_limit)
+                    {
+                        if($min_limit > 1)
+                        {
+                            $this->add_error($msg_error,  _MUST_MAKE_AT_LEAST." ".$min_limit." "._CHARACTERS);
+                        }
+                        else
+                        {
+                            $this->add_error($msg_error, _MUST_MAKE_AT_LEAST." ".$min_limit." "._CHARACTERS);
+                        }
+                        return "";
+                    }
+                }
+            }
+
+            if($max_limit <> "")
+            {
+                if(strlen($w_var) > $max_limit)
+                {
+                    if($min_limit > 1)
+                    {
+                        $this->add_error($msg_error, MUST_BE_LESS_THAN." ".$max_limit." "._CHARACTERS);
+                    }
+                    else
+                    {
+                        $this->add_error($msg_error,  MUST_BE_LESS_THAN." ".$max_limit." "._CHARACTERS);
+                    }
+
+                    return "";
+                }
+            }
+
+            switch ($mask)
+            {
+                case "no":
+                    return $w_var;
+
+                case "num":
+                    if (preg_match("/^[0-9]+$/",$w_var))
+                    {
+                        return $w_var;
+                    }
+                    else
+                    {
+                        $this->add_error($msg_error, _WRONG_FORMAT." :<br/>"._WAITING_INTEGER);
+                        return "";
+                    }
+
+                case "float":
+                    if (preg_match("/^[0-9.,]+$/",$w_var))
+                    {
+                        return $w_var;
+                    }
+                    else
+                    {
+                        $this->add_error($msg_error, _WRONG_FORMAT." "._WAITING_FLOAT);
+                        return "";
+                    }
+
+                case "letter":
+                    if (preg_match("/^[a-zA-Z]+$/",$w_var))
+                    {
+                        return $w_var;
+                    }
+                    else
+                    {
+                        $this->add_error($msg_error, _WRONG_FORMAT);
+                        return "";
+                    }
+
+                case "alphanum":
+                    if (preg_match("/^[a-zA-Z0-9]+$/",$w_var))
+                    {
+                        return $w_var;
+                    }
+                    else
+                    {
+                        $this->add_error($msg_error,_WRONG_FORMAT);
+                        return "";
+                    }
+
+                case "nick":
+                    if (preg_match("/^[_a-zA-Z0-9.-]+$/",$w_var))
+                    {
+                        return $w_var;
+                    }
+                    else
+                    {
+                        $this->add_error($msg_error,_WRONG_FORMAT);
+                        return "";
+                    }
+
+                case "mail":
+                    if (preg_match("/^[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]{2,4}$/",$w_var))
+                    {
+                        return $w_var;
+                    }
+                    else
+                    {
+                        $this->add_error($msg_error, _WRONG_FORMAT);
+                        return "";
+                    }
+
+                case "url":
+                    if (preg_match("/^[www.]+[_a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/",$w_var))
+                    {
+                        return $w_var;
+                    }
+                    else
+                    {
+                        $this->add_error($msg_error, _WRONG_FORMAT);
+                        return "";
+                    }
+
+                case "file":
+                    if (preg_match("/^[_a-zA-Z0-9.-? é&\/]+$/",$w_var))
+                    {
+                        return $w_var;
+                    }
+                    else
+                    {
+                        $this->add_error($msg_error, _WRONG_FORMAT);
+                        return "";
+                    }
+
+                case "name":
+                    if (preg_match("/^[_a-zA-Z0-9.-? \'\/&éea]+$/",$w_var))
+                    {
+                        return $w_var;
+                    }
+                    else
+                    {
+                        $this->add_error($msg_error, _WRONG_FORMAT);
+                        return "";
+                    }
+                case "date":
+                    if(isset($_SESSION['config']['databasetype']) && $_SESSION['config']['databasetype'] == "SQLSERVER")
+                    {
+                        $date_pattern = "/^[0-3][0-9]-[0-1][0-9]-[1-2][0-9][0-9][0-9]$/";
+                    }
+                    else // MYSQL & POSTGRESQL
+                    {
+                        $date_pattern = "/^[0-3][0-9]-[0-1][0-9]-[1-2][0-9][0-9][0-9]$/";
+                    }
+                    if(preg_match($date_pattern,$w_var))
+                    {
+                        return $w_var;
+                    }
+                    else
+                    {
+                        $this->add_error($msg_error, _WRONG_FORMAT." "._WAITING_DATE);
+                        return "";
+                    }
+                case "custom":
+                    if(preg_match($custom_pattern,$w_var) == 0)
+                    {
+                        $this->add_error($msg_error, $custom_error_msg.' '.$custom_pattern.' '.$w_var);
+                        return "";
+                    }
+                    else
+                    {
+                        return $w_var;
+                    }
+            }
+        }
+    }
+
+    /**
+    * Returns a variable with personnal formating. It allows you to add formating action when you displays the variable the var
+    *
+    * @param     $what string Variable to format
+    * @return string  Formated variable
+    */
+    public function show($what)
+    {
+        return stripslashes($what);
+    }
+
+    /**
+    * Manages the location bar in session (4 levels max), then calls the where_am_i() function.
+    *
+    * @param     $path  string Url (empty by default)
+    * @param   $label string Label to show in the location bar (empty by default)
+    * @param   $id_pagestring  Page identifier (empty by default)
+    * @param   $init bool If true reinits the location bar (true by default)
+    * @param   $level string Level in the location bar (empty by default)
+    */
+    public function manage_location_bar($path = '', $label = '', $id_page = '', $init = true, $level = '')
+    {
+        //Fix un little php bug
+        if(strpos($label,"&rsquo;")!== false)
+        {
+            $label = str_replace("&rsquo;" , "\'", $label);
+        }
+
+        $_SESSION['location_bar']['level1']['path'] = "index.php?reinit=true";
+        $_SESSION['location_bar']['level1']['label'] = $_SESSION['config']['applicationname'];
+        $_SESSION['location_bar']['level1']['id'] = "welcome";
+
+        if(!empty($level))
+        {
+            if($level == 1)
+            {
+                $_SESSION['location_bar']['level2']['path'] = "";
+                $_SESSION['location_bar']['level2']['label'] = "";
+                $_SESSION['location_bar']['level2']['id'] = "" ;
+
+                $_SESSION['location_bar']['level3']['path'] = "";
+                $_SESSION['location_bar']['level3']['label'] = "";
+                $_SESSION['location_bar']['level3']['id'] = "" ;
+
+                $_SESSION['location_bar']['level4']['path'] = "";
+                $_SESSION['location_bar']['level4']['label'] = "";
+                $_SESSION['location_bar']['level4']['id'] = "" ;
+            }
+            elseif($level == 2)
+            {
+                $_SESSION['location_bar']['level3']['path'] = "";
+                $_SESSION['location_bar']['level3']['label'] = "";
+                $_SESSION['location_bar']['level3']['id'] = "" ;
+
+                $_SESSION['location_bar']['level4']['path'] = "";
+                $_SESSION['location_bar']['level4']['label'] = "";
+                $_SESSION['location_bar']['level4']['id'] = "" ;
+            }
+            elseif($level == 3)
+            {
+                $_SESSION['location_bar']['level4']['path'] = "";
+                $_SESSION['location_bar']['level4']['label'] = "";
+                $_SESSION['location_bar']['level4']['id'] = "" ;
+            }
+        }
+        else
+        {
+
+            if(trim($id_page) == trim($_SESSION['location_bar']['level1']['id']))
+            {
+                $_SESSION['location_bar']['level2']['path'] = "";
+                $_SESSION['location_bar']['level2']['label'] = "";
+                $_SESSION['location_bar']['level2']['id'] = "" ;
+
+                $_SESSION['location_bar']['level3']['path'] = "";
+                $_SESSION['location_bar']['level3']['label'] = "";
+                $_SESSION['location_bar']['level3']['id'] = "" ;
+
+                $_SESSION['location_bar']['level4']['path'] = "";
+                $_SESSION['location_bar']['level4']['label'] = "";
+                $_SESSION['location_bar']['level4']['id'] = "" ;
+            }
+            elseif(trim($id_page) == trim($_SESSION['location_bar']['level2']['id']))
+            {
+                $_SESSION['location_bar']['level3']['path'] = "";
+                $_SESSION['location_bar']['level3']['label'] = "";
+                $_SESSION['location_bar']['level3']['id'] = "" ;
+
+                $_SESSION['location_bar']['level4']['path'] = "";
+                $_SESSION['location_bar']['level4']['label'] = "";
+                $_SESSION['location_bar']['level4']['id'] = "" ;
+            }
+            elseif(trim($id_page) == trim($_SESSION['location_bar']['level3']['id']))
+            {
+                $_SESSION['location_bar']['level4']['path'] = "";
+                $_SESSION['location_bar']['level4']['label'] = "";
+                $_SESSION['location_bar']['level4']['id'] = "" ;
+            }
+            elseif($init || empty($_SESSION['location_bar']['level2']['id']))
+            {
+                $_SESSION['location_bar']['level2']['path'] = $path;
+                $_SESSION['location_bar']['level2']['path'] .= "&level=2";
+                $_SESSION['location_bar']['level2']['label'] = $this->wash_html($label);
+                $_SESSION['location_bar']['level2']['id'] = $id_page ;
+
+                $_SESSION['location_bar']['level3']['path'] = "";
+                $_SESSION['location_bar']['level3']['label'] = "";
+                $_SESSION['location_bar']['level3']['id'] = "" ;
+
+                $_SESSION['location_bar']['level4']['path'] = "";
+                $_SESSION['location_bar']['level4']['label'] = "";
+                $_SESSION['location_bar']['level4']['id'] = "" ;
+            }
+            else
+            {
+                if(empty($_SESSION['location_bar']['level3']['path']))
+                {
+                    $_SESSION['location_bar']['level3']['path'] = $path."&level=3";
+                    $_SESSION['location_bar']['level3']['label'] = $this->wash_html($label);
+                    $_SESSION['location_bar']['level3']['id'] = $id_page ;
+
+                    $_SESSION['location_bar']['level4']['path'] = "";
+                    $_SESSION['location_bar']['level4']['label'] = "";
+                    $_SESSION['location_bar']['level4']['id'] = "" ;
+                }
+                else
+                {
+                    $_SESSION['location_bar']['level4']['path'] = $path."&level=4";
+                    $_SESSION['location_bar']['level4']['label'] = $this->wash_html($label);
+                    $_SESSION['location_bar']['level4']['id'] = $id_page ;
+                }
+            }
+        }
+        $this->where_am_i();
+    }
+
+    /**
+    * Uses javascript to rewrite the location bar
+    *
+    */
+    private function where_am_i()
+    {
+        if(empty($_SESSION['location_bar']['level2']['path']))
+        {
+        ?><script  type="text/javascript">
+            var bar = window.document.getElementById('ariane');
+            if(bar != null)
+            {
+                var link1 = document.createElement("a");
+                link1.href='<?php  echo $_SESSION['location_bar']['level1']['path'];?>';
+                // link1.href='<?php  echo preg_replace("/(&(?!amp;))/", "&amp;",$_SESSION['location_bar']['level1']['path']);?>';
+                var label1 = document.createTextNode("<?php  echo $_SESSION['location_bar']['level1']['label'];?>");
+                link1.appendChild(label1);
+                bar.appendChild(link1);
+            }
+        </script><?php
+        }
+        else
+        {
+            if(empty($_SESSION['location_bar']['level3']['path']))
+            {
+                ?><script  type="text/javascript">
+                    var bar = window.document.getElementById('ariane');
+                    if(bar != null)
+                    {
+                        var link1 = document.createElement("a");
+                        //link1.href='<?php  echo preg_replace("/(&(?!amp;))/", "&amp;",$_SESSION['location_bar']['level1']['path']);?>';
+                        link1.href='<?php  echo $_SESSION['location_bar']['level1']['path'];?>';
+                        var label1 = document.createTextNode("<?php  echo $_SESSION['location_bar']['level1']['label'];?>");
+                        link1.appendChild(label1);
+                        bar.appendChild(link1);
+                        var text1 = document.createTextNode(" > <?php  echo $_SESSION['location_bar']['level2']['label'];?>");
+                        bar.appendChild(text1);
+                    }
+                </script><?php
+            }
+            else
+            {
+                if(empty($_SESSION['location_bar']['level4']['path']))
+                {
+                    ?><script type="text/javascript">
+                        var bar = window.document.getElementById('ariane');
+                        if(bar != null)
+                        {
+                            var link1 = document.createElement("a");
+                            //link1.href='<?php  echo preg_replace("/(&(?!amp;))/", "&amp;",$_SESSION['location_bar']['level1']['path']);?>';
+                            link1.href='<?php  echo $_SESSION['location_bar']['level1']['path'];?>';
+                            var label1 = document.createTextNode("<?php  echo $_SESSION['location_bar']['level1']['label'];?>");
+                            link1.appendChild(label1);
+                            bar.appendChild(link1);
+                            var text1 = document.createTextNode(" > ");
+                            bar.appendChild(text1);
+                            var link2 = document.createElement("a");
+                            //link2.href='<?php  echo preg_replace("/(&(?!amp;))/", "&amp;",$_SESSION['location_bar']['level2']['path']);?>';
+                            link2.href='<?php  echo $_SESSION['location_bar']['level2']['path'];?>';
+                            var label2 = document.createTextNode("<?php  echo $_SESSION['location_bar']['level2']['label'];?>");
+                            link2.appendChild(label2);
+                            bar.appendChild(link2);
+                            var text2 = document.createTextNode(" > <?php  echo $_SESSION['location_bar']['level3']['label'];?>");
+                            bar.appendChild(text2);
+                        }
+                    </script><?php
+                }
+                else
+                {
+                    ?><script  type="text/javascript">
+                        var bar = window.document.getElementById('ariane');
+                        if(bar != null)
+                        {
+                            var link1 = document.createElement("a");
+                            //link1.href='<?php  echo preg_replace("/(&(?!amp;))/", "&amp;",$_SESSION['location_bar']['level1']['path']);?>';
+                            link1.href='<?php  echo $_SESSION['location_bar']['level1']['path'];?>';
+                            var label1 = document.createTextNode("<?php  echo $_SESSION['location_bar']['level1']['label'];?>");
+                            link1.appendChild(label1);
+                            bar.appendChild(link1);
+                            var text1 = document.createTextNode(" > ");
+                            bar.appendChild(text1);
+                            var link2 = document.createElement("a");
+                        //  link2.href='<?php  echo preg_replace("/(&(?!amp;))/", "&amp;",$_SESSION['location_bar']['level2']['path']);?>';
+                            link2.href='<?php  echo $_SESSION['location_bar']['level2']['path'];?>';
+                            var label2 = document.createTextNode("<?php  echo $_SESSION['location_bar']['level2']['label'];?>");
+                            link2.appendChild(label2);
+                            bar.appendChild(link2);
+                            var text2 = document.createTextNode(" > ");
+                            bar.appendChild(text2);
+                            var link3 = document.createElement("a");
+                            //link3.href='<?php  echo preg_replace("/(&(?!amp;))/", "&amp;",$_SESSION['location_bar']['level3']['path']);?>';
+                            link3.href='<?php  echo $_SESSION['location_bar']['level3']['path'];?>';
+                            var label3 = document.createTextNode("<?php  echo $_SESSION['location_bar']['level3']['label'];?>");
+                            link3.appendChild(label3);
+                            bar.appendChild(link3);
+                            var text3 = document.createTextNode(" > <?php  echo $_SESSION['location_bar']['level4']['label'];?>");
+                            bar.appendChild(text3);
+                        }
+                    </script><?php
+                }
+            }
+        }
+    }
+
+    /**
+    * For debug, displays an array in a more readable way
+    *
+    * @param   $arr array Array to display
+    */
+    public function show_array($arr)
+    {
+        echo "<table width=\"550\"><tr><td align=\"left\">";
+        echo "<pre>";
+        print_r($arr);
+        echo "</pre>";
+        echo "</td></tr></table>";
+    }
+
+    /**
+    * Formats a datetime to a dd/mm/yyyy format (date)
+    *
+    * @param   $date datetime The date to format
+    * @return   datetime  The formated date
+    */
+    public function format_date($date)
+    {
+        $last_date = '';
+        if($date <> "")
+        {
+            if(strpos($date," "))
+            {
+                $date_ex = explode(" ",$date);
+                $the_date = explode("-",$date_ex[0]);
+                $last_date = $the_date[2]."-".$the_date[1]."-".$the_date[0];
+            }
+            else
+            {
+                $the_date = explode("-",$date);
+                $last_date = $the_date[2]."-".$the_date[1]."-".$the_date[0];
+            }
+        }
+        return $last_date;
+    }
+
+    /**
+    * Formats a datetime to a dd/mm/yyyy hh:ii:ss format (timestamp)
+    *
+    * @param   $date  datetime The date to format
+    * @return   datetime  The formatted date
+    */
+    public function dateformat($date, $sep = '/')
+    {
+        if($date <> "")
+        {
+            $ar_test = explode(" ",$date);
+            $date = $ar_test[0];
+            $time = $ar_test[1];
+            if(preg_match('/\./',$time)) // POSTGRES date
+            {
+                $tmp = explode('.', $time);
+                $time = $tmp[0];
+            }
+            else if(preg_match('/,/',$time)) // ORACLE date
+            {
+                $tmp = explode(',', $time);
+                $time = $tmp[0];
+            }
+            if(preg_match('/-/',$date))
+            {
+                $ar_date = explode("-",$date);
+            }
+            elseif(preg_match('@\/@',$date))
+            {
+                $ar_date = explode("/",$date);
+            }
+            if(substr($ar_test[1],0,2) == "00")
+            {
+                return $ar_date[2].$sep.$ar_date[1].$sep.$ar_date[0];
+            }
+            else
+            {
+                return $ar_date[2].$sep.$ar_date[1].$sep.$ar_date[0]." ".$time;
+            }
+        }
+    }
+
+    /**
+    * Writes an error in pre formating format with header and footer
+    *
+    * @param   $title string Error title
+    * @param      $message  string Error message
+    * @param      $type string If 'title' then displays the title otherwise do not displays it (empty by default)
+    * @param      $img_src string Source of the image to show (empty by default)
+    */
+    public function echo_error($title,$message, $type = '', $img_src = '')
+    {
+        if ($type == 'title' || $type <> '')
+        {
+            if($img_src <> '')
+            {
+                echo '<h1><img src="'.$img_src.'" alt="" />'.$title.'</h1>';
+            }
+            else
+            {
+                echo "<h1>".$title."</h1>";
+            }
+            echo '<div id="inner_content">';
+        } ?>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+        <?php echo $message;
+        if ($type <> '')
+        {
+            echo '</div>';
+        }
+    }
+
+    /**
+    * Checks a date and writes the error in session if any
+    *
+    * @param   $day string Day
+    * @param      $month string Month
+    * @param      $year string Year
+    */
+    public function verif_date($day,$month,$year)
+    {
+        if($month > 12)
+        {
+            $_SESSION['error'] .= _BAD_MONTH_FORMAT.".<br />";
+            $_SESSION['monthstart'] = "";
+        }
+        if($day > 31)
+        {
+            $_SESSION['error'] .= _BAD_DAY_FORMAT.".<br />";
+            $_SESSION['daystart'] = "";
+        }
+        else
+        {
+            if($month == "2" || $month == "02")
+            {
+                if($day > 29)
+                {
+                    $_SESSION['error'] .= _BAD_FEBRUARY.".<br />";
+                    $_SESSION['daystart'] = "";
+                }
+            }
+            else
+            {
+                if($month == 2 || $month == 4 || $month == 6 || $month == 9 || $month == 11)
+                {
+                    if($day > 30)
+                    {
+                        $_SESSION['error'] .= _BAD_DAY_FORMAT."t.<br />";
+                        $_SESSION['daystart'] = "";
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+    *  Displays a variable with a label if the var is not empty
+    *
+    * @param   $what string The variable to display
+    * @param      $label string The label
+    */
+    public function writeifnotempty($what,$label)
+    {
+        if(!empty($what))
+        {
+            echo "<span class=\"title\">".$label."</span> : ".$what."<br />";
+        }
+    }
+
+    /**
+    *  Extracts the user informations from database and puts the result in an array
+    *
+    * @param  $id integer User identifier
+    */
+    public function infouser($id)
+    {
+        $conn = new dbquery();
+        $conn->connect();
+
+        $conn->query("select * from ".$_SESSION['tablename']['users']." where user_id = '".$id."'");
+        if($conn->nb_result() == 0)
+        {
+            return array("UserId" => "",
+                            "FirstName" => "",
+                            "LastName" => "",
+                            "Phone" => "",
+                            "Mail" => "",
+                            "department" => ""
+                        );
+        }
+        else
+        {
+            $line = $conn->fetch_object();
+            return array("UserId" => $line->user_id,
+                            "FirstName" => $this->show_string($line->firstname),
+                            "LastName" => $this->show_string($line->lastname),
+                            "Phone" => $line->phone,
+                            "Mail" => $line->mail ,
+                            "department" => $this->show_string($line->department)
+                        );
+        }
+    }
 
 
-	/**
-	* Tests the exitence of a remote file
-	*
-	* @param  $url string Url to connect
-	* @return 1 if the URL  host is empty, 2 if Unable to connect to remote host, true if the file exists and false otherwise
-	*/
-	function remote_file_exists ($url)
-	{
-		$head = "";
-	    $url_p = parse_url($url);
-	    if (isset ($url_p["host"]))
-	    {
-	    	$host = $url_p["host"];
-	   	}
-	    else
-	    {
-	    	return 1;
-	    }
-	    if (isset ($url_p["path"]))
-	    {
-	    	$path = $url_p["path"];
-	    }
-	    else
-	    {
-	    	$path = "";
-	    }
-	    $fp = fsockopen ($host, 80, $errno, $errstr, 20);
-	    if (!$fp)
-	    {
-	    	return 2;
-	    }
-	    else
-	    {
-	        $parse = parse_url($url);
-	        $host = $parse['host'];
+    /**
+    * Tests the exitence of a remote file
+    *
+    * @param  $url string Url to connect
+    * @return 1 if the URL  host is empty, 2 if Unable to connect to remote host, true if the file exists and false otherwise
+    */
+    function remote_file_exists ($url)
+    {
+        $head = "";
+        $url_p = parse_url($url);
+        if (isset ($url_p["host"]))
+        {
+            $host = $url_p["host"];
+        }
+        else
+        {
+            return 1;
+        }
+        if (isset ($url_p["path"]))
+        {
+            $path = $url_p["path"];
+        }
+        else
+        {
+            $path = "";
+        }
+        $fp = fsockopen ($host, 80, $errno, $errstr, 20);
+        if (!$fp)
+        {
+            return 2;
+        }
+        else
+        {
+            $parse = parse_url($url);
+            $host = $parse['host'];
 
-	        fputs($fp, "HEAD ".$url." HTTP/1.1\r\n" );
-	        fputs($fp, "HOST: ".$host."\r\n" );
-	        fputs($fp, "Connection: close\r\n\r\n" );
-	        $headers = "";
-	        while (!feof ($fp))
-	        {
-	        	$headers .= fgets ($fp, 128);
-	        }
-	    }
-	    fclose ($fp);
-	    $arr_headers = explode("\n", $headers);
-	    $return = false;
-	    if (isset ($arr_headers[0]))
-	    {
-	    	$return = strpos ($arr_headers[0], "404" ) === false;
-	    }
-	    return $return;
-	 }
+            fputs($fp, "HEAD ".$url." HTTP/1.1\r\n" );
+            fputs($fp, "HOST: ".$host."\r\n" );
+            fputs($fp, "Connection: close\r\n\r\n" );
+            $headers = "";
+            while (!feof ($fp))
+            {
+                $headers .= fgets ($fp, 128);
+            }
+        }
+        fclose ($fp);
+        $arr_headers = explode("\n", $headers);
+        $return = false;
+        if (isset ($arr_headers[0]))
+        {
+            $return = strpos ($arr_headers[0], "404" ) === false;
+        }
+        return $return;
+     }
 
-	/**
-	* Returns a formated date for SQL queries
-	*
-	* @param  $date date Date to format
-	* @param  $insert bool If true format the date to insert in the database (true by default)
-	* @return Formated date or empty string if any error
-	*/
-	function format_date_db($date, $insert=true, $databasetype= '')
-	{
+    /**
+    * Returns a formated date for SQL queries
+    *
+    * @param  $date date Date to format
+    * @param  $insert bool If true format the date to insert in the database (true by default)
+    * @return Formated date or empty string if any error
+    */
+    function format_date_db($date, $insert=true, $databasetype= '')
+    {
         if(isset($_SESSION['config']['databasetype']) && !empty($_SESSION['config']['databasetype']))
         {
             $databasetype = $_SESSION['config']['databasetype'];
         }
-        
-		if ($date <> "" )
-		{
-			$var=explode("-",$date) ;
-			
-			if(preg_match('/\s/', $var[2]))
-			{
-				$tmp = explode(' ', $var[2]);
-				$var[2]= $tmp[0];
-			}
-			if(preg_match('/^[0-3][0-9]$/', $var[0]))
-			{
-				$day = $var[0];
-				$month= $var[1];
-				$year =  $var[2];
-			}
-			else
-			{
-				$year = $var[0];
-				$month= $var[1];
-				$day =  substr($var[2], 0,2);
-			}
-			if ($year <= "1900")
-			{
-				return '';
-			}
-			else
-			{
-				if($databasetype == "SQLSERVER")
-				{
-					return  $day."-".$month."-".$year;
-				}
-				elseif($databasetype== "POSTGRESQL")
-				{
-					if($_SESSION['config']['lang'] == "fr")
-					{
-						return $day."-".$month."-".$year;
-					}
-					else
-					{
-						return $year."-".$month."-".$day;
-					}
-				}
-				elseif($databasetype == "ORACLE")
-				{
 
-					return  $day."-".$month."-".$year;
-				}
-				elseif($databasetype == "MYSQL" && $insert)
-				{
-					return $year."-".$month."-".$day;
-				}
-				elseif($databasetype == "MYSQL" && !$insert)
-				{
-					return  $day."-".$month."-".$year;
-				}
-			}
-		}
-		else
-		{
-			return '';
-		}
-	}
+        if ($date <> "" )
+        {
+            $var=explode("-",$date) ;
 
-	/**
-	* Protects string to insert in the database
-	*
-	* @param  $string string String to format
-	* @return Formated date
-	*/
-	public function protect_string_db($string, $databasetype = '')
-	{
+            if(preg_match('/\s/', $var[2]))
+            {
+                $tmp = explode(' ', $var[2]);
+                $var[2]= $tmp[0];
+            }
+            if(preg_match('/^[0-3][0-9]$/', $var[0]))
+            {
+                $day = $var[0];
+                $month= $var[1];
+                $year =  $var[2];
+            }
+            else
+            {
+                $year = $var[0];
+                $month= $var[1];
+                $day =  substr($var[2], 0,2);
+            }
+            if ($year <= "1900")
+            {
+                return '';
+            }
+            else
+            {
+                if($databasetype == "SQLSERVER")
+                {
+                    return  $day."-".$month."-".$year;
+                }
+                elseif($databasetype== "POSTGRESQL")
+                {
+                    if($_SESSION['config']['lang'] == "fr")
+                    {
+                        return $day."-".$month."-".$year;
+                    }
+                    else
+                    {
+                        return $year."-".$month."-".$day;
+                    }
+                }
+                elseif($databasetype == "ORACLE")
+                {
+
+                    return  $day."-".$month."-".$year;
+                }
+                elseif($databasetype == "MYSQL" && $insert)
+                {
+                    return $year."-".$month."-".$day;
+                }
+                elseif($databasetype == "MYSQL" && !$insert)
+                {
+                    return  $day."-".$month."-".$year;
+                }
+            }
+        }
+        else
+        {
+            return '';
+        }
+    }
+
+    /**
+    * Protects string to insert in the database
+    *
+    * @param  $string string String to format
+    * @return Formated date
+    */
+    public function protect_string_db($string, $databasetype = '')
+    {
         if(isset($_SESSION['config']['databasetype']) && !empty($_SESSION['config']['databasetype']))
         {
             $databasetype = $_SESSION['config']['databasetype'];
@@ -960,635 +960,625 @@ class functions
             $string = addslashes($string);
         }
 
-		return $string;
-	}
+        return $string;
+    }
 
-	/**
-	* Returns a string without the escaping characters
-	*
-	* @param  $string string String to format
-	* @return Formated string
-	*/
-	public function show_string($string, $replace_CR = false, $chars_to_escape = array(), $databasetype = '')
-	{
+    /**
+    * Returns a string without the escaping characters
+    *
+    * @param  $string string String to format
+    * @return Formated string
+    */
+    public function show_string($string, $replace_CR = false, $chars_to_escape = array(), $databasetype = '')
+    {
         if(isset($_SESSION['config']['databasetype']) && !empty($_SESSION['config']['databasetype']))
         {
             $databasetype = $_SESSION['config']['databasetype'];
         }
-		if($databasetype == "SQLSERVER")
-		{
-			$string = str_replace("''", "'", $string);
-			$string = str_replace("\\", "", $string);
-		}
-		else if($databasetype == "MYSQL" || $databasetype == "POSTGRESQL" && (ini_get('magic_quotes_gpc') <> true || phpversion() >= 6))
-		{
-			$string = stripslashes($string);
-			$string = str_replace("\\'", "'", $string);
-			$string = str_replace('\\"', '"', $string);
-		}
-		else if($databasetype == "ORACLE")
-		{
-			$string = str_replace("''", "'", $string);
-			$string = str_replace("\\", "", $string);
-		}
-		if($replace_CR)
-		{
-			$to_del = array("\t", "\n", "&#0A;", "&#0D;", "\r");
-			$string = str_replace($to_del, ' ', $string);
-		}
-		for($i=0;$i<count($chars_to_escape);$i++)
-		{
-			$string = str_replace($chars_to_escape[$i], '\\'.$chars_to_escape, $string);
-		}
-		$string = str_replace('"', "'", $string);
-		return trim($string);
-	}
+        if($databasetype == "SQLSERVER")
+        {
+            $string = str_replace("''", "'", $string);
+            $string = str_replace("\\", "", $string);
+        }
+        else if($databasetype == "MYSQL" || $databasetype == "POSTGRESQL" && (ini_get('magic_quotes_gpc') <> true || phpversion() >= 6))
+        {
+            $string = stripslashes($string);
+            $string = str_replace("\\'", "'", $string);
+            $string = str_replace('\\"', '"', $string);
+        }
+        else if($databasetype == "ORACLE")
+        {
+            $string = str_replace("''", "'", $string);
+            $string = str_replace("\\", "", $string);
+        }
+        if($replace_CR)
+        {
+            $to_del = array("\t", "\n", "&#0A;", "&#0D;", "\r");
+            $string = str_replace($to_del, ' ', $string);
+        }
+        for($i=0;$i<count($chars_to_escape);$i++)
+        {
+            $string = str_replace($chars_to_escape[$i], '\\'.$chars_to_escape, $string);
+        }
+        $string = str_replace('"', "'", $string);
+        return trim($string);
+    }
 
-	public function escape_string($string, $chars_to_escape=array())
-	{
-		for($i=0;$i<count($chars_to_escape);$i++)
-		{
-			$string = str_replace($chars_to_escape[$i], '\\'.$chars_to_escape, $string);
-		}
-		return trim($string);
-	}
+    public function escape_string($string, $chars_to_escape=array())
+    {
+        for($i=0;$i<count($chars_to_escape);$i++)
+        {
+            $string = str_replace($chars_to_escape[$i], '\\'.$chars_to_escape, $string);
+        }
+        return trim($string);
+    }
 
-	/**
-	* Retrieves  a constant value in a language file
-	*
-	* @param  $constant string Constant
-	* @param  $file string Path to the language file
-	* @return Displays an error message if the language file do not exists, returns the value of the constant or false otherwise
-	*/
-	public function retrieve_constant_lang($constant, $file)
-	{
-		
-		//#####CUSTOM_OVERLOAD#####//
-		if(isset($_SESSION['custom_override_id']) && !empty($_SESSION['custom_override_id']))
-		{
-			
-			$custom_file = $_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php';
-			if(file_exists($custom_file))
-			{
-				
-				$customlang = fopen($custom_file, "r");
-				while (!feof($customlang))
-				{
-				
-					$c_string = fgets($customlang);
-					$c_search="`'".$constant."'`";
-					preg_match($c_search,$c_string,$c_out);
-					
-					if(isset($c_out[0]))
-					{
-						
-						$tab_c_string = explode("'", $c_string);
-						if(isset($tab_c_string[3]))
-						{
-							
-							$c_myresult = $tab_c_string[3];
-							return $c_myresult;
-						}
-						
-					}
-				}
-			}
-			
-			
-			
-		}
-		
-		//#################//
-	
-		$filelang = fopen($file, "r");
-		if(!file_exists($_SESSION['config']['corepath'].$file) && !file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].$file))
-		{
-			echo '<div class="error">Language file missing: '.$file.'</div>';
-			exit();
-		}
-		$find = false;
-		
-		while (!feof($filelang))
-		{
-			
-			$string = fgets($filelang);
-			
-			$search="`'".$constant."'`";
-			preg_match($search,$string,$out);
-			
-			if(isset($out[0]))
-			{
-				$tab_string = explode("'", $string);
-				if(isset($tab_string[5]))
-				{
-					$myresult = $tab_string[5];
-					$find = true;
-				}
-				else
-				{
-					$find = false;
-				}
-				break;
-			}
-		}
-		if(!$find)
-		{
-			return false;
-		}
-		else
-		{
-			if(!empty($myresult))
-			{
-				return $myresult;
-			}
-			else
-			{
-				return false;
-			}
-		}
-		
-			
-	}
-	
-	/**
-	*  Convert some html entities in normal char (to correct a php bug concerning &rsquo; and else)
-	*
-	* @param  $string string The html entity to convert
-	* @return string the converted result
-	*/
-	function convert_smart_quotes($string)
-	{ 
-		$search = array(
-			'&lsquo;',
-			'&rsquo;',
-			'&ldquo;',
-			'&rdquo;',
-			'&mdash;'
-		);
+    /**
+    * Retrieves  a constant value in a language file
+    *
+    * @param  $constant string Constant
+    * @param  $file string Path to the language file
+    * @return Displays an error message if the language file do not exists, returns the value of the constant or false otherwise
+    */
+    public function retrieve_constant_lang($constant, $file)
+    {
+        //#####CUSTOM_OVERLOAD#####//
+        if(isset($_SESSION['custom_override_id']) && !empty($_SESSION['custom_override_id']))
+        {
+            $custom_file = $_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php';
+            if(file_exists($custom_file))
+            {
+                $customlang = fopen($custom_file, "r");
+                while (!feof($customlang))
+                {
+                    $c_string = fgets($customlang);
+                    $c_search="`'".$constant."'`";
+                    preg_match($c_search,$c_string,$c_out);
 
-		$replace = array(
-			"'",
-			"'",
-			'"',
-			'"',
-			'-'
-		);
-		
-		return str_replace($search, $replace, $string);
-	}
-	
-	/**
-	* Cleans html string, replacing entities by utf-8 code
-	*
-	* @param  $var string  String to clean
-	* @return Cleaned string
-	*/
-	public function wash_html($var, $mode="UNICODE")
-	{
-		if($mode == "UNICODE")
-		{
-			$var = str_replace("<br/>","\\n",$var);
-			$var = str_replace("<br />","\\n",$var);
-			$var = str_replace("<br/>","\\n",$var);
-			$var = str_replace("&nbsp;"," ",$var);
-			$var = str_replace("&eacute;", "\u00e9",$var);
-			$var = str_replace("&egrave;","\u00e8",$var);
-			$var = str_replace("&ecirc;","\00ea",$var);
-			$var = str_replace("&agrave;","\u00e0",$var);
-			$var = str_replace("&acirc;","\u00e2",$var);
-			$var = str_replace("&icirc;","\u00ee",$var);
-			$var = str_replace("&ocirc;","\u00f4",$var);
-			$var = str_replace("&ucirc;","\u00fb",$var);
-			$var = str_replace("&acute;","\u0027",$var);
-			$var = str_replace("&deg;","\u00b0",$var);
-		}
-		else if($mode == 'NO_ACCENT')
-		{
-			$var = str_replace("<br/>","\\n",$var);
-			$var = str_replace("<br />","\\n",$var);
-			$var = str_replace("<br/>","\\n",$var);
-			$var = str_replace("&nbsp;"," ",$var);
-			$var = str_replace("&eacute;", "e",$var);
-			$var = str_replace("&egrave;","e",$var);
-			$var = str_replace("&ecirc;","e",$var);
-			$var = str_replace("&agrave;","a",$var);
-			$var = str_replace("&acirc;","â",$var);
-			$var = str_replace("&icirc;","i",$var);
-			$var = str_replace("&ocirc;","o",$var);
-			$var = str_replace("&ucirc;","u",$var);
-			$var = str_replace("&acute;","",$var);
-			$var = str_replace("&deg;","°",$var);
-		}
-		else
-		{
-			$var = str_replace("<br/>","\\n",$var);
-			$var = str_replace("<br />","\\n",$var);
-			$var = str_replace("<br/>","\\n",$var);
-			$var = str_replace("&nbsp;"," ",$var);
-			$var = str_replace("&eacute;", "é",$var);
-			$var = str_replace("&egrave;","è",$var);
-			$var = str_replace("&ecirc;","ê",$var);
-			$var = str_replace("&agrave;","à",$var);
-			$var = str_replace("&acirc;","â",$var);
-			$var = str_replace("&icirc;","î",$var);
-			$var = str_replace("&ocirc;","ô",$var);
-			$var = str_replace("&ucirc;","û",$var);
-			$var = str_replace("&acute;","",$var);
-			$var = str_replace("&deg;","°",$var);
-		}
-		return $var;
-	}
+                    if(isset($c_out[0]))
+                    {
 
-	/**
-	*  Returns the next Easter date
-	*
-	* @param  $year date (null by default)
-	* @return date The next easter date
-	*/
-	public function WhenEasterCelebrates($year = null)
-	{
-		if (is_null($year))
-		{
-			$year = (int)date ('Y');
-		}
-		$iN = $year - 1900;
-		$iA = $iN%19;
-		$iB = floor (((7*$iA)+1)/19);
-		$iC = ((11*$iA)-$iB+4)%29;
-		$iD = floor ($iN/4);
-		$iE = ($iN-$iC+$iD+31)%7;
-		$time = 25-$iC-$iE;
-		if($time > 0)
-		{
-			$WhenEasterCelebrates = strtotime ($year.'/04/'.$time);
-		}
-		else
-		{
-			$WhenEasterCelebrates = strtotime ($year.'/03/'.(31+$time));
-		}
-		return $WhenEasterCelebrates;
-	}
+                        $tab_c_string = explode("'", $c_string);
+                        if(isset($tab_c_string[3]))
+                        {
+                            $c_myresult = $tab_c_string[5];
+                            return $c_myresult;
+                        }
+                    }
+                }
+            }
+        }
+        //#################//
 
-	/**
-	*  Returns the next open day
-	*
-	* @param  $Date date
-	* @param  $Delta integer
-	* @return date The next open day
-	*/
-	public function WhenOpenDay($Date, $Delta)
-	{
-		$Date = strtotime ($Date);
-		$Hollidays = array (
-		'1_1',
-		'1_5',
-		'8_5',
-		'14_7',
-		'15_8',
-		'1_11',
-		'11_11',
-		'25_12'
-		);
-		if(function_exists ('easter_date'))
-		{
-			$WhenEasterCelebrates = easter_date ((int)date('Y'), $Date);
-		}
-		else
-		{
-			$WhenEasterCelebrates = getEaster ((int)date('Y'), $Date);
-		}
-		$Hollidays[] = date ('j_n', $WhenEasterCelebrates);
-		$Hollidays[] = date ('j_n', $WhenEasterCelebrates + (86400*39));
-		$Hollidays[] = date ('j_n', $WhenEasterCelebrates + (86400*49));
-		$iEnd = $Delta * 86400;
-		$i = 0;
-		while ($i < $iEnd)
-		{
-			$i = strtotime ('+1 day', $i);
-			if (in_array (date ('w', $Date+$i),array (0,6) ) || in_array (date ('j_n', $Date+$i), $Hollidays))
-			{
-				$iEnd = strtotime ('+1 day', $iEnd);
-				$Delta ++;
-			}
-		}
-		return date('d/m/Y', $Date + (86400*$Delta));
-	}
+        $filelang = fopen($file, "r");
+        if(!file_exists($_SESSION['config']['corepath'].$file) && !file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].$file))
+        {
+            echo '<div class="error">Language file missing: '.$file.'</div>';
+            exit();
+        }
+        $find = false;
 
-	/**
-	*  Adds an interval to a date
-	*
-	* @param  $Date date Date
-	* @param  $num integer Interval
-	* @return date The date + the interval
-	*/
-	public function addDate($Date1, $num)
-	{
-		$Date1 = strtotime($Date1);
-		$result = date ('d-m-Y', $Date1 + (86400*$num));
-		return $result;
-	}
+        while (!feof($filelang))
+        {
 
-	/**
-	*  Substracts an interval to a date
-	*
-	* @param  $Date date Date
-	* @param  $num integer Interval
-	* @return date The date - the interval
-	*/
-	public function removeDate($Date1, $num)
-	{
-		$Date1 = strtotime($Date1);
-		$result = date ('d-m-Y', $Date1 - (86400*$num));
-		return $result;
-	}
+            $string = fgets($filelang);
 
-	/**
-	*  Returns the next process day (Open day) after a given interval
-	*
-	* @param  $delay integer Interval
-	* @return date The next process day
-	*/
-	public function date_max_treatment($delay)
-	{
-		$result = $this->addDate(strftime("%Y")."-".strftime("%m")."-".strftime("%d"), $delay);
-		$result = $this->WhenOpenDay($result, 1);
-		return $result;
-	}
+            $search="`'".$constant."'`";
+            preg_match($search,$string,$out);
 
-	/**
-	* Formats a datetime to a mm/dd/yyyy hh:ii:ss format (timestamp)
-	*
-	* @param   $date datetime The date to format
-	* @return	datetime  The formated date
-	*/
-	public function dateformaten($date)
-	{
-		$ar_test = explode(" ",$date);
+            if(isset($out[0]))
+            {
+                $tab_string = explode("'", $string);
+                if(isset($tab_string[5]))
+                {
+                    $myresult = $tab_string[5];
+                    $find = true;
+                }
+                else
+                {
+                    $find = false;
+                }
+                break;
+            }
+        }
+        if(!$find)
+        {
+            return false;
+        }
+        else
+        {
+            if(!empty($myresult))
+            {
+                return $myresult;
+            }
+            else
+            {
+                return false;
+            }
+        }
 
-		$date = $ar_test[0];
-		$time = $ar_test[1];
-		$ar_date = explode("/",$date);
-		if(preg_match('/\./',$time))
-		{
-			$tmp = explode('.', $time);
-			$time = $tmp[0];
-		}
-		if(substr($ar_test[1],0,2) == "00")
-		{
-			return $ar_date[1]."/".$ar_date[0]."/".$ar_date[2];
-		}
-		else
-		{
-			return $ar_date[1]."/".$ar_date[0]."/".$ar_date[2]." ".$time;
-		}
-	}
 
-	/**
-	* Converts a value (from the php.ini) into bytes
-	*
-	* @param   $val string Value to convert
-	* @return	integer The converted value
-	*/
-	public function return_bytes($val)
-	{
-		$val = trim($val);
-		$last = strtolower($val{strlen($val)-1});
-		switch($last) {
-			// 'G' modifier available since PHP 5.1.0
-			case 'g':
-				$val *= 1024;
-			case 'm':
-				$val *= 1024;
-			case 'k':
-				$val *= 1024;
-		}
-		return $val;
-	}
+    }
 
-	/**
-	*  Compares to date
-	*
-	* @param  $date1 date First date
-	* @param  $date2 date Second date
-	* @return "date1" if the first date is the greater, "date2" if the second date or "equal" otherwise
-	*/
-	public function compare_date($date1, $date2)
-	{
-		$date1 = strtotime($date1);
-		$date2 = strtotime($date2);
-		if($date1 > $date2)
-		{
-			$result = "date1";
-		}
-		elseif($date1 < $date2)
-		{
-			$result = "date2";
-		}
-		elseif($date1 = $date2)
-		{
-			$result = "equal";
-		}
-		return $result;
-	}
+    /**
+    *  Convert some html entities in normal char (to correct a php bug concerning &rsquo; and else)
+    *
+    * @param  $string string The html entity to convert
+    * @return string the converted result
+    */
+    function convert_smart_quotes($string)
+    {
+        $search = array(
+            '&lsquo;',
+            '&rsquo;',
+            '&ldquo;',
+            '&rdquo;',
+            '&mdash;'
+        );
 
-	/**
-	*  Compares to date and return dif between 2 dates
-	*
-	* @param  $date1 date First date
-	* @param  $date2 date Second date
-	* @return dif between 2 dates in days
-	*/
-	public function nbDaysBetween2Dates($date1, $date2)
-	{
-		$date1 = strtotime($date1);
-		$date2 = strtotime($date2);
-		if($date2 > $date1)
-		{
-			$result = round((($date2 - $date1) / (3600)) / 24, 0);
-		}
-		elseif($date2 < $date1)
-		{
-			$result = round((($date1 - $date2) / (3600)) / 24, 0);
-		}
-		else
-		{
-			$result = 0;
-		}
-		return $result;
-	}
+        $replace = array(
+            "'",
+            "'",
+            '"',
+            '"',
+            '-'
+        );
 
-	/**
-	*  Checks if a directory is empty
-	*
-	* @param  $dir string The directory to check
-	* @return bool True if empty, False otherwise
-	*/
-	function isDirEmpty($dir)
-	{
-		$dir = opendir($dir);
-		$isEmpty = true;
-		while(($entry = readdir($dir)) !== false)
-		{
-			if($entry !== '.' && $entry !== '..')
-			{
-				$isEmpty = false;
-				break;
-			}
-		}
-		closedir($dir);
-		return $isEmpty;
-	}
-	
-	/**
-	* Convert an object to an array
-	* @param  $object object to convert
-	*/
-	public function object2array($object)
-	{
-		$return = NULL;
-		if(is_array($object))
-		{
-			foreach($object as $key => $value)
-			{
-				$return[$key] = $this->object2array($value);
-			}
-		}
-		else
-		{
-			if(is_object($object))
-			{
-				$var = get_object_vars($object);
-				if($var)
-				{
-					foreach($var as $key => $value)
-					{
-						$return[$key] = ($key && !$value) ? NULL : $this->object2array($value);
-					}
-				}
-				else return $object;
-			}
-			else return $object;
-		}
-		return $return;
-	}
-	
-	/**
-	* Function to encode an url in base64
-	*/
-	function base64UrlEncode($data) {
-		return strtr(base64_encode($data), '+/', '-_,');
-	}
-	
-	/**
-	* Function to decode an url encoded in base64
-	*/
-	function base64UrlDecode($base64) {
-		return base64_decode(strtr($base64, '-_,', '+/'));
-	}
-	
-	/**
-	* Method to generates private and public keys
-	*/
-	public function generatePrivatePublicKey() {
-		$privateKeyPath = $this->getPrivateKeyPath();
-		$publicKeyPath = $this->getPublicKeyPath();
-		if(!file_exists($privateKeyPath)) {
-			$inF = fopen($privateKeyPath,"w");
-			fclose($inF);
-		}
-		if(!file_exists($publicKeyPath)) {
-			$inF = fopen($publicKeyPath,"w");
-			fclose($inF);
-		}
-		$privateKey = openssl_pkey_new(array(
-			'private_key_bits' => 1024,
-			'private_key_type' => OPENSSL_KEYTYPE_RSA,
-		));
-		$passphrase = "";
-		openssl_pkey_export_to_file($privateKey, $privateKeyPath, $passphrase);
-		$keyDetails = openssl_pkey_get_details($privateKey);
-		file_put_contents($publicKeyPath, $keyDetails['key']);
-	}
-	
-	/**
-	* Encrypt a text
-	* @param $text string to encrypt
-	*/
-	public function encrypt($sensitiveData) {
-		$publicKeyPath = $this->getPublicKeyPath();
-		if(file_exists($publicKeyPath)) {
-			$pubKey = openssl_pkey_get_public('file://'.$publicKeyPath);
-			if(!$pubKey) {
-				return false;
-			} else {
-				$encryptedData = "";
-				openssl_public_encrypt($sensitiveData, $encryptedData, $pubKey);
-				//base 64 encode to use it in url
-				return $this->base64UrlEncode($encryptedData);
-			}
-		} else{
-			return false;
-		}
-	}
-	
-	/**
-	* Decrypt a text
-	* @param $text string to decrypt
-	*/
-	public function decrypt($encryptedData) {
-		$privateKeyPath = $this->getPrivateKeyPath();
-		if(file_exists($privateKeyPath)) {
-			$passphrase = "";
-			$privateKey = openssl_pkey_get_private('file://'.$privateKeyPath, $passphrase);
-			if(!$privateKey) {
-				return false;
-			} else {
-				$decryptedData = "";
-				openssl_private_decrypt($this->base64UrlDecode($encryptedData), $decryptedData, $privateKey);
-				return $decryptedData;
-			}
-		} else {
-			return false;
-		}
-	}
-	
-	/**
-	* return the path of the private key path
-	*/
-	public function getPrivateKeyPath() {
-		if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'config.xml')) {
-			$path = $_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'config.xml';
-		} else {
-			$path = 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'config.xml';
-		}
-		$xmlconfig = simplexml_load_file($path);
-		$CRYPT = $xmlconfig->CRYPT;
-		return (string) $CRYPT->pathtoprivatekey;
-	}
-	
-	/**
-	* return the path of the public key path
-	*/
-	public function getPublicKeyPath() {
-		if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'config.xml')) {
-			$path = $_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'config.xml';
-		} else {
-			$path = 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'config.xml';
-		}
-		$xmlconfig = simplexml_load_file($path);
-		$CRYPT = $xmlconfig->CRYPT;
-		return $CRYPT->pathtopublickey;
-	}
-	
-	public function isEncrypted() {
-		if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'config.xml')) {
-			$path = $_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'config.xml';
-		} else {
-			$path = 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'config.xml';
-		}
-		$xmlconfig = simplexml_load_file($path);
-		$CRYPT = $xmlconfig->CRYPT;
-		return $CRYPT->encrypt;
-	}
+        return str_replace($search, $replace, $string);
+    }
+
+    /**
+    * Cleans html string, replacing entities by utf-8 code
+    *
+    * @param  $var string  String to clean
+    * @return Cleaned string
+    */
+    public function wash_html($var, $mode="UNICODE")
+    {
+        if($mode == "UNICODE")
+        {
+            $var = str_replace("<br/>","\\n",$var);
+            $var = str_replace("<br />","\\n",$var);
+            $var = str_replace("<br/>","\\n",$var);
+            $var = str_replace("&nbsp;"," ",$var);
+            $var = str_replace("&eacute;", "\u00e9",$var);
+            $var = str_replace("&egrave;","\u00e8",$var);
+            $var = str_replace("&ecirc;","\00ea",$var);
+            $var = str_replace("&agrave;","\u00e0",$var);
+            $var = str_replace("&acirc;","\u00e2",$var);
+            $var = str_replace("&icirc;","\u00ee",$var);
+            $var = str_replace("&ocirc;","\u00f4",$var);
+            $var = str_replace("&ucirc;","\u00fb",$var);
+            $var = str_replace("&acute;","\u0027",$var);
+            $var = str_replace("&deg;","\u00b0",$var);
+        }
+        else if($mode == 'NO_ACCENT')
+        {
+            $var = str_replace("<br/>","\\n",$var);
+            $var = str_replace("<br />","\\n",$var);
+            $var = str_replace("<br/>","\\n",$var);
+            $var = str_replace("&nbsp;"," ",$var);
+            $var = str_replace("&eacute;", "e",$var);
+            $var = str_replace("&egrave;","e",$var);
+            $var = str_replace("&ecirc;","e",$var);
+            $var = str_replace("&agrave;","a",$var);
+            $var = str_replace("&acirc;","â",$var);
+            $var = str_replace("&icirc;","i",$var);
+            $var = str_replace("&ocirc;","o",$var);
+            $var = str_replace("&ucirc;","u",$var);
+            $var = str_replace("&acute;","",$var);
+            $var = str_replace("&deg;","°",$var);
+        }
+        else
+        {
+            $var = str_replace("<br/>","\\n",$var);
+            $var = str_replace("<br />","\\n",$var);
+            $var = str_replace("<br/>","\\n",$var);
+            $var = str_replace("&nbsp;"," ",$var);
+            $var = str_replace("&eacute;", "é",$var);
+            $var = str_replace("&egrave;","è",$var);
+            $var = str_replace("&ecirc;","ê",$var);
+            $var = str_replace("&agrave;","à",$var);
+            $var = str_replace("&acirc;","â",$var);
+            $var = str_replace("&icirc;","î",$var);
+            $var = str_replace("&ocirc;","ô",$var);
+            $var = str_replace("&ucirc;","û",$var);
+            $var = str_replace("&acute;","",$var);
+            $var = str_replace("&deg;","°",$var);
+        }
+        return $var;
+    }
+
+    /**
+    *  Returns the next Easter date
+    *
+    * @param  $year date (null by default)
+    * @return date The next easter date
+    */
+    public function WhenEasterCelebrates($year = null)
+    {
+        if (is_null($year))
+        {
+            $year = (int)date ('Y');
+        }
+        $iN = $year - 1900;
+        $iA = $iN%19;
+        $iB = floor (((7*$iA)+1)/19);
+        $iC = ((11*$iA)-$iB+4)%29;
+        $iD = floor ($iN/4);
+        $iE = ($iN-$iC+$iD+31)%7;
+        $time = 25-$iC-$iE;
+        if($time > 0)
+        {
+            $WhenEasterCelebrates = strtotime ($year.'/04/'.$time);
+        }
+        else
+        {
+            $WhenEasterCelebrates = strtotime ($year.'/03/'.(31+$time));
+        }
+        return $WhenEasterCelebrates;
+    }
+
+    /**
+    *  Returns the next open day
+    *
+    * @param  $Date date
+    * @param  $Delta integer
+    * @return date The next open day
+    */
+    public function WhenOpenDay($Date, $Delta)
+    {
+        $Date = strtotime ($Date);
+        $Hollidays = array (
+        '1_1',
+        '1_5',
+        '8_5',
+        '14_7',
+        '15_8',
+        '1_11',
+        '11_11',
+        '25_12'
+        );
+        if(function_exists ('easter_date'))
+        {
+            $WhenEasterCelebrates = easter_date ((int)date('Y'), $Date);
+        }
+        else
+        {
+            $WhenEasterCelebrates = getEaster ((int)date('Y'), $Date);
+        }
+        $Hollidays[] = date ('j_n', $WhenEasterCelebrates);
+        $Hollidays[] = date ('j_n', $WhenEasterCelebrates + (86400*39));
+        $Hollidays[] = date ('j_n', $WhenEasterCelebrates + (86400*49));
+        $iEnd = $Delta * 86400;
+        $i = 0;
+        while ($i < $iEnd)
+        {
+            $i = strtotime ('+1 day', $i);
+            if (in_array (date ('w', $Date+$i),array (0,6) ) || in_array (date ('j_n', $Date+$i), $Hollidays))
+            {
+                $iEnd = strtotime ('+1 day', $iEnd);
+                $Delta ++;
+            }
+        }
+        return date('d/m/Y', $Date + (86400*$Delta));
+    }
+
+    /**
+    *  Adds an interval to a date
+    *
+    * @param  $Date date Date
+    * @param  $num integer Interval
+    * @return date The date + the interval
+    */
+    public function addDate($Date1, $num)
+    {
+        $Date1 = strtotime($Date1);
+        $result = date ('d-m-Y', $Date1 + (86400*$num));
+        return $result;
+    }
+
+    /**
+    *  Substracts an interval to a date
+    *
+    * @param  $Date date Date
+    * @param  $num integer Interval
+    * @return date The date - the interval
+    */
+    public function removeDate($Date1, $num)
+    {
+        $Date1 = strtotime($Date1);
+        $result = date ('d-m-Y', $Date1 - (86400*$num));
+        return $result;
+    }
+
+    /**
+    *  Returns the next process day (Open day) after a given interval
+    *
+    * @param  $delay integer Interval
+    * @return date The next process day
+    */
+    public function date_max_treatment($delay)
+    {
+        $result = $this->addDate(strftime("%Y")."-".strftime("%m")."-".strftime("%d"), $delay);
+        $result = $this->WhenOpenDay($result, 1);
+        return $result;
+    }
+
+    /**
+    * Formats a datetime to a mm/dd/yyyy hh:ii:ss format (timestamp)
+    *
+    * @param   $date datetime The date to format
+    * @return   datetime  The formated date
+    */
+    public function dateformaten($date)
+    {
+        $ar_test = explode(" ",$date);
+
+        $date = $ar_test[0];
+        $time = $ar_test[1];
+        $ar_date = explode("/",$date);
+        if(preg_match('/\./',$time))
+        {
+            $tmp = explode('.', $time);
+            $time = $tmp[0];
+        }
+        if(substr($ar_test[1],0,2) == "00")
+        {
+            return $ar_date[1]."/".$ar_date[0]."/".$ar_date[2];
+        }
+        else
+        {
+            return $ar_date[1]."/".$ar_date[0]."/".$ar_date[2]." ".$time;
+        }
+    }
+
+    /**
+    * Converts a value (from the php.ini) into bytes
+    *
+    * @param   $val string Value to convert
+    * @return   integer The converted value
+    */
+    public function return_bytes($val)
+    {
+        $val = trim($val);
+        $last = strtolower($val{strlen($val)-1});
+        switch($last) {
+            // 'G' modifier available since PHP 5.1.0
+            case 'g':
+                $val *= 1024;
+            case 'm':
+                $val *= 1024;
+            case 'k':
+                $val *= 1024;
+        }
+        return $val;
+    }
+
+    /**
+    *  Compares to date
+    *
+    * @param  $date1 date First date
+    * @param  $date2 date Second date
+    * @return "date1" if the first date is the greater, "date2" if the second date or "equal" otherwise
+    */
+    public function compare_date($date1, $date2)
+    {
+        $date1 = strtotime($date1);
+        $date2 = strtotime($date2);
+        if($date1 > $date2)
+        {
+            $result = "date1";
+        }
+        elseif($date1 < $date2)
+        {
+            $result = "date2";
+        }
+        elseif($date1 = $date2)
+        {
+            $result = "equal";
+        }
+        return $result;
+    }
+
+    /**
+    *  Compares to date and return dif between 2 dates
+    *
+    * @param  $date1 date First date
+    * @param  $date2 date Second date
+    * @return dif between 2 dates in days
+    */
+    public function nbDaysBetween2Dates($date1, $date2)
+    {
+        $date1 = strtotime($date1);
+        $date2 = strtotime($date2);
+        if($date2 > $date1)
+        {
+            $result = round((($date2 - $date1) / (3600)) / 24, 0);
+        }
+        elseif($date2 < $date1)
+        {
+            $result = round((($date1 - $date2) / (3600)) / 24, 0);
+        }
+        else
+        {
+            $result = 0;
+        }
+        return $result;
+    }
+
+    /**
+    *  Checks if a directory is empty
+    *
+    * @param  $dir string The directory to check
+    * @return bool True if empty, False otherwise
+    */
+    function isDirEmpty($dir)
+    {
+        $dir = opendir($dir);
+        $isEmpty = true;
+        while(($entry = readdir($dir)) !== false)
+        {
+            if($entry !== '.' && $entry !== '..')
+            {
+                $isEmpty = false;
+                break;
+            }
+        }
+        closedir($dir);
+        return $isEmpty;
+    }
+
+    /**
+    * Convert an object to an array
+    * @param  $object object to convert
+    */
+    public function object2array($object)
+    {
+        $return = NULL;
+        if(is_array($object))
+        {
+            foreach($object as $key => $value)
+            {
+                $return[$key] = $this->object2array($value);
+            }
+        }
+        else
+        {
+            if(is_object($object))
+            {
+                $var = get_object_vars($object);
+                if($var)
+                {
+                    foreach($var as $key => $value)
+                    {
+                        $return[$key] = ($key && !$value) ? NULL : $this->object2array($value);
+                    }
+                }
+                else return $object;
+            }
+            else return $object;
+        }
+        return $return;
+    }
+
+    /**
+    * Function to encode an url in base64
+    */
+    function base64UrlEncode($data) {
+        return strtr(base64_encode($data), '+/', '-_,');
+    }
+
+    /**
+    * Function to decode an url encoded in base64
+    */
+    function base64UrlDecode($base64) {
+        return base64_decode(strtr($base64, '-_,', '+/'));
+    }
+
+    /**
+    * Method to generates private and public keys
+    */
+    public function generatePrivatePublicKey() {
+        $privateKeyPath = $this->getPrivateKeyPath();
+        $publicKeyPath = $this->getPublicKeyPath();
+        if(!file_exists($privateKeyPath)) {
+            $inF = fopen($privateKeyPath,"w");
+            fclose($inF);
+        }
+        if(!file_exists($publicKeyPath)) {
+            $inF = fopen($publicKeyPath,"w");
+            fclose($inF);
+        }
+        $privateKey = openssl_pkey_new(array(
+            'private_key_bits' => 1024,
+            'private_key_type' => OPENSSL_KEYTYPE_RSA,
+        ));
+        $passphrase = "";
+        openssl_pkey_export_to_file($privateKey, $privateKeyPath, $passphrase);
+        $keyDetails = openssl_pkey_get_details($privateKey);
+        file_put_contents($publicKeyPath, $keyDetails['key']);
+    }
+
+    /**
+    * Encrypt a text
+    * @param $text string to encrypt
+    */
+    public function encrypt($sensitiveData) {
+        $publicKeyPath = $this->getPublicKeyPath();
+        if(file_exists($publicKeyPath)) {
+            $pubKey = openssl_pkey_get_public('file://'.$publicKeyPath);
+            if(!$pubKey) {
+                return false;
+            } else {
+                $encryptedData = "";
+                openssl_public_encrypt($sensitiveData, $encryptedData, $pubKey);
+                //base 64 encode to use it in url
+                return $this->base64UrlEncode($encryptedData);
+            }
+        } else{
+            return false;
+        }
+    }
+
+    /**
+    * Decrypt a text
+    * @param $text string to decrypt
+    */
+    public function decrypt($encryptedData) {
+        $privateKeyPath = $this->getPrivateKeyPath();
+        if(file_exists($privateKeyPath)) {
+            $passphrase = "";
+            $privateKey = openssl_pkey_get_private('file://'.$privateKeyPath, $passphrase);
+            if(!$privateKey) {
+                return false;
+            } else {
+                $decryptedData = "";
+                openssl_private_decrypt($this->base64UrlDecode($encryptedData), $decryptedData, $privateKey);
+                return $decryptedData;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    /**
+    * return the path of the private key path
+    */
+    public function getPrivateKeyPath() {
+        if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'config.xml')) {
+            $path = $_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'config.xml';
+        } else {
+            $path = 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'config.xml';
+        }
+        $xmlconfig = simplexml_load_file($path);
+        $CRYPT = $xmlconfig->CRYPT;
+        return (string) $CRYPT->pathtoprivatekey;
+    }
+
+    /**
+    * return the path of the public key path
+    */
+    public function getPublicKeyPath() {
+        if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'config.xml')) {
+            $path = $_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'config.xml';
+        } else {
+            $path = 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'config.xml';
+        }
+        $xmlconfig = simplexml_load_file($path);
+        $CRYPT = $xmlconfig->CRYPT;
+        return $CRYPT->pathtopublickey;
+    }
+
+    public function isEncrypted() {
+        if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'config.xml')) {
+            $path = $_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'config.xml';
+        } else {
+            $path = 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'config.xml';
+        }
+        $xmlconfig = simplexml_load_file($path);
+        $CRYPT = $xmlconfig->CRYPT;
+        return $CRYPT->encrypt;
+    }
 }
 ?>

@@ -251,10 +251,10 @@ class core_tools extends functions
     {
         for($i=0;$i<count($modules);$i++)
         {
-			$file_path = $_SESSION['config']['corepath'].'modules'.DIRECTORY_SEPARATOR.$modules[$i]['moduleid'].DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php';
+            $file_path = $_SESSION['config']['corepath'].'modules'.DIRECTORY_SEPARATOR.$modules[$i]['moduleid'].DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php';
             if(isset($_SESSION['config']['lang']) && file_exists($file_path ))
             {
-                
+
                 include($file_path);
             }
             else
@@ -285,6 +285,7 @@ class core_tools extends functions
         $k=0;
         for($i=0;$i<count($modules);$i++)
         {
+
             if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'modules'.DIRECTORY_SEPARATOR.$modules[$i]['moduleid'].DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."menu.xml"))
             {
                 $path_menu = $_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'modules'.DIRECTORY_SEPARATOR.$modules[$i]['moduleid'].DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."menu.xml";
@@ -294,11 +295,12 @@ class core_tools extends functions
                 $path_menu = 'modules'.DIRECTORY_SEPARATOR.$modules[$i]['moduleid'].DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."menu.xml";
             }
 
-            // Reads the module/module_name/xml/menu.xml file  and loads into session
+            // Read the modules/module_name/xml/menu.xml file and load into session
             $path_lang = 'modules'.DIRECTORY_SEPARATOR.$modules[$i]['moduleid'].DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php';
             if(file_exists($_SESSION['config']['corepath'].'modules'.DIRECTORY_SEPARATOR.$modules[$i]['moduleid'].DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."menu.xml") || file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'modules'.DIRECTORY_SEPARATOR.$modules[$i]['moduleid'].DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."menu.xml"))
             {
                 $xmlconfig = simplexml_load_file($path_menu);
+
                 foreach($xmlconfig->MENU as $MENU)
                 {
                     $_SESSION['menu'][$k]['id'] = (string) $MENU->id;
