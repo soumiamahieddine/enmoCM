@@ -618,11 +618,11 @@ class types extends dbquery
                 $values = array();
                 $tableXml = $item->table;
                 //$this->show_array($tableXml);
-                $tableName = $tableXml->table_name;
-                $foreignKey = $tableXml->foreign_key;
-                $foreignLabel = $tableXml->foreign_label;
-                $whereClause = $tableXml->where_clause;
-                $order = $tableXml->order;
+                $tableName = (string) $tableXml->table_name;
+                $foreignKey = (string)$tableXml->foreign_key;
+                $foreignLabel =(string) $tableXml->foreign_label;
+                $whereClause = (string)$tableXml->where_clause;
+                $order = (string) $tableXml->order;
                 $query = "select ".$foreignKey.", ".$foreignLabel." from ".$tableName;
                 if(isset($whereClause) && !empty($whereClause))
                 {
@@ -752,11 +752,11 @@ class types extends dbquery
                     $values = array();
                     $tableXml = $item->table;
                     //$this->show_array($tableXml);
-                    $tableName = $tableXml->table_name;
-                    $foreignKey = $tableXml->foreign_key;
-                    $foreignLabel = $tableXml->foreign_label;
-                    $whereClause = $tableXml->where_clause;
-                    $order = $tableXml->order;
+                    $tableName = (string) $tableXml->table_name;
+                    $foreignKey = (string) $tableXml->foreign_key;
+                    $foreignLabel = (string) $tableXml->foreign_label;
+                    $whereClause = (string) $tableXml->where_clause;
+                    $order = (string) $tableXml->order;
                     $query = "select ".$foreignKey.", ".$foreignLabel." from ".$tableName;
                     if(isset($whereClause) && !empty($whereClause))
                     {
