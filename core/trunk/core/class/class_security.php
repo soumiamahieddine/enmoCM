@@ -78,6 +78,8 @@ class security extends dbquery
         {
             if ($method == 'activex')
                 $comp =" and STATUS <> 'DEL' and loginmode = 'activex'";
+            elseif($method == 'ldap')
+				$comp =" and STATUS <> 'DEL'";
             else
                 $comp = " and password = '".$pass."' and STATUS <> 'DEL' and loginmode = 'standard'";
         }
