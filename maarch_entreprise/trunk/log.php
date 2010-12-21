@@ -118,7 +118,7 @@ else
 			if($db->fetch_object())
 			{
 				$pass = md5($s_pass);
-				$sec->login($s_login,$pass);
+				$sec->login($s_login,$pass,'ldap');
 			}
 			else
 			{
