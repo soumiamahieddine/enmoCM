@@ -1043,6 +1043,14 @@ class core_tools extends functions
     *
     */
     public function insert_page() {
+		if($_GET['amp;module'] <> "") {
+			$_GET['module'] = $_GET['amp;module'];
+			$_REQUEST['module'] = $_REQUEST['amp;module'];
+		}
+		if($_GET['amp;baskets'] <> "") {
+			$_GET['baskets'] = $_GET['amp;baskets'];
+			$_REQUEST['baskets'] = $_REQUEST['amp;baskets'];
+		}
         // Cleans the page variables and looks if she exists or not before including her
         if(isset($_GET['page']) && !empty($_GET['page'])) {
             $this->f_page = $this->wash($_GET['page'],"file","","yes");
@@ -1810,17 +1818,26 @@ class core_tools extends functions
         return false;
     }
 
-
     public function get_custom_id()
     {
-        if(!isset($_SESSION['config']) || !file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.'custom.xml'))
+        if(!file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.'custom.xml'))
         {
             return '';
         }
-
-        $arr = explode('/', $_SERVER['SCRIPT_NAME']);
-        $path = $arr[1];
-        //echo $path;
+		$linkToApps = false;
+			$arr = explode('/', $_SERVER['SCRIPT_NAME']);
+		for($cptArr=0;$cptArr<count($arr);$cptArr++) {
+			if($arr[$cptArr] == "apps") {
+				$linkToApps = true;
+			}
+		}
+		if($linkToApps) {
+			$path = $arr[count($arr)-4];
+		} else {
+			$path = $arr[count($arr)-2];
+		}
+		//echo "the path:".$path;exit;
+	
         //echo $_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.'custom.xml';
         $xml = simplexml_load_file($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.'custom.xml');
         //var_dump($xml);
