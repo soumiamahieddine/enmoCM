@@ -31,8 +31,8 @@ $configFile = '';
 $MaarchDirectory = '';
 $table = '';
 $adrTable = '';
-$view = 'res_view';
-$coll = 'lagi_coll';
+$view = '';
+$coll = '';
 $policy = '';
 $cycle = '';
 $steps = Array();
@@ -46,6 +46,7 @@ $func = "";
 $db = "";
 $db2 = "";
 $db3 = "";
+$wb = "";
 
 function do_query($db_conn, $query_txt) {
 	$db_conn->connect();
@@ -58,6 +59,30 @@ function do_query($db_conn, $query_txt) {
 	return true;
 }
 
+/**
+* Get the batch id
+*/
+function getWorkBatch() {
+	$req = "select param_value_int from parameters where id = 'lc_process_stack_id'";
+	$GLOBALS['db']->query($req);
+	while($reqResult = $GLOBALS['db']->fetch_array()) {
+		$GLOBALS['wb'] = $reqResult[0] + 1;
+	}
+	if($GLOBALS['wb'] == "") {
+		$req = "insert into parameters(id, param_value_int) values ('lc_process_stack_id', 1)";
+		$GLOBALS['db']->query($req);
+		$GLOBALS['wb'] = 1;
+	}
+}
+
+/**
+* Update the database with the new batch id
+*/
+function updateWorkBatch() {
+	$req = "update parameters set param_value_int  = ".$GLOBALS['wb']." where id = 'lc_process_stack_id'";
+	$GLOBALS['db']->query($req);
+}
+
 // Defines scripts arguments
 $argsparser = new ArgsParser();
 $argsparser->add_arg("config", array (
@@ -65,18 +90,6 @@ $argsparser->add_arg("config", array (
 	'long' => "config",
 	'mandatory' => true,
 	'help' => "Config file path is mandatory."
-));
-$argsparser->add_arg("table", array (
-	'short' => "t",
-	'long' => "table",
-	'mandatory' => true,
-	'help' => "Table target is mandatory."
-));
-$argsparser->add_arg("adrTable", array (
-	'short' => "ad",
-	'long' => "adr",
-	'mandatory' => true,
-	'help' => "Address table target is mandatory."
 ));
 $argsparser->add_arg("collection", array (
 	'short' => "coll",
@@ -116,14 +129,6 @@ try {
 		$GLOBALS['logger']->write('Configuration file missing', 'ERROR', 1);
 		exit(1);
 	}
-	if ($e->arg_name == "table") {
-		$GLOBALS['logger']->write('Table missing', 'ERROR', 1);
-		exit(1);
-	}
-	if ($e->arg_name == "adrTable") {
-		$GLOBALS['logger']->write('Address table missing', 'ERROR', 1);
-		exit(1);
-	}
 	if ($e->arg_name == "collection") {
 		$GLOBALS['logger']->write('Collection missing', 'ERROR', 1);
 		exit(1);
@@ -147,8 +152,6 @@ foreach (array_keys($options) as $key) {
 }
 $GLOBALS['logger']->write($txt, 'DEBUG');
 $GLOBALS['configFile'] = $options['config'];
-$GLOBALS['table'] = $options['table'];
-$GLOBALS['adrTable'] = $options['adrTable'];
 $GLOBALS['collection'] = $options['collection'];
 $GLOBALS['policy'] = $options['policy'];
 $GLOBALS['cycle'] = $options['cycle'];
@@ -177,11 +180,22 @@ $databaseserver = (string) $xmlconfig->CONFIG_BASE->databaseserver;
 $databaseserverport = (string) $xmlconfig->CONFIG_BASE->databaseserverport;
 $databaseuser = (string) $xmlconfig->CONFIG_BASE->databaseuser;
 $databasepassword = (string) $xmlconfig->CONFIG_BASE->databasepassword;
-
+foreach($xmlconfig->COLLECTION as $col) {
+	$GLOBALS['collections'][$i] = array("id" => (string) $col->id, "table" => (string) $col->table,"view" => (string) $col->view,"adr" => (string) $col->adr);
+	if($GLOBALS['collections'][$i]['id'] == $GLOBALS['collection']) {
+		$GLOBALS['table'] = $GLOBALS['collections'][$i]['table'];
+		$GLOBALS['adrTable'] = $GLOBALS['collections'][$i]['adr'];
+		$GLOBALS['view'] = $GLOBALS['collections'][$i]['view'];
+	}
+	$i++;
+}
+if($GLOBALS['table'] == "" || $GLOBALS['adrTable'] == "" || $GLOBALS['view'] == "") {
+	$GLOBALS['logger']->write('Collection:' . $GLOBALS['collection'].' unknow', 'ERROR', 16);
+	exit(16);
+}
 if (file_exists($GLOBALS['MaarchDirectory'] . "modules" .DIRECTORY_SEPARATOR . "life_cycle" .DIRECTORY_SEPARATOR . "lang" . DIRECTORY_SEPARATOR . $lang . ".php")) {
 	include($GLOBALS['MaarchDirectory'] . "modules" .DIRECTORY_SEPARATOR . "life_cycle" .DIRECTORY_SEPARATOR . "lang" . DIRECTORY_SEPARATOR . $lang . ".php");
 }
-
 if ($log_level == 'DEBUG') {
 	error_reporting(E_ALL);
 }
@@ -208,5 +222,6 @@ $GLOBALS['db3'] = new dbquery($GLOBALS['configFile']);
 $GLOBALS['db']->connect();
 $GLOBALS['db2']->connect();
 $GLOBALS['db3']->connect();
+getWorkBatch();
 
 ?>

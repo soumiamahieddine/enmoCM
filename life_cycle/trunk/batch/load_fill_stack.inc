@@ -34,6 +34,8 @@ $steps = Array();
 $databasetype = '';
 $exitCode = 0;
 $running_date = date('Y-m-d H:i:s');
+$collections = array();
+$wb = "";
 
 function do_query($db_conn, $query_txt) {
 	$db_conn->connect();
@@ -46,6 +48,34 @@ function do_query($db_conn, $query_txt) {
 	return true;
 }
 
+/**
+* Get the batch id
+*/
+function getWorkBatch($db) {
+	$req = "select param_value_int from parameters where id = 'lc_fill_stack_id'";
+	$db->connect();
+	$db->query($req);
+	while($reqResult = $db->fetch_array()) {
+		$GLOBALS['wb'] = $reqResult[0] + 1;
+	}
+	if($GLOBALS['wb'] == "") {
+		$req = "insert into parameters(id, param_value_int) values ('lc_fill_stack_id', 1)";
+		$db->query($req);
+		$GLOBALS['wb'] = 1;
+	}
+	$db->disconnect();
+}
+
+/**
+* Update the database with the new batch id
+*/
+function updateWorkBatch($db) {
+	$db->connect();
+	$req = "update parameters set param_value_int  = ".$GLOBALS['wb']." where id = 'lc_fill_stack_id'";
+	$db->query($req);
+	$db->disconnect();
+}
+
 // Defines scripts arguments
 $argsparser = new ArgsParser();
 $argsparser->add_arg("config", array (
@@ -53,12 +83,6 @@ $argsparser->add_arg("config", array (
 	'long' => "config",
 	'mandatory' => true,
 	'help' => "Config file path is mandatory."
-));
-$argsparser->add_arg("table", array (
-	'short' => "t",
-	'long' => "table",
-	'mandatory' => true,
-	'help' => "Table target is mandatory."
 ));
 $argsparser->add_arg("collection", array (
 	'short' => "coll",
@@ -98,10 +122,6 @@ try {
 		$GLOBALS['logger']->write('Configuration file missing', 'ERROR', 1);
 		exit(1);
 	}
-	if ($e->arg_name == "table") {
-		$GLOBALS['logger']->write('Table missing', 'ERROR', 1);
-		exit(1);
-	}
 	if ($e->arg_name == "collection") {
 		$GLOBALS['logger']->write('Collection missing', 'ERROR', 1);
 		exit(1);
@@ -125,7 +145,6 @@ foreach (array_keys($options) as $key) {
 }
 $GLOBALS['logger']->write($txt, 'DEBUG');
 $GLOBALS['configFile'] = $options['config'];
-$GLOBALS['table'] = $options['table'];
 $GLOBALS['collection'] = $options['collection'];
 $GLOBALS['policy'] = $options['policy'];
 $GLOBALS['cycle'] = $options['cycle'];
@@ -154,6 +173,17 @@ $databaseserver = (string) $xmlconfig->CONFIG_BASE->databaseserver;
 $databaseserverport = (string) $xmlconfig->CONFIG_BASE->databaseserverport;
 $databaseuser = (string) $xmlconfig->CONFIG_BASE->databaseuser;
 $databasepassword = (string) $xmlconfig->CONFIG_BASE->databasepassword;
+foreach($xmlconfig->COLLECTION as $col) {
+	$GLOBALS['collections'][$i] = array("id" => (string) $col->id, "table" => (string) $col->table,"view" => (string) $col->view,"adr" => (string) $col->adr);
+	if($GLOBALS['collections'][$i]['id'] == $GLOBALS['collection']) {
+		$GLOBALS['table'] = $GLOBALS['collections'][$i]['table'];
+	}
+	$i++;
+}
+if($GLOBALS['table'] == "") {
+	$GLOBALS['logger']->write('Collection:' . $GLOBALS['collection'].' unknow', 'ERROR', 13);
+	exit(13);
+}
 if ($log_level == 'DEBUG') {
 	error_reporting(E_ALL);
 }
@@ -174,5 +204,6 @@ try {
 core_tools::load_lang($lang, $MaarchDirectory, $MaarchApps);
 $db = new dbquery($GLOBALS['configFile']);
 $db2 = new dbquery($GLOBALS['configFile']);
+getWorkBatch($db);
 
 ?>

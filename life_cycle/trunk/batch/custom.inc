@@ -118,7 +118,7 @@ function createPDI($resInContainer) {
 		//access rights
 		$accessRights = $docXML->createElement("ACCESS_RIGHTS");
 		$root->appendChild($accessRights);
-		$query = "select * from security where coll_id = '".$GLOBALS['coll']."'";
+		$query = "select * from security where coll_id = '".$GLOBALS['collection']."'";
 		do_query($GLOBALS['db3'], $query);
 		while ($securityRecordset = $GLOBALS['db3']->fetch_object()) {
 			//an access right
@@ -208,9 +208,11 @@ function createPDI($resInContainer) {
 				$pdi->appendChild($reference);
 				$title = $docXML->createElement("TITLE", $resRecordset->title);
 				$title->setAttributeNode(new DOMAttr('SOURCE', 'RES'));
+				$title->setAttributeNode(new DOMAttr('LABEL', _LIBTRAIT));
 				$reference->appendChild($title);
 				$subject = $docXML->createElement("SUBJECT", $resRecordset->subject);
 				$subject->setAttributeNode(new DOMAttr('SOURCE', 'RES'));
+				$subject->setAttributeNode(new DOMAttr('LABEL', _LIBCPT));
 				$reference->appendChild($subject);
 				$description = $docXML->createElement("DESCRIPTION", $resRecordset->description);
 				$description->setAttributeNode(new DOMAttr('SOURCE', 'RES'));
@@ -230,9 +232,67 @@ function createPDI($resInContainer) {
 				$type_label = $docXML->createElement("TYPE_LABEL", $resRecordset->type_label);
 				$type_label->setAttributeNode(new DOMAttr('SOURCE', 'VIEW'));
 				$reference->appendChild($type_label);
-				$custom_t1 = $docXML->createElement("CUSTOM_T1", $resRecordset->custom_t1);
+				//customs
+				$custom_t1 = $docXML->createElement("CUSTOM_T1", $resRecordset->doc_custom_t1);
 				$custom_t1->setAttributeNode(new DOMAttr('SOURCE', 'RES'));
+				$custom_t1->setAttributeNode(new DOMAttr('LABEL', _NUMCPT));
 				$reference->appendChild($custom_t1);
+				$custom_n1 = $docXML->createElement("CUSTOM_N1", $resRecordset->doc_custom_n1);
+				$custom_n1->setAttributeNode(new DOMAttr('SOURCE', 'RES'));
+				$custom_n1->setAttributeNode(new DOMAttr('LABEL', _REFCLI));
+				$reference->appendChild($custom_n1);
+				$custom_t2 = $docXML->createElement("CUSTOM_T2", $resRecordset->doc_custom_t2);
+				$custom_t2->setAttributeNode(new DOMAttr('SOURCE', 'RES'));
+				$custom_t2->setAttributeNode(new DOMAttr('LABEL', _LIBMDT));
+				$reference->appendChild($custom_t2);
+				$custom_n2 = $docXML->createElement("CUSTOM_N2", $resRecordset->doc_custom_n2);
+				$custom_n2->setAttributeNode(new DOMAttr('SOURCE', 'RES'));
+				$custom_n2->setAttributeNode(new DOMAttr('LABEL', _NUMSOC));
+				$reference->appendChild($custom_n2);
+				$custom_t3 = $docXML->createElement("CUSTOM_T3", $resRecordset->doc_custom_t3);
+				$custom_t3->setAttributeNode(new DOMAttr('SOURCE', 'RES'));
+				$custom_t3->setAttributeNode(new DOMAttr('LABEL', _LIBCPT));
+				$reference->appendChild($custom_t3);
+				$custom_t4 = $docXML->createElement("CUSTOM_T4", $resRecordset->doc_custom_t4);
+				$custom_t4->setAttributeNode(new DOMAttr('SOURCE', 'RES'));
+				$custom_t4->setAttributeNode(new DOMAttr('LABEL', _LIBIMM));
+				$reference->appendChild($custom_t4);
+				$custom_n4 = $docXML->createElement("CUSTOM_N4", $resRecordset->doc_custom_n4);
+				$custom_n4->setAttributeNode(new DOMAttr('SOURCE', 'RES'));
+				$custom_n4->setAttributeNode(new DOMAttr('LABEL', _NUMIMM));
+				$reference->appendChild($custom_n4);
+				$custom_n5 = $docXML->createElement("CUSTOM_N5", $resRecordset->doc_custom_n5);
+				$custom_n5->setAttributeNode(new DOMAttr('SOURCE', 'RES'));
+				$custom_n5->setAttributeNode(new DOMAttr('LABEL', _NUMLOT));
+				$reference->appendChild($custom_n5);
+				$custom_t6 = $docXML->createElement("CUSTOM_T6", $resRecordset->doc_custom_t6);
+				$custom_t6->setAttributeNode(new DOMAttr('SOURCE', 'RES'));
+				$custom_t6->setAttributeNode(new DOMAttr('LABEL', _MODEREGLT));
+				$reference->appendChild($custom_t6);
+				$custom_n6 = $docXML->createElement("CUSTOM_N6", $resRecordset->doc_custom_n6);
+				$custom_n6->setAttributeNode(new DOMAttr('SOURCE', 'RES'));
+				$custom_n6->setAttributeNode(new DOMAttr('LABEL', _ANNEEMOIS));
+				$reference->appendChild($custom_n6);
+				$custom_t7 = $docXML->createElement("CUSTOM_T7", $resRecordset->doc_custom_t7);
+				$custom_t7->setAttributeNode(new DOMAttr('SOURCE', 'RES'));
+				$custom_t7->setAttributeNode(new DOMAttr('LABEL', _DESTINATAIRE));
+				$reference->appendChild($custom_t7);
+				$custom_n7 = $docXML->createElement("CUSTOM_N7", $resRecordset->doc_custom_n7);
+				$custom_n7->setAttributeNode(new DOMAttr('SOURCE', 'RES'));
+				$custom_n7->setAttributeNode(new DOMAttr('LABEL', _NUMDOSTRV));
+				$reference->appendChild($custom_n7);
+				$custom_t8 = $docXML->createElement("CUSTOM_T8", $resRecordset->doc_custom_t8);
+				$custom_t8->setAttributeNode(new DOMAttr('SOURCE', 'RES'));
+				$custom_t8->setAttributeNode(new DOMAttr('LABEL', _COURRIEL));
+				$reference->appendChild($custom_t8);
+				$custom_t9 = $docXML->createElement("CUSTOM_T9", $resRecordset->doc_custom_t9);
+				$custom_t9->setAttributeNode(new DOMAttr('SOURCE', 'RES'));
+				$custom_t9->setAttributeNode(new DOMAttr('LABEL', _MANDATAIRE));
+				$reference->appendChild($custom_t9);
+				$custom_t10 = $docXML->createElement("CUSTOM_T10", $resRecordset->doc_custom_t10);
+				$custom_t10->setAttributeNode(new DOMAttr('SOURCE', 'RES'));
+				$custom_t10->setAttributeNode(new DOMAttr('LABEL', _TYPDOS));
+				$reference->appendChild($custom_t10);
 				//a fixity
 				$fixity = $docXML->createElement("FIXITY");
 				$pdi->appendChild($fixity);
@@ -254,7 +314,7 @@ function createPDI($resInContainer) {
 				$res_id = $docXML->createElement("RES_ID", $resRecordset->res_id);
 				$res_id->setAttributeNode(new DOMAttr('SOURCE', 'RES'));
 				$context->appendChild($res_id);
-				$collection = $docXML->createElement("COLLECTION", $GLOBALS['coll']);
+				$collection = $docXML->createElement("COLLECTION", $GLOBALS['collection']);
 				$collection->setAttributeNode(new DOMAttr('SOURCE', 'LIFECYCLE'));
 				$context->appendChild($collection);
 				$fingerprint_mode = $docXML->createElement("FINGERPRINT_MODE", "md5");

@@ -15,4 +15,10 @@
         <databaseuser>maarch</databaseuser>
         <databasepassword>maarch</databasepassword>
     </CONFIG_BASE>
+    <COLLECTION>
+		<id>lagi_coll</id>
+		<table>res_x</table>
+		<view>res_view</view>
+		<adr>adr_x</adr>
+	</COLLECTION>
 </ROOT>

@@ -43,6 +43,7 @@
  *  10 : No resource found
  *  11 : Cycle step not found
  *  12 : Problem with the php include path
+ *  13 : Collection unknow
  */
 
 include("load_fill_stack.inc");
@@ -116,8 +117,8 @@ while($state <> "END") {
 			if ($cycleRecordset->break_key <> "") {
 				$ordeBy = " order by ".$cycleRecordset->break_key;
 			}
-			//$query = "select res_id from ".$GLOBALS['table']." where policy_id = '".$GLOBALS['policy']."' and cycle_id = '".$cyclePreviousRecordset->cycle_id."' and ".$cycleRecordset->where_clause.$ordeBy;
-			$query = "select res_id from ".$GLOBALS['table']." where policy_id = '".$GLOBALS['policy']."' and cycle_id = '".$cyclePreviousRecordset->cycle_id."' and ".$cycleRecordset->where_clause.$ordeBy." LIMIT 100";
+			$query = "select res_id from ".$GLOBALS['table']." where policy_id = '".$GLOBALS['policy']."' and cycle_id = '".$cyclePreviousRecordset->cycle_id."' and ".$cycleRecordset->where_clause.$ordeBy;
+			//$query = "select res_id from ".$GLOBALS['table']." where policy_id = '".$GLOBALS['policy']."' and cycle_id = '".$cyclePreviousRecordset->cycle_id."' and ".$cycleRecordset->where_clause.$ordeBy." LIMIT 100";
 			do_query($db, $query);
 			$resourcesArray = array();
 			if ($db->nb_result() > 0) {
@@ -131,6 +132,8 @@ while($state <> "END") {
 				$state = "END";break;
 			}
 			$db->disconnect();
+			updateWorkBatch($db);
+			$GLOBALS['logger']->write("Batch number:".$GLOBALS['wb'], 'INFO');
 			$state = "FILL_STACK";
 			break;
 		/**********************************************************************************************/

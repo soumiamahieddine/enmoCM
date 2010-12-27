@@ -46,6 +46,7 @@
  *  13 : Docserver not found
  *  14 : Problem with the php include path
  *  15 : Problem with the include of step operation file
+ *  16 : Collection unknow
  */
 
 include("load_process_stack.inc");
@@ -71,6 +72,8 @@ while ($GLOBALS['state'] <> "END") {
 				$GLOBALS['exitCode'] = 7;
 				$GLOBALS['state'] = "END";break;
 			}
+			updateWorkBatch();
+			$GLOBALS['logger']->write("Batch number:".$GLOBALS['wb'], 'INFO');
 			$GLOBALS['state'] = "GET_STEPS";
 			break;
 		/**********************************************************************************************/
@@ -93,6 +96,7 @@ while ($GLOBALS['state'] <> "END") {
 		case "GET_DOCSERVERS" :
 			$query = "select * from "._LC_CYCLE_STEPS_TABLE_NAME." where policy_id = '".$GLOBALS['policy']."' and cycle_id = '".$GLOBALS['cycle']."'";
 			do_query($GLOBALS['db'], $query);
+			$GLOBALS['state'] = "A_STEP";
 			if ($GLOBALS['db']->nb_result() == 0) {
 				$GLOBALS['logger']->write('Cycle Steps not found', 'ERROR', 11);
 				$GLOBALS['exitCode'] = 11;
@@ -121,7 +125,6 @@ while ($GLOBALS['state'] <> "END") {
 					}
 				}
 			}
-			$GLOBALS['state'] = "A_STEP";
 			break;
 		/**********************************************************************************************/
 		case "A_STEP" :
@@ -131,6 +134,8 @@ while ($GLOBALS['state'] <> "END") {
 					$GLOBALS['currentStep'] = $GLOBALS['steps'][$key]['cycle_step_id'];
 					$GLOBALS['logger']->write("current step:".$GLOBALS['currentStep'], 'INFO');
 					$GLOBALS['logger']->write("current operation:".$GLOBALS['steps'][$key]['step_operation'], 'INFO');
+					$pathOnDocserver = createPathOnDocServer($GLOBALS['docservers'][$GLOBALS['currentStep']]['docserver']['path_template']);
+					$GLOBALS['logger']->write("target path on docserver:".$pathOnDocserver, 'INFO');
 					$cptRecordsInStep = 0;
 					$resInContainer = 0;
 					$totalSizeToAdd = 0;
@@ -231,8 +236,9 @@ while ($GLOBALS['state'] <> "END") {
 		/**********************************************************************************************/
 		case "DO_COPY_OR_MOVE" :
 			$infoFileNameInTargetDocserver = array();
-			$infoFileNameInTargetDocserver = getNextFileNameInDocserver();
+			$infoFileNameInTargetDocserver = getNextFileNameInDocserver($pathOnDocserver);
 			$copyResultArray = array();
+			$infoFileNameInTargetDocserver['fileDestinationName'] .= "." . strtolower(extractFileExt($sourceFilePath));
 			$copyResultArray = copyOnDocserver($sourceFilePath, $infoFileNameInTargetDocserver);
 			if($copyResultArray['error'] <> "") {
 				$GLOBALS['logger']->write('error to copy file on docserver:' . $copyResultArray['error'] . " " . $sourceFilePath . " " . $infoFileNameInTargetDocserver['destinationDir'] . $infoFileNameInTargetDocserver['fileDestinationName'], 'ERROR', 17);
