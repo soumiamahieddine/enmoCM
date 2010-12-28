@@ -138,6 +138,9 @@ CREATE TABLE res_x
   is_ingoing character(1) DEFAULT NULL::bpchar,
   priority smallint,
   arbatch_id bigint DEFAULT NULL,
+  policy_id character varying(32) DEFAULT NULL::character varying,
+  cycle_id character varying(32) DEFAULT NULL::character varying,
+  is_multi_docservers character(1) NOT NULL DEFAULT 'N'::bpchar,
   custom_t1 text,
   custom_n1 bigint,
   custom_f1 numeric,
@@ -181,6 +184,18 @@ CREATE TABLE res_x
   video_user character varying(50)  DEFAULT NULL,
   video_date timestamp without time zone,
   CONSTRAINT res_x_pkey PRIMARY KEY  (res_id)
+)
+WITH (OIDS=FALSE);
+
+CREATE TABLE adr_x
+(
+  res_id bigint NOT NULL,
+  docserver_id character varying(32) NOT NULL,
+  path character varying(255) DEFAULT NULL::character varying,
+  filename character varying(255) DEFAULT NULL::character varying,
+  offset_doc character varying(255) DEFAULT NULL::character varying,
+  adr_priority integer NOT NULL,
+  CONSTRAINT adr_x_pkey PRIMARY KEY (res_id, docserver_id)
 )
 WITH (OIDS=FALSE);
 
@@ -242,6 +257,9 @@ CREATE TABLE res_letterbox
   is_ingoing character(1) DEFAULT NULL::bpchar,
   priority smallint,
   arbatch_id bigint DEFAULT NULL,
+  policy_id character varying(32),
+  cycle_id character varying(32),
+  is_multi_docservers character(1) NOT NULL DEFAULT 'N'::bpchar,
   custom_t1 text,
   custom_n1 bigint,
   custom_f1 numeric,
@@ -285,24 +303,6 @@ CREATE TABLE res_letterbox
   video_user character varying(50)  DEFAULT NULL,
   video_date timestamp without time zone,
   CONSTRAINT res_letterbox_pkey PRIMARY KEY  (res_id)
-)
-WITH (OIDS=FALSE);
-
-CREATE TABLE adr_letterbox
-(
-  res_id bigint NOT NULL,
-  docserver_id character varying(32) NOT NULL,
-  path character varying(255) DEFAULT NULL::character varying,
-  filename character varying(255) DEFAULT NULL::character varying,
-  offset_doc character varying(255) DEFAULT NULL::character varying,
-  logical_adr character varying(255) DEFAULT NULL::character varying,
-  fingerprint character varying(255) DEFAULT NULL::character varying,
-  filesize bigint,
-  policy_id character varying(32) NOT NULL,
-  cycle_id character varying(32) NOT NULL, 
-  cycle_step_id character varying(32) NOT NULL, 
-  adr_priority integer NOT NULL,
-  CONSTRAINT adr_letterbox_pkey PRIMARY KEY (res_id, docserver_id)
 )
 WITH (OIDS=FALSE);
 
