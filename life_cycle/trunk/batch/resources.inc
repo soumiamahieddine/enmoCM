@@ -54,7 +54,9 @@ function do_update_db($resId, $path, $fileName, $offsetDoc) {
 	}
 	$query = "insert into " . $GLOBALS['adrTable'] . " (res_id, docserver_id, path, filename, offset_doc, adr_priority) values (" . $resId . ", '" . $GLOBALS['docservers'][$GLOBALS['currentStep']]['docserver']['docserver_id'] . "', '" . $path . "', '" . $fileName . "', '" .  $offsetDoc . "', " . $GLOBALS['docservers'][$GLOBALS['currentStep']]['docserver']['adr_priority_number'] . ")";
 	do_query($GLOBALS['db'], $query);
-	//history...
+	//history
+	$query = "insert into " . HISTORY_TABLE . " (table_name, record_id, event_type, user_id, event_date, info, id_module) values ('" . $GLOBALS['table'] . "', '" . $resId . "', 'ADD', 'LC_BOT', '" . date("d") . "/" . date("m") . "/" . date("Y") . " " . date("H") . ":" . date("i") . ":" . date("s") . "', 'process stack', 'life_cycle')";
+	do_query($db, $query);
 }
 
 ?>

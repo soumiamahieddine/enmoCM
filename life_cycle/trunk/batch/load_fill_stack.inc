@@ -175,12 +175,12 @@ $databaseuser = (string) $xmlconfig->CONFIG_BASE->databaseuser;
 $databasepassword = (string) $xmlconfig->CONFIG_BASE->databasepassword;
 foreach($xmlconfig->COLLECTION as $col) {
 	$GLOBALS['collections'][$i] = array("id" => (string) $col->id, "table" => (string) $col->table,"view" => (string) $col->view,"adr" => (string) $col->adr);
-	if($GLOBALS['collections'][$i]['id'] == $GLOBALS['collection']) {
+	if ($GLOBALS['collections'][$i]['id'] == $GLOBALS['collection']) {
 		$GLOBALS['table'] = $GLOBALS['collections'][$i]['table'];
 	}
 	$i++;
 }
-if($GLOBALS['table'] == "") {
+if ($GLOBALS['table'] == "") {
 	$GLOBALS['logger']->write('Collection:' . $GLOBALS['collection'].' unknow', 'ERROR', 13);
 	exit(13);
 }
@@ -195,6 +195,7 @@ try {
 	MyInclude($MaarchDirectory . "core" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . "class_functions.php");
 	MyInclude($MaarchDirectory . "core" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . "class_db.php");
 	MyInclude($MaarchDirectory . "core" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . "class_core_tools.php");
+	MyInclude($MaarchDirectory . "core" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . "class_history.php");
 	MyInclude($MaarchDirectory . "core" . DIRECTORY_SEPARATOR . "core_tables.php");
 	MyInclude($MaarchDirectory . "modules" .DIRECTORY_SEPARATOR . "life_cycle" .DIRECTORY_SEPARATOR . "life_cycle_tables_definition.php");
 } catch (IncludeFileError $e) {
