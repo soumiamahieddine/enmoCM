@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ROOT>
     <CONFIG>
-        <lang>en</lang> <!-- fr, en-->
+        <lang>fr</lang> <!-- fr, en-->
         <MaarchDirectory>/var/www/maarch_entreprise_trunk/</MaarchDirectory>
+        <TmpDirectory>/var/www/maarch_entreprise_trunk/modules/life_cycle/batch/tmp/</TmpDirectory>
         <MaarchApps>maarch_entreprise</MaarchApps>
         <LogLevel>INFO</LogLevel>  <!-- DEBUG, INFO, NOTICE, WARNING, ERROR-->
         <DisplayedLogLevel>INFO</DisplayedLogLevel> <!-- DEBUG, INFO, NOTICE, WARNING, ERROR-->

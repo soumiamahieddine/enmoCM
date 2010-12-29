@@ -141,7 +141,7 @@ while($state <> "END") {
 					$query = "insert into " . _LC_STACK_TABLE_NAME . " (policy_id, cycle_id, cycle_step_id, coll_id, res_id, status) values ('" . $GLOBALS['policy'] . "', '" . $GLOBALS['cycle'] . "', '" . $GLOBALS['steps'][$cptSteps]['cycle_step_id'] . "', '" . $GLOBALS['collection'] . "', " . $resourcesArray[$cptRes]["res_id"] . ", 'I')";
 					do_query($db, $query);
 					//history
-					$query = "insert into " . HISTORY_TABLE . " (table_name, record_id, event_type, user_id, event_date, info, id_module) values ('" . $GLOBALS['table'] . "', '" . $resourcesArray[$cptRes]["res_id"] . "', 'ADD', 'LC_BOT', '" . date("d") . "/" . date("m") . "/" . date("Y") . " " . date("H") . ":" . date("i") . ":" . date("s") . "', 'fill stack', 'life_cycle')";
+					$query = "insert into " . HISTORY_TABLE . " (table_name, record_id, event_type, user_id, event_date, info, id_module) values ('" . $GLOBALS['table'] . "', '" . $resourcesArray[$cptRes]["res_id"] . "', 'ADD', 'LC_BOT', '" . date("d") . "/" . date("m") . "/" . date("Y") . " " . date("H") . ":" . date("i") . ":" . date("s") . "', 'fill stack, policy:" . $GLOBALS['policy'] . ", cycle:" . $GLOBALS['cycle'] . ", cycle step:" . $GLOBALS['steps'][$cptSteps]['cycle_step_id'] . ", collection:" . $GLOBALS['collection'] . "', 'life_cycle')";
 					do_query($db, $query);
 				}
 			}

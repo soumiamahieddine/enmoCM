@@ -29,6 +29,7 @@ try {
 $state = '';
 $configFile = '';
 $MaarchDirectory = '';
+$TmpDirectory = '';
 $table = '';
 $adrTable = '';
 $view = '';
@@ -48,10 +49,13 @@ $db2 = "";
 $db3 = "";
 $wb = "";
 
-function do_query($db_conn, $query_txt) {
-	$db_conn->connect();
+function do_query($db_conn, $query_txt, $transaction = false) {
 	$res = $db_conn->query($query_txt, true);
 	if (!$res) {
+		if ($transaction) {
+			$GLOBALS['logger']->write('ROLLBACK', 'INFO');
+			$db_conn->query('ROLLBACK', true);
+		}
 		$GLOBALS['logger']->write('SQL Query error:' . $query_txt, 'ERROR', 4);
 		exit(4);
 	}
@@ -171,6 +175,7 @@ if ($xmlconfig == FALSE) {
 $CONFIG = $xmlconfig->CONFIG;
 $lang = (string) $CONFIG->lang;
 $GLOBALS['MaarchDirectory'] = (string) $CONFIG->MaarchDirectory;
+$GLOBALS['TmpDirectory'] = (string) $CONFIG->TmpDirectory;
 $MaarchApps = (string) $CONFIG->MaarchApps;
 $log_level = (string) $CONFIG->LogLevel;
 $DisplayedLogLevel = (string) $CONFIG->DisplayedLogLevel;
@@ -180,7 +185,7 @@ $databaseserver = (string) $xmlconfig->CONFIG_BASE->databaseserver;
 $databaseserverport = (string) $xmlconfig->CONFIG_BASE->databaseserverport;
 $databaseuser = (string) $xmlconfig->CONFIG_BASE->databaseuser;
 $databasepassword = (string) $xmlconfig->CONFIG_BASE->databasepassword;
-foreach($xmlconfig->COLLECTION as $col) {
+foreach ($xmlconfig->COLLECTION as $col) {
 	$GLOBALS['collections'][$i] = array("id" => (string) $col->id, "table" => (string) $col->table,"view" => (string) $col->view,"adr" => (string) $col->adr);
 	if($GLOBALS['collections'][$i]['id'] == $GLOBALS['collection']) {
 		$GLOBALS['table'] = $GLOBALS['collections'][$i]['table'];
@@ -189,7 +194,7 @@ foreach($xmlconfig->COLLECTION as $col) {
 	}
 	$i++;
 }
-if($GLOBALS['table'] == "" || $GLOBALS['adrTable'] == "" || $GLOBALS['view'] == "") {
+if ($GLOBALS['table'] == "" || $GLOBALS['adrTable'] == "" || $GLOBALS['view'] == "") {
 	$GLOBALS['logger']->write('Collection:' . $GLOBALS['collection'].' unknow', 'ERROR', 16);
 	exit(16);
 }
@@ -211,6 +216,10 @@ try {
 	MyInclude($GLOBALS['MaarchDirectory'] . "modules" .DIRECTORY_SEPARATOR . "life_cycle" .DIRECTORY_SEPARATOR . "life_cycle_tables_definition.php");
 } catch (IncludeFileError $e) {
 	$GLOBALS['logger']->write('Problem with the php include path:' . get_include_path(), 'ERROR', 14);
+	exit(14);
+}
+if (!is_dir($GLOBALS['TmpDirectory'])) {
+	$GLOBALS['logger']->write('Problem with the tmp dir:' . $GLOBALS['TmpDirectory'], 'ERROR', 17);
 	exit(14);
 }
 core_tools::load_lang($lang, $GLOBALS['MaarchDirectory'], $MaarchApps);

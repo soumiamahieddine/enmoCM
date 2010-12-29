@@ -7,14 +7,13 @@ function createPathOnDocServer($docServer) {
 	if (!is_dir($docServer . date("Y") . DIRECTORY_SEPARATOR.date("m") . DIRECTORY_SEPARATOR)) {
 		mkdir($docServer . date("Y") . DIRECTORY_SEPARATOR.date("m") . DIRECTORY_SEPARATOR, 0777);
 	}
-	if (!is_dir($docServer . date("Y") . DIRECTORY_SEPARATOR.date("m") . DIRECTORY_SEPARATOR . str_pad($GLOBALS['wb'], 4, "0", STR_PAD_LEFT) . DIRECTORY_SEPARATOR)) {
-		mkdir($docServer . date("Y") . DIRECTORY_SEPARATOR.date("m") . DIRECTORY_SEPARATOR . str_pad($GLOBALS['wb'], 4, "0", STR_PAD_LEFT) . DIRECTORY_SEPARATOR, 0777);
+	if (!is_dir($docServer . date("Y") . DIRECTORY_SEPARATOR.date("m") . DIRECTORY_SEPARATOR . $GLOBALS['wb'] . DIRECTORY_SEPARATOR)) {
+		mkdir($docServer . date("Y") . DIRECTORY_SEPARATOR.date("m") . DIRECTORY_SEPARATOR . $GLOBALS['wb'] . DIRECTORY_SEPARATOR, 0777);
 	} else {
-		//ERROR !!!
-		//echo "\Folder Already exist... Software stopped!";
-		//manageError("Workbatch already exist! Unable to send file in the Docserver. End of application.", 11);
+		$GLOBALS['logger']->write('Folder alreay exists, workbatch already exist:' . $docServer . date("Y") . DIRECTORY_SEPARATOR.date("m") . DIRECTORY_SEPARATOR . $GLOBALS['wb'] . DIRECTORY_SEPARATOR, 'ERROR', 18);
+		exit(18);
 	}
-	return $docServer . date("Y") . DIRECTORY_SEPARATOR . date("m") . DIRECTORY_SEPARATOR . str_pad($GLOBALS['wb'], 4, "0", STR_PAD_LEFT) . DIRECTORY_SEPARATOR;
+	return $docServer . date("Y") . DIRECTORY_SEPARATOR . date("m") . DIRECTORY_SEPARATOR . $GLOBALS['wb'] . DIRECTORY_SEPARATOR;
 }
 
 /**
@@ -32,7 +31,8 @@ function getNextFileNameInDocserver($pathOnDocserver) {
 	if ($nbFiles == 0 ) {
 		//Creates the directory
 		if (!mkdir($pathOnDocserver."0001", 0000700)) {
-			//$_SESSION['error'] = _FILE_SEND_ERROR.". "._TRY_AGAIN.". "._MORE_INFOS." : <a href=\"mailto:".$_SESSION['config']['adminmail']."\">".$_SESSION['config']['adminname']."</a>";
+			$GLOBALS['logger']->write('Pb to create directory on the docserver:' . $pathOnDocserver, 'ERROR', 21);
+			exit(21);
 		} else {
 			$destinationDir = $pathOnDocserver . "0001" . DIRECTORY_SEPARATOR;
 			$fileDestinationName = "0001";
@@ -50,7 +50,8 @@ function getNextFileNameInDocserver($pathOnDocserver) {
 		if($nbFiles2 >= 1000 ) {
 			$newDir = ($nbFiles) + 1;
 			if (!mkdir($pathOnDocserver.str_pad($newDir, 4, "0", STR_PAD_LEFT), 0000700)) {
-				//$_SESSION['error'] = _FILE_SEND_ERROR.". "._TRY_AGAIN.". "._MORE_INFOS." : <a href=\"mailto:".$_SESSION['config']['adminmail']."\">".$_SESSION['config']['adminname']."</a>";
+				$GLOBALS['logger']->write('Pb to create directory on the docserver:' . $pathOnDocserver.str_pad($newDir, 4, "0", STR_PAD_LEFT), 'ERROR', 21);
+				exit(21);
 			} else {
 				$destinationDir = $pathOnDocserver.str_pad($newDir, 4, "0", STR_PAD_LEFT) . DIRECTORY_SEPARATOR;
 				$fileDestinationName = "0001";
@@ -91,6 +92,7 @@ function copyOnDocserver($sourceFilePath, $infoFileNameInTargetDocserver) {
 		$storeInfos = array('error'=>_DOCSERVER_COPY_ERROR);
 		return $storeInfos;
 	}
+	controlFingerprint($sourceFilePath, $destinationDir.$fileDestinationName);
 	/*$ofile = fopen($destinationDir.$fileDestinationName, "r");
 	if (isCompleteFile($ofile)) {
 		fclose($ofile);
@@ -101,7 +103,7 @@ function copyOnDocserver($sourceFilePath, $infoFileNameInTargetDocserver) {
 	$destinationDir = str_replace($GLOBALS['docservers'][$GLOBALS['currentStep']]['docserver']['path_template'], "", $destinationDir);
 	$destinationDir = str_replace(DIRECTORY_SEPARATOR, '#', $destinationDir);
 	$storeInfos = array("destinationDir" => $destinationDir, "fileDestinationName" => $fileDestinationName, "fileSize" => filesize($sourceFilePath));
-	washTmp($GLOBALS['MaarchDirectory'] . "modules" .DIRECTORY_SEPARATOR . "life_cycle" . DIRECTORY_SEPARATOR . "batch" . DIRECTORY_SEPARATOR . "tmp");
+	washTmp();
 	return $storeInfos;
 }
 
@@ -132,15 +134,14 @@ function isCompleteFile($file, $delay=500, $pointer=0) {
 
 /**
  * del tmp files
- * @param   $tmpPath infos of the doc to store, contains :
  * @return  boolean
  */
-function washTmp($dir) {
-	if (is_dir($dir)) {
-		$objects = scandir($dir);
+function washTmp() {
+	if (is_dir($GLOBALS['TmpDirectory'])) {
+		$objects = scandir($GLOBALS['TmpDirectory']);
 		foreach ($objects as $object) {
 			if ($object != "." && $object != "..") {
-				if (filetype($dir.DIRECTORY_SEPARATOR.$object) == "dir") washSubDir($dir.DIRECTORY_SEPARATOR.$object); else unlink($dir.DIRECTORY_SEPARATOR.$object);
+				if (filetype($GLOBALS['TmpDirectory'] . DIRECTORY_SEPARATOR.$object) == "dir") washSubDir($GLOBALS['TmpDirectory'] . DIRECTORY_SEPARATOR.$object); else unlink($GLOBALS['TmpDirectory'] . DIRECTORY_SEPARATOR . $object);
 			}
 		}
 		reset($objects);
@@ -157,7 +158,7 @@ function washSubDir($dir) {
 		$objects = scandir($dir);
 		foreach ($objects as $object) {
 			if ($object != "." && $object != "..") {
-				if (filetype($dir.DIRECTORY_SEPARATOR.$object) == "dir") washSubDir($dir.DIRECTORY_SEPARATOR.$object); else unlink($dir.DIRECTORY_SEPARATOR.$object);
+				if (filetype($dir . DIRECTORY_SEPARATOR . $object) == "dir") washSubDir($dir . DIRECTORY_SEPARATOR . $object); else unlink($dir . DIRECTORY_SEPARATOR . $object);
 			}
 		}
 		reset($objects);
@@ -194,6 +195,102 @@ function isDirNotEmpty($folder) {
 		}
 	}
 	return $foundDoc;
+}
+
+function doCompression($targeFile, $arrayOfFileToCompress) {
+	if (!is_array($arrayOfFileToCompress)) {
+		$arr = array();
+		$arr[0] = $arrayOfFileToCompress;
+		$arrayOfFileToCompress = $arr;
+	}
+	$tmpCmd = "";
+	for ($cpt=0;$cpt<count($arrayOfFileToCompress);$cpt++) {
+		$listOfFileToCompress .= " " . escapeshellarg($arrayOfFileToCompress[$cpt]);
+	}
+	if (DIRECTORY_SEPARATOR == "/") {
+		$command = "7z a -y -t" . strtolower($GLOBALS['docservers'][$GLOBALS['currentStep']]['compression_mode']) . " " . escapeshellarg($GLOBALS['TmpDirectory'] . $targeFile) . " " . $listOfFileToCompress;
+	} else {
+		$command = "\"" . str_replace("\\", "\\\\", $_SESSION['docserversFeatures']['DOCSERVERS']['PATHTOCOMPRESSTOOL']) . "\" a -y -t" . strtolower($GLOBALS['docservers'][$GLOBALS['currentStep']]['compression_mode']) . " " . escapeshellarg($GLOBALS['TmpDirectory'] . $targeFile) . " " . $listOfFileToCompress;
+	}
+	//echo $command."\r\n";exit;
+	exec($command, $tmpCmd, $ExecError);
+	if($ExecError > 0) {
+		$GLOBALS['logger']->write('Pb with compression:' .$command . ' ' . $tmpCmd, 'ERROR', 23);
+		exit(23);
+	}
+	return $GLOBALS['TmpDirectory'] . $targeFile . "." . strtolower($GLOBALS['docservers'][$GLOBALS['currentStep']]['compression_mode']);
+}
+
+function extractAip($path) {
+	$path = str_replace('#', DIRECTORY_SEPARATOR, $path);
+	$fileNameOnTmp = $GLOBALS['TmpDirectory'] . rand();
+	$cp = copy($path, $fileNameOnTmp);
+	controlFingerprint($path, $fileNameOnTmp);
+	if(DIRECTORY_SEPARATOR == "/") {
+		$command = "7z e -y -o".escapeshellarg($GLOBALS['TmpDirectory'])." ".escapeshellarg($fileNameOnTmp);
+	} else {
+		$command = "\"" . str_replace("\\", "\\\\", $_SESSION['docserversFeatures']['DOCSERVERS']['PATHTOCOMPRESSTOOL']) . "\" e -y -o" . escapeshellarg($GLOBALS['TmpDirectory'])." ".escapeshellarg($fileNameOnTmp);
+	}
+	$tmpCmd = "";
+	exec($command, $tmpCmd, $_exec_error);
+	if($ExecError > 0) {
+		$GLOBALS['logger']->write('Pb with extract:' . $command . ' ' . $tmpCmd, 'ERROR', 24);
+		exit(24);
+	}
+	unlink($fileNameOnTmp);
+	mkdir($GLOBALS['TmpDirectory'] . "CI", 0777);
+	$fileNameOnTmp = $GLOBALS['TmpDirectory'] . "CI." . strtolower($GLOBALS['docservers'][$GLOBALS['currentStep']]['compression_mode']);
+	if(DIRECTORY_SEPARATOR == "/") {
+		$command = "7z e -y -o" . escapeshellarg($GLOBALS['TmpDirectory'] . "CI") . " " . escapeshellarg($fileNameOnTmp);
+	} else {
+		$command = "\"" . str_replace("\\", "\\\\", $_SESSION['docserversFeatures']['DOCSERVERS']['PATHTOCOMPRESSTOOL']) . "\" e -y -o" . escapeshellarg($GLOBALS['TmpDirectory'] . "CI") . " " . escapeshellarg($fileNameOnTmp);
+	}
+	$tmpCmd = "";
+	exec($command, $tmpCmd, $_exec_error);
+	if($ExecError > 0) {
+		$GLOBALS['logger']->write('Pb with extract:' . $command . ' ' . $tmpCmd, 'ERROR', 24);
+		exit(24);
+	}
+}
+
+function doFingerprint($path) {
+	if ($GLOBALS['docservers'][$GLOBALS['currentStep']]['fingerprint_mode'] == "NONE" || $GLOBALS['docservers'][$GLOBALS['currentStep']]['fingerprint_mode'] == "") {
+		return "";
+	} else {
+		return hash_file(strtolower($GLOBALS['docservers'][$GLOBALS['currentStep']]['fingerprint_mode']), $path);
+	}
+}
+
+function controlIntegrityOfTransfert($currentRecordInStack, $resInContainer, $destinationDir, $fileDestinationName, $fileOffsetDoc) {
+	if (is_array($resInContainer) && count($resInContainer) > 0) {
+		extractAip($GLOBALS['docservers'][$GLOBALS['currentStep']]['docserver']['path_template'] . $destinationDir . $fileDestinationName);
+		for ($cptRes=0;$cptRes<count($resInContainer);$cptRes++) {
+			controlFingerprint($resInContainer[$cptRes]['source_path'], $GLOBALS['TmpDirectory'] . "CI" . DIRECTORY_SEPARATOR . str_replace("CI." . strtolower($GLOBALS['docservers'][$GLOBALS['currentStep']]['compression_mode']) . "#", "", $resInContainer[$cptRes]['offset_doc']));
+		}
+	} else {
+		$sourceFilePath = getSourceResourcePath($currentRecordInStack['res_id']);
+		controlFingerprint($sourceFilePath, $GLOBALS['docservers'][$GLOBALS['currentStep']]['docserver']['path_template'] . str_replace("#", DIRECTORY_SEPARATOR, $destinationDir . $fileDestinationName));
+	}
+	//washTmp();
+}
+
+function controlIntegrityOfSource($currentRecordInStack) {
+	$sourceFilePath = getSourceResourcePath($currentRecordInStack);
+	$query = "select fingerprint from " . $GLOBALS['table'] . " where res_id = " . $currentRecordInStack;
+	do_query($GLOBALS['db'], $query);
+	$resRecordset = $GLOBALS['db']->fetch_object();
+	if (md5_file($sourceFilePath) <> $resRecordset->fingerprint) {
+		$GLOBALS['logger']->write('Pb with fingerprint of the source:' . $currentRecordInStack . ' ' . $sourceFilePath, 'ERROR', 25);
+		exit(25);
+	}
+	washTmp();
+}
+
+function controlFingerprint($pathInit, $pathTarget) {
+	if (md5_file($pathInit) <> md5_file($pathTarget)) {
+		$GLOBALS['logger']->write('Pb during transfert of file (fingerprint control) between ' . $pathInit . ' and ' . $pathTarget, 'ERROR', 22);
+		exit(22);
+	}
 }
 
 ?>

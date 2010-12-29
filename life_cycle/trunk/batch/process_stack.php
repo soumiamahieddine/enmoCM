@@ -47,6 +47,15 @@
  *  14 : Problem with the php include path
  *  15 : Problem with the include of step operation file
  *  16 : Collection unknow
+ *  17 : Tmp dir not exists
+ *  18 : Batch already exists
+ *  19 : Tmp dir not empty
+ *  20 : There are still documents to be processed
+ *  21 : Problem to create directory on the docserver
+ *  22 : Problem during transfert of file (fingerprint control)
+ *  23 : Problem with compression
+ *  24 : Problem with extract
+ *  25 : Pb with fingerprint of the source
  */
 
 include("load_process_stack.inc");
@@ -57,6 +66,7 @@ include("custom.inc");
 
 /******************************************************************************************************/
 /* beginning */
+washTmp();
 $GLOBALS['state'] = "CONTROL_STACK";
 while ($GLOBALS['state'] <> "END") {
 	if (isset($GLOBALS['logger'])) {
@@ -74,6 +84,8 @@ while ($GLOBALS['state'] <> "END") {
 			}
 			updateWorkBatch();
 			$GLOBALS['logger']->write("Batch number:".$GLOBALS['wb'], 'INFO');
+			$query = "update " . _LC_STACK_TABLE_NAME . " set status = 'I' where status = 'W'";
+			do_query($GLOBALS['db'], $query);
 			$GLOBALS['state'] = "GET_STEPS";
 			break;
 		/**********************************************************************************************/
@@ -134,17 +146,18 @@ while ($GLOBALS['state'] <> "END") {
 					$GLOBALS['currentStep'] = $GLOBALS['steps'][$key]['cycle_step_id'];
 					$GLOBALS['logger']->write("current step:".$GLOBALS['currentStep'], 'INFO');
 					$GLOBALS['logger']->write("current operation:".$GLOBALS['steps'][$key]['step_operation'], 'INFO');
-					$pathOnDocserver = createPathOnDocServer($GLOBALS['docservers'][$GLOBALS['currentStep']]['docserver']['path_template']);
-					$GLOBALS['logger']->write("target path on docserver:".$pathOnDocserver, 'INFO');
 					$cptRecordsInStep = 0;
 					$resInContainer = 0;
 					$totalSizeToAdd = 0;
 					$theLastRecordInStep = false;
-					//$GLOBALS['docserverSourcePath'] = "";
 					$query = "select * from "._LC_STACK_TABLE_NAME." where policy_id = '".$GLOBALS['policy']."' and cycle_id = '".$GLOBALS['cycle']."' and cycle_step_id = '".$GLOBALS['currentStep']."' and status = 'I' and coll_id = '".$GLOBALS['collection']."'";
 					do_query($GLOBALS['db'], $query);
 					$cptRecordsTotalInStep = $GLOBALS['db']->nb_result();
-					$GLOBALS['logger']->write("Total res in the step:".$cptRecordsTotalInStep, 'INFO');
+					$GLOBALS['logger']->write("total res in the step:".$cptRecordsTotalInStep, 'INFO');
+					if ($cptRecordsTotalInStep <> 0) {
+						$pathOnDocserver = createPathOnDocServer($GLOBALS['docservers'][$GLOBALS['currentStep']]['docserver']['path_template']);
+						$GLOBALS['logger']->write("target path on docserver:".$pathOnDocserver, 'INFO');
+					}
 					$GLOBALS['state'] = "A_RECORD";break;
 				}
 			}
@@ -174,6 +187,7 @@ while ($GLOBALS['state'] <> "END") {
 				$stackRecordset = $GLOBALS['db']->fetch_object();
 				$currentRecordInStack = array();
 				$currentRecordInStack = $GLOBALS['func']->object2array($stackRecordset);
+				controlIntegrityOfSource($currentRecordInStack['res_id']);
 				$sourceFilePath = getSourceResourcePath($currentRecordInStack['res_id']);
 				if (!file_exists($sourceFilePath)) {
 					$GLOBALS['logger']->write('Resource not found:' . $sourceFilePath, 'ERROR', 16);
@@ -216,7 +230,7 @@ while ($GLOBALS['state'] <> "END") {
 			$cptResInContainer++;
 			array_push($resInContainer, array("res_id" => $currentRecordInStack['res_id'], "source_path" => $sourceFilePath));
 			$offsetDoc = "";
-			$query = "update "._LC_STACK_TABLE_NAME." set status = 'A' where policy_id = '".$GLOBALS['policy']."' and cycle_id = '".$GLOBALS['cycle']."' and cycle_step_id = '".$GLOBALS['currentStep']."' and coll_id = '".$GLOBALS['collection']."' and res_id = ".$currentRecordInStack['res_id'];
+			$query = "update " . _LC_STACK_TABLE_NAME . " set status = 'W' where policy_id = '" . $GLOBALS['policy'] . "' and cycle_id = '" . $GLOBALS['cycle'] . "' and cycle_step_id = '" . $GLOBALS['currentStep'] . "' and coll_id = '" . $GLOBALS['collection'] . "' and res_id = " . $currentRecordInStack['res_id'];
 			do_query($GLOBALS['db'], $query);
 			if ($cptResInContainer >= $GLOBALS['docservers'][$GLOBALS['currentStep']]['container_max_number'] || $theLastRecordInStep) {
 				$GLOBALS['state'] = "CLOSE_CONTAINER";
@@ -251,12 +265,22 @@ while ($GLOBALS['state'] <> "END") {
 			$GLOBALS['state'] = "UPDATE_DATABASE";break;
 		/**********************************************************************************************/
 		case "UPDATE_DATABASE" :
+			controlIntegrityOfTransfert($currentRecordInStack, $resInContainer, $destinationDir, $fileDestinationName, $fileOffsetDoc);
 			updateDatabase($currentRecordInStack, $resInContainer, $destinationDir, $fileDestinationName, $fileOffsetDoc);
 			$GLOBALS['state'] = "A_RECORD";break;
 		/**********************************************************************************************/
 		case "EMPTY_STACK" :
-			$query = "truncate table "._LC_STACK_TABLE_NAME;
+			$query = "select * from " . _LC_STACK_TABLE_NAME . " where status <> 'P'";
 			do_query($GLOBALS['db'], $query);
+			if ($GLOBALS['db']->nb_result() == 0) {
+				$query = "truncate table " . _LC_STACK_TABLE_NAME;
+				do_query($GLOBALS['db'], $query);
+			} else {
+				$GLOBALS['logger']->write('there are still documents to be processed', 'ERROR', 20);
+				$GLOBALS['exitCode'] = 20;
+				$query = "delete from " . _LC_STACK_TABLE_NAME . " where status = 'P'";
+				do_query($GLOBALS['db'], $query);
+			}
 			$GLOBALS['state'] = "END";break;
 	}
 }

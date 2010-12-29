@@ -83,7 +83,7 @@ if (!defined('_LC_POLICY_MODIFICATION'))  define('_LC_POLICY_MODIFICATION', 'Mod
 
 /*************BATCH*************************************/
 if (!defined('_PI_COMMENT_ROOT'))  define('_PI_COMMENT_ROOT', 'Packaging information: Utilisation du paquet d archivage (Archival Information package)');
-if (!defined('_PI_COMMENT_FINGERPRINT'))  define('_PI_COMMENT_FINGERPRINT', 'Empreinte associée au fichier <CONTENT_FILE>');
+if (!defined('_PI_COMMENT_FINGERPRINT'))  define('_PI_COMMENT_FINGERPRINT', 'Empreinte associée au fichier CI');
 if (!defined('_PI_COMMENT_AIU'))  define('_PI_COMMENT_AIU', 'Nombre de ressources présentes dans l AIP');
 if (!defined('_PI_COMMENT_CONTENT'))  define('_PI_COMMENT_CONTENT', 'Ressources digitales dans leur format natif (nom + extension de fichier)');
 if (!defined('_PI_COMMENT_PDI'))  define('_PI_COMMENT_PDI', 'Preservation Description Information: Catalogue des descripteurs de Provenance, Référence, Contexte, Intégrité et Droits d accès des ressources présentes dans <CONTENT_FILE>. Pour des raisons pratiques, l historique de traitement est stocké à part dans <HISTORY_FILE>. Voir pdi.xsd pour la structure commentée');

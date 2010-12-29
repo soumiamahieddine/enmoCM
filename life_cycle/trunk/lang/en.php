@@ -76,7 +76,7 @@ if (!defined('_LC_POLICY_DELETED'))  define('_LC_POLICY_DELETED', 'Life cycle po
 
 /*************BATCH*************************************/
 if (!defined('_PI_COMMENT_ROOT'))  define('_PI_COMMENT_ROOT', 'Packaging information: Archival Information Package (AIP) content and usage');
-if (!defined('_PI_COMMENT_FINGERPRINT'))  define('_PI_COMMENT_FINGERPRINT', 'Fingerprint for <CONTENT_FILE>');
+if (!defined('_PI_COMMENT_FINGERPRINT'))  define('_PI_COMMENT_FINGERPRINT', 'Fingerprint for CI');
 if (!defined('_PI_COMMENT_AIU'))  define('_PI_COMMENT_AIU', 'Number of resources in AIP');
 if (!defined('_PI_COMMENT_CONTENT'))  define('_PI_COMMENT_CONTENT', 'Digital resources in native format, each having a sequential filename+extension');
 if (!defined('_PI_COMMENT_PDI'))  define('_PI_COMMENT_PDI', 'Container for Preservation Description Information. This is a catalog containing descriptors for Provenance, Reference, Fixity, Context, and Access Rights for each resource in <CONTENT_FILE>. For convenience, history is stored apart in <HISTORY_FILE>. See pdi.xsd for structure and comments');
