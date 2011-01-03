@@ -602,33 +602,80 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
             }
         }
         $d->close();
-        $docinfo = self::filename($docserver);
-        $destinationDir = $docinfo['destination_rept'];
-        $fileDestinationName = $docinfo['file_destination_name'];
-        $file_path = $destinationDir.$fileDestinationName.".".$fileInfos['format'];
-        $tmpSourceCopy = str_replace("\\\\","\\",$tmpSourceCopy);
-        if(file_exists($destinationDir.$fileDestinationName.".".$fileInfos['format'])) {
-            $storeInfos = array('error'=>_FILE_ALREADY_EXISTS.". "._MORE_INFOS." : <a href=\"mailto:".$_SESSION['config']['adminmail']."\">".$_SESSION['config']['adminname']."</a>.");
+        $pathOnDocserver = array();
+		$pathOnDocserver = self::createPathOnDocServer($docserver->path_template);
+        $docinfo = self::getNextFileNameInDocserver($pathOnDocserver['destinationDir']);
+        if($docinfo['error'] <> "") {
+			 $_SESSION['error'] = _FILE_SEND_ERROR.". "._TRY_AGAIN.". "._MORE_INFOS." : <a href=\"mailto:".$_SESSION['config']['adminmail']."\">".$_SESSION['config']['adminname']."</a>";
+		}
+		$copyResultArray = copyOnDocserver($sourceFilePath, $docinfo);
+		if($copyResultArray['error'] <> "") {
+			$storeInfos = array('error'=>$copyResultArray['error']);
             return $storeInfos;
-        }
-        $cp = copy($tmpSourceCopy, $destinationDir.$fileDestinationName.".".$fileInfos['format']);
-        $file_name = $entry;
-        if($cp == false) {
-            $storeInfos = array('error'=>_DOCSERVER_COPY_ERROR);
-            return $storeInfos;
-        } else {
-            $delete = unlink($tmpSourceCopy);
-            if($delete == false) {
-                $storeInfos = array('error'=>_TMP_FILE_DEL_ERROR);
-                return $storeInfos;
-            }
-        }
-        $destinationDir = substr($destinationDir, strlen($docserver->path_template),4);
-        $destinationDir = str_replace(DIRECTORY_SEPARATOR,'#',$destinationDir);
+		}
+		$destinationDir = $copyResultArray['destinationDir'];
+		$fileDestinationName = $copyResultArray['fileDestinationName'];
+        $destinationDir = substr($destinationDir, strlen($docserver->path_template)) . DIRECTORY_SEPARATOR;
+        $destinationDir = str_replace(DIRECTORY_SEPARATOR, '#', $destinationDir);
         self::setSize($docserver, $newSize);
         $storeInfos = array("path_template"=>$docserver->path_template, "destination_dir"=>$destinationDir, "docserver_id"=>$docserver->docserver_id, "file_destination_name"=>$fileDestinationName);
         return $storeInfos;
     }
+
+	public function copyOnDocserver($sourceFilePath, $infoFileNameInTargetDocserver) {
+		$destinationDir = $infoFileNameInTargetDocserver['destinationDir'];
+		$fileDestinationName = $infoFileNameInTargetDocserver['fileDestinationName'];
+		$sourceFilePath = str_replace("\\\\", "\\", $sourceFilePath);
+		if(file_exists($destinationDir.$fileDestinationName)) {
+			$storeInfos = array('error'=>_FILE_ALREADY_EXISTS);
+			return $storeInfos;
+		}
+		$cp = copy($sourceFilePath, $destinationDir.$fileDestinationName);
+		if($cp == false) {
+			$storeInfos = array('error'=>_DOCSERVER_COPY_ERROR);
+			return $storeInfos;
+		}
+		controlFingerprint($sourceFilePath, $destinationDir.$fileDestinationName);
+		/*$ofile = fopen($destinationDir.$fileDestinationName, "r");
+		if (isCompleteFile($ofile)) {
+			fclose($ofile);
+		} else {
+			$storeInfos = array('error'=>_COPY_OF_DOC_NOT_COMPLETE);
+			return $storeInfos;
+		}*/
+		$destinationDir = str_replace($GLOBALS['docservers'][$GLOBALS['currentStep']]['docserver']['path_template'], "", $destinationDir);
+		$destinationDir = str_replace(DIRECTORY_SEPARATOR, '#', $destinationDir);
+		$storeInfos = array("destinationDir" => $destinationDir, "fileDestinationName" => $fileDestinationName, "fileSize" => filesize($sourceFilePath));
+		if($GLOBALS['TmpDirectory'] <> "") {
+			self::washTmp($GLOBALS['TmpDirectory'], true);
+		}
+		return $storeInfos;
+	}
+
+	/**
+	* Return true when the file is completed
+	* @param  $file
+	* @param  $delay
+	* @param  $pointer position in the file
+	*/ 
+	function isCompleteFile($file, $delay=500, $pointer=0) {
+		if ($file == null) {
+			return false;
+		}
+		fseek($file, $pointer);
+		$currentLine = fgets($file);
+		while (!feof($file)) {
+			$currentLine = fgets($file);
+		}
+		$currentPos = ftell($file);
+		//Wait $delay ms
+		usleep($delay * 1000);
+		if ($currentPos == $pointer) {
+			return true;
+		} else {
+			return isCompleteFile($file, $delay, $currentPos);
+		}
+	}
 
     /**
     * Checks the size of the docserver plus a new file to see if there is enough disk space
@@ -645,70 +692,93 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
             return $new_docserver_size;
         }
     }
-
+    
+    /**
+    * Compute the path in the docserver for a batch
+    * @param $docServer docservers path
+    * @return @return array Contains 2 items : subdirectory path and error
+    */
+    public function createPathOnDocServer($docServer) {
+		if (!is_dir($docServer . date("Y") . DIRECTORY_SEPARATOR)) {
+			mkdir($docServer . date("Y") . DIRECTORY_SEPARATOR, 0777);
+		}
+		if (!is_dir($docServer . date("Y") . DIRECTORY_SEPARATOR.date("m") . DIRECTORY_SEPARATOR)) {
+			mkdir($docServer . date("Y") . DIRECTORY_SEPARATOR.date("m") . DIRECTORY_SEPARATOR, 0777);
+		}
+		if ($GLOBALS['wb'] <> "") {
+			$path = $docServer . date("Y") . DIRECTORY_SEPARATOR.date("m") . DIRECTORY_SEPARATOR . $GLOBALS['wb'] . DIRECTORY_SEPARATOR;
+			if (!is_dir($path)) {
+				mkdir($path, 0777);
+			} else {
+				return array("destinationDir" => "", "error" => "Folder alreay exists, workbatch already exist:" . $path);
+			}
+		} else {
+			$path = $docServer . date("Y") . DIRECTORY_SEPARATOR.date("m") . DIRECTORY_SEPARATOR;
+		}
+		return array("destinationDir" => $path, "error" => "");
+	}
+    
     /**
     * Calculates the next file name in the docserver
-    * @param $docserver docservers object
-    * @return array Contains 2 items : subdirectory path and new filename
+    * @param $pathOnDocserver docservers path
+    * @return array Contains 3 items : subdirectory path and new filename and error
     */
-    private function filename($docserver) {
-        $path_template = $docserver->path_template;
+    public function getNextFileNameInDocserver($pathOnDocserver) {
         //Scans the docserver path
-        $file_tab = scandir($path_template);
+        $fileTab = scandir($pathOnDocserver);
         //Removes . and .. lines
-        array_shift($file_tab);
-        array_shift($file_tab);
-        $nb_files = count($file_tab);
+        array_shift($fileTab);
+        array_shift($fileTab);
+        if(file_exists($pathOnDocserver . DIRECTORY_SEPARATOR . "package_information")) {
+			unset($fileTab[array_search("package_information", $fileTab)]);
+		}
+        $nbFiles = count($fileTab);
         //Docserver is empty
-        if ($nb_files == 0 ) {
+        if ($nbFiles == 0 ) {
             //Creates the directory
-            if (!mkdir($path_template."1",0000700)) {
-                //management of errors in the view controler
-                //$this->error = _FILE_SEND_ERROR;
-                $_SESSION['error'] = _FILE_SEND_ERROR.". "._TRY_AGAIN.". "._MORE_INFOS." : <a href=\"mailto:".$_SESSION['config']['adminmail']."\">".$_SESSION['config']['adminname']."</a>";
+            if (!mkdir($pathOnDocserver."0001",0000700)) {
+				return array("destinationDir" => "", "fileDestinationName" => "", "error" => "Pb to create directory on the docserver:" . $pathOnDocserver);
             } else {
-                $destination_rept = $path_template."1".DIRECTORY_SEPARATOR;
-                $file_destination_name = "1";
-                return array("destination_rept" => $destination_rept, "file_destination_name" => $file_destination_name);
+                $destinationDir = $pathOnDocserver . "0001" . DIRECTORY_SEPARATOR;
+                $fileDestinationName = "0001";
+                return array("destinationDir" => $destinationDir, "fileDestinationName" => $fileDestinationName, "error" => "");
             }
         } else {
             //Gets next usable subdirectory in the docserver
-            $destination_rept = $path_template.count($file_tab).DIRECTORY_SEPARATOR;
-            $file_tab2 = scandir($path_template.strval(count($file_tab)));
+			$destinationDir = $pathOnDocserver . str_pad(count($fileTab), 4, "0", STR_PAD_LEFT) . DIRECTORY_SEPARATOR;
+            $fileTab2 = scandir($pathOnDocserver . strval(str_pad(count($fileTab), 4, "0", STR_PAD_LEFT)));
             //Removes . and .. lines
-            array_shift($file_tab2);
-            array_shift($file_tab2);
-            $nb_files2 = count($file_tab2);
-            //If number of files => 2000 then creates a new subdirectory
-            if($nb_files2 >= 2000 ) {
-                $new_rept = ($nb_files) + 1;
-                if (!mkdir($path_template.$new_rept,0000700)) {
-                    //management of errors in the view controler
-                    //$docserver->error = _FILE_SEND_ERROR;
-                    $_SESSION['error'] = _FILE_SEND_ERROR.". "._TRY_AGAIN.". "._MORE_INFOS." : <a href=\"mailto:".$_SESSION['config']['adminmail']."\">".$_SESSION['config']['adminname']."</a>";
+            array_shift($fileTab2);
+            array_shift($fileTab2);
+            $nbFiles2 = count($fileTab2);
+            //If number of files => 1000 then creates a new subdirectory
+            if($nbFiles2 >= 1000 ) {
+                $newDir = ($nbFiles) + 1;
+                if (!mkdir($pathOnDocserver.str_pad($newDir, 4, "0", STR_PAD_LEFT), 0000700)) {
+                    return array("destinationDir" => "", "fileDestinationName" => "", "error" => "Pb to create directory on the docserver:" . $pathOnDocserver.str_pad($newDir, 4, "0", STR_PAD_LEFT));
                 } else {
-                    $destination_rept = $path_template.$new_rept.DIRECTORY_SEPARATOR;
-                    $file_destination_name = "1";
-                    return array("destination_rept" => $destination_rept, "file_destination_name" => $file_destination_name);
+                    $destinationDir = $pathOnDocserver.str_pad($newDir, 4, "0", STR_PAD_LEFT) . DIRECTORY_SEPARATOR;
+                    $fileDestinationName = "0001";
+                    return array("destinationDir" => $destinationDir, "fileDestinationName" => $fileDestinationName, "error" => "");
                 }
             } else {
-                //Docserver contains less than 2000 files
-                $new_file_name = ($nb_files2) + 1;
-                $greater = $new_file_name;
-                for($n=0;$n<count($file_tab2);$n++) {
-                    $current_file_name = array();
-                    $current_file_name = explode(".",$file_tab2[$n]);
-                    if((int)$greater  <= (int)$current_file_name[0]) {
-                        if((int)$greater  == (int)$current_file_name[0]) {
+                //Docserver contains less than 1000 files
+                $newFileName = $nbFiles2 + 1;
+                $greater = $newFileName;
+                for($n=0;$n<count($fileTab2);$n++) {
+                    $currentFileName = array();
+                    $currentFileName = explode(".",$fileTab2[$n]);
+                    if((int)$greater  <= (int)$currentFileName[0]) {
+                        if((int)$greater  == (int)$currentFileName[0]) {
                             $greater ++;
                         } else {
                             //$greater < current
-                            $greater = (int)$current_file_name[0] +1;
+                            $greater = (int)$currentFileName[0] +1;
                         }
                     }
                 }
-                $file_destination_name = $greater ;
-                return array("destination_rept" => $destination_rept, "file_destination_name" => $file_destination_name);
+                $fileDestinationName = str_pad($greater, 4, "0", STR_PAD_LEFT);
+                return array("destinationDir" => $destinationDir, "fileDestinationName" => $fileDestinationName, "error" => "");
             }
         }
     }
@@ -735,25 +805,45 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
         require_once 'MIME/Type.php';
         return MIME_Type::autoDetect($filePath);
     }
-
+    
     /**
      * del tmp files
-     * @param   $tmpPath infos of the doc to store, contains :
+     * @param   $dir dir to wash
+     * @param   $contentOnly boolean true if only the content
      * @return  boolean
      */
-    function washTmp($dir) {
+    function washTmp($dir, $contentOnly = false) {
         if (is_dir($dir)) {
             $objects = scandir($dir);
             foreach ($objects as $object) {
                 if ($object != "." && $object != "..") {
-                    if (filetype($dir.DIRECTORY_SEPARATOR.$object) == "dir") self::washTmp($dir.DIRECTORY_SEPARATOR.$object); else unlink($dir.DIRECTORY_SEPARATOR.$object);
+                    if (filetype($dir.DIRECTORY_SEPARATOR.$object) == "dir") self::washSubDir($dir.DIRECTORY_SEPARATOR.$object); else unlink($dir.DIRECTORY_SEPARATOR.$object);
                 }
             }
-        reset($objects);
-        rmdir($dir);
+			reset($objects);
+			if(!$contentOnly) {
+				rmdir($dir);
+			}
         }
     }
-
+    
+    /**
+	 * del tmp files
+	 * @param   $tmpPath infos of the doc to store, contains :
+	 * @return  boolean
+	 */
+	function washSubDir($dir) {
+		if (is_dir($dir)) {
+			$objects = scandir($dir);
+			foreach ($objects as $object) {
+				if ($object != "." && $object != "..") {
+					if (filetype($dir . DIRECTORY_SEPARATOR . $object) == "dir") self::washSubDir($dir . DIRECTORY_SEPARATOR . $object); else unlink($dir . DIRECTORY_SEPARATOR . $object);
+				}
+			}
+			reset($objects);
+			rmdir($dir);
+		}
+	}
 
     /**
      * Extract a file from an archive
