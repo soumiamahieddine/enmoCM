@@ -47,6 +47,7 @@ $func = "";
 $db = "";
 $db2 = "";
 $db3 = "";
+$docserverControler = "";
 $wb = "";
 
 function do_query($db_conn, $query_txt, $transaction = false) {
@@ -211,9 +212,11 @@ set_include_path(get_include_path() . PATH_SEPARATOR . $GLOBALS['MaarchDirectory
 try {
 	MyInclude($GLOBALS['MaarchDirectory'] . "core" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . "class_functions.php");
 	MyInclude($GLOBALS['MaarchDirectory'] . "core" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . "class_db.php");
+	MyInclude($GLOBALS['MaarchDirectory'] . "core" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . "class_request.php");
 	MyInclude($GLOBALS['MaarchDirectory'] . "core" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . "class_core_tools.php");
 	MyInclude($GLOBALS['MaarchDirectory'] . "core" . DIRECTORY_SEPARATOR . "core_tables.php");
 	MyInclude($GLOBALS['MaarchDirectory'] . "modules" .DIRECTORY_SEPARATOR . "life_cycle" .DIRECTORY_SEPARATOR . "life_cycle_tables_definition.php");
+	MyInclude($GLOBALS['MaarchDirectory'] . "core" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . "docservers_controler.php");
 } catch (IncludeFileError $e) {
 	$GLOBALS['logger']->write('Problem with the php include path:' . get_include_path(), 'ERROR', 14);
 	exit(14);
@@ -223,7 +226,6 @@ if (!is_dir($GLOBALS['TmpDirectory'])) {
 	exit(14);
 }
 core_tools::load_lang($lang, $GLOBALS['MaarchDirectory'], $MaarchApps);
-
 $GLOBALS['func'] = new functions();
 $GLOBALS['db'] = new dbquery($GLOBALS['configFile']);
 $GLOBALS['db2'] = new dbquery($GLOBALS['configFile']);
@@ -231,6 +233,7 @@ $GLOBALS['db3'] = new dbquery($GLOBALS['configFile']);
 $GLOBALS['db']->connect();
 $GLOBALS['db2']->connect();
 $GLOBALS['db3']->connect();
+$GLOBALS['docserverControler'] = new docservers_controler();
 getWorkBatch();
 
 ?>

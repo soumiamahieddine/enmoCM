@@ -1,7 +1,7 @@
 <?php 
 
 function createAip($resInContainer) {
-	if(isDirNotEmpty($GLOBALS['TmpDirectory'])) {
+	if($GLOBALS['func']->isDirNotEmpty($GLOBALS['TmpDirectory'])) {
 		$GLOBALS['logger']->write('tmp dir not empty:' . $GLOBALS['TmpDirectory'], 'ERROR', 19);
 		exit(19);
 	}
@@ -10,7 +10,7 @@ function createAip($resInContainer) {
 	mkdir($tmpDir);
 	$newSourceFilePath = $GLOBALS['TmpDirectory'] . DIRECTORY_SEPARATOR . mt_rand();
 	for ($cptRes=0;$cptRes<count($resInContainer);$cptRes++) {
-		$resInContainer[$cptRes]['offset_doc'] = str_pad($cptRes, 4, "0", STR_PAD_LEFT) . "." . strtolower(extractFileExt($resInContainer[$cptRes]['source_path']));
+		$resInContainer[$cptRes]['offset_doc'] = str_pad($cptRes, 4, "0", STR_PAD_LEFT) . "." . strtolower($GLOBALS['func']->extractFileExt($resInContainer[$cptRes]['source_path']));
 		$cp = copy($resInContainer[$cptRes]['source_path'], $tmpDir . DIRECTORY_SEPARATOR . $resInContainer[$cptRes]['offset_doc']);
 		if($cp == false) {
 			$storeInfos = array('error'=>_DOCSERVER_COPY_ERROR);

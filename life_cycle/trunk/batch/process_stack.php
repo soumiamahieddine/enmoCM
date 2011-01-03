@@ -66,7 +66,7 @@ include("custom.inc");
 
 /******************************************************************************************************/
 /* beginning */
-washTmp();
+$GLOBALS['docserverControler']->washTmp($GLOBALS['TmpDirectory'], true);
 $GLOBALS['state'] = "CONTROL_STACK";
 while ($GLOBALS['state'] <> "END") {
 	if (isset($GLOBALS['logger'])) {
@@ -155,7 +155,13 @@ while ($GLOBALS['state'] <> "END") {
 					$cptRecordsTotalInStep = $GLOBALS['db']->nb_result();
 					$GLOBALS['logger']->write("total res in the step:".$cptRecordsTotalInStep, 'INFO');
 					if ($cptRecordsTotalInStep <> 0) {
-						$pathOnDocserver = createPathOnDocServer($GLOBALS['docservers'][$GLOBALS['currentStep']]['docserver']['path_template']);
+						$resultPath = array();
+						$resultPath = $GLOBALS['docserverControler']->createPathOnDocServer($GLOBALS['docservers'][$GLOBALS['currentStep']]['docserver']['path_template']);
+						if($resultPath['error'] <> "") {
+							$GLOBALS['logger']->write($resultPath['error'], 'ERROR', 18);
+							exit(18);
+						}
+						$pathOnDocserver = $resultPath['destinationDir'];
 						$GLOBALS['logger']->write("target path on docserver:".$pathOnDocserver, 'INFO');
 					}
 					$GLOBALS['state'] = "A_RECORD";break;
@@ -250,10 +256,14 @@ while ($GLOBALS['state'] <> "END") {
 		/**********************************************************************************************/
 		case "DO_COPY_OR_MOVE" :
 			$infoFileNameInTargetDocserver = array();
-			$infoFileNameInTargetDocserver = getNextFileNameInDocserver($pathOnDocserver);
+			$infoFileNameInTargetDocserver = $GLOBALS['docserverControler']->getNextFileNameInDocserver($pathOnDocserver);
+			if($infoFileNameInTargetDocserver['error'] <> "") {
+				$GLOBALS['logger']->write($infoFileNameInTargetDocserver['error'], 'ERROR', 21);
+				exit(21);
+			}
 			$copyResultArray = array();
-			$infoFileNameInTargetDocserver['fileDestinationName'] .= "." . strtolower(extractFileExt($sourceFilePath));
-			$copyResultArray = copyOnDocserver($sourceFilePath, $infoFileNameInTargetDocserver);
+			$infoFileNameInTargetDocserver['fileDestinationName'] .= "." . strtolower($GLOBALS['func']->extractFileExt($sourceFilePath));
+			$copyResultArray = $GLOBALS['docserverControler']->copyOnDocserver($sourceFilePath, $infoFileNameInTargetDocserver);
 			if($copyResultArray['error'] <> "") {
 				$GLOBALS['logger']->write('error to copy file on docserver:' . $copyResultArray['error'] . " " . $sourceFilePath . " " . $infoFileNameInTargetDocserver['destinationDir'] . $infoFileNameInTargetDocserver['fileDestinationName'], 'ERROR', 17);
 				$GLOBALS['exitCode'] = 17;
