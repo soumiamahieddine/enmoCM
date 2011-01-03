@@ -817,7 +817,7 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
             $objects = scandir($dir);
             foreach ($objects as $object) {
                 if ($object != "." && $object != "..") {
-                    if (filetype($dir.DIRECTORY_SEPARATOR.$object) == "dir") self::washSubDir($dir.DIRECTORY_SEPARATOR.$object); else unlink($dir.DIRECTORY_SEPARATOR.$object);
+                    if (filetype($dir.DIRECTORY_SEPARATOR.$object) == "dir") self::washTmp($dir.DIRECTORY_SEPARATOR.$object); else unlink($dir.DIRECTORY_SEPARATOR.$object);
                 }
             }
 			reset($objects);
@@ -826,24 +826,6 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
 			}
         }
     }
-    
-    /**
-	 * del tmp files
-	 * @param   $tmpPath infos of the doc to store, contains :
-	 * @return  boolean
-	 */
-	function washSubDir($dir) {
-		if (is_dir($dir)) {
-			$objects = scandir($dir);
-			foreach ($objects as $object) {
-				if ($object != "." && $object != "..") {
-					if (filetype($dir . DIRECTORY_SEPARATOR . $object) == "dir") self::washSubDir($dir . DIRECTORY_SEPARATOR . $object); else unlink($dir . DIRECTORY_SEPARATOR . $object);
-				}
-			}
-			reset($objects);
-			rmdir($dir);
-		}
-	}
 
     /**
      * Extract a file from an archive
