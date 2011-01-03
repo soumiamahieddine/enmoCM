@@ -1273,14 +1273,14 @@ class core_tools extends functions
     */
     public function is_module_loaded($module_id)
     {
-        foreach(array_keys($_SESSION['modules_loaded']) as $value)
-        {
-            if($value == $module_id && $_SESSION['modules_loaded'][$value]['loaded'] == "true")
-            {
-                return true;
-            }
-        }
-        return false;
+        if(is_array($_SESSION['modules_loaded'])) {
+			foreach(array_keys($_SESSION['modules_loaded']) as $value) {
+				if($value == $module_id && $_SESSION['modules_loaded'][$value]['loaded'] == "true") {
+					return true;
+				}
+			}
+			return false;
+		}
     }
 
 

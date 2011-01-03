@@ -1580,5 +1580,36 @@ class functions
         $CRYPT = $xmlconfig->CRYPT;
         return $CRYPT->encrypt;
     }
+    
+    /**
+	* Return the file's extention of a file
+	* @param  $sFullPath string path of the file
+	*/
+	function extractFileExt($sFullPath) {
+		$sName = $sFullPath;
+		if(strpos($sName, ".")==0) {
+			$extractFileExt = "";
+		} else {
+			$extractFileExt = explode(".", $sName);
+		}
+		return $extractFileExt[count($extractFileExt) - 1];
+	}
+
+	/**
+	* Browse each file and folder in the folder and return true if the folder is not empty
+	* @param  $folder path string of the folder
+	*/
+	function isDirNotEmpty($folder) {
+		$foundDoc = false;
+		$classScan = dir($folder);
+		while (($fileScan = $classScan->read()) != false) {
+			if($fileScan == '.' || $fileScan == '..' || $fileScan == '.svn') {
+				continue;
+			} else {
+				$foundDoc = true;break;
+			}
+		}
+		return $foundDoc;
+	}
 }
 ?>
