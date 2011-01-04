@@ -221,7 +221,7 @@ function createPDI($resInContainer) {
 				$collection = $docXML->createElement("COLLECTION", $GLOBALS['collection']);
 				$collection->setAttributeNode(new DOMAttr('SOURCE', 'LIFECYCLE'));
 				$context->appendChild($collection);
-				$fingerprint_mode = $docXML->createElement("FINGERPRINT_MODE", "md5");
+				$fingerprint_mode = $docXML->createElement("FINGERPRINT_MODE", $GLOBALS['docserverSourceFingerprint']);
 				$fingerprint_mode->setAttributeNode(new DOMAttr('SOURCE', 'LIFECYCLE'));
 				$context->appendChild($fingerprint_mode);
 				$format = $docXML->createElement("FORMAT", $resRecordset->format);

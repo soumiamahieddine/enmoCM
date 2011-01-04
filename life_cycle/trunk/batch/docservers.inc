@@ -28,7 +28,12 @@ function extractAip($path) {
 	$path = str_replace('#', DIRECTORY_SEPARATOR, $path);
 	$fileNameOnTmp = $GLOBALS['TmpDirectory'] . rand();
 	$cp = copy($path, $fileNameOnTmp);
-	controlFingerprint($path, $fileNameOnTmp);
+	$control = array();
+	$control = $GLOBALS['docserverControler']->controlFingerprint($path, $fileNameOnTmp, $GLOBALS['docserverSourceFingerprint']);
+	if($control['error'] <> "") {
+		$GLOBALS['logger']->write($control['error'], 'ERROR', 22);
+		exit(22);
+	}
 	if(DIRECTORY_SEPARATOR == "/") {
 		$command = "7z e -y -o".escapeshellarg($GLOBALS['TmpDirectory'])." ".escapeshellarg($fileNameOnTmp);
 	} else {
@@ -56,23 +61,25 @@ function extractAip($path) {
 	}
 }
 
-function doFingerprint($path) {
-	if ($GLOBALS['docservers'][$GLOBALS['currentStep']]['fingerprint_mode'] == "NONE" || $GLOBALS['docservers'][$GLOBALS['currentStep']]['fingerprint_mode'] == "") {
-		return "";
-	} else {
-		return hash_file(strtolower($GLOBALS['docservers'][$GLOBALS['currentStep']]['fingerprint_mode']), $path);
-	}
-}
-
 function controlIntegrityOfTransfert($currentRecordInStack, $resInContainer, $destinationDir, $fileDestinationName, $fileOffsetDoc) {
 	if (is_array($resInContainer) && count($resInContainer) > 0) {
 		extractAip($GLOBALS['docservers'][$GLOBALS['currentStep']]['docserver']['path_template'] . $destinationDir . $fileDestinationName);
 		for ($cptRes=0;$cptRes<count($resInContainer);$cptRes++) {
-			controlFingerprint($resInContainer[$cptRes]['source_path'], $GLOBALS['TmpDirectory'] . "CI" . DIRECTORY_SEPARATOR . str_replace("CI." . strtolower($GLOBALS['docservers'][$GLOBALS['currentStep']]['compression_mode']) . "#", "", $resInContainer[$cptRes]['offset_doc']));
+			$control = array();
+			$control = $GLOBALS['docserverControler']->controlFingerprint($resInContainer[$cptRes]['source_path'], $GLOBALS['TmpDirectory'] . "CI" . DIRECTORY_SEPARATOR . str_replace("CI." . strtolower($GLOBALS['docservers'][$GLOBALS['currentStep']]['compression_mode']) . "#", "", $resInContainer[$cptRes]['offset_doc']), $GLOBALS['docserverSourceFingerprint']);
+			if($control['error'] <> "") {
+				$GLOBALS['logger']->write($control['error'], 'ERROR', 22);
+				exit(22);
+			}
 		}
 	} else {
 		$sourceFilePath = getSourceResourcePath($currentRecordInStack['res_id']);
-		controlFingerprint($sourceFilePath, $GLOBALS['docservers'][$GLOBALS['currentStep']]['docserver']['path_template'] . str_replace("#", DIRECTORY_SEPARATOR, $destinationDir . $fileDestinationName));
+		$control = array();
+		$control = $GLOBALS['docserverControler']->controlFingerprint($sourceFilePath, $GLOBALS['docservers'][$GLOBALS['currentStep']]['docserver']['path_template'] . str_replace("#", DIRECTORY_SEPARATOR, $destinationDir . $fileDestinationName), $GLOBALS['docserverSourceFingerprint']);
+		if($control['error'] <> "") {
+			$GLOBALS['logger']->write($control['error'], 'ERROR', 22);
+			exit(22);
+		}
 	}
 	//$GLOBALS['docserverControler']->washTmp($GLOBALS['TmpDirectory'], true);
 }
@@ -82,18 +89,11 @@ function controlIntegrityOfSource($currentRecordInStack) {
 	$query = "select fingerprint from " . $GLOBALS['table'] . " where res_id = " . $currentRecordInStack;
 	do_query($GLOBALS['db'], $query);
 	$resRecordset = $GLOBALS['db']->fetch_object();
-	if (md5_file($sourceFilePath) <> $resRecordset->fingerprint) {
+	if ($GLOBALS['docserverControler']->doFingerprint($sourceFilePath, $GLOBALS['docserverSourceFingerprint']) <> $resRecordset->fingerprint) {
 		$GLOBALS['logger']->write('Pb with fingerprint of the source:' . $currentRecordInStack . ' ' . $sourceFilePath, 'ERROR', 25);
 		exit(25);
 	}
 	$GLOBALS['docserverControler']->washTmp($GLOBALS['TmpDirectory'], true);
-}
-
-function controlFingerprint($pathInit, $pathTarget) {
-	if (md5_file($pathInit) <> md5_file($pathTarget)) {
-		$GLOBALS['logger']->write('Pb during transfert of file (fingerprint control) between ' . $pathInit . ' and ' . $pathTarget, 'ERROR', 22);
-		exit(22);
-	}
 }
 
 ?>

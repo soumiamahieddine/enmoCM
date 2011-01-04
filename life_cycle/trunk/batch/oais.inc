@@ -26,7 +26,7 @@ function createAip($resInContainer) {
 	createPDIHistory($resInContainer);
 	createPDI($resInContainer);
 	$PIArray = array();
-	$PIArray['CIFingerprint'] = doFingerprint($result['newSourceFilePath'], $GLOBALS['docservers'][$GLOBALS['currentStep']]['fingerprint_mode']);
+	$PIArray['CIFingerprint'] = $GLOBALS['docserverControler']->doFingerprint($result['newSourceFilePath'], $GLOBALS['docservers'][$GLOBALS['currentStep']]['fingerprint_mode']);
 	$PIArray['fingerprintMode'] = $GLOBALS['docservers'][$GLOBALS['currentStep']]['fingerprint_mode'];
 	$PIArray['aiuCount'] = count($resInContainer);
 	$PIArray['ciName'] = "CI." . strtolower($GLOBALS['docservers'][$GLOBALS['currentStep']]['compression_mode']);
@@ -37,11 +37,11 @@ function createAip($resInContainer) {
 	//PDI compression
 	$pdiName = $GLOBALS['TmpDirectory'] . DIRECTORY_SEPARATOR . "pdi.xml";
 	$pdiName = doCompression("PDI", $pdiName);
-	$PIArray['PDIFingerprint'] = doFingerprint($pdiName, $GLOBALS['docservers'][$GLOBALS['currentStep']]['fingerprint_mode']);
+	$PIArray['PDIFingerprint'] = $GLOBALS['docserverControler']->doFingerprint($pdiName, $GLOBALS['docservers'][$GLOBALS['currentStep']]['fingerprint_mode']);
 	//PDI_HISTORY compression
 	$pdiHistoryName = $GLOBALS['TmpDirectory'] . DIRECTORY_SEPARATOR . "pdi_history.xml";
 	$pdiHistoryName = doCompression("PDI_HISTORY", $pdiHistoryName);
-	$PIArray['PDIHISTORYFingerprint'] = doFingerprint($pdiHistoryName, $GLOBALS['docservers'][$GLOBALS['currentStep']]['fingerprint_mode']);
+	$PIArray['PDIHISTORYFingerprint'] = $GLOBALS['docserverControler']->doFingerprint($pdiHistoryName, $GLOBALS['docservers'][$GLOBALS['currentStep']]['fingerprint_mode']);
 	createPackagingInformation($PIArray);
 	//AIP compression
 	$aipName = $GLOBALS['TmpDirectory'] . DIRECTORY_SEPARATOR . mt_rand();

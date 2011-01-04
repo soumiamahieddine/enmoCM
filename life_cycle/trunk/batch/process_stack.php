@@ -263,7 +263,7 @@ while ($GLOBALS['state'] <> "END") {
 			}
 			$copyResultArray = array();
 			$infoFileNameInTargetDocserver['fileDestinationName'] .= "." . strtolower($GLOBALS['func']->extractFileExt($sourceFilePath));
-			$copyResultArray = $GLOBALS['docserverControler']->copyOnDocserver($sourceFilePath, $infoFileNameInTargetDocserver);
+			$copyResultArray = $GLOBALS['docserverControler']->copyOnDocserver($sourceFilePath, $infoFileNameInTargetDocserver, $GLOBALS['docserverSourceFingerprint']);
 			if($copyResultArray['error'] <> "") {
 				$GLOBALS['logger']->write('error to copy file on docserver:' . $copyResultArray['error'] . " " . $sourceFilePath . " " . $infoFileNameInTargetDocserver['destinationDir'] . $infoFileNameInTargetDocserver['fileDestinationName'], 'ERROR', 17);
 				$GLOBALS['exitCode'] = 17;

@@ -40,6 +40,7 @@ $steps = Array();
 $currentStep = "";
 $docservers = Array();
 $docserverSourcePath = "";
+$docserverSourceFingerprint = "";
 $databasetype = '';
 $exitCode = 0;
 $running_date = date('Y-m-d H:i:s');
@@ -217,6 +218,7 @@ try {
 	MyInclude($GLOBALS['MaarchDirectory'] . "core" . DIRECTORY_SEPARATOR . "core_tables.php");
 	MyInclude($GLOBALS['MaarchDirectory'] . "modules" .DIRECTORY_SEPARATOR . "life_cycle" .DIRECTORY_SEPARATOR . "life_cycle_tables_definition.php");
 	MyInclude($GLOBALS['MaarchDirectory'] . "core" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . "docservers_controler.php");
+	MyInclude($GLOBALS['MaarchDirectory'] . "core" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . "docserver_types_controler.php");
 } catch (IncludeFileError $e) {
 	$GLOBALS['logger']->write('Problem with the php include path:' . get_include_path(), 'ERROR', 14);
 	exit(14);

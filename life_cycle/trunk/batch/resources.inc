@@ -10,11 +10,16 @@ function getSourceResourcePath($resId) {
 	$resRecordset = $GLOBALS['db']->fetch_object();
 	$sourceFilePath = $resRecordset->path . $resRecordset->filename . $resRecordset->offset_doc;
 	if ($GLOBALS['docserverSourcePath'] == "") {
-		$query = "select path_template from " . _DOCSERVERS_TABLE_NAME . " where docserver_id = '" . $resRecordset->docserver_id . "'";
+		$query = "select path_template, docserver_type_id from " . _DOCSERVERS_TABLE_NAME . " where docserver_id = '" . $resRecordset->docserver_id . "'";
 		do_query($GLOBALS['db'], $query);
 		$docserverRecordset = $GLOBALS['db']->fetch_object();
 		$GLOBALS['docserverSourcePath'] = $docserverRecordset->path_template;
 		$GLOBALS['logger']->write("Docserver source path:" . $GLOBALS['docserverSourcePath'], 'INFO');
+		$query = "select fingerprint_mode from " . _DOCSERVER_TYPES_TABLE_NAME . " where docserver_type_id = '" . $docserverRecordset->docserver_type_id . "'";
+		do_query($GLOBALS['db'], $query);
+		$docserverTypeRecordset = $GLOBALS['db']->fetch_object();
+		$GLOBALS['docserverSourceFingerprint'] = $docserverTypeRecordset->fingerprint_mode;
+		$GLOBALS['logger']->write("Docserver source fingerprint:" . $GLOBALS['docserverSourceFingerprint'], 'INFO');
 	}
 	$sourceFilePath = $GLOBALS['docserverSourcePath'] . $sourceFilePath;
 	$sourceFilePath = str_replace("#", DIRECTORY_SEPARATOR, $sourceFilePath);
