@@ -944,7 +944,7 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
         $adr = array();
         $resource = new resource();
         $adr = $resource->getResourceAdr($tableName, $gedId, $whereClause);
-        //return $adr;exit;
+        //$coreTools->show_array($adr);exit;
         if($adr['status'] == "ko") {
             $result = array("status" => "ko", "mime_type" => "", "ext" => "", "file_content" => "", "tmp_path" => "", "error" => _NO_RIGHT_ON_RESOURCE_OR_RESOURCE_NOT_EXISTS);
         } else {
@@ -962,12 +962,14 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
             $file = str_replace("#", DIRECTORY_SEPARATOR, $file);
             require_once("core" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . "docserver_types_controler.php");
             $docserverTypeControler = new docserver_types_controler();
-			$docserverTypeObject = $docserverTypeControler->get($docserver->docserver_type_id);
+			$docserverTypeObject = $docserverTypeControler->get($docserverObject->docserver_type_id);
             if(!file_exists($file)) {
                 $result = array("status" => "ko", "mime_type" => "", "ext" => "", "file_content" => "", "tmp_path" => "", "error" => _FILE_NOT_EXISTS_ON_THE_SERVER." : ".$file);
             } else {
                 $fingerprint_from_docserver = self::doFingerprint($file, $docserverTypeObject->fingerprint_mode);
-                //echo $fingerprint_from_docserver."<br>";
+                //echo $docserverTypeObject->fingerprint_mode."<br>";
+                //echo "from ds:" . $fingerprint_from_docserver."<br>";
+                //echo "from db:" . $fingerprint_from_db."<br>";
                 //echo filesize($file)."<br>";
                 $adr['path_to_file'] = $file;
                 //retrieve infos of the docserver type
@@ -1005,7 +1007,7 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
                     $type_state = $is->is_filetype_allowed($format);
                 }
                 //if fingerprint from db = 0 we do not control fingerprint
-                if($fingerprint_from_db == 0 || ($fingerprint_from_db == $fingerprint_from_docserver)) {
+                if($fingerprint_from_db == "0" || ($fingerprint_from_db == $fingerprint_from_docserver)) {
                     if($type_state <> false) {
                         if($_SESSION['history']['resview'] == "true") {
                             require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
