@@ -82,7 +82,6 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
                     $control = array("status" => "ok", "value" => $docserver->docserver_id);
                     //history
                     if($_SESSION['history']['docserversadd'] == "true") {
-
                         $history = new history();
                         $history->add(_DOCSERVERS_TABLE_NAME, $docserver->docserver_id, "UP", _DOCSERVER_UPDATED." : ".$docserver->docserver_id, $_SESSION['config']['databasetype']);
                     }
@@ -570,13 +569,13 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
      * @param   $fileInfos infos of the doc to store, contains :
      *          tmpDir : path to tmp directory
      *          size : size of the doc
-     *          md5 : fingerprint of the doc
      *          format : format of the doc
      *          tmpFileName : file name of the doc in Maarch tmp directory
      * @return  array of docserver data for res_x else return error
      */
     public function storeResourceOnDocserver($collId, $fileInfos) {
         $docserver = self::getDocserverToInsert($collId);
+        $func = new functions();
         if(empty($docserver)) {
             $storeInfos = array('error'=>_DOCSERVER_ERROR.' : '._NO_AVAILABLE_DOCSERVER.". "._MORE_INFOS.".");
             return $storeInfos;
@@ -591,7 +590,6 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
         } else {
             $tmp = $fileInfos['tmpDir'];
         }
-
         $d = dir($tmp);
         $pathTmp = $d->path;
         while($entry = $d->read()) {
@@ -608,7 +606,11 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
         if($docinfo['error'] <> "") {
 			 $_SESSION['error'] = _FILE_SEND_ERROR.". "._TRY_AGAIN.". "._MORE_INFOS." : <a href=\"mailto:".$_SESSION['config']['adminmail']."\">".$_SESSION['config']['adminname']."</a>";
 		}
-		$copyResultArray = copyOnDocserver($sourceFilePath, $docinfo);
+		require_once("core" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . "docserver_types_controler.php");
+		$docserverTypeControler = new docserver_types_controler();
+		$docserverTypeObject = $docserverTypeControler->get($docserver->docserver_type_id);
+		$docinfo['fileDestinationName'] .= "." . strtoupper($func->extractFileExt($tmpSourceCopy));
+		$copyResultArray = self::copyOnDocserver($tmpSourceCopy, $docinfo, $docserverTypeObject->fingerprint_mode);
 		if($copyResultArray['error'] <> "") {
 			$storeInfos = array('error'=>$copyResultArray['error']);
             return $storeInfos;
@@ -622,20 +624,20 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
         return $storeInfos;
     }
 
-	public function copyOnDocserver($sourceFilePath, $infoFileNameInTargetDocserver) {
+	public function copyOnDocserver($sourceFilePath, $infoFileNameInTargetDocserver, $docserverSourceFingerprint = "NONE") {
 		$destinationDir = $infoFileNameInTargetDocserver['destinationDir'];
 		$fileDestinationName = $infoFileNameInTargetDocserver['fileDestinationName'];
 		$sourceFilePath = str_replace("\\\\", "\\", $sourceFilePath);
-		if(file_exists($destinationDir.$fileDestinationName)) {
+		if(file_exists($destinationDir . $fileDestinationName)) {
 			$storeInfos = array('error'=>_FILE_ALREADY_EXISTS);
 			return $storeInfos;
 		}
-		$cp = copy($sourceFilePath, $destinationDir.$fileDestinationName);
+		$cp = copy($sourceFilePath, $destinationDir . $fileDestinationName);
 		if($cp == false) {
 			$storeInfos = array('error'=>_DOCSERVER_COPY_ERROR);
 			return $storeInfos;
 		}
-		controlFingerprint($sourceFilePath, $destinationDir.$fileDestinationName);
+		self::controlFingerprint($sourceFilePath, $destinationDir . $fileDestinationName, $docserverSourceFingerprint);
 		/*$ofile = fopen($destinationDir.$fileDestinationName, "r");
 		if (isCompleteFile($ofile)) {
 			fclose($ofile);
@@ -834,9 +836,10 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
      *          path_to_file : path to the file in the docserver
      *          filename : name of the file
      *          offset_doc : offset of the doc in the container
+     * 			$fingerprintMode
      * @return  array with path of the extracted doc
      */
-    public function extractArchive($fileInfos) {
+    public function extractArchive($fileInfos, $fingerprintMode) {
         //var_dump($fileInfos);
         if($fileInfos['tmpDir'] == "") {
             $tmp = $_SESSION['config']['tmppath'];
@@ -893,13 +896,13 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
                             $result = array("status" => "ko", "path" => "", "mime_type" => "", "format" => "", "tmpArchive" => "", "fingerprint" => "", "error"=>_PB_WITH_EXTRACTION_OF_CONTAINER."#".$tmp.$tmpArchive.DIRECTORY_SEPARATOR.$tmpArchiveBis);
                             return $result;
                         }
-                        $result = array("status" => "ok", "path"=>$tmp.$tmpArchive.DIRECTORY_SEPARATOR.$tmpArchiveBis.DIRECTORY_SEPARATOR.$fileInfos['offset_doc'], "mime_type"=>self::getMimeType($tmp.$tmpArchive.DIRECTORY_SEPARATOR.$tmpArchiveBis.DIRECTORY_SEPARATOR.$fileInfos['offset_doc']), "format"=>$format, "fingerprint" => md5_file($tmp.$tmpArchive.DIRECTORY_SEPARATOR.$tmpArchiveBis.DIRECTORY_SEPARATOR.$fileInfos['offset_doc']), "tmpArchive"=>$tmp.$tmpArchive, "error"=> "");
+                        $result = array("status" => "ok", "path"=>$tmp.$tmpArchive.DIRECTORY_SEPARATOR.$tmpArchiveBis.DIRECTORY_SEPARATOR.$fileInfos['offset_doc'], "mime_type"=>self::getMimeType($tmp.$tmpArchive.DIRECTORY_SEPARATOR.$tmpArchiveBis.DIRECTORY_SEPARATOR.$fileInfos['offset_doc']), "format"=>$format, "fingerprint" => self::doFingerprint($tmp.$tmpArchive.DIRECTORY_SEPARATOR.$tmpArchiveBis.DIRECTORY_SEPARATOR.$fileInfos['offset_doc'], $fingerprintMode), "tmpArchive"=>$tmp.$tmpArchive, "error"=> "");
                         unlink($tmp.$tmpArchive.DIRECTORY_SEPARATOR.$fileScan);
                         break;
                     }
                 }
             } else {
-                $result = array("status" => "ok", "path"=>$tmp.$tmpArchive.DIRECTORY_SEPARATOR.$fileInfos['offset_doc'], "mime_type"=>self::getMimeType($tmp.$tmpArchive.DIRECTORY_SEPARATOR.$fileInfos['offset_doc']), "format"=>$format, "tmpArchive"=>$tmp.$tmpArchive, "fingerprint" => md5_file($tmp.$tmpArchive.DIRECTORY_SEPARATOR.$fileInfos['offset_doc']), "error"=> "");
+                $result = array("status" => "ok", "path"=>$tmp.$tmpArchive.DIRECTORY_SEPARATOR.$fileInfos['offset_doc'], "mime_type"=>self::getMimeType($tmp.$tmpArchive.DIRECTORY_SEPARATOR.$fileInfos['offset_doc']), "format"=>$format, "tmpArchive"=>$tmp.$tmpArchive, "fingerprint" => self::doFingerprint($tmp.$tmpArchive.DIRECTORY_SEPARATOR.$fileInfos['offset_doc'], $fingerprintMode), "error"=> "");
             }
             unlink($fileNameOnTmp);
             return $result;
@@ -949,7 +952,7 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
             $path = $adr['path'];
             $filename = $adr['filename'];
             $format = $adr['format'];
-            $md5 = $adr['fingerprint'];
+            $fingerprint = $adr['fingerprint'];
             $fingerprint_from_db = $adr['fingerprint'];
             $offset_doc = $adr['offset_doc'];
             //retrieve infos of the docserver
@@ -957,11 +960,14 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
             $docserver = $docserverObject->path_template;
             $file = $docserver.$path.$filename;
             $file = str_replace("#", DIRECTORY_SEPARATOR, $file);
+            require_once("core" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . "docserver_types_controler.php");
+            $docserverTypeControler = new docserver_types_controler();
+			$docserverTypeObject = $docserverTypeControler->get($docserver->docserver_type_id);
             if(!file_exists($file)) {
                 $result = array("status" => "ko", "mime_type" => "", "ext" => "", "file_content" => "", "tmp_path" => "", "error" => _FILE_NOT_EXISTS_ON_THE_SERVER." : ".$file);
             } else {
-                $fingerprint_from_docserver = @md5_file($file);
-                //echo md5_file($file)."<br>";
+                $fingerprint_from_docserver = self::doFingerprint($file, $docserverTypeObject->fingerprint_mode);
+                //echo $fingerprint_from_docserver."<br>";
                 //echo filesize($file)."<br>";
                 $adr['path_to_file'] = $file;
                 //retrieve infos of the docserver type
@@ -974,7 +980,7 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
                 //manage compressed resource
                 if($docserverTypeObject->is_compressed) {
                     $extract = array();
-                    $extract = self::extractArchive($adr);
+                    $extract = self::extractArchive($adr, $docserverTypeObject->fingerprint_mode);
                     if($extract['status'] == "ko") {
                         $result = array("status" => "ko", "mime_type" => "", "ext" => "", "file_content" => "", "tmp_path" => "", "error" => $extract['error']);
                     } else {
@@ -1029,10 +1035,27 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
                     self::washTmp($extract['tmpArchive']);
                 }
             }
-
         }
         return $result;
     }
+    
+	public function doFingerprint($path, $fingerprintMode) {
+		if ($fingerprintMode == "NONE" || $fingerprintMode == "") {
+			return '0';
+		} else {
+			return hash_file(strtolower($fingerprintMode), $path);
+		}
+	}
+	
+	function controlFingerprint($pathInit, $pathTarget, $fingerprintMode = "NONE") {
+		$result = array();
+		if (self::doFingerprint($pathInit, $fingerprintMode) <> self::doFingerprint($pathTarget, $fingerprintMode)) {
+			$result = array("status" => "ko", "error" => _PB_WITH_FINGERPRINT_OF_DOCUMENT . ' ' . $pathInit . ' '. _AND . ' ' . $pathTarget);
+		} else {
+			$result = array("status" => "ok", "error" => "");
+		}
+		return $result;
+	}
 }
 
 ?>

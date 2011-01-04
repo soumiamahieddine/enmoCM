@@ -129,23 +129,26 @@
 	* @param  $data  array Data array
 	* @param  $databasetype string Type of the db (MYSQL, SQLSERVER, ...)
 	*/
-	function load_into_db( $table_res, $path, $filename, $docserver_path, $docserver_id, $data, $databasetype)
+	function load_into_db($table_res, $path, $filename, $docserver_path, $docserver_id, $data, $databasetype)
 	{
 		$filetmp = $docserver_path;
 		$tmp = $path;
 		$tmp = str_replace('#',DIRECTORY_SEPARATOR,$tmp);
 		$filetmp .= $tmp;
 		$filetmp .= $filename;
-		$md5 = md5_file($filetmp);
+		require_once("core" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . "docservers_controler.php");
+		require_once("core" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . "docserver_types_controler.php");
+		$docserverControler = new docservers_controler();
+		$docserverTypeControler = new docserver_types_controler();
+		$docserver = $docserverControler->get($docserver_id);
+		$docserverTypeObject = $docserverTypeControler->get($docserver->docserver_type_id);
+		$fingerprint = $docserverControler->doFingerprint($filetmp, $docserverTypeObject->fingerprint_mode);
 		$filesize = filesize($filetmp);
-
-
-		array_push($data, array('column' => "fingerprint", 'value' => $md5, 'type' => "string"));
+		array_push($data, array('column' => "fingerprint", 'value' => $fingerprint, 'type' => "string"));
 		array_push($data, array('column' => "filesize", 'value' => $filesize, 'type' => "int"));
 		array_push($data, array('column' => "path", 'value' => $path, 'type' => "string"));
 		array_push($data, array('column' => "filename", 'value' => $filename, 'type' => "string"));
 		array_push($data, array('column' => 'creation_date', 'value' => $this->current_datetime(), 'type' => "function"));
-
 		if(!$this->check_basic_fields($data))
 		{
 			$_SESSION['error'] = $this->error;
