@@ -394,18 +394,31 @@
 	* @param $whereClause security clause
 	* @return array of adr fields if is ok
 	*/
-	public function getResourceAdr($view, $resId, $whereClause) {
+	public function getResourceAdr($view, $resId, $whereClause, $adrTable) {
 		$control = array();
 		if(!isset($view) || empty($resId) || empty($whereClause)) {
 			$control = array("status" => "ko", "error" => _PB_WITH_ARGUMENTS);
 			return $control;
 		}
 		$this->connect();
-		$query = "select res_id, docserver_id, path, filename, format, fingerprint, offset_doc from ".$view." where res_id = ".$resId." ".$whereClause;
+		$query = "select res_id, docserver_id, path, filename, format, fingerprint, offset_doc, is_multi_docservers from " . $view . " where res_id = " . $resId . " ". $whereClause;
 		$this->query($query);
 		if ($this->nb_result() > 0) {
 			$line = $this->fetch_object();
-			$control = array("status" => "ok", "docserver_id" => $line->docserver_id, "path" => $line->path, "filename" => $line->filename, "format" => $line->format, "fingerprint" => $line->fingerprint, "offset_doc" => $line->offset_doc, "error" => "");
+			$fingerprint = $line->fingerprint;
+			$format = $line->format;
+			if($line->is_multi_docservers == "Y") {
+				$query = "select res_id, docserver_id, path, filename, offset_doc, adr_priority from " . $adrTable . " where res_id = " . $resId . " order by adr_priority";
+				$this->query($query);
+				if ($this->nb_result() > 0) {
+					$line = $this->fetch_object();
+				} else {
+					$this->disconnect();
+					$control = array("status" => "ko", "error" => _RESOURCE_NOT_FOUND);
+					return $control;
+				}
+			}
+			$control = array("status" => "ok", "docserver_id" => $line->docserver_id, "path" => $line->path, "filename" => $line->filename, "format" => $format, "fingerprint" => $fingerprint, "offset_doc" => $line->offset_doc, "error" => "");
 			$this->disconnect();
 			return $control;
 		} else {

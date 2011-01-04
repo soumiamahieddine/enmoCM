@@ -873,32 +873,36 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
             }
             $format = substr($fileInfos['offset_doc'], strrpos($fileInfos['offset_doc'], '.') + 1);
             if(!file_exists($tmp.$tmpArchive.DIRECTORY_SEPARATOR.$fileInfos['offset_doc'])) {
-                $classScan = dir($tmp.$tmpArchive);
+                $classScan = dir($tmp . $tmpArchive);
                 while(($fileScan=$classScan->read()) != false) {
                     if($fileScan=='.' || $fileScan=='..') {
                         continue;
                     } else {
-                        $_exec_error_bis = "";
-                        $tmpArchiveBis = uniqid(rand());
-                        if(mkdir($tmp.$tmpArchive.DIRECTORY_SEPARATOR.$tmpArchiveBis)) {
-                            if(DIRECTORY_SEPARATOR == "/") {
-                                $commandBis = "7z e -y -o".escapeshellarg($tmp.$tmpArchive.DIRECTORY_SEPARATOR.$tmpArchiveBis)." ".escapeshellarg($tmp.$tmpArchive.DIRECTORY_SEPARATOR.$fileScan);
-                            } else {
-                                $commandBis = "\"".str_replace("\\", "\\\\", $_SESSION['docserversFeatures']['DOCSERVERS']['PATHTOCOMPRESSTOOL'])."\" e -y -o".escapeshellarg($tmp.$tmpArchive.DIRECTORY_SEPARATOR.$tmpArchiveBis)." ".escapeshellarg($tmp.$tmpArchive.DIRECTORY_SEPARATOR.$fileScan);
-                            }
-                            $tmpCmd = "";
-                            exec($commandBis, $tmpCmd, $_exec_error_bis);
-                            if($_exec_error_bis > 0) {
-                                $result = array("status" => "ko", "path" => "", "mime_type" => "", "format" => "", "tmpArchive" => "", "fingerprint" => "", "error"=>_PB_WITH_EXTRACTION_OF_CONTAINER."#".$_exec_error_bis);
-                                return $result;
-                            }
-                        } else {
-                            $result = array("status" => "ko", "path" => "", "mime_type" => "", "format" => "", "tmpArchive" => "", "fingerprint" => "", "error"=>_PB_WITH_EXTRACTION_OF_CONTAINER."#".$tmp.$tmpArchive.DIRECTORY_SEPARATOR.$tmpArchiveBis);
-                            return $result;
-                        }
-                        $result = array("status" => "ok", "path"=>$tmp.$tmpArchive.DIRECTORY_SEPARATOR.$tmpArchiveBis.DIRECTORY_SEPARATOR.$fileInfos['offset_doc'], "mime_type"=>self::getMimeType($tmp.$tmpArchive.DIRECTORY_SEPARATOR.$tmpArchiveBis.DIRECTORY_SEPARATOR.$fileInfos['offset_doc']), "format"=>$format, "fingerprint" => self::doFingerprint($tmp.$tmpArchive.DIRECTORY_SEPARATOR.$tmpArchiveBis.DIRECTORY_SEPARATOR.$fileInfos['offset_doc'], $fingerprintMode), "tmpArchive"=>$tmp.$tmpArchive, "error"=> "");
-                        unlink($tmp.$tmpArchive.DIRECTORY_SEPARATOR.$fileScan);
-                        break;
+						preg_match("'CI'", $fileScan, $out);
+						if(count($out[0]) == 1) {
+							$_exec_error_bis = "";
+							$tmpArchiveBis = uniqid(rand());
+							if(mkdir($tmp.$tmpArchive.DIRECTORY_SEPARATOR.$tmpArchiveBis)) {
+								if(DIRECTORY_SEPARATOR == "/") {
+									$commandBis = "7z e -y -o".escapeshellarg($tmp.$tmpArchive.DIRECTORY_SEPARATOR.$tmpArchiveBis)." ".escapeshellarg($tmp.$tmpArchive.DIRECTORY_SEPARATOR.$fileScan);
+								} else {
+									$commandBis = "\"".str_replace("\\", "\\\\", $_SESSION['docserversFeatures']['DOCSERVERS']['PATHTOCOMPRESSTOOL'])."\" e -y -o".escapeshellarg($tmp.$tmpArchive.DIRECTORY_SEPARATOR.$tmpArchiveBis)." ".escapeshellarg($tmp.$tmpArchive.DIRECTORY_SEPARATOR.$fileScan);
+								}
+								$tmpCmd = "";
+								exec($commandBis, $tmpCmd, $_exec_error_bis);
+								if($_exec_error_bis > 0) {
+									$result = array("status" => "ko", "path" => "", "mime_type" => "", "format" => "", "tmpArchive" => "", "fingerprint" => "", "error"=>_PB_WITH_EXTRACTION_OF_CONTAINER."#".$_exec_error_bis);
+								}
+							} else {
+								$result = array("status" => "ko", "path" => "", "mime_type" => "", "format" => "", "tmpArchive" => "", "fingerprint" => "", "error"=>_PB_WITH_EXTRACTION_OF_CONTAINER."#".$tmp.$tmpArchive.DIRECTORY_SEPARATOR.$tmpArchiveBis);
+								return $result;
+							}
+							$path = str_replace($fileScan, "", $tmp . $tmpArchive . DIRECTORY_SEPARATOR . $tmpArchiveBis . DIRECTORY_SEPARATOR . $fileInfos['offset_doc']);
+							$path = str_replace("#", DIRECTORY_SEPARATOR, $path);
+							$result = array("status" => "ok", "path"=>$path, "mime_type"=>self::getMimeType($path), "format"=>$format, "fingerprint" => self::doFingerprint($path, $fingerprintMode), "tmpArchive"=>$tmp . $tmpArchive, "error"=> "");
+							unlink($tmp.$tmpArchive.DIRECTORY_SEPARATOR.$fileScan);
+							break;
+						}
                     }
                 }
             } else {
@@ -909,11 +913,11 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
         }
     }
 
-    public function retrieveDocserverNetLinkOfResource($gedId, $tableName) {
+    public function retrieveDocserverNetLinkOfResource($gedId, $tableName, $adrTable) {
         $adr = array();
         $resource = new resource();
         $whereClause = " and 1=1";
-        $adr = $resource->getResourceAdr($tableName, $gedId, $whereClause);
+        $adr = $resource->getResourceAdr($tableName, $gedId, $whereClause, $adrTable);
         if($adr['status'] == "ko") {
             $result = array("status" => "ko", "value" => "", "error" => _RESOURCE_NOT_EXISTS);
         } else {
@@ -929,7 +933,7 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
         return $result;
     }
 
-    public function viewResource($gedId, $tableName) {
+    public function viewResource($gedId, $tableName, $adrTable) {
         $coreTools = new core_tools();
         $whereClause = "";
         if($_SESSION['origin'] <> "basket" && $_SESSION['origin'] <> "workflow") {
@@ -943,7 +947,7 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
         }
         $adr = array();
         $resource = new resource();
-        $adr = $resource->getResourceAdr($tableName, $gedId, $whereClause);
+        $adr = $resource->getResourceAdr($tableName, $gedId, $whereClause, $adrTable);
         //$coreTools->show_array($adr);exit;
         if($adr['status'] == "ko") {
             $result = array("status" => "ko", "mime_type" => "", "ext" => "", "file_content" => "", "tmp_path" => "", "error" => _NO_RIGHT_ON_RESOURCE_OR_RESOURCE_NOT_EXISTS);
