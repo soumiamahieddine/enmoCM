@@ -738,7 +738,7 @@ function check_docserver($coll_id) {
 	}
 	require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."docservers_controler.php");
 	$docserverControler = new docservers_controler();
-	$fileInfos = array("tmpDir"=>$_SESSION['config']['tmppath'], "size"=>$_SESSION['upfile']['size'], "md5"=>$_SESSION['upfile']['md5'], "format"=>$_SESSION['upfile']['format'], "tmpFileName"=>$new_file_name);
+	$fileInfos = array("tmpDir"=>$_SESSION['config']['tmppath'], "size"=>$_SESSION['upfile']['size'], "format"=>$_SESSION['upfile']['format'], "tmpFileName"=>$new_file_name);
 	$storeResult = array();
 	$storeResult = $docserverControler->storeResourceOnDocserver($coll_id, $fileInfos);
 	if($storeResult['error'] <> "") {
@@ -1261,7 +1261,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
 			array_push($_SESSION['data'], array('column' => 'arbatch_id', 'value' => $pa_return_value, 'type' => "integer"));
 		}
 		//print_r($_SESSION['data']);
-		$res_id = $resource->load_into_db($table ,$_SESSION['indexing']['destination_dir'], $_SESSION['indexing']['file_destination_name'].".".$_SESSION['upfile']['format'], $_SESSION['indexing']['path_template'], $_SESSION['indexing']['docserver_id'],  $_SESSION['data'], $_SESSION['config']['databasetype']);
+		$res_id = $resource->load_into_db($table ,$_SESSION['indexing']['destination_dir'], $_SESSION['indexing']['file_destination_name'], $_SESSION['indexing']['path_template'], $_SESSION['indexing']['docserver_id'],  $_SESSION['data'], $_SESSION['config']['databasetype']);
 		//echo 'load '.$res_id. " ";
 		if($res_id <> false)
 		{
@@ -1333,7 +1333,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
 		array_push($_SESSION['data'], array('column' => "res_id_master", 'value' => $id_doc, 'type' => "integer"));
 		array_push($_SESSION['data'], array('column' => "coll_id", 'value' => $db->protect_string_db($coll_id), 'type' => "string"));
 		
-		$res_id = $resource->load_into_db($_SESSION['tablename']['attach_res_attachments'], $_SESSION['indexing']['destination_dir'], $_SESSION['indexing']['file_destination_name'].".".$_SESSION['upfile']['format'], $_SESSION['indexing']['path_template'], $_SESSION['indexing']['docserver_id'], $_SESSION['data'], $_SESSION['config']['databasetype']);
+		$res_id = $resource->load_into_db($_SESSION['tablename']['attach_res_attachments'], $_SESSION['indexing']['destination_dir'], $_SESSION['indexing']['file_destination_name'], $_SESSION['indexing']['path_template'], $_SESSION['indexing']['docserver_id'], $_SESSION['data'], $_SESSION['config']['databasetype']);
 
 		if($res_id == false)
 		{
