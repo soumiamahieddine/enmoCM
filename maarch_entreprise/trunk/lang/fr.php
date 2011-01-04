@@ -848,7 +848,7 @@ if (!defined('_SCANBATCH')) define( '_SCANBATCH', 'Lot de num&eacute;risation');
 if (!defined('_SOURCE')) define( '_SOURCE', 'Source');
 if (!defined('_DOCLANGUAGE')) define( '_DOCLANGUAGE', 'Langage du document');
 if (!defined('_MAILDATE')) define( '_MAILDATE', 'Date du courrier');
-if (!defined('_MD5')) define( '_MD5', 'Empreinte MD5');
+if (!defined('_MD5')) define( '_MD5', 'Empreinte Num&eacute;rique');
 if (!defined('_WORK_BATCH')) define( '_WORK_BATCH', 'Lot de chargement');
 if (!defined('_DONE')) define( '_DONE','Actions effectu&eacute;es');
 if (!defined('_ANSWER_TYPES_DONE')) define( '_ANSWER_TYPES_DONE', 'Type(s) de r&eacute;ponses effectu&eacute;es');
