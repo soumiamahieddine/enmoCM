@@ -834,7 +834,7 @@ if (!defined('_SCANBATCH')) define('_SCANBATCH', 'Scan batch');
 if (!defined('_SOURCE')) define('_SOURCE', 'Origin');
 if (!defined('_DOCLANGUAGE')) define('_DOCLANGUAGE', 'Document language');
 if (!defined('_MAILDATE')) define('_MAILDATE', 'Document date');
-if (!defined('_MD5')) define('_MD5', 'MD5 hash');
+if (!defined('_MD5')) define('_MD5', 'fingerprint');
 if (!defined('_WORK_BATCH')) define('_WORK_BATCH', 'Load batch');
 if (!defined('_DONE')) define('_DONE','Description');
 if (!defined('_ANSWER_TYPES_DONE')) define('_ANSWER_TYPES_DONE', 'Type of answer(s)');
