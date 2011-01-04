@@ -80,10 +80,18 @@ if($s_id == '') {
 			$table = $_SESSION['collections'][0]['table'];
 		}
 	}
+	for ($cptColl=0;$cptColl<count($_SESSION['collections']);$cptColl++) {
+		if($table == $_SESSION['collections'][$cptColl]['table'] || $table == $_SESSION['collections'][$cptColl]['view']) {
+			$adrTable =  $_SESSION['collections'][$cptColl]['adr'];
+		}
+	}
+	if($adrTable == "") {
+		$adrTable = $_SESSION['collections'][0]['adr'];
+	}
 	$docserverControler = new docservers_controler();
 	$viewResourceArr = array();
 	$docserverLocation = array();
-	$docserverLocation = $docserverControler->retrieveDocserverNetLinkOfResource($s_id, $table);
+	$docserverLocation = $docserverControler->retrieveDocserverNetLinkOfResource($s_id, $table, $adrTable);
 	if($docserverLocation['value'] <> "" && $_SESSION['config']['coreurl'] <> $docserverLocation['value']) {
 		$connexion = new dbquery();
 		$connexion->connect();
@@ -104,7 +112,7 @@ if($s_id == '') {
 		}
 		header("location: ".$docserverLocation['value']."ws_client.php?id=".$s_id."&table=".$table."&proxy1=".$proxy1."&proxy2=".$proxy2);
 	} else {
-		$viewResourceArr = $docserverControler->viewResource($s_id, $table);
+		$viewResourceArr = $docserverControler->viewResource($s_id, $table, $adrTable);
 		if($viewResourceArr['error'] <> "") {
 			//...
 		} else {
