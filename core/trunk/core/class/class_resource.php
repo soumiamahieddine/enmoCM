@@ -405,10 +405,9 @@
 		$this->query($query);
 		if ($this->nb_result() > 0) {
 			$line = $this->fetch_object();
-			$fingerprint = $line->fingerprint;
 			$format = $line->format;
 			if($line->is_multi_docservers == "Y") {
-				$query = "select res_id, docserver_id, path, filename, offset_doc, adr_priority from " . $adrTable . " where res_id = " . $resId . " order by adr_priority";
+				$query = "select res_id, docserver_id, path, filename, offset_doc, fingerprint, adr_priority from " . $adrTable . " where res_id = " . $resId . " order by adr_priority";
 				$this->query($query);
 				if ($this->nb_result() > 0) {
 					$line = $this->fetch_object();
@@ -418,7 +417,7 @@
 					return $control;
 				}
 			}
-			$control = array("status" => "ok", "docserver_id" => $line->docserver_id, "path" => $line->path, "filename" => $line->filename, "format" => $format, "fingerprint" => $fingerprint, "offset_doc" => $line->offset_doc, "error" => "");
+			$control = array("status" => "ok", "docserver_id" => $line->docserver_id, "path" => $line->path, "filename" => $line->filename, "format" => $format, "fingerprint" => $line->fingerprint, "offset_doc" => $line->offset_doc, "error" => "");
 			$this->disconnect();
 			return $control;
 		} else {
