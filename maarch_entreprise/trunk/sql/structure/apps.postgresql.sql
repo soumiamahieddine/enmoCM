@@ -194,6 +194,7 @@ CREATE TABLE adr_x
   path character varying(255) DEFAULT NULL::character varying,
   filename character varying(255) DEFAULT NULL::character varying,
   offset_doc character varying(255) DEFAULT NULL::character varying,
+  fingerprint character varying(255) DEFAULT NULL::character varying,
   adr_priority integer NOT NULL,
   CONSTRAINT adr_x_pkey PRIMARY KEY (res_id, docserver_id)
 )
