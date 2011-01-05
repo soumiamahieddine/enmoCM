@@ -200,6 +200,7 @@ while ($GLOBALS['state'] <> "END") {
 					$GLOBALS['exitCode'] = 16;
 					$GLOBALS['state'] = "END";break;
 				}
+				$currentRecordInStack['fingerprint'] = $GLOBALS['docserverControler']->doFingerprint($sourceFilePath, $GLOBALS['docservers'][$GLOBALS['currentStep']]['fingerprint_mode']);
 				$GLOBALS['logger']->write("current record:".$currentRecordInStack['res_id'], 'INFO');
 				// if NEW operation we have to add new states
 				if ($GLOBALS['steps'][$GLOBALS['currentStep']]['step_operation'] == "COPY" || $GLOBALS['steps'][$GLOBALS['currentStep']]['step_operation'] == "MOVE") {
@@ -234,7 +235,7 @@ while ($GLOBALS['state'] <> "END") {
 		/**********************************************************************************************/
 		case "ADD_RECORD" :
 			$cptResInContainer++;
-			array_push($resInContainer, array("res_id" => $currentRecordInStack['res_id'], "source_path" => $sourceFilePath));
+			array_push($resInContainer, array("res_id" => $currentRecordInStack['res_id'], "source_path" => $sourceFilePath, "fingerprint" => $GLOBALS['docserverControler']->doFingerprint($sourceFilePath, $GLOBALS['docservers'][$GLOBALS['currentStep']]['fingerprint_mode'])));
 			$offsetDoc = "";
 			$query = "update " . _LC_STACK_TABLE_NAME . " set status = 'W' where policy_id = '" . $GLOBALS['policy'] . "' and cycle_id = '" . $GLOBALS['cycle'] . "' and cycle_step_id = '" . $GLOBALS['currentStep'] . "' and coll_id = '" . $GLOBALS['collection'] . "' and res_id = " . $currentRecordInStack['res_id'];
 			do_query($GLOBALS['db'], $query);
