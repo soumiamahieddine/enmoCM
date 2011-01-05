@@ -633,6 +633,7 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
 			return $storeInfos;
 		}
 		$cp = copy($sourceFilePath, $destinationDir . $fileDestinationName);
+		self::setRights($destinationDir . $fileDestinationName, $sourceFilePath);
 		if($cp == false) {
 			$storeInfos = array('error'=>_DOCSERVER_COPY_ERROR);
 			return $storeInfos;
@@ -849,11 +850,12 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
         //TODO:extract on the maarch tmp dir on server or on the fly in the docserver dir ?
         $fileNameOnTmp = $tmp.rand()."_".md5_file($fileInfos['path_to_file'])."_".$fileInfos['filename'];
         $cp = copy($fileInfos['path_to_file'], $fileNameOnTmp);
+		self::setRights($fileNameOnTmp, $fileInfos['path_to_file']);
         if($cp == false) {
             $result = array("status" => "ko", "path" => "", "mime_type" => "", "format" => "", "tmpArchive" => "", "fingerprint" => "", "error" => _TMP_COPY_ERROR);
             return $result;
         } else {
-            $_exec_error = "";
+            $execError = "";
             $tmpArchive = uniqid(rand());
             if(mkdir($tmp.$tmpArchive)) {
                 if(DIRECTORY_SEPARATOR == "/") {
@@ -862,9 +864,9 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
                     $command = "\"".str_replace("\\", "\\\\", $_SESSION['docserversFeatures']['DOCSERVERS']['PATHTOCOMPRESSTOOL'])."\" e -y -o".escapeshellarg($tmp.$tmpArchive)." ".escapeshellarg($fileNameOnTmp);
                 }
                 $tmpCmd = "";
-                exec($command, $tmpCmd, $_exec_error);
-                if($_exec_error > 0) {
-                    $result = array("status" => "ko", "path" => "", "mime_type" => "", "format" => "", "tmpArchive" => "", "fingerprint" => "", "error"=>_PB_WITH_EXTRACTION_OF_CONTAINER."#".$_exec_error);
+                exec($command, $tmpCmd, $execError);
+                if($execError > 0) {
+                    $result = array("status" => "ko", "path" => "", "mime_type" => "", "format" => "", "tmpArchive" => "", "fingerprint" => "", "error"=>_PB_WITH_EXTRACTION_OF_CONTAINER."#".$execError);
                     return $result;
                 }
             } else {
@@ -880,7 +882,7 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
                     } else {
 						preg_match("'CI'", $fileScan, $out);
 						if(count($out[0]) == 1) {
-							$_exec_error_bis = "";
+							$execError = "";
 							$tmpArchiveBis = uniqid(rand());
 							if(mkdir($tmp.$tmpArchive.DIRECTORY_SEPARATOR.$tmpArchiveBis)) {
 								if(DIRECTORY_SEPARATOR == "/") {
@@ -889,9 +891,9 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
 									$commandBis = "\"".str_replace("\\", "\\\\", $_SESSION['docserversFeatures']['DOCSERVERS']['PATHTOCOMPRESSTOOL'])."\" e -y -o".escapeshellarg($tmp.$tmpArchive.DIRECTORY_SEPARATOR.$tmpArchiveBis)." ".escapeshellarg($tmp.$tmpArchive.DIRECTORY_SEPARATOR.$fileScan);
 								}
 								$tmpCmd = "";
-								exec($commandBis, $tmpCmd, $_exec_error_bis);
-								if($_exec_error_bis > 0) {
-									$result = array("status" => "ko", "path" => "", "mime_type" => "", "format" => "", "tmpArchive" => "", "fingerprint" => "", "error"=>_PB_WITH_EXTRACTION_OF_CONTAINER."#".$_exec_error_bis);
+								exec($commandBis, $tmpCmd, $execError);
+								if($execError > 0) {
+									$result = array("status" => "ko", "path" => "", "mime_type" => "", "format" => "", "tmpArchive" => "", "fingerprint" => "", "error"=>_PB_WITH_EXTRACTION_OF_CONTAINER."#".$execError);
 								}
 							} else {
 								$result = array("status" => "ko", "path" => "", "mime_type" => "", "format" => "", "tmpArchive" => "", "fingerprint" => "", "error"=>_PB_WITH_EXTRACTION_OF_CONTAINER."#".$tmp.$tmpArchive.DIRECTORY_SEPARATOR.$tmpArchiveBis);
@@ -1062,6 +1064,30 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
 		}
 		return $result;
 	}
+	
+	function setRights($dest, $source) {
+		chown($dest, fileowner($source));
+		chgrp($dest, filegroup($source));
+		chmod($dest, fileperms($source));
+		/*echo fileowner($source)."\r\n";
+		echo fileowner($dest)."\r\n";
+		echo $source."\r\n";
+		echo $dest."\r\n";*/
+	}
+	
+	function recurseSetRights($dest, $source) {
+		$d = opendir($mypath);
+		while (($file = readdir($d)) !== false) {
+			if ($file != "." && $file != "..") {
+				$typepath = $mypath . "/" . $file ;
+				if (filetype ($typepath) == 'dir') {
+					recurseSetRights ($typepath, $source);
+				}
+				chown($typepath, $uid);
+				chgrp($typepath, $gid);
+			}
+		}
+	 }
 }
 
 ?>
