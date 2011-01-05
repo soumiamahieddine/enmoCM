@@ -12,6 +12,7 @@ function createAip($resInContainer) {
 	for ($cptRes=0;$cptRes<count($resInContainer);$cptRes++) {
 		$resInContainer[$cptRes]['offset_doc'] = str_pad($cptRes, 4, "0", STR_PAD_LEFT) . "." . strtolower($GLOBALS['func']->extractFileExt($resInContainer[$cptRes]['source_path']));
 		$cp = copy($resInContainer[$cptRes]['source_path'], $tmpDir . DIRECTORY_SEPARATOR . $resInContainer[$cptRes]['offset_doc']);
+		$GLOBALS['docserverControler']->setRights($tmpDir . DIRECTORY_SEPARATOR . $resInContainer[$cptRes]['offset_doc'], $GLOBALS['docservers'][$GLOBALS['currentStep']]['docserver']['path_template']);
 		if($cp == false) {
 			$storeInfos = array('error'=>_DOCSERVER_COPY_ERROR);
 			return $storeInfos;
@@ -53,6 +54,7 @@ function createAip($resInContainer) {
 	array_push($arrayOfFileToCompress, $piName);
 	$newSourceFilePath = doCompression("AIP", $arrayOfFileToCompress);
 	rename($newSourceFilePath, str_replace(strtolower($GLOBALS['docservers'][$GLOBALS['currentStep']]['compression_mode']), "aip", $newSourceFilePath));
+	$GLOBALS['docserverControler']->setRights(str_replace(strtolower($GLOBALS['docservers'][$GLOBALS['currentStep']]['compression_mode']), "aip", $newSourceFilePath), $GLOBALS['docservers'][$GLOBALS['currentStep']]['docserver']['path_template']);
 	$result = array();
 	$result['resInContainer'] = $resInContainer;
 	$result['newSourceFilePath'] = str_replace(strtolower($GLOBALS['docservers'][$GLOBALS['currentStep']]['compression_mode']), "aip", $newSourceFilePath);

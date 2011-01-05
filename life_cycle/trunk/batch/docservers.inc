@@ -16,8 +16,8 @@ function doCompression($targeFile, $arrayOfFileToCompress) {
 		$command = "\"" . str_replace("\\", "\\\\", $_SESSION['docserversFeatures']['DOCSERVERS']['PATHTOCOMPRESSTOOL']) . "\" a -y -t" . strtolower($GLOBALS['docservers'][$GLOBALS['currentStep']]['compression_mode']) . " " . escapeshellarg($GLOBALS['TmpDirectory'] . $targeFile) . " " . $listOfFileToCompress;
 	}
 	//echo $command."\r\n";exit;
-	exec($command, $tmpCmd, $ExecError);
-	if($ExecError > 0) {
+	exec($command, $tmpCmd, $execError);
+	if($execError > 0) {
 		$GLOBALS['logger']->write('Pb with compression:' .$command . ' ' . $tmpCmd, 'ERROR', 23);
 		exit(23);
 	}
@@ -28,6 +28,7 @@ function extractAip($path) {
 	$path = str_replace('#', DIRECTORY_SEPARATOR, $path);
 	$fileNameOnTmp = $GLOBALS['TmpDirectory'] . rand();
 	$cp = copy($path, $fileNameOnTmp);
+	$GLOBALS['docserverControler']->setRights($fileNameOnTmp, $GLOBALS['docservers'][$GLOBALS['currentStep']]['docserver']['path_template']);
 	$control = array();
 	$control = $GLOBALS['docserverControler']->controlFingerprint($path, $fileNameOnTmp, $GLOBALS['docserverSourceFingerprint']);
 	if($control['error'] <> "") {
@@ -40,8 +41,8 @@ function extractAip($path) {
 		$command = "\"" . str_replace("\\", "\\\\", $_SESSION['docserversFeatures']['DOCSERVERS']['PATHTOCOMPRESSTOOL']) . "\" e -y -o" . escapeshellarg($GLOBALS['TmpDirectory'])." ".escapeshellarg($fileNameOnTmp);
 	}
 	$tmpCmd = "";
-	exec($command, $tmpCmd, $_exec_error);
-	if($ExecError > 0) {
+	exec($command, $tmpCmd, $execError);
+	if($execError > 0) {
 		$GLOBALS['logger']->write('Pb with extract:' . $command . ' ' . $tmpCmd, 'ERROR', 24);
 		exit(24);
 	}
@@ -54,8 +55,8 @@ function extractAip($path) {
 		$command = "\"" . str_replace("\\", "\\\\", $_SESSION['docserversFeatures']['DOCSERVERS']['PATHTOCOMPRESSTOOL']) . "\" e -y -o" . escapeshellarg($GLOBALS['TmpDirectory'] . "CI") . " " . escapeshellarg($fileNameOnTmp);
 	}
 	$tmpCmd = "";
-	exec($command, $tmpCmd, $_exec_error);
-	if($ExecError > 0) {
+	exec($command, $tmpCmd, $execError);
+	if($execError > 0) {
 		$GLOBALS['logger']->write('Pb with extract:' . $command . ' ' . $tmpCmd, 'ERROR', 24);
 		exit(24);
 	}
