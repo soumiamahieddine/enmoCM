@@ -42,22 +42,6 @@
 		<size>100</size>
 	</WORKBATCH>
 	<COLLECTION>
-		<id>letterbox_coll</id>
-		<label>_LETTERBOX</label>
-		<table>res_letterbox</table>
-		<view>res_view_letterbox</view>
-		<adr>adr_letterbox</adr>
-		<index_file>index_letterbox.xml</index_file>
-		<script_add>index_letterbox.php</script_add>
-		<script_search>search_letterbox.php</script_search>
-		<script_search_result>list_results_letterbox.php</script_search_result>
-		<script_details>details.php</script_details>
-		<extensions>
-			<table>mlb_coll_ext</table>
-		</extensions>
-		<path_to_lucene_index>C:\Maarch\indexes\entreprise\letterbox_coll\</path_to_lucene_index>
-	</COLLECTION>
-	<COLLECTION>
 		<id>apa_coll</id>
 		<label>_APA_COLL</label>
 		<table>res_apa</table>
@@ -73,22 +57,22 @@
 		</extensions>
 		<path_to_lucene_index></path_to_lucene_index>
 	</COLLECTION>
-
-<!--	<COLLECTION>
-		<id>coll_2</id>
+	<COLLECTION>
+		<id>res_coll</id>
 		<label>_INVOICES</label>
-		<table>res_invoices</table>
-		<view>res_view_invoices</view>
-		<index_file>index2.xml</index_file>
-		<script_add>index_invoices.php</script_add>
-		<script_search>search_without_folder.php</script_search>
-		<script_search_result>list_results_invoices.php</script_search_result>
-		<script_details>details_invoices.php</script_details>
+		<table>res_x</table>
+		<view>res_view</view>
+		<adr>adr_x</adr>
+		<index_file>index.xml</index_file>
+		<script_add>index.php</script_add>
+		<script_search>search.php</script_search>
+		<script_search_result>list_results.php</script_search_result>
+		<script_details>details.php</script_details>
 		<extensions>
 			<table></table>
 		</extensions>
-		<path_to_lucene_index>C:\Maarch\indexes\sample\coll_2\</path_to_lucene_index>
-	</COLLECTION>-->
+		<path_to_lucene_index>C:\Maarch\indexes\sample\res_coll\</path_to_lucene_index>
+	</COLLECTION>
 	<HISTORY>
 		<usersdel>true</usersdel>
 		<usersban>true</usersban>
@@ -181,6 +165,10 @@
 		<comment>_ATTACHMENTS_COMMENT</comment>
 	</MODULES>
 	<MODULES>
+   		<moduleid>autofoldering</moduleid>
+		<comment>_AUTOFOLDERING</comment>
+	</MODULES>
+	<MODULES>
    		<moduleid>basket</moduleid>
 		<comment>_BASKETS_COMMENT</comment>
 	</MODULES><MODULES>
@@ -223,8 +211,12 @@
    		<moduleid>postindexing</moduleid>
 		<comment>_POSTINDEXING</comment>
 	</MODULES>-->
-	<MODULES>
+	<!--<MODULES>
    		<moduleid>webtwain</moduleid>
 		<comment>_WEBTWAIN_COMMENT</comment>
+	</MODULES>-->
+	<MODULES>
+   		<moduleid>life_cycle</moduleid>
+		<comment>_LIFE_CYCLE_COMMENT</comment>
 	</MODULES>
 </ROOT>
