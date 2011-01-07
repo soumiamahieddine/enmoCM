@@ -339,12 +339,12 @@ CREATE TABLE mlb_doctype_ext (
 WITH (OIDS=FALSE);
 
 CREATE OR REPLACE VIEW res_view AS
- SELECT r.tablename, r.is_multi_docservers, r.res_id, r.title, r.page_count, r.identifier, r.doc_date, r.type_id,
+ SELECT r.tablename, r.is_multi_docservers, r.res_id, r.title, r.subject, r.page_count, r.identifier, r.doc_date, r.type_id,
  d.description AS type_label, d.doctypes_first_level_id, dfl.doctypes_first_level_label, d.doctypes_second_level_id,
  dsl.doctypes_second_level_label, r.format, r.typist, r.creation_date, r.relation, r.docserver_id,
- r.folders_system_id, f.folder_id, r.path, r.filename, r.fingerprint, r.offset_doc, r.filesize, r.status,
+ r.folders_system_id, r.path, r.filename, r.fingerprint, r.offset_doc, r.filesize, r.status,
  r.work_batch, r.arbatch_id, r.arbox_id,  r.is_paper, r.scan_date, r.scan_user,r.scan_location,r.scan_wkstation,
- r.scan_batch,r.doc_language,r.description,r.source,r.initiator,r.destination,r.dest_user,
+ r.scan_batch,r.doc_language,r.description,r.source,r.initiator,r.destination,r.dest_user,r.policy_id,r.cycle_id,
  r.custom_t1 AS doc_custom_t1, r.custom_t2 AS doc_custom_t2, r.custom_t3 AS doc_custom_t3,
  r.custom_t4 AS doc_custom_t4, r.custom_t5 AS doc_custom_t5, r.custom_t6 AS doc_custom_t6,
  r.custom_t7 AS doc_custom_t7, r.custom_t8 AS doc_custom_t8, r.custom_t9 AS doc_custom_t9,
@@ -356,24 +356,11 @@ CREATE OR REPLACE VIEW res_view AS
  r.custom_d10 AS doc_custom_d10, r.custom_n1 AS doc_custom_n1, r.custom_n2 AS doc_custom_n2,
  r.custom_n3 AS doc_custom_n3, r.custom_n4 AS doc_custom_n4, r.custom_n5 AS doc_custom_n5,
  r.custom_f1 AS doc_custom_f1, r.custom_f2 AS doc_custom_f2, r.custom_f3 AS doc_custom_f3,
- r.custom_f4 AS doc_custom_f4, r.custom_f5 AS doc_custom_f5,
- f.foldertype_id, ft.foldertype_label, f.custom_t1 AS fold_custom_t1, f.custom_t2 AS fold_custom_t2,
- f.custom_t3 AS fold_custom_t3, f.custom_t4 AS fold_custom_t4, f.custom_t5 AS fold_custom_t5,
- f.custom_t6 AS fold_custom_t6, f.custom_t7 AS fold_custom_t7, f.custom_t8 AS fold_custom_t8,
- f.custom_t9 AS fold_custom_t9, f.custom_t10 AS fold_custom_t10, f.custom_t11 AS fold_custom_t11,
- f.custom_t12 AS fold_custom_t12, f.custom_t13 AS fold_custom_t13, f.custom_t14 AS fold_custom_t14,
- f.custom_t15 AS fold_custom_t15, f.custom_d1 AS fold_custom_d1, f.custom_d2 AS fold_custom_d2,
- f.custom_d3 AS fold_custom_d3, f.custom_d4 AS fold_custom_d4, f.custom_d5 AS fold_custom_d5,
- f.custom_d6 AS fold_custom_d6, f.custom_d7 AS fold_custom_d7, f.custom_d8 AS fold_custom_d8,
- f.custom_d9 AS fold_custom_d9, f.custom_d10 AS fold_custom_d10, f.custom_n1 AS fold_custom_n1,
- f.custom_n2 AS fold_custom_n2, f.custom_n3 AS fold_custom_n3, f.custom_n4 AS fold_custom_n4,
- f.custom_n5 AS fold_custom_n5, f.custom_f1 AS fold_custom_f1, f.custom_f2 AS fold_custom_f2,
- f.custom_f3 AS fold_custom_f3, f.custom_f4 AS fold_custom_f4, f.custom_f5 AS fold_custom_f5,
- f.is_complete AS fold_complete, f.status AS fold_status, f.folder_name, f.creation_date as fold_creation_date
-   FROM  folders f, doctypes d, foldertypes ft, doctypes_first_level dfl, doctypes_second_level dsl, res_x r
-  WHERE r.folders_system_id = f.folders_system_id AND r.type_id = d.type_id AND f.foldertype_id = ft.foldertype_id
-  AND f.status::text <> 'DEL'::text AND d.doctypes_first_level_id = dfl.doctypes_first_level_id AND
-  d.doctypes_second_level_id = dsl.doctypes_second_level_id ;
+ r.custom_f4 AS doc_custom_f4, r.custom_f5 AS doc_custom_f5
+   FROM  doctypes d, doctypes_first_level dfl, doctypes_second_level dsl, res_x r
+   WHERE r.type_id = d.type_id
+   AND d.doctypes_first_level_id = dfl.doctypes_first_level_id 
+   AND d.doctypes_second_level_id = dsl.doctypes_second_level_id;
 
 -- View without cases :
 --CREATE OR REPLACE VIEW res_view_letterbox AS 

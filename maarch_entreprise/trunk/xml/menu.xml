@@ -30,4 +30,10 @@
 		<url>index.php?page=search_customer&amp;dir=indexing_searching</url>
 		<style>market_search</style>
 	</MENU>
+	<MENU>
+		<id>adv_search_invoices</id>
+		<libconst>_ADV_SEARCH_INVOICES</libconst>
+		<url>index.php?page=search_adv_invoices&amp;dir=indexing_searching</url>
+		<style>searching</style>
+	</MENU>
 </ROOT>
