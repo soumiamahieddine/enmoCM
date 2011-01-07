@@ -63,11 +63,11 @@
 		<table>res_x</table>
 		<view>res_view</view>
 		<adr>adr_x</adr>
-		<index_file>index.xml</index_file>
-		<script_add>index.php</script_add>
-		<script_search>search.php</script_search>
-		<script_search_result>list_results.php</script_search_result>
-		<script_details>details.php</script_details>
+		<index_file>index_invoices.xml</index_file>
+		<script_add>index_invoices.php</script_add>
+		<script_search>search_invoices.php</script_search>
+		<script_search_result>list_results_invoices.php</script_search_result>
+		<script_details>details_invoices.php</script_details>
 		<extensions>
 			<table></table>
 		</extensions>
