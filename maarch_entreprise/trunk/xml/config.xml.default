@@ -42,22 +42,6 @@
 		<size>100</size>
 	</WORKBATCH>
 	<COLLECTION>
-		<id>apa_coll</id>
-		<label>_APA_COLL</label>
-		<table>res_apa</table>
-		<view>res_view_apa</view>
-		<adr>adr_apa</adr>
-		<index_file>index.xml</index_file>
-		<script_add></script_add>
-		<script_search></script_search>
-		<script_search_result></script_search_result>
-		<script_details></script_details>
-		<extensions>
-			<table></table>
-		</extensions>
-		<path_to_lucene_index></path_to_lucene_index>
-	</COLLECTION>
-	<COLLECTION>
 		<id>res_coll</id>
 		<label>_INVOICES</label>
 		<table>res_x</table>
@@ -72,6 +56,22 @@
 			<table></table>
 		</extensions>
 		<path_to_lucene_index>C:\Maarch\indexes\sample\res_coll\</path_to_lucene_index>
+	</COLLECTION>
+	<COLLECTION>
+		<id>apa_coll</id>
+		<label>_APA_COLL</label>
+		<table>res_apa</table>
+		<view>res_view_apa</view>
+		<adr>adr_apa</adr>
+		<index_file>index.xml</index_file>
+		<script_add></script_add>
+		<script_search></script_search>
+		<script_search_result></script_search_result>
+		<script_details></script_details>
+		<extensions>
+			<table></table>
+		</extensions>
+		<path_to_lucene_index></path_to_lucene_index>
 	</COLLECTION>
 	<HISTORY>
 		<usersdel>true</usersdel>
