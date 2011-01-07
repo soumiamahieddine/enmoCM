@@ -704,14 +704,17 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
     public function createPathOnDocServer($docServer) {
 		if (!is_dir($docServer . date("Y") . DIRECTORY_SEPARATOR)) {
 			mkdir($docServer . date("Y") . DIRECTORY_SEPARATOR, 0777);
+			self::setRights($docServer . date("Y") . DIRECTORY_SEPARATOR, $docServer);
 		}
 		if (!is_dir($docServer . date("Y") . DIRECTORY_SEPARATOR.date("m") . DIRECTORY_SEPARATOR)) {
 			mkdir($docServer . date("Y") . DIRECTORY_SEPARATOR.date("m") . DIRECTORY_SEPARATOR, 0777);
+			self::setRights($docServer . date("Y") . DIRECTORY_SEPARATOR.date("m") . DIRECTORY_SEPARATOR, $docServer);
 		}
 		if ($GLOBALS['wb'] <> "") {
 			$path = $docServer . date("Y") . DIRECTORY_SEPARATOR.date("m") . DIRECTORY_SEPARATOR . $GLOBALS['wb'] . DIRECTORY_SEPARATOR;
 			if (!is_dir($path)) {
 				mkdir($path, 0777);
+				self::setRights($path, $docServer);
 			} else {
 				return array("destinationDir" => "", "error" => "Folder alreay exists, workbatch already exist:" . $path);
 			}
@@ -739,7 +742,8 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
         //Docserver is empty
         if ($nbFiles == 0 ) {
             //Creates the directory
-            if (!mkdir($pathOnDocserver."0001",0000700)) {
+            if (!mkdir($pathOnDocserver . "0001",0000700)) {
+				self::setRights($pathOnDocserver . "0001" . DIRECTORY_SEPARATOR, $pathOnDocserver);
 				return array("destinationDir" => "", "fileDestinationName" => "", "error" => "Pb to create directory on the docserver:" . $pathOnDocserver);
             } else {
                 $destinationDir = $pathOnDocserver . "0001" . DIRECTORY_SEPARATOR;
@@ -758,6 +762,7 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
             if($nbFiles2 >= 1000 ) {
                 $newDir = ($nbFiles) + 1;
                 if (!mkdir($pathOnDocserver.str_pad($newDir, 4, "0", STR_PAD_LEFT), 0000700)) {
+					self::setRights($pathOnDocserver.str_pad($newDir, 4, "0", STR_PAD_LEFT) . DIRECTORY_SEPARATOR, $pathOnDocserver);
                     return array("destinationDir" => "", "fileDestinationName" => "", "error" => "Pb to create directory on the docserver:" . $pathOnDocserver.str_pad($newDir, 4, "0", STR_PAD_LEFT));
                 } else {
                     $destinationDir = $pathOnDocserver.str_pad($newDir, 4, "0", STR_PAD_LEFT) . DIRECTORY_SEPARATOR;
