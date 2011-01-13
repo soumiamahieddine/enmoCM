@@ -1071,9 +1071,9 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
 	}
 	
 	function setRights($dest, $source) {
-		chown($dest, fileowner($source));
-		chgrp($dest, filegroup($source));
-		chmod($dest, fileperms($source));
+		//chown($dest, fileowner($source));
+		//chgrp($dest, filegroup($source));
+		//chmod($dest, fileperms($source));
 		/*echo fileowner($source)."\r\n";
 		echo fileowner($dest)."\r\n";
 		echo $source."\r\n";
