@@ -8,7 +8,11 @@ function getSourceResourcePath($resId) {
 		do_query($GLOBALS['db'], $query);
 	}
 	$resRecordset = $GLOBALS['db']->fetch_object();
-	$sourceFilePath = $resRecordset->path . $resRecordset->filename . $resRecordset->offset_doc;
+	if($resRecordset->offset_doc <> "") {
+		$sourceFilePath = $resRecordset->path . $resRecordset->filename . DIRECTORY_SEPARATOR . $resRecordset->offset_doc;
+	} else {
+		$sourceFilePath = $resRecordset->path . $resRecordset->filename;
+	}
 	if ($GLOBALS['docserverSourcePath'] == "") {
 		$query = "select path_template, docserver_type_id from " . _DOCSERVERS_TABLE_NAME . " where docserver_id = '" . $resRecordset->docserver_id . "'";
 		do_query($GLOBALS['db'], $query);

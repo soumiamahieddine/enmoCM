@@ -180,7 +180,7 @@ function validate_cs_submit($mode) {
 		$lc_cycle_steps->is_must_complete=true;
 	}
 	
-	$lc_cycle_steps->step_operation=$f->protect_string_db($f->wash($_REQUEST['step_operation'], "no", _STEP_OPERATION." ", 'yes', 0, '5'));
+	$lc_cycle_steps->step_operation=$f->protect_string_db($f->wash($_REQUEST['step_operation'], "no", _STEP_OPERATION." ", 'yes', 0, 32));
 	
 
 	$status= array();
