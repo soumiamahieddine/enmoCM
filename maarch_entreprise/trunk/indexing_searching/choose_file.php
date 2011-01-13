@@ -45,7 +45,7 @@ $core_tools->load_header('', true, false);
 		if($_SESSION['upfile']['error'] == 1)
 		{
 			?>
-	        <script type="text/javascript">
+	        <script language="javascript" type="text/javascript">
 				var test = window.top.document.getElementById('file_iframe');
 				if (test != null)
 				{
@@ -86,10 +86,19 @@ $core_tools->load_header('', true, false);
 			}
 		}
 		?>
-		<script type="text/javascript">
+		<script language="javascript" type="text/javascript">
+			function refreshFrame(frameId) {
+				frameId.src = '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&dir=indexing_searching&page=file_iframe';
+			}
+			
 			var test = window.top.document.getElementById('file_iframe');
-			if (test != null)
-			{
+			if (test.src == '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&dir=indexing_searching&page=file_iframe&#navpanes=0') {
+				//test.location.refresh();
+				//test.src = '';
+				refreshFrame(test);
+			}
+			
+			if (test != null) {
 				//fix pb with toolbar of pdf
 				test.src = '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&dir=indexing_searching&page=file_iframe&#navpanes=0';
 			}
