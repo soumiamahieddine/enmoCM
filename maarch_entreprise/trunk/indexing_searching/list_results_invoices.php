@@ -22,7 +22,7 @@
 /**
  * @brief  Search result list
  *
- * @file list_results_mlb.php
+ * @file list_results_invoices.php
  * @author Claire Figueras <dev@maarch.org>
  * @author Loïc Vinet <dev@maarch.org>
  * @date $date$
@@ -60,7 +60,7 @@ if ($mode == 'normal') {
     if (isset ($_REQUEST['level']) && ($_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1)) {
         $level = $_REQUEST['level'];
     }
-    $page_path = $_SESSION['config']['businessappurl'] . 'index.php?page=list_results_mlb&dir=indexing_searching&order=' . $order . '&order_field=' . $field . '&start=' . $start;
+    $page_path = $_SESSION['config']['businessappurl'] . 'index.php?page=list_results_invoices&dir=indexing_searching&order=' . $order . '&order_field=' . $field . '&start=' . $start;
     $page_label = _RESULTS;
     $page_id = "search_adv_result_invoices";
     $core_tools->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
@@ -465,15 +465,15 @@ if ($mode == 'frame') {
     $save_mode = false;
     $use_template = false;
     $special = true;
-    //$name = $_SESSION['config']['businessappurl'].'indexing_searching/list_results_mlb';
-    $name = $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=indexing_searching&page=list_results_mlb';
+    //$name = $_SESSION['config']['businessappurl'].'indexing_searching/list_results_invoices';
+    $name = $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=indexing_searching&page=list_results_invoices';
 }
 elseif ($mode == 'popup') {
     $export = false;
     $save_mode = false;
     $use_template = false;
     $special = true;
-    $name = 'list_results_mlb&dir=indexing_searching&action_form=' . $_REQUEST['action_form'] . '&modulename=' . $_REQUEST['modulename'];
+    $name = 'list_results_invoices&dir=indexing_searching&action_form=' . $_REQUEST['action_form'] . '&modulename=' . $_REQUEST['modulename'];
     $bool_radio_form = true;
     $method = 'get';
     $button_label = _VALIDATE;
@@ -490,7 +490,7 @@ elseif ($mode == 'popup') {
     $export = true;
     $save_mode = true;
     $special = false;
-    $name = 'list_results_mlb&dir=indexing_searching';
+    $name = 'list_results_invoices&dir=indexing_searching';
     $use_template = false;
 }
 $comp_link = '&mode=' . $mode;
