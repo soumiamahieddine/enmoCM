@@ -50,6 +50,7 @@ $db2 = "";
 $db3 = "";
 $docserverControler = "";
 $wb = "";
+$docserversFeatures = array();
 
 function do_query($db_conn, $query_txt, $transaction = false) {
 	$res = $db_conn->query($query_txt, true);
@@ -178,6 +179,7 @@ $CONFIG = $xmlconfig->CONFIG;
 $lang = (string) $CONFIG->lang;
 $GLOBALS['MaarchDirectory'] = (string) $CONFIG->MaarchDirectory;
 $GLOBALS['TmpDirectory'] = (string) $CONFIG->TmpDirectory;
+$GLOBALS['docserversFeatures']['DOCSERVERS']['PATHTOCOMPRESSTOOL'] = (string) $CONFIG->PATHTOCOMPRESSTOOL;
 $MaarchApps = (string) $CONFIG->MaarchApps;
 $log_level = (string) $CONFIG->LogLevel;
 $DisplayedLogLevel = (string) $CONFIG->DisplayedLogLevel;

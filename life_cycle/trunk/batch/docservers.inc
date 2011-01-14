@@ -13,12 +13,12 @@ function doCompression($targeFile, $arrayOfFileToCompress) {
 	if (DIRECTORY_SEPARATOR == "/") {
 		$command = "7z a -y -t" . strtolower($GLOBALS['docservers'][$GLOBALS['currentStep']]['compression_mode']) . " " . escapeshellarg($GLOBALS['TmpDirectory'] . $targeFile) . " " . $listOfFileToCompress;
 	} else {
-		$command = "\"" . str_replace("\\", "\\\\", $_SESSION['docserversFeatures']['DOCSERVERS']['PATHTOCOMPRESSTOOL']) . "\" a -y -t" . strtolower($GLOBALS['docservers'][$GLOBALS['currentStep']]['compression_mode']) . " " . escapeshellarg($GLOBALS['TmpDirectory'] . $targeFile) . " " . $listOfFileToCompress;
+		$command = "\"" . str_replace("\\", "\\\\", $GLOBALS['docserversFeatures']['DOCSERVERS']['PATHTOCOMPRESSTOOL']) . "\" a -y -t" . strtolower($GLOBALS['docservers'][$GLOBALS['currentStep']]['compression_mode']) . " " . escapeshellarg($GLOBALS['TmpDirectory'] . $targeFile) . " " . $listOfFileToCompress;
 	}
 	//echo $command."\r\n";exit;
 	exec($command, $tmpCmd, $execError);
 	if($execError > 0) {
-		$GLOBALS['logger']->write('Pb with compression:' .$command . ' ' . $tmpCmd, 'ERROR', 23);
+		$GLOBALS['logger']->write('Pb with compression:' .$command . ' ' . print_r($tmpCmd), 'ERROR', 23);
 		exit(23);
 	}
 	return $GLOBALS['TmpDirectory'] . $targeFile . "." . strtolower($GLOBALS['docservers'][$GLOBALS['currentStep']]['compression_mode']);
@@ -38,12 +38,12 @@ function extractAip($path) {
 	if(DIRECTORY_SEPARATOR == "/") {
 		$command = "7z e -y -o".escapeshellarg($GLOBALS['TmpDirectory'])." ".escapeshellarg($fileNameOnTmp);
 	} else {
-		$command = "\"" . str_replace("\\", "\\\\", $_SESSION['docserversFeatures']['DOCSERVERS']['PATHTOCOMPRESSTOOL']) . "\" e -y -o" . escapeshellarg($GLOBALS['TmpDirectory'])." ".escapeshellarg($fileNameOnTmp);
+		$command = "\"" . str_replace("\\", "\\\\", $GLOBALS['docserversFeatures']['DOCSERVERS']['PATHTOCOMPRESSTOOL']) . "\" e -y -o" . escapeshellarg($GLOBALS['TmpDirectory'])." ".escapeshellarg($fileNameOnTmp);
 	}
 	$tmpCmd = "";
 	exec($command, $tmpCmd, $execError);
 	if($execError > 0) {
-		$GLOBALS['logger']->write('Pb with extract:' . $command . ' ' . $tmpCmd, 'ERROR', 24);
+		$GLOBALS['logger']->write('Pb with extract:' . $command . ' ' . print_r($tmpCmd), 'ERROR', 24);
 		exit(24);
 	}
 	unlink($fileNameOnTmp);
@@ -52,12 +52,12 @@ function extractAip($path) {
 	if(DIRECTORY_SEPARATOR == "/") {
 		$command = "7z e -y -o" . escapeshellarg($GLOBALS['TmpDirectory'] . "CI") . " " . escapeshellarg($fileNameOnTmp);
 	} else {
-		$command = "\"" . str_replace("\\", "\\\\", $_SESSION['docserversFeatures']['DOCSERVERS']['PATHTOCOMPRESSTOOL']) . "\" e -y -o" . escapeshellarg($GLOBALS['TmpDirectory'] . "CI") . " " . escapeshellarg($fileNameOnTmp);
+		$command = "\"" . str_replace("\\", "\\\\", $GLOBALS['docserversFeatures']['DOCSERVERS']['PATHTOCOMPRESSTOOL']) . "\" e -y -o" . escapeshellarg($GLOBALS['TmpDirectory'] . "CI") . " " . escapeshellarg($fileNameOnTmp);
 	}
 	$tmpCmd = "";
 	exec($command, $tmpCmd, $execError);
 	if($execError > 0) {
-		$GLOBALS['logger']->write('Pb with extract:' . $command . ' ' . $tmpCmd, 'ERROR', 24);
+		$GLOBALS['logger']->write('Pb with extract:' . $command . ' ' . print_r($tmpCmd), 'ERROR', 24);
 		exit(24);
 	}
 }

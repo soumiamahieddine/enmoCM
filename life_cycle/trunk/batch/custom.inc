@@ -1,13 +1,13 @@
 <?php
 
 function createPDI($resInContainer) {
-	$sourceTemplatePI = $GLOBALS['MaarchDirectory'] . "modules" .DIRECTORY_SEPARATOR . "life_cycle" . DIRECTORY_SEPARATOR . "batch" . DIRECTORY_SEPARATOR . "xml_templates" . DIRECTORY_SEPARATOR . "pdi.xml";
+	/*$sourceTemplatePI = $GLOBALS['MaarchDirectory'] . "modules" .DIRECTORY_SEPARATOR . "life_cycle" . DIRECTORY_SEPARATOR . "batch" . DIRECTORY_SEPARATOR . "xml_templates" . DIRECTORY_SEPARATOR . "pdi.xml";
 	if (file_exists($sourceTemplatePI)) {
 		$xml = simplexml_load_file($sourceTemplatePI);
 		if ($xml == false) {
 			$returnInfos = array('error'=>'Error on loading xml file:' . $templatePI);
 			return $returnInfos;
-		}
+		}*/
 		$tmpXML = $GLOBALS['TmpDirectory'] . DIRECTORY_SEPARATOR . "pdi.xml";
 		$docXML = new DomDocument("1.0", "utf-8");
 		$docXML->preserveWhiteSpace = false;
@@ -246,7 +246,7 @@ function createPDI($resInContainer) {
 		}
 		//save the xml
 		$docXML->save($tmpXML);
-	}
+	//}
 }
 
 ?>

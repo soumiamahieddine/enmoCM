@@ -1,28 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ROOT>
     <CONFIG>
-        <name>autofoldering</name>
-        <comment>_AUTOFOLDERING</comment>
-        <file_prefix>af</file_prefix>
-        <loaded>true</loaded>
-        <lang>fr</lang>
-        <MaarchDirectory>c:\xampp\htdocs\maarch_entreprise\</MaarchDirectory>
+        <lang>fr</lang> <!-- fr, en-->
+        <MaarchDirectory>C:\xampp\htdocs\maarch_entreprise_trunk\</MaarchDirectory>
+        <TmpDirectory>C:\xampp\htdocs\maarch_entreprise_trunk\modules\life_cycle\batch\tmp\</TmpDirectory>
+		<PATHTOCOMPRESSTOOL>C:\Program Files\7-Zip\7z.exe</PATHTOCOMPRESSTOOL>
         <MaarchApps>maarch_entreprise</MaarchApps>
-        <AutofolderingUrl>http://127.0.0.1/maarch_entreprise/modules/autofoldering/</AutofolderingUrl>
         <LogLevel>INFO</LogLevel>  <!-- DEBUG, INFO, NOTICE, WARNING, ERROR-->
         <DisplayedLogLevel>INFO</DisplayedLogLevel> <!-- DEBUG, INFO, NOTICE, WARNING, ERROR-->
-        <lang>fr</lang> <!-- fr, en-->
     </CONFIG>
     <CONFIG_BASE>
         <databaseserver>127.0.0.1</databaseserver>
         <databaseserverport>5432</databaseserverport>
-        <databasename>maarch_entreprise</databasename>
+        <databasename>maarch_entreprise_trunk</databasename>
         <databasetype>POSTGRESQL</databasetype>
         <databaseuser>postgres</databaseuser>
-        <databasepassword>postgres</databasepassword>
+        <databasepassword>maarch</databasepassword>
     </CONFIG_BASE>
-    <HISTORY>
-        <treedel>true</treedel>
-        <treeup>true</treeup>
-    </HISTORY>
+    <COLLECTION>
+		<id>res_coll</id>
+		<table>res_x</table>
+		<view>res_view</view>
+		<adr>adr_x</adr>
+	</COLLECTION>
 </ROOT>
