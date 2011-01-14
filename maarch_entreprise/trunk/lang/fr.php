@@ -673,8 +673,9 @@ if (!defined('_LOW')) define( '_LOW', 'Basse');
 if (!defined('_VERY_LOW')) define( '_VERY_LOW', 'Tr&egrave;s Basse');
 
 
-if (!defined('_INDEXING_MLB')) define( '_INDEXING_MLB', 'Enregistrer un document');
-if (!defined('_ADV_SEARCH_MLB')) define( '_ADV_SEARCH_MLB', 'Rechercher un document');
+if (!defined('_INDEXING_MLB')) define( '_INDEXING_MLB', 'Enregistrer un courrier');
+if (!defined('_ADV_SEARCH_MLB')) define( '_ADV_SEARCH_MLB', 'Rechercher un courrier');
+if (!defined('_ADV_SEARCH_INVOICES')) define( '_ADV_SEARCH_INVOICES', 'Rechercher une facture');
 
 if (!defined('_ADV_SEARCH_TITLE')) define( '_ADV_SEARCH_TITLE', 'Recherche avanc&eacute;e de document');
 if (!defined('_MAIL_OBJECT')) define( '_MAIL_OBJECT', 'Objet du courrier');
@@ -766,7 +767,7 @@ if (!defined('_PROBLEM_LOADING_FILE_TMP_DIR')) define( '_PROBLEM_LOADING_FILE_TM
 if (!defined('_DOWNLOADED_FILE')) define( '_DOWNLOADED_FILE', 'Fichier charg&eacute;');
 if (!defined('_WRONG_FILE_TYPE')) define( '_WRONG_FILE_TYPE', 'Ce type de fichier n&rsquo;est pas permis');
 
-if (!defined('_LETTERBOX')) define( '_LETTERBOX', 'Collection principale');
+if (!defined('_LETTERBOX')) define( '_LETTERBOX', 'Collection Courrier');
 if (!defined('_APA_COLL')) define( '_APA_COLL', 'APA - ne pas utiliser');
 if (!defined('_REDIRECT_TO_ACTION')) define( '_REDIRECT_TO_ACTION', 'Rediriger vers une action');
 if (!defined('_DOCUMENTS_LIST')) define( '_DOCUMENTS_LIST', 'Liste');
@@ -918,7 +919,6 @@ if (!defined('_AMOUNT')) define( '_AMOUNT', 'Montant facture');
 if (!defined('_CUSTOMER')) define( '_CUSTOMER', 'Client facture');
 if (!defined('_PO_NUMBER')) define( '_PO_NUMBER', 'BDC facture');
 if (!defined('_INVOICE_NUMBER')) define( '_INVOICE_NUMBER', 'Num facture');
-
 
 
 /******************** Keywords Helper ************/

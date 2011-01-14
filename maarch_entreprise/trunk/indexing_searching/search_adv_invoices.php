@@ -66,7 +66,7 @@ if ($mode == 'normal') {
         $level = $_REQUEST['level'];
     }
     $page_path = $_SESSION['config']['businessappurl'] . 'index.php?page=search_adv_invoices&dir=indexing_searching';
-    $page_label = _ADV_SEARCH_MLB_ADMIN;
+    $page_label = _ADV_SEARCH_INVOICES;
     $page_id = "search_adv_invoices";
     $core_tools->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
     /***********************************************************/
@@ -265,20 +265,6 @@ $arr_tmp2 = array (
 $param['destinataire'] = $arr_tmp2;
 */
 
-//Nombre de page
-
-$arr_tmp2 = array (
-    'label' => _PAGE_COUNT,
-    'type' => 'num_range',
-    'param' => array (
-        'field_label' => _PAGE_COUNT,
-        'id1' => $field . '_min',
-        'id2' => $field . '_max'
-    )
-);
-$param['page_count'] = $arr_tmp2;
-
-
 
 //destination (department)
 /*
@@ -397,7 +383,7 @@ $arr_tmp2 = array (
 $param['status'] = $arr_tmp2;
 
 //doc_type
-$conn->query("select type_id, description  from  " . $_SESSION['tablename']['doctypes'] . " where enabled = 'Y' order by description asc");
+/*$conn->query("select type_id, description  from  " . $_SESSION['tablename']['doctypes'] . " where enabled = 'Y' order by description asc");
 $arr_tmp = array ();
 while ($res = $conn->fetch_object()) {
     array_push($arr_tmp, array (
@@ -416,7 +402,7 @@ $arr_tmp2 = array (
     )
 );
 $param['doctype'] = $arr_tmp2;
-
+*/
 
 /*
 //category
@@ -526,7 +512,7 @@ function del_query_confirm()
 -->
 </script>
 
-<h1><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_search_b.gif" alt="" /> <?php echo _ADV_SEARCH_MLB_ADMIN; ?></h1>
+<h1><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_search_b.gif" alt="" /> <?php echo _ADV_SEARCH_INVOICES; ?></h1>
 <div id="inner_content">
 
 <?php
@@ -585,20 +571,11 @@ if (isset ($_REQUEST['nodetails'])) {
         <td >
         <div class="block">
             <table border = "0" width="100%">
-                <tr>
-                    <td width="40%"><label for="subject" class="bold" ><?php echo _REFCLI;?>:</label></td>
-                        <td></td>
-                        <td><input type="text" name="refcli" id="refcli" <?php echo $size; ?>  />
-                        <input type="hidden" name="meta[]" value="refcli#refcli#input_text" />
-                    </td>
-                    <td><em><?php echo ''; ?></em></td>
-                </tr>
-
-                <tr>
+                <!--<tr>
                     <td width="40%"><label for="type" class="bold" ><?php echo _DOCTYPE;?>:</label></td>
                         <td></td>
                         <td><select name="type" id="type">
-                        <option value=""><?php echo _ALL_DOCTYPE; ?></option>
+                        <option value=""><?php echo _ALL_DOCTYPES; ?></option>
                         <?php
                         foreach($param['doctype']['param']['options'] as $type){
                             echo '<option value="'.$type['VALUE'].'">'.$type['LABEL'].'</option>';
@@ -609,7 +586,7 @@ if (isset ($_REQUEST['nodetails'])) {
                         <input type="hidden" name="meta[]" value="type#type#select_simple" />
                     </td>
                     <td><em><?php echo ''; ?></em></td>
-                </tr>
+                </tr>-->
                 <!--
                 <tr>
                     <td width="40%"><label for="subject" class="bold" ><?php echo _NUMMDT;?>:</label></td>
@@ -653,15 +630,7 @@ if (isset ($_REQUEST['nodetails'])) {
                     <td><em><?php echo ''; ?></em></td>
                 </tr>
 -->
-                <tr>
-                    <td width="40%"><label for="numged" class="bold"><?php echo _IDENTIFIER;?>:</label>
-                        <td ></td>
-                        <td><input type="text" name="identifier" id="identifier" <?php echo $size; ?>  />
-                        <input type="hidden" name="meta[]" value="identifier#identifier#input_text" />
-                    </td>
-                    <td><em><?php echo ''; ?></em></td>
-                </tr>
-                <tr>
+				<tr>
                     <td width="40%"><label for="numged" class="bold"><?php echo _N_GED;?>:</label>
                         <td ></td>
                         <td><input type="text" name="numged" id="numged" <?php echo $size; ?>  />
@@ -669,7 +638,14 @@ if (isset ($_REQUEST['nodetails'])) {
                     </td>
                     <td><em><?php echo ''; ?></em></td>
                 </tr>
-
+                <!--<tr>
+                    <td width="40%"><label for="numged" class="bold"><?php echo _IDENTIFIER;?>:</label>
+                        <td ></td>
+                        <td><input type="text" name="identifier" id="identifier" <?php echo $size; ?>  />
+                        <input type="hidden" name="meta[]" value="identifier#identifier#input_text" />
+                    </td>
+                    <td><em><?php echo ''; ?></em></td>
+                </tr>-->
             </table>
             </div>
             <div class="block_end">&nbsp;</div>
