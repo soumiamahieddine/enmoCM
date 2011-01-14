@@ -8,6 +8,7 @@
         <MaarchApps>maarch_entreprise</MaarchApps>
         <LogLevel>INFO</LogLevel>  <!-- DEBUG, INFO, NOTICE, WARNING, ERROR-->
         <DisplayedLogLevel>INFO</DisplayedLogLevel> <!-- DEBUG, INFO, NOTICE, WARNING, ERROR-->
+        <StackSizeLimit>10000</StackSizeLimit>
     </CONFIG>
     <CONFIG_BASE>
         <databaseserver>127.0.0.1</databaseserver>

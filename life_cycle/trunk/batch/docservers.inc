@@ -1,14 +1,18 @@
 <?php 
 
-function doCompression($targeFile, $arrayOfFileToCompress) {
-	if (!is_array($arrayOfFileToCompress)) {
-		$arr = array();
-		$arr[0] = $arrayOfFileToCompress;
-		$arrayOfFileToCompress = $arr;
-	}
-	$tmpCmd = "";
-	for ($cpt=0;$cpt<count($arrayOfFileToCompress);$cpt++) {
-		$listOfFileToCompress .= " " . escapeshellarg($arrayOfFileToCompress[$cpt]);
+function doCompression($targeFile, $arrayOfFileToCompress, $dirToCompress = "") {
+	if ($dirToCompress <> "") {
+		$listOfFileToCompress = " -r " . $dirToCompress;
+	} else {
+		if (!is_array($arrayOfFileToCompress)) {
+			$arr = array();
+			$arr[0] = $arrayOfFileToCompress;
+			$arrayOfFileToCompress = $arr;
+		}
+		$tmpCmd = "";
+		for ($cpt=0;$cpt<count($arrayOfFileToCompress);$cpt++) {
+			$listOfFileToCompress .= " " . escapeshellarg($arrayOfFileToCompress[$cpt]);
+		}
 	}
 	if (DIRECTORY_SEPARATOR == "/") {
 		$command = "7z a -y -t" . strtolower($GLOBALS['docservers'][$GLOBALS['currentStep']]['compression_mode']) . " " . escapeshellarg($GLOBALS['TmpDirectory'] . $targeFile) . " " . $listOfFileToCompress;

@@ -115,8 +115,10 @@ while($state <> "END") {
 			if ($cycleRecordset->break_key <> "") {
 				$ordeBy = " order by " . $cycleRecordset->break_key;
 			}
-			//$query = "select res_id from " . $GLOBALS['table'] . " where policy_id = '" . $GLOBALS['policy'] . "' and cycle_id = '" . $cyclePreviousRecordset->cycle_id . "' and " . $cycleRecordset->where_clause . $ordeBy;
-			$query = "select res_id from " . $GLOBALS['table'] . " where policy_id = '" . $GLOBALS['policy'] . "' and cycle_id = '" . $cyclePreviousRecordset->cycle_id . "' and " . $cycleRecordset->where_clause . $ordeBy . " LIMIT 10000";
+			if($GLOBALS['stackSizeLimit'] <> "") {
+				$limit = " LIMIT " . $GLOBALS['stackSizeLimit'];
+			}
+			$query = "select res_id from " . $GLOBALS['table'] . " where policy_id = '" . $GLOBALS['policy'] . "' and cycle_id = '" . $cyclePreviousRecordset->cycle_id . "' and " . $cycleRecordset->where_clause . $ordeBy . $limit;
 			do_query($db, $query);
 			$resourcesArray = array();
 			if ($db->nb_result() > 0) {

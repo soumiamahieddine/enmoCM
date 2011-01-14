@@ -70,7 +70,7 @@ $GLOBALS['docserverControler']->washTmp($GLOBALS['TmpDirectory'], true);
 $GLOBALS['state'] = "CONTROL_STACK";
 while ($GLOBALS['state'] <> "END") {
 	if (isset($GLOBALS['logger'])) {
-		$GLOBALS['logger']->write("STATE:".$GLOBALS['state'], 'INFO');
+		$GLOBALS['logger']->write("STATE:".$GLOBALS['state'], 'DEBUG');
 	}
 	switch($GLOBALS['state']) {
 		/**********************************************************************************************/
@@ -201,7 +201,7 @@ while ($GLOBALS['state'] <> "END") {
 					$GLOBALS['state'] = "END";break;
 				}
 				$currentRecordInStack['fingerprint'] = $GLOBALS['docserverControler']->doFingerprint($sourceFilePath, $GLOBALS['docservers'][$GLOBALS['currentStep']]['fingerprint_mode']);
-				$GLOBALS['logger']->write("current record:".$currentRecordInStack['res_id'], 'INFO');
+				$GLOBALS['logger']->write("current record:".$currentRecordInStack['res_id'], 'DEBUG');
 				// if NEW operation we have to add new states
 				if ($GLOBALS['steps'][$GLOBALS['currentStep']]['step_operation'] == "COPY" || $GLOBALS['steps'][$GLOBALS['currentStep']]['step_operation'] == "MOVE") {
 					$GLOBALS['state'] = "COPY_OR_MOVE";

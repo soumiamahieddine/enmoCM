@@ -21,7 +21,7 @@ function createAip($resInContainer) {
 		$resInContainer[$cptRes]['offset_doc'] = "CI." . strtolower($GLOBALS['docservers'][$GLOBALS['currentStep']]['compression_mode']) . "#" . $resInContainer[$cptRes]['offset_doc'];
 	}
 	//CI compression
-	$newSourceFilePath = doCompression("CI", $arrayOfFileToCompress);
+	$newSourceFilePath = doCompression("CI", $arrayOfFileToCompress, $tmpDir);
 	$result['resInContainer'] = $resInContainer;
 	$result['newSourceFilePath'] = $newSourceFilePath;
 	createPDIHistory($resInContainer);

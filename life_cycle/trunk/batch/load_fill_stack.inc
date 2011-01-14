@@ -35,7 +35,8 @@ $databasetype = '';
 $exitCode = 0;
 $running_date = date('Y-m-d H:i:s');
 $collections = array();
-$wb = "";
+$wb = '';
+$stackSizeLimit = '';
 
 function do_query($db_conn, $query_txt) {
 	$db_conn->connect();
@@ -167,7 +168,8 @@ $MaarchDirectory = (string) $CONFIG->MaarchDirectory;
 $MaarchApps = (string) $CONFIG->MaarchApps;
 $log_level = (string) $CONFIG->LogLevel;
 $DisplayedLogLevel = (string) $CONFIG->DisplayedLogLevel;
-$GLOBALS['databasetype'] = (string) $xmlconfig->CONFIG_BASE->databasetype;
+$GLOBALS['stackSizeLimit'] = (string) $CONFIG->StackSizeLimit;
+$GLOBALS['databasetype'] = (string) $CONFIG->DisplayedLogLevel;
 $databasename = (string) $xmlconfig->CONFIG_BASE->databasename;
 $databaseserver = (string) $xmlconfig->CONFIG_BASE->databaseserver;
 $databaseserverport = (string) $xmlconfig->CONFIG_BASE->databaseserverport;
