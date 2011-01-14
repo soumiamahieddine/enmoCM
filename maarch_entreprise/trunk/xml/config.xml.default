@@ -42,6 +42,22 @@
 		<size>100</size>
 	</WORKBATCH>
 	<COLLECTION>
+		<id>letterbox_coll</id>
+		<label>_LETTERBOX</label>
+		<table>res_letterbox</table>
+		<view>res_view_letterbox</view>
+		<adr>adr_x</adr>
+		<index_file>index_letterbox.xml</index_file>
+		<script_add>index_letterbox.php</script_add>
+		<script_search>search_letterbox.php</script_search>
+		<script_search_result>list_results_letterbox.php</script_search_result>
+		<script_details>details.php</script_details>
+		<extensions>
+			<table>mlb_coll_ext</table>
+		</extensions>
+		<path_to_lucene_index>C:\Maarch\indexes\entreprise\letterbox_coll\</path_to_lucene_index>
+	</COLLECTION>
+	<COLLECTION>
 		<id>res_coll</id>
 		<label>_INVOICES</label>
 		<table>res_x</table>
