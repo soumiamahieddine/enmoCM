@@ -61,8 +61,8 @@ $coll_id = '';
 $table = '';
 if (!isset ($_REQUEST['coll_id']) || empty ($_REQUEST['coll_id'])) {
     //$_SESSION['error'] = _COLL_ID.' '._IS_MISSING;
-    $coll_id = $_SESSION['collections'][0]['id'];
-    $table = $_SESSION['collections'][0]['view'];
+    $coll_id = "res_coll";
+    $table = "res_view";
     $is_view = true;
 } else {
     $coll_id = $_REQUEST['coll_id'];
