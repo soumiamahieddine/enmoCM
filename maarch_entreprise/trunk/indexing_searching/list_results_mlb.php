@@ -338,7 +338,7 @@ if (count($tab) > 0)
                     $user_lastname = $tab[$i][$j]["value"];
                     $tab[$i][$j]["show"]=false;
                 }
-                if($tab[$i][$j][$value]=="exp_user_id")
+                if($tab[$i][$j][$value]=="$template_to_use exp_user_id")
                 {
                     $tab[$i][$j]["label"]=_CONTACT;
                     $tab[$i][$j]["size"]="10";
