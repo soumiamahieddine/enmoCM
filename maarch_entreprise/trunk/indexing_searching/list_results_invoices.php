@@ -88,7 +88,7 @@ $select = array ();
 //$select[$_SESSION['searching']['coll_view']]= array();
 $select[$view] = array ();
 $where_request = $_SESSION['searching']['where_request'];
-array_push($select[$view], "res_id", "status", "doc_custom_n2", "doc_custom_n3", "doc_custom_n1", "subject",  "type_label", "doc_custom_t7",  "creation_date",   "doc_custom_n4", "doc_custom_t4", "doc_custom_t2" , "doc_custom_t1", "page_count", "subject", "doc_custom_n5", "doc_custom_t6", "doc_custom_t9", "doc_custom_t8" , "title");
+array_push($select[$view], "res_id", "status", "doc_custom_t1", "doc_custom_t4", "doc_custom_t2", "doc_custom_t3", "doc_custom_t5", "title",  "creation_date");
 
 $status = $status_obj->get_not_searchable_status();
 $status_str = '';
@@ -194,190 +194,69 @@ if (count($tab) > 0) {
                         $tab[$i][$j]["align"] = "center";
                         $tab[$i][$j]["valign"] = "bottom";
                         $tab[$i][$j]["show"] = true;
-                    //  $tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
                         $tab[$i][$j]["order"] = 'res_id';
                         $_SESSION['mlb_search_current_res_id'] = $tab[$i][$j]['value'];
                     }
-                    if ($tab[$i][$j][$value] == "doc_custom_n1") {
-                        $tab[$i][$j]["label"] = _REFCLI;
-                        $tab[$i][$j]['value'] = $request->show_string($tab[$i][$j]['value']);
-                        $tab[$i][$j]["size"] = "15";
-                        $tab[$i][$j]["label_align"] = "left";
-                        $tab[$i][$j]["align"] = "left";
-                        $tab[$i][$j]["valign"] = "bottom";
-                        $tab[$i][$j]["show"] = false;
-                        //$tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
-                        $tab[$i][$j]["order"] = "doc_custom_n1";
-                    }
-                    if ($tab[$i][$j][$value] == "doc_custom_n2") {
-                        $tab[$i][$j]["label"] = _NUMSOC;
-                        $tab[$i][$j]['value'] = $request->show_string($tab[$i][$j]['value']);
-                        $tab[$i][$j]["size"] = "15";
-                        $tab[$i][$j]["label_align"] = "left";
-                        $tab[$i][$j]["align"] = "left";
-                        $tab[$i][$j]["valign"] = "bottom";
-                        $tab[$i][$j]["show"] = true;
-                    //  $tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
-                        $tab[$i][$j]["order"] = "doc_custom_n2";
-                    }
-                    if ($tab[$i][$j][$value] == "subject") {
-                        $tab[$i][$j]["label"] = _LIBCPT;
-                        $tab[$i][$j]['value'] = $request->show_string($tab[$i][$j]['value']);
-                        $tab[$i][$j]["size"] = "15";
-                        $tab[$i][$j]["label_align"] = "left";
-                        $tab[$i][$j]["align"] = "left";
-                        $tab[$i][$j]["valign"] = "bottom";
-                        $tab[$i][$j]["show"] = true;
-                    //  $tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
-                        $tab[$i][$j]["order"] = "subject";
-                    }
-                    if ($tab[$i][$j][$value] == "doc_custom_n3") {
-                        $tab[$i][$j]["label"] = _NUMMDT;
-                        $tab[$i][$j]['value'] = $request->show_string($tab[$i][$j]['value']);
-                        $tab[$i][$j]["size"] = "15";
-                        $tab[$i][$j]["label_align"] = "left";
-                        $tab[$i][$j]["align"] = "left";
-                        $tab[$i][$j]["valign"] = "bottom";
-                        $tab[$i][$j]["show"] = true;
-                    //  $tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
-                        $tab[$i][$j]["order"] = "doc_custom_n3";
-                    }
-/*
-                    if ($tab[$i][$j][$value] == "doc_custom_n4") {
-                        $tab[$i][$j]["label"] = _NUMIMM;
-                        $tab[$i][$j]['value'] = $request->show_string($tab[$i][$j]['value']);
-                        $tab[$i][$j]["size"] = "15";
-                        $tab[$i][$j]["label_align"] = "left";
-                        $tab[$i][$j]["align"] = "left";
-                        $tab[$i][$j]["valign"] = "bottom";
-                        $tab[$i][$j]["show"] = false;
-                        //$tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
-                        $tab[$i][$j]["order"] = "doc_custom_n4";
-                    }
-*/
-/*
-                    if ($tab[$i][$j][$value] == "doc_custom_n5") {
-                        $tab[$i][$j]["label"] = _NUMLOT;
-                        $tab[$i][$j]['value'] = $tab[$i][$j]['value'];
-                        $tab[$i][$j]["size"] = "15";
-                        $tab[$i][$j]["label_align"] = "left";
-                        $tab[$i][$j]["align"] = "left";
-                        $tab[$i][$j]["valign"] = "bottom";
-                        $tab[$i][$j]["show"] = false;
-                    //  $tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
-                        $tab[$i][$j]["order"] = "doc_custom_n5";
-                    }
-*/
-                    if ($tab[$i][$j][$value] == "doc_custom_n1") {
-                        $tab[$i][$j]["label"] = _NUMCPT;
-                        $tab[$i][$j]['value'] = $tab[$i][$j]['value'];
-                        $tab[$i][$j]["size"] = "15";
-                        $tab[$i][$j]["label_align"] = "left";
-                        $tab[$i][$j]["align"] = "left";
-                        $tab[$i][$j]["valign"] = "bottom";
-                        $tab[$i][$j]["show"] = true;
-                    //  $tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
-                        $tab[$i][$j]["order"] = "doc_custom_n5";
-                    }
-/*
-                    if ($tab[$i][$j][$value] == "doc_custom_t4") {
-                        $tab[$i][$j]["label"] = _LIBIMM;
-                        $tab[$i][$j]['value'] = $request->show_string($tab[$i][$j]['value']);
-                        $tab[$i][$j]["size"] = "15";
-                        $tab[$i][$j]["label_align"] = "left";
-                        $tab[$i][$j]["align"] = "left";
-                        $tab[$i][$j]["valign"] = "bottom";
-                        $tab[$i][$j]["show"] = false;
-                    //  $tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
-                        $tab[$i][$j]["order"] = "doc_custom_t4";
-                    }
-*/
-/*
-                    if ($tab[$i][$j][$value] == "doc_custom_t6") {
-                        $tab[$i][$j]["label"] = _MODEREGLT;
-                        $tab[$i][$j]['value'] = $request->show_string($tab[$i][$j]['value']);
-                        $tab[$i][$j]["size"] = "15";
-                        $tab[$i][$j]["label_align"] = "left";
-                        $tab[$i][$j]["align"] = "left";
-                        $tab[$i][$j]["valign"] = "bottom";
-                        $tab[$i][$j]["show"] = false;
-                    //  $tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
-                        $tab[$i][$j]["order"] = "doc_custom_t6";
-                    }
-*/
-
-/*
-                    if ($tab[$i][$j][$value] == "doc_custom_t9") {
-                        $tab[$i][$j]["label"] = _MANDATAIRE;
-                        $tab[$i][$j]['value'] = $request->show_string($tab[$i][$j]['value']);
-                        $tab[$i][$j]["size"] = "15";
-                        $tab[$i][$j]["label_align"] = "left";
-                        $tab[$i][$j]["align"] = "left";
-                        $tab[$i][$j]["valign"] = "bottom";
-                        $tab[$i][$j]["show"] = false;
-                        //$tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
-                        $tab[$i][$j]["order"] = "doc_custom_t9";
-                    }
-*/
-/*
-                    if ($tab[$i][$j][$value] == "doc_custom_t8") {
-                        $tab[$i][$j]["label"] = _MANDATAIRE;
-                        $tab[$i][$j]['value'] = $request->show_string($tab[$i][$j]['value']);
-                        $tab[$i][$j]["size"] = "15";
-                        $tab[$i][$j]["label_align"] = "left";
-                        $tab[$i][$j]["align"] = "left";
-                        $tab[$i][$j]["valign"] = "bottom";
-                        $tab[$i][$j]["show"] = false;
-                    //  $tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
-                        $tab[$i][$j]["order"] = "doc_custom_t8";
-                    }
-*/
                     if ($tab[$i][$j][$value] == "doc_custom_t1") {
-                        $tab[$i][$j]["label"] = _NUMCPT;
+                        $tab[$i][$j]["label"] = _IDENTIFIER;
                         $tab[$i][$j]['value'] = $request->show_string($tab[$i][$j]['value']);
                         $tab[$i][$j]["size"] = "15";
                         $tab[$i][$j]["label_align"] = "left";
                         $tab[$i][$j]["align"] = "left";
                         $tab[$i][$j]["valign"] = "bottom";
                         $tab[$i][$j]["show"] = true;
-                    //  $tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
                         $tab[$i][$j]["order"] = "doc_custom_t1";
                     }
                     if ($tab[$i][$j][$value] == "doc_custom_t2") {
-                        $tab[$i][$j]["label"] = _LIBMDT;
+                        $tab[$i][$j]["label"] = _CONTACT_NAME;
                         $tab[$i][$j]['value'] = $request->show_string($tab[$i][$j]['value']);
                         $tab[$i][$j]["size"] = "15";
                         $tab[$i][$j]["label_align"] = "left";
                         $tab[$i][$j]["align"] = "left";
                         $tab[$i][$j]["valign"] = "bottom";
-                        $tab[$i][$j]["show"] = false;
-                        //$tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
+                        $tab[$i][$j]["show"] = true;
+                        $tab[$i][$j]["order"] = "doc_custom_t2";
+                    }
+                    if ($tab[$i][$j][$value] == "doc_custom_t3") {
+                        $tab[$i][$j]["label"] = _COUNTRY;
+                        $tab[$i][$j]['value'] = $request->show_string($tab[$i][$j]['value']);
+                        $tab[$i][$j]["size"] = "15";
+                        $tab[$i][$j]["label_align"] = "left";
+                        $tab[$i][$j]["align"] = "left";
+                        $tab[$i][$j]["valign"] = "bottom";
+                        $tab[$i][$j]["show"] = true;
+                        $tab[$i][$j]["order"] = "doc_custom_t3";
+                    }
+                    if ($tab[$i][$j][$value] == "doc_custom_t4") {
+                        $tab[$i][$j]["label"] = _CUSTOMER;
+                        $tab[$i][$j]['value'] = $request->show_string($tab[$i][$j]['value']);
+                        $tab[$i][$j]["size"] = "15";
+                        $tab[$i][$j]["label_align"] = "left";
+                        $tab[$i][$j]["align"] = "left";
+                        $tab[$i][$j]["valign"] = "bottom";
+                        $tab[$i][$j]["show"] = true;
                         $tab[$i][$j]["order"] = "doc_custom_t4";
                     }
-                    if ($tab[$i][$j][$value] == "title") {
-                        $tab[$i][$j]["label"] = _LIBTRAIT;
-                        $tab[$i][$j]['value'] = $request->show_string($tab[$i][$j]['value']);
+                    if ($tab[$i][$j][$value] == "doc_custom_t5") {
+                        $tab[$i][$j]["label"] = _PO_NUMBER;
+                        $tab[$i][$j]['value'] = $tab[$i][$j]['value'];
                         $tab[$i][$j]["size"] = "15";
                         $tab[$i][$j]["label_align"] = "left";
                         $tab[$i][$j]["align"] = "left";
                         $tab[$i][$j]["valign"] = "bottom";
                         $tab[$i][$j]["show"] = false;
-                        //$tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
+                        $tab[$i][$j]["order"] = "doc_custom_t5";
+                    }
+                    if ($tab[$i][$j][$value] == "title") {
+                        $tab[$i][$j]["label"] = _TITLE;
+                        $tab[$i][$j]['value'] = $request->show_string($tab[$i][$j]['value']);
+                        $tab[$i][$j]["size"] = "15";
+                        $tab[$i][$j]["label_align"] = "left";
+                        $tab[$i][$j]["align"] = "left";
+                        $tab[$i][$j]["valign"] = "bottom";
+                        $tab[$i][$j]["show"] = true;
                         $tab[$i][$j]["order"] = "title";
                     }
-/*
-                    if ($tab[$i][$j][$value] == "page_count") {
-                        $tab[$i][$j]["label"] = _PAGE_COUNT;
-                        $tab[$i][$j]['value'] = $request->show_string($tab[$i][$j]['value']);
-                        $tab[$i][$j]["size"] = "15";
-                        $tab[$i][$j]["label_align"] = "left";
-                        $tab[$i][$j]["align"] = "left";
-                        $tab[$i][$j]["valign"] = "bottom";
-                        $tab[$i][$j]["show"] = false;
-                    //  $tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
-                        $tab[$i][$j]["order"] = "page_count";
-                    }
-*/
                     if($tab[$i][$j][$value]=="creation_date")
                     {
                         $tab[$i][$j]["label"]=_REG_DATE;
@@ -385,21 +264,9 @@ if (count($tab) > 0) {
                         $tab[$i][$j]["label_align"]="left";
                         $tab[$i][$j]["align"]="left";
                         $tab[$i][$j]["valign"]="bottom";
-                        $tab[$i][$j]["show"]=false;
-                        //$tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
+                        $tab[$i][$j]["show"]=true;
                         $tab[$i][$j]["value"] = $request->format_date_db($tab[$i][$j]['value'], false);
                         $tab[$i][$j]["order"]="creation_date";
-                    }
-                    if ($tab[$i][$j][$value] == "type_label") {
-                        $tab[$i][$j]["label"] = _TYPE;
-                        $tab[$i][$j]['value'] = $request->show_string($tab[$i][$j]['value']);
-                        $tab[$i][$j]["size"] = "15";
-                        $tab[$i][$j]["label_align"] = "left";
-                        $tab[$i][$j]["align"] = "left";
-                        $tab[$i][$j]["valign"] = "bottom";
-                        $tab[$i][$j]["show"] = true;
-                    //  $tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
-                        $tab[$i][$j]["order"] = "type_label";
                     }
                     if ($tab[$i][$j][$value] == "status") {
                         $tab[$i][$j]["label"] = _STATUS;
@@ -410,10 +277,8 @@ if (count($tab) > 0) {
                         $tab[$i][$j]["align"] = "left";
                         $tab[$i][$j]["valign"] = "bottom";
                         $tab[$i][$j]["show"] = true;
-                    //  $tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
                         $tab[$i][$j]["order"] = "status";
                     }
-
                 }
             }
         }

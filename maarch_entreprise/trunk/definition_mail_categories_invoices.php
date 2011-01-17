@@ -95,7 +95,7 @@ $_ENV['categories']['incoming']['type_id'] = array (
     'type_form' => 'integer',
     'type_field' => 'integer',
     'mandatory' => true,
-    'label' => _DOCTYPE_MAIL,
+    'label' => _DOCTYPE,
     'table' => 'res',
     'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=mini_type.gif',
     'modify' => true,
@@ -105,7 +105,7 @@ $_ENV['categories']['incoming']['doc_date'] = array (
     'type_form' => 'date',
     'type_field' => 'date',
     'mandatory' => true,
-    'label' => _MAIL_DATE,
+    'label' => _DOC_DATE,
     'table' => 'res',
     'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=date_arr.gif',
     'modify' => true,
@@ -414,17 +414,6 @@ $_ENV['categories']['empty']['identifier'] = array (
 /////////////////////////////MODULES SPECIFIC////////////////////////////////////////////////
 $core = new core_tools();
 if ($core->is_module_loaded('entities')) {
-    //Entities module (incoming)
-    $_ENV['categories']['incoming']['destination'] = array (
-        'type_form' => 'string',
-        'type_field' => 'string',
-        'mandatory' => true,
-        'label' => _DEPARTMENT_DEST,
-        'table' => 'res',
-        'img' => $_SESSION['config']['businessappurl'] . 'static.php?module=entities&filename=manage_entities_b_small.gif',
-        'modify' => false,
-        'form_show' => 'select'
-    );
 
     // Entities module (outgoing)
     $_ENV['categories']['outgoing']['destination'] = array (
@@ -805,10 +794,10 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
         $fields = preg_replace('/,$/', '', $fields);
     }
     // Query
-    //$db->query("select category_id," . $fields . " from " . $view . " where res_id = " . $res_id);
+    $db->query("select * from " . $view . " where res_id = " . $res_id);
     //$db->show();
     //$db->show_array($arr);
-
+	
     $line = $db->fetch_object();
     // We fill the array with the query result
     for ($i = 0; $i < count($arr); $i++) {
@@ -830,13 +819,6 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
             // special cases :
             if ($arr[$i] == 'priority') {
                 $data[$arr[$i]]['show_value'] = $_SESSION['mail_priorities'][$line-> $arr[$i]];
-            }
-            elseif ($arr[$i] == 'destination') {
-                $db2->query('select entity_label from ' . $_SESSION['tablename']['ent_entities'] . " where entity_id = '" . $line-> $arr[$i] . "'");
-                if ($db2->nb_result() == 1) {
-                    $res2 = $db2->fetch_object();
-                    $data[$arr[$i]]['show_value'] = $db->show_string($res2->entity_label, true);
-                }
             }
             elseif ($arr[$i] == 'nature_id') {
                 $data[$arr[$i]]['show_value'] = $_SESSION['mail_natures'][$line-> $arr[$i]];

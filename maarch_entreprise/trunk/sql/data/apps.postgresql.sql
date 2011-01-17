@@ -144,7 +144,7 @@ INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, a
 INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched) VALUES ('OUT', 'Prelevee', 'N', '', 'advanced_physical_archive', 'N');
 INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched) VALUES ('POS', 'Reintegree', 'N', '', 'advanced_physical_archive', 'N');
 INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched) VALUES ('COU', 'En cours', 'Y', 'mail.gif', 'apps', 'Y');
-INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched) VALUES ('NEW', 'Nouveau courrier', 'Y', 'mail_new.gif', 'apps', 'Y');
+INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched) VALUES ('NEW', 'Nouveau', 'Y', 'mail_new.gif', 'apps', 'Y');
 INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched) VALUES ('RSV', 'Reserve', 'N', '', 'apps', 'N');
 INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched) VALUES ('DEL', 'Supprime', 'Y', NULL, 'apps', 'N');
 INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched) VALUES ('END', 'Clos', 'Y', 'mail_end.gif', 'apps', 'Y');
