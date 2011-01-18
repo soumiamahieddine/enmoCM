@@ -928,7 +928,9 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
         if($adr['status'] == "ko") {
             $result = array("status" => "ko", "value" => "", "error" => _RESOURCE_NOT_EXISTS);
         } else {
-            $docserver = $adr['docserver_id'];
+			//TODO : MANAGEMENT OF GEOLOCALISATION FAILOVER
+			//$resource->show_array($adr);
+            $docserver = $adr[0][0]['docserver_id'];
             //retrieve infos of the docserver
             $docserverObject = self::get($docserver);
             //retrieve infos of the docserver type
@@ -959,96 +961,102 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
         if($adr['status'] == "ko") {
             $result = array("status" => "ko", "mime_type" => "", "ext" => "", "file_content" => "", "tmp_path" => "", "error" => _NO_RIGHT_ON_RESOURCE_OR_RESOURCE_NOT_EXISTS);
         } else {
-            $docserver = $adr['docserver_id'];
-            $path = $adr['path'];
-            $filename = $adr['filename'];
-            $format = $adr['format'];
-            $fingerprint = $adr['fingerprint'];
-            $fingerprint_from_db = $adr['fingerprint'];
-            $offset_doc = $adr['offset_doc'];
-            //retrieve infos of the docserver
-            $docserverObject = self::get($docserver);
-            $docserver = $docserverObject->path_template;
-            $file = $docserver.$path.$filename;
-            $file = str_replace("#", DIRECTORY_SEPARATOR, $file);
-            require_once("core" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . "docserver_types_controler.php");
-            $docserverTypeControler = new docserver_types_controler();
-			$docserverTypeObject = $docserverTypeControler->get($docserverObject->docserver_type_id);
-            if(!file_exists($file)) {
-                $result = array("status" => "ko", "mime_type" => "", "ext" => "", "file_content" => "", "tmp_path" => "", "error" => _FILE_NOT_EXISTS_ON_THE_SERVER." : ".$file);
-            } else {
-                $fingerprint_from_docserver = self::doFingerprint($file, $docserverTypeObject->fingerprint_mode);
-                //echo $docserverTypeObject->fingerprint_mode."<br>";
-                //echo "from ds:" . $fingerprint_from_docserver."<br>";
-                //echo "from db:" . $fingerprint_from_db."<br>";
-                //echo filesize($file)."<br>";
-                $adr['path_to_file'] = $file;
-                //retrieve infos of the docserver type
-                require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."docserver_types_controler.php");
-                $docserverTypeControler = new docserver_types_controler();
-                $docserverTypeObject = $docserverTypeControler->get($docserverObject->docserver_type_id);
-                if($docserverTypeObject->is_container && $offset_doc == "") {
-                    $result = array("status" => "ko", "mime_type" => "", "ext" => "", "file_content" => "", "tmp_path" => "", "error" => _PB_WITH_OFFSET_OF_THE_DOC_IN_THE_CONTAINER);
-                }
-                //manage compressed resource
-                if($docserverTypeObject->is_compressed) {
-                    $extract = array();
-                    $extract = self::extractArchive($adr, $docserverTypeObject->fingerprint_mode);
-                    if($extract['status'] == "ko") {
-                        $result = array("status" => "ko", "mime_type" => "", "ext" => "", "file_content" => "", "tmp_path" => "", "error" => $extract['error']);
-                    } else {
-                        $file = $extract['path'];
-                        $mimeType = $extract['mime_type'];
-                        $format = $extract['format'];
-                        //to control fingerprint of the offset 
-                        $fingerprint_from_docserver = $extract['fingerprint'];
-                    }
-                }
-                //var_dump($extract);exit;
-                //manage view of the file
-                $use_tiny_mce = false;
-                if(strtolower($format) == 'maarch' && $coreTools->is_module_loaded('templates')) {
-                    $mode = "content";
-                    $type_state = true;
-                    $use_tiny_mce = true;
-                    $mimeType = "application/maarch";
-                } else {
-                    require_once('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR."class_indexing_searching_app.php");
-                    $is = new indexing_searching_app();
-                    $type_state = $is->is_filetype_allowed($format);
-                }
-                //if fingerprint from db = 0 we do not control fingerprint
-                if($fingerprint_from_db == "0" || ($fingerprint_from_db == $fingerprint_from_docserver)) {
-                    if($type_state <> false) {
-                        if($_SESSION['history']['resview'] == "true") {
-                            require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
-                            $users = new history();
-                            $users->add($tableName, $gedId, "VIEW", _VIEW_DOC_NUM."".$gedId, $_SESSION['config']['databasetype'], 'indexing_searching');
-                        }
-                        //count number of viewed in listinstance for the user
-                        if($coreTools->is_module_loaded('entities')) {
-                            require_once("modules".DIRECTORY_SEPARATOR."entities".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_manage_entities.php");
-                            $ent = new entity();
-                            $ent->increaseListinstanceViewed($gedId);
-                        }
-                        if(file_exists($file)) {
-                            $content = file_get_contents($file, FILE_BINARY);
-                            $encodedContent = base64_encode($content);
-                            $result = array("status" => "ok", "mime_type" => $mimeType, "ext" => $format, "file_content" => $encodedContent, "tmp_path" => $_SESSION['config']['tmppath'], "error" => "");
-                        } else {
-                            $result = array("status" => "ko", "mime_type" => "", "ext" => "", "file_content" => "", "tmp_path" => "", "error" => "file not exists");
-                        }
-                    } else {
-                        $result = array("status" => "ko", "mime_type" => "", "ext" => "", "file_content" => "", "tmp_path" => "", "error" => _FILE_TYPE.' '._UNKNOWN);
-                    }
-                } else {
-                    $result = array("status" => "ko", "mime_type" => "", "ext" => "", "file_content" => "", "tmp_path" => "", "error" => _PB_WITH_FINGERPRINT_OF_DOCUMENT);
-                }
-                if(file_exists($extract['tmpArchive'])) {
-                    self::washTmp($extract['tmpArchive']);
-                }
-            }
+			require_once("core" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . "docserver_types_controler.php");
+			$docserverTypeControler = new docserver_types_controler();
+			$concatError = "";
+			//failover management
+			for($cptDocserver=0;$cptDocserver<count($adr[0]);$cptDocserver++) {
+				//retrieve infos of the docserver
+				//echo $adr[0][$cptDocserver]['docserver_id']."<br>";
+				$fingerprintFromDb = $adr[0][$cptDocserver]['fingerprint'];
+				$format = $adr[0][$cptDocserver]['format'];
+				$docserverObject = self::get($adr[0][$cptDocserver]['docserver_id']);
+				$docserver = $docserverObject->path_template;
+				$file = $docserver.$adr[0][$cptDocserver]['path'].$adr[0][$cptDocserver]['filename'];
+				$file = str_replace("#", DIRECTORY_SEPARATOR, $file);
+				$docserverTypeObject = $docserverTypeControler->get($docserverObject->docserver_type_id);
+				if(!file_exists($file)) {
+					$concatError .= _FILE_NOT_EXISTS_ON_THE_SERVER . " : " . $file . "||";
+				} else {
+					$fingerprintFromDocserver = self::doFingerprint($file, $docserverTypeObject->fingerprint_mode);
+					/*echo $file."<br>";
+					echo $docserverTypeObject->fingerprint_mode."<br>";
+					echo "from ds:" . $fingerprintFromDocserver."<br>";
+					echo "from db:" . $fingerprintFromDb."<br>";*/
+					$adrToExtract = array();
+					$adrToExtract = $adr[0][$cptDocserver];
+					$adrToExtract['path_to_file'] = $file;
+					//print_r($adrToExtract);
+					//retrieve infos of the docserver type
+					require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."docserver_types_controler.php");
+					$docserverTypeControler = new docserver_types_controler();
+					$docserverTypeObject = $docserverTypeControler->get($docserverObject->docserver_type_id);
+					if($docserverTypeObject->is_container && $adr[0][$cptDocserver]['offset_doc'] == "") {
+						$concatError .= _PB_WITH_OFFSET_OF_THE_DOC_IN_THE_CONTAINER . "||";
+					}
+					//manage compressed resource
+					if($docserverTypeObject->is_compressed) {
+						$extract = array();
+						$extract = self::extractArchive($adrToExtract, $docserverTypeObject->fingerprint_mode);
+						if($extract['status'] == "ko") {
+							$concatError .= $extract['error'] . "||";
+						} else {
+							$file = $extract['path'];
+							$mimeType = $extract['mime_type'];
+							$format = $extract['format'];
+							//to control fingerprint of the offset 
+							$fingerprintFromDocserver = $extract['fingerprint'];
+						}
+					}
+					//var_dump($extract);exit;
+					//manage view of the file
+					$use_tiny_mce = false;
+					if(strtolower($format) == 'maarch' && $coreTools->is_module_loaded('templates')) {
+						$mode = "content";
+						$type_state = true;
+						$use_tiny_mce = true;
+						$mimeType = "application/maarch";
+					} else {
+						require_once('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR."class_indexing_searching_app.php");
+						$is = new indexing_searching_app();
+						$type_state = $is->is_filetype_allowed($format);
+					}
+					//if fingerprint from db = 0 we do not control fingerprint
+					if($fingerprintFromDb == "0" || ($fingerprintFromDb == $fingerprintFromDocserver)) {
+						if($type_state <> false) {
+							if($_SESSION['history']['resview'] == "true") {
+								require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
+								$users = new history();
+								$users->add($tableName, $gedId, "VIEW", _VIEW_DOC_NUM."".$gedId, $_SESSION['config']['databasetype'], 'indexing_searching');
+							}
+							//count number of viewed in listinstance for the user
+							if($coreTools->is_module_loaded('entities')) {
+								require_once("modules".DIRECTORY_SEPARATOR."entities".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_manage_entities.php");
+								$ent = new entity();
+								$ent->increaseListinstanceViewed($gedId);
+							}
+							if(file_exists($file)) {
+								$content = file_get_contents($file, FILE_BINARY);
+								$encodedContent = base64_encode($content);
+								$result = array("status" => "ok", "mime_type" => $mimeType, "ext" => $format, "file_content" => $encodedContent, "tmp_path" => $_SESSION['config']['tmppath'], "error" => "");
+								return $result;
+							} else {
+								$concatError .= _FILE_NOT_EXISTS . "||";
+							}
+						} else {
+							$concatError .= _FILE_TYPE . " " . _UNKNOWN . "||";
+						}
+					} else {
+						$concatError .= _PB_WITH_FINGERPRINT_OF_DOCUMENT . "||";
+					}
+					if(file_exists($extract['tmpArchive'])) {
+						self::washTmp($extract['tmpArchive']);
+					}
+				}
+			}
         }
+        //if errors :
+        $result = array("status" => "ko", "mime_type" => "", "ext" => "", "file_content" => "", "tmp_path" => "", "error" => $concatError);
         return $result;
     }
     

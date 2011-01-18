@@ -400,6 +400,7 @@
 			$control = array("status" => "ko", "error" => _PB_WITH_ARGUMENTS);
 			return $control;
 		}
+		$docserverAdr = array();
 		$this->connect();
 		$query = "select res_id, docserver_id, path, filename, format, fingerprint, offset_doc, is_multi_docservers from " . $view . " where res_id = " . $resId . " ". $whereClause;
 		$this->query($query);
@@ -410,14 +411,18 @@
 				$query = "select res_id, docserver_id, path, filename, offset_doc, fingerprint, adr_priority from " . $adrTable . " where res_id = " . $resId . " order by adr_priority";
 				$this->query($query);
 				if ($this->nb_result() > 0) {
-					$line = $this->fetch_object();
+					while($line = $this->fetch_object()) {
+						array_push($docserverAdr, array("docserver_id" => $line->docserver_id, "path" => $line->path, "filename" => $line->filename, "format" => $format, "fingerprint" => $line->fingerprint, "offset_doc" => $line->offset_doc, "adr_priority" => $line->adr_priority));
+					}
 				} else {
 					$this->disconnect();
 					$control = array("status" => "ko", "error" => _RESOURCE_NOT_FOUND);
 					return $control;
 				}
+			} else {
+				array_push($docserverAdr, array("docserver_id" => $line->docserver_id, "path" => $line->path, "filename" => $line->filename, "format" => $format, "fingerprint" => $line->fingerprint, "offset_doc" => $line->offset_doc, "adr_priority" => ""));
 			}
-			$control = array("status" => "ok", "docserver_id" => $line->docserver_id, "path" => $line->path, "filename" => $line->filename, "format" => $format, "fingerprint" => $line->fingerprint, "offset_doc" => $line->offset_doc, "error" => "");
+			$control = array("status" => "ok", $docserverAdr, "error" => "");
 			$this->disconnect();
 			return $control;
 		} else {
