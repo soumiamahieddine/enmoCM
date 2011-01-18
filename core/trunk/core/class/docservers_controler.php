@@ -885,7 +885,7 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
                     if($fileScan=='.' || $fileScan=='..') {
                         continue;
                     } else {
-						preg_match("'CI'", $fileScan, $out);
+						preg_match("'CI|tmp.tar'", $fileScan, $out);
 						if(count($out[0]) == 1) {
 							$execError = "";
 							$tmpArchiveBis = uniqid(rand());
