@@ -369,6 +369,11 @@ function clear_search_form(id_form,id_list)
 			elems[i].value ='';
 		}
 	}
+	var lists = document.getElementsByTagName('SELECT');
+	for(var i=0; i<lists.length;i++)
+	{
+		lists[i].selectedIndex =0;
+	}
 	var copie_false = $('copies_false');
 	if(copie_false)
 	{
