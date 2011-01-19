@@ -265,10 +265,38 @@ if(($_REQUEST['template']== 'group_case_for_basket') && ($core_tools->is_module_
 else
 {
 	if($_SESSION['current_basket']['basket_owner'] <> "") {
-		$where_concat .= " and ".$table.".res_id = ".$_SESSION['tablename']['ent_listinstance'].".res_id and ".$_SESSION['tablename']['ent_listinstance'].".item_id = '".$_SESSION['current_basket']['basket_owner']."'";
+		$db = new dbquery();
+		$db->connect();
+		$db->query("select entity_id from ".$_SESSION['tablename']['ent_users_entities']." where user_id = '".$this->protect_string_db(trim($_SESSION['current_basket']['basket_owner']))."'");
+		while($res = $db->fetch_object()) {
+			$entities .= "'".$res->entity_id."', ";
+		}
+		for($cptEnt=0;$cptEnt<count($_SESSION['user']['entities']);$cptEnt++) {
+			$entities .= "'" . $_SESSION['user']['entities'][$cptEnt]['ENTITY_ID'] . "', ";
+		}
+		$entities = preg_replace('/, $/', '', $entities);
+		if($entities == '' && $user_id == 'superadmin') {
+			if($_SESSION['config']['databasetype'] == "ORACLE" || $_SESSION['config']['databasetype'] == "SQLSERVER") {
+				$entities = "''''";
+			} else {
+				$entities = "''";
+			}
+		}
+		$where_concat .= " and ".$table.".res_id = ".$_SESSION['tablename']['ent_listinstance'].".res_id and (".$_SESSION['tablename']['ent_listinstance'].".item_id = '".$_SESSION['current_basket']['basket_owner']."' or ".$_SESSION['tablename']['ent_listinstance'].".item_id in (" . $entities . "))";
 	} else {
-		$where_concat .= " and ".$table.".res_id = ".$_SESSION['tablename']['ent_listinstance'].".res_id and ".$_SESSION['tablename']['ent_listinstance'].".item_id = '".$_SESSION['user']['UserId']."'";
-	} 
+		for($cptEnt=0;$cptEnt<count($_SESSION['user']['entities']);$cptEnt++) {
+			$entities .= "'" . $_SESSION['user']['entities'][$cptEnt]['ENTITY_ID'] . "', ";
+		}
+		$entities = preg_replace('/, $/', '', $entities);
+		if($entities == '' && $user_id == 'superadmin') {
+			if($_SESSION['config']['databasetype'] == "ORACLE" || $_SESSION['config']['databasetype'] == "SQLSERVER") {
+				$entities = "''''";
+			} else {
+				$entities = "''";
+			}
+		}
+		$where_concat .= " and ".$table.".res_id = ".$_SESSION['tablename']['ent_listinstance'].".res_id and (".$_SESSION['tablename']['ent_listinstance'].".item_id = '".$_SESSION['user']['UserId']."' or ".$_SESSION['tablename']['ent_listinstance'].".item_id in (" . $entities . "))";
+	}
 	$tab = $request->select($select, $where_concat, $orderstr, $_SESSION['config']['databasetype'], $_SESSION['config']['databasesearchlimit'], false,"", "", "", false);
 }
 //$request->show();
