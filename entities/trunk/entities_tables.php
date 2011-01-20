@@ -30,6 +30,7 @@
 */
 
 if(!defined('ENT_ENTITIES')) define( 'ENT_ENTITIES', 'entities');
+if(!defined('ENT_USERS_ENTITIES')) define( 'ENT_USERS_ENTITIES', 'users_entities');
 if(!defined('ENT_LISTMODELS')) define( 'ENT_LISTMODELS', 'listmodels');
 if(!defined('ENT_LISTINSTANCE')) define( 'ENT_LISTINSTANCE', 'listinstance');
 if(!defined('ENT_GROUPBASKET_REDIRECT')) define( 'ENT_GROUPBASKET_REDIRECT', 'groupbasket_redirect');

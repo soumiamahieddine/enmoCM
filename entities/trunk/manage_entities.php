@@ -46,6 +46,7 @@ $admin->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");
 require_once('modules'.DIRECTORY_SEPARATOR.'entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_entities.php');
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
+require_once("modules/entities/entities_tables.php");
 $ent = new entity();
 $func = new functions();
 $request = new request;
@@ -77,7 +78,7 @@ if($_SESSION['user']['UserId'] != 'superadmin')
         }
 
         //we need all entities that are managed by connected user
-        $where.= '('.$_SESSION['tablename']['ent_entities'].'.entity_id in ('.join(',', $my_tab_entities_id).'))';
+        $where.= '('.ENT_ENTITIES.'.entity_id in ('.join(',', $my_tab_entities_id).'))';
     }
 }
 
@@ -95,8 +96,8 @@ if(isset($_REQUEST['order_field']) && !empty($_REQUEST['order_field']))
 
 $orderstr = $list->define_order($order, $field);
 
-$select[$_SESSION['tablename']['ent_entities']] = array();
-array_push($select[$_SESSION['tablename']['ent_entities']], "entity_id", "entity_label", "entity_type", "enabled");
+$select[ENT_ENTITIES] = array();
+array_push($select[ENT_ENTITIES], "entity_id", "entity_label", "entity_type", "enabled");
 
 $tab = $request->select($select, $where, $orderstr, $_SESSION['config']['databasetype']);
 //$request->show();

@@ -10,7 +10,7 @@
 * @license GPL
 * @author  C�dric Ndoumba  <dev@maarch.org>
 */
-
+require("modules/entities/entities_tables.php");
 class entities extends dbquery
 {
     /**
@@ -52,9 +52,9 @@ class entities extends dbquery
         $type = "root";
         $this->connect();
         $this->query('select ue.entity_id, ue.user_role, ue.primary_entity, e.entity_label, e.short_label
-                    from '.$_SESSION['tablename']['ent_users_entities'].' ue,
+                    from '.ENT_USERS_ENTITIES.' ue,
                     '.$_SESSION['tablename']['users'].' u,
-                    '.$_SESSION['tablename']['ent_entities']." e
+                    '.ENT_ENTITIES." e
                     where ue.user_id = u.user_id
                     and ue.entity_id = e.entity_id
                     and e.enabled = 'Y'
@@ -111,7 +111,7 @@ class entities extends dbquery
         {
             $entities = '';
 
-                $db->query("select entity_id from ".$_SESSION['tablename']['ent_users_entities']." where user_id = '".$this->protect_string_db(trim($user_id))."'");
+                $db->query("select entity_id from ".ENT_USERS_ENTITIES." where user_id = '".$this->protect_string_db(trim($user_id))."'");
                 while($res = $db->fetch_object())
                 {
                     $entities .= "'".$res->entity_id."', ";
@@ -135,7 +135,7 @@ class entities extends dbquery
         if(preg_match('/@all_entities/', $where))
         {
             $entities = '';
-            $db->query("select entity_id from ".$_SESSION['tablename']['ent_entities']." where enabled ='Y'");
+            $db->query("select entity_id from ".ENT_ENTITIES." where enabled ='Y'");
             while($res = $db->fetch_object())
             {
                 $entities .= "'".$res->entity_id."', ";
@@ -153,7 +153,7 @@ class entities extends dbquery
             else
             {
                 //echo "<br>l'entité primaire de l'utilisateur<br>";
-                $db->query("select entity_id from ".$_SESSION['tablename']['ent_users_entities']." where user_id = '".$this->protect_string_db(trim($user_id))."' and primary_entity = 'Y'");
+                $db->query("select entity_id from ".ENT_USERS_ENTITIES." where user_id = '".$this->protect_string_db(trim($user_id))."' and primary_entity = 'Y'");
                 //$db->show();
                 $res = $db->fetch_object();
                 if(isset($res->entity_id))
@@ -383,7 +383,7 @@ class entities extends dbquery
         {
             if($res->entity_id <> '')
             {
-                $db->query("select entity_label from ".$_SESSION['tablename']['ent_entities']." where entity_id = '".$this->protect_string_db(trim($res->entity_id))."'");
+                $db->query("select entity_label from ".ENT_ENTITIES." where entity_id = '".$this->protect_string_db(trim($res->entity_id))."'");
                 $line = $db->fetch_object();
                 $label = $db->show_string($line->entity_label);
                 $tab = array('ID' => $res->entity_id, 'LABEL' => $label, 'KEYWORD' => false);
@@ -413,7 +413,7 @@ class entities extends dbquery
         {
             if($res->entity_id <> '')
             {
-                $db->query("select entity_label from ".$_SESSION['tablename']['ent_entities']." where entity_id = '".$this->protect_string_db(trim($res->entity_id))."'");
+                $db->query("select entity_label from ".ENT_ENTITIES." where entity_id = '".$this->protect_string_db(trim($res->entity_id))."'");
                 $line = $db->fetch_object();
                 $label = $db->show_string($line->entity_label);
                 $tab = array('ID' => $res->entity_id, 'LABEL' => $label, 'KEYWORD' => false);

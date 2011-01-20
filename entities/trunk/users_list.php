@@ -31,6 +31,7 @@ $admin->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
 require_once('modules'.DIRECTORY_SEPARATOR.'entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_entities.php');
 require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR.'class_list_show.php');
+require("modules/entities/entities_tables.php");
 $func = new functions();
 $ent = new entity();
 
@@ -62,12 +63,12 @@ if($_SESSION['user']['UserId'] != 'superadmin')
 
         //we need all users who aren't releated with an entity
         // and all users who are releated with all entities that are managed by connected user
-        $where.= '('.$_SESSION['tablename']['users'].'.user_id not in (select distinct user_id from '.$_SESSION['tablename']['ent_users_entities'].') or '.$_SESSION['tablename']['ent_users_entities'].'.entity_id in ('.join(',', $my_tab_entities_id).'))';
+        $where.= '('.$_SESSION['tablename']['users'].'.user_id not in (select distinct user_id from '.ENT_USERS_ENTITIES.') or '.$_SESSION['tablename']['ent_users_entities'].'.entity_id in ('.join(',', $my_tab_entities_id).'))';
     }
 }
 
 $first_join_table = $_SESSION['tablename']['users'];
-$second_join_table = $_SESSION['tablename']['ent_users_entities'];
+$second_join_table = ENT_USERS_ENTITIES;
 $join_key = "user_id";
 $limit = 10;
 

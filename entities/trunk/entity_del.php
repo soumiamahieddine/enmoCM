@@ -33,6 +33,7 @@ $page_id = "entity_del";
 $admin->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
 require_once('modules'.DIRECTORY_SEPARATOR.'entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_entities.php');
+require("modules/entities/entities_tables.php");
 $admin = new core_tools();
 $ent = new entity();
 $db = new dbquery();
@@ -67,9 +68,9 @@ if($_REQUEST['valid'])
                 //$db->show();
             }
         }
-        $db->query("update ".$_SESSION['tablename']['ent_users_entities']." set entity_id = '".$db->protect_string_db($_REQUEST['doc_entity_id'])."' where entity_id = '".$db->protect_string_db($s_id)."'");
+        $db->query("update ".ENT_USERS_ENTITIES." set entity_id = '".$db->protect_string_db($_REQUEST['doc_entity_id'])."' where entity_id = '".$db->protect_string_db($s_id)."'");
         //$db->show();
-        $db->query("select entity_id from ".$_SESSION['tablename']['ent_entities']." where parent_entity_id = '".$db->protect_string_db($s_id)."'");
+        $db->query("select entity_id from ".ENT_ENTITIES." where parent_entity_id = '".$db->protect_string_db($s_id)."'");
         $db2 = new dbquery();
         $db2->connect();
         while($lineEnt=$db->fetch_object())
@@ -77,14 +78,14 @@ if($_REQUEST['valid'])
             //si la nouvelle entité (l'entité remplaçante) est une entité fille de l'entité à supprimer alors l'entité remplaçante récupère l'entité mère de l'entité à supprimer
             if($lineEnt->entity_id == $db2->protect_string_db($_REQUEST['doc_entity_id']))
             {
-                $db2->query("select parent_entity_id from ".$_SESSION['tablename']['ent_entities']." where entity_id = '".$db2->protect_string_db($s_id)."'");
+                $db2->query("select parent_entity_id from ".ENT_ENTITIES." where entity_id = '".$db2->protect_string_db($s_id)."'");
                 $lineParentEnt = $db2->fetch_object();
-                $db2->query("update ".$_SESSION['tablename']['ent_entities']." set parent_entity_id = '".$db2->protect_string_db($lineParentEnt->parent_entity_id)."' where entity_id = '".$lineEnt->entity_id."'");
+                $db2->query("update ".ENT_ENTITIES." set parent_entity_id = '".$db2->protect_string_db($lineParentEnt->parent_entity_id)."' where entity_id = '".$lineEnt->entity_id."'");
                 //$db2->show();
             }
             else
             {
-                $db2->query("update ".$_SESSION['tablename']['ent_entities']." set parent_entity_id = '".$db2->protect_string_db($_REQUEST['doc_entity_id'])."' where entity_id = '".$lineEnt->entity_id."'");
+                $db2->query("update ".ENT_ENTITIES." set parent_entity_id = '".$db2->protect_string_db($_REQUEST['doc_entity_id'])."' where entity_id = '".$lineEnt->entity_id."'");
                 //$db2->show();
             }
         }
@@ -101,18 +102,25 @@ if($_REQUEST['valid'])
         {
             $entity_id_up = $_REQUEST['doc_entity_id'];
         }
-        //groupbasket_redirect
-        $db->query("update ".$_SESSION['tablename']['ent_groupbasket_redirect']." set entity_id = '".$db->protect_string_db($entity_id_up)."' where entity_id = '".$db->protect_string_db($s_id)."'");
+        if($admin->is_module_loaded('baskets'))
+        {
+            //groupbasket_redirect
+            $db->query("update ".$_SESSION['tablename']['ent_groupbasket_redirect']." set entity_id = '".$db->protect_string_db($entity_id_up)."' where entity_id = '".$db->protect_string_db($s_id)."'");
+             //listinstance
+            $db->query("update ".$_SESSION['tablename']['ent_listinstance']." set item_id = '".$db->protect_string_db($entity_id_up)."' where item_id = '".$db->protect_string_db($s_id)."' and item_type = 'entity_id'");
+            //$db->show();
+            //listmodels
+            $db->query("delete from ".$_SESSION['tablename']['ent_listmodels']." where object_id = '".$db->protect_string_db($s_id)."'");
+            //$db->show();
+        }
         //$db->show();
-        //templates_association
-        $db->query("update ".$_SESSION['tablename']['temp_templates_association']." set value_field = '".$db->protect_string_db($entity_id_up)."' where value_field = '".$db->protect_string_db($s_id)."' and what = 'destination'");
-        //$db->show();
-        //listinstance
-        $db->query("update ".$_SESSION['tablename']['ent_listinstance']." set item_id = '".$db->protect_string_db($entity_id_up)."' where item_id = '".$db->protect_string_db($s_id)."' and item_type = 'entity_id'");
-        //$db->show();
-        //listmodels
-        $db->query("delete from ".$_SESSION['tablename']['ent_listmodels']." where object_id = '".$db->protect_string_db($s_id)."'");
-        //$db->show();
+        if($admin->is_module_loaded('templates'))
+        {
+            //templates_association
+            $db->query("update ".$_SESSION['tablename']['temp_templates_association']." set value_field = '".$db->protect_string_db($entity_id_up)."' where value_field = '".$db->protect_string_db($s_id)."' and what = 'destination'");
+            //$db->show();
+        }
+
         if($admin->is_module_loaded('advanced_physical_archive'))
         {
             //ar_boxes
