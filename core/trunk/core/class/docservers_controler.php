@@ -1007,6 +1007,8 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
 							//to control fingerprint of the offset 
 							$fingerprintFromDocserver = $extract['fingerprint'];
 						}
+					} else {
+						$mimeType = self::getMimeType($adrToExtract['path_to_file']);
 					}
 					//var_dump($extract);exit;
 					//manage view of the file
