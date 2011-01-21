@@ -84,6 +84,7 @@ if (!defined('_VALIDATION')) define( '_VALIDATION', 'Validation');
 if (!defined('_REDIRECTION')) define( '_REDIRECTION', 'Redirection');
 if (!defined('_DUPLICATION')) define( '_DUPLICATION', 'Duplication');
 if (!defined('_PROPOSITION')) define( '_PROPOSITION', 'Proposition');
+if (!defined('_ERR')) define( '_ERR', 'Erreur');
 if (!defined('_CLOSE')) define( '_CLOSE', 'Fermer');
 if (!defined('_CLOSE_WINDOW')) define( '_CLOSE_WINDOW', 'Fermer la fen&ecirc;tre');
 if (!defined('_DIFFUSE')) define( '_DIFFUSE', 'Diffuser');

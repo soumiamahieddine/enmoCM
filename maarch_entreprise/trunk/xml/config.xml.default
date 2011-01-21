@@ -137,6 +137,10 @@
 		<docserverslocationsban>true</docserverslocationsban>
 	</HISTORY>
 	<KEYWORDS>
+		<id>ERR</id>
+		<label>_ERR</label>
+	</KEYWORDS>
+	<KEYWORDS>
 		<id>VIEW</id>
 		<label>_VIEW</label>
 	</KEYWORDS>
