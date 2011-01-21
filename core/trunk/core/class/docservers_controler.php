@@ -943,6 +943,7 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
     }
 
     public function viewResource($gedId, $tableName, $adrTable) {
+		$history = new history();
         $coreTools = new core_tools();
         $whereClause = "";
         if($_SESSION['origin'] <> "basket" && $_SESSION['origin'] <> "workflow") {
@@ -959,7 +960,8 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
         $adr = $resource->getResourceAdr($tableName, $gedId, $whereClause, $adrTable);
         //$coreTools->show_array($adr);exit;
         if($adr['status'] == "ko") {
-            $result = array("status" => "ko", "mime_type" => "", "ext" => "", "file_content" => "", "tmp_path" => "", "error" => _NO_RIGHT_ON_RESOURCE_OR_RESOURCE_NOT_EXISTS);
+			$result = array("status" => "ko", "mime_type" => "", "ext" => "", "file_content" => "", "tmp_path" => "", "error" => _NO_RIGHT_ON_RESOURCE_OR_RESOURCE_NOT_EXISTS);
+			$history->add($tableName, $gedId, "UP", _NO_RIGHT_ON_RESOURCE_OR_RESOURCE_NOT_EXISTS, $_SESSION['config']['databasetype']);
         } else {
 			require_once("core" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . "docserver_types_controler.php");
 			$docserverTypeControler = new docserver_types_controler();
@@ -977,6 +979,7 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
 				$docserverTypeObject = $docserverTypeControler->get($docserverObject->docserver_type_id);
 				if(!file_exists($file)) {
 					$concatError .= _FILE_NOT_EXISTS_ON_THE_SERVER . " : " . $file . "||";
+					$history->add(_DOCSERVERS_TABLE_NAME, $adr[0][$cptDocserver]['docserver_id'], "ERR", $adr[0][$cptDocserver]['docserver_id'] . ":" . _FILE_NOT_EXISTS_ON_THE_SERVER . " : " . $file, $_SESSION['config']['databasetype']);
 				} else {
 					$fingerprintFromDocserver = self::doFingerprint($file, $docserverTypeObject->fingerprint_mode);
 					/*echo $file."<br>";
@@ -993,6 +996,7 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
 					$docserverTypeObject = $docserverTypeControler->get($docserverObject->docserver_type_id);
 					if($docserverTypeObject->is_container && $adr[0][$cptDocserver]['offset_doc'] == "") {
 						$concatError .= _PB_WITH_OFFSET_OF_THE_DOC_IN_THE_CONTAINER . "||";
+						$history->add(_DOCSERVERS_TABLE_NAME, $adr[0][$cptDocserver]['docserver_id'], "ERR", $adr[0][$cptDocserver]['docserver_id'] . ":" . _PB_WITH_OFFSET_OF_THE_DOC_IN_THE_CONTAINER, $_SESSION['config']['databasetype']);
 					}
 					//manage compressed resource
 					if($docserverTypeObject->is_compressed) {
@@ -1000,6 +1004,7 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
 						$extract = self::extractArchive($adrToExtract, $docserverTypeObject->fingerprint_mode);
 						if($extract['status'] == "ko") {
 							$concatError .= $extract['error'] . "||";
+							$history->add(_DOCSERVERS_TABLE_NAME, $adr[0][$cptDocserver]['docserver_id'], "ERR",  $adr[0][$cptDocserver]['docserver_id'] . ":" . $extract['error'], $_SESSION['config']['databasetype']);
 						} else {
 							$file = $extract['path'];
 							$mimeType = $extract['mime_type'];
@@ -1028,8 +1033,7 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
 						if($type_state <> false) {
 							if($_SESSION['history']['resview'] == "true") {
 								require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
-								$users = new history();
-								$users->add($tableName, $gedId, "VIEW", _VIEW_DOC_NUM."".$gedId, $_SESSION['config']['databasetype'], 'indexing_searching');
+								$history->add($tableName, $gedId, "VIEW", _VIEW_DOC_NUM."".$gedId, $_SESSION['config']['databasetype'], 'indexing_searching');
 							}
 							//count number of viewed in listinstance for the user
 							if($coreTools->is_module_loaded('entities')) {
@@ -1044,12 +1048,15 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
 								return $result;
 							} else {
 								$concatError .= _FILE_NOT_EXISTS . "||";
+								$history->add(_DOCSERVERS_TABLE_NAME, $adr[0][$cptDocserver]['docserver_id'], "ERR", $adr[0][$cptDocserver]['docserver_id'] . ":" . _FILE_NOT_EXISTS, $_SESSION['config']['databasetype']);
 							}
 						} else {
 							$concatError .= _FILE_TYPE . " " . _UNKNOWN . "||";
+							$history->add(_DOCSERVERS_TABLE_NAME, $adr[0][$cptDocserver]['docserver_id'], "ERR", $adr[0][$cptDocserver]['docserver_id'] . ":" . _FILE_TYPE . " " . _UNKNOWN, $_SESSION['config']['databasetype']);
 						}
 					} else {
 						$concatError .= _PB_WITH_FINGERPRINT_OF_DOCUMENT . "||";
+						$history->add(_DOCSERVERS_TABLE_NAME, $adr[0][$cptDocserver]['docserver_id'], "ERR", $adr[0][$cptDocserver]['docserver_id'] . ":" . _PB_WITH_FINGERPRINT_OF_DOCUMENT, $_SESSION['config']['databasetype']);
 					}
 					if(file_exists($extract['tmpArchive'])) {
 						self::washTmp($extract['tmpArchive']);
