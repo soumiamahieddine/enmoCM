@@ -58,11 +58,20 @@
  *  25 : Pb with fingerprint of the source
  */
 
-include("load_process_stack.inc");
-include("resources.inc");
-include("docservers.inc");
-include("oais.inc");
-include("custom.inc");
+try {
+	include("load_process_stack.inc");
+	include("resources.inc");
+	include("docservers.inc");
+	include("oais.inc");
+	if($GLOBALS['customPath'] <> "") {
+		include($GLOBALS['customPath']);
+	} else {
+		include("custom.inc");
+	}
+} catch (IncludeFileError $e) {
+	echo "Maarch_CLITools required ! \n (pear.maarch.org)\n";
+	exit(6);
+}
 
 /******************************************************************************************************/
 /* beginning */

@@ -1,27 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ROOT>
     <CONFIG>
-        <lang>fr</lang> <!-- fr, en-->
+        <Lang>fr</Lang> <!-- fr, en-->
         <MaarchDirectory>C:\xampp\htdocs\maarch_entreprise_trunk\</MaarchDirectory>
         <TmpDirectory>C:\xampp\htdocs\maarch_entreprise_trunk\modules\life_cycle\batch\tmp\</TmpDirectory>
-		<PATHTOCOMPRESSTOOL>C:\Program Files\7-Zip\7z.exe</PATHTOCOMPRESSTOOL>
+		<PathToCompressTool>C:\Program Files\7-Zip\7z.exe</PathToCompressTool>
         <MaarchApps>maarch_entreprise</MaarchApps>
         <LogLevel>INFO</LogLevel>  <!-- DEBUG, INFO, NOTICE, WARNING, ERROR-->
         <DisplayedLogLevel>INFO</DisplayedLogLevel> <!-- DEBUG, INFO, NOTICE, WARNING, ERROR-->
         <StackSizeLimit>10000</StackSizeLimit>
+        <CustomPath></CustomPath> <!-- path to the custom file to create pdi, ex : c:\xampp\htdocs\maarch_entreprise_trunk\custom\main_lagi\modules\life_cycle\batch\custom.inc -->
     </CONFIG>
     <CONFIG_BASE>
         <databaseserver>127.0.0.1</databaseserver>
-        <databaseserverport>5432</databaseserverport>
-        <databasename>maarch_entreprise_trunk</databasename>
-        <databasetype>POSTGRESQL</databasetype>
-        <databaseuser>postgres</databaseuser>
-        <databasepassword>maarch</databasepassword>
+		<databaseserverport>5432</databaseserverport>
+		<databasetype>POSTGRESQL</databasetype>
+		<databasename>maarch_entreprise_trunk</databasename>
+		<databaseuser>postgres</databaseuser>
+		<databasepassword>maarch</databasepassword>
     </CONFIG_BASE>
     <COLLECTION>
-		<id>res_coll</id>
-		<table>res_x</table>
-		<view>res_view</view>
-		<adr>adr_x</adr>
+		<Id>res_coll</Id>
+		<Table>res_x</Table>
+		<View>res_view</View>
+		<Adr>adr_x</Adr>
 	</COLLECTION>
 </ROOT>

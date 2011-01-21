@@ -163,20 +163,15 @@ if ($xmlconfig == FALSE) {
 	exit(5);
 }
 $CONFIG = $xmlconfig->CONFIG;
-$lang = (string) $CONFIG->lang;
+$lang = (string) $CONFIG->Lang;
 $MaarchDirectory = (string) $CONFIG->MaarchDirectory;
 $MaarchApps = (string) $CONFIG->MaarchApps;
 $log_level = (string) $CONFIG->LogLevel;
 $DisplayedLogLevel = (string) $CONFIG->DisplayedLogLevel;
 $GLOBALS['stackSizeLimit'] = (string) $CONFIG->StackSizeLimit;
-$GLOBALS['databasetype'] = (string) $CONFIG->DisplayedLogLevel;
-$databasename = (string) $xmlconfig->CONFIG_BASE->databasename;
-$databaseserver = (string) $xmlconfig->CONFIG_BASE->databaseserver;
-$databaseserverport = (string) $xmlconfig->CONFIG_BASE->databaseserverport;
-$databaseuser = (string) $xmlconfig->CONFIG_BASE->databaseuser;
-$databasepassword = (string) $xmlconfig->CONFIG_BASE->databasepassword;
+$GLOBALS['databasetype'] = (string) $xmlconfig->CONFIG_BASE->DatabaseType;
 foreach($xmlconfig->COLLECTION as $col) {
-	$GLOBALS['collections'][$i] = array("id" => (string) $col->id, "table" => (string) $col->table,"view" => (string) $col->view,"adr" => (string) $col->adr);
+	$GLOBALS['collections'][$i] = array("id" => (string) $col->Id, "table" => (string) $col->Table, "view" => (string) $col->View, "adr" => (string) $col->Adr);
 	if ($GLOBALS['collections'][$i]['id'] == $GLOBALS['collection']) {
 		$GLOBALS['table'] = $GLOBALS['collections'][$i]['table'];
 	}

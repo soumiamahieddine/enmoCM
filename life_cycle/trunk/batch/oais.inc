@@ -64,8 +64,8 @@ function createAip($resInContainer) {
 function createPDIHistory($resInContainer) {
 	$tmpXML = $GLOBALS['TmpDirectory'] . DIRECTORY_SEPARATOR . "pdi_history.xml";
 	$docXML = new DomDocument("1.0", "utf-8");
-	$docXML->preserveWhiteSpace = false;
-	$dom->formatOutput = true;
+	$docXML->preserveWhiteSpace = true;
+	$docXML->formatOutput = true;
 	//root
 	$root = $docXML->createElement("ROOT");
 	$docXML->appendChild($root);
@@ -108,8 +108,8 @@ function createPDIHistory($resInContainer) {
 function createPackagingInformation($PIArray) {
 	$tmpXML = $GLOBALS['TmpDirectory'] . DIRECTORY_SEPARATOR . "packaging_information.xml";
 	$docXML = new DomDocument("1.0", "utf-8");
-	$docXML->preserveWhiteSpace = false;
-	$dom->formatOutput = true;
+	$docXML->preserveWhiteSpace = true;
+	$docXML->formatOutput = true;
 	//root
 	$root = $docXML->createElement("ROOT");
 	$docXML->appendChild($root);
