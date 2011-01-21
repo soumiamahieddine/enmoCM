@@ -226,7 +226,12 @@ else
             //$db->show_array($indexes);
             foreach(array_keys($indexes) as $key)
             {
-                $tmp = 'doc_'.$key;
+                if(preg_match('/^custom/', $key)){
+                    $tmp = 'doc_' . $key;
+                }
+                else{
+                    $tmp = $key;
+                }
                 if($indexes[$key]['type'] == "date")
                 {
                     $res->$tmp = $db->format_date_db($res->$tmp, false);
