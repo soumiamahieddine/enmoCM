@@ -319,76 +319,6 @@ function format_item(&$item,$label,$size,$label_align,$align,$valign,$show,$orde
  * Validate a submit (add or up),
  * up to saving object
  */
-
-function validate_user_submit(){
-
-    $pageName = "users_management_controler";
-  //  $f = new functions();
-    $mode = $_REQUEST['mode'];
-    $user = new users();
-    $user->user_id=$_REQUEST['user_id'];
-    if($mode == "add"){
-        if(isset($_SESSION['config']['userdefaultpassword']) && !empty($_SESSION['config']['userdefaultpassword'])){
-            $user->password = $_SESSION['config']['userdefaultpassword'];
-        }
-        else{
-            $user->password = 'maarch';
-        }
-    }
-    $user->firstname = $_REQUEST['FirstName'];
-    $user->lastname = $_REQUEST['LastName'];
-    if(isset($_REQUEST['Department']) && !empty($_REQUEST['Department'])){
-        $user->department  = $_REQUEST['Department'];
-    }
-    if(isset($_REQUEST['Phone']) && !empty($_REQUEST['Phone'])){
-        $user->phone  = $_REQUEST['Phone'];
-    }
-    if(isset($_REQUEST['LoginMode']) && !empty($_REQUEST['LoginMode'])){
-        $user->loginmode  = $_REQUEST['LoginMode'];
-    }
-    if(isset($_REQUEST['Mail']) && !empty($_REQUEST['Mail'])){
-        $user->mail  = $_REQUEST['Mail'];
-    }
-
-    $status= array();
-    $status['order']=$_REQUEST['order'];
-    $status['order_field']=$_REQUEST['order_field'];
-    $status['what']=$_REQUEST['what'];
-    $status['start']=$_REQUEST['start'];
-
-    $control = array();
-
-    $control = users_controler::save($user, $mode);
-    if(!empty($control['error']) && $control['error'] <> 1) {
-        // Error management depending of mode
-        $_SESSION['error'] = str_replace("#", "<br />", $control['error']);
-        put_in_session("status", $status);
-        put_in_session("users",$user->getArray());
-
-        switch ($mode) {
-            case "up":
-                if(!empty($_REQUEST['id'])) {
-                    header("location: ".$_SESSION['config']['businessappurl']."index.php?page=".$pageName."&mode=up&id=".$_REQUEST['id']."&admin=docservers");
-                } else {
-                    header("location: ".$_SESSION['config']['businessappurl']."index.php?page=".$pageName."&mode=list&admin=users&order=".$status['order']."&order_field=".$status['order_field']."&start=".$status['start']."&what=".$status['what']);
-                }
-                exit;
-            case "add":
-                header("location: ".$_SESSION['config']['businessappurl']."index.php?page=".$pageName."&mode=add&admin=users");
-                exit;
-        }
-    } else {
-        if($mode == "add"){
-            $_SESSION['error'] = _USER_ADDED;
-        }
-         else{
-            $_SESSION['error'] = _USER_UPDATED;
-        }
-        unset($_SESSION['m_admin']);
-        header("location: ".$_SESSION['config']['businessappurl']."index.php?page=".$pageName."&mode=list&admin=users&order=".$status['order']."&order_field=".$status['order_field']."&start=".$status['start']."&what=".$status['what']);
-    }
-}
-/*
 function validate_user_submit(){
 
     $user = new users();
@@ -500,7 +430,6 @@ function validate_user_submit(){
         header("location: ".$_SESSION['config']['businessappurl']."index.php?page=users_management_controler&mode=list&admin=users&order=".$status['order']."&order_field=".$status['order_field']."&start=".$status['start']."&what=".$status['what']);
     }
 }
-*/
 
 function init_session()
 {
@@ -525,4 +454,6 @@ function put_in_session($type,$hashable, $show_string = true){
             $_SESSION['m_admin'][$type][$key]=$value;
     }
 }
+
+
 ?>
