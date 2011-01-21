@@ -130,7 +130,7 @@ if( isset($_REQUEST['valid']))
 			else
 			{
 				$db->connect();
-				$desc = $_REQUEST['desc_structure'];
+				$desc = $db->protect_string_db($_REQUEST['desc_structure']);
 				$db->query("INSERT INTO ".$_SESSION['tablename']['doctypes_first_level']." ( doctypes_first_level_label) VALUES ( '".$desc."')");
 				$db->query("select doctypes_first_level_id from ".$_SESSION['tablename']['doctypes_first_level']." where doctypes_first_level_label = '".$desc."'");
 				$res = $db->fetch_object();
