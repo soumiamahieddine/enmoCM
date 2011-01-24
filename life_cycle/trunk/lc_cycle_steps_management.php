@@ -128,7 +128,7 @@ elseif($mode == "up" || $mode == "add"){
 						<?php
 						for($cptStepOperation=0;$cptStepOperation<count($_SESSION['lifeCycleFeatures']['LIFE_CYCLE']['PROCESS']['MODE']);$cptStepOperation++){
 							?>
-							<option value="<?php echo $_SESSION['lifeCycleFeatures']['LIFE_CYCLE']['PROCESS']['MODE'][$cptStepOperation];?>" <?php if($_SESSION['m_admin']['docserver_types']['step_operation'] == $_SESSION['lifeCycleFeatures']['LIFE_CYCLE']['PROCESS']['MODE'][$cptStepOperation]) { echo 'selected="selected"';}?>><?php echo $_SESSION['lifeCycleFeatures']['LIFE_CYCLE']['PROCESS']['MODE'][$cptStepOperation];?></option>
+							<option value="<?php echo $_SESSION['lifeCycleFeatures']['LIFE_CYCLE']['PROCESS']['MODE'][$cptStepOperation];?>" <?php if($_SESSION['m_admin']['lc_cycle_steps']['step_operation'] == $_SESSION['lifeCycleFeatures']['LIFE_CYCLE']['PROCESS']['MODE'][$cptStepOperation]) { echo 'selected="selected"';}?>><?php echo $_SESSION['lifeCycleFeatures']['LIFE_CYCLE']['PROCESS']['MODE'][$cptStepOperation];?></option>
 						<?php
 						}
 						?>
