@@ -56,6 +56,9 @@
  *  23 : Problem with compression
  *  24 : Problem with extract
  *  25 : Pb with fingerprint of the source
+ *  26 : File deletion impossible
+ *  27 : Resource not found
+ *  28 : The docserver will be full at 95 percent
  */
 
 try {
@@ -115,7 +118,7 @@ while ($GLOBALS['state'] <> "END") {
 			break;
 		/**********************************************************************************************/
 		case "GET_DOCSERVERS" :
-			$query = "select * from "._LC_CYCLE_STEPS_TABLE_NAME." where policy_id = '".$GLOBALS['policy']."' and cycle_id = '".$GLOBALS['cycle']."'";
+			$query = "select * from " . _LC_CYCLE_STEPS_TABLE_NAME . " where policy_id = '" . $GLOBALS['policy'] . "' and cycle_id = '" . $GLOBALS['cycle'] . "'";
 			do_query($GLOBALS['db'], $query);
 			$GLOBALS['state'] = "A_STEP";
 			if ($GLOBALS['db']->nb_result() == 0) {
@@ -124,7 +127,7 @@ while ($GLOBALS['state'] <> "END") {
 				$GLOBALS['state'] = "END";break;
 			} else {
 				while ($stepsRecordset = $GLOBALS['db']->fetch_object()) {
-					$query = "select * from "._DOCSERVER_TYPES_TABLE_NAME." where docserver_type_id = '".$stepsRecordset->docserver_type_id."'";
+					$query = "select * from " . _DOCSERVER_TYPES_TABLE_NAME . " where docserver_type_id = '" . $stepsRecordset->docserver_type_id . "'";
 					do_query($GLOBALS['db2'], $query);
 					if ($GLOBALS['db2']->nb_result() == 0) {
 						$GLOBALS['logger']->write('Docserver type not found', 'ERROR', 12);
@@ -134,7 +137,8 @@ while ($GLOBALS['state'] <> "END") {
 						$docserverTypesRecordset = $GLOBALS['db2']->fetch_object();
 						$GLOBALS['docservers'][$stepsRecordset->cycle_step_id] = $GLOBALS['func']->object2array($docserverTypesRecordset);
 					}
-					$query = "select * from "._DOCSERVERS_TABLE_NAME." where docserver_type_id = '".$stepsRecordset->docserver_type_id."' order by priority_number";
+					// no need for a purge
+					$query = "select * from " . _DOCSERVERS_TABLE_NAME . " where docserver_type_id = '" . $stepsRecordset->docserver_type_id . "' order by priority_number";
 					do_query($GLOBALS['db2'], $query);
 					if ($GLOBALS['db2']->nb_result() == 0) {
 						$GLOBALS['logger']->write('Docserver not found', 'ERROR', 13);
@@ -159,12 +163,24 @@ while ($GLOBALS['state'] <> "END") {
 					$resInContainer = 0;
 					$totalSizeToAdd = 0;
 					$theLastRecordInStep = false;
-					$query = "select * from "._LC_STACK_TABLE_NAME." where policy_id = '".$GLOBALS['policy']."' and cycle_id = '".$GLOBALS['cycle']."' and cycle_step_id = '".$GLOBALS['currentStep']."' and status = 'I' and coll_id = '".$GLOBALS['collection']."'";
+					$query = "select * from " . _LC_STACK_TABLE_NAME . " where policy_id = '" . $GLOBALS['policy'] . "' and cycle_id = '" . $GLOBALS['cycle'] . "' and cycle_step_id = '".$GLOBALS['currentStep'] . "' and status = 'I' and coll_id = '" . $GLOBALS['collection'] . "'";
 					do_query($GLOBALS['db'], $query);
 					$cptRecordsTotalInStep = $GLOBALS['db']->nb_result();
-					$GLOBALS['logger']->write("total res in the step:".$cptRecordsTotalInStep, 'INFO');
-					if ($cptRecordsTotalInStep <> 0) {
+					$GLOBALS['logger']->write("total res in the step:" . $cptRecordsTotalInStep, 'INFO');
+					// no need for a purge
+					if ($cptRecordsTotalInStep <> 0 && $GLOBALS['steps'][$GLOBALS['currentStep']]['step_operation'] <> "PURGE") {
+						// Check size of the docserver (stop the program if the docserver will be full at 95 percent)
+						$query = "select sum(filesize) as sumfilesize from " . $GLOBALS['table'] . " where res_id in (select res_id from "._LC_STACK_TABLE_NAME." where policy_id = '".$GLOBALS['policy']."' and cycle_id = '".$GLOBALS['cycle']."' and cycle_step_id = '".$GLOBALS['currentStep']."' and status = 'I' and coll_id = '".$GLOBALS['collection']."')";
+						do_query($GLOBALS['db'], $query);
+						$resSum = $GLOBALS['db']->fetch_object();
+						$reasonableLimitSize = $GLOBALS['docservers'][$GLOBALS['currentStep']]['docserver']['size_limit_number'] * 0.95;
+						$targetSize = $resSum->sumfilesize + $GLOBALS['docservers'][$GLOBALS['currentStep']]['docserver']['actual_size_number'];
+						if ($targetSize > $reasonableLimitSize) {
+							$GLOBALS['logger']->write("The docserver will be full at 95 percent : " . $targetSize . " > " . $reasonableLimitSize, 'ERROR', 28);
+							exit(28);
+						}
 						$resultPath = array();
+						$totalSizeToAdd = $GLOBALS['docservers'][$GLOBALS['currentStep']]['docserver']['actual_size_number'];
 						$resultPath = $GLOBALS['docserverControler']->createPathOnDocServer($GLOBALS['docservers'][$GLOBALS['currentStep']]['docserver']['path_template']);
 						if($resultPath['error'] <> "") {
 							$GLOBALS['logger']->write($resultPath['error'], 'ERROR', 18);
@@ -172,6 +188,13 @@ while ($GLOBALS['state'] <> "END") {
 						}
 						$pathOnDocserver = $resultPath['destinationDir'];
 						$GLOBALS['logger']->write("target path on docserver:".$pathOnDocserver, 'INFO');
+					} elseif ($GLOBALS['steps'][$GLOBALS['currentStep']]['step_operation'] == "PURGE") {
+						$nbDocserver = 0;
+						$query = "select * from " . _DOCSERVERS_TABLE_NAME . " where docserver_type_id = '" . $GLOBALS['steps'][$GLOBALS['currentStep']]['docserver_type_id'] . "'";
+						while($docserversRecordset = $GLOBALS['db2']->fetch_object()) {
+							$GLOBALS['docservers'][$GLOBALS['currentStep']]['docserver'][$nbDocserver] = $GLOBALS['func']->object2array($docserversRecordset);
+							$nbDocserver++;
+						}
 					}
 					$GLOBALS['state'] = "A_RECORD";break;
 				}
@@ -185,11 +208,6 @@ while ($GLOBALS['state'] <> "END") {
 			if ($GLOBALS['db']->nb_result() == 0) {
 				foreach ($GLOBALS['steps'] as $key=>$value) {
 					if ($key == $GLOBALS['currentStep']) {
-						if ($totalSizeToAdd <> 0) {
-							$totalSizeToAdd = $totalSizeToAdd + $GLOBALS['docservers'][$GLOBALS['currentStep']]['docserver']['actual_size_number'];
-							$query  = "update "._DOCSERVERS_TABLE_NAME." set actual_size_number=".$totalSizeToAdd." where docserver_id='".$GLOBALS['docservers'][$GLOBALS['currentStep']]['docserver']['docserver_id']."'";
-							do_query($GLOBALS['db'], $query);
-						}
 						$GLOBALS['steps'][$key][0] = "OK";break;
 					}
 				}
@@ -202,23 +220,76 @@ while ($GLOBALS['state'] <> "END") {
 				$stackRecordset = $GLOBALS['db']->fetch_object();
 				$currentRecordInStack = array();
 				$currentRecordInStack = $GLOBALS['func']->object2array($stackRecordset);
-				controlIntegrityOfSource($currentRecordInStack['res_id']);
-				$sourceFilePath = getSourceResourcePath($currentRecordInStack['res_id']);
-				if (!file_exists($sourceFilePath)) {
-					$GLOBALS['logger']->write('Resource not found:' . $sourceFilePath, 'ERROR', 16);
-					$GLOBALS['exitCode'] = 16;
-					$GLOBALS['state'] = "END";break;
-				}
-				$currentRecordInStack['fingerprint'] = $GLOBALS['docserverControler']->doFingerprint($sourceFilePath, $GLOBALS['docservers'][$GLOBALS['currentStep']]['fingerprint_mode']);
-				$GLOBALS['logger']->write("current record:".$currentRecordInStack['res_id'], 'DEBUG');
 				// if NEW operation we have to add new states
 				if ($GLOBALS['steps'][$GLOBALS['currentStep']]['step_operation'] == "COPY" || $GLOBALS['steps'][$GLOBALS['currentStep']]['step_operation'] == "MOVE") {
-					$GLOBALS['state'] = "COPY_OR_MOVE";
+					controlIntegrityOfSource($currentRecordInStack['res_id']);
+					$sourceFilePath = getSourceResourcePath($currentRecordInStack['res_id']);
+					if (!file_exists($sourceFilePath)) {
+						$GLOBALS['logger']->write('Resource not found:' . $sourceFilePath, 'ERROR', 27);
+						$GLOBALS['exitCode'] = 27;
+						$GLOBALS['state'] = "END";break;
+					} else {
+						$currentRecordInStack['fingerprint'] = $GLOBALS['docserverControler']->doFingerprint($sourceFilePath, $GLOBALS['docservers'][$GLOBALS['currentStep']]['fingerprint_mode']);
+						$GLOBALS['logger']->write("current record:".$currentRecordInStack['res_id'], 'DEBUG');
+						$GLOBALS['state'] = "COPY_OR_MOVE";
+					}
+				} elseif ($GLOBALS['steps'][$GLOBALS['currentStep']]['step_operation'] == "PURGE") {
+					$GLOBALS['state'] = "CONTROL_ADR_X";
 				} else {
 					$GLOBALS['state'] = "END";
 				}
 			}
 			break;
+		/**********************************************************************************************/
+		case "CONTROL_ADR_X" :
+			$query = "select res_id from " . $GLOBALS['adrTable'] . " where res_id = " . $currentRecordInStack['res_id'];
+			do_query($GLOBALS['db'], $query);
+			if ($GLOBALS['db']->nb_result() <= 1) {
+				$GLOBALS['state'] = "A_RECORD";
+			} else {
+				if ($GLOBALS['docservers'][$GLOBALS['currentStep']]['is_container'] == "t") {
+					$GLOBALS['state'] = "CONTROL_CONTAINER_EMPTY";
+				} else {
+					$GLOBALS['state'] = "DO_PURGE_ON_DOCSERVER";
+				}
+			}
+			break;
+		/**********************************************************************************************/
+		case "DO_PURGE_ON_DOCSERVER" :
+			$GLOBALS['state'] = "DELETE_RES_ON_ADR_X";
+			$dsToUpdate = array();
+			for ($cptDs=0;$cptDs<count($GLOBALS['docservers'][$GLOBALS['currentStep']]['docserver']);$cptDs++) {
+				$sourceFilePath = getSourceResourcePath($currentRecordInStack['res_id'], $GLOBALS['docservers'][$GLOBALS['currentStep']]['docserver'][$cptDs]['docserver_id']);
+				if ($GLOBALS['docservers'][$GLOBALS['currentStep']]['docserver'][$cptDs]['docserver_id'] <> "") {
+					if (!file_exists($sourceFilePath) && $sourceFilePath <> "") {
+						$GLOBALS['logger']->write('Resource not found for purge:' . $sourceFilePath . ' res_id:' . $currentRecordInStack['res_id'] . ' docserver_id:' . $GLOBALS['docservers'][$GLOBALS['currentStep']]['docserver'][$cptDs]['docserver_id'], 'ERROR', 27);
+						$GLOBALS['exitCode'] = 27;
+						$GLOBALS['state'] = "END";break;
+					} else {
+						if(str_replace($GLOBALS['docserverSourcePath'], "", $sourceFilePath) <> "") {
+							//echo $GLOBALS['docservers'][$GLOBALS['currentStep']]['docserver'][$cptDs]['docserver_id'] . " " . $sourceFilePath . "\r\n";exit;
+							// WARNING unlink file
+							array_push($dsToUpdate, array("docserverId" => $GLOBALS['docservers'][$GLOBALS['currentStep']]['docserver'][$cptDs]['docserver_id']));
+							$currentFileSize = filesize($sourceFilePath);
+							if (!(unlink($sourceFilePath))) {
+								$GLOBALS['logger']->write('File deletion impossible:' . $sourceFilePath, 'ERROR', 26);
+								$GLOBALS['exitCode'] = 26;
+								$GLOBALS['state'] = "END";break;
+							} else {
+								$query = "select actual_size_number from " . _DOCSERVERS_TABLE_NAME . " where docserver_id = '" . $GLOBALS['docservers'][$GLOBALS['currentStep']]['docserver'][$cptDs]['docserver_id'] . "'";
+								do_query($GLOBALS['db'], $query);
+								$docserverRec = $GLOBALS['db']->fetch_object();
+								setSize($GLOBALS['docservers'][$GLOBALS['currentStep']]['docserver'][$cptDs]['docserver_id'], $docserverRec->actual_size_number - $currentFileSize);
+							}
+						}
+					}
+				}
+			}
+			break;
+		/**********************************************************************************************/
+		case "DELETE_RES_ON_ADR_X" :
+			deleteAdrx($currentRecordInStack['res_id'], $dsToUpdate);
+			$GLOBALS['state'] = "A_RECORD";break;
 		/**********************************************************************************************/
 		case "COPY_OR_MOVE" :
 			if ($GLOBALS['docservers'][$GLOBALS['currentStep']]['is_container'] == "t") {
@@ -282,6 +353,7 @@ while ($GLOBALS['state'] <> "END") {
 			$destinationDir = $copyResultArray['destinationDir'];
 			$fileDestinationName = $copyResultArray['fileDestinationName'];
 			$totalSizeToAdd = $totalSizeToAdd + $copyResultArray['fileSize'];
+			setSize($GLOBALS['docservers'][$GLOBALS['currentStep']]['docserver']['docserver_id'], $totalSizeToAdd);
 			$GLOBALS['state'] = "UPDATE_DATABASE";break;
 		/**********************************************************************************************/
 		case "UPDATE_DATABASE" :

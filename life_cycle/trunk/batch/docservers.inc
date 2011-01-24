@@ -101,4 +101,9 @@ function controlIntegrityOfSource($currentRecordInStack) {
 	$GLOBALS['docserverControler']->washTmp($GLOBALS['TmpDirectory'], true);
 }
 
+function setSize($docserverId, $newSize) {
+	$query = "update "._DOCSERVERS_TABLE_NAME." set actual_size_number=" . $newSize . " where docserver_id='" . $docserverId . "'";
+	do_query($GLOBALS['db'], $query);
+}
+
 ?>

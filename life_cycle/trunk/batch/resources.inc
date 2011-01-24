@@ -1,10 +1,18 @@
 <?php
 
-function getSourceResourcePath($resId) {
-	$query = "select res_id, docserver_id, path, filename, offset_doc from " . $GLOBALS['adrTable'] . " where res_id = " . $resId . " order by adr_priority";
+function getSourceResourcePath($resId, $docserverToPurge = "") {
+	if($docserverToPurge <> "") {
+		$query = "select res_id, docserver_id, path, filename, offset_doc from " . $GLOBALS['adrTable'] . " where res_id = " . $resId . " and docserver_id = '" . $docserverToPurge . "'";
+	} else {
+		$query = "select res_id, docserver_id, path, filename, offset_doc from " . $GLOBALS['adrTable'] . " where res_id = " . $resId . " order by adr_priority";
+	}
 	do_query($GLOBALS['db'], $query);
 	if ($GLOBALS['db']->nb_result() == 0) {
-		$query = "select res_id, docserver_id, path, filename, offset_doc from " . $GLOBALS['table'] . " where res_id = " . $resId;
+		if($docserverToPurge <> "") {
+			$query = "select res_id, docserver_id, path, filename, offset_doc from " . $GLOBALS['table'] . " where res_id = " . $resId . " and docserver_id = '" . $docserverToPurge . "'";
+		} else {
+			$query = "select res_id, docserver_id, path, filename, offset_doc from " . $GLOBALS['table'] . " where res_id = " . $resId;
+		}
 		do_query($GLOBALS['db'], $query);
 	}
 	$resRecordset = $GLOBALS['db']->fetch_object();
@@ -66,6 +74,20 @@ function do_update_db($resId, $path, $fileName, $offsetDoc, $fingerprint) {
 	}
 	$query = "insert into " . $GLOBALS['adrTable'] . " (res_id, docserver_id, path, filename, offset_doc, fingerprint, adr_priority) values (" . $resId . ", '" . $GLOBALS['docservers'][$GLOBALS['currentStep']]['docserver']['docserver_id'] . "', '" . $path . "', '" . $fileName . "', '" .  $offsetDoc . "', '" .  $fingerprint . "', " . $GLOBALS['docservers'][$GLOBALS['currentStep']]['docserver']['adr_priority_number'] . ")";
 	do_query($GLOBALS['db'], $query, true);
+	$query = "insert into " . HISTORY_TABLE . " (table_name, record_id, event_type, user_id, event_date, info, id_module) values ('" . $GLOBALS['table'] . "', '" . $resId . "', 'ADD', 'LC_BOT', '" . date("d") . "/" . date("m") . "/" . date("Y") . " " . date("H") . ":" . date("i") . ":" . date("s") . "', 'process stack, policy:" . $GLOBALS['policy'] . ", cycle:" . $GLOBALS['cycle'] . ", cycle step:" . $GLOBALS['currentStep'] . ", collection:" . $GLOBALS['collection'] . "', 'life_cycle')";
+	do_query($GLOBALS['db'], $query, true);
+}
+
+function deleteAdrx($resId, $dsToUpdate) {
+	$query = "update " . _LC_STACK_TABLE_NAME . " set status = 'P' where policy_id = '" . $GLOBALS['policy'] . "' and cycle_id = '" . $GLOBALS['cycle'] . "' and cycle_step_id = '" . $GLOBALS['currentStep'] . "' and coll_id = '" . $GLOBALS['collection'] . "' and res_id = " . $resId;
+	do_query($GLOBALS['db'], $query, true);
+	$query = "update " . $GLOBALS['table'] . " set cycle_id = '" . $GLOBALS['cycle'] . "' where res_id = " . $resId;
+	do_query($GLOBALS['db'], $query, true);
+	$docserverSizeToUpdate = 0;
+	for ($cptDs=0;$cptDs<count($dsToUpdate);$cptDs++) {
+		$query = "delete from " . $GLOBALS['adrTable'] . " where res_id = " . $resId . " and docserver_id = '" . $dsToUpdate[$cptDs]['docserverId'] . "'";
+		do_query($GLOBALS['db'], $query, true);
+	}
 	$query = "insert into " . HISTORY_TABLE . " (table_name, record_id, event_type, user_id, event_date, info, id_module) values ('" . $GLOBALS['table'] . "', '" . $resId . "', 'ADD', 'LC_BOT', '" . date("d") . "/" . date("m") . "/" . date("Y") . " " . date("H") . ":" . date("i") . ":" . date("s") . "', 'process stack, policy:" . $GLOBALS['policy'] . ", cycle:" . $GLOBALS['cycle'] . ", cycle step:" . $GLOBALS['currentStep'] . ", collection:" . $GLOBALS['collection'] . "', 'life_cycle')";
 	do_query($GLOBALS['db'], $query, true);
 }
