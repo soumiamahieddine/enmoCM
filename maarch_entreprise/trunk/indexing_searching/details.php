@@ -112,6 +112,12 @@ $delete_doc = $security->collection_user_right($coll_id, "can_delete");
 //update index with the doctype
 if(isset($_POST['submit_index_doc']))
 {
+	if($core->is_module_loaded('entities') && is_array($_SESSION['details']['diff_list'])) {
+		require_once('modules'.DIRECTORY_SEPARATOR.'entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_listdiff.php');
+		$list = new diffusion_list();
+		$params = array('mode'=> 'listinstance', 'table' => $_SESSION['tablename']['ent_listinstance'], 'coll_id' => $coll_id, 'res_id' => $s_id, 'user_id' => $_SESSION['user']['UserId'], 'concat_list' => true, 'only_cc' => false);
+		$list->load_list_db($_SESSION['details']['diff_list'], $params); //pb enchainement avec action redirect
+	}
     $is->update_mail($_POST, "POST", $s_id, $coll_id);
 }
 //delete the doctype
@@ -918,6 +924,9 @@ else
                                 </table>
                                 <?php
                             }
+                            if($core_tools->test_service('update_list_diff_in_details', 'entities', false)) {
+								echo '<a href="#" onclick="window.open(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=manage_listinstance&origin=details\', \'\', \'scrollbars=yes,menubar=no,toolbar=no,status=no,resizable=yes,width=1024,height=650,location=no\');" title="'._UPDATE_LIST_DIFF.'"><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=modif_liste.png" alt="'._UPDATE_LIST_DIFF.'" />'._UPDATE_LIST_DIFF.'</a>';
+							}
                             ?>
                         </div>
                     </dd>
