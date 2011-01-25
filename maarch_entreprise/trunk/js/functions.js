@@ -2102,11 +2102,11 @@ function updateContent(url,id_div_to_update, onComplete_callback)
     parameters: { },
     onComplete: function()
     {
-		if(onComplete_callback)
-		{
-			eval(onComplete_callback);
-		}
-	}
+        if(onComplete_callback)
+        {
+            eval(onComplete_callback);
+        }
+    }
 });
 
 }

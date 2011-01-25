@@ -107,7 +107,7 @@ $core_tools->load_header();
 $time = $core_tools->get_session_time_expire();
 ?>
 <body onload="session_expirate(<?php  echo $time;?>, '<?php  echo $_SESSION['config']['coreurl'];?>');" id="maarch_body">
-    <div id="header">
+<div id="header">
         <div id="nav">
             <div id="menu" onmouseover="ShowHideMenu('menunav','on');" onmouseout="ShowHideMenu('menunav','off');" class="off">
                 <p>
@@ -134,7 +134,7 @@ $time = $core_tools->get_session_time_expire();
             <p id="gauchemenu"><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=bando_tete_gche.gif" alt=""/></p>
             <p id="logo"><a href="index.php"><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=bando_tete_dte.gif" alt="<?php  echo _LOGO_ALT;?>" /></a></p>
        </div>
-
+</div>
     <div id="container">
         <div id="content">
             <div class="error" id="main_error">
@@ -165,7 +165,7 @@ $time = $core_tools->get_session_time_expire();
         $core_tools->view_debug();
         ?>
     </div>
-</div>
+
 <script type="text/javascript">HideMenu('menunav');</script>
 </body>
 </html>
