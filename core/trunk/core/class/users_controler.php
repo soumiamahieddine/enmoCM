@@ -1,6 +1,6 @@
 <?php
 /*
-*    Copyright 2008-2010 Maarch
+*    Copyright 2008-2011 Maarch
 *
 *  This file is part of Maarch Framework.
 *
@@ -29,19 +29,13 @@
 * @ingroup core
 */
 
-// To activate de debug mode of the class
-$_ENV['DEBUG'] = false;
-/*
-define("_CODE_SEPARATOR","/");
-define("_CODE_INCREMENT",1);
-*/
-
 // Loads the required class
 try {
     require_once("core/core_tables.php");
     require_once("core/class/users.php");
     require_once("core/class/ObjectControlerAbstract.php");
     require_once("core/class/ObjectControlerIF.php");
+    require_once ("core/class/class_history.php");
 } catch (Exception $e){
     echo $e->getMessage().' // ';
 }
@@ -56,8 +50,7 @@ try {
 *</ul>
 * @ingroup core
 */
-class users_controler extends ObjectControler implements ObjectControlerIF
-{
+class users_controler extends ObjectControler implements ObjectControlerIF{
     /**
     * Returns an user object based on a user identifier
     *
@@ -66,16 +59,17 @@ class users_controler extends ObjectControler implements ObjectControlerIF
     * @param  $can_be_disabled bool  if true gets the user even if it is disabled in the database (false by default)
     * @return user object with properties from the database or null
     */
-    public function get($user_id, $comp_where = '', $can_be_disabled = false)
-    {
+    public function get($user_id, $comp_where = '', $can_be_disabled = false){
         self::set_foolish_ids(array('user_id', 'docserver_location_id'));
         self::set_specific_id('user_id');
         $user = self::advanced_get($user_id,USERS_TABLE);
 
-        if(isset($user) && $user->__get('status') == 'OK')
+        if(isset($user) && $user->__get('status') == 'OK'){
             return $user;
-        else
+        }
+        else{
             return null;
+        }
     }
 
     /**
@@ -84,11 +78,11 @@ class users_controler extends ObjectControler implements ObjectControlerIF
     * @param  $user_id string  User identifier
     * @return Array or null
     */
-    public function getGroups($user_id)
-    {
+    public function getGroups($user_id){
         $groups = array();
-        if(empty($user_id))
+        if(empty($user_id)){
             return null;
+        }
 
         self::$db=new dbquery();
         self::$db->connect();
@@ -100,8 +94,7 @@ class users_controler extends ObjectControler implements ObjectControlerIF
                     echo _NO_USER_WITH_ID.' '.$user_id.' // ';
         }
 
-        while($res = self::$db->fetch_object())
-        {
+        while($res = self::$db->fetch_object()){
             array_push($groups, array('USER_ID' => $user_id, 'GROUP_ID' => $res->group_id, 'PRIMARY' => $res->primary_group, 'ROLE' => $res->role));
         }
         self::$db->disconnect();
@@ -113,21 +106,180 @@ class users_controler extends ObjectControler implements ObjectControlerIF
     * Saves in the database a user object
     *
     * @param  $user user object to be saved
-    * @return bool true if the save is complete, false otherwise
+    * @param  $groups Groups data,  array( 'USER_ID'    => User Identifier,
+    *                                   'GROUP_ID'      => Group identifier,
+    *                                   'LABEL'         => Group label,
+    *                                   'PRIMARY'       => Y / N (Is the group, the primary group for the user),
+    *                                   'ROLE'          => User role in the group (string)
+    *                                   )
+    * @param  $mode Mode (add or up)
+    * @param  $params More parameters, array('modules_services'             => $_SESSION['modules_services'] type array,
+    *                                                 'log_user_up'         => 'true' / 'false': log user modification ,
+    *                                                 'log_user_add'        => 'true' / 'false': log user addition ,
+    *                                                 'databasetype'        => Type of the database ('POSTGRESQL', ...),
+    *                                                 'userdefaultpassword' => Default password for user
+    *                                       )
+    * @return array (   'status' => 'ok' / 'ko',
+    *                   'value'  => User identifier or empty in case of error,
+    *                   'error'  => Error message, defined only in case of error
     */
-    public function save($user)
-    {
-        if(!isset($user) )
-            return false;
+    public function save($user, $groups = array(), $mode = '', $params = array()) {
 
+        $control = array();
+        // If user not defined or empty, return an error
+        if(!isset($user) || empty($user)) {
+            $control = array('status' => 'ko', 'value' => '', 'error' => _USER_EMPTY);
+            return $control;
+        }
+        // If mode not up or add, return an error
+        if(!isset($mode) || empty($mode) || ($mode <> 'add' && $mode <> 'up' ) ){
+            $control = array('status' => 'ko', 'value' => '', 'error' => _MODE.' '._UNKNOWN);
+            return $control;
+        }
+        $user = self::isAUser($user);
         self::set_foolish_ids(array('user_id', 'docserver_location_id'));
         self::set_specific_id('user_id');
-        if(self::userExists($user->user_id))
-            return self::update($user);
-        else
-            return self::insert($user);
 
-        return false;
+        // Data checks
+        $control = self::control($user, $groups, $mode, $params);
+
+        if($control['status'] == 'ok') {
+            self::cleanUsergroupContent($user->user_id);
+            self::loadDbUsergroupContent($user->user_id, $groups);
+
+            $_SESSION['service_tag'] = 'user_'.$mode;
+            core_tools::execute_modules_services($params['modules_services'], 'users_add_db', 'include');
+
+            if($mode == 'up') {
+                //Update existing user
+                if(self::update($user)) {
+                    $control = array('status' => 'ok', 'value' => $user->user_id);
+                    //log
+                    if($params['log_user_up'] == 'true') {
+                        $history = new history();
+                         $history->add(USERS_TABLE, $user->user_id,'UP',_USER_UPDATE.' : '.$user->user_id, $params['databasetype']);
+                    }
+                } else {
+                    $control = array('status' => 'ko', 'value' => '', 'error' => _PB_WITH_USER_UPDATE);
+                }
+            }
+            else { //mode == add
+                if(self::insert($user)) {
+                    $control = array('status' => 'ok', 'value' => $user->user_id);
+                    //log
+                    if($params['log_user_add'] == 'true') {
+                        $history = new history();
+                        $history->add(USERS_TABLE, $user->user_id,'ADD',_USER_ADDED.' : '.$user->user_id, $params['databasetype']);
+                    }
+                } else {
+                    $control = array('status' => 'ko', 'value' => '', 'error' => _PB_WITH_DOCSERVER);
+                }
+            }
+        }
+        unset($_SESSION['service_tag']);
+        return $control;
+    }
+
+    /**
+    * Fill a user object with an object if it's not a user
+    *
+    * @param  $object ws users object
+    * @return object users
+    */
+    private function isAUser($object) {
+        if(get_class($object) <> "users") {
+            $func = new functions();
+            $userObject = new users();
+            $array = array();
+            $array = $func->object2array($object);
+            foreach(array_keys($array) as $key) {
+                $userObject->$key = $array[$key];
+            }
+            return $userObject;
+        } else {
+            return $object;
+        }
+    }
+
+    /**
+    * control the data of user object
+    *
+    * @param  $user user object
+    * @param  $groups Groups data,  array( 'USER_ID'    => User Identifier,
+    *                                   'GROUP_ID'      => Group identifier,
+    *                                   'LABEL'         => Group label,
+    *                                   'PRIMARY'       => Y / N (Is the group, the primary group for the user),
+    *                                   'ROLE'          => User role in the group (string)
+    *                                   )
+    * @param  $mode Mode (add or up)
+    * @param  $params More parameters, array('modules_services'             => $_SESSION['modules_services'] type array,
+    *                                                 'log_user_up'         => 'true' / 'false': log user modification ,
+    *                                                 'log_user_add'        => 'true' / 'false': log user addition ,
+    *                                                 'databasetype'        => Type of the database ('POSTGRESQL', ...),
+    *                                                 'userdefaultpassword' => Default password for user
+    *                                       )
+    * @return array (   'status' => 'ok' / 'ko',
+    *                   'value'  => User identifier or empty in case of error,
+    *                   'error'  => Error message, defined only in case of error
+    */
+    private function control($user, $groups, $mode, $params=array()) {
+        $error = "";
+        $f = new functions();
+        $user->user_id=$f->protect_string_db($f->wash($user->user_id, "no", _THE_ID, 'yes', 0, 32));
+
+        if($mode == "add"){
+            $user->password = $f->protect_string_db(md5($params['userdefaultpassword']));
+
+            if(self::userExists($user->user_id)){
+                $error .= _USER.' '._ALREADY_EXISTS.'#';
+            }
+        }
+
+        $user->firstname = $f->protect_string_db($f->wash($user->firstname, "no", _THE_FIRSTNAME, 'yes', 0, 255));
+        $user->lastname = $f->protect_string_db($f->wash($user->lastname, "no", _THE_LASTNAME, 'yes', 0, 255));
+
+        if(isset($user->department) && !empty($user->department)){
+            $user->department  = $f->protect_string_db($f->wash($user->department, "no", _DEPARTMENT, 'yes', 0, 50));
+        }
+
+        if(isset($user->phone) && !empty($user->phone)){
+            $user->phone  = $f->protect_string_db($f->wash($user->phone, "no", _PHONE, 'yes', 0, 15));
+        }
+
+        if(isset($user->loginmode) && !empty($user->loginmode)){
+            $user->loginmode  = $f->protect_string_db($f->wash($user->loginmode, "no", _LOGIN_MODE, 'yes', 0, 50));
+        }
+
+        $user->mail  = $f->protect_string_db($f->wash($user->mail, "mail", _MAIL, 'yes', 0, 255));
+
+        if($user->user_id <> "superadmin"){
+            $primary_set = false;
+            for($i=0; $i < count($groups);$i++){
+                if($groups[$i]['PRIMARY'] == 'Y'){
+                    $primary_set = true;
+                    break;
+                }
+            }
+            if ($primary_set == false){
+                $error .= _PRIMARY_GROUP.' '._MANDATORY.'#';
+            }
+        }
+
+        $_SESSION['service_tag'] = 'user_check';
+
+        core_tools::execute_modules_services($params['modules_services'], 'user_check', "include");
+
+        $error .= $_SESSION['error'];
+        //TODO:rewrite wash to return errors without html and not in the session
+        $error = str_replace("<br />", "#", $error);
+        $return = array();
+        if(!empty($error)) {
+                $return = array("status" => "ko", "value" => $user->user_id, "error" => $error);
+        } else {
+            $return = array("status" => "ok", "value" => $user->user_id);
+        }
+        unset($_SESSION['service_tag']);
+        return $return;
     }
 
     /**
@@ -136,8 +288,7 @@ class users_controler extends ObjectControler implements ObjectControlerIF
     * @param  $user user object
     * @return bool true if the insertion is complete, false otherwise
     */
-    private function insert($user)
-    {
+    private function insert($user){
         return self::advanced_insert($user);
     }
 
@@ -147,43 +298,55 @@ class users_controler extends ObjectControler implements ObjectControlerIF
     * @param  $user user object
     * @return bool true if the update is complete, false otherwise
     */
-    private function update($user)
-    {
+    private function update($user){
         return self::advanced_update($user);
     }
 
     /**
     * Deletes in the database (users related tables) a given user (user_id)
     *
-    * @param  $user_id string  User identifier
+    * @param  $user User Object
     * @return bool true if the deletion is complete, false otherwise
     */
-    public function delete($user_id)
-    {
-        if(!isset($user_id)|| empty($user_id) )
-            return false;
-
-        if(! self::userExists($user_id))
-            return false;
+    public function delete($user, $params= array()){
+        $control = array();
+        if(!isset($user) || empty($user)) {
+            $control = array("status" => "ko", "value" => "", "error" => _USER_EMPTY);
+            return $control;
+        }
+        $user = self::isAUser($user);
+        if(!self::userExists($user->user_id)) {
+            $control = array("status" => "ko", "value" => "", "error" => _USER_NOT_EXISTS);
+            return $control;
+        }
 
         self::$db=new dbquery();
         self::$db->connect();
-        $query="update ".USERS_TABLE." set status = 'DEL' where user_id='".functions::protect_string_db($user_id)."'";
+        $query="update ".USERS_TABLE." set status = 'DEL' where user_id='".functions::protect_string_db($user->user_id)."'";
         // Logic deletion only , status becomes DEL to keep the user data
 
         try{
-            if($_ENV['DEBUG']){echo $query.' // ';}
+            if($_ENV['DEBUG']){
+                echo $query.' // ';
+                }
             self::$db->query($query);
             $ok = true;
         } catch (Exception $e){
-            echo _CANNOT_DELETE_USER_ID." ".$user_id.' // ';
+            $control = array("status" => "ko", "value" => "", "error" => _CANNOT_DELETE_USER_ID." ".$user->user_id);
             $ok = false;
         }
-        self::$db->disconnect();
-        if($ok)
-            $ok = self::cleanUsergroupContent($user_id);
 
-        return $ok;
+        self::$db->disconnect();
+        if($ok){
+            $control = self::cleanUsergroupContent($user->user_id);
+        }
+        if($control['status'] == 'ok'){
+            if($params['log_user_del'] == "true") {
+                $history = new history();
+                $history->add(USERS_TABLE, $user->user_id, "DEL", _USER_DELETED." : ".$user->user_id, $params['databasetype']);
+            }
+        }
+        return $control;
     }
 
     /**
@@ -192,10 +355,12 @@ class users_controler extends ObjectControler implements ObjectControlerIF
     * @param  $user_id string  User identifier
     * @return bool true if the cleaning is complete, false otherwise
     */
-    public function cleanUsergroupContent($user_id)
-    {
-        if(!isset($user_id)|| empty($user_id) )
-            return false;
+    public function cleanUsergroupContent($user_id){
+        $control = array();
+        if(!isset($user_id) || empty($user_id)) {
+            $control = array("status" => "ko", "value" => "", "error" => _USER_ID_EMPTY);
+            return $control;
+        }
 
         self::$db=new dbquery();
         self::$db->connect();
@@ -205,12 +370,11 @@ class users_controler extends ObjectControler implements ObjectControlerIF
             self::$db->query($query);
             $ok = true;
         } catch (Exception $e){
-            echo _CANNOT_DELETE_USER_ID." ".$user_id.' // ';
+            $control = array("status" => "ko", "value" => "", "error" => _CANNOT_CLEAN_USERGROUP_CONTENT." ".$user_id);
             $ok = false;
         }
-
         self::$db->disconnect();
-        return $ok;
+        return $control;
     }
 
     /**
@@ -219,10 +383,10 @@ class users_controler extends ObjectControler implements ObjectControlerIF
     * @param  $user_id String User identifier
     * @return bool true if the user exists, false otherwise
     */
-    public function userExists($user_id)
-    {
-        if(!isset($user_id) || empty($user_id))
+    public function userExists($user_id){
+        if(!isset($user_id) || empty($user_id)){
             return false;
+        }
 
         self::$db=new dbquery();
         self::$db->connect();
@@ -235,8 +399,7 @@ class users_controler extends ObjectControler implements ObjectControlerIF
             echo _UNKNOWN.' '._USER." ".$user_id.' // ';
         }
 
-        if(self::$db->nb_result() > 0)
-        {
+        if(self::$db->nb_result() > 0){
             self::$db->disconnect();
             return true;
         }
@@ -251,8 +414,7 @@ class users_controler extends ObjectControler implements ObjectControlerIF
     * @param  $user user object
     * @return bool true if the disabling is complete, false otherwise
     */
-    public function disable($user)
-    {
+    public function disable($user){
         self::set_foolish_ids(array('user_id', 'docserver_location_id'));
         self::set_specific_id('user_id');
         return self::advanced_disable($user);
@@ -264,8 +426,7 @@ class users_controler extends ObjectControler implements ObjectControlerIF
     * @param  $user user object
     * @return bool true if the enabling is complete, false otherwise
     */
-    public function enable($user)
-    {
+    public function enable($user){
         self::set_foolish_ids(array('user_id', 'docserver_location_id'));
         self::set_specific_id('user_id');
         return self::advanced_enable($user);
@@ -279,20 +440,18 @@ class users_controler extends ObjectControler implements ObjectControlerIF
     * @param  $array Array
     * @return bool true if the loadng is complete, false otherwise
     */
-    public function loadDbUsergroupContent($user_id, $array)
-    {
-        if(!isset($user_id)|| empty($user_id) )
+    public function loadDbUsergroupContent($user_id, $array){
+        if(!isset($user_id)|| empty($user_id) ){
             return false;
-        if(!isset($array) || count($array) == 0)
+        }
+        if(!isset($array) || count($array) == 0){
             return false;
-
+        }
         self::$db=new dbquery();
         self::$db->connect();
         $ok = true;
-        for($i=0; $i < count($array ); $i++)
-        {
-            if($ok)
-            {
+        for($i=0; $i < count($array ); $i++){
+            if($ok){
                 $query = "INSERT INTO ".USERGROUP_CONTENT_TABLE." (user_id, group_id, primary_group, role) VALUES ('".functions::protect_string_db($user_id)."', '".functions::protect_string_db($array[$i]['GROUP_ID'])."', '".functions::protect_string_db($array[$i]['PRIMARY'])."', '".functions::protect_string_db($array[0]['ROLE'])."')";
                 try{
                     if($_ENV['DEBUG']){echo $query.' // ';}
@@ -302,8 +461,9 @@ class users_controler extends ObjectControler implements ObjectControlerIF
                     $ok = false;
                 }
             }
-            else
+            else{
                 break;
+            }
         }
         self::$db->disconnect();
         return $ok;
