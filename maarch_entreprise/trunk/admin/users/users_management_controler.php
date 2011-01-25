@@ -1,34 +1,34 @@
 <?php
 core_tools::load_lang();
+
 $entities_loaded = false;
-
-if(core_tools::is_module_loaded('entities'))
+if(core_tools::is_module_loaded('entities')){
     $entities_loaded = true;
+}
 
+// Default mode is add
 $mode = 'add';
-if(isset($_REQUEST['mode']) && !empty($_REQUEST['mode']))
-{
+if(isset($_REQUEST['mode']) && !empty($_REQUEST['mode'])){
     $mode = $_REQUEST['mode'];
 }
 
-
+// Include files
 try{
     require_once("core/class/usergroups_controler.php");
     require_once("core/class/users_controler.php");
-    if($mode == 'list')
-    {
+    if($mode == 'list'){
         require_once("core/class/class_request.php");
         require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");
     }
-    if($mode == 'del' && $entities_loaded)
+    if($mode == 'del' && $entities_loaded){
         require_once("modules/entities/class/EntityControler.php");
+    }
 
 } catch (Exception $e){
     echo $e->getMessage();
 }
 
-if(isset($_REQUEST['id']) && !empty($_REQUEST['id']))
-{
+if(isset($_REQUEST['id']) && !empty($_REQUEST['id'])){
     $user_id = $_REQUEST['id'];
 }
 
@@ -73,22 +73,23 @@ if(isset($_REQUEST['user_submit'])){
     include('users_management.php');
 }
 
-/////// PRIVATE BLOCK
+
 
 /**
  * Management of the location bar
  */
-function location_bar_management($mode)
-{
+function location_bar_management($mode){
     $page_labels = array('add' => _ADDITION, 'up' => _MODIFICATION, 'list' => _USERS_LIST);
     $page_ids = array('add' => 'user_add', 'up' => 'user_up', 'list' => 'users_list');
     $init = false;
-    if(isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true")
+    if(isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true"){
         $init = true;
+    }
 
     $level = "";
-    if(isset($_REQUEST['level']) && ($_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1))
+    if(isset($_REQUEST['level']) && ($_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1)){
         $level = $_REQUEST['level'];
+    }
 
     $page_path = $_SESSION['config']['businessappurl'].'index.php?page=users_management_controler&admin=users&mode='.$mode;
     $page_label = $page_labels[$mode];
@@ -104,23 +105,22 @@ function location_bar_management($mode)
 function display_up($user_id){
     $state=true;
     $user = users_controler::get($user_id );
-    if(empty($user))
+    if(empty($user)){
         $state = false;
-    else
+    }
+    else{
         put_in_session("users",$user->getArray());
+    }
 
-    if (($_SESSION['m_admin']['load_group'] == true || ! isset($_SESSION['m_admin']['load_group'] )) && $_SESSION['m_admin']['users']['user_id'] <> "superadmin")
-    {
+    if (($_SESSION['m_admin']['load_group'] == true || ! isset($_SESSION['m_admin']['load_group'] )) && $_SESSION['m_admin']['users']['user_id'] <> "superadmin"){
         $tmp_array = users_controler::getGroups($_SESSION['m_admin']['users']['user_id']);
-        for($i=0; $i<count($tmp_array);$i++)
-        {
+        for($i=0; $i<count($tmp_array);$i++){
             $group = usergroups_controler::get($tmp_array[$i]['GROUP_ID']);
             $tmp_array[$i]['LABEL'] = $group->__get('group_desc');
         }
         $_SESSION['m_admin']['users']['groups'] = $tmp_array;
         unset($tmp_array);
     }
-
     return $state;
 }
 
@@ -128,18 +128,15 @@ function display_up($user_id){
  * Initialize session parameters for add display with given scheme
  */
 function display_add(){
-    if(!isset($_SESSION['m_admin']['init']))
-    {
+    if(!isset($_SESSION['m_admin']['init'])){
         init_session();
     }
-
 }
 
 /**
  * Initialize session parameters for list display
  */
-function display_list()
-{
+function display_list(){
     $_SESSION['m_admin'] = array();
 
     init_session();
@@ -148,18 +145,21 @@ function display_list()
     array_push($select[USERS_TABLE],'user_id','lastname','firstname','enabled','status','mail');
     $where = " status = 'OK' ";
     $what = '';
-    if(isset($_REQUEST['what']))
-    {
+    if(isset($_REQUEST['what'])){
         $what = functions::protect_string_db($_REQUEST['what']);
     }
-    if($_SESSION['config']['databasetype'] == "POSTGRESQL")
+    if($_SESSION['config']['databasetype'] == "POSTGRESQL"){
         $where .= " and ( lastname ilike '".strtolower($what)."%' or lastname ilike '".strtoupper($what)."%' )";
-    else
+    }
+    else{
         $where .= " and ( lastname like '".strtolower($what)."%' or lastname like '".strtoupper($what)."%' )";
-            // Checking order and order_field values
+    }
+
+    // Checking order and order_field values
     $order = 'asc';
-    if(isset($_REQUEST['order']) && !empty($_REQUEST['order']))
+    if(isset($_REQUEST['order']) && !empty($_REQUEST['order'])){
         $order = trim($_REQUEST['order']);
+    }
 
     $field = 'lastname';
     if(isset($_REQUEST['order_field']) && !empty($_REQUEST['order_field']))
@@ -189,7 +189,6 @@ function display_list()
                     format_item($item,'',"5","left","left","bottom",true, false); break;
             }
         }
-
     }
 
     /*
@@ -220,20 +219,25 @@ function display_list()
  * Delete given user if exists and initialize session parameters
  * @param unknown_type $user_id
  */
-function display_del($user_id)
-{
-    if(isset($user_id) && !empty($user_id))
-    {
+function display_del($user_id){
+    $user = users_controler::get($user_id);
+    if(isset($user)) {
         // Deletion
-        users_controler::delete($user_id);
-        $_SESSION['error'] = _DELETED_USER.' : '.$user_id;
-        // NOTE: Why not calling display_list ?
+        $control = array();
+        $params = array( 'log_user_del' => $_SESSION['history']['usersdel'],
+                         'databasetype' => $_SESSION['config']['databasetype']
+                        );
+        $control = users_controler::delete($user, $params);
+        if(!empty($control['error']) && $control['error'] <> 1) {
+            $_SESSION['error'] = str_replace("#", "<br />", $control['error']);
+        } else {
+            $_SESSION['error'] = _DELETED_USER.' : '.$user_id;
+        }
         ?><script type="text/javascript">window.top.location='<?php echo $_SESSION['config']['businessappurl']."index.php?page=users_management_controler&mode=list&admin=users&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what;?>';</script>
         <?php
         exit;
     }
-    else
-    {
+    else{
         // Error management
         $_SESSION['error'] = _USER.' '._UNKNOWN;
     }
@@ -243,21 +247,18 @@ function display_del($user_id)
  * Enable given user if exists and initialize session parameters
  * @param unknown_type $user_id
  */
-function display_enable($user_id)
-{
+function display_enable($user_id){
     $user = users_controler::get($user_id);
-    if(isset($user))
-    {
+    if(isset($user)){
         // Deletion
         users_controler::enable($user);
         $_SESSION['error'] = _AUTORIZED_USER.' : '.$user_id;
         // NOTE: Why not calling display_list ?
         ?><script type="text/javascript">window.top.location='<?php echo $_SESSION['config']['businessappurl']."index.php?page=users_management_controler&mode=list&admin=users&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what;?>';</script>
         <?php
-        exit;
+        exit();
     }
-    else
-    {
+    else{
         // Error management
         $_SESSION['error'] = _USER.' '._UNKNOWN;
     }
@@ -267,11 +268,9 @@ function display_enable($user_id)
  * Disable given user if exists and initialize session parameters
  * @param unknown_type $user_id
  */
-function display_disable($user_id)
-{
+function display_disable($user_id){
     $user = users_controler::get($user_id);
-    if(isset($user))
-    {
+    if(isset($user)){
         // Deletion
         users_controler::disable($user);
         $_SESSION['error'] = _SUSPENDED_USER.' : '.$user_id;
@@ -280,8 +279,7 @@ function display_disable($user_id)
         <?php
         exit;
     }
-    else
-    {
+    else{
         // Error management
         $_SESSION['error'] = _USER.' '._UNKNOWN;
     }
@@ -309,10 +307,12 @@ function format_item(&$item,$label,$size,$label_align,$align,$valign,$show,$orde
     $item["align"]=$align;
     $item["valign"]=$valign;
     $item["show"]=$show;
-    if($order)
+    if($order){
         $item["order"]=$item['value'];
-    else
+    }
+    else{
         $item["order"]='';
+    }
 }
 
 /**
@@ -321,31 +321,33 @@ function format_item(&$item,$label,$size,$label_align,$align,$valign,$show,$orde
  */
 function validate_user_submit(){
 
-    $user = new users();
+    $pageName = "users_management_controler";
+
     $mode = $_REQUEST['mode'];
-    $user->user_id=functions::protect_string_db(functions::wash($_REQUEST['user_id'], "no", _THE_ID, 'yes', 0, 32));
-    if($mode == "add")
-    {
-        if(isset($_SESSION['config']['userdefaultpassword']) && !empty($_SESSION['config']['userdefaultpassword']))
-            $user->password = functions::protect_string_db(md5($_SESSION['config']['userdefaultpassword']));
-        else
-            $user->password = functions::protect_string_db(md5('maarch'));
+    $user = new users();
+    $user->user_id=$_REQUEST['user_id'];
+    if($mode == "add"){
+        if(isset($_SESSION['config']['userdefaultpassword']) && !empty($_SESSION['config']['userdefaultpassword'])){
+            $user->password = $_SESSION['config']['userdefaultpassword'];
+        }
+        else{
+            $user->password = 'maarch';
+        }
     }
-
-    $user->firstname = functions::protect_string_db(functions::wash($_REQUEST['FirstName'], "no", _THE_FIRSTNAME, 'yes', 0, 255));
-    $user->lastname = functions::protect_string_db(functions::wash($_REQUEST['LastName'], "no", _THE_LASTNAME, 'yes', 0, 255));
-
-    if(isset($_REQUEST['Department']) && !empty($_REQUEST['Department']))
-        $user->department  = functions::protect_string_db(functions::wash($_REQUEST['Department'], "no", _DEPARTMENT, 'yes', 0, 50));
-
-    if(isset($_REQUEST['Phone']) && !empty($_REQUEST['Phone']))
-        $user->phone  = functions::protect_string_db(functions::wash($_REQUEST['Phone'], "no", _PHONE, 'yes', 0, 15));
-
-    if(isset($_REQUEST['LoginMode']) && !empty($_REQUEST['LoginMode']))
-        $user->loginmode  = functions::protect_string_db(functions::wash($_REQUEST['LoginMode'], "no", _LOGIN_MODE, 'yes', 0, 50));
-
-    if(isset($_REQUEST['Mail']) && !empty($_REQUEST['Mail']))
-        $user->mail  = functions::protect_string_db(functions::wash($_REQUEST['Mail'], "mail", _MAIL, 'yes', 0, 255));
+    $user->firstname = $_REQUEST['FirstName'];
+    $user->lastname = $_REQUEST['LastName'];
+    if(isset($_REQUEST['Department']) && !empty($_REQUEST['Department'])){
+        $user->department  = $_REQUEST['Department'];
+    }
+    if(isset($_REQUEST['Phone']) && !empty($_REQUEST['Phone'])){
+        $user->phone  = $_REQUEST['Phone'];
+    }
+    if(isset($_REQUEST['LoginMode']) && !empty($_REQUEST['LoginMode'])){
+        $user->loginmode  = $_REQUEST['LoginMode'];
+    }
+    if(isset($_REQUEST['Mail']) && !empty($_REQUEST['Mail'])){
+        $user->mail  = $_REQUEST['Mail'];
+    }
 
     $status= array();
     $status['order']=$_REQUEST['order'];
@@ -353,86 +355,55 @@ function validate_user_submit(){
     $status['what']=$_REQUEST['what'];
     $status['start']=$_REQUEST['start'];
 
-    put_in_session("status",$status);
-    put_in_session("users",$user->getArray());
-
-    if($_SESSION['m_admin']['users']['user_id'] <> "superadmin")
-    {
-        $primary_set = false;
-        for($i=0; $i < count($_SESSION['m_admin']['users']['groups']);$i++)
-        {
-            if($_SESSION['m_admin']['users']['groups'][$i]['PRIMARY'] == 'Y')
-            {
-                $primary_set = true;
-                break;
-            }
-        }
-        if ($primary_set == false)
-            $_SESSION['error'] = _PRIMARY_GROUP.' '._MANDATORY;
+    if(isset($_SESSION['config']['userdefaultpassword']) && !empty($_SESSION['config']['userdefaultpassword'])){
+        $tmp_pass = $_SESSION['config']['userdefaultpassword'];
+    }
+    else{
+        $tmp_pass = 'maarch';
     }
 
-    $_SESSION['service_tag'] = 'user_check';
-    core_tools::execute_modules_services($_SESSION['modules_services'], 'user_check', "include");
+    $control = array();
+    $params = array('modules_services' => $_SESSION['modules_services'],
+                    'log_user_up' => $_SESSION['history']['usersup'],
+                    'log_user_add' => $_SESSION['history']['usersadd'],
+                    'databasetype' => $_SESSION['config']['databasetype'],
+                    'userdefaultpassword' => $tmp_pass
+                    );
 
-    if($mode == "add" && users_controler::userExists($_SESSION['m_admin']['users']['user_id']))
-    {
-        $_SESSION['error'] = $_SESSION['m_admin']['users']['user_id']." "._ALREADY_EXISTS."<br />";
-    }
+    $control = users_controler::save($user,  $_SESSION['m_admin']['users']['groups'], $mode,$params);
 
+    if(!empty($control['error']) && $control['error'] <> 1) {
+        // Error management depending of mode
+        $_SESSION['error'] = str_replace("#", "<br />", $control['error']);
+        put_in_session("status", $status);
+        put_in_session("users",$user->getArray());
 
-    if(!empty($_SESSION['error']))
-    {
-        if($mode == "up")
-        {
-            if(!empty($_SESSION['m_admin']['users']['user_id']))
-                header("location: ".$_SESSION['config']['businessappurl']."index.php?page=users_management_controler&mode=up&id=".$_SESSION['m_admin']['users']['user_id']."&admin=users");
-            else
-                header("location: ".$_SESSION['config']['businessappurl']."index.php?page=users_management_controler&mode=list&admin=users&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what);
+        switch ($mode) {
+            case "up":
+                if(!empty($user->user_id)) {
+                    header("location: ".$_SESSION['config']['businessappurl']."index.php?page=".$pageName."&mode=up&id=".$user->user_id."&admin=users");
+                } else {
+                    header("location: ".$_SESSION['config']['businessappurl']."index.php?page=".$pageName."&mode=list&admin=users&order=".$status['order']."&order_field=".$status['order_field']."&start=".$status['start']."&what=".$status['what']);
+                }
+                exit;
+            case "add":
+                header("location: ".$_SESSION['config']['businessappurl']."index.php?page=".$pageName."&mode=add&admin=users");
+                exit;
         }
-        elseif($mode == "add")
-            header("location: ".$_SESSION['config']['businessappurl']."index.php?page=users_management_controler&mode=add&admin=users");
-
-        exit();
-    }
-    else
-    {
-        users_controler::save($user);
-
-        users_controler::cleanUsergroupContent($_SESSION['m_admin']['users']['user_id']);
-        users_controler::loadDbUsergroupContent($_SESSION['m_admin']['users']['user_id'], $_SESSION['m_admin']['users']['groups']);
-
-        $_SESSION['service_tag'] = 'user_'.$mode;
-
-        core_tools::execute_modules_services($_SESSION['modules_services'], 'users_add_db', "include");
-
-        if($_SESSION['history']['usersadd'] == "true" && $mode == "add")
-        {
-            require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
-            $hist = new history();
-            $hist->add($_SESSION['tablename']['users'], $_SESSION['m_admin']['users']['user_id'],"ADD",_USER_ADDED." : ".$_SESSION['m_admin']['users']['user_id'], $_SESSION['config']['databasetype']);
+    } else {
+        if($mode == "add"){
+            $_SESSION['error'] = _USER_ADDED;
         }
-        elseif($_SESSION['history']['usersup'] == "true" && $mode == "up")
-        {
-            require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
-            $hist = new history();
-            $hist->add($_SESSION['tablename']['users'], $_SESSION['m_admin']['users']['user_id'],"UP",_USER_UPDATE." : ".$_SESSION['m_admin']['users']['user_id'], $_SESSION['config']['databasetype']);
-        }
-        unset($_SESSION['m_admin']);
-        if($mode == "add")
-        {
-            $_SESSION['error'] =  _USER_ADDED;
-        }
-        else
-        {
+         else{
             $_SESSION['error'] = _USER_UPDATED;
         }
-
-        header("location: ".$_SESSION['config']['businessappurl']."index.php?page=users_management_controler&mode=list&admin=users&order=".$status['order']."&order_field=".$status['order_field']."&start=".$status['start']."&what=".$status['what']);
+        unset($_SESSION['m_admin']);
+        header("location: ".$_SESSION['config']['businessappurl']."index.php?page=".$pageName."&mode=list&admin=users&order=".$status['order']."&order_field=".$status['order_field']."&start=".$status['start']."&what=".$status['what']);
     }
 }
 
-function init_session()
-{
+
+function init_session(){
     $_SESSION['m_admin']['users'] = array();
     $_SESSION['m_admin']['users']['groups'] = array();
     $_SESSION['m_admin']['users']['nbbelonginggroups'] = 0;
@@ -448,12 +419,12 @@ function init_session()
  */
 function put_in_session($type,$hashable, $show_string = true){
     foreach($hashable as $key=>$value){
-        if ($show_string)
+        if ($show_string){
             $_SESSION['m_admin'][$type][$key]=functions::show_string($value);
-        else
+        }
+        else{
             $_SESSION['m_admin'][$type][$key]=$value;
+        }
     }
 }
-
-
 ?>
