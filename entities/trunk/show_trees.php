@@ -66,7 +66,7 @@ else
                 var struct = [
                                 {
                                 'id':'<?php  echo $_SESSION['entities_chosen_tree'];?>',
-                                'txt':'<?php  echo $label;?>',
+                                'txt':'<?php  echo addslashes($label);?>',
                                 'items':[
                                             <?php
                                             $ent2 = new entity();
