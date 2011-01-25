@@ -110,6 +110,8 @@ if (!defined('_TO_DEST'))  define('_TO_DEST', 'Destinataire');
 if (!defined('_NO_DIFF_LIST_ASSOCIATED'))  define('_NO_DIFF_LIST_ASSOCIATED', 'Aucune liste de diffusion');
 if (!defined('_PRINCIPAL_RECIPIENT'))  define('_PRINCIPAL_RECIPIENT', 'Destinataire principal');
 if (!defined('_ADD_COPY_IN_PROCESS'))  define('_ADD_COPY_IN_PROCESS', 'Ajouter des personnes en copie dans le traitement');
+if (!defined('_UPDATE_LIST_DIFF_IN_DETAILS'))  define('_UPDATE_LIST_DIFF_IN_DETAILS', 'Mettre &agrave jour la liste de diffusion depuis la page de d&eacute;tails');
+if (!defined('_UPDATE_LIST_DIFF'))  define('_UPDATE_LIST_DIFF', 'Modifier la liste de diffusion');
 if (!defined('_DIFF_LIST_COPY'))  define('_DIFF_LIST_COPY', 'Liste de diffusion, copies');
 if (!defined('_NO_COPY'))  define('_NO_COPY', 'Pas de copies');
 if (!defined('_DIFF_LIST'))  define('_DIFF_LIST', 'Liste de diffusion');

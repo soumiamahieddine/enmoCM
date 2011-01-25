@@ -216,4 +216,16 @@
 			<nature>include</nature>
 		</WHEREAMIUSED>
 	</SERVICE>
+	<SERVICE>
+		<id>update_list_diff_in_details</id>
+		<name>_UPDATE_LIST_DIFF_IN_DETAILS</name>
+		<servicepage>add_copy_in_process.php</servicepage>
+		<servicetype>use</servicetype>
+		<system_service>false</system_service>
+		<enabled>true</enabled>
+		<WHEREAMIUSED>
+			<page>details</page>
+			<nature>include</nature>
+		</WHEREAMIUSED>
+	</SERVICE>
 </root>
