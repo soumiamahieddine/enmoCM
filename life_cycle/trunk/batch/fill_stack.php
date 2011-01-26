@@ -88,6 +88,7 @@ while($state <> "END") {
 			$state = "SELECT_RES";break;
 		/**********************************************************************************************/
 		case "SELECT_RES" :
+			$orderBy = "";
 			$db->connect();
 			// get the where clause of the cycle
 			$query = "select * from " . _LC_CYCLES_TABLE_NAME . " where policy_id = '" . $GLOBALS['policy'] . "' and cycle_id = '" . $GLOBALS['cycle'] . "'";
@@ -113,12 +114,12 @@ while($state <> "END") {
 			}
 			// select resources
 			if ($cycleRecordset->break_key <> "") {
-				$ordeBy = " order by " . $cycleRecordset->break_key;
+				$orderBy = " order by " . $cycleRecordset->break_key;
 			}
 			if($GLOBALS['stackSizeLimit'] <> "") {
 				$limit = " LIMIT " . $GLOBALS['stackSizeLimit'];
 			}
-			$query = "select res_id from " . $GLOBALS['table'] . " where policy_id = '" . $GLOBALS['policy'] . "' and cycle_id = '" . $cyclePreviousRecordset->cycle_id . "' and " . $cycleRecordset->where_clause . $ordeBy . $limit;
+			$query = "select res_id from " . $GLOBALS['table'] . " where policy_id = '" . $GLOBALS['policy'] . "' and cycle_id = '" . $cyclePreviousRecordset->cycle_id . "' and " . $cycleRecordset->where_clause . $orderBy . $limit;
 			do_query($db, $query);
 			$resourcesArray = array();
 			if ($db->nb_result() > 0) {

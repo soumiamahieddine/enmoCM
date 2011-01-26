@@ -82,4 +82,9 @@ if (!defined('_PI_COMMENT_CONTENT'))  define('_PI_COMMENT_CONTENT', 'Digital res
 if (!defined('_PI_COMMENT_PDI'))  define('_PI_COMMENT_PDI', 'Container for Preservation Description Information. This is a catalog containing descriptors for Provenance, Reference, Fixity, Context, and Access Rights for each resource in <CONTENT_FILE>. For convenience, history is stored apart in <HISTORY_FILE>. See pdi.xsd for structure and comments');
 if (!defined('_HISTORY_COMMENT_ROOT'))  define('_HISTORY_COMMENT_ROOT', 'Preservation Description Information - History : List of events on resource, each event set being identified by resource filename in <CONTENT_FILE>. Ordered by ascending date');
 if (!defined('_PDI_COMMENT_ROOT'))  define('_PDI_COMMENT_ROOT', 'Preservation Description Information : List of qualifiers for resources, ordered by Provenance, Reference, Fixity, Context, and Access Rights. There is one set by resource, each set being identified by resource filename in <CONTENT_FILE>');
+if (!defined('_PDI_COMMENT_HISTORY'))  define('_PDI_COMMENT_HISTORY', 'Preservation Description Information - History : List of events on resource, each event set being identified by resource filename in <CONTENT_FILE>. Ordered by ascending date.');
+
+/*************OTHER*************************************/
+if (!defined('_DOCS')) define( '_DOCS', 'Documents');
+
 ?>

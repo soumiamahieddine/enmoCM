@@ -37,7 +37,7 @@
  *  4  : SQL Query Error
  *  5  : SQL insert Error
  *  6  : Problem with php include path
- *  7  : Stack empty
+ *  7  : Stack empty for the request
  *  8  : Cycle not found
  *  9  : Previous cycle not found
  *  10 : No resource found
@@ -82,15 +82,15 @@ $GLOBALS['docserverControler']->washTmp($GLOBALS['TmpDirectory'], true);
 $GLOBALS['state'] = "CONTROL_STACK";
 while ($GLOBALS['state'] <> "END") {
 	if (isset($GLOBALS['logger'])) {
-		$GLOBALS['logger']->write("STATE:".$GLOBALS['state'], 'DEBUG');
+		$GLOBALS['logger']->write("STATE:" . $GLOBALS['state'], 'DEBUG');
 	}
 	switch($GLOBALS['state']) {
 		/**********************************************************************************************/
 		case "CONTROL_STACK" :
-			$query = "select * from "._LC_STACK_TABLE_NAME;
+			$query = "select * from " . _LC_STACK_TABLE_NAME . " where policy_id = '" . $GLOBALS['policy'] . "' and cycle_id = '" . $GLOBALS['cycle'] . "'";
 			do_query($GLOBALS['db'], $query);
 			if ($GLOBALS['db']->nb_result() == 0) {
-				$GLOBALS['logger']->write('WARNING stack is empty', 'ERROR', 7);
+				$GLOBALS['logger']->write('WARNING stack empty for your request', 'ERROR', 7);
 				$GLOBALS['exitCode'] = 7;
 				$GLOBALS['state'] = "END";break;
 			}
@@ -102,7 +102,7 @@ while ($GLOBALS['state'] <> "END") {
 			break;
 		/**********************************************************************************************/
 		case "GET_STEPS" :
-			$query = "select * from "._LC_CYCLE_STEPS_TABLE_NAME." where policy_id = '".$GLOBALS['policy']."' and cycle_id = '".$GLOBALS['cycle']."'";
+			$query = "select * from "._LC_CYCLE_STEPS_TABLE_NAME." where policy_id = '" . $GLOBALS['policy'] . "' and cycle_id = '" . $GLOBALS['cycle'] . "'";
 			do_query($GLOBALS['db'], $query);
 			if ($GLOBALS['db']->nb_result() == 0) {
 				$GLOBALS['logger']->write('Cycle Steps not found', 'ERROR', 11);
@@ -138,7 +138,7 @@ while ($GLOBALS['state'] <> "END") {
 						$GLOBALS['docservers'][$stepsRecordset->cycle_step_id] = $GLOBALS['func']->object2array($docserverTypesRecordset);
 					}
 					// no need for a purge
-					$query = "select * from " . _DOCSERVERS_TABLE_NAME . " where docserver_type_id = '" . $stepsRecordset->docserver_type_id . "' order by priority_number";
+					$query = "select * from " . _DOCSERVERS_TABLE_NAME . " where docserver_type_id = '" . $stepsRecordset->docserver_type_id . "' and coll_id = '" . $GLOBALS['collection'] . "' order by priority_number";
 					do_query($GLOBALS['db2'], $query);
 					if ($GLOBALS['db2']->nb_result() == 0) {
 						$GLOBALS['logger']->write('Docserver not found', 'ERROR', 13);
@@ -190,7 +190,9 @@ while ($GLOBALS['state'] <> "END") {
 						$GLOBALS['logger']->write("target path on docserver:".$pathOnDocserver, 'INFO');
 					} elseif ($GLOBALS['steps'][$GLOBALS['currentStep']]['step_operation'] == "PURGE") {
 						$nbDocserver = 0;
-						$query = "select * from " . _DOCSERVERS_TABLE_NAME . " where docserver_type_id = '" . $GLOBALS['steps'][$GLOBALS['currentStep']]['docserver_type_id'] . "'";
+						$GLOBALS['docservers'][$GLOBALS['currentStep']]['docserver'] = array();
+						$query = "select * from " . _DOCSERVERS_TABLE_NAME . " where docserver_type_id = '" . $GLOBALS['steps'][$GLOBALS['currentStep']]['docserver_type_id'] . "' and coll_id = '" . $GLOBALS['collection'] . "'";
+						do_query($GLOBALS['db2'], $query);
 						while($docserversRecordset = $GLOBALS['db2']->fetch_object()) {
 							$GLOBALS['docservers'][$GLOBALS['currentStep']]['docserver'][$nbDocserver] = $GLOBALS['func']->object2array($docserversRecordset);
 							$nbDocserver++;
@@ -245,12 +247,38 @@ while ($GLOBALS['state'] <> "END") {
 			$query = "select res_id from " . $GLOBALS['adrTable'] . " where res_id = " . $currentRecordInStack['res_id'];
 			do_query($GLOBALS['db'], $query);
 			if ($GLOBALS['db']->nb_result() <= 1) {
+				$GLOBALS['logger']->write('No purge for the resource ' . $currentRecordInStack['res_id'] .' because this is the last adr available', 'INFO');
+				updateOnNonePurge($currentRecordInStack['res_id']);
 				$GLOBALS['state'] = "A_RECORD";
 			} else {
 				if ($GLOBALS['docservers'][$GLOBALS['currentStep']]['is_container'] == "t") {
 					$GLOBALS['state'] = "CONTROL_CONTAINER_EMPTY";
 				} else {
 					$GLOBALS['state'] = "DO_PURGE_ON_DOCSERVER";
+				}
+			}
+			break;
+		/**********************************************************************************************/
+		case "CONTROL_CONTAINER_EMPTY" :
+			$GLOBALS['state'] = "DELETE_RES_ON_ADR_X";
+			$dsToUpdate = array();
+			//print_r($GLOBALS['docservers'][$GLOBALS['currentStep']]);
+			for ($cptDs=0;$cptDs<count($GLOBALS['docservers'][$GLOBALS['currentStep']]['docserver']);$cptDs++) {
+				$sourceFilePath = getSourceResourcePath($currentRecordInStack['res_id'], $GLOBALS['docservers'][$GLOBALS['currentStep']]['docserver'][$cptDs]['docserver_id'], true);
+				if ($sourceFilePath[0]['docserverId'] <> "" && $sourceFilePath[0]['basePath'] <> "") {
+					//print_r($sourceFilePath);
+					$query = "select count(*) as cptadr from " . $GLOBALS['adrTable'] . " where docserver_id = '" . $sourceFilePath[0]['docserverId'] . "' and path = '" . $sourceFilePath[0]['basePath'] . "' and filename = '" . $sourceFilePath[0]['fileName'] . "' and offset_doc <> '" . $sourceFilePath[0]['offsetDoc'] . "'";
+					do_query($GLOBALS['db'], $query);
+					$line = $GLOBALS['db']->fetch_object();
+					//if exists at least one doc on the container we remove only the adr
+					if($line->cptadr > 0) {
+						array_push($dsToUpdate, array("docserverId" => $GLOBALS['docservers'][$GLOBALS['currentStep']]['docserver'][$cptDs]['docserver_id']));
+						$GLOBALS['state'] = "DELETE_RES_ON_ADR_X";
+					} else {
+						$GLOBALS['logger']->write('We can purge the resource ' . $currentRecordInStack['res_id'] . ' on ' . $GLOBALS['docservers'][$GLOBALS['currentStep']]['docserver'][$cptDs]['docserver_id'], 'INFO');
+						$GLOBALS['state'] = "DO_PURGE_ON_DOCSERVER";
+						exit;
+					}
 				}
 			}
 			break;
@@ -276,6 +304,7 @@ while ($GLOBALS['state'] <> "END") {
 								$GLOBALS['exitCode'] = 26;
 								$GLOBALS['state'] = "END";break;
 							} else {
+								$GLOBALS['logger']->write('Purge file:' . $sourceFilePath, 'DEBUG');
 								$query = "select actual_size_number from " . _DOCSERVERS_TABLE_NAME . " where docserver_id = '" . $GLOBALS['docservers'][$GLOBALS['currentStep']]['docserver'][$cptDs]['docserver_id'] . "'";
 								do_query($GLOBALS['db'], $query);
 								$docserverRec = $GLOBALS['db']->fetch_object();
@@ -345,7 +374,7 @@ while ($GLOBALS['state'] <> "END") {
 			$copyResultArray = array();
 			$infoFileNameInTargetDocserver['fileDestinationName'] .= "." . strtolower($GLOBALS['func']->extractFileExt($sourceFilePath));
 			$copyResultArray = $GLOBALS['docserverControler']->copyOnDocserver($sourceFilePath, $infoFileNameInTargetDocserver, $GLOBALS['docserverSourceFingerprint']);
-			if($copyResultArray['error'] <> "") {
+			if(isset($copyResultArray['error']) && $copyResultArray['error'] <> "") {
 				$GLOBALS['logger']->write('error to copy file on docserver:' . $copyResultArray['error'] . " " . $sourceFilePath . " " . $infoFileNameInTargetDocserver['destinationDir'] . $infoFileNameInTargetDocserver['fileDestinationName'], 'ERROR', 17);
 				$GLOBALS['exitCode'] = 17;
 				$GLOBALS['state'] = "END";break;
@@ -357,8 +386,8 @@ while ($GLOBALS['state'] <> "END") {
 			$GLOBALS['state'] = "UPDATE_DATABASE";break;
 		/**********************************************************************************************/
 		case "UPDATE_DATABASE" :
-			controlIntegrityOfTransfert($currentRecordInStack, $resInContainer, $destinationDir, $fileDestinationName, $fileOffsetDoc);
-			updateDatabase($currentRecordInStack, $resInContainer, $destinationDir, $fileDestinationName, $fileOffsetDoc);
+			controlIntegrityOfTransfert($currentRecordInStack, $resInContainer, $destinationDir, $fileDestinationName);
+			updateDatabase($currentRecordInStack, $resInContainer, $destinationDir, $fileDestinationName);
 			$GLOBALS['state'] = "A_RECORD";break;
 		/**********************************************************************************************/
 		case "EMPTY_STACK" :

@@ -52,6 +52,7 @@ $db3 = "";
 $docserverControler = "";
 $wb = "";
 $docserversFeatures = array();
+$isAContainerOpened = false;
 
 function do_query($db_conn, $query_txt, $transaction = false) {
 	$res = $db_conn->query($query_txt, true);
@@ -227,6 +228,8 @@ if (!is_dir($GLOBALS['TmpDirectory'])) {
 	exit(14);
 }
 core_tools::load_lang($lang, $GLOBALS['MaarchDirectory'], $MaarchApps);
+session_start();
+$_SESSION['modules_loaded'] = array();
 $GLOBALS['func'] = new functions();
 $GLOBALS['db'] = new dbquery($GLOBALS['configFile']);
 $GLOBALS['db2'] = new dbquery($GLOBALS['configFile']);

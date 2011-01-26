@@ -1,6 +1,7 @@
 <?php 
 
 function doCompression($targeFile, $arrayOfFileToCompress, $dirToCompress = "") {
+	$listOfFileToCompress = "";
 	if ($dirToCompress <> "") {
 		$listOfFileToCompress = " -r " . $dirToCompress;
 	} else {
@@ -66,7 +67,7 @@ function extractAip($path) {
 	}
 }
 
-function controlIntegrityOfTransfert($currentRecordInStack, $resInContainer, $destinationDir, $fileDestinationName, $fileOffsetDoc) {
+function controlIntegrityOfTransfert($currentRecordInStack, $resInContainer, $destinationDir, $fileDestinationName) {
 	if (is_array($resInContainer) && count($resInContainer) > 0) {
 		extractAip($GLOBALS['docservers'][$GLOBALS['currentStep']]['docserver']['path_template'] . $destinationDir . $fileDestinationName);
 		for ($cptRes=0;$cptRes<count($resInContainer);$cptRes++) {

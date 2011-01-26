@@ -89,5 +89,9 @@ if (!defined('_PI_COMMENT_CONTENT'))  define('_PI_COMMENT_CONTENT', 'Ressources 
 if (!defined('_PI_COMMENT_PDI'))  define('_PI_COMMENT_PDI', 'Preservation Description Information: Catalogue des descripteurs de Provenance, Référence, Contexte, Intégrité et Droits d accès des ressources présentes dans <CONTENT_FILE>. Pour des raisons pratiques, l historique de traitement est stocké à part dans <HISTORY_FILE>. Voir pdi.xsd pour la structure commentée');
 if (!defined('_HISTORY_COMMENT_ROOT'))  define('_HISTORY_COMMENT_ROOT', 'Preservation Description Information - Historique : Liste des évènements sur la ressource, chaque jeu d évènement étant identifié par son nom de fichier dans <CONTENT_FILE>. Trié par date ascendante');
 if (!defined('_PDI_COMMENT_ROOT'))  define('_PDI_COMMENT_ROOT', 'Preservation Description Information : Liste des qualificateurs de ressource, rangés par catégorie : Provenance, Référence, Contexte, Intégrité et Droits d accès. Il y a une description par ressource, chaque ressource étant identifiée par son nom de fichier dans <CONTENT_FILE>');
+if (!defined('_PDI_COMMENT_HISTORY'))  define('_PDI_COMMENT_HISTORY', 'Preservation Description Information - Historique : Liste des évènements sur la ressource, chaque jeu d évènement étant identifié par son nom de fichier dans <CONTENT_FILE>. Trié par date ascendante.');
+
+/*************OTHER*************************************/
+if (!defined('_DOCS')) define( '_DOCS', 'Documents');
 
 ?>
