@@ -51,7 +51,7 @@ class entities extends dbquery
         $_SESSION['user']['primaryentity'] = array();
         $type = "root";
         $this->connect();
-        $this->query('select ue.entity_id, ue.user_role, ue.primary_entity, e.entity_label, e.short_label
+        $this->query('select ue.entity_id, ue.user_role, ue.primary_entity, e.entity_label, e.short_label, e.entity_type
                     from '.ENT_USERS_ENTITIES.' ue,
                     '.$_SESSION['tablename']['users'].' u,
                     '.ENT_ENTITIES." e
@@ -62,7 +62,7 @@ class entities extends dbquery
 
         while($line = $this->fetch_object())
         {
-            array_push($_SESSION['user']['entities'],array('ENTITY_ID'=>$line->entity_id, 'ENTITY_LABEL'=>$line->entity_label, 'SHORT_LABEL'=>$line->short_label, 'ROLE'=>$line->user_role));
+            array_push($_SESSION['user']['entities'],array('ENTITY_ID'=>$line->entity_id, 'ENTITY_LABEL'=>$line->entity_label, 'SHORT_LABEL'=>$line->short_label, 'ROLE'=>$line->user_role, 'ENTITY_TYPE' => $line->entity_type));
 
             if($line->primary_entity == 'Y')
             {
