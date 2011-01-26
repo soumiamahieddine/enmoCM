@@ -92,7 +92,7 @@ if (!$right) {
     exit();
 }
 if (isset ($s_id) && !empty ($s_id) && $_SESSION['history']['resview'] == "true") {
-    $users->add($table, $s_id, "VIEW", _VIEW_DOC_NUM . $s_id, $_SESSION['config']['databasetype'], 'apps');
+    $users->add($table, $s_id, "VIEW", _VIEW_DETAILS_NUM . $s_id, $_SESSION['config']['databasetype'], 'apps');
 }
 $modify_doc = $security->collection_user_right($coll_id, "can_update");
 $delete_doc = $security->collection_user_right($coll_id, "can_delete");

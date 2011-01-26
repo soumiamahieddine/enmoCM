@@ -830,6 +830,7 @@ if (!defined('_FOUND_DOCS')) define( '_FOUND_DOCS', 'document(s) trouv&eacute;(s
 if (!defined('_MY_CONTACTS')) define( '_MY_CONTACTS', 'Mes contacts');
 if (!defined('_DETAILLED_PROPERTIES')) define( '_DETAILLED_PROPERTIES', 'Propri&eacute;t&eacute;s d&eacute;taill&eacute;es');
 if (!defined('_VIEW_DOC_NUM')) define( '_VIEW_DOC_NUM', 'Visualisation du document n&deg;');
+if (!defined('_VIEW_DETAILS_NUM')) define( '_VIEW_DETAILS_NUM', 'Visualisation de la fiche d&eacute;taill&eacute;e du document n&deg;');
 if (!defined('_TO')) define( '_TO', 'vers');
 if (!defined('_FILE_PROPERTIES')) define( '_FILE_PROPERTIES', 'Propri&eacute;t&eacute;s du fichier');
 if (!defined('_FILE_DATA')) define( '_FILE_DATA', 'Informations sur le document');
@@ -1117,4 +1118,9 @@ if (!defined('_DOCSERVER_LOCATION_UPDATED'))  define('_DOCSERVER_LOCATION_UPDATE
 if (!defined('_DOCSERVER_LOCATION_ADDED'))  define('_DOCSERVER_LOCATION_ADDED', 'Lieu de stockage ajouté');
 if (!defined('_DOCSERVER_LOCATION_DELETED'))  define('_DOCSERVER_LOCATION_DELETED', 'Lieu de stockage supprimé');
 if (!defined('_IP_V4_ADRESS_NOT_VALID')) define('_IP_V4_ADRESS_NOT_VALID', 'Adresse IPV4 inaccessible');
+
+/************FAILOVER******************************/
+if (!defined('_FAILOVER'))  define('_FAILOVER', 'Reprise sur erreur');
+if (!defined('_FILE_NOT_EXISTS_ON_THE_SERVER'))  define('_FILE_NOT_EXISTS_ON_THE_SERVER', 'Le fichier n&rsquo;existe pas sur le docserver');
+
 ?>

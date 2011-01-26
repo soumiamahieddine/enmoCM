@@ -815,6 +815,7 @@ if (!defined('_FOUND_DOCS')) define('_FOUND_DOCS', 'document(s) found');
 if (!defined('_MY_CONTACTS')) define('_MY_CONTACTS', 'My contacts');
 if (!defined('_DETAILLED_PROPERTIES')) define('_DETAILLED_PROPERTIES', 'Details');
 if (!defined('_VIEW_DOC_NUM')) define('_VIEW_DOC_NUM', 'View document nb.');
+if (!defined('_VIEW_DETAILS_NUM')) define('_VIEW_DETAILS_NUM', 'View details page of document nb.');
 if (!defined('_TO')) define('_TO', 'to');
 if (!defined('_FILE_PROPERTIES')) define('_FILE_PROPERTIES', 'file properties');
 if (!defined('_FILE_DATA')) define('_FILE_DATA', 'Information about document');
@@ -1039,6 +1040,9 @@ if (!defined('_HOW_CAN_I_LOGIN')) define( '_HOW_CAN_I_LOGIN', 'Read me if i can\
 if (!defined('_CONNECT')) define( '_CONNECT', 'Connect');
 if (!defined('_LOGIN_MODE')) define( '_LOGIN_MODE', 'Login process type');
 
+/************FAILOVER******************************/
+if (!defined('_FAILOVER'))  define('_FAILOVER', 'Failover');
+if (!defined('_FILE_NOT_EXISTS_ON_THE_SERVER'))  define('_FILE_NOT_EXISTS_ON_THE_SERVER', 'File not exists on the document server');
 
 
 
