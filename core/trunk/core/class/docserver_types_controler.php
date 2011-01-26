@@ -49,9 +49,6 @@ try {
 	echo $e->getMessage().' // ';
 }
 
-define ("_DEBUG", false);
-define ("_ADVANCED_DEBUG",false);
-
 /**
 * @brief  Controler of the docserver_types_controler object 
 *
