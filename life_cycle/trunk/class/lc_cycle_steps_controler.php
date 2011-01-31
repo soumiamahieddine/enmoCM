@@ -47,8 +47,8 @@ try {
 	echo $e->getMessage() . ' // ';
 }
 
-define ("_DEBUG", false);
-define ("_ADVANCED_DEBUG",false);
+//define ("_DEBUG", false);
+//define ("_ADVANCED_DEBUG",false);
 
 /**
 * @brief  Controler of the lc_cycle_steps object 

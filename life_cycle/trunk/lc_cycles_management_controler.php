@@ -38,11 +38,8 @@ $idName = "cycle_id";
 
 $mode = 'add';
 
-/*echo "<pre>";
-print_r($_REQUEST);
-echo "</pre>";*/
-
-core_tools::load_lang(); // NOTE : core_tools is not a static class
+$core = new core_tools();
+$core->load_lang();
 
 if(isset($_REQUEST['mode']) && !empty($_REQUEST['mode'])) {
 	$mode = $_REQUEST['mode'];
@@ -61,10 +58,10 @@ try {
 } catch (Exception $e) {
 	echo $e->getMessage();
 }
-
+$lcPoliciesControler = new lc_policies_controler();
 if($mode == "up" || $mode =="add"){
 	$policiesArray = array();
-	$policiesArray = lc_policies_controler::getAllId();
+	$policiesArray = $lcPoliciesControler->getAllId();
 }
 
 if(isset($_REQUEST['submit'])) {
@@ -122,11 +119,11 @@ function location_bar_management($mode) {
 	$page_ids = array('add' => 'docserver_add', 'up' => 'docserver_up', 'list' => 'lc_cycles_list');
 
 	$init = false;
-	if($_REQUEST['reinit'] == "true") 
+	if(isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true")
 		$init = true;
 
 	$level = "";
-	if($_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1) 
+	if(isset($_REQUEST['level']) && ($_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1))
 		$level = $_REQUEST['level'];
 	
 	$page_path = $_SESSION['config']['businessappurl'].'index.php?page='.$pageName.'&module=life_cycle&mode='.$mode;
@@ -152,7 +149,7 @@ function validate_cs_submit($mode) {
 	//$f->show_array($_REQUEST);exit;
 	if(isset($_REQUEST['id']) && !empty($_REQUEST['id'])) {
 		// Update, so values exist
-		$lc_cycles->cycle_id=$f->protect_string_db($f->wash($_REQUEST['id'], "nick", _THE_LC_CYCLE_ID." ", "yes", 0, 32));
+		$lc_cycles->cycle_id=$f->protect_string_db($f->wash($_REQUEST['id'], "nick", _LC_CYCLE_ID." ", "yes", 0, 32));
 	}
 	
 	$lc_cycles->policy_id=$f->protect_string_db($f->wash($_REQUEST['policy_id'], "no", _POLICY_ID." ", 'yes', 0, 32));
@@ -161,9 +158,10 @@ function validate_cs_submit($mode) {
 	$lc_cycles->break_key=$f->protect_string_db($f->wash($_REQUEST['break_key'], "no", _BREAK_KEY." ", 'no', 0, 255));
 	
 	// Traitement et contrôle du WHERE-CLAUSE
-	if(lc_cycles_controler::where_test_secure($_REQUEST['where_clause'])) {
+	$lcCyclesControler = new lc_cycles_controler();
+	if($lcCyclesControler->where_test_secure($_REQUEST['where_clause'])) {
 		$_SESSION['error'] .= _WHERE_CLAUSE_NOT_SECURE."<br>";
-	} elseif (!lc_cycles_controler::where_test($_REQUEST['where_clause'])) {
+	} elseif (!$lcCyclesControler->where_test($_REQUEST['where_clause'])) {
 		$_SESSION['error'] .= _PB_WITH_WHERE_CLAUSE."<br>";
 	}
 	$lc_cycles->where_clause=$f->protect_string_db($f->wash($_REQUEST['where_clause'], "no", _WHERE_CLAUSE." ", 'yes', 0, 255));
@@ -177,7 +175,7 @@ function validate_cs_submit($mode) {
 	$status['start']=$_REQUEST['start'];
 	
 	//LKE = BULL ===== SPEC FONC : ==== Cycles de vie : lc_cycles (ID1)
-	if($mode == "add" && lc_cycles_controler::cycleExists($lc_cycles->cycle_id)) {	
+	if($mode == "add" && $lcCyclesControler->cycleExists($lc_cycles->cycle_id)) {	
 		$_SESSION['error'] = $lc_cycles->cycle_id." "._ALREADY_EXISTS."<br />";
 	}
 	
@@ -201,13 +199,13 @@ function validate_cs_submit($mode) {
 	} else {
 		// Saving given object
 		//$f->show_array($lc_cycles);
-		$lc_cycles=lc_cycles_controler::save($lc_cycles);
+		$lc_cycles=$lcCyclesControler->save($lc_cycles);
 		//history
-		if($_SESSION['history']['lc_cyclesadd'] == "true" && $mode == "add") {
+		if($_SESSION['history']['lcadd'] == "true" && $mode == "add") {
 			require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 			$history = new history();
 			$history->add(_LC_CYCLES_TABLE_NAME, $_REQUEST['id'], "ADD",_LC_CYCLE_ADDED." : ".$_REQUEST['id'], $_SESSION['config']['databasetype']);
-		} elseif($_SESSION['history']['lc_cyclesadd'] == "true" && $mode == "up") {
+		} elseif($_SESSION['history']['lcadd'] == "true" && $mode == "up") {
 			require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 			$history = new history();
 			$history->add(_LC_CYCLES_TABLE_NAME, $_REQUEST['id'], "UP",_LC_CYCLE_UPDATED." : ".$_REQUEST['id'], $_SESSION['config']['databasetype']);
@@ -227,7 +225,8 @@ function validate_cs_submit($mode) {
  */
 function display_up($cycle_id) {
 	$state=true;
-	$lc_cycles = lc_cycles_controler::get($cycle_id);
+	$lcCyclesControler = new lc_cycles_controler();
+	$lc_cycles = $lcCyclesControler->get($cycle_id);
 	if(empty($lc_cycles))
 		$state = false; 
 	else
@@ -262,8 +261,9 @@ function display_list() {
 	array_push($select[_LC_CYCLES_TABLE_NAME], $idName, "policy_id", "cycle_desc", "sequence_number");
 	$what = "";
 	$where ="";
+	$func = new functions();
 	if(isset($_REQUEST['what']) && !empty($_REQUEST['what'])) {
-		$what = functions::protect_string_db($_REQUEST['what']);
+		$what = $func->protect_string_db($_REQUEST['what']);
 		if($_SESSION['config']['databasetype'] == "POSTGRESQL") {
 			$where = $idName." ilike '".strtoupper($what)."%' ";
 		} else {
@@ -280,7 +280,8 @@ function display_list() {
 	if(isset($_REQUEST['order_field']) && !empty($_REQUEST['order_field'])) {
 		$field = trim($_REQUEST['order_field']);
 	}
-	$orderstr = list_show::define_order($order, $field);
+	$listShow = new list_show();
+	$orderstr = $listShow->define_order($order, $field);
 	$request = new request();
 	$tab=$request->select($select,$where,$orderstr,$_SESSION['config']['databasetype']);
 	//$request->show();
@@ -321,10 +322,11 @@ function display_list() {
  * @param unknown_type $cycle_id
  */
 function display_del($cycle_id) {
-	$lc_cycles = lc_cycles_controler::get($cycle_id);
+	$lcCyclesControler = new lc_cycles_controler();
+	$lc_cycles = $lcCyclesControler->get($cycle_id);
 	if(isset($lc_cycles)) {
 		// Deletion
-		if(!lc_cycles_controler::delete($cycle_id)) {
+		if(!$lcCyclesControler->delete($cycle_id)) {
 			$_SESSION['error'] = _YOU_CANNOT_DELETE." ".$cycle_id;
 		} else {
 			$_SESSION['error'] = _LC_CYCLE_DELETED." ".$cycle_id;
@@ -359,7 +361,8 @@ function display_del($cycle_id) {
  * @param $show
  */
 function format_item(&$item,$label,$size,$label_align,$align,$valign,$show) {
-	$item['value']=functions::show_string($item['value']);	
+	$func = new functions();
+	$item['value']=$func->show_string($item['value']);	
 	$item[$item['column']]=$item['value'];
 	$item["label"]=$label;
 	$item["size"]=$size;
@@ -377,9 +380,10 @@ function format_item(&$item,$label,$size,$label_align,$align,$valign,$show) {
  * @param hashable $hashable
  */
 function put_in_session($type,$hashable) {
+	$func = new functions();
 	foreach($hashable as $key=>$value) {
-		// echo "Key: $key Value: $value f:".functions::show_string($value)." // ";
-		$_SESSION['m_admin'][$type][$key]=functions::show_string($value);
+		// echo "Key: $key Value: $value f:".$func->show_string($value)." // ";
+		$_SESSION['m_admin'][$type][$key]=$func->show_string($value);
 	}
 }
 

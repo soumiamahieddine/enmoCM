@@ -69,9 +69,9 @@ class lc_policies_controler extends ObjectControler implements ObjectControlerIF
 	* @return lc_policies object with properties from the database or null
 */
 	public function get($policy_id, $comp_where = '', $can_be_disabled = false) {
-		self :: set_foolish_ids(array('policy_id'));
-		self :: set_specific_id('policy_id');
-		$policy = self :: advanced_get($policy_id, _LC_POLICIES_TABLE_NAME);
+		self::set_foolish_ids(array('policy_id'));
+		self::set_specific_id('policy_id');
+		$policy = self::advanced_get($policy_id, _LC_POLICIES_TABLE_NAME);
 
 		if (isset ($policy_id))
 			return $policy;
@@ -89,12 +89,12 @@ class lc_policies_controler extends ObjectControler implements ObjectControlerIF
 		if (!isset ($policy))
 			return false;
 
-		self :: set_foolish_ids(array('policy_id'));
-		self :: set_specific_id('policy_id');
-		if (self :: policyExists($policy->policy_id))
-			return self :: update($policy);
+		self::set_foolish_ids(array('policy_id'));
+		self::set_specific_id('policy_id');
+		if (self::policyExists($policy->policy_id))
+			return self::update($policy);
 		else
-			return self :: insert($policy);
+			return self::insert($policy);
 	}
 		
 /**
@@ -135,7 +135,7 @@ class lc_policies_controler extends ObjectControler implements ObjectControlerIF
 
 		self::$db=new dbquery();
 		self::$db->connect();
-		$query="delete from "._LC_POLICIES_TABLE_NAME." where policy_id ='".functions::protect_string_db($policy_id)."'";
+		$query="delete from "._LC_POLICIES_TABLE_NAME." where policy_id ='".self::$db->protect_string_db($policy_id)."'";
 		
 		try {
 			if($_ENV['DEBUG']) {echo $query.' // ';}

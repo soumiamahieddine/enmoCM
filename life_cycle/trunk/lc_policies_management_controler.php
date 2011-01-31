@@ -42,8 +42,8 @@ $mode = 'add';
 /*echo "<pre>";
 print_r($_REQUEST);
 echo "</pre>";*/
-
-core_tools::load_lang(); // NOTE : core_tools is not a static class
+$core = new core_tools();
+$core->load_lang();
 
 if(isset($_REQUEST['mode']) && !empty($_REQUEST['mode'])) {
 	$mode = $_REQUEST['mode'];
@@ -117,11 +117,11 @@ function location_bar_management($mode) {
 	$page_ids = array('add' => 'docserver_add', 'up' => 'docserver_up', 'list' => 'lc_policies_list');
 
 	$init = false;
-	if($_REQUEST['reinit'] == "true") 
+	if(isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true") 
 		$init = true;
 
 	$level = "";
-	if($_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1) 
+	if(isset($_REQUEST['level']) && ($_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1))
 		$level = $_REQUEST['level'];
 	
 	$page_path = $_SESSION['config']['businessappurl'].'index.php?page='.$pageName.'&module=life_cycle&mode='.$mode;
@@ -145,24 +145,21 @@ function validate_cs_submit($mode) {
 	$f=new functions();
 
 	$lc_policies = new lc_policies();
-	//$f->show_array($_REQUEST);exit;
-	if(isset($_REQUEST['id']) && !empty($_REQUEST['id'])) {
-		// Update, so values exist
-		$lc_policies->policy_id=$f->protect_string_db($f->wash($_REQUEST['id'], "nick", _THE_LC_POLICY_ID." ", "yes", 0, 32));
-	}
+
+	// Update, so values exist
+	$lc_policies->policy_id=$f->protect_string_db($f->wash($_REQUEST['id'], "nick", _LC_POLICY_ID." ", 'yes', 0, 32));
 	$lc_policies->policy_name=$f->protect_string_db($f->wash($_REQUEST['policy_name'], "no", _POLICY_NAME." ", 'yes', 0, 255));
 	$lc_policies->policy_desc=$f->protect_string_db($f->wash($_REQUEST['policy_desc'], "no", _POLICY_DESC." ", 'yes', 0, 255));
 	
-
 	$status= array();
 	$status['order']=$_REQUEST['order'];
 	$status['order_field']=$_REQUEST['order_field'];
 	$status['what']=$_REQUEST['what'];
 	$status['start']=$_REQUEST['start'];
 	
-	
+	$lcPoliciesControler = new lc_policies_controler();
 	//LKE = BULL ===== SPEC FONC : ==== Cycles de vie : lc_policies (ID1)	
-	if($mode == "add" && lc_policies_controler::policyExists($lc_policies->policy_id)) {	
+	if($mode == "add" && $lcPoliciesControler->policyExists($lc_policies->policy_id)) {	
 		$_SESSION['error'] = $lc_policies->policy_id." "._ALREADY_EXISTS."<br />";
 	}
 	
@@ -186,19 +183,19 @@ function validate_cs_submit($mode) {
 	} else {
 		// Saving given object
 		//$f->show_array($lc_policies);
-		$lc_policies=lc_policies_controler::save($lc_policies);
+		$lc_policies = $lcPoliciesControler->save($lc_policies);
 		//history
-		if($_SESSION['history']['lc_policiesadd'] == "true" && $mode == "add") {
+		if($_SESSION['history']['lcadd'] == "true" && $mode == "add") {
 			require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 			$history = new history();
 			$history->add(_LC_POLICIES_TABLE_NAME, $_REQUEST['id'], "ADD",_LC_POLICY_ADDED." : ".$_REQUEST['id'], $_SESSION['config']['databasetype']);
-		} elseif($_SESSION['history']['lc_policiesadd'] == "true" && $mode == "up") {
+		} elseif($_SESSION['history']['lcup'] == "true" && $mode == "up") {
 			require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 			$history = new history();
 			$history->add(_LC_POLICIES_TABLE_NAME, $_REQUEST['id'], "UP",_LC_POLICY_UPDATED." : ".$_REQUEST['id'], $_SESSION['config']['databasetype']);
 		}
 		if($mode == "add")
-			$_SESSION['error'] =  _LC_POLICY_ADDED;
+			$_SESSION['error'] = _LC_POLICY_ADDED;
 		 else
 			$_SESSION['error'] = _LC_POLICY_UPDATED;
 		unset($_SESSION['m_admin']);
@@ -212,7 +209,8 @@ function validate_cs_submit($mode) {
  */
 function display_up($policy_id) {
 	$state=true;
-	$lc_policies = lc_policies_controler::get($policy_id);
+	$lcPoliciesControler = new lc_policies_controler();
+	$lc_policies = $lcPoliciesControler->get($policy_id);
 	if(empty($lc_policies))
 		$state = false; 
 	else
@@ -248,7 +246,8 @@ function display_list() {
 	$what = "";
 	$where ="";
 	if(isset($_REQUEST['what']) && !empty($_REQUEST['what'])) {
-		$what = functions::protect_string_db($_REQUEST['what']);
+		$func = new functions();
+		$what = $func->protect_string_db($_REQUEST['what']);
 		if($_SESSION['config']['databasetype'] == "POSTGRESQL") {
 			$where = $idName." ilike '".strtoupper($what)."%' ";
 		} else {
@@ -265,7 +264,8 @@ function display_list() {
 	if(isset($_REQUEST['order_field']) && !empty($_REQUEST['order_field'])) {
 		$field = trim($_REQUEST['order_field']);
 	}
-	$orderstr = list_show::define_order($order, $field);
+	$listShow = new list_show();
+	$orderstr = $listShow->define_order($order, $field);
 	$request = new request();
 	$tab=$request->select($select,$where,$orderstr,$_SESSION['config']['databasetype']);
 	for ($i=0;$i<count($tab);$i++) {
@@ -309,14 +309,15 @@ function display_list() {
  * @param unknown_type $policy_id
  */
 function display_del($policy_id) {
-	$lc_policies = lc_policies_controler::get($policy_id);
+	$lcPoliciesControler = new lc_policies_controler();
+	$lc_policies = $lcPoliciesControler->get($policy_id);
 	if(isset($lc_policies)) {
 		// Deletion
-		if(!lc_policies_controler::delete($policy_id)) {
+		if(!$lcPoliciesControler->delete($policy_id)) {
 			$_SESSION['error'] = _YOU_CANNOT_DELETE." ".$policy_id;
 		} else {
 			$_SESSION['error'] = _LC_POLICY_DELETED." ".$policy_id;
-			if($_SESSION['history']['lc_policiesdel'] == "true") {
+			if($_SESSION['history']['lcdel'] == "true") {
 				require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 				$history = new history();
 				$history->add(_LC_POLICIES_TABLE_NAME, $policy_id, "DEL", _LC_POLICY_DELETED." : ".$policy_id, $_SESSION['config']['databasetype']);
@@ -347,7 +348,8 @@ function display_del($policy_id) {
  * @param $show
  */
 function format_item(&$item,$label,$size,$label_align,$align,$valign,$show) {
-	$item['value']=functions::show_string($item['value']);	
+	$func = new functions();
+	$item['value'] = $func->show_string($item['value']);	
 	$item[$item['column']]=$item['value'];
 	$item["label"]=$label;
 	$item["size"]=$size;
@@ -365,9 +367,10 @@ function format_item(&$item,$label,$size,$label_align,$align,$valign,$show) {
  * @param hashable $hashable
  */
 function put_in_session($type,$hashable) {
+	$func = new functions();
 	foreach($hashable as $key=>$value) {
-		// echo "Key: $key Value: $value f:".functions::show_string($value)." // ";
-		$_SESSION['m_admin'][$type][$key]=functions::show_string($value);
+		// echo "Key: $key Value: $value f:".$func->show_string($value)." // ";
+		$_SESSION['m_admin'][$type][$key]=$func->show_string($value);
 	}
 }
 

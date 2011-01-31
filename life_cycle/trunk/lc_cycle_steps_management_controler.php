@@ -127,11 +127,11 @@ function location_bar_management($mode) {
 	$page_ids = array('add' => 'docserver_add', 'up' => 'docserver_up', 'list' => 'lc_cycle_steps_list');
 
 	$init = false;
-	if($_REQUEST['reinit'] == "true") 
+	if(isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true") 
 		$init = true;
 
 	$level = "";
-	if($_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1) 
+	if(isset($_REQUEST['level']) && ($_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1))
 		$level = $_REQUEST['level'];
 	
 	$page_path = $_SESSION['config']['businessappurl'].'index.php?page='.$pageName.'&module=life_cycle&mode='.$mode;

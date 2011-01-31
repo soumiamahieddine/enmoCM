@@ -48,8 +48,8 @@ try {
 	echo $e->getMessage() . ' // ';
 }
 
-define ("_DEBUG", false);
-define ("_ADVANCED_DEBUG",false);
+//define ("_DEBUG", false);
+//define ("_ADVANCED_DEBUG",false);
 
 /**
 * @brief  Controler of the lc_cycles object 
@@ -341,11 +341,15 @@ class lc_cycles_controler extends ObjectControler implements ObjectControlerIF {
 		$string = $where_clause;
 		$search1="'drop|insert|delete|update'";
 		preg_match($search1, $string, $out);
-		$count=count($out[0]);
-		if($count == 1) {
-			$find1 = true;
-		}
-		else {
+		if(isset($out[0])) {
+			$count=count($out[0]);
+			if($count == 1) {
+				$find1 = true;
+			}
+			else {
+				$find1 = false;
+			}
+		} else {
 			$find1 = false;
 		}
 		return $find1;
