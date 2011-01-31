@@ -314,12 +314,12 @@ class users_controler extends ObjectControler implements ObjectControlerIF{
     public function delete($user, $params= array()){
         $control = array();
         if(!isset($user) || empty($user)) {
-            $control = array("status" => "ko", "value" => "", "error" => _USER_EMPTY);
+            $control = array('status' => 'ko', 'value' => '', 'error' => _USER_EMPTY);
             return $control;
         }
         $user = self::isAUser($user);
         if(!self::userExists($user->user_id)) {
-            $control = array("status" => "ko", "value" => "", "error" => _USER_NOT_EXISTS);
+            $control = array('status' => 'ko', 'value' => '', 'error' => _USER_NOT_EXISTS);
             return $control;
         }
 
@@ -336,7 +336,7 @@ class users_controler extends ObjectControler implements ObjectControlerIF{
             self::$db->query($query);
             $ok = true;
         } catch (Exception $e){
-            $control = array("status" => "ko", "value" => "", "error" => _CANNOT_DELETE_USER_ID." ".$user->user_id);
+            $control = array('status' => 'ko', 'value' => '', 'error' => _CANNOT_DELETE_USER_ID.' '.$user->user_id);
             $ok = false;
         }
 
@@ -344,10 +344,11 @@ class users_controler extends ObjectControler implements ObjectControlerIF{
         if($ok){
             $control = self::cleanUsergroupContent($user->user_id);
         }
+
         if($control['status'] == 'ok'){
             if(isset($params['log_user_del']) && ($params['log_user_del'] == "true" || $params['log_user_del'] == true)) {
                 $history = new history();
-                $history->add(USERS_TABLE, $user->user_id, "DEL", _USER_DELETED." : ".$user->user_id, $params['databasetype']);
+                $history->add(USERS_TABLE, $user->user_id, "DEL", _DELETED_USER." : ".$user->lastname.' '.$user->firstname.' ('.$user->user_id.')', $params['databasetype']);
             }
         }
         return $control;
@@ -362,7 +363,7 @@ class users_controler extends ObjectControler implements ObjectControlerIF{
     public function cleanUsergroupContent($user_id){
         $control = array();
         if(!isset($user_id) || empty($user_id)) {
-            $control = array("status" => "ko", "value" => "", "error" => _USER_ID_EMPTY);
+            $control = array('status' => 'ko', 'value' => '', 'error' => _USER_ID_EMPTY);
             return $control;
         }
 
@@ -373,10 +374,9 @@ class users_controler extends ObjectControler implements ObjectControlerIF{
         try{
             if($_ENV['DEBUG']){echo $query.' // ';}
             self::$db->query($query);
-            $ok = true;
+            $control = array('status' => 'ok', 'value' => $user_id);
         } catch (Exception $e){
-            $control = array("status" => "ko", "value" => "", "error" => _CANNOT_CLEAN_USERGROUP_CONTENT." ".$user_id);
-            $ok = false;
+            $control = array('status' => 'ko', 'value' => '', 'error' => _CANNOT_CLEAN_USERGROUP_CONTENT.' '.$user_id);
         }
         self::$db->disconnect();
         return $control;
