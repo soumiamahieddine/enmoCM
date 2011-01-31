@@ -38,21 +38,21 @@ if(isset($_REQUEST['user_submit'])){
 
 } else {
     // Display to do
-
+    $ugc = new usergroups_controler();
     $state = true;
     switch ($mode) {
         case "up" :
             $state=display_up($user_id);
             $_SESSION['service_tag'] = 'user_init';
             core_tools::execute_modules_services($_SESSION['modules_services'], 'user_init', "include");
-            $_SESSION['m_admin']['nbgroups']  = usergroups_controler::getUsergroupsCount();
+            $_SESSION['m_admin']['nbgroups']  = $ugc->getUsergroupsCount();
             location_bar_management($mode);
             break;
         case "add" :
             display_add();
             $_SESSION['service_tag'] = 'user_init';
             core_tools::execute_modules_services($_SESSION['modules_services'], 'user_init', "include");
-            $_SESSION['m_admin']['nbgroups']  = usergroups_controler::getUsergroupsCount();
+            $_SESSION['m_admin']['nbgroups']  = $ugc->getUsergroupsCount();
             location_bar_management($mode);
             break;
         case "del" :
@@ -66,7 +66,7 @@ if(isset($_REQUEST['user_submit'])){
             break;
         case "list" :
             $users_list=display_list();
-            $_SESSION['m_admin']['nbgroups']  = usergroups_controler::getUsergroupsCount();
+            $_SESSION['m_admin']['nbgroups']  = $ugc->getUsergroupsCount();
             location_bar_management($mode);
             break;
     }
@@ -103,8 +103,10 @@ function location_bar_management($mode){
  * @param Long $scheme_id
  */
 function display_up($user_id){
+    $uc = new users_controler();
+    $ugc = new usergroups_controler();
     $state=true;
-    $user = users_controler::get($user_id );
+    $user = $uc->get($user_id );
     if(empty($user)){
         $state = false;
     }
@@ -113,9 +115,9 @@ function display_up($user_id){
     }
 
     if (($_SESSION['m_admin']['load_group'] == true || ! isset($_SESSION['m_admin']['load_group'] )) && $_SESSION['m_admin']['users']['user_id'] <> "superadmin"){
-        $tmp_array = users_controler::getGroups($_SESSION['m_admin']['users']['user_id']);
+        $tmp_array = $uc->getGroups($_SESSION['m_admin']['users']['user_id']);
         for($i=0; $i<count($tmp_array);$i++){
-            $group = usergroups_controler::get($tmp_array[$i]['GROUP_ID']);
+            $group = $ugc->get($tmp_array[$i]['GROUP_ID']);
             $tmp_array[$i]['LABEL'] = $group->__get('group_desc');
         }
         $_SESSION['m_admin']['users']['groups'] = $tmp_array;
@@ -137,8 +139,10 @@ function display_add(){
  * Initialize session parameters for list display
  */
 function display_list(){
-    $_SESSION['m_admin'] = array();
 
+    $_SESSION['m_admin'] = array();
+    $list = new list_show();
+    $func = new functions();
     init_session();
 
     $select[USERS_TABLE] = array();
@@ -146,7 +150,7 @@ function display_list(){
     $where = " status = 'OK' ";
     $what = '';
     if(isset($_REQUEST['what'])){
-        $what = functions::protect_string_db($_REQUEST['what']);
+        $what = $func->protect_string_db($_REQUEST['what']);
     }
     if($_SESSION['config']['databasetype'] == "POSTGRESQL"){
         $where .= " and ( lastname ilike '".strtolower($what)."%' or lastname ilike '".strtoupper($what)."%' )";
@@ -165,7 +169,7 @@ function display_list(){
     if(isset($_REQUEST['order_field']) && !empty($_REQUEST['order_field']))
         $field = trim($_REQUEST['order_field']);
 
-    $orderstr = list_show::define_order($order, $field);
+    $orderstr = $list->define_order($order, $field);
     $request = new request();
     $tab=$request->select($select,$where,$orderstr,$_SESSION['config']['databasetype']);
     for ($i=0;$i<count($tab);$i++) {
@@ -220,20 +224,22 @@ function display_list(){
  * @param unknown_type $user_id
  */
 function display_del($user_id){
-    $user = users_controler::get($user_id);
+    $uc = new users_controler();
+    $user = $uc->get($user_id);
     if(isset($user)) {
         // Deletion
         $control = array();
         $params = array( 'log_user_del' => $_SESSION['history']['usersdel'],
                          'databasetype' => $_SESSION['config']['databasetype']
                         );
-        $control = users_controler::delete($user, $params);
+        $control = $uc->delete($user, $params);
         if(!empty($control['error']) && $control['error'] <> 1) {
             $_SESSION['error'] = str_replace("#", "<br />", $control['error']);
         } else {
             $_SESSION['error'] = _DELETED_USER.' : '.$user_id;
         }
-        ?><script type="text/javascript">window.top.location='<?php echo $_SESSION['config']['businessappurl']."index.php?page=users_management_controler&mode=list&admin=users&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what;?>';</script>
+        exit();
+        ?><script type="text/javascript">window.top.location='<?php echo $_SESSION['config']['businessappurl']."index.php?page=users_management_controler&mode=list&admin=users&order=".$_REQUEST['order']."&order_field=".$_REQUEST['order_field']."&start=".$_REQUEST['start']."&what=".$_REQUEST['what'];?>';</script>
         <?php
         exit;
     }
@@ -248,13 +254,31 @@ function display_del($user_id){
  * @param unknown_type $user_id
  */
 function display_enable($user_id){
-    $user = users_controler::get($user_id);
+    $uc = new users_controler();
+    $user = $uc->get($user_id);
     if(isset($user)){
-        // Deletion
-        users_controler::enable($user);
-        $_SESSION['error'] = _AUTORIZED_USER.' : '.$user_id;
-        // NOTE: Why not calling display_list ?
-        ?><script type="text/javascript">window.top.location='<?php echo $_SESSION['config']['businessappurl']."index.php?page=users_management_controler&mode=list&admin=users&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what;?>';</script>
+        $control = array();
+        $params = array();
+        if(isset($_SESSION['history']['usersval'])){
+            $params['log_user_enabled'] = $_SESSION['history']['usersval'];
+        }
+        if(isset($_SESSION['config']['databasetype'])){
+            $params['databasetype'] = $_SESSION['config']['databasetype'];
+        }
+        else{
+            $params['databasetype'] = 'POSTGRESQL';
+        }
+
+        $control = $uc->enable($user, $params);
+        $_SESSION['error'] = '';
+        if(!empty($control['error']) && $control['error'] <> 1) {
+            $_SESSION['error'] = str_replace("#", "<br />", $control['error']);
+        } else {
+            $_SESSION['error'] = _AUTORIZED_USER.' : '.$user_id;
+        }
+
+        ?><script type="text/javascript">
+        window.top.location='<?php echo $_SESSION['config']['businessappurl']."index.php?page=users_management_controler&mode=list&admin=users&order=".$_REQUEST['order']."&order_field=".$_REQUEST['order_field']."&start=".$_REQUEST['start']."&what=".$_REQUEST['what'];?>';</script>
         <?php
         exit();
     }
@@ -269,15 +293,31 @@ function display_enable($user_id){
  * @param unknown_type $user_id
  */
 function display_disable($user_id){
-    $user = users_controler::get($user_id);
+    $uc = new users_controler();
+    $user = $uc->get($user_id);
     if(isset($user)){
-        // Deletion
-        users_controler::disable($user);
-        $_SESSION['error'] = _SUSPENDED_USER.' : '.$user_id;
-        // NOTE: Why not calling display_list ?
-        ?><script type="text/javascript">window.top.location='<?php echo $_SESSION['config']['businessappurl']."index.php?page=users_management_controler&mode=list&admin=users&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what;?>';</script>
+        $control = array();
+        $params = array();
+        if(isset($_SESSION['history']['usersban'])){
+            $params['log_user_disabled'] = $_SESSION['history']['usersban'];
+        }
+        if(isset($_SESSION['config']['databasetype'])){
+            $params['databasetype'] = $_SESSION['config']['databasetype'];
+        }
+        else{
+            $params['databasetype'] = 'POSTGRESQL';
+        }
+
+        $control = $uc->disable($user, $params);
+        if(!empty($control['error']) && $control['error'] <> 1) {
+            $_SESSION['error'] = str_replace("#", "<br />", $control['error']);
+        } else {
+            $_SESSION['error'] = _SUSPENDED_USER.' : '.$user_id;
+        }
+
+        ?><script type="text/javascript">window.top.location='<?php echo $_SESSION['config']['businessappurl']."index.php?page=users_management_controler&mode=list&admin=users&order=".$_REQUEST['order']."&order_field=".$_REQUEST['order_field']."&start=".$_REQUEST['start']."&what=".$_REQUEST['what'];?>';</script>
         <?php
-        exit;
+        exit();
     }
     else{
         // Error management
@@ -299,7 +339,8 @@ function display_disable($user_id){
  * @param $show
  */
 function format_item(&$item,$label,$size,$label_align,$align,$valign,$show,$order= true){
-    $item['value']=functions::show_string($item['value']);
+    $func = new functions();
+    $item['value']=$func->show_string($item['value']);
     $item[$item['column']]=$item['value'];
     $item["label"]=$label;
     $item["size"]=$size;
@@ -321,6 +362,7 @@ function format_item(&$item,$label,$size,$label_align,$align,$valign,$show,$orde
  */
 function validate_user_submit(){
 
+    $uc = new users_controler();
     $pageName = "users_management_controler";
 
     $mode = $_REQUEST['mode'];
@@ -370,8 +412,10 @@ function validate_user_submit(){
                     'userdefaultpassword' => $tmp_pass
                     );
 
-    $control = users_controler::save($user,  $_SESSION['m_admin']['users']['groups'], $mode,$params);
-
+    if(isset($_SESSION['m_admin']['users']['groups']))
+    {
+        $control = $uc->save($user,  $_SESSION['m_admin']['users']['groups'], $mode,$params);
+    }
     if(!empty($control['error']) && $control['error'] <> 1) {
         // Error management depending of mode
         $_SESSION['error'] = str_replace("#", "<br />", $control['error']);
@@ -418,9 +462,10 @@ function init_session(){
  * @param hashable $hashable
  */
 function put_in_session($type,$hashable, $show_string = true){
+    $func = new functions();
     foreach($hashable as $key=>$value){
         if ($show_string){
-            $_SESSION['m_admin'][$type][$key]=functions::show_string($value);
+            $_SESSION['m_admin'][$type][$key]=$func->show_string($value);
         }
         else{
             $_SESSION['m_admin'][$type][$key]=$value;

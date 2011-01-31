@@ -825,7 +825,14 @@ class list_show extends functions
                 {
                     array_push($listcolumn,'');
                 }
-                array_push($listshow,$result[$i][$j]['show']);
+                if(isset($listshow,$result[$i][$j]['show']))
+                {
+                    array_push($listshow,$result[$i][$j]['show']);
+                }
+                else
+                {
+                    array_push($listshow,true);
+                }
                 if(isset($result[$i][$j]["order"]))
                 {
                     array_push($ordercol,$result[$i][$j]["order"]);
@@ -1010,9 +1017,7 @@ class list_show extends functions
                     if($listshow[$count_column]==true)
                     {
                     ?>
-                        <th style="width:<?php  echo $result[0][$count_column]['size'];?>%;" valign="<?php  echo $result[0][$count_column]['valign'];?>" align="<?php  echo $result[0][$count_column]['label_align'];?>"
-                        <?php
-                         ?>
+                        <th <?php if(isset($result[0][$count_column]['size'])){?>style="width:<?php echo $result[0][$count_column]['size'];?>%;"<?php } if(isset($result[0][$count_column]['valign'])){?> valign="<?php echo $result[0][$count_column]['valign'];?>"<?php } if(isset($result[0][$count_column]['label_align'])){?> align="<?php  echo $result[0][$count_column]['label_align'];?>"<?php } ?>
                          ><span>&nbsp;<?php  echo $listcolumn[$count_column]?>
                          <?php  if($bool_order && !empty($ordercol[$count_column]))
                         { ?> <br/> <a href="<?php  echo $link; ?>&amp;start=<?php  echo $start; ?>&amp;order=desc&amp;order_field=<?php  echo $ordercol[$count_column];?>" title="<?php  echo _DESC_SORT;?>"><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=tri_down.gif"  alt="<?php  echo _DESC_SORT; ?>" /> </a> <a href="<?php  echo $link; ?>&amp;start=<?php  echo $start; ?>&amp;order=asc&amp;order_field=<?php  echo $ordercol[$count_column];?>" title="<?php  echo _ASC_SORT;?>"> <img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=tri_up.gif" alt="<?php  echo _ASC_SORT; ?>" /></a> <?php  }
@@ -1120,7 +1125,7 @@ class list_show extends functions
                     $can_delete = true;
                     for($count_column = 0;$count_column < count($listcolumn);$count_column++)
                     {
-                        if($result[$theline][$count_column]['show']==true)
+                        if(isset($result[$theline][$count_column]['show']) && $result[$theline][$count_column]['show']==true)
                         {
                     ?>
                             <td style="width:<?php  echo $result[$theline][$count_column]['size'];?>%;" align="<?php  echo $result[$theline][$count_column]['align'];?>">
@@ -1377,8 +1382,8 @@ class list_show extends functions
         </table><br/>
         </div>
         <?php
-
-        if(core_tools::is_module_loaded("doc_converter"))
+        $core = new core_tools();
+        if($core->is_module_loaded("doc_converter"))
         {
             $_SESSION['doc_convert'] = array();
             require_once("modules".DIRECTORY_SEPARATOR."doc_converter".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");

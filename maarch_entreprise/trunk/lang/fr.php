@@ -70,6 +70,7 @@ if (!defined('_REMOVE')) define( '_REMOVE', 'Enlever');
 if (!defined('_MODIFY')) define( '_MODIFY', 'Modifier');
 if (!defined('_SUSPEND')) define( '_SUSPEND', 'Suspendre');
 if (!defined('_AUTHORIZE')) define( '_AUTHORIZE', 'Autoriser');
+if (!defined('_CHOOSE')) define( '_CHOOSE', 'Choisir');
 if (!defined('_SEND')) define( '_SEND', 'Envoyer');
 if (!defined('_SEARCH')) define( '_SEARCH', 'Rechercher');
 if (!defined('_RESET')) define( '_RESET', 'R&eacute;initialiser');
@@ -111,6 +112,7 @@ if (!defined('_DESC')) define( '_DESC', 'Description');
 if (!defined('_LASTNAME')) define( '_LASTNAME', 'Nom');
 if (!defined('_THE_LASTNAME')) define( '_THE_LASTNAME', 'Le nom');
 if (!defined('_THE_FIRSTNAME')) define( '_THE_FIRSTNAME', 'Le pr&eacute;nom');
+if (!defined('_THE_ID')) define( '_THE_ID', 'L&rsquo;identifiant');
 if (!defined('_FIRSTNAME')) define( '_FIRSTNAME', 'Pr&eacute;nom');
 if (!defined('_STATUS')) define( '_STATUS', 'Statut');
 if (!defined('_DEPARTMENT')) define( '_DEPARTMENT', 'D&eacute;partement');
@@ -988,6 +990,8 @@ if (!defined('_DATABASE')) define( '_DATABASE', 'Base');
 
 
 if (!defined('_TREE_ROOT')) define( '_TREE_ROOT', 'Racine');
+
+if (!defined('_MODE')) define( '_MODE', 'Mode');
 
 if (!defined('_TITLE_STATS_CHOICE_PERIOD'))  define('_TITLE_STATS_CHOICE_PERIOD','Pour une p&eacute;riode');
 
