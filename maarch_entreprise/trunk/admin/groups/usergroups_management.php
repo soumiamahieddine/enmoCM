@@ -3,7 +3,8 @@
 /* Affichage */
 if($mode == "list")
 {
-    list_show::admin_list(
+    $list = new list_show();
+    $list->admin_list(
                     $groups_list['tab'],
                     count($groups_list['tab']),
                     $groups_list['title'],
@@ -185,7 +186,7 @@ elseif($mode == "up" || $mode == "add")
                         <td align="left">
                             <?php  if($mode == "up") { echo functions::show_str($_SESSION['m_admin']['groups']['group_id']); } ?>
                             <input name="group_id" type="<?php  if($mode == "up") { ?>hidden<?php  } elseif($mode == "add") { ?>text<?php  } ?>" id="group_id" value="<?php  echo $_SESSION['m_admin']['groups']['group_id']; ?>" />
-                            <input type="hidden"  name="id" value="<?php  echo $group_id; ?>" />
+                            <input type="hidden"  name="id" value="<?php if(isset($group_id)){echo $group_id;} ?>" />
                         </td>
                     </tr>
                     <tr>
