@@ -42,6 +42,7 @@
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."SecurityControler.php");
 require_once("core/where_targets.php");
+require_once('core/class/users_controler.php');
 
 class security extends dbquery
 {
@@ -73,20 +74,20 @@ class security extends dbquery
     */
     public function login($s_login,$pass, $method = false)
     {
-        require_once('core/class/users_controler.php');
+        $uc = new users_controler();
         if ($this->test_column($_SESSION['tablename']['users'], 'loginmode')) //Compatibility test, if loginmode column doesn't exists, Maarch can't crash
         {
             if ($method == 'activex')
                 $comp =" and STATUS <> 'DEL' and loginmode = 'activex'";
             elseif($method == 'ldap')
-				$comp =" and STATUS <> 'DEL'";
+                $comp =" and STATUS <> 'DEL'";
             else
                 $comp = " and password = '".$pass."' and STATUS <> 'DEL' and loginmode = 'standard'";
         }
         else
             $comp = " and password = '".$pass."' and STATUS <> 'DEL'";
 
-        $user = users_controler::get($s_login, $comp);
+        $user = $uc->get($s_login, $comp);
 
         if(isset($user))
         {
@@ -94,6 +95,9 @@ class security extends dbquery
             {
                 require_once("core/class/usergroups_controler.php");
                 require_once("core/class/ServiceControler.php");
+                $ugc = new usergroups_controler();
+                $sec_controler = new SecurityControler();
+                $serv_controler = new ServiceControler();
                 $_SESSION['user']['change_pass'] = $user->__get('change_password');
                 $_SESSION['user']['UserId'] = $user->__get('user_id');
                 $_SESSION['user']['FirstName'] = $user->__get('firstname');
@@ -111,21 +115,21 @@ class security extends dbquery
                 else
                     $user->__set('cookie_date',date("Y-m-d")." ".date("H:m:i"));
 
-                users_controler::save($user, 'up');
+                $uc->save($user, 'up');
                 setcookie("maarch", "UserId=".$_SESSION['user']['UserId']."&key=".$key,time()+($_SESSION['config']['cookietime']*1000));
-                $_SESSION['user']['primarygroup'] = usergroups_controler::getPrimaryGroup($_SESSION['user']['UserId']);
-                $tmp = SecurityControler::load_security($_SESSION['user']['UserId']);
+                $_SESSION['user']['primarygroup'] =  $ugc ->getPrimaryGroup($_SESSION['user']['UserId']);
+                $tmp = $sec_controler->load_security($_SESSION['user']['UserId']);
 
                 $_SESSION['user']['collections'] = $tmp['collections'];
                 $_SESSION['user']['security'] = $tmp['security'];
 
-                ServiceControler::loadEnabledServices();
+                $serv_controler->loadEnabledServices();
                 require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
                 $business_app_tools = new business_app_tools();
                 $core_tools = new core_tools();
                 $business_app_tools->load_app_var_session();
                 $core_tools->load_var_session($_SESSION['modules']);
-                $_SESSION['user']['services'] = ServiceControler::loadUserServices($_SESSION['user']['UserId']);
+                $_SESSION['user']['services'] = $serv_controler->loadUserServices($_SESSION['user']['UserId']);
                 $core_tools->load_menu($_SESSION['modules']);
 
                 if($_SESSION['history']['userlogin'] == "true")
@@ -182,7 +186,7 @@ class security extends dbquery
         $this->connect();
 
         $comp = " and cookie_key = '".$s_key."' and STATUS <> 'DEL'";
-
+        $uc = new users_controler();
         $user = users_controler::get($s_login, $comp);
 
         if(isset($user))
@@ -191,6 +195,7 @@ class security extends dbquery
             {
                 require_once("core/class/usergroups_controler.php");
                 require_once("core/class/ServiceControler.php");
+                $serv_controler = new ServiceControler();
                 $_SESSION['user']['change_pass'] = $user->__get('change_password');
                 $_SESSION['user']['UserId'] = $user->__get('user_id');
                 $_SESSION['user']['FirstName'] = $user->__get('firstname');
@@ -208,15 +213,15 @@ class security extends dbquery
                 else
                     $user->__set('cookie_date',date("Y-m-d")." ".date("H:m:i"));
 
-                users_controler::save($user, 'up');
+                $uc->save($user, 'up');
                 setcookie("maarch", "UserId=".$_SESSION['user']['UserId']."&key=".$key,time()+($_SESSION['config']['cookietime']*60));
 
-                $_SESSION['user']['primarygroup'] = usergroups_controler::getPrimaryGroup($_SESSION['user']['UserId']);
-
-                $tmp = SecurityControler::load_security($_SESSION['user']['UserId']);
+                $_SESSION['user']['primarygroup'] =  $ugc->getPrimaryGroup($_SESSION['user']['UserId']);
+                $sec_controler = new SecurityControler();
+                $tmp = $sec_controler->load_security($_SESSION['user']['UserId']);
                 $_SESSION['user']['collections'] = $tmp['collections'];
                 $_SESSION['user']['security'] = $tmp['security'];
-                ServiceControler::loadEnabledServices();
+                $serv_controler->loadEnabledServices();
 
                 require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
 
@@ -225,7 +230,7 @@ class security extends dbquery
                 $business_app_tools->load_app_var_session();
                 $core_tools->load_var_session($_SESSION['modules']);
 
-                $_SESSION['user']['services'] = ServiceControler::loadUserServices($_SESSION['user']['UserId']);
+                $_SESSION['user']['services'] = $serv_controler->loadUserServices($_SESSION['user']['UserId']);
                 $core_tools->load_menu($_SESSION['modules']);
 /*
                 if($_SESSION['history']['userlogin'] == "true")

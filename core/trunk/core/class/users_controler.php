@@ -86,7 +86,8 @@ class users_controler extends ObjectControler implements ObjectControlerIF{
 
         self::$db=new dbquery();
         self::$db->connect();
-        $query = "select uc.group_id, uc.primary_group, uc.role from ".USERGROUP_CONTENT_TABLE." uc, ".USERGROUPS_TABLE." u where uc.user_id = '".functions::protect_string_db($user_id)."' and u.enabled = 'Y' and uc.group_id = u.group_id ";
+        $func = new functions();
+        $query = "select uc.group_id, uc.primary_group, uc.role from ".USERGROUP_CONTENT_TABLE." uc, ".USERGROUPS_TABLE." u where uc.user_id = '".$func->protect_string_db($user_id)."' and u.enabled = 'Y' and uc.group_id = u.group_id ";
         try{
             if($_ENV['DEBUG']){echo $query.' // ';}
                     self::$db->query($query);
@@ -147,8 +148,10 @@ class users_controler extends ObjectControler implements ObjectControlerIF{
             self::cleanUsergroupContent($user->user_id);
             self::loadDbUsergroupContent($user->user_id, $groups);
 
+            $core = new core_tools();
+
             $_SESSION['service_tag'] = 'user_'.$mode;
-            core_tools::execute_modules_services($params['modules_services'], 'users_add_db', 'include');
+            $core->execute_modules_services($params['modules_services'], 'users_add_db', 'include');
 
             if($mode == 'up') {
                 //Update existing user
@@ -266,8 +269,8 @@ class users_controler extends ObjectControler implements ObjectControlerIF{
         }
 
         $_SESSION['service_tag'] = 'user_check';
-
-        core_tools::execute_modules_services($params['modules_services'], 'user_check', "include");
+        $core = new core_tools();
+        $core->execute_modules_services($params['modules_services'], 'user_check', "include");
 
         $error .= $_SESSION['error'];
         //TODO:rewrite wash to return errors without html and not in the session
@@ -322,7 +325,8 @@ class users_controler extends ObjectControler implements ObjectControlerIF{
 
         self::$db=new dbquery();
         self::$db->connect();
-        $query="update ".USERS_TABLE." set status = 'DEL' where user_id='".functions::protect_string_db($user->user_id)."'";
+        $func = new functions();
+        $query="update ".USERS_TABLE." set status = 'DEL' where user_id='".$func->protect_string_db($user->user_id)."'";
         // Logic deletion only , status becomes DEL to keep the user data
 
         try{
@@ -341,7 +345,7 @@ class users_controler extends ObjectControler implements ObjectControlerIF{
             $control = self::cleanUsergroupContent($user->user_id);
         }
         if($control['status'] == 'ok'){
-            if($params['log_user_del'] == "true") {
+            if(isset($params['log_user_del']) && ($params['log_user_del'] == "true" || $params['log_user_del'] == true)) {
                 $history = new history();
                 $history->add(USERS_TABLE, $user->user_id, "DEL", _USER_DELETED." : ".$user->user_id, $params['databasetype']);
             }
@@ -364,7 +368,8 @@ class users_controler extends ObjectControler implements ObjectControlerIF{
 
         self::$db=new dbquery();
         self::$db->connect();
-        $query="delete from ".USERGROUP_CONTENT_TABLE."  where user_id='".functions::protect_string_db($user_id)."'";
+        $func = new functions();
+        $query="delete from ".USERGROUP_CONTENT_TABLE."  where user_id='".$func->protect_string_db($user_id)."'";
         try{
             if($_ENV['DEBUG']){echo $query.' // ';}
             self::$db->query($query);
@@ -390,7 +395,8 @@ class users_controler extends ObjectControler implements ObjectControlerIF{
 
         self::$db=new dbquery();
         self::$db->connect();
-        $query = "select user_id from ".USERS_TABLE." where user_id = '".functions::protect_string_db($user_id)."'";
+        $func = new functions();
+        $query = "select user_id from ".USERS_TABLE." where user_id = '".$func->protect_string_db($user_id)."'";
 
         try{
             if($_ENV['DEBUG']){echo $query.' // ';}
@@ -414,10 +420,28 @@ class users_controler extends ObjectControler implements ObjectControlerIF{
     * @param  $user user object
     * @return bool true if the disabling is complete, false otherwise
     */
-    public function disable($user){
+    public function disable($user, $params = array()){
+
+        $control = array();
+        if(!isset($user) || empty($user)) {
+            $control = array('status' => 'ko', 'value' => '', 'error' => _USER_EMPTY);
+            return $control;
+        }
+        $user = self::isAUser($user);
         self::set_foolish_ids(array('user_id', 'docserver_location_id'));
         self::set_specific_id('user_id');
-        return self::advanced_disable($user);
+
+        if(self::advanced_disable($user)) {
+            $control = array('status' => 'ok', 'value' => $user->user_id);
+            if(isset($params['log_user_disabled']) && ($params['log_user_disabled'] == 'true' || $params['log_user_disabled'] == true)) {
+                $history = new history();
+                $history->add(USERS_TABLE, $user->user_id, "BAN",_SUSPENDED_USER." : ".$user->lastname.' '.$user->firstname.' ('.$user->user_id.')', $params['databasetype']);
+            }
+        } else {
+            $control = array('status' => 'ko', 'value' => '', 'error' => _PB_WITH_USER_ID);
+        }
+        return $control;
+
     }
 
     /**
@@ -426,10 +450,27 @@ class users_controler extends ObjectControler implements ObjectControlerIF{
     * @param  $user user object
     * @return bool true if the enabling is complete, false otherwise
     */
-    public function enable($user){
+    public function enable($user, $params= array()){
+
+        $control = array();
+        if(!isset($user) || empty($user)) {
+            $control = array('status' => 'ko', 'value' => '', 'error' => _USER_EMPTY);
+            return $control;
+        }
+        $user = self::isAUser($user);
         self::set_foolish_ids(array('user_id', 'docserver_location_id'));
         self::set_specific_id('user_id');
-        return self::advanced_enable($user);
+
+        if(self::advanced_enable($user)) {
+            $control = array('status' => 'ok', 'value' => $user->user_id);
+            if(isset($params['log_user_enabled']) && ($params['log_user_enabled'] == 'true' || $params['log_user_enabled'] == true)){
+                $history = new history();
+                $history->add(USERS_TABLE, $user->user_id, "VAL",_AUTORIZED_USER." : ".$user->lastname.' '.$user->firstname.' ('.$user->user_id.')', $params['databasetype']);
+            }
+        } else {
+            $control = array('status' => 'ko', 'value' => '', 'error' => _PB_WITH_USER_ID);
+        }
+        return $control;
     }
 
 
@@ -449,10 +490,11 @@ class users_controler extends ObjectControler implements ObjectControlerIF{
         }
         self::$db=new dbquery();
         self::$db->connect();
+        $func = new functions();
         $ok = true;
         for($i=0; $i < count($array ); $i++){
             if($ok){
-                $query = "INSERT INTO ".USERGROUP_CONTENT_TABLE." (user_id, group_id, primary_group, role) VALUES ('".functions::protect_string_db($user_id)."', '".functions::protect_string_db($array[$i]['GROUP_ID'])."', '".functions::protect_string_db($array[$i]['PRIMARY'])."', '".functions::protect_string_db($array[0]['ROLE'])."')";
+                $query = "INSERT INTO ".USERGROUP_CONTENT_TABLE." (user_id, group_id, primary_group, role) VALUES ('".$func->protect_string_db($user_id)."', '".$func->protect_string_db($array[$i]['GROUP_ID'])."', '".$func->protect_string_db($array[$i]['PRIMARY'])."', '".$func->protect_string_db($array[0]['ROLE'])."')";
                 try{
                     if($_ENV['DEBUG']){echo $query.' // ';}
                     self::$db->query($query);
