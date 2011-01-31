@@ -262,7 +262,7 @@ class AdminActions extends dbquery
                     <input type="hidden" name="start" id="start" value="<?php if(isset($_REQUEST['start'])){echo $_REQUEST['start'];}?>" />
                     <p>
                         <label for="label"><?php echo _DESC; ?> : </label>
-                        <input name="label" type="text"  id="label" value="<?php if(isset($_SESSION['m_admin']['action']['LABEL'])){echo $func->show($_SESSION['m_admin']['action']['LABEL']);} ?>"/>
+                        <input name="label" type="text"  id="label" value="<?php if(isset($_SESSION['m_admin']['action']['LABEL'])){echo $func->show_str($_SESSION['m_admin']['action']['LABEL']);} ?>"/>
                     </p>
                     <?php if($_SESSION['m_admin']['action']['IS_SYSTEM']  == 'Y')
                     {

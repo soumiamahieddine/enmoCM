@@ -417,18 +417,18 @@ class list_show extends functions
                      {
                          $str .= ' <th style="width:3%;">&nbsp;</th>';
                         }
-                     
+
                         for($count_column = 0;$count_column < count($listcolumn);$count_column++)
                         {
                             if($listshow[$count_column]==true)
                             {
 
                             $str .= ' <th style="width:'.$result[0][$count_column]['size'].'%;" valign="'.$result[0][$count_column]['valign'].'"  align="'.$result[0][$count_column]['label_align'].'" ><span>'.$listcolumn[$count_column];
-                           
-									
+
+
                                 if($bool_order)
                                 {
-									
+
                                     $str .= ' <br/><br/> <a class="order_items" href="'.$link.'&amp;start='.$start.'&amp;order=desc&amp;order_field='.$ordercol[$count_column].'" title="'._DESC_SORT.'"><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=tri_down.gif"  alt="'._DESC_SORT.'" /> </a> <a class="order_items" href="'.$link.'&amp;start='.$start.'&amp;order=asc&amp;order_field='.$ordercol[$count_column].'" title="'._ASC_SORT.'"> <img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=tri_up.gif"  alt="'._ASC_SORT.'" /></a>';
                                 }
                             $str .= ' </span></th>';
@@ -515,12 +515,12 @@ class list_show extends functions
                         {
                             if($do_action && !empty($id_action) && (count($do_actions_arr) == 0 ||  $do_actions_arr[$theline] == true) )
                             {
-                                $str .= ' <td style="width:'.$result[$theline][$count_column]['size'].'%;" align="'.$result[$theline][$count_column]['align'].'" onclick="valid_form( \'page\', \''.$result[$theline][0]['value'].'\', \''.$id_action.'\');" '.$result[$theline][$count_column]['css_style'].'>'.functions::show(self::thisword($result[$theline][$count_column]['value'],$what)).'</td>';
+                                $str .= ' <td style="width:'.$result[$theline][$count_column]['size'].'%;" align="'.$result[$theline][$count_column]['align'].'" onclick="valid_form( \'page\', \''.$result[$theline][0]['value'].'\', \''.$id_action.'\');" '.$result[$theline][$count_column]['css_style'].'>'.functions::show_str(self::thisword($result[$theline][$count_column]['value'],$what)).'</td>';
 
                             }
                             else if($do_action && !empty($id_action) &&  $do_actions_arr[$theline] == false)
                             {
-                                $str .= ' <td style="width:'.$result[$theline][$count_column]['size'].'%;" align="'.$result[$theline][$count_column]['align'].'" '.$result[$theline][$count_column]['css_style'].'><em>'.functions::show(self::thisword($result[$theline][$count_column]['value'],$what)).'</em></td>';
+                                $str .= ' <td style="width:'.$result[$theline][$count_column]['size'].'%;" align="'.$result[$theline][$count_column]['align'].'" '.$result[$theline][$count_column]['css_style'].'><em>'.functions::show_str(self::thisword($result[$theline][$count_column]['value'],$what)).'</em></td>';
 
                             }
                             else if($link_in_line)
@@ -542,7 +542,7 @@ class list_show extends functions
                                     $str .= ' }';
                                 $str .= ' </script>';
 
-                                $str .= ' <td style="width:'.$result[$theline][$count_column]['size'].'%;" align="'.$result[$theline][$count_column]['align'].'" onclick="openpopup(\''.$detail_destination.'?id='.$result[$theline][0]['value'].'\');" '.$result[$theline][$count_column]['css_style'].'>'.functions::show(self::thisword($result[$theline][$count_column]['value'],$what)).'</td>';
+                                $str .= ' <td style="width:'.$result[$theline][$count_column]['size'].'%;" align="'.$result[$theline][$count_column]['align'].'" onclick="openpopup(\''.$detail_destination.'?id='.$result[$theline][0]['value'].'\');" '.$result[$theline][$count_column]['css_style'].'>'.functions::show_str(self::thisword($result[$theline][$count_column]['value'],$what)).'</td>';
                         }
                         else
                         {
@@ -551,7 +551,7 @@ class list_show extends functions
                             {
                                 $str .= $result[$theline][$count_column]['css_style'];
                             }
-                            $str .='>'.functions::show(self::thisword($result[$theline][$count_column]['value'],$what)).'</td>';
+                            $str .='>'.functions::show_str(self::thisword($result[$theline][$count_column]['value'],$what)).'</td>';
                         }
                     }
                 }
@@ -1163,7 +1163,7 @@ class list_show extends functions
                                     }
                                     else
                                     {
-                                        echo functions::show(self::thisword($result[$theline][$count_column]['value'],$expr, TRUE));
+                                        echo functions::show_str(self::thisword($result[$theline][$count_column]['value'],$expr, TRUE));
                                     }
 
                                 }
@@ -1486,7 +1486,7 @@ class list_show extends functions
                     if($result[$theline][$count_column]['show']==true)
                     {
                         ?>
-                            <td style="width:<?php  echo $result[$theline][$count_column]['size'];?>%;" align="<?php  echo $result[$theline][$count_column]['align'];?>"><?php  echo functions::show(self::thisword($result[$theline][$count_column]['value'],$what)); ?></td>
+                            <td style="width:<?php  echo $result[$theline][$count_column]['size'];?>%;" align="<?php  echo $result[$theline][$count_column]['align'];?>"><?php  echo functions::show_str(self::thisword($result[$theline][$count_column]['value'],$what)); ?></td>
                         <?php
                     }
                     else

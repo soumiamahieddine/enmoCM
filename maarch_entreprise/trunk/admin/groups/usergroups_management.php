@@ -183,7 +183,7 @@ elseif($mode == "up" || $mode == "add")
                             <?php  echo _GROUP; ?> :
                         </td>
                         <td align="left">
-                            <?php  if($mode == "up") { echo functions::show($_SESSION['m_admin']['groups']['group_id']); } ?>
+                            <?php  if($mode == "up") { echo functions::show_str($_SESSION['m_admin']['groups']['group_id']); } ?>
                             <input name="group_id" type="<?php  if($mode == "up") { ?>hidden<?php  } elseif($mode == "add") { ?>text<?php  } ?>" id="group_id" value="<?php  echo $_SESSION['m_admin']['groups']['group_id']; ?>" />
                             <input type="hidden"  name="id" value="<?php  echo $group_id; ?>" />
                         </td>

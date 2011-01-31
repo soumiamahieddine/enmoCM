@@ -164,7 +164,7 @@ class types extends dbquery
                     ?>
                     <p>
                         <label for="label"><?php echo _WORDING; ?> : </label>
-                        <input name="label" type="text" class="textbox" id="label" value="<?php echo $func->show($_SESSION['m_admin']['doctypes']['LABEL']); ?>"/>
+                        <input name="label" type="text" class="textbox" id="label" value="<?php echo $func->show_str($_SESSION['m_admin']['doctypes']['LABEL']); ?>"/>
                     </p>
                     <?php
                     $_SESSION['service_tag'] = 'frm_doctype';
