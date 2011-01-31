@@ -50,6 +50,7 @@ if (!defined('_VERSION_BASE_AND_XML_BASEVERSION_NOT_MATCH')) define( '_VERSION_B
 
 
 /*********************** commons ***********************************/
+if (!defined('_MODE')) define('_MODE', 'Mode');
 
 /************** Lists **************/
 if (!defined('_GO_TO_PAGE')) define('_GO_TO_PAGE', 'Go to page');

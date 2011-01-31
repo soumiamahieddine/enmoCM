@@ -52,7 +52,7 @@ if (!defined('_VERSION_BASE_AND_XML_BASEVERSION_NOT_MATCH')) define( '_VERSION_B
 
 
 /*********************** communs ***********************************/
-
+if (!defined('_MODE')) define('_MODE', 'Mode');
 /************** Listes **************/
 if (!defined('_GO_TO_PAGE')) define( '_GO_TO_PAGE', 'Aller &agrave; la page');
 if (!defined('_NEXT')) define( '_NEXT', 'Suivante');

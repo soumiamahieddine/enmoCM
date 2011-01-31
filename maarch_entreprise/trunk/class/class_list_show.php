@@ -813,35 +813,26 @@ class list_show extends functions
         $listcolumn = array();
         $listshow = array();
         $ordercol = array();
-        for ($i=0;$i<1;$i++)
-        {
-            for ($j=0;$j<count($result[$i]);$j++)
-            {
-                if(isset($result[$i][$j]['label']))
-                {
-                    array_push($listcolumn,$result[$i][$j]['label']);
-                }
-                else
-                {
-                    array_push($listcolumn,'');
-                }
-                if(isset($listshow,$result[$i][$j]['show']))
-                {
-                    array_push($listshow,$result[$i][$j]['show']);
-                }
-                else
-                {
-                    array_push($listshow,true);
-                }
-                if(isset($result[$i][$j]["order"]))
-                {
-                    array_push($ordercol,$result[$i][$j]["order"]);
-                }
-                else
-                {
-                    array_push($ordercol,'');
-                }
-            }
+        for ($i=0;$i<1;$i++) {
+			if(isset($result[$i])) {
+				for ($j=0;$j<count($result[$i]);$j++) {
+					if(isset($result[$i][$j]['label'])) {
+						array_push($listcolumn,$result[$i][$j]['label']);
+					} else {
+						array_push($listcolumn,'');
+					}
+					if(isset($listshow,$result[$i][$j]['show'])) {
+						array_push($listshow,$result[$i][$j]['show']);
+					} else {
+						array_push($listshow,true);
+					}
+					if(isset($result[$i][$j]["order"])) {
+						array_push($ordercol,$result[$i][$j]["order"]);
+					} else {
+						array_push($ordercol,'');
+					}
+				}
+			}
         }
 
 
