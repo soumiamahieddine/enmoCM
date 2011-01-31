@@ -238,7 +238,7 @@ function display_del($user_id){
         } else {
             $_SESSION['error'] = _DELETED_USER.' : '.$user_id;
         }
-        exit();
+
         ?><script type="text/javascript">window.top.location='<?php echo $_SESSION['config']['businessappurl']."index.php?page=users_management_controler&mode=list&admin=users&order=".$_REQUEST['order']."&order_field=".$_REQUEST['order_field']."&start=".$_REQUEST['start']."&what=".$_REQUEST['what'];?>';</script>
         <?php
         exit;
