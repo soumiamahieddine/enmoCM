@@ -64,7 +64,7 @@ class BaseObject {
 	 */
 	public function __get($name) {
 		try {
-			return $this->data[$name];
+			if (isset($this->data[$name])) return $this->data[$name];
 		} catch (Exception $e) {
 			echo 'Exception catched: '.$e->getMessage().', null returned<br/>';
 			return null;
