@@ -33,19 +33,14 @@
 
 // To activate de debug mode of the class
 $_ENV['DEBUG'] = false;
-/*
-define("_CODE_SEPARATOR","/");
-define("_CODE_INCREMENT",1);
-*/
 
 // Loads the required class
-
 try {
 	require_once ("core/class/docserver_types.php");
 	require_once ("core/core_tables.php");
 	require_once ("core/class/ObjectControlerAbstract.php");
 	require_once ("core/class/ObjectControlerIF.php");
-} catch (Exception $e){
+} catch (Exception $e) {
 	echo $e->getMessage().' // ';
 }
 
@@ -125,16 +120,16 @@ class docserver_types_controler extends ObjectControler implements ObjectControl
 	* @return bool true if the deletion is complete, false otherwise
 	*/
 	public function delete($docserver_type) {
-		if(!isset($docserver_type) || empty($docserver_type) )
+		if (!isset($docserver_type) || empty($docserver_type) )
 			return false;
 		
-		if(!self::docserverTypeExists($docserver_type->docserver_type_id))
+		if (!self::docserverTypeExists($docserver_type->docserver_type_id))
 			return false;
 				
-		if(self::docserverLinkExists($docserver_type->docserver_type_id))
+		if (self::docserverLinkExists($docserver_type->docserver_type_id))
 			return false;
 			
-		if(self::lcCycleStepsLinkExists($docserver_type->docserver_type_id))
+		if (self::lcCycleStepsLinkExists($docserver_type->docserver_type_id))
 			return false;
 
 		self::$db=new dbquery();
@@ -142,7 +137,7 @@ class docserver_types_controler extends ObjectControler implements ObjectControl
 		$query="delete from "._DOCSERVER_TYPES_TABLE_NAME." where docserver_type_id ='".functions::protect_string_db($docserver_type->docserver_type_id)."'";
 		
 		try {
-			if($_ENV['DEBUG']) {echo $query.' // ';}
+			if ($_ENV['DEBUG']) {echo $query.' // ';}
 			self::$db->query($query);
 			$ok = true;
 		} catch (Exception $e) {
@@ -164,10 +159,10 @@ class docserver_types_controler extends ObjectControler implements ObjectControl
 		self :: set_foolish_ids(array('docserver_type_id'));
 		self::set_specific_id('docserver_type_id');
 		
-		if(self::docserverLinkExists($docserver_type->docserver_type_id)) { 
+		if (self::docserverLinkExists($docserver_type->docserver_type_id)) { 
 			return false;
 		}
-		if(self::lcCycleStepsLinkExists($docserver_type->docserver_type_id)) { 
+		if (self::lcCycleStepsLinkExists($docserver_type->docserver_type_id)) { 
 			return false;
 		}
 		return self::advanced_disable($docserver_type);
@@ -211,7 +206,7 @@ class docserver_types_controler extends ObjectControler implements ObjectControl
 	}
 
 	public function docserverLinkExists($docserver_type_id) {
-		if(!isset($docserver_type_id) || empty($docserver_type_id))
+		if (!isset($docserver_type_id) || empty($docserver_type_id))
 			return false;
 		self::$db=new dbquery();
 		self::$db->connect();
@@ -226,7 +221,7 @@ class docserver_types_controler extends ObjectControler implements ObjectControl
 	}
 	
 	public function lcCycleStepsLinkExists($docserver_type_id) {
-		if(!isset($docserver_type_id) || empty($docserver_type_id))
+		if (!isset($docserver_type_id) || empty($docserver_type_id))
 			return false;
 		self::$db=new dbquery();
 		self::$db->connect();
@@ -247,7 +242,7 @@ class docserver_types_controler extends ObjectControler implements ObjectControl
 	* @return Array of docserver_id or null
 	*/
 	public function getDocservers($docserver_type_id) {		
-		if(empty($docserver_type_id))
+		if (empty($docserver_type_id))
 			return null;
 
 		$docservers = array();
@@ -256,9 +251,9 @@ class docserver_types_controler extends ObjectControler implements ObjectControl
 		
 		$query = "select docserver_id from "._DOCSERVERS_TABLE_NAME." where docserver_type_id = '".$docserver_type_id."'";
 		try{
-			if($_ENV['DEBUG']){echo $query.' // ';}
+			if ($_ENV['DEBUG']) {echo $query.' // ';}
 					self::$db->query($query);
-		} catch (Exception $e){
+		} catch (Exception $e) {
 					echo _NO_TYPE_WITH_ID.' '.$docserver_type_id.' // ';
 		}
 		

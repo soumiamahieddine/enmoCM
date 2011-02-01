@@ -38,10 +38,6 @@
 
 // To activate de debug mode of the class
 $_ENV['DEBUG'] = false;
-/*
-define("_CODE_SEPARATOR","/");
-define("_CODE_INCREMENT",1);
-*/
 
 // Loads the required class
 try {
@@ -53,9 +49,6 @@ try {
 } catch (Exception $e){
 	echo $e->getMessage().' // ';
 }
-
-define ("_DEBUG", false);
-define ("_ADVANCED_DEBUG",false);
 
 /**
 * @brief  Controler of the docserver_locations object 
@@ -133,13 +126,13 @@ class docserver_locations_controler extends ObjectControler implements ObjectCon
 	* @return bool true if the deletion is complete, false otherwise
 */
 	public function delete($docserver_location) {
-		if(!isset($docserver_location) || empty($docserver_location) )
+		if (!isset($docserver_location) || empty($docserver_location) )
 			return false;
 		
-		if(!self::docserverLocationExists($docserver_location->docserver_location_id))
+		if (!self::docserverLocationExists($docserver_location->docserver_location_id))
 			return false;
 				
-		if(self::linkExists($docserver_location->docserver_location_id))
+		if (self::linkExists($docserver_location->docserver_location_id))
 			return false;
 
 		self::$db=new dbquery();
@@ -147,7 +140,7 @@ class docserver_locations_controler extends ObjectControler implements ObjectCon
 		$query="delete from "._DOCSERVER_LOCATIONS_TABLE_NAME." where docserver_location_id ='".functions::protect_string_db($docserver_location->docserver_location_id)."'";
 		
 		try {
-			if($_ENV['DEBUG']) {echo $query.' // ';}
+			if ($_ENV['DEBUG']) {echo $query.' // ';}
 			self::$db->query($query);
 			$ok = true;
 		} catch (Exception $e) {
@@ -169,7 +162,7 @@ class docserver_locations_controler extends ObjectControler implements ObjectCon
 		self :: set_foolish_ids(array('docserver_location_id'));
 		self::set_specific_id('docserver_location_id');
 		
-		if(self::linkExists($docserver_location->docserver_location_id))
+		if (self::linkExists($docserver_location->docserver_location_id))
 			return false;
 		return self::advanced_disable($docserver_location);
 	}
@@ -225,7 +218,7 @@ class docserver_locations_controler extends ObjectControler implements ObjectCon
  * @return bool true if the docserver_locations is linked
  */
 	public function linkExists($docserver_location_id) {
-		if(!isset($docserver_location_id) || empty($docserver_location_id))
+		if (!isset($docserver_location_id) || empty($docserver_location_id))
 			return false;
 		self::$db=new dbquery();
 		self::$db->connect();
@@ -247,11 +240,11 @@ class docserver_locations_controler extends ObjectControler implements ObjectCon
  * 
  */ 	
 	public function ipv4Control($ipv4) {
-		if(empty($ipv4))
+		if (empty($ipv4))
 		return true;
 		$ipv4 = htmlspecialchars($ipv4);	
-		if(preg_match("/^([1-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])" .
-			"(\.([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])){3}$/", $ipv4)){		
+		if (preg_match("/^([1-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])" .
+			"(\.([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])){3}$/", $ipv4)) {		
 			return true;
 		} else {
 			return false;
@@ -266,11 +259,11 @@ class docserver_locations_controler extends ObjectControler implements ObjectCon
  * @return bool true if it's valid 
  */	
 	public function ipv6Control($ipv6) {
-		if(empty($ipv6))
+		if (empty($ipv6))
 			return true;
 		$ipv6 = htmlspecialchars($ipv6);
 		$patternIpv6 = '/^((([0-9A-Fa-f]{1,4}:){7}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}:[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){5}:([0-9A-Fa-f]{1,4}:)?[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){4}:([0-9A-Fa-f]{1,4}:){0,2}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){3}:([0-9A-Fa-f]{1,4}:){0,3}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){2}:([0-9A-Fa-f]{1,4}:){0,4}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(([0-9A-Fa-f]{1,4}:){0,5}:((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(::([0-9A-Fa-f]{1,4}:){0,5}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|([0-9A-Fa-f]{1,4}::([0-9A-Fa-f]{1,4}:){0,5}[0-9A-Fa-f]{1,4})|(::([0-9A-Fa-f]{1,4}:){0,6}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){1,7}:))$/';		
-		if(preg_match($patternIpv6, $ipv6)) {		
+		if (preg_match($patternIpv6, $ipv6)) {		
 			return true;
 		} else {
 			return false;
@@ -285,10 +278,10 @@ class docserver_locations_controler extends ObjectControler implements ObjectCon
  * @return bool true if it's valid  
 */	
 	public function maskControl($mask) {
-		if(empty($mask))
+		if (empty($mask))
 			return true;
 		$mask = htmlspecialchars($mask);
-		if(preg_match("/^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}0$/", $mask)) {		
+		if (preg_match("/^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}0$/", $mask)) {		
 			return true;
 		} else {
 			return false;
@@ -302,7 +295,7 @@ class docserver_locations_controler extends ObjectControler implements ObjectCon
  * @return Array of docserver_id or null
 */
 	public function getDocservers($docserver_location_id) {		
-		if(empty($docserver_location_id))
+		if (empty($docserver_location_id))
 			return null;
 
 		$docservers = array();
@@ -310,7 +303,7 @@ class docserver_locations_controler extends ObjectControler implements ObjectCon
 		self::$db->connect();
 		$query = "select docserver_id from "._DOCSERVERS_TABLE_NAME." where docserver_location_id = '".$docserver_location_id."'";
 		try{
-			if($_ENV['DEBUG']){echo $query.' // ';}
+			if ($_ENV['DEBUG']) {echo $query.' // ';}
 					self::$db->query($query);
 		} catch (Exception $e) {
 					echo _NO_DOCSERVER_LOCATION_WITH_ID.' '.$docserver_location_id.' // ';
@@ -360,11 +353,11 @@ class docserver_locations_controler extends ObjectControler implements ObjectCon
  */
 	public function pingIpv4 ($ipv4) {
 		$ping = Net_Ping::factory();
-		if(PEAR::isError($ping)) {
+		if (PEAR::isError($ping)) {
 			return false;
 		} else {
 			$response = $ping->ping($ipv4);
-			if($response->getReceived() == $response->getTransmitted()) {
+			if ($response->getReceived() == $response->getTransmitted()) {
 				return true;
 			} else {
 				return false;
