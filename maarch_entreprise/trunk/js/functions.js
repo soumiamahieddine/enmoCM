@@ -1205,7 +1205,7 @@ function get_form_values(form_id, return_string, include_buttons)
             {
                 if((frm.elements[i].tagName == 'INPUT' && frm.elements[i].type != 'checkbox' && frm.elements[i].type != 'radio') || frm.elements[i].tagName == 'TEXTAREA' )
                 {
-                    if(frm.elements[i].tagName == 'INPUT' && (get_buttons == true  || (get_buttons == false && frm.elements[i].type == 'text')))
+                    if((frm.elements[i].tagName == 'INPUT' && (get_buttons == true  || (get_buttons == false && frm.elements[i].type == 'text'))) || frm.elements[i].tagName == 'TEXTAREA')
                     {
                         if(in_string == true)
                         {

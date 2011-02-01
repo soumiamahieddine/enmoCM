@@ -97,8 +97,15 @@ if($mode == "up")
 }
 else
 {
-    $ind = security::get_ind_collection($coll_id);
-    array_push($_SESSION['m_admin']['groups']['security'] , array('GROUP_ID' => '' , 'COLL_ID' => $coll_id , 'IND_COLL_SESSION' => $ind,'WHERE_CLAUSE' => $where, 'COMMENT' => $comment , 'WHERE_TARGET' => $target, 'RIGHTS_BITMASK' => $bitmask, 'START_DATE' => $start_date, 'STOP_DATE' => $stop_date));
+    $sec = new security();
+    $ind = $sec->get_ind_collection($coll_id);
+    $group_id = '';
+    if(isset( $_SESSION['m_admin']['groups']['group_id']))
+    {
+        $group_id =  $_SESSION['m_admin']['groups']['group_id'];
+    }
+    $sec_id = count($_SESSION['m_admin']['groups']['security']);
+    array_push($_SESSION['m_admin']['groups']['security'] , array('SECURITY_ID' => $sec_id,'GROUP_ID' => $group_id , 'COLL_ID' => $coll_id , 'IND_COLL_SESSION' => $ind,'WHERE_CLAUSE' => $where, 'COMMENT' => $comment , 'WHERE_TARGET' => $target, 'RIGHTS_BITMASK' => $bitmask, 'START_DATE' => $start_date, 'STOP_DATE' => $stop_date));
     $_SESSION['m_admin']['load_security'] = false;
 }
 echo "{status : 0, error_txt : '".$error."'}";

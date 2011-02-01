@@ -1,13 +1,13 @@
 <?php
 
-$basket_loaded = false;
-$entities_loaded = false;
+$GLOBALS['basket_loaded'] = false;
+$GLOBALS['entities_loaded'] = false;
 $func = new functions();
 if(core_tools::is_module_loaded('basket')){
-    $basket_loaded = true;
+    $GLOBALS['basket_loaded'] = true;
 }
 if(core_tools::is_module_loaded('entities')){
-    $entities_loaded = true;
+    $GLOBALS['entities_loaded'] = true;
 }
 
 $mode = 'add';
@@ -23,10 +23,10 @@ try{
         require_once("core/class/class_request.php");
         require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");
     }
-    if($basket_loaded){
+    if($GLOBALS['basket_loaded']){
         require_once("modules/basket/class/BasketControler.php");
     }
-    if($mode == 'del' && $entities_loaded){
+    if($mode == 'del' && $GLOBALS['entities_loaded']){
         require_once("modules/entities/class/EntityControler.php");
     }
 
@@ -157,6 +157,7 @@ function display_up($group_id){
     $ugc = new usergroups_controler();
     $uc = new users_controler();
     $group = $ugc->get($group_id );
+    $sec_ctrl = new SecurityControler();
     if(!isset($group)){
         $state = false;
     }
@@ -164,7 +165,7 @@ function display_up($group_id){
         put_in_session("groups",$group->getArray());
     }
     if (! isset($_SESSION['m_admin']['load_security']) || $_SESSION['m_admin']['load_security'] == true){
-        $access = SecurityControler::getAccessForGroup($group_id); // Get security accesses in an array
+        $access = $sec_ctrl->getAccessForGroup($group_id); // Get security accesses in an array
         $_SESSION['m_admin']['groups']['security'] = transform_array_of_security_object($access);
         $_SESSION['m_admin']['load_security'] = false ;
     }
@@ -287,18 +288,37 @@ function display_list(){
  * @param unknown_type $group_id
  */
 function display_del($group_id){
-    $group = usergroups_controler::get($group_id);
+
+    $ugc = new usergroups_controler();
+    $group = $ugc->get($group_id);
     if(isset($group) && isset($group_id) && !empty($group_id)){
-        usergroups_controler::delete($group);
+        $control = array();
+        $params = array();
+        if(isset($_SESSION['history']['usergroupsdel'])){
+            $params['log_group_del'] = $_SESSION['history']['usergroupsdel'];
+        }
+        if(isset($_SESSION['config']['databasetype'])){
+            $params['databasetype'] = $_SESSION['config']['databasetype'];
+        }
+        else{
+            $params['databasetype'] = 'POSTGRESQL';
+        }
+        $control = $ugc->delete($group, $params);
         if($GLOBALS['basket_loaded']){
-            BasketControler::cleanFullGroupbasket($group_id, 'group_id');
+            $bc = new BasketControler();
+            $bc->cleanFullGroupbasket($group_id, 'group_id');
         }
         if($GLOBALS['entities_loaded']){
-            EntityControler::cleanGroupbasketRedirect($group_id, 'group_id');
+            $ec = new EntityControler();
+            $ec->cleanGroupbasketRedirect($group_id, 'group_id');
         }
-        $_SESSION['error'] = _DELETED_GROUP.' : '.$group_id;
-        // NOTE: Why not calling display_list ?
-        ?><script type="text/javascript">window.top.location='<?php echo $_SESSION['config']['businessappurl']."index.php?page=usergroups_management_controler&mode=list&admin=groups&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what;?>';</script>
+        if(!empty($control['error']) && $control['error'] <> 1) {
+            $_SESSION['error'] = str_replace("#", "<br />", $control['error']);
+        } else {
+            $_SESSION['error'] = _DELETED_GROUP.' : '.$group_id;
+        }
+
+        ?><script type="text/javascript">window.top.location='<?php echo $_SESSION['config']['businessappurl']."index.php?page=usergroups_management_controler&mode=list&admin=groups&order=".$_REQUEST['order']."&order_field=".$_REQUEST['order_field']."&start=".$_REQUEST['start']."&what=".$_REQUEST['what'];?>';</script>
         <?php
         exit();
     }
@@ -313,12 +333,29 @@ function display_del($group_id){
  * @param unknown_type $user_id
  */
 function display_enable($group_id){
-    $group = usergroups_controler::get($group_id);
+
+    $ugc = new usergroups_controler();
+    $group = $ugc->get($group_id);
     if(isset($group)){
-        usergroups_controler::enable($group);
-        $_SESSION['error'] = _AUTORIZED_GROUP.' : '.$group_id;
-        // NOTE: Why not calling display_list ?
-        $url = $_SESSION['config']['businessappurl']."index.php?page=usergroups_management_controler&mode=list&admin=groups&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what;
+        $control = array();
+        $params = array();
+        if(isset($_SESSION['history']['usergroupsval'])){
+            $params['log_group_enabled'] = $_SESSION['history']['usergroupsval'];
+        }
+        if(isset($_SESSION['config']['databasetype'])){
+            $params['databasetype'] = $_SESSION['config']['databasetype'];
+        }
+        else{
+            $params['databasetype'] = 'POSTGRESQL';
+        }
+        $control = $ugc->enable($group, $params);
+         if(!empty($control['error']) && $control['error'] <> 1) {
+            $_SESSION['error'] = str_replace("#", "<br />", $control['error']);
+        } else {
+            $_SESSION['error'] = _AUTORIZED_GROUP.' : '.$group_id;
+        }
+        exit();
+        $url = $_SESSION['config']['businessappurl']."index.php?page=usergroups_management_controler&mode=list&admin=groups&order=".$_REQUEST['order']."&order_field=".$_REQUEST['order_field']."&start=".$_REQUEST['start']."&what=".$_REQUEST['what'];
         ?><script type="text/javascript">window.top.location='<?php echo $url;?>';</script>
         <?php
         exit();
@@ -334,12 +371,28 @@ function display_enable($group_id){
  * @param unknown_type $user_id
  */
 function display_disable($group_id){
-    $group = usergroups_controler::get($group_id);
+    $ugc = new usergroups_controler();
+    $group = $ugc->get($group_id);
     if(isset($group)){
-        // Deletion
-        usergroups_controler::disable($group);
-        $_SESSION['error'] = _SUSPENDED_GROUP.' : '.$group_id;
-        // NOTE: Why not calling display_list ?
+        $control = array();
+        $params = array();
+        if(isset($_SESSION['history']['usergroupsban'])){
+            $params['log_group_disabled'] = $_SESSION['history']['usergroupsban'];
+        }
+        if(isset($_SESSION['config']['databasetype'])){
+            $params['databasetype'] = $_SESSION['config']['databasetype'];
+        }
+        else{
+            $params['databasetype'] = 'POSTGRESQL';
+        }
+
+        $control = $ugc->disable($group, $params);
+        if(!empty($control['error']) && $control['error'] <> 1) {
+            $_SESSION['error'] = str_replace("#", "<br />", $control['error']);
+        } else {
+            $_SESSION['error'] = _SUSPENDED_GROUP.' : '.$group_id;
+        }
+        exit;
         $url = $_SESSION['config']['businessappurl']."index.php?page=usergroups_management_controler&mode=list&admin=groups&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what;
         ?><script type="text/javascript">window.top.location='<?php echo $url;?>';</script>
         <?php
@@ -388,117 +441,67 @@ function format_item(&$item,$label,$size,$label_align,$align,$valign,$show,$orde
  */
 function validate_group_submit(){
 
+    $ugc = new usergroups_controler();
+    $pageName = "usergroups_management_controler";
     $group = new usergroups();
     $mode = $_REQUEST['mode'];
-    $func = new functions();
-    $group->group_id=$func->protect_string_db($func->wash($_REQUEST['group_id'], "no", _THE_GROUP, 'yes', 0, 32));
 
+    $group->group_id=$_REQUEST['group_id'];
     if (isset($_REQUEST['desc']) && !empty($_REQUEST['desc'])){
-        $group->group_desc=$func->protect_string_db($func->wash($_REQUEST['desc'], "no", _GROUP_DESC, 'yes', 0, 255));
+        $group->group_desc=$_REQUEST['desc'];
     }
 
-    if (count($_SESSION['m_admin']['groups']['security']) < 1  && count($_REQUEST['services']) < 1){
-        $func->add_error(_THE_GROUP.' '._NO_SECURITY_AND_NO_SERVICES, "");
-    }
     $status= array();
     $status['order']=$_REQUEST['order'];
     $status['order_field']=$_REQUEST['order_field'];
     $status['what']=$_REQUEST['what'];
     $status['start']=$_REQUEST['start'];
 
-    put_in_session("status",$status);
-    put_in_session("groups",$group->getArray());
+    $control = array();
+    $params = array('modules_services' => $_SESSION['modules_services'],
+                    'log_group_up' => $_SESSION['history']['usergroupsup'],
+                    'log_group_add' => $_SESSION['history']['usergroupsadd'],
+                    'databasetype' => $_SESSION['config']['databasetype']
+                    );
 
-    if($mode == "add" && usergroups_controler::groupExists($_SESSION['m_admin']['groups']['group_id'])){
-        $_SESSION['error'] = $_SESSION['m_admin']['groups']['group_id']." "._ALREADY_EXISTS."<br />";
+    $services = array();
+    if(isset($_REQUEST['services']))
+    {
+        $services = $_REQUEST['services'];
+    }
+    if(isset($_SESSION['m_admin']['groups']['security']))
+    {
+        $control = $ugc->save($group, $_SESSION['m_admin']['groups']['security'], $services, $mode,$params);
     }
 
-    if(!empty($_SESSION['error'])){
-        if($mode == "up"){
-            if(!empty($_SESSION['m_admin']['groups']['group_id'])){
-                header("location: ".$_SESSION['config']['businessappurl']."index.php?page=usergroups_management_controler&mode=up&group_id=".$_SESSION['m_admin']['groups']['group_id']."&admin=groups");
-            }
-            else{
-                header("location: ".$_SESSION['config']['businessappurl']."index.php?page=usergroups_management_controler&mode=list&admin=groups&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what);
-            }
-        }
-        elseif($mode == "add"){
-            $_SESSION['m_admin']['load_group'] = false;
-            header("location: ".$_SESSION['config']['businessappurl']."index.php?page=usergroups_management_controler&mode=add&admin=groups");
-        }
-        exit();
-    }
-    else{
-        usergroups_controler::save($group);
+    if(!empty($control['error']) && $control['error'] <> 1) {
+        // Error management depending of mode
+        $_SESSION['error'] = str_replace("#", "<br />", $control['error']);
+        put_in_session("status",$status);
+        put_in_session("groups",$group->getArray());
 
-        SecurityControler::deleteForGroup($_SESSION['m_admin']['groups']['group_id']);
-        for($i=0; $i < count($_SESSION['m_admin']['groups']['security'] ); $i++){
-            if($_SESSION['m_admin']['groups']['security'][$i] <> ""){
-                $values = array('group_id' => $_SESSION['m_admin']['groups']['group_id'],
-                                'coll_id' =>$func->protect_string_db($_SESSION['m_admin']['groups']['security'][$i]['COLL_ID']),
-                                'where_clause' => $func->protect_string_db($_SESSION['m_admin']['groups']['security'][$i]['WHERE_CLAUSE']),
-                                'maarch_comment' => $func->protect_string_db($_SESSION['m_admin']['groups']['security'][$i]['COMMENT']),
-                                'where_target' => $func->protect_string_db($_SESSION['m_admin']['groups']['security'][$i]['WHERE_TARGET']));
-
-                $bitmask = '0';
-                if(isset($_SESSION['m_admin']['groups']['security'][$i]['RIGHTS_BITMASK']) && !empty($_SESSION['m_admin']['groups']['security'][$i]['RIGHTS_BITMASK'])){
-                    $bitmask = (string) $_SESSION['m_admin']['groups']['security'][$i]['RIGHTS_BITMASK'];
+         switch ($mode) {
+            case "up":
+                if(!empty($group->group_id)) {
+                    header("location: ".$_SESSION['config']['businessappurl']."index.php?page=".$pageName."&mode=up&id=".$group->group_id."&admin=groups");
+                } else {
+                    header("location: ".$_SESSION['config']['businessappurl']."index.php?page=".$pageName."&mode=list&admin=groups&order=".$status['order']."&order_field=".$status['order_field']."&start=".$status['start']."&what=".$status['what']);
                 }
-                $values['rights_bitmask'] = $bitmask;
-
-                if(isset($_SESSION['m_admin']['groups']['security'][$i]['START_DATE']) && !empty($_SESSION['m_admin']['groups']['security'][$i]['START_DATE'])){
-                    $values['mr_start_date'] = $func->format_date_db($_SESSION['m_admin']['groups']['security'][$i]['START_DATE']);
-                }
-                if(isset($_SESSION['m_admin']['groups']['security'][$i]['STOP_DATE']) && !empty($_SESSION['m_admin']['groups']['security'][$i]['STOP_DATE'])){
-                    $values['mr_stop_date'] = $func->format_date_db($_SESSION['m_admin']['groups']['security'][$i]['STOP_DATE']);
-                }
-
-                $sec = new SecurityObj();
-                $sec->setArray($values);
-                SecurityControler::save($sec);
-            }
+                exit;
+            case "add":
+                $_SESSION['m_admin']['load_group'] = false;
+                header("location: ".$_SESSION['config']['businessappurl']."index.php?page=".$pageName."&mode=add&admin=groups");
+                exit;
         }
-        usergroups_controler::deleteServicesForGroup($_SESSION['m_admin']['groups']['group_id']);
-        for($i=0; $i<count($_REQUEST['services']); $i++){
-            if(!empty($_REQUEST['services'][$i])){
-                usergroups_controler::insertServiceForGroup($_SESSION['m_admin']['groups']['group_id'], $_REQUEST['services'][$i]);
-            }
+    } else {
+        if($mode == "add"){
+            $_SESSION['error'] = _GROUP_ADDED;
         }
-        if($_SESSION['history']['usergroupsadd'] == "true" && $mode == "add"){
-            require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
-            $users = new history();
-            $users->add($_SESSION['tablename']['usergroups'], $_SESSION['m_admin']['groups']['group_id'],"ADD",_GROUP_ADDED." : ".$_SESSION['m_admin']['groups']['group_id'], $_SESSION['config']['databasetype']);
-        }
-        elseif($_SESSION['history']['usergroupsup'] == "true" && $mode == "up"){
-            require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
-            $users = new history();
-            $users->add($_SESSION['tablename']['usergroups'], $_SESSION['m_admin']['groups']['group_id'],"UP",_GROUP_UPDATE." : ".$_SESSION['m_admin']['groups']['group_id'], $_SESSION['config']['databasetype']);
+         else{
+            $_SESSION['error'] = _GROUP_UPDATED;
         }
         unset($_SESSION['m_admin']);
-        if($mode == "add"){
-            $_SESSION['error'] =  _USER_ADDED;
-        }
-        else{
-            $_SESSION['error'] = _USER_UPDATED;
-        }
-        if($mode == "add"){
-            $_SESSION['error'] =  _GROUP_ADDED;
-        }
-        else{
-            $_SESSION['error'] = _GROUP_UPDATED;
-            if(isset($_SESSION['m_admin']['groups']['group_id']) && usergroups_controler::inGroup($_SESSION['user']['UserId'], $_SESSION['m_admin']['groups']['group_id']) ){
-                $_SESSION['user']['security'] = array();
-                $_SESSION['user']['primarygroup'] = usergroups_controler::getPrimaryGroup($_SESSION['user']['UserId']);
-
-                $tmp = SecurityControler::load_security($_SESSION['user']['UserId']);
-                $_SESSION['user']['collections'] = $tmp['collections'];
-                $_SESSION['user']['security'] = $tmp['security'];
-
-                $_SESSION['user']['services'] = ServiceControler::loadUserServices($_SESSION['user']['UserId']);
-            }
-        }
-
-        header("location: ".$_SESSION['config']['businessappurl']."index.php?page=usergroups_management_controler&mode=list&admin=groups&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what);
+        header("location: ".$_SESSION['config']['businessappurl']."index.php?page=".$pageName."&mode=list&admin=groups&order=".$status['order']."&order_field=".$status['order_field']."&start=".$status['start']."&what=".$status['what']);
     }
 }
 

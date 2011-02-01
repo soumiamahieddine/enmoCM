@@ -28,15 +28,15 @@ $content = '';
 
 if(!isset($_REQUEST['coll_id']) || empty($_REQUEST['coll_id']))
 {
-	echo _COLLECTION.' '._IS_EMPTY;
-	exit();
+    echo _COLLECTION.' '._IS_EMPTY;
+    exit();
 }
 
 $indexes = $type->get_all_indexes($_REQUEST['coll_id']);
 //$core_tools->show_array($indexes);
 if(count($indexes) > 0)
 {
-	$content .= '<hr/>';
+    $content .= '<hr/>';
     $content .= '<table border="1" rules="rows">';
         $content .= '<tr>';
             $content .= '<th width="400px">'._FIELD.'</th>';
@@ -47,50 +47,50 @@ if(count($indexes) > 0)
             $content .= '<th align="center" width="100px">'._DB_COLUMN.'</th>';
             $content .= '<th align="center" width="300px">'._FIELD_VALUES.'</th>';
         $content .= '</tr>';
-	for($i=0;$i<count($indexes);$i++)
-	{
-		$content .= '<tr>';
-			$content .= '<td width="150px">	'.$indexes[$i]['label'].'</td>';
-			$content .= '<td align="center">';
-				$content .= '<input name="fields[]" id="field_'.$indexes[$i]['column'].'" type="checkbox" class="check" value="'.$indexes[$i]['column'].'"';
+    for($i=0;$i<count($indexes);$i++)
+    {
+        $content .= '<tr>';
+            $content .= '<td width="150px"> '.$indexes[$i]['label'].'</td>';
+            $content .= '<td align="center">';
+                $content .= '<input name="fields[]" id="field_'.$indexes[$i]['column'].'" type="checkbox" class="check" value="'.$indexes[$i]['column'].'"';
 
-				if (in_array($indexes[$i]['column'], $_SESSION['m_admin']['doctypes']['indexes']))
-				{
-					$content .= 'checked="checked"';
-				}
-				$content .= '/>';
-			$content .= '</td>';
-			$content.= '<td align="center" width="100px">';
-				$content .= '<input name="mandatory_fields[]" id="mandatory_field_'.$indexes[$i]['column'].'" type="checkbox" class="check" value="'.$indexes[$i]['column'].'"';
-				if (in_array($indexes[$i]['column'], $_SESSION['m_admin']['doctypes']['mandatory_indexes']) )
-				{
-					$content .= ' checked="checked"';
-				}
-				$content .= ' onclick="$(\'field_'.$indexes[$i]['column'].'\').checked=true;"/>';
-			$content .= '</td>';
-			$content.= '<td align="center" width="100px">';
-				$content .= $indexes[$i]['type'];
-			$content .= '</td>';
-			$content.= '<td align="center" width="100px">';
-				$content .= $indexes[$i]['type_field'];
-			$content .= '</td>';
-			$content.= '<td align="center" width="100px">';
-				$content .= $indexes[$i]['column'];
-			$content .= '</td>';
-			$content.= '<td align="left" width="300px">';
-				if(count($indexes[$i]['values']) > 0)
-				{
-					$content.= '<p id="valuesList'.$indexes[$i]['column'].'" name="valuesList'.$indexes[$i]['column'].'" style="display:none">';
-						for($cptValues=0;$cptValues<count($indexes[$i]['values']);$cptValues++)
-						{						
-							$content .= '&nbsp;&nbsp;&nbsp;<a onclick="showValuesList(\'valuesList'.$indexes[$i]['column'].'\', \'valuesSpan'.$indexes[$i]['column'].'\');">'.$indexes[$i]['values'][$cptValues]['id'].' : '.$indexes[$i]['values'][$cptValues]['label'].'</a><br>';
-						}
-					$content.= '<p>';
-					$content.= '<span id="valuesSpan'.$indexes[$i]['column'].'" name="valuesSpan'.$indexes[$i]['column'].'" onclick="showValuesList(\'valuesList'.$indexes[$i]['column'].'\', \'valuesSpan'.$indexes[$i]['column'].'\');">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;............................................................</span>';
-				}
-			$content .= '</td>';
-		$content .= '</tr>';
-	}
+                if (in_array($indexes[$i]['column'], $_SESSION['m_admin']['doctypes']['indexes']))
+                {
+                    $content .= 'checked="checked"';
+                }
+                $content .= '/>';
+            $content .= '</td>';
+            $content.= '<td align="center" width="100px">';
+                $content .= '<input name="mandatory_fields[]" id="mandatory_field_'.$indexes[$i]['column'].'" type="checkbox" class="check" value="'.$indexes[$i]['column'].'"';
+                if (in_array($indexes[$i]['column'], $_SESSION['m_admin']['doctypes']['mandatory_indexes']) )
+                {
+                    $content .= ' checked="checked"';
+                }
+                $content .= ' onclick="$(\'field_'.$indexes[$i]['column'].'\').checked=true;"/>';
+            $content .= '</td>';
+            $content.= '<td align="center" width="100px">';
+                $content .= $indexes[$i]['type'];
+            $content .= '</td>';
+            $content.= '<td align="center" width="100px">';
+                $content .= $indexes[$i]['type_field'];
+            $content .= '</td>';
+            $content.= '<td align="center" width="100px">';
+                $content .= $indexes[$i]['column'];
+            $content .= '</td>';
+            $content.= '<td align="left" width="300px">';
+                if(isset($indexes[$i]['values']) && count($indexes[$i]['values']) > 0)
+                {
+                    $content.= '<p id="valuesList'.$indexes[$i]['column'].'" name="valuesList'.$indexes[$i]['column'].'" style="display:none">';
+                        for($cptValues=0;$cptValues<count($indexes[$i]['values']);$cptValues++)
+                        {
+                            $content .= '&nbsp;&nbsp;&nbsp;<a onclick="showValuesList(\'valuesList'.$indexes[$i]['column'].'\', \'valuesSpan'.$indexes[$i]['column'].'\');">'.$indexes[$i]['values'][$cptValues]['id'].' : '.$indexes[$i]['values'][$cptValues]['label'].'</a><br>';
+                        }
+                    $content.= '<p>';
+                    $content.= '<span id="valuesSpan'.$indexes[$i]['column'].'" name="valuesSpan'.$indexes[$i]['column'].'" onclick="showValuesList(\'valuesList'.$indexes[$i]['column'].'\', \'valuesSpan'.$indexes[$i]['column'].'\');">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;............................................................</span>';
+                }
+            $content .= '</td>';
+        $content .= '</tr>';
+    }
     $content .= '</table>';
     $content .= '<hr/>';
 }

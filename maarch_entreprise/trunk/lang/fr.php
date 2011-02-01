@@ -500,7 +500,7 @@ if (!defined('_DOCTYPE_UPDATED')) define( '_DOCTYPE_UPDATED', 'Type de document 
 if (!defined('_DOCTYPE_UPDATE')) define( '_DOCTYPE_UPDATE', 'Modification du type de document');
 if (!defined('_DOCTYPE_ADDED')) define( '_DOCTYPE_ADDED', 'Nouveau type de document ajout&eacute;');
 if (!defined('_DELETED_DOCTYPE')) define( '_DELETED_DOCTYPE', 'Type de document supprim&eacute;');
-if (!defined('_DOCTYPE_DELETION')) define( '_DOCTYPE_DELETION', 'Suppression du type de document;');
+if (!defined('_DOCTYPE_DELETION')) define( '_DOCTYPE_DELETION', 'Suppression du type de document');
 if (!defined('_THE_DOCTYPE')) define( '_THE_DOCTYPE', 'Le type de document ');
 if (!defined('_THE_WORDING')) define( '_THE_WORDING', 'Le libell&eacute; ');
 if (!defined('_THE_TABLE')) define( '_THE_TABLE', 'La table ');
@@ -1126,5 +1126,13 @@ if (!defined('_IP_V4_ADRESS_NOT_VALID')) define('_IP_V4_ADRESS_NOT_VALID', 'Adre
 /************FAILOVER******************************/
 if (!defined('_FAILOVER'))  define('_FAILOVER', 'Reprise sur erreur');
 if (!defined('_FILE_NOT_EXISTS_ON_THE_SERVER'))  define('_FILE_NOT_EXISTS_ON_THE_SERVER', 'Le fichier n&rsquo;existe pas sur le docserver');
+
+
+
+if (!defined('_PROCESS_DELAY'))  define('_PROCESS_DELAY', 'D&eacute;lai de traitement');
+if (!defined('_ALERT_DELAY_1'))  define('_ALERT_DELAY_1', 'D&eacute;lai de 1ere alerte');
+if (!defined('_ALERT_DELAY_2'))  define('_ALERT_DELAY_2', 'D&eacute;lai de 2eme alerte');
+
+
 
 ?>

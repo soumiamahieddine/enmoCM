@@ -127,7 +127,7 @@ class types extends dbquery
                                 for($i=0; $i< count($_SESSION['sous_dossiers']); $i++)
                                 {
                                     ?>
-                                        <option value="<?php echo $_SESSION['sous_dossiers'][$i]['ID']; ?>" <?php if($_SESSION['sous_dossiers'][$i]['ID'] == $_SESSION['m_admin']['doctypes']['SUB_FOLDER']) { echo "selected=\"selected\"" ;}?>><?php echo $_SESSION['sous_dossiers'][$i]['LABEL']; ?></option>
+                                        <option value="<?php echo $_SESSION['sous_dossiers'][$i]['ID']; ?>" <?php if(isset($_SESSION['m_admin']['doctypes']['SUB_FOLDER']) && $_SESSION['sous_dossiers'][$i]['ID'] == $_SESSION['m_admin']['doctypes']['SUB_FOLDER']) { echo "selected=\"selected\"" ;}?>><?php echo $_SESSION['sous_dossiers'][$i]['LABEL']; ?></option>
                                     <?php
                                 }
                                 ?>
@@ -144,7 +144,7 @@ class types extends dbquery
                             <?php  for($i=0; $i<count($array_coll);$i++)
                             {
                             ?>
-                                <option value="<?php  echo $array_coll[$i]['id'];?>" <?php  if($_SESSION['m_admin']['doctypes']['COLL_ID'] == $array_coll[$i]['id']){ echo 'selected="selected"';}?> ><?php  echo $array_coll[$i]['label'];?></option>
+                                <option value="<?php  echo $array_coll[$i]['id'];?>" <?php  if(isset($_SESSION['m_admin']['doctypes']['COLL_ID']) && $_SESSION['m_admin']['doctypes']['COLL_ID'] == $array_coll[$i]['id']){ echo 'selected="selected"';}?> ><?php  echo $array_coll[$i]['label'];?></option>
                             <?php
                             }
                             ?>
@@ -164,7 +164,7 @@ class types extends dbquery
                     ?>
                     <p>
                         <label for="label"><?php echo _WORDING; ?> : </label>
-                        <input name="label" type="text" class="textbox" id="label" value="<?php echo $func->show_str($_SESSION['m_admin']['doctypes']['LABEL']); ?>"/>
+                        <input name="label" type="text" class="textbox" id="label" value="<?php if(isset($_SESSION['m_admin']['doctypes']['LABEL'])){echo $func->show_str($_SESSION['m_admin']['doctypes']['LABEL']);} ?>"/>
                     </p>
                     <?php
                     $_SESSION['service_tag'] = 'frm_doctype';
@@ -260,17 +260,23 @@ class types extends dbquery
             $_SESSION['m_admin']['doctypes']['COLL_ID'] = $_REQUEST['collection'];
             $_SESSION['m_admin']['doctypes']['indexes'] = array();
             $_SESSION['m_admin']['doctypes']['mandatory_indexes'] = array();
-            for($i=0; $i<count($_REQUEST['fields']);$i++)
+            if(isset($_REQUEST['fields']))
             {
-                array_push($_SESSION['m_admin']['doctypes']['indexes'], $_REQUEST['fields'][$i]);
-            }
-            for($i=0; $i<count($_REQUEST['mandatory_fields']);$i++)
-            {
-                if(!in_array($_REQUEST['mandatory_fields'][$i], $_SESSION['m_admin']['doctypes']['indexes']))
+                for($i=0; $i<count($_REQUEST['fields']);$i++)
                 {
-                    $_SESSION['error'] .= _IF_CHECKS_MANDATORY_MUST_CHECK_USE;
+                    array_push($_SESSION['m_admin']['doctypes']['indexes'], $_REQUEST['fields'][$i]);
                 }
-                array_push($_SESSION['m_admin']['doctypes']['mandatory_indexes'], $_REQUEST['mandatory_fields'][$i]);
+            }
+            if(isset($_REQUEST['mandatory_fields']))
+            {
+                for($i=0; $i<count($_REQUEST['mandatory_fields']);$i++)
+                {
+                    if(!in_array($_REQUEST['mandatory_fields'][$i], $_SESSION['m_admin']['doctypes']['indexes']))
+                    {
+                        $_SESSION['error'] .= _IF_CHECKS_MANDATORY_MUST_CHECK_USE;
+                    }
+                    array_push($_SESSION['m_admin']['doctypes']['mandatory_indexes'], $_REQUEST['mandatory_fields'][$i]);
+                }
             }
         }
         if(!isset($_REQUEST['sous_dossier']) || empty($_REQUEST['sous_dossier']))
@@ -382,7 +388,7 @@ class types extends dbquery
                 {
                     $tmp = $this->protect_string_db($_SESSION['m_admin']['doctypes']['LABEL']);
 
-                    $this->query("insert into ".$_SESSION['tablename']['doctypes']." (coll_id, description, doctypes_first_level_id, doctypes_second_level_id,  enabled ".$_SESSION['m_admin']['doctypes']['custom_query_insert_colums'].") VALUES ('".$_SESSION['m_admin']['doctypes']['COLL_ID']."', '".$tmp."',".$_SESSION['m_admin']['doctypes']['STRUCTURE'].",".$_SESSION['m_admin']['doctypes']['SUB_FOLDER'].", 'Y' ".$_SESSION['m_admin']['doctypes']['custom_query_insert_values'].")");
+                    $this->query("insert into ".$_SESSION['tablename']['doctypes']." (coll_id, description, doctypes_first_level_id, doctypes_second_level_id,  enabled ) VALUES ('".$_SESSION['m_admin']['doctypes']['COLL_ID']."', '".$tmp."',".$_SESSION['m_admin']['doctypes']['STRUCTURE'].",".$_SESSION['m_admin']['doctypes']['SUB_FOLDER'].", 'Y' )");
                     //$this->show();
 
                     $this->query("select type_id from ".$_SESSION['tablename']['doctypes']." where coll_id = '".$_SESSION['m_admin']['doctypes']['COLL_ID']."' and description = '".$tmp."' and doctypes_first_level_id = ".$_SESSION['m_admin']['doctypes']['STRUCTURE']." and doctypes_second_level_id = ".$_SESSION['m_admin']['doctypes']['SUB_FOLDER']);
@@ -411,6 +417,7 @@ class types extends dbquery
                     }
                 }
                 $this->cleartypeinfos();
+
                 ?> <script  type="text/javascript">window.top.location.href='<?php echo $_SESSION['config']['businessappurl']."index.php?page=types&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what;?>';</script>
                 <?php
                 exit();

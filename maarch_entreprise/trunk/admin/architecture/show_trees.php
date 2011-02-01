@@ -43,7 +43,11 @@ $db3 = new dbquery();
 $db3->connect();
 $db4 = new dbquery();
 $db4->connect();
-$nb_trees = count($_SESSION['doctypes_chosen_tree']);
+$nb_trees = 0;
+if(isset($_SESSION['doctypes_chosen_tree']))
+{
+    $nb_trees = count($_SESSION['doctypes_chosen_tree']);
+}
 $core_tools->load_html();
 $core_tools->load_header('', true, false);
 $f_level = array();
@@ -75,6 +79,7 @@ else
             $query="select d.doctypes_first_level_id, d.doctypes_first_level_label from  ".$_SESSION['tablename']['doctypes_first_level']." d where d.enabled = 'Y' order by d.doctypes_first_level_label";
         }
         $db1->query($query);
+
         while($res1 = $db1->fetch_object())
         {
             $s_level = array();

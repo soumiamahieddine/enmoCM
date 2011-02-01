@@ -144,8 +144,22 @@ class list_show extends functions
             // put in tab the different label of the column
             for ($j=0;$j<count($result[0]);$j++)
             {
-                array_push($listcolumn,$result[0][$j]["label"]);
-                array_push($listshow,$result[0][$j]["show"]);
+                if(isset($result[0][$j]["label"]))
+                {
+                    array_push($listcolumn,$result[0][$j]["label"]);
+                }
+                else
+                {
+                     array_push($listcolumn,'');
+                }
+                if(isset($result[0][$j]["show"]))
+                {
+                    array_push($listshow,$result[0][$j]["show"]);
+                }
+                else
+                {
+                    array_push($listshow,false);
+                }
                 if(isset($result[0][$j]["order"]))
                 {
                     array_push($ordercol,$result[0][$j]["order"]);
@@ -198,7 +212,7 @@ class list_show extends functions
                 //$orderby = 'asc';
                 $orderby = '';
             }
-            if(!preg_match('/order=/', $comp_link) && $order <> '')
+            if(!preg_match('/order=/', $comp_link))  //&& $order <> ''
             {
                 $link .= "&amp;order=".$orderby;
             }
@@ -236,7 +250,8 @@ class list_show extends functions
 
             //########################
             $disp_dc = '';
-            if(core_tools::is_module_loaded("doc_converter") && $bool_export)
+            $core = new core_tools();
+            if($core ->is_module_loaded("doc_converter") && $bool_export)
             {
                 $_SESSION['doc_convert'] = array();
                 require_once("modules".DIRECTORY_SEPARATOR."doc_converter".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
@@ -511,7 +526,7 @@ class list_show extends functions
 
                     for($count_column = 0;$count_column < count($listcolumn);$count_column++)
                     {
-                        if($result[$theline][$count_column]['show']==true)
+                        if(isset($result[$theline][$count_column]['show']) && $result[$theline][$count_column]['show']==true)
                         {
                             if($do_action && !empty($id_action) && (count($do_actions_arr) == 0 ||  $do_actions_arr[$theline] == true) )
                             {
@@ -813,28 +828,39 @@ class list_show extends functions
         $listcolumn = array();
         $listshow = array();
         $ordercol = array();
-        for ($i=0;$i<1;$i++) {
-			if(isset($result[$i])) {
-				for ($j=0;$j<count($result[$i]);$j++) {
-					if(isset($result[$i][$j]['label'])) {
-						array_push($listcolumn,$result[$i][$j]['label']);
-					} else {
-						array_push($listcolumn,'');
-					}
-					if(isset($listshow,$result[$i][$j]['show'])) {
-						array_push($listshow,$result[$i][$j]['show']);
-					} else {
-						array_push($listshow,true);
-					}
-					if(isset($result[$i][$j]["order"])) {
-						array_push($ordercol,$result[$i][$j]["order"]);
-					} else {
-						array_push($ordercol,'');
-					}
-				}
-			}
+        for ($i=0;$i<1;$i++)
+        {
+            if(isset($result[$i]))
+            {
+                for ($j=0;$j<count($result[$i]);$j++)
+                {
+                    if(isset($result[$i][$j]['label']))
+                    {
+                        array_push($listcolumn,$result[$i][$j]['label']);
+                    }
+                    else
+                    {
+                        array_push($listcolumn,'');
+                    }
+                    if(isset($listshow,$result[$i][$j]['show']))
+                    {
+                        array_push($listshow,$result[$i][$j]['show']);
+                    }
+                    else
+                    {
+                        array_push($listshow,true);
+                    }
+                    if(isset($result[$i][$j]["order"]))
+                    {
+                        array_push($ordercol,$result[$i][$j]["order"]);
+                    }
+                    else
+                    {
+                        array_push($ordercol,'');
+                    }
+                }
+            }
         }
-
 
         $func = new functions();
         $param_comp = '';
@@ -1236,7 +1262,7 @@ class list_show extends functions
                                 {
                                     $path_auth = preg_replace("/(&(?!amp;))/", "&amp;", $path_auth);
                             ?>
-                                <a href="<?php  echo $path_auth.$param_comp;?>" class="authorize" onclick="return(confirm('<?php  echo _REALLY_AUTHORIZE." "; if($page_name == "users"){ echo $complete_name;}
+                                <a href="<?php  echo $path_auth.$param_comp;?>" class="authorize" onclick="return(confirm('<?php  echo _REALLY_AUTHORIZE." "; if(isset($page_name) && $page_name == "users"){ echo $complete_name;}
                                  else { echo $admin_id; } ?> ?'));"><?php  echo _AUTHORIZE;?></a>
                                 <?php
                                 }

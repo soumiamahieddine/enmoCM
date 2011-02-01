@@ -37,11 +37,11 @@ require("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPAR
 $func = new functions();
 if(isset($_GET['id']))
 {
-	$s_id = addslashes($func->wash($_GET['id'], "no", _THE_DOCTYPE));
+    $s_id = addslashes($func->wash($_GET['id'], "no", _THE_DOCTYPE));
 }
 else
 {
-	$s_id = "";
+    $s_id = "";
 }
 
 // delete a doc type
@@ -50,32 +50,36 @@ $db->connect();
 $db->query("select description from ".$_SESSION['tablename']['doctypes']." where type_id = '".$s_id."'");
 if($db->nb_result() == 0)
 {
-	$_SESSION['error'] = _DOCTYPE.' '._UNKNOWN;
-	?>
-		<script type="text/javascript">window.location.href="<?php echo $_SESSION['config']['businessappurl']; ?>index.php?page=types&order=<?php echo $_REQUEST['order'];?>&order_field=<?php echo $_REQUEST['order_field'];?>&start=<?php echo $_REQUEST['start'];?>&what=<?php echo $_REQUEST['what'];?>";</script>
-	<?php
-	exit();
+    $_SESSION['error'] = _DOCTYPE.' '._UNKNOWN;
+    ?>
+        <script type="text/javascript">window.location.href="<?php echo $_SESSION['config']['businessappurl']; ?>index.php?page=types&order=<?php echo $_REQUEST['order'];?>&order_field=<?php echo $_REQUEST['order_field'];?>&start=<?php echo $_REQUEST['start'];?>&what=<?php echo $_REQUEST['what'];?>";</script>
+    <?php
+    exit();
 }
 else
 {
-	$info = $db->fetch_object();
-	$db->query("delete from ".$_SESSION['tablename']['doctypes']." where type_id = ".$s_id."");
-	$db->query("delete from ".$_SESSION['tablename']['doctypes_indexes']." where type_id = ".$s_id."");
+    $info = $db->fetch_object();
+    $db->query("delete from ".$_SESSION['tablename']['doctypes']." where type_id = ".$s_id."");
+    $db->query("delete from ".$_SESSION['tablename']['doctypes_indexes']." where type_id = ".$s_id."");
 
-	$_SESSION['service_tag'] = "doctype_delete";
-	$_SESSION['m_admin']['doctypes']['TYPE_ID'] = $s_id;
-	$core_tools->execute_modules_services($_SESSION['modules_services'], 'doctype_del', "include");
-	$core_tools->execute_app_services($_SESSION['app_services'], 'doctype_del', 'include');
-	$_SESSION['service_tag'] = '';
-	unset($_SESSION['m_admin']['doctypes']['TYPE_ID']);
-	require("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
-	$users = new history();
-	$users->add($_SESSION['tablename']['doctypes'], $id,"DEL",_DOCTYPE_DELETION." : ".$info->DESCRIPTION, $_SESSION['config']['databasetype']);
-	$_SESSION['error'] = _DELETED_DOCTYPE;
-	?>
-		<script type="text/javascript">window.location.href="<?php echo $_SESSION['config']['businessappurl'] ?>index.php?page=types&order=<?php echo $_REQUEST['order'];?>&order_field=<?php echo $_REQUEST['order_field'];?>&start=<?php echo $_REQUEST['start'];?>&what=<?php echo $_REQUEST['what'];?>";</script>
-	<?php
-	exit();
+    $_SESSION['service_tag'] = "doctype_delete";
+    $_SESSION['m_admin']['doctypes']['TYPE_ID'] = $s_id;
+    $core_tools->execute_modules_services($_SESSION['modules_services'], 'doctype_del', "include");
+    $core_tools->execute_app_services($_SESSION['app_services'], 'doctype_del', 'include');
+    $_SESSION['service_tag'] = '';
+    unset($_SESSION['m_admin']['doctypes']['TYPE_ID']);
+    if($_SESSION['history']['doctypesdel'] == 'true')
+    {
+        require("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
+        $users = new history();
+        $users->add($_SESSION['tablename']['doctypes'], $s_id,"DEL",_DOCTYPE_DELETION." : ".$info->description, $_SESSION['config']['databasetype']);
+    }
+    $_SESSION['error'] = _DELETED_DOCTYPE;
+
+    ?>
+        <script type="text/javascript">window.location.href="<?php echo $_SESSION['config']['businessappurl'] ?>index.php?page=types&order=<?php echo $_REQUEST['order'];?>&order_field=<?php echo $_REQUEST['order_field'];?>&start=<?php echo $_REQUEST['start'];?>&what=<?php echo $_REQUEST['what'];?>";</script>
+    <?php
+    exit();
 }
 
 ?>

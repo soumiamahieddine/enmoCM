@@ -113,7 +113,7 @@ elseif($mode == "up" || $mode == "add")
 
             <?php
                 }
-                if($basket_loaded && count($baskets) > 0)
+                if($GLOBALS['basket_loaded'] && count($baskets) > 0)
                 {?>
                     <div onclick="new Effect.toggle('baskets_list2', 'blind', {delay:0.2});return false;" >
                 &nbsp;<img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=membres_groupe_b.gif" alt="" /><i><?php  echo _SEE_BASKETS_RELATED;?></i> <img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=plus.png" alt="" />
@@ -173,10 +173,10 @@ elseif($mode == "up" || $mode == "add")
             <input type="hidden" name="page" value="usergroups_management_controler" />
             <input type="hidden" name="mode" value="<?php echo $mode;?>" />
 
-            <input type="hidden" name="order" id="order" value="<?php echo $_REQUEST['order'];?>" />
-            <input type="hidden" name="order_field" id="order_field" value="<?php echo $_REQUEST['order_field'];?>" />
-            <input type="hidden" name="what" id="what" value="<?php echo $_REQUEST['what'];?>" />
-            <input type="hidden" name="start" id="start" value="<?php echo $_REQUEST['start'];?>" />
+            <input type="hidden" name="order" id="order" value="<?php if(isset($_REQUEST['order'])){ echo $_REQUEST['order'];}?>" />
+            <input type="hidden" name="order_field" id="order_field" value="<?php if(isset($_REQUEST['order_field'])){echo $_REQUEST['order_field'];}?>" />
+            <input type="hidden" name="what" id="what" value="<?php if(isset($_REQUEST['what'])){echo $_REQUEST['what'];}?>" />
+            <input type="hidden" name="start" id="start" value="<?php if(isset($_REQUEST['start'])){echo $_REQUEST['start'];}?>" />
 
                 <table border="0" summary="">
                     <tr>

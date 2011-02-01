@@ -50,7 +50,7 @@ elseif($_SESSION['service_tag'] == "doctype_info")
     $func = new functions();
     if(isset($_REQUEST['process_delay']) && $_REQUEST['process_delay'] >= 0)
     {
-        $_SESSION['m_admin']['doctypes']['process_delay'] = $func->wash($_REQUEST['process_delay'], "num", _TREATMENT_DELAY);
+        $_SESSION['m_admin']['doctypes']['process_delay'] = $func->wash($_REQUEST['process_delay'], "num", _PROCESS_DELAY);
     }
     if(isset($_REQUEST['delay1']) && $_REQUEST['delay1'] >= 0)
     {
