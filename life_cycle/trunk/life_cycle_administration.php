@@ -35,13 +35,11 @@ $admin = new core_tools();
 $admin->test_admin('admin_life_cycle', 'life_cycle');
 /****************Management of the location bar  ************/
 $init = false;
-if(isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true")
-{
+if(isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true") {
 	$init = true;
 }
 $level = "";
-if(isset($_REQUEST['level']) && ($_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1))
-{
+if(isset($_REQUEST['level']) && ($_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1)) {
 	$level = $_REQUEST['level'];
 }
 $page_path = $_SESSION['config']['businessappurl'].'index.php?page=life_cycle_administration&module=life_cycle';
@@ -51,9 +49,7 @@ $admin->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
 unset($_SESSION['m_admin']);
 ?>
-
 <h1><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?module=life_cycle&filename=manage_lc_b.gif" alt="" /> <?php  echo _ADMIN_LIFE_CYCLE_SHORT;?></h1>
-
 <div id="inner_content" class="clearfix">
 <h2 class="admin_subtitle block" ><?php echo _ADMIN_LIFE_CYCLE;?></h1></h2>
 	<div class="admin_item" id="admin_lc_policies" title="<?php  echo _MANAGE_LC_POLICIES;?>" onclick="window.top.location='<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=lc_policies_management_controler&mode=list&module=life_cycle';">

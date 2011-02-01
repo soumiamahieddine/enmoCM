@@ -61,7 +61,7 @@ if ($mode == "list") {
                     ?>
                     <p>
                         <label for="policy_id"><?php echo _POLICY_ID; ?> : </label>
-                        <input name="policy_id" type="text"  id="policy_id" value="<?php echo $func->show_str($_SESSION['m_admin']['lc_cycles']['policy_id']); ?>" readonly='readonly' class='readonly'/>
+                        <input name="policy_id" type="text"  id="policy_id" value="<?php if (isset($_SESSION['m_admin']['lc_cycles']['policy_id'])) echo $func->show_str($_SESSION['m_admin']['lc_cycles']['policy_id']); ?>" readonly='readonly' class='readonly'/>
                     </p>
                     <?php
                 } else {
@@ -73,7 +73,7 @@ if ($mode == "list") {
                             <?php
                             for ($cptPolicies=0;$cptPolicies<count($policiesArray);$cptPolicies++) {
                                 ?>
-                                <option value="<?php echo $policiesArray[$cptPolicies];?>" <?php if($_SESSION['m_admin']['lc_cycles']['policy_id'] == $policiesArray[$cptPolicies]) { echo 'selected="selected"';}?>><?php echo $policiesArray[$cptPolicies];?></option>
+                                <option value="<?php echo $policiesArray[$cptPolicies];?>" <?php if (isset($_SESSION['m_admin']['lc_cycles']['policy_id']) && $_SESSION['m_admin']['lc_cycles']['policy_id'] == $policiesArray[$cptPolicies]) { echo 'selected="selected"';}?>><?php if (isset($policiesArray[$cptPolicies])) echo $policiesArray[$cptPolicies];?></option>
                                 <?php
                             }
                             ?>
@@ -84,27 +84,27 @@ if ($mode == "list") {
                 ?>
                 <p>
                     <label for="id"><?php echo _CYCLE_ID; ?> : </label>
-                    <input name="id" type="text"  id="id" value="<?php echo $func->show_str($_SESSION['m_admin']['lc_cycles']['cycle_id']); ?>" <?php if($mode == "up") echo " readonly='readonly' class='readonly'";?>/>
+                    <input name="id" type="text"  id="id" value="<?php if (isset($_SESSION['m_admin']['lc_cycles']['cycle_id'])) echo $func->show_str($_SESSION['m_admin']['lc_cycles']['cycle_id']); ?>" <?php if($mode == "up") echo " readonly='readonly' class='readonly'";?>/>
                 </p>
                 <p>
                     <label for="cycle_desc"><?php echo _CYCLE_DESC; ?> : </label>
-                    <textarea name="cycle_desc" type="text"  id="cycle_desc" value="<?php echo $func->show_str($_SESSION['m_admin']['lc_cycles']['cycle_desc']); ?>" /><?php echo $_SESSION['m_admin']['lc_cycles']['cycle_desc'] ?></textarea>
+                    <textarea name="cycle_desc" type="text"  id="cycle_desc" value="<?php if (isset($_SESSION['m_admin']['lc_cycles']['cycle_desc'])) echo $func->show_str($_SESSION['m_admin']['lc_cycles']['cycle_desc']); ?>" /><?php if (isset($_SESSION['m_admin']['lc_cycles']['cycle_desc'])) echo $_SESSION['m_admin']['lc_cycles']['cycle_desc'] ?></textarea>
                 </p>
                 <p>
                     <label for="sequence_number"><?php echo _SEQUENCE_NUMBER; ?> : </label>
-                    <input name="sequence_number" type="text"  id="sequence_number" value="<?php echo $func->show_str($_SESSION['m_admin']['lc_cycles']['sequence_number']); ?>" />
+                    <input name="sequence_number" type="text"  id="sequence_number" value="<?php if (isset($_SESSION['m_admin']['lc_cycles']['sequence_number'])) echo $func->show_str($_SESSION['m_admin']['lc_cycles']['sequence_number']); ?>" />
                 </p>
                 <p>
                     <label for="where_clause"><?php echo _WHERE_CLAUSE; ?> : </label>
-                    <textarea name="where_clause" type="text"  id="where_clause" value="<?php echo $func->show_str($_SESSION['m_admin']['lc_cycles']['where_clause']); ?>" /><?php echo $_SESSION['m_admin']['lc_cycles']['where_clause'] ?></textarea>
+                    <textarea name="where_clause" type="text"  id="where_clause" value="<?php if (isset($_SESSION['m_admin']['lc_cycles']['where_clause'])) echo $func->show_str($_SESSION['m_admin']['lc_cycles']['where_clause']); ?>" /><?php if (isset($_SESSION['m_admin']['lc_cycles']['where_clause'])) echo $_SESSION['m_admin']['lc_cycles']['where_clause'] ?></textarea>
                 </p>
                 <p>
                     <label for="break_key"><?php echo _BREAK_KEY; ?> : </label>
-                    <input name="break_key" type="text"  id="break_key" value="<?php echo $func->show_str($_SESSION['m_admin']['lc_cycles']['break_key']); ?>" />
+                    <input name="break_key" type="text"  id="break_key" value="<?php if (isset($_SESSION['m_admin']['lc_cycles']['break_key'])) echo $func->show_str($_SESSION['m_admin']['lc_cycles']['break_key']); ?>" />
                 </p>
                 <p>
                     <label for="validation_mode"><?php echo _VALIDATION_MODE; ?> : </label>
-                    <input name="validation_mode" type="text"  id="validation_mode" value="<?php echo $func->show_str($_SESSION['m_admin']['lc_cycles']['validation_mode']); ?>" />
+                    <input name="validation_mode" type="text"  id="validation_mode" value="<?php if (isset($_SESSION['m_admin']['lc_cycles']['validation_mode'])) echo $func->show_str($_SESSION['m_admin']['lc_cycles']['validation_mode']); ?>" />
                 </p>
                 <p class="buttons">
                     <?php

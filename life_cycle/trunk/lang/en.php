@@ -30,16 +30,17 @@ if (!defined('_MANAGE_LC_POLICIES'))  define('_MANAGE_LC_POLICIES', 'Life cycle 
 
 /*****************CYCLE_STEPS************************************/
 if (!defined('_LC_CYCLE_STEP'))  define('_LC_CYCLE_STEP', 'Life cycle step');
+if (!defined('_LC_CYCLE_STEP_ID'))  define('_LC_CYCLE_STEP_ID', 'Life cycle step ID');
 if (!defined('_LC_CYCLE_STEPS_LIST'))  define('_LC_CYCLE_STEPS_LIST', 'Life cycle step list');
 if (!defined('_ALL_LC_CYCLE_STEPS'))  define('_ALL_LC_CYCLE_STEPS', 'View all');
 if (!defined('_POLICY_ID'))  define('_POLICY_ID', 'Policy ID');
 if (!defined('_CYCLE_STEP_ID'))  define('_CYCLE_STEP_ID', 'Life cycle step ID ("lc_cycle_steps")');
 if (!defined('_CYCLE_STEP_DESC'))  define('_CYCLE_STEP_DESC', 'Life cycle step description');
 if (!defined('_STEPT_OPERATION'))  define('_STEP_OPERATION', 'Action on a life cycle step');
-if (!defined('_IS_ALLOW_FAILURE'))  define('_IS_ALLOW_FAILURE', 'Allow failure flag');
+if (!defined('_IS_ALLOW_FAILURE'))  define('_IS_ALLOW_FAILURE', 'Allow failures');
 if (!defined('_PREPROCESS_SCRIPT'))  define('_PREPROCESS_SCRIPT', 'Before process script');
 if (!defined('_POSTPROCESS_SCRIPT'))  define('_POSTPROCESS_SCRIPT', 'After process script');
-if (!defined('_IS_MUST_COMPLETE'))  define('_IS_MUST_COMPLETE', 'IS_MUST_COMPLETE');
+if (!defined('_IS_MUST_COMPLETE'))  define('_IS_MUST_COMPLETE', 'Must complete');
 if (!defined('_LC_CYCLE_STEP_ADDITION'))  define('_LC_CYCLE_STEP_ADDITION', 'Add a life cycle step');
 if (!defined('_LC_CYCLE_STEP_UPDATED'))  define('_LC_CYCLE_STEP_UPDATED', 'Life cycle step updated');
 if (!defined('_LC_CYCLE_STEP_ADDED'))  define('_LC_CYCLE_STEP_ADDED', 'Life cycle step added');
@@ -60,6 +61,9 @@ if (!defined('_LC_CYCLE_ADDITION'))  define('_LC_CYCLE_ADDITION', 'Add a life cy
 if (!defined('_LC_CYCLE_ADDED'))  define('_LC_CYCLE_ADDED', 'Life cycle added');
 if (!defined('_LC_CYCLE_UPDATED'))  define('_LC_CYCLE_UPDATED', 'Life cycle updated');
 if (!defined('_LC_CYCLE_DELETED'))  define('_LC_CYCLE_DELETED', 'Life cycle deleted');
+if (!defined('_PB_WITH_WHERE_CLAUSE')) define( '_PB_WITH_WHERE_CLAUSE', 'Pb with where clause');
+if (!defined('_WHERE_CLAUSE_NOT_SECURE')) define( '_WHERE_CLAUSE_NOT_SECURE', 'where clause not secure');
+if (!defined('_CANNOT_DELETE_CYCLE_ID')) define( '_CANNOT_DELETE_CYCLE_ID', 'Cannot delete cycle');
 
 /*************CYCLE POLICIES*************************************/
 if (!defined('_LC_POLICY'))  define('_LC_POLICY', 'Life cycle policy');
@@ -86,5 +90,6 @@ if (!defined('_PDI_COMMENT_HISTORY'))  define('_PDI_COMMENT_HISTORY', 'Preservat
 
 /*************OTHER*************************************/
 if (!defined('_DOCS')) define( '_DOCS', 'Documents');
+if (!defined('_LINK_EXISTS'))  define('_LINK_EXISTS', 'A link exists with an another object');
 
 ?>

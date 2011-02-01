@@ -1,6 +1,7 @@
 <?php
+
 /*
-*    Copyright 2008,2009,2010 Maarch
+*    Copyright 2008-2011 Maarch
 *
 *  This file is part of Maarch Framework.
 *
@@ -30,8 +31,6 @@
 * @ingroup life_cycle
 */
 
-
-//lgi +
 $sessionName = "lc_policies";
 $pageName = "lc_policies_management_controler";
 $tableName = "lc_policies";
@@ -39,13 +38,10 @@ $idName = "policy_id";
 
 $mode = 'add';
 
-/*echo "<pre>";
-print_r($_REQUEST);
-echo "</pre>";*/
 $core = new core_tools();
 $core->load_lang();
 
-if(isset($_REQUEST['mode']) && !empty($_REQUEST['mode'])) {
+if (isset($_REQUEST['mode']) && !empty($_REQUEST['mode'])) {
 	$mode = $_REQUEST['mode'];
 } else {
 	$mode = 'list'; 
@@ -54,7 +50,7 @@ if(isset($_REQUEST['mode']) && !empty($_REQUEST['mode'])) {
 try{
 	require_once("modules/life_cycle/class/lc_policies_controler.php");
 	require_once("core/class/class_request.php");
-	if($mode == 'list') {
+	if ($mode == 'list') {
 		require_once("modules/life_cycle/lang/fr.php");
 		require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");
 	}
@@ -62,12 +58,12 @@ try{
 	echo $e->getMessage();
 }
 
-if(isset($_REQUEST['submit'])) {
+if (isset($_REQUEST['submit'])) {
 	// Action to do with db
 	validate_cs_submit($mode);
 } else {
 	// Display to do
-	if(isset($_REQUEST['id']) && !empty($_REQUEST['id']))
+	if (isset($_REQUEST['id']) && !empty($_REQUEST['id']))
 		$policy_id = $_REQUEST['id'];
 	$state = true;
 	switch ($mode) {
@@ -117,11 +113,11 @@ function location_bar_management($mode) {
 	$page_ids = array('add' => 'docserver_add', 'up' => 'docserver_up', 'list' => 'lc_policies_list');
 
 	$init = false;
-	if(isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true") 
+	if (isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true") 
 		$init = true;
 
 	$level = "";
-	if(isset($_REQUEST['level']) && ($_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1))
+	if (isset($_REQUEST['level']) && ($_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1))
 		$level = $_REQUEST['level'];
 	
 	$page_path = $_SESSION['config']['businessappurl'].'index.php?page='.$pageName.'&module=life_cycle&mode='.$mode;
@@ -141,36 +137,27 @@ function validate_cs_submit($mode) {
 	$pageName = "lc_policies_management_controler";
 	$tableName = "lc_policies";
 	$idName = "policy_id";
-	
 	$f=new functions();
-
-	$lc_policies = new lc_policies();
-
-	// Update, so values exist
-	$lc_policies->policy_id=$f->protect_string_db($f->wash($_REQUEST['id'], "nick", _LC_POLICY_ID." ", 'yes', 0, 32));
-	$lc_policies->policy_name=$f->protect_string_db($f->wash($_REQUEST['policy_name'], "no", _POLICY_NAME." ", 'yes', 0, 255));
-	$lc_policies->policy_desc=$f->protect_string_db($f->wash($_REQUEST['policy_desc'], "no", _POLICY_DESC." ", 'yes', 0, 255));
-	
+	$lcPoliciesControler = new lc_policies_controler();
 	$status= array();
 	$status['order']=$_REQUEST['order'];
 	$status['order_field']=$_REQUEST['order_field'];
 	$status['what']=$_REQUEST['what'];
 	$status['start']=$_REQUEST['start'];
-	
-	$lcPoliciesControler = new lc_policies_controler();
-	//LKE = BULL ===== SPEC FONC : ==== Cycles de vie : lc_policies (ID1)	
-	if($mode == "add" && $lcPoliciesControler->policyExists($lc_policies->policy_id)) {	
-		$_SESSION['error'] = $lc_policies->policy_id." "._ALREADY_EXISTS."<br />";
-	}
-	
-	if(!empty($_SESSION['error'])) {
+	$lc_policies = new lc_policies();
+	if (isset($_REQUEST['id'])) $lc_policies->policy_id = $_REQUEST['id'];
+	if (isset($_REQUEST['policy_name'])) $lc_policies->policy_name = $_REQUEST['policy_name'];
+	if (isset($_REQUEST['policy_desc'])) $lc_policies->policy_desc = $_REQUEST['policy_desc'];
+	$control = array();
+	$control = $lcPoliciesControler->save($lc_policies, $mode);
+	if (!empty($control['error']) && $control['error'] <> 1) {
 		// Error management depending of mode
-		put_in_session("status",$status);
-		put_in_session("lc_policies",$lc_policies->getArray());
-		
+		$_SESSION['error'] = str_replace("#", "<br />", $control['error']);
+		put_in_session("status", $status);
+		put_in_session("lc_policies", $lc_policies->getArray());
 		switch ($mode) {
 			case "up":
-				if(!empty($_REQUEST['id'])) {
+				if (!empty($_REQUEST['id'])) {
 					header("location: ".$_SESSION['config']['businessappurl']."index.php?page=".$pageName."&mode=up&id=".$_REQUEST['id']."&module=life_cycle");
 				} else {
 					header("location: ".$_SESSION['config']['businessappurl']."index.php?page=".$pageName."&mode=list&module=life_cycle&order=".$status['order']."&order_field=".$status['order_field']."&start=".$status['start']."&what=".$status['what']);
@@ -181,20 +168,7 @@ function validate_cs_submit($mode) {
 				exit;
 		}
 	} else {
-		// Saving given object
-		//$f->show_array($lc_policies);
-		$lc_policies = $lcPoliciesControler->save($lc_policies);
-		//history
-		if($_SESSION['history']['lcadd'] == "true" && $mode == "add") {
-			require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
-			$history = new history();
-			$history->add(_LC_POLICIES_TABLE_NAME, $_REQUEST['id'], "ADD",_LC_POLICY_ADDED." : ".$_REQUEST['id'], $_SESSION['config']['databasetype']);
-		} elseif($_SESSION['history']['lcup'] == "true" && $mode == "up") {
-			require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
-			$history = new history();
-			$history->add(_LC_POLICIES_TABLE_NAME, $_REQUEST['id'], "UP",_LC_POLICY_UPDATED." : ".$_REQUEST['id'], $_SESSION['config']['databasetype']);
-		}
-		if($mode == "add")
+		if ($mode == "add")
 			$_SESSION['error'] = _LC_POLICY_ADDED;
 		 else
 			$_SESSION['error'] = _LC_POLICY_UPDATED;
@@ -211,7 +185,7 @@ function display_up($policy_id) {
 	$state=true;
 	$lcPoliciesControler = new lc_policies_controler();
 	$lc_policies = $lcPoliciesControler->get($policy_id);
-	if(empty($lc_policies))
+	if (empty($lc_policies))
 		$state = false; 
 	else
 		put_in_session("lc_policies", $lc_policies->getArray()); 
@@ -224,7 +198,7 @@ function display_up($policy_id) {
  */
 function display_add() {
 	$sessionName = "lc_policies";
-	if(!isset($_SESSION['m_admin'][$sessionName]))
+	if (!isset($_SESSION['m_admin'][$sessionName]))
 		init_session();
 }
 
@@ -245,10 +219,10 @@ function display_list() {
 	array_push($select[_LC_POLICIES_TABLE_NAME], $idName, "policy_id", "policy_name", "policy_desc");
 	$what = "";
 	$where ="";
-	if(isset($_REQUEST['what']) && !empty($_REQUEST['what'])) {
+	if (isset($_REQUEST['what']) && !empty($_REQUEST['what'])) {
 		$func = new functions();
 		$what = $func->protect_string_db($_REQUEST['what']);
-		if($_SESSION['config']['databasetype'] == "POSTGRESQL") {
+		if ($_SESSION['config']['databasetype'] == "POSTGRESQL") {
 			$where = $idName." ilike '".strtoupper($what)."%' ";
 		} else {
 			$where = $idName." like '".strtoupper($what)."%' ";
@@ -257,11 +231,11 @@ function display_list() {
 
 	// Checking order and order_field values
 	$order = 'asc';
-	if(isset($_REQUEST['order']) && !empty($_REQUEST['order'])) {
+	if (isset($_REQUEST['order']) && !empty($_REQUEST['order'])) {
 		$order = trim($_REQUEST['order']);
 	}
 	$field = $idName;
-	if(isset($_REQUEST['order_field']) && !empty($_REQUEST['order_field'])) {
+	if (isset($_REQUEST['order_field']) && !empty($_REQUEST['order_field'])) {
 		$field = trim($_REQUEST['order_field']);
 	}
 	$listShow = new list_show();
@@ -306,22 +280,19 @@ function display_list() {
 
 /**
  * Delete given docserver if exists and initialize session parameters
- * @param unknown_type $policy_id
+ * @param string $policy_id
  */
 function display_del($policy_id) {
 	$lcPoliciesControler = new lc_policies_controler();
 	$lc_policies = $lcPoliciesControler->get($policy_id);
-	if(isset($lc_policies)) {
+	if (isset($lc_policies)) {
 		// Deletion
-		if(!$lcPoliciesControler->delete($policy_id)) {
-			$_SESSION['error'] = _YOU_CANNOT_DELETE." ".$policy_id;
+		$control = array();
+		$control = $lcPoliciesControler->delete($lc_policies);
+		if (!empty($control['error']) && $control['error'] <> 1) {
+			$_SESSION['error'] = str_replace("#", "<br />", $control['error']);
 		} else {
 			$_SESSION['error'] = _LC_POLICY_DELETED." ".$policy_id;
-			if($_SESSION['history']['lcdel'] == "true") {
-				require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
-				$history = new history();
-				$history->add(_LC_POLICIES_TABLE_NAME, $policy_id, "DEL", _LC_POLICY_DELETED." : ".$policy_id, $_SESSION['config']['databasetype']);
-			}
 		}
 		$pageName = "lc_policies_management_controler";
 		?>

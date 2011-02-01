@@ -32,6 +32,7 @@ if (!defined('_MANAGE_LC_POLICIES'))  define('_MANAGE_LC_POLICIES', 'G&eacute;re
 /*****************CYCLE_STEPS************************************/
 if (!defined('_LC_CYCLE_STEPS'))  define('_LC_CYCLE_STEPS', '');
 if (!defined('_LC_CYCLE_STEP'))  define('_LC_CYCLE_STEP', 'une &eacute;tape de cycle de vie');
+if (!defined('_LC_CYCLE_STEP_ID'))  define('_LC_CYCLE_STEP_ID', 'Identifiant &eacute;tape de cycle de vie');
 if (!defined('_COLLECTION_IDENTIFIER'))  define('_COLLECTION_IDENTIFIER', 'identifiant de la collection');
 if (!defined('_LC_CYCLE_STEPS_LIST'))  define('_LC_CYCLE_STEPS_LIST', 'Liste des &eacute;tapes de cycle de vie');
 if (!defined('_ALL_LC_CYCLE_STEPS'))  define('_ALL_LC_CYCLE_STEPS', 'Tout afficher');
@@ -39,8 +40,8 @@ if (!defined('_POLICY_ID'))  define('_POLICY_ID', 'Identifiant de la politique d
 if (!defined('_CYCLE_STEP_ID'))  define('_CYCLE_STEP_ID', 'Identifiant de l&rsquo;etape de cycle de vie ');
 if (!defined('_CYCLE_STEP_DESC'))  define('_CYCLE_STEP_DESC', 'Description de l&rsquo;&eacute;tape de cycle de vie');
 if (!defined('_STEP_OPERATION'))  define('_STEP_OPERATION', 'Action sur les &eacute;tapes de cycle de vie');
-if (!defined('_IS_ALLOW_FAILURE'))  define('_IS_ALLOW_FAILURE', 'Permettre des drapeaux &eacute;chec');
-if (!defined('_IS_MUST_COMPLETE'))  define('_IS_MUST_COMPLETE', 'IS_MUST_COMPLETE');
+if (!defined('_IS_ALLOW_FAILURE'))  define('_IS_ALLOW_FAILURE', 'Permettre des &eacute;checs');
+if (!defined('_IS_MUST_COMPLETE'))  define('_IS_MUST_COMPLETE', 'Doit &ecirc;tre complet');
 if (!defined('_PREPROCESS_SCRIPT'))  define('_PREPROCESS_SCRIPT', 'Script de pr&eacute;-traitement');
 if (!defined('_POSTPROCESS_SCRIPT'))  define('_POSTPROCESS_SCRIPT', 'Script de post-traitement');
 if (!defined('_LC_CYCLE_STEP_ADDITION'))  define('_LC_CYCLE_STEP_ADDITION', 'Ajouter une &eacute;tape de cycle de vie');
@@ -65,6 +66,9 @@ if (!defined('_LC_CYCLE_ADDED'))  define('_LC_CYCLE_ADDED', 'Cycle de vie ajout&
 if (!defined('_LC_CYCLE_UPDATED'))  define('_LC_CYCLE_UPDATED', 'Cycle de vie mis à jour');
 if (!defined('_LC_CYCLE_DELETED'))  define('_LC_CYCLE_DELETED', 'Cycle de vie supprim&eacute;');
 if (!defined('_LC_CYCLE_MODIFICATION'))  define('_LC_CYCLE_MODIFICATION', 'Modification du cycle de vie');
+if (!defined('_PB_WITH_WHERE_CLAUSE')) define( '_PB_WITH_WHERE_CLAUSE', 'Clause where mal d&eacute;finie');
+if (!defined('_WHERE_CLAUSE_NOT_SECURE')) define( '_WHERE_CLAUSE_NOT_SECURE', 'Clause where mal non s&eacute;curis&eacute;');
+if (!defined('_CANNOT_DELETE_CYCLE_ID')) define( '_CANNOT_DELETE_CYCLE_ID', 'Impossible de supprimer le cycle');
 
 /*************CYCLE POLICIES*************************************/
 if (!defined('_LC_POLICIES'))  define('_LC_POLICIES', '');
@@ -93,5 +97,6 @@ if (!defined('_PDI_COMMENT_HISTORY'))  define('_PDI_COMMENT_HISTORY', 'Preservat
 
 /*************OTHER*************************************/
 if (!defined('_DOCS')) define( '_DOCS', 'Documents');
+if (!defined('_LINK_EXISTS'))  define('_LINK_EXISTS', 'Un lien avec un autre objet existe');
 
 ?>
