@@ -32,10 +32,6 @@
 
 // To activate de debug mode of the class
 $_ENV['DEBUG'] = false;
-/*
-define("_CODE_SEPARATOR","/");
-define("_CODE_INCREMENT",1);
-*/
 
 // Loads the required class
 try {
@@ -49,7 +45,6 @@ try {
 } catch (Exception $e){
     echo $e->getMessage().' // ';
 }
-
 
 /**
 * @brief  Controler of the usergroup object
@@ -239,25 +234,172 @@ class usergroups_controler extends ObjectControler implements ObjectControlerIF
         return $services;
     }
 
+
     /**
     * Saves in the database a usergroup object
     *
-    * @param  $group usergroups object to be saved
-    * @return bool true if the save is complete, false otherwise
+    * @param  $group usergroup object to be saved
+    * @param  $security Security access data, array(
+    *                                                   'COLL_ID' => collection identifier,
+    *                                                   'WHERE_CLAUSE' => where clause on the view,
+    *                                                   'COMMENT' => comment on the access,
+    *                                                   'WHERE_TARGET' => target view (DOC = view of the collection),
+    *                                                   'RIGHTS_BITMASK' => Access bitmask = rights allowed for the access on the where target,
+    *                                                   'START_DATE' => Start date of the access (NOT FULLY IMPLEMENTED YET),
+    *                                                   'STOP_DATE' => Start date of the access (NOT FULLY IMPLEMENTED YET)
+    *                                               )
+    * @param  $services Array of services identifier
+    * @param  $mode Mode (add or up)
+    * @param  $params More parameters, array('modules_services'             => $_SESSION['modules_services'] type array,
+    *                                                 'log_group_up'         => 'true' / 'false': log group modification ,
+    *                                                 'log_group_add'        => 'true' / 'false': log group addition ,
+    *                                                 'databasetype'        => Type of the database ('POSTGRESQL', ...)
+    *                                       )
+    * @return array (   'status' => 'ok' / 'ko',
+    *                   'value'  => Usergroup identifier or empty in case of error,
+    *                   'error'  => Error message, defined only in case of error
     */
-    public function save($group)
-    {
-        if(!isset($group) )
-            return false;
+    public function save($group, $security = array(),$services = array(), $mode = '', $params = array()) {
 
+        $control = array();
+        $sec_ctrl = new SecurityControler();
+        $func = new functions();
+        // If usergroup not defined or empty, return an error
+        if(!isset($group) || empty($group)) {
+            $control = array('status' => 'ko', 'value' => '', 'error' => _GROUP_EMPTY);
+            return $control;
+        }
+        // If mode not up or add, return an error
+        if(!isset($mode) || empty($mode) || ($mode <> 'add' && $mode <> 'up' ) ){
+            $control = array('status' => 'ko', 'value' => '', 'error' => _MODE.' '._UNKNOWN);
+            return $control;
+        }
+        $group = self::isAGroup($group);
         self::set_foolish_ids(array('group_id'));
         self::set_specific_id('group_id');
-        if(self::groupExists($group->group_id))
-            return self::update($group);
-        else
-            return self::insert($group);
 
-        return false;
+        // Data checks
+        $control = self::control($group, $security,$services, $mode, $params);
+
+        if($control['status'] == 'ok') {
+            $sec_ctrl->deleteForGroup($group->group_id);
+
+            for($i=0; $i < count($security ); $i++){
+                if($security[$i] <> ""){
+                    $values = array('group_id' => $group->group_id,
+                                    'coll_id' =>$func->protect_string_db($security[$i]['COLL_ID']),
+                                    'where_clause' => $func->protect_string_db($security[$i]['WHERE_CLAUSE']),
+                                    'maarch_comment' => $func->protect_string_db($security[$i]['COMMENT']),
+                                    'where_target' => $func->protect_string_db($security[$i]['WHERE_TARGET']));
+
+                    $bitmask = '0';
+                    if(isset($security[$i]['RIGHTS_BITMASK']) && !empty($security[$i]['RIGHTS_BITMASK'])){
+                        $bitmask = (string) $security[$i]['RIGHTS_BITMASK'];
+                    }
+                    $values['rights_bitmask'] = $bitmask;
+
+                    if(isset($security[$i]['START_DATE']) && !empty($security[$i]['START_DATE'])){
+                        $values['mr_start_date'] = $func->format_date_db($security[$i]['START_DATE']);
+                    }
+                    if(isset($security[$i]['STOP_DATE']) && !empty($security[$i]['STOP_DATE'])){
+                        $values['mr_stop_date'] = $func->format_date_db($security[$i]['STOP_DATE']);
+                    }
+
+                    $sec = new SecurityObj();
+                    $sec->setArray($values);
+                    $sec_ctrl->save($sec);
+                }
+            }
+            self::deleteServicesForGroup($group->group_id);
+            for($i=0; $i<count($services); $i++){
+                if(!empty($services[$i])){
+                    self::insertServiceForGroup($group->group_id, $services[$i]);
+                }
+            }
+            $core = new core_tools();
+
+            $_SESSION['service_tag'] = 'gtoup_'.$mode;
+            $core->execute_modules_services($params['modules_services'], 'groups_add_db', 'include');
+
+            if($mode == 'up') {
+                //Update existing group
+                if(self::update($group)) {
+                    $control = array('status' => 'ok', 'value' => $group->group_id);
+                    //log
+                    if($params['log_group_up'] == 'true') {
+                        $history = new history();
+                        $history->add(USERGROUPS_TABLE, $group->group_id,'UP',_GROUP_UPDATE.' : '.$group->group_id, $params['databasetype']);
+                    }
+                } else {
+                    $control = array('status' => 'ko', 'value' => '', 'error' => _PB_WITH_GROUP_UPDATE);
+                }
+            }
+            else { //mode == add
+                if(self::insert($group)) {
+                    $control = array('status' => 'ok', 'value' => $group->group_id);
+                    //log
+                    if($params['log_group_add'] == 'true') {
+                        $history = new history();
+                        $history->add(USERGROUPS_TABLE, $group->group_id,'ADD',_GROUP_ADDED.' : '.$group->group_id, $params['databasetype']);
+                    }
+                } else {
+                    $control = array('status' => 'ko', 'value' => '', 'error' => _PB_WITH_USERGROUP);
+                }
+            }
+        }
+        unset($_SESSION['service_tag']);
+        return $control;
+    }
+
+    /**
+    * Control the data of usergroups object
+    *
+    * @param  $group Usergroups object
+    * @param  $security Security access data
+    * @param  $services Array of services identifier
+    * @param  $mode Mode (add or up)
+    * @param  $params More parameters, array('modules_services'             => $_SESSION['modules_services'] type array,
+    *                                                 'log_group_up'         => 'true' / 'false': log group modification ,
+    *                                                 'log_group_add'        => 'true' / 'false': log group addition ,
+    *                                                 'databasetype'        => Type of the database ('POSTGRESQL', ...)
+    *                                       )
+    * @return array (   'status' => 'ok' / 'ko',
+    *                   'value'  => Usergroup identifier or empty in case of error,
+    *                   'error'  => Error message, defined only in case of error
+    */
+    private function control($group, $security, $services,$mode, $params=array()) {
+        $error = "";
+        $func = new functions();
+
+        $group->group_id=$func->protect_string_db($func->wash($group->group_id, "no", _THE_GROUP, 'yes', 0, 32));
+
+        if(isset($group->group_desc) && !empty($group->group_desc)){
+            $group->group_desc  =  $func->protect_string_db($func->wash($group->group_desc, "no", _GROUP_DESC, 'yes', 0, 255));
+        }
+
+        if (count($security) < 1  && count($services) < 1){
+            $func->add_error(_THE_GROUP.' '._NO_SECURITY_AND_NO_SERVICES, "");
+        }
+
+        if($mode == "add" && self::groupExists($group->group_id)){
+            $func->add_error($group->group_id." "._ALREADY_EXISTS."<br />");
+        }
+
+        $_SESSION['service_tag'] = 'group_check';
+        $core = new core_tools();
+        $core->execute_modules_services($params['modules_services'], 'group_check', "include");
+
+        $error .= $_SESSION['error'];
+        //TODO:rewrite wash to return errors without html and not in the session
+        $error = str_replace("<br />", "#", $error);
+        $return = array();
+        if(!empty($error)) {
+                $return = array("status" => "ko", "value" => $group->group_id, "error" => $error);
+        } else {
+            $return = array("status" => "ok", "value" => $group->group_id);
+        }
+        unset($_SESSION['service_tag']);
+        return $return;
     }
 
     /**
@@ -288,23 +430,58 @@ class usergroups_controler extends ObjectControler implements ObjectControlerIF
     * @param  $group usergroup object
     * @return bool true if the deletion is complete, false otherwise
     */
-    public function delete($group)
+    public function delete($group, $params = array())
     {
+        $control = array();
+        if(!isset($group) || empty($group)) {
+            $control = array('status' => 'ko', 'value' => '', 'error' => _GROUP_EMPTY);
+            return $control;
+        }
+        $group = self::isAGroup($group);
+        if(!self::groupExists($group->group_id)) {
+            $control = array('status' => 'ko', 'value' => '', 'error' => _GROUP_NOT_EXISTS);
+            return $control;
+        }
+
         self::set_foolish_ids(array('group_id'));
         self::set_specific_id('group_id');
 
         $group_id = $group->__get('group_id');
         $ok = self::advanced_delete($group);
-        if($ok)
+        if($ok){
             $ok = self::cleanUsergroupContent($group_id);
+        }
+        else{
+            $control = array('status' => 'ko', 'value' => '', 'error' => _IMPOSSIBLE_TO_DELETE_USER);
+        }
 
-        if($ok)
+        if($ok ){
             $ok = self::deleteServicesForGroup($group_id);
+        }
+        elseif(!isset($control['status']) || $control['status'] <> 'ko' ){
+            $control = array('status' => 'ko', 'value' => '', 'error' => _PB_WITH_USERGROUP_CONTENT_CLEANING);
+        }
 
-        if($ok)
-            $ok = SecurityControler::deleteForGroup($group_id);
+        if($ok){
+            $sec_ctrl = new SecurityControler();
+            $ok = $sec_ctrl->deleteForGroup($group_id);
+        }
+        elseif(!isset($control['status']) || $control['status'] <> 'ko' ){
+            $control = array('status' => 'ko', 'value' => '', 'error' => _PB_WITH_USERGROUP_CONTENT_CLEANING);
+        }
 
-        return $ok;
+        if(!$ok && (!isset($control['status']) || $control['status'] <> 'ko' )){
+            $control = array('status' => 'ko', 'value' => '', 'error' => _PB_WITH_SECURITY_CLEANING);
+        }
+
+        if(isset($control['status']) && $control['status'] == 'ok'){
+            if(isset($params['log_group_del']) && ($params['log_group_del'] == "true" || $params['log_group_del'] == true)) {
+                $history = new history();
+                $history->add(USERGROUPS_TABLE, $group->group_id, "DEL", _DELETED_GROUP." : ".$group->group_id, $params['databasetype']);
+            }
+        }
+
+        return $control;
     }
 
     /**
@@ -340,11 +517,27 @@ class usergroups_controler extends ObjectControler implements ObjectControlerIF
     * @param  $group usergroup object
     * @return bool true if the disabling is complete, false otherwise
     */
-    public function disable($group)
+    public function disable($group, $params = array())
     {
+        $control = array();
+        if(!isset($group) || empty($group)) {
+            $control = array('status' => 'ko', 'value' => '', 'error' => _GROUP_EMPTY);
+            return $control;
+        }
+        $group = self::isAGroup($group);
         self::set_foolish_ids(array('group_id'));
         self::set_specific_id('group_id');
-        return self::advanced_disable($group);
+
+        if(self::advanced_disable($group)) {
+            $control = array('status' => 'ok', 'value' => $group->group_id);
+            if(isset($params['log_group_disabled']) && ($params['log_group_disabled'] == 'true' || $params['log_group_disabled'] == true)) {
+                $history = new history();
+                $history->add(USERGROUPS_TABLE, $group->group_id, "BAN",_SUSPENDED_GROUP.' : '.$group->group_id, $params['databasetype']);
+            }
+        } else {
+            $control = array('status' => 'ko', 'value' => '', 'error' => _PB_WITH_GROUP_ID);
+        }
+        return $control;
     }
 
     /**
@@ -353,11 +546,26 @@ class usergroups_controler extends ObjectControler implements ObjectControlerIF
     * @param  $group usergroup object
     * @return bool true if the enabling is complete, false otherwise
     */
-    public function enable($group)
+    public function enable($group, $params=array())
     {
+        $control = array();
+        if(!isset($group) || empty($group)) {
+            $control = array('status' => 'ko', 'value' => '', 'error' => _GROUP_EMPTY);
+            return $control;
+        }
+        $group = self::isAGroup($group);
         self::set_foolish_ids(array('group_id'));
         self::set_specific_id('group_id');
-        return self::advanced_enable($group);
+        if(self::advanced_enable($group)) {
+            $control = array('status' => 'ok', 'value' => $group->group_id);
+            if(isset($params['log_group_enabled']) && ($params['log_group_enabled'] == 'true' || $params['log_group_enabled'] == true)){
+                $history = new history();
+                $history->add(USERGROUPS_TABLE, $group->group_id, "VAL",_AUTORIZED_GROUP.' : '.$group->group_id, $params['databasetype']);
+            }
+        } else {
+            $control = array('status' => 'ko', 'value' => '', 'error' => _PB_WITH_GROUP_ID);
+        }
+        return $control;
     }
 
     /**
@@ -497,6 +705,27 @@ class usergroups_controler extends ObjectControler implements ObjectControlerIF
         $nb = self::$db->nb_result();
         self::$db->disconnect();
         return $nb;
+    }
+
+     /**
+    * Fill a group object with an object if it's not a group
+    *
+    * @param  $object ws group object
+    * @return object usergroups
+    */
+    private function isAGroup($object) {
+        if(get_class($object) <> "usergroups") {
+            $func = new functions();
+            $groupObject = new usergroups();
+            $array = array();
+            $array = $func->object2array($object);
+            foreach(array_keys($array) as $key) {
+                $userObject->$key = $array[$key];
+            }
+            return $groupObject;
+        } else {
+            return $object;
+        }
     }
 }
 ?>

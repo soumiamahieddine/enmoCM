@@ -543,7 +543,7 @@ class security extends dbquery
         $flag = false;
         for($i=0; $i<count($_SESSION['user']['security']);$i++)
         {
-            if(($_SESSION['user']['security'][$i]['coll_id'] == $coll_id)  && $_SESSION['user']['security'][$i][$action] == 'Y')
+            if((isset($_SESSION['user']['security'][$i]['coll_id']) && $_SESSION['user']['security'][$i]['coll_id'] == $coll_id)  && $_SESSION['user']['security'][$i][$action] == 'Y')
             {
                 $flag = true;
             }

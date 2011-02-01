@@ -175,7 +175,7 @@ class users_controler extends ObjectControler implements ObjectControlerIF{
                         $history->add(USERS_TABLE, $user->user_id,'ADD',_USER_ADDED.' : '.$user->user_id, $params['databasetype']);
                     }
                 } else {
-                    $control = array('status' => 'ko', 'value' => '', 'error' => _PB_WITH_DOCSERVER);
+                    $control = array('status' => 'ko', 'value' => '', 'error' => _PB_WITH_USER);
                 }
             }
         }
