@@ -54,7 +54,7 @@ foreach($entities as $entity)
     if(stripos($entity, $_REQUEST['what']) === 0)
     {
         echo "<li>".$entity."</li>\n";
-        if($flagAuthView)
+        if(isset($flagAuthView) && $flagAuthView)
         {
             echo "<li>...</li>\n";
             break;

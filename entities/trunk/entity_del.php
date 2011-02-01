@@ -23,7 +23,7 @@ if(isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true")
     $init = true;
 }
 $level = "";
-if(isset($_REQUEST['level']) && $_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1)
+if(isset($_REQUEST['level']) && ($_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1))
 {
     $level = $_REQUEST['level'];
 }
@@ -55,7 +55,7 @@ else
 {
     $s_id = "";
 }
-if($_REQUEST['valid'])
+if(isset($_REQUEST['valid']))
 {
     $documents = true;
     if(!empty($_REQUEST['doc_entity_id']))

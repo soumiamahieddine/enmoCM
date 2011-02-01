@@ -188,7 +188,8 @@ class EntityControler
             return null;
 
         self::connect();
-        $query = "select entity_id, user_role, primary_entity from ".self::$users_entities_table." where user_id = '".functions::protect_string_db($user_id)."'";
+        $func = new functions();
+        $query = "select ue.entity_id, ue.user_role, ue.primary_entity from ".self::$users_entities_table." ue, ".self::$entities_table." u where ue.user_id = '".$func->protect_string_db($user_id)."' and ue.entity_id = u.entity_id and u.enabled = 'Y'";
 
         try{
             if($_ENV['DEBUG']){echo $query.' // ';}
@@ -546,11 +547,12 @@ class EntityControler
 
         self::connect();
         $ok = true;
+        $func = new functions();
         for($i=0; $i < count($array ); $i++)
         {
             if($ok)
             {
-                $query = "INSERT INTO ".self::$users_entities_table." (user_id, entity_id, primary_entity, user_role) VALUES ('".functions::protect_string_db($user_id)."', '".functions::protect_string_db($array[$i]['ENTITY_ID'])."', '".functions::protect_string_db($array[$i]['PRIMARY'])."', '".functions::protect_string_db($array[0]['ROLE'])."')";
+                $query = "INSERT INTO ".self::$users_entities_table." (user_id, entity_id, primary_entity, user_role) VALUES ('".$func->protect_string_db($user_id)."', '".$func->protect_string_db($array[$i]['ENTITY_ID'])."', '".$func->protect_string_db($array[$i]['PRIMARY'])."', '".$func->protect_string_db($array[0]['ROLE'])."')";
                 try{
                     if($_ENV['DEBUG'])
                         echo $query.' // ';

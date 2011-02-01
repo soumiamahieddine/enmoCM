@@ -40,12 +40,14 @@ try{
     echo $e->getMessage();
 }
 
+$entity_ctrl = new EntityControler();
+
 $values = get_values_in_array($_REQUEST['form_values']);
 
 $entity_id = get_value_fields($values, 'entity_id');
 $role = get_value_fields($values, 'role');
 
-$entity = EntityControler::get($entity_id);
+$entity = $entity_ctrl->get($entity_id);
 
 if(!isset($_SESSION['m_admin']['entity']['entities']))
     $_SESSION['m_admin']['entity']['entities'] = array();

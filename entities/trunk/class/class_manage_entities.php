@@ -60,7 +60,11 @@ class entity extends dbquery
             //$core_tools->execute_app_services($_SESSION['app_services'], 'entity_add', 'include');
         }
         $_SESSION['service_tag_form'] = 'formentity';
-        $except[] = $_SESSION['m_admin']['entity']['entityId'];
+        $except = array();
+        if(isset($_SESSION['m_admin']['entity']['entityId']))
+        {
+            $except[] = $_SESSION['m_admin']['entity']['entityId'];
+        }
         $entities = array();
         if($_SESSION['user']['UserId'] == 'superadmin')
         {
@@ -94,10 +98,10 @@ class entity extends dbquery
                     {?>
                         <input type="hidden" name="page" value="entity_add_db" />
                     <?php } ?>
-                    <input type="hidden" name="order" id="order" value="<?php echo $_REQUEST['order'];?>" />
-                    <input type="hidden" name="order_field" id="order_field" value="<?php echo $_REQUEST['order_field'];?>" />
-                    <input type="hidden" name="what" id="what" value="<?php echo $_REQUEST['what'];?>" />
-                    <input type="hidden" name="start" id="start" value="<?php echo $_REQUEST['start'];?>" />
+                    <input type="hidden" name="order" id="order" value="<?php if(isset($_REQUEST['order'])){ echo $_REQUEST['order'];}?>" />
+                    <input type="hidden" name="order_field" id="order_field" value="<?php if(isset($_REQUEST['order_field'])){ echo $_REQUEST['order_field'];}?>" />
+                    <input type="hidden" name="what" id="what" value="<?php if(isset($_REQUEST['what'])){echo $_REQUEST['what'];}?>" />
+                    <input type="hidden" name="start" id="start" value="<?php if(isset($_REQUEST['start'])){ echo $_REQUEST['start'];}?>" />
                     <?php
                     if($mode == 'up')
                     {
@@ -115,50 +119,50 @@ class entity extends dbquery
                         ?>
                         <p>
                             <label><?php  echo _ID;?> : </label>
-                            <input name="entityId" id="entityId" type="text" value="<?php  echo $_SESSION['m_admin']['entity']['entityId']; ?>" /><span class="red_asterisk">*</span>
+                            <input name="entityId" id="entityId" type="text" value="<?php if(isset($_SESSION['m_admin']['entity']['entityId'])){ echo $_SESSION['m_admin']['entity']['entityId'];} ?>" /><span class="red_asterisk">*</span>
                         </p>
                         <?php
                     }
                     ?>
                     <p>
                         <label><?php  echo _ENTITY_LABEL; ?> : </label>
-                        <input name="label"  type="text" id="label" value="<?php  echo $_SESSION['m_admin']['entity']['label']; ?>" /><span class="red_asterisk">*</span>
+                        <input name="label"  type="text" id="label" value="<?php if(isset($_SESSION['m_admin']['entity']['label'])){ echo $_SESSION['m_admin']['entity']['label'];} ?>" /><span class="red_asterisk">*</span>
                     </p>
                     <p>
                         <label><?php  echo _SHORT_LABEL; ?> : </label>
-                        <input name="short_label"  type="text" id="short_label" value="<?php  echo $_SESSION['m_admin']['entity']['short_label']; ?>" /><span class="red_asterisk">*</span>
+                        <input name="short_label"  type="text" id="short_label" value="<?php if(isset($_SESSION['m_admin']['entity']['label'])){ echo $_SESSION['m_admin']['entity']['short_label'];} ?>" /><span class="red_asterisk">*</span>
                     </p>
                     <p>
                         <label><?php  echo _ENTITY_ADR_1; ?> : </label>
-                        <input name="adrs1"  type="text" id="adrs1" value="<?php  echo $_SESSION['m_admin']['entity']['adrs1']; ?>" />
+                        <input name="adrs1"  type="text" id="adrs1" value="<?php if(isset( $_SESSION['m_admin']['entity']['adrs1'])){echo $_SESSION['m_admin']['entity']['adrs1']; }?>" />
                     </p>
                     <p>
                         <label><?php  echo _ENTITY_ADR_2; ?> : </label>
-                        <input name="adrs2"  type="text" id="adrs2" value="<?php  echo $_SESSION['m_admin']['entity']['adrs2']; ?>" />
+                        <input name="adrs2"  type="text" id="adrs2" value="<?php if(isset($_SESSION['m_admin']['entity']['adrs2'])){ echo $_SESSION['m_admin']['entity']['adrs2'];} ?>" />
                     </p>
                     <p>
                         <label><?php  echo _ENTITY_ADR_3; ?> : </label>
-                        <input name="adrs3"  type="text" id="adrs3" value="<?php  echo $_SESSION['m_admin']['entity']['adrs3']; ?>" />
+                        <input name="adrs3"  type="text" id="adrs3" value="<?php if(isset($_SESSION['m_admin']['entity']['adrs3'])){ echo $_SESSION['m_admin']['entity']['adrs3'];} ?>" />
                     </p>
                     <p>
                         <label><?php  echo _ENTITY_ZIPCODE; ?> : </label>
-                        <input name="zcode"  type="text" id="zcode" value="<?php  echo $_SESSION['m_admin']['entity']['zcode']; ?>" />
+                        <input name="zcode"  type="text" id="zcode" value="<?php if(isset($_SESSION['m_admin']['entity']['zcode'])){ echo $_SESSION['m_admin']['entity']['zcode'];} ?>" />
                     </p>
                     <p>
                         <label><?php  echo _ENTITY_CITY; ?> : </label>
-                        <input name="city"  type="text" id="city" value="<?php  echo $_SESSION['m_admin']['entity']['city']; ?>" />
+                        <input name="city"  type="text" id="city" value="<?php if(isset($_SESSION['m_admin']['entity']['city'])){ echo $_SESSION['m_admin']['entity']['city']; }?>" />
                     </p>
                     <p>
                         <label><?php  echo _ENTITY_COUNTRY; ?> : </label>
-                        <input name="country"  type="text" id="country" value="<?php  echo $_SESSION['m_admin']['entity']['country']; ?>" />
+                        <input name="country"  type="text" id="country" value="<?php if(isset($_SESSION['m_admin']['entity']['country'])){ echo $_SESSION['m_admin']['entity']['country'];} ?>" />
                     </p>
                     <p>
                         <label><?php  echo _ENTITY_EMAIL; ?> : </label>
-                        <input name="email"  type="text" id="email" value="<?php  echo $_SESSION['m_admin']['entity']['email']; ?>" />
+                        <input name="email"  type="text" id="email" value="<?php if(isset($_SESSION['m_admin']['entity']['email'])){ echo $_SESSION['m_admin']['entity']['email'];} ?>" />
                     </p>
                     <p>
                         <label><?php  echo _ENTITY_BUSINESS; ?> : </label>
-                        <input name="business"  type="text" id="business" value="<?php  echo $_SESSION['m_admin']['entity']['business']; ?>" />
+                        <input name="business"  type="text" id="business" value="<?php if(isset($_SESSION['m_admin']['entity']['business'])){ echo $_SESSION['m_admin']['entity']['business']; }?>" />
                     </p>
                     <p>
                         <label><?php  echo _ENTITY_TYPE;
@@ -183,7 +187,7 @@ class entity extends dbquery
                                 for ($i = 0; $i < count($typelist); $i++)
                                 {
                             ?>
-                                    <option value="<?php  echo $typelist[$i]['id']; ?>" <?php  if ($_SESSION['m_admin']['entity']['type'] == $typelist[$i]['id']){ echo 'selected="selected"'; } ?> ><?php  echo $typelist[$i]['label']; ?></option>
+                                    <option value="<?php  echo $typelist[$i]['id']; ?>" <?php  if (isset($_SESSION['m_admin']['entity']['type']) &&$_SESSION['m_admin']['entity']['type'] == $typelist[$i]['id']){ echo 'selected="selected"'; } ?> ><?php  echo $typelist[$i]['label']; ?></option>
                             <?php
                                 }
                             ?>
@@ -197,7 +201,7 @@ class entity extends dbquery
                             for($i=0; $i<count($entities);$i++)
                             {
                                 ?>
-                                <option value="<?php  echo $entities[$i]['ID'];?>" <?php  if($entities[$i]['ID']== $_SESSION['m_admin']['entity']['parent']){ echo 'selected="selected"'; }?> ><?php  echo $entities[$i]['LABEL'];?></option><?php
+                                <option value="<?php  echo $entities[$i]['ID'];?>" <?php  if(isset($_SESSION['m_admin']['entity']['parent']) && $entities[$i]['ID']== $_SESSION['m_admin']['entity']['parent']){ echo 'selected="selected"'; }?> ><?php  echo $entities[$i]['LABEL'];?></option><?php
                             }
                             ?>
                         </select><span class="red_asterisk" >*</span>
@@ -594,15 +598,15 @@ class entity extends dbquery
                 $db2->connect();
 
                 $db2->query('Update '.ENT_ENTITIES." set enabled = '".$this->protect_string_db(trim($action))."' where entity_id = '".$this->protect_string_db(trim($line->entity_id))."'");
-                if($_SESSION['history'][hist] == "true")
+                if($_SESSION['history'][$hist] == "true")
                 {
                     require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
                     $users = new history();
-                    $users->add(ENT_ENTITIES, $line->entity_id, $HistKey, $HistLabel." : ".$line->entity_id, $_SESSION['config']['databasetype']);
+                    $users->add(ENT_ENTITIES, $line->entity_id, $histKey, $histLabel." : ".$line->entity_id, $_SESSION['config']['databasetype']);
                 }
 
                 $count++;
-
+                $db2->connect();
                 $db2->query('select entity_id from '.ENT_ENTITIES." where parent_entity_id = '".$this->protect_string_db(trim($line->entity_id))."'");
                 if($db2->nb_result() > 0)
                 {
@@ -680,6 +684,7 @@ class entity extends dbquery
                     }
                 }
                 //header('location: '.$_SESSION['config']['businessappurl'].'index.php?page=manage_entities&module=entities&order='.$order."&order_field=".$order_field."&start=".$start."&what=".$what);
+
                 ?>
                 <script type="text/javascript">
                     window.top.location.href='<?php echo $_SESSION['config']['businessappurl'].'index.php?page=manage_entities&module=entities&order='.$order."&order_field=".$order_field."&start=".$start."&what=".$what;?>';
@@ -739,42 +744,42 @@ class entity extends dbquery
         {
             $_SESSION['error'].= _SHORT_LABEL_MISSING."<br/>";
         }
-
+        $_SESSION['m_admin']['entity']['adrs1'] = '';
         if(isset($_REQUEST['adrs1']) && !empty($_REQUEST['adrs1']))
         {
             $_SESSION['m_admin']['entity']['adrs1'] = $this->wash($_REQUEST['adrs1'], "no", _ENTITY_ADR_1, 'yes', 0, 255);
         }
-
+        $_SESSION['m_admin']['entity']['adrs2'] = '';
         if(isset($_REQUEST['adrs2']) && !empty($_REQUEST['adrs2']))
         {
             $_SESSION['m_admin']['entity']['adrs2'] = $this->wash($_REQUEST['adrs2'], "no", _ENTITY_ADR_2, 'yes', 0, 255);
         }
-
+        $_SESSION['m_admin']['entity']['adrs3'] = '';
         if(isset($_REQUEST['adrs3']) && !empty($_REQUEST['adrs3']))
         {
             $_SESSION['m_admin']['entity']['adrs3'] = $this->wash($_REQUEST['adrs3'], "no", _ENTITY_ADR_3, 'yes', 0, 255);
         }
-
+        $_SESSION['m_admin']['entity']['zcode'] = '';
         if(isset($_REQUEST['zcode']) && !empty($_REQUEST['zcode']))
         {
             $_SESSION['m_admin']['entity']['zcode'] = $this->wash($_REQUEST['zcode'], "no", _ENTITY_ZIPCODE, 'yes', 0, 32);
         }
-
+         $_SESSION['m_admin']['entity']['city'] = '';
         if(isset($_REQUEST['city']) && !empty($_REQUEST['city']))
         {
             $_SESSION['m_admin']['entity']['city'] =  $this->wash($_REQUEST['city'], "no", _ENTITY_CITY, 'yes', 0, 255);
         }
-
+        $_SESSION['m_admin']['entity']['country'] = '';
         if(isset($_REQUEST['country']) && !empty($_REQUEST['country']))
         {
             $_SESSION['m_admin']['entity']['country'] =$this->wash($_REQUEST['country'], "no", _ENTITY_COUNTRY, 'yes', 0, 255);
         }
-
+        $_SESSION['m_admin']['entity']['email'] = '';
         if(isset($_REQUEST['email']) && !empty($_REQUEST['email']))
         {
             $_SESSION['m_admin']['entity']['email'] = $this->wash($_REQUEST['email'], "mail", _ENTITY_EMAIL, 'yes', 0, 255);
         }
-
+        $_SESSION['m_admin']['entity']['business'] = '';
         if(isset($_REQUEST['business']) && !empty($_REQUEST['business']))
         {
             $_SESSION['m_admin']['entity']['business'] = $this->wash($_REQUEST['business'], "no", _ENTITY_BUSINESS, 'yes', 0, 32);
@@ -1297,8 +1302,8 @@ class entity extends dbquery
                 ?>
                 <br/>
                 <p class="buttons">
-                    <input type="submit" value="<?php echo _DEL_AND_REAFFECT;?>" name="valid" class="button" onclick="return(confirm('<?php  echo _REALLY_DELETE;  if($page_name == "users"){ echo $complete_name;} else { echo " ".$admin_id; }?> ?\n\r\n\r<?php  echo _DEFINITIVE_ACTION; ?>'));"/>
-                    <input type="button" value="<?php echo _CANCEL;?>" onclick="window.location.href='<?php echo $_SESSION['config']['businessappurl'].'index.php?page=manage_entities&module=entities&order='.$order."&order_field=".$order_field."&start=".$start."&what=".$what;?>';"" class="button" />
+                    <input type="submit" value="<?php echo _DEL_AND_REAFFECT;?>" name="valid" class="button" onclick="return(confirm('<?php  echo _REALLY_DELETE;  if(isset($page_name) && $page_name == "users"){ echo $complete_name;} elseif(isset($admin_id)){ echo " ".$admin_id; }?> ?\n\r\n\r<?php  echo _DEFINITIVE_ACTION; ?>'));"/>
+                    <input type="button" value="<?php echo _CANCEL;?>" onclick="window.location.href='<?php echo $_SESSION['config']['businessappurl'].'index.php?page=manage_entities&module=entities&order='.$_REQUEST['order']."&order_field=".$_REQUEST['order_field']."&start=".$_REQUEST['start']."&what=".$_REQUEST['what'];?>';"" class="button" />
                 </p>
             </form>
             <?php

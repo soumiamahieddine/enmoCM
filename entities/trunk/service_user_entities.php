@@ -1,15 +1,20 @@
 <?php
 require_once('modules/entities/class/EntityControler.php');
-if($_SESSION['service_tag'] == 'user_init')
+$entity_ctrl = new EntityControler();
+$tmp_array = array();
+if($_SESSION['service_tag'] == 'user_init' && isset($_SESSION['m_admin']['users']['user_id']))
 {
-    $_SESSION['m_admin']['nbentities'] = EntityControler::getEntitiesCount();
+    $_SESSION['m_admin']['nbentities'] = $entity_ctrl->getEntitiesCount();
 
-    $tmp_array = EntityControler::getUsersEntities($_SESSION['m_admin']['users']['user_id']);
+    $tmp_array = $entity_ctrl->getUsersEntities($_SESSION['m_admin']['users']['user_id']);
     for($i=0; $i<count($tmp_array);$i++)
     {
-        $ent = EntityControler::get($tmp_array[$i]['ENTITY_ID']);
-        $tmp_array[$i]['LABEL'] = $ent->__get('entity_label');
-        $tmp_array[$i]['SHORT_LABEL'] = $ent->__get('short_label');
+        $ent = $entity_ctrl->get($tmp_array[$i]['ENTITY_ID']);
+        if(isset($ent))
+        {
+            $tmp_array[$i]['LABEL'] = $ent->__get('entity_label');
+            $tmp_array[$i]['SHORT_LABEL'] = $ent->__get('short_label');
+        }
     }
     $_SESSION['m_admin']['entity']['entities'] = $tmp_array;
     unset($tmp_array);
@@ -50,7 +55,7 @@ elseif($_SESSION['service_tag'] == 'user_check')
 }
 elseif($_SESSION['service_tag'] == 'user_add' || $_SESSION['service_tag'] == 'user_up')
 {
-    EntityControler::cleanUsersentities($_SESSION['m_admin']['users']['user_id'], 'user_id');
-    EntityControler::loadDbUsersentities($_SESSION['m_admin']['users']['user_id'], $_SESSION['m_admin']['entity']['entities']);
+    $entity_ctrl->cleanUsersentities($_SESSION['m_admin']['users']['user_id'], 'user_id');
+    $entity_ctrl->loadDbUsersentities($_SESSION['m_admin']['users']['user_id'], $_SESSION['m_admin']['entity']['entities']);
 }
 ?>
