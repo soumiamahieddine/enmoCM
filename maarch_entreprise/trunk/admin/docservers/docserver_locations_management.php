@@ -1,6 +1,6 @@
 <?php
 /* View */
-if($mode == "list") {
+if ($mode == "list") {
     list_show::admin_list(
                     $docserver_locations_list['tab'],
                     count($docserver_locations_list['tab']),
@@ -28,13 +28,13 @@ if($mode == "list") {
                     true,
                     $docserver_locations_list['autoCompletionArray']
                 );
-} elseif($mode == "up" || $mode == "add") {
+} elseif ($mode == "up" || $mode == "add") {
     ?>
     <h1><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=favicon.png" alt="" />
         <?php
-        if($mode == "add") {
+        if ($mode == "add") {
             echo _DOCSERVER_LOCATION_ADDITION;
-        } elseif($mode == "up") {
+        } elseif ($mode == "up") {
             echo _DOCSERVER_LOCATION_MODIFICATION;
         }
         ?>
@@ -42,14 +42,14 @@ if($mode == "list") {
     <div id="inner_content" class="clearfix" align="center">
         <br><br>
         <?php
-        if($state == false) {
+        if ($state == false) {
             echo "<br /><br />"._THE_DOCSERVER_LOCATION." "._UNKOWN."<br /><br /><br /><br />";
         } else {
             ?>
             <div id="inner_content" class="clearfix">
             <?php
-            if($mode == "up") {
-                if(count($docservers) > 0) {
+            if ($mode == "up") {
+                if (count($docservers) > 0) {
                 ?><div onclick="new Effect.toggle('users_list', 'blind', {delay:0.2});return false;" >
                     &nbsp;<img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=manage_doctypes_b.gif" alt="" /><i><?php  echo _SEE_DOCSERVERS_LOCATION;?></i> <img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=plus.png" alt="" />
                     <span class="lb1-details">&nbsp;</span></div>
@@ -69,7 +69,7 @@ if($mode == "list") {
                                     $color = ' class="col"';
 
                                     for($i=0;$i<count($docservers);$i++) {
-                                        if($color == ' class="col"') {
+                                        if ($color == ' class="col"') {
                                             $color = '';
                                         } else {
                                             $color = ' class="col"';
@@ -80,7 +80,7 @@ if($mode == "list") {
                                             <td style="width:25%;"><?php  echo $docservers[$i]->__get('device_label');?></td>
                                             <td style="width:25%;"><?php  echo $docservers[$i]->__get('docserver_type_id');?></td>
                                             <td ><?php
-                                        if(core_tools::test_service('admin_docservers', 'apps', false)) {?>
+                                        if (core_tools::test_service('admin_docservers', 'apps', false)) {?>
                                             <a class="change" href="<?php echo $_SESSION['config']['businessappurl'].'index.php?page=docservers_management_controler&amp;mode=up&amp;admin=docservers&amp;id='.$docservers[$i]->__get('docserver_id'); ?>"  title="<?php echo _GO_MANAGE_;?>"><i><?php echo _GO_MANAGE_DOCSERVER;?></i></a><?php }?></td>
                                         </tr>
                                     <?php
@@ -107,7 +107,7 @@ if($mode == "list") {
                 <input type="hidden" name="start" id="start" value="<?php echo $_REQUEST['start'];?>" />
                 <p>
                     <label for="id"><?php echo _DOCSERVER_LOCATION_ID; ?> : </label>
-                    <input name="id" type="text"  id="id" value="<?php echo functions::show($_SESSION['m_admin']['docserver_locations']['docserver_location_id']); ?>" <?php if($mode == "up") echo " readonly='readonly' class='readonly'";?>/><span class="red_asterisk">*</span>
+                    <input name="id" type="text"  id="id" value="<?php echo functions::show($_SESSION['m_admin']['docserver_locations']['docserver_location_id']); ?>" <?php if ($mode == "up") echo " readonly='readonly' class='readonly'";?>/><span class="red_asterisk">*</span>
                 </p>
                 <p class = "bulle">
                     <label for="ipv4"><?php echo _IPV4; ?> : </label>
@@ -134,11 +134,11 @@ if($mode == "list") {
                 </p>
                 <p class="buttons">
                     <?php
-                    if($mode == "up") {
+                    if ($mode == "up") {
                         ?>
                         <input class="button" type="submit" name="submit" value="<?php echo _MODIFY; ?>" />
                         <?php
-                    } elseif($mode == "add") {
+                    } elseif ($mode == "add") {
                         ?>
                         <input type="submit" class="button"  name="submit" value="<?php echo _ADD; ?>" />
                         <?php

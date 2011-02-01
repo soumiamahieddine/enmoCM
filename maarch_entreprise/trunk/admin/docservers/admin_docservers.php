@@ -35,13 +35,11 @@ $admin = new core_tools();
 $admin->test_admin('admin_docservers', 'apps');
 /****************Management of the location bar  ************/
 $init = false;
-if($_REQUEST['reinit'] == "true")
-{
+if(isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true") {
 	$init = true;
 }
 $level = "";
-if($_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1)
-{
+if(isset($_REQUEST['level']) && ($_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1)) {
 	$level = $_REQUEST['level'];
 }
 $page_path = $_SESSION['config']['businessappurl'].'index.php?page=admin_docservers&admin=docservers';
@@ -56,17 +54,17 @@ unset($_SESSION['m_admin']);
 	<h2 class="admin_subtitle block" ><?php  echo _ADMIN_DOCSERVERS;?></h2>
 	<div class="admin_item" id="admin_docservers_locations" title="<?php  echo _MANAGE_DOCSERVERS_LOCATIONS_DESC;?>" onclick="window.top.location='<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=docserver_locations_management_controler&mode=list&admin=docservers';">
 		<div class="sum_margin" >
-				<strong><?php  echo _MANAGE_DOCSERVERS_LOCATIONS;?></strong>
-				
+			<strong><?php  echo _MANAGE_DOCSERVERS_LOCATIONS;?></strong>
 		</div>
 	</div>
 	<div class="admin_item" id="admin_docservers" title="<?php  echo _MANAGE_DOCSERVERS_DESC;?>" onclick="window.top.location='<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=docservers_management_controler&mode=list&admin=docservers';">
 		<div class="sum_margin" >
-				<strong><?php  echo _MANAGE_DOCSERVERS;?></strong>
+			<strong><?php  echo _MANAGE_DOCSERVERS;?></strong>
 		</div>
 	</div>
 	<div class="admin_item" id="admin_docserver_types" title="<?php  echo _MANAGE_DOCSERVER_TYPES_DESC;?>" onclick="window.top.location='<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=docserver_types_management_controler&mode=list&admin=docservers';">
 		<div class="sum_margin" >
-				<strong><?php  echo _MANAGE_DOCSERVER_TYPES;?></strong>
+			<strong><?php  echo _MANAGE_DOCSERVER_TYPES;?></strong>
 		</div>
+	</div>
 </div>
