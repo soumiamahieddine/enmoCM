@@ -87,6 +87,7 @@ $history_user = '';
 $history_module= '';
 $history_datefin =  '';
 $history_datestart = '';
+$req = new request();
 
 if(isset($_REQUEST['search'])  ||
 (isset($_SESSION['m_admin']['history']['action']) && !empty($_SESSION['m_admin']['history']['action']))  ||
@@ -149,88 +150,84 @@ if(isset($_REQUEST['search'])  ||
         }
     }
 
-    if(isset($_REQUEST['datestart']) )
+    if(isset($_REQUEST['datestart']) || (isset( $_SESSION['m_admin']['history']['datestart']) && !empty($_SESSION['m_admin']['history']['datestart'])) )
     {
-        if(empty($_REQUEST['datestart']))
+        if(isset($_REQUEST['datestart']))
         {
-            $_SESSION['m_admin']['history']['datestart'] = '';
+            $_SESSION['m_admin']['history']['datestart'] = $_REQUEST['datestart'];
+        }
+
+        if( preg_match($pattern, $_SESSION['m_admin']['history']['datestart'])==false )
+        {
+            $_SESSION['error'] = _DATE.' '._WRONG_FORMAT;
         }
         else
         {
-            if( preg_match($pattern,$_REQUEST['datestart'])==false )
+            if($_SESSION['config']['databasetype'] == "POSTGRESQL" )
             {
-                $_SESSION['error'] = _DATE.' '._WRONG_FORMAT;
+                $history_datestart =  $_SESSION['m_admin']['history']['datestart'];
             }
             else
             {
-                $_SESSION['m_admin']['history']['datestart'] = $_REQUEST['datestart'];
-                if($_SESSION['config']['databasetype'] == "POSTGRESQL" && (isset($_REQUEST['datestart']) && !empty($_REQUEST['datestart'])))
-                {
-                    $history_datestart = $_REQUEST['datestart'];
-                }
-                else if(isset($_REQUEST['datestart']) && !empty($_REQUEST['datestart']))
-                {
-                    $history_datestart = str_replace('-','',$_REQUEST['datestart']);
-                }
-                $where .= " (".$_SESSION['tablename']['history'].".event_date >= '".$history_datestart."') and ";
+                $history_datestart = str_replace('-','', $_SESSION['m_admin']['history']['datestart']);
             }
+            $where .= " (".$req->extract_date($_SESSION['tablename']['history'].".event_date")." >= '".$history_datestart."') and ";
         }
+
     }
 
-    if(isset($_REQUEST['datefin']) )
+    if(isset($_REQUEST['datefin']) || (isset( $_SESSION['m_admin']['history']['datefin']) && !empty($_SESSION['m_admin']['history']['datefin'])) )
     {
-        if(empty($_REQUEST['datefin']))
+        if(isset($_REQUEST['datefin']))
         {
-            $_SESSION['m_admin']['history']['datefin'] = '';
+            $_SESSION['m_admin']['history']['datefin'] = $_REQUEST['datefin'];
+        }
+
+        if( preg_match($pattern, $_SESSION['m_admin']['history']['datefin'])==false )
+        {
+            $_SESSION['error'] = _DATE.' '._WRONG_FORMAT;
         }
         else
         {
-
-            if( preg_match($pattern,$_REQUEST['datefin'])==false  )
+            if($_SESSION['config']['databasetype'] == "POSTGRESQL" )
             {
-                $_SESSION['error'] = _DATE.' '._WRONG_FORMAT;
+                $history_datefin =  $_SESSION['m_admin']['history']['datefin'];
             }
             else
             {
-                $_SESSION['m_admin']['history']['datefin'] = $_REQUEST['datefin'];
-                if($_SESSION['config']['databasetype'] == "POSTGRESQL" && (isset($_REQUEST['datefin']) && !empty($_REQUEST['datefin'])))
-                {
-                    $history_datefin = $_REQUEST['datefin'];
-                }
-                else if(isset($_REQUEST['datefin']) && !empty($_REQUEST['datefin']))
-                {
-                    $history_datefin = str_replace('-','',$_REQUEST['datefin']);
-                }
-
-                $where .= " ( ".$_SESSION['tablename']['history'].".event_date <= '".$history_datefin."') and ";
+                $history_datefin = str_replace('-','', $_SESSION['m_admin']['history']['datefin']);
             }
+            $where .= " (".$req->extract_date($_SESSION['tablename']['history'].".event_date")." <= '".$history_datefin."') and ";
         }
+
     }
+
     $where = trim($where);
     $where = preg_replace('/and$/', '', $where);
 }
-    $select[$_SESSION['tablename']['history']] = array();
-    array_push($select[$_SESSION['tablename']['history']],"id","event_date","user_id", "table_name", 'event_type', "info" );
 
-    $select[$_SESSION['tablename']['users']] = array();
-    array_push($select[$_SESSION['tablename']['users']],"lastname","firstname" );
+$select[$_SESSION['tablename']['history']] = array();
+array_push($select[$_SESSION['tablename']['history']],"id","event_date","user_id", "table_name", 'event_type', "info" );
 
-    $list = new list_show();
-    $order = 'desc';
-    if(isset($_REQUEST['order']) && !empty($_REQUEST['order']))
-    {
-        $order = trim($_REQUEST['order']);
-    }
-    $field = 'event_date';
-    if(isset($_REQUEST['order_field']) && !empty($_REQUEST['order_field']))
-    {
-        $field = trim($_REQUEST['order_field']);
-    }
+$select[$_SESSION['tablename']['users']] = array();
+array_push($select[$_SESSION['tablename']['users']],"lastname","firstname" );
 
-    $orderstr = $list->define_order($order, $field);
-    $req = new request();
+$list = new list_show();
+$order = 'desc';
+if(isset($_REQUEST['order']) && !empty($_REQUEST['order']))
+{
+    $order = trim($_REQUEST['order']);
+}
+$field = 'event_date';
+if(isset($_REQUEST['order_field']) && !empty($_REQUEST['order_field']))
+{
+    $field = trim($_REQUEST['order_field']);
+}
 
-    $tab = $req->select($select, $where,$orderstr, $_SESSION['config']['databasetype'], $limit="500",true,$_SESSION['tablename']['history'],$_SESSION['tablename']['users'],"user_id");
+$orderstr = $list->define_order($order, $field);
+
+
+$tab = $req->select($select, $where,$orderstr, $_SESSION['config']['databasetype'], $limit="500",true,$_SESSION['tablename']['history'],$_SESSION['tablename']['users'],"user_id");
 
 for ($i=0;$i<count($tab);$i++)
 {
