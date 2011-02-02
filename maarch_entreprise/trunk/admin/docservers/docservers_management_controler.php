@@ -40,7 +40,7 @@ $mode = 'add';
 
 core_tools::load_lang(); // NOTE : core_tools is not a static class
 
-if(isset($_REQUEST['mode']) && !empty($_REQUEST['mode'])) {
+if (isset($_REQUEST['mode']) && !empty($_REQUEST['mode'])) {
 	$mode = $_REQUEST['mode'];
 } else {
 	$mode = 'list'; 
@@ -51,26 +51,26 @@ try {
 	require_once("core/class/docservers_controler.php");
 	require_once("core/class/docserver_locations_controler.php");
 	require_once("core/class/docserver_types_controler.php");
-	if($mode == 'list') {
+	if ($mode == 'list') {
 		require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");
 	}
 } catch (Exception $e) {
 	echo $e->getMessage();
 }
 
-if($mode == "up" || $mode =="add") {
+if ($mode == "up" || $mode =="add") {
 	$docserverLocationsArray = array();
 	$docserverLocationsArray = docserver_locations_controler::getAllId();
 	$docserverTypesArray = array();
 	$docserverTypesArray = docserver_types_controler::getAllId();
 }
 
-if(isset($_REQUEST['submit'])) {
+if (isset($_REQUEST['submit'])) {
 	// Action to do with db
 	validate_cs_submit($mode);
 } else {
 	// Display to do
-	if(isset($_REQUEST['id']) && !empty($_REQUEST['id']))
+	if (isset($_REQUEST['id']) && !empty($_REQUEST['id']))
 		$docserver_id = $_REQUEST['id'];
 	$state = true;
 	switch ($mode) {
@@ -120,11 +120,11 @@ function location_bar_management($mode) {
 	$page_ids = array('add' => 'docserver_add', 'up' => 'docserver_up', 'list' => 'docservers_list');
 
 	$init = false;
-	if(isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true") 
+	if (isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true") 
 		$init = true;
 
 	$level = "";
-	if(isset($_REQUEST['level']) && ($_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1))
+	if (isset($_REQUEST['level']) && ($_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1))
 		$level = $_REQUEST['level'];
 	
 	$page_path = $_SESSION['config']['businessappurl'].'index.php?page='.$pageName.'&admin=docservers&mode='.$mode;
@@ -164,7 +164,7 @@ function validate_cs_submit($mode) {
 	$control = array();
 	//var_dump($docservers);exit;
 	$control = docservers_controler::save($docservers, $mode);
-	if(!empty($control['error']) && $control['error'] <> 1) {
+	if (!empty($control['error']) && $control['error'] <> 1) {
 		// Error management depending of mode
 		$_SESSION['error'] = str_replace("#", "<br />", $control['error']);
 		put_in_session("status", $status);
@@ -172,7 +172,7 @@ function validate_cs_submit($mode) {
 		//var_dump($_SESSION['m_admin']['docservers']);
 		switch ($mode) {
 			case "up":
-				if(!empty($_REQUEST['id'])) {
+				if (!empty($_REQUEST['id'])) {
 					header("location: ".$_SESSION['config']['businessappurl']."index.php?page=".$pageName."&mode=up&id=".$_REQUEST['id']."&admin=docservers");
 				} else {
 					header("location: ".$_SESSION['config']['businessappurl']."index.php?page=".$pageName."&mode=list&admin=docservers&order=".$status['order']."&order_field=".$status['order_field']."&start=".$status['start']."&what=".$status['what']);
@@ -183,7 +183,7 @@ function validate_cs_submit($mode) {
 				exit;
 		}
 	} else {
-		if($mode == "add")
+		if ($mode == "add")
 			$_SESSION['error'] = _DOCSERVER_ADDED;
 		 else
 			$_SESSION['error'] = _DOCSERVER_UPDATED;
@@ -199,7 +199,7 @@ function validate_cs_submit($mode) {
 function display_up($docserver_id) {
 	$state = true;
 	$docservers = docservers_controler::get($docserver_id);
-	if(empty($docservers))
+	if (empty($docservers))
 		$state = false; 
 	else
 		put_in_session("docservers", $docservers->getArray()); 
@@ -212,7 +212,7 @@ function display_up($docserver_id) {
  */
 function display_add() {
 	$sessionName = "docservers";
-	if(!isset($_SESSION['m_admin'][$sessionName]))
+	if (!isset($_SESSION['m_admin'][$sessionName]))
 		init_session();
 }
 
@@ -230,9 +230,9 @@ function display_list() {
 	array_push($select[_DOCSERVERS_TABLE_NAME], $idName, "device_label", "docserver_type_id", "size_limit_number", "actual_size_number", "coll_id", "enabled");
 	$what = "";
 	$where ="";
-	if(isset($_REQUEST['what']) && !empty($_REQUEST['what'])) {
+	if (isset($_REQUEST['what']) && !empty($_REQUEST['what'])) {
 		$what = functions::protect_string_db($_REQUEST['what']);
-		if($_SESSION['config']['databasetype'] == "POSTGRESQL") {
+		if ($_SESSION['config']['databasetype'] == "POSTGRESQL") {
 			$where = $idName." ilike '".strtoupper($what)."%' ";
 		} else {
 			$where = $idName." like '".strtoupper($what)."%' ";
@@ -240,11 +240,11 @@ function display_list() {
 	}
 	// Checking order and order_field values
 	$order = 'asc';
-	if(isset($_REQUEST['order']) && !empty($_REQUEST['order'])) {
+	if (isset($_REQUEST['order']) && !empty($_REQUEST['order'])) {
 		$order = trim($_REQUEST['order']);
 	}
 	$field = $idName;
-	if(isset($_REQUEST['order_field']) && !empty($_REQUEST['order_field'])) {
+	if (isset($_REQUEST['order_field']) && !empty($_REQUEST['order_field'])) {
 		$field = trim($_REQUEST['order_field']);
 	}
 	$orderstr = list_show::define_order($order, $field);
@@ -303,11 +303,11 @@ function display_list() {
  */
 function display_del($docserver_id) {
 	$docservers = docservers_controler::get($docserver_id);
-	if(isset($docservers)) {
+	if (isset($docservers)) {
 		// Deletion
 		$control = array();
 		$control = docservers_controler::delete($docservers);
-		if(!empty($control['error']) && $control['error'] <> 1) {
+		if (!empty($control['error']) && $control['error'] <> 1) {
 			$_SESSION['error'] = str_replace("#", "<br />", $control['error']);
 		} else {
 			$_SESSION['error'] = _DOCSERVER_DELETED." ".$docserver_id;
@@ -328,11 +328,11 @@ function display_del($docserver_id) {
  */
 function display_enable($docserver_id) {
 	$docservers = docservers_controler::get($docserver_id);
-	if(isset($docservers)) {
-		// Disable
+	if (isset($docservers)) {
+		// Enable
 		$control = array();
 		$control = docservers_controler::enable($docservers);
-		if(!empty($control['error']) && $control['error'] <> 1) {
+		if (!empty($control['error']) && $control['error'] <> 1) {
 			$_SESSION['error'] = str_replace("#", "<br />", $control['error']);
 		} else {
 			$_SESSION['error'] = _DOCSERVER_ENABLED." ".$docserver_id;
@@ -353,7 +353,7 @@ function display_enable($docserver_id) {
  */
 function display_disable($docserver_id) {
 	$docservers = docservers_controler::get($docserver_id);
-	if(isset($docservers)) {
+	if (isset($docservers)) {
 		// Disable
 		docservers_controler::disable($docservers);
 		$_SESSION['error'] = _DOCSERVER_DISABLED." ".$docserver_id;

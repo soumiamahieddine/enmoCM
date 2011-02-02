@@ -1122,6 +1122,9 @@ if (!defined('_DOCSERVER_LOCATION_UPDATED'))  define('_DOCSERVER_LOCATION_UPDATE
 if (!defined('_DOCSERVER_LOCATION_ADDED'))  define('_DOCSERVER_LOCATION_ADDED', 'Lieu de stockage ajouté');
 if (!defined('_DOCSERVER_LOCATION_DELETED'))  define('_DOCSERVER_LOCATION_DELETED', 'Lieu de stockage supprimé');
 if (!defined('_IP_V4_ADRESS_NOT_VALID')) define('_IP_V4_ADRESS_NOT_VALID', 'Adresse IPV4 inaccessible');
+if (!defined('_IP_V4_FORMAT_NOT_VALID')) define('_IP_V4_FORMAT_NOT_VALID', 'Mauvais format adresse IPV4');
+if (!defined('_IP_V6_NOT_VALID')) define('_IP_V6_NOT_VALID', 'Mauvais format adresse IPV6');
+if (!defined('_MASK_NOT_VALID')) define('_MASK_NOT_VALID', 'Masque non valide');
 
 /************FAILOVER******************************/
 if (!defined('_FAILOVER'))  define('_FAILOVER', 'Reprise sur erreur');

@@ -30,35 +30,28 @@
 */
 
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
+require_once("core".DIRECTORY_SEPARATOR."core_tables.php");
 $db = new dbquery();
 $db->connect();
-if($_SESSION['config']['databasetype'] == "POSTGRESQL")
-{
-	$db->query("select docserver_location_id as tag from ".$_SESSION['tablename']['docserver_locations']." where docserver_location_id ilike '".$_REQUEST['what']."%' order by docserver_location_id");
-}
-else
-{
-	$db->query("select docserver_location_id as tag from ".$_SESSION['tablename']['docserver_locations']." where docserver_location_id like '".$_REQUEST['what']."%' order by docserver_location_id");
+if($_SESSION['config']['databasetype'] == "POSTGRESQL") {
+	$db->query("select docserver_location_id as tag from "._DOCSERVER_LOCATIONS_TABLE_NAME." where docserver_location_id ilike '".$_REQUEST['what']."%' order by docserver_location_id");
+} else {
+	$db->query("select docserver_location_id as tag from "._DOCSERVER_LOCATIONS_TABLE_NAME." where docserver_location_id like '".$_REQUEST['what']."%' order by docserver_location_id");
 }
 $listArray = array();
-while($line = $db->fetch_object())
-{
+while($line = $db->fetch_object()) {
 	array_push($listArray, $line->tag);
 }
 echo "<ul>\n";
 $authViewList = 0;
-
-foreach($listArray as $what)
-{
-	if($authViewList >= 10)
-	{
+$flagAuthView = false;
+foreach($listArray as $what) {
+	if($authViewList >= 10) {
 		$flagAuthView = true;
 	}
-    if(stripos($what, $_REQUEST['what']) === 0)
-    {
+    if(stripos($what, $_REQUEST['what']) === 0) {
         echo "<li>".$what."</li>\n";
-		if($flagAuthView)
-		{
+		if($flagAuthView) {
 			echo "<li>...</li>\n";
 			break;
 		}

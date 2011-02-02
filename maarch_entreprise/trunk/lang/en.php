@@ -1032,7 +1032,10 @@ if (!defined('_DOCSERVER_LOCATION_ADDITION'))  define('_DOCSERVER_LOCATION_ADDIT
 if (!defined('_DOCSERVER_LOCATION_ADDED'))  define('_DOCSERVER_LOCATION_ADDED', 'Docserver location added');
 if (!defined('_DOCSERVER_LOCATION_UPDATED'))  define('_DOCSERVER_LOCATION_UPDATED', 'Docserver location updated');
 if (!defined('_DOCSERVER_LOCATION_DELETED'))  define('_DOCSERVER_LOCATION_DELETED', 'Docserver location deleted');
-
+if (!defined('_IP_V4_ADRESS_NOT_VALID')) define('_IP_V4_ADRESS_NOT_VALID', 'IPV4 address not valid');
+if (!defined('_IP_V4_FORMAT_NOT_VALID')) define('_IP_V4_FORMAT_NOT_VALID', 'IPV4 address not valid');
+if (!defined('_IP_V6_NOT_VALID')) define('_IP_V4_FORMAT_NOT_VALID', 'IPV6 address not valid');
+if (!defined('_MASK_NOT_VALID')) define('_MASK_NOT_VALID', 'Mask not valid');
 
 /******************** Authentification method  ************/
 if (!defined('_STANDARD_LOGIN')) define( '_STANDARD_LOGIN', 'Standard authentification');

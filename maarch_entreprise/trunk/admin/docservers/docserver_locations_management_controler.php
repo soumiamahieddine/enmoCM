@@ -37,7 +37,8 @@ $idName = "docserver_location_id";
 
 $mode = 'add';
 
-core_tools::load_lang();
+$core = new core_tools();
+$core->load_lang();
 
 if (isset($_REQUEST['mode']) && !empty($_REQUEST['mode'])) {
 	$mode = $_REQUEST['mode'];
@@ -140,52 +141,27 @@ function validate_cs_submit($mode) {
 	$pageName = "docserver_locations_management_controler";
 	$tableName = "docserver_locations";
 	$idName = "docserver_location_id";
-	
 	$f=new functions();
-
+	$docserverLocationsControler = new docserver_locations_controler();
 	$docserver_locations = new docserver_locations();
-	if (isset($_REQUEST['id']) && !empty($_REQUEST['id'])) {
-		// Update, so values exist
-		$docserver_locations->docserver_location_id=$f->protect_string_db($f->wash($_REQUEST['id'], "nick", _THE_DOCSERVER_LOCATION_ID." ", "yes", 0, 32));
-	}
-	$docserver_locations->ipv4=$f->protect_string_db($f->wash($_REQUEST['ipv4'], "no", _IPV4." ", 'yes', 0, 255));
-	if (!docserver_locations_controler::ipv4Control($docserver_locations->ipv4)) {	
-		$_SESSION['error'] .= _IP_V4_FORMAT_NOT_VALID."<br>";
-	}
-	
-	/*if (!empty($_REQUEST['ipv4'])) {
-		if (!docserver_locations_controler::pingIpv4($docserver_locations->ipv4))
-			$_SESSION['error'] .= _IP_V4_ADRESS_NOT_VALID."<br>";
-	}*/
-		
-	$docserver_locations->ipv6=$f->protect_string_db($f->wash($_REQUEST['ipv6'], "no", _IPV6." ", 'no', 0, 255));
-	/*if (!docserver_locations_controler::ipv6Control($docserver_locations->ipv6)) {	
-		$_SESSION['error'] .= _IP_V6_NOT_VALID."<br>";
-	}*/
-	
-	$docserver_locations->net_domain=$f->protect_string_db($f->wash($_REQUEST['net_domain'], "no", _NET_DOMAIN." ", 'no', 0, 32));
-	$docserver_locations->mask=$f->protect_string_db($f->wash($_REQUEST['mask'], "no", _MASK." ", 'no', 0, 255));
-	if (!docserver_locations_controler::maskControl($docserver_locations->mask)) {	
-		$_SESSION['error'] .= _MASK_NOT_VALID."<br>";
-	}
-	$docserver_locations->net_link=$f->protect_string_db($f->wash($_REQUEST['net_link'], "no", _NET_LINK." ", 'no', 0, 255));
-
 	$status= array();
 	$status['order']=$_REQUEST['order'];
 	$status['order_field']=$_REQUEST['order_field'];
 	$status['what']=$_REQUEST['what'];
 	$status['start']=$_REQUEST['start'];
-	
-	//LKE = BULL ===== SPEC FONC : ==== Cycles de vie : docserver_locations (ID1)
-	if ($mode == "add" && docserver_locations_controler::docserverLocationExists($docserver_locations->docserver_location_id)) {	
-		$_SESSION['error'] = $docserver_locations->docserver_location_id." "._ALREADY_EXISTS."<br />";
-	}
-	
-	if (!empty($_SESSION['error'])) {
+	if (isset($_REQUEST['id'])) $docserver_locations->docserver_location_id = $_REQUEST['id'];
+	if (isset($_REQUEST['ipv4'])) $docserver_locations->ipv4 = $_REQUEST['ipv4'];
+	if (isset($_REQUEST['ipv6'])) $docserver_locations->ipv6 = $_REQUEST['ipv6'];
+	if (isset($_REQUEST['net_domain'])) $docserver_locations->net_domain = $_REQUEST['net_domain'];
+	if (isset($_REQUEST['mask'])) $docserver_locations->mask = $_REQUEST['mask'];
+	if (isset($_REQUEST['net_link'])) $docserver_locations->net_link = $_REQUEST['net_link'];
+	$control = array();
+	$control = $docserverLocationsControler->save($docserver_locations, $mode);	
+	if (!empty($control['error']) && $control['error'] <> 1) {
 		// Error management depending of mode
+		$_SESSION['error'] = str_replace("#", "<br />", $control['error']);
 		put_in_session("status",$status);
 		put_in_session("docserver_locations",$docserver_locations->getArray());
-		
 		switch ($mode) {
 			case "up":
 				if (!empty($_REQUEST['id'])) {
@@ -199,19 +175,6 @@ function validate_cs_submit($mode) {
 				exit;
 		}
 	} else {
-		// Saving given object
-		//$f->show_array($docserver_locations);
-		$docserver_locations=docserver_locations_controler::save($docserver_locations);
-		//history
-		if ($_SESSION['history']['docserver_locationsadd'] == "true" && $mode == "add") {
-			require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
-			$history = new history();
-			$history->add(_DOCSERVER_LOCATIONS_TABLE_NAME, $_REQUEST['id'], "ADD",_DOCSERVER_LOCATION_ADDED." : ".$_REQUEST['id'], $_SESSION['config']['databasetype']);
-		} elseif ($_SESSION['history']['docserver_locationsadd'] == "true" && $mode == "up") {
-			require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
-			$history = new history();
-			$history->add(_DOCSERVER_LOCATIONS_TABLE_NAME, $_REQUEST['id'], "UP",_DOCSERVER_LOCATION_UPDATED." : ".$_REQUEST['id'], $_SESSION['config']['databasetype']);
-		}
 		if ($mode == "add")
 			$_SESSION['error'] =  _DOCSERVER_LOCATION_ADDED;
 		 else
@@ -228,27 +191,24 @@ function validate_cs_submit($mode) {
 function display_up($docserver_location_id) {
 	$docservers = array();
 	$state=true;
-	$docserver_locations = docserver_locations_controler::get($docserver_location_id);
+	$docserverLocationsControler = new docserver_locations_controler();
+	$docserversControler = new docservers_controler();
+	$docserver_locations = $docserverLocationsControler->get($docserver_location_id);
 	if (empty($docserver_locations))
 		$state = false; 
 	else
 		put_in_session("docserver_locations", $docserver_locations->getArray()); 
 		
-	$docservers_id = docserver_locations_controler::getDocservers($docserver_location_id ); //ramène le tableau des docserver_id appartenant au groupe
-	for($i=0; $i<count($docservers_id);$i++)
-	{
-		$tmp_user = docservers_controler::get($docservers_id[$i]);
-		if (isset($tmp_user))
-		{
+	$docservers_id = $docserverLocationsControler->getDocservers($docserver_location_id);
+	for($i=0;$i<count($docservers_id);$i++) {
+		$tmp_user = $docserversControler->get($docservers_id[$i]);
+		if (isset($tmp_user)) {
 			array_push($docservers, $tmp_user);
 		}	
 	}
-	
 	unset($tmp_user);
-	
 	$res['state'] = $state;
 	$res['docservers'] = $docservers;
-	
 	return $res;
 }
 
@@ -269,24 +229,22 @@ function display_list() {
 	$pageName = "docserver_locations_management_controler";
 	$tableName = "docserver_locations";
 	$idName = "docserver_location_id";
-	
+	$func = new functions();
+	$listShow = new list_show();
 	$_SESSION['m_admin'] = array();
-	
 	init_session();
-	
 	$select[_DOCSERVER_LOCATIONS_TABLE_NAME] = array();
 	array_push($select[_DOCSERVER_LOCATIONS_TABLE_NAME], $idName, "ipv4", "ipv6", "net_domain", "enabled");
 	$what = "";
 	$where ="";
 	if (isset($_REQUEST['what']) && !empty($_REQUEST['what'])) {
-		$what = functions::protect_string_db($_REQUEST['what']);
+		$what = $func->protect_string_db($_REQUEST['what']);
 		if ($_SESSION['config']['databasetype'] == "POSTGRESQL") {
 			$where = $idName." ilike '".strtoupper($what)."%' ";
 		} else {
 			$where = $idName." like '".strtoupper($what)."%' ";
 		}
 	}
-
 	// Checking order and order_field values
 	$order = 'asc';
 	if (isset($_REQUEST['order']) && !empty($_REQUEST['order'])) {
@@ -296,7 +254,7 @@ function display_list() {
 	if (isset($_REQUEST['order_field']) && !empty($_REQUEST['order_field'])) {
 		$field = trim($_REQUEST['order_field']);
 	}
-	$orderstr = list_show::define_order($order, $field);
+	$orderstr = $listShow->define_order($order, $field);
 	$request = new request();
 	$tab=$request->select($select,$where,$orderstr,$_SESSION['config']['databasetype']);
 	for ($i=0;$i<count($tab);$i++) {
@@ -317,11 +275,11 @@ function display_list() {
 			
 	}
 	/*
-	 * TODO Pour éviter les actions suivantes, il y a 2 solutions :
-	 * - La plus propre : créer un objet "PageList"
-	 * - La plus locale : si cela ne sert que pour admin_list dans docserver_management.php,
-	 *                    il est possible d'en construire directement la string et de la récupérer en return.
-	 */  
+	* TODO Pour éviter les actions suivantes, il y a 2 solutions :
+	* - La plus propre : créer un objet "PageList"
+	* - La plus locale : si cela ne sert que pour admin_list dans docserver_management.php,
+	*                    il est possible d'en construire directement la string et de la récupérer en return.
+	*/
 	$result = array();
 	$result['tab']=$tab;
 	$result['what']=$what;
@@ -341,29 +299,26 @@ function display_list() {
 }
 
 /**
- * Delete given docserver if exists and initialize session parameters
- * @param unknown_type $docserver_location_id
- */
+* Delete given docserver if exists and initialize session parameters
+* @param unknown_type $docserver_location_id
+*/
 function display_del($docserver_location_id) {
-	$docserver_locations = docserver_locations_controler::get($docserver_location_id);
+	$docserverLocationsControler = new docserver_locations_controler();
+	$docserver_locations = $docserverLocationsControler->get($docserver_location_id);
 	if (isset($docserver_locations)) {
 		// Deletion
-		if (!docserver_locations_controler::delete($docserver_locations)) {
-			$_SESSION['error'] = _YOU_CANNOT_DELETE." ".$docserver_location_id;
+		$control = array();
+		$control = $docserverLocationsControler->delete($docserver_locations);
+		if (!empty($control['error']) && $control['error'] <> 1) {
+			$_SESSION['error'] = str_replace("#", "<br />", $control['error']);
 		} else {
 			$_SESSION['error'] = _DOCSERVER_LOCATION_DELETED." ".$docserver_location_id;
-			if ($_SESSION['history']['docserver_locationsdel'] == "true") {
-				require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
-				$history = new history();
-				$history->add(_DOCSERVER_LOCATIONS_TABLE_NAME, $docserver_location_id, "DEL", _DOCSERVER_LOCATION_DELETED." : ".$docserver_location_id, $_SESSION['config']['databasetype']);
-			}
 		}
 		$pageName = "docserver_locations_management_controler";
 		?><script>window.top.location='<?php echo $_SESSION['config']['businessappurl']."index.php?page=".$pageName."&mode=list&admin=docservers";?>';</script>
 		<?php
 		exit;
-	} 
-	else{
+	} else {
 		// Error management
 		$_SESSION['error'] = _DOCSERVER_LOCATION.' '._UNKNOWN;
 	}
@@ -374,23 +329,22 @@ function display_del($docserver_location_id) {
  * @param unknown_type $docserver_location_id
  */
 function display_enable($docserver_location_id) {
-	$docserver_locations = docserver_locations_controler::get($docserver_location_id);
+	$docserverLocationsControler = new docserver_locations_controler();
+	$docserver_locations = $docserverLocationsControler->get($docserver_location_id);
 	if (isset($docserver_locations)) {
 		// Enable
-		docserver_locations_controler::enable($docserver_locations);
-		$_SESSION['error'] = _DOCSERVER_LOCATION_ENABLED." ".$docserver_location_id;
-		if ($_SESSION['history']['docserver_locationsallow'] == "true") {
-			require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
-			$history = new history();
-			$history->add(_DOCSERVER_LOCATIONS_TABLE_NAME, $docserver_location_id, "VAL",_DOCSERVER_LOCATION_ENABLED." : ".$docserver_location_id, $_SESSION['config']['databasetype']);
+		$control = array();
+		$control = $docserverLocationsControler->enable($docserver_locations);
+		if (!empty($control['error']) && $control['error'] <> 1) {
+			$_SESSION['error'] = str_replace("#", "<br />", $control['error']);
+		} else {
+			$_SESSION['error'] = _DOCSERVER_LOCATION_ENABLED." ".$docserver_location_id;
 		}
-		// NOTE: Why not calling display_list ?
 		$pageName = "docserver_locations_management_controler";
 		?><script>window.top.location='<?php echo $_SESSION['config']['businessappurl']."index.php?page=".$pageName."&mode=list&admin=docservers";?>';</script>
 		<?php
 		exit;
-	}
-	else{
+	} else {
 		// Error management
 		$_SESSION['error'] = _DOCSERVER_LOCATION.' '._UNKNOWN;
 	}
@@ -401,25 +355,17 @@ function display_enable($docserver_location_id) {
  * @param unknown_type $docserver_location_id
  */
 function display_disable($docserver_location_id) {
-	$docserver_locations = docserver_locations_controler::get($docserver_location_id);
+	$docserverLocationsControler = new docserver_locations_controler();
+	$docserver_locations = $docserverLocationsControler->get($docserver_location_id);
 	if (isset($docserver_locations)) {
 		// Disable
-		if (!docserver_locations_controler::disable($docserver_locations)) {
-			$_SESSION['error'] = _YOU_CANNOT_DISABLE." ".$docserver_location_id;
-		} else {
-			$_SESSION['error'] = _DOCSERVER_LOCATION_DISABLED." ".$docserver_location_id;
-			if ($_SESSION['history']['docserver_locationsban'] == "true") {
-				require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
-				$history = new history();
-				$history->add(_DOCSERVER_LOCATIONS_TABLE_NAME, $docserver_location_id, "BAN", _DOCSERVER_LOCATION_DISABLED." : ".$docserver_location_id, $_SESSION['config']['databasetype']);
-			}
-		}
+		$docserverLocationsControler->disable($docserver_locations);
+		$_SESSION['error'] = _DOCSERVER_LOCATION_DISABLED." ".$docserver_location_id;
 		$pageName = "docserver_locations_management_controler";
 		?><script>window.top.location='<?php echo $_SESSION['config']['businessappurl']."index.php?page=".$pageName."&mode=list&admin=docservers";?>';</script>
 		<?php
 		exit;
-	} 
-	else{
+	} else {
 		// Error management
 		$_SESSION['error'] = _DOCSERVER_LOCATION.' '._UNKNOWN;
 	}
@@ -439,7 +385,8 @@ function display_disable($docserver_location_id) {
  * @param $show
  */
 function format_item(&$item,$label,$size,$label_align,$align,$valign,$show) {
-	$item['value']=functions::show_string($item['value']);	
+	$func = new functions();
+	$item['value']=$func->show_string($item['value']);	
 	$item[$item['column']]=$item['value'];
 	$item["label"]=$label;
 	$item["size"]=$size;
@@ -457,9 +404,10 @@ function format_item(&$item,$label,$size,$label_align,$align,$valign,$show) {
  * @param hashable $hashable
  */
 function put_in_session($type,$hashable) {
+	$func = new functions();
 	foreach($hashable as $key=>$value) {
-		// echo "Key: $key Value: $value f:".functions::show_string($value)." // ";
-		$_SESSION['m_admin'][$type][$key]=functions::show_string($value);
+		// echo "Key: $key Value: $value f:".$func->show_string($value)." // ";
+		$_SESSION['m_admin'][$type][$key]=$func->show_string($value);
 	}
 }
 
