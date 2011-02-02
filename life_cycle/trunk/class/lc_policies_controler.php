@@ -120,9 +120,9 @@ class lc_policies_controler extends ObjectControler implements ObjectControlerIF
         $f = new functions();
         $error = "";
         // Update, so values exist
-		$policy->policy_id=$f->protect_string_db($f->wash($_REQUEST['id'], "nick", _LC_POLICY_ID." ", 'yes', 0, 32));
-		$policy->policy_name=$f->protect_string_db($f->wash($_REQUEST['policy_name'], "no", _POLICY_NAME." ", 'yes', 0, 255));
-		$policy->policy_desc=$f->protect_string_db($f->wash($_REQUEST['policy_desc'], "no", _POLICY_DESC." ", 'yes', 0, 255));
+		$policy->policy_id=$f->protect_string_db($f->wash($policy->policy_id, "nick", _LC_POLICY_ID." ", 'yes', 0, 32));
+		$policy->policy_name=$f->protect_string_db($f->wash($policy->policy_name, "no", _POLICY_NAME." ", 'yes', 0, 255));
+		$policy->policy_desc=$f->protect_string_db($f->wash($policy->policy_desc, "no", _POLICY_DESC." ", 'yes', 0, 255));
 		$lcPoliciesControler = new lc_policies_controler();
 		if ($mode == "add" && $lcPoliciesControler->policyExists($policy->policy_id)) {	
 			$error .= $policy->policy_id." "._ALREADY_EXISTS."<br />";

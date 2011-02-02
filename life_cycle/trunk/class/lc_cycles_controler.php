@@ -118,23 +118,23 @@ class lc_cycles_controler extends ObjectControler implements ObjectControlerIF {
     private function control($cycle, $mode) {
         $f = new functions();
         $error = "";
-		if (isset($_REQUEST['id']) && !empty($_REQUEST['id'])) {
+		if (isset($cycle->cycle_id) && !empty($cycle->cycle_id)) {
 			// Update, so values exist
-			$cycle->cycle_id=$f->protect_string_db($f->wash($_REQUEST['id'], "nick", _LC_CYCLE_ID." ", "yes", 0, 32));
+			$cycle->cycle_id=$f->protect_string_db($f->wash($cycle->cycle_id, "nick", _LC_CYCLE_ID." ", "yes", 0, 32));
 		}
-		$cycle->policy_id=$f->protect_string_db($f->wash($_REQUEST['policy_id'], "no", _POLICY_ID." ", 'yes', 0, 32));
-		$cycle->cycle_desc=$f->protect_string_db($f->wash($_REQUEST['cycle_desc'], "no", _CYCLE_DESC." ", 'yes', 0, 255));
-		$cycle->sequence_number=$f->protect_string_db($f->wash($_REQUEST['sequence_number'], "num", _SEQUENCE_NUMBER." ", 'yes', 0, 255));
-		$cycle->break_key=$f->protect_string_db($f->wash($_REQUEST['break_key'], "no", _BREAK_KEY." ", 'no', 0, 255));	
+		$cycle->policy_id=$f->protect_string_db($f->wash($cycle->policy_id, "no", _POLICY_ID." ", 'yes', 0, 32));
+		$cycle->cycle_desc=$f->protect_string_db($f->wash($cycle->cycle_desc, "no", _CYCLE_DESC." ", 'yes', 0, 255));
+		$cycle->sequence_number=$f->protect_string_db($f->wash($cycle->sequence_number, "num", _SEQUENCE_NUMBER." ", 'yes', 0, 255));
+		$cycle->break_key=$f->protect_string_db($f->wash($cycle->break_key, "no", _BREAK_KEY." ", 'no', 0, 255));	
 		// Traitement et contrôle du WHERE-CLAUSE
 		$lcCyclesControler = new lc_cycles_controler();
-		if ($lcCyclesControler->where_test_secure($_REQUEST['where_clause'])) {
+		if ($lcCyclesControler->where_test_secure($cycle->where_clause)) {
 			$error .= _WHERE_CLAUSE_NOT_SECURE."<br>";
-		} elseif (!$lcCyclesControler->where_test($_REQUEST['where_clause'])) {
+		} elseif (!$lcCyclesControler->where_test($cycle->where_clause)) {
 			$error .= _PB_WITH_WHERE_CLAUSE."<br>";
 		}
-		$cycle->where_clause=$f->protect_string_db($f->wash($_REQUEST['where_clause'], "no", _WHERE_CLAUSE." ", 'yes', 0, 255));
-		$cycle->validation_mode=$f->protect_string_db($f->wash($_REQUEST['validation_mode'], "no", _VALIDATION_MODE." ", 'yes', 0, 32));
+		$cycle->where_clause=$f->protect_string_db($f->wash($cycle->where_clause, "no", _WHERE_CLAUSE." ", 'yes', 0, 255));
+		$cycle->validation_mode=$f->protect_string_db($f->wash($cycle->validation_mode, "no", _VALIDATION_MODE." ", 'yes', 0, 32));
 		if ($mode == "add" && $lcCyclesControler->cycleExists($cycle->cycle_id)) {	
 			$error .= $cycle->cycle_id." "._ALREADY_EXISTS."<br />";
 		}
@@ -143,7 +143,7 @@ class lc_cycles_controler extends ObjectControler implements ObjectControlerIF {
         $error = str_replace("<br />", "#", $error);
         $return = array();
         if (!empty($error)) {
-                $return = array("status" => "ko", "value" => $cycle->cycle_id, "error" => $error);
+			$return = array("status" => "ko", "value" => $cycle->cycle_id, "error" => $error);
         } else {
             $return = array("status" => "ok", "value" => $cycle->cycle_id);
         }

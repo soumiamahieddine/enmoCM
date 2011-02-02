@@ -115,33 +115,33 @@ class lc_cycle_steps_controler extends ObjectControler implements ObjectControle
     private function control($lc_cycle_steps, $mode) {
         $f = new functions();
         $error = "";
-		if (isset($_REQUEST['id']) && !empty($_REQUEST['id'])) {
+		if (isset($lc_cycle_steps->cycle_step_id) && !empty($lc_cycle_steps->cycle_step_id)) {
 			// Update, so values exist
-			$lc_cycle_steps->cycle_step_id=$f->protect_string_db($f->wash($_REQUEST['id'], "nick", _LC_CYCLE_STEP_ID." ", "yes", 0, 32));
+			$lc_cycle_steps->cycle_step_id=$f->protect_string_db($f->wash($lc_cycle_steps->cycle_step_id, "nick", _LC_CYCLE_STEP_ID." ", "yes", 0, 32));
 		}
-		$lc_cycle_steps->policy_id=$f->protect_string_db($f->wash($_REQUEST['policy_id'], "no", _POLICY_ID." ", 'yes', 0, 32));
-		if (isset($_REQUEST['cycle_id']) && !empty($_REQUEST['cycle_id'])) {
-			$lc_cycle_steps->cycle_id=$f->protect_string_db($f->wash($_REQUEST['cycle_id'], "no", _LC_CYCLE_ID." ", 'yes', 0, 32));
+		$lc_cycle_steps->policy_id=$f->protect_string_db($f->wash($lc_cycle_steps->policy_id, "no", _POLICY_ID." ", 'yes', 0, 32));
+		if (isset($lc_cycle_steps->cycle_id) && !empty($lc_cycle_steps->cycle_id)) {
+			$lc_cycle_steps->cycle_id=$f->protect_string_db($f->wash($lc_cycle_steps->cycle_id, "no", _LC_CYCLE_ID." ", 'yes', 0, 32));
 		} else {
 			$lc_cycle_steps->policy_id = '';
 			$error .= _LC_CYCLE_ID . ' ' . _MANDATORY;
 		}
-		$lc_cycle_steps->docserver_type_id=$f->protect_string_db($f->wash($_REQUEST['docserver_type_id'], "no", _DOCSERVER_TYPE_ID." ", 'yes', 0, 32));	
-		$lc_cycle_steps->cycle_step_desc=$f->protect_string_db($f->wash($_REQUEST['cycle_step_desc'], "no", _CYCLE_STEP_DESC." ", 'yes', 0, 255));
-		$lc_cycle_steps->sequence_number=$f->protect_string_db($f->wash($_REQUEST['sequence_number'], "num", _SEQUENCE_NUMBER." ", 'yes', 0, 255));
-		/*$lc_cycle_steps->is_allow_failure=$f->protect_string_db($f->wash($_REQUEST['is_allow_failure'], "no", _IS_ALLOW_FAILURE." ", 'yes', 0, '5'));
+		$lc_cycle_steps->docserver_type_id=$f->protect_string_db($f->wash($lc_cycle_steps->docserver_type_id, "no", _DOCSERVER_TYPE_ID." ", 'yes', 0, 32));	
+		$lc_cycle_steps->cycle_step_desc=$f->protect_string_db($f->wash($lc_cycle_steps->cycle_step_desc, "no", _CYCLE_STEP_DESC." ", 'yes', 0, 255));
+		$lc_cycle_steps->sequence_number=$f->protect_string_db($f->wash($lc_cycle_steps->sequence_number, "num", _SEQUENCE_NUMBER." ", 'yes', 0, 255));
+		/*$lc_cycle_steps->is_allow_failure=$f->protect_string_db($f->wash($lc_cycle_steps->is_allow_failure, "no", _IS_ALLOW_FAILURE." ", 'yes', 0, '5'));
 		if ($lc_cycle_steps->is_allow_failure == "false") {
 			$lc_cycle_steps->is_allow_failure=false;	
 		} else {
 			$lc_cycle_steps->is_allow_failure=true;
 		}*/
-		/*$lc_cycle_steps->is_must_complete=$f->protect_string_db($f->wash($_REQUEST['is_must_complete'], "no", _IS_MUST_COMPLETE." ", 'yes', 0, '5'));
+		/*$lc_cycle_steps->is_must_complete=$f->protect_string_db($f->wash($lc_cycle_steps->is_must_complete, "no", _IS_MUST_COMPLETE." ", 'yes', 0, '5'));
 		if ($lc_cycle_steps->is_must_complete == "false") {
 			$lc_cycle_steps->is_must_complete=false;	
 		} else {
 			$lc_cycle_steps->is_must_complete=true;
 		}*/
-		$lc_cycle_steps->step_operation=$f->protect_string_db($f->wash($_REQUEST['step_operation'], "no", _STEP_OPERATION." ", 'yes', 0, 32));
+		$lc_cycle_steps->step_operation=$f->protect_string_db($f->wash($lc_cycle_steps->step_operation, "no", _STEP_OPERATION." ", 'yes', 0, 32));
 		$lcCycleStepsControler = new lc_cycle_steps_controler();
 		if ($mode == "add" && $lcCycleStepsControler->cycleStepExists($lc_cycle_steps->cycle_step_id)) {	
 			$error .= $lc_cycle_steps->cycle_step_id." "._ALREADY_EXISTS."<br />";
