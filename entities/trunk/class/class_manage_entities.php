@@ -1070,37 +1070,55 @@ class entity extends dbquery
         return array('ID' => $res->entity_id, 'LABEL' => $res->entity_label, 'SHORT_LABEL' => $res->short_label, 'ROLE' => $res->user_role);
     }
 
-    public function increaseListinstanceViewed($docId)
-    {
-        if(isset($_SESSION['collection_id_choice']) && !empty($_SESSION['collection_id_choice']))
-        {
+     public function increaseListinstanceViewed($docId) {
+        if(isset($_SESSION['collection_id_choice']) && !empty($_SESSION['collection_id_choice'])) {
             $collId = $_SESSION['collection_id_choice'];
-        }
-        else
-        {
+        } else {
             $collId = $_SESSION['collections'][0]['id'];
         }
-        if($docId <> "" && $collId <> "")
-        {
+        if($docId <> "" && $collId <> "") {
+            for($cptEnt=0;$cptEnt<count($_SESSION['user']['entities']);$cptEnt++) {
+				$entities .= "'" . $_SESSION['user']['entities'][$cptEnt]['ENTITY_ID'] . "', ";
+			}
+			$entities = preg_replace('/, $/', '', $entities);
+			if($entities == '' && $user_id == 'superadmin') {
+				if($_SESSION['config']['databasetype'] == "ORACLE" || $_SESSION['config']['databasetype'] == "SQLSERVER") {
+					$entities = "''''";
+				} else {
+					$entities = "''";
+				}
+			}
             $this->connect();
             $this->query("select res_id, viewed from ".$_SESSION['tablename']['ent_listinstance']." where coll_id = '".$this->protect_string_db($collId)."' and res_id = ".$docId." and item_type = 'user_id' and item_id = '".$_SESSION['user']['UserId']."'");
             //$this->show();
             $res = $this->fetch_object();
             $cptViewed = 0;
-            if($res->res_id <> "")
-            {
-                if($res->viewed <> "" && $res->viewed <> 0)
-                {
+            if($res->res_id <> "") {
+                if($res->viewed <> "" && $res->viewed <> 0) {
                     $cptViewed = $res->viewed + 1;
-                }
-                else
-                {
+                } else {
                     $cptViewed = 1;
                 }
                 //echo $cptViewed;
                 $this->query("update ".$_SESSION['tablename']['ent_listinstance']." set viewed = ".$cptViewed." where coll_id = '".$this->protect_string_db($collId)."' and res_id = ".$docId." and item_type = 'user_id' and item_id = '".$_SESSION['user']['UserId']."'");
                 //$this->show();
             }
+            $db = new dbquery();
+            $db->connect();
+            $this->query("select res_id, viewed, item_id from ".$_SESSION['tablename']['ent_listinstance']." where coll_id = '".$this->protect_string_db($collId)."' and res_id = ".$docId." and item_type = 'entity_id' and ".$_SESSION['tablename']['ent_listinstance'].".item_id in (" . $entities . ")");
+            //$this->show();
+            while($res = $this->fetch_object()) {
+				$cptViewed = 0;
+				if($res->res_id <> "") {
+					if($res->viewed <> "" && $res->viewed <> 0) {
+						$cptViewed = $res->viewed + 1;
+					} else {
+						$cptViewed = 1;
+					}
+					$db->query("update ".$_SESSION['tablename']['ent_listinstance']." set viewed = ".$cptViewed." where coll_id = '".$this->protect_string_db($collId)."' and res_id = ".$docId." and item_type = 'entity_id' and ".$_SESSION['tablename']['ent_listinstance'].".item_id = '" . $res->item_id . "'");
+					//$db->show();
+				}
+			 }
         }
     }
 
