@@ -58,7 +58,7 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
      * - make an insert if new object.
      * Return updated object.
      * @param docservers $docservers
-     * @return boolean
+     * @return array
      */
     public function save($docserver, $mode = "") {
         //var_dump($docserver);

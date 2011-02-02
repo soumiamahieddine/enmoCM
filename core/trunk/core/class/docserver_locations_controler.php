@@ -1,7 +1,7 @@
 <?php
 
 /*
-*    Copyright 2008,2009,2010 Maarch
+*    Copyright 2008-2011 Maarch
 *
 *  This file is part of Maarch Framework.
 *
@@ -18,11 +18,6 @@
 *   You should have received a copy of the GNU General Public License
 *    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
-
-/**
- * @defgroup 
- */
-
 
 /**
 * @brief  Contains the docserver_locations_controler Object (herits of the BaseObject class)
@@ -62,135 +57,290 @@ try {
 */
 class docserver_locations_controler extends ObjectControler implements ObjectControlerIF {
 	
-/**
+	/**
+     * Save given object in database:
+     * - make an update if object already exists,
+     * - make an insert if new object.
+     * Return updated object.
+     * @param docservers_locations $docservers_locations
+     * @return array
+     */
+	public function save($docserver_location, $mode = "") {
+        $control = array();
+        if (!isset($docserver_location) || empty($docserver_location)) {
+            $control = array("status" => "ko", "value" => "", "error" => _DOCSERVER_EMPTY);
+            return $control;
+        }
+        $docserver_location = self::isADocserverLocation($docserver_location);
+        self::set_foolish_ids(array('docserver_location_id'));
+		self::set_specific_id('docserver_location_id');
+        if ($mode == "up") {
+            $control = self::control($docserver_location, "up");
+            if ($control['status'] == "ok") {
+                //Update existing docserver
+                if (self::update($docserver_location)) {
+                    $control = array("status" => "ok", "value" => $docserver_location->docserver_location_id);
+                    //history
+                    if ($_SESSION['history']['docserversadd'] == "true") {
+                        $history = new history();
+                        $history->add(_DOCSERVER_LOCATIONS_TABLE_NAME, $docserver_location->docserver_location_id, "UP", _DOCSERVER_LOCATION_UPDATED." : ".$docserver_location->docserver_location_id, $_SESSION['config']['databasetype']);
+                    }
+                } else {
+                    $control = array("status" => "ko", "value" => "", "error" => _PB_WITH_DOCSERVER_LOCATION);
+                }
+                return $control;
+            }
+        } else {
+            $control = self::control($docserver_location, "add");
+            if ($control['status'] == "ok") {
+                //Insert new docserver
+                if (self::insert($docserver_location)) {
+                    $control = array("status" => "ok", "value" => $docserver_location->docserver_location_id);
+                    //history
+                    if ($_SESSION['history']['docserversadd'] == "true") {
+                        $history = new history();
+                        $history->add(_DOCSERVER_LOCATIONS_TABLE_NAME, $docserver_location->docserver_location_id, "ADD", _DOCSERVER_LOCATION_ADDED." : ".$docserver_location->docserver_location_id, $_SESSION['config']['databasetype']);
+                    }
+                } else {
+                    $control = array("status" => "ko", "value" => "", "error" => _PB_WITH_DOCSERVER_LOCATION);
+                }
+            }
+        }
+        return $control;
+		
+	}
+	
+	/**
+    * control the docserver location object before action
+    *
+    * @param  $docserver_locations docserver location object
+    * @return array ok if the object is well formated, ko otherwise
+    */
+    private function control($docserver_locations, $mode) {
+        $f = new functions();
+        $error = "";
+        if (isset($docserver_locations->docserver_location_id) && !empty($docserver_locations->docserver_location_id)) {
+			// Update, so values exist
+			$docserver_locations->docserver_location_id=$f->protect_string_db($f->wash($docserver_locations->docserver_location_id, "nick", _DOCSERVER_LOCATION_ID." ", "yes", 0, 32));
+		} else {
+			$error .= _DOCSERVER_LOCATION_ID . " " . _IS_EMPTY . "<br>";
+		}
+		$docserver_locations->ipv4=$f->protect_string_db($f->wash($docserver_locations->ipv4, "no", _IPV4." ", 'yes', 0, 255));
+		if (!$this->ipv4Control($docserver_locations->ipv4)) {	
+			$error .= _IP_V4_FORMAT_NOT_VALID . "<br>";
+		}
+		/*if (!empty($docserver_locations->ipv4)) {
+			if (!$this->pingIpv4($docserver_locations->ipv4))
+				$error .= _IP_V4_ADRESS_NOT_VALID."<br>";
+		}*/
+		$docserver_locations->ipv6=$f->protect_string_db($f->wash($docserver_locations->ipv6, "no", _IPV6." ", 'no', 0, 255));
+		if (!$this->ipv6Control($docserver_locations->ipv6)) {	
+			$error .= _IP_V6_NOT_VALID . "<br>";
+		}
+		$docserver_locations->net_domain=$f->protect_string_db($f->wash($docserver_locations->net_domain, "no", _NET_DOMAIN." ", 'no', 0, 32));
+		$docserver_locations->mask=$f->protect_string_db($f->wash($docserver_locations->mask, "no", _MASK." ", 'no', 0, 255));
+		if (!$this->maskControl($docserver_locations->mask)) {	
+			$error .= _MASK_NOT_VALID . "<br>";
+		}
+		$docserver_locations->net_link=$f->protect_string_db($f->wash($docserver_locations->net_link, "no", _NET_LINK." ", 'no', 0, 255));
+        if ($mode == "add" && $this->docserverLocationExists($docserver_locations->docserver_location_id)) {	
+			$error .= $docserver_locations->docserver_location_id." "._ALREADY_EXISTS."<br />";
+		}
+        $error .= $_SESSION['error'];
+        //TODO:rewrite wash to return errors without html
+        $error = str_replace("<br />", "#", $error);
+        $return = array();
+        if (!empty($error)) {
+                $return = array("status" => "ko", "value" => $docserver_locations->docserver_location_id, "error" => $error);
+        } else {
+            $return = array("status" => "ok", "value" => $docserver_locations->docserver_location_id);
+        }
+        return $return;
+    }
+	
+	/**
+	* Inserts in the database (docserver_locations table) a docserver_locations object
+	*
+	* @param  $docserver_location docserver_locations object
+	* @return bool true if the insertion is complete, false otherwise
+	*/
+	private function insert($docserver_location) {
+		return self::advanced_insert($docserver_location);
+	}
+
+	/**
+	* Updates in the database (docserver_locations table) a docserver_locations object
+	*
+	* @param  $docserver_location docserver_locations object
+	* @return bool true if the update is complete, false otherwise
+	*/
+	private function update($docserver_location) {
+		return self::advanced_update($docserver_location);
+	}
+	
+	/**
 	* Returns an docserver_locations object based on a docserver_locations identifier
 	*
 	* @param  $docserver_location_id string  docserver_locations identifier
 	* @param  $comp_where string  where clause arguments (must begin with and or or)
 	* @param  $can_be_disabled bool  if true gets the docserver_location even if it is disabled in the database (false by default)
 	* @return docserver_locations object with properties from the database or null
-*/
+	*/
 	public function get($docserver_location_id, $comp_where = '', $can_be_disabled = false) {
-		self :: set_foolish_ids(array('docserver_location_id'));
-		self :: set_specific_id('docserver_location_id');
-		$docserver_location = self :: advanced_get($docserver_location_id, _DOCSERVER_LOCATIONS_TABLE_NAME);
+		self::set_foolish_ids(array('docserver_location_id'));
+		self::set_specific_id('docserver_location_id');
+		$docserver_location = self::advanced_get($docserver_location_id, _DOCSERVER_LOCATIONS_TABLE_NAME);
 
 		if (isset ($docserver_location_id))
 			return $docserver_location;
 		else
 			return null;
 	}
+	
+	/**
+    * get lc_cycles_steps with given id for a ws.
+    * Can return null if no corresponding object.
+    * @param $cycle_step_id of cycle to send
+    * @return cycle steps
+    */
+    public function getWs($cycle_step_id) {
+        self::set_foolish_ids(array('policy_id', 'cycle_id', 'cycle_step_id', 'docserver_type_id'));
+		self::set_specific_id('cycle_step_id');
+        $cycle = self::advanced_get($cycle_step_id, _LC_CYCLE_STEPS_TABLE_NAME);
+        if (get_class($cycle) <> "lc_cycle_steps") {
+            return null;
+        } else {
+            $cycle = $cycle->getArray();
+            return $cycle;
+        }
+    }
 
-/**
-	* Saves in the database a docserver_locations object 
-	*
-	* @param  $docserver_location docserver_locations object to be saved
-	* @return bool true if the save is complete, false otherwise
-*/
-	public function save($docserver_location) {
-		if (!isset ($docserver_location))
-			return false;
-
-		self :: set_foolish_ids(array('docserver_location_id'));
-		self :: set_specific_id('docserver_location_id');
-		if (self :: docserverLocationExists($docserver_location->docserver_location_id))
-			return self :: update($docserver_location);
-		else
-			return self :: insert($docserver_location);
-	}
-		
-/**
-	* Inserts in the database (docserver_locations table) a docserver_locations object
-	*
-	* @param  $docserver_location docserver_locations object
-	* @return bool true if the insertion is complete, false otherwise
-*/
-	private function insert($docserver_location) {
-		return self::advanced_insert($docserver_location);
-	}
-
-/**
-	* Updates in the database (docserver_locations table) a docserver_locations object
-	*
-	* @param  $docserver_location docserver_locations object
-	* @return bool true if the update is complete, false otherwise
-*/
-	private function update($docserver_location) {
-		return self::advanced_update($docserver_location);
-	}
-
-/**
+	/**
 	* Deletes in the database (docserver_locations related tables) a given docserver_locations (docserver_location_id)
 	*
 	* @param  $docserver_location_id string  docserver_locations identifier
 	* @return bool true if the deletion is complete, false otherwise
-*/
+	*/
 	public function delete($docserver_location) {
-		if (!isset($docserver_location) || empty($docserver_location) )
-			return false;
-		
-		if (!self::docserverLocationExists($docserver_location->docserver_location_id))
-			return false;
-				
-		if (self::linkExists($docserver_location->docserver_location_id))
-			return false;
-
+		$func = new functions();
+		$control = array();
+        if (!isset($docserver_location) || empty($docserver_location)) {
+            $control = array("status" => "ko", "value" => "", "error" => _DOCSERVER_LOCATION_EMPTY);
+            return $control;
+        }
+        $docserver_location = self::isADocserverLocation($docserver_location);
+        if (!$this->docserverLocationExists($docserver_location->docserver_location_id)) {
+            $control = array("status" => "ko", "value" => "", "error" => _DOCSERVER_LOCATION_NOT_EXISTS);
+            return $control;
+        }
+        if ($this->linkExists($docserver_location->docserver_location_id)) {
+            $control = array("status" => "ko", "value" => "", "error" => _LINK_EXISTS);
+            return $control;
+        }
 		self::$db=new dbquery();
 		self::$db->connect();
-		$query="delete from "._DOCSERVER_LOCATIONS_TABLE_NAME." where docserver_location_id ='".functions::protect_string_db($docserver_location->docserver_location_id)."'";
-		
+		$query="delete from "._DOCSERVER_LOCATIONS_TABLE_NAME." where docserver_location_id ='".$func->protect_string_db($docserver_location->docserver_location_id)."'";
 		try {
 			if ($_ENV['DEBUG']) {echo $query.' // ';}
 			self::$db->query($query);
-			$ok = true;
 		} catch (Exception $e) {
-			echo _CANNOT_DELETE_CYCLE_ID." ".$docserver_location->docserver_location_id.' // ';
-			$ok = false;
+			$control = array("status" => "ko", "value" => "", "error" => _CANNOT_DELETE_DOCSERVER_LOCATION_ID." ".$docserver_location->docserver_location_id);
 		}
 		self::$db->disconnect();
-		
-		return $ok;
+		$control = array("status" => "ok", "value" => $docserver_location->docserver_location_id);
+		if ($_SESSION['history']['docserverslocationsdel'] == "true") {
+			$history = new history();
+			$history->add(_DOCSERVER_LOCATIONS_TABLE_NAME, $docserver_location->docserver_location_id, "DEL", _DOCSERVER_LOCATION_DELETED." : ".$docserver_location->docserver_location_id, $_SESSION['config']['databasetype']);
+		}
+		return $control;
 	}
 
-/**
+	/**
 	* Disables a given docserver_locations
 	* 
 	* @param  $docserver_location docserver_locations object 
-	* @return bool true if the disabling is complete, false otherwise 
-*/
+	* @return array
+	*/
 	public function disable($docserver_location) {
-		self :: set_foolish_ids(array('docserver_location_id'));
-		self::set_specific_id('docserver_location_id');
-		
-		if (self::linkExists($docserver_location->docserver_location_id))
-			return false;
-		return self::advanced_disable($docserver_location);
+		$control = array();
+        if (!isset($docserver_location) || empty($docserver_location)) {
+            $control = array("status" => "ko", "value" => "", "error" => _DOCSERVER_LOCATION_EMPTY);
+            return $control;
+        }
+        $docserver_location = self::isADocserverLocation($docserver_location);
+        self::set_foolish_ids(array('docserver_location_id'));
+        self::set_specific_id('docserver_location_id');
+        if (self::advanced_disable($docserver_location)) {
+            $control = array("status" => "ok", "value" => $docserver_location->docserver_location_id);
+            if ($_SESSION['history']['docserverslocationsban'] == "true") {
+                $history = new history();
+                $history->add(_DOCSERVER_LOCATIONS_TABLE_NAME, $docserver_location->docserver_location_id, "BAN", _DOCSERVER_LOCATION_DISABLED." : ".$docserver_location->docserver_location_id, $_SESSION['config']['databasetype']);
+            }
+        } else {
+            $control = array("status" => "ko", "value" => "", "error" => _PB_WITH_DOCSERVER_LOCATION);
+        }
+        return $control;
 	}
 	
-/**
+	/**
 	* Enables a given docserver_locations
 	* 
 	* @param  $docserver_location docserver_locations object  
-	* @return bool true if the enabling is complete, false otherwise 
-*/
+	* @return array
+	*/
 	public function enable($docserver_location) {
-		self :: set_foolish_ids(array('docserver_location_id'));
-		self::set_specific_id('docserver_location_id');
-		return self::advanced_enable($docserver_location);
+		$control = array();
+        if (!isset($docserver_location) || empty($docserver_location)) {
+            $control = array("status" => "ko", "value" => "", "error" => _DOCSERVER_LOCATION_EMPTY);
+            return $control;
+        }
+        $docserver_location = self::isADocserverLocation($docserver_location);
+        self::set_foolish_ids(array('docserver_location_id'));
+        self::set_specific_id('docserver_location_id');
+        if (self::advanced_enable($docserver_location)) {
+            $control = array("status" => "ok", "value" => $docserver_location->docserver_location_id);
+            if ($_SESSION['history']['docserverslocationsban'] == "true") {
+                $history = new history();
+                $history->add(_DOCSERVER_LOCATIONS_TABLE_NAME, $docserver_location->docserver_location_id, "BAN", _DOCSERVER_LOCATION_ENABLED." : ".$docserver_location->docserver_location_id, $_SESSION['config']['databasetype']);
+            }
+        } else {
+            $control = array("status" => "ko", "value" => "", "error" => _PB_WITH_DOCSERVER_LOCATION);
+        }
+        return $control;
 	}
+	
+	/**
+    * Fill a docserver_locations object with an object if it's not a docserver_locations
+    *
+    * @param  $object ws docserver_locations object
+    * @return object docserver_locations
+    */
+    private function isADocserverLocation($object) {
+        if (get_class($object) <> "docserver_locations") {
+            $func = new functions();
+            $docserverLocationsObject = new docserver_locations();
+            $array = array();
+            $array = $func->object2array($object);
+            foreach(array_keys($array) as $key) {
+                $docserverLocationsObject->$key = $array[$key];
+            }
+            return $docserverLocationsObject;
+        } else {
+            return $object;
+        }
+    }
 
-
-/** 
- * Checks if a docserver_locations exists
- * 
- * @param $docserver_location_id docserver_locations object
- * @return bool true if the docserver_locations exists
- */
+	/** 
+	* Checks if a docserver_locations exists
+	* 
+	* @param $docserver_location_id docserver_locations object
+	* @return bool true if the docserver_locations exists
+	*/
 	public function docserverLocationExists($docserver_location_id) {
 		if (!isset ($docserver_location_id) || empty ($docserver_location_id))
 			return false;
-		self :: $db = new dbquery();
-		self :: $db->connect();
+		self::$db = new dbquery();
+		self::$db->connect();
 
 		$query = "select docserver_location_id from " . _DOCSERVER_LOCATIONS_TABLE_NAME . " where docserver_location_id = '" . $docserver_location_id . "'";
 
@@ -198,25 +348,25 @@ class docserver_locations_controler extends ObjectControler implements ObjectCon
 			if ($_ENV['DEBUG']) {
 				echo $query . ' // ';
 			}
-			self :: $db->query($query);
+			self::$db->query($query);
 		} catch (Exception $e) {
 			echo _UNKNOWN . _LC_CYCLE . " " . $docserver_location_id . ' // ';
 		}
 
-		if (self :: $db->nb_result() > 0) {
-			self :: $db->disconnect();
+		if (self::$db->nb_result() > 0) {
+			self::$db->disconnect();
 			return true;
 		}
-		self :: $db->disconnect();
+		self::$db->disconnect();
 		return false;
 	}
 
-/**
- *  Checks if a docserver_locations is linked
- * 
- * @param $docserver_location_id docserver_locations object
- * @return bool true if the docserver_locations is linked
- */
+	/**
+	*  Checks if a docserver_locations is linked
+	* 
+	* @param $docserver_location_id docserver_locations object
+	* @return bool true if the docserver_locations is linked
+	*/
 	public function linkExists($docserver_location_id) {
 		if (!isset($docserver_location_id) || empty($docserver_location_id))
 			return false;
@@ -232,13 +382,13 @@ class docserver_locations_controler extends ObjectControler implements ObjectCon
 		self::$db->disconnect();
 	}
 	
-/** 
- *  Check if the docserver location ipV4 is valid
- * 
- *  @param ipv4 docservers 
- *  @return bool true if it's valid  
- * 
- */ 	
+	/** 
+	*  Check if the docserver location ipV4 is valid
+	* 
+	*  @param ipv4 docservers 
+	*  @return bool true if it's valid  
+	* 
+	*/ 	
 	public function ipv4Control($ipv4) {
 		if (empty($ipv4))
 		return true;
@@ -252,12 +402,12 @@ class docserver_locations_controler extends ObjectControler implements ObjectCon
 	}
 	
 	
-/**
- * Check if the docserver location ipV6 is valid
- * 
- * @param ipv6 docservers 
- * @return bool true if it's valid 
- */	
+	/**
+	* Check if the docserver location ipV6 is valid
+	* 
+	* @param ipv6 docservers 
+	* @return bool true if it's valid 
+	*/	
 	public function ipv6Control($ipv6) {
 		if (empty($ipv6))
 			return true;
@@ -271,12 +421,12 @@ class docserver_locations_controler extends ObjectControler implements ObjectCon
 	}
 	
 	
-/** 
- * Check if the docserver location mask is valid
- * 
- * @param mask docservers 
- * @return bool true if it's valid  
-*/	
+	/** 
+	* Check if the docserver location mask is valid
+	* 
+	* @param mask docservers 
+	* @return bool true if it's valid  
+	*/	
 	public function maskControl($mask) {
 		if (empty($mask))
 			return true;
@@ -288,12 +438,12 @@ class docserver_locations_controler extends ObjectControler implements ObjectCon
 		}
 	}
 	
-/**
- * Returns in an array all the docservers of a docserver location (docserver_id only) 
- * 
- * @param  $docserver_location_id string  Docserver_location identifier
- * @return Array of docserver_id or null
-*/
+	/**
+	* Returns in an array all the docservers of a docserver location (docserver_id only) 
+	* 
+	* @param  $docserver_location_id string  Docserver_location identifier
+	* @return Array of docserver_id or null
+	*/
 	public function getDocservers($docserver_location_id) {		
 		if (empty($docserver_location_id))
 			return null;
@@ -316,41 +466,44 @@ class docserver_locations_controler extends ObjectControler implements ObjectCon
 		return $docservers;
 	}
 
-
+	/**
+	* Return all docservers locations ID
+	* @return array of docservers locations
+	*/
 	public function getAllId($can_be_disabled = false) {
-		self :: $db = new dbquery();
-		self :: $db->connect();
+		self::$db = new dbquery();
+		self::$db->connect();
 		$query = "select docserver_location_id from " . _DOCSERVER_LOCATIONS_TABLE_NAME . " ";
 		if (!$can_be_disabled)
 			$query .= " where enabled = 'Y'";
 		try {
 			if ($_ENV['DEBUG'])
 				echo $query . ' // ';
-			self :: $db->query($query);
+			self::$db->query($query);
 		} catch (Exception $e) {
 			echo _NO_DOCSERVER_LOCATION . ' // ';
 		}
-		if (self :: $db->nb_result() > 0) {
+		if (self::$db->nb_result() > 0) {
 			$result = array ();
 			$cptId = 0;
-			while ($queryResult = self :: $db->fetch_object()) {
+			while ($queryResult = self::$db->fetch_object()) {
 				$result[$cptId] = $queryResult->docserver_location_id;
 				$cptId++;
 			}
-			self :: $db->disconnect();
+			self::$db->disconnect();
 			return $result;
 		} else {
-			self :: $db->disconnect();
+			self::$db->disconnect();
 			return null;
 		}
 	}
 	
-/**
- * Ping the ipv4
- * 
- * @param ipv4 docservers
- * @return bool true if valid 	
- */
+	/**
+	* Ping the ipv4
+	* 
+	* @param ipv4 docservers
+	* @return bool true if valid 	
+	*/
 	public function pingIpv4 ($ipv4) {
 		$ping = Net_Ping::factory();
 		if (PEAR::isError($ping)) {
