@@ -71,17 +71,17 @@ class docserver_locations_controler extends ObjectControler implements ObjectCon
             $control = array("status" => "ko", "value" => "", "error" => _DOCSERVER_EMPTY);
             return $control;
         }
-        $docserver_location = self::isADocserverLocation($docserver_location);
-        self::set_foolish_ids(array('docserver_location_id'));
-		self::set_specific_id('docserver_location_id');
+        $docserver_location = $this->isADocserverLocation($docserver_location);
+        $this->set_foolish_ids(array('docserver_location_id'));
+		$this->set_specific_id('docserver_location_id');
         if ($mode == "up") {
-            $control = self::control($docserver_location, "up");
+            $control = $this->control($docserver_location, "up");
             if ($control['status'] == "ok") {
                 //Update existing docserver
-                if (self::update($docserver_location)) {
+                if ($this->update($docserver_location)) {
                     $control = array("status" => "ok", "value" => $docserver_location->docserver_location_id);
                     //history
-                    if ($_SESSION['history']['docserversadd'] == "true") {
+                    if ($_SESSION['history']['docserverslocationsadd'] == "true") {
                         $history = new history();
                         $history->add(_DOCSERVER_LOCATIONS_TABLE_NAME, $docserver_location->docserver_location_id, "UP", _DOCSERVER_LOCATION_UPDATED." : ".$docserver_location->docserver_location_id, $_SESSION['config']['databasetype']);
                     }
@@ -91,13 +91,13 @@ class docserver_locations_controler extends ObjectControler implements ObjectCon
                 return $control;
             }
         } else {
-            $control = self::control($docserver_location, "add");
+            $control = $this->control($docserver_location, "add");
             if ($control['status'] == "ok") {
                 //Insert new docserver
-                if (self::insert($docserver_location)) {
+                if ($this->insert($docserver_location)) {
                     $control = array("status" => "ok", "value" => $docserver_location->docserver_location_id);
                     //history
-                    if ($_SESSION['history']['docserversadd'] == "true") {
+                    if ($_SESSION['history']['docserverslocationsadd'] == "true") {
                         $history = new history();
                         $history->add(_DOCSERVER_LOCATIONS_TABLE_NAME, $docserver_location->docserver_location_id, "ADD", _DOCSERVER_LOCATION_ADDED." : ".$docserver_location->docserver_location_id, $_SESSION['config']['databasetype']);
                     }
@@ -107,7 +107,6 @@ class docserver_locations_controler extends ObjectControler implements ObjectCon
             }
         }
         return $control;
-		
 	}
 	
 	/**
@@ -123,28 +122,28 @@ class docserver_locations_controler extends ObjectControler implements ObjectCon
 			// Update, so values exist
 			$docserver_locations->docserver_location_id=$f->protect_string_db($f->wash($docserver_locations->docserver_location_id, "nick", _DOCSERVER_LOCATION_ID." ", "yes", 0, 32));
 		} else {
-			$error .= _DOCSERVER_LOCATION_ID . " " . _IS_EMPTY . "<br>";
+			$error .= _DOCSERVER_LOCATION_ID . " " . _IS_EMPTY . "#";
 		}
 		$docserver_locations->ipv4=$f->protect_string_db($f->wash($docserver_locations->ipv4, "no", _IPV4." ", 'yes', 0, 255));
 		if (!$this->ipv4Control($docserver_locations->ipv4)) {	
-			$error .= _IP_V4_FORMAT_NOT_VALID . "<br>";
+			$error .= _IP_V4_FORMAT_NOT_VALID . "#";
 		}
 		/*if (!empty($docserver_locations->ipv4)) {
 			if (!$this->pingIpv4($docserver_locations->ipv4))
-				$error .= _IP_V4_ADRESS_NOT_VALID."<br>";
+				$error .= _IP_V4_ADRESS_NOT_VALID."#";
 		}*/
 		$docserver_locations->ipv6=$f->protect_string_db($f->wash($docserver_locations->ipv6, "no", _IPV6." ", 'no', 0, 255));
 		if (!$this->ipv6Control($docserver_locations->ipv6)) {	
-			$error .= _IP_V6_NOT_VALID . "<br>";
+			$error .= _IP_V6_NOT_VALID . "#";
 		}
 		$docserver_locations->net_domain=$f->protect_string_db($f->wash($docserver_locations->net_domain, "no", _NET_DOMAIN." ", 'no', 0, 32));
 		$docserver_locations->mask=$f->protect_string_db($f->wash($docserver_locations->mask, "no", _MASK." ", 'no', 0, 255));
 		if (!$this->maskControl($docserver_locations->mask)) {	
-			$error .= _MASK_NOT_VALID . "<br>";
+			$error .= _MASK_NOT_VALID . "#";
 		}
 		$docserver_locations->net_link=$f->protect_string_db($f->wash($docserver_locations->net_link, "no", _NET_LINK." ", 'no', 0, 255));
         if ($mode == "add" && $this->docserverLocationExists($docserver_locations->docserver_location_id)) {	
-			$error .= $docserver_locations->docserver_location_id." "._ALREADY_EXISTS."<br />";
+			$error .= $docserver_locations->docserver_location_id." "._ALREADY_EXISTS."#";
 		}
         $error .= $_SESSION['error'];
         //TODO:rewrite wash to return errors without html
@@ -165,7 +164,7 @@ class docserver_locations_controler extends ObjectControler implements ObjectCon
 	* @return bool true if the insertion is complete, false otherwise
 	*/
 	private function insert($docserver_location) {
-		return self::advanced_insert($docserver_location);
+		return $this->advanced_insert($docserver_location);
 	}
 
 	/**
@@ -175,7 +174,7 @@ class docserver_locations_controler extends ObjectControler implements ObjectCon
 	* @return bool true if the update is complete, false otherwise
 	*/
 	private function update($docserver_location) {
-		return self::advanced_update($docserver_location);
+		return $this->advanced_update($docserver_location);
 	}
 	
 	/**
@@ -187,9 +186,9 @@ class docserver_locations_controler extends ObjectControler implements ObjectCon
 	* @return docserver_locations object with properties from the database or null
 	*/
 	public function get($docserver_location_id, $comp_where = '', $can_be_disabled = false) {
-		self::set_foolish_ids(array('docserver_location_id'));
-		self::set_specific_id('docserver_location_id');
-		$docserver_location = self::advanced_get($docserver_location_id, _DOCSERVER_LOCATIONS_TABLE_NAME);
+		$this->set_foolish_ids(array('docserver_location_id'));
+		$this->set_specific_id('docserver_location_id');
+		$docserver_location = $this->advanced_get($docserver_location_id, _DOCSERVER_LOCATIONS_TABLE_NAME);
 
 		if (isset ($docserver_location_id))
 			return $docserver_location;
@@ -198,20 +197,20 @@ class docserver_locations_controler extends ObjectControler implements ObjectCon
 	}
 	
 	/**
-    * get lc_cycles_steps with given id for a ws.
+    * get docserver_locations with given id for a ws.
     * Can return null if no corresponding object.
-    * @param $cycle_step_id of cycle to send
-    * @return cycle steps
+    * @param $docserver_location_id of docserver_location to send
+    * @return docserver_locations
     */
-    public function getWs($cycle_step_id) {
-        self::set_foolish_ids(array('policy_id', 'cycle_id', 'cycle_step_id', 'docserver_type_id'));
-		self::set_specific_id('cycle_step_id');
-        $cycle = self::advanced_get($cycle_step_id, _LC_CYCLE_STEPS_TABLE_NAME);
-        if (get_class($cycle) <> "lc_cycle_steps") {
+    public function getWs($docserver_location_id) {
+        $this->set_foolish_ids(array('docserver_location_id'));
+		$this->set_specific_id('docserver_location_id');
+        $docserver_location = $this->advanced_get($docserver_location_id, _DOCSERVER_LOCATIONS_TABLE_NAME);
+        if (get_class($docserver_location) <> "docserver_locations") {
             return null;
         } else {
-            $cycle = $cycle->getArray();
-            return $cycle;
+            $docserver_location = $docserver_location->getArray();
+            return $docserver_location;
         }
     }
 
@@ -228,7 +227,7 @@ class docserver_locations_controler extends ObjectControler implements ObjectCon
             $control = array("status" => "ko", "value" => "", "error" => _DOCSERVER_LOCATION_EMPTY);
             return $control;
         }
-        $docserver_location = self::isADocserverLocation($docserver_location);
+        $docserver_location = $this->isADocserverLocation($docserver_location);
         if (!$this->docserverLocationExists($docserver_location->docserver_location_id)) {
             $control = array("status" => "ko", "value" => "", "error" => _DOCSERVER_LOCATION_NOT_EXISTS);
             return $control;
@@ -237,16 +236,16 @@ class docserver_locations_controler extends ObjectControler implements ObjectCon
             $control = array("status" => "ko", "value" => "", "error" => _LINK_EXISTS);
             return $control;
         }
-		self::$db=new dbquery();
-		self::$db->connect();
+		$db=new dbquery();
+		$db->connect();
 		$query="delete from "._DOCSERVER_LOCATIONS_TABLE_NAME." where docserver_location_id ='".$func->protect_string_db($docserver_location->docserver_location_id)."'";
 		try {
 			if ($_ENV['DEBUG']) {echo $query.' // ';}
-			self::$db->query($query);
+			$db->query($query);
 		} catch (Exception $e) {
 			$control = array("status" => "ko", "value" => "", "error" => _CANNOT_DELETE_DOCSERVER_LOCATION_ID." ".$docserver_location->docserver_location_id);
 		}
-		self::$db->disconnect();
+		$db->disconnect();
 		$control = array("status" => "ok", "value" => $docserver_location->docserver_location_id);
 		if ($_SESSION['history']['docserverslocationsdel'] == "true") {
 			$history = new history();
@@ -267,10 +266,14 @@ class docserver_locations_controler extends ObjectControler implements ObjectCon
             $control = array("status" => "ko", "value" => "", "error" => _DOCSERVER_LOCATION_EMPTY);
             return $control;
         }
-        $docserver_location = self::isADocserverLocation($docserver_location);
-        self::set_foolish_ids(array('docserver_location_id'));
-        self::set_specific_id('docserver_location_id');
-        if (self::advanced_disable($docserver_location)) {
+        $docserver_location = $this->isADocserverLocation($docserver_location);
+        if ($this->linkExists($docserver_location->docserver_location_id)) {
+            $control = array("status" => "ko", "value" => "", "error" => _LINK_EXISTS);
+            return $control;
+        }
+        $this->set_foolish_ids(array('docserver_location_id'));
+        $this->set_specific_id('docserver_location_id');
+        if ($this->advanced_disable($docserver_location)) {
             $control = array("status" => "ok", "value" => $docserver_location->docserver_location_id);
             if ($_SESSION['history']['docserverslocationsban'] == "true") {
                 $history = new history();
@@ -294,12 +297,12 @@ class docserver_locations_controler extends ObjectControler implements ObjectCon
             $control = array("status" => "ko", "value" => "", "error" => _DOCSERVER_LOCATION_EMPTY);
             return $control;
         }
-        $docserver_location = self::isADocserverLocation($docserver_location);
-        self::set_foolish_ids(array('docserver_location_id'));
-        self::set_specific_id('docserver_location_id');
-        if (self::advanced_enable($docserver_location)) {
+        $docserver_location = $this->isADocserverLocation($docserver_location);
+        $this->set_foolish_ids(array('docserver_location_id'));
+        $this->set_specific_id('docserver_location_id');
+        if ($this->advanced_enable($docserver_location)) {
             $control = array("status" => "ok", "value" => $docserver_location->docserver_location_id);
-            if ($_SESSION['history']['docserverslocationsban'] == "true") {
+            if ($_SESSION['history']['docserverslocationsallow'] == "true") {
                 $history = new history();
                 $history->add(_DOCSERVER_LOCATIONS_TABLE_NAME, $docserver_location->docserver_location_id, "BAN", _DOCSERVER_LOCATION_ENABLED." : ".$docserver_location->docserver_location_id, $_SESSION['config']['databasetype']);
             }
@@ -339,25 +342,22 @@ class docserver_locations_controler extends ObjectControler implements ObjectCon
 	public function docserverLocationExists($docserver_location_id) {
 		if (!isset ($docserver_location_id) || empty ($docserver_location_id))
 			return false;
-		self::$db = new dbquery();
-		self::$db->connect();
-
+		$db = new dbquery();
+		$db->connect();
 		$query = "select docserver_location_id from " . _DOCSERVER_LOCATIONS_TABLE_NAME . " where docserver_location_id = '" . $docserver_location_id . "'";
-
 		try {
 			if ($_ENV['DEBUG']) {
 				echo $query . ' // ';
 			}
-			self::$db->query($query);
+			$db->query($query);
 		} catch (Exception $e) {
-			echo _UNKNOWN . _LC_CYCLE . " " . $docserver_location_id . ' // ';
+			echo _UNKNOWN . _DOCSERVER_LOCATION . " " . $docserver_location_id . ' // ';
 		}
-
-		if (self::$db->nb_result() > 0) {
-			self::$db->disconnect();
+		if ($db->nb_result() > 0) {
+			$db->disconnect();
 			return true;
 		}
-		self::$db->disconnect();
+		$db->disconnect();
 		return false;
 	}
 
@@ -370,16 +370,15 @@ class docserver_locations_controler extends ObjectControler implements ObjectCon
 	public function linkExists($docserver_location_id) {
 		if (!isset($docserver_location_id) || empty($docserver_location_id))
 			return false;
-		self::$db=new dbquery();
-		self::$db->connect();
-		
+		$db=new dbquery();
+		$db->connect();
 		$query = "select docserver_location_id from "._DOCSERVERS_TABLE_NAME." where docserver_location_id = '".$docserver_location_id."'";
-		self::$db->query($query);
-		if (self::$db->nb_result()>0) {
-			self::$db->disconnect();
+		$db->query($query);
+		if ($db->nb_result()>0) {
+			$db->disconnect();
 			return true;
 		}
-		self::$db->disconnect();
+		$db->disconnect();
 	}
 	
 	/** 
@@ -401,7 +400,6 @@ class docserver_locations_controler extends ObjectControler implements ObjectCon
 		}
 	}
 	
-	
 	/**
 	* Check if the docserver location ipV6 is valid
 	* 
@@ -419,7 +417,6 @@ class docserver_locations_controler extends ObjectControler implements ObjectCon
 			return false;
 		}
 	}
-	
 	
 	/** 
 	* Check if the docserver location mask is valid
@@ -447,22 +444,20 @@ class docserver_locations_controler extends ObjectControler implements ObjectCon
 	public function getDocservers($docserver_location_id) {		
 		if (empty($docserver_location_id))
 			return null;
-
 		$docservers = array();
-		self::$db=new dbquery();
-		self::$db->connect();
+		$db=new dbquery();
+		$db->connect();
 		$query = "select docserver_id from "._DOCSERVERS_TABLE_NAME." where docserver_location_id = '".$docserver_location_id."'";
 		try{
 			if ($_ENV['DEBUG']) {echo $query.' // ';}
-					self::$db->query($query);
+					$db->query($query);
 		} catch (Exception $e) {
 					echo _NO_DOCSERVER_LOCATION_WITH_ID.' '.$docserver_location_id.' // ';
 		}
-		
-		while($res = self::$db->fetch_object()) {
+		while($res = $db->fetch_object()) {
 			array_push($docservers, $res->docserver_id);
 		}
-		self::$db->disconnect();
+		$db->disconnect();
 		return $docservers;
 	}
 
@@ -471,29 +466,29 @@ class docserver_locations_controler extends ObjectControler implements ObjectCon
 	* @return array of docservers locations
 	*/
 	public function getAllId($can_be_disabled = false) {
-		self::$db = new dbquery();
-		self::$db->connect();
+		$db = new dbquery();
+		$db->connect();
 		$query = "select docserver_location_id from " . _DOCSERVER_LOCATIONS_TABLE_NAME . " ";
 		if (!$can_be_disabled)
 			$query .= " where enabled = 'Y'";
 		try {
 			if ($_ENV['DEBUG'])
 				echo $query . ' // ';
-			self::$db->query($query);
+			$db->query($query);
 		} catch (Exception $e) {
 			echo _NO_DOCSERVER_LOCATION . ' // ';
 		}
-		if (self::$db->nb_result() > 0) {
+		if ($db->nb_result() > 0) {
 			$result = array ();
 			$cptId = 0;
-			while ($queryResult = self::$db->fetch_object()) {
+			while ($queryResult = $db->fetch_object()) {
 				$result[$cptId] = $queryResult->docserver_location_id;
 				$cptId++;
 			}
-			self::$db->disconnect();
+			$db->disconnect();
 			return $result;
 		} else {
-			self::$db->disconnect();
+			$db->disconnect();
 			return null;
 		}
 	}

@@ -82,11 +82,11 @@ class webService {
 	 * web service authentification
 	 */
 	function authentication() {
-		if($_SERVER["PHP_AUTH_USER"] && $_SERVER["PHP_AUTH_PW"] && preg_match("/^Basic /", $_SERVER["HTTP_AUTHORIZATION"])) {
+		if((isset($_SERVER["PHP_AUTH_USER"]) && isset($_SERVER["PHP_AUTH_PW"]) && isset($_SERVER["HTTP_AUTHORIZATION"])) && $_SERVER["PHP_AUTH_USER"] && $_SERVER["PHP_AUTH_PW"] && preg_match("/^Basic /", $_SERVER["HTTP_AUTHORIZATION"])) {
 			list($_SERVER["PHP_AUTH_USER"], $_SERVER["PHP_AUTH_PW"]) = explode(":", base64_decode(substr($_SERVER["HTTP_AUTHORIZATION"], 6)));
 		}
 		$authenticated = false;
-		if($_SERVER["PHP_AUTH_USER"] || $_SERVER["PHP_AUTH_PW"]) {
+		if((isset($_SERVER["PHP_AUTH_USER"]) && isset($_SERVER["PHP_AUTH_PW"])) && ($_SERVER["PHP_AUTH_USER"] || $_SERVER["PHP_AUTH_PW"])) {
 			require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_functions.php");
 			$func = new functions();
 			$connexion = new dbquery();
@@ -95,10 +95,12 @@ class webService {
 				$_SESSION['user']['UserId'] = $func->decrypt($_SERVER["PHP_AUTH_USER"]);
 				$password = $func->decrypt($_SERVER["PHP_AUTH_PW"]);
 			} else {
+				//echo "ici";exit;
 				$_SESSION['user']['UserId'] = $_SERVER["PHP_AUTH_USER"];
 				$password = $_SERVER["PHP_AUTH_PW"];
 			}
-			$connexion->query("select * from ".$_SESSION['tablename']['users']." where user_id = '".$_SESSION['user']['UserId']."' and password = '".$password."' and STATUS <> 'DEL'");
+			$connexion->query("select * from ".$_SESSION['tablename']['users']." where user_id = '".$_SESSION['user']['UserId']."' and password = '".md5($password)."' and STATUS <> 'DEL'");
+			//$connexion->show();exit;
 			if($connexion->nb_result() > 0) {
 				$authenticated = true;
 			}

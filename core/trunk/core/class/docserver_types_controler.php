@@ -1,7 +1,7 @@
 <?php
 
 /*
-*    Copyright 2008,2009,2010 Maarch
+*    Copyright 2008-2011 Maarch
 *
 *  This file is part of Maarch Framework.
 *
@@ -57,50 +57,136 @@ try {
 class docserver_types_controler extends ObjectControler implements ObjectControlerIF {
 	
 	/**
-	* Returns an docserver_types object based on a docserver_types identifier
-	*
-	* @param  $docserver_type_id string  docserver_types identifier
-	* @param  $comp_where string  where clause arguments (must begin with and or or)
-	* @param  $can_be_disabled bool  if true gets the docserver_type even if it is disabled in the database (false by default)
-	* @return docserver_types object with properties from the database or null
-	*/
-	public function get($docserver_type_id, $comp_where = '', $can_be_disabled = false) {
-		self :: set_foolish_ids(array('docserver_type_id'));
-		self :: set_specific_id('docserver_type_id');
-		$docserver_type = self :: advanced_get($docserver_type_id, _DOCSERVER_TYPES_TABLE_NAME);
-
-		if (isset ($docserver_type_id))
-			return $docserver_type;
-		else
-			return null;
+     * Save given object in database:
+     * - make an update if object already exists,
+     * - make an insert if new object.
+     * Return updated object.
+     * @param docservers_types $docservers_types
+     * @return array
+     */
+	public function save($docserver_type, $mode = "") {
+        $control = array();
+        if (!isset($docserver_type) || empty($docserver_type)) {
+            $control = array("status" => "ko", "value" => "", "error" => _DOCSERVER_EMPTY);
+            return $control;
+        }
+        $docserver_type = $this->isADocserverType($docserver_type);
+        $this->set_foolish_ids(array('docserver_type_id'));
+		$this->set_specific_id('docserver_type_id');
+        if ($mode == "up") {
+            $control = $this->control($docserver_type, "up");
+            if ($control['status'] == "ok") {
+                //Update existing docserver
+                if ($this->update($docserver_type)) {
+                    $control = array("status" => "ok", "value" => $docserver_type->docserver_type_id);
+                    //history
+                    if ($_SESSION['history']['docserverstypesadd'] == "true") {
+                        $history = new history();
+                        $history->add(_DOCSERVER_TYPES_TABLE_NAME, $docserver_type->docserver_type_id, "UP", _DOCSERVER_TYPE_UPDATED." : ".$docserver_type->docserver_type_id, $_SESSION['config']['databasetype']);
+                    }
+                } else {
+                    $control = array("status" => "ko", "value" => "", "error" => _PB_WITH_DOCSERVER_TYPE);
+                }
+                return $control;
+            }
+        } else {
+            $control = $this->control($docserver_type, "add");
+            if ($control['status'] == "ok") {
+                //Insert new docserver
+                if ($this->insert($docserver_type)) {
+                    $control = array("status" => "ok", "value" => $docserver_type->docserver_type_id);
+                    //history
+                    if ($_SESSION['history']['docserverstypesadd'] == "true") {
+                        $history = new history();
+                        $history->add(_DOCSERVER_TYPES_TABLE_NAME, $docserver_type->docserver_type_id, "ADD", _DOCSERVER_TYPE_ADDED." : ".$docserver_type->docserver_type_id, $_SESSION['config']['databasetype']);
+                    }
+                } else {
+                    $control = array("status" => "ko", "value" => "", "error" => _PB_WITH_DOCSERVER_TYPE);
+                }
+            }
+        }
+        return $control;
 	}
-
+	
 	/**
-	* Saves in the database a docserver_types object 
-	*
-	* @param  $docserver_type docserver_types object to be saved
-	* @return bool true if the save is complete, false otherwise
-	*/
-	public function save($docserver_type) {
-		if (!isset ($docserver_type))
-			return false;
-
-		self :: set_foolish_ids(array('docserver_type_id'));
-		self :: set_specific_id('docserver_type_id');
-		if (self :: docserverTypeExists($docserver_type->docserver_type_id))
-			return self :: update($docserver_type);
-		else
-			return self :: insert($docserver_type);
-	}
-		
-	/**
+    * control the docserver types object before action
+    *
+    * @param  $docserver_types docserver types object
+    * @return array ok if the object is well formated, ko otherwise
+    */
+    private function control($docserver_types, $mode) {
+        $f = new functions();
+        $error = "";
+        if (isset($docserver_types->docserver_type_id) && !empty($docserver_types->docserver_type_id)) {
+			// Update, so values exist
+			$docserver_types->docserver_type_id=$f->protect_string_db($f->wash($docserver_types->docserver_type_id, "nick", _DOCSERVER_TYPE_ID." ", "yes", 0, 32));
+		} else {
+			$error .= _DOCSERVER_TYPE_ID . " " . _IS_EMPTY . "#";
+		}
+		$docserver_types->docserver_type_label=$f->protect_string_db($f->wash($docserver_types->docserver_type_label, "no", _DOCSERVER_TYPE_LABEL." ", 'yes', 0, 255));
+		$docserver_types->is_container=$f->protect_string_db($f->wash($docserver_types->is_container, "no", _IS_CONTAINER." ", 'yes', 0, '5'));
+		if ($docserver_types->is_container == "false") {
+			$docserver_types->is_container=false;
+			$docserver_types->container_max_number = 0;
+		} else {
+			$docserver_types->is_container=true;
+			$docserver_types->container_max_number=$f->protect_string_db($f->wash($docserver_types->container_max_number, "no", _CONTAINER_MAX_NUMBER." ", 'yes', 0, 6));
+		}
+		$docserver_types->is_compressed=$f->protect_string_db($f->wash($docserver_types->is_compressed, "no", _IS_COMPRESSED." ", 'yes', 0, '5'));
+		if ($docserver_types->is_compressed == "false") {
+			$docserver_types->is_compressed=false;
+			$docserver_types->compression_mode = "NONE";
+		} else {
+			$docserver_types->is_compressed=true;
+			$docserver_types->compression_mode=$f->protect_string_db($f->wash($docserver_types->compression_mode, "no", _COMPRESSION_MODE." ", 'yes', 0, 32));
+		}
+		$docserver_types->is_meta=$f->protect_string_db($f->wash($docserver_types->is_meta, "no", _IS_META." ", 'yes', 0, '5'));
+		if ($docserver_types->is_meta == "false") {
+			$docserver_types->is_meta=false;
+			$docserver_types->meta_template = "NONE";
+		} else {
+			$docserver_types->is_meta=true;
+			$docserver_types->meta_template=$f->protect_string_db($f->wash($docserver_types->meta_template, "no", _META_TEMPLATE." ", 'yes', 0, 32));
+		}
+		$docserver_types->is_logged=$f->protect_string_db($f->wash($docserver_types->is_logged, "no", _IS_LOGGED." ", 'yes', 0, '5'));
+		if ($docserver_types->is_logged == "false") {
+			$docserver_types->is_logged=false;
+			$docserver_types->log_template = "NONE";
+		} else {
+			$docserver_types->is_logged=true;
+			$docserver_types->log_template=$f->protect_string_db($f->wash($docserver_types->log_template, "no", _LOG_TEMPLATE." ", 'yes', 0, 32));
+		}
+		$docserver_types->is_signed=$f->protect_string_db($f->wash($docserver_types->is_signed, "no", _IS_SIGNED." ", 'yes', 0, '5'));
+		if ($docserver_types->is_signed == "false") {
+			$docserver_types->is_signed=false;
+			$docserver_types->fingerprint_mode = "NONE";
+		} else {
+			$docserver_types->is_signed=true;
+			$docserver_types->fingerprint_mode=$f->protect_string_db($f->wash($docserver_types->fingerprint_mode, "no", _FINGERPRINT_MODE." ", 'yes', 0, 32));
+		}
+        if ($mode == "add" && $this->docserverTypeExists($docserver_types->docserver_type_id)) {
+			$error .= $docserver_types->docserver_type_id." "._ALREADY_EXISTS."#";
+		}
+        $error .= $_SESSION['error'];
+        //TODO:rewrite wash to return errors without html
+        $error = str_replace("<br />", "#", $error);
+        $return = array();
+        if (!empty($error)) {
+                $return = array("status" => "ko", "value" => $docserver_types->docserver_type_id, "error" => $error);
+        } else {
+            $return = array("status" => "ok", "value" => $docserver_types->docserver_type_id);
+        }
+        return $return;
+    }
+    
+    /**
 	* Inserts in the database (docserver_types table) a docserver_types object
 	*
 	* @param  $docserver_type docserver_types object
 	* @return bool true if the insertion is complete, false otherwise
 	*/
 	private function insert($docserver_type) {
-		return self::advanced_insert($docserver_type);
+		return $this->advanced_insert($docserver_type);
 	}
 
 	/**
@@ -110,8 +196,45 @@ class docserver_types_controler extends ObjectControler implements ObjectControl
 	* @return bool true if the update is complete, false otherwise
 	*/
 	private function update($docserver_type) {
-		return self::advanced_update($docserver_type);
+		return $this->advanced_update($docserver_type);
 	}
+	
+	/**
+	* Returns an docserver_types object based on a docserver_types identifier
+	*
+	* @param  $docserver_type_id string  docserver_types identifier
+	* @param  $comp_where string  where clause arguments (must begin with and or or)
+	* @param  $can_be_disabled bool  if true gets the docserver_type even if it is disabled in the database (false by default)
+	* @return docserver_types object with properties from the database or null
+	*/
+	public function get($docserver_type_id, $comp_where = '', $can_be_disabled = false) {
+		$this->set_foolish_ids(array('docserver_type_id'));
+		$this->set_specific_id('docserver_type_id');
+		$docserver_type = $this->advanced_get($docserver_type_id, _DOCSERVER_TYPES_TABLE_NAME);
+
+		if (isset ($docserver_type_id))
+			return $docserver_type;
+		else
+			return null;
+	}
+
+	/**
+    * get docserver_types with given id for a ws.
+    * Can return null if no corresponding object.
+    * @param $docserver_type_id of docserver_type to send
+    * @return docserver_types
+    */
+    public function getWs($docserver_type_id) {
+        $this->set_foolish_ids(array('docserver_type_id'));
+		$this->set_specific_id('docserver_type_id');
+        $docserver_type = $this->advanced_get($docserver_type_id, _DOCSERVER_TYPES_TABLE_NAME);
+        if (get_class($docserver_type) <> "docserver_types") {
+            return null;
+        } else {
+            $docserver_type = $docserver_type->getArray();
+            return $docserver_type;
+        }
+    }
 
 	/**
 	* Deletes in the database (docserver_types related tables) a given docserver_types (docserver_type_id)
@@ -120,33 +243,43 @@ class docserver_types_controler extends ObjectControler implements ObjectControl
 	* @return bool true if the deletion is complete, false otherwise
 	*/
 	public function delete($docserver_type) {
-		if (!isset($docserver_type) || empty($docserver_type) )
-			return false;
-		
-		if (!self::docserverTypeExists($docserver_type->docserver_type_id))
-			return false;
-				
-		if (self::docserverLinkExists($docserver_type->docserver_type_id))
-			return false;
-			
-		if (self::lcCycleStepsLinkExists($docserver_type->docserver_type_id))
-			return false;
-
-		self::$db=new dbquery();
-		self::$db->connect();
-		$query="delete from "._DOCSERVER_TYPES_TABLE_NAME." where docserver_type_id ='".functions::protect_string_db($docserver_type->docserver_type_id)."'";
-		
+		$func = new functions();
+		$control = array();
+        if (!isset($docserver_type) || empty($docserver_type)) {
+            $control = array("status" => "ko", "value" => "", "error" => _DOCSERVER_TYPE_EMPTY);
+            return $control;
+        }
+        $docserver_type = $this->isADocserverType($docserver_type);
+        if (!$this->docserverTypeExists($docserver_type->docserver_type_id)) {
+            $control = array("status" => "ko", "value" => "", "error" => _DOCSERVER_TYPE_NOT_EXISTS);
+            return $control;
+        }
+		if ($this->docserverLinkExists($docserver_type->docserver_type_id)) {
+            $control = array("status" => "ko", "value" => "", "error" => _LINK_EXISTS);
+            return $control;
+        }
+		if ($this->lcCycleStepsLinkExists($docserver_type->docserver_type_id)) {
+            $control = array("status" => "ko", "value" => "", "error" => _LINK_EXISTS);
+            return $control;
+        }
+		$db=new dbquery();
+		$db->connect();
+		$query="delete from "._DOCSERVER_TYPES_TABLE_NAME." where docserver_type_id ='".$func->protect_string_db($docserver_type->docserver_type_id)."'";
 		try {
 			if ($_ENV['DEBUG']) {echo $query.' // ';}
-			self::$db->query($query);
+			$db->query($query);
 			$ok = true;
 		} catch (Exception $e) {
-			echo _CANNOT_DELETE_CYCLE_ID." ".$docserver_type->docserver_type_id.' // ';
+			$control = array("status" => "ko", "value" => "", "error" => _CANNOT_DELETE_DOCSERVER_TYPE_ID." ".$docserver_type->docserver_type_id);
 			$ok = false;
 		}
-		self::$db->disconnect();
-		
-		return $ok;
+		$db->disconnect();
+		$control = array("status" => "ok", "value" => $docserver_type->docserver_type_id);
+		if ($_SESSION['history']['docserverstypesdel'] == "true") {
+			$history = new history();
+			$history->add(_DOCSERVER_TYPES_TABLE_NAME, $docserver_type->docserver_type_id, "DEL", _DOCSERVER_TYPE_DELETED." : ".$docserver_type->docserver_type_id, $_SESSION['config']['databasetype']);
+		}
+		return $control;
 	}
 
 	/**
@@ -156,18 +289,34 @@ class docserver_types_controler extends ObjectControler implements ObjectControl
 	* @return bool true if the disabling is complete, false otherwise 
 	*/
 	public function disable($docserver_type) {
-		self :: set_foolish_ids(array('docserver_type_id'));
-		self::set_specific_id('docserver_type_id');
-		
-		if (self::docserverLinkExists($docserver_type->docserver_type_id)) { 
-			return false;
-		}
-		if (self::lcCycleStepsLinkExists($docserver_type->docserver_type_id)) { 
-			return false;
-		}
-		return self::advanced_disable($docserver_type);
+		$control = array();
+        if (!isset($docserver_type) || empty($docserver_type)) {
+            $control = array("status" => "ko", "value" => "", "error" => _DOCSERVER_TYPE_EMPTY);
+            return $control;
+        }
+        $docserver_type = $this->isADocserverType($docserver_type);
+		$this->set_foolish_ids(array('docserver_type_id'));
+		$this->set_specific_id('docserver_type_id');
+		if ($this->docserverLinkExists($docserver_type->docserver_type_id)) {
+            $control = array("status" => "ko", "value" => "", "error" => _LINK_EXISTS);
+            return $control;
+        }
+		if ($this->lcCycleStepsLinkExists($docserver_type->docserver_type_id)) {
+            $control = array("status" => "ko", "value" => "", "error" => _LINK_EXISTS);
+            return $control;
+        }
+		if ($this->advanced_disable($docserver_type)) {
+            $control = array("status" => "ok", "value" => $docserver_type->docserver_type_id);
+            if ($_SESSION['history']['docserverstypesban'] == "true") {
+                $history = new history();
+                $history->add(_DOCSERVER_TYPES_TABLE_NAME, $docserver_type->docserver_type_id, "BAN", _DOCSERVER_TYPE_DISABLED." : ".$docserver_type->docserver_type_id, $_SESSION['config']['databasetype']);
+            }
+        } else {
+            $control = array("status" => "ko", "value" => "", "error" => _PB_WITH_DOCSERVER_TYPE);
+        }
+        return $control;
 	}
-	
+
 	/**
 	* Enables a given docserver_types
 	* 
@@ -175,67 +324,117 @@ class docserver_types_controler extends ObjectControler implements ObjectControl
 	* @return bool true if the enabling is complete, false otherwise 
 	*/
 	public function enable($docserver_type) {
-		self :: set_foolish_ids(array('docserver_type_id'));
-		self::set_specific_id('docserver_type_id');
-		return self::advanced_enable($docserver_type);
+		$control = array();
+        if (!isset($docserver_type) || empty($docserver_type)) {
+            $control = array("status" => "ko", "value" => "", "error" => _DOCSERVER_TYPE_EMPTY);
+            return $control;
+        }
+        $docserver_type = $this->isADocserverType($docserver_type);
+        $this->set_foolish_ids(array('docserver_type_id'));
+        $this->set_specific_id('docserver_type_id');
+        if ($this->advanced_enable($docserver_type)) {
+            $control = array("status" => "ok", "value" => $docserver_type->docserver_type_id);
+            if ($_SESSION['history']['docserverstypesallow'] == "true") {
+                $history = new history();
+                $history->add(_DOCSERVER_TYPES_TABLE_NAME, $docserver_type->docserver_type_id, "BAN", _DOCSERVER_TYPE_ENABLED." : ".$docserver_type->docserver_type_id, $_SESSION['config']['databasetype']);
+            }
+        } else {
+            $control = array("status" => "ko", "value" => "", "error" => _PB_WITH_DOCSERVER_TYPE);
+        }
+        return $control;
 	}
 
+	/**
+    * Fill a docserver_types object with an object if it's not a docserver_types
+    *
+    * @param  $object ws docserver_types object
+    * @return object docserver_types
+    */
+    private function isADocserverType($object) {
+        if (get_class($object) <> "docserver_types") {
+            $func = new functions();
+            $docserverTypesObject = new docserver_types();
+            $array = array();
+            $array = $func->object2array($object);
+            foreach(array_keys($array) as $key) {
+                $docserverTypesObject->$key = $array[$key];
+            }
+            return $docserverTypesObject;
+        } else {
+            return $object;
+        }
+    }
+	
+	/** 
+	* Checks if a docserver_types exists
+	* 
+	* @param $docserver_type_id docserver_types object
+	* @return bool true if the docserver_types exists
+	*/
 	public function docserverTypeExists($docserver_type_id) {
 		if (!isset ($docserver_type_id) || empty ($docserver_type_id))
 			return false;
-		self :: $db = new dbquery();
-		self :: $db->connect();
-
+		$db = new dbquery();
+		$db->connect();
 		$query = "select docserver_type_id from " . _DOCSERVER_TYPES_TABLE_NAME . " where docserver_type_id = '" . $docserver_type_id . "'";
-
 		try {
 			if ($_ENV['DEBUG']) {
 				echo $query . ' // ';
 			}
-			self :: $db->query($query);
+			$db->query($query);
 		} catch (Exception $e) {
 			echo _UNKNOWN . _LC_CYCLE . " " . $docserver_type_id . ' // ';
 		}
-
-		if (self :: $db->nb_result() > 0) {
-			self :: $db->disconnect();
+		if ($db->nb_result() > 0) {
+			$db->disconnect();
 			return true;
 		}
-		self :: $db->disconnect();
+		$db->disconnect();
 		return false;
 	}
-
+	
+	/**
+	*  Checks if a docserver is linked
+	* 
+	* @param $docserver_id docserver id
+	* @return bool true if the docserver is linked
+	*/
 	public function docserverLinkExists($docserver_type_id) {
 		if (!isset($docserver_type_id) || empty($docserver_type_id))
 			return false;
-		self::$db=new dbquery();
-		self::$db->connect();
+		$db=new dbquery();
+		$db->connect();
 		
 		$query = "select docserver_type_id from "._DOCSERVERS_TABLE_NAME." where docserver_type_id = '".$docserver_type_id."'";
-		self::$db->query($query);
-		if (self::$db->nb_result()>0) {
-			self::$db->disconnect();
+		$db->query($query);
+		if ($db->nb_result()>0) {
+			$db->disconnect();
 			return true;
 		}
-		self::$db->disconnect();
+		$db->disconnect();
 	}
 	
+	/**
+	*  Checks if a cycle_steps is linked
+	* 
+	* @param $docserver_id docserver id
+	* @return bool true if the cycle_steps is linked
+	*/
 	public function lcCycleStepsLinkExists($docserver_type_id) {
 		if (!isset($docserver_type_id) || empty($docserver_type_id))
 			return false;
-		self::$db=new dbquery();
-		self::$db->connect();
-		
+		$db=new dbquery();
+		$db->connect();
 		$query = "select docserver_type_id from "._LC_CYCLE_STEPS_TABLE_NAME." where docserver_type_id = '".$docserver_type_id."'";
-		self::$db->query($query);
-		if (self::$db->nb_result()>0) {
-			self::$db->disconnect();
+		$db->query($query);
+		if ($db->nb_result()>0) {
+			$db->disconnect();
 			return true;
 		}
-		self::$db->disconnect();
+		$db->disconnect();
 	}
 
-/**
+	/**
 	* Returns in an array all the members of a docserver type (docserver_id only) 
 	*
 	* @param  $docserver_id string  Docserver identifier
@@ -244,51 +443,52 @@ class docserver_types_controler extends ObjectControler implements ObjectControl
 	public function getDocservers($docserver_type_id) {		
 		if (empty($docserver_type_id))
 			return null;
-
 		$docservers = array();
-		self::$db=new dbquery();
-		self::$db->connect();
-		
+		$db=new dbquery();
+		$db->connect();
 		$query = "select docserver_id from "._DOCSERVERS_TABLE_NAME." where docserver_type_id = '".$docserver_type_id."'";
 		try{
 			if ($_ENV['DEBUG']) {echo $query.' // ';}
-					self::$db->query($query);
+					$db->query($query);
 		} catch (Exception $e) {
 					echo _NO_TYPE_WITH_ID.' '.$docserver_type_id.' // ';
 		}
-		
-		while($res = self::$db->fetch_object())
+		while($res = $db->fetch_object())
 		{
 			array_push($docservers, $res->docserver_id);
 		}
-		self::$db->disconnect();
+		$db->disconnect();
 		return $docservers;
 	}
 	
+	/**
+	* Return all docservers types ID
+	* @return array of docservers types
+	*/
 	public function getAllId($can_be_disabled = false) {
-		self :: $db = new dbquery();
-		self :: $db->connect();
+		$db = new dbquery();
+		$db->connect();
 		$query = "select docserver_type_id from " . _DOCSERVER_TYPES_TABLE_NAME . " ";
 		if (!$can_be_disabled)
 			$query .= " where enabled = 'Y'";
 		try {
 			if ($_ENV['DEBUG'])
 				echo $query . ' // ';
-			self :: $db->query($query);
+			$db->query($query);
 		} catch (Exception $e) {
 			echo _NO_DOCSERVER_TYPE . ' // ';
 		}
-		if (self :: $db->nb_result() > 0) {
+		if ($db->nb_result() > 0) {
 			$result = array ();
 			$cptId = 0;
-			while ($queryResult = self :: $db->fetch_object()) {
+			while ($queryResult = $db->fetch_object()) {
 				$result[$cptId] = $queryResult->docserver_type_id;
 				$cptId++;
 			}
-			self :: $db->disconnect();
+			$db->disconnect();
 			return $result;
 		} else {
-			self :: $db->disconnect();
+			$db->disconnect();
 			return null;
 		}
 	}
