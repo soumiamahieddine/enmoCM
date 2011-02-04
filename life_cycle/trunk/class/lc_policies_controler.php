@@ -71,14 +71,14 @@ class lc_policies_controler extends ObjectControler implements ObjectControlerIF
             $control = array("status" => "ko", "value" => "", "error" => _POLICY_ID_EMPTY);
             return $control;
         }
-		$policy = self::isAPolicy($policy);
-		self::set_foolish_ids(array('policy_id'));
-		self::set_specific_id('policy_id');
+		$policy = $this->isAPolicy($policy);
+		$this->set_foolish_ids(array('policy_id'));
+		$this->set_specific_id('policy_id');
 		if ($mode == "up") {
-            $control = self::control($policy, "up");
+            $control = $this->control($policy, "up");
             if ($control['status'] == "ok") {
                 //Update existing policy
-                if (self::update($policy)) {
+                if ($this->update($policy)) {
                     $control = array("status" => "ok", "value" => $policy->policy_id);
                     //history
                     if ($_SESSION['history']['lcadd'] == "true") {
@@ -91,10 +91,10 @@ class lc_policies_controler extends ObjectControler implements ObjectControlerIF
                 return $control;
             }
         } else {
-            $control = self::control($policy, "add");
+            $control = $this->control($policy, "add");
             if ($control['status'] == "ok") {
                 //Insert new policy
-                if (self::insert($policy)) {
+                if ($this->insert($policy)) {
                     $control = array("status" => "ok", "value" => $policy->policy_id);
                     //history
                     if ($_SESSION['history']['lcadd'] == "true") {
@@ -123,9 +123,8 @@ class lc_policies_controler extends ObjectControler implements ObjectControlerIF
 		$policy->policy_id=$f->protect_string_db($f->wash($policy->policy_id, "nick", _LC_POLICY_ID." ", 'yes', 0, 32));
 		$policy->policy_name=$f->protect_string_db($f->wash($policy->policy_name, "no", _POLICY_NAME." ", 'yes', 0, 255));
 		$policy->policy_desc=$f->protect_string_db($f->wash($policy->policy_desc, "no", _POLICY_DESC." ", 'yes', 0, 255));
-		$lcPoliciesControler = new lc_policies_controler();
-		if ($mode == "add" && $lcPoliciesControler->policyExists($policy->policy_id)) {	
-			$error .= $policy->policy_id." "._ALREADY_EXISTS."<br />";
+		if ($mode == "add" && $this->policyExists($policy->policy_id)) {	
+			$error .= $policy->policy_id." "._ALREADY_EXISTS."#";
 		}
         $error .= $_SESSION['error'];
         //TODO:rewrite wash to return errors without html
@@ -146,7 +145,7 @@ class lc_policies_controler extends ObjectControler implements ObjectControlerIF
 	* @return bool true if the insertion is complete, false otherwise
 	*/
 	private function insert($policy) {
-		return self::advanced_insert($policy);
+		return $this->advanced_insert($policy);
 	}
 
 	/**
@@ -156,7 +155,7 @@ class lc_policies_controler extends ObjectControler implements ObjectControlerIF
 	* @return bool true if the update is complete, false otherwise
 	*/
 	private function update($policy) {
-		return self::advanced_update($policy);
+		return $this->advanced_update($policy);
 	}
 
 	/**
@@ -166,9 +165,9 @@ class lc_policies_controler extends ObjectControler implements ObjectControlerIF
 	* @return lc_policies object with properties from the database or null
 	*/
 	public function get($policy_id) {
-		self::set_foolish_ids(array('policy_id'));
-		self::set_specific_id('policy_id');
-		$policy = self::advanced_get($policy_id, _LC_POLICIES_TABLE_NAME);
+		$this->set_foolish_ids(array('policy_id'));
+		$this->set_specific_id('policy_id');
+		$policy = $this->advanced_get($policy_id, _LC_POLICIES_TABLE_NAME);
 		//var_dump($policy);
         if (get_class($policy) <> "lc_policies") {
             return null;
@@ -185,9 +184,9 @@ class lc_policies_controler extends ObjectControler implements ObjectControlerIF
     * @return policy
     */
     public function getWs($policy_id) {
-        self::set_foolish_ids(array('policy_id'));
-        self::set_specific_id('policy_id');
-        $policy = self::advanced_get($policy_id, _LC_POLICIES_TABLE_NAME);
+        $this->set_foolish_ids(array('policy_id'));
+        $this->set_specific_id('policy_id');
+        $policy = $this->advanced_get($policy_id, _LC_POLICIES_TABLE_NAME);
         if (get_class($policy) <> "lc_policies") {
             return null;
         } else {
@@ -208,27 +207,27 @@ class lc_policies_controler extends ObjectControler implements ObjectControlerIF
             $control = array("status" => "ko", "value" => "", "error" => _LC_POLICY_EMPTY);
             return $control;
         }
-        $policy = self::isAPolicy($policy);
-        if (!self::policyExists($policy->policy_id)) {
+        $policy = $this->isAPolicy($policy);
+        if (!$this->policyExists($policy->policy_id)) {
             $control = array("status" => "ko", "value" => "", "error" => _LC_POLICY_NOT_EXISTS);
             return $control;
         }
-		if (self::linkExists($policy->policy_id)) {
+		if ($this->linkExists($policy->policy_id)) {
             $control = array("status" => "ko", "value" => "", "error" => _LINK_EXISTS);
             return $control;
         }
-		self::$db=new dbquery();
-		self::$db->connect();
-		$query="delete from "._LC_POLICIES_TABLE_NAME." where policy_id ='".self::$db->protect_string_db($policy->policy_id)."'";
+		$db=new dbquery();
+		$db->connect();
+		$query="delete from "._LC_POLICIES_TABLE_NAME." where policy_id ='".$db->protect_string_db($policy->policy_id)."'";
 		try {
 			if ($_ENV['DEBUG']) {echo $query.' // ';}
-			self::$db->query($query);
+			$db->query($query);
 			$ok = true;
 		} catch (Exception $e) {
 			$control = array("status" => "ko", "value" => "", "error" => _CANNOT_DELETE_POLICY_ID." ".$policy->policy_id);
 			$ok = false;
 		}
-		self::$db->disconnect();
+		$db->disconnect();
 		$control = array("status" => "ok", "value" => $policy->policy_id);
 		if ($_SESSION['history']['lcdel'] == "true") {
 			require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
@@ -288,22 +287,22 @@ class lc_policies_controler extends ObjectControler implements ObjectControlerIF
 	public function policyExists($policy_id) {
 		if (!isset ($policy_id) || empty ($policy_id))
 			return false;
-		self::$db = new dbquery();
-		self::$db->connect();
+		$db = new dbquery();
+		$db->connect();
 		$query = "select policy_id from " . _LC_POLICIES_TABLE_NAME . " where policy_id = '" . $policy_id . "'";
 		try {
 			if ($_ENV['DEBUG']) {
 				echo $query . ' // ';
 			}
-			self::$db->query($query);
+			$db->query($query);
 		} catch (Exception $e) {
 			echo _UNKNOWN . _LC_POLICY . " " . $policy_id . ' // ';
 		}
-		if (self::$db->nb_result() > 0) {
-			self::$db->disconnect();
+		if ($db->nb_result() > 0) {
+			$db->disconnect();
 			return true;
 		}
-		self::$db->disconnect();
+		$db->disconnect();
 		return false;
 	}
 
@@ -316,40 +315,40 @@ class lc_policies_controler extends ObjectControler implements ObjectControlerIF
 	public function linkExists($policy_id) {
 		if (!isset($policy_id) || empty($policy_id))
 			return false;
-		self::$db=new dbquery();
-		self::$db->connect();
+		$db=new dbquery();
+		$db->connect();
 		
 		$query = "select policy_id from "._LC_STACK_TABLE_NAME." where policy_id = '".$policy_id."'";
-		self::$db->query($query);
-		if (self::$db->nb_result()>0) {
-			self::$db->disconnect();
+		$db->query($query);
+		if ($db->nb_result()>0) {
+			$db->disconnect();
 			return true;
 		}
 		$query = "select policy_id from "._LC_CYCLE_STEPS_TABLE_NAME." where policy_id = '".$policy_id."'";
-		self::$db->query($query);
-		if (self::$db->nb_result()>0) {
-			self::$db->disconnect();
+		$db->query($query);
+		if ($db->nb_result()>0) {
+			$db->disconnect();
 			return true;
 		}
 		/*$query = "select policy_id from "._LC_RES_X_TABLE_NAME." where policy_id = '".$policy_id."'";
-		self::$db->query($query);
-		if (self::$db->nb_result()>0) {
-			self::$db->disconnect();
+		$db->query($query);
+		if ($db->nb_result()>0) {
+			$db->disconnect();
 			return true;
 		}
 		$query = "select policy_id from "._LC_ADR_X_TABLE_NAME." where policy_id = '".$policy_id."'";
-		self::$db->query($query);
-		if (self::$db->nb_result()>0) {
-			self::$db->disconnect();
+		$db->query($query);
+		if ($db->nb_result()>0) {
+			$db->disconnect();
 			return true;
 		}*/
 		$query = "select policy_id from "._LC_CYCLES_TABLE_NAME." where policy_id = '".$policy_id."'";
-		self::$db->query($query);
-		if (self::$db->nb_result()>0) {
-			self::$db->disconnect();
+		$db->query($query);
+		if ($db->nb_result()>0) {
+			$db->disconnect();
 			return true;
 		}
-		self::$db->disconnect();
+		$db->disconnect();
 	}
 
 	/**
@@ -358,27 +357,27 @@ class lc_policies_controler extends ObjectControler implements ObjectControlerIF
 	* @return array of policies
 	*/
 	public function getAllId() {
-		self::$db = new dbquery();
-		self::$db->connect();
+		$db = new dbquery();
+		$db->connect();
 		$query = "select policy_id from " . _LC_POLICIES_TABLE_NAME . " ";
 		try {
 			if ($_ENV['DEBUG'])
 				echo $query . ' // ';
-			self::$db->query($query);
+			$db->query($query);
 		} catch (Exception $e) {
 			echo _NO_LC_POLICY_LOCATION . ' // ';
 		}
-		if (self::$db->nb_result() > 0) {
+		if ($db->nb_result() > 0) {
 			$result = array ();
 			$cptId = 0;
-			while ($queryResult = self::$db->fetch_object()) {
+			while ($queryResult = $db->fetch_object()) {
 				$result[$cptId] = $queryResult->policy_id;
 				$cptId++;
 			}
-			self::$db->disconnect();
+			$db->disconnect();
 			return $result;
 		} else {
-			self::$db->disconnect();
+			$db->disconnect();
 			return null;
 		}
 	}

@@ -67,14 +67,14 @@ class lc_cycle_steps_controler extends ObjectControler implements ObjectControle
             $control = array("status" => "ko", "value" => "", "error" => _CYCLE_STEP_ID_EMPTY);
             return $control;
         }
-		$cycle = self::isACycleSteps($cycle);
-		self::set_foolish_ids(array('policy_id', 'cycle_id', 'cycle_step_id', 'docserver_type_id'));
-		self::set_specific_id('cycle_step_id');
+		$cycle = $this->isACycleSteps($cycle);
+		$this->set_foolish_ids(array('policy_id', 'cycle_id', 'cycle_step_id', 'docserver_type_id'));
+		$this->set_specific_id('cycle_step_id');
 		if ($mode == "up") {
-            $control = self::control($cycle, "up");
+            $control = $this->control($cycle, "up");
             if ($control['status'] == "ok") {
                 //Update existing cycle steps
-                if (self::update($cycle)) {
+                if ($this->update($cycle)) {
                     $control = array("status" => "ok", "value" => $cycle->cycle_step_id);
                     //history
                     if ($_SESSION['history']['lcadd'] == "true") {
@@ -87,10 +87,10 @@ class lc_cycle_steps_controler extends ObjectControler implements ObjectControle
                 return $control;
             }
         } else {
-            $control = self::control($cycle, "add");
+            $control = $this->control($cycle, "add");
             if ($control['status'] == "ok") {
                 //Insert new cycle
-                if (self::insert($cycle)) {
+                if ($this->insert($cycle)) {
                     $control = array("status" => "ok", "value" => $cycle->cycle_step_id);
                     //history
                     if ($_SESSION['history']['lcadd'] == "true") {
@@ -142,9 +142,8 @@ class lc_cycle_steps_controler extends ObjectControler implements ObjectControle
 			$lc_cycle_steps->is_must_complete=true;
 		}*/
 		$lc_cycle_steps->step_operation=$f->protect_string_db($f->wash($lc_cycle_steps->step_operation, "no", _STEP_OPERATION." ", 'yes', 0, 32));
-		$lcCycleStepsControler = new lc_cycle_steps_controler();
-		if ($mode == "add" && $lcCycleStepsControler->cycleStepExists($lc_cycle_steps->cycle_step_id)) {	
-			$error .= $lc_cycle_steps->cycle_step_id." "._ALREADY_EXISTS."<br />";
+		if ($mode == "add" && $this->cycleStepExists($lc_cycle_steps->cycle_step_id)) {	
+			$error .= $lc_cycle_steps->cycle_step_id." "._ALREADY_EXISTS."#";
 		}
         $error .= $_SESSION['error'];
         //TODO:rewrite wash to return errors without html
@@ -165,7 +164,7 @@ class lc_cycle_steps_controler extends ObjectControler implements ObjectControle
 	* @return bool true if the insertion is complete, false otherwise
 	*/
 	private function insert($cycle) {	
-		return self::advanced_insert($cycle);
+		return $this->advanced_insert($cycle);
 	}
 
 	/**
@@ -175,7 +174,7 @@ class lc_cycle_steps_controler extends ObjectControler implements ObjectControle
 	* @return bool true if the update is complete, false otherwise
 	*/
 	private function update($cycle) {
-		return self::advanced_update($cycle);
+		return $this->advanced_update($cycle);
 	}
 	
 	/**
@@ -187,9 +186,9 @@ class lc_cycle_steps_controler extends ObjectControler implements ObjectControle
 	* @return lc_cycle_steps object with properties from the database or null
 	*/
 	public function get($cycle_step_id, $comp_where = '', $can_be_disabled = false) {
-		self::set_foolish_ids(array('policy_id', 'cycle_id', 'cycle_step_id', 'docserver_type_id'));
-		self::set_specific_id('cycle_step_id');
-		$cycle = self::advanced_get($cycle_step_id, _LC_CYCLE_STEPS_TABLE_NAME);
+		$this->set_foolish_ids(array('policy_id', 'cycle_id', 'cycle_step_id', 'docserver_type_id'));
+		$this->set_specific_id('cycle_step_id');
+		$cycle = $this->advanced_get($cycle_step_id, _LC_CYCLE_STEPS_TABLE_NAME);
 		//var_dump($policy);
         if (get_class($cycle) <> "lc_cycle_steps") {
             return null;
@@ -206,9 +205,9 @@ class lc_cycle_steps_controler extends ObjectControler implements ObjectControle
     * @return cycle steps
     */
     public function getWs($cycle_step_id) {
-        self::set_foolish_ids(array('policy_id', 'cycle_id', 'cycle_step_id', 'docserver_type_id'));
-		self::set_specific_id('cycle_step_id');
-        $cycle = self::advanced_get($cycle_step_id, _LC_CYCLE_STEPS_TABLE_NAME);
+        $this->set_foolish_ids(array('policy_id', 'cycle_id', 'cycle_step_id', 'docserver_type_id'));
+		$this->set_specific_id('cycle_step_id');
+        $cycle = $this->advanced_get($cycle_step_id, _LC_CYCLE_STEPS_TABLE_NAME);
         if (get_class($cycle) <> "lc_cycle_steps") {
             return null;
         } else {
@@ -229,27 +228,27 @@ class lc_cycle_steps_controler extends ObjectControler implements ObjectControle
             $control = array("status" => "ko", "value" => "", "error" => _LC_CYCLE_EMPTY);
             return $control;
         }
-        $cycle = self::isACycleSteps($cycle_step_id);
-        if (!self::cycleStepExists($cycle->cycle_step_id)) {
+        $cycle = $this->isACycleSteps($cycle_step_id);
+        if (!$this->cycleStepExists($cycle->cycle_step_id)) {
             $control = array("status" => "ko", "value" => "", "error" => _LC_CYCLE_STEP_NOT_EXISTS);
             return $control;
         }
-		if (self::linkExists($cycle->policy_id, $cycle->cycle_step_id)) {
+		if ($this->linkExists($cycle->policy_id, $cycle->cycle_step_id)) {
 			$control = array("status" => "ko", "value" => "", "error" => _LINK_EXISTS);
             return $control;
         }
-		self::$db=new dbquery();
-		self::$db->connect();
-		$query="delete from "._LC_CYCLE_STEPS_TABLE_NAME." where cycle_step_id ='".self::$db->protect_string_db($cycle->cycle_step_id)."'";
+		$db=new dbquery();
+		$db->connect();
+		$query="delete from "._LC_CYCLE_STEPS_TABLE_NAME." where cycle_step_id ='".$db->protect_string_db($cycle->cycle_step_id)."'";
 		try {
 			if ($_ENV['DEBUG']) {echo $query.' // ';}
-			self::$db->query($query);
+			$db->query($query);
 			$ok = true;
 		} catch (Exception $e) {
 			$control = array("status" => "ko", "value" => "", "error" => _CANNOT_DELETE_CYCLE_STEP_ID." ".$cycle->cycle_step_id);
 			$ok = false;
 		}
-		self::$db->disconnect();
+		$db->disconnect();
 		$control = array("status" => "ok", "value" => $cycle->cycle_step_id);
 		if ($_SESSION['history']['lcdel'] == "true") {
 			require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
@@ -309,8 +308,8 @@ class lc_cycle_steps_controler extends ObjectControler implements ObjectControle
 	public function cycleStepExists($cycle_step_id) {
 		if (!isset ($cycle_step_id) || empty ($cycle_step_id))
 			return false;
-		self::$db = new dbquery();
-		self::$db->connect();
+		$db = new dbquery();
+		$db->connect();
 
 		$query = "select cycle_step_id from " . _LC_CYCLE_STEPS_TABLE_NAME . " where cycle_step_id = '" . $cycle_step_id . "'";
 
@@ -318,16 +317,16 @@ class lc_cycle_steps_controler extends ObjectControler implements ObjectControle
 			if ($_ENV['DEBUG']) {
 				echo $query . ' // ';
 			}
-			self::$db->query($query);
+			$db->query($query);
 		} catch (Exception $e) {
 			echo _UNKNOWN . _LC_CYCLE_STEP . " " . $cycle_step_id . ' // ';
 		}
 
-		if (self::$db->nb_result() > 0) {
-			self::$db->disconnect();
+		if ($db->nb_result() > 0) {
+			$db->disconnect();
 			return true;
 		}
-		self::$db->disconnect();
+		$db->disconnect();
 		return false;
 	}
 
@@ -343,23 +342,23 @@ class lc_cycle_steps_controler extends ObjectControler implements ObjectControle
 			return false;
 		if (!isset($cycle_step_id) || empty($cycle_step_id))
 			return false;
-		self::$db=new dbquery();
-		self::$db->connect();
+		$db=new dbquery();
+		$db->connect();
 		
 		$query = "select cycle_step_id from "._LC_STACK_TABLE_NAME." where cycle_step_id = '".$cycle_step_id."' and policy_id = '".$policy_id."'";
-		self::$db->query($query);
-		if (self::$db->nb_result()>0) {
-			self::$db->disconnect();
+		$db->query($query);
+		if ($db->nb_result()>0) {
+			$db->disconnect();
 			return true;
 		}
 		
 		/*$query = "select cycle_step_id from "._LC_ADR_X_TABLE_NAME." where cycle_step_id = '".$cycle_step_id."' and policy_id = '".$policy_id."'";
-		self::$db->query($query);
-		if (self::$db->nb_result()>0) {
-			self::$db->disconnect();
+		$db->query($query);
+		if ($db->nb_result()>0) {
+			$db->disconnect();
 			return true;
 		}*/
-		self::$db->disconnect();
+		$db->disconnect();
 	}
 	
 	/**
@@ -368,27 +367,27 @@ class lc_cycle_steps_controler extends ObjectControler implements ObjectControle
 	* @return array of cycles
 	*/
 	public function getAllId($policy_id) {
-		self::$db = new dbquery();
-		self::$db->connect();
+		$db = new dbquery();
+		$db->connect();
 		$query = "select cycle_id from " . _LC_CYCLES_TABLE_NAME . " where policy_id = '" .$policy_id. "'";
 		try {
 			if ($_ENV['DEBUG'])
 				echo $query . ' // ';
-			self::$db->query($query);
+			$db->query($query);
 		} catch (Exception $e) {
 			echo _NO_CYCLE_ID . ' // ';
 		}
-		if (self::$db->nb_result() > 0) {
+		if ($db->nb_result() > 0) {
 			$result = array ();
 			$cptId = 0;
-			while ($queryResult = self::$db->fetch_object()) {
+			while ($queryResult = $db->fetch_object()) {
 				$result[$cptId] = $queryResult->cycle_id;
 				$cptId++;
 			}
-			self::$db->disconnect();
+			$db->disconnect();
 			return $result;
 		} else {
-			self::$db->disconnect();
+			$db->disconnect();
 			return null;
 		}
 	}

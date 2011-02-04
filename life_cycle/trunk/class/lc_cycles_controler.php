@@ -70,14 +70,14 @@ class lc_cycles_controler extends ObjectControler implements ObjectControlerIF {
             $control = array("status" => "ko", "value" => "", "error" => _CYCLE_ID_EMPTY);
             return $control;
         }
-		$cycle = self::isACycle($cycle);
-		self::set_foolish_ids(array('policy_id', 'cycle_id'));
-		self::set_specific_id('cycle_id');
+		$cycle = $this->isACycle($cycle);
+		$this->set_foolish_ids(array('policy_id', 'cycle_id'));
+		$this->set_specific_id('cycle_id');
 		if ($mode == "up") {
-            $control = self::control($cycle, "up");
+            $control = $this->control($cycle, "up");
             if ($control['status'] == "ok") {
                 //Update existing cycle
-                if (self::update($cycle)) {
+                if ($this->update($cycle)) {
                     $control = array("status" => "ok", "value" => $cycle->cycle_id);
                     //history
                     if ($_SESSION['history']['lcadd'] == "true") {
@@ -90,10 +90,10 @@ class lc_cycles_controler extends ObjectControler implements ObjectControlerIF {
                 return $control;
             }
         } else {
-            $control = self::control($cycle, "add");
+            $control = $this->control($cycle, "add");
             if ($control['status'] == "ok") {
                 //Insert new cycle
-                if (self::insert($cycle)) {
+                if ($this->insert($cycle)) {
                     $control = array("status" => "ok", "value" => $cycle->cycle_id);
                     //history
                     if ($_SESSION['history']['lcadd'] == "true") {
@@ -126,17 +126,15 @@ class lc_cycles_controler extends ObjectControler implements ObjectControlerIF {
 		$cycle->cycle_desc=$f->protect_string_db($f->wash($cycle->cycle_desc, "no", _CYCLE_DESC." ", 'yes', 0, 255));
 		$cycle->sequence_number=$f->protect_string_db($f->wash($cycle->sequence_number, "num", _SEQUENCE_NUMBER." ", 'yes', 0, 255));
 		$cycle->break_key=$f->protect_string_db($f->wash($cycle->break_key, "no", _BREAK_KEY." ", 'no', 0, 255));	
-		// Traitement et contrôle du WHERE-CLAUSE
-		$lcCyclesControler = new lc_cycles_controler();
-		if ($lcCyclesControler->where_test_secure($cycle->where_clause)) {
-			$error .= _WHERE_CLAUSE_NOT_SECURE."<br>";
-		} elseif (!$lcCyclesControler->where_test($cycle->where_clause)) {
-			$error .= _PB_WITH_WHERE_CLAUSE."<br>";
+		if ($this->where_test_secure($cycle->where_clause)) {
+			$error .= _WHERE_CLAUSE_NOT_SECURE."#";
+		} elseif (!$this->where_test($cycle->where_clause)) {
+			$error .= _PB_WITH_WHERE_CLAUSE."#";
 		}
 		$cycle->where_clause=$f->protect_string_db($f->wash($cycle->where_clause, "no", _WHERE_CLAUSE." ", 'yes', 0, 255));
 		$cycle->validation_mode=$f->protect_string_db($f->wash($cycle->validation_mode, "no", _VALIDATION_MODE." ", 'yes', 0, 32));
-		if ($mode == "add" && $lcCyclesControler->cycleExists($cycle->cycle_id)) {	
-			$error .= $cycle->cycle_id." "._ALREADY_EXISTS."<br />";
+		if ($mode == "add" && $this->cycleExists($cycle->cycle_id)) {	
+			$error .= $cycle->cycle_id." "._ALREADY_EXISTS."#";
 		}
         $error .= $_SESSION['error'];
         //TODO:rewrite wash to return errors without html
@@ -157,7 +155,7 @@ class lc_cycles_controler extends ObjectControler implements ObjectControlerIF {
 	* @return bool true if the insertion is complete, false otherwise
 	*/
 	private function insert($cycle) {
-		return self::advanced_insert($cycle);
+		return $this->advanced_insert($cycle);
 	}
 
 	/**
@@ -167,7 +165,7 @@ class lc_cycles_controler extends ObjectControler implements ObjectControlerIF {
 	* @return bool true if the update is complete, false otherwise
 	*/
 	private function update($cycle) {
-		return self::advanced_update($cycle);
+		return $this->advanced_update($cycle);
 	}
 
 	/**
@@ -179,9 +177,9 @@ class lc_cycles_controler extends ObjectControler implements ObjectControlerIF {
 	* @return lc_cycles object with properties from the database or null
 	*/
 	public function get($cycle_id, $comp_where = '', $can_be_disabled = false) {
-		self::set_foolish_ids(array('policy_id', 'cycle_id'));
-		self::set_specific_id('cycle_id');
-		$cycle = self::advanced_get($cycle_id, _LC_CYCLES_TABLE_NAME);
+		$this->set_foolish_ids(array('policy_id', 'cycle_id'));
+		$this->set_specific_id('cycle_id');
+		$cycle = $this->advanced_get($cycle_id, _LC_CYCLES_TABLE_NAME);
 		//var_dump($policy);
         if (get_class($cycle) <> "lc_cycles") {
             return null;
@@ -198,9 +196,9 @@ class lc_cycles_controler extends ObjectControler implements ObjectControlerIF {
     * @return cycle
     */
     public function getWs($cycle_id) {
-        self::set_foolish_ids(array('policy_id', 'cycle_id'));
-        self::set_specific_id('cycle_id');
-        $cycle = self::advanced_get($cycle_id, _LC_CYCLES_TABLE_NAME);
+        $this->set_foolish_ids(array('policy_id', 'cycle_id'));
+        $this->set_specific_id('cycle_id');
+        $cycle = $this->advanced_get($cycle_id, _LC_CYCLES_TABLE_NAME);
         if (get_class($cycle) <> "lc_policies") {
             return null;
         } else {
@@ -221,27 +219,27 @@ class lc_cycles_controler extends ObjectControler implements ObjectControlerIF {
             $control = array("status" => "ko", "value" => "", "error" => _LC_CYCLE_EMPTY);
             return $control;
         }
-        $cycle = self::isACycle($cycle);
-        if (!self::cycleExists($cycle->cycle_id)) {
+        $cycle = $this->isACycle($cycle);
+        if (!$this->cycleExists($cycle->cycle_id)) {
             $control = array("status" => "ko", "value" => "", "error" => _LC_CYCLE_NOT_EXISTS);
             return $control;
         }
-		if (self::linkExists($cycle->policy_id, $cycle->cycle_id)) {
+		if ($this->linkExists($cycle->policy_id, $cycle->cycle_id)) {
 			$control = array("status" => "ko", "value" => "", "error" => _LINK_EXISTS);
             return $control;
         }
-		self::$db=new dbquery();
-		self::$db->connect();
-		$query="delete from "._LC_CYCLES_TABLE_NAME." where cycle_id ='".self::$db->protect_string_db($cycle->cycle_id)."'";
+		$db=new dbquery();
+		$db->connect();
+		$query="delete from "._LC_CYCLES_TABLE_NAME." where cycle_id ='".$db->protect_string_db($cycle->cycle_id)."'";
 		try {
 			if ($_ENV['DEBUG']) {echo $query.' // ';}
-			self::$db->query($query);
+			$db->query($query);
 			$ok = true;
 		} catch (Exception $e) {
 			$control = array("status" => "ko", "value" => "", "error" => _CANNOT_DELETE_CYCLE_ID." ".$cycle->cycle_id);
 			$ok = false;
 		}
-		self::$db->disconnect();
+		$db->disconnect();
 		$control = array("status" => "ok", "value" => $cycle->cycle_id);
 		if ($_SESSION['history']['lcdel'] == "true") {
 			require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
@@ -301,22 +299,22 @@ class lc_cycles_controler extends ObjectControler implements ObjectControlerIF {
 	public function cycleExists($cycle_id) {
 		if (!isset ($cycle_id) || empty ($cycle_id))
 			return false;
-		self::$db = new dbquery();
-		self::$db->connect();
+		$db = new dbquery();
+		$db->connect();
 		$query = "select cycle_id from " . _LC_CYCLES_TABLE_NAME . " where cycle_id = '" . $cycle_id . "'";
 		try {
 			if ($_ENV['DEBUG']) {
 				echo $query . ' // ';
 			}
-			self::$db->query($query);
+			$db->query($query);
 		} catch (Exception $e) {
 			echo _UNKNOWN . _LC_CYCLE . " " . $cycle_id . ' // ';
 		}
-		if (self::$db->nb_result() > 0) {
-			self::$db->disconnect();
+		if ($db->nb_result() > 0) {
+			$db->disconnect();
 			return true;
 		}
-		self::$db->disconnect();
+		$db->disconnect();
 		return false;
 	}
 
@@ -332,34 +330,34 @@ class lc_cycles_controler extends ObjectControler implements ObjectControlerIF {
 			return false;
 		if (!isset($cycle_id) || empty($cycle_id))
 			return false;
-		self::$db=new dbquery();
-		self::$db->connect();
+		$db=new dbquery();
+		$db->connect();
 		
 		$query = "select cycle_id from "._LC_STACK_TABLE_NAME." where cycle_id = '".$cycle_id."' and policy_id = '".$policy_id."'";
-		self::$db->query($query);
-		if (self::$db->nb_result()>0) {
-			self::$db->disconnect();
+		$db->query($query);
+		if ($db->nb_result()>0) {
+			$db->disconnect();
 			return true;
 		}
 		$query = "select cycle_id from "._LC_CYCLE_STEPS_TABLE_NAME." where cycle_id = '".$cycle_id."' and policy_id = '".$policy_id."'";
-		self::$db->query($query);
-		if (self::$db->nb_result()>0) {
-			self::$db->disconnect();
+		$db->query($query);
+		if ($db->nb_result()>0) {
+			$db->disconnect();
 			return true;
 		}
 		/*$query = "select cycle_id from "._LC_RES_X_TABLE_NAME." where cycle_id = '".$cycle_id."' and policy_id = '".$policy_id."'";
-		self::$db->query($query);
-		if (self::$db->nb_result()>0) {
-			self::$db->disconnect();
+		$db->query($query);
+		if ($db->nb_result()>0) {
+			$db->disconnect();
 			return true;
 		}
 		$query = "select cycle_id from "._LC_ADR_X_TABLE_NAME." where cycle_id = '".$cycle_id."' and policy_id = '".$policy_id."'";
-		self::$db->query($query);
-		if (self::$db->nb_result()>0) {
-			self::$db->disconnect();
+		$db->query($query);
+		if ($db->nb_result()>0) {
+			$db->disconnect();
 			return true;
 		}*/
-		self::$db->disconnect();
+		$db->disconnect();
 	}
 
 	/**
@@ -368,29 +366,29 @@ class lc_cycles_controler extends ObjectControler implements ObjectControlerIF {
 	* @return array of cycles
 	*/
 	public function getAllId($can_be_disabled = false) {
-		self::$db = new dbquery();
-		self::$db->connect();
+		$db = new dbquery();
+		$db->connect();
 		$query = "select cycle_id from " . _LC_CYCLES_TABLE_NAME . " ";
 		if (!$can_be_disabled)
 			$query .= " where enabled = 'Y'";
 		try {
 			if ($_ENV['DEBUG'])
 				echo $query . ' // ';
-			self::$db->query($query);
+			$db->query($query);
 		} catch (Exception $e) {
 			echo _NO_LC_CYCLE . ' // ';
 		}
-		if (self::$db->nb_result() > 0) {
+		if ($db->nb_result() > 0) {
 			$result = array ();
 			$cptId = 0;
-			while ($queryResult = self::$db->fetch_object()) {
+			while ($queryResult = $db->fetch_object()) {
 				$result[$cptId] = $queryResult->cycle_id;
 				$cptId++;
 			}
-			self::$db->disconnect();
+			$db->disconnect();
 			return $result;
 		} else {
-			self::$db->disconnect();
+			$db->disconnect();
 			return null;
 		}
 	}
@@ -402,27 +400,27 @@ class lc_cycles_controler extends ObjectControler implements ObjectControlerIF {
 	* @return array lc_cycle identifier
 	*/
 	public function getAllIdByPolicy($policy_id) {
-		self::$db = new dbquery();
-		self::$db->connect();
+		$db = new dbquery();
+		$db->connect();
 		$query = "select cycle_id from " . _LC_CYCLES_TABLE_NAME . " where policy_id = '".$policy_id."'";
 		try {
 			if ($_ENV['DEBUG'])
 				echo $query . ' // ';
-			self::$db->query($query);
+			$db->query($query);
 		} catch (Exception $e) {
 			echo _NO_LC_CYCLE . ' // ';
 		}
-		if (self::$db->nb_result() > 0) {
+		if ($db->nb_result() > 0) {
 			$result = array ();
 			$cptId = 0;
-			while ($queryResult = self::$db->fetch_object()) {
+			while ($queryResult = $db->fetch_object()) {
 				$result[$cptId] = $queryResult->cycle_id;
 				$cptId++;
 			}
-			self::$db->disconnect();
+			$db->disconnect();
 			return $result;
 		} else {
-			self::$db->disconnect();
+			$db->disconnect();
 			return null;
 		}
 	}
@@ -435,15 +433,15 @@ class lc_cycles_controler extends ObjectControler implements ObjectControlerIF {
 	*/
 	public function where_test($where_clause) {
 		$res = true;
-		self::$db=new dbquery();
-		self::$db->connect();
+		$db=new dbquery();
+		$db->connect();
 		if (!empty($where_clause)) {
-			$res = self::$db->query("select res_id from ".$_SESSION['collections'][0]['view']." where ".$where_clause, true);
+			$res = $db->query("select res_id from ".$_SESSION['collections'][0]['view']." where ".$where_clause, true);
 		}
 		if (!$res) {
 			$res = false;
 		}
-		self::$db->disconnect();
+		$db->disconnect();
 		return $res;
 	}
 
