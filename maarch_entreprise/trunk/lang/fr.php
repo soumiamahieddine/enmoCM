@@ -1055,7 +1055,7 @@ if (!defined('_DOCSERVER_DISABLED')) define( '_DOCSERVER_DISABLED', 'Zone de sto
 if (!defined('_DOCSERVER_ENABLED')) define( '_DOCSERVER_ENABLED', 'Zone de stockage active');
 if (!defined('_ALREADY_EXISTS_FOR_THIS_TYPE_OF_DOCSERVER')) define( '_ALREADY_EXISTS_FOR_THIS_TYPE_OF_DOCSERVER', 'existe déjà pour ce type');
 if (!defined('_DOCSERVER_LOCATION_ENABLED')) define( '_DOCSERVER_LOCATION_ENABLED', 'Lieu de stockage actif');
-if (!defined('_DOCSERVER_LOCATION_DISABLED')) define( '_DOCSERVER_LOCATION_DISABLED', 'Lieu de stockage suspendu');
+
 
 /***************DOCSERVERS TYPES*************************************/
 if (!defined('_DOCSERVER_TYPE_ID'))  define('_DOCSERVER_TYPE_ID', 'Identifiant du type de zone de stockage ');
@@ -1079,7 +1079,11 @@ if (!defined('_DOCSERVER_TYPE_ADDITION'))  define('_DOCSERVER_TYPE_ADDITION', 'A
 if (!defined('_DOCSERVER_TYPE_ADDED'))  define('_DOCSERVER_TYPE_ADDED', 'Type de zone de stockage ajouté ');
 if (!defined('_DOCSERVER_TYPE_UPDATED'))  define('_DOCSERVER_TYPE_UPDATED', 'Type de zone de stockage mis à jour ');
 if (!defined('_DOCSERVER_TYPE_DELETED'))  define('_DOCSERVER_TYPE_DELETED', 'Type de zone de stockage supprimé ');
-
+if (!defined('_NOT_CONTAINER'))  define('_NOT_CONTAINER', 'Pas un container');
+if (!defined('_CONTAINER'))  define('_CONTAINER', 'Un container');
+if (!defined('_NOT_COMPRESSED'))  define('_NOT_COMPRESSED', 'Non compress&eacute;');
+if (!defined('_COMPRESSED'))  define('_COMPRESSED', 'Compress&eacute;');
+if (!defined('_COMPRESSION_MODE'))  define('_COMPRESSION_MODE', 'Mode de compression');
 
 /***************DOCSERVERS*********************************/
 if (!defined('_DOCSERVERS'))  define('_DOCSERVERS', 'Zone(s) de stockage ');
@@ -1104,6 +1108,8 @@ if (!defined('_DOCSERVERS_LIST'))  define('_DOCSERVERS_LIST', 'Liste des zones d
 if (!defined('_GB'))  define('_GB', 'Gigaoctets ');
 if (!defined('_TB'))  define('_TB', 'Teraoctets ');
 if (!defined('_MB'))  define('_MB', 'Megaoctets ');
+if (!defined('_SIZE_LIMIT_NUMBER')) define( '_SIZE_LIMIT_NUMBER', 'Taille limite');
+if (!defined('_DOCSERVER_ATTACHED_TO_RES_X')) define( '_DOCSERVER_ATTACHED_TO_RES_X', 'Des documents sont stock&eacute;s sur cette espace de stockage');
 
 /************DOCSERVER LOCATIONS******************************/
 if (!defined('_DOCSERVER_LOCATION_ID'))  define('_DOCSERVER_LOCATION_ID', 'Identifiant de lieu de stockage ');
@@ -1121,10 +1127,13 @@ if (!defined('_DOCSERVER_LOCATION'))  define('_DOCSERVER_LOCATION', 'un lieu de 
 if (!defined('_DOCSERVER_LOCATION_UPDATED'))  define('_DOCSERVER_LOCATION_UPDATED', 'Lieu de stockage mis à jour');
 if (!defined('_DOCSERVER_LOCATION_ADDED'))  define('_DOCSERVER_LOCATION_ADDED', 'Lieu de stockage ajouté');
 if (!defined('_DOCSERVER_LOCATION_DELETED'))  define('_DOCSERVER_LOCATION_DELETED', 'Lieu de stockage supprimé');
+if (!defined('_DOCSERVER_LOCATION_DISABLED'))  define('_DOCSERVER_LOCATION_DISABLED', 'Lieu de stockage desactiv&eacute;');
+if (!defined('_DOCSERVER_LOCATION_ENABLED'))  define('_DOCSERVER_LOCATION_ENABLED', 'Lieu de stockage activ&eacute;');
 if (!defined('_IP_V4_ADRESS_NOT_VALID')) define('_IP_V4_ADRESS_NOT_VALID', 'Adresse IPV4 inaccessible');
 if (!defined('_IP_V4_FORMAT_NOT_VALID')) define('_IP_V4_FORMAT_NOT_VALID', 'Mauvais format adresse IPV4');
 if (!defined('_IP_V6_NOT_VALID')) define('_IP_V6_NOT_VALID', 'Mauvais format adresse IPV6');
 if (!defined('_MASK_NOT_VALID')) define('_MASK_NOT_VALID', 'Masque non valide');
+
 
 /************FAILOVER******************************/
 if (!defined('_FAILOVER'))  define('_FAILOVER', 'Reprise sur erreur');

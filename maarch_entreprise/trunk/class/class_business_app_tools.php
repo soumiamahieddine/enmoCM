@@ -179,6 +179,10 @@ class business_app_tools extends dbquery
             $_SESSION['history']['docserverslocationsdel'] = (string) $HISTORY->docserverslocationsdel;
             $_SESSION['history']['docserverslocationsallow'] = (string) $HISTORY->docserverslocationsallow;
             $_SESSION['history']['docserverslocationsban'] = (string) $HISTORY->docserverslocationsban;
+            $_SESSION['history']['docserverstypesadd'] = (string) $HISTORY->docserverstypesadd;
+            $_SESSION['history']['docserverstypesdel'] = (string) $HISTORY->docserverstypesdel;
+            $_SESSION['history']['docserverstypesallow'] = (string) $HISTORY->docserverstypesallow;
+            $_SESSION['history']['docserverstypesban'] = (string) $HISTORY->docserverstypesban;
             $_SESSION['history_keywords'] = array();
             foreach($xmlconfig->KEYWORDS as $keyword)
             {

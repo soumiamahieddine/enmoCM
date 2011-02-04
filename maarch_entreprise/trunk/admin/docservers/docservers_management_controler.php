@@ -38,8 +38,8 @@ $idName = "docserver_id";
 
 $mode = 'add';
 
-core_tools::load_lang(); // NOTE : core_tools is not a static class
-
+$core = new core_tools();
+$core->load_lang();
 if (isset($_REQUEST['mode']) && !empty($_REQUEST['mode'])) {
 	$mode = $_REQUEST['mode'];
 } else {
@@ -57,12 +57,13 @@ try {
 } catch (Exception $e) {
 	echo $e->getMessage();
 }
-
+$docserverLocationsControler = new docserver_locations_controler();
+$docserverTypesControler = new docserver_types_controler();
 if ($mode == "up" || $mode =="add") {
 	$docserverLocationsArray = array();
-	$docserverLocationsArray = docserver_locations_controler::getAllId();
+	$docserverLocationsArray = $docserverLocationsControler->getAllId();
 	$docserverTypesArray = array();
-	$docserverTypesArray = docserver_types_controler::getAllId();
+	$docserverTypesArray = $docserverTypesControler->getAllId();
 }
 
 if (isset($_REQUEST['submit'])) {
@@ -144,26 +145,25 @@ function validate_cs_submit($mode) {
 	$tableName = "docservers";
 	$idName = "docserver_id";
 	$f = new functions();
-	//$f->show_array($_REQUEST);exit;
+	$docserversControler = new docservers_controler();
 	$docservers = new docservers();
-	$docservers->docserver_id = $_REQUEST['id'];
-	$docservers->docserver_type_id = $_REQUEST['docserver_type_id'];
-	$docservers->device_label = $_REQUEST['device_label'];
-	$docservers->is_readonly = $_REQUEST['is_readonly'];
-	$docservers->size_limit_number = $_REQUEST['size_limit_hidden'];
-	$docservers->path_template = $_REQUEST['path_template'];
-	$docservers->coll_id = $_REQUEST['coll_id'];
-	$docservers->priority_number = $_REQUEST['priority_number'];
-	$docservers->docserver_location_id = $_REQUEST['docserver_location_id'];
-	$docservers->adr_priority_number = $_REQUEST['adr_priority_number'];
 	$status = array();
 	$status['order'] = $_REQUEST['order'];
 	$status['order_field'] = $_REQUEST['order_field'];
 	$status['what'] = $_REQUEST['what'];
 	$status['start'] = $_REQUEST['start'];
+	if (isset($_REQUEST['id'])) $docservers->docserver_id = $_REQUEST['id'];
+	if (isset($_REQUEST['docserver_type_id'])) $docservers->docserver_type_id = $_REQUEST['docserver_type_id'];
+	if (isset($_REQUEST['device_label'])) $docservers->device_label = $_REQUEST['device_label'];
+	if (isset($_REQUEST['is_readonly'])) $docservers->is_readonly = $_REQUEST['is_readonly'];
+	if (isset($_REQUEST['size_limit_number'])) $docservers->size_limit_number = $_REQUEST['size_limit_hidden'];
+	if (isset($_REQUEST['path_template'])) $docservers->path_template = $_REQUEST['path_template'];
+	if (isset($_REQUEST['coll_id'])) $docservers->coll_id = $_REQUEST['coll_id'];
+	if (isset($_REQUEST['priority_number'])) $docservers->priority_number = $_REQUEST['priority_number'];
+	if (isset($_REQUEST['docserver_location_id'])) $docservers->docserver_location_id = $_REQUEST['docserver_location_id'];
+	if (isset($_REQUEST['adr_priority_number'])) $docservers->adr_priority_number = $_REQUEST['adr_priority_number'];
 	$control = array();
-	//var_dump($docservers);exit;
-	$control = docservers_controler::save($docservers, $mode);
+	$control = $docserversControler->save($docservers, $mode);
 	if (!empty($control['error']) && $control['error'] <> 1) {
 		// Error management depending of mode
 		$_SESSION['error'] = str_replace("#", "<br />", $control['error']);
@@ -197,8 +197,9 @@ function validate_cs_submit($mode) {
  * @param Long $docserver_id
  */
 function display_up($docserver_id) {
+	$docserversControler = new docservers_controler();
 	$state = true;
-	$docservers = docservers_controler::get($docserver_id);
+	$docservers = $docserversControler->get($docserver_id);
 	if (empty($docservers))
 		$state = false; 
 	else
@@ -224,6 +225,8 @@ function display_list() {
 	$pageName = "docservers_management_controler";
 	$tableName = "docservers";
 	$idName = "docserver_id";
+	$func = new functions();
+	$listShow = new list_show();
 	$_SESSION['m_admin'] = array();
 	init_session();
 	$select[_DOCSERVERS_TABLE_NAME] = array();
@@ -231,7 +234,7 @@ function display_list() {
 	$what = "";
 	$where ="";
 	if (isset($_REQUEST['what']) && !empty($_REQUEST['what'])) {
-		$what = functions::protect_string_db($_REQUEST['what']);
+		$what = $func->protect_string_db($_REQUEST['what']);
 		if ($_SESSION['config']['databasetype'] == "POSTGRESQL") {
 			$where = $idName." ilike '".strtoupper($what)."%' ";
 		} else {
@@ -247,7 +250,7 @@ function display_list() {
 	if (isset($_REQUEST['order_field']) && !empty($_REQUEST['order_field'])) {
 		$field = trim($_REQUEST['order_field']);
 	}
-	$orderstr = list_show::define_order($order, $field);
+	$orderstr = $listShow->define_order($order, $field);
 	$request = new request();
 	$tab=$request->select($select,$where,$orderstr,$_SESSION['config']['databasetype']);
 	for ($i=0;$i<count($tab);$i++) {
@@ -265,7 +268,11 @@ function display_list() {
 					$sizeLimit = $item['value'];
 					format_item($item,_SIZE_LIMIT_NUMBER,"5","left","left","bottom",false); break;
 				case "actual_size_number":
-					$item['value'] = number_format(($item['value']*100)/$sizeLimit, 0);
+					if(isset($sizeLimit) && $sizeLimit <> 0) {
+						$item['value'] = number_format(($item['value']*100)/$sizeLimit, 0);
+					} else {
+						$item['value'] = 0;
+					}
 					$item['value'] .= "%";
 					format_item($item,_PERCENTAGE_FULL,"5","left","left","bottom",true); break;
 				case "enabled":
@@ -273,12 +280,6 @@ function display_list() {
 			}
 		}
 	}
-	/*
-	 * TODO Pour éviter les actions suivantes, il y a 2 solutions :
-	 * - La plus propre : créer un objet "PageList"
-	 * - La plus locale : si cela ne sert que pour admin_list dans docserver_management.php,
-	 *                    il est possible d'en construire directement la string et de la récupérer en return.
-	 */  
 	$result = array();
 	$result['tab']=$tab;
 	$result['what']=$what;
@@ -302,11 +303,12 @@ function display_list() {
  * @param unknown_type $docserver_id
  */
 function display_del($docserver_id) {
-	$docservers = docservers_controler::get($docserver_id);
+	$docserversControler = new docservers_controler();
+	$docservers = $docserversControler->get($docserver_id);
 	if (isset($docservers)) {
 		// Deletion
 		$control = array();
-		$control = docservers_controler::delete($docservers);
+		$control = $docserversControler->delete($docservers);
 		if (!empty($control['error']) && $control['error'] <> 1) {
 			$_SESSION['error'] = str_replace("#", "<br />", $control['error']);
 		} else {
@@ -327,11 +329,12 @@ function display_del($docserver_id) {
  * @param unknown_type $docserver_id
  */
 function display_enable($docserver_id) {
-	$docservers = docservers_controler::get($docserver_id);
+	$docserversControler = new docservers_controler();
+	$docservers = $docserversControler->get($docserver_id);
 	if (isset($docservers)) {
 		// Enable
 		$control = array();
-		$control = docservers_controler::enable($docservers);
+		$control = $docserversControler->enable($docservers);
 		if (!empty($control['error']) && $control['error'] <> 1) {
 			$_SESSION['error'] = str_replace("#", "<br />", $control['error']);
 		} else {
@@ -352,11 +355,17 @@ function display_enable($docserver_id) {
  * @param unknown_type $docserver_id
  */
 function display_disable($docserver_id) {
-	$docservers = docservers_controler::get($docserver_id);
+	$docserversControler = new docservers_controler();
+	$docservers = $docserversControler->get($docserver_id);
 	if (isset($docservers)) {
 		// Disable
-		docservers_controler::disable($docservers);
-		$_SESSION['error'] = _DOCSERVER_DISABLED." ".$docserver_id;
+		$control = array();
+		$control = $docserversControler->disable($docservers);
+		if (!empty($control['error']) && $control['error'] <> 1) {
+			$_SESSION['error'] = str_replace("#", "<br />", $control['error']);
+		} else {
+			$_SESSION['error'] = _DOCSERVER_DISABLED." ".$docserver_id;
+		}
 		$pageName = "docservers_management_controler";
 		?><script>window.top.location='<?php echo $_SESSION['config']['businessappurl']."index.php?page=".$pageName."&mode=list&admin=docservers"?>';</script>
 		<?php
@@ -381,7 +390,8 @@ function display_disable($docserver_id) {
  * @param $show
  */
 function format_item(&$item,$label,$size,$label_align,$align,$valign,$show) {
-	$item['value']=functions::show_string($item['value']);	
+	$func = new functions();
+	$item['value']=$func->show_string($item['value']);	
 	$item[$item['column']]=$item['value'];
 	$item["label"]=$label;
 	$item["size"]=$size;
@@ -399,9 +409,10 @@ function format_item(&$item,$label,$size,$label_align,$align,$valign,$show) {
  * @param hashable $hashable
  */
 function put_in_session($type,$hashable) {
+	$func = new functions();
 	foreach($hashable as $key=>$value) {
-		// echo "Key: $key Value: $value f:".functions::show_string($value)." // ";
-		$_SESSION['m_admin'][$type][$key]=$value;
+		// echo "Key: $key Value: $value f:".$func->show_string($value)." // ";
+		$_SESSION['m_admin'][$type][$key]=$func->show_string($value);
 	}
 }
 

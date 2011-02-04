@@ -986,15 +986,27 @@ if (!defined('_DOCSERVER_TYPE'))  define('_DOCSERVER_TYPE', 'Docserver type');
 if (!defined('_DOCSERVER_TYPES_LIST'))  define('_DOCSERVER_TYPES_LIST', 'Docserver type list ');
 if (!defined('_ALL_DOCSERVER_TYPES'))  define('_ALL_DOCSERVER_TYPES', 'View all');
 if (!defined('_DOCSERVER_TYPE_LABEL'))  define('_DOCSERVER_TYPE_LABEL', 'Docserver type label ');
-if (!defined('_IS_COMPRESSED'))  define('_IS_COMPRESSED', 'Compressed');
+if (!defined('_DOCSERVER_TYPES'))  define('_DOCSERVER_TYPES', 'Docserver types');
+if (!defined('_IS_CONTAINER'))  define('_IS_CONTAINER', 'Container');
+if (!defined('_IS_COMPRESSED'))  define('_IS_COMPRESSED', 'is compressed');
+if (!defined('_IS_META'))  define('_IS_META', 'is meta');
+if (!defined('_IS_LOGGED'))  define('_IS_LOGGED', 'is logged');
+if (!defined('_IS_SIGNED'))  define('_IS_SIGNED', 'is signed');
 if (!defined('_COMPRESS_MODE'))  define('_COMPRESS_MODE', 'Compression mode');
 if (!defined('_META_TEMPLATE'))  define('_META_TEMPLATE', 'Meta template');
+if (!defined('_LOG_TEMPLATE'))  define('_LOG_TEMPLATE', 'log template');
 if (!defined('_FINGERPRINT_MODE'))  define('_FINGERPRINT_MODE', 'Signature mode');
 if (!defined('_CONTAINER_MAX_NUMBER'))  define('_CONTAINER_MAX_NUMBER', 'Container max number');
 if (!defined('_DOCSERVER_TYPE_MODIFICATION'))  define('_DOCSERVER_TYPE_MODIFICATION', 'Docserver type modification');
+if (!defined('_DOCSERVER_TYPE_ADDITION'))  define('_DOCSERVER_TYPE_ADDITION', 'Docserver type addition');
 if (!defined('_DOCSERVER_TYPE_ADDED'))  define('_DOCSERVER_TYPE_ADDED', 'Docserver type added ');
-if (!defined('_DOCSERVER_TYPE_ADDITION'))  define('_DOCSERVER_TYPE_ADDITION', 'Add a docserver type ');
+if (!defined('_DOCSERVER_TYPE_UPDATED'))  define('_DOCSERVER_TYPE_UPDATED', 'Docserver type updated ');
 if (!defined('_DOCSERVER_TYPE_DELETED'))  define('_DOCSERVER_TYPE_DELETED', 'Docserver type deleted ');
+if (!defined('_NOT_CONTAINER'))  define('_NOT_CONTAINER', 'Not a container');
+if (!defined('_CONTAINER'))  define('_CONTAINER', 'A Container');
+if (!defined('_NOT_COMPRESSED'))  define('_NOT_COMPRESSED', 'Non compressed');
+if (!defined('_COMPRESSED'))  define('_COMPRESSED', 'Compressed');
+if (!defined('_COMPRESSION_MODE'))  define('_COMPRESSION_MODE', 'Compression mode');
 
 /***************DOCSERVERS*************************************/
 if (!defined('_DOCSERVER_ID'))  define('_DOCSERVER_ID', 'Docserver ID');
@@ -1018,6 +1030,8 @@ if (!defined('_DOCSERVER_ADDITION'))  define('_DOCSERVER_ADDITION', 'Add a docse
 if (!defined('_DOCSERVER_ADDED'))  define('_DOCSERVER_ADDED', 'Docserver added');
 if (!defined('_DOCSERVER_DELETED'))  define('_DOCSERVER_ADDED', 'Docserver deleted');
 if (!defined('_DOCSERVER_UPDATED'))  define('_DOCSERVER_UPDATED', 'Docserver updated');
+if (!defined('_SIZE_LIMIT_NUMBER')) define( '_SIZE_LIMIT_NUMBER', 'Limit size');
+if (!defined('_DOCSERVER_ATTACHED_TO_RES_X')) define( '_DOCSERVER_ATTACHED_TO_RES_X', 'Resources linked to this docserver');
 
 /************DOCSERVER LOCATIONS******************************/
 if (!defined('_ALL_DOCSERVER_LOCATIONS'))  define('_ALL_DOCSERVER_LOCATIONS', 'View all');
@@ -1032,6 +1046,8 @@ if (!defined('_DOCSERVER_LOCATION_ADDITION'))  define('_DOCSERVER_LOCATION_ADDIT
 if (!defined('_DOCSERVER_LOCATION_ADDED'))  define('_DOCSERVER_LOCATION_ADDED', 'Docserver location added');
 if (!defined('_DOCSERVER_LOCATION_UPDATED'))  define('_DOCSERVER_LOCATION_UPDATED', 'Docserver location updated');
 if (!defined('_DOCSERVER_LOCATION_DELETED'))  define('_DOCSERVER_LOCATION_DELETED', 'Docserver location deleted');
+if (!defined('_DOCSERVER_LOCATION_DISABLED'))  define('_DOCSERVER_LOCATION_DISABLED', 'Docserver location disabled');
+if (!defined('_DOCSERVER_LOCATION_ENABLED'))  define('_DOCSERVER_LOCATION_ENABLED', 'Docserver location enabled');
 if (!defined('_IP_V4_ADRESS_NOT_VALID')) define('_IP_V4_ADRESS_NOT_VALID', 'IPV4 address not valid');
 if (!defined('_IP_V4_FORMAT_NOT_VALID')) define('_IP_V4_FORMAT_NOT_VALID', 'IPV4 address not valid');
 if (!defined('_IP_V6_NOT_VALID')) define('_IP_V4_FORMAT_NOT_VALID', 'IPV6 address not valid');
@@ -1047,20 +1063,5 @@ if (!defined('_LOGIN_MODE')) define( '_LOGIN_MODE', 'Login process type');
 /************FAILOVER******************************/
 if (!defined('_FAILOVER'))  define('_FAILOVER', 'Failover');
 if (!defined('_FILE_NOT_EXISTS_ON_THE_SERVER'))  define('_FILE_NOT_EXISTS_ON_THE_SERVER', 'File not exists on the document server');
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 ?>

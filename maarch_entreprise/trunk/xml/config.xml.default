@@ -135,6 +135,10 @@
 		<docserverslocationsdel>true</docserverslocationsdel>
 		<docserverslocationsallow>true</docserverslocationsallow>
 		<docserverslocationsban>true</docserverslocationsban>
+		<docserverstypesadd>true</docserverstypesadd>
+		<docserverstypesdel>true</docserverstypesdel>
+		<docserverstypesallow>true</docserverstypesallow>
+		<docserverstypesban>true</docserverstypesban>
 	</HISTORY>
 	<KEYWORDS>
 		<id>ERR</id>

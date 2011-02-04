@@ -95,8 +95,6 @@ if (isset($_REQUEST['submit'])) {
 
 // END of main block
 
-/////// PRIVATE BLOCK
-
 /**
  * Initialize session variables
  */
@@ -274,12 +272,6 @@ function display_list() {
 		}
 			
 	}
-	/*
-	* TODO Pour éviter les actions suivantes, il y a 2 solutions :
-	* - La plus propre : créer un objet "PageList"
-	* - La plus locale : si cela ne sert que pour admin_list dans docserver_management.php,
-	*                    il est possible d'en construire directement la string et de la récupérer en return.
-	*/
 	$result = array();
 	$result['tab']=$tab;
 	$result['what']=$what;
@@ -359,8 +351,13 @@ function display_disable($docserver_location_id) {
 	$docserver_locations = $docserverLocationsControler->get($docserver_location_id);
 	if (isset($docserver_locations)) {
 		// Disable
-		$docserverLocationsControler->disable($docserver_locations);
-		$_SESSION['error'] = _DOCSERVER_LOCATION_DISABLED." ".$docserver_location_id;
+		$control = array();
+		$control = $docserverLocationsControler->disable($docserver_locations);
+		if (!empty($control['error']) && $control['error'] <> 1) {
+			$_SESSION['error'] = str_replace("#", "<br />", $control['error']);
+		} else {
+			$_SESSION['error'] = _DOCSERVER_LOCATION_DISABLED." ".$docserver_location_id;
+		}
 		$pageName = "docserver_locations_management_controler";
 		?><script>window.top.location='<?php echo $_SESSION['config']['businessappurl']."index.php?page=".$pageName."&mode=list&admin=docservers";?>';</script>
 		<?php

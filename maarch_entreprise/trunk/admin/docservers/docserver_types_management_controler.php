@@ -1,7 +1,7 @@
 <?php
 
 /*
-*    Copyright 2008,2009,2010 Maarch
+*    Copyright 2008-2011 Maarch
 *
 *  This file is part of Maarch Framework.
 *
@@ -38,9 +38,10 @@ $idName = "docserver_type_id";
 
 $mode = 'add';
 
-core_tools::load_lang(); // NOTE : core_tools is not a static class
+$core = new core_tools();
+$core->load_lang();
 
-if(isset($_REQUEST['mode']) && !empty($_REQUEST['mode'])) {
+if (isset($_REQUEST['mode']) && !empty($_REQUEST['mode'])) {
     $mode = $_REQUEST['mode'];
 } else {
     $mode = 'list';
@@ -50,19 +51,19 @@ try{
     require_once("core/class/docserver_types_controler.php");
     require_once("core/class/class_request.php");
     require_once("core/class/docservers_controler.php");
-    if($mode == 'list') {
+    if ($mode == 'list') {
         require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");
     }
-} catch (Exception $e){
+} catch (Exception $e) {
     echo $e->getMessage();
 }
 
-if(isset($_REQUEST['submit'])) {
+if (isset($_REQUEST['submit'])) {
     // Action to do with db
     validate_cs_submit($mode);
 } else {
     // Display to do
-    if(isset($_REQUEST['id']) && !empty($_REQUEST['id']))
+    if (isset($_REQUEST['id']) && !empty($_REQUEST['id']))
         $docserver_type_id = $_REQUEST['id'];
     $state = true;
     switch ($mode) {
@@ -114,11 +115,11 @@ function location_bar_management($mode) {
     $page_ids = array('add' => 'docserver_add', 'up' => 'docserver_up', 'list' => 'docserver_types_list');
 
     $init = false;
-	if(isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true") 
+	if (isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true") 
 		$init = true;
 
 	$level = "";
-	if(isset($_REQUEST['level']) && ($_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1))
+	if (isset($_REQUEST['level']) && ($_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1))
         $level = $_REQUEST['level'];
 
     $page_path = $_SESSION['config']['businessappurl'].'index.php?page='.$pageName.'&admin=docservers&mode='.$mode;
@@ -138,81 +139,36 @@ function validate_cs_submit($mode) {
     $pageName = "docserver_types_management_controler";
     $tableName = "docserver_types";
     $idName = "docserver_type_id";
-
     $f=new functions();
-
+    $docserverTypesControler = new docserver_types_controler();
     $docserver_types = new docserver_types();
-    //$f->show_array($_REQUEST);exit;
-    if(isset($_REQUEST['id']) && !empty($_REQUEST['id'])){
-        // Update, so values exist
-        $docserver_types->docserver_type_id=$f->protect_string_db($f->wash($_REQUEST['id'], "nick", _THE_DOCSERVER_TYPE_ID." ", "yes", 0, 32));
-    }
-    $docserver_types->docserver_type_label=$f->protect_string_db($f->wash($_REQUEST['docserver_type_label'], "no", _DOCSERVER_TYPE_LABEL." ", 'yes', 0, 255));
-    $docserver_types->is_container=$f->protect_string_db($f->wash($_REQUEST['is_container'], "no", _IS_CONTAINER." ", 'yes', 0, '5'));
-    if($docserver_types->is_container == "false") {
-        $docserver_types->is_container=false;
-        $docserver_types->container_max_number = 0;
-    } else {
-        $docserver_types->is_container=true;
-        $docserver_types->container_max_number=$f->protect_string_db($f->wash($_REQUEST['container_max_number'], "no", _CONTAINER_MAX_NUMBER." ", 'yes', 0, 6));
-    }
-
-    $docserver_types->is_compressed=$f->protect_string_db($f->wash($_REQUEST['is_compressed'], "no", _IS_COMPRESSED." ", 'yes', 0, '5'));
-    if($docserver_types->is_compressed == "false") {
-        $docserver_types->is_compressed=false;
-        $docserver_types->compression_mode = "NONE";
-    } else {
-        $docserver_types->is_compressed=true;
-        $docserver_types->compression_mode=$f->protect_string_db($f->wash($_REQUEST['compression_mode'], "no", _COMPRESSION_MODE." ", 'yes', 0, 32));
-    }
-
-    $docserver_types->is_meta=$f->protect_string_db($f->wash($_REQUEST['is_meta'], "no", _IS_META." ", 'yes', 0, '5'));
-    if($docserver_types->is_meta == "false") {
-        $docserver_types->is_meta=false;
-        $docserver_types->meta_template = "NONE";
-    } else {
-        $docserver_types->is_meta=true;
-        $docserver_types->meta_template=$f->protect_string_db($f->wash($_REQUEST['meta_template'], "no", _META_TEMPLATE." ", 'yes', 0, 32));
-    }
-
-    $docserver_types->is_logged=$f->protect_string_db($f->wash($_REQUEST['is_logged'], "no", _IS_LOGGED." ", 'yes', 0, '5'));
-    if($docserver_types->is_logged == "false") {
-        $docserver_types->is_logged=false;
-        $docserver_types->log_template = "NONE";
-    } else {
-        $docserver_types->is_logged=true;
-        $docserver_types->log_template=$f->protect_string_db($f->wash($_REQUEST['log_template'], "no", _LOG_TEMPLATE." ", 'yes', 0, 32));
-    }
-
-    $docserver_types->is_signed=$f->protect_string_db($f->wash($_REQUEST['is_signed'], "no", _IS_SIGNED." ", 'yes', 0, '5'));
-    if($docserver_types->is_signed == "false") {
-        $docserver_types->is_signed=false;
-        $docserver_types->fingerprint_mode = "NONE";
-    } else {
-        $docserver_types->is_signed=true;
-        $docserver_types->fingerprint_mode=$f->protect_string_db($f->wash($_REQUEST['fingerprint_mode'], "no", _FINGERPRINT_MODE." ", 'yes', 0, 32));
-    }
-
     $status= array();
     $status['order']=$_REQUEST['order'];
     $status['order_field']=$_REQUEST['order_field'];
     $status['what']=$_REQUEST['what'];
     $status['start']=$_REQUEST['start'];
-
-
-    //LKE = BULL ===== SPEC FONC : ==== Cycles de vie : docserver_types (ID1)
-    if($mode == "add" && docserver_types_controler::docserverTypeExists($docserver_types->docserver_type_id)){
-        $_SESSION['error'] = $docserver_types->docserver_type_id." "._ALREADY_EXISTS."<br />";
-    }
-
-    if(!empty($_SESSION['error'])) {
-        // Error management depending of mode
+	if (isset($_REQUEST['id'])) $docserver_types->docserver_type_id = $_REQUEST['id'];
+	if (isset($_REQUEST['docserver_type_label'])) $docserver_types->docserver_type_label = $_REQUEST['docserver_type_label'];
+	if (isset($_REQUEST['is_container'])) $docserver_types->is_container = $_REQUEST['is_container'];
+	if (isset($_REQUEST['container_max_number'])) $docserver_types->container_max_number = $_REQUEST['container_max_number'];
+	if (isset($_REQUEST['is_compressed'])) $docserver_types->is_compressed = $_REQUEST['is_compressed'];
+	if (isset($_REQUEST['compression_mode'])) $docserver_types->compression_mode = $_REQUEST['compression_mode'];
+	if (isset($_REQUEST['is_meta'])) $docserver_types->is_meta = $_REQUEST['is_meta'];
+	if (isset($_REQUEST['meta_template'])) $docserver_types->meta_template = $_REQUEST['meta_template'];
+	if (isset($_REQUEST['is_logged'])) $docserver_types->is_logged = $_REQUEST['is_logged'];
+	if (isset($_REQUEST['log_template'])) $docserver_types->log_template = $_REQUEST['log_template'];
+	if (isset($_REQUEST['is_signed'])) $docserver_types->is_signed = $_REQUEST['is_signed'];
+	if (isset($_REQUEST['fingerprint_mode'])) $docserver_types->fingerprint_mode = $_REQUEST['fingerprint_mode'];
+	$control = array();
+	$control = $docserverTypesControler->save($docserver_types, $mode);	
+	if (!empty($control['error']) && $control['error'] <> 1) {
+		// Error management depending of mode
+		$_SESSION['error'] = str_replace("#", "<br />", $control['error']);
         put_in_session("status",$status);
         put_in_session("docserver_types",$docserver_types->getArray());
-
         switch ($mode) {
             case "up":
-                if(!empty($_REQUEST['id'])) {
+                if (!empty($_REQUEST['id'])) {
                     header("location: ".$_SESSION['config']['businessappurl']."index.php?page=".$pageName."&mode=up&id=".$_REQUEST['id']."&admin=docservers");
                 } else {
                     header("location: ".$_SESSION['config']['businessappurl']."index.php?page=".$pageName."&mode=list&admin=docservers&order=".$status['order']."&order_field=".$status['order_field']."&start=".$status['start']."&what=".$status['what']);
@@ -223,20 +179,7 @@ function validate_cs_submit($mode) {
                 exit;
         }
     } else {
-        // Saving given object
-        //$f->show_array($docserver_types);
-        $docserver_types=docserver_types_controler::save($docserver_types);
-        //history
-        if($_SESSION['history']['docserver_typesadd'] == "true" && $mode == "add"){
-            require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
-            $history = new history();
-            $history->add(_DOCSERVER_TYPES_TABLE_NAME, $_REQUEST['id'], "ADD",_DOCSERVER_TYPE_ADDED." : ".$_REQUEST['id'], $_SESSION['config']['databasetype']);
-        } elseif($_SESSION['history']['docserver_typesadd'] == "true" && $mode == "up"){
-            require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
-            $history = new history();
-            $history->add(_DOCSERVER_TYPES_TABLE_NAME, $_REQUEST['id'], "UP",_DOCSERVER_TYPE_UPDATED." : ".$_REQUEST['id'], $_SESSION['config']['databasetype']);
-        }
-        if($mode == "add")
+        if ($mode == "add")
             $_SESSION['error'] =  _DOCSERVER_TYPE_ADDED;
          else
             $_SESSION['error'] = _DOCSERVER_TYPE_UPDATED;
@@ -250,32 +193,27 @@ function validate_cs_submit($mode) {
  * @param Long $docserver_type_id
  */
 function display_up($docserver_type_id) {
-
     $docservers = array();
     $state=true;
-    $docserver_types = docserver_types_controler::get($docserver_type_id);
-    if(empty($docserver_types))
+    $docserverTypesControler = new docserver_types_controler();
+    $docserversControler = new docservers_controler();
+    $docserver_types = $docserverTypesControler->get($docserver_type_id);
+    if (empty($docserver_types))
         $state = false;
     else
         put_in_session("docserver_types", $docserver_types->getArray());
 
-    $docservers_id = docserver_types_controler::getDocservers($docserver_type_id ); //ramène le tableau des docserver_id appartenant au type
-    for($i=0; $i<count($docservers_id);$i++)
-    {
-
-        $tmp_docserver = docservers_controler::get($docservers_id[$i]);
-
-        if(isset($tmp_docserver))
-        {
+    $docservers_id = $docserverTypesControler->getDocservers($docserver_type_id); //ramène le tableau des docserver_id appartenant au type
+    for($i=0;$i<count($docservers_id);$i++) {
+        $tmp_docserver = $docserversControler->get($docservers_id[$i]);
+        if (isset($tmp_docserver)) {
             array_push($docservers, $tmp_docserver);
         }
     }
     unset($tmp_docserver);
-
     $res['state'] = $state;
     $res['docservers'] = $docservers;
     return $res;
-
 }
 
 /**
@@ -283,7 +221,7 @@ function display_up($docserver_type_id) {
  */
 function display_add() {
     $sessionName = "docserver_types";
-    if(!isset($_SESSION['m_admin'][$sessionName]))
+    if (!isset($_SESSION['m_admin'][$sessionName]))
         init_session();
 }
 
@@ -295,34 +233,32 @@ function display_list() {
     $pageName = "docserver_types_management_controler";
     $tableName = "docserver_types";
     $idName = "docserver_type_id";
-
+	$func = new functions();
+	$listShow = new list_show();
     $_SESSION['m_admin'] = array();
-
     init_session();
-
     $select[_DOCSERVER_TYPES_TABLE_NAME] = array();
     array_push($select[_DOCSERVER_TYPES_TABLE_NAME], $idName, "docserver_type_label", "is_container", "is_compressed", "enabled");
     $what = "";
     $where ="";
-    if(isset($_REQUEST['what']) && !empty($_REQUEST['what'])) {
-        $what = functions::protect_string_db($_REQUEST['what']);
-        if($_SESSION['config']['databasetype'] == "POSTGRESQL") {
+    if (isset($_REQUEST['what']) && !empty($_REQUEST['what'])) {
+        $what = $func->protect_string_db($_REQUEST['what']);
+        if ($_SESSION['config']['databasetype'] == "POSTGRESQL") {
             $where = $idName." ilike '".strtoupper($what)."%' ";
         } else {
             $where = $idName." like '".strtoupper($what)."%' ";
         }
     }
-
     // Checking order and order_field values
     $order = 'asc';
-    if(isset($_REQUEST['order']) && !empty($_REQUEST['order'])) {
+    if (isset($_REQUEST['order']) && !empty($_REQUEST['order'])) {
         $order = trim($_REQUEST['order']);
     }
     $field = $idName;
-    if(isset($_REQUEST['order_field']) && !empty($_REQUEST['order_field'])) {
+    if (isset($_REQUEST['order_field']) && !empty($_REQUEST['order_field'])) {
         $field = trim($_REQUEST['order_field']);
     }
-    $orderstr = list_show::define_order($order, $field);
+    $orderstr = $listShow->define_order($order, $field);
     $request = new request();
     $tab=$request->select($select,$where,$orderstr,$_SESSION['config']['databasetype']);
     for ($i=0;$i<count($tab);$i++) {
@@ -333,16 +269,16 @@ function display_list() {
                 case "docserver_type_label":
                     format_item($item,_DOCSERVER_TYPE_LABEL,"15","left","left","bottom",true); break;
                 case "is_container":
-                    if($item['value'] == "t") {
+                    if ($item['value'] == "t") {
                         $item['value'] = "<img src='".$_SESSION['config']['businessappurl']."static.php?filename=picto_stat_enabled.gif' alt='"._CONTAINER."' title='"._CONTAINER."'/>";
-                    } elseif($item['value'] == "f") {
+                    } elseif ($item['value'] == "f") {
                         $item['value'] = "<img src='".$_SESSION['config']['businessappurl']."static.php?filename=picto_stat_disabled.gif' alt='"._NOT_CONTAINER."' title='"._NOT_CONTAINER."'/>";
                     }
                     format_item($item,_IS_CONTAINER,"5","left","left","bottom",true); break;
                 case "is_compressed":
-                    if($item['value'] == "t") {
+                    if ($item['value'] == "t") {
                         $item['value'] = "<img src='".$_SESSION['config']['businessappurl']."static.php?filename=picto_stat_enabled.gif' alt='"._COMPRESSED."' title='"._COMPRESSED."'/>";
-                    } elseif($item['value'] == "f") {
+                    } elseif ($item['value'] == "f") {
                         $item['value'] = "<img src='".$_SESSION['config']['businessappurl']."static.php?filename=picto_stat_disabled.gif' alt='"._NOT_COMPRESSED."' title='"._NOT_COMPRESSED."'/>";
                     }
                     format_item($item,_IS_COMPRESSED,"5","left","left","bottom",true); break;
@@ -374,27 +310,25 @@ function display_list() {
  * @param unknown_type $docserver_type_id
  */
 function display_del($docserver_type_id) {
-    $docserver_types = docserver_types_controler::get($docserver_type_id);
-    if(isset($docserver_types)) {
-        // Deletion
-        if(!docserver_types_controler::delete($docserver_types)) {
-            $_SESSION['error'] = _YOU_CANNOT_DELETE." ".$docserver_type_id;
-        } else {
-            $_SESSION['error'] = _DOCSERVER_TYPE_DELETED." ".$docserver_type_id;
-            if($_SESSION['history']['docserver_typesdel'] == "true") {
-                require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
-                $history = new history();
-                $history->add(_DOCSERVER_TYPES_TABLE_NAME, $docserver_type_id, "DEL", _DOCSERVER_TYPE_DELETED." : ".$docserver_type_id, $_SESSION['config']['databasetype']);
-            }
-        }
-        $pageName = "docserver_types_management_controler";
-        ?><script>window.top.location='<?php echo $_SESSION['config']['businessappurl']."index.php?page=".$pageName."&mode=list&admin=docservers"?>';</script>
-        <?php
-        exit;
-    } else {
-        // Error management
-        $_SESSION['error'] = _DOCSERVER_TYPE.' '._UNKNOWN;
-    }
+	$docserverTypesControler = new docserver_types_controler();
+	$docserver_types = $docserverTypesControler->get($docserver_type_id);
+	if (isset($docserver_types)) {
+		// Deletion
+		$control = array();
+		$control = $docserverTypesControler->delete($docserver_types);
+		if (!empty($control['error']) && $control['error'] <> 1) {
+			$_SESSION['error'] = str_replace("#", "<br />", $control['error']);
+		} else {
+			$_SESSION['error'] = _DOCSERVER_TYPE_DELETED." ".$docserver_type_id;
+		}
+		$pageName = "docserver_types_management_controler";
+		?><script>window.top.location='<?php echo $_SESSION['config']['businessappurl']."index.php?page=".$pageName."&mode=list&admin=docservers";?>';</script>
+		<?php
+		exit;
+	} else {
+		// Error management
+		$_SESSION['error'] = _DOCSERVER_TYPE.' '._UNKNOWN;
+	}
 }
 
 /**
@@ -402,24 +336,25 @@ function display_del($docserver_type_id) {
  * @param unknown_type $docserver_type_id
  */
 function display_enable($docserver_type_id) {
-    $docserver_types = docserver_types_controler::get($docserver_type_id);
-    if(isset($docserver_types)) {
-        // Disable
-        docserver_types_controler::enable($docserver_types);
-        $_SESSION['error'] = _DOCSERVER_TYPE_ENABLED." ".$docserver_type_id;
-        if($_SESSION['history']['docserver_typesallow'] == "true") {
-            require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
-            $history = new history();
-            $history->add(_DOCSERVER_TYPES_TABLE_NAME, $docserver_type_id, "VAL",_DOCSERVER_TYPE_ENABLED." : ".$docserver_type_id, $_SESSION['config']['databasetype']);
-        }
-        $pageName = "docserver_types_management_controler";
-        ?><script>window.top.location='<?php echo $_SESSION['config']['businessappurl']."index.php?page=".$pageName."&mode=list&admin=docservers"?>';</script>
-        <?php
-        exit;
-    } else {
-        // Error management
-        $_SESSION['error'] = _DOCSERVER_TYPE.' '._UNKNOWN;
-    }
+	$docserverTypesControler = new docserver_types_controler();
+	$docserver_types = $docserverTypesControler->get($docserver_type_id);
+	if (isset($docserver_types)) {
+		// Enable
+		$control = array();
+		$control = $docserverTypesControler->enable($docserver_types);
+		if (!empty($control['error']) && $control['error'] <> 1) {
+			$_SESSION['error'] = str_replace("#", "<br />", $control['error']);
+		} else {
+			$_SESSION['error'] = _DOCSERVER_TYPE_ENABLED." ".$docserver_type_id;
+		}
+		$pageName = "docserver_types_management_controler";
+		?><script>window.top.location='<?php echo $_SESSION['config']['businessappurl']."index.php?page=".$pageName."&mode=list&admin=docservers";?>';</script>
+		<?php
+		exit;
+	} else {
+		// Error management
+		$_SESSION['error'] = _DOCSERVER_TYPE.' '._UNKNOWN;
+	}
 }
 
 /**
@@ -427,27 +362,25 @@ function display_enable($docserver_type_id) {
  * @param unknown_type $docserver_type_id
  */
 function display_disable($docserver_type_id) {
-    $docserver_types = docserver_types_controler::get($docserver_type_id);
-    if(isset($docserver_types)) {
-        // Disable
-        if(!docserver_types_controler::disable($docserver_types)) {
-            $_SESSION['error'] = _YOU_CANNOT_DISABLE." ".$docserver_type_id;
-        } else {
-            $_SESSION['error'] = _DOCSERVER_TYPE_DISABLED." ".$docserver_type_id;
-            if($_SESSION['history']['docserver_typesban'] == "true") {
-                require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
-                $history = new history();
-                $history->add(_DOCSERVER_TYPES_TABLE_NAME, $docserver_type_id, "BAN", _DOCSERVER_TYPE_DISABLED." : ".$docserver_type_id, $_SESSION['config']['databasetype']);
-            }
-        }
-        $pageName = "docserver_types_management_controler";
-        ?><script>window.top.location='<?php echo $_SESSION['config']['businessappurl']."index.php?page=".$pageName."&mode=list&admin=docservers"?>';</script>
-        <?php
-        exit;
-    } else {
-        // Error management
-        $_SESSION['error'] = _DOCSERVER_TYPE.' '._UNKNOWN;
-    }
+	$docserverTypesControler = new docserver_types_controler();
+	$docserver_types = $docserverTypesControler->get($docserver_type_id);
+	if (isset($docserver_types)) {
+		// Disable
+		$control = array();
+		$control = $docserverTypesControler->disable($docserver_types);
+		if (!empty($control['error']) && $control['error'] <> 1) {
+			$_SESSION['error'] = str_replace("#", "<br />", $control['error']);
+		} else {
+			$_SESSION['error'] = _DOCSERVER_TYPE_DISABLED." ".$docserver_type_id;
+		}
+		$pageName = "docserver_types_management_controler";
+		?><script>window.top.location='<?php echo $_SESSION['config']['businessappurl']."index.php?page=".$pageName."&mode=list&admin=docservers";?>';</script>
+		<?php
+		exit;
+	} else {
+		// Error management
+		$_SESSION['error'] = _DOCSERVER_TYPE.' '._UNKNOWN;
+	}
 }
 
 /**
@@ -464,7 +397,8 @@ function display_disable($docserver_type_id) {
  * @param $show
  */
 function format_item(&$item,$label,$size,$label_align,$align,$valign,$show) {
-    $item['value']=functions::show_string($item['value']);
+	$func = new functions();
+    $item['value']=$func->show_string($item['value']);
     $item[$item['column']]=$item['value'];
     $item["label"]=$label;
     $item["size"]=$size;
@@ -482,9 +416,10 @@ function format_item(&$item,$label,$size,$label_align,$align,$valign,$show) {
  * @param hashable $hashable
  */
 function put_in_session($type,$hashable) {
+    $func = new functions();
     foreach($hashable as $key=>$value) {
-        // echo "Key: $key Value: $value f:".functions::show_string($value)." // ";
-        $_SESSION['m_admin'][$type][$key]=functions::show_string($value);
+        // echo "Key: $key Value: $value f:".$func->show_string($value)." // ";
+        $_SESSION['m_admin'][$type][$key]=$func->show_string($value);
     }
 }
 
