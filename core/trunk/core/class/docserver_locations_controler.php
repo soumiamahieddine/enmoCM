@@ -57,6 +57,10 @@ try {
 */
 class docserver_locations_controler extends ObjectControler implements ObjectControlerIF {
 	
+	public function testMethod($myVar) {
+		return $myVar;
+	}
+	
 	/**
      * Save given object in database:
      * - make an update if object already exists,
