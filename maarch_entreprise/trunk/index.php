@@ -156,7 +156,10 @@ $time = $core_tools->get_session_time_expire();
         </div>
         <p id="footer">
             <?php
-            $core_tools->load_footer();
+            if(isset($_SESSION['config']['showfooter']) && $_SESSION['config']['showfooter'] == 'true')
+            {
+                $core_tools->load_footer();
+            }
             ?>
         </p>
         <?php

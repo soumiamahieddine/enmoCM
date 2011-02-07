@@ -97,6 +97,14 @@ class business_app_tools extends dbquery
             $_SESSION['config']['cookietime'] = (string) $CONFIG->CookieTime;
             $_SESSION['config']['ldap'] = (string) $CONFIG->ldap;
             $_SESSION['config']['userdefaultpassword'] = (string) $CONFIG->userdefaultpassword;
+            if(isset($CONFIG->showfooter))
+            {
+                $_SESSION['config']['showfooter'] = (string) $CONFIG->showfooter;
+            }
+            else
+            {
+                $_SESSION['config']['showfooter'] = 'true';
+            }
             //$_SESSION['config']['databaseworkspace'] = (string) $CONFIG->databaseworkspace;
 
             $TABLENAME =  $xmlconfig->TABLENAME ;
