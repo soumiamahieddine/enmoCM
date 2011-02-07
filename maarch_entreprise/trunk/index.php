@@ -144,7 +144,7 @@ $time = $core_tools->get_session_time_expire();
                 <?php  if(isset($_SESSION['info'])){echo $_SESSION['info'];}?>
             </div>
             <?php
-            if($core_tools->is_module_loaded("basket") && $_SESSION['abs_user_status'] ==true)
+            if($core_tools->is_module_loaded("basket") && isset($_SESSION['abs_user_status']) && $_SESSION['abs_user_status'] ==true)
             {
                 include('modules'.DIRECTORY_SEPARATOR.'basket'.DIRECTORY_SEPARATOR."advert_missing.php");
             }
