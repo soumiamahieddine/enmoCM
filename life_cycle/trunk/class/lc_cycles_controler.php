@@ -199,7 +199,7 @@ class lc_cycles_controler extends ObjectControler implements ObjectControlerIF {
         $this->set_foolish_ids(array('policy_id', 'cycle_id'));
         $this->set_specific_id('cycle_id');
         $cycle = $this->advanced_get($cycle_id, _LC_CYCLES_TABLE_NAME);
-        if (get_class($cycle) <> "lc_policies") {
+        if (get_class($cycle) <> "lc_cycles") {
             return null;
         } else {
             $cycle = $cycle->getArray();
