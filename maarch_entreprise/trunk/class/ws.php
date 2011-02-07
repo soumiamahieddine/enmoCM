@@ -15,4 +15,3 @@ $SOAP_dispatch_map['addContact'] = Array(
                                      'out' => Array('out' => 'string'),
                                      'method' => "apps#contacts::save"
                                      );
-?>
