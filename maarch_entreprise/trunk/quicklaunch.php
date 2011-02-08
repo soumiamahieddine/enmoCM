@@ -36,51 +36,46 @@ $core_tools->test_user();
 $core_tools->test_service('quicklaunch', "apps");
 ?>
 <div id="welcome_box_left_quick_lunch" >
-	<div class="block">
-		<h2><?php echo _QUICKLAUNCH; ?> : </h2>
-	</div>
-	<div class="blank_space">&nbsp;</div>
-	<table class="center" summary="<?php echo _QUICKLAUNCH;?>">
-		<tr >
-		<?php
-		$nb_max = 0;
-		$menu_array = $_SESSION['menu'];
-		foreach($menu_array as $element)
-		{
-			if($nb_max < 3)
-			{
-				if($element['id'] == 'physical_archive' && $element['show'] == true && (!isset($displayed_physical_archive) || isset($displayed_physical_archive) && $displayed_physical_archive <> true))
-				{
-						echo '<td><a href="index.php?page=boxes&amp;module=physical_archive&amp;reinit=true" class="bighome_physical_archive"><span >'._PHYSICAL_ARCHIVE.'</span></a></td>';
-						$nb_max++;
-						$displayed_physical_archive = true;
-				}
-				if ($element['id'] == 'index_mlb' && $element['show'] == true &&
-				(!isset($displayed_index_mlb) || $displayed_index_mlb <> true))
-				{
-						echo '<td><a href="index.php?page=view_baskets&amp;module=basket&amp;baskets=IndexingBasket" class="bighome_indexing"><span>'._INDEXING_MLB.'</span></a></td>';
-						$nb_max++;
-						$displayed_index_mlb = true;
-				}
-				if ($element['id'] == 'adv_search_mlb' && $element['show'] == true && 
-				(!isset($displayed_adv_search_mlb) || isset($displayed_index_mlb) && $displayed_adv_search_mlb <> true))
-				{
-						echo '<td><a href="index.php?page=search_adv&amp;dir=indexing_searching&amp;reinit=true" class="bighome_search_adv"><span >'._ADV_SEARCH_TITLE.'</span></a></td>';
-						$nb_max++;
-						$displayed_adv_search_mlb = true;
-				}
-				
-			}
-		}
-		
-		if ($nb_max <3)
-		{
-		?>
-		<td><a href="index.php?page=modify_user&amp;admin=users&amp;reinit=true" class="bighome_userinfo"><span ><?php  echo _MY_INFO; ?></span></a> </td>
-		<?php 
-		}
-		?> 
-		</tr>
-	</table>
-	<div class="blank_space">&nbsp;</div>
+    <div class="block">
+        <h2><?php echo _QUICKLAUNCH; ?> : </h2>
+    </div>
+    <div class="blank_space">&nbsp;</div>
+        <?php
+        $nb_max = 0;
+        $menu_array = $_SESSION['menu'];
+        foreach($menu_array as $element)
+        {
+            if($nb_max < 3)
+            {
+                if($element['id'] == 'physical_archive' && $element['show'] == true && (!isset($displayed_physical_archive) || isset($displayed_physical_archive) && $displayed_physical_archive <> true))
+                {
+                    echo '<div class="quiclaunch_div bighome_physical_archive" ><a href="index.php?page=boxes&amp;module=physical_archive&amp;reinit=true" ><span >'._PHYSICAL_ARCHIVE.'</span></a></div>';
+                    $nb_max++;
+                    $displayed_physical_archive = true;
+                }
+                if ($element['id'] == 'index_mlb' && $element['show'] == true &&
+                (!isset($displayed_index_mlb) || $displayed_index_mlb <> true))
+                {
+                    echo '<div class="quiclaunch_div bighome_indexing"><a href="index.php?page=view_baskets&amp;module=basket&amp;baskets=IndexingBasket" ><span>'._INDEXING_MLB.'</span></a></div>';
+                    $nb_max++;
+                    $displayed_index_mlb = true;
+                }
+                if ($element['id'] == 'adv_search_mlb' && $element['show'] == true &&
+                (!isset($displayed_adv_search_mlb) || isset($displayed_index_mlb) && $displayed_adv_search_mlb <> true))
+                {
+                        echo '<div class="quiclaunch_div bighome_search_adv"><a href="index.php?page=search_adv&amp;dir=indexing_searching&amp;reinit=true" ><span >'._ADV_SEARCH_TITLE.'</span></a></div>';
+                        $nb_max++;
+                        $displayed_adv_search_mlb = true;
+                }
+            }
+        }
+
+        if ($nb_max <3)
+        {
+        ?>
+        <div class="quiclaunch_div bighome_userinfo"><a href="index.php?page=modify_user&amp;admin=users&amp;reinit=true"><span ><?php  echo _MY_INFO; ?></span></a> </td>
+        <?php
+        }
+        ?>
+    <div class="blank_space">&nbsp;</div>
 </div>

@@ -2695,10 +2695,9 @@ width:187px;
 height:64px;
 color: #1B98C5;
 font-weight: bold;
-font-size: 1.2em;
+font-size: 1.1em;
 letter-spacing: 0.1em;
 cursor:pointer;
-display: table-cell;
  text-align: center;
  vertical-align: middle;
 }
@@ -2725,6 +2724,7 @@ background:  url(static.php?filename=big_home_physical.gif) no-repeat top;
 
 .bighome_search_adv span, .bighome_userinfo span, .bighome_workflow span, .bighome_indexing span, .bighome_physical_archive span {
     vertical-align: middle;
+    margin-top: 15px;
     margin-left: 55px;
     display:block;
     color: #1B99C4;
@@ -3526,4 +3526,11 @@ a.legend hr
     font-size: 16px;
     font-weight: bold;
     clear:both;
+}
+
+.quiclaunch_div
+{
+    float:left;
+    width: 190px;
+
 }

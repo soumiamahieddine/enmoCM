@@ -79,7 +79,7 @@ usort($_SESSION['m_admin']['groups']['security'], "cmp");
                                 </div>
                                 <div align="left" style="margin-left:5%;">
 
-                                    <span ><?php echo _COLLECTION;?> : </span><span><?php echo $_SESSION['collections'][$_SESSION['m_admin']['groups']['security'][$i]['IND_COLL_SESSION']]['label']; ?></span>
+                                    <span ><?php echo _COLLECTION;?> : </span><span><?php if(isset($_SESSION['collections'][$_SESSION['m_admin']['groups']['security'][$i]['IND_COLL_SESSION']]['label'])){echo $_SESSION['collections'][$_SESSION['m_admin']['groups']['security'][$i]['IND_COLL_SESSION']]['label']; }?></span>
                                 </div>
                                 <div style="margin-left:5%;">
                                     <span >
