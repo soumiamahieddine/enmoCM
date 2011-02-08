@@ -961,7 +961,14 @@ class core_tools extends functions
                         elseif($app_services[$i]['whereamiused'][$k]['nature'] == "include" && $_SESSION['user']['services'][$app_services[$i]['id']] && ($servicenature == "all" || $servicenature == "include") && !in_array($app_services[$i]['id'],$executed_services))
                         {
                             array_push($executed_services, $app_services[$i]['id']);
-                            include('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.$app_services[$i]['servicepage']);
+                            if(isset($_SESSION['custom_override_id']) && !empty($_SESSION['custom_override_id']) && file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.$app_services[$i]['servicepage']))
+                            {
+                                include($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.$app_services[$i]['servicepage']);
+                            }
+                            else
+                            {
+                                include('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.$app_services[$i]['servicepage']);
+                            }
                         }
                     }
                 }
