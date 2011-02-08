@@ -1,6 +1,7 @@
 <?php 
 
-function doCompression($targeFile, $arrayOfFileToCompress, $dirToCompress = "") {
+function doCompression($targeFile, $arrayOfFileToCompress, $dirToCompress = "") 
+{
 	$listOfFileToCompress = "";
 	if ($dirToCompress <> "") {
 		$listOfFileToCompress = " -r " . $dirToCompress;
@@ -21,6 +22,7 @@ function doCompression($targeFile, $arrayOfFileToCompress, $dirToCompress = "") 
 		$command = "\"" . str_replace("\\", "\\\\", $GLOBALS['docserversFeatures']['DOCSERVERS']['PATHTOCOMPRESSTOOL']) . "\" a -y -t" . strtolower($GLOBALS['docservers'][$GLOBALS['currentStep']]['compression_mode']) . " " . escapeshellarg($GLOBALS['TmpDirectory'] . $targeFile) . " " . $listOfFileToCompress;
 	}
 	//echo $command."\r\n";exit;
+    $execError = '';
 	exec($command, $tmpCmd, $execError);
 	if($execError > 0) {
 		$GLOBALS['logger']->write('Pb with compression:' .$command . ' ' . print_r($tmpCmd), 'ERROR', 23);
@@ -29,7 +31,8 @@ function doCompression($targeFile, $arrayOfFileToCompress, $dirToCompress = "") 
 	return $GLOBALS['TmpDirectory'] . $targeFile . "." . strtolower($GLOBALS['docservers'][$GLOBALS['currentStep']]['compression_mode']);
 }
 
-function extractAip($path) {
+function extractAip($path) 
+{
 	$path = str_replace('#', DIRECTORY_SEPARATOR, $path);
 	$fileNameOnTmp = $GLOBALS['TmpDirectory'] . rand();
 	$cp = copy($path, $fileNameOnTmp);
@@ -45,7 +48,8 @@ function extractAip($path) {
 	} else {
 		$command = "\"" . str_replace("\\", "\\\\", $GLOBALS['docserversFeatures']['DOCSERVERS']['PATHTOCOMPRESSTOOL']) . "\" e -y -o" . escapeshellarg($GLOBALS['TmpDirectory'])." ".escapeshellarg($fileNameOnTmp);
 	}
-	$tmpCmd = "";
+	$tmpCmd = '';
+    $execError = '';
 	exec($command, $tmpCmd, $execError);
 	if($execError > 0) {
 		$GLOBALS['logger']->write('Pb with extract:' . $command . ' ' . print_r($tmpCmd), 'ERROR', 24);
@@ -67,7 +71,8 @@ function extractAip($path) {
 	}
 }
 
-function controlIntegrityOfTransfert($currentRecordInStack, $resInContainer, $destinationDir, $fileDestinationName) {
+function controlIntegrityOfTransfert($currentRecordInStack, $resInContainer, $destinationDir, $fileDestinationName) 
+{
 	if (is_array($resInContainer) && count($resInContainer) > 0) {
 		extractAip($GLOBALS['docservers'][$GLOBALS['currentStep']]['docserver']['path_template'] . $destinationDir . $fileDestinationName);
 		for ($cptRes=0;$cptRes<count($resInContainer);$cptRes++) {
@@ -90,7 +95,8 @@ function controlIntegrityOfTransfert($currentRecordInStack, $resInContainer, $de
 	//$GLOBALS['docserverControler']->washTmp($GLOBALS['TmpDirectory'], true);
 }
 
-function controlIntegrityOfSource($currentRecordInStack) {
+function controlIntegrityOfSource($currentRecordInStack) 
+{
 	$sourceFilePath = getSourceResourcePath($currentRecordInStack);
 	$query = "select fingerprint from " . $GLOBALS['table'] . " where res_id = " . $currentRecordInStack;
 	do_query($GLOBALS['db'], $query);
@@ -102,7 +108,8 @@ function controlIntegrityOfSource($currentRecordInStack) {
 	$GLOBALS['docserverControler']->washTmp($GLOBALS['TmpDirectory'], true);
 }
 
-function setSize($docserverId, $newSize) {
+function setSize($docserverId, $newSize) 
+{
 	$query = "update "._DOCSERVERS_TABLE_NAME." set actual_size_number=" . $newSize . " where docserver_id='" . $docserverId . "'";
 	do_query($GLOBALS['db'], $query);
 }
