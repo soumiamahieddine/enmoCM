@@ -1105,20 +1105,22 @@ class entity extends dbquery
             }
             $db = new dbquery();
             $db->connect();
-            $this->query("select res_id, viewed, item_id from ".$_SESSION['tablename']['ent_listinstance']." where coll_id = '".$this->protect_string_db($collId)."' and res_id = ".$docId." and item_type = 'entity_id' and ".$_SESSION['tablename']['ent_listinstance'].".item_id in (" . $entities . ")");
-            //$this->show();
-            while($res = $this->fetch_object()) {
-				$cptViewed = 0;
-				if($res->res_id <> "") {
-					if($res->viewed <> "" && $res->viewed <> 0) {
-						$cptViewed = $res->viewed + 1;
-					} else {
-						$cptViewed = 1;
-					}
-					$db->query("update ".$_SESSION['tablename']['ent_listinstance']." set viewed = ".$cptViewed." where coll_id = '".$this->protect_string_db($collId)."' and res_id = ".$docId." and item_type = 'entity_id' and ".$_SESSION['tablename']['ent_listinstance'].".item_id = '" . $res->item_id . "'");
-					//$db->show();
-				}
-			 }
+            if(isset($entities) && $entities <> "") {
+                $this->query("select res_id, viewed, item_id from ".$_SESSION['tablename']['ent_listinstance']." where coll_id = '".$this->protect_string_db($collId)."' and res_id = ".$docId." and item_type = 'entity_id' and ".$_SESSION['tablename']['ent_listinstance'].".item_id in (" . $entities . ")");
+                //$this->show();
+                while($res = $this->fetch_object()) {
+                    $cptViewed = 0;
+                    if($res->res_id <> "") {
+                        if($res->viewed <> "" && $res->viewed <> 0) {
+                            $cptViewed = $res->viewed + 1;
+                        } else {
+                            $cptViewed = 1;
+                        }
+                        $db->query("update ".$_SESSION['tablename']['ent_listinstance']." set viewed = ".$cptViewed." where coll_id = '".$this->protect_string_db($collId)."' and res_id = ".$docId." and item_type = 'entity_id' and ".$_SESSION['tablename']['ent_listinstance'].".item_id = '" . $res->item_id . "'");
+                        //$db->show();
+                    }
+                }
+            }
         }
     }
 
