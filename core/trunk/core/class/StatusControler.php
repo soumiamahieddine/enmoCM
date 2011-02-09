@@ -98,7 +98,8 @@ class StatusControler
 			return null;
 
 		self::connect();
-		$query = "select * from ".self::$status_table." where id = '".functions::protect_string_db($status_id)."'";
+		$func = new functions();
+		$query = "select * from ".self::$status_table." where id = '".$func->protect_string_db($status_id)."'";
 		
 		try{
 			if($_ENV['DEBUG']){echo $query.' // ';}
@@ -188,9 +189,10 @@ class StatusControler
 			return false;
 			
 		self::connect();
+		$func = new functions();
 		$query="update ".self::$status_table." set "
 					.self::update_prepare($status)
-					." where id='".functions::protect_string_db($status->id)."'"; 
+					." where id='".$func->protect_string_db($status->id)."'"; 
 					
 		try{
 			if($_ENV['DEBUG']){echo $query.' // ';}
@@ -248,7 +250,8 @@ class StatusControler
 			return false;
 
 		self::connect();
-		$query = "select id from ".self::$status_table." where id = '".functions::protect_string_db($status_id)."'";
+		$func = new functions();
+		$query = "select id from ".self::$status_table." where id = '".$func->protect_string_db($status_id)."'";
 					
 		try{
 			if($_ENV['DEBUG']){echo $query.' // ';}
@@ -275,12 +278,13 @@ class StatusControler
 	private function update_prepare($status)
 	{
 		$result=array();
+		$func = new functions();
 		foreach($status->getArray() as $key => $value)
 		{
 			// For now all fields in the status table are strings or dates
 			if(!empty($value))
 			{
-				$result[]=$key."='".functions::protect_string_db($value)."'";		
+				$result[]=$key."='".$func->protect_string_db($value)."'";		
 			}
 		}
 		// Return created string minus last ", "
@@ -297,13 +301,14 @@ class StatusControler
 	{
 		$columns=array();
 		$values=array();
+		$func = new functions();
 		foreach($status->getArray() as $key => $value)
 		{
 			//For now all fields in the statuss table are strings or dates
 			if(!empty($value))
 			{
 				$columns[]=$key;
-				$values[]="'".functions::protect_string_db($value)."'";
+				$values[]="'".$func->protect_string_db($value)."'";
 			}
 		}
 		return array('COLUMNS' => implode(",",$columns), 'VALUES' => implode(",",$values));
