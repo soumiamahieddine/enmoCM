@@ -1,9 +1,9 @@
 <?php
 
 /*
-*    Copyright 2008,2009,2010 Maarch
+*   Copyright 2008-2011 Maarch
 *
-*  This file is part of Maarch Framework.
+*   This file is part of Maarch Framework.
 *
 *   Maarch Framework is free software: you can redistribute it and/or modify
 *   it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
 *   GNU General Public License for more details.
 *
 *   You should have received a copy of the GNU General Public License
-*    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
+*   along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 /**
@@ -32,18 +32,19 @@
 
 // Loads the required class
 try {
-	require_once("core/class/BaseObject.php");
-} catch (Exception $e){
-	echo $e->getMessage().' // ';
+    require_once("core/class/BaseObject.php");
+} catch (Exception $e) {
+    echo $e->getMessage().' // ';
 }
 
-class docserver_types extends BaseObject {
-	/**
-	 *Print a viewable string to render the object.
-	 * @return string Rendering of the object
-	 */
-	public function __toString(){
-		return $this->docserver_type_label; 
-	}
-} 
-?>
+class docserver_types extends BaseObject
+{
+    /**
+     *Print a viewable string to render the object.
+     * @return string Rendering of the object
+     */
+    public function __toString()
+    {
+        return $this->docserver_type_label; 
+    }
+}
