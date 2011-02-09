@@ -29,40 +29,38 @@
 * @ingroup admin
 */
 
-require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
+require_once('core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
+			 . 'class_request.php');
 $db = new dbquery();
 $db->connect();
-if($_SESSION['config']['databasetype'] == "POSTGRESQL")
-{
-	$db->query("select label_status as tag from ".$_SESSION['tablename']['status']." where label_status ilike '".$_REQUEST['what']."%' order by label_status");
+if($_SESSION['config']['databasetype'] == 'POSTGRESQL'){
+	$db->query('select label_status as tag from '.
+		$_SESSION['tablename']['status'] . " where label_status ilike '" 
+		. $_REQUEST['what'] . "%' order by label_status");
 }
-else
-{
-	$db->query("select label_status as tag from ".$_SESSION['tablename']['status']." where label_status like '".$_REQUEST['what']."%' order by label_status");
+else{
+	$db->query('select label_status as tag from ' .
+		$_SESSION['tablename']['status'] . " where label_status like '" 
+		. $_REQUEST['what']."%' order by label_status");
 }
 $listArray = array();
-while($line = $db->fetch_object())
-{
+while($line = $db->fetch_object()){
 	array_push($listArray, $line->tag);
 }
 echo "<ul>\n";
 $authViewList = 0;
 
-foreach($listArray as $what)
-{
-	if($authViewList >= 10)
-	{
+foreach($listArray as $what){
+	if($authViewList >= 10){
 		$flagAuthView = true;
 	}
-    if(stripos($what, $_REQUEST['what']) === 0)
-    {
-        echo "<li>".$what."</li>\n";
-		if($flagAuthView)
-		{
-			echo "<li>...</li>\n";
+    if(stripos($what, $_REQUEST['what']) === 0){
+        echo '<li>'.$what.'</li>\n';
+		if(isset($flagAuthView) && $flagAuthView){
+			echo '<li>...</li>\n';
 			break;
 		}
 		$authViewList++;
     }
 }
-echo "</ul>";
+echo '</ul>';

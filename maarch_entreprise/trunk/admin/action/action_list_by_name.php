@@ -30,33 +30,30 @@
 
 $db = new dbquery();
 $db->connect();
-if($_SESSION['config']['databasetype'] == "POSTGRESQL")
-{
-	$db->query("select label_action as tag from ".$_SESSION['tablename']['actions']." where label_action ilike '".$_REQUEST['what']."%' order by label_action");
+if($_SESSION['config']['databasetype'] == 'POSTGRESQL'){
+	$db->query('select label_action as tag from ' 
+    . $_SESSION['tablename']['actions'] . " where label_action ilike '"
+    . $_REQUEST['what'] . "%' order by label_action");
 }
-else
-{
-	$db->query("select label_action as tag from ".$_SESSION['tablename']['actions']." where label_action like '".$_REQUEST['what']."%' order by label_action");
+else{
+	$db->query('select label_action as tag from '
+    . $_SESSION['tablename']['actions'] . " where label_action like '"
+    . $_REQUEST['what'] . "%' order by label_action");
 }
 $listArray = array();
-while($line = $db->fetch_object())
-{
+while($line = $db->fetch_object()){
 	array_push($listArray, $line->tag);
 }
 echo "<ul>\n";
 $authViewList = 0;
 
-foreach($listArray as $what)
-{
-	if($authViewList >= 10)
-	{
+foreach($listArray as $what){
+	if($authViewList >= 10){
 		$flagAuthView = true;
 	}
-    if(stripos($what, $_REQUEST['what']) === 0)
-    {
+    if(stripos($what, $_REQUEST['what']) === 0){
         echo "<li>".$what."</li>\n";
-		if($flagAuthView)
-		{
+		if(isset($flagAuthView) && $flagAuthView){
 			echo "<li>...</li>\n";
 			break;
 		}

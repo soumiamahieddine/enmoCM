@@ -31,33 +31,33 @@ $core_tools2 = new core_tools();
 $core_tools2->load_lang();
 $core_tools2->test_admin('admin_actions', 'apps');
 $func = new functions();
-if(isset($_GET['id']))
-{
-    $id = addslashes($func->wash($_GET['id'], "alphanum", _THE_ACTION));
+if(isset($_GET['id'])){
+    $id = addslashes($func->wash($_GET['id'], 'alphanum', _THE_ACTION));
 }
-else
-{
-    $id = "";
+else{
+    $id = '';
 }
 /****************Management of the location bar  ************/
 $init = false;
-if(isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true")
-{
+if(isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == 'true'){
     $init = true;
 }
-$level = "";
-if(isset($_REQUEST['level']) && $_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1)
-{
+$level = '';
+if(isset($_REQUEST['level']) 
+    && ($_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 
+        || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1)){
     $level = $_REQUEST['level'];
 }
-$page_path = $_SESSION['config']['businessappurl'].'index.php?page=action_add&admin=action';
+$page_path = $_SESSION['config']['businessappurl']
+            . 'index.php?page=action_add&admin=action';
 $page_label = _ADDITION;
-$page_id = "action_up";
-$core_tools2->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
+$page_id = 'action_up';
+$core_tools2->manage_location_bar($page_path, $page_label, $page_id, $init, 
+    $level);
 /***********************************************************/
-require("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_admin_actions.php");
+require('apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+    . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
+    . 'class_admin_actions.php');
 
 $action = new AdminActions();
-
-$action->formaction("up", $id);
-?>
+$action->formaction('up', $id);

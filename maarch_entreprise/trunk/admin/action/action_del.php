@@ -32,19 +32,19 @@ $core_tools = new core_tools();
 $core_tools->load_lang();
 $core_tools->test_admin('admin_actions', 'apps');
 
-require("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_admin_actions.php");
+require('apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+        . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
+        . 'class_admin_actions.php'
+        );
 
 $func = new functions();
 
-if(isset($_GET['id']))
-{
-	$s_id = addslashes($func->wash($_GET['id'], "alphanum", _THE_ACTION));
+if(isset($_GET['id'])){
+	$s_id = addslashes($func->wash($_GET['id'], 'alphanum', _THE_ACTION));
 }
-else
-{
-	$s_id = "";
+else{
+	$s_id = '';
 }
 
 $action= new AdminActions();
 $action->delaction($s_id);
-?>
