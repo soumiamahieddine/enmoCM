@@ -174,14 +174,14 @@ function updateDatabase(
     do_query($GLOBALS['db'], 'START TRANSACTION');
     if (is_array($resInContainer) && count($resInContainer) > 0) {
         for ($cptRes=0;$cptRes<count($resInContainer);$cptRes++) {
-            do_update_db(
+            doUpdateDb(
                 $resInContainer[$cptRes]['res_id'], 
                 $path, $fileName, $resInContainer[$cptRes]['offset_doc'], 
                 $resInContainer[$cptRes]['fingerprint']
             );
         }
     } else {
-        do_update_db(
+        doUpdateDb(
             $currentRecordInStack['res_id'], $path, $fileName, $offsetDoc, 
             $currentRecordInStack['fingerprint']
         );
@@ -200,7 +200,7 @@ function updateDatabase(
  * @param string $fingerprint fingerprint of the resource on the docserver
  * @return nothing
  */
-function do_update_db($resId, $path, $fileName, $offsetDoc, $fingerprint) 
+function doUpdateDb($resId, $path, $fileName, $offsetDoc, $fingerprint) 
 {
     $query = "update " . _LC_STACK_TABLE_NAME . " set status = 'P' where"
            . " policy_id = '" . $GLOBALS['policy'] . "' and cycle_id = '" 
