@@ -1,5 +1,39 @@
 <?php
 
+/*
+ *   Copyright 2008-2011 Maarch
+ *
+ *   This file is part of Maarch Framework.
+ *
+ *   Maarch Framework is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   Maarch Framework is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with Maarch Framework. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/**
+ * @brief Library to fill the stack
+ *
+ * @file
+ * @author  Laurent Giovannoni  <dev@maarch.org>
+ * @date $date$
+ * @version $Revision$
+ * @ingroup life_cycle
+ */
+
+/**
+* @brief  Class to include the file error
+*
+* @ingroup life_cycle
+*/
 class IncludeFileError extends Exception
 {
     public function __construct($file) 
@@ -9,6 +43,12 @@ class IncludeFileError extends Exception
     }
 }
 
+/**
+ * Include the file requested if exists
+ * 
+ * @param string $file path of the file to include
+ * @return nothing
+ */
 function MyInclude($file) 
 {
     if (file_exists($file)) {
@@ -40,6 +80,13 @@ $collections = array();
 $wb = '';
 $stackSizeLimit = '';
 
+/**
+ * Execute a sql query
+ * 
+ * @param object $dbConn connection object to the database
+ * @param string $queryTxt path of the file to include
+ * @return true if ok, exit if ko
+ */
 function do_query($dbConn, $queryTxt) 
 {
     $dbConn->connect();
@@ -53,8 +100,11 @@ function do_query($dbConn, $queryTxt)
 }
 
 /**
-* Get the batch id
-*/
+ * Get the batch if of the fill stack process
+ * 
+ * @param object $db connection object to the database
+ * @return nothing
+ */
 function getWorkBatch($db) 
 {
     $req = "select param_value_int from parameters where id = "
@@ -74,8 +124,11 @@ function getWorkBatch($db)
 }
 
 /**
-* Update the database with the new batch id
-*/
+ * Update the database with the new batch id of the fill stack process
+ * 
+ * @param object $db connection object to the database
+ * @return nothing
+ */
 function updateWorkBatch($db) 
 {
     $db->connect();
@@ -87,6 +140,7 @@ function updateWorkBatch($db)
 
 // Defines scripts arguments
 $argsparser = new ArgsParser();
+// The config file
 $argsparser->add_arg(
     'config', array (
     'short' => 'c',
@@ -95,6 +149,7 @@ $argsparser->add_arg(
     'help' => 'Config file path is mandatory.'
     )
 );
+// The res collection target
 $argsparser->add_arg(
     'collection', array (
     'short' => 'coll',
@@ -103,6 +158,7 @@ $argsparser->add_arg(
     'help' => 'Collection target is mandatory.'
     )
 );
+// The life cycle policy
 $argsparser->add_arg(
     'policy', array (
     'short' => 'p',
@@ -111,6 +167,7 @@ $argsparser->add_arg(
     'help' => 'Policy is mandatory.'
     )
 );
+// The cycle of the policy
 $argsparser->add_arg(
     'cycle', array (
     'short' => 'cy',
@@ -187,6 +244,7 @@ if ($xmlconfig == FALSE) {
     );
     exit(5);
 }
+// Load the config vars
 $config = $xmlconfig->CONFIG;
 $lang = (string) $config->Lang;
 $maarchDirectory = (string) $config->MaarchDirectory;
@@ -222,6 +280,7 @@ $GLOBALS['logger']->change_handler_log_level($file, $logLevel);
 $GLOBALS['logger']->change_handler_log_level($console, $DisplayedLogLevel);
 unset($xmlconfig);
 set_include_path(get_include_path() . PATH_SEPARATOR . $maarchDirectory);
+// Include library
 try {
     MyInclude(
         $maarchDirectory . 'core' . DIRECTORY_SEPARATOR . 'class' 
@@ -240,8 +299,7 @@ try {
         . DIRECTORY_SEPARATOR . 'class_history.php'
     );
     MyInclude(
-        $maarchDirectory . 'core' . DIRECTORY_SEPARATOR 
-        . 'core_tables.php'
+        $maarchDirectory . 'core' . DIRECTORY_SEPARATOR . 'core_tables.php'
     );
     MyInclude(
         $maarchDirectory . 'modules' .DIRECTORY_SEPARATOR . 'life_cycle' 

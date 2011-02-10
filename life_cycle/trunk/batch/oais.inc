@@ -1,5 +1,45 @@
-<?php 
+<?php
 
+/*
+ *  Copyright 2008-2011 Maarch
+ *
+ *  This file is part of Maarch Framework.
+ *
+ *  Maarch Framework is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Maarch Framework is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/**
+ * @brief created the Archival Information Package (AIP) which contains :
+ *      Content Information (CI), Preservation Description Information (PDI), 
+ *      history (PDIHistory) and Packaging Information (PI)
+ * OAIS features
+ * @file
+ * @author  Laurent Giovannoni  <dev@maarch.org>
+ * @date $date$
+ * @version $Revision$
+ * @ingroup life_cycle
+ */
+ 
+/**
+ * Created the Archival Information Package (AIP) which contains :
+ *      Content Information (CI), Preservation Description Information (PDI), 
+ *      history (PDIHistory) and Packaging Information (PI)
+ * @param array $resInContainer array of resources in a container
+ *              res_id, source_path, fingerprint
+ * @return array $resInContainer array of resources in a container
+ *              res_id, source_path, fingerprint, offset_doc
+ */
 function createAip($resInContainer) 
 {
     if ($GLOBALS['func']->isDirNotEmpty($GLOBALS['TmpDirectory'])) {
@@ -135,6 +175,13 @@ function createAip($resInContainer)
     return $result;
 }
 
+/**
+ * Created the history of AIP (PDIHistory)
+ * Created an xml file in the temporary directory of the batch
+ * @param array $resInContainer array of resources in a container
+ *              res_id, source_path, fingerprint
+ * @return nothing
+ */
 function createPDIHistory($resInContainer) 
 {
     $tmpXML = $GLOBALS['TmpDirectory'] . DIRECTORY_SEPARATOR 
@@ -201,6 +248,15 @@ function createPDIHistory($resInContainer)
     $docXML->save($tmpXML);
 }
 
+/**
+ * Created the Packaging Information (PI)
+ * Created an xml file in the temporary directory of the batch
+ * @param array $piArray array AIP content and usage
+ *              CIFingerprint, fingerprintMode, aiuCount, ciName
+ *              compressionModeCI, pdiName, PDIFingerprint, pdiHistoryName,
+ *              PDIHISTORYFingerprint, compressionModeHistory, fingerprintMode
+ * @return nothing
+ */
 function createPackagingInformation($piArray) 
 {
     $tmpXML = $GLOBALS['TmpDirectory'] . DIRECTORY_SEPARATOR 

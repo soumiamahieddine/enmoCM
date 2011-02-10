@@ -16,7 +16,7 @@
  *   GNU General Public License for more details.
  *
  *   You should have received a copy of the GNU General Public License
- *   along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
+ *   along with Maarch Framework. If not, see <http://www.gnu.org/licenses/>.
  */
 
 /**
@@ -46,6 +46,7 @@
  *  13 : Collection unknow
  */
 
+// load the config and prepare to process
 include('load_fill_stack.inc');
 
 /******************************************************************************/
@@ -56,6 +57,9 @@ while ($state <> 'END') {
         $GLOBALS['logger']->write('STATE:' . $state, 'INFO');
     }
     switch ($state) {
+        /**********************************************************************/
+        /*                          CONTROL_STACK                             */
+        /* Checking if the stack is full                                      */
         /**********************************************************************/
         case 'CONTROL_STACK' :
             $db->connect();
@@ -70,6 +74,9 @@ while ($state <> 'END') {
             $db->disconnect();
             $state = 'GET_STEPS';
             break;
+        /**********************************************************************/
+        /*                          GET_STEPS                                 */
+        /* Get the list of cycle steps                                        */
         /**********************************************************************/
         case 'GET_STEPS' :
             $db->connect();
@@ -93,6 +100,9 @@ while ($state <> 'END') {
             $db->disconnect();
             $state = 'SELECT_RES';
             break;
+        /**********************************************************************/
+        /*                          SELECT_RES                                */
+        /* Selects candidates from each step of the cycle                     */
         /**********************************************************************/
         case 'SELECT_RES' :
             $orderBy = '';
@@ -169,6 +179,9 @@ while ($state <> 'END') {
             $GLOBALS['logger']->write('Batch number:' . $GLOBALS['wb'], 'INFO');
             $state = 'FILL_STACK';
             break;
+        /**********************************************************************/
+        /*                          FILL_STACK                                */
+        /* Fill the stack of candidates from each step of the cycle           */
         /**********************************************************************/
         case 'FILL_STACK' :
             $db->connect();

@@ -1,5 +1,41 @@
 <?php
 
+/*
+ *  Copyright 2008-2011 Maarch
+ *
+ *  This file is part of Maarch Framework.
+ *
+ *  Maarch Framework is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Maarch Framework is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/**
+ * @brief API to interface with objects in the database
+ * @file
+ * @author  Laurent Giovannoni  <dev@maarch.org>
+ * @date $date$
+ * @version $Revision$
+ * @ingroup life_cycle
+ */
+
+/**
+ * Retrieve the path of source file to process
+ * @param bigint $resId Id of the resource to process
+ * @param string $docserverToPurge Id of the docsever to purge
+ * @param string $dirToCompress path to the target dir to compress 
+ * @return array $returnArray array of information to retrieve the source file
+ *               docserverId, basePath, fileName, offsetDoc
+ */
 function getSourceResourcePath(
     $resId, 
     $docserverToPurge = '', 
@@ -116,6 +152,17 @@ function getSourceResourcePath(
     }
 }
 
+/**
+ * Updating the database with the location information of the document on the
+ * new docserver
+ * @param bigint $currentRecordInStack Id of the resource to process
+ * @param array  $resInContainer current container, array of res_id
+ * @param string $path location of the resource on the docserver
+ * @param string $fileName file name of the resource on the docserver
+ * @param string $offsetDoc offset in the container of the resource 
+ *               on the docserver
+ * @return nothing
+ */
 function updateDatabase(
     $currentRecordInStack, 
     $resInContainer, 
@@ -142,6 +189,17 @@ function updateDatabase(
     do_query($GLOBALS['db'], 'COMMIT');
 }
 
+/**
+ * Do the update with the location information of the document on the
+ * new docserver
+ * @param bigint $resId Id of the resource to process
+ * @param string $path location of the resource on the docserver
+ * @param string $fileName file name of the resource on the docserver
+ * @param string $offsetDoc offset in the container of the resource 
+ *               on the docserver
+ * @param string $fingerprint fingerprint of the resource on the docserver
+ * @return nothing
+ */
 function do_update_db($resId, $path, $fileName, $offsetDoc, $fingerprint) 
 {
     $query = "update " . _LC_STACK_TABLE_NAME . " set status = 'P' where"
@@ -198,6 +256,12 @@ function do_update_db($resId, $path, $fileName, $offsetDoc, $fingerprint)
     do_query($GLOBALS['db'], $query, true);
 }
 
+/**
+ * Delete the location information of the document to purge
+ * @param bigint $resId Id of the resource to process
+ * @param string $dsToUpdate id of the docserver to purge
+ * @return nothing
+ */
 function deleteAdrx($resId, $dsToUpdate) 
 {
     do_query($GLOBALS['db'], 'START TRANSACTION');
@@ -229,6 +293,12 @@ function deleteAdrx($resId, $dsToUpdate)
     do_query($GLOBALS['db'], 'COMMIT');
 }
 
+/**
+ * Updating the database, but not as deletion is the latest location 
+ * for the resource processed
+ * @param bigint $resId Id of the resource to process
+ * @return nothing
+ */
 function updateOnNonePurge($resId) 
 {
     do_query($GLOBALS['db'], 'START TRANSACTION');

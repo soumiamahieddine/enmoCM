@@ -86,6 +86,9 @@ while ($GLOBALS['state'] <> "END") {
     }
     switch($GLOBALS['state']) {
         /**********************************************************************/
+        /*                          CONTROL_STACK                             */
+        /* Checking the stack is empty for the required parameters            */
+        /**********************************************************************/
         case "CONTROL_STACK" :
             $query = "select * from " . _LC_STACK_TABLE_NAME 
                    . " where policy_id = '" . $GLOBALS['policy'] 
@@ -105,6 +108,9 @@ while ($GLOBALS['state'] <> "END") {
             do_query($GLOBALS['db'], $query);
             $GLOBALS['state'] = "GET_STEPS";
             break;
+        /**********************************************************************/
+        /*                          GET_STEPS                                 */
+        /* Get the list of cycle steps                                        */
         /**********************************************************************/
         case "GET_STEPS" :
             $query = "select * from " . _LC_CYCLE_STEPS_TABLE_NAME 
@@ -127,6 +133,9 @@ while ($GLOBALS['state'] <> "END") {
             }
             $GLOBALS['state'] = "GET_DOCSERVERS";
             break;
+        /**********************************************************************/
+        /*                          GET_DOCSERVERS                            */
+        /* Get the list of the docservers of each steps                       */
         /**********************************************************************/
         case "GET_DOCSERVERS" :
             $query = "select * from " . _LC_CYCLE_STEPS_TABLE_NAME 
@@ -181,6 +190,9 @@ while ($GLOBALS['state'] <> "END") {
                 }
             }
             break;
+        /**********************************************************************/
+        /*                          A_STEP                                    */
+        /* Processes a step cycle                                             */
         /**********************************************************************/
         case "A_STEP" :
             $GLOBALS['state'] = "EMPTY_STACK";
@@ -291,6 +303,9 @@ while ($GLOBALS['state'] <> "END") {
             }
             break;
         /**********************************************************************/
+        /*                          A_RECORD                                  */
+        /* Process a record of a step                                         */
+        /**********************************************************************/
         case "A_RECORD" :
             $cptRecordsInStep++;
             $query = "select * from " . _LC_STACK_TABLE_NAME 
@@ -360,6 +375,9 @@ while ($GLOBALS['state'] <> "END") {
             }
             break;
         /**********************************************************************/
+        /*                          CONTROL_ADR_X                             */
+        /* Controls whether this is the last record of the container          */
+        /**********************************************************************/
         case "CONTROL_ADR_X" :
             $query = "select res_id from " . $GLOBALS['adrTable'] 
                    . " where res_id = " . $currentRecordInStack['res_id'];
@@ -381,6 +399,9 @@ while ($GLOBALS['state'] <> "END") {
                 }
             }
             break;
+        /**********************************************************************/
+        /*                          CONTROL_CONTAINER_EMPTY                   */
+        /* Controls whether the container is empty                            */
         /**********************************************************************/
         case "CONTROL_CONTAINER_EMPTY" :
             $GLOBALS['state'] = "DELETE_RES_ON_ADR_X";
@@ -438,6 +459,9 @@ while ($GLOBALS['state'] <> "END") {
             }
             break;
         /**********************************************************************/
+        /*                          DO_PURGE_ON_DOCSERVER                     */
+        /* Purge the record or container on the document server               */
+        /**********************************************************************/
         case "DO_PURGE_ON_DOCSERVER" :
             $GLOBALS['state'] = "DELETE_RES_ON_ADR_X";
             $dsToUpdate = array();
@@ -474,10 +498,6 @@ while ($GLOBALS['state'] <> "END") {
                             $sourceFilePath
                         ) <> ""
                         ) {
-                            //echo $GLOBALS['docservers']
-                            //[$GLOBALS['currentStep']]['docserver'][$cptDs]
-                            //['docserver_id'] . " " . $sourceFilePath . "\r\n";
-                            //exit;
                             // WARNING unlink file
                             array_push(
                                 $dsToUpdate, 
@@ -521,10 +541,16 @@ while ($GLOBALS['state'] <> "END") {
             }
             break;
         /**********************************************************************/
+        /*                          DELETE_RES_ON_ADR_X                       */
+        /* Removes the address of the resource in the database                */
+        /**********************************************************************/
         case "DELETE_RES_ON_ADR_X" :
             deleteAdrx($currentRecordInStack['res_id'], $dsToUpdate);
             $GLOBALS['state'] = "A_RECORD";
             break;
+        /**********************************************************************/
+        /*                          COPY_OR_MOVE                              */
+        /* The action step is a copy or a move                                */
         /**********************************************************************/
         case "COPY_OR_MOVE" :
             if (
@@ -537,6 +563,10 @@ while ($GLOBALS['state'] <> "END") {
             }
             break;
         /**********************************************************************/
+        /*                          CONTAINER                                 */
+        /* It is a new container, it opens                                    */
+        /* This is not a new container, add a resource                        */
+        /**********************************************************************/
         case "CONTAINER" :
             if (!$isAContainerOpened) {
                 $GLOBALS['state'] = "OPEN_CONTAINER";
@@ -545,12 +575,18 @@ while ($GLOBALS['state'] <> "END") {
             }
             break;
         /**********************************************************************/
+        /*                          OPEN_CONTAINER                            */
+        /* Declares that the container is opened                              */
+        /**********************************************************************/
         case "OPEN_CONTAINER" :
             $isAContainerOpened = true;
             $cptResInContainer = 0;
             $resInContainer = array();
             $GLOBALS['state'] = "ADD_RECORD";
             break;
+        /**********************************************************************/
+        /*                          ADD_RECORD                                */
+        /* Adds a resource in the container                                   */
         /**********************************************************************/
         case "ADD_RECORD" :
             $cptResInContainer++;
@@ -588,6 +624,9 @@ while ($GLOBALS['state'] <> "END") {
             }
             break;
         /**********************************************************************/
+        /*                          CLOSE_CONTAINER                           */
+        /* Close the container because it is full                             */
+        /**********************************************************************/
         case "CLOSE_CONTAINER" :
             $resultAip = array();
             $resultAip = createAip($resInContainer);
@@ -597,6 +636,9 @@ while ($GLOBALS['state'] <> "END") {
             $cptResInContainer = 0;
             $GLOBALS['state'] = "DO_COPY_OR_MOVE";
             break;
+        /**********************************************************************/
+        /*                          DO_COPY_OR_MOVE                           */
+        /* Copy or move the resource on the target document server            */
         /**********************************************************************/
         case "DO_COPY_OR_MOVE" :
             $infoFileNameInTargetDocserver = array();
@@ -641,8 +683,11 @@ while ($GLOBALS['state'] <> "END") {
             $GLOBALS['state'] = "UPDATE_DATABASE";
             break;
         /**********************************************************************/
+        /*                          UPDATE_DATABASE                           */
+        /* Updating the database                                              */
+        /**********************************************************************/
         case "UPDATE_DATABASE" :
-            controlIntegrityOfTransfert(
+            controlIntegrityOfTransfer(
                 $currentRecordInStack, 
                 $resInContainer, $destinationDir, $fileDestinationName
             );
@@ -652,6 +697,9 @@ while ($GLOBALS['state'] <> "END") {
             );
             $GLOBALS['state'] = "A_RECORD";
             break;
+        /**********************************************************************/
+        /*                          EMPTY_STACK                               */
+        /* Empty stack if all resources are processed                         */
         /**********************************************************************/
         case "EMPTY_STACK" :
             $query = "select * from " . _LC_STACK_TABLE_NAME 

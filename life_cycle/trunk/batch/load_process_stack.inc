@@ -1,5 +1,39 @@
 <?php
 
+/*
+ *   Copyright 2008-2011 Maarch
+ *
+ *   This file is part of Maarch Framework.
+ *
+ *   Maarch Framework is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   Maarch Framework is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with Maarch Framework. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/**
+ * @brief Library to process the stack
+ *
+ * @file
+ * @author  Laurent Giovannoni  <dev@maarch.org>
+ * @date $date$
+ * @version $Revision$
+ * @ingroup life_cycle
+ */
+
+/**
+* @brief  Class to include the file error
+*
+* @ingroup life_cycle
+*/
 class IncludeFileError extends Exception 
 {
     public function __construct($file) 
@@ -9,6 +43,12 @@ class IncludeFileError extends Exception
     }
 }
 
+/**
+ * Include the file requested if exists
+ * 
+ * @param string $file path of the file to include
+ * @return nothing
+ */
 function MyInclude($file) 
 {
     if (file_exists($file)) {
@@ -57,6 +97,14 @@ $wb = '';
 $docserversFeatures = array();
 $isAContainerOpened = false;
 
+/**
+ * Execute a sql query
+ * 
+ * @param object $dbConn connection object to the database
+ * @param string $queryTxt path of the file to include
+ * @param boolean $transaction for rollback if error
+ * @return true if ok, exit if ko and rollback if necessary
+ */
 function do_query($db_conn, $query_txt, $transaction = false) 
 {
     $res = $db_conn->query($query_txt, true);
@@ -73,8 +121,11 @@ function do_query($db_conn, $query_txt, $transaction = false)
 }
 
 /**
-* Get the batch id
-*/
+ * Get the batch if of the process stack
+ * 
+ * @param object $db connection object to the database
+ * @return nothing
+ */
 function getWorkBatch() 
 {
     $req = "select param_value_int from parameters where id = "
@@ -92,8 +143,11 @@ function getWorkBatch()
 }
 
 /**
-* Update the database with the new batch id
-*/
+ * Update the database with the new batch id of the process stack
+ * 
+ * @param object $db connection object to the database
+ * @return nothing
+ */
 function updateWorkBatch() 
 {
     $req = "update parameters set param_value_int  = " . $GLOBALS['wb'] . " "
@@ -103,6 +157,7 @@ function updateWorkBatch()
 
 // Defines scripts arguments
 $argsparser = new ArgsParser();
+// The config file
 $argsparser->add_arg(
     'config', array (
     'short' => 'c',
@@ -110,6 +165,7 @@ $argsparser->add_arg(
     'mandatory' => true,
     'help' => 'Config file path is mandatory.'
 ));
+// The res collection target
 $argsparser->add_arg(
     'collection', array (
     'short' => 'coll',
@@ -117,6 +173,7 @@ $argsparser->add_arg(
     'mandatory' => true,
     'help' => 'Collection target is mandatory.'
 ));
+// The life cycle policy
 $argsparser->add_arg(
     'policy', array (
     'short' => 'p',
@@ -124,6 +181,7 @@ $argsparser->add_arg(
     'mandatory' => true,
     'help' => 'Policy is mandatory.'
 ));
+// The cycle of the policy
 $argsparser->add_arg(
     'cycle', array (
     'short' => 'cy',
@@ -193,6 +251,7 @@ if ($xmlconfig == FALSE) {
                         . $GLOBALS['configFile'], 'ERROR', 5);
     exit(5);
 }
+// Load the config vars
 $CONFIG = $xmlconfig->CONFIG;
 $lang = (string) $CONFIG->Lang;
 $GLOBALS['MaarchDirectory'] = (string) $CONFIG->MaarchDirectory;
@@ -243,6 +302,7 @@ $GLOBALS['logger']->change_handler_log_level($console, $DisplayedLogLevel);
 unset($xmlconfig);
 set_include_path(get_include_path() . PATH_SEPARATOR 
                 . $GLOBALS['MaarchDirectory']);
+// Include library
 try {
     MyInclude($GLOBALS['MaarchDirectory'] . 'core' . DIRECTORY_SEPARATOR 
     . 'class' . DIRECTORY_SEPARATOR . 'class_functions.php');
