@@ -1,6 +1,6 @@
 <?php
 /*
-*    Copyright 2008,2009,2010 Maarch
+*    Copyright 2008-2011 Maarch
 *
 *  This file is part of Maarch Framework.
 *
@@ -20,8 +20,8 @@
 
 /**
 * @brief  Contains the Status Object (herits of the BaseObject class)
-* 
-* 
+*
+*
 * @file
 * @author Claire Figueras <dev@maarch.org>
 * @date $date$
@@ -31,25 +31,25 @@
 
 // Loads the required class
 try {
-	require_once("core/class/BaseObject.php");
+    require_once('core/class/BaseObject.php');
 } catch (Exception $e){
-	echo $e->getMessage().' // ';
+    echo $e->getMessage().' // ';
 }
 
 /**
-* @brief  Status Object, herits of the BaseObject class 
+* @brief  Status Object, herits of the BaseObject class
 *
 * @ingroup core
 */
 class Status extends BaseObject
 {
-	/**
+    /**
 	* Returns the string representing the Status object
 	*
 	* @return string The status label (label_status)
 	*/
-	public function __toString(){
-		return $this->label_status ; 
-	}
+    public function __toString()
+    {
+        return $this->label_status;
+    }
 }
-?>

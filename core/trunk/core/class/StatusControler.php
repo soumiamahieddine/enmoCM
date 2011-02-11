@@ -1,6 +1,6 @@
 <?php
 /*
-*    Copyright 2008,2009,2010 Maarch
+*    Copyright 2008-2011 Maarch
 *
 *  This file is part of Maarch Framework.
 *
@@ -19,9 +19,9 @@
 */
 
 /**
-* @brief  Contains the controler of the Status Object (create, save, modify, etc...)
-* 
-* 
+* @brief  Contains the controler of the Status Object (create, save, modify)
+*
+*
 * @file
 * @author Claire Figueras <dev@maarch.org>
 * @date $date$
@@ -29,290 +29,361 @@
 * @ingroup core
 */
 
-// To activate de debug mode of the class
-$_ENV['DEBUG'] = false;
-/*
-define("_CODE_SEPARATOR","/");
-define("_CODE_INCREMENT",1);
-*/
-
 // Loads the required class
 try {
-	require_once("core/class/class_db.php");
-	require_once("core/class/Status.php");
+    require_once('core/class/class_db.php');
+    require_once('core/core_tables.php');
+    require_once('core/class/Status.php');
+    require_once('core/class/ObjectControlerAbstract.php');
+    require_once('core/class/ObjectControlerIF.php');
+    require_once ('core/class/class_history.php');
 } catch (Exception $e){
-	echo $e->getMessage().' // ';
+    echo $e->getMessage().' // ';
 }
 
 /**
-* @brief  Controler of the Status Object 
+* @brief  Controler of the Status Object
 *
 *<ul>
 *  <li>Get an status object from an id</li>
 *  <li>Save in the database a status</li>
-*  <li>Manage the operation on the status related tables in the database (insert, select, update, delete)</li>
+*  <li>Manage the operation on the status related tables in the database
+*  (insert, select, update, delete)</li>
 *</ul>
 * @ingroup core
 */
-class StatusControler
+class Maarch_Core_Class_StatusControler
+    extends ObjectControler
+   // implements ObjectControlerIF
 {
-	/**
-	* Dbquery object used to connnect to the database
+
+    /**
+    * Return an Status Object based on a status identifier
+    *
+    * @param  $status_id string  Status identifier
+    * @return Status object with properties
+    *     from the database or null
     */
-	private static $db;
-	
-	/**
-	* Status table
+    public function get($status_id)
+    {
+        if (empty($status_id)) {
+            return null;
+        }
+
+        self::set_foolish_ids(array('id'));
+        self::set_specific_id('id');
+        $status = self::advanced_get($status_id, STATUS_TABLE);
+
+        if (isset($status)) {
+            return $status;
+        } else {
+            return null;
+        }
+    }
+
+    /**
+    * Saves in the database a Status object
+    *
+    * @param  $status Status object to be saved
+    * @param  $mode string  Saving mode : add or up
+    * @param  $params More parameters,
+    *             array('modules_services' => $_SESSION['modules_services']
+    *                                         type array,
+    *                 'log_status_up'    => 'true' / 'false':
+    *                                         log status modification ,
+    *                 'log_status_add'   => 'true' / 'false': log status
+    *                                          addition,
+    *                 'databasetype'     => Type of the database ('POSTGRESQL'),
+    *                 )
+    * @return array (  'status' => 'ok' / 'ko',
+    *                  'value'  => User identifier or empty in case of error,
+    *                  'error'  => Error message, defined only in case of error
+    *               )
     */
-	public static $status_table ;
+    public function save($status, $mode, $params)
+    {
+        $control = array();
+        // If status not defined or empty, return an error
+        if (!isset($status) || empty($status)) {
+            $control = array('status' => 'ko',
+                             'value'  => '',
+                             'error'  => _STATUS_EMPTY
+                       );
+            return $control;
+        }
 
-	/**
-	* Opens a database connexion and values the tables variables
-	*/
-	public function connect()
-	{
-		$db = new dbquery();
-		$db->connect();
-		self::$status_table = $_SESSION['tablename']['status'];
-		
-		self::$db=$db;
-	}	
-	
-	/**
-	* Close the database connexion
-	*/
-	public function disconnect()
-	{
-		self::$db->disconnect();
-	}	
-	
-	/**
-	* Returns an Status Object based on a status identifier
-	*
-	* @param  $status_id string  Status identifier
-	* @return Status object with properties from the database or null
-	*/
-	public function get($status_id)
-	{
-		if(empty($status_id))
-			return null;
+        // If mode not up or add, return an error
+        if (!isset($mode) || empty($mode)
+            || ($mode <> 'add' && $mode <> 'up' )) {
+            $control = array('status' => 'ko',
+                             'value'  => '',
+                             'error'  => _MODE . ' ' ._UNKNOWN
+                        );
+            return $control;
+        }
 
-		self::connect();
-		$func = new functions();
-		$query = "select * from ".self::$status_table." where id = '".$func->protect_string_db($status_id)."'";
-		
-		try{
-			if($_ENV['DEBUG']){echo $query.' // ';}
-			self::$db->query($query);
-		} catch (Exception $e){
-		echo _NO_STATUS_WITH_ID.' '.$status_id.' // ';
-		}
-		
-		if(self::$db->nb_result() > 0)
-		{
-			$status = new Status();
-			$queryResult=self::$db->fetch_object(); 
-			foreach($queryResult as $key => $value){
-				$status->$key=$value;
-			}
-			self::disconnect();
-			return $status;
-		}
-		else
-		{
-			self::disconnect();
-			return null;
-		}
-	}
-	
-	
-	/**
-	* Saves in the database a Status object 
-	*
-	* @param  $status Status object to be saved
-	* @param  $mode string  Saving mode : add or up
-	* @return bool true if the save is complete, false otherwise
-	*/
-	public function save($status, $mode)
-	{
-		if(!isset($status) )
-			return false;
-			
-		if($mode == "up")
-			return self::update($status);
-		elseif($mode =="add") 
-			return self::insert($status);
-		
-		return false;
-	}
-	
-	/**
-	* Inserts in the database (status table) a Status object
-	*
-	* @param  $status Status object
-	* @return bool true if the insertion is complete, false otherwise
-	*/
-	private function insert($status)
-	{
-		if(!isset($status) )
-			return false;
-			
-		self::connect();
-		$prep_query = self::insert_prepare($status);
+        $status = self::isAStatus($status);
+        self::set_foolish_ids(array('id'));
+        self::set_specific_id('id');
 
-		$query="insert into ".self::$status_table." ("
-					.$prep_query['COLUMNS']
-					.") values("
-					.$prep_query['VALUES']
-					.")";
-		try{
-			if($_ENV['DEBUG']){ echo $query.' // '; }
-			self::$db->query($query);
-			$ok = true;
-		} catch (Exception $e){
-			echo _CANNOT_INSERT_STATUS." ".$status->toString().' // ';
-			$ok = false;
-		}
-		self::disconnect();
-		return $ok;
-	}
+        // Data checks
+        $control = self::control($status, $mode, $params);
 
-	/**
-	* Updates a status in the database (status table) with a Status object
-	*
-	* @param  $status Status object
-	* @return bool true if the update is complete, false otherwise
-	*/
-	private function update($status)
-	{
-		if(!isset($status) )
-			return false;
-			
-		self::connect();
-		$func = new functions();
-		$query="update ".self::$status_table." set "
-					.self::update_prepare($status)
-					." where id='".$func->protect_string_db($status->id)."'"; 
-					
-		try{
-			if($_ENV['DEBUG']){echo $query.' // ';}
-			self::$db->query($query);
-			$ok = true;
-		} catch (Exception $e){
-			echo _CANNOT_UPDATE_STATUS." ".$status->toString().' // ';
-			$ok = false;
-		}
-		self::disconnect();
-		return $ok;
-	}
-	
-	/**
-	* Deletes in the database (status table) a given status (status_id)
-	*
-	* @param  $status_id string  Status identifier
-	* @return bool true if the deletion is complete, false otherwise
-	*/
-	public function delete($status_id)
-	{
-		if(!isset($status_id)|| empty($status_id) )
-			return false;
-		if(! self::statusExists($status_id))
-			return false;
-			
-		self::connect();
-		$query="delete from ".self::$status_table." where id='".$status_id."'";
-		
-		try{
-			if($_ENV['DEBUG']){echo $query.' // ';}
-			self::$db->query($query);
-			$ok = true;
-		} catch (Exception $e){
-			echo _CANNOT_DELETE_STATUS_ID." ".$status_id.' // ';
-			$ok = false;
-		}
-		
-		// TO DO : penser à la table actions (champ id_status)
-		self::disconnect();
-	
-		return $ok;
-	}
-	
-	
-	/**
-	* Asserts if a given status (status_id) exists in the database
-	* 
-	* @param  $status_id String Status identifier
-	* @return bool true if the status exists, false otherwise 
-	*/
-	public function statusExists($status_id)
-	{
-		if(!isset($status_id) || empty($status_id))
-			return false;
+        if ($control['status'] == 'ok') {
+            $core = new core_tools();
+            $_SESSION['service_tag'] = 'status_' . $mode;
+            $core->execute_modules_services(
+                $params['modules_services'], 'status_add_db', 'include'
+            );
 
-		self::connect();
-		$func = new functions();
-		$query = "select id from ".self::$status_table." where id = '".$func->protect_string_db($status_id)."'";
-					
-		try{
-			if($_ENV['DEBUG']){echo $query.' // ';}
-			self::$db->query($query);
-		} catch (Exception $e){
-			echo _UNKNOWN.' '._STATUS." ".$status_id.' // ';
-		}
-		
-		if(self::$db->nb_result() > 0)
-		{
-			self::disconnect();
-			return true;
-		}
-		self::disconnect();
-		return false;
-	}
-	
-	/**
-	* Prepares the update query for a given Status object
-	*
-	* @param  $status Status object
-	* @return String containing the fields and the values 
-	*/
-	private function update_prepare($status)
-	{
-		$result=array();
-		$func = new functions();
-		foreach($status->getArray() as $key => $value)
-		{
-			// For now all fields in the status table are strings or dates
-			if(!empty($value))
-			{
-				$result[]=$key."='".$func->protect_string_db($value)."'";		
-			}
-		}
-		// Return created string minus last ", "
-		return implode(",",$result);
-	} 
-	
-	/**
-	* Prepares the insert query for a given Status object
-	*
-	* @param  $status Status object
-	* @return Array containing the fields and the values 
-	*/
-	private function insert_prepare($status)
-	{
-		$columns=array();
-		$values=array();
-		$func = new functions();
-		foreach($status->getArray() as $key => $value)
-		{
-			//For now all fields in the statuss table are strings or dates
-			if(!empty($value))
-			{
-				$columns[]=$key;
-				$values[]="'".$func->protect_string_db($value)."'";
-			}
-		}
-		return array('COLUMNS' => implode(",",$columns), 'VALUES' => implode(",",$values));
-	}
-	
+            if ($mode == 'up') {
+                //Update existing status
+                if (self::update($status)) {
+                    $control = array('status' => 'ok',
+                                     'value'  => $status->id
+                               );
+                    //log
+                    if ($params['log_status_up'] == 'true') {
+                        $history = new history();
+                        $history->add(
+                            STATUS_TABLE, $status->id, 'UP',
+                            _STATUS_MODIFIED . ' : ' . $status->id,
+                            $params['databasetype']
+                        );
+                    }
+                } else {
+                    $control = array('status' => 'ko',
+                                     'value'  => '',
+                                     'error'  => _PB_WITH_STATUS_UPDATE
+                                );
+                }
+            } else { //mode == add
+                if (self::insert($status)) {
+                    $control = array('status' => 'ok',
+                                     'value'  => $status->id);
+                    //log
+                    if ($params['log_status_add'] == 'true') {
+                        $history = new history();
+                        $history->add(
+                            STATUS_TABLE, $status->id, 'ADD',
+                            _STATUS_ADDED . ' : ' . $status->id,
+                            $params['databasetype']
+                        );
+                    }
+                } else {
+                    $control = array('status' => 'ko',
+                                     'value'  => '',
+                                     'error'  => _PB_WITH_STATUS
+                                );
+                }
+            }
+        }
+        unset($_SESSION['service_tag']);
+        return $control;
+    }
+
+    /**
+    * Fill a Status object with an object if it's not a Status
+    *
+    * @param  $object ws Status object
+    * @return object Status
+    */
+    private function isAStatus($object)
+    {
+        if (get_class($object) <> 'Status') {
+            $func = new functions();
+            $statusObject = new Status();
+            $array = array();
+            $array = $func->object2array($object);
+            foreach (array_keys($array) as $key) {
+                $statusObject->$key = $array[$key];
+            }
+            return $statusObject;
+        } else {
+            return $object;
+        }
+    }
+
+    /**
+    * Control the data of Status object
+    *
+    * @param  $status Status object
+    * @param  $mode Mode (add or up)
+    * @param  $params More parameters,
+    *                 array('modules_services' => $_SESSION['modules_services']
+    *                                               type array,
+    *                     'log_status_up'      => 'true' / 'false': log status
+    *                                               modification,
+    *                     'log_status_add'     => 'true' / 'false': log status
+    *                                               addition,
+    *                     'databasetype'       => Type of the database
+    *                                               ('POSTGRESQL', ...)
+    *                )
+    * @return array (  'status' => 'ok' / 'ko',
+    *                  'value'  => Status identifier or empty in case of error,
+    *                  'error'  => Error message, defined only in case of error
+    *                  )
+    */
+    private function control($status, $mode, $params=array())
+    {
+        $error = "";
+        $f = new functions();
+        $status->id = $f->protect_string_db(
+            $f->wash($status->id, 'no', _THE_ID . ' ', 'yes', 0, 10)
+        );
+
+        if ($mode == 'add') {
+            if (self::statusExists($status->id)) {
+                $error .= _STATUS . ' ' . _ALREADY_EXISTS . '#';
+            }
+        }
+
+        $status->label_status = $f->protect_string_db(
+            $f->wash($status->label_status, 'no', _DESC, 'yes', 0, 50)
+        );
+        $status->is_system = $f->protect_string_db(
+            $f->wash($status->is_system, 'no', _IS_SYSTEM)
+        );
+        $status->img_filename = '';
+        $status->maarch_module = 'apps';
+
+        if (!isset($status->can_be_searched)
+            || ($status->can_be_searched != 'Y'
+                && $status->can_be_searched != 'N')) {
+          $status->can_be_searched = 'Y';
+        }
+
+        if (!isset($status->can_be_modified)
+            || ($status->can_be_modified != 'Y'
+                && $status->can_be_modified != 'N')) {
+          $status->can_be_modified = 'Y';
+        }
+
+        $_SESSION['service_tag'] = 'status_check';
+        $core = new core_tools();
+        $core->execute_modules_services(
+            $params['modules_services'], 'status_check', 'include'
+        );
+
+        $error .= $_SESSION['error'];
+        //TODO:rewrite wash to return errors without html and not in the session
+        $error = str_replace("<br />", "#", $error);
+        $return = array();
+        if (!empty($error)) {
+                $return = array('status' => 'ko',
+                                'value'  => $status->id,
+                                'error'  => $error
+                          );
+        } else {
+            $return = array('status' => 'ok',
+                            'value'  => $status->id
+                      );
+        }
+        unset($_SESSION['service_tag']);
+        return $return;
+    }
+
+    /**
+    * Inserts in the database (status table) a Status object
+    *
+    * @param  $status Status object
+    * @return bool true if the insertion is complete, false otherwise
+    */
+    private function insert($status)
+    {
+        return self::advanced_insert($status);
+    }
+
+    /**
+    * Updates a status in the database (status table) with a Status object
+    *
+    * @param  $status Status object
+    * @return bool true if the update is complete, false otherwise
+    */
+    private function update($status)
+    {
+       return self::advanced_update($status);
+    }
+
+    /**
+    * Deletes in the database (status table) a given status (status_id)
+    *
+    * @param  $status_id string  Status identifier
+    * @return bool true if the deletion is complete, false otherwise
+    */
+    public function delete($status, $params = array())
+    {
+        $control = array();
+        if (!isset($status) || empty($status)) {
+            $control = array('status' => 'ko',
+                             'value'  => '',
+                             'error'  => _STATUS_EMPTY
+                       );
+            return $control;
+        }
+        $status = self::isAStatus($status);
+        if (!self::statusExists($status->id)) {
+            $control = array('status' => 'ko',
+                             'value'  => '',
+                             'error'  => _STATUS_NOT_EXISTS
+                       );
+            return $control;
+        }
+
+        self::set_foolish_ids(array('id'));
+        self::set_specific_id('id');
+        if (self::advanced_delete($status) == true) {
+            if (isset($params['log_status_del'])
+                && ($params['log_status_del'] == "true"
+                    || $params['log_status_del'] == true)) {
+                $history = new history();
+                $history->add(
+                    STATUS_TABLE, $status->id, 'DEL', _STATUS_DELETED . ' : '
+                    . $status->id, $params['databasetype']
+                );
+            }
+            $control = array('status' => 'ok',
+                             'value'  => $status->id
+                      );
+        } else {
+            $control = array('status' => 'ko',
+                             'value'  => $status->id,
+                             'error'  => $error
+                          );
+        }
+        return $control;
+    }
+
+
+    /**
+    * Asserts if a given status (status_id) exists in the database
+    *
+    * @param  $status_id String Status identifier
+    * @return bool true if the status exists, false otherwise
+    */
+    public function statusExists($status_id)
+    {
+        if (!isset($status_id) || empty($status_id)) {
+            return false;
+        }
+
+        self::$db = new dbquery();
+        self::$db->connect();
+        $func = new functions();
+        $query = 'select id from ' . STATUS_TABLE . " where id = '"
+               . $func->protect_string_db($status_id) . "'";
+
+        try{
+            self::$db->query($query);
+        } catch (Exception $e){
+            echo _UNKNOWN . ' ' . _STATUS . ' ' . $status_id . ' // ';
+        }
+
+        if (self::$db->nb_result() > 0) {
+            self::$db->disconnect();
+            return true;
+        }
+        self::$db->disconnect();
+        return false;
+    }
 }
-?>
