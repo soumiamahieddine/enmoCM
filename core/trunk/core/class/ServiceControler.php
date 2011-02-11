@@ -19,9 +19,9 @@
 */
 
 /**
-* @brief  Contains the controler of the Service Object 
-* 
-* 
+* @brief  Contains the controler of the Service Object
+*
+*
 * @file
 * @author Claire Figueras <dev@maarch.org>
 * @date $date$
@@ -46,7 +46,7 @@ try {
 }
 
 /**
-* @brief  Controler of the Service Object 
+* @brief  Controler of the Service Object
 *
 * @ingroup core
 */
@@ -56,13 +56,13 @@ class ServiceControler
 	* Dbquery object used to connnect to the database
     */
 	private static $db;
-	
+
 	/**
 	* usergroups_services table
     */
 	private static $usergroups_services_table;
-	
-	
+
+
 	/**
 	* Opens a database connexion and values the tables variables
 	*/
@@ -70,20 +70,20 @@ class ServiceControler
 	{
 		$db = new dbquery();
 		$db->connect();
-		
+
 		self::$usergroups_services_table = USERGROUPS_SERVICES_TABLE;
 		self::$db=$db;
-	}	
-	
-	
+	}
+
+
 	/**
 	* Close the database connexion
 	*/
 	public function disconnect()
 	{
 		self::$db->disconnect();
-	}	
-	
+	}
+
 	public function loadEnabledServices()
 	{
 		$_SESSION['enabled_services'] = array();
@@ -105,7 +105,7 @@ class ServiceControler
 			}
 		}
 	}
-	
+
 	/**
 	* Loads into session all the services for a user
 	*
@@ -115,6 +115,7 @@ class ServiceControler
 	public function loadUserServices($user_id)
 	{
 		$services = array();
+		$ugc = new usergroups_controler();
 		if($user_id == "superadmin")
 		{
 			$services = self::getAllServices();
@@ -134,7 +135,7 @@ class ServiceControler
 					$find = false;
 					while($res = self::$db->fetch_object())
 					{
-						if(usergroups_controler::inGroup($user_id, $res->group_id) == true)
+						if($ugc->inGroup($user_id, $res->group_id) == true)
 						{
 							$find = true;
 							break;
@@ -153,7 +154,7 @@ class ServiceControler
 		}
 		return $services;
 	}
-	
+
 		/**
 	* Loads into session all the services for the superadmin
 	*

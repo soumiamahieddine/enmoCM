@@ -39,15 +39,16 @@ define("_CODE_INCREMENT",1);
 
 // Loads the required class
 try {
-    require_once("core/core_tables.php");
-    require_once("core/class/class_db.php");
-    require_once("core/class/users_controler.php");
-    require_once("core/class/session_security_controler.php");
-    require_once("core/class/Security.php");
-    if(!defined("_CLASSIFICATION_SCHEME_VIEW")) define("_CLASSIFICATION_SCHEME_VIEW","mr_classification_scheme_view");
-//  require_once("apps/".$_SESSION['businessapps'][0]['appid']."/security_bitmask.php"); must be called in the controler
+    require_once('core/core_tables.php');
+    require_once('core/class/class_db.php');
+    require_once('core/class/users_controler.php');
+    require_once('core/class/session_security_controler.php');
+    require_once('core/class/Security.php');
+    if (!defined('_CLASSIFICATION_SCHEME_VIEW')) {
+        define('_CLASSIFICATION_SCHEME_VIEW', 'mr_classification_scheme_view');
+    }
 } catch (Exception $e){
-    echo $e->getMessage().' // ';
+    echo $e->getMessage() . ' // ';
 }
 
 /**
@@ -56,7 +57,8 @@ try {
 *<ul>
 *  <li>Get an security object from an id</li>
 *  <li>Save in the database a security</li>
-*  <li>Manage the operation on the security table in the database (insert, select, update, delete)</li>
+*  <li>Manage the operation on the security table in the database
+*  	(insert, select, update, delete)</li>
 *</ul>
 * @ingroup core
 */
@@ -459,7 +461,7 @@ class SecurityControler
     {
         $tab['collections'] = array();
         $tab['security'] = array();
-
+        $func = new functions();
         self::connect();
 
         if($user_id == "superadmin")
@@ -476,7 +478,8 @@ class SecurityControler
         }
         else
         {
-            $groups = users_controler::getGroups($user_id);
+            $uc = new users_controler();
+            $groups = $uc->getGroups($user_id);
 
             $access = array();
             for($i=0; $i<count($groups); $i++)
@@ -504,7 +507,7 @@ class SecurityControler
                 if(trim($where_clause) == "")
                     $where = "-1";
                 else
-                    $where =  "( ".$this->show_string($where_clause)." )";
+                    $where =  "( ".$func->show_string($where_clause)." )";
 
                 if( ! in_array($coll_id, $tab['collections'] ) )
                 {
@@ -575,8 +578,9 @@ class SecurityControler
      */
     public function getActions($user_id,$object_id, $object_type = 'aggregation')
     {
+        $Ctrl = new session_security_controler();
         // Select from security session table
-        $session_sec = session_security_controler::get($user_id);
+        $session_sec = $Ctrl->get($user_id);
         if($session_sec->__get('last_object_id') == $object_id)
             return $session_sec->__get('last_available_bitmask');
         else
@@ -604,7 +608,8 @@ class SecurityControler
         }
         // Compute action bitmask
         $full_bitmask = 0;
-        $groups = users_controler::getGroups($user_id);
+        $uc = new users_controler();
+        $groups = $uc->getGroups($user_id);
         //print_r($groups);
 
         $full_where = "";
@@ -667,10 +672,11 @@ class SecurityControler
         }
 
         // Update security session table
+        $func = new functions();
         $session_security = new session_security();
-        $session_security->setArray(array('user_id' => functions::protect_string_db($user_id), 'session_begin_date' => date("Y-m-d H:i"), 'full_where_clause' => functions::protect_string_db($full_where), 'last_available_bitmask' => $full_bitmask, 'last_object_id' => functions::protect_string_db($object_id))); // TO DO : calculate the session_end_date
-
-        session_security_controler::save($session_security);
+        $session_security->setArray(array('user_id' => $func->protect_string_db($user_id), 'session_begin_date' => date("Y-m-d H:i"), 'full_where_clause' => functions::protect_string_db($full_where), 'last_available_bitmask' => $full_bitmask, 'last_object_id' => functions::protect_string_db($object_id))); // TO DO : calculate the session_end_date
+        $ctrl = new session_security_controler();
+        $ctrl->save($session_security);
 
         return $full_bitmask;
     }
