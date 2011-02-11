@@ -120,7 +120,7 @@ elseif(isset($_SESSION['upfile']['mime']) && !empty($_SESSION['upfile']['mime'])
 else
 {
 	?>
-    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <!DOCTYPE PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 	<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php  echo $_SESSION['config']['lang'] ?>" lang="<?php  echo $_SESSION['config']['lang'] ?>">
 	<head>
 		<title><?php  echo $_SESSION['config']['applicationname']; ?></title>

@@ -1,354 +1,438 @@
 <?php
 core_tools::load_lang();
 
+// Default mode is add
 $mode = 'add';
-if(isset($_REQUEST['mode']) && !empty($_REQUEST['mode'])){
+if (isset($_REQUEST['mode']) && !empty($_REQUEST['mode'])) {
     $mode = $_REQUEST['mode'];
 }
 
-$page_labels = array('add' => _ADDITION, 'up' => _MODIFICATION, 
-					 'list' => _STATUS_LIST);
-$page_ids = array('add' => 'status_add', 'up' => 'status_up', 
-                  'list' => 'status_list');
-
 try{
     require_once('core/class/StatusControler.php');
-    if($mode == 'list'){
+    if ($mode == 'list') {
         require_once('core/class/class_request.php');
-        require_once('apps' . DIRECTORY_SEPARATOR 
-					 . $_SESSION['config']['app_id'] . DIRECTORY_SEPARATOR 
-					 . 'class' . DIRECTORY_SEPARATOR . 'class_list_show.php');
+        require_once('apps' . DIRECTORY_SEPARATOR
+                     . $_SESSION['config']['app_id'] . DIRECTORY_SEPARATOR
+                     . 'class' . DIRECTORY_SEPARATOR . 'class_list_show.php');
     }
-
-} catch (Exception $e){
+} catch (Exception $e) {
     echo $e->getMessage();
 }
-$status_ctrl = new StatusControler();
+
+if (isset($_REQUEST['id']) && !empty($_REQUEST['id'])) {
+    $statusId = $_REQUEST['id'];
+}
+
+if (isset($_REQUEST['status_submit'])) {
+    // Action to do with db
+    validate_status_submit();
+
+} else {
+    // Display to do
+    $state = true;
+    switch ($mode) {
+        case "up" :
+            $state = display_up($statusId);
+            $_SESSION['service_tag'] = 'status_init';
+            core_tools::execute_modules_services(
+                $_SESSION['modules_services'], 'status_init', 'include'
+            );
+            location_bar_management($mode);
+            break;
+        case "add" :
+            display_add();
+            $_SESSION['service_tag'] = 'status_init';
+            core_tools::execute_modules_services(
+                $_SESSION['modules_services'], 'status_init', 'include'
+            );
+            location_bar_management($mode);
+            break;
+        case "del" :
+            display_del($statusId);
+            break;
+        case "list" :
+            $statusList = display_list();
+            location_bar_management($mode);
+            break;
+    }
+    include('status_management.php');
+}
+
+/**
+ * Management of the location bar
+ */
+function location_bar_management($mode)
+{
+    $pageLabels = array('add'  => _ADDITION,
+                    'up'   => _MODIFICATION,
+                    'list' => _STATUS_LIST
+               );
+    $pageIds = array('add' => 'status_add',
+                  'up' => 'status_up',
+                  'list' => 'status_list'
+            );
+    $init = false;
+    if (isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == 'true') {
+        $init = true;
+    }
+
+    $level = '';
+    if (isset($_REQUEST['level'])
+        && ($_REQUEST['level'] == 2 || $_REQUEST['level'] == 3
+            || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1)) {
+        $level = $_REQUEST['level'];
+    }
+
+    $pagePath = $_SESSION['config']['businessappurl'] . 'index.php?page='
+               . 'status_management_controler&admin=status&mode=' . $mode ;
+    $pageLabel = $pageLabels[$mode];
+    $pageId = $pageIds[$mode];
+    $ct = new core_tools();
+    $ct->manage_location_bar($pagePath, $pageLabel, $pageId, $init, $level);
+}
+
+/**
+ * Initialize session parameters for update display
+ * @param String $statusId
+ */
+function display_up($statusId)
+{
+    $statusCtrl = new Maarch_Core_Class_StatusControler();
+    $state = true;
+    $status = $statusCtrl->get($statusId);
+
+    if (empty($status)) {
+        $state = false;
+    } else {
+        put_in_session('status', $status->getArray());
+    }
+
+    return $state;
+}
+
+/**
+ * Initialize session parameters for add display
+ */
+function display_add()
+{
+    if (!isset($_SESSION['m_admin']['init'])) {
+        init_session();
+    }
+}
+
+/**
+ * Initialize session parameters for list display
+ */
+function display_list()
+{
+    $_SESSION['m_admin'] = array();
+    $list = new list_show();
+    $func = new functions();
+    init_session();
+
+    $select[STATUS_TABLE] = array();
+    array_push(
+        $select[STATUS_TABLE], 'id', 'label_status', 'is_system',
+        'can_be_searched'
+    );
+    $where = '';
+    $what = '';
+    if (isset($_REQUEST['what'])) {
+        $what = $func->protect_string_db($_REQUEST['what']);
+    }
+    if ($_SESSION['config']['databasetype'] == 'POSTGRESQL') {
+        $where .= " (label_status ilike '". $func->protect_string_db(
+            $what, $_SESSION['config']['databasetype']
+        )
+               . "%'  or id ilike '" . $func->protect_string_db(
+                   $what, $_SESSION['config']['databasetype']
+               )
+               . "%' ) ";
+    } else {
+        $where .= " (label_status like '"
+               . $func->protect_string_db(
+                   $what, $_SESSION['config']['databasetype']
+               )
+               . "%'  or id like '" . $func->protect_string_db(
+                   $what, $_SESSION['config']['databasetype']
+               )
+               . "%' ) ";
+    }
+
+    // Checking order and order_field values
+    $order = 'asc';
+    if (isset($_REQUEST['order']) && !empty($_REQUEST['order'])) {
+        $order = trim($_REQUEST['order']);
+    }
+
+    $field = 'label_status';
+    if (isset($_REQUEST['order_field']) && !empty($_REQUEST['order_field'])) {
+        $field = trim($_REQUEST['order_field']);
+    }
+
+    $orderstr = $list->define_order($order, $field);
+    $request = new request();
+    $tab = $request->select(
+        $select, $where, $orderstr, $_SESSION['config']['databasetype']
+    );
+
+    for ($i=0;$i<count($tab);$i++) {
+        foreach ($tab[$i] as &$item) {
+            switch ($item['column']) {
+                case 'id':
+                    format_item(
+                        $item, _ID, '18', 'left', 'left', 'bottom', true
+                    );
+                    break;
+                case 'label_status':
+                    format_item(
+                        $item, _DESC, '15', 'left', 'left', 'bottom', true
+                    );
+                    break;
+                case 'is_system':
+                    if ($item['value'] == 'Y') {
+                        $item['value'] = _YES;
+                        array_push(
+                            $tab[$i], array(
+                                'column' => 'can_delete', 'value' => 'false',
+                                'can_delete' => 'false', 'label' => _DESC,
+                                'show' => false
+                            )
+                        );
+                    } else {
+                        $item['value'] = _NO;
+                        array_push(
+                            $tab[$i], array(
+                                'column' => 'can_delete', 'value' => 'true',
+                                'can_delete' => 'true', 'label' => _DESC,
+                                'show' => false
+                            )
+                        );
+                    }
+                    format_item(
+                        $item, '', '5', 'left', 'left', 'bottom', true, false
+                    );
+                    break;
+                case 'can_be_searched':
+                    if ($item['value'] == 'Y') {
+                        $item['value'] = _YES;
+                    } else {
+                        $item['value'] = _NO;
+                    }
+                    format_item(
+                        $item, '', '5', 'left', 'left', 'bottom', true, false
+                    );
+                    break;
+            }
+        }
+    }
+    $_SESSION['m_admin']['init'] = true;
+    $result = array(
+        'tab'                 => $tab,
+        'what'                => $what,
+        'page_name'           => 'status_management_controler&mode=list',
+        'page_name_add'       => 'status_management_controler&mode=add',
+        'page_name_up'        => 'status_management_controler&mode=up',
+        'page_name_del'       => 'status_management_controler&mode=del',
+        'page_name_val'       => '',
+        'page_name_ban'       => '',
+        'label_add'           => _ADD_STATUS,
+        'title'               => _STATUS_LIST . ' : ' . $i . ' ' . _STATUS_PLUR,
+        'autoCompletionArray' => array(
+                                     'list_script_url'  =>
+                                        $_SESSION['config']['businessappurl']
+                                        . 'index.php?display=true&admin=status'
+                                        . '&page=status_list_by_name',
+                                     'number_to_begin'  => 1
+                                 ),
+
+    );
+    return $result;
+}
+
+/**
+ * Delete given status if exists and initialize session parameters
+ * @param string $statusId
+ */
+function display_del($statusId)
+{
+    $statusCtrl = new Maarch_Core_Class_StatusControler();
+    $status = $statusCtrl->get($statusId);
+    if (isset($status)) {
+        // Deletion
+        $control = array();
+        $params  = array( 'log_status_del' => $_SESSION['history']['statusdel'],
+                         'databasetype' => $_SESSION['config']['databasetype']
+                        );
+        $control = $statusCtrl->delete($status, $params);
+        if (!empty($control['error']) && $control['error'] <> 1) {
+            $_SESSION['error'] = str_replace("#", "<br />", $control['error']);
+        } else {
+            $_SESSION['error'] = _STATUS_DELETED.' : '.$statusId;
+        }
+        ?><script type="text/javascript">window.top.location='<?php
+            echo $_SESSION['config']['businessappurl']
+                . 'index.php?page=status_management_controler&mode=list&admin='
+                . 'status&order=' . $_REQUEST['order'] . '&order_field='
+                . $_REQUEST['order_field'] . '&start=' . $_REQUEST['start']
+                . '&what=' . $_REQUEST['what'];
+        ?>';</script>
+        <?php
+        exit();
+    } else {
+        // Error management
+        $_SESSION['error'] = _STATUS.' '._UNKNOWN;
+    }
+}
+
+/**
+ * Format given item with given values, according with HTML formating.
+ * NOTE: given item needs to be an array with at least 2 keys:
+ * 'column' and 'value'.
+ * NOTE: given item is modified consequently.
+ * @param $item
+ * @param $label
+ * @param $size
+ * @param $labelAlign
+ * @param $align
+ * @param $valign
+ * @param $show
+ */
+function format_item(
+    &$item, $label, $size, $labelAlign, $align, $valign, $show, $order = true
+)
+{
+    $func = new functions();
+    $item['value'] = $func->show_string($item['value']);
+    $item[$item['column']] = $item['value'];
+    $item['label'] = $label;
+    $item['size'] = $size;
+    $item['label_align'] = $labelAlign;
+    $item['align'] = $align;
+    $item['valign'] = $valign;
+    $item['show'] = $show;
+    if ($order) {
+        $item['order'] = $item['value'];
+    } else {
+        $item['order'] = '';
+    }
+}
+
+/**
+ * Validate a submit (add or up),
+ * up to saving object
+ */
+function validate_status_submit()
+{
+    $statusCtrl = new Maarch_Core_Class_StatusControler();
+    $pageName = 'status_management_controler';
+
+    $mode = $_REQUEST['mode'];
+    $statusObj = new Status();
+    $statusObj->id = $_REQUEST['status_id'];
+    $statusObj->label_status = $_REQUEST['label'];
+    $statusObj->is_system = 'N';
+    if (isset($_REQUEST['is_system']) && !empty($_REQUEST['is_system'])) {
+        $statusObj->is_system = $_REQUEST['is_system'];
+    }
+    $statusObj->img_filename = '';
+    $statusObj->maarch_module = 'apps';
+     $statusObj->can_be_searched = 'Y';
+    if (isset($_REQUEST['can_be_searched'])) {
+        $statusObj->can_be_searched = $_REQUEST['can_be_searched'];
+    }
+    $statusObj->can_be_modified = 'Y';
+    if (isset($_REQUEST['can_be_modified'])) {
+        $statusObj->can_be_modified = $_REQUEST['can_be_modified'];
+    }
+
+    $status = array();
+    $status['order'] = $_REQUEST['order'];
+    $status['order_field'] = $_REQUEST['order_field'];
+    $status['what'] = $_REQUEST['what'];
+    $status['start'] = $_REQUEST['start'];
+
+    $control = array();
+    $params = array('modules_services' => $_SESSION['modules_services'],
+                    'log_status_up' => $_SESSION['history']['statusup'],
+                    'log_status_add' => $_SESSION['history']['statusadd'],
+                    'databasetype' => $_SESSION['config']['databasetype']
+               );
+
+    $control = $statusCtrl->save($statusObj, $mode, $params);
+    if (!empty($control['error']) && $control['error'] <> 1) {
+        // Error management depending of mode
+        $_SESSION['error'] = str_replace("#", "<br />", $control['error']);
+        put_in_session('status', $status);
+        put_in_session('status', $statusObj->getArray());
+
+        switch ($mode) {
+            case 'up':
+                if (!empty($status->id)) {
+                    header(
+                        'location: ' . $_SESSION['config']['businessappurl']
+                        . 'index.php?page=' . $pageName . '&mode=up&id='
+                        . $statusObj->id . '&admin=status'
+                    );
+                } else {
+                    header(
+                        'location: ' . $_SESSION['config']['businessappurl']
+                        . 'index.php?page=' . $pageName . '&mode=list&admin='
+                        .'status&order=' . $status['order'] . '&order_field='
+                        . $status['order_field'] . '&start=' . $status['start']
+                        . '&what=' . $status['what']
+                    );
+                }
+                exit();
+            case 'add':
+                header(
+                    'location: ' . $_SESSION['config']['businessappurl']
+                    . 'index.php?page=' . $pageName . '&mode=add&admin=status'
+                );
+                exit();
+        }
+    } else {
+        if ($mode == 'add') {
+            $_SESSION['error'] = _STATUS_ADDED;
+        } else {
+            $_SESSION['error'] = _STATUS_MODIFIED;
+        }
+        unset($_SESSION['m_admin']);
+        header(
+            'location: ' . $_SESSION['config']['businessappurl']
+            . 'index.php?page=' . $pageName . '&mode=list&admin=status&order='
+            . $status['order'] . '&order_field=' . $status['order_field']
+            . '&start=' . $status['start'] . '&what=' . $status['what']
+        );
+    }
+}
 
 function init_session()
 {
     $_SESSION['m_admin']['status'] = array();
-    $_SESSION['m_admin']['status']['ID'] = '';
-    $_SESSION['m_admin']['status']['LABEL'] = '';
-    $_SESSION['m_admin']['status']['IS_SYSTEM'] = 'N';
-    $_SESSION['m_admin']['status']['IMG_FILENAME'] = '';
-    $_SESSION['m_admin']['status']['MODULE'] = '';
-    $_SESSION['m_admin']['status']['CAN_BE_SEARCHED'] = 'Y';
-    $_SESSION['m_admin']['status']['CAN_BE_MODIFIED'] = 'Y';
+    $_SESSION['m_admin']['status']['id'] = '';
+    $_SESSION['m_admin']['status']['label_status'] = '';
+    $_SESSION['m_admin']['status']['is_system'] = 'N';
+    $_SESSION['m_admin']['status']['img_filename'] = '';
+    $_SESSION['m_admin']['status']['module'] = 'apps';
+    $_SESSION['m_admin']['status']['can_be_searched'] = 'Y';
+    $_SESSION['m_admin']['status']['can_be_modified'] = 'Y';
 }
 
-if(isset($_REQUEST['id']) && !empty($_REQUEST['id'])){
-    $status_id = $_REQUEST['id'];
-}
-
-if(isset($_REQUEST['status_submit'])){
-	$_SESSION['m_admin']['status'] = array();
-    $_SESSION['m_admin']['status']['ID'] = 
-		functions::wash($_REQUEST['status_id'], 'no', _ID . ' ');
-    $_SESSION['m_admin']['status']['LABEL'] = 
-		functions::wash($_REQUEST['label'], 'no', _DESC .' ', 'yes', 0, 50);
-    $_SESSION['m_admin']['status']['IS_SYSTEM'] = 
-		functions::wash($_REQUEST['is_system'], 'no', _IS_SYSTEM . ' ');
-    $_SESSION['m_admin']['status']['IMG_FILENAME'] = '';
-    $_SESSION['m_admin']['status']['MODULE'] = 'apps';
-	$_SESSION['m_admin']['status']['CAN_BE_SEARCHED'] = 'Y';
-    $_SESSION['m_admin']['status']['CAN_BE_MODIFIED'] = 'Y';
-    if(isset($_REQUEST['can_be_searched']) 
-	   && ($_REQUEST['can_be_searched'] == 'Y'
-	       || $_REQUEST['can_be_searched'] == 'N')){
-		$_SESSION['m_admin']['status']['CAN_BE_SEARCHED'] = 
-			functions::wash($_REQUEST['can_be_searched'], 'no', 
-				CAN_BE_SEARCHED . ' ');
-	}
-	if(isset($_REQUEST['can_be_modified']) 
-	   && ($_REQUEST['can_be_modified'] == 'Y' 
-	       || $_REQUEST['can_be_modified'] == 'N')){
-		$_SESSION['m_admin']['status']['CAN_BE_MODIFIED'] =
-			functions::wash($_REQUEST['can_be_modified'], 'no', 
-				_CAN_BE_MODIFIED . ' ');
-	}
-    $_SESSION['m_admin']['status']['order'] = $_REQUEST['order'];
-    $_SESSION['m_admin']['status']['order_field'] = $_REQUEST['order_field'];
-    $_SESSION['m_admin']['status']['what'] = $_REQUEST['what'];
-    $_SESSION['m_admin']['status']['start'] = $_REQUEST['start'];
-
-    if($mode == 'add' 
-		&& $status_ctrl->statusExists($_SESSION['m_admin']['status']['ID'])){
-        $_SESSION['error'] = $_SESSION['m_admin']['status']['ID'] . ' ' 
-						   . _ALREADY_EXISTS . '<br/>';
-    }
-    if(!empty($_SESSION['error'])){
-        if($mode == 'up'){
-            if(!empty($_SESSION['m_admin']['status']['ID'])){
-                header('location: ' . $_SESSION['config']['businessappurl'] 
-					.'index.php?page=status_management_controler&mode=up&id=' 
-					. $_SESSION['m_admin']['status']['ID'] . '&admin=status');
-                exit();
-            }
-            else{
-                header('location: ' . $_SESSION['config']['businessappurl']
-                    . 'index.php?page=status_management_controler&mode=list'
-                    . '&admin=status&order='.$_REQUEST['order'] 
-                    . '&order_field=' . $_REQUEST['order_field'] . '&start='
-                    . $_REQUEST['start'] . '&what=' . $_REQUEST['what']);
-                exit();
-            }
-        }
-        elseif($mode == 'add'){
-            header('location: ' . $_SESSION['config']['businessappurl']
-				. 'index.php?page=status_management_controler&mode=add'
-				. '&admin=status');
-            exit();
+/**
+ * Put given object in session, according with given type
+ * NOTE: given object needs to be at least hashable
+ * @param string $type
+ * @param hashable $hashable
+ */
+function put_in_session($type, $hashable, $showString = true)
+{
+    $func = new functions();
+    foreach ($hashable as $key=>$value) {
+        if ($showString) {
+            $_SESSION['m_admin'][$type][$key]=$func->show_string($value);
+        } else {
+            $_SESSION['m_admin'][$type][$key]=$value;
         }
     }
-    else{
-        $status_value = array(
-			'id' => functions::protect_string_db(
-				$_SESSION['m_admin']['status']['ID']), 
-			'label_status' => functions::protect_string_db(
-				$_SESSION['m_admin']['status']['LABEL']),
-			'is_system' => functions::protect_string_db(
-				$_SESSION['m_admin']['status']['IS_SYSTEM']),
-			'maarch_module' => functions::protect_string_db(
-				$_SESSION['m_admin']['status']['MODULE']),
-			'can_be_searched' => functions::protect_string_db(
-				$_SESSION['m_admin']['status']['CAN_BE_SEARCHED']),
-			'can_be_modified' => functions::protect_string_db(
-				$_SESSION['m_admin']['status']['CAN_BE_MODIFIED'])
-			);
-
-        $status = new Status;
-        $status->setArray($status_value);
-
-        $status_ctrl->save($status, $mode);
-
-        if($_SESSION['history']['statusadd'] == 'true' && $mode == 'add'){
-            require_once('core' . DIRECTORY_SEPARATOR . 'class' 
-				. DIRECTORY_SEPARATOR . 'class_history.php');
-            $hist = new history();
-            $hist->add($_SESSION['tablename']['status'], 
-				$_SESSION['m_admin']['status']['ID'],
-				'ADD', _STATUS_ADDED . ' : ' . functions::protect_string_db(
-					$_SESSION['m_admin']['status']['ID']),
-				$_SESSION['config']['databasetype']);
-        }
-        elseif($_SESSION['history']['statusup'] == 'true' && $mode == 'up'){
-            require_once('core' . DIRECTORY_SEPARATOR . 'class' 
-				. DIRECTORY_SEPARATOR . 'class_history.php');
-            $hist = new history();
-            $hist->add($_SESSION['tablename']['status'], 
-				$_SESSION['m_admin']['status']['ID'], 'UP',
-				_STATUS_MODIFIED . ' : ' . functions::protect_string_db(
-					$_SESSION['m_admin']['status']['ID']),
-				$_SESSION['config']['databasetype']);
-        }
-        unset($_SESSION['m_admin']);
-        if($mode == 'add'){
-            $_SESSION['error'] = _STATUS_ADDED;
-        }
-        else{
-            $_SESSION['error'] = _STATUS_MODIFIED;
-        }
-
-        header('location: ' . $_SESSION['config']['businessappurl'] 
-			. 'index.php?page=status_management_controler&mode=list'
-			. '&admin=status&order=' . $_REQUEST['order'] . '&order_field='
-			. $_REQUEST['order_field'] . '&start=' . $_REQUEST['start']
-			. '&what=' . $_REQUEST['what']);
-    }
-    exit();
-}
-
-$state = true;
-
-if($mode == 'up'){
-    $status = $status_ctrl->get($status_id );
-    if(!isset($status)){
-        $state = false;
-    }
-    else{
-        $_SESSION['m_admin']['status']['ID'] = $status->__get('id');
-        $_SESSION['m_admin']['status']['LABEL'] = 
-			functions::show_string($status->__get('label_status'));
-        $_SESSION['m_admin']['status']['IS_SYSTEM'] = 
-			functions::show_string($status->__get('is_system'));
-        $_SESSION['m_admin']['status']['IMG_FILENAME'] =
-			functions::show_string($status->__get('img_filename'));
-        $_SESSION['m_admin']['status']['MODULE'] = 
-			functions::show_string($status->__get('maarch_module'));
-        $_SESSION['m_admin']['status']['CAN_BE_SEARCHED'] = 
-			functions::show_string($status->__get('can_be_searched'));
-        $_SESSION['m_admin']['status']['CAN_BE_MODIFIED'] = 
-			functions::show_string($status->__get('can_be_modified'));
-    }
-}
-elseif($mode == 'add'){
-    if(!isset($_SESSION['m_admin']['status'])){
-        init_session();
-    }
-}
-elseif($mode == 'list'){
-    $_SESSION['m_admin'] = array();
-    init_session();
-
-    $select[$_SESSION['tablename']['status']] = array();
-    array_push($select[$_SESSION['tablename']['status']], 'id', 'label_status',
-		'is_system', 'can_be_searched');
-    $what = '';
-    $where = '';
-    if(isset($_REQUEST['what'])){
-		$what = functions::protect_string_db($_REQUEST['what']);
-	}
-    if($_SESSION['config']['databasetype'] == 'POSTGRESQL'){
-        $where .= " (label_status ilike '" 
-			   . functions::protect_string_db(
-					$what, $_SESSION['config']['databasetype'])
-			   . "%'  or id ilike '" . functions::protect_string_db(
-					$what, $_SESSION['config']['databasetype'])
-			   . "%' ) ";
-    }
-    else{
-        $where .= " (label_status like '" 
-			   . functions::protect_string_db(
-					$what, $_SESSION['config']['databasetype'])
-			   . "%'  or id like '" . functions::protect_string_db($what,
-					$_SESSION['config']['databasetype'])
-			   . "%' ) ";
-    }
-
-    $order = 'asc';
-    if(isset($_REQUEST['order']) && !empty($_REQUEST['order'])){
-        $order = trim($_REQUEST['order']);
-    }
-    $field = 'label_status';
-    if(isset($_REQUEST['order_field']) && !empty($_REQUEST['order_field'])){
-        $field = trim($_REQUEST['order_field']);
-    }
-	$list = new list_show();
-    $orderstr = $list->define_order($order, $field);
-    $request = new request();
-    $tab = $request->select($select,$where,$orderstr,
-							$_SESSION['config']['databasetype']);
-    for ($i = 0; $i < count($tab); $i++){
-        for ($j = 0; $j < count($tab[$i]); $j++){
-            foreach(array_keys($tab[$i][$j]) as $value){
-				if($tab[$i][$j][$value] == 'id'){
-					$tab[$i][$j]['id'] = $tab[$i][$j]['value'];
-					$tab[$i][$j]['label'] = _ID;
-					$tab[$i][$j]['size'] = '18';
-					$tab[$i][$j]['label_align'] = 'left';
-					$tab[$i][$j]['align'] = 'left';
-					$tab[$i][$j]['valign'] = 'bottom';
-					$tab[$i][$j]['show'] = true;
-					$tab[$i][$j]['order'] = 'id';
-				}
-				if($tab[$i][$j][$value] == 'label_status'){
-					$tab[$i][$j]['value'] = functions::show_string(
-						$tab[$i][$j]['value']);
-					$tab[$i][$j]['label_status'] = $tab[$i][$j]['value'];
-					$tab[$i][$j]['label'] = _DESC;
-					$tab[$i][$j]['size'] = '15';
-					$tab[$i][$j]['label_align'] = 'left';
-					$tab[$i][$j]['align'] = 'left';
-					$tab[$i][$j]['valign'] = 'bottom';
-					$tab[$i][$j]['show'] = true;
-					$tab[$i][$j]['order'] = 'label_status';
-				}
-				if($tab[$i][$j][$value] == 'is_system'){
-					if($tab[$i][$j]['value'] == 'Y'){
-						$tab[$i][$j]['value'] = _YES;
-						array_push($tab[$i], array('column' => 'can_delete', 
-							'value' => 'false', 'can_delete' => 'false', 
-							'label' => _DESC,'show' => false));
-					}
-					else{
-						$tab[$i][$j]['value'] = _NO;
-						array_push($tab[$i], array('column' => 'can_delete', 
-							'value' => 'true', 'can_delete' => 'true',
-							'label' => _DESC,'show' => false));
-					}
-					$tab[$i][$j]['is_system'] = $tab[$i][$j]['value'];
-					$tab[$i][$j]['label'] = _IS_SYSTEM;
-					$tab[$i][$j]['size']='5';
-					$tab[$i][$j]['label_align'] = 'left';
-					$tab[$i][$j]['align'] = 'left';
-					$tab[$i][$j]['valign'] = 'bottom';
-					$tab[$i][$j]['show'] = true;
-					$tab[$i][$j]['order'] = 'is_system';
-				}
-				if($tab[$i][$j][$value] == 'can_be_searched'){
-					if($tab[$i][$j]['value'] == 'Y'){
-						$tab[$i][$j]['value'] = _YES;
-					}
-					else{
-						$tab[$i][$j]['value'] = _NO;
-					}
-					$tab[$i][$j]['can_be_searched'] = $tab[$i][$j]['value'];
-					$tab[$i][$j]['label'] = _CAN_BE_SEARCHED;
-					$tab[$i][$j]['size']='5';
-					$tab[$i][$j]['label_align'] = 'center';
-					$tab[$i][$j]['align'] = 'center';
-					$tab[$i][$j]['valign'] = 'bottom';
-					$tab[$i][$j]['show'] = true;
-					$tab[$i][$j]['order'] = 'can_be_searched';
-				}
-			}
-        }
-    }
-
-    $page_name = 'status_management_controler&mode=list';
-    $page_name_up = 'status_management_controler&mode=up';
-    $page_name_del = 'status_management_controler&mode=del';
-    $page_name_val = '';
-    $page_name_ban = '';
-    $page_name_add = 'status_management_controler&mode=add';
-    $label_add = _ADD_STATUS;
-    $_SESSION['m_admin']['init'] = true;
-    $title = _STATUS_LIST . ' : ' . $i . ' ' . _STATUS_PLUR;
-    $autoCompletionArray = array();
-    $autoCompletionArray['list_script_url'] = 
-		$_SESSION['config']['businessappurl']
-		. 'index.php?display=true&admin=status&page=status_list_by_name';
-    $autoCompletionArray['number_to_begin'] = 1;
-}
-elseif((!isset($status_id) 
-		|| empty($status_id) || ! $status_ctrl->statusExists($status_id))
-	  && $mode == 'del' ){
-    $_SESSION['error'] = _STATUS . ' ' . _UNKNOWN;
-}
-elseif($mode == 'del'){
-    $status_ctrl->delete($status_id);
-    $_SESSION['error'] = _STATUS_DELETED . ' ' . $status_id;
-    ?><script type="text/javascript">window.top.location='<?php echo
-     $_SESSION['config']['businessappurl'] 
-     . 'index.php?page=status_management_controler&mode=list&admin=status'
-     . '&order=' . $_REQUEST['order'] . '&order_field='
-     . $_REQUEST['order_field'] . '&start=' . $_REQUEST['start']
-     . '&what=' . $_REQUEST['what'];?>';</script>
-    <?php
-    exit();
-}
-
-if($mode == 'add' || $mode == 'up' || $mode == 'list'){
-     /****************Management of the location bar  ************/
-    $init = false;
-    if(isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == 'true'){
-        $init = true;
-    }
-    $level = '';
-    if(isset($_REQUEST['level']) 
-		&& ($_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 
-			|| $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1)){
-        $level = $_REQUEST['level'];
-    }
-    $page_path = $_SESSION['config']['businessappurl']
-			   . 'index.php?page=status_management_controler&admin=status'
-			   . '&mode=' . $mode;
-    $page_label = $page_labels[$mode];
-    $page_id = $page_ids[$mode];
-    core_tools::manage_location_bar($page_path, $page_label, $page_id, $init,
-		$level);
-    /***********************************************************/
-
-    include('status_management.php');
 }

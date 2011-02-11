@@ -2108,5 +2108,4 @@ function updateContent(url,id_div_to_update, onComplete_callback)
         }
     }
 });
-
 }

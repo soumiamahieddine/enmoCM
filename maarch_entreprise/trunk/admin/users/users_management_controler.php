@@ -100,7 +100,7 @@ function location_bar_management($mode){
 
 /**
  * Initialize session parameters for update display
- * @param Long $scheme_id
+ * @param String $user_id
  */
 function display_up($user_id){
     $uc = new users_controler();
@@ -127,7 +127,7 @@ function display_up($user_id){
 }
 
 /**
- * Initialize session parameters for add display with given scheme
+ * Initialize session parameters for add display
  */
 function display_add(){
     if(!isset($_SESSION['m_admin']['init'])){
