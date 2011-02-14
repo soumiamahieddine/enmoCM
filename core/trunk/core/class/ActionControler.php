@@ -20,8 +20,8 @@
 
 /**
 * @brief  Contains the controler of the Action Object (create, save, modify, etc...)
-* 
-* 
+*
+*
 * @file
 * @author Claire Figueras <dev@maarch.org>
 * @date $date$
@@ -29,23 +29,20 @@
 * @ingroup core
 */
 
-// To activate de debug mode of the class
-$_ENV['DEBUG'] = false;
-/*
-define("_CODE_SEPARATOR","/");
-define("_CODE_INCREMENT",1);
-*/
-
 // Loads the required class
 try {
-	require_once("core/class/class_db.php");
-	require_once("core/class/Action.php");
-} catch (Exception $e){
-	echo $e->getMessage().' // ';
+	require_once('core/class/class_db.php');
+	require_once('core/class/Action.php');
+	require_once('core/core_tables.php');
+ // require_once('core/class/ObjectControlerIF.php');
+    require_once('core/class/ObjectControlerAbstract.php');
+    require_once('core/class/class_history.php');
+} catch (Exception $e) {
+	echo $e->getMessage() . ' // ';
 }
 
 /**
-* @brief  Controler of the Action Object 
+* @brief  Controler of the Action Object
 *
 *<ul>
 *  <li>Get an action object from an id</li>
@@ -60,12 +57,12 @@ class ActionControler
 	* Dbquery object used to connnect to the database
     */
 	private static $db;
-	
+
 	/**
 	* Actions table
     */
 	public static $actions_table ;
-	
+
 	/**
 	* Actions_groupbaskets_table table
     */
@@ -79,18 +76,18 @@ class ActionControler
 		$db = new dbquery();
 		$db->connect();
 		self::$actions_table = $_SESSION['tablename']['actions'];
-		
+
 		self::$db=$db;
-	}	
-	
+	}
+
 	/**
 	* Close the database connexion
 	*/
 	public function disconnect()
 	{
 		self::$db->disconnect();
-	}	
-	
+	}
+
 	/**
 	* Returns an Action Object based on a action identifier
 	*
@@ -104,18 +101,18 @@ class ActionControler
 
 		self::connect();
 		$query = "select * from ".self::$actions_table." where id = ".$action_id;
-		
+
 		try{
 			if($_ENV['DEBUG']){echo $query.' // ';}
 			self::$db->query($query);
 		} catch (Exception $e){
 		echo _NO_ACTION_WITH_ID.' '.$action_id.' // ';
 		}
-		
+
 		if(self::$db->nb_result() > 0)
 		{
 			$action = new Action();
-			$queryResult=self::$db->fetch_object(); 
+			$queryResult=self::$db->fetch_object();
 			foreach($queryResult as $key => $value){
 				$action->$key=$value;
 			}
@@ -128,10 +125,10 @@ class ActionControler
 			return null;
 		}
 	}
-	
-	
+
+
 	/**
-	* Saves in the database an Action object 
+	* Saves in the database an Action object
 	*
 	* @param  $group Action object to be saved
 	* @param  $mode string  Saving mode : add or up
@@ -141,15 +138,15 @@ class ActionControler
 	{
 		if(!isset($action) )
 			return false;
-			
+
 		if($mode == "up")
 			return self::update($action);
-		elseif($mode =="add") 
+		elseif($mode =="add")
 			return self::insert($action);
-		
+
 		return false;
 	}
-	
+
 	/**
 	* Inserts in the database (actions table) an Action object
 	*
@@ -160,7 +157,7 @@ class ActionControler
 	{
 		if(!isset($action) )
 			return false;
-			
+
 		self::connect();
 		$prep_query = self::insert_prepare($action);
 
@@ -191,12 +188,12 @@ class ActionControler
 	{
 		if(!isset($action) )
 			return false;
-			
+
 		self::connect();
 		$query="update ".self::$actions_table." set "
 					.self::update_prepare($action)
-					." where id=".$action->id; 
-					
+					." where id=".$action->id;
+
 		try{
 			if($_ENV['DEBUG']){echo $query.' // ';}
 			self::$db->query($query);
@@ -208,7 +205,7 @@ class ActionControler
 		self::disconnect();
 		return $ok;
 	}
-	
+
 	/**
 	* Deletes in the database (actions table) a given action (action_id)
 	*
@@ -221,10 +218,10 @@ class ActionControler
 			return false;
 		if(! self::actionExists($action_id))
 			return false;
-			
+
 		self::connect();
 		$query="delete from ".self::$actions_table." where id=".$action_id;
-		
+
 		try{
 			if($_ENV['DEBUG']){echo $query.' // ';}
 			self::$db->query($query);
@@ -237,10 +234,10 @@ class ActionControler
 			self::cleanActionsGroupbasket($action_id);
 
 		self::disconnect();
-	
+
 		return $ok;
 	}
-	
+
 	/**
 	* Cleans the actions_groupbasket table in the database from a given action (action_id)
 	*
@@ -251,7 +248,7 @@ class ActionControler
 	{
 		if(!isset($action_id)|| empty($action_id) )
 			return false;
-		
+
 		self::connect();
 		$query="delete from ".self::$actions_groupbaskets_table."  where id_action=".$action_id;
 		try{
@@ -262,16 +259,16 @@ class ActionControler
 			echo _CANNOT_DELETE_ACTION_ID." ".$action_id.' // ';
 			$ok = false;
 		}
-		
+
 		self::disconnect();
 		return $ok;
 	}
-	
+
 	/**
 	* Asserts if a given action (action_id) exists in the database
-	* 
+	*
 	* @param  $action_id String Action identifier
-	* @return bool true if the action exists, false otherwise 
+	* @return bool true if the action exists, false otherwise
 	*/
 	public function actionExists($action_id)
 	{
@@ -280,14 +277,14 @@ class ActionControler
 
 		self::connect();
 		$query = "select id from ".self::$actions_table." where id = ".$action_id;
-					
+
 		try{
 			if($_ENV['DEBUG']){echo $query.' // ';}
 			self::$db->query($query);
 		} catch (Exception $e){
 			echo _UNKNOWN.' '._ACTION." ".$action_id.' // ';
 		}
-		
+
 		if(self::$db->nb_result() > 0)
 		{
 			self::disconnect();
@@ -296,12 +293,12 @@ class ActionControler
 		self::disconnect();
 		return false;
 	}
-	
+
 	/**
 	* Prepares the update query for a given Action object
 	*
 	* @param  $action Action object
-	* @return String containing the fields and the values 
+	* @return String containing the fields and the values
 	*/
 	private function update_prepare($action)
 	{
@@ -311,18 +308,18 @@ class ActionControler
 			// For now all fields in the action table are strings or dates
 			if(!empty($value))
 			{
-				$result[]=$key."='".functions::protect_string_db($value)."'";		
+				$result[]=$key."='".functions::protect_string_db($value)."'";
 			}
 		}
 		// Return created string minus last ", "
 		return implode(",",$result);
-	} 
-	
+	}
+
 	/**
 	* Prepares the insert query for a given Action object
 	*
 	* @param  $action Action object
-	* @return Array containing the fields and the values 
+	* @return Array containing the fields and the values
 	*/
 	private function insert_prepare($action)
 	{
@@ -339,6 +336,6 @@ class ActionControler
 		}
 		return array('COLUMNS' => implode(",",$columns), 'VALUES' => implode(",",$values));
 	}
-	
+
 }
 ?>

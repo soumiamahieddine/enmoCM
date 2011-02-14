@@ -20,8 +20,8 @@
 
 /**
 * @brief  Contains the Action Object (herits of the BaseObject class)
-* 
-* 
+*
+*
 * @file
 * @author Claire Figueras <dev@maarch.org>
 * @date $date$
@@ -31,25 +31,25 @@
 
 // Loads the required class
 try {
-	require_once("core/class/BaseObject.php");
-} catch (Exception $e){
-	echo $e->getMessage().' // ';
+    require_once('core/class/BaseObject.php');
+} catch (Exception $e) {
+    echo $e->getMessage() . ' // ';
 }
 
 /**
-* @brief  Action Object, herits of the BaseObject class 
+* @brief  Action Object, herits of the BaseObject class
 *
 * @ingroup core
 */
 class Action extends BaseObject
 {
-	/**
-	* Returns the string representing the Action object
-	*
-	* @return string The action label (label_action)
-	*/
-	public function __toString(){
-		return $this->label_action ; 
-	}
+    /**
+    * Returns the string representing the Action object
+    *
+    * @return string The action label (label_action)
+    */
+    public function __toString()
+    {
+        return $this->label_action ;
+    }
 }
-?>

@@ -31,12 +31,12 @@
 
 // Loads the required class
 try {
-    require_once('core/class/class_db.php');
-    require_once('core/core_tables.php');
-    require_once('core/class/Status.php');
-    require_once('core/class/ObjectControlerAbstract.php');
-    require_once('core/class/ObjectControlerIF.php');
-    require_once ('core/class/class_history.php');
+    require_once 'core/class/class_db.php';
+    require_once 'core/core_tables.php';
+    require_once 'core/class/Status.php';
+    require_once 'core/class/ObjectControlerAbstract.php';
+    // require_once 'core/class/ObjectControlerIF.php';
+    require_once 'core/class/class_history.php';
 } catch (Exception $e){
     echo $e->getMessage().' // ';
 }
