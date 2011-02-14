@@ -28,7 +28,11 @@
 * @version $Revision$
 * @ingroup basket
 */
+if(isset($_SESSION['search']['plain_text'])) {
 
+    $_SESSION['search']['plain_text'] = "";
+
+}
 $_SESSION['FILE'] = array();
 if(isset($_REQUEST['extension']))
 {
