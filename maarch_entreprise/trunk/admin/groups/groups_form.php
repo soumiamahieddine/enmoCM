@@ -45,6 +45,7 @@ function cmp($a, $b)
     return strcmp($a["COLL_ID"], $b["COLL_ID"]);
 }
 usort($_SESSION['m_admin']['groups']['security'], "cmp");
+$func = new functions();
 ?>
 <div class="block" >
 <h2 class="tit"><small><?php  echo _MANAGE_RIGHTS;?> : </small></h2>
@@ -75,7 +76,7 @@ usort($_SESSION['m_admin']['groups']['security'], "cmp");
                                     <input type="checkbox"  class="check" name="security[]" value="<?php  echo $i; ?>" />
                                 </div>
                                 <div>
-                                    <?php echo functions::show_string($_SESSION['m_admin']['groups']['security'][$i]['COMMENT']);?>
+                                    <?php echo $func->show_string($_SESSION['m_admin']['groups']['security'][$i]['COMMENT']);?>
                                 </div>
                                 <div align="left" style="margin-left:5%;">
 
@@ -85,12 +86,12 @@ usort($_SESSION['m_admin']['groups']['security'], "cmp");
                                     <span >
                                     <?php if(!empty($_SESSION['m_admin']['groups']['security'][$i]['START_DATE']) )
                                     {
-                                        echo _SINCE.' : '.functions::format_date_db($_SESSION['m_admin']['groups']['security'][$i]['START_DATE']);
+                                        echo _SINCE.' : '.$func->format_date_db($_SESSION['m_admin']['groups']['security'][$i]['START_DATE']);
                                     }
                                     echo '&nbsp;';
                                     if(!empty($_SESSION['m_admin']['groups']['security'][$i]['STOP_DATE']) )
                                     {
-                                        echo _FOR.' : '.functions::format_date_db($_SESSION['m_admin']['groups']['security'][$i]['STOP_DATE']);
+                                        echo _FOR.' : '.$func->format_date_db($_SESSION['m_admin']['groups']['security'][$i]['STOP_DATE']);
                                     }?>
                                     </span>
                                 </div>
@@ -111,7 +112,7 @@ usort($_SESSION['m_admin']['groups']['security'], "cmp");
                                         }
                                         ?></div>
                                         <div>
-                                            <?php echo _WHERE_CLAUSE.' : '.functions::show_string($_SESSION['m_admin']['groups']['security'][$i]['WHERE_CLAUSE']);?>
+                                            <?php echo _WHERE_CLAUSE.' : '.$func->show_string($_SESSION['m_admin']['groups']['security'][$i]['WHERE_CLAUSE']);?>
                                         </div>
                                         <div>
                                             <span><?php echo _TASKS;?> :</span><br/>
