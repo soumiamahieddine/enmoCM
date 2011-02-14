@@ -71,6 +71,9 @@ if($mode == "up" && $access_ind >= 0)
     $security_id = $_SESSION['m_admin']['groups']['security'][$access_ind]['SECURITY_ID'];
     $coll_id = $_SESSION['m_admin']['groups']['security'][$access_ind]['COLL_ID'];
     $ind = $sec->get_ind_collection($coll_id);
+    if(!isset($ind) || $ind < 0){
+        $ind = 0;
+    }
     $coll_label = $_SESSION['collections'][$ind]['label'];
     $target = $_SESSION['m_admin']['groups']['security'][$access_ind]['WHERE_TARGET'];
     $clause = functions::show_string($_SESSION['m_admin']['groups']['security'][$access_ind]['WHERE_CLAUSE']);
