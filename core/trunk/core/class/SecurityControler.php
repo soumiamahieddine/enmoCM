@@ -58,7 +58,7 @@ try {
 *  <li>Get an security object from an id</li>
 *  <li>Save in the database a security</li>
 *  <li>Manage the operation on the security table in the database
-*  	(insert, select, update, delete)</li>
+*   (insert, select, update, delete)</li>
 *</ul>
 * @ingroup core
 */
@@ -349,39 +349,41 @@ class SecurityControler
     }
 
     // TO DO : USE TO CHECK WHERE CLAUSE
-    public function check_where_clause($coll_id, $target, $where_clause, $view, $user_id)
+    public function check_where_clause($coll_id, $target, $where_clause,
+       $view, $user_id)
     {
-        $res = array('RESULT' => false, 'TXT' => '');
+        $res = array(
+            'RESULT' => false,
+            'TXT' => ''
+        );
 
-        if(empty($coll_id) || empty($target) || empty($where))
-        {
+        if (empty($coll_id) || empty($target) || empty($where_clause)) {
             $res['TXT'] = _ERROR_PARAMETERS_FUNCTION;
             return $res;
         }
 
-        $where = " ".$where_clause;
-        $where = str_replace("\\", "", $where);
+        $where = ' ' . $where_clause;
+        $where = str_replace('\\', '', $where);
         $where = self::process_security_where_clause($where, $user_id);
-        if(str_replace(" ", "", $where) == "")
-        {
-            $where = "";
+        if(str_replace(' ', '', $where) == ''){
+            $where = '';
         }
-        $where = str_replace("where", " ", $where);
+        $where = str_replace('where', ' ', $where);
         self::connect();
 
-        if($target == 'ALL' || $target == 'DOC')
-            $query = "select res_id from ".$view." where  ".$where;
-        if($target == 'ALL' || $target == 'CLASS')
-            $query = "select mr_aggregation_id from ".$view." where  ".$where;
+        if ($target == 'ALL' || $target == 'DOC') {
+            $query = 'select res_id from ' . $view . ' where ' . $where;
+        }
+        if($target == 'ALL' || $target == 'CLASS'){
+            $query = 'select mr_aggregation_id from ' . $view
+                   . ' where  '. $where;
+        }
 
         $ok = self::$db->query($query, true);
-        if(!$ok )
-        {
+        if (!$ok) {
             $res['TXT'] = _SYNTAX_ERROR_WHERE_CLAUSE;
             return $res;
-        }
-        else
-        {
+        } else {
             $res['TXT'] = _SYNTAX_OK;
             $res['RESULT'] = true;
         }
