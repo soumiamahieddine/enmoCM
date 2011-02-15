@@ -459,9 +459,10 @@ function validate_group_submit(){
 
     $control = array();
     $params = array('modules_services' => $_SESSION['modules_services'],
-                    'log_group_up' => $_SESSION['history']['usergroupsup'],
-                    'log_group_add' => $_SESSION['history']['usergroupsadd'],
-                    'databasetype' => $_SESSION['config']['databasetype']
+                    'log_group_up'     => $_SESSION['history']['usergroupsup'],
+                    'log_group_add'    => $_SESSION['history']['usergroupsadd'],
+                    'databasetype'     => $_SESSION['config']['databasetype'],
+                    'user_id'          => $_SESSION['user']['UserId']
                     );
 
     $services = array();

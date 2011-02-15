@@ -1145,6 +1145,9 @@ if (!defined('_PROCESS_DELAY'))  define('_PROCESS_DELAY', 'D&eacute;lai de trait
 if (!defined('_ALERT_DELAY_1'))  define('_ALERT_DELAY_1', 'D&eacute;lai de 1ere alerte');
 if (!defined('_ALERT_DELAY_2'))  define('_ALERT_DELAY_2', 'D&eacute;lai de 2eme alerte');
 
+if (!defined('_ERROR_PARAMETERS_FUNCTION'))  define('_ERROR_PARAMETERS_FUNCTION', 'Erreur de paramètres...');
+if (!defined('_SYNTAX_OK'))  define('_SYNTAX_OK', 'Syntaxe OK');
+
 
 
 ?>
