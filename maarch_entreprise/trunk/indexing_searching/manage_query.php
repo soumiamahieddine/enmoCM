@@ -27,83 +27,91 @@
 * @version $Revision$
 * @ingroup indexing_searching_mlb
 */
-require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
+require_once 'core/class/class_request.php';
 $core_tools = new core_tools();
 $core_tools->load_lang();
 $db = new dbquery();
 $req = new request();
 $tmp = false;
-if($_POST['action'] == "creation")
-{
+if ($_POST['action'] == 'creation') {
     $func_date = $req->current_datetime();
-    if(isset($_POST['name']) && !empty($_POST['name']))
-    {
+    if (isset($_POST['name']) && !empty($_POST['name'])) {
         $name = preg_replace('/[\'"]/', '', $_POST['name']);
         $db->connect();
-        $db->query("select query_id from ".$_SESSION['tablename']['saved_queries']." where user_id ='".$db->protect_string_db($_SESSION['user']['UserId'])."' and query_name='".$db->protect_string_db($_POST['name'])."'");
+        $db->query(
+            'select query_id from ' . $_SESSION['tablename']['saved_queries']
+            . " where user_id ='" .$db->protect_string_db(
+                $_SESSION['user']['UserId']
+            ) . "' and query_name='" . $db->protect_string_db($_POST['name'])
+            . "'"
+        );
 
-        if($db->nb_result() < 1)
-        {
-            $tmp = $db->query("insert into ".$_SESSION['tablename']['saved_queries']." (user_id, query_name, creation_date, created_by, query_type, query_txt)
-            values ('".$db->protect_string_db($_SESSION['user']['UserId'])."', '".$db->protect_string_db($_POST['name'])."', ". $func_date.",'".$db->protect_string_db($_SESSION['user']['UserId'])."', 'my_search', '".$db->protect_string_db($_SESSION['current_search_query'])."' )", true);
-        }
-        else
-        {
+        if ($db->nb_result() < 1) {
+            $tmp = $db->query(
+                'insert into ' . $_SESSION['tablename']['saved_queries']
+                . ' (user_id, query_name, creation_date, created_by, '
+                . " query_type, query_txt) values ('" . $db->protect_string_db(
+                    $_SESSION['user']['UserId']
+                ) . "', '" . $db->protect_string_db($_POST['name']) . "', "
+                . $func_date . ",'" . $db->protect_string_db(
+                    $_SESSION['user']['UserId']
+                ) . "', 'my_search', '" . $db->protect_string_db(
+                    $_SESSION['current_search_query']
+                ) . "' )", true
+            );
+        } else {
             $res = $db->fetch_object();
             $id = $res->query_id;
-            $tmp = $db->query("update ".$_SESSION['tablename']['saved_queries']." set query_txt = '".$db->protect_string_db($_SESSION['current_search_query'])."', last_modification_date = ". $func_date." where user_id ='".$db->protect_string_db($_SESSION['user']['UserId'])."' and query_name='".$db->protect_string_db($_POST['name'])."'", true);
+            $tmp = $db->query(
+                'update ' . $_SESSION['tablename']['saved_queries']
+                . " set query_txt = '" . $db->protect_string_db(
+                    $_SESSION['current_search_query']
+                ) ."', last_modification_date = " . $func_date
+                . " where user_id ='" . $db->protect_string_db(
+                    $_SESSION['user']['UserId']
+                ) . "' and query_name='" . $db->protect_string_db(
+                    $_POST['name']
+                ) . "'", true
+            );
         }
-        if(!$tmp)
-        {
+        if (!$tmp) {
             echo "{status : 2, 'query':'".$db->show()."'}";
             exit();
-        }
-        else
-        {
-            echo "{status : 0}";
+        } else {
+            echo '{status : 0}';
             exit();
         }
+    } else {
+        echo '{status : 3}';
     }
-    else
-    {
-        echo "{status : 3}";
-    }
- }
- else if($_POST['action'] == "load")
- {
-    if(isset($_POST['id']) && !empty($_POST['id']))
-    {
+} else if ($_POST['action'] == 'load') {
+    if (isset($_POST['id']) && !empty($_POST['id'])) {
         $db->connect();
-        $tmp = $db->query("select query_txt from ".$_SESSION['tablename']['saved_queries']." where query_id = ".$_POST['id'], true);
+        $tmp = $db->query(
+            'select query_txt from ' . $_SESSION['tablename']['saved_queries']
+            . " where query_id = " . $_POST['id'], true
+        );
     }
-    if(!$tmp)
-    {
+    if (!$tmp) {
         echo "{'status' : 2, 'query':'".$db->show()."'}";
-    }
-    else
-    {
+    } else {
         $res = $db->fetch_object();
         echo "{'status' : 0, 'query':".$res->query_txt."}";
     }
- }
- else if($_POST['action'] == "delete")
- {
-    if(isset($_POST['id']) && !empty($_POST['id']))
-    {
+} else if($_POST['action'] == 'delete') {
+    if (isset($_POST['id']) && !empty($_POST['id'])) {
         $db->connect();
-        $tmp = $db->query("delete from ".$_SESSION['tablename']['saved_queries']." where query_id = ".$_POST['id'], true);
+        $tmp = $db->query(
+            'delete from ' . $_SESSION['tablename']['saved_queries']
+            . " where query_id = " . $_POST['id'], true
+        );
     }
-    if(!$tmp)
-    {
+    if (!$tmp) {
         echo "{'status' : 2, 'query':'".$db->show()."'}";
-    }
-    else
-    {
+    } else {
         echo "{'status' : 0}";
     }
- }
- else
- {
+} else {
     echo "{status : 1}";
  }
-?>
+exit();

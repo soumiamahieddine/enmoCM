@@ -8,12 +8,12 @@ if (isset($_REQUEST['mode']) && !empty($_REQUEST['mode'])) {
 }
 
 try{
-    require_once('core/class/StatusControler.php');
+    require_once 'core/class/StatusControler.php' ;
     if ($mode == 'list') {
-        require_once('core/class/class_request.php');
-        require_once('apps' . DIRECTORY_SEPARATOR
+        require_once 'core/class/class_request.php' ;
+        require_once 'apps' . DIRECTORY_SEPARATOR
                      . $_SESSION['config']['app_id'] . DIRECTORY_SEPARATOR
-                     . 'class' . DIRECTORY_SEPARATOR . 'class_list_show.php');
+                     . 'class' . DIRECTORY_SEPARATOR . 'class_list_show.php' ;
     }
 } catch (Exception $e) {
     echo $e->getMessage();
@@ -31,7 +31,7 @@ if (isset($_REQUEST['status_submit'])) {
     // Display to do
     $state = true;
     switch ($mode) {
-        case "up" :
+        case 'up' :
             $state = display_up($statusId);
             $_SESSION['service_tag'] = 'status_init';
             core_tools::execute_modules_services(
@@ -39,7 +39,7 @@ if (isset($_REQUEST['status_submit'])) {
             );
             location_bar_management($mode);
             break;
-        case "add" :
+        case 'add' :
             display_add();
             $_SESSION['service_tag'] = 'status_init';
             core_tools::execute_modules_services(
@@ -47,10 +47,10 @@ if (isset($_REQUEST['status_submit'])) {
             );
             location_bar_management($mode);
             break;
-        case "del" :
+        case 'del' :
             display_del($statusId);
             break;
-        case "list" :
+        case 'list' :
             $statusList = display_list();
             location_bar_management($mode);
             break;
@@ -409,14 +409,15 @@ function validate_status_submit()
 
 function init_session()
 {
-    $_SESSION['m_admin']['status'] = array();
-    $_SESSION['m_admin']['status']['id'] = '';
-    $_SESSION['m_admin']['status']['label_status'] = '';
-    $_SESSION['m_admin']['status']['is_system'] = 'N';
-    $_SESSION['m_admin']['status']['img_filename'] = '';
-    $_SESSION['m_admin']['status']['module'] = 'apps';
-    $_SESSION['m_admin']['status']['can_be_searched'] = 'Y';
-    $_SESSION['m_admin']['status']['can_be_modified'] = 'Y';
+    $_SESSION['m_admin']['status'] = array(
+        'id'              => '',
+        'label_status'    => '',
+        'is_system'       => 'N',
+        'img_filename'    => '',
+        'module'          => 'apps',
+        'can_be_searched' => 'Y',
+        'can_be_modified' => 'Y',
+    );
 }
 
 /**

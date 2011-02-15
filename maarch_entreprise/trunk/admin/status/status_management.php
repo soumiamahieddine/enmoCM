@@ -1,6 +1,6 @@
 <?php
 /* Affichage */
-if ($mode == "list") {
+if ($mode == 'list') {
     $list = new list_show();
     $list->admin_list(
         $statusList['tab'],
@@ -30,14 +30,14 @@ if ($mode == "list") {
         true,
         $statusList['autoCompletionArray']
     );
-} elseif ($mode == "up" || $mode == "add") {
+} elseif ($mode == 'up' || $mode == 'add') {
     ?><h1><img src="<?php
     echo $_SESSION['config']['businessappurl'];
     ?>static.php?filename=manage_status_b.gif" alt="" />
     <?php
         if ($mode == 'up') {
             echo _MODIFY_STATUS;
-        } elseif ($mode == "add") {
+        } elseif ($mode == 'add') {
             echo _ADD_STATUS;
         }?>
     </h1>
@@ -73,7 +73,7 @@ if ($mode == "list") {
                 echo functions::show_str(
                     $_SESSION['m_admin']['status']['id']
                 ); ?>" <?php
-                if ($mode == "up") {
+                if ($mode == 'up') {
                     echo 'readonly="readonly" class="readonly"';
                 }?>/>
         </p>
