@@ -971,37 +971,41 @@ class functions
     */
     public function show_string($string, $replace_CR = false, $chars_to_escape = array(), $databasetype = '')
     {
-        if(isset($_SESSION['config']['databasetype']) && !empty($_SESSION['config']['databasetype']))
+        if(isset($string) && !empty($string) && is_string($string))
         {
-            $databasetype = $_SESSION['config']['databasetype'];
+            if(isset($_SESSION['config']['databasetype']) && !empty($_SESSION['config']['databasetype']))
+            {
+                $databasetype = $_SESSION['config']['databasetype'];
+            }
+            if($databasetype == "SQLSERVER")
+            {
+                $string = str_replace("''", "'", $string);
+                $string = str_replace("\\", "", $string);
+            }
+            else if($databasetype == "MYSQL" || $databasetype == "POSTGRESQL" && (ini_get('magic_quotes_gpc') <> true || phpversion() >= 6))
+            {
+                $string = stripslashes($string);
+                $string = str_replace("\\'", "'", $string);
+                $string = str_replace('\\"', '"', $string);
+            }
+            else if($databasetype == "ORACLE")
+            {
+                $string = str_replace("''", "'", $string);
+                $string = str_replace("\\", "", $string);
+            }
+            if($replace_CR)
+            {
+                $to_del = array("\t", "\n", "&#0A;", "&#0D;", "\r");
+                $string = str_replace($to_del, ' ', $string);
+            }
+            for($i=0;$i<count($chars_to_escape);$i++)
+            {
+                $string = str_replace($chars_to_escape[$i], '\\'.$chars_to_escape, $string);
+            }
+            $string = str_replace('"', "'", $string);
+            $string = trim($string);
         }
-        if($databasetype == "SQLSERVER")
-        {
-            $string = str_replace("''", "'", $string);
-            $string = str_replace("\\", "", $string);
-        }
-        else if($databasetype == "MYSQL" || $databasetype == "POSTGRESQL" && (ini_get('magic_quotes_gpc') <> true || phpversion() >= 6))
-        {
-            $string = stripslashes($string);
-            $string = str_replace("\\'", "'", $string);
-            $string = str_replace('\\"', '"', $string);
-        }
-        else if($databasetype == "ORACLE")
-        {
-            $string = str_replace("''", "'", $string);
-            $string = str_replace("\\", "", $string);
-        }
-        if($replace_CR)
-        {
-            $to_del = array("\t", "\n", "&#0A;", "&#0D;", "\r");
-            $string = str_replace($to_del, ' ', $string);
-        }
-        for($i=0;$i<count($chars_to_escape);$i++)
-        {
-            $string = str_replace($chars_to_escape[$i], '\\'.$chars_to_escape, $string);
-        }
-        $string = str_replace('"', "'", $string);
-        return trim($string);
+        return $string;
     }
 
     public function escape_string($string, $chars_to_escape=array())

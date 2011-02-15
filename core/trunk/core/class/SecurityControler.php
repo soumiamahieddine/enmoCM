@@ -348,7 +348,6 @@ class SecurityControler
         return array('COLUMNS' => implode(",",$columns), 'VALUES' => implode(",",$values));
     }
 
-    // TO DO : USE TO CHECK WHERE CLAUSE
     public function check_where_clause($coll_id, $target, $where_clause,
        $view, $user_id)
     {
