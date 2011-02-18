@@ -418,6 +418,7 @@ function clear_q_list(item_value)
 function load_query_db(id_query, id_list, id_form_to_load, sql_error_txt,
     server_error_txt, manage_script)
 {
+        console.log(id_query);
     if (id_query != '') {
         var query_object = new Ajax.Request(
             manage_script,
@@ -438,6 +439,7 @@ function load_query_db(id_query, id_list, id_form_to_load, sql_error_txt,
                         }
                         var del_button = $('del_query');
                         del_button.style.display = 'inline';
+                        $('query_' + id_query).selected = "selected";
                     } else if(response.status == 2) {
                         $('error').update(sql_error_txt);
                     } else {
