@@ -1,9 +1,9 @@
 <?php
 
 /*
-*    Copyright 2008-2011 Maarch
+*   Copyright 2008-2011 Maarch
 *
-*  This file is part of Maarch Framework.
+*  	This file is part of Maarch Framework.
 *
 *   Maarch Framework is free software: you can redistribute it and/or modify
 *   it under the terms of the GNU General Public License as published by
@@ -16,11 +16,12 @@
 *   GNU General Public License for more details.
 *
 *   You should have received a copy of the GNU General Public License
-*    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
+*   along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 /**
-* @brief Contains the docservers_controler Object (herits of the BaseObject class)
+* @brief Contains the docservers_controler Object 
+* (herits of the BaseObject class)
 *
 *
 * @file
@@ -639,6 +640,14 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
         return $storeInfos;
     }
 
+    /**
+     * copy doc in a docserver.
+     * @param   string $sourceFilePath collection resource
+     * @param   array $infoFileNameInTargetDocserver infos of the doc to store, 
+     * 			contains : subdirectory path and new filename
+     * @param   string $docserverSourceFingerprint     
+     * @return  array of docserver data for res_x else return error
+     */
     public function copyOnDocserver($sourceFilePath, $infoFileNameInTargetDocserver, $docserverSourceFingerprint = "NONE") {
         $destinationDir = $infoFileNameInTargetDocserver['destinationDir'];
         $fileDestinationName = $infoFileNameInTargetDocserver['fileDestinationName'];
@@ -867,8 +876,7 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
         } else {
             $tmp = $fileInfos['tmpDir'];
         }
-        //TODO:extract on the maarch tmp dir on server or on the fly in the docserver dir ?
-        $fileNameOnTmp = $tmp.rand()."_".md5_file($fileInfos['path_to_file'])."_".$fileInfos['filename'];
+        $fileNameOnTmp = $tmp . rand() . "_" . md5_file($fileInfos['path_to_file']) . "_" . $fileInfos['filename'];
         $cp = copy($fileInfos['path_to_file'], $fileNameOnTmp);
         $this->setRights($fileNameOnTmp, $fileInfos['path_to_file']);
         if ($cp == false) {
@@ -878,38 +886,50 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
             $execError = "";
             $tmpArchive = uniqid(rand());
             if (mkdir($tmp.$tmpArchive)) {
+                //try to extract the offset if it's possible
                 if (DIRECTORY_SEPARATOR == "/") {
-                    $command = "7z e -y -o".escapeshellarg($tmp.$tmpArchive)." ".escapeshellarg($fileNameOnTmp);
+                    $command = "7z x -y -o" . escapeshellarg($tmp . $tmpArchive) . " " . escapeshellarg($fileNameOnTmp) . " " . escapeshellarg($fileNameOnTmp);
                 } else {
-                    $command = "\"".str_replace("\\", "\\\\", $_SESSION['docserversFeatures']['DOCSERVERS']['PATHTOCOMPRESSTOOL'])."\" e -y -o".escapeshellarg($tmp.$tmpArchive)." ".escapeshellarg($fileNameOnTmp);
+                    $command = "\"" . str_replace("\\", "\\\\", $_SESSION['docserversFeatures']['DOCSERVERS']['PATHTOCOMPRESSTOOL']) . "\" x -y -o" . escapeshellarg($tmp . $tmpArchive) . " " . escapeshellarg($fileNameOnTmp) . " " . escapeshellarg($fileNameOnTmp);
                 }
                 $tmpCmd = "";
                 exec($command, $tmpCmd, $execError);
                 if ($execError > 0) {
-                    $result = array("status" => "ko", "path" => "", "mime_type" => "", "format" => "", "tmpArchive" => "", "fingerprint" => "", "error"=>_PB_WITH_EXTRACTION_OF_CONTAINER."#".$execError);
-                    return $result;
+                    if (DIRECTORY_SEPARATOR == "/") {
+                        //else try to extract only the first container
+                        $command = "7z x -y -o" . escapeshellarg($tmp . $tmpArchive) . " " . escapeshellarg($fileNameOnTmp);
+                    } else {
+                        $command = "\"" . str_replace("\\", "\\\\", $_SESSION['docserversFeatures']['DOCSERVERS']['PATHTOCOMPRESSTOOL']) . "\" x -y -o" . escapeshellarg($tmp . $tmpArchive) . " " . escapeshellarg($fileNameOnTmp);
+                    }
+                    $tmpCmd = "";
+                    exec($command, $tmpCmd, $execError);
+                    if ($execError > 0) {
+                        $result = array("status" => "ko", "path" => "", "mime_type" => "", "format" => "", "tmpArchive" => "", "fingerprint" => "", "error"=>_PB_WITH_EXTRACTION_OF_CONTAINER."#".$execError);
+                        return $result;
+                    }
                 }
             } else {
                 $result = array("status" => "ko", "path" => "", "mime_type" => "", "format" => "", "tmpArchive" => "", "fingerprint" => "", "error"=>_PB_WITH_EXTRACTION_OF_CONTAINER."#".$tmp.$tmpArchive);
                 return $result;
             }
             $format = substr($fileInfos['offset_doc'], strrpos($fileInfos['offset_doc'], '.') + 1);
-            if (!file_exists($tmp.$tmpArchive.DIRECTORY_SEPARATOR.$fileInfos['offset_doc'])) {
+            if (!file_exists($tmp . $tmpArchive . DIRECTORY_SEPARATOR . $fileInfos['offset_doc'])) {
                 $classScan = dir($tmp . $tmpArchive);
-                while(($fileScan=$classScan->read()) != false) {
-                    if ($fileScan=='.' || $fileScan=='..') {
+                while(($fileScan = $classScan->read()) != false) {
+                    if ($fileScan == '.' || $fileScan == '..') {
                         continue;
                     } else {
                         preg_match("'CI|tmp.tar'", $fileScan, $out);
                         if (count($out[0]) == 1) {
                             $execError = "";
                             $tmpArchiveBis = uniqid(rand());
-                            if (mkdir($tmp.$tmpArchive.DIRECTORY_SEPARATOR.$tmpArchiveBis)) {
+                            if (mkdir($tmp . $tmpArchive . DIRECTORY_SEPARATOR . $tmpArchiveBis)) {
                                 if (DIRECTORY_SEPARATOR == "/") {
-                                    $commandBis = "7z e -y -o".escapeshellarg($tmp.$tmpArchive.DIRECTORY_SEPARATOR.$tmpArchiveBis)." ".escapeshellarg($tmp.$tmpArchive.DIRECTORY_SEPARATOR.$fileScan);
+                                    $commandBis = "7z x -y -o".escapeshellarg($tmp . $tmpArchive . DIRECTORY_SEPARATOR . $tmpArchiveBis)." ".escapeshellarg($tmp . $tmpArchive . DIRECTORY_SEPARATOR . $fileScan) . " " .$fileInfos['offset_doc'];
                                 } else {
-                                    $commandBis = "\"".str_replace("\\", "\\\\", $_SESSION['docserversFeatures']['DOCSERVERS']['PATHTOCOMPRESSTOOL'])."\" e -y -o".escapeshellarg($tmp.$tmpArchive.DIRECTORY_SEPARATOR.$tmpArchiveBis)." ".escapeshellarg($tmp.$tmpArchive.DIRECTORY_SEPARATOR.$fileScan);
+                                    $commandBis = "\"".str_replace("\\", "\\\\", $_SESSION['docserversFeatures']['DOCSERVERS']['PATHTOCOMPRESSTOOL'])."\" x -y -o".escapeshellarg($tmp.$tmpArchive.DIRECTORY_SEPARATOR.$tmpArchiveBis)." ".escapeshellarg($tmp.$tmpArchive.DIRECTORY_SEPARATOR.$fileScan) . " " .$fileInfos['offset_doc'];
                                 }
+                                //echo $commandBis;exit;
                                 $tmpCmd = "";
                                 exec($commandBis, $tmpCmd, $execError);
                                 if ($execError > 0) {
@@ -922,7 +942,7 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
                             $path = str_replace($fileScan, "", $tmp . $tmpArchive . DIRECTORY_SEPARATOR . $tmpArchiveBis . DIRECTORY_SEPARATOR . $fileInfos['offset_doc']);
                             $path = str_replace("#", DIRECTORY_SEPARATOR, $path);
                             $result = array("status" => "ok", "path"=>$path, "mime_type"=>$this->getMimeType($path), "format"=>$format, "fingerprint" => $this->doFingerprint($path, $fingerprintMode), "tmpArchive"=>$tmp . $tmpArchive, "error"=> "");
-                            unlink($tmp.$tmpArchive.DIRECTORY_SEPARATOR.$fileScan);
+                            unlink($tmp . $tmpArchive . DIRECTORY_SEPARATOR . $fileScan);
                             break;
                         }
                     }
@@ -934,7 +954,14 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
             return $result;
         }
     }
-
+    
+    /**
+     * Get the network link of a resource on a docserver
+     * @param   bigint $gedId id of th resource
+     * @param   string $tableName name of the res table
+     * @param   string $adrTable name of the res address table  
+     * @return  array of net address to the docserver 
+     */
     public function retrieveDocserverNetLinkOfResource($gedId, $tableName, $adrTable) {
         $adr = array();
         $resource = new resource();
@@ -956,7 +983,15 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
         }
         return $result;
     }
-
+    
+    /**
+     * View the resource, returns the content of the resource
+     * @param   bigint $gedId id of th resource
+     * @param   string $tableName name of the res table
+     * @param   string $adrTable name of the res address table  
+     * @return  array of elements to view the resource :
+     * 			 status, mime_type, extension, file_content, tmp_path, error
+     */
     public function viewResource($gedId, $tableName, $adrTable) {
         $history = new history();
         $coreTools = new core_tools();
@@ -983,6 +1018,7 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
             $concatError = "";
             //failover management
             for($cptDocserver=0;$cptDocserver<count($adr[0]);$cptDocserver++) {
+                $error = false;
                 //retrieve infos of the docserver
                 //echo $adr[0][$cptDocserver]['docserver_id']."<br>";
                 $fingerprintFromDb = $adr[0][$cptDocserver]['fingerprint'];
@@ -1010,6 +1046,7 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
                     $docserverTypeControler = new docserver_types_controler();
                     $docserverTypeObject = $docserverTypeControler->get($docserverObject->docserver_type_id);
                     if ($docserverTypeObject->is_container && $adr[0][$cptDocserver]['offset_doc'] == "") {
+                        $error = true;
                         $concatError .= _PB_WITH_OFFSET_OF_THE_DOC_IN_THE_CONTAINER . "||";
                         $history->add($tableName, $gedId, "ERR", _FAILOVER . " " . _DOCSERVERS . " " . $adr[0][$cptDocserver]['docserver_id'] . ":" . _PB_WITH_OFFSET_OF_THE_DOC_IN_THE_CONTAINER, $_SESSION['config']['databasetype']);
                     }
@@ -1017,7 +1054,8 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
                     if ($docserverTypeObject->is_compressed) {
                         $extract = array();
                         $extract = $this->extractArchive($adrToExtract, $docserverTypeObject->fingerprint_mode);
-                        if ($extract['status'] == "ko") {
+                        if ($extract['status'] == "ko" || !is_array($extract)) {
+                            $error = true;
                             $concatError .= $extract['error'] . "||";
                             $history->add($tableName, $gedId, "ERR", _FAILOVER . " " . _DOCSERVERS . " " . $adr[0][$cptDocserver]['docserver_id'] . ":" . $extract['error'], $_SESSION['config']['databasetype']);
                         } else {
@@ -1056,10 +1094,13 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
                                 $ent = new entity();
                                 $ent->increaseListinstanceViewed($gedId);
                             }
-                            if (file_exists($file)) {
+                            if (file_exists($file) && !$error) {
                                 $content = file_get_contents($file, FILE_BINARY);
                                 $encodedContent = base64_encode($content);
                                 $result = array("status" => "ok", "mime_type" => $mimeType, "ext" => $format, "file_content" => $encodedContent, "tmp_path" => $_SESSION['config']['tmppath'], "error" => "");
+                                if (file_exists($extract['tmpArchive'])) {
+                                    $this->washTmp($extract['tmpArchive']);
+                                }
                                 return $result;
                             } else {
                                 $concatError .= _FILE_NOT_EXISTS . "||";
@@ -1084,6 +1125,12 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
         return $result;
     }
 
+     /**
+     * Compute the fingerprint of a resource
+     * @param   string $path path of the resource
+     * @param   string $fingerprintMode (md5, sha512, ...)
+     * @return  string the fingerprint
+     */
     public function doFingerprint($path, $fingerprintMode) {
         if ($fingerprintMode == "NONE" || $fingerprintMode == "") {
             return '0';
@@ -1091,7 +1138,14 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
             return hash_file(strtolower($fingerprintMode), $path);
         }
     }
-
+    
+     /**
+     * Control fingerprint between two resources
+     * @param   string $pathInit path of the resource 1
+     * @param   string $pathTarget path of the resource 2
+     * @param   string $fingerprintMode (md5, sha512, ...)
+     * @return  array ok or ko with error
+     */
     function controlFingerprint($pathInit, $pathTarget, $fingerprintMode = "NONE") {
         $result = array();
         if ($this->doFingerprint($pathInit, $fingerprintMode) <> $this->doFingerprint($pathTarget, $fingerprintMode)) {
@@ -1102,6 +1156,12 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
         return $result;
     }
 
+     /**
+     * Set Rights on resources
+     * @param   string $dest path of the resource 1
+     * @param   string $source path of the resource 2
+     * @return  nothing
+     */
     function setRights($dest, $source) {
         //chown($dest, fileowner($source));
         //chgrp($dest, filegroup($source));
@@ -1112,6 +1172,12 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
         echo $dest."\r\n";*/
     }
 
+    /**
+     * Set Rights on resources with recurse method
+     * @param   string $dest path of the resource 1
+     * @param   string $source path of the resource 2
+     * @return  nothing
+     */
     function recurseSetRights($dest, $source) {
         $d = opendir($mypath);
         while (($file = readdir($d)) !== false) {
