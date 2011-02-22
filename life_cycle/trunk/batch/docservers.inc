@@ -39,7 +39,8 @@ function doCompression($targeFile, $arrayOfFileToCompress, $dirToCompress = "")
 {
     $listOfFileToCompress = "";
     if ($dirToCompress <> "") {
-        $listOfFileToCompress = " -r " . $dirToCompress;
+        //$listOfFileToCompress = " -r " . $dirToCompress;
+        $listOfFileToCompress = $dirToCompress . DIRECTORY_SEPARATOR . "*";
     } else {
         if (!is_array($arrayOfFileToCompress)) {
             $arr = array();
@@ -113,14 +114,14 @@ function extractAip($path)
         exit(22);
     }
     if (DIRECTORY_SEPARATOR == "/") {
-        $command = "7z e -y -o" . escapeshellarg($GLOBALS['TmpDirectory']) 
+        $command = "7z x -y -o" . escapeshellarg($GLOBALS['TmpDirectory']) 
                  . " " . escapeshellarg($fileNameOnTmp);
     } else {
         $command = "\"" . str_replace(
             "\\", "\\\\", 
             $GLOBALS['docserversFeatures']['DOCSERVERS']['PATHTOCOMPRESSTOOL']
         )
-        . "\" e -y -o" . escapeshellarg($GLOBALS['TmpDirectory']) . " " 
+        . "\" x -y -o" . escapeshellarg($GLOBALS['TmpDirectory']) . " " 
         . escapeshellarg($fileNameOnTmp);
     }
     $tmpCmd = '';
@@ -139,7 +140,7 @@ function extractAip($path)
             $GLOBALS['docservers'][$GLOBALS['currentStep']]['compression_mode']
         );
     if (DIRECTORY_SEPARATOR == "/") {
-        $command = "7z e -y -o" 
+        $command = "7z x -y -o" 
                  . escapeshellarg($GLOBALS['TmpDirectory'] . "CI") . " " 
                  . escapeshellarg($fileNameOnTmp);
     } else {
@@ -149,7 +150,7 @@ function extractAip($path)
                 $GLOBALS['docserversFeatures']['DOCSERVERS']
                 ['PATHTOCOMPRESSTOOL']
             )
-            . "\" e -y -o" . escapeshellarg($GLOBALS['TmpDirectory'] . "CI") 
+            . "\" x -y -o" . escapeshellarg($GLOBALS['TmpDirectory'] . "CI") 
             . " " . escapeshellarg($fileNameOnTmp);
     }
     $tmpCmd = "";
