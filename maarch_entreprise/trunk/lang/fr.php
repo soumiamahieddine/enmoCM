@@ -1138,8 +1138,7 @@ if (!defined('_MASK_NOT_VALID')) define('_MASK_NOT_VALID', 'Masque non valide');
 /************FAILOVER******************************/
 if (!defined('_FAILOVER'))  define('_FAILOVER', 'Reprise sur erreur');
 if (!defined('_FILE_NOT_EXISTS_ON_THE_SERVER'))  define('_FILE_NOT_EXISTS_ON_THE_SERVER', 'Le fichier n&rsquo;existe pas sur le docserver');
-
-
+if (!defined('_NO_RIGHT_ON_RESOURCE_OR_RESOURCE_NOT_EXISTS'))  define('_NO_RIGHT_ON_RESOURCE_OR_RESOURCE_NOT_EXISTS', 'Aucun droit sur la resource demand&eacute;e ou elle est non disponible');
 
 if (!defined('_PROCESS_DELAY'))  define('_PROCESS_DELAY', 'D&eacute;lai de traitement');
 if (!defined('_ALERT_DELAY_1'))  define('_ALERT_DELAY_1', 'D&eacute;lai de 1ere alerte');
