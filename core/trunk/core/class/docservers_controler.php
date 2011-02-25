@@ -894,6 +894,7 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
                 }
                 $tmpCmd = "";
                 exec($command, $tmpCmd, $execError);
+                //echo $command . "<br>";
                 if ($execError > 0) {
                     if (DIRECTORY_SEPARATOR == "/") {
                         //else try to extract only the first container
@@ -919,7 +920,7 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
                     if ($fileScan == '.' || $fileScan == '..') {
                         continue;
                     } else {
-                        preg_match("'CI|tmp.tar'", $fileScan, $out);
+                        preg_match("'CI|.tar'", $fileScan, $out);
                         if (count($out[0]) == 1) {
                             $execError = "";
                             $tmpArchiveBis = uniqid(rand());
@@ -929,7 +930,6 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
                                 } else {
                                     $commandBis = "\"".str_replace("\\", "\\\\", $_SESSION['docserversFeatures']['DOCSERVERS']['PATHTOCOMPRESSTOOL'])."\" x -y -o".escapeshellarg($tmp.$tmpArchive.DIRECTORY_SEPARATOR.$tmpArchiveBis)." ".escapeshellarg($tmp.$tmpArchive.DIRECTORY_SEPARATOR.$fileScan) . " " .$fileInfos['offset_doc'];
                                 }
-                                //echo $commandBis;exit;
                                 $tmpCmd = "";
                                 exec($commandBis, $tmpCmd, $execError);
                                 if ($execError > 0) {
@@ -990,9 +990,9 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
      * @param   string $tableName name of the res table
      * @param   string $adrTable name of the res address table  
      * @return  array of elements to view the resource :
-     * 			 status, mime_type, extension, file_content, tmp_path, error
+     *          status, mime_type, extension, file_content, tmp_path, file_path, called_by_ws error
      */
-    public function viewResource($gedId, $tableName, $adrTable) {
+    public function viewResource($gedId, $tableName, $adrTable, $calledByWS = false) {
         $history = new history();
         $coreTools = new core_tools();
         $whereClause = "";
@@ -1008,56 +1008,54 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
         $adr = array();
         $resource = new resource();
         $adr = $resource->getResourceAdr($tableName, $gedId, $whereClause, $adrTable);
-        //$coreTools->show_array($adr);exit;
-        if ($adr['status'] == "ko") {
-            $result = array("status" => "ko", "mime_type" => "", "ext" => "", "file_content" => "", "tmp_path" => "", "error" => _NO_RIGHT_ON_RESOURCE_OR_RESOURCE_NOT_EXISTS);
-            $history->add($tableName, $gedId, "ERR", _NO_RIGHT_ON_RESOURCE_OR_RESOURCE_NOT_EXISTS, $_SESSION['config']['databasetype']);
+        //$coreTools->show_array($adr);
+        if ($adr['status'] == 'ko') {
+            $result = array('status' => 'ko', 'mime_type' => '', 'ext' => '', 'file_content' => '', 'tmp_path' => '', 'file_path' => '', 'called_by_ws' => $calledByWS, 'error' => _NO_RIGHT_ON_RESOURCE_OR_RESOURCE_NOT_EXISTS);
+            $history->add($tableName, $gedId, 'ERR', _NO_RIGHT_ON_RESOURCE_OR_RESOURCE_NOT_EXISTS, $_SESSION['config']['databasetype']);
         } else {
-            require_once("core" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . "docserver_types_controler.php");
+            require_once('core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR . 'docserver_types_controler.php');
             $docserverTypeControler = new docserver_types_controler();
-            $concatError = "";
+            $concatError = '';
             //failover management
             for($cptDocserver=0;$cptDocserver<count($adr[0]);$cptDocserver++) {
                 $error = false;
                 //retrieve infos of the docserver
-                //echo $adr[0][$cptDocserver]['docserver_id']."<br>";
                 $fingerprintFromDb = $adr[0][$cptDocserver]['fingerprint'];
                 $format = $adr[0][$cptDocserver]['format'];
                 $docserverObject = $this->get($adr[0][$cptDocserver]['docserver_id']);
                 $docserver = $docserverObject->path_template;
                 $file = $docserver.$adr[0][$cptDocserver]['path'].$adr[0][$cptDocserver]['filename'];
-                $file = str_replace("#", DIRECTORY_SEPARATOR, $file);
+                $file = str_replace('#', DIRECTORY_SEPARATOR, $file);
                 $docserverTypeObject = $docserverTypeControler->get($docserverObject->docserver_type_id);
                 if (!file_exists($file)) {
-                    $concatError .= _FILE_NOT_EXISTS_ON_THE_SERVER . " : " . $file . "||";
-                    $history->add($tableName, $gedId, "ERR", _FAILOVER . " " . _DOCSERVERS . " " . $adr[0][$cptDocserver]['docserver_id'] . ":" . _FILE_NOT_EXISTS_ON_THE_SERVER . " : " . $file, $_SESSION['config']['databasetype']);
+                    $concatError .= _FILE_NOT_EXISTS_ON_THE_SERVER . ' : ' . $file . '||';
+                    $history->add($tableName, $gedId, 'ERR', _FAILOVER . ' ' . _DOCSERVERS . ' ' . $adr[0][$cptDocserver]['docserver_id'] . ':' . _FILE_NOT_EXISTS_ON_THE_SERVER . ' : ' . $file, $_SESSION['config']['databasetype']);
                 } else {
                     $fingerprintFromDocserver = $this->doFingerprint($file, $docserverTypeObject->fingerprint_mode);
-                    /*echo $file."<br>";
-                    echo $docserverTypeObject->fingerprint_mode."<br>";
-                    echo "from ds:" . $fingerprintFromDocserver."<br>";
-                    echo "from db:" . $fingerprintFromDb."<br>";*/
+                    /*echo $file.'<br>';
+                    echo $docserverTypeObject->fingerprint_mode.'<br>';
+                    echo 'from ds:' . $fingerprintFromDocserver.'<br>';
+                    echo 'from db:' . $fingerprintFromDb.'<br>';*/
                     $adrToExtract = array();
                     $adrToExtract = $adr[0][$cptDocserver];
                     $adrToExtract['path_to_file'] = $file;
-                    //print_r($adrToExtract);
                     //retrieve infos of the docserver type
-                    require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."docserver_types_controler.php");
+                    require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'docserver_types_controler.php');
                     $docserverTypeControler = new docserver_types_controler();
                     $docserverTypeObject = $docserverTypeControler->get($docserverObject->docserver_type_id);
-                    if ($docserverTypeObject->is_container && $adr[0][$cptDocserver]['offset_doc'] == "") {
+                    if ($docserverTypeObject->is_container && $adr[0][$cptDocserver]['offset_doc'] == '') {
                         $error = true;
-                        $concatError .= _PB_WITH_OFFSET_OF_THE_DOC_IN_THE_CONTAINER . "||";
-                        $history->add($tableName, $gedId, "ERR", _FAILOVER . " " . _DOCSERVERS . " " . $adr[0][$cptDocserver]['docserver_id'] . ":" . _PB_WITH_OFFSET_OF_THE_DOC_IN_THE_CONTAINER, $_SESSION['config']['databasetype']);
+                        $concatError .= _PB_WITH_OFFSET_OF_THE_DOC_IN_THE_CONTAINER . '||';
+                        $history->add($tableName, $gedId, 'ERR', _FAILOVER . ' ' . _DOCSERVERS . ' ' . $adr[0][$cptDocserver]['docserver_id'] . ':' . _PB_WITH_OFFSET_OF_THE_DOC_IN_THE_CONTAINER, $_SESSION['config']['databasetype']);
                     }
                     //manage compressed resource
                     if ($docserverTypeObject->is_compressed) {
                         $extract = array();
                         $extract = $this->extractArchive($adrToExtract, $docserverTypeObject->fingerprint_mode);
-                        if ($extract['status'] == "ko" || !is_array($extract)) {
+                        if ($extract['status'] == 'ko' || !is_array($extract)) {
                             $error = true;
-                            $concatError .= $extract['error'] . "||";
-                            $history->add($tableName, $gedId, "ERR", _FAILOVER . " " . _DOCSERVERS . " " . $adr[0][$cptDocserver]['docserver_id'] . ":" . $extract['error'], $_SESSION['config']['databasetype']);
+                            $concatError .= $extract['error'] . '||';
+                            $history->add($tableName, $gedId, 'ERR', _FAILOVER . ' ' . _DOCSERVERS . ' ' . $adr[0][$cptDocserver]['docserver_id'] . ':' . $extract['error'], $_SESSION['config']['databasetype']);
                         } else {
                             $file = $extract['path'];
                             $mimeType = $extract['mime_type'];
@@ -1068,51 +1066,64 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
                     } else {
                         $mimeType = $this->getMimeType($adrToExtract['path_to_file']);
                     }
-                    //var_dump($extract);exit;
                     //manage view of the file
                     $use_tiny_mce = false;
                     if (strtolower($format) == 'maarch' && $coreTools->is_module_loaded('templates')) {
-                        $mode = "content";
+                        $mode = 'content';
                         $type_state = true;
                         $use_tiny_mce = true;
-                        $mimeType = "application/maarch";
+                        $mimeType = 'application/maarch';
                     } else {
-                        require_once('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR."class_indexing_searching_app.php");
+                        require_once('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_indexing_searching_app.php');
                         $is = new indexing_searching_app();
                         $type_state = $is->is_filetype_allowed($format);
                     }
                     //if fingerprint from db = 0 we do not control fingerprint
-                    if ($fingerprintFromDb == "0" || ($fingerprintFromDb == $fingerprintFromDocserver)) {
+                    if ($fingerprintFromDb == '0' || ($fingerprintFromDb == $fingerprintFromDocserver)) {
                         if ($type_state <> false) {
-                            if ($_SESSION['history']['resview'] == "true") {
-                                require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
-                                $history->add($tableName, $gedId, "VIEW", _VIEW_DOC_NUM . $gedId, $_SESSION['config']['databasetype'], 'indexing_searching');
+                            if ($_SESSION['history']['resview'] == 'true') {
+                                require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_history.php');
+                                $history->add($tableName, $gedId, 'VIEW', _VIEW_DOC_NUM . $gedId, $_SESSION['config']['databasetype'], 'indexing_searching');
                             }
                             //count number of viewed in listinstance for the user
                             if ($coreTools->is_module_loaded('entities') && $coreTools->is_module_loaded('basket')) {
-                                require_once("modules" . DIRECTORY_SEPARATOR . "entities" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . "class_manage_entities.php");
+                                require_once('modules' . DIRECTORY_SEPARATOR . 'entities' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR . 'class_manage_entities.php');
                                 $ent = new entity();
                                 $ent->increaseListinstanceViewed($gedId);
                             }
                             if (file_exists($file) && !$error) {
-                                $content = file_get_contents($file, FILE_BINARY);
-                                $encodedContent = base64_encode($content);
-                                $result = array("status" => "ok", "mime_type" => $mimeType, "ext" => $format, "file_content" => $encodedContent, "tmp_path" => $_SESSION['config']['tmppath'], "error" => "");
+                                if ($calledByWS) {
+                                    $content = '';
+                                    //$content = file_get_contents($file, FILE_BINARY);
+                                    $handle = fopen($file, 'r');
+                                    if ($handle) {
+                                        while (!feof($handle)) {
+                                            $content .= fgets($handle, 4096);
+                                        }
+                                        fclose($handle);
+                                    }
+                                    $encodedContent = base64_encode($content);
+                                } else {
+                                    $fileNameOnTmp = 'tmp_file_' . rand() . '.' . strtolower($format);
+                                    $filePathOnTmp = $_SESSION['config']['tmppath'] . DIRECTORY_SEPARATOR . $fileNameOnTmp;
+                                    copy($file, $filePathOnTmp);
+                                }
+                                $result = array('status' => 'ok', 'mime_type' => $mimeType, 'ext' => $format, 'file_content' => $encodedContent, 'tmp_path' => $_SESSION['config']['tmppath'], 'file_path' => $filePathOnTmp, 'called_by_ws' => $calledByWS, 'error' => '');
                                 if (file_exists($extract['tmpArchive'])) {
                                     $this->washTmp($extract['tmpArchive']);
                                 }
                                 return $result;
                             } else {
-                                $concatError .= _FILE_NOT_EXISTS . "||";
-                                $history->add($tableName, $gedId, "ERR", _FAILOVER . " " . _DOCSERVERS . " " . $adr[0][$cptDocserver]['docserver_id'] . ":" . _FILE_NOT_EXISTS, $_SESSION['config']['databasetype']);
+                                $concatError .= _FILE_NOT_EXISTS . '||';
+                                $history->add($tableName, $gedId, 'ERR', _FAILOVER . ' ' . _DOCSERVERS . ' ' . $adr[0][$cptDocserver]['docserver_id'] . ':' . _FILE_NOT_EXISTS, $_SESSION['config']['databasetype']);
                             }
                         } else {
-                            $concatError .= _FILE_TYPE . " " . _UNKNOWN . "||";
-                            $history->add($tableName, $gedId, "ERR", _FAILOVER . " " . _DOCSERVERS . " " . $adr[0][$cptDocserver]['docserver_id'] . ":" . _FILE_TYPE . " " . _UNKNOWN, $_SESSION['config']['databasetype']);
+                            $concatError .= _FILE_TYPE . ' ' . _UNKNOWN . '||';
+                            $history->add($tableName, $gedId, 'ERR', _FAILOVER . ' ' . _DOCSERVERS . ' ' . $adr[0][$cptDocserver]['docserver_id'] . ':' . _FILE_TYPE . ' ' . _UNKNOWN, $_SESSION['config']['databasetype']);
                         }
                     } else {
-                        $concatError .= _PB_WITH_FINGERPRINT_OF_DOCUMENT . "||";
-                        $history->add($tableName, $gedId, "ERR", _FAILOVER . " " . _DOCSERVERS . " " . $adr[0][$cptDocserver]['docserver_id'] . ":" . _PB_WITH_FINGERPRINT_OF_DOCUMENT, $_SESSION['config']['databasetype']);
+                        $concatError .= _PB_WITH_FINGERPRINT_OF_DOCUMENT . '||';
+                        $history->add($tableName, $gedId, 'ERR', _FAILOVER . ' ' . _DOCSERVERS . ' ' . $adr[0][$cptDocserver]['docserver_id'] . ':' . _PB_WITH_FINGERPRINT_OF_DOCUMENT, $_SESSION['config']['databasetype']);
                     }
                     if (file_exists($extract['tmpArchive'])) {
                         $this->washTmp($extract['tmpArchive']);
@@ -1121,7 +1132,7 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
             }
         }
         //if errors :
-        $result = array("status" => "ko", "mime_type" => "", "ext" => "", "file_content" => "", "tmp_path" => "", "error" => $concatError);
+        $result = array('status' => 'ko', 'mime_type' => '', 'ext' => '', 'file_content' => '', 'tmp_path' => '', 'file_path' => '', 'called_by_ws' => $calledByWS, 'error' => $concatError);
         return $result;
     }
 
@@ -1132,7 +1143,7 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
      * @return  string the fingerprint
      */
     public function doFingerprint($path, $fingerprintMode) {
-        if ($fingerprintMode == "NONE" || $fingerprintMode == "") {
+        if ($fingerprintMode == 'NONE' || $fingerprintMode == '') {
             return '0';
         } else {
             return hash_file(strtolower($fingerprintMode), $path);
@@ -1146,12 +1157,12 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
      * @param   string $fingerprintMode (md5, sha512, ...)
      * @return  array ok or ko with error
      */
-    function controlFingerprint($pathInit, $pathTarget, $fingerprintMode = "NONE") {
+    function controlFingerprint($pathInit, $pathTarget, $fingerprintMode = 'NONE') {
         $result = array();
         if ($this->doFingerprint($pathInit, $fingerprintMode) <> $this->doFingerprint($pathTarget, $fingerprintMode)) {
-            $result = array("status" => "ko", "error" => _PB_WITH_FINGERPRINT_OF_DOCUMENT . ' ' . $pathInit . ' '. _AND . ' ' . $pathTarget);
+            $result = array('status' => 'ko', 'error' => _PB_WITH_FINGERPRINT_OF_DOCUMENT . ' ' . $pathInit . ' '. _AND . ' ' . $pathTarget);
         } else {
-            $result = array("status" => "ok", "error" => "");
+            $result = array('status' => 'ok', 'error' => '');
         }
         return $result;
     }

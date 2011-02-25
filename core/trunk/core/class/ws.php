@@ -5,173 +5,175 @@ global $SOAP_typedef;
 
 //test
 /*$SOAP_dispatch_map['testMethod'] = array(
-										'in'  => array('myVar' => 'string'),
-										'out' => array('out' => 'string'),
-										'method' => "core#docserver_locations::testMethod"
-										);*/
+                                        'in'  => array('myVar' => 'string'),
+                                        'out' => array('out' => 'string'),
+                                        'method' => "core#docserver_locations::testMethod"
+                                        );*/
 
 // COMMON
-$SOAP_typedef['returnArray'] = array(	'status'=>'string',
-										'value'=>'string',
-										'error'=>'string'
-									);
+$SOAP_typedef['returnArray'] = array(   'status'=>'string',
+                                        'value'=>'string',
+                                        'error'=>'string'
+                                    );
 /**************************************************************************************************/
 // DOCSERVERS
-$SOAP_typedef['docservers'] = array(	'docserver_id'=>'string',
-										'docserver_type_id'=>'string',
-										'device_label'=>'string',
-										'is_readonly'=>'boolean',
-										'size_limit_number'=>'string',
-										'path_template'=>'string',
-										'coll_id'=>'string',
-										'priority_number'=>'string',
-										'docserver_location_id'=>'string',
-										'adr_priority_number'=>'string'
-									);
+$SOAP_typedef['docservers'] = array(    'docserver_id'=>'string',
+                                        'docserver_type_id'=>'string',
+                                        'device_label'=>'string',
+                                        'is_readonly'=>'boolean',
+                                        'size_limit_number'=>'string',
+                                        'path_template'=>'string',
+                                        'coll_id'=>'string',
+                                        'priority_number'=>'string',
+                                        'docserver_location_id'=>'string',
+                                        'adr_priority_number'=>'string'
+                                    );
 $SOAP_typedef['returnViewResource'] = array('status'=>'string',
-											'mime_type'=>'string',
-											'ext'=>'string',
-											'file_content'=>'string',
-											'tmp_path'=>'string',
-											'error'=>'string'
-									);
+                                            'mime_type'=>'string',
+                                            'ext'=>'string',
+                                            'file_content'=>'string',
+                                            'tmp_path'=>'string',
+                                            'file_path'=>'string',
+                                            'called_by_ws'=>'string',
+                                            'error'=>'string'
+                                    );
 $SOAP_dispatch_map['docserverSave'] = array(
-										'in'  => array('docserver' => '{urn:MySoapServer}docservers', 'mode' => 'string'),
-										'out' => array('out' => '{urn:MySoapServer}returnArray'),
-										'method' => "core#docservers::save"
-									);
+                                        'in'  => array('docserver' => '{urn:MySoapServer}docservers', 'mode' => 'string'),
+                                        'out' => array('out' => '{urn:MySoapServer}returnArray'),
+                                        'method' => "core#docservers::save"
+                                    );
 $SOAP_dispatch_map['docserverDelete'] = array(
-										'in'  => array('docserver' => '{urn:MySoapServer}docservers'),
-										'out' => array('out' => '{urn:MySoapServer}returnArray'),
-										'method' => "core#docservers::delete"
-									);
+                                        'in'  => array('docserver' => '{urn:MySoapServer}docservers'),
+                                        'out' => array('out' => '{urn:MySoapServer}returnArray'),
+                                        'method' => "core#docservers::delete"
+                                    );
 $SOAP_dispatch_map['docserverEnable'] = array(
-										'in'  => array('docserver' => '{urn:MySoapServer}docservers'),
-										'out' => array('out' => '{urn:MySoapServer}returnArray'),
-										'method' => "core#docservers::enable"
-									);									
+                                        'in'  => array('docserver' => '{urn:MySoapServer}docservers'),
+                                        'out' => array('out' => '{urn:MySoapServer}returnArray'),
+                                        'method' => "core#docservers::enable"
+                                    );                                    
 $SOAP_dispatch_map['docserverDisable'] = array(
-										'in'  => array('docserver' => '{urn:MySoapServer}docservers'),
-										'out' => array('out' => '{urn:MySoapServer}returnArray'),
-										'method' => "core#docservers::disable"
-									);
+                                        'in'  => array('docserver' => '{urn:MySoapServer}docservers'),
+                                        'out' => array('out' => '{urn:MySoapServer}returnArray'),
+                                        'method' => "core#docservers::disable"
+                                    );
 $SOAP_dispatch_map['docserverGet'] = array(
-										'in'  => array('docserverId' => 'string'),
-										'out' => array('out' => '{urn:MySoapServer}docservers'),
-										'method' => "core#docservers::getWs"
-									);
+                                        'in'  => array('docserverId' => 'string'),
+                                        'out' => array('out' => '{urn:MySoapServer}docservers'),
+                                        'method' => "core#docservers::getWs"
+                                    );
 $SOAP_dispatch_map['viewResource'] = array(
-										'in'  => Array('gedId' => 'integer', 'tableName' => 'string'),
-										'out' => Array('out' => '{urn:MySoapServer}returnViewResource'),
-										'method' => "core#docservers::viewResource"
-									);
+                                        'in'  => Array('gedId' => 'integer', 'tableName' => 'string', 'adrTableName' => 'string', 'calledByWS' => 'boolean'),
+                                        'out' => Array('out' => '{urn:MySoapServer}returnViewResource'),
+                                        'method' => "core#docservers::viewResource"
+                                    );
 /**************************************************************************************************/
 // DOCSERVERS LOCATIONS
-$SOAP_typedef['docserverLocations'] = array(	'docserver_location_id'=>'string',
-												'ipv4'=>'string',
-												'ipv6'=>'string',
-												'net_domain'=>'string',
-												'mask'=>'string',
-												'net_link'=>'string'
-											);
+$SOAP_typedef['docserverLocations'] = array(    'docserver_location_id'=>'string',
+                                                'ipv4'=>'string',
+                                                'ipv6'=>'string',
+                                                'net_domain'=>'string',
+                                                'mask'=>'string',
+                                                'net_link'=>'string'
+                                            );
 $SOAP_dispatch_map['docserverLocationSave'] = array(
-										'in'  => array('docserver_location' => '{urn:MySoapServer}docserverLocations', 'mode' => 'string'),
-										'out' => array('out' => '{urn:MySoapServer}returnArray'),
-										'method' => "core#docserver_locations::save"
-										);
+                                        'in'  => array('docserver_location' => '{urn:MySoapServer}docserverLocations', 'mode' => 'string'),
+                                        'out' => array('out' => '{urn:MySoapServer}returnArray'),
+                                        'method' => "core#docserver_locations::save"
+                                        );
 $SOAP_dispatch_map['docserverLocationDelete'] = array(
-										'in'  => array('docserver_location' => '{urn:MySoapServer}docserverLocations'),
-										'out' => array('out' => '{urn:MySoapServer}returnArray'),
-										'method' => "core#docserver_locations::delete"
-									);
+                                        'in'  => array('docserver_location' => '{urn:MySoapServer}docserverLocations'),
+                                        'out' => array('out' => '{urn:MySoapServer}returnArray'),
+                                        'method' => "core#docserver_locations::delete"
+                                    );
 $SOAP_dispatch_map['docserverLocationEnable'] = array(
-										'in'  => array('docserver_location' => '{urn:MySoapServer}docserverLocations'),
-										'out' => array('out' => '{urn:MySoapServer}returnArray'),
-										'method' => "core#docserver_locations::enable"
-									);
+                                        'in'  => array('docserver_location' => '{urn:MySoapServer}docserverLocations'),
+                                        'out' => array('out' => '{urn:MySoapServer}returnArray'),
+                                        'method' => "core#docserver_locations::enable"
+                                    );
 $SOAP_dispatch_map['docserverLocationDisable'] = array(
-										'in'  => array('docserver_location' => '{urn:MySoapServer}docserverLocations'),
-										'out' => array('out' => '{urn:MySoapServer}returnArray'),
-										'method' => "core#docserver_locations::disable"
-									);
+                                        'in'  => array('docserver_location' => '{urn:MySoapServer}docserverLocations'),
+                                        'out' => array('out' => '{urn:MySoapServer}returnArray'),
+                                        'method' => "core#docserver_locations::disable"
+                                    );
 $SOAP_dispatch_map['docserverLocationGet'] = array(
-										'in'  => array('docserverLocationId' => 'string'),
-										'out' => array('out' => '{urn:MySoapServer}docserverLocations'),
-										'method' => "core#docserver_locations::getWs"
-									);
+                                        'in'  => array('docserverLocationId' => 'string'),
+                                        'out' => array('out' => '{urn:MySoapServer}docserverLocations'),
+                                        'method' => "core#docserver_locations::getWs"
+                                    );
 /**************************************************************************************************/
 // DOCSERVERS TYPES
-$SOAP_typedef['docserverTypes'] = array(	'docserver_type_id'=>'string',
-											'docserver_type_label'=>'string',
-											'is_container'=>'boolean',
-											'container_max_number'=>'integer',
-											'is_compressed'=>'boolean',
-											'compression_mode'=>'string',
-											'is_meta'=>'boolean',
-											'meta_template'=>'string',
-											'is_logged'=>'boolean',
-											'log_template'=>'string',
-											'is_signed'=>'boolean',
-											'fingerprint_mode'=>'string'
-											);
+$SOAP_typedef['docserverTypes'] = array(    'docserver_type_id'=>'string',
+                                            'docserver_type_label'=>'string',
+                                            'is_container'=>'boolean',
+                                            'container_max_number'=>'integer',
+                                            'is_compressed'=>'boolean',
+                                            'compression_mode'=>'string',
+                                            'is_meta'=>'boolean',
+                                            'meta_template'=>'string',
+                                            'is_logged'=>'boolean',
+                                            'log_template'=>'string',
+                                            'is_signed'=>'boolean',
+                                            'fingerprint_mode'=>'string'
+                                            );
 $SOAP_dispatch_map['docserverTypeSave'] = array(
-										'in'  => array('docserver_type' => '{urn:MySoapServer}docserverTypes', 'mode' => 'string'),
-										'out' => array('out' => '{urn:MySoapServer}returnArray'),
-										'method' => "core#docserver_types::save"
-										);
+                                        'in'  => array('docserver_type' => '{urn:MySoapServer}docserverTypes', 'mode' => 'string'),
+                                        'out' => array('out' => '{urn:MySoapServer}returnArray'),
+                                        'method' => "core#docserver_types::save"
+                                        );
 $SOAP_dispatch_map['docserverTypeDelete'] = array(
-										'in'  => array('docserver_type' => '{urn:MySoapServer}docserverTypes'),
-										'out' => array('out' => '{urn:MySoapServer}returnArray'),
-										'method' => "core#docserver_types::delete"
-									);
+                                        'in'  => array('docserver_type' => '{urn:MySoapServer}docserverTypes'),
+                                        'out' => array('out' => '{urn:MySoapServer}returnArray'),
+                                        'method' => "core#docserver_types::delete"
+                                    );
 $SOAP_dispatch_map['docserverTypeEnable'] = array(
-										'in'  => array('docserver_type' => '{urn:MySoapServer}docserverTypes'),
-										'out' => array('out' => '{urn:MySoapServer}returnArray'),
-										'method' => "core#docserver_types::enable"
-									);
+                                        'in'  => array('docserver_type' => '{urn:MySoapServer}docserverTypes'),
+                                        'out' => array('out' => '{urn:MySoapServer}returnArray'),
+                                        'method' => "core#docserver_types::enable"
+                                    );
 $SOAP_dispatch_map['docserverTypeDisable'] = array(
-										'in'  => array('docserver_type' => '{urn:MySoapServer}docserverTypes'),
-										'out' => array('out' => '{urn:MySoapServer}returnArray'),
-										'method' => "core#docserver_types::disable"
-									);
+                                        'in'  => array('docserver_type' => '{urn:MySoapServer}docserverTypes'),
+                                        'out' => array('out' => '{urn:MySoapServer}returnArray'),
+                                        'method' => "core#docserver_types::disable"
+                                    );
 $SOAP_dispatch_map['docserverTypeGet'] = array(
-										'in'  => array('docserverTypeId' => 'string'),
-										'out' => array('out' => '{urn:MySoapServer}docserverTypes'),
-										'method' => "core#docserver_types::getWs"
-									);
+                                        'in'  => array('docserverTypeId' => 'string'),
+                                        'out' => array('out' => '{urn:MySoapServer}docserverTypes'),
+                                        'method' => "core#docserver_types::getWs"
+                                    );
 /**************************************************************************************************/
 // USERS
-$SOAP_typedef['users'] = array(	'user_id'=>'string',
-								'password'=>'string',
-								'firstname'=>'string',
-								'lastname'=>'string',
-								'phone'=>'string',
-								'mail'=>'string',
-								'loginmode'=>'string'
-								);
+$SOAP_typedef['users'] = array(    'user_id'=>'string',
+                                'password'=>'string',
+                                'firstname'=>'string',
+                                'lastname'=>'string',
+                                'phone'=>'string',
+                                'mail'=>'string',
+                                'loginmode'=>'string'
+                                );
 $SOAP_dispatch_map['userSave'] = array(
-										'in'  => array('user' => '{urn:MySoapServer}users', 'mode' => 'string'),
-										'out' => array('out' => '{urn:MySoapServer}returnArray'),
-										'method' => "core#users::save"
-										);
+                                        'in'  => array('user' => '{urn:MySoapServer}users', 'mode' => 'string'),
+                                        'out' => array('out' => '{urn:MySoapServer}returnArray'),
+                                        'method' => "core#users::save"
+                                        );
 $SOAP_dispatch_map['userDelete'] = array(
-										'in'  => array('user' => '{urn:MySoapServer}users'),
-										'out' => array('out' => '{urn:MySoapServer}returnArray'),
-										'method' => "core#users::delete"
-									);
+                                        'in'  => array('user' => '{urn:MySoapServer}users'),
+                                        'out' => array('out' => '{urn:MySoapServer}returnArray'),
+                                        'method' => "core#users::delete"
+                                    );
 $SOAP_dispatch_map['userEnable'] = array(
-										'in'  => array('user' => '{urn:MySoapServer}users'),
-										'out' => array('out' => '{urn:MySoapServer}returnArray'),
-										'method' => "core#users::enable"
-									);
+                                        'in'  => array('user' => '{urn:MySoapServer}users'),
+                                        'out' => array('out' => '{urn:MySoapServer}returnArray'),
+                                        'method' => "core#users::enable"
+                                    );
 $SOAP_dispatch_map['userDisable'] = array(
-										'in'  => array('user' => '{urn:MySoapServer}users'),
-										'out' => array('out' => '{urn:MySoapServer}returnArray'),
-										'method' => "core#users::disable"
-									);
+                                        'in'  => array('user' => '{urn:MySoapServer}users'),
+                                        'out' => array('out' => '{urn:MySoapServer}returnArray'),
+                                        'method' => "core#users::disable"
+                                    );
 $SOAP_dispatch_map['userGet'] = array(
-										'in'  => array('user' => 'string'),
-										'out' => array('out' => '{urn:MySoapServer}users'),
-										'method' => "core#users::getWs"
-									);
+                                        'in'  => array('user' => 'string'),
+                                        'out' => array('out' => '{urn:MySoapServer}users'),
+                                        'method' => "core#users::getWs"
+                                    );
 
