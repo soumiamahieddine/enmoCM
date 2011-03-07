@@ -1,0 +1,39 @@
+
+
+# src_dir:
+#
+# Indicates the source directory relatively to the root of the project
+#
+# Default: Maarch
+#
+# Examples:
+src_dir: /
+#src_dir: MaarchX 
+
+
+# test_dir:
+#
+# Indicates the directory where automated tests are relatively to the 
+# root of the project
+#
+# Default: tests
+#
+# Examples:
+#test_dir: test
+
+# ignore_patterns:
+#
+# List of directory pattern to exclude from static analysis.
+# Listed patterns will be added to the default list.
+# Globbing is supported :
+# - *    : matches any sequence of character
+# - **   : matches directories recursively. 
+# - ?    : matches any one character.
+# - [set]: matches any one character in set.
+# - {p,q}: matches either literal p or literal q.
+#
+# Default: [tests, build]
+#
+# Examples:
+#ignore_patterns: [pattern1, pattern2]
+
