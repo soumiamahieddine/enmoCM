@@ -11,287 +11,387 @@
 * @author  Claire Figueras  <dev@maarch.org>
 */
 
-require("modules/entities/entities_tables.php");
+require 'modules/entities/entities_tables.php';
 
 function cmp_entity($a, $b)
 {
-    return strcmp($a["entity_label"], $b["entity_label"]);
+    return strcmp($a['entity_label'], $b['entity_label']);
 }
 function cmp_users($a, $b)
 {
-    return strcmp($a["lastname"], $b["lastname"]);
+    return strcmp($a['lastname'], $b['lastname']);
 }
 $core_tools = new core_tools();
 $core_tools->load_lang();
-if(isset($_POST['valid']))
-{
-    $_SESSION["popup_suite"] = true;
+if (isset($_POST['valid'])) {
+    $_SESSION['popup_suite'] = true;
     //print_r($_SESSION['m_admin']['entity']['listmodel']);exit;
     ?>
-    <script type="text/javascript">window.parent.opener.location.reload();self.close();</script>
+    <script type="text/javascript">window.parent.opener.location.reload();
+    self.close();</script>
     <?php
     exit;
 }
 $func = new functions();
-if(isset($_POST['what_users']) && !empty($_POST['what_users']) )
-{
+if (isset($_POST['what_users']) && !empty($_POST['what_users']) ) {
     $_GET['what_users'] = $_POST['what_users'];
 }
-if(isset($_POST['what_services']) && !empty($_POST['what_services']) )
-{
+if (isset($_POST['what_services']) && ! empty($_POST['what_services']) ) {
     $_GET['what_services'] = $_POST['what_services'];
 }
 $users = array();
 $entities = array();
-$where_users = "";
-$where_entities = "";
-$orderby_users = "";
-$orderby_entities = "";
+$where_users = '';
+$where_entities = '';
+$orderby_users = '';
+$orderby_entities = '';
 $where_entities_users = '';
-$what = "";
-if(isset($_GET['what_users']) && !empty($_GET['what_users']) )
-{
-    $what_users = $func->protect_string_db($func->wash($_GET['what_users'], "no", "", "no"));
-    if($_SESSION['config']['databasetype'] == 'POSTGRESQL')
-    {
-        $where_users .= " and (u.lastname ilike '%".strtolower($what_users)."%'
-                or u.lastname ilike '%".strtoupper($what_users)."%'
-                or u.firstname ilike '%".strtolower($what_users)."%'
-                or u.firstname ilike '%".strtoupper($what_users)."%'
-                or u.user_id ilike '%".strtolower($what_users)."%'
-                or u.user_id ilike '%".strtoupper($what_users)."%')";
+$what = '';
+if (isset($_GET['what_users']) && ! empty($_GET['what_users']) ) {
+    $what_users = $func->protect_string_db(
+        $func->wash($_GET['what_users'], 'no', '', 'no'));
+    if ($_SESSION['config']['databasetype'] == 'POSTGRESQL') {
+        $where_users .= " and (u.lastname ilike '%" . strtolower($what_users)
+                     . "%' or u.lastname ilike '%" . strtoupper($what_users)
+                     . "%' or u.firstname ilike '%" . strtolower($what_users)
+                     . "%' or u.firstname ilike '%" . strtoupper($what_users)
+                     . "%' or u.user_id ilike '%" . strtolower($what_users)
+                     . "%' or u.user_id ilike '%" . strtoupper($what_users)
+                     . "%')";
+    } else {
+        $where_users .= " and (u.lastname like '%" . strtolower($what_users)
+                     . "%' or u.lastname like '%" . strtoupper($what_users)
+                     . "%' or u.firstname like '%" . strtolower($what_users)
+                     . "%' or u.firstname like '%" . strtoupper($what_users)
+                     . "%' or u.user_id like '%" . strtolower($what_users)
+                     . "%' or u.user_id like '%" . strtoupper($what_users)
+                     . "%')";
     }
-    else
-    {
-        $where_users .= " and (u.lastname like '%".strtolower($what_users)."%'
-                or u.lastname like '%".strtoupper($what_users)."%'
-                or u.firstname like '%".strtolower($what_users)."%'
-                or u.firstname like '%".strtoupper($what_users)."%'
-                or u.user_id like '%".strtolower($what_users)."%'
-                or u.user_id like '%".strtoupper($what_users)."%')";
-    }
-    $orderby_users = " order by u.user_id asc, u.lastname asc, u.firstname asc, e.entity_label asc";
+    $orderby_users = ' order by u.user_id asc, u.lastname asc, u.firstname asc,'
+                   . 'e.entity_label asc';
 
-    if($_SESSION['config']['databasetype'] == 'POSTGRESQL')
-    {
-        $where_entities_users .= " and (u.lastname ilike '%".strtolower($what_users)."%'
-                or u.lastname ilike '%".strtoupper($what_users)."%'
-                or u.firstname ilike '%".strtolower($what_users)."%'
-                or u.firstname ilike '%".strtoupper($what_users)."%'
-                or u.user_id ilike '%".strtolower($what_users)."%'
-                or u.user_id ilike '%".strtoupper($what_users)."%')";
+    if ($_SESSION['config']['databasetype'] == 'POSTGRESQL') {
+        $where_entities_users .= " and (u.lastname ilike '%"
+                              . strtolower($what_users) . "%' or u.lastname "
+                              . "ilike '%" . strtoupper($what_users) . "%' or "
+                              . "u.firstname ilike '%"
+                              . strtolower($what_users) . "%' or u.firstname "
+                              . "ilike '%" . strtoupper($what_users) . "%' or "
+                              . "u.user_id ilike '%" . strtolower($what_users)
+                              . "%' or u.user_id ilike '%"
+                              . strtoupper($what_users) . "%')";
+    } else {
+        $where_entities_users .= " and (u.lastname like '%"
+                              . strtolower($what_users) . "%' or u.lastname "
+                              . "like '%" . strtoupper($what_users) . "%' or "
+                              . "u.firstname like '%" . strtolower($what_users)
+                              . "%' or u.firstname like '%"
+                              . strtoupper($what_users) . "%' or u.user_id like"
+                              . " '%" . strtolower($what_users) . "%' or "
+                              . "u.user_id like '%" . strtoupper($what_users)
+                              . "%')";
     }
-    else
-    {
-        $where_entities_users .= " and (u.lastname like '%".strtolower($what_users)."%'
-                or u.lastname like '%".strtoupper($what_users)."%'
-                or u.firstname like '%".strtolower($what_users)."%'
-                or u.firstname like '%".strtoupper($what_users)."%'
-                or u.user_id like '%".strtolower($what_users)."%'
-                or u.user_id like '%".strtoupper($what_users)."%')";
-    }
-    $orderby_entities = " order by e.entity_label asc";
+    $orderby_entities = ' order by e.entity_label asc';
 }
-if(isset($_GET['what_services']) && !empty($_GET['what_services']) )
-{
+if (isset($_GET['what_services']) && ! empty($_GET['what_services'])) {
     //$where_entities_users = '';
-    $what_services = addslashes($func->wash($_GET['what_services'], "no", "", "no"));
-    if($_SESSION['config']['databasetype'] == 'POSTGRESQL')
-    {
-        $where_users .= " and (e.entity_label ilike '%".strtolower($what_services)."%' or e.entity_id ilike '%".strtoupper($what_services)."%')";
-        $where_entities .= " and (e.entity_label ilike '%".strtolower($what_services)."%' or e.entity_id ilike '%".strtolower($what_services)."%' )";
+    $what_services = addslashes(
+        $func->wash($_GET['what_services'], 'no', '', 'no')
+    );
+    if ($_SESSION['config']['databasetype'] == 'POSTGRESQL') {
+        $where_users .= " and (e.entity_label ilike '%"
+                     . strtolower($what_services) . "%' or e.entity_id ilike '%"
+                     . strtoupper($what_services) . "%')";
+        $where_entities .= " and (e.entity_label ilike '%"
+                        . strtolower($what_services) . "%' or e.entity_id ilike"
+                        . " '%" . strtolower($what_services) . "%' )";
+    } else {
+        $where_users .= " and (e.entity_label like '%"
+                     . strtolower($what_services) . "%' or e.entity_id like '%"
+                     . strtoupper($what_services) . "%')";
+        $where_entities .= " and (e.entity_label like '%"
+                        . strtolower($what_services) . "%' or e.entity_id like"
+                        . " '%" . strtolower($what_services) . "%' )";
     }
-    else
-    {
-        $where_users .= " and (e.entity_label like '%".strtolower($what_services)."%' or e.entity_id like '%".strtoupper($what_services)."%')";
-        $where_entities .= " and (e.entity_label like '%".strtolower($what_services)."%' or e.entity_id like '%".strtolower($what_services)."%' )";
-    }
-    $orderby_users = " order by e.entity_label asc, u.user_id asc, u.lastname asc, u.firstname asc";
-    $orderby_entities = " order by e.entity_label asc";
-
+    $orderby_users = ' order by e.entity_label asc, u.user_id asc, '
+                   . 'u.lastname asc, u.firstname asc';
+    $orderby_entities = ' order by e.entity_label asc';
 }
 $db = new dbquery();
 $db->connect();
-$db->query("select u.user_id, u.firstname, u.lastname,e.entity_id,  e.entity_label
-FROM ".$_SESSION['tablename']['users']." u, ".ENT_ENTITIES." e, ".ENT_USERS_ENTITIES." ue
-WHERE u.status <> 'DEL' and u.enabled = 'Y' and  e.entity_id = ue.entity_id and u.user_id = ue.user_id and e.enabled = 'Y' ".$where_users.$orderby_users);
+$db->query(
+    "select u.user_id, u.firstname, u.lastname,e.entity_id,  e.entity_label "
+    . "FROM " . $_SESSION['tablename']['users'] . " u, " . ENT_ENTITIES . " e, "
+    . ENT_USERS_ENTITIES . " ue WHERE u.status <> 'DEL' and u.enabled = 'Y' and"
+    . " e.entity_id = ue.entity_id and u.user_id = ue.user_id and"
+    . " e.enabled = 'Y' " . $where_users . $orderby_users
+);
+$i = 0;
+while ($line = $db->fetch_object()) {
+    array_push(
+        $users,
+        array(
+            'ID'     => $db->show_string($line->user_id),
+            'PRENOM' => $db->show_string($line->firstname),
+            'NOM'    => $db->show_string($line->lastname),
+            'DEP_ID' => $db->show_string($line->entity_id),
+            'DEP'    => $db->show_string($line->entity_label)
+        )
+    );
+}
+if ($where_entities_users  == '') {
+    $db->query(
+        "select e.entity_id,  e.entity_label FROM  " . ENT_ENTITIES . " e WHERE"
+        . " e.enabled = 'Y' " . $where_entities . $orderby_entities
+    );
+} else {
+    $db->query(
+        "select e.entity_id,  e.entity_label FROM "
+        . $_SESSION['tablename']['users'] . " u, " . ENT_ENTITIES . " e, "
+        . ENT_USERS_ENTITIES . " ue WHERE u.status <> 'DEL' and u.enabled = 'Y'"
+        . "and  e.entity_id = ue.entity_id and u.user_id = ue.user_id and "
+        . "e.enabled = 'Y' " . $where_entities_users . $orderby_users
+    );
+}
 
-$i=0;
-while($line = $db->fetch_object())
-{
-    array_push($users, array("ID" => $db->show_string($line->user_id), "PRENOM" => $db->show_string($line->firstname), "NOM" => $db->show_string($line->lastname), "DEP_ID" => $db->show_string($line->entity_id),  "DEP" =>$db->show_string($line->entity_label)));
-}
-if($where_entities_users  == '')
-{
-    $db->query("select e.entity_id,  e.entity_label
-FROM  ".ENT_ENTITIES." e
-WHERE e.enabled = 'Y' ".$where_entities.$orderby_entities);
-}
-else
-{
-    $db->query("select e.entity_id,  e.entity_label
-FROM ".$_SESSION['tablename']['users']." u, ".ENT_ENTITIES." e, ".ENT_USERS_ENTITIES." ue
-WHERE u.status <> 'DEL' and u.enabled = 'Y' and  e.entity_id = ue.entity_id and u.user_id = ue.user_id and e.enabled = 'Y' ".$where_entities_users.$orderby_users);
+$i = 0;
+while ($line = $db->fetch_object()) {
+    array_push(
+        $entities,
+        array(
+            'ID' => $db->show_string($line->entity_id),
+            'DEP' =>$db->show_string($line->entity_label)
+        )
+    );
 }
 
-$i=0;
-while($line = $db->fetch_object())
-{
-    array_push($entities, array("ID" => $db->show_string($line->entity_id), "DEP" =>$db->show_string($line->entity_label)));
-}
-
-$id = "";
-$desc ="";
-if(!isset($_SESSION['m_admin']['entity']['listmodel']['copy']['users']))
-{
+$id = '';
+$desc = '';
+if (! isset($_SESSION['m_admin']['entity']['listmodel']['copy']['users'])) {
     $_SESSION['m_admin']['entity']['listmodel']['copy']['users'] = array();
 }
-if(!isset($_SESSION['m_admin']['entity']['listmodel']['copy']['entities']))
-{
+if (! isset($_SESSION['m_admin']['entity']['listmodel']['copy']['entities'])) {
     $_SESSION['m_admin']['entity']['listmodel']['copy']['entities'] = array();
 }
-if(isset($_GET['action']) && $_GET['action'] == "add_entity" )
-{
-
-    if(isset($_GET['id']) && !empty($_GET['id']))
-    {
+if (isset($_GET['action']) && $_GET['action'] == 'add_entity' ) {
+    if (isset($_GET['id']) && ! empty($_GET['id'])) {
         $id = $_GET['id'];
         $find = false;
-        for($i=0; $i < count($_SESSION['m_admin']['entity']['listmodel']['copy']['entities']); $i++)
-        {
-            if($id == $_SESSION['m_admin']['entity']['listmodel']['copy']['entities'][$i]['entity_id'])
-            {
+        for ($i = 0; $i < count(
+            $_SESSION['m_admin']['entity']['listmodel']['copy']['entities']
+        ); $i ++) {
+            if ($id ==
+                $_SESSION['m_admin']['entity']['listmodel']['copy']['entities']
+                    [$i]['entity_id']) {
                 $find = true;
                 break;
             }
         }
-
-        if( $find == false)
-        {
-            $db->query("SELECT  e.entity_id,  e.entity_label FROM ".ENT_ENTITIES." e WHERE   e.entity_id = '".$db->protect_string_db($id)."'");
+        if ($find == false) {
+            $db->query(
+                "SELECT  e.entity_id,  e.entity_label FROM " . ENT_ENTITIES
+                . " e WHERE e.entity_id = '" . $db->protect_string_db($id) . "'"
+            );
             $line = $db->fetch_object();
-            array_push($_SESSION['m_admin']['entity']['listmodel']['copy']['entities'], array(  'entity_id' => $db->show_string($id),'entity_label' =>$db->show_string($line->entity_label)));
+            array_push(
+                $_SESSION['m_admin']['entity']['listmodel']['copy']['entities'],
+                array(
+                    'entity_id' => $db->show_string($id),
+                    'entity_label' =>$db->show_string($line->entity_label)
+                )
+            );
         }
-
-        usort($_SESSION['m_admin']['entity']['listmodel']['copy']['entities'], "cmp_entity");
+        usort(
+            $_SESSION['m_admin']['entity']['listmodel']['copy']['entities'],
+            'cmp_entity'
+        );
     }
-}
-else if(isset($_GET['action']) && $_GET['action'] == "add_user" )
-{
-
-    if(isset($_GET['id']) && !empty($_GET['id']))
-    {
+} else if (isset($_GET['action']) && $_GET['action'] == 'add_user') {
+    if (isset($_GET['id']) && ! empty($_GET['id'])) {
         $id = $_GET['id'];
         $find = false;
-
-        if($id == $_SESSION['m_admin']['entity']['listmodel']['dest']['user_id'])
-        {
+        if ($id ==
+            $_SESSION['m_admin']['entity']['listmodel']['dest']['user_id']) {
             $find = true;
-        }
-        elseif( empty( $_SESSION['m_admin']['entity']['listmodel']['dest']['user_id']) || !isset( $_SESSION['m_admin']['entity']['listmodel']['dest']['user_id']))
-        {
-            $db->query("SELECT u.firstname, u.lastname, u.department, e.entity_id,  e.entity_label FROM ".$_SESSION['tablename']['users']." u,  ".ENT_ENTITIES." e, ".ENT_USERS_ENTITIES." ue WHERE  u.user_id='".$db->protect_string_db($id)."' and  e.entity_id = ue.entity_id and u.user_id = ue.user_id and ue.primary_entity = 'Y'");
+        } else if (empty(
+            $_SESSION['m_admin']['entity']['listmodel']['dest']['user_id']
+        ) || ! isset(
+            $_SESSION['m_admin']['entity']['listmodel']['dest']['user_id'])
+        ) {
+            $db->query(
+                "SELECT u.firstname, u.lastname, u.department, e.entity_id,  "
+                . "e.entity_label FROM " . $_SESSION['tablename']['users']
+                . " u,  " . ENT_ENTITIES . " e, " . ENT_USERS_ENTITIES
+                . " ue WHERE  u.user_id='" . $db->protect_string_db($id)
+                . "' and  e.entity_id = ue.entity_id and u.user_id = ue.user_id"
+                . " and ue.primary_entity = 'Y'"
+            );
             $line = $db->fetch_object();
-            $_SESSION['m_admin']['entity']['listmodel']['dest']['user_id'] = $db->show_string($id);
-            $_SESSION['m_admin']['entity']['listmodel']['dest']['firstname'] = $db->show_string($line->firstname);
-            $_SESSION['m_admin']['entity']['listmodel']['dest']['lastname'] = $db->show_string($line->lastname);
-            $_SESSION['m_admin']['entity']['listmodel']['dest']['entity_id'] = $db->show_string($line->entity_id);
-            $_SESSION['m_admin']['entity']['listmodel']['dest']['entity_label'] = $db->show_string($line->entity_label);
-        }
-        else
-        {
-            for($i=0; $i < count($_SESSION['m_admin']['entity']['listmodel']['copy']['users']); $i++)
-            {
-                if($id == $_SESSION['m_admin']['entity']['listmodel']['copy']['users'][$i]['user_id'])
-                {
+            $_SESSION['m_admin']['entity']['listmodel']['dest']['user_id'] =
+                $db->show_string($id);
+            $_SESSION['m_admin']['entity']['listmodel']['dest']['firstname'] =
+                $db->show_string($line->firstname);
+            $_SESSION['m_admin']['entity']['listmodel']['dest']['lastname'] =
+                $db->show_string($line->lastname);
+            $_SESSION['m_admin']['entity']['listmodel']['dest']['entity_id'] =
+                $db->show_string($line->entity_id);
+            $_SESSION['m_admin']['entity']['listmodel']['dest']['entity_label'] =
+                $db->show_string($line->entity_label);
+        } else {
+            for ($i = 0; $i < count(
+                $_SESSION['m_admin']['entity']['listmodel']['copy']['users']
+            ); $i ++) {
+                if ($id ==
+                    $_SESSION['m_admin']['entity']['listmodel']['copy']['users']
+                        [$i]['user_id']) {
                     $find = true;
                     break;
                 }
             }
-
-            if( $find == false)
-            {
-                $db->query("SELECT u.firstname, u.lastname, u.department, e.entity_id,  e.entity_label FROM ".$_SESSION['tablename']['users']." u,  ".ENT_ENTITIES." e, ".ENT_USERS_ENTITIES." ue WHERE  u.user_id='".$db->protect_string_db($id)."' and  e.entity_id = ue.entity_id and u.user_id = ue.user_id and ue.primary_entity = 'Y'");
+            if ($find == false) {
+                $db->query(
+                    "SELECT u.firstname, u.lastname, u.department, e.entity_id,"
+                    . " e.entity_label FROM " . $_SESSION['tablename']['users']
+                    . " u,  " . ENT_ENTITIES . " e, " . ENT_USERS_ENTITIES
+                    . " ue WHERE  u.user_id='" . $db->protect_string_db($id)
+                    . "' and  e.entity_id = ue.entity_id and "
+                    . "u.user_id = ue.user_id and ue.primary_entity = 'Y'"
+                );
                 $line = $db->fetch_object();
-                array_push($_SESSION['m_admin']['entity']['listmodel']['copy']['users'], array(  'user_id' => $db->show_string($id),
-                                                            'firstname' =>$db->show_string($line->firstname),
-                                                            'lastname' =>$db->show_string($line->lastname),
-                                                            'entity_id' =>$db->show_string($line->entity_id),
-                                                            'entity_label' =>$db->show_string($line->entity_label),
-                                                ));
+                array_push(
+                    $_SESSION['m_admin']['entity']['listmodel']['copy']['users'],
+                    array(
+                        'user_id' => $db->show_string($id),
+                        'firstname' =>$db->show_string($line->firstname),
+                        'lastname' =>$db->show_string($line->lastname),
+                        'entity_id' =>$db->show_string($line->entity_id),
+                        'entity_label' =>$db->show_string($line->entity_label),
+                    )
+                );
             }
         }
-        usort($_SESSION['m_admin']['entity']['listmodel']['copy']['users'], "cmp_users");
+        usort(
+            $_SESSION['m_admin']['entity']['listmodel']['copy']['users'],
+            'cmp_users'
+        );
     }
-}
-else if(isset($_GET['action']) && $_GET['action'] == "remove_dest" )
-{
+} else if (isset($_GET['action']) && $_GET['action'] == 'remove_dest') {
     unset( $_SESSION['m_admin']['entity']['listmodel']['dest'] );
-}
-else if(isset($_GET['action']) && $_GET['action'] == "remove_entity" )
-{
+} else if (isset($_GET['action']) && $_GET['action'] == 'remove_entity' ) {
     $rank = $_GET['rank'];
-    if(isset($_GET['id']) && !empty($_GET['id']))
-    {
+    if (isset($_GET['id']) && ! empty($_GET['id'])) {
         $id = $_GET['id'];
-        if($_SESSION['m_admin']['entity']['listmodel']['copy']['entities'][$rank]['entity_id'] == $id)
-        {
-            unset($_SESSION['m_admin']['entity']['listmodel']['copy']['entities'][$rank] );
-            $_SESSION['m_admin']['entity']['listmodel']['copy']['entities'] = array_values($_SESSION['m_admin']['entity']['listmodel']['copy']['entities']);
+        if ($_SESSION['m_admin']['entity']['listmodel']['copy']['entities']
+            [$rank]['entity_id'] == $id) {
+            unset(
+                $_SESSION['m_admin']['entity']['listmodel']['copy']['entities']
+                    [$rank]
+            );
+            $_SESSION['m_admin']['entity']['listmodel']['copy']['entities'] =
+                array_values(
+                    $_SESSION['m_admin']['entity']['listmodel']['copy']
+                        ['entities']
+            );
         }
     }
-}
-else if(isset($_GET['action']) && $_GET['action'] == "remove_user" )
-{
+} else if (isset($_GET['action']) && $_GET['action'] == 'remove_user' ) {
     $rank = $_GET['rank'];
-    if(isset($_GET['id']) && !empty($_GET['id']))
-    {
+    if (isset($_GET['id']) && ! empty($_GET['id'])) {
         $id = $_GET['id'];
-        if($_SESSION['m_admin']['entity']['listmodel']['copy']['users'][$rank]['user_id'] == $id)
-        {
-            unset($_SESSION['m_admin']['entity']['listmodel']['copy']['users'][$rank] );
-            $_SESSION['m_admin']['entity']['listmodel']['copy']['users'] = array_values($_SESSION['m_admin']['entity']['listmodel']['copy']['users']);
+        if ($_SESSION['m_admin']['entity']['listmodel']['copy']['users']
+            [$rank]['user_id'] == $id) {
+            unset(
+                $_SESSION['m_admin']['entity']['listmodel']['copy']['users']
+                    [$rank]
+            );
+            $_SESSION['m_admin']['entity']['listmodel']['copy']['users'] =
+                array_values(
+                    $_SESSION['m_admin']['entity']['listmodel']['copy']['users']
+            );
         }
     }
-}
-else if(isset($_GET['action']) && $_GET['action'] == "dest_to_copy" )
-{
-    if(isset($_SESSION['m_admin']['entity']['listmodel']['dest']['user_id']) && !empty($_SESSION['m_admin']['entity']['listmodel']['dest']['user_id']))
-    {
-        array_push($_SESSION['m_admin']['entity']['listmodel']['copy']['users'], array(  'user_id' => $_SESSION['m_admin']['entity']['listmodel']['dest']['user_id'],
-                                                            'firstname' =>$_SESSION['m_admin']['entity']['listmodel']['dest']['firstname'],
-                                                            'lastname' =>$_SESSION['m_admin']['entity']['listmodel']['dest']['lastname'],
-                                                            'entity_id' =>$_SESSION['m_admin']['entity']['listmodel']['dest']['entity_id'],
-                                                            'entity_label' =>$_SESSION['m_admin']['entity']['listmodel']['dest']['entity_label'],
-                                                ));
-        unset( $_SESSION['m_admin']['entity']['listmodel']['dest'] );
-        usort($_SESSION['m_admin']['entity']['listmodel']['copy']['users'], "cmp_users");
+} else if (isset($_GET['action']) && $_GET['action'] == 'dest_to_copy' ) {
+    if (isset($_SESSION['m_admin']['entity']['listmodel']['dest']['user_id'])
+        && !empty(
+            $_SESSION['m_admin']['entity']['listmodel']['dest']['user_id']
+        )) {
+        array_push(
+            $_SESSION['m_admin']['entity']['listmodel']['copy']['users'],
+            array(
+                'user_id' => $_SESSION['m_admin']['entity']['listmodel']
+                                ['dest']['user_id'],
+                'firstname' => $_SESSION['m_admin']['entity']['listmodel']
+                                ['dest']['firstname'],
+                'lastname' => $_SESSION['m_admin']['entity']['listmodel']
+                                ['dest']['lastname'],
+                'entity_id' =>$_SESSION['m_admin']['entity']['listmodel']
+                                ['dest']['entity_id'],
+                'entity_label' => $_SESSION['m_admin']['entity']['listmodel']
+                                ['dest']['entity_label'],
+           )
+        );
+        unset($_SESSION['m_admin']['entity']['listmodel']['dest']);
+        usort(
+            $_SESSION['m_admin']['entity']['listmodel']['copy']['users'],
+            'cmp_users'
+        );
     }
-}
-else if(isset($_GET['action']) && $_GET['action'] == "copy_to_dest" )
-{
-    if(isset($_SESSION['m_admin']['entity']['listmodel']['dest']['user_id']) && !empty($_SESSION['m_admin']['entity']['listmodel']['dest']['user_id']))
-    {
-        array_push($_SESSION['m_admin']['entity']['listmodel']['copy']['users'], array(  'user_id' => $_SESSION['m_admin']['entity']['listmodel']['dest']['user_id'],
-                                                            'firstname' =>$_SESSION['m_admin']['entity']['listmodel']['dest']['firstname'],
-                                                            'lastname' =>$_SESSION['m_admin']['entity']['listmodel']['dest']['lastname'],
-                                                            'entity_id' =>$_SESSION['m_admin']['entity']['listmodel']['dest']['entity_id'],
-                                                            'entity_label' =>$_SESSION['m_admin']['entity']['listmodel']['dest']['entity_label'],
+} else if (isset($_GET['action']) && $_GET['action'] == 'copy_to_dest' ) {
+    if (isset($_SESSION['m_admin']['entity']['listmodel']['dest']['user_id'])
+        && ! empty(
+            $_SESSION['m_admin']['entity']['listmodel']['dest']['user_id']
+        )) {
+        array_push(
+            $_SESSION['m_admin']['entity']['listmodel']['copy']['users'],
+            array(
+                'user_id' => $_SESSION['m_admin']['entity']['listmodel']
+                            ['dest']['user_id'],
+                'firstname' => $_SESSION['m_admin']['entity']['listmodel']
+                            ['dest']['firstname'],
+                'lastname' => $_SESSION['m_admin']['entity']['listmodel']
+                            ['dest']['lastname'],
+                'entity_id' => $_SESSION['m_admin']['entity']['listmodel']
+                            ['dest']['entity_id'],
+                'entity_label' => $_SESSION['m_admin']['entity']['listmodel']
+                            ['dest']['entity_label'],
                                                 ));
         unset( $_SESSION['m_admin']['entity']['listmodel']['dest'] );
     }
     $rank = $_GET['rank'];
-    if(isset($_SESSION['m_admin']['entity']['listmodel']['copy']['users'][$rank]['user_id']) && !empty($_SESSION['m_admin']['entity']['listmodel']['copy']['users'][$rank]['user_id']))
-    {
-        $_SESSION['m_admin']['entity']['listmodel']['dest']['user_id'] = $_SESSION['m_admin']['entity']['listmodel']['copy']['users'][$rank]['user_id'];
-        $_SESSION['m_admin']['entity']['listmodel']['dest']['firstname'] = $_SESSION['m_admin']['entity']['listmodel']['copy']['users'][$rank]['firstname'];
-        $_SESSION['m_admin']['entity']['listmodel']['dest']['lastname'] = $_SESSION['m_admin']['entity']['listmodel']['copy']['users'][$rank]['lastname'];
-        $_SESSION['m_admin']['entity']['listmodel']['dest']['entity_id'] = $_SESSION['m_admin']['entity']['listmodel']['copy']['users'][$rank]['entity_id'];
-        $_SESSION['m_admin']['entity']['listmodel']['dest']['entity_label'] = $_SESSION['m_admin']['entity']['listmodel']['copy']['users'][$rank]['entity_label'];
-        unset( $_SESSION['m_admin']['entity']['listmodel']['copy']['users'][$rank]);
-        $_SESSION['m_admin']['entity']['listmodel']['copy']['users'] = array_values($_SESSION['m_admin']['entity']['listmodel']['copy']['users']);
+    if (isset(
+        $_SESSION['m_admin']['entity']['listmodel']['copy']['users'][$rank]
+        ['user_id'])
+        && ! empty(
+            $_SESSION['m_admin']['entity']['listmodel']['copy']['users']
+                [$rank]['user_id']
+    )) {
+        $_SESSION['m_admin']['entity']['listmodel']['dest']['user_id'] =
+            $_SESSION['m_admin']['entity']['listmodel']['copy']['users'][$rank]
+                ['user_id'];
+        $_SESSION['m_admin']['entity']['listmodel']['dest']['firstname'] =
+            $_SESSION['m_admin']['entity']['listmodel']['copy']['users']
+                [$rank]['firstname'];
+        $_SESSION['m_admin']['entity']['listmodel']['dest']['lastname'] =
+            $_SESSION['m_admin']['entity']['listmodel']['copy']['users']
+                [$rank]['lastname'];
+        $_SESSION['m_admin']['entity']['listmodel']['dest']['entity_id'] =
+            $_SESSION['m_admin']['entity']['listmodel']['copy']['users']
+                [$rank]['entity_id'];
+        $_SESSION['m_admin']['entity']['listmodel']['dest']['entity_label'] =
+            $_SESSION['m_admin']['entity']['listmodel']['copy']['users'][$rank]
+                ['entity_label'];
+        unset(
+            $_SESSION['m_admin']['entity']['listmodel']['copy']['users'][$rank]
+        );
+        $_SESSION['m_admin']['entity']['listmodel']['copy']['users'] =
+            array_values(
+                $_SESSION['m_admin']['entity']['listmodel']['copy']['users']
+            );
     }
-    usort($_SESSION['m_admin']['entity']['listmodel']['copy']['users'], "cmp_users");
+    usort(
+        $_SESSION['m_admin']['entity']['listmodel']['copy']['users'],
+        'cmp_users'
+    );
 }
 
 $core_tools->load_html();

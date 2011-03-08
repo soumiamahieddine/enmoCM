@@ -80,11 +80,11 @@ class diffusion_list extends dbquery
         $this->query("select  l.item_id, u.firstname, u.lastname, e.entity_id, e.entity_label  from ".$_SESSION['tablename']['ent_listmodels']." l, ".$_SESSION['tablename']['users']." u, ".ENT_ENTITIES." e, ".ENT_USERS_ENTITIES." ue where l.coll_id = '".$this->protect_string_db(trim($coll_id))."' and l.listmodel_type = 'DOC' and l.item_mode = 'dest' and l.item_type = 'user_id' and l.object_type = 'entity_id' and l.sequence = 0 and l.object_id = '".$this->protect_string_db(trim($entity_id))."' and l.item_id = u.user_id and u.user_id = ue.user_id and e.entity_id = ue.entity_id and ue.primary_entity = 'Y'");
 
         $res = $this->fetch_object();
-        $listmodel['dest']['user_id'] = $this->show_string($res->item_id);
-        $listmodel['dest']['lastname'] = $this->show_string($res->lastname);
-        $listmodel['dest']['firstname'] = $this->show_string($res->firstname);
-        $listmodel['dest']['entity_id'] = $this->show_string($res->entity_id);
-        $listmodel['dest']['entity_label'] = $this->show_string($res->entity_label);
+        $listmodel['dest']['user_id'] = $this->show_str($res->item_id);
+        $listmodel['dest']['lastname'] = $this->show_str($res->lastname);
+        $listmodel['dest']['firstname'] = $this->show_str($res->firstname);
+        $listmodel['dest']['entity_id'] = $this->show_str($res->entity_id);
+        $listmodel['dest']['entity_label'] = $this->show_str($res->entity_label);
 
         $this->query("select  l.item_id, u.firstname, u.lastname, e.entity_id, e.entity_label  from ".$_SESSION['tablename']['ent_listmodels']." l, ".$_SESSION['tablename']['users']." u, ".ENT_ENTITIES." e, ".ENT_USERS_ENTITIES." ue where l.coll_id = '".$this->protect_string_db(trim($coll_id))."' and l.listmodel_type = 'DOC' and l.item_mode = 'cc' and l.item_type = 'user_id' and l.object_type = 'entity_id' and l.object_id = '".$this->protect_string_db(trim($entity_id))."' and l.item_id = u.user_id and l.item_id = ue.user_id and e.entity_id = ue.entity_id and ue.primary_entity='Y' order by u.lastname ");
 

@@ -18,18 +18,20 @@ if($_SESSION['service_tag'] == 'group_basket')
                             $state_entity = false;
                             if(!isset($is_default_action) || !$is_default_action)
                             {
-                                for($j=0;$j<count($_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['ACTIONS']);$j++)
-                                {
-                                    if($_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['ACTIONS'][$j]['ID_ACTION'] == $_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID'])
+                                if (isset($_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['ACTIONS'])) {
+                                    for($j=0;$j<count($_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['ACTIONS']);$j++)
                                     {
-                                        for($k=0; $k<count($_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['ACTIONS'][$j]['ENTITIES_LIST']);$k++)
+                                        if($_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['ACTIONS'][$j]['ID_ACTION'] == $_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID'])
                                         {
-                                            if($_SESSION['m_admin']['entities'][$i]['ID'] == $_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['ACTIONS'][$j]['ENTITIES_LIST'][$k]['ID'])
+                                            for($k=0; $k<count($_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['ACTIONS'][$j]['ENTITIES_LIST']);$k++)
                                             {
-                                                $state_entity = true;
+                                                if($_SESSION['m_admin']['entities'][$i]['ID'] == $_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['ACTIONS'][$j]['ENTITIES_LIST'][$k]['ID'])
+                                                {
+                                                    $state_entity = true;
+                                                }
                                             }
+                                            break;
                                         }
-                                        break;
                                     }
                                 }
                             }
@@ -69,18 +71,20 @@ if($_SESSION['service_tag'] == 'group_basket')
                             $state_entity = false;
                             if(!isset($is_default_action) || !$is_default_action)
                             {
-                                for($j=0;$j<count($_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['ACTIONS']);$j++)
-                                {
-                                    if($_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['ACTIONS'][$j]['ID_ACTION'] == $_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID'])
+                                if(isset($_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['ACTIONS'])) {
+                                    for($j=0;$j<count($_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['ACTIONS']);$j++)
                                     {
-                                        for($k=0; $k<count($_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['ACTIONS'][$j]['ENTITIES_LIST']);$k++)
+                                        if($_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['ACTIONS'][$j]['ID_ACTION'] == $_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID'])
                                         {
-                                            if($_SESSION['m_admin']['entities'][$i]['ID'] == $_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['ACTIONS'][$j]['ENTITIES_LIST'][$k]['ID'])
+                                            for($k=0; $k<count($_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['ACTIONS'][$j]['ENTITIES_LIST']);$k++)
                                             {
-                                                $state_entity = true;
+                                                if($_SESSION['m_admin']['entities'][$i]['ID'] == $_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['ACTIONS'][$j]['ENTITIES_LIST'][$k]['ID'])
+                                                {
+                                                    $state_entity = true;
+                                                }
                                             }
+                                            break;
                                         }
-                                        break;
                                     }
                                 }
                             }
@@ -123,18 +127,20 @@ if($_SESSION['service_tag'] == 'group_basket')
                             $state_usersentities = false;
                             if(!isset($is_default_action) || !$is_default_action)
                             {
-                                for($j=0;$j<count($_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['ACTIONS']);$j++)
-                                {
-                                    if($_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['ACTIONS'][$j]['ID_ACTION'] == $_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID'])
+                                if(isset($_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['ACTIONS'])) {
+                                    for($j=0;$j<count($_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['ACTIONS']);$j++)
                                     {
-                                        for($k=0; $k<count($_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['ACTIONS'][$j]['USERS_ENTITIES_LIST']);$k++)
+                                        if($_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['ACTIONS'][$j]['ID_ACTION'] == $_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID'])
                                         {
-                                            if($_SESSION['m_admin']['entities'][$i]['ID'] == $_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['ACTIONS'][$j]['USERS_ENTITIES_LIST'][$k]['ID'])
+                                            for($k=0; $k<count($_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['ACTIONS'][$j]['USERS_ENTITIES_LIST']);$k++)
                                             {
-                                                $state_usersentities = true;
+                                                if($_SESSION['m_admin']['entities'][$i]['ID'] == $_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['ACTIONS'][$j]['USERS_ENTITIES_LIST'][$k]['ID'])
+                                                {
+                                                    $state_usersentities = true;
+                                                }
                                             }
+                                            break;
                                         }
-                                        break;
                                     }
                                 }
                             }
@@ -173,18 +179,20 @@ if($_SESSION['service_tag'] == 'group_basket')
                             $state_usersentities = false;
                             if(!isset($is_default_action) || !$is_default_action)
                             {
-                                for($j=0;$j<count($_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['ACTIONS']);$j++)
-                                {
-                                    if($_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['ACTIONS'][$j]['ID_ACTION'] == $_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID'])
+                                if(isset($_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['ACTIONS'])) {
+                                    for($j=0;$j<count($_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['ACTIONS']);$j++)
                                     {
-                                        for($k=0; $k<count($_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['ACTIONS'][$j]['USERS_ENTITIES_LIST']);$k++)
+                                        if($_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['ACTIONS'][$j]['ID_ACTION'] == $_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID'])
                                         {
-                                            if($_SESSION['m_admin']['entities'][$i]['ID'] == $_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['ACTIONS'][$j]['USERS_ENTITIES_LIST'][$k]['ID'])
+                                            for($k=0; $k<count($_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['ACTIONS'][$j]['USERS_ENTITIES_LIST']);$k++)
                                             {
-                                                $state_usersentities = true;
+                                                if($_SESSION['m_admin']['entities'][$i]['ID'] == $_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['ACTIONS'][$j]['USERS_ENTITIES_LIST'][$k]['ID'])
+                                                {
+                                                    $state_usersentities = true;
+                                                }
                                             }
+                                            break;
                                         }
-                                        break;
                                     }
                                 }
                             }
