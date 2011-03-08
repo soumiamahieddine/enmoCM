@@ -11,7 +11,9 @@
 * @author Loïc Vinet  <dev@maarch.org>
 */
 
-require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR.'class_business_app_tools.php');
+require_once
+    'apps/' . $_SESSION['config']['app_id']
+    . '/class/class_business_app_tools.php';
 $appTools = new business_app_tools();
 $core_tools = new core_tools();
 $core_tools->test_user();
@@ -20,29 +22,30 @@ $core_tools->test_service('search_customer', 'apps');
 $_SESSION['indexation'] = false;
 /****************Management of the location bar  ************/
 $init = false;
-if(isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true")
-{
+if (isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == 'true') {
     $init = true;
 }
-$level = "";
-if(isset($_REQUEST['level']) && $_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1)
-{
+$level = '';
+if (isset($_REQUEST['level']) && ($_REQUEST['level'] == 2
+    || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4
+    || $_REQUEST['level'] == 1)) {
     $level = $_REQUEST['level'];
 }
-$page_path = $_SESSION['config']['businessappurl'].'index.php?page=search_customer&dir=indexing_searching';
+$page_path = $_SESSION['config']['businessappurl']
+           . 'index.php?page=search_customer&dir=indexing_searching';
 $page_label = _SEARCH_CUSTOMER;
-$page_id = "is_search_customer";
-$core_tools->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
+$page_id = 'is_search_customer';
+$core_tools->manage_location_bar(
+    $page_path, $page_label, $page_id, $init, $level
+);
 /***********************************************************/
 //Definition de la collection
 $_SESSION['collection_id_choice'] = $_SESSION['user']['collections'][0] ;
-if ($_GET['erase'] == 'true')
-{
+if (isset($_REQUEST['erase']) && $_REQUEST['erase'] == 'true') {
     $_SESSION['search'] = array();
 }
-$_SESSION['origin'] = "search_customer";
-if($_REQUEST['name_folder'] <> "")
-{
+$_SESSION['origin'] = 'search_customer';
+if (isset($_REQUEST['name_folder']) && $_REQUEST['name_folder'] <> '') {
     $_SESSION['search']['chosen_name_folder'] = $_REQUEST['name_folder'];
 }
 //$core_tools->show_array($_REQUEST);

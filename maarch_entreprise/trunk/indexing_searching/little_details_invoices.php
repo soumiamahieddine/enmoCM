@@ -15,125 +15,138 @@ $core_tools->test_user();
 $core_tools->load_lang();
 $core_tools->load_header('', true, false);
 
-require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
-require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
-require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");
-require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
+require_once 'core/class/class_request.php';
+require_once 'core/class/class_security.php';
+require_once 'apps/' . $_SESSION['config']['app_id'] .'/class/class_list_show.php';
+require_once 'core/class/class_history.php';
 /****************Management of the location bar  ************/
 $init = false;
-if(isset($_SESSION['indexation']) && $_SESSION['indexation'] == true)
-{
+if (isset($_SESSION['indexation']) && $_SESSION['indexation'] == true) {
     $init = true;
 }
-if(isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true")
-{
+if (isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == 'true') {
     $init = true;
 }
-$level = "";
-if(isset($_REQUEST['level']) && $_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1)
-{
+$level = '';
+if (isset($_REQUEST['level']) && $_REQUEST['level'] == 2
+    || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4
+    || $_REQUEST['level'] == 1) {
     $level = $_REQUEST['level'];
 }
-$page_path = $_SESSION['config']['businessappurl'].'index.php?page=details_invoices&dir=indexing_searching';
+$page_path = $_SESSION['config']['businessappurl']
+           . 'index.php?page=details_invoices&dir=indexing_searching';
 $page_label = _DETAILS;
-$page_id = "is_details";
-$core_tools->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
+$page_id = 'is_details';
+$core_tools->manage_location_bar(
+    $page_path, $page_label, $page_id, $init, $level
+);
 /***********************************************************/
 $users = new history();
 $security = new security();
 $func = new functions();
 $request= new request;
-$s_id = "";
+$s_id = '';
 $_SESSION['req'] ='details_invoices';
-$is_view= false;
+$is_view = false;
 $_SESSION['indexing'] = array();
-if($_GET['status'] == "empty")
-{
+if ($_GET['status'] == 'empty') {
     ?><p align="center"><img src="<?php echo $_SESSION['config']['businessappurl'].'static.php?filename=bg_home_home.gif'; ?>" alt="Maarch" /></p> <?php
-}
-else
-{
-    if(isset($_SESSION['collection_id_choice']) && !empty($_SESSION['collection_id_choice']))
-    {
-        $table = $security->retrieve_view_from_coll_id($_SESSION['collection_id_choice']);
+} else {
+    if (isset($_SESSION['collection_id_choice'])
+        && ! empty($_SESSION['collection_id_choice'])) {
+        $table = $security->retrieve_view_from_coll_id(
+            $_SESSION['collection_id_choice']
+        );
         $is_view = true;
-        if(empty($table))
-        {
-            $table = $security->retrieve_table_from_coll($_SESSION['collection_id_choice']);
+        if (empty($table)) {
+            $table = $security->retrieve_table_from_coll(
+                $_SESSION['collection_id_choice']
+            );
             $is_view = false;
         }
-    }
-    elseif(isset($_SESSION['collection_choice']) && !empty($_SESSION['collection_choice']))
-    {
+    } else if (isset($_SESSION['collection_choice'])
+        && ! empty($_SESSION['collection_choice'])) {
         $table = $_SESSION['collection_choice'];
-        $_SESSION['collection_id_choice'] = $security->retrieve_coll_id_from_table($_SESSION['collection_choice']);
-    }
-    elseif((isset($_SESSION['indexing2']['ind_coll']) && !empty($_SESSION['indexing2']['ind_coll']))|| ($_SESSION['indexing2']['ind_coll'] == 0 && isset($_SESSION['indexing2']['ind_coll'])))
-    {
-        if(isset($_SESSION['collections'][$_SESSION['indexing2']['ind_coll']]['view']) && !empty($_SESSION['collections'][$_SESSION['indexing2']['ind_coll']]['view']))
-        {
-            $table = $_SESSION['collections'][$_SESSION['indexing2']['ind_coll']]['view'];
+        $_SESSION['collection_id_choice'] =
+            $security->retrieve_coll_id_from_table(
+                $_SESSION['collection_choice']
+        );
+    } else if((isset($_SESSION['indexing2']['ind_coll'])
+        && ! empty($_SESSION['indexing2']['ind_coll']))
+            || ($_SESSION['indexing2']['ind_coll'] == 0
+                && isset($_SESSION['indexing2']['ind_coll']))) {
+        if (isset(
+            $_SESSION['collections'][$_SESSION['indexing2']['ind_coll']]['view']
+        ) && ! empty(
+            $_SESSION['collections'][$_SESSION['indexing2']['ind_coll']]['view']
+        )) {
+            $table =
+                $_SESSION['collections'][$_SESSION['indexing2']['ind_coll']]
+                    ['view'];
             $is_view = true;
+        } else {
+            $table =
+                $_SESSION['collections'][$_SESSION['indexing2']['ind_coll']]
+                    ['table'];
         }
-        else
-        {
-            $table = $_SESSION['collections'][$_SESSION['indexing2']['ind_coll']]['table'];
-        }
-        $_SESSION['collection_id_choice'] = $_SESSION['collections'][$_SESSION['indexing2']['ind_coll']]['id'];
-    }
-    elseif((isset($_SESSION['searching']['ind_coll']) && !empty($_SESSION['searching']['ind_coll']))|| ($_SESSION['searching']['ind_coll'] == 0 && isset($_SESSION['searching']['ind_coll'])))
-    {
-        if(isset($_SESSION['collections'][$_SESSION['searching']['ind_coll']]['view']) && !empty($_SESSION['collections'][$_SESSION['searching']['ind_coll']]['view']))
-        {
-            $table = $_SESSION['collections'][$_SESSION['searching']['ind_coll']]['view'];
+        $_SESSION['collection_id_choice'] =
+            $_SESSION['collections'][$_SESSION['indexing2']['ind_coll']]['id'];
+    } else if ((isset($_SESSION['searching']['ind_coll'])
+        && ! empty($_SESSION['searching']['ind_coll']))
+            || ($_SESSION['searching']['ind_coll'] == 0
+                && isset($_SESSION['searching']['ind_coll']))) {
+        if (isset(
+            $_SESSION['collections'][$_SESSION['searching']['ind_coll']]['view']
+        ) && ! empty(
+            $_SESSION['collections'][$_SESSION['searching']['ind_coll']]['view']
+        )) {
+            $table =
+                $_SESSION['collections'][$_SESSION['searching']['ind_coll']]
+                    ['view'];
             $is_view = true;
+        } else {
+            $table =
+                $_SESSION['collections'][$_SESSION['searching']['ind_coll']]
+                    ['table'];
         }
-        else
-        {
-            $table = $_SESSION['collections'][$_SESSION['searching']['ind_coll']]['table'];
-        }
-        $_SESSION['collection_id_choice'] = $_SESSION['collections'][$_SESSION['searching']['ind_coll']]['id'];
-    }
-    else
-    {
+        $_SESSION['collection_id_choice'] =
+            $_SESSION['collections'][$_SESSION['searching']['ind_coll']]['id'];
+    } else {
         $table = $_SESSION['collections'][0]['view'];
         $is_view = true;
-        $_SESSION['collection_id_choice'] = $security->retrieve_coll_id_from_table($_SESSION['collection_choice']);
+        $_SESSION['collection_id_choice'] =
+            $security->retrieve_coll_id_from_table(
+                $_SESSION['collection_choice']
+            );
     }
-    $_SESSION['id_to_view'] = "";
+    $_SESSION['id_to_view'] = '';
 
-    if(isset($_GET['id']) && !empty($_GET['id']))
-    {
+    if (isset($_GET['id']) && ! empty($_GET['id'])) {
         $_SESSION['id_to_view'] = $_GET['id'];
     }
-    if(isset($_POST['up_res_id']) && !empty($_POST['up_res_id']))
-    {
+    if (isset($_POST['up_res_id']) && ! empty($_POST['up_res_id'])) {
         $_GET['id'] = $_POST['up_res_id'];
     }
-    if(isset($_SESSION['detail_id']) && !empty($_SESSION['detail_id']) && $_GET['origin'] =="waiting_list")
-    {
+    if (isset($_SESSION['detail_id']) && ! empty($_SESSION['detail_id'])
+        && $_GET['origin'] == 'waiting_list') {
         $s_id =$_SESSION['detail_id'];
     }
-    if(isset($_GET['id']) && !empty($_GET['id']))
-    {
-        $s_id = addslashes($func->wash($_GET['id'], "num", _THE_DOC));
-    }
-    else if(isset($_SESSION['scan_doc_id']) && !empty($_SESSION['scan_doc_id']))
-    {
+    if (isset($_GET['id']) && ! empty($_GET['id'])) {
+        $s_id = addslashes($func->wash($_GET['id'], 'num', _THE_DOC));
+    } else if(isset($_SESSION['scan_doc_id'])
+        && ! empty($_SESSION['scan_doc_id'])) {
         $s_id =$_SESSION['scan_doc_id'];
         $_SESSION['scan_doc_id'] = "";
     }
     $_SESSION['doc_id'] = $s_id;
-    if($_SESSION['origin'] <> "basket")
-    {
-        $right = $security->test_right_doc($_SESSION['collection_id_choice'], $s_id);
-    }
-    else
-    {
+    if ($_SESSION['origin'] <> 'basket') {
+        $right = $security->test_right_doc(
+            $_SESSION['collection_id_choice'], $s_id
+        );
+    } else {
         $right = true;
     }
-    if(!$right && $s_id <> "")
-    {
+    if (! $right && $s_id <> '') {
         ?>
         <script type="text/javascript">
         window.top.location.href = '<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=no_right';
@@ -141,28 +154,36 @@ else
         <?php
         exit();
     }
-    if($s_id == "")
-    {
-        echo '<br><br><center><h2 style="color:#FFC200;">'._NO_RESULTS.'</h2></center>';
+    if ($s_id == '') {
+        echo '<br><br><center><h2 style="color:#FFC200;">' . _NO_RESULTS
+            . '</h2></center>';
         exit;
     }
-    if(isset($s_id) && !empty($s_id) && $_SESSION['history']['resview'] == "true")
-    {
-        $users->add($table, $s_id ,"VIEW", _VIEW_DOC_NUM.$s_id, $_SESSION['config']['databasetype'],'apps');
+    if (isset($s_id) && ! empty($s_id)
+        && $_SESSION['history']['resview'] == 'true') {
+        $users->add(
+            $table, $s_id , 'VIEW', _VIEW_DOC_NUM . $s_id,
+            $_SESSION['config']['databasetype'], 'apps'
+        );
     }
-    $modify_doc = $security->collection_user_right($_SESSION['collection_id_choice'], "can_update");
-    if(empty($_SESSION['error']) || $_SESSION['indexation'])
-    {
+    $modify_doc = $security->collection_user_right(
+        $_SESSION['collection_id_choice'], 'can_update'
+    );
+    if (empty($_SESSION['error']) || $_SESSION['indexation']) {
         $connexion_invoices = new dbquery();
         $connexion_invoices->connect();
-        $connexion_invoices->query("select type_id, type_label, format, typist, creation_date, fingerprint, filesize, res_id, work_batch, status, page_count, doc_date, identifier, description, source, doc_language from ".$table." where res_id = ".$s_id."");
+        $connexion_invoices->query(
+            "select type_id, type_label, format, typist, creation_date, "
+            . "fingerprint, filesize, res_id, work_batch, status, page_count,"
+            . " doc_date, identifier, description, source, doc_language from "
+            . $table . " where res_id = " . $s_id . ""
+        );
         //$connexion_invoices->show();
     }
     ?>
     <div id="" class="clearfix">
     <?php
-    if((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
-    {
+    if (! empty($_SESSION['error']) && ! $_SESSION['indexation'] ) {
         ?>
         <div class="error">
             <br />
@@ -174,11 +195,8 @@ else
             <br />
         </div>
         <?php
-    }
-    else
-    {
-        if($connexion_invoices->nb_result() == 0)
-        {
+    } else {
+        if ($connexion_invoices->nb_result() == 0) {
             ?>
             <div align="center">
                 <br />
@@ -189,9 +207,7 @@ else
                 <br />
             </div>
             <?php
-        }
-        else
-        {
+        } else  {
             $details = $connexion_invoices->fetch_object();
             $title = $details->title;
             //$description = $details->description;
@@ -218,16 +234,17 @@ else
             $description = $details->description;
             $source = $details->source;
             $doc_language = $details->doc_language;
-            if(!empty($type))
-            {
-                $connexion_invoices->query("select description, coll_id from ".$_SESSION['tablename']['doctypes']." where type_id = ".$type);
+            if (! empty($type)) {
+                $connexion_invoices->query(
+                    "select description, coll_id from "
+                    . $_SESSION['tablename']['doctypes'] . " where type_id = "
+                    . $type
+                );
                 $line_sql = $connexion_invoices->fetch_object();
                 $type = $line_sql->description;
                 $tmp =  $line_sql->coll_id;
-                for($i=0; $i < count($_SESSION['ressources']); $i++)
-                {
-                    if($_SESSION['ressources'][$i]['tablename'] == $tmp)
-                    {
+                for ($i = 0; $i < count($_SESSION['ressources']); $i ++) {
+                    if ($_SESSION['ressources'][$i]['tablename'] == $tmp) {
                         $table = $_SESSION['ressources'][$i]['comment'];
                         break;
                     }
@@ -236,16 +253,18 @@ else
             ?>
             <div align="center">
             <?php
-            if($type_id <> "0" && $type_id <> "")
-            {
-                    $connexion_invoices->query("select * from ".$_SESSION['tablename']['doctypes']." where type_id = ".$type_id);
+            if ($type_id <> '0' && $type_id <> '') {
+                    $connexion_invoices->query(
+                        "select * from " . $_SESSION['tablename']['doctypes']
+                        . " where type_id = " . $type_id
+                    );
                     $res = $connexion_invoices->fetch_array();
-                    $desc = str_replace("\\","",$res['description']);
+                    $desc = str_replace('\\', '',$res['description']);
                     $type_id = $res['type_id'];
                     $is_master = $res['is_master'];
-                    if($is_master == "Y")
-                    {
-                        $doctypes_second_level_id = $res['doctypes_second_level_id'];
+                    if ($is_master == 'Y') {
+                        $doctypes_second_level_id =
+                            $res['doctypes_second_level_id'];
                         $_SESSION['multidoc'] = true;
                     }
                     require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_indexing_searching_app.php");

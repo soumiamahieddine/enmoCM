@@ -31,141 +31,131 @@ class contacts extends dbquery
     {
         // return the user information in sessions vars
         $func = new functions();
-        $_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON']  = $_REQUEST['is_corporate'];
-        if($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'Y')
-        {
-            $_SESSION['m_admin']['contact']['SOCIETY'] = $func->wash($_REQUEST['society'], "no", _SOCIETY." ", 'yes', 0, 255);
+        $_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] =
+            $_REQUEST['is_corporate'];
+        if ($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'Y') {
+            $_SESSION['m_admin']['contact']['SOCIETY'] = $func->wash(
+                $_REQUEST['society'], 'no', _SOCIETY . ' ', 'yes', 0, 255
+            );
             $_SESSION['m_admin']['contact']['LASTNAME'] = '';
-        }
-        else
-        {
-            $_SESSION['m_admin']['contact']['LASTNAME'] = $func->wash($_REQUEST['lastname'], "no", _LASTNAME, 'yes', 0, 255);
-            if ($_REQUEST['society'] <> '')
-            {
-                $_SESSION['m_admin']['contact']['SOCIETY'] = $func->wash($_REQUEST['society'], "no", _SOCIETY." ", 'yes', 0, 255);
-            }
-            else
-            {
+        } else {
+            $_SESSION['m_admin']['contact']['LASTNAME'] = $func->wash(
+                $_REQUEST['lastname'], 'no', _LASTNAME, 'yes', 0, 255
+            );
+            if ($_REQUEST['society'] <> '') {
+                $_SESSION['m_admin']['contact']['SOCIETY'] = $func->wash(
+                    $_REQUEST['society'], 'no', _SOCIETY . ' ', 'yes', 0, 255
+                );
+            } else {
                 $_SESSION['m_admin']['contact']['SOCIETY'] = '';
             }
         }
-        if ($_REQUEST['title'] <> '')
-        {
-            $_SESSION['m_admin']['contact']['TITLE'] = $func->wash($_REQUEST['title'], "no", _TITLE2." ", 'yes', 0, 255);
-        }
-        else
-        {
+        if ($_REQUEST['title'] <> '') {
+            $_SESSION['m_admin']['contact']['TITLE'] = $func->wash(
+                $_REQUEST['title'], 'no', _TITLE2 . ' ', 'yes', 0, 255
+            );
+        } else {
             $_SESSION['m_admin']['contact']['TITLE'] = '';
         }
 
-        if ($_REQUEST['firstname'] <> '')
-        {
-            $_SESSION['m_admin']['contact']['FIRSTNAME'] = $func->wash($_REQUEST['firstname'], "no", _FIRSTNAME." ", 'yes', 0, 255);
-        }
-        else
-        {
+        if ($_REQUEST['firstname'] <> '') {
+            $_SESSION['m_admin']['contact']['FIRSTNAME'] = $func->wash(
+                $_REQUEST['firstname'], 'no', _FIRSTNAME . ' ', 'yes', 0, 255
+            );
+        } else {
             $_SESSION['m_admin']['contact']['FIRSTNAME'] = '';
         }
 
-        if ($_REQUEST['function'] <> '')
-        {
-            $_SESSION['m_admin']['contact']['FUNCTION'] = $func->wash($_REQUEST['function'], "no", _FUNCTION." ", 'yes', 0, 255);
-        }
-        else
-        {
+        if ($_REQUEST['function'] <> '') {
+            $_SESSION['m_admin']['contact']['FUNCTION'] = $func->wash(
+                $_REQUEST['function'], 'no', _FUNCTION . ' ', 'yes', 0, 255
+            );
+        } else {
             $_SESSION['m_admin']['contact']['FUNCTION'] = '';
         }
 
-        if ($_REQUEST['num'] <> '')
-        {
-            $_SESSION['m_admin']['contact']['ADD_NUM'] = $func->wash($_REQUEST['num'], "no", _NUM." ", 'yes', 0, 32);
-        }
-        else
-        {
+        if ($_REQUEST['num'] <> '') {
+            $_SESSION['m_admin']['contact']['ADD_NUM'] = $func->wash(
+                $_REQUEST['num'], 'no', _NUM . ' ', 'yes', 0, 32
+            );
+        } else {
             $_SESSION['m_admin']['contact']['ADD_NUM'] = '';
         }
 
-        if ($_REQUEST['street'] <> '')
-        {
-            $_SESSION['m_admin']['contact']['ADD_STREET'] = $func->wash($_REQUEST['street'], "no", _STREET." ", 'yes', 0, 255);
-        }
-        else
-        {
+        if ($_REQUEST['street'] <> '') {
+            $_SESSION['m_admin']['contact']['ADD_STREET'] = $func->wash(
+                $_REQUEST['street'], 'no', _STREET . ' ', 'yes', 0, 255
+            );
+        } else {
             $_SESSION['m_admin']['contact']['ADD_STREET'] = '';
         }
 
-        if ($_REQUEST['add_comp'] <> '')
-        {
-            $_SESSION['m_admin']['contact']['ADD_COMP'] = $func->wash($_REQUEST['add_comp'], "no", ADD_COMP." ", 'yes', 0, 255);
-        }
-        else
-        {
+        if ($_REQUEST['add_comp'] <> '') {
+            $_SESSION['m_admin']['contact']['ADD_COMP'] = $func->wash(
+                $_REQUEST['add_comp'], 'no', ADD_COMP . ' ', 'yes', 0, 255
+            );
+        } else {
             $_SESSION['m_admin']['contact']['ADD_COMP'] = '';
         }
 
-        if ($_REQUEST['town'] <> '')
-        {
-            $_SESSION['m_admin']['contact']['ADD_TOWN'] = $func->wash($_REQUEST['town'], "no", _TOWN." ", 'yes', 0, 255);
-        }
-        else
-        {
+        if ($_REQUEST['town'] <> '') {
+            $_SESSION['m_admin']['contact']['ADD_TOWN'] = $func->wash(
+                $_REQUEST['town'], 'no', _TOWN . ' ', 'yes', 0, 255
+            );
+        } else {
             $_SESSION['m_admin']['contact']['ADD_TOWN'] = '';
         }
-        if ($_REQUEST['cp'] <> '')
-        {
-            $_SESSION['m_admin']['contact']['ADD_CP'] = $func->wash($_REQUEST['cp'], "no", _POSTAL_CODE, 'yes', 0, 255);
-        }
-        else
-        {
+        if ($_REQUEST['cp'] <> '') {
+            $_SESSION['m_admin']['contact']['ADD_CP'] = $func->wash(
+                $_REQUEST['cp'], 'no', _POSTAL_CODE, 'yes', 0, 255
+            );
+        } else {
             $_SESSION['m_admin']['contact']['ADD_CP'] = '';
         }
-        if ($_REQUEST['country'] <> '')
-        {
-            $_SESSION['m_admin']['contact']['ADD_COUNTRY'] = $func->wash($_REQUEST['country'], "no", _COUNTRY, 'yes', 0, 255);
-        }
-        else
-        {
+        if ($_REQUEST['country'] <> '') {
+            $_SESSION['m_admin']['contact']['ADD_COUNTRY'] = $func->wash(
+                $_REQUEST['country'], 'no', _COUNTRY, 'yes', 0, 255
+            );
+        } else {
             $_SESSION['m_admin']['contact']['ADD_COUNTRY'] = '';
         }
-        if ($_REQUEST['phone'] <> '')
-        {
-            $_SESSION['m_admin']['contact']['PHONE'] = $func->wash($_REQUEST['phone'], "num", _PHONE, 'yes', 0, 20);
-        }
-        else
-        {
+        if ($_REQUEST['phone'] <> '') {
+            $_SESSION['m_admin']['contact']['PHONE'] = $func->wash(
+                $_REQUEST['phone'], 'num', _PHONE, 'yes', 0, 20
+            );
+        } else {
             $_SESSION['m_admin']['contact']['PHONE'] = '';
         }
-        if ($_REQUEST['mail'] <> '')
-        {
-            $_SESSION['m_admin']['contact']['MAIL'] = $func->wash($_REQUEST['mail'], "mail", _MAIL, 'yes', 0, 255);
-        }
-        else
-        {
+        if ($_REQUEST['mail'] <> '') {
+            $_SESSION['m_admin']['contact']['MAIL'] = $func->wash(
+                $_REQUEST['mail'], 'mail', _MAIL, 'yes', 0, 255
+            );
+        } else {
             $_SESSION['m_admin']['contact']['MAIL'] = '';
         }
-        if ($_REQUEST['comp_data'] <> '')
-        {
-            $_SESSION['m_admin']['contact']['OTHER_DATA'] = $func->wash($_REQUEST['comp_data'], "no", _COMP_DATA);
-        }
-        else
-        {
+        if ($_REQUEST['comp_data'] <> '') {
+            $_SESSION['m_admin']['contact']['OTHER_DATA'] = $func->wash(
+                $_REQUEST['comp_data'], 'no', _COMP_DATA
+            );
+        } else {
             $_SESSION['m_admin']['contact']['OTHER_DATA'] = '';
         }
 
-        if ($_REQUEST['owner'] <> '')
-        {
-            if(preg_match('/\((\s|\d|\h|\w)+\)$/i', $_REQUEST['owner']) == 0)
-            {
-                $_SESSION['error'] = _OWNER." "._WRONG_FORMAT.".<br/>"._USE_AUTOCOMPLETION;
+        if (isset($_REQUEST['owner']) && $_REQUEST['owner'] <> '') {
+            if (preg_match('/\((\s|\d|\h|\w)+\)$/i', $_REQUEST['owner']) == 0) {
+                $_SESSION['error'] = _OWNER . ' ' . _WRONG_FORMAT . '.<br/>'
+                                   . _USE_AUTOCOMPLETION;
+            } else {
+                $_SESSION['m_admin']['contact']['OWNER'] = str_replace(
+                    ')', '', substr($_REQUEST['owner'],
+                    strrpos($_REQUEST['owner'],'(')+1)
+                );
+                $_SESSION['m_admin']['contact']['OWNER'] = $func->wash(
+                    $_SESSION['m_admin']['contact']['OWNER'], 'no',
+                    _OWNER . ' ', 'yes', 0, 32
+                );
             }
-            else
-            {
-                $_SESSION['m_admin']['contact']['OWNER'] = str_replace(')', '', substr($_REQUEST['owner'], strrpos($_REQUEST['owner'],'(')+1));
-                $_SESSION['m_admin']['contact']['OWNER'] = $func->wash($_SESSION['m_admin']['contact']['OWNER'], "no", _OWNER." ", 'yes', 0, 32);
-            }
-        }
-        else
-        {
+        } else {
             $_SESSION['m_admin']['contact']['OWNER'] = '';
         }
 
@@ -189,47 +179,86 @@ class contacts extends dbquery
         $what = $_SESSION['m_admin']['contact']['what'];
         $start = $_SESSION['m_admin']['contact']['start'];
 
-        $path_contacts = $_SESSION['config']['businessappurl']."index.php?page=contacts&admin=contacts&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what;
-        $path_contacts_add_errors = $_SESSION['config']['businessappurl']."index.php?page=contact_add&admin=contacts";
-        $path_contacts_up_errors = $_SESSION['config']['businessappurl']."index.php?page=contact_up&admin=contacts";
-        if(!$admin)
-        {
-            $path_contacts = $_SESSION['config']['businessappurl']."index.php?page=my_contacts&dir=my_contacts&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what;
-            $path_contacts_add_errors = $_SESSION['config']['businessappurl']."index.php?page=my_contact_add&dir=my_contacts";
-            $path_contacts_up_errors = $_SESSION['config']['businessappurl']."index.php?page=my_contact_up&dir=my_contacts";
+        $path_contacts = $_SESSION['config']['businessappurl']
+                       . 'index.php?page=contacts&admin=contacts&order='
+                       . $order . '&order_field=' . $order_field . '&start='
+                       . $start . '&what=' . $what;
+        $path_contacts_add_errors = $_SESSION['config']['businessappurl']
+                                  . 'index.php?page=contact_add&admin=contacts';
+        $path_contacts_up_errors = $_SESSION['config']['businessappurl']
+                                 . 'index.php?page=contact_up&admin=contacts';
+        if (! $admin) {
+            $path_contacts = $_SESSION['config']['businessappurl']
+                           . 'index.php?page=my_contacts&dir=my_contacts&order='
+                           . $order . '&order_field=' . $order_field . '&start='
+                           . $start . '&what=' . $what;
+            $path_contacts_add_errors = $_SESSION['config']['businessappurl']
+                                      . 'index.php?page=my_contact_add&dir='
+                                      . 'my_contacts';
+            $path_contacts_up_errors = $_SESSION['config']['businessappurl']
+                                     . 'index.php?page=my_contact_up&dir='
+                                     . 'my_contacts';
         }
-        if(!empty($_SESSION['error']))
-        {
-            if($mode == "up")
-            {
-                if(!empty($_SESSION['m_admin']['contact']['ID']))
-                {
-                    header("location: ".$path_contacts_up_errors."&id=".$_SESSION['m_admin']['contact']['ID']);
+        if (! empty($_SESSION['error'])) {
+            if ($mode == 'up') {
+                if (! empty($_SESSION['m_admin']['contact']['ID'])) {
+                    header(
+                        'location: ' . $path_contacts_up_errors . '&id='
+                        . $_SESSION['m_admin']['contact']['ID']
+                    );
                     exit;
-                }
-                else
-                {
-                    header("location: ".$path_contacts);
+                } else {
+                    header('location: ' . $path_contacts);
                     exit;
                 }
             }
-            if($mode == "add")
-            {
-                header("location: ".$path_contacts_add_errors);
+            if ($mode == 'add') {
+                header('location: ' . $path_contacts_add_errors);
                 exit;
             }
-        }
-        else
-        {
+        } else {
             $this->connect();
-            if($mode == "add")
-            {
-                if($admin)
-                {
-                    $query = "INSERT INTO ".$_SESSION['tablename']['contacts']." (  lastname , firstname , society , function , phone , email , address_num, address_street, address_complement, address_town, address_postal_code, address_country, other_data, title, is_corporate_person) VALUES (  '".$this->protect_string_db($_SESSION['m_admin']['contact']['LASTNAME'])."', '".$this->protect_string_db($_SESSION['m_admin']['contact']['FIRSTNAME'])."', '".$this->protect_string_db($_SESSION['m_admin']['contact']['SOCIETY'])."', '".$this->protect_string_db($_SESSION['m_admin']['contact']['FUNCTION'])."', '".$this->protect_string_db($_SESSION['m_admin']['contact']['PHONE'])."', '".$this->protect_string_db($_SESSION['m_admin']['contact']['MAIL'])."', '".$this->protect_string_db($_SESSION['m_admin']['contact']['ADD_NUM'])."','".$this->protect_string_db($_SESSION['m_admin']['contact']['ADD_STREET'])."', '".$this->protect_string_db($_SESSION['m_admin']['contact']['ADD_COMP'])."', '".$this->protect_string_db($_SESSION['m_admin']['contact']['ADD_TOWN'])."',  '".$this->protect_string_db($_SESSION['m_admin']['contact']['ADD_CP'])."','".$this->protect_string_db($_SESSION['m_admin']['contact']['ADD_COUNTRY'])."','".$this->protect_string_db($_SESSION['m_admin']['contact']['OTHER_DATA'])."','".$this->protect_string_db($_SESSION['m_admin']['contact']['TITLE'])."','".$this->protect_string_db($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'])."' )";
-                }
-                else
-                {
+            if ($mode == 'add') {
+                if ($admin) {
+                    $query = 'INSERT INTO ' . $_SESSION['tablename']['contacts']
+                           . ' (  lastname , firstname , society , function , '
+                           . 'phone , email , address_num, address_street, '
+                           . 'address_complement, address_town, '
+                           . 'address_postal_code, address_country, other_data,'
+                           . " title, is_corporate_person) VALUES (  '"
+                           . $this->protect_string_db(
+                                $_SESSION['m_admin']['contact']['LASTNAME']
+                           ) . "', '" . $this->protect_string_db(
+                                $_SESSION['m_admin']['contact']['FIRSTNAME']
+                           ) . "', '" . $this->protect_string_db(
+                                $_SESSION['m_admin']['contact']['SOCIETY']
+                           ) . "', '" . $this->protect_string_db(
+                                $_SESSION['m_admin']['contact']['FUNCTION']
+                           ) . "', '" . $this->protect_string_db(
+                                $_SESSION['m_admin']['contact']['PHONE']
+                           ) . "', '" . $this->protect_string_db(
+                                $_SESSION['m_admin']['contact']['MAIL']
+                           ) . "', '" . $this->protect_string_db(
+                                $_SESSION['m_admin']['contact']['ADD_NUM']
+                           ) . "','" . $this->protect_string_db(
+                                $_SESSION['m_admin']['contact']['ADD_STREET']
+                           ) . "', '" . $this->protect_string_db(
+                                $_SESSION['m_admin']['contact']['ADD_COMP']
+                           ) . "', '" . $this->protect_string_db(
+                                $_SESSION['m_admin']['contact']['ADD_TOWN']
+                           ) . "',  '" . $this->protect_string_db(
+                                $_SESSION['m_admin']['contact']['ADD_CP']
+                           ) . "','" . $this->protect_string_db(
+                                $_SESSION['m_admin']['contact']['ADD_COUNTRY']
+                           ) . "','" . $this->protect_string_db(
+                                $_SESSION['m_admin']['contact']['OTHER_DATA']
+                           ) . "','" . $this->protect_string_db(
+                                $_SESSION['m_admin']['contact']['TITLE']
+                           ) . "','" . $this->protect_string_db(
+                                $_SESSION['m_admin']['contact']
+                                    ['IS_CORPORATE_PERSON']
+                           ) . "' )";
+                } else {
                     $query = "INSERT INTO ".$_SESSION['tablename']['contacts']." (  lastname , firstname , society , function , phone , email , address_num, address_street, address_complement, address_town, address_postal_code, address_country, other_data, title, is_corporate_person, user_id) VALUES (  '".$this->protect_string_db($_SESSION['m_admin']['contact']['LASTNAME'])."', '".$this->protect_string_db($_SESSION['m_admin']['contact']['FIRSTNAME'])."', '".$this->protect_string_db($_SESSION['m_admin']['contact']['SOCIETY'])."', '".$this->protect_string_db($_SESSION['m_admin']['contact']['FUNCTION'])."', '".$this->protect_string_db($_SESSION['m_admin']['contact']['PHONE'])."', '".$this->protect_string_db($_SESSION['m_admin']['contact']['MAIL'])."', '".$this->protect_string_db($_SESSION['m_admin']['contact']['ADD_NUM'])."','".$this->protect_string_db($_SESSION['m_admin']['contact']['ADD_STREET'])."', '".$this->protect_string_db($_SESSION['m_admin']['contact']['ADD_COMP'])."', '".$this->protect_string_db($_SESSION['m_admin']['contact']['ADD_TOWN'])."',  '".$this->protect_string_db($_SESSION['m_admin']['contact']['ADD_CP'])."','".$this->protect_string_db($_SESSION['m_admin']['contact']['ADD_COUNTRY'])."','".$this->protect_string_db($_SESSION['m_admin']['contact']['OTHER_DATA'])."','".$this->protect_string_db($_SESSION['m_admin']['contact']['TITLE'])."','".$this->protect_string_db($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'])."', '".$this->protect_string_db($_SESSION['user']['UserId'])."')";
                 }
                 $this->query($query);
@@ -355,7 +384,7 @@ class contacts extends dbquery
                 $_SESSION['m_admin']['contact']['OTHER_DATA'] = $this->show_string($line->other_data);
                 $_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] = $this->show_string($line->is_corporate_person);
                 $_SESSION['m_admin']['contact']['OWNER'] = $line->user_id;
-                if(admin && !empty($_SESSION['m_admin']['contact']['OWNER']))
+                if($admin && !empty($_SESSION['m_admin']['contact']['OWNER']))
                 {
                     $this->query("select lastname, firstname from ".$_SESSION['tablename']['users']." where user_id = '".$_SESSION['m_admin']['contact']['OWNER']."'");
                     $res = $this->fetch_object();
@@ -410,10 +439,10 @@ class contacts extends dbquery
                         <input type="hidden" name="admin"  value="contacts" />
                         <input type="hidden" name="page"  value="contact_up_db" />
                 <?php   }?>
-                    <input type="hidden" name="order" id="order" value="<?php echo $_REQUEST['order'];?>" />
-                    <input type="hidden" name="order_field" id="order_field" value="<?php echo $_REQUEST['order_field'];?>" />
-                    <input type="hidden" name="what" id="what" value="<?php echo $_REQUEST['what'];?>" />
-                    <input type="hidden" name="start" id="start" value="<?php echo $_REQUEST['start'];?>" />
+                    <input type="hidden" name="order" id="order" value="<?php if(isset($_REQUEST['order'])) {echo $_REQUEST['order'];}?>" />
+                    <input type="hidden" name="order_field" id="order_field" value="<?php if(isset($_REQUEST['order_field'])) { echo $_REQUEST['order_field'];}?>" />
+                    <input type="hidden" name="what" id="what" value="<?php if(isset($_REQUEST['what'])){echo $_REQUEST['what'];}?>" />
+                    <input type="hidden" name="start" id="start" value="<?php if(isset($_REQUEST['start'])){ echo $_REQUEST['start'];}?>" />
                 <table width="75%" >
                 <?php if($admin && $mode == "up")
                 {
@@ -455,7 +484,6 @@ class contacts extends dbquery
                                 {
                                     echo 'selected="selected"';
                                 }
-
                                 ?>><?php echo $titles[$key];?></option><?php
                             }?>
                         </select></td>
@@ -464,37 +492,37 @@ class contacts extends dbquery
                     <tr id="lastname_p" style="display:<?php if($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'Y'){ echo 'none';}else{ echo $display_value;}?>">
                         <td><label for="lastname"><?php echo _LASTNAME; ?> : </label></td>
                         <td>&nbsp;</td>
-                        <td class="indexing_field"><input name="lastname" type="text"  id="lastname" value="<?php echo $func->show_str($_SESSION['m_admin']['contact']['LASTNAME']); ?>"/></td>
+                        <td class="indexing_field"><input name="lastname" type="text"  id="lastname" value="<?php if(isset($_SESSION['m_admin']['contact']['LASTNAME'])){ echo $func->show_str($_SESSION['m_admin']['contact']['LASTNAME']);} ?>"/></td>
                         <td><span id="lastname_mandatory" class="red_asterisk" style="visibility:hidden;">*</span></td>
                     </tr>
                     <tr id="firstname_p" style="display:<?php if($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'Y'){ echo 'none';}else{ echo $display_value;}?>">
                         <td><label for="firstname"><?php echo _FIRSTNAME; ?> : </label></td>
                         <td>&nbsp;</td>
-                        <td class="indexing_field"><input name="firstname" type="text"  id="firstname" value="<?php echo $func->show_str($_SESSION['m_admin']['contact']['FIRSTNAME']); ?>"/></td>
+                        <td class="indexing_field"><input name="firstname" type="text"  id="firstname" value="<?php if(isset($_SESSION['m_admin']['contact']['FIRSTNAME'])){ echo $func->show_str($_SESSION['m_admin']['contact']['FIRSTNAME']);} ?>"/></td>
                         <td>&nbsp;</td>
                     </tr>
                     <tr>
                         <td><label for="society"><?php echo _SOCIETY; ?> : </label></td>
                         <td>&nbsp;</td>
-                        <td class="indexing_field"><input name="society" type="text"  id="society" value="<?php echo $func->show_str($_SESSION['m_admin']['contact']['SOCIETY']); ?>"/></td>
+                        <td class="indexing_field"><input name="society" type="text"  id="society" value="<?php if(isset($_SESSION['m_admin']['contact']['SOCIETY'])){ echo $func->show_str($_SESSION['m_admin']['contact']['SOCIETY']); }?>"/></td>
                         <td class="indexing_field"><span class="red_asterisk" style="visibility:visible;" id="society_mandatory">*</span></td>
                     </tr>
-                    <tr id="function_p" style="display:<?php if($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'Y'){ echo 'none';}else{ echo $display_value;}?>">
+                    <tr id="function_p" style="display:<?php if(isset($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON']) && $_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'Y'){ echo 'none';}else{ echo $display_value;}?>">
                         <td><label for="function"><?php echo _FUNCTION; ?> : </label></td>
                         <td>&nbsp;</td>
-                        <td class="indexing_field"><input name="function" type="text"  id="function" value="<?php echo $func->show_str($_SESSION['m_admin']['contact']['FUNCTION']); ?>"/></td>
+                        <td class="indexing_field"><input name="function" type="text"  id="function" value="<?php if(isset($_SESSION['m_admin']['contact']['FUNCTION'])){echo $func->show_str($_SESSION['m_admin']['contact']['FUNCTION']);} ?>"/></td>
                         <td>&nbsp;</td>
                     </tr>
                     <tr >
                         <td><label for="phone"><?php echo _PHONE; ?> : </label></td>
                         <td>&nbsp;</td>
-                        <td class="indexing_field"><input name="phone" type="text"  id="phone" value="<?php echo $func->show_str($_SESSION['m_admin']['contact']['PHONE']); ?>"/></td>
+                        <td class="indexing_field"><input name="phone" type="text"  id="phone" value="<?php if(isset($_SESSION['m_admin']['contact']['PHONE'])){echo $func->show_str($_SESSION['m_admin']['contact']['PHONE']);} ?>"/></td>
                         <td>&nbsp;</td>
                     </tr>
                     <tr>
                         <td><label for="mail"><?php echo _MAIL; ?> : </label></td>
                         <td>&nbsp;</td>
-                        <td class="indexing_field"><input name="mail" type="text" id="mail" value="<?php echo $func->show_str($_SESSION['m_admin']['contact']['MAIL']); ?>"/></td>
+                        <td class="indexing_field"><input name="mail" type="text" id="mail" value="<?php if(isset($_SESSION['m_admin']['contact']['MAIL'])){ echo $func->show_str($_SESSION['m_admin']['contact']['MAIL']);} ?>"/></td>
                         <td>&nbsp;</td>
                     </tr>
                     <tr>
@@ -503,37 +531,37 @@ class contacts extends dbquery
                     <tr>
                         <td><label for="num"><?php echo _NUM; ?> : </label></td>
                         <td>&nbsp;</td>
-                        <td class="indexing_field"><input name="num" type="text"  id="num" value="<?php echo $func->show_str($_SESSION['m_admin']['contact']['ADD_NUM']); ?>"/></td>
+                        <td class="indexing_field"><input name="num" type="text"  id="num" value="<?php if(isset($_SESSION['m_admin']['contact']['ADD_NUM'])){echo $func->show_str($_SESSION['m_admin']['contact']['ADD_NUM']); }?>"/></td>
                         <td>&nbsp;</td>
                     </tr>
                     <tr>
                         <td><label for="street"><?php echo _STREET; ?> : </label></td>
                         <td>&nbsp;</td>
-                        <td class="indexing_field"><input name="street" type="text"  id="street" value="<?php echo $func->show_str($_SESSION['m_admin']['contact']['ADD_STREET']); ?>"/></td>
+                        <td class="indexing_field"><input name="street" type="text"  id="street" value="<?php if(isset($_SESSION['m_admin']['contact']['ADD_STREET'])){ echo $func->show_str($_SESSION['m_admin']['contact']['ADD_STREET']); }?>"/></td>
                         <td>&nbsp;</td>
                     </tr>
                     <tr>
                         <td><label for="add_comp"><?php echo _COMPLEMENT; ?> : </label></td>
                         <td>&nbsp;</td>
-                        <td class="indexing_field"><input name="add_comp" type="text"  id="add_comp" value="<?php echo $func->show_str($_SESSION['m_admin']['contact']['ADD_COMP']); ?>"/></td>
+                        <td class="indexing_field"><input name="add_comp" type="text"  id="add_comp" value="<?php if(isset($_SESSION['m_admin']['contact']['ADD_COMP'])){ echo $func->show_str($_SESSION['m_admin']['contact']['ADD_COMP']); }?>"/></td>
                         <td>&nbsp;</td>
                     </tr>
                     <tr>
                         <td><label for="town"><?php echo _TOWN; ?> : </label></td>
                         <td>&nbsp;</td>
-                        <td class="indexing_field"><input name="town" type="text" id="town" value="<?php echo $func->show_str($_SESSION['m_admin']['contact']['ADD_TOWN']); ?>"/></td>
+                        <td class="indexing_field"><input name="town" type="text" id="town" value="<?php if(isset($_SESSION['m_admin']['contact']['ADD_TOWN'])){ echo $func->show_str($_SESSION['m_admin']['contact']['ADD_TOWN']);} ?>"/></td>
                         <td>&nbsp;</td>
                     </tr>
                     <tr>
                         <td><label for="cp"><?php echo _POSTAL_CODE; ?> : </label></td>
                         <td>&nbsp;</td>
-                        <td class="indexing_field"><input name="cp" type="text" id="cp" value="<?php echo $func->show_str($_SESSION['m_admin']['contact']['ADD_CP']); ?>"/></td>
+                        <td class="indexing_field"><input name="cp" type="text" id="cp" value="<?php if(isset($_SESSION['m_admin']['contact']['ADD_CP'])){echo $func->show_str($_SESSION['m_admin']['contact']['ADD_CP']); }?>"/></td>
                         <td>&nbsp;</td>
                     </tr>
                     <tr>
                         <td><label for="country"><?php echo _COUNTRY; ?> : </label></td>
                         <td>&nbsp;</td>
-                        <td class="indexing_field"><input name="country" type="text"  id="country" value="<?php echo $func->show_str($_SESSION['m_admin']['contact']['ADD_COUNTRY']); ?>"/></td>
+                        <td class="indexing_field"><input name="country" type="text"  id="country" value="<?php if(isset($_SESSION['m_admin']['contact']['ADD_COUNTRY'])){ echo $func->show_str($_SESSION['m_admin']['contact']['ADD_COUNTRY']); }?>"/></td>
                         <td>&nbsp;</td>
                     </tr>
                     <tr>
@@ -542,7 +570,7 @@ class contacts extends dbquery
                     <tr>
                         <td><label for="comp_data"><?php echo _COMP_DATA; ?> : </label></td>
                         <td>&nbsp;</td>
-                        <td class="indexing_field"><textarea name="comp_data"   id="comp_data"><?php echo $func->show_str($_SESSION['m_admin']['contact']['OTHER_DATA']); ?></textarea></td>
+                        <td class="indexing_field"><textarea name="comp_data"   id="comp_data"><?php if(isset($_SESSION['m_admin']['contact']['OTHER_DATA'])){echo $func->show_str($_SESSION['m_admin']['contact']['OTHER_DATA']); }?></textarea></td>
                         <td>&nbsp;</td>
                     </tr>
                 </table>
@@ -631,7 +659,6 @@ class contacts extends dbquery
             else
             {
                 $res = $this->fetch_object();
-                $label = $res->LABEL;
                 $this->query("update ".$_SESSION['tablename']['contacts']." set enabled = 'N' where contact_id = ".$id);
                 if($_SESSION['history']['contactdel'])
                 {

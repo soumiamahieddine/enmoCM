@@ -584,6 +584,7 @@ if (!defined('_MAILS')) define( '_MAILS', 'Courriers');
 if (!defined('_DOCUMENTS')) define( '_DOCUMENTS', 'Prets immobiliers');
 if (!defined('_INVOICES')) define( '_INVOICES', 'Factures');
 if (!defined('_CHOOSE_COLLECTION')) define( '_CHOOSE_COLLECTION', 'Choisir une collection');
+if (!defined('_COLLECTION')) define( '_COLLECTION', 'Collection');
 
 if (!defined('_EVENT')) define( '_EVENT', 'Ev&egrave;nement');
 if (!defined('_LINK')) define( '_LINK', 'Lien');

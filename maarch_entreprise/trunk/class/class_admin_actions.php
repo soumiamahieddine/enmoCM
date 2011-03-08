@@ -217,11 +217,12 @@ class AdminActions extends dbquery
         $this->query("select * from ".$_SESSION['tablename']['status']." order by label_status");
 
         $arr_status = array();
-
-        while($res = $this->fetch_object())
+        if($this->nb_result() > 0)
         {
-            array_push($arr_status, array('id' => $res->id, 'label' => $res->label_status, 'is_system' => $res->is_system, 'img_filename' => $res->img_filename,
-            'module' => $res->maarch_module, 'can_be_searched' => $res->can_be_searched, 'can_be_modified' => $res->can_be_modified));
+            while($res = $this->fetch_object())
+            {
+                array_push($arr_status, array('id' => $res->id, 'label' => $res->label_status, 'is_system' => $res->is_system, 'img_filename' => $res->img_filename, 'module' => $res->maarch_module, 'can_be_searched' => $res->can_be_searched, 'can_be_modified' => $res->can_be_modified));
+            }
         }
         ?>
         <h1><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=manage_actions_b.gif" alt="" />

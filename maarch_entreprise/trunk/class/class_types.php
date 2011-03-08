@@ -626,10 +626,10 @@ class types extends dbquery
                 $tableXml = $item->table;
                 //$this->show_array($tableXml);
                 $tableName = (string) $tableXml->table_name;
-                $foreignKey = (string)$tableXml->foreign_key;
-                $foreignLabel =(string) $tableXml->foreign_label;
-                $whereClause = (string)$tableXml->where_clause;
-                $order = (string) $tableXml->order;
+                $foreignKey = (string) $tableXml->foreign_key;
+                $foreignLabel = (string) $tableXml->foreign_label;
+                $whereClause = (string) $tableXml->where_clause;
+                $order = (string)  $tableXml->order;
                 $query = "select ".$foreignKey.", ".$foreignLabel." from ".$tableName;
                 if(isset($whereClause) && !empty($whereClause))
                 {

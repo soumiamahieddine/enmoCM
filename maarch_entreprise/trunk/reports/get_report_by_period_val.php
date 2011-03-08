@@ -263,6 +263,195 @@ if($id_report == 'process_delay')
 	}
 
 }
+if($id_report == 'process_delay_generic_evaluation')
+{
+	$data = "";
+	//Gestion du graphique par année
+	
+	//récupération des libellés de mois
+	$_SESSION['month'] = array();
+	$_SESSION['month'][1] = _JANUARY;
+	$_SESSION['month'][2] = _FEBRUARY;
+	$_SESSION['month'][3] = _MARCH;
+	$_SESSION['month'][4] = _APRIL;
+	$_SESSION['month'][5] = _MAY;
+	$_SESSION['month'][6] = _JUNE;
+	$_SESSION['month'][7] = _JULY;
+	$_SESSION['month'][8] = _AUGUST;
+	$_SESSION['month'][9] = _SEPTEMBER;
+	$_SESSION['month'][10] = _OCTOBER;
+	$_SESSION['month'][11] = _NOVEMBER;
+	$_SESSION['month'][12] = _DECEMBER;
+	
+	if($report_type == 'graph')
+	{
+		$val_an = array();
+		$_SESSION['labels1'] = $_SESSION['month'];
+	}
+	elseif($report_type == 'array')
+	{
+		$data = array();
+	}
+	
+	//Gestion en mode année
+	if ($period_type == 'period_year')
+	{
+		for($i=1; $i<= 12; $i++)
+		{
+			$db->query("SELECT ".$req->get_date_diff('closing_date', 'creation_date' )." FROM ".$view." WHERE status in ".$str_status." and date_part( 'month', creation_date)  = ".$i." and date_part( 'year', creation_date)  = ".date('Y')." AND STATUS = 'END'");
+			if( $db->nb_result() > 0)
+			{
+				
+				$tmp = 0;
+				while($elm = $db->fetch_array())
+				{
+					$tmp = $tmp + $elm[0];
+
+				}
+				if($report_type == 'graph')
+				{
+					array_push($val_an, (string)$tmp / $db->nb_result());
+				}
+				elseif($report_type == 'array')
+				{
+					array_push($data, array('LABEL' => $_SESSION['month'][$i], 'VALUE' => (string)$tmp / $db->nb_result()));
+				}
+				if($tmp / $db->nb_result() > 0)
+				{
+					$has_data = true;
+				}
+			}
+			else
+			{
+				if($report_type == 'graph')
+				{
+					array_push($val_an, 0);
+				}
+				elseif($report_type == 'tab')
+				{
+					array_push($data, array('LABEL' => $_SESSION['month'][$i], 'VALUE' => _UNDEFINED));
+				}
+			}
+		}
+		$title = _REPORTS_EVO_PROCESS.' '.$date_title ;
+		if($report_type == 'graph')
+		{
+			$src1 = $_SESSION['config']['businessappurl']."index.php?display=true&module=reports&page=graphs&type=courbe&largeur=1000&hauteur=400&title=".$title."&labelX="._MONTH."&labelY="._N_DAYS;
+			for($k=1;$k<=count($_SESSION['labels1']);$k++)
+			{
+				$src1 .= "&labels[]=".$_SESSION['labels1'][$k];
+			}
+			for($l=0;$l<count($val_an);$l++)
+			{
+				$src1 .= "&values[]=".$val_an[$l];
+			}
+		}
+		elseif($report_type == 'array')
+		{
+			array_unshift($data, array('LABEL' => _MONTH, 'VALUE' => _PROCESS_DELAI_AVG));
+		}
+	}
+	//Gestion du graphique par mois
+	if ($period_type == 'period_month')
+	{
+		if($report_type == 'graph')
+		{
+			$val_mois = array();
+		}
+		elseif($report_type == 'graph')
+		{
+			$data = array();
+		}
+		$max = $func->get_nb_days_in_month($_REQUEST['the_month'], date("Y"));
+		for($i=1; $i<= $max; $i++)
+		{
+			
+			$db->query("SELECT ".$req->get_date_diff('closing_date', 'creation_date' )." FROM ".$view." WHERE status in ".$str_status." and date_part( 'month', creation_date)  = ".$_REQUEST['the_month']." and date_part( 'year', creation_date)  = ".date('Y')." and date_part( 'day', creation_date)  = ".$i." AND STATUS = 'END'");
+		
+			if( $db->nb_result() > 0)
+			{
+				$tmp = 0;
+				while($elm = $db->fetch_array())
+				{
+					$tmp = $tmp + $elm[0];
+				}
+				if($report_type == 'graph')
+				{
+					array_push($val_mois, (string) $tmp / $db->nb_result());
+				}
+				elseif($report_type == 'array')
+				{
+					array_push($data, array('LABEL' => $i, 'VALUE' => (string) $tmp / $db->nb_result()));
+				}
+				$has_data = true;
+			}
+			else
+			{
+				if($report_type == 'graph')
+				{
+					array_push($val_mois, 0);
+				}
+				elseif($report_type == 'array')
+				{
+					array_push($data, array('LABEL' => $i, 'VALUE' => _UNDEFINED));
+				}
+			}
+		} 
+		
+		$title2 = _REPORTS_EVO_PROCESS;
+		if($report_type == 'graph')
+		{
+			
+			$src2 = $_SESSION['config']['businessappurl']."index.php?display=true&module=reports&page=graphs&type=courbe&largeur=1000&hauteur=406&title=".$title2."&labelX="._DAYS."&labelY="._N_DAYS;
+		
+			for($k=1;$k<=$max;$k++)
+			{
+				$src2 .= "&labels[]=".$k;
+			}
+			for($l=0;$l<count($val_mois);$l++)
+			{
+				$src2 .= "&values[]=".$val_mois[$l];
+			}
+		
+		}
+		elseif($report_type == 'array')
+		{
+			array_unshift($data, array('LABEL' => _DAYS, 'VALUE' => _PROCESS_DELAI_AVG));
+		
+		}
+	}
+
+	
+	
+	if ($period_type == 'period_year' && $has_data)
+	{
+		if($report_type == 'graph')
+		{
+		?>
+		<img src="<?php echo $src1;?>" alt="<?php echo $title1;?>"/><?php }
+		 elseif($report_type  == 'array')
+		{
+			$graph->show_stats_array($title1, $data);
+		}
+	}
+	elseif ($period_type == 'period_month' && $has_data)
+	{
+		if($report_type == 'graph')
+		{?>
+		<img src="<?php echo $src2;?>" alt="<?php echo $title;?>"/>
+		<?php }
+		elseif($report_type == 'array')
+		{
+			$graph->show_stats_array($title2, $data);
+		}
+	}
+	else
+	{
+		echo '<br/><br/><div class="error">'._NO_DATA_MESSAGE.'</div>';
+	}
+
+	
+}
 else if($id_report == 'mail_typology')
 {
 	$has_data = false;

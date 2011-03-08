@@ -39,7 +39,7 @@ $func = new functions();
 
 if(isset($_GET['id']))
 {
-    $id = addslashes($func->wash($_GET['id'], "alphanum", _THE_CONTACT));
+    $id = addslashes($func->wash($_GET['id'], "alphanum", _CONTACT));
 }
 else
 {
@@ -52,7 +52,7 @@ if(isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true")
     $init = true;
 }
 $level = "";
-if(isset($_REQUEST['level']) && $_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1)
+if(isset($_REQUEST['level']) && ($_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1))
 {
     $level = $_REQUEST['level'];
 }

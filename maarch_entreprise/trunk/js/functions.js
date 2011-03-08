@@ -1125,7 +1125,7 @@ function valid_action_form(current_form_id, path_manage_script, id_action, value
     }
     else
     {
-        if(console)
+        if(console != null)
         {
             console.log('Action Error!');
         }

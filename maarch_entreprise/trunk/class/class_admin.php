@@ -1,6 +1,6 @@
 <?php 
 /*
-*    Copyright 2008-2010 Maarch
+*    Copyright 2008-2011 Maarch
 *
 *  This file is part of Maarch Framework.
 *
@@ -47,6 +47,10 @@ class admin extends functions
 	*/
 	public function display_app_admin_services($app_services)
 	{
+		$debug_style = '';
+	    if (preg_match("/MSIE 6.0/", $_SERVER['HTTP_USER_AGENT']))
+			$debug_style =  'style="height:100px;"';
+			
 		echo '<h2 class="admin_subtitle block" >Application</h2>';
 		echo '<div  id="admin_apps">';
 		for($i=0;$i<count($app_services);$i++)
@@ -54,8 +58,8 @@ class admin extends functions
 			if($app_services[$i]['servicetype'] == "admin" && $_SESSION['user']['services'][$app_services[$i]['id']])
 			{
 				?>
-                <div class="admin_item" id="<?php  echo $app_services[$i]['style']; ?>" title="<?php  echo $app_services[$i]['comment'];?>" onclick="window.top.location='<?php  echo preg_replace("/(&(?!amp;))/", "&amp;", $app_services[$i]['servicepage']) ;?>';">
-                    <div class="sum_margin" >
+                <div class="admin_item" id="<?php  echo $app_services[$i]['style'];?>" title="<?php  echo $app_services[$i]['comment'];?>" onclick="window.top.location='<?php  echo $app_services[$i]['servicepage'];?>';">
+                    <div class="sum_margin" <?php echo $debug_style; ?>>
                        
                             <strong><?php  echo $app_services[$i]['name'];?></strong>
                            <!-- <em><br/><?php  echo $app_services[$i]['comment'];?></em>-->
@@ -75,6 +79,10 @@ class admin extends functions
 	*/
 	public function display_modules_admin_services($modules_services)
 	{
+		$debug_style = '';
+	    if (preg_match("/MSIE 6.0/", $_SERVER['HTTP_USER_AGENT']))
+			$debug_style =  'style="height:100px;"';
+			
 		echo '<h2 class="admin_subtitle block">Modules</h2>';
 		echo '<div id="admin_modules">';
 		foreach(array_keys($modules_services) as $value)
@@ -90,9 +98,12 @@ class admin extends functions
 					}
 					$nb ++;
 					?>
-					<div class="admin_item" id="<?php  echo $modules_services[$value][$i]['style'];?>" title="<?php  echo 'Module '.$value.' : '.$modules_services[$value][$i]['comment'];?>" onclick="window.top.location='<?php  echo preg_replace("/(&(?!amp;))/", "&amp;", $modules_services[$value][$i]['servicepage']) ;?>';">
-						<div class="sum_margin">					
-							<strong><?php  echo $modules_services[$value][$i]['name'];?></strong>			
+					<div class="admin_item" id="<?php  echo $modules_services[$value][$i]['style'];?>" title="<?php  echo 'Module '.$value.' : '.$modules_services[$value][$i]['comment'];?>" onclick="window.top.location='<?php  echo $modules_services[$value][$i]['servicepage'];?>';">
+						<div class="sum_margin" <?php echo $debug_style; ?> >
+						
+								<strong><?php  echo $modules_services[$value][$i]['name'];?></strong><!--<br/>
+                                <em><?php  echo $modules_services[$value][$i]['comment'];?></em>-->
+						
 						</div>
 					</div>
 					<?php 	

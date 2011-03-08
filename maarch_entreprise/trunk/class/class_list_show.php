@@ -170,6 +170,8 @@ class list_show extends functions
                 }
             }
 
+            $func = new functions();
+
             if($bool_frame)
             {
                 $link = $_SESSION['config']['businessappurl'].'index.php?display=true&amp;page='.$name.'&amp;search='.$what;
@@ -332,7 +334,7 @@ class list_show extends functions
 
             if($bool_radio_form || $bool_check_form || ($do_action && !empty($id_action)))
             {
-                $temp = '<form  id="form_select" action="'.$action.'" method="'.$method.'" class="forms';
+                $temp = '<form name="form_select" id="form_select" action="'.$action.'" method="'.$method.'" class="forms';
                 if(!$show_full_list)
                 {
                     $temp .= " addforms2\" >";
@@ -862,6 +864,7 @@ class list_show extends functions
             }
         }
 
+
         $func = new functions();
         $param_comp = '';
         if(isset($_REQUEST['start']) && !empty($_REQUEST['start']))
@@ -1081,6 +1084,18 @@ class list_show extends functions
             }
             elseif($bool_simple_list)
             {
+                if($page_name_up == "contrat_up" || $name == 'structures')
+                {
+                    $height = "750";
+                }
+                elseif($name == 'types')
+                {
+                    $height = "650";
+                }
+                else
+                {
+                    $height = "250";
+                }
                 if($admin == "types" || $admin == "structures" || $admin == "subfolders")
                 {
                     //$path_root = $_SESSION['config']['businessappurl']."admin/architecture/".$admin."/";
@@ -1145,7 +1160,7 @@ class list_show extends functions
                         if(isset($result[$theline][$count_column]['show']) && $result[$theline][$count_column]['show']==true)
                         {
                     ?>
-                            <td style="width:<?php  echo $result[$theline][$count_column]['size'];?>%;" align="<?php  echo $result[$theline][$count_column]['align'];?>">
+                           <td style="width:<?php  echo $result[$theline][$count_column]['size'];?>%;" align="<?php  echo $result[$theline][$count_column]['align'];?>">
 
                             <?php
                                 if($result[$theline][$count_column]['column'] == "enabled")

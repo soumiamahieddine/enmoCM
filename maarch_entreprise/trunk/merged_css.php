@@ -17,7 +17,7 @@ function compress($buffer) {
 	header("Cache-Control: max-age=".$time.", must-revalidate");
 	header('Content-type: text/css; charset=utf-8');
 	
-	ob_start();
+	ob_start("compress");
 
 	if(isset($_GET['ie']))
 	{

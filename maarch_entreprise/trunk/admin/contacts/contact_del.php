@@ -38,11 +38,11 @@ $func = new functions();
 
 if(isset($_GET['id']))
 {
-	$s_id = addslashes($func->wash($_GET['id'], "alphanum", _THE_CONTACT));
+    $s_id = addslashes($func->wash($_GET['id'], "alphanum", _CONTACT));
 }
 else
 {
-	$s_id = "";
+    $s_id = "";
 }
 
 $contact = new contacts();

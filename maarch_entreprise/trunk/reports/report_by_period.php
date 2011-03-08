@@ -57,7 +57,7 @@ $content .='<div id="params">';
                  	$content .='<option value ="12"> '._DECEMBER.' </option>';
                	$content .='</select>';
 	          $content .= _OF_THIS_YEAR.'.</p>';
-	   		if($id <> 'process_delay')
+	   		if($id <> 'process_delay' && $id <> 'process_delay_generic_evaluation')
 	    	{
 	           	$content .='<p class="double">';
               	$content .='<input type="radio" id="custom_period" name="type_period" value="custom_period" /><label for="period">'._TITLE_STATS_CHOICE_PERIOD.'.&nbsp;</label>'._SINCE.'&nbsp;:&nbsp;<input name="datestart" type="text"  id="datestart" onclick="showCalender(this);" />&nbsp;'._FOR.'&nbsp;:&nbsp;<input name="dateend" type="text"  id="dateend" onclick="showCalender(this);" /></p>';

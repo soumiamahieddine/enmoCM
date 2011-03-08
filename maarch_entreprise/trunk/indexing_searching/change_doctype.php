@@ -57,19 +57,22 @@ if(isset($_REQUEST['res_id']) && !empty($_REQUEST['res_id']) && isset($_REQUEST[
 }
 
 // Process limit date calcul
-$db->connect();
-$db->query("select process_delay from ".$_SESSION['tablename']['mlb_doctype_ext']." where type_id = ".$_REQUEST['type_id']);
-//$db->show();
-
-if($db->nb_result() == 0)
+if ($core->service_is_enabled('param_mlb_doctypes')) //Bug fix if delay process is disabled in services
 {
-	$_SESSION['error'] = _NO_DOCTYPE_IN_DB;
-	echo "{status : 2, error_txt : '".addslashes($_SESSION['error'])."'}";
-	exit();
-}
+	$db->connect();
+	$db->query("select process_delay from ".$_SESSION['tablename']['mlb_doctype_ext']." where type_id = ".$_REQUEST['type_id']);
+	//$db->show();
 
-$res = $db->fetch_object();
-$delay = $res->process_delay;
+	if($db->nb_result() == 0)
+	{
+		$_SESSION['error'] = _NO_DOCTYPE_IN_DB;
+		echo "{status : 2, error_txt : '".addslashes($_SESSION['error'])."'}";
+		exit();
+	}
+
+	$res = $db->fetch_object();
+	$delay = $res->process_delay;
+}
 
 $mandatory_indexes = $type->get_mandatory_indexes($_REQUEST['type_id'], 'letterbox_coll');
 $indexes = $type->get_indexes($_REQUEST['type_id'], 'letterbox_coll');

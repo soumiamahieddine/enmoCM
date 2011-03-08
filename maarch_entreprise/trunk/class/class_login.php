@@ -71,23 +71,65 @@ class login extends functions
 			$displayed_title = true;
 			$_SESSION['login_method_bool'] = true;
 		}	
+		
+		//Si plusieurs éléments sont disponnibles, on ajoute certains attriibuts
+		if($tmp_engine > 1){
+			?>
+			<script language="javascript" type="text/javascript">
+			//Si plusieurs elements sont disponnibles, on affiche une liste de choix
+			function display_auth(mydiv)
+			{
+				if (mydiv != '' && mydiv){ //Debug for IE9 and IE6...
+					var mylittlediv = document.getElementById(mydiv);
+					mylittlediv.style.display ='block';
+				}
+				
+				var elems = document.getElementsByClassName('login_mode');
+				for(var i=0; i<elems.length;i++)
+				{
+					elems[i].style.display ='none';
+				}
+				
+				if (mydiv != '' && mydiv){
+					var mylittlediv = document.getElementById(mydiv);
+					mylittlediv.style.display ='block';
+				}
+			}
+			</script>
+			<?php
+			echo '<div style ="margin:25px";>';
+			echo '<select name="login_method" id="login_method" onchange="display_auth(this.options[this.selectedIndex].value);" style="width:275px;">';		
+			foreach($array_method as $VALUE){
+				if ($VALUE['ACTIVATED'] == "true")
+					echo '<option value="'.$VALUE['ID'].'">'.constant($VALUE['BRUT_LABEL']).'</option>';
+			}
+			echo '</select>';
+			echo '</div>';
+		}
+		
 		foreach ($array_method as $KEY)
 		{
 		
 			if ($KEY['ACTIVATED'] == 'true')
 			{
 				if ($displayed_title == true)
-					echo "<h3 align='right'>".constant($KEY['BRUT_LABEL'])."</h3>";
-					 
-				self::launch_login_method($KEY['SCRIPTNAME']);
+				{
+					echo "<div style='display:none;' class='login_mode'  id='".$KEY['ID']."'>";
+						$this->launch_login_method($KEY['SCRIPTNAME']);
+					echo "</div>";
+				}
+				else
+				{
+					$this->launch_login_method($KEY['SCRIPTNAME']);
+				}
 				
-				if ($displayed_title == true)
-					echo "<hr/>";
 				
 			}
 			
 		}
-		
+		if($tmp_engine > 1){
+			echo  "<script type='text/javascript'>display_auth('".$array_method[0]['ID']."');</script>";
+		}
 	}
 	
 	
