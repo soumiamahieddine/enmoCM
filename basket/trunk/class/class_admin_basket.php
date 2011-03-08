@@ -166,10 +166,10 @@ class admin_basket extends dbquery
                  {?>
                     <input type="hidden" name="page"  value="basket_add_db" />
                  <?php } ?>
-                <input type="hidden" name="order" id="order" value="<?php echo $_REQUEST['order'];?>" />
-                <input type="hidden" name="order_field" id="order_field" value="<?php echo $_REQUEST['order_field'];?>" />
-                <input type="hidden" name="what" id="what" value="<?php echo $_REQUEST['what'];?>" />
-                <input type="hidden" name="start" id="start" value="<?php echo $_REQUEST['start'];?>" />
+                <input type="hidden" name="order" id="order" value="<?php if(isset($_REQUEST['order'])){echo $_REQUEST['order'];}?>" />
+                <input type="hidden" name="order_field" id="order_field" value="<?php if(isset($_REQUEST['order_field'])){echo $_REQUEST['order_field'];}?>" />
+                <input type="hidden" name="what" id="what" value="<?php if(isset($_REQUEST['what'])){echo $_REQUEST['what'];}?>" />
+                <input type="hidden" name="start" id="start" value="<?php if(isset($_REQUEST['start'])){echo $_REQUEST['start'];}?>" />
 
                 <p>
                     <label><?php echo _ID;?> : </label>
@@ -243,16 +243,15 @@ class admin_basket extends dbquery
         {
             $_SESSION['m_admin']['basket']['desc'] = $this->wash($_REQUEST['basketdesc'], "no", _THE_DESC, 'yes', 0, 255);
         }
-        if ( isset($_REQUEST['collection']) && !empty($_REQUEST['collection']))
-        {
-            $_SESSION['m_admin']['basket']['coll_id'] = $this->wash($_REQUEST['collection'], "no", _THE_COLLECTION, 'yes', 0, 32);
+        if ( isset($_REQUEST['collection']) && !empty($_REQUEST['collection'])) {
+            $_SESSION['m_admin']['basket']['coll_id'] = $this->wash($_REQUEST['collection'], "no", _COLLECTION, 'yes', 0, 32);
         }
-        if (isset($_REQUEST['basketclause']) && !empty($_REQUEST['basketclause']))
-        {
+        if (isset($_REQUEST['basketclause'])
+            && ! empty($_REQUEST['basketclause'])) {
             $_SESSION['m_admin']['basket']['clause'] = trim($_REQUEST['basketclause']);
         }
-        if(count($_SESSION['m_admin']['basket']['groups']) < 1)
-        {
+        if (isset($_SESSION['m_admin']['basket']['groups'])
+            && count($_SESSION['m_admin']['basket']['groups']) < 1) {
             $this->add_error(_BELONGS_TO_NO_GROUP, "");
         }
 
@@ -398,39 +397,38 @@ class admin_basket extends dbquery
     */
     public function where_test( $where_clause)
     {
-        $where = "";
+        $where = '';
         $res2 = true;
-
-        if( !empty ($where_clause))
-        {
-            require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."SecurityControler.php");
-            $where = SecurityControler::process_security_where_clause($where, $_SESSION['user']['UserId']);
+        if (! empty ($where_clause)) {
+            require_once 'core/class/SecurityControler.php';
+            $secCtrl = new SecurityControler();
+            $where = $secCtrl->process_security_where_clause(
+                $where_clause, $_SESSION['user']['UserId']
+            );
          }
         // Gets the basket collection
         $ind = -1;
-        for($i=0; $i<count($_SESSION['collections']);$i++)
+        for ($i = 0; $i < count($_SESSION['collections']); $i ++)
         {
-            if($_SESSION['m_admin']['basket']['coll_id'] == $_SESSION['collections'][$i]['id'])
-            {
+            if ($_SESSION['m_admin']['basket']['coll_id']
+                == $_SESSION['collections'][$i]['id']) {
                 $ind = $i;
                 break;
             }
         }
 
-        if($ind == -1)
-        {
-            $_SESSION['error'] .= " ".$_SESSION['m_admin']['basket']['coll_id'];
+        if ($ind == -1) {
+            $_SESSION['error'] .= ' ' . $_SESSION['m_admin']['basket']['coll_id'];
             $res2 = false;
-        }
-        else // Launches the query in quiet mode
-        {
+        } else {// Launches the query in quiet mode
             $this->connect();
-            $res = $this->query("select count(*) from ".$_SESSION['collections'][$ind]['view']." ".$where, true);
-
+            $res = $this->query(
+                "select count(*) from " . $_SESSION['collections'][$ind]['view']
+                . " " . $where, true
+            );
         }
-        if(!$res )
-        {
-            $_SESSION['error'] .= " ".$_SESSION['m_admin']['basket']['coll_id'];
+        if (! $res) {
+            $_SESSION['error'] .= " " . $_SESSION['m_admin']['basket']['coll_id'];
             $res2 = false;
         }
         return $res2;
@@ -579,11 +577,18 @@ class admin_basket extends dbquery
     */
     public function is_action_defined_for_the_group($id_action, $ind_group_session)
     {
-        for($i=0; $i < count($_SESSION['m_admin']['basket']['groups'][$ind_group_session]['ACTIONS']); $i++)
-        {
-            if(trim($id_action) == trim($_SESSION['m_admin']['basket']['groups'][$ind_group_session]['ACTIONS'][$i]['ID_ACTION']))
-            {
-                return true;
+        if (isset($ind_group_session)
+            && isset($_SESSION['m_admin']['basket']['groups']
+                [$ind_group_session])) {
+            for ($i = 0; $i < count(
+                $_SESSION['m_admin']['basket']['groups']
+                    [$ind_group_session]['ACTIONS']
+                ); $i ++) {
+                if (trim($id_action) == trim(
+                    $_SESSION['m_admin']['basket']['groups']
+                        [$ind_group_session]['ACTIONS'][$i]['ID_ACTION'])) {
+                    return true;
+                }
             }
         }
         return false;
@@ -599,6 +604,12 @@ class admin_basket extends dbquery
     */
     public function get_infos_groupbasket_session($ind_group, $id_action, $what)
     {
+        if (! isset($ind_group)
+            || ! isset(
+                $_SESSION['m_admin']['basket']['groups'][$ind_group]['ACTIONS']
+            )) {
+            return '';
+        }
         for($i=0; $i < count($_SESSION['m_admin']['basket']['groups'][$ind_group]['ACTIONS']); $i++)
         {
             if($id_action == $_SESSION['m_admin']['basket']['groups'][$ind_group]['ACTIONS'][$i]['ID_ACTION'])

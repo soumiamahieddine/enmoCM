@@ -32,21 +32,21 @@
 $admin = new core_tools();
 $admin->test_admin('admin_baskets', 'basket');
 
-require_once("modules".DIRECTORY_SEPARATOR."basket".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_admin_basket.php");
+require_once 'modules/basket/class/class_admin_basket.php';
  /****************Management of the location bar  ************/
 $init = false;
-if(isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true")
-{
+if (isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == 'true') {
     $init = true;
 }
-$level = "";
-if(isset($_REQUEST['level']) && $_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1)
-{
+$level = '';
+if (isset($_REQUEST['level']) && ($_REQUEST['level'] == 2
+    || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4
+    || $_REQUEST['level'] == 1)) {
     $level = $_REQUEST['level'];
 }
 $page_path = $_SESSION['config']['businessappurl'].'index.php?page=basket_up&module=basket';
 $page_label = _MODIFICATION;
-$page_id = "basket_up";
+$page_id = 'basket_up';
 $admin->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
 $func = new functions();

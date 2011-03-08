@@ -99,7 +99,7 @@ $time = $core_tools->get_session_time_expire();
                 for($i=0; $i < count($tab2); $i++)
                 {
                 ?>
-                <option value="<?php echo $tab2[$i]['ID']; ?>" <?php if($tab2[$i]['ID'] == $group || $_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['GROUP_ID'] == $tab2[$i]['ID'] || $_SESSION['m_admin']['basket_popup']['group_id'] == $tab2[$i]['ID']) { echo "selected=\"selected\""; } ?> ><?php echo $tab2[$i]['LABEL']; ?></option>
+                <option value="<?php echo $tab2[$i]['ID']; ?>" <?php if($tab2[$i]['ID'] == $group || (isset($_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['GROUP_ID'] ) && $_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['GROUP_ID'] == $tab2[$i]['ID']) || (isset($_SESSION['m_admin']['basket_popup']['group_id']) && $_SESSION['m_admin']['basket_popup']['group_id'] == $tab2[$i]['ID'])) { echo "selected=\"selected\""; } ?> ><?php echo $tab2[$i]['LABEL']; ?></option>
               <?php }?>
             </select>
             <?php if($group <> "")
@@ -113,11 +113,14 @@ $time = $core_tools->get_session_time_expire();
         <p>
             <label><?php echo _BASKET_RESULT_PAGE;?> :</label>
             <select name="result_page" id="result_page">
-            <?php for($i=0; $i < count($_SESSION['basket_page']); $i++)
-            {
-                ?>
-                <option value="<?php echo $_SESSION['basket_page'][$i]['ID'];?>" <?php if ($_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['RESULT_PAGE'] == $_SESSION['basket_page'][$i]['ID'] || $_SESSION['m_admin']['basket_popup']['res_page'] == $_SESSION['basket_page'][$i]['ID']) { echo "selected=\"selected\"";} elseif($i==0){ echo "selected=\"selected\"";}?>><?php echo $_SESSION['basket_page'][$i]['LABEL'];?></option>
-                <?php
+            <?php
+            if (isset($_SESSION['basket_page']) && count($_SESSION['basket_page']) > 0) {
+                for($i=0; $i < count($_SESSION['basket_page']); $i++)
+                {
+                    ?>
+                    <option value="<?php echo $_SESSION['basket_page'][$i]['ID'];?>" <?php if ((isset($_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['RESULT_PAGE']) && $_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['RESULT_PAGE'] == $_SESSION['basket_page'][$i]['ID']) || ( isset($_SESSION['m_admin']['basket_popup']['res_page']) && $_SESSION['m_admin']['basket_popup']['res_page'] == $_SESSION['basket_page'][$i]['ID'])) { echo "selected=\"selected\"";} elseif($i==0){ echo "selected=\"selected\"";}?>><?php echo $_SESSION['basket_page'][$i]['LABEL'];?></option>
+                    <?php
+                }
             }
             ?>
             </select>
@@ -131,7 +134,7 @@ $time = $core_tools->get_session_time_expire();
                 for($i=0; $i < count($_SESSION['m_admin']['basket']['all_actions']); $i++)
                 {
                 ?>
-                    <option value="<?php echo $_SESSION['m_admin']['basket']['all_actions'][$i]['ID'];?>" <?php if ($_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['DEFAULT_ACTION'] == $_SESSION['m_admin']['basket']['all_actions'][$i]['ID'] || $_SESSION['m_admin']['basket_popup']['default_action_page'] == $_SESSION['m_admin']['basket']['all_actions'][$i]['ID']) { echo "selected=\"selected\"";} ?>><?php echo $_SESSION['m_admin']['basket']['all_actions'][$i]['LABEL'];?></option>
+                    <option value="<?php echo $_SESSION['m_admin']['basket']['all_actions'][$i]['ID'];?>" <?php if ((isset($_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['DEFAULT_ACTION']) && $_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['DEFAULT_ACTION'] == $_SESSION['m_admin']['basket']['all_actions'][$i]['ID']) || (isset($_SESSION['m_admin']['basket_popup']['default_action_page']) && $_SESSION['m_admin']['basket_popup']['default_action_page'] == $_SESSION['m_admin']['basket']['all_actions'][$i]['ID'])) { echo "selected=\"selected\"";} ?>><?php echo $_SESSION['m_admin']['basket']['all_actions'][$i]['LABEL'];?></option>
                 <?php
                 }?>
             </select>
@@ -172,7 +175,7 @@ $time = $core_tools->get_session_time_expire();
                         echo 'colspan="2"';
                     }?>
                     ><div style='font-size:10px;'><input type="checkbox"  name="actions[]" value="<?php echo $_SESSION['m_admin']['basket']['all_actions'][$i]['ID']; ?>" class="check group_action" id="checkbox_<?php echo $_SESSION['m_admin']['basket']['all_actions'][$i]['ID'] ?>"
-                    <?php if($bask->is_action_defined_for_the_group($_SESSION['m_admin']['basket']['all_actions'][$i]['ID'], $_SESSION['m_admin']['basket']['ind_group']) || (isset($_SESSION['m_admin']['basket_popup']) && count($_SESSION['m_admin']['basket_popup']['actions'][$_SESSION['m_admin']['basket']['all_actions'][$i]['ID']]) > 0)){echo 'checked="checked"';}?> <?php if($_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['DEFAULT_ACTION'] == $_SESSION['m_admin']['basket']['all_actions'][$i]['ID']){echo 'disabled="disabled"';}?>/>
+                    <?php if($bask->is_action_defined_for_the_group($_SESSION['m_admin']['basket']['all_actions'][$i]['ID'], $_SESSION['m_admin']['basket']['ind_group']) || (isset($_SESSION['m_admin']['basket_popup']) && count($_SESSION['m_admin']['basket_popup']['actions'][$_SESSION['m_admin']['basket']['all_actions'][$i]['ID']]) > 0)){echo 'checked="checked"';}?> <?php if(isset($_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['DEFAULT_ACTION']) && $_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['DEFAULT_ACTION'] == $_SESSION['m_admin']['basket']['all_actions'][$i]['ID']){echo 'disabled="disabled"';}?>/>
                     <span id="label_<?php echo $_SESSION['m_admin']['basket']['all_actions'][$i]['ID']; ?>"><?php echo $_SESSION['m_admin']['basket']['all_actions'][$i]['LABEL'];  $tr++;     ?></span>
                     <a href="javascript://" onclick="check_this_box('checkbox_<?php echo $_SESSION['m_admin']['basket']['all_actions'][$i]['ID'] ?>');show_config_action(<?php echo $_SESSION['m_admin']['basket']['all_actions'][$i]['ID']; ?>, true, <?php if(!empty($_SESSION['m_admin']['basket']['all_actions'][$i]['KEYWORD'])){ echo 'true';}else{ echo 'false';}?>);" class="config" id="link_<?php echo $_SESSION['m_admin']['basket']['all_actions'][$i]['ID']; ?>" style="display:inline;"><?php echo _CONFIG;?></a></div>
                     </td>
@@ -223,7 +226,7 @@ $time = $core_tools->get_session_time_expire();
                             <td width="20%">&nbsp;&nbsp;</td>
                             <td><?php echo _USE_ONE; ?></td>
 
-                            <td><input type="checkbox" class="check" name="action_<?php echo $_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID'];?>_page_use" value="Y" <?php if($bask->get_infos_groupbasket_session($_SESSION['m_admin']['basket']['ind_group'],$_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID'], 'PAGE_USE' ) == 'Y' ||  $_SESSION['m_admin']['basket_popup']['actions'][$_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID']]['PAGE_USE'] == 'Y'){ echo 'checked="checked"';}?> /></td>
+                            <td><input type="checkbox" class="check" name="action_<?php echo $_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID'];?>_page_use" value="Y" <?php if($bask->get_infos_groupbasket_session($_SESSION['m_admin']['basket']['ind_group'], $_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID'], 'PAGE_USE' ) == 'Y' || (isset($_SESSION['m_admin']['basket_popup']['actions']) && $_SESSION['m_admin']['basket_popup']['actions'][$_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID']]['PAGE_USE'] == 'Y')){ echo 'checked="checked"';}?> /></td>
                         </tr>
                     </table>
                 </div>
@@ -245,12 +248,12 @@ $time = $core_tools->get_session_time_expire();
                 } ?></div><?php
         }
         $core_tools->load_js();
-    //  $bask->show_array($_SESSION['m_admin']['basket']['all_actions']);
+
         ?>  </div>
             <script type="text/javascript">
                 sb = new ScrollBox(document.getElementById('allowed_basket_actions'), {auto_hide: true});
                 sb2 = new ScrollBox(document.getElementById('config_actions'), {auto_hide: true});
-                manage_actions('<?php echo $_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['DEFAULT_ACTION'];?>', true, '<?php echo $_SESSION['config']['businessappurl']."index.php?display=true&module=basket&page=check_action";?>');
+               manage_actions('<?php if(isset($_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['DEFAULT_ACTION'])){ echo $_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['DEFAULT_ACTION'];}?>', true, '<?php echo $_SESSION['config']['businessappurl']."index.php?display=true&module=basket&page=check_action";?>');
             </script>
             <p>&nbsp;</p>
             <p class="buttons">
