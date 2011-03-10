@@ -1,6 +1,7 @@
 <?php
-
-echo '<form id="formlogin" method="post" action="'.$_SESSION['config']['businessappurl'].'index.php?display=true&amp;page=log" class="forms">';
+echo '<form id="formlogin" method="post" action="'
+    . $_SESSION['config']['businessappurl']
+    . 'index.php?display=true&amp;page=log" class="forms">';
             echo '<div>';
                 echo '<input type="hidden" name="display" id="display" value="true" />';
                 echo '<input type="hidden" name="page" id="page" value="log" />';
@@ -26,5 +27,3 @@ echo '<form id="formlogin" method="post" action="'.$_SESSION['config']['business
             echo '</div>';
           echo '</div>';
         echo '</form>';
-
-?>

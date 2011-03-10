@@ -30,73 +30,89 @@
 * @ingroup apps
 */
 
-include_once('../../core/init.php');
-if(isset($_SESSION['config']['corepath']))
-{
-    require_once("core/class/class_functions.php");
-    require_once("core/class/class_db.php");
-    require_once("core/class/class_core_tools.php");
+include_once '../../core/init.php';
+if (isset($_SESSION['config']['corepath'])) {
+    require_once 'core/class/class_functions.php';
+    require_once 'core/class/class_db.php';
+    require_once 'core/class/class_core_tools.php';
     $core_tools = new core_tools();
-    if(!isset($_SESSION['custom_override_id']) || empty($_SESSION['custom_override_id']))
-    {
+    if (! isset($_SESSION['custom_override_id'])
+        || empty($_SESSION['custom_override_id'])) {
         $_SESSION['custom_override_id'] = $core_tools->get_custom_id();
-        if(!empty($_SESSION['custom_override_id']))
-        {
-            $path = $_SESSION['config']['corepath']."custom".DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR;
-            set_include_path( $path.PATH_SEPARATOR.$_SESSION['config']['corepath']);
+        if (! empty($_SESSION['custom_override_id'])) {
+            $path = $_SESSION['config']['corepath'] . 'custom'
+                  . DIRECTORY_SEPARATOR . $_SESSION['custom_override_id']
+                  . DIRECTORY_SEPARATOR;
+            set_include_path(
+                $path . PATH_SEPARATOR . $_SESSION['config']['corepath']
+            );
         }
     }
-}
-else
-{
-    require_once("../../core/class/class_functions.php");
-    require_once("../../core/class/class_db.php");
-    require_once("../../core/class/class_core_tools.php");
+} else {
+    require_once '../../core/class/class_functions.php';
+    require_once '../../core/class/class_db.php';
+    require_once '../../core/class/class_core_tools.php';
     $core_tools = new core_tools();
     $_SESSION['custom_override_id'] = $core_tools->get_custom_id();
-    chdir("../..");
-    if(!empty($_SESSION['custom_override_id']))
-    {
-        $path = $_SESSION['config']['corepath']."custom".DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR;
-        set_include_path( $path.PATH_SEPARATOR.$_SESSION['config']['corepath']);
+    chdir('../..');
+    if (! empty($_SESSION['custom_override_id'])) {
+        $path = $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
+              . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR;
+        set_include_path(
+            $path . PATH_SEPARATOR . $_SESSION['config']['corepath']
+        );
     }
 }
-if(isset($_SESSION['user']['UserId']) && isset($_GET['page']) && !empty($_SESSION['user']['UserId']) && $_GET['page'] <> 'login' && $_GET['page'] <> 'log' && $_GET['page'] <> 'logout')
-{
+if (isset($_SESSION['user']['UserId']) && isset($_GET['page'])
+    && ! empty($_SESSION['user']['UserId']) && $_GET['page'] <> 'login'
+    && $_GET['page'] <> 'log' && $_GET['page'] <> 'logout') {
     $db = new dbquery();
     $db->connect();
-    $key = md5(time()."%".$_SESSION['user']['FirstName']."%".$_SESSION['user']['UserId']."%".$_SESSION['user']['UserId']."%".date("dmYHmi")."%");
+    $key = md5(
+        time() . '%' . $_SESSION['user']['FirstName'] . '%'
+        . $_SESSION['user']['UserId'] . '%' . $_SESSION['user']['UserId']
+        . '%' . date('dmYHmi') . '%'
+    );
 
-    if ($_SESSION['config']['databasetype'] == "ORACLE")
-    {
-        $db->query("update ".$_SESSION['tablename']['users']." set cookie_key = '".$key."', cookie_date = SYSDATE where user_id = '".$_SESSION['user']['UserId']."' and mail = '".$_SESSION['user']['Mail']."'", 1);
+    if ($_SESSION['config']['databasetype'] == 'ORACLE') {
+        $db->query(
+            'update ' . $_SESSION['tablename']['users'] . " set cookie_key = '"
+            . $key . "', cookie_date = SYSDATE where user_id = '"
+            . $_SESSION['user']['UserId'] . "' and mail = '"
+            . $_SESSION['user']['Mail'] . "'", 1
+        );
+    } else {
+        $db->query(
+            'update ' . $_SESSION['tablename']['users'] . " set cookie_key = '"
+            . $key . "', cookie_date = '" . date('Y-m-d') . ' ' . date('H:m:i')
+            . "' where user_id = '" . $_SESSION['user']['UserId']
+            . "' and mail = '" . $_SESSION['user']['Mail'] . "'", 1
+        );
     }
-    else
-    {
-        $db->query("update ".$_SESSION['tablename']['users']." set cookie_key = '".$key."', cookie_date = '".date("Y-m-d")." ".date("H:m:i")."' where user_id = '".$_SESSION['user']['UserId']."' and mail = '".$_SESSION['user']['Mail']."'", 1);
-    }
-    setcookie("maarch", "UserId=".$_SESSION['user']['UserId']."&key=".$key,time()+($_SESSION['config']['cookietime']*1000));
+    setcookie(
+        'maarch', 'UserId=' . $_SESSION['user']['UserId'] . '&key=' . $key,
+        time() + ($_SESSION['config']['cookietime'] * 1000)
+    );
 }
-if(isset($_REQUEST['display']))
-{
+if (isset($_REQUEST['display'])) {
      $core_tools->insert_page();
      exit();
 }
 
-if(!isset($_SESSION['user']['UserId']))
-{
-    if(trim($_SERVER['argv'][0]) <> "")
-        header("location: reopen.php?".$_SERVER['argv'][0]);
-    else
-        header("location: reopen.php");
+if (! isset($_SESSION['user']['UserId'])) {
+    if (trim($_SERVER['argv'][0]) <> '') {
+        header('location: reopen.php?' . $_SERVER['argv'][0]);
+    } else {
+        header('location: reopen.php');
+    }
     exit();
 }
 
-
-if(isset($_GET['show']))
+if (isset($_GET['show'])) {
     $show = $_GET['show'];
-else
-    $show = "true";
+} else {
+    $show = 'true';
+}
 
 $core_tools->start_page_stat();
 $core_tools->configPosition();
@@ -144,27 +160,28 @@ $time = $core_tools->get_session_time_expire();
                 <?php  if(isset($_SESSION['info'])){echo $_SESSION['info'];}?>
             </div>
             <?php
-            if($core_tools->is_module_loaded("basket") && isset($_SESSION['abs_user_status']) && $_SESSION['abs_user_status'] ==true)
-            {
-                include('modules'.DIRECTORY_SEPARATOR.'basket'.DIRECTORY_SEPARATOR."advert_missing.php");
-            }
-            else
-            {
+            if ($core_tools->is_module_loaded('basket')
+                && isset($_SESSION['abs_user_status'])
+                && $_SESSION['abs_user_status'] == true) {
+                include
+                    'modules' . DIRECTORY_SEPARATOR . 'basket'
+                    . DIRECTORY_SEPARATOR . 'advert_missing.php';
+            } else {
               $core_tools->insert_page();
             }
             ?>
         </div>
         <p id="footer">
             <?php
-            if(isset($_SESSION['config']['showfooter']) && $_SESSION['config']['showfooter'] == 'true')
-            {
+            if (isset($_SESSION['config']['showfooter'])
+                && $_SESSION['config']['showfooter'] == 'true') {
                 $core_tools->load_footer();
             }
             ?>
         </p>
         <?php
-        $_SESSION['error'] = "";
-        $_SESSION['info'] = "";
+        $_SESSION['error'] = '';
+        $_SESSION['info'] = '';
         $core_tools->view_debug();
         ?>
     </div>
