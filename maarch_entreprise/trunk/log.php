@@ -89,7 +89,7 @@ if (! empty($_SESSION['error'])) {
         if(! include
             'apps/' . $_SESSION['config']['app_id'] . '/ldap/class_'
             . $type_ldap . '.php'
-        )) {
+        ) {
             exit('Impossible de charger class_' . $type_ldap . '.php\n');
         }
 
