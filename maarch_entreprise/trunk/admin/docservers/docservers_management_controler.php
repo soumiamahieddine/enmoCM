@@ -412,7 +412,11 @@ function put_in_session($type,$hashable) {
 	$func = new functions();
 	foreach($hashable as $key=>$value) {
 		// echo "Key: $key Value: $value f:".$func->show_string($value)." // ";
-		$_SESSION['m_admin'][$type][$key]=$func->show_string($value);
+        if ($key == 'path_template') {
+            $_SESSION['m_admin'][$type][$key] = $value;
+        } else {
+            $_SESSION['m_admin'][$type][$key] = $func->show_string($value);
+        }
 	}
 }
 
