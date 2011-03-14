@@ -24,8 +24,8 @@
 *
 *
 * @file
-* @author  Claire Figueras  <dev@maarch.org>
-* @author  Laurent Giovannoni  <dev@maarch.org>
+* @author Claire Figueras <dev@maarch.org>
+* @author Laurent Giovannoni <dev@maarch.org>
 * @date $date$
 * @version $Revision$
 * @ingroup admin
