@@ -110,10 +110,10 @@ function init_session() {
  * Management of the location bar  
  */
 function location_bar_management($mode) {
-    $sessionName = "lc_cycles";
+    //$sessionName = "lc_cycles";
     $pageName = "lc_cycles_management_controler";
-    $tableName = "lc_cycles";
-    $idName = "cycle_id";
+    //$tableName = "lc_cycles";
+    //$idName = "cycle_id";
     
     $page_labels = array('add' => _ADDITION, 'up' => _MODIFICATION, 'list' => _LC_CYCLES_LIST);
     $page_ids = array('add' => 'docserver_add', 'up' => 'docserver_up', 'list' => 'lc_cycles_list');
@@ -138,11 +138,11 @@ function location_bar_management($mode) {
  * up to saving object
  */
 function validate_cs_submit($mode) {
-    $sessionName = "lc_cycles";
+    //$sessionName = "lc_cycles";
     $pageName = "lc_cycles_management_controler";
-    $tableName = "lc_cycles";
-    $idName = "cycle_id";
-    $f=new functions();
+    //$tableName = "lc_cycles";
+    //$idName = "cycle_id";
+    //$f=new functions();
     $lcCyclesControler = new lc_cycles_controler();
     $status= array();
     $status['order']=$_REQUEST['order'];
@@ -215,9 +215,9 @@ function display_add() {
  * Initialize session parameters for list display
  */
 function display_list() {
-    $sessionName = "lc_cycles";
+    //$sessionName = "lc_cycles";
     $pageName = "lc_cycles_management_controler";
-    $tableName = "lc_cycles";
+    //$tableName = "lc_cycles";
     $idName = "cycle_id";
     
     $_SESSION['m_admin'] = array();

@@ -137,7 +137,7 @@ function createAip($resInContainer)
         );
     createPackagingInformation($piArray);
     //AIP compression
-    $aipName = $GLOBALS['TmpDirectory'] . DIRECTORY_SEPARATOR . mt_rand();
+    //$aipName = $GLOBALS['TmpDirectory'] . DIRECTORY_SEPARATOR . mt_rand();
     $piName = $GLOBALS['TmpDirectory'] . DIRECTORY_SEPARATOR 
         . 'packaging_information.xml';
     $arrayOfFileToCompress = array();

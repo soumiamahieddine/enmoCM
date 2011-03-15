@@ -78,7 +78,7 @@ class life_cycle extends dbquery
                 .DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."config.xml";
         }
         $xmlconfig = simplexml_load_file($path);
-        $CONFIG = $xmlconfig->CONFIG;
+        //$CONFIG = $xmlconfig->CONFIG;
         // Loads the tables of the module life_cycle 
         // into session ($_SESSION['tablename'] array)
         $TABLENAME = $xmlconfig->TABLENAME ;

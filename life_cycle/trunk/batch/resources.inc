@@ -272,7 +272,7 @@ function deleteAdrx($resId, $dsToUpdate)
     $query = "update " . $GLOBALS['table'] . " set cycle_id = '" 
            . $GLOBALS['cycle'] . "' where res_id = " . $resId;
     do_query($GLOBALS['db'], $query, true);
-    $docserverSizeToUpdate = 0;
+    //$docserverSizeToUpdate = 0;
     for ($cptDs = 0;$cptDs < count($dsToUpdate);$cptDs++) {
         $query = "delete from " . $GLOBALS['adrTable'] . " where res_id = " 
                . $resId . " and docserver_id = '" 

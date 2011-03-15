@@ -104,10 +104,10 @@ function init_session() {
  * Management of the location bar  
  */
 function location_bar_management($mode) {
-    $sessionName = "lc_policies";
+    //$sessionName = "lc_policies";
     $pageName = "lc_policies_management_controler";
-    $tableName = "lc_policies";
-    $idName = "policy_id";
+    //$tableName = "lc_policies";
+    //$idName = "policy_id";
     
     $page_labels = array('add' => _ADDITION, 'up' => _MODIFICATION, 'list' => _LC_POLICIES_LIST);
     $page_ids = array('add' => 'docserver_add', 'up' => 'docserver_up', 'list' => 'lc_policies_list');
@@ -133,11 +133,11 @@ function location_bar_management($mode) {
  * up to saving object
  */
 function validate_cs_submit($mode) {
-    $sessionName = "lc_policies";
+    //$sessionName = "lc_policies";
     $pageName = "lc_policies_management_controler";
-    $tableName = "lc_policies";
-    $idName = "policy_id";
-    $f=new functions();
+    //$tableName = "lc_policies";
+    //$idName = "policy_id";
+    //$f=new functions();
     $lcPoliciesControler = new lc_policies_controler();
     $status= array();
     $status['order']=$_REQUEST['order'];
@@ -206,9 +206,9 @@ function display_add() {
  * Initialize session parameters for list display
  */
 function display_list() {
-    $sessionName = "lc_policies";
+    //$sessionName = "lc_policies";
     $pageName = "lc_policies_management_controler";
-    $tableName = "lc_policies";
+    //$tableName = "lc_policies";
     $idName = "policy_id";
     
     $_SESSION['m_admin'] = array();

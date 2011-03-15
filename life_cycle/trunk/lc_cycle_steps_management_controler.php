@@ -120,10 +120,10 @@ function init_session() {
  * Management of the location bar  
  */
 function location_bar_management($mode) {
-    $sessionName = "lc_cycle_steps";
+    //$sessionName = "lc_cycle_steps";
     $pageName = "lc_cycle_steps_management_controler";
-    $tableName = "lc_cycle_steps";
-    $idName = "cycle_step_id";
+    //$tableName = "lc_cycle_steps";
+    //$idName = "cycle_step_id";
     
     $page_labels = array('add' => _ADDITION, 'up' => _MODIFICATION, 'list' => _LC_CYCLE_STEPS_LIST);
     $page_ids = array('add' => 'docserver_add', 'up' => 'docserver_up', 'list' => 'lc_cycle_steps_list');
@@ -148,11 +148,11 @@ function location_bar_management($mode) {
  * up to saving object
  */
 function validate_cs_submit($mode) {
-    $sessionName = "lc_cycle_steps";
+    //$sessionName = "lc_cycle_steps";
     $pageName = "lc_cycle_steps_management_controler";
-    $tableName = "lc_cycle_steps";
-    $idName = "cycle_step_id";
-    $f=new functions();
+    //$tableName = "lc_cycle_steps";
+    //$idName = "cycle_step_id";
+    //$f=new functions();
     $lcCycleStepsControler = new lc_cycle_steps_controler();
     $status= array();
     $status['order']=$_REQUEST['order'];
@@ -227,9 +227,9 @@ function display_add() {
  * Initialize session parameters for list display
  */
 function display_list() {
-    $sessionName = "lc_cycle_steps";
+    //$sessionName = "lc_cycle_steps";
     $pageName = "lc_cycle_steps_management_controler";
-    $tableName = "lc_cycle_steps";
+    //$tableName = "lc_cycle_steps";
     $idName = "cycle_step_id";
     $func = new functions();
     $_SESSION['m_admin'] = array();
