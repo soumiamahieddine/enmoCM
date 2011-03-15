@@ -34,7 +34,7 @@
 *
 * @ingroup life_cycle
 */
-class IncludeFileError extends Exception 
+class IncludeFileError extends Exception
 {
     public function __construct($file) 
     {
@@ -49,7 +49,7 @@ class IncludeFileError extends Exception
  * @param string $file path of the file to include
  * @return nothing
  */
-function MyInclude($file) 
+function MyInclude($file)
 {
     if (file_exists($file)) {
         include_once ($file);
@@ -105,7 +105,7 @@ $isAContainerOpened = false;
  * @param boolean $transaction for rollback if error
  * @return true if ok, exit if ko and rollback if necessary
  */
-function do_query($db_conn, $query_txt, $transaction = false) 
+function do_query($db_conn, $query_txt, $transaction=false)
 {
     $res = $db_conn->query($query_txt, true);
     if (!$res) {
@@ -131,10 +131,10 @@ function getWorkBatch()
     $req = "select param_value_int from parameters where id = "
          . "'lc_process_stack_id'";
     $GLOBALS['db']->query($req);
-    while($reqResult = $GLOBALS['db']->fetch_array()) {
+    while ($reqResult = $GLOBALS['db']->fetch_array()) {
         $GLOBALS['wb'] = $reqResult[0] + 1;
     }
-    if($GLOBALS['wb'] == '') {
+    if ($GLOBALS['wb'] == '') {
         $req = "insert into parameters(id, param_value_int) values "
              . "('lc_process_stack_id', 1)";
         $GLOBALS['db']->query($req);
@@ -159,36 +159,44 @@ function updateWorkBatch()
 $argsparser = new ArgsParser();
 // The config file
 $argsparser->add_arg(
-    'config', array (
-    'short' => 'c',
-    'long' => 'config',
-    'mandatory' => true,
-    'help' => 'Config file path is mandatory.'
-));
+    'config', 
+    array(
+        'short' => 'c',
+        'long' => 'config',
+        'mandatory' => true,
+        'help' => 'Config file path is mandatory.',
+    )
+);
 // The res collection target
 $argsparser->add_arg(
-    'collection', array (
-    'short' => 'coll',
-    'long' => 'collection',
-    'mandatory' => true,
-    'help' => 'Collection target is mandatory.'
-));
+    'collection', 
+    array(
+        'short' => 'coll',
+        'long' => 'collection',
+        'mandatory' => true,
+        'help' => 'Collection target is mandatory.',
+    )
+);
 // The life cycle policy
 $argsparser->add_arg(
-    'policy', array (
-    'short' => 'p',
-    'long' => 'policy',
-    'mandatory' => true,
-    'help' => 'Policy is mandatory.'
-));
+    'policy', 
+    array(
+        'short' => 'p',
+        'long' => 'policy',
+        'mandatory' => true,
+        'help' => 'Policy is mandatory.',
+    )
+);
 // The cycle of the policy
 $argsparser->add_arg(
-    'cycle', array (
-    'short' => 'cy',
-    'long' => 'cycle',
-    'mandatory' => true,
-    'help' => 'Cycle is mandatory.'
-));
+    'cycle', 
+    array(
+        'short' => 'cy',
+        'long' => 'cycle',
+        'mandatory' => true,
+        'help' => 'Cycle is mandatory.',
+    )
+);
 // Log management
 $GLOBALS['logger'] = new Logger();
 $GLOBALS['logger']->set_threshold_level('DEBUG');
@@ -239,16 +247,16 @@ $GLOBALS['logger']->write($txt, 'INFO');
 // Tests existence of config file
 if (!file_exists($GLOBALS['configFile'])) {
     $GLOBALS['logger']->write('Configuration file ' . $GLOBALS['configFile'] 
-                        . ' does not exist', 'ERROR', 3);
+                              . ' does not exist', 'ERROR', 3);
     exit(3);
 }
 // Loading config file
 $GLOBALS['logger']->write('Load xml config file:' . $GLOBALS['configFile'], 
-                            'INFO');
+                          'INFO');
 $xmlconfig = simplexml_load_file($GLOBALS['configFile']);
 if ($xmlconfig == FALSE) {
     $GLOBALS['logger']->write('Error on loading config file:' 
-                        . $GLOBALS['configFile'], 'ERROR', 5);
+                              . $GLOBALS['configFile'], 'ERROR', 5);
     exit(5);
 }
 // Load the config vars
@@ -256,7 +264,7 @@ $CONFIG = $xmlconfig->CONFIG;
 $lang = (string) $CONFIG->Lang;
 $GLOBALS['MaarchDirectory'] = (string) $CONFIG->MaarchDirectory;
 $GLOBALS['TmpDirectory'] = (string) $CONFIG->TmpDirectory;
-$GLOBALS['docserversFeatures']['DOCSERVERS']['PATHTOCOMPRESSTOOL'] = 
+$GLOBALS['docserversFeatures']['DOCSERVERS']['PATHTOCOMPRESSTOOL'] =
                                            (string) $CONFIG->PathToCompressTool;
 $MaarchApps = (string) $CONFIG->MaarchApps;
 $log_level = (string) $CONFIG->LogLevel;
@@ -266,12 +274,12 @@ $GLOBALS['databasetype'] = (string) $xmlconfig->CONFIG_BASE->DatabaseType;
 $i = 0;
 foreach ($xmlconfig->COLLECTION as $col) {
     $GLOBALS['collections'][$i] = array(
-                                        'id' => (string) $col->Id, 
-                                        'table' => (string) $col->Table, 
-                                        'view' => (string) $col->View, 
-                                        'adr' => (string) $col->Adr
+        'id' => (string) $col->Id, 
+        'table' => (string) $col->Table, 
+        'view' => (string) $col->View, 
+        'adr' => (string) $col->Adr,
     );
-    if($GLOBALS['collections'][$i]['id'] == $GLOBALS['collection']) {
+    if ($GLOBALS['collections'][$i]['id'] == $GLOBALS['collection']) {
         $GLOBALS['table'] = $GLOBALS['collections'][$i]['table'];
         $GLOBALS['adrTable'] = $GLOBALS['collections'][$i]['adr'];
         $GLOBALS['view'] = $GLOBALS['collections'][$i]['view'];
@@ -283,12 +291,13 @@ if ($GLOBALS['table'] == ''
     || $GLOBALS['view'] == ''
 ) {
     $GLOBALS['logger']->write('Collection:' . $GLOBALS['collection'].' unknow'
-                        , 'ERROR', 16);
+                              , 'ERROR', 16);
     exit(16);
 }
 if (file_exists($GLOBALS['MaarchDirectory'] . 'modules' .DIRECTORY_SEPARATOR 
-    . 'life_cycle' .DIRECTORY_SEPARATOR . 'lang' . DIRECTORY_SEPARATOR 
-    . $lang . '.php')
+                . 'life_cycle' .DIRECTORY_SEPARATOR . 'lang' 
+                . DIRECTORY_SEPARATOR 
+                . $lang . '.php')
 ) {
     include($GLOBALS['MaarchDirectory'] . 'modules' .DIRECTORY_SEPARATOR 
     . 'life_cycle' .DIRECTORY_SEPARATOR . 'lang' . DIRECTORY_SEPARATOR 
@@ -301,35 +310,40 @@ $GLOBALS['logger']->change_handler_log_level($file, $log_level);
 $GLOBALS['logger']->change_handler_log_level($console, $DisplayedLogLevel);
 unset($xmlconfig);
 set_include_path(get_include_path() . PATH_SEPARATOR 
-                . $GLOBALS['MaarchDirectory']);
+                 . $GLOBALS['MaarchDirectory']);
 // Include library
 try {
     MyInclude($GLOBALS['MaarchDirectory'] . 'core' . DIRECTORY_SEPARATOR 
-    . 'class' . DIRECTORY_SEPARATOR . 'class_functions.php');
+              . 'class' . DIRECTORY_SEPARATOR . 'class_functions.php');
     MyInclude($GLOBALS['MaarchDirectory'] . 'core' . DIRECTORY_SEPARATOR 
-    . 'class' . DIRECTORY_SEPARATOR . 'class_db.php');
+              . 'class' . DIRECTORY_SEPARATOR . 'class_db.php');
     MyInclude($GLOBALS['MaarchDirectory'] . 'core' . DIRECTORY_SEPARATOR 
-    . 'class' . DIRECTORY_SEPARATOR . 'class_request.php');
+              . 'class' . DIRECTORY_SEPARATOR . 'class_request.php');
     MyInclude($GLOBALS['MaarchDirectory'] . 'core' . DIRECTORY_SEPARATOR 
-    . 'class' . DIRECTORY_SEPARATOR . 'class_core_tools.php');
+              . 'class' . DIRECTORY_SEPARATOR . 'class_core_tools.php');
     MyInclude($GLOBALS['MaarchDirectory'] . 'core' . DIRECTORY_SEPARATOR 
-    . 'core_tables.php');
+              . 'core_tables.php');
     MyInclude($GLOBALS['MaarchDirectory'] . 'modules' .DIRECTORY_SEPARATOR 
-    . 'life_cycle' .DIRECTORY_SEPARATOR . 'life_cycle_tables_definition.php');
+              . 'life_cycle' .DIRECTORY_SEPARATOR 
+              . 'life_cycle_tables_definition.php');
     MyInclude($GLOBALS['MaarchDirectory'] . 'core' . DIRECTORY_SEPARATOR 
-    . 'class' . DIRECTORY_SEPARATOR . 'docservers_controler.php');
+              . 'class' . DIRECTORY_SEPARATOR . 'docservers_controler.php');
     MyInclude($GLOBALS['MaarchDirectory'] . 'core' . DIRECTORY_SEPARATOR 
-    . 'class' . DIRECTORY_SEPARATOR . 'docserver_types_controler.php');
+              . 'DocserversTools.inc');
+    MyInclude($GLOBALS['MaarchDirectory'] . 'core' . DIRECTORY_SEPARATOR 
+              . 'class' . DIRECTORY_SEPARATOR 
+              . 'docserver_types_controler.php');
 } catch (IncludeFileError $e) {
     $GLOBALS['logger']->write(
-                            'Problem with the php include path:' 
-                            . get_include_path(), 'ERROR', 14);
+        'Problem with the php include path:' 
+        . get_include_path(), 'ERROR', 14
+    );
     exit(14);
 }
 if (!is_dir($GLOBALS['TmpDirectory'])) {
     $GLOBALS['logger']->write(
-                            'Problem with the tmp dir:' 
-                            . $GLOBALS['TmpDirectory'], 'ERROR', 17);
+        'Problem with the tmp dir:' . $GLOBALS['TmpDirectory'], 'ERROR', 17
+    );
     exit(14);
 }
 core_tools::load_lang($lang, $GLOBALS['MaarchDirectory'], $MaarchApps);
@@ -344,5 +358,3 @@ $GLOBALS['db2']->connect();
 $GLOBALS['db3']->connect();
 $GLOBALS['docserverControler'] = new docservers_controler();
 getWorkBatch();
-
-?>

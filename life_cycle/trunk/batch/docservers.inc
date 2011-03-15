@@ -35,10 +35,10 @@
  * @param string $dirToCompress path to the target dir to compress 
  * @return string path of the compressed resource
  */
-function doCompression($targeFile, $arrayOfFileToCompress, $dirToCompress = "") 
+function doCompression($targeFile, $arrayOfFileToCompress, $dirToCompress='') 
 {
-    $listOfFileToCompress = "";
-    if ($dirToCompress <> "") {
+    $listOfFileToCompress = '';
+    if ($dirToCompress <> '') {
         //$listOfFileToCompress = " -r " . $dirToCompress;
         $listOfFileToCompress = $dirToCompress . DIRECTORY_SEPARATOR . "*";
     } else {
@@ -48,8 +48,8 @@ function doCompression($targeFile, $arrayOfFileToCompress, $dirToCompress = "")
             $arrayOfFileToCompress = $arr;
         }
         $tmpCmd = "";
-        for ($cpt=0;$cpt<count($arrayOfFileToCompress);$cpt++) {
-            $listOfFileToCompress .= 
+        for ($cpt = 0;$cpt < count($arrayOfFileToCompress);$cpt++) {
+            $listOfFileToCompress .=
                 " " . escapeshellarg($arrayOfFileToCompress[$cpt]);
         }
     }
@@ -100,13 +100,13 @@ function extractAip($path)
     $path = str_replace('#', DIRECTORY_SEPARATOR, $path);
     $fileNameOnTmp = $GLOBALS['TmpDirectory'] . rand();
     $cp = copy($path, $fileNameOnTmp);
-    $GLOBALS['docserverControler']->setRights(
+    Ds_setRights(
         $fileNameOnTmp, 
         $GLOBALS['docservers'][$GLOBALS['currentStep']]['docserver']
         ['path_template']
     );
     $control = array();
-    $control = $GLOBALS['docserverControler']->controlFingerprint(
+    $control = Ds_controlFingerprint(
         $path, $fileNameOnTmp, $GLOBALS['docserverSourceFingerprint']
     );
     if ($control['error'] <> "") {
@@ -174,16 +174,16 @@ function extractAip($path)
 function controlIntegrityOfTransfer(
     $currentRecordInStack, $resInContainer, $destinationDir, 
     $fileDestinationName
-) 
+)
 {
     if (is_array($resInContainer) && count($resInContainer) > 0) {
         extractAip(
             $GLOBALS['docservers'][$GLOBALS['currentStep']]['docserver']
             ['path_template'] . $destinationDir . $fileDestinationName
         );
-        for ($cptRes=0;$cptRes<count($resInContainer);$cptRes++) {
+        for ($cptRes = 0;$cptRes < count($resInContainer);$cptRes++) {
             $control = array();
-            $control = $GLOBALS['docserverControler']->controlFingerprint(
+            $control = Ds_controlFingerprint(
                 $resInContainer[$cptRes]['source_path'], 
                 $GLOBALS['TmpDirectory'] . "CI" . DIRECTORY_SEPARATOR 
                 . str_replace(
@@ -205,7 +205,7 @@ function controlIntegrityOfTransfer(
             $currentRecordInStack['res_id']
         );
         $control = array();
-        $control = $GLOBALS['docserverControler']->controlFingerprint(
+        $control = Ds_controlFingerprint(
             $sourceFilePath, 
             $GLOBALS['docservers'][$GLOBALS['currentStep']]['docserver']
             ['path_template'] . str_replace(
@@ -233,10 +233,9 @@ function controlIntegrityOfSource($currentRecordInStack)
            . " where res_id = " . $currentRecordInStack;
     do_query($GLOBALS['db'], $query);
     $resRecordset = $GLOBALS['db']->fetch_object();
-    if ($GLOBALS['docserverControler']->doFingerprint(
+    if (Ds_doFingerprint(
         $sourceFilePath, $GLOBALS['docserverSourceFingerprint']
-    ) 
-    <> $resRecordset->fingerprint
+    ) <> $resRecordset->fingerprint
     ) {
         $GLOBALS['logger']->write(
             'Pb with fingerprint of the source:' . $currentRecordInStack 
@@ -244,7 +243,7 @@ function controlIntegrityOfSource($currentRecordInStack)
         );
         exit(25);
     }
-    $GLOBALS['docserverControler']->washTmp($GLOBALS['TmpDirectory'], true);
+    Ds_washTmp($GLOBALS['TmpDirectory'], true);
 }
 
 /**

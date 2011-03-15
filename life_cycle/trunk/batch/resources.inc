@@ -38,10 +38,9 @@
  */
 function getSourceResourcePath(
     $resId, 
-    $docserverToPurge = '', 
-    $returnArray = false
-) 
-{
+    $docserverToPurge='', 
+    $returnArray=false
+) {
     $pathArray = array();
     if ($docserverToPurge <> '') {
         $query = "select res_id, docserver_id, path, filename, offset_doc "
@@ -84,8 +83,8 @@ function getSourceResourcePath(
         //purge a container
         if (
             $docserverToPurge <> '' 
-            && $GLOBALS['docservers'][$GLOBALS['currentStep']]['is_container'] 
-            == 't'
+            && $GLOBALS['docservers'][$GLOBALS['currentStep']]
+                ['is_container'] == 't'
         ) {
             $sourceFilePath = $resRecordset->path . $resRecordset->filename;
         } else {
@@ -98,7 +97,7 @@ function getSourceResourcePath(
                 'docserverId' => $docserverToPurge, 
                 'basePath' => $resRecordset->path, 
                 'fileName' => $resRecordset->filename, 
-                'offsetDoc' => $resRecordset->offset_doc
+                'offsetDoc' => $resRecordset->offset_doc,
             )
         );
     } else {
@@ -108,7 +107,7 @@ function getSourceResourcePath(
             array(
                 'docserverId' => $docserverToPurge, 
                 'basePath' => $resPath, 
-                'fileName' => $resFilename
+                'fileName' => $resFilename,
             )
         );
     }
@@ -168,12 +167,11 @@ function updateDatabase(
     $resInContainer, 
     $path, 
     $fileName, 
-    $offsetDoc = ''
-)
-{
+    $offsetDoc='' 
+) {
     do_query($GLOBALS['db'], 'START TRANSACTION');
     if (is_array($resInContainer) && count($resInContainer) > 0) {
-        for ($cptRes=0;$cptRes<count($resInContainer);$cptRes++) {
+        for ($cptRes = 0;$cptRes < count($resInContainer);$cptRes++) {
             doUpdateDb(
                 $resInContainer[$cptRes]['res_id'], 
                 $path, $fileName, $resInContainer[$cptRes]['offset_doc'], 
@@ -275,7 +273,7 @@ function deleteAdrx($resId, $dsToUpdate)
            . $GLOBALS['cycle'] . "' where res_id = " . $resId;
     do_query($GLOBALS['db'], $query, true);
     $docserverSizeToUpdate = 0;
-    for ($cptDs=0;$cptDs<count($dsToUpdate);$cptDs++) {
+    for ($cptDs = 0;$cptDs < count($dsToUpdate);$cptDs++) {
         $query = "delete from " . $GLOBALS['adrTable'] . " where res_id = " 
                . $resId . " and docserver_id = '" 
                . $dsToUpdate[$cptDs]['docserverId'] . "'";

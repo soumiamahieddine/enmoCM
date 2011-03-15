@@ -78,7 +78,7 @@ try {
 
 /******************************************************************************/
 /* beginning */
-$GLOBALS['docserverControler']->washTmp($GLOBALS['TmpDirectory'], true);
+Ds_washTmp($GLOBALS['TmpDirectory'], true);
 $GLOBALS['state'] = "CONTROL_STACK";
 while ($GLOBALS['state'] <> "END") {
     if (isset($GLOBALS['logger'])) {
@@ -99,7 +99,8 @@ while ($GLOBALS['state'] <> "END") {
                     'WARNING stack empty for your request', 'ERROR', 7
                 );
                 $GLOBALS['exitCode'] = 7;
-                $GLOBALS['state'] = "END";break;
+                $GLOBALS['state'] = "END";
+                break;
             }
             updateWorkBatch();
             $GLOBALS['logger']->write("Batch number:".$GLOBALS['wb'], 'INFO');
@@ -120,10 +121,11 @@ while ($GLOBALS['state'] <> "END") {
             if ($GLOBALS['db']->nb_result() == 0) {
                 $GLOBALS['logger']->write('Cycle Steps not found', 'ERROR', 11);
                 $GLOBALS['exitCode'] = 11;
-                $GLOBALS['state'] = "END";break;
+                $GLOBALS['state'] = "END";
+                break;
             } else {
                 while ($stepsRecordset = $GLOBALS['db']->fetch_object()) {
-                    $GLOBALS['steps'][$stepsRecordset->cycle_step_id] = 
+                    $GLOBALS['steps'][$stepsRecordset->cycle_step_id] =
                         $GLOBALS['func']->object2array($stepsRecordset);
                     array_push(
                         $GLOBALS['steps'][$stepsRecordset->cycle_step_id], 
@@ -146,7 +148,8 @@ while ($GLOBALS['state'] <> "END") {
             if ($GLOBALS['db']->nb_result() == 0) {
                 $GLOBALS['logger']->write('Cycle Steps not found', 'ERROR', 11);
                 $GLOBALS['exitCode'] = 11;
-                $GLOBALS['state'] = "END";break;
+                $GLOBALS['state'] = "END";
+                break;
             } else {
                 while ($stepsRecordset = $GLOBALS['db']->fetch_object()) {
                     $query = "select * from " . _DOCSERVER_TYPES_TABLE_NAME 
@@ -158,9 +161,10 @@ while ($GLOBALS['state'] <> "END") {
                             'Docserver type not found', 'ERROR', 12
                         );
                         $GLOBALS['exitCode'] = 12;
-                        $GLOBALS['state'] = "END";break;
+                        $GLOBALS['state'] = "END";
+                        break;
                     } else {
-                        $docserverTypesRecordset = 
+                        $docserverTypesRecordset =
                             $GLOBALS['db2']->fetch_object();
                         $GLOBALS['docservers'][$stepsRecordset->cycle_step_id] =
                             $GLOBALS['func']->object2array(
@@ -179,7 +183,8 @@ while ($GLOBALS['state'] <> "END") {
                             'Docserver not found', 'ERROR', 13
                         );
                         $GLOBALS['exitCode'] = 13;
-                        $GLOBALS['state'] = "END";break;
+                        $GLOBALS['state'] = "END";
+                        break;
                     } else {
                         $docserversRecordset = $GLOBALS['db2']->fetch_object();
                         $GLOBALS['docservers'][$stepsRecordset->cycle_step_id]
@@ -196,7 +201,7 @@ while ($GLOBALS['state'] <> "END") {
         /**********************************************************************/
         case "A_STEP" :
             $GLOBALS['state'] = "EMPTY_STACK";
-            foreach ($GLOBALS['steps'] as $key=>$value) {
+            foreach ($GLOBALS['steps'] as $key => $value) {
                 if ($GLOBALS['steps'][$key][0] == "KO") {
                     $GLOBALS['currentStep'] = $GLOBALS['steps'][$key]
                         ['cycle_step_id'];
@@ -242,10 +247,10 @@ while ($GLOBALS['state'] <> "END") {
                                . $GLOBALS['collection'] . "')";
                         do_query($GLOBALS['db'], $query);
                         $resSum = $GLOBALS['db']->fetch_object();
-                        $reasonableLimitSize = 
+                        $reasonableLimitSize =
                             $GLOBALS['docservers'][$GLOBALS['currentStep']]
                             ['docserver']['size_limit_number'] * 0.95;
-                        $targetSize = $resSum->sumfilesize + 
+                        $targetSize = $resSum->sumfilesize +
                             $GLOBALS['docservers'][$GLOBALS['currentStep']]
                             ['docserver']['actual_size_number'];
                         if ($targetSize > $reasonableLimitSize) {
@@ -257,12 +262,11 @@ while ($GLOBALS['state'] <> "END") {
                             exit(28);
                         }
                         $resultPath = array();
-                        $totalSizeToAdd = 
+                        $totalSizeToAdd =
                             $GLOBALS['docservers'][$GLOBALS['currentStep']]
                             ['docserver']['actual_size_number'];
-                        $resultPath = 
-                            $GLOBALS['docserverControler']
-                            ->createPathOnDocServer(
+                        $resultPath =
+                            Ds_createPathOnDocServer(
                                 $GLOBALS['docservers'][$GLOBALS['currentStep']]
                                 ['docserver']['path_template']
                             );
@@ -278,7 +282,8 @@ while ($GLOBALS['state'] <> "END") {
                             'INFO'
                         );
                     } elseif ($GLOBALS['steps'][$GLOBALS['currentStep']]
-                    ['step_operation'] == "PURGE") {
+                    ['step_operation'] == "PURGE"
+                    ) {
                         $nbDocserver = 0;
                         $GLOBALS['docservers'][$GLOBALS['currentStep']]
                             ['docserver'] = array();
@@ -288,17 +293,19 @@ while ($GLOBALS['state'] <> "END") {
                                ['docserver_type_id'] . "' and coll_id = '" 
                                . $GLOBALS['collection'] . "'";
                         do_query($GLOBALS['db2'], $query);
-                        while ($docserversRecordset = 
-                            $GLOBALS['db2']->fetch_object()) {
+                        while ($docserversRecordset =
+                            $GLOBALS['db2']->fetch_object()
+                        ) {
                             $GLOBALS['docservers'][$GLOBALS['currentStep']]
-                            ['docserver'][$nbDocserver] = 
+                            ['docserver'][$nbDocserver] =
                             $GLOBALS['func']->object2array(
                                 $docserversRecordset
                             );
                             $nbDocserver++;
                         }
                     }
-                    $GLOBALS['state'] = "A_RECORD";break;
+                    $GLOBALS['state'] = "A_RECORD";
+                    break;
                 }
             }
             break;
@@ -316,12 +323,14 @@ while ($GLOBALS['state'] <> "END") {
                    . $GLOBALS['collection'] . "'";
             do_query($GLOBALS['db'], $query);
             if ($GLOBALS['db']->nb_result() == 0) {
-                foreach ($GLOBALS['steps'] as $key=>$value) {
+                foreach ($GLOBALS['steps'] as $key => $value) {
                     if ($key == $GLOBALS['currentStep']) {
-                        $GLOBALS['steps'][$key][0] = "OK";break;
+                        $GLOBALS['steps'][$key][0] = "OK";
+                        break;
                     }
                 }
-                $GLOBALS['state'] = "A_STEP";break;
+                $GLOBALS['state'] = "A_STEP";
+                break;
             } else {
                 if ($cptRecordsInStep == $cptRecordsTotalInStep) {
                     $GLOBALS['logger']->write(
@@ -336,11 +345,10 @@ while ($GLOBALS['state'] <> "END") {
                     $stackRecordset
                 );
                 // if NEW operation we have to add new states
-                if ($GLOBALS['steps'][$GLOBALS['currentStep']]['step_operation']
-                    == "COPY" 
+                if ($GLOBALS['steps'][$GLOBALS['currentStep']]
+                    ['step_operation'] == "COPY" 
                     || $GLOBALS['steps'][$GLOBALS['currentStep']]
-                       ['step_operation']
-                    == "MOVE"
+                    ['step_operation'] == "MOVE"
                 ) {
                     controlIntegrityOfSource($currentRecordInStack['res_id']);
                     $sourceFilePath = getSourceResourcePath(
@@ -352,10 +360,11 @@ while ($GLOBALS['state'] <> "END") {
                             'ERROR', 27
                         );
                         $GLOBALS['exitCode'] = 27;
-                        $GLOBALS['state'] = "END";break;
+                        $GLOBALS['state'] = "END";
+                        break;
                     } else {
-                        $currentRecordInStack['fingerprint'] = 
-                            $GLOBALS['docserverControler']->doFingerprint(
+                        $currentRecordInStack['fingerprint'] =
+                            Ds_doFingerprint(
                                 $sourceFilePath, 
                                 $GLOBALS['docservers'][$GLOBALS['currentStep']]
                                 ['fingerprint_mode']
@@ -367,7 +376,8 @@ while ($GLOBALS['state'] <> "END") {
                         $GLOBALS['state'] = "COPY_OR_MOVE";
                     }
                 } elseif ($GLOBALS['steps'][$GLOBALS['currentStep']]
-                ['step_operation'] == "PURGE") {
+                    ['step_operation'] == "PURGE"
+                ) {
                     $GLOBALS['state'] = "CONTROL_ADR_X";
                 } else {
                     $GLOBALS['state'] = "END";
@@ -392,7 +402,8 @@ while ($GLOBALS['state'] <> "END") {
                 $GLOBALS['state'] = "A_RECORD";
             } else {
                 if ($GLOBALS['docservers'][$GLOBALS['currentStep']]
-                ['is_container'] == "t") {
+                ['is_container'] == "t"
+                ) {
                     $GLOBALS['state'] = "CONTROL_CONTAINER_EMPTY";
                 } else {
                     $GLOBALS['state'] = "DO_PURGE_ON_DOCSERVER";
@@ -408,11 +419,11 @@ while ($GLOBALS['state'] <> "END") {
             $dsToUpdate = array();
             //print_r($GLOBALS['docservers'][$GLOBALS['currentStep']]);
             for (
-            $cptDs=0;
-            $cptDs<count(
-                $GLOBALS['docservers'][$GLOBALS['currentStep']]['docserver']
-            );
-            $cptDs++
+                $cptDs = 0;
+                $cptDs < count(
+                    $GLOBALS['docservers'][$GLOBALS['currentStep']]['docserver']
+                );
+                $cptDs++
             ) {
                 $sourceFilePath = getSourceResourcePath(
                     $currentRecordInStack['res_id'], 
@@ -441,7 +452,7 @@ while ($GLOBALS['state'] <> "END") {
                             array(
                                 "docserverId" => $GLOBALS['docservers']
                                 [$GLOBALS['currentStep']]['docserver'][$cptDs]
-                                ['docserver_id']
+                                ['docserver_id'],
                             )
                         );
                         $GLOBALS['state'] = "DELETE_RES_ON_ADR_X";
@@ -466,8 +477,8 @@ while ($GLOBALS['state'] <> "END") {
             $GLOBALS['state'] = "DELETE_RES_ON_ADR_X";
             $dsToUpdate = array();
             for (
-                $cptDs=0;
-                $cptDs<count(
+                $cptDs = 0;
+                $cptDs < count(
                     $GLOBALS['docservers'][$GLOBALS['currentStep']]['docserver']
                 );
                 $cptDs++
@@ -478,7 +489,8 @@ while ($GLOBALS['state'] <> "END") {
                     [$cptDs]['docserver_id']
                 );
                 if ($GLOBALS['docservers'][$GLOBALS['currentStep']]['docserver']
-                [$cptDs]['docserver_id'] <> "") {
+                    [$cptDs]['docserver_id'] <> ""
+                ) {
                     if (!file_exists($sourceFilePath) 
                         && $sourceFilePath <> ""
                     ) {
@@ -491,7 +503,8 @@ while ($GLOBALS['state'] <> "END") {
                             ['docserver'][$cptDs]['docserver_id'], 'ERROR', 27
                         );
                         $GLOBALS['exitCode'] = 27;
-                        $GLOBALS['state'] = "END";break;
+                        $GLOBALS['state'] = "END";
+                        break;
                     } else {
                         if (str_replace(
                             $GLOBALS['docserverSourcePath'], "", 
@@ -504,7 +517,7 @@ while ($GLOBALS['state'] <> "END") {
                                 array(
                                     "docserverId" => $GLOBALS['docservers']
                                     [$GLOBALS['currentStep']]['docserver']
-                                    [$cptDs]['docserver_id']
+                                    [$cptDs]['docserver_id'],
                                 )
                             );
                             $currentFileSize = filesize($sourceFilePath);
@@ -514,7 +527,8 @@ while ($GLOBALS['state'] <> "END") {
                                     $sourceFilePath, 'ERROR', 26
                                 );
                                 $GLOBALS['exitCode'] = 26;
-                                $GLOBALS['state'] = "END";break;
+                                $GLOBALS['state'] = "END";
+                                break;
                             } else {
                                 $GLOBALS['logger']->write(
                                     'Purge file:' . $sourceFilePath, 'DEBUG'
@@ -531,7 +545,7 @@ while ($GLOBALS['state'] <> "END") {
                                     $GLOBALS['docservers']
                                     [$GLOBALS['currentStep']]
                                     ['docserver'][$cptDs]['docserver_id'], 
-                                    $docserverRec->actual_size_number - 
+                                    $docserverRec->actual_size_number -
                                     $currentFileSize
                                 );
                             }
@@ -554,8 +568,8 @@ while ($GLOBALS['state'] <> "END") {
         /**********************************************************************/
         case "COPY_OR_MOVE" :
             if (
-                $GLOBALS['docservers'][$GLOBALS['currentStep']]['is_container'] 
-                == "t"
+                $GLOBALS['docservers'][$GLOBALS['currentStep']]
+                ['is_container'] == "t"
             ) {
                 $GLOBALS['state'] = "CONTAINER";
             } else {
@@ -595,12 +609,11 @@ while ($GLOBALS['state'] <> "END") {
                 array(
                     "res_id" => $currentRecordInStack['res_id'], 
                     "source_path" => $sourceFilePath, 
-                    "fingerprint" => $GLOBALS['docserverControler']->
-                    doFingerprint(
+                    "fingerprint" => Ds_doFingerprint(
                         $sourceFilePath, 
                         $GLOBALS['docservers'][$GLOBALS['currentStep']]
                         ['fingerprint_mode']
-                    )
+                    ),
                 )
             );
             $offsetDoc = "";
@@ -613,9 +626,8 @@ while ($GLOBALS['state'] <> "END") {
                    . $currentRecordInStack['res_id'];
             do_query($GLOBALS['db'], $query);
             if (
-                $cptResInContainer 
-                >= $GLOBALS['docservers'][$GLOBALS['currentStep']]
-                ['container_max_number'] 
+                $cptResInContainer >= $GLOBALS['docservers']
+                [$GLOBALS['currentStep']]['container_max_number'] 
                 || $theLastRecordInStep
             ) {
                 $GLOBALS['state'] = "CLOSE_CONTAINER";
@@ -642,7 +654,7 @@ while ($GLOBALS['state'] <> "END") {
         /**********************************************************************/
         case "DO_COPY_OR_MOVE" :
             $infoFileNameInTargetDocserver = array();
-            $infoFileNameInTargetDocserver = 
+            $infoFileNameInTargetDocserver =
                 $GLOBALS['docserverControler']->getNextFileNameInDocserver(
                     $pathOnDocserver
                 );
@@ -655,7 +667,7 @@ while ($GLOBALS['state'] <> "END") {
             $copyResultArray = array();
             $infoFileNameInTargetDocserver['fileDestinationName'] .= "." 
                 . strtolower($GLOBALS['func']->extractFileExt($sourceFilePath));
-            $copyResultArray = $GLOBALS['docserverControler']->copyOnDocserver(
+            $copyResultArray = Ds_copyOnDocserver(
                 $sourceFilePath, 
                 $infoFileNameInTargetDocserver, 
                 $GLOBALS['docserverSourceFingerprint']
@@ -671,7 +683,8 @@ while ($GLOBALS['state'] <> "END") {
                     'ERROR', 17
                 );
                 $GLOBALS['exitCode'] = 17;
-                $GLOBALS['state'] = "END";break;
+                $GLOBALS['state'] = "END";
+                break;
             }
             $destinationDir = $copyResultArray['destinationDir'];
             $fileDestinationName = $copyResultArray['fileDestinationName'];

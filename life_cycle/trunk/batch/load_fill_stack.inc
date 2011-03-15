@@ -142,38 +142,42 @@ function updateWorkBatch($db)
 $argsparser = new ArgsParser();
 // The config file
 $argsparser->add_arg(
-    'config', array (
-    'short' => 'c',
-    'long' => 'config',
-    'mandatory' => true,
-    'help' => 'Config file path is mandatory.'
+    'config', 
+    array(
+        'short' => 'c',
+        'long' => 'config',
+        'mandatory' => true,
+        'help' => 'Config file path is mandatory.',
     )
 );
 // The res collection target
 $argsparser->add_arg(
-    'collection', array (
-    'short' => 'coll',
-    'long' => 'collection',
-    'mandatory' => true,
-    'help' => 'Collection target is mandatory.'
+    'collection', 
+    array(
+        'short' => 'coll',
+        'long' => 'collection',
+        'mandatory' => true,
+        'help' => 'Collection target is mandatory.',
     )
 );
 // The life cycle policy
 $argsparser->add_arg(
-    'policy', array (
-    'short' => 'p',
-    'long' => 'policy',
-    'mandatory' => true,
-    'help' => 'Policy is mandatory.'
+    'policy', 
+    array(
+        'short' => 'p',
+        'long' => 'policy',
+        'mandatory' => true,
+        'help' => 'Policy is mandatory.',
     )
 );
 // The cycle of the policy
 $argsparser->add_arg(
-    'cycle', array (
-    'short' => 'cy',
-    'long' => 'cycle',
-    'mandatory' => true,
-    'help' => 'Cycle is mandatory.'
+    'cycle', 
+    array(
+        'short' => 'cy',
+        'long' => 'cycle',
+        'mandatory' => true,
+        'help' => 'Cycle is mandatory.',
     )
 );
 // Log management
@@ -256,10 +260,10 @@ $GLOBALS['databasetype'] = (string) $xmlconfig->CONFIG_BASE->DatabaseType;
 $i = 0;
 foreach ($xmlconfig->COLLECTION as $col) {
     $GLOBALS['collections'][$i] = array(
-                                    'id' => (string) $col->Id, 
-                                    'table' => (string) $col->Table, 
-                                    'view' => (string) $col->View, 
-                                    'adr' => (string) $col->Adr
+        'id' => (string) $col->Id, 
+        'table' => (string) $col->Table, 
+        'view' => (string) $col->View, 
+        'adr' => (string) $col->Adr,
     );
     if ($GLOBALS['collections'][$i]['id'] == $GLOBALS['collection']) {
         $GLOBALS['table'] = $GLOBALS['collections'][$i]['table'];

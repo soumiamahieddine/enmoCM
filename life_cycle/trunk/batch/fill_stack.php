@@ -69,7 +69,8 @@ while ($state <> 'END') {
                 $GLOBALS['logger']->write('WARNING stack is full', 'ERROR', 7);
                 $db->disconnect();
                 $GLOBALS['exitCode'] = 7;
-                $state = 'END';break;
+                $state = 'END';
+                break;
             }
             $db->disconnect();
             $state = 'GET_STEPS';
@@ -88,7 +89,8 @@ while ($state <> 'END') {
                 $GLOBALS['logger']->write('Cycle Steps not found', 'ERROR', 11);
                 $db->disconnect();
                 $GLOBALS['exitCode'] = 11;
-                $state = 'END';break;
+                $state = 'END';
+                break;
             } else {
                 while ($stepsRecordset = $db->fetch_object()) {
                     array_push(
@@ -122,7 +124,8 @@ while ($state <> 'END') {
                 );
                 $db->disconnect();
                 $GLOBALS['exitCode'] = 8;
-                $state = 'END';break;
+                $state = 'END';
+                break;
             }
             // compute the previous step
             $query = "select * from " . _LC_CYCLES_TABLE_NAME 
@@ -141,7 +144,8 @@ while ($state <> 'END') {
                 );
                 $db->disconnect();
                 $GLOBALS['exitCode'] = 9;
-                $state = 'END';break;
+                $state = 'END';
+                break;
             }
             // select resources
             if ($cycleRecordset->break_key <> '') {
@@ -172,7 +176,8 @@ while ($state <> 'END') {
                 );
                 $db->disconnect();
                 $GLOBALS['exitCode'] = 10;
-                $state = 'END';break;
+                $state = 'END';
+                break;
             }
             $db->disconnect();
             updateWorkBatch($db);
@@ -185,8 +190,12 @@ while ($state <> 'END') {
         /**********************************************************************/
         case 'FILL_STACK' :
             $db->connect();
-            for ($cptSteps=0;$cptSteps<count($GLOBALS['steps']);$cptSteps++) {
-                for ($cptRes=0;$cptRes<count($resourcesArray);$cptRes++) {
+            for (
+                $cptSteps = 0;
+                $cptSteps < count($GLOBALS['steps']);
+                $cptSteps++
+            ) {
+                for ($cptRes = 0;$cptRes < count($resourcesArray);$cptRes++) {
                     $query = "insert into " . _LC_STACK_TABLE_NAME 
                            . " (policy_id, cycle_id, cycle_step_id, coll_id, " 
                            . "res_id, status) values ('" . $GLOBALS['policy'] 

@@ -53,8 +53,8 @@ function createAip($resInContainer)
     mkdir($tmpDir);
     $newSourceFilePath = $GLOBALS['TmpDirectory'] . DIRECTORY_SEPARATOR 
                        . mt_rand();
-    for ($cptRes=0;$cptRes<count($resInContainer);$cptRes++) {
-        $resInContainer[$cptRes]['offset_doc'] = 
+    for ($cptRes = 0;$cptRes < count($resInContainer);$cptRes++) {
+        $resInContainer[$cptRes]['offset_doc'] =
             str_pad($cptRes, 4, '0', STR_PAD_LEFT) . '.' 
             . strtolower(
                 $GLOBALS['func']->extractFileExt(
@@ -66,14 +66,14 @@ function createAip($resInContainer)
             $tmpDir . DIRECTORY_SEPARATOR 
             . $resInContainer[$cptRes]['offset_doc']
         );
-        $GLOBALS['docserverControler']->setRights(
+        Ds_setRights(
             $tmpDir . DIRECTORY_SEPARATOR 
             . $resInContainer[$cptRes]['offset_doc'], 
             $GLOBALS['docservers'][$GLOBALS['currentStep']]
             ['docserver']['path_template']
         );
         if ($cp == false) {
-            $storeInfos = array('error'=>_DOCSERVER_COPY_ERROR);
+            $storeInfos = array('error' => _DOCSERVER_COPY_ERROR);
             return $storeInfos;
         }
         array_push(
@@ -95,19 +95,19 @@ function createAip($resInContainer)
     createPDIHistory($resInContainer);
     createPDI($resInContainer);
     $piArray = array();
-    $piArray['CIFingerprint'] = 
-        $GLOBALS['docserverControler']->doFingerprint(
+    $piArray['CIFingerprint'] =
+        Ds_doFingerprint(
             $result['newSourceFilePath'], 
             $GLOBALS['docservers'][$GLOBALS['currentStep']]['fingerprint_mode']
         );
-    $piArray['fingerprintMode'] = 
+    $piArray['fingerprintMode'] =
         $GLOBALS['docservers'][$GLOBALS['currentStep']]['fingerprint_mode'];
     $piArray['aiuCount'] = count($resInContainer);
     $piArray['ciName'] = 'CI.' 
         . strtolower(
             $GLOBALS['docservers'][$GLOBALS['currentStep']]['compression_mode']
         );
-    $piArray['compressionModeCI'] = 
+    $piArray['compressionModeCI'] =
         $GLOBALS['docservers'][$GLOBALS['currentStep']]['compression_mode'];
     $piArray['pdiName'] = 'PDI.' 
         . strtolower(
@@ -117,12 +117,12 @@ function createAip($resInContainer)
         . strtolower(
             $GLOBALS['docservers'][$GLOBALS['currentStep']]['compression_mode']
         );
-    $piArray['compressionModeHistory'] = 
+    $piArray['compressionModeHistory'] =
         $GLOBALS['docservers'][$GLOBALS['currentStep']]['compression_mode'];
     //PDI compression
     $pdiName = $GLOBALS['TmpDirectory'] . DIRECTORY_SEPARATOR . 'pdi.xml';
     $pdiName = doCompression('PDI', $pdiName);
-    $piArray['PDIFingerprint'] = $GLOBALS['docserverControler']->doFingerprint(
+    $piArray['PDIFingerprint'] = Ds_doFingerprint(
         $pdiName, 
         $GLOBALS['docservers'][$GLOBALS['currentStep']]['fingerprint_mode']
     );
@@ -130,8 +130,8 @@ function createAip($resInContainer)
     $pdiHistoryName = $GLOBALS['TmpDirectory'] . DIRECTORY_SEPARATOR .
          'pdi_history.xml';
     $pdiHistoryName = doCompression('PDI_HISTORY', $pdiHistoryName);
-    $piArray['PDIHISTORYFingerprint'] = 
-        $GLOBALS['docserverControler']->doFingerprint(
+    $piArray['PDIHISTORYFingerprint'] =
+        Ds_doFingerprint(
             $pdiHistoryName, 
             $GLOBALS['docservers'][$GLOBALS['currentStep']]['fingerprint_mode']
         );
@@ -155,7 +155,7 @@ function createAip($resInContainer)
             ), 'aip', $newSourceFilePath
         )
     );
-    $GLOBALS['docserverControler']->setRights(
+    Ds_setRights(
         str_replace(
             strtolower(
                 $GLOBALS['docservers'][$GLOBALS['currentStep']]
@@ -195,7 +195,7 @@ function createPDIHistory($resInContainer)
     $commentString = _HISTORY_COMMENT_ROOT;
     $commentNodeRoot = $docXML->createComment($commentString);
     $root->appendChild($commentNodeRoot);
-    for ($cptRes=0;$cptRes<count($resInContainer);$cptRes++) {
+    for ($cptRes = 0;$cptRes < count($resInContainer);$cptRes++) {
         //a record
         $pdiHistory = $docXML->createElement('PDI_HISTORY');
         $pdiHistory->setAttributeNode(
