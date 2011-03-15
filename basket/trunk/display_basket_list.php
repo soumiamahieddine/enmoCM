@@ -1,8 +1,9 @@
 <?php
+
 /*
-*    Copyright 2008-2010 Maarch
+*   Copyright 2008-2011 Maarch
 *
-*  This file is part of Maarch Framework.
+*   This file is part of Maarch Framework.
 *
 *   Maarch Framework is free software: you can redistribute it and/or modify
 *   it under the terms of the GNU General Public License as published by
@@ -25,6 +26,7 @@
 * @file
 * @author Loic Vinet <dev@maarch.org>
 * @author Claire Figueras <dev@maarch.org>
+* @author Laurent Giovannoni <dev@maarch.org>
 * @date $date$
 * @version $Revision$
 * @ingroup basket
@@ -35,7 +37,7 @@ $core_tools = new core_tools();
 $core_tools->test_user();
 //$core_tools->load_lang();
 
-if(!isset($_REQUEST['noinit']))
+if (!isset($_REQUEST['noinit']))
 {
     $_SESSION['current_basket'] = array();
 }
@@ -47,10 +49,9 @@ $db->connect();
 
 ?>
 <div id="welcome_box_right">
-<?php if($core_tools->test_service('display_basket_list','basket', false))
-{
-        if (isset($_SESSION['user']['baskets']) && count($_SESSION['user']['baskets']) > 0)
-        {
+<?php 
+if ($core_tools->test_service('display_basket_list','basket', false)) {
+        if (isset($_SESSION['user']['baskets']) && count($_SESSION['user']['baskets']) > 0) {
             ?>
             <div class="block">
             <h2><?php echo _MY_BASKETS; ?> : </h2>
@@ -58,42 +59,37 @@ $db->connect();
             <div class="blank_space">&nbsp;</div>
             <?php
             ?> <ul class="basket_elem"><?php
-        $abs_basket = false;
-        for ($i=0;$i<count($_SESSION['user']['baskets']);$i++)
-        {
-            if($_SESSION['user']['baskets'][$i]['abs_basket'] == true && !$abs_basket)
-            {
-                echo '</ul><h3>'._OTHER_BASKETS.' :</h3><ul class="basket_elem">';
-                $abs_basket = true;
-            }
-            $nb = '';
-            if(preg_match('/^CopyMailBasket/', $_SESSION['user']['baskets'][$i]['id']) && !empty($_SESSION['user']['baskets'][$i]['view']))
-            {
-                $db->query('select res_id from '.$_SESSION['user']['baskets'][$i]['view']." where ".$_SESSION['user']['baskets'][$i]['clause']);
-                $nb = $db->nb_result();
-            }
-            elseif(!empty($_SESSION['user']['baskets'][$i]['table']))
-            {
-                if( trim($_SESSION['user']['baskets'][$i]['clause']) <> '')
-                {
-                    $db->query('select res_id from '.$_SESSION['user']['baskets'][$i]['view']." where ".$_SESSION['user']['baskets'][$i]['clause'], true);
+            $abs_basket = false;
+            for ($i=0;$i<count($_SESSION['user']['baskets']);$i++) {
+                if ($_SESSION['user']['baskets'][$i]['abs_basket'] == true && !$abs_basket) {
+                    echo '</ul><h3>'._OTHER_BASKETS.' :</h3><ul class="basket_elem">';
+                    $abs_basket = true;
+                }
+                $nb = '';
+                if (preg_match('/^CopyMailBasket/', $_SESSION['user']['baskets'][$i]['id']) && !empty($_SESSION['user']['baskets'][$i]['view'])) {
+                    $db->query('select res_id from '.$_SESSION['user']['baskets'][$i]['view']." where ".$_SESSION['user']['baskets'][$i]['clause']);
                     $nb = $db->nb_result();
+                } elseif (!empty($_SESSION['user']['baskets'][$i]['table'])) {
+                    if ( trim($_SESSION['user']['baskets'][$i]['clause']) <> '') {
+                        $db->query('select res_id from '.$_SESSION['user']['baskets'][$i]['view']." where ".$_SESSION['user']['baskets'][$i]['clause'], true);
+                        $nb = $db->nb_result();
+                    }
+                }
+                if ($nb <> 0)
+                    $nb = "(".$nb.")";
+                else
+                    $nb = "(0)";
+                if (!preg_match('/^IndexingBasket/', $_SESSION['user']['baskets'][$i]['id'])) {
+                    echo '<li><a href="'.$_SESSION['config']['businessappurl'].'index.php?page=view_baskets&amp;module=basket&amp;baskets='.$_SESSION['user']['baskets'][$i]['id'].'"><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=manage_baskets_off.gif&amp;module=basket" alt=""/> '.$_SESSION['user']['baskets'][$i]['name'].'  <b>'.$nb.'</b> </a></li>';
                 }
             }
-
-            if ($nb <> 0)
-                $nb = "(".$nb.")";
-            else
-                $nb = "(0)";
-            if(!preg_match('/^IndexingBasket/', $_SESSION['user']['baskets'][$i]['id']))
-            {
-                echo '<li><a href="'.$_SESSION['config']['businessappurl'].'index.php?page=view_baskets&amp;module=basket&amp;baskets='.$_SESSION['user']['baskets'][$i]['id'].'"><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=manage_baskets_off.gif&amp;module=basket" alt=""/> '.$_SESSION['user']['baskets'][$i]['name'].'  <b>'.$nb.'</b> </a></li>';
-            }
-        }
-        ?>
-    </ul><?php
+            ?>
+            </ul>
+            <?php
         }
         ?>
     <div class="blank_space">&nbsp;</div>
-<?php }?>
+    <?php 
+}
+?>
 </div>
