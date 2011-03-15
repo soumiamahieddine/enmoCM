@@ -138,11 +138,12 @@
 		$filetmp .= $filename;
 		require_once("core" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . "docservers_controler.php");
 		require_once("core" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . "docserver_types_controler.php");
+		require_once("core" . DIRECTORY_SEPARATOR . "DocserversTools.inc");
 		$docserverControler = new docservers_controler();
 		$docserverTypeControler = new docserver_types_controler();
 		$docserver = $docserverControler->get($docserver_id);
 		$docserverTypeObject = $docserverTypeControler->get($docserver->docserver_type_id);
-		$fingerprint = $docserverControler->doFingerprint($filetmp, $docserverTypeObject->fingerprint_mode);
+		$fingerprint = Ds_doFingerprint($filetmp, $docserverTypeObject->fingerprint_mode);
 		$filesize = filesize($filetmp);
 		array_push($data, array('column' => "fingerprint", 'value' => $fingerprint, 'type' => "string"));
 		array_push($data, array('column' => "filesize", 'value' => $filesize, 'type' => "int"));

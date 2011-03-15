@@ -3,7 +3,7 @@
 /*
 *   Copyright 2008-2011 Maarch
 *
-*  	This file is part of Maarch Framework.
+*   This file is part of Maarch Framework.
 *
 *   Maarch Framework is free software: you can redistribute it and/or modify
 *   it under the terms of the GNU General Public License as published by
@@ -16,13 +16,12 @@
 *   GNU General Public License for more details.
 *
 *   You should have received a copy of the GNU General Public License
-*   along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
+*   along with Maarch Framework. If not, see <http://www.gnu.org/licenses/>.
 */
 
 /**
 * @brief Contains the docservers_controler Object 
 * (herits of the BaseObject class)
-*
 *
 * @file
 * @author Luc KEULEYAN - BULL
@@ -37,21 +36,25 @@ $_ENV['DEBUG'] = false;
 
 //Loads the required class
 try {
-    require_once ("core/class/docservers.php");
-    require_once ("core/core_tables.php");
-    require_once ("core/class/ObjectControlerAbstract.php");
-    require_once ("core/class/ObjectControlerIF.php");
-    require_once ("core/class/class_security.php");
-    require_once ("core/class/class_resource.php");
-    require_once ("core/class/class_history.php");
+    require_once ('core/class/docservers.php');
+    require_once ('core/DocserversTools.inc');
+    require_once ('core/core_tables.php');
+    require_once ('core/class/ObjectControlerAbstract.php');
+    require_once ('core/class/ObjectControlerIF.php');
+    require_once ('core/class/class_security.php');
+    require_once ('core/class/class_resource.php');
+    require_once ('core/class/class_history.php');
 } catch (Exception $e) {
-    echo $e->getMessage().' // ';
+    echo $e->getMessage() . ' // ';
 }
 
 /**
  * Class for controling docservers objects from database
  */
-class docservers_controler extends ObjectControler implements ObjectControlerIF {
+class docservers_controler
+    extends ObjectControler
+    implements ObjectControlerIF
+{
 
     /**
      * Save given object in database:
@@ -61,47 +64,86 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
      * @param docservers $docservers
      * @return array
      */
-    public function save($docserver, $mode = "") {
+    public function save($docserver, $mode='') 
+    {
         //var_dump($docserver);
         $control = array();
         if (!isset($docserver) || empty($docserver)) {
-            $control = array("status" => "ko", "value" => "", "error" => _DOCSERVER_EMPTY);
+            $control = array(
+                'status' => 'ko', 
+                'value' => '',
+                'error' => _DOCSERVER_EMPTY,
+            );
             return $control;
         }
         $docserver = $this->isADocserver($docserver);
-        $this->set_foolish_ids(array('docserver_id', 'docserver_type_id', 'coll_id', 'docserver_location_id'));
+        $this->set_foolish_ids(
+            array(
+                'docserver_id', 
+                'docserver_type_id', 
+                'coll_id', 
+                'docserver_location_id',
+            )
+        );
         $this->set_specific_id('docserver_id');
-        if ($mode == "up") {
-            $control = $this->control($docserver, "up");
-            if ($control['status'] == "ok") {
+        if ($mode == 'up') {
+            $control = $this->control($docserver, 'up');
+            if ($control['status'] == 'ok') {
                 //Update existing docserver
                 if ($this->update($docserver)) {
                     $this->createPackageInformation($docserver);
-                    $control = array("status" => "ok", "value" => $docserver->docserver_id);
+                    $control = array(
+                        'status' => 'ok', 
+                        'value' => $docserver->docserver_id,
+                    );
                     //history
-                    if ($_SESSION['history']['docserversadd'] == "true") {
+                    if ($_SESSION['history']['docserversadd'] == 'true') {
                         $history = new history();
-                        $history->add(_DOCSERVERS_TABLE_NAME, $docserver->docserver_id, "UP", _DOCSERVER_UPDATED." : ".$docserver->docserver_id, $_SESSION['config']['databasetype']);
+                        $history->add(
+                            _DOCSERVERS_TABLE_NAME, 
+                            $docserver->docserver_id, 
+                            'UP', 
+                            _DOCSERVER_UPDATED . ' : ' 
+                            . $docserver->docserver_id, 
+                            $_SESSION['config']['databasetype']
+                        );
                     }
                 } else {
-                    $control = array("status" => "ko", "value" => "", "error" => _PB_WITH_DOCSERVER);
+                    $control = array(
+                        'status' => 'ko', 
+                        'value' => '', 
+                        'error' => _PB_WITH_DOCSERVER,
+                    );
                 }
                 return $control;
             }
         } else {
-            $control = $this->control($docserver, "add");
-            if ($control['status'] == "ok") {
+            $control = $this->control($docserver, 'add');
+            if ($control['status'] == 'ok') {
                 //Insert new docserver
                 if ($this->insert($docserver)) {
                     $this->createPackageInformation($docserver);
-                    $control = array("status" => "ok", "value" => $docserver->docserver_id);
+                    $control = array(
+                        'status' => 'ok', 
+                        'value' => $docserver->docserver_id,
+                    );
                     //history
-                    if ($_SESSION['history']['docserversadd'] == "true") {
+                    if ($_SESSION['history']['docserversadd'] == 'true') {
                         $history = new history();
-                        $history->add(_DOCSERVERS_TABLE_NAME, $docserver->docserver_id, "ADD", _DOCSERVER_ADDED." : ".$docserver->docserver_id, $_SESSION['config']['databasetype']);
+                        $history->add(
+                            _DOCSERVERS_TABLE_NAME, 
+                            $docserver->docserver_id, 
+                            'ADD', 
+                            _DOCSERVER_ADDED . ' : ' . $docserver->docserver_id,
+                            $_SESSION['config']['databasetype']
+                        );
                     }
                 } else {
-                    $control = array("status" => "ko", "value" => "", "error" => _PB_WITH_DOCSERVER);
+                    $control = array(
+                        'status' => 'ko', 
+                        'value' => '', 
+                        'error' => _PB_WITH_DOCSERVER,
+                    );
                 }
             }
         }
@@ -114,72 +156,178 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
     * @param  $docserver docserver object
     * @return array ok if the object is well formated, ko otherwise
     */
-    private function control($docserver, $mode) {
+    private function control($docserver, $mode) 
+    {
         $f = new functions();
-        $error = "";
-        if ($mode == "add") {
+        $error = '';
+        if ($mode == 'add') {
             // Update, so values exist
-            if (isset($docserver->docserver_id) && $docserver->docserver_id <> "") {
-                $docserver->docserver_id = $f->protect_string_db($f->wash($docserver->docserver_id, "nick", _DOCSERVER_ID." ", "yes", 0, 32));
+            if (isset($docserver->docserver_id) 
+                && $docserver->docserver_id <> ''
+            ) {
+                $docserver->docserver_id = $f->protect_string_db(
+                    $f->wash(
+                        $docserver->docserver_id, 
+                        'nick', 
+                        _DOCSERVER_ID . ' ', 
+                        'yes', 0, 32
+                    )
+                );
             } else {
-                $error .= _DOCSERVER_ID . " " . _IS_EMPTY . "#";
+                $error .= _DOCSERVER_ID . ' ' . _IS_EMPTY . '#';
             }
         }
-        $docserver->docserver_type_id = $f->protect_string_db($f->wash($docserver->docserver_type_id, "no", _DOCSERVER_TYPES." ", 'yes', 0, 32));
-        $docserver->device_label = $f->protect_string_db($f->wash($docserver->device_label, "no", _DEVICE_LABEL." ", 'yes', 0, 255));
-        if ($docserver->is_readonly == "") {
-            $docserver->is_readonly = "false";
+        $docserver->docserver_type_id = $f->protect_string_db(
+            $f->wash(
+                $docserver->docserver_type_id, 
+                'no', 
+                _DOCSERVER_TYPES . ' ', 
+                'yes', 
+                0, 
+                32
+            )
+        );
+        $docserver->device_label = $f->protect_string_db(
+            $f->wash(
+                $docserver->device_label, 
+                'no', 
+                _DEVICE_LABEL . ' ', 
+                'yes', 
+                0, 
+                255
+            )
+        );
+        if ($docserver->is_readonly == '') {
+            $docserver->is_readonly = 'false';
         }
-        $docserver->is_readonly = $f->protect_string_db($f->wash($docserver->is_readonly, "no", _IS_READONLY." ", 'yes', 0, 5));
-        if ($docserver->is_readonly == "false") {
+        $docserver->is_readonly = $f->protect_string_db(
+            $f->wash(
+                $docserver->is_readonly, 
+                'no', 
+                _IS_READONLY . ' ', 
+                'yes', 
+                0, 
+                5
+            )
+        );
+        if ($docserver->is_readonly == 'false') {
             $docserver->is_readonly = false;
         } else {
             $docserver->is_readonly = true;
         }
-        if (isset($docserver->size_limit_number) && !empty($docserver->size_limit_number)) {
-            $docserver->size_limit_number = $f->protect_string_db($f->wash($docserver->size_limit_number, "no", _SIZE_LIMIT." ", 'yes', 0, 255));
+        if (isset($docserver->size_limit_number) 
+            && !empty($docserver->size_limit_number)
+        ) {
+            $docserver->size_limit_number = $f->protect_string_db(
+                $f->wash(
+                    $docserver->size_limit_number, 
+                    'no', 
+                    _SIZE_LIMIT . ' ', 
+                    'yes', 
+                    0, 
+                    255
+                )
+            );
             if ($docserver->size_limit_number == 0) {
-                $error .= _SIZE_LIMIT . " " . _IS_EMPTY . "#";
+                $error .= _SIZE_LIMIT . ' ' . _IS_EMPTY . '#';
             }
             if ($this->sizeLimitControl($docserver)) {
-                $error .= _SIZE_LIMIT_UNAPPROACHABLE."#";
+                $error .= _SIZE_LIMIT_UNAPPROACHABLE . '#';
             }
             if ($this->actualSizeNumberControl($docserver)) {
-                $error .= _SIZE_LIMIT_LESS_THAN_ACTUAL_SIZE."#";
+                $error .= _SIZE_LIMIT_LESS_THAN_ACTUAL_SIZE . '#';
             }
         } else {
-            $error .= _SIZE_LIMIT . " " . _IS_EMPTY . "#";
+            $error .= _SIZE_LIMIT . ' ' . _IS_EMPTY . '#';
         }
-        $docserver->path_template = $f->protect_string_db($f->wash($docserver->path_template, "no", _PATH_TEMPLATE." ", 'yes', 0, 255));
+        $docserver->path_template = $f->protect_string_db(
+            $f->wash(
+                $docserver->path_template, 
+                'no', 
+                _PATH_TEMPLATE . ' ', 
+                'yes', 
+                0, 
+                255
+            )
+        );
         if (!is_dir($docserver->path_template)) {
-            $error .= _PATH_OF_DOCSERVER_UNAPPROACHABLE."#";
+            $error .= _PATH_OF_DOCSERVER_UNAPPROACHABLE . '#';
         } else {
-            // $Fnm = $docserver->path_template."test_docserver.txt";
-            if (!is_writable($docserver->path_template) || !is_readable($docserver->path_template)) {
+            // $Fnm = $docserver->path_template . 'test_docserver.txt';
+            if (!is_writable($docserver->path_template) 
+                || !is_readable($docserver->path_template)
+            ) {
                 $error .= _THE_DOCSERVER_DOES_NOT_HAVE_THE_ADEQUATE_RIGHTS;
             }
         }
-        $docserver->coll_id = $f->protect_string_db($f->wash($docserver->coll_id, "no", _COLLECTION." ", 'yes', 0, 32));
-        $docserver->priority_number = $f->protect_string_db($f->wash($docserver->priority_number, "num", _PRIORITY." ", 'yes', 0, 6));
-        $docserver->docserver_location_id = $f->protect_string_db($f->wash($docserver->docserver_location_id, "no", _DOCSERVER_LOCATIONS." ", 'yes', 0, 32));
-        $docserver->adr_priority_number = $f->protect_string_db($f->wash($docserver->adr_priority_number, "num", _ADR_PRIORITY." ", 'yes', 0, 6));
-        if ($mode == "add" && $this->docserversExists($docserver->docserver_id)) {
-            $error .= $docserver->docserver_id." "._ALREADY_EXISTS."#";
+        $docserver->coll_id = $f->protect_string_db(
+            $f->wash(
+                $docserver->coll_id, 
+                'no', 
+                _COLLECTION . ' ', 
+                'yes', 
+                0, 
+                32
+            )
+        );
+        $docserver->priority_number = $f->protect_string_db(
+            $f->wash(
+                $docserver->priority_number, 
+                'num',
+                _PRIORITY . ' ', 
+                'yes', 
+                0, 
+                6
+            )
+        );
+        $docserver->docserver_location_id = $f->protect_string_db(
+            $f->wash(
+                $docserver->docserver_location_id, 
+                'no', 
+                _DOCSERVER_LOCATIONS . ' ', 
+                'yes', 
+                0, 
+                32
+            )
+        );
+        $docserver->adr_priority_number = $f->protect_string_db(
+            $f->wash(
+                $docserver->adr_priority_number, 
+                'num', 
+                _ADR_PRIORITY . ' ', 
+                'yes', 
+                0, 
+                6
+            )
+        );
+        if ($mode == 'add' 
+            && $this->docserversExists($docserver->docserver_id)
+        ) {
+            $error .= $docserver->docserver_id . ' ' . _ALREADY_EXISTS . '#';
         }
         if (!$this->adrPriorityNumberControl($docserver)) {
-            $error .= _PRIORITY." ".$docserver->adr_priority_number." "._ALREADY_EXISTS_FOR_THIS_TYPE_OF_DOCSERVER."#";
+            $error .= _PRIORITY . ' ' . $docserver->adr_priority_number . ' ' 
+                    . _ALREADY_EXISTS_FOR_THIS_TYPE_OF_DOCSERVER . '#';
         }
         if (!$this->priorityNumberControl($docserver)) {
-            $error .= _ADR_PRIORITY.$docserver->priority_number."  "._ALREADY_EXISTS_FOR_THIS_TYPE_OF_DOCSERVER."#";
+            $error .= _ADR_PRIORITY . $docserver->priority_number . '  ' 
+                    . _ALREADY_EXISTS_FOR_THIS_TYPE_OF_DOCSERVER . '#';
         }
         $error .= $_SESSION['error'];
         //TODO:rewrite wash to return errors without html
-        $error = str_replace("<br />", "#", $error);
+        $error = str_replace('<br />', '#', $error);
         $return = array();
         if (!empty($error)) {
-                $return = array("status" => "ko", "value" => $docserver->docserver_id, "error" => $error);
+                $return = array(
+                    'status' => 'ko', 
+                    'value' => $docserver->docserver_id, 
+                    'error' => $error,
+                );
         } else {
-            $return = array("status" => "ok", "value" => $docserver->docserver_id);
+            $return = array(
+                'status' => 'ok', 
+                'value' => $docserver->docserver_id,
+            );
         }
         return $return;
     }
@@ -189,28 +337,80 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
     *
     * @param  $docserver docserver object
     */
-    private function createPackageInformation($docserver) {
-        if (is_writable($docserver->path_template) && is_readable($docserver->path_template)) {
-            require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."docserver_types_controler.php");
+    private function createPackageInformation($docserver) 
+    {
+        if (is_writable($docserver->path_template) 
+            && is_readable($docserver->path_template)
+        ) {
+            require_once('core' . DIRECTORY_SEPARATOR . 'class' 
+                . DIRECTORY_SEPARATOR . 'docserver_types_controler.php');
             $docserverTypeControler = new docserver_types_controler();
-            $docserverTypeObject = $docserverTypeControler->get($docserver->docserver_type_id);
-            $Fnm = $docserver->path_template.DIRECTORY_SEPARATOR."package_information";
+            $docserverTypeObject = $docserverTypeControler->get(
+                $docserver->docserver_type_id
+            );
+            $Fnm = $docserver->path_template . DIRECTORY_SEPARATOR 
+                 . 'package_information';
             if (file_exists($Fnm)) {
                 unlink($Fnm);
             }
-            $inF = fopen($Fnm, "a");
-            fwrite($inF, _DOCSERVER_TYPE_ID." : ".$docserverTypeObject->docserver_type_id."\r\n");
-            fwrite($inF, _DOCSERVER_TYPE_LABEL." : ".$docserverTypeObject->docserver_type_label."\r\n");
-            fwrite($inF, _IS_CONTAINER." : ".$docserverTypeObject->is_container."\r\n");
-            fwrite($inF, _CONTAINER_MAX_NUMBER." : ".$docserverTypeObject->container_max_number."\r\n");
-            fwrite($inF, _IS_COMPRESSED." : ".$docserverTypeObject->is_compressed."\r\n");
-            fwrite($inF, _COMPRESS_MODE." : ".$docserverTypeObject->compression_mode."\r\n");
-            fwrite($inF, _IS_META." : ".$docserverTypeObject->is_meta."\r\n");
-            fwrite($inF, _META_TEMPLATE." : ".$docserverTypeObject->meta_template."\r\n");
-            fwrite($inF, _IS_LOGGED." : ".$docserverTypeObject->is_logged."\r\n");
-            fwrite($inF, _LOG_TEMPLATE." : ".$docserverTypeObject->log_template."\r\n");
-            fwrite($inF, _IS_SIGNED." : ".$docserverTypeObject->is_signed."\r\n");
-            fwrite($inF, _FINGERPRINT_MODE." : ".$docserverTypeObject->fingerprint_mode."\r\n");
+            $inF = fopen($Fnm, 'a');
+            fwrite(
+                $inF, 
+                _DOCSERVER_TYPE_ID . ' : ' 
+                . $docserverTypeObject->docserver_type_id . '\r\n'
+            );
+            fwrite(
+                $inF, 
+                _DOCSERVER_TYPE_LABEL . ' : ' 
+                . $docserverTypeObject->docserver_type_label . '\r\n'
+            );
+            fwrite(
+                $inF, 
+                _IS_CONTAINER . ' : ' . $docserverTypeObject->is_container 
+                . '\r\n'
+            );
+            fwrite(
+                $inF, 
+                _CONTAINER_MAX_NUMBER . ' : ' 
+                . $docserverTypeObject->container_max_number . '\r\n'
+            );
+            fwrite(
+                $inF, 
+                _IS_COMPRESSED . ' : ' . $docserverTypeObject->is_compressed 
+                . '\r\n'
+            );
+            fwrite(
+                $inF, 
+                _COMPRESS_MODE . ' : ' 
+                . $docserverTypeObject->compression_mode . '\r\n'
+            );
+            fwrite(
+                $inF, 
+                _IS_META . ' : ' . $docserverTypeObject->is_meta . '\r\n'
+            );
+            fwrite(
+                $inF, 
+                _META_TEMPLATE . ' : ' . $docserverTypeObject->meta_template 
+                . '\r\n'
+            );
+            fwrite(
+                $inF, 
+                _IS_LOGGED . ' : ' . $docserverTypeObject->is_logged . '\r\n'
+            );
+            fwrite(
+                $inF, 
+                _LOG_TEMPLATE . ' : ' . $docserverTypeObject->log_template 
+                . '\r\n'
+            );
+            fwrite(
+                $inF, 
+                _IS_SIGNED . ' : ' . $docserverTypeObject->is_signed . '\r\n'
+            );
+            fwrite(
+                $inF, 
+                _FINGERPRINT_MODE . ' : ' 
+                . $docserverTypeObject->fingerprint_mode . '\r\n'
+            );
             fclose($inF);
         }
     }
@@ -221,11 +421,12 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
     * @param  $docserver docserver object
     * @return bool true if the insertion is complete, false otherwise
     */
-    private function insert($docserver) {
+    private function insert($docserver) 
+    {
         $request = new request();
         //Giving automatised values
-        $docserver->enabled="Y";
-        $docserver->creation_date=$request->current_datetime();
+        $docserver->enabled = 'Y';
+        $docserver->creation_date = $request->current_datetime();
         //Inserting object
         $result = $this->advanced_insert($docserver);
         return $result;
@@ -237,7 +438,8 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
     * @param  $docserver docserver object
     * @return bool true if the update is complete, false otherwise
     */
-    private function update($docserver) {
+    private function update($docserver) 
+    {
         return $this->advanced_update($docserver);
     }
 
@@ -247,13 +449,14 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
      * @param $id Id of docservers to get
      * @return docservers
      */
-    public function get($docserver_id) {
+    public function get($docserver_id) 
+    {
         //var_dump($docserver_id);
         $this->set_foolish_ids(array('docserver_id'));
         $this->set_specific_id('docserver_id');
         $docserver = $this->advanced_get($docserver_id, _DOCSERVERS_TABLE_NAME);
         //var_dump($docserver);
-        if (get_class($docserver) <> "docservers") {
+        if (get_class($docserver) <> 'docservers') {
             return null;
         } else {
             //var_dump($docserver);
@@ -267,11 +470,12 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
      * @param $docserver_id of docservers to send
      * @return docservers
      */
-    public function getWs($docserver_id) {
+    public function getWs($docserver_id) 
+    {
         $this->set_foolish_ids(array('docserver_id'));
         $this->set_specific_id('docserver_id');
         $docserver = $this->advanced_get($docserver_id, _DOCSERVERS_TABLE_NAME);
-        if (get_class($docserver) <> "docservers") {
+        if (get_class($docserver) <> 'docservers') {
             return null;
         } else {
             $docserver = $docserver->getArray();
@@ -283,40 +487,76 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
      * Delete given docserver from database.
      * @param docservers $docservers
      */
-    public function delete($docserver) {
+    public function delete($docserver) 
+    {
         $func = new functions();
         $control = array();
         if (!isset($docserver) || empty($docserver)) {
-            $control = array("status" => "ko", "value" => "", "error" => _DOCSERVER_EMPTY);
+            $control = array(
+                'status' => 'ko', 
+                'value' => '', 
+                'error' => _DOCSERVER_EMPTY,
+            );
             return $control;
         }
         $docserver = $this->isADocserver($docserver);
         if (!$this->docserversExists($docserver->docserver_id)) {
-            $control = array("status" => "ko", "value" => "", "error" => _DOCSERVER_NOT_EXISTS);
+            $control = array(
+                'status' => 'ko', 
+                'value' => '', 
+                'error' => _DOCSERVER_NOT_EXISTS,
+            );
             return $control;
         }
         /*if ($this->adrxLinkExists($docserver->docserver_id)) {
-            $control = array("status" => "ko", "value" => "", "error" => _DOCSERVER_ATTACHED_TO_ADR_X);
+            $control = array('status' => 'ko', 'value' => '', 
+            'error' => _DOCSERVER_ATTACHED_TO_ADR_X);
             return $control;
         }*/
-        if ($this->resxLinkExists($docserver->docserver_id, $docserver->coll_id)) {
-            $control = array("status" => "ko", "value" => "", "error" => _DOCSERVER_ATTACHED_TO_RES_X);
+        if ($this->resxLinkExists(
+            $docserver->docserver_id, 
+            $docserver->coll_id
+        )
+        ) {
+            $control = array(
+                'status' => 'ko', 
+                'value' => '', 
+                'error' => _DOCSERVER_ATTACHED_TO_RES_X,
+            );
             return $control;
         }
-        $db=new dbquery();
+        $db = new dbquery();
         $db->connect();
-        $query="delete from "._DOCSERVERS_TABLE_NAME." where docserver_id ='".$func->protect_string_db($docserver->docserver_id)."'";
+        $query = "delete from " . _DOCSERVERS_TABLE_NAME 
+               . " where docserver_id ='" 
+               . $func->protect_string_db($docserver->docserver_id) . "'";
         try {
-            if ($_ENV['DEBUG']) {echo $query.' // ';}
+            if ($_ENV['DEBUG']) {
+                echo $query . ' // ';
+            }
             $db->query($query);
         } catch (Exception $e) {
-            $control = array("status" => "ko", "value" => "", "error" => _CANNOT_DELETE_DOCSERVER_ID." ".$docserver->docserver_id);
+            $control = array(
+                'status' => 'ko', 
+                'value' => '', 
+                'error' => _CANNOT_DELETE_DOCSERVER_ID 
+                . ' ' . $docserver->docserver_id,
+            );
         }
         $db->disconnect();
-        $control = array("status" => "ok", "value" => $docserver->docserver_id);
-        if ($_SESSION['history']['docserversdel'] == "true") {
+        $control = array(
+            'status' => 'ok', 
+            'value' => $docserver->docserver_id,
+        );
+        if ($_SESSION['history']['docserversdel'] == 'true') {
             $history = new history();
-            $history->add(_DOCSERVERS_TABLE_NAME, $docserver->docserver_id, "DEL", _DOCSERVER_DELETED." : ".$docserver->docserver_id, $_SESSION['config']['databasetype']);
+            $history->add(
+                _DOCSERVERS_TABLE_NAME, 
+                $docserver->docserver_id, 
+                'DEL', 
+                _DOCSERVER_DELETED . ' : ' . $docserver->docserver_id, 
+                $_SESSION['config']['databasetype']
+            );
         }
         return $control;
     }
@@ -327,23 +567,41 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
     * @param  $docserver docservers object
     * @return bool true if the disabling is complete, false otherwise
     */
-    public function disable($docserver) {
+    public function disable($docserver) 
+    {
         $control = array();
         if (!isset($docserver) || empty($docserver)) {
-            $control = array("status" => "ko", "value" => "", "error" => _DOCSERVER_EMPTY);
+            $control = array(
+                'status' => 'ko', 
+                'value' => '', 
+                'error' => _DOCSERVER_EMPTY,
+            );
             return $control;
         }
         $docserver = $this->isADocserver($docserver);
         $this->set_foolish_ids(array('docserver_id'));
         $this->set_specific_id('docserver_id');
         if ($this->advanced_disable($docserver)) {
-            $control = array("status" => "ok", "value" => $docserver->docserver_id);
-            if ($_SESSION['history']['docserversban'] == "true") {
+            $control = array(
+                'status' => 'ok', 
+                'value' => $docserver->docserver_id,
+            );
+            if ($_SESSION['history']['docserversban'] == 'true') {
                 $history = new history();
-                $history->add(_DOCSERVERS_TABLE_NAME, $docserver->docserver_id, "BAN", _DOCSERVER_DISABLED." : ".$docserver->docserver_id, $_SESSION['config']['databasetype']);
+                $history->add(
+                    _DOCSERVERS_TABLE_NAME, 
+                    $docserver->docserver_id, 
+                    'BAN', 
+                    _DOCSERVER_DISABLED . ' : ' . $docserver->docserver_id, 
+                    $_SESSION['config']['databasetype']
+                );
             }
         } else {
-            $control = array("status" => "ko", "value" => "", "error" => _PB_WITH_DOCSERVER);
+            $control = array(
+                'status' => 'ko', 
+                'value' => '', 
+                'error' => _PB_WITH_DOCSERVER,
+            );
         }
         return $control;
     }
@@ -354,23 +612,41 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
     * @param  $docserver docservers object
     * @return bool true if the enabling is complete, false otherwise
     */
-    public function enable($docserver) {
+    public function enable($docserver) 
+    {
         $control = array();
         if (!isset($docserver) || empty($docserver)) {
-            $control = array("status" => "ko", "value" => "", "error" => _DOCSERVER_EMPTY);
+            $control = array(
+                'status' => 'ko', 
+                'value' => '', 
+                'error' => _DOCSERVER_EMPTY,
+            );
             return $control;
         }
         $docserver = $this->isADocserver($docserver);
         $this->set_foolish_ids(array('docserver_id'));
         $this->set_specific_id('docserver_id');
         if ($this->advanced_enable($docserver)) {
-            $control = array("status" => "ok", "value" => $docserver->docserver_id);
-            if ($_SESSION['history']['docserversallow'] == "true") {
+            $control = array(
+                'status' => 'ok', 
+                'value' => $docserver->docserver_id,
+            );
+            if ($_SESSION['history']['docserversallow'] == 'true') {
                 $history = new history();
-                $history->add(_DOCSERVERS_TABLE_NAME, $docserver->docserver_id, "VAL",_DOCSERVER_ENABLED." : ".$docserver->docserver_id, $_SESSION['config']['databasetype']);
+                $history->add(
+                    _DOCSERVERS_TABLE_NAME, 
+                    $docserver->docserver_id, 
+                    'VAL', 
+                    _DOCSERVER_ENABLED . ' : ' . $docserver->docserver_id, 
+                    $_SESSION['config']['databasetype']
+                );
             }
         } else {
-            $control = array("status" => "ko", "value" => "", "error" => _PB_WITH_DOCSERVER);
+            $control = array(
+                'status' => 'ko', 
+                'value' => '', 
+                'error' => _PB_WITH_DOCSERVER,
+            );
         }
         return $control;
     }
@@ -381,13 +657,14 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
     * @param  $object ws docserver object
     * @return object docservers
     */
-    private function isADocserver($object) {
-        if (get_class($object) <> "docservers") {
+    private function isADocserver($object) 
+    {
+        if (get_class($object) <> 'docservers') {
             $func = new functions();
             $docserverObject = new docservers();
             $array = array();
             $array = $func->object2array($object);
-            foreach(array_keys($array) as $key) {
+            foreach (array_keys($array) as $key) {
                 $docserverObject->$key = $array[$key];
             }
             return $docserverObject;
@@ -402,17 +679,22 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
     * @param  $docserver docservers object
     * @return bool true if exists, false otherwise
     */
-    public function docserversExists($docserver_id) {
-        if (!isset($docserver_id) || empty($docserver_id))
+    public function docserversExists($docserver_id) 
+    {
+        if (!isset($docserver_id) || empty($docserver_id)) {
             return false;
-        $db=new dbquery();
+        }
+        $db = new dbquery();
         $db->connect();
-        $query = "select docserver_id from "._DOCSERVERS_TABLE_NAME." where docserver_id = '".$docserver_id."'";
+        $query = "select docserver_id from " . _DOCSERVERS_TABLE_NAME 
+               . " where docserver_id = '" . $docserver_id . "'";
         try{
-            if ($_ENV['DEBUG']) {echo $query.' // ';}
+            if ($_ENV['DEBUG']) {
+                echo $query . ' // ';
+            }
             $db->query($query);
         } catch (Exception $e) {
-            echo _UNKNOWN._DOCSERVER." ".$docserver_id.' // ';
+            echo _UNKNOWN . _DOCSERVER . ' ' . $docserver_id . ' // ';
         }
         if ($db->nb_result() > 0) {
             $db->disconnect();
@@ -427,12 +709,14 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
     *@param docserver_id docservers
     *@return bool true if it's linked
     */
-    private function resxLinkExists($docserver_id, $coll_id) {
+    private function resxLinkExists($docserver_id, $coll_id) 
+    {
         $security = new security();
-        $db=new dbquery();
+        $db = new dbquery();
         $db->connect();
         $tableName = $security->retrieve_table_from_coll($coll_id);
-        $query = "select docserver_id from ".$tableName." where docserver_id = '".$docserver_id."'";
+        $query = "select docserver_id from " . $tableName 
+               . " where docserver_id = '" . $docserver_id . "'";
         $db->query($query);
         if ($db->nb_result()>0) {
             $db->disconnect();
@@ -446,12 +730,14 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
     *@param docserver_id docservers
     *@return bool true if it's linked
     */
-    private function adrxLinkExists($docserver_id) {
-        $db=new dbquery();
+    private function adrxLinkExists($docserver_id) 
+    {
+        $db = new dbquery();
         $db->connect();
-        $query = "select docserver_id from "._ADR_X_TABLE_NAME." where docserver_id = '".$docserver_id."'";
+        $query = "select docserver_id from " . _ADR_X_TABLE_NAME 
+               . " where docserver_id = '" . $docserver_id . "'";
         $db->query($query);
-        if ($db->nb_result()>0) {
+        if ($db->nb_result() > 0) {
             $db->disconnect();
             return true;
         }
@@ -464,15 +750,24 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
     * @param $docserver docservers object
     * @return bool true if the control is ok
     */
-    private function adrPriorityNumberControl($docserver) {
+    private function adrPriorityNumberControl($docserver) 
+    {
         $func = new functions();
-        if (!isset($docserver) || empty($docserver) || empty($docserver->adr_priority_number))
-        return false;
-        $db=new dbquery();
+        if (!isset($docserver) 
+            || empty($docserver) 
+            || empty($docserver->adr_priority_number)
+        ) {
+            return false;
+        }
+        $db = new dbquery();
         $db->connect();
-        $query = "select adr_priority_number from "._DOCSERVERS_TABLE_NAME." where adr_priority_number = ".$docserver->adr_priority_number.
-                                                                            " AND docserver_type_id = '".$func->protect_string_db($docserver->docserver_type_id)."'".
-                                                                            " AND docserver_id <> '".$func->protect_string_db($docserver->docserver_id)."'";
+        $query = "select adr_priority_number from " . _DOCSERVERS_TABLE_NAME 
+               . " where adr_priority_number = " 
+               . $docserver->adr_priority_number 
+               . " AND docserver_type_id = '" 
+               . $func->protect_string_db($docserver->docserver_type_id) . "'" 
+               . " AND docserver_id <> '" 
+               . $func->protect_string_db($docserver->docserver_id) . "'";
         $db->query($query);
         if ($db->nb_result() > 0) {
             $db->disconnect();
@@ -488,15 +783,23 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
     * @param $docserver docservers object
     * @return bool true if the control is ok
     */
-    private function priorityNumberControl($docserver) {
+    private function priorityNumberControl($docserver) 
+    {
         $func = new functions();
-        if (!isset($docserver) || empty($docserver) || empty($docserver->priority_number))
-        return false;
-        $db=new dbquery();
+        if (!isset($docserver) 
+            || empty($docserver) 
+            || empty($docserver->priority_number)
+        ) {
+            return false;
+        }
+        $db = new dbquery();
         $db->connect();
-        $query = "select priority_number from "._DOCSERVERS_TABLE_NAME." where priority_number = ".$docserver->priority_number.
-                                                                        " AND docserver_type_id = '".$func->protect_string_db($docserver->docserver_type_id)."'".
-                                                                        " AND docserver_id <> '".$func->protect_string_db($docserver->docserver_id)."'";
+        $query = "select priority_number from " . _DOCSERVERS_TABLE_NAME 
+               . " where priority_number = " . $docserver->priority_number 
+               . " AND docserver_type_id = '" 
+               . $func->protect_string_db($docserver->docserver_type_id) . "'" 
+               . " AND docserver_id <> '" 
+               . $func->protect_string_db($docserver->docserver_id) . "'";
         $db->query($query);
         if ($db->nb_result() > 0) {
             $db->disconnect();
@@ -512,15 +815,17 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
     * @param $docserver docservers object
     * @return bool true if the control is ok
     */
-    public function actualSizeNumberControl($docserver) {
-        if (!isset($docserver) || empty($docserver))
-        return false;
-
+    public function actualSizeNumberControl($docserver) 
+    {
+        if (!isset($docserver) || empty($docserver)) {
+            return false;
+        }
         $size_limit_number = floatval($docserver->size_limit_number);
-        $size_limit_number = $size_limit_number*1000*1000*1000;
-        $db=new dbquery();
+        $size_limit_number = $size_limit_number * 1000 * 1000 * 1000;
+        $db = new dbquery();
         $db->connect();
-        $query = "select actual_size_number from " ._DOCSERVERS_TABLE_NAME." where docserver_id = '".$docserver->docserver_id."'";
+        $query = "select actual_size_number from "  . _DOCSERVERS_TABLE_NAME 
+               . " where docserver_id = '" . $docserver->docserver_id . "'";
         $db->query($query);
         $queryResult = $db->fetch_object();
         if (isset($queryResult->actual_size_number)) {
@@ -542,12 +847,15 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
     * @param $docserver docservers object
     * @return bool true if the control is ok
     */
-    private function sizeLimitControl($docserver) {
+    private function sizeLimitControl($docserver) 
+    {
         $docserver->size_limit_number = floatval($docserver->size_limit_number);
-        $maxsizelimit = floatval($_SESSION['docserversFeatures']['DOCSERVERS']['MAX_SIZE_LIMIT'])*1000*1000*1000;
-        if (!isset($docserver) || empty($docserver))
+        $maxsizelimit = floatval(
+            $_SESSION['docserversFeatures']['DOCSERVERS']['MAX_SIZE_LIMIT']
+        ) * 1000 * 1000 * 1000;
+        if (!isset($docserver) || empty($docserver)) {
             return false;
-
+        }
         if ($docserver->size_limit_number < $maxsizelimit) {
             return false;
         } else {
@@ -561,19 +869,24 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
      * @param  $coll_id  string Collection identifier
      * @return docservers
      */
-    public function getDocserverToInsert($collId) {
-        $db=new dbquery();
+    public function getDocserverToInsert($collId) 
+    {
+        $db = new dbquery();
         $db->connect();
-        $query = "select priority_number, docserver_id from "._DOCSERVERS_TABLE_NAME." where is_readonly = 'N' and enabled = 'Y' and coll_id = '".$collId."' order by priority_number";
+        $query = "select priority_number, docserver_id from " 
+               . _DOCSERVERS_TABLE_NAME . " where is_readonly = 'N' and "
+               . " enabled = 'Y' and coll_id = '" . $collId 
+               . "' order by priority_number";
         $db->query($query);
         $queryResult = $db->fetch_object();
         $db->disconnect();
-        if ($queryResult->docserver_id <> "") {
+        if ($queryResult->docserver_id <> '') {
             $docserver = $this->get($queryResult->docserver_id);
-            if (isset($docserver->docserver_id))
+            if (isset($docserver->docserver_id)) {
                 return $docserver;
-            else
+            } else {
                 return null;
+            }
         } else {
             return null;
         }
@@ -589,228 +902,226 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
      *          tmpFileName : file name of the doc in Maarch tmp directory
      * @return  array of docserver data for res_x else return error
      */
-    public function storeResourceOnDocserver($collId, $fileInfos) {
+    public function storeResourceOnDocserver($collId, $fileInfos) 
+    {
         $docserver = $this->getDocserverToInsert($collId);
         $func = new functions();
         if (empty($docserver)) {
-            $storeInfos = array('error'=>_DOCSERVER_ERROR.' : '._NO_AVAILABLE_DOCSERVER.". "._MORE_INFOS.".");
+            $storeInfos = array(
+                'error' => _DOCSERVER_ERROR . ' : ' 
+                . _NO_AVAILABLE_DOCSERVER . ' .  ' . _MORE_INFOS . '.',
+            );
             return $storeInfos;
         }
         $newSize = $this->checkSize($docserver, $fileInfos['size']);
         if ($newSize == 0) {
-            $storeInfos = array('error'=>_DOCSERVER_ERROR.' : '._NOT_ENOUGH_DISK_SPACE.". "._MORE_INFOS.".");
+            $storeInfos = array(
+                'error' => _DOCSERVER_ERROR . ' : ' 
+                . _NOT_ENOUGH_DISK_SPACE . ' .  ' . _MORE_INFOS . '.',
+            );
             return $storeInfos;
         }
-        if ($fileInfos['tmpDir'] == "") {
+        if ($fileInfos['tmpDir'] == '') {
             $tmp = $_SESSION['config']['tmppath'];
         } else {
             $tmp = $fileInfos['tmpDir'];
         }
         $d = dir($tmp);
         $pathTmp = $d->path;
-        while($entry = $d->read()) {
+        while ($entry = $d->read()) {
             if ($entry == $fileInfos['tmpFileName']) {
-                $tmpSourceCopy = $pathTmp.$entry;
+                $tmpSourceCopy = $pathTmp . $entry;
                 $theFile = $entry;
                 break;
             }
         }
         $d->close();
         $pathOnDocserver = array();
-        $pathOnDocserver = $this->createPathOnDocServer($docserver->path_template);
-        $docinfo = $this->getNextFileNameInDocserver($pathOnDocserver['destinationDir']);
-        if ($docinfo['error'] <> "") {
-             $_SESSION['error'] = _FILE_SEND_ERROR.". "._TRY_AGAIN.". "._MORE_INFOS." : <a href=\"mailto:".$_SESSION['config']['adminmail']."\">".$_SESSION['config']['adminname']."</a>";
+        $pathOnDocserver = Ds_createPathOnDocServer(
+            $docserver->path_template
+        );
+        $docinfo = $this->getNextFileNameInDocserver(
+            $pathOnDocserver['destinationDir']
+        );
+        if ($docinfo['error'] <> '') {
+             $_SESSION['error'] = _FILE_SEND_ERROR . '. '._TRY_AGAIN . '. ' 
+                                . _MORE_INFOS . ' : <a href=\'mailto:' 
+                                . $_SESSION['config']['adminmail'] . '\'>' 
+                                . $_SESSION['config']['adminname'] . '</a>';
         }
-        require_once("core" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . "docserver_types_controler.php");
+        require_once('core' . DIRECTORY_SEPARATOR . 'class' 
+            . DIRECTORY_SEPARATOR . 'docserver_types_controler.php');
         $docserverTypeControler = new docserver_types_controler();
-        $docserverTypeObject = $docserverTypeControler->get($docserver->docserver_type_id);
-        $docinfo['fileDestinationName'] .= "." . strtoupper($func->extractFileExt($tmpSourceCopy));
-        $copyResultArray = $this->copyOnDocserver($tmpSourceCopy, $docinfo, $docserverTypeObject->fingerprint_mode);
-        if ($copyResultArray['error'] <> "") {
-            $storeInfos = array('error'=>$copyResultArray['error']);
+        $docserverTypeObject = $docserverTypeControler->get(
+            $docserver->docserver_type_id
+        );
+        $docinfo['fileDestinationName'] .= '.' 
+            . strtoupper($func->extractFileExt($tmpSourceCopy));
+        $copyResultArray = Ds_copyOnDocserver(
+            $tmpSourceCopy, 
+            $docinfo, 
+            $docserverTypeObject->fingerprint_mode
+        );
+        if ($copyResultArray['error'] <> '') {
+            $storeInfos = array('error' => $copyResultArray['error']);
             return $storeInfos;
         }
         $destinationDir = $copyResultArray['destinationDir'];
         $fileDestinationName = $copyResultArray['fileDestinationName'];
-        $destinationDir = substr($destinationDir, strlen($docserver->path_template)) . DIRECTORY_SEPARATOR;
-        $destinationDir = str_replace(DIRECTORY_SEPARATOR, '#', $destinationDir);
+        $destinationDir = substr(
+            $destinationDir, 
+            strlen($docserver->path_template)
+        ) . DIRECTORY_SEPARATOR;
+        $destinationDir = str_replace(
+            DIRECTORY_SEPARATOR, 
+            '#', 
+            $destinationDir
+        );
         $this->setSize($docserver, $newSize);
-        $storeInfos = array("path_template"=>$docserver->path_template, "destination_dir"=>$destinationDir, "docserver_id"=>$docserver->docserver_id, "file_destination_name"=>$fileDestinationName);
+        $storeInfos = array(
+            'path_template' => $docserver->path_template, 
+            'destination_dir' => $destinationDir, 
+            'docserver_id' => $docserver->docserver_id, 
+            'file_destination_name' => $fileDestinationName,
+        );
         return $storeInfos;
     }
-
+    
     /**
-     * copy doc in a docserver.
-     * @param   string $sourceFilePath collection resource
-     * @param   array $infoFileNameInTargetDocserver infos of the doc to store, 
-     * 			contains : subdirectory path and new filename
-     * @param   string $docserverSourceFingerprint     
-     * @return  array of docserver data for res_x else return error
-     */
-    public function copyOnDocserver($sourceFilePath, $infoFileNameInTargetDocserver, $docserverSourceFingerprint = "NONE") {
-        $destinationDir = $infoFileNameInTargetDocserver['destinationDir'];
-        $fileDestinationName = $infoFileNameInTargetDocserver['fileDestinationName'];
-        $sourceFilePath = str_replace("\\\\", "\\", $sourceFilePath);
-        if (file_exists($destinationDir . $fileDestinationName)) {
-            $storeInfos = array('error'=>_FILE_ALREADY_EXISTS);
-            return $storeInfos;
-        }
-        $cp = copy($sourceFilePath, $destinationDir . $fileDestinationName);
-        $this->setRights($destinationDir . $fileDestinationName, $sourceFilePath);
-        if ($cp == false) {
-            $storeInfos = array('error'=>_DOCSERVER_COPY_ERROR);
-            return $storeInfos;
-        }
-        $this->controlFingerprint($sourceFilePath, $destinationDir . $fileDestinationName, $docserverSourceFingerprint);
-        /*$ofile = fopen($destinationDir.$fileDestinationName, "r");
-        if (isCompleteFile($ofile)) {
-            fclose($ofile);
-        } else {
-            $storeInfos = array('error'=>_COPY_OF_DOC_NOT_COMPLETE);
-            return $storeInfos;
-        }*/
-        $destinationDir = str_replace($GLOBALS['docservers'][$GLOBALS['currentStep']]['docserver']['path_template'], "", $destinationDir);
-        $destinationDir = str_replace(DIRECTORY_SEPARATOR, '#', $destinationDir);
-        $storeInfos = array("destinationDir" => $destinationDir, "fileDestinationName" => $fileDestinationName, "fileSize" => filesize($sourceFilePath));
-        if ($GLOBALS['TmpDirectory'] <> "") {
-            $this->washTmp($GLOBALS['TmpDirectory'], true);
-        }
-        return $storeInfos;
-    }
-
-    /**
-    * Return true when the file is completed
-    * @param  $file
-    * @param  $delay
-    * @param  $pointer position in the file
-    */
-    function isCompleteFile($file, $delay=500, $pointer=0) {
-        if ($file == null) {
-            return false;
-        }
-        fseek($file, $pointer);
-        $currentLine = fgets($file);
-        while (!feof($file)) {
-            $currentLine = fgets($file);
-        }
-        $currentPos = ftell($file);
-        //Wait $delay ms
-        usleep($delay * 1000);
-        if ($currentPos == $pointer) {
-            return true;
-        } else {
-            return isCompleteFile($file, $delay, $currentPos);
-        }
-    }
-
-    /**
-    * Checks the size of the docserver plus a new file to see if there is enough disk space
+    * Checks the size of the docserver plus a new file to see 
+    * if there is enough disk space
     *
     * @param  $docserver docservers object
     * @param  $filesize integer File size
     * @return integer New docserver size or 0 if not enough disk space available
     */
-    public function checkSize($docserver, $filesize) {
+    public function checkSize($docserver, $filesize) 
+    {
         $new_docserver_size = $docserver->actual_size + $filesize;
-        if ($docserver->size_limit > 0 && $new_docserver_size >= $docserver->size_limit) {
+        if ($docserver->size_limit > 0 
+            && $new_docserver_size >= $docserver->size_limit
+        ) {
             return 0;
         } else {
             return $new_docserver_size;
         }
     }
-
-    /**
-    * Compute the path in the docserver for a batch
-    * @param $docServer docservers path
-    * @return @return array Contains 2 items : subdirectory path and error
-    */
-    public function createPathOnDocServer($docServer) {
-        if (!is_dir($docServer . date("Y") . DIRECTORY_SEPARATOR)) {
-            mkdir($docServer . date("Y") . DIRECTORY_SEPARATOR, 0777);
-            $this->setRights($docServer . date("Y") . DIRECTORY_SEPARATOR, $docServer);
-        }
-        if (!is_dir($docServer . date("Y") . DIRECTORY_SEPARATOR.date("m") . DIRECTORY_SEPARATOR)) {
-            mkdir($docServer . date("Y") . DIRECTORY_SEPARATOR.date("m") . DIRECTORY_SEPARATOR, 0777);
-            $this->setRights($docServer . date("Y") . DIRECTORY_SEPARATOR.date("m") . DIRECTORY_SEPARATOR, $docServer);
-        }
-        if ($GLOBALS['wb'] <> "") {
-            $path = $docServer . date("Y") . DIRECTORY_SEPARATOR.date("m") . DIRECTORY_SEPARATOR . $GLOBALS['wb'] . DIRECTORY_SEPARATOR;
-            if (!is_dir($path)) {
-                mkdir($path, 0777);
-                $this->setRights($path, $docServer);
-            } else {
-                return array("destinationDir" => "", "error" => "Folder alreay exists, workbatch already exist:" . $path);
-            }
-        } else {
-            $path = $docServer . date("Y") . DIRECTORY_SEPARATOR.date("m") . DIRECTORY_SEPARATOR;
-        }
-        return array("destinationDir" => $path, "error" => "");
-    }
-
+    
     /**
     * Calculates the next file name in the docserver
     * @param $pathOnDocserver docservers path
-    * @return array Contains 3 items : subdirectory path and new filename and error
+    * @return array Contains 3 items : 
+    * subdirectory path and new filename and error
     */
-    public function getNextFileNameInDocserver($pathOnDocserver) {
+    public function getNextFileNameInDocserver($pathOnDocserver) 
+    {
         //Scans the docserver path
         $fileTab = scandir($pathOnDocserver);
         //Removes . and .. lines
         array_shift($fileTab);
         array_shift($fileTab);
-        if (file_exists($pathOnDocserver . DIRECTORY_SEPARATOR . "package_information")) {
-            unset($fileTab[array_search("package_information", $fileTab)]);
+        if (file_exists(
+            $pathOnDocserver . DIRECTORY_SEPARATOR . 'package_information'
+        )
+        ) {
+            unset($fileTab[array_search('package_information', $fileTab)]);
         }
         $nbFiles = count($fileTab);
         //Docserver is empty
         if ($nbFiles == 0 ) {
             //Creates the directory
-            if (!mkdir($pathOnDocserver . "0001",0000700)) {
-                $this->setRights($pathOnDocserver . "0001" . DIRECTORY_SEPARATOR, $pathOnDocserver);
-                return array("destinationDir" => "", "fileDestinationName" => "", "error" => "Pb to create directory on the docserver:" . $pathOnDocserver);
+            if (!mkdir($pathOnDocserver . '0001', 0000700)) {
+                Ds_setRights(
+                    $pathOnDocserver . '0001' . DIRECTORY_SEPARATOR, 
+                    $pathOnDocserver
+                );
+                return array(
+                    'destinationDir' => '', 
+                    'fileDestinationName' => '', 
+                    'error' => 'Pb to create directory on the docserver:' 
+                    . $pathOnDocserver,
+                );
             } else {
-                $destinationDir = $pathOnDocserver . "0001" . DIRECTORY_SEPARATOR;
-                $fileDestinationName = "0001";
-                return array("destinationDir" => $destinationDir, "fileDestinationName" => $fileDestinationName, "error" => "");
+                $destinationDir = $pathOnDocserver . '0001' 
+                                . DIRECTORY_SEPARATOR;
+                $fileDestinationName = '0001';
+                return array(
+                    'destinationDir' => $destinationDir, 
+                    'fileDestinationName' => $fileDestinationName, 
+                    'error' => '',
+                );
             }
         } else {
             //Gets next usable subdirectory in the docserver
-            $destinationDir = $pathOnDocserver . str_pad(count($fileTab), 4, "0", STR_PAD_LEFT) . DIRECTORY_SEPARATOR;
-            $fileTab2 = scandir($pathOnDocserver . strval(str_pad(count($fileTab), 4, "0", STR_PAD_LEFT)));
+            $destinationDir = $pathOnDocserver 
+                . str_pad(
+                    count($fileTab), 
+                    4, 
+                    '0', 
+                    STR_PAD_LEFT
+                ) 
+                . DIRECTORY_SEPARATOR;
+            $fileTabBis = scandir(
+                $pathOnDocserver 
+                . strval(str_pad(count($fileTab), 4, '0', STR_PAD_LEFT))
+            );
             //Removes . and .. lines
-            array_shift($fileTab2);
-            array_shift($fileTab2);
-            $nbFiles2 = count($fileTab2);
+            array_shift($fileTabBis);
+            array_shift($fileTabBis);
+            $nbFilesBis = count($fileTabBis);
             //If number of files => 1000 then creates a new subdirectory
-            if ($nbFiles2 >= 1000 ) {
+            if ($nbFilesBis >= 1000 ) {
                 $newDir = ($nbFiles) + 1;
-                if (!mkdir($pathOnDocserver.str_pad($newDir, 4, "0", STR_PAD_LEFT), 0000700)) {
-                    $this->setRights($pathOnDocserver.str_pad($newDir, 4, "0", STR_PAD_LEFT) . DIRECTORY_SEPARATOR, $pathOnDocserver);
-                    return array("destinationDir" => "", "fileDestinationName" => "", "error" => "Pb to create directory on the docserver:" . $pathOnDocserver.str_pad($newDir, 4, "0", STR_PAD_LEFT));
+                if (!mkdir(
+                    $pathOnDocserver 
+                    . str_pad($newDir, 4, '0', STR_PAD_LEFT), 0000700
+                )
+                ) {
+                    Ds_setRights(
+                        $pathOnDocserver 
+                        . str_pad($newDir, 4, '0', STR_PAD_LEFT) 
+                        . DIRECTORY_SEPARATOR, $pathOnDocserver
+                    );
+                    return array(
+                        'destinationDir' => '', 
+                        'fileDestinationName' => '', 
+                        'error' => 'Pb to create directory on the docserver:' 
+                        . $pathOnDocserver 
+                        . str_pad($newDir, 4, '0', STR_PAD_LEFT),
+                    );
                 } else {
-                    $destinationDir = $pathOnDocserver.str_pad($newDir, 4, "0", STR_PAD_LEFT) . DIRECTORY_SEPARATOR;
-                    $fileDestinationName = "0001";
-                    return array("destinationDir" => $destinationDir, "fileDestinationName" => $fileDestinationName, "error" => "");
+                    $destinationDir = $pathOnDocserver 
+                        . str_pad($newDir, 4, '0', STR_PAD_LEFT) 
+                        . DIRECTORY_SEPARATOR;
+                    $fileDestinationName = '0001';
+                    return array(
+                        'destinationDir' => $destinationDir, 
+                        'fileDestinationName' => $fileDestinationName, 
+                        'error' => '',
+                    );
                 }
             } else {
                 //Docserver contains less than 1000 files
-                $newFileName = $nbFiles2 + 1;
+                $newFileName = $nbFilesBis + 1;
                 $greater = $newFileName;
-                for($n=0;$n<count($fileTab2);$n++) {
+                for ($n = 0;$n < count($fileTabBis);$n++) {
                     $currentFileName = array();
-                    $currentFileName = explode(".",$fileTab2[$n]);
-                    if ((int)$greater  <= (int)$currentFileName[0]) {
-                        if ((int)$greater  == (int)$currentFileName[0]) {
+                    $currentFileName = explode('.', $fileTabBis[$n]);
+                    if ((int) $greater <= (int) $currentFileName[0]) {
+                        if ((int) $greater == (int) $currentFileName[0]) {
                             $greater ++;
                         } else {
                             //$greater < current
-                            $greater = (int)$currentFileName[0] +1;
+                            $greater = (int) $currentFileName[0] + 1;
                         }
                     }
                 }
-                $fileDestinationName = str_pad($greater, 4, "0", STR_PAD_LEFT);
-                return array("destinationDir" => $destinationDir, "fileDestinationName" => $fileDestinationName, "error" => "");
+                $fileDestinationName = str_pad($greater, 4, '0', STR_PAD_LEFT);
+                return array(
+                    'destinationDir' => $destinationDir, 
+                    'fileDestinationName' => $fileDestinationName, 
+                    'error' => '',
+                );
             }
         }
     }
@@ -820,139 +1131,17 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
     * @param $docserver docservers object
     * @param $newSize integer New size of the docserver
     */
-    public function setSize($docserver, $newSize) {
-        $db=new dbquery();
+    public function setSize($docserver, $newSize) 
+    {
+        $db = new dbquery();
         $db->connect();
-        $db->query("update "._DOCSERVERS_TABLE_NAME." set actual_size_number=".$newSize." where docserver_id='".$docserver->docserver_id."'");
+        $db->query(
+            "update " . _DOCSERVERS_TABLE_NAME 
+            . " set actual_size_number=" . $newSize . " where docserver_id='" 
+            . $docserver->docserver_id . "'"
+        );
         $db->disconnect();
         return $newSize;
-    }
-
-    /**
-    * get the mime type of a doc
-    * @param $filePath path of the file
-    * @return string of the mime type
-    */
-    public function getMimeType($filePath) {
-        require_once 'MIME/Type.php';
-        return MIME_Type::autoDetect($filePath);
-    }
-
-    /**
-     * del tmp files
-     * @param   $dir dir to wash
-     * @param   $contentOnly boolean true if only the content
-     * @return  boolean
-     */
-    function washTmp($dir, $contentOnly = false) {
-        if (is_dir($dir)) {
-            $objects = scandir($dir);
-            foreach ($objects as $object) {
-                if ($object != "." && $object != "..") {
-                    if (filetype($dir.DIRECTORY_SEPARATOR.$object) == "dir") $this->washTmp($dir.DIRECTORY_SEPARATOR.$object); else unlink($dir.DIRECTORY_SEPARATOR.$object);
-                }
-            }
-            reset($objects);
-            if (!$contentOnly) {
-                rmdir($dir);
-            }
-        }
-    }
-
-    /**
-     * Extract a file from an archive
-     * @param   $fileInfos infos of the doc to store, contains :
-     *          tmpDir : path to tmp directory
-     *          path_to_file : path to the file in the docserver
-     *          filename : name of the file
-     *          offset_doc : offset of the doc in the container
-     *          $fingerprintMode
-     * @return  array with path of the extracted doc
-     */
-    public function extractArchive($fileInfos, $fingerprintMode) {
-        //var_dump($fileInfos);
-        if ($fileInfos['tmpDir'] == "") {
-            $tmp = $_SESSION['config']['tmppath'];
-        } else {
-            $tmp = $fileInfos['tmpDir'];
-        }
-        $fileNameOnTmp = $tmp . rand() . "_" . md5_file($fileInfos['path_to_file']) . "_" . $fileInfos['filename'];
-        $cp = copy($fileInfos['path_to_file'], $fileNameOnTmp);
-        $this->setRights($fileNameOnTmp, $fileInfos['path_to_file']);
-        if ($cp == false) {
-            $result = array("status" => "ko", "path" => "", "mime_type" => "", "format" => "", "tmpArchive" => "", "fingerprint" => "", "error" => _TMP_COPY_ERROR);
-            return $result;
-        } else {
-            $execError = "";
-            $tmpArchive = uniqid(rand());
-            if (mkdir($tmp.$tmpArchive)) {
-                //try to extract the offset if it's possible
-                if (DIRECTORY_SEPARATOR == "/") {
-                    $command = "7z x -y -o" . escapeshellarg($tmp . $tmpArchive) . " " . escapeshellarg($fileNameOnTmp) . " " . escapeshellarg($fileNameOnTmp);
-                } else {
-                    $command = "\"" . str_replace("\\", "\\\\", $_SESSION['docserversFeatures']['DOCSERVERS']['PATHTOCOMPRESSTOOL']) . "\" x -y -o" . escapeshellarg($tmp . $tmpArchive) . " " . escapeshellarg($fileNameOnTmp) . " " . escapeshellarg($fileNameOnTmp);
-                }
-                $tmpCmd = "";
-                exec($command, $tmpCmd, $execError);
-                //echo $command . "<br>";
-                if ($execError > 0) {
-                    if (DIRECTORY_SEPARATOR == "/") {
-                        //else try to extract only the first container
-                        $command = "7z x -y -o" . escapeshellarg($tmp . $tmpArchive) . " " . escapeshellarg($fileNameOnTmp);
-                    } else {
-                        $command = "\"" . str_replace("\\", "\\\\", $_SESSION['docserversFeatures']['DOCSERVERS']['PATHTOCOMPRESSTOOL']) . "\" x -y -o" . escapeshellarg($tmp . $tmpArchive) . " " . escapeshellarg($fileNameOnTmp);
-                    }
-                    $tmpCmd = "";
-                    exec($command, $tmpCmd, $execError);
-                    if ($execError > 0) {
-                        $result = array("status" => "ko", "path" => "", "mime_type" => "", "format" => "", "tmpArchive" => "", "fingerprint" => "", "error"=>_PB_WITH_EXTRACTION_OF_CONTAINER."#".$execError);
-                        return $result;
-                    }
-                }
-            } else {
-                $result = array("status" => "ko", "path" => "", "mime_type" => "", "format" => "", "tmpArchive" => "", "fingerprint" => "", "error"=>_PB_WITH_EXTRACTION_OF_CONTAINER."#".$tmp.$tmpArchive);
-                return $result;
-            }
-            $format = substr($fileInfos['offset_doc'], strrpos($fileInfos['offset_doc'], '.') + 1);
-            if (!file_exists($tmp . $tmpArchive . DIRECTORY_SEPARATOR . $fileInfos['offset_doc'])) {
-                $classScan = dir($tmp . $tmpArchive);
-                while(($fileScan = $classScan->read()) != false) {
-                    if ($fileScan == '.' || $fileScan == '..') {
-                        continue;
-                    } else {
-                        preg_match("'CI|.tar'", $fileScan, $out);
-                        if (count($out[0]) == 1) {
-                            $execError = "";
-                            $tmpArchiveBis = uniqid(rand());
-                            if (mkdir($tmp . $tmpArchive . DIRECTORY_SEPARATOR . $tmpArchiveBis)) {
-                                if (DIRECTORY_SEPARATOR == "/") {
-                                    $commandBis = "7z x -y -o".escapeshellarg($tmp . $tmpArchive . DIRECTORY_SEPARATOR . $tmpArchiveBis)." ".escapeshellarg($tmp . $tmpArchive . DIRECTORY_SEPARATOR . $fileScan) . " " .$fileInfos['offset_doc'];
-                                } else {
-                                    $commandBis = "\"".str_replace("\\", "\\\\", $_SESSION['docserversFeatures']['DOCSERVERS']['PATHTOCOMPRESSTOOL'])."\" x -y -o".escapeshellarg($tmp.$tmpArchive.DIRECTORY_SEPARATOR.$tmpArchiveBis)." ".escapeshellarg($tmp.$tmpArchive.DIRECTORY_SEPARATOR.$fileScan) . " " .$fileInfos['offset_doc'];
-                                }
-                                $tmpCmd = "";
-                                exec($commandBis, $tmpCmd, $execError);
-                                if ($execError > 0) {
-                                    $result = array("status" => "ko", "path" => "", "mime_type" => "", "format" => "", "tmpArchive" => "", "fingerprint" => "", "error"=>_PB_WITH_EXTRACTION_OF_CONTAINER."#".$execError);
-                                }
-                            } else {
-                                $result = array("status" => "ko", "path" => "", "mime_type" => "", "format" => "", "tmpArchive" => "", "fingerprint" => "", "error"=>_PB_WITH_EXTRACTION_OF_CONTAINER."#".$tmp.$tmpArchive.DIRECTORY_SEPARATOR.$tmpArchiveBis);
-                                return $result;
-                            }
-                            $path = str_replace($fileScan, "", $tmp . $tmpArchive . DIRECTORY_SEPARATOR . $tmpArchiveBis . DIRECTORY_SEPARATOR . $fileInfos['offset_doc']);
-                            $path = str_replace("#", DIRECTORY_SEPARATOR, $path);
-                            $result = array("status" => "ok", "path"=>$path, "mime_type"=>$this->getMimeType($path), "format"=>$format, "fingerprint" => $this->doFingerprint($path, $fingerprintMode), "tmpArchive"=>$tmp . $tmpArchive, "error"=> "");
-                            unlink($tmp . $tmpArchive . DIRECTORY_SEPARATOR . $fileScan);
-                            break;
-                        }
-                    }
-                }
-            } else {
-                $result = array("status" => "ok", "path"=>$tmp.$tmpArchive.DIRECTORY_SEPARATOR.$fileInfos['offset_doc'], "mime_type"=>$this->getMimeType($tmp.$tmpArchive.DIRECTORY_SEPARATOR.$fileInfos['offset_doc']), "format"=>$format, "tmpArchive"=>$tmp.$tmpArchive, "fingerprint" => $this->doFingerprint($tmp.$tmpArchive.DIRECTORY_SEPARATOR.$fileInfos['offset_doc'], $fingerprintMode), "error"=> "");
-            }
-            unlink($fileNameOnTmp);
-            return $result;
-        }
     }
     
     /**
@@ -962,13 +1151,26 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
      * @param   string $adrTable name of the res address table  
      * @return  array of net address to the docserver 
      */
-    public function retrieveDocserverNetLinkOfResource($gedId, $tableName, $adrTable) {
+    public function retrieveDocserverNetLinkOfResource(
+        $gedId, 
+        $tableName, 
+        $adrTable
+    ) {
         $adr = array();
         $resource = new resource();
-        $whereClause = " and 1=1";
-        $adr = $resource->getResourceAdr($tableName, $gedId, $whereClause, $adrTable);
-        if ($adr['status'] == "ko") {
-            $result = array("status" => "ko", "value" => "", "error" => _RESOURCE_NOT_EXISTS);
+        $whereClause = ' and 1=1';
+        $adr = $resource->getResourceAdr(
+            $tableName, 
+            $gedId, 
+            $whereClause, 
+            $adrTable
+        );
+        if ($adr['status'] == 'ko') {
+            $result = array(
+                'status' => 'ko', 
+                'value' => '', 
+                'error' => _RESOURCE_NOT_EXISTS,
+            );
         } else {
             //TODO : MANAGEMENT OF GEOLOCALISATION FAILOVER
             //$resource->show_array($adr);
@@ -976,10 +1178,18 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
             //retrieve infos of the docserver
             $docserverObject = $this->get($docserver);
             //retrieve infos of the docserver type
-            require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."docserver_locations_controler.php");
+            require_once('core' . DIRECTORY_SEPARATOR . 'class' 
+                . DIRECTORY_SEPARATOR . 'docserver_locations_controler.php');
             $docserverLocationControler = new docserver_locations_controler();
-            $docserverLocationObject = $docserverLocationControler->get($docserverObject->docserver_location_id);
-            $result = array("status" => "ok", "value" => $docserverLocationObject->net_link, "error" => "");
+            $docserverLocationObject =
+                $docserverLocationControler->get(
+                    $docserverObject->docserver_location_id
+                );
+            $result = array(
+                'status' => 'ok', 
+                'value' => $docserverLocationObject->net_link, 
+                'error' => '',
+            );
         }
         return $result;
     }
@@ -990,72 +1200,143 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
      * @param   string $tableName name of the res table
      * @param   string $adrTable name of the res address table  
      * @return  array of elements to view the resource :
-     *          status, mime_type, extension, file_content, tmp_path, file_path, called_by_ws error
+     *          status, mime_type, extension, 
+     *          file_content, tmp_path, file_path, called_by_ws error
      */
-    public function viewResource($gedId, $tableName, $adrTable, $calledByWS = false) {
+    public function viewResource(
+        $gedId, 
+        $tableName, 
+        $adrTable, 
+        $calledByWS=false
+    ) {
         $history = new history();
         $coreTools = new core_tools();
-        $whereClause = "";
-        if ($_SESSION['origin'] <> "basket" && $_SESSION['origin'] <> "workflow") {
-            if (isset($_SESSION['user']['security'][$_SESSION['collection_id_choice']])) {
-                $whereClause = " and( ".$_SESSION['user']['security'][$_SESSION['collection_id_choice']]['DOC']['where']." ) ";
+        $whereClause = '';
+        if ($_SESSION['origin'] <> 'basket' 
+            && $_SESSION['origin'] <> 'workflow'
+        ) {
+            if (isset(
+                $_SESSION['user']['security']
+                [$_SESSION['collection_id_choice']]
+                )
+            ) {
+                $whereClause = ' and( ' 
+                             . $_SESSION['user']['security']
+                             [$_SESSION['collection_id_choice']]['DOC']['where']
+                             . ' ) ';
             } else {
-                $whereClause = " and 1=1";
+                $whereClause = ' and 1=1';
             }
         } else {
-            $whereClause = " and 1=1";
+            $whereClause = ' and 1=1';
         }
         $adr = array();
         $resource = new resource();
-        $adr = $resource->getResourceAdr($tableName, $gedId, $whereClause, $adrTable);
+        $adr = $resource->getResourceAdr(
+            $tableName, 
+            $gedId, 
+            $whereClause, 
+            $adrTable
+        );
         //$coreTools->show_array($adr);
         if ($adr['status'] == 'ko') {
-            $result = array('status' => 'ko', 'mime_type' => '', 'ext' => '', 'file_content' => '', 'tmp_path' => '', 'file_path' => '', 'called_by_ws' => $calledByWS, 'error' => _NO_RIGHT_ON_RESOURCE_OR_RESOURCE_NOT_EXISTS);
-            $history->add($tableName, $gedId, 'ERR', _NO_RIGHT_ON_RESOURCE_OR_RESOURCE_NOT_EXISTS, $_SESSION['config']['databasetype']);
+            $result = array(
+                'status' => 'ko', 
+                'mime_type' => '', 
+                'ext' => '', 
+                'file_content' => '', 
+                'tmp_path' => '', 
+                'file_path' => '', 
+                'called_by_ws' => $calledByWS, 
+                'error' => _NO_RIGHT_ON_RESOURCE_OR_RESOURCE_NOT_EXISTS,
+            );
+            $history->add(
+                $tableName, 
+                $gedId, 
+                'ERR', 
+                _NO_RIGHT_ON_RESOURCE_OR_RESOURCE_NOT_EXISTS, 
+                $_SESSION['config']['databasetype']
+            );
         } else {
-            require_once('core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR . 'docserver_types_controler.php');
+            require_once('core' . DIRECTORY_SEPARATOR . 'class' 
+                . DIRECTORY_SEPARATOR . 'docserver_types_controler.php');
             $docserverTypeControler = new docserver_types_controler();
             $concatError = '';
             //failover management
-            for($cptDocserver=0;$cptDocserver<count($adr[0]);$cptDocserver++) {
+            for (
+                $cptDocserver = 0;
+                $cptDocserver < count($adr[0]);
+                $cptDocserver++
+            ) {
                 $error = false;
                 //retrieve infos of the docserver
                 $fingerprintFromDb = $adr[0][$cptDocserver]['fingerprint'];
                 $format = $adr[0][$cptDocserver]['format'];
-                $docserverObject = $this->get($adr[0][$cptDocserver]['docserver_id']);
+                $docserverObject = $this->get(
+                    $adr[0][$cptDocserver]['docserver_id']
+                );
                 $docserver = $docserverObject->path_template;
-                $file = $docserver.$adr[0][$cptDocserver]['path'].$adr[0][$cptDocserver]['filename'];
+                $file = $docserver . $adr[0][$cptDocserver]['path'] 
+                      . $adr[0][$cptDocserver]['filename'];
                 $file = str_replace('#', DIRECTORY_SEPARATOR, $file);
-                $docserverTypeObject = $docserverTypeControler->get($docserverObject->docserver_type_id);
+                $docserverTypeObject = $docserverTypeControler->get(
+                    $docserverObject->docserver_type_id
+                );
                 if (!file_exists($file)) {
-                    $concatError .= _FILE_NOT_EXISTS_ON_THE_SERVER . ' : ' . $file . '||';
-                    $history->add($tableName, $gedId, 'ERR', _FAILOVER . ' ' . _DOCSERVERS . ' ' . $adr[0][$cptDocserver]['docserver_id'] . ':' . _FILE_NOT_EXISTS_ON_THE_SERVER . ' : ' . $file, $_SESSION['config']['databasetype']);
+                    $concatError .= _FILE_NOT_EXISTS_ON_THE_SERVER . ' : ' 
+                                  . $file . '||';
+                    $history->add(
+                        $tableName, $gedId, 'ERR', 
+                        _FAILOVER . ' ' . _DOCSERVERS . ' ' 
+                        . $adr[0][$cptDocserver]['docserver_id'] . ':' 
+                        . _FILE_NOT_EXISTS_ON_THE_SERVER . ' : ' 
+                        . $file, $_SESSION['config']['databasetype']
+                    );
                 } else {
-                    $fingerprintFromDocserver = $this->doFingerprint($file, $docserverTypeObject->fingerprint_mode);
-                    /*echo $file.'<br>';
-                    echo $docserverTypeObject->fingerprint_mode.'<br>';
-                    echo 'from ds:' . $fingerprintFromDocserver.'<br>';
-                    echo 'from db:' . $fingerprintFromDb.'<br>';*/
+                    $fingerprintFromDocserver = Ds_doFingerprint(
+                        $file, $docserverTypeObject->fingerprint_mode
+                    );
                     $adrToExtract = array();
                     $adrToExtract = $adr[0][$cptDocserver];
                     $adrToExtract['path_to_file'] = $file;
                     //retrieve infos of the docserver type
-                    require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'docserver_types_controler.php');
+                    require_once('core' . DIRECTORY_SEPARATOR . 'class' 
+                    . DIRECTORY_SEPARATOR . 'docserver_types_controler.php');
                     $docserverTypeControler = new docserver_types_controler();
-                    $docserverTypeObject = $docserverTypeControler->get($docserverObject->docserver_type_id);
-                    if ($docserverTypeObject->is_container && $adr[0][$cptDocserver]['offset_doc'] == '') {
+                    $docserverTypeObject = $docserverTypeControler->get(
+                        $docserverObject->docserver_type_id
+                    );
+                    if ($docserverTypeObject->is_container 
+                        && $adr[0][$cptDocserver]['offset_doc'] == ''
+                    ) {
                         $error = true;
-                        $concatError .= _PB_WITH_OFFSET_OF_THE_DOC_IN_THE_CONTAINER . '||';
-                        $history->add($tableName, $gedId, 'ERR', _FAILOVER . ' ' . _DOCSERVERS . ' ' . $adr[0][$cptDocserver]['docserver_id'] . ':' . _PB_WITH_OFFSET_OF_THE_DOC_IN_THE_CONTAINER, $_SESSION['config']['databasetype']);
+                        $concatError .=
+                            _PB_WITH_OFFSET_OF_THE_DOC_IN_THE_CONTAINER . '||';
+                        $history->add(
+                            $tableName, $gedId, 'ERR', 
+                            _FAILOVER . ' ' . _DOCSERVERS . ' ' 
+                            . $adr[0][$cptDocserver]['docserver_id'] . ':' 
+                            . _PB_WITH_OFFSET_OF_THE_DOC_IN_THE_CONTAINER, 
+                            $_SESSION['config']['databasetype']
+                        );
                     }
                     //manage compressed resource
                     if ($docserverTypeObject->is_compressed) {
                         $extract = array();
-                        $extract = $this->extractArchive($adrToExtract, $docserverTypeObject->fingerprint_mode);
+                        $extract = Ds_extractArchive(
+                            $adrToExtract, 
+                            $docserverTypeObject->fingerprint_mode
+                        );
                         if ($extract['status'] == 'ko' || !is_array($extract)) {
                             $error = true;
                             $concatError .= $extract['error'] . '||';
-                            $history->add($tableName, $gedId, 'ERR', _FAILOVER . ' ' . _DOCSERVERS . ' ' . $adr[0][$cptDocserver]['docserver_id'] . ':' . $extract['error'], $_SESSION['config']['databasetype']);
+                            $history->add(
+                                $tableName, $gedId, 'ERR', 
+                                _FAILOVER . ' ' . _DOCSERVERS . ' ' 
+                                . $adr[0][$cptDocserver]['docserver_id'] . ':' 
+                                . $extract['error'], 
+                                $_SESSION['config']['databasetype']
+                            );
                         } else {
                             $file = $extract['path'];
                             $mimeType = $extract['mime_type'];
@@ -1064,37 +1345,72 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
                             $fingerprintFromDocserver = $extract['fingerprint'];
                         }
                     } else {
-                        $mimeType = $this->getMimeType($adrToExtract['path_to_file']);
+                        $mimeType = Ds_getMimeType(
+                            $adrToExtract['path_to_file']
+                        );
                     }
+                    /*echo $file . '<br>';
+                    echo $docserverTypeObject->fingerprint_mode . '<br>';
+                    echo 'from ds:' . $fingerprintFromDocserver . '<br>';
+                    echo 'from db:' . $fingerprintFromDb . '<br>';exit;*/
                     //manage view of the file
                     $use_tiny_mce = false;
-                    if (strtolower($format) == 'maarch' && $coreTools->is_module_loaded('templates')) {
+                    if (strtolower($format) == 'maarch' 
+                        && $coreTools->is_module_loaded('templates')
+                    ) {
                         $mode = 'content';
                         $type_state = true;
                         $use_tiny_mce = true;
                         $mimeType = 'application/maarch';
                     } else {
-                        require_once('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_indexing_searching_app.php');
+                        require_once(
+                            'apps' . DIRECTORY_SEPARATOR 
+                            . $_SESSION['config']['app_id'] 
+                            . DIRECTORY_SEPARATOR 
+                            . 'class' . DIRECTORY_SEPARATOR 
+                            . 'class_indexing_searching_app.php'
+                        );
                         $is = new indexing_searching_app();
                         $type_state = $is->is_filetype_allowed($format);
                     }
                     //if fingerprint from db = 0 we do not control fingerprint
-                    if ($fingerprintFromDb == '0' || ($fingerprintFromDb == $fingerprintFromDocserver)) {
+                    if ($fingerprintFromDb == '0' 
+                        || ($fingerprintFromDb == $fingerprintFromDocserver)
+                    ) {
                         if ($type_state <> false) {
                             if ($_SESSION['history']['resview'] == 'true') {
-                                require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_history.php');
-                                $history->add($tableName, $gedId, 'VIEW', _VIEW_DOC_NUM . $gedId, $_SESSION['config']['databasetype'], 'indexing_searching');
+                                require_once(
+                                    'core' . DIRECTORY_SEPARATOR 
+                                    . 'class' . DIRECTORY_SEPARATOR 
+                                    . 'class_history.php'
+                                );
+                                $history->add(
+                                    $tableName, $gedId, 'VIEW', 
+                                    _VIEW_DOC_NUM . $gedId, 
+                                    $_SESSION['config']['databasetype'], 
+                                    'indexing_searching'
+                                );
                             }
-                            //count number of viewed in listinstance for the user
-                            if ($coreTools->is_module_loaded('entities') && $coreTools->is_module_loaded('basket')) {
-                                require_once('modules' . DIRECTORY_SEPARATOR . 'entities' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR . 'class_manage_entities.php');
+                            //count number of viewed in listinstance for 
+                            //the user
+                            if ($coreTools->is_module_loaded('entities') 
+                                && $coreTools->is_module_loaded('basket')
+                            ) {
+                                require_once(
+                                    'modules' . DIRECTORY_SEPARATOR 
+                                    . 'entities' . DIRECTORY_SEPARATOR 
+                                    . 'class' . DIRECTORY_SEPARATOR 
+                                    . 'class_manage_entities.php'
+                                );
                                 $ent = new entity();
                                 $ent->increaseListinstanceViewed($gedId);
                             }
                             if (file_exists($file) && !$error) {
                                 if ($calledByWS) {
                                     $content = '';
-                                    //$content = file_get_contents($file, FILE_BINARY);
+                                    /*$content = file_get_contents(
+                                        $file, FILE_BINARY
+                                    );*/
                                     $handle = fopen($file, 'r');
                                     if ($handle) {
                                         while (!feof($handle)) {
@@ -1104,104 +1420,76 @@ class docservers_controler extends ObjectControler implements ObjectControlerIF 
                                     }
                                     $encodedContent = base64_encode($content);
                                 } else {
-                                    $fileNameOnTmp = 'tmp_file_' . rand() . '.' . strtolower($format);
-                                    $filePathOnTmp = $_SESSION['config']['tmppath'] . DIRECTORY_SEPARATOR . $fileNameOnTmp;
+                                    $fileNameOnTmp = 'tmp_file_' . rand() 
+                                        . '.' . strtolower($format);
+                                    $filePathOnTmp = $_SESSION['config']
+                                        ['tmppath'] . DIRECTORY_SEPARATOR 
+                                        . $fileNameOnTmp;
                                     copy($file, $filePathOnTmp);
                                 }
-                                $result = array('status' => 'ok', 'mime_type' => $mimeType, 'ext' => $format, 'file_content' => $encodedContent, 'tmp_path' => $_SESSION['config']['tmppath'], 'file_path' => $filePathOnTmp, 'called_by_ws' => $calledByWS, 'error' => '');
+                                $result = array(
+                                    'status' => 'ok', 
+                                    'mime_type' => $mimeType, 
+                                    'ext' => $format, 
+                                    'file_content' => $encodedContent, 
+                                    'tmp_path' => $_SESSION['config']
+                                    ['tmppath'], 
+                                    'file_path' => $filePathOnTmp, 
+                                    'called_by_ws' => $calledByWS, 
+                                    'error' => '',
+                                );
                                 if (file_exists($extract['tmpArchive'])) {
-                                    $this->washTmp($extract['tmpArchive']);
+                                    Ds_washTmp($extract['tmpArchive']);
                                 }
                                 return $result;
                             } else {
                                 $concatError .= _FILE_NOT_EXISTS . '||';
-                                $history->add($tableName, $gedId, 'ERR', _FAILOVER . ' ' . _DOCSERVERS . ' ' . $adr[0][$cptDocserver]['docserver_id'] . ':' . _FILE_NOT_EXISTS, $_SESSION['config']['databasetype']);
+                                $history->add(
+                                    $tableName, $gedId, 'ERR', 
+                                    _FAILOVER . ' ' . _DOCSERVERS . ' ' 
+                                    . $adr[0][$cptDocserver]['docserver_id']
+                                    . ':' . _FILE_NOT_EXISTS, 
+                                    $_SESSION['config']['databasetype']
+                                );
                             }
                         } else {
                             $concatError .= _FILE_TYPE . ' ' . _UNKNOWN . '||';
-                            $history->add($tableName, $gedId, 'ERR', _FAILOVER . ' ' . _DOCSERVERS . ' ' . $adr[0][$cptDocserver]['docserver_id'] . ':' . _FILE_TYPE . ' ' . _UNKNOWN, $_SESSION['config']['databasetype']);
+                            $history->add(
+                                $tableName, $gedId, 'ERR', 
+                                _FAILOVER . ' ' . _DOCSERVERS . ' ' 
+                                . $adr[0][$cptDocserver]['docserver_id'] . ':' 
+                                . _FILE_TYPE . ' ' . _UNKNOWN, 
+                                $_SESSION['config']['databasetype']
+                            );
                         }
                     } else {
                         $concatError .= _PB_WITH_FINGERPRINT_OF_DOCUMENT . '||';
-                        $history->add($tableName, $gedId, 'ERR', _FAILOVER . ' ' . _DOCSERVERS . ' ' . $adr[0][$cptDocserver]['docserver_id'] . ':' . _PB_WITH_FINGERPRINT_OF_DOCUMENT, $_SESSION['config']['databasetype']);
+                        $history->add(
+                            $tableName, $gedId, 'ERR',
+                            _FAILOVER . ' ' . _DOCSERVERS . ' ' 
+                            . $adr[0][$cptDocserver]['docserver_id'] . ':' 
+                            . _PB_WITH_FINGERPRINT_OF_DOCUMENT, 
+                            $_SESSION['config']['databasetype']
+                        );
                     }
                     if (file_exists($extract['tmpArchive'])) {
-                        $this->washTmp($extract['tmpArchive']);
+                        Ds_washTmp($extract['tmpArchive']);
                     }
                 }
             }
         }
         //if errors :
-        $result = array('status' => 'ko', 'mime_type' => '', 'ext' => '', 'file_content' => '', 'tmp_path' => '', 'file_path' => '', 'called_by_ws' => $calledByWS, 'error' => $concatError);
+        $result = array(
+            'status' => 'ko', 
+            'mime_type' => '', 
+            'ext' => '', 
+            'file_content' => '', 
+            'tmp_path' => '', 
+            'file_path' => '', 
+            'called_by_ws' => $calledByWS, 
+            'error' => $concatError,
+        );
         return $result;
     }
-
-     /**
-     * Compute the fingerprint of a resource
-     * @param   string $path path of the resource
-     * @param   string $fingerprintMode (md5, sha512, ...)
-     * @return  string the fingerprint
-     */
-    public function doFingerprint($path, $fingerprintMode) {
-        if ($fingerprintMode == 'NONE' || $fingerprintMode == '') {
-            return '0';
-        } else {
-            return hash_file(strtolower($fingerprintMode), $path);
-        }
-    }
-    
-     /**
-     * Control fingerprint between two resources
-     * @param   string $pathInit path of the resource 1
-     * @param   string $pathTarget path of the resource 2
-     * @param   string $fingerprintMode (md5, sha512, ...)
-     * @return  array ok or ko with error
-     */
-    function controlFingerprint($pathInit, $pathTarget, $fingerprintMode = 'NONE') {
-        $result = array();
-        if ($this->doFingerprint($pathInit, $fingerprintMode) <> $this->doFingerprint($pathTarget, $fingerprintMode)) {
-            $result = array('status' => 'ko', 'error' => _PB_WITH_FINGERPRINT_OF_DOCUMENT . ' ' . $pathInit . ' '. _AND . ' ' . $pathTarget);
-        } else {
-            $result = array('status' => 'ok', 'error' => '');
-        }
-        return $result;
-    }
-
-     /**
-     * Set Rights on resources
-     * @param   string $dest path of the resource 1
-     * @param   string $source path of the resource 2
-     * @return  nothing
-     */
-    function setRights($dest, $source) {
-        //chown($dest, fileowner($source));
-        //chgrp($dest, filegroup($source));
-        //chmod($dest, fileperms($source));
-        /*echo fileowner($source)."\r\n";
-        echo fileowner($dest)."\r\n";
-        echo $source."\r\n";
-        echo $dest."\r\n";*/
-    }
-
-    /**
-     * Set Rights on resources with recurse method
-     * @param   string $dest path of the resource 1
-     * @param   string $source path of the resource 2
-     * @return  nothing
-     */
-    function recurseSetRights($dest, $source) {
-        $d = opendir($mypath);
-        while (($file = readdir($d)) !== false) {
-            if ($file != "." && $file != "..") {
-                $typepath = $mypath . "/" . $file ;
-                if (filetype ($typepath) == 'dir') {
-                    recurseSetRights ($typepath, $source);
-                }
-                chown($typepath, $uid);
-                chgrp($typepath, $gid);
-            }
-        }
-     }
 }
 
-?>
