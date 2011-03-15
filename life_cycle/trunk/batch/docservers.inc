@@ -78,11 +78,14 @@ function doCompression($targeFile, $arrayOfFileToCompress, $dirToCompress='')
     $execError = '';
     exec($command, $tmpCmd, $execError);
     if ($execError > 0) {
-        $GLOBALS['logger']->write(
+        /*$GLOBALS['logger']->write(
             'Pb with compression:' .$command . ' ' . print_r($tmpCmd), 
             'ERROR', 23
         );
-        exit(23);
+        exit(23);*/
+        exitBatch(
+            23, 'Pb with compression:' .$command . ' ' . print_r($tmpCmd)
+        );
     }
     return $GLOBALS['TmpDirectory'] . $targeFile . "." 
         . strtolower(
@@ -110,8 +113,11 @@ function extractAip($path)
         $path, $fileNameOnTmp, $GLOBALS['docserverSourceFingerprint']
     );
     if ($control['error'] <> "") {
-        $GLOBALS['logger']->write($control['error'], 'ERROR', 22);
-        exit(22);
+        //$GLOBALS['logger']->write($control['error'], 'ERROR', 22);
+        //exit(22);
+        exitBatch(
+            22, $control['error']
+        );
     }
     if (DIRECTORY_SEPARATOR == "/") {
         $command = "7z x -y -o" . escapeshellarg($GLOBALS['TmpDirectory']) 
@@ -128,10 +134,13 @@ function extractAip($path)
     $execError = '';
     exec($command, $tmpCmd, $execError);
     if ($execError > 0) {
-        $GLOBALS['logger']->write(
+        /*$GLOBALS['logger']->write(
             'Pb with extract:' . $command . ' ' . print_r($tmpCmd), 'ERROR', 24
         );
-        exit(24);
+        exit(24);*/
+        exitBatch(
+            24, 'Pb with extract:' . $command . ' ' . print_r($tmpCmd)
+        );
     }
     unlink($fileNameOnTmp);
     mkdir($GLOBALS['TmpDirectory'] . "CI", 0777);
@@ -156,10 +165,13 @@ function extractAip($path)
     $tmpCmd = "";
     exec($command, $tmpCmd, $execError);
     if ($execError > 0) {
-        $GLOBALS['logger']->write(
+        /*$GLOBALS['logger']->write(
             'Pb with extract:' . $command . ' ' . print_r($tmpCmd), 'ERROR', 24
         );
-        exit(24);
+        exit(24);*/
+        exitBatch(
+            24, 'Pb with extract:' . $command . ' ' . print_r($tmpCmd)
+        );
     }
 }
 
@@ -196,8 +208,11 @@ function controlIntegrityOfTransfer(
                 $GLOBALS['docserverSourceFingerprint']
             );
             if ($control['error'] <> "") {
-                $GLOBALS['logger']->write($control['error'], 'ERROR', 22);
-                exit(22);
+                //$GLOBALS['logger']->write($control['error'], 'ERROR', 22);
+                //exit(22);
+                exitBatch(
+                    22, $control['error']
+                );
             }
         }
     } else {
@@ -215,8 +230,11 @@ function controlIntegrityOfTransfer(
             $GLOBALS['docserverSourceFingerprint']
         );
         if ($control['error'] <> "") {
-            $GLOBALS['logger']->write($control['error'], 'ERROR', 22);
-            exit(22);
+            /*$GLOBALS['logger']->write($control['error'], 'ERROR', 22);
+            exit(22);*/
+            exitBatch(
+                22, $control['error']
+            );
         }
     }
 }
@@ -237,11 +255,15 @@ function controlIntegrityOfSource($currentRecordInStack)
         $sourceFilePath, $GLOBALS['docserverSourceFingerprint']
     ) <> $resRecordset->fingerprint
     ) {
-        $GLOBALS['logger']->write(
+        /*$GLOBALS['logger']->write(
             'Pb with fingerprint of the source:' . $currentRecordInStack 
             . ' ' . $sourceFilePath, 'ERROR', 25
         );
-        exit(25);
+        exit(25);*/
+        exitBatch(
+            25, 'Pb with fingerprint of the source:' . $currentRecordInStack 
+            . ' ' . $sourceFilePath
+        );
     }
     Ds_washTmp($GLOBALS['TmpDirectory'], true);
 }

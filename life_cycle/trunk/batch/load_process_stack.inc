@@ -155,6 +155,19 @@ function updateWorkBatch()
     $GLOBALS['db']->query($req);
 }
 
+/**
+ * exit the batch with a message in the log and an error log
+ * 
+ * @param int $errorCode error code to exit
+ * @param string $errorMessage error message to the log
+ * @return nothing, exit the program
+ */
+function exitBatch($errorCode, $errorMessage)
+{
+    $GLOBALS['logger']->write($errorMessage, 'ERROR', $errorCode);
+    exit($errorCode);
+}
+
 // Defines scripts arguments
 $argsparser = new ArgsParser();
 // The config file
