@@ -1,9 +1,9 @@
 <?php
 
 /*
-*    Copyright 2008,2009,2010 Maarch
+*   Copyright 2008-2011 Maarch
 *
-*  This file is part of Maarch Framework.
+*   This file is part of Maarch Framework.
 *
 *   Maarch Framework is free software: you can redistribute it and/or modify
 *   it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
 *   GNU General Public License for more details.
 *
 *   You should have received a copy of the GNU General Public License
-*    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
+*   along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 /**
@@ -29,20 +29,24 @@
 * @ingroup indexing_searching
 */
 
-if(!isset($_SESSION['user']['UserId']) && $_SESSION['user']['UserId'] == "") {
-    if(trim($_SERVER['argv'][0]) <> "") {
-        header("location: reopen.php?".$_SERVER['argv'][0]);
+if (!isset($_SESSION['user']['UserId']) && $_SESSION['user']['UserId'] == '') {
+    if (trim($_SERVER['argv'][0]) <> '') {
+        header('location: reopen.php?' . $_SERVER['argv'][0]);
     } else {
-        header("location: reopen.php");
+        header('location: reopen.php');
     }
     exit();
 }
 
 try {
-    require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
-    require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
-    require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_resource.php");
-    require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."docservers_controler.php");
+    require_once('core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR 
+        . 'class_request.php');
+    require_once('core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR 
+        . 'class_security.php');
+    require_once('core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR 
+        . 'class_resource.php');
+    require_once('core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR 
+        . 'docservers_controler.php');
 } catch (Exception $e) {
     echo $e->getMessage();
 }
@@ -51,85 +55,117 @@ $core_tools->test_user();
 $core_tools->load_lang();
 $function = new functions();
 $sec = new security();
-$mode = "";
+$mode = '';
 $calledByWS = false;
 //1:test the request ID
-if(isset($_REQUEST['id'])) {
+if (isset($_REQUEST['id'])) {
     $s_id = $_REQUEST['id'];
 } else {
-    $s_id = "";
+    $s_id = '';
 }
-if($s_id == '') {
-    $_SESSION['error'] = _THE_DOC.' '._IS_EMPTY;
-    header("location: ".$_SESSION['config']['businessappurl']."index.php");
+if ($s_id == '') {
+    $_SESSION['error'] = _THE_DOC . ' ' . _IS_EMPTY;
+    header('location: ' . $_SESSION['config']['businessappurl'] . 'index.php');
     exit();
 } else {
     //2:retrieve the view
-    $table = "";
-    if(isset($_REQUEST['collid']) && $_REQUEST['collid'] <> "") {
+    $table = '';
+    if (isset($_REQUEST['collid']) && $_REQUEST['collid'] <> '') {
         $_SESSION['collection_id_choice'] = $_REQUEST['collid'];
     }
-    if(isset($_SESSION['collection_id_choice']) && !empty($_SESSION['collection_id_choice'])) {
-        $table = $sec->retrieve_view_from_coll_id($_SESSION['collection_id_choice']);
-        if(!$table) {
-            $table = $sec->retrieve_table_from_coll($_SESSION['collection_id_choice']);
+    if (isset($_SESSION['collection_id_choice']) 
+        && !empty($_SESSION['collection_id_choice'])
+    ) {
+        $table = $sec->retrieve_view_from_coll_id(
+            $_SESSION['collection_id_choice']
+        );
+        if (!$table) {
+            $table = $sec->retrieve_table_from_coll(
+                $_SESSION['collection_id_choice']
+            );
         }
     } else {
-        if(isset($_SESSION['collections'][0]['view']) && !empty($_SESSION['collections'][0]['view'])) {
+        if (isset($_SESSION['collections'][0]['view']) 
+            && !empty($_SESSION['collections'][0]['view'])
+        ) {
             $table = $_SESSION['collections'][0]['view'];
         } else {
             $table = $_SESSION['collections'][0]['table'];
         }
     }
-    for ($cptColl=0;$cptColl<count($_SESSION['collections']);$cptColl++) {
-        if($table == $_SESSION['collections'][$cptColl]['table'] || $table == $_SESSION['collections'][$cptColl]['view']) {
-            $adrTable =  $_SESSION['collections'][$cptColl]['adr'];
+    for ($cptColl = 0;$cptColl < count($_SESSION['collections']);$cptColl++) {
+        if ($table == $_SESSION['collections'][$cptColl]['table'] 
+            || $table == $_SESSION['collections'][$cptColl]['view']
+        ) {
+            $adrTable = $_SESSION['collections'][$cptColl]['adr'];
         }
     }
-    if($adrTable == "") {
+    if ($adrTable == '') {
         $adrTable = $_SESSION['collections'][0]['adr'];
     }
     $docserverControler = new docservers_controler();
     $viewResourceArr = array();
     $docserverLocation = array();
-    $docserverLocation = $docserverControler->retrieveDocserverNetLinkOfResource($s_id, $table, $adrTable);
-    if($docserverLocation['value'] <> "" && $_SESSION['config']['coreurl'] <> $docserverLocation['value']) {
+    $docserverLocation =
+        $docserverControler->retrieveDocserverNetLinkOfResource(
+            $s_id, $table, $adrTable
+        );
+    if ($docserverLocation['value'] <> '' 
+        && $_SESSION['config']['coreurl'] <> $docserverLocation['value']
+    ) {
         $connexion = new dbquery();
         $connexion->connect();
-        $connexion->query("select password from ".$_SESSION['tablename']['users']." where user_id = '".$_SESSION['user']['UserId']."'");
+        $connexion->query(
+            "select password from " . $_SESSION['tablename']['users'] 
+            . " where user_id = '" . $_SESSION['user']['UserId'] . "'"
+        );
         $resultUser = $connexion->fetch_object();
-        if($core_tools->isEncrypted() == "true") {
+        if ($core_tools->isEncrypted() == 'true') {
             //$core_tools->generatePrivatePublicKey();
-            $proxy1 = $core_tools->encrypt($_SESSION['user']['UserId']);
-            $proxy2 = $core_tools->encrypt($resultUser->password);
-            if(!$proxy1 || !$proxy2) {
+            $proxyOne = $core_tools->encrypt($_SESSION['user']['UserId']);
+            $proxyTwo = $core_tools->encrypt($resultUser->password);
+            if (!$proxyOne || !$proxyTwo) {
                 $_SESSION['error'] = _PB_WITH_PUBLIC_OR_PRIVATE_KEY;
-                header("location: ".$_SESSION['config']['businessappurl']."index.php");
+                header('location: ' . $_SESSION['config']['businessappurl'] 
+                       . 'index.php');
                 exit();
             }
         } else {
-            $proxy1 = $_SESSION['user']['UserId'];
-            $proxy2 = $resultUser->password;
+            $proxyOne = $_SESSION['user']['UserId'];
+            $proxyTwo = $resultUser->password;
         }
-        header("location: ".$docserverLocation['value']."ws_client.php?id=".$s_id."&table=".$table."&proxy1=".$proxy1."&proxy2=".$proxy2);
+        header('location: ' . $docserverLocation['value'] . 'ws_client.php?id=' 
+               . $s_id . '&table=' . $table . '&proxy1=' . $proxyOne 
+               . '&proxy2=' . $proxyTwo);
     } else {
-        $viewResourceArr = $docserverControler->viewResource($s_id, $table, $adrTable, false);
-        if($viewResourceArr['error'] <> "") {
+        $viewResourceArr = $docserverControler->viewResource(
+            $s_id, 
+            $table, 
+            $adrTable, 
+            false
+        );
+        if ($viewResourceArr['error'] <> '') {
             //...
         } else {
             //$core_tools->show_array($viewResourceArr);
             if ($viewResourceArr['called_by_ws']) {
                 $fileContent = base64_decode($viewResourceArr['file_content']);
-                $fileNameOnTmp = 'tmp_file_' . rand() . '_' . md5($fileContent) . '.' . strtolower($viewResourceArr['ext']);
-                $filePathOnTmp = $_SESSION['config']['tmppath'] . DIRECTORY_SEPARATOR . $fileNameOnTmp;
-                $inF = fopen($filePathOnTmp,"w");
-                fwrite($inF,$fileContent);
+                $fileNameOnTmp = 'tmp_file_' . rand() . '_' 
+                    . md5($fileContent) . '.' 
+                    . strtolower($viewResourceArr['ext']);
+                $filePathOnTmp = $_SESSION['config']['tmppath'] 
+                    . DIRECTORY_SEPARATOR . $fileNameOnTmp;
+                $inF = fopen($filePathOnTmp, 'w');
+                fwrite($inF, $fileContent);
                 fclose($inF);
             } else {
                 $filePathOnTmp = $viewResourceArr['file_path'];
             }
-            if (strtolower($viewResourceArr['mime_type']) == "application/maarch") {
-                $myfile = fopen($filePathOnTmp, "r");
+            if (strtolower(
+                $viewResourceArr['mime_type']
+            ) == 'application/maarch'
+            ) {
+                $myfile = fopen($filePathOnTmp, 'r');
                 $data = fread($myfile, filesize($filePathOnTmp));
                 fclose($myfile);
                 $content = stripslashes($data);
@@ -138,4 +174,3 @@ if($s_id == '') {
         include('view_resource.php');
     }
 }
-?>
