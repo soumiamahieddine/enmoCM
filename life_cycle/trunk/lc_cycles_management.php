@@ -2,7 +2,7 @@
 /* View */
 $func = new functions();
 if ($mode == "list") {
-	$listshow = new list_show();
+    $listshow = new list_show();
     $listshow->admin_list(
                     $lc_cycles_list['tab'],
                     count($lc_cycles_list['tab']),
@@ -13,7 +13,7 @@ if ($mode == "list") {
                     true,
                     $lc_cycles_list['page_name_up'],
                     '',
-					'',
+                    '',
                     $lc_cycles_list['page_name_del'],
                     $lc_cycles_list['page_name_add'],
                     $lc_cycles_list['label_add'],
@@ -52,7 +52,7 @@ if ($mode == "list") {
                 <input type="hidden" name="display" value="value" />
                 <input type="hidden" name="module" value="life_cycle" />
                 <input type="hidden" name="page" value="lc_cycles_management_controler" />
-				<input type="hidden" name="mode" id="mode" value="<?php echo $mode;?>" />
+                <input type="hidden" name="mode" id="mode" value="<?php echo $mode;?>" />
                 <input type="hidden" name="order" id="order" value="<?php if(isset($_REQUEST['order'])) echo $_REQUEST['order'];?>" />
                 <input type="hidden" name="order_field" id="order_field" value="<?php if(isset($_REQUEST['order_field'])) echo $_REQUEST['order_field'];?>" />
                 <input type="hidden" name="what" id="what" value="<?php if(isset($_REQUEST['what'])) echo $_REQUEST['what'];?>" />

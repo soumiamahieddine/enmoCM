@@ -1,4 +1,5 @@
 <?php
+
 /**
  *Change cycle list according to the life cycle policy 
  * 
@@ -15,16 +16,18 @@ $selectCycle = '';
 $selectCycle .= '<p>';
 $selectCycle .= '<label for="cycle_id">'. _CYCLE_ID.' : </label>';
 $selectCycle .= '<select name="cycle_id" id="cycle_id">';
-$selectCycle .= '	<option value="">'._CYCLE_ID.'</option>';
-for($cptCycle=0;$cptCycle<count($cyclesArray);$cptCycle++){
-	$selectCycle .= '<option value="'.$cyclesArray[$cptCycle].'"';
-	if (isset($_SESSION['m_admin']['lc_cycle_steps']['cycle_id']) && $_SESSION['m_admin']['lc_cycle_steps']['cycle_id'] == $cyclesArray[$cptCycle]) { 
-		$selectCycle .= ' selected="selected"';
-	}
-	$selectCycle .= '>'.$cyclesArray[$cptCycle].'</option>';
+$selectCycle .= '    <option value="">'._CYCLE_ID.'</option>';
+for ($cptCycle = 0;$cptCycle < count($cyclesArray);$cptCycle++) {
+    $selectCycle .= '<option value="'.$cyclesArray[$cptCycle].'"';
+    if (isset($_SESSION['m_admin']['lc_cycle_steps']['cycle_id']) 
+    && $_SESSION['m_admin']['lc_cycle_steps']
+        ['cycle_id'] == $cyclesArray[$cptCycle]
+    ) { 
+        $selectCycle .= ' selected="selected"';
+    }
+    $selectCycle .= '>'.$cyclesArray[$cptCycle].'</option>';
 }
 $selectCycle .= '</select>';
 $selectCycle .= '</p>';
 echo "{status : 0, selectCycle : '" . addslashes($selectCycle) . "'}";
 exit ();
-?>

@@ -16,7 +16,7 @@
 *   GNU General Public License for more details.
 *
 *   You should have received a copy of the GNU General Public License
-*   along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
+*   along with Maarch Framework. If not, see <http://www.gnu.org/licenses/>.
 */
 
 /**
@@ -35,36 +35,49 @@ $admin = new core_tools();
 $admin->test_admin('admin_life_cycle', 'life_cycle');
 /****************Management of the location bar  ************/
 $init = false;
-if(isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true") {
-	$init = true;
+if (isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true") {
+    $init = true;
 }
 $level = "";
-if(isset($_REQUEST['level']) && ($_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1)) {
-	$level = $_REQUEST['level'];
+if (isset($_REQUEST['level']) && ($_REQUEST['level'] == 2 
+    || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 
+    || $_REQUEST['level'] == 1)
+) {
+    $level = $_REQUEST['level'];
 }
-$page_path = $_SESSION['config']['businessappurl'].'index.php?page=life_cycle_administration&module=life_cycle';
+$page_path = $_SESSION['config']['businessappurl']
+    .'index.php?page=life_cycle_administration&module=life_cycle';
 $page_label = _ADMIN_LIFE_CYCLE_SHORT;
 $page_id = "life_cycle_administration";
 $admin->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
 unset($_SESSION['m_admin']);
 ?>
-<h1><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?module=life_cycle&filename=manage_lc_b.gif" alt="" /> <?php  echo _ADMIN_LIFE_CYCLE_SHORT;?></h1>
+<h1><img src="<?php  echo $_SESSION['config']['businessappurl'];?>
+static.php?module=life_cycle&filename=manage_lc_b.gif" alt="" /> 
+<?php  echo _ADMIN_LIFE_CYCLE_SHORT;?></h1>
 <div id="inner_content" class="clearfix">
 <h2 class="admin_subtitle block" ><?php echo _ADMIN_LIFE_CYCLE;?></h1></h2>
-	<div class="admin_item" id="admin_lc_policies" title="<?php  echo _MANAGE_LC_POLICIES;?>" onclick="window.top.location='<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=lc_policies_management_controler&mode=list&module=life_cycle';">
-		<div class="sum_margin" >
-				<strong><?php  echo _MANAGE_LC_POLICIES;?></strong>
-		</div>
-	</div>
-	<div class="admin_item" id="admin_lc_cycles" title="<?php  echo _MANAGE_LC_CYCLES;?>" onclick="window.top.location='<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=lc_cycles_management_controler&mode=list&module=life_cycle';">
-		<div class="sum_margin" >
-				<strong><?php  echo _MANAGE_LC_CYCLES;?></strong>
-		</div>
-	</div>
-	<div class="admin_item" id="admin_lc_cycle_steps" title="<?php  echo _MANAGE_LC_CYCLE_STEPS;?>" onclick="window.top.location='<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=lc_cycle_steps_management_controler&mode=list&module=life_cycle';">
-		<div class="sum_margin" >
-				<strong><?php  echo _MANAGE_LC_CYCLE_STEPS;?></strong>
-		</div>
-	</div>
+    <div class="admin_item" id="admin_lc_policies" title="
+    <?php  echo _MANAGE_LC_POLICIES;?>" 
+    onclick="
+    window.top.location='<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=lc_policies_management_controler&mode=list&module=life_cycle';">
+        <div class="sum_margin" >
+                <strong><?php  echo _MANAGE_LC_POLICIES;?></strong>
+        </div>
+    </div>
+    <div class="admin_item" id="admin_lc_cycles" title="
+    <?php  echo _MANAGE_LC_CYCLES;?>" 
+    onclick="window.top.location='<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=lc_cycles_management_controler&mode=list&module=life_cycle';">
+        <div class="sum_margin" >
+                <strong><?php  echo _MANAGE_LC_CYCLES;?></strong>
+        </div>
+    </div>
+    <div class="admin_item" id="admin_lc_cycle_steps" title="
+    <?php echo _MANAGE_LC_CYCLE_STEPS;?>" onclick="window.top.location=
+    '<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=lc_cycle_steps_management_controler&mode=list&module=life_cycle';">
+        <div class="sum_margin" >
+                <strong><?php  echo _MANAGE_LC_CYCLE_STEPS;?></strong>
+        </div>
+    </div>
 </div>

@@ -2,7 +2,7 @@
 /* View */
 $func = new functions();
 if($mode == "list"){
-	$listShow = new list_show();
+    $listShow = new list_show();
     $listShow->admin_list(
                     $lc_policies_list['tab'],
                     count($lc_policies_list['tab']),
@@ -13,7 +13,7 @@ if($mode == "list"){
                     true,
                     $lc_policies_list['page_name_up'],
                     '',
-					'',
+                    '',
                     $lc_policies_list['page_name_del'],
                     $lc_policies_list['page_name_add'],
                     $lc_policies_list['label_add'],

@@ -36,12 +36,12 @@ $_ENV['DEBUG'] = false;
 
 // Loads the required class
 try {
-	require_once ("modules/life_cycle/class/lc_cycles.php");
-	require_once ("modules/life_cycle/life_cycle_tables_definition.php");
-	require_once ("core/class/ObjectControlerAbstract.php");
-	require_once ("core/class/ObjectControlerIF.php");
+    require_once ("modules/life_cycle/class/lc_cycles.php");
+    require_once ("modules/life_cycle/life_cycle_tables_definition.php");
+    require_once ("core/class/ObjectControlerAbstract.php");
+    require_once ("core/class/ObjectControlerIF.php");
 } catch (Exception $e) {
-	echo $e->getMessage() . ' // ';
+    echo $e->getMessage() . ' // ';
 }
 
 /**
@@ -56,7 +56,7 @@ try {
 */
 class lc_cycles_controler extends ObjectControler implements ObjectControlerIF {
 
-	/**
+    /**
     * Save given object in database:
     * - make an update if object already exists,
     * - make an insert if new object.
@@ -65,15 +65,15 @@ class lc_cycles_controler extends ObjectControler implements ObjectControlerIF {
     * @return array
     */
     public function save($cycle, $mode = "") {
-		$control = array();
+        $control = array();
         if (!isset($cycle) || empty($cycle)) {
             $control = array("status" => "ko", "value" => "", "error" => _CYCLE_ID_EMPTY);
             return $control;
         }
-		$cycle = $this->isACycle($cycle);
-		$this->set_foolish_ids(array('policy_id', 'cycle_id'));
-		$this->set_specific_id('cycle_id');
-		if ($mode == "up") {
+        $cycle = $this->isACycle($cycle);
+        $this->set_foolish_ids(array('policy_id', 'cycle_id'));
+        $this->set_specific_id('cycle_id');
+        if ($mode == "up") {
             $control = $this->control($cycle, "up");
             if ($control['status'] == "ok") {
                 //Update existing cycle
@@ -106,9 +106,9 @@ class lc_cycles_controler extends ObjectControler implements ObjectControlerIF {
             }
         }
         return $control;
-	}
+    }
 
-	/**
+    /**
     * control the cycle object before action
     *
     * @param  object $cycle cycle object
@@ -118,78 +118,78 @@ class lc_cycles_controler extends ObjectControler implements ObjectControlerIF {
     private function control($cycle, $mode) {
         $f = new functions();
         $error = "";
-		if (isset($cycle->cycle_id) && !empty($cycle->cycle_id)) {
-			// Update, so values exist
-			$cycle->cycle_id=$f->protect_string_db($f->wash($cycle->cycle_id, "nick", _LC_CYCLE_ID." ", "yes", 0, 32));
-		}
-		$cycle->policy_id=$f->protect_string_db($f->wash($cycle->policy_id, "no", _POLICY_ID." ", 'yes', 0, 32));
-		$cycle->cycle_desc=$f->protect_string_db($f->wash($cycle->cycle_desc, "no", _CYCLE_DESC." ", 'yes', 0, 255));
-		$cycle->sequence_number=$f->protect_string_db($f->wash($cycle->sequence_number, "num", _SEQUENCE_NUMBER." ", 'yes', 0, 255));
-		$cycle->break_key=$f->protect_string_db($f->wash($cycle->break_key, "no", _BREAK_KEY." ", 'no', 0, 255));	
-		if ($this->where_test_secure($cycle->where_clause)) {
-			$error .= _WHERE_CLAUSE_NOT_SECURE."#";
-		} elseif (!$this->where_test($cycle->where_clause)) {
-			$error .= _PB_WITH_WHERE_CLAUSE."#";
-		}
-		$cycle->where_clause=$f->protect_string_db($f->wash($cycle->where_clause, "no", _WHERE_CLAUSE." ", 'yes', 0, 255));
-		$cycle->validation_mode=$f->protect_string_db($f->wash($cycle->validation_mode, "no", _VALIDATION_MODE." ", 'yes', 0, 32));
-		if ($mode == "add" && $this->cycleExists($cycle->cycle_id)) {	
-			$error .= $cycle->cycle_id." "._ALREADY_EXISTS."#";
-		}
+        if (isset($cycle->cycle_id) && !empty($cycle->cycle_id)) {
+            // Update, so values exist
+            $cycle->cycle_id=$f->protect_string_db($f->wash($cycle->cycle_id, "nick", _LC_CYCLE_ID." ", "yes", 0, 32));
+        }
+        $cycle->policy_id=$f->protect_string_db($f->wash($cycle->policy_id, "no", _POLICY_ID." ", 'yes', 0, 32));
+        $cycle->cycle_desc=$f->protect_string_db($f->wash($cycle->cycle_desc, "no", _CYCLE_DESC." ", 'yes', 0, 255));
+        $cycle->sequence_number=$f->protect_string_db($f->wash($cycle->sequence_number, "num", _SEQUENCE_NUMBER." ", 'yes', 0, 255));
+        $cycle->break_key=$f->protect_string_db($f->wash($cycle->break_key, "no", _BREAK_KEY." ", 'no', 0, 255));    
+        if ($this->where_test_secure($cycle->where_clause)) {
+            $error .= _WHERE_CLAUSE_NOT_SECURE."#";
+        } elseif (!$this->where_test($cycle->where_clause)) {
+            $error .= _PB_WITH_WHERE_CLAUSE."#";
+        }
+        $cycle->where_clause=$f->protect_string_db($f->wash($cycle->where_clause, "no", _WHERE_CLAUSE." ", 'yes', 0, 255));
+        $cycle->validation_mode=$f->protect_string_db($f->wash($cycle->validation_mode, "no", _VALIDATION_MODE." ", 'yes', 0, 32));
+        if ($mode == "add" && $this->cycleExists($cycle->cycle_id)) {    
+            $error .= $cycle->cycle_id." "._ALREADY_EXISTS."#";
+        }
         $error .= $_SESSION['error'];
         //TODO:rewrite wash to return errors without html
         $error = str_replace("<br />", "#", $error);
         $return = array();
         if (!empty($error)) {
-			$return = array("status" => "ko", "value" => $cycle->cycle_id, "error" => $error);
+            $return = array("status" => "ko", "value" => $cycle->cycle_id, "error" => $error);
         } else {
             $return = array("status" => "ok", "value" => $cycle->cycle_id);
         }
         return $return;
     }
 
-	/**
-	* Inserts in the database (lc_cycles table) a lc_cycles object
-	*
-	* @param  $cycle lc_cycles object
-	* @return bool true if the insertion is complete, false otherwise
-	*/
-	private function insert($cycle) {
-		return $this->advanced_insert($cycle);
-	}
+    /**
+    * Inserts in the database (lc_cycles table) a lc_cycles object
+    *
+    * @param  $cycle lc_cycles object
+    * @return bool true if the insertion is complete, false otherwise
+    */
+    private function insert($cycle) {
+        return $this->advanced_insert($cycle);
+    }
 
-	/**
-	* Updates in the database (lc_cycles table) a lc_cycles object
-	*
-	* @param  $cycle lc_cycles object
-	* @return bool true if the update is complete, false otherwise
-	*/
-	private function update($cycle) {
-		return $this->advanced_update($cycle);
-	}
+    /**
+    * Updates in the database (lc_cycles table) a lc_cycles object
+    *
+    * @param  $cycle lc_cycles object
+    * @return bool true if the update is complete, false otherwise
+    */
+    private function update($cycle) {
+        return $this->advanced_update($cycle);
+    }
 
-	/**
-	* Returns an lc_cycles object based on a lc_cycles identifier
-	*
-	* @param  $cycle_id string  lc_cycles identifier
-	* @param  $comp_where string  where clause arguments (must begin with and or or)
-	* @param  $can_be_disabled bool  if true gets the cycle even if it is disabled in the database (false by default)
-	* @return lc_cycles object with properties from the database or null
-	*/
-	public function get($cycle_id, $comp_where = '', $can_be_disabled = false) {
-		$this->set_foolish_ids(array('policy_id', 'cycle_id'));
-		$this->set_specific_id('cycle_id');
-		$cycle = $this->advanced_get($cycle_id, _LC_CYCLES_TABLE_NAME);
-		//var_dump($policy);
+    /**
+    * Returns an lc_cycles object based on a lc_cycles identifier
+    *
+    * @param  $cycle_id string  lc_cycles identifier
+    * @param  $comp_where string  where clause arguments (must begin with and or or)
+    * @param  $can_be_disabled bool  if true gets the cycle even if it is disabled in the database (false by default)
+    * @return lc_cycles object with properties from the database or null
+    */
+    public function get($cycle_id, $comp_where = '', $can_be_disabled = false) {
+        $this->set_foolish_ids(array('policy_id', 'cycle_id'));
+        $this->set_specific_id('cycle_id');
+        $cycle = $this->advanced_get($cycle_id, _LC_CYCLES_TABLE_NAME);
+        //var_dump($policy);
         if (get_class($cycle) <> "lc_cycles") {
             return null;
         } else {
             //var_dump($cycle);
             return $cycle;
         }
-	}
+    }
 
-	/**
+    /**
     * get lc_cycles with given id for a ws.
     * Can return null if no corresponding object.
     * @param $cycle_id of cycle to send
@@ -207,14 +207,14 @@ class lc_cycles_controler extends ObjectControler implements ObjectControlerIF {
         }
     }
 
-	/**
-	* Deletes in the database (lc_cycles related tables) a given lc_cycles (cycle_id)
-	*
-	* @param  $cycle string  lc_cycles identifier
-	* @return bool true if the deletion is complete, false otherwise
-	*/
-	public function delete($cycle) {
-		$control = array();
+    /**
+    * Deletes in the database (lc_cycles related tables) a given lc_cycles (cycle_id)
+    *
+    * @param  $cycle string  lc_cycles identifier
+    * @return bool true if the deletion is complete, false otherwise
+    */
+    public function delete($cycle) {
+        $control = array();
         if (!isset($cycle) || empty($cycle)) {
             $control = array("status" => "ko", "value" => "", "error" => _LC_CYCLE_EMPTY);
             return $control;
@@ -224,52 +224,52 @@ class lc_cycles_controler extends ObjectControler implements ObjectControlerIF {
             $control = array("status" => "ko", "value" => "", "error" => _LC_CYCLE_NOT_EXISTS);
             return $control;
         }
-		if ($this->linkExists($cycle->policy_id, $cycle->cycle_id)) {
-			$control = array("status" => "ko", "value" => "", "error" => _LINK_EXISTS);
+        if ($this->linkExists($cycle->policy_id, $cycle->cycle_id)) {
+            $control = array("status" => "ko", "value" => "", "error" => _LINK_EXISTS);
             return $control;
         }
-		$db=new dbquery();
-		$db->connect();
-		$query="delete from "._LC_CYCLES_TABLE_NAME." where cycle_id ='".$db->protect_string_db($cycle->cycle_id)."'";
-		try {
-			if ($_ENV['DEBUG']) {echo $query.' // ';}
-			$db->query($query);
-			$ok = true;
-		} catch (Exception $e) {
-			$control = array("status" => "ko", "value" => "", "error" => _CANNOT_DELETE_CYCLE_ID." ".$cycle->cycle_id);
-			$ok = false;
-		}
-		$db->disconnect();
-		$control = array("status" => "ok", "value" => $cycle->cycle_id);
-		if ($_SESSION['history']['lcdel'] == "true") {
-			require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
-			$history = new history();
-			$history->add(_LC_CYCLES_TABLE_NAME, $cycle->cycle_id, "DEL", _LC_CYCLE_DELETED." : ".$cycle->cycle_id, $_SESSION['config']['databasetype']);
-		}
-		return $control;
-	}
+        $db=new dbquery();
+        $db->connect();
+        $query="delete from "._LC_CYCLES_TABLE_NAME." where cycle_id ='".$db->protect_string_db($cycle->cycle_id)."'";
+        try {
+            if ($_ENV['DEBUG']) {echo $query.' // ';}
+            $db->query($query);
+            $ok = true;
+        } catch (Exception $e) {
+            $control = array("status" => "ko", "value" => "", "error" => _CANNOT_DELETE_CYCLE_ID." ".$cycle->cycle_id);
+            $ok = false;
+        }
+        $db->disconnect();
+        $control = array("status" => "ok", "value" => $cycle->cycle_id);
+        if ($_SESSION['history']['lcdel'] == "true") {
+            require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
+            $history = new history();
+            $history->add(_LC_CYCLES_TABLE_NAME, $cycle->cycle_id, "DEL", _LC_CYCLE_DELETED." : ".$cycle->cycle_id, $_SESSION['config']['databasetype']);
+        }
+        return $control;
+    }
 
-	/**
-	* Disables a given lc_cycles
-	* 
-	* @param  $cycle lc_cycles object 
-	* @return bool true if the disabling is complete, false otherwise 
-	*/
-	public function disable($cycle) {
-		//
-	}
+    /**
+    * Disables a given lc_cycles
+    * 
+    * @param  $cycle lc_cycles object 
+    * @return bool true if the disabling is complete, false otherwise 
+    */
+    public function disable($cycle) {
+        //
+    }
 
-	/**
-	* Enables a given lc_cycles
-	* 
-	* @param  $cycle lc_cycles object  
-	* @return bool true if the enabling is complete, false otherwise 
-	*/
-	public function enable($cycle) {
-		//
-	}
+    /**
+    * Enables a given lc_cycles
+    * 
+    * @param  $cycle lc_cycles object  
+    * @return bool true if the enabling is complete, false otherwise 
+    */
+    public function enable($cycle) {
+        //
+    }
 
-	/**
+    /**
     * Fill a cycle object with an object if it's not a cycle
     *
     * @param  $object ws cycle object
@@ -290,183 +290,182 @@ class lc_cycles_controler extends ObjectControler implements ObjectControlerIF {
         }
     }
 
-	/**
-	* Checks if the life cycle cycle exists
-	* 
-	* @param $cycle_id lc_cycle identifier
-	* @return bool true if the cycle exists
-	*/
-	public function cycleExists($cycle_id) {
-		if (!isset ($cycle_id) || empty ($cycle_id))
-			return false;
-		$db = new dbquery();
-		$db->connect();
-		$query = "select cycle_id from " . _LC_CYCLES_TABLE_NAME . " where cycle_id = '" . $cycle_id . "'";
-		try {
-			if ($_ENV['DEBUG']) {
-				echo $query . ' // ';
-			}
-			$db->query($query);
-		} catch (Exception $e) {
-			echo _UNKNOWN . _LC_CYCLE . " " . $cycle_id . ' // ';
-		}
-		if ($db->nb_result() > 0) {
-			$db->disconnect();
-			return true;
-		}
-		$db->disconnect();
-		return false;
-	}
+    /**
+    * Checks if the life cycle cycle exists
+    * 
+    * @param $cycle_id lc_cycle identifier
+    * @return bool true if the cycle exists
+    */
+    public function cycleExists($cycle_id) {
+        if (!isset ($cycle_id) || empty ($cycle_id))
+            return false;
+        $db = new dbquery();
+        $db->connect();
+        $query = "select cycle_id from " . _LC_CYCLES_TABLE_NAME . " where cycle_id = '" . $cycle_id . "'";
+        try {
+            if ($_ENV['DEBUG']) {
+                echo $query . ' // ';
+            }
+            $db->query($query);
+        } catch (Exception $e) {
+            echo _UNKNOWN . _LC_CYCLE . " " . $cycle_id . ' // ';
+        }
+        if ($db->nb_result() > 0) {
+            $db->disconnect();
+            return true;
+        }
+        $db->disconnect();
+        return false;
+    }
 
-	/**
-	* Checks if the life cycle cycle is linked 
-	* 
-	* @param $cycle_id lc_cycle identifier
-	* @param $policy_id lc_cycle policy identifier
-	* @return bool true if the cycle is linked
-	*/
-	public function linkExists($policy_id, $cycle_id) {
-		if (!isset($policy_id) || empty($policy_id))
-			return false;
-		if (!isset($cycle_id) || empty($cycle_id))
-			return false;
-		$db=new dbquery();
-		$db->connect();
-		
-		$query = "select cycle_id from "._LC_STACK_TABLE_NAME." where cycle_id = '".$cycle_id."' and policy_id = '".$policy_id."'";
-		$db->query($query);
-		if ($db->nb_result()>0) {
-			$db->disconnect();
-			return true;
-		}
-		$query = "select cycle_id from "._LC_CYCLE_STEPS_TABLE_NAME." where cycle_id = '".$cycle_id."' and policy_id = '".$policy_id."'";
-		$db->query($query);
-		if ($db->nb_result()>0) {
-			$db->disconnect();
-			return true;
-		}
-		/*$query = "select cycle_id from "._LC_RES_X_TABLE_NAME." where cycle_id = '".$cycle_id."' and policy_id = '".$policy_id."'";
-		$db->query($query);
-		if ($db->nb_result()>0) {
-			$db->disconnect();
-			return true;
-		}
-		$query = "select cycle_id from "._LC_ADR_X_TABLE_NAME." where cycle_id = '".$cycle_id."' and policy_id = '".$policy_id."'";
-		$db->query($query);
-		if ($db->nb_result()>0) {
-			$db->disconnect();
-			return true;
-		}*/
-		$db->disconnect();
-	}
+    /**
+    * Checks if the life cycle cycle is linked 
+    * 
+    * @param $cycle_id lc_cycle identifier
+    * @param $policy_id lc_cycle policy identifier
+    * @return bool true if the cycle is linked
+    */
+    public function linkExists($policy_id, $cycle_id) {
+        if (!isset($policy_id) || empty($policy_id))
+            return false;
+        if (!isset($cycle_id) || empty($cycle_id))
+            return false;
+        $db=new dbquery();
+        $db->connect();
+        
+        $query = "select cycle_id from "._LC_STACK_TABLE_NAME." where cycle_id = '".$cycle_id."' and policy_id = '".$policy_id."'";
+        $db->query($query);
+        if ($db->nb_result()>0) {
+            $db->disconnect();
+            return true;
+        }
+        $query = "select cycle_id from "._LC_CYCLE_STEPS_TABLE_NAME." where cycle_id = '".$cycle_id."' and policy_id = '".$policy_id."'";
+        $db->query($query);
+        if ($db->nb_result()>0) {
+            $db->disconnect();
+            return true;
+        }
+        /*$query = "select cycle_id from "._LC_RES_X_TABLE_NAME." where cycle_id = '".$cycle_id."' and policy_id = '".$policy_id."'";
+        $db->query($query);
+        if ($db->nb_result()>0) {
+            $db->disconnect();
+            return true;
+        }
+        $query = "select cycle_id from "._LC_ADR_X_TABLE_NAME." where cycle_id = '".$cycle_id."' and policy_id = '".$policy_id."'";
+        $db->query($query);
+        if ($db->nb_result()>0) {
+            $db->disconnect();
+            return true;
+        }*/
+        $db->disconnect();
+    }
 
-	/**
-	* Return all cycles ID
-	* 
-	* @return array of cycles
-	*/
-	public function getAllId($can_be_disabled = false) {
-		$db = new dbquery();
-		$db->connect();
-		$query = "select cycle_id from " . _LC_CYCLES_TABLE_NAME . " ";
-		if (!$can_be_disabled)
-			$query .= " where enabled = 'Y'";
-		try {
-			if ($_ENV['DEBUG'])
-				echo $query . ' // ';
-			$db->query($query);
-		} catch (Exception $e) {
-			echo _NO_LC_CYCLE . ' // ';
-		}
-		if ($db->nb_result() > 0) {
-			$result = array ();
-			$cptId = 0;
-			while ($queryResult = $db->fetch_object()) {
-				$result[$cptId] = $queryResult->cycle_id;
-				$cptId++;
-			}
-			$db->disconnect();
-			return $result;
-		} else {
-			$db->disconnect();
-			return null;
-		}
-	}
+    /**
+    * Return all cycles ID
+    * 
+    * @return array of cycles
+    */
+    public function getAllId($can_be_disabled = false) {
+        $db = new dbquery();
+        $db->connect();
+        $query = "select cycle_id from " . _LC_CYCLES_TABLE_NAME . " ";
+        if (!$can_be_disabled)
+            $query .= " where enabled = 'Y'";
+        try {
+            if ($_ENV['DEBUG'])
+                echo $query . ' // ';
+            $db->query($query);
+        } catch (Exception $e) {
+            echo _NO_LC_CYCLE . ' // ';
+        }
+        if ($db->nb_result() > 0) {
+            $result = array ();
+            $cptId = 0;
+            while ($queryResult = $db->fetch_object()) {
+                $result[$cptId] = $queryResult->cycle_id;
+                $cptId++;
+            }
+            $db->disconnect();
+            return $result;
+        } else {
+            $db->disconnect();
+            return null;
+        }
+    }
 
-	/**
-	* Displays lc_cycle according to a given policy_id 
-	* 
-	* @param $policy_id lc_cycle policy identifier
-	* @return array lc_cycle identifier
-	*/
-	public function getAllIdByPolicy($policy_id) {
-		$db = new dbquery();
-		$db->connect();
-		$query = "select cycle_id from " . _LC_CYCLES_TABLE_NAME . " where policy_id = '".$policy_id."'";
-		try {
-			if ($_ENV['DEBUG'])
-				echo $query . ' // ';
-			$db->query($query);
-		} catch (Exception $e) {
-			echo _NO_LC_CYCLE . ' // ';
-		}
-		if ($db->nb_result() > 0) {
-			$result = array ();
-			$cptId = 0;
-			while ($queryResult = $db->fetch_object()) {
-				$result[$cptId] = $queryResult->cycle_id;
-				$cptId++;
-			}
-			$db->disconnect();
-			return $result;
-		} else {
-			$db->disconnect();
-			return null;
-		}
-	}
+    /**
+    * Displays lc_cycle according to a given policy_id 
+    * 
+    * @param $policy_id lc_cycle policy identifier
+    * @return array lc_cycle identifier
+    */
+    public function getAllIdByPolicy($policy_id) {
+        $db = new dbquery();
+        $db->connect();
+        $query = "select cycle_id from " . _LC_CYCLES_TABLE_NAME . " where policy_id = '".$policy_id."'";
+        try {
+            if ($_ENV['DEBUG'])
+                echo $query . ' // ';
+            $db->query($query);
+        } catch (Exception $e) {
+            echo _NO_LC_CYCLE . ' // ';
+        }
+        if ($db->nb_result() > 0) {
+            $result = array ();
+            $cptId = 0;
+            while ($queryResult = $db->fetch_object()) {
+                $result[$cptId] = $queryResult->cycle_id;
+                $cptId++;
+            }
+            $db->disconnect();
+            return $result;
+        } else {
+            $db->disconnect();
+            return null;
+        }
+    }
 
-	/**
-	* Check the where clause syntax
-	*
-	* @param  $where_clause string The where clause to check
-	* @return bool true if the syntax is correct, false otherwise
-	*/
-	public function where_test($where_clause) {
-		$res = true;
-		$db=new dbquery();
-		$db->connect();
-		if (!empty($where_clause)) {
-			$res = $db->query("select res_id from ".$_SESSION['collections'][0]['view']." where ".$where_clause, true);
-		}
-		if (!$res) {
-			$res = false;
-		}
-		$db->disconnect();
-		return $res;
-	}
+    /**
+    * Check the where clause syntax
+    *
+    * @param  $where_clause string The where clause to check
+    * @return bool true if the syntax is correct, false otherwise
+    */
+    public function where_test($where_clause) {
+        $res = true;
+        $db=new dbquery();
+        $db->connect();
+        if (!empty($where_clause)) {
+            $res = $db->query("select res_id from ".$_SESSION['collections'][0]['view']." where ".$where_clause, true);
+        }
+        if (!$res) {
+            $res = false;
+        }
+        $db->disconnect();
+        return $res;
+    }
 
-	/**
-	* Check the where clause syntax
-	*
-	* @param  $where_clause string The where clause to check
-	* @return bool true if the syntax is correct, false otherwise
-	*/
-	public function where_test_secure($where_clause) {
-		$string = $where_clause;
-		$search1="'drop|insert|delete|update'";
-		preg_match($search1, $string, $out);
-		if (isset($out[0])) {
-			$count=count($out[0]);
-			if ($count == 1) {
-				$find1 = true;
-			} else {
-				$find1 = false;
-			}
-		} else {
-			$find1 = false;
-		}
-		return $find1;
-	}
+    /**
+    * Check the where clause syntax
+    *
+    * @param  $where_clause string The where clause to check
+    * @return bool true if the syntax is correct, false otherwise
+    */
+    public function where_test_secure($where_clause) {
+        $string = $where_clause;
+        $search1="'drop|insert|delete|update'";
+        preg_match($search1, $string, $out);
+        if (isset($out[0])) {
+            $count=count($out[0]);
+            if ($count == 1) {
+                $find1 = true;
+            } else {
+                $find1 = false;
+            }
+        } else {
+            $find1 = false;
+        }
+        return $find1;
+    }
 }
 
-?>

@@ -1,4 +1,5 @@
 <?php
+
 /*
 *    Copyright 2008-2011 Maarch
 *
@@ -34,9 +35,13 @@ require_once ("modules/life_cycle/life_cycle_tables_definition.php");
 $db = new dbquery();
 $db->connect();
 if ($_SESSION['config']['databasetype'] == "POSTGRESQL") {
-    $db->query("select cycle_step_id as tag from " . _LC_CYCLE_STEPS_TABLE_NAME . " where cycle_step_id ilike '" . $_REQUEST['what'] . "%' order by cycle_step_id");
+    $db->query("select cycle_step_id as tag from " 
+               . _LC_CYCLE_STEPS_TABLE_NAME . " where cycle_step_id ilike '" 
+               . $_REQUEST['what'] . "%' order by cycle_step_id");
 } else {
-    $db->query("select cycle_step_id as tag from " . _LC_CYCLE_STEPS_TABLE_NAME . " where cycle_step_id like '" . $_REQUEST['what'] . "%' order by cycle_step_id");
+    $db->query("select cycle_step_id as tag from " 
+               . _LC_CYCLE_STEPS_TABLE_NAME . " where cycle_step_id like '" 
+               . $_REQUEST['what'] . "%' order by cycle_step_id");
 }
 $listArray = array();
 while ($line = $db->fetch_object()) {
@@ -46,7 +51,7 @@ echo "<ul>\n";
 $authViewList = 0;
 $flagAuthView = false;
 foreach ($listArray as $what) {
-    if (isset($authViewList) && $authViewList>= 10) {
+    if (isset($authViewList) && $authViewList >= 10) {
         $flagAuthView = true;
     }
     if (stripos($what, $_REQUEST['what']) === 0) {

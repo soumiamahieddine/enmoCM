@@ -31,9 +31,9 @@
 
 // Loads the required class
 try {
-	require_once("core/class/BaseObject.php");
+    require_once("core/class/BaseObject.php");
 } catch (Exception $e) {
-	echo $e->getMessage().' // ';
+    echo $e->getMessage().' // ';
 }
 
 /**
@@ -41,13 +41,15 @@ try {
 *
 * @ingroup life_cycle
 */
-class lc_cycle_steps extends BaseObject {
-	/**
-	 *Print a viewable string to render the object.
-	 * @return string Rendering of the object
-	 */
-	public function __toString() {
-		return $this->cycle_step_desc;
-	}
-} 
-?>
+class lc_cycle_steps 
+    extends BaseObject
+{
+    /**
+     *Print a viewable string to render the object.
+     * @return string Rendering of the object
+     */
+    public function __toString()
+    {
+        return $this->cycle_step_desc;
+    }
+}
