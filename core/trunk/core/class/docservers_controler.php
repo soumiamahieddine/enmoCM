@@ -37,7 +37,7 @@ $_ENV['DEBUG'] = false;
 //Loads the required class
 try {
     require_once ('core/class/docservers.php');
-    require_once ('core/DocserversTools.inc');
+    require_once ('core/docservers_tools.inc');
     require_once ('core/core_tables.php');
     require_once ('core/class/ObjectControlerAbstract.php');
     require_once ('core/class/ObjectControlerIF.php');

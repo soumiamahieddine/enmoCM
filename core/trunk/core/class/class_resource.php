@@ -138,7 +138,7 @@
 		$filetmp .= $filename;
 		require_once("core" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . "docservers_controler.php");
 		require_once("core" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . "docserver_types_controler.php");
-		require_once("core" . DIRECTORY_SEPARATOR . "DocserversTools.inc");
+		require_once("core" . DIRECTORY_SEPARATOR . "docservers_tools.inc");
 		$docserverControler = new docservers_controler();
 		$docserverTypeControler = new docserver_types_controler();
 		$docserver = $docserverControler->get($docserver_id);
