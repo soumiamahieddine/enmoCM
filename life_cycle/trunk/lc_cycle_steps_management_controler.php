@@ -55,7 +55,9 @@ try {
     require_once("core/class/docserver_types_controler.php");
     if ($mode == 'list') {
         require_once("modules/life_cycle/lang/fr.php");
-        require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");
+        require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id']
+            .DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR
+            ."class_list_show.php");
     }
 } catch (Exception $e) {
     echo $e->getMessage();
@@ -64,13 +66,15 @@ try {
 $lcPoliciesControler = new lc_policies_controler();
 $lcCycleStepsControler = new lc_cycle_steps_controler();
 $docserverTypesControler = new docserver_types_controler();
-if ($mode == "up" || $mode =="add") {
+if ($mode == "up" || $mode == "add") {
     $policiesArray = array();
     $stepsArray = array();
     $docserverTypesArray = array();
     $policiesArray = $lcPoliciesControler->getAllId();
     if (isset($_SESSION['m_admin']['lc_cycle_steps']['policy_id'])) {
-        $stepsArray = $lcCycleStepsControler->getAllId($_SESSION['m_admin']['lc_cycle_steps']['policy_id']);
+        $stepsArray = $lcCycleStepsControler->getAllId(
+            $_SESSION['m_admin']['lc_cycle_steps']['policy_id']
+        );
     }
     $docserverTypesArray = $docserverTypesControler->getAllId();
 }
@@ -80,12 +84,13 @@ if (isset($_REQUEST['submit'])) {
     validate_cs_submit($mode);
 } else {
     // Display to do
-    if (isset($_REQUEST['id']) && !empty($_REQUEST['id']))
-        $cycle_step_id = $_REQUEST['id'];
+    if (isset($_REQUEST['id']) && !empty($_REQUEST['id'])) {
+        $cycleStepId = $_REQUEST['id'];
+    }
     $state = true;
     switch ($mode) {
         case "up" :
-            $state=display_up($cycle_step_id); 
+            $state = display_up($cycleStepId); 
             location_bar_management($mode);
             break;
         case "add" :
@@ -93,17 +98,17 @@ if (isset($_REQUEST['submit'])) {
             location_bar_management($mode);
             break;
         case "del" :            
-            display_del($cycle_step_id); 
+            display_del($cycleStepId); 
             break;
         case "list" :
-            $lc_cycle_steps_list=display_list(); 
+            $lc_cycle_steps_list = display_list(); 
             location_bar_management($mode);
             break;
         case "allow" :
-            display_enable($cycle_step_id); 
+            display_enable($cycleStepId); 
             location_bar_management($mode);
         case "ban" :
-            display_disable($cycle_step_id); 
+            display_disable($cycleStepId); 
             location_bar_management($mode);
     }
     include('lc_cycle_steps_management.php');
@@ -112,7 +117,8 @@ if (isset($_REQUEST['submit'])) {
 /**
  * Initialize session variables
  */
-function init_session() {
+function init_session()
+{
     $sessionName = "lc_cycle_steps";
     $_SESSION['m_admin'][$sessionName] = array();
 }
@@ -120,56 +126,89 @@ function init_session() {
 /**
  * Management of the location bar  
  */
-function location_bar_management($mode) {
+function location_bar_management($mode)
+{
     //$sessionName = "lc_cycle_steps";
     $pageName = "lc_cycle_steps_management_controler";
     //$tableName = "lc_cycle_steps";
     //$idName = "cycle_step_id";
     
-    $page_labels = array('add' => _ADDITION, 'up' => _MODIFICATION, 'list' => _LC_CYCLE_STEPS_LIST);
-    $page_ids = array('add' => 'docserver_add', 'up' => 'docserver_up', 'list' => 'lc_cycle_steps_list');
+    $pageLabels = array(
+        'add' => _ADDITION, 
+        'up' => _MODIFICATION, 
+        'list' => _LC_CYCLE_STEPS_LIST,
+    );
+    $pageIds = array(
+        'add' => 'docserver_add', 
+        'up' => 'docserver_up', 
+        'list' => 'lc_cycle_steps_list',
+    );
 
     $init = false;
-    if (isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true") 
+    if (isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true") {
         $init = true;
-
+    }
     $level = "";
-    if (isset($_REQUEST['level']) && ($_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1))
+    if (isset($_REQUEST['level']) 
+        && ($_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 
+            || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1
+        )
+    ) {
         $level = $_REQUEST['level'];
-    
-    $page_path = $_SESSION['config']['businessappurl'].'index.php?page='.$pageName.'&module=life_cycle&mode='.$mode;
-    $page_label = $page_labels[$mode];
-    $page_id = $page_ids[$mode];
-    $ct=new core_tools();
-    $ct->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
+    }
+    $pagePath = $_SESSION['config']['businessappurl'].'index.php?page='
+        .$pageName.'&module=life_cycle&mode='.$mode;
+    $pageLabel = $pageLabels[$mode];
+    $pageId = $pageIds[$mode];
+    $ct = new core_tools();
+    $ct->manage_location_bar($pagePath, $pageLabel, $pageId, $init, $level);
 }
 
 /**
  * Validate a submit (add or up),
  * up to saving object
  */
-function validate_cs_submit($mode) {
+function validate_cs_submit($mode)
+{
     //$sessionName = "lc_cycle_steps";
     $pageName = "lc_cycle_steps_management_controler";
     //$tableName = "lc_cycle_steps";
     //$idName = "cycle_step_id";
     //$f=new functions();
     $lcCycleStepsControler = new lc_cycle_steps_controler();
-    $status= array();
-    $status['order']=$_REQUEST['order'];
-    $status['order_field']=$_REQUEST['order_field'];
-    $status['what']=$_REQUEST['what'];
-    $status['start']=$_REQUEST['start'];
+    $status = array();
+    $status['order'] = $_REQUEST['order'];
+    $status['order_field'] = $_REQUEST['order_field'];
+    $status['what'] = $_REQUEST['what'];
+    $status['start'] = $_REQUEST['start'];
     $lc_cycle_steps = new lc_cycle_steps();
-    if (isset($_REQUEST['id'])) $lc_cycle_steps->cycle_step_id = $_REQUEST['id'];
-    if (isset($_REQUEST['policy_id'])) $lc_cycle_steps->policy_id = $_REQUEST['policy_id'];
-    if (isset($_REQUEST['cycle_id'])) $lc_cycle_steps->cycle_id = $_REQUEST['cycle_id'];
-    if (isset($_REQUEST['docserver_type_id'])) $lc_cycle_steps->docserver_type_id = $_REQUEST['docserver_type_id'];
-    if (isset($_REQUEST['cycle_step_desc'])) $lc_cycle_steps->cycle_step_desc = $_REQUEST['cycle_step_desc'];
-    if (isset($_REQUEST['sequence_number'])) $lc_cycle_steps->sequence_number = $_REQUEST['sequence_number'];
-    //if (isset($_REQUEST['is_allow_failure'])) $lc_cycle_steps->is_allow_failure = $_REQUEST['is_allow_failure'];
-    //if (isset($_REQUEST['is_must_complete'])) $lc_cycle_steps->is_must_complete = $_REQUEST['is_must_complete'];
-    if (isset($_REQUEST['step_operation'])) $lc_cycle_steps->step_operation = $_REQUEST['step_operation'];    
+    if (isset($_REQUEST['id'])) {
+        $lc_cycle_steps->cycle_step_id = $_REQUEST['id'];
+    }
+    if (isset($_REQUEST['policy_id'])) {
+        $lc_cycle_steps->policy_id = $_REQUEST['policy_id'];
+    }
+    if (isset($_REQUEST['cycle_id'])) {
+        $lc_cycle_steps->cycle_id = $_REQUEST['cycle_id'];
+    }
+    if (isset($_REQUEST['docserver_type_id'])) {
+        $lc_cycle_steps->docserver_type_id = $_REQUEST['docserver_type_id'];
+    }
+    if (isset($_REQUEST['cycle_step_desc'])) {
+        $lc_cycle_steps->cycle_step_desc = $_REQUEST['cycle_step_desc'];
+    }
+    if (isset($_REQUEST['sequence_number'])) {
+        $lc_cycle_steps->sequence_number = $_REQUEST['sequence_number'];
+    }
+    //if (isset($_REQUEST['is_allow_failure'])) {
+        //$lc_cycle_steps->is_allow_failure = $_REQUEST['is_allow_failure'];
+    //}
+    //if (isset($_REQUEST['is_must_complete'])) {
+        //$lc_cycle_steps->is_must_complete = $_REQUEST['is_must_complete'];
+    //}
+    if (isset($_REQUEST['step_operation'])) {
+        $lc_cycle_steps->step_operation = $_REQUEST['step_operation'];    
+    }
     $control = array();
     $control = $lcCycleStepsControler->save($lc_cycle_steps, $mode);
     if (!empty($control['error']) && $control['error'] <> 1) {
@@ -180,67 +219,91 @@ function validate_cs_submit($mode) {
         switch ($mode) {
             case "up":
                 if (!empty($_REQUEST['id'])) {
-                    header("location: ".$_SESSION['config']['businessappurl']."index.php?page=".$pageName."&mode=up&id=".$_REQUEST['id']."&module=life_cycle");
+                    header("location: ".$_SESSION['config']['businessappurl']
+                           ."index.php?page=".$pageName."&mode=up&id="
+                           .$_REQUEST['id']
+                           ."&module=life_cycle");
                 } else {
-                    header("location: ".$_SESSION['config']['businessappurl']."index.php?page=".$pageName."&mode=list&module=life_cycle&order=".$status['order']."&order_field=".$status['order_field']."&start=".$status['start']."&what=".$status['what']);
+                    header("location: ".$_SESSION['config']['businessappurl']
+                           ."index.php?page=".$pageName
+                           ."&mode=list&module=life_cycle&order="
+                           .$status['order']."&order_field="
+                           .$status['order_field']."&start=".$status['start']
+                           ."&what=".$status['what']);
                 }
                 exit;
             case "add":
-                header("location: ".$_SESSION['config']['businessappurl']."index.php?page=".$pageName."&mode=add&module=life_cycle");
+                header("location: ".$_SESSION['config']['businessappurl']
+                       ."index.php?page=".$pageName
+                       ."&mode=add&module=life_cycle");
                 exit;
         }
     } else {
-        if ($mode == "add")
-            $_SESSION['error'] =  _LC_CYCLE_STEP_ADDED;
-         else
+        if ($mode == "add") {
+            $_SESSION['error'] = _LC_CYCLE_STEP_ADDED;
+        } else {
             $_SESSION['error'] = _LC_CYCLE_STEP_UPDATED;
+        }
         unset($_SESSION['m_admin']);
-        header("location: ".$_SESSION['config']['businessappurl']."index.php?page=".$pageName."&mode=list&module=life_cycle&order=".$status['order']."&order_field=".$status['order_field']."&start=".$status['start']."&what=".$status['what']);
+        header("location: ".$_SESSION['config']['businessappurl']
+               ."index.php?page=".$pageName
+               ."&mode=list&module=life_cycle&order="
+               .$status['order']."&order_field=".$status['order_field']
+               ."&start=".$status['start']."&what=".$status['what']);
     }
 }
 
 /**
  * Initialize session parameters for update display
- * @param Long $cycle_step_id
+ * @param Long $cycleStepId
  */
-function display_up($cycle_step_id) {
-    $state=true;
+function display_up($cycleStepId)
+{
+    $state = true;
     $lcCycleStepsControler = new lc_cycle_steps_controler();
-    $lc_cycle_steps = $lcCycleStepsControler->get($cycle_step_id);
-    if (empty($lc_cycle_steps))
-        $state = false; 
-    else
+    $lc_cycle_steps = $lcCycleStepsControler->get($cycleStepId);
+    if (empty($lc_cycle_steps)) {
+        $state = false;
+    } else {
         At_putInSession("lc_cycle_steps", $lc_cycle_steps->getArray()); 
-    
+    }
     return $state;
 }
 
 /**
  * Initialize session parameters for add display with given docserver
  */
-function display_add() {
+function display_add()
+{
     $sessionName = "lc_cycle_steps";
-    if (!isset($_SESSION['m_admin'][$sessionName]))
+    if (!isset($_SESSION['m_admin'][$sessionName])) {
         init_session();
+    }
 }
 
 /**
  * Initialize session parameters for list display
  */
-function display_list() {
+function display_list()
+{
     //$sessionName = "lc_cycle_steps";
     $pageName = "lc_cycle_steps_management_controler";
     //$tableName = "lc_cycle_steps";
     $idName = "cycle_step_id";
     $func = new functions();
     $_SESSION['m_admin'] = array();
-    
     init_session();
-    
     $select[_LC_CYCLE_STEPS_TABLE_NAME] = array();
-    array_push($select[_LC_CYCLE_STEPS_TABLE_NAME], $idName, "cycle_id", "cycle_step_desc","policy_id" , "sequence_number");
+    array_push(
+        $select[_LC_CYCLE_STEPS_TABLE_NAME], 
+        $idName, 
+        "cycle_id", 
+        "cycle_step_desc", 
+        "policy_id" , 
+        "sequence_number"
+    );
     $what = "";
-    $where ="";
+    $where = "";
     if (isset($_REQUEST['what']) && !empty($_REQUEST['what'])) {
         $what = $func->protect_string_db($_REQUEST['what']);
         if ($_SESSION['config']['databasetype'] == "POSTGRESQL") {
@@ -262,27 +325,46 @@ function display_list() {
     $listShow = new list_show();
     $orderstr = $listShow->define_order($order, $field);
     $request = new request();
-    $tab=$request->select($select,$where,$orderstr,$_SESSION['config']['databasetype']);
+    $tab = $request->select(
+        $select, $where, $orderstr, $_SESSION['config']['databasetype']
+    );
     //$request->show();
-    for ($i=0;$i<count($tab);$i++) {
-        foreach($tab[$i] as &$item) {
+    for ($i = 0;$i < count($tab);$i++) {
+        foreach ($tab[$i] as &$item) {
             switch ($item['column']) {
                 case $idName:
-                    At_formatItem($item,_ID,"15","left","left","bottom",true); break;
+                    At_formatItem(
+                        $item, _ID, "15", "left", "left", "bottom", true
+                    );
+                    break;
                 case "cycle_step_desc":
-                    At_formatItem($item,_CYCLE_STEP_DESC,"40","left","left","bottom",true); break;
-                    case "cycle_id":
-                    At_formatItem($item,_CYCLE_ID,"15","left","left","bottom",true); break;
-                    case "policy_id":
-                    At_formatItem($item,_POLICY_ID,"15","left","left","bottom",true); break;
+                    At_formatItem(
+                        $item, _CYCLE_STEP_DESC, "40", "left", "left", 
+                        "bottom", true
+                    );
+                    break;
+                case "cycle_id":
+                    At_formatItem(
+                        $item, _CYCLE_ID, "15", "left", "left", "bottom", true
+                    );
+                    break;
+                case "policy_id":
+                    At_formatItem(
+                        $item, _POLICY_ID, "15", "left", "left", "bottom", true
+                    );
+                    break;
                 case "sequence_number":
-                    At_formatItem($item,_SEQUENCE_NUMBER,"15","left","left","bottom",true); break;
+                    At_formatItem(
+                        $item, _SEQUENCE_NUMBER, "15", "left", "left", 
+                        "bottom", true
+                    );
+                    break;
             }
         }
     }
     $result = array();
-    $result['tab']=$tab;
-    $result['what']=$what;
+    $result['tab'] = $tab;
+    $result['what'] = $what;
     $result['page_name'] = $pageName."&mode=list";
     $result['page_name_up'] = $pageName."&mode=up";
     $result['page_name_del'] = $pageName."&mode=del";
@@ -291,20 +373,24 @@ function display_list() {
     $result['page_name_add'] = $pageName."&mode=add";
     $result['label_add'] = _LC_CYCLE_STEP_ADDITION;
     $_SESSION['m_admin']['init'] = true;
-    $result['title'] = _LC_CYCLE_STEPS_LIST." : ".count($tab)." "._LC_CYCLE_STEPS;
+    $result['title'] = _LC_CYCLE_STEPS_LIST." : ".count($tab)." "
+        ._LC_CYCLE_STEPS;
     $result['autoCompletionArray'] = array();
-    $result['autoCompletionArray']["list_script_url"] = $_SESSION['config']['businessappurl']."index.php?display=true&module=life_cycle&page=lc_cycle_steps_list_by_id";
+    $result['autoCompletionArray']["list_script_url"] =
+        $_SESSION['config']['businessappurl']
+            ."index.php?display=true&module=life_cycle&page=lc_cycle_steps_list_by_id";
     $result['autoCompletionArray']["number_to_begin"] = 1;
     return $result;
 }
 
 /**
  * Delete given docserver if exists and initialize session parameters
- * @param unknown_type $cycle_step_id
+ * @param unknown_type $cycleStepId
  */
-function display_del($cycle_step_id) {
+function display_del($cycleStepId)
+{
     $lcCycleStepsControler = new lc_cycle_steps_controler();
-    $lc_cycle_steps = $lcCycleStepsControler->get($cycle_step_id);
+    $lc_cycle_steps = $lcCycleStepsControler->get($cycleStepId);
     if (isset($lc_cycle_steps)) {
         // Deletion
         $control = array();
@@ -312,10 +398,11 @@ function display_del($cycle_step_id) {
         if (!empty($control['error']) && $control['error'] <> 1) {
             $_SESSION['error'] = str_replace("#", "<br />", $control['error']);
         } else {
-            $_SESSION['error'] = _LC_CYCLE_STEP_DELETED." ".$cycle_step_id;
+            $_SESSION['error'] = _LC_CYCLE_STEP_DELETED." ".$cycleStepId;
         }
         $pageName = "lc_cycle_steps_management_controler";
-        ?><script>window.top.location='<?php echo $_SESSION['config']['businessappurl']."index.php?page=".$pageName."&mode=list&module=life_cycle";?>';</script>
+        ?><script>window.top.location='<?php echo $_SESSION['config']['businessappurl']
+            ."index.php?page=".$pageName."&mode=list&module=life_cycle";?>';</script>
         <?php
         exit;
     } else {
