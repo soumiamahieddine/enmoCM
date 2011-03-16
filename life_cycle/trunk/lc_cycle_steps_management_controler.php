@@ -50,6 +50,7 @@ if (isset($_REQUEST['mode']) && !empty($_REQUEST['mode'])) {
 try {
     require_once("modules/life_cycle/class/lc_cycle_steps_controler.php");
     require_once("modules/life_cycle/class/lc_policies_controler.php");
+    require_once('core/admin_tools.inc');
     require_once("core/class/class_request.php");
     require_once("core/class/docserver_types_controler.php");
     if ($mode == 'list') {
@@ -174,8 +175,8 @@ function validate_cs_submit($mode) {
     if (!empty($control['error']) && $control['error'] <> 1) {
         // Error management depending of mode
         $_SESSION['error'] = str_replace("#", "<br />", $control['error']);
-        put_in_session("status", $status);
-        put_in_session("lc_cycle_steps", $lc_cycle_steps->getArray());
+        At_putInSession("status", $status);
+        At_putInSession("lc_cycle_steps", $lc_cycle_steps->getArray());
         switch ($mode) {
             case "up":
                 if (!empty($_REQUEST['id'])) {
@@ -209,7 +210,7 @@ function display_up($cycle_step_id) {
     if (empty($lc_cycle_steps))
         $state = false; 
     else
-        put_in_session("lc_cycle_steps", $lc_cycle_steps->getArray()); 
+        At_putInSession("lc_cycle_steps", $lc_cycle_steps->getArray()); 
     
     return $state;
 }
@@ -267,15 +268,15 @@ function display_list() {
         foreach($tab[$i] as &$item) {
             switch ($item['column']) {
                 case $idName:
-                    format_item($item,_ID,"15","left","left","bottom",true); break;
+                    At_formatItem($item,_ID,"15","left","left","bottom",true); break;
                 case "cycle_step_desc":
-                    format_item($item,_CYCLE_STEP_DESC,"40","left","left","bottom",true); break;
+                    At_formatItem($item,_CYCLE_STEP_DESC,"40","left","left","bottom",true); break;
                     case "cycle_id":
-                    format_item($item,_CYCLE_ID,"15","left","left","bottom",true); break;
+                    At_formatItem($item,_CYCLE_ID,"15","left","left","bottom",true); break;
                     case "policy_id":
-                    format_item($item,_POLICY_ID,"15","left","left","bottom",true); break;
+                    At_formatItem($item,_POLICY_ID,"15","left","left","bottom",true); break;
                 case "sequence_number":
-                    format_item($item,_SEQUENCE_NUMBER,"15","left","left","bottom",true); break;
+                    At_formatItem($item,_SEQUENCE_NUMBER,"15","left","left","bottom",true); break;
             }
         }
     }
@@ -320,47 +321,6 @@ function display_del($cycle_step_id) {
     } else {
         // Error management
         $_SESSION['error'] = _LC_CYCLE_STEP.' '._UNKNOWN;
-    }
-}
-
-
-/**
- * Format given item with given values, according with HTML formating.
- * NOTE: given item needs to be an array with at least 2 keys: 
- * 'column' and 'value'.
- * NOTE: given item is modified consequently.  
- * @param $item
- * @param $label
- * @param $size
- * @param $label_align
- * @param $align
- * @param $valign
- * @param $show
- */
-function format_item(&$item,$label,$size,$label_align,$align,$valign,$show) {
-    $func = new functions();
-    $item['value']=$func->show_string($item['value']);    
-    $item[$item['column']]=$item['value'];
-    $item["label"]=$label;
-    $item["size"]=$size;
-    $item["label_align"]=$label_align;
-    $item["align"]=$align;
-    $item["valign"]=$valign;
-    $item["show"]=$show;
-    $item["order"]=$item['column'];    
-}
-
-/**
- * Put given object in session, according with given type
- * NOTE: given object needs to be at least hashable
- * @param string $type
- * @param hashable $hashable
- */
-function put_in_session($type,$hashable) {
-    $func = new functions();
-    foreach($hashable as $key=>$value) {
-        // echo "Key: $key Value: $value f:".$func->show_string($value)." // ";
-        $_SESSION['m_admin'][$type][$key]=$func->show_string($value);
     }
 }
 

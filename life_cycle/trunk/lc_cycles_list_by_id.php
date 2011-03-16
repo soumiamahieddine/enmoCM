@@ -31,7 +31,7 @@
 */
 
 require_once ("modules/life_cycle/life_cycle_tables_definition.php");
-
+require_once('core/admin_tools.inc');
 $db = new dbquery();
 $db->connect();
 if ($_SESSION['config']['databasetype'] == "POSTGRESQL") {
@@ -43,24 +43,4 @@ if ($_SESSION['config']['databasetype'] == "POSTGRESQL") {
                . " where cycle_id like '" . $_REQUEST['what'] 
                . "%' order by cycle_id");
 }
-$listArray = array();
-while ($line = $db->fetch_object()) {
-    array_push($listArray, $line->tag);
-}
-echo "<ul>\n";
-$authViewList = 0;
-$flagAuthView = false;
-foreach ($listArray as $what) {
-    if (isset($authViewList) && $authViewList >= 10) {
-        $flagAuthView = true;
-    }
-    if (stripos($what, $_REQUEST['what']) === 0) {
-        echo "<li>".$what."</li>\n";
-        if ($flagAuthView) {
-            echo "<li>...</li>\n";
-            break;
-        }
-        $authViewList++;
-    }
-}
-echo "</ul>";
+At_showAjaxList($db, $_REQUEST['what']);
