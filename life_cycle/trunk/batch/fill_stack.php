@@ -37,7 +37,7 @@
  *  4  : SQL Query Error
  *  5  : SQL insert Error
  *  6  : Problem with php include path
- *  7  : Stack full
+ *  7  : Stack full for the policy and the cycle requested
  *  8  : Cycle not found
  *  9  : Previous cycle not found
  *  10 : No resource found
@@ -63,10 +63,14 @@ while ($state <> 'END') {
         /**********************************************************************/
         case 'CONTROL_STACK' :
             $db->connect();
-            $query = "select * from " . _LC_STACK_TABLE_NAME;
+            $query = "select * from " . _LC_STACK_TABLE_NAME
+                   . " where policy_id = '" . $GLOBALS['policy'] 
+                   . "' and cycle_id = '" . $GLOBALS['cycle'] . "'";
             do_query($db, $query);
             if ($db->nb_result() > 0) {
-                $GLOBALS['logger']->write('WARNING stack is full', 'ERROR', 7);
+                $GLOBALS['logger']->write('WARNING stack is full for policy:' 
+                    . $GLOBALS['policy'] . ' and cycle:' 
+                    . $GLOBALS['cycle'], 'ERROR', 7);
                 $db->disconnect();
                 $GLOBALS['exitCode'] = 7;
                 $state = 'END';

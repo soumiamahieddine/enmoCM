@@ -42,16 +42,15 @@
  */
 function createAip($resInContainer) 
 {
-    if ($GLOBALS['func']->isDirNotEmpty($GLOBALS['TmpDirectory'])) {
-        $GLOBALS['logger']->write(
-            'tmp dir not empty:' . $GLOBALS['TmpDirectory'], 'ERROR', 19
+    if ($GLOBALS['func']->isDirNotEmpty($GLOBALS['tmpDirectory'])) {
+        exitBatch(
+            19, 'tmp dir not empty:' . $GLOBALS['tmpDirectory']
         );
-        exit(19);
     }
     $arrayOfFileToCompress = array();
-    $tmpDir = $GLOBALS['TmpDirectory'] . DIRECTORY_SEPARATOR . mt_rand();
+    $tmpDir = $GLOBALS['tmpDirectory'] . DIRECTORY_SEPARATOR . mt_rand();
     mkdir($tmpDir);
-    $newSourceFilePath = $GLOBALS['TmpDirectory'] . DIRECTORY_SEPARATOR 
+    $newSourceFilePath = $GLOBALS['tmpDirectory'] . DIRECTORY_SEPARATOR 
                        . mt_rand();
     for ($cptRes = 0;$cptRes < count($resInContainer);$cptRes++) {
         $resInContainer[$cptRes]['offset_doc'] =
@@ -120,14 +119,14 @@ function createAip($resInContainer)
     $piArray['compressionModeHistory'] =
         $GLOBALS['docservers'][$GLOBALS['currentStep']]['compression_mode'];
     //PDI compression
-    $pdiName = $GLOBALS['TmpDirectory'] . DIRECTORY_SEPARATOR . 'pdi.xml';
+    $pdiName = $GLOBALS['tmpDirectory'] . DIRECTORY_SEPARATOR . 'pdi.xml';
     $pdiName = doCompression('PDI', $pdiName);
     $piArray['PDIFingerprint'] = Ds_doFingerprint(
         $pdiName, 
         $GLOBALS['docservers'][$GLOBALS['currentStep']]['fingerprint_mode']
     );
     //PDI_HISTORY compression
-    $pdiHistoryName = $GLOBALS['TmpDirectory'] . DIRECTORY_SEPARATOR .
+    $pdiHistoryName = $GLOBALS['tmpDirectory'] . DIRECTORY_SEPARATOR .
          'pdi_history.xml';
     $pdiHistoryName = doCompression('PDI_HISTORY', $pdiHistoryName);
     $piArray['PDIHISTORYFingerprint'] =
@@ -137,8 +136,8 @@ function createAip($resInContainer)
         );
     createPackagingInformation($piArray);
     //AIP compression
-    //$aipName = $GLOBALS['TmpDirectory'] . DIRECTORY_SEPARATOR . mt_rand();
-    $piName = $GLOBALS['TmpDirectory'] . DIRECTORY_SEPARATOR 
+    //$aipName = $GLOBALS['tmpDirectory'] . DIRECTORY_SEPARATOR . mt_rand();
+    $piName = $GLOBALS['tmpDirectory'] . DIRECTORY_SEPARATOR 
         . 'packaging_information.xml';
     $arrayOfFileToCompress = array();
     array_push($arrayOfFileToCompress, $newSourceFilePath);
@@ -184,7 +183,7 @@ function createAip($resInContainer)
  */
 function createPDIHistory($resInContainer) 
 {
-    $tmpXML = $GLOBALS['TmpDirectory'] . DIRECTORY_SEPARATOR 
+    $tmpXML = $GLOBALS['tmpDirectory'] . DIRECTORY_SEPARATOR 
         . 'pdi_history.xml';
     $docXML = new DomDocument('1.0', 'utf-8');
     $docXML->preserveWhiteSpace = true;
@@ -259,7 +258,7 @@ function createPDIHistory($resInContainer)
  */
 function createPackagingInformation($piArray) 
 {
-    $tmpXML = $GLOBALS['TmpDirectory'] . DIRECTORY_SEPARATOR 
+    $tmpXML = $GLOBALS['tmpDirectory'] . DIRECTORY_SEPARATOR 
             . 'packaging_information.xml';
     $docXML = new DomDocument('1.0', 'utf-8');
     $docXML->preserveWhiteSpace = true;

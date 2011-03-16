@@ -59,6 +59,9 @@
  *  26 : File deletion impossible
  *  27 : Resource not found
  *  28 : The docserver will be full at 95 percent
+ *  29 : Error persists
+ *  30 : An instance of the batch for the required policy and cyle is already
+ *       in progress 
  */
 
 try {
@@ -78,7 +81,6 @@ try {
 
 /******************************************************************************/
 /* beginning */
-Ds_washTmp($GLOBALS['TmpDirectory'], true);
 $GLOBALS['state'] = "CONTROL_STACK";
 while ($GLOBALS['state'] <> "END") {
     if (isset($GLOBALS['logger'])) {
@@ -254,12 +256,10 @@ while ($GLOBALS['state'] <> "END") {
                             $GLOBALS['docservers'][$GLOBALS['currentStep']]
                             ['docserver']['actual_size_number'];
                         if ($targetSize > $reasonableLimitSize) {
-                            $GLOBALS['logger']->write(
-                                "The docserver will be full at 95 percent : " 
-                                . $targetSize . " > " . $reasonableLimitSize, 
-                                'ERROR', 28
+                            exitBatch(
+                                28, 'The docserver will be full at 95 percent:'
+                                . $targetSize . " > " . $reasonableLimitSize
                             );
-                            exit(28);
                         }
                         $resultPath = array();
                         $totalSizeToAdd =
@@ -271,10 +271,9 @@ while ($GLOBALS['state'] <> "END") {
                                 ['docserver']['path_template']
                             );
                         if ($resultPath['error'] <> "") {
-                            $GLOBALS['logger']->write(
-                                $resultPath['error'], 'ERROR', 18
+                            exitBatch(
+                                18, $resultPath['error']
                             );
-                            exit(18);
                         }
                         $pathOnDocserver = $resultPath['destinationDir'];
                         $GLOBALS['logger']->write(
@@ -355,11 +354,9 @@ while ($GLOBALS['state'] <> "END") {
                         $currentRecordInStack['res_id']
                     );
                     if (!file_exists($sourceFilePath)) {
-                        $GLOBALS['logger']->write(
-                            'Resource not found:' . $sourceFilePath, 
-                            'ERROR', 27
+                        exitBatch(
+                            27, 'Resource not found:' . $sourceFilePath
                         );
-                        $GLOBALS['exitCode'] = 27;
                         $GLOBALS['state'] = "END";
                         break;
                     } else {
@@ -494,15 +491,14 @@ while ($GLOBALS['state'] <> "END") {
                     if (!file_exists($sourceFilePath) 
                         && $sourceFilePath <> ""
                     ) {
-                        $GLOBALS['logger']->write(
-                            'Resource not found for purge:' 
+                        exitBatch(
+                            27, 'Resource not found for purge:' 
                             . $sourceFilePath . ' res_id:' 
                             . $currentRecordInStack['res_id'] 
                             . ' docserver_id:' 
                             . $GLOBALS['docservers'][$GLOBALS['currentStep']]
-                            ['docserver'][$cptDs]['docserver_id'], 'ERROR', 27
+                            ['docserver'][$cptDs]['docserver_id']
                         );
-                        $GLOBALS['exitCode'] = 27;
                         $GLOBALS['state'] = "END";
                         break;
                     } else {
@@ -522,11 +518,10 @@ while ($GLOBALS['state'] <> "END") {
                             );
                             $currentFileSize = filesize($sourceFilePath);
                             if (!(unlink($sourceFilePath))) {
-                                $GLOBALS['logger']->write(
-                                    'File deletion impossible:' . 
-                                    $sourceFilePath, 'ERROR', 26
+                                exitBatch(
+                                    26, 'File deletion impossible:'
+                                    . $sourceFilePath
                                 );
-                                $GLOBALS['exitCode'] = 26;
                                 $GLOBALS['state'] = "END";
                                 break;
                             } else {
@@ -659,10 +654,9 @@ while ($GLOBALS['state'] <> "END") {
                     $pathOnDocserver
                 );
             if ($infoFileNameInTargetDocserver['error'] <> "") {
-                $GLOBALS['logger']->write(
-                    $infoFileNameInTargetDocserver['error'], 'ERROR', 21
+                exitBatch(
+                    21, $infoFileNameInTargetDocserver['error']
                 );
-                exit(21);
             }
             $copyResultArray = array();
             $infoFileNameInTargetDocserver['fileDestinationName'] .= "." 
@@ -675,14 +669,12 @@ while ($GLOBALS['state'] <> "END") {
             if (isset($copyResultArray['error']) 
                 && $copyResultArray['error'] <> ""
             ) {
-                $GLOBALS['logger']->write(
-                    'error to copy file on docserver:' 
+                exitBatch(
+                    17, 'error to copy file on docserver:' 
                     . $copyResultArray['error'] . " " . $sourceFilePath . " " 
                     . $infoFileNameInTargetDocserver['destinationDir'] 
-                    . $infoFileNameInTargetDocserver['fileDestinationName'], 
-                    'ERROR', 17
+                    . $infoFileNameInTargetDocserver['fileDestinationName']
                 );
-                $GLOBALS['exitCode'] = 17;
                 $GLOBALS['state'] = "END";
                 break;
             }
@@ -716,20 +708,21 @@ while ($GLOBALS['state'] <> "END") {
         /**********************************************************************/
         case "EMPTY_STACK" :
             $query = "select * from " . _LC_STACK_TABLE_NAME 
-                   . " where status <> 'P'";
+                   . " where status <> 'P' and "
+                   . " policy_id = '" . $GLOBALS['policy'] 
+                   . "' and cycle_id = '" . $GLOBALS['cycle'] . "'";
             do_query($GLOBALS['db'], $query);
-            if ($GLOBALS['db']->nb_result() == 0) {
-                $query = "truncate table " . _LC_STACK_TABLE_NAME;
-                do_query($GLOBALS['db'], $query);
-            } else {
+            if ($GLOBALS['db']->nb_result() > 0) {
                 $GLOBALS['logger']->write(
                     'there are still documents to be processed', 'ERROR', 20
                 );
                 $GLOBALS['exitCode'] = 20;
-                $query = "delete from " . _LC_STACK_TABLE_NAME 
-                       . " where status = 'P'";
-                do_query($GLOBALS['db'], $query);
             }
+            $query = "delete from " . _LC_STACK_TABLE_NAME 
+                   . " where status = 'P' and "
+                   . " policy_id = '" . $GLOBALS['policy'] 
+                   . "' and cycle_id = '" . $GLOBALS['cycle'] . "'";
+            do_query($GLOBALS['db'], $query);
             $GLOBALS['state'] = "END";
             break;
     }
@@ -738,4 +731,6 @@ $GLOBALS['logger']->write("End of process", 'INFO');
 $GLOBALS['db']->disconnect();
 $GLOBALS['db2']->disconnect();
 $GLOBALS['db3']->disconnect();
+Ds_washTmp($GLOBALS['tmpDirectory']);
+unlink($GLOBALS['lckFile']);
 exit($GLOBALS['exitCode']);

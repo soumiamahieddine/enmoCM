@@ -60,7 +60,7 @@ function doCompression($targeFile, $arrayOfFileToCompress, $dirToCompress='')
                      ['compression_mode']
                  ) 
                  . " " . escapeshellarg(
-                     $GLOBALS['TmpDirectory'] . $targeFile
+                     $GLOBALS['tmpDirectory'] . $targeFile
                  )
                  . " " . $listOfFileToCompress;
     } else {
@@ -71,23 +71,18 @@ function doCompression($targeFile, $arrayOfFileToCompress, $dirToCompress='')
         . "\" a -y -t" . strtolower(
             $GLOBALS['docservers'][$GLOBALS['currentStep']]['compression_mode']
         )
-        . " " . escapeshellarg($GLOBALS['TmpDirectory'] . $targeFile) 
+        . " " . escapeshellarg($GLOBALS['tmpDirectory'] . $targeFile) 
         . " " . $listOfFileToCompress;
     }
     //echo $command."\r\n";exit;
     $execError = '';
     exec($command, $tmpCmd, $execError);
     if ($execError > 0) {
-        /*$GLOBALS['logger']->write(
-            'Pb with compression:' .$command . ' ' . print_r($tmpCmd), 
-            'ERROR', 23
-        );
-        exit(23);*/
         exitBatch(
             23, 'Pb with compression:' .$command . ' ' . print_r($tmpCmd)
         );
     }
-    return $GLOBALS['TmpDirectory'] . $targeFile . "." 
+    return $GLOBALS['tmpDirectory'] . $targeFile . "." 
         . strtolower(
             $GLOBALS['docservers'][$GLOBALS['currentStep']]['compression_mode']
         );
@@ -101,7 +96,7 @@ function doCompression($targeFile, $arrayOfFileToCompress, $dirToCompress='')
 function extractAip($path) 
 {
     $path = str_replace('#', DIRECTORY_SEPARATOR, $path);
-    $fileNameOnTmp = $GLOBALS['TmpDirectory'] . rand();
+    $fileNameOnTmp = $GLOBALS['tmpDirectory'] . rand();
     $cp = copy($path, $fileNameOnTmp);
     Ds_setRights(
         $fileNameOnTmp, 
@@ -113,44 +108,38 @@ function extractAip($path)
         $path, $fileNameOnTmp, $GLOBALS['docserverSourceFingerprint']
     );
     if ($control['error'] <> "") {
-        //$GLOBALS['logger']->write($control['error'], 'ERROR', 22);
-        //exit(22);
         exitBatch(
             22, $control['error']
         );
     }
     if (DIRECTORY_SEPARATOR == "/") {
-        $command = "7z x -y -o" . escapeshellarg($GLOBALS['TmpDirectory']) 
+        $command = "7z x -y -o" . escapeshellarg($GLOBALS['tmpDirectory']) 
                  . " " . escapeshellarg($fileNameOnTmp);
     } else {
         $command = "\"" . str_replace(
             "\\", "\\\\", 
             $GLOBALS['docserversFeatures']['DOCSERVERS']['PATHTOCOMPRESSTOOL']
         )
-        . "\" x -y -o" . escapeshellarg($GLOBALS['TmpDirectory']) . " " 
+        . "\" x -y -o" . escapeshellarg($GLOBALS['tmpDirectory']) . " " 
         . escapeshellarg($fileNameOnTmp);
     }
     $tmpCmd = '';
     $execError = '';
     exec($command, $tmpCmd, $execError);
     if ($execError > 0) {
-        /*$GLOBALS['logger']->write(
-            'Pb with extract:' . $command . ' ' . print_r($tmpCmd), 'ERROR', 24
-        );
-        exit(24);*/
         exitBatch(
             24, 'Pb with extract:' . $command . ' ' . print_r($tmpCmd)
         );
     }
     unlink($fileNameOnTmp);
-    mkdir($GLOBALS['TmpDirectory'] . "CI", 0777);
-    $fileNameOnTmp = $GLOBALS['TmpDirectory'] . "CI." 
+    mkdir($GLOBALS['tmpDirectory'] . "CI", 0777);
+    $fileNameOnTmp = $GLOBALS['tmpDirectory'] . "CI." 
         . strtolower(
             $GLOBALS['docservers'][$GLOBALS['currentStep']]['compression_mode']
         );
     if (DIRECTORY_SEPARATOR == "/") {
         $command = "7z x -y -o" 
-                 . escapeshellarg($GLOBALS['TmpDirectory'] . "CI") . " " 
+                 . escapeshellarg($GLOBALS['tmpDirectory'] . "CI") . " " 
                  . escapeshellarg($fileNameOnTmp);
     } else {
         $command = "\"" . 
@@ -159,16 +148,12 @@ function extractAip($path)
                 $GLOBALS['docserversFeatures']['DOCSERVERS']
                 ['PATHTOCOMPRESSTOOL']
             )
-            . "\" x -y -o" . escapeshellarg($GLOBALS['TmpDirectory'] . "CI") 
+            . "\" x -y -o" . escapeshellarg($GLOBALS['tmpDirectory'] . "CI") 
             . " " . escapeshellarg($fileNameOnTmp);
     }
     $tmpCmd = "";
     exec($command, $tmpCmd, $execError);
     if ($execError > 0) {
-        /*$GLOBALS['logger']->write(
-            'Pb with extract:' . $command . ' ' . print_r($tmpCmd), 'ERROR', 24
-        );
-        exit(24);*/
         exitBatch(
             24, 'Pb with extract:' . $command . ' ' . print_r($tmpCmd)
         );
@@ -197,7 +182,7 @@ function controlIntegrityOfTransfer(
             $control = array();
             $control = Ds_controlFingerprint(
                 $resInContainer[$cptRes]['source_path'], 
-                $GLOBALS['TmpDirectory'] . "CI" . DIRECTORY_SEPARATOR 
+                $GLOBALS['tmpDirectory'] . "CI" . DIRECTORY_SEPARATOR 
                 . str_replace(
                     "CI." . strtolower(
                         $GLOBALS['docservers'][$GLOBALS['currentStep']]
@@ -208,8 +193,6 @@ function controlIntegrityOfTransfer(
                 $GLOBALS['docserverSourceFingerprint']
             );
             if ($control['error'] <> "") {
-                //$GLOBALS['logger']->write($control['error'], 'ERROR', 22);
-                //exit(22);
                 exitBatch(
                     22, $control['error']
                 );
@@ -230,8 +213,6 @@ function controlIntegrityOfTransfer(
             $GLOBALS['docserverSourceFingerprint']
         );
         if ($control['error'] <> "") {
-            /*$GLOBALS['logger']->write($control['error'], 'ERROR', 22);
-            exit(22);*/
             exitBatch(
                 22, $control['error']
             );
@@ -255,17 +236,12 @@ function controlIntegrityOfSource($currentRecordInStack)
         $sourceFilePath, $GLOBALS['docserverSourceFingerprint']
     ) <> $resRecordset->fingerprint
     ) {
-        /*$GLOBALS['logger']->write(
-            'Pb with fingerprint of the source:' . $currentRecordInStack 
-            . ' ' . $sourceFilePath, 'ERROR', 25
-        );
-        exit(25);*/
         exitBatch(
             25, 'Pb with fingerprint of the source:' . $currentRecordInStack 
             . ' ' . $sourceFilePath
         );
     }
-    Ds_washTmp($GLOBALS['TmpDirectory'], true);
+    Ds_washTmp($GLOBALS['tmpDirectory'], true);
 }
 
 /**

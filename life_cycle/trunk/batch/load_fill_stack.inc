@@ -185,7 +185,8 @@ $GLOBALS['logger'] = new Logger();
 $GLOBALS['logger']->set_threshold_level('DEBUG');
 $console = new ConsoleHandler();
 $GLOBALS['logger']->add_handler($console);
-$file = new FileHandler('logs/log.txt');
+$file = new FileHandler('logs' . DIRECTORY_SEPARATOR . 'fill_stack' 
+                        . DIRECTORY_SEPARATOR . date('Y-m-d H:i:s') . '.log');
 $GLOBALS['logger']->add_handler($file);
 $GLOBALS['logger']->write('STATE:INIT', 'INFO');
 // Parsing script options

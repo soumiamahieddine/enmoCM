@@ -72,6 +72,7 @@ try {
 $state = '';
 $configFile = '';
 $MaarchDirectory = '';
+$batchDirectory = '';
 $TmpDirectory = '';
 $customPath = '';
 $table = '';
@@ -96,6 +97,8 @@ $docserverControler = '';
 $wb = '';
 $docserversFeatures = array();
 $isAContainerOpened = false;
+$lckFile = '';
+$errorLckFile = '';
 
 /**
  * Execute a sql query
@@ -113,8 +116,9 @@ function do_query($db_conn, $query_txt, $transaction=false)
             $GLOBALS['logger']->write('ROLLBACK', 'INFO');
             $db_conn->query('ROLLBACK', true);
         }
-        $GLOBALS['logger']->write('SQL Query error:' . $query_txt, 'ERROR', 4);
-        exit(4);
+        exitBatch(
+            4, 'SQL Query error:' . $query_txt
+        );
     }
     $GLOBALS['logger']->write('SQL query:' . $query_txt, 'DEBUG');
     return true;
@@ -164,6 +168,15 @@ function updateWorkBatch()
  */
 function exitBatch($errorCode, $errorMessage)
 {
+    if (file_exists($GLOBALS['lckFile'])) {
+        unlink($GLOBALS['lckFile']);
+    }
+    if (file_exists($GLOBALS['errorLckFile'])) {
+        unlink($GLOBALS['errorLckFile']);
+    }
+    $semaphore = fopen($GLOBALS['errorLckFile'], "a");
+    fwrite($semaphore, "1");
+    fclose($semaphore);
     $GLOBALS['logger']->write($errorMessage, 'ERROR', $errorCode);
     exit($errorCode);
 }
@@ -215,7 +228,8 @@ $GLOBALS['logger'] = new Logger();
 $GLOBALS['logger']->set_threshold_level('DEBUG');
 $console = new ConsoleHandler();
 $GLOBALS['logger']->add_handler($console);
-$file = new FileHandler('logs/log.txt');
+$file = new FileHandler('logs' . DIRECTORY_SEPARATOR . 'process_stack' 
+                        . DIRECTORY_SEPARATOR . date('Y-m-d H:i:s') . '.log');
 $GLOBALS['logger']->add_handler($file);
 $GLOBALS['logger']->write('STATE:INIT', 'INFO');
 // Parsing script options
@@ -276,7 +290,10 @@ if ($xmlconfig == FALSE) {
 $CONFIG = $xmlconfig->CONFIG;
 $lang = (string) $CONFIG->Lang;
 $GLOBALS['MaarchDirectory'] = (string) $CONFIG->MaarchDirectory;
-$GLOBALS['TmpDirectory'] = (string) $CONFIG->TmpDirectory;
+$GLOBALS['batchDirectory'] = $GLOBALS['MaarchDirectory'] . 'modules' 
+                           . DIRECTORY_SEPARATOR . 'life_cycle' 
+                           . DIRECTORY_SEPARATOR . 'batch';
+$GLOBALS['tmpDirectoryRoot'] = (string) $CONFIG->TmpDirectory;
 $GLOBALS['docserversFeatures']['DOCSERVERS']['PATHTOCOMPRESSTOOL'] =
                                            (string) $CONFIG->PathToCompressTool;
 $MaarchApps = (string) $CONFIG->MaarchApps;
@@ -308,7 +325,7 @@ if ($GLOBALS['table'] == ''
     exit(16);
 }
 if (file_exists($GLOBALS['MaarchDirectory'] . 'modules' .DIRECTORY_SEPARATOR 
-                . 'life_cycle' .DIRECTORY_SEPARATOR . 'lang' 
+                . 'life_cycle' . DIRECTORY_SEPARATOR . 'lang' 
                 . DIRECTORY_SEPARATOR 
                 . $lang . '.php')
 ) {
@@ -353,9 +370,9 @@ try {
     );
     exit(14);
 }
-if (!is_dir($GLOBALS['TmpDirectory'])) {
+if (!is_dir($GLOBALS['tmpDirectoryRoot'])) {
     $GLOBALS['logger']->write(
-        'Problem with the tmp dir:' . $GLOBALS['TmpDirectory'], 'ERROR', 17
+        'Problem with the tmp dir:' . $GLOBALS['tmpDirectory'], 'ERROR', 17
     );
     exit(14);
 }
@@ -370,4 +387,32 @@ $GLOBALS['db']->connect();
 $GLOBALS['db2']->connect();
 $GLOBALS['db3']->connect();
 $GLOBALS['docserverControler'] = new docservers_controler();
+
+$GLOBALS['errorLckFile'] = $GLOBALS['batchDirectory'] . DIRECTORY_SEPARATOR 
+                         . $GLOBALS['policy'] . '_' . $GLOBALS['cycle'] 
+                          . "_error.lck";
+$GLOBALS['lckFile'] = $GLOBALS['batchDirectory'] . DIRECTORY_SEPARATOR 
+                    . $GLOBALS['policy'] . '_' . $GLOBALS['cycle'] . ".lck";
+if (file_exists($GLOBALS['errorLckFile'])) {
+    $GLOBALS['logger']->write(
+        'Error persists, please solve this before launching a new batch', 
+        'ERROR', 29
+    );
+    exit(29);
+}
+if (file_exists($GLOBALS['lckFile'])) {
+    $GLOBALS['logger']->write(
+        'An instance of the batch for policy:' . $GLOBALS['policy'] 
+        . ' and the cycle:' . $GLOBALS['cycle'] . ' is already in progress',
+        'ERROR', 30
+    );
+    exit(30);
+}
+$semaphore = fopen($GLOBALS['lckFile'], "a");
+fwrite($semaphore, "1");
+fclose($semaphore);
+
 getWorkBatch();
+$GLOBALS['tmpDirectory'] = $GLOBALS['tmpDirectoryRoot'] . DIRECTORY_SEPARATOR 
+                         . $GLOBALS['wb'] . DIRECTORY_SEPARATOR;
+mkdir($GLOBALS['tmpDirectory'], 0777);

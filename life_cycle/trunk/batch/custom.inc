@@ -38,7 +38,7 @@
  */
 function createPDI($resInContainer)
 {
-    $tmpXML = $GLOBALS['TmpDirectory'] . DIRECTORY_SEPARATOR . 'pdi.xml';
+    $tmpXML = $GLOBALS['tmpDirectory'] . DIRECTORY_SEPARATOR . 'pdi.xml';
     $docXML = new DomDocument('1.0', 'utf-8');
     $docXML->preserveWhiteSpace = true;
     $docXML->formatOutput = true;
