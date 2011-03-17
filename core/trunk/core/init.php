@@ -1,5 +1,5 @@
 <?php
-session_name('maarch_entreprise');
+session_name('maarch_entreprise_trunk');
 session_start();
 if(isset($_SESSION['config']['default_timezone']) && !empty($_SESSION['config']['default_timezone']))
 {
