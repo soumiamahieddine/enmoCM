@@ -1312,6 +1312,24 @@ class core_tools extends functions
     }
 
     /**
+    * Test if a service is enabled
+    *
+    * @param  $id_service string Service identifier
+    * @return boolean true if enabled false if not
+    */
+    public function service_is_enabled($id_service)
+    {
+        for($i=0;$i<count($_SESSION['enabled_services']);$i++)
+        {
+            if($_SESSION['enabled_services'][$i]['id'] == $id_service)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    /**
     * Tests if the user has admin rights on the service
     *
     * @param  $id_service string Service identifier
