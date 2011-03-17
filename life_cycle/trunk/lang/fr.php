@@ -2,7 +2,7 @@
 
 /*
  *
- *   Copyright 2010 Maarch
+ *   Copyright 2011 Maarch
  *
  *   This file is part of Maarch Framework.
  *
@@ -21,6 +21,9 @@
  */
 
 /*********************** ADMIN ***********************************/
+if (!defined('_ADMIN_LIFE_CYCLE')) { define('_ADMIN_LIFE_CYCLE', ' Politiques d&rsquo;archivage');}
+if (!defined('_ADMIN_LIFE_CYCLE_DESC')) { define('_ADMIN_LIFE_CYCLE_DESC', 'D&eacute;finition des politiques d&rsquo;archivage, cycles et &eacute;tapes jusqu&rsquo;au sort final');
+}
 if (!defined('_LIFE_CYCLE')) {
     define('_LIFE_CYCLE', 'Cycle de vie');
 }
@@ -29,16 +32,6 @@ if (!defined('_LIFE_CYCLE_COMMENT')) {
 }
 if (!defined('_ADMIN_LIFE_CYCLE_SHORT')) {
     define('_ADMIN_LIFE_CYCLE_SHORT', ' Administration des cycles de vie');
-}
-if (!defined('_ADMIN_LIFE_CYCLE')) {
-    define('_ADMIN_LIFE_CYCLE', ' Politiques d&rsquo;archivage');
-}
-if (!defined('_ADMIN_LIFE_CYCLE_DESC')) {
-    define(
-        '_ADMIN_LIFE_CYCLE_DESC', 
-        'D&eacute;finition des politiques d&rsquo;archivage, cycles et '
-        . '&eacute;tapes jusqu&rsquo;au sort final'
-    );
 }
 if (!defined('_MANAGE_LC_CYCLES')) {
     define('_MANAGE_LC_CYCLES', 'G&eacute;rer les cycles de vie ');
