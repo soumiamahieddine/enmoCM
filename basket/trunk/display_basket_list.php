@@ -75,10 +75,11 @@ if ($core_tools->test_service('display_basket_list','basket', false)) {
                         $nb = $db->nb_result();
                     }
                 }
-                if ($nb <> 0)
+                if ($nb <> 0) {
                     $nb = "(".$nb.")";
-                else
-                    $nb = "(0)";
+                } else {
+                    $nb = '';
+                }
                 if (!preg_match('/^IndexingBasket/', $_SESSION['user']['baskets'][$i]['id'])) {
                     echo '<li><a href="'.$_SESSION['config']['businessappurl'].'index.php?page=view_baskets&amp;module=basket&amp;baskets='.$_SESSION['user']['baskets'][$i]['id'].'"><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=manage_baskets_off.gif&amp;module=basket" alt=""/> '.$_SESSION['user']['baskets'][$i]['name'].'  <b>'.$nb.'</b> </a></li>';
                 }
