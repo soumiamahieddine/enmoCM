@@ -373,6 +373,18 @@ if (count($tab) > 0)
                     $tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
                     $tab[$i][$j]["order"]="case_id";
                 }
+                if($tab[$i][$j][$value]=="exp_user_id")
+                {
+                    $tab[$i][$j]["label"]=_CONTACT;
+                    $tab[$i][$j]["size"]="10";
+                    $tab[$i][$j]["label_align"]="left";
+                    $tab[$i][$j]["align"]="left";
+                    $tab[$i][$j]["valign"]="bottom";
+                    $tab[$i][$j]["show"]=false;
+                    $tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
+                    $tab[$i][$j]["value"] = $contact->get_contact_information_from_view($_SESSION['mlb_search_current_category_id'], $contact_lastname, $contact_firstname, $contact_society, $user_lastname, $user_firstname);
+                    $tab[$i][$j]["order"]=false;
+                }
             }
         }
     }
