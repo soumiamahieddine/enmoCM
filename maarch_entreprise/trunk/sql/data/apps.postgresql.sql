@@ -305,6 +305,7 @@ INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (64,
 INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (65, 21, 14, 1);
 INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (66, 21, 14, 1);
 INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (70, 21, 14, 1);
+INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (71, 21, 14, 1);
 
 INSERT INTO doctypes_first_level (doctypes_first_level_id, doctypes_first_level_label, enabled) VALUES (1, 'Courriers', 'Y');
 INSERT INTO doctypes_first_level (doctypes_first_level_id, doctypes_first_level_label, enabled) VALUES (2, 'Dossier du Personnel', 'Y');
