@@ -661,7 +661,7 @@ if (!defined('_MARKET_DOCUMENT')) define( '_MARKET_DOCUMENT', 'Document de Sous-
 
 // Mail Natures
 if (!defined('_SIMPLE_MAIL')) define( '_SIMPLE_MAIL', 'Courrier simple');
-if (!defined('_EMAIL')) define( '_EMAIL', 'Mail');
+if (!defined('_EMAIL')) define( '_EMAIL', 'Courriel');
 if (!defined('_FAX')) define( '_FAX', 'Fax');
 if (!defined('_CHRONOPOST')) define( '_CHRONOPOST', 'Chronopost');
 if (!defined('_FEDEX')) define( '_FEDEX', 'Fedex');
