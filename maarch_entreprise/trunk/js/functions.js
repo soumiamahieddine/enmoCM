@@ -846,17 +846,19 @@ function displayModal(url, id_mod, height, width, mode_frm )
     var tmp_height = height;
 
     var layer_height = $('container').clientHeight;
-
-    if(layer_height < $('container').scrollHeight)
+    
+    //lgi : à quoi cela sert ?
+    /*if(layer_height < $('container').scrollHeight)
     {
         layer_height = 5 * layer_height;
     }
     else if(layer_height = $('container').scrollHeight)
     {
         layer_height = 2 * layer_height;
-    }
-
-    var layer = new Element('div', {'id':id_layer, 'class' : 'lb1-layer', 'style' : "display:block;filter:alpha(opacity=70);opacity:.70;z-index:"+get_z_indexes()['layer']+';width :'+ (document.getElementsByTagName('html')[0].offsetWidth)+"px;height:"+layer_height+'px;'});
+    }*/
+    //lgi
+    var layer_width = document.getElementsByTagName('html')[0].offsetWidth - 5;
+    var layer = new Element('div', {'id':id_layer, 'class' : 'lb1-layer', 'style' : "display:block;filter:alpha(opacity=70);opacity:.70;z-index:"+get_z_indexes()['layer']+';width :'+ (layer_width)+"px;height:"+layer_height+'px;'});
 
 
     if( mode_frm == 'fullscreen')
