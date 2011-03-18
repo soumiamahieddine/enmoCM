@@ -53,7 +53,7 @@ function createPDI($resInContainer)
     $root->appendChild($accessRights);
     $query = "select * from security where coll_id = '" 
            . $GLOBALS['collection'] . "'";
-    do_query($GLOBALS['db3'], $query);
+    Bt_doQuery($GLOBALS['db3'], $query);
     while ($securityRecordset = $GLOBALS['db3']->fetch_object()) {
         //an access right
         $accessRight = $docXML->createElement('ACCESS_RIGHT');
@@ -100,7 +100,7 @@ function createPDI($resInContainer)
         );
         $query = "select * from " . $GLOBALS['view'] 
                . " where res_id = ".$resInContainer[$cptRes]['res_id'];
-        do_query($GLOBALS['db3'], $query);
+        Bt_doQuery($GLOBALS['db3'], $query);
         while ($resRecordset = $GLOBALS['db3']->fetch_object()) {
             //a record
             //a provenance

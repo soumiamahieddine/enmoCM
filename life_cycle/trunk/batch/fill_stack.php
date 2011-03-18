@@ -30,25 +30,28 @@
  */
 
 /**
- * Errors :
- *  1  : Configuration file missing
- *  2  : Configuration file does not exist
- *  3  : Error on loading config file
- *  4  : SQL Query Error
- *  5  : SQL insert Error
- *  6  : Problem with php include path
- *  7  : Stack full for the policy and the cycle requested
- *  8  : Cycle not found
- *  9  : Previous cycle not found
- *  10 : No resource found
- *  11 : Cycle step not found
- *  12 : Problem with the php include path
- *  13 : Collection unknow
+ * *****   LIGHT PROBLEMS without an error semaphore
+ *  101 : Configuration file missing
+ *  102 : Configuration file does not exist
+ *  103 : Error on loading config file
+ *  104 : SQL Query Error
+ *  105 : a parameter is missin
+ *  106 : Maarch_CLITools is missing
+ *  107 : Stack full for the policy and the cycle requested
+ *  108 : Problem with the php include path
+ *  109 : An instance of the batch for the required policy and cyle is already
+ *        in progress
+ *  110 : Problem with collection parameter
+ *  111 : No resource found
+ * ****   HEAVY PROBLEMS with an error semaphore
+ *  11  : Cycle not found
+ *  12  : Previous cycle not found
+ *  13  : Error persists
+ *  14  : Cycle step not found
  */
 
 // load the config and prepare to process
 include('load_fill_stack.php');
-
 /******************************************************************************/
 /* beginning */
 $state = 'CONTROL_STACK';
@@ -62,21 +65,16 @@ while ($state <> 'END') {
         /* Checking if the stack is full                                      */
         /**********************************************************************/
         case 'CONTROL_STACK' :
-            $db->connect();
             $query = "select * from " . _LC_STACK_TABLE_NAME
                    . " where policy_id = '" . $GLOBALS['policy'] 
                    . "' and cycle_id = '" . $GLOBALS['cycle'] . "'";
-            do_query($db, $query);
-            if ($db->nb_result() > 0) {
-                $GLOBALS['logger']->write('WARNING stack is full for policy:' 
-                    . $GLOBALS['policy'] . ' and cycle:' 
-                    . $GLOBALS['cycle'], 'ERROR', 7);
-                $db->disconnect();
-                $GLOBALS['exitCode'] = 7;
-                $state = 'END';
+            Bt_doQuery($GLOBALS['db'], $query);
+            if ($GLOBALS['db']->nb_result() > 0) {
+                Bt_exitBatch(107, 'WARNING stack is full for policy:'
+                             . $GLOBALS['policy'] . ' and cycle:'
+                             . $GLOBALS['cycle']);
                 break;
             }
-            $db->disconnect();
             $state = 'GET_STEPS';
             break;
         /**********************************************************************/
@@ -84,26 +82,21 @@ while ($state <> 'END') {
         /* Get the list of cycle steps                                        */
         /**********************************************************************/
         case 'GET_STEPS' :
-            $db->connect();
             $query = "select * from " . _LC_CYCLE_STEPS_TABLE_NAME 
                    . " where policy_id = '" . $GLOBALS['policy'] 
                    . "' and cycle_id = '" . $GLOBALS['cycle'] . "'";
-            do_query($db, $query);
-            if ($db->nb_result() == 0) {
-                $GLOBALS['logger']->write('Cycle Steps not found', 'ERROR', 11);
-                $db->disconnect();
-                $GLOBALS['exitCode'] = 11;
-                $state = 'END';
+            Bt_doQuery($GLOBALS['db'], $query);
+            if ($GLOBALS['db']->nb_result() == 0) {
+                Bt_exitBatch(14, 'Cycle Steps not found');
                 break;
             } else {
-                while ($stepsRecordset = $db->fetch_object()) {
+                while ($stepsRecordset = $GLOBALS['db']->fetch_object()) {
                     array_push(
                         $GLOBALS['steps'], 
                         array('cycle_step_id' => $stepsRecordset->cycle_step_id)
                     );
                 }
             }
-            $db->disconnect();
             $state = 'SELECT_RES';
             break;
         /**********************************************************************/
@@ -112,43 +105,31 @@ while ($state <> 'END') {
         /**********************************************************************/
         case 'SELECT_RES' :
             $orderBy = '';
-            $db->connect();
             // get the where clause of the cycle
             $query = "select * from " . _LC_CYCLES_TABLE_NAME 
                    . " where policy_id = '" . $GLOBALS['policy'] 
                    . "' and cycle_id = '" . $GLOBALS['cycle'] . "'";
-            do_query($db, $query);
-            if ($db->nb_result() > 0) {
-                $cycleRecordset = $db->fetch_object();
+            Bt_doQuery($GLOBALS['db'], $query);
+            if ($GLOBALS['db']->nb_result() > 0) {
+                $cycleRecordset = $GLOBALS['db']->fetch_object();
             } else {
-                $GLOBALS['logger']->write(
-                    'cycle not found for policy:' 
-                    . $GLOBALS['policy'] . ', cycle:' 
-                    . $GLOBALS['cycle'], 'ERROR', 8
-                );
-                $db->disconnect();
-                $GLOBALS['exitCode'] = 8;
-                $state = 'END';
+                Bt_exitBatch(11, 'cycle not found for policy:' 
+                             . $GLOBALS['policy'] . ', cycle:' 
+                             . $GLOBALS['cycle']);
                 break;
             }
             // compute the previous step
             $query = "select * from " . _LC_CYCLES_TABLE_NAME 
                    . " where policy_id = '" . $GLOBALS['policy'] 
                    . "' and sequence_number = " 
-                   . ($cycleRecordset->sequence_number - 1
-             );
-            do_query($db, $query);
-            if ($db->nb_result() > 0) {
-                $cyclePreviousRecordset = $db->fetch_object();
+                   . ($cycleRecordset->sequence_number - 1);
+            Bt_doQuery($GLOBALS['db'], $query);
+            if ($GLOBALS['db']->nb_result() > 0) {
+                $cyclePreviousRecordset = $GLOBALS['db']->fetch_object();
             } else {
-                $GLOBALS['logger']->write(
-                    'previous cycle not found for policy:' 
-                    . $GLOBALS['policy'] . ', cycle:' 
-                    . $GLOBALS['cycle'], 'ERROR', 9
-                );
-                $db->disconnect();
-                $GLOBALS['exitCode'] = 9;
-                $state = 'END';
+                Bt_exitBatch(12, 'previous cycle not found for policy:' 
+                             . $GLOBALS['policy'] . ', cycle:' 
+                             . $GLOBALS['cycle']);
                 break;
             }
             // select resources
@@ -163,28 +144,22 @@ while ($state <> 'END') {
                    . "' and cycle_id = '" . $cyclePreviousRecordset->cycle_id 
                    . "' and " . $cycleRecordset->where_clause 
                    . $orderBy . $limit;
-            do_query($db, $query);
+            Bt_doQuery($GLOBALS['db'], $query);
             $resourcesArray = array();
-            if ($db->nb_result() > 0) {
-                while ($resoucesRecordset = $db->fetch_object()) {
+            if ($GLOBALS['db']->nb_result() > 0) {
+                while ($resoucesRecordset = $GLOBALS['db']->fetch_object()) {
                     array_push(
                         $resourcesArray, 
                         array('res_id' => $resoucesRecordset->res_id)
                     );
                 }
             } else {
-                $GLOBALS['logger']->write(
-                    'no resource found for policy:' 
-                    . $GLOBALS['policy'] . ', cycle:' 
-                    . $GLOBALS['cycle'], 'ERROR', 10
-                );
-                $db->disconnect();
-                $GLOBALS['exitCode'] = 10;
-                $state = 'END';
+                Bt_exitBatch(111, 'no resource found for policy:' 
+                             . $GLOBALS['policy'] . ', cycle:' 
+                             . $GLOBALS['cycle']);
                 break;
             }
-            $db->disconnect();
-            updateWorkBatch($db);
+            Bt_updateWorkBatch();
             $GLOBALS['logger']->write('Batch number:' . $GLOBALS['wb'], 'INFO');
             $state = 'FILL_STACK';
             break;
@@ -193,7 +168,6 @@ while ($state <> 'END') {
         /* Fill the stack of candidates from each step of the cycle           */
         /**********************************************************************/
         case 'FILL_STACK' :
-            $db->connect();
             for (
                 $cptSteps = 0;
                 $cptSteps < count($GLOBALS['steps']);
@@ -207,7 +181,7 @@ while ($state <> 'END') {
                            . $GLOBALS['steps'][$cptSteps]['cycle_step_id'] 
                            . "', '" . $GLOBALS['collection'] . "', " 
                            . $resourcesArray[$cptRes]["res_id"] . ", 'I')";
-                    do_query($db, $query);
+                    Bt_doQuery($GLOBALS['db'], $query);
                     //history
                     $query = "insert into " . HISTORY_TABLE 
                            . " (table_name, record_id, event_type, user_id, "
@@ -222,13 +196,14 @@ while ($state <> 'END') {
                            . $GLOBALS['steps'][$cptSteps]['cycle_step_id'] 
                            . ", collection:" . $GLOBALS['collection'] 
                            . "', 'life_cycle')";
-                    do_query($db, $query);
+                    Bt_doQuery($GLOBALS['db'], $query);
+                    $GLOBALS['totalProcessedResources']++;
                 }
             }
-            $db->disconnect();
             $state = 'END';
             break;
     }
 }
+unlink($GLOBALS['lckFile']);
 $GLOBALS['logger']->write('End of process', 'INFO');
 exit($GLOBALS['exitCode']);

@@ -78,7 +78,7 @@ function doCompression($targeFile, $arrayOfFileToCompress, $dirToCompress='')
     $execError = '';
     exec($command, $tmpCmd, $execError);
     if ($execError > 0) {
-        exitBatch(
+        Bt_exitBatch(
             23, 'Pb with compression:' .$command . ' ' . print_r($tmpCmd)
         );
     }
@@ -108,7 +108,7 @@ function extractAip($path)
         $path, $fileNameOnTmp, $GLOBALS['docserverSourceFingerprint']
     );
     if ($control['error'] <> "") {
-        exitBatch(
+        Bt_exitBatch(
             22, $control['error']
         );
     }
@@ -127,7 +127,7 @@ function extractAip($path)
     $execError = '';
     exec($command, $tmpCmd, $execError);
     if ($execError > 0) {
-        exitBatch(
+        Bt_exitBatch(
             24, 'Pb with extract:' . $command . ' ' . print_r($tmpCmd)
         );
     }
@@ -154,7 +154,7 @@ function extractAip($path)
     $tmpCmd = "";
     exec($command, $tmpCmd, $execError);
     if ($execError > 0) {
-        exitBatch(
+        Bt_exitBatch(
             24, 'Pb with extract:' . $command . ' ' . print_r($tmpCmd)
         );
     }
@@ -171,8 +171,7 @@ function extractAip($path)
 function controlIntegrityOfTransfer(
     $currentRecordInStack, $resInContainer, $destinationDir, 
     $fileDestinationName
-)
-{
+) {
     if (is_array($resInContainer) && count($resInContainer) > 0) {
         extractAip(
             $GLOBALS['docservers'][$GLOBALS['currentStep']]['docserver']
@@ -193,7 +192,7 @@ function controlIntegrityOfTransfer(
                 $GLOBALS['docserverSourceFingerprint']
             );
             if ($control['error'] <> "") {
-                exitBatch(
+                Bt_exitBatch(
                     22, $control['error']
                 );
             }
@@ -213,7 +212,7 @@ function controlIntegrityOfTransfer(
             $GLOBALS['docserverSourceFingerprint']
         );
         if ($control['error'] <> "") {
-            exitBatch(
+            Bt_exitBatch(
                 22, $control['error']
             );
         }
@@ -230,13 +229,13 @@ function controlIntegrityOfSource($currentRecordInStack)
     $sourceFilePath = getSourceResourcePath($currentRecordInStack);
     $query = "select fingerprint from " . $GLOBALS['table'] 
            . " where res_id = " . $currentRecordInStack;
-    do_query($GLOBALS['db'], $query);
+    Bt_doQuery($GLOBALS['db'], $query);
     $resRecordset = $GLOBALS['db']->fetch_object();
     if (Ds_doFingerprint(
         $sourceFilePath, $GLOBALS['docserverSourceFingerprint']
     ) <> $resRecordset->fingerprint
     ) {
-        exitBatch(
+        Bt_exitBatch(
             25, 'Pb with fingerprint of the source:' . $currentRecordInStack 
             . ' ' . $sourceFilePath
         );
@@ -254,5 +253,5 @@ function setSize($docserverId, $newSize)
 {
     $query = "update " . _DOCSERVERS_TABLE_NAME . " set actual_size_number=" 
            . $newSize . " where docserver_id='" . $docserverId . "'";
-    do_query($GLOBALS['db'], $query);
+    Bt_doQuery($GLOBALS['db'], $query);
 }

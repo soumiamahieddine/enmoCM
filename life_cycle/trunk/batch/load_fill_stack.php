@@ -43,21 +43,6 @@ class IncludeFileError extends Exception
     }
 }
 
-/**
- * Include the file requested if exists
- * 
- * @param string $file path of the file to include
- * @return nothing
- */
-function MyInclude($file) 
-{
-    if (file_exists($file)) {
-        include_once ($file);
-    } else {
-        throw new IncludeFileError($file);
-    }
-}
-
 try {
     include('Maarch_CLITools/ArgsParser.php');
     include('Maarch_CLITools/Logger.php');
@@ -65,9 +50,9 @@ try {
     include('Maarch_CLITools/ConsoleHandler.php');
 } catch (IncludeFileError $e) {
     echo 'Maarch_CLITools required ! \n (pear.maarch.org)\n';
-    exit(6);
+    exit(106);
 }
-
+include('batch_tools.php');
 // Globals variables definition
 $configFile = '';
 $table = '';
@@ -79,64 +64,13 @@ $exitCode = 0;
 $collections = array();
 $wb = '';
 $stackSizeLimit = '';
-
-/**
- * Execute a sql query
- * 
- * @param object $dbConn connection object to the database
- * @param string $queryTxt path of the file to include
- * @return true if ok, exit if ko
- */
-function do_query($dbConn, $queryTxt) 
-{
-    $dbConn->connect();
-    $res = $dbConn->query($queryTxt, true);
-    if (!$res) {
-        $GLOBALS['logger']->write('SQL Query error:' . $queryTxt, 'ERROR', 4);
-        exit(4);
-    }
-    $GLOBALS['logger']->write('SQL query:' . $queryTxt, 'DEBUG');
-    return true;
-}
-
-/**
- * Get the batch if of the fill stack process
- * 
- * @param object $db connection object to the database
- * @return nothing
- */
-function getWorkBatch($db) 
-{
-    $req = "select param_value_int from parameters where id = "
-         . "'lc_fill_stack_id'";
-    $db->connect();
-    $db->query($req);
-    while ($reqResult = $db->fetch_array()) {
-        $GLOBALS['wb'] = $reqResult[0] + 1;
-    }
-    if ($GLOBALS['wb'] == '') {
-        $req = "insert into parameters(id, param_value_int) "
-             . "values ('lc_fill_stack_id', 1)";
-        $db->query($req);
-        $GLOBALS['wb'] = 1;
-    }
-    $db->disconnect();
-}
-
-/**
- * Update the database with the new batch id of the fill stack process
- * 
- * @param object $db connection object to the database
- * @return nothing
- */
-function updateWorkBatch($db) 
-{
-    $db->connect();
-    $req = "update parameters set param_value_int  = " . $GLOBALS['wb'] 
-         . " where id = 'lc_fill_stack_id'";
-    $db->query($req);
-    $db->disconnect();
-}
+$batchName = 'fill_stack';
+$func = '';
+$db = '';
+$lckFile = '';
+$errorLckFile = '';
+$totalProcessedResources = 0;
+$batchDirectory = '';
 
 // Defines scripts arguments
 $argsparser = new ArgsParser();
@@ -198,20 +132,20 @@ try {
     }
 } catch (MissingArgumentError $e) {
     if ($e->arg_name == 'config') {
-        $GLOBALS['logger']->write('Configuration file missing', 'ERROR', 1);
-        exit(1);
+        $GLOBALS['logger']->write('Configuration file missing', 'ERROR', 101);
+        exit(101);
     }
     if ($e->arg_name == 'collection') {
-        $GLOBALS['logger']->write('Collection missing', 'ERROR', 1);
-        exit(1);
+        $GLOBALS['logger']->write('Collection missing', 'ERROR', 105);
+        exit(105);
     }
     if ($e->arg_name == 'policy') {
-        $GLOBALS['logger']->write('Policy missing', 'ERROR', 1);
-        exit(1);
+        $GLOBALS['logger']->write('Policy missing', 'ERROR', 105);
+        exit(105);
     }
     if ($e->arg_name == 'cycle') {
-        $GLOBALS['logger']->write('Cycle missing', 'ERROR', 1);
-        exit(1);
+        $GLOBALS['logger']->write('Cycle missing', 'ERROR', 105);
+        exit(105);
     }
 }
 $txt = '';
@@ -232,9 +166,9 @@ $GLOBALS['logger']->write($txt, 'INFO');
 if (!file_exists($GLOBALS['configFile'])) {
     $GLOBALS['logger']->write(
         'Configuration file ' . $GLOBALS['configFile'] 
-        . ' does not exist', 'ERROR', 3
+        . ' does not exist', 'ERROR', 102
     );
-    exit(3);
+    exit(102);
 }
 // Loading config file
 $GLOBALS['logger']->write(
@@ -245,9 +179,9 @@ $xmlconfig = simplexml_load_file($GLOBALS['configFile']);
 if ($xmlconfig == FALSE) {
     $GLOBALS['logger']->write(
         'Error on loading config file:' 
-        . $GLOBALS['configFile'], 'ERROR', 5
+        . $GLOBALS['configFile'], 'ERROR', 103
     );
-    exit(5);
+    exit(103);
 }
 // Load the config vars
 $config = $xmlconfig->CONFIG;
@@ -257,7 +191,10 @@ $MaarchApps = (string) $config->MaarchApps;
 $logLevel = (string) $config->LogLevel;
 $DisplayedLogLevel = (string) $config->DisplayedLogLevel;
 $GLOBALS['stackSizeLimit'] = (string) $config->StackSizeLimit;
-$GLOBALS['databasetype'] = (string) $xmlconfig->CONFIG_BASE->DatabaseType;
+$GLOBALS['databasetype'] = (string) $xmlconfig->CONFIG_BASE->databasetype;
+$GLOBALS['batchDirectory'] = $maarchDirectory . 'modules' 
+                           . DIRECTORY_SEPARATOR . 'life_cycle' 
+                           . DIRECTORY_SEPARATOR . 'batch';
 $i = 0;
 foreach ($xmlconfig->COLLECTION as $col) {
     $GLOBALS['collections'][$i] = array(
@@ -274,9 +211,9 @@ foreach ($xmlconfig->COLLECTION as $col) {
 if ($GLOBALS['table'] == '') {
     $GLOBALS['logger']->write(
         'Collection:' . $GLOBALS['collection'] 
-        . ' unknow', 'ERROR', 13
+        . ' unknow', 'ERROR', 110
     );
-    exit(13);
+    exit(110);
 }
 if ($logLevel == 'DEBUG') {
     error_reporting(E_ALL);
@@ -287,26 +224,26 @@ unset($xmlconfig);
 set_include_path(get_include_path() . PATH_SEPARATOR . $maarchDirectory);
 // Include library
 try {
-    MyInclude(
+    Bt_myInclude(
         $maarchDirectory . 'core' . DIRECTORY_SEPARATOR . 'class' 
         . DIRECTORY_SEPARATOR . 'class_functions.php'
     );
-    MyInclude(
+    Bt_myInclude(
         $maarchDirectory . 'core' . DIRECTORY_SEPARATOR . 'class' 
         . DIRECTORY_SEPARATOR . 'class_db.php'
     );
-    MyInclude(
+    Bt_myInclude(
         $maarchDirectory . 'core' . DIRECTORY_SEPARATOR . 'class' 
         . DIRECTORY_SEPARATOR . 'class_core_tools.php'
     );
-    MyInclude(
+    Bt_myInclude(
         $maarchDirectory . 'core' . DIRECTORY_SEPARATOR . 'class' 
         . DIRECTORY_SEPARATOR . 'class_history.php'
     );
-    MyInclude(
+    Bt_myInclude(
         $maarchDirectory . 'core' . DIRECTORY_SEPARATOR . 'core_tables.php'
     );
-    MyInclude(
+    Bt_myInclude(
         $maarchDirectory . 'modules' .DIRECTORY_SEPARATOR . 'life_cycle' 
         .DIRECTORY_SEPARATOR . 'life_cycle_tables_definition.php'
     );
@@ -314,12 +251,37 @@ try {
     $GLOBALS['logger']->write(
         'Problem with the php include path:' . get_include_path(), 
         'ERROR', 
-        12
+        108
     );
-    exit(12);
+    exit(108);
 }
 core_tools::load_lang($lang, $maarchDirectory, $MaarchApps);
-$db = new dbquery($GLOBALS['configFile']);
-$dbBis = new dbquery($GLOBALS['configFile']);
-getWorkBatch($db);
+$GLOBALS['func'] = new functions();
+$GLOBALS['db'] = new dbquery($GLOBALS['configFile']);
+$GLOBALS['db']->connect();
+$GLOBALS['errorLckFile'] = $GLOBALS['batchDirectory'] . DIRECTORY_SEPARATOR 
+                         . $GLOBALS['batchName'] . '_' . $GLOBALS['policy'] 
+                         . '_' . $GLOBALS['cycle'] . '_error.lck';
+$GLOBALS['lckFile'] = $GLOBALS['batchDirectory'] . DIRECTORY_SEPARATOR 
+                    . $GLOBALS['batchName'] . '_' . $GLOBALS['policy'] 
+                    . '_' . $GLOBALS['cycle'] . '.lck';
+if (file_exists($GLOBALS['errorLckFile'])) {
+    $GLOBALS['logger']->write(
+        'Error persists, please solve this before launching a new batch', 
+        'ERROR', 13
+    );
+    exit(13);
+}
+if (file_exists($GLOBALS['lckFile'])) {
+    $GLOBALS['logger']->write(
+        'An instance of the batch for policy:' . $GLOBALS['policy'] 
+        . ' and the cycle:' . $GLOBALS['cycle'] . ' is already in progress',
+        'ERROR', 109
+    );
+    exit(109);
+}
+$semaphore = fopen($GLOBALS['lckFile'], 'a');
+fwrite($semaphore, '1');
+fclose($semaphore);
 
+Bt_getWorkBatch();

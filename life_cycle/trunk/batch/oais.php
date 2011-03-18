@@ -43,7 +43,7 @@
 function createAip($resInContainer) 
 {
     if ($GLOBALS['func']->isDirNotEmpty($GLOBALS['tmpDirectory'])) {
-        exitBatch(
+        Bt_exitBatch(
             19, 'tmp dir not empty:' . $GLOBALS['tmpDirectory']
         );
     }
@@ -209,7 +209,7 @@ function createPDIHistory($resInContainer)
                . $GLOBALS['table'] . "' or table_name = '" 
                . $GLOBALS['adrTable'] . "' or table_name = '" 
                . $GLOBALS['view'] . "') order by event_date";
-        do_query($GLOBALS['db3'], $query);
+        Bt_doQuery($GLOBALS['db3'], $query);
         while ($historyRecordset = $GLOBALS['db3']->fetch_object()) {
             //an event
             $event = $docXML->createElement('EVENT');

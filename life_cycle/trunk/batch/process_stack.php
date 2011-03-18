@@ -30,38 +30,40 @@
  */
 
 /**
- * Errors :
- *  1  : Configuration file missing
- *  2  : Configuration file does not exist
- *  3  : Error on loading config file
- *  4  : SQL Query Error
- *  5  : SQL insert Error
- *  6  : Problem with php include path
- *  7  : Stack empty for the request
- *  8  : Cycle not found
- *  9  : Previous cycle not found
- *  10 : No resource found
- *  11 : Cycle step not found
- *  12 : Docserver type not found
- *  13 : Docserver not found
- *  14 : Problem with the php include path
- *  15 : Problem with the include of step operation file
- *  16 : Collection unknow
- *  17 : Tmp dir not exists
- *  18 : Batch already exists
- *  19 : Tmp dir not empty
- *  20 : There are still documents to be processed
- *  21 : Problem to create directory on the docserver
- *  22 : Problem during transfert of file (fingerprint control)
- *  23 : Problem with compression
- *  24 : Problem with extract
- *  25 : Pb with fingerprint of the source
- *  26 : File deletion impossible
- *  27 : Resource not found
- *  28 : The docserver will be full at 95 percent
- *  29 : Error persists
- *  30 : An instance of the batch for the required policy and cyle is already
- *       in progress 
+ * *****   LIGHT PROBLEMS without an error semaphore
+ *  101 : Configuration file missing
+ *  102 : Configuration file does not exist
+ *  103 : Error on loading config file
+ *  104 : SQL Query Error
+ *  105 : a parameter is missing
+ *  106 : Maarch_CLITools is missing
+ *  107 : Stack empty for the request
+ *  108 : There are still documents to be processed
+ *  109 : An instance of the batch for the required policy and cyle is already
+ *        in progress
+ *  110 : Problem with collection parameter
+ *  111 : Problem with the php include path
+ * ****   HEAVY PROBLEMS with an error semaphore
+ *  11   : Problem with policy administration : Cycle step not found
+ *  12  : Docserver type not found
+ *  13  : Docserver not found
+ *  14  : ...
+ *  15  : Error to copy file on docserver
+ *  16  : ...
+ *  17  : Tmp dir not exists
+ *  18  : Problem to create path on docserver, maybe batch number 
+ *        already exists
+ *  19  : Tmp dir not empty
+ *  20  : ...
+ *  21  : Problem to create directory on the docserver
+ *  22  : Problem during transfert of file (fingerprint control)
+ *  23  : Problem with compression
+ *  24  : Problem with extract
+ *  25  : Pb with fingerprint of the source
+ *  26  : File deletion impossible
+ *  27  : Resource not found
+ *  28  : The docserver will be full at 95 percent
+ *  29  : Error persists
  */
 
 try {
@@ -76,7 +78,7 @@ try {
     }
 } catch (IncludeFileError $e) {
     echo "Maarch_CLITools required ! \n (pear.maarch.org)\n";
-    exit(6);
+    exit(106);
 }
 
 /******************************************************************************/
@@ -95,20 +97,16 @@ while ($GLOBALS['state'] <> "END") {
             $query = "select * from " . _LC_STACK_TABLE_NAME 
                    . " where policy_id = '" . $GLOBALS['policy'] 
                    . "' and cycle_id = '" . $GLOBALS['cycle'] . "'";
-            do_query($GLOBALS['db'], $query);
+            Bt_doQuery($GLOBALS['db'], $query);
             if ($GLOBALS['db']->nb_result() == 0) {
-                $GLOBALS['logger']->write(
-                    'WARNING stack empty for your request', 'ERROR', 7
-                );
-                $GLOBALS['exitCode'] = 7;
-                $GLOBALS['state'] = "END";
+                Bt_exitBatch(107, 'WARNING stack empty for your request');
                 break;
             }
-            updateWorkBatch();
+            Bt_updateWorkBatch();
             $GLOBALS['logger']->write("Batch number:".$GLOBALS['wb'], 'INFO');
             $query = "update " . _LC_STACK_TABLE_NAME 
                    . " set status = 'I' where status = 'W'";
-            do_query($GLOBALS['db'], $query);
+            Bt_doQuery($GLOBALS['db'], $query);
             $GLOBALS['state'] = "GET_STEPS";
             break;
         /**********************************************************************/
@@ -119,11 +117,9 @@ while ($GLOBALS['state'] <> "END") {
             $query = "select * from " . _LC_CYCLE_STEPS_TABLE_NAME 
                    . " where policy_id = '" . $GLOBALS['policy'] 
                    . "' and cycle_id = '" . $GLOBALS['cycle'] . "'";
-            do_query($GLOBALS['db'], $query);
+            Bt_doQuery($GLOBALS['db'], $query);
             if ($GLOBALS['db']->nb_result() == 0) {
-                $GLOBALS['logger']->write('Cycle Steps not found', 'ERROR', 11);
-                $GLOBALS['exitCode'] = 11;
-                $GLOBALS['state'] = "END";
+                Bt_exitBatch(11, 'Cycle Steps not found');
                 break;
             } else {
                 while ($stepsRecordset = $GLOBALS['db']->fetch_object()) {
@@ -145,25 +141,19 @@ while ($GLOBALS['state'] <> "END") {
             $query = "select * from " . _LC_CYCLE_STEPS_TABLE_NAME 
                    . " where policy_id = '" . $GLOBALS['policy'] 
                    . "' and cycle_id = '" . $GLOBALS['cycle'] . "'";
-            do_query($GLOBALS['db'], $query);
+            Bt_doQuery($GLOBALS['db'], $query);
             $GLOBALS['state'] = "A_STEP";
             if ($GLOBALS['db']->nb_result() == 0) {
-                $GLOBALS['logger']->write('Cycle Steps not found', 'ERROR', 11);
-                $GLOBALS['exitCode'] = 11;
-                $GLOBALS['state'] = "END";
+                Bt_exitBatch(11, 'Cycle Steps not found');
                 break;
             } else {
                 while ($stepsRecordset = $GLOBALS['db']->fetch_object()) {
                     $query = "select * from " . _DOCSERVER_TYPES_TABLE_NAME 
                            . " where docserver_type_id = '" 
                            . $stepsRecordset->docserver_type_id . "'";
-                    do_query($GLOBALS['db2'], $query);
+                    Bt_doQuery($GLOBALS['db2'], $query);
                     if ($GLOBALS['db2']->nb_result() == 0) {
-                        $GLOBALS['logger']->write(
-                            'Docserver type not found', 'ERROR', 12
-                        );
-                        $GLOBALS['exitCode'] = 12;
-                        $GLOBALS['state'] = "END";
+                        Bt_exitBatch(12, 'Docserver type not found');
                         break;
                     } else {
                         $docserverTypesRecordset =
@@ -179,13 +169,9 @@ while ($GLOBALS['state'] <> "END") {
                            . $stepsRecordset->docserver_type_id 
                            . "' and coll_id = '" . $GLOBALS['collection'] 
                            . "' order by priority_number";
-                    do_query($GLOBALS['db2'], $query);
+                    Bt_doQuery($GLOBALS['db2'], $query);
                     if ($GLOBALS['db2']->nb_result() == 0) {
-                        $GLOBALS['logger']->write(
-                            'Docserver not found', 'ERROR', 13
-                        );
-                        $GLOBALS['exitCode'] = 13;
-                        $GLOBALS['state'] = "END";
+                        Bt_exitBatch(13, 'Docserver not found');
                         break;
                     } else {
                         $docserversRecordset = $GLOBALS['db2']->fetch_object();
@@ -224,7 +210,7 @@ while ($GLOBALS['state'] <> "END") {
                            . "' and cycle_step_id = '".$GLOBALS['currentStep'] 
                            . "' and status = 'I' and coll_id = '" 
                            . $GLOBALS['collection'] . "'";
-                    do_query($GLOBALS['db'], $query);
+                    Bt_doQuery($GLOBALS['db'], $query);
                     $cptRecordsTotalInStep = $GLOBALS['db']->nb_result();
                     $GLOBALS['logger']->write(
                         "total res in the step:" . $cptRecordsTotalInStep, 
@@ -247,7 +233,7 @@ while ($GLOBALS['state'] <> "END") {
                                . $GLOBALS['currentStep'] 
                                . "' and status = 'I' and coll_id = '" 
                                . $GLOBALS['collection'] . "')";
-                        do_query($GLOBALS['db'], $query);
+                        Bt_doQuery($GLOBALS['db'], $query);
                         $resSum = $GLOBALS['db']->fetch_object();
                         $reasonableLimitSize =
                             $GLOBALS['docservers'][$GLOBALS['currentStep']]
@@ -256,7 +242,7 @@ while ($GLOBALS['state'] <> "END") {
                             $GLOBALS['docservers'][$GLOBALS['currentStep']]
                             ['docserver']['actual_size_number'];
                         if ($targetSize > $reasonableLimitSize) {
-                            exitBatch(
+                            Bt_exitBatch(
                                 28, 'The docserver will be full at 95 percent:'
                                 . $targetSize . " > " . $reasonableLimitSize
                             );
@@ -271,7 +257,7 @@ while ($GLOBALS['state'] <> "END") {
                                 ['docserver']['path_template']
                             );
                         if ($resultPath['error'] <> "") {
-                            exitBatch(
+                            Bt_exitBatch(
                                 18, $resultPath['error']
                             );
                         }
@@ -291,7 +277,7 @@ while ($GLOBALS['state'] <> "END") {
                                . $GLOBALS['steps'][$GLOBALS['currentStep']]
                                ['docserver_type_id'] . "' and coll_id = '" 
                                . $GLOBALS['collection'] . "'";
-                        do_query($GLOBALS['db2'], $query);
+                        Bt_doQuery($GLOBALS['db2'], $query);
                         while ($docserversRecordset =
                             $GLOBALS['db2']->fetch_object()
                         ) {
@@ -314,13 +300,14 @@ while ($GLOBALS['state'] <> "END") {
         /**********************************************************************/
         case "A_RECORD" :
             $cptRecordsInStep++;
+            $GLOBALS['totalProcessedResources']++;
             $query = "select * from " . _LC_STACK_TABLE_NAME 
                    . " where policy_id = '" . $GLOBALS['policy'] 
                    . "' and cycle_id = '" . $GLOBALS['cycle'] 
                    . "' and cycle_step_id = '" . $GLOBALS['currentStep'] 
                    . "' and status = 'I' and coll_id = '" 
                    . $GLOBALS['collection'] . "'";
-            do_query($GLOBALS['db'], $query);
+            Bt_doQuery($GLOBALS['db'], $query);
             if ($GLOBALS['db']->nb_result() == 0) {
                 foreach ($GLOBALS['steps'] as $key => $value) {
                     if ($key == $GLOBALS['currentStep']) {
@@ -354,7 +341,7 @@ while ($GLOBALS['state'] <> "END") {
                         $currentRecordInStack['res_id']
                     );
                     if (!file_exists($sourceFilePath)) {
-                        exitBatch(
+                        Bt_exitBatch(
                             27, 'Resource not found:' . $sourceFilePath
                         );
                         $GLOBALS['state'] = "END";
@@ -388,7 +375,7 @@ while ($GLOBALS['state'] <> "END") {
         case "CONTROL_ADR_X" :
             $query = "select res_id from " . $GLOBALS['adrTable'] 
                    . " where res_id = " . $currentRecordInStack['res_id'];
-            do_query($GLOBALS['db'], $query);
+            Bt_doQuery($GLOBALS['db'], $query);
             if ($GLOBALS['db']->nb_result() <= 1) {
                 $GLOBALS['logger']->write(
                     'No purge for the resource ' 
@@ -439,7 +426,7 @@ while ($GLOBALS['state'] <> "END") {
                            . $sourceFilePath[0]['fileName'] 
                            . "' and offset_doc <> '" 
                            . $sourceFilePath[0]['offsetDoc'] . "'";
-                    do_query($GLOBALS['db'], $query);
+                    Bt_doQuery($GLOBALS['db'], $query);
                     $line = $GLOBALS['db']->fetch_object();
                     //if exists at least one doc on the container 
                     //we remove only the adr
@@ -458,10 +445,9 @@ while ($GLOBALS['state'] <> "END") {
                             'We can purge the resource ' 
                             . $currentRecordInStack['res_id'] . ' on ' 
                             . $GLOBALS['docservers'][$GLOBALS['currentStep']]
-                            ['docserver'][$cptDs]['docserver_id'], 'INFO'
+                            ['docserver'][$cptDs]['docserver_id'], 'DEBUG'
                         );
                         $GLOBALS['state'] = "DO_PURGE_ON_DOCSERVER";
-                        exit;
                     }
                 }
             }
@@ -491,7 +477,7 @@ while ($GLOBALS['state'] <> "END") {
                     if (!file_exists($sourceFilePath) 
                         && $sourceFilePath <> ""
                     ) {
-                        exitBatch(
+                        Bt_exitBatch(
                             27, 'Resource not found for purge:' 
                             . $sourceFilePath . ' res_id:' 
                             . $currentRecordInStack['res_id'] 
@@ -518,7 +504,7 @@ while ($GLOBALS['state'] <> "END") {
                             );
                             $currentFileSize = filesize($sourceFilePath);
                             if (!(unlink($sourceFilePath))) {
-                                exitBatch(
+                                Bt_exitBatch(
                                     26, 'File deletion impossible:'
                                     . $sourceFilePath
                                 );
@@ -534,7 +520,7 @@ while ($GLOBALS['state'] <> "END") {
                                        . $GLOBALS['docservers']
                                        [$GLOBALS['currentStep']]['docserver']
                                        [$cptDs]['docserver_id'] . "'";
-                                do_query($GLOBALS['db'], $query);
+                                Bt_doQuery($GLOBALS['db'], $query);
                                 $docserverRec = $GLOBALS['db']->fetch_object();
                                 setSize(
                                     $GLOBALS['docservers']
@@ -619,7 +605,7 @@ while ($GLOBALS['state'] <> "END") {
                    . $GLOBALS['currentStep'] . "' and coll_id = '" 
                    . $GLOBALS['collection'] . "' and res_id = " 
                    . $currentRecordInStack['res_id'];
-            do_query($GLOBALS['db'], $query);
+            Bt_doQuery($GLOBALS['db'], $query);
             if (
                 $cptResInContainer >= $GLOBALS['docservers']
                 [$GLOBALS['currentStep']]['container_max_number'] 
@@ -654,7 +640,7 @@ while ($GLOBALS['state'] <> "END") {
                     $pathOnDocserver
                 );
             if ($infoFileNameInTargetDocserver['error'] <> "") {
-                exitBatch(
+                Bt_exitBatch(
                     21, $infoFileNameInTargetDocserver['error']
                 );
             }
@@ -669,8 +655,8 @@ while ($GLOBALS['state'] <> "END") {
             if (isset($copyResultArray['error']) 
                 && $copyResultArray['error'] <> ""
             ) {
-                exitBatch(
-                    17, 'error to copy file on docserver:' 
+                Bt_exitBatch(
+                    15, 'error to copy file on docserver:' 
                     . $copyResultArray['error'] . " " . $sourceFilePath . " " 
                     . $infoFileNameInTargetDocserver['destinationDir'] 
                     . $infoFileNameInTargetDocserver['fileDestinationName']
@@ -711,23 +697,23 @@ while ($GLOBALS['state'] <> "END") {
                    . " where status <> 'P' and "
                    . " policy_id = '" . $GLOBALS['policy'] 
                    . "' and cycle_id = '" . $GLOBALS['cycle'] . "'";
-            do_query($GLOBALS['db'], $query);
+            Bt_doQuery($GLOBALS['db'], $query);
             if ($GLOBALS['db']->nb_result() > 0) {
-                $GLOBALS['logger']->write(
-                    'there are still documents to be processed', 'ERROR', 20
-                );
-                $GLOBALS['exitCode'] = 20;
+                Bt_exitBatch(108, 'There are still documents to be processed');
             }
             $query = "delete from " . _LC_STACK_TABLE_NAME 
                    . " where status = 'P' and "
                    . " policy_id = '" . $GLOBALS['policy'] 
                    . "' and cycle_id = '" . $GLOBALS['cycle'] . "'";
-            do_query($GLOBALS['db'], $query);
+            Bt_doQuery($GLOBALS['db'], $query);
             $GLOBALS['state'] = "END";
             break;
     }
 }
-$GLOBALS['logger']->write("End of process", 'INFO');
+$GLOBALS['logger']->write('End of process', 'INFO');
+Bt_logInDataBase(
+    $GLOBALS['totalProcessedResources'], 0, 'process without error'
+);
 $GLOBALS['db']->disconnect();
 $GLOBALS['db2']->disconnect();
 $GLOBALS['db3']->disconnect();
