@@ -50,7 +50,7 @@ if (isset($_REQUEST['mode']) && !empty($_REQUEST['mode'])) {
 try{
     require_once("modules/life_cycle/class/lc_policies_controler.php");
     require_once("core/class/class_request.php");
-    require_once('core/admin_tools.inc');
+    require_once('core/admin_tools.php');
     if ($mode == 'list') {
         require_once("modules/life_cycle/lang/fr.php");
         require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");

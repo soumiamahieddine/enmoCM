@@ -47,7 +47,7 @@
  */
 
 // load the config and prepare to process
-include('load_fill_stack.inc');
+include('load_fill_stack.php');
 
 /******************************************************************************/
 /* beginning */

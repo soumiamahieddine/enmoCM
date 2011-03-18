@@ -359,7 +359,7 @@ try {
     MyInclude($GLOBALS['MaarchDirectory'] . 'core' . DIRECTORY_SEPARATOR 
               . 'class' . DIRECTORY_SEPARATOR . 'docservers_controler.php');
     MyInclude($GLOBALS['MaarchDirectory'] . 'core' . DIRECTORY_SEPARATOR 
-              . 'docservers_tools.inc');
+              . 'docservers_tools.php');
     MyInclude($GLOBALS['MaarchDirectory'] . 'core' . DIRECTORY_SEPARATOR 
               . 'class' . DIRECTORY_SEPARATOR 
               . 'docserver_types_controler.php');

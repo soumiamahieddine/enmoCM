@@ -65,14 +65,14 @@
  */
 
 try {
-    include("load_process_stack.inc");
-    include("resources.inc");
-    include("docservers.inc");
-    include("oais.inc");
+    include('load_process_stack.php');
+    include('resources.php');
+    include('docservers.php');
+    include('oais.php');
     if ($GLOBALS['customPath'] <> "") {
         include($GLOBALS['customPath']);
     } else {
-        include("custom.inc");
+        include('custom.php');
     }
 } catch (IncludeFileError $e) {
     echo "Maarch_CLITools required ! \n (pear.maarch.org)\n";

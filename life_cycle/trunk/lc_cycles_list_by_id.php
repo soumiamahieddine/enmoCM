@@ -31,7 +31,7 @@
 */
 
 require_once ("modules/life_cycle/life_cycle_tables_definition.php");
-require_once('core/admin_tools.inc');
+require_once('core/admin_tools.php');
 $db = new dbquery();
 $db->connect();
 if ($_SESSION['config']['databasetype'] == "POSTGRESQL") {
