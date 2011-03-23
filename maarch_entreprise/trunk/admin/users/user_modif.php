@@ -32,7 +32,7 @@
 $core_tools = new core_tools();
 $core_tools->load_lang();
 
-require("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_users.php");
+require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_users.php");
 
 $users = new users();
 $users->user_modif();

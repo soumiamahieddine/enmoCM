@@ -21,12 +21,15 @@
 * @version 2.1
 */
 
+require_once 'core/core_tables.php';
+
 class users extends dbquery
 {
 	/**
-	* Redefinition of the user object constructor : configure the SQL argument order by
+	* Redefinition of the user object constructor : configure the SQL argument
+	*  order by
 	*/
-	function __construct()
+	public function __construct()
 	{
 		parent::__construct();
 	}
@@ -38,58 +41,80 @@ class users extends dbquery
 	*/
 	public function user_modif()
 	{
-		$_SESSION['user']['FirstName'] = $this->wash($_POST['FirstName'], "no", _FIRSTNAME);
-		$_SESSION['user']['LastName'] = $this->wash($_POST['LastName'], "no", _LASTNAME);
-		$_SESSION['user']['pass1'] = $this->wash($_POST['pass1'], "no", _FIRST_PSW);
-		$_SESSION['user']['pass2'] = $this->wash($_POST['pass2'], "no", _SECOND_PSW);
+		$_SESSION['user']['FirstName'] = $this->wash(
+			$_POST['FirstName'], 'no', _FIRSTNAME
+		);
+		$_SESSION['user']['LastName'] = $this->wash(
+			$_POST['LastName'], 'no', _LASTNAME
+		);
+		$_SESSION['user']['pass1'] = $this->wash(
+			$_POST['pass1'], 'no', _FIRST_PSW
+		);
+		$_SESSION['user']['pass2'] = $this->wash(
+			$_POST['pass2'], 'no', _SECOND_PSW
+		);
 
-		if($_SESSION['user']['pass1'] <> $_SESSION['user']['pass2'])
-		{
+		if ($_SESSION['user']['pass1'] <> $_SESSION['user']['pass2']) {
 			$this->add_error(_WRONG_SECOND_PSW, '');
 		}
 
-		if(isset($_POST['Phone']) && !empty($_POST['Phone']))
-		{
+		if (isset($_POST['Phone']) && ! empty($_POST['Phone'])) {
 			$_SESSION['user']['Phone']  = $_POST['Phone'];
 		}
 
-		if(isset($_POST['Fonction']) && !empty($_POST['Fonction']))
-		{
+		if (isset($_POST['Fonction']) && ! empty($_POST['Fonction'])) {
 			$_SESSION['user']['Fonction']  = $_POST['Fonction'];
 		}
 
-		if(isset($_POST['Department']) && !empty($_POST['Department']))
-		{
+		if (isset($_POST['Department']) && ! empty($_POST['Department'])) {
 			$_SESSION['user']['department']  = $_POST['Department'];
 		}
 
-		if(isset($_POST['Mail']) && !empty($_POST['Mail']))
-		{
+		if (isset($_POST['Mail']) && ! empty($_POST['Mail'])) {
 			$_SESSION['user']['Mail']  = $_POST['Mail'];
 		}
-		if(empty($_SESSION['error']))
-		{
-			$tmp_fn = $this->protect_string_db($_SESSION['user']['FirstName']);
-			$tmp_ln = $this->protect_string_db($_SESSION['user']['LastName']);
-			$tmp_dep = $this->protect_string_db($_SESSION['user']['department']);
+		if (empty($_SESSION['error'])) {
+			$firstname = $this->protect_string_db(
+				$_SESSION['user']['FirstName']
+			);
+			$lastname = $this->protect_string_db($_SESSION['user']['LastName']);
+			$department = $this->protect_string_db(
+				$_SESSION['user']['department']
+			);
 			$this->connect();
-			$this->query("update ".$_SESSION['tablename']['users']." set password = '".md5($_SESSION['user']['pass1'])."', firstname = '".$_SESSION['user']['FirstName']."', lastname = '".$_SESSION['user']['LastName']."', phone = '".$_SESSION['user']['Phone']."', mail = '".$_SESSION['user']['Mail']."' , department = '".$_SESSION['user']['department']."' where user_id = '".$_SESSION['user']['UserId']."'");
+			$this->query(
+				"update " . USERS_TABLE . " set password = '" 
+				. md5($_SESSION['user']['pass1']) . "', firstname = '"
+				. $firstname . "', lastname = '" . $lastname . "', phone = '"
+				. $_SESSION['user']['Phone'] . "', mail = '" 
+				. $_SESSION['user']['Mail'] . "' , department = '" . $department 
+				. "' where user_id = '" . $_SESSION['user']['UserId'] . "'"
+			);
 
 
-			if($_SESSION['history']['usersup'] == "true")
-			{
-				require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
+			if ($_SESSION['history']['usersup'] == 'true') {
+				require_once 'core' . DIRECTORY_SEPARATOR . 'class'
+					. DIRECTORY_SEPARATOR . 'class_history.php';
 				$hist = new history();
-				$hist->add($_SESSION['tablename']['users'], $_SESSION['user']['UserId'],"UP",_USER_UPDATE." : ".$_SESSION['user']['LastName']." ".$_SESSION['user']['FirstName'], $_SESSION['config']['databasetype']);
+				$hist->add(
+					USERS_TABLE, $_SESSION['user']['UserId'], 'UP',
+					_USER_UPDATE . ' : ' . $_SESSION['user']['LastName'] . ' '
+					. $_SESSION['user']['FirstName'], 
+					$_SESSION['config']['databasetype']
+				);
 			}
 
 			$_SESSION['error'] = _USER_UPDATED;
-			header("location: ".$_SESSION['config']['businessappurl']."index.php");
+			header(
+				'location: ' . $_SESSION['config']['businessappurl']
+				. 'index.php'
+			);
 			exit();
-		}
-		else
-		{
-			header("location: ".$_SESSION['config']['businessappurl']."index.php?page=modify_user&admin=users");
+		} else {	
+			header(
+				'location: ' . $_SESSION['config']['businessappurl']
+				. 'index.php?page=modify_user&admin=users'
+			);
 			exit();
 		}
 	}
@@ -100,8 +125,7 @@ class users extends dbquery
 	*/
 	public function change_info_user()
 	{
-		//require_once('core/class/class_core_tools.php');
-		$core_tools = new core_tools();
+		$core = new core_tools();
 		?>
 		<h1><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_user_b.gif" alt="" /> <?php  echo _MY_INFO; ?></h1>
 
@@ -111,25 +135,24 @@ class users extends dbquery
                  <h2 class="tit"><?php  echo _USER_GROUPS_TITLE;?> : </h2>
 					 <ul id="my_profil">
                       <?php
-						 	$this->connect();
-							$this->query("SELECT u.group_desc FROM ".$_SESSION['tablename']['usergroup_content']." uc, ".$_SESSION['tablename']['usergroups']." u
-							where uc.user_id ='".$_SESSION['user']['UserId']."' and uc.group_id = u.group_id order by u.group_desc");
+		 	$this->connect();
+			$this->query(
+				"SELECT u.group_desc FROM " . USERGROUP_CONTENT_TABLE . " uc, "
+				. USERGROUPS_TABLE ." u where uc.user_id ='" 
+				. $_SESSION['user']['UserId'] . "' and uc.group_id = u.group_id"
+				. " order by u.group_desc"
+			);
 
-							if($this->nb_result() < 1)
-							{
-								echo _USER_BELONGS_NO_GROUP.".";
-							}
-							else
-							{
-								while($line = $this->fetch_object())
-								{
-
-								 echo "<li>".$line->group_desc." </li>";
-								}
-							}
+			if ($this->nb_result() < 1) {
+				echo _USER_BELONGS_NO_GROUP . ".";
+			} else {
+				while ($line = $this->fetch_object()) {
+					echo "<li>" . $line->group_desc . " </li>";
+				}
+			}
 						 ?>
 						 </ul>
-						 <?php if($core_tools->is_module_loaded("entities") )
+						 <?php if($core->is_module_loaded("entities") )
 						{?>
 						 <h2 class="tit"><?php  echo _USER_ENTITIES_TITLE;?> : </h2>
 							<ul id="my_profil">
@@ -182,7 +205,7 @@ class users extends dbquery
 					  	<label for="FirstName"><?php  echo _FIRSTNAME; ?> : </label>
 						<input name="FirstName"  type="text" id="FirstName" size="45" value="<?php  echo $this->show_string($_SESSION['user']['FirstName']); ?>" />
 					 </p>
-					 <?php if(!$core_tools->is_module_loaded("entities") )
+					 <?php if(!$core->is_module_loaded("entities") )
 						{?>
 					  <p>
 						<label for="Department"><?php  echo _DEPARTMENT;?> : </label>
@@ -209,8 +232,8 @@ class users extends dbquery
 				<?php
 
 			//	require_once("core/class/class_core_tools.php");
-				$core_tools = new core_tools;
-				echo $core_tools->execute_modules_services($_SESSION['modules_services'], 'modify_user.php', "include");
+				$core = new core_tools;
+				echo $core->execute_modules_services($_SESSION['modules_services'], 'modify_user.php', "include");
 				?>
 		</div>
 

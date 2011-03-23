@@ -29,26 +29,28 @@
 * @ingroup admin
 */
 
-$core_tools2 = new core_tools();
+$core = new core_tools();
 //here we loading the lang vars
-$core_tools2->load_lang();
+$core->load_lang();
  /****************Management of the location bar  ************/
 $init = false;
-if(isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true")
-{
+if (isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == 'true') {
     $init = true;
 }
-$level = "";
-if(isset($_REQUEST['level']) && ($_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1))
-{
+$level = '';
+if (isset($_REQUEST['level'])
+	&& ($_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 
+		|| $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1)
+) {
     $level = $_REQUEST['level'];
 }
-$page_path = $_SESSION['config']['businessappurl'].'index.php?page=modify_user&admin=users';
-$page_label = _MY_INFO;
-$page_id = "modify_users";
-$core_tools2->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
+$pagePath = $_SESSION['config']['businessappurl']
+	      . 'index.php?page=modify_user&admin=users';
+$pageLabel = _MY_INFO;
+$pageId = 'modify_users';
+$core->manage_location_bar($pagePath, $pageLabel, $pageId, $init, $level);
 /***********************************************************/
-require("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_users.php");
+require_once 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+	. DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR . 'class_users.php';
 $users = new users();
 $users->change_info_user();
-?>

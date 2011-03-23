@@ -1,4 +1,4 @@
-<?
+<?php
 /**
 * File : contact_info.php
 *
@@ -12,163 +12,179 @@
 * @author  Claire Figueras <dev@maarch.org>
 */
 
-require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
-$core_tools = new core_tools();
+require_once 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+	. DIRECTORY_SEPARATOR  . 'class' . DIRECTORY_SEPARATOR 
+	. 'class_business_app_tools.php';
+$core = new core_tools();
 $business = new business_app_tools();
-$core_tools->load_lang();
-$core_tools->load_html();
-$core_tools->load_header('', true, false);
+$core->load_lang();
+$core->load_html();
+$core->load_header('', true, false);
 $func = new functions();
 $db = new dbquery();
 $db->connect();
 $tmp = $business->get_titles();
 $titles = $tmp['titles'];
-$default_title = $tmp['default_title'];
-if($_REQUEST['id'] == "" && $_REQUEST['mode'] == 'view')
-{
+$defaultTitle = $tmp['default_title'];
+if ($_REQUEST['id'] == "" && $_REQUEST['mode'] == 'view') {
     echo '<script type="text/javascript">window.resizeTo(300, 150);</script>';
     echo '<br/><br/><center>'._YOU_MUST_SELECT_CONTACT.'</center><br/><br/><div align="center">
         <input name="close" type="button" value="'._CLOSE.'"  onclick="self.close();" class="button" />
         </div>';
     exit();
 }
-if(!empty($_REQUEST['submit']))
-{
+if (! empty($_REQUEST['submit'])) {
     $contact['IS_CORPORATE_PERSON'] = $_REQUEST['is_corporate'];
-    if($contact['IS_CORPORATE_PERSON'] == 'Y')
-    {
-        $contact['SOCIETY'] = $func->wash($_REQUEST['society'], "no", _SOCIETY." ");
+    if ($contact['IS_CORPORATE_PERSON'] == 'Y') {
+        $contact['SOCIETY'] = $func->wash(
+        	$_REQUEST['society'], "no", _SOCIETY." "
+        );
         $contact['LASTNAME'] = '';
-    }
-    else
-    {
-        $contact['LASTNAME'] = $func->wash($_REQUEST['lastname'], "no", _LASTNAME);
-        if ($_REQUEST['society'] <> '')
-        {
-            $contact['SOCIETY'] = $func->wash($_REQUEST['society'], "no", _SOCIETY." ");
-        }
-        else
-        {
+    } else {
+        $contact['LASTNAME'] = $func->wash(
+        	$_REQUEST['lastname'], "no", _LASTNAME
+        );
+        if ($_REQUEST['society'] <> '') {
+            $contact['SOCIETY'] = $func->wash(
+            	$_REQUEST['society'], "no", _SOCIETY." "
+            );
+        } else {
             $contact['SOCIETY'] = '';
         }
     }
-    if ($_REQUEST['title'] <> '')
-    {
-        $contact['TITLE'] = $func->wash($_REQUEST['title'], "no", _TITLE2." ");
-    }
-    else
-    {
+    if ($_REQUEST['title'] <> '') {
+        $contact['TITLE'] = $func->wash(
+        	$_REQUEST['title'], "no", _TITLE2." "
+        );
+    } else {
         $contact['TITLE'] = '';
     }
-    if ($_REQUEST['firstname'] <> '')
-    {
-        $contact['FIRSTNAME'] = $func->wash($_REQUEST['firstname'], "no", _FIRSTNAME." ");
-    }
-    else
-    {
+    if ($_REQUEST['firstname'] <> '') {
+        $contact['FIRSTNAME'] = $func->wash(
+        	$_REQUEST['firstname'], "no", _FIRSTNAME." "
+        );
+    } else {
         $contact['FIRSTNAME'] = '';
     }
-    if ($_REQUEST['function'] <> '')
-    {
-        $contact['FUNCTION'] = $func->wash($_REQUEST['function'], "no", _FUNCTION." ");
-    }
-    else
-    {
+    if ($_REQUEST['function'] <> '') {
+        $contact['FUNCTION'] = $func->wash(
+        	$_REQUEST['function'], "no", _FUNCTION." "
+        );
+    } else {
         $contact['FUNCTION'] = '';
     }
-    if ($_REQUEST['num'] <> '')
-    {
+    if ($_REQUEST['num'] <> '') {
         $contact['ADD_NUM'] = $func->wash($_REQUEST['num'], "no", _NUM." ");
-    }
-    else
-    {
+    } else {
         $contact['ADD_NUM'] = '';
     }
-    if ($_REQUEST['street'] <> '')
-    {
-        $contact['ADD_STREET'] = $func->wash($_REQUEST['street'], "no", _STREET." ");
-    }
-    else
-    {
+    if ($_REQUEST['street'] <> '') {
+        $contact['ADD_STREET'] = $func->wash(
+        	$_REQUEST['street'], "no", _STREET." "
+        );
+    } else {
         $contact['ADD_STREET'] = '';
     }
-    if ($_REQUEST['add_comp'] <> '')
-    {
-        $contact['ADD_COMP'] = $func->wash($_REQUEST['add_comp'], "no", ADD_COMP." ");
-    }
-    else
-    {
+    if ($_REQUEST['add_comp'] <> '') {
+        $contact['ADD_COMP'] = $func->wash(
+        	$_REQUEST['add_comp'], "no", ADD_COMP." "
+        );
+    } else {
         $contact['ADD_COMP'] = '';
     }
-    if ($_REQUEST['town'] <> '')
-    {
+    if ($_REQUEST['town'] <> '') {
         $contact['ADD_TOWN'] = $func->wash($_REQUEST['town'], "no", _TOWN." ");
-    }
-    else
-    {
+    } else {
         $contact['ADD_TOWN'] = '';
     }
-    if ($_REQUEST['cp'] <> '')
-    {
+    if ($_REQUEST['cp'] <> '') {
         $contact['ADD_CP'] = $func->wash($_REQUEST['cp'], "no", _POSTAL_CODE);
-    }
-    else
-    {
+    } else {
         $contact['ADD_CP'] = '';
     }
-    if ($_REQUEST['country'] <> '')
-    {
-        $contact['ADD_COUNTRY'] = $func->wash($_REQUEST['country'], "no", _COUNTRY);
-    }
-    else
-    {
+    if ($_REQUEST['country'] <> '') {
+        $contact['ADD_COUNTRY'] = $func->wash(
+        	$_REQUEST['country'], "no", _COUNTRY
+        );
+    } else {
         $contact['ADD_COUNTRY'] = '';
     }
-    if ($_REQUEST['phone'] <> '')
-    {
+    if ($_REQUEST['phone'] <> '') {
         $contact['PHONE'] = $func->wash($_REQUEST['phone'], "num", _PHONE);
-    }
-    else
-    {
+    } else {
         $contact['PHONE'] = '';
     }
-    if ($_REQUEST['mail'] <> '')
-    {
+    if ($_REQUEST['mail'] <> '') {
         $contact['MAIL'] = $func->wash($_REQUEST['mail'], "mail", _MAIL);
-    }
-    else
-    {
+    } else {
         $contact['MAIL'] = '';
     }
-    if ($_REQUEST['comp_data'] <> '')
-    {
-        $contact['OTHER_DATA'] = $func->wash($_REQUEST['comp_data'], "no", _COMP_DATA);
-    }
-    else
-    {
+    if ($_REQUEST['comp_data'] <> '') {
+        $contact['OTHER_DATA'] = $func->wash(
+        	$_REQUEST['comp_data'], "no", _COMP_DATA
+        );
+    } else {
         $contact['OTHER_DATA'] = '';
     }
-    if(!empty($_SESSION['error']))
-    {
+    if (! empty($_SESSION['error'])) {
         //error
-    }
-    else
-    {
-        if($contact['IS_CORPORATE_PERSON'] == 'Y')
-        {
-            $db->query("INSERT INTO ".$_SESSION['tablename']['contacts']." (society, phone, email, address_num, address_street, address_complement, address_town, address_postal_code, address_country, other_data, is_corporate_person, user_id) values ('".$func->protect_string_db($contact['SOCIETY'])."', '".$func->protect_string_db($contact['PHONE'])."', '".$func->protect_string_db($contact['MAIL'])."', '".$func->protect_string_db($contact['ADD_NUM'])."','".$func->protect_string_db($contact['ADD_STREET'])."', '".$func->protect_string_db($contact['ADD_COMP'])."', '".$func->protect_string_db($contact['ADD_TOWN'])."', '".$func->protect_string_db($contact['ADD_CP'])."', '".$func->protect_string_db($contact['ADD_COUNTRY'])."', '".$func->protect_string_db($contact['OTHER_DATA'])."', '".$func->protect_string_db($contact['IS_CORPORATE_PERSON'])."', '".$func->protect_string_db($_SESSION['user']['UserId'])."')");
-        }
-        else
-        {
-            $db->query("INSERT INTO ".$_SESSION['tablename']['contacts']." (lastname , firstname , society , function , phone , email , address_num, address_street, address_complement, address_town, address_postal_code, address_country, other_data, title, is_corporate_person, user_id) values ('".$func->protect_string_db($contact['LASTNAME'])."', '".$func->protect_string_db($contact['FIRSTNAME'])."', '".$func->protect_string_db($contact['SOCIETY'])."', '".$func->protect_string_db($contact['FUNCTION'])."', '".$func->protect_string_db($contact['PHONE'])."', '".$func->protect_string_db($contact['MAIL'])."', '".$func->protect_string_db($contact['ADD_NUM'])."','".$func->protect_string_db($contact['ADD_STREET'])."', '".$func->protect_string_db($contact['ADD_COMP'])."', '".$func->protect_string_db($contact['ADD_TOWN'])."',  '".$func->protect_string_db($contact['ADD_CP'])."','".$func->protect_string_db($contact['ADD_COUNTRY'])."','".$func->protect_string_db($contact['OTHER_DATA'])."','".$func->protect_string_db($contact['TITLE'])."','".$func->protect_string_db($contact['IS_CORPORATE_PERSON'])."','".$func->protect_string_db($_SESSION['user']['UserId'])."')");
+    } else {
+        if ($contact['IS_CORPORATE_PERSON'] == 'Y') {
+            $db->query(
+            	"INSERT INTO " . $_SESSION['tablename']['contacts']
+            	. " (society, phone, email, address_num, address_street, "
+            	. "address_complement, address_town, address_postal_code, "
+            	. "address_country, other_data, is_corporate_person, user_id)"
+             	. " values ('" . $func->protect_string_db($contact['SOCIETY'])
+            	. "', '" . $func->protect_string_db($contact['PHONE']) . "', '"
+            	. $func->protect_string_db($contact['MAIL']) . "', '"
+            	. $func->protect_string_db($contact['ADD_NUM']) . "','"
+            	. $func->protect_string_db($contact['ADD_STREET']) . "', '"
+            	. $func->protect_string_db($contact['ADD_COMP']) . "', '"
+            	. $func->protect_string_db($contact['ADD_TOWN']) . "', '"
+            	. $func->protect_string_db($contact['ADD_CP']) . "', '"
+            	. $func->protect_string_db($contact['ADD_COUNTRY']) . "', '"
+            	. $func->protect_string_db($contact['OTHER_DATA']) . "', '"
+            	. $func->protect_string_db($contact['IS_CORPORATE_PERSON']) 
+            	. "', '" . $func->protect_string_db($_SESSION['user']['UserId'])
+            	. "')"
+            );
+        } else {
+            $db->query(
+            	"INSERT INTO " . $_SESSION['tablename']['contacts']
+            	. " (lastname , firstname , society , function , phone , email,"
+            	. " address_num, address_street, address_complement, "
+            	. "address_town, address_postal_code, address_country,"
+            	. " other_data, title, is_corporate_person, user_id) values ('"
+            	. $func->protect_string_db($contact['LASTNAME']) . "', '"
+            	. $func->protect_string_db($contact['FIRSTNAME']) . "', '"
+            	. $func->protect_string_db($contact['SOCIETY']) . "', '"
+            	. $func->protect_string_db($contact['FUNCTION']) . "', '"
+            	. $func->protect_string_db($contact['PHONE']) . "', '"
+            	. $func->protect_string_db($contact['MAIL']) . "', '"
+            	. $func->protect_string_db($contact['ADD_NUM']) . "','"
+            	. $func->protect_string_db($contact['ADD_STREET']) . "', '"
+            	. $func->protect_string_db($contact['ADD_COMP']) . "', '"
+            	. $func->protect_string_db($contact['ADD_TOWN']) . "',  '"
+            	. $func->protect_string_db($contact['ADD_CP']) . "','"
+            	. $func->protect_string_db($contact['ADD_COUNTRY']) . "','"
+            	. $func->protect_string_db($contact['OTHER_DATA']) . "','"
+            	. $func->protect_string_db($contact['TITLE']) . "','"
+            	. $func->protect_string_db($contact['IS_CORPORATE_PERSON']) 
+            	. "','" . $func->protect_string_db($_SESSION['user']['UserId'])
+            	. "')"
+            );
         }
 
-        if($contact['IS_CORPORATE_PERSON'] == 'N')
-        {
-            $db->query("select contact_id, lastname, firstname, society from ".$_SESSION['tablename']['contacts']." where lastname = '".$func->protect_string_db($contact['LASTNAME'])."' and enabled = 'Y' order by contact_id desc");
+        if ($contact['IS_CORPORATE_PERSON'] == 'N') {
+            $db->query(
+            	"select contact_id, lastname, firstname, society from "
+            	. $_SESSION['tablename']['contacts'] . " where lastname = '"
+            	. $func->protect_string_db($contact['LASTNAME'])
+            	. "' and enabled = 'Y' order by contact_id desc"
+            );
             $res = $db->fetch_object();
-            if(empty($res->society))
-            {
+            if (empty($res->society)) {
                 $value_contact = $res->lastname.', '.$res->firstname.' ('.$res->contact_id.')';
             }
             else
@@ -235,7 +251,7 @@ else if($_REQUEST['mode'] == 'add')
     $readonly = false;
     $contact_info['IS_CORPORATE_PERSON'] == 'Y';
 }
-$core_tools->load_js();
+$core->load_js();
 ?>
 <script type="text/javascript">window.resizeTo(600, 570);</script>
 <br/>
@@ -269,7 +285,7 @@ $core_tools->load_js();
                 <option value=""><?php echo _CHOOSE_TITLE;?></option>
                 <?php foreach(array_keys($titles) as $key)
                 {
-                    ?><option value="<?php echo $key;?>" <?php if($key == $default_title){ echo 'selected="selected"';}?>><?php echo $titles[$key];?></option><?php
+                    ?><option value="<?php echo $key;?>" <?php if($key == $defaultTitle){ echo 'selected="selected"';}?>><?php echo $titles[$key];?></option><?php
                 }?>
             </select>
             <?php }?>
