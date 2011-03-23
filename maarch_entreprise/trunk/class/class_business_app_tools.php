@@ -11,209 +11,252 @@
 * @author  Laurent Giovannoni  <dev@maarch.org>
 *
 */
-
+require_once 'core/core_tables.php';
 class business_app_tools extends dbquery
 {
-    function __construct()
+    public function __construct()
     {
         parent::__construct();
     }
     /**
-    * Build Maarch business app configuration into sessions vars with a xml configuration file
+    * Build Maarch business app configuration into sessions vars with a xml
+    * configuration file
     */
     public function build_business_app_config()
     {
         // build Maarch business app configuration into sessions vars
-        $_SESSION['showmenu']='oui';
+        $_SESSION['showmenu'] = 'oui';
 
         $core = new core_tools();
-        if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'config.xml'))
-        {
-            $path = $_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'config.xml';
-        }
-        else
-        {
-            $path = 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'config.xml';
+        if(file_exists(
+            $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
+            . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR . 'apps'
+            . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+            . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR . 'config.xml'
+        )
+        ) {
+            $path = $_SESSION['config']['corepath'] . 'custom'
+                  . DIRECTORY_SEPARATOR . $_SESSION['custom_override_id']
+                  . DIRECTORY_SEPARATOR . 'apps' . DIRECTORY_SEPARATOR
+                  . $_SESSION['config']['app_id'] . DIRECTORY_SEPARATOR . 'xml'
+                  . DIRECTORY_SEPARATOR . 'config.xml';
+        } else {
+            $path = 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+                  . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR
+                  . 'config.xml';
         }
         $xmlconfig = simplexml_load_file($path);
-        if( $xmlconfig <> false)
-        {
-            $CONFIG = $xmlconfig->CONFIG;
-            $_SESSION['config']['businessappname'] = (string) $CONFIG->businessappname;
-            //$_SESSION['config']['businessapppath'] = (string) $CONFIG->businessapppath;
+        if ($xmlconfig <> false) {
+            $config = $xmlconfig->CONFIG;
+            $_SESSION['config']['businessappname'] =
+                (string) $config->businessappname;
+            //$_SESSION['config']['businessapppath'] = (string) $config->businessapppath;
             //##############
 
-            if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == "on")
-                $protocol = "https";
-            else
-                $protocol = "http";
-            if ($_SERVER['SERVER_PORT'] <> 443 && $protocol == "https")
-            {
-                $server_port = ":".$_SERVER['SERVER_PORT'];
+            if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') {
+                $protocol = 'https';
+            } else {
+                $protocol = 'http';
             }
-            elseif ($_SERVER['SERVER_PORT'] <> 80 && $protocol == "http")
-            {
-                $server_port = ":".$_SERVER['SERVER_PORT'];
-            }
-            else
-            {
-                    $server_port = "";
+            if ($_SERVER['SERVER_PORT'] <> 443 && $protocol == 'https') {
+                $serverPort = ':' . $_SERVER['SERVER_PORT'];
+            } else if ($_SERVER['SERVER_PORT'] <> 80 && $protocol == 'http') {
+                $serverPort = ':' . $_SERVER['SERVER_PORT'];
+            } else {
+                $serverPort = '';
             }
 
             //##############
-            if(isset($_SERVER['HTTP_X_FORWARDED_HOST']) && $_SERVER['HTTP_X_FORWARDED_HOST'] <> "")
-            {
-                    $host = $_SERVER['HTTP_X_FORWARDED_HOST'];
-            }
-            else
-            {
-                    $host = $_SERVER['HTTP_HOST'];
+            if (isset($_SERVER['HTTP_X_FORWARDED_HOST'])
+                && $_SERVER['HTTP_X_FORWARDED_HOST'] <> ''
+            ) {
+                $host = $_SERVER['HTTP_X_FORWARDED_HOST'];
+            } else {
+                $host = $_SERVER['HTTP_HOST'];
             }
 
             $tmp = $host;
-            if(!preg_match('/:[0-9]+$/', $host))
-            {
-                $tmp =$host.$server_port;
+            if (! preg_match('/:[0-9]+$/', $host)) {
+                $tmp = $host.$serverPort;
             }
-            $_SESSION['config']['businessappurl'] = $protocol."://".$tmp.str_replace('index.php','',$_SERVER['SCRIPT_NAME']);
-            $_SESSION['config']['databaseserver'] = (string) $CONFIG->databaseserver;
-            $_SESSION['config']['databaseserverport'] = (string) $CONFIG->databaseserverport;
-            $_SESSION['config']['databasetype'] = (string) $CONFIG->databasetype;
-            $_SESSION['config']['databasename'] = (string) $CONFIG->databasename;
-            $_SESSION['config']['databaseschema'] = (string) $CONFIG->databaseschema;
-            $_SESSION['config']['databaseuser'] = (string) $CONFIG->databaseuser;
-            $_SESSION['config']['databasepassword'] = (string) $CONFIG->databasepassword;
-            $_SESSION['config']['databasesearchlimit'] = (string) $CONFIG->databasesearchlimit;
-            $_SESSION['config']['nblinetoshow'] = (string) $CONFIG->nblinetoshow;
-            $_SESSION['config']['limitcharsearch'] = (string) $CONFIG->limitcharsearch;
-            $_SESSION['config']['lang'] = (string) $CONFIG->lang;
-            $_SESSION['config']['adminmail'] = (string) $CONFIG->adminmail;
-            $_SESSION['config']['adminname'] = (string) $CONFIG->adminname;
-            $_SESSION['config']['debug'] = (string) $CONFIG->debug;
-            $_SESSION['config']['applicationname'] = (string) $CONFIG->applicationname;
-            $_SESSION['config']['defaultPage'] = (string) $CONFIG->defaultPage;
-            $_SESSION['config']['exportdirectory'] = (string) $CONFIG->exportdirectory;
-            $_SESSION['config']['tmppath'] = (string) $CONFIG->tmppath;
-            $_SESSION['config']['cookietime'] = (string) $CONFIG->CookieTime;
-            $_SESSION['config']['ldap'] = (string) $CONFIG->ldap;
-            $_SESSION['config']['userdefaultpassword'] = (string) $CONFIG->userdefaultpassword;
-            if(isset($CONFIG->showfooter))
-            {
-                $_SESSION['config']['showfooter'] = (string) $CONFIG->showfooter;
-            }
-            else
-            {
+            $_SESSION['config']['businessappurl'] = $protocol . '://' . $tmp
+                . str_replace('index.php', '', $_SERVER['SCRIPT_NAME']);
+            $_SESSION['config']['databaseserver'] =
+                (string) $config->databaseserver;
+            $_SESSION['config']['databaseserverport'] =
+                (string) $config->databaseserverport;
+            $_SESSION['config']['databasetype'] =
+                (string) $config->databasetype;
+            $_SESSION['config']['databasename'] =
+                (string) $config->databasename;
+            $_SESSION['config']['databaseschema'] =
+                (string) $config->databaseschema;
+            $_SESSION['config']['databaseuser'] =
+                (string) $config->databaseuser;
+            $_SESSION['config']['databasepassword'] =
+                (string) $config->databasepassword;
+            $_SESSION['config']['databasesearchlimit'] =
+                (string) $config->databasesearchlimit;
+            $_SESSION['config']['nblinetoshow'] =
+                (string) $config->nblinetoshow;
+            $_SESSION['config']['limitcharsearch'] =
+                (string) $config->limitcharsearch;
+            $_SESSION['config']['lang'] = (string) $config->lang;
+            $_SESSION['config']['adminmail'] = (string) $config->adminmail;
+            $_SESSION['config']['adminname'] = (string) $config->adminname;
+            $_SESSION['config']['debug'] = (string) $config->debug;
+            $_SESSION['config']['applicationname'] = (string) $config->applicationname;
+            $_SESSION['config']['defaultPage'] = (string) $config->defaultPage;
+            $_SESSION['config']['exportdirectory'] = (string) $config->exportdirectory;
+            $_SESSION['config']['tmppath'] = (string) $config->tmppath;
+            $_SESSION['config']['cookietime'] = (string) $config->CookieTime;
+            $_SESSION['config']['ldap'] = (string) $config->ldap;
+            $_SESSION['config']['userdefaultpassword'] = (string) $config->userdefaultpassword;
+            if (isset($config->showfooter)) {
+                $_SESSION['config']['showfooter'] = (string) $config->showfooter;
+            } else {
                 $_SESSION['config']['showfooter'] = 'true';
             }
-            //$_SESSION['config']['databaseworkspace'] = (string) $CONFIG->databaseworkspace;
+            //$_SESSION['config']['databaseworkspace'] = (string) $config->databaseworkspace;
 
-            $TABLENAME =  $xmlconfig->TABLENAME ;
-            $_SESSION['tablename']['doctypes_first_level'] = (string) $TABLENAME->doctypes_first_level;
-            $_SESSION['tablename']['doctypes_second_level'] = (string) $TABLENAME->doctypes_second_level;
-            $_SESSION['tablename']['mlb_doctype_ext'] = (string) $TABLENAME->mlb_doctype_ext;
-            $_SESSION['tablename']['doctypes_indexes'] = (string) $TABLENAME->doctypes_indexes;
-            $_SESSION['tablename']['saved_queries'] = (string) $TABLENAME->saved_queries;
-            $_SESSION['tablename']['contacts'] = (string) $TABLENAME->contacts;
-            $i=0;
+            $tablename =  $xmlconfig->TABLENAME ;
+            $_SESSION['tablename']['doctypes_first_level'] = (string) $tablename->doctypes_first_level;
+            $_SESSION['tablename']['doctypes_second_level'] = (string) $tablename->doctypes_second_level;
+            $_SESSION['tablename']['mlb_doctype_ext'] = (string) $tablename->mlb_doctype_ext;
+            $_SESSION['tablename']['doctypes_indexes'] = (string) $tablename->doctypes_indexes;
+            $_SESSION['tablename']['saved_queries'] = (string) $tablename->saved_queries;
+            $_SESSION['tablename']['contacts'] = (string) $tablename->contacts;
+            $i = 0;
 
             $_SESSION['collections'] = array();
-            foreach($xmlconfig->COLLECTION as $col)
-            {
+            foreach ($xmlconfig->COLLECTION as $col) {
                 $tmp = (string) $col->label;
-                $tmp2 = $this->retrieve_constant_lang($tmp, 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].".php");
-                if($tmp2 <> false)
-                {
+                $tmp2 = $this->retrieve_constant_lang(
+                    $tmp, 'apps' . DIRECTORY_SEPARATOR
+                    . $_SESSION['config']['app_id'] . DIRECTORY_SEPARATOR
+                    . 'lang'  .DIRECTORY_SEPARATOR . $_SESSION['config']['lang']
+                    . ".php"
+                );
+                if ($tmp2 <> false) {
                     $tmp = $tmp2;
                 }
                 $extensions = $col->extensions;
                 $tab = array();
-                foreach($extensions->table as $table)
-                {
-                    array_push($tab,(string)$table);
+                foreach ($extensions->table as $table) {
+                    array_push($tab, (string) $table);
                 }
-                if(isset($col->table) && !empty($col->table))
-                {
-                    $_SESSION['collections'][$i] = array("id" => (string) $col->id, "label" => (string) $tmp, "table" => (string) $col->table,"view" => (string) $col->view,"adr" => (string) $col->adr, "index_file" => (string) $col->index_file, "script_add" => (string) $col->script_add, "script_search" => (string) $col->script_search, "script_search_result" => (string) $col->script_search_result, "script_details"=> (string) $col->script_details, "path_to_lucene_index"=> (string) $col->path_to_lucene_index, "extensions" => $tab);
+                if (isset($col->table) && ! empty($col->table)) {
+                    $_SESSION['collections'][$i] = array(
+                    	'id' => (string) $col->id,
+                    	'label' => (string) $tmp,
+                    	'table' => (string) $col->table,
+                    	'view' => (string) $col->view,
+                    	'adr' => (string) $col->adr,
+                    	'index_file' => (string) $col->index_file,
+                        'script_add' => (string) $col->script_add,
+                        'script_search' => (string) $col->script_search,
+                        'script_search_result' => (string) $col->script_search_result,
+                        'script_details' => (string) $col->script_details,
+                        'path_to_lucene_index' => (string) $col->path_to_lucene_index,
+                        'extensions' => $tab,
+                    );
                     $i++;
-                }
-                else
-                {
-                    $_SESSION['collections'][$i] = array("id" => (string) $col->id, "label" => (string) $tmp, "view" => (string) $col->view, "adr" => (string) $col->adr, "index_file" => (string) $col->index_file, "script_add" => (string) $col->script_add, "script_search" => (string) $col->script_search, "script_search_result" => (string) $col->script_search_result, "script_details"=> (string) $col->script_details, "path_to_lucene_index"=> (string) $col->path_to_lucene_index, "extensions" => $tab);
+                } else {
+                    $_SESSION['collections'][$i] = array(
+                    	'id' => (string) $col->id,
+                    	'label' => (string) $tmp,
+                    	'view' => (string) $col->view,
+                    	'adr' => (string) $col->adr,
+                    	'index_file' => (string) $col->index_file,
+                    	'script_add' => (string) $col->script_add,
+                    	'script_search' => (string) $col->script_search,
+                    	'script_search_result' => (string) $col->script_search_result,
+                    	'script_details' => (string) $col->script_details,
+                        'path_to_lucene_index' => (string) $col->path_to_lucene_index,
+                        'extensions' => $tab,
+                    );
                 }
             }
-            $HISTORY = $xmlconfig->HISTORY;
-            $_SESSION['history']['usersdel'] = (string) $HISTORY->usersdel;
-            $_SESSION['history']['usersban'] = (string) $HISTORY->usersban;
-            $_SESSION['history']['usersadd'] = (string) $HISTORY->usersadd;
-            $_SESSION['history']['usersup'] = (string) $HISTORY->usersup;
-            $_SESSION['history']['usersval'] = (string) $HISTORY->usersval;
-            $_SESSION['history']['doctypesdel'] = (string) $HISTORY->doctypesdel;
-            $_SESSION['history']['doctypesadd'] = (string) $HISTORY->doctypesadd;
-            $_SESSION['history']['doctypesup'] = (string) $HISTORY->doctypesup;
-            $_SESSION['history']['doctypesval'] = (string) $HISTORY->doctypesval;
-            $_SESSION['history']['doctypesprop'] = (string) $HISTORY->doctypesprop;
-            $_SESSION['history']['usergroupsdel'] = (string) $HISTORY->usergroupsdel;
-            $_SESSION['history']['usergroupsban'] = (string) $HISTORY->usergroupsban;
-            $_SESSION['history']['usergroupsadd'] = (string) $HISTORY->usergroupsadd;
-            $_SESSION['history']['usergroupsup'] = (string) $HISTORY->usergroupsup;
-            $_SESSION['history']['usergroupsval'] = (string) $HISTORY->usergroupsval;
-            $_SESSION['history']['structuredel'] = (string) $HISTORY->structuredel;
-            $_SESSION['history']['structureadd'] = (string) $HISTORY->structureadd;
-            $_SESSION['history']['structureup'] = (string) $HISTORY->structureup;
-            $_SESSION['history']['subfolderdel'] = (string) $HISTORY->subfolderdel;
-            $_SESSION['history']['subfolderadd'] = (string) $HISTORY->subfolderadd;
-            $_SESSION['history']['subfolderup'] = (string) $HISTORY->subfolderup;
-            $_SESSION['history']['resadd'] = (string) $HISTORY->resadd;
-            $_SESSION['history']['resup'] = (string) $HISTORY->resup;
-            $_SESSION['history']['resdel'] = (string) $HISTORY->resdel;
-            $_SESSION['history']['resview'] = (string) $HISTORY->resview;
-            $_SESSION['history']['userlogin'] = (string) $HISTORY->userlogin;
-            $_SESSION['history']['userlogout'] = (string) $HISTORY->userlogout;
-            $_SESSION['history']['actionadd'] = (string) $HISTORY->actionadd;
-            $_SESSION['history']['actionup'] = (string) $HISTORY->actionup;
-            $_SESSION['history']['actiondel'] = (string) $HISTORY->actiondel;
-            $_SESSION['history']['contactadd'] = (string) $HISTORY->contactadd;
-            $_SESSION['history']['contactup'] = (string) $HISTORY->contactup;
-            $_SESSION['history']['contactdel'] = (string) $HISTORY->contactdel;
-            $_SESSION['history']['statusadd'] = (string) $HISTORY->statusadd;
-            $_SESSION['history']['statusup'] = (string) $HISTORY->statusup;
-            $_SESSION['history']['statusdel'] = (string) $HISTORY->statusdel;
-            $_SESSION['history']['docserversadd'] = (string) $HISTORY->docserversadd;
-            $_SESSION['history']['docserversdel'] = (string) $HISTORY->docserversdel;
-            $_SESSION['history']['docserversallow'] = (string) $HISTORY->docserversallow;
-            $_SESSION['history']['docserversban'] = (string) $HISTORY->docserversban;
-            //$_SESSION['history']['docserversclose'] = (string) $HISTORY->docserversclose;
-            $_SESSION['history']['docserverslocationsadd'] = (string) $HISTORY->docserverslocationsadd;
-            $_SESSION['history']['docserverslocationsdel'] = (string) $HISTORY->docserverslocationsdel;
-            $_SESSION['history']['docserverslocationsallow'] = (string) $HISTORY->docserverslocationsallow;
-            $_SESSION['history']['docserverslocationsban'] = (string) $HISTORY->docserverslocationsban;
-            $_SESSION['history']['docserverstypesadd'] = (string) $HISTORY->docserverstypesadd;
-            $_SESSION['history']['docserverstypesdel'] = (string) $HISTORY->docserverstypesdel;
-            $_SESSION['history']['docserverstypesallow'] = (string) $HISTORY->docserverstypesallow;
-            $_SESSION['history']['docserverstypesban'] = (string) $HISTORY->docserverstypesban;
+            $history = $xmlconfig->HISTORY;
+            $_SESSION['history']['usersdel'] = (string) $history->usersdel;
+            $_SESSION['history']['usersban'] = (string) $history->usersban;
+            $_SESSION['history']['usersadd'] = (string) $history->usersadd;
+            $_SESSION['history']['usersup'] = (string) $history->usersup;
+            $_SESSION['history']['usersval'] = (string) $history->usersval;
+            $_SESSION['history']['doctypesdel'] = (string) $history->doctypesdel;
+            $_SESSION['history']['doctypesadd'] = (string) $history->doctypesadd;
+            $_SESSION['history']['doctypesup'] = (string) $history->doctypesup;
+            $_SESSION['history']['doctypesval'] = (string) $history->doctypesval;
+            $_SESSION['history']['doctypesprop'] = (string) $history->doctypesprop;
+            $_SESSION['history']['usergroupsdel'] = (string) $history->usergroupsdel;
+            $_SESSION['history']['usergroupsban'] = (string) $history->usergroupsban;
+            $_SESSION['history']['usergroupsadd'] = (string) $history->usergroupsadd;
+            $_SESSION['history']['usergroupsup'] = (string) $history->usergroupsup;
+            $_SESSION['history']['usergroupsval'] = (string) $history->usergroupsval;
+            $_SESSION['history']['structuredel'] = (string) $history->structuredel;
+            $_SESSION['history']['structureadd'] = (string) $history->structureadd;
+            $_SESSION['history']['structureup'] = (string) $history->structureup;
+            $_SESSION['history']['subfolderdel'] = (string) $history->subfolderdel;
+            $_SESSION['history']['subfolderadd'] = (string) $history->subfolderadd;
+            $_SESSION['history']['subfolderup'] = (string) $history->subfolderup;
+            $_SESSION['history']['resadd'] = (string) $history->resadd;
+            $_SESSION['history']['resup'] = (string) $history->resup;
+            $_SESSION['history']['resdel'] = (string) $history->resdel;
+            $_SESSION['history']['resview'] = (string) $history->resview;
+            $_SESSION['history']['userlogin'] = (string) $history->userlogin;
+            $_SESSION['history']['userlogout'] = (string) $history->userlogout;
+            $_SESSION['history']['actionadd'] = (string) $history->actionadd;
+            $_SESSION['history']['actionup'] = (string) $history->actionup;
+            $_SESSION['history']['actiondel'] = (string) $history->actiondel;
+            $_SESSION['history']['contactadd'] = (string) $history->contactadd;
+            $_SESSION['history']['contactup'] = (string) $history->contactup;
+            $_SESSION['history']['contactdel'] = (string) $history->contactdel;
+            $_SESSION['history']['statusadd'] = (string) $history->statusadd;
+            $_SESSION['history']['statusup'] = (string) $history->statusup;
+            $_SESSION['history']['statusdel'] = (string) $history->statusdel;
+            $_SESSION['history']['docserversadd'] = (string) $history->docserversadd;
+            $_SESSION['history']['docserversdel'] = (string) $history->docserversdel;
+            $_SESSION['history']['docserversallow'] = (string) $history->docserversallow;
+            $_SESSION['history']['docserversban'] = (string) $history->docserversban;
+            //$_SESSION['history']['docserversclose'] = (string) $history->docserversclose;
+            $_SESSION['history']['docserverslocationsadd'] = (string) $history->docserverslocationsadd;
+            $_SESSION['history']['docserverslocationsdel'] = (string) $history->docserverslocationsdel;
+            $_SESSION['history']['docserverslocationsallow'] = (string) $history->docserverslocationsallow;
+            $_SESSION['history']['docserverslocationsban'] = (string) $history->docserverslocationsban;
+            $_SESSION['history']['docserverstypesadd'] = (string) $history->docserverstypesadd;
+            $_SESSION['history']['docserverstypesdel'] = (string) $history->docserverstypesdel;
+            $_SESSION['history']['docserverstypesallow'] = (string) $history->docserverstypesallow;
+            $_SESSION['history']['docserverstypesban'] = (string) $history->docserverstypesban;
             $_SESSION['history_keywords'] = array();
-            foreach($xmlconfig->KEYWORDS as $keyword)
-            {
+            foreach ($xmlconfig->KEYWORDS as $keyword) {
                 $tmp = (string) $keyword->label;
-                $tmp2 = $this->retrieve_constant_lang($tmp, 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].".php");
-                if($tmp2 <> false)
-                {
+                $tmp2 = $this->retrieve_constant_lang(
+                    $tmp, 'apps' . DIRECTORY_SEPARATOR
+                    . $_SESSION['config']['app_id'] . DIRECTORY_SEPARATOR
+                    . 'lang' . DIRECTORY_SEPARATOR . $_SESSION['config']['lang']
+                    . '.php'
+                );
+                if ($tmp2 <> false) {
                     $tmp = $tmp2;
                 }
-                array_push($_SESSION['history_keywords'], array('id' =>(string) $keyword->id,'label' =>$tmp));
-            }
-
-
-            $i=0;
-            foreach($xmlconfig->MODULES as $MODULES)
-            {
-
-                $_SESSION['modules'][$i] = array("moduleid" => (string) $MODULES->moduleid
-                //,"comment" => (string) $MODULES->comment
+                array_push(
+                    $_SESSION['history_keywords'],
+                    array(
+                    	'id'    => (string) $keyword->id,
+                    	'label' => $tmp,
+                    )
                 );
-                $i++;
             }
 
+            $i = 0;
+            foreach ($xmlconfig->MODULES as $modules) {
+
+                $_SESSION['modules'][$i] = array(
+                	'moduleid' => (string) $modules->moduleid,
+                    //,"comment" => (string) $MODULES->comment
+                );
+                $i ++;
+            }
             $this->load_actions_pages();
         }
     }
@@ -223,46 +266,65 @@ class business_app_tools extends dbquery
     */
     private function load_actions_pages()
     {
-        if(isset($_SESSION['config']['corepath']) && isset($_SESSION['config']['app_id']) && isset($_SESSION['config']['lang']))
-        {
+        if (isset($_SESSION['config']['corepath'])
+            && isset($_SESSION['config']['app_id'])
+            && isset($_SESSION['config']['lang']
+        )
+        ) {
             $core = new core_tools();
-            if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR."core".DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."actions_pages.xml"))
-            {
-                $path = $_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR."core".DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."actions_pages.xml";
-            }
-            else
-            {
-                $path = "core".DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."actions_pages.xml";
+            if (file_exists(
+                $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
+                . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR . 'core'
+                . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR
+                . 'actions_pages.xml'
+            )
+            ) {
+                $path = $_SESSION['config']['corepath'] . 'custom'
+                      . DIRECTORY_SEPARATOR . $_SESSION['custom_override_id']
+                      . DIRECTORY_SEPARATOR . 'core' . DIRECTORY_SEPARATOR
+                      . 'xml' . DIRECTORY_SEPARATOR . 'actions_pages.xml';
+            } else {
+                $path = 'core' . DIRECTORY_SEPARATOR . 'xml'
+                      . DIRECTORY_SEPARATOR . 'actions_pages.xml';
             }
             $xmlfile = simplexml_load_file($path);
-            $path_lang = 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php';
+            $langPath = 'apps' . DIRECTORY_SEPARATOR
+                       . $_SESSION['config']['app_id'] . DIRECTORY_SEPARATOR
+                       . 'lang' . DIRECTORY_SEPARATOR
+                       . $_SESSION['config']['lang'] . '.php';
 
-            $i =0;
-            foreach($xmlfile->ACTIONPAGE as $ACTIONPAGE)
+            $i = 0;
+            foreach ($xmlfile->ACTIONPAGE as $actionPage)
             {
-                $tmp = (string) $ACTIONPAGE->LABEL;
-                $tmp2 = $this->retrieve_constant_lang($tmp, $path_lang);
-                if($tmp2 <> false)
-                {
+                $tmp = (string) $actionPage->LABEL;
+                $tmp2 = $this->retrieve_constant_lang($tmp, $langPath);
+                if ($tmp2 <> false) {
                     $label = $tmp2;
-                }
-                else
-                {
+                } else {
                     $label = $tmp;
                 }
                 $keyword = '';
-                if(isset($ACTIONPAGE->KEYWORD) && !empty($ACTIONPAGE->KEYWORD))
-                {
-                    $keyword = (string) $ACTIONPAGE->KEYWORD;
+                if (isset($actionPage->KEYWORD)
+                    && ! empty($actionPage->KEYWORD)
+                ) {
+                    $keyword = (string) $actionPage->KEYWORD;
                 }
-                $flag_create = 'N';
-                if(isset($ACTIONPAGE->FLAG_CREATE) && (string) $ACTIONPAGE->FLAG_CREATE == 'true')
-                {
-                    $flag_create = 'Y';
+                $createFlag = 'N';
+                if (isset($actionPage->FLAG_CREATE)
+                    && (string) $actionPage->FLAG_CREATE == 'true'
+                ) {
+                    $createFlag = 'Y';
                 }
 
-                $_SESSION['actions_pages'][$i] = array("ID" => (string) $ACTIONPAGE->ID, "LABEL" => $label,"NAME" => (string) $ACTIONPAGE->NAME, "ORIGIN" => (string) $ACTIONPAGE->ORIGIN,"MODULE" => (string) $ACTIONPAGE->MODULE, "KEYWORD" => $keyword, "FLAG_CREATE" => $flag_create);
-
+                $_SESSION['actions_pages'][$i] = array(
+                	'ID' => (string) $actionPage->ID,
+                	'LABEL' => $label,
+                	'NAME' => (string) $actionPage->NAME,
+                	'ORIGIN' => (string) $actionPage->ORIGIN,
+                	'MODULE' => (string) $actionPage->MODULE,
+                    'KEYWORD' => $keyword,
+                    'FLAG_CREATE' => $createFlag,
+                );
                 $i++;
 
             }
@@ -272,134 +334,140 @@ class business_app_tools extends dbquery
     private function load_entreprise_var()
     {
         $core = new core_tools();
-        if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."entreprise.xml"))
-        {
-            $path = $_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."entreprise.xml";
-        }
-        else
-        {
-            $path = 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."entreprise.xml";
+        if (file_exists(
+            $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
+            . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR
+            . 'apps'.DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+            . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR
+            . 'entreprise.xml'
+        )
+        ) {
+            $path = $_SESSION['config']['corepath'] . 'custom'
+                  . DIRECTORY_SEPARATOR . $_SESSION['custom_override_id']
+                  . DIRECTORY_SEPARATOR . 'apps' . DIRECTORY_SEPARATOR
+                  . $_SESSION['config']['app_id'] . DIRECTORY_SEPARATOR . 'xml'
+                  . DIRECTORY_SEPARATOR . 'entreprise.xml';
+        } else {
+            $path = 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+                  . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR
+                  . 'entreprise.xml';
         }
         $xmlfile = simplexml_load_file($path);
-        $path_lang = 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php';
+        $langPath = 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+                  . DIRECTORY_SEPARATOR . 'lang' . DIRECTORY_SEPARATOR
+                  . $_SESSION['config']['lang'] . '.php';
 
         $categories = $xmlfile->categories;
         $_SESSION['mail_categories'] = array();
-        foreach($categories->category as $cat )
-        {
+        foreach ($categories->category as $cat) {
             $tmp = (string) $cat->label;
-            $tmp2 = $this->retrieve_constant_lang($tmp, $path_lang);
-            if($tmp2 <> false)
-            {
+            $tmp2 = $this->retrieve_constant_lang($tmp, $langPath);
+            if ($tmp2 <> false) {
                 $label = $tmp2;
-            }
-            else
-            {
+            } else {
                 $label = $tmp;
             }
-            $_SESSION['mail_categories'][(string)$cat->id] = $label;
+            $_SESSION['mail_categories'][(string) $cat->id] = $label;
         }
         $_SESSION['default_category'] = (string) $categories->default_category;
 
         $_SESSION['mail_natures'] = array();
-        $mail_natures = $xmlfile->mail_natures;
-        foreach($mail_natures->nature as $nature )
-        {
+        $mailNatures = $xmlfile->mail_natures;
+        foreach ($mailNatures->nature as $nature ) {
             $tmp = (string) $nature->label;
-            $tmp2 = $this->retrieve_constant_lang($tmp, $path_lang);
-            if($tmp2 <> false)
-            {
+            $tmp2 = $this->retrieve_constant_lang($tmp, $langPath);
+            if ($tmp2 <> false) {
                 $label = $tmp2;
-            }
-            else
-            {
+            } else {
                 $label = $tmp;
             }
-            $_SESSION['mail_natures'][(string)$nature->id] = $label;
+            $_SESSION['mail_natures'][(string) $nature->id] = $label;
         }
-        $_SESSION['default_mail_nature'] = (string) $mail_natures->default_nature;
+        $_SESSION['default_mail_nature'] = (string) $mailNatures->default_nature;
 
         $_SESSION['mail_priorities'] = array();
-        $mail_priorities = $xmlfile->priorities;
-        $i=0;
-        foreach($mail_priorities->priority as $priority )
+        $mailPriorities = $xmlfile->priorities;
+        $i = 0;
+        foreach ($mailPriorities->priority as $priority )
         {
             $tmp = (string) $priority;
-            $tmp2 = $this->retrieve_constant_lang($tmp, $path_lang);
-            if($tmp2 <> false)
-            {
+            $tmp2 = $this->retrieve_constant_lang($tmp, $langPath);
+            if ($tmp2 <> false) {
                 $label = $tmp2;
-            }
-            else
-            {
+            } else {
                 $label = $tmp;
             }
             $_SESSION['mail_priorities'][$i] = $label;
             $i++;
         }
-        $_SESSION['default_mail_priority'] = (string) $mail_priorities->default_priority;
+        $_SESSION['default_mail_priority'] = (string) $mailPriorities->default_priority;
 
         $_SESSION['mail_titles'] = array();
-        $mail_titles = $xmlfile->titles;
-        $i=0;
-        foreach($mail_titles->nature as $title )
-        {
+        $mailTitles = $xmlfile->titles;
+        $i = 0;
+        foreach ($mailTitles->nature as $title ) {
             $tmp = (string) $title->label;
-            $tmp2 = $this->retrieve_constant_lang($tmp, $path_lang);
-            if($tmp2 <> false)
-            {
+            $tmp2 = $this->retrieve_constant_lang($tmp, $langPath);
+            if ($tmp2 <> false) {
                 $label = $tmp2;
-            }
-            else
-            {
+            } else {
                 $label = $tmp;
             }
-            $_SESSION['mail_titles'][(string)$title->id] = $label;
+            $_SESSION['mail_titles'][(string) $title->id] = $label;
         }
-        $_SESSION['default_mail_title'] = (string) $mail_titles->default_title;
+        $_SESSION['default_mail_title'] = (string) $mailTitles->default_title;
     }
 
-    public function compare_base_version($xml_versionbase){
-        //Compare version value beetwen version base xml file and version base value in the database
-        if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.$xml_versionbase))
-        {
-            $path = $_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.$xml_versionbase;
+    public function compare_base_version($xmlVersionBase){
+        // Compare version value beetwen version base xml file and version base
+        // value in the database
+        if (file_exists(
+            $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
+            . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR
+            . $xmlVersionBase
+        )
+        ) {
+            $path = $_SESSION['config']['corepath'] . 'custom'
+                  . DIRECTORY_SEPARATOR . $_SESSION['custom_override_id']
+                  . DIRECTORY_SEPARATOR . $xmlVersionBase;
+        } else {
+            $path = $xmlVersionBase;
         }
-        else
-        {
-            $path = $xml_versionbase;
+        $xmlBase = simplexml_load_file($path);
+        //Find value in the xml database_version tag
+        if ($xmlBase) {
+            $_SESSION['maarch_entreprise']
+                ['xml_versionbase'] = (string) $xmlBase->database_version;
+        } else {
+            $_SESSION['maarch_entreprise']['xml_versionbase'] = 'none';
         }
-        $xml_base = simplexml_load_file($path);
-        if ($xml_base) //Find value in the xml database_version tag
-        {
-            $_SESSION['maarch_entreprise']['xml_versionbase'] = (string) $xml_base->database_version;
-        }
-        else{
-            $_SESSION['maarch_entreprise']['xml_versionbase'] = "none";
-        }
-        $vef_base = new dbquery();
-        $vef_base->connect();
-        $query="select param_value_int from ".$_SESSION['tablename']['param']." where id='database_version'";
+        $checkBase = new dbquery();
+        $checkBase->connect();
+        $query = "select param_value_int from " . PARAM_TABLE
+               . " where id = 'database_version'";
 
-        $vef_base->query($query); //Find value in parameters table on database
-        if ($vef_base->nb_result() == 0){
+        $checkBase->query($query); //Find value in parameters table on database
+        if ($checkBase->nb_result() == 0) {
             $_SESSION['maarch_entreprise']['database_version'] = "none";
-        }
-        else
-        {
-            $vbg = $vef_base->fetch_object();
-            $_SESSION['maarch_entreprise']['database_version'] = $vbg->param_value_int;
+        } else {
+            $vbg = $checkBase->fetch_object();
+            $_SESSION['maarch_entreprise']
+                ['database_version'] = $vbg->param_value_int;
         }
         //If this two parameters is not find, this is the end of this function
-        if ($_SESSION['maarch_entreprise']['xml_versionbase'] <>"none" ){
-            if (($_SESSION['maarch_entreprise']['xml_versionbase'] > $_SESSION['maarch_entreprise']['database_version'])||($_SESSION['maarch_entreprise']['database_version'] == "none")){
-                $_SESSION['error'] .= "<p style=\"color:#346DC4;border:1px solid blue\">"._VERSION_BASE_AND_XML_BASEVERSION_NOT_MATCH."</p>";}
+        if ($_SESSION['maarch_entreprise']['xml_versionbase'] <> 'none' ) {
+            if (($_SESSION['maarch_entreprise']['xml_versionbase'] > $_SESSION['maarch_entreprise']['database_version'])
+                || ($_SESSION['maarch_entreprise']['database_version'] == 'none')
+            ) {
+                $_SESSION['error'] .= '<p style="color:#346DC4;border:1px'
+                				   . 'solid blue">'
+                				   . _VERSION_BASE_AND_XML_BASEVERSION_NOT_MATCH
+                				   . '</p>';
+            }
         }
     }
 
-
-
-    public function load_features($xml_features)
+    public function load_features($xmlFeatures)
     {
         $_SESSION['features'] = array();
         //Defines all features by  default at 'false'
@@ -408,20 +476,22 @@ class business_app_tools extends dbquery
         $_SESSION['features']['dest_to_copy_during_redirection'] = "false";
         $_SESSION['features']['show_types_tree'] = "false";
 
-        if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.$xml_features))
-        {
-            $path = $_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.$xml_features;
-        }
-        else
-        {
-            $path = $xml_features;
+        if (file_exists(
+            $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
+            . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR
+            . $xmlFeatures
+        )
+        ) {
+            $path = $_SESSION['config']['corepath'] . 'custom'
+                  . DIRECTORY_SEPARATOR . $_SESSION['custom_override_id']
+                  . DIRECTORY_SEPARATOR . $xmlFeatures;
+        } else {
+            $path = $xmlFeatures;
         }
 
         $xmlfeatures = simplexml_load_file($path);
-        if ($xmlfeatures)
-        {
-            foreach($xmlfeatures->FEATURES as $FEATURES)
-            {
+        if ($xmlfeatures) {
+            foreach ($xmlfeatures->FEATURES as $FEATURES) {
                 $_SESSION['features']['personal_contact'] = (string) $FEATURES->personal_contact;
                 $_SESSION['features']['search_notes'] = (string) $FEATURES->search_notes;
                 $_SESSION['features']['dest_to_copy_during_redirection'] = (string) $FEATURES->dest_to_copy_during_redirection;
@@ -436,14 +506,16 @@ class business_app_tools extends dbquery
     */
     private function load_current_folder()
     {
-        $this->connect();
+        if (isset($_SESSION['user']['UserId'])) {
+            $this->connect();
+            $this->query(
+            	"select custom_t1 from " . USERS_TABLE . " where user_id = '"
+                . $_SESSION['user']['UserId'] . "'"
+            );
+            $res = $this->fetch_object();
 
-        $this->query("select custom_t1 from ".$_SESSION['tablename']['users']." where user_id = '".$_SESSION['user']['UserId']."'");
-
-        $res = $this->fetch_object();
-
-        $_SESSION['current_folder_id'] = $res->custom_t1;
-
+            $_SESSION['current_folder_id'] = $res->custom_t1;
+        }
     }
 
     /**
@@ -454,14 +526,32 @@ class business_app_tools extends dbquery
     {
         $this->load_current_folder();
         $this->load_entreprise_var();
-        $this->load_features('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'features.xml');
-        if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'docservers_features.xml')) {
-            $path = $_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'docservers_features.xml';
+        $this->load_features(
+        	'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+            . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR . 'features.xml'
+        );
+        if (file_exists(
+            $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
+            . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR . 'apps'
+            . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+            . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR
+            . 'docservers_features.xml'
+        )
+        ) {
+            $path = $_SESSION['config']['corepath'] . 'custom'
+                  . DIRECTORY_SEPARATOR . $_SESSION['custom_override_id']
+                  . DIRECTORY_SEPARATOR . 'apps' . DIRECTORY_SEPARATOR
+                  . $_SESSION['config']['app_id'] . DIRECTORY_SEPARATOR . 'xml'
+                  . DIRECTORY_SEPARATOR . 'docservers_features.xml';
         } else {
-            $path = 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'docservers_features.xml';
+            $path = 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+                  . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR
+                  . 'docservers_features.xml';
         }
         $_SESSION['docserversFeatures'] = array();
-        $_SESSION['docserversFeatures'] = functions::object2array(simplexml_load_file($path));
+        $_SESSION['docserversFeatures'] = functions::object2array(
+            simplexml_load_file($path)
+        );
     }
 
     /**
@@ -470,28 +560,38 @@ class business_app_tools extends dbquery
     */
     public function insert_app_page($name)
     {
-        if(!isset($name) || empty($name))
-        {
+        if (! isset($name) || empty($name)) {
             return false;
         }
-        if($name == "structures" || $name=="structures_list_by_name" || $name == "structure_up" || $name == "structure_del")
-        {
-            $path = 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."admin".DIRECTORY_SEPARATOR."architecture".DIRECTORY_SEPARATOR."structures".DIRECTORY_SEPARATOR.$name.'.php';
+        if ($name == 'structures' || $name == 'structures_list_by_name'
+            || $name == 'structure_up' || $name == 'structure_del'
+        ) {
+            $path = 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+                  . DIRECTORY_SEPARATOR . 'admin' . DIRECTORY_SEPARATOR
+                  . 'architecture' . DIRECTORY_SEPARATOR . 'structures'
+                  . DIRECTORY_SEPARATOR . $name . '.php';
             return $path;
-        }
-        elseif($name == "subfolders" || $name=="subfolders_list_by_name" || $name == "subfolder_up" || $name == "subfolder_del")
-        {
-            $path = 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."admin".DIRECTORY_SEPARATOR."architecture".DIRECTORY_SEPARATOR."subfolders".DIRECTORY_SEPARATOR.$name.'.php';
+        } else if ($name == 'subfolders' || $name == 'subfolders_list_by_name'
+            || $name == 'subfolder_up' || $name == 'subfolder_del'
+        ) {
+            $path = 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+                  . DIRECTORY_SEPARATOR . 'admin' . DIRECTORY_SEPARATOR
+                  . 'architecture' . DIRECTORY_SEPARATOR . 'subfolders'
+                  . DIRECTORY_SEPARATOR . $name . '.php';
             return $path;
-        }
-        elseif($name == "types" || $name == "types_up" || $name == "types_up_db" || $name == "types_add" || $name == "types_del" || $name == 'get_index' || $name == "choose_index" || $name == "choose_coll" || $name == "types_list_by_name")
-        {
-            $path = 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."admin".DIRECTORY_SEPARATOR."architecture".DIRECTORY_SEPARATOR."types".DIRECTORY_SEPARATOR.$name.'.php';
+        } else if ($name == 'types' || $name == 'types_up'
+            || $name == 'types_up_db' || $name == 'types_add'
+            || $name == 'types_del' || $name == 'get_index'
+            || $name == 'choose_index' || $name == 'choose_coll'
+            || $name == 'types_list_by_name'
+        ) {
+            $path = 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+                  . DIRECTORY_SEPARATOR . 'admin' . DIRECTORY_SEPARATOR
+                  . 'architecture' . DIRECTORY_SEPARATOR . 'types'
+                  . DIRECTORY_SEPARATOR . $name . '.php';
 
             return $path;
-        }
-        else
-        {
+        } else {
             return false;
         }
     }
@@ -499,67 +599,81 @@ class business_app_tools extends dbquery
     public function get_titles()
     {
         $core = new core_tools();
-        if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."entreprise.xml"))
-        {
-            $path = $_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."entreprise.xml";
-        }
-        else
-        {
-            $path = 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."entreprise.xml";
+        if (file_exists(
+            $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
+            . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR . 'apps'
+            . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+            . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR
+            . 'entreprise.xml'
+        )
+        ) {
+            $path = $_SESSION['config']['corepath'] . 'custom'
+                  . DIRECTORY_SEPARATOR . $_SESSION['custom_override_id']
+                  . DIRECTORY_SEPARATOR . 'apps' . DIRECTORY_SEPARATOR
+                  . $_SESSION['config']['app_id'] . DIRECTORY_SEPARATOR . 'xml'
+                  . DIRECTORY_SEPARATOR . 'entreprise.xml';
+        } else {
+            $path = 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+                  . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR
+                  . 'entreprise.xml';
         }
         $xmlfile = simplexml_load_file($path);
-        $path_lang = 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php';
+        $langPath = 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+                  . DIRECTORY_SEPARATOR . 'lang' . DIRECTORY_SEPARATOR
+                  . $_SESSION['config']['lang'] . '.php';
 
-        $res_titles = array();
+        $resTitles = array();
         $titles = $xmlfile->titles;
-        foreach($titles->title as $title )
-        {
+        foreach ($titles->title as $title ) {
             $tmp = (string) $title->label;
-            $tmp2 = $this->retrieve_constant_lang($tmp, $path_lang);
-            if($tmp2 <> false)
-            {
+            $tmp2 = $this->retrieve_constant_lang($tmp, $langPath);
+            if ($tmp2 <> false) {
                 $label = $tmp2;
-            }
-            else
-            {
+            } else {
                 $label = $tmp;
             }
-
-            $res_titles[(string)$title->id] = $label;
+            $resTitles[(string) $title->id] = $label;
         }
 
-        asort($res_titles, SORT_LOCALE_STRING);
-        $default_title = (string) $titles->default_title;
-        return array('titles' => $res_titles, 'default_title' => $default_title);
+        asort($resTitles, SORT_LOCALE_STRING);
+        $defaultTitle = (string) $titles->default_title;
+        return array('titles' => $resTitles, 'default_title' => $defaultTitle);
     }
 
 
-    public function get_label_title($id_title)
+    public function get_label_title($titleId)
     {
         $core = new core_tools();
-        if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."entreprise.xml"))
-        {
-            $path = $_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."entreprise.xml";
-        }
-        else
-        {
-            $path = 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."entreprise.xml";
+        if (file_exists(
+            $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
+            . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR . 'apps'
+            . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+            . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR
+            . 'entreprise.xml'
+        )
+        ) {
+            $path = $_SESSION['config']['corepath'] . 'custom'
+                  . DIRECTORY_SEPARATOR . $_SESSION['custom_override_id']
+                  . DIRECTORY_SEPARATOR . 'apps' . DIRECTORY_SEPARATOR
+                  . $_SESSION['config']['app_id'] . DIRECTORY_SEPARATOR .'xml'
+                  . DIRECTORY_SEPARATOR . 'entreprise.xml';
+        } else {
+            $path = 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+            . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR
+            . 'entreprise.xml';
         }
         $xmlfile = simplexml_load_file($path);
-        $path_lang = 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php';
+        $langPath = 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+                  . DIRECTORY_SEPARATOR . 'lang' . DIRECTORY_SEPARATOR
+                  . $_SESSION['config']['lang'] . '.php';
         $titles = $xmlfile->titles;
-        foreach($titles->title as $title )
-        {
-            if($id_title == (string)$title->id)
-            {
+        foreach ($titles->title as $title ) {
+            if ($titleId == (string) $title->id) {
                 $tmp = (string) $title->label;
-                $tmp2 = $this->retrieve_constant_lang($tmp, $path_lang);
-                if($tmp2 <> false)
-                {
+                $tmp2 = $this->retrieve_constant_lang($tmp, $langPath);
+                if ($tmp2 <> false) {
                     $label = $tmp2;
-                }
-                else
-                {
+                } else {
                     $label = $tmp;
                 }
                 return $label;
@@ -567,6 +681,4 @@ class business_app_tools extends dbquery
         }
         return '';
     }
-
 }
-?>
