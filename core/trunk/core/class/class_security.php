@@ -44,9 +44,10 @@ require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."SecurityCon
 require_once("core/where_targets.php");
 require_once('core/class/users_controler.php');
 
+//require_once('lib/FirePHP/Init.php');
+
 class security extends dbquery
 {
-
     /**
     * Gets the indice of the collection in the  $_SESSION['collections'] array
     *
@@ -74,104 +75,145 @@ class security extends dbquery
     */
     public function login($s_login,$pass, $method = false)
     {
-        $uc = new users_controler();
-        if ($this->test_column($_SESSION['tablename']['users'], 'loginmode')) //Compatibility test, if loginmode column doesn't exists, Maarch can't crash
-        {
-            if ($method == 'activex')
-                $comp =" and STATUS <> 'DEL' and loginmode = 'activex'";
-            elseif($method == 'ldap')
-                $comp =" and STATUS <> 'DEL'";
-            else
-                $comp = " and password = '".$pass."' and STATUS <> 'DEL' and loginmode = 'standard'";
-        }
-        else
-            $comp = " and password = '".$pass."' and STATUS <> 'DEL'";
+/*
+        $inspector = FirePHP::to('page');
+        $console = $inspector->console();
+        $console->log(date('H:i:s').' Login start');
 
+*/
+        $array = array();
+        $error = '';
+        $uc = new users_controler();
+        //Compatibility test, if loginmode column doesn't exists, Maarch can't crash
+        if ($this->test_column($_SESSION['tablename']['users'], 'loginmode')) {
+            if ($method == 'activex') {
+                $comp = " and STATUS <> 'DEL' and loginmode = 'activex'";
+            } else if ($method == 'ldap') {
+                $comp =" and STATUS <> 'DEL'";
+            } else {
+                $comp = " and password = '" . $pass . "' and STATUS <> 'DEL' "
+                      . "and loginmode = 'standard'";
+            }
+        } else {
+            $comp = " and password = '" . $pass . "' and STATUS <> 'DEL'";
+        }
         $user = $uc->get($s_login, $comp);
 
-        if(isset($user))
-        {
-            if($user->__get('enabled') == "Y")
-            {
-                require_once("core/class/usergroups_controler.php");
-                require_once("core/class/ServiceControler.php");
+        if (isset($user)) {
+            if ($user->__get('enabled') == 'Y') {
+                require_once 'core/class/usergroups_controler.php';
+                require_once 'core/class/ServiceControler.php';
                 $ugc = new usergroups_controler();
                 $sec_controler = new SecurityControler();
                 $serv_controler = new ServiceControler();
-                $_SESSION['user']['change_pass'] = $user->__get('change_password');
-                $_SESSION['user']['UserId'] = $user->__get('user_id');
-                $_SESSION['user']['FirstName'] = $user->__get('firstname');
-                $_SESSION['user']['LastName'] = $user->__get('lastname');
-                $_SESSION['user']['Phone'] = $user->__get('phone');
-                $_SESSION['user']['Mail'] = $user->__get('mail');
-                $_SESSION['user']['department'] = $user->__get('department');
-                $_SESSION['error'] =  "";
-                setcookie("maarch", "UserId=".$_SESSION['user']['UserId']."&key=".$user->__get('cookie_key'),time()-3600000);
-                $key = md5(time()."%".$_SESSION['user']['FirstName']."%".$_SESSION['user']['UserId']."%".$_SESSION['user']['UserId']."%".date("dmYHmi")."%");
+                $array = array(
+                    'change_pass' => $user->__get('change_password'),
+                    'UserId'      => $user->__get('user_id'),
+                    'FirstName'   => $user->__get('firstname'),
+                    'LastName'    => $user->__get('lastname'),
+                    'Phone'       => $user->__get('phone'),
+                    'Mail'        => $user->__get('mail'),
+                    'department' => $user->__get('department')
+                );
+               // $_SESSION['error'] =  '';
+                setcookie(
+                    'maarch', 'UserId=' . $array['UserId'] . '&key='
+                    . $user->__get('cookie_key'), time() - 3600000
+                );
+                $key = md5(
+                    time() . '%' . $array['FirstName'] . '%' . $array['UserId']
+                    . '%' . $array['UserId'] . '%' . date('dmYHmi') . '%'
+                );
 
                 $user->__set('cookie_key', functions::protect_string_db($key));
-                if ($_SESSION['config']['databasetype'] == "ORACLE")
+                if ($_SESSION['config']['databasetype'] == 'ORACLE') {
                     $user->__set('cookie_date', 'SYSDATE');
-                else
-                    $user->__set('cookie_date',date("Y-m-d")." ".date("H:m:i"));
-
+                } else {
+                    $user->__set(
+                        'cookie_date', date('Y-m-d') . ' ' . date('H:m:i')
+                    );
+                }
                 $uc->save($user, 'up');
-                setcookie("maarch", "UserId=".$_SESSION['user']['UserId']."&key=".$key,time()+($_SESSION['config']['cookietime']*1000));
-                $_SESSION['user']['primarygroup'] =  $ugc ->getPrimaryGroup($_SESSION['user']['UserId']);
-                $tmp = $sec_controler->load_security($_SESSION['user']['UserId']);
-
-                $_SESSION['user']['collections'] = $tmp['collections'];
-                $_SESSION['user']['security'] = $tmp['security'];
+                setcookie(
+                    'maarch', 'UserId=' . $array['UserId'] . '&key='
+                    . $key, time() + ($_SESSION['config']['cookietime'] * 1000)
+                );
+                $array['primarygroup'] = $ugc ->getPrimaryGroup(
+                    $array['UserId']
+                );
+                $tmp = $sec_controler->load_security(
+                    $array['UserId']
+                );
+                $array['collections'] = $tmp['collections'];
+                $array['security'] = $tmp['security'];
 
                 $serv_controler->loadEnabledServices();
-                require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
+                require_once
+                    'apps/' . $_SESSION['config']['app_id']
+                    . '/class/class_business_app_tools.php';
                 $business_app_tools = new business_app_tools();
                 $core_tools = new core_tools();
                 $business_app_tools->load_app_var_session();
                 $core_tools->load_var_session($_SESSION['modules']);
-                $_SESSION['user']['services'] = $serv_controler->loadUserServices($_SESSION['user']['UserId']);
-                $core_tools->load_menu($_SESSION['modules']);
+                $array['services'] = $serv_controler->loadUserServices(
+                    $array['UserId']
+                );
 
-                if($_SESSION['history']['userlogin'] == "true")
-                {
+
+                if ($_SESSION['history']['userlogin'] == 'true') {
                     //add new instance in history table for the user's connexion
                     $hist = new history();
                     $ip = $_SERVER['REMOTE_ADDR'];
                     $navigateur = addslashes($_SERVER['HTTP_USER_AGENT']);
 
-                    $hist->add($_SESSION['tablename']['users'],$_SESSION['user']['UserId'],"LOGIN","IP : ".$ip.", BROWSER : ".$navigateur , $_SESSION['config']['databasetype']);
+                    $hist->add(
+                        $_SESSION['tablename']['users'],
+                        $_SESSION['user']['UserId'],
+                        'LOGIN',
+                        'IP : ' . $ip . ', BROWSER : ' . $navigateur ,
+                        $_SESSION['config']['databasetype']
+                    );
                 }
 
-                if($_SESSION['user']['change_pass'] == 'Y')
-                {
-                    header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&page=change_pass");
-                    exit();
+                if ($array['change_pass'] == 'Y') {
+                    return array(
+                        'user'  => $array,
+                        'error' => $error,
+                        'url'   => 'index.php?display=true&page=change_pass'
+                    );
+                }else if (isset($_SESSION['requestUri'])
+                    && trim($_SESSION['requestUri']) <> ''
+                    && ! preg_match('/page=login/', $_SESSION['requestUri'])) {
+                    return array(
+                        'user'  => $array,
+                        'error' => $error,
+                        'url'   => 'index.php?' . $_SESSION['requestUri']
+                    );
+                } else {
+                    return array(
+                        'user'  => $array,
+                        'error' => $error,
+                        'url'   => 'index.php'
+                    );
                 }
-
-                elseif(isset($_SESSION['requestUri']) && trim($_SESSION['requestUri']) <> ""&& !preg_match('/page=login/', $_SESSION['requestUri']))
-                {
-                    header("location: ".$_SESSION['config']['businessappurl']."index.php?".$_SESSION['requestUri']);
-                    exit();
-                }
-                else
-                {
-                    header("location: ".$_SESSION['config']['businessappurl']."index.php");
-                    exit();
-                }
+            } else {
+                $error = _SUSPENDED_ACCOUNT . '. ' . _MORE_INFOS
+                    . " <a href=\"mailto:" . $_SESSION['config']['adminmail']
+                    . "\">" . $_SESSION['config']['adminname'] . "</a>";
+                return array(
+                    'user'  => $array,
+                    'error' => $error,
+                    'url'   => 'index.php'
+                );
             }
-            else
-            {
-                $_SESSION['error'] = _SUSPENDED_ACCOUNT.'. '._MORE_INFOS." <a href=\"mailto:".$_SESSION['config']['adminmail']."\">".$_SESSION['config']['adminname']."</a>";
-                header("location: ".$_SESSION['config']['businessappurl']."index.php");
-                exit();
-            }
-        }
-        else
-        {
-
-            $_SESSION['error'] = _BAD_LOGIN_OR_PSW."&hellip;";
-            header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&page=login&coreurl=".$_SESSION['config']['coreurl']);
-            exit();
+        } else {
+            $error = _BAD_LOGIN_OR_PSW . '&hellip;';
+            return array(
+                'user'  => $array,
+                'error' => $error,
+                'url'   => 'index.php?display=true&page=login&coreurl='
+                                   . $_SESSION['config']['coreurl']
+            );
         }
     }
 

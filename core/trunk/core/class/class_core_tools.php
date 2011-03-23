@@ -770,7 +770,7 @@ class core_tools extends functions
                     {
                         for($i=0;$i<count($modules_services[$value]);$i++)
                         {
-                            if(isset($modules_services[$value][$i]) && isset($modules_services[$value][$i]['whereamiused']))
+                            if(isset($modules_services[$value][$i]) && isset($modules_services[$value][$i]['whereamiused']) && count($modules_services[$value][$i]['whereamiused']) > 0)
                             {
                                 for($k=0;$k<count($modules_services[$value][$i]['whereamiused']);$k++)
                                 {
