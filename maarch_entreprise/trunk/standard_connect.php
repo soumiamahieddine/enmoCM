@@ -1,7 +1,13 @@
 <?php
 echo '<form id="formlogin" method="post" action="'
     . $_SESSION['config']['businessappurl']
-    . 'index.php?display=true&amp;page=log" class="forms">';
+    . 'index.php?display=true&amp;page=log';
+    if (isset($_SESSION['config']['debug']) 
+    	&& $_SESSION['config']['debug'] == 'true'
+	) {
+    	echo '&XDEBUG_PROFILE';
+    }
+    echo '" class="forms">';
             echo '<div>';
                 echo '<input type="hidden" name="display" id="display" value="true" />';
                 echo '<input type="hidden" name="page" id="page" value="log" />';

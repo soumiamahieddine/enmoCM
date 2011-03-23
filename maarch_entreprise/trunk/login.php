@@ -18,10 +18,11 @@ if (trim($_GET['coreurl']) <> '') {
     $_SESSION['config']['coreurl'] = $_GET['coreurl'];
 }
 if (! isset($_SESSION['config']['corename'])
-    || empty($_SESSION['config']['corename'])) {
+    || empty($_SESSION['config']['corename'])
+) {
     if (isset($_SESSION['config']['corepath'])
-        && ! empty($_SESSION['config']['corepath'] ))
-    {
+        && ! empty($_SESSION['config']['corepath'] )
+    ) {
         $path = 'core' . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR
               .'config.xml';
     } else {
@@ -29,7 +30,7 @@ if (! isset($_SESSION['config']['corename'])
               . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR
               . 'config.xml';
     }
-    $xmlconfig = simplexml_load_file($path );
+    $xmlconfig = simplexml_load_file($path);
 
     if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') {
         $protocol = 'https';
@@ -37,45 +38,45 @@ if (! isset($_SESSION['config']['corename'])
         $protocol = 'http';
     }
 
-    foreach ($xmlconfig->CONFIG as $CONFIG) {
-        $_SESSION['config']['corename'] = (string) $CONFIG->corename;
-        $_SESSION['config']['corepath'] = (string) $CONFIG->corepath;
-        $_SESSION['config']['tmppath'] = (string) $CONFIG->tmppath;
-        $_SESSION['config']['unixserver'] = (string) $CONFIG->unixserver;
-        $_SESSION['config']['defaultpage'] = (string) $CONFIG->defaultpage;
-        $_SESSION['config']['defaultlang'] = (string) $CONFIG->defaultlanguage;
-        if (isset($CONFIG->default_timezone)
-            && ! empty($CONFIG->default_timezone)) {
+    foreach ($xmlconfig->CONFIG as $config) {
+        $_SESSION['config']['corename'] = (string) $config->corename;
+        $_SESSION['config']['corepath'] = (string) $config->corepath;
+        $_SESSION['config']['tmppath'] = (string) $config->tmppath;
+        $_SESSION['config']['unixserver'] = (string) $config->unixserver;
+        $_SESSION['config']['defaultpage'] = (string) $config->defaultpage;
+        $_SESSION['config']['defaultlang'] = (string) $config->defaultlanguage;
+        if (isset($config->default_timezone)
+            && ! empty($config->default_timezone)) {
             $_SESSION['config']['default_timezone'] =
-                (string) $CONFIG->default_timezone;
+                (string) $config->default_timezone;
         } else {
             $_SESSION['config']['default_timezone'] = 'Europe/Paris';
         }
         if (! isset($_SESSION['config']['coreurl'])) {
             if ($_SERVER['SERVER_PORT'] <> 443 && $protocol == 'https') {
-                $server_port = ':' . $_SERVER['SERVER_PORT'];
+                $serverPort = ':' . $_SERVER['SERVER_PORT'];
             } else if ($_SERVER['SERVER_PORT'] <> 80 && $protocol == 'http') {
-                $server_port = ':' . $_SERVER['SERVER_PORT'];
+                $serverPort = ':' . $_SERVER['SERVER_PORT'];
             } else {
-                $server_port = '';
+                $serverPort = '';
             }
-            $array_uri = explode('/', $_SERVER['SCRIPT_NAME']);
-            $slice_uri = array_slice($array_uri, 0, -3);
-            $final_uri = implode('/', $slice_uri) . '/';
+            $uriArray = explode('/', $_SERVER['SCRIPT_NAME']);
+            $sliceUri = array_slice($uriArray, 0, -3);
+            $finalUri = implode('/', $sliceUri) . '/';
             if ($_SERVER['HTTP_X_FORWARDED_HOST'] <> '') {
                 $host = $_SERVER['HTTP_X_FORWARDED_HOST'];
             } else {
                 $host = $_SERVER['HTTP_HOST'];
             }
             $_SESSION['config']['coreurl'] = $protocol . '://' . $host
-                                           . $server_port . $final_uri;
+                                           . $serverPort . $finalUri;
         }
     }
     $i = 0;
-    foreach ($xmlconfig->BUSINESSAPPS as $BUSINESSAPPS) {
+    foreach ($xmlconfig->BUSINESSAPPS as $businessApps) {
         $_SESSION['businessapps'][$i] = array(
-            'appid'   => (string) $BUSINESSAPPS->appid,
-            'comment' => (string) $BUSINESSAPPS->comment
+            'appid'   => (string) $businessApps->appid,
+            'comment' => (string) $businessApps->comment,
         );
         $i ++;
     }
@@ -85,30 +86,31 @@ $_SESSION['config']['app_id'] = $_SESSION['businessapps'][0]['appid'];
 //print_r($_REQUEST);
 if (isset($_GET['target_page']) && trim($_GET['target_page']) <> '') {
     $_SESSION['target_page'] = $_GET['target_page'];
-    if(trim($_GET['target_module']) <> '') {
+    if (trim($_GET['target_module']) <> '') {
         $_SESSION['target_module'] = $_GET['target_module'];
     } else if (trim($_GET['target_admin']) <> '') {
         $_SESSION['target_admin'] = $_GET['target_admin'];
     }
 }
 
-$path_server = '';
+$serverPath = '';
 
 if (strtoupper(substr(PHP_OS, 0, 3)) != 'WIN'
-    && strtoupper(substr(PHP_OS, 0, 3)) != 'WINNT') {
-    $path_server = str_replace('\\', DIRECTORY_SEPARATOR, $path_server);
+    && strtoupper(substr(PHP_OS, 0, 3)) != 'WINNT'
+) {
+    $serverPath = str_replace('\\', DIRECTORY_SEPARATOR, $serverPath);
 } else {
-    $path_server = str_replace('/', DIRECTORY_SEPARATOR, $path_server);
+    $serverPath = str_replace('/', DIRECTORY_SEPARATOR, $serverPath);
 }
 $_SESSION['slash_env'] = DIRECTORY_SEPARATOR;
-$path_tmp = explode(
+$tmpPath = explode(
     DIRECTORY_SEPARATOR, str_replace(
-        '/', DIRECTORY_SEPARATOR,$_SERVER['SCRIPT_FILENAME']
+        '/', DIRECTORY_SEPARATOR, $_SERVER['SCRIPT_FILENAME']
     )
 );
-$path_server = implode(
+$serverPath = implode(
     DIRECTORY_SEPARATOR, array_slice(
-        $path_tmp, 0, array_search('apps', $path_tmp)
+        $tmpPath, 0, array_search('apps', $tmpPath)
     )
 ) . DIRECTORY_SEPARATOR;
 
@@ -116,7 +118,8 @@ $_SESSION['urltomodules'] = $_SESSION['config']['coreurl'] . 'modules/';
 $_SESSION['urltocore'] = $_SESSION['config']['coreurl'] . 'core/';
 
 if (isset($_SESSION['config']['corepath'])
-    && ! empty($_SESSION['config']['corepath'] )) {
+    && ! empty($_SESSION['config']['corepath'] )
+) {
     require
         'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
         . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
@@ -125,56 +128,63 @@ if (isset($_SESSION['config']['corepath'])
         'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
         . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
         . 'class_login.php';
-    $path_core_config = 'core' . DIRECTORY_SEPARATOR . 'xml'
+    $configCorePath = 'core' . DIRECTORY_SEPARATOR . 'xml'
                       . DIRECTORY_SEPARATOR . 'config.xml';
 } else {
     require 'class' . DIRECTORY_SEPARATOR . 'class_business_app_tools.php';
     require 'class' . DIRECTORY_SEPARATOR . 'class_login.php';
-    $path_core_config = '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR
+    $configCorePath = '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR
                       . 'core' . DIRECTORY_SEPARATOR . 'xml'
                       . DIRECTORY_SEPARATOR . 'config.xml';
 }
 
-$core_tools = new core_tools();
-$business_app_tools = new business_app_tools();
+$core = new core_tools();
+$businessAppTools = new business_app_tools();
 $func = new functions();
 
-$core_tools->build_core_config($path_core_config );
-$business_app_tools->build_business_app_config();
+$core->build_core_config($configCorePath);
+$businessAppTools->build_business_app_config();
 
-$core_tools->load_modules_config($_SESSION['modules']);
-$core_tools->load_lang();
+$core->load_modules_config($_SESSION['modules']);
+$core->load_lang();
 //$func->show_array($_SESSION);
-$core_tools->load_app_services();
-$core_tools->load_modules_services($_SESSION['modules']);
-//$core_tools->load_menu($_SESSION['modules']); // transfer in class_security (login + reopen)
+$core->load_app_services();
+$core->load_modules_services($_SESSION['modules']);
+//$core->load_menu($_SESSION['modules']);
+// transfer in class_security (login + reopen)
 
 //Reading base version
-$business_app_tools->compare_base_version(
+$businessAppTools->compare_base_version(
     'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
     . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR . 'database_version.xml'
 );
-$core_tools->load_html();
-$core_tools->load_header('', true, false);
-$time = $core_tools->get_session_time_expire();
+$core->load_html();
+$core->load_header('', true, false);
+$time = $core->get_session_time_expire();
 
-$m_login = new login();
-$login_methods = array();
-$login_methods = $m_login->build_login_method();
+$loginObj = new login();
+$loginMethods = array();
+$loginMethods = $loginObj->build_login_method();
 if (isset($_SESSION['error'])) {
     $error = $_SESSION['error'];
 } else {
     $error = '';
 }
 ?>
-<body id="bodylogin" onload="session_expirate(<?php  echo $time;?>, '<?php  echo $_SESSION['config']['coreurl'];?>');">
+<body id="bodylogin" onload="session_expirate(<?php
+    echo $time;
+?>, '<?php
+    echo $_SESSION['config']['coreurl'];
+?>');">
     <div id="loginpage">
-        <p id="logo"><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=default_maarch.gif" alt="Maarch" /></p>
+        <p id="logo"><img src="<?php
+            echo $_SESSION['config']['businessappurl'];
+        ?>static.php?filename=default_maarch.gif" alt="Maarch" /></p>
 
        <?php
-       $m_login->execute_login_script($login_methods);
+       $loginObj->execute_login_script($loginMethods);
         ?>
     </div>
-<?php $core_tools->load_js();?>
+<?php $core->load_js();?>
 </body>
 </html>
