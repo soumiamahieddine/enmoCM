@@ -199,14 +199,14 @@ function Ds_extractArchive($fileInfos, $fingerprintMode)
                          . escapeshellarg($fileNameOnTmp) . ' ' 
                          . escapeshellarg($fileNameOnTmp);
             } else {
-                $command = '\'' 
+                $command = '"' 
                     . str_replace(
                         '\\', 
                         '\\\\', 
                         $_SESSION['docserversFeatures']['DOCSERVERS']
                         ['PATHTOCOMPRESSTOOL']
                     ) 
-                    . '\' x -y -o' . escapeshellarg($tmp . $tmpArchive) 
+                    . '" x -y -o' . escapeshellarg($tmp . $tmpArchive) 
                     . ' ' . escapeshellarg($fileNameOnTmp) . ' ' 
                     . escapeshellarg($fileNameOnTmp);
             }
@@ -220,14 +220,14 @@ function Ds_extractArchive($fileInfos, $fingerprintMode)
                              . escapeshellarg($tmp . $tmpArchive) . ' ' 
                              . escapeshellarg($fileNameOnTmp);
                 } else {
-                    $command = '\'' 
+                    $command = '"' 
                         . str_replace(
                             '\\', 
                             '\\\\', 
                             $_SESSION['docserversFeatures']['DOCSERVERS']
                             ['PATHTOCOMPRESSTOOL']
                         ) 
-                        . '\' x -y -o' 
+                        . '" x -y -o' 
                         . escapeshellarg($tmp . $tmpArchive) . ' ' 
                         . escapeshellarg($fileNameOnTmp);
                 }
@@ -298,7 +298,7 @@ function Ds_extractArchive($fileInfos, $fingerprintMode)
                                             )
                                             . ' ' .$fileInfos['offset_doc'];
                             } else {
-                                $commandBis = '\'' 
+                                $commandBis = '"' 
                                             . str_replace(
                                                 '\\', 
                                                 '\\\\', 
@@ -307,7 +307,7 @@ function Ds_extractArchive($fileInfos, $fingerprintMode)
                                                 ['DOCSERVERS']
                                                 ['PATHTOCOMPRESSTOOL']
                                             )
-                                            . '\' x -y -o' 
+                                            . '" x -y -o' 
                                             . escapeshellarg(
                                                 $tmp . $tmpArchive 
                                                 . DIRECTORY_SEPARATOR 
@@ -323,6 +323,7 @@ function Ds_extractArchive($fileInfos, $fingerprintMode)
                             }
                             $tmpCmd = '';
                             exec($commandBis, $tmpCmd, $execError);
+							//echo $commandBis;exit;
                             if ($execError > 0) {
                                 $result = array(
                                     'status' => 'ko', 
