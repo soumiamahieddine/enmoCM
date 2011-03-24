@@ -184,10 +184,10 @@ function display_up($group_id){
     }
 
     unset($tmp_user);
-
+    $bc = new BasketControler();
     if(isset($GLOBALS['basket_loaded']) && $GLOBALS['basket_loaded'] == true && count($baskets_id) > 0){
         for($i=0; $i<count($baskets_id);$i++){
-            $tmp_bask = BasketControler::get($baskets_id[$i]);
+            $tmp_bask = $bc->get($baskets_id[$i]);
             if(isset($tmp_bask)){
                 $baskets[] = $tmp_bask;
             }
