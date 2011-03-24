@@ -39,12 +39,12 @@
 */
 
 require_once 'core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
-	. 'SecurityControler.php';
+    . 'SecurityControler.php';
 require_once 'core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
-	. 'class_security.php';
+    . 'class_security.php';
 require_once 'core' . DIRECTORY_SEPARATOR . 'core_tables.php';
 require_once 'modules' . DIRECTORY_SEPARATOR . 'basket' . DIRECTORY_SEPARATOR
-	. 'basket_tables.php';
+    . 'basket_tables.php';
 /**
 * @brief   Module Basket : Module Tools Class
 *
@@ -66,10 +66,10 @@ class basket extends dbquery
     public function build_modules_tables()
     {
         if (file_exists(
-        	$_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
-        	. $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR . 'modules'
-        	. DIRECTORY_SEPARATOR . 'basket' . DIRECTORY_SEPARATOR . 'xml'
-        	. DIRECTORY_SEPARATOR . 'config.xml'
+            $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
+            . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR . 'modules'
+            . DIRECTORY_SEPARATOR . 'basket' . DIRECTORY_SEPARATOR . 'xml'
+            . DIRECTORY_SEPARATOR . 'config.xml'
         )
         ) {
             $path = $_SESSION['config']['corepath'] . 'custom'
@@ -78,7 +78,7 @@ class basket extends dbquery
                   . 'basket' . DIRECTORY_SEPARATOR . 'xml' .DIRECTORY_SEPARATOR
                   . 'config.xml';
         } else {
-            $path = 'modules' . DIRECTORY_SEPARATOR . 'basket' 
+            $path = 'modules' . DIRECTORY_SEPARATOR . 'basket'
                   . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR
                   . 'config.xml';
         }
@@ -106,7 +106,7 @@ class basket extends dbquery
     }
 
     /**
-    * Load into session vars all the basket specific vars : calls private 
+    * Load into session vars all the basket specific vars : calls private
     * methods
     */
     public function load_module_var_session()
@@ -115,17 +115,17 @@ class basket extends dbquery
         $this->_loadActivityUser();
         $this->_loadBasketsPages();
         if (isset($_SESSION['user']) && isset($_SESSION['user']['primarygroup'])
-        	&& isset($_SESSION['user']['UserId'])
+            && isset($_SESSION['user']['UserId'])
         ) {
-	        $basketsArr = $this->load_basket(
-	        	$_SESSION['user']['primarygroup'], $_SESSION['user']['UserId']
-	        );
-	        $absBasketsArr = $this->load_basket_abs($_SESSION['user']['UserId']);
-        	$_SESSION['user']['baskets'] = array_merge(
-        		$basketsArr, $absBasketsArr
-        	);
+            $basketsArr = $this->load_basket(
+                $_SESSION['user']['primarygroup'], $_SESSION['user']['UserId']
+            );
+            $absBasketsArr = $this->load_basket_abs($_SESSION['user']['UserId']);
+            $_SESSION['user']['baskets'] = array_merge(
+                $basketsArr, $absBasketsArr
+            );
         }
-        
+
     }
 
     /**
@@ -133,18 +133,18 @@ class basket extends dbquery
     *
     * @param   $basketIdPage  string  Basket results page identifier
     * @param   $mode_page   string "frame" or "no_frame"
-    * @return string url of the basket results page or empty string in error 
+    * @return string url of the basket results page or empty string in error
     * case
     */
     public function retrieve_path_page($basketIdPage, $mode)
     {
-        // Gets the indice of the $basketIdPage in the 
+        // Gets the indice of the $basketIdPage in the
         // $_SESSION['basket_page'] to access all the informations on this page
         $path = '';
         $ind = -1;
         for ($i = 0; $i < count($_SESSION['basket_page']); $i ++) {
             if (trim($_SESSION['basket_page'][$i]['ID']) == trim(
-            	$basketIdPage
+                $basketIdPage
             )
             ) {
                 $ind = $i;
@@ -159,48 +159,48 @@ class basket extends dbquery
             if (strtoupper($_SESSION['basket_page'][$ind]['ORIGIN']) == 'APPS'
             ) {
                 if (strtoupper($mode) == 'NO_FRAME') {
-                    $path = $_SESSION['config']['businessappurl'] 
-                    	  . 'index.php?page=' 
-                    	  . $_SESSION['basket_page'][$ind]['NAME'];
+                    $path = $_SESSION['config']['businessappurl']
+                          . 'index.php?page='
+                          . $_SESSION['basket_page'][$ind]['NAME'];
                 } else if (strtoupper($mode) == 'FRAME') {
                     $path = $_SESSION['config']['businessappurl']
                           . $_SESSION['basket_page'][$ind]['NAME'] . '.php';
                 } else if (strtoupper($mode) == 'INCLUDE') {
-                    $path = 'apps/' . $_SESSION['config']['app_id'] . '/' 
+                    $path = 'apps/' . $_SESSION['config']['app_id'] . '/'
                           . $_SESSION['basket_page'][$ind]['NAME'] . '.php';
                 } else {
                     return '';
                 }
             } else if (strtoupper(
-            	$_SESSION['basket_page'][$ind]['ORIGIN']
+                $_SESSION['basket_page'][$ind]['ORIGIN']
             ) == "MODULE"
             ) { // The page is in a module
                 $core = new core_tools();
                 // Error : The module name is empty or the module is not loaded
-                if (empty($_SESSION['basket_page'][$ind]['MODULE']) 
-                	|| ! $core->is_module_loaded(
-                		$_SESSION['basket_page'][$ind]['MODULE']
-                	)
+                if (empty($_SESSION['basket_page'][$ind]['MODULE'])
+                    || ! $core->is_module_loaded(
+                        $_SESSION['basket_page'][$ind]['MODULE']
+                    )
                 ) {
                     return '';
                 } else {
                     if (strtoupper($mode) == 'NO_FRAME') {
                         $path = $_SESSION['config']['businessappurl']
-                        	  . 'index.php?page=' 
-                        	  . $_SESSION['basket_page'][$ind]['NAME']
-                        	  . '&module=' 
-                        	  . $_SESSION['basket_page'][$ind]['MODULE'];
+                              . 'index.php?page='
+                              . $_SESSION['basket_page'][$ind]['NAME']
+                              . '&module='
+                              . $_SESSION['basket_page'][$ind]['MODULE'];
                     } else if (strtoupper($mode) == 'FRAME') {
-                        $path = $_SESSION['config']['businessappurl'] 
+                        $path = $_SESSION['config']['businessappurl']
                               . 'index.php?display=true&module='
                               . $_SESSION['basket_page'][$ind]['MODULE']
-                              . '&page=' 
+                              . '&page='
                               . $_SESSION['basket_page'][$ind]['NAME'];
 
                     } else if (strtoupper($mode) == 'INCLUDE') {
                         $path = 'modules' . DIRECTORY_SEPARATOR
                               . $_SESSION['basket_page'][$ind]['MODULE']
-                              . DIRECTORY_SEPARATOR 
+                              . DIRECTORY_SEPARATOR
                               . $_SESSION['basket_page'][$ind]['NAME'] . '.php';
                     } else {
                         return '';
@@ -222,10 +222,10 @@ class basket extends dbquery
     {
         $_SESSION['basket_page'] = array();
         if (file_exists(
-        	$_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
-        	. $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR . 'modules'
-        	. DIRECTORY_SEPARATOR . 'basket' . DIRECTORY_SEPARATOR . 'xml'
-        	. DIRECTORY_SEPARATOR . 'basketpage.xml'
+            $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
+            . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR . 'modules'
+            . DIRECTORY_SEPARATOR . 'basket' . DIRECTORY_SEPARATOR . 'xml'
+            . DIRECTORY_SEPARATOR . 'basketpage.xml'
         )
         ) {
             $path = $_SESSION['config']['corepath'] . 'custom'
@@ -234,7 +234,7 @@ class basket extends dbquery
                   . 'basket' . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR
                   . 'basketpage.xml';
         } else {
-            $path = 'modules' . DIRECTORY_SEPARATOR . 'basket' 
+            $path = 'modules' . DIRECTORY_SEPARATOR . 'basket'
                   . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR
                   . 'basketpage.xml';
         }
@@ -247,7 +247,7 @@ class basket extends dbquery
             $tmpLabel = (string) $basketPage->LABEL;
             // the label of the page comes from the module basket languages files
             $retrievedLabel = $this->retrieve_constant_lang(
-            	$tmpLabel, $langFilePath
+                $tmpLabel, $langFilePath
             );
             if ($retrievedLabel <> false) {
                 $desc = $retrievedLabel;
@@ -255,12 +255,12 @@ class basket extends dbquery
                 $desc = $tmpLabel;
             }
             $_SESSION['basket_page'][$i] = array(
-            	'ID'     => (string) $basketPage->ID, 
-            	'LABEL'  => $desc,
-            	'NAME'   => (string) $basketPage->NAME, 
-            	'ORIGIN' => (string) $basketPage->ORIGIN, 
-            	'MODULE' => (string) $basketPage->MODULE,
-           	);
+                'ID'     => (string) $basketPage->ID,
+                'LABEL'  => $desc,
+                'NAME'   => (string) $basketPage->NAME,
+                'ORIGIN' => (string) $basketPage->ORIGIN,
+                'MODULE' => (string) $basketPage->MODULE,
+            );
             $i++;
         }
     }
@@ -275,9 +275,9 @@ class basket extends dbquery
         $db = new dbquery();
         $db->connect();
         $db->query(
-        	"select gb.basket_id from " . GROUPBASKET_TABLE . " gb, "
-        	. BASKET_TABLE . " b where gb.group_id = '" . $primaryGroup 
-        	. "' and gb.basket_id = b.basket_id order by b.basket_name "
+            "select gb.basket_id from " . GROUPBASKET_TABLE . " gb, "
+            . BASKET_TABLE . " b where gb.group_id = '" . $primaryGroup
+            . "' and gb.basket_id = b.basket_id order by b.basket_name "
         );
         //$db->show();
         while ($res = $db->fetch_object()) {
@@ -294,16 +294,16 @@ class basket extends dbquery
         $db->connect();
         $arr = array();
         $db->query(
-        	"select system_id, basket_id from " . USER_ABS_TABLE
-        	. " where new_user = '" . $userId . "' "
+            "select system_id, basket_id from " . USER_ABS_TABLE
+            . " where new_user = '" . $userId . "' "
         );
         //$db->show();
         while ($res = $db->fetch_object()) {
             array_push(
-            	$arr , 
-            	$this->get_abs_baskets_data(
-            		$res->basket_id, $userId, $res->system_id
-            	)
+                $arr ,
+                $this->get_abs_baskets_data(
+                    $res->basket_id, $userId, $res->system_id
+                )
             );
         }
         return $arr;
@@ -323,28 +323,28 @@ class basket extends dbquery
         $this->connect();
 
         $this->query(
-        	"select agb.id_action, agb.where_clause, agb.used_in_basketlist, "
-        	. "agb.used_in_action_page, a.label_action, a.id_status, "
-        	. "a.action_page from " . ACTIONS_TABLE . " a, " 
-        	. ACTIONS_GROUPBASKET_TABLE . " agb where a.id = agb.id_action and "
-        	. "agb.group_id = '" . $groupId . "' and agb.basket_id = '" 
-        	. $basketId . "' and a.enabled = 'Y' and "
-        	. "agb.default_action_list ='N'"
+            "select agb.id_action, agb.where_clause, agb.used_in_basketlist, "
+            . "agb.used_in_action_page, a.label_action, a.id_status, "
+            . "a.action_page from " . ACTIONS_TABLE . " a, "
+            . ACTIONS_GROUPBASKET_TABLE . " agb where a.id = agb.id_action and "
+            . "agb.group_id = '" . $groupId . "' and agb.basket_id = '"
+            . $basketId . "' and a.enabled = 'Y' and "
+            . "agb.default_action_list ='N'"
         );
         $core = new core_tools();
         while ($res = $this->fetch_object()) {
             array_push(
-            	$actions, 
-            	array(
-            		'ID' => $res->id_action, 
-            		'LABEL' => $res->label_action, 
-            		'WHERE' => $res->where_clause,
-            		'MASS_USE' => $res->used_in_basketlist, 
-            		'PAGE_USE' => $res->used_in_action_page, 
-            		'ID_STATUS' => $res->id_status,
-            		'ACTION_PAGE' => $res->action_page
-            	)
-           	);
+                $actions,
+                array(
+                    'ID' => $res->id_action,
+                    'LABEL' => $res->label_action,
+                    'WHERE' => $res->where_clause,
+                    'MASS_USE' => $res->used_in_basketlist,
+                    'PAGE_USE' => $res->used_in_action_page,
+                    'ID_STATUS' => $res->id_status,
+                    'ACTION_PAGE' => $res->action_page
+                )
+            );
         }
         return $actions;
     }
@@ -360,11 +360,11 @@ class basket extends dbquery
     {
         $this->connect();
         $this->query(
-        	"select agb.id_action from " . ACTIONS_TABLE . " a, " 
-         	. ACTIONS_GROUPBASKET_TABLE . " agb where a.id = agb.id_action "
-         	. "and agb.group_id = '" . $groupId . "' and agb.basket_id = '"
-         	. $basketId . "' and a.enabled = 'Y' "
-         	. "and agb.default_action_list ='Y'"
+            "select agb.id_action from " . ACTIONS_TABLE . " a, "
+            . ACTIONS_GROUPBASKET_TABLE . " agb where a.id = agb.id_action "
+            . "and agb.group_id = '" . $groupId . "' and agb.basket_id = '"
+            . $basketId . "' and a.enabled = 'Y' "
+            . "and agb.default_action_list ='Y'"
         );
 
         if ($this->nb_result() < 1) {
@@ -416,21 +416,21 @@ class basket extends dbquery
     */
     private function _loadActivityUser()
     {
-    	if ( isset($_SESSION['user']['UserId']) ) {
-	        $userId = $_SESSION['user']['UserId'];
-	        $this->connect();
-	        $this->query( 
-	        	"SELECT status from " . USERS_TABLE . " where user_id='" . $userId
-	        	. "'"
-	        );
-	        $line = $this-> fetch_object();
-	
-	        if ($line->status == 'ABS') {
-	            $_SESSION['abs_user_status'] = true;
-	        } else {
-	            $_SESSION['abs_user_status'] = false;
-	        }
-    	}
+        if ( isset($_SESSION['user']['UserId']) ) {
+            $userId = $_SESSION['user']['UserId'];
+            $this->connect();
+            $this->query(
+                "SELECT status from " . USERS_TABLE . " where user_id='" . $userId
+                . "'"
+            );
+            $line = $this-> fetch_object();
+
+            if ($line->status == 'ABS') {
+                $_SESSION['abs_user_status'] = true;
+            } else {
+                $_SESSION['abs_user_status'] = false;
+            }
+        }
     }
 
     public function translates_actions_to_json($actions = array())
@@ -440,11 +440,11 @@ class basket extends dbquery
         if (count($actions) > 0) {
             for ($i = 0; $i < count($actions); $i ++) {
                 $jsonActions .= "'"  . $actions[$i]['ID'] . "' : { 'where' : '"
-                			 . addslashes($actions[$i]['WHERE']) . "',";
+                             . addslashes($actions[$i]['WHERE']) . "',";
                 $jsonActions .= "'id_status' : '" . $actions[$i]['ID_STATUS']
-                			 . "', 'confirm' : '" . $actions[$i]['CONFIRM']."', ";
-                $jsonActions .= "'id_action_page' : '" 
-                			 . $actions[$i]['ACTION_PAGE'] . "'}, ";
+                             . "', 'confirm' : '" . $actions[$i]['CONFIRM']."', ";
+                $jsonActions .= "'id_action_page' : '"
+                             . $actions[$i]['ACTION_PAGE'] . "'}, ";
             }
             $jsonActions = preg_replace('/, $/', '}', $jsonActions);
         }
@@ -458,10 +458,10 @@ class basket extends dbquery
     * Builds the basket results list (using class_list_show.php method)
     *
     * @param   $paramsList  array  Parameters array used to display the result
-    * 							   list
+    *                              list
     * @param   $actions actions  Array to be displayed in the list
-    * @param   $lineTxt  string String to be displayed at the bottom of the 
-    * 						list to describe the default action
+    * @param   $lineTxt  string String to be displayed at the bottom of the
+    *                       list to describe the default action
     */
     public function basket_list_doc($paramsList, $actions, $lineTxt)
     {
@@ -470,17 +470,17 @@ class basket extends dbquery
         $boolCheckForm = false;
         $method = '';
         $actionsList = array();
-        // Browse the actions array to build the jason string that will be used 
+        // Browse the actions array to build the jason string that will be used
         // to display the actions in the list
         if (count($actions) > 0) {
             for ($i = 0; $i < count($actions); $i ++) {
                 if ($actions[$i]['MASS_USE'] == 'Y') {
                     array_push(
-                    	$actionsList, 
-                    	array(
-                    		'VALUE' => $actions[$i]['ID'], 
-                    		'LABEL' => addslashes($actions[$i]['LABEL'])
-                    	)
+                        $actionsList,
+                        array(
+                            'VALUE' => $actions[$i]['ID'],
+                            'LABEL' => addslashes($actions[$i]['LABEL'])
+                        )
                     );
                 }
             }
@@ -491,8 +491,8 @@ class basket extends dbquery
 
         if (count($actionsList) > 0) {
             $actionForm = $_SESSION['config']['businessappurl']
-            			. 'index.php?display=true&page=manage_action'
-            			. '&module=core';
+                        . 'index.php?display=true&page=manage_action'
+                        . '&module=core';
             $boolCheckForm = true;
             $method = 'get';
         }
@@ -522,31 +522,31 @@ class basket extends dbquery
         $str = '';
         // Displays the list using list_doc method from class_list_shows
         $str .= $list->list_doc(
-        	$paramsList['values'], count($paramsList['values']),
-        	$paramsList['title'], $paramsList['what'], $paramsList['page_name'],
-        	$paramsList['key'], $paramsList['detail_destination'],
-        	$paramsList['view_doc'], false, $method, $actionForm , '', 
-        	$paramsList['bool_details'], $paramsList['bool_order'], 
-        	$paramsList['bool_frame'], $paramsList['bool_export'], false, false,
-        	true, $boolCheckForm, '', $paramsList['module'], false, '', '', 
-        	$paramsList['css'], $paramsList['comp_link'], 
-        	$paramsList['link_in_line'], true, $actionsList, 
-        	$paramsList['hidden_fields'], $jsonActions, $doAction, 
-        	$_SESSION['current_basket']['default_action'], 
-        	$paramsList['open_details_popup'], $paramsList['do_actions_arr'],  
-        	$paramsList['template'], $paramsList['template_list'], 
-        	$paramsList['actual_template'], true
+            $paramsList['values'], count($paramsList['values']),
+            $paramsList['title'], $paramsList['what'], $paramsList['page_name'],
+            $paramsList['key'], $paramsList['detail_destination'],
+            $paramsList['view_doc'], false, $method, $actionForm , '',
+            $paramsList['bool_details'], $paramsList['bool_order'],
+            $paramsList['bool_frame'], $paramsList['bool_export'], false, false,
+            true, $boolCheckForm, '', $paramsList['module'], false, '', '',
+            $paramsList['css'], $paramsList['comp_link'],
+            $paramsList['link_in_line'], true, $actionsList,
+            $paramsList['hidden_fields'], $jsonActions, $doAction,
+            $_SESSION['current_basket']['default_action'],
+            $paramsList['open_details_popup'], $paramsList['do_actions_arr'],
+            $paramsList['template'], $paramsList['template_list'],
+            $paramsList['actual_template'], true
         );
 
         // Displays the text line if needed
-        if (count($paramsList['values']) > 0 && ($paramsList['link_in_line'] 
-        	|| $doAction ) 
+        if (count($paramsList['values']) > 0 && ($paramsList['link_in_line']
+            || $doAction )
         ) {
             $str .= "<em>".$lineTxt."</em>";
         }
-        if (! isset($paramsList['mode_string']) 
-        	|| $paramsList['mode_string'] == false
-       	) { 
+        if (! isset($paramsList['mode_string'])
+            || $paramsList['mode_string'] == false
+        ) {
             echo $str;
         } else {
             return $str;
@@ -557,21 +557,21 @@ class basket extends dbquery
     * Returns the actions for the current basket for a given mode.
     * The mode can be "MASS_USE" or "PAGE_USE".
     *
-    * @param   $resId  string  Resource identifier 
-    * 	(used in PAGE_USE mode to test the action where_clause)
-    * @param   $collId  string Collection identifier 
-    * 	(used in PAGE_USE mode to test the action where_clause)
+    * @param   $resId  string  Resource identifier
+    *   (used in PAGE_USE mode to test the action where_clause)
+    * @param   $collId  string Collection identifier
+    *   (used in PAGE_USE mode to test the action where_clause)
     * @param   $mode  string  "PAGE_USE" or "MASS_USE"
     * @return array  Actions to be displayed
     */
-    public function get_actions_from_current_basket($resId, $collId, $mode, 
+    public function get_actions_from_current_basket($resId, $collId, $mode,
     $testWhere = true)
     {
         $arr = array();
         // If parameters error return an empty array
-        if (empty($resId) || empty($collId) 
-        	|| (strtoupper($mode) <> 'MASS_USE' 
-        		&& strtoupper($mode) <> 'PAGE_USE')
+        if (empty($resId) || empty($collId)
+            || (strtoupper($mode) <> 'MASS_USE'
+                && strtoupper($mode) <> 'PAGE_USE')
         ) {
             return $arr;
         } else {
@@ -581,7 +581,7 @@ class basket extends dbquery
             if (empty($table)) {
                 $table = $sec->retrieve_table_from_coll_id($collId);
             }
-            // If the view and the table of the collection is empty, 
+            // If the view and the table of the collection is empty,
             // return an empty array
             if (empty($table)) {
                 return $arr;
@@ -590,68 +590,68 @@ class basket extends dbquery
             // the current action
             if ($mode == 'PAGE_USE') {
                 array_push(
-                	$arr, 
-                	array(
-                		'VALUE' => 'end_action', 
-                		'LABEL' => _SAVE_CHANGES
-                	)
+                    $arr,
+                    array(
+                        'VALUE' => 'end_action',
+                        'LABEL' => _SAVE_CHANGES
+                    )
                 );
             }
             // Browsing the current basket actions to build the actions array
-            for ($i = 0; $i < count($_SESSION['current_basket']['actions']); 
-            	$i ++
+            for ($i = 0; $i < count($_SESSION['current_basket']['actions']);
+                $i ++
             ) {
-                // If in mode "PAGE_USE", testing the action where clause 
+                // If in mode "PAGE_USE", testing the action where clause
                 // on the res_id before adding the action
-                if (strtoupper($mode) == 'PAGE_USE' 
-                	&& $_SESSION['current_basket']['actions'][$i]['PAGE_USE'] == 'Y' 
-                	&& $testWhere
+                if (strtoupper($mode) == 'PAGE_USE'
+                    && $_SESSION['current_basket']['actions'][$i]['PAGE_USE'] == 'Y'
+                    && $testWhere
                 ) {
                     $where = ' where res_id = ' . $resId;
                     if (! empty(
-                    	$_SESSION['current_basket']['actions'][$i]['WHERE']
+                        $_SESSION['current_basket']['actions'][$i]['WHERE']
                     )
                     ) {
-                        $where = $where . ' and ' 
-                        	   . $_SESSION['current_basket']['actions'][$i]
-                        	   	['WHERE'];
+                        $where = $where . ' and '
+                               . $_SESSION['current_basket']['actions'][$i]
+                                ['WHERE'];
                     }
                     $this->query('select res_id from ' . $table . ' ' . $where);
                     if ($this->nb_result() > 0) {
                         array_push(
-                        	$arr, 
-                        	array(
-                        		'VALUE' => $_SESSION['current_basket']['actions']
-                        					[$i]['ID'], 
-                        		'LABEL' => $_SESSION['current_basket']
-                        					['actions'][$i]['LABEL']
-                        	)
+                            $arr,
+                            array(
+                                'VALUE' => $_SESSION['current_basket']['actions']
+                                            [$i]['ID'],
+                                'LABEL' => $_SESSION['current_basket']
+                                            ['actions'][$i]['LABEL']
+                            )
                         );
                     }
-                } else if (strtoupper($mode) == 'PAGE_USE' 
-                	&& $_SESSION['current_basket']['actions'][$i]['PAGE_USE'] == 'Y' 
-                	&& ! $testWhere
+                } else if (strtoupper($mode) == 'PAGE_USE'
+                    && $_SESSION['current_basket']['actions'][$i]['PAGE_USE'] == 'Y'
+                    && ! $testWhere
                 ) {
                     array_push(
-                    	$arr, 
-                    	array(
-                    		'VALUE' => $_SESSION['current_basket']['actions']
-                    					[$i]['ID'], 
-                    		'LABEL' => $_SESSION['current_basket']['actions']
-                    					[$i]['LABEL']
-                    	)
+                        $arr,
+                        array(
+                            'VALUE' => $_SESSION['current_basket']['actions']
+                                        [$i]['ID'],
+                            'LABEL' => $_SESSION['current_basket']['actions']
+                                        [$i]['LABEL']
+                        )
                     );
-                } else if (strtoupper($mode) == 'MASS_USE' 
-                	&& $_SESSION['current_basket']['actions'][$i]['MASS_USE'] == 'Y'
+                } else if (strtoupper($mode) == 'MASS_USE'
+                    && $_SESSION['current_basket']['actions'][$i]['MASS_USE'] == 'Y'
                 ) { // If "MASS_USE" adding the actions in the array
                     array_push(
-                    	$arr, 
-                    	array(
-                    		'VALUE' => $_SESSION['current_basket']['actions']
-                    					[$i]['ID'], 
-                    		'LABEL' => $_SESSION['current_basket']['actions']
-                    					[$i]['LABEL']
-                    	)
+                        $arr,
+                        array(
+                            'VALUE' => $_SESSION['current_basket']['actions']
+                                        [$i]['ID'],
+                            'LABEL' => $_SESSION['current_basket']['actions']
+                                        [$i]['LABEL']
+                        )
                     );
                 }
             }
@@ -660,7 +660,7 @@ class basket extends dbquery
     }
 
     /**
-    * Returns in an array the baskets of a given user 
+    * Returns in an array the baskets of a given user
     *  (Including the redirected baskets)
     *
     * @param  $userId string Owner of the baskets (identifier)
@@ -669,30 +669,33 @@ class basket extends dbquery
     {
         $this->connect();
         $this->query(
-        	"select b.basket_id, b.basket_name from " . BASKET_TABLE . " b, "
-        	. USERGROUP_CONTENT_TABLE . " uc, " . GROUPBASKET_TABLE . " gb, "
-        	. USERGROUPS_TABLE . " u where uc.user_id = '" . $userId
-        	. "' and uc.primary_group = 'Y' and gb.group_id = uc.group_id "
-        	. "and b.basket_id = gb.basket_id and u.group_id = gb.group_id "
-        	. "and u.enabled = 'Y' "
+            "select b.basket_id, b.basket_name from " . BASKET_TABLE . " b, "
+            . USERGROUP_CONTENT_TABLE . " uc, " . GROUPBASKET_TABLE . " gb, "
+            . USERGROUPS_TABLE . " u where uc.user_id = '" . $userId
+            . "' and uc.primary_group = 'Y' and gb.group_id = uc.group_id "
+            . "and b.basket_id = gb.basket_id and u.group_id = gb.group_id "
+            . "and u.enabled = 'Y' "
         );
 
         //$this->show();
         $arr = array();
         while ($res = $this->fetch_object()) {
             array_push(
-            	$arr, 
-            	array(
-            		'id' 	       => $res->basket_id, 
-            		'name'         => $res->basket_name, 
-            		'is_virtual'   => 'N', 
-            		'basket_owner' => '', 
-            		'abs_basket'   => false
-            	)
+                $arr,
+                array(
+                    'id'           => $res->basket_id,
+                    'name'         => $res->basket_name,
+                    'is_virtual'   => 'N',
+                    'basket_owner' => '',
+                    'abs_basket'   => false
+                )
             );
         }
-        return array_merge($arr, $this->get_abs_baskets($userId));
-
+        $absBaskets = $this->get_abs_baskets($userId);
+        if (isset($absBaskets)) {
+            return array_merge($arr, $absBaskets);
+        }
+        return $arr;
     }
 
     /**
@@ -704,8 +707,8 @@ class basket extends dbquery
     {
         $this->connect();
         $this->query(
-        	"select basket_id, is_virtual, basket_owner from "
-        	. USER_ABS_TABLE . " mu where user_abs = '" . $userId . "'"
+            "select basket_id, is_virtual, basket_owner from "
+            . USER_ABS_TABLE . " mu where user_abs = '" . $userId . "'"
         );
         $db = new dbquery();
         $db->connect();
@@ -715,15 +718,15 @@ class basket extends dbquery
             $basketOwner = $res->basket_owner;
             $isVirtual = $res->is_virtual;
             $db->query(
-            	"select basket_name from " . BASKET_TABLE 
-            	. " where basket_id ='" . $basketId . "'"
+                "select basket_name from " . BASKET_TABLE
+                . " where basket_id ='" . $basketId . "'"
             );
             $res2 = $db->fetch_object();
             $basketName = $res2->basket_name;
             if ($isVirtual == 'Y' && $basketOwner <> '') {
                 $db->query(
-                	"select firstname, lastname from " . USERS_TABLE 
-                	." where user_id = '" . $basketOwner . "'"
+                    "select firstname, lastname from " . USERS_TABLE
+                    ." where user_id = '" . $basketOwner . "'"
                 );
                 $res2 = $db->fetch_object();
                 $userName = $res2->firstname.' '.$res2->lastname;
@@ -732,21 +735,21 @@ class basket extends dbquery
                 $basketOwner = $userId;
             }
             array_push(
-            	$arr, 
-            	array(
-            		'id' => $basketId, 
-            		'name' => $basketName, 
-            		'is_virtual' => $isVirtual, 
-            		'basket_owner' => $basketOwner, 
-            		'abs_basket' => true
-            	)
+                $arr,
+                array(
+                    'id' => $basketId,
+                    'name' => $basketName,
+                    'is_virtual' => $isVirtual,
+                    'basket_owner' => $basketOwner,
+                    'abs_basket' => true
+                )
             );
         }
         return $arr;
     }
 
     /**
-    * Returns in an array all the data of a basket for a user 
+    * Returns in an array all the data of a basket for a user
     * (checks if the basket is a redirected one and then if already a virtual one)
     *
     * @param  $basketId string Basket identifier
@@ -756,14 +759,14 @@ class basket extends dbquery
     {
         $tab = array();
         $this->connect();
-        
+
         $sec = new security();
         $secCtrl = new SecurityControler();
         $this->query(
-        	"select basket_id, coll_id, basket_name, basket_desc, "
-        	. "basket_clause, is_generic from " . BASKET_TABLE 
-        	. " where basket_id = '" . $this->protect_string_db($basketId)
-        	. "' and enabled = 'Y'"
+            "select basket_id, coll_id, basket_name, basket_desc, "
+            . "basket_clause, is_generic from " . BASKET_TABLE
+            . " where basket_id = '" . $this->protect_string_db($basketId)
+            . "' and enabled = 'Y'"
         );
 
         $res = $this->fetch_object();
@@ -861,8 +864,8 @@ class basket extends dbquery
         if ($isVirtual == 'N') {
             $tmpUser = $userAbs;
             $this->query(
-            	"select firstname, lastname from " . USERS_TABLE 
-            	. " where user_id ='" . $userAbs . "'"
+                "select firstname, lastname from " . USERS_TABLE
+                . " where user_id ='" . $userAbs . "'"
             );
             $res = $this->fetch_object();
             $nameUserAbs = $res->firstname . ' ' . $res->lastname;
@@ -872,8 +875,8 @@ class basket extends dbquery
         } else {
             $tmpUser = $basketOwner;  /// TO DO : test if basket_owner empty
             $this->query(
-            	"select firstname, lastname from " . USERS_TABLE 
-            	." where user_id ='" . $basketOwner . "'"
+                "select firstname, lastname from " . USERS_TABLE
+                ." where user_id ='" . $basketOwner . "'"
             );
             $res = $this->fetch_object();
             $nameBasketOwner = $res->firstname . ' ' . $res->lastname;
@@ -884,8 +887,8 @@ class basket extends dbquery
         /// TO DO : Test if tmp_user is empty
         if ($tmpUser <> $_SESSION['user']['UserId']) {
             $this->query(
-            	"select group_id from " . USERGROUP_CONTENT_TABLE 
-            	. " where primary_group = 'Y' and user_id = '" . $tmpUser . "'"
+                "select group_id from " . USERGROUP_CONTENT_TABLE
+                . " where primary_group = 'Y' and user_id = '" . $tmpUser . "'"
             );
             $res = $this->fetch_object();
             $primaryGroup = $res->group_id;
@@ -893,10 +896,10 @@ class basket extends dbquery
             $primaryGroup = $_SESSION['user']['primarygroup'];
         }
         $this->query(
-        	"select  sequence, can_redirect, can_delete, can_insert, "
-        	. "result_page, redirect_basketlist, redirect_grouplist from "
-        	. GROUPBASKET_TABLE . " where group_id = '" . $primaryGroup
-        	. "' and basket_id = '" . $basketId . "' "
+            "select  sequence, can_redirect, can_delete, can_insert, "
+            . "result_page, redirect_basketlist, redirect_grouplist from "
+            . GROUPBASKET_TABLE . " where group_id = '" . $primaryGroup
+            . "' and basket_id = '" . $basketId . "' "
         );
         $res = $this->fetch_object();
 
@@ -904,35 +907,35 @@ class basket extends dbquery
         $tab['id_page'] = $basketIdPage;
         // Retrieves the basket url (frame and no_frame modes)
         $basketPathPageNoFrame = $this->retrieve_path_page(
-        	$basketIdPage, 'no_frame'
+            $basketIdPage, 'no_frame'
         );
         $basketPathPageFrame = $this->retrieve_path_page(
-        	$basketIdPage, 'frame'
+            $basketIdPage, 'frame'
         );
         $basketPathPageInclude = $this->retrieve_path_page(
-        	$basketIdPage, 'include'
+            $basketIdPage, 'include'
         );
         $tab['page_no_frame'] = $basketPathPageNoFrame;
         $tab['page_frame'] = $basketPathPageFrame;
         $tab['page_include'] = $basketPathPageInclude;
         // Gets actions of the basket
         $tab['default_action'] = $this->_getDefaultAction(
-        	$basketId, $primaryGroup 
+            $basketId, $primaryGroup
         );
         $tab['actions'] = $this->_getActionsFromGroupbaket(
-        	$basketId, $primaryGroup 
+            $basketId, $primaryGroup
         );
 
         $tab['is_virtual'] = $isVirtual;
         $tab['basket_owner'] = $basketOwner;
         $tab['redirect_services'] = trim(
-        	stripslashes($res->redirect_basketlist)
+            stripslashes($res->redirect_basketlist)
         );
         $tab['redirect_users'] = trim(stripslashes($res->redirect_grouplist));
         $tab['abs_basket'] = $absBasket;
 
         $tab['clause'] = $secCtrl->process_security_where_clause(
-        	$tab['clause'], $basketOwner
+            $tab['clause'], $basketOwner
         );
         $tab['clause'] = str_replace('where', '', $tab['clause']);
 
@@ -941,7 +944,7 @@ class basket extends dbquery
     }
 
     /**
-    * Returns the number of baskets of a given user 
+    * Returns the number of baskets of a given user
     * (Including the redirected baskets)
     *
     * @param  $userId string Owner of the baskets (identifier)
@@ -953,14 +956,14 @@ class basket extends dbquery
         } else {
             $this->connect();
             $this->query(
-            	"SELECT gb.basket_id  FROM " . USERGROUP_CONTENT_TABLE . " uc, "
-            	. GROUPBASKET_TABLE . " gb WHERE uc.user_id = '" . $userId
-            	. "' AND uc.primary_group = 'Y' AND uc.group_id = gb.group_id"
+                "SELECT gb.basket_id  FROM " . USERGROUP_CONTENT_TABLE . " uc, "
+                . GROUPBASKET_TABLE . " gb WHERE uc.user_id = '" . $userId
+                . "' AND uc.primary_group = 'Y' AND uc.group_id = gb.group_id"
             );
             $nb = $this->nb_result();
             $this->query(
-            	"select basket_id from " . USER_ABS_TABLE
-            	. " mu where new_user = '" . $userId . "'"
+                "select basket_id from " . USER_ABS_TABLE
+                . " mu where new_user = '" . $userId . "'"
             );
 
             return $nb + $this->nb_result();
@@ -1014,36 +1017,36 @@ class basket extends dbquery
         $db = new dbquery();
         $db->connect();
         $this->query(
-        	"delete from " . USER_ABS_TABLE . " where is_virtual = 'Y' "
-        	. "and basket_owner = '" . $this->protect_string_db($userId) . "'"
+            "delete from " . USER_ABS_TABLE . " where is_virtual = 'Y' "
+            . "and basket_owner = '" . $this->protect_string_db($userId) . "'"
         );
         //Then we search all the virtual baskets assigned to the user
         $this->query(
-        	"select basket_owner, basket_id from " . USER_ABS_TABLE
-        	. " where is_virtual='Y' and user_abs = '" 
-        	. $this->protect_string_db($userId) . "'" 
+            "select basket_owner, basket_id from " . USER_ABS_TABLE
+            . " where is_virtual='Y' and user_abs = '"
+            . $this->protect_string_db($userId) . "'"
         );
         // and delete this baskets if they were reassigned to someone else
         $i = 0;
         while ($res = $this->fetch_object()) {
             $db->query(
-            	"delete from " . USER_ABS_TABLE . " where is_virtual ='Y' "
-            	. " and basket_id = '" 
-            	. $this->protect_string_db($res->basket_id) 
-            	. "' and basket_owner = '"
-            	. $this->protect_string_db($res->basket_owner) . "'"
+                "delete from " . USER_ABS_TABLE . " where is_virtual ='Y' "
+                . " and basket_id = '"
+                . $this->protect_string_db($res->basket_id)
+                . "' and basket_owner = '"
+                . $this->protect_string_db($res->basket_owner) . "'"
             );
             //$this->show();
             $i ++;
         }
         // then we delete all baskets where the user was the missing user
         $this->query(
-        	"DELETE  from " . USER_ABS_TABLE . " WHERE user_abs='"
-        	. $this->protect_string_db($userId) . "'"
+            "DELETE  from " . USER_ABS_TABLE . " WHERE user_abs='"
+            . $this->protect_string_db($userId) . "'"
         );
         $this->query(
-        	"update " . USERS_TABLE . " set status = 'OK' where user_id = '"
-        	. $userId . "'"
+            "update " . USERS_TABLE . " set status = 'OK' where user_id = '"
+            . $userId . "'"
         );
     }
 
@@ -1055,29 +1058,29 @@ class basket extends dbquery
         if (! empty($table) && ! empty($resId)) {
             $db->connect();
             $db->query(
-            	"select video_time, video_user, destination from " . $table
-            	. " where res_id = " . $resId
+                "select video_time, video_user, destination from " . $table
+                . " where res_id = " . $resId
             );
             $res = $db->fetch_object();
             $timestamp = $res->video_time;
             $videoUser = $res-> video_user;
             $dest = $res->destination;
-        
-            if (trim($videoUser) <> '' 
-            	&& ($timestamp - mktime( 
-            		date("H") , date("i")  , date("s") , date("m") , date("d"), 
-            		date("Y")
-            	) < 0 
+
+            if (trim($videoUser) <> ''
+                && ($timestamp - mktime(
+                    date("H") , date("i")  , date("s") , date("m") , date("d"),
+                    date("Y")
+                ) < 0
             )
             ) {
                 $db->query(
-                	"update " . $table . " set video_user = '' where res_id = "
-                	. $resId
+                    "update " . $table . " set video_user = '' where res_id = "
+                    . $resId
                 );
                 return false;
             } else { // Reserved time not yet expired
-                if ($videoUser == $_SESSION['user']['UserId'] 
-                	|| empty($videoUser)
+                if ($videoUser == $_SESSION['user']['UserId']
+                    || empty($videoUser)
                 ) {
                     return true;
                 } else {
@@ -1101,8 +1104,8 @@ class basket extends dbquery
         }
         $this->connect();
         $this->query(
-        	"select video_user, video_time from " . $table . " where res_id = "
-        	. $resId
+            "select video_user, video_time from " . $table . " where res_id = "
+            . $resId
         );
 
         if ($this->nb_result() == 0) {
@@ -1123,8 +1126,8 @@ class basket extends dbquery
             return false;
         } else {
             $this->query(
-            	"update " . $table . " set video_time = " . strtotime($delayStr)
-            	. ", video_user = '" . $userId . "' where res_id = " . $resId
+                "update " . $table . " set video_time = " . strtotime($delayStr)
+                . ", video_user = '" . $userId . "' where res_id = " . $resId
             );
             return true;
         }
