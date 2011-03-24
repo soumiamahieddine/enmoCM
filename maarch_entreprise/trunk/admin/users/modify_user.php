@@ -39,18 +39,18 @@ if (isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == 'true') {
 }
 $level = '';
 if (isset($_REQUEST['level'])
-	&& ($_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 
-		|| $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1)
+    && ($_REQUEST['level'] == 2 || $_REQUEST['level'] == 3
+        || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1)
 ) {
     $level = $_REQUEST['level'];
 }
 $pagePath = $_SESSION['config']['businessappurl']
-	      . 'index.php?page=modify_user&admin=users';
+          . 'index.php?page=modify_user&admin=users';
 $pageLabel = _MY_INFO;
 $pageId = 'modify_users';
 $core->manage_location_bar($pagePath, $pageLabel, $pageId, $init, $level);
 /***********************************************************/
 require_once 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
-	. DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR . 'class_users.php';
-$users = new users();
+    . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR . 'class_users.php';
+$users = new class_users();
 $users->change_info_user();

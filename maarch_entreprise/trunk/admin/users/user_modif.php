@@ -34,6 +34,6 @@ $core_tools->load_lang();
 
 require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_users.php");
 
-$users = new users();
+$users = new class_users();
 $users->user_modif();
 ?>
