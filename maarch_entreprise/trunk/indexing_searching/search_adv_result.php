@@ -43,6 +43,7 @@ $req = new request();
 $type = new types();
 $fields = "";
 $orderby = "";
+
 $baskets_clause = '';
 $coll_id = 'letterbox_coll';
 $indexes = $type->get_all_indexes($coll_id);
@@ -89,8 +90,7 @@ $json_txt = '{';
 )
 **/
 //$func->show_array($_REQUEST['meta']);exit;
-if(count($_REQUEST['meta']) > 0)
-{
+if (count($_REQUEST['meta']) > 0) {
 	//Verif for parms sended by url
 	if($_GET['meta'])
 	{
@@ -253,7 +253,7 @@ if(count($_REQUEST['meta']) > 0)
 					$where_request .= " (folder_name like '%".$func->protect_string_db($project)."%' or folder_id like '%".$func->protect_string_db($project)."%' or folders_system_id in (select parent_id from ".$_SESSION['tablename']['fold_folders']." where folder_name like '".$func->protect_string_db($project)."%' or folder_id like '%".$func->protect_string_db($project)."%')) and ";
 				}
 			}
-		
+
 			else if($tab_id_fields[$j] == 'folder_name' && !empty($_REQUEST['folder_name']))
 			{
 				$json_txt .= " 'folder_name' : ['".addslashes(trim($_REQUEST['folder_name']))."'],";
@@ -555,7 +555,7 @@ if(count($_REQUEST['meta']) > 0)
 						{
 							$where_request .="( ".$req->extract_date('alarm1_date')." <= ".$req->current_datetime()." and ".$req->extract_date('alarm2_date')." > ".$req->current_datetime()." and status <> 'END') or ";
 						}
-						
+
 					}
 					else
 					{
@@ -569,7 +569,7 @@ if(count($_REQUEST['meta']) > 0)
 							{
 								$where_request .="( ".$req->current_datetime()." >= ".$req->extract_date('alarm2_date')."  and status <> 'END') or ";
 							}
-							
+
 						}
 						elseif ($_REQUEST['status_chosen'][$get_i]=="LATE")
 						{
@@ -581,7 +581,7 @@ if(count($_REQUEST['meta']) > 0)
 							{
 								$where_request .="( process_limit_date is not null and ".$req->current_datetime()." > ".$req->extract_date('process_limit_date')."  and status <> 'END') or ";
 							}
-							
+
 						}
 						else
 						{
@@ -751,7 +751,7 @@ if(count($_REQUEST['meta']) > 0)
 					{
 						$where_request .= " (".$req->extract_date("admission_date")." <= '".$func->format_date_db($_REQUEST['admission_date_to'])."') and ";
 					}
-					
+
 					$json_txt .= " 'admission_date_to' : ['".trim($_REQUEST['admission_date_to'])."'],";
 				}
 			}
@@ -792,7 +792,7 @@ if(count($_REQUEST['meta']) > 0)
 					{
 						$where_request .= " (".$req->extract_date("doc_date")." <= '".$func->format_date_db($_REQUEST['doc_date_to'])."') and ";
 					}
-					
+
 					$json_txt .= " 'doc_date_to' : ['".trim($_REQUEST['doc_date_to'])."'],";
 				}
 			}

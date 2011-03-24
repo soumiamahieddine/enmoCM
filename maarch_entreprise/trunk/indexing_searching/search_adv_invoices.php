@@ -630,7 +630,7 @@ if (isset ($_REQUEST['nodetails'])) {
                     <td><em><?php echo ''; ?></em></td>
                 </tr>
 -->
-				<tr>
+                <tr>
                     <td width="40%"><label for="numged" class="bold"><?php echo _N_GED;?>:</label>
                         <td ></td>
                         <td><input type="text" name="numged" id="numged" <?php echo $size; ?>  />

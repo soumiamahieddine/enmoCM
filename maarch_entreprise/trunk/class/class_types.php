@@ -993,81 +993,109 @@ class types extends dbquery
     * Makes the search checks for a given index, and builds the where query and json
     *
     * @param array $indexes Array of the possible indexes (used to check)
-    * @param string $field_name Field name, index identifier
+    * @param string $fieldName Field name, index identifier
     * @param string $val Value to check
     * @return array ['json_txt'] : json used in the search
     *               ['where'] : where query
     */
-    public function search_checks($indexes, $field_name, $val )
+    public function search_checks($indexes, $fieldName, $val )
     {
-        $where_request = '';
-        $json_txt = '';
-        $date_pattern = "/^[0-3][0-9]-[0-1][0-9]-[1-2][0-9][0-9][0-9]$/";
-        for($j=0; $j<count($indexes);$j++)
-        {
-            $column = $indexes[$j]['column'] ;
-            if(preg_match('/^doc_/', $field_name))
-            {
-                $column = 'doc_'.$column;
-            }
-            if($indexes[$j]['column'] == $field_name || 'doc_'.$indexes[$j]['column'] == $field_name) // type == 'string'
-            {
-                if(!empty($val))
-                {
-                    $json_txt .= " '".$field_name."' : ['".addslashes(trim($val))."'],";
-                    if($_SESSION['config']['databasetype'] == "POSTGRESQL")
-                    {
-                        $where_request .= " ".$column." ilike '%".$this->protect_string_db($val)."%' and ";
-                    }
-                    else
-                    {
-                        $where_request .= " ".$column." like '%".$this->protect_string_db($val)."%' and ";
-                    }
+        $func = new functions();
+        $whereRequest = '';
+        $jsonTxt = '';
+        if (! empty($val)) {
+            $date_pattern = "/^[0-3][0-9]-[0-1][0-9]-[1-2][0-9][0-9][0-9]$/";
+            for ($j = 0; $j < count($indexes); $j ++) {
+                $column = $indexes[$j]['column'] ;
+                if (preg_match('/^doc_/', $fieldName)) {
+                    $column = 'doc_' . $column;
                 }
-                break;
-            }
-            else if(($indexes[$j]['column'].'_from' == $field_name || $indexes[$j]['column'].'_to' == $field_name || 'doc_'.$indexes[$j]['column'].'_from' == $field_name ||  'doc_'.$indexes[$j]['column'].'_to' == $field_name) && !empty($val))
-            { // type == 'date'
-                if( preg_match($date_pattern,$val)==false )
-                {
-                    $_SESSION['error'] .= _WRONG_DATE_FORMAT.' : '.$val;
+                // type == 'string'
+                if ($indexes[$j]['column'] == $fieldName
+                    || 'doc_' . $indexes[$j]['column'] == $fieldName
+                ) {
+                    $jsonTxt .= " '" . $fieldName . "' : ['"
+                             . addslashes(trim($val)) . "'],";
+                    if ($_SESSION['config']['databasetype'] == 'POSTGRESQL') {
+                        $whereRequest .= " " . $column . " ilike '%"
+                                      . $this->protect_string_db($val) . "%' and ";
+                    } else {
+                        $whereRequest .= " " . $column . " like '%"
+                                      . $this->protect_string_db($val) . "%' and ";
+                    }
+                    break;
+                } else if (($indexes[$j]['column'] . '_from' == $fieldName
+                    || $indexes[$j]['column'] . '_to' == $fieldName
+                    || 'doc_' . $indexes[$j]['column'] . '_from' == $fieldName
+                    || 'doc_' . $indexes[$j]['column'] . '_to' == $fieldName)
+                        && ! empty($val)
+                ) { // type == 'date'
+                    if (preg_match($date_pattern, $val) == false) {
+                        $_SESSION['error'] .= _WRONG_DATE_FORMAT . ' : ' . $val;
+                    } else {
+                        if ($indexes[$j]['column'] . '_from' == $fieldName
+                            || 'doc_' . $indexes[$j]['column'] . '_from' == $fieldName
+                        ) {
+                            $whereRequest .= " (" . $column . " >= '"
+                                          . $this->format_date_db($val) . "') and ";
+                        } else {
+                            $whereRequest .= " (" . $column . " <= '"
+                                          . $this->format_date_db($val) . "') and ";
+                        }
+                        $jsonTxt .= " '" . $fieldName . "' : ['" . trim($val)
+                                 . "'],";
+                    }
+                    break;
+                } else if ($indexes[$j]['column'] . '_min' == $fieldName
+                    || 'doc_' . $indexes[$j]['column'] . '_min' == $fieldName
+                ) {
+                    if ($indexes[$j]['type'] == 'integer'
+                        || $indexes[$j]['type'] == 'float'
+                    ) {
+                        if ($indexes[$j]['type'] == 'integer') {
+                            $val_check = $func->wash(
+                                $val, "num", $indexes[$j]['label'], "no"
+                            );
+                        } else {
+                            $val_check = $func->wash(
+                                $val, "float", $indexes[$j]['label'], "no"
+                            );
+                        }
+                        if (empty($_SESSION['error'])) {
+                            $whereRequest .= " (" . $column . " >= " . $val_check
+                                          . ") and ";
+                            $jsonTxt .= " '" . $fieldName . "' : ['" . $val_check
+                                     . "'],";
+                        }
+                    }
+                    break;
+                } else if ($indexes[$j]['column'] . '_max' == $fieldName
+                    || 'doc_' . $indexes[$j]['column'] . '_max' == $fieldName
+                ) {
+                    if ($indexes[$j]['type'] == 'integer'
+                        || $indexes[$j]['type'] == 'float'
+                    ) {
+                        if ($indexes[$j]['type'] == 'integer') {
+                            $val_check = $func->wash(
+                                $val, "num", $indexes[$j]['label'], "no"
+                            );
+                        } else {
+                            $val_check = $func->wash(
+                                $val, "float", $indexes[$j]['label'], "no"
+                            );
+                        }
+                        if (empty($_SESSION['error'])) {
+                            $whereRequest .= " (" . $column . " <= " . $val_check
+                                          . ") and ";
+                            $jsonTxt .= " '" . $fieldName . "' : ['" . $val_check
+                                     . "'],";
+                        }
+                    }
+                    break;
                 }
-                else
-                {
-                    if($indexes[$j]['column'].'_from' == $field_name || 'doc_'.$indexes[$j]['column'].'_from' == $field_name)
-                    {
-                        $where_request .= " (".$column." >= '".$this->format_date_db($val)."') and ";
-                    }
-                    else
-                    {
-                        $where_request .= " (".$column." <= '".$this->format_date_db($val)."') and ";
-                    }
-                    $json_txt .= " '".$field_name."' : ['".trim($val)."'],";
-                }
-                break;
-            }
-            else if($indexes[$j]['column'].'min' == $field_name || $indexes[$j]['column'].'max' == $field_name || 'doc_'.$indexes[$j]['column'].'min' == $field_name || 'doc_'.$indexes[$j]['column'].'max' == $field_name)
-            {
-                if($indexes[$j]['type'] == 'integer' || $indexes[$j]['type'] == 'float')
-                {
-                    if($indexes[$j]['type'] == 'integer')
-                    {
-                        $val_check = $func->wash($val,"num",$indexes[$j]['label'],"no");
-                    }
-                    else
-                    {
-                        $val_check = $func->wash($val,"float",$indexes[$j]['label'],"no");
-                    }
-                    if(empty($_SESSION['error']))
-                    {
-                        $where_request .= " (".$column." >= ".$val_check.") and ";
-                        $json_txt .= " '".$field_name."' : ['".$val_check."'],";
-                    }
-                }
-                break;
             }
         }
-        return array('json_txt' => $json_txt, 'where' => $where_request);
+        return array('json_txt' => $jsonTxt, 'where' => $whereRequest);
     }
 }
 ?>
