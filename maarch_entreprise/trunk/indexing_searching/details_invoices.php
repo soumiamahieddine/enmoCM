@@ -191,6 +191,9 @@ if (empty ($_SESSION['error']) || $_SESSION['indexation']) {
                 $scan_batch = $res->scan_batch;
                 $doc_language = $res->doc_language;
                 $indexes = $type->get_indexes($type_id, $coll_id);
+                $policyId = $res->policy_id;
+                $cycleId = $res->cycle_id;
+                $isMultiDs = $res->is_multi_docservers;
                 //print_r($indexes);
                 //$db->show_array($indexes);
                 foreach (array_keys($indexes) as $key) {
@@ -661,6 +664,70 @@ if (empty ($_SESSION['error']) || $_SESSION['indexation']) {
                                 </dd>
                                 <?php
 
+            }
+            //TODO: faire un service et n'afficher que si module de cycle de vie activé
+            $viewDsAndPoliciesInformations = true;
+            if ($viewDsAndPoliciesInformations) {
+                //$policyId
+                //$cycleId
+                //$isMultiDs
+                
+                $selectNotes = "select id, identifier, user_id, date_note, note_text from " . $_SESSION['tablename']['not_notes'] . " where identifier = " . $s_id . " and coll_id ='" . $_SESSION['collection_id_choice'] . "' order by date_note desc";
+                $dbNotes = new dbquery();
+                $dbNotes->connect();
+                $dbNotes->query($selectNotes);
+                //$dbNotes->show();
+                $nb_notes_for_title = $dbNotes->nb_result();
+                if ($nb_notes_for_title == 0) {
+                    $extend_title_for_notes = '';
+                } else {
+                    $extend_title_for_notes = " (" . $nb_notes_for_title . ") ";
+                }
+                ?>
+                <dt><?php  echo _POLICIES;?></dt>
+                <dd>
+                    <h2>
+                    <span class="date">
+                        <b><?php  echo _POLICIES;?></b>
+                    </span>
+                    </h2>
+                    <br/>
+                    <table cellpadding="2" cellspacing="2" border="0" class="block forms details" width="100%">
+                        <tr>
+                            <!--<th align="left" class="picto">
+                                <img alt="<?php echo _POLICY; ?>" src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=manage_users_entities_b_small.gif" />
+                            </th>-->
+                            <td align="left" width="200px"><?php  echo _POLICY; ?> :</td>
+                            <td><input type="text" class="readonly" readonly="readonly" value="<?php  echo $policyId; ?>"  /></td>
+                            <!--<th align="left" class="picto">
+                                <img alt="<?php echo _CYCLE; ?>" src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=weight.gif" />
+                            </th>-->
+                            <td align="left" width="200px"><?php  echo _CYCLE; ?> :</td>
+                            <td><input type="text" class="readonly" readonly="readonly" value="<?php  echo $cycleId; ?>" /></td>
+                        </tr>
+                    </table>
+                    <h2>
+                    <span class="date">
+                        <b><?php  echo _DOCSERVERS;?></b>
+                    </span>
+                    </h2>
+                    <br/>
+                    <table cellpadding="2" cellspacing="2" border="0" class="block forms details" width="100%">
+                        <tr>
+                            <!--<th align="left" class="picto">
+                                <img alt="<?php echo _POLICY; ?>" src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=manage_users_entities_b_small.gif" />
+                            </th>-->
+                            <td align="left" width="200px"><?php  echo _POLICY; ?> :</td>
+                            <td><input type="text" class="readonly" readonly="readonly" value="<?php  echo $policyId; ?>"  /></td>
+                            <!--<th align="left" class="picto">
+                                <img alt="<?php echo _CYCLE; ?>" src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=weight.gif" />
+                            </th>-->
+                            <td align="left" width="200px"><?php  echo _CYCLE; ?> :</td>
+                            <td><input type="text" class="readonly" readonly="readonly" value="<?php  echo $cycleId; ?>" /></td>
+                        </tr>
+                    </table>
+                </dd>
+                <?php
             }
         }
         ?>
