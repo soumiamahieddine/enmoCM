@@ -552,7 +552,10 @@ if (empty ($_SESSION['error']) || $_SESSION['indexation']) {
             }
             ?>
                             </dd>
-
+                            <?php
+                            //SERVICE TO VIEW TECHNICAL INDEX
+                            $core_tools->execute_app_services($_SESSION['app_services'], 'details.php');
+                            ?>
                             <dt><?php echo _DOC_HISTORY;?></dt>
                             <dd>
                                 <iframe src="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&dir=indexing_searching&page=hist_doc&id=<?php echo $s_id;?>&mode=normal" name="hist_doc_process" width="100%" height="580" align="left" scrolling="auto" frameborder="0" id="hist_doc_process"></iframe>
@@ -590,103 +593,6 @@ if (empty ($_SESSION['error']) || $_SESSION['indexation']) {
                                 </dd>
                                 <?php
 
-            }
-            //TODO: faire un service et n'afficher que si module de cycle de vie activé
-            $viewTechnicalInformations = true;
-            if ($viewTechnicalInformations) {
-                //$policyId
-                //$cycleId
-                //$isMultiDs
-                
-                $selectNotes = "select id, identifier, user_id, date_note, note_text from " . $_SESSION['tablename']['not_notes'] . " where identifier = " . $s_id . " and coll_id ='" . $_SESSION['collection_id_choice'] . "' order by date_note desc";
-                $dbNotes = new dbquery();
-                $dbNotes->connect();
-                $dbNotes->query($selectNotes);
-                //$dbNotes->show();
-                $nb_notes_for_title = $dbNotes->nb_result();
-                if ($nb_notes_for_title == 0) {
-                    $extend_title_for_notes = '';
-                } else {
-                    $extend_title_for_notes = " (" . $nb_notes_for_title . ") ";
-                }
-                ?>
-                <dt><?php  echo _TECHNICAL_INFORMATIONS;?></dt>
-                <dd>
-                    <h2>
-                        <span class="date">
-                            <b><?php  echo _SOURCE_FILE_PROPERTIES;?></b>
-                        </span>
-                    </h2>
-                    <br/>
-
-                    <table cellpadding="2" cellspacing="2" border="0" class="block forms details" width="100%">
-                        <tr>
-                            <th align="left" class="picto">
-                                <img alt="<?php echo _TYPIST; ?>" src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=manage_users_entities_b_small.gif" />
-                            </th>
-                            <td align="left" width="200px"><?php  echo _TYPIST; ?> :</td>
-                            <td><input type="text" class="readonly" readonly="readonly" value="<?php  echo $typist; ?>"  /></td>
-                            <th align="left" class="picto">
-                                <img alt="<?php echo _SIZE; ?>" src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=weight.gif" />
-                            </th>
-                            <td align="left" width="200px"><?php  echo _SIZE; ?> :</td>
-                            <td><input type="text" class="readonly" readonly="readonly" value="<?php  echo $filesize." ".$_SESSION['lang']['txt_byte']." ( ".round($filesize/1024,2)."K )"; ?>" /></td>
-                        </tr>
-                        <tr class="col">
-                            <th align="left" class="picto">
-                                <img alt="<?php echo _FORMAT; ?>" src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=mini_type.gif" />
-                            </th>
-                            <td align="left"><?php  echo _FORMAT; ?> :</td>
-                            <td><input type="text" class="readonly" readonly="readonly" value="<?php  echo $format; ?>" size="40"  /></td>
-                            <th align="left" class="picto">
-                                <img alt="<?php echo _CREATION_DATE; ?>" src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=small_calend.gif" />
-                            </th>
-                            <td align="left"><?php  echo _CREATION_DATE; ?> :</td>
-                            <td><input type="text" class="readonly" readonly="readonly" value="<?php  echo $func->format_date_db($creation_date, false); ?>"/></td>
-                        </tr>
-                        <tr>
-                            <th align="left" class="picto">
-                                <img alt="<?php echo _MD5; ?>" src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=md5.gif" />
-                            </th>
-                            <td align="left"><?php  echo _MD5; ?> :</td>
-                            <td><input type="text" class="readonly" readonly="readonly" value="<?php  echo $fingerprint; ?>"  title="<?php  echo $fingerprint; ?>" alt="<?php  echo $fingerprint; ?>" /></td>
-
-                            <th align="left" class="picto">
-                                <img alt="<?php echo _WORK_BATCH; ?>" src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=lot.gif" />
-                            </th>
-                            <td align="left"><?php  echo _WORK_BATCH; ?> :</td>
-                            <td><input type="text" class="readonly" readonly="readonly" value="<?php  echo $work_batch; ?>" title="<?php  echo $work_batch; ?>" alt="<?php  echo $work_batch; ?>" /></td>
-                        </tr>
-                        <!--
-                        <tr>
-                            <th align="left"><?php  echo _PAGECOUNT; ?> :</th>
-                            <td><input type="text" class="readonly" readonly="readonly" value="<?php  echo $page_count; ?>"  /></td>
-                            <th align="left"><?php  echo _ISPAPER; ?> :</th>
-                            <td><input type="text" class="readonly" readonly="readonly" value="<?php  echo $is_paper; ?>" /></td>
-                        </tr>
-                            <tr class="col">
-                            <th align="left"><?php  echo _SCANUSER; ?> :</th>
-                            <td><input type="text" class="readonly" readonly="readonly" value="<?php  echo $scan_user; ?>"  /></td>
-                            <th align="left"><?php  echo _SCANDATE; ?> :</th>
-                            <td><input type="text" class="readonly" readonly="readonly" value="<?php  echo $scan_date; ?>" /></td>
-                        </tr>
-                        <tr>
-                            <th align="left"><?php  echo _SCANWKSATION; ?> :</th>
-                            <td><input type="text" class="readonly" readonly="readonly" value="<?php  echo $scan_wkstation; ?>" /></td>
-                            <th align="left"><?php  echo _SCANLOCATION; ?> :</th>
-                            <td><input type="text" class="readonly" readonly="readonly" value="<?php  echo $scan_location; ?>" /></td>
-                        </tr>
-                        <tr class="col">
-                            <th align="left"><?php  echo _SCANBATCH; ?> :</th>
-                            <td><input type="text" class="readonly" readonly="readonly" value="<?php  echo $scan_batch; ?>"  /></td>
-                            <th align="right"><?php  echo _SOURCE; ?> :</th>
-                            <td><input type="text" class="readonly" readonly="readonly" value="<?php  echo $source; ?>" /></td>
-                        </tr>
-                        -->
-                    </table>
-                    
-                </dd>
-                <?php
             }
         }
         ?>
