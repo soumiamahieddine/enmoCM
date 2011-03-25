@@ -66,6 +66,7 @@
  *  29  : Error persists
  */
 
+date_default_timezone_set('Europe/Paris');
 try {
     include('load_process_stack.php');
     include('resources.php');
