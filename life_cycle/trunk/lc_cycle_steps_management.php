@@ -23,7 +23,7 @@ if ($mode == "list") {
         _ALL_LC_CYCLE_STEPS,
         _LC_CYCLE_STEP,
         $_SESSION['config']['businessappurl']
-        . 'static.php?filename=manage_lc_b.gif&module=life_cycle',
+        .'static.php?filename=manage_lc_b.gif&module=life_cycle',
         true,
         true,
         false,
@@ -34,8 +34,7 @@ if ($mode == "list") {
     );
 } elseif ($mode == "up" || $mode == "add") {
     ?>
-    <h1><img src="<?php  echo $_SESSION['config']['businessappurl'];?>
-    static.php?filename=manage_lc_b.gif&module=life_cycle" alt="" />
+    <h1><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=manage_lc_b.gif&module=life_cycle" alt="" />
     <?php
     if ($mode == "add") {
         echo _LC_CYCLE_STEP_ADDITION;
