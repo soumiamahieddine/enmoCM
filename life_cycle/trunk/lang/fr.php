@@ -45,7 +45,7 @@ if (!defined('_MANAGE_LC_CYCLE_STEPS')) {
 if (!defined('_MANAGE_LC_POLICIES')) {
     define(
         '_MANAGE_LC_POLICIES', 
-        'G&eacute;rer les politiques de cycle de vie '
+        'G&eacute;rer les politiques d&rsquo;archivage '
     );
 }
 
