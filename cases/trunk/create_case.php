@@ -63,8 +63,8 @@ if (($core_tools->test_service('join_res_case', 'cases', false) == 1) || ($core_
 				?>
 				<script type="text/javascript">
 				window.opener.top.location.reload();
-				var error_div = window.opener.$('main_error');
-				/*if(error_div)
+				/*var error_div = window.opener.$('main_error');
+				if(error_div)
 				{
 					error_div.update('<?php echo $error ;?>');
 				}*/
