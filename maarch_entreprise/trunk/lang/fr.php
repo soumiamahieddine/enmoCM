@@ -278,7 +278,7 @@ if (!defined('_NOTES')) define( '_NOTES', 'Notes');
 if (!defined('_NOTE1')) define( '_NOTE1', 'Les champs obligatoires sont marqu&eacute;s par un ast&eacute;risque rouge ');
 if (!defined('_NOTE2')) define( '_NOTE2', 'Le groupe primaire est obligatoire');
 if (!defined('_NOTE3')) define( '_NOTE3', 'Le premier groupe s&eacute;lectionn&eacute sera le groupe primaire');
-if (!defined('_USER_GROUPS_TITLE')) define( '_USER_GROUPS_TITLE', 'L&apos;utilisateur appartient aux groupes suivants');
+if (!defined('_USER_GROUPS_TITLE')) define( '_USER_GROUPS_TITLE', 'L&rsquo;utilisateur appartient aux groupes suivants');
 if (!defined('_USER_ENTITIES_TITLE')) define( '_USER_ENTITIES_TITLE', 'L&rsquo;utilisateur appartient aux entit&eacute;s suivantes');
 if (!defined('_DELETE_GROUPS')) define( '_DELETE_GROUPS', 'Supprimer le(s) groupe(s)');
 if (!defined('_ADD_TO_GROUP')) define( '_ADD_TO_GROUP', 'Ajouter &agrave; un groupe');
