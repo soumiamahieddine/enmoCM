@@ -1148,6 +1148,7 @@ if (!defined('_ALERT_DELAY_2'))  define('_ALERT_DELAY_2', 'D&eacute;lai de 2eme 
 if (!defined('_ERROR_PARAMETERS_FUNCTION'))  define('_ERROR_PARAMETERS_FUNCTION', 'Erreur de paramètres...');
 if (!defined('_SYNTAX_OK'))  define('_SYNTAX_OK', 'Syntaxe OK');
 
-
-
+/************TECHNICAL INFOS******************************/
+if (!defined('_TECHNICAL_INFORMATIONS'))  define('_TECHNICAL_INFORMATIONS', 'Informations techniques');
+if (!defined('_SOURCE_FILE_PROPERTIES')) define( '_SOURCE_FILE_PROPERTIES', 'Propri&eacute;t&eacute;s du fichier source');
 ?>

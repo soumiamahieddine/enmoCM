@@ -1065,4 +1065,7 @@ if (!defined('_FAILOVER'))  define('_FAILOVER', 'Failover');
 if (!defined('_FILE_NOT_EXISTS_ON_THE_SERVER'))  define('_FILE_NOT_EXISTS_ON_THE_SERVER', 'File not exists on the document server');
 if (!defined('_NO_RIGHT_ON_RESOURCE_OR_RESOURCE_NOT_EXISTS'))  define('_NO_RIGHT_ON_RESOURCE_OR_RESOURCE_NOT_EXISTS', 'No right on resource or not exists');
 
+/************TECHNICAL INFOS******************************/
+if (!defined('_TECHNICAL_INFORMATIONS'))  define('_TECHNICAL_INFORMATIONS', 'Technical Informations');
+if (!defined('_SOURCE_FILE_PROPERTIES')) define('_SOURCE_FILE_PROPERTIES', 'Source file properties');
 ?>
