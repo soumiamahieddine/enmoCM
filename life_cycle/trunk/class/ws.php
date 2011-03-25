@@ -3,17 +3,21 @@ global $SOAP_dispatch_map;
 global $XMLRPC_dispatch_map;
 global $SOAP_typedef;
 
-/**************************************************************************************************/
+/******************************************************************************/
 // LC_POLICIES
-$SOAP_typedef['lcPolicies'] = array(    'policy_id' => 'string',
-                                        'policy_name' => 'string',
-                                        'policy_desc' => 'string',
-                                        );
+$SOAP_typedef['lcPolicies'] = array(
+    'policy_id' => 'string',
+    'policy_name' => 'string',
+    'policy_desc' => 'string',
+);
 $SOAP_dispatch_map['policySave'] = array(
-                                        'in'  => array('policy' => '{urn:MySoapServer}lcPolicies', 'mode' => 'string'),
-                                        'out' => array('out' => '{urn:MySoapServer}returnArray'),
-                                        'method' => "modules/life_cycle#lc_policies::save",
-                                        );
+    'in'  => array(
+        'policy' => '{urn:MySoapServer}lcPolicies',
+        'mode' => 'string',
+    ),
+    'out' => array('out' => '{urn:MySoapServer}returnArray'),
+    'method' => "modules/life_cycle#lc_policies::save",
+);
 $SOAP_dispatch_map['policyDelete'] = array(
                                         'in'  => array('policy' => '{urn:MySoapServer}lcPolicies'),
                                         'out' => array('out' => '{urn:MySoapServer}returnArray'),
