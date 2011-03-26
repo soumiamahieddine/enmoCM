@@ -22,7 +22,7 @@ $core->load_lang();
 		   <?php
 		   include($_REQUEST['page'] . '.php');
 		   ?>
-		   <input class="refresh" name="refreshButton" type="button" value="<?php echo _REFRESH; ?>" onclick="window.location.reload();" />
+		   <!--<input class="refresh" name="refreshButton" type="button" value="<?php echo _REFRESH; ?>" onclick="window.location.reload();" />-->
 		</div>
     </body>
     <script type="text/javascript">

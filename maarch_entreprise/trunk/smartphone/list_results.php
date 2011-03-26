@@ -304,3 +304,6 @@ if (count($tab) > 0) {
         }
     }
     </script>
+    <br>
+	<input class="button_search_adv_text" name="imageField" type="button" value="Nouvelle recherche" onclick="window.document.location.href='index.php?page=search';" />
+	<br>
