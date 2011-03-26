@@ -158,6 +158,13 @@ $businessAppTools->compare_base_version(
     'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
     . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR . 'database_version.xml'
 );
+
+//LGI TEST FOR SMARTPHONE
+if ($core->detectSmartphone()) {
+	header('location: smartphone/login.php');
+	exit;
+}
+
 $core->load_html();
 $core->load_header('', true, false);
 $time = $core->get_session_time_expire();
