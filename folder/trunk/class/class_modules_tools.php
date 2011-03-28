@@ -172,10 +172,6 @@ class folder extends request
 		$_SESSION['history']['foldertypedel']= (string) $HISTORY->foldertypedel;
 	}
 
-	public function load_module_var_session()
-	{
-
-	}
 
 	/**
 	* load folder object from the folder system id
