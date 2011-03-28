@@ -42,11 +42,6 @@ class reports  extends dbquery
 	}
 
 
-	public function load_module_var_session()
-	{
-
-	}
-
 	function get_reports_from_xml($id_report = '', $only_enabled = true)
 	{
 		$reports = array();
