@@ -89,7 +89,7 @@ class login extends functions
         if ($tmp_engine > 1) {
             ?>
             <script language="javascript" type="text/javascript">
-            //Si plusieurs elements sont disponnibles, on affiche une liste de choix
+            //Si plusieurs elements sont disponibles, on affiche une liste de choix
             function display_auth(mydiv)
             {
                 if (mydiv != '' && mydiv) { //Debug for IE9 and IE6...

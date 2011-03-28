@@ -27,9 +27,9 @@ if (isset($_REQUEST['pass'])) {
 } else {
     $password = '';
 }
-require 'core/class/class_security.php';
-require 'core/class/class_request.php';
-require 'apps/' . $_SESSION['config']['app_id']
+require_once 'core/class/class_security.php';
+require_once 'core/class/class_request.php';
+require_once 'apps/' . $_SESSION['config']['app_id']
     . '/class/class_business_app_tools.php';
 $sec = new security();
 $businessAppTools = new business_app_tools();
@@ -126,7 +126,7 @@ if (! empty($_SESSION['error'])) {
                 }
                 $core->load_menu($_SESSION['modules']);
                 header(
-                    'location: ' . $_SESSION['config']['businessappurl'] 
+                    'location: ' . $_SESSION['config']['businessappurl']
                 	. $res['url']
                 );
                 exit();
@@ -162,6 +162,8 @@ if (! empty($_SESSION['error'])) {
             $pass = md5($password);
             $res = $sec->login($login, $pass);
             $_SESSION['user'] = $res['user'];
+            $businessAppTools->load_app_var_session($_SESSION['user']);
+            $core->load_var_session($_SESSION['modules'], $_SESSION['user']);
             //var_dump($_SESSION['user']);exit();
             if (empty($_SESSION['error'])) {
                 $_SESSION['error'] = $res['error'];

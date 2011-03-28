@@ -504,13 +504,13 @@ class business_app_tools extends dbquery
     * Loads current folder identifier in session
     *
     */
-    private function load_current_folder()
+    private function load_current_folder($userId)
     {
-        if (isset($_SESSION['user']['UserId'])) {
+        if (isset($userId)) {
             $this->connect();
             $this->query(
             	"select custom_t1 from " . USERS_TABLE . " where user_id = '"
-                . $_SESSION['user']['UserId'] . "'"
+                . $userId . "'"
             );
             $res = $this->fetch_object();
 
@@ -522,9 +522,9 @@ class business_app_tools extends dbquery
     * Loads app specific vars in session
     *
     */
-    public function load_app_var_session()
+    public function load_app_var_session($userData)
     {
-        $this->load_current_folder();
+        $this->load_current_folder($userData['UserId']);
         $this->load_entreprise_var();
         $this->load_features(
         	'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']

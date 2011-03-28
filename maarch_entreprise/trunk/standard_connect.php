@@ -1,8 +1,8 @@
 <?php
 echo '<form id="formlogin" method="post" action="'
     . $_SESSION['config']['businessappurl']
-    . 'index.php?display=true&amp;page=log';
-    if (isset($_SESSION['config']['debug']) 
+    . 'index.php?display=true&page=log';
+    if (isset($_SESSION['config']['debug'])
     	&& $_SESSION['config']['debug'] == 'true'
 	) {
     	echo '&XDEBUG_PROFILE';
