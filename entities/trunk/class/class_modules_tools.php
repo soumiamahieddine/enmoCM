@@ -62,12 +62,12 @@ class entities extends dbquery
         $_SESSION['history']['entityban'] = (string) $history->entityban;
     }
 
-    public function load_module_var_session()
+    public function load_module_var_session($userData)
     {
         $_SESSION['user']['entities'] = array();
         $_SESSION['entities_types'] = array();
         $_SESSION['user']['primaryentity'] = array();
-        if (isset($_SESSION['user']['UserId'])) {
+        if (isset($userData['UserId'])) {
             $type = 'root';
             $this->connect();
             $this->query(
@@ -77,7 +77,7 @@ class entities extends dbquery
                 . ' u,'. ENT_ENTITIES ." e where ue.user_id = u.user_id and "
                 . " ue.entity_id = e.entity_id and e.enabled = 'Y' "
                 . " and ue.user_id = '" . $this->protect_string_db(
-                    trim($_SESSION['user']['UserId'])
+                    trim($userData['UserId'])
                 ) . "'"
             );
         }
@@ -128,16 +128,16 @@ class entities extends dbquery
         $core = new core_tools;
         if ($core->is_module_loaded('basket')) {
             $_SESSION['user']['redirect_groupbasket'] = array();
-            if (isset($_SESSION['user']) 
-            	&& isset($_SESSION['user']['primarygroup'])
-            	&& isset($_SESSION['user']['UserId'])
+            if (isset($userData)
+            	&& isset($userData['primarygroup'])
+            	&& isset($userData['UserId'])
             ) {
 	            $arr1 = $this->load_redirect_groupbasket_session(
-	                $_SESSION['user']['primarygroup'],
-	                $_SESSION['user']['UserId']
+	                $userData['primarygroup'],
+	                $userData['UserId']
 	            );
 	            $arr2 = $this->load_redirect_groupbasket_session_for_abs(
-	                $_SESSION['user']['UserId']
+	                $userData['UserId']
 	            );
 	            $_SESSION['user']['redirect_groupbasket']  = array_merge(
 	                $arr1, $arr2
