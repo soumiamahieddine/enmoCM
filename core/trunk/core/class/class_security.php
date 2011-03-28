@@ -47,6 +47,11 @@ require_once 'core/where_targets.php';
 require_once 'core/class/users_controler.php';
 require_once 'apps/' . $_SESSION['config']['app_id']
     . '/class/class_business_app_tools.php';
+require_once 'core/class/usergroups_controler.php';
+require_once 'core/class/ServiceControler.php';
+require_once 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+	. DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
+	. 'class_business_app_tools.php';
 
 //require_once('lib/FirePHP/Init.php');
 
@@ -105,8 +110,6 @@ class security extends dbquery
 
         if (isset($user)) {
             if ($user->__get('enabled') == 'Y') {
-                require_once 'core/class/usergroups_controler.php';
-                require_once 'core/class/ServiceControler.php';
                 $ugc = new usergroups_controler();
                 $sec_controler = new SecurityControler();
                 $serv_controler = new ServiceControler();
@@ -234,8 +237,6 @@ class security extends dbquery
         {
             if($user->__get('enabled')  == "Y")
             {
-                require_once("core/class/usergroups_controler.php");
-                require_once("core/class/ServiceControler.php");
                 $serv_controler = new ServiceControler();
                 $_SESSION['user']['change_pass'] = $user->__get('change_password');
                 $_SESSION['user']['UserId'] = $user->__get('user_id');
@@ -263,8 +264,6 @@ class security extends dbquery
                 $_SESSION['user']['collections'] = $tmp['collections'];
                 $_SESSION['user']['security'] = $tmp['security'];
                 $serv_controler->loadEnabledServices();
-
-                require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
 
                 $business_app_tools = new business_app_tools();
                 $core_tools = new core_tools();
