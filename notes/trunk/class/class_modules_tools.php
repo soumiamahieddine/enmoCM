@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
 * modules tools Class for notes
 *
@@ -9,12 +9,12 @@
 * @since 10/2005
 * @license GPL v3
 * @author  Claire Figueras  <dev@maarch.org>
-* 
+*
 */
 
 class notes
 {
-	
+
 	/**
 	* Build Maarch module tables into sessions vars with a xml configuration file
 	*/
@@ -38,10 +38,6 @@ class notes
 		$_SESSION['history']['noteup'] = (string) $HISTORY->noteup;
 		$_SESSION['history']['notedel'] = (string) $HISTORY->notedel;
 	}
-	
-	public function load_module_var_session()
-	{
-	
-	}
+
 }
-?>
+
