@@ -192,16 +192,21 @@ class core_tools extends functions
     *
     * @param $modules Enabled modules of the application
     */
-    public function load_var_session($modules)
+    public function load_var_session($modules, $userData)
     {
-        for($i=0;$i<count($modules);$i++)
-        {
-            $path_module_tools = 'modules'.DIRECTORY_SEPARATOR.$modules[$i]['moduleid'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php";
-            if(file_exists($path_module_tools))
-            {
-                require_once($path_module_tools);
+        for ($i = 0;$i < count($modules); $i ++) {
+            $path_module_tools = 'modules' . DIRECTORY_SEPARATOR
+                . $modules[$i]['moduleid'] . DIRECTORY_SEPARATOR . 'class'
+                . DIRECTORY_SEPARATOR . 'class_modules_tools.php';
+            if (file_exists($path_module_tools)) {
+                require_once $path_module_tools;
                 $modules_tools = new $modules[$i]['moduleid'];
-                $modules_tools->load_module_var_session();
+                if (method_exists(
+                    $modules[$i]['moduleid'], 'load_module_var_session'
+                )
+                ) {
+                    $modules_tools->load_module_var_session($userData);
+                }
             }
         }
     }
@@ -1328,7 +1333,7 @@ class core_tools extends functions
         }
         return false;
     }
-    
+
     /**
     * Tests if the user has admin rights on the service
     *

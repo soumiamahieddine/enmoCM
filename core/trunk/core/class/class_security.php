@@ -39,10 +39,14 @@
 */
 
 //Requires to launch history functions
-require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
-require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."SecurityControler.php");
-require_once("core/where_targets.php");
-require_once('core/class/users_controler.php');
+require_once 'core' .DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
+    . 'class_history.php';
+require_once 'core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
+    . 'SecurityControler.php';
+require_once 'core/where_targets.php';
+require_once 'core/class/users_controler.php';
+require_once 'apps/' . $_SESSION['config']['app_id']
+    . '/class/class_business_app_tools.php';
 
 //require_once('lib/FirePHP/Init.php');
 
@@ -124,7 +128,6 @@ class security extends dbquery
                     time() . '%' . $array['FirstName'] . '%' . $array['UserId']
                     . '%' . $array['UserId'] . '%' . date('dmYHmi') . '%'
                 );
-
                 $user->__set('cookie_key', functions::protect_string_db($key));
                 if ($_SESSION['config']['databasetype'] == 'ORACLE') {
                     $user->__set('cookie_date', 'SYSDATE');
@@ -146,19 +149,15 @@ class security extends dbquery
                 );
                 $array['collections'] = $tmp['collections'];
                 $array['security'] = $tmp['security'];
-
                 $serv_controler->loadEnabledServices();
-                require_once
-                    'apps/' . $_SESSION['config']['app_id']
-                    . '/class/class_business_app_tools.php';
+
                 $business_app_tools = new business_app_tools();
                 $core_tools = new core_tools();
-                $business_app_tools->load_app_var_session();
-                $core_tools->load_var_session($_SESSION['modules']);
+                $business_app_tools->load_app_var_session($array);
+                $core_tools->load_var_session($_SESSION['modules'], $array);
                 $array['services'] = $serv_controler->loadUserServices(
                     $array['UserId']
                 );
-
 
                 if ($_SESSION['history']['userlogin'] == 'true') {
                     //add new instance in history table for the user's connexion
@@ -168,7 +167,7 @@ class security extends dbquery
 
                     $hist->add(
                         $_SESSION['tablename']['users'],
-                        $_SESSION['user']['UserId'],
+                        $s_login,
                         'LOGIN',
                         'IP : ' . $ip . ', BROWSER : ' . $navigateur ,
                         $_SESSION['config']['databasetype']
@@ -269,8 +268,8 @@ class security extends dbquery
 
                 $business_app_tools = new business_app_tools();
                 $core_tools = new core_tools();
-                $business_app_tools->load_app_var_session();
-                $core_tools->load_var_session($_SESSION['modules']);
+                $business_app_tools->load_app_var_session($array);
+                $core_tools->load_var_session($_SESSION['modules'], $array);
 
                 $_SESSION['user']['services'] = $serv_controler->loadUserServices($_SESSION['user']['UserId']);
                 $core_tools->load_menu($_SESSION['modules']);

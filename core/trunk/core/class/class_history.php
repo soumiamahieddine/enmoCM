@@ -1,6 +1,6 @@
 <?php
 /*
-*    Copyright 2008,2009 Maarch    
+*    Copyright 2008,2009 Maarch
 *
 *  This file is part of Maarch Framework.
 *
@@ -55,7 +55,7 @@ class history extends dbquery
 			$date_now = "getdate()";
 		}
 		else if($databasetype == "MYSQL" || $databasetype == "POSTGRESQL" )
-		{ 
+		{
 			$date_now = "now()";
 		}
 		elseif($databasetype == "ORACLE")
@@ -66,10 +66,20 @@ class history extends dbquery
 		$what = $this->protect_string_db($what, $databasetype);
 	//	$what = $this->protect_string_db($what);
 		$this->connect();
-		$this->query("INSERT INTO ".$_SESSION['tablename']['history']." (table_name, record_id , event_type , user_id , event_date , info , id_module, remote_ip) VALUES ('".$where."', '".$id."', '".$how."', '".$_SESSION['user']['UserId']."', ".$date_now.", '".$what."', '".$id_module."' , '".$remote_ip."')");
+		$user = '';
+		if(isset($_SESSION['user']['UserId'])) {
+		    $user = $_SESSION['user']['UserId'];
+		}
+		$this->query(
+			"INSERT INTO ".$_SESSION['tablename']['history']
+		    ." (table_name, record_id , event_type , user_id , event_date , "
+		    . "info , id_module, remote_ip) VALUES ('".$where."', '".$id."', '"
+		    .$how."', '".$user."', ".$date_now.", '".$what."', '".$id_module
+		    ."' , '".$remote_ip."')"
+		);
 		$this->disconnect();
 	}
-	
+
 	/**
 	* Gets the label of an history keyword
 	*

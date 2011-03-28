@@ -213,8 +213,8 @@ class dbquery extends functions
             $this->_sqlLink = @pg_connect(
             	'host=' . $this->_server . ' user=' . $this->_user
                 . ' password=' . $this->_password . ' dbname='
-                . $this->_database . ' port=' . $this->_port,
-                PGSQL_CONNECT_FORCE_NEW
+                . $this->_database . ' port=' . $this->_port
+               // , PGSQL_CONNECT_FORCE_NEW
             );
         } else if ($this->_databasetype == 'ORACLE') {
             if ($this->_server <> '') {
