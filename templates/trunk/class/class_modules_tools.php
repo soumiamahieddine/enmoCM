@@ -45,10 +45,6 @@ class templates extends dbquery
 		$_SESSION['history']['templatedel'] = (string) $HISTORY->templatedel;
 	}
 
-	public function load_module_var_session()
-	{
-
-	}
 
 	public function getAllItemsLinkedToModel($template_id, $field ='')
 	{
