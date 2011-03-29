@@ -96,7 +96,8 @@ if (isset($_REQUEST['submit'])) {
 /**
  * Initialize session variables
  */
-function init_session() {
+function init_session()
+{
     $sessionName = "lc_policies";
     $_SESSION['m_admin'][$sessionName] = array();
 }
@@ -104,7 +105,8 @@ function init_session() {
 /**
  * Management of the location bar  
  */
-function location_bar_management($mode) {
+function location_bar_management($mode)
+{
     //$sessionName = "lc_policies";
     $pageName = "lc_policies_management_controler";
     //$tableName = "lc_policies";
@@ -133,7 +135,8 @@ function location_bar_management($mode) {
  * Validate a submit (add or up),
  * up to saving object
  */
-function validate_cs_submit($mode) {
+function validate_cs_submit($mode)
+{
     //$sessionName = "lc_policies";
     $pageName = "lc_policies_management_controler";
     //$tableName = "lc_policies";
@@ -182,22 +185,27 @@ function validate_cs_submit($mode) {
  * Initialize session parameters for update display
  * @param Long $policy_id
  */
-function display_up($policy_id) {
+function display_up($policyId)
+{
     $state=true;
     $lcPoliciesControler = new lc_policies_controler();
-    $lc_policies = $lcPoliciesControler->get($policy_id);
-    if (empty($lc_policies))
+    $lc_policies = $lcPoliciesControler->get($policyId);
+    if (empty($lc_policies)) {
         $state = false; 
-    else
+    } else {
         At_putInSession("lc_policies", $lc_policies->getArray()); 
-    
+        $_SESSION['m_admin']['lc_policies']['tabWf'] = array();
+        $_SESSION['m_admin']['lc_policies']['tabWf'] 
+            = $lcPoliciesControler->designPolicyWorkflow($policyId);
+    }
     return $state;
 }
 
 /**
  * Initialize session parameters for add display with given docserver
  */
-function display_add() {
+function display_add()
+{
     $sessionName = "lc_policies";
     if (!isset($_SESSION['m_admin'][$sessionName]))
         init_session();
@@ -206,7 +214,8 @@ function display_add() {
 /**
  * Initialize session parameters for list display
  */
-function display_list() {
+function display_list()
+{
     //$sessionName = "lc_policies";
     $pageName = "lc_policies_management_controler";
     //$tableName = "lc_policies";
@@ -283,7 +292,8 @@ function display_list() {
  * Delete given docserver if exists and initialize session parameters
  * @param string $policy_id
  */
-function display_del($policy_id) {
+function display_del($policy_id)
+{
     $lcPoliciesControler = new lc_policies_controler();
     $lc_policies = $lcPoliciesControler->get($policy_id);
     if (isset($lc_policies)) {

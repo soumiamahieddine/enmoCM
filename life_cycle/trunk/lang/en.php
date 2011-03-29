@@ -194,6 +194,16 @@ if (!defined('_LC_POLICY_DELETED')) {
     define('_LC_POLICY_DELETED', 'Life cycle policy deleted');
 }
 
+if (!defined('_MISSING_A_CYCLE_STEP')) {
+    define('_MISSING_A_CYCLE_STEP', 'You have to had a cycle and a step to '
+        . 'finish the setup of the policy'):
+}
+
+if (!defined('_MISSING_A_CYCLE_STEP')) {
+    define('_MISSING_A_CYCLE_STEP', 'You have to had a cycle to '
+        . 'finish the setup of the policy'):
+}
+
 /*************BATCH*************************************/
 if (!defined('_PI_COMMENT_ROOT')) {
     define(

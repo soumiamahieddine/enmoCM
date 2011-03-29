@@ -382,4 +382,82 @@ class lc_policies_controler extends ObjectControler implements ObjectControlerIF
             return null;
         }
     }
+    
+    /**
+    * Return array of the workflow if the policy have a cycle and a step
+    * 
+    * @param $policy_id lc_policy identifier
+    * @return array describing the workflow
+    */
+    public function designPolicyWorkflow($policyId)
+    {
+        if (!isset($policyId) || empty($policyId)) {
+            return false;
+        }
+        $db = new dbquery();
+        $db->connect();
+        $dbBis = new dbquery();
+        $dbBis->connect();
+        $result = array();
+        $query = "select * from " . _LC_CYCLES_TABLE_NAME 
+            . " where policy_id = '".$policyId."' order by sequence_number";
+        $db->query($query);
+        $cptCycles = 0;
+        if ($db->nb_result() > 0) {
+            while ($cycleLine = $db->fetch_object()) {
+                $cptSteps = 0;
+                $result['cycles'][$cptCycles]['cycle_id'] = 
+                    $cycleLine->cycle_id;
+                $result['cycles'][$cptCycles]['cycle_desc'] = 
+                    $cycleLine->cycle_desc;
+                $result['cycles'][$cptCycles]['sequence_number'] = 
+                    $cycleLine->sequence_number;
+                $result['cycles'][$cptCycles]['where_clause'] = 
+                    $cycleLine->where_clause;
+                $result['cycles'][$cptCycles]['break_key'] = 
+                    $cycleLine->break_key;
+                $query = "select * from " . _LC_CYCLE_STEPS_TABLE_NAME 
+                    . " where cycle_id = '" . $cycleLine->cycle_id 
+                    . "' order by sequence_number";
+                $dbBis->query($query);
+                if ($dbBis->nb_result() > 0) {
+                    while ($stepLine = $dbBis->fetch_object()) {
+                        $result['cycles'][$cptCycles]['steps'][$cptSteps]
+                            ['cycle_step_id'] = $stepLine->cycle_step_id;
+                        $result['cycles'][$cptCycles]['steps'][$cptSteps]
+                            ['cycle_step_desc'] = $stepLine->cycle_step_desc;
+                        $result['cycles'][$cptCycles]['steps'][$cptSteps]
+                            ['docserver_type_id'] = 
+                                $stepLine->docserver_type_id;
+                        $result['cycles'][$cptCycles]['steps'][$cptSteps]
+                            ['step_operation'] = $stepLine->step_operation;
+                         $result['cycles'][$cptCycles]['steps'][$cptSteps]
+                            ['sequence_number'] = $stepLine->sequence_number;
+                        $cptSteps++;
+                    }
+                } else {
+                    $return = array(
+                        'status' => 'ko',
+                        'value' => '',
+                        'error' => _MISSING_A_CYCLE_STEP,
+                    );
+                    return $return;
+                }
+                $cptCycles++;
+            }
+        } else {
+            $return = array(
+                'status' => 'ko',
+                'value' => '',
+                'error' => _MISSING_A_CYCLE_AND_A_CYCLE_STEP,
+            );
+            return $return;
+        }
+        $return = array(
+            'status' => 'ok',
+            'value' => $result,
+            'error' => '',
+        );
+        return $return;
+    }    
 }

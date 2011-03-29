@@ -220,6 +220,16 @@ if (!defined('_LC_POLICY_MODIFICATION')) {
     );
 }
 
+if (!defined('_MISSING_A_CYCLE_STEP')) {
+    define('_MISSING_A_CYCLE_STEP', 'Vous devez ajouter au moins une '
+        . '&eacute;tape de cycle de vie pour compl&eacute;ter votre param&eacute;trage');
+}
+
+if (!defined('_MISSING_A_CYCLE_AND_A_CYCLE_STEP')) {
+    define('_MISSING_A_CYCLE_AND_A_CYCLE_STEP', 'Vous devez ajouter '
+        . 'au moins un cycle de vie et une &eacute;tape pour compl&eacute;ter votre param&eacute;trage');
+}
+
 /*************BATCH*************************************/
 if (!defined('_PI_COMMENT_ROOT')) {
     define(

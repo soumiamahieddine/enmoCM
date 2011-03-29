@@ -1,35 +1,46 @@
+<script language="javascript">
+    function showHideElem(elem)
+    {
+        var elem_1 = window.document.getElementById(elem);
+        if (elem_1 != null && elem_1.style.display == "block") {
+            elem_1.style.display = "none";
+        } else if (elem_1 != null && elem_1.style.display == "none") {
+            elem_1.style.display = "block";
+        }
+    }
+</script>
 <?php
 /* View */
 $func = new functions();
 if($mode == "list"){
     $listShow = new list_show();
     $listShow->admin_list(
-                    $lc_policies_list['tab'],
-                    count($lc_policies_list['tab']),
-                    $lc_policies_list['title'],
-                    'policy_id',
-                    'lc_policies_management_controler&mode=list',
-                    'life_cycle','policy_id',
-                    true,
-                    $lc_policies_list['page_name_up'],
-                    '',
-                    '',
-                    $lc_policies_list['page_name_del'],
-                    $lc_policies_list['page_name_add'],
-                    $lc_policies_list['label_add'],
-                    false,
-                    false,
-                    _ALL_LC_POLICIES,
-                    _LC_POLICY,
-                    $_SESSION['config']['businessappurl'].'static.php?filename=manage_lc_b.gif&module=life_cycle',
-                    true,
-                    true,
-                    false,
-                    true,
-                    $lc_policies_list['what'],
-                    true,
-                    $lc_policies_list['autoCompletionArray']
-                );
+        $lc_policies_list['tab'],
+        count($lc_policies_list['tab']),
+        $lc_policies_list['title'],
+        'policy_id',
+        'lc_policies_management_controler&mode=list',
+        'life_cycle','policy_id',
+        true,
+        $lc_policies_list['page_name_up'],
+        '',
+        '',
+        $lc_policies_list['page_name_del'],
+        $lc_policies_list['page_name_add'],
+        $lc_policies_list['label_add'],
+        false,
+        false,
+        _ALL_LC_POLICIES,
+        _LC_POLICY,
+        $_SESSION['config']['businessappurl'].'static.php?filename=manage_lc_b.gif&module=life_cycle',
+        true,
+        true,
+        false,
+        true,
+        $lc_policies_list['what'],
+        true,
+        $lc_policies_list['autoCompletionArray']
+    );
 } elseif($mode == "up" || $mode == "add") {
     ?>
     <h1><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=manage_lc_b.gif&module=life_cycle" alt="" />
@@ -87,8 +98,126 @@ if($mode == "list"){
             </form>
             <?php
         }
+        if (
+            isset($_SESSION['m_admin']['lc_policies']['tabWf']) 
+            && $_SESSION['m_admin']['lc_policies']['tabWf'] <> ''
+        ) {
+            if ($_SESSION['m_admin']['lc_policies']['tabWf']['status'] <> 'ko') {
+                $content = '';
+                $content .= '<hr/>';                
+                for (
+                    $cptCycles = 0;
+                    $cptCycles < count($_SESSION['m_admin']['lc_policies']
+                        ['tabWf']['value']['cycles']);
+                    $cptCycles++
+                ) {
+                    $content .= '<table border="1" rules="rows">';
+                    if ($cptCycles == 0) {
+                        $content .= '<tr>';
+                            $content .= '<th align="left" width="180px">' 
+                                . _CYCLE_ID . '</th>';
+                            $content .= '<th align="left" width="300px">' 
+                                . _CYCLE_DESC . '</th>';
+                            $content .= '<th align="left" width="300px">' 
+                                . _WHERE_CLAUSE . '</th>';
+                            $content .= '<th align="left" width="100px">' 
+                                . _BREAK_KEY . '</th>';
+                            $content .= '<th align="right" width="100px">' 
+                                . _SEQUENCE_NUMBER . '</th>';
+                        $content .= '</tr>';
+                    }
+                    $content .= '<tr>';
+                        $content .= '<td align="left" width="180px">';
+                        $content .= '<a href="#" onclick="javascript:showHideElem(\'step' . $cptCycles . '\');">';
+                        $content .= $_SESSION['m_admin']['lc_policies']
+                            ['tabWf']['value']['cycles'][$cptCycles]
+                            ['cycle_id'];
+                        $content .= '</a>';
+                        $content .= '</td>';
+                        $content .= '<td align="left" width="300px">';
+                        $content .= $_SESSION['m_admin']['lc_policies']
+                            ['tabWf']['value']['cycles'][$cptCycles]
+                            ['cycle_desc'];
+                        $content .= '</td>';
+                        $content .= '<td align="left" width="300px">';
+                        $content .= $_SESSION['m_admin']['lc_policies']
+                            ['tabWf']['value']['cycles'][$cptCycles]
+                            ['where_clause'];
+                        $content .= '</td>';
+                        $content .= '<td align="left" width="100px">';
+                        $content .= $_SESSION['m_admin']['lc_policies']
+                            ['tabWf']['value']['cycles'][$cptCycles]
+                            ['break_key'];
+                        $content .= '</td>';
+                        $content .= '<td align="right" width="100px">';
+                        $content .= $_SESSION['m_admin']['lc_policies']
+                            ['tabWf']['value']['cycles'][$cptCycles]
+                            ['sequence_number'];
+                        $content .= '&nbsp;</td>';
+                    $content .= '</tr>';
+                    $content .= '</table>';
+                    $content .= '<br/>';
+                    $content .= '<div id="step' . $cptCycles . '" style="display:none;">';
+                    for (
+                        $cptSteps = 0;
+                        $cptSteps < count($_SESSION['m_admin']['lc_policies']
+                            ['tabWf']['value']['cycles'][$cptCycles]['steps']);
+                        $cptSteps++
+                    ) {
+                        $content .= '<table border="0" rules="rows">';
+                        if ($cptSteps == 0) {
+                            $content .= '<tr>';
+                            $content .= '<th align="left" width="180px"><small>' 
+                                . _CYCLE_STEP_ID . '</small></th>';
+                            $content .= '<th align="left" width="300px"><small>' 
+                                . _CYCLE_STEP_DESC . '</small></th>';
+                            $content .= '<th align="left" width="200px"><small>' 
+                                . _DOCSERVER_TYPE_ID . '</small></th>';
+                            $content .= '<th align="left" width="150px"><small>' 
+                                . _STEP_OPERATION . '</small></th>';
+                            $content .= '<th align="left" width="80px"><small>' 
+                                . _SEQUENCE_NUMBER . '</small></th>';
+                            $content .= '</tr>';
+                        }
+                            $content .= '<tr>';
+                                $content .= '<td align="left" width="180px"><small>';
+                                $content .= $_SESSION['m_admin']['lc_policies']
+                                    ['tabWf']['value']['cycles'][$cptCycles]
+                                    ['steps'][$cptSteps]['cycle_step_id'];
+                                $content .= '</small></td>';
+                                $content .= '<td align="left" width="300px"><small>';
+                                $content .= $_SESSION['m_admin']['lc_policies']
+                                    ['tabWf']['value']['cycles'][$cptCycles]
+                                    ['steps'][$cptSteps]['cycle_step_desc'];
+                                $content .= '</small></td>';
+                                $content .= '<td align="left" width="200px"><small>';
+                                $content .= $_SESSION['m_admin']['lc_policies']
+                                    ['tabWf']['value']['cycles'][$cptCycles]
+                                    ['steps'][$cptSteps]['docserver_type_id'];
+                                $content .= '</small></td>';
+                                $content .= '<td align="left" width="150px"><small>';
+                                $content .= $_SESSION['m_admin']['lc_policies']
+                                    ['tabWf']['value']['cycles'][$cptCycles]
+                                    ['steps'][$cptSteps]['step_operation'];
+                                $content .= '</small></td>';
+                                $content .= '<td align="right" width="80px"><small>';
+                                $content .= $_SESSION['m_admin']['lc_policies']
+                                    ['tabWf']['value']['cycles'][$cptCycles]
+                                    ['steps'][$cptSteps]['sequence_number'];
+                                $content .= '&nbsp;</small></td>';
+                            $content .= '</tr>';
+                        $content .= '</table>';
+                    }
+                    $content .= '<br/>';
+                    $content .= '</div>';
+                }
+                $content .= '<hr/>';
+                echo $content;
+            } else {
+                echo $_SESSION['m_admin']['lc_policies']['tabWf']['error'];
+            }
+        }
         ?>
     </div>
     <?php
 }
-?>

@@ -102,10 +102,11 @@ if ($mode == "list") {
                     <label for="break_key"><?php echo _BREAK_KEY; ?> : </label>
                     <input name="break_key" type="text"  id="break_key" value="<?php if (isset($_SESSION['m_admin']['lc_cycles']['break_key'])) echo $func->show_str($_SESSION['m_admin']['lc_cycles']['break_key']); ?>" />
                 </p>
-                <p>
+                <input type="hidden" name="validation_mode" value="AUTO" />
+                <!--<p>
                     <label for="validation_mode"><?php echo _VALIDATION_MODE; ?> : </label>
                     <input name="validation_mode" type="text"  id="validation_mode" value="<?php if (isset($_SESSION['m_admin']['lc_cycles']['validation_mode'])) echo $func->show_str($_SESSION['m_admin']['lc_cycles']['validation_mode']); ?>" />
-                </p>
+                </p>-->
                 <p class="buttons">
                     <?php
                     if($mode == "up"){
