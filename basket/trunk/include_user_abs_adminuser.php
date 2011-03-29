@@ -28,7 +28,7 @@
 * @version $Revision$
 * @ingroup basket
 */
-if(isset($_SESSION['m_admin']['users']['Status']) && $_SESSION['m_admin']['users']['Status'] == 'ABS')
+if(isset($_SESSION['m_admin']['users']['status']) && $_SESSION['m_admin']['users']['status'] == 'ABS')
 {
 
  $content = '<div class="h2_title">'._CANCEL_ABS.'</div><div><form name="cancel_abs" id="cancel_abs" method="get" action="'.$_SESSION['config']['bussinesappurl'].'index.php?display=true&module=basket&page=manage_cancel_abs"><input type="hidden" name="diplay" value="true"/><input type="hidden" name="module" value="basket"/><input type="hidden" name="page" value="manage_cancel_abs"/><p>'._REALLY_CANCEL_ABS.'</p><input type="submit" name="submit" value="'._VALIDATE.'" class="button" /> <input type="button" name="cancel" value="'._CANCEL.'" onclick="destroyModal(\'modal_cancel_abs\');" class="button" /></form></div>';
