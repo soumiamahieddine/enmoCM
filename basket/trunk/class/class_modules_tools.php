@@ -983,35 +983,12 @@ class basket extends dbquery
      * @param  $used_css string CSS to use in displaying
      */
     public function redirect_my_baskets_list($result, $nb_total, $userId,
-    $used_css = 'listing spec')
+     $used_css = 'listing spec')
     {
         $nbShow = $_SESSION['config']['nblinetoshow'];
         if ($nb_total > 0) {
             ob_start();
-            ?>
-<h2>
-<?php echo _REDIRECT_MY_BASKETS;?>
-</h2>
-<div align="center">
-    <form name="redirect_my_baskets_to" id="redirect_my_baskets_to"
-        method="post"
-        action="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&amp;module=basket&amp;page=manage_redirect_my_basket">
-        <input type="hidden" name="display" id="display" value="true" /><input
-            type="hidden" name="page" id="page"
-            value="manage_redirect_my_basket" /><input type="hidden"
-            name="module" id="module" value="basket" /><input type="hidden"
-            name="baskets_owner" id="baskets_owner"
-            value="<?php echo $userId;?>" />
-        <table border="0" cellspacing="0" class="<?php echo $used_css;?>">
-            <thead>
-                <tr>
-                    <th><?php echo _ID; ?></th>
-                    <th><?php echo _NAME; ?></th>
-                    <th><?php echo _REDIRECT_TO; ?></th>
-                </tr>
-            </thead>
-            <tbody>
-            <?php
+            ?><h2><?php echo _REDIRECT_MY_BASKETS;?></h2><div align="center"><form name="redirect_my_baskets_to" id="redirect_my_baskets_to" method="post" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&amp;module=basket&amp;page=manage_redirect_my_basket"><input type="hidden" name="display" id="display" value="true" /><input type="hidden" name="page" id="page" value="manage_redirect_my_basket" /><input type="hidden" name="module" id="module" value="basket" /><input type="hidden" name="baskets_owner" id="baskets_owner" value="<?php echo $userId;?>" /><table border="0" cellspacing="0" class="<?php echo $used_css;?>"><thead><tr><th><?php echo _ID; ?></th><th><?php echo _NAME; ?></th><th><?php echo _REDIRECT_TO; ?></th></tr></thead><tbody><?php
             $color = "";
             for ($theline = 0; $theline < $nb_total ; $theline ++) {
                 if ($color == ' class="col"') {
@@ -1019,73 +996,17 @@ class basket extends dbquery
                 } else {
                     $color = ' class="col"';
                 }
-                ?>
-                <tr <?php echo $color; ?>>
-                    <td><?php echo $result[$theline]['id'];  ?></td>
-                    <td><?php echo $result[$theline]['name'];  ?></td>
-                    <td><input type="hidden"
-                        name="basket_<?php echo $theline;?>"
-                        id="basket_<?php echo $theline;?>"
-                        value="<?php echo $result[$theline]['id'];?>" /><input
-                        type="hidden" name="virtual_<?php echo $theline;?>"
-                        id="virtual_<?php echo $theline;?>"
-                        value="<?php if( $result[$theline]['abs_basket'] == true){ echo 'Y';}else{ echo 'N';} ?>" /><input
-                        type="hidden"
-                        name="originalowner_<?php echo $theline;?>"
-                        id="originalowner_<?php echo $theline;?>"
-                        value="<?php echo $result[$theline]['basket_owner'];  ?>" /><input
-                        type="text" id="user_<?php echo $theline;?>"
-                        name="user_<?php echo $theline;?>"
-                        class="users_to redirect" /><span
-                        id="indicator_<?php echo $theline;?>"
-                        style="display: none"><img
-                            src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=loading.gif"
-                            alt="Working..." /> </span>
-                        <div id="options_<?php echo $theline;?>"
-                            class="autocomplete"></div></td>
-                </tr>
-                <?php
+                ?><tr <?php echo $color; ?>><td> <?php echo $result[$theline]['id'];  ?></td><td><?php echo $result[$theline]['name'];  ?></td><td><input type="hidden" name="basket_<?php echo $theline;?>" id="basket_<?php echo $theline;?>" value="<?php echo $result[$theline]['id'];?>" /><input type="hidden" name="virtual_<?php echo $theline;?>" id="virtual_<?php echo $theline;?>" value="<?php if( $result[$theline]['abs_basket'] == true){ echo 'Y';}else{ echo 'N';} ?>"/><input type="hidden" name="originalowner_<?php echo $theline;?>" id="originalowner_<?php echo $theline;?>" value="<?php echo $result[$theline]['basket_owner'];  ?>" /><input type="text" id="user_<?php echo $theline;?>" name="user_<?php echo $theline;?>" class="users_to redirect" /><span id="indicator_<?php echo $theline;?>" style="display: none"><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=loading.gif" alt="Working..." /></span><div id="options_<?php echo $theline;?>" class="autocomplete"></div></td></tr><?php
             }
-            ?>
-            </tbody>
-        </table>
-        <p class="buttons">
-            <input type="button" onclick="test_form();" name="valid"
-                value="<?php echo _VALIDATE;?>" class="button" /> <input
-                type="button" name="cancel" value="<?php echo _CANCEL;?>"
-                onclick="destroyModal('modal_redirect');" class="button" />
-        </p>
-    </form>
-</div>
-            <?php
+            ?></tbody></table><p class="buttons"><input type="button" onclick="test_form();" name="valid" value="<?php echo _VALIDATE;?>" class="button"/> <input type="button" name="cancel" value="<?php echo _CANCEL;?>" onclick="destroyModal('modal_redirect');" class="button"/></p></form></div><?php
 
-            $content = ob_get_clean();
+             $content = ob_get_clean();
         } else {
             ob_start();
-            ?>
-<h2>
-<?php echo _ABS_MODE;?>
-</h2>
-<div align="center">
-    <form name="abs_mode" id="abs_mode" method="get"
-        action="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&amp;module=basket&amp;page=manage_abs_mode">
-        <input type="hidden" name="display" value="true" /><input type="hidden"
-            name="module" value="basket" /><input type="hidden" name="page"
-            value="manage_abs_mode" /><input type="hidden" name="user_id"
-            value="<?php echo $userId ;?>" />
-        <p>
-        <?php echo _REALLY_ABS_MODE;?>
-        </p>
-        <input type="submit" name="submit" value="<?php echo _VALIDATE;?>"
-            class="button" /> <input type="button" name="cancel"
-            value="<?php echo _CANCEL;?>"
-            onclick="destroyModal('modal_redirect');" class="button" />
-    </form>
-</div>
-        <?php
-        $content = ob_get_clean();
+            ?><h2><?php echo _ABS_MODE;?></h2><div align="center"><form name="abs_mode" id="abs_mode" method="get" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&amp;module=basket&amp;page=manage_abs_mode"><input type="hidden" name="display" value="true"/><input type="hidden" name="module" value="basket"/><input type="hidden" name="page" value="manage_abs_mode"/><input type="hidden" name="user_id" value="<?php echo $userId ;?>"/><p><?php echo _REALLY_ABS_MODE;?></p><input type="submit" name="submit" value="<?php echo _VALIDATE;?>" class="button" /> <input type="button" name="cancel" value="<?php echo _CANCEL;?>" onclick="destroyModal('modal_redirect');" class="button" /></form></div><?php
+            $content = ob_get_clean();
         }
-        return $content;
+         return $content;
     }
 
     /**
