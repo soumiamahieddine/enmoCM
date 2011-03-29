@@ -417,7 +417,7 @@ class basket extends dbquery
      */
     private function _loadActivityUser($userId)
     {
-        if ( isset($userData['UserId']) ) {
+        if ( isset($userId) ) {
             $this->connect();
             $this->query(
                 "SELECT status from " . USERS_TABLE . " where user_id='" . $userId

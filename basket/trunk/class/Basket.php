@@ -20,8 +20,8 @@
 
 /**
 * @brief  Contains the Bakset Object (herits of the BaseObject class)
-* 
-* 
+*
+*
 * @file
 * @author Claire Figueras <dev@maarch.org>
 * @date $date$
@@ -37,11 +37,11 @@ try {
 }
 
 /**
-* @brief  Basket Object, herits of the BaseObject class 
+* @brief  Basket Object, herits of the BaseObject class
 *
 * @ingroup basket
 */
-class Basket extends BaseObject 
+class Basket_obj extends BaseObject
 {
 	/**
 	* Returns the string representing the Basket object
@@ -50,7 +50,7 @@ class Basket extends BaseObject
 	*/
 	function __toString()
 	{
-		return $this->basket_name." (".$this->basket_id.")" ; 
+		return $this->basket_name." (".$this->basket_id.")" ;
 	}
 }
-?>
+

@@ -19,9 +19,10 @@
 */
 
 /**
-* @brief  Contains the controler of the Basket Object (create, save, modify, etc...)
-* 
-* 
+* @brief  Contains the controler of the Basket Object
+* (create, save, modify, etc...)
+*
+*
 * @file
 * @author Claire Figueras <dev@maarch.org>
 * @date $date$
@@ -29,125 +30,70 @@
 * @ingroup core
 */
 
-// To activate de debug mode of the class
-$_ENV['DEBUG'] = false;
-/*
-define("_CODE_SEPARATOR","/");
-define("_CODE_INCREMENT",1);
-*/
 
 // Loads the required class
 try {
-	require_once("core/class/class_db.php");
-	require_once("modules/basket/class/Basket.php");
+	require_once 'core/class/class_db.php';
+	require_once 'modules/basket/class/Basket.php';
+	require_once 'modules/basket/basket_tables.php';
 } catch (Exception $e){
 	echo $e->getMessage().' // ';
 }
 
 /**
-* @brief  Controler of the Basket Object 
+* @brief  Controler of the Basket Object
 *
 *<ul>
 *  <li>Get an basket object from an id</li>
 *  <li>Save in the database a basket</li>
-*  <li>Manage the operation on the baskets related tables in the database (insert, select, update, delete)</li>
+*  <li>Manage the operation on the baskets related tables in the database
+*  (_insert, select, _update, delete)</li>
 *</ul>
 * @ingroup core
 */
 class BasketControler
 {
-	/**
-	* Dbquery object used to connnect to the database
-    */
-	private static $db;
-	
-	/**
-	* Baskets table
-    */
-	public static $baskets_table;
-	
-	/**
-	* Groupbasket table
-    */
-	public static $groupbasket_table;
-	
-	/**
-	* Groupbasket_redirect table
-    */
-	public static $groupbasket_redirect_table;
-	
-	/**
-	* Actions_groupbasket table
-    */
-	public static $actions_groupbaskets_table;
-	
-	/**
-	* Opens a database connexion and values the tables variables
-	*/
-	public function connect()
-	{
-		$db = new dbquery();
-		$db->connect();
-		self::$baskets_table = $_SESSION['tablename']['bask_baskets'];
-		self::$groupbasket_table = $_SESSION['tablename']['bask_groupbasket'];
-		self::$actions_groupbaskets_table = $_SESSION['tablename']['bask_actions_groupbaskets'];
-		self::$groupbasket_redirect_table = $_SESSION['tablename']['ent_groupbasket_redirect'];
-			
-		self::$db=$db;
-	}	
-	
-	/**
-	* Close the database connexion
-	*/
-	public function disconnect()
-	{
-		self::$db->disconnect();
-	}	
-	
+
 	/**
 	* Returns a Basket Object based on a basket identifier
 	*
-	* @param  $basket_id string Basket identifier
-	* @param  $can_be_disabled bool  if true gets the basket even if it is disabled in the database (false by default)
+	* @param  $basketId string Basket identifier
+	* @param  $canBeDisabled bool  if true gets the basket even if it is
+	*  disabled in the database (false by default)
 	* @return User object with properties from the database or null
 	*/
-	public function get($basket_id, $can_be_disabled = false)
+	public function get($basketId, $canBeDisabled=false)
 	{
-		if(!isset($basket_id) || empty($basket_id))
+		if (! isset($basketId) || empty($basketId)) {
 			return null;
+		}
+		$db = new dbquery();
+		$db->connect();
 
-		self::connect();
-
-		$query = "select * from ".self::$baskets_table." where basket_id = '".$basket_id."'";
-		if(!$can_be_disabled)
-		{
+		$query = "select * from " . BASKET_TABLE . " where basket_id = '"
+		       . $basketId . "'";
+		if (! $canBeDisabled) {
 			$query .= " and enabled = 'Y'";
 		}
-		try{
-			if($_ENV['DEBUG']){echo $query.' // ';}
-			self::$db->query($query);
-		} catch (Exception $e){
-			echo _NO_BASKET_WITH_ID.' '.$basket_id.' // ';
+		try {
+		    $db->query($query);
+		} catch (Exception $e) {
+			echo _NO_BASKET_WITH_ID . ' ' . $basketId . ' // ';
 		}
-		if(self::$db->nb_result() > 0)
-		{	
-			$basket=new Basket();
-			$queryResult=self::$db->fetch_object();
-			foreach($queryResult as $key => $value){
-				$basket->$key=$value;
+		if ($db->nb_result() > 0) {
+			$basket = new Basket_obj();
+			$queryResult = $db->fetch_object();
+			foreach ($queryResult as $key => $value) {
+				$basket->$key = $value;
 			}
-			self::disconnect();
 			return $basket;
-		}
-		else
-		{
-			self::disconnect();
+		} else {
 			return null;
 		}
 	}
-	
+
 	/**
-	* Saves in the database a basket object 
+	* Saves in the database a basket object
 	*
 	* @param  $basket Basket object to be saved
 	* @param  $mode string  Saving mode : add or up
@@ -155,45 +101,41 @@ class BasketControler
 	*/
 	public function save($basket, $mode)
 	{
-		if(!isset($basket) )
+		if (! isset($basket)) {
 			return false;
-
-		if($mode == "up")
-			return self::update($basket);
-		elseif($mode =="add") 
-			return self::insert($basket);
-		
+		}
+		if ($mode == 'up') {
+			return $this->_update($basket);
+		} else if ($mode == 'add') {
+			return $this->_insert($basket);
+		}
 		return false;
 	}
-	
+
 	/**
 	* Inserts in the database (baskets table) a Basket object
 	*
 	* @param  $basket Basket object
-	* @return bool true if the insertion is complete, false otherwise
+	* @return bool true if the _insertion is complete, false otherwise
 	*/
-	private function insert($basket)
+	private function _insert($basket)
 	{
-		if(!isset($basket) )
+		if (! isset($basket)) {
 			return false;
-			
-		self::connect();
-		$prep_query = self::insert_prepare($basket);
+		}
+		$this->connect();
+		$prepQuery = $this->_insertPrepare($basket);
 
-		$query="insert into ".self::$baskets_table." ("
-					.$prep_query['COLUMNS']
-					.") values("
-					.$prep_query['VALUES']
-					.")";
-		try{
-			if($_ENV['DEBUG']){ echo $query.' // '; }
-			self::$db->query($query);
+		$query = "insert into " . BASKET_TABLE . " (" . $prepQuery['COLUMNS']
+			   . ") values(" . $prepQuery['VALUES'] . ")";
+		try {
+			$db->query($query);
 			$ok = true;
-		} catch (Exception $e){
-			echo _CANNOT_INSERT_BASKET." ".$basket->toString().' // ';
+		} catch (Exception $e) {
+			echo _CANNOT_INSERT_BASKET . " " . $basket->toString() . ' // ';
 			$ok = false;
 		}
-		self::disconnect();
+
 		return $ok;
 	}
 
@@ -201,262 +143,268 @@ class BasketControler
 	* Updates a basket in the database (baskets table) with a Basket object
 	*
 	* @param  $basket Basket object
-	* @return bool true if the update is complete, false otherwise
+	* @return bool true if the _update is complete, false otherwise
 	*/
-	private function update($basket)
+	private function _update($basket)
 	{
-		if(!isset($basket) )
+		if (! isset($basket)) {
 			return false;
-			
-		self::connect();
-		$query="update ".self::$baskets_table." set "
-					.self::update_prepare($basket)
-					." where basket_id='".$basket->basket_id."'"; 
-					
-		try{
-			if($_ENV['DEBUG']){echo $query.' // ';}
-			self::$db->query($query);
+		}
+		$db = new dbquery();
+		$db->connect();
+		$query = "update " . BASKET_TABLE . " set "
+		       . $this->_updatePrepare($basket) . " where basket_id='"
+		       . $basket->basket_id . "'";
+
+		try {
+			$db->query($query);
 			$ok = true;
-		} catch (Exception $e){
-			echo _CANNOT_UPDATE_BASKET." ".$basket->toString().' // ';
+		} catch (Exception $e) {
+			echo _CANNOT_UPDATE_BASKET . " " . $basket->toString() . ' // ';
 			$ok = false;
 		}
-		self::disconnect();
 		return $ok;
 	}
-	
+
 	/**
-	* Deletes in the database (baskets related tables) a given basket (basket_id)
+	* Deletes in the database (baskets related tables) a given basket
+	*  (basket_id)
 	*
-	* @param  $basket_id string  Basket identifier
+	* @param  $basketId string  Basket identifier
 	* @return bool true if the deletion is complete, false otherwise
 	*/
-	public function delete($basket_id)  
+	public function delete($basketId)
 	{
-		if(!isset($basket_id)|| empty($basket_id) )
+		if (! isset($basketId)|| empty($basketId)) {
 			return false;
-		if(! self::basketExists($basket_id))
+		}
+		if (! $this->basketExists($basketId)) {
 			return false;
-			
-		self::connect();
-		$query="delete from ".self::$baskets_table." where basket_id='".$basket_id."'";
-		try{
-			if($_ENV['DEBUG']){echo $query.' // ';}
-			self::$db->query($query);
+		}
+		$db = new dbquery();
+		$db->connect();
+		$query = "delete from " . BASKET_TABLE . " where basket_id='"
+		       . $basketId . "'";
+		try {
+			$db->query($query);
 			$ok = true;
-		} catch (Exception $e){
-			echo _CANNOT_DELETE_BASKET_ID." ".$basket_id.' // ';
+		} catch (Exception $e) {
+			echo _CANNOT_DELETE_BASKET_ID . " " . $basketId . ' // ';
 			$ok = false;
 		}
-		
-		if($ok)
-			$ok = self::cleanFullGroupbasket($basket_id);
-		
-		self::disconnect();
+
+		if ($ok) {
+			$ok = $this->cleanFullGroupbasket($basketId);
+		}
+
 		return $ok;
 	}
-	
+
 	/**
-	* Cleans the groupbasket and actions_groupbasket tables in the database from a given field (basket_id by default)
+	* Cleans the groupbasket and actions_groupbasket tables in the database
+	* from a given field (basket_id by default)
 	*
 	* @param  $id string  object identifier
 	* @param  $field string  Field name (basket_id by default)
 	* @return bool true if the cleaning is complete, false otherwise
 	*/
-	public function cleanFullGroupbasket($id , $field = 'basket_id' )
+	public function cleanFullGroupbasket($id , $field='basket_id')
 	{
-		if(!isset($id)|| empty($id) || !isset($field) || empty($field) )
+		if (! isset($id )|| empty($id) || ! isset($field) || empty($field)) {
 			return false;
-			
-		$ok = self::cleanGroupbasket($id, $field);
-		
-		if($ok)
-			$ok = self::cleanActionsGroupbasket($id, $field);
-		
+		}
+		$ok = $this->cleanGroupbasket($id, $field);
+
+		if ($ok) {
+			$ok = $this->cleanActionsGroupbasket($id, $field);
+		}
 		return $ok;
 	}
-	
-	
+
+
 	/**
-	* Cleans the groupbasket table in the database from a given field 
+	* Cleans the groupbasket table in the database from a given field
 	*
 	* @param  $id string  object identifier
-	* @param  $field string  Field name 
+	* @param  $field string  Field name
 	* @return bool true if the cleaning is complete, false otherwise
 	*/
 	public function cleanGroupbasket($id, $field)
 	{
-		if(!isset($id)|| empty($id) || !isset($field) || empty($field) )
+		if (! isset($id) || empty($id) || ! isset($field) || empty($field)) {
 			return false;
-		
-		self::connect();
-		$query="delete from ".self::$groupbasket_table." where ".$field."='".$id."'";
-		try{
-			if($_ENV['DEBUG']){echo $query.' // ';}
-			self::$db->query($query);
+		}
+		$db = new dbquery();
+		$db->connect();
+		$query = "delete from " . GROUPBASKET_TABLE . " where " . $field . "='"
+		       . $id . "'";
+		try {
+			$db->query($query);
 			$ok = true;
-		} catch (Exception $e){
-			echo _CANNOT_DELETE.' '.$field.' '.$id.' // ';
+		} catch (Exception $e) {
+			echo _CANNOT_DELETE . ' ' . $field . ' ' . $id . ' // ';
 			$ok = false;
 		}
-		
-		self::disconnect();
+
 		return $ok;
 	}
-	
+
 	/**
-	* Cleans the actions_groupbasket table in the database from a given field 
+	* Cleans the actions_groupbasket table in the database from a given field
 	*
 	* @param  $id string  object identifier
-	* @param  $field string  Field name 
+	* @param  $field string  Field name
 	* @return bool true if the cleaning is complete, false otherwise
 	*/
 	public function cleanActionsGroupbasket($id, $field)
 	{
-		if(!isset($id)|| empty($id) || !isset($field) || empty($field) )
+		if (! isset($id) || empty($id) || !isset($field) || empty($field)) {
 			return false;
-		
-		self::connect();
-		$query="delete from ".self::$actions_groupbaskets_table." where ".$field."='".$basket_id."'";
-		try{
-			if($_ENV['DEBUG']){echo $query.' // ';}
-			self::$db->query($query);
+		}
+		$db = new dbquery();
+		$db->connect();
+		$query = "delete from " . ACTIONS_GROUPBASKET_TABLE . " where " . $field
+		       . "='" . $basketId . "'";
+		try {
+			$db->query($query);
 			$ok = true;
-		} catch (Exception $e){
-			echo _CANNOT_DELETE.' '.$field.' '.$id.' // ';
+		} catch (Exception $e) {
+			echo _CANNOT_DELETE . ' ' . $field . ' ' . $id . ' // ';
 			$ok = false;
 		}
-		
-		self::disconnect();
+
 		return $ok;
 	}
-	
+
 	/**
-	* Prepares the update query for a given Basket object
+	* Prepares the _update query for a given Basket object
 	*
 	* @param  $basket Basket object
-	* @return String containing the fields and the values 
+	* @return String containing the fields and the values
 	*/
-	private function update_prepare($basket)
+	private function _updatePrepare($basket)
 	{
-		$result=array();
-		foreach($basket->getArray() as $key => $value)
-		{
+		$result = array();
+		foreach ($basket->getArray() as $key => $value) {
 			// For now all fields in the baskets table are strings
-			if(!empty($value))
-			{
-				$result[]=$key."='".$value."'";		
+			if (! empty($value)) {
+				$result[] = $key . "='" . $value . "'";
 			}
 		}
 		// Return created string minus last ", "
-		return implode(",",$result);
-	} 
-	
+		return implode(",", $result);
+	}
+
 	/**
-	* Prepares the insert query for a given Basket object
+	* Prepares the _insert query for a given Basket object
 	*
 	* @param  $basket Basket object
-	* @return Array containing the fields and the values 
+	* @return Array containing the fields and the values
 	*/
-	private function insert_prepare($basket){
-		$columns=array();
-		$values=array();
-		foreach($basket->getArray() as $key => $value)
-		{
+	private function _insertPrepare($basket)
+	{
+		$columns = array();
+		$values = array();
+		foreach ($basket->getArray() as $key => $value) {
 			//For now all fields in the baskets table are strings or dates
-			if(!empty($value))
-			{
-				$columns[]=$key;
-				$values[]="'".$value."'";
+			if (! empty($value)) {
+				$columns[] = $key;
+				$values[] = "'" . $value . "'";
 			}
 		}
-		return array('COLUMNS' => implode(",",$columns), 'VALUES' => implode(",",$values));
+		return array(
+			'COLUMNS' => implode(",", $columns),
+			'VALUES' => implode(",", $values),
+		);
 	}
-	
+
 	/**
 	* Disables a given basket
-	* 
-	* @param  $basket_id String Basket identifier
-	* @return bool true if the disabling is complete, false otherwise 
+	*
+	* @param  $basketId String Basket identifier
+	* @return bool true if the disabling is complete, false otherwise
 	*/
-	public function disable($basket_id)
+	public function disable($basketId)
 	{
-		if(!isset($basket_id)|| empty($basket_id) )
+		if (! isset($basketId) || empty($basketId)) {
 			return false;
-		if(! self::basketExists($basket_id))
+		}
+		if (! $this->basketExists($basketId)) {
 			return false;
-			
-		self::connect();
-		$query="update ".self::$baskets_table." set enabled = 'N' where basket_id='".$basket_id."'"; 
-					
-		try{
-			if($_ENV['DEBUG']){echo $query.' // ';}
-			self::$db->query($query);
+		}
+		$db = new dbquery();
+		$db->connect();
+		$query = "update " . BASKET_TABLE . " set enabled = 'N' "
+		       . "where basket_id='" . $basketId . "'";
+
+		try {
+			$db->query($query);
 			$ok = true;
-		} catch (Exception $e){
-			echo _CANNOT_DISABLE_BASKET." ".$basket_id.' // ';
+		} catch (Exception $e) {
+			echo _CANNOT_DISABLE_BASKET . " " . $basketId . ' // ';
 			$ok = false;
 		}
-		self::disconnect();
+
 		return $ok;
 	}
-	
+
 	/**
 	* Enables a given basket
-	* 
-	* @param  $basket_id String Basket identifier
-	* @return bool true if the enabling is complete, false otherwise 
+	*
+	* @param  $basketId String Basket identifier
+	* @return bool true if the enabling is complete, false otherwise
 	*/
-	public function enable($basket_id)
+	public function enable($basketId)
 	{
-		if(!isset($basket_id)|| empty($basket_id) )
+		if (! isset($basketId) || empty($basketId)) {
 			return false;
-		if(! self::basketExists($basket_id))
+		}
+		if (! $this->basketExists($basketId)) {
 			return false;
-			
-		self::connect();
-		$query="update ".self::$baskets_table." set enabled = 'Y' where basket_id='".$basket_id."'"; 
-					
-		try{
-			if($_ENV['DEBUG']){echo $query.' // ';}
-			self::$db->query($query);
+		}
+
+		$db = new dbquery();
+		$db->connect();
+		$query = "update " . BASKET_TABLE . " set enabled = 'Y' "
+		       . "where basket_id='" . $basketId . "'";
+
+		try {
+			$db->query($query);
 			$ok = true;
-		} catch (Exception $e){
-			echo _CANNOT_ENABLE_BASKET." ".basket_id.' // ';
+		} catch (Exception $e) {
+			echo _CANNOT_ENABLE_BASKET . " " . basket_id . ' // ';
 			$ok = false;
 		}
-		self::disconnect();
+
 		return $ok;
 	}
-	
+
 	/**
 	* Asserts if a given basket (basket_id) exists in the database
-	* 
-	* @param  $basket_id String Basket identifier
-	* @return bool true if the basket exists, false otherwise 
+	*
+	* @param  $basketId String Basket identifier
+	* @return bool true if the basket exists, false otherwise
 	*/
-	public function basketExists($basket_id)
+	public function basketExists($basketId)
 	{
-		if(!isset($basket_id) || empty($basket_id))
+		if (! isset($basketId) || empty($basketId)) {
 			return false;
-
-		self::connect();
-		$query = "select basket from ".self::$baskets_table." where basket_id = '".$basket_id."'";
-					
-		try{
-			if($_ENV['DEBUG']){echo $query.' // ';}
-			self::$db->query($query);
-		} catch (Exception $e){
-			echo _UNKNOWN.' '._BASKET." ".$basket_id.' // ';
 		}
-		
-		if(self::$db->nb_result() > 0)
-		{
-			self::disconnect();
+		$db = new dbquery();
+		$db->connect();
+		$query = "select basket from " . BASKET_TABLE . " where basket_id = '"
+		       . $basketId . "'";
+
+		try {
+			$db->query($query);
+		} catch (Exception $e) {
+			echo _UNKNOWN . ' ' . _BASKET . " " . $basketId . ' // ';
+		}
+
+		if ($db->nb_result() > 0) {
 			return true;
 		}
-		self::disconnect();
+
 		return false;
 	}
 }
-?>
