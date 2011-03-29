@@ -682,4 +682,4 @@ class security extends dbquery
         }
     }
 }
-?>
+
