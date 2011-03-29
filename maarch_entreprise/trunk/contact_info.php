@@ -277,7 +277,7 @@ $core->load_js();
             <?php if($readonly)
             {
 
-                ?><input name="title" type="text"  id="title" value="<?php echo $func->show_str($contact_info['TITLE_LABEL']); ?>" readonly="readonly"/><?
+                ?><input name="title" type="text"  id="title" value="<?php echo $func->show_str($contact_info['TITLE_LABEL']); ?>" readonly="readonly"/><?php
             }
             else
             {?>
