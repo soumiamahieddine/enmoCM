@@ -147,7 +147,7 @@ function display_list(){
 
     $select[USERS_TABLE] = array();
     array_push($select[USERS_TABLE],'user_id','lastname','firstname','enabled','status','mail');
-    $where = " status = 'OK' ";
+    $where = " (status = 'OK' or status = 'ABS')";
     $what = '';
     if(isset($_REQUEST['what'])){
         $what = $func->protect_string_db($_REQUEST['what']);

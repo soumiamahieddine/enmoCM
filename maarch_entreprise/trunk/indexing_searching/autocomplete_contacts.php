@@ -44,11 +44,11 @@ if($table == 'users')
 	$select[$_SESSION['tablename']['users']]= array('lastname', 'firstname', 'user_id');
 	if($_SESSION['config']['databasetype'] == "POSTGRESQL")
 	{
-		$where = " (lastname ilike '%".$req->protect_string_db($_REQUEST['Input'])."%' or firstname ilike '%".$req->protect_string_db($_REQUEST['Input'])."%' or user_id ilike '%".$req->protect_string_db($_REQUEST['Input'])."%') and status = 'OK' and enabled = 'Y'";
+		$where = " (lastname ilike '%".$req->protect_string_db($_REQUEST['Input'])."%' or firstname ilike '%".$req->protect_string_db($_REQUEST['Input'])."%' or user_id ilike '%".$req->protect_string_db($_REQUEST['Input'])."%') and (status = 'OK' or status = 'ABS') and enabled = 'Y'";
 	}
 	else
 	{
-		$where = " (lastname like '%".$req->protect_string_db($_REQUEST['Input'])."%' or firstname like '%".$req->protect_string_db($_REQUEST['Input'])."%' or user_id like '%".$req->protect_string_db($_REQUEST['Input'])."%') and status = 'OK' and enabled = 'Y'";
+		$where = " (lastname like '%".$req->protect_string_db($_REQUEST['Input'])."%' or firstname like '%".$req->protect_string_db($_REQUEST['Input'])."%' or user_id like '%".$req->protect_string_db($_REQUEST['Input'])."%') and (status = 'OK' or status = 'ABS') and enabled = 'Y'";
 	}
 
 	$other = 'order by lastname, firstname';
