@@ -69,7 +69,9 @@ class users_controler extends ObjectControler implements ObjectControlerIF
         self::set_specific_id('user_id');
         $user = self::advanced_get($user_id,USERS_TABLE);
 
-        if(isset($user) && $user->__get('status') == 'OK'){
+        if(isset($user) 
+        && ($user->__get('status') == 'OK' || $user->__get('status') == 'ABS')
+        ) {
             return $user;
         }
         else{

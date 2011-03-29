@@ -120,7 +120,8 @@ class security extends dbquery
                     'LastName'    => $user->__get('lastname'),
                     'Phone'       => $user->__get('phone'),
                     'Mail'        => $user->__get('mail'),
-                    'department' => $user->__get('department')
+                    'department' => $user->__get('department'),
+                    'Status' => $user->__get('status'),
                 );
                // $_SESSION['error'] =  '';
                 setcookie(

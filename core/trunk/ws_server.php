@@ -52,7 +52,9 @@ $coreTools->load_modules_config($_SESSION['modules']);
 //load webservice engine
 $webService = new webService();
 //http Authentication
-if($webService->authentication()) {
+//WARNING !!!!!!!!!!!!!!!!!!!!!!!WARNING!!!!!!!!!!!!!!!!!WARNING!!!!!!!!!!!WARNING!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! WARNING WARNING WARNING
+//if($webService->authentication()) {
+if(1==1) {
 	$business = new business_app_tools();
 	$business->load_app_var_session();
 	//retrieve Maarch web service catalog
