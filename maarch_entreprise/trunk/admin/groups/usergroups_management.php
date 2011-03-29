@@ -122,8 +122,8 @@ if ($mode == 'list') {
                         <table cellpadding="0" cellspacing="0" border="0" class="listingsmall" summary="">
                             <thead>
                                 <tr>
-                                    <th><?php  echo NAME;?></th>
-                                    <th ><?php  echo DESC;?></th>
+                                    <th><?php  echo _NAME;?></th>
+                                    <th ><?php  echo _DESC;?></th>
                                     <th></th>
                                 </tr>
                             </thead>
