@@ -20,8 +20,8 @@
 
 /**
 * @brief  Contains the Security Object (herits of the BaseObject class)
-* 
-* 
+*
+*
 * @file
 * @author Claire Figueras <dev@maarch.org>
 * @date $date$
@@ -37,7 +37,7 @@ try {
 }
 
 /**
-* @brief  Security Object, herits of the BaseObject class 
+* @brief  Security Object, herits of the BaseObject class
 *
 * @ingroup core
 */
@@ -50,8 +50,8 @@ class SecurityObj extends BaseObject
 	*/
 	function __toString()
 	{
-		return $this->maarch_comment ; 
+		return $this->maarch_comment ;
 	}
 
 }
-?>
+

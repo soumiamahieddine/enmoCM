@@ -59,147 +59,147 @@ class usergroups_controler extends ObjectControler implements ObjectControlerIF
     /**
     * Returns an usergroup object based on a usegroup identifier
     *
-    * @param  $group_id string  Usergroup identifier
-    * @param  $can_be_disabled bool  if true gets the group even if it is
+    * @param  $groupId string  Usergroup identifier
+    * @param  $canBeDisabled bool  if true gets the group even if it is
     *   disabled in the database (false by default)
     * @return usergroup object with properties from the database or null
     */
-    public function get($group_id, $can_be_disabled = false)
+    public function get($groupId, $canBeDisabled=false)
     {
-        self::set_foolish_ids(array('group_id'));
-        self::set_specific_id('group_id');
-        return self::advanced_get($group_id,USERGROUPS_TABLE);
+        $this->set_foolish_ids(array('group_id'));
+        $this->set_specific_id('group_id');
+        return $this->advanced_get($groupId, USERGROUPS_TABLE);
     }
 
     /**
     * Returns all usergroups (enabled by default) from the database in an array
     *   of usergroup objects (ordered by group_desc by default)
     *
-    * @param  $order_str string  Order string passed to the query
+    * @param  $orderStr string  Order string passed to the query
     *   ("order by group_desc asc" by default)
-    * @param  $enabled_only bool  if true returns only the enabled usergroups,
+    * @param  $enabledOnly bool  if true returns only the enabled usergroups,
     *   otherwise returns even the disabled (true by default)
     * @return Array of usergroup objects with properties from the database
     */
-    public function getAllUsergroups($order_str = 'order by group_desc asc',
-        $enabled_only = true)
+    public function getAllUsergroups($orderStr='order by group_desc asc',
+        $enabledOnly=true)
     {
-        self::$db=new dbquery();
-        self::$db->connect();
+        $db = new dbquery();
+        $db->connect();
         $query = 'select * from ' . USERGROUPS_TABLE .' ';
-        if ($enabled_only) {
+        if ($enabledOnly) {
             $query .= "where enabled = 'Y'";
         }
-        $query.= $order_str;
+        $query .= $orderStr;
 
         try{
-            self::$db->query($query);
+            $db->query($query);
         } catch (Exception $e){}
 
         $groups = array();
-        while ($res = self::$db->fetch_object()) {
+        while ($res = $db->fetch_object()) {
             $group = new usergroups();
-            $tmp_array = array(
+            $tmpArray = array(
                 'group_id'   => $res->group_id,
                 'group_desc' => $res->group_desc,
-                'enabled'    => $res->enabled
+                'enabled'    => $res->enabled,
             );
-            $group->setArray($tmp_array);
+            $group->setArray($tmpArray);
             array_push($groups, $group);
         }
-        self::$db->disconnect();
+        $db->disconnect();
         return $groups;
     }
 
     /**
     * Returns in an array all the members of a usergroup (user_id only)
     *
-    * @param  $group_id string  Usergroup identifier
+    * @param  $groupId string  Usergroup identifier
     * @return Array of user_id or null
     */
-    public function getUsers($group_id)
+    public function getUsers($groupId)
     {
-        if (empty($group_id)) {
+        if (empty($groupId)) {
             return null;
         }
         $users = array();
-        self::$db=new dbquery();
-        self::$db->connect();
+        $db = new dbquery();
+        $db->connect();
         $query = 'select user_id from ' . USERGROUP_CONTENT_TABLE
-               . " where group_id = '" . $group_id . "'";
+               . " where group_id = '" . $groupId . "'";
         try{
-            self::$db->query($query);
+            $db->query($query);
         } catch (Exception $e){
-            echo _NO_GROUP_WITH_ID . ' ' . $group_id . ' // ';
+            echo _NO_GROUP_WITH_ID . ' ' . $groupId . ' // ';
         }
 
-        while ($res = self::$db->fetch_object()) {
+        while ($res = $db->fetch_object()) {
             array_push($users, $res->user_id);
         }
-        self::$db->disconnect();
+        $db->disconnect();
         return $users;
     }
 
     /**
     * Returns the id of the primary group for a given user_id
     *
-    * @param  $user_id string  User identifier
+    * @param  $userId string  User identifier
     * @return String  group_id or null
     */
-    public function getPrimaryGroup($user_id)
+    public function getPrimaryGroup($userId)
     {
-        if (empty($user_id)) {
+        if (empty($userId)) {
             return null;
         }
         $users = array();
-        self::$db=new dbquery();
-        self::$db->connect();
+        $db = new dbquery();
+        $db->connect();
         $query = 'select group_id from ' . USERGROUP_CONTENT_TABLE
-               . " where user_id = '" . $user_id . "' and primary_group = 'Y'";
+               . " where user_id = '" . $userId . "' and primary_group = 'Y'";
 
         try {
-            self::$db->query($query);
+            $db->query($query);
         } catch (Exception $e){
-            echo _NO_USER_WITH_ID.' '.$user_id.' // ';
+            echo _NO_USER_WITH_ID.' '.$userId.' // ';
         }
 
-        $res = self::$db->fetch_object();
+        $res = $db->fetch_object();
         if (isset($res->group_id)) {
-            $group_id = $res->group_id;
+            $groupId = $res->group_id;
         } else {
             return null;
         }
-        self::$db->disconnect();
-        return $group_id;
+        $db->disconnect();
+        return $groupId;
     }
 
     /**
     * Returns in an array all the baskets associated with a usergroup
     *   (basket_id only)
     *
-    * @param  $group_id string  Usergroup identifier
+    * @param  $groupId string  Usergroup identifier
     * @return Array of basket_id or null
     */
-    public function getBaskets($group_id)
+    public function getBaskets($groupId)
     {
-        if (empty($group_id)) {
+        if (empty($groupId)) {
             return null;
         }
         $baskets = array();
-        self::$db=new dbquery();
-        self::$db->connect();
+        $db = new dbquery();
+        $db->connect();
         $query = 'select basket_id from ' . GROUPBASKET_TABLE
-               . " where group_id = '" . $group_id . "'";
+               . " where group_id = '" . $groupId . "'";
         try{
-            self::$db->query($query);
+            $db->query($query);
         } catch (Exception $e){
-            echo _NO_GROUP_WITH_ID.' '.$group_id.' // ';
+            echo _NO_GROUP_WITH_ID.' '.$groupId.' // ';
         }
 
-        while ($res = self::$db->fetch_object()) {
+        while ($res = $db->fetch_object()) {
             array_push($baskets, $res->basket_id);
         }
-        self::$db->disconnect();
+        $db->disconnect();
         return $baskets;
     }
 
@@ -207,29 +207,29 @@ class usergroups_controler extends ObjectControler implements ObjectControlerIF
     * Returns in an array all the services linked to a usergroup
     *   (service_id only)
     *
-    * @param  $group_id string  Usergroup identifier
+    * @param  $groupId string  Usergroup identifier
     * @return Array of service_id or null
     */
-    public function getServices($group_id)
+    public function getServices($groupId)
     {
-        if (empty($group_id)) {
+        if (empty($groupId)) {
             return null;
         }
-        self::$db=new dbquery();
-        self::$db->connect();
+        $db = new dbquery();
+        $db->connect();
         $query = 'select service_id from ' . USERGROUPS_SERVICES_TABLE
-               . " where group_id = '" . $group_id . "'";
+               . " where group_id = '" . $groupId . "'";
         try {
-            self::$db->query($query);
+            $db->query($query);
         } catch (Exception $e){
-            echo _NO_GROUP_WITH_ID . ' ' . $group_id . ' // ';
+            echo _NO_GROUP_WITH_ID . ' ' . $groupId . ' // ';
         }
 
         $services = array();
-        while ($queryResult=self::$db->fetch_object()) {
-            array_push($services,trim($queryResult->service_id));
+        while ($queryResult = $db->fetch_object()) {
+            array_push($services, trim($queryResult->service_id));
         }
-        self::$db->disconnect();
+        $db->disconnect();
         return $services;
     }
 
@@ -268,7 +268,7 @@ class usergroups_controler extends ObjectControler implements ObjectControlerIF
         $mode = '', $params = array())
     {
         $control = array();
-        $sec_ctrl = new SecurityControler();
+        $secCtrl = new SecurityControler();
         $sec = new security();
         $func = new functions();
         // If usergroup not defined or empty, return an error
@@ -276,35 +276,35 @@ class usergroups_controler extends ObjectControler implements ObjectControlerIF
             $control = array(
                 'status' => 'ko',
                 'value' => '',
-                'error' => _GROUP_EMPTY
+                'error' => _GROUP_EMPTY,
             );
             return $control;
         }
         // If mode not up or add, return an error
         if (!isset($mode) || empty($mode)
-            || ($mode <> 'add' && $mode <> 'up' )) {
+            || ($mode <> 'add' && $mode <> 'up' )
+        ) {
             $control = array(
                 'status' => 'ko',
                 'value' => '',
-                'error' => _MODE . ' ' . _UNKNOWN
+                'error' => _MODE . ' ' . _UNKNOWN,
             );
             return $control;
         }
-        $group = self::isAGroup($group);
-        self::set_foolish_ids(array('group_id'));
-        self::set_specific_id('group_id');
-
+        $group = $this->_isAGroup($group);
+        $this->set_foolish_ids(array('group_id'));
+        $this->set_specific_id('group_id');
         // Data checks
-        $control = self::control($group, $security,$services, $mode, $params);
-
+        $control = $this->control($group, $security, $services, $mode, $params);
         // Security checks
-        for ($i=0; $i < count($security ); $i++) {
+        for ($i = 0; $i < count($security); $i ++) {
             $view = $sec->retrieve_view_from_coll_id(
                 $security[$i]['COLL_ID']
             );
-            $res = $sec_ctrl->check_where_clause(
+            $res = $secCtrl->check_where_clause(
                 $security[$i]['COLL_ID'], $security[$i]['WHERE_TARGET'],
-                $security[$i]['WHERE_CLAUSE'], $view, $params['user_id']);
+                $security[$i]['WHERE_CLAUSE'], $view, $params['user_id']
+            );
             if ($res['RESULT'] == false) {
                 $control = array(
                     'status' => 'ko',
@@ -315,10 +315,8 @@ class usergroups_controler extends ObjectControler implements ObjectControlerIF
             }
         }
         if ($control['status'] == 'ok') {
-
-            $sec_ctrl->deleteForGroup($group->group_id);
-
-            for ($i=0; $i < count($security ); $i++) {
+            $secCtrl->deleteForGroup($group->group_id);
+            for ($i = 0; $i < count($security); $i ++) {
                 if ($security[$i] <> "") {
                     $values = array(
                         'group_id'       => $group->group_id,
@@ -338,19 +336,22 @@ class usergroups_controler extends ObjectControler implements ObjectControlerIF
 
                     $bitmask = '0';
                     if (isset($security[$i]['RIGHTS_BITMASK'])
-                        && !empty($security[$i]['RIGHTS_BITMASK'])) {
+                        && !empty($security[$i]['RIGHTS_BITMASK'])
+                    ) {
                         $bitmask = (string) $security[$i]['RIGHTS_BITMASK'];
                     }
                     $values['rights_bitmask'] = $bitmask;
 
                     if (isset($security[$i]['START_DATE'])
-                        && !empty($security[$i]['START_DATE'])) {
+                        && !empty($security[$i]['START_DATE'])
+                    ) {
                         $values['mr_start_date'] = $func->format_date_db(
                             $security[$i]['START_DATE']
                         );
                     }
                     if (isset($security[$i]['STOP_DATE'])
-                        && !empty($security[$i]['STOP_DATE'])) {
+                        && !empty($security[$i]['STOP_DATE'])
+                    ) {
                         $values['mr_stop_date'] = $func->format_date_db(
                             $security[$i]['STOP_DATE']
                         );
@@ -358,13 +359,13 @@ class usergroups_controler extends ObjectControler implements ObjectControlerIF
 
                     $sec = new SecurityObj();
                     $sec->setArray($values);
-                    $sec_ctrl->save($sec);
+                    $secCtrl->save($sec);
                 }
             }
-            self::deleteServicesForGroup($group->group_id);
-            for ($i=0; $i<count($services); $i++) {
+            $this->deleteServicesForGroup($group->group_id);
+            for ($i = 0; $i < count($services); $i ++) {
                 if (!empty($services[$i])) {
-                    self::insertServiceForGroup(
+                    $this->insertServiceForGroup(
                         $group->group_id, $services[$i]
                     );
                 }
@@ -378,7 +379,7 @@ class usergroups_controler extends ObjectControler implements ObjectControlerIF
 
             if ($mode == 'up') {
                 //Update existing group
-                if (self::update($group)) {
+                if ($this->update($group)) {
                     $control = array(
                         'status' => 'ok',
                         'value'  => $group->group_id
@@ -396,11 +397,11 @@ class usergroups_controler extends ObjectControler implements ObjectControlerIF
                     $control = array(
                         'status' => 'ko',
                         'value'  => '',
-                        'error'  => _PB_WITH_GROUP_UPDATE
+                        'error'  => _PB_WITH_GROUP_UPDATE,
                     );
                 }
             } else { //mode == add
-                if (self::insert($group)) {
+                if ($this->insert($group)) {
                     $control = array(
                         'status' => 'ok',
                         'value'  => $group->group_id
@@ -418,7 +419,7 @@ class usergroups_controler extends ObjectControler implements ObjectControlerIF
                     $control = array(
                         'status' => 'ko',
                         'value'  => '',
-                        'error'  => _PB_WITH_USERGROUP
+                        'error'  => _PB_WITH_USERGROUP,
                     );
                 }
             }
@@ -468,9 +469,9 @@ class usergroups_controler extends ObjectControler implements ObjectControlerIF
             );
         }
 
-        if ($mode == "add" && self::groupExists($group->group_id)) {
+        if ($mode == "add" && $this->groupExists($group->group_id)) {
             $func->add_error(
-                $group->group_id . ' '. _ALREADY_EXISTS . "<br />"
+                $group->group_id . ' ' . _ALREADY_EXISTS . "<br />"
             );
         }
 
@@ -508,7 +509,7 @@ class usergroups_controler extends ObjectControler implements ObjectControlerIF
     */
     private function insert($group)
     {
-        return self::advanced_insert($group);
+        return $this->advanced_insert($group);
     }
 
     /**
@@ -520,7 +521,7 @@ class usergroups_controler extends ObjectControler implements ObjectControlerIF
     */
     private function update($group)
     {
-        return self::advanced_update($group);
+        return $this->advanced_update($group);
     }
 
     /**
@@ -536,69 +537,71 @@ class usergroups_controler extends ObjectControler implements ObjectControlerIF
             $control = array(
                 'status' => 'ko',
                 'value'  => '',
-                'error'  => _GROUP_EMPTY
+                'error'  => _GROUP_EMPTY,
             );
             return $control;
         }
-        $group = self::isAGroup($group);
-        if (!self::groupExists($group->group_id)) {
+        $group = $this->_isAGroup($group);
+        if (!$this->groupExists($group->group_id)) {
             $control = array(
                 'status' => 'ko',
                 'value'  => '',
-                'error'  => _GROUP_NOT_EXISTS
+                'error'  => _GROUP_NOT_EXISTS,
             );
             return $control;
         }
 
-        self::set_foolish_ids(array('group_id'));
-        self::set_specific_id('group_id');
+        $this->set_foolish_ids(array('group_id'));
+        $this->set_specific_id('group_id');
 
-        $group_id = $group->__get('group_id');
-        $ok = self::advanced_delete($group);
+        $groupId = $group->__get('group_id');
+        $ok = $this->advanced_delete($group);
         if ($ok) {
-            $ok = self::cleanUsergroupContent($group_id);
+            $ok = $this->_cleanUsergroupContent($groupId);
         } else {
             $control = array(
                 'status' => 'ko',
                 'value'  => '',
-                'error'  => _IMPOSSIBLE_TO_DELETE_USER
+                'error'  => _IMPOSSIBLE_TO_DELETE_USER,
             );
         }
 
         if ($ok) {
-            $ok = self::deleteServicesForGroup($group_id);
+            $ok = $this->deleteServicesForGroup($groupId);
         } elseif (!isset($control['status']) || $control['status'] <> 'ko' ) {
             $control = array(
                 'status' => 'ko',
                 'value'  => '',
-                'error'  => _PB_WITH_USERGROUP_CONTENT_CLEANING
+                'error'  => _PB_WITH_USERGROUP_CONTENT_CLEANING,
             );
         }
 
         if ($ok) {
-            $sec_ctrl = new SecurityControler();
-            $ok = $sec_ctrl->deleteForGroup($group_id);
+            $secCtrl = new SecurityControler();
+            $ok = $secCtrl->deleteForGroup($groupId);
         } elseif (!isset($control['status']) || $control['status'] <> 'ko' ) {
             $control = array(
                 'status' => 'ko',
                 'value' => '',
-                'error' => _PB_WITH_USERGROUP_CONTENT_CLEANING
+                'error' => _PB_WITH_USERGROUP_CONTENT_CLEANING,
             );
         }
 
         if (!$ok
-            && (!isset($control['status']) || $control['status'] <> 'ko' )) {
+            && (!isset($control['status']) || $control['status'] <> 'ko' )
+        ) {
             $control = array(
                 'status' => 'ko',
                 'value'  => '',
-                'error'  => _PB_WITH_SECURITY_CLEANING
+                'error'  => _PB_WITH_SECURITY_CLEANING,
             );
         }
 
         if (isset($control['status']) && $control['status'] == 'ok') {
             if (isset($params['log_group_del'])
                 && ($params['log_group_del'] == 'true'
-                    || $params['log_group_del'] == true)) {
+                    || $params['log_group_del'] == true)
+            ) {
                 $history = new history();
                 $history->add(
                     USERGROUPS_TABLE, $group->group_id, 'DEL',
@@ -611,25 +614,26 @@ class usergroups_controler extends ObjectControler implements ObjectControlerIF
     }
 
     /**
-    * Cleans the usergroup_content table in the database from a given usergroup (group_id)
+    * Cleans the usergroup_content table in the database from a given usergroup
+    *  (group_id)
     *
-    * @param  $group_id string  Usergroup identifier
+    * @param  $groupId string  Usergroup identifier
     * @return bool true if the cleaning is complete, false otherwise
     */
-    private function cleanUsergroupContent($group_id)
+    private function _cleanUsergroupContent($groupId)
     {
-        if (!isset($group_id)|| empty($group_id)) {
+        if (!isset($groupId)|| empty($groupId)) {
             return false;
         }
-        self::$db=new dbquery();
-        self::$db->connect();
+        $db = new dbquery();
+        $db->connect();
         $query = 'delete from ' . USERGROUP_CONTENT_TABLE . " where group_id='"
-               . $group_id . "'";
+               . $groupId . "'";
         try {
-            self::$db->query($query);
+            $db->query($query);
             $ok = true;
         } catch (Exception $e){
-            echo _CANNOT_DELETE_GROUP_ID . ' ' . $group_id . ' // ';
+            echo _CANNOT_DELETE_GROUP_ID . ' ' . $groupId . ' // ';
             $ok = false;
         }
 
@@ -643,29 +647,30 @@ class usergroups_controler extends ObjectControler implements ObjectControlerIF
     * @param  $group usergroup object
     * @return bool true if the disabling is complete, false otherwise
     */
-    public function disable($group, $params = array())
+    public function disable($group, $params=array())
     {
         $control = array();
         if (!isset($group) || empty($group)) {
             $control = array(
                 'status' => 'ko',
                 'value'  => '',
-                'error'  => _GROUP_EMPTY
+                'error'  => _GROUP_EMPTY,
             );
             return $control;
         }
-        $group = self::isAGroup($group);
-        self::set_foolish_ids(array('group_id'));
-        self::set_specific_id('group_id');
+        $group = $this->_isAGroup($group);
+        $this->set_foolish_ids(array('group_id'));
+        $this->set_specific_id('group_id');
 
-        if (self::advanced_disable($group)) {
+        if ($this->advanced_disable($group)) {
             $control = array(
                 'status' => 'ok',
                 'value'  => $group->group_id
             );
             if (isset($params['log_group_disabled'])
                 && ($params['log_group_disabled'] == 'true'
-                    || $params['log_group_disabled'] == true)) {
+                    || $params['log_group_disabled'] == true)
+            ) {
                 $history = new history();
                 $history->add(
                     USERGROUPS_TABLE, $group->group_id, 'BAN',
@@ -677,7 +682,7 @@ class usergroups_controler extends ObjectControler implements ObjectControlerIF
             $control = array(
                 'status' => 'ko',
                 'value'  => '',
-                'error'  => _PB_WITH_GROUP_ID
+                'error'  => _PB_WITH_GROUP_ID,
             );
         }
         return $control;
@@ -696,21 +701,22 @@ class usergroups_controler extends ObjectControler implements ObjectControlerIF
             $control = array(
                 'status' => 'ko',
                 'value'  => '',
-                'error'  => _GROUP_EMPTY
+                'error'  => _GROUP_EMPTY,
             );
             return $control;
         }
-        $group = self::isAGroup($group);
-        self::set_foolish_ids(array('group_id'));
-        self::set_specific_id('group_id');
-        if (self::advanced_enable($group)) {
+        $group = $this->_isAGroup($group);
+        $this->set_foolish_ids(array('group_id'));
+        $this->set_specific_id('group_id');
+        if ($this->advanced_enable($group)) {
             $control = array(
                 'status' => 'ok',
-                'value' => $group->group_id
+                'value' => $group->group_id,
             );
             if (isset($params['log_group_enabled'])
                 && ($params['log_group_enabled'] == 'true'
-                    || $params['log_group_enabled'] == true)) {
+                    || $params['log_group_enabled'] == true)
+            ) {
                 $history = new history();
                 $history->add(
                     USERGROUPS_TABLE, $group->group_id, 'VAL',
@@ -722,7 +728,7 @@ class usergroups_controler extends ObjectControler implements ObjectControlerIF
             $control = array(
                 'status' => 'ko',
                 'value' => '',
-                'error' => _PB_WITH_GROUP_ID
+                'error' => _PB_WITH_GROUP_ID,
             );
         }
         return $control;
@@ -731,31 +737,31 @@ class usergroups_controler extends ObjectControler implements ObjectControlerIF
     /**
     * Asserts if a given usergroup (group_id) exists in the database
     *
-    * @param  $group_id String Usergroup identifier
+    * @param  $groupId String Usergroup identifier
     * @return bool true if the usergroup exists, false otherwise
     */
-    public function groupExists($group_id)
+    public function groupExists($groupId)
     {
-        if (!isset($group_id) || empty($group_id)) {
+        if (!isset($groupId) || empty($groupId)) {
             return false;
         }
 
-        self::$db=new dbquery();
-        self::$db->connect();
+        $db = new dbquery();
+        $db->connect();
         $query = 'select group_id from ' . USERGROUPS_TABLE
-               . " where group_id = '" . $group_id . "'";
+               . " where group_id = '" . $groupId . "'";
 
         try {
-            self::$db->query($query);
+            $db->query($query);
         } catch (Exception $e) {
-            echo _UNKNOWN . _GROUP . ' ' . $group_id . ' // ';
+            echo _UNKNOWN . _GROUP . ' ' . $groupId . ' // ';
         }
 
-        if (self::$db->nb_result() > 0) {
-            self::$db->disconnect();
+        if ($db->nb_result() > 0) {
+            $db->disconnect();
             return true;
         }
-        self::$db->disconnect();
+        $db->disconnect();
         return false;
     }
 
@@ -763,26 +769,26 @@ class usergroups_controler extends ObjectControler implements ObjectControlerIF
     * Deletes all the services for a given usergroup in the usergroups_service
     *   table
     *
-    * @param  $group_id String Usergroup identifier
+    * @param  $groupId String Usergroup identifier
     * @return bool true if the deleting is complete, false otherwise
     */
-    public function deleteServicesForGroup($group_id)
+    public function deleteServicesForGroup($groupId)
     {
-        if (!isset($group_id)|| empty($group_id)) {
+        if (!isset($groupId)|| empty($groupId)) {
             return false;
         }
-        self::$db=new dbquery();
-        self::$db->connect();
+        $db = new dbquery();
+        $db->connect();
         $query = 'delete from ' . USERGROUPS_SERVICES_TABLE
-               . " where group_id='" . $group_id . "'";
+               . " where group_id='" . $groupId . "'";
         try {
-            self::$db->query($query);
+            $db->query($query);
             $ok = true;
         } catch (Exception $e) {
-            echo _CANNOT_DELETE_GROUP_ID . ' ' . $group_id . ' // ';
+            echo _CANNOT_DELETE_GROUP_ID . ' ' . $groupId . ' // ';
             $ok = false;
         }
-        self::$db->disconnect();
+        $db->disconnect();
         return $ok;
     }
 
@@ -790,59 +796,61 @@ class usergroups_controler extends ObjectControler implements ObjectControlerIF
     * Inserts a given service for a given group into the usergroups_services
     *   table
     *
-    * @param  $group_id String Usergroup identifier
-    * @param  $service_id String Service identifier
+    * @param  $groupId String Usergroup identifier
+    * @param  $serviceId String Service identifier
     * @return bool true if the insertion is complete, false otherwise
     */
-    public function insertServiceForGroup($group_id, $service_id)
+    public function insertServiceForGroup($groupId, $serviceId)
     {
-        if (!isset($group_id)|| empty($group_id) || !isset($service_id)
-            || empty($service_id)) {
+        if (!isset($groupId)|| empty($groupId) || !isset($serviceId)
+            || empty($serviceId)
+        ) {
             return false;
         }
-        self::$db=new dbquery();
-        self::$db->connect();
+        $db = new dbquery();
+        $db->connect();
         $query = 'insert into ' . USERGROUPS_SERVICES_TABLE
-               . " (group_id, service_id) values ('" . $group_id . "', '"
-               . $service_id . "')";
+               . " (group_id, service_id) values ('" . $groupId . "', '"
+               . $serviceId . "')";
         try {
-            self::$db->query($query);
+            $db->query($query);
             $ok = true;
         } catch (Exception $e) {
-            echo _CANNOT_INSERT . ' ' . $group_id . ' ' . $service_id . ' // ';
+            echo _CANNOT_INSERT . ' ' . $groupId . ' ' . $serviceId . ' // ';
             $ok = false;
         }
-        self::$db->disconnect();
+        $db->disconnect();
         return $ok;
     }
 
     /**
     * Checks if a given user is a member of the given group
     *
-    * @param  $user_id String User identifier
-    * @param  $group_id String Usergroup identifier
+    * @param  $userId String User identifier
+    * @param  $groupId String Usergroup identifier
     * @return bool true if the user is a member, false otherwise
     */
-    public function inGroup($user_id, $group_id)
+    public function inGroup($userId, $groupId)
     {
-        if (!isset($group_id) || empty($group_id) || !isset($user_id)
-            || empty($user_id)) {
+        if (!isset($groupId) || empty($groupId) || !isset($userId)
+            || empty($userId)
+        ) {
             return false;
         }
-        self::$db=new dbquery();
-        self::$db->connect();
+        $db = new dbquery();
+        $db->connect();
         $query = 'select user_id from ' . USERGROUP_CONTENT_TABLE
-               . " where user_id ='" . $user_id . "' and group_id = '"
-               . $group_id . "'";
+               . " where user_id ='" . $userId . "' and group_id = '"
+               . $groupId . "'";
 
         try {
-            self::$db->query($query);
+            $db->query($query);
         } catch (Exception $e) {
-            echo _CANNOT_FIND . ' ' . $group_id . ' ' . $user_id . ' // ';
+            echo _CANNOT_FIND . ' ' . $groupId . ' ' . $userId . ' // ';
         }
-        self::$db->disconnect();
+        $db->disconnect();
 
-        if (self::$db->nb_result() > 0) {
+        if ($db->nb_result() > 0) {
             return true;
         } else {
             return false;
@@ -853,29 +861,29 @@ class usergroups_controler extends ObjectControler implements ObjectControlerIF
     * Returns the number of usergroup of the usergroups table
     *   (only the enabled by default)
     *
-    * @param  $enabled_only Bool if true counts only the enabled ones,
+    * @param  $enabledOnly Bool if true counts only the enabled ones,
     *   otherwise counts all usergroups even the disabled ones (true by default)
     * @return Integer the number of usergroups in the usergroups table
     */
-    public function getUsergroupsCount($enabled_only = true)
+    public function getUsergroupsCount($enabledOnly=true)
     {
         $nb = 0;
-        self::$db = new dbquery();
-        self::$db->connect();
+        $db = new dbquery();
+        $db->connect();
 
         $query = 'select group_id from ' . USERGROUPS_TABLE . ' ' ;
-        if ($enabled_only) {
+        if ($enabledOnly) {
             $query .= "where enabled ='Y'";
         }
 
         try {
-            self::$db->query($query);
+            $db->query($query);
         } catch (Exception $e) {
 
         }
 
-        $nb = self::$db->nb_result();
-        self::$db->disconnect();
+        $nb = $db->nb_result();
+        $db->disconnect();
         return $nb;
     }
 
@@ -885,7 +893,7 @@ class usergroups_controler extends ObjectControler implements ObjectControlerIF
     * @param  $object ws group object
     * @return object usergroups
     */
-    private function isAGroup($object)
+    private function _isAGroup($object)
     {
         if (get_class($object) <> 'usergroups') {
             $func = new functions();

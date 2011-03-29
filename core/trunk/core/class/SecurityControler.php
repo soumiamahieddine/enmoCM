@@ -29,25 +29,17 @@
 * @ingroup core
 */
 
-
-// To activate de debug mode of the class
-$_ENV['DEBUG'] = false;
-/*
-define("_CODE_SEPARATOR","/");
-define("_CODE_INCREMENT",1);
-*/
-
 // Loads the required class
 try {
-    require_once('core/core_tables.php');
-    require_once('core/class/class_db.php');
-    require_once('core/class/users_controler.php');
-    require_once('core/class/session_security_controler.php');
-    require_once('core/class/Security.php');
-    if (!defined('_CLASSIFICATION_SCHEME_VIEW')) {
+    require_once 'core/core_tables.php';
+    require_once 'core/class/class_db.php';
+    require_once 'core/class/users_controler.php';
+    require_once 'core/class/session_security_controler.php';
+    require_once 'core/class/Security.php';
+    if (! defined('_CLASSIFICATION_SCHEME_VIEW')) {
         define('_CLASSIFICATION_SCHEME_VIEW', 'mr_classification_scheme_view');
     }
-} catch (Exception $e){
+} catch (Exception $e) {
     echo $e->getMessage() . ' // ';
 }
 
@@ -58,78 +50,44 @@ try {
 *  <li>Get an security object from an id</li>
 *  <li>Save in the database a security</li>
 *  <li>Manage the operation on the security table in the database
-*   (insert, select, update, delete)</li>
+*   (_insert, select, _update, delete)</li>
 *</ul>
 * @ingroup core
 */
+
+
 class SecurityControler
 {
     /**
-    * Dbquery object used to connnect to the database
+    * Returns an Security Object based on a security identifier
+    *
+    * @param  $securityId string  Security identifier
+    * @return Security object with properties from the database or null
     */
-    private static $db;
-
-    /**
-    * Security table
-    */
-    private static $security_table;
-
-
-    /**
-    * Opens a database connexion and values the tables variables
-    */
-    public function connect()
+    public function get($securityId)
     {
+        if (empty($securityId)) {
+            return null;
+        }
         $db = new dbquery();
         $db->connect();
 
-        self::$security_table = SECURITY_TABLE;
-        self::$db=$db;
-    }
-
-
-    /**
-    * Close the database connexion
-    */
-    public function disconnect()
-    {
-        self::$db->disconnect();
-    }
-
-    /**
-    * Returns an Security Object based on a security identifier
-    *
-    * @param  $security_id string  Security identifier
-    * @return Security object with properties from the database or null
-    */
-    public function get($security_id)
-    {
-        if(empty($security_id))
-            return null;
-
-        self::connect();
-
-        $query = "select * from ".self::$security_table." where security_id = ".$security_id;
-        try{
-            if($_ENV['DEBUG']){echo $query.' // ';}
-            self::$db->query($query);
+        $query = "select * from " . SECURITY_TABLE . " where security_id = "
+               . $securityId;
+        try {
+            $db->query($query);
         } catch (Exception $e){
-            echo _NO_ACCESS_WITH_ID.' '.$security_id.' // ';
+            echo _NO_ACCESS_WITH_ID . ' ' . $securityId . ' // ';
         }
 
-        if(self::$db->nb_result() > 0)
-        {
-            $access=new SecurityObj();
-            $queryResult=self::$db->fetch_object();
-            foreach($queryResult as $key => $value){
-                $access->$key=$value;
+        if ($db->nb_result() > 0) {
+            $access = new SecurityObj();
+            $queryResult = $db->fetch_object();
+            foreach ($queryResult as $key => $value) {
+                $access->$key = $value;
             }
-            self::disconnect();
             return $access;
-        }
-        else
-        {
-            self::disconnect();
+        } else {
             return null;
         }
     }
@@ -137,38 +95,36 @@ class SecurityControler
     /**
     * Returns all security object for a given usergroup
     *
-    * @param  $group_id string  Usergroup identifier
+    * @param  $groupId string  Usergroup identifier
     * @return Array of security objects or null
     */
-    public function getAccessForGroup($group_id)
+    public function getAccessForGroup($groupId)
     {
-        if(empty($group_id))
+        if (empty($groupId)) {
             return null;
-
-        self::connect();
+        }
+        $db = new dbquery();
+        $db->connect();
         // Querying database
-        $query = "select * from ".self::$security_table." where group_id = '".$group_id."'";
+        $query = "select * from " . SECURITY_TABLE . " where group_id = '"
+               . $groupId . "'";
 
-        try{
-            if($_ENV['DEBUG']){echo $query.' // ';}
-            self::$db->query($query);
-        } catch (Exception $e){
-            echo _NO_GROUP_WITH_ID.' '.$group_id.' // ';
+        try {
+            $db->query($query);
+        } catch (Exception $e) {
+            echo _NO_GROUP_WITH_ID . ' ' . $groupId . ' // ';
         }
 
         $security = array();
-        if(self::$db->nb_result() > 0)
-        {
-            while($queryResult = self::$db->fetch_object())
-            {
-                $access=new SecurityObj();
-                foreach($queryResult as $key => $value){
-                    $access->$key=$value;
+        if ($db->nb_result() > 0) {
+            while ($queryResult = $db->fetch_object()) {
+                $access = new SecurityObj();
+                foreach ($queryResult as $key => $value) {
+                    $access->$key = $value;
                 }
                 array_push($security, $access);
             }
         }
-        self::disconnect();
         return $security;
     }
 
@@ -181,13 +137,15 @@ class SecurityControler
     */
     public function save($security, $mode="add")
     {
-        if(!isset($security))
+        if (! isset($security)) {
             return false;
+        }
 
-        if($mode == "up")
-            return self::update($security);
-        elseif($mode == "add")
-            return self::insert($security);
+        if ($mode == "up") {
+            return $this->_update($security);
+        } else if ($mode == "add") {
+            return $this->_insert($security);
+        }
 
         return false;
     }
@@ -196,30 +154,26 @@ class SecurityControler
     * Inserts in the database (security table) a Security object
     *
     * @param  $security Security object
-    * @return bool true if the insertion is complete, false otherwise
+    * @return bool true if the _insertion is complete, false otherwise
     */
-    private function insert($security)
+    private function _insert($security)
     {
-        if(!isset($security))
+        if (! isset($security)) {
             return false;
+        }
+        $db = new dbquery();
+        $db->connect();
+        $prepQuery = $this->_insertPrepare($security);
 
-        self::connect();
-        $prep_query = self::insert_prepare($security);
-
-        $query="insert into ".self::$security_table." ("
-                    .$prep_query['COLUMNS']
-                    .") values("
-                    .$prep_query['VALUES']
-                    .")";
-        try{
-            if($_ENV['DEBUG']){ echo $query.' // '; }
-            self::$db->query($query);
+        $query = "insert into " . SECURITY_TABLE . " (" . $prepQuery['COLUMNS']
+               . ") values (" . $prepQuery['VALUES'] . ")";
+        try {
+            $db->query($query);
             $ok = true;
-        } catch (Exception $e){
-            echo _CANNOT_INSERT_ACCESS." ".$security->toString().' // ';
+        } catch (Exception $e) {
+            echo _CANNOT_INSERT_ACCESS . " " . $security->toString() . ' // ';
             $ok = false;
         }
-        self::disconnect();
         return $ok;
     }
 
@@ -227,158 +181,158 @@ class SecurityControler
     * Updates a security in the database (security table) with a Security object
     *
     * @param  $security Security object
-    * @return bool true if the update is complete, false otherwise
+    * @return bool true if the _update is complete, false otherwise
     */
-    private function update($security)
+    private function _update($security)
     {
-        if(!isset($security))
+        if (! isset($security)) {
             return false;
+        }
+        $db = new dbquery();
+        $db->connect();
+        $query = "update " . SECURITY_TABLE . " set "
+               . $this->_updatePrepare($security) . " where security_id="
+               . $security->security_id;
 
-        self::connect();
-        $query="update ".self::$security_table." set "
-                    .self::update_prepare($security)
-                    ." where security_id=".$security->security_id;
-
-        try{
-            if($_ENV['DEBUG']){echo $query.' // ';}
-            self::$db->query($query);
+        try {
+            $db->query($query);
             $ok = true;
-        } catch (Exception $e){
-            echo _CANNOT_UPDATE_ACCESS." ".$security->toString().' // ';
+        } catch (Exception $e) {
+            echo _CANNOT_UPDATE_ACCESS . " " . $security->toString() . ' // ';
             $ok = false;
         }
-        self::disconnect();
         return $ok;
     }
 
     /**
     * Deletes in the database (security table) a given security
     *
-    * @param  $security_id string  Security identifier
+    * @param  $securityId string  Security identifier
     * @return bool true if the deletion is complete, false otherwise
     */
-    public function delete($security_id)
+    public function delete($securityId)
     {
-        if(!isset($security_id)|| empty($security_id) )
+        if (! isset($securityId) || empty($securityId)) {
             return false;
-
-        self::connect();
-        $query="delete from ".self::$security_table." where security_id=".$security_id;
-        try{
-            if($_ENV['DEBUG']){echo $query.' // ';}
-            self::$db->query($query);
+        }
+        $db = new dbquery();
+        $db->connect();
+        $query = "delete from " . SECURITY_TABLE . " where security_id="
+               . $securityId;
+        try {
+            $db->query($query);
             $ok = true;
-        } catch (Exception $e){
-            echo _CANNOT_DELETE_SECURITY_ID." ".$security_id.' // ';
+        } catch (Exception $e) {
+            echo _CANNOT_DELETE_SECURITY_ID . " " . $securityId . ' // ';
             $ok = false;
         }
-        self::disconnect();
         return $ok;
     }
 
     /**
     * Deletes in the database (security table) all security of a given usergroup
     *
-    * @param  $group_id string  Usergroup identifier
+    * @param  $groupId string  Usergroup identifier
     * @return bool true if the deletion is complete, false otherwise
     */
-    public function deleteForGroup($group_id)
+    public function deleteForGroup($groupId)
     {
-        if(!isset($group_id)|| empty($group_id) )
+        if (! isset($groupId) || empty($groupId)) {
             return false;
-
-        self::connect();
-        $query="delete from ".self::$security_table." where group_id='".$group_id."'";
-        try{
-            if($_ENV['DEBUG']){echo $query.' // ';}
-            self::$db->query($query);
+        }
+        $db = new dbquery();
+        $db->connect();
+        $query = "delete from " . SECURITY_TABLE . " where group_id='"
+               . $groupId . "'";
+        try {
+            $db->query($query);
             $ok = true;
-        } catch (Exception $e){
-            echo _CANNOT_DELETE.' '._GROUP_ID." ".$group_id.' // ';
+        } catch (Exception $e) {
+            echo _CANNOT_DELETE . ' ' . _GROUP_ID . " " . $groupId . ' // ';
             $ok = false;
         }
-        self::disconnect();
         return $ok;
     }
 
     /**
-    * Prepares the update query for a given Security object
+    * Prepares the _update query for a given Security object
     *
     * @param  $security Security object
     * @return String containing the fields and the values
     */
-    private function update_prepare($security)
+    private function _updatePrepare($security)
     {
-        $result=array();
-        foreach($security->getArray() as $key => $value)
-        {
-            // For now all fields in the usergroups table are strings or date excepts the security_id
-            if(!empty($value))
-            {
-                if($key <> 'security_id')
-                    $result[]=$key."='".$value."'";
+        $result = array();
+        foreach ($security->getArray() as $key => $value) {
+            // For now all fields in the usergroups table are strings or date
+            // excepts the security_id
+            if (! empty($value)) {
+                if ($key <> 'security_id') {
+                    $result[] = $key . "='" . $value . "'";
+                }
             }
         }
         // Return created string minus last ", "
-        return implode(",",$result);
+        return implode(",", $result);
     }
 
     /**
-    * Prepares the insert query for a given Security object
+    * Prepares the _insert query for a given Security object
     *
     * @param  $security Security object
     * @return Array containing the fields and the values
     */
-    private function insert_prepare($security)
+    private function _insertPrepare($security)
     {
-        $columns=array();
-        $values=array();
-        foreach($security->getArray() as $key => $value)
-        {
-            // For now all fields in the usergroups table are strings or date excepts the security_id
-            if(!empty($value))
-            {
-                if($key <> 'security_id')
-                {
-                    $columns[]=$key;
-                    $values[]="'".$value."'";
+        $columns = array();
+        $values = array();
+        foreach ($security->getArray() as $key => $value) {
+            // For now all fields in the security table are strings
+            // or date excepts the security_id
+            if (! empty($value)) {
+                if ($key <> 'security_id') {
+                    $columns[] = $key;
+                    $values[] = "'" . $value . "'";
                 }
             }
         }
-        return array('COLUMNS' => implode(",",$columns), 'VALUES' => implode(",",$values));
+        return array(
+        	'COLUMNS' => implode(",", $columns),
+        	'VALUES'  => implode(",", $values),
+        );
     }
 
-    public function check_where_clause($coll_id, $target, $where_clause,
-       $view, $user_id)
+    public function check_where_clause($collId, $target, $whereClause,
+       $view, $userId)
     {
         $res = array(
             'RESULT' => false,
-            'TXT' => ''
+            'TXT' => '',
         );
 
-        if (empty($coll_id) || empty($target) || empty($where_clause)) {
+        if (empty($collId) || empty($target) || empty($whereClause)) {
             $res['TXT'] = _ERROR_PARAMETERS_FUNCTION;
             return $res;
         }
-
-        $where = ' ' . $where_clause;
+        $where = ' ' . $whereClause;
         $where = str_replace('\\', '', $where);
-        $where = self::process_security_where_clause($where, $user_id);
-        if(str_replace(' ', '', $where) == ''){
+        $where = $this->process_security_where_clause($where, $userId);
+        if (str_replace(' ', '', $where) == '') {
             $where = '';
         }
         $where = str_replace('where', ' ', $where);
-        self::connect();
+        $db = new dbquery();
+        $db->connect();
 
         if ($target == 'ALL' || $target == 'DOC') {
             $query = 'select res_id from ' . $view . ' where ' . $where;
         }
-        if($target == 'ALL' || $target == 'CLASS'){
+        if ($target == 'ALL' || $target == 'CLASS') {
             $query = 'select mr_aggregation_id from ' . $view
                    . ' where  '. $where;
         }
 
-        $ok = self::$db->query($query, true);
+        $ok = $db->query($query, true);
         if (!$ok) {
             $res['TXT'] = _SYNTAX_ERROR_WHERE_CLAUSE;
             return $res;
@@ -386,52 +340,58 @@ class SecurityControler
             $res['TXT'] = _SYNTAX_OK;
             $res['RESULT'] = true;
         }
-        self::disconnect();
         return $res;
     }
 
     /**
-    * Process a where clause, using the process_where_clause methods of the modules, the core and the apps
+    * Process a where clause, using the process_where_clause methods of the
+    * modules, the core and the apps
     *
-    * @param  $where_clause string Where clause to process
-    * @param  $user_id string User identifier
+    * @param  $whereClause string Where clause to process
+    * @param  $userId string User identifier
     * @return string Proper where clause
     */
-    public function process_security_where_clause($where_clause, $user_id)
+    public function process_security_where_clause($whereClause, $userId)
     {
-        if(!empty($where_clause))
-        {
-            $where = ' where '.$where_clause;
-
+        if (! empty($whereClause)) {
+            $where = ' where ' . $whereClause;
             // Process with the core vars
-            $where = self::process_where_clause($where, $user_id);
-
+            $where = $this->process_where_clause($where, $userId);
             // Process with the modules vars
-            foreach(array_keys($_SESSION['modules_loaded']) as $key)
-            {
-                $path_module_tools = $_SESSION['modules_loaded'][$key]['path']."class".DIRECTORY_SEPARATOR."class_modules_tools.php";
-                require_once($path_module_tools);
-                $object = new $key;
-                if(method_exists($object, 'process_where_clause'))
-                {
-                    $where = $object->process_where_clause($where, $user_id);
+            foreach (array_keys($_SESSION['modules_loaded']) as $key) {
+                $pathModuleTools = $_SESSION['modules_loaded'][$key]['path']
+                                   . "class" . DIRECTORY_SEPARATOR
+                                   . "class_modules_tools.php";
+                if (file_exists($pathModuleTools)) {
+                    require_once($pathModuleTools);
+                    if (class_exists($key)) {
+                        $object = new $key;
+                        if (method_exists(
+                            $object, 'process_where_clause'
+                        ) == true
+                        ) {
+                            $where = $object->process_where_clause(
+                                $where, $userId
+                            );
+                        }
+                    }
                 }
             }
+
             $where = preg_replace('/, ,/', ',', $where);
             $where = preg_replace('/\( ?,/', '(', $where);
             $where = preg_replace('/, ?\)/', ')', $where);
 
             // Process with the apps vars
-            require_once('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_business_app_tools.php');
+            require_once 'apps' . DIRECTORY_SEPARATOR
+                . $_SESSION['config']['app_id'] . DIRECTORY_SEPARATOR . 'class'
+                . DIRECTORY_SEPARATOR . 'class_business_app_tools.php';
             $object = new business_app_tools();
-            if(method_exists($object, 'process_where_clause'))
-            {
-                $where = $object->process_where_clause($where, $user_id);
+            if (method_exists($object, 'process_where_clause')) {
+                $where = $object->process_where_clause($where, $userId);
             }
             return $where;
-        }
-        else
-        {
+        } else {
             return '';
         }
     }
@@ -439,111 +399,131 @@ class SecurityControler
     /**
     * Process a where clause with the core specific vars
     *
-    * @param  $where_clause string Where clause to process
-    * @param  $user_id string User identifier
+    * @param  $whereClause string Where clause to process
+    * @param  $userId string User identifier
     * @return string Proper where clause
     */
-    public function process_where_clause($where_clause, $user_id)
+    public function process_where_clause($whereClause, $userId)
     {
-        $where = $where_clause;
-        if(preg_match('/@user/', $where_clause))
-        {
-            $where = str_replace("@user","'".trim($user_id)."'", $where_clause);
+        $where = $whereClause;
+        if (preg_match('/@user/', $whereClause)) {
+            $where = str_replace(
+            	"@user", "'" . trim($userId) . "'", $whereClause
+            );
         }
         return $where;
     }
 
     /**
-    * Loads into session, the security parameters corresponding to the user groups.
+    * Loads into session, the security parameters corresponding to the user
+    * groups.
     *
-    * @param  $user_id string User Identifier
+    * @param  $userId string User Identifier
     */
-    public function load_security($user_id)
+    public function load_security($userId)
     {
         $tab['collections'] = array();
         $tab['security'] = array();
         $func = new functions();
-        self::connect();
+        $db = new dbquery();
+        $db->connect();
 
-        if($user_id == "superadmin")
-        {
-            for($i=0; $i<count($_SESSION['collections']);$i++)
-            {
+        if ($userId == "superadmin") {
+            for ($i = 0; $i < count($_SESSION['collections']); $i ++) {
                 $tab['security'][ $_SESSION['collections'][$i]['id']] = array();
-                foreach(array_keys($_ENV['targets']) as $key)
-                {
-                    $tab['security'][ $_SESSION['collections'][$i]['id']][$key] = array('table'  => $_SESSION['collections'][$i]['table'], 'label_coll'  => $_SESSION['collections'][$i]['label'],'view'  => $_SESSION['collections'][$i]['view'], 'where' =>" (1=1) ");
+                foreach (array_keys($_ENV['targets']) as $key) {
+                    $tab['security'][ $_SESSION['collections'][$i]['id']][$key] = array(
+                    	'table'  => $_SESSION['collections'][$i]['table'],
+                    	'label_coll' => $_SESSION['collections'][$i]['label'],
+                    	'view'  => $_SESSION['collections'][$i]['view'],
+                    	'where' => " (1=1) ",
+                    );
                 }
-                array_push($tab['collections'], $_SESSION['collections'][$i]['id']);
+                array_push(
+                    $tab['collections'], $_SESSION['collections'][$i]['id']
+                );
             }
-        }
-        else
-        {
+        } else {
             $uc = new users_controler();
-            $groups = $uc->getGroups($user_id);
+            $groups = $uc->getGroups($userId);
 
             $access = array();
-            for($i=0; $i<count($groups); $i++)
-            {
-                $tmp = self::getAccessForGroup($groups[$i]['GROUP_ID']);
-                for($j=0; $j<count($tmp);$j++)
-                {
+            for ($i = 0; $i < count($groups); $i ++) {
+                $tmp = $this->getAccessForGroup($groups[$i]['GROUP_ID']);
+                for ($j = 0; $j < count($tmp);$j ++) {
                     array_push($access, $tmp[$j]);
                 }
             }
-            for($i=0; $i<count($access); $i++)
-            {
+            for ($i = 0; $i < count($access); $i ++) {
                 // TO DO : vérifier les dates
-                $start_date = $access[$i]->__get('mr_start_date');
-                $stop_date = $access[$i]->__get('mr_stop_date');
+                $startDate = $access[$i]->__get('mr_start_date');
+                $stopDate = $access[$i]->__get('mr_stop_date');
 
                 $target = $access[$i]->__get('where_target');
-                $coll_id = $access[$i]->__get('coll_id');
-                $where_clause = $access[$i]->__get('where_clause');
-                $where_clause = self::process_security_where_clause($where_clause, $user_id);
-                $where_clause = str_replace('where', '', $where_clause);
+                $collId = $access[$i]->__get('coll_id');
+                $whereClause = $access[$i]->__get('where_clause');
+                $whereClause = $this->process_security_where_clause(
+                    $whereClause, $userId
+                );
+                $whereClause = str_replace('where', '', $whereClause);
 
-                $ind = self::get_ind_collection($coll_id);
+                $ind = $this->get_ind_collection($collId);
 
-                if(trim($where_clause) == "")
+                if (trim($whereClause) == "") {
                     $where = "-1";
-                else
-                    $where =  "( ".$func->show_string($where_clause)." )";
-
-                if( ! in_array($coll_id, $tab['collections'] ) )
-                {
-                    $tab['security'][$coll_id] = array();
-
-                    if($target == 'ALL')
-                    {
-                        foreach(array_keys($_ENV['targets']) as $key)
-                        {
-                            $tab['security'][$coll_id][$key] = array('table'  => $_SESSION['collections'][$ind]['table'], 'label_coll'  => $_SESSION['collections'][$ind]['label'],'view'  => $_SESSION['collections'][$ind]['view'], 'where'  => $where);
-                        }
-                    }
-                    else
-                    {
-                        $tab['security'][$coll_id][$target] = array('table'  => $_SESSION['collections'][$ind]['table'], 'label_coll'  => $_SESSION['collections'][$ind]['label'],'view'  => $_SESSION['collections'][$ind]['view'], 'where'  => $where);
-                    }
-                    array_push($tab['collections'] ,$coll_id);
+                } else {
+                    $where = "( " . $func->show_string($whereClause) . " )";
                 }
-                else
-                {
-                    if(isset($tab['security'][$coll_id][$target]) && count($tab['security'][$coll_id][$target]) > 0)
-                        $tab['security'][ $coll_id][$target]['where'] .= " or ".$where;
-                    elseif($target == 'ALL')
-                    {
-                        foreach(array_keys($_ENV['targets']) as $key)
-                        {
-                            if(isset($tab['security'][$coll_id][$key]) && count($tab['security'][$coll_id][$key]) > 0)
-                                $tab['security'][$coll_id][$key]['where'] .= " or ".$where;
-                            else
-                                $tab['security'][$coll_id][$key] = array('table'  => $_SESSION['collections'][$ind]['table'], 'label_coll'  => $_SESSION['collections'][$ind]['label'],'view'  => $_SESSION['collections'][$ind]['view'], 'where'  => $where);
+                if (! in_array($collId, $tab['collections'])) {
+                    $tab['security'][$collId] = array();
+
+                    if ($target == 'ALL') {
+                        foreach (array_keys($_ENV['targets']) as $key) {
+                            $tab['security'][$collId][$key] = array(
+                            	'table'  => $_SESSION['collections'][$ind]['table'],
+                            	'label_coll'  => $_SESSION['collections'][$ind]['label'],
+                            	'view'  => $_SESSION['collections'][$ind]['view'],
+                            	'where'  => $where,
+                            );
                         }
+                    } else {
+                        $tab['security'][$collId][$target] = array(
+                        	'table'  => $_SESSION['collections'][$ind]['table'],
+                        	'label_coll'  => $_SESSION['collections'][$ind]['label'],
+                        	'view'  => $_SESSION['collections'][$ind]['view'],
+                        	'where'  => $where,
+                        );
                     }
-                    else
-                    {
-                        $tab['security'][$coll_id][$target] = array('table'  => $_SESSION['collections'][$ind]['table'], 'label_coll'  => $_SESSION['collections'][$ind]['label'],'view'  => $_SESSION['collections'][$ind]['view'], 'where'  => $where);
+                    array_push($tab['collections'], $collId);
+                } else {
+                    if (isset($tab['security'][$collId][$target])
+                        && count($tab['security'][$collId][$target]) > 0
+                    ) {
+                        $tab['security'][ $collId][$target]['where'] .= " or "
+                            . $where;
+                    } else if ($target == 'ALL') {
+                        foreach (array_keys($_ENV['targets']) as $key) {
+                            if (isset($tab['security'][$collId][$key])
+                                && count($tab['security'][$collId][$key]) > 0
+                            ) {
+                                $tab['security'][$collId][$key]['where'] .= " or "
+                                    . $where;
+                            } else {
+                                $tab['security'][$collId][$key] = array(
+                                	'table'  => $_SESSION['collections'][$ind]['table'],
+                                	'label_coll'  => $_SESSION['collections'][$ind]['label'],
+                                	'view'  => $_SESSION['collections'][$ind]['view'],
+                                	'where'  => $where,
+                                );
+                            }
+                        }
+                    } else {
+                        $tab['security'][$collId][$target] = array(
+                        	'table'  => $_SESSION['collections'][$ind]['table'],
+                        	'label_coll'  => $_SESSION['collections'][$ind]['label'],
+                        	'view'  => $_SESSION['collections'][$ind]['view'],
+                        	'where'  => $where,
+                        );
                     }
                 }
             }
@@ -554,15 +534,14 @@ class SecurityControler
     /**
     * Gets the indice of the collection in the  $_SESSION['collections'] array
     *
-    * @param  $coll_id string  Collection identifier
-    * @return integer Indice of the collection in the $_SESSION['collections'] or -1 if not found
+    * @param  $collId string  Collection identifier
+    * @return integer Indice of the collection in the $_SESSION['collections']
+    * 			or -1 if not found
     */
-    public function get_ind_collection($coll_id)
+    public function get_ind_collection($collId)
     {
-        for($i=0;$i< count($_SESSION['collections']); $i++)
-        {
-            if(trim($_SESSION['collections'][$i]['id']) == trim($coll_id))
-            {
+        for ($i = 0; $i < count($_SESSION['collections']); $i ++) {
+            if (trim($_SESSION['collections'][$i]['id']) == trim($collId)) {
                 return $i;
             }
         }
@@ -570,26 +549,23 @@ class SecurityControler
     }
 
 
-/**
-     * Give action bitmask for given $user_id over given
+	/**
+     * Give action bitmask for given $userId over given
      * object
-     * @param varchar(32) $user_id
-     * @param bigint $object_id
+     * @param varchar(32) $userId
+     * @param bigint $objectId
      * @return bitmask
      */
-    public function getActions($user_id,$object_id, $object_type = 'aggregation')
+    public function getActions($userId, $objectId, $objectType='aggregation')
     {
-        $Ctrl = new session_security_controler();
+        $ctrl = new session_security_controler();
         // Select from security session table
-        $session_sec = $Ctrl->get($user_id);
-        if($session_sec->__get('last_object_id') == $object_id)
-            return $session_sec->__get('last_available_bitmask');
-        else
-            return self::setActions($user_id,$object_id, $object_type);
-        /********
-         * FAKE *
-         ********/
-        //return ADD_RECORD+CREATE_CLASS+CREATE_OTHER_AGREGATION+DATA_MODIFICATION+DELETE_CLASS+DELETE_OTHER_AGREGATION;
+        $sessionSec = $ctrl->get($userId);
+        if ($sessionSec->__get('last_object_id') == $objectId) {
+            return $sessionSec->__get('last_available_bitmask');
+        } else {
+            return $this->setActions($userId, $objectId, $objectType);
+        }
     }
 
     /**
@@ -597,89 +573,100 @@ class SecurityControler
      * bitmask, according with given user
      * and aggregation.
      * Return computed bitmask
-     * @param varchar(32) $user_id
-     * @param bigint $object_id
+     * @param varchar(32) $userId
+     * @param bigint $objectId
      * @return bitmask
      */
-    public function setActions($user_id,$object_id, $object_type)
+    public function setActions($userId, $objectId, $objectType)
     {
-        if($user_id == 'superadmin')
-        {
+        if ($userId == 'superadmin') {
             return MAX_BITMASK;
         }
         // Compute action bitmask
-        $full_bitmask = 0;
+        $fullBitmask = 0;
         $uc = new users_controler();
-        $groups = $uc->getGroups($user_id);
+        $groups = $uc->getGroups($userId);
         //print_r($groups);
 
-        $full_where = "";
-        for($i=0; $i<count($groups); $i++)
-        {
-            $access = self::getAccessForGroup($groups[$i]['GROUP_ID']);
+        $fullWhere = "";
+        for ($i = 0; $i < count($groups); $i ++) {
+            $access = $this->getAccessForGroup($groups[$i]['GROUP_ID']);
             //var_dump($access);
-            for($j=0; $j<count($access);$j++)
-            {
+            for ($j = 0; $j < count($access); $j ++) {
                 $target = $access[$j]->__get('where_target');
-                $coll_id = $access[$j]->__get('coll_id');
-                $where_clause = $access[$j]->__get('where_clause');
-                $where_clause = self::process_security_where_clause($where_clause, $user_id);
-                $where_clause = str_replace('where', '', $where_clause);
+                $collId = $access[$j]->__get('coll_id');
+                $whereClause = $access[$j]->__get('where_clause');
+                $whereClause = $this->process_security_where_clause(
+                    $whereClause, $userId
+                );
+                $whereClause = str_replace('where', '', $whereClause);
                 $bitmask = $access[$j]->__get('rights_bitmask');
 
-                $ind = self::get_ind_collection($coll_id);
-                if(trim($where_clause) == "")
+                $ind = $this->get_ind_collection($collId);
+                if (trim($whereClause) == "") {
                     $where = "-1";
-                else
-                    $where =  "( ".$this->show_string($where_clause)." )";
+                } else {
+                    $where = "( " . $this->show_string($whereClause) . " )";
+                }
 
-                //echo 'target : '.$target.', coll_id : '.$coll_id.', where : '.$where.', bitmask : '.decbin($bitmask).'';
                 $query = '';
-                if($object_type == 'aggregation' && ($target == 'CLASS' || $target == 'ALL'))
-                {
-                    $query = "select mr_aggregation_id from "._CLASSIFICATION_SCHEME_VIEW." where (".$where.') ';
-                    if(isset($object_id) && !empty($object_id))
-                    {
-                       $query .= 'and mr_aggregation_id = '.$object_id;
+                if ($objectType == 'aggregation'
+                    && ($target == 'CLASS' || $target == 'ALL')
+                ) {
+                    $query = "select mr_aggregation_id from "
+                           . _CLASSIFICATION_SCHEME_VIEW . " where (" . $where
+                           . ') ';
+                    if (isset($objectId) && ! empty($objectId)) {
+                        $query .= 'and mr_aggregation_id = ' . $objectId;
                     }
-                }
-                elseif($object_type == 'classification_scheme' && ($target == 'CLASS' || $target == 'ALL'))
-                {
-                    $query = "select mr_classification_scheme_id from "._CLASSIFICATION_SCHEME_VIEW." where (".$where.') and mr_classification_scheme_id = '.$object_id;
-                }
-                else if($object_type == 'doc' && ($target == 'DOC' || $target == 'ALL'))
-                {
-                    $query = "select res_id from ".$_SESSION['collections'][$ind]['view']." where (".$where.') and res_id = '.$object_id;
+                } else if ($objectType == 'classification_scheme'
+                    && ($target == 'CLASS' || $target == 'ALL')
+                ) {
+                    $query = "select mr_classification_scheme_id from "
+                           . _CLASSIFICATION_SCHEME_VIEW . " where (" . $where
+                           . ') and mr_classification_scheme_id = ' . $objectId;
+                } else if ($objectType == 'doc'
+                    && ($target == 'DOC' || $target == 'ALL')
+                ) {
+                    $query = "select res_id from "
+                           . $_SESSION['collections'][$ind]['view'] . " where ("
+                           . $where . ') and res_id = ' . $objectId;
                 }
                 //echo $query;
-                self::connect();
-                if(!empty($query))
-                    self::$db->query($query);
-
-                if(self::$db->nb_result() > 0)
-                {
-                    if($bitmask > 0)
-                    {
-                        $full_bitmask = set_right($full_bitmask, $bitmask);
+                $db = new dbquery();
+                $db->connect();
+                if (! empty($query)) {
+                    $db->query($query);
+                }
+                if ($db->nb_result() > 0) {
+                    if ($bitmask > 0) {
+                        $fullBitmask = set_right($fullBitmask, $bitmask);
                     }
 
-                    if(!empty($full_where))
-                        $full_where .= " and (".$where.") ";
-                    else
-                        $full_where .= $where;
+                    if (! empty($fullWhere)) {
+                        $fullWhere .= " and (" . $where . ") ";
+                    } else {
+                        $fullWhere .= $where;
+                    }
                 }
-                self::disconnect();
             }
         }
 
         // Update security session table
         $func = new functions();
-        $session_security = new session_security();
-        $session_security->setArray(array('user_id' => $func->protect_string_db($user_id), 'session_begin_date' => date("Y-m-d H:i"), 'full_where_clause' => functions::protect_string_db($full_where), 'last_available_bitmask' => $full_bitmask, 'last_object_id' => functions::protect_string_db($object_id))); // TO DO : calculate the session_end_date
+        $sessionSecurity = new session_security();
+        $sessionSecurity->setArray(
+            array(
+            	'user_id' => $func->protect_string_db($userId),
+            	'session_begin_date' => date("Y-m-d H:i"),
+            	'full_where_clause' => $func->protect_string_db($fullWhere),
+            	'last_available_bitmask' => $fullBitmask,
+            	'last_object_id' => $func->protect_string_db($objectId)
+            )
+        ); // TO DO : calculate the session_end_date
         $ctrl = new session_security_controler();
-        $ctrl->save($session_security);
+        $ctrl->save($sessionSecurity);
 
-        return $full_bitmask;
+        return $fullBitmask;
     }
 }
-?>
