@@ -1212,8 +1212,8 @@ class docservers_controler
         $history = new history();
         $coreTools = new core_tools();
         $whereClause = '';
-        if ($_SESSION['origin'] <> 'basket' 
-            && $_SESSION['origin'] <> 'workflow'
+        if (isset($_SESSION['origin']) && ($_SESSION['origin'] <> 'basket' 
+            && $_SESSION['origin'] <> 'workflow')
         ) {
             if (isset(
                 $_SESSION['user']['security']
@@ -1405,6 +1405,7 @@ class docservers_controler
                                 $ent = new entity();
                                 $ent->increaseListinstanceViewed($gedId);
                             }
+                            $encodedContent = '';
                             if (file_exists($file) && !$error) {
                                 if ($calledByWS) {
                                     $content = '';
@@ -1438,7 +1439,9 @@ class docservers_controler
                                     'called_by_ws' => $calledByWS, 
                                     'error' => '',
                                 );
-                                if (file_exists($extract['tmpArchive'])) {
+                                if (isset($extract) 
+                                    && file_exists($extract['tmpArchive'])
+                                ) {
                                     Ds_washTmp($extract['tmpArchive']);
                                 }
                                 return $result;

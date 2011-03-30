@@ -167,7 +167,7 @@ function Ds_createPathOnDocServer($docServer)
 function Ds_extractArchive($fileInfos, $fingerprintMode) 
 {
     //var_dump($fileInfos);
-    if ($fileInfos['tmpDir'] == '') {
+    if (!isset($fileInfos['tmpDir']) || $fileInfos['tmpDir'] == '') {
         $tmp = $_SESSION['config']['tmppath'];
     } else {
         $tmp = $fileInfos['tmpDir'];
@@ -275,7 +275,7 @@ function Ds_extractArchive($fileInfos, $fingerprintMode)
                     continue;
                 } else {
                     preg_match("'CI|.tar'", $fileScan, $out);
-                    if (count($out[0]) == 1) {
+                    if (isset($out[0]) && count($out[0]) == 1) {
                         $execError = '';
                         $tmpArchiveBis = uniqid(rand());
                         if (mkdir(
@@ -323,7 +323,7 @@ function Ds_extractArchive($fileInfos, $fingerprintMode)
                             }
                             $tmpCmd = '';
                             exec($commandBis, $tmpCmd, $execError);
-							//echo $commandBis;exit;
+                            //echo $commandBis;exit;
                             if ($execError > 0) {
                                 $result = array(
                                     'status' => 'ko', 
