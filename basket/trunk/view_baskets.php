@@ -100,8 +100,10 @@ if(isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true")
     $init = true;
 }
 $level = "";
-if(isset($_REQUEST['level']) && $_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1)
-{
+if (isset($_REQUEST['level'])
+    && ($_REQUEST['level'] == 2 || $_REQUEST['level'] == 3
+        || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1)
+) {
     $level = $_REQUEST['level'];
 }
 $page_path = $_SESSION['config']['businessappurl'].'index.php?page=view_baskets&module=basket';
@@ -113,7 +115,7 @@ $bask = new basket();
 //$bask->load_basket();
 if(isset($_REQUEST['baskets']) && !empty($_REQUEST['baskets']))
 {
-    $_SESSION['tmpbasket']['service'] = $_SESSION['user']['services'][0]['ID'];
+    //$_SESSION['tmpbasket']['service'] = $_SESSION['user']['services'][0]['ID'];
     $_SESSION['tmpbasket']['status'] = "all";
     $bask->load_current_basket(trim($_REQUEST['baskets']), 'frame');
 }

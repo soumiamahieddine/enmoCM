@@ -405,8 +405,8 @@ class basket extends dbquery
             $_SESSION['current_basket']['clause'] = $_SESSION['user']['baskets'][$ind]['clause'];
             $_SESSION['current_basket']['actions'] = $_SESSION['user']['baskets'][$ind]['actions'];
         }
-        $_SESSION['current_basket']['redirect_services'] = $_SESSION['user']['baskets'][$ind]['redirect_services'];
-        $_SESSION['current_basket']['redirect_users'] = $_SESSION['user']['baskets'][$ind]['redirect_users'];
+       // $_SESSION['current_basket']['redirect_services'] = $_SESSION['user']['baskets'][$ind]['redirect_services'];
+       // $_SESSION['current_basket']['redirect_users'] = $_SESSION['user']['baskets'][$ind]['redirect_users'];
         $_SESSION['current_basket']['basket_owner'] = $_SESSION['user']['baskets'][$ind]['basket_owner'];
         $_SESSION['current_basket']['abs_basket'] = $_SESSION['user']['baskets'][$ind]['abs_basket'];
     }
@@ -442,7 +442,13 @@ class basket extends dbquery
                 $jsonActions .= "'"  . $actions[$i]['ID'] . "' : { 'where' : '"
                 . addslashes($actions[$i]['WHERE']) . "',";
                 $jsonActions .= "'id_status' : '" . $actions[$i]['ID_STATUS']
-                . "', 'confirm' : '" . $actions[$i]['CONFIRM']."', ";
+                . "', 'confirm' : '" ;
+                if (isset($actions[$i]['CONFIRM'])) {
+                    $jsonActions .= $actions[$i]['CONFIRM'];
+                } else {
+                    $jsonActions .= 'false';
+                }
+                $jsonActions .= "', ";
                 $jsonActions .= "'id_action_page' : '"
                 . $actions[$i]['ACTION_PAGE'] . "'}, ";
             }
