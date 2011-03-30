@@ -28,14 +28,20 @@
 * @ingroup indexing_searching_mlb
 */
 $func = new functions();
-$core_tools = new core_tools();
-$core_tools->test_user();
-$core_tools->load_lang();
+$core = new core_tools();
+$core->test_user();
+$core->load_lang();
 require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_indexing_searching_app.php");
 $is = new indexing_searching_app();
-$show_file = $is->show_index_frame($_SESSION['upfile']['format']);
 $ext_list = $is->filetypes_showed_indexation();
-$ext = strtolower($_SESSION['upfile']['format']);
+if (isset($_SESSION['upfile']['format'])) {
+    $show_file = $is->show_index_frame($_SESSION['upfile']['format']);
+    $ext = strtolower($_SESSION['upfile']['format']);
+} else {
+    $show_file = false;
+    $ext = '';
+}
+
 if($_SESSION['origin'] == "scan")
 {
 	//echo 'modules/indexing_searching'.DIRECTORY_SEPARATOR.'tmp'.DIRECTORY_SEPARATOR.'tmp_file_'.$_SESSION['upfile']['md5'].'.'.$ext;
@@ -82,18 +88,10 @@ elseif(isset($_SESSION['upfile']['mime']) && !empty($_SESSION['upfile']['mime'])
 	}
 	else
 	{
+        $core->load_html();
+        $core->load_header();
+       //time = $core->get_session_time_expire();
 		?>
-		<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-		<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php  echo $_SESSION['config']['lang'] ?>" lang="<?php  echo $_SESSION['config']['lang'] ?>">
-		<head>
-			<title><?php  echo $_SESSION['config']['applicationname']; ?></title>
-			<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-			<meta http-equiv="Content-Language" content="<?php  echo $_SESSION['config']['lang'] ?>" />
-			<link rel="stylesheet" type="text/css" href="<?php  echo $_SESSION['config']['css']; ?>" media="screen" />
-			<!--[if lt IE 7.0]>  <link rel="stylesheet" type="text/css" href="<?php  echo $_SESSION['config']['css_IE']; ?>" media="screen" />  <![endif]-->
-			<!--[if gte IE 7.0]>  <link rel="stylesheet" type="text/css" href="<?php  echo $_SESSION['config']['css_IE7']; ?>" media="screen" />  <![endif]-->
-			<!--<script type="text/javascript" src="js/functions.js"></script>-->
-		</head>
 		<body background="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=bg_home_home.gif" style="background-repeat:no-repeat;background-position:center">
 		<?php
    		$ext = strtolower($_SESSION['upfile']['format']);
@@ -119,22 +117,13 @@ elseif(isset($_SESSION['upfile']['mime']) && !empty($_SESSION['upfile']['mime'])
 }
 else
 {
+     $core->load_html();
+     $core->load_header();
 	?>
-    <!DOCTYPE PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-	<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php  echo $_SESSION['config']['lang'] ?>" lang="<?php  echo $_SESSION['config']['lang'] ?>">
-	<head>
-		<title><?php  echo $_SESSION['config']['applicationname']; ?></title>
-		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-		<meta http-equiv="Content-Language" content="<?php  echo $_SESSION['config']['lang'] ?>" />
-		<link rel="stylesheet" type="text/css" href="<?php  echo $_SESSION['config']['css']; ?>" media="screen" />
-		<!--[if lt IE 7.0]>  <link rel="stylesheet" type="text/css" href="<?php  echo $_SESSION['config']['css_IE']; ?>" media="screen" />  <![endif]-->
-		<!--[if gte IE 7.0]>  <link rel="stylesheet" type="text/css" href="<?php  echo $_SESSION['config']['css_IE7']; ?>" media="screen" />  <![endif]-->
-		<!--<script type="text/javascript" src="js/functions.js"></script>-->
-    </head>
     <body background="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=bg_home_home.gif" style="background-repeat:no-repeat;background-position:center">
 	<?php
 
-		if($_SESSION['upfile']['error'] == 1)
+		if(isset($_SESSION['upfile']['error']) && $_SESSION['upfile']['error'] == 1)
 		{
 			$filesize = $func->return_bytes(ini_get("upload_max_filesize"));
 			echo "<br/><br/><div class=\"error\">"._MAX_SIZE_UPLOAD_REACHED." (".round($filesize/1024,2)."Ko Max)</div>";
@@ -142,10 +131,10 @@ else
 		else
 		{
 			echo "<br/><br/><div class=\"advertissement\">".$_SESSION['error']." <br/>"._ONLY_FILETYPES_AUTHORISED." <br/><ul>";
-				for($i=0; $i< count($ext_list); $i++)
-				{
-					$displayed_ext_list .= $ext_list[$i].", ";
-				}
+			$displayed_ext_list = '';
+			for ($i = 0; $i < count($ext_list); $i ++) {
+				$displayed_ext_list .= $ext_list[$i].", ";
+		    }
 
 			echo "<li>".substr($displayed_ext_list, 0 ,-2)."</li>";
 			echo "</ul></div>";

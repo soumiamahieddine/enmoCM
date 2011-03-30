@@ -60,16 +60,11 @@ else
 	$start = 0;
 }
 
-if($_REQUEST['mode'] == 'frame')
-{
+if (isset($_REQUEST['mode']) && $_REQUEST['mode'] == 'frame') {
 	$mode = 'frame';
-}
-elseif($_REQUEST['mode'] == 'popup')
-{
+} else if (isset($_REQUEST['mode']) && $_REQUEST['mode'] == 'popup') {
 	$mode = 'popup';
-}
-else
-{
+} else {
 	$mode = 'normal';
 	$core_tools->test_service('adv_search_mlb', 'apps');
 }
@@ -694,9 +689,10 @@ if (count($_REQUEST['meta']) > 0) {
 			{
 				$where_request .= " category_id = '".$func->protect_string_db($_REQUEST['category'])."' AND ";
 				$json_txt .= "'category' : ['".addslashes($_REQUEST['category'])."'],";
-			}
-			else if($tab_id_fields[$j] == 'baskets_clause_true'  && $_REQUEST['baskets_clause'] == "true" )
-			{
+			} else if (isset($_REQUEST['baskets_clause'])
+			    && $tab_id_fields[$j] == 'baskets_clause_true'
+			    && $_REQUEST['baskets_clause'] == "true"
+			) {
 				for($ind_bask = 0; $ind_bask < count($_SESSION['user']['baskets']); $ind_bask++)
 				{
 					if(isset($_SESSION['user']['baskets'][$ind_bask]['clause']) && trim($_SESSION['user']['baskets'][$ind_bask]['clause']) <> '')
@@ -862,8 +858,9 @@ else
 	$where_request = trim($where_request);
 	$_SESSION['searching']['where_request'] = $where_request;
 }
-if($_REQUEST['specific_case'] == "attach_to_case")
-{
+if (isset($_REQUEST['specific_case'])
+    && $_REQUEST['specific_case'] == "attach_to_case"
+) {
 	$page = 'list_results_mlb_frame';
 	?>
 	<script type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=cases&page='.$page.'&searched_item='.$_REQUEST['searched_item'].'&searched_value='.$_REQUEST['searched_value'].'&template='.$_REQUEST['template'];?>';</script>

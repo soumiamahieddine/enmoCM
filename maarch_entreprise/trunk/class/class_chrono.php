@@ -11,322 +11,319 @@
 * @author  Loïc Vinet  <dev@maarch.org>
 *
 */
+require_once 'core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
+    . 'class_db.php';
+require_once 'core/core_tables.php';
 
-//class AdminActions extends dbquery
 class chrono
 {
-	function get_chrono_number($res_id, $view)
+	public function get_chrono_number($resId, $view)
 	{
-		require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_db.php");
 		$db = new dbquery();
 		$db->connect();
-
-		$db->query("select alt_identifier from ".$view." where res_id = ".$res_id." ");
+		$db->query(
+			"select alt_identifier from " . $view . " where res_id = "
+		    . $resId . " "
+		);
 		$res = $db->fetch_object();
-
-		$chrono_number = $res->alt_identifier;
-
-		return $chrono_number;
+		return $res->alt_identifier;
 	}
 	/**
 	* Return an array with all structure readed in chorno.xml
 	*
 	* @param string $xml_file add or up (a supprimer)
 	*/
-	function get_structure($id_chrono)
+	public function get_structure($idChrono)
 	{
 		$globality = array();
-		$parameters_tab = array();
-		$chrono_tab = array();
+		$parameters = array();
+		$chronoArr = array();
 
-		if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."chrono.xml"))
-		{
-			$path = $_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."chrono.xml";
+		if (file_exists(
+		    $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
+		    . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR . 'apps'
+		    . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+		    . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR
+		    . 'chrono.xml'
+		)
+		) {
+			$path = $_SESSION['config']['corepath'] . 'custom'
+			      . DIRECTORY_SEPARATOR . $_SESSION['custom_override_id']
+			      . DIRECTORY_SEPARATOR . 'apps' . DIRECTORY_SEPARATOR
+			      . $_SESSION['config']['app_id'] . DIRECTORY_SEPARATOR . 'xml'
+			      . DIRECTORY_SEPARATOR . 'chrono.xml';
+		} else {
+			$path = 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+			      . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR
+			      . 'chrono.xml';
 		}
-		else
-		{
-			$path = 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."chrono.xml";
-		}
-		$chrono_config = simplexml_load_file($path);
-		if($chrono_config)
-		{
-			foreach($chrono_config ->CHRONO as $CHRONO)
-			{
-				if($CHRONO->id ==  $id_chrono)
-				{
-					$chrono_id = (string) $CHRONO->id;
-					$separator = (string) $CHRONO->separator;
-					array_push($parameters_tab, array("ID"=> $chrono_id , "SEPARATOR"=>$separator));
-
-					foreach($CHRONO->ELEMENT as $ELEMENT)
-					{
-						$type = $ELEMENT->type;
-						$value = (string) $ELEMENT->value;
-						array_push($chrono_tab, array("TYPE"=> $type , "VALUE"=>$value));
+		$chronoConfig = simplexml_load_file($path);
+		if ($chronoConfig) {
+			foreach ($chronoConfig -> CHRONO as $chronoTag) {
+				if ($chronoTag->id == $idChrono) {
+					$chronoId = (string) $chronoTag->id;
+					$separator = (string) $chronoTag->separator;
+					array_push(
+					    $parameters,
+					    array(
+					    	'ID' => $chronoId ,
+					    	'SEPARATOR' => $separator,
+					    )
+					);
+					foreach ($chronoTag->ELEMENT as $item) {
+						$type = $item->type;
+						$value = (string) $item->value;
+						array_push(
+						    $chronoArr,
+						    array(
+						    	'TYPE' => $type,
+						    	'VALUE' => $value,
+						    )
+					    );
 					}
 				}
 			}
-			array_push($globality, array("PARAMETERS"=>$parameters_tab, "ELEMENTS"=>$chrono_tab));
+			array_push(
+			    $globality,
+			    array(
+			    	'PARAMETERS' => $parameters,
+			    	'ELEMENTS' => $chronoArr,
+			    )
+			);
 
 			return $globality;
-		}
-		else
-		{
+		} else {
 			echo "chrono::get_structure error";
 		}
 
 	}
 
-	function convert_date_field($chrono_array)
+	public function convert_date_field($chronoArray)
 	{
-		//$new_chrono_array = array();
-
-		for($i = 0;$i <= count($chrono_array); $i++)
-		{
-				if ($chrono_array[$i]['TYPE'] == "date")
-				{
-					if ($chrono_array[$i]['VALUE'] == "year")
-					{
-						$chrono_array[$i]['VALUE'] = date('Y');
-					}
-					elseif ($chrono_array[$i]['VALUE'] == "month")
-					{
-						$chrono_array[$i]['VALUE'] = date('m');
-					}
-					elseif ($chrono_array[$i]['VALUE'] == "day")
-					{
-						$chrono_array[$i]['VALUE'] = date('d');
-					}
-					elseif ($chrono_array[$i]['VALUE'] == "full_date")
-					{
-						$chrono_array[$i]['VALUE'] = date('dmY');
-					}
+		for ($i = 0; $i <= count($chronoArray); $i ++) {
+			if (isset($chronoArray[$i]['TYPE'])
+		        && $chronoArray[$i]['TYPE'] == "date"
+			) {
+				if ($chronoArray[$i]['VALUE'] == "year") {
+					$chronoArray[$i]['VALUE'] = date('Y');
+				} else if ($chronoArray[$i]['VALUE'] == "month") {
+					$chronoArray[$i]['VALUE'] = date('m');
+				} else if ($chronoArray[$i]['VALUE'] == "day") {
+					$chronoArray[$i]['VALUE'] = date('d');
+				} else if ($chronoArray[$i]['VALUE'] == "full_date") {
+					$chronoArray[$i]['VALUE'] = date('dmY');
 				}
-		}
-		return $chrono_array;
-
-	}
-
-
-
-	function convert_maarch_var($chrono_array, $php_var)
-	{
-
-		for($i = 0;$i <= count($chrono_array); $i++)
-		{
-				if ($chrono_array[$i]['TYPE'] == "maarch_var")
-				{
-					if ($chrono_array[$i]['VALUE'] == "arbox_id")
-					{
-						$chrono_array[$i]['VALUE'] = $php_var['arbox_id'];
-					}
-					elseif ($chrono_array[$i]['VALUE'] == "entity_id")
-					{
-						$chrono_array[$i]['VALUE'] = $php_var['entity_id'];;
-					}
-					elseif ($chrono_array[$i]['VALUE'] == "type_id")
-					{
-						$chrono_array[$i]['VALUE'] = $php_var['type_id'];;
-					}
-				}
-		}
-		return $chrono_array;
-
-	}
-
-
-	function convert_maarch_forms($chrono_array, $forms)
-	{
-
-
-		for($i = 0;$i <= count($chrono_array); $i++)
-		{
-			if($chrono_array[$i]['TYPE'] == "maarch_form")
-			{
-					foreach ($forms as $key => $value)
-					{
-						if ($chrono_array[$i]['VALUE'] == $key)
-						{
-							$chrono_array[$i]['VALUE'] = $value;
-						}
-					}
-
 			}
 		}
-		return $chrono_array;
+		return $chronoArray;
 	}
 
 
-	function convert_maarch_functions($chrono_array, $php_var = 'false')
+	public function convert_maarch_var($chronoArray, $phpVar)
 	{
-		for($i = 0;$i <= count($chrono_array); $i++)
-		{
+		for ($i = 0; $i <= count($chronoArray); $i ++) {
+			if (isset($chronoArray[$i]['TYPE'])
+			&& $chronoArray[$i]['TYPE'] == "maarch_var"
+			) {
+				if ($chronoArray[$i]['VALUE'] == "arbox_id") {
+					$chronoArray[$i]['VALUE'] = $phpVar['arbox_id'];
+				} else if ($chronoArray[$i]['VALUE'] == "entity_id") {
+					$chronoArray[$i]['VALUE'] = $phpVar['entity_id'];;
+				} else if ($chronoArray[$i]['VALUE'] == "type_id") {
+					$chronoArray[$i]['VALUE'] = $phpVar['type_id'];;
+				}
+			}
+    	}
+		return $chronoArray;
+	}
 
-				if ($chrono_array[$i]['TYPE'] == "maarch_functions")
-				{
-					if ($chrono_array[$i]['VALUE'] == "chr_global")
-					{
-						$chrono_array[$i]['VALUE'] = $this->execute_chrono_for_this_year();
-					}
-					elseif ($chrono_array[$i]['VALUE'] == "chr_by_entity")
-					{
-						$chrono_array[$i]['VALUE'] = $this->execute_chrono_by_entity($php_var['entity_id']);
-					}
-					elseif ($chrono_array[$i]['VALUE'] == "chr_by_category")
-					{
-						$chrono_array[$i]['VALUE'] = $this->execute_chrono_by_category($php_var['category_id']);
-					}
-					elseif ($chrono_array[$i]['VALUE'] == "category_char")
-					{
-						$chrono_array[$i]['VALUE'] = $this->execute_category_char($php_var);
-					}
 
+	public function convert_maarch_forms($chronoArray, $forms)
+	{
+		for ($i = 0; $i <= count($chronoArray); $i ++) {
+			if (isset($chronoArray[$i]['TYPE'])
+			    && $chronoArray[$i]['TYPE'] == "maarch_form"
+			) {
+			    foreach ($forms as $key => $value) {
+				    if ($chronoArray[$i]['VALUE'] == $key) {
+						$chronoArray[$i]['VALUE'] = $value;
+					}
+				}
 			}
 		}
-		return $chrono_array;
-
+		return $chronoArray;
 	}
 
 
-	function execute_chrono_for_this_year()
+	public function convert_maarch_functions($chronoArray, $phpVar = 'false')
 	{
-		require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_db.php");
+		for ($i = 0; $i <= count($chronoArray); $i ++) {
+			if (isset($chronoArray[$i]['TYPE'])
+			    && $chronoArray[$i]['TYPE'] == "maarch_functions"
+			) {
+				if ($chronoArray[$i]['VALUE'] == "chr_global") {
+					$chronoArray[$i]['VALUE'] = $this->execute_chrono_for_this_year();
+				} else if ($chronoArray[$i]['VALUE'] == "chr_by_entity") {
+					$chronoArray[$i]['VALUE'] = $this->execute_chrono_by_entity(
+					    $phpVar['entity_id']
+					);
+				} else if ($chronoArray[$i]['VALUE'] == "chr_by_category") {
+					$chronoArray[$i]['VALUE'] = $this->execute_chrono_by_category(
+					    $phpVar['category_id']
+					);
+				} else if ($chronoArray[$i]['VALUE'] == "category_char") {
+					$chronoArray[$i]['VALUE'] = $this->_executeCategoryChar(
+					    $phpVar
+					);
+				}
+			}
+		}
+		return $chronoArray;
+	}
+
+
+	public function execute_chrono_for_this_year()
+	{
 		$db = new dbquery();
 		$db->connect();
-
 		//Get the crono key for this year
-		$db->query("SELECT param_value_int from ".$_SESSION['tablename']['param']." where id = 'chrono_global_".date('Y')."' ");
-		if ($db->nb_result() == 0)
-		{
-				$chrono = $this->create_new_chrono_global($db);
+		$db->query(
+			"SELECT param_value_int from " . PARAM_TABLE
+		    . " where id = 'chrono_global_" . date('Y') . "' "
+		);
+		if ($db->nb_result() == 0) {
+			$chrono = $this->_createNewChronoGlobal($db);
+		} else {
+			$fetch = $db->fetch_object();
+			$chrono = $fetch->param_value_int;
 		}
-		else
-		{
-				$fetch = $db->fetch_object();
-				$chrono = $fetch->param_value_int;
-		}
-		$this->update_chrono_for_this_year($chrono, $db);
+		$this->_updateChronoForThisYear($chrono, $db);
 		return $chrono;
 	}
 
 
-	function execute_chrono_by_entity($entity)
+	public function execute_chrono_by_entity($entity)
 	{
-		require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_db.php");
 		$db = new dbquery();
 		$db->connect();
-
 		//Get the crono key for this year
-		$db->query("SELECT param_value_int from ".$_SESSION['tablename']['param']." where id = 'chrono_".$entity."_".date('Y')."' ");
-		if ($db->nb_result() == 0)
-		{
-				$chrono = $this->create_new_chrono_for_entity($db, $entity);
+		$db->query(
+			"SELECT param_value_int from " . PARAM_TABLE
+		    . " where id = 'chrono_" . $entity . "_" . date('Y') . "' "
+		);
+		if ($db->nb_result() == 0) {
+			$chrono = $this->_createNewChronoForEntity($db, $entity);
+		} else {
+			$fetch = $db->fetch_object();
+			$chrono = $fetch->param_value_int;
 		}
-		else
-		{
-				$fetch = $db->fetch_object();
-				$chrono = $fetch->param_value_int;
-		}
-		$this->update_chrono_for_entity($chrono, $db, $entity);
+		$this->_updateChronoForEntity($chrono, $db, $entity);
 		return $chrono;
 	}
 
-	function execute_chrono_by_category($category)
+	public function execute_chrono_by_category($category)
 	{
-		require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_db.php");
 		$db = new dbquery();
 		$db->connect();
-
 		//Get the crono key for this year
-		$db->query("SELECT param_value_int from ".$_SESSION['tablename']['param']." where id = 'chrono_".$category."_".date('Y')."' ");
-		if ($db->nb_result() == 0)
-		{
-				$chrono = $this->create_new_chrono_for_category($db, $category);
+		$db->query(
+			"SELECT param_value_int from " . PARAM_TABLE
+		    . " where id = 'chrono_" . $category . "_" . date('Y') . "' "
+		);
+		if ($db->nb_result() == 0) {
+			$chrono = $this->_createNewChronoForCategory($db, $category);
+		} else {
+			$fetch = $db->fetch_object();
+			$chrono = $fetch->param_value_int;
 		}
-		else
-		{
-				$fetch = $db->fetch_object();
-				$chrono = $fetch->param_value_int;
-		}
-		$this->update_chrono_for_category($chrono, $db, $category);
+		$this->_updateChronoForCategory($chrono, $db, $category);
 		return $chrono;
 	}
 
-	private function execute_category_char($php_var)
+	private function _executeCategoryChar($phpVar)
 	{
-		if (!$php_var['category_id'])
-		{
+		if (! $phpVar['category_id']) {
 			return "category::php_var error";
-		}
-		else
-		{
-			if($php_var['category_id'] == "incoming")
-			{
+		} else {
+			if ($phpVar['category_id'] == "incoming") {
 				return "E";
-			}
-			elseif($php_var['category_id'] == "outcoming")
-			{
+			} else if ($phpVar['category_id'] == "outcoming") {
 				return "S";
-			}
-			else
-			{
+			} else {
 				return '';
 			}
 		}
 	}
 
 	//For global chrono
-	private function update_chrono_for_this_year($actual_chrono, $db)
+	private function _updateChronoForThisYear($actualChrono, $db)
 	{
-		$actual_chrono++;
-		$db->query("UPDATE ".$_SESSION['tablename']['param']." SET param_value_int = '".$actual_chrono."'  WHERE id = 'chrono_global_".date('Y')."' " );
+		$actualChrono++;
+		$db->query(
+			"UPDATE " . PARAM_TABLE . " SET param_value_int = '" . $actualChrono
+		    . "'  WHERE id = 'chrono_global_" . date('Y') . "' "
+		);
 	}
 
-	private function create_new_chrono_global($db)
+	private function _createNewChronoGlobal($db)
 	{
-		$db->query("INSERT INTO ".$_SESSION['tablename']['param']." (id, param_value_int) VALUES ('chrono_global_".date('Y')."', '1')" );
+		$db->query(
+			"INSERT INTO " . PARAM_TABLE . " (id, param_value_int) VALUES "
+		    . "('chrono_global_" . date('Y') . "', '1')"
+		);
 		return 1;
 	}
 
 
-
 	//For specific chrono =>category
-	private function update_chrono_for_category($actual_chrono, $db, $category)
+	private function _updateChronoForCategory($actualChrono, $db, $category)
 	{
-		$actual_chrono++;
-		$db->query("UPDATE ".$_SESSION['tablename']['param']." SET param_value_int = '".$actual_chrono."'  WHERE id = 'chrono_".$category."_".date('Y')."' " );
+		$actualChrono++;
+		$db->query(
+			"UPDATE " . PARAM_TABLE . " SET param_value_int = '" . $actualChrono
+		    . "' WHERE id = 'chrono_" . $category . "_" . date('Y') . "' "
+		);
 	}
-	private function create_new_chrono_for_category($db, $category)
+
+	private function _createNewChronoForCategory($db, $category)
 	{
-		$db->query("INSERT INTO ".$_SESSION['tablename']['param']." (id, param_value_int) VALUES ('chrono_".$category."_".date('Y')."', '1')" );
+		$db->query(
+			"INSERT INTO " . PARAM_TABLE . " (id, param_value_int) VALUES "
+		    . "('chrono_" . $category . "_" . date('Y') . "', '1')"
+		);
 		return 1;
 	}
 
 
 	//For specific chrono =>entity
-	private function update_chrono_for_entity($actual_chrono, $db, $entity)
+	private function _updateChronoForEntity($actualChrono, $db, $entity)
 	{
-		$actual_chrono++;
-		$db->query("UPDATE ".$_SESSION['tablename']['param']." SET param_value_int = '".$actual_chrono."'  WHERE id = 'chrono_".$entity."_".date('Y')."' " );
+		$actualChrono++;
+		$db->query(
+			"UPDATE " . PARAM_TABLE . " SET param_value_int = '" . $actualChrono
+		    . "'  WHERE id = 'chrono_" . $entity . "_" . date('Y') . "' "
+		);
 	}
-	private function create_new_chrono_for_entity($db, $entity)
+
+	private function _createNewChronoForEntity($db, $entity)
 	{
-		$db->query("INSERT INTO ".$_SESSION['tablename']['param']." (id, param_value_int) VALUES ('chrono_".$entity."_".date('Y')."', '1')" );
+		$db->query(
+			"INSERT INTO " . PARAM_TABLE . " (id, param_value_int) VALUES "
+		    . "('chrono_" . $entity . "_" . date('Y') . "', '1')"
+		);
 		return 1;
 	}
 
-	function generate_chrono($chrono_id, $php_var = 'false', $form= 'false')
+	public function generate_chrono($chronoId, $phpVar='false', $form='false')
 	{
-
-		$tmp = $this->get_structure($chrono_id);
+		$tmp = $this->get_structure($chronoId);
 		$elements = $tmp[0]['ELEMENTS'];
 		$parameters = $tmp[0]['PARAMETERS'];
 
-
 		//Launch any conversion needed for value in the chrono array
 		$elements = $this->convert_date_field($elements); //For type date
-		$elements = $this->convert_maarch_var($elements, $php_var); //For php var in maarch
-		$elements = $this->convert_maarch_functions($elements, $php_var);
+		$elements = $this->convert_maarch_var($elements, $phpVar); //For php var in maarch
+		$elements = $this->convert_maarch_functions($elements, $phpVar);
 		$elements = $this->convert_maarch_forms($elements, $form); //For values used in forms
 
 		//Generate chrono string
@@ -335,22 +332,18 @@ class chrono
 	}
 
 
-	function convert_in_string($elements, $parameters)
+	public function convert_in_string($elements, $parameters)
 	{
 		$separator = $parameters[0]['SEPARATOR'];
 
-		$this_string = '';
+		$thisString = '';
 		//Explode each elements of this array
-		foreach($elements as $array)
-		{
-			$this_string .= $separator;
-			$this_string .= $array['VALUE'];
+		foreach ($elements as $array) {
+			$thisString .= $separator;
+			$thisString .= $array['VALUE'];
 		}
 
-		//$this_string = substr($this_string, 1);
-		return $this_string;
-
+		//$thisString = substr($thisString, 1);
+		return $thisString;
 	}
-
-
 }

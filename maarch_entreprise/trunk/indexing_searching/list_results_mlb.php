@@ -45,6 +45,18 @@ $sec = new security();
 $status_obj = new manage_status();
 $contact = new contacts();
 
+$order = '';
+if (isset($_REQUEST['order']) && ! empty($_REQUEST['order'])) {
+    $order = trim($_REQUEST['order']);
+}
+$field = '';
+if( isset($_REQUEST['order_field']) && ! empty($_REQUEST['order_field'])) {
+    $field = trim($_REQUEST['order_field']);
+}
+$start = 0;
+if( isset($_REQUEST['start']) && ! empty($_REQUEST['start'])) {
+    $start = trim($_REQUEST['start']);
+}
 $mode = 'normal';
 if(isset($_REQUEST['mode'])&& !empty($_REQUEST['mode']))
 {
@@ -127,21 +139,12 @@ else
 $where_request = str_replace(" ()", "(1=-1)", $where_request);
 $where_request = str_replace("and ()", "", $where_request);
 $list=new list_show();
-$order = '';
-if(isset($_REQUEST['order']) && !empty($_REQUEST['order']))
-{
-    $order = trim($_REQUEST['order']);
-}
-$field = '';
-if(isset($_REQUEST['order_field']) && !empty($_REQUEST['order_field']))
-{
-    $field = trim($_REQUEST['order_field']);
-}
 
 $orderstr = $list->define_order($order, $field);
 
-if(($_REQUEST['template']== 'group_case')&& ($core_tools->is_module_loaded('cases')))
-{
+if (isset($_REQUEST['template']) && $_REQUEST['template'] == 'group_case'
+    && $core_tools->is_module_loaded('cases')
+) {
     unset($select);
     $select = array();
     $select[$_SESSION['tablename']['cases']]= array();
@@ -150,9 +153,7 @@ if(($_REQUEST['template']== 'group_case')&& ($core_tools->is_module_loaded('case
     $where = " ".$_SESSION['tablename']['cases'].".case_id = ".$view.".case_id  and ";
     $request = new request();
     $tab=$request->select($select,$where.$where_request,$orderstr,$_SESSION['config']['databasetype'], "default", false, "", "", "", true, false, true);
-}
-else
-{
+} else {
     $request = new request();
     $tab=$request->select($select,$where_request,$orderstr,$_SESSION['config']['databasetype'],"default", false, "", "", "", $add_security);
     //$request->show();
@@ -170,13 +171,15 @@ $template_list=array();
 array_push($template_list, array( "name"=>"search_adv", "img"=>"extend_list.gif", "label"=> _ACCESS_LIST_EXTEND));
 if($core_tools->is_module_loaded('cases'))
     array_push($template_list, array( "name"=>"group_case", "img"=>"case_list.gif", "label"=> _ACCESS_LIST_CASE));
-if(!$_REQUEST['template'])
+if ( ! isset($_REQUEST['template']) || ! $_REQUEST['template']) {
     $template_to_use = $template_list[0]["name"];
-if(isset($_REQUEST['template']) && empty($_REQUEST['template']))
-$template_to_use = '';
-if($_REQUEST['template'])
+}
+if (isset($_REQUEST['template']) && empty($_REQUEST['template'])) {
+    $template_to_use = '';
+}
+if (isset($_REQUEST['template']) && $_REQUEST['template']) {
     $template_to_use = $_REQUEST['template'];
-
+}
 //For status icon
 $extension_icon = '';
 if($template_to_use <> '')
@@ -189,12 +192,11 @@ if (count($tab) > 0)
 {
     //Specific View for group_case_template, we don' need to load the standard list_result_mlb
     //#########################
-    if(($_REQUEST['template']== 'group_case')&& ($core_tools->is_module_loaded('cases')))
-    {
+    if (isset($_REQUEST['template']) && $_REQUEST['template']== 'group_case'
+        && $core_tools->is_module_loaded('cases')
+    ) {
         include("modules".DIRECTORY_SEPARATOR."cases".DIRECTORY_SEPARATOR.'mlb_list_group_case_addon.php');
-    }
-    else
-    {
+    } else {
     for ($i=0;$i<count($tab);$i++)
     {
         for ($j=0;$j<count($tab[$i]);$j++)
@@ -389,10 +391,11 @@ if (count($tab) > 0)
         }
     }
 }
-if($_GET['template'] == "group_case")
+if ( isset($_GET['template']) && $_GET['template'] == "group_case") {
     $found_type = _FOUND_CASE;
-else
+} else {
     $found_type = _FOUND_DOC;
+}
 ?>
 
 <h1><img src="<?php  echo $_SESSION['config']['businessappurl']."static.php?filename=picto_search_b.gif";?>" alt="" /> <?php  echo _SEARCH_RESULTS." - ".count($tab)." ".$found_type;?></h1>

@@ -39,7 +39,7 @@ $core_tools->load_header('', true, false);
 <body >
 	<?php
 	$_SESSION['upfile']['error'] = 0;
-	if($_FILES['file']['error'] == 1)
+	if (isset($_FILES['file']['error']) && $_FILES['file']['error'] == 1)
 	{
 		$_SESSION['upfile']['error'] = $_FILES['file']['error'];
 		if($_SESSION['upfile']['error'] == 1)
@@ -90,14 +90,14 @@ $core_tools->load_header('', true, false);
 			function refreshFrame(frameId) {
 				frameId.src = '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&dir=indexing_searching&page=file_iframe';
 			}
-			
+
 			var test = window.top.document.getElementById('file_iframe');
 			if (test.src == '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&dir=indexing_searching&page=file_iframe&#navpanes=0') {
 				//test.location.refresh();
 				//test.src = '';
 				refreshFrame(test);
 			}
-			
+
 			if (test != null) {
 				//fix pb with toolbar of pdf
 				test.src = '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&dir=indexing_searching&page=file_iframe&#navpanes=0';
@@ -112,7 +112,7 @@ $core_tools->load_header('', true, false);
 		<input type="hidden" name="page" value="choose_file" />
         <p>
                <label for="file" ><?php  echo _CHOOSE_FILE; ?> </label>
-               <input type="file" name="file" id="file"  onchange="this.form.method = 'post';this.form.submit();" value="<?php  echo $_SESSION['file_path']; ?>" style="width:200px;margin-left:33px;" /><?php
+               <input type="file" name="file" id="file"  onchange="this.form.method = 'post';this.form.submit();" value="<?php if(isset($_SESSION['file_path'])){ echo $_SESSION['file_path'];} ?>" style="width:200px;margin-left:33px;" /><?php
 		if(!empty($_SESSION['upfile']['local_path']) && empty($_SESSION['error'] ) )
 			{
 				?><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_stat_enabled.gif" alt="" class="img_upload_doc" /><?php

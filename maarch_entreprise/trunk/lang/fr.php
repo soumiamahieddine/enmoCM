@@ -871,7 +871,21 @@ if (!defined('_DOCTYPE_MANDATORY')) define( '_DOCTYPE_MANDATORY', 'Le type de pi
 if (!defined('_INDEX_UPDATED')) define( '_INDEX_UPDATED', 'Index mis &agrave; jour');
 if (!defined('_DOC_DELETED')) define( '_DOC_DELETED', 'Document supprimé');
 if (!defined('_UPDATE_DOC_STATUS')) define( '_UPDATE_DOC_STATUS', 'Statut du document mis à jour');
-
+if (! defined('_CHECK_FORM_OK')) {
+    define('_CHECK_FORM_OK', 'V&eacute;rification formulaire OK');
+}
+if (! defined('_MISSING_FORMAT')) {
+    define('_MISSING_FORMAT', 'Il manque le format');
+}
+if (! defined('_ERROR_RES_ID')) {
+    define('_ERROR_RES_ID', 'Probl&egrave;me lors du calcul du res_id');
+}
+if (! defined('_NEW_DOC_ADDED')) {
+    define('_NEW_DOC_ADDED', 'Nouveau document enregistr&eacute;');
+}
+if (! defined('_STATUS_UPDATED')) {
+    define('_STATUS_UPDATED', 'Statut mis &agrave; jour');
+}
 
 if (!defined('_QUICKLAUNCH')) define( '_QUICKLAUNCH', 'Raccourcis');
 if (!defined('_SHOW_DETAILS_DOC')) define( '_SHOW_DETAILS_DOC', 'Voir les d&eacute;tails du document');

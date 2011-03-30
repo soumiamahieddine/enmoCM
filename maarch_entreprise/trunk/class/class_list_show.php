@@ -1448,12 +1448,10 @@ class list_show extends functions
         $start = 0;
         $end = $nb_total;
         // put in tab the different label of the column
-        for ($i = 0;$i < 1;$i++) {
-            if (isset($result[$i])) {
-                for ($j = 0;$j < count($result[$i]);$j++) {
-                    array_push($listcolumn,$result[$i][$j]["label"]);
-                    array_push($listshow,$result[$i][$j]["show"]);
-                }
+        if(isset($result[0])) {
+            for ($j = 0; $j < count($result[0]); $j ++) {
+                array_push($listcolumn, $result[0][$j]["label"]);
+                array_push($listshow, $result[0][$j]["show"]);
             }
         }
         //self::show_array($listcolumn);

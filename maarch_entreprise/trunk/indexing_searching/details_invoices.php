@@ -15,6 +15,9 @@
 $core_tools = new core_tools();
 $core_tools->test_user();
 $core_tools->load_lang();
+require_once('core/manage_bitmask.php');
+require_once "apps" . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+    . DIRECTORY_SEPARATOR  . "security_bitmask.php";
 require_once ("core" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . "class_request.php");
 require_once ("core" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . "class_security.php");
 require_once ("apps" . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id'] . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . "class_list_show.php");
@@ -94,8 +97,14 @@ if (!$right) {
 if (isset ($s_id) && !empty ($s_id) && $_SESSION['history']['resview'] == "true") {
     $users->add($table, $s_id, "VIEW", _VIEW_DETAILS_NUM . $s_id, $_SESSION['config']['databasetype'], 'apps');
 }
-$modify_doc = $security->collection_user_right($coll_id, "can_update");
-$delete_doc = $security->collection_user_right($coll_id, "can_delete");
+$modify_doc = check_right(
+    $_SESSION['user']['security'][$coll_id]['DOC']['securityBitmask'],
+    DATA_MODIFICATION
+);
+$delete_doc = check_right(
+    $_SESSION['user']['security'][$coll_id]['DOC']['securityBitmask'],
+    DELETE_RECORD
+);
 //update index with the doctype
 if (isset ($_POST['submit_index_doc'])) {
     $is->update_mail($_POST, "POST", $s_id, $coll_id);

@@ -11,16 +11,27 @@
 * @author  Claire Figueras  <dev@maarch.org>
 */
 
-$core_tools = new core_tools();
-$core_tools->test_user();
-$core_tools->load_lang();
-require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
-require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
-require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");
-require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
-require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_indexing_searching_app.php");
-require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_types.php");
-include('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'definition_mail_categories.php');
+$core = new core_tools();
+$core->test_user();
+$core->load_lang();
+require_once('core/manage_bitmask.php');
+require_once "core" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR
+    . "class_request.php";
+require_once "core" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR
+    . "class_security.php";
+require_once "apps" . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+    . DIRECTORY_SEPARATOR  . "security_bitmask.php";
+require_once "apps" . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+    . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . "class_list_show.php";
+require_once "core" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR
+    . "class_history.php";
+require_once "apps" . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+    . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR
+    . "class_indexing_searching_app.php";
+require_once "apps" . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+    . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . "class_types.php";
+include 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+    . DIRECTORY_SEPARATOR . 'definition_mail_categories.php';
 
 if(!isset($_REQUEST['coll_id']))
 {
@@ -45,7 +56,7 @@ if(isset($_REQUEST['level']) && ($_REQUEST['level'] == 2 || $_REQUEST['level'] =
 $page_path = $_SESSION['config']['businessappurl'].'index.php?page=details&dir=indexing_searching&coll_id='.$_REQUEST['coll_id'].'&id='.$_REQUEST['id'];
 $page_label = _DETAILS;
 $page_id = "details";
-$core_tools->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
+$core->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
 $users = new history();
 $security = new security();
@@ -106,8 +117,15 @@ if(isset($s_id) && !empty($s_id) && $_SESSION['history']['resview'] == "true")
 {
     $users->add($table, $s_id ,"VIEW", _VIEW_DETAILS_NUM.$s_id, $_SESSION['config']['databasetype'],'apps');
 }
-$modify_doc = $security->collection_user_right($coll_id, "can_update");
-$delete_doc = $security->collection_user_right($coll_id, "can_delete");
+
+$modify_doc = check_right(
+    $_SESSION['user']['security'][$coll_id]['DOC']['securityBitmask'],
+    DATA_MODIFICATION
+);
+$delete_doc = check_right(
+    $_SESSION['user']['security'][$coll_id]['DOC']['securityBitmask'],
+    DELETE_RECORD
+);
 
 //update index with the doctype
 if(isset($_POST['submit_index_doc']))
@@ -145,20 +163,27 @@ if(empty($_SESSION['error']) || $_SESSION['indexation'])
         {
             if(preg_match('/^custom_/', $indexes[$i])) // In the view all custom from res table begin with doc_
             {
-                $comp_field .= ', doc_'.$indexes[$i];
+                $comp_fields .= ', doc_'.$indexes[$i];
             }
             else
             {
-                $comp_field .= ', '.$indexes[$i];
+                $comp_fields .= ', '.$indexes[$i];
             }
         }
     }
     $case_sql_complementary = '';
-    if($core_tools->is_module_loaded('cases') == true)
+    if($core->is_module_loaded('cases') == true)
     {
         $case_sql_complementary = " , case_id";
     }
-    $db->query("select status, format, typist, creation_date,  fingerprint,  filesize, res_id, work_batch,  page_count, is_paper, scan_date, scan_user, scan_location, scan_wkstation, scan_batch, source, doc_language, description, closing_date, alt_identifier ".$comp_field.$case_sql_complementary." from ".$table." where res_id = ".$s_id."");
+    $db->query(
+    	"select status, format, typist, creation_date, fingerprint, filesize, "
+        . "res_id, work_batch, page_count, is_paper, scan_date, scan_user, "
+        . "scan_location, scan_wkstation, scan_batch, source, doc_language, "
+        . "description, closing_date, alt_identifier " . $comp_fields
+        . $case_sql_complementary . " from " . $table . " where res_id = "
+        . $s_id
+    );
     //$db->show();
 
 }
@@ -221,7 +246,7 @@ else
             $closing_date = $db->format_date_db($res->closing_date, false);
             $indexes = $type->get_indexes($type_id, $coll_id);
 
-            if($core_tools->is_module_loaded('cases') == true)
+            if($core->is_module_loaded('cases') == true)
             {
                 require_once("modules".DIRECTORY_SEPARATOR."cases".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR.'class_modules_tools.php');
                 $case = new cases();
@@ -312,8 +337,7 @@ else
                 <b>
                 <p id="back_list">
                     <?php
-                    if(!$_POST['up_res_id'])
-                    {
+                    if (! isset($_POST['up_res_id']) || ! $_POST['up_res_id']) {
                         if($_SESSION['indexation'] == false)
                         {
                             ?>
@@ -546,7 +570,7 @@ else
 
                         $detailsExport .=  "<tr class='col'>";
                         $detailsExport .=  "<th align='left' width='50px'>";
-                        $detailsExport .=  "<img alt='".CHRONO_NUMBER." src='".$_SESSION['config']['businessappurl']."static.php?filename=chrono.gif' />";
+                        $detailsExport .=  "<img alt='"._CHRONO_NUMBER." src='".$_SESSION['config']['businessappurl']."static.php?filename=chrono.gif' />";
                         $detailsExport .=  "</th>";
                         $detailsExport .=  "<td align='left' width='200px'>";
                         $detailsExport .=  _CHRONO_NUMBER." : ";
@@ -598,7 +622,7 @@ else
                     $detailsExport .=  _SIZE." : ";
                     $detailsExport .=  "</th>";
                     $detailsExport .=  "<td align='left' width='250px'>";
-                    $detailsExport .=  $filesize." ".$_SESSION['lang']['txt_byte']." ( ".round($filesize/1024,2)."K )";
+                    $detailsExport .=  $filesize." "._BYTES." ( ".round($filesize/1024,2)."K )";
                     $detailsExport .=  "</td>";
                     $detailsExport .=  "</tr>";
                     $detailsExport .=  "<tr>";
@@ -747,7 +771,7 @@ else
                                 <img alt="<?php echo _SIZE; ?>" src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=weight.gif" />
                             </th>
                             <td align="left" width="200px"><?php  echo _SIZE; ?> :</td>
-                            <td><input type="text" class="readonly" readonly="readonly" value="<?php  echo $filesize." ".$_SESSION['lang']['txt_byte']." ( ".round($filesize/1024,2)."K )"; ?>" /></td>
+                            <td><input type="text" class="readonly" readonly="readonly" value="<?php  echo $filesize." "._BYTES." ( ".round($filesize/1024,2)."K )"; ?>" /></td>
                         </tr>
                         <tr class="col">
                             <th align="left" class="picto">
@@ -820,7 +844,7 @@ else
         ?>
                 </dd>
                 <?php
-                if($core_tools->is_module_loaded('entities'))
+                if($core->is_module_loaded('entities'))
                 {
                     $detailsExport .= "<h2>"._DIFF_LIST."</h2>";
                     ?>
@@ -924,7 +948,7 @@ else
                                 </table>
                                 <?php
                             }
-                            if($core_tools->test_service('update_list_diff_in_details', 'entities', false)) {
+                            if($core->test_service('update_list_diff_in_details', 'entities', false)) {
 								echo '<a href="#" onclick="window.open(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=manage_listinstance&origin=details\', \'\', \'scrollbars=yes,menubar=no,toolbar=no,status=no,resizable=yes,width=1024,height=650,location=no\');" title="'._UPDATE_LIST_DIFF.'"><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=modif_liste.png" alt="'._UPDATE_LIST_DIFF.'" />'._UPDATE_LIST_DIFF.'</a>';
 							}
                             ?>
@@ -1007,7 +1031,7 @@ else
                         </table>
                     </div>
                     <?php
-                    if($core_tools->is_module_loaded('attachments'))
+                    if($core->is_module_loaded('attachments'))
                     {
                         $detailsExport .= "<h3>"._ATTACHED_DOC." : </h3>";
                         $selectAttachments = "select res_id, creation_date, title, format from ".$_SESSION['tablename']['attach_res_attachments']." where res_id_master = ".$_SESSION['doc_id']." and coll_id ='".$_SESSION['collection_id_choice']."' and status <> 'DEL'";
@@ -1046,7 +1070,7 @@ else
                     <iframe src="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&dir=indexing_searching&page=hist_doc&id=<?php echo $s_id;?>&mode=normal" name="hist_doc_process" width="100%" height="580" align="left" scrolling="auto" frameborder="0" id="hist_doc_process"></iframe>
                 </dd>
                 <?php
-                if($core_tools->is_module_loaded('notes'))
+                if($core->is_module_loaded('notes'))
                 {
                     $selectNotes = "select id, identifier, user_id, date_note, note_text from ".$_SESSION['tablename']['not_notes']." where identifier = ".$s_id." and coll_id ='".$_SESSION['collection_id_choice']."' order by date_note desc";
                     $dbNotes = new dbquery();
@@ -1099,14 +1123,14 @@ else
                     </dd>
                     <?php
                 }
-                if($core_tools->is_module_loaded('cases') == true)
+                if($core->is_module_loaded('cases') == true)
                 {
                     ?>
                     <dt><?php  echo _CASE;?></dt>
                     <dd>
                 <?php
                         include('modules'.DIRECTORY_SEPARATOR.'cases'.DIRECTORY_SEPARATOR.'including_detail_cases.php');
-                         if ($core_tools->test_service('join_res_case', 'cases',false) == 1)
+                         if ($core->test_service('join_res_case', 'cases',false) == 1)
                         {
                         ?><div align="center">
                             <input type="button" class="button" name="back_welcome" id="back_welcome" value="<?php if($res->case_id<>'') echo _MODIFY_CASE; else echo _JOIN_CASE;?>" onclick="window.open('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=cases&page=search_adv_for_cases&searched_item=res_id&searched_value=<?php echo $s_id;?>','', 'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=1020,height=710');"/></div><?php
@@ -1132,8 +1156,8 @@ else
 $detailsExport .= "</body></html>";
 $_SESSION['doc_convert'] = array();
 $_SESSION['doc_convert']['details_result'] = $detailsExport;
-$core_tools = new core_tools();
-if($core_tools->is_module_loaded("doc_converter"))
+$core = new core_tools();
+if($core->is_module_loaded("doc_converter"))
 {
 
     require_once("modules".DIRECTORY_SEPARATOR."doc_converter".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");

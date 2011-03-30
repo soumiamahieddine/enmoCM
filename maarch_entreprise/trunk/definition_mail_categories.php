@@ -827,7 +827,9 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
                 );
             }
             $data['process_limit_date']['readonly'] = true;
-            if ($mode == 'form' && $_ENV['categories'][$cat_id]['process_limit_date']['modify']) {
+            if (isset($_ENV['categories'][$cat_id]['process_limit_date']['modify'])
+                && $mode == 'form' && $_ENV['categories'][$cat_id]['process_limit_date']['modify']
+            ) {
                 $data['process_limit_date']['field_type'] = $_ENV['categories'][$cat_id]['process_limit_date']['form_show'];
                 $data['process_limit_date']['readonly'] = false;
             }
@@ -856,7 +858,9 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
                     'display' => 'textinput'
                 );
                 $data[$arr_tmp[$i]]['readonly'] = true;
-                if ($mode == 'form' && $_ENV['categories'][$cat_id][$arr_tmp[$i]]['modify']) {
+                if (isset($_ENV['categories'][$cat_id][$arr_tmp[$i]]['modify'])
+                    && $mode == 'form' && $_ENV['categories'][$cat_id][$arr_tmp[$i]]['modify']
+                ) {
                     $data[$arr_tmp[$i]]['field_type'] = $_ENV['categories'][$cat_id][$arr_tmp[$i]]['form_show'];
                     $data[$arr_tmp[$i]]['readonly'] = false;
                 }
@@ -1015,13 +1019,17 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
             if ($arr[$i] <> 'project') {
                 $data[$arr[$i]]['show_value'] = $db->show_string($line-> $arr[$i]);
             }
-            if ($_ENV['categories'][$cat_id][$arr[$i]]['type_field'] == 'date') {
+            if (isset($_ENV['categories'][$cat_id][$arr[$i]]['type_field'])
+                && $_ENV['categories'][$cat_id][$arr[$i]]['type_field'] == 'date'
+            ) {
                 $data[$arr[$i]]['show_value'] = $db->format_date_db($line-> $arr[$i], false);
-            }
-            elseif ($_ENV['categories'][$cat_id]['other_cases'][$arr[$i]]['type_field'] == 'date') {
+            } else if (isset($_ENV['categories'][$cat_id]['other_cases'][$arr[$i]]['type_field'])
+                && $_ENV['categories'][$cat_id]['other_cases'][$arr[$i]]['type_field'] == 'date'
+            ) {
                 $data[$arr[$i]]['show_value'] = $db->format_date_db($line-> $arr[$i], false);
-            }
-            elseif ($_ENV['categories'][$cat_id][$arr[$i]]['type_field'] == 'string') {
+            } else if (isset($_ENV['categories'][$cat_id][$arr[$i]]['type_field'])
+                && $_ENV['categories'][$cat_id][$arr[$i]]['type_field'] == 'string'
+            ) {
                 $data[$arr[$i]]['show_value'] = $db->show_string($line-> $arr[$i], true);
             }
             // special cases :

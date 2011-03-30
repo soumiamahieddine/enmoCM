@@ -340,7 +340,7 @@ class list_show_with_template extends list_show
 
 
 	//Load string ans search all function defined in this string
-	 public function load_var_sys($actual_string, $theline, $result = array(), $key = 'empty' , $include_by_module= '')
+	public function load_var_sys($actual_string, $theline, $result = array(), $key = 'empty' , $include_by_module= '')
 	{
 
 		##load_value|arg1##: load value in the db; arg1= column's value identifier
@@ -517,6 +517,8 @@ class list_show_with_template extends list_show
 	{
 		$core_tools = new core_tools();
 		$core_tools->load_lang();
+		$list_title = '';
+		$str = '';
 		$this->detail_destination = $detail_destination;
 		$this->bool_radio_form = $bool_radio_form;
 		$this->bool_check_form = $bool_check_form;
@@ -526,8 +528,7 @@ class list_show_with_template extends list_show
 		$this->id_action = $id_action; /*To keep value for extended simples script =>*/ $_SESSION['extended_template']['id_default_action'] = $this->id_action;
 		$this->do_action_arr = $do_actions_arr;
 		$this->hide_standard_list = $hide_standard_list;
-		if($_REQUEST['start'] > $nb_total)
-		{
+		if (isset($_REQUEST['start']) && $_REQUEST['start'] > $nb_total) {
 			$_REQUEST['start'] = 0;
 		}
 		if(isset($_REQUEST['start']) && !empty($_REQUEST['start']))
@@ -582,9 +583,10 @@ class list_show_with_template extends list_show
 		{
 			$link = $_SESSION['config']['businessappurl']."index.php?page=".$name."&amp;search=".$what;
 		}
-		for($i=0;$i<count($_SESSION['where']);$i++)
-		{
-			$link .= "&amp;where[]=".$_SESSION['where'][$i];
+		if (isset($_SESSION['where'])) {
+		    for ($i = 0; $i < count($_SESSION['where']); $i ++) {
+			    $link .= "&amp;where[]=".$_SESSION['where'][$i];
+		    }
 		}
 		if(!empty($module))
 		{
@@ -625,7 +627,7 @@ class list_show_with_template extends list_show
 				$orderfield = '';
 			}
 			$link .= "&amp;order_field=".$orderfield;
-		}	
+		}
 		//echo $link;exit;
 		$link .= $comp_link;
 		if($actual_template <> '')
@@ -645,6 +647,7 @@ class list_show_with_template extends list_show
 		//########################
 		//require_once("core/class/class_core_tools.php");
 		$core_tools = new core_tools();
+		$disp_dc = '';
 		if($core_tools->is_module_loaded("doc_converter") && $bool_export)
 		{
 			$_SESSION['doc_convert'] = array();
@@ -675,6 +678,7 @@ class list_show_with_template extends list_show
 			{ $list_title .= '<img src="'.$picto_path.'" alt="" class="title_img" /> ';}
 			$list_title .= $title.'</b>';
 		}
+		$theline = 0;
 		//if they are more 1 page we do pagination with 2 forms
 		if($nb_pages > 1)
 		{
@@ -682,6 +686,7 @@ class list_show_with_template extends list_show
 			//$search_form = "<form name=\"newpage1\" method=\"get\" >";
 			$page_list1 = _GO_TO_PAGE." <select name=\"startpage\" onchange=\"window.location.href='".$link."&amp;start='+this.value;\">";
 			$lastpage = 0;
+
 			for($i = 0;$i <> $nb_pages; $i++)
 			{
 				$page_name = $i + 1;
@@ -714,7 +719,15 @@ class list_show_with_template extends list_show
 				$next = "<a href=\"".$link."&amp;start=".$start_next."\">"._NEXT."</a> >";
 			}
 		}
-		$page_list1 = '<div class="block" style="height:30px;vertical" align="center" ><table width="100%" border="0"><tr><td align="center" width="15%"><b>'.$previous.'</b></td><td align="center" width="15%"><b>'.$next.'</b></td><td width="10px">|</td><td align="center" width="30%">'.$page_list1.'</td><td width="10px">|</td><td width="210px" align="center">'.$disp_dc.'</td><td width="5px">|</td><td align="right">'.$tdeto.'</td></tr></table></b></div>';
+		$page_list1 = '<div class="block" style="height:30px;vertical" '
+		            . 'align="center" ><table width="100%" border="0"><tr>'
+		            . '<td align="center" width="15%"><b>' . $previous
+		            . '</b></td><td align="center" width="15%"><b>' . $next
+		            . '</b></td><td width="10px">|</td><td align="center" '
+		            . 'width="30%">' . $page_list1 . '</td><td width="10px">|'
+		            . '</td><td width="210px" align="center">' . $disp_dc
+		            . '</td><td width="5px">|</td><td align="right">' . $tdeto
+		            . '</td></tr></table></b></div>';
 		//Script for action
 		//#################
 		if($bool_radio_form || $bool_check_form || ($do_action && !empty($id_action)))
@@ -747,7 +760,9 @@ class list_show_with_template extends list_show
 
 				for($i=0;$i<count($out[0]);$i++)
 				{
-					$remplacement_table = $this->load_var_sys($out[1][$i], $theline, '', '', $including_table);
+					$remplacement_table = $this->load_var_sys(
+					    $out[1][$i], $theline, '', '', $including_table
+					);
 					$table = str_replace($out[0][$i],$remplacement_table,$true_table);
 				}
 			}
@@ -852,6 +867,7 @@ class list_show_with_template extends list_show
 			$str .= ' }';
 			$str .= ' </script>';
 		}
+		$str_foot = "";
 		//#################
 		//#################### Action module
 		if(($bool_radio_form || $bool_check_form) && count($result) > 0 && !$bool_show_actions_list)
@@ -898,4 +914,3 @@ class list_show_with_template extends list_show
 		}
 	}
 }
-?>
