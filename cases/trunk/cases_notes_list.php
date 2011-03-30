@@ -30,10 +30,10 @@ if(empty($_SESSION['collection_id_choice']))
 {
 	$_SESSION['collection_id_choice']= $_SESSION['user']['collections'][0];
 }
-
-
-$where_request = $_SESSION['searching']['cases_request'];
-
+$where_request = '';
+if (isset($_SESSION['searching']['cases_request'])) {
+    $where_request = $_SESSION['searching']['cases_request'];
+}
 
 
 $status = $status_obj->get_not_searchable_status();
@@ -48,8 +48,9 @@ $where_clause = $sec->get_where_clause_from_coll_id($_SESSION['collection_id_cho
 
 if(!empty($where_request))
 {
-	if($_SESSION['searching']['where_clause_bis'] <> "")
-	{
+	if (isset($_SESSION['searching']['where_clause_bis'])
+	    && $_SESSION['searching']['where_clause_bis'] <> ""
+    ) {
 		$where_clause = "((".$where_clause.") or (".$_SESSION['searching']['where_clause_bis']."))";
 	}
 	$where_request = '('.$where_request.') and ('.$where_clause.')';

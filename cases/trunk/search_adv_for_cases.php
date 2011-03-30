@@ -29,84 +29,106 @@
 * @ingroup indexing_searching_mlb
 */
 
-require_once("core/class/class_request.php");
-require_once("core/class/class_security.php");
-require_once("core/class/class_manage_status.php");
-require_once('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR."class_indexing_searching_app.php");
-require_once('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR."class_types.php");
-$core_tools = new core_tools();
-$core_tools->test_user();
-$core_tools->load_lang();
-$core_tools->load_html();
-$core_tools->load_header('', true, false);
-$core_tools->test_service('adv_search_mlb', 'apps');
+require_once 'core/core_tables.php';
+require_once 'core/class/class_request.php';
+require_once 'core/class/class_security.php';
+require_once 'core/class/class_manage_status.php';
+require_once 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+    . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
+    . 'class_indexing_searching_app.php';
+require_once 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+    . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR . 'class_types.php';
+$core = new core_tools();
+$core->test_user();
+$core->load_lang();
+$core->load_html();
+$core->load_header('', true, false);
+$core->test_service('adv_search_mlb', 'apps');
 $type = new types();
 $_SESSION['indexation'] = false;
 /****************Management of the location bar  ************/
 $init = false;
-if(isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true")
-{
+if (isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true") {
     $init = true;
 }
 $level = "";
-if(isset($_REQUEST['level']) && $_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1)
-{
+if (isset($_REQUEST['level']) && ($_REQUEST['level'] == 2
+    || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4
+    || $_REQUEST['level'] == 1)
+) {
     $level = $_REQUEST['level'];
 }
-$page_path = $_SESSION['config']['businessappurl'].'index.php?page=search_adv&dir=indexing_searching';
-$page_label = _SEARCH_ADV_SHORT;
-$page_id = "search_adv_mlb";
-$core_tools->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
+$pagePath = $_SESSION['config']['businessappurl']
+          . 'index.php?page=search_adv&dir=indexing_searching';
+$pageLabel = _SEARCH_ADV_SHORT;
+$pageId = "search_adv_mlb";
+$core->manage_location_bar($pagePath, $pageLabel, $pageId, $init, $level);
 /***********************************************************/
 
 $func = new functions();
 $conn = new dbquery();
 $conn->connect();
-$search_obj = new indexing_searching_app();
-$status_obj = new manage_status();
+$searchObj = new indexing_searching_app();
+$statusObj = new manage_status();
 $sec = new security();
 // load saved queries for the current user in an array
-$conn->query("select query_id, query_name from ".$_SESSION['tablename']['saved_queries']." where user_id = '".$_SESSION['user']['UserId']."' order by query_name");
+$conn->query(
+	"select query_id, query_name from " . SAVED_QUERIES . " where user_id = '"
+    . $_SESSION['user']['UserId'] . "' order by query_name"
+);
 $queries = array();
-while($res = $conn->fetch_object())
-{
-    array_push($queries, array('ID'=>$res->query_id, 'LABEL' => $res->query_name));
+while ($res = $conn->fetch_object()) {
+    array_push(
+        $queries,
+        array(
+        	'ID' => $res->query_id,
+        	'LABEL' => $res->query_name
+        )
+    );
 }
 
-$conn->query("select user_id, firstname, lastname, status from ".$_SESSION['tablename']['users']." where enabled = 'Y' and status <> 'DEL' order by lastname asc");
-$users_list = array();
-while($res = $conn->fetch_object())
-{
-    array_push($users_list, array('ID' => $conn->show_string($res->user_id), 'NOM' => $conn->show_string($res->lastname), 'PRENOM' => $conn->show_string($res->firstname), 'STATUT' => $res->status));
+$conn->query(
+	"select user_id, firstname, lastname, status from " . USERS_TABLE
+    . " where enabled = 'Y' and status <> 'DEL' order by lastname asc"
+);
+$usersList = array();
+while ($res = $conn->fetch_object()) {
+    array_push(
+        $usersList,
+        array(
+        	'ID' => $conn->show_string($res->user_id),
+        	'NOM' => $conn->show_string($res->lastname),
+        	'PRENOM' => $conn->show_string($res->firstname),
+        	'STATUT' => $res->status,
+        )
+    );
 }
 
-$coll_id = 'letterbox_coll';
-$view = $sec->retrieve_view_from_coll_id($coll_id);
-$where = $sec->get_where_clause_from_coll_id($coll_id);
-if(!empty($where))
-{
-    $where = ' where '.$where;
+$collId = 'letterbox_coll';
+$view = $sec->retrieve_view_from_coll_id($collId);
+$where = $sec->get_where_clause_from_coll_id($collId);
+if (! empty($where)) {
+    $where = ' where ' . $where;
 }
 
 //Check if web brower is ie_6 or not
 if (preg_match("/MSIE 6.0/", $_SERVER["HTTP_USER_AGENT"])) {
-    $browser_ie = 'true';
-    $class_for_form = 'form';
+    $ieBrowser = 'true';
+    $formClass = 'form';
     $hr = '<tr><td colspan="2"><hr></td></tr>';
     $size = '';
-} elseif(preg_match('/msie/i', $_SERVER["HTTP_USER_AGENT"]) && !preg_match('/opera/i', $HTTP_USER_AGENT) )
-{
-    $browser_ie = 'true';
-    $class_for_form = 'forms';
+} else if (preg_match('/msie/i', $_SERVER["HTTP_USER_AGENT"])
+    && !preg_match('/opera/i', $HTTP_USER_AGENT)
+) {
+    $ieBrowser = 'true';
+    $formClass = 'forms';
     $hr = '';
      $size = '';
-}
-else
-{
-    $browser_ie = 'false';
-    $class_for_form = 'forms';
+} else {
+    $ieBrowser = 'false';
+    $formClass = 'forms';
     $hr = '';
-     $size = '';
+    $size = '';
    // $size = 'style="width:40px;"';
 }
 
@@ -114,7 +136,7 @@ else
 $param = array();
 
 // Indexes specific to doctype
-$indexes = $type->get_all_indexes($coll_id);
+$indexes = $type->get_all_indexes($collId);
 for($i=0;$i<count($indexes);$i++)
 {
     $field = $indexes[$i]['column'];
@@ -159,9 +181,9 @@ $param['process_limit_date'] = $arr_tmp2;
 
 //destinataire
 $arr_tmp = array();
-for($i=0; $i < count($users_list); $i++)
+for($i=0; $i < count($usersList); $i++)
 {
-    array_push($arr_tmp, array('VALUE' => $users_list[$i]['ID'], 'LABEL' => $users_list[$i]['NOM']." ".$users_list[$i]['PRENOM']));
+    array_push($arr_tmp, array('VALUE' => $usersList[$i]['ID'], 'LABEL' => $usersList[$i]['NOM']." ".$usersList[$i]['PRENOM']));
 }
 $arr_tmp2 = array('label' => _PROCESS_RECEIPT, 'type' => 'select_multiple', 'param' => array('field_label' => _PROCESS_RECEIPT, 'label_title' => _CHOOSE_RECIPIENT_SEARCH_TITLE,
 'id' => 'destinataire','options' => $arr_tmp));
@@ -201,14 +223,14 @@ if($_SESSION['features']['search_notes'] == 'true')
 }
 
 //destination (department)
-if($core_tools->is_module_loaded('entities'))
+if($core->is_module_loaded('entities'))
 {
-    $coll_id = 'letterbox_coll';
-    $where = $sec->get_where_clause_from_coll_id($coll_id);
-    $table = $sec->retrieve_view_from_coll_id($coll_id);
+    $collId = 'letterbox_coll';
+    $where = $sec->get_where_clause_from_coll_id($collId);
+    $table = $sec->retrieve_view_from_coll_id($collId);
     if(empty($table))
     {
-        $table = $sec->retrieve_view_from_coll_id($coll_id);
+        $table = $sec->retrieve_view_from_coll_id($collId);
     }
     if(!empty($where))
     {
@@ -219,7 +241,7 @@ if($core_tools->is_module_loaded('entities'))
     $arr_tmp = array();
     while($res = $conn->fetch_object())
     {
-        array_push($arr_tmp, array('VALUE' => $res->entity_id, 'LABEL' => $res->entity_label));
+        array_push($arr_tmp, array('VALUE' => $res->destination, 'LABEL' => $res->short_label));
     }
 
     $arr_tmp2 = array('label' => _DESTINATION_SEARCH, 'type' => 'select_multiple', 'param' => array('field_label' => _DESTINATION_SEARCH, 'label_title' => _CHOOSE_ENTITES_SEARCH_TITLE,
@@ -229,7 +251,7 @@ if($core_tools->is_module_loaded('entities'))
 
 // Folder
 /*
-if($core_tools->is_module_loaded('folder'))
+if($core->is_module_loaded('folder'))
 {
     $arr_tmp2 = array('label' => _MARKET, 'type' => 'input_text', 'param' => array('field_label' => _MARKET, 'other' => $size));
     $param['market'] = $arr_tmp2;
@@ -246,7 +268,7 @@ $arr_tmp2 = array('label' => _CHRONO_NUMBER, 'type' => 'input_text', 'param' => 
 $param['chrono'] = $arr_tmp2;
 
 //status
-$status = $status_obj->get_searchable_status();
+$status = $statusObj->get_searchable_status();
 $arr_tmp = array();
 for($i=0; $i < count($status); $i++)
 {
@@ -284,7 +306,7 @@ foreach(array_keys($_SESSION['mail_categories']) as $cat_id)
 }
 $arr_tmp2 = array('label' => _CATEGORY, 'type' => 'select_simple', 'param' => array('field_label' => _CATEGORY,'default_label' => '', 'options' => $arr_tmp));
 $param['category'] = $arr_tmp2;//Arbox_id ; for physical_archive
-/*if ($core_tools->is_module_loaded('physical_archive') == true)
+/*if ($core->is_module_loaded('physical_archive') == true)
 {
     //arbox_id
     $conn->query("select arbox_id, title from  ".$_SESSION['tablename']['ar_boxes']." where status <> 'DEL' order by description asc");
@@ -314,7 +336,7 @@ function cmp($a, $b)
 }
 uasort($param, "cmp");
 
-$tab = $search_obj->send_criteria_data($param);
+$tab = $searchObj->send_criteria_data($param);
 //$conn->show_array($param);
 //$conn->show_array($tab);
 
@@ -322,7 +344,7 @@ $tab = $search_obj->send_criteria_data($param);
 $src_tab = $tab[0];
 
 $string = '';
-$core_tools->load_js();
+$core->load_js();
 ?>
 
 <script type="text/javascript" src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=search_adv.js" ></script>
@@ -348,13 +370,13 @@ function del_query_confirm()
         <?php
         if($_GET['searched_item'] <> 'case')
         {
-            if($core_tools->test_service('add_cases', 'cases', false) == 1)
+            if($core->test_service('add_cases', 'cases', false) == 1)
             {
                 ?>
                 <dt><?php echo _CREATE_NEW_CASE; ?></dt>
                 <dd>
                     <h4><p align="center"><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_add_b.gif" alt="" /> <?php echo _CREATE_NEW_CASE; ?><p></h4>
-                    <p class="error"><?php echo $_SESSION['cases_error'];$_SESSION['cases_error'] = "";?></p>
+                    <p class="error"><?php if (isset($_SESSION['cases_error'])){ echo $_SESSION['cases_error'];}$_SESSION['cases_error'] = "";?></p>
                     <div class="blank_space">&nbsp;</div>
                     <form name="create_case" id="create_case" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=cases&page=create_case" method="post" >
 
@@ -365,7 +387,7 @@ function del_query_confirm()
                         <input type="hidden" name="searched_value" value="<?php echo $_GET['searched_value']; ?>" />
 
                         <div align="center" style="display:block;" id="div_query">
-                            <table align="center" border="0" width="100%" class="<?php echo $class_for_form; ?>">
+                            <table align="center" border="0" width="100%" class="<?php echo $formClass; ?>">
 
                                 <tr >
                                     <td >
@@ -431,14 +453,15 @@ function del_query_confirm()
         </form>
         -->
         <?php } ?>
-        <!--<form name="frmsearch2" method="get" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=search_adv_result&dir=indexing_searching"  id="frmsearch2" class="<?php echo $class_for_form; ?>">-->
-        <form name="frmsearch2" method="get" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php"  id="frmsearch2" class="<?php echo $class_for_form; ?>">
+        <!--<form name="frmsearch2" method="get" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=search_adv_result&dir=indexing_searching"  id="frmsearch2" class="<?php echo $formClass; ?>">-->
+        <form name="frmsearch2" method="get" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php"  id="frmsearch2" class="<?php echo $formClass; ?>">
         <input type="hidden" name="display" value="true" />
         <input type="hidden" name="dir" value="indexing_searching" />
         <input type="hidden" name="page" value="search_adv_result" />
 
-        <?php if ($_GET['schema'] <> '')
-        { ?>
+        <?php
+        if (isset($_GET['schema']) && $_GET['schema'] <> '') {
+        ?>
             <input type="hidden" name="schema" value="<?php echo $_GET['schema']; ?>" />
         <?php
         }
@@ -476,7 +499,7 @@ function del_query_confirm()
         <table align="center" border="0" width="100%">
 
             <?php
-            if($core_tools->is_module_loaded("cases") == true)
+            if($core->is_module_loaded("cases") == true)
             { ?>
              <tr>
                 <td colspan="2" ><h2><?php echo _CASE_INFO; ?></h2></td>
@@ -577,7 +600,7 @@ function del_query_confirm()
                <tr>
              <td width="70%">
                 <label class="bold"><?php echo _ADD_PARAMETERS; ?>:</label>
-                <select name="select_criteria" id="select_criteria" style="display:inline;" onchange="add_criteria(this.options[this.selectedIndex].id, 'frmsearch2', <?php echo $browser_ie;?>, '<?php echo _ERROR_IE_SEARCH;?>');">
+                <select name="select_criteria" id="select_criteria" style="display:inline;" onchange="add_criteria(this.options[this.selectedIndex].id, 'frmsearch2', <?php echo $ieBrowser;?>, '<?php echo _ERROR_IE_SEARCH;?>');">
                     <?php echo $src_tab; ?>
                 </select>
              </td>
@@ -598,7 +621,7 @@ function del_query_confirm()
         </div>
 
         <script type="text/javascript">
-        load_query(valeurs, loaded_query, 'frmsearch2', '<?php echo $browser_ie;?>, <?php echo _ERROR_IE_SEARCH;?>');
+        load_query(valeurs, loaded_query, 'frmsearch2', '<?php echo $ieBrowser;?>, <?php echo _ERROR_IE_SEARCH;?>');
         </script>
 
     </dd>

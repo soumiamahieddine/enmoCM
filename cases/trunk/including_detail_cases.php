@@ -28,8 +28,7 @@
 * @ingroup indexing_searching_mlb
 */
 
-if ($case_properties['case_id'] <> '')
-{
+if (isset($case_properties['case_id']) && $case_properties['case_id'] <> '') {
 ?>
 <h2>
 								<span class="date">
@@ -37,7 +36,7 @@ if ($case_properties['case_id'] <> '')
 								</span>
 								</h2>
 								<?php echo "<p align='right'><b><img src='".$_SESSION['config']['businessappurl']."static.php?filename=big_case.gif&dir=indexing_searching' border='0' alt='' /> <a href = '".$_SESSION['config']['businessappurl']."index.php?page=details_cases&module=cases&id=".$case_properties['case_id']."'>("._CLICK_HERE_TO_ACCESS_CASE.")</a></b></p>"; ?>
-			
+
 								<br/>
 								<table cellpadding="2" cellspacing="2" border="0" class="block forms details" width="100%">
 									<tr>
@@ -70,10 +69,10 @@ if ($case_properties['case_id'] <> '')
 										<td colspan="3">
 											<input type="text" class="readonly" readonly="readonly" value="<?php  echo $case_properties['case_description']; ?>" size="40" title="<?php  echo $case_properties['case_description']; ?>" alt="<?php  echo $case_properties['case_description']; ?>" />
 										</td>
-										
+
 									</tr>
 								</table>
 								<br/>
-<?php 
-} 
+<?php
+}
 ?>

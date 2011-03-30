@@ -13,29 +13,34 @@
 $core_tools = new core_tools();
 $core_tools->test_user();
 $core_tools->load_lang();
+$detailsExport = '';
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
 require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
-if(isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true")
-{
+$init = false;
+if (isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true") {
     $init = true;
 }
 $level = "";
-if(isset($_REQUEST['level']) && $_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1)
-{
+if (isset($_REQUEST['level']) && ($_REQUEST['level'] == 2
+    || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4
+    || $_REQUEST['level'] == 1)
+) {
     $level = $_REQUEST['level'];
 }
-$page_path = $_SESSION['config']['businessappurl'].'index.php?page=details&dir=indexing_searching&coll_id='.$_REQUEST['coll_id'].'&id='.$_REQUEST['id'];
+$page_path = $_SESSION['config']['businessappurl']
+           . 'index.php?page=details&dir=indexing_searching'
+           . '&id=' . $_REQUEST['id'];
+if (isset($_REQUEST['coll_id'])) {
+    $page_path .= '&coll_id=' . $_REQUEST['coll_id'];
+}
 $page_label = _DETAILS_CASES;
 $page_id = "details_cases";
 $core_tools->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 
-
-
-if(isset($_GET['id']))
-{
-        $_SESSION['cases']['actual_case_id'] = $_GET['id'];
+if (isset($_GET['id'])) {
+    $_SESSION['cases']['actual_case_id'] = $_GET['id'];
 }
 
 ?>

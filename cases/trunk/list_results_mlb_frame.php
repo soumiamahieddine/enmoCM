@@ -28,14 +28,24 @@
  * @version $Revision$
  * @ingroup indexing_searching_mlb
  */
-require_once ("core" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . "class_request.php");
-require_once ("core" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . "class_security.php");
-require_once ("core" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . "class_manage_status.php");
-require_once ("apps" . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id'] . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . 'class_list_show.php');
-require_once ("apps" . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id'] . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . 'class_contacts.php');
-require_once ("core" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . "class_manage_status.php");
-require_once ("modules" . DIRECTORY_SEPARATOR . "cases" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . 'class_modules_tools.php');
-include_once ("apps" . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id'] . DIRECTORY_SEPARATOR . 'definition_mail_categories.php');
+require_once "core" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR
+    . "class_request.php";
+require_once "core" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR
+    . "class_security.php";
+require_once "core" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR
+    . "class_manage_status.php";
+require_once
+	"apps" . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+    . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR
+    . 'class_list_show.php';
+require_once "apps" . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+    . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . 'class_contacts.php';
+require_once "core" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR
+    . "class_manage_status.php";
+require_once "modules" . DIRECTORY_SEPARATOR . "cases" . DIRECTORY_SEPARATOR
+    . "class" . DIRECTORY_SEPARATOR . 'class_modules_tools.php';
+include_once "apps" . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+    . DIRECTORY_SEPARATOR . 'definition_mail_categories.php';
 
 $status_obj = new manage_status();
 $core_tools = new core_tools();
@@ -47,21 +57,37 @@ $sec = new security();
 $status_obj = new manage_status();
 $contact = new contacts();
 $cases = new cases();
+$where = '';
+$order = '';
+if (isset ($_REQUEST['order']) && !empty ($_REQUEST['order'])) {
+    $order = trim($_REQUEST['order']);
+}
+$field = '';
+if (isset ($_REQUEST['order_field']) && !empty ($_REQUEST['order_field'])) {
+    $field = trim($_REQUEST['order_field']);
+}
+$start = 0;
+ if (isset ($_REQUEST['start']) && !empty ($_REQUEST['start'])) {
+    $start = trim($_REQUEST['start']);
+}
 /****************Management of the location bar  ************/
 $init = false;
-if(isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true")
-{
+if (isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true") {
     $init = true;
 }
 $level = "";
-if(isset($_REQUEST['level']) && $_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1)
-{
+if (isset($_REQUEST['level']) && ($_REQUEST['level'] == 2
+    || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4
+    || $_REQUEST['level'] == 1)
+) {
     $level = $_REQUEST['level'];
 }
-$page_path = $_SESSION['config']['businessappurl'] . 'index.php?page=list_results_mlb&dir=indexing_searching&order=' . $order . '&order_field=' . $field . '&start=' . $start;
+$pagePath = $_SESSION['config']['businessappurl']
+    . 'index.php?page=list_results_mlb&dir=indexing_searching&order=' . $order
+    . '&order_field=' . $field . '&start=' . $start;
 $page_label = _RESULTS;
 $page_id = "search_adv_result_mlb";
-$core_tools->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
+$core_tools->manage_location_bar($pagePath, $page_label, $page_id, $init, $level);
 /***********************************************************/
 
 /*echo "<pre>";
@@ -71,14 +97,14 @@ echo "</pre>";*/
 
 $string = $_SESSION['searching']['where_request'];
 $search1="'case'";
-preg_match($search1, $string, $out);
-$count=count($out[0]);
+/*preg_match($search1, $string, $out);
+$count = count($out[0]);
 if($count == 1) {
     $searchOnCases = true;
 }
 else {
     $searchOnCases = false;
-}
+}*/
 //temporary
 $searchOnCases = true;
 if(!$searchOnCases) {
@@ -150,14 +176,6 @@ if ($_GET['searched_item'] == "case") {
 }
 
 $list = new list_show();
-$order = '';
-if (isset ($_REQUEST['order']) && !empty ($_REQUEST['order'])) {
-    $order = trim($_REQUEST['order']);
-}
-$field = '';
-if (isset ($_REQUEST['order_field']) && !empty ($_REQUEST['order_field'])) {
-    $field = trim($_REQUEST['order_field']);
-}
 
 $orderstr = $list->define_order($order, $field);
 

@@ -30,7 +30,7 @@ $status_obj = new manage_status();
 
 
 
-if($_POST['update'] == true)
+if(isset($_POST['update']) && $_POST['update'] == true)
 {
 	$update_id = $_POST['id'];
 	$update_field = array();

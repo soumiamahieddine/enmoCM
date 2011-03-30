@@ -52,9 +52,13 @@ $obj_cases = new cases();
 $_SESSION['collection_id_choice'] = 'letterbox_coll';
 $view = $sec->retrieve_view_from_coll_id($_SESSION['collection_id_choice'] );
 $select = array();
+$where_clause = '';
+$select[$view] = array();
+$where_request = '';
+if (isset($_SESSION['searching']['cases_request'])) {
+    $where_request = $_SESSION['searching']['cases_request'];
+}
 
-$select[$view]= array();
-$where_request = $_SESSION['searching']['cases_request'];
 array_push($select[$view], "res_id", "status", "subject", "category_id as category_img", "contact_firstname", "contact_lastname", "contact_society", "user_lastname", "user_firstname", "dest_user", "type_label", "creation_date", "destination", "category_id, exp_user_id");
 
 $status = $status_obj->get_not_searchable_status();
@@ -148,7 +152,7 @@ if (count($tab) > 0)
 				if($tab[$i][$j][$value]=="status")
 				{
 					$tab[$i][$j]["label"]=_STATUS;
-					$res_status = $status_obj->get_status_data($tab[$i][$j]['value'],$extension_icon);
+					$res_status = $status_obj->get_status_data($tab[$i][$j]['value']);
 					$tab[$i][$j]['value'] = "<img src = '".$res_status['IMG_SRC']."' alt = '".$res_status['LABEL']."' title = '".$res_status['LABEL']."'>";
 					$tab[$i][$j]["size"]="5";
 					$tab[$i][$j]["label_align"]="left";
@@ -227,7 +231,7 @@ if (count($tab) > 0)
 					$tab[$i][$j]["valign"]="bottom";
 					$tab[$i][$j]["show"]=false;
 					$tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
-					$my_imgcat = get_img_cat($tab[$i][$j]['value'],$extension_icon);
+					$my_imgcat = get_img_cat($tab[$i][$j]['value']);
 					$tab[$i][$j]['value'] = "<img src = '".$my_imgcat."' alt = '' title = ''>";
 					$tab[$i][$j]["value"] = $tab[$i][$j]['value'];
 					$tab[$i][$j]["order"]="category_id";
@@ -268,7 +272,7 @@ if (count($tab) > 0)
 					$tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
 					$tab[$i][$j]["value"] = $contact->get_contact_information_from_view($_SESSION['mlb_search_current_category_id'], $contact_lastname, $contact_firstname, $contact_society, $user_lastname, $user_firstname);
 					$tab[$i][$j]["order"]=false;
-				}			
+				}
 			}
 		}
 	}
