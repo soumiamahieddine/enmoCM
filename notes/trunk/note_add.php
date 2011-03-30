@@ -52,7 +52,7 @@ if(isset($_REQUEST['table']) && !empty($_REQUEST['table']))
 <body id="pop_up" onload="resizeTo(450, 350);setTimeout(window.close, <?php  echo $time;?>*60*1000);">
 <?php
 
-if (isset($_REQUEST['notes'])&& !empty($_REQUEST['notes']))
+if (isset($_REQUEST['notes']) && !empty($_REQUEST['notes']))
 {
 	if($_SESSION['config']['databasetype'] == 'ORACLE')
 	{
@@ -71,7 +71,7 @@ if (isset($_REQUEST['notes'])&& !empty($_REQUEST['notes']))
 			$db->query("SELECT id FROM ".$_SESSION['tablename']['not_notes']." WHERE date_note = '".$date."' and  identifier = ".$identifier." and user_id = '".$_SESSION['user']['UserId']."' and coll_id = '".$coll_id."' ");
 			$res = $db->fetch_object();
 			$id = $res->id;
-			if($_SESSION['origin'] == "show_folder" )
+			if(isset($_SESSION['origin']) && $_SESSION['origin'] == "show_folder" )
 			{
 				$hist->add($table, $identifier ,"ADD", _ADDITION_NOTE._ON_FOLDER_NUM.$identifier.' ('.$id.')', $_SESSION['config']['databasetype'], 'notes');
 			}
@@ -80,51 +80,51 @@ if (isset($_REQUEST['notes'])&& !empty($_REQUEST['notes']))
 				$hist->add($view, $identifier ,"ADD", _ADDITION_NOTE._ON_DOC_NUM.$identifier.' ('.$id.')', $_SESSION['config']['databasetype'], 'notes');
 			}
 
-			$hist->add($_SESSION['tablename']['not_notes'], $id ,"ADD", _NOTE_ADDED.' ('.$id.')', $_SESSION['config']['databasetype'], 'notes');
+			$hist->add($_SESSION['tablename']['not_notes'], $id ,"ADD", _NOTES_ADDED.' ('.$id.')', $_SESSION['config']['databasetype'], 'notes');
 		}
 		
-		if($_SESSION['origin'] <> 'valid' && $_SESSION['origin'] <> 'qualify')
+		if(isset($_REQUEST['origin']) && ($_SESSION['origin'] <> 'valid' && $_SESSION['origin'] <> 'qualify'))
 		{
 			//$_SESSION['error'] = _ADDITION_NOTE;
 		}
 		?>
 		<script type="text/javascript">
-		<?php  if($_SESSION['origin'] == "process")
-		{?>
-			var eleframe1 =  window.opener.top.frames['process_frame'].document.getElementById('list_notes_doc');
-		<?php  }
-		elseif($_SESSION['origin'] == "valid" || $_SESSION['origin'] == 'qualify')
-		{
-		?>
-			var eleframe1 = window.opener.top.frames['index'].document.frames['myframe'].document.getElementById('list_notes_doc');
-		<?php
-		}
-		elseif($_SESSION['origin'] == "show_folder" )
-		{
-		?>
-			var eleframe1 =  window.opener.top.document.getElementById('list_notes_folder');
-		<?php
-		}
-		else
-		{
-		?>
-			var eleframe1 =  window.opener.top.document.getElementById('list_notes_doc');
-		<?php 	
-		}
-		if($_SESSION['origin'] == "show_folder" )
-		{
-		?>
-			eleframe1.src = '<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=notes&page=frame_notes_folder<?php echo $extend_url;?>';
-		<?php
-		}
-		else
-		{
-		?>
-			eleframe1.src = '<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=notes&page=frame_notes_doc<?php echo $extend_url;?>';
-		<?php 
-		}
-		?>
-		window.top.close();
+            <?php  
+            if (isset($_SESSION['origin']) && $_SESSION['origin'] == "process") {
+                ?>
+                var eleframe1 =  window.opener.top.frames['process_frame'].document.getElementById('list_notes_doc');
+                <?php
+            } elseif (isset($_SESSION['origin']) && ($_SESSION['origin'] == "valid" || $_SESSION['origin'] == 'qualify')) {
+                ?>
+                var eleframe1 = window.opener.top.frames['index'].document.frames['myframe'].document.getElementById('list_notes_doc');
+                <?php
+            }
+            elseif(isset($_SESSION['origin']) && $_SESSION['origin'] == "show_folder" )
+            {
+            ?>
+                var eleframe1 =  window.opener.top.document.getElementById('list_notes_folder');
+            <?php
+            }
+            else
+            {
+            ?>
+                var eleframe1 =  window.opener.top.document.getElementById('list_notes_doc');
+            <?php 	
+            }
+            if(isset($_SESSION['origin']) && $_SESSION['origin'] == "show_folder")
+            {
+            ?>
+                eleframe1.src = '<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=notes&page=frame_notes_folder<?php echo $extend_url;?>';
+            <?php
+            }
+            else
+            {
+            ?>
+                eleframe1.src = '<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=notes&page=frame_notes_doc<?php echo $extend_url;?>';
+            <?php 
+            }
+            ?>
+            window.top.close();
 		</script>
 
 <?php
