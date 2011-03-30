@@ -45,13 +45,13 @@ require_once 'core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
     . 'SecurityControler.php';
 require_once 'core/where_targets.php';
 require_once 'core/class/users_controler.php';
-require_once 'apps/' . $_SESSION['config']['app_id']
-    . '/class/class_business_app_tools.php';
+if (isset($_SESSION['config'])) {
+    require_once 'apps/' . $_SESSION['config']['app_id']
+        . '/class/class_business_app_tools.php';
+}
 require_once 'core/class/usergroups_controler.php';
 require_once 'core/class/ServiceControler.php';
-require_once 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
-	. DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
-	. 'class_business_app_tools.php';
+
 
 //require_once('lib/FirePHP/Init.php');
 
