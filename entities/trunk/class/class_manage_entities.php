@@ -1067,7 +1067,12 @@ class entity extends dbquery
         $this->connect();
         $this->query("select ue.entity_id, ue.user_role, e.entity_label, e.short_label from ".ENT_ENTITIES." e, ".ENT_USERS_ENTITIES." ue where ue.user_id = '".$this->protect_string_db(trim($user_id))."' and ue.entity_id = e.entity_id and ue.primary_entity = 'Y'");
         $res = $this->fetch_object();
-        return array('ID' => $res->entity_id, 'LABEL' => $res->entity_label, 'SHORT_LABEL' => $res->short_label, 'ROLE' => $res->user_role);
+        return array(
+        	'ID' => $res->entity_id,
+        	'LABEL' => $res->entity_label,
+        	'SHORT_LABEL' => $res->short_label,
+        	'ROLE' => $res->user_role
+        );
     }
 
      public function increaseListinstanceViewed($docId) {

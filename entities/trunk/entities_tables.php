@@ -1,6 +1,6 @@
 <?php
 /*
-*    Copyright 2008,2009, 2010 Maarch
+*    Copyright 2008 - 2011 Maarch
 *
 *  This file is part of Maarch Framework.
 *
@@ -29,9 +29,18 @@
 * @ingroup entities
 */
 
-if(!defined('ENT_ENTITIES')) define( 'ENT_ENTITIES', 'entities');
-if(!defined('ENT_USERS_ENTITIES')) define( 'ENT_USERS_ENTITIES', 'users_entities');
-if(!defined('ENT_LISTMODELS')) define( 'ENT_LISTMODELS', 'listmodels');
-if(!defined('ENT_LISTINSTANCE')) define( 'ENT_LISTINSTANCE', 'listinstance');
-if(!defined('ENT_GROUPBASKET_REDIRECT')) define( 'ENT_GROUPBASKET_REDIRECT', 'groupbasket_redirect');
-?>
+if (! defined('ENT_ENTITIES')) {
+    define('ENT_ENTITIES', 'entities');
+}
+if (! defined('ENT_USERS_ENTITIES')) {
+    define('ENT_USERS_ENTITIES', 'users_entities');
+}
+if (! defined('ENT_LISTMODELS')) {
+    define('ENT_LISTMODELS', 'listmodels');
+}
+if (! defined('ENT_LISTINSTANCE')) {
+    define('ENT_LISTINSTANCE', 'listinstance');
+}
+if (! defined('ENT_GROUPBASKET_REDIRECT')) {
+    define('ENT_GROUPBASKET_REDIRECT', 'groupbasket_redirect');
+}
