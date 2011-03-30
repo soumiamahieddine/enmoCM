@@ -32,6 +32,7 @@
 // Loads the required class
 try {
     require_once 'core/core_tables.php';
+    require_once 'core/manage_bitmask.php';
     require_once 'core/class/class_db.php';
     require_once 'core/class/users_controler.php';
     require_once 'core/class/session_security_controler.php';
@@ -422,6 +423,8 @@ class SecurityControler
     */
     public function load_security($userId)
     {
+        require_once 'apps/' . $_SESSION['config']['app_id']
+            . '/security_bitmask.php';
         $tab['collections'] = array();
         $tab['security'] = array();
         $func = new functions();
@@ -437,6 +440,7 @@ class SecurityControler
                     	'label_coll' => $_SESSION['collections'][$i]['label'],
                     	'view'  => $_SESSION['collections'][$i]['view'],
                     	'where' => " (1=1) ",
+                        'securityBitmask' => MAX_BITMASK,
                     );
                 }
                 array_push(
@@ -459,6 +463,7 @@ class SecurityControler
                 $startDate = $access[$i]->__get('mr_start_date');
                 $stopDate = $access[$i]->__get('mr_stop_date');
 
+                $bitmask = $access[$i] ->__get('rights_bitmask');
                 $target = $access[$i]->__get('where_target');
                 $collId = $access[$i]->__get('coll_id');
                 $whereClause = $access[$i]->__get('where_clause');
@@ -484,6 +489,7 @@ class SecurityControler
                             	'label_coll'  => $_SESSION['collections'][$ind]['label'],
                             	'view'  => $_SESSION['collections'][$ind]['view'],
                             	'where'  => $where,
+                                'securityBitmask' => $bitmask,
                             );
                         }
                     } else {
@@ -492,6 +498,7 @@ class SecurityControler
                         	'label_coll'  => $_SESSION['collections'][$ind]['label'],
                         	'view'  => $_SESSION['collections'][$ind]['view'],
                         	'where'  => $where,
+                            'securityBitmask' => $bitmask,
                         );
                     }
                     array_push($tab['collections'], $collId);
@@ -499,6 +506,10 @@ class SecurityControler
                     if (isset($tab['security'][$collId][$target])
                         && count($tab['security'][$collId][$target]) > 0
                     ) {
+                        $tab['security'][ $collId][$target]['securityBitmask'] = set_right(
+                            $tab['security'][ $collId][$target]['securityBitmask'],
+                            $bitmask
+                        );
                         $tab['security'][ $collId][$target]['where'] .= " or "
                             . $where;
                     } else if ($target == 'ALL') {
@@ -506,6 +517,10 @@ class SecurityControler
                             if (isset($tab['security'][$collId][$key])
                                 && count($tab['security'][$collId][$key]) > 0
                             ) {
+                                $tab['security'][ $collId][$target]['securityBitmask'] = set_right(
+                                    $tab['security'][ $collId][$target]['securityBitmask'],
+                                    $bitmask
+                                );
                                 $tab['security'][$collId][$key]['where'] .= " or "
                                     . $where;
                             } else {
@@ -514,6 +529,7 @@ class SecurityControler
                                 	'label_coll'  => $_SESSION['collections'][$ind]['label'],
                                 	'view'  => $_SESSION['collections'][$ind]['view'],
                                 	'where'  => $where,
+                                    'securityBitmask' => $bitmask,
                                 );
                             }
                         }
@@ -523,6 +539,7 @@ class SecurityControler
                         	'label_coll'  => $_SESSION['collections'][$ind]['label'],
                         	'view'  => $_SESSION['collections'][$ind]['view'],
                         	'where'  => $where,
+                            'securityBitmask' => $bitmask,
                         );
                     }
                 }

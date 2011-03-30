@@ -638,40 +638,38 @@ class functions
     * @param   $date  datetime The date to format
     * @return   datetime  The formatted date
     */
-    public function dateformat($date, $sep = '/')
+    public function dateformat($realDate, $sep='/')
     {
-        if($date <> "")
-        {
-            $ar_test = explode(" ",$date);
-            $date = $ar_test[0];
-            $time = $ar_test[1];
-            if(preg_match('/\./',$time)) // POSTGRES date
-            {
-                $tmp = explode('.', $time);
-                $time = $tmp[0];
+        if ($realDate <> '') {
+            if (preg_match('/ /', $realDate)) {
+                $hasTime = true;
+                $tmpArr = explode(" ", $realDate);
+                $date = $tmpArr[0];
+                $time = $tmpArr[1];
+                if (preg_match('/\./', $time)) {  // POSTGRES date
+                    $tmp = explode('.', $time);
+                    $time = $tmp[0];
+                } else if (preg_match('/,/', $time)) { // ORACLE date
+                    $tmp = explode(',', $time);
+                    $time = $tmp[0];
+                }
+            } else {
+                $hasTime = false;
+                $date = $realDate;
             }
-            else if(preg_match('/,/',$time)) // ORACLE date
-            {
-                $tmp = explode(',', $time);
-                $time = $tmp[0];
+            if (preg_match('/-/', $date)) {
+                $dateArr = explode("-", $date);
+            } else if (preg_match('@\/@', $date)) {
+                $dateArr = explode("/", $date);
             }
-            if(preg_match('/-/',$date))
-            {
-                $ar_date = explode("-",$date);
-            }
-            elseif(preg_match('@\/@',$date))
-            {
-                $ar_date = explode("/",$date);
-            }
-            if(substr($ar_test[1],0,2) == "00")
-            {
-                return $ar_date[2].$sep.$ar_date[1].$sep.$ar_date[0];
-            }
-            else
-            {
-                return $ar_date[2].$sep.$ar_date[1].$sep.$ar_date[0]." ".$time;
+            if (! $hasTime || substr($tmpArr[1], 0, 2) == "00") {
+                return $dateArr[2] . $sep . $dateArr[1] . $sep . $dateArr[0];
+            } else {
+                return $dateArr[2] . $sep . $dateArr[1] . $sep . $dateArr[0]
+                    . " " . $time;
             }
         }
+        return '';
     }
 
     /**
@@ -1317,23 +1315,23 @@ class functions
     */
     public function dateformaten($date)
     {
-        $ar_test = explode(" ",$date);
+        $tmpArr = explode(" ",$date);
 
-        $date = $ar_test[0];
-        $time = $ar_test[1];
-        $ar_date = explode("/",$date);
+        $date = $tmpArr[0];
+        $time = $tmpArr[1];
+        $dateArr = explode("/",$date);
         if(preg_match('/\./',$time))
         {
             $tmp = explode('.', $time);
             $time = $tmp[0];
         }
-        if(substr($ar_test[1],0,2) == "00")
+        if(substr($tmpArr[1],0,2) == "00")
         {
-            return $ar_date[1]."/".$ar_date[0]."/".$ar_date[2];
+            return $dateArr[1]."/".$dateArr[0]."/".$dateArr[2];
         }
         else
         {
-            return $ar_date[1]."/".$ar_date[0]."/".$ar_date[2]." ".$time;
+            return $dateArr[1]."/".$dateArr[0]."/".$dateArr[2]." ".$time;
         }
     }
 
@@ -1615,10 +1613,10 @@ class functions
         }
         return $foundDoc;
     }
-    
+
     //lgi tests
     function detectSmartphone() {
-        $mobile_browser = '0'; 
+        $mobile_browser = '0';
         if (preg_match('/(up.browser|up.link|mmp|symbian|smartphone|midp|wap|phone|android)/i', strtolower($_SERVER['HTTP_USER_AGENT']))) {
             $mobile_browser++;
         }

@@ -20,20 +20,13 @@
 
 /**
 * @brief  Contains the controler of the session_security object (create, save, modify, etc...)
-* 
-* 
+*
+*
 * @file
 * @author Claire Figueras <dev@maarch.org>
 * @date $date$
 * @version $Revision$
 * @ingroup core
-*/
-
-// To activate de debug mode of the class
-$_ENV['DEBUG'] = false;
-/*
-define("_CODE_SEPARATOR","/");
-define("_CODE_INCREMENT",1);
 */
 
 // Loads the required class
@@ -47,7 +40,7 @@ try {
 }
 
 /**
-* @brief  Controler of the session_security object 
+* @brief  Controler of the session_security object
 *
 *<ul>
 *  <li>Get an session_security object for a given user_id</li>
@@ -67,19 +60,19 @@ class session_security_controler extends ObjectControler implements ObjectContro
 	*/
 	public function get($user_id, $comp_where = '')
 	{
-		self::set_foolish_ids(array('user_id'));
-		self::set_specific_id('user_id');
-		$session_security = self::advanced_get($user_id,SESSION_SECURITY_TABLE);	
-		
+		$this->set_foolish_ids(array('user_id'));
+		$this->set_specific_id('user_id');
+		$session_security = $this->advanced_get($user_id,SESSION_SECURITY_TABLE);
+
 		if(isset($session_security) )
 			return $session_security;
 		else
 			return null;
 	}
-	
-	
+
+
 	/**
-	* Saves in the database a session_security object 
+	* Saves in the database a session_security object
 	*
 	* @param  $session_security session_security object to be saved
 	* @return bool true if the save is complete, false otherwise
@@ -88,17 +81,17 @@ class session_security_controler extends ObjectControler implements ObjectContro
 	{
 		if(!isset($session_security) )
 			return false;
-		
-		self::set_foolish_ids(array('user_id'));
-		self::set_specific_id('user_id');
-		if(self::sessionSecurityExists($session_security->user_id))
-			return self::update($session_security);
+
+		$this->set_foolish_ids(array('user_id'));
+		$this->set_specific_id('user_id');
+		if($this->sessionSecurityExists($session_security->user_id))
+			return $this->update($session_security);
 		else
-			return self::insert($session_security);
-		
+			return $this->insert($session_security);
+
 		return false;
 	}
-	
+
 	/**
 	* Inserts in the database (session_security table) a session_security object
 	*
@@ -107,7 +100,7 @@ class session_security_controler extends ObjectControler implements ObjectContro
 	*/
 	private function insert($session_security)
 	{
-		return self::advanced_insert($session_security);
+		return $this->advanced_insert($session_security);
 	}
 
 	/**
@@ -118,53 +111,53 @@ class session_security_controler extends ObjectControler implements ObjectContro
 	*/
 	private function update($session_security)
 	{
-		return self::advanced_update($session_security);
+		return $this->advanced_update($session_security);
 	}
-	
+
 	/**
-	* Deletes in the database a given session_security 
+	* Deletes in the database a given session_security
 	*
 	* @param  $session_security session_security object
 	* @return bool true if the deletion is complete, false otherwise
 	*/
 	public function delete($session_security)
 	{
-		self::set_foolish_ids(array('user_id'));
-		self::set_specific_id('user_id');
-		return self::advanced_delete($session_security);
+		$this->set_foolish_ids(array('user_id'));
+		$this->set_specific_id('user_id');
+		return $this->advanced_delete($session_security);
 	}
-	
-	
+
+
 	/**
 	* Asserts if a session_security exists in the database for a given user (user_id)
-	* 
+	*
 	* @param  $user_id String User identifier
-	* @return bool true if the user exists, false otherwise 
+	* @return bool true if the user exists, false otherwise
 	*/
 	public function sessionSecurityExists($user_id)
 	{
 		if(!isset($user_id) || empty($user_id))
 			return false;
 
-		self::$db=new dbquery();
-		self::$db->connect();
+		$this->$db=new dbquery();
+		$this->$db->connect();
 		$query = "select user_id from ".SESSION_SECURITY_TABLE." where user_id = '".functions::protect_string_db($user_id)."'";
-					
+
 		try{
 			if($_ENV['DEBUG']){echo $query.' // ';}
-			self::$db->query($query);
+			$this->$db->query($query);
 		} catch (Exception $e){
 			echo _UNKNOWN.' '._USER." ".$user_id.' // ';
 		}
-		
-		if(self::$db->nb_result() > 0)
+
+		if($this->$db->nb_result() > 0)
 		{
-			self::$db->disconnect();
+			$this->$db->disconnect();
 			return true;
 		}
-		self::$db->disconnect();
+		$this->$db->disconnect();
 		return false;
 	}
-	
+
 }
 ?>

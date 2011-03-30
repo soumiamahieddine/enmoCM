@@ -20,7 +20,7 @@
 */
 
 /**
-* @brief API to manage docservers 
+* @brief API to manage docservers
 *
 * @file
 * @author Laurent Giovannoni
@@ -41,14 +41,14 @@ try {
 /**
  * copy doc in a docserver.
  * @param   string $sourceFilePath collection resource
- * @param   array $infoFileNameInTargetDocserver infos of the doc to store, 
+ * @param   array $infoFileNameInTargetDocserver infos of the doc to store,
  *          contains : subdirectory path and new filename
  * @param   string $docserverSourceFingerprint
  * @return  array of docserver data for res_x else return error
  */
 function Ds_copyOnDocserver(
-    $sourceFilePath, 
-    $infoFileNameInTargetDocserver, 
+    $sourceFilePath,
+    $infoFileNameInTargetDocserver,
     $docserverSourceFingerprint='NONE'
 ) {
     $destinationDir = $infoFileNameInTargetDocserver['destinationDir'];
@@ -61,7 +61,7 @@ function Ds_copyOnDocserver(
     }
     $cp = copy($sourceFilePath, $destinationDir . $fileDestinationName);
     Ds_setRights(
-        $destinationDir . $fileDestinationName, 
+        $destinationDir . $fileDestinationName,
         $sourceFilePath
     );
     if ($cp == false) {
@@ -69,8 +69,8 @@ function Ds_copyOnDocserver(
         return $storeInfos;
     }
     Ds_controlFingerprint(
-        $sourceFilePath, 
-        $destinationDir . $fileDestinationName, 
+        $sourceFilePath,
+        $destinationDir . $fileDestinationName,
         $docserverSourceFingerprint
     );
     /*$ofile = fopen($destinationDir.$fileDestinationName, 'r');
@@ -80,20 +80,22 @@ function Ds_copyOnDocserver(
         $storeInfos = array('error' => _COPY_OF_DOC_NOT_COMPLETE);
         return $storeInfos;
     }*/
+    if (isset($GLOBALS['currentStep'])) {
+        $destinationDir = str_replace(
+            $GLOBALS['docservers'][$GLOBALS['currentStep']]['docserver']
+            ['path_template'],
+            '',
+            $destinationDir
+        );
+    }
     $destinationDir = str_replace(
-        $GLOBALS['docservers'][$GLOBALS['currentStep']]['docserver']
-        ['path_template'], 
-        '', 
-        $destinationDir
-    );
-    $destinationDir = str_replace(
-        DIRECTORY_SEPARATOR, 
-        '#', 
+        DIRECTORY_SEPARATOR,
+        '#',
         $destinationDir
     );
     $storeInfos = array(
-        'destinationDir' => $destinationDir, 
-        'fileDestinationName' => $fileDestinationName, 
+        'destinationDir' => $destinationDir,
+        'fileDestinationName' => $fileDestinationName,
         'fileSize' => filesize($sourceFilePath),
     );
     if ($GLOBALS['TmpDirectory'] <> '') {
@@ -107,7 +109,7 @@ function Ds_copyOnDocserver(
  * @param $docServer docservers path
  * @return @return array Contains 2 items : subdirectory path and error
  */
-function Ds_createPathOnDocServer($docServer) 
+function Ds_createPathOnDocServer($docServer)
 {
     if (!is_dir($docServer . date('Y') . DIRECTORY_SEPARATOR)) {
         mkdir($docServer . date('Y') . DIRECTORY_SEPARATOR, 0777);
@@ -116,40 +118,40 @@ function Ds_createPathOnDocServer($docServer)
         );
     }
     if (!is_dir(
-        $docServer . date('Y') . DIRECTORY_SEPARATOR.date('m') 
+        $docServer . date('Y') . DIRECTORY_SEPARATOR.date('m')
         . DIRECTORY_SEPARATOR
     )
     ) {
         mkdir(
-            $docServer . date('Y') . DIRECTORY_SEPARATOR.date('m') 
-            . DIRECTORY_SEPARATOR, 
+            $docServer . date('Y') . DIRECTORY_SEPARATOR.date('m')
+            . DIRECTORY_SEPARATOR,
             0777
         );
         Ds_setRights(
-            $docServer . date('Y') . DIRECTORY_SEPARATOR.date('m') 
-            . DIRECTORY_SEPARATOR, 
+            $docServer . date('Y') . DIRECTORY_SEPARATOR.date('m')
+            . DIRECTORY_SEPARATOR,
             $docServer
         );
     }
-    if ($GLOBALS['wb'] <> '') {
-        $path = $docServer . date('Y') . DIRECTORY_SEPARATOR.date('m') 
+    if (isset($GLOBALS['wb']) && $GLOBALS['wb'] <> '') {
+        $path = $docServer . date('Y') . DIRECTORY_SEPARATOR.date('m')
               . DIRECTORY_SEPARATOR . $GLOBALS['wb'] . DIRECTORY_SEPARATOR;
         if (!is_dir($path)) {
             mkdir($path, 0777);
             Ds_setRights($path, $docServer);
         } else {
             return array(
-                'destinationDir' => '', 
-                'error' => 'Folder alreay exists, workbatch already exist:' 
+                'destinationDir' => '',
+                'error' => 'Folder alreay exists, workbatch already exist:'
                 . $path,
             );
         }
     } else {
-        $path = $docServer . date('Y') . DIRECTORY_SEPARATOR.date('m') 
+        $path = $docServer . date('Y') . DIRECTORY_SEPARATOR.date('m')
               . DIRECTORY_SEPARATOR;
     }
     return array(
-        'destinationDir' => $path, 
+        'destinationDir' => $path,
         'error' => '',
     );
 }
@@ -164,7 +166,7 @@ function Ds_createPathOnDocServer($docServer)
  *          $fingerprintMode
  * @return  array with path of the extracted doc
  */
-function Ds_extractArchive($fileInfos, $fingerprintMode) 
+function Ds_extractArchive($fileInfos, $fingerprintMode)
 {
     //var_dump($fileInfos);
     if (!isset($fileInfos['tmpDir']) || $fileInfos['tmpDir'] == '') {
@@ -172,19 +174,19 @@ function Ds_extractArchive($fileInfos, $fingerprintMode)
     } else {
         $tmp = $fileInfos['tmpDir'];
     }
-    $fileNameOnTmp = $tmp . rand() . '_' 
-                   . md5_file($fileInfos['path_to_file']) 
+    $fileNameOnTmp = $tmp . rand() . '_'
+                   . md5_file($fileInfos['path_to_file'])
                    . '_' . $fileInfos['filename'];
     $cp = copy($fileInfos['path_to_file'], $fileNameOnTmp);
     Ds_setRights($fileNameOnTmp, $fileInfos['path_to_file']);
     if ($cp == false) {
         $result = array(
-            'status' => 'ko', 
-            'path' => '', 
-            'mime_type' => '', 
-            'format' => '', 
-            'tmpArchive' => '', 
-            'fingerprint' => '', 
+            'status' => 'ko',
+            'path' => '',
+            'mime_type' => '',
+            'format' => '',
+            'tmpArchive' => '',
+            'fingerprint' => '',
             'error' => _TMP_COPY_ERROR,
         );
         return $result;
@@ -194,20 +196,20 @@ function Ds_extractArchive($fileInfos, $fingerprintMode)
         if (mkdir($tmp . $tmpArchive)) {
             //try to extract the offset if it's possible
             if (DIRECTORY_SEPARATOR == '/') {
-                $command = '7z x -y -o' 
-                         . escapeshellarg($tmp . $tmpArchive) . ' ' 
-                         . escapeshellarg($fileNameOnTmp) . ' ' 
+                $command = '7z x -y -o'
+                         . escapeshellarg($tmp . $tmpArchive) . ' '
+                         . escapeshellarg($fileNameOnTmp) . ' '
                          . escapeshellarg($fileNameOnTmp);
             } else {
-                $command = '"' 
+                $command = '"'
                     . str_replace(
-                        '\\', 
-                        '\\\\', 
+                        '\\',
+                        '\\\\',
                         $_SESSION['docserversFeatures']['DOCSERVERS']
                         ['PATHTOCOMPRESSTOOL']
-                    ) 
-                    . '" x -y -o' . escapeshellarg($tmp . $tmpArchive) 
-                    . ' ' . escapeshellarg($fileNameOnTmp) . ' ' 
+                    )
+                    . '" x -y -o' . escapeshellarg($tmp . $tmpArchive)
+                    . ' ' . escapeshellarg($fileNameOnTmp) . ' '
                     . escapeshellarg($fileNameOnTmp);
             }
             $tmpCmd = '';
@@ -216,32 +218,32 @@ function Ds_extractArchive($fileInfos, $fingerprintMode)
             if ($execError > 0) {
                 if (DIRECTORY_SEPARATOR == '/') {
                     //else try to extract only the first container
-                    $command = '7z x -y -o' 
-                             . escapeshellarg($tmp . $tmpArchive) . ' ' 
+                    $command = '7z x -y -o'
+                             . escapeshellarg($tmp . $tmpArchive) . ' '
                              . escapeshellarg($fileNameOnTmp);
                 } else {
-                    $command = '"' 
+                    $command = '"'
                         . str_replace(
-                            '\\', 
-                            '\\\\', 
+                            '\\',
+                            '\\\\',
                             $_SESSION['docserversFeatures']['DOCSERVERS']
                             ['PATHTOCOMPRESSTOOL']
-                        ) 
-                        . '" x -y -o' 
-                        . escapeshellarg($tmp . $tmpArchive) . ' ' 
+                        )
+                        . '" x -y -o'
+                        . escapeshellarg($tmp . $tmpArchive) . ' '
                         . escapeshellarg($fileNameOnTmp);
                 }
                 $tmpCmd = '';
                 exec($command, $tmpCmd, $execError);
                 if ($execError > 0) {
                     $result = array(
-                        'status' => 'ko', 
-                        'path' => '', 
-                        'mime_type' => '', 
-                        'format' => '', 
-                        'tmpArchive' => '', 
-                        'fingerprint' => '', 
-                        'error' => _PB_WITH_EXTRACTION_OF_CONTAINER . '#' 
+                        'status' => 'ko',
+                        'path' => '',
+                        'mime_type' => '',
+                        'format' => '',
+                        'tmpArchive' => '',
+                        'fingerprint' => '',
+                        'error' => _PB_WITH_EXTRACTION_OF_CONTAINER . '#'
                         . $execError,
                     );
                     return $result;
@@ -249,23 +251,23 @@ function Ds_extractArchive($fileInfos, $fingerprintMode)
             }
         } else {
             $result = array(
-                'status' => 'ko', 
-                'path' => '', 
-                'mime_type' => '', 
-                'format' => '', 
-                'tmpArchive' => '', 
-                'fingerprint' => '', 
-                'error' => _PB_WITH_EXTRACTION_OF_CONTAINER . '#' . $tmp 
+                'status' => 'ko',
+                'path' => '',
+                'mime_type' => '',
+                'format' => '',
+                'tmpArchive' => '',
+                'fingerprint' => '',
+                'error' => _PB_WITH_EXTRACTION_OF_CONTAINER . '#' . $tmp
                 . $tmpArchive,
             );
             return $result;
         }
         $format = substr(
-            $fileInfos['offset_doc'], 
+            $fileInfos['offset_doc'],
             strrpos($fileInfos['offset_doc'], '.') + 1
         );
         if (!file_exists(
-            $tmp . $tmpArchive . DIRECTORY_SEPARATOR 
+            $tmp . $tmpArchive . DIRECTORY_SEPARATOR
             . $fileInfos['offset_doc']
         )
         ) {
@@ -279,44 +281,44 @@ function Ds_extractArchive($fileInfos, $fingerprintMode)
                         $execError = '';
                         $tmpArchiveBis = uniqid(rand());
                         if (mkdir(
-                            $tmp . $tmpArchive . DIRECTORY_SEPARATOR 
+                            $tmp . $tmpArchive . DIRECTORY_SEPARATOR
                             . $tmpArchiveBis
                         )
                         ) {
                             if (DIRECTORY_SEPARATOR == '/') {
-                                $commandBis = '7z x -y -o' 
+                                $commandBis = '7z x -y -o'
                                             . escapeshellarg(
-                                                $tmp . $tmpArchive 
-                                                . DIRECTORY_SEPARATOR 
+                                                $tmp . $tmpArchive
+                                                . DIRECTORY_SEPARATOR
                                                 . $tmpArchiveBis
                                             )
-                                            . ' ' 
+                                            . ' '
                                             . escapeshellarg(
-                                                $tmp . $tmpArchive 
-                                                . DIRECTORY_SEPARATOR 
+                                                $tmp . $tmpArchive
+                                                . DIRECTORY_SEPARATOR
                                                 . $fileScan
                                             )
                                             . ' ' .$fileInfos['offset_doc'];
                             } else {
-                                $commandBis = '"' 
+                                $commandBis = '"'
                                             . str_replace(
-                                                '\\', 
-                                                '\\\\', 
+                                                '\\',
+                                                '\\\\',
                                                 $_SESSION
                                                 ['docserversFeatures']
                                                 ['DOCSERVERS']
                                                 ['PATHTOCOMPRESSTOOL']
                                             )
-                                            . '" x -y -o' 
+                                            . '" x -y -o'
                                             . escapeshellarg(
-                                                $tmp . $tmpArchive 
-                                                . DIRECTORY_SEPARATOR 
+                                                $tmp . $tmpArchive
+                                                . DIRECTORY_SEPARATOR
                                                 . $tmpArchiveBis
                                             )
-                                            . ' ' 
+                                            . ' '
                                             . escapeshellarg(
-                                                $tmp . $tmpArchive 
-                                                . DIRECTORY_SEPARATOR 
+                                                $tmp . $tmpArchive
+                                                . DIRECTORY_SEPARATOR
                                                 . $fileScan
                                             )
                                             . ' ' .$fileInfos['offset_doc'];
@@ -326,55 +328,55 @@ function Ds_extractArchive($fileInfos, $fingerprintMode)
                             //echo $commandBis;exit;
                             if ($execError > 0) {
                                 $result = array(
-                                    'status' => 'ko', 
-                                    'path' => '', 
-                                    'mime_type' => '', 
-                                    'format' => '', 
-                                    'tmpArchive' => '', 
-                                    'fingerprint' => '', 
+                                    'status' => 'ko',
+                                    'path' => '',
+                                    'mime_type' => '',
+                                    'format' => '',
+                                    'tmpArchive' => '',
+                                    'fingerprint' => '',
                                     'error' =>
-                                    _PB_WITH_EXTRACTION_OF_CONTAINER . '#' 
+                                    _PB_WITH_EXTRACTION_OF_CONTAINER . '#'
                                     . $execError,
                                 );
                             }
                         } else {
                             $result = array(
-                                'status' => 'ko', 
-                                'path' => '', 
-                                'mime_type' => '', 
-                                'format' => '', 
-                                'tmpArchive' => '', 
-                                'fingerprint' => '', 
+                                'status' => 'ko',
+                                'path' => '',
+                                'mime_type' => '',
+                                'format' => '',
+                                'tmpArchive' => '',
+                                'fingerprint' => '',
                                 'error' => _PB_WITH_EXTRACTION_OF_CONTAINER
-                                . '#' . $tmp . $tmpArchive 
+                                . '#' . $tmp . $tmpArchive
                                 . DIRECTORY_SEPARATOR . $tmpArchiveBis,
                             );
                             return $result;
                         }
                         $path = str_replace(
-                            $fileScan, 
-                            '', 
-                            $tmp . $tmpArchive . DIRECTORY_SEPARATOR 
-                            . $tmpArchiveBis . DIRECTORY_SEPARATOR 
+                            $fileScan,
+                            '',
+                            $tmp . $tmpArchive . DIRECTORY_SEPARATOR
+                            . $tmpArchiveBis . DIRECTORY_SEPARATOR
                             . $fileInfos['offset_doc']
                         );
                         $path = str_replace(
-                            '#', 
-                            DIRECTORY_SEPARATOR, 
+                            '#',
+                            DIRECTORY_SEPARATOR,
                             $path
                         );
                         $result = array(
-                            'status' => 'ok', 
-                            'path' => $path, 
-                            'mime_type' => Ds_getMimeType($path), 
-                            'format' => $format, 
+                            'status' => 'ok',
+                            'path' => $path,
+                            'mime_type' => Ds_getMimeType($path),
+                            'format' => $format,
                             'fingerprint' =>
-                            Ds_doFingerprint($path, $fingerprintMode), 
-                            'tmpArchive' => $tmp . $tmpArchive, 
+                            Ds_doFingerprint($path, $fingerprintMode),
+                            'tmpArchive' => $tmp . $tmpArchive,
                             'error' => '',
                         );
                         unlink(
-                            $tmp . $tmpArchive . DIRECTORY_SEPARATOR 
+                            $tmp . $tmpArchive . DIRECTORY_SEPARATOR
                             . $fileScan
                         );
                         break;
@@ -383,24 +385,24 @@ function Ds_extractArchive($fileInfos, $fingerprintMode)
             }
         } else {
             $result = array(
-                'status' => 'ok', 
-                'path' => $tmp . $tmpArchive . DIRECTORY_SEPARATOR 
-                . $fileInfos['offset_doc'], 
+                'status' => 'ok',
+                'path' => $tmp . $tmpArchive . DIRECTORY_SEPARATOR
+                . $fileInfos['offset_doc'],
                 'mime_type' =>
                 Ds_getMimeType(
-                    $tmp . $tmpArchive . DIRECTORY_SEPARATOR 
+                    $tmp . $tmpArchive . DIRECTORY_SEPARATOR
                     . $fileInfos['offset_doc']
                 )
-                , 
-                'format' => $format, 
-                'tmpArchive' => $tmp . $tmpArchive, 
+                ,
+                'format' => $format,
+                'tmpArchive' => $tmp . $tmpArchive,
                 'fingerprint' =>
                 Ds_doFingerprint(
-                    $tmp . $tmpArchive . DIRECTORY_SEPARATOR 
-                    . $fileInfos['offset_doc'], 
+                    $tmp . $tmpArchive . DIRECTORY_SEPARATOR
+                    . $fileInfos['offset_doc'],
                     $fingerprintMode
                 )
-                , 
+                ,
                 'error' => '',
             );
         }
@@ -414,7 +416,7 @@ function Ds_extractArchive($fileInfos, $fingerprintMode)
  * @param   string $fingerprintMode (md5, sha512, ...)
  * @return  string the fingerprint
  */
-function Ds_doFingerprint($path, $fingerprintMode) 
+function Ds_doFingerprint($path, $fingerprintMode)
 {
     if ($fingerprintMode == 'NONE' || $fingerprintMode == '') {
         return '0';
@@ -431,24 +433,24 @@ function Ds_doFingerprint($path, $fingerprintMode)
  * @return  array ok or ko with error
  */
 function Ds_controlFingerprint(
-    $pathInit, 
-    $pathTarget, 
+    $pathInit,
+    $pathTarget,
     $fingerprintMode='NONE'
 ) {
     $result = array();
     if (Ds_doFingerprint(
-        $pathInit, 
+        $pathInit,
         $fingerprintMode
     ) <> Ds_doFingerprint($pathTarget, $fingerprintMode)
     ) {
         $result = array(
-            'status' => 'ko', 
-            'error' => _PB_WITH_FINGERPRINT_OF_DOCUMENT . ' ' . $pathInit 
+            'status' => 'ko',
+            'error' => _PB_WITH_FINGERPRINT_OF_DOCUMENT . ' ' . $pathInit
             . ' '. _AND . ' ' . $pathTarget,
         );
     } else {
         $result = array(
-            'status' => 'ok', 
+            'status' => 'ok',
             'error' => '',
         );
     }
@@ -461,7 +463,7 @@ function Ds_controlFingerprint(
  * @param   string $source path of the resource 2
  * @return  nothing
  */
-function Ds_setRights($dest, $source) 
+function Ds_setRights($dest, $source)
 {
     //chown($dest, fileowner($source));
     //chgrp($dest, filegroup($source));
@@ -478,7 +480,7 @@ function Ds_setRights($dest, $source)
  * @param   string $source path of the resource 2
  * @return  nothing
  */
-function Ds_recurseSetRights($dest, $source) 
+function Ds_recurseSetRights($dest, $source)
 {
     $d = opendir($mypath);
     while (($file = readdir($d)) !== false) {
@@ -497,7 +499,7 @@ function Ds_recurseSetRights($dest, $source)
 * @param $filePath path of the file
 * @return string of the mime type
 */
-function Ds_getMimeType($filePath) 
+function Ds_getMimeType($filePath)
 {
     require_once 'MIME/Type.php';
     return MIME_Type::autoDetect($filePath);
@@ -509,7 +511,7 @@ function Ds_getMimeType($filePath)
  * @param   $contentOnly boolean true if only the content
  * @return  boolean
  */
-function Ds_washTmp($dir, $contentOnly=false) 
+function Ds_washTmp($dir, $contentOnly=false)
 {
     if (is_dir($dir)) {
         $objects = scandir($dir);
@@ -518,7 +520,7 @@ function Ds_washTmp($dir, $contentOnly=false)
                 if (
                     filetype($dir . DIRECTORY_SEPARATOR . $object) == 'dir'
                 ) {
-                    Ds_washTmp($dir . DIRECTORY_SEPARATOR . $object); 
+                    Ds_washTmp($dir . DIRECTORY_SEPARATOR . $object);
                 } else {
                     unlink($dir . DIRECTORY_SEPARATOR . $object);
                 }
@@ -537,7 +539,7 @@ function Ds_washTmp($dir, $contentOnly=false)
 * @param  $delay
 * @param  $pointer position in the file
 */
-function Ds_isCompleteFile($file, $delay=500, $pointer=0) 
+function Ds_isCompleteFile($file, $delay=500, $pointer=0)
 {
     if ($file == null) {
         return false;

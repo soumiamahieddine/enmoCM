@@ -1,21 +1,15 @@
 <?php
 
-
-function check_right($int_to_check, $right)
+function check_right($intToCheck, $right)
 {
-	if($int_to_check & $right)
-	{
+	if ($intToCheck & $right) {
 		return true;
-	}
-	else
-	{
+	} else {
 		return false;
 	}
 }
 
-function set_right($int_to_set = 0, $right)
+function set_right($intToSet = 0, $right)
 {
-	return $int_to_set | $right;	
+	return $intToSet | $right;
 }
-
-?>
