@@ -128,7 +128,13 @@ if ($coreTools->test_service('view_technical_infos', 'apps', false)) {
                     <img alt="<?php echo _SIZE;?>" src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=weight.gif" />
                 </th>
                 <td align="left" width="200px"><?php echo _SIZE;?> :</td>
-                <td><input type="text" class="readonly" readonly="readonly" value="<?php echo $filesize." ".$_SESSION['lang']['txt_byte']." ( ".round($filesize / 1024, 2)."K )";?>" /></td>
+                <?php
+                $txtByte = '';
+                if (isset($_SESSION['lang'])) {
+                    $txtByte = $_SESSION['lang']['txt_byte'];
+                }
+                ?>
+                <td><input type="text" class="readonly" readonly="readonly" value="<?php echo $filesize." ".$txtByte." ( ".round($filesize / 1024, 2)."K )";?>" /></td>
             </tr>
             <tr class="col">
                 <th align="left" class="picto">

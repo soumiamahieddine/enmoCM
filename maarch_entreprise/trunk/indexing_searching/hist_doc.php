@@ -108,8 +108,10 @@ $db_hist->query($query);
             }
             $db_hist2->query("select lastname, firstname from ".$_SESSION['tablename']['users']." where user_id = '".$res_hist->user_id."'");
             $res_hist2 = $db_hist2->fetch_object();
-            $nom = $res_hist2->lastname;
-            $prenom = $res_hist2->firstname;
+            if (isset($res_hist2->lastname)) {
+                $nom = $res_hist2->lastname;
+                $prenom = $res_hist2->firstname;
+            }
             ?>
             <tr <?php  echo $color; ?>>
                 <td><span><?php  echo $func->dateformat($res_hist->event_date);?></span></td>

@@ -802,91 +802,94 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
     // We fill the array with the query result
     for ($i = 0; $i < count($arr); $i++) {
         if ($mode == 'full' || $mode == 'form') {
-            // Normal Cases
-            $data[$arr[$i]]['value'] = $line-> $arr[$i];
-            if ($arr[$i] <> 'project') {
-                $data[$arr[$i]]['show_value'] = $db->show_string($line-> $arr[$i]);
-            }
-            if ($_ENV['categories'][$cat_id][$arr[$i]]['type_field'] == 'date') {
-                $data[$arr[$i]]['show_value'] = $db->format_date_db($line-> $arr[$i], false);
-            }
-            elseif ($_ENV['categories'][$cat_id]['other_cases'][$arr[$i]]['type_field'] == 'date') {
-                $data[$arr[$i]]['show_value'] = $db->format_date_db($line-> $arr[$i], false);
-            }
-            elseif ($_ENV['categories'][$cat_id][$arr[$i]]['type_field'] == 'string') {
-                $data[$arr[$i]]['show_value'] = $db->show_string($line-> $arr[$i], true);
-            }
-            // special cases :
-            if ($arr[$i] == 'priority') {
-                $data[$arr[$i]]['show_value'] = $_SESSION['mail_priorities'][$line-> $arr[$i]];
-            }
-            elseif ($arr[$i] == 'nature_id') {
-                $data[$arr[$i]]['show_value'] = $_SESSION['mail_natures'][$line-> $arr[$i]];
-            }
-            elseif ($arr[$i] == 'type_id') {
-                $data[$arr[$i]]['show_value'] = $db->show_string($line->type_label);
-            }
-            // Arboxe
-            elseif ($arr[$i] == 'arbox_id') {
-                if (isset ($line->arbox_id) && !empty ($line->arbox_id)) {
-                    $db2->query('select title from ' . $_SESSION['tablename']['ar_boxes'] . " where arbox_id = " . $line->arbox_id . "");
+            if (isset($line-> $arr[$i])) {
+                // Normal Cases
+                $data[$arr[$i]]['value'] = $line-> $arr[$i];
+                if ($arr[$i] <> 'project') {
+                    $data[$arr[$i]]['show_value'] = $db->show_string($line-> $arr[$i]);
+                }
+                if ($_ENV['categories'][$cat_id][$arr[$i]]['type_field'] == 'date') {
+                    $data[$arr[$i]]['show_value'] = $db->format_date_db($line-> $arr[$i], false);
+                }
+                elseif (isset($_ENV['categories'][$cat_id]['other_cases'][$arr[$i]]['type_field'])
+                    && $_ENV['categories'][$cat_id]['other_cases'][$arr[$i]]['type_field'] == 'date') {
+                    $data[$arr[$i]]['show_value'] = $db->format_date_db($line-> $arr[$i], false);
+                }
+                elseif ($_ENV['categories'][$cat_id][$arr[$i]]['type_field'] == 'string') {
+                    $data[$arr[$i]]['show_value'] = $db->show_string($line-> $arr[$i], true);
+                }
+                // special cases :
+                if ($arr[$i] == 'priority') {
+                    $data[$arr[$i]]['show_value'] = $_SESSION['mail_priorities'][$line-> $arr[$i]];
+                }
+                elseif ($arr[$i] == 'nature_id') {
+                    $data[$arr[$i]]['show_value'] = $_SESSION['mail_natures'][$line-> $arr[$i]];
+                }
+                elseif ($arr[$i] == 'type_id') {
+                    $data[$arr[$i]]['show_value'] = $db->show_string($line->type_label);
+                }
+                // Arboxe
+                elseif ($arr[$i] == 'arbox_id') {
+                    if (isset ($line->arbox_id) && !empty ($line->arbox_id)) {
+                        $db2->query('select title from ' . $_SESSION['tablename']['ar_boxes'] . " where arbox_id = " . $line->arbox_id . "");
 
-                    $res = $db2->fetch_object();
-                    $data[$arr[$i]]['show_value'] = $db->show_string($res->title . ' (' . $line->arbox_id . ')');
+                        $res = $db2->fetch_object();
+                        $data[$arr[$i]]['show_value'] = $db->show_string($res->title . ' (' . $line->arbox_id . ')');
+                    }
                 }
-            }
-            // Contact
-            elseif ($arr[$i] == 'dest_user_id' || $arr[$i] == 'exp_user_id') {
-                if (!empty ($line-> $arr[$i])) {
-                    $db2->query('select lastname, firstname from ' . $_SESSION['tablename']['users'] . " where user_id = '" . $line-> $arr[$i] . "'");
-                    $res = $db2->fetch_object();
-                    $data[$arr[$i]]['show_value'] = $res->lastname . ', ' . $res->firstname . ' (' . $line-> $arr[$i] . ')';
-                    $data[$arr[$i]]['addon'] = '<a href="#" id="contact_card" title="' . _CONTACT_CARD . '" onclick="window.open(\'' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&page=user_info&id=' . $line-> $arr[$i] . '\', \'contact_info\', \'height=450, width=600,scrollbars=yes,resizable=yes\');" ><img src="' . $_SESSION['config']['businessappurl'] . 'static.php?filename=my_contacts_off.gif" alt="' . _CONTACT_CARD . '" /></a>';
-                } else {
-                    unset ($data[$arr[$i]]);
-                }
-            }
-            elseif ($arr[$i] == 'dest_contact_id' || $arr[$i] == 'exp_contact_id') {
-                if (!empty ($line-> $arr[$i])) {
-                    $db2->query('select is_corporate_person, lastname, firstname, society from ' . $_SESSION['tablename']['contacts'] . " where  contact_id = " . $line-> $arr[$i] . "");
-                    $res = $db2->fetch_object();
-                    if ($res->is_corporate_person == 'Y') {
-                        $data[$arr[$i]]['show_value'] = $res->society;
+                // Contact
+                elseif ($arr[$i] == 'dest_user_id' || $arr[$i] == 'exp_user_id') {
+                    if (!empty ($line-> $arr[$i])) {
+                        $db2->query('select lastname, firstname from ' . $_SESSION['tablename']['users'] . " where user_id = '" . $line-> $arr[$i] . "'");
+                        $res = $db2->fetch_object();
+                        $data[$arr[$i]]['show_value'] = $res->lastname . ', ' . $res->firstname . ' (' . $line-> $arr[$i] . ')';
+                        $data[$arr[$i]]['addon'] = '<a href="#" id="contact_card" title="' . _CONTACT_CARD . '" onclick="window.open(\'' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&page=user_info&id=' . $line-> $arr[$i] . '\', \'contact_info\', \'height=450, width=600,scrollbars=yes,resizable=yes\');" ><img src="' . $_SESSION['config']['businessappurl'] . 'static.php?filename=my_contacts_off.gif" alt="' . _CONTACT_CARD . '" /></a>';
                     } else {
-                        $data[$arr[$i]]['show_value'] = $res->lastname . ', ' . $res->firstname;
-                        if (!empty ($res->society)) {
-                            $data[$arr[$i]]['show_value'] .= ' (' . $res->society . ')';
+                        unset ($data[$arr[$i]]);
+                    }
+                }
+                elseif ($arr[$i] == 'dest_contact_id' || $arr[$i] == 'exp_contact_id') {
+                    if (!empty ($line-> $arr[$i])) {
+                        $db2->query('select is_corporate_person, lastname, firstname, society from ' . $_SESSION['tablename']['contacts'] . " where  contact_id = " . $line-> $arr[$i] . "");
+                        $res = $db2->fetch_object();
+                        if ($res->is_corporate_person == 'Y') {
+                            $data[$arr[$i]]['show_value'] = $res->society;
+                        } else {
+                            $data[$arr[$i]]['show_value'] = $res->lastname . ', ' . $res->firstname;
+                            if (!empty ($res->society)) {
+                                $data[$arr[$i]]['show_value'] .= ' (' . $res->society . ')';
+                            }
+                        }
+                        $data[$arr[$i]]['addon'] = '<a href="#" id="contact_card" title="' . _CONTACT_CARD . '" onclick="window.open(\'' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&page=contact_info&mode=view&id=' . $line-> $arr[$i] . '\', \'contact_info\', \'height=600, width=600,scrollbars=yes,resizable=yes\');" ><img src="' . $_SESSION['config']['businessappurl'] . 'static.php?filename=my_contacts_off.gif" alt="' . _CONTACT_CARD . '" /></a>';
+                    } else {
+                        unset ($data[$arr[$i]]);
+                    }
+                }
+                // Folder : market
+                elseif ($arr[$i] == 'market' && isset ($line->folders_system_id) && !empty ($line->folders_system_id)) {
+                    $db2->query('select folder_name, subject, folders_system_id, parent_id from ' . $_SESSION['tablename']['fold_folders'] . " where status <> 'DEL' and folders_system_id = " . $line->folders_system_id . " and folder_level = 2");
+
+                    if ($db2->nb_result() > 0) {
+                        $res = $db2->fetch_object();
+                        $data['market']['show_value'] = $res->folder_name . ', ' . $res->subject . ' (' . $res->folders_system_id . ')';
+                        $folder_id = $res->parent_id;
+                        if (isset ($folder_id) && !empty ($folder_id)) {
+                            $db2->query('select folder_name, subject, folders_system_id from ' . $_SESSION['tablename']['fold_folders'] . " where status <> 'DEL' and folders_system_id = " . $folder_id . " and folder_level = 1");
+                            //  $db2->show();
+                            $res = $db2->fetch_object();
+                            $data['project']['show_value'] = $res->folder_name . ', ' . $res->subject . ' (' . $res->folders_system_id . ')';
+                            //$db2->show_array($data['project']);
                         }
                     }
-                    $data[$arr[$i]]['addon'] = '<a href="#" id="contact_card" title="' . _CONTACT_CARD . '" onclick="window.open(\'' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&page=contact_info&mode=view&id=' . $line-> $arr[$i] . '\', \'contact_info\', \'height=600, width=600,scrollbars=yes,resizable=yes\');" ><img src="' . $_SESSION['config']['businessappurl'] . 'static.php?filename=my_contacts_off.gif" alt="' . _CONTACT_CARD . '" /></a>';
-                } else {
-                    unset ($data[$arr[$i]]);
                 }
-            }
-            // Folder : market
-            elseif ($arr[$i] == 'market' && isset ($line->folders_system_id) && !empty ($line->folders_system_id)) {
-                $db2->query('select folder_name, subject, folders_system_id, parent_id from ' . $_SESSION['tablename']['fold_folders'] . " where status <> 'DEL' and folders_system_id = " . $line->folders_system_id . " and folder_level = 2");
+                // Folder : project
+                elseif ($arr[$i] == 'project' && $line->folders_system_id <> '' && isset ($line->folders_system_id) && empty ($data['market']['show_value'])) {
+                    $db2->query('select folder_name, subject, folders_system_id, parent_id from ' . $_SESSION['tablename']['fold_folders'] . " where status <> 'DEL' and folders_system_id = " . $line->folders_system_id . " and folder_level = 1");
 
-                if ($db2->nb_result() > 0) {
-                    $res = $db2->fetch_object();
-                    $data['market']['show_value'] = $res->folder_name . ', ' . $res->subject . ' (' . $res->folders_system_id . ')';
-                    $folder_id = $res->parent_id;
-                    if (isset ($folder_id) && !empty ($folder_id)) {
-                        $db2->query('select folder_name, subject, folders_system_id from ' . $_SESSION['tablename']['fold_folders'] . " where status <> 'DEL' and folders_system_id = " . $folder_id . " and folder_level = 1");
-                        //  $db2->show();
+                    if ($db2->nb_result() > 0) {
                         $res = $db2->fetch_object();
                         $data['project']['show_value'] = $res->folder_name . ', ' . $res->subject . ' (' . $res->folders_system_id . ')';
-                        //$db2->show_array($data['project']);
                     }
-                }
-            }
-            // Folder : project
-            elseif ($arr[$i] == 'project' && $line->folders_system_id <> '' && isset ($line->folders_system_id) && empty ($data['market']['show_value'])) {
-                $db2->query('select folder_name, subject, folders_system_id, parent_id from ' . $_SESSION['tablename']['fold_folders'] . " where status <> 'DEL' and folders_system_id = " . $line->folders_system_id . " and folder_level = 1");
-
-                if ($db2->nb_result() > 0) {
-                    $res = $db2->fetch_object();
-                    $data['project']['show_value'] = $res->folder_name . ', ' . $res->subject . ' (' . $res->folders_system_id . ')';
                 }
             }
         } else // 'mimimal' mode

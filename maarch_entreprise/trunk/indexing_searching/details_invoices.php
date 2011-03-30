@@ -117,6 +117,7 @@ if (empty ($_SESSION['error']) || $_SESSION['indexation']) {
         $res = $db->fetch_object();
         $type_id = $res->type_id;
         $indexes = $type->get_indexes($type_id, $coll_id, 'minimal');
+        $comp_field = '';
         for ($i = 0; $i < count($indexes); $i++) {
             if (preg_match('/^custom_/', $indexes[$i])) // In the view all custom from res table begin with doc_
             {
@@ -257,7 +258,7 @@ if (empty ($_SESSION['error']) || $_SESSION['indexation']) {
                     <b>
                     <p id="back_list">
                     <?php
-                    if (!$_POST['up_res_id']) {
+                    if (isset($_POST['up_res_id']) && !$_POST['up_res_id']) {
                         if ($_SESSION['indexation'] == false) {
                             ?>
                             <a href="#" onclick="history.go(-1);" class="back"><?php  echo _BACK; ?></a>
@@ -305,7 +306,7 @@ if (empty ($_SESSION['error']) || $_SESSION['indexation']) {
                         echo $data[$key]['addon'];
                     }
                     elseif (isset ($data[$key]['img'])) {
-                        if ($folder_id <> "") {
+                        if (isset($folder_id) && $folder_id <> "") {
                             echo "<a href='" . $_SESSION['config']['businessappurl'] . "index.php?page=show_folder&module=folder&id=" . $folder_id . "'>";
                             ?>
                                                             <img alt="<?php echo $data[$key]['label'];?>" title="<?php echo $data[$key]['label'];?>" src="<?php echo $data[$key]['img'];?>"  /></a>

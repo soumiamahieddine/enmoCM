@@ -122,7 +122,7 @@ if (preg_match("/MSIE 6.0/", $_SERVER["HTTP_USER_AGENT"])) {
     $hr = '<tr><td colspan="2"><hr></td></tr>';
     $size = '';
 }
-elseif (preg_match('/msie/i', $_SERVER["HTTP_USER_AGENT"]) && !preg_match('/opera/i', $HTTP_USER_AGENT)) {
+elseif (isset($HTTP_USER_AGENT) && (preg_match('/msie/i', $_SERVER["HTTP_USER_AGENT"]) && !preg_match('/opera/i', $HTTP_USER_AGENT))) {
     $browser_ie = 'true';
     $class_for_form = 'forms';
     $hr = '';

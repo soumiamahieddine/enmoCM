@@ -60,6 +60,15 @@ if ($mode == 'normal') {
     if (isset ($_REQUEST['level']) && ($_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1)) {
         $level = $_REQUEST['level'];
     }
+    if (!isset($order)) {
+        $order = '';
+    }
+    if (!isset($field)) {
+        $field = '';
+    }
+    if (!isset($start)) {
+        $start = '';
+    }
     $page_path = $_SESSION['config']['businessappurl'] . 'index.php?page=list_results_invoices&dir=indexing_searching&order=' . $order . '&order_field=' . $field . '&start=' . $start;
     $page_label = _RESULTS;
     $page_id = "search_adv_result_invoices";
@@ -123,7 +132,7 @@ if (isset ($_REQUEST['order_field']) && !empty ($_REQUEST['order_field'])) {
 
 $orderstr = $list->define_order($order, $field);
 
-if (($_REQUEST['template'] == 'group_case') && ($core_tools->is_module_loaded('cases'))) {
+if (isset($_REQUEST['template']) && (($_REQUEST['template'] == 'group_case') && ($core_tools->is_module_loaded('cases')))) {
     unset ($select);
     $select = array ();
     $select[$_SESSION['tablename']['cases']] = array ();
@@ -160,7 +169,9 @@ if ($core_tools->is_module_loaded('cases'))
         "label" => _ACCESS_LIST_CASE
     ));
 }
-
+if(!isset($_REQUEST['template'])) {
+    $_REQUEST['template'] = false;
+}
 if (!$_REQUEST['template'])
     $template_to_use = $template_list[0]["name"];
 if (isset ($_REQUEST['template']) && empty ($_REQUEST['template']))
@@ -283,7 +294,7 @@ if (count($tab) > 0) {
             }
         }
     }
-    if ($_GET['template'] == "group_case")
+    if ($_REQUEST['template'] == "group_case")
         $found_type = _FOUND_CASE;
     else
         $found_type = _FOUND_DOC;
