@@ -1077,11 +1077,12 @@ class entity extends dbquery
             $collId = $_SESSION['collections'][0]['id'];
         }
         if($docId <> "" && $collId <> "") {
+            $entities = '';
             for($cptEnt=0;$cptEnt<count($_SESSION['user']['entities']);$cptEnt++) {
 				$entities .= "'" . $_SESSION['user']['entities'][$cptEnt]['ENTITY_ID'] . "', ";
 			}
 			$entities = preg_replace('/, $/', '', $entities);
-			if($entities == '' && $user_id == 'superadmin') {
+			if($entities == '' && $_SESSION['user']['UserId']== 'superadmin') {
 				if($_SESSION['config']['databasetype'] == "ORACLE" || $_SESSION['config']['databasetype'] == "SQLSERVER") {
 					$entities = "''''";
 				} else {
@@ -1093,7 +1094,7 @@ class entity extends dbquery
             //$this->show();
             $res = $this->fetch_object();
             $cptViewed = 0;
-            if($res->res_id <> "") {
+            if(isset($res->res_id) && $res->res_id <> "") {
                 if($res->viewed <> "" && $res->viewed <> 0) {
                     $cptViewed = $res->viewed + 1;
                 } else {
