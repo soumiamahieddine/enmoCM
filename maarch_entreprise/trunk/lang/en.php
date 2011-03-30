@@ -1070,3 +1070,4 @@ if (!defined('_TECHNICAL_INFORMATIONS'))  define('_TECHNICAL_INFORMATIONS', 'Tec
 if (!defined('_VIEW_TECHNICAL_INFORMATIONS'))  define('_VIEW_TECHNICAL_INFORMATIONS', 'View technical Informations');
 if (!defined('_SOURCE_FILE_PROPERTIES')) define('_SOURCE_FILE_PROPERTIES', 'Source file properties');
 if (!defined('_OFFSET'))  define('_OFFSET', 'Offset');
+if (!defined('_SETUP'))  define('_SETUP', 'Setup');

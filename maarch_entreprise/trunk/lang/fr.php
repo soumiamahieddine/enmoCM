@@ -1154,3 +1154,4 @@ if (!defined('_VIEW_TECHNICAL_INFORMATIONS'))  define('_VIEW_TECHNICAL_INFORMATI
 if (!defined('_SOURCE_FILE_PROPERTIES')) define( '_SOURCE_FILE_PROPERTIES', 'Propri&eacute;t&eacute;s du fichier source');
 if (!defined('_FINGERPRINT'))  define('_FINGERPRINT', 'Empreinte num&eacute;rique');
 if (!defined('_OFFSET'))  define('_OFFSET', 'Offset');
+if (!defined('_SETUP'))  define('_SETUP', 'Configurer');
