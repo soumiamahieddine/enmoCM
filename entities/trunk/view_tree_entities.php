@@ -8,7 +8,7 @@
 * @version 1
 * @since 03/2009
 * @license GPL
-* @author  Cédric Ndoumba  <dev@maarch.org>
+* @author  Cï¿½dric Ndoumba  <dev@maarch.org>
 */
 //require_once("core/class/class_functions.php");
 //require_once("core/class/class_db.php");
@@ -53,7 +53,7 @@ while($res = $db->fetch_object())
         </tr>
         <tr>
             <td>
-                <iframe name="show_trees" id="show_trees" width="550" height="600" frameborder="0" scrolling="auto" src="<?php  echo $_SESSION['config']['businesappurl']."index.php?display=true&module=entities&page=show_trees";?>"></iframe>
+                <iframe name="show_trees" id="show_trees" width="550" height="600" frameborder="0" scrolling="auto" src="<?php  echo $_SESSION['config']['businessappurl']."index.php?display=true&module=entities&page=show_trees";?>"></iframe>
             </td>
         </tr>
     </table>
