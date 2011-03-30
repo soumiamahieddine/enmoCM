@@ -470,7 +470,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                                     $frm_str .=' /><br/>';
                                     $frm_str .= '</td>';
                                     $frm_str .= '<td>&nbsp;</td>';
-                                    
+
                                     $frm_str .= '</tr>';
                                     $frm_str .= '<tr>';
                                     $frm_str .= '<td><label for="process_notes">'._PROCESS_NOTES.' : </label><br/><textarea name="process_notes" id="process_notes" style="display:block;" rows="8" cols="5">'.$process_data['process_notes'].'</textarea></td>';
@@ -521,7 +521,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .= '</div>';
 
         $frm_str .= '<div id="validright">';
-        $frm_str .= '<iframe src="'.$_SESSION['config']['businesappurl'].'index.php?display=true&dir=indexing_searching&page=view_resource_controler&id='.$res_id.'" name="viewframe" id="viewframe"  scrolling="auto" frameborder="0" ></iframe>';
+        $frm_str .= '<iframe src="'.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=view_resource_controler&id='.$res_id.'" name="viewframe" id="viewframe"  scrolling="auto" frameborder="0" ></iframe>';
         $frm_str .= '</div>';
         $frm_str .= '<script type="text/javascript">resize_frame_process("modal_'.$id_action.'", "viewframe", true, true);resize_frame_process("modal_'.$id_action.'", "hist_doc", true, false);window.scrollTo(0,0);';
         if ($core_tools->is_module_loaded('folder')) {
@@ -530,8 +530,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .='$(\'entity\').style.visibility=\'hidden\';';
         $frm_str .='$(\'category\').style.visibility=\'hidden\';';
         $frm_str .='$(\'baskets\').style.visibility=\'hidden\';</script>';
-        
-        
+
+
     //}
     return addslashes($frm_str);
 }
