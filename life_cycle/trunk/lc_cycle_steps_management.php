@@ -75,6 +75,12 @@ if ($mode == "list") {
         ?>" />
         <?php 
         if ($mode == "up") {
+            echo '<p><a href="' . $_SESSION['config']['businessappurl']
+                . '?page=lc_policies_management_controler&mode=up&'
+                . 'module=life_cycle&id=' . $_SESSION['m_admin']['lc_cycle_steps']['policy_id'] 
+                . '"><img src="' . $_SESSION['config']['businessappurl'] 
+                . 'static.php?filename=lot.gif" title="' . _VIEW_GENERAL_PARAMETERS_OF_THE_POLICY . ' ' 
+                . _LC_CYCLE_STEP . '" />&nbsp;' . _VIEW_GENERAL_PARAMETERS_OF_THE_POLICY . '</a></p>';
                     ?>
                     <p>
                         <label for="policy_id"><?php echo _POLICY_ID; ?> : 

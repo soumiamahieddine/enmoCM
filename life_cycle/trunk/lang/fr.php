@@ -296,4 +296,8 @@ if (!defined('_DOCS')) {
 if (!defined('_LINK_EXISTS')) {
     define('_LINK_EXISTS', 'Un lien avec un autre objet existe');
 }
+if (!defined('_VIEW_GENERAL_PARAMETERS_OF_THE_POLICY')) {
+    define('_VIEW_GENERAL_PARAMETERS_OF_THE_POLICY'
+        , 'Voir le param&eacute;trage global de la politique de cycle de vie');
+}
 

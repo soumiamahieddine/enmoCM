@@ -267,4 +267,7 @@ if (!defined('_DOCS')) {
 if (!defined('_LINK_EXISTS')) {
     define('_LINK_EXISTS', 'A link exists with an another object');
 }
-
+if (!defined('_VIEW_GENERAL_PARAMETERS_OF_THE_POLICY')) {
+    define('_VIEW_GENERAL_PARAMETERS_OF_THE_POLICY'
+        , 'View the global setup of the policy');
+}

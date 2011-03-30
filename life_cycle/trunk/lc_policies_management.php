@@ -127,32 +127,50 @@ if($mode == "list"){
                         $content .= '</tr>';
                     }
                     $content .= '<tr>';
+                        $link = '<a href="#" onclick="javascript:showHideElem(\'step' 
+                            . $cptCycles . '\');">';
                         $content .= '<td align="left" width="180px">';
-                        $content .= '<a href="#" onclick="javascript:showHideElem(\'step' . $cptCycles . '\');">';
+                        $content .= '<a href="' . $_SESSION['config']['businessappurl'] 
+                            . '?page=lc_cycles_management_controler&mode=up&'
+                            . 'module=life_cycle&id=' . $_SESSION['m_admin']['lc_policies']
+                            ['tabWf']['value']['cycles'][$cptCycles]
+                            ['cycle_id'] . '">';
+                        $content .= '<img src="' . $_SESSION['config']['businessappurl'] 
+                            . 'static.php?filename=lot.gif" title="' . _SETUP . ' ' 
+                            . _LC_CYCLE . '" /></a>&nbsp;';
+                        $content .= $link;
                         $content .= $_SESSION['m_admin']['lc_policies']
                             ['tabWf']['value']['cycles'][$cptCycles]
                             ['cycle_id'];
                         $content .= '</a>';
                         $content .= '</td>';
                         $content .= '<td align="left" width="300px">';
+                        $content .= $link;
                         $content .= $_SESSION['m_admin']['lc_policies']
                             ['tabWf']['value']['cycles'][$cptCycles]
                             ['cycle_desc'];
+                        $content .= '</a>';
                         $content .= '</td>';
                         $content .= '<td align="left" width="300px">';
+                        $content .= $link;
                         $content .= $_SESSION['m_admin']['lc_policies']
                             ['tabWf']['value']['cycles'][$cptCycles]
                             ['where_clause'];
+                        $content .= '</a>';
                         $content .= '</td>';
                         $content .= '<td align="left" width="100px">';
+                        $content .= $link;
                         $content .= $_SESSION['m_admin']['lc_policies']
                             ['tabWf']['value']['cycles'][$cptCycles]
                             ['break_key'];
+                        $content .= '</a>';
                         $content .= '</td>';
                         $content .= '<td align="right" width="100px">';
+                        $content .= $link;
                         $content .= $_SESSION['m_admin']['lc_policies']
                             ['tabWf']['value']['cycles'][$cptCycles]
                             ['sequence_number'];
+                        $content .= '</a>';
                         $content .= '&nbsp;</td>';
                     $content .= '</tr>';
                     $content .= '</table>';
@@ -181,6 +199,14 @@ if($mode == "list"){
                         }
                             $content .= '<tr>';
                                 $content .= '<td align="left" width="180px"><small>';
+                                $content .= '<a href="' . $_SESSION['config']['businessappurl'] 
+                                    . '?page=lc_cycle_steps_management_controler&mode=up&'
+                                    . 'module=life_cycle&id=' . $_SESSION['m_admin']['lc_policies']
+                                    ['tabWf']['value']['cycles'][$cptCycles]
+                                    ['steps'][$cptSteps]['cycle_step_id'] . '">';
+                                $content .= '<img src="' . $_SESSION['config']['businessappurl'] 
+                                    . 'static.php?filename=lot.gif" title="' . _SETUP . ' ' 
+                                    . _LC_CYCLE_STEP . '" /></a>&nbsp;';
                                 $content .= $_SESSION['m_admin']['lc_policies']
                                     ['tabWf']['value']['cycles'][$cptCycles]
                                     ['steps'][$cptSteps]['cycle_step_id'];
