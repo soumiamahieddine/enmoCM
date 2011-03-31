@@ -29,9 +29,9 @@
 */
 try{
     require_once('core/class/class_security.php');
-    include('apps/'.$_SESSION['config']['app_id'].'/security_bitmask.php');
-    include('core/manage_bitmask.php');
-    include('core/where_targets.php');
+    include_once('apps/'.$_SESSION['config']['app_id'].'/security_bitmask.php');
+    include_once('core/manage_bitmask.php');
+    include_once('core/where_targets.php');
 } catch (Exception $e){
     echo $e->getMessage();
 }
