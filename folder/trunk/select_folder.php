@@ -113,7 +113,7 @@ if($_SESSION['current_folder_id'] <> "" && $folder->is_folder_exists($_SESSION['
 <br/>
 
 <div class="block">
-	<form name="frm1" class="physicalform" action="<?php  echo  $_SESSION['config']['businessappurl'].'index.php?display=true&module=indexing_searching&page=file_index';?>"
+	<form name="frm1" class="physicalform" action="<?php  echo  $_SESSION['config']['businessappurl'].'index.php?display=true&module=indexing_searching&page=file_index';?>">
 	
 		<b><?php  echo _SELECTED_FOLDER;?></b>
 		<br/>
