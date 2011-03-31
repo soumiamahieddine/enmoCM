@@ -196,12 +196,12 @@ if (!defined('_LC_POLICY_DELETED')) {
 
 if (!defined('_MISSING_A_CYCLE_STEP')) {
     define('_MISSING_A_CYCLE_STEP', 'You have to had a cycle and a step to '
-        . 'finish the setup of the policy'):
+        . 'finish the setup of the policy');
 }
 
 if (!defined('_MISSING_A_CYCLE_STEP')) {
     define('_MISSING_A_CYCLE_STEP', 'You have to had a cycle to '
-        . 'finish the setup of the policy'):
+        . 'finish the setup of the policy');
 }
 
 /*************BATCH*************************************/
