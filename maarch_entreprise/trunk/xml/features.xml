@@ -12,5 +12,6 @@
 		<search_notes>true</search_notes> <!-- If true, activates the search on notes (warning : join in the query, must be desactivated if the search takes too much time) -->
 		<dest_to_copy_during_redirection>false</dest_to_copy_during_redirection> <!-- If true, the dest of the mail is automatically put in copy during redirection to another user or entity -->
 		<show_types_tree>false</show_types_tree><!-- If true, types are displayed with their classification scheme-->
+        <create_public_contact>true</create_public_contact>
 	</FEATURES>
 </ROOT>

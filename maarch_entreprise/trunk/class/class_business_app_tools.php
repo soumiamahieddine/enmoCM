@@ -12,6 +12,7 @@
 *
 */
 require_once 'core/core_tables.php';
+
 class business_app_tools extends dbquery
 {
     public function __construct()
@@ -28,7 +29,7 @@ class business_app_tools extends dbquery
         $_SESSION['showmenu'] = 'oui';
 
         $core = new core_tools();
-        if(file_exists(
+        if (file_exists(
             $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
             . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR . 'apps'
             . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
@@ -119,7 +120,7 @@ class business_app_tools extends dbquery
             }
             //$_SESSION['config']['databaseworkspace'] = (string) $config->databaseworkspace;
 
-            $tablename =  $xmlconfig->TABLENAME ;
+            $tablename = $xmlconfig->TABLENAME ;
             $_SESSION['tablename']['doctypes_first_level'] = (string) $tablename->doctypes_first_level;
             $_SESSION['tablename']['doctypes_second_level'] = (string) $tablename->doctypes_second_level;
             $_SESSION['tablename']['mlb_doctype_ext'] = (string) $tablename->mlb_doctype_ext;
@@ -257,14 +258,14 @@ class business_app_tools extends dbquery
                 );
                 $i ++;
             }
-            $this->load_actions_pages();
+            $this->_loadActionsPages();
         }
     }
 
     /**
     * Load actions in session
     */
-    private function load_actions_pages()
+    private function _loadActionsPages()
     {
         if (isset($_SESSION['config']['corepath'])
             && isset($_SESSION['config']['app_id'])
@@ -331,7 +332,7 @@ class business_app_tools extends dbquery
         }
     }
 
-    private function load_entreprise_var()
+    private function _loadEntrepriseVar()
     {
         $core = new core_tools();
         if (file_exists(
@@ -475,7 +476,7 @@ class business_app_tools extends dbquery
         $_SESSION['features']['search_notes'] = "false";
         $_SESSION['features']['dest_to_copy_during_redirection'] = "false";
         $_SESSION['features']['show_types_tree'] = "false";
-
+        $_SESSION['features']['create_public_contact'] = "false";
         if (file_exists(
             $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
             . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR
@@ -491,12 +492,12 @@ class business_app_tools extends dbquery
 
         $xmlfeatures = simplexml_load_file($path);
         if ($xmlfeatures) {
-            foreach ($xmlfeatures->FEATURES as $FEATURES) {
-                $_SESSION['features']['personal_contact'] = (string) $FEATURES->personal_contact;
-                $_SESSION['features']['search_notes'] = (string) $FEATURES->search_notes;
-                $_SESSION['features']['dest_to_copy_during_redirection'] = (string) $FEATURES->dest_to_copy_during_redirection;
-                $_SESSION['features']['show_types_tree'] = (string) $FEATURES->show_types_tree;
-            }
+            $feats = $xmlfeatures->FEATURES;
+            $_SESSION['features']['personal_contact'] = (string) $feats->personal_contact;
+            $_SESSION['features']['search_notes'] = (string) $feats->search_notes;
+            $_SESSION['features']['dest_to_copy_during_redirection'] = (string) $feats->dest_to_copy_during_redirection;
+            $_SESSION['features']['show_types_tree'] = (string) $feats->show_types_tree;
+            $_SESSION['features']['create_public_contact'] = (string) $feats->create_public_contact;
         }
     }
 
@@ -504,7 +505,7 @@ class business_app_tools extends dbquery
     * Loads current folder identifier in session
     *
     */
-    private function load_current_folder($userId)
+    private function _loadCurrentFolder($userId)
     {
         if (isset($userId)) {
             $this->connect();
@@ -524,8 +525,8 @@ class business_app_tools extends dbquery
     */
     public function load_app_var_session($userData)
     {
-        $this->load_current_folder($userData['UserId']);
-        $this->load_entreprise_var();
+        $this->_loadCurrentFolder($userData['UserId']);
+        $this->_loadEntrepriseVar();
         $this->load_features(
         	'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
             . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR . 'features.xml'
