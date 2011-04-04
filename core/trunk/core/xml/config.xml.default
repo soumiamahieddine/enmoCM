@@ -2,7 +2,7 @@
 <ROOT>
 	<CONFIG>
 		<corepath>C:\xampp\htdocs\maarch_entreprise\</corepath>
-		<tmppath>C:\xampp\htdocs\maarch_entreprise\tmp\</tmppath>
+		<tmppath>C:\xampp\htdocs\maarch_entreprise\apps\maarch_entreprise\tmp\</tmppath>
 		<defaultpage>C:\xampp\htdocs\maarch_entreprise\index.php</defaultpage>
 		<defaultlanguage>fr</defaultlanguage>
 		<default_timezone>Europe/Paris</default_timezone>
