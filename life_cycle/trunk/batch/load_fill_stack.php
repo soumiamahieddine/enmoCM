@@ -255,7 +255,8 @@ try {
     );
     exit(108);
 }
-core_tools::load_lang($lang, $maarchDirectory, $MaarchApps);
+$coreTools = new core_tools();
+$coreTools->load_lang($lang, $maarchDirectory, $MaarchApps);
 $GLOBALS['func'] = new functions();
 $GLOBALS['db'] = new dbquery($GLOBALS['configFile']);
 $GLOBALS['db']->connect();

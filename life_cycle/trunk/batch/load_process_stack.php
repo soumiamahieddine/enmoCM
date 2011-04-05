@@ -282,7 +282,8 @@ if (!is_dir($GLOBALS['tmpDirectoryRoot'])) {
     );
     exit(17);
 }
-core_tools::load_lang($lang, $GLOBALS['MaarchDirectory'], $MaarchApps);
+$coreTools = new core_tools();
+$coreTools->load_lang($lang, $GLOBALS['MaarchDirectory'], $MaarchApps);
 session_start();
 $_SESSION['modules_loaded'] = array();
 $GLOBALS['func'] = new functions();
