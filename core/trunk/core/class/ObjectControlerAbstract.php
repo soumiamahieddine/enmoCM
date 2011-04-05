@@ -218,7 +218,7 @@ abstract class ObjectControler
      * @param string $class_name
      * @return unknown_type
      */
-    protected function advanced_get($id, $table_name)
+    protected function advanced_get($id, $table_name, $whereComp='')
     {
         if (strlen($id) == 0) {
             return null;
@@ -232,15 +232,12 @@ abstract class ObjectControler
         self::$db = new dbquery();
         self::$db->connect();
         if (in_array($table_id, self::$foolish_ids)) {
-             $select = "select * from $table_name where $table_id='$id'";
+             $select = "select * from $table_name where $table_id='$id' ".$whereComp;
         } else {
-            $select = "select * from $table_name where $table_id=$id";
+            $select = "select * from $table_name where $table_id=$id" .  $whereComp;
         }
 
         try {
-            if (_DEBUG){
-                echo "get: $select // ";
-            }
             self::$db->query($select);
             if (self::$db->nb_result() == 0) {
                 return null;

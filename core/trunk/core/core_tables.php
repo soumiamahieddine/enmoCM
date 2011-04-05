@@ -55,6 +55,9 @@ if (! defined('_ADR_X_TABLE_NAME')) {
 if (! defined('DOCTYPES_TABLE')) {
     define('DOCTYPES_TABLE', 'doctypes');
 }
+if (! defined('DOCTYPES_INDEXES_TABLE')) {
+    define('DOCTYPES_INDEXES_TABLE', 'doctypes_indexes');
+}
 if (! defined('FULLTEXT_TABLE')) {
     define('FULLTEXT_TABLE', 'fulltext');
 }

@@ -67,9 +67,9 @@ class users_controler extends ObjectControler implements ObjectControlerIF
     {
         self::set_foolish_ids(array('user_id', 'docserver_location_id'));
         self::set_specific_id('user_id');
-        $user = self::advanced_get($user_id,USERS_TABLE);
+        $user = self::advanced_get($user_id, USERS_TABLE, $comp_where);
 
-        if(isset($user) 
+        if(isset($user)
         && ($user->__get('status') == 'OK' || $user->__get('status') == 'ABS')
         ) {
             return $user;
