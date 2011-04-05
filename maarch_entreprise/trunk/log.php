@@ -162,13 +162,14 @@ if (! empty($_SESSION['error'])) {
             $pass = md5($password);
             $res = $sec->login($login, $pass);
             $_SESSION['user'] = $res['user'];
-            $businessAppTools->load_app_var_session($_SESSION['user']);
-            $core->load_var_session($_SESSION['modules'], $_SESSION['user']);
-            //var_dump($_SESSION['user']);exit();
+            if ($res['error'] == '') {
+                $businessAppTools->load_app_var_session($_SESSION['user']);
+                $core->load_var_session($_SESSION['modules'], $_SESSION['user']);
+                $core->load_menu($_SESSION['modules']);
+            }
             if (empty($_SESSION['error'])) {
                 $_SESSION['error'] = $res['error'];
             }
-            $core->load_menu($_SESSION['modules']);
             header(
                 'location: ' . $_SESSION['config']['businessappurl'] . $res['url']
             );
