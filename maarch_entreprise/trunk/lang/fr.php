@@ -364,7 +364,15 @@ if (!defined('_NEW_STRUCTURE')) define( '_NEW_STRUCTURE', 'Nouvelle chemise');
 if (!defined('_DESC_STRUCTURE_MISSING')) define( '_DESC_STRUCTURE_MISSING', 'Il manque la description de la chemise');
 if (!defined('_STRUCTURE_DEL')) define( '_STRUCTURE_DEL', 'Suppression de la chemise');
 if (!defined('_DELETED_STRUCTURE')) define( '_DELETED_STRUCTURE', 'Chemise supprim&eacute;e');
-
+if (! defined('_FONT_COLOR')) {
+    define('_FONT_COLOR', 'Couleur de la police');
+}
+if (! defined('_FONT_SIZE')) {
+    define('_FONT_SIZE', 'Taille de la police');
+}
+if (! defined('_BLACK')) {
+    define('_BLACK', 'Noir');
+}
 /************** sous-dossiers : Liste + Formulaire**************/
 if (!defined('_SUBFOLDER_LIST')) define( '_SUBFOLDER_LIST', 'Liste des sous-chemises');
 if (!defined('_SUBFOLDERS')) define( '_SUBFOLDERS', 'sous-chemise(s)');

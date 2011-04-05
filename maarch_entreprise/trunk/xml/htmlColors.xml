@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+    <color>
+        <id>#0000FF</id>
+        <label>Bleu</label>
+    </color>
+    <color>
+        <id>#FFFF00</id>
+        <label>Jaune</label>
+    </color>
+    <color>
+        <id>#008000</id>
+        <label>Vert</label>
+    </color>
+    <color>
+        <id>#D2B48C</id>
+        <label>Beige</label>
+    </color>
+    <color>
+        <id>#FF00FF</id>
+        <label>Rose</label>
+    </color>
+    <color>
+        <id>#FF0000</id>
+        <label>Rouge</label>
+    </color>
+    <color>
+        <id>#800080</id>
+        <label>Violet</label>
+    </color>
+    <color>
+        <id>#808080</id>
+        <label>Gris</label>
+    </color>
+    <color>
+        <id>#FF4500</id>
+        <label>Orange</label>
+    </color>
+    <color>
+        <id>#800000</id>
+        <label>Marron</label>
+    </color>
+</root>
