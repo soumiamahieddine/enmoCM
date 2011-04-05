@@ -16,13 +16,16 @@ $core_tools->load_lang();
  $core_tools->load_html();
 $core_tools->load_header( );
 
-if($_SESSION['m_admin']['mode'] == "up" && $_SESSION['m_admin']['init'] == true)
+if($_SESSION['m_admin']['mode'] == "up" && (isset($_SESSION['m_admin']['init']) && $_SESSION['m_admin']['init'] == true))
 {
 	$_SESSION['m_admin']['chosen_doctypes'] = array();
 	$_SESSION['m_admin']['chosen_doctypes'] = $_SESSION['m_admin']['foldertype']['doctypes'];
 	$_SESSION['m_admin']['init'] = false;
 }
 
+if(!isset($_SESSION['m_admin']['chosen_doctypes'])) {
+    $_SESSION['m_admin']['chosen_doctypes'] = array();
+}
 if(isset($_REQUEST['doctypes']) && count($_REQUEST['doctypes']) > 0)
 {
 	for($i=0; $i < count($_REQUEST['doctypes']); $i++)

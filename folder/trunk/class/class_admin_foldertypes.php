@@ -131,10 +131,10 @@ class foldertype extends dbquery
                     elseif($mode == "add") {?>
                         <input type="hidden" name="page" value="foldertype_add_db" />
                     <?php } ?>
-                    <input type="hidden" name="order" id="order" value="<?php echo $_REQUEST['order'];?>" />
-                    <input type="hidden" name="order_field" id="order_field" value="<?php echo $_REQUEST['order_field'];?>" />
-                    <input type="hidden" name="what" id="what" value="<?php echo $_REQUEST['what'];?>" />
-                    <input type="hidden" name="start" id="start" value="<?php echo $_REQUEST['start'];?>" />
+                    <input type="hidden" name="order" id="order" value="<?php if(isset($_REQUEST['order'])) echo $_REQUEST['order'];?>" />
+                    <input type="hidden" name="order_field" id="order_field" value="<?php if(isset($_REQUEST['order_field'])) echo $_REQUEST['order_field'];?>" />
+                    <input type="hidden" name="what" id="what" value="<?php if(isset($_REQUEST['what'])) echo $_REQUEST['what'];?>" />
+                    <input type="hidden" name="start" id="start" value="<?php if(isset($_REQUEST['start'])) echo $_REQUEST['start'];?>" />
                     <?php
                     if($mode == "up")
                     {
@@ -305,19 +305,22 @@ class foldertype extends dbquery
         }
         $_SESSION['m_admin']['foldertype']['indexes'] = array();
         $_SESSION['m_admin']['foldertype']['mandatory_indexes'] = array();
-        for($i=0; $i<count($_REQUEST['fields']);$i++)
-        {
-            array_push($_SESSION['m_admin']['foldertype']['indexes'], $_REQUEST['fields'][$i]);
-        }
-        for($i=0; $i<count($_REQUEST['mandatory_fields']);$i++)
-        {
-            if(!in_array($_REQUEST['mandatory_fields'][$i], $_SESSION['m_admin']['foldertype']['indexes']))
+        if (isset($_REQUEST['fields'])) {
+            for($i=0; $i<count($_REQUEST['fields']);$i++)
             {
-                $_SESSION['error'].= _IF_CHECKS_MANDATORY_MUST_CHECK_USE;
+                array_push($_SESSION['m_admin']['foldertype']['indexes'], $_REQUEST['fields'][$i]);
             }
-            array_push($_SESSION['m_admin']['foldertype']['mandatory_indexes'], $_REQUEST['mandatory_fields'][$i]);
         }
-
+        if (isset($_REQUEST['mandatory_fields'])) {
+            for($i=0; $i<count($_REQUEST['mandatory_fields']);$i++)
+            {
+                if(!in_array($_REQUEST['mandatory_fields'][$i], $_SESSION['m_admin']['foldertype']['indexes']))
+                {
+                    $_SESSION['error'].= _IF_CHECKS_MANDATORY_MUST_CHECK_USE;
+                }
+                array_push($_SESSION['m_admin']['foldertype']['mandatory_indexes'], $_REQUEST['mandatory_fields'][$i]);
+            }
+        }
         $_SESSION['m_admin']['foldertype']['order'] = $_REQUEST['order'];
         $_SESSION['m_admin']['foldertype']['order_field'] = $_REQUEST['order_field'];
         $_SESSION['m_admin']['foldertype']['what'] = $_REQUEST['what'];
