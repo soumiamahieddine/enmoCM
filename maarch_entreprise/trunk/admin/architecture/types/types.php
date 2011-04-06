@@ -33,104 +33,115 @@ $admin = new core_tools();
 $admin->test_admin('admin_architecture', 'apps');
 /****************Management of the location bar  ************/
 $init = false;
-if(isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true")
-{
+if (isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true") {
     $init = true;
 }
 $level = "";
-if(isset($_REQUEST['level']) && ($_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1))
-{
+if (isset($_REQUEST['level']) && ($_REQUEST['level'] == 2 
+	|| $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 
+	|| $_REQUEST['level'] == 1)
+) {
     $level = $_REQUEST['level'];
 }
-$page_path = $_SESSION['config']['businessappurl'].'index.php?page=types';
-$page_label = _DOCTYPES_LIST2;
-$page_id = "types";
-$admin->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
+$pagePath = $_SESSION['config']['businessappurl'] . 'index.php?page=types';
+$pageLabel = _DOCTYPES_LIST2;
+$pageId = "types";
+$admin->manage_location_bar($pagePath, $pageLabel, $pageId, $init, $level);
 /***********************************************************/
-require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
-require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");
+require_once "core" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR
+	."class_request.php";
+require_once "apps" . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+	. DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR
+	. "class_list_show.php";
 $func = new functions();
 $_SESSION['m_admin'] = array();
 $select[$_SESSION['tablename']['doctypes']] = array();
-array_push($select[$_SESSION['tablename']['doctypes']],"type_id","description");
+array_push(
+	$select[$_SESSION['tablename']['doctypes']],
+	"type_id",
+	"description"
+);
 $what = "";
 $where = " enabled = 'Y' ";
-if(isset($_REQUEST['what']) && !empty($_REQUEST['what']))
-{
+if (isset($_REQUEST['what']) && ! empty($_REQUEST['what'])) {
     $what = $func->protect_string_db($_REQUEST['what']);
-    if($_SESSION['config']['databasetype'] == "POSTGRESQL")
-    {
-        $where .= " and (description ilike '".strtolower($what)."%' or description ilike '".strtoupper($what)."%') ";
-    }
-    else
-    {
-        $where .= " and (description like '".strtolower($what)."%' or description like '".strtoupper($what)."%') ";
+    if ($_SESSION['config']['databasetype'] == "POSTGRESQL") {
+        $where .= " and (description ilike '" . strtolower($what)
+        	   . "%' or description ilike '" . strtoupper($what) . "%') ";
+    } else {
+        $where .= " and (description like '" . strtolower($what)
+        	   . "%' or description like '" . strtoupper($what) . "%') ";
     }
 }
 $list = new list_show();
 $order = 'asc';
-if(isset($_REQUEST['order']) && !empty($_REQUEST['order']))
-{
+if (isset($_REQUEST['order']) && ! empty($_REQUEST['order'])) {
     $order = trim($_REQUEST['order']);
 }
 $field = 'description';
-if(isset($_REQUEST['order_field']) && !empty($_REQUEST['order_field']))
-{
+if (isset($_REQUEST['order_field']) && ! empty($_REQUEST['order_field'])) {
     $field = trim($_REQUEST['order_field']);
 }
 
 $orderstr = $list->define_order($order, $field);
-
-$request= new request;
-$tab=$request->select($select,$where,$orderstr ,$_SESSION['config']['databasetype']);
-for ($i=0;$i<count($tab);$i++)
-{
-    for ($j=0;$j<count($tab[$i]);$j++)
-    {
-        foreach(array_keys($tab[$i][$j]) as $value)
-        {
-            if($tab[$i][$j][$value]=="type_id")
-            {
-                $tab[$i][$j]["type_id"]=$tab[$i][$j]['value'];
-                $tab[$i][$j]["label"]= _ID;
-                $tab[$i][$j]["size"]="10";
-                $tab[$i][$j]["label_align"]="left";
-                $tab[$i][$j]["align"]="left";
-                $tab[$i][$j]["valign"]="bottom";
-                $tab[$i][$j]["show"]=true;
-                $tab[$i][$j]["order"]='type_id';
+$request = new request;
+$tab = $request->select(
+	$select, $where, $orderstr, $_SESSION['config']['databasetype']
+);
+for ($i = 0; $i < count($tab); $i ++) {
+    for ($j = 0; $j < count($tab[$i]); $j ++) {
+        foreach (array_keys($tab[$i][$j]) as $value) {
+            if ($tab[$i][$j][$value] == "type_id") {
+                $tab[$i][$j]["type_id"] = $tab[$i][$j]['value'];
+                $tab[$i][$j]["label"] = _ID;
+                $tab[$i][$j]["size"] = "10";
+                $tab[$i][$j]["label_align"] = "left";
+                $tab[$i][$j]["align"] = "left";
+                $tab[$i][$j]["valign"] = "bottom";
+                $tab[$i][$j]["show"] = true;
+                $tab[$i][$j]["order"] = 'type_id';
             }
-            if($tab[$i][$j][$value]=="description")
-            {
-                $tab[$i][$j]['value'] = $func->show_string($tab[$i][$j]['value']);
-                $tab[$i][$j]["description"]=$tab[$i][$j]['value'];
-                $tab[$i][$j]["label"]=_DESC;
-                $tab[$i][$j]["size"]="50";
-                $tab[$i][$j]["label_align"]="left";
-                $tab[$i][$j]["align"]="left";
-                $tab[$i][$j]["valign"]="bottom";
-                $tab[$i][$j]["show"]=true;
-                $tab[$i][$j]["order"]='description';
+            if ($tab[$i][$j][$value] == "description") {
+                $tab[$i][$j]['value'] = $func->show_string(
+                	$tab[$i][$j]['value']
+                );
+                $tab[$i][$j]["description"] = $tab[$i][$j]['value'];
+                $tab[$i][$j]["label"] = _DESC;
+                $tab[$i][$j]["size"] = "50";
+                $tab[$i][$j]["label_align"] = "left";
+                $tab[$i][$j]["align"] = "left";
+                $tab[$i][$j]["valign"] = "bottom";
+                $tab[$i][$j]["show"] = true;
+                $tab[$i][$j]["order"] = 'description';
             }
         }
     }
 }
-$page_name = "types";
-$page_name_up = "types_up";
-$page_name_add = "types_add";
-$page_name_del = "types_del";
-$page_name_val = "";
-$table_name = $_SESSION['tablename']['doctypes'];
-$page_name_ban = "";
-$label_add = _ADD_DOCTYPE;
+$pageName = "types";
+$pageNameUp = "types_up";
+$pageNameAdd = "types_add";
+$pageNameDel = "types_del";
+$pageNameVal = "";
+$tableName = $_SESSION['tablename']['doctypes'];
+$pageNameBan = "";
+$addLabel = _ADD_DOCTYPE;
 $_SESSION['m_admin']['load_security']  = true;
 $_SESSION['m_admin']['init'] = true;
 $_SESSION['m_admin']['doctypes'] = array();
 $_SESSION['sous_dossiers'] = array();
-$request->query("select * from ".$_SESSION['tablename']['doctypes_second_level']." where enabled = 'Y'");
-while($res = $request->fetch_object())
-{
-    array_push($_SESSION['sous_dossiers'], array('ID' => $res->doctypes_second_level_id, 'LABEL'=> $res->doctypes_second_level_label));
+$request->query(
+	"select * from " . $_SESSION['tablename']['doctypes_second_level']
+	. " where enabled = 'Y'"
+);
+while ($res = $request->fetch_object()) {
+    array_push(
+    	$_SESSION['sous_dossiers'], 
+    	array(
+    		'ID' => $res->doctypes_second_level_id, 
+    		'LABEL' => $res->doctypes_second_level_label,
+    		'COLOR' => $res->font_color,
+    	)
+    );
 }
 function cmp($a, $b)
 {
@@ -138,10 +149,17 @@ function cmp($a, $b)
 }
 usort($_SESSION['sous_dossiers'], "cmp");
 
-$title = _DOCTYPES_LIST." : ".$i." "._TYPES;
+$title = _DOCTYPES_LIST . " : " . $i . " " . _TYPES;
 $autoCompletionArray = array();
-$autoCompletionArray["list_script_url"] = $_SESSION['config']['businessappurl']."index.php?display=true&page=types_list_by_name";
+$autoCompletionArray["list_script_url"] = $_SESSION['config']['businessappurl']
+	. "index.php?display=true&page=types_list_by_name";
 $autoCompletionArray["number_to_begin"] = 1;
 
-$list->admin_list($tab, $i, $title, 'type_id','types','architecture/types','type_id', true, $page_name_up, $page_name_val, $page_name_ban, $page_name_del, $page_name_add, $label_add, false, false,_ALL_DOCTYPES, _TYPE, $_SESSION['config']['businessappurl'].'static.php?filename=manage_doctypes_b.gif',false, true, true, true, "", true, $autoCompletionArray);
-?>
+$list->admin_list(
+	$tab, $i, $title, 'type_id', 'types', 'architecture/types', 'type_id', true, 
+	$pageNameUp, $pageNameVal, $pageNameBan, $pageNameDel, $pageNameAdd, 
+	$addLabel, false, false, _ALL_DOCTYPES, _TYPE, 
+	$_SESSION['config']['businessappurl'] 
+	. 'static.php?filename=manage_doctypes_b.gif', false, true, true, true, "", 
+	true, $autoCompletionArray
+);

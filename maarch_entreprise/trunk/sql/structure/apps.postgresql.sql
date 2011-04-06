@@ -58,6 +58,7 @@ CREATE TABLE doctypes_first_level
 (
   doctypes_first_level_id integer NOT NULL DEFAULT nextval('doctypes_first_level_id_seq'::regclass),
   doctypes_first_level_label character varying(255) NOT NULL,
+  font_color character varying(50),
   enabled character(1) NOT NULL DEFAULT 'Y'::bpchar,
   CONSTRAINT doctypes_first_level_pkey PRIMARY KEY (doctypes_first_level_id)
 )
@@ -75,6 +76,7 @@ CREATE TABLE doctypes_second_level
   doctypes_second_level_id integer NOT NULL DEFAULT nextval('doctypes_second_level_id_seq'::regclass),
   doctypes_second_level_label character varying(255) NOT NULL,
   doctypes_first_level_id integer NOT NULL,
+  font_color character varying(50),
   enabled character(1) NOT NULL DEFAULT 'Y'::bpchar,
   CONSTRAINT doctypes_second_level_pkey PRIMARY KEY (doctypes_second_level_id)
 )

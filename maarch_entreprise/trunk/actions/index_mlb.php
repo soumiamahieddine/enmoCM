@@ -333,12 +333,14 @@ $module, $collId, $mode )
 	    for ($i = 0; $i < count($doctypes); $i ++) {
 		    $frmStr .= '<option value="" class="doctype_level1" title="'
 		            . $doctypes[$i]['label'] . '" label="'
-		            . $doctypes[$i]['label'] . '">' . $doctypes[$i]['label']
+		            . $doctypes[$i]['label'] . '" style="color:'
+		            . $doctypes[$i]['color'].';">' . $doctypes[$i]['label']
 		            . '</option>';
 			for ($j = 0; $j < count($doctypes[$i]['level2']); $j ++) {
 			    $frmStr .= '<option value="" class="doctype_level2" title="'
 			            . $doctypes[$i]['level2'][$j]['label'] . '" label="'
-			            . $doctypes[$i]['level2'][$j]['label'] . '">&nbsp;&nbsp;'
+			            . $doctypes[$i]['level2'][$j]['label'] . '" style="color:'
+		            	. $doctypes[$i]['color'].';">&nbsp;&nbsp;'
 			            . $doctypes[$i]['level2'][$j]['label'] .'</option>';
 			    for ($k = 0; $k < count($doctypes[$i]['level2'][$j]['types']);
 			        $k ++

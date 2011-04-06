@@ -28,171 +28,299 @@
 * @version $Revision$
 * @ingroup admin
 */
-
-$core_tools = new core_tools();
-$core_tools->test_admin('admin_architecture', 'apps');
-$core_tools->load_lang();
+require_once "core" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR 
+	. "class_history.php";
+$core = new core_tools();
+$core->test_admin('admin_architecture', 'apps');
+$core->load_lang();
 
 $db = new dbquery();
 $db->connect();
-$desc =  "";
+$desc = "";
 $id = "";
-$id_structure = "";
-
-if(isset($_GET['id']) && !empty($_GET['id']))
-{
+$structureId = "";
+$fontColor = '#000000'; // Black by default
+$fontSize = '';
+if (isset($_GET['id']) && ! empty($_GET['id'])) {
 	$id = $_GET['id'];
-	$db->query("select doctypes_second_level_label, doctypes_first_level_id from ".$_SESSION['tablename']['doctypes_second_level']." where doctypes_second_level_id = ".$id);
+	$db->query(
+		"select doctypes_second_level_label, doctypes_first_level_id, font_color from "
+		. $_SESSION['tablename']['doctypes_second_level']
+		. " where doctypes_second_level_id = " . $id
+	);
 
 	$res = $db->fetch_object();
 	$desc = $db->show_string($res->doctypes_second_level_label);
-	$id_structure = $res->doctypes_first_level_id;
+	if (isset($res->font_color)) {
+        $fontColor = $db->show_string($res->font_color);
+	}
+	$structureId = $res->doctypes_first_level_id;
 }
 
 $mode = "";
-if(isset($_REQUEST['mode']) && !empty($_REQUEST['mode']))
-{
+if (isset($_REQUEST['mode']) && ! empty($_REQUEST['mode'])) {
 	$mode = $_REQUEST['mode'];
 }
 $erreur = "";
-if( isset($_REQUEST['valid']))
-{
-
-	if(isset($_REQUEST['desc_sd']) && !empty($_REQUEST['desc_sd']))
-	{
-
+if (isset($_REQUEST['valid'])) {
+	if (isset($_REQUEST['font_color']) && !empty($_REQUEST['font_color'])) {
+	    $color = $db->protect_string_db($_REQUEST['font_color']);
+	} else {
+	    $erreur .= _FONT_COLOR. ' ' . _MISSING . '.<br/>';
+	}
+	
+	if (isset($_REQUEST['desc_sd']) && ! empty($_REQUEST['desc_sd'])) {
 		$desc = $db->protect_string_db($_REQUEST['desc_sd']);
-
-		$db->query("select * from ".$_SESSION['tablename']['doctypes_second_level']." where doctypes_second_level_label = '".$desc."' and enabled = 'Y'");
+		$db->query(
+			"select * from " . $_SESSION['tablename']['doctypes_second_level']
+			. " where doctypes_second_level_label = '" . $desc
+			. "' and enabled = 'Y'"
+		);
 		//$db->show();
-		if($db->nb_result() > 1)
-		{
-			$erreur .= _THE_SUBFOLDER." "._ALREADY_EXISTS.".";
-		}
-		else
-		{
-			if(isset($_REQUEST['structure']) && !empty($_REQUEST['structure']))
-			{
+		if ($db->nb_result() > 1) {
+			$erreur .= _THE_SUBFOLDER . " " . _ALREADY_EXISTS . ".";
+		} else {
+			if (isset($_REQUEST['structure']) 
+				&& ! empty($_REQUEST['structure'])
+			) {
 				$structure = $_REQUEST['structure'];
-				if($mode == "up")
-				{
-
-					if( isset($_REQUEST['ID_sd']) && !empty($_REQUEST['ID_sd']))
-					{
+				if ($mode == "up") {
+					if (isset($_REQUEST['ID_sd']) 
+						&& ! empty($_REQUEST['ID_sd'])
+					) {
 						$id = $db->protect_string_db($_REQUEST['ID_sd']);
-						$db->query("UPDATE ".$_SESSION['tablename']['doctypes_second_level']." set doctypes_second_level_label = '".$desc."', doctypes_first_level_id = ".$structure." where doctypes_second_level_id = ".$id."");
-						$db->query("update ".$_SESSION['tablename']['doctypes']." set doctypes_first_level_id = ".$structure." where doctypes_second_level_id = ".$id);
-						if($_SESSION['history']['subfolderup'] == "true")
-						{
-							require("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
+						$db->query(
+							"UPDATE " 
+							. $_SESSION['tablename']['doctypes_second_level']
+							. " set doctypes_second_level_label = '" . $desc
+							. "', doctypes_first_level_id = " . $structure
+							. ", font_color = '".$color."' "
+							. " where doctypes_second_level_id = " . $id . ""
+						);
+						$db->query(
+							"update " . $_SESSION['tablename']['doctypes']
+							. " set doctypes_first_level_id = " . $structure
+							. " where doctypes_second_level_id = " . $id
+						);
+						if ($_SESSION['history']['subfolderup'] == "true") {
 							$hist = new history();
-							$hist->add($_SESSION['tablename']['doctypes_second_level'], $id,"UP",_SUBFOLDER_MODIF." ".strtolower(_NUM).$id." (".$info.")", $_SESSION['config']['databasetype']);
+							$hist->add(
+								$_SESSION['tablename']['doctypes_second_level'],
+								$id, "UP", _SUBFOLDER_MODIF . " " 
+								. strtolower(_NUM) . $id . " (" . $info . ")", 
+								$_SESSION['config']['databasetype']
+							);
 						}
-						$_SESSION['error'] .= _SUBFOLDER_MODIF." : ".$id."<br/>";
+						$_SESSION['error'] .= _SUBFOLDER_MODIF . " : " . $id
+										   . "<br/>";
+					} else {
+						$erreur .= _SUBFOLDER_ID_PB . ".";
 					}
-					else
-					{
-						$erreur .= _SUBFOLDER_ID_PB.".";
-					}
-				}
-
-				else
-				{
+				} else {
 					$desc = $db->protect_string_db($_REQUEST['desc_sd']);
-					$db->query("INSERT INTO ".$_SESSION['tablename']['doctypes_second_level']." ( doctypes_second_level_label, doctypes_first_level_id) VALUES ( '".$desc."', ".$structure.")");
-					$db->query("select doctypes_first_level_id from ".$_SESSION['tablename']['doctypes_second_level']." where doctypes_second_level_label =  '".$desc."' and doctypes_first_level_id= ".$structure);
+					$db->query(
+						"INSERT INTO "
+						. $_SESSION['tablename']['doctypes_second_level']
+						. " ( font_color, doctypes_second_level_label, "
+						. "doctypes_first_level_id) VALUES ( '".$fontColor 
+						."',  '" . $desc . "', ". $structure . ")"
+					);
+					$db->query(
+						"select doctypes_first_level_id from "
+						. $_SESSION['tablename']['doctypes_second_level']
+						. " where doctypes_second_level_label =  '" . $desc
+						. "' and doctypes_first_level_id= " . $structure
+					);
 					$res = $db->fetch_object();
-					if($_SESSION['history']['subfolderadd'] == "true")
-					{
-						require("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
+					if ($_SESSION['history']['subfolderadd'] == "true") {
 						$hist = new history();
-						$hist->add($_SESSION['tablename']['doctypes_second_level'], $res->doctypes_first_level_id,"ADD",_SUBFOLDER_ADDED." (".$desc.")", $_SESSION['config']['databasetype']);
+						$hist->add(
+							$_SESSION['tablename']['doctypes_second_level'], 
+							$res->doctypes_first_level_id, "ADD",
+							_SUBFOLDER_ADDED . " (" . $desc . ")", 
+							$_SESSION['config']['databasetype']
+						);
 					}
-
-					$_SESSION['error'] .= _NEW_SUBFOLDER." : ".$desc."<br/>";
+					$_SESSION['error'] .= _NEW_SUBFOLDER . " : " . $desc 
+									   . "<br/>";
 				}
-
-				if(empty($erreur))
-				{
+				if (empty($erreur)) {
 					unset($_SESSION['m_admin']);
 					?>
-						<script type="text/javascript">window.opener.location.reload();self.close();</script>
+					<script type="text/javascript">window.opener.location.reload();self.close();</script>
 					<?php
 				}
-			}
-			else
-			{
-				$erreur .= _STRUCTURE_MANDATORY.'.<br/>';
+			} else {
+				$erreur .= _STRUCTURE_MANDATORY . '.<br/>';
 			}
 		}
-	}
-	else
-	{
-		$erreur .= _SUBFOLDER_DESC_MISSING.".<br/>";
+	} else {
+		$erreur .= _SUBFOLDER_DESC_MISSING . ".<br/>";
 	}
 }
+if (file_exists(
+    $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
+    . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR . 'apps'
+    . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+    . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR . 'htmlColors.xml'
+)
+) {
+    $path = $_SESSION['config']['corepath'] . 'custom'
+          . DIRECTORY_SEPARATOR . $_SESSION['custom_override_id']
+          . DIRECTORY_SEPARATOR . 'apps' . DIRECTORY_SEPARATOR
+          . $_SESSION['config']['app_id'] . DIRECTORY_SEPARATOR . 'xml'
+          . DIRECTORY_SEPARATOR . 'htmlColors.xml';
+} else {
+    $path = 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+          . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR . 'htmlColors.xml';
+}
+$fontColors = array();
+//$fontSizes = array('9', '10', '11', '12', '14', '16', '18', '20');
+$xml = simplexml_load_file($path);
+if ($xml <> false) {
+    foreach ($xml->color as $color) {
+        array_push(
+            $fontColors,
+            array(
+       	        'id' => (string) $color->id,
+                'label' => (string) $color->label,
+            )
+        );
+   }
+}
+array_push(
+    $fontColors,
+    array(
+    	'id' => '#000000',
+        'label' => _BLACK,
+    )
+);
 
-$core_tools->load_html('', true, false);
-
-if($mode == "up")
+function cmpColors($a, $b)
 {
+    return strcmp(strtolower($a['label']), strtolower($b['label']));
+}
+usort($fontColors, 'cmpColors');
+$core->load_html('', true, false);
+
+if ($mode == "up") {
 	$title = _SUBFOLDER_MODIF;
-}
- else
-{
+} else {
 	$title = _SUBFOLDER_CREATION;
 }
-$core_tools->load_header($title);
-$time = $core_tools->get_session_time_expire();
+$core->load_header($title);
+$time = $core->get_session_time_expire();
 ?>
 <body onload="setTimeout(window.close, <?php  echo $time;?>*60*1000);">
 
 <div class="error">
-<?php  echo $erreur;
-	$erreur = "";
+<?php  
+echo $erreur;
+$erreur = "";
 ?>
 </div>
-<h2 class="tit"> &nbsp;<img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=manage_structures_b.gif" alt="" valign="center"/> <?php  if($mode == "up"){ echo _SUBFOLDER_MODIF;} else{ echo _SUBFOLDER_CREATION;}?></h2>
+<h2 class="tit"> &nbsp;<img src="<?php  
+echo $_SESSION['config']['businessappurl'];
+?>static.php?filename=manage_structures_b.gif" alt="" valign="center"/> <?php  
+if ($mode == "up") { 
+	echo _SUBFOLDER_MODIF;
+} else { 
+	echo _SUBFOLDER_CREATION;
+}
+?></h2>
 <div class="block">
 <br/>
-<form method="post" name="modif" id="modif" class="forms" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=subfolder_up">
+<form method="post" name="modif" id="modif" class="forms" action="<?php 
+echo $_SESSION['config']['businessappurl'];
+?>index.php?display=true&page=subfolder_up">
 	<input type="hidden" name="display" value="true" />
     <input type="hidden" name="page" value="subfolder_up" />
-	<?php  if ($mode == "up")
-	{ ?>
+	<?php  
+if ($mode == "up") { 
+	?>
 	<p>
     	<label><?php  echo _ID.' '._SUBFOLDER;?>	</label>
-		<input type="text" name="ID_sd"  value="<?php  echo $id; ?>" readonly="readonly" class="readonly" />
+		<input type="text" name="ID_sd"  value="<?php  
+	echo $id; 
+	?>" readonly="readonly" class="readonly" />
 	</p>
     <p>&nbsp;</p>
-	<?php  } ?>
+	<?php  
+} 
+?>
 	<p>
     	<label><?php  echo _DESC.' '._SUBFOLDER;?></label>
-		<input type="text" name="desc_sd" value="<?php  echo $desc; ?>"   /> </td>
+		<input type="text" name="desc_sd" value="<?php  echo $desc; ?>" />
 	</p>
     <p>&nbsp;</p>
+    <!--      <p>
+        <label><?php
+echo _FONT_SIZE;
+        ?> :</label>
+        <select name="font_size" id="font_size">
+            <option value=""><?php
+echo _CHOOSE;
+            ?></option>
+            <?php
+for ($i = 0; $i < count($fontSizes); $i ++) {
+    echo '<option value="' . $fontSizes[$i] . '">' . $fontSizes[$i] . '</option>';
+}
+            ?>
+        </select>
+     </p> -->
+     <p>
+        <label><?php
+echo _FONT_COLOR;
+        ?> :</label>
+        <select name="font_color" id="font_color">
+            <option value=""><?php
+echo _CHOOSE;
+            ?></option>
+            <?php
+for ($i = 0; $i < count($fontColors); $i ++) {
+    echo '<option value="' . $fontColors[$i]['id'] . '" ';
+    if ($fontColors[$i]['id'] == $fontColor) {
+        echo ' selected="selected" ';
+    }
+    echo   ' style="color:' . $fontColors[$i]['id'] . ';">' . $fontColors[$i]['label'] . '</option>';
+}
+            ?>
+        </select>
+     </p>
+       <p>&nbsp;</p>
 	<p>
 		<label><?php  echo _ATTACH_STRUCTURE;?> :</label>
-
 			<select name="structure" >
 				<option value=""><?php  echo _CHOOSE_STRUCTURE;?></option>
-				<?php 	for($i=0; $i < count($_SESSION['m_admin']['structures']); $i++)
-					{
-						?>
-							<option value="<?php  echo $_SESSION['m_admin']['structures'][$i]['ID'];?>" <?php  if ($id_structure == $_SESSION['m_admin']['structures'][$i]['ID']){ echo 'selected="selected"'; }?>><?php  echo $_SESSION['m_admin']['structures'][$i]['LABEL'];?></option>
-						<?php
-					}
-				?>
+				<?php 	
+for ($i = 0; $i < count($_SESSION['m_admin']['structures']); $i ++) {
+	?>
+	<option value="<?php  
+	echo $_SESSION['m_admin']['structures'][$i]['ID'];
+	?>" <?php  
+	if ($structureId == $_SESSION['m_admin']['structures'][$i]['ID']) { 
+		echo 'selected="selected"'; 
+	}
+	?>><?php  
+	echo $_SESSION['m_admin']['structures'][$i]['LABEL'];
+	?></option>
+	<?php
+}
+?>
 			</select>
 	</p>
 	<p class="buttons">
-    	<input type="submit" class="button" name="valid" value="<?php  echo _VALIDATE;?>" />
-        <input type="button" class="button" name="cancel" value="<?php  echo _CANCEL;?>" onclick="self.close();" />
+    	<input type="submit" class="button" name="valid" value="<?php  
+echo _VALIDATE;
+?>" />
+        <input type="button" class="button" name="cancel" value="<?php  
+echo _CANCEL;
+?>" onclick="self.close();" />
     </p>
 <input type="hidden" name="mode" value="<?php  echo $mode;?>"/>
 </form>
 </div>
 <div class="block_end">&nbsp;</div>
-<?php $core_tools->load_js();?>
+<?php $core->load_js();?>
 </body>
 </html>
