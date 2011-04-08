@@ -24,6 +24,9 @@
 if (!defined('_LIFE_CYCLE')) {
     define('_LIFE_CYCLE', 'Life cycle');
 }
+if (!defined('_LIFE_CYCLE_COMMENT')) {
+    define('_LIFE_CYCLE_COMMENT', 'Gestion du cycle de vie');
+}
 if (!defined('_ADMIN_LIFE_CYCLE_SHORT')) {
     define('_ADMIN_LIFE_CYCLE_SHORT', ' Life cycle administration');
 }

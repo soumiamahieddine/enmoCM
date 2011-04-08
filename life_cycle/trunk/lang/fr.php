@@ -21,14 +21,12 @@
  */
 
 /*********************** ADMIN ***********************************/
+if (!defined('_LIFE_CYCLE_COMMENT')) define('_LIFE_CYCLE_COMMENT', 'Gestion du cycle de vie');
 if (!defined('_ADMIN_LIFE_CYCLE')) { define('_ADMIN_LIFE_CYCLE', ' Politiques d&rsquo;archivage');}
 if (!defined('_ADMIN_LIFE_CYCLE_DESC')) { define('_ADMIN_LIFE_CYCLE_DESC', 'D&eacute;finition des politiques d&rsquo;archivage, cycles et &eacute;tapes jusqu&rsquo;au sort final');
 }
 if (!defined('_LIFE_CYCLE')) {
     define('_LIFE_CYCLE', 'Cycle de vie');
-}
-if (!defined('_LIFE_CYCLE_COMMENT')) {
-    define('_LIFE_CYCLE_COMMENT', 'Gestion du cycle de vie');
 }
 if (!defined('_ADMIN_LIFE_CYCLE_SHORT')) {
     define('_ADMIN_LIFE_CYCLE_SHORT', ' Administration des cycles de vie');
