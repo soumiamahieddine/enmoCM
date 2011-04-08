@@ -668,6 +668,7 @@ if (!defined('_INTERNAL')) define( '_INTERNAL', 'Courrier Interne');
 if (!defined('_MARKET_DOCUMENT')) define( '_MARKET_DOCUMENT', 'Document de Sous-dossier');
 
 // Mail Natures
+if (!defined('_CHOOSE_NATURE')) define( '_CHOOSE_NATURE', 'Choisir');
 if (!defined('_SIMPLE_MAIL')) define( '_SIMPLE_MAIL', 'Courrier simple');
 if (!defined('_EMAIL')) define( '_EMAIL', 'Courriel');
 if (!defined('_FAX')) define( '_FAX', 'Fax');
@@ -1077,6 +1078,9 @@ if (!defined('_DOCSERVER_DISABLED')) define( '_DOCSERVER_DISABLED', 'Zone de sto
 if (!defined('_DOCSERVER_ENABLED')) define( '_DOCSERVER_ENABLED', 'Zone de stockage active');
 if (!defined('_ALREADY_EXISTS_FOR_THIS_TYPE_OF_DOCSERVER')) define( '_ALREADY_EXISTS_FOR_THIS_TYPE_OF_DOCSERVER', 'existe déjà pour ce type');
 if (!defined('_DOCSERVER_LOCATION_ENABLED')) define( '_DOCSERVER_LOCATION_ENABLED', 'Lieu de stockage actif');
+if (!defined('_LINK_EXISTS')) {
+    define('_LINK_EXISTS', 'Ce lieu contient des docservers...');
+}
 
 
 /***************DOCSERVERS TYPES*************************************/

@@ -65,7 +65,7 @@ if ($_SESSION['config']['databasetype'] == "SQLSERVER") {
  *                  ['table'] = keyword : 'res' = field in the res_x like table
  *                                        'coll_ext' = field in collection ext table (ex : mlb_ext_coll)
  *                                        'none' = field in no table, only in form for special functionnality
- *                                        'special' = field in aother table, handled in the code
+ *                                        'special' = field in another table, handled in the code
  *                  ['modify'] = true or false (optional) : can we modify this field (used in details.php)
  *                  ['form_show'] = keyword (used with modify = true)
  *                              'select' = displayed in a select item
