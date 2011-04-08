@@ -1012,8 +1012,9 @@ function check_docserver($collId) {
 		$newFileName = "tmp_file_" . $_SESSION['upfile']['md5'] . '.'
 		             . strtolower($_SESSION['upfile']['format']);
 	} else {
-		$newFileName = "tmp_file_" . $_SESSION['user']['UserId'] . '.'
-		             . strtolower($_SESSION['upfile']['format']);
+		//$newFileName = "tmp_file_" . $_SESSION['user']['UserId'] . '.'
+		//             . strtolower($_SESSION['upfile']['format']);
+        $newFileName = $_SESSION['upfile']['name'];
 	}
 
 	$docserverControler = new docservers_controler();

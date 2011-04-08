@@ -79,9 +79,13 @@ elseif(isset($_SESSION['upfile']['mime']) && !empty($_SESSION['upfile']['mime'])
 		header("Content-Disposition: inline; filename=".basename('maarch').".".$ext.";");
 		header("Content-Transfer-Encoding: binary");
 		$ext = strtolower($_SESSION['upfile']['format']);
-		if(file_exists($_SESSION['config']['tmppath'].DIRECTORY_SEPARATOR.'tmp_file_'.$_SESSION['user']['UserId'].'.'.$ext))
+		/*if(file_exists($_SESSION['config']['tmppath'].DIRECTORY_SEPARATOR.'tmp_file_'.$_SESSION['user']['UserId'].'.'.$ext))
 		{
 			$loc = $_SESSION['config']['MaarchUrl'].$_SESSION['config']['tmppath'].DIRECTORY_SEPARATOR.'tmp_file_'.$_SESSION['user']['UserId'].'.'.$ext;
+			readfile($loc);
+		}*/
+		if (file_exists($_SESSION['upfile']['local_path'])) {
+			$loc = $_SESSION['config']['MaarchUrl'] . $_SESSION['upfile']['local_path'];
 			readfile($loc);
 		}
 		exit();
@@ -95,7 +99,8 @@ elseif(isset($_SESSION['upfile']['mime']) && !empty($_SESSION['upfile']['mime'])
 		<body background="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=bg_home_home.gif" style="background-repeat:no-repeat;background-position:center">
 		<?php
    		$ext = strtolower($_SESSION['upfile']['format']);
-		if(file_exists($_SESSION['config']['tmppath'].DIRECTORY_SEPARATOR.'tmp_file_'.$_SESSION['user']['UserId'].'.'.$ext))
+		//if(file_exists($_SESSION['config']['tmppath'].DIRECTORY_SEPARATOR.'tmp_file_'.$_SESSION['user']['UserId'].'.'.$ext))
+        if(file_exists($_SESSION['upfile']['local_path']))
 		{
 			echo "<br/><br/><div class=\"error\">"._FILE_LOADED_BUT_NOT_VISIBLE.			_ONLY_FILETYPES_AUTHORISED." <br/><ul>";
 				for($i=0; $i< count($ext_list); $i++)
