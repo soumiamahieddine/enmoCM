@@ -98,7 +98,7 @@ function Ds_copyOnDocserver(
         'fileDestinationName' => $fileDestinationName,
         'fileSize' => filesize($sourceFilePath),
     );
-    if ($GLOBALS['TmpDirectory'] <> '') {
+    if (isset($GLOBALS['TmpDirectory']) && $GLOBALS['TmpDirectory'] <> '') {
         Ds_washTmp($GLOBALS['TmpDirectory'], true);
     }
     return $storeInfos;
