@@ -40,6 +40,7 @@ $security = new security();
 $core_tools = new core_tools();
 $request = new request();
 $contact = new contacts();
+$template_to_use = '';
 require_once("modules".DIRECTORY_SEPARATOR."basket".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
 $bask = new basket();
 if(!empty($_REQUEST['id']))
@@ -90,19 +91,19 @@ $tab=$request->select($select,$where,$orderstr,$_SESSION['config']['databasetype
 	$template_list=array();
 	array_push($template_list, array( "name"=>"document_list_extend", "img"=>"extend_list.gif", "label"=> _ACCESS_LIST_EXTEND));
 
-	if(!$_REQUEST['template'])
+	if(isset($_REQUEST['template']) && !$_REQUEST['template'])
 		$template_to_use = $template_list[0]["name"];
 
 	if(isset($_REQUEST['template']) && empty($_REQUEST['template']))
 		$template_to_use = '';
 
-	if($_REQUEST['template'])
+	if(isset($_REQUEST['template']) && $_REQUEST['template'])
 		$template_to_use = $_REQUEST['template'];
 
 
 	//For status icon
 	$extension_icon = '';
-	if($template_to_use <> '')
+	if(isset($template_to_use) && $template_to_use <> '')
 		$extension_icon = "_big";
 	//###################
 
@@ -252,11 +253,30 @@ $_SESSION['collection_id_choice'] = $_SESSION['current_basket']['coll_id'];
 
 $details = 'details&dir=indexing_searching';
 
-$param_list = array('values' => $tab, 'title' => $title, 'key' => 'res_id', 'page_name' => 'view_baskets&module=basket&baskets='.$_SESSION['current_basket']['id'] ,
-'what' => 'res_id', 'detail_destination' =>$details, 'details_page' => '', 'view_doc' => true,  'bool_details' => true, 'bool_order' => true,
-'bool_frame' => false, 'module' => '', 'css' => 'listing spec',
- 'hidden_fields' => '<input type="hidden" name="module" id="module" value="basket" /><input type="hidden" name="table" id="table" value="'.$_SESSION['current_basket']['table'].'"/>
- <input type="hidden" name="coll_id" id="coll_id" value="'.$_SESSION['current_basket']['coll_id'].'"/>', 'open_details_popup' => false, 'do_actions_arr' => $do_actions_arr, 'template' => true,
-  'template_list'=> $template_list, 'actual_template'=>$template_to_use, 'bool_export'=>true );
+$param_list = array(
+	'values' => $tab,
+	'title' => $title,
+	'key' => 'res_id',
+	'page_name' => 'view_baskets&module=basket&baskets=' . $_SESSION['current_basket']['id'],
+	'what' => 'res_id',
+	'detail_destination' => $details,
+	'details_page' => '',
+	'view_doc' => true,
+	'bool_details' => true,
+	'bool_order' => true,
+	'bool_frame' => false,
+	'module' => '',
+	'css' => 'listing spec',
+ 	'hidden_fields' => '<input type="hidden" name="module" id="module" value="basket" />'
+        .'<input type="hidden" name="table" id="table" value="'
+        . $_SESSION['current_basket']['table'] . '"/><input type="hidden" name="coll_id" id="coll_id" value="'
+        . $_SESSION['current_basket']['coll_id'] . '"/>',
+    'open_details_popup' => false,
+    'do_actions_arr' => $do_actions_arr,
+    'template' => true,
+  	'template_list' => $template_list,
+  	'actual_template' => $template_to_use,
+  	'bool_export' => true
+);
 $bask->basket_list_doc($param_list, $_SESSION['current_basket']['actions'],_CLICK_LINE_TO_PROCESS, true, $template_list, $template_to_use );
 ?>

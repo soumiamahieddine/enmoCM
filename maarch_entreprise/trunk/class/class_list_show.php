@@ -105,8 +105,7 @@ class list_show extends functions
     $hide_standard_list = false
     )
     {
-        if ($template && $actual_template <> '')
-        {
+        if ($template && $actual_template <> '') {
             require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR.'class_list_show_with_template.php');
             $list_temp = new list_show_with_template();
 
@@ -475,66 +474,70 @@ class list_show extends functions
 
                 $str .= ' <tr '.$color.'>';
 
-                if($bool_radio_form || $bool_check_form)
-                    {
+                if ($bool_radio_form || $bool_check_form) {
                     $str .= ' <td style="width:3%;">';
                     $str .= ' <div align="center">';
 
-                            if($bool_radio_form)
-                            {
-                                    if(count($do_actions_arr) == 0 ||  $do_actions_arr[$theline] == true)
-                                    {
-                                        $str .= '<input type="radio"  class="check" name="field" value="'.$result[$theline][0]['value'].'" class="check" />&nbsp;&nbsp;';
-                                    }
-                                    else
-                                    {
-                                        $str .= '<img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=cadenas_rouge.png" alt="'._DOC_LOCKED.'" border="0"/>';
-                                    }
-                            }
-                            elseif($bool_check_form)
-                            {
-
-                        if(!$bool_show_actions_list ){
+                     if ($bool_radio_form) {
+                         if (count($do_actions_arr) == 0
+                             ||  $do_actions_arr[$theline] == true
+                         ) {
+                             $str .= '<input type="radio"  class="check" name="field" value="'.$result[$theline][0]['value'].'" class="check" />&nbsp;&nbsp;';
+                         } else {
+                             $str .= '<img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=cadenas_rouge.png" alt="'._DOC_LOCKED.'" border="0"/>';
+                         }
+                     } else if ($bool_check_form) {
+                        if (! $bool_show_actions_list ) {
                             $str .= '<input type="checkbox"  class="check" name="field[]" class="check" value="'.$result[$theline][0]['value'].'" />&nbsp;&nbsp;';
-                        }else{
-
-
-                            if(count($do_actions_arr) == 0 ||  $do_actions_arr[$theline] == true)
-                            {
+                        } else {
+                            if (count($do_actions_arr) == 0
+                                || $do_actions_arr[$theline] == true
+                            ) {
                                 $str .= '<input type="checkbox"  class="check" name="field" class="check" value="'.$result[$theline][0]['value'].'" />&nbsp;&nbsp;';
-                            }
-                            else
-                            {
+                            } else {
                                 $str .= '<img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=cadenas_rouge.png" alt="'._DOC_LOCKED.'" border="0"/>';
                             }
                         }
-
                     }
                     $str .= ' </div>';
                     $str .= ' </td>';
+                }
+                if ($bool_view_document) {
+                    $str .= ' <td style="width:3%;">';
+                    $str .= ' <div align="center">';
+                    if ($bool_view_document) {
+                        $str .= '<a href="'.$_SESSION['config']['businessappurl'].'index.php?display=true&amp;dir=indexing_searching&amp;page=view_resource_controler&amp;id='.$result[$theline][0][$key].'" target="_blank" title="'._VIEW_DOC.'">';
+                        $str .= ' <img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=picto_dld.gif" alt="'._VIEW_DOC.'" border="0"/></a>';
                     }
-                     if($bool_view_document)
-                     {
-                        $str .= ' <td style="width:3%;">';
-                        $str .= ' <div align="center">';
-                        if($bool_view_document)
-                        {
-                            $str .= '<a href="'.$_SESSION['config']['businessappurl'].'index.php?display=true&amp;dir=indexing_searching&amp;page=view_resource_controler&amp;id='.$result[$theline][0][$key].'" target="_blank" title="'._VIEW_DOC.'">';
-                            $str .= ' <img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=picto_dld.gif" alt="'._VIEW_DOC.'" border="0"/></a>';
-                        }
-                        $str .= ' </div>';
-                        $str .= ' </td>';
-                    }
+                    $str .= ' </div>';
+                    $str .= ' </td>';
+                }
 
-                    for($count_column = 0;$count_column < count($listcolumn);$count_column++)
-                    {
-                        if(isset($result[$theline][$count_column]['show']) && $result[$theline][$count_column]['show']==true)
-                        {
-                            if($do_action && !empty($id_action) && (count($do_actions_arr) == 0 ||  $do_actions_arr[$theline] == true) )
-                            {
-                                $str .= ' <td style="width:'.$result[$theline][$count_column]['size'].'%;" align="'.$result[$theline][$count_column]['align'].'" onclick="valid_form( \'page\', \''.$result[$theline][0]['value'].'\', \''.$id_action.'\');" '.$result[$theline][$count_column]['css_style'].'>'.functions::show_str(self::thisword($result[$theline][$count_column]['value'],$what)).'</td>';
-
+                for($count_column = 0;$count_column < count($listcolumn);$count_column++) {
+                    if(isset($result[$theline][$count_column]['show'])
+                        && $result[$theline][$count_column]['show'] == true
+                    ) {
+                        if($do_action && !empty($id_action)
+                            && (count($do_actions_arr) == 0
+                                || $do_actions_arr[$theline] == true)
+                        ) {
+                            $str .= ' <td style="width:'
+                                 . $result[$theline][$count_column]['size']
+                                 . '%;" align="'
+                                 . $result[$theline][$count_column]['align']
+                                 . '" onclick="valid_form( \'page\', \''
+                                 . $result[$theline][0]['value'] . '\', \''
+                                 . $id_action . '\');" ';
+                            if (isset($result[$theline][$count_column]['css_style'])) {
+                                 $str .= $result[$theline][$count_column]['css_style'];
                             }
+                            $str .= '>' . functions::show_str(
+                                     self::thisword(
+                                         $result[$theline][$count_column]['value'],
+                                         $what
+                                     )
+                                 ) . '</td>';
+                        }
                             else if($do_action && !empty($id_action) &&  $do_actions_arr[$theline] == false)
                             {
                                 $str .= ' <td style="width:'.$result[$theline][$count_column]['size'].'%;" align="'.$result[$theline][$count_column]['align'].'" '.$result[$theline][$count_column]['css_style'].'><em>'.functions::show_str(self::thisword($result[$theline][$count_column]['value'],$what)).'</em></td>';

@@ -44,8 +44,9 @@ class list_show_with_template extends list_show
 			$to_share = $my_explode[1];
 			for($stand= 0; $stand <= count($result[$theline]); $stand++ )
 			{
-				if($result[$theline][$stand]['column'] == $to_share)
-				{
+				if (isset($result[$theline][$stand]['column'])
+				    && $result[$theline][$stand]['column'] == $to_share
+				) {
 						return $result[$theline][$stand]['value'];
 				}
 
@@ -170,9 +171,11 @@ class list_show_with_template extends list_show
 	//Load check form if this parameters is loaded in list_show and list_show_with_template
 	public function tmplt_func_click_form($actual_string, $theline, $result, $key)
 	{
-
-		if($this->do_action && !empty($this->id_action) && (count($this->do_actions_arr) == 0 ||  $this->do_actions_arr[$theline] == true) )
-		{
+		if ($this->do_action && ! empty($this->id_action)
+		    && isset($this->do_actions_arr) &&
+		    (count($this->do_actions_arr) == 0
+		        || $this->do_actions_arr[$theline] == true)
+		) {
 			$return = '//onclick="valid_form( \'page\', \''.$result[$theline][0]['value'].'\', \''.$this->id_action.'\');"';
 			return $return;
 		}
@@ -548,6 +551,7 @@ class list_show_with_template extends list_show
 		{
 			$file = 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."template".DIRECTORY_SEPARATOR.$actual_template.".html";
 		}
+
 		//To load including values template Use for case by exemple
 		//##############################################################
 		if($core_tools->is_module_loaded("cases") == true)
@@ -656,6 +660,7 @@ class list_show_with_template extends list_show
 			$disp_dc = $doc_converter->convert_list($result, true);
 		}
 		//########################
+		$page_list1 = '';
 		$this->the_link = $link;
 		$nb_show = $_SESSION['config']['nblinetoshow'];
 		$nb_pages = ceil($nb_total/$nb_show);
@@ -718,8 +723,7 @@ class list_show_with_template extends list_show
 				//$next = " <div class='list_next' ><a href=\"".$link."&amp;start=".$start_next."\">"._NEXT."</a> ></div>";
 				$next = "<a href=\"".$link."&amp;start=".$start_next."\">"._NEXT."</a> >";
 			}
-		}
-		$page_list1 = '<div class="block" style="height:30px;vertical" '
+			$page_list1 = '<div class="block" style="height:30px;vertical" '
 		            . 'align="center" ><table width="100%" border="0"><tr>'
 		            . '<td align="center" width="15%"><b>' . $previous
 		            . '</b></td><td align="center" width="15%"><b>' . $next
@@ -728,6 +732,8 @@ class list_show_with_template extends list_show
 		            . '</td><td width="210px" align="center">' . $disp_dc
 		            . '</td><td width="5px">|</td><td align="right">' . $tdeto
 		            . '</td></tr></table></b></div>';
+		}
+
 		//Script for action
 		//#################
 		if($bool_radio_form || $bool_check_form || ($do_action && !empty($id_action)))

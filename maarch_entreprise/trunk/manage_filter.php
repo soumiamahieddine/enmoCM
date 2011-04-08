@@ -29,7 +29,7 @@ array_push($select[$table],"res_id", "status", "category_id", "category_id as ca
 
 if($core_tools->is_module_loaded("cases") == true)
 {
-	array_push($select[$table], "case_id", "case_label", "case_description"); 
+	array_push($select[$table], "case_id", "case_label", "case_description");
 }
 $order = '';
 if(isset($_REQUEST['order']) && !empty($_REQUEST['order']))
@@ -67,7 +67,7 @@ if($_REQUEST['template'] <> 'group_case_for_basket')
 	{
 		$bask->query("select res_id from ".$table."  ".$orderstr);
 	}
-}	
+}
 $tmp = array();
 while($res = $bask->fetch_object())
 {
@@ -76,31 +76,31 @@ while($res = $bask->fetch_object())
 }
 $str = '';
 $search = false;
-if(trim($_REQUEST['entity_id']) == "none")
+if(isset($_REQUEST['entity_id']) && trim($_REQUEST['entity_id']) == "none")
 {
 	$_SESSION['auth_dep']['bask_chosen_entity'] = "";
 }
-if(trim($_REQUEST['category_id']) == "none")
+if(isset($_REQUEST['category_id']) && trim($_REQUEST['category_id']) == "none")
 {
 	$_SESSION['auth_dep']['bask_chosen_category'] = "";
 }
-if(trim($_REQUEST['status_id']) == "none")
+if(isset($_REQUEST['status_id']) && trim($_REQUEST['status_id']) == "none")
 {
 	$_SESSION['auth_dep']['bask_chosen_status'] = "";
 }
-if(($_REQUEST['entity_id'] <> "none" && $_REQUEST['entity_id'] <> ""))
+if(isset($_REQUEST['entity_id']) && $_REQUEST['entity_id'] <> "none" && $_REQUEST['entity_id'] <> "")
 {
 	$_SESSION['auth_dep']['bask_chosen_entity'] = trim($_REQUEST['entity_id']);
 }
-if(($_REQUEST['category_id'] <> "none" && $_REQUEST['category_id'] <> ""))
+if(isset($_REQUEST['category_id']) && $_REQUEST['category_id'] <> "none" && $_REQUEST['category_id'] <> "")
 {
 	$_SESSION['auth_dep']['bask_chosen_category'] = trim($_REQUEST['category_id']);
 }
-if(($_REQUEST['status_id'] <> "none" && $_REQUEST['status_id'] <> ""))
+if( isset($_REQUEST['status_id']) && $_REQUEST['status_id'] <> "none" && $_REQUEST['status_id'] <> "")
 {
 	$_SESSION['auth_dep']['bask_chosen_status'] = trim($_REQUEST['status_id']);
 }
-if(trim($_REQUEST['contact_id']) <> "")
+if(isset($_REQUEST['contact_id']) && trim($_REQUEST['contact_id']) <> "")
 {
 	$contactTmp = str_replace(')', '', substr($_REQUEST['contact_id'], strrpos($_REQUEST['contact_id'],'(')+1));
 	$find1 = strpos($contactTmp, ':');
@@ -112,7 +112,7 @@ if(trim($_REQUEST['contact_id']) <> "")
 		$_SESSION['auth_dep']['bask_chosen_contact'] = trim($_REQUEST['contact_id']);
 	}
 }
-elseif($_SESSION['auth_dep']['bask_chosen_contact'] <> "")
+elseif( isset($_SESSION['auth_dep']['bask_chosen_contact'] ) && $_SESSION['auth_dep']['bask_chosen_contact'] <> "")
 {
 	$contactTmp = str_replace(')', '', substr($_SESSION['auth_dep']['bask_chosen_contact'], strrpos($_SESSION['auth_dep']['bask_chosen_contact'],'(')+1));
 	$find1 = strpos($contactTmp, ':');
@@ -191,7 +191,7 @@ if(isset($_SESSION['auth_dep']['bask_chosen_status']) && !empty($_SESSION['auth_
 			}
 		}
 	}
-	else 
+	else
 	{
 		if($where_concat <> "")
 		{
@@ -229,7 +229,7 @@ else
 //Defines template allowed for this list
 $template_list=array();
 array_push($template_list, array("name"=>"document_list_extend", "img"=>"extend_list.gif", "label"=> _ACCESS_LIST_EXTEND));
-if($core_tools->is_module_loaded('cases'))	
+if($core_tools->is_module_loaded('cases'))
 	array_push($template_list, array("name"=>"group_case_for_basket", "img"=>"case_list.gif", "label"=> _ACCESS_LIST_CASE));
 if(!$_REQUEST['template'])
 {
@@ -247,8 +247,8 @@ if($_REQUEST['template'])
 $extension_icon = '';
 if($template_to_use <> '')
 	$extension_icon = "_big";
-	
-	
+
+
 //###################
 //Specific View for group_case_template, we don' need to load the standard list_result_mlb
 //#########################
@@ -464,17 +464,57 @@ else
 }
 if(count($tab) > 0)
 {
+    $chosenEntity = '';
+    if (isset($_SESSION['auth_dep']['bask_chosen_entity'])) {
+        $chosenEntity = $_SESSION['auth_dep']['bask_chosen_entity'];
+    }
+    $chosenCat = '';
+    if (isset($_SESSION['auth_dep']['bask_chosen_category'])) {
+        $chosenCat = $_SESSION['auth_dep']['bask_chosen_category'];
+    }
+    $chosenStatus = '';
+    if (isset($_SESSION['auth_dep']['bask_chosen_status'])) {
+        $chosenStatus = $_SESSION['auth_dep']['bask_chosen_status'];
+    }
+    $chosenContact = '';
+    if (isset($_SESSION['auth_dep']['bask_chosen_contact'])) {
+        $chosenStatus = $_SESSION['auth_dep']['bask_chosen_contact'];
+    }
 	$i = count($tab);
 	$title = _RESULTS." : ".$i." "._FOUND_DOCS;
 	$_SESSION['origin'] = 'basket';
 	$_SESSION['collection_id_choice'] = $_SESSION['current_basket']['coll_id'];
 	$details = 'details&dir=indexing_searching';
-	$param_list = array('values' => $tab, 'title' => $title, 'key' => 'res_id', 'page_name' => 'view_baskets&module=basket&baskets='.$_SESSION['current_basket']['id'].'&entity_id='.$_SESSION['auth_dep']['bask_chosen_entity'].'&category_id='.$_SESSION['auth_dep']['bask_chosen_category'].'&status_id='.$_SESSION['auth_dep']['bask_chosen_status'].'&contact_id='.$_SESSION['auth_dep']['bask_chosen_contact'].'&order_field='.$order_field.'&order='.$order,
-	'what' => 'res_id', 'detail_destination' =>$details, 'details_page' => '', 'view_doc' => true,  'bool_details' => true, 'bool_order' => true,
-	'bool_frame' => false, 'module' => '', 'css' => 'listing spec',
-	'hidden_fields' => '<input type="hidden" name="module" id="module" value="basket" /><input type="hidden" name="table" id="table" value="'.$_SESSION['current_basket']['table'].'"/>
-	<input type="hidden" name="coll_id" id="coll_id" value="'.$_SESSION['current_basket']['coll_id'].'"/>', 'open_details_popup' => false, 'do_actions_arr' => $do_actions_arr, 'template' => true,
-	'template_list'=> $template_list, 'actual_template'=>$template_to_use, 'bool_export'=>true , 'mode_string' => true);
+	$param_list = array(
+		'values' => $tab,
+		'title' => $title,
+		'key' => 'res_id',
+		'page_name' => 'view_baskets&module=basket&baskets='
+	        . $_SESSION['current_basket']['id'] . '&entity_id='
+	        . $chosenEntity . '&category_id=' . $chosenCat . '&status_id='
+	        . $chosenStatus . '&contact_id=' . $chosenContact . '&order_field='
+	        . $order_field . '&order=' . $order,
+		'what' => 'res_id',
+		'detail_destination' => $details,
+		'details_page' => '',
+		'view_doc' => true,
+		'bool_details' => true,
+		'bool_order' => true,
+		'bool_frame' => false,
+		'module' => '',
+		'css' => 'listing spec',
+		'hidden_fields' => '<input type="hidden" name="module" id="module" value="basket" />'
+	        .'<input type="hidden" name="table" id="table" value="'
+	        . $_SESSION['current_basket']['table'] . '"/><input type="hidden" name="coll_id" id="coll_id" value="'
+	        . $_SESSION['current_basket']['coll_id'] . '"/>',
+	    'open_details_popup' => false,
+	    'do_actions_arr' => $do_actions_arr,
+	    'template' => true,
+		'template_list' => $template_list,
+		'actual_template'=> $template_to_use,
+		'bool_export' => true ,
+		'mode_string' => true
+	);
 	echo $bask->basket_list_doc($param_list, $_SESSION['current_basket']['actions'], _CLICK_LINE_TO_PROCESS);
 }
-?>
+

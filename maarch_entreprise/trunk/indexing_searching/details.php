@@ -14,7 +14,7 @@
 $core = new core_tools();
 $core->test_user();
 $core->load_lang();
-require_once('core/manage_bitmask.php');
+require_once 'core/manage_bitmask.php';
 require_once "core" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR
     . "class_request.php";
 require_once "core" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR
@@ -30,8 +30,23 @@ require_once "apps" . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
     . "class_indexing_searching_app.php";
 require_once "apps" . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
     . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . "class_types.php";
-include 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
-    . DIRECTORY_SEPARATOR . 'definition_mail_categories.php';
+
+if (file_exists(
+    $_SESSION['config']['corepath'] . 'custom'. DIRECTORY_SEPARATOR
+    . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR . 'apps'
+    . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id'] . DIRECTORY_SEPARATOR
+    . 'definition_mail_categories.php'
+)
+) {
+    $path = $_SESSION['config']['corepath'] . 'custom'. DIRECTORY_SEPARATOR
+          . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR . 'apps'
+          . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+          . DIRECTORY_SEPARATOR . 'definition_mail_categories.php';
+} else {
+    $path = 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+          . DIRECTORY_SEPARATOR . 'definition_mail_categories.php';
+}
+include_once $path;
 
 if(!isset($_REQUEST['coll_id']))
 {
