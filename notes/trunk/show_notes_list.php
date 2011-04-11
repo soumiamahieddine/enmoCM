@@ -10,21 +10,21 @@
 * @author  Loïc Vinet  <dev@maarch.org>
 */
 
-$core_tools = new core_tools();
-$core_tools->load_lang();
-$core_tools->test_service('show_notes_list', 'notes');
+$core = new core_tools();
+$core->load_lang();
+$core->test_service('show_notes_list', 'notes');
 
 $func = new functions();
-
-if(empty($_SESSION['collection_id_choice']))
-{
-	$_SESSION['collection_id_choice']= $_SESSION['user']['collections'][0];
+if (empty($_SESSION['collection_id_choice'])) {
+	$_SESSION['collection_id_choice'] = $_SESSION['user']['collections'][0];
 }
 
-require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
-require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");
+require_once "core/class/class_request.php";
+require_once "apps" . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+    . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR
+    . "class_list_show.php"
+);
 ?>
-
 <div id="welcome_box_right_notes" >
 				<div class="block">
 				<h2>Dernières annotations</h2>
