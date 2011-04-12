@@ -863,70 +863,48 @@ class functions
     */
     function format_date_db($date, $insert=true, $databasetype= '')
     {
-        if(isset($_SESSION['config']['databasetype']) && !empty($_SESSION['config']['databasetype']))
-        {
+        if (isset($_SESSION['config']['databasetype'])
+            && ! empty($_SESSION['config']['databasetype'])) {
             $databasetype = $_SESSION['config']['databasetype'];
         }
 
-        if ($date <> "" )
-        {
-            $var=explode("-",$date) ;
+        if ($date <> "" ) {
+            $var = explode('-', $date) ;
 
-            if(preg_match('/\s/', $var[2]))
-            {
+            if (preg_match('/\s/', $var[2])) {
                 $tmp = explode(' ', $var[2]);
-                $var[2]= $tmp[0];
+                $var[2] = $tmp[0];
             }
-            if(preg_match('/^[0-3][0-9]$/', $var[0]))
-            {
+            if (preg_match('/^[0-3][0-9]$/', $var[0])) {
                 $day = $var[0];
-                $month= $var[1];
-                $year =  $var[2];
-            }
-            else
-            {
+                $month = $var[1];
+                $year = $var[2];
+            } else {
                 $year = $var[0];
-                $month= $var[1];
-                $day =  substr($var[2], 0,2);
+                $month = $var[1];
+                $day = substr($var[2], 0, 2);
             }
-            if ($year <= "1900")
-            {
+            if ($year <= "1900") {
                 return '';
-            }
-            else
-            {
-                if($databasetype == "SQLSERVER")
-                {
-                    return  $day."-".$month."-".$year;
-                }
-                elseif($databasetype== "POSTGRESQL")
-                {
-                    if($_SESSION['config']['lang'] == "fr")
-                    {
-                        return $day."-".$month."-".$year;
+            } else {
+                if ($databasetype == "SQLSERVER") {
+                    return  $day . "-" . $month . "-" . $year;
+                } else if ($databasetype == "POSTGRESQL") {
+                    if ($_SESSION['config']['lang'] == "fr") {
+                        return $day . "-" . $month . "-" . $year;
+                    } else {
+                        return $year . "-" . $month . "-" . $day;
                     }
-                    else
-                    {
-                        return $year."-".$month."-".$day;
-                    }
-                }
-                elseif($databasetype == "ORACLE")
-                {
+                } else if ($databasetype == "ORACLE") {
 
-                    return  $day."-".$month."-".$year;
-                }
-                elseif($databasetype == "MYSQL" && $insert)
-                {
-                    return $year."-".$month."-".$day;
-                }
-                elseif($databasetype == "MYSQL" && !$insert)
-                {
-                    return  $day."-".$month."-".$year;
+                    return  $day . "-" . $month . "-" . $year;
+                } else if ($databasetype == "MYSQL" && $insert) {
+                    return $year . "-" . $month . "-" . $day;
+                } else if ($databasetype == "MYSQL" && !$insert) {
+                    return  $day . "-" . $month . "-" . $year;
                 }
             }
-        }
-        else
-        {
+        } else {
             return '';
         }
     }
@@ -1572,7 +1550,8 @@ class functions
         return $CRYPT->pathtopublickey;
     }
 
-    public function isEncrypted() {
+    public function isEncrypted()
+    {
         if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'config.xml')) {
             $path = $_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'config.xml';
         } else {
@@ -1587,21 +1566,26 @@ class functions
     * Return the file's extention of a file
     * @param  $sFullPath string path of the file
     */
-    function extractFileExt($sFullPath) {
+    function extractFileExt($sFullPath)
+    {
         $sName = $sFullPath;
-        if(strpos($sName, ".")==0) {
+        if (strpos($sName, ".") == 0) {
             $extractFileExt = "";
         } else {
             $extractFileExt = explode(".", $sName);
         }
-        return $extractFileExt[count($extractFileExt) - 1];
+        if ($extractFileExt <> '') {
+            return $extractFileExt[count($extractFileExt) - 1];
+        }
+        return '';
     }
 
     /**
     * Browse each file and folder in the folder and return true if the folder is not empty
     * @param  $folder path string of the folder
     */
-    function isDirNotEmpty($folder) {
+    function isDirNotEmpty($folder)
+    {
         $foundDoc = false;
         $classScan = dir($folder);
         while (($fileScan = $classScan->read()) != false) {

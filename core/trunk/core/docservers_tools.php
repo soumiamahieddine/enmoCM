@@ -31,9 +31,9 @@
 
 //Loads the required class
 try {
-    require_once ('core/class/docservers.php');
-    require_once ('core/class/docservers_controler.php');
-    require_once ('core/core_tables.php');
+    require_once 'core/class/docservers.php';
+    require_once 'core/class/docservers_controler.php';
+    require_once 'core/core_tables.php';
 } catch (Exception $e) {
     echo $e->getMessage() . ' // ';
 }

@@ -900,6 +900,7 @@ class docservers_controler
     public function storeResourceOnDocserver($collId, $fileInfos)
     {
         $docserver = $this->getDocserverToInsert($collId);
+        $tmpSourceCopy = '';
         $func = new functions();
         if (empty($docserver)) {
             $storeInfos = array(
@@ -957,7 +958,7 @@ class docservers_controler
             $docinfo,
             $docserverTypeObject->fingerprint_mode
         );
-        if ($copyResultArray['error'] <> '') {
+        if (isset($copyResultArray['error']) && $copyResultArray['error'] <> '') {
             $storeInfos = array('error' => $copyResultArray['error']);
             return $storeInfos;
         }
