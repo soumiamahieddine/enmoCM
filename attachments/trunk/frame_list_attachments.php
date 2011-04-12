@@ -47,50 +47,67 @@ for ($indAtt1d = 0; $indAtt1d < count($attachArr); $indAtt1d ++) {
 				$indAtt1d = $attachArr[$indAtt1d][$indAtt2]['value'];
 			}
 			if ($attachArr[$indAtt1d][$indAtt2][$value] == "title") {
-				$attachArr[$indAtt1d][$indAtt2]["title"]=$attachArr[$indAtt1d][$indAtt2]['value'];
-				$attachArr[$indAtt1d][$indAtt2]["label"]= _TITLE;
-				$attachArr[$indAtt1d][$indAtt2]["size"]="30";
-				$attachArr[$indAtt1d][$indAtt2]["label_align"]="left";
-				$attachArr[$indAtt1d][$indAtt2]["align"]="left";
-				$attachArr[$indAtt1d][$indAtt2]["valign"]="bottom";
-				$attachArr[$indAtt1d][$indAtt2]["show"]=true;
+				$attachArr[$indAtt1d][$indAtt2]["title"] = $attachArr[$indAtt1d][$indAtt2]['value'];
+				$attachArr[$indAtt1d][$indAtt2]["label"] = _TITLE;
+				$attachArr[$indAtt1d][$indAtt2]["size"] = "30";
+				$attachArr[$indAtt1d][$indAtt2]["label_align"] = "left";
+				$attachArr[$indAtt1d][$indAtt2]["align"] = "left";
+				$attachArr[$indAtt1d][$indAtt2]["valign"] = "bottom";
+				$attachArr[$indAtt1d][$indAtt2]["show"] = true;
 			}
-			if($attachArr[$indAtt1d][$indAtt2][$value]=="creation_date")
-			{
-				$attachArr[$indAtt1d][$indAtt2]['value']=$request->format_date_db($attachArr[$indAtt1d][$indAtt2]['value'], true);
-				$attachArr[$indAtt1d][$indAtt2]["creation_date"]=$attachArr[$indAtt1d][$indAtt2]['value'];
-				$attachArr[$indAtt1d][$indAtt2]["label"]=_DATE;
-				$attachArr[$indAtt1d][$indAtt2]["size"]="30";
-				$attachArr[$indAtt1d][$indAtt2]["label_align"]="left";
-				$attachArr[$indAtt1d][$indAtt2]["align"]="left";
-				$attachArr[$indAtt1d][$indAtt2]["valign"]="bottom";
-				$attachArr[$indAtt1d][$indAtt2]["show"]=true;
+			if ($attachArr[$indAtt1d][$indAtt2][$value] == "creation_date") {
+				$attachArr[$indAtt1d][$indAtt2]['value'] = $request->format_date_db(
+				    $attachArr[$indAtt1d][$indAtt2]['value'], true
+				);
+				$attachArr[$indAtt1d][$indAtt2]["creation_date"] = $attachArr[$indAtt1d][$indAtt2]['value'];
+				$attachArr[$indAtt1d][$indAtt2]["label"] = _DATE;
+				$attachArr[$indAtt1d][$indAtt2]["size"] = "30";
+				$attachArr[$indAtt1d][$indAtt2]["label_align"] = "left";
+				$attachArr[$indAtt1d][$indAtt2]["align"] = "left";
+				$attachArr[$indAtt1d][$indAtt2]["valign"] = "bottom";
+				$attachArr[$indAtt1d][$indAtt2]["show"] = true;
 			}
-			if($attachArr[$indAtt1d][$indAtt2][$value]=="format")
-			{
-				$attachArr[$indAtt1d][$indAtt2]['value']=$request->show_string($attachArr[$indAtt1d][$indAtt2]['value']);
-				$attachArr[$indAtt1d][$indAtt2]["format"]=$attachArr[$indAtt1d][$indAtt2]['value'];
-				$attachArr[$indAtt1d][$indAtt2]["label"]=_FORMAT;
-				$attachArr[$indAtt1d][$indAtt2]["size"]="5";
-				$attachArr[$indAtt1d][$indAtt2]["label_align"]="left";
-				$attachArr[$indAtt1d][$indAtt2]["align"]="left";
-				$attachArr[$indAtt1d][$indAtt2]["valign"]="bottom";
-				$attachArr[$indAtt1d][$indAtt2]["show"]=false;
+			if ($attachArr[$indAtt1d][$indAtt2][$value] == "format") {
+				$attachArr[$indAtt1d][$indAtt2]['value'] = $request->show_string(
+				    $attachArr[$indAtt1d][$indAtt2]['value']
+				);
+				$attachArr[$indAtt1d][$indAtt2]["format"] = $attachArr[$indAtt1d][$indAtt2]['value'];
+				$attachArr[$indAtt1d][$indAtt2]["label"] = _FORMAT;
+				$attachArr[$indAtt1d][$indAtt2]["size"] = "5";
+				$attachArr[$indAtt1d][$indAtt2]["label_align"] = "left";
+				$attachArr[$indAtt1d][$indAtt2]["align"] = "left";
+				$attachArr[$indAtt1d][$indAtt2]["valign"] = "bottom";
+				$attachArr[$indAtt1d][$indAtt2]["show"] = false;
 
-				if($attachArr[$indAtt1d][$indAtt2]['value'] == "maarch")
-				{
+				if ($attachArr[$indAtt1d][$indAtt2]['value'] == "maarch") {
 					$modifyValue = true;
 				}
-
 			}
 		}
 	}
-	if(!$viewOnly)
-	{
-		$tmp = array('column' => 'modify_item', 'value'=>$modifyValue, 'label' =>  _MODIFY, 'size' => '22', 'label_align' => "right", 'align'=> "center", 'valign' => "bottom", 'show' => false);
+	if (! $viewOnly) {
+		$tmp = array(
+			'column' => 'modify_item',
+			'value' => $modifyValue,
+			'label' => _MODIFY,
+			'size' => '22',
+			'label_align' => "right",
+			'align' => "center",
+			'valign' => "bottom",
+			'show' => false,
+		);
 		array_push($attachArr[$indAtt1d], $tmp);
 
-		$tmp2 = array('column' => 'delete_item','value'=>true, 'label' =>  _DELETE, 'size' => '22', 'label_align' => "right", 'align'=> "center", 'valign' => "bottom", 'show' => false);
+		$tmp2 = array(
+			'column' => 'delete_item',
+			'value' => true,
+			'label' => _DELETE,
+			'size' => '22',
+			'label_align' => "right",
+			'align' => "center",
+			'valign' => "bottom",
+			'show' => false,
+		);
 		array_push($attachArr[$indAtt1d], $tmp2);
 	}
 }
@@ -101,22 +118,32 @@ $core->load_html();
 //here we building the header
 $core->load_header('', true, false);
 $mode = "small";
-if(isset($_REQUEST['mode']) && $_REQUEST['mode'] == 'normal')
-{
+if (isset($_REQUEST['mode']) && $_REQUEST['mode'] == 'normal') {
 	$mode = 'normal';
 }
 
 ?>
-<body <?php if($mode == 'small'){ echo 'id="iframe"';}?>>
- <?php
-$list_attach = new list_show();
-
-$used_css = 'listingsmall';
-if($mode == 'normal')
-{
-	$used_css = 'listing spec';
+<body <?php
+if ($mode == 'small') {
+    echo 'id="iframe"';
 }
-	$list_attach->list_simple($attachArr, count($attachArr), '','res_id','res_id', true, $_SESSION['config']['businessappurl']."index.php?display=true&module=attachments&page=view_attachment",$used_css,$_SESSION['config']['businessappurl']."index.php?display=true&module=templates&page=generate_attachment&mode=up",450,  500, $page_del = $_SESSION['config']['businessappurl']."index.php?display=true&module=attachments&page=del_attachment");
+?>>
+ <?php
+$listAttach = new list_show();
+
+$usedCss = 'listingsmall';
+if ($mode == 'normal') {
+	$usedCss = 'listing spec';
+}
+$listAttach->list_simple(
+    $attachArr, count($attachArr), '', 'res_id', 'res_id', true,
+    $_SESSION['config']['businessappurl'] . "index.php?display=true"
+    . "&module=attachments&page=view_attachment", $usedCss,
+    $_SESSION['config']['businessappurl'] . "index.php?display=true"
+    . "&module=templates&page=generate_attachment&mode=up", 450, 500,
+    $_SESSION['config']['businessappurl'] . "index.php?display=true"
+    . "&module=attachments&page=del_attachment"
+);
 $core->load_js();
 ?></body>
 </html>

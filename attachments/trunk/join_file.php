@@ -11,165 +11,287 @@
 * @author  Claire Figueras  <dev@maarch.org>
 */
 
-require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
-require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
-require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_resource.php");
-$core_tools = new core_tools();
-$core_tools->load_lang();
+require_once "core/class/class_security.php";
+require_once "core/class/class_request.php";
+require_once "core/class/class_resource.php";
+require_once "apps" . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+    . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR
+    . "class_indexing_searching_app.php";
+require_once "core/class/docservers_controler.php";
+require_once 'modules/attachments/attachments_tables.php';
+require_once "core/class/class_history.php";
+
+$core = new core_tools();
+$core->load_lang();
 $sec = new security();
 $func = new functions();
 $req = new request();
 $_SESSION['error'] = "";
-if($_POST['valid'])
-{
-
+if ($_POST['valid']) {
 	$_SESSION['upfile'] = array();
-	if(empty($_FILES['file']['tmp_name']))
-	{
-		$_SESSION['error'] .= _FILE_MISSING.".<br/>";
-	}
-	else
-	{
+	if (empty($_FILES['file']['tmp_name'])) {
+		$_SESSION['error'] .= _FILE_MISSING . ".<br/>";
+	} else {
 		$_SESSION['upfile']['tmp_name'] = $_FILES['file']['tmp_name'];
 	}
 
-	if($_FILES['file']['size'] == 0)
-	{
-		$_SESSION['error'] .= _FILE_EMPTY.".<br />";
-	}
-	else
-	{
+	if ($_FILES['file']['size'] == 0) {
+		$_SESSION['error'] .= _FILE_EMPTY . ".<br />";
+	} else {
 		$_SESSION['upfile']['size'] = $_FILES['file']['size'];
 	}
-	if($_FILES['file']['error'] == 1)
-	{
+	if ($_FILES['file']['error'] == 1) {
 		$filesize = $func->return_bytes(ini_get("upload_max_filesize"));
-		$_SESSION['error'] = _ERROR_FILE_UPLOAD_MAX."(".round($filesize/1024,2)."Ko Max).<br />";
+		$_SESSION['error'] = _ERROR_FILE_UPLOAD_MAX . "(" . round(
+		    $filesize / 1024, 2
+	    ) . "Ko Max).<br />";
 	}
 	$title = '';
-	if(!isset($_REQUEST['title']) || empty($_REQUEST['title']))
-	{
-		$_SESSION['error'] .= _TITLE.' '._MANDATORY;
-	}
-	else
-	{
+	if (! isset($_REQUEST['title']) || empty($_REQUEST['title'])) {
+		$_SESSION['error'] .= _TITLE . ' ' . _MANDATORY;
+	} else {
 		$title = $func->protect_string_db($_REQUEST['title']);
 	}
-	if(empty($_SESSION['error']))
-	{
+	if (empty($_SESSION['error'])) {
 		$_SESSION['upfile']['name'] = $_FILES['file']['name'];
 
-		if(!is_uploaded_file($_FILES['file']['tmp_name']))
-		{
+		if (! is_uploaded_file($_FILES['file']['tmp_name'])) {
 
-			$_SESSION['error'] .= _FILE_NOT_SEND.". "._TRY_AGAIN."."._MORE_INFOS." : <a href=\"mailto:".$_SESSION['config']['adminmail']."\">".$_SESSION['config']['adminname']."</a>.<br/>";
-		}
-		elseif(isset($_SESSION['upfile']) && !empty($_SESSION['upfile']))
-		{
-			$extension = explode(".",$_SESSION['upfile']['name']);
-			$count_level = count($extension)-1;
-			$the_ext = $extension[$count_level];
-			require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_indexing_searching_app.php");
+			$_SESSION['error'] .= _FILE_NOT_SEND . ". " . _TRY_AGAIN . "."
+			    . _MORE_INFOS . " : <a href=\"mailto:"
+			    . $_SESSION['config']['adminmail'] . "\">"
+			    . $_SESSION['config']['adminname'] . "</a>.<br/>";
+		} else if (isset($_SESSION['upfile']) && ! empty($_SESSION['upfile'])) {
+			$extension = explode(".", $_SESSION['upfile']['name']);
+			$countLevel = count($extension) - 1;
+			$theExt = $extension[$countLevel];
 			$is = new indexing_searching_app();
-			$ext_ok = $is->is_filetype_allowed($the_ext);
-			$_SESSION['upfile']['format'] = $the_ext;
-			if($ext_ok == false)
-			{
-				$_SESSION['error'] = _WRONG_FILE_TYPE.".";
+			$extOk = $is->is_filetype_allowed($theExt);
+			$_SESSION['upfile']['format'] = $theExt;
+			if ($extOk == false) {
+				$_SESSION['error'] = _WRONG_FILE_TYPE . ".";
 				$_SESSION['upfile'] = array();
 			} else {
-				require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."docservers_controler.php");
-				if(!isset($_SESSION['collection_id_choice']) || empty($_SESSION['collection_id_choice'])) {
+				if (! isset($_SESSION['collection_id_choice'])
+				    || empty($_SESSION['collection_id_choice'])
+				) {
 					$_SESSION['collection_id_choice'] = $_SESSION['user']['collections'][0];
 				}
 				$docserverControler = new docservers_controler();
-				$docserver = $docserverControler->getDocserverToInsert($_SESSION['collection_id_choice']);
-				if(empty($docserver)) {
-					$_SESSION['error'] = _DOCSERVER_ERROR.' : '._NO_AVAILABLE_DOCSERVER.". "._MORE_INFOS.".";
+				$docserver = $docserverControler->getDocserverToInsert(
+				    $_SESSION['collection_id_choice']
+				);
+				if (empty($docserver)) {
+					$_SESSION['error'] = _DOCSERVER_ERROR . ' : '
+					    . _NO_AVAILABLE_DOCSERVER . ". " . _MORE_INFOS . ".";
 					$location = "";
 				} else {
 					// some checking on docserver size limit
-					$new_size = $docserverControler->checkSize($docserver, $_SESSION['file']['size']);
-					if($new_size == 0) {
-						$_SESSION['error'] = _DOCSERVER_ERROR.' : '._NOT_ENOUGH_DISK_SPACE.". "._MORE_INFOS.".";
+					$newSize = $docserverControler->checkSize(
+					    $docserver, $_SESSION['file']['size']
+					);
+					if ($newSize == 0) {
+						$_SESSION['error'] = _DOCSERVER_ERROR . ' : '
+						    . _NOT_ENOUGH_DISK_SPACE . ". " . _MORE_INFOS . ".";
 						?>
 						<script type="text/javascript">
 							var eleframe1 =  window.opener.top.frames['process_frame'].document.getElementById('list_attach');
-							eleframe1.location.href = '<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=attachments&page=frame_list_attachments';
+							eleframe1.location.href = '<?php
+					    echo $_SESSION['config']['businessappurl'];
+					    ?>index.php?display=true&module=attachments&page=frame_list_attachments';
 						</script>
 						<?php
 						exit();
 					} else {
 						$docinfo = $docserverControler->filename($docserver);
-						$destination_rept = $docinfo['destination_rept'];
-						$file_destination_name = $docinfo['file_destination_name'];
-						$file_path = $destination_rept.$file_destination_name.".".$_SESSION['upfile']['format'];
-						if(file_exists( $destination_rept.$file_destination_name.".".$_SESSION['upfile']['format'])) {
-							 $_SESSION['error'] .= _FILE_ALREADY_EXISTS.". "._MORE_INFOS." : <a href=\"mailto:".$_SESSION['config']['adminmail']."\">".$_SESSION['config']['adminname']."</a>.";
+						$destinationRep = $docinfo['destination_rept'];
+						$fileDestinationName = $docinfo['file_destination_name'];
+						$filePath = $destinationRep . $fileDestinationName . "."
+						          . $_SESSION['upfile']['format'];
+						if (file_exists(
+						    $destinationRep . $fileDestinationName . "."
+						    . $_SESSION['upfile']['format']
+						)
+						) {
+							 $_SESSION['error'] .= _FILE_ALREADY_EXISTS . ". "
+							     . _MORE_INFOS . " : <a href=\"mailto:"
+							     . $_SESSION['config']['adminmail'] . "\">"
+							     . $_SESSION['config']['adminname'] . "</a>.";
 						} else {
-							$file_name = $entry;
-							if (!move_uploaded_file($_FILES['file']['tmp_name'],$destination_rept.$file_destination_name.".".$the_ext)) {
-								$_SESSION['error'] .= "<li> "._DOCSERVER_COPY_ERROR.".</li>";
+							$fileName = $entry;
+							if (! move_uploaded_file(
+							    $_FILES['file']['tmp_name'],
+							    $destinationRep . $fileDestinationName . "."
+							    . $theExt
+							)
+							) {
+								$_SESSION['error'] .= "<li> "
+								    . _DOCSERVER_COPY_ERROR . ".</li>";
 							} else {
-								$path_template= $docserver->path_template;
-								$destination_rept = substr($destination_rept,strlen($path_template),4);
+								$pathTemplate = $docserver->path_template;
+								$destinationRep = substr(
+								    $destinationRep, strlen($pathTemplate), 4
+								);
 								//Linux / Windows
-								$destination_rept = str_replace(DIRECTORY_SEPARATOR,'#',$destination_rept);
-								$docserverControler->setSize($docserver, $new_size);
-								$res_attach = new resource();
+								$destinationRep = str_replace(
+								    DIRECTORY_SEPARATOR, '#', $destinationRep
+								);
+								$docserverControler->setSize(
+								    $docserver, $newSize
+								);
+								$resAttach = new resource();
 								$_SESSION['data'] = array();
-								array_push($_SESSION['data'], array('column' => "typist", 'value' => $_SESSION['user']['UserId'], 'type' => "string"));
-								array_push($_SESSION['data'], array('column' => "format", 'value' => $the_ext, 'type' => "string"));
-								array_push($_SESSION['data'], array('column' => "docserver_id", 'value' => $docserver->docserver_id, 'type' => "string"));
-								array_push($_SESSION['data'], array('column' => "status", 'value' => 'NEW', 'type' => "string"));
-								array_push($_SESSION['data'], array('column' => "offset_doc", 'value' => ' ', 'type' => "string"));
-								array_push($_SESSION['data'], array('column' => "logical_adr", 'value' => ' ', 'type' => "string"));
-								array_push($_SESSION['data'], array('column' => "title", 'value' => $title, 'type' => "string"));
-								array_push($_SESSION['data'], array('column' => "coll_id", 'value' => $_SESSION['collection_id_choice'], 'type' => "string"));
-								array_push($_SESSION['data'], array('column' => "res_id_master", 'value' => $_SESSION['doc_id'], 'type' => "integer"));
-								if($_SESSION['origin'] == "scan")
-								{
-									array_push($_SESSION['data'], array('column' => "scan_user", 'value' => $_SESSION['user']['UserId'], 'type' => "string"));
-									array_push($_SESSION['data'], array('column' => "scan_date", 'value' => $req->current_datetime(), 'type' => "function"));
-
+								array_push(
+								    $_SESSION['data'],
+								    array(
+								    	'column' => "typist",
+								    	'value' => $_SESSION['user']['UserId'],
+								    	'type' => "string",
+								    )
+								);
+								array_push(
+								    $_SESSION['data'],
+								    array(
+								    	'column' => "format",
+								    	'value' => $theExt,
+								    	'type' => "string",
+								    )
+								);
+								array_push(
+								    $_SESSION['data'],
+								    array(
+								    	'column' => "docserver_id",
+								    	'value' => $docserver->docserver_id,
+								    	'type' => "string",
+								    )
+								);
+								array_push(
+								    $_SESSION['data'],
+								    array(
+								    	'column' => "status",
+								    	'value' => 'NEW',
+								    	'type' => "string",
+								    )
+								);
+								array_push(
+								    $_SESSION['data'],
+								    array(
+								    	'column' => "offset_doc",
+								    	'value' => ' ',
+								    	'type' => "string",
+								    )
+								);
+								array_push(
+								    $_SESSION['data'],
+								    array(
+								    	'column' => "logical_adr",
+								    	'value' => ' ',
+								    	'type' => "string",
+								    )
+								);
+								array_push(
+								    $_SESSION['data'],
+								    array(
+								    	'column' => "title",
+								    	'value' => $title,
+								    	'type' => "string",
+								    )
+								);
+								array_push(
+								    $_SESSION['data'],
+								    array(
+								    	'column' => "coll_id",
+								    	'value' => $_SESSION['collection_id_choice'],
+								    	'type' => "string",
+								    )
+								);
+								array_push(
+								    $_SESSION['data'],
+								    array(
+								    	'column' => "res_id_master",
+								    	'value' => $_SESSION['doc_id'],
+								    	'type' => "integer",
+								    )
+							    );
+								if ($_SESSION['origin'] == "scan") {
+									array_push(
+									    $_SESSION['data'],
+									    array(
+									    	'column' => "scan_user",
+									    	'value' => $_SESSION['user']['UserId'],
+									    	'type' => "string"
+									    )
+									);
+									array_push(
+									    $_SESSION['data'],
+									    array(
+									    	'column' => "scan_date",
+									    	'value' => $req->current_datetime(),
+									    	'type' => "function"
+									    )
+									);
 								}
-								array_push($_SESSION['data'], array('column' => "type_id", 'value' => 0, 'type' => "int"));
+								array_push(
+								    $_SESSION['data'],
+								    array(
+								    	'column' => "type_id",
+								    	'value' => 0,
+								    	'type' => "int"
+								    )
+								);
 
-								$id = $res_attach->load_into_db($_SESSION['tablename']['attach_res_attachments'],$destination_rept,$file_destination_name.".".$_SESSION['upfile']['format'], $docserver->path_template, $docserver->docserver_id,  $_SESSION['data'], $_SESSION['config']['databasetype']);
+								$id = $resAttach->load_into_db(
+								    RES_ATTACHMENTS_TABLE, $destinationRep,
+								    $fileDestinationName . "."
+								    . $_SESSION['upfile']['format'],
+								    $docserver->path_template,
+								    $docserver->docserver_id, $_SESSION['data'],
+								    $_SESSION['config']['databasetype']
+								);
 
-
-								if($id == false)
-								{
-									$_SESSION['error'] = $res_attach->get_error();
+								if ($id == false) {
+									$_SESSION['error'] = $resAttach->get_error();
 									//echo $resource->get_error();
 									//$resource->show();
 									//exit();
-								}
-								else
-								{
-
-									if($_SESSION['history']['attachadd'] == "true")
-									{
-										require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
+								} else {
+									if ($_SESSION['history']['attachadd'] == "true") {
 										$users = new history();
-										$view = $sec->retrieve_view_from_coll_id($coll_id);
-										$users->add($view, $_SESSION['doc_id'], "ADD",  ucfirst(_DOC_NUM).$id.' '._ADDED_TO_FOLDER_NUM.$_SESSION['doc_id'], $_SESSION['config']['databasetype'],'apps');
+										$view = $sec->retrieve_view_from_coll_id(
+										    $collId
+										);
+										$users->add(
+										    $view, $_SESSION['doc_id'], "ADD",
+										    ucfirst(_DOC_NUM) . $id . ' '
+										    . _ADDED_TO_FOLDER_NUM
+										    . $_SESSION['doc_id'],
+										    $_SESSION['config']['databasetype'],
+										    'apps'
+										);
 										$_SESSION['error'] = _NEW_ATTACH_ADDED;
-										$users->add($_SESSION['tablename']['attach_res_attachments'], $id, "ADD", $_SESSION['error']." (".$title.") ", $_SESSION['config']['databasetype'],'attachments');
+										$users->add(
+										    RES_ATTACHMENTS_TABLE, $id, "ADD",
+										    $_SESSION['error'] . " (" . $title
+										    . ") ",
+										    $_SESSION['config']['databasetype'],
+										    'attachments'
+										);
 									}
-								//}
 								}
 							}
 						}
 					}
 				}
 			}
-			if(empty($_SESSION['error']) || $_SESSION['error'] == _NEW_ATTACH_ADDED)
-			{
-				?>
+			if (empty($_SESSION['error'])
+			    || $_SESSION['error'] == _NEW_ATTACH_ADDED
+			) {
+			    ?>
 				<script type="text/javascript">
 					var eleframe1 =  window.opener.top.document.getElementById('list_attach');
-					eleframe1.src = '<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=attachments&page=frame_list_attachments';
+					eleframe1.src = '<?php
+				echo $_SESSION['config']['businessappurl'];
+				?>index.php?display=true&module=attachments&page=frame_list_attachments';
 					window.top.close();
 				</script>
 				<?php
@@ -177,20 +299,24 @@ if($_POST['valid'])
 			}
 		}
 	}
-
 }
 
 //here we loading the html
-$core_tools->load_html();
+$core->load_html();
 //here we building the header
-$core_tools->load_header(_ATTACH_ANSWER, true, false);
-$time = $core_tools->get_session_time_expire();
+$core->load_header(_ATTACH_ANSWER, true, false);
+$time = $core->get_session_time_expire();
 ?>
-<body id="pop_up" onload="setTimeout(window.close, <?php  echo $time;?>*60*1000);" >
-<div class="error"><?php  echo $_SESSION['error']; $_SESSION['error']=""; ?></div>
+<body id="pop_up" onload="setTimeout(window.close, <?php
+echo $time;
+?>*60*1000);" >
+<div class="error"><?php
+echo $_SESSION['error'];
+$_SESSION['error'] = "";
+?></div>
 <h2 class="tit"><?php  echo _ATTACH_ANSWER;?> </h2>
 
-	<form enctype="multipart/form-data" method="post" name="attachement" class="forms"  >
+	<form enctype="multipart/form-data" method="post" name="attachement" class="forms">
 	<p>
     	<label><?php  echo _TITLE;?> : </label>
         <input type="text" name="title" id="title" />
@@ -203,10 +329,14 @@ $time = $core_tools->get_session_time_expire();
     <br/>
 
 	<p class="buttons">
-       <input type="submit" value="<?php  echo _VALIDATE;?>" name="valid" id="valid" class="button" />
-	<input type="button" value="<?php  echo _CANCEL;?>" name="cancel" class="button"  onclick="self.close();"/>
+       <input type="submit" value="<?php
+echo _VALIDATE;
+?>" name="valid" id="valid" class="button" />
+	<input type="button" value="<?php
+echo _CANCEL;
+?>" name="cancel" class="button"  onclick="self.close();"/>
   </p>
  </form>
-<?php $core_tools->load_js();?>
+<?php $core->load_js();?>
 </body>
 </html>
