@@ -145,7 +145,7 @@ class list_show extends functions
             {
                 if(isset($result[0][$j]["label"]))
                 {
-                    array_push($listcolumn,$result[0][$j]["label"]);
+                    array_push($listcolumn, $result[0][$j]["label"]);
                 }
                 else
                 {
@@ -1451,10 +1451,18 @@ class list_show extends functions
         $start = 0;
         $end = $nb_total;
         // put in tab the different label of the column
-        if(isset($result[0])) {
+        if (isset($result[0])) {
             for ($j = 0; $j < count($result[0]); $j ++) {
-                array_push($listcolumn, $result[0][$j]["label"]);
-                array_push($listshow, $result[0][$j]["show"]);
+                if (isset($result[0][$j]["label"])) {
+                    array_push($listcolumn, $result[0][$j]["label"]);
+                } else {
+                    array_push($listcolumn, '');
+                }
+                if (isset($result[0][$j]["show"])) {
+                    array_push($listshow, $result[0][$j]["show"]);
+                } else {
+                    array_push($listshow, false);
+                }
             }
         }
         //self::show_array($listcolumn);
@@ -1518,10 +1526,10 @@ class list_show extends functions
 
                 $bool_modify = false;
                 $bool_del = false;
-                for($count_column = 0;$count_column < count($listcolumn);$count_column++)
-                {
-                    if($result[$theline][$count_column]['show']==true)
-                    {
+                for ($count_column = 0; $count_column < count($listcolumn); $count_column ++) {
+                    if (isset($result[$theline][$count_column]['show'])
+                        && $result[$theline][$count_column]['show'] == true
+                    ) {
                         ?>
                             <td style="width:<?php  echo $result[$theline][$count_column]['size'];?>%;" align="<?php  echo $result[$theline][$count_column]['align'];?>"><?php  echo functions::show_str(self::thisword($result[$theline][$count_column]['value'],$what)); ?></td>
                         <?php
