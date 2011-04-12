@@ -17,6 +17,7 @@ require_once "core/class/class_request.php";
 require_once "apps" . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
     . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR
     . "class_list_show.php";
+require_once 'modules/attachments/attachments_tables.php';
 $func = new functions();
 
 $select[RES_ATTACHMENTS_TABLE] = array();
@@ -30,86 +31,85 @@ $request = new request;
 $attachArr = $request->select(
     $select, $where, "", $_SESSION['config']['databasetype'], "500"
 );
-//$request->show();
-$indAtt1d = '';
-for ($indAtt1d = 0; $indAtt1d < count($attachArr); $indAtt1d ++) {
-	$modifyValue = false;
-	for ($indAtt2 = 0; $indAtt2 < count($attachArr[$indAtt1d]); $indAtt2 ++) {
-		foreach (array_keys($attachArr[$indAtt1d][$indAtt2]) as $value) {
-			if ($attachArr[$indAtt1d][$indAtt2][$value] == "res_id") {
-				$attachArr[$indAtt1d][$indAtt2]["res_id"] = $attachArr[$indAtt1d][$indAtt2]['value'];
-				$attachArr[$indAtt1d][$indAtt2]["label"] = _ID;
-				$attachArr[$indAtt1d][$indAtt2]["size"] = "18";
-				$attachArr[$indAtt1d][$indAtt2]["label_align"] = "left";
-				$attachArr[$indAtt1d][$indAtt2]["align"] = "left";
-				$attachArr[$indAtt1d][$indAtt2]["valign"] = "bottom";
-				$attachArr[$indAtt1d][$indAtt2]["show"] = false;
-				$indAtt1d = $attachArr[$indAtt1d][$indAtt2]['value'];
-			}
-			if ($attachArr[$indAtt1d][$indAtt2][$value] == "title") {
-				$attachArr[$indAtt1d][$indAtt2]["title"] = $attachArr[$indAtt1d][$indAtt2]['value'];
-				$attachArr[$indAtt1d][$indAtt2]["label"] = _TITLE;
-				$attachArr[$indAtt1d][$indAtt2]["size"] = "30";
-				$attachArr[$indAtt1d][$indAtt2]["label_align"] = "left";
-				$attachArr[$indAtt1d][$indAtt2]["align"] = "left";
-				$attachArr[$indAtt1d][$indAtt2]["valign"] = "bottom";
-				$attachArr[$indAtt1d][$indAtt2]["show"] = true;
-			}
-			if ($attachArr[$indAtt1d][$indAtt2][$value] == "creation_date") {
-				$attachArr[$indAtt1d][$indAtt2]['value'] = $request->format_date_db(
-				    $attachArr[$indAtt1d][$indAtt2]['value'], true
-				);
-				$attachArr[$indAtt1d][$indAtt2]["creation_date"] = $attachArr[$indAtt1d][$indAtt2]['value'];
-				$attachArr[$indAtt1d][$indAtt2]["label"] = _DATE;
-				$attachArr[$indAtt1d][$indAtt2]["size"] = "30";
-				$attachArr[$indAtt1d][$indAtt2]["label_align"] = "left";
-				$attachArr[$indAtt1d][$indAtt2]["align"] = "left";
-				$attachArr[$indAtt1d][$indAtt2]["valign"] = "bottom";
-				$attachArr[$indAtt1d][$indAtt2]["show"] = true;
-			}
-			if ($attachArr[$indAtt1d][$indAtt2][$value] == "format") {
-				$attachArr[$indAtt1d][$indAtt2]['value'] = $request->show_string(
-				    $attachArr[$indAtt1d][$indAtt2]['value']
-				);
-				$attachArr[$indAtt1d][$indAtt2]["format"] = $attachArr[$indAtt1d][$indAtt2]['value'];
-				$attachArr[$indAtt1d][$indAtt2]["label"] = _FORMAT;
-				$attachArr[$indAtt1d][$indAtt2]["size"] = "5";
-				$attachArr[$indAtt1d][$indAtt2]["label_align"] = "left";
-				$attachArr[$indAtt1d][$indAtt2]["align"] = "left";
-				$attachArr[$indAtt1d][$indAtt2]["valign"] = "bottom";
-				$attachArr[$indAtt1d][$indAtt2]["show"] = false;
+//$request->show_array($attachArr);
 
-				if ($attachArr[$indAtt1d][$indAtt2]['value'] == "maarch") {
+for ($i = 0; $i < count($attachArr); $i ++) {
+	$modifyValue = false;
+	for ($j = 0; $j < count($attachArr[$i]); $j ++) {
+		foreach (array_keys($attachArr[$i][$j]) as $value) {
+			if (isset($attachArr[$i][$j][$value]) && $attachArr[$i][$j][$value] == "res_id") {
+				$attachArr[$i][$j]["res_id"] = $attachArr[$i][$j]['value'];
+				$attachArr[$i][$j]["label"] = _ID;
+				$attachArr[$i][$j]["size"] = "18";
+				$attachArr[$i][$j]["label_align"] = "left";
+				$attachArr[$i][$j]["align"] = "left";
+				$attachArr[$i][$j]["valign"] = "bottom";
+				$attachArr[$i][$j]["show"] = false;
+			}
+			if (isset($attachArr[$i][$j][$value]) && $attachArr[$i][$j][$value] == "title") {
+				$attachArr[$i][$j]["title"] = $attachArr[$i][$j]['value'];
+				$attachArr[$i][$j]["label"] = _TITLE;
+				$attachArr[$i][$j]["size"] = "30";
+				$attachArr[$i][$j]["label_align"] = "left";
+				$attachArr[$i][$j]["align"] = "left";
+				$attachArr[$i][$j]["valign"] = "bottom";
+				$attachArr[$i][$j]["show"] = true;
+			}
+			if (isset($attachArr[$i][$j][$value]) && $attachArr[$i][$j][$value] == "creation_date") {
+				$attachArr[$i][$j]['value'] = $request->format_date_db(
+				    $attachArr[$i][$j]['value'], true
+				);
+				$attachArr[$i][$j]["creation_date"] = $attachArr[$i][$j]['value'];
+				$attachArr[$i][$j]["label"] = _DATE;
+				$attachArr[$i][$j]["size"] = "30";
+				$attachArr[$i][$j]["label_align"] = "left";
+				$attachArr[$i][$j]["align"] = "left";
+				$attachArr[$i][$j]["valign"] = "bottom";
+				$attachArr[$i][$j]["show"] = true;
+			}
+			if (isset($attachArr[$i][$j][$value]) && $attachArr[$i][$j][$value] == "format") {
+				$attachArr[$i][$j]['value'] = $request->show_string(
+				    $attachArr[$i][$j]['value']
+				);
+				$attachArr[$i][$j]["format"] = $attachArr[$i][$j]['value'];
+				$attachArr[$i][$j]["label"] = _FORMAT;
+				$attachArr[$i][$j]["size"] = "5";
+				$attachArr[$i][$j]["label_align"] = "left";
+				$attachArr[$i][$j]["align"] = "left";
+				$attachArr[$i][$j]["valign"] = "bottom";
+				$attachArr[$i][$j]["show"] = false;
+
+				if (isset($attachArr[$i][$j][$value]) && $attachArr[$i][$j]['value'] == "maarch") {
 					$modifyValue = true;
 				}
 			}
 		}
 	}
-	if (! $viewOnly) {
-		$tmp = array(
-			'column' => 'modify_item',
-			'value' => $modifyValue,
-			'label' => _MODIFY,
-			'size' => '22',
-			'label_align' => "right",
-			'align' => "center",
-			'valign' => "bottom",
-			'show' => false,
-		);
-		array_push($attachArr[$indAtt1d], $tmp);
+    	if (! $viewOnly) {
+    		$tmp = array(
+    			'column' => 'modify_item',
+    			'value' => $modifyValue,
+    			'label' => _MODIFY,
+    			'size' => '22',
+    			'label_align' => "right",
+    			'align' => "center",
+    			'valign' => "bottom",
+    			'show' => false,
+    		);
+    		array_push($attachArr[$i], $tmp);
 
-		$tmp2 = array(
-			'column' => 'delete_item',
-			'value' => true,
-			'label' => _DELETE,
-			'size' => '22',
-			'label_align' => "right",
-			'align' => "center",
-			'valign' => "bottom",
-			'show' => false,
-		);
-		array_push($attachArr[$indAtt1d], $tmp2);
-	}
+    		$tmp2 = array(
+    			'column' => 'delete_item',
+    			'value' => true,
+    			'label' => _DELETE,
+    			'size' => '22',
+    			'label_align' => "right",
+    			'align' => "center",
+    			'valign' => "bottom",
+    			'show' => false,
+    		);
+    		array_push($attachArr[$i], $tmp2);
+    	}
 }
 
 //$request->show_array($attachArr);

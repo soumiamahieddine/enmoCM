@@ -47,9 +47,9 @@ if (! empty($_SESSION['error'])) {
 	$resIdMaster = $res->res_id_master;
 
 	$where2 = "";
-	for ($i = 0; $i < count($_SESSION['user']['security']); $i ++) {
-		if ($collId == $_SESSION['user']['security'][$i]['coll_id']) {
-			$where2 = " and ( " . $_SESSION['user']['security'][$i]['where']
+	foreach (array_keys($_SESSION['user']['security']) as $key) {
+		if ($collId == $key) {
+			$where2 = " and ( " . $_SESSION['user']['security'][$key]['DOC']['where']
 			        . " ) ";
 		}
 	}
