@@ -1028,7 +1028,7 @@ function check_docserver($collId) {
 	$storeResult = $docserverControler->storeResourceOnDocserver(
 	    $collId, $fileInfos
 	);
-	if ($storeResult['error'] <> "") {
+	if (isset($storeResult['error']) && $storeResult['error'] <> "") {
 		$_SESSION['action_error'] = $storeResult['error'];
 		return false;
 	} else {
@@ -1818,7 +1818,7 @@ $collId, $table, $formValues )
 		$resId = $resource->load_into_db(
 		    $_SESSION['tablename']['attach_res_attachments'],
 		    $_SESSION['indexing']['destination_dir'],
-		    $_SESSION['indexing']['file_destination_name'] . "." . $_SESSION['upfile']['format'],
+		    $_SESSION['indexing']['file_destination_name'],
 		    $_SESSION['indexing']['path_template'],
 		    $_SESSION['indexing']['docserver_id'], $_SESSION['data'],
 		    $_SESSION['config']['databasetype']
