@@ -16,7 +16,7 @@ if ($mode == "list") {
         $docserversList['autoCompletionArray']
     );
 } elseif ($mode == "up" || $mode == "add") {
-	$func = new functions();
+    $func = new functions();
     ?>
     <h1><img src="<?php
     echo $_SESSION['config']['businessappurl'];
@@ -91,27 +91,48 @@ if ($mode == "list") {
         ?>/>
         </p>
         <p>
-            <label for="docserver_type_id"><?php
-        echo _DOCSERVER_TYPES;
-        ?> (*): </label>
-            <select name="docserver_type_id" id="docserver_type_id">
-                <option value=""><?php echo _DOCSERVER_TYPES;?></option>
-                <?php
-        for ($cptTypes = 0; $cptTypes < count($docserverTypesArray);
-            $cptTypes ++
-        ) {
-            ?>
-            <option value="<?php echo $docserverTypesArray[$cptTypes];?>" <?php
-            if (isset($_SESSION['m_admin']['docservers']['docserver_type_id'])
-                && $_SESSION['m_admin']['docservers']['docserver_type_id'] == $docserverTypesArray[$cptTypes]
-            ) {
-                echo 'selected="selected"';
-            }
-            ?>><?php echo $docserverTypesArray[$cptTypes];?></option>
+            <label for="docserver_type_id"><?php echo _DOCSERVER_TYPES;?> (*): </label>
             <?php
-        }
-        ?>
-            </select>
+            for ($cptTypes = 0; $cptTypes < count($docserverTypesArray);
+                $cptTypes ++
+            ) {
+                if (isset($_SESSION['m_admin']['docservers']['docserver_type_id'])
+                    && $_SESSION['m_admin']['docservers']['docserver_type_id'] == $docserverTypesArray[$cptTypes]
+                ) {
+                    $docserverTypeTxt = $docserverTypesArray[$cptTypes];
+                }
+            }
+            if ($_SESSION['m_admin']['docservers']['link_exists']) {
+                ?>
+                <input type="hidden" name="docserver_type_id" value="<?php 
+                    echo $_SESSION['m_admin']['docservers']['docserver_type_id'];?>" />
+                <input name="docserver_type_id_txt" type="text"  id="docserver_type_id_txt" value="<?php
+                    echo $docserverTypeTxt;
+                ?>" readonly="readonly" class="readonly"/>
+                <?php
+            } else {
+                ?>
+                <select name="docserver_type_id" id="docserver_type_id">
+                    <option value=""><?php echo _DOCSERVER_TYPES;?></option>
+                    <?php
+                for ($cptTypes = 0; $cptTypes < count($docserverTypesArray);
+                    $cptTypes ++
+                ) {
+                    ?>
+                    <option value="<?php echo $docserverTypesArray[$cptTypes];?>" <?php
+                    if (isset($_SESSION['m_admin']['docservers']['docserver_type_id'])
+                        && $_SESSION['m_admin']['docservers']['docserver_type_id'] == $docserverTypesArray[$cptTypes]
+                    ) {
+                        echo 'selected="selected"';
+                    }
+                    ?>><?php echo $docserverTypesArray[$cptTypes];?></option>
+                    <?php
+                }
+                ?>
+                </select>
+                <?php
+            }
+            ?>
         </p>
         <p>
             <label for="device_label"><?php echo _DEVICE_LABEL; ?> (*): </label>
@@ -319,6 +340,28 @@ if ($mode == "list") {
         </p>-->
         <p>
             <label for="coll_id"><?php echo _COLLECTION; ?> (*): </label>
+            <?php
+            for ($cptCollection = 0; $cptCollection < count(
+                $_SESSION['collections']
+            ); $cptCollection ++
+            ) {
+                if (isset($_SESSION['m_admin']['docservers']['coll_id'])
+                    && $_SESSION['m_admin']['docservers']['coll_id'] == $_SESSION['collections'][$cptCollection]['id']
+                ) {
+                    $collTxt = $_SESSION['collections'][$cptCollection]['id'] . " : "
+                    . $_SESSION['collections'][$cptCollection]['label'];
+                }
+            }
+            if ($_SESSION['m_admin']['docservers']['link_exists']) {
+                ?>
+                <input type="hidden" name="coll_id" value="<?php 
+                    echo $_SESSION['m_admin']['docservers']['coll_id'];?>" />
+                <input name="coll_id_txt" type="text"  id="coll_id_txt" value="<?php
+                    echo $collTxt;
+                ?>" readonly="readonly" class="readonly"/>
+                <?php
+            } else {
+                ?>
             <select name="coll_id" id="coll_id">
                 <option value=""><?php echo _CHOOSE_COLLECTION;?></option>
                 <?php
@@ -336,13 +379,15 @@ if ($mode == "list") {
                 echo 'selected="selected"';
             }
             ?>><?php
-            echo $_SESSION['collections'][$cptCollection]['id'] . " : "
-                . $_SESSION['collections'][$cptCollection]['label'];
+            echo $collTxt;
             ?></option>
             <?php
         }
         ?>
             </select>
+            <?php
+        }
+        ?>
         </p>
         <p>
             <label for="priority_number"><?php echo _PRIORITY; ?> : </label>

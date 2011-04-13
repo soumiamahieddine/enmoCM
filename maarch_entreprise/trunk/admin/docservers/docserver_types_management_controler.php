@@ -198,11 +198,15 @@ function display_up($docserver_type_id) {
     $docserverTypesControler = new docserver_types_controler();
     $docserversControler = new docservers_controler();
     $docserver_types = $docserverTypesControler->get($docserver_type_id);
-    if (empty($docserver_types))
+    if (empty($docserver_types)) {
         $state = false;
-    else
+    } else {
         put_in_session("docserver_types", $docserver_types->getArray());
-
+        if ($docserverTypesControler->docserverLinkExists($docserver_type_id)
+        ) {
+            $_SESSION['m_admin']['docserver_types']['link_exists'] = true;
+        }
+    }
     $docservers_id = $docserverTypesControler->getDocservers($docserver_type_id); //ramène le tableau des docserver_id appartenant au type
     for($i=0;$i<count($docservers_id);$i++) {
         $tmp_docserver = $docserversControler->get($docservers_id[$i]);
