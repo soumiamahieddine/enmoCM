@@ -98,11 +98,7 @@ function extractAip($path)
     $path = str_replace('#', DIRECTORY_SEPARATOR, $path);
     $fileNameOnTmp = $GLOBALS['tmpDirectory'] . rand();
     $cp = copy($path, $fileNameOnTmp);
-    Ds_setRights(
-        $fileNameOnTmp, 
-        $GLOBALS['docservers'][$GLOBALS['currentStep']]['docserver']
-        ['path_template']
-    );
+    Ds_setRights($fileNameOnTmp);
     $control = array();
     $control = Ds_controlFingerprint(
         $path, $fileNameOnTmp, $GLOBALS['docserverSourceFingerprint']

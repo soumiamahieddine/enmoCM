@@ -86,6 +86,7 @@ $isAContainerOpened = false;
 $lckFile = '';
 $errorLckFile = '';
 $totalProcessedResources = 0;
+$apacheUserAndGroup =  '';
 
 // Defines scripts arguments
 $argsparser = new ArgsParser();
@@ -207,6 +208,7 @@ $log_level = (string) $CONFIG->LogLevel;
 $DisplayedLogLevel = (string) $CONFIG->DisplayedLogLevel;
 $GLOBALS['customPath'] = (string) $CONFIG->CustomPath;
 $GLOBALS['databasetype'] = (string) $xmlconfig->CONFIG_BASE->databasetype;
+$GLOBALS['apacheUserAndGroup'] = (string) $CONFIG->ApacheUserAndGroup;
 $i = 0;
 foreach ($xmlconfig->COLLECTION as $col) {
     $GLOBALS['collections'][$i] = array(

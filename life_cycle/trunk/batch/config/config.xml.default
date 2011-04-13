@@ -10,6 +10,7 @@
         <DisplayedLogLevel>INFO</DisplayedLogLevel> <!-- DEBUG, INFO, NOTICE, WARNING, ERROR-->
         <StackSizeLimit>10000</StackSizeLimit>
         <CustomPath></CustomPath> <!-- path to the custom file to create pdi, ex : c:\xampp\htdocs\maarch_entreprise_trunk\custom\main_lagi\modules\life_cycle\batch\custom.php -->
+        <ApacheUserAndGroup>www-data:www-data</ApacheUserAndGroup>
     </CONFIG>
     <CONFIG_BASE>
         <databaseserver>127.0.0.1</databaseserver>

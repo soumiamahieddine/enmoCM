@@ -67,9 +67,7 @@ function createAip($resInContainer)
         );
         Ds_setRights(
             $tmpDir . DIRECTORY_SEPARATOR 
-            . $resInContainer[$cptRes]['offset_doc'], 
-            $GLOBALS['docservers'][$GLOBALS['currentStep']]
-            ['docserver']['path_template']
+            . $resInContainer[$cptRes]['offset_doc']
         );
         if ($cp == false) {
             $storeInfos = array('error' => _DOCSERVER_COPY_ERROR);
@@ -160,9 +158,7 @@ function createAip($resInContainer)
                 $GLOBALS['docservers'][$GLOBALS['currentStep']]
                 ['compression_mode']
             ), 'aip', $newSourceFilePath
-        ), 
-        $GLOBALS['docservers'][$GLOBALS['currentStep']]['docserver']
-        ['path_template']
+        )
     );
     $result = array();
     $result['resInContainer'] = $resInContainer;
