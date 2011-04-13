@@ -39,20 +39,20 @@ $db->connect();
 $desc = "";
 $id = "";
 $structureId = "";
-$fontColor = '#000000'; // Black by default
-$fontSize = '';
+$cssStyle = "default_style";
+//$fontColor = '#000000'; // Black by default
 if (isset($_GET['id']) && ! empty($_GET['id'])) {
 	$id = $_GET['id'];
 	$db->query(
-		"select doctypes_second_level_label, doctypes_first_level_id, font_color from "
+		"select doctypes_second_level_label, doctypes_first_level_id, css_style from "
 		. $_SESSION['tablename']['doctypes_second_level']
 		. " where doctypes_second_level_id = " . $id
 	);
 
 	$res = $db->fetch_object();
 	$desc = $db->show_string($res->doctypes_second_level_label);
-	if (isset($res->font_color)) {
-        $fontColor = $db->show_string($res->font_color);
+	if (isset($res->css_style)) {
+        $cssStyle = $db->show_string($res->css_style);
 	}
 	$structureId = $res->doctypes_first_level_id;
 }
@@ -63,8 +63,8 @@ if (isset($_REQUEST['mode']) && ! empty($_REQUEST['mode'])) {
 }
 $erreur = "";
 if (isset($_REQUEST['valid'])) {
-	if (isset($_REQUEST['font_color']) && !empty($_REQUEST['font_color'])) {
-	    $color = $db->protect_string_db($_REQUEST['font_color']);
+	if (isset($_REQUEST['css_style']) && !empty($_REQUEST['css_style'])) {
+	    $cssStyle = $db->protect_string_db($_REQUEST['css_style']);
 	} else {
 	    $erreur .= _FONT_COLOR. ' ' . _MISSING . '.<br/>';
 	}
@@ -94,7 +94,7 @@ if (isset($_REQUEST['valid'])) {
 							. $_SESSION['tablename']['doctypes_second_level']
 							. " set doctypes_second_level_label = '" . $desc
 							. "', doctypes_first_level_id = " . $structure
-							. ", font_color = '".$color."' "
+							. ", css_style = '".$cssStyle."' "
 							. " where doctypes_second_level_id = " . $id . ""
 						);
 						$db->query(
@@ -121,8 +121,8 @@ if (isset($_REQUEST['valid'])) {
 					$db->query(
 						"INSERT INTO "
 						. $_SESSION['tablename']['doctypes_second_level']
-						. " ( font_color, doctypes_second_level_label, "
-						. "doctypes_first_level_id) VALUES ( '".$fontColor 
+						. " ( css_style, doctypes_second_level_label, "
+						. "doctypes_first_level_id) VALUES ( '".$cssStyle 
 						."',  '" . $desc . "', ". $structure . ")"
 					);
 					$db->query(
@@ -174,8 +174,8 @@ if (file_exists(
     $path = 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
           . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR . 'htmlColors.xml';
 }
+/*
 $fontColors = array();
-//$fontSizes = array('9', '10', '11', '12', '14', '16', '18', '20');
 $xml = simplexml_load_file($path);
 if ($xml <> false) {
     foreach ($xml->color as $color) {
@@ -200,7 +200,7 @@ function cmpColors($a, $b)
 {
     return strcmp(strtolower($a['label']), strtolower($b['label']));
 }
-usort($fontColors, 'cmpColors');
+usort($fontColors, 'cmpColors');*/
 $core->load_html('', true, false);
 
 if ($mode == "up") {
@@ -253,21 +253,12 @@ if ($mode == "up") {
 		<input type="text" name="desc_sd" value="<?php  echo $desc; ?>" />
 	</p>
     <p>&nbsp;</p>
-    <!--      <p>
-        <label><?php
-echo _FONT_SIZE;
-        ?> :</label>
-        <select name="font_size" id="font_size">
-            <option value=""><?php
-echo _CHOOSE;
-            ?></option>
-            <?php
-for ($i = 0; $i < count($fontSizes); $i ++) {
-    echo '<option value="' . $fontSizes[$i] . '">' . $fontSizes[$i] . '</option>';
-}
-            ?>
-        </select>
-     </p> -->
+    <p>
+    	<label><?php  echo _CSS_STYLE;?></label>
+		<input type="text" name="css_style" id="css_style" value="<?php  echo $cssStyle; ?>" />
+	</p>
+    <p>&nbsp;</p>
+   <?php /*
      <p>
         <label><?php
 echo _FONT_COLOR;
@@ -287,7 +278,7 @@ for ($i = 0; $i < count($fontColors); $i ++) {
             ?>
         </select>
      </p>
-       <p>&nbsp;</p>
+       <p>&nbsp;</p>*/?>
 	<p>
 		<label><?php  echo _ATTACH_STRUCTURE;?> :</label>
 			<select name="structure" >

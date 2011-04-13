@@ -373,6 +373,9 @@ if (! defined('_FONT_SIZE')) {
 if (! defined('_BLACK')) {
     define('_BLACK', 'Noir');
 }
+if (! defined('_CSS_STYLE')) {
+    define('_CSS_STYLE', 'Classe css');
+}
 /************** sous-dossiers : Liste + Formulaire**************/
 if (!defined('_SUBFOLDER_LIST')) define( '_SUBFOLDER_LIST', 'Liste des sous-chemises');
 if (!defined('_SUBFOLDERS')) define( '_SUBFOLDERS', 'sous-chemise(s)');

@@ -1,0 +1,56 @@
+@CHARSET "UTF-8";
+
+.default_style
+{
+	font-color: #000000;
+}
+
+.blue_style
+{
+    font-color: #0000FF;
+}
+
+.yellow_style
+{
+    font-color: #FFFF00;
+}
+
+.green_style
+{
+    font-color: #008000;
+}
+
+.beige_style
+{
+    font-color: #D2B48C;
+}
+
+.pink_style
+{
+    font-color: #FF00FF;
+}
+
+.red_style
+{
+    font-color: #FF0000;
+}
+
+.violet_style
+{
+    font-color: #800080;
+}
+
+.grey_style
+{
+    font-color: #808080;
+}
+
+.orange_style
+{
+    font-color: #FF4500;
+}
+
+.brawn_style
+{
+    font-color: #800000;
+}
