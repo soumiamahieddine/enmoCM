@@ -467,6 +467,22 @@ class security extends dbquery
         }
         return '';
     }
+    
+    /**
+    * Returns the adr table of the collection from the collection identifier
+    *
+    * @param string $collId  Collection identifier
+    * @return string adr table name or empty string if not found
+    */
+    public function retrieveAdrFromColl($collId)
+    {
+        for ($i = 0;$i < count($_SESSION['collections']);$i++) {
+            if ($_SESSION['collections'][$i]['id'] == $collId) {
+                return $_SESSION['collections'][$i]['adr'];
+            }
+        }
+        return '';
+    }
 
     /**
     * Returns the table of the collection from the view of the collection

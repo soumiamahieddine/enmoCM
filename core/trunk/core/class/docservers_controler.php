@@ -505,11 +505,15 @@ class docservers_controler
             );
             return $control;
         }
-        /*if ($this->adrxLinkExists($docserver->docserver_id)) {
+        if ($this->adrxLinkExists(
+            $docserver->docserver_id,
+            $docserver->coll_id
+            )
+        ) {
             $control = array('status' => 'ko', 'value' => '',
             'error' => _DOCSERVER_ATTACHED_TO_ADR_X);
             return $control;
-        }*/
+        }
         if ($this->resxLinkExists(
             $docserver->docserver_id,
             $docserver->coll_id
@@ -700,7 +704,7 @@ class docservers_controler
     *@param docserver_id docservers
     *@return bool true if it's linked
     */
-    private function resxLinkExists($docserver_id, $coll_id)
+    public function resxLinkExists($docserver_id, $coll_id)
     {
         $security = new security();
         $db = new dbquery();
@@ -725,11 +729,16 @@ class docservers_controler
     *@param docserver_id docservers
     *@return bool true if it's linked
     */
-    private function adrxLinkExists($docserver_id)
+    public function adrxLinkExists($docserver_id, $coll_id)
     {
+        $security = new security();
         $db = new dbquery();
         $db->connect();
-        $query = "select docserver_id from " . _ADR_X_TABLE_NAME
+        $adrName = $security->retrieveAdrFromColl($coll_id);
+        if (!isset($adrName) || empty($adrName)) {
+            return false;
+        }
+        $query = "select docserver_id from " . $adrName
                . " where docserver_id = '" . $docserver_id . "'";
         $db->query($query);
         if ($db->nb_result() > 0) {
@@ -1027,10 +1036,6 @@ class docservers_controler
         if ($nbFiles == 0 ) {
             //Creates the directory
             if (!mkdir($pathOnDocserver . '0001', 0000700)) {
-                Ds_setRights(
-                    $pathOnDocserver . '0001' . DIRECTORY_SEPARATOR,
-                    $pathOnDocserver
-                );
                 return array(
                     'destinationDir' => '',
                     'fileDestinationName' => '',
@@ -1038,6 +1043,7 @@ class docservers_controler
                     . $pathOnDocserver,
                 );
             } else {
+                Ds_setRights($pathOnDocserver . '0001' . DIRECTORY_SEPARATOR);
                 $destinationDir = $pathOnDocserver . '0001'
                                 . DIRECTORY_SEPARATOR;
                 $fileDestinationName = '0001';
@@ -1073,11 +1079,6 @@ class docservers_controler
                     . str_pad($newDir, 4, '0', STR_PAD_LEFT), 0000700
                 )
                 ) {
-                    Ds_setRights(
-                        $pathOnDocserver
-                        . str_pad($newDir, 4, '0', STR_PAD_LEFT)
-                        . DIRECTORY_SEPARATOR, $pathOnDocserver
-                    );
                     return array(
                         'destinationDir' => '',
                         'fileDestinationName' => '',
@@ -1086,6 +1087,11 @@ class docservers_controler
                         . str_pad($newDir, 4, '0', STR_PAD_LEFT),
                     );
                 } else {
+                    Ds_setRights(
+                        $pathOnDocserver
+                        . str_pad($newDir, 4, '0', STR_PAD_LEFT)
+                        . DIRECTORY_SEPARATOR
+                    );
                     $destinationDir = $pathOnDocserver
                         . str_pad($newDir, 4, '0', STR_PAD_LEFT)
                         . DIRECTORY_SEPARATOR;

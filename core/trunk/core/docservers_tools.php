@@ -60,10 +60,7 @@ function Ds_copyOnDocserver(
         return $storeInfos;
     }
     $cp = copy($sourceFilePath, $destinationDir . $fileDestinationName);
-    Ds_setRights(
-        $destinationDir . $fileDestinationName,
-        $sourceFilePath
-    );
+    Ds_setRights($destinationDir . $fileDestinationName);
     if ($cp == false) {
         $storeInfos = array('error' => _DOCSERVER_COPY_ERROR);
         return $storeInfos;
@@ -113,9 +110,7 @@ function Ds_createPathOnDocServer($docServer)
 {
     if (!is_dir($docServer . date('Y') . DIRECTORY_SEPARATOR)) {
         mkdir($docServer . date('Y') . DIRECTORY_SEPARATOR, 0777);
-        Ds_setRights(
-            $docServer . date('Y') . DIRECTORY_SEPARATOR, $docServer
-        );
+        Ds_setRights($docServer . date('Y') . DIRECTORY_SEPARATOR);
     }
     if (!is_dir(
         $docServer . date('Y') . DIRECTORY_SEPARATOR.date('m')
@@ -129,8 +124,7 @@ function Ds_createPathOnDocServer($docServer)
         );
         Ds_setRights(
             $docServer . date('Y') . DIRECTORY_SEPARATOR.date('m')
-            . DIRECTORY_SEPARATOR,
-            $docServer
+            . DIRECTORY_SEPARATOR
         );
     }
     if (isset($GLOBALS['wb']) && $GLOBALS['wb'] <> '') {
@@ -138,7 +132,7 @@ function Ds_createPathOnDocServer($docServer)
               . DIRECTORY_SEPARATOR . $GLOBALS['wb'] . DIRECTORY_SEPARATOR;
         if (!is_dir($path)) {
             mkdir($path, 0777);
-            Ds_setRights($path, $docServer);
+            Ds_setRights($path);
         } else {
             return array(
                 'destinationDir' => '',
@@ -178,7 +172,7 @@ function Ds_extractArchive($fileInfos, $fingerprintMode)
                    . md5_file($fileInfos['path_to_file'])
                    . '_' . $fileInfos['filename'];
     $cp = copy($fileInfos['path_to_file'], $fileNameOnTmp);
-    Ds_setRights($fileNameOnTmp, $fileInfos['path_to_file']);
+    Ds_setRights($fileNameOnTmp);
     if ($cp == false) {
         $result = array(
             'status' => 'ko',
@@ -459,41 +453,20 @@ function Ds_controlFingerprint(
 
  /**
  * Set Rights on resources
- * @param   string $dest path of the resource 1
- * @param   string $source path of the resource 2
+ * @param   string $dest path of the resource
  * @return  nothing
  */
-function Ds_setRights($dest, $source)
+function Ds_setRights($dest)
 {
-    //chown($dest, fileowner($source));
-    //chgrp($dest, filegroup($source));
-    //chmod($dest, fileperms($source));
-    /*echo fileowner($source) . '\r\n';
-    echo fileowner($dest) . '\r\n';
-    echo $source . '\r\n';
-    echo $dest . '\r\n';*/
-}
-
-/**
- * Set Rights on resources with recurse method
- * @param   string $dest path of the resource 1
- * @param   string $source path of the resource 2
- * @return  nothing
- */
-function Ds_recurseSetRights($dest, $source)
-{
-    $d = opendir($mypath);
-    while (($file = readdir($d)) !== false) {
-        if ($file != '.' && $file != '..') {
-            $typepath = $mypath . '/' . $file ;
-            if (filetype($typepath) == 'dir') {
-                Ds_recurseSetRights($typepath, $source);
-            }
-            chown($typepath, $uid);
-            chgrp($typepath, $gid);
-        }
+    if (
+        DIRECTORY_SEPARATOR == '/' 
+        && (isset($GLOBALS['apacheUserAndGroup']) 
+        && $GLOBALS['apacheUserAndGroup'] <> '')
+    ) {
+        exec('chown ' . $GLOBALS['apacheUserAndGroup'] . ' ' . $dest);
     }
 }
+
 /**
 * get the mime type of a doc
 * @param $filePath path of the file
