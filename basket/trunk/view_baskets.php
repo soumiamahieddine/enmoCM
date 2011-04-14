@@ -28,14 +28,13 @@
 * @version $Revision$
 * @ingroup basket
 */
-if(isset($_SESSION['search']['plain_text'])) {
+if (isset($_SESSION['search']['plain_text'])) {
 
     $_SESSION['search']['plain_text'] = "";
 
 }
 $_SESSION['FILE'] = array();
-if(isset($_REQUEST['extension']))
-{
+if (isset($_REQUEST['extension'])) {
     $_SESSION['origin'] = "scan";
     $_SESSION['FILE']['extension'] = $_REQUEST['extension'];
     $_SESSION['upfile']['size'] = $_REQUEST['taille_fichier'];
@@ -44,59 +43,49 @@ if(isset($_REQUEST['extension']))
     $_SESSION['upfile']['name'] = "tmp_file_".$_REQUEST['md5'].".pdf";
     $_SESSION['upfile']['md5'] = $_REQUEST['md5'];
     $_SESSION['upfile']['format'] = 'pdf';
-}
-else
-{
+} else {
     $_SESSION['origin'] = "";
     $_SESSION['upfile'] = array();
 }
 //file size
-if(isset($_REQUEST['taille_fichier']))
-{
+if (isset($_REQUEST['taille_fichier'])) {
     $_SESSION['FILE']['taille_fichier'] = $_REQUEST['taille_fichier'];
     $_SESSION['upfile']['size'] = $_REQUEST['taille_fichier'];
 }
 //file temporary path
-if(isset($_REQUEST['Ftp_File']))
-{
+if (isset($_REQUEST['Ftp_File'])) {
     $_SESSION['FILE']['Ftp_File'] = $_REQUEST['Ftp_File'];
 }
 //fingerprint of the file
-if(isset($_REQUEST['md5']))
-{
+if (isset($_REQUEST['md5'])) {
     $_SESSION['FILE']['md5'] = $_REQUEST['md5'];
 }
 //scan user
-if(isset($_REQUEST['scan_user']))
-{
+if (isset($_REQUEST['scan_user'])) {
     $_SESSION['FILE']['scan_user'] = $_REQUEST['scan_user'];
 }
 //scan workstation
-if(isset($_REQUEST['scan_wkstation']))
-{
+if (isset($_REQUEST['scan_wkstation'])) {
     $_SESSION['FILE']['scan_wkstation'] = $_REQUEST['scan_wkstation'];
 }
-if(isset($_REQUEST['tmp_file']))
-{
+if (isset($_REQUEST['tmp_file'])) {
     $_SESSION['FILE']['tmp_file'] = $_REQUEST['tmp_file'];
 }
 //print_r($_SESSION['FILE']);
 //print_r($_SESSION['upfile']);exit;
 
-require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
-$core_tools = new core_tools();
-$core_tools->test_user();
-$core_tools->load_lang();
-$core_tools->test_service('view_baskets', "basket");
-if(!isset($_REQUEST['noinit']))
-{
+require_once "core/class/class_request.php";
+$core = new core_tools();
+$core->test_user();
+$core->load_lang();
+$core->test_service('view_baskets', "basket");
+if (! isset($_REQUEST['noinit'])) {
     $_SESSION['current_basket'] = array();
 }
-require_once("modules".DIRECTORY_SEPARATOR."basket".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
+require_once "modules/basket/class/class_modules_tools.php";
 /****************Management of the location bar  ************/
 $init = false;
-if(isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true")
-{
+if (isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true") {
     $init = true;
 }
 $level = "";
@@ -106,22 +95,20 @@ if (isset($_REQUEST['level'])
 ) {
     $level = $_REQUEST['level'];
 }
-$page_path = $_SESSION['config']['businessappurl'].'index.php?page=view_baskets&module=basket';
-$page_label = _MY_BASKETS;
-$page_id = "my_baskets";
-$core_tools->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
+$pagePath = $_SESSION['config']['businessappurl'].'index.php?page=view_baskets&module=basket';
+$pageLabel = _MY_BASKETS;
+$pageId = "my_baskets";
+$core->manage_location_bar($pagePath, $pageLabel, $pageId, $init, $level);
 /***********************************************************/
 $bask = new basket();
 //$bask->load_basket();
-if(isset($_REQUEST['baskets']) && !empty($_REQUEST['baskets']))
-{
+if (isset($_REQUEST['baskets']) && ! empty($_REQUEST['baskets'])) {
     //$_SESSION['tmpbasket']['service'] = $_SESSION['user']['services'][0]['ID'];
     $_SESSION['tmpbasket']['status'] = "all";
     $bask->load_current_basket(trim($_REQUEST['baskets']), 'frame');
 }
 ?><h1> <?php
-if(count($_SESSION['user']['baskets'])> 0)
-{
+if (count($_SESSION['user']['baskets']) > 0) {
     ?><div style="">
         <form name="select_basket" method="get"  id="select_basket"  action="<?php echo $_SESSION['config']['businessappurl'];?>index.php">
         <img src="<?php echo $_SESSION['config']['businessappurl']."static.php?filename=picto_basket_b.gif&module=basket";?>" alt="" /> <?php echo _VIEW_BASKETS_TITLE; ?> :
@@ -131,10 +118,19 @@ if(count($_SESSION['user']['baskets'])> 0)
             <select name="baskets"id="baskets" onchange="this.form.submit();" class="listext_big" >
                 <option value=""><?php echo _CHOOSE_BASKET;?></option>
                 <?php
-                for ($i=0;$i<count($_SESSION['user']['baskets']);$i++)
-                {
-                    ?>
-                    <option value="<?php echo $_SESSION['user']['baskets'][$i]['id'];?>" <?php if($_SESSION['current_basket']['id'] == $_SESSION['user']['baskets'][$i]['id']) { echo 'selected="selected"'; }?>>
+    for ($i = 0; $i < count($_SESSION['user']['baskets']); $i ++) {
+        ?>
+        <option value="<?php
+        if (isset($_SESSION['user']['baskets'][$i]['id'])) {
+            echo $_SESSION['user']['baskets'][$i]['id'];
+        }
+        ?>" <?php
+        if (isset($_SESSION['current_basket']['id'])
+            && $_SESSION['current_basket']['id'] == $_SESSION['user']['baskets'][$i]['id']
+        ) {
+            echo 'selected="selected"';
+        }
+        ?>>
                         <?php echo $_SESSION['user']['baskets'][$i]['name'];?>
                       </option>
                     <?php
@@ -168,7 +164,7 @@ else
 
     if(count($_SESSION['user']['baskets'])> 0)
     {
-        $core_tools->execute_modules_services($_SESSION['modules_services'], 'view_basket', "include");
+        $core->execute_modules_services($_SESSION['modules_services'], 'view_basket', "include");
         echo '<p style="border:0px solid;padding-left:250px;"><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=arrow_up.gif" /></p>';
         ?><div align="left"  style="width:500px;"><?php
 
