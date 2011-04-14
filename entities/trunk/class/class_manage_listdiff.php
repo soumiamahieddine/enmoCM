@@ -431,7 +431,9 @@ class diffusion_list extends dbquery
                     && $diffList['dest']['user_id'] <> $diffList['copy']['users'][$i]['user_id']
                 ) {
                     $seq = $i + $maxSeq;
-                    if ($diffList['copy']['users'][$i]['viewed'] <> "") {
+                    if (isset($diffList['copy']['users'][$i]['viewed'])
+                        && $diffList['copy']['users'][$i]['viewed'] <> ""
+                    ) {
                         $this->query(
                         	"insert into " . $params['table'] . " (coll_id, "
                             . "res_id, listinstance_type,  sequence, item_id, "
