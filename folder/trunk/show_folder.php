@@ -11,31 +11,31 @@
 * @author  Claire Figueras  <dev@maarch.org>
 */
 
-require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
-require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
-$core_tools = new core_tools();
-if(!$core_tools->is_module_loaded("folder"))
-{
+require_once "core/class/class_request.php";
+require_once "core/class/class_security.php";
+$core = new core_tools();
+if (!$core->is_module_loaded("folder")) {
     echo "Folder module missing !<br/>Please install this module.";
     exit();
 }
-// $core_tools->test_service('salary_sheet', 'folder');
+// $core->test_service('salary_sheet', 'folder');
 /****************Management of the location bar  ************/
 $sec = new security();
 $init = false;
-if(isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true")
-{
+if (isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true") {
     $init = true;
 }
 $level = "";
-if(isset($_REQUEST['level']) && $_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1)
-{
+if (isset($_REQUEST['level']) && ($_REQUEST['level'] == 2
+    || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4
+    || $_REQUEST['level'] == 1)
+) {
     $level = $_REQUEST['level'];
 }
 $page_path = $_SESSION['config']['businessappurl'].'index.php?page=show_folder&module=folder&folder_id='.$_REQUEST['id'];
 $page_label = _SHOW_FOLDER;
 $page_id = "fold_show_folder";
-$core_tools->manage_location_bar($page_path, $page_label,$page_id, $init, $level);
+$core->manage_location_bar($page_path, $page_label,$page_id, $init, $level);
 /***********************************************************/
 require_once("modules".DIRECTORY_SEPARATOR."folder".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
 require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");
@@ -51,8 +51,8 @@ $_SESSION['origin'] = "show_folder";
 $date_pattern = "/^[0-3][0-9]-[0-1][0-9]-[1-2][0-9][0-9][0-9]$/";
 
 $view = '';
-$update_right = $core_tools->test_service('modify_folder', 'folder', false);
-$delete_right = $core_tools->test_service('delete_folder', 'folder', false);
+$update_right = $core->test_service('modify_folder', 'folder', false);
+$delete_right = $core->test_service('delete_folder', 'folder', false);
 
 //update folder index
 if(isset($_POST['update_folder']))
@@ -359,11 +359,11 @@ if(isset($_POST['delete_folder']))
                     </table>
             <dt><?php  echo _FOLDER_HISTORY;?></dt>
             <dd>
-                <?php  echo $core_tools->execute_modules_services($_SESSION['modules_services'], 'index.php?page=show_folder', "include","show_history_folder", "folder");?>
+                <?php  echo $core->execute_modules_services($_SESSION['modules_services'], 'index.php?page=show_folder', "include","show_history_folder", "folder");?>
             </dd>
             <!--<dt><?php  echo _MISSING_DOC;?></dt>
             <dd>
-                <?php  //echo $core_tools->execute_modules_services($_SESSION['modules_services'], 'index.php?page=show_folder', "include","show_missing_doc_in_folder", "folder");?>
+                <?php  //echo $core->execute_modules_services($_SESSION['modules_services'], 'index.php?page=show_folder', "include","show_missing_doc_in_folder", "folder");?>
             </dd>-->
         </dl>
 

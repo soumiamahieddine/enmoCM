@@ -30,16 +30,15 @@
 * @author  Claire Figueras  <dev@maarch.org>
 */
 
-require('modules'.DIRECTORY_SEPARATOR.'folder'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR."class_admin_foldertypes.php");
+require_once 'modules/folder/class/class_admin_foldertypes.php';
 
-$core_tools = new core_tools();
+$core = new core_tools();
 //here we loading the lang vars
-$core_tools->load_lang();
+$core->load_lang();
 $foldertype = new foldertype();
 $content = '';
 
-if(!isset($_REQUEST['foldertype_id']) || empty($_REQUEST['foldertype_id']))
-{
+if (! isset($_REQUEST['foldertype_id']) || empty($_REQUEST['foldertype_id'])) {
 	echo _FOLDERTYPE.' '._IS_EMPTY;
 	exit();
 }
@@ -47,64 +46,56 @@ if(!isset($_REQUEST['foldertype_id']) || empty($_REQUEST['foldertype_id']))
 $indexes = $foldertype->get_indexes($_REQUEST['foldertype_id']);
 $mandatory = $foldertype->get_mandatory_indexes($_REQUEST['foldertype_id']);
 
-if(count($indexes) > 0)
-{
-	foreach(array_keys($indexes) as $key)
-	{
+if (count($indexes) > 0) {
+	foreach (array_keys($indexes) as $key) {
 		$content .= '<p>';
-		$content .= '<label for="'.$key.'">	'.$indexes[$key]['label'].' :</label>';
-
-		if($indexes[$key]['type_field'] == 'input')
-		{
-			if($indexes[$key]['type'] == 'date')
-			{
-				$content .='<input name="'.$key.'" type="text" id="'.$key.'" value="';
-				if(!empty($_SESSION['m_admin']['folder']['indexes'][$key]))
-				{
+		$content .= '<label for="' . $key . '">	' . $indexes[$key]['label']
+		         . ' :</label>';
+		if ($indexes[$key]['type_field'] == 'input') {
+			if ($indexes[$key]['type'] == 'date') {
+				$content .= '<input name="' . $key . '" type="text" id="' . $key
+				         . '" value="';
+				if (! empty($_SESSION['m_admin']['folder']['indexes'][$key])) {
 					$content .= $_SESSION['m_admin']['folder']['indexes'][$key];
-				}
-				else if($indexes[$key]['default_value'] <> false)
-				{
-					$content .= $foldertype->format_date_db($indexes[$key]['default_value'], true);
+				} else if ($indexes[$key]['default_value'] <> false) {
+					$content .= $foldertype->format_date_db(
+					    $indexes[$key]['default_value'], true
+					);
 				}
 				$content .= '" onclick="showCalender(this);"/>';
-			}
-			else
-			{
-				$content .= '<input name="'.$key.'" type="text" id="'.$key.'" value="';
-				if(!empty($_SESSION['m_admin']['folder']['indexes'][$key]))
-				{
+			} else {
+				$content .= '<input name="' . $key . '" type="text" id="' . $key
+				         . '" value="';
+				if (! empty($_SESSION['m_admin']['folder']['indexes'][$key])) {
 					$content .= $_SESSION['m_admin']['folder']['indexes'][$key];
-				}
-				else if($indexes[$key]['default_value'] <> false)
-				{
-					$content .= $foldertype->protect_string_db($indexes[$key]['default_value'], true);
+				} else if ($indexes[$key]['default_value'] <> false) {
+					$content .= $foldertype->protect_string_db(
+					    $indexes[$key]['default_value'], true
+					);
 				}
 				$content .= '"  />';
 			}
-		}
-		else
-		{
-			$content .= '<select name="'.$key.'" id="'.$key.'" >';
-				$content .= '<option value="">'._CHOOSE.'...</option>';
-				for($i=0; $i<count($indexes[$key]['values']);$i++)
-				{
-					$content .= '<option value="'.$indexes[$key]['values'][$i]['id'].'"';
-					if($indexes[$key]['values'][$i]['id'] == $_SESSION['m_admin']['folder']['indexes'][$key])
-					{
-						$content .= ' selected="selected"';
-					}
-					else if($indexes[$key]['default_value'] <> false && $indexes[$key]['values'][$i]['id'] == $indexes[$key]['default_value'] && empty($_SESSION['m_admin']['folder']['indexes'][$key]))
-					{
-						$content .= ' selected="selected"';
-					}
-					$content .= ' >'.$indexes[$key]['values'][$i]['label'].'</option>';
+		} else {
+			$content .= '<select name="' . $key . '" id="' . $key . '" >';
+			$content .= '<option value="">' . _CHOOSE . '...</option>';
+			for ($i = 0; $i < count($indexes[$key]['values']); $i ++) {
+			    $content .= '<option value="'
+			             . $indexes[$key]['values'][$i]['id'] . '"';
+				if ($indexes[$key]['values'][$i]['id'] == $_SESSION['m_admin']['folder']['indexes'][$key]) {
+					$content .= ' selected="selected"';
+				} else if ($indexes[$key]['default_value'] <> false
+				    && $indexes[$key]['values'][$i]['id'] == $indexes[$key]['default_value']
+				    && empty($_SESSION['m_admin']['folder']['indexes'][$key])
+				) {
+					$content .= ' selected="selected"';
 				}
+				$content .= ' >' . $indexes[$key]['values'][$i]['label']
+				         . '</option>';
+			}
 			$content .= '</select>';
 		}
 
-		if(in_array($key, $mandatory))
-		{
+		if (in_array($key, $mandatory)) {
 			$content .= ' <span class="red_asterisk">*</span>';
 		}
 		$content .= '</p>';
@@ -114,27 +105,24 @@ if(count($indexes) > 0)
 $db = new dbquery();
 $db->connect();
 
-$db->query("select folders_system_id, folder_id, folder_name from ".$_SESSION['tablename']['fold_folders']." where folder_level = 1 and status <> 'DEL'");
+$db->query(
+	"select folders_system_id, folder_id, folder_name from "
+    . $_SESSION['tablename']['fold_folders']
+    . " where folder_level = 1 and status <> 'DEL'"
+);
 
 $folders = array();
-while($res = $db->fetch_object())
-{
-	array_push($folders, array('SYS_ID' => $res->folders_system_id, 'ID' => $res->folder_id, 'NAME' => $res->folder_name));
+while ($res = $db->fetch_object()) {
+	array_push(
+	    $folders,
+	    array(
+	    	'SYS_ID' => $res->folders_system_id,
+	    	'ID' => $res->folder_id,
+	    	'NAME' => $res->folder_name
+	    )
+	);
 }
+include_once 'modules/folder/create_folder_get_folder_index_comp.php';
 
-if(count($folders) > 0)
-{
-	$content .= '<p>';
-		$content .= '<label for="folder_parent">'._CHOOSE_PARENT_FOLDER.' :</label>';
-		$content .= '<select name="folder_parent" id="folder_parent">';
-			$content .= '<option value=""></option>';
-			for($i=0; $i< count($folders);$i++)
-			{
-				$content .= '<option value="'.$folders[$i]['SYS_ID'].'">'.$folders[$i]['ID'].' - '.$folders[$i]['NAME'].'</option>';
-			}
-		$content .= '</select>';
-		$content .= ' <img src = "'.$_SESSION['config']['businessappurl'].'static.php?filename=picto_menu_help.gif" alt="'._FOLDER_PARENT_DESC.'" title="'._FOLDER_PARENT_DESC.'"/>';
-	$content .= '</p>';
-}
 echo $content;
 
