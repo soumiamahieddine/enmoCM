@@ -172,9 +172,10 @@ class list_show_with_template extends list_show
 	public function tmplt_func_click_form($actual_string, $theline, $result, $key)
 	{
 		if ($this->do_action && ! empty($this->id_action)
-		    && isset($this->do_actions_arr) &&
-		    (count($this->do_actions_arr) == 0
-		        || $this->do_actions_arr[$theline] == true)
+		    &&
+		    (! isset($this->do_actions_arr) || count($this->do_actions_arr) == 0
+		        || (isset($this->do_actions_arr)
+		        && $this->do_actions_arr[$theline] == true))
 		) {
 			$return = '//onclick="valid_form( \'page\', \''.$result[$theline][0]['value'].'\', \''.$this->id_action.'\');"';
 			return $return;
@@ -460,20 +461,23 @@ class list_show_with_template extends list_show
 		 * 							 [img] : html img to use for this template
 		 * 							 [label] : label to show in alt tag or title tag
 		 */
-		if ($this->hide_standard_list == true)
+		if ($this->hide_standard_list == true) {
 			$standard = '';
-		else
-			$standard = "<a href='".$link."&template='><img src='".$_SESSION['config']['businessappurl']."static.php?filename=standard_list.gif' alt='"._ACCESS_LIST_STANDARD."' ></a>";
-
+		} else {
+			$standard = "<a href='" . $link . "&template='><img src='"
+			    . $_SESSION['config']['businessappurl'] . "static.php?filename"
+			    . "=standard_list.gif' alt='" . _ACCESS_LIST_STANDARD
+			    . "' ></a>";
+		}
 		$extend = "";
-		foreach ($template_list as $temp)
-		{
-				$extend .= "&nbsp;<a href='".$link."&amp;template=".$temp['name']."'> <img src='".$_SESSION['config']['businessappurl']."static.php?filename=".$temp['img']."' alt='".$temp['label']."' title='".$temp['label']."'></a>";
+		foreach ($template_list as $temp) {
+		    $extend .= "&nbsp;<a href='" . $link . "&amp;template="
+				    .$temp['name'] . "'> <img src='"
+				    . $_SESSION['config']['businessappurl']
+				    . "static.php?filename=" . $temp['img'] . "' alt='"
+				    . $temp['label'] . "' title='" . $temp['label'] . "'></a>";
 		}
 		return $standard." ".$extend."";
-
-
-
 	}
 
 
@@ -512,11 +516,19 @@ class list_show_with_template extends list_show
 	* @param 	array 	$actions  list of the elements of the actions combo list
 	* @param 	string 	$hidden_fields  hidden fields in the form
 	*/
-	public function list_doc_by_template($result, $nb_total, $title,$what,$name = "search",$key,$detail_destination,$bool_view_document,$bool_radio_form,$method,$action,
-	$button_label, $bool_detail, $bool_order, $bool_frame= false,$bool_export= false, $show_close = FALSE, $show_big_title = true,
-	$show_full_list = true, $bool_check_form = false, $res_link = '', $module='', $bool_show_listletters = false, $all_sentence = '',
-	$whatname = '', $used_css = 'listing spec', $comp_link = "", $link_in_line = false, $bool_show_actions_list = false, $actions = array(),
-	$hidden_fields = '', $actions_json= '{}', $do_action = false, $id_action = '', $open_details_popup = true, $do_actions_arr = array(), $template = false, $template_list = array(), $actual_template = '', $mode_string = false, $hide_standard_list = false)
+	public function list_doc_by_template(
+	$result, $nb_total, $title,
+	$what, $name = "search", $key, $detail_destination, $bool_view_document,
+	$bool_radio_form, $method,$action, $button_label, $bool_detail, $bool_order,
+	$bool_frame=false, $bool_export=false, $show_close=FALSE, $show_big_title=true,
+	$show_full_list=true, $bool_check_form=false, $res_link = '', $module='',
+	$bool_show_listletters = false, $all_sentence = '', $whatname = '',
+	$used_css = 'listing spec', $comp_link = "", $link_in_line = false,
+	$bool_show_actions_list = false, $actions = array(), $hidden_fields = '',
+	$actions_json= '{}', $do_action = false, $id_action = '',
+	$open_details_popup = true, $do_actions_arr = array(), $template = false,
+	$template_list = array(), $actual_template = '', $mode_string = false,
+	$hide_standard_list = false)
 	{
 		$core_tools = new core_tools();
 		$core_tools->load_lang();
@@ -634,7 +646,7 @@ class list_show_with_template extends list_show
 		}
 		//echo $link;exit;
 		$link .= $comp_link;
-		if($actual_template <> '')
+		if(isset($actual_template) && $actual_template <> '')
 		{
 			$link .= "&amp;template=".$actual_template;
 		}
@@ -643,7 +655,7 @@ class list_show_with_template extends list_show
 			$link .= "&amp;template=";
 		}
 		// Load object to switch template
-		if ($template == true)
+		if (isset($template) && $template == true)
 		{
 			$tdeto = $this->display_template_for_user($template_list, $link);
 			//$tdeto = _DISPLAY." : ".$tdeto;
@@ -729,6 +741,16 @@ class list_show_with_template extends list_show
 		            . '</b></td><td align="center" width="15%"><b>' . $next
 		            . '</b></td><td width="10px">|</td><td align="center" '
 		            . 'width="30%">' . $page_list1 . '</td><td width="10px">|'
+		            . '</td><td width="210px" align="center">' . $disp_dc
+		            . '</td><td width="5px">|</td><td align="right">' . $tdeto
+		            . '</td></tr></table></b></div>';
+		} else {
+		    $page_list1 = '<div class="block" style="height:30px;vertical" '
+		            . 'align="center" ><table width="100%" border="0"><tr>'
+		            . '<td align="center" width="15%"><b>&nbsp;'
+		            . '</b></td><td align="center" width="15%"><b>&nbsp;'
+		            . '</b></td><td width="10px">|</td><td align="center" '
+		            . 'width="30%">&nbsp;</td><td width="10px">|'
 		            . '</td><td width="210px" align="center">' . $disp_dc
 		            . '</td><td width="5px">|</td><td align="right">' . $tdeto
 		            . '</td></tr></table></b></div>';

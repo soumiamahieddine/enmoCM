@@ -91,7 +91,7 @@ $tab=$request->select($select,$where,$orderstr,$_SESSION['config']['databasetype
 	$template_list=array();
 	array_push($template_list, array( "name"=>"document_list_extend", "img"=>"extend_list.gif", "label"=> _ACCESS_LIST_EXTEND));
 
-	if(isset($_REQUEST['template']) && !$_REQUEST['template'])
+	if(!isset($_REQUEST['template']) || !$_REQUEST['template'])
 		$template_to_use = $template_list[0]["name"];
 
 	if(isset($_REQUEST['template']) && empty($_REQUEST['template']))
