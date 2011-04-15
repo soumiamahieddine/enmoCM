@@ -343,6 +343,7 @@ class dbquery extends functions
         } else {
             $this->query = false;
         }
+		//$this->show();
         if ((($this->_databasetype == 'ORACLE' && $this->statement == false)
             || ($this->_databasetype <> 'ORACLE' && $this->query == false))
             && ! $catchError

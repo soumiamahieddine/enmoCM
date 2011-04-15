@@ -93,6 +93,7 @@ class security extends dbquery
         $array = array();
         $error = '';
         $uc = new users_controler();
+		// #TODO : Not usefull anymore, loginmode field is always in users table
         //Compatibility test, if loginmode column doesn't exists, Maarch can't crash
         if ($this->test_column($_SESSION['tablename']['users'], 'loginmode')) {
             if ($method == 'activex') {
@@ -140,6 +141,7 @@ class security extends dbquery
                         'cookie_date', date('Y-m-d') . ' ' . date('H:m:i')
                     );
                 }
+				// #TODO : usefull ?
                 $uc->save($user, 'up');
                 setcookie(
                     'maarch', 'UserId=' . $array['UserId'] . '&key='
@@ -159,10 +161,23 @@ class security extends dbquery
                 $core_tools = new core_tools();
                 $business_app_tools->load_app_var_session($array);
                 $core_tools->load_var_session($_SESSION['modules'], $array);
+				
+				/************Temporary fix*************/ 
+				// #TODO : revoir les functions load_var_session dans class_modules_tools pour ne plus charger en session les infos
+				if (isset($_SESSION['user']['baskets'])) {
+					$array['baskets'] = $_SESSION['user']['baskets'];
+				}
+				if (isset($_SESSION['user']['entities'])) {
+					$array['entities'] = $_SESSION['user']['entities'];
+				}
+				if (isset($_SESSION['user']['primaryentity'])) {
+					$array['primaryentity'] = $_SESSION['user']['primaryentity'];
+				}
+				/*************************************/
                 $array['services'] = $serv_controler->loadUserServices(
                     $array['UserId']
                 );
-
+				
                 if ($_SESSION['history']['userlogin'] == 'true') {
                     //add new instance in history table for the user's connexion
                     $hist = new history();

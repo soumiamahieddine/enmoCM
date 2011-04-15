@@ -198,6 +198,7 @@ class core_tools extends functions
             $path_module_tools = 'modules' . DIRECTORY_SEPARATOR
                 . $modules[$i]['moduleid'] . DIRECTORY_SEPARATOR . 'class'
                 . DIRECTORY_SEPARATOR . 'class_modules_tools.php';
+				//echo "<br/>".$modules[$i]['moduleid']."<br/>";
             if (file_exists($path_module_tools)) {
                 require_once $path_module_tools;
                 $modules_tools = new $modules[$i]['moduleid'];
@@ -208,6 +209,7 @@ class core_tools extends functions
                     $modules_tools->load_module_var_session($userData);
                 }
             }
+			//$this->show_array($_SESSION['user']['baskets']);
         }
     }
 

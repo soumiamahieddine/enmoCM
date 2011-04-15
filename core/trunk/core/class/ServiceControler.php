@@ -41,6 +41,8 @@ define("_CODE_INCREMENT",1);
 try {
 	require_once("core/class/Service.php");
 	require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."usergroups_controler.php");
+	require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."users_controler.php");
+	require_once 'core/core_tables.php';
 } catch (Exception $e){
 	echo $e->getMessage().' // ';
 }
@@ -115,40 +117,37 @@ class ServiceControler
 	public function loadUserServices($user_id)
 	{
 		$services = array();
-		$ugc = new usergroups_controler();
+		
+		// #TODO : Au lieu de partir des services, partir plutot des groupes de l'utilisateur et récuperer tous les services 
+		// associés aux groupes
 		if($user_id == "superadmin")
 		{
 			$services = self::getAllServices();
 		}
 		else
 		{
-			for($i=0; $i< count($_SESSION['enabled_services']);$i++)
-			{
-				if($_SESSION['enabled_services'][$i]['system'] == true )
-				{
+			$tmpServices = array();
+			for ($i = 0; $i < count($_SESSION['enabled_services']); $i ++) {
+				if ($_SESSION['enabled_services'][$i]['system'] == true ) {
 					$services[$_SESSION['enabled_services'][$i]['id']] = true;
+				} else {
+					$tmpServices[] = $_SESSION['enabled_services'][$i]['id'];
 				}
-				else
-				{
-					self::connect();
-					self::$db->query("select group_id from ".self::$usergroups_services_table." where service_id = '".$_SESSION['enabled_services'][$i]['id']."'");
-					$find = false;
-					while($res = self::$db->fetch_object())
-					{
-						if($ugc->inGroup($user_id, $res->group_id) == true)
-						{
-							$find = true;
-							break;
-						}
-					}
-					if($find == true)
-					{
-						$services[$_SESSION['enabled_services'][$i]['id']] = true;
-					}
-					else
-					{
-						$services[$_SESSION['enabled_services'][$i]['id']] = false;
-					}
+			}
+			$ugc = new usergroups_controler();
+			self::connect();
+			self::$db->query(
+				'select distinct us.service_id from ' . USERGROUPS_SERVICES_TABLE
+				. ' us, ' . USERGROUP_CONTENT_TABLE 
+				. " uc where us.group_id = uc.group_id and uc.user_id = '". $user_id . "'"
+			);
+			
+			while($res = self::$db->fetch_object()) {
+				$serviceId = $res->service_id;
+				if (in_array($serviceId, $tmpServices)) {
+					$services[$serviceId] = true;
+				} else {
+					$services[$serviceId] = false;
 				}
 			}
 		}
