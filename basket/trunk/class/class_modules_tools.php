@@ -112,6 +112,7 @@ class basket extends dbquery
      */
     public function load_module_var_session($userData)
     {
+		//$this->show_array($userData);
         $_SESSION['user']['baskets'] = array();
         $this->_loadActivityUser($userData['UserId']);
         $this->_loadBasketsPages();
@@ -120,6 +121,7 @@ class basket extends dbquery
             $basketsArr = $this->load_basket(
                 $userData['primarygroup'], $userData['UserId']
             );
+			//$this->show_array($basketsArr);
             $absBasketsArr = $this->load_basket_abs($userData['UserId']);
             $_SESSION['user']['baskets'] = array_merge(
                 $basketsArr, $absBasketsArr
@@ -795,6 +797,7 @@ class basket extends dbquery
         /// TO DO : Test if tmp_user is empty
         // if($userId <> $_SESSION['user']['UserId'])
         // {
+		// Primary group already in session?
                 $this->query(
                 	"select group_id from "
                     . $_SESSION['tablename']['usergroup_content']
@@ -831,12 +834,14 @@ class basket extends dbquery
          $tab['page_frame'] = $basketPathPageFrame;
          $tab['page_include'] = $basketPathPageInclude;
          // Gets actions of the basket
+		 // #TODO : make one method to get all actions : merge _getDefaultAction and _getActionsFromGroupbaket
          $tab['default_action'] = $this->_getDefaultAction(
              $basketId, $primaryGroup
          );
          $tab['actions'] = $this->_getActionsFromGroupbaket(
              $basketId, $primaryGroup
          );
+	
          $tab['abs_basket'] = $absBasket;
          $tab['is_virtual'] = $isVirtual;
          $tab['basket_owner'] = $basketOwner;
