@@ -76,7 +76,7 @@ foreach($listArray as $what)
 		$flagAuthView = true;
 	}
 	echo "<li>".$what."</li>\n";
-	if($flagAuthView)
+	if(isset($flagAuthView) && $flagAuthView)
 	{
 		echo "<li>...</li>\n";
 		break;

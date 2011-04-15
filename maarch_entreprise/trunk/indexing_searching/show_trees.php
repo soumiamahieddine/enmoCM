@@ -103,12 +103,17 @@ if (isset($_SESSION['chosen_name_folder'])
 ) {
 	?>
 	<script type="text/javascript" src="<?php
-	echo $_SESSION['config']['businessappurl'] . 'tools/tafelTree/';?>js/prototype.js"></script>
-	<script type="text/javascript" src="<?php echo $_SESSION['config']['businessappurl'].'tools/tafelTree/';?>js/scriptaculous.js"></script>
-	<script type="text/javascript" src="<?php echo $_SESSION['config']['businessappurl'].'tools/tafelTree/';?>Tree.js"></script>
+	echo $_SESSION['config']['businessappurl'] . 'tools/tafelTree/';
+	?>js/prototype.js"></script>
+	<script type="text/javascript" src="<?php
+	echo $_SESSION['config']['businessappurl'].'tools/tafelTree/';
+	?>js/scriptaculous.js"></script>
+	<script type="text/javascript" src="<?php
+	echo $_SESSION['config']['businessappurl'].'tools/tafelTree/';
+	?>Tree.js"></script>
 	<?php
 	//exit;
-	$search_customer_results = array();
+	$searchCustomerResults = array();
 	while($res = $db->fetch_object())
 	{
 		$actual_custom_t1 = $res->folder_id;
@@ -185,10 +190,10 @@ if (isset($_SESSION['chosen_name_folder'])
 			//$func->show_array($s_level);
 			array_push($f_level, array('doctypes_first_level_id' => $res1->doctypes_first_level_id, 'doctypes_first_level_label' => $func->show_string($res1->doctypes_first_level_label, true), 'second_level' => $s_level));
 		}
-		array_push($search_customer_results, array('folder_id' => $res->folder_id,'folder_name' => $res->folder_name, 'folder_subject' => $res->subject, 'content' => $f_level));
+		array_push($searchCustomerResults, array('folder_id' => $res->folder_id,'folder_name' => $res->folder_name, 'folder_subject' => $res->subject, 'content' => $f_level));
 	}
-	//print_r($search_customer_results);
-	//$core->show_array($search_customer_results);
+	//print_r($searchCustomerResults);
+	//$core->show_array($searchCustomerResults);
 	if($idProject <> "")
 	{
 		echo "<b>&nbsp;<i>".$labelProject." (".$idProject.")</i></b>";
@@ -284,40 +289,40 @@ if (isset($_SESSION['chosen_name_folder'])
 		{
 			var struct = [
 							<?php
-							for($i=0;$i<count($search_customer_results);$i++)
+							for($i=0;$i<count($searchCustomerResults);$i++)
 							{
 								?>
 								{
-									'id':'<?php  echo $search_customer_results[$i]['folder_id'];?>',
-									'txt':'<b><?php  echo addslashes($search_customer_results[$i]['folder_subject'])."</b><br><small>(".$search_customer_results[$i]['folder_name'].")</small>";?>',
+									'id':'<?php  echo $searchCustomerResults[$i]['folder_id'];?>',
+									'txt':'<b><?php  echo addslashes($searchCustomerResults[$i]['folder_subject'])."</b><br><small>(".$searchCustomerResults[$i]['folder_name'].")</small>";?>',
 									'items':[
 												<?php
-												for($j=0;$j<count($search_customer_results[$i]['content']);$j++)
+												for($j=0;$j<count($searchCustomerResults[$i]['content']);$j++)
 												{
 													?>
 													{
-														'id':'<?php  echo addslashes($search_customer_results[$i]['content'][$j]['doctypes_first_level_id']);?>',
-														'txt':'<?php  echo addslashes($search_customer_results[$i]['content'][$j]['doctypes_first_level_label']);?>',
+														'id':'<?php  echo addslashes($searchCustomerResults[$i]['content'][$j]['doctypes_first_level_id']);?>',
+														'txt':'<?php  echo addslashes($searchCustomerResults[$i]['content'][$j]['doctypes_first_level_label']);?>',
 														'items':[
 																	<?php
-																	for($k=0;$k<count($search_customer_results[$i]['content'][$j]['second_level']);$k++)
+																	for($k=0;$k<count($searchCustomerResults[$i]['content'][$j]['second_level']);$k++)
 																	{
 																		?>
 																		{
-																			'id':'<?php  echo addslashes($search_customer_results[$i]['content'][$j]['second_level'][$k]['doctypes_second_level_id']);?>',
-																			'txt':'<?php  echo addslashes($search_customer_results[$i]['content'][$j]['second_level'][$k]['doctypes_second_level_label']);?>',
+																			'id':'<?php  echo addslashes($searchCustomerResults[$i]['content'][$j]['second_level'][$k]['doctypes_second_level_id']);?>',
+																			'txt':'<?php  echo addslashes($searchCustomerResults[$i]['content'][$j]['second_level'][$k]['doctypes_second_level_label']);?>',
 																			'items':[
 																						<?php
-																						for($l=0;$l<count($search_customer_results[$i]['content'][$j]['second_level'][$k]['doctypes']);$l++)
+																						for($l=0;$l<count($searchCustomerResults[$i]['content'][$j]['second_level'][$k]['doctypes']);$l++)
 																						{
 																							?>
 																							{
 																								<?php
-																								if($search_customer_results[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['no_doc'])
+																								if($searchCustomerResults[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['no_doc'])
 																								{
 																									/*
 																									?>
-																									'txt':'<span style="font-style:italic;"><small><small>(<?php  echo addslashes($search_customer_results[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['description']);?>)</small></small></span>',
+																									'txt':'<span style="font-style:italic;"><small><small>(<?php  echo addslashes($searchCustomerResults[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['description']);?>)</small></small></span>',
 																									'img':'empty.gif',
 																									<?php
 																									*/
@@ -325,20 +330,20 @@ if (isset($_SESSION['chosen_name_folder'])
 																								else
 																								{
 																									?>
-																									'txt':'<?php  echo addslashes($search_customer_results[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['description']);?>',
+																									'txt':'<?php  echo addslashes($searchCustomerResults[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['description']);?>',
 																									<?php
 																								}
 																								?>
 
 																								'items':[
 																											<?php
-																											for($m=0;$m<count($search_customer_results[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['results']);$m++)
+																											for($m=0;$m<count($searchCustomerResults[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['results']);$m++)
 																											{
 																												?>
 																												{
-																													'id':'<?php  echo addslashes($search_customer_results[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['results'][$m]['res_id']);?>',
+																													'id':'<?php  echo addslashes($searchCustomerResults[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['results'][$m]['res_id']);?>',
 																													<?php
-																													if($search_customer_results[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['results'][$m]['found_doc'])
+																													if($searchCustomerResults[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['results'][$m]['found_doc'])
 																													{
 																														$beginStr = "<b>";
 																														$endStr = "</b>";
@@ -348,59 +353,59 @@ if (isset($_SESSION['chosen_name_folder'])
 																														$beginStr = "";
 																														$endStr = "";
 																													}
-																													if(trim($search_customer_results[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['results'][$m]['name_folder']) <> "" && $search_customer_results[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['type_id'] == "3")
+																													if(trim($searchCustomerResults[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['results'][$m]['name_folder']) <> "" && $searchCustomerResults[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['type_id'] == "3")
 																													{
-																														echo "'txt':'".addslashes($search_customer_results[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['results'][$m]['doc_date'])." ".$beginStr.addslashes($search_customer_results[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['results'][$m]['name_folder']).$endStr."',";
+																														echo "'txt':'".addslashes($searchCustomerResults[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['results'][$m]['doc_date'])." ".$beginStr.addslashes($searchCustomerResults[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['results'][$m]['name_folder']).$endStr."',";
 																													}
 																													else
 																													{
-																														if($beginStr.addslashes($search_customer_results[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['results'][$m]['subject'] == ""))
+																														if($beginStr.addslashes($searchCustomerResults[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['results'][$m]['subject'] == ""))
 																														{
-																															echo "'txt':'".$beginStr.addslashes($search_customer_results[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['results'][$m]['res_id']).$endStr."',";
+																															echo "'txt':'".$beginStr.addslashes($searchCustomerResults[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['results'][$m]['res_id']).$endStr."',";
 																														}
 																														else
 																														{
-																															echo "'txt':'".$beginStr.addslashes($search_customer_results[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['results'][$m]['subject']).$endStr." <small>(".$search_customer_results[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['results'][$m]['res_id'].")</small>',";
+																															echo "'txt':'".$beginStr.addslashes($searchCustomerResults[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['results'][$m]['subject']).$endStr." <small>(".$searchCustomerResults[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['results'][$m]['res_id'].")</small>',";
 																														}
 																													}
 																													?>
 																													'imgBase' : '<?php  echo $_SESSION['config']['businessappurl'].'tools/tafelTree/';?>imgs/',
 																													//'onbeforeopen' : MyBeforeOpen,
-																													//'script' : 'window.opener.frames["view"].location.href="<?php echo addslashes($search_customer_results[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['results'][$m]['res_id']);?>" '
-																													//'onclick' : 'javascript:window.top.frames["view"].location.href="<?php echo $_SESSION['urltomodules']."indexing_searching/view_type_folder.php?id=".addslashes($search_customer_results[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['results'][$m]['res_id']);?>" '
+																													//'script' : 'window.opener.frames["view"].location.href="<?php echo addslashes($searchCustomerResults[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['results'][$m]['res_id']);?>" '
+																													//'onclick' : 'javascript:window.top.frames["view"].location.href="<?php echo $_SESSION['urltomodules']."indexing_searching/view_type_folder.php?id=".addslashes($searchCustomerResults[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['results'][$m]['res_id']);?>" '
 																													"onclick" : myClick,
 																													"onmouseover" : myMouseOver,
 																													"onmouseout" : myMouseOut
 																												}
 																												<?php
-																												if ($m <> count($search_customer_results[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['results']) - 1)
+																												if ($m <> count($searchCustomerResults[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['results']) - 1)
 																													echo ',';
 																											}
 																											?>
 																										]
 																							}
 																							<?php
-																							if ($l <> count($search_customer_results[$i]['content'][$j]['second_level'][$k]['doctypes']) - 1)
+																							if ($l <> count($searchCustomerResults[$i]['content'][$j]['second_level'][$k]['doctypes']) - 1)
 																							echo ',';
 																						} ?>
 																					]
 																		}
 																		<?php
-																		if($k <> count($search_customer_results[$i]['content'][$j]['second_level']) - 1)
+																		if($k <> count($searchCustomerResults[$i]['content'][$j]['second_level']) - 1)
 																		echo ',';
 																	}
 																	?>
 																]
 													}
 													<?php
-													if ($j <> count($search_customer_results[$i]['content']) - 1)
+													if ($j <> count($searchCustomerResults[$i]['content']) - 1)
 														echo ',';
 												}
 												?>
 											]
 								}
 								<?php
-								if ($i <> count($search_customer_results) - 1)
+								if ($i <> count($searchCustomerResults) - 1)
 									echo ',';
 							}
 							?>
