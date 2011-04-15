@@ -1021,7 +1021,7 @@ class functions
                         $tab_c_string = explode("'", $c_string);
                         if(isset($tab_c_string[3]))
                         {
-                            $c_myresult = $tab_c_string[5];
+                            $c_myresult = $tab_c_string[3];
                             return $c_myresult;
                         }
                     }
