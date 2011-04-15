@@ -306,7 +306,7 @@ if(isset($_POST['delete_folder']))
                                                     }
                                                     if($tab2[$cpt_folder_2][$cpt_folder_j_2][$value]=="type_label")
                                                     {
-                                                        $tab2[$cpt_folder_2][$cpt_folder_j_2]["value"]=$request->show_string($tab[$cpt_folder_2][$cpt_folder_j_2]["value"]);
+                                                        $tab2[$cpt_folder_2][$cpt_folder_j_2]["value"]=$request->show_string($tab2[$cpt_folder_2][$cpt_folder_j_2]["value"]);
                                                         $tab2[$cpt_folder_2][$cpt_folder_j_2]["label"]=_TYPE;
                                                         $tab2[$cpt_folder_2][$cpt_folder_j_2]["size"]="40";
                                                         $tab2[$cpt_folder_2][$cpt_folder_j_2]["label_align"]="left";

@@ -9,7 +9,7 @@
 * @since 06/2006
 * @license GPL
 * @author  Claire Figueras  <dev@maarch.org>
-* @author  Loïc Vinet  <dev@maarch.org>
+* @author  Loï¿½c Vinet  <dev@maarch.org>
 * @author  Laurent Giovannoni  <dev@maarch.org>
 */
 
@@ -41,15 +41,14 @@ $array_level_2 = array();
 $array_level_3 = array();
 $array_level_4 = array();
 $list=new list_show();
-for($i=0;$i<count($_SESSION['user']['security']);$i++)
-{
-	if($_SESSION['user']['security'][$i]['coll_id'] == $_SESSION['current_foldertype_coll_id'])
-	{
-		$coll_id_test = $_SESSION['user']['security'][$i]['coll_id'];
-		$where_clause = $_SESSION['user']['security'][$i]['where'];
+foreach (array_keys($_SESSION['user']['security']) as $collId) {
+    if ($collId == $_SESSION['current_foldertype_coll_id']) {
+		$coll_id_test = $collId;
+		$where_clause = $_SESSION['user']['security'][$collId]['DOC']['where'];
 		break;
 	}
 }
+
 if(empty($coll_id_test))
 {
 	echo _NO_COLLECTION_ACCESS_FOR_THIS_USER;

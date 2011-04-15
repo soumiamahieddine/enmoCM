@@ -1,31 +1,34 @@
 <?php
 
-require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
-require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR.'class_list_show.php');
-require_once("modules".DIRECTORY_SEPARATOR."folder".DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_admin_foldertypes.php');
+require_once "core/class/class_request.php";
+require_once "apps" . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+    . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR
+    . 'class_list_show.php';
+require_once 'modules/folder/class/class_admin_foldertypes.php';
 
-$core_tools = new core_tools();
+$core = new core_tools();
 $func = new functions();
 $req = new request();
 $foldertype = new foldertype();
-$core_tools->load_lang();
+$core->load_lang();
 
-//$core_tools->test_service('folder_search', 'folder');
+//$core->test_service('folder_search', 'folder');
 /****************Management of the location bar  ************/
 $init = false;
-if(isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true")
-{
+if (isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true") {
     $init = true;
 }
 $level = "";
-if(isset($_REQUEST['level']) && $_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1)
-{
+if (isset($_REQUEST['level']) && ($_REQUEST['level'] == 2
+    || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4
+    || $_REQUEST['level'] == 1)
+) {
     $level = $_REQUEST['level'];
 }
 $page_path = $_SESSION['config']['businessappurl'].'index.php?page=search_adv_folder_result&module=folder';
 $page_label = _RESULTS;
 $page_id = "folder_search_adv_result";
-$core_tools->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
+$core->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
 $fields = "";
 $orderby = "";

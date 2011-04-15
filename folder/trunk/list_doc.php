@@ -22,14 +22,14 @@ $func = new functions();
 $core_tools->load_html();
 //here we building the header
 $core_tools->load_header('', true, false);
-for($i=0; $i<count($_SESSION['user']['security']);$i++)
-{
-	if($_SESSION['user']['security'][$i]['coll_id'] == $_SESSION['current_foldertype_coll_id'])
-	{
-		$where_clause = $_SESSION['user']['security'][$i]['where'];
+
+foreach (array_keys($_SESSION['user']['security']) as $collId) {
+    if($collId == $_SESSION['current_foldertype_coll_id']) {
+		$where_clause = $_SESSION['user']['security'][$collId]['DOC']['where'];
 		break;
 	}
 }
+
 ?>
 <body>
 <?php

@@ -12,42 +12,41 @@
 * @author Claire Figueras <dev@maarch.org>
 */
 
-require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
+require_once "core/class/class_request.php";
 $db = new dbquery();
 $db->connect();
-if($_SESSION['config']['databasetype'] == "POSTGRESQL")
-{
-	$db->query("select folder_id from ".$_SESSION['tablename']['fold_folders']." where folder_id ilike '".$_REQUEST['Input']."%' order by folder_id");
-}
-else
-{
-	$db->query("select folder_id from ".$_SESSION['tablename']['fold_folders']." where folder_id like '".$_REQUEST['Input']."%' order by folder_id");
+if ($_SESSION['config']['databasetype'] == "POSTGRESQL") {
+	$db->query(
+		"select folder_id from " . $_SESSION['tablename']['fold_folders']
+	    . " where folder_id ilike '" . $_REQUEST['Input']
+	    . "%' order by folder_id"
+	);
+} else {
+	$db->query(
+		"select folder_id from " . $_SESSION['tablename']['fold_folders']
+	    . " where folder_id like '" . $_REQUEST['Input']
+	    . "%' order by folder_id"
+	);
 }
 //$db->show();
 $folders = array();
-while($line = $db->fetch_object())
-{
+while ($line = $db->fetch_object()) {
 	array_push($folders, $line->folder_id);
 }
 
 echo "<ul>";
 $authViewList = 0;
-foreach($folders as $folder)
-{
-	if($authViewList >= 10)
-	{
+foreach ($folders as $folder) {
+	if ($authViewList >= 10) {
 		$flagAuthView = true;
 	}
-    if(stripos($folder, $_REQUEST['Input']) === 0)
-    {
-        echo "<li>".$folder."</li>";
-		if($flagAuthView)
-		{
+    if (stripos($folder, $_REQUEST['Input']) === 0) {
+        echo "<li>" . $folder . "</li>";
+		if (isset($flagAuthView) && $flagAuthView) {
 			echo "<li>...</li>";
 			break;
 		}
-		$authViewList++;
+		$authViewList ++;
     }
 }
 echo "</ul>";
-
