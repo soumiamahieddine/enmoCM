@@ -178,20 +178,16 @@ if (isset($_SESSION['error'])) {
     $error = '';
 }
 ?>
-<body id="bodylogin" onload="session_expirate(<?php
-    echo $time;
-?>, '<?php
-    echo $_SESSION['config']['coreurl'];
-?>');">
+<?php $core->load_js();?>
+<body id="bodylogin" onload="session_expirate(<?php echo $time;?>, '<?php  echo $_SESSION['config']['coreurl'];?>');">
     <div id="loginpage">
         <p id="logo"><img src="<?php
             echo $_SESSION['config']['businessappurl'];
         ?>static.php?filename=default_maarch.gif" alt="Maarch" /></p>
-
-       <?php
-       $loginObj->execute_login_script($loginMethods);
+        <?php
+        $loginObj->execute_login_script($loginMethods);
         ?>
     </div>
-<?php $core->load_js();?>
+
 </body>
 </html>
