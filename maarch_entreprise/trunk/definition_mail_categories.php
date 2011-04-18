@@ -425,6 +425,41 @@ $_ENV['categories']['market_document']['author'] = array (
     'form_show' => 'textfield'
 );
 
+/////////////////////////////POSTINDEXING DOCUMENT////////////////////////////////////////////////
+$_ENV['categories']['postindexing_document'] = array ();
+$_ENV['categories']['postindexing_document']['img_cat'] = $_SESSION['config']['businessappurl'] . 'static.php?filename=cat_doc_market.gif';
+$_ENV['categories']['postindexing_document']['other_cases'] = array ();
+$_ENV['categories']['postindexing_document']['type_id'] = array (
+    'type_form' => 'integer',
+    'type_field' => 'integer',
+    'mandatory' => true,
+    'label' => _DOCTYPE,
+    'table' => 'res',
+    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=mini_type.gif',
+    'modify' => true,
+    'form_show' => 'select'
+);
+$_ENV['categories']['postindexing_document']['doc_date'] = array (
+    'type_form' => 'date',
+    'type_field' => 'date',
+    'mandatory' => true,
+    'label' => _DOC_DATE,
+    'table' => 'res',
+    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=small_calend.gif',
+    'modify' => true,
+    'form_show' => 'date'
+);
+$_ENV['categories']['postindexing_document']['subject'] = array (
+    'type_form' => 'string',
+    'type_field' => 'string',
+    'mandatory' => true,
+    'label' => _SUBJECT,
+    'table' => 'res',
+    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=object.gif',
+    'modify' => true,
+    'form_show' => 'textfield'
+);
+
 /////////////////////////////EMPTY////////////////////////////////////////////////
 $_ENV['categories']['empty'] = array ();
 $_ENV['categories']['empty']['img_cat'] = $_SESSION['config']['businessappurl'] . 'static.php?filename=cat_doc_market.gif';
@@ -572,6 +607,17 @@ if ($core->is_module_loaded('physical_archive')) {
         'modify' => false,
         'form_show' => 'select'
     );
+    // Physical Archive (postindexing_document)
+    $_ENV['categories']['postindexing_document']['other_cases']['arbox_id'] = array (
+        'type_form' => 'interger',
+        'type_field' => 'integer',
+        'mandatory' => false,
+        'label' => _BOX_ID,
+        'table' => 'res',
+        'img' => $_SESSION['config']['businessappurl'] . 'static.php?module=physical_archive&filename=pa_boxes.gif',
+        'modify' => false,
+        'form_show' => 'select'
+    );
 }
 
 if ($core->is_module_loaded('folder')) {
@@ -650,6 +696,27 @@ if ($core->is_module_loaded('folder')) {
         'form_show' => 'autocomplete'
     );
     $_ENV['categories']['market_document']['other_cases']['project'] = array (
+        'type_form' => 'string',
+        'type_field' => 'string',
+        'mandatory' => false,
+        'label' => _PROJECT,
+        'table' => 'none',
+        'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=doc_project.gif',
+        'modify' => true,
+        'form_show' => 'autocomplete'
+    );
+    //Folder (postindexing_document)
+    $_ENV['categories']['postindexing_document']['other_cases']['market'] = array (
+        'type_form' => 'string',
+        'type_field' => 'string',
+        'mandatory' => false,
+        'label' => _MARKET,
+        'table' => 'none',
+        'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=market.gif',
+        'modify' => true,
+        'form_show' => 'autocomplete'
+    );
+    $_ENV['categories']['postindexing_document']['other_cases']['project'] = array (
         'type_form' => 'string',
         'type_field' => 'string',
         'mandatory' => false,

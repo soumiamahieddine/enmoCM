@@ -327,6 +327,55 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
         {id:'chrono_number_mandatory', type:'label', state:'hide'},
         {id:'project_mandatory', type:'label', state:'hide'}
         ];
+    }//Category = POSTINDEXING DOCUMENT
+    else if(cat_id == 'postindexing_document')
+    {
+        var category = [
+		{id:'attachment_tr', type:'tr', state:'hide'},
+		{id:'doctype_mail', type:'label', state:'hide'},
+		{id:'doctype_res', type:'label', state:'display'},
+		{id:'priority_tr', type:'tr', state:'hide'},
+		{id:'doc_date_label', type:'label', state:'display'},
+		{id:'mail_date_label', type:'label', state:'hide'},
+		{id:'author_tr', type:'tr', state:'hide'},
+		{id:'admission_date_tr', type:'tr', state:'hide'},
+		{id:'nature_id_tr', type:'tr', state:'hide'},
+		{id:'department_tr', type:'tr', state:'display'},
+		{id:'process_limit_date_use_tr', type:'tr', state:'hide'},
+		{id:'process_limit_date_tr', type:'tr', state:'hide'},
+		{id:'diff_list_tr', type:'tr', state:'hide'},
+		{id:'box_id_tr', type:'tr', state:'display'},
+        {id:'contact_choose_tr', type:'tr', state:'hide'},
+        {id:'dest_contact_choose_label', type:'label', state:'hide'},
+        {id:'exp_contact_choose_label', type:'label', state:'hide'},
+        {id:'contact_id_tr', type:'tr', state:'hide'},
+        {id:'dest_contact', type:'label', state:'hide'},
+        {id:'exp_contact', type:'label', state:'hide'},
+        {id:'type_contact_internal', type:'radiobutton', state:'not_checked'},
+        {id:'type_contact_external', type:'radiobutton', state:'checked'},
+        {id:'market_tr', type:'tr', state:'display'},
+		{id:'project_tr', type:'tr', state:'display'},
+		{id:'category_tr', type:'tr', state:'hide'},
+		{id:'category_id_mandatory', type:'label', state:'display'},
+		{id:'type_id_mandatory', type:'label', state:'display'},
+		{id:'priority_mandatory', type:'label', state:'hide'},
+		{id:'doc_date_mandatory', type:'label', state:'display'},
+		{id:'author_mandatory', type:'label', state:'hide'},
+		{id:'admission_date_mandatory', type:'label', state:'hide'},
+		{id:'type_contact_mandatory', type:'label', state:'hide'},
+		{id:'contact_mandatory', type:'label', state:'hide'},
+		{id:'nature_id_mandatory', type:'label', state:'hide'},
+		{id:'subject_mandatory', type:'label', state:'display'},
+		{id:'destination_mandatory', type:'label', state:'hide'},
+		{id:'arbox_id_mandatory', type:'label', state:'hide'},
+		{id:'process_limit_date_use_mandatory', type:'label', state:'hide'},
+		{id:'process_limit_date_mandatory', type:'label', state:'hide'},
+		{id:'market_mandatory', type:'label', state:'hide'},
+		{id:'chrono_number', type:'label', state:'hide'},
+		{id:'chrono_number_tr', type:'tr', state:'hide'},
+		{id:'chrono_number_mandatory', type:'label', state:'hide'},
+		{id:'project_mandatory', type:'label', state:'hide'}
+        ];
     }
     if(params_cat)
     {
