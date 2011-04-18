@@ -961,7 +961,7 @@ class docservers_controler
             $docserver->docserver_type_id
         );
         $docinfo['fileDestinationName'] .= '.'
-            . strtoupper($func->extractFileExt($tmpSourceCopy));
+            . strtolower($func->extractFileExt($tmpSourceCopy));
         $copyResultArray = Ds_copyOnDocserver(
             $tmpSourceCopy,
             $docinfo,
