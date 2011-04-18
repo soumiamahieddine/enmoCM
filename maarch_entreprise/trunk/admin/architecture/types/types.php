@@ -107,7 +107,7 @@ for ($i = 0; $i < count($tab); $i ++) {
                 );
                 $tab[$i][$j]["description"] = $tab[$i][$j]['value'];
                 $tab[$i][$j]["label"] = _DESC;
-                $tab[$i][$j]["size"] = "50";
+                $tab[$i][$j]["size"] = "80";
                 $tab[$i][$j]["label_align"] = "left";
                 $tab[$i][$j]["align"] = "left";
                 $tab[$i][$j]["valign"] = "bottom";

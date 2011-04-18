@@ -186,7 +186,7 @@ function display_list()
                     break;
                 case 'label_status':
                     format_item(
-                        $item, _DESC, '15', 'left', 'left', 'bottom', true
+                        $item, _DESC, '55', 'left', 'left', 'bottom', true
                     );
                     break;
                 case 'is_system':

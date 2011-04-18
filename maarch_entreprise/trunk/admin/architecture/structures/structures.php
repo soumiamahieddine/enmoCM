@@ -110,7 +110,7 @@ for ($i = 0; $i < count($tab); $i ++) {
                 );
                 $tab[$i][$j]["doctypes_first_level_label"] = $tab[$i][$j]['value'];
                 $tab[$i][$j]["label"] = _DESC;
-                $tab[$i][$j]["size"] = "30";
+                $tab[$i][$j]["size"] = "60";
                 $tab[$i][$j]["label_align"] = "left";
                 $tab[$i][$j]["align"] = "left";
                 $tab[$i][$j]["valign"] = "bottom";

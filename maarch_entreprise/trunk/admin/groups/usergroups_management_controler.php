@@ -301,7 +301,7 @@ function displayList(){
                     break;
                 case 'group_desc':
                     formatItem(
-                        $item, _DESC, '30', 'left', 'left', 'bottom', true
+                        $item, _DESC, '50', 'left', 'left', 'bottom', true
                     );
                     break;
                 case 'enabled':
