@@ -260,7 +260,7 @@ if(($_REQUEST['template']== 'group_case_for_basket') && ($core_tools->is_module_
 	array_push($select[$_SESSION['tablename']['cases']], "case_id", "case_label", "case_description", "case_typist", "case_creation_date");
 	$where = " ".$_SESSION['tablename']['cases'].".case_id = ".$table.".case_id  and ";
 	//$where_concat .= " and res_view_letterbox.res_id = ".$_SESSION['tablename']['ent_listinstance'].".res_id and ".$_SESSION['tablename']['ent_listinstance'].".item_id = '".$_SESSION['user']['UserId']."'";
-	$tab = $request->select($select, $where.$where_concat, $orderstr, $_SESSION['config']['databasetype'], "default", false, "", "", "", true, false, true);
+	$tab = $request->select($select, $where.$where_concat, 'order by case_id desc', $_SESSION['config']['databasetype'], "default", false, "", "", "", true, false, true);
 }
 else
 {
