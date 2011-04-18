@@ -187,7 +187,7 @@ if(isset($_SESSION['auth_dep']['bask_chosen_status']) && !empty($_SESSION['auth_
 		{
 			if(!empty($where))
 			{
-				$where_concat = "(".$where.") and ( process_limit_date is not null and ".$request->current_datetime()." > ".$request->extract_date('process_limit_date')." )";
+				$where_concat = "(".$where.") and (process_limit_date is not null and ".$request->current_datetime()." > ".$request->extract_date('process_limit_date').")";
 			}
 		}
 	}
@@ -209,17 +209,17 @@ if(isset($_SESSION['auth_dep']['bask_chosen_status']) && !empty($_SESSION['auth_
 }
 if(($_REQUEST['template']== 'group_case_for_basket') && ($core_tools->is_module_loaded('cases')))
 {
-	unset($select);
-	$select = array();
-	$select[$_SESSION['tablename']['cases']]= array();
-	$select[$table]= array();
-	array_push($select[$_SESSION['tablename']['cases']], "case_id", "case_label", "case_description", "case_typist", "case_creation_date");
-	$where = " ".$_SESSION['tablename']['cases'].".case_id = ".$table.".case_id  and ";
-	$tab=$request->select($select, $where.$where_concat, $orderstr, $_SESSION['config']['databasetype'], "default", false, "", "", "", true, false, true);
+    unset($select);
+    $select = array();
+    $select[$_SESSION['tablename']['cases']]= array();
+    $select[$table]= array();
+    array_push($select[$_SESSION['tablename']['cases']], "case_id", "case_label", "case_description", "case_typist", "case_creation_date");
+    $where = " " . $_SESSION['tablename']['cases'] . ".case_id = " . $table . ".case_id and ";
+    $tab = $request->select($select, $where . $where_concat, 'order by case_id desc', $_SESSION['config']['databasetype'], "default", false, "", "", "", true, false, true);
 }
 else
 {
-	$tab=$request->select($select, $where_concat, $orderstr, $_SESSION['config']['databasetype'], $_SESSION['config']['databasesearchlimit'], false,"", "", "", false);
+    $tab=$request->select($select, $where_concat, $orderstr, $_SESSION['config']['databasetype'], $_SESSION['config']['databasesearchlimit'], false,"", "", "", false);
 }
 
 //$request->show();
