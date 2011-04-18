@@ -70,4 +70,20 @@ An action page is described in a ACTIONPAGE tag :
 		<MODULE></MODULE>
 		<FLAG_CREATE>false</FLAG_CREATE>
     </ACTIONPAGE>
+	<ACTIONPAGE>
+		<ID>postindex_documents</ID>
+		<LABEL>_POSTINDEXING_PAGE</LABEL>
+    	<NAME>postindex_documents</NAME>
+        <ORIGIN>module</ORIGIN> 
+		<MODULE>postindexing</MODULE>
+		<FLAG_CREATE>false</FLAG_CREATE>
+    </ACTIONPAGE>
+	<ACTIONPAGE>
+		<ID>postindex_folders</ID>
+		<LABEL>_POSTINDEXING_FOLDER_PAGE</LABEL>
+    	<NAME>postindex_folders</NAME>
+        <ORIGIN>module</ORIGIN> 
+		<MODULE>postindexing</MODULE>
+		<FLAG_CREATE>false</FLAG_CREATE>
+    </ACTIONPAGE>
 </ROOT>
