@@ -120,7 +120,7 @@ class business_app_tools extends dbquery
             }
             //$_SESSION['config']['databaseworkspace'] = (string) $config->databaseworkspace;
 
-            $tablename = $xmlconfig->TABLENAME ;
+            $tablename = $xmlconfig->TABLENAME;
             $_SESSION['tablename']['doctypes_first_level'] = (string) $tablename->doctypes_first_level;
             $_SESSION['tablename']['doctypes_second_level'] = (string) $tablename->doctypes_second_level;
             $_SESSION['tablename']['mlb_doctype_ext'] = (string) $tablename->mlb_doctype_ext;
@@ -135,7 +135,7 @@ class business_app_tools extends dbquery
                 $tmp2 = $this->retrieve_constant_lang(
                     $tmp, 'apps' . DIRECTORY_SEPARATOR
                     . $_SESSION['config']['app_id'] . DIRECTORY_SEPARATOR
-                    . 'lang'  .DIRECTORY_SEPARATOR . $_SESSION['config']['lang']
+                    . 'lang' . DIRECTORY_SEPARATOR . $_SESSION['config']['lang']
                     . ".php"
                 );
                 if ($tmp2 <> false) {
@@ -143,17 +143,23 @@ class business_app_tools extends dbquery
                 }
                 $extensions = $col->extensions;
                 $tab = array();
-                foreach ($extensions->table as $table) {
-                    array_push($tab, (string) $table);
+                
+                $extensionTables = $extensions->table;
+                if ($extensionTables->count() > 0) {
+                    foreach ($extensions->table as $table) {
+                        if (strlen($extensionTables) > 0) {
+                            array_push($tab, (string) $table);
+                        }
+                    }
                 }
                 if (isset($col->table) && ! empty($col->table)) {
                     $_SESSION['collections'][$i] = array(
-                    	'id' => (string) $col->id,
-                    	'label' => (string) $tmp,
-                    	'table' => (string) $col->table,
-                    	'view' => (string) $col->view,
-                    	'adr' => (string) $col->adr,
-                    	'index_file' => (string) $col->index_file,
+                        'id' => (string) $col->id,
+                        'label' => (string) $tmp,
+                        'table' => (string) $col->table,
+                        'view' => (string) $col->view,
+                        'adr' => (string) $col->adr,
+                        'index_file' => (string) $col->index_file,
                         'script_add' => (string) $col->script_add,
                         'script_search' => (string) $col->script_search,
                         'script_search_result' => (string) $col->script_search_result,
@@ -164,15 +170,15 @@ class business_app_tools extends dbquery
                     $i++;
                 } else {
                     $_SESSION['collections'][$i] = array(
-                    	'id' => (string) $col->id,
-                    	'label' => (string) $tmp,
-                    	'view' => (string) $col->view,
-                    	'adr' => (string) $col->adr,
-                    	'index_file' => (string) $col->index_file,
-                    	'script_add' => (string) $col->script_add,
-                    	'script_search' => (string) $col->script_search,
-                    	'script_search_result' => (string) $col->script_search_result,
-                    	'script_details' => (string) $col->script_details,
+                        'id' => (string) $col->id,
+                        'label' => (string) $tmp,
+                        'view' => (string) $col->view,
+                        'adr' => (string) $col->adr,
+                        'index_file' => (string) $col->index_file,
+                        'script_add' => (string) $col->script_add,
+                        'script_search' => (string) $col->script_search,
+                        'script_search_result' => (string) $col->script_search_result,
+                        'script_details' => (string) $col->script_details,
                         'path_to_lucene_index' => (string) $col->path_to_lucene_index,
                         'extensions' => $tab,
                     );
@@ -243,8 +249,8 @@ class business_app_tools extends dbquery
                 array_push(
                     $_SESSION['history_keywords'],
                     array(
-                    	'id'    => (string) $keyword->id,
-                    	'label' => $tmp,
+                        'id'    => (string) $keyword->id,
+                        'label' => $tmp,
                     )
                 );
             }
@@ -253,7 +259,7 @@ class business_app_tools extends dbquery
             foreach ($xmlconfig->MODULES as $modules) {
 
                 $_SESSION['modules'][$i] = array(
-                	'moduleid' => (string) $modules->moduleid,
+                    'moduleid' => (string) $modules->moduleid,
                     //,"comment" => (string) $MODULES->comment
                 );
                 $i ++;
@@ -295,8 +301,7 @@ class business_app_tools extends dbquery
                        . $_SESSION['config']['lang'] . '.php';
 
             $i = 0;
-            foreach ($xmlfile->ACTIONPAGE as $actionPage)
-            {
+            foreach ($xmlfile->ACTIONPAGE as $actionPage) {
                 $tmp = (string) $actionPage->LABEL;
                 $tmp2 = $this->retrieve_constant_lang($tmp, $langPath);
                 if ($tmp2 <> false) {
@@ -318,11 +323,11 @@ class business_app_tools extends dbquery
                 }
 
                 $_SESSION['actions_pages'][$i] = array(
-                	'ID' => (string) $actionPage->ID,
-                	'LABEL' => $label,
-                	'NAME' => (string) $actionPage->NAME,
-                	'ORIGIN' => (string) $actionPage->ORIGIN,
-                	'MODULE' => (string) $actionPage->MODULE,
+                    'ID' => (string) $actionPage->ID,
+                    'LABEL' => $label,
+                    'NAME' => (string) $actionPage->NAME,
+                    'ORIGIN' => (string) $actionPage->ORIGIN,
+                    'MODULE' => (string) $actionPage->MODULE,
                     'KEYWORD' => $keyword,
                     'FLAG_CREATE' => $createFlag,
                 );
@@ -389,8 +394,7 @@ class business_app_tools extends dbquery
         $_SESSION['mail_priorities'] = array();
         $mailPriorities = $xmlfile->priorities;
         $i = 0;
-        foreach ($mailPriorities->priority as $priority )
-        {
+        foreach ($mailPriorities->priority as $priority ) {
             $tmp = (string) $priority;
             $tmp2 = $this->retrieve_constant_lang($tmp, $langPath);
             if ($tmp2 <> false) {
@@ -419,7 +423,8 @@ class business_app_tools extends dbquery
         $_SESSION['default_mail_title'] = (string) $mailTitles->default_title;
     }
 
-    public function compare_base_version($xmlVersionBase){
+    public function compare_base_version($xmlVersionBase)
+    {
         // Compare version value beetwen version base xml file and version base
         // value in the database
         if (file_exists(
@@ -461,9 +466,9 @@ class business_app_tools extends dbquery
                 || ($_SESSION['maarch_entreprise']['database_version'] == 'none')
             ) {
                 $_SESSION['error'] .= '<p style="color:#346DC4;border:1px'
-                				   . 'solid blue">'
-                				   . _VERSION_BASE_AND_XML_BASEVERSION_NOT_MATCH
-                				   . '</p>';
+                                    . 'solid blue">'
+                                    . _VERSION_BASE_AND_XML_BASEVERSION_NOT_MATCH
+                                    . '</p>';
             }
         }
     }
@@ -510,7 +515,7 @@ class business_app_tools extends dbquery
         if (isset($userId)) {
             $this->connect();
             $this->query(
-            	"select custom_t1 from " . USERS_TABLE . " where user_id = '"
+                "select custom_t1 from " . USERS_TABLE . " where user_id = '"
                 . $userId . "'"
             );
             $res = $this->fetch_object();
@@ -528,7 +533,7 @@ class business_app_tools extends dbquery
         $this->_loadCurrentFolder($userData['UserId']);
         $this->_loadEntrepriseVar();
         $this->load_features(
-        	'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+            'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
             . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR . 'features.xml'
         );
         if (file_exists(
