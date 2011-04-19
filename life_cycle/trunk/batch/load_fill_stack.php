@@ -204,7 +204,7 @@ foreach ($xmlconfig->COLLECTION as $col) {
         'adr' => (string) $col->Adr,
     );
     if ($GLOBALS['collections'][$i]['id'] == $GLOBALS['collection']) {
-        $GLOBALS['table'] = $GLOBALS['collections'][$i]['table'];
+        $GLOBALS['table'] = $GLOBALS['collections'][$i]['view'];
     }
     $i++;
 }
