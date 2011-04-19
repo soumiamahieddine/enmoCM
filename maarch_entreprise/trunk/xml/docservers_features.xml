@@ -14,8 +14,7 @@
 			<MODE>NONE</MODE>
 			<MODE>7Z</MODE>
 			<MODE>ZIP</MODE>
-			<!--<MODE>GZIP</MODE>
-			<MODE>BZIP2</MODE>-->
+			<MODE>GZIP</MODE> <!--do a tar and gzip -->
 			<MODE>TAR</MODE>
 		</COMPRESS>
 		<META_TEMPLATE>

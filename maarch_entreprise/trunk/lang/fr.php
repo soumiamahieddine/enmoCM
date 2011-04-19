@@ -1082,7 +1082,7 @@ if (!defined('_DOCSERVER_ENABLED')) define( '_DOCSERVER_ENABLED', 'Zone de stock
 if (!defined('_ALREADY_EXISTS_FOR_THIS_TYPE_OF_DOCSERVER')) define( '_ALREADY_EXISTS_FOR_THIS_TYPE_OF_DOCSERVER', 'existe déjà pour ce type');
 if (!defined('_DOCSERVER_LOCATION_ENABLED')) define( '_DOCSERVER_LOCATION_ENABLED', 'Lieu de stockage actif');
 if (!defined('_LINK_EXISTS')) {
-    define('_LINK_EXISTS', 'Ce lieu contient des docservers...');
+    define('_LINK_EXISTS', 'Un lien avec un autre objet existe');
 }
 
 
@@ -1113,6 +1113,7 @@ if (!defined('_CONTAINER'))  define('_CONTAINER', 'Un container');
 if (!defined('_NOT_COMPRESSED'))  define('_NOT_COMPRESSED', 'Non compress&eacute;');
 if (!defined('_COMPRESSED'))  define('_COMPRESSED', 'Compress&eacute;');
 if (!defined('_COMPRESSION_MODE'))  define('_COMPRESSION_MODE', 'Mode de compression');
+if (!defined('_GZIP_COMPRESSION_MODE'))  define('_GZIP_COMPRESSION_MODE', 'Mode de compression GZIP (tar.gz) est uniquement disponible pour la consultation');
 
 /***************DOCSERVERS*********************************/
 if (!defined('_DOCSERVERS'))  define('_DOCSERVERS', 'Zone(s) de stockage ');

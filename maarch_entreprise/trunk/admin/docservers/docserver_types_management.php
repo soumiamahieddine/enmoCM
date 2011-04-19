@@ -309,6 +309,9 @@ if ($mode == "list") {
                     ?>
                    <input type="button" class="button"  name="cancel" value="<?php echo _CANCEL; ?>" onclick="javascript:window.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=docserver_types_management_controler&amp;admin=docservers&amp;mode=list';"/>
                 </p>
+                <?php
+                echo _GZIP_COMPRESSION_MODE;
+                ?>
             </form>
             <script type="text/javascript">
                 //on load hide inputs

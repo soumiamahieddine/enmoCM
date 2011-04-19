@@ -379,7 +379,8 @@ if ($mode == "list") {
                 echo 'selected="selected"';
             }
             ?>><?php
-            echo $collTxt;
+            echo $_SESSION['collections'][$cptCollection]['id'] . " : "
+                    . $_SESSION['collections'][$cptCollection]['label'];
             ?></option>
             <?php
         }

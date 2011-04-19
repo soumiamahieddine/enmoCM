@@ -1007,6 +1007,7 @@ if (!defined('_CONTAINER'))  define('_CONTAINER', 'A Container');
 if (!defined('_NOT_COMPRESSED'))  define('_NOT_COMPRESSED', 'Non compressed');
 if (!defined('_COMPRESSED'))  define('_COMPRESSED', 'Compressed');
 if (!defined('_COMPRESSION_MODE'))  define('_COMPRESSION_MODE', 'Compression mode');
+if (!defined('_GZIP_COMPRESSION_MODE'))  define('_GZIP_COMPRESSION_MODE', 'GZIP compression mode (tar.gz) only avaible for the consultation');
 
 /***************DOCSERVERS*************************************/
 if (!defined('_DOCSERVER_ID'))  define('_DOCSERVER_ID', 'Docserver ID');
@@ -1071,3 +1072,4 @@ if (!defined('_VIEW_TECHNICAL_INFORMATIONS'))  define('_VIEW_TECHNICAL_INFORMATI
 if (!defined('_SOURCE_FILE_PROPERTIES')) define('_SOURCE_FILE_PROPERTIES', 'Source file properties');
 if (!defined('_OFFSET'))  define('_OFFSET', 'Offset');
 if (!defined('_SETUP'))  define('_SETUP', 'Setup');
+if (!defined('_LINK_EXISTS')) define('_LINK_EXISTS', 'A link exists with another object');
