@@ -144,11 +144,13 @@ class business_app_tools extends dbquery
                 $extensions = $col->extensions;
                 $tab = array();
                 
-                $extensionTables = $extensions->table;
-                if ($extensionTables->count() > 0) {
-                    foreach ($extensions->table as $table) {
-                        if (strlen($extensionTables) > 0) {
-                            array_push($tab, (string) $table);
+                if ($extensions->count()) {
+                    $extensionTables = $extensions->table;
+                    if ($extensionTables->count() > 0) {
+                        foreach ($extensions->table as $table) {
+                            if (strlen($extensionTables) > 0) {
+                                array_push($tab, (string) $table);
+                            }
                         }
                     }
                 }
