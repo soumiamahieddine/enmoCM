@@ -102,7 +102,9 @@ if ($mode == "list") {
                     $docserverTypeTxt = $docserverTypesArray[$cptTypes];
                 }
             }
-            if ($_SESSION['m_admin']['docservers']['link_exists']) {
+            if (isset($_SESSION['m_admin']['docservers']['link_exists']) 
+            	&& $_SESSION['m_admin']['docservers']['link_exists']
+           	) {
                 ?>
                 <input type="hidden" name="docserver_type_id" value="<?php 
                     echo $_SESSION['m_admin']['docservers']['docserver_type_id'];?>" />
@@ -352,7 +354,9 @@ if ($mode == "list") {
                     . $_SESSION['collections'][$cptCollection]['label'];
                 }
             }
-            if ($_SESSION['m_admin']['docservers']['link_exists']) {
+            if (isset($_SESSION['m_admin']['docservers']['link_exists']) 
+            	&& $_SESSION['m_admin']['docservers']['link_exists']
+            ) {
                 ?>
                 <input type="hidden" name="coll_id" value="<?php 
                     echo $_SESSION['m_admin']['docservers']['coll_id'];?>" />
