@@ -34,7 +34,7 @@ if(!isset($_SESSION['config']['userdefaultpassword']) || empty($_SESSION['config
 	$_SESSION['config']['userdefaultpassword'] = 'maarch';
 ?>
 <h2 class="tit"><?php  echo _PASSWORD_MODIFICATION;?></h2>
-
+<div id="frm_error"></div>
 <p ><?php  echo _PASSWORD_FOR_USER;?> <b><?php  echo $_SESSION['m_admin']['users']['user_id'] ; ?></b> <?php  echo _HAS_BEEN_RESET;?>.
 </p>
 <p><?php  echo _NEW_PASW_IS." '".$_SESSION['config']['userdefaultpassword']."'";?></p>

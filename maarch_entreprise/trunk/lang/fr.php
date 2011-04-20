@@ -305,7 +305,9 @@ if (!defined('_DURING_NEXT_CONNEXION')) define( '_DURING_NEXT_CONNEXION', 'Lors 
 if (!defined('_MUST_CHANGE_PSW')) define( '_MUST_CHANGE_PSW', 'doit modifier son mot de passe');
 
 if (!defined('_NEW_PASSWORD_USER')) define( '_NEW_PASSWORD_USER', 'R&eacute;initialisation du mot de passe de l&rsquo;utilisateur');
-
+if (!defined('_PASSWORD_NOT_CHANGED')) {
+	define('_PASSWORD_NOT_CHANGED', 'Probl&egrave;me lors du changement de mot de passe');
+}
 /************** Types de document : Liste + Formulaire**************/
 
 if (!defined('_DOCTYPES_LIST')) define( '_DOCTYPES_LIST', 'Liste des types de document');

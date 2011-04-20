@@ -409,12 +409,11 @@ function validate_user_submit(){
                     'log_user_up' => $_SESSION['history']['usersup'],
                     'log_user_add' => $_SESSION['history']['usersadd'],
                     'databasetype' => $_SESSION['config']['databasetype'],
-                    'userdefaultpassword' => $tmp_pass
+                    'userdefaultpassword' => $tmp_pass,
                     );
 
-    if(isset($_SESSION['m_admin']['users']['groups']))
-    {
-        $control = $uc->save($user,  $_SESSION['m_admin']['users']['groups'], $mode,$params);
+    if (isset($_SESSION['m_admin']['users']['groups'])) {
+        $control = $uc->save($user, $_SESSION['m_admin']['users']['groups'], $mode, $params);
     }
     if(!empty($control['error']) && $control['error'] <> 1) {
         // Error management depending of mode
