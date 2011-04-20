@@ -724,7 +724,7 @@ class basket extends dbquery
         );
         $db = new dbquery();
         $db->connect();
-        $tab = array();
+        $arr = array();
         while ($res = $this->fetch_object()) {
             $basketId = $res->basket_id;
             $basketOwner = $res->basket_owner;
