@@ -206,8 +206,8 @@ if ($mode == "list") {
                     ?>
                     <p>
                         <label><?php echo _IS_CONTAINER; ?> : </label>
-                        <input type="radio" class="check" name="is_container" id="is_container" value="true"  <?php if (isset($_SESSION['m_admin']['docserver_types']['is_container']) && $_SESSION['m_admin']['docserver_types']['is_container']) {?> checked="checked"<?php } ?> onclick="hide_index(false, 'container_max_number');"/><?php echo _YES;?>
-                        <input type="radio" class="check" name="is_container" id="is_container" value="false" <?php if (!isset($_SESSION['m_admin']['docserver_types']['is_container']) || (!$_SESSION['m_admin']['docserver_types']['is_container'] || $_SESSION['m_admin']['docserver_types']['is_container'] == '')) {?> checked="checked"<?php } ?> onclick="hide_index(true, 'container_max_number');"/><?php echo _NO;?>
+                        <input type="radio" class="check" name="is_container" id="is_container" value="true"  <?php if (isset($_SESSION['m_admin']['docserver_types']['is_container']) && $_SESSION['m_admin']['docserver_types']['is_container']) {?> checked="checked"<?php } ?> onclick="hideIndex(false, 'container_max_number');"/><?php echo _YES;?>
+                        <input type="radio" class="check" name="is_container" id="is_container" value="false" <?php if (!isset($_SESSION['m_admin']['docserver_types']['is_container']) || (!$_SESSION['m_admin']['docserver_types']['is_container'] || $_SESSION['m_admin']['docserver_types']['is_container'] == '')) {?> checked="checked"<?php } ?> onclick="hideIndex(true, 'container_max_number');"/><?php echo _NO;?>
                     </p>
                     <div class ="container_max_number" id="container_max_number">
                     <p>
@@ -217,8 +217,8 @@ if ($mode == "list") {
                     </div>
                     <p>
                         <label><?php echo _IS_COMPRESSED; ?> : </label>
-                        <input type="radio" class="check" name="is_compressed" id="is_compressed" value="true"  <?php if (isset($_SESSION['m_admin']['docserver_types']['is_compressed']) && $_SESSION['m_admin']['docserver_types']['is_compressed']) {?> checked="checked"<?php } ?> onclick="hide_index(false, 'compression_mode');"/><?php echo _YES;?>
-                        <input type="radio" class="check" name="is_compressed" id="is_compressed" value="false" <?php if (!isset($_SESSION['m_admin']['docserver_types']['is_compressed']) || (!$_SESSION['m_admin']['docserver_types']['is_compressed'] || $_SESSION['m_admin']['docserver_types']['is_compressed'] == '')) {?> checked="checked"<?php } ?> onclick="hide_index(true, 'compression_mode');"/><?php echo _NO;?>
+                        <input type="radio" class="check" name="is_compressed" id="is_compressed" value="true"  <?php if (isset($_SESSION['m_admin']['docserver_types']['is_compressed']) && $_SESSION['m_admin']['docserver_types']['is_compressed']) {?> checked="checked"<?php } ?> onclick="hideIndex(false, 'compression_mode');"/><?php echo _YES;?>
+                        <input type="radio" class="check" name="is_compressed" id="is_compressed" value="false" <?php if (!isset($_SESSION['m_admin']['docserver_types']['is_compressed']) || (!$_SESSION['m_admin']['docserver_types']['is_compressed'] || $_SESSION['m_admin']['docserver_types']['is_compressed'] == '')) {?> checked="checked"<?php } ?> onclick="hideIndex(true, 'compression_mode');"/><?php echo _NO;?>
                     </p>
                     <div class ="compression_mode" id="compression_mode">
                     <p>
@@ -236,8 +236,8 @@ if ($mode == "list") {
                     </div>
                     <p>
                         <label><?php echo _IS_META; ?> : </label>
-                        <input type="radio" class="check" name="is_meta" id="is_meta" value="true"   <?php if (isset($_SESSION['m_admin']['docserver_types']['is_meta']) && $_SESSION['m_admin']['docserver_types']['is_meta']) {?> checked="checked"<?php } ?> onclick="hide_index(false, 'meta_template');"/><?php echo _YES;?>
-                        <input type="radio" class="check" name="is_meta" id="is_meta" value="false"  <?php if (!isset($_SESSION['m_admin']['docserver_types']['is_meta']) || (!$_SESSION['m_admin']['docserver_types']['is_meta'] || $_SESSION['m_admin']['docserver_types']['is_meta'] == '')) {?> checked="checked"<?php } ?> onclick="hide_index(true, 'meta_template');"/><?php echo _NO;?>
+                        <input type="radio" class="check" name="is_meta" id="is_meta" value="true"   <?php if (isset($_SESSION['m_admin']['docserver_types']['is_meta']) && $_SESSION['m_admin']['docserver_types']['is_meta']) {?> checked="checked"<?php } ?> onclick="hideIndex(false, 'meta_template');"/><?php echo _YES;?>
+                        <input type="radio" class="check" name="is_meta" id="is_meta" value="false"  <?php if (!isset($_SESSION['m_admin']['docserver_types']['is_meta']) || (!$_SESSION['m_admin']['docserver_types']['is_meta'] || $_SESSION['m_admin']['docserver_types']['is_meta'] == '')) {?> checked="checked"<?php } ?> onclick="hideIndex(true, 'meta_template');"/><?php echo _NO;?>
                     </p>
                     <div class ="meta_template" id="meta_template">
                     <p>
@@ -255,8 +255,8 @@ if ($mode == "list") {
                     </div>
                     <p>
                         <label><?php echo _IS_LOGGED; ?> : </label>
-                        <input type="radio" class="check" name="is_logged" id="is_logged" value="true"  <?php if (isset($_SESSION['m_admin']['docserver_types']['is_logged']) && $_SESSION['m_admin']['docserver_types']['is_logged']) {?> checked="checked"<?php } ?> onclick="hide_index(false, 'log_template');"/><?php echo _YES;?>
-                        <input type="radio" class="check" name="is_logged" id="is_logged" value="false" <?php if (!isset($_SESSION['m_admin']['docserver_types']['is_logged']) || (!$_SESSION['m_admin']['docserver_types']['is_logged'] || $_SESSION['m_admin']['docserver_types']['is_logged'] == '')) {?> checked="checked"<?php } ?> onclick="hide_index(true, 'log_template');"/><?php echo _NO;?>
+                        <input type="radio" class="check" name="is_logged" id="is_logged" value="true"  <?php if (isset($_SESSION['m_admin']['docserver_types']['is_logged']) && $_SESSION['m_admin']['docserver_types']['is_logged']) {?> checked="checked"<?php } ?> onclick="hideIndex(false, 'log_template');"/><?php echo _YES;?>
+                        <input type="radio" class="check" name="is_logged" id="is_logged" value="false" <?php if (!isset($_SESSION['m_admin']['docserver_types']['is_logged']) || (!$_SESSION['m_admin']['docserver_types']['is_logged'] || $_SESSION['m_admin']['docserver_types']['is_logged'] == '')) {?> checked="checked"<?php } ?> onclick="hideIndex(true, 'log_template');"/><?php echo _NO;?>
                     </p>
                     <div class ="log_template" id="log_template">
                     <p>
@@ -274,8 +274,8 @@ if ($mode == "list") {
                     </div>
                     <p>
                         <label><?php echo _IS_SIGNED; ?> : </label>
-                        <input type="radio" class="check" name="is_signed" id="is_signed" value="true" <?php  if (isset($_SESSION['m_admin']['docserver_types']['is_signed']) && $_SESSION['m_admin']['docserver_types']['is_signed']) {?> checked="checked"<?php } ?> onclick="hide_index(false, 'fingerprint_mode');"/><?php echo _YES;?>
-                        <input type="radio" class="check" name="is_signed" id="is_signed" value="false" <?php if (!isset($_SESSION['m_admin']['docserver_types']['is_signed']) || (!$_SESSION['m_admin']['docserver_types']['is_signed'] || $_SESSION['m_admin']['docserver_types']['is_signed'] == '')) {?> checked="checked"<?php } ?> onclick="hide_index(true, 'fingerprint_mode');"/><?php echo _NO;?>
+                        <input type="radio" class="check" name="is_signed" id="is_signed" value="true" <?php  if (isset($_SESSION['m_admin']['docserver_types']['is_signed']) && $_SESSION['m_admin']['docserver_types']['is_signed']) {?> checked="checked"<?php } ?> onclick="hideIndex(false, 'fingerprint_mode');"/><?php echo _YES;?>
+                        <input type="radio" class="check" name="is_signed" id="is_signed" value="false" <?php if (!isset($_SESSION['m_admin']['docserver_types']['is_signed']) || (!$_SESSION['m_admin']['docserver_types']['is_signed'] || $_SESSION['m_admin']['docserver_types']['is_signed'] == '')) {?> checked="checked"<?php } ?> onclick="hideIndex(true, 'fingerprint_mode');"/><?php echo _NO;?>
                     </p>
                     <div class ="fingerprint_mode" id="fingerprint_mode">
                     <p>
@@ -318,27 +318,27 @@ if ($mode == "list") {
                 <?php
                 if (!isset($_SESSION['m_admin']['docserver_types']['is_container']) || !$_SESSION['m_admin']['docserver_types']['is_container']) {
                     ?>
-                    hide_index(true, 'container_max_number');
+                    hideIndex(true, 'container_max_number');
                     <?php
                 }
                 if (!isset($_SESSION['m_admin']['docserver_types']['is_compressed']) || !$_SESSION['m_admin']['docserver_types']['is_compressed']) {
                     ?>
-                    hide_index(true, 'compression_mode');
+                    hideIndex(true, 'compression_mode');
                     <?php
                 }
                 if (!isset($_SESSION['m_admin']['docserver_types']['is_meta']) || !$_SESSION['m_admin']['docserver_types']['is_meta']) {
                     ?>
-                    hide_index(true, 'meta_template');
+                    hideIndex(true, 'meta_template');
                     <?php
                 }
                 if (!isset($_SESSION['m_admin']['docserver_types']['is_logged']) || !$_SESSION['m_admin']['docserver_types']['is_logged']) {
                     ?>
-                    hide_index(true, 'log_template');
+                    hideIndex(true, 'log_template');
                     <?php
                 }
                 if (!isset($_SESSION['m_admin']['docserver_types']['is_signed']) || !$_SESSION['m_admin']['docserver_types']['is_signed']) {
                     ?>
-                    hide_index(true, 'fingerprint_mode');
+                    hideIndex(true, 'fingerprint_mode');
                     <?php
                 }
                 ?>
