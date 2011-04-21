@@ -11,7 +11,9 @@
 * @author  Laurent Giovannoni  <dev@maarch.org>
 *
 */
-
+require_once 'core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
+. 'class_request.php';
+require_once 'core' . DIRECTORY_SEPARATOR . 'core_tables.php';
 class folder extends request
 {
 	/**
