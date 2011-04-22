@@ -796,7 +796,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .='if(type_id){change_doctype(type_id.options[type_id.selectedIndex].value, \''.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=change_doctype\', \''._ERROR_DOCTYPE.'\', \''.$id_action.'\', \''.$_SESSION['config']['businessappurl'].'index.php?display=true&page=get_content_js\' , \''.$display_value.'\', '.$res_id.', \''. $coll_id.'\' );}';
         if($core_tools->is_module_loaded('entities') )
         {
-            $frm_str .='change_entity(\'\', \''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=load_listinstance'.'\',\'diff_list_div\', \'indexing\', \''.$display_value.'\'';
+            $frm_str .='change_entity(\''.$data['destination'].'\', \''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=load_listinstance'.'\',\'diff_list_div\', \'indexing\', \''.$display_value.'\'';
             if(!$load_listmodel)
             {
                 $frm_str .= ',\'false\'';
