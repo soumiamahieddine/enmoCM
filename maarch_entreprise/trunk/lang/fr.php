@@ -100,7 +100,6 @@ if (!defined('_ACTIONS')) define( '_ACTIONS', 'Actions');
 if (!defined('_ACTION_PAGE')) define( '_ACTION_PAGE', 'Page de r&eacute;sultat de l&rsquo;action');
 if (!defined('_DO_NOT_MODIFY_UNLESS_EXPERT')) define( '_DO_NOT_MODIFY_UNLESS_EXPERT', ' Ne pas modifier cette section &agrave; moins de savoir ce que vous faites. Un mauvais param&egrave;trage peut entrainer des dysfonctionnements de l&rsquo;application!');
 if (!defined('_INFOS_ACTIONS')) define( '_INFOS_ACTIONS', 'Vous devez choisir au moins un statut et / ou un script.');
-if (!defined('_INFOS_ACTIONS')) define( '_INFOS_ACTIONS', 'Vous devez choisir au moins un statut et / ou un script.');
 
 
 /************** Intitul&eacute;s formulaires et listes **************/
@@ -641,6 +640,9 @@ if (!defined('_CHECK_INVOICE')) define( '_CHECK_INVOICE', 'V&eacute;rifier factu
 if (!defined('_REDIRECT_TO')) define( '_REDIRECT_TO', 'Rediriger vers');
 if (!defined('_NO_STRUCTURE_ATTACHED')) define( '_NO_STRUCTURE_ATTACHED', 'Ce type de document n&rsquo;est attach&eacute; &agrave; aucune chemise');
 
+//Postindexing action page
+if (!defined('_POSTINDEXING_PAGE')) define('_POSTINDEXING_PAGE', 'Formulaire de vid&eacute;ocodage');
+if (!defined('_POSTINDEXING_FOLDER_PAGE')) define('_POSTINDEXING_FOLDER_PAGE', 'Formulaire de vid&eacute;ocodage (dossiers)');
 
 ///// Credits
 if (!defined('_MAARCH_CREDITS')) define( '_MAARCH_CREDITS', 'A propos de Maarch&nbsp;');

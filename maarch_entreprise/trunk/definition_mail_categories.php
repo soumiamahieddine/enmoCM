@@ -439,6 +439,36 @@ $_ENV['categories']['postindexing_document']['type_id'] = array (
     'modify' => true,
     'form_show' => 'select'
 );
+$_ENV['categories']['postindexing_document']['priority'] = array (
+    'type_form' => 'integer',
+    'type_field' => 'integer',
+    'mandatory' => false,
+    'label' => _PRIORITY,
+    'table' => 'res',
+    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=mini_type.gif',
+    'modify' => true,
+    'form_show' => 'select'
+);
+$_ENV['categories']['postindexing_document']['admission_date'] = array (
+    'type_form' => 'date',
+    'type_field' => 'date',
+    'mandatory' => true,
+    'label' => _RECEIVING_DATE,
+    'table' => 'coll_ext',
+    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=date_arriv.gif',
+    'modify' => true,
+    'form_show' => 'date'
+);
+$_ENV['categories']['postindexing_document']['nature_id'] = array (
+    'type_form' => 'string',
+    'type_field' => 'string',
+    'mandatory' => true,
+    'label' => _NATURE,
+    'table' => 'coll_ext',
+    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=nature_send.gif',
+    'modify' => true,
+    'form_show' => 'select'
+);
 $_ENV['categories']['postindexing_document']['doc_date'] = array (
     'type_form' => 'date',
     'type_field' => 'date',
@@ -459,7 +489,26 @@ $_ENV['categories']['postindexing_document']['subject'] = array (
     'modify' => true,
     'form_show' => 'textfield'
 );
-
+$_ENV['categories']['postindexing_document']['type_contact'] = array (
+    'type_form' => 'radio',
+    'mandatory' => true,
+    'label' => _SHIPPER_TYPE,
+    'table' => 'none',
+    'values' => array (
+        'internal',
+        'external'
+    ),
+    'modify' => false
+);
+$_ENV['categories']['postindexing_document']['other_cases']['contact'] = array (
+    'type_form' => 'string',
+    'type_field' => 'string',
+    'mandatory' => true,
+    'label' => _SHIPPER,
+    'table' => 'coll_ext',
+    'special' => 'exp_user_id,exp_contact_id',
+    'modify' => false
+);
 /////////////////////////////EMPTY////////////////////////////////////////////////
 $_ENV['categories']['empty'] = array ();
 $_ENV['categories']['empty']['img_cat'] = $_SESSION['config']['businessappurl'] . 'static.php?filename=cat_doc_market.gif';
@@ -561,6 +610,24 @@ if ($core->is_module_loaded('entities')) {
         'label' => _DIFF_LIST,
         'table' => 'special'
     );
+
+    // Entities module (postindexing_document)
+    $_ENV['categories']['postindexing_document']['destination'] = array (
+        'type_form' => 'string',
+        'type_field' => 'string',
+        'mandatory' => true,
+        'label' => _DEPARTMENT_DEST,
+        'table' => 'res',
+        'img' => $_SESSION['config']['businessappurl'] . 'static.php?module=entities&filename=manage_entities_b_small.gif',
+        'modify' => false,
+        'form_show' => 'select'
+    );
+    $_ENV['categories']['postindexing_document']['other_cases']['diff_list'] = array (
+        'type' => 'special',
+        'mandatory' => true,
+        'label' => _DIFF_LIST,
+        'table' => 'special'
+    );
 }
 if ($core->is_module_loaded('physical_archive')) {
     //Physical Archive (incoming)
@@ -611,7 +678,7 @@ if ($core->is_module_loaded('physical_archive')) {
     $_ENV['categories']['postindexing_document']['other_cases']['arbox_id'] = array (
         'type_form' => 'interger',
         'type_field' => 'integer',
-        'mandatory' => false,
+        'mandatory' => true,
         'label' => _BOX_ID,
         'table' => 'res',
         'img' => $_SESSION['config']['businessappurl'] . 'static.php?module=physical_archive&filename=pa_boxes.gif',
