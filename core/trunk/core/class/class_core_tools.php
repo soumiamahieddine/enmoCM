@@ -1057,6 +1057,9 @@ class core_tools extends functions
     *
     */
     public function insert_page() {
+    	if (!isset($_SESSION['config']['app_id']) && $_SESSION['config']['app_id'] == '') {
+    		$_SESSION['config']['app_id'] = 'maarch_entreprise';
+    	}
         if(isset($_GET['amp;module']) && $_GET['amp;module'] <> "") {
             $_GET['module'] = $_GET['amp;module'];
             $_REQUEST['module'] = $_REQUEST['amp;module'];

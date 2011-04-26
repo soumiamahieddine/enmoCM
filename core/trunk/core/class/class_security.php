@@ -96,17 +96,19 @@ class security extends dbquery
         // #TODO : Not usefull anymore, loginmode field is always in users table
         //Compatibility test, if loginmode column doesn't exists, Maarch can't crash
         if ($this->test_column($_SESSION['tablename']['users'], 'loginmode')) {
+            // #TODO : do evolution of the loginmethod in sql query
             if ($method == 'activex') {
                 $comp = " and STATUS <> 'DEL' and loginmode = 'activex'";
             } else if ($method == 'ldap') {
                 $comp =" and STATUS <> 'DEL'";
             } else {
                 $comp = " and password = '" . $pass . "' and STATUS <> 'DEL' "
-                      . "and loginmode = 'standard'";
+                      . "and (loginmode = 'standard' or loginmode  = 'sso')";
             }
         } else {
             $comp = " and password = '" . $pass . "' and STATUS <> 'DEL'";
         }
+        //echo $comp;exit;
         $user = $uc->get($s_login, $comp);
 
         if (isset($user)) {

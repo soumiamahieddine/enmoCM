@@ -22,6 +22,9 @@ $func = new functions();
 $core = new core_tools();
 $_SESSION['custom_override_id'] = $core->get_custom_id();
 
+/**** retrieve HTTP_REQUEST FROM SSO ****/
+$_SESSION['HTTP_REQUEST'] = $_REQUEST;
+
 if(isset($_SESSION['config']['defaultlang']) && !empty($_SESSION['config']['defaultlang']))
 {
 	include("portal".DIRECTORY_SEPARATOR.$_SESSION['config']['defaultlang'].'.php');
