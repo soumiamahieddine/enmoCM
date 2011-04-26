@@ -1060,6 +1060,7 @@ if (!defined('_ACTIVEX_LOGIN')) define( '_ACTIVEX_LOGIN', 'Ms Ie - ActiveX authe
 if (!defined('_HOW_CAN_I_LOGIN')) define( '_HOW_CAN_I_LOGIN', 'Read me if i can\'t log into Maarch..');
 if (!defined('_CONNECT')) define( '_CONNECT', 'Connect');
 if (!defined('_LOGIN_MODE')) define( '_LOGIN_MODE', 'Login process type');
+if (!defined('_SSO_LOGIN')) define( '_SSO_LOGIN', 'Login via SSO');
 
 /************FAILOVER******************************/
 if (!defined('_FAILOVER'))  define('_FAILOVER', 'Failover');

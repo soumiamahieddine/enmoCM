@@ -12,4 +12,10 @@
         <SCRIPT>standard_connect.php</SCRIPT>
         <ENABLED>true</ENABLED>
     </METHOD>
+    <!--<METHOD>
+        <ID>sso</ID>
+        <NAME>_SSO_LOGIN</NAME>
+        <SCRIPT>sso_connect.php</SCRIPT>
+        <ENABLED>true</ENABLED>
+    </METHOD>-->
 </ROOT>

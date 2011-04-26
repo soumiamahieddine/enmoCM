@@ -1035,6 +1035,7 @@ if (!defined('_ACTIVEX_LOGIN')) define( '_ACTIVEX_LOGIN', 'Authentification Ms I
 if (!defined('_HOW_CAN_I_LOGIN')) define( '_HOW_CAN_I_LOGIN', 'Je n&rsquo;arrive pas &agrave; me connecter...');
 if (!defined('_CONNECT')) define( '_CONNECT', 'Se connecter');
 if (!defined('_LOGIN_MODE')) define( '_LOGIN_MODE', 'Type d&rsquo;authentification');
+if (!defined('_SSO_LOGIN')) define( '_SSO_LOGIN', 'Login via SSO');
 
 
 /******** Admin groups **********/
