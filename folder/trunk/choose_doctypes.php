@@ -11,13 +11,15 @@
 */
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
 
-$core_tools = new core_tools();
-$core_tools->load_lang();
- $core_tools->load_html();
-$core_tools->load_header( );
+$core = new core_tools();
+$core->load_lang();
+$core->load_html();
+$core->load_header();
 
-if($_SESSION['m_admin']['mode'] == "up" && (isset($_SESSION['m_admin']['init']) && $_SESSION['m_admin']['init'] == true))
-{
+if (isset($_SESSION['m_admin']['mode']) && $_SESSION['m_admin']['mode'] == "up" 
+	&& isset($_SESSION['m_admin']['init']) 
+	&& $_SESSION['m_admin']['init'] == true
+) {
 	$_SESSION['m_admin']['chosen_doctypes'] = array();
 	$_SESSION['m_admin']['chosen_doctypes'] = $_SESSION['m_admin']['foldertype']['doctypes'];
 	$_SESSION['m_admin']['init'] = false;

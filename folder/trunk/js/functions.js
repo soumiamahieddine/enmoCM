@@ -311,3 +311,23 @@ function search_change_coll(url, id_coll)
 		});
 	}
 }
+
+function get_ft_opt_index(url)
+{
+	if(url)
+    {
+        new Ajax.Request(url,
+        {
+            method:'post',
+            parameters: {},
+                    onSuccess: function(answer){
+                        var div_to_fill = $('opt_index');
+                    //  console.log(div_to_fill);
+                        if(div_to_fill)
+                        {
+                            div_to_fill.innerHTML = answer.responseText;
+                        }
+                    }
+        });
+    }
+}

@@ -211,8 +211,9 @@ class foldertype extends dbquery
                         <label><?php  echo _COMMENTS; ?> : </label>
                         <textarea  cols="30" rows="4"  name="comment"  id="comment" ><?php  echo $func->show_str($_SESSION['m_admin']['foldertype']['comment']); ?></textarea>
                     </p>
+                    <div id="opt_index"></div>
                 <?php
-                $indexes = $this->get_all_indexes();
+              /*  $indexes = $this->get_all_indexes();
 
                 if(count($indexes) > 0)
                 {?>
@@ -246,7 +247,7 @@ class foldertype extends dbquery
 
                     </div>
                     <div  class="block_end"></div>
-            <?php } ?>
+            <?php } */?>
                     <div align="center">
                      <p><h3><?php  echo _MANDATORY_DOCTYPES_COMP;?> : </h3></p><br/>
                     <iframe name="doctypes_frame" src="<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=folder&page=choose_doctypes" frameborder="0" width="900px" height="250px" scrolling="no"></iframe>
@@ -256,6 +257,12 @@ class foldertype extends dbquery
                         <input type="button" name="cancel" value="<?php  echo _CANCEL; ?>" class="button"  onclick="javascript:window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=foldertypes&amp;module=folder';"/>
                     </p>
                 </form>
+                 <script type="text/javascript">
+                	get_ft_opt_index('<?php
+            			echo $_SESSION['config']['businessappurl'];
+            		?>index.php?display=true&page=get_index&module=folder');
+                </script>
+         
                 <?php
             }
         ?>
