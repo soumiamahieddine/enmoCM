@@ -702,23 +702,36 @@ class core_tools extends functions
     public function execute_modules_services($modules_services, $whereami, $servicenature = "all", $id_service = '', $id_module = '')
     {
         $executed_services = array();
-        if(!empty($id_service) && !empty($id_module))
-        {
-            for($i=0;$i < count($modules_services[$id_module]);$i++)
-            {
-                if($modules_services[$id_module][$i]['id'] == $id_service && isset($modules_services[$id_module][$i]['whereamiused']))
-                {
-                    for($k=0; $k < count($modules_services[$id_module][$i]['whereamiused']);$k++)
-                    {
-                        //$name = $id = $width = $height = $frameborder = $scrolling = '';
+        if (! empty($id_service) && ! empty($id_module)) {
+            for ($i = 0; $i < count($modules_services[$id_module]); $i ++) {
+                if ($modules_services[$id_module][$i]['id'] == $id_service 
+                	&& isset($modules_services[$id_module][$i]['whereamiused'])
+                ) {
+                    for ($k = 0; $k < count(
+                    	$modules_services[$id_module][$i]['whereamiused']
+                    ); $k ++
+                    ) {
+                        $name = $id = $width = $height = $frameborder = $scrolling = $style = '';
+                        if ($modules_services[$id_module][$i]['whereamiused'][$k]['page'] == $whereami) {
+                            if ($modules_services[$id_module][$i]['whereamiused'][$k]['nature'] == "frame" 
+                            	&& $_SESSION['user']['services'][$modules_services[$id_module][$i]['id']] 
+                            	&& ! in_array(
+                            		$modules_services[$id_module][$i]['id'], 
+                            		$executed_services
+                            	)
+                            ) {
+                                array_push(
+                                	$executed_services,
+                                	$modules_services[$id_module][$i]['id']
+                                );
 
-                        if($modules_services[$id_module][$i]['whereamiused'][$k]['page'] == $whereami)
-                        {
-                            if($modules_services[$id_module][$i]['whereamiused'][$k]['nature'] == "frame" && $_SESSION['user']['services'][$modules_services[$id_module][$i]['id']] && !in_array($modules_services[$id_module][$i]['id'], $executed_services))
-                            {
-                                array_push($executed_services,$modules_services[$id_module][$i]['id']);
-
-                                if (isset($modules_services[$id_module][$i]['whereamiused'][$k]['frame_id']) && !empty($modules_services[$id_module][$i]['whereamiused'][$k]['frame_id'])) { $name = 'name="'.$modules_services[$id_module][$i]['whereamiused'][$k]['frame_id'].'"';}
+                                if (isset(
+                                	$modules_services[$id_module][$i]['whereamiused'][$k]['frame_id']
+                                	) && ! empty(
+                                	$modules_services[$id_module][$i]['whereamiused'][$k]['frame_id']
+                                	)
+                                ) { 
+                                	$name = 'name="' . $modules_services[$id_module][$i]['whereamiused'][$k]['frame_id'].'"';}
                                 if (isset($modules_services[$id_module][$i]['whereamiused'][$k]['frame_id']) && !empty($modules_services[$id_module][$i]['whereamiused'][$k]['frame_id'])) { $id = 'id="'.$modules_services[$id_module][$i]['whereamiused'][$k]['frame_id'].'"'; }
                                 if (isset($modules_services[$id_module][$i]['whereamiused'][$k]['width']) &&  strlen($modules_services[$id_module][$i]['whereamiused'][$k]['width']) >0) { $width = 'width="'.$modules_services[$id_module][$i]['whereamiused'][$k]['width'].'" '; }
                                 if (isset($modules_services[$id_module][$i]['whereamiused'][$k]['height']) &&  strlen($modules_services[$id_module][$i]['whereamiused'][$k]['height']) > 0) { $height = 'height="'.$modules_services[$id_module][$i]['whereamiused'][$k]['height'].'"'; }
