@@ -16,8 +16,10 @@ $date = mktime(0, 0, 0, date("m") + 2 , date("d"), date("Y"));
 $date = date("D, d M Y H:i:s", $date);
 $time = 30 * 12 * 60 * 60;
 header("Pragma: public");
-header("Expires: ".$date." GMT");
-header("Cache-Control: max-age=".$time.", must-revalidate");
+header("Cache-Control: no-cache, must-revalidate");
+header("Expires: Sat, 26 Jul 1997 05:00:00 GMT");
+//header("Expires: ".$date." GMT");
+//header("Cache-Control: max-age=".$time.", must-revalidate");
 header('Content-type: text/css; charset=utf-8');
 
 ob_start("compress");
@@ -84,6 +86,6 @@ if (isset($_GET['ie'])) {
 		}
 	}
 }
-include 'apps/' . $_SESSION['config']['app_id'] . '/css/doctype_levels.css';
+include_once 'apps/' . $_SESSION['config']['app_id'] . '/css/doctype_levels.css';
 ob_end_flush();
 

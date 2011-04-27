@@ -1,56 +1,45 @@
-@CHARSET "UTF-8";
 
-.default_style
-{
-	font-color: #000000;
+
+.default_style {
+    color:#000000;
 }
 
-.blue_style
-{
-    font-color: #0000FF;
+.blue_style {
+    color:#0000FF;
 }
 
-.yellow_style
-{
-    font-color: #FFFF00;
+.yellow_style {
+    color:#FFFF00;
 }
 
-.green_style
-{
-    font-color: #008000;
+.green_style {
+    color:#008000;
 }
 
-.beige_style
-{
-    font-color: #D2B48C;
+.beige_style {
+    color:#D2B48C;
 }
 
-.pink_style
-{
-    font-color: #FF00FF;
+.pink_style {
+    color:#FF00FF;
 }
 
-.red_style
-{
-    font-color: #FF0000;
+.red_style {
+    color:#FF0000;
 }
 
-.violet_style
-{
-    font-color: #800080;
+.violet_style {
+    color:#800080;
 }
 
-.grey_style
-{
-    font-color: #808080;
+.grey_style {
+    color:#808080;
 }
 
-.orange_style
-{
-    font-color: #FF4500;
+.orange_style {
+    color:#FF4500;
 }
 
-.brown_style
-{
-    font-color: #800000;
+.brown_style {
+    color:#800000;
 }

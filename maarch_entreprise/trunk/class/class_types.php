@@ -248,16 +248,7 @@ class types extends dbquery
             ?>index.php?display=true&page=get_index', coll_list.options[coll_list.options.selectedIndex].value);
                 </script>
                 <script type="text/javascript">
-            function showValuesList(listId, spanId)
-            {
-                if (window.document.getElementById(listId).style.display == 'none') {
-                    window.document.getElementById(listId).style.display = 'block';
-                    window.document.getElementById(spanId).style.display = 'none';
-                } else {
-                    window.document.getElementById(listId).style.display = 'none';
-                    window.document.getElementById(spanId).style.display = 'block';
-                }
-            }
+            
                 </script>
             <?php
          }

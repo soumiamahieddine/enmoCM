@@ -52,6 +52,7 @@ $core_tools->load_html();
 $core_tools->load_header('', true, false);
 $f_level = array();
 $folder_module = $core_tools->is_module_loaded('folder');
+
 ?>
 <body>
 <?php
@@ -61,7 +62,10 @@ if($nb_trees < 1 && $folder_module)
 }
 else
 {
-    if(((isset($_SESSION['doctypes_chosen_tree']) && !empty($_SESSION['doctypes_chosen_tree']))&& $folder_module ) || !$folder_module)
+    if ((
+    	(isset($_SESSION['doctypes_chosen_tree']) && ! empty($_SESSION['doctypes_chosen_tree'])) 
+    	&& $folder_module 
+    	) || ! $folder_module)
     {
         ?>
         <script type="text/javascript" src="<?php  echo $_SESSION['config']['businessappurl'].'tools/tafelTree/';?>js/prototype.js"></script>
@@ -117,7 +121,7 @@ else
             var BASE_URL = '<?php echo $_SESSION['config']['businessappurl'];?>';
             function funcOpen(branch, response) {
                 // Ici tu peux traiter le retour et retourner true si
-                // tu veux insérer les enfants, false si tu veux pas
+                // tu veux insï¿½rer les enfants, false si tu veux pas
                 //MyClick(branch);
                 return true;
             }
