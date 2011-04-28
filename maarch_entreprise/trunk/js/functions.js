@@ -2111,7 +2111,7 @@ function updateContent(url,id_div_to_update, onComplete_callback)
     }
 });
 }
-<<<<<<< .mine
+
 function showValuesList(listId, spanId)
 {
     if (window.document.getElementById(listId).style.display == 'none') {
@@ -2121,7 +2121,7 @@ function showValuesList(listId, spanId)
         window.document.getElementById(listId).style.display = 'none';
         window.document.getElementById(spanId).style.display = 'block';
     }
-}=======
+}
 
 function hideIndex(mode_hide, display_val) {
 	var displayVal = $(display_val);
@@ -2135,4 +2135,4 @@ function hideIndex(mode_hide, display_val) {
 		}
 	}
 }
->>>>>>> .r804
+
