@@ -59,7 +59,7 @@ if (empty($coll_id_test)) {
 		"select distinct doctypes_first_level_id, doctypes_first_level_label, "
 		. "doctype_first_level_style, doctypes_second_level_id, "
 		. "doctypes_second_level_label, doctype_second_level_style, type_id, "
-		. "type_label, res_id from  " . $table_view 
+		. "type_label, res_id from  " . $table_view
 		. " where folders_system_id = '" . $_SESSION['current_folder_id']
 		. "' and type_id <> 0 and doctypes_first_level_id <> 0 "
 		. "and doctypes_second_level_id <> 0 and status<>'DEL' " . $where_clause
@@ -69,17 +69,27 @@ if (empty($coll_id_test)) {
 	//$db->show();
 	$count_doc = 0;
 	while ($res = $db->fetch_object()) {
+	    if (isset($res->doctype_first_level_style)) {
+	        $level1Style = $func->show_string($res->doctype_first_level_style);
+	    } else {
+	        $level1Style = 'default_style';
+	    }
+	    if (isset($res->doctype_second_level_style)) {
+	        $level2Style = $func->show_string($res->doctype_second_level_style);
+	    } else {
+	        $level2Style = 'default_style';
+	    }
 		array_push(
-			$array_struct, 
+			$array_struct,
 			array(
-				"level_1_id" => $res->doctypes_first_level_id, 
-				"level_1_label" => $func->show_string($res->doctypes_first_level_label), 
-				"level_1_style" => $func->show_string($res->doctype_first_level_style), 
-				"level_2_id" => $res->doctypes_second_level_id, 
-				"level_2_label" => $func->show_string($res->doctypes_second_level_label), 
-				"level_2_style" => $func->show_string($res->doctype_second_level_style), 	
-				"level_3_id" => $res->type_id, 
-				"level_3_label" => $func->show_string($res->type_label), 
+				"level_1_id" => $res->doctypes_first_level_id,
+				"level_1_label" => $func->show_string($res->doctypes_first_level_label),
+				"level_1_style" => $level1Style,
+				"level_2_id" => $res->doctypes_second_level_id,
+				"level_2_label" => $func->show_string($res->doctypes_second_level_label),
+				"level_2_style" => $level2Style,
+				"level_3_id" => $res->type_id,
+				"level_3_label" => $func->show_string($res->type_label),
 				"level_4_id" => $res->res_id, "level_4_label" => $res->res_id
 			)
 		);
@@ -188,11 +198,11 @@ if (empty($coll_id_test)) {
 				}
 				?>
 				<div onclick="change2(<?php  echo $value_1;?>)" id="h2<?php  echo $value_1;?>" class="categorie">
-					<?php  
+					<?php
 					echo "<a href=javascript:view_doc('" . $res_id_list . "');>"
-					?><img src="<?php  
+					?><img src="<?php
 					echo $_SESSION['config']['businessappurl']
-					?>static.php?filename=folderopen.gif" alt="" />&nbsp;<b class="<?php 
+					?>static.php?filename=folderopen.gif" alt="" />&nbsp;<b class="<?php
 					echo $_SESSION['array_struct_final']['level_1'][$value_1]['style'];
 					?>"><?php  echo $_SESSION['array_struct_final']['level_1'][$value_1]['label'];?></b></a>
 					<span class="lb1-details">&nbsp;</span>
@@ -216,12 +226,16 @@ if (empty($coll_id_test)) {
 							//echo $res_id_list;
 							?>
 							<div onclick="change2(<?php  echo $value_2;?>)" id="h2<?php  echo $value_2;?>" class="categorie">
-								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php  
+								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php
 								echo "<a href=javascript:view_doc('".$res_id_list."');>"
-								?><img src="<?php  
+								?><img src="<?php
 								echo $_SESSION['config']['businessappurl'];
-								?>static.php?filename=folderopen.gif" alt="" />&nbsp;<b class="<?php 
-								echo $_SESSION['array_struct_final']['level_1'][$value_1]['level_2'][$value_2]['style'];
+								?>static.php?filename=folderopen.gif" alt="" />&nbsp;<b class="<?php
+								if (isset($_SESSION['array_struct_final']['level_1'][$value_1]['level_2'][$value_2]['style'])) {
+								    echo $_SESSION['array_struct_final']['level_1'][$value_1]['level_2'][$value_2]['style'];
+								} else {
+								    echo 'default_style';
+								}
 								?>"><?php  echo $_SESSION['array_struct_final']['level_1'][$value_1]['level_2'][$value_2]['label'];?></b></a>
 								<span class="lb1-details">&nbsp;</span>
 							</div>
