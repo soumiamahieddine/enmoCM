@@ -1946,28 +1946,37 @@ class core_tools extends functions
         <head>
             <title><?php  echo $title;?></title>
             <meta name="apple-mobile-web-app-capable" content="yes">
-			<meta name="apple-touch-fullscreen" content="yes">
-			<link rel="apple-touch-icon" href="img/board.png">
-			<link rel="apple-touch-icon-precomposed" href="img/board.png">
+            <meta name="apple-touch-fullscreen" content="yes">
+            <link rel="apple-touch-icon" href="img/board.png">
+            <link rel="apple-touch-icon-precomposed" href="img/board.png">
             <?php
             if($load_css) {
                 $this->loadSmartphoneCss();
             }
             if($load_js) {
-                $this->load_js();
+                //$this->load_js();
+                ?>
+                <script type="application/x-javascript" src="<?php  echo $_SESSION['config']['businessappurl'];?>smartphone/js/iui/iui.js"></script>
+                <script type="text/javascript" src="<?php  echo $_SESSION['config']['businessappurl'];?>smartphone/js/iscroll.js?v3.7.1"></script>
+                
+                <?php
             }
             ?>
         </head>
         <?php
     }
-
+    
     /**
     * Loads the smartphone css
     */
     private function loadSmartphoneCss()
     {
         ?>
-        <link rel="stylesheet" type="text/css" href="<?php  echo $_SESSION['config']['businessappurl'].'smartphone/css/style.css'; ?>" media="screen" />
+        <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"/>
+        <!--<link rel="stylesheet" type="text/css" href="<?php  echo $_SESSION['config']['businessappurl'].'smartphone/css/style.css'; ?>" media="screen" />-->
+        <link rel="stylesheet" type="text/css" href="<?php  echo $_SESSION['config']['businessappurl'].'smartphone/css/iui-panel-list.css'; ?>" media="screen" />
+        <link rel="stylesheet" type="text/css" href="<?php  echo $_SESSION['config']['businessappurl'].'smartphone/js/iui/iui.css'; ?>" media="screen" />
+        <link rel="stylesheet" type="text/css" href="<?php  echo $_SESSION['config']['businessappurl'].'smartphone/js/iui/t/maarch/maarch-theme.css'; ?>" media="screen" />
         <?php
     }
 }
