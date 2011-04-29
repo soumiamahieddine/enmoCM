@@ -69,6 +69,7 @@ while ($res = $db->fetch_object()) {
         )
     );
 }
+$init = false;
 ?>
 
 <h1><img src="<?php
@@ -97,6 +98,9 @@ for ($i = 0; $i < count($foldertypes); $i ++) {
     if (isset($_SESSION['m_admin']['folder']['foldertype_id'])
         && $_SESSION['m_admin']['folder']['foldertype_id'] == $foldertypes[$i]['id']
     ) {
+        echo 'selected="selected"';
+    } else if($i == 0) {
+        $init = true;
         echo 'selected="selected"';
     }
     ?>><?php
@@ -136,8 +140,9 @@ echo $_SESSION['config']['businessappurl'];
         </p>
     </form>
     <?php
-if (isset($_SESSION['m_admin']['folder']['foldertype_id'])
-    && ! empty($_SESSION['m_admin']['folder']['foldertype_id'])
+if ((isset($_SESSION['m_admin']['folder']['foldertype_id'])
+    && ! empty($_SESSION['m_admin']['folder']['foldertype_id'] ))
+    || $init
 ) {
     ?>
     <script type="text/javascript">

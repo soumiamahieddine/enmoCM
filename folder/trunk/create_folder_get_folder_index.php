@@ -81,7 +81,9 @@ if (count($indexes) > 0) {
 			for ($i = 0; $i < count($indexes[$key]['values']); $i ++) {
 			    $content .= '<option value="'
 			             . $indexes[$key]['values'][$i]['id'] . '"';
-				if ($indexes[$key]['values'][$i]['id'] == $_SESSION['m_admin']['folder']['indexes'][$key]) {
+				if (isset($_SESSION['m_admin']['folder']['indexes'][$key])
+				    && $indexes[$key]['values'][$i]['id'] == $_SESSION['m_admin']['folder']['indexes'][$key]
+				) {
 					$content .= ' selected="selected"';
 				} else if ($indexes[$key]['default_value'] <> false
 				    && $indexes[$key]['values'][$i]['id'] == $indexes[$key]['default_value']
