@@ -91,7 +91,7 @@ class list_show_with_template extends list_show
 	//Load radio form if this parameters is loaded in list_show and list_show_with_template
 	public function tmplt_load_external_script($actual_string, $theline, $result, $key)
 	{
-
+        $external = '';
 		$my_explode= explode ("|", $actual_string);
 		if (count($my_explode) <> 3)
 		{
