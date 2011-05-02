@@ -218,11 +218,11 @@ else
 	<?php
 	} ?>
 	<?php
-	if ($core_tools->test_service('join_res_case', 'cases',false) == 1)
+	/*if ($core_tools->test_service('join_res_case', 'cases',false) == 1)
 	{ ?>
-		<input type="button" class="button"  value="<?php  echo _JOIN_RES_ON_THIS_CASE;?>" name="join_res" onclick="window.open('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=cases&page=search_adv_for_cases&searched_item=case&searched_value=<?php echo $case_indexes['case_id'];?>','', 'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=1020,height=710');"/>
+		<input type="button" class="button"  value="<?php  echo _JOIN_RES_ON_THIS_CASE;?>" name="join_res" onclick="window.open('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=cases&page=search_adv_for_cases&searched_item=res_id&searched_value=<?php echo $case_indexes['case_id'];?>','', 'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=1020,height=710');"/>
 	<?php
-	}
+	}*/
 	if ($core_tools->test_service('close_case', 'cases',false) == 1)
 	{ ?>
 		<input type="button" class="button"  value="<?php  echo _CLOSE_THIS_CASE;?>" name="join_res" onclick="window.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=cases&page=db_close_case&case_id=<?php echo $case_indexes['case_id'];?>' "/>

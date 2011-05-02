@@ -13,7 +13,7 @@
      <nature>include</nature>
    </WHEREAMIUSED>
  </SERVICE>
- <SERVICE>
+ <!--<SERVICE>
    <id>join_res_case</id>
    <name>_JOIN_RES_CASE</name>
    <comment>_JOIN_RES_CASE</comment>
@@ -25,7 +25,7 @@
      <page>detail_index_cases.php</page>
      <nature>include</nature>
    </WHEREAMIUSED>
- </SERVICE>
+ </SERVICE>-->
  <SERVICE>
    <id>join_res_case_in_process</id>
    <name>_JOIN_RES_CASE_IN_PROCESS</name>
