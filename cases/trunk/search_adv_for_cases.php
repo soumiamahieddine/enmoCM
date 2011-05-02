@@ -82,7 +82,7 @@ while ($res = $conn->fetch_object()) {
         $queries,
         array(
         	'ID' => $res->query_id,
-        	'LABEL' => $res->query_name
+        	'LABEL' => $res->query_name,
         )
     );
 }
@@ -129,7 +129,7 @@ if (preg_match("/MSIE 6.0/", $_SERVER["HTTP_USER_AGENT"])) {
     $formClass = 'forms';
     $hr = '';
     $size = '';
-   // $size = 'style="width:40px;"';
+    // $size = 'style="width:40px;"';
 }
 
 // building of the parameters array used to pre-load the category list and the search elements
@@ -137,197 +137,377 @@ $param = array();
 
 // Indexes specific to doctype
 $indexes = $type->get_all_indexes($collId);
-for($i=0;$i<count($indexes);$i++)
-{
+for ($i = 0; $i < count($indexes); $i ++) {
     $field = $indexes[$i]['column'];
-    if(preg_match('/^custom_/', $field))
-    {
+    if (preg_match('/^custom_/', $field)) {
         $field = 'doc_'.$field;
     }
-    if($indexes[$i]['type'] == 'date')
-    {
-        $arr_tmp2 = array('label' => $indexes[$i]['label'], 'type' => 'date_range', 'param' => array('field_label' => $indexes[$i]['label'], 'id1' => $field.'_from', 'id2' =>$field.'_to'));
+    if ($indexes[$i]['type'] == 'date') {
+        $arrTmp2 = array(
+        	'label' => $indexes[$i]['label'],
+        	'type' => 'date_range',
+        	'param' => array(
+        		'field_label' => $indexes[$i]['label'],
+        		'id1' => $field . '_from',
+        		'id2' => $field . '_to',
+            ),
+        );
+    } else if ($indexes[$i]['type'] == 'string') {
+        $arrTmp2 = array(
+        	'label' => $indexes[$i]['label'],
+        	'type' => 'input_text',
+        	'param' => array(
+        		'field_label' => $indexes[$i]['label'],
+        		'other' => $size,
+            ),
+        );
+    } else { // integer or float
+        $arrTmp2 = array(
+        	'label' => $indexes[$i]['label'],
+        	'type' => 'num_range',
+        	'param' => array(
+        		'field_label' => $indexes[$i]['label'],
+        		'id1' => $field . '_min',
+        		'id2' => $field . '_max',
+            ),
+        );
     }
-    else if($indexes[$i]['type'] == 'string')
-    {
-        $arr_tmp2 = array('label' => $indexes[$i]['label'], 'type' => 'input_text', 'param' => array('field_label' => $indexes[$i]['label'], 'other' => $size));
-    }
-    else  // integer or float
-    {
-        $arr_tmp2 = array('label' => $indexes[$i]['label'], 'type' => 'num_range', 'param' => array('field_label' => $indexes[$i]['label'], 'id1' => $field.'_min', 'id2' =>$field.'_max'));
-    }
-    $param[$field] = $arr_tmp2;
+    $param[$field] = $arrTmp2;
 }
 
 //Coming date
-$arr_tmp2 = array('label' => _DATE_START, 'type' => 'date_range', 'param' => array('field_label' => _DATE_START, 'id1' => 'admission_date_from', 'id2' =>'admission_date_to'));
-$param['admission_date'] = $arr_tmp2;
+$arrTmp2 = array(
+	'label' => _DATE_START,
+	'type' => 'date_range',
+	'param' => array(
+		'field_label' => _DATE_START,
+		'id1' => 'admission_date_from',
+		'id2' =>'admission_date_to',
+    ),
+);
+$param['admission_date'] = $arrTmp2;
 
 //Loaded date
-$arr_tmp2 = array('label' => _REG_DATE, 'type' => 'date_range', 'param' => array('field_label' => _REG_DATE, 'id1' => 'creation_date_from', 'id2' =>'creation_date_to'));
-$param['creation_date'] = $arr_tmp2;
+$arrTmp2 = array(
+	'label' => _REG_DATE,
+	'type' => 'date_range',
+	'param' => array(
+		'field_label' => _REG_DATE,
+		'id1' => 'creation_date_from',
+		'id2' =>'creation_date_to',
+    ),
+);
+$param['creation_date'] = $arrTmp2;
 
 //Closing date
-$arr_tmp2 = array('label' => _PROCESS_DATE, 'type' => 'date_range', 'param' => array('field_label' => _PROCESS_DATE, 'id1' => 'closing_date_from', 'id2' =>'closing_date_to'));
-$param['closing_date'] = $arr_tmp2;
+$arrTmp2 = array(
+	'label' => _PROCESS_DATE,
+	'type' => 'date_range',
+	'param' => array(
+		'field_label' => _PROCESS_DATE,
+		'id1' => 'closing_date_from',
+		'id2' =>'closing_date_to',
+    ),
+);
+$param['closing_date'] = $arrTmp2;
 
 //Document date
-$arr_tmp2 = array('label' => _DOC_DATE, 'type' => 'date_range', 'param' => array('field_label' => _DOC_DATE, 'id1' => 'doc_date_from', 'id2' =>'doc_date_to'));
-$param['doc_date'] = $arr_tmp2;
+$arrTmp2 = array(
+	'label' => _DOC_DATE,
+	'type' => 'date_range',
+	'param' => array(
+		'field_label' => _DOC_DATE,
+		'id1' => 'doc_date_from',
+		'id2' =>'doc_date_to',
+    ),
+);
+$param['doc_date'] = $arrTmp2;
 
 //Process limit date
-$arr_tmp2 = array('label' => _LIMIT_DATE_PROCESS, 'type' => 'date_range', 'param' => array('field_label' => _LIMIT_DATE_PROCESS, 'id1' => 'process_limit_date_from', 'id2' =>'process_limit_date_to'));
-$param['process_limit_date'] = $arr_tmp2;
+$arrTmp2 = array(
+	'label' => _LIMIT_DATE_PROCESS,
+	'type' => 'date_range',
+	'param' => array(
+		'field_label' => _LIMIT_DATE_PROCESS,
+		'id1' => 'process_limit_date_from',
+		'id2' =>'process_limit_date_to',
+    ),
+);
+$param['process_limit_date'] = $arrTmp2;
 
 //destinataire
-$arr_tmp = array();
+$arrTmp = array();
 for($i=0; $i < count($usersList); $i++)
 {
-    array_push($arr_tmp, array('VALUE' => $usersList[$i]['ID'], 'LABEL' => $usersList[$i]['NOM']." ".$usersList[$i]['PRENOM']));
+    array_push($arrTmp, array('VALUE' => $usersList[$i]['ID'], 'LABEL' => $usersList[$i]['NOM']." ".$usersList[$i]['PRENOM']));
 }
-$arr_tmp2 = array('label' => _PROCESS_RECEIPT, 'type' => 'select_multiple', 'param' => array('field_label' => _PROCESS_RECEIPT, 'label_title' => _CHOOSE_RECIPIENT_SEARCH_TITLE,
-'id' => 'destinataire','options' => $arr_tmp));
-$param['destinataire'] = $arr_tmp2;
+$arrTmp2 = array('label' => _PROCESS_RECEIPT, 'type' => 'select_multiple', 'param' => array('field_label' => _PROCESS_RECEIPT, 'label_title' => _CHOOSE_RECIPIENT_SEARCH_TITLE,
+'id' => 'destinataire','options' => $arrTmp));
+$param['destinataire'] = $arrTmp2;
 
 //mail_natures
-$arr_tmp = array();
+$arrTmp = array();
 foreach(array_keys($_SESSION['mail_natures']) as $nature)
 {
-    array_push($arr_tmp, array('VALUE' => $nature, 'LABEL' => $_SESSION['mail_natures'][$nature]));
+    array_push($arrTmp, array('VALUE' => $nature, 'LABEL' => $_SESSION['mail_natures'][$nature]));
 }
-$arr_tmp2 = array('label' => _MAIL_NATURE, 'type' => 'select_simple', 'param' => array('field_label' => _MAIL_NATURE,'default_label' => addslashes(_CHOOSE_MAIL_NATURE), 'options' => $arr_tmp));
-$param['mail_nature'] = $arr_tmp2;
+$arrTmp2 = array('label' => _MAIL_NATURE, 'type' => 'select_simple', 'param' => array('field_label' => _MAIL_NATURE,'default_label' => addslashes(_CHOOSE_MAIL_NATURE), 'options' => $arrTmp));
+$param['mail_nature'] = $arrTmp2;
 
 //priority
-$arr_tmp = array();
-foreach(array_keys($_SESSION['mail_priorities']) as $priority)
-{
-    array_push($arr_tmp, array('VALUE' => $priority, 'LABEL' => $_SESSION['mail_priorities'][$priority]));
+$arrTmp = array();
+foreach (array_keys($_SESSION['mail_priorities']) as $priority)    {
+    array_push(
+        $arrTmp,
+        array(
+        	'VALUE' => $priority,
+        	'LABEL' => $_SESSION['mail_priorities'][$priority]
+        )
+    );
 }
-$arr_tmp2 = array('label' => _PRIORITY, 'type' => 'select_simple', 'param' => array('field_label' => _MAIL_PRIORITY,'default_label' => addslashes(_CHOOSE_PRIORITY), 'options' => $arr_tmp));
-$param['priority'] = $arr_tmp2;
+$arrTmp2 = array(
+	'label' => _PRIORITY,
+	'type' => 'select_simple',
+	'param' => array(
+		'field_label' => _MAIL_PRIORITY,
+		'default_label' => addslashes(_CHOOSE_PRIORITY),
+		'options' => $arrTmp
+    )
+);
+$param['priority'] = $arrTmp2;
 
-// dest
-/*$arr_tmp2 = array('label' => _DEST, 'type' => 'input_text', 'param' => array('field_label' => _DEST, 'other' => $size));
-$param['dest'] = $arr_tmp2;
-
-//shipper
-$arr_tmp2 = array('label' => _SHIPPER, 'type' => 'input_text', 'param' => array('field_label' => _SHIPPER, 'other' => $size));
-$param['shipper'] = $arr_tmp2;
-*/
-if($_SESSION['features']['search_notes'] == 'true')
-{
+if ($_SESSION['features']['search_notes'] == 'true') {
     //annotations
-    $arr_tmp2 = array('label' => _NOTES, 'type' => 'textarea', 'param' => array('field_label' => _NOTES, 'other' => $size));
-    $param['doc_notes'] = $arr_tmp2;
+    $arrTmp2 = array(
+    	'label' => _NOTES,
+    	'type' => 'textarea',
+    	'param' => array(
+    		'field_label' => _NOTES,
+    		'other' => $size
+        )
+    );
+    $param['doc_notes'] = $arrTmp2;
 }
 
 //destination (department)
-if($core->is_module_loaded('entities'))
-{
+if ($core->is_module_loaded('entities')) {
     $collId = 'letterbox_coll';
     $where = $sec->get_where_clause_from_coll_id($collId);
     $table = $sec->retrieve_view_from_coll_id($collId);
-    if(empty($table))
-    {
+    if (empty($table)) {
         $table = $sec->retrieve_view_from_coll_id($collId);
     }
-    if(!empty($where))
-    {
-        $where = ' and '.$where;
+    if (! empty($where)) {
+        $where = ' and ' . $where;
     }
-    //$conn->query("select distinct r.destination as entity_id, e.entity_label from ".$table." r, ".$_SESSION['tablename']['ent_entities']." e where e.entity_id = r.destination ".$where." group by e.entity_label, r.destination");
-    $conn->query("select distinct destination, e.short_label from ".$table." join ".$_SESSION['tablename']['ent_entities']." e on e.entity_id = destination ".$where." group by e.short_label, destination ");
-    $arr_tmp = array();
-    while($res = $conn->fetch_object())
-    {
-        array_push($arr_tmp, array('VALUE' => $res->destination, 'LABEL' => $res->short_label));
+    $conn->query(
+    	"select distinct destination, e.short_label from " . $table . " join "
+        . $_SESSION['tablename']['ent_entities']
+        . " e on e.entity_id = destination " . $where
+        . " group by e.short_label, destination "
+    );
+    $arrTmp = array();
+    while ($res = $conn->fetch_object()) {
+        array_push(
+            $arrTmp,
+            array(
+            	'VALUE' => $res->destination,
+            	'LABEL' => $res->short_label
+            )
+        );
     }
 
-    $arr_tmp2 = array('label' => _DESTINATION_SEARCH, 'type' => 'select_multiple', 'param' => array('field_label' => _DESTINATION_SEARCH, 'label_title' => _CHOOSE_ENTITES_SEARCH_TITLE,
-'id' => 'services','options' => $arr_tmp));
-    $param['destination_mu'] = $arr_tmp2;
+    $arrTmp2 = array(
+    	'label' => _DESTINATION_SEARCH,
+    	'type' => 'select_multiple',
+    	'param' => array(
+    		'field_label' => _DESTINATION_SEARCH,
+    		'label_title' => _CHOOSE_ENTITES_SEARCH_TITLE,
+			'id' => 'services',
+			'options' => $arrTmp
+        )
+    );
+    $param['destination_mu'] = $arrTmp2;
 }
 
-// Folder
-/*
-if($core->is_module_loaded('folder'))
-{
-    $arr_tmp2 = array('label' => _MARKET, 'type' => 'input_text', 'param' => array('field_label' => _MARKET, 'other' => $size));
-    $param['market'] = $arr_tmp2;
-    $arr_tmp2 = array('label' => _PROJECT, 'type' => 'input_text', 'param' => array('field_label' => _PROJECT, 'other' => $size));
-    $param['project'] = $arr_tmp2;
-}*/
-
 //process notes
-$arr_tmp2 = array('label' => _PROCESS_NOTES, 'type' => 'textarea', 'param' => array('field_label' => _PROCESS_NOTES, 'other' => $size, 'id' => 'process_notes'));
-$param['process_notes'] = $arr_tmp2;
+$arrTmp2 = array(
+	'label' => _PROCESS_NOTES,
+	'type' => 'textarea',
+	'param' => array(
+		'field_label' => _PROCESS_NOTES,
+		'other' => $size,
+		'id' => 'process_notes'
+    )
+);
+$param['process_notes'] = $arrTmp2;
 
 // chrono
-$arr_tmp2 = array('label' => _CHRONO_NUMBER, 'type' => 'input_text', 'param' => array('field_label' => _CHRONO_NUMBER, 'other' => $size));
-$param['chrono'] = $arr_tmp2;
+$arrTmp2 = array(
+	'label' => _CHRONO_NUMBER,
+	'type' => 'input_text',
+	'param' => array(
+		'field_label' => _CHRONO_NUMBER,
+		'other' => $size
+    )
+);
+$param['chrono'] = $arrTmp2;
 
 //status
 $status = $statusObj->get_searchable_status();
-$arr_tmp = array();
-for($i=0; $i < count($status); $i++)
-{
-    array_push($arr_tmp, array('VALUE' => $status[$i]['ID'], 'LABEL' => $status[$i]['LABEL']));
+$arrTmp = array();
+for ($i = 0; $i < count($status); $i ++) {
+    array_push(
+        $arrTmp,
+        array(
+        	'VALUE' => $status[$i]['ID'],
+        	'LABEL' => $status[$i]['LABEL']
+        )
+    );
 }
-array_push($arr_tmp,  array('VALUE'=> 'REL1', 'LABEL' =>_FIRST_WARNING));
-array_push($arr_tmp,  array('VALUE'=> 'REL2', 'LABEL' =>_SECOND_WARNING));
-array_push($arr_tmp,  array('VALUE'=> 'LATE', 'LABEL' =>_LATE));
+array_push(
+    $arrTmp,
+    array(
+    	'VALUE'=> 'REL1',
+    	'LABEL' =>_FIRST_WARNING
+    )
+);
+array_push(
+    $arrTmp,
+    array(
+    	'VALUE'=> 'REL2',
+    	'LABEL' =>_SECOND_WARNING
+    )
+);
+array_push(
+    $arrTmp,
+    array(
+    	'VALUE'=> 'LATE',
+    	'LABEL' =>_LATE
+    )
+);
 
 // Sorts the $param['status'] array
 function cmp_status($a, $b)
 {
     return strcmp(strtolower($a["LABEL"]), strtolower($b["LABEL"]));
 }
-usort($arr_tmp, "cmp_status");
-$arr_tmp2 = array('label' => _STATUS_PLUR, 'type' => 'select_multiple', 'param' => array('field_label' => _STATUS,'label_title' => _CHOOSE_STATUS_SEARCH_TITLE,'id' => 'status',  'options' => $arr_tmp));
-$param['status'] = $arr_tmp2;
+usort($arrTmp, "cmp_status");
+$arrTmp2 = array(
+	'label' => _STATUS_PLUR,
+	'type' => 'select_multiple',
+	'param' => array(
+		'field_label' => _STATUS,
+		'label_title' => _CHOOSE_STATUS_SEARCH_TITLE,
+		'id' => 'status',
+		'options' => $arrTmp
+    )
+);
+$param['status'] = $arrTmp2;
 
 //doc_type
-$conn->query("select type_id, description  from  ".$_SESSION['tablename']['doctypes']." where enabled = 'Y' order by description asc");
-$arr_tmp = array();
-while ($res=$conn->fetch_object())
-{
-    array_push($arr_tmp, array('VALUE' => $res->type_id, 'LABEL' => $conn->show_string($res->description)));
+$conn->query(
+	"select type_id, description from  " . $_SESSION['tablename']['doctypes']
+    . " where enabled = 'Y' order by description asc"
+);
+$arrTmp = array();
+while ($res = $conn->fetch_object()) {
+    array_push(
+        $arrTmp,
+        array(
+        	'VALUE' => $res->type_id,
+        	'LABEL' => $conn->show_string($res->description)
+        )
+    );
 }
-$arr_tmp2 = array('label' => _DOCTYPES, 'type' => 'select_multiple', 'param' => array('field_label' => _DOCTYPE,'label_title' => _CHOOSE_DOCTYPES_SEARCH_TITLE, 'id' => 'doctypes', 'options' => $arr_tmp));
-$param['doctype'] = $arr_tmp2;
+$arrTmp2 = array(
+	'label' => _DOCTYPES,
+	'type' => 'select_multiple',
+	'param' => array(
+		'field_label' => _DOCTYPE,
+		'label_title' => _CHOOSE_DOCTYPES_SEARCH_TITLE,
+		'id' => 'doctypes',
+		'options' => $arrTmp
+    )
+);
+$param['doctype'] = $arrTmp2;
 
 //category
-$arr_tmp = array();
-array_push($arr_tmp, array('VALUE' => '', 'LABEL' => _CHOOSE_CATEGORY));
-foreach(array_keys($_SESSION['mail_categories']) as $cat_id)
-{
-    array_push($arr_tmp, array('VALUE' => $cat_id, 'LABEL' => $_SESSION['mail_categories'][$cat_id]));
+$arrTmp = array();
+array_push(
+    $arrTmp,
+    array(
+    	'VALUE' => '',
+    	'LABEL' => _CHOOSE_CATEGORY
+    )
+);
+foreach (array_keys($_SESSION['mail_categories']) as $cat_id) {
+    array_push(
+        $arrTmp,
+        array(
+        	'VALUE' => $cat_id,
+        	'LABEL' => $_SESSION['mail_categories'][$cat_id]
+        )
+    );
 }
-$arr_tmp2 = array('label' => _CATEGORY, 'type' => 'select_simple', 'param' => array('field_label' => _CATEGORY,'default_label' => '', 'options' => $arr_tmp));
-$param['category'] = $arr_tmp2;//Arbox_id ; for physical_archive
-/*if ($core->is_module_loaded('physical_archive') == true)
-{
-    //arbox_id
-    $conn->query("select arbox_id, title from  ".$_SESSION['tablename']['ar_boxes']." where status <> 'DEL' order by description asc");
-    $arr_tmp = array();
-    while ($res=$conn->fetch_object())
-    {
-        array_push($arr_tmp, array('VALUE' => $res->arbox_id, 'LABEL' => $conn->show_string($res->title)));
-    }
-    $arr_tmp2 = array('label' => _ARBOXES, 'type' => 'select_multiple', 'param' => array('field_label' =>_ARBOXES,'label_title' => _CHOOSE_BOXES_SEARCH_TITLE, 'id' => 'arboxes', 'options' => $arr_tmp));
-    $param['arbox_id'] = $arr_tmp2;
-
-
-    $arr_tmp2 = array('label' => _ARBATCHES, 'type' => 'input_text', 'param' => array('field_label' => _ARBATCHES, 'other' => $size));
-    $param['arbatch_id'] = $arr_tmp2;
-}*/
+$arrTmp2 = array(
+	'label' => _CATEGORY,
+	'type' => 'select_simple',
+	'param' => array(
+		'field_label' => _CATEGORY,
+		'default_label' => '',
+		'options' => $arrTmp
+    )
+);
+$param['category'] = $arrTmp2;
 
 //Answers types
-$arr_tmp = array(array('ID' => 'simple_mail','VALUE'=> 'true', 'LABEL' =>_SIMPLE_MAIL),array('ID' => 'AR','VALUE'=> 'true', 'LABEL' =>_REGISTERED_MAIL),array('ID' => 'fax','VALUE'=> 'true', 'LABEL' =>_FAX),array('ID' => 'courriel','VALUE'=> 'true', 'LABEL' =>_MAIL)
-,array('ID' => 'direct','VALUE'=> 'true', 'LABEL' =>_DIRECT_CONTACT),array('ID' => 'autre','VALUE'=> 'true', 'LABEL' =>_OTHER),array('ID' => 'norep','VALUE'=> 'true', 'LABEL' =>_NO_ANSWER));
-$arr_tmp2 = array('label' => _ANSWER_TYPE, 'type' => 'checkbox', 'param' => array('field_label' => _ANSWER_TYPE, 'checkbox_data' => $arr_tmp));
-$param['answer_type'] = $arr_tmp2;
+$arrTmp = array(
+    array(
+    	'ID' => 'simple_mail',
+    	'VALUE'=> 'true',
+    	'LABEL' =>_SIMPLE_MAIL
+    ),
+    array(
+    	'ID' => 'AR',
+    	'VALUE'=> 'true',
+    	'LABEL' =>_REGISTERED_MAIL
+    ),
+    array(
+    	'ID' => 'fax',
+    	'VALUE'=> 'true',
+    	'LABEL' =>_FAX
+    ),
+    array(
+    	'ID' => 'courriel',
+    	'VALUE'=> 'true',
+    	'LABEL' =>_MAIL
+    ),
+    array(
+    	'ID' => 'direct',
+    	'VALUE'=> 'true',
+    	'LABEL' =>_DIRECT_CONTACT
+    ),
+    array(
+    	'ID' => 'autre',
+    	'VALUE'=> 'true',
+    	'LABEL' =>_OTHER
+    ),
+    array(
+    	'ID' => 'norep',
+    	'VALUE'=> 'true',
+    	'LABEL' =>_NO_ANSWER
+    )
+);
+$arrTmp2 = array(
+	'label' => _ANSWER_TYPE,
+	'type' => 'checkbox',
+	'param' => array(
+		'field_label' => _ANSWER_TYPE,
+		'checkbox_data' => $arrTmp
+    )
+);
+$param['answer_type'] = $arrTmp2;
 
 // Sorts the param array
 function cmp($a, $b)
@@ -341,7 +521,7 @@ $tab = $searchObj->send_criteria_data($param);
 //$conn->show_array($tab);
 
 // criteria list options
-$src_tab = $tab[0];
+$srcTab = $tab[0];
 
 $string = '';
 $core->load_js();
@@ -601,7 +781,7 @@ function del_query_confirm()
              <td width="70%">
                 <label class="bold"><?php echo _ADD_PARAMETERS; ?>:</label>
                 <select name="select_criteria" id="select_criteria" style="display:inline;" onchange="add_criteria(this.options[this.selectedIndex].id, 'frmsearch2', <?php echo $ieBrowser;?>, '<?php echo _ERROR_IE_SEARCH;?>');">
-                    <?php echo $src_tab; ?>
+                    <?php echo $srcTab; ?>
                 </select>
              </td>
 

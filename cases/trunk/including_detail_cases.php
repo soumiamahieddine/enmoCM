@@ -31,48 +31,61 @@
 if (isset($case_properties['case_id']) && $case_properties['case_id'] <> '') {
 ?>
 <h2>
-								<span class="date">
-									<b><?php  echo _LINKED_TO_CASE;?></b>
-								</span>
-								</h2>
-								<?php echo "<p align='right'><b><img src='".$_SESSION['config']['businessappurl']."static.php?filename=big_case.gif&dir=indexing_searching' border='0' alt='' /> <a href = '".$_SESSION['config']['businessappurl']."index.php?page=details_cases&module=cases&id=".$case_properties['case_id']."'>("._CLICK_HERE_TO_ACCESS_CASE.")</a></b></p>"; ?>
-
-								<br/>
-								<table cellpadding="2" cellspacing="2" border="0" class="block forms details" width="100%">
-									<tr>
-										<th align="left" class="picto">
-										<!--	<img alt="<?php echo _CASE; ?>" src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_infos.gif" />-->
-										</th>
-										<td align="left" width="200px">
-											<?php  echo _NUM_CASE; ?> :
-										</td>
-										<td>
-											<input type="text" class="readonly" readonly="readonly" value="<?php  echo $case_properties['case_id']; ?>" size="40" title="<?php  echo $case_properties['case_id']; ?>" alt="<?php  echo $case_properties['case_id']; ?>" />
-										</td>
-										<th align="left" class="picto">
-											<!--<img alt="<?php echo _CASE; ?>" src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_infos.gif" />-->
-										</th>
-										<td align="left" width="200px">
-											<?php  echo _CASE_LABEL; ?> :
-										</td>
-										<td>
-											<input type="text" class="readonly" readonly="readonly" value="<?php  echo $case_properties['case_label']; ?>" size="40" title="<?php  echo $case_properties['case_label']; ?>" alt="<?php  echo $case_properties['case_label']; ?>" />
-										</td>
-									</tr>
-									<tr>
-										<th align="left" class="picto">
-											<!--<img alt="<?php echo _CASE; ?>" src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_infos.gif" />-->
-										</th>
-										<td align="left" width="200px">
-											<?php  echo _CASE_DESCRIPTION; ?> :
-										</td>
-										<td colspan="3">
-											<input type="text" class="readonly" readonly="readonly" value="<?php  echo $case_properties['case_description']; ?>" size="40" title="<?php  echo $case_properties['case_description']; ?>" alt="<?php  echo $case_properties['case_description']; ?>" />
-										</td>
-
-									</tr>
-								</table>
-								<br/>
+    <span class="date">
+	<b><?php  echo _LINKED_TO_CASE;?></b>
+	</span>
+</h2>
+<?php
+echo "<p align='right'><b><img src='".$_SESSION['config']['businessappurl']
+    . "static.php?filename=big_case.gif&dir=indexing_searching' border='0' alt='' /> <a href = '"
+    . $_SESSION['config']['businessappurl']
+    . "index.php?page=details_cases&module=cases&id="
+    . $case_properties['case_id'] . "'>(" . _CLICK_HERE_TO_ACCESS_CASE.
+    " )</a></b></p>";
+?>
+<br/>
+<table cellpadding="2" cellspacing="2" border="0" class="block forms details" width="100%">
+    <tr>
+	    <th align="left" class="picto">
+	       <!--	<img alt="<?php echo _CASE; ?>" src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_infos.gif" />-->
+	    </th>
+	    <td align="left" width="200px">
+            <?php  echo _NUM_CASE; ?> :
+		</td>
+		<td>
+		  <input type="text" class="readonly" readonly="readonly" value="<?php
+echo $case_properties['case_id'];
+?>" size="40" title="<?php
+echo $case_properties['case_id'];
+?>" alt="<?php  echo $case_properties['case_id']; ?>" />
+        </td>
+		<th align="left" class="picto">
+		  <!--<img alt="<?php echo _CASE; ?>" src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_infos.gif" />-->
+		</th>
+		<td align="left" width="200px">
+		    <?php  echo _CASE_LABEL; ?> :
+		</td>
+		<td>
+		    <input type="text" class="readonly" readonly="readonly" value="<?php
+echo $case_properties['case_label'];
+?>" size="40" title="<?php
+echo $case_properties['case_label'];
+?>" alt="<?php  echo $case_properties['case_label']; ?>" />
+		</td>
+	</tr>
+	<tr>
+	    <th align="left" class="picto">
+	       <!--<img alt="<?php echo _CASE; ?>" src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_infos.gif" />-->
+	    </th>
+		<td align="left" width="200px">
+		    <?php  echo _CASE_DESCRIPTION; ?> :
+		</td>
+		<td colspan="3">
+		  <input type="text" class="readonly" readonly="readonly" value="<?php  echo $case_properties['case_description']; ?>" size="40" title="<?php  echo $case_properties['case_description']; ?>" alt="<?php  echo $case_properties['case_description']; ?>" />
+		</td>
+    </tr>
+</table>
+<br/>
 <?php
 }
 ?>
