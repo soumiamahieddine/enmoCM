@@ -47,7 +47,7 @@ if(isset($_REQUEST['order_field']) && !empty($_REQUEST['order_field']))
 }
 elseif($_REQUEST['template']<> 'group_case_for_basket')
 {
-	$order_field = 'priority, creation_date, res_id';
+    $order_field = 'priority, creation_date, res_id';
 }
 else
 {
@@ -57,22 +57,21 @@ $list=new list_show();
 $orderstr = $list->define_order($order, $order_field);
 $bask->connect();
 $do_actions_arr = array();
-if($_REQUEST['template'] <> 'group_case_for_basket')
-{
-	if(!empty($_SESSION['current_basket']['clause']))
-	{
-		$bask->query("select res_id from ".$table." where ".$_SESSION['current_basket']['clause']." ".$orderstr);
-	}
-	else
-	{
-		$bask->query("select res_id from ".$table."  ".$orderstr);
-	}
+if ($_REQUEST['template'] <> 'group_case_for_basket') {
+    
+    if (preg_match('"case"', $orderstr) == true) {
+        $orderstr = '';
+    }
+    if(!empty($_SESSION['current_basket']['clause'])) {
+        $bask->query("select res_id from ".$table." where ".$_SESSION['current_basket']['clause']." ".$orderstr);
+    } else {
+        $bask->query("select res_id from ".$table."  ".$orderstr);
+    }
 }
 $tmp = array();
-while($res = $bask->fetch_object())
-{
-	$tmp = $bask->check_reserved_time($res->res_id, $_SESSION['current_basket']['coll_id']);
-	array_push($do_actions_arr, $tmp);
+while($res = $bask->fetch_object()) {
+    $tmp = $bask->check_reserved_time($res->res_id, $_SESSION['current_basket']['coll_id']);
+    array_push($do_actions_arr, $tmp);
 }
 $str = '';
 $search = false;
