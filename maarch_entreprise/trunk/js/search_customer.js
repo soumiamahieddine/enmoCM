@@ -31,7 +31,7 @@ function tree_init(treeId, projectStr, more_params)
         },
         onSuccess: function(response){
             eval('params='+response.responseText+';');
-            console.log(params);
+            //console.log(params);
             Tree = new Maarch.treeview.Tree(treeId, params);
         },
         onComplete: function(response){

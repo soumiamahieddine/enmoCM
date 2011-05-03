@@ -472,12 +472,12 @@ WITH (OIDS=FALSE);
 -- Resource view used to fill af_target, we exclude from res_x the branches already in af_target table
 
 CREATE OR REPLACE VIEW af_view_year_view AS
- SELECT r.custom_t3 AS level1, date_part( 'year', r.doc_date) AS level2, r.custom_t4 AS level3, r.type_id as level4,
+ SELECT r.custom_t3 AS level1, date_part( 'year', r.doc_date) AS level2, r.custom_t4 AS level3,
         r.res_id, r.creation_date, r.status -- for where clause
    FROM  res_x r
    WHERE  NOT (EXISTS ( SELECT t.level1, t.level2, t.level3, t.level4
            FROM af_view_year_target t
-          WHERE r.custom_t3::text = t.level1::text AND cast(date_part( 'year', r.doc_date) as character) = t.level2 AND r.custom_t4 = t.level3 AND r.type_id = t.level4));
+          WHERE r.custom_t3::text = t.level1::text AND cast(date_part( 'year', r.doc_date) as character) = t.level2 AND r.custom_t4 = t.level3));
 
 CREATE OR REPLACE VIEW af_view_customer_view AS
  SELECT substring(r.custom_t4, 1, 1) AS level1,  r.custom_t4 AS level2, date_part( 'year', r.doc_date) AS level3,
@@ -491,10 +491,8 @@ CREATE OR REPLACE VIEW af_view_customer_view AS
 
 -- View used to display trees
 CREATE OR REPLACE VIEW af_view_year_target_view AS
- SELECT af.level1, af.level1 as level1_label, af.level2, af.level2 as level2_label, af.level3, af.level3 as level3_label,
-    af.level4, d.description as level4_label
-   FROM af_view_year_target af, doctypes d
-  WHERE af.level4 = d.type_id ;
+ SELECT af.level1, af.level1 as level1_label, af.level2, af.level2 as level2_label, af.level3, af.level3 as level3_label
+   FROM af_view_year_target af;
 
 CREATE OR REPLACE VIEW af_view_customer_target_view AS
  SELECT af.level1, af.level1 as level1_label, af.level2, af.level2 as level2_label, af.level3, af.level3 as level3_label
