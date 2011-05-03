@@ -95,7 +95,8 @@ if (isset($_REQUEST['level'])
 ) {
     $level = $_REQUEST['level'];
 }
-$pagePath = $_SESSION['config']['businessappurl'].'index.php?page=view_baskets&module=basket';
+$pagePath = $_SESSION['config']['businessappurl']
+    . 'index.php?page=view_baskets&module=basket';
 $pageLabel = _MY_BASKETS;
 $pageId = "my_baskets";
 $core->manage_location_bar($pagePath, $pageLabel, $pageId, $init, $level);
@@ -110,8 +111,13 @@ if (isset($_REQUEST['baskets']) && ! empty($_REQUEST['baskets'])) {
 ?><h1> <?php
 if (count($_SESSION['user']['baskets']) > 0) {
     ?><div style="">
-        <form name="select_basket" method="get"  id="select_basket"  action="<?php echo $_SESSION['config']['businessappurl'];?>index.php">
-        <img src="<?php echo $_SESSION['config']['businessappurl']."static.php?filename=picto_basket_b.gif&module=basket";?>" alt="" /> <?php echo _VIEW_BASKETS_TITLE; ?> :
+        <form name="select_basket" method="get" id="select_basket" action="<?php
+    echo $_SESSION['config']['businessappurl'];
+    ?>index.php">
+        <img src="<?php
+    echo $_SESSION['config']['businessappurl']
+        . "static.php?filename=picto_basket_b.gif&module=basket";
+    ?>" alt="" /> <?php echo _VIEW_BASKETS_TITLE; ?> :
             <input type="hidden" name="page" id="page" value="view_baskets" />
             <input type="hidden" name="module" id="module" value="basket" />
 
@@ -140,44 +146,49 @@ if (count($_SESSION['user']['baskets']) > 0) {
         </form>
     </div>
     <?php
+} else {
+    ?>
+    <img src="<?php
+    echo $_SESSION['config']['businessappurl']
+        . "static.php?filename=picto_basket_b.gif&module=basket";
+    ?>" alt="" /> <?php echo _VIEW_BASKETS_TITLE;
 }
-else
-{?>
-     <img src="<?php echo $_SESSION['config']['businessappurl']."static.php?filename=picto_basket_b.gif&module=basket";?>" alt="" /> <?php echo _VIEW_BASKETS_TITLE;
-}?>
+?>
 </h1>
 <div id="inner_content">
 <?php
-if(count($_SESSION['user']['baskets'])== 0)
-{
+if (count($_SESSION['user']['baskets']) == 0) {
     ?><div align="center"><?php echo _NO_BASKET_DEFINED_FOR_YOU;?></div><?php
-
 }
 
-if(isset($_SESSION['current_basket']['page_include']) && !empty($_SESSION['current_basket']['page_include']))
-{
+if (isset($_SESSION['current_basket']['page_include'])
+    && ! empty($_SESSION['current_basket']['page_include'])
+) {
     //$bask->show_array($_SESSION['current_basket']);
     include($_SESSION['current_basket']['page_include']);
-}
-else
-{
-
-    if(count($_SESSION['user']['baskets'])> 0)
-    {
-        $core->execute_modules_services($_SESSION['modules_services'], 'view_basket', "include");
-        echo '<p style="border:0px solid;padding-left:250px;"><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=arrow_up.gif" /></p>';
+} else {
+    if (count($_SESSION['user']['baskets']) > 0) {
+        $core->execute_modules_services(
+            $_SESSION['modules_services'], 'view_basket', "include"
+        );
+        echo '<p style="border:0px solid;padding-left:250px;"><img src="'
+            . $_SESSION['config']['businessappurl']
+            . 'static.php?filename=arrow_up.gif" /></p>';
         ?><div align="left"  style="width:500px;"><?php
 
          echo "<p align = 'justify'>
          <table width='100%'>
              <tr>
-                 <td width='80px'><img src='".$_SESSION['config']['businessappurl']."static.php?filename=lunch_guide.gif'> </td>
-                 <td> <div class='block' align='center'>"._BASKET_WELCOME_TXT1."<br/>"._BASKET_WELCOME_TXT2.".<div class='block_end'>&nbsp;</div></div></td>
+                 <td width='80px'><img src='"
+         . $_SESSION['config']['businessappurl']
+         . "static.php?filename=lunch_guide.gif'> </td>
+                 <td> <div class='block' align='center'>"
+         . _BASKET_WELCOME_TXT1 . "<br/>" . _BASKET_WELCOME_TXT2
+         . ".<div class='block_end'>&nbsp;</div></div></td>
              </tr>
          </table>
          </p>";
          ?></div><?php
-
     }
 }
 
