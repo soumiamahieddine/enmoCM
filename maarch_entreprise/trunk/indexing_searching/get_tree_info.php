@@ -156,7 +156,7 @@ if (isset($_SESSION['chosen_name_folder'])
 		}
 		$folderLevels = array();
 		$db1->query(
-			"select distinct doctypes_first_level_id, doctypes_first_level_label from "
+			"select distinct doctypes_first_level_id, doctypes_first_level_label, doctype_first_level_style from "
 		    . $resView . " where folder_id = '" . $actualCustomT1 . "' and ("
 		    . $whereClause . ") order by doctypes_first_level_label asc"
 		);
@@ -164,7 +164,7 @@ if (isset($_SESSION['chosen_name_folder'])
 		while ($res1 = $db1->fetch_object()) {
 			$sLevel = array();
 			$db2->query(
-				"select distinct doctypes_second_level_id, doctypes_second_level_label from "
+				"select distinct doctypes_second_level_id, doctypes_second_level_label, doctype_second_level_style from "
 			    . $resView . " where (doctypes_first_level_id = "
 			    . $res1->doctypes_first_level_id . " and folder_id = '"
 			    . $actualCustomT1 . "') and (" . $whereClause
@@ -186,42 +186,56 @@ if (isset($_SESSION['chosen_name_folder'])
 				);
 				//$db3->show();
 				while ($res3 = $db3->fetch_object()) {
-					//Dépot des documents
-					$results = array();
-					//echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".$res3->description."<br>";
 					$cptDoc = 0;
+				/*	$db4->query(
+						"select count(res_id) as total from " . $resView 
+						. " where (type_id = " . $res3->type_id
+					    . " and folder_id = '" . $actualCustomT1 . "') and ("
+					    . $whereClause . ")"
+					);
+					$res4 = $db4->fetch_object();
+					if (isset($res4->total)) {
+						$cptDoc = $res4->total;
+					}
+					
+					array_push(
+					    $doctypes,
+					    array(
+					    	'type_id' => $res3->type_id,
+					    	'description' => $func->show_string($res3->description, true) . '('.$cptDoc.')',
+					    )
+					);*/
 					$db4->query(
 						"select res_id, doc_date, folder_name, identifier, subject from "
-					    . $resView . " where (type_id = " . $res3->type_id
-					    . " and folder_id = '" . $actualCustomT1 . "') and ("
-					    . $whereClause . ") order by doc_date desc"
+						. $resView." where (type_id = " . $res3->type_id
+						. " and folder_id = '" . $actualCustomT1 . "') and ("
+						. $whereClause . ") order by doc_date desc"
 					);
-					//$db4->show();
+					$results = array();
 					while ($res4 = $db4->fetch_object()) {
 						array_push(
-						    $results,
-						    array(
-						    	'res_id' => $res4->res_id,
-						    	'doc_date' => $res4->doc_date,
-						    	'name_folder' => $res4->folder_name,
-						    	'num_ref' => $res4->identifier,
-						    	'found_doc' => true,
-						    	'subject' => $func->show_string($res4->subject, true)
-						    )
+							$results, 
+							array(
+								'res_id' => $res4->res_id, 
+								'doc_date' => $res4->doc_date, 
+								'name_folder' => $res4->folder_name, 
+								'num_ref' => $res4->identifier, 
+								'subject' => $func->show_string($res4->subject, true),
+							)
 						);
-						$cptDoc ++;
+						$cptDoc++;
 					}
 					if ($cptDoc == 0) {
 						//array_push($doctypes, array('type_id' => $res3->type_id, 'description' => $func->show_string($res3->description), "results" => $results, "no_doc" => true ));
 					} else {
 						array_push(
-						    $doctypes,
-						    array(
-						    	'type_id' => $res3->type_id,
-						    	'description' => $func->show_string($res3->description, true),
-						    	"results" => $results,
-						    	"no_doc" => false
-						    )
+							$doctypes, 
+							array(
+								'type_id' => $res3->type_id, 
+								'description' => $func->show_string($res3->description, true) . ' ('.$cptDoc.')', 
+								"results" => $results, 
+								"no_doc" => false 
+							)
 						);
 					}
 				}
@@ -230,7 +244,8 @@ if (isset($_SESSION['chosen_name_folder'])
 				    array(
 				    	'doctypes_second_level_id' => $res2->doctypes_second_level_id,
 				    	'doctypes_second_level_label' => $func->show_string($res2->doctypes_second_level_label, true),
-				    	'doctypes' => $doctypes
+				    	'doctypes_second_level_class' => $res2->doctype_second_level_style,
+				    	'doctypes' => $doctypes,
 				    )
 				);
 			}
@@ -240,6 +255,7 @@ if (isset($_SESSION['chosen_name_folder'])
 			    array(
 			    	'doctypes_first_level_id' => $res1->doctypes_first_level_id,
 			    	'doctypes_first_level_label' => $func->show_string($res1->doctypes_first_level_label, true),
+			    	'doctypes_first_level_class' => $res1->doctype_first_level_style,
 			    	'second_level' => $sLevel
 			    )
 			);
@@ -264,102 +280,70 @@ try {
          . $_SESSION['config']['businessappurl'] . "tools/MaarchJS/src/img/', "
          . "'initial_structure' : [";
     for ($i = 0; $i < count($searchCustomerResults); $i ++) {
-        $resStr .= "{'id' : '" . $searchCustomerResults[$i]['folder_id']
+        $resStr .= "{'id' : 'folder_" . $searchCustomerResults[$i]['folder_id']
                 . "', 'label' :'<b>" . addslashes(
-                    $searchCustomerResults[$i]['folder_subject']
-                ) . "</b><br><small>(" . $searchCustomerResults[$i]['folder_name']
+                    $searchCustomerResults[$i]['folder_id']
+                ) . "</b> <small>(" . $searchCustomerResults[$i]['folder_name']
                 . ")</small>', 'toolTip' : '"
                  . $searchCustomerResults[$i]['folder_id']
                  . "', 'classes' : ['level"
                  . $level . "'], 'open' : true, children: [";
         for ($j = 0; $j < count($searchCustomerResults[$i]['content']); $j ++) {
-            $resStr .= "{'id' : '" . addslashes(
+            $resStr .= "{'id' : 'dfl_" . addslashes(
                 $searchCustomerResults[$i]['content'][$j]['doctypes_first_level_id']
                 ) . "', 'label' :'" . addslashes(
                 $searchCustomerResults[$i]['content'][$j]['doctypes_first_level_label']
                 ) . "', 'toolTip' : '"
                 . addslashes(
                 $searchCustomerResults[$i]['content'][$j]['doctypes_first_level_label']
-                ) . "', 'classes' : ['level"
-                . $level . "'], 'open' : true, children : [";
+                ) . " (" . $searchCustomerResults[$i]['content'][$j]['doctypes_first_level_id']
+                . ")', 'classes' : ['" .  $searchCustomerResults[$i]['content'][$j]['doctypes_first_level_class']
+                . "'], 'open' : true, children : [";
             for ($k = 0; $k < count(
                 $searchCustomerResults[$i]['content'][$j]['second_level']
             ); $k ++
             ) {
-                $resStr .= "{'id' : '" . addslashes(
+                $resStr .= "{'id' : 'dsl_" . addslashes(
                     $searchCustomerResults[$i]['content'][$j]['second_level'][$k]['doctypes_second_level_id']
                     ) . "', 'label' :'" . addslashes(
                     $searchCustomerResults[$i]['content'][$j]['second_level'][$k]['doctypes_second_level_label']
                     ) . "', 'toolTip' : '"
                     . addslashes(
                     $searchCustomerResults[$i]['content'][$j]['second_level'][$k]['doctypes_second_level_label']
-                    ) . "', 'classes' : ['level"
-               		. $level . "'], 'open' : true, children : [";
+                    ) . " (" .  $searchCustomerResults[$i]['content'][$j]['second_level'][$k]['doctypes_second_level_id']
+                    . ")', 'classes' : ['" .$searchCustomerResults[$i]['content'][$j]['second_level'][$k]['doctypes_second_level_class']
+               		. "'], 'open' : true, children : [";
                 for ($l = 0; $l < count(
                     $searchCustomerResults[$i]['content'][$j]['second_level'][$k]['doctypes']
                 ); $l ++
                 ) {
 
-					    $resStr .= "{'id' : '" . addslashes($searchCustomerResults[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['type_id'])
+					    $resStr .= "{'id' : 'type_" . addslashes($searchCustomerResults[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['type_id'])
 					        . "', 'label' :'" . addslashes(
                             $searchCustomerResults[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['description']
                             ) . "', 'toolTip' : '"
                             . addslashes(
                             $searchCustomerResults[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['description']
-                            ) . "', 'classes' : ['level"
+                            ) . " (" .$searchCustomerResults[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['type_id']
+                            . ")', 'classes' : ['level"
                		        . $level . "'],";
 
 					$resStr .= 'children : [';
-					for ($m = 0; $m < count(
-					    $searchCustomerResults[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['results']
-					); $m ++
-					) {
-					    $resStr .= "{'id' : '" . addslashes(
-					        $searchCustomerResults[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['results'][$m]['res_id']
-					        ) . "', ";
-
-					        "'classes' : ['level"
-               		        . $level . "'],";
-
-						if ($searchCustomerResults[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['results'][$m]['found_doc']) {
-							$beginStr = "<b>";
-							$endStr = "</b>";
-						} else {
-							$beginStr = "";
-							$endStr = "";
-						}
-						if (trim(
-						    $searchCustomerResults[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['results'][$m]['name_folder']
-						) <> ""
-						    && $searchCustomerResults[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['type_id'] == "3"
-						) {
-						    $label = addslashes(
-						            $searchCustomerResults[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['results'][$m]['doc_date']
-						        ) . " " . $beginStr . addslashes(
-						            $searchCustomerResults[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['results'][$m]['name_folder']
-						        ) . $endStr;
-						    $resStr .= "'label' :'" . $label . "', 'toolTip' : '"
-                                . $label . "',";
-						} else {
-							if ($searchCustomerResults[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['results'][$m]['subject'] == "") {
-								$label = $beginStr . addslashes(
-								    $searchCustomerResults[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['results'][$m]['res_id']
-								    ) . $endStr;
-							    $resStr .= "'label' :'" . $label
-							        . "', 'toolTip' : '" . $label . "'";
-                            } else {
-                                $label = $beginStr . addslashes(
-                                    $searchCustomerResults[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['results'][$m]['subject']
-                                    ) . $endStr . " <small>("
-                                    . $searchCustomerResults[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['results'][$m]['res_id']
-                                    . ")</small>";
-							    $resStr .= "'label' :'" . $label
-							        . "', 'toolTip' : '" . $label . "'";
-							}
-						}
-						$resStr .= "},";
-					}
-					$resStr .= "]},";
+                	for ($m = 0; $m < count(
+                		$searchCustomerResults[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['results']
+                	); $m ++
+                	) {
+                		 $resStr .= "{'id' : 'resid_" . addslashes($searchCustomerResults[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['results'][$m]['res_id'])
+					        . "', 'label' :'" . addslashes(
+                            	$searchCustomerResults[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['results'][$m]['subject']
+                            ) . "', 'toolTip' : '"
+                            . addslashes(
+                            $searchCustomerResults[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['results'][$m]['subject']
+                            ) . " (" . $searchCustomerResults[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['results'][$m]['res_id']
+                            . ")', 'classes' : []},";
+						
+                	}
+					$resStr .= ']},';
                 }
                 $resStr .= "]},";
             }

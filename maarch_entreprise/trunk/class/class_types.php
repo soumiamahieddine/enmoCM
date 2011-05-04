@@ -148,7 +148,7 @@ class types extends dbquery
                 ) {
                     echo "selected=\"selected\" " ;
                 }
-                echo 'style="color:' . $_SESSION['sous_dossiers'][$i]['COLOR'] . ';"';
+                echo 'class="' . $_SESSION['sous_dossiers'][$i]['STYLE'] . '"';
                 ?>><?php
                 echo $_SESSION['sous_dossiers'][$i]['LABEL'];
                 ?></option>

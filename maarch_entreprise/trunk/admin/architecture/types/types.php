@@ -139,7 +139,7 @@ while ($res = $request->fetch_object()) {
     	array(
     		'ID' => $res->doctypes_second_level_id, 
     		'LABEL' => $res->doctypes_second_level_label,
-    		'COLOR' => $res->font_color,
+    		'STYLE' => $res->css_style,
     	)
     );
 }

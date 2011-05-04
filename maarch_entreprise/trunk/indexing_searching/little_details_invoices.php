@@ -2,189 +2,100 @@
 /**
 * File : little_details_invoices.php
 *
-* @package  Maarch PeopleBox 1.0
+* @package  Maarch Entreprise
 * @version 2.1
-* @since 10/2005
+* @since 05/2011
 * @license GPL
 * @author  Claire Figueras  <dev@maarch.org>
-* @author  Laurent Giovannoni  <dev@maarch.org>
 */
 
-$core_tools = new core_tools();
-$core_tools->test_user();
-$core_tools->load_lang();
-$core_tools->load_header('', true, false);
-
-require_once 'core/class/class_request.php';
+require 'core/class/class_request.php';
+require 'apps/' . $_SESSION['config']['app_id'] . '/class/class_list_show.php';
 require_once 'core/class/class_security.php';
-require_once 'apps/' . $_SESSION['config']['app_id'] .'/class/class_list_show.php';
 require_once 'core/class/class_history.php';
-/****************Management of the location bar  ************/
-$init = false;
-if (isset($_SESSION['indexation']) && $_SESSION['indexation'] == true) {
-    $init = true;
+require_once 'core/manage_bitmask.php';
+require_once "apps" . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+    . DIRECTORY_SEPARATOR  . "security_bitmask.php";
+$core = new core_tools();
+$core->test_user();
+$core->load_lang();
+
+$resId = '';
+if (isset($_REQUEST['value']) && !empty($_REQUEST['value'])) {
+	$resId = $_REQUEST['value'];
 }
-if (isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == 'true') {
-    $init = true;
-}
-$level = '';
-if (isset($_REQUEST['level']) && $_REQUEST['level'] == 2
-    || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4
-    || $_REQUEST['level'] == 1) {
-    $level = $_REQUEST['level'];
-}
-$page_path = $_SESSION['config']['businessappurl']
-           . 'index.php?page=details_invoices&dir=indexing_searching';
-$page_label = _DETAILS;
-$page_id = 'is_details';
-$core_tools->manage_location_bar(
-    $page_path, $page_label, $page_id, $init, $level
-);
-/***********************************************************/
+
 $users = new history();
 $security = new security();
 $func = new functions();
-$request= new request;
-$s_id = '';
-$_SESSION['req'] ='details_invoices';
-$is_view = false;
-$_SESSION['indexing'] = array();
-if ($_GET['status'] == 'empty') {
-    ?><p align="center"><img src="<?php echo $_SESSION['config']['businessappurl'].'static.php?filename=bg_home_home.gif'; ?>" alt="Maarch" /></p> <?php
-} else {
-    if (isset($_SESSION['collection_id_choice'])
-        && ! empty($_SESSION['collection_id_choice'])) {
-        $table = $security->retrieve_view_from_coll_id(
-            $_SESSION['collection_id_choice']
-        );
-        $is_view = true;
-        if (empty($table)) {
-            $table = $security->retrieve_table_from_coll(
-                $_SESSION['collection_id_choice']
-            );
-            $is_view = false;
-        }
-    } else if (isset($_SESSION['collection_choice'])
-        && ! empty($_SESSION['collection_choice'])) {
-        $table = $_SESSION['collection_choice'];
-        $_SESSION['collection_id_choice'] =
-            $security->retrieve_coll_id_from_table(
-                $_SESSION['collection_choice']
-        );
-    } else if((isset($_SESSION['indexing2']['ind_coll'])
-        && ! empty($_SESSION['indexing2']['ind_coll']))
-            || ($_SESSION['indexing2']['ind_coll'] == 0
-                && isset($_SESSION['indexing2']['ind_coll']))) {
-        if (isset(
-            $_SESSION['collections'][$_SESSION['indexing2']['ind_coll']]['view']
-        ) && ! empty(
-            $_SESSION['collections'][$_SESSION['indexing2']['ind_coll']]['view']
-        )) {
-            $table =
-                $_SESSION['collections'][$_SESSION['indexing2']['ind_coll']]
-                    ['view'];
-            $is_view = true;
-        } else {
-            $table =
-                $_SESSION['collections'][$_SESSION['indexing2']['ind_coll']]
-                    ['table'];
-        }
-        $_SESSION['collection_id_choice'] =
-            $_SESSION['collections'][$_SESSION['indexing2']['ind_coll']]['id'];
-    } else if ((isset($_SESSION['searching']['ind_coll'])
-        && ! empty($_SESSION['searching']['ind_coll']))
-            || ($_SESSION['searching']['ind_coll'] == 0
-                && isset($_SESSION['searching']['ind_coll']))) {
-        if (isset(
-            $_SESSION['collections'][$_SESSION['searching']['ind_coll']]['view']
-        ) && ! empty(
-            $_SESSION['collections'][$_SESSION['searching']['ind_coll']]['view']
-        )) {
-            $table =
-                $_SESSION['collections'][$_SESSION['searching']['ind_coll']]
-                    ['view'];
-            $is_view = true;
-        } else {
-            $table =
-                $_SESSION['collections'][$_SESSION['searching']['ind_coll']]
-                    ['table'];
-        }
-        $_SESSION['collection_id_choice'] =
-            $_SESSION['collections'][$_SESSION['searching']['ind_coll']]['id'];
-    } else {
-        $table = $_SESSION['collections'][0]['view'];
-        $is_view = true;
-        $_SESSION['collection_id_choice'] =
-            $security->retrieve_coll_id_from_table(
-                $_SESSION['collection_choice']
-            );
-    }
-    $_SESSION['id_to_view'] = '';
+$request = new request;
 
-    if (isset($_GET['id']) && ! empty($_GET['id'])) {
-        $_SESSION['id_to_view'] = $_GET['id'];
-    }
-    if (isset($_POST['up_res_id']) && ! empty($_POST['up_res_id'])) {
-        $_GET['id'] = $_POST['up_res_id'];
-    }
-    if (isset($_SESSION['detail_id']) && ! empty($_SESSION['detail_id'])
-        && $_GET['origin'] == 'waiting_list') {
-        $s_id =$_SESSION['detail_id'];
-    }
-    if (isset($_GET['id']) && ! empty($_GET['id'])) {
-        $s_id = addslashes($func->wash($_GET['id'], 'num', _THE_DOC));
-    } else if(isset($_SESSION['scan_doc_id'])
-        && ! empty($_SESSION['scan_doc_id'])) {
-        $s_id =$_SESSION['scan_doc_id'];
-        $_SESSION['scan_doc_id'] = "";
-    }
-    $_SESSION['doc_id'] = $s_id;
-    if ($_SESSION['origin'] <> 'basket') {
-        $right = $security->test_right_doc(
-            $_SESSION['collection_id_choice'], $s_id
-        );
-    } else {
-        $right = true;
-    }
-    if (! $right && $s_id <> '') {
-        ?>
-        <script type="text/javascript">
-        window.top.location.href = '<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=no_right';
-        </script>
-        <?php
-        exit();
-    }
-    if ($s_id == '') {
-        echo '<br><br><center><h2 style="color:#FFC200;">' . _NO_RESULTS
-            . '</h2></center>';
-        exit;
-    }
-    if (isset($s_id) && ! empty($s_id)
-        && $_SESSION['history']['resview'] == 'true') {
-        $users->add(
-            $table, $s_id , 'VIEW', _VIEW_DOC_NUM . $s_id,
-            $_SESSION['config']['databasetype'], 'apps'
-        );
-    }
-    $modify_doc = $security->collection_user_right(
-        $_SESSION['collection_id_choice'], 'can_update'
+//$_SESSION['req'] = 'details_invoices';
+$is_view = false;
+//$_SESSION['indexing'] = array();
+if (isset($_SESSION['collection_id_choice'])
+	&& ! empty($_SESSION['collection_id_choice'])
+) {
+	$collId = $_SESSION['collection_id_choice'];
+} else {
+	$collId = $_SESSION['user']['collections'][0];
+}
+
+$table = $security->retrieve_view_from_coll_id($collId);
+$is_view = true;
+if (empty($table)) {
+	$table = $security->retrieve_table_from_coll($collId);
+	$is_view = false;
+}
+
+$_SESSION['id_to_view'] = $resId;
+$_SESSION['doc_id'] = $resId;
+
+$right = $security->test_right_doc($collId, $resId);
+
+if (! $right && $resId <> '') {
+	include('apps/'.$_SESSION['config']['app_id'].'/no_right.php');
+	exit;
+}
+if ($resId == '') {
+    echo '<br><br><center><h2 style="color:#FFC200;">' . _NO_RESULTS
+    	. '</h2></center>';
+    exit;
+}
+if (isset($resId) && ! empty($resId) 
+	&& $_SESSION['history']['resview'] == 'true'
+) {
+	$users->add(
+    	$table, $resId , 'VIEW', _VIEW_DOC_NUM . $resId,
+        $_SESSION['config']['databasetype'], 'apps'
     );
-    if (empty($_SESSION['error']) || $_SESSION['indexation']) {
-        $connexion_invoices = new dbquery();
-        $connexion_invoices->connect();
-        $connexion_invoices->query(
-            "select type_id, type_label, format, typist, creation_date, "
-            . "fingerprint, filesize, res_id, work_batch, status, page_count,"
-            . " doc_date, identifier, description, source, doc_language from "
-            . $table . " where res_id = " . $s_id . ""
-        );
-        //$connexion_invoices->show();
-    }
+}
+    
+$modify_doc = check_right(
+    $_SESSION['user']['security'][$collId]['DOC']['securityBitmask'],
+    DATA_MODIFICATION
+);
+$delete_doc = check_right(
+    $_SESSION['user']['security'][$collId]['DOC']['securityBitmask'],
+    DELETE_RECORD
+);
+    
+if (empty($_SESSION['error'])) {
+	$db = new dbquery();
+    $db->connect();
+    $db->query(
+    	"select type_id, type_label, format, typist, creation_date, "
+        . "fingerprint, filesize, res_id, work_batch, status, page_count,"
+        . " doc_date, identifier, description, source, doc_language from "
+        . $table . " where res_id = " . $resId . ""
+    );
+    //$db->show();
+}
     ?>
     <div id="" class="clearfix">
     <?php
-    if (! empty($_SESSION['error']) && ! $_SESSION['indexation'] ) {
-        ?>
+if (! empty($_SESSION['error']) ) {
+    ?>
         <div class="error">
             <br />
             <br />
@@ -195,8 +106,8 @@ if ($_GET['status'] == 'empty') {
             <br />
         </div>
         <?php
-    } else {
-        if ($connexion_invoices->nb_result() == 0) {
+} else {
+    if ($db->nb_result() == 0) {
             ?>
             <div align="center">
                 <br />
@@ -207,66 +118,48 @@ if ($_GET['status'] == 'empty') {
                 <br />
             </div>
             <?php
-        } else  {
-            $details = $connexion_invoices->fetch_object();
-            $title = $details->title;
-            //$description = $details->description;
-            $typist = $details->typist;
-            $format = $details->format;
-            $filesize = $details->filesize;
-            $creation_date = $details->creation_date;
-            //echo $creation_date;exit;
-            $doc_date = $details->doc_date;
-            $fingerprint = $details->fingerprint;
-            $work_batch = $details->work_batch;
-            $ref = $details->identifier;
-            $tmp = "";
-            $type = $details->type_id;
-            $type_label = $details->type_label;
-            $type_id = $details->type_id;
-            $_SESSION['type'] = $type_id;
-            $res_id = $details->res_id;
-            $status = $details->status;
-            $page_count = $details->page_count;
-            $identifier = $details->identifier;
-            //$doc_date = $connexion_invoices->format_date_db($details->doc_date, false);
-            //echo "doc_date ".$doc_date;exit;
-            $description = $details->description;
-            $source = $details->source;
-            $doc_language = $details->doc_language;
-            if (! empty($type)) {
-                $connexion_invoices->query(
-                    "select description, coll_id from "
-                    . $_SESSION['tablename']['doctypes'] . " where type_id = "
-                    . $type
-                );
-                $line_sql = $connexion_invoices->fetch_object();
-                $type = $line_sql->description;
-                $tmp =  $line_sql->coll_id;
-                for ($i = 0; $i < count($_SESSION['ressources']); $i ++) {
-                    if ($_SESSION['ressources'][$i]['tablename'] == $tmp) {
-                        $table = $_SESSION['ressources'][$i]['comment'];
-                        break;
-                    }
-                }
+	} else  {
+            $res = $db->fetch_object();
+            $title = '';
+            if (isset($res->title)) {
+            	$title = $res->title;
             }
+            //$description = $res->description;
+            $typist = $res->typist;
+            $format = $res->format;
+            $filesize = $res->filesize;
+            $creation_date = $res->creation_date;
+            //echo $creation_date;exit;
+            $doc_date = $res->doc_date;
+            $fingerprint = $res->fingerprint;
+            $work_batch = $res->work_batch;
+            $ref = $res->identifier;
+            $tmp = "";
+            $type = $res->type_id;
+            $type_label = $res->type_label;
+            $type_id = $res->type_id;           
+            $res_id = $res->res_id;
+            $status = $res->status;
+            $page_count = $res->page_count;
+            $identifier = $res->identifier;
+            //$doc_date = $db->format_date_db($res->doc_date, false);
+            //echo "doc_date ".$doc_date;exit;
+            $description = $res->description;
+            $source = $res->source;
+            $doc_language = $res->doc_language;
+
             ?>
             <div align="center">
             <?php
             if ($type_id <> '0' && $type_id <> '') {
-                    $connexion_invoices->query(
+                    $db->query(
                         "select * from " . $_SESSION['tablename']['doctypes']
                         . " where type_id = " . $type_id
                     );
-                    $res = $connexion_invoices->fetch_array();
+                    $res = $db->fetch_array();
                     $desc = str_replace('\\', '',$res['description']);
                     $type_id = $res['type_id'];
-                    $is_master = $res['is_master'];
-                    if ($is_master == 'Y') {
-                        $doctypes_second_level_id =
-                            $res['doctypes_second_level_id'];
-                        $_SESSION['multidoc'] = true;
-                    }
+                   
                     require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_indexing_searching_app.php");
                     $indexing_searching = new indexing_searching_app();
                     //$indexing_searching->retrieve_index($res,$_SESSION['collection_id_choice'] );
@@ -283,15 +176,15 @@ if ($_GET['status'] == 'empty') {
                         <div class="desc block_light admin" id="desc3" style="display:none">
                             <div class="ref-unit">
                                 <?php echo _MENU." : "; ?>
-                                <a href="<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=view_resource_controler&id=<?php  echo $s_id; ?>&dir=indexing_searching" target="_blank"><b><?php  echo _VIEW_DOC_FULL; ?></b> </a>
+                                <a href="<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=view_resource_controler&id=<?php  echo $resId; ?>&dir=indexing_searching" target="_blank"><b><?php  echo _VIEW_DOC_FULL; ?></b> </a>
                                         |
-                                <a href="<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=details&dir=indexing_searching&id=<?php  echo $s_id; ?>" target="_blank"><b><?php  echo _DETAILS_DOC_FULL; ?> </b></a>
+                                <a href="<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=details&dir=indexing_searching&id=<?php  echo $resId; ?>" target="_blank"><b><?php  echo _DETAILS_DOC_FULL; ?> </b></a>
                                 <hr/>
                                 <p>
                                     <label>
                                     <?php echo _NUM_GED." : "; ?>
                                     </label>
-                                    <input type="text" name="resId" id="resId" value="<?php  echo $s_id;?>" />
+                                    <input type="text" name="resId" id="resId" value="<?php  echo $resId;?>" />
                                 </p>
                                 <p>
                                     <label>
@@ -311,9 +204,9 @@ if ($_GET['status'] == 'empty') {
                                         {
                                             $field = "doc_".$field;
                                         }
-                                        $connexion_invoices->query("select ".$field." from ".$table." where res_id = ".$_SESSION['id_to_view']);
-                                        $res_mastertype = $connexion_invoices->fetch_array();
-                                        //$connexion_invoices->show_array($res_mastertype);
+                                        $db->query("select ".$field." from ".$table." where res_id = ".$_SESSION['id_to_view']);
+                                        $res_mastertype = $db->fetch_array();
+                                        //$db->show_array($res_mastertype);
                                         $_SESSION['indexing'][$_SESSION['index_to_use'][$cpt6]['column']] = $res_mastertype[$field];
                                         if($_SESSION['index_to_use'][$cpt6]['date'])
                                         {
@@ -350,7 +243,7 @@ if ($_GET['status'] == 'empty') {
                             </div>
                         </div>
                     </form>
-                <iframe name="view" id="view" width="100%" height="700" frameborder="0" scrolling="no" src="<?php  echo $_SESSION['config']['businessappurl']."index.php?display=true&dir=indexing_searching&page=view_resource_controler&id=".$s_id;?>"></iframe>
+                <iframe name="view" id="view" width="100%" height="700" frameborder="0" scrolling="no" src="<?php  echo $_SESSION['config']['businessappurl']."index.php?display=true&dir=indexing_searching&page=view_resource_controler&id=".$resId;?>"></iframe>
                 <?php
             }
             else
@@ -388,7 +281,7 @@ if ($_GET['status'] == 'empty') {
             <?php
         }
     }
-}
-$core_tools->load_js();
+
+$core->load_js();
 ?>
 </div>

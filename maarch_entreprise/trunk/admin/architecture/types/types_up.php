@@ -63,4 +63,3 @@ else
 
 $users = new types();
 $users->formtype("up",$s_id);
-?>

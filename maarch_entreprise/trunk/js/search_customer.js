@@ -1,3 +1,27 @@
+$(document).observe("maarch:tree:branchselect", function(evt){
+    // First clean the script result div
+	var div_to_clean = $('docView');
+	div_to_clean.innerHTML = '';
+
+    // get the id of the selected branch
+    var id_branch = evt.findElement().id;
+    // A branch id is like prefix_[main div]_[tree id]_[id from db]
+    // Node id MUST NOT contain _
+    // get the id
+    var branchId = id_branch.split('_').pop();
+
+    var tmp_branch = $(id_branch);
+    var levelBranch = tmp_branch.ancestors().filter(function(el){
+                        return el.match("ul");
+                    }).size();
+    // Display page in docView only if level is the last (res_id)
+    if (levelBranch == 5) {
+    	var url_script = BASE_URL+'index.php?dir=indexing_searching&page=little_details_invoices&display=true&value='+branchId;
+    	updateContent(url_script, 'docView');
+    }
+});
+
+
 // Activate ToolTips displays and Ajax loading
 Maarch.cssPath = "./css/";
 Maarch.require('treeview', function(){
@@ -15,13 +39,12 @@ Maarch.require('treeview', function(){
 // Init tree data
 function tree_init(treeId, projectStr, more_params)
 {
-	var tree = $(treeId);
-	// If reload the tree, remove existing tree roots before creating new tree
-   /* if(tree)
+	if($('myTree'))
     {
-       tree.remove();
-    }*/
-    div = tree.insert(new Element('div', {'id' : 'rootTree'}));
+		$('myTree').childElements().each(function(item){
+			item.remove();
+		});
+    }
     // Get tree parameters from an ajax script (get_tree_info.php)
     new Ajax.Request(BASE_URL+'index.php?dir=indexing_searching&page=get_tree_info&display=true',{
         method: 'post',
@@ -35,10 +58,10 @@ function tree_init(treeId, projectStr, more_params)
             Tree = new Maarch.treeview.Tree(treeId, params);
         },
         onComplete: function(response){
-            if(more_params['onComplete_callback'])
+         /*   if(more_params['onComplete_callback'])
             {
                 eval(more_params['onComplete_callback']);
-            }
+            }*/
         }
     });
 }
