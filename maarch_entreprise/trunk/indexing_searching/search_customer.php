@@ -9,6 +9,7 @@
 * @since 10/2005
 * @license GPL
 * @author Loïc Vinet  <dev@maarch.org>
+* @author Claire Figueras  <dev@maarch.org>
 */
 
 require_once
@@ -41,7 +42,7 @@ $core->manage_location_bar(
 );
 /***********************************************************/
 //Definition de la collection
-$_SESSION['collection_id_choice'] = $_SESSION['user']['collections'][0] ;
+$_SESSION['collection_id_choice'] = $_SESSION['user']['collections'][0];
 if (isset($_REQUEST['erase']) && $_REQUEST['erase'] == 'true') {
     $_SESSION['search'] = array();
 }
@@ -51,6 +52,9 @@ if (isset($_REQUEST['name_folder']) && $_REQUEST['name_folder'] <> '') {
 }
 //$core->show_array($_REQUEST);
 ?>
+<script type="text/javascript" >
+    BASE_URL = "<?php echo $_SESSION['config']['businessappurl'] ?>";
+</script>
 <h1><img src="<?php
 echo $_SESSION['config']['businessappurl'] . "static.php?filename=search_proj_off.gif";
 ?>" alt="" /> <?php  echo _SEARCH_CUSTOMER_TITLE; ?></h1>
@@ -58,12 +62,14 @@ echo $_SESSION['config']['businessappurl'] . "static.php?filename=search_proj_of
     <div class="block">
         <table width="100%" border="0">
             <tr>
-                <td align="right"><label><?php  echo _PROJECT;?> :</td>
+                <td align="right"><label for="project"><?php
+echo _PROJECT;
+?> :</label></td>
                 <td class="indexing_field">
                     <input type="text" name="project" id="project" size="50" />
                     <div id="show_project" class="autocomplete"></div>
                 </td>
-                <td align="right"><?php  echo _MARKET;?> :</td>
+                 <td align="right"><?php  echo _MARKET;?> :</td>
                 <td>
                     <input type="text" name="market" id="market" size="50" />
                     <div id="show_market" class="autocomplete"></div>
@@ -87,23 +93,11 @@ echo $_SESSION['config']['businessappurl']."static.php?filename=reset.gif";
     <!-- Display the layout of search_customer -->
     <table width="100%" height="100%" border="1">
         <tr>
-            <td width= "55%" height = "720px">
-                <iframe name="show_trees" id="show_trees" width="100%" height="720" frameborder="0" scrolling="auto" src="<?php
-echo $_SESSION['config']['businessappurl'] . "index.php?display=true"
-    . "&dir=indexing_searching&page=show_trees";
-if (isset($_REQUEST['num_folder'])) {
-    echo "&num_folder=" . $_REQUEST['num_folder'];
-}
-if (isset($_REQUEST['name_folder'])) {
-    echo "&name_folder=" . $_REQUEST['name_folder'];
-}
-?>"></iframe>
+            <td width="55%" height="720px" style="vertical-align: top;">
+                <div id="myTree"></div>
             </td>
             <td>
-                <iframe name="view" id="view" width="100%" height="720" frameborder="0" scrolling="no" src="<?php
-echo $_SESSION['config']['businessappurl'] . "index.php?display=true"
-    . "&dir=indexing_searching&page=little_details_invoices&status=empty";
-?>"></iframe>
+                <div id="docView"><p align="center"><img src="<?php echo $_SESSION['config']['businessappurl'].'static.php?filename=bg_home_home.gif'; ?>" alt="Maarch" /></p></div>
             </td>
         </tr>
     </table>
@@ -112,47 +106,15 @@ echo $_SESSION['config']['businessappurl'] . "index.php?display=true"
     launch_autocompleter_folders('<?php
 echo $_SESSION['config']['businessappurl'];
 ?>index.php?display=true&module=folder&page=autocomplete_folders&mode=project', 'project');
-    launch_autocompleter_folders('<?php
-echo $_SESSION['config']['businessappurl'];
-?>index.php?display=true&module=folder&page=autocomplete_folders&mode=market', 'market');
     function submitForm()
     {
-        window.frames['show_trees'].location.href='<?php
-echo $_SESSION['config']['businessappurl'] . "index.php?display=true&dir=indexing_searching";
-?>&page=show_trees&project='+window.document.getElementById("project").value+'&market='+window.document.getElementById("market").value;
+        var project = $('project').value;
+        tree_init('myTree', project);
     }
-    <?php
-if (isset($_REQUEST['num_folder']) && $_REQUEST['num_folder'] <> "") {
-    $db = new dbquery();
-    $db->connect();
-    $db->query(
-    	"select folder_name, subject, folders_system_id from "
-        . $_SESSION['tablename']['fold_folders'] . " where folder_name = '"
-        . $_REQUEST['num_folder'] . "'"
-    );
-    $res = $db->fetch_object();
-    $chosenNumFolder = $res->folder_name . ", " . $res->subject  ." ("
-        . $res->folders_system_id . ")";
-    ?>
-    window.document.getElementById("project").value = "<?php echo $chosenNumFolder;?>";
-    submitForm();
-    <?php
-}
-if ($_REQUEST['num_subfolder'] <> "") {
-    $db = new dbquery();
-    $db->connect();
-    $db->query(
-   		"select folder_name, subject, folders_system_id from "
-        . $_SESSION['tablename']['fold_folders'] . " where folder_name = '"
-        . $_REQUEST['num_subfolder'] . "'"
-    );
-    $res = $db->fetch_object();
-    $chosenNumFolder = $res->folder_name . ", " . $res->subject . " ("
-        . $res->folders_system_id . ")";
-    ?>
-    window.document.getElementById("market").value = "<?php echo $chosenNumFolder;?>";
-    submitForm();
-    <?php
-}
-?>
 </script>
+<script type="text/javascript" src="<?php
+echo $_SESSION['config']['businessappurl'] . 'tools/'
+?>MaarchJS/dist/maarch.js"></script>
+<script type="text/javascript" src="<?php
+echo $_SESSION['config']['businessappurl'] . 'js/'
+?>search_customer.js"></script>

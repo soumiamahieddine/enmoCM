@@ -1012,7 +1012,7 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
         //echo 'market ';
         $fields .= 'folders_system_id,';
         if ($mode == 'full' || $mode == 'form') {
-            if ($params['img_project'] == true) {
+            if (isset($params['img_project']) && $params['img_project'] == true) {
                 $data['project'] = array (
                     'value' => '',
                     'show_value' => '',
@@ -1028,7 +1028,7 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
                     'display' => 'textinput'
                 );
             }
-            if ($params['img_market'] == true) {
+            if (isset($params['img_market']) && $params['img_market'] == true) {
                 $data['market'] = array (
                     'value' => '',
                     'show_value' => '',
@@ -1071,7 +1071,7 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
         array_push($arr, 'project');
         if ($mode == 'full' || $mode == 'form') {
             if ($params['img_project'] == true) {
-                $data['project'] = array (
+                $data['project'] = array(
                     'value' => '',
                     'show_value' => '',
                     'label' => $_ENV['categories'][$cat_id]['other_cases']['project']['label'],
@@ -1079,7 +1079,7 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
                     'img' => $_ENV['categories'][$cat_id]['other_cases']['project']['img']
                 );
             } else {
-                $data['project'] = array (
+                $data['project'] = array(
                     'value' => '',
                     'show_value' => '',
                     'label' => $_ENV['categories'][$cat_id]['other_cases']['project']['label'],
@@ -1149,9 +1149,11 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
     for ($i = 0; $i < count($arr); $i++) {
         if ($mode == 'full' || $mode == 'form') {
             // Normal Cases
-            $data[$arr[$i]]['value'] = $line-> $arr[$i];
+            if (isset($line-> $arr[$i])) {
+                $data[$arr[$i]]['value'] = $line-> $arr[$i];
+            }
             if ($arr[$i] <> 'project') {
-                $data[$arr[$i]]['show_value'] = $db->show_string($line-> $arr[$i]);
+                $data[$arr[$i]]['show_value'] = $db->show_string($data[$arr[$i]]['value']);
             }
             if (isset($_ENV['categories'][$cat_id][$arr[$i]]['type_field'])
                 && $_ENV['categories'][$cat_id][$arr[$i]]['type_field'] == 'date'

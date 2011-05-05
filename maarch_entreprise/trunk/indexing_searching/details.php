@@ -734,9 +734,12 @@ else
                                         <select name="<?php echo $key;?>" id="<?php echo $key;?>" >
                                             <option value=""><?php echo _CHOOSE;?>...</option>
                                             <?php
-                                            for($i=0; $i<count($indexes[$key]['values']);$i++)
+                                            for ($j = 0; $j < count($indexes[$key]['values']); $j ++)
                                             {?>
-                                                <option value="<?php echo $indexes[$key]['values'][$i]['id'];?>" <?php if($indexes[$key]['values'][$i]['id'] == $indexes[$key]['value']){ echo 'selected="selected"';}?>><?php echo $indexes[$key]['values'][$i]['label'];?></option><?php
+                                                <option value="<?php echo $indexes[$key]['values'][$j]['id'];?>" <?php
+                                                if ($indexes[$key]['values'][$j]['id'] == $indexes[$key]['value']) {
+                                                    echo 'selected="selected"';
+                                                }?>><?php echo $indexes[$key]['values'][$j]['label'];?></option><?php
                                             }?>
                                         </select><?php
                                     }
