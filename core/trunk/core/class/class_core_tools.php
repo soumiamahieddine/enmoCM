@@ -1956,9 +1956,9 @@ class core_tools extends functions
             if($load_js) {
                 //$this->load_js();
                 ?>
+                <script type="application/javascript" src="<?php  echo $_SESSION['config']['businessappurl'];?>smartphone/js/maarch_functions.js"></script>
                 <script type="application/x-javascript" src="<?php  echo $_SESSION['config']['businessappurl'];?>smartphone/js/iui/iui.js"></script>
                 <script type="text/javascript" src="<?php  echo $_SESSION['config']['businessappurl'];?>smartphone/js/iscroll.js?v3.7.1"></script>
-                
                 <?php
             }
             ?>
