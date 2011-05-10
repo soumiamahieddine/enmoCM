@@ -420,7 +420,7 @@ class functions
         else
         {
 
-            if(trim($id_page) == trim($_SESSION['location_bar']['level1']['id']))
+            if(isset($_SESSION['location_bar']['level1']['id']) && trim($id_page) == trim($_SESSION['location_bar']['level1']['id']))
             {
                 $_SESSION['location_bar']['level2']['path'] = "";
                 $_SESSION['location_bar']['level2']['label'] = "";
@@ -434,7 +434,7 @@ class functions
                 $_SESSION['location_bar']['level4']['label'] = "";
                 $_SESSION['location_bar']['level4']['id'] = "" ;
             }
-            elseif(trim($id_page) == trim($_SESSION['location_bar']['level2']['id']))
+            elseif( isset($_SESSION['location_bar']['level2']['id']) && trim($id_page) == trim($_SESSION['location_bar']['level2']['id']))
             {
                 $_SESSION['location_bar']['level3']['path'] = "";
                 $_SESSION['location_bar']['level3']['label'] = "";
@@ -444,7 +444,7 @@ class functions
                 $_SESSION['location_bar']['level4']['label'] = "";
                 $_SESSION['location_bar']['level4']['id'] = "" ;
             }
-            elseif(trim($id_page) == trim($_SESSION['location_bar']['level3']['id']))
+            elseif(isset($_SESSION['location_bar']['level3']['id']) && trim($id_page) == trim($_SESSION['location_bar']['level3']['id']))
             {
                 $_SESSION['location_bar']['level4']['path'] = "";
                 $_SESSION['location_bar']['level4']['label'] = "";
