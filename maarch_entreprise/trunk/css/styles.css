@@ -3534,3 +3534,11 @@ a.legend hr
     width: 190px;
 
 }
+#myTree
+{
+	/*width: 520px;*/
+}
+#docView
+{
+    width: 460px;	
+}
