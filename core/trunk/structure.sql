@@ -1,6 +1,6 @@
 
 
--- from core/sql/structure/core.postgresql.sql
+-- core/sql/structure/core.postgresql.sql
 
 
 SET client_encoding = 'UTF8';
@@ -302,7 +302,7 @@ CREATE TABLE users
 WITH (OIDS=FALSE);
 
 
--- from modules/advanced_physical_archive/sql/structure/advanced_physical_archive.postgresql.sql
+-- modules/advanced_physical_archive/sql/structure/advanced_physical_archive.postgresql.sql
 
 CREATE SEQUENCE arbox_id_seq
   INCREMENT 1
@@ -549,7 +549,7 @@ WITH (OIDS=FALSE);
 WITH (OIDS=FALSE);
 
 
--- from modules/alert_diffusion/sql/structure/alert_diffusion.postgresql.sql
+-- modules/alert_diffusion/sql/structure/alert_diffusion.postgresql.sql
 
 
 CREATE SEQUENCE alerts_alert_id_seq
@@ -619,7 +619,7 @@ CREATE TABLE alert_insts
 WITH (OIDS=FALSE);
 
 
--- from modules/attachments/sql/structure/attachments.postgresql.sql
+-- modules/attachments/sql/structure/attachments.postgresql.sql
 
 
 CREATE SEQUENCE res_attachment_res_id_seq
@@ -687,7 +687,7 @@ CREATE TABLE res_attachments
 WITH (OIDS=FALSE);
 
 
--- from modules/autofoldering/sql/structure/autofoldering.postgresql.sql
+-- modules/autofoldering/sql/structure/autofoldering.postgresql.sql
 
 
 CREATE TABLE af_security
@@ -704,26 +704,34 @@ CREATE TABLE af_security
 WITH (OIDS=FALSE);
 
 -- Filled during autofoldering load
+-- If you create your on table for a new tree
+-- It is very important to respect the order of fields : DO NOT PUT IDS IN THE END OF THE TABLE!!!
 CREATE TABLE af_view_year_target
 (
   level1 character varying(255) NOT NULL , -- Pays / Country : custom_t3
+  level1_id integer NOT NULL,
   level2 character(4) ,          -- Année / Year : date_part( 'year', doc_date)
+  level2_id integer NOT NULL,
   level3 character varying(255) ,          -- Client / Customer : custom_t4
-  level4 integer ,                         -- Type de document : type_id
-  CONSTRAINT af_view_year_target_pkey PRIMARY KEY (level1, level2, level3, level4)
+  level3_id integer NOT NULL,
+  CONSTRAINT af_view_year_target_pkey PRIMARY KEY (level1, level2, level3)
 )
 WITH (OIDS=FALSE);
 
 CREATE TABLE af_view_customer_target
 (
   level1 character varying(255) NOT NULL , -- 1ère lettre client / Customer 1st letter : substring(custom_t4, 1, 1)
+  level1_id integer NOT NULL,
   level2 character varying(255) ,          -- Client / Customer : custom_t4
+  level2_id integer NOT NULL,
   level3 character(4) ,                    -- Année / Year : date_part( 'year', doc_date)
+  level3_id integer NOT NULL,
   CONSTRAINT af_view_customer_target_pkey PRIMARY KEY (level1, level2, level3)
 )
 WITH (OIDS=FALSE);
 
--- from modules/basket/sql/structure/basket.postgresql.sql
+
+-- modules/basket/sql/structure/basket.postgresql.sql
 
 CREATE TABLE actions_groupbaskets
 (
@@ -786,7 +794,7 @@ CREATE TABLE user_abs
 WITH (OIDS=FALSE);
 
 
--- from modules/cases/sql/structure/cases.postgresql.sql
+-- modules/cases/sql/structure/cases.postgresql.sql
 
 CREATE SEQUENCE case_id_seq
   INCREMENT 1
@@ -822,7 +830,7 @@ CREATE TABLE cases_res
 
 
 
--- from modules/entities/sql/structure/entities.postgresql.sql
+-- modules/entities/sql/structure/entities.postgresql.sql
 
 
 CREATE TABLE entities
@@ -904,7 +912,7 @@ CREATE TABLE groupbasket_redirect
 WITH (OIDS=FALSE);
 
 
--- from modules/folder/sql/structure/folder.postgresql.sql
+-- modules/folder/sql/structure/folder.postgresql.sql
 
 CREATE SEQUENCE folders_system_id_seq
   INCREMENT 1
@@ -1068,7 +1076,7 @@ CREATE TABLE foldertypes_indexes
 WITH (OIDS=FALSE);
 
 
--- from modules/full_text/sql/structure/full_text.postgresql.sql
+-- modules/full_text/sql/structure/full_text.postgresql.sql
 
 CREATE TABLE fulltext
 (
@@ -1083,7 +1091,64 @@ WITH (
 );
 
 
--- from modules/notes/sql/structure/notes.postgresql.sql
+-- modules/life_cycle/sql/structure/life_cycle.postgresql.sql
+
+CREATE TABLE lc_policies
+(
+   policy_id character varying(32) NOT NULL, 
+   policy_name character varying(255) NOT NULL,
+   policy_desc character varying(255) NOT NULL,
+   CONSTRAINT lc_policies_pkey PRIMARY KEY (policy_id)
+) 
+WITH (OIDS = FALSE);
+
+
+CREATE TABLE lc_cycles
+(
+   policy_id character varying(32) NOT NULL,
+   cycle_id character varying(32) NOT NULL, 
+   cycle_desc character varying(255) NOT NULL,
+   sequence_number integer NOT NULL,
+   where_clause text, 
+   break_key character varying(255) DEFAULT NULL,
+   validation_mode character varying(32) NOT NULL, 
+   CONSTRAINT lc_cycle_pkey PRIMARY KEY (policy_id, cycle_id)
+) 
+WITH (OIDS = FALSE);
+
+CREATE TABLE lc_cycle_steps
+(
+   policy_id character varying(32) NOT NULL,
+   cycle_id character varying(32) NOT NULL, 
+   cycle_step_id character varying(32) NOT NULL, 
+   cycle_step_desc character varying(255) NOT NULL,
+   docserver_type_id character varying(32) NOT NULL,
+   is_allow_failure boolean NOT NULL DEFAULT false,
+   step_operation character varying(32) NOT NULL,
+   sequence_number integer NOT NULL,
+   is_must_complete boolean NOT NULL DEFAULT false,
+   preprocess_script character varying(255) DEFAULT NULL, 
+   postprocess_script character varying(255) DEFAULT NULL,
+   CONSTRAINT lc_cycle_steps_pkey PRIMARY KEY (policy_id, cycle_id, cycle_step_id, docserver_type_id)
+) 
+WITH (OIDS = FALSE);
+
+CREATE TABLE lc_stack
+(
+   policy_id character varying(32) NOT NULL,
+   cycle_id character varying(32) NOT NULL, 
+   cycle_step_id character varying(32) NOT NULL, 
+   coll_id character varying(32) NOT NULL,
+   res_id bigint NOT NULL, 
+   cnt_retry integer DEFAULT NULL, 
+   status character(1) NOT NULL,
+   CONSTRAINT lc_stack_pkey PRIMARY KEY (policy_id, cycle_id, cycle_step_id, res_id)
+) 
+WITH (OIDS = FALSE);
+
+
+
+-- modules/notes/sql/structure/notes.postgresql.sql
 
 CREATE SEQUENCE notes_seq
   INCREMENT 1
@@ -1107,7 +1172,7 @@ CREATE TABLE notes
 WITH (OIDS=FALSE);
 
 
--- from modules/physical_archive/sql/structure/physical_archive.postgresql.sql
+-- modules/physical_archive/sql/structure/physical_archive.postgresql.sql
 
 create or replace function update_the_db() returns void as
 $$
@@ -1240,7 +1305,18 @@ CREATE TABLE ar_batch
 ) ;
 
 
--- from modules/templates/sql/structure/templates.postgresql.sql
+-- modules/reports/sql/structure/reports.postgresql.sql
+
+CREATE TABLE usergroups_reports
+(
+  group_id character varying(32) NOT NULL,
+  report_id character varying(50) NOT NULL,
+  CONSTRAINT usergroups_reports_pkey PRIMARY KEY (group_id, report_id)
+)
+WITH (OIDS=FALSE);
+
+
+-- modules/templates/sql/structure/templates.postgresql.sql
 
 
 CREATE SEQUENCE templates_seq
@@ -1288,75 +1364,7 @@ CREATE TABLE templates_doctype_ext
 WITH (OIDS=FALSE);
 
 
--- from modules/reports/sql/structure/reports.postgresql.sql
-
-CREATE TABLE usergroups_reports
-(
-  group_id character varying(32) NOT NULL,
-  report_id character varying(50) NOT NULL,
-  CONSTRAINT usergroups_reports_pkey PRIMARY KEY (group_id, report_id)
-)
-WITH (OIDS=FALSE);
-
-
--- from modules/life_cycle/sql/structure/life_cycle.postgresql.sql
-
-CREATE TABLE lc_policies
-(
-   policy_id character varying(32) NOT NULL, 
-   policy_name character varying(255) NOT NULL,
-   policy_desc character varying(255) NOT NULL,
-   CONSTRAINT lc_policies_pkey PRIMARY KEY (policy_id)
-) 
-WITH (OIDS = FALSE);
-
-
-CREATE TABLE lc_cycles
-(
-   policy_id character varying(32) NOT NULL,
-   cycle_id character varying(32) NOT NULL, 
-   cycle_desc character varying(255) NOT NULL,
-   sequence_number integer NOT NULL,
-   where_clause text, 
-   break_key character varying(255) DEFAULT NULL,
-   validation_mode character varying(32) NOT NULL, 
-   CONSTRAINT lc_cycle_pkey PRIMARY KEY (policy_id, cycle_id)
-) 
-WITH (OIDS = FALSE);
-
-CREATE TABLE lc_cycle_steps
-(
-   policy_id character varying(32) NOT NULL,
-   cycle_id character varying(32) NOT NULL, 
-   cycle_step_id character varying(32) NOT NULL, 
-   cycle_step_desc character varying(255) NOT NULL,
-   docserver_type_id character varying(32) NOT NULL,
-   is_allow_failure boolean NOT NULL DEFAULT false,
-   step_operation character varying(32) NOT NULL,
-   sequence_number integer NOT NULL,
-   is_must_complete boolean NOT NULL DEFAULT false,
-   preprocess_script character varying(255) DEFAULT NULL, 
-   postprocess_script character varying(255) DEFAULT NULL,
-   CONSTRAINT lc_cycle_steps_pkey PRIMARY KEY (policy_id, cycle_id, cycle_step_id, docserver_type_id)
-) 
-WITH (OIDS = FALSE);
-
-CREATE TABLE lc_stack
-(
-   policy_id character varying(32) NOT NULL,
-   cycle_id character varying(32) NOT NULL, 
-   cycle_step_id character varying(32) NOT NULL, 
-   coll_id character varying(32) NOT NULL,
-   res_id bigint NOT NULL, 
-   cnt_retry integer DEFAULT NULL, 
-   status character(1) NOT NULL,
-   CONSTRAINT lc_stack_pkey PRIMARY KEY (policy_id, cycle_id, cycle_step_id, res_id)
-) 
-WITH (OIDS = FALSE);
-
-
-
--- from apps/maarch_entreprise/sql/structure/apps.postgresql.sql
+-- apps/maarch_entreprise/sql/structure/apps.postgresql.sql
 
 CREATE SEQUENCE contact_id_seq
   INCREMENT 1
@@ -1702,8 +1710,9 @@ WITH (OIDS=FALSE);
 
 CREATE OR REPLACE VIEW res_view AS
  SELECT r.tablename, r.is_multi_docservers, r.res_id, r.title, r.subject, r.page_count, r.identifier, r.doc_date, r.type_id,
- d.description AS type_label, d.doctypes_first_level_id, dfl.doctypes_first_level_label, dfl.css_style as doctype_first_level_style,d.doctypes_second_level_id, 
- dsl.doctypes_second_level_label, dsl.css_style as doctype_second_level_style, r.format, r.typist, r.creation_date, r.relation, r.docserver_id,
+ d.description AS type_label, d.doctypes_first_level_id, dfl.doctypes_first_level_label, dfl.css_style as doctype_first_level_style,
+ d.doctypes_second_level_id, dsl.doctypes_second_level_label, dsl.css_style as doctype_second_level_style,
+ r.format, r.typist, r.creation_date, r.relation, r.docserver_id,
  r.folders_system_id, r.path, r.filename, r.fingerprint, r.offset_doc, r.filesize, r.status,
  r.work_batch, r.arbatch_id, r.arbox_id,  r.is_paper, r.scan_date, r.scan_user,r.scan_location,r.scan_wkstation,
  r.scan_batch,r.doc_language,r.description,r.source,r.initiator,r.destination,r.dest_user,r.policy_id,r.cycle_id,
@@ -1726,7 +1735,9 @@ CREATE OR REPLACE VIEW res_view AS
 
 -- View without cases :
 --CREATE OR REPLACE VIEW res_view_letterbox AS
- --SELECT r.tablename, r.res_id, r.type_id, d.description AS type_label, d.doctypes_first_level_id, dfl.doctypes_first_level_label, dfl.css_style as doctype_first_level_style,d.doctypes_second_level_id, dsl.doctypes_second_level_label,dsl.css_style as doctype_second_level_style, r.format, r.typist, r.creation_date, r.relation, r.docserver_id, r.folders_system_id, f.folder_id, r.path, r.filename, r.fingerprint, r.filesize, r.status, r.work_batch, r.arbatch_id, r.arbox_id, r.page_count, r.is_paper, r.doc_date, r.scan_date, r.scan_user, r.scan_location, r.scan_wkstation, r.scan_batch, r.doc_language, r.description, r.source, r.author, r.custom_t1 AS doc_custom_t1, r.custom_t2 AS doc_custom_t2, r.custom_t3 AS doc_custom_t3, r.custom_t4 AS doc_custom_t4, r.custom_t5 AS doc_custom_t5, r.custom_t6 AS doc_custom_t6, r.custom_t7 AS doc_custom_t7, r.custom_t8 AS doc_custom_t8, r.custom_t9 AS doc_custom_t9, r.custom_t10 AS doc_custom_t10, r.custom_t11 AS doc_custom_t11, r.custom_t12 AS doc_custom_t12, r.custom_t13 AS doc_custom_t13, r.custom_t14 AS doc_custom_t14, r.custom_t15 AS doc_custom_t15, r.custom_d1 AS doc_custom_d1, r.custom_d2 AS doc_custom_d2, r.custom_d3 AS doc_custom_d3, r.custom_d4 AS doc_custom_d4, r.custom_d5 AS doc_custom_d5, r.custom_d6 AS doc_custom_d6, r.custom_d7 AS doc_custom_d7, r.custom_d8 AS doc_custom_d8, r.custom_d9 AS doc_custom_d9, r.custom_d10 AS doc_custom_d10, r.custom_n1 AS doc_custom_n1, r.custom_n2 AS doc_custom_n2, r.custom_n3 AS doc_custom_n3, r.custom_n4 AS doc_custom_n4, r.custom_n5 AS doc_custom_n5, r.custom_f1 AS doc_custom_f1, r.custom_f2 AS doc_custom_f2, r.custom_f3 AS doc_custom_f3, r.custom_f4 AS doc_custom_f4, r.custom_f5 AS doc_custom_f5, f.foldertype_id, ft.foldertype_label, f.custom_t1 AS fold_custom_t1, f.custom_t2 AS fold_custom_t2, f.custom_t3 AS fold_custom_t3, f.custom_t4 AS fold_custom_t4, f.custom_t5 AS fold_custom_t5, f.custom_t6 AS fold_custom_t6, f.custom_t7 AS fold_custom_t7, f.custom_t8 AS fold_custom_t8, f.custom_t9 AS fold_custom_t9, f.custom_t10 AS fold_custom_t10, f.custom_t11 AS fold_custom_t11, f.custom_t12 AS fold_custom_t12, f.custom_t13 AS fold_custom_t13, f.custom_t14 AS fold_custom_t14, f.custom_t15 AS fold_custom_t15, f.custom_d1 AS fold_custom_d1, f.custom_d2 AS fold_custom_d2, f.custom_d3 AS fold_custom_d3, f.custom_d4 AS fold_custom_d4, f.custom_d5 AS fold_custom_d5, f.custom_d6 AS fold_custom_d6, f.custom_d7 AS fold_custom_d7, f.custom_d8 AS fold_custom_d8, f.custom_d9 AS fold_custom_d9, f.custom_d10 AS fold_custom_d10, f.custom_n1 AS fold_custom_n1, f.custom_n2 AS fold_custom_n2, f.custom_n3 AS fold_custom_n3, f.custom_n4 AS fold_custom_n4, f.custom_n5 AS fold_custom_n5, f.custom_f1 AS fold_custom_f1, f.custom_f2 AS fold_custom_f2, f.custom_f3 AS fold_custom_f3, f.custom_f4 AS fold_custom_f4, f.custom_f5 AS fold_custom_f5, f.is_complete AS fold_complete, f.status AS fold_status, f.subject AS fold_subject, f.parent_id AS fold_parent_id, f.folder_level, f.folder_name, f.creation_date AS fold_creation_date, r.initiator, r.destination, r.dest_user, mlb.category_id, mlb.exp_contact_id, mlb.exp_user_id, mlb.dest_user_id, mlb.dest_contact_id, mlb.nature_id, mlb.alt_identifier, mlb.admission_date, mlb.answer_type_bitmask, mlb.other_answer_desc, mlb.process_limit_date, mlb.closing_date, mlb.alarm1_date, mlb.alarm2_date, mlb.flag_notif, mlb.flag_alarm1, mlb.flag_alarm2, r.video_user, r.video_time, r.video_batch, r.subject, r.identifier, r.title, r.priority, mlb.process_notes
+ --SELECT r.tablename, r.res_id, r.type_id, d.description AS type_label, d.doctypes_first_level_id, dfl.doctypes_first_level_label, dfl.css_style as doctype_first_level_style,
+ -- d.doctypes_second_level_id, dsl.doctypes_second_level_label, dsl.css_style as doctype_second_level_style,
+ -- r.format, r.typist, r.creation_date, r.relation, r.docserver_id, r.folders_system_id, f.folder_id, r.path, r.filename, r.fingerprint, r.filesize, r.status, r.work_batch, r.arbatch_id, r.arbox_id, r.page_count, r.is_paper, r.doc_date, r.scan_date, r.scan_user, r.scan_location, r.scan_wkstation, r.scan_batch, r.doc_language, r.description, r.source, r.author, r.custom_t1 AS doc_custom_t1, r.custom_t2 AS doc_custom_t2, r.custom_t3 AS doc_custom_t3, r.custom_t4 AS doc_custom_t4, r.custom_t5 AS doc_custom_t5, r.custom_t6 AS doc_custom_t6, r.custom_t7 AS doc_custom_t7, r.custom_t8 AS doc_custom_t8, r.custom_t9 AS doc_custom_t9, r.custom_t10 AS doc_custom_t10, r.custom_t11 AS doc_custom_t11, r.custom_t12 AS doc_custom_t12, r.custom_t13 AS doc_custom_t13, r.custom_t14 AS doc_custom_t14, r.custom_t15 AS doc_custom_t15, r.custom_d1 AS doc_custom_d1, r.custom_d2 AS doc_custom_d2, r.custom_d3 AS doc_custom_d3, r.custom_d4 AS doc_custom_d4, r.custom_d5 AS doc_custom_d5, r.custom_d6 AS doc_custom_d6, r.custom_d7 AS doc_custom_d7, r.custom_d8 AS doc_custom_d8, r.custom_d9 AS doc_custom_d9, r.custom_d10 AS doc_custom_d10, r.custom_n1 AS doc_custom_n1, r.custom_n2 AS doc_custom_n2, r.custom_n3 AS doc_custom_n3, r.custom_n4 AS doc_custom_n4, r.custom_n5 AS doc_custom_n5, r.custom_f1 AS doc_custom_f1, r.custom_f2 AS doc_custom_f2, r.custom_f3 AS doc_custom_f3, r.custom_f4 AS doc_custom_f4, r.custom_f5 AS doc_custom_f5, f.foldertype_id, ft.foldertype_label, f.custom_t1 AS fold_custom_t1, f.custom_t2 AS fold_custom_t2, f.custom_t3 AS fold_custom_t3, f.custom_t4 AS fold_custom_t4, f.custom_t5 AS fold_custom_t5, f.custom_t6 AS fold_custom_t6, f.custom_t7 AS fold_custom_t7, f.custom_t8 AS fold_custom_t8, f.custom_t9 AS fold_custom_t9, f.custom_t10 AS fold_custom_t10, f.custom_t11 AS fold_custom_t11, f.custom_t12 AS fold_custom_t12, f.custom_t13 AS fold_custom_t13, f.custom_t14 AS fold_custom_t14, f.custom_t15 AS fold_custom_t15, f.custom_d1 AS fold_custom_d1, f.custom_d2 AS fold_custom_d2, f.custom_d3 AS fold_custom_d3, f.custom_d4 AS fold_custom_d4, f.custom_d5 AS fold_custom_d5, f.custom_d6 AS fold_custom_d6, f.custom_d7 AS fold_custom_d7, f.custom_d8 AS fold_custom_d8, f.custom_d9 AS fold_custom_d9, f.custom_d10 AS fold_custom_d10, f.custom_n1 AS fold_custom_n1, f.custom_n2 AS fold_custom_n2, f.custom_n3 AS fold_custom_n3, f.custom_n4 AS fold_custom_n4, f.custom_n5 AS fold_custom_n5, f.custom_f1 AS fold_custom_f1, f.custom_f2 AS fold_custom_f2, f.custom_f3 AS fold_custom_f3, f.custom_f4 AS fold_custom_f4, f.custom_f5 AS fold_custom_f5, f.is_complete AS fold_complete, f.status AS fold_status, f.subject AS fold_subject, f.parent_id AS fold_parent_id, f.folder_level, f.folder_name, f.creation_date AS fold_creation_date, r.initiator, r.destination, r.dest_user, mlb.category_id, mlb.exp_contact_id, mlb.exp_user_id, mlb.dest_user_id, mlb.dest_contact_id, mlb.nature_id, mlb.alt_identifier, mlb.admission_date, mlb.answer_type_bitmask, mlb.other_answer_desc, mlb.process_limit_date, mlb.closing_date, mlb.alarm1_date, mlb.alarm2_date, mlb.flag_notif, mlb.flag_alarm1, mlb.flag_alarm2, r.video_user, r.video_time, r.video_batch, r.subject, r.identifier, r.title, r.priority, mlb.process_notes
   -- FROM doctypes d, doctypes_first_level dfl, doctypes_second_level dsl, res_letterbox r
    --LEFT JOIN ar_batch a ON r.arbatch_id = a.arbatch_id
    --LEFT JOIN folders f ON r.folders_system_id = f.folders_system_id
@@ -1734,22 +1745,84 @@ CREATE OR REPLACE VIEW res_view AS
    --LEFT JOIN foldertypes ft ON f.foldertype_id = ft.foldertype_id AND f.status::text <> 'DEL'::text
  -- WHERE r.type_id = d.type_id AND d.doctypes_first_level_id = dfl.doctypes_first_level_id AND d.doctypes_second_level_id = dsl.doctypes_second_level_id;
 
--- View with cases :
-CREATE OR REPLACE VIEW res_view_letterbox AS
- SELECT r.tablename, r.is_multi_docservers, r.res_id, r.type_id, d.description AS type_label, d.doctypes_first_level_id, dfl.doctypes_first_level_label, dfl.css_style as doctype_first_level_style,d.doctypes_second_level_id, dsl.doctypes_second_level_label, dsl.css_style as doctype_second_level_style,r.format, r.typist, r.creation_date, r.relation, r.docserver_id, r.folders_system_id, f.folder_id, r.path, r.filename, r.fingerprint, r.offset_doc, r.filesize, r.status, r.work_batch, r.arbatch_id, r.arbox_id, r.page_count, r.is_paper, r.doc_date, r.scan_date, r.scan_user, r.scan_location, r.scan_wkstation, r.scan_batch, r.doc_language, r.description, r.source, r.author, r.custom_t1 AS doc_custom_t1, r.custom_t2 AS doc_custom_t2, r.custom_t3 AS doc_custom_t3, r.custom_t4 AS doc_custom_t4, r.custom_t5 AS doc_custom_t5, r.custom_t6 AS doc_custom_t6, r.custom_t7 AS doc_custom_t7, r.custom_t8 AS doc_custom_t8, r.custom_t9 AS doc_custom_t9, r.custom_t10 AS doc_custom_t10, r.custom_t11 AS doc_custom_t11, r.custom_t12 AS doc_custom_t12, r.custom_t13 AS doc_custom_t13, r.custom_t14 AS doc_custom_t14, r.custom_t15 AS doc_custom_t15, r.custom_d1 AS doc_custom_d1, r.custom_d2 AS doc_custom_d2, r.custom_d3 AS doc_custom_d3, r.custom_d4 AS doc_custom_d4, r.custom_d5 AS doc_custom_d5, r.custom_d6 AS doc_custom_d6, r.custom_d7 AS doc_custom_d7, r.custom_d8 AS doc_custom_d8, r.custom_d9 AS doc_custom_d9, r.custom_d10 AS doc_custom_d10, r.custom_n1 AS doc_custom_n1, r.custom_n2 AS doc_custom_n2, r.custom_n3 AS doc_custom_n3, r.custom_n4 AS doc_custom_n4, r.custom_n5 AS doc_custom_n5, r.custom_f1 AS doc_custom_f1, r.custom_f2 AS doc_custom_f2, r.custom_f3 AS doc_custom_f3, r.custom_f4 AS doc_custom_f4, r.custom_f5 AS doc_custom_f5, f.foldertype_id, ft.foldertype_label, f.custom_t1 AS fold_custom_t1, f.custom_t2 AS fold_custom_t2, f.custom_t3 AS fold_custom_t3, f.custom_t4 AS fold_custom_t4, f.custom_t5 AS fold_custom_t5, f.custom_t6 AS fold_custom_t6, f.custom_t7 AS fold_custom_t7, f.custom_t8 AS fold_custom_t8, f.custom_t9 AS fold_custom_t9, f.custom_t10 AS fold_custom_t10, f.custom_t11 AS fold_custom_t11, f.custom_t12 AS fold_custom_t12, f.custom_t13 AS fold_custom_t13, f.custom_t14 AS fold_custom_t14, f.custom_t15 AS fold_custom_t15, f.custom_d1 AS fold_custom_d1, f.custom_d2 AS fold_custom_d2, f.custom_d3 AS fold_custom_d3, f.custom_d4 AS fold_custom_d4, f.custom_d5 AS fold_custom_d5, f.custom_d6 AS fold_custom_d6, f.custom_d7 AS fold_custom_d7, f.custom_d8 AS fold_custom_d8, f.custom_d9 AS fold_custom_d9, f.custom_d10 AS fold_custom_d10, f.custom_n1 AS fold_custom_n1, f.custom_n2 AS fold_custom_n2, f.custom_n3 AS fold_custom_n3, f.custom_n4 AS fold_custom_n4, f.custom_n5 AS fold_custom_n5, f.custom_f1 AS fold_custom_f1, f.custom_f2 AS fold_custom_f2, f.custom_f3 AS fold_custom_f3, f.custom_f4 AS fold_custom_f4, f.custom_f5 AS fold_custom_f5, f.is_complete AS fold_complete, f.status AS fold_status, f.subject AS fold_subject, f.parent_id AS fold_parent_id, f.folder_level, f.folder_name, f.creation_date AS fold_creation_date, r.initiator, r.destination, r.dest_user, mlb.category_id, mlb.exp_contact_id, mlb.exp_user_id, mlb.dest_user_id, mlb.dest_contact_id, mlb.nature_id, mlb.alt_identifier, mlb.admission_date, mlb.answer_type_bitmask, mlb.other_answer_desc, mlb.process_limit_date, mlb.closing_date, mlb.alarm1_date, mlb.alarm2_date, mlb.flag_notif, mlb.flag_alarm1, mlb.flag_alarm2, r.video_user, r.video_time, r.video_batch, r.subject, r.identifier, r.title, r.priority, mlb.process_notes, ca.case_id, ca.case_label, ca.case_description, en.entity_label, cont.firstname AS contact_firstname, cont.lastname AS contact_lastname, cont.society AS contact_society, u.lastname AS user_lastname, u.firstname AS user_firstname, list.item_id AS dest_user_from_listinstance
-   FROM doctypes d, doctypes_first_level dfl, doctypes_second_level dsl, ar_batch a
-   RIGHT JOIN res_letterbox r ON r.arbatch_id = a.arbatch_id
-   LEFT JOIN entities en ON r.destination::text = en.entity_id::text
-   LEFT JOIN folders f ON r.folders_system_id = f.folders_system_id
-   LEFT JOIN cases_res cr ON r.res_id = cr.res_id
-   LEFT JOIN mlb_coll_ext mlb ON mlb.res_id = r.res_id
-   LEFT JOIN foldertypes ft ON f.foldertype_id = ft.foldertype_id AND f.status::text <> 'DEL'::text
-   LEFT JOIN cases ca ON cr.case_id = ca.case_id
-   LEFT JOIN contacts cont ON mlb.exp_contact_id = cont.contact_id OR mlb.dest_contact_id = cont.contact_id
-   LEFT JOIN users u ON mlb.exp_user_id::text = u.user_id::text OR mlb.dest_user_id::text = u.user_id::text
-   LEFT JOIN listinstance list ON r.res_id = list.res_id AND list.item_mode::text = 'dest'::text
-  WHERE r.type_id = d.type_id AND d.doctypes_first_level_id = dfl.doctypes_first_level_id AND d.doctypes_second_level_id = dsl.doctypes_second_level_id;
-
+CREATE VIEW res_view_letterbox AS
+    SELECT r.tablename, r.is_multi_docservers, r.res_id, r.type_id, 
+    d.description AS type_label, d.doctypes_first_level_id, 
+    dfl.doctypes_first_level_label, dfl.css_style as doctype_first_level_style,
+    d.doctypes_second_level_id, dsl.doctypes_second_level_label, 
+    dsl.css_style as doctype_second_level_style, r.format, r.typist, 
+    r.creation_date, r.relation, r.docserver_id, r.folders_system_id, 
+    f.folder_id, r.path, r.filename, r.fingerprint, r.offset_doc, r.filesize, 
+    r.status, r.work_batch, r.arbatch_id, r.arbox_id, r.page_count, r.is_paper, 
+    r.doc_date, r.scan_date, r.scan_user, r.scan_location, r.scan_wkstation,
+    r.scan_batch, r.doc_language, r.description, r.source, r.author, 
+    r.custom_t1 AS doc_custom_t1, r.custom_t2 AS doc_custom_t2, 
+    r.custom_t3 AS doc_custom_t3, r.custom_t4 AS doc_custom_t4, 
+    r.custom_t5 AS doc_custom_t5, r.custom_t6 AS doc_custom_t6,
+    r.custom_t7 AS doc_custom_t7, r.custom_t8 AS doc_custom_t8, 
+    r.custom_t9 AS doc_custom_t9, r.custom_t10 AS doc_custom_t10, 
+    r.custom_t11 AS doc_custom_t11, r.custom_t12 AS doc_custom_t12, 
+    r.custom_t13 AS doc_custom_t13, r.custom_t14 AS doc_custom_t14, 
+    r.custom_t15 AS doc_custom_t15, r.custom_d1 AS doc_custom_d1,
+    r.custom_d2 AS doc_custom_d2, r.custom_d3 AS doc_custom_d3,
+    r.custom_d4 AS doc_custom_d4, r.custom_d5 AS doc_custom_d5, 
+    r.custom_d6 AS doc_custom_d6, r.custom_d7 AS doc_custom_d7, 
+    r.custom_d8 AS doc_custom_d8, r.custom_d9 AS doc_custom_d9, 
+    r.custom_d10 AS doc_custom_d10, r.custom_n1 AS doc_custom_n1,
+    r.custom_n2 AS doc_custom_n2, r.custom_n3 AS doc_custom_n3, 
+    r.custom_n4 AS doc_custom_n4, r.custom_n5 AS doc_custom_n5, 
+    r.custom_f1 AS doc_custom_f1, r.custom_f2 AS doc_custom_f2, 
+    r.custom_f3 AS doc_custom_f3, r.custom_f4 AS doc_custom_f4, 
+    r.custom_f5 AS doc_custom_f5, f.foldertype_id, ft.foldertype_label, 
+    f.custom_t1 AS fold_custom_t1, f.custom_t2 AS fold_custom_t2, 
+    f.custom_t3 AS fold_custom_t3, f.custom_t4 AS fold_custom_t4,
+    f.custom_t5 AS fold_custom_t5, f.custom_t6 AS fold_custom_t6, 
+    f.custom_t7 AS fold_custom_t7, f.custom_t8 AS fold_custom_t8, 
+    f.custom_t9 AS fold_custom_t9, f.custom_t10 AS fold_custom_t10, 
+    f.custom_t11 AS fold_custom_t11, f.custom_t12 AS fold_custom_t12,
+    f.custom_t13 AS fold_custom_t13, f.custom_t14 AS fold_custom_t14, 
+    f.custom_t15 AS fold_custom_t15, f.custom_d1 AS fold_custom_d1, 
+    f.custom_d2 AS fold_custom_d2, f.custom_d3 AS fold_custom_d3, 
+    f.custom_d4 AS fold_custom_d4, f.custom_d5 AS fold_custom_d5, 
+    f.custom_d6 AS fold_custom_d6, f.custom_d7 AS fold_custom_d7, 
+    f.custom_d8 AS fold_custom_d8, f.custom_d9 AS fold_custom_d9, 
+    f.custom_d10 AS fold_custom_d10, f.custom_n1 AS fold_custom_n1, 
+    f.custom_n2 AS fold_custom_n2, f.custom_n3 AS fold_custom_n3,
+    f.custom_n4 AS fold_custom_n4, f.custom_n5 AS fold_custom_n5,
+    f.custom_f1 AS fold_custom_f1, f.custom_f2 AS fold_custom_f2, 
+    f.custom_f3 AS fold_custom_f3, f.custom_f4 AS fold_custom_f4, 
+    f.custom_f5 AS fold_custom_f5, f.is_complete AS fold_complete, 
+    f.status AS fold_status, f.subject AS fold_subject,
+    f.parent_id AS fold_parent_id, f.folder_level, f.folder_name, 
+    f.creation_date AS fold_creation_date, r.initiator, r.destination, 
+    r.dest_user, mlb.category_id, mlb.exp_contact_id, mlb.exp_user_id, 
+    mlb.dest_user_id, mlb.dest_contact_id, mlb.nature_id, mlb.alt_identifier, 
+    mlb.admission_date, mlb.answer_type_bitmask, mlb.other_answer_desc,
+    mlb.process_limit_date, mlb.closing_date, mlb.alarm1_date, mlb.alarm2_date, 
+    mlb.flag_notif, mlb.flag_alarm1, mlb.flag_alarm2, r.video_user, r.video_time,
+    r.video_batch, r.subject, r.identifier, r.title, r.priority, mlb.process_notes,
+    ca.case_id, ca.case_label, ca.case_description, en.entity_label, 
+    cont.firstname AS contact_firstname, cont.lastname AS contact_lastname, 
+    cont.society AS contact_society, u.lastname AS user_lastname,
+    u.firstname AS user_firstname, list.item_id AS dest_user_from_listinstance 
+    FROM doctypes d, doctypes_first_level dfl, doctypes_second_level dsl,
+    ((((((((((ar_batch a RIGHT JOIN res_letterbox r ON ((r.arbatch_id = a.arbatch_id))) 
+    LEFT JOIN entities en ON (((r.destination)::text = (en.entity_id)::text))) 
+    LEFT JOIN folders f ON ((r.folders_system_id = f.folders_system_id))) 
+    LEFT JOIN cases_res cr ON ((r.res_id = cr.res_id)))
+    LEFT JOIN mlb_coll_ext mlb ON ((mlb.res_id = r.res_id))) 
+    LEFT JOIN foldertypes ft ON (((f.foldertype_id = ft.foldertype_id)
+        AND ((f.status)::text <> 'DEL'::text))))
+    LEFT JOIN cases ca ON ((cr.case_id = ca.case_id))) 
+    LEFT JOIN contacts cont ON (((mlb.exp_contact_id = cont.contact_id) 
+        OR (mlb.dest_contact_id = cont.contact_id)))) 
+    LEFT JOIN users u ON ((((mlb.exp_user_id)::text = (u.user_id)::text) 
+        OR ((mlb.dest_user_id)::text = (u.user_id)::text)))) 
+    LEFT JOIN listinstance list ON (((r.res_id = list.res_id)
+        AND ((list.item_mode)::text = 'dest'::text))))
+    WHERE (((r.type_id = d.type_id) AND 
+    (d.doctypes_first_level_id = dfl.doctypes_first_level_id))
+    AND (d.doctypes_second_level_id = dsl.doctypes_second_level_id));
 CREATE OR REPLACE VIEW res_view_apa AS
  select * from res_apa;
 
@@ -1767,12 +1840,12 @@ WITH (OIDS=FALSE);
 -- Resource view used to fill af_target, we exclude from res_x the branches already in af_target table
 
 CREATE OR REPLACE VIEW af_view_year_view AS
- SELECT r.custom_t3 AS level1, date_part( 'year', r.doc_date) AS level2, r.custom_t4 AS level3, r.type_id as level4,
+ SELECT r.custom_t3 AS level1, date_part( 'year', r.doc_date) AS level2, r.custom_t4 AS level3,
         r.res_id, r.creation_date, r.status -- for where clause
    FROM  res_x r
-   WHERE  NOT (EXISTS ( SELECT t.level1, t.level2, t.level3, t.level4
+   WHERE  NOT (EXISTS ( SELECT t.level1, t.level2, t.level3
            FROM af_view_year_target t
-          WHERE r.custom_t3::text = t.level1::text AND cast(date_part( 'year', r.doc_date) as character) = t.level2 AND r.custom_t4 = t.level3 AND r.type_id = t.level4));
+          WHERE r.custom_t3::text = t.level1::text AND cast(date_part( 'year', r.doc_date) as character) = t.level2 AND r.custom_t4 = t.level3));
 
 CREATE OR REPLACE VIEW af_view_customer_view AS
  SELECT substring(r.custom_t4, 1, 1) AS level1,  r.custom_t4 AS level2, date_part( 'year', r.doc_date) AS level3,
@@ -1786,12 +1859,9 @@ CREATE OR REPLACE VIEW af_view_customer_view AS
 
 -- View used to display trees
 CREATE OR REPLACE VIEW af_view_year_target_view AS
- SELECT af.level1, af.level1 as level1_label, af.level2, af.level2 as level2_label, af.level3, af.level3 as level3_label,
-    af.level4, d.description as level4_label
-   FROM af_view_year_target af, doctypes d
-  WHERE af.level4 = d.type_id ;
+ SELECT af.level1, af.level1_id, af.level1 as level1_label, af.level2, af.level2_id, af.level2 as level2_label, af.level3, af.level3_id, af.level3 as level3_label
+   FROM af_view_year_target af;
 
 CREATE OR REPLACE VIEW af_view_customer_target_view AS
- SELECT af.level1, af.level1 as level1_label, af.level2, af.level2 as level2_label, af.level3, af.level3 as level3_label
+ SELECT af.level1, af.level1_id, af.level1 as level1_label, af.level2, af.level2_id, af.level2 as level2_label, af.level3, af.level3_id, af.level3 as level3_label
    FROM af_view_customer_target af ;
-
