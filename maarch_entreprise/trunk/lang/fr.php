@@ -644,6 +644,11 @@ if (!defined('_NO_STRUCTURE_ATTACHED')) define( '_NO_STRUCTURE_ATTACHED', 'Ce ty
 if (!defined('_POSTINDEXING_PAGE')) define('_POSTINDEXING_PAGE', 'Formulaire de vid&eacute;ocodage');
 if (!defined('_POSTINDEXING_FOLDER_PAGE')) define('_POSTINDEXING_FOLDER_PAGE', 'Formulaire de vid&eacute;ocodage (dossiers)');
 
+//Advanced Physical Archive action page
+if (!defined('_APA_CONFIRM_IN_OUT')) {
+    define( '_APA_CONFIRM_IN_OUT', 'Confirmation de R&eacute;servation / R&eacute;int&eacute;gration');
+}
+
 ///// Credits
 if (!defined('_MAARCH_CREDITS')) define( '_MAARCH_CREDITS', 'A propos de Maarch&nbsp;');
 

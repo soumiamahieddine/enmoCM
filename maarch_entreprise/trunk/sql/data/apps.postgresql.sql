@@ -128,8 +128,8 @@ INSERT INTO "security" (group_id, coll_id, where_clause, maarch_comment, can_ins
 INSERT INTO "security" (group_id, coll_id, where_clause, maarch_comment, can_insert, can_update, can_delete) VALUES ('CORRESPONDANTS', 'letterbox_coll', '(DESTINATION = @my_primary_entity or DESTINATION in (@subentities[@my_primary_entity])) or DESTINATION is NULL', '', 'N', 'N', 'N');
 
 -- ACTIONS and BASKETS
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (15, '', 'Prelever une archive', 'OUT', 'N', 'Y', 'confirm_status', 'Y', 'advanced_physical_archive', 'N');
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (16, '', 'Reintegrer une archive', 'POS', 'N', 'Y', 'confirm_status', 'Y', 'advanced_physical_archive', 'N');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (15, '', 'Prelever une archive', 'OUT', 'N', 'Y', 'confirm_apa', 'Y', 'advanced_physical_archive', 'N');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (16, '', 'Reintegrer une archive', 'POS', 'N', 'Y', 'confirm_apa', 'Y', 'advanced_physical_archive', 'N');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (2, 'to_validate', 'A valider', 'VAL', 'Y', 'N', 'confirm_status', 'N', 'apps', 'N');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (21, 'indexing', 'Indexation', 'NEW', 'N', 'Y', 'index_mlb', 'Y', 'apps', 'Y');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (18, '', 'A valider', 'NEW', 'N', 'Y', '', 'Y', 'apps', 'N');
@@ -335,10 +335,8 @@ INSERT INTO parameters (id, param_value_string, param_value_int) VALUES
 ('ar_index_pparker_outgoing', NULL, 3),
 ('ar_index_pparker_internal', NULL, 3),
 ('ar_index_pparker_market_document', NULL, 3),
-('postindexing_max_files', NULL, 15),
 ('postindexing_workbatch', NULL, 40),
-('database_version', NULL, 112),
-('postindexing_max_time', NULL, 600);
+('database_version', NULL, 112);
 
 INSERT INTO templates (id, label, creation_date, template_comment, content) VALUES (2, 'AR_MAARCH', '2009-08-20 16:01:00', 'Accusé de réception Maarch', '<p style="TEXT-ALIGN: left"><img src="img/default_maarch.gif" alt="" width="278" height="80" />&nbsp;</p>
 <p><em><font face="Arial Black" size="2" color="#3366ff">La gestion de courriers Open source !</font></em><br />Mail : info@maarch.org<br />Web : http://www.maarch.org</p>
