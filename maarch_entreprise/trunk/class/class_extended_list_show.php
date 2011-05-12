@@ -1249,6 +1249,8 @@ class extended_list_show extends dbquery
 		(
 		[module] => string : Name of the module where the page is
 		[page_name] => string : The calling page
+		[page_parameters] => string : More parameters in link for page
+        [bool_page_in_module] => boolean : if page is in a module
 		[page_title] => string : Title of the page to be displayed over the list
 		[bool_big_page_title] => boolean : size of the title. If false small size
 		[page_picto] => string : Image to be displayed near title
@@ -1294,6 +1296,7 @@ class extended_list_show extends dbquery
 		[hidden_fields_form] => array : Hidden fields in the form
 		[bool_do_action] => boolean : If action on row of the list .False by default
 		[id_action] => string : Id of the action
+		[click_line_text] => string : Text displayed under the list for action on line
 		[actions_combo] => array : List of the elements of the actions combo list
 		[bool_script_on_line] => boolean : If the click on the line open link. False by default
 		[script_on_line] => string : Javascript for click on line 
