@@ -1,33 +1,29 @@
 
 
--- from core/sql/data/core.postgresql.sql
+-- core/sql/data/core.postgresql.sql
 
 
 
--- from modules/advanced_physical_archive/sql/data/advanced_physical_archive.postgresql.sql
+-- modules/advanced_physical_archive/sql/data/advanced_physical_archive.postgresql.sql
 
 INSERT INTO parameters (id, param_value_string, param_value_int) VALUES ('apa_reservation_batch', NULL, '1');
 
 
--- from modules/basket/sql/data/basket.postgresql.sql
+-- modules/basket/sql/data/basket.postgresql.sql
 
 
 -- BASKET
 
 
--- from modules/entities/sql/data/entities.postgresql.sql
+-- modules/entities/sql/data/entities.postgresql.sql
 
 
 
--- from modules/folder/sql/data/folder.postgresql.sql
+-- modules/folder/sql/data/folder.postgresql.sql
 
 
 
--- from modules/physical_archive/sql/data/physical_archive.postgresql.sql
-
-
-
--- from modules/life_cycle/sql/data/life_cycle.postgresql.sql
+-- modules/life_cycle/sql/data/life_cycle.postgresql.sql
 
 --
 -- PostgreSQL database dump
@@ -70,7 +66,11 @@ INSERT INTO lc_cycles (policy_id, cycle_id, cycle_desc, sequence_number, where_c
 
 
 
--- from apps/maarch_entreprise/sql/data/apps.postgresql.sql
+-- modules/physical_archive/sql/data/physical_archive.postgresql.sql
+
+
+
+-- apps/maarch_entreprise/sql/data/apps.postgresql.sql
 
 -- Maarch LetterBox v3 sample data : Application
 
@@ -214,6 +214,7 @@ INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, a
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (20, '', 'Cloturer', 'END', 'N', 'Y', 'close_mail', 'Y', 'apps', 'N');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (3, '', 'Retourner au service Courrier', 'RET', 'N', 'Y', 'confirm_status', 'Y', 'apps', 'N');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (100, '', 'Voir le document', '', 'N', 'Y', 'view', 'N', 'apps', 'N');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (26, 'indexing', 'Reserver des documents', NULL, 'N', 'Y', 'postindex_documents', 'Y', 'postindexing', 'Y');
 
 INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched) VALUES ('OUT', 'Prelevee', 'N', '', 'advanced_physical_archive', 'N');
 INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched) VALUES ('POS', 'Reintegree', 'N', '', 'advanced_physical_archive', 'N');
@@ -272,6 +273,7 @@ INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, 
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (15, '', 'TYPISTS', 'APA_reservation', 'Y', 'Y', 'N');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (16, '', 'TYPISTS', 'APA_picking', 'Y', 'Y', 'N');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (23, '', 'TYPISTS', 'QualificationBasket', 'N', 'N', 'Y');
+INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (26, '', 'TYPISTS', 'PostindexingBasket', 'N', 'N', 'Y');
 
 INSERT INTO groupbasket_redirect (system_id, group_id, basket_id, action_id, entity_id, keyword, redirect_mode) VALUES (1, 'TYPISTS', 'IndexingBasket', 21, '', 'ALL_ENTITIES', 'ENTITY');
 INSERT INTO groupbasket_redirect (system_id, group_id, basket_id, action_id, entity_id, keyword, redirect_mode) VALUES (2, 'MANAGERS', 'MyBasket', 1, '', 'ALL_ENTITIES', 'ENTITY');
@@ -281,6 +283,7 @@ INSERT INTO groupbasket_redirect (system_id, group_id, basket_id, action_id, ent
 INSERT INTO groupbasket_redirect (system_id, group_id, basket_id, action_id, entity_id, keyword, redirect_mode) VALUES (6, 'MANAGERS', 'DepartmentBasket', 1, '', 'MY_ENTITIES', 'USERS');
 INSERT INTO groupbasket_redirect (system_id, group_id, basket_id, action_id, entity_id, keyword, redirect_mode) VALUES (7, 'TYPISTS', 'QualificationBasket', 23, '', 'ALL_ENTITIES', 'ENTITY');
 INSERT INTO groupbasket_redirect (system_id, group_id, basket_id, action_id, entity_id, keyword, redirect_mode) VALUES (8, 'EMPLOYEES', 'MyBasket', 1, '', 'ENTITIES_JUST_BELOW', 'ENTITY');
+INSERT INTO groupbasket_redirect (system_id, group_id, basket_id, action_id, entity_id, keyword, redirect_mode) VALUES (9, 'TYPISTS', 'PostindexingBasket', 26, '', 'ALL_ENTITIES', 'ENTITY');
 
 INSERT INTO listmodels (coll_id, object_id, object_type, "sequence", item_id, item_type, item_mode, listmodel_type) VALUES ('letterbox_coll', 'DIR', 'entity_id', 0, 'eerina', 'user_id', 'dest', 'DOC');
 INSERT INTO listmodels (coll_id, object_id, object_type, "sequence", item_id, item_type, item_mode, listmodel_type) VALUES ('letterbox_coll', 'DIR', 'entity_id', 0, 'ppetit', 'user_id', 'cc', 'DOC');
@@ -342,7 +345,7 @@ INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_lev
 INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll', 64, 'Mutuelle', 'Y', 2, 52, NULL, NULL);
 INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll', 65, 'Diplôme', 'Y', 2, 53, NULL, NULL);
 INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll', 66, 'Bilan de compétences', 'Y', 2, 53, NULL, NULL);
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('res_coll', 70, 'Factures', 'Y', 2, 54, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('res_coll', 22, 'Factures', 'Y', 2, 54, NULL, NULL);
 INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll', 71, 'Facture fournisseur', 'Y', 1, 13, NULL, NULL);
 
 
