@@ -168,7 +168,7 @@ if (isset($_SESSION['chosen_name_folder'])
 			    . $resView . " where (doctypes_first_level_id = "
 			    . $res1->doctypes_first_level_id . " and folder_id = '"
 			    . $actualCustomT1 . "') and (" . $whereClause
-			    . ") order by doctypes_second_level_label desc"
+			    . ") order by doctypes_second_level_label asc"
 			);
 			//$db2->show();
 			//echo $res1->doctypes_first_level_label."<br>";
@@ -182,7 +182,7 @@ if (isset($_SESSION['chosen_name_folder'])
 				    . " and doctypes_second_level_id = "
 				    . $res2->doctypes_second_level_id . " and folder_id = '"
 				    . $actualCustomT1 . "') and (" . $whereClause
-				    . ") order by type_label desc"
+				    . ") order by type_label asc"
 				);
 				//$db3->show();
 				while ($res3 = $db3->fetch_object()) {
