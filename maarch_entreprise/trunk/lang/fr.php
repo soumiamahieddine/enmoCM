@@ -640,14 +640,12 @@ if (!defined('_CHECK_INVOICE')) define( '_CHECK_INVOICE', 'V&eacute;rifier factu
 if (!defined('_REDIRECT_TO')) define( '_REDIRECT_TO', 'Rediriger vers');
 if (!defined('_NO_STRUCTURE_ATTACHED')) define( '_NO_STRUCTURE_ATTACHED', 'Ce type de document n&rsquo;est attach&eacute; &agrave; aucune chemise');
 
-//Postindexing action page
+//Postindexing action pages
 if (!defined('_POSTINDEXING_PAGE')) define('_POSTINDEXING_PAGE', 'Formulaire de vid&eacute;ocodage');
 if (!defined('_POSTINDEXING_FOLDER_PAGE')) define('_POSTINDEXING_FOLDER_PAGE', 'Formulaire de vid&eacute;ocodage (dossiers)');
 
 //Advanced Physical Archive action page
-if (!defined('_APA_CONFIRM_IN_OUT')) {
-    define( '_APA_CONFIRM_IN_OUT', 'Confirmation de R&eacute;servation / R&eacute;int&eacute;gration');
-}
+if (!defined('_APA_CONFIRM_IN_OUT')) define( '_APA_CONFIRM_IN_OUT', 'Confirmation de R&eacute;servation / R&eacute;int&eacute;gration');
 
 ///// Credits
 if (!defined('_MAARCH_CREDITS')) define( '_MAARCH_CREDITS', 'A propos de Maarch&nbsp;');
