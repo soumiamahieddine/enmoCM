@@ -197,7 +197,12 @@ if (!defined('_REDIRECT_TO_DEP_OK'))  define('_REDIRECT_TO_DEP_OK', 'Redirection
 if (!defined('_REDIRECT_TO_USER_OK'))  define('_REDIRECT_TO_USER_OK', 'Redirection vers un utilisateur effectu&eacute;e');
 
 if (!defined('_SAVE_CHANGES'))  define('_SAVE_CHANGES', 'Enregistrer les modifications');
-if (!defined('_VIEW_BASKETS'))  define('_VIEW_BASKETS', 'Mes corbeilles');
+if (!defined('_VIEW_BASKETS')) {
+	define('_VIEW_BASKETS', 'Mes corbeilles');
+}
+if (!defined('_VIEW_BASKETS_DESC')) {
+	define('_VIEW_BASKETS_DESC', 'Mes corbeilles');
+}
 if (!defined('_VIEW_BASKETS_TITLE'))  define('_VIEW_BASKETS_TITLE', 'Mes corbeilles');
 
 if (!defined('_INVOICE_LIST_TO_VAL'))  define('_INVOICE_LIST_TO_VAL', 'Factures &agrave; valider');

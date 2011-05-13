@@ -241,20 +241,14 @@ class basket extends dbquery
             . 'basketpage.xml';
         }
         $xmlfile = simplexml_load_file($path);
-        $langFilePath = 'modules' . DIRECTORY_SEPARATOR . 'basket'
+        include_once 'modules' . DIRECTORY_SEPARATOR . 'basket'
         . DIRECTORY_SEPARATOR . 'lang' . DIRECTORY_SEPARATOR
         . $_SESSION['config']['lang'] . '.php';
         $i = 0;
         foreach ($xmlfile->BASKETPAGE as $basketPage) {
-            $tmpLabel = (string) $basketPage->LABEL;
-            // the label of the page comes from the module basket languages files
-            $retrievedLabel = $this->retrieve_constant_lang(
-                $tmpLabel, $langFilePath
-            );
-            if ($retrievedLabel <> false) {
-                $desc = $retrievedLabel;
-            } else {
-                $desc = $tmpLabel;
+            $desc = (string) $basketPage->LABEL;
+            if (!empty($desc) && defined($desc) && constant($desc) <> NULL) {
+            	$desc = constant($desc);
             }
             $_SESSION['basket_page'][$i] = array(
                 'ID'     => (string) $basketPage->ID,
