@@ -2584,20 +2584,20 @@ class extended_list_show extends dbquery
 		// Browses the filters in that file  and loads $_SESSION['filters']
 		foreach($xmltemplate->FILTER as $FILTER)
 		{
-
 			if ($FILTER->enabled == 'true') //only if enabled
 			{
+                
 				$tmp = (string) $FILTER->label;
-                if (!empty($tmp) && defined($tmp) && constant($tmp) <> NULL) {
+                if (!empty($tmp) && defined($tmp) && constant($tmp) <> NULL) 
+                {
                     $tmp = constant($tmp);
                 }
 				$_SESSION['filters'][$k]['label'] = $tmp;
-				
 				$_SESSION['filters'][$k]['filter_field'] = (string) $FILTER->filter_field;
 				$_SESSION['filters'][$k]['filter_var'] = (string) $FILTER->filter_var;
 				$_SESSION['filters'][$k]['id'] = (string) $FILTER->id;
 				$_SESSION['filters'][$k]['type'] = (string) $FILTER->type;
-				
+                
 				//Values from xml
 				if(isset($FILTER->values))
 				{
@@ -2608,15 +2608,17 @@ class extended_list_show extends dbquery
 						$lab = (string) $val->label;
                         if (!empty($lab) && defined($lab) 
                             && constant($lab) <> NULL
-                        ) {
-                        $lab = constant($lab);
-                        array_push(
-                            $_SESSION['filters'][$k]['values'], 
-                            array(
-                                'id' => (string) $val->id, 
-                                'label' => $lab
-                            )
-                        );
+                        ) 
+                        {
+                            $lab = constant($lab);
+                            array_push(
+                                $_SESSION['filters'][$k]['values'], 
+                                array(
+                                    'id' => (string) $val->id, 
+                                    'label' => $lab
+                                )
+                            );
+                        }
 					}
 				}
 				elseif(isset($FILTER->table)) //Values from database
@@ -2649,7 +2651,7 @@ class extended_list_show extends dbquery
 					{
 						 array_push($_SESSION['filters'][$k]['values'], array('id' => (string) $res->$foreignKey, 'label' => $res->$foreignLabel));
 					}
-				}
+                }
 				
 				$l=0;
 				foreach($FILTER->whereamiused as $WHEREAMIUSED)
@@ -2658,7 +2660,6 @@ class extended_list_show extends dbquery
 					$l++;
 				}
 			}
-			
 			$k++;
 		}
 	}
