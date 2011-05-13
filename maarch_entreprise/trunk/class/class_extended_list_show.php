@@ -458,7 +458,7 @@ class extended_list_show extends dbquery
 				if(isset($this->actions_link[$action_id]['class'])) { $action_href .= ' class="'.$this->actions_link[$action_id]['class'].'">';}else {$action_href .= '>';} //End of link
 				
 				//Image
-				if(isset($this->actions_link[$action_id]['icon'])) { $action_href .= '<img src="'.$this->actions_link[$action_id]['icon'].'" alt="'.$this->actions_link[$action_id]['tooltip'].'" border="0"/>'; }
+				if(isset($this->actions_link[$action_id]['icon'])) { $action_href .= '<img src="'.$this->actions_link[$action_id]['icon'].'" alt="'.$this->actions_link[$action_id]['tooltip'].'" border="0" align="absmiddle" />'; }
 				
 				//Label
 				if(isset($this->actions_link[$action_id]['label'])) { $action_href .= '&nbsp;'.$this->actions_link[$action_id]['label'];}
@@ -965,7 +965,7 @@ class extended_list_show extends dbquery
 						if(isset($this->actions_link[$i]['class_on']))	{ $content .= ' class="'.$this->actions_link[$i]['class_on'].'">';	} else { $content .= '>'; } //End of link
 						
 						//Image
-						if(isset($this->actions_link[$i]['icon_on'])) { $content .= '<img src="'.$this->actions_link[$i]['icon_on'].'" alt="'.$this->actions_link[$i]['tooltip_on'].'" border="0"/>'; }
+						if(isset($this->actions_link[$i]['icon_on'])) { $content .= '<img src="'.$this->actions_link[$i]['icon_on'].'" alt="'.$this->actions_link[$i]['tooltip_on'].'" border="0" align="absmiddle" />'; }
 						
 						//Label
 						if(isset($this->actions_link[$i]['label_on'])) { $content .= '&nbsp;'.$this->actions_link[$i]['label_on']; }
@@ -991,7 +991,7 @@ class extended_list_show extends dbquery
 						if(isset($this->actions_link[$i]['class_off']))	{ $content .= ' class="'.$this->actions_link[$i]['class_off'].'">';	} else { $content .= '>'; } //End of link
 						
 						//Image
-						if(isset($this->actions_link[$i]['icon_off'])) { $content .= '<img src="'.$this->actions_link[$i]['icon_off'].'" alt="'.$this->actions_link[$i]['tooltip_off'].'" border="0"/>'; }
+						if(isset($this->actions_link[$i]['icon_off'])) { $content .= '<img src="'.$this->actions_link[$i]['icon_off'].'" alt="'.$this->actions_link[$i]['tooltip_off'].'" border="0" align="absmiddle"/>'; }
 						
 						//Label
 						if(isset($this->actions_link[$i]['label_off'])) { $content .= '&nbsp;'.$this->actions_link[$i]['label_off']; }
@@ -1029,7 +1029,7 @@ class extended_list_show extends dbquery
 					if(isset($this->actions_link[$i]['class']))	{ $content .= ' class="'.$this->actions_link[$i]['class'].'">';	} else { $content .= '>'; } //End of link
 					
 					//Image
-					if(isset($this->actions_link[$i]['icon'])) { $content .= '<img src="'.$this->actions_link[$i]['icon'].'" alt="'.$this->actions_link[$i]['tooltip'].'" border="0"/>'; }
+					if(isset($this->actions_link[$i]['icon'])) { $content .= '<img src="'.$this->actions_link[$i]['icon'].'" alt="'.$this->actions_link[$i]['tooltip'].'" border="0" align="absmiddle"/>'; }
 					
 					//Label
 					if(isset($this->actions_link[$i]['label'])) { $content .= '&nbsp;'.$this->actions_link[$i]['label']; }
