@@ -8,66 +8,66 @@
 * @version 2.0
 * @since 06/2006
 * @license GPL
-* @author  Claire Figueras  <dev@maarch.org>
 * @author  Lo�c Vinet  <dev@maarch.org>
 * @author  Laurent Giovannoni  <dev@maarch.org>
 */
 
-require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
-require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
-$core_tools = new core_tools();
-$core_tools->load_lang();
-$security = new security();
-require_once("modules".DIRECTORY_SEPARATOR."folder".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
-require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");
-$func = new functions();
-$table_name = $security->retrieve_table_from_coll($_SESSION['current_foldertype_coll_id']);
-$table_view = $security->retrieve_view_from_coll_id($_SESSION['current_foldertype_coll_id']);
-$foldertype_id = $_SESSION['folder_search']['foldertype_id'];
-$missing_res = array();
+require_once "core/class/class_request.php";
+require_once "core/class/class_security.php";
+require_once "modules/folder/class/class_modules_tools.php";
+require_once "apps/" . $_SESSION['config']['app_id'] 
+	. "/class/class_list_show.php";
 
-$core_tools->load_html();
+$core = new core_tools();
+$core->load_lang();
+$security = new security();
+$func = new functions();
+$tableName = $security->retrieve_table_from_coll(
+	$_SESSION['current_foldertype_coll_id']
+);
+$view = $security->retrieve_view_from_coll_id(
+	$_SESSION['current_foldertype_coll_id']
+);
+
+$core->load_html();
 //here we building the header
-$core_tools->load_header('', true, false );
+$core->load_header('', true, false);
 ?>
 <body id="filling_res_frame">
 <?php
 $_SESSION['array_struct_final'] = array();
 $db = new dbquery();
 $db->connect();
-$array_struct = array();
-$array_level_1 = array();
-$array_level_2 = array();
-$array_level_3 = array();
-$array_level_4 = array();
-$list=new list_show();
+$arrayStruct = array();
+
+$list = new list_show();
 foreach (array_keys($_SESSION['user']['security']) as $collId) {
     if ($collId == $_SESSION['current_foldertype_coll_id']) {
-		$coll_id_test = $collId;
-		$where_clause = $_SESSION['user']['security'][$collId]['DOC']['where'];
+		$collIdTest = $collId;
+		$whereClause = $_SESSION['user']['security'][$collId]['DOC']['where'];
 		break;
 	}
 }
 
-if (empty($coll_id_test)) {
+if (empty($collIdTest)) {
 	echo _NO_COLLECTION_ACCESS_FOR_THIS_USER;
 } else {
-	if ($where_clause <> "") {
-		$where_clause = " and (".$where_clause.")";
+	if ($whereClause <> "") {
+		$whereClause = " and (".$whereClause.")";
 	}
 	$db->query(
 		"select distinct doctypes_first_level_id, doctypes_first_level_label, "
 		. "doctype_first_level_style, doctypes_second_level_id, "
 		. "doctypes_second_level_label, doctype_second_level_style, type_id, "
-		. "type_label, res_id from  " . $table_view
+		. "type_label, res_id from  " . $view
 		. " where folders_system_id = '" . $_SESSION['current_folder_id']
 		. "' and type_id <> 0 and doctypes_first_level_id <> 0 "
-		. "and doctypes_second_level_id <> 0 and status<>'DEL' " . $where_clause
+		. "and doctypes_second_level_id <> 0 and status<>'DEL' " . $whereClause
 		. " order by doctypes_first_level_label, doctypes_second_level_label, "
 		. "type_label, res_id "
 	);
 	//$db->show();
-	$count_doc = 0;
+	$countDoc = 0;
 	while ($res = $db->fetch_object()) {
 	    if (isset($res->doctype_first_level_style)) {
 	        $level1Style = $func->show_string($res->doctype_first_level_style);
@@ -79,33 +79,43 @@ if (empty($coll_id_test)) {
 	    } else {
 	        $level2Style = 'default_style';
 	    }
-		array_push(
-			$array_struct,
-			array(
-				"level_1_id" => $res->doctypes_first_level_id,
-				"level_1_label" => $func->show_string($res->doctypes_first_level_label),
-				"level_1_style" => $level1Style,
-				"level_2_id" => $res->doctypes_second_level_id,
-				"level_2_label" => $func->show_string($res->doctypes_second_level_label),
-				"level_2_style" => $level2Style,
-				"level_3_id" => $res->type_id,
-				"level_3_label" => $func->show_string($res->type_label),
-				"level_4_id" => $res->res_id, "level_4_label" => $res->res_id
-			)
-		);
-		$count_doc++;
+	    if (! isset($arrayStruct['level1'][$res->doctypes_first_level_id])) {
+	    	$arrayStruct['level1'][$res->doctypes_first_level_id] = array(
+	    		'label' => $func->show_string($res->doctypes_first_level_label),
+	    		'style' => $level1Style,
+	    		'level2' => array(),
+	    	);
+	    }
+	    if (!isset(
+	    	$arrayStruct['level1'][$res->doctypes_first_level_id]['level2'][$res->doctypes_second_level_id]
+	    )
+	    ) {
+	    	$arrayStruct['level1'][$res->doctypes_first_level_id]['level2'][$res->doctypes_second_level_id] = array(
+	    		'label' => $func->show_string($res->doctypes_second_level_label),
+	    		'style' => $level2Style,
+	    		'level3' => array(),
+	    	);
+	    }
+		if (!isset(
+	    	$arrayStruct['level1'][$res->doctypes_first_level_id]['level2'][$res->doctypes_second_level_id]['level3'][$res->type_id]
+	    )
+	    ) {
+	    	$arrayStruct['level1'][$res->doctypes_first_level_id]['level2'][$res->doctypes_second_level_id]['level3'][$res->type_id] = array(
+	    		'label' => $func->show_string($res->type_label),
+	    		'level4' => array(),
+	    	);
+	    }
+		if (!isset(
+	    	$arrayStruct['level1'][$res->doctypes_first_level_id]['level2'][$res->doctypes_second_level_id]['level3'][$res->type_id]['level4'][$res->res_id]
+	    )
+	    ) {
+	    	$arrayStruct['level1'][$res->doctypes_first_level_id]['level2'][$res->doctypes_second_level_id]['level3'][$res->type_id]['level4'][$res->res_id] = array(
+	    		'label' => $func->show_string($res->res_id),
+	    	);
+	    }
+		$countDoc++;
 	}
-	if($count_doc >0)
-	{
-		//$func->show_array($array_struct);
-		$_SESSION['array_struct_final']['level_1'][$array_struct[0]['level_1_id']]['label'] = $array_struct[0]['level_1_label'];
-		$_SESSION['array_struct_final']['level_1'][$array_struct[0]['level_1_id']]['style'] = $array_struct[0]['level_1_style'];
-		$_SESSION['array_struct_final']['level_1'][$array_struct[0]['level_1_id']]['level_2'][$array_struct[0]['level_2_id']]['label'] = $array_struct[0]['level_2_label'];
-		$_SESSION['array_struct_final']['level_1'][$array_struct[0]['level_1_id']]['level_2'][$array_struct[0]['level_2_id']]['style'] = $array_struct[0]['level_2_style'];
-		$_SESSION['array_struct_final']['level_1'][$array_struct[0]['level_1_id']]['level_2'][$array_struct[0]['level_2_id']]['level_3'][$array_struct[0]['level_3_id']]['label'] = $array_struct[0]['level_3_label'];
-		$_SESSION['array_struct_final']['level_1'][$array_struct[0]['level_1_id']]['level_2'][$array_struct[0]['level_2_id']]['level_3'][$array_struct[0]['level_3_id']]['level_4'][$array_struct[0]['level_4_id']]['label'] = $array_struct[0]['level_4_label'];
-
-		$level1 = array();
+	if ($countDoc > 0) {
 		$_SESSION['where_list_doc'] = "";
 		?>
 		<script type="text/javascript">
@@ -117,158 +127,98 @@ if (empty($coll_id_test)) {
 		</script>
 		<div align="left">
 			<?php
-			function is_new_element($array, $level, $element_id, $element_label, $level_2, $element_id_2, $element_label_2, $level_3, $element_id_3, $element_label_3, $level_4, $element_id_4, $element_label_4)
-			{
-				//echo "is_array : ".is_array($_SESSION['array_struct_final'])."<br>";
-				foreach(array_keys($_SESSION['array_struct_final'][$level]) as $value)
-				{
-					if($value == $element_id)
-					{
-						//echo "exist : ".$element_label."<br>";
-					}
-					else
-					{
-						//echo "new element : ".$element_label."<br>";
-						$_SESSION['array_struct_final'][$level][$element_id]['label'] = $element_label;
-						//echo "----".$element_label."<br>";
-						break;
-					}
-				}
-				foreach(array_keys($_SESSION['array_struct_final'][$level][$element_id]) as $value)
-				{
-					if($value == $element_id_2)
-					{
-						//echo "exist : ".$element_label."<br>";
-					}
-					else
-					{
-						//echo "new element : ".$element_label."<br>";
-						$_SESSION['array_struct_final'][$level][$element_id][$level_2][$element_id_2]['label'] = $element_label_2;
-						//echo "--------".$element_label2."<br>";
-						break;
-					}
-				}
-				foreach(array_keys($_SESSION['array_struct_final'][$level][$element_id][$level_2][$element_id_2]) as $value)
-				{
-					if($value == $element_id_3)
-					{
-						//echo "exist : ".$element_label."<br>";
-					}
-					else
-					{
-						//echo "new element : ".$element_label."<br>";
-						$_SESSION['array_struct_final'][$level][$element_id][$level_2][$element_id_2][$level_3][$element_id_3]['label'] = $element_label_3;
-						//echo "----------------".$element_label3."<br>";
-						break;
-					}
-				}
-				foreach(array_keys($_SESSION['array_struct_final'][$level][$element_id][$level_2][$element_id_2][$level_3][$element_id_3]) as $value)
-				{
-					if($value == $element_id_4)
-					{
-						//echo "exist : ".$element_label."<br>";
-					}
-					else
-					{
-						//echo "new element : ".$element_label."<br>";
-						$_SESSION['array_struct_final'][$level][$element_id][$level_2][$element_id_2][$level_3][$element_id_3][$level_4][$element_id_4]['label'] = $element_label_4;
-						//echo "--------------------------------".$element_label4."<br>";
-						break;
-					}
-				}
-			}
-			for($i=1;$i<count($array_struct);$i++)
-			{
-				is_new_element($array_struct, "level_1", $array_struct[$i]['level_1_id'], $array_struct[$i]['level_1_label'], "level_2", $array_struct[$i]['level_2_id'], $array_struct[$i]['level_2_label'], "level_3", $array_struct[$i]['level_3_id'], $array_struct[$i]['level_3_label'], "level_4", $array_struct[$i]['level_4_id'], $array_struct[$i]['level_4_label']);
-			}
-			//$func->show_array($_SESSION['array_struct_final']);
-			foreach(array_keys($_SESSION['array_struct_final']['level_1']) as $value_1)
-			{
+			
+			foreach (array_keys($arrayStruct['level1']) as $level1) {
 				$res_id_list = "";
-				foreach(array_keys($_SESSION['array_struct_final']['level_1'][$value_1]['level_2']) as $value_2)
-				{
-					foreach(array_keys($_SESSION['array_struct_final']['level_1'][$value_1]['level_2'][$value_2]['level_3']) as $value_3)
-					{
-						foreach(array_keys($_SESSION['array_struct_final']['level_1'][$value_1]['level_2'][$value_2]['level_3'][$value_3]['level_4']) as $value_4)
-						{
-							$res_id_list .= $_SESSION['array_struct_final']['level_1'][$value_1]['level_2'][$value_2]['level_3'][$value_3]['level_4'][$value_4]['label'].",";
+				foreach (array_keys(
+					$arrayStruct['level1'][$level1]['level2']
+				) as $level2
+				) {
+					if (isset(
+						$arrayStruct['level1'][$level1]['level2'][$level2]['level3']
+					)
+					) {
+						foreach (array_keys(
+							$arrayStruct['level1'][$level1]['level2'][$level2]['level3']
+							) as $level3
+						) {
+							foreach (array_keys(
+								$arrayStruct['level1'][$level1]['level2'][$level2]['level3'][$level3]['level4']
+							) as $level4
+							) {
+								$res_id_list .= $arrayStruct['level1'][$level1]['level2'][$level2]['level3'][$level3]['level4'][$level4]['label'].",";
 
+							}
 						}
 					}
 				}
 				?>
-				<div onclick="change2(<?php  echo $value_1;?>)" id="h2<?php  echo $value_1;?>" class="categorie">
+				<div onclick="change2(<?php  echo $level1;?>)" id="h2<?php  echo $level1;?>" class="categorie">
 					<?php
 					echo "<a href=javascript:view_doc('" . $res_id_list . "');>"
 					?><img src="<?php
 					echo $_SESSION['config']['businessappurl']
 					?>static.php?filename=folderopen.gif" alt="" />&nbsp;<b class="<?php
-					echo $_SESSION['array_struct_final']['level_1'][$value_1]['style'];
-					?>"><?php  echo $_SESSION['array_struct_final']['level_1'][$value_1]['label'];?></b></a>
+					echo $arrayStruct['level1'][$level1]['style'];
+					?>"><?php  echo $arrayStruct['level1'][$level1]['label'];?></b></a>
 					<span class="lb1-details">&nbsp;</span>
 				</div>
 				<br>
-				<div class="desc" id="desc<?php  echo $value_1;?>" >
+				<div class="desc" id="desc<?php  echo $level1;?>" >
 					<div class="ref-unit">
 						<?php
 						$res_id_list = "";
-						foreach(array_keys($_SESSION['array_struct_final']['level_1'][$value_1]['level_2']) as $value_2)
+						foreach (array_keys($arrayStruct['level1'][$level1]['level2']) as $level2)
 						{
 							$res_id_list = "";
-							foreach(array_keys($_SESSION['array_struct_final']['level_1'][$value_1]['level_2'][$value_2]['level_3']) as $value_3)
-							{
-								foreach(array_keys($_SESSION['array_struct_final']['level_1'][$value_1]['level_2'][$value_2]['level_3'][$value_3]['level_4']) as $value_4)
+							if (isset($arrayStruct['level1'][$level1]['level2'][$level2]['level3'])) {
+								foreach(array_keys($arrayStruct['level1'][$level1]['level2'][$level2]['level3']) as $level3)
 								{
-									$res_id_list .= $_SESSION['array_struct_final']['level_1'][$value_1]['level_2'][$value_2]['level_3'][$value_3]['level_4'][$value_4]['label'].",";
+									foreach(array_keys($arrayStruct['level1'][$level1]['level2'][$level2]['level3'][$level3]['level4']) as $level4)
+									{
+										$res_id_list .= $arrayStruct['level1'][$level1]['level2'][$level2]['level3'][$level3]['level4'][$level4]['label'].",";
 
+									}
 								}
 							}
 							//echo $res_id_list;
 							?>
-							<div onclick="change2(<?php  echo $value_2;?>)" id="h2<?php  echo $value_2;?>" class="categorie">
+							<div onclick="change2(<?php  echo $level2;?>)" id="h2<?php  echo $level2;?>" class="categorie">
 								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php
 								echo "<a href=javascript:view_doc('".$res_id_list."');>"
 								?><img src="<?php
 								echo $_SESSION['config']['businessappurl'];
 								?>static.php?filename=folderopen.gif" alt="" />&nbsp;<b class="<?php
-								if (isset($_SESSION['array_struct_final']['level_1'][$value_1]['level_2'][$value_2]['style'])) {
-								    echo $_SESSION['array_struct_final']['level_1'][$value_1]['level_2'][$value_2]['style'];
+								if (isset($arrayStruct['level1'][$level1]['level2'][$level2]['style'])) {
+								    echo $arrayStruct['level1'][$level1]['level2'][$level2]['style'];
 								} else {
 								    echo 'default_style';
 								}
-								?>"><?php  echo $_SESSION['array_struct_final']['level_1'][$value_1]['level_2'][$value_2]['label'];?></b></a>
+								?>"><?php  echo $arrayStruct['level1'][$level1]['level2'][$level2]['label'];?></b></a>
 								<span class="lb1-details">&nbsp;</span>
 							</div>
 							<br>
-							<div class="desc" id="desc<?php  echo $value_2;?>" >
+							<div class="desc" id="desc<?php  echo $level2;?>" >
 								<div class="ref-unit">
 									<?php
 									$res_id_list = "";
-									foreach(array_keys($_SESSION['array_struct_final']['level_1'][$value_1]['level_2'][$value_2]['level_3']) as $value_3)
-									{
-										$res_id_list = "";
-										foreach(array_keys($_SESSION['array_struct_final']['level_1'][$value_1]['level_2'][$value_2]['level_3'][$value_3]['level_4']) as $value_4)
+									//if (isset($arrayStruct['level1'][$level1]['level2'][$level2]['level3'])) {
+										foreach(array_keys($arrayStruct['level1'][$level1]['level2'][$level2]['level3']) as $level3)
 										{
-											$res_id_list = $_SESSION['array_struct_final']['level_1'][$value_1]['level_2'][$value_2]['level_3'][$value_3]['level_4'][$value_4]['label'].",";
-											echo 	"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-													<a href=javascript:view_doc('".$res_id_list."');><img src='".$_SESSION['config']['businessappurl']."static.php?module=folder&filename=page.gif' alt='' />".$_SESSION['array_struct_final']['level_1'][$value_1]['level_2'][$value_2]['level_3'][$value_3]['level_4'][$value_4]['label']." - ".$_SESSION['array_struct_final']['level_1'][$value_1]['level_2'][$value_2]['level_3'][$value_3]['label']."</a><br>";
-										}
+											$res_id_list = "";
+											foreach(array_keys($arrayStruct['level1'][$level1]['level2'][$level2]['level3'][$level3]['level4']) as $level4)
+											{
+												$res_id_list = $arrayStruct['level1'][$level1]['level2'][$level2]['level3'][$level3]['level4'][$level4]['label'].",";
+												echo 	"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+													<a href=javascript:view_doc('".$res_id_list."');><img src='".$_SESSION['config']['businessappurl']."static.php?module=folder&filename=page.gif' alt='' />".$arrayStruct['level1'][$level1]['level2'][$level2]['level3'][$level3]['level4'][$level4]['label']." - ".$arrayStruct['level1'][$level1]['level2'][$level2]['level3'][$level3]['label']."</a><br>";
+											}
 
-										?>
-
-												<?php
-/*
-												foreach(array_keys($_SESSION['array_struct_final']['level_1'][$value_1]['level_2'][$value_2]['level_3'][$value_3]['level_4']) as $value_4)
-												{
-													echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-													<a href=javascript:view_doc('".$res_id_list."');><img src='".$_SESSION['config']['businessappurl']."static.php?filename=page.gif'alt='' />".$_SESSION['array_struct_final']['level_1'][$value_1]['level_2'][$value_2]['level_3'][$value_3]['level_4'][$value_4]['label']."</a><br>";
-												}
-*/
-												?>
+																						?>
 											</div>
 										</div>
 										<?php
-									}
+										}
+									
 									?>
 								</div>
 							</div>
@@ -288,7 +238,7 @@ if (empty($coll_id_test)) {
 		echo _FOLDERHASNODOC.".<br>";
 	}
 }
-$core_tools->load_js();
+$core->load_js();
 ?>
 </body>
 </html>
