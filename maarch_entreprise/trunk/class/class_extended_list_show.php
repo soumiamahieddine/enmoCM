@@ -2587,19 +2587,11 @@ class extended_list_show extends dbquery
 
 			if ($FILTER->enabled == 'true') //only if enabled
 			{
-			
-				$lang_path = 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php';
-				
 				$tmp = (string) $FILTER->label;
-				$tmp2 = $this->retrieve_constant_lang($tmp, $lang_path);
-				if($tmp2 <> false)
-				{
-					$_SESSION['filters'][$k]['label'] = $tmp2;
-				}
-				else
-				{
-					$_SESSION['filters'][$k]['label'] = $tmp;
-				}
+                if (!empty($tmp) && defined($tmp) && constant($tmp) <> NULL) {
+                    $tmp = constant($tmp);
+                }
+				$_SESSION['filters'][$k]['label'] = $tmp;
 				
 				$_SESSION['filters'][$k]['filter_field'] = (string) $FILTER->filter_field;
 				$_SESSION['filters'][$k]['filter_var'] = (string) $FILTER->filter_var;
@@ -2614,10 +2606,17 @@ class extended_list_show extends dbquery
 					foreach($VALUES->value as $val)
 					{
 						$lab = (string) $val->label;
-						$tmp = $this->retrieve_constant_lang($lab, $lang_path);
-						if($tmp <> false){$lab = $tmp;}
-						
-						array_push($_SESSION['filters'][$k]['values'], array('id' => (string) $val->id, 'label' => $lab));
+                        if (!empty($lab) && defined($lab) 
+                            && constant($lab) <> NULL
+                        ) {
+                        $lab = constant($lab);
+                        array_push(
+                            $_SESSION['filters'][$k]['values'], 
+                            array(
+                                'id' => (string) $val->id, 
+                                'label' => $lab
+                            )
+                        );
 					}
 				}
 				elseif(isset($FILTER->table)) //Values from database

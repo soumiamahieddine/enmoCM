@@ -767,23 +767,18 @@ class types extends dbquery
                   . $_SESSION['config']['lang'] . '.php';
         $indexes = array();
         foreach ($xmlfile->INDEX as $item) {
-            $tmp = (string) $item->label;
-            //echo $tmp;
-            $tmp2 = $this->retrieve_constant_lang($tmp, $pathLang);
-            if ($tmp2 <> false) {
-                $label = $tmp2;
-            } else {
-                $label = $tmp;
-            }
+            $label = (string) $item->label;
+           	if (!empty($label) && defined($label) && constant($label) <> NULL) {
+           		$label = constant($label);
+           	}
             $img = (string) $item->img;
             if (isset($item->default_value) && ! empty($item->default_value)) {
-                $tmp = (string) $item->default_value;
-                $tmp2 = $this->retrieve_constant_lang($tmp, $pathLang);
-                if ($tmp2 <> false) {
-                    $default = $tmp2;
-                } else {
-                    $default = $tmp;
-                }
+                $default = (string) $item->default_value;
+	            if (!empty($default) && defined($default) 
+	            	&& constant($default) <> NULL
+	            ) {
+	           		$default = constant($default);
+	           	}
             } else {
                 $default = false;
             }
@@ -791,13 +786,13 @@ class types extends dbquery
                 $values = array();
                 $list = $item->values_list ;
                 foreach ($list->value as $val) {
-                    $tmp = (string) $val->label;
-                    $tmp2 = $this->retrieve_constant_lang($tmp, $pathLang);
-                    if ($tmp2 <> false) {
-                        $labelVal = $tmp2;
-                    } else {
-                        $labelVal = $tmp;
-                    }
+                    $labelVal = (string) $val->label;
+	                if (!empty($labelVal) && defined($labelVal) 
+		            	&& constant($labelVal) <> NULL
+		            ) {
+		           		$labelVal = constant($labelVal);
+		           	}
+                   
                     array_push(
                         $values,
                         array(
@@ -929,23 +924,22 @@ class types extends dbquery
                   . DIRECTORY_SEPARATOR . 'lang' . DIRECTORY_SEPARATOR
                   . $_SESSION['config']['lang'] . '.php';
         foreach ($xmlfile->INDEX as $item) {
-            $tmp = (string) $item->label;
-            $tmp2 = $this->retrieve_constant_lang($tmp, $pathLang );
-            if ($tmp2 <> false) {
-                $label = $tmp2;
-            } else {
-                $label = $tmp;
-            }
+            $label = (string) $item->label;
+         	if (!empty($label) && defined($label) 
+            	&& constant($label) <> NULL
+            ) {
+           		$label = constant($label);
+           	}
+           
             $col = (string) $item->column;
             $img = (string) $item->img;
             if (isset($item->default_value) && ! empty($item->default_value)) {
-                $tmp = (string) $item->default_value;
-                $tmp2 = $this->retrieve_constant_lang($tmp, $pathLang);
-                if ($tmp2 <> false) {
-                    $default = $tmp2;
-                } else {
-                    $default = $tmp;
-                }
+                $default = (string) $item->default_value;
+	            if (!empty($default) && defined($default) 
+	            	&& constant($default) <> NULL
+	            ) {
+	           		$default = constant($default);
+	           	}
             } else {
                 $default = false;
             }
@@ -954,13 +948,13 @@ class types extends dbquery
                     $values = array();
                     $list = $item->values_list ;
                     foreach ($list->value as $val) {
-                        $tmp = (string) $val->label;
-                        $tmp2 = $this->retrieve_constant_lang($tmp, $pathLang);
-                        if ($tmp2 <> false) {
-                            $labelVal = $tmp2;
-                        } else {
-                            $labelVal = $tmp;
-                        }
+                        $labelVal = (string) $val->label;
+		                if (!empty($labelVal) && defined($labelVal) 
+			            	&& constant($labelVal) <> NULL
+			            ) {
+			           		$labelVal = constant($labelVal);
+			           	}
+                       
                         array_push(
                             $values,
                             array(

@@ -1194,3 +1194,18 @@ if (!defined('_SOURCE_FILE_PROPERTIES')) define( '_SOURCE_FILE_PROPERTIES', 'Pro
 if (!defined('_FINGERPRINT'))  define('_FINGERPRINT', 'Empreinte num&eacute;rique');
 if (!defined('_OFFSET'))  define('_OFFSET', 'Offset');
 if (!defined('_SETUP'))  define('_SETUP', 'Configurer');
+
+
+if (!defined('_PARAM_MLB_DOCTYPES')) {
+	define('_PARAM_MLB_DOCTYPES', 'Param&eacute;trage des types de documents ');
+}
+if (!defined('_PARAM_MLB_DOCTYPES_DESC')) {
+	define('_PARAM_MLB_DOCTYPES_DESC', 'Param&eacute;trage des types de documents ');
+}
+if (!defined('_WELCOME_TEXT_LOAD')) {
+	define('_WELCOME_TEXT_LOAD', 'Chargement texte page d&rsquo;accueil');
+}
+if (!defined('_REOPEN_MAIL_DESC')) {
+	define('_REOPEN_MAIL_DESC', 'R&eacute;ouverture de courrier');
+}
+
