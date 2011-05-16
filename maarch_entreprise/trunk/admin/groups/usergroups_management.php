@@ -266,13 +266,14 @@ if ($mode == 'list') {
         <?php
         $enabledServicesSortByParent = array();
         $j = 0;
+
         for ($i = 0; $i < count($_SESSION['enabled_services']); $i ++) {
+            if ($i > 0
+                 && $_SESSION['enabled_services'][$i]['parent'] <> $_SESSION['enabled_services'][$i - 1]['parent']
+            ) {
+                $j = 0;
+            }
             if ($_SESSION['enabled_services'][$i]['system'] == false) {
-                if ($i > 0
-                    && $_SESSION['enabled_services'][$i]['parent'] <> $_SESSION['enabled_services'][$i - 1]['parent']
-                ) {
-                    $j = 0;
-                }
                 $enabledServicesSortByParent[$_SESSION['enabled_services'][$i]['parent']][$j] = $_SESSION['enabled_services'][$i];
                 $j ++;
             }
@@ -309,7 +310,10 @@ if ($mode == 'list') {
                 for ($i = 0; $i < count($enabledServicesSortByParent[$value]);
                     $i ++
                 ) {
-                    if ($enabledServicesSortByParent[$value][$i]['system'] <> true) {
+                    if ((isset($enabledServicesSortByParent[$value][$i]['system'])
+                        && $enabledServicesSortByParent[$value][$i]['system'] == false)
+                        || !isset($enabledServicesSortByParent[$value][$i]['system'])
+                    ) {
                         ?>
                         <tr>
                         <td style="width:800px;" align="right" title="<?php
