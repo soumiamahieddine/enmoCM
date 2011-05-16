@@ -91,12 +91,13 @@ class diffusion_list extends dbquery
         );
 
         $res = $this->fetch_object();
-        $listmodel['dest']['user_id'] = $this->show_str($res->item_id);
-        $listmodel['dest']['lastname'] = $this->show_str($res->lastname);
-        $listmodel['dest']['firstname'] = $this->show_str($res->firstname);
-        $listmodel['dest']['entity_id'] = $this->show_str($res->entity_id);
-        $listmodel['dest']['entity_label'] = $this->show_str($res->entity_label);
-
+        if (isset($res)) {
+            $listmodel['dest']['user_id'] = $this->show_str($res->item_id);
+            $listmodel['dest']['lastname'] = $this->show_str($res->lastname);
+            $listmodel['dest']['firstname'] = $this->show_str($res->firstname);
+            $listmodel['dest']['entity_id'] = $this->show_str($res->entity_id);
+            $listmodel['dest']['entity_label'] = $this->show_str($res->entity_label);
+        }
         $this->query(
         	"select  l.item_id, u.firstname, u.lastname, e.entity_id, "
             . "e.entity_label from " . ENT_LISTMODELS . " l, " . USERS_TABLE
