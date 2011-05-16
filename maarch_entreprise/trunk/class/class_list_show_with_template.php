@@ -55,6 +55,30 @@ class list_show_with_template extends list_show
 		}
 	}
 
+    //Load value from db with $result tab
+	public function tmplt_load_date($actual_string, $theline, $result)
+	{
+		$my_explode= explode ("|", $actual_string);
+		if (!$my_explode[1])
+		{
+			return _WRONG_PARAM_FOR_LOAD_VALUE;
+		}
+		else
+		{
+			$to_share = $my_explode[1];
+			for($stand= 0; $stand <= count($result[$theline]); $stand++ )
+			{
+				if (isset($result[$theline][$stand]['column'])
+				    && $result[$theline][$stand]['column'] == $to_share
+				) {
+						return $this->format_date($result[$theline][$stand]['value']);
+				}
+
+			}
+
+		}
+	}
+
 
 	//Load css defined in $actual_string
 	public function tmplt_load_css($actual_string)
@@ -352,6 +376,11 @@ class list_show_with_template extends list_show
 		//elseif($actual_string == "load_value")
 		{
 			$my_var = $this->tmplt_load_value($actual_string, $theline, $result);
+		}
+		##load_value|arg1##: load value in the db; arg1= column's value identifier
+		elseif (preg_match("/^load_date\|/", $actual_string))
+		{
+			$my_var = $this->tmplt_load_date($actual_string, $theline, $result);
 		}
 		##load_css|arg1## : load css style - arg1= name of this class
 		elseif (preg_match("/^load_css\|/", $actual_string))

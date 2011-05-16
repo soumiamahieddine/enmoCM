@@ -20,117 +20,321 @@
  */
 
 /************** Administration **************/
-if (!defined('_ADMIN_USERS'))  define( '_ADMIN_USERS', 'Utilisateurs');
-if (!defined('_ADMIN_DOCSERVERS'))  define( '_ADMIN_DOCSERVERS', 'Zones de stockage');
-if (!defined('_ADMIN_USERS_DESC')) define( '_ADMIN_USERS_DESC', 'Ajouter, suspendre, ou modifier des profils utilisateurs. Placer les utilisateurs dans leurs groupes d&rsquo;appartenance et définir leur groupe primaire.');
-if (!defined('_ADMIN_DOCSERVERS_DESC')) define( '_ADMIN_DOCSERVERS_DESC', 'Ajouter, suspendre, ou modifier des zones de stockage. Placer les zones de stockages par type d&rsquo;appartenance et définir leur groupe primaire.');
-if (!defined('_ADMIN_GROUPS')) define( '_ADMIN_GROUPS', 'Groupes d&rsquo;utilisateurs');
-if (!defined('_ADMIN_GROUPS_DESC')) define( '_ADMIN_GROUPS_DESC', 'Ajouter, suspendre, ou modifier des groupes d&rsquo;utilisateurs. Attribuer des privil&egrave;ges ou des autorisations d&rsquo;acc&egrave;s aux ressources.');
-if (!defined('_ADMIN_ARCHITECTURE')) define( '_ADMIN_ARCHITECTURE', 'Plan de classement');
-if (!defined('_ADMIN_ARCHITECTURE_DESC')) define( '_ADMIN_ARCHITECTURE_DESC', 'D&eacute;finir la structure interne d&rsquo;un dossier (chemise / sous-chemise / type de document). D&eacute;finir pour chaque pi&egrave;ce la liste des index &agrave; saisir, et leur caract&egrave;re obligatoire pour la compl&eacute;tude du dossier.');
-if (!defined('_VIEW_HISTORY')) define( '_VIEW_HISTORY', 'Historique');
-if (!defined('_VIEW_HISTORY_BATCH')) define( '_VIEW_HISTORY_BATCH', 'Historique des batchs');
-if (!defined('_VIEW_HISTORY_DESC')) define( '_VIEW_HISTORY_DESC', 'Consulter l&rsquo;historique des &eacute;v&egrave;nements relatifs à l&rsquo;utilisation de la GED Maarch.');
-if (!defined('_VIEW_HISTORY_BATCH_DESC')) define( '_VIEW_HISTORY_BATCH_DESC', 'Consulter l&rsquo;historique des batchs');
-if (!defined('_ADMIN_MODULES')) define( '_ADMIN_MODULES', 'G&eacute;rer les modules');
-if (!defined('_ADMIN_SERVICE')) define( '_ADMIN_SERVICE', 'Service d&rsquo;administration');
-if (!defined('_XML_PARAM_SERVICE_DESC')) define( '_XML_PARAM_SERVICE_DESC', 'Visualisation configuration XML des services');
-if (!defined('_XML_PARAM_SERVICE')) define( '_XML_PARAM_SERVICE', 'Visualisation configuration XML des services');
-if (!defined('_MODULES_SERVICES')) define( '_MODULES_SERVICES', 'Services d&eacute;finis par les modules');
-if (!defined('_APPS_SERVICES')) define( '_APPS_SERVICES', 'Services d&eacute;finis par l&rsquo;application');
-if (!defined('_ADMIN_STATUS_DESC')) define( '_ADMIN_STATUS_DESC', 'Cr&eacute;er ou modifier des statuts.');
-if (!defined('_ADMIN_ACTIONS_DESC')) define( '_ADMIN_ACTIONS_DESC', 'Cr&eacute;er ou modifier des actions.');
-if (!defined('_ADMIN_SERVICES_UNKNOWN')) define( '_ADMIN_SERVICES_UNKNOWN', 'Service d&rsquo;administration inconnu');
-if (!defined('_NO_RIGHTS_ON')) define( '_NO_RIGHTS_ON', 'Aucun droit sur');
-if (!defined('_NO_LABEL_FOUND')) define( '_NO_LABEL_FOUND', 'Aucun label trouv&eacute; pour ce service');
+if (!defined('_ADMIN_USERS')) {
+    define( '_ADMIN_USERS', 'Utilisateurs');
+}
+if (!defined('_ADMIN_DOCSERVERS')) {
+    define( '_ADMIN_DOCSERVERS', 'Zones de stockage');
+}
+if (!defined('_ADMIN_USERS_DESC')) {
+    define( '_ADMIN_USERS_DESC', 'Ajouter, suspendre, ou modifier des profils utilisateurs. Placer les utilisateurs dans leurs groupes d&rsquo;appartenance et définir leur groupe primaire.');
+}
+if (!defined('_ADMIN_DOCSERVERS_DESC')) {
+    define( '_ADMIN_DOCSERVERS_DESC', 'Ajouter, suspendre, ou modifier des zones de stockage. Placer les zones de stockages par type d&rsquo;appartenance et définir leur groupe primaire.');
+}
+if (!defined('_ADMIN_GROUPS')) {
+    define( '_ADMIN_GROUPS', 'Groupes d&rsquo;utilisateurs');
+}
+if (!defined('_ADMIN_GROUPS_DESC')) {
+    define( '_ADMIN_GROUPS_DESC', 'Ajouter, suspendre, ou modifier des groupes d&rsquo;utilisateurs. Attribuer des privil&egrave;ges ou des autorisations d&rsquo;acc&egrave;s aux ressources.');
+}
+if (!defined('_ADMIN_ARCHITECTURE')) {
+    define( '_ADMIN_ARCHITECTURE', 'Plan de classement');
+}
+if (!defined('_ADMIN_ARCHITECTURE_DESC')) {
+    define( '_ADMIN_ARCHITECTURE_DESC', 'D&eacute;finir la structure interne d&rsquo;un dossier (chemise / sous-chemise / type de document). D&eacute;finir pour chaque pi&egrave;ce la liste des index &agrave; saisir, et leur caract&egrave;re obligatoire pour la compl&eacute;tude du dossier.');
+}
+if (!defined('_VIEW_HISTORY')) {
+    define( '_VIEW_HISTORY', 'Historique');
+}
+if (!defined('_VIEW_HISTORY_BATCH')) {
+    define( '_VIEW_HISTORY_BATCH', 'Historique des batchs');
+}
+if (!defined('_VIEW_HISTORY_DESC')) {
+    define( '_VIEW_HISTORY_DESC', 'Consulter l&rsquo;historique des &eacute;v&egrave;nements relatifs à l&rsquo;utilisation de la GED Maarch.');
+}
+if (!defined('_VIEW_HISTORY_BATCH_DESC')) {
+    define( '_VIEW_HISTORY_BATCH_DESC', 'Consulter l&rsquo;historique des batchs');
+}
+if (!defined('_ADMIN_MODULES')) {
+    define( '_ADMIN_MODULES', 'G&eacute;rer les modules');
+}
+if (!defined('_ADMIN_SERVICE')) {
+    define( '_ADMIN_SERVICE', 'Service d&rsquo;administration');
+}
+if (!defined('_XML_PARAM_SERVICE_DESC')) {
+    define( '_XML_PARAM_SERVICE_DESC', 'Visualisation configuration XML des services');
+}
+if (!defined('_XML_PARAM_SERVICE')) {
+    define( '_XML_PARAM_SERVICE', 'Visualisation configuration XML des services');
+}
+if (!defined('_MODULES_SERVICES')) {
+    define( '_MODULES_SERVICES', 'Services d&eacute;finis par les modules');
+}
+if (!defined('_APPS_SERVICES')) {
+    define( '_APPS_SERVICES', 'Services d&eacute;finis par l&rsquo;application');
+}
+if (!defined('_ADMIN_STATUS_DESC')) {
+    define( '_ADMIN_STATUS_DESC', 'Cr&eacute;er ou modifier des statuts.');
+}
+if (!defined('_ADMIN_ACTIONS_DESC')) {
+    define( '_ADMIN_ACTIONS_DESC', 'Cr&eacute;er ou modifier des actions.');
+}
+if (!defined('_ADMIN_SERVICES_UNKNOWN')) {
+    define( '_ADMIN_SERVICES_UNKNOWN', 'Service d&rsquo;administration inconnu');
+}
+if (!defined('_NO_RIGHTS_ON')) {
+    define( '_NO_RIGHTS_ON', 'Aucun droit sur');
+}
+if (!defined('_NO_LABEL_FOUND')) {
+    define( '_NO_LABEL_FOUND', 'Aucun label trouv&eacute; pour ce service');
+}
 
-if (!defined('_FOLDERTYPES_LIST')) define( '_FOLDERTYPES_LIST', 'Liste des types de dossier');
-if (!defined('_SELECTED_FOLDERTYPES')) define( '_SELECTED_FOLDERTYPES', 'Types de dossier s&eacute;lectionn&eacute;s');
-if (!defined('_FOLDERTYPE_ADDED')) define( '_FOLDERTYPE_ADDED', 'Nouveau dossier ajout&eacute;');
-if (!defined('_FOLDERTYPE_DELETION')) define( '_FOLDERTYPE_DELETION', 'Dossier supprim&eacute;');
-if (!defined('_VERSION_BASE_AND_XML_BASEVERSION_NOT_MATCH')) define( '_VERSION_BASE_AND_XML_BASEVERSION_NOT_MATCH', 'Attention: Le mod&egrave;le de donn&eacute;es de Maarch Entreprise doit &ecirc;tre mis &agrave; jour...');
+if (!defined('_FOLDERTYPES_LIST')) {
+    define( '_FOLDERTYPES_LIST', 'Liste des types de dossier');
+}
+if (!defined('_SELECTED_FOLDERTYPES')) {
+    define( '_SELECTED_FOLDERTYPES', 'Types de dossier s&eacute;lectionn&eacute;s');
+}
+if (!defined('_FOLDERTYPE_ADDED')) {
+    define( '_FOLDERTYPE_ADDED', 'Nouveau dossier ajout&eacute;');
+}
+if (!defined('_FOLDERTYPE_DELETION')) {
+    define( '_FOLDERTYPE_DELETION', 'Dossier supprim&eacute;');
+}
+if (!defined('_VERSION_BASE_AND_XML_BASEVERSION_NOT_MATCH')) {
+    define( '_VERSION_BASE_AND_XML_BASEVERSION_NOT_MATCH', 'Attention: Le mod&egrave;le de donn&eacute;es de Maarch Entreprise doit &ecirc;tre mis &agrave; jour...');
+}
 
 
 /*********************** communs ***********************************/
-if (!defined('_MODE')) define('_MODE', 'Mode');
+if (!defined('_MODE')) {
+    define('_MODE', 'Mode');
+}
 /************** Listes **************/
-if (!defined('_GO_TO_PAGE')) define( '_GO_TO_PAGE', 'Aller &agrave; la page');
-if (!defined('_NEXT')) define( '_NEXT', 'Suivante');
-if (!defined('_PREVIOUS')) define( '_PREVIOUS', 'Pr&eacute;c&eacute;dente');
-if (!defined('_ALPHABETICAL_LIST')) define( '_ALPHABETICAL_LIST', 'Liste alphab&eacute;tique');
-if (!defined('_ASC_SORT')) define( '_ASC_SORT', 'Tri ascendant');
-if (!defined('_DESC_SORT')) define( '_DESC_SORT', 'Tri descendant');
-if (!defined('_ACCESS_LIST_STANDARD')) define( '_ACCESS_LIST_STANDARD', 'Affichage des listes simples');
-if (!defined('_ACCESS_LIST_EXTEND')) define( '_ACCESS_LIST_EXTEND', 'Affichage des listes &eacute;tendues');
-if (!defined('_DISPLAY')) define( '_DISPLAY', 'Affichage');
+if (!defined('_GO_TO_PAGE')) {
+    define( '_GO_TO_PAGE', 'Aller &agrave; la page');
+}
+if (!defined('_NEXT')) {
+    define( '_NEXT', 'Suivante');
+}
+if (!defined('_PREVIOUS')) {
+    define( '_PREVIOUS', 'Pr&eacute;c&eacute;dente');
+}
+if (!defined('_ALPHABETICAL_LIST')) {
+    define( '_ALPHABETICAL_LIST', 'Liste alphab&eacute;tique');
+}
+if (!defined('_ASC_SORT')) {
+    define( '_ASC_SORT', 'Tri ascendant');
+}
+if (!defined('_DESC_SORT')) {
+    define( '_DESC_SORT', 'Tri descendant');
+}
+if (!defined('_ACCESS_LIST_STANDARD')) {
+    define( '_ACCESS_LIST_STANDARD', 'Affichage des listes simples');
+}
+if (!defined('_ACCESS_LIST_EXTEND')) {
+    define( '_ACCESS_LIST_EXTEND', 'Affichage des listes &eacute;tendues');
+}
+if (!defined('_DISPLAY')) {
+    define( '_DISPLAY', 'Affichage');
+}
 /************** Actions **************/
-if (!defined('_DELETE')) define( '_DELETE', 'Supprimer');
-if (!defined('_ADD')) define( '_ADD', 'Ajouter');
-if (!defined('_REMOVE')) define( '_REMOVE', 'Enlever');
-if (!defined('_MODIFY')) define( '_MODIFY', 'Modifier');
-if (!defined('_SUSPEND')) define( '_SUSPEND', 'Suspendre');
-if (!defined('_AUTHORIZE')) define( '_AUTHORIZE', 'Autoriser');
-if (!defined('_CHOOSE')) define( '_CHOOSE', 'Choisir');
-if (!defined('_SEND')) define( '_SEND', 'Envoyer');
-if (!defined('_SEARCH')) define( '_SEARCH', 'Rechercher');
-if (!defined('_RESET')) define( '_RESET', 'R&eacute;initialiser');
-if (!defined('_VALIDATE')) define( '_VALIDATE', 'Valider');
-if (!defined('_CANCEL')) define( '_CANCEL', 'Annuler');
-if (!defined('_ADDITION')) define( '_ADDITION', 'Ajout');
-if (!defined('_MODIFICATION')) define( '_MODIFICATION', 'Modification');
-if (!defined('_DIFFUSION')) define( '_DIFFUSION', 'Diffusion');
-if (!defined('_DELETION')) define( '_DELETION', 'Suppression');
-if (!defined('_SUSPENSION')) define( '_SUSPENSION', 'Suspension');
-if (!defined('_VALIDATION')) define( '_VALIDATION', 'Validation');
-if (!defined('_REDIRECTION')) define( '_REDIRECTION', 'Redirection');
-if (!defined('_DUPLICATION')) define( '_DUPLICATION', 'Duplication');
-if (!defined('_PROPOSITION')) define( '_PROPOSITION', 'Proposition');
-if (!defined('_ERR')) define( '_ERR', 'Erreur');
-if (!defined('_CLOSE')) define( '_CLOSE', 'Fermer');
-if (!defined('_CLOSE_WINDOW')) define( '_CLOSE_WINDOW', 'Fermer la fen&ecirc;tre');
-if (!defined('_DIFFUSE')) define( '_DIFFUSE', 'Diffuser');
-if (!defined('_DOWN')) define( '_DOWN', 'Descendre');
-if (!defined('_UP')) define( '_UP', 'Monter');
-if (!defined('_REDIRECT')) define( '_REDIRECT', 'Rediriger');
-if (!defined('_DELETED')) define( '_DELETED', 'Supprim&eacute;');
-if (!defined('_CONTINUE')) define( '_CONTINUE', 'Continuer');
-if (!defined('_VIEW')) define( '_VIEW','Visualisation');
-if (!defined('_CHOOSE_ACTION')) define( '_CHOOSE_ACTION', 'Choisissez une action');
-if (!defined('_ACTIONS')) define( '_ACTIONS', 'Actions');
-if (!defined('_ACTION_PAGE')) define( '_ACTION_PAGE', 'Page de r&eacute;sultat de l&rsquo;action');
-if (!defined('_DO_NOT_MODIFY_UNLESS_EXPERT')) define( '_DO_NOT_MODIFY_UNLESS_EXPERT', ' Ne pas modifier cette section &agrave; moins de savoir ce que vous faites. Un mauvais param&egrave;trage peut entrainer des dysfonctionnements de l&rsquo;application!');
-if (!defined('_INFOS_ACTIONS')) define( '_INFOS_ACTIONS', 'Vous devez choisir au moins un statut et / ou un script.');
+if (!defined('_DELETE')) {
+    define( '_DELETE', 'Supprimer');
+}
+if (!defined('_ADD')) {
+    define( '_ADD', 'Ajouter');
+}
+if (!defined('_REMOVE')) {
+    define( '_REMOVE', 'Enlever');
+}
+if (!defined('_MODIFY')) {
+    define( '_MODIFY', 'Modifier');
+}
+if (!defined('_SUSPEND')) {
+    define( '_SUSPEND', 'Suspendre');
+}
+if (!defined('_AUTHORIZE')) {
+    define( '_AUTHORIZE', 'Autoriser');
+}
+if (!defined('_CHOOSE')) {
+    define( '_CHOOSE', 'Choisir');
+}
+if (!defined('_SEND')) {
+    define( '_SEND', 'Envoyer');
+}
+if (!defined('_SEARCH')) {
+    define( '_SEARCH', 'Rechercher');
+}
+if (!defined('_RESET')) {
+    define( '_RESET', 'R&eacute;initialiser');
+}
+if (!defined('_VALIDATE')) {
+    define( '_VALIDATE', 'Valider');
+}
+if (!defined('_CANCEL')) {
+    define( '_CANCEL', 'Annuler');
+}
+if (!defined('_ADDITION')) {
+    define( '_ADDITION', 'Ajout');
+}
+if (!defined('_MODIFICATION')) {
+    define( '_MODIFICATION', 'Modification');
+}
+if (!defined('_DIFFUSION')) {
+    define( '_DIFFUSION', 'Diffusion');
+}
+if (!defined('_DELETION')) {
+    define( '_DELETION', 'Suppression');
+}
+if (!defined('_SUSPENSION')) {
+    define( '_SUSPENSION', 'Suspension');
+}
+if (!defined('_VALIDATION')) {
+    define( '_VALIDATION', 'Validation');
+}
+if (!defined('_REDIRECTION')) {
+    define( '_REDIRECTION', 'Redirection');
+}
+if (!defined('_DUPLICATION')) {
+    define( '_DUPLICATION', 'Duplication');
+}
+if (!defined('_PROPOSITION')) {
+    define( '_PROPOSITION', 'Proposition');
+}
+if (!defined('_ERR')) {
+    define( '_ERR', 'Erreur');
+}
+if (!defined('_CLOSE')) {
+    define( '_CLOSE', 'Fermer');
+}
+if (!defined('_CLOSE_WINDOW')) {
+    define( '_CLOSE_WINDOW', 'Fermer la fen&ecirc;tre');
+}
+if (!defined('_DIFFUSE')) {
+    define( '_DIFFUSE', 'Diffuser');
+}
+if (!defined('_DOWN')) {
+    define( '_DOWN', 'Descendre');
+}
+if (!defined('_UP')) {
+    define( '_UP', 'Monter');
+}
+if (!defined('_REDIRECT')) {
+    define( '_REDIRECT', 'Rediriger');
+}
+if (!defined('_DELETED')) {
+    define( '_DELETED', 'Supprim&eacute;');
+}
+if (!defined('_CONTINUE')) {
+    define( '_CONTINUE', 'Continuer');
+}
+if (!defined('_VIEW')) {
+    define( '_VIEW','Visualisation');
+}
+if (!defined('_CHOOSE_ACTION')) {
+    define( '_CHOOSE_ACTION', 'Choisissez une action');
+}
+if (!defined('_ACTIONS')) {
+    define( '_ACTIONS', 'Actions');
+}
+if (!defined('_ACTION_PAGE')) {
+    define( '_ACTION_PAGE', 'Page de r&eacute;sultat de l&rsquo;action');
+}
+if (!defined('_DO_NOT_MODIFY_UNLESS_EXPERT')) {
+    define( '_DO_NOT_MODIFY_UNLESS_EXPERT', ' Ne pas modifier cette section &agrave; moins de savoir ce que vous faites. Un mauvais param&egrave;trage peut entrainer des dysfonctionnements de l&rsquo;application!');
+}
+if (!defined('_INFOS_ACTIONS')) {
+    define( '_INFOS_ACTIONS', 'Vous devez choisir au moins un statut et / ou un script.');
+}
 
 
 /************** Intitul&eacute;s formulaires et listes **************/
-if (!defined('_ID')) define( '_ID', 'Identifiant');
-if (!defined('_PASSWORD')) define( '_PASSWORD', 'Mot de passe');
-if (!defined('_GROUP')) define( '_GROUP', 'Groupe');
-if (!defined('_USER')) define( '_USER', 'Utilisateur');
-if (!defined('_DESC')) define( '_DESC', 'Description');
-if (!defined('_LASTNAME')) define( '_LASTNAME', 'Nom');
-if (!defined('_THE_LASTNAME')) define( '_THE_LASTNAME', 'Le nom');
-if (!defined('_THE_FIRSTNAME')) define( '_THE_FIRSTNAME', 'Le pr&eacute;nom');
-if (!defined('_THE_ID')) define( '_THE_ID', 'L&rsquo;identifiant');
-if (!defined('_FIRSTNAME')) define( '_FIRSTNAME', 'Pr&eacute;nom');
-if (!defined('_STATUS')) define( '_STATUS', 'Statut');
-if (!defined('_DEPARTMENT')) define( '_DEPARTMENT', 'D&eacute;partement');
-if (!defined('_FUNCTION')) define( '_FUNCTION', 'Fonction');
-if (!defined('_PHONE_NUMBER')) define( '_PHONE_NUMBER', 'Num&eacute;ro de t&eacute;l&eacute;phone');
-if (!defined('_MAIL')) define( '_MAIL', 'Courriel');
-if (!defined('_DOCTYPE')) define( '_DOCTYPE', 'Type de document');
-if (!defined('_TYPE')) define( '_TYPE', 'Type');
-if (!defined('_SELECT_ALL')) define( '_SELECT_ALL', 'S&eacute;lectionner tout');
-if (!defined('_DATE')) define( '_DATE', 'Date');
-if (!defined('_ACTION')) define( '_ACTION', 'Action');
-if (!defined('_COMMENTS')) define( '_COMMENTS', 'Commentaires');
-if (!defined('_ENABLED')) define( '_ENABLED', 'Autoris&eacute;');
-if (!defined('_DISABLED')) define( '_DISABLED', 'Suspendu');
-if (!defined('_NOT_ENABLED')) define( '_NOT_ENABLED', 'Suspendu');
-if (!defined('_RESSOURCES_COLLECTION')) define( '_RESSOURCES_COLLECTION','Collection documentaire');
-if (!defined('_RECIPIENT')) define( '_RECIPIENT', 'Destinataire');
-if (!defined('_START')) define( '_START', 'D&eacute;but');
-if (!defined('_END')) define( '_END', 'Fin');
+if (!defined('_ID')) {
+    define( '_ID', 'Identifiant');
+}
+if (!defined('_PASSWORD')) {
+    define( '_PASSWORD', 'Mot de passe');
+}
+if (!defined('_GROUP')) {
+    define( '_GROUP', 'Groupe');
+}
+if (!defined('_USER')) {
+    define( '_USER', 'Utilisateur');
+}
+if (!defined('_DESC')) {
+    define( '_DESC', 'Description');
+}
+if (!defined('_LASTNAME')) {
+    define( '_LASTNAME', 'Nom');
+}
+if (!defined('_THE_LASTNAME')) {
+    define( '_THE_LASTNAME', 'Le nom');
+}
+if (!defined('_THE_FIRSTNAME')) {
+    define( '_THE_FIRSTNAME', 'Le pr&eacute;nom');
+}
+if (!defined('_THE_ID')) {
+    define( '_THE_ID', 'L&rsquo;identifiant');
+}
+if (!defined('_FIRSTNAME')) {
+    define( '_FIRSTNAME', 'Pr&eacute;nom');
+}
+if (!defined('_STATUS')) {
+    define( '_STATUS', 'Statut');
+}
+if (!defined('_DEPARTMENT')) {
+    define( '_DEPARTMENT', 'D&eacute;partement');
+}
+if (!defined('_FUNCTION')) {
+    define( '_FUNCTION', 'Fonction');
+}
+if (!defined('_PHONE_NUMBER')) {
+    define( '_PHONE_NUMBER', 'Num&eacute;ro de t&eacute;l&eacute;phone');
+}
+if (!defined('_MAIL')) {
+    define( '_MAIL', 'Courriel');
+}
+if (!defined('_DOCTYPE')) {
+    define( '_DOCTYPE', 'Type de document');
+}
+if (!defined('_TYPE')) {
+    define( '_TYPE', 'Type');
+}
+if (!defined('_SELECT_ALL')) {
+    define( '_SELECT_ALL', 'S&eacute;lectionner tout');
+}
+if (!defined('_DATE')) {
+    define( '_DATE', 'Date');
+}
+if (!defined('_ACTION')) {
+    define( '_ACTION', 'Action');
+}
+if (!defined('_COMMENTS')) {
+    define( '_COMMENTS', 'Commentaires');
+}
+if (!defined('_ENABLED')) {
+    define( '_ENABLED', 'Autoris&eacute;');
+}
+if (!defined('_DISABLED')) {
+    define( '_DISABLED', 'Suspendu');
+}
+if (!defined('_NOT_ENABLED')) {
+    define( '_NOT_ENABLED', 'Suspendu');
+}
+if (!defined('_RESSOURCES_COLLECTION')) {
+    define( '_RESSOURCES_COLLECTION','Collection documentaire');
+}
+if (!defined('_RECIPIENT')) {
+    define( '_RECIPIENT', 'Destinataire');
+}
+if (!defined('_START')) {
+    define( '_START', 'D&eacute;but');
+}
+if (!defined('_END')) {
+    define( '_END', 'Fin');
+}
 
 
 /************** Messages pop up **************/
@@ -1206,4 +1410,6 @@ if (!defined('_WELCOME_TEXT_LOAD')) {
 if (!defined('_REOPEN_MAIL_DESC')) {
 	define('_REOPEN_MAIL_DESC', 'R&eacute;ouverture de courrier');
 }
-
+if (!defined('_WRONG_FUNCTION_OR_WRONG_PARAMETERS')) {
+    define('_WRONG_FUNCTION_OR_WRONG_PARAMETERS', 'Mauvais appel ou mauvaus param&eagrave;tre');
+}

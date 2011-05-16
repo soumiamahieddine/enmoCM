@@ -491,7 +491,7 @@ CREATE OR REPLACE VIEW af_view_year_view AS
  SELECT r.custom_t3 AS level1, date_part( 'year', r.doc_date) AS level2, r.custom_t4 AS level3,
         r.res_id, r.creation_date, r.status -- for where clause
    FROM  res_x r
-   WHERE  NOT (EXISTS ( SELECT t.level1, t.level2, t.level3, t.level4
+   WHERE  NOT (EXISTS ( SELECT t.level1, t.level2, t.level3
            FROM af_view_year_target t
           WHERE r.custom_t3::text = t.level1::text AND cast(date_part( 'year', r.doc_date) as character) = t.level2 AND r.custom_t4 = t.level3));
 
@@ -507,10 +507,9 @@ CREATE OR REPLACE VIEW af_view_customer_view AS
 
 -- View used to display trees
 CREATE OR REPLACE VIEW af_view_year_target_view AS
- SELECT af.level1, af.level1 as level1_label, af.level2, af.level2 as level2_label, af.level3, af.level3 as level3_label
+ SELECT af.level1, af.level1_id, af.level1 as level1_label, af.level2, af.level2_id, af.level2 as level2_label, af.level3, af.level3_id, af.level3 as level3_label
    FROM af_view_year_target af;
 
 CREATE OR REPLACE VIEW af_view_customer_target_view AS
- SELECT af.level1, af.level1 as level1_label, af.level2, af.level2 as level2_label, af.level3, af.level3 as level3_label
+ SELECT af.level1, af.level1_id, af.level1 as level1_label, af.level2, af.level2_id, af.level2 as level2_label, af.level3, af.level3_id, af.level3 as level3_label
    FROM af_view_customer_target af ;
-

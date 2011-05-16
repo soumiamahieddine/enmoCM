@@ -34,6 +34,7 @@ last_modification_date DATETIME NULL
 CREATE TABLE IF NOT EXISTS doctypes_first_level (
   doctypes_first_level_id int(8) NOT NULL auto_increment,
   doctypes_first_level_label varchar(255) collate utf8_unicode_ci NOT NULL,
+  css_style varchar(255) collate utf8_unicode_ci,
   enabled char(1) collate utf8_unicode_ci NOT NULL default 'Y',
   PRIMARY KEY  (doctypes_first_level_id)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -42,6 +43,7 @@ CREATE TABLE IF NOT EXISTS doctypes_second_level (
   doctypes_second_level_id int(8) NOT NULL auto_increment,
   doctypes_second_level_label varchar(255) collate utf8_unicode_ci NOT NULL,
   doctypes_first_level_id int(8) NOT NULL,
+  css_style varchar(255) collate utf8_unicode_ci,
   enabled char(1) collate utf8_unicode_ci NOT NULL default 'Y',
   PRIMARY KEY  (doctypes_second_level_id)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -343,3 +345,30 @@ mandatory CHAR( 1 ) NOT NULL DEFAULT 'N'
 
 CREATE OR REPLACE VIEW res_view_apa AS
  select * from res_apa;
+
+-- Resource view used to fill af_target
+CREATE OR REPLACE VIEW af_view_year_view AS
+ SELECT r.custom_t3 AS level1, date_format(r.doc_date, '%Y') AS level2, r.custom_t4 AS level3
+        r.res_id, r.creation_date, r.status -- for where clause
+   FROM  res_x r
+   WHERE NOT (EXISTS ( SELECT t.level1, t.level2, t.level3
+           FROM af_target t
+          WHERE r.custom_t3 = t.level1 AND date_part( 'year', r.doc_date) = t.level2 AND r.custom_t4 = t.level3));
+   
+CREATE OR REPLACE VIEW af_view_customer_view AS
+ SELECT substring(r.custom_t4, 1, 1) AS level1,  r.custom_t4 AS level2, date_format(r.doc_date, '%Y') AS level3
+        r.res_id, r.creation_date, r.status -- for where clause
+   FROM  res_x r
+   WHERE status <> 'DEL' and date_part( 'year', doc_date) is not null ;
+    AND NOT (EXISTS ( SELECT t.level1, t.level2, t.level3
+           FROM af_target t
+          WHERE substring(r.custom_t4, 1, 1) = t.level1 AND r.custom_t4 = t.level2 AND date_part( 'year', r.doc_date) = t.level3));
+
+-- View used to display trees
+CREATE OR REPLACE VIEW af_view_year_target_view AS
+ SELECT af.level1, af.level1_id, af.level1 as level1_label, af.level2, af.level2_id, af.level2 as level2_label, af.level3, af.level3_id, af.level3 as level3_label
+   FROM af_view_year_target af;
+
+CREATE OR REPLACE VIEW af_view_customer_target_view AS
+ SELECT af.level1, af.level1_id, af.level1 as level1_label, af.level2, af.level2_id, af.level2 as level2_label, af.level3, af.level3_id, af.level3 as level3_label
+   FROM af_view_customer_target af ;
