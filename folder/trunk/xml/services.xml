@@ -97,4 +97,30 @@
    <system_service>false</system_service>
    <enabled>true</enabled>
  </SERVICE>
+ <SERVICE>
+   <id>folder_freeze</id>
+   <name>_FOLDER_FREEZE</name>
+   <comment>_FOLDER_FREEZE</comment>
+   <servicepage>folder_freeze.php</servicepage>
+   <servicetype>use</servicetype>
+   <system_service>false</system_service>
+   <enabled>true</enabled>
+   <WHEREAMIUSED>
+     <page>show_folder</page>
+     <nature>include</nature>
+   </WHEREAMIUSED>
+ </SERVICE>
+ <SERVICE>
+   <id>close_folder</id>
+   <name>_CLOSE_FOLDER</name>
+   <comment>_CLOSE_FOLDER</comment>
+   <servicepage>close_folder.php</servicepage>
+   <servicetype>use</servicetype>
+   <system_service>false</system_service>
+   <enabled>true</enabled>
+   <WHEREAMIUSED>
+     <page>show_folder</page>
+     <nature>include</nature>
+   </WHEREAMIUSED>
+ </SERVICE>
 </root>

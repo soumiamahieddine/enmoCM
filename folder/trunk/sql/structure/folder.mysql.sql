@@ -12,6 +12,7 @@ CREATE TABLE IF NOT EXISTS folders (
   folder_level int(2) default '1',
   creation_date datetime NOT NULL,
   folder_out_id int(8) default NULL,
+  is_frozen char(1) default 'N',
   custom_t1 varchar(255) collate utf8_unicode_ci default NULL,
   custom_n1 int(8) default NULL,
   custom_f1 decimal(10,0) default NULL,

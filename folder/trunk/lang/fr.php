@@ -197,4 +197,19 @@ if (!defined('_THIS_FOLDER'))  define('_THIS_FOLDER', 'ce dossier');
 if (!defined('_LABEL'))  define('_LABEL', 'Libelle');
 if (!defined('_ALL_FOLDERS'))  define('_ALL_FOLDERS', 'Tous les dossiers');
 if (!defined('_FOLDER_DELETED'))  define('_FOLDER_DELETED', 'Dossier supprim&eacute;');
-?>
+
+if (!defined('_FREEZE_FOLDER_SERVICE')) {
+    define('_FREEZE_FOLDER_SERVICE', 'Gel et d&eacute;gel des dossiers');
+}
+if (!defined('_FREEZE_FOLDER')) {
+    define('_FREEZE_FOLDER', 'Geler le dossier');
+}
+if (!defined('_UNFREEZE_FOLDER')) {
+    define('_UNFREEZE_FOLDER', 'D&eacute;geler le dossier');
+}
+if (!defined('_CLOSE_FOLDER')) {
+    define('_CLOSE_FOLDER', 'Cl&ocirc;turer le dossier');
+}
+if (!defined('_FOLDER_CLOSED')) {
+    define('_FOLDER_CLOSED', 'Dossier clotur&eacute;');
+}

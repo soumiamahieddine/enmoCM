@@ -20,6 +20,7 @@ CREATE TABLE folders
   folder_level smallint DEFAULT (1)::smallint,
   creation_date timestamp without time zone NOT NULL,
   folder_out_id bigint,
+  is_frozen character(1) NOT NULL DEFAULT 'N',
   custom_t1 character varying(255) DEFAULT NULL::character varying,
   custom_n1 bigint,
   custom_f1 numeric,

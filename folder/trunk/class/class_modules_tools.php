@@ -14,6 +14,13 @@
 require_once 'core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
 . 'class_request.php';
 require_once 'core' . DIRECTORY_SEPARATOR . 'core_tables.php';
+require_once 'modules' . DIRECTORY_SEPARATOR . 'folder' . DIRECTORY_SEPARATOR
+    . 'class' . DIRECTORY_SEPARATOR . 'class_admin_foldertypes.php';
+require_once 'modules/folder/folder_tables.php';
+require_once "core" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR
+    . "class_history.php";
+
+
 class folder extends request
 {
 	/**
@@ -129,6 +136,13 @@ class folder extends request
 	private $desarchive;
 
 	/**
+	* Folder is in frozen state or not
+    * @access private
+    * @var string
+    */
+	private $is_frozen;
+
+	/**
 	* Dynamic index
     * @access private
     * @var array
@@ -183,7 +197,6 @@ class folder extends request
 	*/
 	function load_folder($id, $table)
 	{
-		require_once('modules'.DIRECTORY_SEPARATOR.'folder'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_admin_foldertypes.php');
 		$ft = new foldertype();
 		$this->connect();
 		$this->query("select foldertype_id from ".$table." where folders_system_id = ".$id."");
@@ -192,12 +205,15 @@ class folder extends request
 		$this->system_id = $id;
 		$tab_index = $ft->get_indexes($this->foldertype_id);
 
-		$fields = " folder_id, parent_id, folder_name, subject, description, author, typist, status, folder_level, creation_date,folder_out_id, is_complete, is_folder_out, last_modified_date, folder_name";
+		$fields = " folder_id, parent_id, folder_name, subject, description, "
+		    . "author, typist, status, folder_level, creation_date, "
+		    . "folder_out_id, is_complete, is_folder_out, last_modified_date, "
+		    . "folder_name, is_frozen";
 		foreach(array_keys($tab_index) as $key)
 		{
 			$fields .= ", ".$key;
 		}
-		$this->query("select ".$fields." from ".$_SESSION['tablename']['fold_folders']." where folders_system_id = ".$id."");
+		$this->query("select ".$fields." from ".FOLD_FOLDERS_TABLE." where folders_system_id = ".$id."");
 		//$this->show();
 		$res = $this->fetch_object();
 
@@ -211,6 +227,7 @@ class folder extends request
 		$this->folder_out_id = $res->folder_out_id;
 		$this->complete = $res->is_complete;
 		$this->desarchive = $res->is_folder_out;
+		$this->is_frozen = $res->is_frozen;
 		$this->last_modified_date = $this->format_date_db($res->last_modified_date, true);
 
 		foreach(array_keys($tab_index) as $key)
@@ -261,7 +278,7 @@ class folder extends request
 		else
 		{
 			$this->connect();
-			$this->query("select folder_id from ".$_SESSION['tablename']['fold_folders']." where folder_id= '".$_SESSION['m_admin']['folder']['folder_id'] ."'");
+			$this->query("select folder_id from ".FOLD_FOLDERS_TABLE." where folder_id= '".$_SESSION['m_admin']['folder']['folder_id'] ."'");
 			if($this->nb_result() > 0)
 			{
 				$_SESSION['error'] = $_SESSION['m_admin']['folder']['folder_id'] ." "._ALREADY_EXISTS."<br />";
@@ -271,7 +288,7 @@ class folder extends request
 			else
 			{
 				$this->connect();
-				$this->query("INSERT INTO ".$_SESSION['tablename']['fold_folders']." (folder_id, folder_name, foldertype_id,creation_date, typist, last_modified_date, parent_id,folder_level) VALUES ('".$this->protect_string_db($_SESSION['m_admin']['folder']['folder_id'])."', '".$this->protect_string_db($_SESSION['m_admin']['folder']['folder_name'])."',".$_SESSION['m_admin']['folder']['foldertype_id'].",  ".$this->current_datetime().", '".$_SESSION['user']['UserId']."', ".$this->current_datetime().", ".$_SESSION['m_admin']['folder']['folder_parent'].", ".$_SESSION['m_admin']['folder']['folder_level']." )");
+				$this->query("INSERT INTO ".FOLD_FOLDERS_TABLE." (folder_id, folder_name, foldertype_id,creation_date, typist, last_modified_date, parent_id,folder_level) VALUES ('".$this->protect_string_db($_SESSION['m_admin']['folder']['folder_id'])."', '".$this->protect_string_db($_SESSION['m_admin']['folder']['folder_name'])."',".$_SESSION['m_admin']['folder']['foldertype_id'].",  ".$this->current_datetime().", '".$_SESSION['user']['UserId']."', ".$this->current_datetime().", ".$_SESSION['m_admin']['folder']['folder_parent'].", ".$_SESSION['m_admin']['folder']['folder_level']." )");
 				$this->query('select folders_system_id from '.$_SESSION['tablename']['fold_folders']." where folder_id = '".$this->protect_string_db($_SESSION['m_admin']['folder']['folder_id'])."'");
 				$res = $this->fetch_object();
 				$id = $res->folders_system_id;
@@ -283,14 +300,14 @@ class folder extends request
 				if(!empty($query))
 				{
 					$query = preg_replace('/^,/', '', $query);
-					$query = "update ".$_SESSION['tablename']['fold_folders']." set ".$query." where folders_system_id = ".$id;
+					$query = "update ".FOLD_FOLDERS_TABLE." set ".$query." where folders_system_id = ".$id;
 					$this->query($query);
 				}
 				if($_SESSION['history']['folderadd'] == "true")
 				{
-					require("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
+					require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 					$hist = new history();
-					$hist->add($_SESSION['tablename']['fold_folders'], $id ,"ADD",_FOLDER_ADDED." : ".$_SESSION['m_admin']['folder']['folder_id'] , $_SESSION['config']['databasetype'], 'folder');
+					$hist->add(FOLD_FOLDERS_TABLE, $id ,"ADD",_FOLDER_ADDED." : ".$_SESSION['m_admin']['folder']['folder_id'] , $_SESSION['config']['databasetype'], 'folder');
 				}
 
 				$_SESSION['error'] = _FOLDER_ADDED;
@@ -307,7 +324,6 @@ class folder extends request
 	*/
 	private function checks_folder_data()
 	{
-		require_once('modules'.DIRECTORY_SEPARATOR.'folder'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR."class_admin_foldertypes.php");
 		$foldertype = new foldertype();
 
 		if(isset($_REQUEST['folder_id']) && !empty($_REQUEST['folder_id']))
@@ -388,6 +404,7 @@ class folder extends request
 		$folder['folder_out_id'] = $this->folder_out_id ;
 		$folder['complete'] = $this->complete ;
 		$folder['desarchive'] = $this->desarchive ;
+		$folder['is_frozen'] = $this->is_frozen ;
 		$folder['coll_id'] = $this->coll_id ;
 		$folder['last_modified_date'] = $this->last_modified_date ;
 		$folder['index'] = array();
@@ -449,6 +466,10 @@ class folder extends request
 		elseif($field_name == 'desarchive')
 		{
 			return $this->desarchive;
+		}
+	    elseif($field_name == 'is_frozen')
+		{
+			return $this->is_frozen;
 		}
 		elseif($field_name == 'coll_id')
 		{
@@ -627,8 +648,6 @@ class folder extends request
 
 	public function update_folder($values, $id_to_update)
 	{
-		require_once('modules'.DIRECTORY_SEPARATOR.'folder'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_admin_foldertypes.php');
-		require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_request.php');
 		$data = array();
 		$foldertype = new foldertype();
 		$request = new request();
@@ -662,7 +681,7 @@ class folder extends request
 			{
 				require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 				$hist = new history();
-				$hist->add($_SESSION['tablename']['fold_folders'], $id_to_update, "UP", $_SESSION['error'], $_SESSION['config']['databasetype'],'apps');
+				$hist->add(FOLD_FOLDERS_TABLE, $id_to_update, "UP", $_SESSION['error'], $_SESSION['config']['databasetype'],'apps');
 			}
 		}
 		$_SESSION['error_page'] = $_SESSION['error'];
@@ -677,6 +696,26 @@ class folder extends request
 			}
 		</script>
 		<?php
+	}
+
+	public function closeFolder($folderId)
+	{
+	    if (empty($folderId)) {
+	         return false;
+	    }
+	    $this->connect();
+	    $this->query(
+	    	"update " . FOLD_FOLDERS_TABLE . " set status = 'END' "
+	        . "where folders_system_id = " . $folderId
+	    );
+	    if ($_SESSION['history']['folderup']) {
+			$hist = new history();
+			$msg = _FOLDER_CLOSED .' : ' . $folderId ;
+			$hist->add(
+			    FOLD_FOLDERS_TABLE, $folderId, "UP", $msg,
+			    $_SESSION['config']['databasetype'], 'apps'
+			);
+		}
 	}
 
 	public function delete_folder($folder_sys_id, $foldertype)
@@ -759,4 +798,3 @@ class folder extends request
 		return $empty;
 	}
 }
-?>
