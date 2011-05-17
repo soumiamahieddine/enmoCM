@@ -66,12 +66,12 @@ echo $_SESSION['config']['businessappurl'] . "static.php?filename=search_proj_of
 echo _PROJECT;
 ?> :</label></td>
                 <td class="indexing_field">
-                    <input type="text" name="project" id="project" size="50" />
+                    <input type="text" name="project" id="project" size="45" />
                     <div id="show_project" class="autocomplete"></div>
                 </td>
                  <td align="right"><?php  echo _MARKET;?> :</td>
                 <td>
-                    <input type="text" name="market" id="market" size="50" />
+                    <input type="text" name="market" id="market" size="45" />
                     <div id="show_market" class="autocomplete"></div>
                 </td>
                 <td>
@@ -93,11 +93,11 @@ echo $_SESSION['config']['businessappurl']."static.php?filename=reset.gif";
     <!-- Display the layout of search_customer -->
     <table width="100%" height="100%" border="1">
         <tr>
-            <td width="55%" height="720px" style="vertical-align: top;">
-                <div id="myTree"></div>
+            <td width="55%" height="720px" style="vertical-align: top; text-align: left;">
+                <div id="myTree">&nbsp;</div>
             </td>
-            <td>
-                <div id="docView"><p align="center"><img src="<?php echo $_SESSION['config']['businessappurl'].'static.php?filename=bg_home_home.gif'; ?>" alt="Maarch" /></p></div>
+            <td width="45%">
+                <div id="docView"><p align="center"><img src="<?php echo $_SESSION['config']['businessappurl'].'static.php?filename=bg_home_home.gif'; ?>"  width="400px" alt="Maarch" /></p></div>
             </td>
         </tr>
     </table>
@@ -106,10 +106,19 @@ echo $_SESSION['config']['businessappurl']."static.php?filename=reset.gif";
     launch_autocompleter_folders('<?php
 echo $_SESSION['config']['businessappurl'];
 ?>index.php?display=true&module=folder&page=autocomplete_folders&mode=project', 'project');
+    launch_autocompleter_folders('<?php
+echo $_SESSION['config']['businessappurl'];
+?>index.php?display=true&module=folder&page=autocomplete_folders&mode=market', 'market');
     function submitForm()
     {
         var project = $('project').value;
-        tree_init('myTree', project);
+        if (project) {
+            tree_init('myTree', project);
+        }
+        var market = $('market').value;
+        if (market) {
+        	tree_init('myTree', market);
+        }
     }
 </script>
 <script type="text/javascript" src="<?php
