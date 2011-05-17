@@ -55,8 +55,10 @@ class admin extends functions
 		echo '<div  id="admin_apps">';
 		for($i=0;$i<count($app_services);$i++)
 		{
-			if($app_services[$i]['servicetype'] == "admin" && $_SESSION['user']['services'][$app_services[$i]['id']])
-			{
+			if ($app_services[$i]['servicetype'] == "admin"
+			    && isset($_SESSION['user']['services'][$app_services[$i]['id']])
+			    && $_SESSION['user']['services'][$app_services[$i]['id']]
+			) {
 				?>
                 <div class="admin_item" id="<?php  echo $app_services[$i]['style'];?>" title="<?php  echo $app_services[$i]['comment'];?>" onclick="window.top.location='<?php  echo $app_services[$i]['servicepage'];?>';">
                     <div class="sum_margin" <?php echo $debug_style; ?>>

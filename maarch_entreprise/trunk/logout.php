@@ -44,7 +44,7 @@ $_SESSION['custom_override_id'] = $custom;
 $_SESSION['config']['corepath'] = $corePath ;
 $_SESSION['config']['app_id'] = $appId ;
 
-if ($_GET['logout']) {
+if (isset($_GET['logout']) && $_GET['logout']) {
     $logoutExtension = "&logout=true";
 } else {
     $logoutExtension = "";

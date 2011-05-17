@@ -174,6 +174,7 @@ if (! empty($_SESSION['error'])) {
                // $businessAppTools->load_app_var_session($_SESSION['user']);
                 //$core->load_var_session($_SESSION['modules'], $_SESSION['user']);
                 $core->load_menu($_SESSION['modules']);
+               // exit;
             }
             if (empty($_SESSION['error'])) {
                 $_SESSION['error'] = $res['error'];

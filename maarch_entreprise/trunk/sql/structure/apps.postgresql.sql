@@ -143,6 +143,7 @@ CREATE TABLE res_x
   policy_id character varying(32) DEFAULT NULL::character varying,
   cycle_id character varying(32) DEFAULT NULL::character varying,
   is_multi_docservers character(1) NOT NULL DEFAULT 'N'::bpchar,
+  is_frozen character(1) NOT NULL DEFAULT 'N'::bpchar,
   custom_t1 text,
   custom_n1 bigint,
   custom_f1 numeric,
@@ -263,6 +264,7 @@ CREATE TABLE res_letterbox
   policy_id character varying(32),
   cycle_id character varying(32),
   is_multi_docservers character(1) NOT NULL DEFAULT 'N'::bpchar,
+  is_frozen character(1) NOT NULL DEFAULT 'N'::bpchar,
   custom_t1 text,
   custom_n1 bigint,
   custom_f1 numeric,
@@ -359,7 +361,7 @@ CREATE OR REPLACE VIEW res_view AS
  r.custom_d10 AS doc_custom_d10, r.custom_n1 AS doc_custom_n1, r.custom_n2 AS doc_custom_n2,
  r.custom_n3 AS doc_custom_n3, r.custom_n4 AS doc_custom_n4, r.custom_n5 AS doc_custom_n5,
  r.custom_f1 AS doc_custom_f1, r.custom_f2 AS doc_custom_f2, r.custom_f3 AS doc_custom_f3,
- r.custom_f4 AS doc_custom_f4, r.custom_f5 AS doc_custom_f5
+ r.custom_f4 AS doc_custom_f4, r.custom_f5 AS doc_custom_f5, r.is_frozen as res_is_frozen
    FROM  doctypes d, doctypes_first_level dfl, doctypes_second_level dsl, res_x r
    WHERE r.type_id = d.type_id
    AND d.doctypes_first_level_id = dfl.doctypes_first_level_id
@@ -384,7 +386,7 @@ CREATE VIEW res_view_letterbox AS
     d.doctypes_second_level_id, dsl.doctypes_second_level_label, 
     dsl.css_style as doctype_second_level_style, r.format, r.typist, 
     r.creation_date, r.relation, r.docserver_id, r.folders_system_id, 
-    f.folder_id, r.path, r.filename, r.fingerprint, r.offset_doc, r.filesize, 
+    f.folder_id, f.is_frozen as folder_is_frozen, r.path, r.filename, r.fingerprint, r.offset_doc, r.filesize, 
     r.status, r.work_batch, r.arbatch_id, r.arbox_id, r.page_count, r.is_paper, 
     r.doc_date, r.scan_date, r.scan_user, r.scan_location, r.scan_wkstation,
     r.scan_batch, r.doc_language, r.description, r.source, r.author, 
@@ -436,7 +438,8 @@ CREATE VIEW res_view_letterbox AS
     ca.case_id, ca.case_label, ca.case_description, en.entity_label, 
     cont.firstname AS contact_firstname, cont.lastname AS contact_lastname, 
     cont.society AS contact_society, u.lastname AS user_lastname,
-    u.firstname AS user_firstname, list.item_id AS dest_user_from_listinstance 
+    u.firstname AS user_firstname, list.item_id AS dest_user_from_listinstance,
+    r.is_frozen as res_is_frozen 
     FROM doctypes d, doctypes_first_level dfl, doctypes_second_level dsl,
     ((((((((((ar_batch a RIGHT JOIN res_letterbox r ON ((r.arbatch_id = a.arbatch_id))) 
     LEFT JOIN entities en ON (((r.destination)::text = (en.entity_id)::text))) 
