@@ -427,7 +427,7 @@ class admin_basket extends dbquery
                 . " " . $where, true
             );
         }
-        if (! $res) {
+        if (!isset($res) || !$res) {
             $_SESSION['error'] .= " " . $_SESSION['m_admin']['basket']['coll_id'];
             $res2 = false;
         }
