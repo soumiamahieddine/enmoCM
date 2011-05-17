@@ -835,7 +835,7 @@ class basket extends dbquery
          $tab['actions'] = $this->_getActionsFromGroupbaket(
              $basketId, $primaryGroup
          );
-	
+
          $tab['abs_basket'] = $absBasket;
          $tab['is_virtual'] = $isVirtual;
          $tab['basket_owner'] = $basketOwner;
@@ -916,7 +916,9 @@ class basket extends dbquery
             $tab['id'] .= "_" . $basketOwner;
         }
         /// TO DO : Test if tmp_user is empty
-        if ($tmpUser <> $_SESSION['user']['UserId']) {
+        if (isset($_SESSION['user']['UserId'])
+            && $tmpUser <> $_SESSION['user']['UserId']
+        ) {
             $this->query(
                 "select group_id from " . USERGROUP_CONTENT_TABLE
                 . " where primary_group = 'Y' and user_id = '" . $tmpUser . "'"

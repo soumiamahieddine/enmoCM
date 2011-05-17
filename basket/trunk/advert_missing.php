@@ -29,7 +29,7 @@
 * @ingroup basket
 */
 
-if ($_POST['value'] == "submit")
+if (isset($_POST['value']) && $_POST['value'] == "submit")
 {
 	$db = new dbquery();
 	$db->connect();
@@ -58,7 +58,7 @@ if ($_POST['value'] == "submit")
 ?>
 <h1 ><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_help_b.gif"  align="middle" /><?php echo _MISSING_ADVERT_TITLE; ?></h1>
 <div id="inner_content" class="clearfix">
-<h2 class="tit" align="center"><?php echo_MISSING_ADVERT_01; ?></h2>
+<h2 class="tit" align="center"><?php echo _MISSING_ADVERT_01; ?></h2>
 <p align="center"><?php echo _MISSING_ADVERT_02; ?> </p>
 <p align="center"><?php echo _MISSING_CHOOSE; ?></p>
 
