@@ -1048,7 +1048,8 @@ class core_tools extends functions
                                             ?>
                                             <input type="button" name="<?php  echo $modules_services[$value][$i]['id'];?>" value="<?php  echo $tmp;?>" onclick="window.open('<?php  echo  $_SESSION['config']['businessappurl'].'index.php?display=true&module='.$id_module."&page=".$modules_services[$id_module][$i]['servicepage'];?>', '<?php  echo $modules_services[$value][$i]['id'];?>','width=<?php  echo $modules_services[$value][$i]['whereamiused'][$k]['width'];?>,height=<?php  echo $modules_services[$value][$i]['whereamiused'][$k]['height'];?>,scrollbars=yes,resizable=yes' );" class="button" /><br/>
                                             <?php
-                                        } else if ($modules_services[$value][$i]['whereamiused'][$k]['nature'] == "include"
+                                        } else if ( isset($_SESSION['user']['services'][$modules_services[$value][$i]['id']])
+                                            && $modules_services[$value][$i]['whereamiused'][$k]['nature'] == "include"
                                         	&& $_SESSION['user']['services'][$modules_services[$value][$i]['id']]
                                         	&& ($servicenature == "all" || $servicenature == "include")
                                         	&& ! in_array(
