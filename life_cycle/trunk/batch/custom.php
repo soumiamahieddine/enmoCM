@@ -72,7 +72,7 @@ function createPDI($resInContainer)
         );
         $accessRight->appendChild($whereClause);
         $comment = $docXML->createElement(
-            'COMMENT', $securityRecordset->comment
+            'COMMENT', $securityRecordset->maarch_comment
         );
         $accessRight->appendChild($comment);
         $canInsert = $docXML->createElement(
