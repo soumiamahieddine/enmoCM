@@ -128,7 +128,15 @@ class business_app_tools extends dbquery
             $_SESSION['tablename']['saved_queries'] = (string) $tablename->saved_queries;
             $_SESSION['tablename']['contacts'] = (string) $tablename->contacts;
             $i = 0;
-			
+
+            if ( isset($_SESSION['custom_override_id']) && file_exists(
+            	'custom/' . $_SESSION['custom_override_id'] . '/'
+                . $_SESSION['config']['lang'] . '.php'
+            )
+            ) {
+               include_once 'custom/' . $_SESSION['custom_override_id'] . '/'
+                . $_SESSION['config']['lang'] . '.php';
+            }
             include_once 'apps' . DIRECTORY_SEPARATOR
                     . $_SESSION['config']['app_id'] . DIRECTORY_SEPARATOR
                     . 'lang' . DIRECTORY_SEPARATOR . $_SESSION['config']['lang']
@@ -138,10 +146,10 @@ class business_app_tools extends dbquery
                 $tmp = (string) $col->label;
                 if (!empty($tmp) && defined($tmp) && constant($tmp) <> NULL) {
                 	$tmp = constant($tmp);
-                }         
+                }
                 $extensions = $col->extensions;
                 $tab = array();
-                
+
                 if ($extensions->count()) {
                     $extensionTables = $extensions->table;
                     if ($extensionTables->count() > 0) {
@@ -240,7 +248,7 @@ class business_app_tools extends dbquery
                 if (!empty($tmp) && defined($tmp) && constant($tmp) <> NULL) {
                 	$tmp = constant($tmp);
                 }
-                
+
                 array_push(
                     $_SESSION['history_keywords'],
                     array(
@@ -298,7 +306,7 @@ class business_app_tools extends dbquery
             $i = 0;
             foreach ($xmlfile->ACTIONPAGE as $actionPage) {
                 $label = (string) $actionPage->LABEL;
-             	if (!empty($label) && defined($label) 
+             	if (!empty($label) && defined($label)
              		&& constant($label) <> NULL
              	) {
                 	$label = constant($label);
@@ -361,11 +369,11 @@ class business_app_tools extends dbquery
         $_SESSION['mail_categories'] = array();
         foreach ($categories->category as $cat) {
             $label = (string) $cat->label;
-        	if (!empty($label) && defined($label) 
+        	if (!empty($label) && defined($label)
              	&& constant($label) <> NULL
              ) {
                 $label = constant($label);
-            }	
+            }
             $_SESSION['mail_categories'][(string) $cat->id] = $label;
         }
         $_SESSION['default_category'] = (string) $categories->default_category;
@@ -374,11 +382,11 @@ class business_app_tools extends dbquery
         $mailNatures = $xmlfile->mail_natures;
         foreach ($mailNatures->nature as $nature ) {
             $label = (string) $nature->label;
-            if (!empty($label) && defined($label) 
+            if (!empty($label) && defined($label)
              	&& constant($label) <> NULL
              ) {
                 $label = constant($label);
-            }	
+            }
             $_SESSION['mail_natures'][(string) $nature->id] = $label;
         }
         $_SESSION['default_mail_nature'] = (string) $mailNatures->default_nature;
@@ -388,11 +396,11 @@ class business_app_tools extends dbquery
         $i = 0;
         foreach ($mailPriorities->priority as $priority ) {
             $label = (string) $priority;
-            if (!empty($label) && defined($label) 
+            if (!empty($label) && defined($label)
             	&& constant($label) <> NULL
             ) {
                 $label = constant($label);
-            }	
+            }
             $_SESSION['mail_priorities'][$i] = $label;
             $i++;
         }
@@ -403,7 +411,7 @@ class business_app_tools extends dbquery
         $i = 0;
         foreach ($mailTitles->nature as $title ) {
             $label = (string) $title->label;
-        	if (!empty($label) && defined($label) 
+        	if (!empty($label) && defined($label)
             	&& constant($label) <> NULL
             ) {
                 $label = constant($label);
@@ -622,12 +630,12 @@ class business_app_tools extends dbquery
         $titles = $xmlfile->titles;
         foreach ($titles->title as $title ) {
             $label = (string) $title->label;
-            if (!empty($label) && defined($label) 
+            if (!empty($label) && defined($label)
 	            && constant($label) <> NULL
 	        ) {
 	            $label = constant($label);
 	        }
-          
+
             $resTitles[(string) $title->id] = $label;
         }
 
@@ -666,12 +674,12 @@ class business_app_tools extends dbquery
         foreach ($titles->title as $title ) {
             if ($titleId == (string) $title->id) {
                 $label = (string) $title->label;
-	            if (!empty($label) && defined($label) 
+	            if (!empty($label) && defined($label)
 	            	&& constant($label) <> NULL
 	            ) {
 	                $label = constant($label);
 	            }
-               
+
                 return $label;
             }
         }
