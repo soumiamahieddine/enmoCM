@@ -1,45 +1,99 @@
 
-
-.default_style {
-    color:#000000;
+.default_style, .doctypes, .documents
+{
+    color: #000000;
+    font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+    font-weight: normal;
+    font-style: normal;
+    font-size: 12px;
 }
 
-.blue_style {
-    color:#0000FF;
+, .blue_style, .blue_style[selected=selected]
+{
+    color: #0000FF;
+    font-weight: bold;
+    font-style: normal;
+    font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+    font-size: 12px;
 }
 
-.yellow_style {
-    color:#FFFF00;
+.yellow_style, .yellow_style[selected=selected]
+{
+    color: #FFFF00;
+    font-weight: bold;
+    font-style: normal;
+    font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+    font-size: 12px;
 }
 
-.green_style {
-    color:#008000;
+.green_style, .green_style[selected]
+{
+    color: #008000;
+    font-weight: bold;
+    font-style: normal;
+    font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+    font-size: 12px;
 }
 
-.beige_style {
-    color:#D2B48C;
+.beige_style, .blue_style[selected=selected]
+{
+    color: #D2B48C;
+    font-weight: bold;
+    font-style: normal;
+    font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+    font-size: 12px;
 }
 
-.pink_style {
-    color:#FF00FF;
+.pink_style, .pink_style[selected="selected"]
+{
+    color: #FF00FF;
+    font-weight: bold;
+    font-style: normal;
+    font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+    font-size: 12px;
 }
 
-.red_style {
-    color:#FF0000;
+.red_style, .red_style[selected=selected]
+{
+    color: #FF0000;
+    font-weight: bold;
+    font-style: normal;
+    font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+    font-size: 12px;
 }
 
-.violet_style {
-    color:#800080;
+.violet_style, .violet_style[selected=selected]
+{
+    color: #800080;
+    font-weight: bold;
+    font-style: normal;
+    font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+    font-size: 12px;
 }
 
-.grey_style {
-    color:#808080;
+.grey_style,  .grey_style[selected=selected]
+{
+    color: #808080;
+    font-weight: bold;
+    font-style: normal;
+    font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+    font-size: 12px;
 }
 
-.orange_style {
-    color:#FF4500;
+.orange_style, .blue_style[selected=selected]
+{
+    color: #FF4500;
+    font-weight: bold;
+    font-style: normal;
+    font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+    font-size: 12px;
 }
 
-.brown_style {
-    color:#800000;
+.brown_style, .brown_style[selected=selected]
+{
+    color: #800000;
+    font-weight: bold;
+    font-style: normal;
+    font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+    font-size: 12px;
 }
