@@ -191,7 +191,7 @@ class life_cycle extends dbquery
         if (! isset($xml->frozen_cycles)) {
         	return $cycles;
         } 
-        foreach ($xml->frozen_cycles as $cycle) {
+        foreach ($xml->frozen_cycles->cycle as $cycle) {
         	$cycles [] = array(
         		'policy_id' => (string) $cycle->policy_id,
         		'cycle_id'  => (string) $cycle->cycle_id,
