@@ -70,6 +70,46 @@ INSERT INTO lc_cycles (policy_id, cycle_id, cycle_desc, sequence_number, where_c
 
 
 
+-- modules/postindexing/sql/data/postindexing.postgresql.sql
+
+
+-- POSTINDEXING FOLDERS
+--INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, enabled) VALUES ('folders', 'FoldersPostIndexingBasket', 'Dossiers ‡ vidÈocoder', 'Corbeilles des dossiers ‡ vidÈocoder', 'status =''NEW'' and count_document >0', 'N', 'Y');
+--INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (27, 'indexing', 'VidÈocoder le dossier', NULL, 'N', 'Y', 'postindex_folders', 'Y', 'postindexing', 'Y');
+--INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('TYPISTS', 'FoldersPostIndexingBasket', 2, NULL, NULL, 'postindexing_folders_list', 'N', 'N', 'N');
+--INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (27, '', 'TYPISTS', 'FoldersPostIndexingBasket', 'Y', 'N', 'N');
+--INSERT INTO groupbasket_redirect (group_id, basket_id, action_id, entity_id, keyword, redirect_mode) VALUES ('TYPISTS', 'FoldersPostIndexingBasket', 27, '', 'ALL_ENTITIES', 'ENTITY');
+
+
+-- modules/workflow/sql/data/workflow.postgresql.sql
+
+INSERT INTO wf_groupworklist VALUES (103, 1, NULL, 'superadmin');
+INSERT INTO wf_groupworklist VALUES (102, 1, NULL, 'ccharles');
+INSERT INTO wf_groupworklist VALUES (104, 1, NULL, 'bsaporta');
+
+
+INSERT INTO wf_worklist VALUES(1, 'Bons de travail', 'Bons de travail', '', 'Y', 'Y', 'list_tasks_todo_generic', 'Y', '');
+
+INSERT INTO wf_worklist_stamps VALUES(1, 1, 'FACTURE VALIDEE', 150, 400, 30);
+
+INSERT INTO wf_tasks VALUES ('WF_INVOICE', 'START', 'Validation facture - Invoice validation', NULL, NULL, 'coll_2', '', 'process.php', 48);
+INSERT INTO wf_tasks VALUES ('WF_INVOICE', 'T_CHECK', 'Visa du Manager - Manager visa', NULL, NULL, 'coll_2', '', 'process.php', 48);
+INSERT INTO wf_tasks VALUES ('WF_INVOICE', 'T_SIGN', 'Signature du responsable - Executive signature', NULL, NULL, 'coll_2', '', 'process.php', 1);
+
+INSERT INTO wf_actors VALUES ('WF_INVOICE', 'START', 0, NULL, 'Accountants', NULL, 'N');
+INSERT INTO wf_actors VALUES ('WF_INVOICE', 'T_CHECK', 0, NULL, 'Managers', NULL, 'N');
+INSERT INTO wf_actors VALUES ('WF_INVOICE', 'START', 1, 'ccharles', NULL, NULL, 'N');
+INSERT INTO wf_actors VALUES ('WF_INVOICE', 'T_SIGN', 0, 'pparker', NULL, NULL, 'N');
+
+INSERT INTO wf_events VALUES ('WF_INVOICE', 'START', 0, 'Lancer le workflow - Launch WF', 'Lancer le workflow', 'T_CHECK', 0, '', 0, 'LAUNCH', 'CHK');
+INSERT INTO wf_events VALUES ('WF_INVOICE', 'T_CHECK', 0, 'Rejeter la facture - Reject invoice', 'Rejeter - Reject', '', 0, '', 0, 'REJECT', 'END');
+INSERT INTO wf_events VALUES ('WF_INVOICE', 'T_CHECK', 0, 'Valider la facture - Validate invoice', 'Valider', '', 0, '', 0, 'VALIDATION', 'END');
+INSERT INTO wf_events VALUES ('WF_INVOICE', '', 0, '', '', '', 0, '', 0, '', '');
+INSERT INTO wf_events VALUES ('WF_INVOICE', 'T_CHECK', 0, 'Demander avis du responsable - Ask manager', 'Demander avis du responsable - Ask manager', 'T_SIGN', 0, '', 0, 'ADVICE', 'SGN');
+INSERT INTO wf_events VALUES ('WF_INVOICE', 'T_SIGN', 0, 'Viser la facture - Manager visa', 'Valider - Validate', '', 0, '', 0, 'VALIDATION', 'END');
+INSERT INTO wf_events VALUES ('WF_INVOICE', 'T_SIGN', 0, 'Rejeter - Reject', 'Rejeter - Reject', '', 0, '', 0, 'REJECT', 'REJ');
+
+
 -- apps/maarch_entreprise/sql/data/apps.postgresql.sql
 
 -- Maarch LetterBox v3 sample data : Application
@@ -202,8 +242,8 @@ INSERT INTO "security" (group_id, coll_id, where_clause, maarch_comment, can_ins
 INSERT INTO "security" (group_id, coll_id, where_clause, maarch_comment, can_insert, can_update, can_delete) VALUES ('CORRESPONDANTS', 'letterbox_coll', '(DESTINATION = @my_primary_entity or DESTINATION in (@subentities[@my_primary_entity])) or DESTINATION is NULL', '', 'N', 'N', 'N');
 
 -- ACTIONS and BASKETS
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (15, '', 'Prelever une archive', 'OUT', 'N', 'Y', 'confirm_status', 'Y', 'advanced_physical_archive', 'N');
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (16, '', 'Reintegrer une archive', 'POS', 'N', 'Y', 'confirm_status', 'Y', 'advanced_physical_archive', 'N');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (15, '', 'Prelever une archive', 'OUT', 'N', 'Y', 'confirm_apa', 'Y', 'advanced_physical_archive', 'N');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (16, '', 'Reintegrer une archive', 'POS', 'N', 'Y', 'confirm_apa', 'Y', 'advanced_physical_archive', 'N');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (2, 'to_validate', 'A valider', 'VAL', 'Y', 'N', 'confirm_status', 'N', 'apps', 'N');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (21, 'indexing', 'Indexation', 'NEW', 'N', 'Y', 'index_mlb', 'Y', 'apps', 'Y');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (18, '', 'A valider', 'NEW', 'N', 'Y', '', 'Y', 'apps', 'N');
@@ -409,10 +449,8 @@ INSERT INTO parameters (id, param_value_string, param_value_int) VALUES
 ('ar_index_pparker_outgoing', NULL, 3),
 ('ar_index_pparker_internal', NULL, 3),
 ('ar_index_pparker_market_document', NULL, 3),
-('postindexing_max_files', NULL, 15),
 ('postindexing_workbatch', NULL, 40),
-('database_version', NULL, 112),
-('postindexing_max_time', NULL, 600);
+('database_version', NULL, 112);
 
 INSERT INTO templates (id, label, creation_date, template_comment, content) VALUES (2, 'AR_MAARCH', '2009-08-20 16:01:00', 'Accus√© de r√©ception Maarch', '<p style="TEXT-ALIGN: left"><img src="img/default_maarch.gif" alt="" width="278" height="80" />&nbsp;</p>
 <p><em><font face="Arial Black" size="2" color="#3366ff">La gestion de courriers Open source !</font></em><br />Mail : info@maarch.org<br />Web : http://www.maarch.org</p>

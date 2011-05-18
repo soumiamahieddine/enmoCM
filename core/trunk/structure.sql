@@ -1,4 +1,4 @@
-
+﻿
 
 -- core/sql/structure/core.postgresql.sql
 
@@ -830,6 +830,47 @@ CREATE TABLE cases_res
 
 
 
+-- modules/doc_project/sql/structure/doc_project.postgresql.sql
+
+CREATE TABLE project_res
+(
+  project_id bigint NOT NULL,
+  res_id bigint NOT NULL,
+  coll_id character varying(32) NOT NULL,
+  CONSTRAINT projects_res_pkey PRIMARY KEY (project_id, res_id, coll_id)
+)
+WITH (OIDS=FALSE);
+
+CREATE TABLE project_users
+(
+  project_id bigint NOT NULL,
+  user_id character varying(32) NOT NULL,
+  CONSTRAINT projects_users_pkey PRIMARY KEY (project_id, user_id)
+)
+WITH (OIDS=FALSE);
+
+CREATE SEQUENCE project_id_seq
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 10
+  CACHE 1;
+
+
+CREATE TABLE projects
+(
+  project_id bigint NOT NULL DEFAULT nextval('project_id_seq'::regclass),
+  project_label character varying(65),
+  description character varying(255),
+  creator character varying(255),
+  custom_t1 character varying(255),
+  rights bigint,
+  creation_date timestamp without time zone NOT NULL,
+  CONSTRAINT projects_pkey PRIMARY KEY (project_id)
+)
+WITH (OIDS=FALSE);
+
+
 -- modules/entities/sql/structure/entities.postgresql.sql
 
 
@@ -936,6 +977,7 @@ CREATE TABLE folders
   folder_level smallint DEFAULT (1)::smallint,
   creation_date timestamp without time zone NOT NULL,
   folder_out_id bigint,
+  is_frozen character(1) NOT NULL DEFAULT 'N',
   custom_t1 character varying(255) DEFAULT NULL::character varying,
   custom_n1 bigint,
   custom_f1 numeric,
@@ -1305,6 +1347,7 @@ CREATE TABLE ar_batch
 ) ;
 
 
+
 -- modules/reports/sql/structure/reports.postgresql.sql
 
 CREATE TABLE usergroups_reports
@@ -1362,6 +1405,115 @@ CREATE TABLE templates_doctype_ext
   is_generated character(1) NOT NULL DEFAULT 'N'::bpchar
 )
 WITH (OIDS=FALSE);
+
+
+-- modules/workflow/sql/structure/workflow.postgresql.sql
+
+CREATE TABLE  wf_actors (
+  wf_id character varying(255)  NOT NULL,
+  task_id character varying(32)  NOT NULL,
+  sequence integer NOT NULL,
+  user_id character varying(32)  DEFAULT NULL,
+  group_id character varying(32)  DEFAULT NULL,
+  redirect_grouplist character varying(255)  DEFAULT NULL,
+  can_redirect character(1)  NOT NULL DEFAULT 'N'::bpchar,
+  CONSTRAINT wf_actors_pkey PRIMARY KEY  (wf_id,task_id,sequence)
+) ;
+
+CREATE TABLE  wf_events (
+  wf_id character varying(255)  NOT NULL,
+  task_id character varying(255)  NOT NULL,
+  sequence integer DEFAULT 0,
+  event_desc character varying(255)  DEFAULT NULL,
+  event_label character varying(255)  NOT NULL,
+  next_task_id character varying(255)  NOT NULL,
+  branch_id bigint NOT NULL,
+  where_clause text  NOT NULL,
+  sort_order bigint NOT NULL,
+  event_id character varying(32)  NOT NULL,
+  res_status character varying(32)  NOT NULL
+) ;
+
+CREATE SEQUENCE worklist_security_id_seq
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 10
+  CACHE 1;
+
+CREATE TABLE  wf_groupworklist (
+  worklist_security_id bigint NOT NULL DEFAULT nextval('worklist_security_id_seq'::regclass),
+  worklist_id bigint NOT NULL,
+  group_id character varying(255)  DEFAULT NULL,
+  user_id character varying(255)  DEFAULT NULL,
+   CONSTRAINT wf_groupworklist_pkey PRIMARY KEY  (worklist_security_id)
+) ;
+
+CREATE TABLE  wf_insts (
+  wf_id character varying(255)  NOT NULL,
+  res_id bigint NOT NULL,
+  sequence integer NOT NULL,
+  task_id character varying(255)  NOT NULL,
+  user_id character varying(32)  NOT NULL,
+  group_id character varying(32)  NOT NULL,
+  begin_date date NOT NULL,
+  inst_date date NOT NULL,
+  actual_user_id character varying(255)  DEFAULT NULL,
+  "status" character varying(255)  DEFAULT NULL,
+  due_date date NOT NULL
+) ;
+
+CREATE TABLE  wf_tasks (
+  wf_id character varying(255)  NOT NULL,
+  task_id character varying(32)  NOT NULL,
+  task_desc character varying(255)  NOT NULL,
+  pre_process_script character varying(255)  DEFAULT NULL,
+  post_process_script character varying(255)  DEFAULT NULL,
+  coll_id character varying(255)  NOT NULL,
+  where_clause character varying(1024)  DEFAULT NULL,
+  process_script character varying(255)  NOT NULL,
+  task_delay bigint DEFAULT NULL,
+  CONSTRAINT wf_tasks_pkey PRIMARY KEY  (wf_id,task_id)
+) ;
+
+CREATE SEQUENCE worklist_id_seq
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 10
+  CACHE 1;
+
+
+CREATE TABLE  wf_worklist (
+  worklist_id  bigint NOT NULL DEFAULT nextval('worklist_id_seq'::regclass),
+  worklist_name character varying(255)  NOT NULL,
+  worklist_desc character varying(255)  NOT NULL,
+  worklist_clause text  NOT NULL,
+  is_generic character(1)  NOT NULL DEFAULT 'Y'::bpchar,
+  enabled character(1)  NOT NULL DEFAULT 'Y'::bpchar,
+  result_page character varying(255)  NOT NULL,
+  custom_stamp character(1)  NOT NULL DEFAULT 'Y'::bpchar,
+  wf_id character varying(255)  NOT NULL,
+  CONSTRAINT wf_worklist_pkey PRIMARY KEY  (worklist_id)
+) ;
+
+CREATE SEQUENCE stamp_id_seq
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 10
+  CACHE 1;
+
+
+CREATE TABLE  wf_worklist_stamps (
+  worklist_id bigint NOT NULL,
+  stamp_id bigint NOT NULL DEFAULT nextval('stamp_id_seq'::regclass),
+  stamp_label character varying(255)  NOT NULL,
+  x_pos integer NOT NULL,
+  y_pos integer NOT NULL,
+  rotation integer NOT NULL,
+   CONSTRAINT wf_worklist_stamps_pkey PRIMARY KEY  (worklist_id,stamp_id)
+) ;
 
 
 -- apps/maarch_entreprise/sql/structure/apps.postgresql.sql
@@ -1511,6 +1663,7 @@ CREATE TABLE res_x
   policy_id character varying(32) DEFAULT NULL::character varying,
   cycle_id character varying(32) DEFAULT NULL::character varying,
   is_multi_docservers character(1) NOT NULL DEFAULT 'N'::bpchar,
+  is_frozen character(1) NOT NULL DEFAULT 'N'::bpchar,
   custom_t1 text,
   custom_n1 bigint,
   custom_f1 numeric,
@@ -1631,6 +1784,7 @@ CREATE TABLE res_letterbox
   policy_id character varying(32),
   cycle_id character varying(32),
   is_multi_docservers character(1) NOT NULL DEFAULT 'N'::bpchar,
+  is_frozen character(1) NOT NULL DEFAULT 'N'::bpchar,
   custom_t1 text,
   custom_n1 bigint,
   custom_f1 numeric,
@@ -1727,7 +1881,7 @@ CREATE OR REPLACE VIEW res_view AS
  r.custom_d10 AS doc_custom_d10, r.custom_n1 AS doc_custom_n1, r.custom_n2 AS doc_custom_n2,
  r.custom_n3 AS doc_custom_n3, r.custom_n4 AS doc_custom_n4, r.custom_n5 AS doc_custom_n5,
  r.custom_f1 AS doc_custom_f1, r.custom_f2 AS doc_custom_f2, r.custom_f3 AS doc_custom_f3,
- r.custom_f4 AS doc_custom_f4, r.custom_f5 AS doc_custom_f5
+ r.custom_f4 AS doc_custom_f4, r.custom_f5 AS doc_custom_f5, r.is_frozen as res_is_frozen
    FROM  doctypes d, doctypes_first_level dfl, doctypes_second_level dsl, res_x r
    WHERE r.type_id = d.type_id
    AND d.doctypes_first_level_id = dfl.doctypes_first_level_id
@@ -1752,7 +1906,7 @@ CREATE VIEW res_view_letterbox AS
     d.doctypes_second_level_id, dsl.doctypes_second_level_label, 
     dsl.css_style as doctype_second_level_style, r.format, r.typist, 
     r.creation_date, r.relation, r.docserver_id, r.folders_system_id, 
-    f.folder_id, r.path, r.filename, r.fingerprint, r.offset_doc, r.filesize, 
+    f.folder_id, f.is_frozen as folder_is_frozen, r.path, r.filename, r.fingerprint, r.offset_doc, r.filesize, 
     r.status, r.work_batch, r.arbatch_id, r.arbox_id, r.page_count, r.is_paper, 
     r.doc_date, r.scan_date, r.scan_user, r.scan_location, r.scan_wkstation,
     r.scan_batch, r.doc_language, r.description, r.source, r.author, 
@@ -1804,7 +1958,8 @@ CREATE VIEW res_view_letterbox AS
     ca.case_id, ca.case_label, ca.case_description, en.entity_label, 
     cont.firstname AS contact_firstname, cont.lastname AS contact_lastname, 
     cont.society AS contact_society, u.lastname AS user_lastname,
-    u.firstname AS user_firstname, list.item_id AS dest_user_from_listinstance 
+    u.firstname AS user_firstname, list.item_id AS dest_user_from_listinstance,
+    r.is_frozen as res_is_frozen 
     FROM doctypes d, doctypes_first_level dfl, doctypes_second_level dsl,
     ((((((((((ar_batch a RIGHT JOIN res_letterbox r ON ((r.arbatch_id = a.arbatch_id))) 
     LEFT JOIN entities en ON (((r.destination)::text = (en.entity_id)::text))) 
@@ -1825,6 +1980,22 @@ CREATE VIEW res_view_letterbox AS
     AND (d.doctypes_second_level_id = dsl.doctypes_second_level_id));
 CREATE OR REPLACE VIEW res_view_apa AS
  select * from res_apa;
+
+ALTER TABLE folders ADD video_status character varying(10) DEFAULT NULL;
+ALTER TABLE folders ADD video_user character varying(32) DEFAULT NULL;
+CREATE OR REPLACE VIEW view_postindexing AS 
+ SELECT res_view_letterbox.video_user, (users.firstname::text || ' '::text) || users.lastname::text AS user_name, 
+ res_view_letterbox.video_batch, res_view_letterbox.video_time, count(res_view_letterbox.res_id) AS count_documents, 
+ res_view_letterbox.folders_system_id, (folders.folder_id::text || ' / '::text) || folders.folder_name::text AS folder_full_label, 
+ folders.video_status
+   FROM res_view_letterbox
+   LEFT JOIN users ON res_view_letterbox.video_user::text = users.user_id::text
+   LEFT JOIN folders ON folders.folders_system_id = res_view_letterbox.folders_system_id
+  WHERE res_view_letterbox.video_batch IS NOT NULL
+  GROUP BY res_view_letterbox.video_user, (users.firstname::text || ' '::text) || users.lastname::text, 
+  res_view_letterbox.video_batch, res_view_letterbox.video_time, res_view_letterbox.folders_system_id, 
+  (folders.folder_id::text || ' / '::text) || folders.folder_name::text, folders.video_status;
+
 
 CREATE TABLE doctypes_indexes
 (
