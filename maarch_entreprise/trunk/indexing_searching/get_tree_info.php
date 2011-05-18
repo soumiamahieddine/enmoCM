@@ -280,7 +280,7 @@ try {
          . $_SESSION['config']['businessappurl'] . "tools/MaarchJS/src/img/', "
          . "'initial_structure' : [";
     for ($i = 0; $i < count($searchCustomerResults); $i ++) {
-        $resStr .= "{'id' : 'folder_" . $searchCustomerResults[$i]['folder_id']
+        $resStr .= "{'id' : 'folder::" . $searchCustomerResults[$i]['folder_id']
                 . "', 'label' :'<b>" . addslashes(
                     $searchCustomerResults[$i]['folder_id']
                 ) . "</b> <small>(" . $searchCustomerResults[$i]['folder_name']
@@ -289,7 +289,7 @@ try {
                  . "', 'classes' : ['level"
                  . $level . "'], 'open' : true, children: [";
         for ($j = 0; $j < count($searchCustomerResults[$i]['content']); $j ++) {
-            $resStr .= "{'id' : 'dfl_" . addslashes(
+            $resStr .= "{'id' : 'dfl::" . addslashes(
                 $searchCustomerResults[$i]['content'][$j]['doctypes_first_level_id']
                 ) . "', 'label' :'" . addslashes(
                 $searchCustomerResults[$i]['content'][$j]['doctypes_first_level_label']
@@ -303,7 +303,7 @@ try {
                 $searchCustomerResults[$i]['content'][$j]['second_level']
             ); $k ++
             ) {
-                $resStr .= "{'id' : 'dsl_" . addslashes(
+                $resStr .= "{'id' : 'dsl::" . addslashes(
                     $searchCustomerResults[$i]['content'][$j]['second_level'][$k]['doctypes_second_level_id']
                     ) . "', 'label' :'" . addslashes(
                     $searchCustomerResults[$i]['content'][$j]['second_level'][$k]['doctypes_second_level_label']
@@ -318,7 +318,7 @@ try {
                 ); $l ++
                 ) {
 
-					    $resStr .= "{'id' : 'type_" . addslashes($searchCustomerResults[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['type_id'])
+					    $resStr .= "{'id' : 'type::" . addslashes($searchCustomerResults[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['type_id'])
 					        . "', 'label' :'" . addslashes(
                             $searchCustomerResults[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['description']
                             ) . "', 'toolTip' : '"
@@ -333,7 +333,7 @@ try {
                 		$searchCustomerResults[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['results']
                 	); $m ++
                 	) {
-                		 $resStr .= "{'id' : 'resid_" . addslashes($searchCustomerResults[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['results'][$m]['res_id'])
+                		 $resStr .= "{'id' : 'resid::" . addslashes($searchCustomerResults[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['results'][$m]['res_id'])
 					        . "', 'label' :'" . addslashes(
                             	$searchCustomerResults[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['results'][$m]['subject']
                             ) . "', 'toolTip' : '"

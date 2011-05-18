@@ -8,7 +8,7 @@ $(document).observe("maarch:tree:branchselect", function(evt){
     // A branch id is like prefix_[main div]_[tree id]_[id from db]
     // Node id MUST NOT contain _
     // get the id
-    var branchId = id_branch.split('_').pop();
+    var branchId = id_branch.split('::').pop();
 
     var tmp_branch = $(id_branch);
     var levelBranch = tmp_branch.ancestors().filter(function(el){
