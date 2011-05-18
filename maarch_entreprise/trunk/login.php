@@ -63,7 +63,9 @@ if (! isset($_SESSION['config']['corename'])
             $uriArray = explode('/', $_SERVER['SCRIPT_NAME']);
             $sliceUri = array_slice($uriArray, 0, -3);
             $finalUri = implode('/', $sliceUri) . '/';
-            if ($_SERVER['HTTP_X_FORWARDED_HOST'] <> '') {
+            if (isset($_SERVER['HTTP_X_FORWARDED_HOST']) 
+            	&& $_SERVER['HTTP_X_FORWARDED_HOST'] <> ''
+            ) {
                 $host = $_SERVER['HTTP_X_FORWARDED_HOST'];
             } else {
                 $host = $_SERVER['HTTP_HOST'];

@@ -1413,3 +1413,6 @@ if (!defined('_REOPEN_MAIL_DESC')) {
 if (!defined('_WRONG_FUNCTION_OR_WRONG_PARAMETERS')) {
     define('_WRONG_FUNCTION_OR_WRONG_PARAMETERS', 'Mauvais appel ou mauvaus param&eagrave;tre');
 }
+if (!defined('_INDEXING_INSERT_ERROR')) {
+	define('_INDEXING_INSERT_ERROR', 'Indexation : erreur lors de l&rsquo;insertion');
+}
