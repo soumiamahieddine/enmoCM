@@ -789,6 +789,44 @@ class foldertype extends dbquery
                 	'values' => $values, 
                 	'default_value' => $default
                 );
+            } else if (isset($item->table)) {
+                $values = array();
+                $tableXml = $item->table;
+                //$this->show_array($tableXml);
+                $tableName = (string) $tableXml->table_name;
+                $foreignKey = (string) $tableXml->foreign_key;
+                $foreignLabel = (string) $tableXml->foreign_label;
+                $whereClause = (string) $tableXml->where_clause;
+                $order = (string) $tableXml->order;
+                $query = "select " . $foreignKey . ", " . $foreignLabel
+                       . " from " . $tableName;
+                if (isset($whereClause) && ! empty($whereClause)) {
+                    $query .= " where " . $whereClause;
+                }
+                if (isset($order) && ! empty($order)) {
+                    $query .= ' '.$order;
+                }
+                $this->connect();
+                $this->query($query);
+                while ($res = $this->fetch_object()) {
+                     array_push(
+                         $values,
+                         array(
+                             'id' => (string) $res->$foreignKey,
+                             'label' => $res->$foreignLabel,
+                         )
+                     );
+                }
+                $tmpArr = array(
+                    'column' => (string) $item->column,
+                    'label' => $label,
+                    'type' => (string) $item->type,
+                    'img' => $_SESSION['config']['businessappurl']
+                    . 'static.php?filename=' . $img,
+                    'type_field' => 'select',
+                    'values' => $values,
+                    'default_value' => $default,
+                );
             } else {
                 $arrTmp = array(
                 	'column' => (string) $item->column, 
@@ -900,7 +938,44 @@ class foldertype extends dbquery
                     		. 'static.php?module=folder&filename=' . $img, 
                     	'type_field' => 'select', 
                     	'values' => $values, 
-                    	'default_value' => $default
+                    	'default_value' => $default,
+                    );
+                } else if (isset($item->table)) {
+                    $values = array();
+                    $tableXml = $item->table;
+                    //$this->show_array($tableXml);
+                    $tableName = (string) $tableXml->table_name;
+                    $foreignKey = (string) $tableXml->foreign_key;
+                    $foreignLabel = (string) $tableXml->foreign_label;
+                    $whereClause = (string) $tableXml->where_clause;
+                    $order = (string) $tableXml->order;
+                    $query = "select " . $foreignKey . ", " . $foreignLabel
+                           . " from " . $tableName;
+                    if (isset($whereClause) && ! empty($whereClause)) {
+                        $query .= " where " . $whereClause;
+                    }
+                    if (isset($order) && ! empty($order)) {
+                        $query .= ' '.$order;
+                    }
+                    $this->connect();
+                    $this->query($query);
+                    while ($res = $this->fetch_object()) {
+                         array_push(
+                             $values,
+                             array(
+                                 'id' => (string) $res->$foreignKey,
+                                 'label' => $res->$foreignLabel,
+                             )
+                         );
+                    }
+                    $indexes[$col] = array(
+                        'label' => $label,
+                        'type' => (string) $item->type,
+                        'img' => $_SESSION['config']['businessappurl']
+                        . 'static.php?filename=' . $img,
+                        'type_field' => 'select',
+                        'values' => $values,
+                        'default_value' => $default,
                     );
                 } else {
                     $indexes[$col] = array( 
