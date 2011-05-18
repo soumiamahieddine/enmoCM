@@ -213,3 +213,9 @@ if (!defined('_CLOSE_FOLDER')) {
 if (!defined('_FOLDER_CLOSED')) {
     define('_FOLDER_CLOSED', 'Dossier clotur&eacute;');
 }
+if (!defined('_FROZEN_FOLDER')) {
+	define('_FROZEN_FOLDER', 'Gel du dossier');
+}
+if (!defined('_UNFROZEN_FOLDER')) {
+	define('_UNFROZEN_FOLDER', 'D&eacute;gel du dossier');
+}

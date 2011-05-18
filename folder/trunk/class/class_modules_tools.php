@@ -156,36 +156,46 @@ class folder extends request
 	}
 
 	/**
-	* Build Maarch module tables into sessions vars with a xml configuration file
+	* Build Maarch module tables into sessions vars with a xml 
+	* configuration file
 	*/
 	public function build_modules_tables()
 	{
-		if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR."modules".DIRECTORY_SEPARATOR."folder".DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."config.xml"))
-		{
-			$path = $_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR."modules".DIRECTORY_SEPARATOR."folder".DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."config.xml";
-		}
-		else
-		{
-			$path = "modules".DIRECTORY_SEPARATOR."folder".DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."config.xml";
+		if (file_exists(
+			$_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
+			. $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR . "modules"
+			. DIRECTORY_SEPARATOR . "folder" . DIRECTORY_SEPARATOR . "xml"
+			. DIRECTORY_SEPARATOR . "config.xml"
+		)
+		) {
+			$path = $_SESSION['config']['corepath'] . 'custom' 
+				. DIRECTORY_SEPARATOR . $_SESSION['custom_override_id']
+				. DIRECTORY_SEPARATOR . "modules" . DIRECTORY_SEPARATOR 
+				. "folder" . DIRECTORY_SEPARATOR . "xml" . DIRECTORY_SEPARATOR
+				. "config.xml";
+		} else {
+			$path = "modules" . DIRECTORY_SEPARATOR . "folder" 
+				. DIRECTORY_SEPARATOR . "xml" . DIRECTORY_SEPARATOR
+				. "config.xml";
 		}
 		$xmlconfig = simplexml_load_file($path);
 
-		$TABLENAME = $xmlconfig->TABLENAME;
-		$_SESSION['tablename']['fold_folders'] = (string) $TABLENAME->fold_folders;
-		$_SESSION['tablename']['fold_folders_out'] = (string) $TABLENAME->fold_folders_out;
-		$_SESSION['tablename']['fold_foldertypes'] = (string) $TABLENAME->fold_foldertypes;
-		$_SESSION['tablename']['fold_foldertypes_doctypes'] = (string) $TABLENAME->fold_foldertypes_doctypes;
-		$_SESSION['tablename']['fold_foldertypes_indexes'] = (string) $TABLENAME->fold_foldertypes_indexes;
-		$_SESSION['tablename']['fold_foldertypes_doctypes_level1'] = (string) $TABLENAME->fold_foldertypes_doctypes_level1;
+		$tableName = $xmlconfig->TABLENAME;
+		$_SESSION['tablename']['fold_folders'] = (string) $tableName->fold_folders;
+		$_SESSION['tablename']['fold_folders_out'] = (string) $tableName->fold_folders_out;
+		$_SESSION['tablename']['fold_foldertypes'] = (string) $tableName->fold_foldertypes;
+		$_SESSION['tablename']['fold_foldertypes_doctypes'] = (string) $tableName->fold_foldertypes_doctypes;
+		$_SESSION['tablename']['fold_foldertypes_indexes'] = (string) $tableName->fold_foldertypes_indexes;
+		$_SESSION['tablename']['fold_foldertypes_doctypes_level1'] = (string) $tableName->fold_foldertypes_doctypes_level1;
 
-		$HISTORY = $xmlconfig->HISTORY;
-		$_SESSION['history']['folderdel'] = (string) $HISTORY->folderdel;
-		$_SESSION['history']['folderadd'] = (string) $HISTORY->folderadd;
-		$_SESSION['history']['folderup'] = (string) $HISTORY->folderup;
-		$_SESSION['history']['folderview'] = (string) $HISTORY->folderview;
-		$_SESSION['history']['foldertypeadd'] = (string) $HISTORY->foldertypeadd;
-		$_SESSION['history']['foldertypeup']= (string) $HISTORY->foldertypeup;
-		$_SESSION['history']['foldertypedel']= (string) $HISTORY->foldertypedel;
+		$history = $xmlconfig->HISTORY;
+		$_SESSION['history']['folderdel'] = (string) $history->folderdel;
+		$_SESSION['history']['folderadd'] = (string) $history->folderadd;
+		$_SESSION['history']['folderup'] = (string) $history->folderup;
+		$_SESSION['history']['folderview'] = (string) $history->folderview;
+		$_SESSION['history']['foldertypeadd'] = (string) $history->foldertypeadd;
+		$_SESSION['history']['foldertypeup'] = (string) $history->foldertypeup;
+		$_SESSION['history']['foldertypedel'] = (string) $history->foldertypedel;
 	}
 
 
@@ -293,7 +303,6 @@ class folder extends request
 				$res = $this->fetch_object();
 				$id = $res->folders_system_id;
 
-				require_once('modules'.DIRECTORY_SEPARATOR.'folder'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR."class_admin_foldertypes.php");
 				$foldertype = new foldertype();
 
 				$query = $foldertype->get_sql_update($_SESSION['m_admin']['folder']['foldertype_id'], $_SESSION['m_admin']['folder']['indexes']);
@@ -305,7 +314,6 @@ class folder extends request
 				}
 				if($_SESSION['history']['folderadd'] == "true")
 				{
-					require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 					$hist = new history();
 					$hist->add(FOLD_FOLDERS_TABLE, $id ,"ADD",_FOLDER_ADDED." : ".$_SESSION['m_admin']['folder']['folder_id'] , $_SESSION['config']['databasetype'], 'folder');
 				}
@@ -654,7 +662,7 @@ class folder extends request
 		$foldertype_id =  $values['foldertype_id'];
 		if(!empty($foldertype_id))
 		{
-			$indexes = $foldertype->get_indexes( $foldertype_id,'minimal');
+			$indexes = $foldertype->get_indexes($foldertype_id,'minimal');
 			$val_indexes = array();
 			for($i=0; $i<count($indexes);$i++)
 			{
@@ -679,7 +687,6 @@ class folder extends request
 			$_SESSION['error'] = _FOLDER_INDEX_UPDATED." (".strtolower(_NUM).$values['folder_id'].")";
 			if($_SESSION['history']['folderup'])
 			{
-				require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 				$hist = new history();
 				$hist->add(FOLD_FOLDERS_TABLE, $id_to_update, "UP", $_SESSION['error'], $_SESSION['config']['databasetype'],'apps');
 			}
@@ -717,7 +724,47 @@ class folder extends request
 			);
 		}
 	}
-
+	public function freezeFolder($folderId, $params=array()) 
+	{
+	 	if (empty($folderId)) {
+	         return false;
+	    }
+	    $this->connect();
+	    $this->query(
+	    	"update " . FOLD_FOLDERS_TABLE . " set is_frozen = 'Y' "
+	        . "where folders_system_id = " . $folderId
+	    );
+	 	if ($_SESSION['history']['folderup']) {
+			$hist = new history();
+			$msg = _FROZEN_FOLDER .' : ' . $folderId ;
+			$hist->add(
+			    FOLD_FOLDERS_TABLE, $folderId, "UP", $msg,
+			    $_SESSION['config']['databasetype'], 'apps'
+			);
+		}
+	}
+	
+	
+	public function unfreezeFolder($folderId, $params=array()) 
+	{
+	 	if (empty($folderId)) {
+	         return false;
+	    }
+	    $this->connect();
+	    $this->query(
+	    	"update " . FOLD_FOLDERS_TABLE . " set is_frozen = 'N' "
+	        . "where folders_system_id = " . $folderId
+	    );
+	 	if ($_SESSION['history']['folderup']) {
+			$hist = new history();
+			$msg = _UNFROZEN_FOLDER .' : ' . $folderId ;
+			$hist->add(
+			    FOLD_FOLDERS_TABLE, $folderId, "UP", $msg,
+			    $_SESSION['config']['databasetype'], 'apps'
+			);
+		}
+	}
+		
 	public function delete_folder($folder_sys_id, $foldertype)
 	{
 		$this->connect();
