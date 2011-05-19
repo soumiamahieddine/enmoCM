@@ -231,10 +231,10 @@
    		<moduleid>reports</moduleid>
 		<comment>_REPORTS_COMMENT</comment>
 	</MODULES>
-	<!--	<MODULES>
+	<MODULES>
    		<moduleid>postindexing</moduleid>
 		<comment>_POSTINDEXING</comment>
-	</MODULES>-->
+	</MODULES>
 	<!--<MODULES>
    		<moduleid>webtwain</moduleid>
 		<comment>_WEBTWAIN_COMMENT</comment>
