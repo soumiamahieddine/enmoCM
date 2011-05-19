@@ -70,46 +70,6 @@ INSERT INTO lc_cycles (policy_id, cycle_id, cycle_desc, sequence_number, where_c
 
 
 
--- modules/postindexing/sql/data/postindexing.postgresql.sql
-
-
--- POSTINDEXING FOLDERS
---INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, enabled) VALUES ('folders', 'FoldersPostIndexingBasket', 'Dossiers à vidéocoder', 'Corbeilles des dossiers à vidéocoder', 'status =''NEW'' and count_document >0', 'N', 'Y');
---INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (27, 'indexing', 'Vidéocoder le dossier', NULL, 'N', 'Y', 'postindex_folders', 'Y', 'postindexing', 'Y');
---INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('TYPISTS', 'FoldersPostIndexingBasket', 2, NULL, NULL, 'postindexing_folders_list', 'N', 'N', 'N');
---INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (27, '', 'TYPISTS', 'FoldersPostIndexingBasket', 'Y', 'N', 'N');
---INSERT INTO groupbasket_redirect (group_id, basket_id, action_id, entity_id, keyword, redirect_mode) VALUES ('TYPISTS', 'FoldersPostIndexingBasket', 27, '', 'ALL_ENTITIES', 'ENTITY');
-
-
--- modules/workflow/sql/data/workflow.postgresql.sql
-
-INSERT INTO wf_groupworklist VALUES (103, 1, NULL, 'superadmin');
-INSERT INTO wf_groupworklist VALUES (102, 1, NULL, 'ccharles');
-INSERT INTO wf_groupworklist VALUES (104, 1, NULL, 'bsaporta');
-
-
-INSERT INTO wf_worklist VALUES(1, 'Bons de travail', 'Bons de travail', '', 'Y', 'Y', 'list_tasks_todo_generic', 'Y', '');
-
-INSERT INTO wf_worklist_stamps VALUES(1, 1, 'FACTURE VALIDEE', 150, 400, 30);
-
-INSERT INTO wf_tasks VALUES ('WF_INVOICE', 'START', 'Validation facture - Invoice validation', NULL, NULL, 'coll_2', '', 'process.php', 48);
-INSERT INTO wf_tasks VALUES ('WF_INVOICE', 'T_CHECK', 'Visa du Manager - Manager visa', NULL, NULL, 'coll_2', '', 'process.php', 48);
-INSERT INTO wf_tasks VALUES ('WF_INVOICE', 'T_SIGN', 'Signature du responsable - Executive signature', NULL, NULL, 'coll_2', '', 'process.php', 1);
-
-INSERT INTO wf_actors VALUES ('WF_INVOICE', 'START', 0, NULL, 'Accountants', NULL, 'N');
-INSERT INTO wf_actors VALUES ('WF_INVOICE', 'T_CHECK', 0, NULL, 'Managers', NULL, 'N');
-INSERT INTO wf_actors VALUES ('WF_INVOICE', 'START', 1, 'ccharles', NULL, NULL, 'N');
-INSERT INTO wf_actors VALUES ('WF_INVOICE', 'T_SIGN', 0, 'pparker', NULL, NULL, 'N');
-
-INSERT INTO wf_events VALUES ('WF_INVOICE', 'START', 0, 'Lancer le workflow - Launch WF', 'Lancer le workflow', 'T_CHECK', 0, '', 0, 'LAUNCH', 'CHK');
-INSERT INTO wf_events VALUES ('WF_INVOICE', 'T_CHECK', 0, 'Rejeter la facture - Reject invoice', 'Rejeter - Reject', '', 0, '', 0, 'REJECT', 'END');
-INSERT INTO wf_events VALUES ('WF_INVOICE', 'T_CHECK', 0, 'Valider la facture - Validate invoice', 'Valider', '', 0, '', 0, 'VALIDATION', 'END');
-INSERT INTO wf_events VALUES ('WF_INVOICE', '', 0, '', '', '', 0, '', 0, '', '');
-INSERT INTO wf_events VALUES ('WF_INVOICE', 'T_CHECK', 0, 'Demander avis du responsable - Ask manager', 'Demander avis du responsable - Ask manager', 'T_SIGN', 0, '', 0, 'ADVICE', 'SGN');
-INSERT INTO wf_events VALUES ('WF_INVOICE', 'T_SIGN', 0, 'Viser la facture - Manager visa', 'Valider - Validate', '', 0, '', 0, 'VALIDATION', 'END');
-INSERT INTO wf_events VALUES ('WF_INVOICE', 'T_SIGN', 0, 'Rejeter - Reject', 'Rejeter - Reject', '', 0, '', 0, 'REJECT', 'REJ');
-
-
 -- apps/maarch_entreprise/sql/data/apps.postgresql.sql
 
 -- Maarch LetterBox v3 sample data : Application

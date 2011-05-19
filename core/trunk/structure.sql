@@ -1,4 +1,4 @@
-﻿
+
 
 -- core/sql/structure/core.postgresql.sql
 
@@ -830,47 +830,6 @@ CREATE TABLE cases_res
 
 
 
--- modules/doc_project/sql/structure/doc_project.postgresql.sql
-
-CREATE TABLE project_res
-(
-  project_id bigint NOT NULL,
-  res_id bigint NOT NULL,
-  coll_id character varying(32) NOT NULL,
-  CONSTRAINT projects_res_pkey PRIMARY KEY (project_id, res_id, coll_id)
-)
-WITH (OIDS=FALSE);
-
-CREATE TABLE project_users
-(
-  project_id bigint NOT NULL,
-  user_id character varying(32) NOT NULL,
-  CONSTRAINT projects_users_pkey PRIMARY KEY (project_id, user_id)
-)
-WITH (OIDS=FALSE);
-
-CREATE SEQUENCE project_id_seq
-  INCREMENT 1
-  MINVALUE 1
-  MAXVALUE 9223372036854775807
-  START 10
-  CACHE 1;
-
-
-CREATE TABLE projects
-(
-  project_id bigint NOT NULL DEFAULT nextval('project_id_seq'::regclass),
-  project_label character varying(65),
-  description character varying(255),
-  creator character varying(255),
-  custom_t1 character varying(255),
-  rights bigint,
-  creation_date timestamp without time zone NOT NULL,
-  CONSTRAINT projects_pkey PRIMARY KEY (project_id)
-)
-WITH (OIDS=FALSE);
-
-
 -- modules/entities/sql/structure/entities.postgresql.sql
 
 
@@ -1347,7 +1306,6 @@ CREATE TABLE ar_batch
 ) ;
 
 
-
 -- modules/reports/sql/structure/reports.postgresql.sql
 
 CREATE TABLE usergroups_reports
@@ -1405,115 +1363,6 @@ CREATE TABLE templates_doctype_ext
   is_generated character(1) NOT NULL DEFAULT 'N'::bpchar
 )
 WITH (OIDS=FALSE);
-
-
--- modules/workflow/sql/structure/workflow.postgresql.sql
-
-CREATE TABLE  wf_actors (
-  wf_id character varying(255)  NOT NULL,
-  task_id character varying(32)  NOT NULL,
-  sequence integer NOT NULL,
-  user_id character varying(32)  DEFAULT NULL,
-  group_id character varying(32)  DEFAULT NULL,
-  redirect_grouplist character varying(255)  DEFAULT NULL,
-  can_redirect character(1)  NOT NULL DEFAULT 'N'::bpchar,
-  CONSTRAINT wf_actors_pkey PRIMARY KEY  (wf_id,task_id,sequence)
-) ;
-
-CREATE TABLE  wf_events (
-  wf_id character varying(255)  NOT NULL,
-  task_id character varying(255)  NOT NULL,
-  sequence integer DEFAULT 0,
-  event_desc character varying(255)  DEFAULT NULL,
-  event_label character varying(255)  NOT NULL,
-  next_task_id character varying(255)  NOT NULL,
-  branch_id bigint NOT NULL,
-  where_clause text  NOT NULL,
-  sort_order bigint NOT NULL,
-  event_id character varying(32)  NOT NULL,
-  res_status character varying(32)  NOT NULL
-) ;
-
-CREATE SEQUENCE worklist_security_id_seq
-  INCREMENT 1
-  MINVALUE 1
-  MAXVALUE 9223372036854775807
-  START 10
-  CACHE 1;
-
-CREATE TABLE  wf_groupworklist (
-  worklist_security_id bigint NOT NULL DEFAULT nextval('worklist_security_id_seq'::regclass),
-  worklist_id bigint NOT NULL,
-  group_id character varying(255)  DEFAULT NULL,
-  user_id character varying(255)  DEFAULT NULL,
-   CONSTRAINT wf_groupworklist_pkey PRIMARY KEY  (worklist_security_id)
-) ;
-
-CREATE TABLE  wf_insts (
-  wf_id character varying(255)  NOT NULL,
-  res_id bigint NOT NULL,
-  sequence integer NOT NULL,
-  task_id character varying(255)  NOT NULL,
-  user_id character varying(32)  NOT NULL,
-  group_id character varying(32)  NOT NULL,
-  begin_date date NOT NULL,
-  inst_date date NOT NULL,
-  actual_user_id character varying(255)  DEFAULT NULL,
-  "status" character varying(255)  DEFAULT NULL,
-  due_date date NOT NULL
-) ;
-
-CREATE TABLE  wf_tasks (
-  wf_id character varying(255)  NOT NULL,
-  task_id character varying(32)  NOT NULL,
-  task_desc character varying(255)  NOT NULL,
-  pre_process_script character varying(255)  DEFAULT NULL,
-  post_process_script character varying(255)  DEFAULT NULL,
-  coll_id character varying(255)  NOT NULL,
-  where_clause character varying(1024)  DEFAULT NULL,
-  process_script character varying(255)  NOT NULL,
-  task_delay bigint DEFAULT NULL,
-  CONSTRAINT wf_tasks_pkey PRIMARY KEY  (wf_id,task_id)
-) ;
-
-CREATE SEQUENCE worklist_id_seq
-  INCREMENT 1
-  MINVALUE 1
-  MAXVALUE 9223372036854775807
-  START 10
-  CACHE 1;
-
-
-CREATE TABLE  wf_worklist (
-  worklist_id  bigint NOT NULL DEFAULT nextval('worklist_id_seq'::regclass),
-  worklist_name character varying(255)  NOT NULL,
-  worklist_desc character varying(255)  NOT NULL,
-  worklist_clause text  NOT NULL,
-  is_generic character(1)  NOT NULL DEFAULT 'Y'::bpchar,
-  enabled character(1)  NOT NULL DEFAULT 'Y'::bpchar,
-  result_page character varying(255)  NOT NULL,
-  custom_stamp character(1)  NOT NULL DEFAULT 'Y'::bpchar,
-  wf_id character varying(255)  NOT NULL,
-  CONSTRAINT wf_worklist_pkey PRIMARY KEY  (worklist_id)
-) ;
-
-CREATE SEQUENCE stamp_id_seq
-  INCREMENT 1
-  MINVALUE 1
-  MAXVALUE 9223372036854775807
-  START 10
-  CACHE 1;
-
-
-CREATE TABLE  wf_worklist_stamps (
-  worklist_id bigint NOT NULL,
-  stamp_id bigint NOT NULL DEFAULT nextval('stamp_id_seq'::regclass),
-  stamp_label character varying(255)  NOT NULL,
-  x_pos integer NOT NULL,
-  y_pos integer NOT NULL,
-  rotation integer NOT NULL,
-   CONSTRAINT wf_worklist_stamps_pkey PRIMARY KEY  (worklist_id,stamp_id)
-) ;
 
 
 -- apps/maarch_entreprise/sql/structure/apps.postgresql.sql
