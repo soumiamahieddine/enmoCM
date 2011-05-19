@@ -1,29 +1,44 @@
+Ôªø
+
+-- from core/sql/data/core.postgresql.sql
 
 
--- core/sql/data/core.postgresql.sql
 
-
-
--- modules/advanced_physical_archive/sql/data/advanced_physical_archive.postgresql.sql
+-- from modules/advanced_physical_archive/sql/data/advanced_physical_archive.postgresql.sql
 
 INSERT INTO parameters (id, param_value_string, param_value_int) VALUES ('apa_reservation_batch', NULL, '1');
 
 
--- modules/basket/sql/data/basket.postgresql.sql
+-- from modules/basket/sql/data/basket.postgresql.sql
 
 
 -- BASKET
 
 
--- modules/entities/sql/data/entities.postgresql.sql
+-- from modules/entities/sql/data/entities.postgresql.sql
 
 
 
--- modules/folder/sql/data/folder.postgresql.sql
+-- from modules/folder/sql/data/folder.postgresql.sql
 
 
 
--- modules/life_cycle/sql/data/life_cycle.postgresql.sql
+-- from modules/physical_archive/sql/data/physical_archive.postgresql.sql
+
+
+
+-- from modules/postindexing/sql/data/postindexing.postgresql.sql
+
+
+-- POSTINDEXING FOLDERS
+--INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, enabled) VALUES ('folders', 'FoldersPostIndexingBasket', 'Dossiers ‡ vidÈocoder', 'Corbeilles des dossiers ‡ vidÈocoder', 'status =''NEW'' and count_document >0', 'N', 'Y');
+--INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (27, 'indexing', 'VidÈocoder le dossier', NULL, 'N', 'Y', 'postindex_folders', 'Y', 'postindexing', 'Y');
+--INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('TYPISTS', 'FoldersPostIndexingBasket', 2, NULL, NULL, 'postindexing_folders_list', 'N', 'N', 'N');
+--INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (27, '', 'TYPISTS', 'FoldersPostIndexingBasket', 'Y', 'N', 'N');
+--INSERT INTO groupbasket_redirect (group_id, basket_id, action_id, entity_id, keyword, redirect_mode) VALUES ('TYPISTS', 'FoldersPostIndexingBasket', 27, '', 'ALL_ENTITIES', 'ENTITY');
+
+
+-- from modules/life_cycle/sql/data/life_cycle.postgresql.sql
 
 --
 -- PostgreSQL database dump
@@ -66,13 +81,9 @@ INSERT INTO lc_cycles (policy_id, cycle_id, cycle_desc, sequence_number, where_c
 
 
 
--- modules/physical_archive/sql/data/physical_archive.postgresql.sql
+-- from apps/maarch_entreprise/sql/data/apps.postgresql.sql
 
-
-
--- apps/maarch_entreprise/sql/data/apps.postgresql.sql
-
--- Maarch LetterBox v3 sample data : Application
+Ôªø-- Maarch LetterBox v3 sample data : Application
 
 -- USERS, GROUPS and ENTITIES
 INSERT INTO usergroups (group_id, group_desc, administrator, custom_right1, custom_right2, custom_right3, custom_right4, enabled) VALUES ('ADMINS', 'Administrateurs fonctionnels', ' ', ' ', ' ', ' ', ' ', 'Y');
@@ -345,7 +356,7 @@ INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_lev
 INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll', 64, 'Mutuelle', 'Y', 2, 52, NULL, NULL);
 INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll', 65, 'Dipl√¥me', 'Y', 2, 53, NULL, NULL);
 INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll', 66, 'Bilan de comp√©tences', 'Y', 2, 53, NULL, NULL);
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('res_coll', 22, 'Factures', 'Y', 2, 54, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('res_coll', 70, 'Factures', 'Y', 2, 54, NULL, NULL);
 INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll', 71, 'Facture fournisseur', 'Y', 1, 13, NULL, NULL);
 
 
