@@ -1131,6 +1131,7 @@ class functions
             $var = str_replace("&ucirc;","\u00fb",$var);
             $var = str_replace("&acute;","\u0027",$var);
             $var = str_replace("&deg;","\u00b0",$var);
+            $var = str_replace("&rsquo;", "\u2019",$var);
         }
         else if($mode == 'NO_ACCENT')
         {
@@ -1142,12 +1143,13 @@ class functions
             $var = str_replace("&egrave;","e",$var);
             $var = str_replace("&ecirc;","e",$var);
             $var = str_replace("&agrave;","a",$var);
-            $var = str_replace("&acirc;","â",$var);
+            $var = str_replace("&acirc;","a",$var);
             $var = str_replace("&icirc;","i",$var);
             $var = str_replace("&ocirc;","o",$var);
             $var = str_replace("&ucirc;","u",$var);
             $var = str_replace("&acute;","",$var);
-            $var = str_replace("&deg;","°",$var);
+            $var = str_replace("&deg;","o",$var);
+            $var = str_replace("&rsquo;", "'",$var);
         }
         else
         {
@@ -1165,6 +1167,7 @@ class functions
             $var = str_replace("&ucirc;","û",$var);
             $var = str_replace("&acute;","",$var);
             $var = str_replace("&deg;","°",$var);
+            $var = str_replace("&rsquo;", "'",$var);
         }
         return $var;
     }
