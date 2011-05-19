@@ -461,20 +461,6 @@ CREATE VIEW res_view_letterbox AS
 CREATE OR REPLACE VIEW res_view_apa AS
  select * from res_apa;
 
-ALTER TABLE folders ADD video_status character varying(10) DEFAULT NULL;
-ALTER TABLE folders ADD video_user character varying(32) DEFAULT NULL;
-CREATE OR REPLACE VIEW view_postindexing AS 
- SELECT res_view_letterbox.video_user, (users.firstname::text || ' '::text) || users.lastname::text AS user_name, 
- res_view_letterbox.video_batch, res_view_letterbox.video_time, count(res_view_letterbox.res_id) AS count_documents, 
- res_view_letterbox.folders_system_id, (folders.folder_id::text || ' / '::text) || folders.folder_name::text AS folder_full_label, 
- folders.video_status
-   FROM res_view_letterbox
-   LEFT JOIN users ON res_view_letterbox.video_user::text = users.user_id::text
-   LEFT JOIN folders ON folders.folders_system_id = res_view_letterbox.folders_system_id
-  WHERE res_view_letterbox.video_batch IS NOT NULL
-  GROUP BY res_view_letterbox.video_user, (users.firstname::text || ' '::text) || users.lastname::text, 
-  res_view_letterbox.video_batch, res_view_letterbox.video_time, res_view_letterbox.folders_system_id, 
-  (folders.folder_id::text || ' / '::text) || folders.folder_name::text, folders.video_status;
 
 
 CREATE TABLE doctypes_indexes
