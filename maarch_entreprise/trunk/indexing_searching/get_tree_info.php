@@ -125,7 +125,7 @@ if (isset($_SESSION['chosen_name_folder'])
 ) {
     while ($res = $db->fetch_object()) {
 		$actualCustomT1 = $res->folder_id;
-		if ($flagProject) {
+		if (isset($flagProject) && $flagProject) {
 			$dbTmp->query(
 				"select folder_name, subject from "
 			    . $_SESSION['tablename']['fold_folders']
@@ -188,7 +188,7 @@ if (isset($_SESSION['chosen_name_folder'])
 				while ($res3 = $db3->fetch_object()) {
 					$cptDoc = 0;
 				/*	$db4->query(
-						"select count(res_id) as total from " . $resView 
+						"select count(res_id) as total from " . $resView
 						. " where (type_id = " . $res3->type_id
 					    . " and folder_id = '" . $actualCustomT1 . "') and ("
 					    . $whereClause . ")"
@@ -197,7 +197,7 @@ if (isset($_SESSION['chosen_name_folder'])
 					if (isset($res4->total)) {
 						$cptDoc = $res4->total;
 					}
-					
+
 					array_push(
 					    $doctypes,
 					    array(
@@ -214,12 +214,12 @@ if (isset($_SESSION['chosen_name_folder'])
 					$results = array();
 					while ($res4 = $db4->fetch_object()) {
 						array_push(
-							$results, 
+							$results,
 							array(
-								'res_id' => $res4->res_id, 
-								'doc_date' => $res4->doc_date, 
-								'name_folder' => $res4->folder_name, 
-								'num_ref' => $res4->identifier, 
+								'res_id' => $res4->res_id,
+								'doc_date' => $res4->doc_date,
+								'name_folder' => $res4->folder_name,
+								'num_ref' => $res4->identifier,
 								'subject' => $func->show_string($res4->subject, true),
 							)
 						);
@@ -229,12 +229,12 @@ if (isset($_SESSION['chosen_name_folder'])
 						//array_push($doctypes, array('type_id' => $res3->type_id, 'description' => $func->show_string($res3->description), "results" => $results, "no_doc" => true ));
 					} else {
 						array_push(
-							$doctypes, 
+							$doctypes,
 							array(
-								'type_id' => $res3->type_id, 
-								'description' => $func->show_string($res3->description, true) . ' ('.$cptDoc.')', 
-								"results" => $results, 
-								"no_doc" => false 
+								'type_id' => $res3->type_id,
+								'description' => $func->show_string($res3->description, true) . ' ('.$cptDoc.')',
+								"results" => $results,
+								"no_doc" => false
 							)
 						);
 					}
@@ -341,7 +341,7 @@ try {
                             $searchCustomerResults[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['results'][$m]['subject']
                             ) . " (" . $searchCustomerResults[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['results'][$m]['res_id']
                             . ")', 'classes' : []},";
-						
+
                 	}
 					$resStr .= ']},';
                 }
