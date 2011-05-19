@@ -194,23 +194,26 @@ function controlIntegrityOfTransfer(
             }
         }
     } else {
-        $sourceFilePath = getSourceResourcePath(
-            $currentRecordInStack['res_id']
-        );
-        $control = array();
-        $control = Ds_controlFingerprint(
-            $sourceFilePath, 
-            $GLOBALS['docservers'][$GLOBALS['currentStep']]['docserver']
-            ['path_template'] . str_replace(
-                "#", DIRECTORY_SEPARATOR, $destinationDir 
-                . $fileDestinationName
-            ),
-            $GLOBALS['docserverSourceFingerprint']
-        );
-        if ($control['error'] <> "") {
-            Bt_exitBatch(
-                22, $control['error']
+        //print_r($resInContainer);
+        if ($currentRecordInStack['res_id'] <> '') {
+            $sourceFilePath = getSourceResourcePath(
+                $currentRecordInStack['res_id']
             );
+            $control = array();
+            $control = Ds_controlFingerprint(
+                $sourceFilePath, 
+                $GLOBALS['docservers'][$GLOBALS['currentStep']]['docserver']
+                ['path_template'] . str_replace(
+                    "#", DIRECTORY_SEPARATOR, $destinationDir 
+                    . $fileDestinationName
+                ),
+                $GLOBALS['docserverSourceFingerprint']
+            );
+            if ($control['error'] <> "") {
+                Bt_exitBatch(
+                    22, $control['error']
+                );
+            }
         }
     }
 }

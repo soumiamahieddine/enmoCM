@@ -152,6 +152,30 @@ function getSourceResourcePath(
 }
 
 /**
+ * Retrieve the break key value of the resource
+ * @param bigint $resId Id of the resource to process
+ * @param string $breakKey break key
+ * @return undefined returns the value of the break key or false if error 
+ */
+function getBreakKeyValue($resId, $breakKey)
+{
+    if ($resId <> '' && $breakKey <> '') {
+        $query = "select " . $breakKey . " "
+               . "from " . $GLOBALS['view'] . " where res_id = " . $resId;
+    } else {
+        return false;
+    }
+    Bt_doQuery($GLOBALS['db'], $query);
+    if ($GLOBALS['db']->nb_result() == 0) {
+        return false;
+    } else {
+        $resBreakKey = $GLOBALS['db']->fetch_object();
+        $breakKeyValue = $resBreakKey->$breakKey;
+    }
+    return $breakKeyValue;
+}
+
+/**
  * Updating the database with the location information of the document on the
  * new docserver
  * @param bigint $currentRecordInStack Id of the resource to process
@@ -179,10 +203,12 @@ function updateDatabase(
             );
         }
     } else {
-        doUpdateDb(
-            $currentRecordInStack['res_id'], $path, $fileName, $offsetDoc, 
-            $currentRecordInStack['fingerprint']
-        );
+        if ($currentRecordInStack['res_id'] <> '') {
+            doUpdateDb(
+                $currentRecordInStack['res_id'], $path, $fileName, $offsetDoc, 
+                $currentRecordInStack['fingerprint']
+            );
+        }
     }
     Bt_doQuery($GLOBALS['db'], 'COMMIT');
 }
@@ -242,6 +268,34 @@ function doUpdateDb($resId, $path, $fileName, $offsetDoc, $fingerprint)
            . "', '" .  $offsetDoc . "', '" .  $fingerprint . "', " 
            . $GLOBALS['docservers'][$GLOBALS['currentStep']]['docserver']
            ['adr_priority_number'] . ")";
+    Bt_doQuery($GLOBALS['db'], $query, true);
+    $query = "insert into " . HISTORY_TABLE . " (table_name, record_id, "
+           . "event_type, user_id, event_date, info, id_module) values ('" 
+           . $GLOBALS['table'] . "', '" . $resId . "', 'ADD', 'LC_BOT', '" 
+           . date("d") . "/" . date("m") . "/" . date("Y") . " " . date("H") 
+           . ":" . date("i") . ":" . date("s") . "', 'process stack, policy:" 
+           . $GLOBALS['policy'] . ", cycle:" . $GLOBALS['cycle'] 
+           . ", cycle step:" . $GLOBALS['currentStep'] . ", collection:" 
+           . $GLOBALS['collection'] . "', 'life_cycle')";
+    Bt_doQuery($GLOBALS['db'], $query, true);
+}
+
+/**
+ * Do the minimal update for a NONE operation
+ * @param bigint $resId Id of the resource to process
+ * @return nothing
+ */
+function doMinimalUpdate($resId)
+{
+    $query = "update " . _LC_STACK_TABLE_NAME . " set status = 'P' where"
+           . " policy_id = '" . $GLOBALS['policy'] . "' and cycle_id = '" 
+           . $GLOBALS['cycle'] . "' and cycle_step_id = '" 
+           . $GLOBALS['currentStep'] . "' and coll_id = '" 
+           . $GLOBALS['collection'] . "' and res_id = " . $resId;
+    Bt_doQuery($GLOBALS['db'], $query, true);
+    $query = "update " . $GLOBALS['table'] . " set cycle_id = '" 
+           . $GLOBALS['cycle'] . "', is_multi_docservers = 'Y' where"
+           . " res_id = " . $resId;
     Bt_doQuery($GLOBALS['db'], $query, true);
     $query = "insert into " . HISTORY_TABLE . " (table_name, record_id, "
            . "event_type, user_id, event_date, info, id_module) values ('" 

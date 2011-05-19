@@ -87,6 +87,8 @@ $lckFile = '';
 $errorLckFile = '';
 $totalProcessedResources = 0;
 $apacheUserAndGroup =  '';
+$breakKey = '';
+$breakKeyValue = '';
 
 // Defines scripts arguments
 $argsparser = new ArgsParser();

@@ -131,6 +131,15 @@ while ($GLOBALS['state'] <> "END") {
                         "KO"
                     );
                 }
+                //get the cycle break key if exists
+                $query = "select break_key from " . _LC_CYCLES_TABLE_NAME 
+                   . " where policy_id = '" . $GLOBALS['policy'] 
+                   . "' and cycle_id = '" . $GLOBALS['cycle'] . "'";
+                Bt_doQuery($GLOBALS['db'], $query);
+                if ($GLOBALS['db']->nb_result() > 0) {
+                    $breakKeyRecordset = $GLOBALS['db']->fetch_object();
+                    $GLOBALS['breakKey'] = $breakKeyRecordset->break_key;
+                }
             }
             $GLOBALS['state'] = "GET_DOCSERVERS";
             break;
@@ -364,6 +373,11 @@ while ($GLOBALS['state'] <> "END") {
                     ['step_operation'] == "PURGE"
                 ) {
                     $GLOBALS['state'] = "CONTROL_ADR_X";
+                } elseif ($GLOBALS['steps'][$GLOBALS['currentStep']]
+                    ['step_operation'] == "NONE"
+                ) {
+                    doMinimalUpdate($currentRecordInStack['res_id']);
+                    $GLOBALS['state'] = "A_RECORD";
                 } else {
                     $GLOBALS['state'] = "END";
                 }
@@ -585,36 +599,66 @@ while ($GLOBALS['state'] <> "END") {
         /* Adds a resource in the container                                   */
         /**********************************************************************/
         case "ADD_RECORD" :
-            $cptResInContainer++;
-            array_push(
-                $resInContainer, 
-                array(
-                    "res_id" => $currentRecordInStack['res_id'], 
-                    "source_path" => $sourceFilePath, 
-                    "fingerprint" => Ds_doFingerprint(
-                        $sourceFilePath, 
-                        $GLOBALS['docservers'][$GLOBALS['currentStep']]
-                        ['fingerprint_mode']
-                    ),
-                )
-            );
-            $offsetDoc = "";
-            $query = "update " . _LC_STACK_TABLE_NAME 
-                   . " set status = 'W' where policy_id = '" 
-                   . $GLOBALS['policy'] . "' and cycle_id = '" 
-                   . $GLOBALS['cycle'] . "' and cycle_step_id = '" 
-                   . $GLOBALS['currentStep'] . "' and coll_id = '" 
-                   . $GLOBALS['collection'] . "' and res_id = " 
-                   . $currentRecordInStack['res_id'];
-            Bt_doQuery($GLOBALS['db'], $query);
+            $dontProcessTheCurrentRecord = false;
+            //compute the break key if exists and if container max number > 1
             if (
-                $cptResInContainer >= $GLOBALS['docservers']
-                [$GLOBALS['currentStep']]['container_max_number'] 
-                || $theLastRecordInStep
+                (isset($GLOBALS['breakKey']) && $GLOBALS['breakKey'] <> '') &&
+                $GLOBALS['docservers']
+                    [$GLOBALS['currentStep']]['container_max_number'] > 1
             ) {
-                $GLOBALS['state'] = "CLOSE_CONTAINER";
+                $breakKeyCompare = getBreakKeyValue(
+                    $currentRecordInStack['res_id'], $GLOBALS['breakKey']
+                );
+                //echo "compare " . $breakKeyCompare 
+                //. " value " . $GLOBALS['breakKeyValue'] . "\r\n";
+                if ($GLOBALS['breakKeyValue'] == '') {
+                    //echo "first break key\r\n";
+                    $GLOBALS['breakKeyValue'] = $breakKeyCompare;
+                } elseif ($breakKeyCompare <> $GLOBALS['breakKeyValue']) {
+                    //close the container and don't process the current record
+                    //the current record will be processed on next turn
+                    //echo "new break key\r\n";
+                    $GLOBALS['breakKeyValue'] = $breakKeyCompare;
+                    $dontProcessTheCurrentRecord = true;
+                    $currentRecordInStack = array();
+                    $cptRecordsInStep--;
+                    //echo "dont process the current record\r\n";
+                }
+            }
+            if (!$dontProcessTheCurrentRecord) {
+                $cptResInContainer++;
+                array_push(
+                    $resInContainer, 
+                    array(
+                        "res_id" => $currentRecordInStack['res_id'], 
+                        "source_path" => $sourceFilePath, 
+                        "fingerprint" => Ds_doFingerprint(
+                            $sourceFilePath, 
+                            $GLOBALS['docservers'][$GLOBALS['currentStep']]
+                            ['fingerprint_mode']
+                        ),
+                    )
+                );
+                $offsetDoc = "";
+                $query = "update " . _LC_STACK_TABLE_NAME 
+                       . " set status = 'W' where policy_id = '" 
+                       . $GLOBALS['policy'] . "' and cycle_id = '" 
+                       . $GLOBALS['cycle'] . "' and cycle_step_id = '" 
+                       . $GLOBALS['currentStep'] . "' and coll_id = '" 
+                       . $GLOBALS['collection'] . "' and res_id = " 
+                       . $currentRecordInStack['res_id'];
+                Bt_doQuery($GLOBALS['db'], $query);
+                if (
+                    $cptResInContainer >= $GLOBALS['docservers']
+                    [$GLOBALS['currentStep']]['container_max_number'] 
+                    || $theLastRecordInStep
+                ) {
+                    $GLOBALS['state'] = "CLOSE_CONTAINER";
+                } else {
+                    $GLOBALS['state'] = "A_RECORD";
+                }
             } else {
-                $GLOBALS['state'] = "A_RECORD";
+                $GLOBALS['state'] = "CLOSE_CONTAINER";
             }
             break;
         /**********************************************************************/
