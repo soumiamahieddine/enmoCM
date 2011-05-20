@@ -1445,7 +1445,7 @@ $collId, $table, $formValues )
         $_SESSION['data'],
         array(
             'column' => 'offset_doc',
-            'value' => ' ',
+            'value' => '',
             'type' => 'string',
         )
     );
@@ -1453,7 +1453,7 @@ $collId, $table, $formValues )
         $_SESSION['data'],
         array(
             'column' => 'logical_adr',
-            'value' => ' ',
+            'value' => '',
             'type' => 'string',
         )
     );
