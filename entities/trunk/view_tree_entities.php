@@ -10,8 +10,7 @@
 * @license GPL
 * @author  C�dric Ndoumba  <dev@maarch.org>
 */
-//require_once("core/class/class_functions.php");
-//require_once("core/class/class_db.php");
+
 require_once("modules/entities/entities_tables.php");
 $admin = new core_tools();
 $admin->test_admin('manage_entities', 'entities');
@@ -24,8 +23,10 @@ if(isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true")
     $init = true;
 }
 $level = "";
-if(isset($_REQUEST['level']) && $_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1)
-{
+if (isset($_REQUEST['level']) && ($_REQUEST['level'] == 2
+    || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4
+    || $_REQUEST['level'] == 1)
+) {
     $level = $_REQUEST['level'];
 }
 $page_path = $_SESSION['config']['businessappurl'].'index.php?page=view_tree_entities&module=entities';
