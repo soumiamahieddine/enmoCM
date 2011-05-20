@@ -79,7 +79,9 @@ function getSourceResourcePath(
     if (isset($resRecordset->docserver_id)) {
         $resDocserverId = $resRecordset->docserver_id;
     }
-    if (isset($resRecordset->offset_doc) && $resRecordset->offset_doc <> '') {
+    if (isset($resRecordset->offset_doc) && $resRecordset->offset_doc <> ''
+        && $resRecordset->offset_doc <> ' '
+    ) {
         //purge a container
         if (
             $docserverToPurge <> '' 

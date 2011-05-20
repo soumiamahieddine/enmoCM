@@ -77,6 +77,9 @@ try {
     } else {
         include('custom.php');
     }
+    if ($GLOBALS['customLang'] <> "" && file_exists($GLOBALS['customLang'])) {
+        include($GLOBALS['customLang']);
+    }
 } catch (IncludeFileError $e) {
     echo "Maarch_CLITools required ! \n (pear.maarch.org)\n";
     exit(106);
