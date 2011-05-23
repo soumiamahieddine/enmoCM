@@ -28,41 +28,41 @@ class folder extends request
     * @access private
     * @var integer
     */
-	private $system_id;
+	protected $system_id;
 	/**
 	* Identifier of the foldertype
     * @access private
     * @var integer
     */
-	private $foldertype_id;
+	protected $foldertype_id;
 
 	/**
 	* Label of the foldertype
     * @access private
     * @var integer
     */
-	private $foldertype_label;
+	protected $foldertype_label;
 
 	/**
 	* Identifier of the folder (Matricule)
     * @access private
     * @var integer
     */
-	private $folder_id;
+	protected $folder_id;
 
 	/**
 	* Folder Name
     * @access private
     * @var integer
     */
-	private $folder_name;
+	protected $folder_name;
 
 	/**
 	* System Identifier of the parent folder
     * @access private
     * @var integer
     */
-	private $parent_id;
+	protected $parent_id;
 
 
 	/**
@@ -70,21 +70,21 @@ class folder extends request
     * @access private
     * @var string
     */
-	private $typist;
+	protected $typist;
 
 	/**
 	* Folder status
     * @access private
     * @var string
     */
-	private $status;
+	protected $status;
 
 	/**
 	* Level of the folder
     * @access private
     * @var integer
     */
-	private $level;
+	protected $level;
 
 
 	/**
@@ -92,62 +92,62 @@ class folder extends request
     * @access private
     * @var string
     */
-	//private $retention_time;
+	//protected $retention_time;
 
 	/**
 	* Creation date of the folder
     * @access private
     * @var date
     */
-	private $creation_date;
+	protected $creation_date;
 
 	/**
 	* identifier of the folder out card
     * @access private
     * @var integer
     */
-	private $folder_out_id;
+	protected $folder_out_id;
 
 	/**
 	* folder is complete or not
     * @access private
     * @var boolean
     */
-	private $complete;
+	protected $complete;
 
 	/**
 	* Collection identifier
     * @access private
     * @var string
     */
-	private $coll_id;
+	protected $coll_id;
 	/**
 	* Collection identifier
     * @access private
     * @var string
     */
-	private $last_modified_date;
+	protected $last_modified_date;
 
 	/**
 	* Last modification date
     * @access private
     * @var date
     */
-	private $desarchive;
+	protected $desarchive;
 
 	/**
 	* Folder is in frozen state or not
     * @access private
     * @var string
     */
-	private $is_frozen;
+	protected $is_frozen;
 
 	/**
 	* Dynamic index
     * @access private
     * @var array
     */
-	private $index;
+	protected $index;
 
 	function __construct()
 	{
@@ -156,7 +156,7 @@ class folder extends request
 	}
 
 	/**
-	* Build Maarch module tables into sessions vars with a xml 
+	* Build Maarch module tables into sessions vars with a xml
 	* configuration file
 	*/
 	public function build_modules_tables()
@@ -168,13 +168,13 @@ class folder extends request
 			. DIRECTORY_SEPARATOR . "config.xml"
 		)
 		) {
-			$path = $_SESSION['config']['corepath'] . 'custom' 
+			$path = $_SESSION['config']['corepath'] . 'custom'
 				. DIRECTORY_SEPARATOR . $_SESSION['custom_override_id']
-				. DIRECTORY_SEPARATOR . "modules" . DIRECTORY_SEPARATOR 
+				. DIRECTORY_SEPARATOR . "modules" . DIRECTORY_SEPARATOR
 				. "folder" . DIRECTORY_SEPARATOR . "xml" . DIRECTORY_SEPARATOR
 				. "config.xml";
 		} else {
-			$path = "modules" . DIRECTORY_SEPARATOR . "folder" 
+			$path = "modules" . DIRECTORY_SEPARATOR . "folder"
 				. DIRECTORY_SEPARATOR . "xml" . DIRECTORY_SEPARATOR
 				. "config.xml";
 		}
@@ -280,47 +280,81 @@ class folder extends request
 	public function create_folder()
 	{
 		$this->checks_folder_data();
-		if(!empty($_SESSION['error']))
-		{
-			header("location: ".$_SESSION['config']['businessappurl']."index.php?page=create_folder_form&module=folder");
+		if (! empty($_SESSION['error'])) {
+			header(
+				"location: " . $_SESSION['config']['businessappurl']
+			    . "index.php?page=create_folder_form&module=folder"
+			);
 			exit();
-		}
-		else
-		{
+		} else {
 			$this->connect();
-			$this->query("select folder_id from ".FOLD_FOLDERS_TABLE." where folder_id= '".$_SESSION['m_admin']['folder']['folder_id'] ."'");
-			if($this->nb_result() > 0)
-			{
-				$_SESSION['error'] = $_SESSION['m_admin']['folder']['folder_id'] ." "._ALREADY_EXISTS."<br />";
-				header("location: ".$_SESSION['config']['businessappurl']."index.php?page=create_folder_form&module=folder");
+			$this->query(
+				"select folder_id from " . FOLD_FOLDERS_TABLE
+			    . " where folder_id= '"
+			    . $_SESSION['m_admin']['folder']['folder_id'] . "'"
+			);
+			if ($this->nb_result() > 0) {
+				$_SESSION['error'] = $_SESSION['m_admin']['folder']['folder_id']
+				    . " " . _ALREADY_EXISTS . "<br />";
+				header(
+					"location: " . $_SESSION['config']['businessappurl']
+				    . "index.php?page=create_folder_form&module=folder"
+				);
 				exit();
-			}
-			else
-			{
+			} else {
 				$this->connect();
-				$this->query("INSERT INTO ".FOLD_FOLDERS_TABLE." (folder_id, folder_name, foldertype_id,creation_date, typist, last_modified_date, parent_id,folder_level) VALUES ('".$this->protect_string_db($_SESSION['m_admin']['folder']['folder_id'])."', '".$this->protect_string_db($_SESSION['m_admin']['folder']['folder_name'])."',".$_SESSION['m_admin']['folder']['foldertype_id'].",  ".$this->current_datetime().", '".$_SESSION['user']['UserId']."', ".$this->current_datetime().", ".$_SESSION['m_admin']['folder']['folder_parent'].", ".$_SESSION['m_admin']['folder']['folder_level']." )");
-				$this->query('select folders_system_id from '.$_SESSION['tablename']['fold_folders']." where folder_id = '".$this->protect_string_db($_SESSION['m_admin']['folder']['folder_id'])."'");
+				$this->query(
+					"INSERT INTO " . FOLD_FOLDERS_TABLE
+				    . " (folder_id, folder_name, foldertype_id, creation_date, "
+				    . "typist, last_modified_date, parent_id,folder_level) VALUES ('"
+				    . $this->protect_string_db(
+				        $_SESSION['m_admin']['folder']['folder_id']
+				    ) . "', '" . $this->protect_string_db(
+				        $_SESSION['m_admin']['folder']['folder_name']
+				    ) . "'," . $_SESSION['m_admin']['folder']['foldertype_id']
+				    . ",  " . $this->current_datetime() . ", '"
+				    . $_SESSION['user']['UserId'] . "', "
+				    . $this->current_datetime() . ", "
+				    . $_SESSION['m_admin']['folder']['folder_parent'] . ", "
+				    . $_SESSION['m_admin']['folder']['folder_level'] . " )"
+				);
+				$this->query(
+					'select folders_system_id from ' . FOLD_FOLDERS_TABLE
+				    . " where folder_id = '" . $this->protect_string_db(
+				        $_SESSION['m_admin']['folder']['folder_id']
+				    ) . "'"
+				);
 				$res = $this->fetch_object();
 				$id = $res->folders_system_id;
 
 				$foldertype = new foldertype();
 
-				$query = $foldertype->get_sql_update($_SESSION['m_admin']['folder']['foldertype_id'], $_SESSION['m_admin']['folder']['indexes']);
-				if(!empty($query))
-				{
+				$query = $foldertype->get_sql_update(
+				    $_SESSION['m_admin']['folder']['foldertype_id'],
+				    $_SESSION['m_admin']['folder']['indexes']
+				);
+				if (! empty($query)) {
 					$query = preg_replace('/^,/', '', $query);
-					$query = "update ".FOLD_FOLDERS_TABLE." set ".$query." where folders_system_id = ".$id;
+					$query = "update  " .FOLD_FOLDERS_TABLE . " set " . $query
+					    . " where folders_system_id = " . $id;
 					$this->query($query);
 				}
-				if($_SESSION['history']['folderadd'] == "true")
-				{
+				if ($_SESSION['history']['folderadd'] == "true") {
 					$hist = new history();
-					$hist->add(FOLD_FOLDERS_TABLE, $id ,"ADD",_FOLDER_ADDED." : ".$_SESSION['m_admin']['folder']['folder_id'] , $_SESSION['config']['databasetype'], 'folder');
+					$hist->add(
+					    FOLD_FOLDERS_TABLE, $id, "ADD",
+					    _FOLDER_ADDED . " : "
+					    . $_SESSION['m_admin']['folder']['folder_id'],
+					    $_SESSION['config']['databasetype'], 'folder'
+					);
 				}
 
 				$_SESSION['error'] = _FOLDER_ADDED;
 				unset($_SESSION['m_admin']);
-				header("location: ".$_SESSION['config']['businessappurl']."index.php?page=show_folder&module=folder&id=".$id);
+				header(
+					"location: " . $_SESSION['config']['businessappurl']
+				    . "index.php?page=show_folder&module=folder&id=" . $id
+				);
 				exit();
 			}
 
@@ -330,53 +364,55 @@ class folder extends request
 	/**
 	* Processes data during folder creation
 	*/
-	private function checks_folder_data()
+	protected function checks_folder_data()
 	{
 		$foldertype = new foldertype();
 
-		if(isset($_REQUEST['folder_id']) && !empty($_REQUEST['folder_id']))
-		{
-			$_SESSION['m_admin']['folder']['folder_id'] = $this->wash($_REQUEST['folder_id'], "no", _FOLDER_ID);
-		}
-		else
-		{
+		if (isset($_REQUEST['folder_id']) && ! empty($_REQUEST['folder_id'])) {
+			$_SESSION['m_admin']['folder']['folder_id'] = $this->wash(
+			    $_REQUEST['folder_id'], "no", _FOLDER_ID
+			);
+		} else {
 			$_SESSION['m_admin']['folder']['folder_id'] = '';
-			$_SESSION['error'] .= _FOLDER_ID.' '._IS_EMPTY.'<br/>';
+			$_SESSION['error'] .= _FOLDER_ID . ' ' . _IS_EMPTY . '<br/>';
 		}
 
-		if(isset($_REQUEST['folder_name']) && !empty($_REQUEST['folder_name']))
-		{
-			$_SESSION['m_admin']['folder']['folder_name'] = $this->wash($_REQUEST['folder_name'], "no", _FOLDERNAME);
-		}
-		else
-		{
+		if (isset($_REQUEST['folder_name'])
+		    && ! empty($_REQUEST['folder_name'])
+		) {
+			$_SESSION['m_admin']['folder']['folder_name'] = $this->wash(
+			    $_REQUEST['folder_name'], "no", _FOLDERNAME
+			);
+		} else {
 			$_SESSION['m_admin']['folder']['folder_name'] = '';
-			$_SESSION['error'] .= _FOLDERNAME.' '._IS_EMPTY.'<br/>';
+			$_SESSION['error'] .= _FOLDERNAME . ' ' . _IS_EMPTY . '<br/>';
 		}
 
 		$_SESSION['m_admin']['folder']['folder_parent'] = 0;
 		$_SESSION['m_admin']['folder']['folder_level'] = 1;
 
-		if(isset($_REQUEST['folder_parent']) && !empty($_REQUEST['folder_parent']))
-		{
-			$_SESSION['m_admin']['folder']['folder_parent'] = $this->wash($_REQUEST['folder_parent'], "num", _FOLDER_PARENT);
+		if (isset($_REQUEST['folder_parent'])
+		    && ! empty($_REQUEST['folder_parent'])
+		) {
+			$_SESSION['m_admin']['folder']['folder_parent'] = $this->wash(
+			    $_REQUEST['folder_parent'], "num", _FOLDER_PARENT
+			);
 			$_SESSION['m_admin']['folder']['folder_level'] = 2;
 		}
 
-		if(isset($_REQUEST['foldertype']) && !empty($_REQUEST['foldertype']))
-		{
-			$_SESSION['m_admin']['folder']['foldertype_id'] = $this->wash($_REQUEST['foldertype'], "no", _FOLDERTYPE);
-			$indexes = $foldertype->get_indexes($_SESSION['m_admin']['folder']['foldertype_id']);
+		if (isset($_REQUEST['foldertype']) && ! empty($_REQUEST['foldertype'])) {
+			$_SESSION['m_admin']['folder']['foldertype_id'] = $this->wash(
+			    $_REQUEST['foldertype'], "no", _FOLDERTYPE
+			);
+			$indexes = $foldertype->get_indexes(
+			    $_SESSION['m_admin']['folder']['foldertype_id']
+			);
 
 			$values = array();
-			foreach( array_keys($indexes) as $key)
-			{
-				if(isset($_REQUEST[$key]))
-				{
+			foreach (array_keys($indexes) as $key) {
+				if (isset($_REQUEST[$key])) {
 					$values [$key] = $_REQUEST[$key];
-				}
-				else
-				{
+				} else {
 					$values [$key] = '';
 				}
 			}
@@ -724,7 +760,7 @@ class folder extends request
 			);
 		}
 	}
-	public function freezeFolder($folderId, $params=array()) 
+	public function freezeFolder($folderId, $params=array())
 	{
 	 	if (empty($folderId)) {
 	         return false;
@@ -743,9 +779,9 @@ class folder extends request
 			);
 		}
 	}
-	
-	
-	public function unfreezeFolder($folderId, $params=array()) 
+
+
+	public function unfreezeFolder($folderId, $params=array())
 	{
 	 	if (empty($folderId)) {
 	         return false;
@@ -764,7 +800,7 @@ class folder extends request
 			);
 		}
 	}
-		
+
 	public function delete_folder($folder_sys_id, $foldertype)
 	{
 		$this->connect();

@@ -6,6 +6,8 @@ if (isset($_SESSION['folder'])
     ?>
     <input type="submit" name="closeFolder" id="closeFolder" class="button" value="<?php
     echo _CLOSE_FOLDER;
-    ?>" />
+    ?>"  onclick="return(confirm('<?php
+        echo _REALLY_CLOSE_THIS_FOLDER . '?\n\r\n\r';
+        ?>'));" />
     <?php
 }

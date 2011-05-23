@@ -219,3 +219,9 @@ if (!defined('_FROZEN_FOLDER')) {
 if (!defined('_UNFROZEN_FOLDER')) {
 	define('_UNFROZEN_FOLDER', 'D&eacute;gel du dossier');
 }
+if (!defined('_REALLY_FREEZE_THIS_FOLDER')) {
+    define('_REALLY_FREEZE_THIS_FOLDER', 'Voulez-vous vraiment geler ce dossier');
+}
+if (!defined('_REALLY_CLOSE_THIS_FOLDER')) {
+    define('_REALLY_CLOSE_THIS_FOLDER', 'Voulez-vous vraiment cloturer ce dossier');
+}
