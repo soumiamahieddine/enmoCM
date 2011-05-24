@@ -188,7 +188,7 @@ class security extends dbquery
                     $hist = new history();
                     $ip = $_SERVER['REMOTE_ADDR'];
                     $navigateur = addslashes($_SERVER['HTTP_USER_AGENT']);
-
+                    $_SESSION['user']['UserId'] = $s_login;
                     $hist->add(
                         $_SESSION['tablename']['users'],
                         $s_login,
