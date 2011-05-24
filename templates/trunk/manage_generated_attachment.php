@@ -13,6 +13,7 @@
 
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_resource.php");
+require_once "core/class/class_security.php";
 
 $core_tools = new core_tools();
 $core_tools->test_user();
@@ -109,7 +110,10 @@ if (empty($_REQUEST['mode']) || !isset($_REQUEST['mode'])) {
                     require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
                     $users = new history();
                     //$_SESSION['error'] = _NEW_ATTACH_ADDED;
-                    $users->add($_SESSION['tablename']['attach_res_attachments'], $id, "ADD", _NEW_ATTACH_ADDED." (".$title.") ", $_SESSION['config']['databasetype'],'attachments');
+                    $users->add($_SESSION['tablename']['attach_res_attachments'], $id, "ADD", _NEW_ATTACH_ADDED." (".$_REQUEST['answer_title'].") ", $_SESSION['config']['databasetype'],'attachments');
+                    $sec = new security();
+                    $view = $sec->retrieve_view_from_coll_id($_SESSION['collection_id_choice']);
+                    $users->add($view, $_SESSION['doc_id'], "ADD", ucfirst(_DOC_NUM) . $id . ' ' . _NEW_ATTACH_ADDED . ' ' . _TO_MASTER_DOCUMENT . $_SESSION['doc_id'], $_SESSION['config']['databasetype'], 'apps');
                 }
             }
             if (empty($_SESSION['error']) || $_SESSION['error'] == _NEW_ATTACH_ADDED) {
