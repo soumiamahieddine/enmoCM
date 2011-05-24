@@ -194,7 +194,7 @@ class security extends dbquery
                         $s_login,
                         'LOGIN',
                         'IP : ' . $ip . ', BROWSER : ' . $navigateur ,
-                        $_SESSION['config']['databasetype']
+                        $_SESSION['config']['databasetype'], '', $s_login
                     );
                 }
 
