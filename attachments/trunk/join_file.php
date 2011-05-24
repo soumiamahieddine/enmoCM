@@ -247,13 +247,13 @@ if (isset($_POST['valid']) && $_POST['valid']) {
 								if ($_SESSION['history']['attachadd'] == "true") {
 									$users = new history();
 									$view = $sec->retrieve_view_from_coll_id(
-									    $collId
+									    $_SESSION['collection_id_choice']
 									);
 									$users->add(
 										$view, $_SESSION['doc_id'], "ADD",
 										ucfirst(_DOC_NUM) . $id . ' '
-										. _ADDED_TO_FOLDER_NUM
-										. $_SESSION['doc_id'],
+										. _NEW_ATTACH_ADDED . ' ' . _TO_MASTER_DOCUMENT
+                                        . $_SESSION['doc_id'],
 										$_SESSION['config']['databasetype'],
 										'apps'
 									);
