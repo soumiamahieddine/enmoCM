@@ -158,7 +158,6 @@ class security extends dbquery
                 $array['collections'] = $tmp['collections'];
                 $array['security'] = $tmp['security'];
                 $serv_controler->loadEnabledServices();
-
                 $business_app_tools = new business_app_tools();
                 $core_tools = new core_tools();
                 $business_app_tools->load_app_var_session($array);
@@ -189,6 +188,11 @@ class security extends dbquery
                     $ip = $_SERVER['REMOTE_ADDR'];
                     $navigateur = addslashes($_SERVER['HTTP_USER_AGENT']);
                     $_SESSION['user']['UserId'] = $s_login;
+                    $_SESSION['user']['department'] = $array['department'];
+                    $_SESSION['user']['primarygroup'] = $array['primarygroup'];
+                    /*echo '<pre>';
+                    print_r($_SESSION['user']);
+                    echo '<pre>';exit;*/
                     $hist->add(
                         $_SESSION['tablename']['users'],
                         $s_login,
