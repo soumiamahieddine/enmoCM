@@ -1082,3 +1082,7 @@ if (!defined('_LOGIN_HISTORY')) {
 if (!defined('_LOGOUT_HISTORY')) {
     define('_LOGOUT_HISTORY', 'Logout of user');
 }
+
+if (!defined('_TO_MASTER_DOCUMENT')) {
+    define('_TO_MASTER_DOCUMENT', 'to master document #');
+}

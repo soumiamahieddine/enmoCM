@@ -1424,3 +1424,7 @@ if (!defined('_LOGIN_HISTORY')) {
 if (!defined('_LOGOUT_HISTORY')) {
     define('_LOGOUT_HISTORY', 'D&eacute;connexion de l&rsquo;utilisateur');
 }
+
+if (!defined('_TO_MASTER_DOCUMENT')) {
+    define('_TO_MASTER_DOCUMENT', 'au document maitre n&deg;');
+}
