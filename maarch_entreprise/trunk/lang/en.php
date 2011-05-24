@@ -1074,3 +1074,11 @@ if (!defined('_SOURCE_FILE_PROPERTIES')) define('_SOURCE_FILE_PROPERTIES', 'Sour
 if (!defined('_OFFSET'))  define('_OFFSET', 'Offset');
 if (!defined('_SETUP'))  define('_SETUP', 'Setup');
 if (!defined('_LINK_EXISTS')) define('_LINK_EXISTS', 'A link exists with another object');
+
+if (!defined('_LOGIN_HISTORY')) {
+    define('_LOGIN_HISTORY', 'Login of user');
+}
+
+if (!defined('_LOGOUT_HISTORY')) {
+    define('_LOGOUT_HISTORY', 'Logout of user');
+}

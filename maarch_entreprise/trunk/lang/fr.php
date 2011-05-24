@@ -1416,3 +1416,11 @@ if (!defined('_WRONG_FUNCTION_OR_WRONG_PARAMETERS')) {
 if (!defined('_INDEXING_INSERT_ERROR')) {
 	define('_INDEXING_INSERT_ERROR', 'Indexation : erreur lors de l&rsquo;insertion');
 }
+
+if (!defined('_LOGIN_HISTORY')) {
+    define('_LOGIN_HISTORY', 'Connexion de l&rsquo;utilisateur');
+}
+
+if (!defined('_LOGOUT_HISTORY')) {
+    define('_LOGOUT_HISTORY', 'D&eacute;connexion de l&rsquo;utilisateur');
+}
