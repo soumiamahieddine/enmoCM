@@ -1991,11 +1991,11 @@ function valid_report_by_period(url)
  *
  * @param path_script String Path to the Ajax script
  **/
-function launch_autocompleter(path_script, id_text, id_div)
+function launch_autocompleter(path_script, id_text, id_div, minCharSearch)
 {
     var input = id_text ;
     var div  = id_div ;
-
+    var minCharSearch = minCharSearch ||  2;
     if( path_script)
     {
         // Ajax autocompleter object creation
