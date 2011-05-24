@@ -135,7 +135,6 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $data = array();
     $params_data = array('show_market' => false, 'show_project' => false);
     $data = get_general_data($coll_id, $res_id, 'full', $params_data);
-
     $process_data = $is->get_process_data($coll_id, $res_id);
     $chrono_number = $cr->get_chrono_number($res_id, $sec->retrieve_view_from_table($table));
     $_SESSION['doc_id'] = $res_id;
@@ -237,6 +236,17 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                         $frm_str .= '</tr>';
                     }
                 }
+                //extension
+                $db = new dbquery();
+                $db->connect();
+                $db->query("select format from ".$table." where res_id = ".$res_id);
+                $formatLine = $db->fetch_object();
+                $frm_str .= '<tr>';
+                $frm_str .= '<td width="33%" align="left"><span class="form_title" >'._FORMAT.' :</span></td>';
+                $frm_str .= '<td >';
+                $frm_str .= '<input type="text" name="alt_identifier" id="alt_identifier" value="'.$formatLine->format.'" readonly="readonly" class="readonly" style="border:none;" />';
+                $frm_str .= '</td >';
+                $frm_str .= '</tr>';
             $frm_str .= '</table>';
             $frm_str .= '</div>';
 
