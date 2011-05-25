@@ -28,7 +28,7 @@ if (isset($_REQUEST['template_content']) && !empty($_REQUEST['template_content']
     <!--[if lt IE 7.0]>  <link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['config']['css_IE']; ?>" media="screen" />  <![endif]-->
     <!--[if gte IE 7.0]>  <link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['config']['css_IE7']; ?>" media="screen" />  <![endif]-->
     <script type="text/javascript" src="js/functions.js"></script>
-    <?
+    <?php
     $_SESSION['mode_editor'] = false;
     include("modules" . DIRECTORY_SEPARATOR . "templates" . DIRECTORY_SEPARATOR . "load_editor.php");
     ?>
