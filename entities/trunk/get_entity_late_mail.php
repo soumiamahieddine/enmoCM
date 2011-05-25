@@ -4,7 +4,7 @@ require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_secur
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_manage_status.php");
 require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");
 require_once('modules'.DIRECTORY_SEPARATOR.'reports'.DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_graphics.php");
-require_once("modules/entities/entities_table.php");
+require_once('modules'.DIRECTORY_SEPARATOR.'entities'.DIRECTORY_SEPARATOR.'entities_tables.php');
 
 $_ENV['date_pattern'] = "/^[0-3][0-9]-[0-1][0-9]-[1-2][0-9][0-9][0-9]$/";
 
@@ -42,7 +42,6 @@ while($res = $db->fetch_object())
 {
     array_push($entities, array('ID' => $res->entity_id, 'LABEL' => $res->short_label));
 }
-
 
 if($report_type == 'graph')
 {
@@ -135,20 +134,14 @@ elseif($report_type == 'array')
     array_unshift($data, array('LABEL' => _ENTITY, 'VALUE' => _NB_DOCS));
 }
 
-if ( $has_data)
-{
-    if($report_type == 'graph')
-    {
+if ($has_data) {
+    if($report_type == 'graph') {
     ?>
-        <img src="<?php echo $src1;?>" alt="<?php echo $title;?>"/><?
-     }
-    elseif($report_type == 'array')
-    {
+        <img src="<?php echo $src1;?>" alt="<?php echo $title;?>"/><?php
+    } elseif($report_type == 'array') {
         $graph->show_stats_array($title, $data);
     }
-}
-else
-{
+} else {
     echo '<br/><br/><div class="error">'._NO_DATA_MESSAGE.'</div>';
 }
 exit();

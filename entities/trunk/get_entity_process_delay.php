@@ -225,7 +225,7 @@ if ( $has_data)
     if($report_type == 'graph')
     {
     ?>
-        <img src="<?php echo $src1;?>" alt="<?php echo $title;?>"/><?
+        <img src="<?php echo $src1;?>" alt="<?php echo $title;?>"/><?php
      }
     elseif($report_type == 'array')
     {
