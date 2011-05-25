@@ -121,7 +121,7 @@ class admin_reports extends dbquery
 			$enabled_reports = $rep->get_reports_from_xml();
 			$this->connect();
 			//$_SESSION['user']['reports'] = array();
-			require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."usergroups_Controler.php");
+			require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."usergroups_controler.php");
 
 			foreach(array_keys($enabled_reports)as $key)
 			{
