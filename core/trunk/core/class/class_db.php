@@ -521,6 +521,7 @@ class dbquery extends functions
         // Connexion error
         if ($this->_sqlError == 1) {
             // Shows the connexion data (server, port, user, pass)
+            header("HTTP/1.0 500 Internal Server Error");
             if ($_SESSION['config']['debug'] == 'true') {
                 echo '- <b>' . _DB_CONNEXION_ERROR . '</b>';
                 echo ' -<br /><br />' . _DATABASE_SERVER . ' : '
@@ -530,7 +531,6 @@ class dbquery extends functions
                     . _DB_USER . ' : ' . $this->_user . '<br/>' . _PASSWORD
                     . ' : ' . $this->_password;
             }
-            header("HTTP/1.0 500 Internal Server Error");
             exit();
         }
 
