@@ -10,6 +10,9 @@
  **/
 function load_query(valeurs, loaded_query, id_form, ie_browser, error_ie_txt)
 {
+	console.log('load_query');
+	console.log(valeurs);
+	console.log(loaded_query);
     for( var critere in loaded_query)
     {
         if(valeurs[critere] != undefined) // in the valeurs array
@@ -117,8 +120,34 @@ function fill_field_select_multiple(values)
             }
             Move_ext(available, key);
         }
+        if(key.indexOf('_targetlist') >= 0)
+        {
+            var available = key.substring(0, key.length -7)+'_sourcelist';
+            var available_list = $(available);
+            for(var j=0; j <values[key].length;j++)
+            {
+            	if (available_list) {
+	                for(var i=0; i<available_list.options.length;i++)
+	                {
+	                    if(values[key][j] == available_list.options[i].value)
+	                    {
+	                        available_list.options[i].selected='selected';
+	                    }
+	                }
+            	} 
+            }
+            if (available) {
+            	Move_ext(available, key);
+            }
+        }
     }
 }
+
+function fill_field_select_multiple_filter(values)
+{
+// TO DO 
+}
+
 
 /**
  * Checks checkboxes in the search form
@@ -335,10 +364,11 @@ function delete_criteria(id_elem, id_form)
 function valid_search_form(id_form)
 {
     var frm = $(id_form);
-    //var reg_chosen = new RegExp("_chosen$");
     var selects = frm.getElementsByTagName('select'); //Array
     for (var i=0; i< selects.length;i++) {
-        if (selects[i].multiple && selects[i].id.indexOf('_chosen') >= 0) {
+        if (selects[i].multiple && (selects[i].id.indexOf('_chosen') >= 0
+        	|| selects[i].id.indexOf('_targetlist') >= 0)
+        ) {
             selectall_ext(selects[i].id);
         }
     }
@@ -418,7 +448,6 @@ function clear_q_list(item_value)
 function load_query_db(id_query, id_list, id_form_to_load, sql_error_txt,
     server_error_txt, manage_script)
 {
-       // console.log(id_query);
     if (id_query != '') {
         var query_object = new Ajax.Request(
             manage_script,

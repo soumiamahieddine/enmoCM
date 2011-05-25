@@ -188,6 +188,6 @@ $time = $core->get_session_time_expire();
         ?>
     </div>
 
-<script type="text/javascript">HideMenu('menunav');</script>
+<script type="text/javascript">//HideMenu('menunav');</script>
 </body>
 </html>
