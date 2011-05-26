@@ -21,10 +21,30 @@ $(document).observe("maarch:tree:branchselect", function(evt){
     }
 });
 
+function addCustomClasses()
+{
+    var _old_insertBranch = Maarch.treeview.Tree.prototype._insertBranch;
+    Maarch.treeview.Tree.addMethods({
+
+        _insertBranch : function(branch, parent_branch_id){
+
+            var new_branch = _old_insertBranch.bind(this)(branch, parent_branch_id);
+            new_branch.addClassName(branch.classes.join(" "));
+            if(branch.open == true)
+            {
+                this.expand(new_branch);
+            }
+            return new_branch;
+        }
+    });
+
+}
+
 
 // Activate ToolTips displays and Ajax loading
 Maarch.cssPath = "./css/";
 Maarch.require('treeview', function(){
+    addCustomClasses();
     Maarch.treeview.activateToolTip();
 
 });

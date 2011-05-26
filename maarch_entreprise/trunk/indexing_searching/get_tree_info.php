@@ -239,23 +239,33 @@ if (isset($_SESSION['chosen_name_folder'])
 						);
 					}
 				}
+ 				if (isset($res2->doctype_second_level_style) && !empty($res2->doctype_second_level_style)) {
+                    $dslStyle = $res2->doctype_second_level_style;
+                } else {
+                    $dslStyle = 'default_style';
+                }
 				array_push(
 				    $sLevel,
 				    array(
 				    	'doctypes_second_level_id' => $res2->doctypes_second_level_id,
 				    	'doctypes_second_level_label' => $func->show_string($res2->doctypes_second_level_label, true),
-				    	'doctypes_second_level_class' => $res2->doctype_second_level_style,
+				    	'doctypes_second_level_class' => $dslStyle,
 				    	'doctypes' => $doctypes,
 				    )
 				);
 			}
 			//$func->show_array($sLevel);
+			if (isset($res1->doctype_first_level_style) && !empty($res1->doctype_first_level_style)) {
+                    $dflStyle = $res1->doctype_first_level_style;
+            } else {
+                    $dflStyle = 'default_style';
+            }
 			array_push(
 			    $folderLevels,
 			    array(
 			    	'doctypes_first_level_id' => $res1->doctypes_first_level_id,
 			    	'doctypes_first_level_label' => $func->show_string($res1->doctypes_first_level_label, true),
-			    	'doctypes_first_level_class' => $res1->doctype_first_level_style,
+			    	'doctypes_first_level_class' => $dflStyle,
 			    	'second_level' => $sLevel
 			    )
 			);
@@ -286,8 +296,7 @@ try {
                 ) . "</b> <small>(" . $searchCustomerResults[$i]['folder_name']
                 . ")</small>', 'toolTip' : '"
                  . $searchCustomerResults[$i]['folder_id']
-                 . "', 'classes' : ['level"
-                 . $level . "'], 'open' : true, children: [";
+                 . "', 'classes' : ['default_style'], 'open' : true, children: [";
         for ($j = 0; $j < count($searchCustomerResults[$i]['content']); $j ++) {
             $resStr .= "{'id' : 'dfl::" . addslashes(
                 $searchCustomerResults[$i]['content'][$j]['doctypes_first_level_id']
@@ -325,8 +334,7 @@ try {
                             . addslashes(
                             $searchCustomerResults[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['description']
                             ) . " (" .$searchCustomerResults[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['type_id']
-                            . ")', 'classes' : ['level"
-               		        . $level . "'],";
+                            . ")', 'classes' : ['doctypes'],";
 
 					$resStr .= 'children : [';
                 	for ($m = 0; $m < count(
@@ -340,7 +348,7 @@ try {
                             . addslashes(
                             $searchCustomerResults[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['results'][$m]['subject']
                             ) . " (" . $searchCustomerResults[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['results'][$m]['res_id']
-                            . ")', 'classes' : []},";
+                            . ")', 'classes' : ['documents']},";
 
                 	}
 					$resStr .= ']},';

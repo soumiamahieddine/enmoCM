@@ -16,7 +16,9 @@ include('../../core/init.php');
 
 $path_tmp = explode('/',$_SERVER['SCRIPT_FILENAME']);
 $path_server = implode('/',array_slice($path_tmp,0,array_search('apps',$path_tmp))).'/';
-$_SESSION['urltomodules'] = $_SESSION['config']['coreurl']."/modules/";
+if (isset($_SESSION['config']['coreurl'])) {
+    $_SESSION['urltomodules'] = $_SESSION['config']['coreurl']."/modules/";
+}
 $_SESSION['config']['corepath'] = $path_server;
 chdir($_SESSION['config']['corepath']);
 if(!isset($_SESSION['config']['app_id']) || empty($_SESSION['config']['app_id']))
@@ -29,7 +31,7 @@ if(isset($_SESSION['config']['corepath']))
 }
 else
 {
-	require_once("..".DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_functions.php");	
+	require_once("..".DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_functions.php");
 }
 //require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_db.php");
 //require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_core_tools.php");
@@ -37,13 +39,13 @@ else
 //$core_tools = new core_tools();
 //$business_app_tools = new business_app_tools();
 $func = new functions();
-$cookie = explode("&",$_COOKIE['maarch']);
+$cookie = explode("&", $_COOKIE['maarch']);
 $user = explode("=",$cookie[0]);
 $thekey = explode("=",$cookie[1]);
 $s_UserId = strtolower($func->wash($user[1],"no","","yes"));
 $s_key =strtolower($func->wash($thekey[1],"no","","yes"));
 $_SESSION['arg_page'] = '';
-	
+
 if(!empty($_SESSION['error']) || ($s_UserId == "1" && $s_key == ""))
 {
 	header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&page=login&coreurl=".$_SESSION['config']['coreurl']);
