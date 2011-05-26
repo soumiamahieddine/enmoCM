@@ -997,19 +997,23 @@ function check_docserver($collId) {
             $_SESSION['action_error'] = _TEMPLATE . ' ' . _IS_EMPTY;
             return false;
         }
-        $_SESSION['upfile']['name'] = 'tmp_file_' 
-            . $_SESSION['user']['UserId'] . '_' . rand() . '.maarch';
-        $tmpPath = $_SESSION['config']['tmppath'] . DIRECTORY_SEPARATOR
-                 . $_SESSION['upfile']['name'];
-        
-        $myfile = fopen($tmpPath, "w");
-        if (!$myfile) {
-            $_SESSION['action_error'] .= _FILE_OPEN_ERROR . '.<br/>';
-            return false;
+        if (
+            !isset($_SESSION['upfile']['name']) 
+            && $_SESSION['upfile']['name'] == ''
+        ) {
+            $_SESSION['upfile']['name'] = 'tmp_file_' 
+                . $_SESSION['user']['UserId'] . '_' . rand() . '.maarch';
+            $tmpPath = $_SESSION['config']['tmppath'] . DIRECTORY_SEPARATOR
+                . $_SESSION['upfile']['name'];
+            $myfile = fopen($tmpPath, "w");
+            if (!$myfile) {
+                $_SESSION['action_error'] .= _FILE_OPEN_ERROR . '.<br/>';
+                return false;
+            }
+            fwrite($myfile, $_SESSION['template_content']);
+            fclose($myfile);
+            $_SESSION['upfile']['size'] = filesize($tmpPath);
         }
-        fwrite($myfile, $_SESSION['template_content']);
-        fclose($myfile);
-        $_SESSION['upfile']['size'] = filesize($tmpPath);
     }
     if ($_SESSION['origin'] == "scan") {
         $newFileName = "tmp_file_" . $_SESSION['upfile']['md5'] . '.'
