@@ -14,18 +14,18 @@
 
 class notification_engine extends request
 {
-	
 	function execute_engine($working_template,$my_docs, $user)
 	//Replace all arguments in Html template by differents value loaded in load_var_sys library
 	//@args $workin_template : array : exploded template
 	//@args $my_docs : array : list of documents to process with all properties
 	{
+        $content_list = '';
 		//print_r($working_template);
 		//For the head...
 		$head = $working_template['head'];
 		$true_head = $head;
 		preg_match_all('/##(.*?)##/', $true_head, $out);
-
+        $theline = '';
 		for($i=0;$i<count($out[0]);$i++)
 		{
 			$remplacement_head = $this->load_var_sys($out[1][$i], $theline, $user);
@@ -122,7 +122,7 @@ class notification_engine extends request
 				array_push($users, array( 'ID' => htmlentities($res->user_id), 'MAIL' => htmlentities($res->mail), 'NOM' => htmlentities($res->lastname), 'PRENOM' => htmlentities($res->firstname), 'IS_ABS' => true, 'MAIL_TO_SEND' => htmlentities($res2->mail), 'USER_ID_TO_SEND' => htmlentities($res2->new_user), 'ENTITIES' => $allowed_entities));
 			}
 		}
-		if($_SESSION['debug']['hide_console'] == "false")
+		if(isset($_SESSION['debug']['hide_console']) && $_SESSION['debug']['hide_console'] == "false")
 		{
 			print_r($users);
 		}
@@ -639,7 +639,7 @@ class notification_engine extends request
 			}
 			else
 			{
-				return 'true';
+                return 'true';
 			}
 		}
 		else
@@ -655,6 +655,7 @@ class notification_engine extends request
 	//Load string ans search all function defined in this string
 	 public function load_var_sys($actual_string, $result = array(), $users = 'empty' )
 	{
+        $theline = '';
 		##display_full_name_for_dest_mail##: display complete name for the user who has receive this mail 
 		if (preg_match("/^display_full_name_for_dest_mail$/", $actual_string))
 		{

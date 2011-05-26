@@ -10,8 +10,9 @@
 * @license GPL
 * @author  Loic Vinet 	<dev@maarch.org>
 */ 
-session_name('PeopleBox');
+session_name('entreprise');
 session_start();
+$_ENV['log'] = '';
 date_default_timezone_set('Europe/Paris');
 if($argc != 2 )
 {
@@ -51,7 +52,7 @@ else
 		$used_coll_ext = $_SESSION['collection'][0]['extensions'][0];
 		$template_path = $_SESSION['config']['MaarchDirectory']."modules".DIRECTORY_SEPARATOR."notifications".DIRECTORY_SEPARATOR.$_SESSION['templates_directory'].DIRECTORY_SEPARATOR.$_SESSION['templates']['notif'];
 		$template_path_copy = $_SESSION['config']['MaarchDirectory']."modules".DIRECTORY_SEPARATOR."notifications".DIRECTORY_SEPARATOR.$_SESSION['templates_directory'].DIRECTORY_SEPARATOR.$_SESSION['templates']['notif_copy'];
-		
+		chdir($_SESSION['config']['MaarchDirectory']);
 		
 		require_once($_SESSION['config']['MaarchDirectory']."core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_functions.php");
 		require_once($_SESSION['config']['MaarchDirectory']."core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_core_tools.php");
