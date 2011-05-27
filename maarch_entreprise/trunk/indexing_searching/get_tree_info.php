@@ -107,6 +107,7 @@ if (isset($folderSystemId) && $folderSystemId <> '') {
 				. $resTmp->folders_system_id . " or folders_system_id = "
 				. $folderSystemId . " order by folder_name"
 		    );
+
 			$flagProject = true;
 		} else {
 			$db->query(
@@ -118,6 +119,7 @@ if (isset($folderSystemId) && $folderSystemId <> '') {
 			);
 		}
 	}
+	// $db->show();
 }
 $searchCustomerResults = array();
 if (isset($_SESSION['chosen_name_folder'])
@@ -125,7 +127,8 @@ if (isset($_SESSION['chosen_name_folder'])
 ) {
     while ($res = $db->fetch_object()) {
 		$actualCustomT1 = $res->folder_id;
-		if (isset($flagProject) && $flagProject) {
+		//echo '<br/>'.$actualCustomT1.'<br/>';
+		//if (isset($flagProject) && $flagProject) {
 			$dbTmp->query(
 				"select folder_name, subject from "
 			    . $_SESSION['tablename']['fold_folders']
@@ -134,7 +137,7 @@ if (isset($_SESSION['chosen_name_folder'])
 			$resTmp = $dbTmp->fetch_object();
 			$idProject = $resTmp->folder_name;
 			$labelProject = $resTmp->subject;
-		} else {
+	/*	} else {
 			$dbTmp->query(
 				"select folder_name, subject from "
 			    . $_SESSION['tablename']['fold_folders']
@@ -143,7 +146,7 @@ if (isset($_SESSION['chosen_name_folder'])
 			$resTmp = $dbTmp->fetch_object();
 			$idProject = $resTmp->folder_name;
 			$labelProject = $resTmp->subject;
-		}
+		}*/
 		$db4->query(
 			"select count(res_id) as cptresult from " . $resView
 		    . " where folder_id = '" . $actualCustomT1 . "' and ("
@@ -298,7 +301,8 @@ try {
                  . $searchCustomerResults[$i]['folder_id']
                  . "', 'classes' : ['default_style'], 'open' : true, children: [";
         for ($j = 0; $j < count($searchCustomerResults[$i]['content']); $j ++) {
-            $resStr .= "{'id' : 'dfl::" . addslashes(
+            $resStr .= "{'id' : 'folder::" . $searchCustomerResults[$i]['folder_id']
+                . "::dfl::" . addslashes(
                 $searchCustomerResults[$i]['content'][$j]['doctypes_first_level_id']
                 ) . "', 'label' :'" . addslashes(
                 $searchCustomerResults[$i]['content'][$j]['doctypes_first_level_label']
@@ -312,7 +316,10 @@ try {
                 $searchCustomerResults[$i]['content'][$j]['second_level']
             ); $k ++
             ) {
-                $resStr .= "{'id' : 'dsl::" . addslashes(
+                $resStr .= "{'id' : 'folder::" . $searchCustomerResults[$i]['folder_id']
+                . "::dfl::" . addslashes(
+                $searchCustomerResults[$i]['content'][$j]['doctypes_first_level_id']
+                ) . "::dsl::" . addslashes(
                     $searchCustomerResults[$i]['content'][$j]['second_level'][$k]['doctypes_second_level_id']
                     ) . "', 'label' :'" . addslashes(
                     $searchCustomerResults[$i]['content'][$j]['second_level'][$k]['doctypes_second_level_label']
@@ -327,7 +334,12 @@ try {
                 ); $l ++
                 ) {
 
-					    $resStr .= "{'id' : 'type::" . addslashes($searchCustomerResults[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['type_id'])
+					    $resStr .= "{'id' : 'folder::" . $searchCustomerResults[$i]['folder_id']
+                . "::dfl::" . addslashes(
+                $searchCustomerResults[$i]['content'][$j]['doctypes_first_level_id']
+                ) . "::dsl::" . addslashes(
+                    $searchCustomerResults[$i]['content'][$j]['second_level'][$k]['doctypes_second_level_id']
+                    ) . "::type::" . addslashes($searchCustomerResults[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['type_id'])
 					        . "', 'label' :'" . addslashes(
                             $searchCustomerResults[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['description']
                             ) . "', 'toolTip' : '"

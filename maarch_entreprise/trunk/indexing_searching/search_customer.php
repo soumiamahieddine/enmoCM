@@ -114,10 +114,11 @@ echo $_SESSION['config']['businessappurl'];
         var project = $('project').value;
         if (project) {
             tree_init('myTree', project);
-        }
-        var market = $('market').value;
-        if (market) {
-        	tree_init('myTree', market);
+        } else {
+            var market = $('market').value;
+            if (market) {
+        	   tree_init('myTree', market);
+            }
         }
     }
 </script>
