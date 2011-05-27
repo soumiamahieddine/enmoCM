@@ -1211,6 +1211,7 @@ class core_tools extends functions
                             <input type="button" name="<?php  echo $appServices[$i]['id'];?>" value="<?php  echo $tmp;?>" onclick="window.open('<?php  echo  $_SESSION['config']['businessappurl'].'index.php?display=true&page='.$appServices[$i]['servicepage']; ?>', '<?php  echo $appServices[$i]['id'];?>','width=<?php  echo $appServices[$i]['whereamiused'][$k]['width'];?>,height=<?php  echo $appServices[$i]['whereamiused'][$k]['height'];?>,scrollbars=yes,resizable=yes' );" class="button" /><br/>
                             <?php
                         } else if ($appServices[$i]['whereamiused'][$k]['nature'] == "include"
+                        	&& isset($_SESSION['user']['services'][$appServices[$i]['id']])
                         	&& $_SESSION['user']['services'][$appServices[$i]['id']]
                         	&& ($servicenature == "all" || $servicenature == "include")
                         	&& ! in_array(
