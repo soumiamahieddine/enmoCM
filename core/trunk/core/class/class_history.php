@@ -48,7 +48,7 @@ class history extends dbquery
 	* @param  $databasetype string Type of the database (MYSQL, POSTGRESQL, etc...)
 	* @param  $id_module string Identifier of the module concerned by the event (admin by default)
 	*/
-	public function add($where,$id,$how,$what, $databasetype, $id_module ="admin", $i)
+	public function add($where,$id,$how,$what, $databasetype, $id_module ="admin", $user="")
 	{
 		if($databasetype == "SQLSERVER")
 		{
