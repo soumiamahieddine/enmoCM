@@ -91,7 +91,8 @@ class diffusion_list extends dbquery
         );
 
         $res = $this->fetch_object();
-        if (isset($res)) {
+
+        if ($this->nb_result() > 0 && isset($res)) {
             $listmodel['dest']['user_id'] = $this->show_str($res->item_id);
             $listmodel['dest']['lastname'] = $this->show_str($res->lastname);
             $listmodel['dest']['firstname'] = $this->show_str($res->firstname);

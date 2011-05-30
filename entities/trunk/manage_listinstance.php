@@ -208,7 +208,9 @@ if (isset($_GET['action']) && $_GET['action'] == "add_entity" ) {
         $id = $_GET['id'];
         $find = false;
 
-        if ($id == $_SESSION[$origin]['diff_list']['dest']['user_id']) {
+        if (isset($_SESSION[$origin]['diff_list']['dest']['user_id']) &&
+            $id == $_SESSION[$origin]['diff_list']['dest']['user_id']
+        ) {
             $find = true;
         } else if (empty( $_SESSION[$origin]['diff_list']['dest']['user_id'])
             || ! isset( $_SESSION[$origin]['diff_list']['dest']['user_id'])
