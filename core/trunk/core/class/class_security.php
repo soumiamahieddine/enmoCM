@@ -90,6 +90,7 @@ class security extends dbquery
         $console->log(date('H:i:s').' Login start');
 
 */
+
         $array = array();
         $error = '';
         $uc = new users_controler();
@@ -108,7 +109,7 @@ class security extends dbquery
         } else {
             $comp = " and password = '" . $pass . "' and STATUS <> 'DEL'";
         }
-        //echo $comp;exit;
+        //echo "<BR>" . $comp;exit;
         $user = $uc->get($s_login, $comp);
 
         if (isset($user)) {
@@ -174,6 +175,7 @@ class security extends dbquery
                 if (isset($_SESSION['user']['primaryentity'])) {
                     $array['primaryentity'] = $_SESSION['user']['primaryentity'];
                 }
+
                 if (isset($_SESSION['user']['redirect_groupbasket'])) {
                     $array['redirect_groupbasket'] = $_SESSION['user']['redirect_groupbasket'];
                 }
