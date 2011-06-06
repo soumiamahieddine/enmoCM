@@ -7,7 +7,7 @@
 -- modules/advanced_physical_archive/sql/data/advanced_physical_archive.postgresql.sql
 
 -- test
-INSERT INTO parameters (id, param_value_string, param_value_int) VALUES ('apa_réservation_batch', NULL, '1');
+INSERT INTO parameters (id, param_value_string, param_value_int) VALUES ('apa_reservation_batch', NULL, '1');
 
 
 -- modules/basket/sql/data/basket.postgresql.sql
@@ -56,10 +56,6 @@ INSERT INTO lc_cycles (policy_id, cycle_id, cycle_desc, sequence_number, where_c
 --
 -- PostgreSQL database dump complete
 --
-
-
-
--- modules/physical_archive/sql/data/physical_archive.postgresql.sql
 
 
 
