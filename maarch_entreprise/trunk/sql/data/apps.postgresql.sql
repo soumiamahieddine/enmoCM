@@ -294,6 +294,7 @@ INSERT INTO doctypes_indexes (type_id, coll_id, field_name, mandatory) VALUES (7
 INSERT INTO doctypes_indexes (type_id, coll_id, field_name, mandatory) VALUES (71, 'letterbox_coll', 'custom_n1', 'N');
 INSERT INTO doctypes_indexes (type_id, coll_id, field_name, mandatory) VALUES (71, 'letterbox_coll', 'custom_d1', 'N');
 
+INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (5, 21, 14, 1);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2) VALUES (10, 21, 14, 1);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2) VALUES (15, 21, 14, 1);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2) VALUES (20, 21, 14, 1);
