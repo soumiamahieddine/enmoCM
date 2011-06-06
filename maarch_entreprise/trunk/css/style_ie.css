@@ -243,3 +243,8 @@ color:#FFFFFF;
 }*/
 
 #menu{ z-index: 3000;}
+
+.listing, .spec {
+    margin: 10px 0px 0;
+    width: 980px;
+}

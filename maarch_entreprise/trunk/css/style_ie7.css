@@ -115,3 +115,9 @@ width: 90%;
 top:19px;
 }
 
+.listing, .spec {
+    margin: 10px 0px 0;
+    width: 980px;
+}
+
+
