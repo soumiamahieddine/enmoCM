@@ -121,3 +121,13 @@ top:19px;
 }
 
 
+#validright
+{
+    /*width: 47%;*/
+    padding-left: 5px;
+    padding-right: 5px;
+    vertical-align:top;
+    float: left;
+    /*margin: 0 0 1em 2em;*/
+    position: relative;
+}

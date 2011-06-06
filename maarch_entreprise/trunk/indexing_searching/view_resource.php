@@ -4,8 +4,14 @@
 if ($viewResourceArr['status'] <> 'ko') {
     if (strtolower($viewResourceArr['mime_type']) == 'application/maarch') {
         ?>
-        <body id="validation_page" 
+		<!--<body id="validation_page" 
         onload="javascript:moveTo(0,0);resizeTo(screen.width, screen.height);">
+            <div id="template_content" style="width:100%;">
+            <?php echo $content;?>
+            </div>
+        </body>-->
+        <body id="validation_page" 
+        onload="javascript:moveTo(0,0);">
             <div id="template_content" style="width:100%;">
             <?php echo $content;?>
             </div>
