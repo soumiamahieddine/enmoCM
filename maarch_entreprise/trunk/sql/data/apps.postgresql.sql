@@ -257,6 +257,7 @@ INSERT INTO foldertypes_doctypes_level1 (foldertype_id, doctypes_first_level_id)
 INSERT INTO foldertypes_doctypes_level1 (foldertype_id, doctypes_first_level_id) VALUES (2, 2);
 INSERT INTO foldertypes_doctypes_level1 (foldertype_id, doctypes_first_level_id) VALUES (3, 3);
 
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll', 5, 'Appel téléphonique', 'Y', 1, 13, NULL, NULL);
 INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll', 10, 'Courrier divers', 'Y', 1, 13, NULL, NULL);
 INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll', 15, 'Demande de modification', 'Y', 1, 11, NULL, NULL);
 INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll', 20, 'Avenant', 'Y', 1, 11, NULL, NULL);
@@ -479,6 +480,17 @@ INSERT INTO templates (id, label, creation_date, template_comment, content) VALU
 </tbody>
 </table>
 <p><font size="2">&nbsp;</font></p>');
+INSERT INTO templates (id, label, creation_date, template_comment, content) VALUES (3, 'AppelTel', '2011-06-06 11:38:48.126', 'Appel téléphonique', '<p><font size="\\&quot;5\\&quot;"><strong>APPEL TELEPHONIQUE</strong></font></p>
+<p><font size="\\&quot;2\\&quot;">Bonjour,</font></p>
+<p><font size="\\&quot;2\\&quot;">Vous avez re&ccedil;u un appel t&eacute;l&eacute;phonique dont voici les informations :</font></p>
+<ul>
+<li><font size="\\&quot;2\\&quot;">Date : </font></li>
+<li><font size="\\&quot;2\\&quot;">Heure :</font></li>
+<li><font size="\\&quot;2\\&quot;">Soci&eacute;t&eacute; :</font></li>
+<li><font size="\\&quot;2\\&quot;">Contact :</font></li>
+</ul>
+<p><font size="\\&quot;2\\&quot;">Notes : </font></p>');
+
 
 
 --
@@ -500,6 +512,8 @@ INSERT INTO templates_association (template_id, what, value_field, system_id, ma
 INSERT INTO templates_association (template_id, what, value_field, system_id, maarch_module) VALUES (1, 'destination', 'EQ1', 11, 'entities');
 INSERT INTO templates_association (template_id, what, value_field, system_id, maarch_module) VALUES (1, 'destination', 'EQ2', 12, 'entities');
 INSERT INTO templates_association (template_id, what, value_field, system_id, maarch_module) VALUES (1, 'destination', 'COR', 13, 'entities');
+INSERT INTO templates_association (template_id, what, value_field, system_id, maarch_module) VALUES (2, 'destination', 'MNG', 14, 'entities');
+INSERT INTO templates_association (template_id, what, value_field, system_id, maarch_module) VALUES (3, 'destination', 'COU', 15, 'entities');
 
 
 INSERT INTO templates_doctype_ext (template_id, type_id, is_generated) VALUES (NULL, 60, 'N');
@@ -511,6 +525,7 @@ INSERT INTO templates_doctype_ext (template_id, type_id, is_generated) VALUES (N
 INSERT INTO templates_doctype_ext (template_id, type_id, is_generated) VALUES (NULL, 66, 'N');
 INSERT INTO templates_doctype_ext (template_id, type_id, is_generated) VALUES (NULL, 67, 'N');
 INSERT INTO templates_doctype_ext (template_id, type_id, is_generated) VALUES (NULL, 68, 'N');
+INSERT INTO templates_doctype_ext (template_id, type_id, is_generated) VALUES (3, 5, 'Y');
 
 -- DOCS
 -- TBC
