@@ -2,8 +2,8 @@
 <ROOT>
     <CONFIG>
         <Lang>fr</Lang> <!-- fr, en-->
-        <MaarchDirectory>C:\xampp\htdocs\maarch_entreprise_trunk\</MaarchDirectory>
-        <TmpDirectory>C:\xampp\htdocs\maarch_entreprise_trunk\modules\life_cycle\batch\tmp\</TmpDirectory>
+        <MaarchDirectory>C:\xampp\htdocs\maarch_entreprise\</MaarchDirectory>
+        <TmpDirectory>C:\xampp\htdocs\maarch_entreprise\modules\life_cycle\batch\tmp\</TmpDirectory>
         <PathToCompressTool>C:\Program Files\7-Zip\7z.exe</PathToCompressTool>
         <MaarchApps>maarch_entreprise</MaarchApps>
         <LogLevel>INFO</LogLevel>  <!-- DEBUG, INFO, NOTICE, WARNING, ERROR-->
@@ -17,7 +17,7 @@
         <databaseserver>127.0.0.1</databaseserver>
         <databaseserverport>5432</databaseserverport>
         <databasetype>POSTGRESQL</databasetype>
-        <databasename>maarch_entreprise_trunk</databasename>
+        <databasename>maarch_entreprise</databasename>
         <databaseuser>postgres</databaseuser>
         <databasepassword>maarch</databasepassword>
     </CONFIG_BASE>
