@@ -77,7 +77,7 @@ for ($i = 0; $i < count($attachArr); $i ++) {
 				$attachArr[$i][$j]["label_align"] = "left";
 				$attachArr[$i][$j]["align"] = "left";
 				$attachArr[$i][$j]["valign"] = "bottom";
-				$attachArr[$i][$j]["show"] = false;
+				$attachArr[$i][$j]["show"] = true;
 
 				if (isset($attachArr[$i][$j][$value]) && $attachArr[$i][$j]['value'] == "maarch") {
 					$modifyValue = true;
