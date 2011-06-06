@@ -1,11 +1,11 @@
--- Maarch LetterBox v3 sample data : Application
+﻿-- Maarch LetterBox v3 sample data : Application
 
 -- USERS, GROUPS and ENTITIES
 INSERT INTO usergroups (group_id, group_desc, administrator, custom_right1, custom_right2, custom_right3, custom_right4, enabled) VALUES ('ADMINS', 'Administrateurs fonctionnels', ' ', ' ', ' ', ' ', ' ', 'Y');
 INSERT INTO usergroups (group_id, group_desc, administrator, custom_right1, custom_right2, custom_right3, custom_right4, enabled) VALUES ('ARCHIVISTS', 'Archivistes et operateurs de scan', ' ', ' ', ' ', ' ', ' ', 'Y');
 INSERT INTO usergroups (group_id, group_desc, administrator, custom_right1, custom_right2, custom_right3, custom_right4, enabled) VALUES ('EMPLOYEES', 'Employés', ' ', ' ', ' ', ' ', ' ', 'Y');
-INSERT INTO usergroups (group_id, group_desc, administrator, custom_right1, custom_right2, custom_right3, custom_right4, enabled) VALUES ('MANAGERS', 'Directeurs et personnes habilitees', ' ', ' ', ' ', ' ', ' ', 'Y');
-INSERT INTO usergroups (group_id, group_desc, administrator, custom_right1, custom_right2, custom_right3, custom_right4, enabled) VALUES ('TYPISTS', 'Groupe des createurs de courriers', ' ', ' ', ' ', ' ', ' ', 'Y');
+INSERT INTO usergroups (group_id, group_desc, administrator, custom_right1, custom_right2, custom_right3, custom_right4, enabled) VALUES ('MANAGERS', 'Directeurs et personnes habilitées', ' ', ' ', ' ', ' ', ' ', 'Y');
+INSERT INTO usergroups (group_id, group_desc, administrator, custom_right1, custom_right2, custom_right3, custom_right4, enabled) VALUES ('TYPISTS', 'Groupe des créateurs de courriers', ' ', ' ', ' ', ' ', ' ', 'Y');
 INSERT INTO usergroups (group_id, group_desc, administrator, custom_right1, custom_right2, custom_right3, custom_right4, enabled) VALUES ('CORRESPONDANTS', 'Correspondants Archive', ' ', ' ', ' ', ' ', ' ', 'Y');
 
 INSERT INTO users (user_id, "password", firstname, lastname, phone, mail, department, custom_t1, custom_t2, custom_t3, cookie_key, cookie_date, enabled, change_password, delay_number, status, loginmode) VALUES ('ccharles', 'ef9689be896dacd901cae4f13593e90d', 'Charlotte', 'CHARLES', '+33 1 47 24 51', 'info@maarch.org', '', NULL, NULL, NULL, '2b67f8017119d7de32f300be3e97ccb4', '2008-09-10 15:09:23', 'Y', 'N', NULL, 'OK','standard');
@@ -157,7 +157,7 @@ INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, ca
 INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, enabled) VALUES ('apa_coll', 'APA_reservation', 'Archives reservees', 'Corbeille des archives reservees', 'res_view_apa.status = ''RSV'' and (ORIGIN= @my_primary_entity or ORIGIN in (@subentities[@my_primary_entity]))', 'NO', 'Y');
 INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, enabled) VALUES ('apa_coll', 'APA_picking', 'Archives prelevees', 'Corbeille des archives prelevees', 'res_view_apa.status = ''OUT'' and (ORIGIN= @my_primary_entity or ORIGIN in (@subentities[@my_primary_entity]))', 'NO', 'Y');
 INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, enabled) VALUES ('letterbox_coll', 'CopyMailBasket', 'Mes courriers en copie', 'Mes courriers en copie', '(res_id in (select res_id from listinstance WHERE coll_id = ''letterbox_coll'' and item_type = ''user_id'' and item_id = @user and item_mode = ''cc'') or res_id in (select res_id from listinstance WHERE coll_id = ''letterbox_coll'' and item_type = ''entity_id'' and item_mode = ''cc'' and item_id in (@my_entities))) and status <> ''DEL'' ', 'N', 'Y');
-INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, enabled) VALUES ('letterbox_coll', 'LateMailBasket', 'Mes courriers en retard', 'Mes courriers en retard', '1=1', 'N', 'Y');
+INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, enabled) VALUES ('letterbox_coll', 'LateMailBasket', 'Courriers en retard', 'Courriers en retard', 'destination in (@my_entities, @subentities[@my_primary_entity]) and (status <> ''DEL'' AND status <> ''REP'') and (now() > process_limit_date)', 'N', 'Y');
 INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, enabled) VALUES ('letterbox_coll', 'RetourCourrier', 'Retours Courrier', 'Courriers retournes au service Courrier', 'STATUS=''RET'' ', 'N', 'Y');
 INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, enabled) VALUES ('letterbox_coll', 'IndexingBasket', 'Corbeille d''indexation', 'Corbeille d''indexation', ' ', 'N', 'Y');
 INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, enabled) VALUES ('letterbox_coll', 'MyBasket', 'Mes courriers a traiter', 'Mes courriers a traiter', '(status =''NEW'' or status =''COU'') and dest_user = @user', 'N', 'Y');
@@ -172,6 +172,7 @@ INSERT INTO groupbasket (group_id, basket_id, "sequence", redirect_basketlist, r
 INSERT INTO groupbasket (group_id, basket_id, "sequence", redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('ARCHIVISTS', 'ValidationBasket', 1, NULL, NULL, 'auth_dep', 'N', 'N', 'N');
 INSERT INTO groupbasket (group_id, basket_id, "sequence", redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('MANAGERS', 'DepartmentBasket', 2, NULL, NULL, 'auth_dep', 'N', 'N', 'N');
 INSERT INTO groupbasket (group_id, basket_id, "sequence", redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('MANAGERS', 'CopyMailBasket', 4, NULL, NULL, 'auth_dep', 'N', 'N', 'N');
+INSERT INTO groupbasket (group_id, basket_id, "sequence", redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('MANAGERS', 'LateMailBasket', 5, NULL, NULL, 'auth_dep', 'N', 'N', 'N');
 INSERT INTO groupbasket (group_id, basket_id, "sequence", redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('EMPLOYEES', 'CopyMailBasket', 5, NULL, NULL, 'auth_dep', 'N', 'N', 'N');
 INSERT INTO groupbasket (group_id, basket_id, "sequence", redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('TYPISTS', 'CopyMailBasket', 7, NULL, NULL, 'auth_dep', 'N', 'N', 'N');
 INSERT INTO groupbasket (group_id, basket_id, "sequence", redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('ARCHIVISTS', 'APA_reservation', 1, NULL, NULL, 'apa_basket_list', 'N', 'N', 'N');
@@ -192,6 +193,7 @@ INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, 
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (19, '', 'EMPLOYEES', 'MyBasket', 'N', 'N', 'Y');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (100, '', 'MANAGERS', 'DepartmentBasket', 'N', 'N', 'Y');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (100, '', 'MANAGERS', 'CopyMailBasket', 'N', 'N', 'Y');
+INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (100, '', 'MANAGERS', 'LateMailBasket', 'N', 'N', 'Y');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (100, '', 'EMPLOYEES', 'CopyMailBasket', 'N', 'N', 'Y');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (100, '', 'TYPISTS', 'CopyMailBasket', 'N', 'N', 'Y');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (15, '', 'ARCHIVISTS', 'APA_reservation', 'Y', 'Y', 'N');
@@ -271,7 +273,7 @@ INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_lev
 INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll', 64, 'Mutuelle', 'Y', 2, 52, NULL, NULL);
 INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll', 65, 'Diplôme', 'Y', 2, 53, NULL, NULL);
 INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll', 66, 'Bilan de compétences', 'Y', 2, 53, NULL, NULL);
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('res_coll', 70, 'Factures', 'Y', 2, 54, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('res_coll', 70, 'Factures client', 'Y', 2, 54, NULL, NULL);
 INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll', 71, 'Facture fournisseur', 'Y', 1, 13, NULL, NULL);
 
 
