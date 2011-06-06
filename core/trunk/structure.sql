@@ -1,6 +1,6 @@
 
 
--- from core/sql/structure/core.postgresql.sql
+-- core/sql/structure/core.postgresql.sql
 
 
 SET client_encoding = 'UTF8';
@@ -302,7 +302,7 @@ CREATE TABLE users
 WITH (OIDS=FALSE);
 
 
--- from modules/advanced_physical_archive/sql/structure/advanced_physical_archive.postgresql.sql
+-- modules/advanced_physical_archive/sql/structure/advanced_physical_archive.postgresql.sql
 
 CREATE SEQUENCE arbox_id_seq
   INCREMENT 1
@@ -549,7 +549,7 @@ WITH (OIDS=FALSE);
 WITH (OIDS=FALSE);
 
 
--- from modules/alert_diffusion/sql/structure/alert_diffusion.postgresql.sql
+-- modules/alert_diffusion/sql/structure/alert_diffusion.postgresql.sql
 
 
 CREATE SEQUENCE alerts_alert_id_seq
@@ -619,7 +619,7 @@ CREATE TABLE alert_insts
 WITH (OIDS=FALSE);
 
 
--- from modules/attachments/sql/structure/attachments.postgresql.sql
+-- modules/attachments/sql/structure/attachments.postgresql.sql
 
 
 CREATE SEQUENCE res_attachment_res_id_seq
@@ -687,7 +687,7 @@ CREATE TABLE res_attachments
 WITH (OIDS=FALSE);
 
 
--- from modules/autofoldering/sql/structure/autofoldering.postgresql.sql
+-- modules/autofoldering/sql/structure/autofoldering.postgresql.sql
 
 
 CREATE TABLE af_security
@@ -731,7 +731,7 @@ CREATE TABLE af_view_customer_target
 WITH (OIDS=FALSE);
 
 
--- from modules/basket/sql/structure/basket.postgresql.sql
+-- modules/basket/sql/structure/basket.postgresql.sql
 
 CREATE TABLE actions_groupbaskets
 (
@@ -794,7 +794,7 @@ CREATE TABLE user_abs
 WITH (OIDS=FALSE);
 
 
--- from modules/cases/sql/structure/cases.postgresql.sql
+-- modules/cases/sql/structure/cases.postgresql.sql
 
 CREATE SEQUENCE case_id_seq
   INCREMENT 1
@@ -830,7 +830,7 @@ CREATE TABLE cases_res
 
 
 
--- from modules/entities/sql/structure/entities.postgresql.sql
+-- modules/entities/sql/structure/entities.postgresql.sql
 
 
 CREATE TABLE entities
@@ -912,7 +912,7 @@ CREATE TABLE groupbasket_redirect
 WITH (OIDS=FALSE);
 
 
--- from modules/folder/sql/structure/folder.postgresql.sql
+-- modules/folder/sql/structure/folder.postgresql.sql
 
 CREATE SEQUENCE folders_system_id_seq
   INCREMENT 1
@@ -936,6 +936,8 @@ CREATE TABLE folders
   folder_level smallint DEFAULT (1)::smallint,
   creation_date timestamp without time zone NOT NULL,
   folder_out_id bigint,
+  video_status character varying(10) DEFAULT NULL,
+  video_user character varying(32) DEFAULT NULL,
   is_frozen character(1) NOT NULL DEFAULT 'N',
   custom_t1 character varying(255) DEFAULT NULL::character varying,
   custom_n1 bigint,
@@ -1077,7 +1079,7 @@ CREATE TABLE foldertypes_indexes
 WITH (OIDS=FALSE);
 
 
--- from modules/full_text/sql/structure/full_text.postgresql.sql
+-- modules/full_text/sql/structure/full_text.postgresql.sql
 
 CREATE TABLE fulltext
 (
@@ -1092,7 +1094,64 @@ WITH (
 );
 
 
--- from modules/notes/sql/structure/notes.postgresql.sql
+-- modules/life_cycle/sql/structure/life_cycle.postgresql.sql
+
+CREATE TABLE lc_policies
+(
+   policy_id character varying(32) NOT NULL, 
+   policy_name character varying(255) NOT NULL,
+   policy_desc character varying(255) NOT NULL,
+   CONSTRAINT lc_policies_pkey PRIMARY KEY (policy_id)
+) 
+WITH (OIDS = FALSE);
+
+
+CREATE TABLE lc_cycles
+(
+   policy_id character varying(32) NOT NULL,
+   cycle_id character varying(32) NOT NULL, 
+   cycle_desc character varying(255) NOT NULL,
+   sequence_number integer NOT NULL,
+   where_clause text, 
+   break_key character varying(255) DEFAULT NULL,
+   validation_mode character varying(32) NOT NULL, 
+   CONSTRAINT lc_cycle_pkey PRIMARY KEY (policy_id, cycle_id)
+) 
+WITH (OIDS = FALSE);
+
+CREATE TABLE lc_cycle_steps
+(
+   policy_id character varying(32) NOT NULL,
+   cycle_id character varying(32) NOT NULL, 
+   cycle_step_id character varying(32) NOT NULL, 
+   cycle_step_desc character varying(255) NOT NULL,
+   docserver_type_id character varying(32) NOT NULL,
+   is_allow_failure boolean NOT NULL DEFAULT false,
+   step_operation character varying(32) NOT NULL,
+   sequence_number integer NOT NULL,
+   is_must_complete boolean NOT NULL DEFAULT false,
+   preprocess_script character varying(255) DEFAULT NULL, 
+   postprocess_script character varying(255) DEFAULT NULL,
+   CONSTRAINT lc_cycle_steps_pkey PRIMARY KEY (policy_id, cycle_id, cycle_step_id, docserver_type_id)
+) 
+WITH (OIDS = FALSE);
+
+CREATE TABLE lc_stack
+(
+   policy_id character varying(32) NOT NULL,
+   cycle_id character varying(32) NOT NULL, 
+   cycle_step_id character varying(32) NOT NULL, 
+   coll_id character varying(32) NOT NULL,
+   res_id bigint NOT NULL, 
+   cnt_retry integer DEFAULT NULL, 
+   status character(1) NOT NULL,
+   CONSTRAINT lc_stack_pkey PRIMARY KEY (policy_id, cycle_id, cycle_step_id, res_id)
+) 
+WITH (OIDS = FALSE);
+
+
+
+-- modules/notes/sql/structure/notes.postgresql.sql
 
 CREATE SEQUENCE notes_seq
   INCREMENT 1
@@ -1116,7 +1175,7 @@ CREATE TABLE notes
 WITH (OIDS=FALSE);
 
 
--- from modules/physical_archive/sql/structure/physical_archive.postgresql.sql
+-- modules/physical_archive/sql/structure/physical_archive.postgresql.sql
 
 create or replace function update_the_db() returns void as
 $$
@@ -1249,7 +1308,22 @@ CREATE TABLE ar_batch
 ) ;
 
 
--- from modules/templates/sql/structure/templates.postgresql.sql
+-- modules/postindexing/sql/structure/postindexing.postgresql.sql
+
+
+
+-- modules/reports/sql/structure/reports.postgresql.sql
+
+CREATE TABLE usergroups_reports
+(
+  group_id character varying(32) NOT NULL,
+  report_id character varying(50) NOT NULL,
+  CONSTRAINT usergroups_reports_pkey PRIMARY KEY (group_id, report_id)
+)
+WITH (OIDS=FALSE);
+
+
+-- modules/templates/sql/structure/templates.postgresql.sql
 
 
 CREATE SEQUENCE templates_seq
@@ -1297,76 +1371,7 @@ CREATE TABLE templates_doctype_ext
 WITH (OIDS=FALSE);
 
 
--- from modules/reports/sql/structure/reports.postgresql.sql
-
-CREATE TABLE usergroups_reports
-(
-  group_id character varying(32) NOT NULL,
-  report_id character varying(50) NOT NULL,
-  CONSTRAINT usergroups_reports_pkey PRIMARY KEY (group_id, report_id)
-)
-WITH (OIDS=FALSE);
-
-
-
--- from modules/life_cycle/sql/structure/life_cycle.postgresql.sql
-
-CREATE TABLE lc_policies
-(
-   policy_id character varying(32) NOT NULL, 
-   policy_name character varying(255) NOT NULL,
-   policy_desc character varying(255) NOT NULL,
-   CONSTRAINT lc_policies_pkey PRIMARY KEY (policy_id)
-) 
-WITH (OIDS = FALSE);
-
-
-CREATE TABLE lc_cycles
-(
-   policy_id character varying(32) NOT NULL,
-   cycle_id character varying(32) NOT NULL, 
-   cycle_desc character varying(255) NOT NULL,
-   sequence_number integer NOT NULL,
-   where_clause text, 
-   break_key character varying(255) DEFAULT NULL,
-   validation_mode character varying(32) NOT NULL, 
-   CONSTRAINT lc_cycle_pkey PRIMARY KEY (policy_id, cycle_id)
-) 
-WITH (OIDS = FALSE);
-
-CREATE TABLE lc_cycle_steps
-(
-   policy_id character varying(32) NOT NULL,
-   cycle_id character varying(32) NOT NULL, 
-   cycle_step_id character varying(32) NOT NULL, 
-   cycle_step_desc character varying(255) NOT NULL,
-   docserver_type_id character varying(32) NOT NULL,
-   is_allow_failure boolean NOT NULL DEFAULT false,
-   step_operation character varying(32) NOT NULL,
-   sequence_number integer NOT NULL,
-   is_must_complete boolean NOT NULL DEFAULT false,
-   preprocess_script character varying(255) DEFAULT NULL, 
-   postprocess_script character varying(255) DEFAULT NULL,
-   CONSTRAINT lc_cycle_steps_pkey PRIMARY KEY (policy_id, cycle_id, cycle_step_id, docserver_type_id)
-) 
-WITH (OIDS = FALSE);
-
-CREATE TABLE lc_stack
-(
-   policy_id character varying(32) NOT NULL,
-   cycle_id character varying(32) NOT NULL, 
-   cycle_step_id character varying(32) NOT NULL, 
-   coll_id character varying(32) NOT NULL,
-   res_id bigint NOT NULL, 
-   cnt_retry integer DEFAULT NULL, 
-   status character(1) NOT NULL,
-   CONSTRAINT lc_stack_pkey PRIMARY KEY (policy_id, cycle_id, cycle_step_id, res_id)
-) 
-WITH (OIDS = FALSE);
-
-
-
--- from apps/maarch_entreprise/sql/structure/apps.postgresql.sql
+-- apps/maarch_entreprise/sql/structure/apps.postgresql.sql
 
 CREATE SEQUENCE contact_id_seq
   INCREMENT 1
@@ -1873,11 +1878,7 @@ CREATE OR REPLACE VIEW af_view_customer_target_view AS
  SELECT af.level1, af.level1_id, af.level1 as level1_label, af.level2, af.level2_id, af.level2 as level2_label, af.level3, af.level3_id, af.level3 as level3_label
    FROM af_view_customer_target af ;
 
-   -- from modules/postindexing/sql/structure/postindexing.postgresql.sql
-
-ALTER TABLE folders ADD video_status character varying(10) DEFAULT NULL;
-ALTER TABLE folders ADD video_user character varying(32) DEFAULT NULL;
-
+-- Views for postindexing
  CREATE OR REPLACE VIEW view_folders AS 
  SELECT folders.folders_system_id, folders.folder_id, folders.foldertype_id, foldertypes.foldertype_label, (folders.folder_id::text || ' - '::text) || folders.folder_name::text AS folder_full_label, folders.parent_id, folders.folder_name, folders.subject, folders.description, folders.author, folders.typist, folders.status, folders.folder_level, folders.creation_date, folders.folder_out_id, folders.custom_t1, folders.custom_n1, folders.custom_f1, folders.custom_d1, folders.custom_t2, folders.custom_n2, folders.custom_f2, folders.custom_d2, folders.custom_t3, folders.custom_n3, folders.custom_f3, folders.custom_d3, folders.custom_t4, folders.custom_n4, folders.custom_f4, folders.custom_d4, folders.custom_t5, folders.custom_n5, folders.custom_f5, folders.custom_d5, folders.custom_t6, folders.custom_d6, folders.custom_t7, folders.custom_d7, folders.custom_t8, folders.custom_d8, folders.custom_t9, folders.custom_d9, folders.custom_t10, folders.custom_d10, folders.custom_t11, folders.custom_d11, folders.custom_t12, folders.custom_d12, folders.custom_t13, folders.custom_d13, folders.custom_t14, folders.custom_d14, folders.custom_t15, folders.is_complete, folders.is_folder_out, folders.last_modified_date, count(res_view_letterbox.folders_system_id) AS count_document, folders.video_status
    FROM foldertypes, folders
@@ -1896,4 +1897,4 @@ ALTER TABLE folders ADD video_user character varying(32) DEFAULT NULL;
   GROUP BY res_view_letterbox.video_user, (users.firstname::text || ' '::text) || users.lastname::text, res_view_letterbox.video_batch, res_view_letterbox.video_time, res_view_letterbox.folders_system_id, (folders.folder_id::text || ' / '::text) || folders.folder_name::text, folders.video_status;
 
 ALTER TABLE view_postindexing OWNER TO postgres;
-
+   
