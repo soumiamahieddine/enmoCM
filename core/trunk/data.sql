@@ -7,7 +7,7 @@
 -- modules/advanced_physical_archive/sql/data/advanced_physical_archive.postgresql.sql
 
 -- test
-INSERT INTO parameters (id, param_value_string, param_value_int) VALUES ('apa_rÈservation_batch', NULL, '1');
+INSERT INTO parameters (id, param_value_string, param_value_int) VALUES ('apa_r√©servation_batch', NULL, '1');
 
 
 -- modules/basket/sql/data/basket.postgresql.sql
@@ -67,8 +67,8 @@ INSERT INTO lc_cycles (policy_id, cycle_id, cycle_desc, sequence_number, where_c
 
 
 -- POSTINDEXING FOLDERS
---INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, enabled) VALUES ('folders', 'FoldersPostIndexingBasket', 'Dossiers ‡ vidÈocoder', 'Corbeilles des dossiers ‡ vidÈocoder', 'status =''NEW'' and count_document >0', 'N', 'Y');
---INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (27, 'indexing', 'VidÈocoder le dossier', NULL, 'N', 'Y', 'postindex_folders', 'Y', 'postindexing', 'Y');
+--INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, enabled) VALUES ('folders', 'FoldersPostIndexingBasket', 'Dossiers √† vid√©ocoder', 'Corbeilles des dossiers √† vid√©ocoder', 'status =''NEW'' and count_document >0', 'N', 'Y');
+--INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (27, 'indexing', 'Vid√©ocoder le dossier', NULL, 'N', 'Y', 'postindex_folders', 'Y', 'postindexing', 'Y');
 --INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('TYPISTS', 'FoldersPostIndexingBasket', 2, NULL, NULL, 'postindexing_folders_list', 'N', 'N', 'N');
 --INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (27, '', 'TYPISTS', 'FoldersPostIndexingBasket', 'Y', 'N', 'N');
 --INSERT INTO groupbasket_redirect (group_id, basket_id, action_id, entity_id, keyword, redirect_mode) VALUES ('TYPISTS', 'FoldersPostIndexingBasket', 27, '', 'ALL_ENTITIES', 'ENTITY');
