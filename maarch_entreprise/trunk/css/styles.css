@@ -1444,7 +1444,7 @@ vertical-align: middle;
 
 #footer {
     clear: both;
-    position: relative;
+    position: absolute;
     text-align: right;
     font-size: 0.8em;
     color: #CCC;
