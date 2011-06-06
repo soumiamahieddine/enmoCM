@@ -60,7 +60,7 @@ class admin_templates extends dbquery
 		$_SESSION['mode_editor'] = true;
 		include("modules".DIRECTORY_SEPARATOR."templates".DIRECTORY_SEPARATOR."load_editor.php");
 		?>
-		<h1><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_add_b.gif&module=templates" alt="" />
+		<h1><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_add_b.gif" alt="" />
 				<?php
 				if($mode == "up")
 				{
