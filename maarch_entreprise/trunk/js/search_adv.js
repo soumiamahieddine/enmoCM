@@ -10,9 +10,6 @@
  **/
 function load_query(valeurs, loaded_query, id_form, ie_browser, error_ie_txt)
 {
-	console.log('load_query');
-	console.log(valeurs);
-	console.log(loaded_query);
     for( var critere in loaded_query)
     {
         if(valeurs[critere] != undefined) // in the valeurs array
