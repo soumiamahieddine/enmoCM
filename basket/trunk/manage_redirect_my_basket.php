@@ -51,7 +51,7 @@ if(isset($_REQUEST['baskets_owner']) && !empty($_REQUEST['baskets_owner']))
 			$user_id = substr($tmp, strpos($tmp, '(') +1);
 
 			$user_id = str_replace(')', '', $user_id);
-			$bask->query("select user_id from ".$_SESSION['tablename']['users']." where user_id = '".addslashes($user_id)."' and status = 'OK' and enabled = 'Y'");
+			$bask->query("select user_id from ".$_SESSION['tablename']['users']." where user_id = '".addslashes($user_id)."'  and enabled = 'Y'"); //and status = 'OK'
 			
 			if($bask->nb_result() == 1)
 			{
