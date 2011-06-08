@@ -526,9 +526,11 @@ class business_app_tools extends dbquery
     * Loads app specific vars in session
     *
     */
-    public function load_app_var_session($userData)
+    public function load_app_var_session($userData = '')
     {
-        $this->_loadCurrentFolder($userData['UserId']);
+        if (is_array($userData)) {
+            $this->_loadCurrentFolder($userData['UserId']);
+        }
         $this->_loadEntrepriseVar();
         $this->load_features(
             'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
