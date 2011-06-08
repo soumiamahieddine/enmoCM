@@ -304,6 +304,7 @@ class basket extends dbquery
                 )
             );
         }
+	
         return $arr;
     }
 
@@ -882,7 +883,7 @@ class basket extends dbquery
             . " where basket_id = '" . $basketId . "' and new_user = '"
             . $userId . "' and system_id = " . $systemId
         );
-
+		
         $absBasket = true;
         $res = $this->fetch_object();
         $isVirtual = $res->is_virtual;
@@ -915,14 +916,17 @@ class basket extends dbquery
             $tab['desc'] .= " (" . $nameBasketOwner . ")";
             $tab['id'] .= "_" . $basketOwner;
         }
+		
         /// TO DO : Test if tmp_user is empty
-        if (isset($_SESSION['user']['UserId'])
-            && $tmpUser <> $_SESSION['user']['UserId']
+        if ((isset($_SESSION['user']['UserId'])
+            && $tmpUser <> $_SESSION['user']['UserId']) 
+			|| (!isset($_SESSION['user']['UserId']))
         ) {
             $this->query(
                 "select group_id from " . USERGROUP_CONTENT_TABLE
                 . " where primary_group = 'Y' and user_id = '" . $tmpUser . "'"
             );
+			
             $res = $this->fetch_object();
             $primaryGroup = $res->group_id;
         } else {
@@ -934,6 +938,7 @@ class basket extends dbquery
             . GROUPBASKET_TABLE . " where group_id = '" . $primaryGroup
             . "' and basket_id = '" . $basketId . "' "
         );
+
         $res = $this->fetch_object();
 
         $basketIdPage = $res->result_page;

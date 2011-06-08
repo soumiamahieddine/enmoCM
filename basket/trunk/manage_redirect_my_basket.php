@@ -52,7 +52,7 @@ if(isset($_REQUEST['baskets_owner']) && !empty($_REQUEST['baskets_owner']))
 
 			$user_id = str_replace(')', '', $user_id);
 			$bask->query("select user_id from ".$_SESSION['tablename']['users']." where user_id = '".addslashes($user_id)."' and status = 'OK' and enabled = 'Y'");
-
+			
 			if($bask->nb_result() == 1)
 			{
 				if(isset($_REQUEST['basket_'.$i]) && !empty($_REQUEST['basket_'.$i]))
@@ -72,7 +72,7 @@ if(isset($_REQUEST['baskets_owner']) && !empty($_REQUEST['baskets_owner']))
 					}
 					else
 					{
-						$original_owner = '';
+						$original_owner = $baskets_owner;
 					}
 					$basket_id = trim($_REQUEST['basket_'.$i]);
 					if(preg_match('/_/', $basket_id))

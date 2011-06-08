@@ -103,10 +103,12 @@ $core->manage_location_bar($pagePath, $pageLabel, $pageId, $init, $level);
 /***********************************************************/
 $bask = new basket();
 //$bask->load_basket();
+
 if (isset($_REQUEST['baskets']) && ! empty($_REQUEST['baskets'])) {
     //$_SESSION['tmpbasket']['service'] = $_SESSION['user']['services'][0]['ID'];
     $_SESSION['tmpbasket']['status'] = "all";
-    $bask->load_current_basket(trim($_REQUEST['baskets']), 'frame');
+    $bask->load_current_basket(trim($_REQUEST['baskets']));
+	//$bask->show_array($_SESSION['current_basket']);
 }
 ?><h1> <?php
 if (count($_SESSION['user']['baskets']) > 0) {
