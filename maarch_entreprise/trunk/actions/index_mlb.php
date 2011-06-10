@@ -454,7 +454,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
             . '<span id="exp_contact">' . _SHIPPER . '</span>'
             . '<span id="dest_contact">' . _DEST . '</span>';
     if ($_SESSION['features']['personal_contact'] == "true"
-        && $core->test_service('my_contacts', 'apps', false)
+       // && $core->test_service('my_contacts', 'apps', false)
     ) {
         $frmStr .= ' <a href="#" id="create_contact" title="' . _CREATE_CONTACT
                 . '" onclick="new Effect.toggle(\'create_contact_div\', '
