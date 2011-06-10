@@ -8,6 +8,25 @@
     font-size: 12px;
 }
 
+.blue_style_big, .blue_style_big[selected=selected]
+{
+    color: #0000FF;
+    font-weight: bold;
+    font-style: normal;
+    font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+    font-size: 14px;
+}
+
+.orange_style_big, .orange_style_big[selected=selected]
+{
+    color: #FF4500;
+    font-weight: bold;
+    font-style: normal;
+    font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+    font-size: 14px;
+}
+
+
  .blue_style, .blue_style[selected=selected]
 {
     color: #0000FF;
