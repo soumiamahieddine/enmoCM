@@ -38,13 +38,13 @@ $core_tools->manage_location_bar($page_path, $page_label, $page_id, $init, $leve
     <div class="maarch_credits_left_box" style="height:420px;">
         <h3><?php  echo _MAARCH_CREDITS; ?></h3>
     <hr/>
-    <p><em>Copyright &copy; 2008, 2009 Maarch SAS.</em></p>
-    <p>Maarch Entreprise est diffusé sous les termes de la <a href="http://www.gnu.org/licenses/gpl-3.0-standalone.html">licence GNU GPLv3</a></p>
+    <p><em>Copyright &copy; 2008-2011 Maarch SAS.</em></p>
+    <p>Maarch Entreprise est diffus&eacute; sous les termes de la <a href="http://www.gnu.org/licenses/gpl-3.0-standalone.html">licence GNU GPLv3</a></p>
     <div>
         <ul>
-            <li>Site officiel : <a href="http://www.maarch.fr">http://www.maarch.fr</a></li>
+            <li>Site officiel : <a href="http://www.maarch.com">http://www.maarch.com</a></li>
             <li>Communtauté : <a href="http://www.maarch.org">http://www.maarch.org</a></li>
-            <li>Documentation : <a href="http://www.maarch.org/maarch_wiki">http://www.maarch.org/maarch_wiki</a></li>
+            <li>Documentation : <a href="http://wiki.maarch.org/Accueil">http://wiki.maarch.org/Accueil</a></li>
         </ul>
     </div>
     <p>&nbsp;</p>
@@ -78,6 +78,7 @@ $core_tools->manage_location_bar($page_path, $page_label, $page_id, $init, $leve
         <li>Claire FIGUERAS</li>
         <li>Laurent GIOVANNONI</li>
         <li>Yves-Christian KPAKPO</li>
+	<li>S&eacute;bastien NANABONDJA</li>
         <li>Fod&eacute; NDIAYE</li>
         <li>C&eacute;dric NDOUMBA</li>
         <li>Serge THIERRY-MIEG</li>
