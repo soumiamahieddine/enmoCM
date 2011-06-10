@@ -388,18 +388,24 @@ INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (66,
 INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (70, 21, 14, 1);
 INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (71, 21, 14, 1);
 
-INSERT INTO doctypes_first_level (doctypes_first_level_id, doctypes_first_level_label, enabled) VALUES (1, 'Courriers', 'Y');
-INSERT INTO doctypes_first_level (doctypes_first_level_id, doctypes_first_level_label, enabled) VALUES (2, 'Dossier du Personnel', 'Y');
-INSERT INTO doctypes_first_level (doctypes_first_level_id, doctypes_first_level_label, enabled) VALUES (3, 'Factures', 'Y');
+INSERT INTO doctypes_first_level (doctypes_first_level_id, doctypes_first_level_label, css_style, enabled) VALUES (1, 'Courriers', 'blue_style_big', 'Y');
+INSERT INTO doctypes_first_level (doctypes_first_level_id, doctypes_first_level_label, css_style, enabled) VALUES (2, 'Dossier du Personnel', 'orange_style_big', 'Y');
+INSERT INTO doctypes_first_level (doctypes_first_level_id, doctypes_first_level_label, css_style, enabled) VALUES (3, 'Factures', NULL, 'Y');
 
-INSERT INTO doctypes_second_level (doctypes_second_level_id, doctypes_second_level_label, doctypes_first_level_id, enabled) VALUES (10, 'Ouverture de compte', 1, 'Y');
-INSERT INTO doctypes_second_level (doctypes_second_level_id, doctypes_second_level_label, doctypes_first_level_id, enabled) VALUES (11, 'Avenants', 1, 'Y');
-INSERT INTO doctypes_second_level (doctypes_second_level_id, doctypes_second_level_label, doctypes_first_level_id, enabled) VALUES (12, 'Sinistres', 1, 'Y');
-INSERT INTO doctypes_second_level (doctypes_second_level_id, doctypes_second_level_label, doctypes_first_level_id, enabled) VALUES (13, 'Autres', 1, 'Y');
-INSERT INTO doctypes_second_level (doctypes_second_level_id, doctypes_second_level_label, doctypes_first_level_id, enabled) VALUES (51, 'DDRH', 2, 'Y');
-INSERT INTO doctypes_second_level (doctypes_second_level_id, doctypes_second_level_label, doctypes_first_level_id, enabled) VALUES (52, 'Affaires Sociales', 2, 'Y');
-INSERT INTO doctypes_second_level (doctypes_second_level_id, doctypes_second_level_label, doctypes_first_level_id, enabled) VALUES (53, 'Formation', 2, 'Y');
-INSERT INTO doctypes_second_level (doctypes_second_level_id, doctypes_second_level_label, doctypes_first_level_id, enabled) VALUES (54, 'Factures', 3, 'Y');
+INSERT INTO doctypes_second_level (doctypes_second_level_id, doctypes_second_level_label, doctypes_first_level_id, css_style, enabled) VALUES (10, 'Ouverture de compte', 1, 'blue_style', 'Y');
+INSERT INTO doctypes_second_level (doctypes_second_level_id, doctypes_second_level_label, doctypes_first_level_id, css_style, enabled) VALUES (11, 'Avenants', 1, 'green_style', 'Y');
+INSERT INTO doctypes_second_level (doctypes_second_level_id, doctypes_second_level_label, doctypes_first_level_id, css_style, enabled) VALUES (12, 'Sinistres', 1, 'red_style', 'Y');
+INSERT INTO doctypes_second_level (doctypes_second_level_id, doctypes_second_level_label, doctypes_first_level_id, css_style, enabled) VALUES (13, 'Autres', 1, 'brown_style', 'Y');
+INSERT INTO doctypes_second_level (doctypes_second_level_id, doctypes_second_level_label, doctypes_first_level_id, css_style, enabled) VALUES (51, 'DDRH', 2, 'beige_style', 'Y');
+INSERT INTO doctypes_second_level (doctypes_second_level_id, doctypes_second_level_label, doctypes_first_level_id, css_style, enabled) VALUES (52, 'Affaires Sociales', 2, 'violet_style', 'Y');
+INSERT INTO doctypes_second_level (doctypes_second_level_id, doctypes_second_level_label, doctypes_first_level_id, css_style, enabled) VALUES (53, 'Formation', 2, 'pink_style', 'Y');
+INSERT INTO doctypes_second_level (doctypes_second_level_id, doctypes_second_level_label, doctypes_first_level_id, css_style, enabled) VALUES (54, 'Factures', 3, NULL, 'Y');
+
+
+
+
+
+
 
 
 -- OTHER
