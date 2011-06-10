@@ -8,7 +8,7 @@
     font-size: 12px;
 }
 
-, .blue_style, .blue_style[selected=selected]
+ .blue_style, .blue_style[selected=selected]
 {
     color: #0000FF;
     font-weight: bold;
@@ -35,7 +35,7 @@
     font-size: 12px;
 }
 
-.beige_style, .blue_style[selected=selected]
+.beige_style, .beige_style[selected=selected]
 {
     color: #D2B48C;
     font-weight: bold;
@@ -80,7 +80,7 @@
     font-size: 12px;
 }
 
-.orange_style, .blue_style[selected=selected]
+.orange_style, .orange_style[selected=selected]
 {
     color: #FF4500;
     font-weight: bold;

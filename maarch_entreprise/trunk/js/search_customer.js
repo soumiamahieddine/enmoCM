@@ -33,6 +33,7 @@ function addCustomClasses()
             if(branch.open == true)
             {
                 this.expand(new_branch);
+                new_branch.removeClassName('mt_leaf');
             }
             return new_branch;
         }

@@ -329,40 +329,40 @@ $module, $collId, $mode )
             . $_SESSION['config']['businessappurl'] . 'index.php?display=true'
             . '&page=get_content_js\', \'' . $displayValue . '\');">';
     $frmStr .= '<option value="">' . _CHOOSE_TYPE . '</option>';
-    if ($_SESSION['features']['show_types_tree'] == 'true') {
-        for ($i = 0; $i < count($doctypes); $i ++) {
-            $frmStr .= '<option value="" class="doctype_level1" title="'
-                    . $doctypes[$i]['label'] . '" label="'
-                    . $doctypes[$i]['label'] . '" style="color:'
-                    . $doctypes[$i]['color'].';">' . $doctypes[$i]['label']
-                    . '</option>';
-            for ($j = 0; $j < count($doctypes[$i]['level2']); $j ++) {
-                $frmStr .= '<option value="" class="doctype_level2" title="'
-                        . $doctypes[$i]['level2'][$j]['label'] . '" label="'
-                        . $doctypes[$i]['level2'][$j]['label'] . '" style="color:'
-                        . $doctypes[$i]['color'].';">&nbsp;&nbsp;'
-                        . $doctypes[$i]['level2'][$j]['label'] .'</option>';
-                for ($k = 0; $k < count($doctypes[$i]['level2'][$j]['types']);
-                    $k ++
-                ) {
-                    $frmStr .= '<option value="'
-                            . $doctypes[$i]['level2'][$j]['types'][$k]['id']
-                            . '" title="'
-                            . $doctypes[$i]['level2'][$j]['types'][$k]['label']
-                            . '" label="'
-                            . $doctypes[$i]['level2'][$j]['types'][$k]['label']
-                            . '">&nbsp;&nbsp;&nbsp;&nbsp;'
-                            . $doctypes[$i]['level2'][$j]['types'][$k]['label']
-                            . '</option>';
-                }
-            }
-        }
-    } else {
-        for ($i = 0; $i < count($doctypes); $i ++) {
-            $frmStr .= '<option value="' . $doctypes[$i]['ID'] . '" >'
-                    . $doctypes[$i]['LABEL'] . '</option>';
-        }
-    }
+if ($_SESSION['features']['show_types_tree'] == 'true') {
+	    for ($i = 0; $i < count($doctypes); $i ++) {
+		    $frmStr .= '<option value="" class="' //doctype_level1
+		    		. $doctypes[$i]['style'] . '" title="'
+		            . $doctypes[$i]['label'] . '" label="'
+		            . $doctypes[$i]['label'] . '" >' . $doctypes[$i]['label']
+		            . '</option>';
+			for ($j = 0; $j < count($doctypes[$i]['level2']); $j ++) {
+			    $frmStr .= '<option value="" class="' //doctype_level2
+			    		. $doctypes[$i]['level2'][$j]['style'] .'" title="'
+			            . $doctypes[$i]['level2'][$j]['label'] . '" label="'
+			            . $doctypes[$i]['level2'][$j]['label'] . '" >&nbsp;&nbsp;'
+			            . $doctypes[$i]['level2'][$j]['label'] .'</option>';
+			    for ($k = 0; $k < count($doctypes[$i]['level2'][$j]['types']);
+			        $k ++
+			    ) {
+				    $frmStr .= '<option value="'
+				            . $doctypes[$i]['level2'][$j]['types'][$k]['id']
+				            . '" title="'
+				            . $doctypes[$i]['level2'][$j]['types'][$k]['label']
+				            . '" label="'
+				            . $doctypes[$i]['level2'][$j]['types'][$k]['label']
+				            . '">&nbsp;&nbsp;&nbsp;&nbsp;'
+				            . $doctypes[$i]['level2'][$j]['types'][$k]['label']
+				            . '</option>';
+				}
+			}
+		}
+	} else {
+	    for ($i = 0; $i < count($doctypes); $i ++) {
+			$frmStr .= '<option value="' . $doctypes[$i]['ID'] . '" >'
+			        . $doctypes[$i]['LABEL'] . '</option>';
+		}
+	}
     $frmStr .= '</select></td>';
     $frmStr .= '<td><span class="red_asterisk" id="type_id_mandatory" '
             . 'style="display:inline;">*</span>&nbsp;</td>';
@@ -998,10 +998,10 @@ function check_docserver($collId) {
             return false;
         }
         if (
-            !isset($_SESSION['upfile']['name']) 
+            !isset($_SESSION['upfile']['name'])
             && $_SESSION['upfile']['name'] == ''
         ) {
-            $_SESSION['upfile']['name'] = 'tmp_file_' 
+            $_SESSION['upfile']['name'] = 'tmp_file_'
                 . $_SESSION['user']['UserId'] . '_' . rand() . '.maarch';
             $tmpPath = $_SESSION['config']['tmppath'] . DIRECTORY_SEPARATOR
                 . $_SESSION['upfile']['name'];
