@@ -451,7 +451,7 @@ class indexing_searching_app extends dbquery
             $where = "res_id = ".$id_to_delete;
             $request->update($table, $data, $where, $_SESSION['config']['databasetype']);
             $_SESSION['error'] = _DOC_DELETED." ("._NUM." : ".$id_to_delete.")";
-            if($_SESSION['history']['res_del'])
+            if($_SESSION['history']['resdel'])
             {
                 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
                 $hist = new history();
