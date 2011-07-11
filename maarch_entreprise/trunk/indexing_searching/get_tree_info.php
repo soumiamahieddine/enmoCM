@@ -159,19 +159,19 @@ if (isset($_SESSION['chosen_name_folder'])
 		}
 		$folderLevels = array();
 		$db1->query(
-			"select distinct doctypes_first_level_id, doctypes_first_level_label, doctype_first_level_style from "
-		    . $resView . " where folder_id = '" . $actualCustomT1 . "' and ("
-		    . $whereClause . ") order by doctypes_first_level_label asc"
+			"select distinct doctypes_first_level.doctypes_first_level_id, doctypes_first_level.doctypes_first_level_label, doctype_first_level_style from "
+		    . $resView . ", doctypes_first_level where (" . $resView . ".doctypes_first_level_id = doctypes_first_level.doctypes_first_level_id) and (folder_id = '" . $actualCustomT1 . "' and ("
+		    . $whereClause . ")) and doctypes_first_level.enabled = 'Y' order by doctypes_first_level_label asc"
 		);
 		//$db1->show();
 		while ($res1 = $db1->fetch_object()) {
 			$sLevel = array();
 			$db2->query(
-				"select distinct doctypes_second_level_id, doctypes_second_level_label, doctype_second_level_style from "
-			    . $resView . " where (doctypes_first_level_id = "
+				"select distinct doctypes_second_level.doctypes_second_level_id, doctypes_second_level.doctypes_second_level_label, doctype_second_level_style from "
+			    . $resView . ", doctypes_second_level where (" . $resView . ".doctypes_second_level_id = doctypes_second_level.doctypes_second_level_id) and ((" . $resView . ".doctypes_first_level_id = "
 			    . $res1->doctypes_first_level_id . " and folder_id = '"
 			    . $actualCustomT1 . "') and (" . $whereClause
-			    . ") order by doctypes_second_level_label asc"
+			    . ")) and doctypes_second_level.enabled = 'Y' order by doctypes_second_level_label asc"
 			);
 			//$db2->show();
 			//echo $res1->doctypes_first_level_label."<br>";
