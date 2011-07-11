@@ -1503,6 +1503,7 @@ class core_tools extends functions
     */
     public function load_footer()
     {
+        echo _MEP_VERSION;
         ?>
         Powered by Maarch&trade;. <?php  $this->show_page_stat(); ?>
         <?php
