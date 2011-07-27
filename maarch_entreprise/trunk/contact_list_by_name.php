@@ -35,11 +35,11 @@ $db->connect();
 $listArray = array();
 if($_SESSION['config']['databasetype'] == "POSTGRESQL")
 {
-	$db->query("select lastname, firstname, user_id from ".$_SESSION['tablename']['users']." where lastname ilike '%".$db->protect_string_db($_REQUEST['what'])."%' and enabled = 'Y' order by lastname");
+	$db->query("select lastname, firstname, user_id from ".$_SESSION['tablename']['users']." where lastname ilike '%".$db->protect_string_db($_REQUEST['what'])."%' and enabled = 'Y' order by lastname, firstname");
 }
 else
 {
-	$db->query("select lastname, firstname, user_id from ".$_SESSION['tablename']['users']." where lastname like '%".$db->protect_string_db($_REQUEST['what'])."%' and enabled = 'Y' order by lastname");
+	$db->query("select lastname, firstname, user_id from ".$_SESSION['tablename']['users']." where lastname like '%".$db->protect_string_db($_REQUEST['what'])."%' and enabled = 'Y' order by lastname, firstname");
 }
 while($line = $db->fetch_object())
 {
@@ -48,23 +48,23 @@ while($line = $db->fetch_object())
 }
 if($_SESSION['config']['databasetype'] == "POSTGRESQL")
 {
-	$db->query("select is_corporate_person, society, lastname, firstname, contact_id from ".$_SESSION['tablename']['contacts']." where (lastname ilike '%".$db->protect_string_db($_REQUEST['what'])."%' or firstname ilike '".$db->protect_string_db($_REQUEST['what'])."%' or society ilike '%".$db->protect_string_db($_REQUEST['what'])."%') and enabled = 'Y'");
+	$db->query("select is_corporate_person, society, lastname, firstname, contact_id from ".$_SESSION['tablename']['contacts']." where (lastname ilike '%".$db->protect_string_db($_REQUEST['what'])."%' or firstname ilike '".$db->protect_string_db($_REQUEST['what'])."%' or society ilike '%".$db->protect_string_db($_REQUEST['what'])."%') and enabled = 'Y' order by society, lastname, firstname");
 	//$db->show();
 }
 else
 {
-	$db->query("select is_corporate_person, society, lastname, firstname, contact_id from ".$_SESSION['tablename']['contacts']." where (lastname like '%".$db->protect_string_db($_REQUEST['what'])."%' or firstname like '".$db->protect_string_db($_REQUEST['what'])."%' or society like '%".$db->protect_string_db($_REQUEST['what'])."%') and enabled = 'Y'");
+	$db->query("select is_corporate_person, society, lastname, firstname, contact_id from ".$_SESSION['tablename']['contacts']." where (lastname like '%".$db->protect_string_db($_REQUEST['what'])."%' or firstname like '".$db->protect_string_db($_REQUEST['what'])."%' or society like '%".$db->protect_string_db($_REQUEST['what'])."%') and enabled = 'Y' order by society, lastname, firstname");
 }
 //$db->show();
 while($line = $db->fetch_object())
 {
 	if($line->is_corporate_person == "Y")
 	{
-		array_push($listArray, $db->show_string($line->society)." ".$db->show_string($line->lastname)." ".$db->show_string($line->firstname)." (contact:".$line->contact_id.")");
+		array_push($listArray, $db->show_string($line->society).", ".$db->show_string($line->lastname)." ".$db->show_string($line->firstname)." (contact:".$line->contact_id.")");
 	}
 	else
 	{
-		array_push($listArray, $db->show_string($line->lastname)." ".$db->show_string($line->firstname)." (contact:".$line->contact_id.")");
+		array_push($listArray, $db->show_string($line->society).", ".$db->show_string($line->lastname)." ".$db->show_string($line->firstname)." (contact:".$line->contact_id.")");
 	}
 }
 echo "<ul>\n";
