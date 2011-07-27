@@ -48,6 +48,11 @@ if (file_exists(
 }
 include_once $path;
 
+//test service print_details
+$printDetails = false;
+if ($core->test_service('print_details', 'apps', false)) {
+    $printDetails = true;
+}
 if(!isset($_REQUEST['coll_id']))
 {
     $_REQUEST['coll_id'] = "";
@@ -342,11 +347,10 @@ else
             $data = get_general_data($coll_id, $s_id, $mode_data, $param_data );
             //$data = array_merge($data, $indexes);
             //$db->show_array($indexes);
-            $detailsExport = "";
-            $detailsExport = "<html lang='fr' xmlns='http://www.w3.org/1999/xhtml' xml:lang='fr'>";
-            $detailsExport = "<head><title>Maarch Details</title><meta content='text/html; charset=UTF-8' http-equiv='Content-Type'/><meta content='fr' http-equiv='Content-Language'/>";
-            $detailsExport = "<link media='screen' href='http://127.0.0.1/DGGT/apps/maarch_letterbox/css/styles.css' type='text/css' rel='stylesheet'></head>";
-            $detailsExport = "<body>";
+            $detailsExport = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" >';
+            $detailsExport .= '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">';
+            $detailsExport .= "<head><title>Maarch Details</title><meta http-equiv='Content-Type' content='text/html; charset=UTF-8' /><meta content='fr' http-equiv='Content-Language'/></head>";
+            $detailsExport .= "<body onload='javascript:window.print();' style='font-size:8pt'>";
             ?>
             <div class="block">
                 <b>
@@ -370,7 +374,7 @@ else
             </div>
             <br/>
             <dl id="tabricator1">
-                <?php $detailsExport .= "<h1>"._DETAILLED_PROPERTIES."</h1>";?>
+                <?php $detailsExport .= "<h1><center>"._DETAILS_PRINT." : ".$s_id."</center></h1><hr>";?>
                 <dt><?php  echo _DETAILLED_PROPERTIES;?></dt>
                 <dd>
                     <h2>
@@ -381,9 +385,7 @@ else
                     </h2>
                     <br/>
                 <form method="post" name="index_doc" id="index_doc" action="index.php?page=details&dir=indexing_searching&id=<?php  echo $s_id; ?>">
-                    <?php $detailsExport .= "<table cellpadding='2' cellspacing='2' border='0' class='block forms details' width='100%'>";
-                    //$db->show_array($data);
-                    ?>
+                    <?php $detailsExport .= "<table cellpadding='2' cellspacing='0' border='1' class='block forms details' width='100%'>"; ?>
                     <table cellpadding="2" cellspacing="2" border="0" class="block forms details" width="100%">
                         <?php
                         $i=0;
@@ -407,18 +409,18 @@ else
                                 $folder_id = str_replace(")", "", $folder_id);
                             }
 
-                            $detailsExport .= "<th align='left' width='50px'>";
+                            //$detailsExport .= "<th align='left' width='50px'>";
                             ?>
                             <th align="left" class="picto" >
                                 <?php
                                 if(isset($data[$key]['addon']))
                                 {
                                     echo $data[$key]['addon'];
-                                    $detailsExport .= $data[$key]['addon'];
+                                    //$detailsExport .= $data[$key]['addon'];
                                 }
                                 elseif(isset($data[$key]['img']))
                                 {
-                                    $detailsExport .= "<img alt='".$data[$key]['label']."' title='".$data[$key]['label']."' src='".$data[$key]['img']."'  />";
+                                    //$detailsExport .= "<img alt='".$data[$key]['label']."' title='".$data[$key]['label']."' src='".$data[$key]['img']."'  />";
                                     if($folder_id <> "")
                                     {
                                         echo "<a href='".$_SESSION['config']['businessappurl']."index.php?page=show_folder&module=folder&id=".$folder_id."'>";
@@ -436,7 +438,7 @@ else
 
                                     <?php
                                 }
-                                $detailsExport .= "</th>";
+                                //$detailsExport .= "</th>";
                                 ?>
                             </th>
                             <?php
@@ -569,31 +571,19 @@ else
                             $i++;
                         }
                         $detailsExport .=  "<tr class='col'>";
-                        $detailsExport .=  "<th align='left' width='50px'>";
-                        $detailsExport .=  "<img alt='"._STATUS." : ".$res_status['LABEL']." src='".$res_status['IMG_SRC']."' />";
-                        $detailsExport .=  "</th>";
                         $detailsExport .=  "<td align='left' width='200px'>";
-                        $detailsExport .=  _STATUS." : ";
+                        $detailsExport .=  _STATUS;
                         $detailsExport .=  "</td>";
                         $detailsExport .=  "<td>";
                         $detailsExport .=  $res_status['LABEL'];
                         $detailsExport .=  "</td>";
-                        $detailsExport .=  "<th align='left' width='50px'>";
-                        $detailsExport .=  "<img alt='"._CREATION_DATE." : ".$res_status['LABEL']." src='".$_SESSION['config']['businessappurl']."static.php?filename=small_calend.gif' />";
-                        $detailsExport .=  "</th>";
-                        $detailsExport .=  "</tr>";
-
-                        $detailsExport .=  "<tr class='col'>";
-                        $detailsExport .=  "<th align='left' width='50px'>";
-                        $detailsExport .=  "<img alt='"._CHRONO_NUMBER." src='".$_SESSION['config']['businessappurl']."static.php?filename=chrono.gif' />";
-                        $detailsExport .=  "</th>";
                         $detailsExport .=  "<td align='left' width='200px'>";
-                        $detailsExport .=  _CHRONO_NUMBER." : ";
+                        $detailsExport .=  _CHRONO_NUMBER;
                         $detailsExport .=  "</td>";
                         $detailsExport .=  "<td>";
                         $detailsExport .=  $chrono_number;
                         $detailsExport .=  "</td>";
-
+                        $detailsExport .=  "</tr>";
 
                         ?>
                         <tr class="col">
@@ -623,53 +613,6 @@ else
                     </table>
                     <?php
                     $detailsExport .=  "</table>";
-                    $detailsExport .=  "<br>";
-                    $detailsExport .=  "<h2>"._FILE_PROPERTIES."</h2>";
-                    $detailsExport .=  "<table cellpadding='2' cellspacing='2' border='0' class='block forms details' width='100%'>";
-                    $detailsExport .=  "<tr>";
-                    $detailsExport .=  "<th align='left' width='255px'>";
-                    $detailsExport .=  _TYPIST." : ";
-                    $detailsExport .=  "</th>";
-                    $detailsExport .=  "<td align='left' width='250px'>";
-                    $detailsExport .=  $typist;
-                    $detailsExport .=  "</td>";
-                    $detailsExport .=  "<th align='left' width='255px'>";
-                    $detailsExport .=  _SIZE." : ";
-                    $detailsExport .=  "</th>";
-                    $detailsExport .=  "<td align='left' width='250px'>";
-                    $detailsExport .=  $filesize." "._BYTES." ( ".round($filesize/1024,2)."K )";
-                    $detailsExport .=  "</td>";
-                    $detailsExport .=  "</tr>";
-                    $detailsExport .=  "<tr>";
-                    $detailsExport .=  "<th align='left' width='255px'>";
-                    $detailsExport .=  _FORMAT." : ";
-                    $detailsExport .=  "</th>";
-                    $detailsExport .=  "<td align='left' width='250px'>";
-                    $detailsExport .=  $format;
-                    $detailsExport .=  "</td>";
-                    $detailsExport .=  "<th align='left' width='255px'>";
-                    $detailsExport .=  _CREATION_DATE." : ";
-                    $detailsExport .=  "</th>";
-                    $detailsExport .=  "<td align='left' width='250px'>";
-                    $detailsExport .=  $func->format_date_db($creation_date, false);
-                    $detailsExport .=  "</td>";
-                    $detailsExport .=  "</tr>";
-                    $detailsExport .=  "<tr>";
-                    $detailsExport .=  "<th align='left' width='255px'>";
-                    $detailsExport .=  _MD5." : ";
-                    $detailsExport .=  "</th>";
-                    $detailsExport .=  "<td align='left' width='250px'>";
-                    $detailsExport .=  $fingerprint;
-                    $detailsExport .=  "</td>";
-                    $detailsExport .=  "<th align='left' width='255px'>";
-                    $detailsExport .=  _WORK_BATCH." : ";
-                    $detailsExport .=  "</th>";
-                    $detailsExport .=  "<td align='left' width='250px'>";
-                    $detailsExport .=  $work_batch;
-                    $detailsExport .=  "</td>";
-                    $detailsExport .=  "</tr>";
-                    $detailsExport .=  "</table>";
-                    $detailsExport .= "<br><br><br><br><br><br><br><br><br><br><br><br><br><br>";
                     ?>
                     <div id="opt_indexes">
                     <?php if(count($indexes) > 0)
@@ -700,7 +643,7 @@ else
                                     <?php
                                     if(isset($indexes[$key]['img']))
                                     {
-                                        $detailsExport .= "<img alt='".$indexes[$key]['label']."' title='".$indexes[$key]['label']."' src='".$indexes[$key]['img']."'  />";
+                                        //$detailsExport .= "<img alt='".$indexes[$key]['label']."' title='".$indexes[$key]['label']."' src='".$indexes[$key]['img']."'  />";
                                         ?>
                                         <img alt="<?php echo $indexes[$key]['label'];?>" title="<?php echo $indexes[$key]['label'];?>" src="<?php echo $indexes[$key]['img'];?>"  /></a>
                                         <?php
@@ -862,6 +805,33 @@ else
         ?>
                 </dd>
                 <?php
+                $detailsExport .= "<h2>"._NOTES."</h2>";
+                $detailsExport .= "<table cellpadding='4' cellspacing='0' border='1' width='100%'>";
+                $detailsExport .= "<tr height='130px'>";
+                $detailsExport .= "<td width='15%'>";
+                $detailsExport .= "<h3>"._NOTES_1."</h3>";
+                $detailsExport .= "</td>";
+                $detailsExport .= "<td width='85%'>";
+                $detailsExport .= "&nbsp;";
+                $detailsExport .= "</td>";
+                $detailsExport .= "</tr>";
+                $detailsExport .= "<tr height='130px'>";
+                $detailsExport .= "<td width='15%'>";
+                $detailsExport .= "<h3>"._NOTES_2."</h3>";
+                $detailsExport .= "</td>";
+                $detailsExport .= "<td width='85%'>";
+                $detailsExport .= "&nbsp;";
+                $detailsExport .= "</td>";
+                $detailsExport .= "</tr>";
+                $detailsExport .= "<tr height='130px'>";
+                $detailsExport .= "<td width='15%'>";
+                $detailsExport .= "<h3>"._NOTES_3."</h3>";
+                $detailsExport .= "</td>";
+                $detailsExport .= "<td width='85%'>";
+                $detailsExport .= "&nbsp;";
+                $detailsExport .= "</td>";
+                $detailsExport .= "</tr>";
+                $detailsExport .= "</table>";
                 if($core->is_module_loaded('entities'))
                 {
                     $detailsExport .= "<h2>"._DIFF_LIST."</h2>";
@@ -884,16 +854,31 @@ else
                             <?php
                             if(isset($_SESSION['details']['diff_list']['dest']['user_id']) && !empty($_SESSION['details']['diff_list']['dest']['user_id']))
                             {
-                                $detailsExport .= "<p class='sstit'>"._RECIPIENT."</p>";
-                                $detailsExport .= "<table cellpadding='0' cellspacing='0' border='0' class='listing'>";
+                                //$detailsExport .= "<p class='sstit'>"._RECIPIENT."</p>";
+                                $detailsExport .= "<table cellpadding='4' cellspacing='0' border='1' width='100%'>";
                                 $detailsExport .= "<tr class='col'>";
-                                $detailsExport .= "<td><img src='".$_SESSION['config']['businessappurl']."static.php?filename=manage_users_entities_b_small.gif&module=entities' alt='"._USER."' title='"._USER."' /></td>";
-                                $detailsExport .= "<td>".$_SESSION['details']['diff_list']['dest']['firstname']."</td>";
-                                $detailsExport .= "<td>".$_SESSION['details']['diff_list']['dest']['lastname']."</td>";
-                                $detailsExport .= "<td>".$_SESSION['details']['diff_list']['dest']['entity_label']."</td>";
+                                $detailsExport .= "<td>"._RECIPIENT."</td>";
+                                $detailsExport .= "<td>"._TO_CC."</td>";
                                 $detailsExport .= "</tr>";
+                                $detailsExport .= "<tr class='col' valign='top'>";
+                                //$detailsExport .= "<td>-&nbsp;".$_SESSION['details']['diff_list']['dest']['firstname']."&nbsp;".$_SESSION['details']['diff_list']['dest']['lastname']."&nbsp;".$_SESSION['details']['diff_list']['dest']['entity_label']."</td>";
+                                $detailsExport .= "<td>-&nbsp;<b>".$entityLabel."</b><br>-&nbsp;".$_SESSION['details']['diff_list']['dest']['entity_label']."</td>";
+                                $detailsExport .= "<td>";
+                                for($i=0;$i<count($_SESSION['details']['diff_list']['copy']['entities']);$i++) {
+                                    $detailsExport .= "-&nbsp;".$_SESSION['details']['diff_list']['copy']['entities'][$i]['entity_id']."&nbsp;".$_SESSION['details']['diff_list']['copy']['entities'][$i]['entity_label']."<br>";
+                                }
+                                for($i=0;$i<count($_SESSION['details']['diff_list']['copy']['users']);$i++) {
+                                    //$detailsExport .= "-&nbsp;".$_SESSION['details']['diff_list']['copy']['users'][$i]['firstname']."&nbsp;".$_SESSION['details']['diff_list']['copy']['users'][$i]['lastname']."&nbsp;".$_SESSION['details']['diff_list']['copy']['users'][$i]['entity_label']."<br>";
+                                    $detailsExport .= "-&nbsp;".$_SESSION['details']['diff_list']['copy']['users'][$i]['entity_label']."<br>";
+                                }
+                                $detailsExport .= "</td>";
+                                $detailsExport .= "</tr>";
+                                /*$detailsExport .= "<td>".$_SESSION['details']['diff_list']['dest']['firstname']."&nbsp;&nbsp;</td>";
+                                $detailsExport .= "<td>".$_SESSION['details']['diff_list']['dest']['lastname']."&nbsp;&nbsp;</td>";
+                                $detailsExport .= "<td>".$_SESSION['details']['diff_list']['dest']['entity_label']."&nbsp;&nbsp;</td>";
+                                $detailsExport .= "</tr>";*/
                                 $detailsExport .= "</table>";
-                                $detailsExport .= "<br>";
+                                //$detailsExport .= "<br>";
                                 ?>
                                 <p class="sstit"><?php echo _RECIPIENT;?></p>
                                 <table cellpadding="0" cellspacing="0" border="0" class="listing">
@@ -909,8 +894,8 @@ else
                             }
                             if(count($_SESSION['details']['diff_list']['copy']['users']) > 0 || count($_SESSION['details']['diff_list']['copy']['entities']) > 0)
                             {
-                                $detailsExport .= "<p class='sstit'>"._TO_CC."</p>";
-                                $detailsExport .= "<table cellpadding='0' cellspacing='0' border='0' class='listing'>";
+                                //$detailsExport .= "<p class='sstit'>"._TO_CC."</p>";
+                                //$detailsExport .= "<table cellpadding='0' cellspacing='0' border='0' class='listing'>";
                                 ?>
                                 <p class="sstit"><?php echo _TO_CC;?></p>
                                 <table cellpadding="0" cellspacing="0" border="0" class="listing">
@@ -925,11 +910,11 @@ else
                                     {
                                         $color = ' class="col"';
                                     }
-                                    $detailsExport .= "<tr ".$color.">";
+                                    /*$detailsExport .= "<tr ".$color.">";
                                     $detailsExport .= "<td><img src='".$_SESSION['config']['businessappurl']."static.php?filename=manage_entities_b_small.gif&module=entities' alt='"._ENTITY."' title='"._ENTITY."' /></td>";
                                     $detailsExport .= "<td>".$_SESSION['details']['diff_list']['copy']['entities'][$i]['entity_id']."</td>";
                                     $detailsExport .= "<td colspan='2'>".$_SESSION['details']['diff_list']['copy']['entities'][$i]['entity_label']."</td>";
-                                    $detailsExport .= "</tr>";
+                                    $detailsExport .= "</tr>";*/
                                     ?>
                                     <tr <?php echo $color;?> >
                                         <td><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=manage_entities_b_small.gif&module=entities" alt="<?php echo _ENTITY;?>" title="<?php echo _ENTITY;?>" /></td>
@@ -947,12 +932,12 @@ else
                                     {
                                         $color = ' class="col"';
                                     }
-                                    $detailsExport .= "<tr ".$color.">";
+                                    /*$detailsExport .= "<tr ".$color.">";
                                     $detailsExport .= "<td><img src='".$_SESSION['config']['businessappurl']."static.php?filename=manage_users_entities_b_small.gif&module=entities' alt='"._USER."' title='"._USER."' /></td>";
                                     $detailsExport .= "<td>".$_SESSION['details']['diff_list']['copy']['users'][$i]['firstname']."</td>";
                                     $detailsExport .= "<td>".$_SESSION['details']['diff_list']['copy']['users'][$i]['lastname']."</td>";
                                     $detailsExport .= "<td>".$_SESSION['details']['diff_list']['copy']['users'][$i]['entity_label']."</td>";
-                                    $detailsExport .= "</tr>";
+                                    $detailsExport .= "</tr>";*/
                                     ?>
                                     <tr <?php echo $color;?> >
                                         <td><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=manage_users_entities_b_small.gif&module=entities" alt="<?php echo _USER;?>" title="<?php echo _USER;?>" /></td>
@@ -961,20 +946,20 @@ else
                                         <td><?php echo $_SESSION['details']['diff_list']['copy']['users'][$i]['entity_label'];?></td>
                                     </tr><?php
                                 }
-                                $detailsExport .= "</table>";
+                                //$detailsExport .= "</table>";
                                 ?>
                                 </table>
                                 <?php
                             }
                             if($core->test_service('update_list_diff_in_details', 'entities', false)) {
-								echo '<a href="#" onclick="window.open(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=manage_listinstance&origin=details\', \'\', \'scrollbars=yes,menubar=no,toolbar=no,status=no,resizable=yes,width=1024,height=650,location=no\');" title="'._UPDATE_LIST_DIFF.'"><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=modif_liste.png" alt="'._UPDATE_LIST_DIFF.'" />'._UPDATE_LIST_DIFF.'</a>';
-							}
+                                echo '<a href="#" onclick="window.open(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=manage_listinstance&origin=details\', \'\', \'scrollbars=yes,menubar=no,toolbar=no,status=no,resizable=yes,width=1024,height=650,location=no\');" title="'._UPDATE_LIST_DIFF.'"><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=modif_liste.png" alt="'._UPDATE_LIST_DIFF.'" />'._UPDATE_LIST_DIFF.'</a>';
+                            }
                             ?>
                         </div>
                     </dd>
                 <?php
                 }
-                $detailsExport .= "<h2>"._PROCESS."</h2>";
+                //$detailsExport .= "<h2>"._PROCESS."</h2>";
                 ?>
                 <dt><?php  echo _PROCESS;?></dt>
                 <dd>
@@ -984,9 +969,9 @@ else
                                 <td><label for="answer_types"><?php echo _ANSWER_TYPES_DONE;?> : </label></td>
                                 <td>
                                     <?php
-                                    $detailsExport .= "<table width='100%'>";
+                                    /*$detailsExport .= "<table width='100%'>";
                                     $detailsExport .= "<tr>";
-                                    $detailsExport .= "<td><label for='answer_types'>"._ANSWER_TYPES_DONE." : </label></td>";
+                                    $detailsExport .= "<td><label for='answer_types'>"._ANSWER_TYPES_DONE." : </label></td>";*/
                                     $answer_type = "";
                                     if($process_data['simple_mail'] == true)
                                     {
@@ -1017,15 +1002,15 @@ else
                                         $answer_type .=  " ".$process_data['other_answer_desc']."".', ';
                                     }
                                     $answer_type = preg_replace('/, $/', '', $answer_type);
-                                    $detailsExport .= $answer_type."</td></tr>";
+                                    //$detailsExport .= $answer_type."</td></tr>";
                                     ?>
                                     <input name="answer_types" type="text" readonly="readonly" class="readonly" value="<?php echo $answer_type;?>" style="width:500px;" />
                                 </td>
                             </tr>
                             <?php
-                            $detailsExport .= "<tr>";
+                            /*$detailsExport .= "<tr>";
                             $detailsExport .= "<td><label for='process_notes'>"._PROCESS_NOTES." : </label></td>";
-                            $detailsExport .= $db->show_string($process_data['process_notes'])."</td></tr>";
+                            $detailsExport .= $db->show_string($process_data['process_notes'])."</td></tr>";*/
                             ?>
                             <tr>
                                 <td><label for="process_notes"><?php echo _PROCESS_NOTES;?> : </label></td>
@@ -1034,9 +1019,9 @@ else
                             <?php
                             if(isset($closing_date) && !empty($closing_date))
                             {
-                                $detailsExport .= "<tr>";
+                                /*$detailsExport .= "<tr>";
                                 $detailsExport .= "<td><label for='closing_date'>"._CLOSING_DATE." : </label></td>";
-                                $detailsExport .= $closing_date."</td></tr>";
+                                $detailsExport .= $closing_date."</td></tr>";*/
                                 ?>
                                 <tr>
                                     <td><label for="closing_date"><?php echo _CLOSING_DATE;?> : </label></td>
@@ -1044,7 +1029,7 @@ else
                                 </tr>
                                 <?php
                             }
-                            $detailsExport .= "</table>";
+                            //$detailsExport .= "</table>";
                             ?>
                         </table>
                     </div>
@@ -1056,7 +1041,7 @@ else
                         $dbAttachments = new dbquery();
                         $dbAttachments->connect();
                         $dbAttachments->query($selectAttachments);
-                        $detailsExport .= "<table width='100%'>";
+                        /*$detailsExport .= "<table width='100%'>";
                         $detailsExport .= "<tr>";
                         $detailsExport .= "<td>"._ID."</td>";
                         $detailsExport .= "<td>"._DATE."</td>";
@@ -1072,7 +1057,7 @@ else
                             $detailsExport .= "<td>".$resAttachments->format."</td>";
                             $detailsExport .= "</tr>";
                         }
-                        $detailsExport .= "</table>";
+                        $detailsExport .= "</table>";*/
                         ?>
                         <div>
                         <label><?php echo _ATTACHED_DOC;?> : </label>
@@ -1108,7 +1093,7 @@ else
                     <dt><?php  echo _NOTES.$extend_title_for_notes;?></dt>
                     <dd>
                     <?php
-                        $detailsExport .= "<h3>"._NOTES." : </h3>";
+                        /*$detailsExport .= "<h3>"._NOTES." : </h3>";
                         $detailsExport .= "<table width='100%'>";
                         $detailsExport .= "<tr>";
                         $detailsExport .= "<td>"._ID."</td>";
@@ -1125,7 +1110,7 @@ else
                             $detailsExport .= "<td>".$resNotes->user_id."</td>";
                             $detailsExport .= "</tr>";
                         }
-                        $detailsExport .= "</table>";
+                        $detailsExport .= "</table>";*/
                         $select_notes[$_SESSION['tablename']['users']] = array();
                         array_push($select_notes[$_SESSION['tablename']['users']],"user_id","lastname","firstname");
                         $select_notes[$_SESSION['tablename']['not_notes']] = array();
@@ -1177,9 +1162,14 @@ $_SESSION['doc_convert']['details_result'] = $detailsExport;
 $core = new core_tools();
 if($core->is_module_loaded("doc_converter"))
 {
-
     require_once("modules".DIRECTORY_SEPARATOR."doc_converter".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
     $doc_converter = new doc_converter();
     $doc_converter->convert_details($detailsExport);
 }
-?>
+
+if ($printDetails) {
+    $Fnm = $_SESSION['config']['tmppath'].DIRECTORY_SEPARATOR.'export_details_'.$_SESSION['user']['UserId']."_export.html";
+    $inF = fopen($Fnm,"w");
+    fwrite($inF, $detailsExport);
+    fclose($inF); 
+}

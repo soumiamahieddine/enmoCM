@@ -221,4 +221,17 @@
         <nature>include</nature>
     </WHEREAMIUSED>
  </SERVICE>
+ <SERVICE>
+   <id>print_details</id>
+   <name>_PRINT_DETAILS</name>
+   <comment>_PRINT_DETAILS</comment>
+   <servicepage>print_details.php</servicepage>
+   <servicetype>use</servicetype>
+   <system_service>false</system_service>
+   <enabled>true</enabled>
+   <WHEREAMIUSED>
+        <page>details.php</page>
+        <nature>include</nature>
+    </WHEREAMIUSED>
+ </SERVICE>
 </root>

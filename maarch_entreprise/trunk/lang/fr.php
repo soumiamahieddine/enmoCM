@@ -1430,3 +1430,20 @@ if (!defined('_LOGOUT_HISTORY')) {
 if (!defined('_TO_MASTER_DOCUMENT')) {
     define('_TO_MASTER_DOCUMENT', 'au document maitre n&deg;');
 }
+
+//print details
+if (!defined('_DETAILS_PRINT')) {
+    define( '_DETAILS_PRINT', 'Fiche de liaison N&deg;');
+}
+if (!defined('_PRINT_DETAILS')) {
+    define( '_PRINT_DETAILS', 'Imprimer fiche de liaison');
+}
+if (!defined('_NOTES_1')) {
+    define( '_NOTES_1', 'Exemple Notes service 1');
+}
+if (!defined('_NOTES_2')) {
+    define( '_NOTES_2', 'Exemple Notes service 2');
+}
+if (!defined('_NOTES_3')) {
+    define( '_NOTES_3', 'Exemple Notes service 3');
+}
