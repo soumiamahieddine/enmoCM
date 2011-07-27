@@ -788,6 +788,24 @@ else
                     </table>
                     <br/>
                     <div align="center">
+                        <?php if ($printDetails) {
+                            if (
+                              isset($_SESSION['custom_override_id']) 
+                              && $_SESSION['custom_override_id'] <> ''
+                            ) {
+                               $path = $_SESSION['config']['coreurl'] 
+                                . '/custom/' 
+                                . $_SESSION['custom_override_id'] 
+                                . '/apps/' 
+                                . $_SESSION['config']['app_id'];
+                            } else {
+                              $path = $_SESSION['config']['businessappurl'];
+                            }
+                            ?>
+                            <input type="button" class="button" name="print_details" id="print_details" value="<?php echo _PRINT_DETAILS;?>" onclick="window.open('<?php echo $path . "/tmp/export_details_".$_SESSION['user']['UserId']."_export.html";?>', '_blank');" />
+                            <?php
+                            }
+                        ?>
                         <?php if($delete_doc)
                         {?>
                         <input type="submit" class="button"  value="<?php  echo _DELETE_DOC;?>" name="delete_doc" onclick="return(confirm('<?php  echo _REALLY_DELETE.' '._THIS_DOC;?> ?\n\r\n\r'));" />
