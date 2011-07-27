@@ -35,16 +35,28 @@ $core_tools->test_user();
 $core_tools->test_service('welcome_text_load', "apps");
 
 function get_file_template($this_file)
-{			
-	//File opening
-	$mail_trait = file_get_contents($this_file);
-	//Deleting comments 
-	$mail_trait = preg_replace("/(<!--.*?-->)/s","", $mail_trait);		
-	return $mail_trait; 
+{     
+  //File opening
+  $mail_trait = file_get_contents($this_file);
+  //Deleting comments 
+  $mail_trait = preg_replace("/(<!--.*?-->)/s","", $mail_trait);    
+  return $mail_trait; 
 }
+
+if (
+  isset($_SESSION['custom_override_id']) 
+  && $_SESSION['custom_override_id'] <> ''
+) {
+   $path = 'custom' . DIRECTORY_SEPARATOR 
+        . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR
+        . "apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'];
+} else {
+  $path = "apps" . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id'];
+}
+
+
 ?>
 <div id="welcome_box_left_text" >
-	<?php echo get_file_template("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id']."/welcome_file.html");?>
-	<div class="blank_space">&nbsp;</div>			
+  <?php echo get_file_template($path . "/welcome_file.html");?>
+  <div class="blank_space">&nbsp;</div>     
 </div>
-			
