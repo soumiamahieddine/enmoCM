@@ -6,6 +6,9 @@ $core->load_lang();
 $_SESSION['template_content'] = '';
 if (isset($_REQUEST['template_content']) && !empty($_REQUEST['template_content'])) {
     $_SESSION['template_content'] = stripslashes($_REQUEST['template_content']);
+    $_SESSION['upfile']['format'] = 'maarch';
+    $_SESSION['upfile']['name'] = 'tmp_file_' 
+                . $_SESSION['user']['UserId'] . '_' . rand() . '.maarch';
     $tmpPath = $_SESSION['config']['tmppath'] . DIRECTORY_SEPARATOR
              . $_SESSION['upfile']['name'];
     $myfile = fopen($tmpPath, "w");
@@ -21,7 +24,7 @@ if (isset($_REQUEST['template_content']) && !empty($_REQUEST['template_content']
         $res_model = $model->fetch_object();
         $_SESSION['template_content'] = stripslashes($res_model->content);
         $_SESSION['upfile']['format'] = 'maarch';
-        if ($_SESSION['upfile']['name'] == '') {
+        /*if ($_SESSION['upfile']['name'] == '') {
             $_SESSION['upfile']['name'] = 'tmp_file_' 
                 . $_SESSION['user']['UserId'] . '_' . rand() . '.maarch';
         }
@@ -30,7 +33,7 @@ if (isset($_REQUEST['template_content']) && !empty($_REQUEST['template_content']
         $myfile = fopen($tmpPath, "w");
         fwrite($myfile, $_SESSION['template_content'] . rand());
         fclose($myfile);
-        $_SESSION['upfile']['size'] = filesize($tmpPath);
+        $_SESSION['upfile']['size'] = filesize($tmpPath);*/
     }
 }
 ?>
