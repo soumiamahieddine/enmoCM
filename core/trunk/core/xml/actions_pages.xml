@@ -70,6 +70,14 @@ An action page is described in a ACTIONPAGE tag :
 		<MODULE></MODULE>
 		<FLAG_CREATE>false</FLAG_CREATE>
     </ACTIONPAGE>
+    <ACTIONPAGE>
+		<ID>qualify_mail</ID>
+		<LABEL>_QUALIFY</LABEL>
+    	<NAME>qualify_mail</NAME>
+        <ORIGIN>apps</ORIGIN> 
+		<MODULE></MODULE>
+		<FLAG_CREATE>false</FLAG_CREATE>
+    </ACTIONPAGE>
  	<ACTIONPAGE>
 		<ID>confirm_apa</ID>
 		<LABEL>_APA_CONFIRM_IN_OUT</LABEL>
