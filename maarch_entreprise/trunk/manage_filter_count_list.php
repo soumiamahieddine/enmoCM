@@ -193,11 +193,11 @@ if(isset($_SESSION['auth_dep']['bask_chosen_viewed']) && !empty($_SESSION['auth_
 {
 	if($where_concat <> "")
 	{
-		if($_SESSION['auth_dep']['bask_chosen_viewed'] == "yes")
+		if($_SESSION['auth_dep']['bask_chosen_viewed'] == "yes" && ($_REQUEST['template'] <> 'group_case_for_basket'))
 		{
 			$where_concat .= " and (viewed > 0)";
 		}
-		elseif($_SESSION['auth_dep']['bask_chosen_viewed'] == "no")
+		elseif($_SESSION['auth_dep']['bask_chosen_viewed'] == "no" && ($_REQUEST['template'] <> 'group_case_for_basket'))
 		{
 			$where_concat .= " and (viewed = 0 or viewed is null)";
 		}
@@ -206,11 +206,11 @@ if(isset($_SESSION['auth_dep']['bask_chosen_viewed']) && !empty($_SESSION['auth_
 	{
 		if(!empty($where))
 		{
-			if($_SESSION['auth_dep']['bask_chosen_viewed'] == "yes")
+			if($_SESSION['auth_dep']['bask_chosen_viewed'] == "yes" && ($_REQUEST['template'] <> 'group_case_for_basket'))
 			{
 				$where_concat = "(".$where.") and (viewed > 0)";
 			}
-			elseif($_SESSION['auth_dep']['bask_chosen_viewed'] == "no")
+			elseif($_SESSION['auth_dep']['bask_chosen_viewed'] == "no" && ($_REQUEST['template'] <> 'group_case_for_basket'))
 			{
 				$where_concat = "(".$where.") and (viewed = 0 or viewed is null)";
 			}
