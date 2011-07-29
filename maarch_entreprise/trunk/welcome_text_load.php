@@ -44,14 +44,20 @@ function get_file_template($this_file)
 }
 
 if (
-  isset($_SESSION['custom_override_id']) 
-  && $_SESSION['custom_override_id'] <> ''
+  (isset($_SESSION['custom_override_id']) 
+  && $_SESSION['custom_override_id'] <> '')
+  && file_exists(
+        'custom' . DIRECTORY_SEPARATOR 
+        . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR
+        . 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+        . '/welcome_file.html'
+    )
 ) {
    $path = 'custom' . DIRECTORY_SEPARATOR 
         . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR
-        . "apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'];
+        . 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id'];
 } else {
-  $path = "apps" . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id'];
+  $path = 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id'];
 }
 
 
