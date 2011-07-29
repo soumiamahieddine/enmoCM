@@ -30,10 +30,10 @@
 * It course a resources table and brings out documents candidates for full text.<br><br>
 * A user exit code is stored in fulltext_result column of the document in "res_x" :
 * <ul>
-* 	<li>1 : Full Text extraction successfull</li>
-*	<li>-1 : No file found</li>
-*	<li>-2 : File extension not allowed for lucene</li>
-*	<li>2 : no result for this extraction</li>
+*   <li>1 : Full Text extraction successfull</li>
+* <li>-1 : No file found</li>
+* <li>-2 : File extension not allowed for lucene</li>
+* <li>2 : no result for this extraction</li>
 * </ul>
 * @file
 * @author Mathieu Donzel <mathieu.donzel@sages-informatique.com>
@@ -48,6 +48,10 @@
 error_reporting(E_ERROR);
 set_error_handler(errorHandler);
 // global vars of the program
+/**
+* Name of the config (usefull for multi instance)
+*/
+$_ENV['config_name'] = "";
 /**
 * Path to the log file
 */
@@ -70,14 +74,18 @@ $_ENV['db2'] = "";
 */
 function loginCreation()
 {
-	if(!is_dir(dirname($_SERVER["PHP_SELF"]).DIRECTORY_SEPARATOR."log".DIRECTORY_SEPARATOR))
-	{
-		mkdir(dirname($_SERVER["PHP_SELF"]).DIRECTORY_SEPARATOR."log".DIRECTORY_SEPARATOR."",0777);
-	}
-	$folderLogName = dirname($_SERVER["PHP_SELF"]).DIRECTORY_SEPARATOR."log".DIRECTORY_SEPARATOR."";
-	//$_ENV['log'] = $folderLogName."full_text_".date("Y")."_".date("m")."_".date("d")." ".date("H")."-".date("i")."-".date("s").".log";
-	$_ENV['log'] = $folderLogName."full_text_".date("Y")."_".date("m")."_".date("d").".log";
-	writeLog("Application start with : ".$_SERVER['SCRIPT_FILENAME']);
+  if(!is_dir(dirname($_SERVER["PHP_SELF"]).DIRECTORY_SEPARATOR."log".DIRECTORY_SEPARATOR))
+  {
+      mkdir(dirname($_SERVER["PHP_SELF"]).DIRECTORY_SEPARATOR."log".DIRECTORY_SEPARATOR."",0777);
+  }
+  $folderLogName = dirname($_SERVER["PHP_SELF"]).DIRECTORY_SEPARATOR."log".DIRECTORY_SEPARATOR."";
+  //$_ENV['log'] = $folderLogName."full_text_".date("Y")."_".date("m")."_".date("d")." ".date("H")."-".date("i")."-".date("s").".log";
+  if (isset($_ENV['config_name']) && $_ENV['config_name'] <> '') {
+      $_ENV['log'] = $folderLogName . $_ENV['config_name'] . "_full_text_" . date("Y") . "_" . date("m") . "_" . date("d") . ".log";
+  } else {
+      $_ENV['log'] = $folderLogName . "full_text_" . date("Y") . "_" . date("m") . "_" . date("d") . ".log";
+  }
+  writeLog("Application start with : ".$_SERVER['SCRIPT_FILENAME']);
 }
 
 /**
@@ -86,9 +94,9 @@ function loginCreation()
 */
 function writeLog($EventInfo)
 {
-	$logFileOpened = fopen($_ENV['log'], "a");
-	fwrite($logFileOpened, "[".date("d")."/".date("m")."/".date("Y")." ".date("H").":".date("i").":".date("s")."] ".$EventInfo."\r\n"); 
-	fclose($logFileOpened);
+  $logFileOpened = fopen($_ENV['log'], "a");
+  fwrite($logFileOpened, "[".date("d")."/".date("m")."/".date("Y")." ".date("H").":".date("i").":".date("s")."] ".$EventInfo."\r\n"); 
+  fclose($logFileOpened);
 }
 
 /**
@@ -101,7 +109,7 @@ function writeLog($EventInfo)
 */
 function errorHandler($errno, $errstr, $errfile, $errline, $errcontext)
 {
-	writeLog("[ERROR] from  line ".$errline." : ". $errstr." [ERROR]");
+    writeLog("[ERROR] from  line ".$errline." : ". $errstr." [ERROR]");
     $_ENV['ErrorLevel'] = 1;
 }
 
@@ -112,18 +120,18 @@ function errorHandler($errno, $errstr, $errfile, $errline, $errcontext)
 */
 function isDirEmpty($dir)
 {
-	$dir = opendir($dir);
-	$isEmpty = true;
-	while(($entry = readdir($dir)) !== false)
-	{
-		if($entry !== '.' && $entry !== '..')
-		{
-			$isEmpty = false;
-			break;
-		}
-	}
-	closedir($dir);
-	return $isEmpty;
+  $dir = opendir($dir);
+  $isEmpty = true;
+  while(($entry = readdir($dir)) !== false)
+  {
+    if($entry !== '.' && $entry !== '..')
+    {
+      $isEmpty = false;
+      break;
+    }
+  }
+  closedir($dir);
+  return $isEmpty;
 }
 
 /**
@@ -136,20 +144,20 @@ function isDirEmpty($dir)
 */
 Function indexFullText($pathToFile, $indexFileDirectory, $format, $Id)
 {
-	$result = -1;
-	if (is_file($pathToFile))
-	{
-		switch (strtoupper($format))
-		{
-			case "PDF":
-				writeLog("it's a PDF file");
-				$result = indexFullTextPdf($pathToFile, $indexFileDirectory, $Id);
-				break;
-			default:
-				$result = -2;
-		}
-	}
-	return $result;
+  $result = -1;
+  if (is_file($pathToFile))
+  {
+    switch (strtoupper($format))
+    {
+      case "PDF":
+        writeLog("it's a PDF file");
+        $result = indexFullTextPdf($pathToFile, $indexFileDirectory, $Id);
+        break;
+      default:
+        $result = -2;
+    }
+  }
+  return $result;
 }
 
 /**
@@ -161,64 +169,64 @@ Function indexFullText($pathToFile, $indexFileDirectory, $format, $Id)
 */
 Function indexFullTextPdf($pathToFile, $indexFileDirectory, $Id)
 {
-	$result = -1;
-	if(is_file($pathToFile))
-	{
-		$tmpFile = $_ENV["base_directory"].DIRECTORY_SEPARATOR."tmp".DIRECTORY_SEPARATOR.basename($pathToFile).".ftx";
-		//$pathToFile = str_replace("\\\\", "\\", $pathToFile);
-		if($_ENV['osname'] == "WINDOWS")
-		{
-			//$resultExtraction = exec("\""."\"".$_ENV['maarch_tools_path']."pdftotext".DIRECTORY_SEPARATOR.$_ENV['pdftotext']."\" \"".$pathToFile."\" \"".$tmpFile."\""."\"");
-			$resultExtraction = exec("\"".$_ENV['maarch_tools_path']."pdftotext".DIRECTORY_SEPARATOR.$_ENV['pdftotext']."\" \"".$pathToFile."\" \"".$tmpFile."\"");
-			writeLog("\""."\"".$_ENV['maarch_tools_path']."pdftotext".DIRECTORY_SEPARATOR.$_ENV['pdftotext']."\" \"".$pathToFile."\" \"".$tmpFile."\""."\"");
-		}
-		elseif($_ENV['osname'] == "UNIX")
-		{
-			$resultExtraction = exec("pdftotext \"".$pathToFile."\" \"".$tmpFile."\"");
-			writeLog("pdftotext \"".$pathToFile."\" \"".$tmpFile."\"");
-		}
-		$fileContent = trim(readFileF($tmpFile));
-		if(is_file($tmpFile)) unlink($tmpFile);
-		if(strlen($fileContent) > 50)
-		{
-			// Storing text in lucene index
-			set_include_path($_ENV['maarch_tools_path'].DIRECTORY_SEPARATOR.PATH_SEPARATOR.get_include_path());
-			require_once('Zend/Search/Lucene.php');
-			if(!is_dir($indexFileDirectory))
-			{
-			    writeLog($indexFileDirectory." not exists !");
-				$index = Zend_Search_Lucene::create($indexFileDirectory);
-			}
-			else
-			{
-			    if(isDirEmpty($indexFileDirectory))
-				{
-					writeLog($indexFileDirectory." empty !");
-					$index = Zend_Search_Lucene::create($indexFileDirectory);
-				}
-				else
-				{
-					$index = Zend_Search_Lucene::open($indexFileDirectory);
-				}
-			}
-			$term = new Zend_Search_Lucene_Index_Term($Id, 'Id');
-			foreach($index->termDocs($term) as $id)
-			{
-				$index->delete($id);
-			}
-		    $doc = new Zend_Search_Lucene_Document();
-		    $doc->addField(Zend_Search_Lucene_Field::UnIndexed('Id', $Id));
-		    $doc->addField(Zend_Search_Lucene_Field::UnStored('contents', $fileContent));
-		    $index->addDocument($doc);
-			$index->commit();
-			$result = 1;
-		}
-		else
-		{
-			$result = 2;
-		}
-	}
-	return $result;
+  $result = -1;
+  if(is_file($pathToFile))
+  {
+    $tmpFile = $_ENV["base_directory"].DIRECTORY_SEPARATOR."tmp".DIRECTORY_SEPARATOR.basename($pathToFile).".ftx";
+    //$pathToFile = str_replace("\\\\", "\\", $pathToFile);
+    if($_ENV['osname'] == "WINDOWS")
+    {
+      //$resultExtraction = exec("\""."\"".$_ENV['maarch_tools_path']."pdftotext".DIRECTORY_SEPARATOR.$_ENV['pdftotext']."\" \"".$pathToFile."\" \"".$tmpFile."\""."\"");
+      $resultExtraction = exec("\"".$_ENV['maarch_tools_path']."pdftotext".DIRECTORY_SEPARATOR.$_ENV['pdftotext']."\" \"".$pathToFile."\" \"".$tmpFile."\"");
+      writeLog("\""."\"".$_ENV['maarch_tools_path']."pdftotext".DIRECTORY_SEPARATOR.$_ENV['pdftotext']."\" \"".$pathToFile."\" \"".$tmpFile."\""."\"");
+    }
+    elseif($_ENV['osname'] == "UNIX")
+    {
+      $resultExtraction = exec("pdftotext \"".$pathToFile."\" \"".$tmpFile."\"");
+      writeLog("pdftotext \"".$pathToFile."\" \"".$tmpFile."\"");
+    }
+    $fileContent = trim(readFileF($tmpFile));
+    if(is_file($tmpFile)) unlink($tmpFile);
+    if(strlen($fileContent) > 50)
+    {
+      // Storing text in lucene index
+      set_include_path($_ENV['maarch_tools_path'].DIRECTORY_SEPARATOR.PATH_SEPARATOR.get_include_path());
+      require_once('Zend/Search/Lucene.php');
+      if(!is_dir($indexFileDirectory))
+      {
+          writeLog($indexFileDirectory." not exists !");
+        $index = Zend_Search_Lucene::create($indexFileDirectory);
+      }
+      else
+      {
+          if(isDirEmpty($indexFileDirectory))
+        {
+          writeLog($indexFileDirectory." empty !");
+          $index = Zend_Search_Lucene::create($indexFileDirectory);
+        }
+        else
+        {
+          $index = Zend_Search_Lucene::open($indexFileDirectory);
+        }
+      }
+      $term = new Zend_Search_Lucene_Index_Term($Id, 'Id');
+      foreach($index->termDocs($term) as $id)
+      {
+        $index->delete($id);
+      }
+        $doc = new Zend_Search_Lucene_Document();
+        $doc->addField(Zend_Search_Lucene_Field::UnIndexed('Id', $Id));
+        $doc->addField(Zend_Search_Lucene_Field::UnStored('contents', $fileContent));
+        $index->addDocument($doc);
+      $index->commit();
+      $result = 1;
+    }
+    else
+    {
+      $result = 2;
+    }
+  }
+  return $result;
 }
 
 /**
@@ -228,54 +236,56 @@ Function indexFullTextPdf($pathToFile, $indexFileDirectory, $Id)
 */
 Function readFileF($file)
 {
-	$result = "";
-	if(is_file($file))
-	{
-	  	$fp = fopen($file, "r");
-	    $result = fread($fp, filesize($file));
-	    fclose($fp);
-	}
-	Return $result;
+  $result = "";
+  if(is_file($file))
+  {
+      $fp = fopen($file, "r");
+      $result = fread($fp, filesize($file));
+      fclose($fp);
+  }
+  Return $result;
 }
 
 // Begin
 date_default_timezone_set('Europe/Paris');
 if($argc != 2 )
 {
-	echo "You must specify the configuration file." . $argc;
-	exit;
+    echo "You must specify the configuration file." . $argc;
+    exit;
 }
 $conf = $argv[1];
 $xmlconfig = simplexml_load_file($conf);
 foreach($xmlconfig->CONFIG as $CONFIG)
-{	
-	$base_directory = $CONFIG->BASE_DIRECTORY;
-	$_ENV["base_directory"] = $base_directory;
-	$indexFileDirectory = $CONFIG->INDEX_FILE_DIRECTORY;
-	$_ENV['databaseserver'] = $CONFIG->LOCATION;
-	$_ENV['databaseport'] = $CONFIG->DATABASE_PORT;
-	$_ENV['database'] = $CONFIG ->DATABASE;
-	$_ENV['databasetype'] = $CONFIG->DATABASETYPE;
-	$_ENV['databaseuser'] = $CONFIG -> USER_NAME;
-	$_ENV['databasepwd'] = $CONFIG->PASSWORD;
-	$_ENV['tablename'] = $CONFIG->TABLE_NAME;
-	$fulltextColumnName = $CONFIG->FULLTEXT_COLUMN_NAME;
-	$_ENV['maarch_tools_path'] = $CONFIG->MAARCH_TOOLS_PATH;
-	$_ENV['max_batch_size'] = $CONFIG->MAX_BATCH_SIZE;
-}
+{
+    $_ENV['config_name'] = $CONFIG->CONFIG_NAME;
+    $base_directory = $CONFIG->BASE_DIRECTORY;
+    $_ENV["base_directory"] = $base_directory;
+    $indexFileDirectory = $CONFIG->INDEX_FILE_DIRECTORY;
+    $_ENV['databaseserver'] = $CONFIG->LOCATION;
+    $_ENV['databaseport'] = $CONFIG->DATABASE_PORT;
+    $_ENV['database'] = $CONFIG ->DATABASE;
+    $_ENV['databasetype'] = $CONFIG->DATABASETYPE;
+    $_ENV['databaseuser'] = $CONFIG -> USER_NAME;
+    $_ENV['databasepwd'] = $CONFIG->PASSWORD;
+    $_ENV['tablename'] = $CONFIG->TABLE_NAME;
+    $fulltextColumnName = $CONFIG->FULLTEXT_COLUMN_NAME;
+    $_ENV['maarch_tools_path'] = $CONFIG->MAARCH_TOOLS_PATH;
+    $_ENV['max_batch_size'] = $CONFIG->MAX_BATCH_SIZE;
+  }
 if(DIRECTORY_SEPARATOR == "/")
 {
-	$_ENV['osname'] = "UNIX";
-	 $_ENV['pdftotext'] = "pdftotext";
+    $_ENV['osname'] = "UNIX";
+     $_ENV['pdftotext'] = "pdftotext";
 }
 else
 {
-	$_ENV['osname'] = "WINDOWS";
-	$_ENV['pdftotext'] = "pdftotext.exe";
+    $_ENV['osname'] = "WINDOWS";
+    $_ENV['pdftotext'] = "pdftotext.exe";
 }
 loginCreation();
 writeLog("Launch of Lucene full text engine");
 writeLog("Loading the xml config file");
+writeLog("Config name : " . $_ENV['config_name']);
 writeLog("Full text engine launched for table : ".$_ENV['tablename']);
 require("class_db.php");
 $_ENV['db'] = new dbquery();
@@ -288,8 +298,8 @@ $_ENV['db']->query($docServers);
 writeLog("docServers found : ");
 while($queryResult=$_ENV['db']->fetch_array())
 {
-	$pathToDocServer[$queryResult[0]] = $queryResult[1];
-	writeLog($queryResult[1]);
+  $pathToDocServer[$queryResult[0]] = $queryResult[1];
+  writeLog($queryResult[1]);
 }
 $queryIndexFullText = "select res_id, docserver_id, path, filename, format from ".$_ENV['tablename']." where ".$fulltextColumnName." = '0' or ".$fulltextColumnName." = '' or ".$fulltextColumnName." is null ";
 writeLog("query to found document with no full text : ".$queryIndexFullText);
@@ -298,24 +308,24 @@ $cpt_batch_size=0;
 writeLog("max_batch_size : ".$_ENV['max_batch_size']);
 while($queryResult=$_ENV['db']->fetch_array())
 {
-	if($_ENV['max_batch_size'] >= $cpt_batch_size)
-	{
-		$pathToFile = $pathToDocServer[$queryResult[1]] . str_replace("#", DIRECTORY_SEPARATOR, $queryResult[2]) . DIRECTORY_SEPARATOR . $queryResult[3];
-		writeLog("processing of document : ".$pathToFile." | res_id : ". $queryResult[0]);
-		echo "processing of document : ".$pathToFile." \r\n res_id : ". $queryResult[0]."\n";
-		$result = indexFullText($pathToFile, $indexFileDirectory, $queryResult[4], $queryResult[0]);
-		writeLog("Result of processing : ".$result);
-		echo "Result of processing : ".$result."\r\n";
-		$updateDoc = "update ".$_ENV['tablename']." SET ".$fulltextColumnName." = '".$result."' where res_id = ".$queryResult[0];
-		$queryUpdate = $_ENV['db2']->query($updateDoc);;
-	}
-	else
-	{
-		writeLog("Max batch size ! Stop processing !");
-		echo "\r\nMax batch size ! Stop processing !";
-		break;
-	}
-	$cpt_batch_size++;
+  if($_ENV['max_batch_size'] >= $cpt_batch_size)
+  {
+    $pathToFile = $pathToDocServer[$queryResult[1]] . str_replace("#", DIRECTORY_SEPARATOR, $queryResult[2]) . DIRECTORY_SEPARATOR . $queryResult[3];
+    writeLog("processing of document : ".$pathToFile." | res_id : ". $queryResult[0]);
+    echo "processing of document : ".$pathToFile." \r\n res_id : ". $queryResult[0]."\n";
+    $result = indexFullText($pathToFile, $indexFileDirectory, $queryResult[4], $queryResult[0]);
+    writeLog("Result of processing : ".$result);
+    echo "Result of processing : ".$result."\r\n";
+    $updateDoc = "update ".$_ENV['tablename']." SET ".$fulltextColumnName." = '".$result."' where res_id = ".$queryResult[0];
+    $queryUpdate = $_ENV['db2']->query($updateDoc);;
+  }
+  else
+  {
+    writeLog("Max batch size ! Stop processing !");
+    echo "\r\nMax batch size ! Stop processing !";
+    break;
+  }
+  $cpt_batch_size++;
 }
 writeLog("Return execution code : ".$_ENV['ErrorLevel']);
 writeLog("End of application !");
