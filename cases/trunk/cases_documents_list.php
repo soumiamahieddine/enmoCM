@@ -282,7 +282,7 @@ if (count($tab) > 0)
 
 
 $details = 'details';
-	$list->list_doc($tab,$i,'','res_id','cases_documents_list','res_id',$details.'&dir=indexing_searching',true,false,'','','',true,true,true, false,false,false,true,false,'', '',false,'','','listing2 smallfont ', '', false, false, null, '', '{}', false, '', true, '', false);
+	$list->list_doc($tab,$i,'','res_id','cases_documents_list','res_id',$details.'&dir=indexing_searching',true,false,'','','',true,true,true, false,false,false,true,false,'', 'cases',false,'','','listing2 smallfont ', '', false, false, null, '', '{}', false, '', true, '', false);
 }
 $core_tools->load_js();
 ?>
