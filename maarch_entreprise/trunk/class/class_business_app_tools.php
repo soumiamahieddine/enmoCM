@@ -54,34 +54,46 @@ class business_app_tools extends dbquery
             //$_SESSION['config']['businessapppath'] = (string) $config->businessapppath;
             //##############
 
-            if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') {
-                $protocol = 'https';
-            } else {
-                $protocol = 'http';
-            }
-            if ($_SERVER['SERVER_PORT'] <> 443 && $protocol == 'https') {
-                $serverPort = ':' . $_SERVER['SERVER_PORT'];
-            } else if ($_SERVER['SERVER_PORT'] <> 80 && $protocol == 'http') {
-                $serverPort = ':' . $_SERVER['SERVER_PORT'];
-            } else {
-                $serverPort = '';
-            }
+            ################# BUGGY PART START #########################
+            ## if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') {
+            ##     $protocol = 'https';
+            ## } else {
+            ##     $protocol = 'http';
+            ## }
+            ## if ($_SERVER['SERVER_PORT'] <> 443 && $protocol == 'https') {
+            ##     $serverPort = ':' . $_SERVER['SERVER_PORT'];
+            ## } else if ($_SERVER['SERVER_PORT'] <> 80 && $protocol == 'http') {
+            ##     $serverPort = ':' . $_SERVER['SERVER_PORT'];
+            ## } else {
+            ##     $serverPort = '';
+            ## }
+            ## 
+            ## //##############
+            ## if (isset($_SERVER['HTTP_X_FORWARDED_HOST'])
+            ##     && $_SERVER['HTTP_X_FORWARDED_HOST'] <> ''
+            ## ) {
+            ##     $host = $_SERVER['HTTP_X_FORWARDED_HOST'];
+            ## } else {
+            ##     $host = $_SERVER['HTTP_HOST'];
+            ## }
+            ## 
+            ## $tmp = $host;
+            ## if (! preg_match('/:[0-9]+$/', $host)) {
+            ##     $tmp = $host.$serverPort;
+            ## }
+            ## $_SESSION['config']['businessappurl'] = $protocol . '://' . $tmp
+            ##     . str_replace('index.php', '', $_SERVER['SCRIPT_NAME']);
+            ## 
+            ################### BUGGY PART END #########################
+            
 
-            //##############
-            if (isset($_SERVER['HTTP_X_FORWARDED_HOST'])
-                && $_SERVER['HTTP_X_FORWARDED_HOST'] <> ''
-            ) {
-                $host = $_SERVER['HTTP_X_FORWARDED_HOST'];
-            } else {
-                $host = $_SERVER['HTTP_HOST'];
-            }
-
-            $tmp = $host;
-            if (! preg_match('/:[0-9]+$/', $host)) {
-                $tmp = $host.$serverPort;
-            }
-            $_SESSION['config']['businessappurl'] = $protocol . '://' . $tmp
-                . str_replace('index.php', '', $_SERVER['SCRIPT_NAME']);
+            $uriBeginning = strpos($_SERVER['SCRIPT_NAME'], 'apps');
+            $url = $_SESSION['config']['coreurl']
+                 .substr($_SERVER['SCRIPT_NAME'], $uriBeginning);
+            $_SESSION['config']['businessappurl'] = str_replace(
+                'index.php', '', $url
+            );
+            
             $_SESSION['config']['databaseserver'] =
                 (string) $config->databaseserver;
             $_SESSION['config']['databaseserverport'] =
