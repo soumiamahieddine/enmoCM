@@ -76,7 +76,16 @@ class portal extends functions
 			if(!preg_match('/:[0-9]+$/', $host)) {
 				$tmp =$host.$server_port;
 			}
-			$_SESSION['config']['coreurl'] = $protocol."://".$tmp.str_replace('index.php','',$_SERVER['SCRIPT_NAME']);
+            if (isset($_SERVER['HTTP_X_BASE_URL']) 
+                && $_SERVER['HTTP_X_BASE_URL'] <> ""
+            ) {
+                $uri = $_SERVER['HTTP_X_BASE_URL'];
+            } else {
+                $uri = str_replace('index.php','',
+                                   $_SERVER['SCRIPT_NAME']);
+            }
+            $_SESSION['config']['coreurl'] = $protocol . "://" . $tmp
+                                           . $uri;
 		}
 		$i=0;
 		foreach($xmlconfig->BUSINESSAPPS as $BUSINESSAPPS) {
