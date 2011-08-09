@@ -72,12 +72,11 @@ $core_tools->load_header('', true, false);
             //$_SESSION['upfile']['name'] = $_FILES['file']['name'];
             $_SESSION['upfile']['name'] = $fileNameOnTmp;
             $_SESSION['upfile']['format'] = $the_ext;
-            require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_indexing_searching_app.php");
-            $is = new indexing_searching_app();
-            $ext_ok = $is->is_filetype_allowed($the_ext);
-            if ($ext_ok == false)
-            {
-                $_SESSION['error'] = _WRONG_FILE_TYPE.".";
+            require_once 'core/docservers_tools.php';
+            $arrayIsAllowed = array();
+            $arrayIsAllowed = Ds_isFileTypeAllowed($_SESSION['upfile']['local_path']);
+            if ($arrayIsAllowed['status'] == false) {
+                $_SESSION['error'] = _WRONG_FILE_TYPE . ' ' . $arrayIsAllowed['mime_type'];
                 $_SESSION['upfile'] = array();
             }
         }
