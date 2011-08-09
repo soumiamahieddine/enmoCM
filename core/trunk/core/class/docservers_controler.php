@@ -33,6 +33,7 @@
 
 //Loads the required class
 try {
+    require_once 'core/class/class_request.php';
     require_once 'core/class/docservers.php';
     require_once 'core/docservers_tools.php';
     require_once 'core/core_tables.php';

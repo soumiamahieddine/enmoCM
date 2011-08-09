@@ -531,3 +531,54 @@ function Ds_isCompleteFile($file, $delay=500, $pointer=0)
         return Ds_isCompleteFile($file, $delay, $currentPos);
     }
 }
+
+/**
+ * Check the mime type of a file with the extension config file
+* Return array with the status of the check and the mime type of the file
+* @param  string $filePath
+* @param  array
+*/
+function Ds_isFileTypeAllowed($filePath)
+{
+    $mimeType = Ds_getMimeType(
+        $filePath
+    );
+    if (file_exists($_SESSION['config']['corepath'] . 'custom' 
+        . DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'] 
+        . DIRECTORY_SEPARATOR 
+        . 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id'] 
+        . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR 
+        . 'extensions.xml')
+    ) {
+        $path = $_SESSION['config']['corepath'] . 'custom' 
+        . DIRECTORY_SEPARATOR . $_SESSION['custom_override_id'] 
+        . DIRECTORY_SEPARATOR . 'apps' . DIRECTORY_SEPARATOR 
+        . $_SESSION['config']['app_id'] . DIRECTORY_SEPARATOR . 'xml' 
+        . DIRECTORY_SEPARATOR . 'extensions.xml';
+    } else {
+        $path = 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id'] 
+        . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR . 'extensions.xml';
+    }
+    $xmlconfig = simplexml_load_file($path);
+    $ext_list = array();
+    $i = 0;
+    foreach($xmlconfig->FORMAT as $FORMAT) {
+        $ext_list[$i] = array(
+            'name' => (string) $FORMAT->name, 
+            'mime' => (string) $FORMAT->mime
+        );
+        $i++;
+    }
+    $type_state = false;
+    for($i=0;$i<count($ext_list);$i++) {
+        if($ext_list[$i]['mime'] == $mimeType) {
+            $type_state = true;
+            break;
+        }
+    }
+    $arrayReturn = array(
+        'status' => $type_state,
+        'mime_type' => $mimeType,
+    );
+    return $arrayReturn;
+}
