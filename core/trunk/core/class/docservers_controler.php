@@ -1366,15 +1366,10 @@ class docservers_controler
                         $use_tiny_mce = true;
                         $mimeType = 'application/maarch';
                     } else {
-                        require_once(
-                            'apps' . DIRECTORY_SEPARATOR
-                            . $_SESSION['config']['app_id']
-                            . DIRECTORY_SEPARATOR
-                            . 'class' . DIRECTORY_SEPARATOR
-                            . 'class_indexing_searching_app.php'
-                        );
-                        $is = new indexing_searching_app();
-                        $type_state = $is->is_filetype_allowed($format);
+                        require_once 'core/docservers_tools.php';
+                        $arrayIsAllowed = array();
+                        $arrayIsAllowed = Ds_isFileTypeAllowed($file);
+                        $type_state = $arrayIsAllowed['status'];
                     }
                     //if fingerprint from db = 0 we do not control fingerprint
                     if ($fingerprintFromDb == '0'
