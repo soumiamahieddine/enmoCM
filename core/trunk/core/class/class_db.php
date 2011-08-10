@@ -31,9 +31,6 @@
 * @ingroup core
 */
 
-require_once('core' . DIRECTORY_SEPARATOR . 'class' 
-    . DIRECTORY_SEPARATOR . 'class_history.php');
-
 /**
 * @brief   Embedded sql functions (connection, database selection, query ).
 * Allow to changes the databases server
@@ -521,8 +518,10 @@ class dbquery extends functions
     */
     private function error()
     {
-    	$trace = new history();
-    	
+        require_once('core' . DIRECTORY_SEPARATOR . 'class' 
+            . DIRECTORY_SEPARATOR . 'class_history.php');
+        $trace = new history();
+        
         // Connexion error
         if ($this->_sqlError == 1) {
             $trace->add("", 0, "CONNECT", _CONNECTION_DB_FAILED." : ".$this->_user."@".$this->_server.":".$this->_port, $_SESSION['config']['databasetype'], "database", true, _KO, _LEVEL_FATAL);
