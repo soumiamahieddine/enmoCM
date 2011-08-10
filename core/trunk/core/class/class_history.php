@@ -48,7 +48,7 @@ class history extends dbquery
 	* @param  $databasetype string Type of the database (MYSQL, POSTGRESQL, etc...)
 	* @param  $id_module string Identifier of the module concerned by the event (admin by default)
 	*/
-	public function add($where,$id,$how,$what, $databasetype, $id_module ="admin", $user="")
+	public function add($where, $id, $how, $what, $databasetype, $id_module ="admin", $isTech = false, $result = _OK, $level = _LEVEL_INFO, $user="")
 	{
 		if($databasetype == "SQLSERVER")
 		{
@@ -64,20 +64,24 @@ class history extends dbquery
 		}
 		$remote_ip = $_SERVER['REMOTE_ADDR'];
 		$what = $this->protect_string_db($what, $databasetype);
-	//	$what = $this->protect_string_db($what);
-		$this->connect();
+        //$what = $this->protect_string_db($what);
 		$user = '';
 		if(isset($_SESSION['user']['UserId'])) {
 		    $user = $_SESSION['user']['UserId'];
 		}
-		$this->query(
-			"INSERT INTO ".$_SESSION['tablename']['history']
-		    ." (table_name, record_id , event_type , user_id , event_date , "
-		    . "info , id_module, remote_ip) VALUES ('".$where."', '".$id."', '"
-		    .$how."', '".$user."', ".$date_now.", '".$what."', '".$id_module
-		    ."' , '".$remote_ip."')"
-		);
-		$this->disconnect();
+        if (!$isTech) {
+            $this->connect();
+            $this->query(
+                "INSERT INTO ".$_SESSION['tablename']['history']
+                ." (table_name, record_id , event_type , user_id , event_date , "
+                . "info , id_module, remote_ip) VALUES ('".$where."', '".$id."', '"
+                .$how."', '".$user."', ".$date_now.", '".$what."', '".$id_module
+                ."' , '".$remote_ip."')"
+            );
+            $this->disconnect();
+        } else {
+            //write on a log
+        }
 	}
 
 	/**

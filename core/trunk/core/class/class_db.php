@@ -31,6 +31,9 @@
 * @ingroup core
 */
 
+require_once('core' . DIRECTORY_SEPARATOR . 'class' 
+    . DIRECTORY_SEPARATOR . 'class_history.php');
+
 /**
 * @brief   Embedded sql functions (connection, database selection, query ).
 * Allow to changes the databases server
@@ -518,12 +521,14 @@ class dbquery extends functions
     */
     private function error()
     {
+    	$trace = new history();
+    	
         // Connexion error
         if ($this->_sqlError == 1) {
+            $trace->add("", 0, "CONNECT", _CONNECTION_DB_FAILED." : ".$this->_user."@".$this->_server.":".$this->_port, $_SESSION['config']['databasetype'], "database", true, _KO, _LEVEL_FATAL);
             // Shows the connexion data (server, port, user, pass)
-            header("HTTP/1.0 500 Internal Server Error");
+            echo '- <b>' . _DB_CONNEXION_ERROR . '</b>';
             if ($_SESSION['config']['debug'] == 'true') {
-                echo '- <b>' . _DB_CONNEXION_ERROR . '</b>';
                 echo ' -<br /><br />' . _DATABASE_SERVER . ' : '
                     . $this->_server . '<br/>' . _DB_PORT . ' : ' . $this->_port
                     . '<br/>' . _DB_TYPE . ' : ' . $this->_databasetype
@@ -540,6 +545,7 @@ class dbquery extends functions
             if ($_SESSION['config']['debug'] == 'true') {
                 echo ' -<br /><br />' . _DATABASE . ' : ' . $this->_database;
             }
+            $trace->add("", 0, "SELECTDB", _SELECT_DB_FAILED." : ".$this->_database, $_SESSION['config']['databasetype'], "database", true, _KO, _LEVEL_FATAL);
             exit();
         }
 
@@ -563,23 +569,27 @@ class dbquery extends functions
             }
             echo '<br/>' . _QUERY . ' : <textarea cols="70" rows="10">'
                 . $this->_debugQuery . '</textarea>';
+            $trace->add("", 0, "QUERY", _QUERY_DB_FAILED." : ".$this->_debugQuery, $_SESSION['config']['databasetype'], "database", true, _KO, _LEVEL_ERROR);
             exit();
         }
 
         // Closing connexion error
         if ($this->_sqlError == 4) {
             echo '- <b>' . _CLOSE_CONNEXION_ERROR . '</b> -<br /><br />';
+            $trace->add("", 0, "CLOSE", _CLOSE_DB_FAILED, $_SESSION['config']['databasetype'], "database", true, _KO, _LEVEL_ERROR);
             exit();
         }
 
         // Constructor error
         if ($this->_sqlError == 5) {
             echo '- <b>' . _DB_INIT_ERROR . '</b> <br />';
+            $trace->add("", 0, "INIT", _INIT_DB_FAILED, $_SESSION['config']['databasetype'], "database", true, _KO, _LEVEL_ERROR);
             exit();
         }
-        // QUery Preparation error (ORACLE)
+        // Query Preparation error (ORACLE)
         if ($this->_sqlError == 6) {
             echo '- <b>' . _QUERY_PREP_ERROR . '</b> <br />';
+            $trace->add("", 0, "QUERY", _PREPARE_QUERY_DB_FAILED, $_SESSION['config']['databasetype'], "database", true, _KO, _LEVEL_ERROR);
             exit();
         }
     }
