@@ -101,6 +101,7 @@ if (isset($_REQUEST['display'])) {
 }
 
 if (! isset($_SESSION['user']['UserId'])) {
+    $_SESSION['HTTP_REFERER'] = $_SERVER['REQUEST_URI'];
     if (trim($_SERVER['argv'][0]) <> '') {
         header('location: reopen.php?' . $_SERVER['argv'][0]);
     } else {
@@ -122,6 +123,11 @@ $core->load_lang();
 $core->load_html();
 $core->load_header();
 $time = $core->get_session_time_expire();
+if (isset($_SESSION['HTTP_REFERER'])) {
+    $url = $_SESSION['HTTP_REFERER'];
+    unset($_SESSION['HTTP_REFERER']);
+    header('location: '.$url);
+}
 ?>
 <body onload="session_expirate(<?php  echo $time;?>, '<?php  echo $_SESSION['config']['coreurl'];?>');" id="maarch_body">
 <div id="header">
