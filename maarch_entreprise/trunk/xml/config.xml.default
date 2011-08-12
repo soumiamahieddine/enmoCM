@@ -26,7 +26,7 @@
 		<userdefaultpassword>maarch</userdefaultpassword><!-- default user's password -->
 	</CONFIG>
 	<CRYPT>
-		<encrypt>true</encrypt>
+		<encrypt>false</encrypt>
 		<pathtopublickey>/home/user/maarchkey.pub</pathtopublickey>
 		<pathtoprivatekey>/home/user/maarchkey</pathtoprivatekey>
 	</CRYPT>
