@@ -1,6 +1,15 @@
 <?php
 session_name('maarch_entreprise_trunk');
 session_start();
+
+if (!isset($_SESSION['config'])) {
+    require_once('class' . DIRECTORY_SEPARATOR . 'class_portal.php');
+    $portal = new portal();
+    $portal->unset_session();
+    $portal->build_config();
+}
+
+
 if (isset($_SESSION['config']['default_timezone']) 
     && ! empty($_SESSION['config']['default_timezone'])
 ) {
