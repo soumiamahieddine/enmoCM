@@ -10,6 +10,7 @@
 * @license GPL
 * @author  Claire Figueras  <dev@maarch.org>
 */
+include_once('../../core/class/class_functions.php');
 include('../../core/init.php');
 
 //$_SESSION['slash_env'] = DIRECTORY_SEPARATOR;
@@ -25,6 +26,7 @@ if(!isset($_SESSION['config']['app_id']) || empty($_SESSION['config']['app_id'])
 {
 	$_SESSION['config']['app_id'] = $path_tmp[count($path_tmp) -2];
 }
+/*
 if(isset($_SESSION['config']['corepath']))
 {
 	require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_functions.php");
@@ -32,7 +34,8 @@ if(isset($_SESSION['config']['corepath']))
 else
 {
 	require_once("..".DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_functions.php");
-}
+
+}*/
 //require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_db.php");
 //require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_core_tools.php");
 //require_once('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_business_app_tools.php");

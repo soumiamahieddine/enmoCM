@@ -29,6 +29,7 @@
 * @version $Revision$
 * @ingroup apps
 */
+include_once('../../core/class/class_functions.php');
 include_once '../../core/init.php';
 if (isset($_SESSION['config']['corepath'])) {
     require_once 'core/class/class_functions.php';
