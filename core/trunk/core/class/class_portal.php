@@ -41,7 +41,10 @@ class portal extends functions
 	* Loads Maarch portal configuration into sessions  from an xml configuration file (core/xml/config.xml)
 	*/
 	public function build_config() {
-		$xmlconfig = simplexml_load_file('core'.DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'config.xml');
+		$xmlconfig = simplexml_load_file(dirname(__FILE__) 
+                   . DIRECTORY_SEPARATOR . '..'
+                   . DIRECTORY_SEPARATOR . 'xml' 
+                   . DIRECTORY_SEPARATOR . 'config.xml');
 		foreach($xmlconfig->CONFIG as $CONFIG) {
 			$_SESSION['config']['corename'] = (string) $CONFIG->corename;
 			$_SESSION['config']['corepath'] = (string) $CONFIG->corepath;
@@ -76,14 +79,20 @@ class portal extends functions
 			if(!preg_match('/:[0-9]+$/', $host)) {
 				$tmp =$host.$server_port;
 			}
+            
             if (isset($_SERVER['HTTP_X_BASE_URL']) 
                 && $_SERVER['HTTP_X_BASE_URL'] <> ""
             ) {
-                $uri = $_SERVER['HTTP_X_BASE_URL'];
+                $uri = str_replace($_SERVER['HTTP_X_BASE_URL'], '', $_SERVER['SCRIPT_NAME']);
             } else {
-                $uri = str_replace('index.php','',
-                                   $_SERVER['SCRIPT_NAME']);
+                $uri = $_SERVER['SCRIPT_NAME'];
             }
+            
+            if (($appsInUri = strpos($uri, 'apps')) !== false)  {
+                $uri = substr($uri, 0, $appsInUri);
+            }
+            $uri = str_replace('index.php', '', $uri);
+            
             $_SESSION['config']['coreurl'] = $protocol . "://" . $tmp
                                            . $uri;
 		}
