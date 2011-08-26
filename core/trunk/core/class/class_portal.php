@@ -29,6 +29,8 @@
 * @ingroup core
 */
 
+require_once 'class_functions.php';
+
 /**
 * @brief   Contains all the functions to use a maarch portal
 *
