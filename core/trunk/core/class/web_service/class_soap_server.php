@@ -29,6 +29,8 @@
 * @ingroup core
 */
 
+require_once('Maarch_SOAP_DISCO_Server.php');
+
 //declaration of descriptions services vars
 if(!isset ($SOAP_dispatch_map)) {
 	$SOAP_dispatch_map = Array ();
@@ -84,7 +86,9 @@ class MySoapServer extends webService {
 	 */
 	function importSOAPLibs() {
 		require ('SOAP/Server.php');
+/*
 		require ('SOAP/Disco.php');
+*/
 	}
 	
 	/**
@@ -104,7 +108,7 @@ class MySoapServer extends webService {
 	function makeWSDL() {
 		$this->importSOAPLibs();
 		$server = $this->launchSOAPServer();
-		$disco = new SOAP_DISCO_Server($server, 'MySoapServer');
+		$disco = new Maarch_SOAP_DISCO_Server($server, 'MySoapServer');
 		header("Content-type: text/xml");
 		echo $disco->getWSDL();
 	}
@@ -125,7 +129,7 @@ class MySoapServer extends webService {
 	function makeDISCO() {
 		$this->importSOAPLibs();
 		$server = $this->launchSOAPServer();
-		$disco = new SOAP_DISCO_Server($server, 'MySoapServer');
+		$disco = new Maarch_SOAP_DISCO_Server($server, 'MySoapServer');
 		header("Content-type: text/xml");
 		echo $disco->getDISCO();
 	}
