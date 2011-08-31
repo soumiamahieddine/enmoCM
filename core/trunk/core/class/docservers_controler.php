@@ -1036,7 +1036,7 @@ class docservers_controler
         //Docserver is empty
         if ($nbFiles == 0 ) {
             //Creates the directory
-            if (!mkdir($pathOnDocserver . '0001', 0000700)) {
+            if (!mkdir($pathOnDocserver . '0001', 0770)) {
                 return array(
                     'destinationDir' => '',
                     'fileDestinationName' => '',
@@ -1077,7 +1077,7 @@ class docservers_controler
                 $newDir = ($nbFiles) + 1;
                 if (!mkdir(
                     $pathOnDocserver
-                    . str_pad($newDir, 4, '0', STR_PAD_LEFT), 0000700
+                    . str_pad($newDir, 4, '0', STR_PAD_LEFT), 0770
                 )
                 ) {
                     return array(

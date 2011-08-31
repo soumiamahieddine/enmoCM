@@ -109,7 +109,7 @@ function Ds_copyOnDocserver(
 function Ds_createPathOnDocServer($docServer)
 {
     if (!is_dir($docServer . date('Y') . DIRECTORY_SEPARATOR)) {
-        mkdir($docServer . date('Y') . DIRECTORY_SEPARATOR, 0777);
+        mkdir($docServer . date('Y') . DIRECTORY_SEPARATOR, 0770);
         Ds_setRights($docServer . date('Y') . DIRECTORY_SEPARATOR);
     }
     if (!is_dir(
@@ -120,7 +120,7 @@ function Ds_createPathOnDocServer($docServer)
         mkdir(
             $docServer . date('Y') . DIRECTORY_SEPARATOR.date('m')
             . DIRECTORY_SEPARATOR,
-            0777
+            0770
         );
         Ds_setRights(
             $docServer . date('Y') . DIRECTORY_SEPARATOR.date('m')
@@ -131,7 +131,7 @@ function Ds_createPathOnDocServer($docServer)
         $path = $docServer . date('Y') . DIRECTORY_SEPARATOR.date('m')
               . DIRECTORY_SEPARATOR . $GLOBALS['wb'] . DIRECTORY_SEPARATOR;
         if (!is_dir($path)) {
-            mkdir($path, 0777);
+            mkdir($path, 0770);
             Ds_setRights($path);
         } else {
             return array(
