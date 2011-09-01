@@ -103,25 +103,7 @@ if (isset($_REQUEST['display'])) {
 
 if (! isset($_SESSION['user']['UserId'])) {
 
-    # bca: change to allow url manipulation at proxy level
-    if (isset($_SERVER['HTTP_X_BASE_URL'])) {
-        # In this case, the proxy gives the path to the application as it sees
-        # it, which differs from the URL Apache sees. The URL recorded here is
-        # the one that the user sees, i.e. the "proxy url"
-        # For example: 
-        # The proxy URL is : http://server/maarch/entreprise
-        # The Apache URL is : http://backend_server/entreprise
-        # After the login phase, the user will have to be redirected to the
-        # proxy URL. Hence, the proixy gives the 'HTTP_X_BASE_URL' for
-        # Maarch Entreprise to know what URL is realy to be used.
-
-        $_SESSION['HTTP_REFERER'] = str_replace($_SERVER['HTTP_X_BASE_URL'], '', $_SERVER['REQUEST_URI']);
-    } else {
-        # This is the normal case, nothing is specific: we just record the 
-        # REQUEST_URI.
-
-        $_SESSION['HTTP_REFERER'] = $_SERVER['REQUEST_URI'];
-    }
+    $_SESSION['HTTP_REFERER'] = Url::requestUri();
     if (trim($_SERVER['argv'][0]) <> '') {
         header('location: reopen.php?' . $_SERVER['argv'][0]);
     } else {
