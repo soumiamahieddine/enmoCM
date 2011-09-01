@@ -11,7 +11,7 @@ src_dir: /
 #src_dir: MaarchX 
 
 
-# test_dir:
+# tests_dir:
 #
 # Indicates the directory where automated tests are relatively to the 
 # root of the project
@@ -19,7 +19,7 @@ src_dir: /
 # Default: tests
 #
 # Examples:
-#test_dir: test
+tests_dir: "core/tests"
 
 # ignore_patterns:
 #

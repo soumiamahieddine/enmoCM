@@ -1,4 +1,4 @@
-<?php 
+<?php
 /*
 *    Copyright 2008,2009 Maarch
 *
@@ -43,9 +43,9 @@ class portal extends functions
 	* Loads Maarch portal configuration into sessions  from an xml configuration file (core/xml/config.xml)
 	*/
 	public function build_config() {
-		$xmlconfig = simplexml_load_file(dirname(__FILE__) 
+		$xmlconfig = simplexml_load_file(dirname(__FILE__)
                    . DIRECTORY_SEPARATOR . '..'
-                   . DIRECTORY_SEPARATOR . 'xml' 
+                   . DIRECTORY_SEPARATOR . 'xml'
                    . DIRECTORY_SEPARATOR . 'config.xml');
 		foreach($xmlconfig->CONFIG as $CONFIG) {
 			$_SESSION['config']['corename'] = (string) $CONFIG->corename;
@@ -59,44 +59,7 @@ class portal extends functions
 			} else {
 				$_SESSION['config']['default_timezone'] = 'Europe/Paris';
 			}
-			if(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == "on")
-				$protocol = "https";
-			else
-				$protocol = "http";
-			
-			if($_SERVER['SERVER_PORT'] <> 443 && $protocol == "https") {
-				$server_port = ":".$_SERVER['SERVER_PORT'];
-			} elseif ($_SERVER['SERVER_PORT'] <> 80 && $protocol == "http") {
-				$server_port = ":".$_SERVER['SERVER_PORT'];
-			} else {
-				$server_port = '';
-			}
-			if(isset($_SERVER['HTTP_X_FORWARDED_HOST']) && $_SERVER['HTTP_X_FORWARDED_HOST'] <> "") {
-					$host = $_SERVER['HTTP_X_FORWARDED_HOST'];
-			}
-			else {
-					$host = $_SERVER['HTTP_HOST'];
-			}
-			$tmp = $host;
-			if(!preg_match('/:[0-9]+$/', $host)) {
-				$tmp =$host.$server_port;
-			}
-            
-            if (isset($_SERVER['HTTP_X_BASE_URL']) 
-                && $_SERVER['HTTP_X_BASE_URL'] <> ""
-            ) {
-                $uri = str_replace($_SERVER['HTTP_X_BASE_URL'], '', $_SERVER['SCRIPT_NAME']);
-            } else {
-                $uri = $_SERVER['SCRIPT_NAME'];
-            }
-            
-            if (($appsInUri = strpos($uri, 'apps')) !== false)  {
-                $uri = substr($uri, 0, $appsInUri);
-            }
-            $uri = str_replace('index.php', '', $uri);
-            
-            $_SESSION['config']['coreurl'] = $protocol . "://" . $tmp
-                                           . $uri;
+			$_SESSION['config']['coreurl'] = Url::coreurl();
 		}
 		$i=0;
 		foreach($xmlconfig->BUSINESSAPPS as $BUSINESSAPPS) {
