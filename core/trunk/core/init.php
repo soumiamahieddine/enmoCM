@@ -1,6 +1,6 @@
 <?php
 
-require_once dirname(__file__) . 'class/Url.php';
+require_once dirname(__file__) . '/class/Url.php';
 
 session_name('maarch_entreprise_trunk');
 session_start();
