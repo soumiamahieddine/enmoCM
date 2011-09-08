@@ -97,9 +97,9 @@ else
 			$res = $db->fetch_object();
 			$syntax =  $bask->where_test($where);
 
-			if($syntax <> true)
+			if($syntax['status'] <> true)
 			{
-				$_SESSION['error'] .= " "._SYNTAX_ERROR_WHERE_CLAUSE." "._IN_ACTION.' '.$res->label_action.'<br/>' ;
+				$_SESSION['error'] .= ' : ' . _SYNTAX_ERROR_WHERE_CLAUSE . ' ' . $syntax['error'] ._IN_ACTION.' '.$res->label_action.'<br/>' ;;
 			}
 			if(isset($_REQUEST['action_'.$_REQUEST['actions'][$i].'_mass_use']) && !empty($_REQUEST['action_'.$_REQUEST['actions'][$i].'_mass_use']))
 			{

@@ -316,10 +316,10 @@ class admin_basket extends dbquery
                 {
                     $tmp = $this->protect_string_db($_SESSION['m_admin']['basket']['clause']);
                     // Checks the where clause syntax
-                    $syntax =  $this -> where_test($_SESSION['m_admin']['basket']['clause']);
-                    if($syntax <> true)
+                    $syntax = $this -> where_test($_SESSION['m_admin']['basket']['clause']);
+                    if($syntax['status'] <> true)
                     {
-                        $_SESSION['error'] .= " : "._SYNTAX_ERROR_WHERE_CLAUSE."." ;
+                        $_SESSION['error'] .= ' : ' . _SYNTAX_ERROR_WHERE_CLAUSE . ' ' . $syntax['error'];
                         header("location: ".$_SESSION['config']['businessappurl']."index.php?page=basket_up&id=".$_SESSION['m_admin']['basket']['basketId']."&module=basket");
                         exit();
                     }
@@ -354,9 +354,9 @@ class admin_basket extends dbquery
 
                 // Checks the where clause syntax
                 $syntax =  $this->where_test($_SESSION['m_admin']['basket']['clause']);
-                if($syntax <> true)
-                {
-                     $_SESSION['error'] .= " : "._SYNTAX_ERROR_WHERE_CLAUSE."." ;
+                if($syntax['status'] <> true)
+				{
+					$_SESSION['error'] .= ' : ' . _SYNTAX_ERROR_WHERE_CLAUSE . ' ' . $syntax['error'];
                     header("location: ".$_SESSION['config']['businessappurl']."index.php?page=basket_up&id=".$_SESSION['m_admin']['basket']['basketId']."&module=basket");
                     exit();
                 }
@@ -395,16 +395,27 @@ class admin_basket extends dbquery
     * @param  $where_clause   string The where clause to check
     * @return bool true if the syntax is correct, false otherwise
     */
-    public function where_test( $where_clause)
+    public function where_test($where_clause)
     {
         $where = '';
-        $res2 = true;
+        $return = array(
+				'status' => true, 
+				'error' => ''
+			);
         if (! empty ($where_clause)) {
             require_once 'core/class/SecurityControler.php';
             $secCtrl = new SecurityControler();
-            $where = $secCtrl->process_security_where_clause(
-                $where_clause, $_SESSION['user']['UserId']
-            );
+            if ($secCtrl->isUnsecureRequest($where_clause)) {
+				$return = array(
+					'status' => false, 
+					'error' => _WHERE_CLAUSE_NOT_SECURE
+				);
+				return $return;
+			} else {
+				$where = $secCtrl->process_security_where_clause(
+					$where_clause, $_SESSION['user']['UserId']
+				);
+			}
          }
         // Gets the basket collection
         $ind = -1;
@@ -419,7 +430,10 @@ class admin_basket extends dbquery
 
         if ($ind == -1) {
             $_SESSION['error'] .= ' ' . $_SESSION['m_admin']['basket']['coll_id'];
-            $res2 = false;
+            $return = array(
+				'status' => false, 
+				'error' => ''
+			);
         } else {// Launches the query in quiet mode
             $this->connect();
             $res = $this->query(
@@ -429,9 +443,12 @@ class admin_basket extends dbquery
         }
         if (!isset($res) || !$res) {
             $_SESSION['error'] .= " " . $_SESSION['m_admin']['basket']['coll_id'];
-            $res2 = false;
+            $return = array(
+				'status' => false, 
+				'error' => ''
+			);
         }
-        return $res2;
+        return $return;
     }
 
     /**
