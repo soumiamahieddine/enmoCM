@@ -164,12 +164,7 @@ if (!defined('_LC_CYCLE_MODIFICATION')) {
 if (!defined('_PB_WITH_WHERE_CLAUSE')) {
     define('_PB_WITH_WHERE_CLAUSE', 'Clause where mal d&eacute;finie');
 }
-if (!defined('_WHERE_CLAUSE_NOT_SECURE')) {
-    define(
-        '_WHERE_CLAUSE_NOT_SECURE', 
-        'Clause where mal non s&eacute;curis&eacute;'
-    );
-}
+
 if (!defined('_CANNOT_DELETE_CYCLE_ID')) {
     define('_CANNOT_DELETE_CYCLE_ID', 'Impossible de supprimer le cycle');
 }

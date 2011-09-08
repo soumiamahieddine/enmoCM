@@ -41,6 +41,7 @@ try {
     require_once ("modules/life_cycle/life_cycle_tables_definition.php");
     require_once ("core/class/ObjectControlerAbstract.php");
     require_once ("core/class/ObjectControlerIF.php");
+    require_once ("core/class/SecurityControler.php");
 } catch (Exception $e) {
     echo $e->getMessage() . ' // ';
 }
@@ -151,6 +152,7 @@ class lc_cycles_controler extends ObjectControler implements ObjectControlerIF
     private function control($cycle, $mode) 
     {
         $f = new functions();
+        $sec = new SecurityControler();
         $error = "";
         if (isset($cycle->cycle_id) && !empty($cycle->cycle_id)) {
             // Update, so values exist
@@ -170,7 +172,7 @@ class lc_cycles_controler extends ObjectControler implements ObjectControlerIF
         $cycle->break_key = $f->protect_string_db(
             $f->wash($cycle->break_key, "no", _BREAK_KEY." ", 'no', 0, 255)
         );
-        if ($this->where_test_secure($cycle->where_clause)) {
+        if ($sec->isUnsecureRequest($cycle->where_clause)) {
             $error .= _WHERE_CLAUSE_NOT_SECURE."#";
         } elseif (!$this->where_test($cycle->where_clause)) {
             $error .= _PB_WITH_WHERE_CLAUSE."#";
@@ -558,30 +560,6 @@ class lc_cycles_controler extends ObjectControler implements ObjectControlerIF
         }
         $db->disconnect();
         return $res;
-    }
-
-    /**
-    * Check the where clause syntax
-    *
-    * @param  $where_clause string The where clause to check
-    * @return bool true if the syntax is correct, false otherwise
-    */
-    public function where_test_secure($where_clause)
-    {
-        $string = $where_clause;
-        $search1 = "'drop|insert|delete|update'";
-        preg_match($search1, $string, $out);
-        if (isset($out[0])) {
-            $count = count($out[0]);
-            if ($count == 1) {
-                $find1 = true;
-            } else {
-                $find1 = false;
-            }
-        } else {
-            $find1 = false;
-        }
-        return $find1;
     }
 }
 

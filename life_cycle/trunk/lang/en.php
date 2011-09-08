@@ -155,9 +155,6 @@ if (!defined('_LC_CYCLE_DELETED')) {
 if (!defined('_PB_WITH_WHERE_CLAUSE')) {
     define('_PB_WITH_WHERE_CLAUSE', 'Pb with where clause');
 }
-if (!defined('_WHERE_CLAUSE_NOT_SECURE')) {
-    define('_WHERE_CLAUSE_NOT_SECURE', 'where clause not secure');
-}
 if (!defined('_CANNOT_DELETE_CYCLE_ID')) {
     define('_CANNOT_DELETE_CYCLE_ID', 'Cannot delete cycle');
 }
