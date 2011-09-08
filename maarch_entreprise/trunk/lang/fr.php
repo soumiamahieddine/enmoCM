@@ -1447,3 +1447,10 @@ if (!defined('_NOTES_2')) {
 if (!defined('_NOTES_3')) {
     define( '_NOTES_3', 'Exemple Notes service 3');
 }
+
+if (!defined('_WHERE_CLAUSE_NOT_SECURE')) {
+    define(
+        '_WHERE_CLAUSE_NOT_SECURE', 
+        'Clause where non s&eacute;curis&eacute;e'
+    );
+}

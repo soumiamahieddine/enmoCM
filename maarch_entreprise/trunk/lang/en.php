@@ -1088,3 +1088,7 @@ if (!defined('_LOGOUT_HISTORY')) {
 if (!defined('_TO_MASTER_DOCUMENT')) {
     define('_TO_MASTER_DOCUMENT', 'to master document #');
 }
+
+if (!defined('_WHERE_CLAUSE_NOT_SECURE')) {
+    define('_WHERE_CLAUSE_NOT_SECURE', 'where clause not secure');
+}
