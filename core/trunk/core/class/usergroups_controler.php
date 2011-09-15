@@ -301,10 +301,20 @@ class usergroups_controler extends ObjectControler implements ObjectControlerIF
             $view = $sec->retrieve_view_from_coll_id(
                 $security[$i]['COLL_ID']
             );
-            $res = $secCtrl->check_where_clause(
-                $security[$i]['COLL_ID'], $security[$i]['WHERE_TARGET'],
-                $security[$i]['WHERE_CLAUSE'], $view, $params['user_id']
-            );
+            if ($secCtrl->isUnsecureRequest($security[$i]['WHERE_CLAUSE'])) {
+                $res['RESULT'] = false;
+                $res['TXT'] = WHERE_CLAUSE_NOT_SECURE;
+                $control = array(
+                    'status' => 'ko',
+                    'value'  => '',
+                    'error'  => WHERE_CLAUSE_NOT_SECURE
+                );
+            } else {
+               $res = $secCtrl->check_where_clause(
+                    $security[$i]['COLL_ID'], $security[$i]['WHERE_TARGET'],
+                    $security[$i]['WHERE_CLAUSE'], $view, $params['user_id']
+                );
+            }
             if ($res['RESULT'] == false) {
                 $control = array(
                     'status' => 'ko',
@@ -314,6 +324,8 @@ class usergroups_controler extends ObjectControler implements ObjectControlerIF
                 break;
             }
         }
+        /*print_r($res);
+        print_r($control);exit;*/
         if ($control['status'] == 'ok') {
             $secCtrl->deleteForGroup($group->group_id);
             for ($i = 0; $i < count($security); $i ++) {
