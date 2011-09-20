@@ -177,3 +177,28 @@ $SOAP_dispatch_map['userGet'] = array(
                                         'method' => "core#users::getWs"
                                     );
 
+#####################################
+## Web Service de versement de données issue du gros scanner
+#####################################
+$SOAP_typedef['arrayOfData'] = array(
+    'arrayOfDataContent' => '{urn:MySoapServer}arrayOfDataContent',
+);
+
+$SOAP_typedef['arrayOfDataContent'] = array(
+    'column' => 'string',
+    'value' => 'string',
+    'type' => 'string',
+);
+
+$SOAP_dispatch_map['storeResource'] = array(
+    'in'  => array(
+        'encodedFile' => 'string',
+        'data' => '{urn:MySoapServer}arrayOfData',
+        'collId' => 'string',
+        'table' => 'string',
+        'fileFormat' => 'string',
+        'status' => 'string',
+),
+    'out' => array('out' => 'string'),
+    'method' => "core#resources::storeResource",
+);

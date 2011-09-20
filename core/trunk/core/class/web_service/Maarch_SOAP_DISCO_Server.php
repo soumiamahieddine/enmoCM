@@ -30,7 +30,7 @@ class Maarch_SOAP_DISCO_Server extends SOAP_DISCO_Server
             : $_SERVER['SCRIPT_NAME'];
         $endPos = strlen($rootUri) - strrpos($rootUri, '/');
         $rootUri = substr($rootUri, 0, $endPos);
-        return $rootUri;
+        return $rootUri . '.php';
     }
     
     public function _generate_WSDL()
