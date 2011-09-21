@@ -41,6 +41,8 @@ $mode = 'add';
 $core = new core_tools();
 $core->load_lang();
 
+$core->test_admin('admin_life_cycle', 'life_cycle');
+
 if (isset($_REQUEST['mode']) && !empty($_REQUEST['mode'])) {
     $mode = $_REQUEST['mode'];
 } else {
