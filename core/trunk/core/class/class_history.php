@@ -38,37 +38,37 @@
 */
 class history extends dbquery
 {
-	/**
-	* Inserts a record in the history table
-	*
-	* @param  $where  string Table or view of the event
-	* @param  $id integer Identifier of the event to add
-	* @param  $how string Event type (Keyword)
-	* @param  $what string Event description
-	* @param  $databasetype string Type of the database (MYSQL, POSTGRESQL, etc...)
-	* @param  $id_module string Identifier of the module concerned by the event (admin by default)
-	*/
-	public function add($where, $id, $how, $what, $databasetype, $id_module ="admin", $isTech = false, $result = _OK, $level = _LEVEL_INFO, $user="")
-	{
-		if($databasetype == "SQLSERVER")
-		{
-			$date_now = "getdate()";
-		}
-		else if($databasetype == "MYSQL" || $databasetype == "POSTGRESQL" )
-		{
-			$date_now = "now()";
-		}
-		elseif($databasetype == "ORACLE")
-		{
-			$date_now = "SYSDATE";
-		}
-		$remote_ip = $_SERVER['REMOTE_ADDR'];
-		$what = $this->protect_string_db($what, $databasetype);
+    /**
+    * Inserts a record in the history table
+    *
+    * @param  $where  string Table or view of the event
+    * @param  $id integer Identifier of the event to add
+    * @param  $how string Event type (Keyword)
+    * @param  $what string Event description
+    * @param  $databasetype string Type of the database (MYSQL, POSTGRESQL, etc...)
+    * @param  $id_module string Identifier of the module concerned by the event (admin by default)
+    */
+    public function add($where, $id, $how, $what, $databasetype, $id_module ="admin", $isTech = false, $result = _OK, $level = _LEVEL_INFO, $user="")
+    {
+        if($databasetype == "SQLSERVER")
+        {
+            $date_now = "getdate()";
+        }
+        else if($databasetype == "MYSQL" || $databasetype == "POSTGRESQL" )
+        {
+            $date_now = "now()";
+        }
+        elseif($databasetype == "ORACLE")
+        {
+            $date_now = "SYSDATE";
+        }
+        $remote_ip = $_SERVER['REMOTE_ADDR'];
+        $what = $this->protect_string_db($what, $databasetype);
         //$what = $this->protect_string_db($what);
-		$user = '';
-		if(isset($_SESSION['user']['UserId'])) {
-		    $user = $_SESSION['user']['UserId'];
-		}
+        $user = '';
+        if(isset($_SESSION['user']['UserId'])) {
+            $user = $_SESSION['user']['UserId'];
+        }
         if (!$isTech) {
             $this->connect();
             $this->query(
@@ -77,36 +77,38 @@ class history extends dbquery
                 . "info , id_module, remote_ip) VALUES ('".$where."', '".$id."', '"
                 .$how."', '".$user."', ".$date_now.", '".$what."', '".$id_module
                 ."' , '".$remote_ip."')"
+            , false
+            , true
             );
             $this->disconnect();
         } else {
             //write on a log
         }
-	}
+    }
 
-	/**
-	* Gets the label of an history keyword
-	*
-	* @param  $id  string Key word identifier
-	* @return  string Label of the key word or empty string
-	*/
-	public function get_label_history_keyword($id)
-	{
-		if(empty($id))
-		{
-			return '';
-		}
-		else
-		{
-			for($i=0; $i<count($_SESSION['history_keywords']);$i++)
-			{
-				if($id == $_SESSION['history_keywords'][$i]['id'])
-				{
-					return $_SESSION['history_keywords'][$i]['label'];
-				}
-			}
-		}
-		return '';
-	}
+    /**
+    * Gets the label of an history keyword
+    *
+    * @param  $id  string Key word identifier
+    * @return  string Label of the key word or empty string
+    */
+    public function get_label_history_keyword($id)
+    {
+        if(empty($id))
+        {
+            return '';
+        }
+        else
+        {
+            for($i=0; $i<count($_SESSION['history_keywords']);$i++)
+            {
+                if($id == $_SESSION['history_keywords'][$i]['id'])
+                {
+                    return $_SESSION['history_keywords'][$i]['label'];
+                }
+            }
+        }
+        return '';
+    }
 }
 ?>

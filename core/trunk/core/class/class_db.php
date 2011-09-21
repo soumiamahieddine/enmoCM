@@ -309,26 +309,13 @@ class dbquery extends functions
     * @param  $sqlQuery string SQL query
     * @param  $catchError bool In case of error, catch the error or not,
     *           if not catched, the error is displayed (false by default)
+    * @param  $noFilter bool true if you don't want to filter on ; and --
     */
-    public function query($sqlQuery, $catchError = false)
+    public function query($sqlQuery, $catchError = false, $noFilter = false)
     {
-        $canExecute = true;
-        //exclude templates and history to the control
-        $search = '#\b(?:templates|history)\b#i';
-        preg_match($search, $sqlQuery, $out);
-        if (isset($out[0])) {
-            $count = count($out[0]);
-            if ($count == 1) {
-                $found = true;
-            } else {
-                $found = false;
-            }
-        } else {
-            $found = false;
-        }
-        
-        // if not a sql for history or templates, we looking for ; or -- in the sql query
-        if (!$found) {
+        $canExecute = true;        
+        // if filter, we looking for ; or -- in the sql query
+        if (!$noFilter) {
             $func = new functions();
             $sqlQuery = $func->wash_html($sqlQuery, '');
             $ctrl1 = array();
@@ -589,26 +576,30 @@ class dbquery extends functions
 
         // Query error
         if ($this->_sqlError == 3) {
-            echo '- <b>' . _QUERY_ERROR . '</b> -<br /><br />';
+            $sqlErrorToView = '<b>' . _QUERY_ERROR . '</b><br />';
             if ($this->_databasetype == 'MYSQL') {
-                echo _ERROR_NUM . @mysqli_errno($this->_sqlLink) . ' '
+                $sqlError .= _ERROR_NUM . @mysqli_errno($this->_sqlLink) . ' '
                     . _HAS_JUST_OCCURED . ' :<br />';
-                echo _MESSAGE . ' : ' .  @mysqli_error($this->_sqlLink)
-                    . '<br />';
+                //$sqlError .= _MESSAGE . ' : ' .  @mysqli_error($this->_sqlLink) . '<br />';
             } else if ($this->_databasetype == 'POSTGRESQL') {
                 @pg_send_query($this->_sqlLink, $this->_debugQuery);
                 $res = @pg_get_result($this->_sqlLink);
-                echo @pg_result_error($res);
+                $sqlError .= @pg_result_error($res);
             } else if ($this->_databasetype == 'SQLSERVER') {
-                echo @mssql_get_last_message();
+                $sqlError .= @mssql_get_last_message();
             } else if ($this->_databasetype == 'ORACLE') {
                 $res = @oci_error($this->statement);
-                echo $res['message'];
+                $sqlError .= $res['message'];
             }
-            echo '<br/>' . _QUERY . ' : <textarea cols="70" rows="10">'
-                . $this->_debugQuery . '</textarea>';
+            $_SESSION['error'] = $sqlErrorToView;
+            if ($_SESSION['config']['debug'] == 'true') {
+                echo $sqlError;
+                echo '<br/>' . _QUERY . ' : <textarea cols="70" rows="10">'
+                    . $this->_debugQuery . '</textarea>';
+                exit();
+            }
             $trace->add("", 0, "QUERY", _QUERY_DB_FAILED." : ".$this->_debugQuery, $_SESSION['config']['databasetype'], "database", true, _KO, _LEVEL_ERROR);
-            exit();
+            //exit();
         }
 
         // Closing connexion error
