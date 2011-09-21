@@ -1,4 +1,8 @@
 <?php
+
+$core_tools = new core_tools();
+$core_tools->test_admin('admin_actions', 'apps');
+
 core_tools::load_lang();
 
 $mode = 'add';

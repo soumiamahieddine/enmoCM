@@ -3,6 +3,9 @@ $GLOBALS['basket_loaded'] = false;
 $GLOBALS['entities_loaded'] = false;
 $func = new functions();
 $core = new core_tools();
+
+$core_tools->test_admin('admin_groups', 'apps');
+
 if ($core->is_module_loaded('basket')) {
     $GLOBALS['basket_loaded'] = true;
 }

@@ -59,6 +59,9 @@ try {
 } catch (Exception $e) {
     echo $e->getMessage();
 }
+
+$core_tools->test_admin('admin_docservers', 'apps');
+
 $docserverLocationsControler = new docserver_locations_controler();
 $docserverTypesControler = new docserver_types_controler();
 if ($mode == "up" || $mode == "add") {

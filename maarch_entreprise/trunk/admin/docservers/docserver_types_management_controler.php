@@ -58,6 +58,8 @@ try{
     echo $e->getMessage();
 }
 
+$core_tools->test_admin('admin_docservers', 'apps');
+
 if (isset($_REQUEST['submit'])) {
     // Action to do with db
     validate_cs_submit($mode);

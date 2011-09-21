@@ -1,5 +1,7 @@
 <?php
 core_tools::load_lang();
+$core_tools = new core_tools();
+$core_tools->test_admin('admin_status', 'apps');
 
 // Default mode is add
 $mode = 'add';
