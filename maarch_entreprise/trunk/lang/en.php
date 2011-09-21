@@ -1092,3 +1092,10 @@ if (!defined('_TO_MASTER_DOCUMENT')) {
 if (!defined('_WHERE_CLAUSE_NOT_SECURE')) {
     define('_WHERE_CLAUSE_NOT_SECURE', 'where clause not secure');
 }
+
+if (!defined('_SQL_QUERY_NOT_SECURE')) {
+    define(
+        '_SQL_QUERY_NOT_SECURE', 
+        'sql query not secure'
+    );
+}
