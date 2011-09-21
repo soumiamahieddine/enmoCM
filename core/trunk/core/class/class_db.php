@@ -37,7 +37,7 @@
 *
 * <ul>
 *  <li>Compatibility with the following databases : Mysql, Postgres,
-*  		Mssql Server, Oracle
+*       Mssql Server, Oracle
 *  <li>Connection to the Maarch database</li>
 * <li>Execution of SQL queries to the Maarch database</li>
 * <li>Getting results of SQL queries</li>
@@ -211,7 +211,7 @@ class dbquery extends functions
             );
         } else if ($this->_databasetype == 'POSTGRESQL') {
             $this->_sqlLink = @pg_connect(
-            	'host=' . $this->_server . ' user=' . $this->_user
+                'host=' . $this->_server . ' user=' . $this->_user
                 . ' password=' . $this->_password . ' dbname='
                 . $this->_database . ' port=' . $this->_port
                // , PGSQL_CONNECT_FORCE_NEW
@@ -276,7 +276,7 @@ class dbquery extends functions
         } else if ($this->_databasetype == 'POSTGRESQL') {
             $this->connect();
             $this->query(
-            	"select column_name from information_schema.columns where "
+                "select column_name from information_schema.columns where "
                 . "table_name = '" . $table . "' and column_name = '" . $field
                 . "'"
             );
@@ -290,7 +290,7 @@ class dbquery extends functions
         } else if ($this->_databasetype == 'ORACLE') {
             $this->connect();
             $this->query(
-            	"SELECT * from USER_TAB_COLUMNS where TABLE_NAME = '" . $table
+                "SELECT * from USER_TAB_COLUMNS where TABLE_NAME = '" . $table
                 . "' AND COLUMN_NAME = '" . $field . "'"
             );
             $res = $this->nb_result();
@@ -308,54 +308,93 @@ class dbquery extends functions
     *
     * @param  $sqlQuery string SQL query
     * @param  $catchError bool In case of error, catch the error or not,
-    * 			if not catched, the error is displayed (false by default)
+    *           if not catched, the error is displayed (false by default)
     */
     public function query($sqlQuery, $catchError = false)
     {
-        // query
-        $this->_debugQuery = $sqlQuery;
-        if ($this->_databasetype == 'MYSQL') {
-            $this->query = @mysqli_query($this->_sqlLink, $sqlQuery);
-        } else if ($this->_databasetype == 'SQLSERVER') {
-            $this->query = @mssql_query($sqlQuery);
-        } else if ($this->_databasetype == 'POSTGRESQL') {
-            $this->query = @pg_query($sqlQuery);
-        } else if ($this->_databasetype == 'ORACLE') {
-            $this->statement = @oci_parse($this->_sqlLink, $sqlQuery);
-            if ($this->statement == false) {
-                if ($catchError) {
-                    return false;
-                }
-                $this->_sqlError = 6;
-                $this->error();
-                exit();
+        $canExecute = true;
+        //exclude templates and history to the control
+        $search = '#\b(?:templates|history)\b#i';
+        preg_match($search, $sqlQuery, $out);
+        if (isset($out[0])) {
+            $count = count($out[0]);
+            if ($count == 1) {
+                $found = true;
             } else {
-                if (! @oci_execute($this->statement)) {
+                $found = false;
+            }
+        } else {
+            $found = false;
+        }
+        
+        // if not a sql for history or templates, we looking for ; or -- in the sql query
+        if (!$found) {
+            $func = new functions();
+            $sqlQuery = $func->wash_html($sqlQuery, '');
+            $ctrl1 = array();
+            $ctrl1 = explode(";", $sqlQuery);
+            if (count($ctrl1) > 1) {
+                $canExecute = false;
+                $this->_sqlError = 7;
+                $this->error();
+            }
+            $ctrl2 = array();
+            $ctrl2 = explode("--", $sqlQuery);
+            if (count($ctrl2) > 1) {
+                $canExecute = false;
+                $this->_sqlError = 7;
+                $this->error();
+            }
+        }
+
+        // query
+        if ($canExecute) {
+            $this->_debugQuery = $sqlQuery;
+            if ($this->_databasetype == 'MYSQL') {
+                $this->query = @mysqli_query($this->_sqlLink, $sqlQuery);
+            } else if ($this->_databasetype == 'SQLSERVER') {
+                $this->query = @mssql_query($sqlQuery);
+            } else if ($this->_databasetype == 'POSTGRESQL') {
+                $this->query = @pg_query($sqlQuery);
+            } else if ($this->_databasetype == 'ORACLE') {
+                $this->statement = @oci_parse($this->_sqlLink, $sqlQuery);
+                if ($this->statement == false) {
                     if ($catchError) {
                         return false;
                     }
-                    //$error = oci_error($this->statement);
-                    $this->_sqlError = 3;
+                    $this->_sqlError = 6;
                     $this->error();
-                    //print_r($error);
+                    exit();
+                } else {
+                    if (! @oci_execute($this->statement)) {
+                        if ($catchError) {
+                            return false;
+                        }
+                        //$error = oci_error($this->statement);
+                        $this->_sqlError = 3;
+                        $this->error();
+                        //print_r($error);
+                    }
                 }
+            } else {
+                $this->query = false;
+            }
+            //$this->show();
+            if ((($this->_databasetype == 'ORACLE' && $this->statement == false)
+                || ($this->_databasetype <> 'ORACLE' && $this->query == false))
+                && ! $catchError
+            ) {
+                $this->_sqlError = 3;
+                $this->error();
+            }
+            $this->_nbQuery ++;
+            if ($this->_databasetype == 'ORACLE') {
+                return $this->statement;
+            } else {
+                return $this->query;
             }
         } else {
-            $this->query = false;
-        }
-		//$this->show();
-        if ((($this->_databasetype == 'ORACLE' && $this->statement == false)
-            || ($this->_databasetype <> 'ORACLE' && $this->query == false))
-            && ! $catchError
-        ) {
-            $this->_sqlError = 3;
-            $this->error();
-        }
-        $this->_nbQuery ++;
-        if ($this->_databasetype == 'ORACLE') {
-            return $this->statement;
-        } else {
-            return $this->query;
+            return false;
         }
     }
 
@@ -591,6 +630,13 @@ class dbquery extends functions
             $trace->add("", 0, "QUERY", _PREPARE_QUERY_DB_FAILED, $_SESSION['config']['databasetype'], "database", true, _KO, _LEVEL_ERROR);
             exit();
         }
+        // Query Preparation error (ORACLE)
+        if ($this->_sqlError == 7) {
+            $_SESSION['error'] .= '<b>' . _SQL_QUERY_NOT_SECURE . '</b> <br />';
+            //echo $_SESSION['error']; 
+            $trace->add("", 0, "QUERY", _SQL_QUERY_NOT_SECURE, $_SESSION['config']['databasetype'], "database", true, _KO, _LEVEL_ERROR);
+            //exit();
+        }
     }
 
     /**
@@ -605,7 +651,7 @@ class dbquery extends functions
 
     /**
     * Returns the last insert id for the current query in case  of
-    * 	autoincrement id
+    *   autoincrement id
     *
     * @return integer  last increment id
     */
@@ -615,7 +661,7 @@ class dbquery extends functions
             return @mysqli_insert_id($this->_sqlLink);
         } else if ($this->_databasetype == 'POSTGRESQL') {
             $this->query = @pg_query(
-            	"select currval('" . $sequenceName . "') as lastinsertid"
+                "select currval('" . $sequenceName . "') as lastinsertid"
             );
             $line = @pg_fetch_object($this->query);
 
