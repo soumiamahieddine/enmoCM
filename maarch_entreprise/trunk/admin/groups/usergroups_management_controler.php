@@ -3,6 +3,7 @@ $GLOBALS['basket_loaded'] = false;
 $GLOBALS['entities_loaded'] = false;
 $func = new functions();
 $core = new core_tools();
+$core_tools = new core_tools();
 
 $core_tools->test_admin('admin_groups', 'apps');
 

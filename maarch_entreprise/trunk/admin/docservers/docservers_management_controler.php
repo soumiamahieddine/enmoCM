@@ -39,6 +39,7 @@ $idName = "docserver_id";
 $mode = 'add';
 
 $core = new core_tools();
+$core_tools = new core_tools();
 $core->load_lang();
 if (isset($_REQUEST['mode']) && !empty($_REQUEST['mode'])) {
     $mode = $_REQUEST['mode'];
