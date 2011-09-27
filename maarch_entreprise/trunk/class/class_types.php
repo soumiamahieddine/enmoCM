@@ -768,17 +768,17 @@ class types extends dbquery
         $indexes = array();
         foreach ($xmlfile->INDEX as $item) {
             $label = (string) $item->label;
-           	if (!empty($label) && defined($label) && constant($label) <> NULL) {
-           		$label = constant($label);
-           	}
+            if (!empty($label) && defined($label) && constant($label) <> NULL) {
+                $label = constant($label);
+            }
             $img = (string) $item->img;
             if (isset($item->default_value) && ! empty($item->default_value)) {
                 $default = (string) $item->default_value;
-	            if (!empty($default) && defined($default) 
-	            	&& constant($default) <> NULL
-	            ) {
-	           		$default = constant($default);
-	           	}
+                if (!empty($default) && defined($default) 
+                    && constant($default) <> NULL
+                ) {
+                    $default = constant($default);
+                }
             } else {
                 $default = false;
             }
@@ -787,11 +787,11 @@ class types extends dbquery
                 $list = $item->values_list ;
                 foreach ($list->value as $val) {
                     $labelVal = (string) $val->label;
-	                if (!empty($labelVal) && defined($labelVal) 
-		            	&& constant($labelVal) <> NULL
-		            ) {
-		           		$labelVal = constant($labelVal);
-		           	}
+                    if (!empty($labelVal) && defined($labelVal) 
+                        && constant($labelVal) <> NULL
+                    ) {
+                        $labelVal = constant($labelVal);
+                    }
                    
                     array_push(
                         $values,
@@ -925,21 +925,21 @@ class types extends dbquery
                   . $_SESSION['config']['lang'] . '.php';
         foreach ($xmlfile->INDEX as $item) {
             $label = (string) $item->label;
-         	if (!empty($label) && defined($label) 
-            	&& constant($label) <> NULL
+            if (!empty($label) && defined($label) 
+                && constant($label) <> NULL
             ) {
-           		$label = constant($label);
-           	}
+                $label = constant($label);
+            }
            
             $col = (string) $item->column;
             $img = (string) $item->img;
             if (isset($item->default_value) && ! empty($item->default_value)) {
                 $default = (string) $item->default_value;
-	            if (!empty($default) && defined($default) 
-	            	&& constant($default) <> NULL
-	            ) {
-	           		$default = constant($default);
-	           	}
+                if (!empty($default) && defined($default) 
+                    && constant($default) <> NULL
+                ) {
+                    $default = constant($default);
+                }
             } else {
                 $default = false;
             }
@@ -949,11 +949,11 @@ class types extends dbquery
                     $list = $item->values_list ;
                     foreach ($list->value as $val) {
                         $labelVal = (string) $val->label;
-		                if (!empty($labelVal) && defined($labelVal) 
-			            	&& constant($labelVal) <> NULL
-			            ) {
-			           		$labelVal = constant($labelVal);
-			           	}
+                        if (!empty($labelVal) && defined($labelVal) 
+                            && constant($labelVal) <> NULL
+                        ) {
+                            $labelVal = constant($labelVal);
+                        }
                        
                         array_push(
                             $values,

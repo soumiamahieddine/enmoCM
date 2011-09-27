@@ -52,7 +52,7 @@ $core_tools2->manage_location_bar($page_path, $page_label, $page_id, $init,
     $level);
 /***********************************************************/
 
-require('apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+require_once('apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
     . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
     . 'class_admin_actions.php'
     );

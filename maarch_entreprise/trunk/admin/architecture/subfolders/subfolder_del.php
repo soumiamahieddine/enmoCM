@@ -18,11 +18,11 @@ $db = new dbquery();
 
 if(isset($_GET['id']))
 {
-	$id = addslashes($db->wash($_GET['id'], "no", _THE_SUBFOLDER));
+    $id = addslashes($db->wash($_GET['id'], "no", _THE_SUBFOLDER));
 }
 else
 {
-	$id = "";
+    $id = "";
 }
 
 $db->connect();
@@ -31,36 +31,36 @@ $db->query("select doctypes_second_level_label from ".$_SESSION['tablename']['do
 
 if($db->nb_result() == 0)
 {
-	$_SESSION['error'] = _SUBFOLDER.' '._UNKNOWN.".";
-	header("location: ".$_SESSION['config']['businessappurl']."index.php?page=subfolders&order=".$_REQUEST['order']."&order_field=".$_REQUEST['order_field']."&start=".$_REQUEST['start']."&what=".$_REQUEST['what']);
-	exit();
+    $_SESSION['error'] = _SUBFOLDER.' '._UNKNOWN.".";
+    header("location: ".$_SESSION['config']['businessappurl']."index.php?page=subfolders&order=".$_REQUEST['order']."&order_field=".$_REQUEST['order_field']."&start=".$_REQUEST['start']."&what=".$_REQUEST['what']);
+    exit();
 }
 else
 {
-	$info = $db->fetch_object();
+    $info = $db->fetch_object();
 
-	$db->query("update ".$_SESSION['tablename']['doctypes_second_level']." set enabled = 'N' where doctypes_second_level_id = ".$id);
+    $db->query("update ".$_SESSION['tablename']['doctypes_second_level']." set enabled = 'N' where doctypes_second_level_id = ".$id);
 
-	$db->query("select type_id from ".$_SESSION['tablename']['doctypes']." where doctypes_second_level_id = ".$id);
-	$db2 = new dbquery();
-	$db2->connect();
-	while($res = $db->fetch_object())
-	{
-		//delete the doctypes from the foldertypes_doctypes table
-		$db2->query("delete from  ".$_SESSION['tablename']['fold_foldertypes_doctypes']."  where doctype_id = ".$res->type_id);
-	}
-	// delete the doctypes
-	$db2->query("update ".$_SESSION['tablename']['doctypes']." set enabled = 'N' where doctypes_second_level_id = ".$id);
+    $db->query("select type_id from ".$_SESSION['tablename']['doctypes']." where doctypes_second_level_id = ".$id);
+    $db2 = new dbquery();
+    $db2->connect();
+    while($res = $db->fetch_object())
+    {
+        //delete the doctypes from the foldertypes_doctypes table
+        $db2->query("delete from  ".$_SESSION['tablename']['fold_foldertypes_doctypes']."  where doctype_id = ".$res->type_id);
+    }
+    // delete the doctypes
+    $db2->query("update ".$_SESSION['tablename']['doctypes']." set enabled = 'N' where doctypes_second_level_id = ".$id);
 
-	if($_SESSION['history']['subfolderdel'] == "true")
-	{
-		require("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
-		$users = new history();
-		$users->add($_SESSION['tablename']['doctypes_second_level'], $id,"DEL",_DEL_SUBFOLDER." ".strtolower(_NUM).$id."", $_SESSION['config']['databasetype']);
-	}
-	$_SESSION['error'] = _SUBFOLDER_DELETED.".";
-		unset($_SESSION['m_admin']);
-	header("location: ".$_SESSION['config']['businessappurl']."index.php?page=subfolders&order=".$_REQUEST['order']."&order_field=".$_REQUEST['order_field']."&start=".$_REQUEST['start']."&what=".$_REQUEST['what']);
-	exit();
+    if($_SESSION['history']['subfolderdel'] == "true")
+    {
+        require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
+        $users = new history();
+        $users->add($_SESSION['tablename']['doctypes_second_level'], $id,"DEL",_DEL_SUBFOLDER." ".strtolower(_NUM).$id."", $_SESSION['config']['databasetype']);
+    }
+    $_SESSION['error'] = _SUBFOLDER_DELETED.".";
+        unset($_SESSION['m_admin']);
+    header("location: ".$_SESSION['config']['businessappurl']."index.php?page=subfolders&order=".$_REQUEST['order']."&order_field=".$_REQUEST['order_field']."&start=".$_REQUEST['start']."&what=".$_REQUEST['what']);
+    exit();
 }
 ?>

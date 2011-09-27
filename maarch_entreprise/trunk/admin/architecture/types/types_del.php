@@ -33,7 +33,7 @@ $core_tools = new core_tools();
 $core_tools->test_admin('admin_architecture', 'apps');
 //here we loading the lang vars
 $core_tools->load_lang();
-require("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_types.php");
+require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_types.php");
 $func = new functions();
 if(isset($_GET['id']))
 {
@@ -70,7 +70,7 @@ else
     unset($_SESSION['m_admin']['doctypes']['TYPE_ID']);
     if($_SESSION['history']['doctypesdel'] == 'true')
     {
-        require("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
+        require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
         $users = new history();
         $users->add($_SESSION['tablename']['doctypes'], $s_id,"DEL",_DOCTYPE_DELETION." : ".$info->description, $_SESSION['config']['databasetype']);
     }

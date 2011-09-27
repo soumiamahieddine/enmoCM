@@ -22,7 +22,7 @@ $core_tools = new core_tools();
 $core_tools->load_lang();
 $core_tools->test_admin('reopen_mail', 'apps');
 
-require("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_reopen_mail.php");
+require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_reopen_mail.php");
 
 $reopen = new ReopenMail();
 $reopen->update_db();
