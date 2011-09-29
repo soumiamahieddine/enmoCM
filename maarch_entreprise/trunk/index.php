@@ -120,16 +120,16 @@ if (isset($_GET['show'])) {
 
 $core->start_page_stat();
 $core->configPosition();
-
-$core->load_lang();
-$core->load_html();
-$core->load_header();
-$time = $core->get_session_time_expire();
 if (isset($_SESSION['HTTP_REFERER'])) {
     $url = $_SESSION['HTTP_REFERER'];
     unset($_SESSION['HTTP_REFERER']);
     header('location: '.$url);
 }
+$core->load_lang();
+$core->load_html();
+$core->load_header();
+$time = $core->get_session_time_expire();
+
 ?>
 <body onload="session_expirate(<?php  echo $time;?>, '<?php  echo $_SESSION['config']['coreurl'];?>');" id="maarch_body">
 <div id="header">
