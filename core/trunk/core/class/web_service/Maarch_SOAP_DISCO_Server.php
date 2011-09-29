@@ -1,6 +1,7 @@
 <?php
 
 require_once('SOAP/Disco.php');
+require_once('core/class/Url.php');
 
 class Maarch_SOAP_DISCO_Server extends SOAP_DISCO_Server
 {
@@ -18,19 +19,12 @@ class Maarch_SOAP_DISCO_Server extends SOAP_DISCO_Server
         $rootUri = self::_getRootUri();
         $protocol = (array_key_exists('HTTPS', $_SERVER) && $_SERVER['HTTPS'] == 'on')
             ? 'https://' : 'http://' ;
-        $selfFilename = basename(__file__);
-        return $protocol . $this->host . $rootUri;
+        return $protocol . $this->host . $rootUri . '/' . basename(Url::scriptName());
     }
     
     private static function _getRootUri()
     {
-        $rootUri = array_key_exists('HTTP_X_BASE_URL', $_SERVER)
-            ? str_replace($_SERVER['HTTP_X_BASE_URL'], '', 
-                          $_SERVER['SCRIPT_NAME'])
-            : $_SERVER['SCRIPT_NAME'];
-        $endPos = strlen($rootUri) - strrpos($rootUri, '/');
-        $rootUri = substr($rootUri, 0, $endPos);
-        return $rootUri . '.php';
+        return Url::baseUri();
     }
     
     public function _generate_WSDL()
