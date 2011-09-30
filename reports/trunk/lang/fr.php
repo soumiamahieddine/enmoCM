@@ -56,5 +56,6 @@ if (!defined('_ERROR_PERIOD_TYPE'))  define('_ERROR_PERIOD_TYPE', 'Erreur avec l
 if (!defined('_REPORTS_EVO_PROCESS'))  define('_REPORTS_EVO_PROCESS', 'Evolution du d&eacute;lai moyen de traitement');
 if (!defined('_MONTH'))  define('_MONTH', 'Mois');
 if (!defined('_PROCESS_DELAI_AVG'))  define('_PROCESS_DELAI_AVG', 'D&eacute;lai moyen');
+if (!defined('_PROCESS_DELAY_GENERIC_EVALUATION_REPORT'))  define('_PROCESS_DELAY_GENERIC_EVALUATION_REPORT', 'D&eacute;lai moyen de traitement');
 
 ?>
