@@ -546,6 +546,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
         $frmStr .= '</tr>';
     }
     /*** Physical_archive : Arbox ***/
+/*
     if ($core->is_module_loaded('physical_archive')) {
         $frmStr .= '<tr id="box_id_tr" style="display:' . $displayValue . ';">';
         $frmStr .= '<td><label for="arbox_id" class="form_title" id="label_box"'
@@ -564,6 +565,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
                 . 'style="display:inline;">*</span>&nbsp;</td>';
         $frmStr .= '</tr>';
     }
+*/
     /*** Process limit date ***/
     $frmStr .= '<tr id="process_limit_date_use_tr" style="display:'
             . $displayValue . ';">';
@@ -610,32 +612,34 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
     $frmStr .= '</tr>';
 
     /*** Folder : Market & Project ***/
-    if ($core->is_module_loaded('folder')) {
-        $frmStr .= '<tr id="project_tr" style="display:' . $displayValue . ';">';
-        $frmStr .= '<td><label for="project" class="form_title" >' . _PROJECT
-                . '</label></td>';
-        $frmStr .= '<td>&nbsp;</td>';
-        $frmStr .= '<td class="indexing_field"><input type="text" '
-                . 'name="project" id="project" onblur="clear_error(\'frm_error_'
-                . $actionId . '\');return false;" /><div id="show_project" '
-                . 'class="autocomplete"></div></td>';// $(\'market\').value=\'\';
-        $frmStr .= '<td><span class="red_asterisk" id="project_mandatory" '
-                . 'style="display:inline;">*</span>&nbsp;</td>';
-        $frmStr .= '</tr>';
-        $frmStr .= '<tr id="market_tr" style="display:' . $displayValue . ';">';
-        $frmStr .= '<td><label for="market" class="form_title" >' . _MARKET
-                . '</label></td>';
-        $frmStr .= '<td>&nbsp;</td>';
-        $frmStr .= '<td class="indexing_field"><input type="text" name="market"'
-                . ' id="market" onblur="clear_error(\'frm_error_' . $actionId
-                . '\');fill_project(\'' . $_SESSION['config']['businessappurl']
-                . 'index.php?display=true&module=folder&page=ajax_get_project\');'
-                . 'return false;" /><div id="show_market" class="autocomplete">'
-                . '</div></td>';
-        $frmStr .= '<td><span class="red_asterisk" id="market_mandatory" '
-                . 'style="display:inline;">*</span>&nbsp;</td>';
-        $frmStr .= '</tr>';
-    }
+		/*
+		if ($core->is_module_loaded('folder')) {
+			$frmStr .= '<tr id="project_tr" style="display:' . $displayValue . ';">';
+			$frmStr .= '<td><label for="project" class="form_title" >' . _PROJECT
+					. '</label></td>';
+			$frmStr .= '<td>&nbsp;</td>';
+			$frmStr .= '<td class="indexing_field"><input type="text" '
+					. 'name="project" id="project" onblur="clear_error(\'frm_error_'
+					. $actionId . '\');return false;" /><div id="show_project" '
+					. 'class="autocomplete"></div></td>';// $(\'market\').value=\'\';
+			$frmStr .= '<td><span class="red_asterisk" id="project_mandatory" '
+					. 'style="display:inline;">*</span>&nbsp;</td>';
+			$frmStr .= '</tr>';
+			$frmStr .= '<tr id="market_tr" style="display:' . $displayValue . ';">';
+			$frmStr .= '<td><label for="market" class="form_title" >' . _MARKET
+					. '</label></td>';
+			$frmStr .= '<td>&nbsp;</td>';
+			$frmStr .= '<td class="indexing_field"><input type="text" name="market"'
+					. ' id="market" onblur="clear_error(\'frm_error_' . $actionId
+					. '\');fill_project(\'' . $_SESSION['config']['businessappurl']
+					. 'index.php?display=true&module=folder&page=ajax_get_project\');'
+					. 'return false;" /><div id="show_market" class="autocomplete">'
+					. '</div></td>';
+			$frmStr .= '<td><span class="red_asterisk" id="market_mandatory" '
+					. 'style="display:inline;">*</span>&nbsp;</td>';
+			$frmStr .= '</tr>';
+		}
+		*/
     $frmStr .= '</table>';
 
     $frmStr .= '<div id="comp_indexes" style="display:block;">';
@@ -890,6 +894,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
             . 'launch_autocompleter_contacts(\''
             . $_SESSION['config']['businessappurl'] . 'index.php?display=true'
             . '&dir=indexing_searching&page=autocomplete_contacts\');';
+/*
     if ($core->is_module_loaded('folder')) {
         $frmStr .= 'launch_autocompleter_folders(\''
                 . $_SESSION['config']['businessappurl'] . 'index.php?display='
@@ -899,6 +904,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
                 . 'true&module=folder&page=autocomplete_folders&mode=market\','
                 . ' \'market\');';
     }
+*/
     $frmStr .= '$(\'baskets\').style.visibility=\'hidden\';'
             . 'var item  = $(\'index_div\'); if(item)'
             . '{item.style.display=\'block\';}</script>';
@@ -1208,6 +1214,7 @@ function process_category_check($catId, $values)
             }
         }
     }
+/*
     if ($core->is_module_loaded('folder')) {
         $db = new dbquery();
         $db->connect();
@@ -1310,7 +1317,9 @@ function process_category_check($catId, $values)
             }
         }
     }
+*/
 
+/*
     if ($core->is_module_loaded('physical_archive')) {
         // Arbox id
         $boxId = get_value_fields($values, 'arbox_id');
@@ -1333,6 +1342,7 @@ function process_category_check($catId, $values)
             }
         }
     }
+*/
 
     //For specific case => chrono number
     $chronoOut = get_value_fields($values, 'chrono_number');
@@ -1679,6 +1689,7 @@ $collId, $table, $formValues )
             }
         }
 
+/*
         if ($core->is_module_loaded('physical_archive')) {
             // Arbox_id + Arbatch_id
             $boxId = get_value_fields($formValues, 'arbox_id');
@@ -1703,6 +1714,7 @@ $collId, $table, $formValues )
                 )
             );
         }
+*/
         //print_r($_SESSION['data']);
         $resId = $resource->load_into_db(
             $table, $_SESSION['indexing']['destination_dir'],
@@ -1746,6 +1758,7 @@ $collId, $table, $formValues )
             //echo $queryExt;
             $db->connect();
             $db->query($queryExt);
+/*
             if ($core->is_module_loaded('folder') && ! empty($folderId)
                 && $_SESSION['history']['folderup']
             ) {
@@ -1757,6 +1770,7 @@ $collId, $table, $formValues )
                     $_SESSION['config']['databasetype'], 'apps'
                 );
             }
+*/
             //$db->show();
             if ($core->is_module_loaded('entities')) {
                 //	echo 'entities '.$resId. " ";

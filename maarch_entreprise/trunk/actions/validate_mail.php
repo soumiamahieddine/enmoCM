@@ -201,6 +201,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         }
     }
 
+/*
     if($core_tools->is_module_loaded('physical_archive'))
     {
         $boxes = array();
@@ -210,6 +211,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             array_push($boxes, array( 'ID' => $res->arbox_id, 'LABEL' => $db->show_string($res->title)));
         }
     }
+*/
     check_category($coll_id, $res_id);
     $data = get_general_data($coll_id, $res_id, 'minimal');
     //print_r($data);
@@ -484,6 +486,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                   $frm_str .= '</tr>';
                 }
                 /*** Physical_archive : Arbox ***/
+/*
                 if($core_tools->is_module_loaded('physical_archive'))
                 {
                     $frm_str .= '<tr id="box_id_tr" style="display:'.$display_value.';">';
@@ -517,6 +520,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                     $frm_str .= '<td><span class="red_asterisk" id="arbox_id_mandatory" style="display:inline;">*</span>&nbsp;</td>';
                   $frm_str .= '</tr>';
                 }
+*/
         /*** Process limit date ***/
         $frm_str .= '<tr id="process_limit_date_use_tr" style="display:'.$display_value.';">';
             $frm_str .='<td class="indexing_label"><label for="process_limit_date_use" class="form_title" >'._PROCESS_LIMIT_DATE_USE.'</label></td>';
