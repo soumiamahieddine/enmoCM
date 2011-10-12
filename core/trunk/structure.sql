@@ -695,7 +695,7 @@ CREATE TABLE af_security
   af_security_id bigint NOT NULL,
   af_security_label character varying(255) NOT NULL,
   group_id character varying(50) NOT NULL,
-  tree_id character(50) NOT NULL,
+  tree_id character varying(50) NOT NULL,
   where_clause text NOT NULL,
   start_date timestamp without time zone,
   stop_date timestamp without time zone,
