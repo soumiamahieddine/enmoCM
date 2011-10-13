@@ -376,13 +376,13 @@ $list->list_doc($tab, $i, '', 'res_id', $name, 'res_id', 'details_invoices&dir=i
 
 } else {
     if ($mode == 'normal') {
-        $_SESSION['error_search'] = '<p class="error"><img src="' . $_SESSION['config']['businessappurl'] . 'static.php?filename=noresult.gif" /><br />' . _NO_RESULTS . '</p><br/><br/><div align="center"><strong><a href="' . $_SESSION['config']['businessappurl'] . 'index.php?page=search_adv_invoices&dir=indexing_searching&init_search">' . _MAKE_NEW_SEARCH . '</a></strong></div>';
+        $_SESSION['error_search'] = '<p class="error"><img src="' . $_SESSION['config']['businessappurl'] . 'static.php?filename=noresult.gif" /><br />' . _NO_RESULTS . '</p><br/><br/><div align="center"><strong><a href="' . $_SESSION['config']['businessappurl'] . 'index.php?page=search_adv_invoices&dir=indexing_searching">' . _MAKE_NEW_SEARCH . '</a></strong></div>';
         ?>
         <script type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?page=search_adv_error_invoices&dir=indexing_searching';?>';</script>
         <?php
 
 } else {
-    $_SESSION['error_search'] = '<p class="error"><img src="' . $_SESSION['config']['businessappurl'] . 'static.php?filename=noresult.gif" /><br />' . _NO_RESULTS . '</p><br/><br/><div align="center"><strong><a href="' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=indexing_searching&page=search_adv_invoices&mode=' . $mode . '&init_search">' . _MAKE_NEW_SEARCH . '</a></strong></div>';
+    $_SESSION['error_search'] = '<p class="error"><img src="' . $_SESSION['config']['businessappurl'] . 'static.php?filename=noresult.gif" /><br />' . _NO_RESULTS . '</p><br/><br/><div align="center"><strong><a href="' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=indexing_searching&page=search_adv_invoices&mode=' . $mode . '">' . _MAKE_NEW_SEARCH . '</a></strong></div>';
     ?>
         <script  type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=search_adv_error_invoices&mode='.$mode;?>';</script>
         <?php
