@@ -1003,9 +1003,9 @@ class docservers_controler
     */
     public function checkSize($docserver, $filesize)
     {
-        $new_docserver_size = $docserver->actual_size + $filesize;
-        if ($docserver->size_limit > 0
-            && $new_docserver_size >= $docserver->size_limit
+        $new_docserver_size = $docserver->actual_size_number + $filesize;
+        if ($docserver->size_limit_number > 0
+            && $new_docserver_size >= $docserver->size_limit_number
         ) {
             return 0;
         } else {
