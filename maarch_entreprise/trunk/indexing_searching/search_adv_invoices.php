@@ -27,7 +27,7 @@
  * @author Loïc Vinet <dev@maarch.org>
  * @date $date$
  * @version $Revision$
- * @ingroup indexing_searching_mlb
+ * @ingroup indexing_searching_invoices
  */
 
 require_once ("core" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . "class_request.php");
@@ -55,7 +55,7 @@ if (isset ($_REQUEST['mode']) && !empty ($_REQUEST['mode'])) {
     $mode = $func->wash($_REQUEST['mode'], "alphanum", _MODE);
 }
 if ($mode == 'normal') {
-    $core_tools->test_service('adv_search_mlb', 'apps');
+    $core_tools->test_service('adv_search_invoices', 'apps');
     /****************Management of the location bar  ************/
     $init = false;
     if (isset ($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true") {

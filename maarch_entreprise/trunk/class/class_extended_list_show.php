@@ -458,7 +458,7 @@ class extended_list_show extends dbquery
 				if(isset($this->actions_link[$action_id]['class'])) { $action_href .= ' class="'.$this->actions_link[$action_id]['class'].'">';}else {$action_href .= '>';} //End of link
 				
 				//Image
-				if(isset($this->actions_link[$action_id]['icon'])) { $action_href .= '<img src="'.$this->actions_link[$action_id]['icon'].'" alt="'.$this->actions_link[$action_id]['tooltip'].'" border="0"/>'; }
+				if(isset($this->actions_link[$action_id]['icon'])) { $action_href .= '<img src="'.$this->actions_link[$action_id]['icon'].'" alt="'.$this->actions_link[$action_id]['tooltip'].'" border="0" align="absmiddle" />'; }
 				
 				//Label
 				if(isset($this->actions_link[$action_id]['label'])) { $action_href .= '&nbsp;'.$this->actions_link[$action_id]['label'];}
@@ -965,7 +965,7 @@ class extended_list_show extends dbquery
 						if(isset($this->actions_link[$i]['class_on']))	{ $content .= ' class="'.$this->actions_link[$i]['class_on'].'">';	} else { $content .= '>'; } //End of link
 						
 						//Image
-						if(isset($this->actions_link[$i]['icon_on'])) { $content .= '<img src="'.$this->actions_link[$i]['icon_on'].'" alt="'.$this->actions_link[$i]['tooltip_on'].'" border="0"/>'; }
+						if(isset($this->actions_link[$i]['icon_on'])) { $content .= '<img src="'.$this->actions_link[$i]['icon_on'].'" alt="'.$this->actions_link[$i]['tooltip_on'].'" border="0" align="absmiddle" />'; }
 						
 						//Label
 						if(isset($this->actions_link[$i]['label_on'])) { $content .= '&nbsp;'.$this->actions_link[$i]['label_on']; }
@@ -991,7 +991,7 @@ class extended_list_show extends dbquery
 						if(isset($this->actions_link[$i]['class_off']))	{ $content .= ' class="'.$this->actions_link[$i]['class_off'].'">';	} else { $content .= '>'; } //End of link
 						
 						//Image
-						if(isset($this->actions_link[$i]['icon_off'])) { $content .= '<img src="'.$this->actions_link[$i]['icon_off'].'" alt="'.$this->actions_link[$i]['tooltip_off'].'" border="0"/>'; }
+						if(isset($this->actions_link[$i]['icon_off'])) { $content .= '<img src="'.$this->actions_link[$i]['icon_off'].'" alt="'.$this->actions_link[$i]['tooltip_off'].'" border="0" align="absmiddle"/>'; }
 						
 						//Label
 						if(isset($this->actions_link[$i]['label_off'])) { $content .= '&nbsp;'.$this->actions_link[$i]['label_off']; }
@@ -1029,7 +1029,7 @@ class extended_list_show extends dbquery
 					if(isset($this->actions_link[$i]['class']))	{ $content .= ' class="'.$this->actions_link[$i]['class'].'">';	} else { $content .= '>'; } //End of link
 					
 					//Image
-					if(isset($this->actions_link[$i]['icon'])) { $content .= '<img src="'.$this->actions_link[$i]['icon'].'" alt="'.$this->actions_link[$i]['tooltip'].'" border="0"/>'; }
+					if(isset($this->actions_link[$i]['icon'])) { $content .= '<img src="'.$this->actions_link[$i]['icon'].'" alt="'.$this->actions_link[$i]['tooltip'].'" border="0" align="absmiddle"/>'; }
 					
 					//Label
 					if(isset($this->actions_link[$i]['label'])) { $content .= '&nbsp;'.$this->actions_link[$i]['label']; }
@@ -1249,6 +1249,8 @@ class extended_list_show extends dbquery
 		(
 		[module] => string : Name of the module where the page is
 		[page_name] => string : The calling page
+		[page_parameters] => string : More parameters in link for page
+        [bool_page_in_module] => boolean : if page is in a module
 		[page_title] => string : Title of the page to be displayed over the list
 		[bool_big_page_title] => boolean : size of the title. If false small size
 		[page_picto] => string : Image to be displayed near title
@@ -1294,6 +1296,7 @@ class extended_list_show extends dbquery
 		[hidden_fields_form] => array : Hidden fields in the form
 		[bool_do_action] => boolean : If action on row of the list .False by default
 		[id_action] => string : Id of the action
+		[click_line_text] => string : Text displayed under the list for action on line
 		[actions_combo] => array : List of the elements of the actions combo list
 		[bool_script_on_line] => boolean : If the click on the line open link. False by default
 		[script_on_line] => string : Javascript for click on line 
@@ -2435,17 +2438,17 @@ class extended_list_show extends dbquery
 			}
 			
 			//Si on a une sous liste
-			if ($param_list['bool_sublist'] === true) 
+			if ($param_list['bool_sublist'] === true && 
+				$param_list['bool_sublist_check_form'] === false && 
+				$param_list['bool_sublist_radio_form'] === false
+				) 
 			{
-                if ($param_list['bool_sublist_check_form'] === false &&	$param_list['bool_sublist_radio_form'] === false)
-                {
-                    //On met les cases à cocher par defaut
-                    $param_list['bool_sublist_check_form'] = true;
-                }
-                
-                //On desactive les boutons form dans la liste principale
-                $param_list['bool_check_form'] = false;
-                $param_list['bool_radio_form'] = false;
+				//On met les cases àcocher par defaut
+				$param_list['bool_sublist_check_form'] = true;
+				
+				//On desactive les boutons form dans la liste principale
+				$param_list['bool_check_form'] = false;
+				$param_list['bool_radio_form'] = false;
 			}
 			
 		}
@@ -2581,28 +2584,20 @@ class extended_list_show extends dbquery
 		// Browses the filters in that file  and loads $_SESSION['filters']
 		foreach($xmltemplate->FILTER as $FILTER)
 		{
-
 			if ($FILTER->enabled == 'true') //only if enabled
 			{
-			
-				$lang_path = 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php';
-				
+                
 				$tmp = (string) $FILTER->label;
-				$tmp2 = $this->retrieve_constant_lang($tmp, $lang_path);
-				if($tmp2 <> false)
-				{
-					$_SESSION['filters'][$k]['label'] = $tmp2;
-				}
-				else
-				{
-					$_SESSION['filters'][$k]['label'] = $tmp;
-				}
-				
+                if (!empty($tmp) && defined($tmp) && constant($tmp) <> NULL) 
+                {
+                    $tmp = constant($tmp);
+                }
+				$_SESSION['filters'][$k]['label'] = $tmp;
 				$_SESSION['filters'][$k]['filter_field'] = (string) $FILTER->filter_field;
 				$_SESSION['filters'][$k]['filter_var'] = (string) $FILTER->filter_var;
 				$_SESSION['filters'][$k]['id'] = (string) $FILTER->id;
 				$_SESSION['filters'][$k]['type'] = (string) $FILTER->type;
-				
+                
 				//Values from xml
 				if(isset($FILTER->values))
 				{
@@ -2611,10 +2606,19 @@ class extended_list_show extends dbquery
 					foreach($VALUES->value as $val)
 					{
 						$lab = (string) $val->label;
-						$tmp = $this->retrieve_constant_lang($lab, $lang_path);
-						if($tmp <> false){$lab = $tmp;}
-						
-						array_push($_SESSION['filters'][$k]['values'], array('id' => (string) $val->id, 'label' => $lab));
+                        if (!empty($lab) && defined($lab) 
+                            && constant($lab) <> NULL
+                        ) 
+                        {
+                            $lab = constant($lab);
+                            array_push(
+                                $_SESSION['filters'][$k]['values'], 
+                                array(
+                                    'id' => (string) $val->id, 
+                                    'label' => $lab
+                                )
+                            );
+                        }
 					}
 				}
 				elseif(isset($FILTER->table)) //Values from database
@@ -2647,7 +2651,7 @@ class extended_list_show extends dbquery
 					{
 						 array_push($_SESSION['filters'][$k]['values'], array('id' => (string) $res->$foreignKey, 'label' => $res->$foreignLabel));
 					}
-				}
+                }
 				
 				$l=0;
 				foreach($FILTER->whereamiused as $WHEREAMIUSED)
@@ -2656,7 +2660,6 @@ class extended_list_show extends dbquery
 					$l++;
 				}
 			}
-			
 			$k++;
 		}
 	}

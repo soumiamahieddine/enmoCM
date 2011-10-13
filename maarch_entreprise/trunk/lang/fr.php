@@ -1454,3 +1454,10 @@ if (!defined('_WHERE_CLAUSE_NOT_SECURE')) {
         'Clause where non s&eacute;curis&eacute;e'
     );
 }
+
+if (!defined('_SQL_QUERY_NOT_SECURE')) {
+    define(
+        '_SQL_QUERY_NOT_SECURE', 
+        'requete SQL non s&eacute;curis&eacute;e'
+    );
+}
