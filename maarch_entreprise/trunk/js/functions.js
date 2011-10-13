@@ -1504,7 +1504,7 @@ function action_change_status(path_manage_script, mode_req, res_id_values, table
                 onFailure: function(){
                     if(console)
                     {
-                        //console.log('dans ton c** !!');
+                        //console.log('the console');
                     }
                 }
             });
