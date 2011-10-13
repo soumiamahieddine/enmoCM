@@ -1065,13 +1065,8 @@ class types extends dbquery
 
         // Checks the manadatory indexes
         for ($i = 0; $i < count($mandatoryIndexes); $i ++) {
-            if (($indexes[$mandatoryIndexes[$i]]['type'] == 'string'
-                && trim($values[$mandatoryIndexes[$i]]) == '')
-                || (($indexes[$mandatoryIndexes[$i]]['type'] == 'integer'
-                || $indexes[$mandatoryIndexes[$i]]['type'] == 'float')
-                && preg_match("/^[0-9.]+$/", $values[$mandatoryIndexes[$i]]) == 0)
-                || (empty($values[$mandatoryIndexes[$i]])
-                && $indexes[$mandatoryIndexes[$i]]['type'] == 'date')
+            if ((empty($values[$mandatoryIndexes[$i]])
+                || $values[$mandatoryIndexes[$i]] == '')
             ) {
                 $_SESSION['error'] .= $indexes[$mandatoryIndexes[$i]]['label']
                                    . ' <br/>' . _IS_EMPTY . '<br/>';
@@ -1087,24 +1082,28 @@ class types extends dbquery
                                        . _WRONG_FORMAT . ".<br/>";
                     return false;
                 }
-            } else if ($indexes[$key]['type'] == 'string'
+            } elseif ($indexes[$key]['type'] == 'string'
                 && trim($values[$key]) <> ''
             ) {
                 $fieldValue = $this->wash(
                     $values[$key], "no", $indexes[$key]['label']
                 );
-            } else if ($indexes[$key]['type'] == 'float'
+            } elseif ($indexes[$key]['type'] == 'float'
                 && preg_match("/^[0-9.]+$/", $values[$key]) == 1
             ) {
                 $fieldValue = $this->wash(
                     $values[$key], "float", $indexes[$key]['label']
                 );
-            } else if ($indexes[$key]['type'] == 'integer'
+            } elseif ($indexes[$key]['type'] == 'integer'
                 && preg_match("/^[0-9]+$/", $values[$key]) == 1
             ) {
                 $fieldValue = $this->wash(
                     $values[$key], "num", $indexes[$key]['label']
                 );
+            } elseif (!empty($values[$key])) {
+                $_SESSION['error'] .= $indexes[$key]['label'] . " <br/>"
+                                       . _WRONG_FORMAT . ".<br/>";
+                return false;
             }
 
             if (isset($indexes[$key]['values'])
