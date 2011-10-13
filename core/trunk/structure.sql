@@ -1,4 +1,4 @@
-
+﻿
 
 -- core/sql/structure/core.postgresql.sql
 
