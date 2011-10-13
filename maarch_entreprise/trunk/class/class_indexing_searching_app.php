@@ -570,18 +570,18 @@ class indexing_searching_app extends dbquery
         }
         elseif($field_type == 'select_multiple')
         {
-            $str .= '<tr><td colspan="3">rr'.$param['label_title'].' :</td></tr>';
+            $str .= '<tr><td colspan="3">'.$param['label_title'].' :</td></tr>';
             $str .= '<tr>';
                 $str .= '<td width="150" align="left">';
                     $str .= '<select name="'.$param['id'].'_available[]" id="'.$param['id'].'_available" size="10" ondblclick="moveclick_ext('." '".$param['id']."_available', '".$param['id']."_chosen'".');" multiple="multiple" >';
                         for($i=0; $i<count($param['options']);$i++)
                         {
                             $str .= '<option value="'.$param['options'][$i]['VALUE'].'"  alt="'.addslashes($param['options'][$i]['LABEL'])
-								. '" title="'.addslashes($param['options'][$i]['LABEL']).'" ';
-							if (isset($param['options'][$i]['CLASS'])) {
-								$str .= ' class="' . $param['options'][$i]['CLASS'] . '" ';
-							}
-							$str .= '>'.$param['options'][$i]['LABEL'].'</option>';
+                                . '" title="'.addslashes($param['options'][$i]['LABEL']).'" ';
+                            if (isset($param['options'][$i]['CLASS'])) {
+                                $str .= ' class="' . $param['options'][$i]['CLASS'] . '" ';
+                            }
+                            $str .= '>'.$param['options'][$i]['LABEL'].'</option>';
                         }
                     $str .='</select>';
                     $str .= "<br/><em><a href=\"javascript:selectall_ext( '".$param['id']."_available');\" >"._SELECT_ALL.'</a></em>';
