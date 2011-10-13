@@ -53,7 +53,7 @@ else
         $template_path = $_SESSION['config']['MaarchDirectory']."modules".DIRECTORY_SEPARATOR."notifications".DIRECTORY_SEPARATOR.$_SESSION['templates_directory'].DIRECTORY_SEPARATOR.$_SESSION['templates']['notif'];
         $template_path_copy = $_SESSION['config']['MaarchDirectory']."modules".DIRECTORY_SEPARATOR."notifications".DIRECTORY_SEPARATOR.$_SESSION['templates_directory'].DIRECTORY_SEPARATOR.$_SESSION['templates']['notif_copy'];
         
-        
+        chdir($_SESSION['config']['MaarchDirectory']);
         require_once($_SESSION['config']['MaarchDirectory']."core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_functions.php");
         require_once($_SESSION['config']['MaarchDirectory']."core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_core_tools.php");
         
