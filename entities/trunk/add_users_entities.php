@@ -62,19 +62,18 @@ function in_session_array($entity_id)
     <label for="entity_id"> <?php  echo _CHOOSE_ENTITY;?> : </label>
     <select name="entity_id" id="entity_id" size="10">
     <?php
+   
         for($i=0; $i<count($entities);$i++)
         {
             $short_label = $entities[$i]->__get('short_label');
             $entity_id = $entities[$i]->__get('entity_id');
 
-/*
-                if(in_session_array($entity_id))
-                {
-                    $i++;
-                    $short_label = $entities[$i]->__get('short_label');
-                    $entity_id = $entities[$i]->__get('entity_id');
-                }
-*/
+                //if(in_session_array($entity_id))
+                //{
+                //$i++;
+                //    $short_label = $entities[$i]->__get('short_label');
+                //    $entity_id = $entities[$i]->__get('entity_id');
+                //}
             ?>
                 <option value="<?php  echo $entity_id;?>" ><?php  if(isset($short_label) && !empty($short_label)){ echo $short_label;}else{echo $entities[$i]->__get('entity_label');}?></option><?php
 
