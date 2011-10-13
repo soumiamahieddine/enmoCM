@@ -54,6 +54,8 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINS', 'admin_
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINS', 'manage_entities');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINS', 'admin_foldertypes');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINS', 'admin_templates');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINS', 'print_details');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINS', 'view_technical_infos');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ARCHIVISTS', 'admin');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ARCHIVISTS', 'admin_apa');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ARCHIVISTS', 'manage_apa');
@@ -77,6 +79,8 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('EMPLOYEES', 'upd
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('EMPLOYEES', 'join_res_case');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('EMPLOYEES', 'join_res_case_in_process');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('EMPLOYEES', 'close_case');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('EMPLOYEES', 'print_details');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('EMPLOYEES', 'view_technical_infos');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('MANAGERS', 'adv_search_mlb');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('MANAGERS', 'search_customer');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('MANAGERS', 'my_alerts');
@@ -87,10 +91,14 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('MANAGERS', 'add_
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('MANAGERS', 'folder_search');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('MANAGERS', 'modify_folder');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('MANAGERS', 'delete_folder');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('MANAGERS', 'print_details');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('MANAGERS', 'view_technical_infos');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('TYPISTS', 'index_mlb');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('TYPISTS', 'my_contacts');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('TYPISTS', 'view_baskets');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('TYPISTS', 'add_copy_in_process');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('TYPISTS', 'print_details');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('TYPISTS', 'view_technical_infos');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('CORRESPONDANTS', 'reserve_apa');
 
 INSERT INTO entities (entity_id, entity_label, short_label, enabled, adrs_1, adrs_2, adrs_3, zipcode, city, country, email, business_id, parent_entity_id, entity_type) VALUES ('DIR', 'Organisation ACME', 'ACME', 'Y', '', '', '', '', '', '', '', '', '', 'Direction');

@@ -33,6 +33,11 @@ if (!isset ($_REQUEST['coll_id'])) {
     $_REQUEST['coll_id'] = "";
 }
 $_SESSION['doc_convert'] = array ();
+//test service view technical infos
+$viewTechnicalInfos = false;
+if ($core_tools->test_service('view_technical_infos', 'apps', false)) {
+    $viewTechnicalInfos = true;
+}
 /****************Management of the location bar  ************/
 $init = false;
 if (isset ($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true") {
@@ -564,7 +569,9 @@ if (empty ($_SESSION['error']) || $_SESSION['indexation']) {
                             </dd>
                             <?php
                             //SERVICE TO VIEW TECHNICAL INDEX
-                            $core_tools->execute_app_services($_SESSION['app_services'], 'details.php');
+                            if ($viewTechnicalInfos) {
+                                include_once('apps/' . $_SESSION['config']['app_id'] . '/view_technical_infos.php');
+                            }
                             ?>
                             <dt><?php echo _DOC_HISTORY;?></dt>
                             <dd>

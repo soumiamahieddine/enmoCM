@@ -53,6 +53,11 @@ $printDetails = false;
 if ($core->test_service('print_details', 'apps', false)) {
     $printDetails = true;
 }
+//test service view technical infos
+$viewTechnicalInfos = false;
+if ($core->test_service('view_technical_infos', 'apps', false)) {
+    $viewTechnicalInfos = true;
+}
 if(!isset($_REQUEST['coll_id']))
 {
     $_REQUEST['coll_id'] = "";
@@ -150,18 +155,18 @@ $delete_doc = check_right(
 //update index with the doctype
 if(isset($_POST['submit_index_doc']))
 {
-	if($core->is_module_loaded('entities') && is_array($_SESSION['details']['diff_list'])) {
-		require_once('modules'.DIRECTORY_SEPARATOR.'entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_listdiff.php');
-		$list = new diffusion_list();
-		$params = array('mode'=> 'listinstance', 'table' => $_SESSION['tablename']['ent_listinstance'], 'coll_id' => $coll_id, 'res_id' => $s_id, 'user_id' => $_SESSION['user']['UserId'], 'concat_list' => true, 'only_cc' => false);
-		$list->load_list_db($_SESSION['details']['diff_list'], $params); //pb enchainement avec action redirect
-	}
+    if($core->is_module_loaded('entities') && is_array($_SESSION['details']['diff_list'])) {
+        require_once('modules'.DIRECTORY_SEPARATOR.'entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_listdiff.php');
+        $list = new diffusion_list();
+        $params = array('mode'=> 'listinstance', 'table' => $_SESSION['tablename']['ent_listinstance'], 'coll_id' => $coll_id, 'res_id' => $s_id, 'user_id' => $_SESSION['user']['UserId'], 'concat_list' => true, 'only_cc' => false);
+        $list->load_list_db($_SESSION['details']['diff_list'], $params); //pb enchainement avec action redirect
+    }
     $is->update_mail($_POST, "POST", $s_id, $coll_id);
 }
 //delete the doctype
 if(isset($_POST['delete_doc']))
 {
-    $is ->delete_doc( $s_id, $coll_id);
+    $is ->delete_doc($s_id, $coll_id);
     ?>
         <script type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?page=search_adv&dir=indexing_searching';?>';</script>
     <?php
@@ -197,7 +202,7 @@ if(empty($_SESSION['error']) || $_SESSION['indexation'])
         $case_sql_complementary = " , case_id";
     }
     $db->query(
-    	"select status, format, typist, creation_date, fingerprint, filesize, "
+        "select status, format, typist, creation_date, fingerprint, filesize, "
         . "res_id, work_batch, page_count, is_paper, scan_date, scan_user, "
         . "scan_location, scan_wkstation, scan_batch, source, doc_language, "
         . "description, closing_date, alt_identifier " . $comp_fields
@@ -714,7 +719,7 @@ else
                     </div>
                     <br/>
 
-                    <h2>
+                    <!--<h2>
                     <span class="date">
                         <b><?php  echo _FILE_PROPERTIES;?></b>
                     </span>
@@ -759,33 +764,7 @@ else
                             <td align="left"><?php  echo _WORK_BATCH; ?> :</td>
                             <td><input type="text" class="readonly" readonly="readonly" value="<?php  echo $work_batch; ?>" title="<?php  echo $work_batch; ?>" alt="<?php  echo $work_batch; ?>" /></td>
                         </tr>
-                        <!--
-                        <tr>
-                            <th align="left"><?php  echo _PAGECOUNT; ?> :</th>
-                            <td><input type="text" class="readonly" readonly="readonly" value="<?php  echo $page_count; ?>"  /></td>
-                            <th align="left"><?php  echo _ISPAPER; ?> :</th>
-                            <td><input type="text" class="readonly" readonly="readonly" value="<?php  echo $is_paper; ?>" /></td>
-                        </tr>
-                            <tr class="col">
-                            <th align="left"><?php  echo _SCANUSER; ?> :</th>
-                            <td><input type="text" class="readonly" readonly="readonly" value="<?php  echo $scan_user; ?>"  /></td>
-                            <th align="left"><?php  echo _SCANDATE; ?> :</th>
-                            <td><input type="text" class="readonly" readonly="readonly" value="<?php  echo $scan_date; ?>" /></td>
-                        </tr>
-                        <tr>
-                            <th align="left"><?php  echo _SCANWKSATION; ?> :</th>
-                            <td><input type="text" class="readonly" readonly="readonly" value="<?php  echo $scan_wkstation; ?>" /></td>
-                            <th align="left"><?php  echo _SCANLOCATION; ?> :</th>
-                            <td><input type="text" class="readonly" readonly="readonly" value="<?php  echo $scan_location; ?>" /></td>
-                        </tr>
-                        <tr class="col">
-                            <th align="left"><?php  echo _SCANBATCH; ?> :</th>
-                            <td><input type="text" class="readonly" readonly="readonly" value="<?php  echo $scan_batch; ?>"  /></td>
-                            <th align="right"><?php  echo _SOURCE; ?> :</th>
-                            <td><input type="text" class="readonly" readonly="readonly" value="<?php  echo $source; ?>" /></td>
-                        </tr>
-                        -->
-                    </table>
+                    </table>-->
                     <br/>
                     <div align="center">
                         <?php if ($printDetails) {
@@ -823,6 +802,11 @@ else
         ?>
                 </dd>
                 <?php
+                //SERVICE TO VIEW TECHNICAL INDEX
+                if ($viewTechnicalInfos) {
+                    include_once('apps/' . $_SESSION['config']['app_id'] . '/view_technical_infos.php');
+                }
+                //$core->execute_app_services($_SESSION['app_services'], 'details.php');
                 $detailsExport .= "<h2>"._NOTES."</h2>";
                 $detailsExport .= "<table cellpadding='4' cellspacing='0' border='1' width='100%'>";
                 $detailsExport .= "<tr height='130px'>";

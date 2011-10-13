@@ -133,10 +133,7 @@ function display_list()
     init_session();
 
     $select[STATUS_TABLE] = array();
-    array_push(
-        $select[STATUS_TABLE], 'id', 'label_status', 'is_system',
-        'can_be_searched'
-    );
+    array_push($select[STATUS_TABLE], 'id', 'label_status');
     $where = '';
     $what = '';
     if (isset($_REQUEST['what'])) {
@@ -189,40 +186,6 @@ function display_list()
                 case 'label_status':
                     format_item(
                         $item, _DESC, '55', 'left', 'left', 'bottom', true
-                    );
-                    break;
-                case 'is_system':
-                    if ($item['value'] == 'Y') {
-                        $item['value'] = _YES;
-                        array_push(
-                            $tab[$i], array(
-                                'column' => 'can_delete', 'value' => 'false',
-                                'can_delete' => 'false', 'label' => _DESC,
-                                'show' => false
-                            )
-                        );
-                    } else {
-                        $item['value'] = _NO;
-                        array_push(
-                            $tab[$i], array(
-                                'column' => 'can_delete', 'value' => 'true',
-                                'can_delete' => 'true', 'label' => _DESC,
-                                'show' => false
-                            )
-                        );
-                    }
-                    format_item(
-                        $item, '', '5', 'left', 'left', 'bottom', true, false
-                    );
-                    break;
-                case 'can_be_searched':
-                    if ($item['value'] == 'Y') {
-                        $item['value'] = _YES;
-                    } else {
-                        $item['value'] = _NO;
-                    }
-                    format_item(
-                        $item, '', '5', 'left', 'left', 'bottom', true, false
                     );
                     break;
             }
@@ -339,7 +302,7 @@ function validate_status_submit()
     }
     $statusObj->img_filename = '';
     $statusObj->maarch_module = 'apps';
-     $statusObj->can_be_searched = 'Y';
+    $statusObj->can_be_searched = 'Y';
     if (isset($_REQUEST['can_be_searched'])) {
         $statusObj->can_be_searched = $_REQUEST['can_be_searched'];
     }
