@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-	<database_version>112</database_version> <!-- 1.1.2 -->
+    <database_version>121</database_version> <!-- 1.2.1 -->
 </root>
