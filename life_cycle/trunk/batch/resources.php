@@ -234,8 +234,10 @@ function doUpdateDb($resId, $path, $fileName, $offsetDoc, $fingerprint)
            . $GLOBALS['currentStep'] . "' and coll_id = '" 
            . $GLOBALS['collection'] . "' and res_id = " . $resId;
     Bt_doQuery($GLOBALS['db'], $query, true);
+    //ADD CYCLE_DATE
     $query = "update " . $GLOBALS['table'] . " set cycle_id = '" 
-           . $GLOBALS['cycle'] . "', is_multi_docservers = 'Y' where"
+           . $GLOBALS['cycle'] . "', is_multi_docservers = 'Y', cycle_date = " 
+           . Bt_currentDatetime() . " where"
            . " res_id = " . $resId;
     Bt_doQuery($GLOBALS['db'], $query, true);
     $query = "select * from " . $GLOBALS['adrTable'] . " where res_id = " 
@@ -296,7 +298,8 @@ function doMinimalUpdate($resId)
            . $GLOBALS['collection'] . "' and res_id = " . $resId;
     Bt_doQuery($GLOBALS['db'], $query, true);
     $query = "update " . $GLOBALS['table'] . " set cycle_id = '" 
-           . $GLOBALS['cycle'] . "', is_multi_docservers = 'Y' where"
+           . $GLOBALS['cycle'] . "', is_multi_docservers = 'Y', cycle_date = " 
+           . Bt_currentDatetime() . " where "
            . " res_id = " . $resId;
     Bt_doQuery($GLOBALS['db'], $query, true);
     $query = "insert into " . HISTORY_TABLE . " (table_name, record_id, "
@@ -326,7 +329,8 @@ function deleteAdrx($resId, $dsToUpdate)
            . $GLOBALS['collection'] . "' and res_id = " . $resId;
     Bt_doQuery($GLOBALS['db'], $query, true);
     $query = "update " . $GLOBALS['table'] . " set cycle_id = '" 
-           . $GLOBALS['cycle'] . "' where res_id = " . $resId;
+           . $GLOBALS['cycle'] . "', cycle_date = " 
+           . Bt_currentDatetime() . " where res_id = " . $resId;
     Bt_doQuery($GLOBALS['db'], $query, true);
     //$docserverSizeToUpdate = 0;
     for ($cptDs = 0;$cptDs < count($dsToUpdate);$cptDs++) {
@@ -364,7 +368,8 @@ function updateOnNonePurge($resId)
            . $resId;
     Bt_doQuery($GLOBALS['db'], $query, true);
     $query = "update " . $GLOBALS['table'] . " set cycle_id = '" 
-           . $GLOBALS['cycle'] . "' where res_id = " . $resId;
+           . $GLOBALS['cycle'] . "', cycle_date = " 
+           . Bt_currentDatetime() . " where res_id = " . $resId;
     Bt_doQuery($GLOBALS['db'], $query, true);
     $query = "insert into " . HISTORY_TABLE . " (table_name, record_id, "
            . "event_type, user_id, event_date, info, id_module) values ('" 
