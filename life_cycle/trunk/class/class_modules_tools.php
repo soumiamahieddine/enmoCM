@@ -125,12 +125,13 @@ class life_cycle extends dbquery
         //functions::show_array($_SESSION['lifeCycleFeatures']);
     }
     
-    public function get_indexing_cycle() 
+    public function get_indexing_cycles() 
     {
-    	if (file_exists(
-    		$_SESSION['config']['corepath'].'custom' . DIRECTORY_SEPARATOR
-    		. $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR
-    		. "modules" . DIRECTORY_SEPARATOR . "life_cycle"
+        $cycles = array();
+        if (file_exists(
+            $_SESSION['config']['corepath'].'custom' . DIRECTORY_SEPARATOR
+            . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR
+            . "modules" . DIRECTORY_SEPARATOR . "life_cycle"
             . DIRECTORY_SEPARATOR . "xml" . DIRECTORY_SEPARATOR . "params.xml"
         )
         ) {
@@ -140,34 +141,36 @@ class life_cycle extends dbquery
                   . "life_cycle" . DIRECTORY_SEPARATOR . "xml"
                   . DIRECTORY_SEPARATOR . "params.xml";
         } else if (file_exists(
-        	"modules" . DIRECTORY_SEPARATOR . "life_cycle" . DIRECTORY_SEPARATOR
-        	. "xml" . DIRECTORY_SEPARATOR . "params.xml"
+            "modules" . DIRECTORY_SEPARATOR . "life_cycle" . DIRECTORY_SEPARATOR
+            . "xml" . DIRECTORY_SEPARATOR . "params.xml"
         )
         ) {
             $path = "modules" . DIRECTORY_SEPARATOR . "life_cycle"
                   . DIRECTORY_SEPARATOR . "xml" . DIRECTORY_SEPARATOR
                   . "params.xml";
         } else {
-        	return false;
+            return $cycles;
         }
         $xml = simplexml_load_file($path);
-        if (! isset($xml->indexing_cycle)) {
-        	return false;
+        if (!isset($xml->indexing_cycles)) {
+            return $cycles;
         } 
-        $cycle = $xml->indexing_cycle;
-        return array(
-        	'policy_id' => (string) $cycle->policy_id,
-        	'cycle_id'  => (string) $cycle->cycle_id,
-        );  
+        foreach ($xml->indexing_cycles->cycle as $cycle) {
+            $cycles [] = array(
+                'policy_id' => (string) $cycle->policy_id,
+                'cycle_id'  => (string) $cycle->cycle_id,
+            );  
+        }
+        return $cycles;
     }
     
    public function get_frozen_cycles() 
    {
-    	$cycles = array();
-    	if (file_exists(
-    		$_SESSION['config']['corepath'].'custom' . DIRECTORY_SEPARATOR
-    		. $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR
-    		. "modules" . DIRECTORY_SEPARATOR . "life_cycle"
+        $cycles = array();
+        if (file_exists(
+            $_SESSION['config']['corepath'].'custom' . DIRECTORY_SEPARATOR
+            . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR
+            . "modules" . DIRECTORY_SEPARATOR . "life_cycle"
             . DIRECTORY_SEPARATOR . "xml" . DIRECTORY_SEPARATOR . "params.xml"
         )
         ) {
@@ -177,25 +180,25 @@ class life_cycle extends dbquery
                   . "life_cycle" . DIRECTORY_SEPARATOR . "xml"
                   . DIRECTORY_SEPARATOR . "params.xml";
         } else if (file_exists(
-        	"modules" . DIRECTORY_SEPARATOR . "life_cycle" . DIRECTORY_SEPARATOR
-        	. "xml" . DIRECTORY_SEPARATOR . "params.xml"
+            "modules" . DIRECTORY_SEPARATOR . "life_cycle" . DIRECTORY_SEPARATOR
+            . "xml" . DIRECTORY_SEPARATOR . "params.xml"
         )
         ) {
             $path = "modules" . DIRECTORY_SEPARATOR . "life_cycle"
                   . DIRECTORY_SEPARATOR . "xml" . DIRECTORY_SEPARATOR
                   . "params.xml";
         } else {
-        	return $cycles;
+            return $cycles;
         }
         $xml = simplexml_load_file($path);
         if (! isset($xml->frozen_cycles)) {
-        	return $cycles;
+            return $cycles;
         } 
         foreach ($xml->frozen_cycles->cycle as $cycle) {
-        	$cycles [] = array(
-        		'policy_id' => (string) $cycle->policy_id,
-        		'cycle_id'  => (string) $cycle->cycle_id,
-       	    );  
+            $cycles [] = array(
+                'policy_id' => (string) $cycle->policy_id,
+                'cycle_id'  => (string) $cycle->cycle_id,
+            );  
         }
         return $cycles;
     }
