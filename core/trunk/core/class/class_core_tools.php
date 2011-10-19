@@ -264,21 +264,28 @@ class core_tools extends functions
     /**
     * Loads language variables of each module
     *
-    * @param  $modules array Enabled modules of the application
+    * @param $modules array Enabled modules of the application
     */
     private function load_lang_modules($modules)
     {
-        for($i=0;$i<count($modules);$i++)
-        {
-            $file_path = $_SESSION['config']['corepath'].'modules'.DIRECTORY_SEPARATOR.$modules[$i]['moduleid'].DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php';
-            if(isset($_SESSION['config']['lang']) && file_exists($file_path ))
-            {
-
-                include($file_path);
+        for ($i=0;$i<count($modules);$i++) {
+            $file_path = $_SESSION['config']['corepath'] . 'custom'
+                . DIRECTORY_SEPARATOR . $_SESSION['custom_override_id']
+                . DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR
+                . $modules[$i]['moduleid'] . DIRECTORY_SEPARATOR 
+                . 'lang' . DIRECTORY_SEPARATOR
+                . $_SESSION['config']['lang'] . '.php';
+            if (!file_exists($file_path)) {
+                $file_path = $_SESSION['config']['corepath'] . 'modules'
+                . DIRECTORY_SEPARATOR . $modules[$i]['moduleid']
+                . DIRECTORY_SEPARATOR . 'lang' . DIRECTORY_SEPARATOR
+                . $_SESSION['config']['lang'] . '.php';
             }
-            else
-            {
-                $_SESSION['error'] .= "Language file missing for module : ".$modules[$i]['moduleid']."<br/>";
+            if (isset($_SESSION['config']['lang']) && file_exists($file_path)) {
+                include($file_path);
+            } else {
+                $_SESSION['error'] .= "Language file missing for module : "
+                . $modules[$i]['moduleid']."<br/>";
             }
         }
     }
