@@ -159,7 +159,7 @@ class extended_list_show extends dbquery
 		}
 		else
 		{
-			$return = '<input type="radio"  class="check" name="field" value="'.$result[$theline][0]['value'].'" class="check" />';
+			$return = '<input type="radio"  class="check" name="field" id="field" value="'.$result[$theline][0]['value'].'" class="check" />';
 		}
 		return $return;
 	}
@@ -175,7 +175,7 @@ class extended_list_show extends dbquery
 		}
 		else
 		{
-			$return = '<input type="checkbox"  name="field[]" value="'.$result[$theline][0]['value'].'" class="check" />';
+			$return = '<input type="checkbox"  name="field[]"  id="field" value="'.$result[$theline][0]['value'].'" class="check" />';
 		}
 					
 		return $return;
@@ -270,7 +270,7 @@ class extended_list_show extends dbquery
 	//Load view_doc if this parameters is loaded in list_show and list_show_with_template
 	private function tmplt_func_bool_detail($actual_string, $theline, $result, $key)
 	{
-		$href_details = $this->build_link($result, $theline, $this->params['details_destination']);
+		$href_details = $this->build_link($result, $theline, $this->params['details_destination'], $key);
 
 		if($this->params['bool_details_popup'] === true)
 		{
@@ -307,8 +307,8 @@ class extended_list_show extends dbquery
 	//Load check form if this parameters is loaded in list_show and list_show_with_template
 	private function tmplt_func_bool_view_doc($actual_string, $theline, $result, $key)
 	{
-		$return = "<a href='".$_SESSION['config']['businessappurl']."index.php?display=true&dir=indexing_searching&page=view&id=".$result[$theline][0][$key]."' target=\"_blank\" title='"._VIEW_DOC."'>
-                   <img src='".$_SESSION['config']['businessappurl']."static.php?filename=picto_dld.gif' alt='"._VIEW_DOC."' border='0'/></a>";
+        $href_view = $this->build_link($result, $theline, $this->params['view_destination'], $key);
+		$return = "<a href='".$href_view."' target=\"_blank\" title='"._VIEW_DOC."'><img src='".$_SESSION['config']['businessappurl']."static.php?filename=picto_dld.gif' alt='"._VIEW_DOC."' border='0'/></a>";
 		return $return;
 	}
 
@@ -430,7 +430,7 @@ class extended_list_show extends dbquery
 			
 			if (!$disabled_action)
 			{
-				$href = $this->build_link($result, $theline,  $this->actions_link[$action_id]['href']);
+				$href = $this->build_link($result, $theline,  $this->actions_link[$action_id]['href'], $key);
 				
 				$action_href = '';
 				
@@ -458,7 +458,7 @@ class extended_list_show extends dbquery
 				if(isset($this->actions_link[$action_id]['class'])) { $action_href .= ' class="'.$this->actions_link[$action_id]['class'].'">';}else {$action_href .= '>';} //End of link
 				
 				//Image
-				if(isset($this->actions_link[$action_id]['icon'])) { $action_href .= '<img src="'.$this->actions_link[$action_id]['icon'].'" alt="'.$this->actions_link[$action_id]['tooltip'].'" border="0" align="absmiddle" />'; }
+				if(isset($this->actions_link[$action_id]['icon'])) { $action_href .= '<img src="'.$this->actions_link[$action_id]['icon'].'" alt="'.$this->actions_link[$action_id]['tooltip'].'" border="0"/>'; }
 				
 				//Label
 				if(isset($this->actions_link[$action_id]['label'])) { $action_href .= '&nbsp;'.$this->actions_link[$action_id]['label'];}
@@ -476,7 +476,8 @@ class extended_list_show extends dbquery
 	//Display Add button
 	private function tmplt_func_display_add_button($actual_string, $theline, $result, $key)
 	{
-        $return = '<a href="'.$this->params['add_button_link'].'"><span>'.$this->params['add_button_label'].'</span></a>';
+        if(!empty($params['add_button_script'])) $add_button_script = 'onClick="javascript:'.$params['add_button_script'].'"';
+        $return = '<a href="'.$this->params['add_button_link'].'" '.$add_button_script.'><span>'.$this->params['add_button_label'].'</span></a>';
 		return $return;
 	}
 	
@@ -646,7 +647,7 @@ class extended_list_show extends dbquery
 	* Build link
 	*
 	*/
-	private function build_link($result, $theline, $actionHref)
+	private function build_link($result, $theline, $actionHref, $key)
 	{
 		//load href link for this action
 		$href = $actionHref;
@@ -665,7 +666,7 @@ class extended_list_show extends dbquery
 		}
 		else
 		{
-			$href = $actionHref."&amp;id=".$result[$theline][0][$this->list_key]; 
+			$href = $actionHref."&amp;id=".$result[$theline][0][$key]; 
 		}
 		
 		return $href;
@@ -843,11 +844,18 @@ class extended_list_show extends dbquery
 			}
 			else
 			{
-				$content .= '<td width="1%" onclick="new Effect.toggle(\'info'.$result[$theline][0][$key].'\', \'blind\');" 
+                if (count($subresult[$result[$theline][0][$key]]['sub_data']) > 0 )
+                {
+                    $content .= '<td width="1%" onclick="new Effect.toggle(\'info'.$result[$theline][0][$key].'\', \'blind\');" 
 								onmouseover="document.body.style.cursor=\'pointer\';" onmouseout="document.body.style.cursor=\'auto\';">
 								<div align="center">
-								<img id="hideShow" name="hideShow" src="'.$_SESSION['config']['businessappurl'].'static.php?filename=moins.png" alt="'._SHOW_HIDE.'" border="0" class="" />
+								<img id="hideShow" name="hideShow" src="'.$_SESSION['config']['businessappurl'].'static.php?filename=plus.gif" alt="'._SHOW_HIDE.'" border="0" class="" />
 								</div></td>';
+                }
+                else
+                {
+                    $content .= '<td width="1%"><div align="center"><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=moins.gif" alt="'._SHOW_HIDE.'" border="0" class="" /></div></td>'; 
+                }
 			}
 		}
 		//Show checkBox
@@ -861,7 +869,7 @@ class extended_list_show extends dbquery
 			}
 			else
 			{
-				$content .= '<input type="checkbox" name="field[]" class="check" value="'.$result[$theline][0][$key].'" />';
+				$content .= '<input type="checkbox" name="field[]"  id="field" class="check" value="'.$result[$theline][0][$key].'" />';
 			}
 			
 			$content .= '</div></td>';
@@ -878,7 +886,7 @@ class extended_list_show extends dbquery
 			}
 			else
 			{
-				$content .= '<input type="radio" name="field" class="check" value="'.$result[$theline][0][$key].'" />';
+				$content .= '<input type="radio" name="field" id="field" class="check" value="'.$result[$theline][0][$key].'" />';
 			}
 			
 			$content .= '</div></td>';
@@ -887,9 +895,10 @@ class extended_list_show extends dbquery
 		//Show document icon
 		if(isset($this->params['bool_view_document']) && $this->params['bool_view_document'])
 		{
+            $href_view = $this->build_link($result, $theline, $this->params['view_destination'], $this->list_key);
 			$content .= '<td width="3%">';
 	        $content .= '<div align="center">';
-		    $content .= '<a href="'.$_SESSION['config']['businessappurl'].'index.php?display=true&amp;dir=indexing_searching&amp;page=view&amp;id='.$result[$theline][0][$key].'" target="_blank" title="'._VIEW_DOC.'">';
+		    $content .= '<a href="'.$href_view.'" target="_blank" title="'._VIEW_DOC.'">';
 			$content .= '<img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=picto_dld.gif" alt="'._VIEW_DOC.'" border="0"/>';
 			$content .= '</a>';
 	        $content .= '</div>';
@@ -949,7 +958,7 @@ class extended_list_show extends dbquery
 					if (!$activate_switch)
 					{
 						//Build href link on
-						$href = $this->build_link($result, $theline, $this->actions_link[$i]['href_on']);
+						$href = $this->build_link($result, $theline, $this->actions_link[$i]['href_on'], $this->list_key);
 						$content .= '<a href="'.$href.'" title="'.$this->actions_link[$i]['tooltip_on'].'" ';
 						
 						//If javascript alert box
@@ -965,7 +974,7 @@ class extended_list_show extends dbquery
 						if(isset($this->actions_link[$i]['class_on']))	{ $content .= ' class="'.$this->actions_link[$i]['class_on'].'">';	} else { $content .= '>'; } //End of link
 						
 						//Image
-						if(isset($this->actions_link[$i]['icon_on'])) { $content .= '<img src="'.$this->actions_link[$i]['icon_on'].'" alt="'.$this->actions_link[$i]['tooltip_on'].'" border="0" align="absmiddle" />'; }
+						if(isset($this->actions_link[$i]['icon_on'])) { $content .= '<img src="'.$this->actions_link[$i]['icon_on'].'" alt="'.$this->actions_link[$i]['tooltip_on'].'" border="0"/>'; }
 						
 						//Label
 						if(isset($this->actions_link[$i]['label_on'])) { $content .= '&nbsp;'.$this->actions_link[$i]['label_on']; }
@@ -975,7 +984,7 @@ class extended_list_show extends dbquery
 					else
 					{
 						//Build href link off
-						$href = $this->build_link($result, $theline, $this->actions_link[$i]['href_off']);
+						$href = $this->build_link($result, $theline, $this->actions_link[$i]['href_off'], $this->list_key);
 						$content .= '<a href="'.$href.'" title="'.$this->actions_link[$i]['tooltip_off'].'" ';
 						
 						//If javascript alert box
@@ -991,7 +1000,7 @@ class extended_list_show extends dbquery
 						if(isset($this->actions_link[$i]['class_off']))	{ $content .= ' class="'.$this->actions_link[$i]['class_off'].'">';	} else { $content .= '>'; } //End of link
 						
 						//Image
-						if(isset($this->actions_link[$i]['icon_off'])) { $content .= '<img src="'.$this->actions_link[$i]['icon_off'].'" alt="'.$this->actions_link[$i]['tooltip_off'].'" border="0" align="absmiddle"/>'; }
+						if(isset($this->actions_link[$i]['icon_off'])) { $content .= '<img src="'.$this->actions_link[$i]['icon_off'].'" alt="'.$this->actions_link[$i]['tooltip_off'].'" border="0"/>'; }
 						
 						//Label
 						if(isset($this->actions_link[$i]['label_off'])) { $content .= '&nbsp;'.$this->actions_link[$i]['label_off']; }
@@ -1002,7 +1011,7 @@ class extended_list_show extends dbquery
 				else
 				{
 					//Build href link
-					$href = $this->build_link($result, $theline, $this->actions_link[$i]['href']);
+					$href = $this->build_link($result, $theline, $this->actions_link[$i]['href'], $this->list_key);
 					
 					//Begin of href link
 					if($this->actions_link[$i]['script'])
@@ -1029,7 +1038,7 @@ class extended_list_show extends dbquery
 					if(isset($this->actions_link[$i]['class']))	{ $content .= ' class="'.$this->actions_link[$i]['class'].'">';	} else { $content .= '>'; } //End of link
 					
 					//Image
-					if(isset($this->actions_link[$i]['icon'])) { $content .= '<img src="'.$this->actions_link[$i]['icon'].'" alt="'.$this->actions_link[$i]['tooltip'].'" border="0" align="absmiddle"/>'; }
+					if(isset($this->actions_link[$i]['icon'])) { $content .= '<img src="'.$this->actions_link[$i]['icon'].'" alt="'.$this->actions_link[$i]['tooltip'].'" border="0"/>'; }
 					
 					//Label
 					if(isset($this->actions_link[$i]['label'])) { $content .= '&nbsp;'.$this->actions_link[$i]['label']; }
@@ -1050,7 +1059,7 @@ class extended_list_show extends dbquery
             $content .= '<td width="4%"  align="center">';
 			$content .= '<div align="right">';
 			
-			$href_details = $this->build_link($result, $theline, $this->params['details_destination']);
+			$href_details = $this->build_link($result, $theline, $this->params['details_destination'], $this->list_key);
 
 			if(isset($this->params['bool_details_popup']) && $this->params['bool_details_popup'])
 			{
@@ -1074,6 +1083,8 @@ class extended_list_show extends dbquery
 			//Sublist key
 			$theSublistKey = $subresult[$result[$theline][0][$key]]['sub_data_key'];
 			
+            // echo 'theSublistKey '.$theSublistKey.' - >'.$result[$theline][0][$key].' - > '.$key; 
+            // echo 'Count: '.count($subresult[$result[$theline][0][$key]]['sub_data']).' / ';
 			//Sublist data
 			$content .= '<tr id="info'.$result[$theline][0][$key].'" style="display:none;">';
 			$content .= '<td style="background-color: white;">&nbsp;</td>';
@@ -1192,11 +1203,11 @@ class extended_list_show extends dbquery
 				//checkbox
 				if(isset($this->params['bool_sublist_check_form']) && $this->params['bool_sublist_check_form'])
 				{
-					$sublist .= '<td width="1%"><div align="center"><input type="checkbox" name="field[]" class="check" value="'.$result[$i][0][$key].'" /></div></td>';
+					$sublist .= '<td width="1%"><div align="center"><input type="checkbox" name="field[]" id="field" class="check" value="'.$result[$i][0][$key].'" /></div></td>';
 				}
 				elseif(isset($this->params['bool_sublist_radio_form']) && $this->params['bool_sublist_radio_form']) //Radio
 				{
-					$sublist .= '<td width="1%"><div align="center"><input type="radio" name="field" class="check" value="'.$result[$i][0][$key].'" /></div></td>';
+					$sublist .= '<td width="1%"><div align="center"><input type="radio" name="field" id="field" class="check" value="'.$result[$i][0][$key].'" /></div></td>';
 				}
 			}
 			
@@ -1214,13 +1225,14 @@ class extended_list_show extends dbquery
 			//Document icon
 			if(isset($this->params['bool_sublist_view_document']) && $this->params['bool_sublist_view_document'])
 			{
-				$sublist .= '<td width="1%">';
-				$sublist .= '<div align="center">';
-				$sublist .= '<a href="'.$_SESSION['config']['businessappurl'].'index.php?display=true&amp;dir=indexing_searching&amp;page=view&amp;id='.$result[$i][0][$key].'" target="_blank" title="'._VIEW_DOC.'">';
-				$sublist .= '<img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=picto_dld.gif" alt="'._VIEW_DOC.'" border="0"/>';
-				$sublist .= '</a>';
-				$sublist .= '</div>';
-				$sublist .= '</td>';
+                $href_view = $this->build_link($result, $i, $this->params['sublist_view_destination'], $key);
+                $sublist .= '<td width="1%">';
+                $sublist .= '<div align="center">';
+                $sublist .= '<a href="'.$href_view.'" target="_blank" title="'._VIEW_DOC.'">';
+                $sublist .= '<img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=picto_dld_small.gif" alt="'._VIEW_DOC.'" title="'._VIEW_DOC.'" border="0"/>';
+                $sublist .= '</a>';
+                $sublist .= '</div>';
+                $sublist .= '</td>';
 			}
 			
 			//Details Icon
@@ -1229,7 +1241,7 @@ class extended_list_show extends dbquery
 				$sublist .= '<td width="1%"  align="center">';
 				$sublist .= '<div align="right">';
 				$sublist .= '<a href="#" OnClick="javascript:window.top.location=\''.$_SESSION['config']['businessappurl'].'index.php?page=details&amp;dir=indexing_searching&amp;id='.$result[$i][0][$key].'\'; return false;" title="'._VIEW_DOC.'">';
-				$sublist .= '<img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=picto_infos.gif"  alt="'._DETAILS.'" width="25" height="25" border="0" /></a>';
+				$sublist .= '<img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=picto_infos_small.gif"  alt="'._DETAILS.'" title="'._DETAILS.'" border="0" /></a>';
 				$sublist .= '</a>';
 				$sublist .= '</div>';
 				$sublist .= '</td>';
@@ -1249,8 +1261,6 @@ class extended_list_show extends dbquery
 		(
 		[module] => string : Name of the module where the page is
 		[page_name] => string : The calling page
-		[page_parameters] => string : More parameters in link for page
-        [bool_page_in_module] => boolean : if page is in a module
 		[page_title] => string : Title of the page to be displayed over the list
 		[bool_big_page_title] => boolean : size of the title. If false small size
 		[page_picto] => string : Image to be displayed near title
@@ -1259,9 +1269,10 @@ class extended_list_show extends dbquery
 		[bool_show_searchbox] => boolean : If true : show search box, search on the elements of the list possible
 		[searchbox_autoCompletionArray] => array : Array of autocompletion values in search box
 		[bool_view_document] => boolean : Show the icon view document 
+		[view_destination] =>  string : url of the view page 
 		
 		[bool_sublist] => boolean : Add sublist in principal list
-		[bool_sublist_view_document] => boolean : show the  iconv iew document in sublist 
+		[bool_sublist_view_document] => boolean : show the  iconv view document in sublist 
 		[bool_sublist_details] => boolean : show the detail page (icon and link) in sublist
 		[bool_sublist_radio_form] => boolean : Add radio button to sublist row (radio name : field)
 		[bool_sublist_check_form] => boolean : Add checkbox to sublist row (checkbox name : field[])
@@ -1296,7 +1307,6 @@ class extended_list_show extends dbquery
 		[hidden_fields_form] => array : Hidden fields in the form
 		[bool_do_action] => boolean : If action on row of the list .False by default
 		[id_action] => string : Id of the action
-		[click_line_text] => string : Text displayed under the list for action on line
 		[actions_combo] => array : List of the elements of the actions combo list
 		[bool_script_on_line] => boolean : If the click on the line open link. False by default
 		[script_on_line] => string : Javascript for click on line 
@@ -1364,7 +1374,9 @@ class extended_list_show extends dbquery
 		if (!isset($parameters['show_searchbox'])){ $parameters['show_searchbox']= false; }
 		if (!isset($parameters['bool_add_button'])){ $parameters['bool_add_button']= false; }
 		if (!isset($parameters['bool_view_document'])){ $parameters['bool_view_document']= false; }
+        if (!isset($parameters['view_destination'])){ $parameters['view_destination'] = $_SESSION['config']['businessappurl'].'index.php?display=true&amp;page=view&amp;dir=indexing_searching';}
 		if (!isset($parameters['bool_sublist_view_document'])){ $parameters['bool_sublist_view_document']= false; }
+        if (!isset($parameters['sublist_view_destination'])){ $parameters['sublist_view_destination'] = $_SESSION['config']['businessappurl'].'index.php?display=true&amp;page=view&amp;dir=indexing_searching';}
 		if (!isset($parameters['bool_details'])){ $parameters['bool_details']= false; }
 		if (!isset($parameters['bool_sublist_details'])){ $parameters['bool_sublist_details']= false; }
 		if (!isset($parameters['details_destination'])){ $parameters['details_destination'] = $_SESSION['config']['businessappurl'].'index.php?page=details&amp;dir=indexing_searching';}
@@ -1980,10 +1992,20 @@ class extended_list_show extends dbquery
 				</script>
 			<?php 
 			}
+            if (
+					($parameters['bool_list_is_ajax'] && !empty($parameters['div_list_ajax'])) || 
+                    (!empty($parameters['extra_javascript']))
+				)
+			{
 				?>
 				<script type="text/javascript">
 				<?php
-
+            }
+                if (!empty($parameters['extra_javascript']))
+                {
+                    echo $parameters['extra_javascript'];
+                }
+                
 				if (
 					($parameters['bool_list_is_ajax'] && !empty($parameters['div_list_ajax']))
 				)
@@ -2030,10 +2052,15 @@ class extended_list_show extends dbquery
 					}
 					<?php
 				}
-					?>
+                if (
+					($parameters['bool_list_is_ajax'] && !empty($parameters['div_list_ajax'])) || 
+                    (!empty($parameters['extra_javascript']))
+                    )
+                {
+				?>
 				</script>
 				<?php
-				
+				}
 			//Si affichage du formulaire
 			if($withForm)
 			{
@@ -2121,7 +2148,7 @@ class extended_list_show extends dbquery
 		if($parameters['bool_add_button'])
 		{
 		?>
-			<br/><span class="add clearfix"><a href="<?php echo $parameters['add_button_link'];?>"><span><?php echo $parameters['add_button_label'];?></span></a></span>
+			<br/><span class="add clearfix"><a href="<?php echo $parameters['add_button_link'];?>" <?php if(!empty($parameters['add_button_script'])) echo 'onClick="javascript:'.$parameters['add_button_script'].'"';?>><span><?php echo $parameters['add_button_label'];?></span></a></span>
 		<?php
 		}
 
@@ -2438,17 +2465,17 @@ class extended_list_show extends dbquery
 			}
 			
 			//Si on a une sous liste
-			if ($param_list['bool_sublist'] === true && 
-				$param_list['bool_sublist_check_form'] === false && 
-				$param_list['bool_sublist_radio_form'] === false
-				) 
+			if ($param_list['bool_sublist'] === true) 
 			{
-				//On met les cases àcocher par defaut
-				$param_list['bool_sublist_check_form'] = true;
-				
-				//On desactive les boutons form dans la liste principale
-				$param_list['bool_check_form'] = false;
-				$param_list['bool_radio_form'] = false;
+                if ($param_list['bool_sublist_check_form'] === false &&	$param_list['bool_sublist_radio_form'] === false)
+                {
+                    //On met les cases à cocher par defaut
+                    $param_list['bool_sublist_check_form'] = true;
+                }
+                
+                //On desactive les boutons form dans la liste principale
+                $param_list['bool_check_form'] = false;
+                $param_list['bool_radio_form'] = false;
 			}
 			
 		}
@@ -2584,20 +2611,28 @@ class extended_list_show extends dbquery
 		// Browses the filters in that file  and loads $_SESSION['filters']
 		foreach($xmltemplate->FILTER as $FILTER)
 		{
+
 			if ($FILTER->enabled == 'true') //only if enabled
 			{
-                
+			
+				$lang_path = 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php';
+				
 				$tmp = (string) $FILTER->label;
-                if (!empty($tmp) && defined($tmp) && constant($tmp) <> NULL) 
-                {
-                    $tmp = constant($tmp);
-                }
-				$_SESSION['filters'][$k]['label'] = $tmp;
+				$tmp2 = $this->retrieve_constant_lang($tmp, $lang_path);
+				if($tmp2 <> false)
+				{
+					$_SESSION['filters'][$k]['label'] = $tmp2;
+				}
+				else
+				{
+					$_SESSION['filters'][$k]['label'] = $tmp;
+				}
+				
 				$_SESSION['filters'][$k]['filter_field'] = (string) $FILTER->filter_field;
 				$_SESSION['filters'][$k]['filter_var'] = (string) $FILTER->filter_var;
 				$_SESSION['filters'][$k]['id'] = (string) $FILTER->id;
 				$_SESSION['filters'][$k]['type'] = (string) $FILTER->type;
-                
+				
 				//Values from xml
 				if(isset($FILTER->values))
 				{
@@ -2606,19 +2641,10 @@ class extended_list_show extends dbquery
 					foreach($VALUES->value as $val)
 					{
 						$lab = (string) $val->label;
-                        if (!empty($lab) && defined($lab) 
-                            && constant($lab) <> NULL
-                        ) 
-                        {
-                            $lab = constant($lab);
-                            array_push(
-                                $_SESSION['filters'][$k]['values'], 
-                                array(
-                                    'id' => (string) $val->id, 
-                                    'label' => $lab
-                                )
-                            );
-                        }
+						$tmp = $this->retrieve_constant_lang($lab, $lang_path);
+						if($tmp <> false){$lab = $tmp;}
+						
+						array_push($_SESSION['filters'][$k]['values'], array('id' => (string) $val->id, 'label' => $lab));
 					}
 				}
 				elseif(isset($FILTER->table)) //Values from database
@@ -2651,7 +2677,7 @@ class extended_list_show extends dbquery
 					{
 						 array_push($_SESSION['filters'][$k]['values'], array('id' => (string) $res->$foreignKey, 'label' => $res->$foreignLabel));
 					}
-                }
+				}
 				
 				$l=0;
 				foreach($FILTER->whereamiused as $WHEREAMIUSED)
@@ -2660,6 +2686,7 @@ class extended_list_show extends dbquery
 					$l++;
 				}
 			}
+			
 			$k++;
 		}
 	}
