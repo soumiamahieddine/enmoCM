@@ -171,7 +171,7 @@ if ($mode == "list") {
             );
         }
         ?>"/>
-            <span>&nbsp;</span>
+            <span class="red_asterisk">*</span>
 
         </p>
         <p class="bulle">
