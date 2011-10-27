@@ -218,9 +218,9 @@ if (count($folderArray['index']) > 0) {
                                             ?>
                                             <select name="<?php echo $key;?>" id="<?php echo $key;?>" >
                                                 <option value=""><?php echo _CHOOSE;?>...</option>
-                                                <?php for($i=0; $i<count($folderArray['index'][$key]['values']);$i++)
+                                                <?php foreach($folderArray['index'][$key]['values'] as $folderOptIndexValue)
                                                 {?>
-                                                    <option value="<?php echo $folderArray['index'][$key]['values'][$i]['id'];?>" <?php if($folderArray['index'][$key]['values'][$i]['id'] == $folderArray['index'][$key]['value'] || $folderArray['index'][$key]['values'][$i]['id'] == $value){ echo 'selected="selected"';}?>><?php echo $folderArray['index'][$key]['values'][$i]['label'];?></option>
+                                                    <option value="<?php echo $folderOptIndexValue['id'];?>" <?php if($folderOptIndexValue['id'] == $folderArray['index'][$key]['value'] || $folderOptIndexValue['id'] == $value){ echo 'selected="selected"';}?>><?php echo $folderOptIndexValue['label'];?></option>
                                                     <?php
                                                 }?>
                                             </select>
