@@ -99,8 +99,8 @@
  </SERVICE>
  <SERVICE>
    <id>folder_freeze</id>
-   <name>_FOLDER_FREEZE</name>
-   <comment>_FOLDER_FREEZE</comment>
+   <name>_FREEZE_FOLDER</name>
+   <comment>_FREEZE_FOLDER</comment>
    <servicepage>folder_freeze.php</servicepage>
    <servicetype>use</servicetype>
    <system_service>false</system_service>
