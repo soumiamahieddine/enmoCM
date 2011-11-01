@@ -1,4 +1,4 @@
-<?
+<?php
 /**
 * File : user_info.php
 *
@@ -100,7 +100,7 @@ else
         </p>
     </form >
 </div>
-    <?
+    <?php
 }
 $core_tools->load_js();
 ?>
