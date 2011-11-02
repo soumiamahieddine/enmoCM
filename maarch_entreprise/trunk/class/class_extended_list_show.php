@@ -1422,13 +1422,15 @@ class extended_list_show extends dbquery
 		$ordercol = array();
 	
 		// put in tab the different label of the column
-		for ($j=0;$j<count($result[0]);$j++)
-		{
-			array_push($listcolumn,$result[0][$j]["label"]);
-			array_push($listshow,$result[0][$j]["show"]);
-			array_push($ordercol,$result[0][$j]["order"]);
-		}
-		
+		if (isset($result[0])) {
+		    for ($j=0;$j<count($result[0]);$j++)
+    		{
+    			array_push($listcolumn,$result[0][$j]["label"]);
+    			array_push($listshow,$result[0][$j]["show"]);
+    			array_push($ordercol,$result[0][$j]["order"]);
+    		}
+	    }
+
 		//$this->show_array($result);
 		//$this->show_array($listcolumn);
 		//$this->show_array($listshow);
@@ -2558,24 +2560,25 @@ class extended_list_show extends dbquery
 	public function load_list_templates($whereami)
 	{
 		$templates = array();
-		
-		for($i=0; $i<count($_SESSION['templates']);$i++)
-		{
-			if($_SESSION['templates'][$i]['enabled'] == 'true')
-			{	
-				for($k=0; $k < count($_SESSION['templates'][$i]['whereamiused']);$k++)
-				{
-					if($_SESSION['templates'][$i]['whereamiused'][$k]['page'] == $whereami)
-					{
-						$templates[$_SESSION['templates'][$i]['id']]['label'] = $_SESSION['templates'][$i]['name'];
-						$templates[$_SESSION['templates'][$i]['id']]['name'] = $_SESSION['templates'][$i]['templatepage'];
-						$templates[$_SESSION['templates'][$i]['id']]['img'] = $_SESSION['templates'][$i]['img'];
-						$templates[$_SESSION['templates'][$i]['id']]['img_on']  = $_SESSION['templates'][$i]['img_on'];
-					}
-				}
-			}
-		}
-		
+
+        if(isset($_SESSION['templates'])) {
+            for($i=0; $i<count($_SESSION['templates']);$i++)
+    		{
+    			if($_SESSION['templates'][$i]['enabled'] == 'true')
+    			{
+    				for($k=0; $k < count($_SESSION['templates'][$i]['whereamiused']);$k++)
+    				{
+    					if($_SESSION['templates'][$i]['whereamiused'][$k]['page'] == $whereami)
+    					{
+    						$templates[$_SESSION['templates'][$i]['id']]['label'] = $_SESSION['templates'][$i]['name'];
+    						$templates[$_SESSION['templates'][$i]['id']]['name'] = $_SESSION['templates'][$i]['templatepage'];
+    						$templates[$_SESSION['templates'][$i]['id']]['img'] = $_SESSION['templates'][$i]['img'];
+    						$templates[$_SESSION['templates'][$i]['id']]['img_on']  = $_SESSION['templates'][$i]['img_on'];
+    					}
+    				}
+    			}
+    		}
+        }
 		return $templates;
 	}
 	
