@@ -1847,15 +1847,15 @@ class extended_list_show extends dbquery
 				echo '<b>'.$picto_path.$parameters['page_title'].'</b>';
 			}
 		}
-		
+
+		$withForm = false;
 		//If one line at least
 		if (count($result) > 0)
-		{		
+		{
 			//Navigation  link
 			echo $navigation_link; 
 
 			//c'est ici qu'il faut faire le test sur l'ensemble des paramètres qui ont besoin du formulaire
-			$withForm = false;
 			if(
 				($parameters['bool_check_form']) ||
 				($parameters['bool_sublist_check_form']) ||
