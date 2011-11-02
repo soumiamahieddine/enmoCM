@@ -1373,7 +1373,11 @@ class core_tools extends functions
                 $this->loadDefaultPage();
             }
         } elseif(isset($_GET['admin']) && !empty($_GET['admin'])) {
-            if (!isset($_SESSION['user']['services']['admin'])) {
+            if (
+                !isset($_SESSION['user']['services']['admin']) 
+                && $_GET['page'] <> 'modify_user'
+                && $_GET['page'] <> 'user_modif'
+            ) {
                $this->loadDefaultPage();
             } else {
                 // Page is defined the admin directory of the application
