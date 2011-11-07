@@ -20,6 +20,7 @@
  */
 
 //communs
+if (!defined('_NOTIFICATIONS')) define('_NOTIFICATIONS', 'Notifications');
 if (!defined('_MAIL_TO_PROCESS')) define('_MAIL_TO_PROCESS', 'Courriers pour traitement');
 if (!defined('_HELLO')) define('_HELLO','Bonjour');
 if (!defined('_THE_MAIL_NUM')) define('_THE_MAIL_NUM', 'le courrier n&deg;');
@@ -71,5 +72,62 @@ if (!defined('_FOLLOWING_MAIL_ARE_LATE')) define('_FOLLOWING_MAIL_ARE_LATE', 'Le
 if (!defined('_WHO_MUST_BE_PROCESSED_BEFORE')) define('_WHO_MUST_BE_PROCESSED_BEFORE', 'qui devait le traiter avant le');
 if (!defined('_COPY_TITLE')) define('_COPY_TITLE', 'En copie');
 //notifications engine
-if (!defined('_WRONG_FUNCTION_OR_WRONG_PARAMETERS')) define('_WRONG_FUNCTION_OR_WRONG_PARAMETERS','Mauvaise fonction ou mauvais param&egrave;tre')
+if (!defined('_WRONG_FUNCTION_OR_WRONG_PARAMETERS')) define('_WRONG_FUNCTION_OR_WRONG_PARAMETERS','Mauvaise fonction ou mauvais param&egrave;tre');
+
+
+
+
+//v2.0
+if (!defined('_ADMIN_NOTIFICATIONS')) define('_ADMIN_NOTIFICATIONS', 'Administration des notifications');
+if (!defined('_MANAGE_EVENTS')) define('_MANAGE_EVENTS', 'G&eacute;rer les &eacute;venements');
+if (!defined('_MANAGE_EVENTS_DESC')) define('_MANAGE_EVENTS_DESC', 'Ajouter ou modifier des &eacute;venement &agrave; notifier');
+
+if (!defined('_TEST_SENDMAIL')) define('_TEST_SENDMAIL', 'Tester la configuration');
+if (!defined('_TEST_SENDMAIL_DESC')) define('_TEST_SENDMAIL_DESC', 'V&eacute;rifier le param&eacute;trage du module de notification');
+
+if (!defined('_EVENTS_LIST')) define('_EVENTS_LIST', 'Liste des &eacute;venements');
+if (!defined('_THIS_EVENT')) define('_THIS_EVENT', 'Cet &eacute;venement');
+if (!defined('_IS_UNKNOWN')) define('_IS_UNKNOWN', 'est inconnu');
+if (!defined('_MODIFY_EVENT')) define('_MODIFY_EVENT', 'Modifier &eacute;venement');
+if (!defined('_ADD_EVENT')) define('_ADD_EVENT', 'Ajouter &eacute;venement');
+
+
+if (!defined('_DIFFUSION_TYPE')) define('_DIFFUSION_TYPE', 'Type de diffusion');
+if (!defined('_EXCLUSION_TYPE')) define('_EXCLUSION_TYPE', 'Type d&rsquo;exclusion');
+
+
+if (!defined('_ATTACH_MAIL_FILE')) define('_ATTACH_MAIL_FILE', 'Envoyer les courriers par notification');
+
+
+
+//List of require
+if (!defined('_NOTIFICATIONS_LISTINSTANC_DIFF_TYPE')) define('_NOTIFICATIONS_LISTINSTANC_DIFF_TYPE', 'Les courriels de notifications seront diffus&eacute;s &agrave tous les utilisateurs de la liste de diffusion (destinataire principal et copies)');
+//if (!defined('_DIFFUSION_LIST')) define('_DIFFUSION_LIST', 'Liste de diffusion');
+
+
+if (!defined('_NOTIFICATIONS_DEST_USER_DIFF_TYPE')) define('_NOTIFICATIONS_DEST_USER_DIFF_TYPE', 'Les courriels de notifications seront diffus&eacute;s au destinataire principal du document');
+//if (!defined('_DEST_USER')) define('_DEST_USER', 'destinataire principal');
+
+
+if (!defined('_NOTIFICATIONS_COPYLIST_DIFF_TYPE')) define('_NOTIFICATIONS_COPYLIST_DIFF_TYPE', 'Les courriels de notifications seront diffus&eacute;s aux utilisateurs en copie');
+//if (!defined('_COPY_LIST')) define('_COPY_LIST', 'Liste des copies');
+
+if (!defined('_NOTIFICATIONS_GROUP_DIFF_TYPE')) define('_NOTIFICATIONS_GROUP_DIFF_TYPE', 'Les courriels de notifications seront diffus&eacute;s au(x) groupe(s) sp&eacute;cifi&eacute;(s)');
+
+if (!defined('_NOTIFICATIONS_ENTITY_DIFF_TYPE')) define('_NOTIFICATIONS_ENTITY_DIFF_TYPE', 'Les courriels de notifications seront diffus&eacute;s au(x) entit&eacute;e(s) sp&eacute;cifi&eacute;e(s)');
+
+if (!defined('_NOTIFICATIONS_USER_DIFF_TYPE')) define('_NOTIFICATIONS_USER_DIFF_TYPE', 'Les courriels de notifications seront diffus&eacute;s au(x) utilisateurs(s) sp&eacute;cifi&eacute;(s)');
+
+if (!defined('_NOTIFICATIONS_MAIL_DIFF_TYPE')) define('_NOTIFICATIONS_MAIL_DIFF_TYPE', 'Les courriels de notifications seront diffus&eacute;s a l&rsquo;adresse courriel sp&eacute;cifi&eacute;e');
+
+
+if (!defined('_EVENT_ADDED')) define('_EVENT_ADDED', 'Evenement ajout&eacute;');
+if (!defined('_EVENT_DELETED')) define('_EVENT_DELETED', 'Evenement supprim&eacute;');
+if (!defined('_EVENT_MODIFIED')) define('_EVENT_MODIFIED', 'Evenement modifi&eacute;');
+if (!defined('_EVENT_EMPTY')) define('_EVENT_EMPTY', 'Evenement vide');
+if (!defined('_ALL_EVENTS')) define('_ALL_EVENTS', 'Tous les &eacute;venements');
+if (!defined('_SYSTEM')) define('_SYSTEM', 'Syst&egrave;me');
+
+
+
 ?>
