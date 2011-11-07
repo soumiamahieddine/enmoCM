@@ -1,0 +1,36 @@
+ <p>
+	<label for="status_id"><?php echo _ID; ?> : </label>
+	<input name="status_id" type="text"  id="event_id" value="<?php
+		echo functions::show_str(
+			$_SESSION['m_admin']['event']['id']
+		); ?>" <?php
+		if ($mode == 'up') {
+			echo 'readonly="readonly" class="readonly"';
+		}?>/>
+</p>
+
+ <p>
+            <label ><?php echo _CAN_BE_SEARCHED; ?> : </label>
+        <input type="radio"  class="check" name="can_be_searched" value="Y"<?php
+             if ($_SESSION['m_admin']['e	vent']['can_be_searched'] == 'Y') {
+                 ?> checked="checked"<?php
+             } ?> /><?php echo _YES;?>
+            <input type="radio" name="can_be_searched" class="check" value="N"
+            <?php
+            if ($_SESSION['m_admin']['status']['can_be_searched'] == 'N') {
+               ?> checked="checked"<?php
+            } ?> /><?php echo _NO;?>
+        </p>
+        <p>
+            <label ><?php echo _CAN_BE_MODIFIED; ?> : </label>
+            <input type="radio"  class="check" name="can_be_modified" value="Y"
+            <?php
+            if ($_SESSION['m_admin']['event']['can_be_modified'] == 'Y') {
+                ?> checked="checked"<?php
+            } ?> /><?php echo _YES;?>
+            <input type="radio" name="can_be_modified" class="check"  value="N"
+            <?php
+            if ($_SESSION['m_admin']['event']['can_be_modified'] == 'N') {
+               ?> checked="checked"<?php
+            } ?> /><?php echo _NO;?>
+        </p>
