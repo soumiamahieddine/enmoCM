@@ -57,15 +57,9 @@ $what = "";
 $where ="  enabled = 'Y' ";
 if(isset($_REQUEST['what']) && !empty($_REQUEST['what']))
 {
-    $what = $func->protect_string_db($func->wash($_REQUEST['what'], "alphanum", "", "no"));
-    if($_SESSION['config']['databasetype'] == "POSTGRESQL")
-    {
-        $where .= " and (lastname ilike '".$func->protect_string_db($what,$_SESSION['config']['databasetype'])."%'  or society ilike '".$func->protect_string_db($what,$_SESSION['config']['databasetype'])."%' ) ";
-    }
-    else
-    {
-        $where .= " and (lastname like '".$func->protect_string_db($what,$_SESSION['config']['databasetype'])."%'  or society like '".$func->protect_string_db($what,$_SESSION['config']['databasetype'])."%' ) ";
-    }
+    $contact_id = str_replace(')', '', substr($_REQUEST['what'], strrpos($_REQUEST['what'],'(')+1));
+    $contact_id = str_replace('contact:', '', $contact_id);
+    $where .= " and contact_id = " . $contact_id;
 }
 $list = new list_show();
 $order = 'asc';
