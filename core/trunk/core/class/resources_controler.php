@@ -67,7 +67,7 @@ class resources_controler
         //copy sended file on tmp 
         $fileContent = base64_decode($encodedFile);
         $random = rand();
-        $fileName = 'tmp_file_' . $random . '.pdf';
+        $fileName = 'tmp_file_' . $random . '.' . $fileFormat;
         $Fnm = $_SESSION['config']['tmppath'] . $fileName;
         $inF = fopen($Fnm,"w");
         fwrite($inF, $fileContent);
@@ -77,7 +77,7 @@ class resources_controler
         $fileInfos = array(
             'tmpDir'      => $_SESSION['config']['tmppath'],
             'size'        => filesize($Fnm),
-            'format'      => 'PDF',
+            'format'      => $fileFormat,
             'tmpFileName' => $fileName,
         );
         //print_r($fileInfos);
