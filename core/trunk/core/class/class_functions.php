@@ -917,25 +917,22 @@ class functions
     */
     public function protect_string_db($string, $databasetype = '')
     {
-        if(isset($_SESSION['config']['databasetype']) && !empty($_SESSION['config']['databasetype']))
+        if (isset($_SESSION['config']['databasetype']) && !empty($_SESSION['config']['databasetype']))
         {
             $databasetype = $_SESSION['config']['databasetype'];
         }
-        if($databasetype  == "SQLSERVER")
+        if ($databasetype  == "SQLSERVER")
         {
             $string = str_replace("'", "''", $string);
             $string = str_replace("\\", "", $string);
-        }
-        else if($databasetype  == "ORACLE")
-        {
+        } else if($databasetype  == "ORACLE") {
             $string = str_replace("'", "''", $string);
             $string = str_replace("\\", "", $string);
-        }
-        else if(($databasetype  == "MYSQL" || $databasetype  == "POSTGRESQL")  && !get_magic_quotes_runtime()) //&& (ini_get('magic_quotes_gpc') <> true && phpversion() >= 6)
-        {
+        } else if(($databasetype  == "MYSQL")  && !get_magic_quotes_runtime()) {
             $string = addslashes($string);
+        } else if(($databasetype  == "POSTGRESQL")  && !get_magic_quotes_runtime()) {
+            $string = pg_escape_string($string);
         }
-
         return $string;
     }
 
