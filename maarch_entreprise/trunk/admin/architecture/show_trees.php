@@ -274,7 +274,7 @@ else
                     //'defaultImg' : 'page.gif',
                     'defaultImgOpen' : 'folderopen.gif',
                     'defaultImgClose' : 'folder.gif',
-                    'onOpenPopulate' : [funcOpen, 'get_tree_children.php?IdTree=<?php  echo $_SESSION['chosen_tree'];?>']
+                    'onOpenPopulate' : [funcOpen, 'get_tree_children.php?IdTree=<?php  echo $_SESSION['doctypes_chosen_tree'];?>']
                 });
 
                 //open all branches
