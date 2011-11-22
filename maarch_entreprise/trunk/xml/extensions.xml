@@ -6,11 +6,6 @@
 		<index_frame_show>true</index_frame_show>
 	</FORMAT>
 	<FORMAT>
-		<name>PDFHQ</name>
-		<mime>application/pdf</mime>
-		<index_frame_show>true</index_frame_show>
-	</FORMAT>
-	<FORMAT>
 		<name>TIFF</name>
 		<mime>image/tiff</mime>
 		<index_frame_show>false</index_frame_show>
@@ -41,8 +36,18 @@
 		<index_frame_show>false</index_frame_show>
 	</FORMAT>
 	<FORMAT>
+		<name>DOCX</name>
+		<mime>application/zip</mime>
+		<index_frame_show>false</index_frame_show>
+	</FORMAT>
+	<FORMAT>
 		<name>XLSX</name>
 		<mime>application/vnd.openxmlformats-officedocument.spreadsheetml.sheet</mime>
+		<index_frame_show>false</index_frame_show>
+	</FORMAT>
+	<FORMAT>
+		<name>XLSX</name>
+		<mime>application/zip</mime>
 		<index_frame_show>false</index_frame_show>
 	</FORMAT>
     <FORMAT>
@@ -51,8 +56,18 @@
 		<index_frame_show>false</index_frame_show>
 	</FORMAT>
 	<FORMAT>
+		<name>PPTX</name>
+		<mime>application/zip</mime>
+		<index_frame_show>false</index_frame_show>
+	</FORMAT>
+	<FORMAT>
 		<name>ODT</name>
 		<mime>application/vnd.oasis.opendocument.text</mime>
+		<index_frame_show>false</index_frame_show>
+	</FORMAT>
+	<FORMAT>
+		<name>ODT</name>
+		<mime>application/octet-stream</mime>
 		<index_frame_show>false</index_frame_show>
 	</FORMAT>
 	<FORMAT>
@@ -60,9 +75,19 @@
 		<mime>application/vnd.oasis.opendocument.spreadsheet</mime>
 		<index_frame_show>false</index_frame_show>
 	</FORMAT>
+	<FORMAT>
+		<name>ODS</name>
+		<mime>application/octet-stream</mime>
+		<index_frame_show>false</index_frame_show>
+	</FORMAT>
     <FORMAT>
 		<name>ODP</name>
 		<mime>application/vnd.oasis.opendocument.presentation</mime>
+		<index_frame_show>false</index_frame_show>
+	</FORMAT>
+	<FORMAT>
+		<name>ODP</name>
+		<mime>application/octet-stream</mime>
 		<index_frame_show>false</index_frame_show>
 	</FORMAT>
 	<FORMAT>
