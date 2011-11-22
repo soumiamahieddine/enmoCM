@@ -65,11 +65,16 @@ function Ds_copyOnDocserver(
         $storeInfos = array('error' => _DOCSERVER_COPY_ERROR);
         return $storeInfos;
     }
-    Ds_controlFingerprint(
+    $fingerprintControl = array();
+    $fingerprintControl = Ds_controlFingerprint(
         $sourceFilePath,
         $destinationDir . $fileDestinationName,
         $docserverSourceFingerprint
     );
+    if ($fingerprintControl['status'] == 'ko') {
+		$storeInfos = array('error' => $fingerprintControl['error']);
+		return $storeInfos;
+	}
     /*$ofile = fopen($destinationDir.$fileDestinationName, 'r');
     if (Ds_isCompleteFile($ofile)) {
         fclose($ofile);
