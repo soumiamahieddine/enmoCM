@@ -459,8 +459,8 @@ function Ds_controlFingerprint(
 function Ds_setRights($dest)
 {
     if (
-        DIRECTORY_SEPARATOR == '/' 
-        && (isset($GLOBALS['apacheUserAndGroup']) 
+        DIRECTORY_SEPARATOR == '/'
+        && (isset($GLOBALS['apacheUserAndGroup'])
         && $GLOBALS['apacheUserAndGroup'] <> '')
     ) {
         exec('chown ' . $GLOBALS['apacheUserAndGroup'] . ' ' . $dest);
@@ -543,35 +543,39 @@ function Ds_isFileTypeAllowed($filePath)
     $mimeType = Ds_getMimeType(
         $filePath
     );
-    if (file_exists($_SESSION['config']['corepath'] . 'custom' 
-        . DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'] 
-        . DIRECTORY_SEPARATOR 
-        . 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id'] 
-        . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR 
+    $ext = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
+    if (file_exists($_SESSION['config']['corepath'] . 'custom'
+        . DIRECTORY_SEPARATOR.$_SESSION['custom_override_id']
+        . DIRECTORY_SEPARATOR
+        . 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+        . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR
         . 'extensions.xml')
     ) {
-        $path = $_SESSION['config']['corepath'] . 'custom' 
-        . DIRECTORY_SEPARATOR . $_SESSION['custom_override_id'] 
-        . DIRECTORY_SEPARATOR . 'apps' . DIRECTORY_SEPARATOR 
-        . $_SESSION['config']['app_id'] . DIRECTORY_SEPARATOR . 'xml' 
+        $path = $_SESSION['config']['corepath'] . 'custom'
+        . DIRECTORY_SEPARATOR . $_SESSION['custom_override_id']
+        . DIRECTORY_SEPARATOR . 'apps' . DIRECTORY_SEPARATOR
+        . $_SESSION['config']['app_id'] . DIRECTORY_SEPARATOR . 'xml'
         . DIRECTORY_SEPARATOR . 'extensions.xml';
     } else {
-        $path = 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id'] 
+        $path = 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
         . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR . 'extensions.xml';
     }
     $xmlconfig = simplexml_load_file($path);
     $ext_list = array();
     $i = 0;
-    foreach($xmlconfig->FORMAT as $FORMAT) {
+    foreach ($xmlconfig->FORMAT as $FORMAT) {
         $ext_list[$i] = array(
-            'name' => (string) $FORMAT->name, 
+            'name' => (string) $FORMAT->name,
             'mime' => (string) $FORMAT->mime
         );
         $i++;
     }
     $type_state = false;
-    for($i=0;$i<count($ext_list);$i++) {
-        if($ext_list[$i]['mime'] == $mimeType) {
+    for ($i=0;$i<count($ext_list);$i++) {
+        if (
+			$ext_list[$i]['mime'] == $mimeType 
+			&& strtolower($ext_list[$i]['name']) == $ext
+		) {
             $type_state = true;
             break;
         }
