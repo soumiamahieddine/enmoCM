@@ -208,6 +208,7 @@ $module, $collId, $mode )
 
     $frmStr .= '<div  style="display:block">';
     if ($core->is_module_loaded('webtwain')
+        && isset($_SESSION['user']['services']['scan'])
         && $_SESSION['user']['services']['scan'] === true
     ) { //Ajout yck
         $frmStr .= '<div style="display:block;" id="choose_scan">'
@@ -866,6 +867,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
     }
     $strJs = '';
     if ($core->is_module_loaded('webtwain')
+        && isset($_SESSION['user']['services']['scan'])
         && $_SESSION['user']['services']['scan'] === true
     ) {//Ajout yck
         //$frmStr .= '<iframe src="'.$_SESSION['config']['businessappurl'].'index.php?display=true&module=webtwain&page=scan" name="file_iframe" id="scan_iframe" scrolling="auto" frameborder="0" ></iframe>';
