@@ -109,6 +109,7 @@ class admin_reports extends dbquery
 	*/
 	public function load_user_reports($user_id, $from)
 	{
+		$db = new dbquery();
 		$reports = array();
 		if($user_id == "superadmin")
 		{
@@ -119,57 +120,33 @@ class admin_reports extends dbquery
 			require_once('modules'.DIRECTORY_SEPARATOR.'reports'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php');
 			$rep = new reports();
 			$enabled_reports = $rep->get_reports_from_xml();
-			$this->connect();
+			//$this->connect();
 			//$_SESSION['user']['reports'] = array();
 			require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."usergroups_controler.php");
 
 			foreach(array_keys($enabled_reports)as $key)
-			{
-					$this->query("select group_id from ".$_SESSION['tablename']['usergroups_reports']." where report_id = '".$key."'");
-					$find = false;
-					while($res = $this->fetch_object())
+			{					
+				$db->connect();
+				$db->query("select group_id from ".$_SESSION['tablename']['usergroups_reports']." where report_id = '".$key."'");
+				$find = false;
+				$res = false;
+				while($res=$db->fetch_object())
+				{
+					if(usergroups_controler::inGroup($user_id, $res->group_id) == true)
 					{
-						if(usergroups_controler::inGroup($user_id, $res->group_id) == true)
-						{
-							$find = true;
-							break;
-						}
+						$find = true;
+						break;
 					}
-					if($find == true)
-					{
-						$reports[$key] = true;
-/*
-						if ((!empty($from) && $from == "menu") && $enabled_reports[$i]['menu']=="true")
-						{
-							array_push($reports, array('id' => $enabled_reports[$i]['id'],
-														'label' => $enabled_reports[$i]['label'],
-														'desc' => $enabled_reports[$i]['desc'],
-														'url' =>$enabled_reports[$i]['url'],
-														'menu' =>$enabled_reports[$i]['menu'],
-														'module' => $enabled_reports[$i]['module'],
-														'module_label' => $enabled_reports[$i]['module_label']));
-						}
-						elseif((!isset($from) || empty($from) || $from <> "menu") && $enabled_reports[$i]['menu']== "false")
-						{
-
-						array_push($reports, array('id' => $enabled_reports[$i]['id'],
-													'label' => $enabled_reports[$i]['label'],
-													'desc' =>$enabled_reports[$i]['desc'],
-													'url' =>$enabled_reports[$i]['url'],
-													'menu' =>$enabled_reports[$i]['menu'],
-													'module' => $enabled_reports[$i]['module'],
-													'module_label' => $enabled_reports[$i]['module_label']));
-
-						}
-*/
-						//print_r($reports);
-					}
-					else
-					{
-						//$_SESSION['user']['reports'][$_SESSION['enabled_reports'][$i]['id']] = false;
-						//$reports[$_SESSION['enabled_reports'][$i]['id']] = false;
-					}
-
+				}
+				if($find == true)
+				{
+					$reports[$key] = true;
+				}
+				else
+				{
+					//$_SESSION['user']['reports'][$_SESSION['enabled_reports'][$i]['id']] = false;
+					//$reports[$_SESSION['enabled_reports'][$i]['id']] = false;
+				}
 			}
 		}
 		return $reports;
