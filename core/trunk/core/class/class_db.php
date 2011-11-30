@@ -578,6 +578,7 @@ class dbquery extends functions
         // Query error
         if ($this->_sqlError == 3) {
             $sqlErrorToView = '<b>' . _QUERY_ERROR . '</b><br />';
+            $sqlError = '';
             if ($this->_databasetype == 'MYSQL') {
                 $sqlError .= _ERROR_NUM . @mysqli_errno($this->_sqlLink) . ' '
                     . _HAS_JUST_OCCURED . ' :<br />';
