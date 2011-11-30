@@ -561,6 +561,7 @@ class dbquery extends functions
                     . _DB_USER . ' : ' . $this->_user . '<br/>' . _PASSWORD
                     . ' : ' . $this->_password;
             }
+            header('HTTP/1.1 500 Internal server error');
             exit();
         }
 
