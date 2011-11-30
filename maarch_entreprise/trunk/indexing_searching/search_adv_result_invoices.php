@@ -549,13 +549,13 @@ if (!empty ($_SESSION['error'])) {
     if ($mode == 'normal') {
         $_SESSION['error_search'] = '<br /><div class="error">' . _MUST_CORRECT_ERRORS . ' : <br /><br /><strong>' . $_SESSION['error_search'] . '<br /><a href="' . $_SESSION['config']['businessappurl'] . 'index.php?page=search_adv&dir=indexing_searching">' . _CLICK_HERE_TO_CORRECT . '</a></strong></div>';
 ?>
-        <script  type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?page=search_adv_error&dir=indexing_searching';?>';</script>
+        <script  type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?page=search_adv_error_invoices&dir=indexing_searching';?>';</script>
         <?php
 
     } else {
         $_SESSION['error_search'] = '<br /><div class="error">' . _MUST_CORRECT_ERRORS . ' : <br /><br /><strong>' . $_SESSION['error_search'] . '<br /><a href="' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=indexing_searching&page=search_adv&mode=' . $mode . '">' . _CLICK_HERE_TO_CORRECT . '</a></strong></div>';
 ?>
-        <script type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=search_adv_error&mode='.$mode;?>';</script>
+        <script type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=search_adv_error_invoices&mode='.$mode;?>';</script>
         <?php
 
     }

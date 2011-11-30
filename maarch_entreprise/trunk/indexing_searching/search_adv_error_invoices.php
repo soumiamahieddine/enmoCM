@@ -40,7 +40,7 @@ if(isset($_REQUEST['mode'])&& !empty($_REQUEST['mode']))
 }
 if($mode == 'normal')
 {
-    $core_tools->test_service('adv_search_mlb', 'apps');
+    $core_tools->test_service('adv_search_invoices', 'apps');
 /****************Management of the location bar  ************/
 $init = false;
 if(isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true")
