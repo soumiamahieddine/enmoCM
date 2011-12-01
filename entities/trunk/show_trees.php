@@ -29,7 +29,7 @@ else
         $ent->connect();
         //$where = "";
         $level1 = array();
-        $ent->query("select u.user_id, u.lastname, u.firstname from  ".ENT_USERS_ENTITIES." ue, ".$_SESSION['tablename']['users']." u where ue.entity_id  = '".$_SESSION['entities_chosen_tree']."' and ue.user_id = u.user_id  order by u.lastname, u.firstname");
+        $ent->query("select u.user_id, u.lastname, u.firstname from  ".ENT_USERS_ENTITIES." ue, ".$_SESSION['tablename']['users']." u where ue.entity_id  = '".$_SESSION['entities_chosen_tree']."' and ue.user_id = u.user_id and u.status <> 'DEL' order by u.lastname, u.firstname");
         while($res = $ent->fetch_object())
         {
             array_push($level1, array('id' => $res->user_id, 'tree' => $_SESSION['entities_chosen_tree'], 'key_value' => $res->user_id, 'label_value' => $ent->show_string($res->lastname.' '.$res->firstname, true), 'is_entity' => false));
@@ -48,7 +48,7 @@ else
                 $label = "<b>".$_SESSION['tree_entities'][$i]['ID'].' - '.$_SESSION['tree_entities'][$i]['LABEL']."</b>";
             }
         }
-        $ent->query("select u.user_id, u.lastname, u.firstname from  ".ENT_USERS_ENTITIES." ue, ".$_SESSION['tablename']['users']." u where ue.entity_id  = '".$_SESSION['entities_chosen_tree']."' and ue.user_id = u.user_id  order by u.lastname, u.firstname");
+        $ent->query("select u.user_id, u.lastname, u.firstname from  ".ENT_USERS_ENTITIES." ue, ".$_SESSION['tablename']['users']." u where ue.entity_id  = '".$_SESSION['entities_chosen_tree']."' and ue.user_id = u.user_id and u.status <> 'DEL' order by u.lastname, u.firstname");
         while($res = $ent->fetch_object())
         {
             array_push($level1, array('id' => $res->user_id, 'tree' => $_SESSION['entities_chosen_tree'], 'key_value' => $res->user_id, 'label_value' => $ent->show_string($res->lastname.' '.$res->firstname, true), 'is_entity' => false));

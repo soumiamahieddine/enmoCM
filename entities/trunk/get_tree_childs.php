@@ -11,7 +11,7 @@ if(isset($_POST['branch_id'])) {
     $ent->connect();
     $children = array();
 
-    $ent->query("select u.user_id, u.lastname, u.firstname from ".ENT_USERS_ENTITIES." ue,".ENT_ENTITIES." e, ".$_SESSION['tablename']['users']." u where e.parent_entity_id = '".$_POST['branch_id']."' and e.parent_entity_id = ue.entity_id and u.user_id = ue.user_id order by u.lastname, u.firstname");
+    $ent->query("select u.user_id, u.lastname, u.firstname from ".ENT_USERS_ENTITIES." ue,".ENT_ENTITIES." e, ".$_SESSION['tablename']['users']." u where e.parent_entity_id = '".$_POST['branch_id']."' and e.parent_entity_id = ue.entity_id and u.user_id = ue.user_id and u.status <> 'DEL' order by u.lastname, u.firstname");
     if($ent->nb_result() > 0)
     {
         while($res = $ent->fetch_object())
@@ -22,7 +22,7 @@ if(isset($_POST['branch_id'])) {
     }
     else
     {
-        $ent->query("select u.user_id, u.lastname, u.firstname from ".ENT_USERS_ENTITIES." ue, ".$_SESSION['tablename']['users']." u where ue.entity_id = '".$_POST['branch_id']."'  and u.user_id = ue.user_id order by u.lastname, u.firstname");
+        $ent->query("select u.user_id, u.lastname, u.firstname from ".ENT_USERS_ENTITIES." ue, ".$_SESSION['tablename']['users']." u where ue.entity_id = '".$_POST['branch_id']."'  and u.user_id = ue.user_id and u.status <> 'DEL' order by u.lastname, u.firstname");
         //$ent->show();
         if($ent->nb_result() > 0)
         {
