@@ -1518,7 +1518,7 @@ class core_tools extends functions
     */
     public function load_footer()
     {
-        echo _MEP_VERSION;
+        echo _MEP_VERSION . ', <b>database release : ' . $_SESSION['maarch_entreprise']['xml_versionbase'] . '</b>';
         ?>
         Powered by Maarch&trade;. <?php  $this->show_page_stat(); ?>
         <?php
