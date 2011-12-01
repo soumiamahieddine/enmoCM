@@ -475,11 +475,11 @@ class usergroups_controler extends ObjectControler implements ObjectControlerIF
             );
         }
 
-        if (count($security) < 1  && count($services) < 1) {
+        /*if (count($security) < 1  && count($services) < 1) {
             $func->add_error(
                 _THE_GROUP . ' ' . _NO_SECURITY_AND_NO_SERVICES, ''
             );
-        }
+        }*/
 
         if ($mode == "add" && $this->groupExists($group->group_id)) {
             $func->add_error(
