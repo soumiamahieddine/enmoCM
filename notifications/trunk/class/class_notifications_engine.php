@@ -15,6 +15,94 @@
 class notification_engine extends request
 {
     
+    public function add_DatesAlarm($res_array)
+    {
+		//print_r($res_array); exit();
+		if (!$res_array) return null;
+		 
+		foreach($res_array as $res)
+		{
+			$res_id = $res['res_id'];
+			$this->connect();
+			$this->query("SELECT res_id, type_id, process_limit_date, alarm1_date, alarm2_date FROM ".$_SESSION['ressources']['letterbox_view']." where res_id = '".$res_id."'");
+			
+			$result = $this -> fetch_object(); 
+			
+			$process_limit_date = $result->process_limit_date;
+			$alarm1_date = $result->alarm1_date;
+			$alarm2_date = $result->alarm2_date;
+			$type_id = $result->type_id;
+			
+			if ($process_limit_date <> '' && $alarm1_date == '' && $alarm2_date == '')
+			{ 
+				//on récupère la typologie documentaire
+				$query = "SELECT delay1, delay2 from ".$_SESSION['tablename']['mlb_doctype_ext']." where type_id = '".$type_id."' "; 
+				//$query = "SELECT delay1, delay2 from mlb_doctype_ext where type_id = '".$type_id."' "; 
+				//Recuperation du délai de relance pour le type de document.
+			
+				$this->query($query);
+				if ($this -> nb_result() > 0){
+					$result2 = $this->fetch_object();
+					$delay1 = $result2 -> delay1;
+					$delay2 = $result2 -> delay2;
+					
+					//Def de Alarm1
+					$date_alarm1_final = $this->WhenOpenDay($process_limit_date, $delay1);
+					//Def de Alarm2
+					$date_alarm2_final = $this->WhenOpenDay($date_alarm1_final, $delay2);
+					
+					//On créer les date appropriées.
+					$final_query = "UPDATE ".$_SESSION['collection'][0]['extensions'][0]." set alarm1_date='".$date_alarm1_final."', alarm2_date='".$date_alarm2_final."' where res_id = '".$res_id."'";
+					$this->query($final_query);
+					//$this->show();
+				}
+			}
+		}
+		
+		//Récupération de la date limite de traitement	
+		//Pour chaque document
+			//On ajoute alarm1 et alarm2 en base de données
+	}
+	
+	public function WhenOpenDay($Date, $Delta)
+	{
+		$Date = strtotime ($Date);
+		$Hollidays = array (
+		'1_1',
+		'1_5',
+		'8_5',
+		'14_7',
+		'15_8',
+		'1_11',
+		'11_11',
+		'25_12'
+		);
+		if(function_exists ('easter_date'))
+		{
+			$WhenEasterCelebrates = easter_date ((int)date('Y'), $Date);
+		}
+		else
+		{
+			$WhenEasterCelebrates = getEaster ((int)date('Y'), $Date);
+		}
+		$Hollidays[] = date ('j_n', $WhenEasterCelebrates);
+		$Hollidays[] = date ('j_n', $WhenEasterCelebrates + (86400*39));
+		$Hollidays[] = date ('j_n', $WhenEasterCelebrates + (86400*49));
+		$iEnd = $Delta * 86400;
+		$i = 0;
+		while ($i < $iEnd)
+		{
+			$i = strtotime ('+1 day', $i);
+			if (in_array (date ('w', $Date+$i),array (0,6) ) || in_array (date ('j_n', $Date+$i), $Hollidays))
+			{
+				$iEnd = strtotime ('+1 day', $iEnd);
+				$Delta ++;
+			}
+		}
+		return date('Y-m-d', $Date + (86400*$Delta));
+	}
+    
+    
     function execute_engine($working_template,$my_docs, $user)
     //Replace all arguments in Html template by differents value loaded in load_var_sys library
     //@args $workin_template : array : exploded template
@@ -532,39 +620,40 @@ class notification_engine extends request
         return $rempl;
     }
 
-
-
-    function sendmail_notes($res_id, $notes= "")
+    function sendmail_notes($res_table, $res_id, $notes = '', $user = '', $date = '')
     {
         $db= new dbquery();
         $db->connect();
-        
+        include_once('modules/notifications/lang/' . $_SESSION['config']['lang'] . '.php');
         
         //Get the dest user of this document
-        $db->query("select dest_user from ".$_SESSION['ressources'][0]['tablename']." where RES_ID = '".$res_id."'");
+        $db->query("select dest_user from " . $res_table . " where RES_ID = '" . $res_id . "'");
         $result1 = $db->fetch_object();
         $this_dest_user = $result1->dest_user;
         
         if ($this_dest_user <> $_SESSION['user']['UserId'])
         {
-            //Get mail adresse from this user
-            $db->query("select mail from ".$_SESSION['tablename']['users']." where USER_ID = '".$this_dest_user."'");
+            //Get mail address from this user
+            $db->query("select mail from " . $_SESSION['tablename']['users'] . " where user_id = '" . $this_dest_user . "'");
             $result2= $db->fetch_object();
             $mail = $result2->mail;
             
-            //Get this mail template
-            $file = $_SESSION['config']['includedir']."/template_mail_notes.html";
-            $mail_trait = get_mail_template($file, $resid );                
-            
-            global $rempl;
-            $rempl = get_doc_info($res_id, $notes);
-            
-            //Replace the constants by the lang file definition
-            $mail_trait = preg_replace_callback('/(\\[(.*?)\\])/',create_function('$match','global $rempl; return $rempl[$match[2]];'),$mail_trait);
-            $mail_trait = preg_replace_callback('/(_[A-Z_]*)/',create_function('$match', 'return constant($match[1]);'),$mail_trait);   
-            
+            $mail_trait = _HELLO_NOTE . ' ' . $res_id . '.<br>';
+            $mail_trait .= _NOTE_BODY . $notes . '.<br>';
+            if ($user <> '') {
+				if ($date == '') {
+					$date = date('d/m/Y');
+				}
+				$mail_trait .= _NOTE_DETAILS . $user . ' ' . _NOTE_DATE_DETAILS . ' ' . $date . '.<br>';
+			}
+			$mail_trait .= '<a href="' . $_SESSION['config']['coreurl'] . 'apps/maarch_entreprise/index.php?page=details&dir=indexing_searching&id=' 
+						. $res_id . '">'  . _LINK_TO_MAARCH . '</a>';
             //Send mail to the dest_user
-            mail($mail,  _NEW_NOTES_BY_MAIL." ".$res_id, $mail_trait , "From: ".$_SESSION['config']['adminmail']."\nReply-To: ".$_SESSION['config']['adminmail']." \nContent-Type: text/html; charset=\"iso-8859-1\"\n");   
+            if ($mail <> '') {
+				if (!mail($mail, _NEW_NOTE_BY_MAIL . ' ' . $res_id, $mail_trait, "From: " . $_SESSION['config']['adminmail'] . "\nReply-To: " . $_SESSION['config']['adminmail'] . " \nContent-Type: text/html; charset=\"iso-8859-1\"\n")) {
+					//echo "mail not sended";
+				}
+			}
         }
     }
 

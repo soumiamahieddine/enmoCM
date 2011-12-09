@@ -73,6 +73,14 @@ if (!defined('_WHO_MUST_BE_PROCESSED_BEFORE')) define('_WHO_MUST_BE_PROCESSED_BE
 if (!defined('_COPY_TITLE')) define('_COPY_TITLE', 'En copie');
 //notifications engine
 if (!defined('_WRONG_FUNCTION_OR_WRONG_PARAMETERS')) define('_WRONG_FUNCTION_OR_WRONG_PARAMETERS','Mauvaise fonction ou mauvais param&egrave;tre');
+//annotations
+if (!defined('_NEW_NOTE_BY_MAIL')) define('_NEW_NOTE_BY_MAIL', 'Nouvelle annotation pour le courrier');
+if (!defined('_HELLO_NOTE')) define('_HELLO_NOTE', 'Bonjour, vous avez une nouvelle annotation pour le courrier');
+if (!defined('_NOTE_BODY')) define('_NOTE_BODY', 'La note est la suivante : ');
+if (!defined('_NOTE_DETAILS')) define('_NOTE_DETAILS', 'Cette note &agrave &eacute;t&eacute; ajout&eacute;e par : ');
+if (!defined('_NOTE_DATE_DETAILS')) define('_NOTE_DATE_DETAILS', 'le');
+if (!defined('_LINK_TO_MAARCH')) define('_LINK_TO_MAARCH', 'Vous pouvez acc&eacute;der au courrier depuis ce lien');
+
 
 
 
