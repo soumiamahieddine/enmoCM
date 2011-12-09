@@ -1461,3 +1461,25 @@ if (!defined('_SQL_QUERY_NOT_SECURE')) {
         'requete SQL non s&eacute;curis&eacute;e'
     );
 }
+
+//service to put doc on validation from details page
+if (!defined('_PUT_DOC_ON_VALIDATION_FROM_DETAILS')) {
+    define(
+        '_PUT_DOC_ON_VALIDATION_FROM_DETAILS', 
+        'Envoyer le document en validation depuis la page d&eacute;tails'
+    );
+}
+
+if (!defined('_PUT_DOC_ON_VALIDATION')) {
+    define(
+        '_PUT_DOC_ON_VALIDATION', 
+        'Envoyer le document en validation'
+    );
+}
+
+if (!defined('_REALLY_PUT_DOC_ON_VALIDATION')) {
+    define(
+        '_REALLY_PUT_DOC_ON_VALIDATION', 
+        'Confirmer l&rsquo;envoi en validation'
+    );
+}

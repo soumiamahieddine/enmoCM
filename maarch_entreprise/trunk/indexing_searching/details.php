@@ -53,6 +53,11 @@ $printDetails = false;
 if ($core->test_service('print_details', 'apps', false)) {
     $printDetails = true;
 }
+//test service put_in_validation
+$putInValid = false;
+if ($core->test_service('put_in_validation', 'apps', false)) {
+    $putInValid = true;
+}
 //test service view technical infos
 $viewTechnicalInfos = false;
 if ($core->test_service('view_technical_infos', 'apps', false)) {
@@ -171,6 +176,14 @@ if(isset($_POST['delete_doc']))
         <script type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?page=search_adv&dir=indexing_searching';?>';</script>
     <?php
     exit();
+}
+if(isset($_POST['put_doc_on_validation']))
+{
+	$is ->update_doc_status($s_id, $coll_id, "VAL");
+	?>
+		<script language="javascript" type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?page=search_adv&dir=indexing_searching';?>';</script>
+    <?php
+	exit();
 }
 $db = new dbquery();
 $db->connect();
@@ -782,6 +795,12 @@ else
                             }
                             ?>
                             <input type="button" class="button" name="print_details" id="print_details" value="<?php echo _PRINT_DETAILS;?>" onclick="window.open('<?php echo $path . "/tmp/export_details_".$_SESSION['user']['UserId']."_export.html";?>', '_blank');" />
+                            <?php
+                            }
+                        ?>
+                        <?php if ($putInValid) {
+                            ?>
+                            <input type="submit" class="button"  value="<?php  echo _PUT_DOC_ON_VALIDATION;?>" name="put_doc_on_validation" onclick="return(confirm('<?php  echo _REALLY_PUT_DOC_ON_VALIDATION;?>\n\r\n\r'));" />
                             <?php
                             }
                         ?>
