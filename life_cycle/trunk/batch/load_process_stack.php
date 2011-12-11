@@ -45,7 +45,8 @@ class IncludeFileError extends Exception
 
 try {
     include('Maarch_CLITools/ArgsParser.php');
-    include('Maarch_CLITools/Logger.php');
+    //include('Maarch_CLITools/Logger.php');
+    include('LoggerLog4php.php');
     include('Maarch_CLITools/FileHandler.php');
     include('Maarch_CLITools/ConsoleHandler.php');
 } catch (IncludeFileError $e) {
@@ -90,6 +91,7 @@ $totalProcessedResources = 0;
 $apacheUserAndGroup =  '';
 $breakKey = '';
 $breakKeyValue = '';
+$log4PhpEnabled = false;
 
 // Defines scripts arguments
 $argsparser = new ArgsParser();
@@ -134,12 +136,13 @@ $argsparser->add_arg(
     )
 );
 // Log management
-$GLOBALS['logger'] = new Logger();
+//$GLOBALS['logger'] = new Logger();
+$GLOBALS['logger'] = new Logger4Php();
 $GLOBALS['logger']->set_threshold_level('DEBUG');
 $console = new ConsoleHandler();
 $GLOBALS['logger']->add_handler($console);
 $file = new FileHandler('logs' . DIRECTORY_SEPARATOR . 'process_stack' 
-                        . DIRECTORY_SEPARATOR . date('Y-m-d H-i-s') . '.log');
+                        . DIRECTORY_SEPARATOR . date('Y-m-d_H-i-s') . '.log');
 $GLOBALS['logger']->add_handler($file);
 $GLOBALS['logger']->write('STATE:INIT', 'INFO');
 // Parsing script options
@@ -208,6 +211,7 @@ $GLOBALS['docserversFeatures']['DOCSERVERS']['PATHTOCOMPRESSTOOL'] =
                                            (string) $CONFIG->PathToCompressTool;
 $MaarchApps = (string) $CONFIG->MaarchApps;
 $log_level = (string) $CONFIG->LogLevel;
+$GLOBALS['logger']->set_threshold_level($logLevel);
 $DisplayedLogLevel = (string) $CONFIG->DisplayedLogLevel;
 $GLOBALS['customPath'] = (string) $CONFIG->CustomPath;
 $GLOBALS['customLang'] = (string) $CONFIG->CustomLang;
@@ -227,6 +231,20 @@ foreach ($xmlconfig->COLLECTION as $col) {
         $GLOBALS['view'] = $GLOBALS['collections'][$i]['view'];
     }
     $i++;
+}
+set_include_path(get_include_path() . PATH_SEPARATOR 
+	. $GLOBALS['MaarchDirectory']);
+//log4php params
+$log4phpParams = $xmlconfig->LOG4PHP;
+if ((string) $log4phpParams->enabled == 'true') {
+	$GLOBALS['logger']->set_log4PhpLibrary(
+		$GLOBALS['MaarchDirectory'] 
+			. 'apps/maarch_entreprise/tools/log4php/Logger.php'
+	);
+	$GLOBALS['logger']->set_log4PhpLogger((string) $log4phpParams->Log4PhpLogger);
+	$GLOBALS['logger']->set_log4PhpBusinessCode((string) $log4phpParams->Log4PhpBusinessCode);
+	$GLOBALS['logger']->set_log4PhpConfigPath((string) $log4phpParams->Log4PhpConfigPath);
+	$GLOBALS['logger']->set_log4PhpBatchName('life_cycle_fill_stack');
 }
 if ($GLOBALS['table'] == '' 
     || $GLOBALS['adrTable'] == '' 
@@ -251,8 +269,10 @@ if ($log_level == 'DEBUG') {
 $GLOBALS['logger']->change_handler_log_level($file, $log_level);
 $GLOBALS['logger']->change_handler_log_level($console, $DisplayedLogLevel);
 unset($xmlconfig);
+/*
 set_include_path(get_include_path() . PATH_SEPARATOR 
                  . $GLOBALS['MaarchDirectory']);
+*/
 // Include library
 try {
     Bt_myInclude($GLOBALS['MaarchDirectory'] . 'core' . DIRECTORY_SEPARATOR 

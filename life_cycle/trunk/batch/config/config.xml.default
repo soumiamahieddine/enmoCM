@@ -6,11 +6,11 @@
         <TmpDirectory>C:\xampp\htdocs\maarch_entreprise\modules\life_cycle\batch\tmp\</TmpDirectory>
         <PathToCompressTool>C:\Program Files\7-Zip\7z.exe</PathToCompressTool>
         <MaarchApps>maarch_entreprise</MaarchApps>
-        <LogLevel>INFO</LogLevel>  <!-- DEBUG, INFO, NOTICE, WARNING, ERROR-->
+        <LogLevel>INFO</LogLevel> <!-- DEBUG, INFO, NOTICE, WARNING, ERROR-->
         <DisplayedLogLevel>INFO</DisplayedLogLevel> <!-- DEBUG, INFO, NOTICE, WARNING, ERROR-->
         <StackSizeLimit>10000</StackSizeLimit>
         <CustomPath></CustomPath> <!-- path to the custom file to create pdi, ex : c:\xampp\htdocs\maarch_entreprise_trunk\custom\main_lagi\modules\life_cycle\batch\custom.php -->
-        <CustomLang></CustomLang><!-- path to the custom language file, ex : /var/www/dggn/custom/DGGN/fr.php -->
+        <CustomLang></CustomLang> <!-- path to the custom language file, ex : /var/www/dggn/custom/DGGN/fr.php -->
         <ApacheUserAndGroup>www-data:www-data</ApacheUserAndGroup>
     </CONFIG>
     <CONFIG_BASE>
@@ -27,4 +27,10 @@
         <View>res_view</View>
         <Adr>adr_x</Adr>
     </COLLECTION>
+    <LOG4PHP>
+		<enabled>false</enabled>
+		<Log4PhpLogger>loggerTechnique</Log4PhpLogger>
+		<Log4PhpBusinessCode>MaarchEntrepriseDemo</Log4PhpBusinessCode>
+        <Log4PhpConfigPath>/var/www/maarch_entreprise/apps/maarch_entreprise/xml/log4php.xml</Log4PhpConfigPath>
+    </LOG4PHP>
 </ROOT>
