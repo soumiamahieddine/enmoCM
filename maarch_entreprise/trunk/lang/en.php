@@ -130,6 +130,11 @@ if (!defined('_RESSOURCES_COLLECTION')) define('_RESSOURCES_COLLECTION','Documen
 if (!defined('_RECIPIENT')) define('_RECIPIENT', 'Recipient');
 if (!defined('_START')) define('_START', 'Start');
 if (!defined('_END')) define('_END', 'End');
+if (!defined('_KEYWORD')) define( '_KEYWORD', 'Keyword');
+if (!defined('_NO_KEYWORD')) define( '_NO_KEYWORD', 'No keyword');
+if (!defined('_SYSTEM_PARAMETERS')) define( '_SYSTEM_PARAMETERS', 'system parameters');
+if (!defined('_TO_VALIDATE')) define( '_TO_VALIDATE', 'To validate');
+if (!defined('_INDEXING')) define( '_INDEXING', 'Indexing');
 
 /************** Messages pop up **************/
 if (!defined('_REALLY_SUSPEND')) define('_REALLY_SUSPEND', 'Do you really want to disable ');

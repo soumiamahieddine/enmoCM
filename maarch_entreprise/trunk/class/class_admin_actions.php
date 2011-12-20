@@ -38,7 +38,7 @@ class AdminActions extends dbquery
     */
     public function actioninfo($mode)
     {
-
+		
         // return the user information in sessions vars
         $func = new functions();
         if($_REQUEST['mode'] == "up")
@@ -62,7 +62,7 @@ class AdminActions extends dbquery
         {
             $_SESSION['m_admin']['action']['ACTION_PAGE'] = trim($_REQUEST['action_page']);
         }
-        $_SESSION['m_admin']['action']['KEYWORD'] = '';
+        $_SESSION['m_admin']['action']['KEYWORD'] = $_REQUEST['keyword'];
         $_SESSION['m_admin']['action']['FLAG_CREATE'] = 'N';
         if($_SESSION['m_admin']['action']['ACTION_PAGE'] <> "")
         {
@@ -70,7 +70,7 @@ class AdminActions extends dbquery
             {
                 if($_SESSION['m_admin']['action']['ACTION_PAGE'] == $_SESSION['actions_pages'][$i]['ID'])
                 {
-                    $_SESSION['m_admin']['action']['KEYWORD'] = $_SESSION['actions_pages'][$i]['KEYWORD'];
+                    //$_SESSION['m_admin']['action']['KEYWORD'] = $_SESSION['actions_pages'][$i]['KEYWORD'];
                     $_SESSION['m_admin']['action']['FLAG_CREATE'] = $_SESSION['actions_pages'][$i]['FLAG_CREATE'];
                     break;
                 }
@@ -295,7 +295,16 @@ class AdminActions extends dbquery
                         }?>
                         </select>
                     </p>
-                     <p>
+                    <p>
+					    <label for="keyword"><?=_KEYWORD.' ('._SYSTEM_PARAMETERS.')'?> : </label>
+                        <select name="keyword" id="keyword">
+							<option value=" "><?=_NO_KEYWORD?></option>
+                            <option value="redirect" <?php if($_SESSION['m_admin']['action']['KEYWORD'] == 'redirect'){ echo 'selected="selected"';}?>><?=_REDIRECT?></option>
+                            <option value="to_validate" <?php if($_SESSION['m_admin']['action']['KEYWORD'] == 'to_validate'){ echo 'selected="selected"';}?>><?=_TO_VALIDATE?></option>
+                            <option value="indexing" <?php if($_SESSION['m_admin']['action']['KEYWORD'] == 'indexing'){ echo 'selected="selected"';}?>><?=_INDEXING?></option>
+                        </select>
+                    </p>
+                    <p>
                         <label for="history"><?php echo _ACTION_HISTORY; ?> : </label>
                         <input type="radio"  class="check" name="history" value="Y" <?php if($_SESSION['m_admin']['action']['HISTORY'] == 'Y'){ echo 'checked="checked"';}?> /><?php echo _YES;?>
                         <input type="radio"  class="check" name="history" value="N" <?php if($_SESSION['m_admin']['action']['HISTORY'] == 'N'){ echo 'checked="checked"';}?>/><?php echo _NO;?>

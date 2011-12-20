@@ -338,6 +338,26 @@ if (!defined('_END')) {
     define( '_END', 'Fin');
 }
 
+if (!defined('_KEYWORD')) {
+    define( '_KEYWORD', 'Mot cl&eacute;');
+}
+
+if (!defined('_SYSTEM_PARAMETERS')) {
+    define( '_SYSTEM_PARAMETERS', 'param&egrave;tres syst&egrave;me');
+}
+
+if (!defined('_NO_KEYWORD')) {
+    define( '_NO_KEYWORD', 'Aucun mot cl&eacute;');
+}
+
+if (!defined('_TO_VALIDATE')) {
+    define( '_TO_VALIDATE', '&Agrave; valider');
+}
+
+if (!defined('_INDEXING')) {
+    define( '_INDEXING', 'Indexation');
+}
+
 
 /************** Messages pop up **************/
 if (!defined('_REALLY_SUSPEND')) define( '_REALLY_SUSPEND', 'Voulez-vous vraiment suspendre ');
