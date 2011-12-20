@@ -371,6 +371,7 @@ function validate_user_submit(){
     $mode = $_REQUEST['mode'];
     $user = new users();
     $user->user_id=$_REQUEST['user_id'];
+    $_SESSION['m_admin']['users']['user_id']=$_REQUEST['user_id'];
     if($mode == "add"){
         if(isset($_SESSION['config']['userdefaultpassword']) && !empty($_SESSION['config']['userdefaultpassword'])){
             $user->password = $_SESSION['config']['userdefaultpassword'];
