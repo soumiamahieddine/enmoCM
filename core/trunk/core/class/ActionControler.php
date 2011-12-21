@@ -62,7 +62,7 @@ class ActionControler
 	* Actions table
     */
 	public static $actions_table ;
-
+	
 	/**
 	* Actions_groupbaskets_table table
     */
@@ -76,6 +76,7 @@ class ActionControler
 		$db = new dbquery();
 		$db->connect();
 		self::$actions_table = $_SESSION['tablename']['actions'];
+		self::$actions_groupbaskets_table = $_SESSION['tablename']['bask_actions_groupbaskets'];
 
 		self::$db=$db;
 	}
@@ -96,8 +97,10 @@ class ActionControler
 	*/
 	public function get($action_id)
 	{
-		if(empty($action_id))
+		
+		if(empty($action_id)) {
 			return null;
+		}
 
 		self::connect();
 		$query = "select * from ".self::$actions_table." where id = ".$action_id;
@@ -136,14 +139,18 @@ class ActionControler
 	*/
 	public function save($action, $mode)
 	{
-		if(!isset($action) )
+		if(!isset($action)) {
 			return false;
-
-		if($mode == "up")
-			return self::update($action);
-		elseif($mode =="add")
+		}
+		if($mode == "up") {
+			//return self::update($action);
+			self::update($action);
+			return 'WTF !!!';
+			
+		}
+		elseif($mode =="add"){
 			return self::insert($action);
-
+        }
 		return false;
 	}
 
@@ -260,7 +267,7 @@ class ActionControler
 			$ok = false;
 		}
 
-		self::disconnect();
+		//self::disconnect();
 		return $ok;
 	}
 

@@ -386,4 +386,35 @@ class Maarch_Core_Class_StatusControler
         self::$db->disconnect();
         return false;
     }
+    
+    /**
+    * Return all status infos
+    * @return array of stauts
+    */
+    public function getAllInfos() {
+        $db = new dbquery();
+        $db->connect();
+        $query = "select * from " . STATUS_TABLE . " ";
+        try {
+            if ($_ENV['DEBUG'])
+                echo $query . ' // ';
+            $db->query($query);
+        } catch (Exception $e) {
+            echo _NO_STATUS . ' // ';
+        }
+        if ($db->nb_result() > 0) {
+            $result = array ();
+            $cptId = 0;
+            while ($queryResult = $db->fetch_object()) {
+                $result[$cptId]['id'] = $queryResult->id;
+                $result[$cptId]['label'] = $queryResult->label_status;
+                $cptId++;
+            }
+            $db->disconnect();
+            return $result;
+        } else {
+            $db->disconnect();
+            return null;
+        }
+    }
 }
