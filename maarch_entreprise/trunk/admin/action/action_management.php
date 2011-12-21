@@ -32,8 +32,8 @@ elseif($mode == 'up' || $mode == 'add'){
     }
     else{?>
         <form name="frmaction" id="frmaction" method="post" action="<?php 
-        echo $_SESSION['config']['businessappurl'] . 'index.php?display=true'
-            . '&admin=action&page=action_management_controler&mode=' . $mode;
+        echo $_SESSION['config']['businessappurl'] . 'index.php?'
+            . 'page=action_management_controler&admin=action&mode=' . $mode . '&id=' . $_REQUEST['id'];
         ?>" class="forms addforms">
             <input type="hidden" name="display" value="true" />
             <input type="hidden" name="admin" value="action" />
@@ -64,13 +64,13 @@ elseif($mode == 'up' || $mode == 'add'){
                 <select name="status" id="status">
                     <option value=""><?php echo _CHOOSE_STATUS;?></option>
                     <?php
-                    for($i = 0; $i < count($arr_status); $i++){
-                        ?><option value="<?php echo $arr_status[$i]['id'];?>" 
+                    for($i = 0; $i < count($statusArray); $i++){
+                        ?><option value="<?php echo $statusArray[$i]['id'];?>" 
                         <?php 
                         if($_SESSION['m_admin']['action']['ID_STATUS'] 
-                            == $arr_status[$i]['id']) { 
+                            == $statusArray[$i]['id']) { 
                             echo 'selected="selected"';
-                        }?>><?php echo $arr_status[$i]['label'];
+                        }?>><?php echo $statusArray[$i]['label'];
                         ?></option><?php
                     }
                     ?>
@@ -91,6 +91,15 @@ elseif($mode == 'up' || $mode == 'add'){
                         echo $_SESSION['actions_pages'][$i]['LABEL'];
                         ?></option><?php
                     }?>
+                </select>
+            </p>
+            <p>
+                <label for="keyword"><?=_KEYWORD.' ('._SYSTEM_PARAMETERS.')'?> : </label>
+                <select name="keyword" id="keyword">
+                    <option value=" "><?=_NO_KEYWORD?></option>
+                    <option value="redirect" <?php if($_SESSION['m_admin']['action']['KEYWORD'] == 'redirect'){ echo 'selected="selected"';}?>><?=_REDIRECT?></option>
+                    <option value="to_validate" <?php if($_SESSION['m_admin']['action']['KEYWORD'] == 'to_validate'){ echo 'selected="selected"';}?>><?=_TO_VALIDATE?></option>
+                    <option value="indexing" <?php if($_SESSION['m_admin']['action']['KEYWORD'] == 'indexing'){ echo 'selected="selected"';}?>><?=_INDEXING?></option>
                 </select>
             </p>
             <p>

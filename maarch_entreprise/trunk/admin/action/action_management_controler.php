@@ -1,5 +1,36 @@
 <?php
 
+/*
+*    Copyright 2008-2011 Maarch
+*
+*  This file is part of Maarch Framework.
+*
+*   Maarch Framework is free software: you can redistribute it and/or modify
+*   it under the terms of the GNU General Public License as published by
+*   the Free Software Foundation, either version 3 of the License, or
+*   (at your option) any later version.
+*
+*   Maarch Framework is distributed in the hope that it will be useful,
+*   but WITHOUT ANY WARRANTY; without even the implied warranty of
+*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*   GNU General Public License for more details.
+*
+*   You should have received a copy of the GNU General Public License
+*    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+/**
+* @brief Contains the action controler page
+*
+*
+* @file
+* @author Laurent Giovannoni
+* @author Arnaud Veber
+* @date $date$
+* @version $Revision$
+* @ingroup admin
+*/
+
 $core_tools = new core_tools();
 $core_tools->test_admin('admin_actions', 'apps');
 
@@ -28,8 +59,17 @@ try{
             . $_SESSION['config']['app_id'] . DIRECTORY_SEPARATOR . 'class'
             . DIRECTORY_SEPARATOR . 'class_list_show.php');
     }
+    require_once 'core/class/StatusControler.php';
 } catch (Exception $e){
     echo $e->getMessage();
+}
+
+$statusController = new Maarch_Core_Class_StatusControler();
+
+if ($mode == "up" || $mode == "add") {
+    $statusArray = array();
+    $statusArray = $statusController->getAllInfos();
+    //var_dump($statusArray);
 }
 
 function init_session()
@@ -39,6 +79,7 @@ function init_session()
     $_SESSION['m_admin']['action']['LABEL'] = '';
     $_SESSION['m_admin']['action']['ID_STATUS'] = '';
     $_SESSION['m_admin']['action']['ACTION_PAGE'] = '';
+    $_SESSION['m_admin']['action']['KEYWORD'] = '';
     $_SESSION['m_admin']['action']['HISTORY'] = 'Y';
 }
 
@@ -46,7 +87,7 @@ if(isset($_REQUEST['id']) && !empty($_REQUEST['id'])){
     $action_id = $_REQUEST['id'];
 }
 
-if(isset($_REQUEST['action_submit'])){
+if(isset($_REQUEST['Submit'])){
     if($_REQUEST['mode'] == 'up'){
         $_SESSION['m_admin']['action']['ID'] = 
             functions::wash($action_id, 'no', _ID . ' ');
@@ -70,21 +111,9 @@ if(isset($_REQUEST['action_submit'])){
         $_SESSION['m_admin']['action']['ACTION_PAGE'] = 
             trim($_REQUEST['action_page']);
     }
-    $_SESSION['m_admin']['action']['KEYWORD'] = '';
+    $_SESSION['m_admin']['action']['KEYWORD'] = $_REQUEST['keyword'];
     $_SESSION['m_admin']['action']['FLAG_CREATE'] = 'N';
-    if($_SESSION['m_admin']['action']['ACTION_PAGE'] <> ''){
-        for($i = 0; $i < count($_SESSION['actions_pages']); $i++){
-            if($_SESSION['m_admin']['action']['ACTION_PAGE'] 
-                == $_SESSION['actions_pages'][$i]['ID']
-            ){
-                $_SESSION['m_admin']['action']['KEYWORD'] = 
-                    $_SESSION['actions_pages'][$i]['KEYWORD'];
-                $_SESSION['m_admin']['action']['FLAG_CREATE'] = 
-                    $_SESSION['actions_pages'][$i]['FLAG_CREATE'];
-                break;
-            }
-        }
-    }
+    
 
     $_SESSION['m_admin']['action']['HISTORY'] = 
         functions::wash($_REQUEST['history'], 'no', _HISTORY . ' ');
@@ -191,7 +220,7 @@ if(isset($_REQUEST['action_submit'])){
 $state = true;
 
 if($mode == 'up'){
-    $action = ActionControler::get($action_id );
+    $action = ActionControler::get($action_id);
 
     if(!isset($action)){
         $state = false;
