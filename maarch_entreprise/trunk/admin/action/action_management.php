@@ -79,7 +79,7 @@ elseif($mode == 'up' || $mode == 'add'){
             <p>
                 <label for="action_page"><?php echo _ACTION_PAGE;?> : </label>
                 <select name="action_page" id="action_page">
-                    <option value=""><?php echo _NO_PAGE;?></option>
+                    <option value="_"><?php echo _NO_PAGE;?></option>
                     <?php 
                     for($i = 0; $i < count($_SESSION['actions_pages']); $i++){
                         ?><option value="<?php 
