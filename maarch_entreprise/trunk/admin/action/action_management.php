@@ -16,10 +16,10 @@ elseif($mode == 'up' || $mode == 'add'){
     ?>static.php?filename=manage_action_b.gif" alt="" />
         <?php
         if($mode == 'up'){
-            echo _MODIFY_STATUS;
+            echo _MODIFY_ACTION;
         }
         elseif($mode == 'add'){
-            echo _ADD_STATUS;
+            echo _ADD_ACTION;
         }
         ?>
     </h1>
@@ -94,12 +94,12 @@ elseif($mode == 'up' || $mode == 'add'){
                 </select>
             </p>
             <p>
-                <label for="keyword"><?=_KEYWORD.' ('._SYSTEM_PARAMETERS.')'?> : </label>
+                <label for="keyword"><?php echo _KEYWORD.' ('._SYSTEM_PARAMETERS.')';?> : </label>
                 <select name="keyword" id="keyword">
-                    <option value=" "><?=_NO_KEYWORD?></option>
-                    <option value="redirect" <?php if($_SESSION['m_admin']['action']['KEYWORD'] == 'redirect'){ echo 'selected="selected"';}?>><?=_REDIRECT?></option>
-                    <option value="to_validate" <?php if($_SESSION['m_admin']['action']['KEYWORD'] == 'to_validate'){ echo 'selected="selected"';}?>><?=_TO_VALIDATE?></option>
-                    <option value="indexing" <?php if($_SESSION['m_admin']['action']['KEYWORD'] == 'indexing'){ echo 'selected="selected"';}?>><?=_INDEXING?></option>
+                    <option value=" "><?php echo _NO_KEYWORD; ?></option>
+                    <option value="redirect" <?php if($_SESSION['m_admin']['action']['KEYWORD'] == 'redirect'){ echo 'selected="selected"';}?>><?php echo _REDIRECT; ?></option>
+                    <option value="to_validate" <?php if($_SESSION['m_admin']['action']['KEYWORD'] == 'to_validate'){ echo 'selected="selected"';}?>><?php echo _TO_VALIDATE; ?></option>
+                    <option value="indexing" <?php if($_SESSION['m_admin']['action']['KEYWORD'] == 'indexing'){ echo 'selected="selected"';}?>><?php echo _INDEXING; ?></option>
                 </select>
             </p>
             <p>
