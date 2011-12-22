@@ -135,6 +135,7 @@ if (!defined('_NO_KEYWORD')) define( '_NO_KEYWORD', 'No keyword');
 if (!defined('_SYSTEM_PARAMETERS')) define( '_SYSTEM_PARAMETERS', 'system parameters');
 if (!defined('_TO_VALIDATE')) define( '_TO_VALIDATE', 'To validate');
 if (!defined('_INDEXING')) define( '_INDEXING', 'Indexing');
+if (!defined('_QUALIFY')) define( '_QUALIFY', 'Qualify');
 
 /************** Messages pop up **************/
 if (!defined('_REALLY_SUSPEND')) define('_REALLY_SUSPEND', 'Do you really want to disable ');

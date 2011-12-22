@@ -358,6 +358,10 @@ if (!defined('_INDEXING')) {
     define( '_INDEXING', 'Indexation');
 }
 
+if (!defined('_QUALIFY')) {
+    define( '_QUALIFY', 'Qualification');
+}
+
 
 /************** Messages pop up **************/
 if (!defined('_REALLY_SUSPEND')) define( '_REALLY_SUSPEND', 'Voulez-vous vraiment suspendre ');

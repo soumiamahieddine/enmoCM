@@ -37,30 +37,31 @@ $core_tools->test_admin('admin_actions', 'apps');
 core_tools::load_lang();
 
 $mode = 'add';
-if(isset($_REQUEST['mode']) && !empty($_REQUEST['mode'])){
+if (isset($_REQUEST['mode']) && !empty($_REQUEST['mode'])) {
     $mode = $_REQUEST['mode'];
 }
 
 $page_labels = array(
-                    'add'  => _ADDITION, 
-                    'up'   => _MODIFICATION, 
-                    'list' => _ACTION_LIST
-                    );
+    'add'  => _ADDITION, 
+    'up'   => _MODIFICATION, 
+    'list' => _ACTION_LIST
+);
 $page_ids = array(
                 'add'  => 'action_add', 
                 'up'   => 'action_up', 
-                'list' => 'action_list');
+                'list' => 'action_list'
+);
 
-try{
+try {
     require_once('core/class/ActionControler.php');
-    if($mode == 'list'){
+    if ($mode == 'list') {
         require_once('core/class/class_request.php');
         require_once('apps' . DIRECTORY_SEPARATOR 
             . $_SESSION['config']['app_id'] . DIRECTORY_SEPARATOR . 'class'
             . DIRECTORY_SEPARATOR . 'class_list_show.php');
     }
     require_once 'core/class/StatusControler.php';
-} catch (Exception $e){
+} catch (Exception $e) {
     echo $e->getMessage();
 }
 
@@ -83,31 +84,29 @@ function init_session()
     $_SESSION['m_admin']['action']['HISTORY'] = 'Y';
 }
 
-if(isset($_REQUEST['id']) && !empty($_REQUEST['id'])){
+if (isset($_REQUEST['id']) && !empty($_REQUEST['id'])) {
     $action_id = $_REQUEST['id'];
 }
 
-if(isset($_REQUEST['Submit'])){
-    if($_REQUEST['mode'] == 'up'){
+if (isset($_REQUEST['action_submit'])) {
+    if ($_REQUEST['mode'] == 'up') {
         $_SESSION['m_admin']['action']['ID'] = 
             functions::wash($action_id, 'no', _ID . ' ');
     }
     $_SESSION['m_admin']['action']['LABEL'] = 
         functions::wash($_REQUEST['label'], 'no', _DESC .' ', 'yes', 0, 255);
-    if(empty($_REQUEST['action_page'])){
+    if (empty($_REQUEST['action_page'])) {
         $_SESSION['m_admin']['action']['ID_STATUS'] = 
             functions::wash($_REQUEST['status'], 'no', _STATUS . ' ', 'yes', 0,
              10);
-    }
-    else{
+    } else {
         $_SESSION['m_admin']['action']['ID_STATUS'] = trim($_REQUEST['status']);
     }
-    if(empty($_REQUEST['status'])){
+    if (empty($_REQUEST['status'])) {
         $_SESSION['m_admin']['action']['ACTION_PAGE'] = 
             functions::wash($_REQUEST['action_page'], 'no', _ACTION_PAGE . ' ', 
             'yes', 0, 255);
-    }
-    else{
+    } else {
         $_SESSION['m_admin']['action']['ACTION_PAGE'] = 
             trim($_REQUEST['action_page']);
     }
@@ -123,22 +122,21 @@ if(isset($_REQUEST['Submit'])){
     $_SESSION['m_admin']['action']['what'] = $_REQUEST['what'];
     $_SESSION['m_admin']['action']['start'] = $_REQUEST['start'];
 
-    if($mode == 'add' 
+    if ($mode == 'add' 
         && ActionControler::actionExists($_SESSION['m_admin']['action']['ID'])
-    ){
+    ) {
         $_SESSION['error'] = $_SESSION['m_admin']['action']['ID'] . ' '
                            . _ALREADY_EXISTS . '<br />';
     }
-    if(!empty($_SESSION['error'])){
-        if($mode == 'up'){
-            if(!empty($_SESSION['m_admin']['action']['ID'])){
+    if (!empty($_SESSION['error'])) {
+        if ($mode == 'up') {
+            if (!empty($_SESSION['m_admin']['action']['ID'])) {
                 header('location: ' . $_SESSION['config']['businessappurl']
                     . 'index.php?page=action_management_controler&mode=up&id='
                     . $_SESSION['m_admin']['action']['ID'] . '&admin=action'
                 );
                 exit();
-            }
-            else{
+            } else {
                 header('location: ' . $_SESSION['config']['businessappurl']
                     . 'index.php?page=action_management_controler&mode=list'
                     . '&admin=action&order=' . $_REQUEST['order'] 
@@ -147,16 +145,14 @@ if(isset($_REQUEST['Submit'])){
                 );
                 exit();
             }
-        }
-        elseif($mode == 'add'){
+        } elseif ($mode == 'add') {
             header('location: ' . $_SESSION['config']['businessappurl']
                 . 'index.php?page=action_management_controler&mode=add'
                 . '&admin=action'
             );
             exit();
         }
-    }
-    else{
+    } else {
         $action_value = array(
             'id' => functions::protect_string_db(
                 $_SESSION['m_admin']['action']['ID']), 
@@ -179,7 +175,7 @@ if(isset($_REQUEST['Submit'])){
 
         ActionControler::save($action, $mode);
 
-        if($_SESSION['history']['actionadd'] == 'true' && $mode == 'add'){
+        if ($_SESSION['history']['actionadd'] == 'true' && $mode == 'add') {
             require_once('core/class/class_history.php');
             $hist = new history();
             $hist->add($_SESSION['tablename']['actions'], 
@@ -188,8 +184,7 @@ if(isset($_REQUEST['Submit'])){
                     $_SESSION['m_admin']['action']['ID']), 
                 $_SESSION['config']['databasetype']
             );
-        }
-        elseif($_SESSION['history']['actionup'] == 'true' && $mode == 'up'){
+        } elseif ($_SESSION['history']['actionup'] == 'true' && $mode == 'up') {
             require_once('core/class/class_history.php');
             $hist = new history();
             $hist->add($_SESSION['tablename']['actions'], 
@@ -202,8 +197,7 @@ if(isset($_REQUEST['Submit'])){
         unset($_SESSION['m_admin']);
         if($mode == 'add'){
             $_SESSION['error'] =  _ACTION_ADDED;
-        }
-        else{
+        } else {
             $_SESSION['error'] = _ACTION_MODIFIED;
         }
 
@@ -219,13 +213,12 @@ if(isset($_REQUEST['Submit'])){
 
 $state = true;
 
-if($mode == 'up'){
+if ($mode == 'up') {
     $action = ActionControler::get($action_id);
 
-    if(!isset($action)){
+    if (!isset($action)) {
         $state = false;
-    }
-    else{
+    } else {
         $_SESSION['m_admin']['action']['ID'] = $action->__get('id');
         $_SESSION['m_admin']['action']['LABEL'] = 
             functions::show_string($action->__get('label_action'));
@@ -240,13 +233,11 @@ if($mode == 'up'){
         $_SESSION['m_admin']['action']['KEYWORD'] = 
             functions::show_string($action->__get('keyword'));
     }
-}
-elseif($mode == 'add'){
-    if(!isset($_SESSION['m_admin']['action'])){
+} elseif ($mode == 'add') {
+    if (!isset($_SESSION['m_admin']['action'])) {
         init_session();
     }
-}
-elseif($mode == 'list'){
+} elseif ($mode == 'list') {
     $_SESSION['m_admin'] = array();
     init_session();
 
@@ -256,15 +247,15 @@ elseif($mode == 'list'){
     );
     $what = '';
     $where = " enabled = 'Y' ";
-    if(isset($_REQUEST['what']) && !empty($_REQUEST['what'])){
+    if (isset($_REQUEST['what']) && !empty($_REQUEST['what'])) {
+        //$what = $_REQUEST['what'];
         $what = functions::protect_string_db($_REQUEST['what']);
         if($_SESSION['config']['databasetype'] == 'POSTGRESQL'){
             $where .= " and (label_action ilike '" 
                    . functions::protect_string_db($what,
                         $_SESSION['config']['databasetype'])
                    . "%'  ) ";
-        }
-        else{
+        } else {
             $where .= " and (label_action like '"
                    . functions::protect_string_db($what,
                         $_SESSION['config']['databasetype'])
@@ -272,11 +263,11 @@ elseif($mode == 'list'){
         }
     }
     $order = 'asc';
-    if(isset($_REQUEST['order']) && !empty($_REQUEST['order'])){
+    if (isset($_REQUEST['order']) && !empty($_REQUEST['order'])) {
         $order = trim($_REQUEST['order']);
     }
     $field = 'label_action';
-    if(isset($_REQUEST['order_field']) && !empty($_REQUEST['order_field'])){
+    if (isset($_REQUEST['order_field']) && !empty($_REQUEST['order_field'])) {
         $field = trim($_REQUEST['order_field']);
     }
 
@@ -284,10 +275,10 @@ elseif($mode == 'list'){
     $request = new request();
     $tab = $request->select($select, $where, $orderstr,
         $_SESSION['config']['databasetype']);
-    for($i = 0;$i < count($tab); $i++){
-        for($j = 0;$j < count($tab[$i]); $j++){
-            foreach(array_keys($tab[$i][$j]) as $value){
-                if($tab[$i][$j][$value] == 'id'){
+    for ($i = 0;$i < count($tab); $i++) {
+        for ($j = 0;$j < count($tab[$i]); $j++) {
+            foreach (array_keys($tab[$i][$j]) as $value) {
+                if ($tab[$i][$j][$value] == 'id') {
                     $load = core_tools::is_action_defined($tab[$i][$j]['value']);
 
                     $tab[$i][$j]['id'] = $tab[$i][$j]['value'];
@@ -299,7 +290,7 @@ elseif($mode == 'list'){
                     $tab[$i][$j]['show'] = true;
                     $tab[$i][$j]['order'] = 'id';
                 }
-                if($tab[$i][$j][$value] == 'label_action'){
+                if ($tab[$i][$j][$value] == 'label_action') {
                     $tab[$i][$j]['value'] = 
                         functions::show_string($tab[$i][$j]['value']);
                     $tab[$i][$j]['label_action'] = $tab[$i][$j]['value'];
@@ -311,15 +302,14 @@ elseif($mode == 'list'){
                     $tab[$i][$j]['show'] = true;
                     $tab[$i][$j]['order'] = 'label_action';
                 }
-                if($tab[$i][$j][$value] == 'is_system'){
-                    if($tab[$i][$j]['value'] == 'Y'){
+                if ($tab[$i][$j][$value] == 'is_system') {
+                    if ($tab[$i][$j]['value'] == 'Y') {
                         $tab[$i][$j]['value'] = _YES;
                         array_push($tab[$i], array('column' => 'can_delete', 
                             'value' => 'false', 'can_delete' => 'false',
                             'label' => _DESC,'show' => false)
                         );
-                    }
-                    else{
+                    } else {
                         $tab[$i][$j]['value'] = _NO;
                         array_push($tab[$i], array('column' => 'can_delete',
                             'value' => 'true', 'can_delete' => 'true',
@@ -354,14 +344,12 @@ elseif($mode == 'list'){
         $_SESSION['config']['businessappurl'] .'index.php?display=true'
         . '&admin=action&page=action_list_by_name';
     $autoCompletionArray['number_to_begin'] = 1;
-}
-elseif((!isset($action_id) || empty($action_id) 
+} elseif ((!isset($action_id) || empty($action_id) 
         || ! ActionControler::actionExists($action_id)) 
     && $mode == 'del' 
-){
+) {
     $_SESSION['error'] = _ACTION.' '._UNKNOWN;
-}
-elseif($mode == 'del'){
+} elseif ($mode == 'del') {
     ActionControler::delete($action_id);
     $_SESSION['error'] = _ACTION_DELETED . ' ' . $action_id;
     ?><script type="text/javascript">window.top.location='<?php 
@@ -374,17 +362,17 @@ elseif($mode == 'del'){
     exit();
 }
 
-if($mode == 'add' || $mode == 'up' || $mode == 'list'){
+if ($mode == 'add' || $mode == 'up' || $mode == 'list') {
      /****************Management of the location bar  ************/
     $init = false;
-    if(isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == 'true'){
+    if (isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == 'true') {
         $init = true;
     }
     $level = '';
-    if(isset($_REQUEST['level']) 
+    if (isset($_REQUEST['level']) 
         && ($_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 
             || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1)
-    ){
+    ) {
         $level = $_REQUEST['level'];
     }
     $page_path = $_SESSION['config']['businessappurl'] 

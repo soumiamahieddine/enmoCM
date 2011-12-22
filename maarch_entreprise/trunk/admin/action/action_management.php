@@ -5,9 +5,9 @@ if($mode == 'list'){
     list_show::admin_list($tab, $i, $title, 'id',
         'action_management_controler&mode=list','action','id', true, 
         $page_name_up, $page_name_val, $page_name_ban, $page_name_del, 
-        $page_name_add, $label_add, FALSE, FALSE, _ALL_STATUS, _STATUS_SING, 
+        $page_name_add, $label_add, FALSE, FALSE, _ALL_ACTIONS, _ACTION, 
         $_SESSION['config']['businessappurl']
-        . 'static.php?filename=manage_action_b.gif', false, true, false, true, 
+        . 'static.php?filename=manage_action_b.gif&admin=action', false, true, false, true, 
         $what, true, $autoCompletionArray
     );
 }
@@ -117,13 +117,13 @@ elseif($mode == 'up' || $mode == 'add'){
         <?php
             if($mode == 'up'){
             ?>
-                <input class="button" type="submit" name="Submit" value="<?php 
+                <input class="button" type="submit" name="action_submit" value="<?php 
                 echo _MODIFY_ACTION; ?>" />
             <?php
             }
             elseif($mode == 'add'){
             ?>
-                <input type="submit" class="button"  name="Submit" value="<?php 
+                <input type="submit" class="button"  name="action_submit" value="<?php 
                 echo _ADD_ACTION; ?>" />
                 <?php
             }
