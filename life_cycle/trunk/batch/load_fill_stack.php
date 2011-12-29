@@ -116,15 +116,16 @@ $argsparser->add_arg(
         'help' => 'Cycle is mandatory.',
     )
 );
-// Log management
-$GLOBALS['logger'] = new Logger4Php();
-$GLOBALS['logger']->set_threshold_level('DEBUG');
-$console = new ConsoleHandler();
-$GLOBALS['logger']->add_handler($console);
-$file = new FileHandler('logs' . DIRECTORY_SEPARATOR . 'fill_stack' 
-                        . DIRECTORY_SEPARATOR . date('Y-m-d_H-i-s') . '.log');
-$GLOBALS['logger']->add_handler($file);
-$GLOBALS['logger']->write('STATE:INIT', 'INFO');
+// The path of the log directory
+$argsparser->add_arg(
+    'logs', 
+    array(
+        'short' => 'logs',
+        'long' => 'logs',
+        'mandatory' => false,
+        'help' => '',
+    )
+);
 // Parsing script options
 try {
     $options = $argsparser->parse_args($GLOBALS['argv']);
@@ -150,6 +151,22 @@ try {
         exit(105);
     }
 }
+// Log management
+$GLOBALS['logger'] = new Logger4Php();
+$GLOBALS['logger']->set_threshold_level('DEBUG');
+$console = new ConsoleHandler();
+$GLOBALS['logger']->add_handler($console);
+if (!empty($options['logs'])) {
+    $logFile = $options['logs'] . DIRECTORY_SEPARATOR . 'fill_stack' 
+             . DIRECTORY_SEPARATOR . date('Y-m-d_H-i-s') . '.log';
+} else {
+    $logFile = 'logs' . DIRECTORY_SEPARATOR . 'fill_stack' 
+             . DIRECTORY_SEPARATOR . date('Y-m-d_H-i-s') . '.log';
+}
+
+$file = new FileHandler($logFile);
+$GLOBALS['logger']->add_handler($file);
+$GLOBALS['logger']->write('STATE:INIT', 'INFO');
 $txt = '';
 foreach (array_keys($options) as $key) {
     if (isset($options[$key]) && $options[$key] == false) {
