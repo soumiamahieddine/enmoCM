@@ -2,14 +2,14 @@
 
 function check_right($intToCheck, $right)
 {
-	if ($intToCheck & $right) {
-		return true;
-	} else {
-		return false;
-	}
+    if ($intToCheck & $right) {
+        return true;
+    } else {
+        return false;
+    }
 }
 
 function set_right($intToSet = 0, $right)
 {
-	return $intToSet | $right;
+    return $intToSet | (int) $right;
 }
