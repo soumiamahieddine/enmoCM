@@ -293,7 +293,6 @@ function esign($resId)
             }
         }
     } else {
-        echo "esign WS not available : ".$GLOBALS['manageEsign']->error." ". $resId;exit;
         $GLOBALS['logger']->write(
                 'esign WS not available : ' . $GLOBALS['manageEsign']->error
                 . $resId , 'ERROR', 30
@@ -314,10 +313,6 @@ function esign($resId)
  */
 function doUpdateDb($resId, $path, $fileName, $offsetDoc, $fingerprint) 
 {
-     //if signature available, we control it
-    if ($GLOBALS['enabledEsign']) {
-        esign($resId);
-    }
     $query = "update " . _LC_STACK_TABLE_NAME . " set status = 'P' where"
            . " policy_id = '" . $GLOBALS['policy'] . "' and cycle_id = '" 
            . $GLOBALS['cycle'] . "' and cycle_step_id = '" 

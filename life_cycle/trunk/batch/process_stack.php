@@ -344,6 +344,10 @@ while ($GLOBALS['state'] <> "END") {
                 $currentRecordInStack = $GLOBALS['func']->object2array(
                     $stackRecordset
                 );
+                //if signature available, we control it
+                if ($GLOBALS['enabledEsign']) {
+                    esign($currentRecordInStack['res_id']);
+                }
                 // if NEW operation we have to add new states
                 if ($GLOBALS['steps'][$GLOBALS['currentStep']]
                     ['step_operation'] == "COPY" 
