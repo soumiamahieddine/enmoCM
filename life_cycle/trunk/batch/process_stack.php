@@ -64,6 +64,7 @@
  *  27  : Resource not found
  *  28  : The docserver will be full at 95 percent
  *  29  : Error persists
+ *  30  : Esign problem
  */
 
 date_default_timezone_set('Europe/Paris');

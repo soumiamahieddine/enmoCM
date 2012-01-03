@@ -92,6 +92,11 @@ $apacheUserAndGroup =  '';
 $breakKey = '';
 $breakKeyValue = '';
 $log4PhpEnabled = false;
+$enabledEsign = false;
+$configPathEsign = '';
+$targetCycle = '';
+$manageEsign = '';
+$D2S = '';
 
 // Defines scripts arguments
 $argsparser = new ArgsParser();
@@ -249,19 +254,22 @@ foreach ($xmlconfig->COLLECTION as $col) {
     $i++;
 }
 set_include_path(get_include_path() . PATH_SEPARATOR 
-	. $GLOBALS['MaarchDirectory']);
+    . $GLOBALS['MaarchDirectory']);
 //log4php params
 $log4phpParams = $xmlconfig->LOG4PHP;
 if ((string) $log4phpParams->enabled == 'true') {
-	$GLOBALS['logger']->set_log4PhpLibrary(
-		$GLOBALS['MaarchDirectory'] 
-			. 'apps/maarch_entreprise/tools/log4php/Logger.php'
-	);
-	$GLOBALS['logger']->set_log4PhpLogger((string) $log4phpParams->Log4PhpLogger);
-	$GLOBALS['logger']->set_log4PhpBusinessCode((string) $log4phpParams->Log4PhpBusinessCode);
-	$GLOBALS['logger']->set_log4PhpConfigPath((string) $log4phpParams->Log4PhpConfigPath);
-	$GLOBALS['logger']->set_log4PhpBatchName('life_cycle_fill_stack');
+    $GLOBALS['logger']->set_log4PhpLibrary(
+        $GLOBALS['MaarchDirectory'] 
+            . 'apps/maarch_entreprise/tools/log4php/Logger.php'
+    );
+    $GLOBALS['logger']->set_log4PhpLogger((string) $log4phpParams->Log4PhpLogger);
+    $GLOBALS['logger']->set_log4PhpBusinessCode((string) $log4phpParams->Log4PhpBusinessCode);
+    $GLOBALS['logger']->set_log4PhpConfigPath((string) $log4phpParams->Log4PhpConfigPath);
+    $GLOBALS['logger']->set_log4PhpBatchName('life_cycle_fill_stack');
 }
+//esign params
+$esignParams = $xmlconfig->ESIGN;
+
 if ($GLOBALS['table'] == '' 
     || $GLOBALS['adrTable'] == '' 
     || $GLOBALS['view'] == ''
@@ -324,6 +332,21 @@ if (!is_dir($GLOBALS['tmpDirectoryRoot'])) {
     );
     exit(17);
 }
+
+if ((string) $esignParams->enabledEsign == 'true') {
+    $GLOBALS['configPathEsign'] = (string) $esignParams->configEsign;
+    $GLOBALS['targetCycle'] = (string) $esignParams->targetCycleEsign;
+    if ($GLOBALS['targetCycle'] == $GLOBALS['cycle']) {
+        $GLOBALS['enabledEsign'] = true;
+        Bt_myInclude($GLOBALS['MaarchDirectory'] . 'modules' .DIRECTORY_SEPARATOR 
+            . 'esign' .DIRECTORY_SEPARATOR . 'class' 
+            . DIRECTORY_SEPARATOR . 'class_manage_esign.php');
+        //declaration of manageEsign object
+        $GLOBALS['manageEsign'] = new manage_esign($GLOBALS['configPathEsign']);
+        $GLOBALS['D2S'] = new D2S($GLOBALS['manageEsign']->esignConfig['service']['D2S']['url']);
+    }
+}
+
 $coreTools = new core_tools();
 $coreTools->load_lang($lang, $GLOBALS['MaarchDirectory'], $MaarchApps);
 session_start();

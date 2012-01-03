@@ -28,9 +28,14 @@
         <Adr>adr_x</Adr>
     </COLLECTION>
     <LOG4PHP>
-		<enabled>false</enabled>
-		<Log4PhpLogger>loggerTechnique</Log4PhpLogger>
-		<Log4PhpBusinessCode>MaarchEntrepriseDemo</Log4PhpBusinessCode>
+        <enabled>false</enabled>
+        <Log4PhpLogger>loggerTechnique</Log4PhpLogger>
+        <Log4PhpBusinessCode>MaarchEntrepriseDemo</Log4PhpBusinessCode>
         <Log4PhpConfigPath>/var/www/maarch_entreprise/apps/maarch_entreprise/xml/log4php.xml</Log4PhpConfigPath>
     </LOG4PHP>
+    <ESIGN>
+        <enabledEsign>false</enabledEsign>
+        <configEsign>/var/www/maarch_entreprise/modules/esign/xml/config_esign.xml</configEsign>
+        <targetCycleEsign>OAIS_CACHED</targetCycleEsign>
+    </ESIGN>
 </ROOT>

@@ -215,6 +215,92 @@ function updateDatabase(
     Bt_doQuery($GLOBALS['db'], 'COMMIT');
 }
 
+
+/**
+ * e-signature of the resource
+ * @param bigint $resId Id of the resource to process
+ * @return nothing
+ */
+function esign($resId)
+{
+    if (empty($GLOBALS['manageEsign']->error)) {
+        $resultDataSignatureEx = array();
+        $resultDataGetArchiveEx = array();
+        $GLOBALS['manageEsign']->connectToDB();
+        $fingerprint = $GLOBALS['manageEsign']->getFingerprintTosign($resId, $GLOBALS['table']);
+        //########################signatureEx########################
+        //echo "--------------call the signature ws\r\n";
+        $signatureEx = new signatureEx();
+        $signatureExResponse = new signatureExResponse();
+        $signatureEx->requestId = $resId;
+        $signatureEx->transactionId = rand();
+        $signatureEx->tag = 'Maarch life_cycle module';
+        $signatureEx->dataToSign = new dataType();
+        $dataStr = new dataString();
+        //$dataStr->dataFormatSpecified = false;
+        //$dataStr->dataFormat = 'gzEnc';
+        $dataStr->_ = $fingerprint; //le hash du fichier
+        $signatureEx->dataToSign->value = $dataStr;
+        $signatureEx->dataToSign->binaryValue = 0;
+        $signatureEx->signatureFormat = 'XADES';
+        $signatureEx->signatureType = 'ENVELOPING';
+        //echo "--------------process the return\r\n";
+        $signatureExResponse = $GLOBALS['D2S']->signatureEx($signatureEx);
+        if ($signatureExResponse->signatureExResult->D2SResponseEx['opStatus'] > 0) {
+            $GLOBALS['logger']->write(
+                'problem with esign of resource :' 
+                . $resId , 'ERROR', 30
+            );
+        } else {
+            //opStatus
+            $opstatus = $signatureExResponse->signatureExResult->opStatus;
+            //D2SStatus
+            $D2SStatus = $signatureExResponse->signatureExResult->D2SStatus;
+            //theSignature
+            $theSignature = $signatureExResponse->signatureExResult->D2SSignature->value->_;
+            $resultDataSignatureEx['esign_content'] = $theSignature;
+            //D2SArchiveId
+            $D2SArchiveId = $signatureExResponse->signatureExResult->D2SArchiveId;
+            $resultDataSignatureEx['esign_proof_id'] = $D2SArchiveId;
+            //requestId
+            $requestId = $signatureExResponse->signatureExResult->requestId;
+            //echo "--------------store the esign in DB\r\n";
+            $GLOBALS['manageEsign']->putInfoInDB($resId, $GLOBALS['table'], $resultDataSignatureEx, $GLOBALS['databasetype']);
+            //########################getArchiveEx########################
+            //echo "--------------call the proof ws\r\n";
+            $getArchiveEx = new getArchiveEx();
+            $getArchiveExResponse = new getArchiveExResponse();
+            $getArchiveEx->requestId = $resId;
+            $getArchiveEx->archiveId = $signatureExResponse->D2SarchiveId;
+            //echo "--------------process the return\r\n";
+            $getArchiveExResponse = $GLOBALS['D2S']->getArchiveEx($getArchiveEx);
+            if ($getArchiveExResponse->getArchiveExResult->D2SArchiveResponseEx['opStatus'] > 0) {
+                //echo 'ici';exit;
+                $GLOBALS['logger']->write(
+                    'problem with esign of resource :' 
+                    . $resId , 'ERROR', 30
+                );
+            } else {
+                //opStatus
+                $opstatus = $getArchiveExResponse->getArchiveExResult->opStatus;
+                //requestId
+                $requestId = $getArchiveExResponse->getArchiveExResult->requestId;
+                //D2SProof
+                $D2SProof = $getArchiveExResponse->getArchiveExResult->D2SProof;
+                $resultDataGetArchiveEx['esign_proof_content'] = $D2SProof;
+                //echo "--------------store the proof in DB\r\n";
+                $GLOBALS['manageEsign']->putInfoInDB($resId, $GLOBALS['table'], $resultDataGetArchiveEx, $GLOBALS['databasetype']);
+            }
+        }
+    } else {
+        echo "esign WS not available : ".$GLOBALS['manageEsign']->error." ". $resId;exit;
+        $GLOBALS['logger']->write(
+                'esign WS not available : ' . $GLOBALS['manageEsign']->error
+                . $resId , 'ERROR', 30
+        );
+    }
+}
+
 /**
  * Do the update with the location information of the document on the
  * new docserver
@@ -228,6 +314,10 @@ function updateDatabase(
  */
 function doUpdateDb($resId, $path, $fileName, $offsetDoc, $fingerprint) 
 {
+     //if signature available, we control it
+    if ($GLOBALS['enabledEsign']) {
+        esign($resId);
+    }
     $query = "update " . _LC_STACK_TABLE_NAME . " set status = 'P' where"
            . " policy_id = '" . $GLOBALS['policy'] . "' and cycle_id = '" 
            . $GLOBALS['cycle'] . "' and cycle_step_id = '" 
