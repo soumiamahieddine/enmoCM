@@ -343,7 +343,14 @@ if ((string) $esignParams->enabledEsign == 'true') {
             . DIRECTORY_SEPARATOR . 'class_manage_esign.php');
         //declaration of manageEsign object
         $GLOBALS['manageEsign'] = new manage_esign($GLOBALS['configPathEsign']);
-        $GLOBALS['D2S'] = new D2S($GLOBALS['manageEsign']->esignConfig['service']['D2S']['url']);
+        if (empty($GLOBALS['manageEsign']->error)) {
+            $GLOBALS['D2S'] = new D2S($GLOBALS['manageEsign']->esignConfig['service']['D2S']['url']);
+        } else {
+            $GLOBALS['logger']->write('esign setup error' . 
+                $GLOBALS['manageEsign']->error, 'ERROR', 112
+            );
+            exit(112);
+        }
     }
 }
 

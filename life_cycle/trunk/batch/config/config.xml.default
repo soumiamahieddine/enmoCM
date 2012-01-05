@@ -35,7 +35,7 @@
     </LOG4PHP>
     <ESIGN>
         <enabledEsign>false</enabledEsign>
-        <configEsign>/var/www/maarch_entreprise/modules/esign/xml/config_esign.xml</configEsign>
+        <configEsign>/var/www/maarch_entreprise/modules/esign/xml/config_esign_from_lc.xml</configEsign>
         <targetCycleEsign>OAIS_CACHED</targetCycleEsign>
     </ESIGN>
 </ROOT>

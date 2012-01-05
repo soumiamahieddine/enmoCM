@@ -43,6 +43,7 @@
  *        in progress
  *  110 : Problem with collection parameter
  *  111 : Problem with the php include path
+ *  112 : Problem with the setup of esign
  * ****   HEAVY PROBLEMS with an error semaphore
  *  11   : Problem with policy administration : Cycle step not found
  *  12  : Docserver type not found
