@@ -58,7 +58,7 @@ else
 $_SESSION['collection_id_choice'] = $_SESSION['current_basket']['coll_id'];
 $select[$table]= array();
 $where = $_SESSION['current_basket']['clause'];
-array_push($select[$table],"res_id", "status", "category_id","category_id as category_img", "priority", "admission_date", "subject", "process_limit_date", "destination", "dest_user", "type_label");
+array_push($select[$table],"res_id", "status", "category_id","category_id as category_img", "priority", "admission_date", "subject", "process_limit_date", "destination", "dest_user", "type_label", "entity_label");
 $order = '';
 if(isset($_REQUEST['order']) && !empty($_REQUEST['order']))
 {
