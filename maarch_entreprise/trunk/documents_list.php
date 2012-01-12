@@ -58,7 +58,7 @@ else
 $_SESSION['collection_id_choice'] = $_SESSION['current_basket']['coll_id'];
 $select[$table]= array();
 $where = $_SESSION['current_basket']['clause'];
-array_push($select[$table],"res_id", "status", "category_id","category_id as category_img", "priority", "admission_date", "subject", "process_limit_date", "destination", "dest_user", "type_label", "entity_label");
+array_push($select[$table],"res_id", "status", "category_id", "category_id as category_img", "contact_firstname", "contact_lastname", "contact_society", "user_lastname", "user_firstname", "priority", "creation_date", "admission_date", "subject", "process_limit_date", "entity_label", "dest_user", "type_label", "exp_user_id");
 $order = '';
 if(isset($_REQUEST['order']) && !empty($_REQUEST['order']))
 {
@@ -200,6 +200,55 @@ for ($i=0;$i<count($tab);$i++)
 				$tab[$i][$j]["show"]=true;
 				$tab[$i][$j]["order"]='subject';
 			}
+            if($tab[$i][$j][$value]=="category_id")
+            {
+                $_SESSION['mlb_search_current_category_id'] = $tab[$i][$j]["value"];
+                $tab[$i][$j]["value"] = $_SESSION['mail_categories'][$tab[$i][$j]["value"]];
+                $tab[$i][$j]["label"]=_CATEGORY;
+                $tab[$i][$j]["size"]="10";
+                $tab[$i][$j]["label_align"]="left";
+                $tab[$i][$j]["align"]="left";
+                $tab[$i][$j]["valign"]="bottom";
+                $tab[$i][$j]["show"]=true;
+                $tab[$i][$j]["order"]='category_id';
+            }
+            if($tab[$i][$j][$value]=="contact_firstname")
+            {
+                $contact_firstname = $tab[$i][$j]["value"];
+                $tab[$i][$j]["show"]=false;
+            }
+            if($tab[$i][$j][$value]=="contact_lastname")
+            {
+                $contact_lastname = $tab[$i][$j]["value"];
+                $tab[$i][$j]["show"]=false;
+            }
+            if($tab[$i][$j][$value]=="contact_society")
+            {
+                $contact_society = $tab[$i][$j]["value"];
+                $tab[$i][$j]["show"]=false;
+            }
+            if($tab[$i][$j][$value]=="user_firstname")
+            {
+                $user_firstname = $tab[$i][$j]["value"];
+                $tab[$i][$j]["show"]=false;
+            }
+            if($tab[$i][$j][$value]=="user_lastname")
+            {
+                $user_lastname = $tab[$i][$j]["value"];
+                $tab[$i][$j]["show"]=false;
+            }
+            if($tab[$i][$j][$value]=="exp_user_id")
+            {
+                $tab[$i][$j]["label"]=_CONTACT;
+                $tab[$i][$j]["size"]="10";
+                $tab[$i][$j]["label_align"]="left";
+                $tab[$i][$j]["align"]="left";
+                $tab[$i][$j]["valign"]="bottom";
+                $tab[$i][$j]["show"]=false;
+                $tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
+                $tab[$i][$j]["value"] = $contact->get_contact_information_from_view($_SESSION['mlb_search_current_category_id'], $contact_lastname, $contact_firstname, $contact_society, $user_lastname, $user_firstname);
+                $tab[$i][$j]["order"]=false;
+            }
 			if($tab[$i][$j][$value]=="type_label")
 			{
 				$tab[$i][$j]["value"] = $request->show_string($tab[$i][$j]["value"]);
