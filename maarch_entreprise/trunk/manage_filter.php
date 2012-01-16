@@ -218,7 +218,7 @@ if(($_REQUEST['template']== 'group_case_for_basket') && ($core_tools->is_module_
 }
 else
 {
-    $tab=$request->select($select, $where_concat, $orderstr, $_SESSION['config']['databasetype'], $_SESSION['config']['databasesearchlimit'], false,"", "", "", false);
+    $tab=$request->select($select, $where_concat, $orderstr, $_SESSION['config']['databasetype'], $_SESSION['config']['databasesearchlimit'], false, "", "", "", false, false, 'distinct');
 }
 
 //$request->show();
