@@ -1105,3 +1105,66 @@ if (!defined('_SQL_QUERY_NOT_SECURE')) {
         'sql query not secure'
     );
 }
+
+/*******************************************************************************
+ * RA_CODE
+*******************************************************************************/
+if (!defined('_ASK_RA_CODE_1')) {
+    define( '_ASK_RA_CODE_1', 'An email will be send to : ');
+}
+
+if (!defined('_ASK_RA_CODE_2')) {
+    define( '_ASK_RA_CODE_2', 'Try again when you receive the remote access code.');
+}
+
+if (!defined('_CONFIRM_ASK_RA_CODE_1')) {
+    define( '_CONFIRM_ASK_RA_CODE_1', 'Hello, ');
+}
+
+if (!defined('_CONFIRM_ASK_RA_CODE_2')) {
+    define( '_CONFIRM_ASK_RA_CODE_2', 'your Maarch remote access code is : ');
+}
+
+if (!defined('_CONFIRM_ASK_RA_CODE_3')) {
+    define( '_CONFIRM_ASK_RA_CODE_3', 'This code is available until ');
+}
+
+if (!defined('_CONFIRM_ASK_RA_CODE_4')) {
+    define( '_CONFIRM_ASK_RA_CODE_4', 'To connect, ');
+}
+
+if (!defined('_CONFIRM_ASK_RA_CODE_5')) {
+    define( '_CONFIRM_ASK_RA_CODE_5', 'click here');
+}
+
+if (!defined('_CONFIRM_ASK_RA_CODE_6')) {
+    define( '_CONFIRM_ASK_RA_CODE_6', 'Your Maarch remote access code');
+}
+
+if (!defined('_CONFIRM_ASK_RA_CODE_7')) {
+    define( '_CONFIRM_ASK_RA_CODE_7', 'An email has been sent to your address');
+}
+
+if (!defined('_CONFIRM_ASK_RA_CODE_8')) {
+    define( '_CONFIRM_ASK_RA_CODE_8', 'Try to reconnect');
+}
+
+if (!defined('_TRYING_TO_CONNECT_FROM_NOT_ALLOWED_IP')) {
+    define( '_TRYING_TO_CONNECT_FROM_NOT_ALLOWED_IP', 'You are trying to connect from an unknown host.');
+}
+
+if (!defined('_PLEASE_ENTER_YOUR_RA_CODE')) {
+    define( '_PLEASE_ENTER_YOUR_RA_CODE', 'Please enter your remote access code.');
+}
+
+if (!defined('_ASK_AN_RA_CODE')) {
+    define( '_ASK_AN_RA_CODE', 'Ask a remote access code');
+}
+
+if (!defined('_RA_CODE_1')) {
+    define( '_RA_CODE_1', 'Remote access code');
+}
+
+if (!defined('_CAN_T_CONNECT_WITH_THIS_IP')) {
+    define( '_CAN_T_CONNECT_WITH_THIS_IP', 'You can\'t connect to Maarch from an unknown host.');
+}

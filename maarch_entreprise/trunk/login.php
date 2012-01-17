@@ -194,6 +194,18 @@ if (isset($_SESSION['error'])) {
 } else {
     $error = '';
 }
+
+if (isset($_SESSION['HTTP_REQUEST']['withRA_CODE']) && empty($_SESSION['HTTP_REQUEST']['withRA_CODE'])) {
+    $_SESSION['error'] = _IP_NOT_ALLOWED;
+    $_SESSION['withRA_CODE'] = 'ok';
+    $_SESSION['HTTP_REQUEST'] = array();
+    header(
+        'location: ' . $_SESSION['config']['businessappurl']
+        . 'index.php?display=true&page=login&coreurl='
+        . $_SESSION['config']['coreurl']
+    );
+    exit;
+}
 ?>
 <?php $core->load_js();?>
 <body id="bodylogin" onload="session_expirate(<?php echo $time;?>, '<?php  echo $_SESSION['config']['coreurl'];?>');">

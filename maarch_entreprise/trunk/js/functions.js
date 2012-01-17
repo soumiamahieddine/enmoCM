@@ -1448,7 +1448,6 @@ function action_send_form_confirm_result(path_manage_script, mode_req, id_action
                     }
                 },
                 onFailure: function(){
-                //console.log('dans ton c** !!');
                 }
             });
         }

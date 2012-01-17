@@ -428,6 +428,7 @@ if (!defined('_ASKED_ONLY_ONCE')) define( '_ASKED_ONLY_ONCE', 'Cela ne vous sera
 if (!defined('_FIRST_CONN')) define( '_FIRST_CONN', 'Premi&egrave;re connexion');
 if (!defined('_LOGIN')) define( '_LOGIN', 'Connexion');
 if (!defined('_RELOGIN')) define( '_RELOGIN', 'Reconnexion');
+if (!defined('_RA_CODE')) define( '_RA_CODE', 'Code d\'acc&egrave;s compl&eacute;mentaire');
 
 /*************************  index  page***********************************/
 if (!defined('_LOGO_ALT')) define( '_LOGO_ALT', 'Retour &agrave; la page d&rsquo;accueil');
@@ -1506,4 +1507,67 @@ if (!defined('_REALLY_PUT_DOC_ON_VALIDATION')) {
         '_REALLY_PUT_DOC_ON_VALIDATION', 
         'Confirmer l&rsquo;envoi en validation'
     );
+}
+
+/*******************************************************************************
+ * RA_CODE
+*******************************************************************************/
+if (!defined('_ASK_RA_CODE_1')) {
+    define( '_ASK_RA_CODE_1', 'Un courriel va être envoyé à l\'adresse : ');
+}
+
+if (!defined('_ASK_RA_CODE_2')) {
+    define( '_ASK_RA_CODE_2', 'Une fois le code connu, merci de renouveler votre tentative de connexion.');
+}
+
+if (!defined('_CONFIRM_ASK_RA_CODE_1')) {
+    define( '_CONFIRM_ASK_RA_CODE_1', 'Bonjour, ');
+}
+
+if (!defined('_CONFIRM_ASK_RA_CODE_2')) {
+    define( '_CONFIRM_ASK_RA_CODE_2', 'votre code de connexion distant a l\'application Maarch est : ');
+}
+
+if (!defined('_CONFIRM_ASK_RA_CODE_3')) {
+    define( '_CONFIRM_ASK_RA_CODE_3', 'Ce code reste reste valide jusqu\'au ');
+}
+
+if (!defined('_CONFIRM_ASK_RA_CODE_4')) {
+    define( '_CONFIRM_ASK_RA_CODE_4', 'Pour vous connecter, ');
+}
+
+if (!defined('_CONFIRM_ASK_RA_CODE_5')) {
+    define( '_CONFIRM_ASK_RA_CODE_5', 'cliquez ici');
+}
+
+if (!defined('_CONFIRM_ASK_RA_CODE_6')) {
+    define( '_CONFIRM_ASK_RA_CODE_6', 'Votre code de connexion Maarch');
+}
+
+if (!defined('_CONFIRM_ASK_RA_CODE_7')) {
+    define( '_CONFIRM_ASK_RA_CODE_7', 'Un courriel a été envoyé à votre adresse mail');
+}
+
+if (!defined('_CONFIRM_ASK_RA_CODE_8')) {
+    define( '_CONFIRM_ASK_RA_CODE_8', 'Tentative de reconnexion');
+}
+
+if (!defined('_TRYING_TO_CONNECT_FROM_NOT_ALLOWED_IP')) {
+    define( '_TRYING_TO_CONNECT_FROM_NOT_ALLOWED_IP', 'Vous tentez de vous connecter depuis un emplacement non répertorié.');
+}
+
+if (!defined('_PLEASE_ENTER_YOUR_RA_CODE')) {
+    define( '_PLEASE_ENTER_YOUR_RA_CODE', 'Veuillez entrer le code d\'acces complémentaire.');
+}
+
+if (!defined('_ASK_AN_RA_CODE')) {
+    define( '_ASK_AN_RA_CODE', 'Demander un code d\'accès');
+}
+
+if (!defined('_RA_CODE_1')) {
+    define( '_RA_CODE_1', 'Code complémentaire');
+}
+
+if (!defined('_CAN_T_CONNECT_WITH_THIS_IP')) {
+    define( '_CAN_T_CONNECT_WITH_THIS_IP', 'Vous ne pouvez pas vous connecter depuis un emplacement non répertorié.');
 }

@@ -147,7 +147,8 @@ $module, $collId, $mode )
                 "select entity_id, entity_label, short_label from "
                 . ENT_ENTITIES . " where entity_id in ("
                 . $_SESSION['user']['redirect_groupbasket'][$_SESSION['current_basket']['id']][$actionId]['entities']
-                . ") and enabled= 'Y' order by entity_label"
+                //. ") and enabled= 'Y' order by entity_label"
+                . ") and enabled= 'Y' order by short_label"
             );
             while ($res = $db->fetch_object()) {
                 array_push(
