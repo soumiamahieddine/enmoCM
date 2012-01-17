@@ -82,7 +82,7 @@ class security extends dbquery
     * @param  $s_login  string User login
     * @param  $pass string User password
     */
-    public function login($s_login,$pass, $method = false)
+    public function login($s_login,$pass, $method = false, $ra_code=false)
     {
 /*
         $inspector = FirePHP::to('page');
@@ -103,8 +103,15 @@ class security extends dbquery
             } else if ($method == 'ldap') {
                 $comp =" and STATUS <> 'DEL'";
             } else {
+                if ($ra_code <> false) {
+                    $comp = " and password = '" . $pass . "' and ra_code = '" 
+                      . md5($ra_code) . "' and ra_expiration_date >= '" . date('Y-m-d 00:00:00') . "' and STATUS <> 'DEL' "
+                      . "and (loginmode = 'standard' or loginmode  = 'sso')";
+                }
+                else {
                 $comp = " and password = '" . $pass . "' and STATUS <> 'DEL' "
                       . "and (loginmode = 'standard' or loginmode  = 'sso')";
+                }
             }
         } else {
             $comp = " and password = '" . $pass . "' and STATUS <> 'DEL'";

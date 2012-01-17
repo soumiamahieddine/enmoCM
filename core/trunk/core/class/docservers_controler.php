@@ -1198,6 +1198,228 @@ class docservers_controler
     }
 
     /**
+     * 
+     * Get a resources at a specific address in adr table or res table
+     * @param array $adr
+     */
+    public function viewResourceAdr($adr) {
+        //retrieve infos of the docserver type
+        require_once('core' . DIRECTORY_SEPARATOR . 'class'
+        . DIRECTORY_SEPARATOR . 'docserver_types_controler.php');
+        $history = new history();
+        $coreTools = new core_tools();
+        $fingerprintFromDb = $adr['fingerprint'];
+        //$format = $adr[0][$cptDocserver]['format'];
+        $docserverObject = $this->get($adr['docserver_id']);
+        $docserver = $docserverObject->path_template;
+        $file = $docserver . $adr['path']
+          . $adr['filename'];
+        $file = str_replace('#', DIRECTORY_SEPARATOR, $file);
+        $docserverTypeControler = new docserver_types_controler();
+        $docserverTypeObject = $docserverTypeControler->get(
+            $docserverObject->docserver_type_id
+        );
+        if (!file_exists($file)) {
+            $concatError .= _FILE_NOT_EXISTS_ON_THE_SERVER . ' : '
+                          . $file . '||';
+            $history->add(
+                $tableName, $gedId, 'ERR',
+                _FAILOVER . ' ' . _DOCSERVERS . ' '
+                . $adr['docserver_id'] . ':'
+                . _FILE_NOT_EXISTS_ON_THE_SERVER . ' : '
+                . $file, $_SESSION['config']['databasetype']
+            );
+        } else {
+            $fingerprintFromDocserver = Ds_doFingerprint(
+                $file, $docserverTypeObject->fingerprint_mode
+            );
+            $adrToExtract = array();
+            $adrToExtract = $adr;
+            $adrToExtract['path_to_file'] = $file;
+            $docserverTypeControler = new docserver_types_controler();
+            $docserverTypeObject = $docserverTypeControler->get(
+                $docserverObject->docserver_type_id
+            );
+            if ($docserverTypeObject->is_container
+                && $adr['offset_doc'] == ''
+            ) {
+                $error = true;
+                $concatError .=
+                    _PB_WITH_OFFSET_OF_THE_DOC_IN_THE_CONTAINER . '||';
+                $history->add(
+                    $tableName, $gedId, 'ERR',
+                    _FAILOVER . ' ' . _DOCSERVERS . ' '
+                    . $adr['docserver_id'] . ':'
+                    . _PB_WITH_OFFSET_OF_THE_DOC_IN_THE_CONTAINER,
+                    $_SESSION['config']['databasetype']
+                );
+            }
+            //manage compressed resource
+            if ($docserverTypeObject->is_compressed) {
+                $extract = array();
+                $extract = Ds_extractArchive(
+                    $adrToExtract,
+                    $docserverTypeObject->fingerprint_mode
+                );
+                if ($extract['status'] == 'ko' || !is_array($extract)) {
+                    $error = true;
+                    $concatError .= $extract['error'] . '||';
+                    $history->add(
+                        $tableName, $gedId, 'ERR',
+                        _FAILOVER . ' ' . _DOCSERVERS . ' '
+                        . $adr['docserver_id'] . ':'
+                        . $extract['error'],
+                        $_SESSION['config']['databasetype']
+                    );
+                } else {
+                    $file = $extract['path'];
+                    $mimeType = $extract['mime_type'];
+                    $format = $extract['format'];
+                    //to control fingerprint of the offset
+                    $fingerprintFromDocserver = $extract['fingerprint'];
+                }
+            } else {
+                $mimeType = Ds_getMimeType(
+                    $adrToExtract['path_to_file']
+                );
+                $format = substr(
+                    $adrToExtract['filename'],
+                    strrpos($adrToExtract['filename'], '.') + 1
+                );
+            }
+            //manage view of the file
+            $use_tiny_mce = false;
+            if (strtolower($format) == 'maarch'
+                && $coreTools->is_module_loaded('templates')
+            ) {
+                $mode = 'content';
+                $type_state = true;
+                $use_tiny_mce = true;
+                $mimeType = 'application/maarch';
+            } else {
+                require_once 'core/docservers_tools.php';
+                $arrayIsAllowed = array();
+                $arrayIsAllowed = Ds_isFileTypeAllowed($file);
+                $type_state = $arrayIsAllowed['status'];
+            }
+            //if fingerprint from db = 0 we do not control fingerprint
+            if ($fingerprintFromDb == '0'
+                || ($fingerprintFromDb == $fingerprintFromDocserver)
+            ) {
+                if ($type_state <> false) {
+                    if ($_SESSION['history']['resview'] == 'true') {
+                        require_once(
+                            'core' . DIRECTORY_SEPARATOR
+                            . 'class' . DIRECTORY_SEPARATOR
+                            . 'class_history.php'
+                        );
+                        $history->add(
+                            $tableName, $gedId, 'VIEW',
+                            _VIEW_DOC_NUM . $gedId,
+                            $_SESSION['config']['databasetype'],
+                            'indexing_searching'
+                        );
+                    }
+                    //count number of viewed in listinstance for
+                    //the user
+                    if ($coreTools->is_module_loaded('entities')
+                        && $coreTools->is_module_loaded('basket')
+                    ) {
+                        require_once(
+                            'modules' . DIRECTORY_SEPARATOR
+                            . 'entities' . DIRECTORY_SEPARATOR
+                            . 'class' . DIRECTORY_SEPARATOR
+                            . 'class_manage_entities.php'
+                        );
+                        $ent = new entity();
+                        $ent->increaseListinstanceViewed($gedId);
+                    }
+                    $encodedContent = '';
+                    if (file_exists($file) && !$error) {
+                        if ($calledByWS) {
+                            $content = '';
+                            $handle = fopen($file, 'r');
+                            if ($handle) {
+                                while (!feof($handle)) {
+                                    $content .= fgets($handle, 4096);
+                                }
+                                fclose($handle);
+                            }
+                            $encodedContent = base64_encode($content);
+                        } else {
+                            $fileNameOnTmp = 'tmp_file_' . rand()
+                                . '.' . strtolower($format);
+                            $filePathOnTmp = $_SESSION['config']
+                                ['tmppath'] . DIRECTORY_SEPARATOR
+                                . $fileNameOnTmp;
+                            copy($file, $filePathOnTmp);
+                        }
+                        $result = array(
+                            'status' => 'ok',
+                            'mime_type' => $mimeType,
+                            'ext' => $format,
+                            'file_content' => $encodedContent,
+                            'tmp_path' => $_SESSION['config']
+                            ['tmppath'],
+                            'file_path' => $filePathOnTmp,
+                            'called_by_ws' => $calledByWS,
+                            'error' => '',
+                        );
+                        if (isset($extract)
+                            && file_exists($extract['tmpArchive'])
+                        ) {
+                            Ds_washTmp($extract['tmpArchive']);
+                        }
+                        return $result;
+                    } else {
+                        $concatError .= _FILE_NOT_EXISTS . '||';
+                        $history->add(
+                            $tableName, $gedId, 'ERR',
+                            _FAILOVER . ' ' . _DOCSERVERS . ' '
+                            . $adr['docserver_id']
+                            . ':' . _FILE_NOT_EXISTS,
+                            $_SESSION['config']['databasetype']
+                        );
+                    }
+                } else {
+                    $concatError .= _FILE_TYPE . ' ' . _UNKNOWN . '||';
+                    $history->add(
+                        $tableName, $gedId, 'ERR',
+                        _FAILOVER . ' ' . _DOCSERVERS . ' '
+                        . $adr['docserver_id'] . ':'
+                        . _FILE_TYPE . ' ' . _UNKNOWN,
+                        $_SESSION['config']['databasetype']
+                    );
+                }
+            } else {
+                $concatError .= _PB_WITH_FINGERPRINT_OF_DOCUMENT . '||';
+                $history->add(
+                    $tableName, $gedId, 'ERR',
+                    _FAILOVER . ' ' . _DOCSERVERS . ' '
+                    . $adr['docserver_id'] . ':'
+                    . _PB_WITH_FINGERPRINT_OF_DOCUMENT,
+                    $_SESSION['config']['databasetype']
+                );
+            }
+            if (file_exists($extract['tmpArchive'])) {
+                Ds_washTmp($extract['tmpArchive']);
+            }
+        }
+        //if errors :
+        $result = array(
+            'status' => 'ko',
+            'mime_type' => '',
+            'ext' => '',
+            'file_content' => '',
+            'tmp_path' => '',
+            'file_path' => '',
+            'called_by_ws' => $calledByWS,
+            'error' => $concatError,
+        );
+        return $result;
+    }
+    
+    /**
      * View the resource, returns the content of the resource
      * @param   bigint $gedId id of th resource
      * @param   string $tableName name of the res table
