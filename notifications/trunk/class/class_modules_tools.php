@@ -79,6 +79,7 @@ class notifications
 			$_SESSION['tablename']['ent_entities'] = utf8_decode((string) $TABLENAME->entities);
 			$_SESSION['tablename']['ent_users_entities'] = utf8_decode((string) $TABLENAME->users_entities);
 			$_SESSION['tablename']['contacts'] = utf8_decode((string) $TABLENAME->contacts);
+			$_SESSION['tablename']['mlb_doctype_ext'] = utf8_decode((string) $TABLENAME->mlb_doctype_ext);
 		}
 		
 		foreach($xmlconfig->TEMPLATES as $TEMPLATE)
@@ -106,6 +107,11 @@ class notifications
 			$_SESSION['debug']['console'] = utf8_decode((string) $DEBUG->console);
 			
 		}
+	}
+	
+	function check_compatibility() 
+	{
+		if ($_SESSION['tablename']['mlb_doctype_ext'] == '') $_SESSION['tablename']['mlb_doctype_ext'] = "mlb_doctype_ext";
 	}
 	
 	function build_modules_tables() 
