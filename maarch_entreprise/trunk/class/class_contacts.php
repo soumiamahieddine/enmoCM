@@ -742,6 +742,7 @@ class contacts extends dbquery
         else
         {
              $stopthis = true;
+             $prefix = '';
         }
         if($stopthis == true)
         {
@@ -791,6 +792,9 @@ class contacts extends dbquery
         elseif ($category_id == 'outgoing'  || $category_id == 'internal')
         {
             $prefix = "<b>"._FOR_CONTACT_C."</b>";
+        }
+        else {
+            $prefix = '';
         }
         if($contact_lastname <> "")
         {
