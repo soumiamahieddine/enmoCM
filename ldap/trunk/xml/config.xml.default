@@ -45,9 +45,6 @@
 			<security><!-- Perimetre documentaire : -->
 				<coll_id>letterbox_coll</coll_id>
 				<where_clause>(DESTINATION = @my_primary_entity or DESTINATION in (@subentities[@my_primary_entity])) or DESTINATION is NULL</where_clause>
-				<can_insert>N</can_insert>
-				<can_update>N</can_update>
-				<can_delete>N</can_delete>
 			</security>
 		</dn>
 		<dn id="OU=,OU=,DC=,DC=" type="rights">
