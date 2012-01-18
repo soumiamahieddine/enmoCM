@@ -58,23 +58,6 @@ $list=new list_show();
 $orderstr = $list->define_order($order, $order_field);
 $bask->connect();
 $do_actions_arr = array();
-if($_REQUEST['template'] <> 'group_case_for_basket')
-{
-	if(!empty($_SESSION['current_basket']['clause']))
-	{
-		$bask->query("select ".$table.".res_id from ".$table.", ".$_SESSION['tablename']['ent_listinstance']." where ".$_SESSION['current_basket']['clause']." and ".$table.".res_id = ".$_SESSION['tablename']['ent_listinstance'].".res_id and ".$_SESSION['tablename']['ent_listinstance'].".item_id = '".$_SESSION['user']['UserId']."' ".$orderstr);
-	}
-	else
-	{
-		$bask->query("select ".$table.".res_id from ".$table.", ".$_SESSION['tablename']['ent_listinstance']." where ".$table.".res_id = ".$_SESSION['tablename']['ent_listinstance'].".res_id and ".$_SESSION['tablename']['ent_listinstance'].".item_id = '".$_SESSION['user']['UserId']."' ".$orderstr);
-	}
-}	
-$tmp = array();
-while($res = $bask->fetch_object())
-{
-	$tmp = $bask->check_reserved_time($res->res_id, $_SESSION['current_basket']['coll_id']);
-	array_push($do_actions_arr, $tmp);
-}
 $str = '';
 $search = false;
 if(trim($_REQUEST['entity_id']) == "none")
@@ -354,6 +337,8 @@ else
 					$tab[$i][$j]["show"]=true;
 					$tab[$i][$j]["order"]='res_id';
 					$_SESSION['mlb_search_current_res_id'] = $tab[$i][$j]["value"];
+                    $tmp = $bask->check_reserved_time($tab[$i][$j]['value'], $_SESSION['current_basket']['coll_id']);
+                    array_push($do_actions_arr, $tmp);
 				}
 				if($tab[$i][$j][$value]=="creation_date")
 				{
