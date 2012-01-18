@@ -131,6 +131,50 @@ class ActionControler
 
 
 	/**
+	* Returns an Action array of Object based on all action
+	*
+	* @return Action array of objects with properties from the database or null
+	*/
+	public function getAllActions()
+	{
+		self::connect();
+		$query = "select * from ".self::$actions_table;
+
+		try{
+			if($_ENV['DEBUG']){echo $query.' // ';}
+			self::$db->query($query);
+		} catch (Exception $e){
+		echo _NO_ACTION;
+		}
+
+		if(self::$db->nb_result() > 0)
+		{
+			$actions_list = array();
+			
+
+			while($queryResult=self::$db->fetch_object()){
+				
+				$action = new Action();
+				
+				foreach($queryResult as $key => $value){
+					$action->$key=$value;
+				}
+				array_push($actions_list, $action);
+				
+			}
+			
+			self::disconnect();
+			return $actions_list;
+		}
+		else
+		{
+			self::disconnect();
+			return null;
+		}
+	}
+
+
+	/**
 	* Saves in the database an Action object
 	*
 	* @param  $group Action object to be saved
