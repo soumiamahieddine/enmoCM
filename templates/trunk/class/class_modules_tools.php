@@ -46,6 +46,27 @@ class templates extends dbquery
 	}
 
 
+	public function getAllTemplates()
+	{
+			$return = array();
+			
+			$this->connect();	
+			$this->query("select * from ".$_SESSION['tablename']['temp_templates']);
+			
+			while ($result = $this->fetch_object())
+			{
+				$this_template = array();
+				$this_template['id'] = $result->id;
+				$this_template['label'] = $result->label;
+				$this_template['template_comment'] = $result->template_comment;
+				
+				array_push($return, $this_template);
+			}
+			
+			return $return;
+	}
+	
+	
 	public function getAllItemsLinkedToModel($template_id, $field ='')
 	{
 		$items = array();
