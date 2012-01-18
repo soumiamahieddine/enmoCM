@@ -213,6 +213,9 @@ if (! empty($_SESSION['error'])) {
                 $core->load_menu($_SESSION['modules']);
                // exit;
             }
+            else {
+                $_SESSION['error'] = $res['error'];
+            }
             
             $pathToIPFilter = '';
             if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'ip_filter.xml')){
