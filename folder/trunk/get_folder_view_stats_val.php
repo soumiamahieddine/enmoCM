@@ -16,7 +16,9 @@ if(isset($_REQUEST['type_report']) && $_REQUEST['type_report'] == 'foldertype')
 		$where = ' f.folders_system_id in (';
 		while($res = $db->fetch_object())
 		{
-			$where .= $res->record_id.',';
+            if (!empty($res->record_id)) {
+                $where .= $res->record_id.',';
+            }
 		}
 		$where = preg_replace('/,$/', ')', $where);
 		$db-> query("select  ft.foldertype_id, ft.foldertype_label, count(f.folders_system_id) as nbr from  ".$_SESSION['tablename']['fold_folders']." f,  ".$_SESSION['tablename']['fold_foldertypes']." ft where f.foldertype_id = ft.foldertype_id and ".$where." group by ft.foldertype_label, ft.foldertype_id");
