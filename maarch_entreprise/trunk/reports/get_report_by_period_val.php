@@ -73,7 +73,9 @@ if($period_type == 'period_year')
 		<?php
 		exit();
 	}
+	
 	$where_date = $req->extract_date('creation_date', 'year')." = '".$_REQUEST['the_year']."'";
+	
 	$date_title = _FOR_YEAR.' '.$_REQUEST['the_year'];
 }
 else if($period_type == 'period_month')
@@ -190,7 +192,7 @@ if($id_report == 'process_delay')
 	for($i=0; $i<count($doctypes);$i++)
 	{
 		$db->query("SELECT ".$req->get_date_diff('closing_date', 'creation_date' )." AS delay FROM ".$view." WHERE  ".$where_date." AND status in ".$str_status." and type_id = ".$doctypes[$i]['ID']."");
-
+		
 		if( $db->nb_result() > 0)
 		{
 			$tmp = 0;
@@ -264,7 +266,7 @@ if($id_report == 'process_delay')
 
 }
 if($id_report == 'process_delay_generic_evaluation')
-{
+{	
 	$data = "";
 	//Gestion du graphique par année
 	
@@ -298,7 +300,14 @@ if($id_report == 'process_delay_generic_evaluation')
 	{
 		for($i=1; $i<= 12; $i++)
 		{
-			$db->query("SELECT ".$req->get_date_diff('closing_date', 'creation_date' )." FROM ".$view." WHERE status in ".$str_status." and date_part( 'month', creation_date)  = ".$i." and date_part( 'year', creation_date)  = ".date('Y')." AND STATUS = 'END'");
+			if (!isset($where_date) || empty($where_date)) {
+				$period = date("Y");
+			} else {
+				$period = substr($where_date, -5, -1);
+			}
+			
+			$db->query("SELECT ".$req->get_date_diff('closing_date', 'creation_date' )." FROM ".$view." WHERE status in ".$str_status." and date_part( 'month', creation_date)  = ".$i." and date_part( 'year', creation_date)  = ".$period." AND STATUS = 'END'");
+			
 			if( $db->nb_result() > 0)
 			{
 				
@@ -362,7 +371,12 @@ if($id_report == 'process_delay_generic_evaluation')
 		{
 			$data = array();
 		}
-		$max = $func->get_nb_days_in_month($_REQUEST['the_month'], date("Y"));
+		
+		//$max = date("t", $_REQUEST['the_month']);
+		
+		$mois = mktime( 0, 0, 0, $_REQUEST['the_month'], 1, date("Y") );
+		$max = date("t",$mois);
+		
 		for($i=1; $i<= $max; $i++)
 		{
 			
