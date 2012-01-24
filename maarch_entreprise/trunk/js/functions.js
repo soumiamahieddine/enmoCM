@@ -2135,3 +2135,31 @@ function hideIndex(mode_hide, display_val) {
 	}
 }
 
+function loadSvnLog(path_manage_script, onlineVersion, localVersion, divName) {
+    //window.alert(path_manage_script+' '+onlineVersion+' '+localVersion+' '+divName);
+    if(onlineVersion != '' && localVersion != '') {
+        new Ajax.Request(path_manage_script,
+        {
+            method:'post',
+            parameters: { onlineVersion : onlineVersion,
+                          localVersion  : localVersion
+                        },
+                onSuccess: function(answer){
+                eval("response = "+answer.responseText);
+                if(response.status == 0 || response.status == 1) {
+                    if(response.status == 0) {
+                       
+                        $('div_'+divName).innerHTML = response.svnLog;
+                    } else {
+                        //
+                    }
+                } else {
+                    try {
+                        $('frm_error').innerHTML = response.error_txt;
+                    }
+                    catch(e){}
+                }
+            }
+        });
+    }
+}

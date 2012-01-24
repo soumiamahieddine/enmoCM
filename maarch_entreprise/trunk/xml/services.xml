@@ -119,6 +119,16 @@
    <system_service>false</system_service>
    <enabled>true</enabled>
  </SERVICE>
+  <!-- <SERVICE>
+   <id>svn_monitoring</id>
+   <name>_SVN_MONITORING</name>
+   <comment>_SVN_MONITORING</comment>
+   <servicepage>index.php?page=svn_monitoring_controler&amp;admin=svn_monitoring</servicepage>
+   <servicetype>admin</servicetype>
+   <style>svn_monitoring</style>
+   <system_service>false</system_service>
+   <enabled>true</enabled>
+ </SERVICE> -->
  <SERVICE>
    <id>param_mlb_doctypes</id>
    <name>_PARAM_MLB_DOCTYPES</name>
