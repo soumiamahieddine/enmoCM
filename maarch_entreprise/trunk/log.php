@@ -229,7 +229,7 @@ if (! empty($_SESSION['error'])) {
                 $ipArray['duration'] = '0';
             }
             $ipArray = array();
-            $ipArray = functions::object2array(simplexml_load_file($pathToIPFilter));
+            $ipArray = $func->object2array(simplexml_load_file($pathToIPFilter));
             //print_r($ipArray);
             if ($ipArray['enabled'] == 'true') {
                 $isAllowed = false;
