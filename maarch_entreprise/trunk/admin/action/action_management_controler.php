@@ -107,8 +107,7 @@ if (isset($_REQUEST['action_submit'])) {
             functions::wash($_REQUEST['action_page'], 'no', _ACTION_PAGE . ' ', 
             'yes', 0, 255);
     } else {
-        $_SESSION['m_admin']['action']['ACTION_PAGE'] = 
-            trim($_REQUEST['action_page']);
+        $_SESSION['m_admin']['action']['ACTION_PAGE'] = trim($_REQUEST['action_page']);
     }
     $_SESSION['m_admin']['action']['KEYWORD'] = $_REQUEST['keyword'];
     $_SESSION['m_admin']['action']['FLAG_CREATE'] = 'N';
@@ -174,6 +173,7 @@ if (isset($_REQUEST['action_submit'])) {
         $action->setArray($action_value);
 
         ActionControler::save($action, $mode);
+        ActionControler::razActionPage();
 
         if ($_SESSION['history']['actionadd'] == 'true' && $mode == 'add') {
             require_once('core/class/class_history.php');
