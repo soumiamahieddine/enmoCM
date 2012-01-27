@@ -120,7 +120,7 @@
    <enabled>true</enabled>
  </SERVICE>
   <!-- <SERVICE>
-   <id>svn_monitoring</id>
+   <id>manage_svn</id>
    <name>_SVN_MONITORING</name>
    <comment>_SVN_MONITORING</comment>
    <servicepage>index.php?page=svn_monitoring_controler&amp;admin=svn_monitoring</servicepage>

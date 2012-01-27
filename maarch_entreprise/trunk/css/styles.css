@@ -3099,6 +3099,13 @@ hr{
     background-position : 2px top;
     /*background:  url(static.php?filename=manage_users.gif) no-repeat 2px top;*/
 }
+#svn_monitoring {
+    background-image : url(static.php?filename=manage_svn.gif);
+    background-repeat: no-repeat;
+    background-position : 2px top;
+    /*background:  url(static.php?filename=manage_users.gif) no-repeat 2px top;*/
+}
+
 #admin_status {
     background-image : url(static.php?filename=manage_status.gif);
     background-repeat: no-repeat;

@@ -2135,6 +2135,7 @@ function hideIndex(mode_hide, display_val) {
 	}
 }
 
+
 function loadSvnLog(path_manage_script, onlineVersion, localVersion, divName) {
     //window.alert(path_manage_script+' '+onlineVersion+' '+localVersion+' '+divName);
     if(onlineVersion != '' && localVersion != '') {
@@ -2142,7 +2143,8 @@ function loadSvnLog(path_manage_script, onlineVersion, localVersion, divName) {
         {
             method:'post',
             parameters: { onlineVersion : onlineVersion,
-                          localVersion  : localVersion
+                          localVersion  : localVersion,
+                          divName       : divName
                         },
                 onSuccess: function(answer){
                 eval("response = "+answer.responseText);

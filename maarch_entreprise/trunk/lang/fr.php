@@ -1571,3 +1571,39 @@ if (!defined('_RA_CODE_1')) {
 if (!defined('_CAN_T_CONNECT_WITH_THIS_IP')) {
     define( '_CAN_T_CONNECT_WITH_THIS_IP', 'Vous ne pouvez pas vous connecter depuis un emplacement non répertorié.');
 }
+
+
+/*******************************************************************************
+* admin => svn_monitoring
+*******************************************************************************/
+if (!defined('_SVN_MONITORING')) {
+    define( '_SVN_MONITORING', 'SVN Supervision');
+}
+
+if (!defined('_LOADING_INFORMATIONS')) {
+    define( '_LOADING_INFORMATIONS', 'Chargement des informations');
+}
+
+if (!defined('_RELEASE_NUMBER')) {
+    define( '_RELEASE_NUMBER', 'N&deg; de r&eacute;vision');
+}
+
+if (!defined('_BY')) {
+    define( '_BY', 'par');
+}
+
+if (!defined('_UP_TO_DATE')) {
+    define( '_UP_TO_DATE', '&agrave; jour');
+}
+
+if (!defined('_ACTUAL_INSTALLATION')) {
+    define( '_ACTUAL_INSTALLATION', 'version install&eacute;e');
+}
+
+if (!defined('_MAKE_UPDATE')) {
+    define( '_MAKE_UPDATE', 'mettre &agrave; jour');
+}
+
+if (!defined('_TO_GET_LOG_PLEASE_CONNECT')) {
+    define( '_TO_GET_LOG_PLEASE_CONNECT', 'Pour obtenir la liste des logs, vous devez &ecirc;tre connect&eacute;');
+}

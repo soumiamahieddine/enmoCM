@@ -1168,3 +1168,38 @@ if (!defined('_RA_CODE_1')) {
 if (!defined('_CAN_T_CONNECT_WITH_THIS_IP')) {
     define( '_CAN_T_CONNECT_WITH_THIS_IP', 'You can\'t connect to Maarch from an unknown host.');
 }
+
+/*******************************************************************************
+* admin => svn_monitoring
+*******************************************************************************/
+if (!defined('_SVN_MONITORING')) {
+    define( '_SVN_MONITORING', 'SVN Monitoring');
+}
+
+if (!defined('_LOADING_INFORMATIONS')) {
+    define( '_LOADING_INFORMATIONS', 'Loading informations');
+}
+
+if (!defined('_RELEASE_NUMBER')) {
+    define( '_RELEASE_NUMBER', 'Release number');
+}
+
+if (!defined('_BY')) {
+    define( '_BY', 'by');
+}
+
+if (!defined('_UP_TO_DATE')) {
+    define( '_UP_TO_DATE', 'up to date');
+}
+
+if (!defined('_ACTUAL_INSTALLATION')) {
+    define( '_ACTUAL_INSTALLATION', 'actual installation');
+}
+
+if (!defined('_MAKE_UPDATE')) {
+    define( '_MAKE_UPDATE', 'update');
+}
+
+if (!defined('_TO_GET_LOG_PLEASE_CONNECT')) {
+    define( '_TO_GET_LOG_PLEASE_CONNECT', 'Please connect to get the full log informations');
+}
