@@ -188,14 +188,29 @@ class ActionControler
 		}
 		if($mode == "up") {
 			//return self::update($action);
-			self::update($action);
-			return 'WTF !!!';
-			
+			return self::update($action);
+            
 		}
 		elseif($mode =="add"){
 			return self::insert($action);
         }
 		return false;
+	}
+
+    /**
+	* if action_page = _ raz
+	*
+	* 
+	* @return bool true if raz ok
+	*/
+	public function razActionPage()
+	{
+        $dbUp = new dbquery();
+        $dbUp->connect();
+        $return = self::update($action);
+        $query="update " . self::$actions_table . " set action_page = '' where action_page = '_'";
+        $dbUp->query($query);
+        return true;
 	}
 
 	/**
