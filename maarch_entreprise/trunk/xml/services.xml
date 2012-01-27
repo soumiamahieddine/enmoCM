@@ -119,7 +119,7 @@
    <system_service>false</system_service>
    <enabled>true</enabled>
  </SERVICE>
-  <!-- <SERVICE>
+ <SERVICE>
    <id>manage_svn</id>
    <name>_SVN_MONITORING</name>
    <comment>_SVN_MONITORING</comment>
@@ -128,7 +128,7 @@
    <style>svn_monitoring</style>
    <system_service>false</system_service>
    <enabled>true</enabled>
- </SERVICE> -->
+ </SERVICE>
  <SERVICE>
    <id>param_mlb_doctypes</id>
    <name>_PARAM_MLB_DOCTYPES</name>
