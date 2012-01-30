@@ -33,8 +33,11 @@ $core_tools = new core_tools();
 $core_tools->test_admin('manage_svn', 'apps');
 $core_tools->load_lang();
 
-$databaseVersion = _DATABASE_VERSION.' : '.'1.2.1';
+//$databaseVersion = _DATABASE_VERSION.' : '.'1.2.1';
 $version = trim(substr(_MEP_VERSION, ((strpos(_MEP_VERSION, 'v')+1)-(strlen(_MEP_VERSION)))));
+if ( preg_match("/trunk/i", $_SESSION['config']['coreurl'])) {
+    $version = 'trunk';
+}
 
 $svnDirToCheck = array(
     0 => 'core',
@@ -58,7 +61,11 @@ for ($i=0; $i<count($svnDirToCheck); $i++) {
         $svnUrlRepo[$i] .= $dirName[$i];
         $svnUrlRepo[$i] .= '"';
     } else {
-        $svnUrlRepo[$i] .= 'branches/'.$version;
+        if ($version == 'trunk') {
+            $svnUrlRepo[$i] .= 'trunk/';
+        } else {
+            $svnUrlRepo[$i] .= 'branches/'.$version;
+        }
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -136,7 +143,7 @@ for ($i=0; $i<count($svnDirToCheck); $i++) {
      $formatText .= '" ';
     $formatText .= '>';
         $formatText .= '<img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=puce_next.gif" alt="" />';
-        $formatText .= ' '.$dirName[$i].' (v'.$version.') ';
+        $formatText .= ' '.$dirName[$i].' (v. '.$version.') ';
     $formatText .= '</h5>';
     $formatText .= '<div>&nbsp;</div>'; // Space for divs
     $formatText .= '<div ';
@@ -146,6 +153,7 @@ for ($i=0; $i<count($svnDirToCheck); $i++) {
      $formatText .= 'id="div_'.$dirName[$i].'" ';
      $formatText .= 'style="display: none; height: 550px; overflow: scroll;"';
     $formatText .= '>';
+        $formatText .= getRevisionNumber($_SESSION['config']['corepath'].$svnDirToCheck[$i]);
         $formatText .= _LOADING_INFORMATIONS;
     $formatText .= '</div>';
     $formatText .= '<div>&nbsp;</div>'; // Space for divs
@@ -176,3 +184,19 @@ core_tools::manage_location_bar($page_path, $page_label, $page_id, $init,
 //                              Affichage                                     //
 ////////////////////////////////////////////////////////////////////////////////
 echo $formatText;
+
+////////////////////////////////////////////////////////////////////////////////
+//                function getRevisionNumber()                                //
+////////////////////////////////////////////////////////////////////////////////
+
+function getRevisionNumber($dir) {
+    $path = $dir.'/.svn/entries';
+    
+    if (file_exists($path)) {
+        $entries = true;
+        $fileLine = file($path);
+        $svnReleaseLocal = $fileLine[10];
+    }
+    
+    return _RELEASE_NUMBER.' <b>'.$svnReleaseLocal.'</b><br /><br />';
+}

@@ -170,7 +170,7 @@ if (   (isset($_REQUEST['onlineVersion']) && !empty($_REQUEST['onlineVersion']))
         }
         
         if ($entries) {
-            $formatText .= _RELEASE_NUMBER.$svnReleaseLocal.'<br />';
+            $formatText .= _RELEASE_NUMBER.' <b>'.$svnReleaseLocal.'</b><br /><br />';
         }
         
         $formatText .= _TO_GET_LOG_PLEASE_CONNECT;
