@@ -1607,3 +1607,7 @@ if (!defined('_MAKE_UPDATE')) {
 if (!defined('_TO_GET_LOG_PLEASE_CONNECT')) {
     define( '_TO_GET_LOG_PLEASE_CONNECT', 'Pour obtenir la liste des logs, vous devez &ecirc;tre connect&eacute;');
 }
+
+if (!defined('_MANAGE_MEP_RELEASE')) {
+    define( '_MANAGE_MEP_RELEASE', 'Gestion des r&eacute;visions de Maarch Entreprise');
+}

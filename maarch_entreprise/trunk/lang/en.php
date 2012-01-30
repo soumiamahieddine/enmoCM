@@ -1203,3 +1203,7 @@ if (!defined('_MAKE_UPDATE')) {
 if (!defined('_TO_GET_LOG_PLEASE_CONNECT')) {
     define( '_TO_GET_LOG_PLEASE_CONNECT', 'Please connect to get the full log informations');
 }
+
+if (!defined('_MANAGE_MEP_RELEASE')) {
+    define( '_MANAGE_MEP_RELEASE', 'Manage Maarch Entreprise releases');
+}

@@ -93,6 +93,16 @@ $formatText  = '<h1>';
     $formatText .= '&nbsp;&nbsp;'._SVN_MONITORING;
 $formatText .= '</h1>';
 ////////////////////////////////////////////////////////////////////////////////
+//                         Titre dans la page                                 //
+////////////////////////////////////////////////////////////////////////////////
+$formatText .= '<br />';
+$formatText .= '<div class="block" align="center">';
+    $formatText .= '<h2>'._MANAGE_MEP_RELEASE.'</h2>';
+    $formatText .= '&nbsp;';
+$formatText .= '</div>';
+////////////////////////////////////////////////////////////////////////////////
+//                         Titre dans la page                                 //
+////////////////////////////////////////////////////////////////////////////////
 $formatText  .= '&nbsp;<br />';
 $formatText .= '<div class="block">';
 $formatText .= '<img ';
