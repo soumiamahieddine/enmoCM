@@ -71,8 +71,8 @@ if ((isset($_REQUEST['onlineVersion']) && !empty($_REQUEST['onlineVersion']))
                     $formatText .= '</b>';
                 $formatText .= '</span>';
             }
-            /*else {
-                if ($j == 0 && ($svnReleaseOnline > $svnReleaseLocal)) {
+            else {
+                /*if ($j == 0 && ($svnReleaseOnline > $svnReleaseLocal)) {
                     $formatText .= '<a href="'.$_SESSION['config']['businessappurl'].'admin/svn_monitoring/svn_monitoring_update.php?dir='.$_REQUEST['localVersion'].'" ';
                     $formatText .= 'target="_blank" ';
                     $formatText .= 'style="color: #CC7777;" ';
@@ -81,8 +81,8 @@ if ((isset($_REQUEST['onlineVersion']) && !empty($_REQUEST['onlineVersion']))
                             $formatText .= ' ('._MAKE_UPDATE.')';
                         $formatText .= '</b>';
                     $formatText .= '</a>';
-                }
-            }*/
+                }*/
+            }
             $formatText .= '<br />';
             $date = substr($svnLogOnline[$j]['date'], 0, 10);
             sscanf(substr($svnLogOnline[$j]['date'], 0, 10), "%4s-%2s-%2s", $date_Y, $date_m, $date_d);
