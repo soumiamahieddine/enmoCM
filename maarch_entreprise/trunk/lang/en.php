@@ -1207,3 +1207,7 @@ if (!defined('_TO_GET_LOG_PLEASE_CONNECT')) {
 if (!defined('_MANAGE_MEP_RELEASE')) {
     define( '_MANAGE_MEP_RELEASE', 'Manage Maarch Entreprise releases');
 }
+
+if (!defined('_INSTALL_SVN_EXTENSION')) {
+    define( '_INSTALL_SVN_EXTENSION', 'You must install svn library to view svn log and launch update.');
+}

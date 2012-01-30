@@ -15,6 +15,9 @@
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
 $core_tools = new core_tools();
 
+
+
+
 /****************Management of the location bar  ************/
 $init = false;
 if(isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true")

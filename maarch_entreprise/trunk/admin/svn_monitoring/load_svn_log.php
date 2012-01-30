@@ -33,10 +33,10 @@ require_once("core/class/class_core_tools.php");
 $core_tools = new core_tools();
 $core_tools->load_lang();
 
-if (   (isset($_REQUEST['onlineVersion']) && !empty($_REQUEST['onlineVersion']))
+if ((isset($_REQUEST['onlineVersion']) && !empty($_REQUEST['onlineVersion']))
     && (isset($_REQUEST['localVersion'])  && !empty($_REQUEST['localVersion']))
 ) {
-    if (@file_get_contents('http://svn.maarch.org/core')) {
+    if (@file_get_contents('http://svn.maarch.org/core') && extension_loaded('svn')) {
         $svnLogOnline = svn_log($_REQUEST['onlineVersion']);
         $svnReleaseOnline   = $svnLogOnline[0]['rev'];
         
@@ -155,7 +155,8 @@ if (   (isset($_REQUEST['onlineVersion']) && !empty($_REQUEST['onlineVersion']))
     } else {
         $formatText = '';
         
-        $path = $_REQUEST['localVersion'].'/.svn/entries';
+        $path = $_REQUEST['localVersion'] . DIRECTORY_SEPARATOR . '.svn' 
+              . DIRECTORY_SEPARATOR . 'entries';
         if (file_exists($path)) {
             $entries = true;
             $fileLine = file($path);
@@ -173,8 +174,11 @@ if (   (isset($_REQUEST['onlineVersion']) && !empty($_REQUEST['onlineVersion']))
             $formatText .= _RELEASE_NUMBER.' <b>'.$svnReleaseLocal.'</b><br /><br />';
         }
         
-        $formatText .= _TO_GET_LOG_PLEASE_CONNECT;
-        
+        if (!extension_loaded('svn')) {
+            $formatText .= _INSTALL_SVN_EXTENSION;
+        } else {
+            $formatText .= _TO_GET_LOG_PLEASE_CONNECT;
+        }
         $formatText = str_replace("\n", ' ', $formatText);
         
         echo "{status : 0, svnLog : '" . addslashes($formatText) . "'}";
@@ -184,3 +188,4 @@ if (   (isset($_REQUEST['onlineVersion']) && !empty($_REQUEST['onlineVersion']))
     echo "{status : 1}";
     exit ();
 }
+

@@ -145,7 +145,7 @@ for ($i=0; $i<count($svnDirToCheck); $i++) {
       $formatText .= 'loadSvnLog(';
        $formatText .= '\''.$_SESSION['config']['businessappurl'].'index.php?page=load_svn_log&admin=svn_monitoring&display=true\'';
        $formatText .= ', \''.$svnUrlRepo[$i].'\''; //url of the repo
-       $formatText .= ', \''.$_SESSION['config']['corepath'].$svnDirToCheck[$i].'\''; //path to the dir
+       $formatText .= ', \''.str_replace("\\", "\\\\", $_SESSION['config']['corepath'].$svnDirToCheck[$i]).'\''; //path to the dir
       $formatText .= ', \''.$dirName[$i].'\''; //name of the dir
      $formatText .= ');"';
      $formatText .= 'style="';

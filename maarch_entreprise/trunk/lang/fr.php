@@ -1611,3 +1611,7 @@ if (!defined('_TO_GET_LOG_PLEASE_CONNECT')) {
 if (!defined('_MANAGE_MEP_RELEASE')) {
     define( '_MANAGE_MEP_RELEASE', 'Gestion des r&eacute;visions de Maarch Entreprise');
 }
+
+if (!defined('_INSTALL_SVN_EXTENSION')) {
+    define( '_INSTALL_SVN_EXTENSION', 'Vous devez installer la librairie PHP svn pour acc&eacute;der aux logs et faire des mises &agrave; jour.');
+}

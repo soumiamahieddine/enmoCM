@@ -31,9 +31,9 @@
 */
 
 if (isset($_REQUEST['dir']) && !empty($_REQUEST['dir'])) {
-    svn_update(realpath($_REQUEST['dir']));
+    $ret = svn_update(realpath($_REQUEST['dir']));
 }
-$dossier = end(explode('/', $_REQUEST['dir']));
+$dossier = end(explode(DIRECTORY_SEPARATOR, $_REQUEST['dir']));
 $_SESSION['error'] = $dossier.' à été mis à jour';
 ?>
 
