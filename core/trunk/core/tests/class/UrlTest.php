@@ -25,7 +25,7 @@ class UrlTest extends PHPUnit_Framework_TestCase
         $_SERVER['HTTPS'] = (strpos($url_parts[0], 's') !== false)
                                 ? 'on': '';
         $host_parts = explode(':', $url_parts[2]);
-        $_SERVER['HTTP_HOST'] = $host_parts[0];
+        $_SERVER['HTTP_HOST'] = $url_parts[2];
         if (count($host_parts) == 2) {
             $_SERVER['SERVER_PORT'] = $host_parts[1];
         } else {

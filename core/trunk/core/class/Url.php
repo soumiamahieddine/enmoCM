@@ -185,8 +185,12 @@ class Url
 
     private static function _buildHost()
     {
-        return array_key_exists('HTTP_X_FORWARDED_HOST', $_SERVER)
-                ? $_SERVER['HTTP_X_FORWARDED_HOST'] : $_SERVER['HTTP_HOST'];
+        if (array_key_exists('HTTP_X_FORWARDED_HOST', $_SERVER)) {
+            return $_SERVER['HTTP_X_FORWARDED_HOST'];
+        } else {
+            $hostParts = explode(':',$_SERVER['HTTP_HOST']);
+            return $hostParts[0];
+        }
     }
 
     private static function _buildPort()
