@@ -2165,3 +2165,19 @@ function loadSvnLog(path_manage_script, onlineVersion, localVersion, divName) {
         });
     }
 }
+
+function checkAll() {
+    $$('input[type=checkbox]').without($('all')).each(
+        function(e) {
+            e.checked = true;  
+        }  
+    )
+}
+
+function reverseCheck() {
+    $$('input[type=checkbox]').without($('all')).each(
+        function(e) {
+            e.checked = !e.checked;  
+        }  
+    )
+}

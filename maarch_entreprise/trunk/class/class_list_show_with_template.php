@@ -724,6 +724,11 @@ class list_show_with_template extends list_show
 			{ $list_title .= '<img src="'.$picto_path.'" alt="" class="title_img" /> ';}
 			$list_title .= $title.'</b>';
 		}
+        // CHECK ALL IF ANY ACTION
+        if ($bool_radio_form || $bool_check_form) {
+            //$disp_dc .= '<a href="#" onclick="checkAll();" >' . _CHECK_ALL . '</a>&nbsp;&nbsp;';
+            $disp_dc .= '&nbsp;&nbsp;<input type="checkbox"><a href="#" onclick="reverseCheck();" >' . _REVERSE_CHECK . '</a>';
+        }
 		$theline = 0;
 		//if they are more 1 page we do pagination with 2 forms
 		if($nb_pages > 1)

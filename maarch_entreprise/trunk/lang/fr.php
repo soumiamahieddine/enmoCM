@@ -1615,3 +1615,7 @@ if (!defined('_MANAGE_MEP_RELEASE')) {
 if (!defined('_INSTALL_SVN_EXTENSION')) {
     define( '_INSTALL_SVN_EXTENSION', 'Vous devez installer la librairie PHP svn pour acc&eacute;der aux logs et faire des mises &agrave; jour.');
 }
+
+if (!defined('_REVERSE_CHECK')) {
+    define( '_REVERSE_CHECK', 'Inverser la s&eacute;lection');
+}
