@@ -1209,7 +1209,7 @@ if (!defined('_MANAGE_MEP_RELEASE')) {
 }
 
 if (!defined('_INSTALL_SVN_EXTENSION')) {
-    define( '_INSTALL_SVN_EXTENSION', 'You must install svn library to view svn log and launch update.');
+    define( '_INSTALL_SVN_EXTENSION', 'You must install svn library to view svn log.');
 }
 
 if (!defined('_REVERSE_CHECK')) {
