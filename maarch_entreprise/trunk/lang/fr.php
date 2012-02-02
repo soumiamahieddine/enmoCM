@@ -1619,3 +1619,9 @@ if (!defined('_INSTALL_SVN_EXTENSION')) {
 if (!defined('_REVERSE_CHECK')) {
     define( '_REVERSE_CHECK', 'Inverser la s&eacute;lection');
 }
+
+//EXPORT
+
+if (!defined('_EXPORT_LIST')) {
+    define( '_EXPORT_LIST', 'Exporter');
+}

@@ -114,6 +114,12 @@ class list_show extends functions
             $show_full_list, $bool_check_form, $res_link, $module, $bool_show_listletters, $all_sentence,
             $whatname, $used_css , $comp_link, $link_in_line, $bool_show_actions_list , $actions,
             $hidden_fields, $actions_json, $do_action, $id_action , $open_details_popup, $do_actions_arr, $template, $template_list, $actual_template, true, $hide_standard_list);
+			$str .= '<br />';
+			$str .= '<a href="'.$_SESSION['config']['businessappurl'].'index.php?display=true&page=export" target="_blank">';
+				$str .= '<div style="float: right; min-width: 1px;">';
+					$str .= '<input type="button" class="button" name="submit" value="'.  _EXPORT_LIST.'" />';
+				$str .= '</div>';
+			$str .= '</a>';
             if($mode_string)
             {
                 return $str;
@@ -330,7 +336,6 @@ class list_show extends functions
             }
             $str .= $page_list1;
             $str .= ' <div align="center">';
-
             if($bool_radio_form || $bool_check_form || ($do_action && !empty($id_action)))
             {
                 $temp = '<form name="form_select" id="form_select" action="'.$action.'" method="'.$method.'" class="forms';
@@ -639,7 +644,14 @@ class list_show extends functions
             }
 
             $str .= ' </div>';
-
+			
+			$str .= '<br />';
+			$str .= '<a href="'.$_SESSION['config']['businessappurl'].'index.php?display=true&page=export" target="_blank">';
+				$str .= '<div style="float: right; min-width: 1px;">';
+					$str .= '<input type="button" class="button" name="submit" value="'.  _EXPORT_LIST .'" />';
+				$str .= '</div>';
+			$str .= '</a>';
+			
             if($mode_string)
             {
                 return $str;
