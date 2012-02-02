@@ -182,7 +182,11 @@ class request extends dbquery
             $query = "SELECT ".$dist.$field_string." FROM ".$table_string.' '.$join.' '.$where_string." ".$orcl_limit." ".$other." ";
         }
         $this->connect();
-
+		
+		if (preg_match('/res_view/i', $query)) {
+			$_SESSION['last_select_query'] = $query;
+		}
+		
         $res_query = $this->query($query, $catch_error);
         if($catch_error && !$res_query)
         {
