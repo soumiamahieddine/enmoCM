@@ -152,7 +152,11 @@ class ExportControler
 	
 	private function loadXMLConf()
 	{
-		$exportConf = simplexml_load_file('apps/maarch_entreprise/xml/export.xml');
+		$path = 'apps/maarch_entreprise/xml/export.xml';
+		if (file_exists('custom/'.$_SESSION['custom_override_id'].'/apps/maarch_entreprise/xml/export.xml')) {
+			$path = 'custom/'.$_SESSION['custom_override_id'].'/apps/maarch_entreprise/xml/export.xml';
+		}
+		$exportConf = simplexml_load_file($path);
 		return $exportConf;
 	}
 	
