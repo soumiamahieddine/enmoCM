@@ -16,7 +16,7 @@ if(isset($_REQUEST['type_report']) && $_REQUEST['type_report'] == 'foldertype')
 		$where = ' f.folders_system_id in (';
 		while($res = $db->fetch_object())
 		{
-            if (!empty($res->record_id)) {
+            if(!empty($res->record_id)) {
                 $where .= $res->record_id.',';
             }
 		}
