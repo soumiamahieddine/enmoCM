@@ -461,7 +461,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                                     if ($process_data['no_answer']) {
                                         $frm_str .= 'checked="checked"';
                                     }
-                                    $frm_str .='onclick="unmark_empty_process(\'no_answer\');" />'._NO_ANSWER.'<br/>';
+                                   // $frm_str .='onclick="unmark_empty_process(\'no_answer\');" />'._NO_ANSWER.'<br/>';
+									$frm_str .='/>'._NO_ANSWER.'<br />';
                                     $frm_str .= '<input type="checkbox"  class="check" name="other" id="other" value="true"';
                                     if ($process_data['other']) {
                                         $frm_str .= 'checked="checked"';
