@@ -57,9 +57,20 @@ $what = "";
 $where ="  enabled = 'Y' ";
 if(isset($_REQUEST['what']) && !empty($_REQUEST['what']))
 {
-    $contact_id = str_replace(')', '', substr($_REQUEST['what'], strrpos($_REQUEST['what'],'(')+1));
-    $contact_id = str_replace('contact:', '', $contact_id);
-    $where .= " and contact_id = " . $contact_id;
+	$what = $func->protect_string_db($func->wash($_REQUEST['what'], "alphanum", "", "no"));
+	$contact_id = str_replace(')', '', substr($_REQUEST['what'], strrpos($_REQUEST['what'],'(')+1));
+	$contact_id = str_replace('contact:', '', $contact_id);
+	if($contact_id != substr($_REQUEST['what'], strrpos($_REQUEST['what'],'(')+1)){
+		$where .= " and contact_id = " . $contact_id;
+	}
+    elseif($_SESSION['config']['databasetype'] == "POSTGRESQL")
+    {
+        $where .= " and (lastname ilike '".$func->protect_string_db($what,$_SESSION['config']['databasetype'])."%'  or society ilike '".$func->protect_string_db($what,$_SESSION['config']['databasetype'])."%' ) ";
+    } 
+    else
+    {
+        $where .= " and (lastname like '".$func->protect_string_db($what,$_SESSION['config']['databasetype'])."%'  or society like '".$func->protect_string_db($what,$_SESSION['config']['databasetype'])."%' ) ";
+    }
 }
 $list = new list_show();
 $order = 'asc';
