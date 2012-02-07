@@ -22,8 +22,7 @@ if (empty($_SESSION['collection_id_choice'])) {
 require_once "core/class/class_request.php";
 require_once "apps" . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
     . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR
-    . "class_list_show.php"
-);
+    . "class_list_show.php";
 ?>
 <div id="welcome_box_right_notes" >
 				<div class="block">
