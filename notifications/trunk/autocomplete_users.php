@@ -13,7 +13,7 @@
 require('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_request.php');
 $req = new request();
 $req->connect();
-$table = 'users'
+$table = 'users';
 $where = '(user_id="'.$_REQUEST['user_id'].'" or firstname = "'.$_REQUEST['user_id'].'" and lastname = "'.$_REQUEST['user_id'].'" and STATUS <> "DEL"';
 $select = array();
 $select[$table]= array( 'user_id', 'lastname',  'firstname');
