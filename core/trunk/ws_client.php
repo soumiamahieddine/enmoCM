@@ -8,7 +8,8 @@ $fileContentArray = array();
 $fileContentArray = $client->viewResource((integer) $_REQUEST['id'], $_REQUEST['table']);
 if($fileContentArray->status == "ok") {
     $fileContent = base64_decode($fileContentArray->file_content);
-    $Fnm = $fileContentArray->tmp_path.DIRECTORY_SEPARATOR.rand()."_".md5($fileContent).".".strtolower($fileContentArray->ext);
+    $Fnm = $fileContentArray->tmp_path . DIRECTORY_SEPARATOR . rand() 
+         . "_" . md5($fileContent) . "." . strtolower($fileContentArray->ext);
     $inF = fopen($Fnm, "w");
     fwrite($inF, $fileContent);
     fclose($inF);
@@ -18,7 +19,9 @@ if($fileContentArray->status == "ok") {
     header("Cache-Control: public");
     header("Content-Description: File Transfer");
     header("Content-Type: ".strtolower($fileContentArray->mime_type));
-    header("Content-Disposition: inline; filename=".basename('maarch.'.strtolower($fileContentArray->ext)).";");
+    header("Content-Disposition: inline; filename=" 
+        . basename('maarch.' . strtolower($fileContentArray->ext)) . ";"
+    );
     header("Content-Transfer-Encoding: binary");
     readfile($Fnm);
     exit();
