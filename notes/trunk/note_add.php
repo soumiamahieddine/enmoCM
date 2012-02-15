@@ -54,18 +54,13 @@ echo $time;
 <?php
 
 if (isset($_REQUEST['notes']) && ! empty($_REQUEST['notes'])) {
-	if ($_SESSION['config']['databasetype'] == 'ORACLE') {
-		$date = date("d") . "-" . date("m") . "-" . date("Y") . " "
-		      . date("H:i:s");
-	} else {
-		$date = date("Y") . "-" . date("m") . "-" . date("d") . " "
-		      . date("H:i:s");
-	}
+	$date = $db->current_datetime();
+
 	$db->query(
 		"INSERT INTO " . NOTES_TABLE . "(identifier, note_text, date_note, "
 	    . "user_id, coll_id, tablename) VALUES"
 		. " (".$identifier . ", '" . $db->protect_string_db($_REQUEST['notes'])
-		. "', '" . $date . "', '"
+		. "', " . $date . ", '"
 		. $db->protect_string_db($_SESSION['user']['UserId']) . "', '"
 		. $db->protect_string_db($collId) . "', '"
 		. $db->protect_string_db($table) . "')"
@@ -73,28 +68,28 @@ if (isset($_REQUEST['notes']) && ! empty($_REQUEST['notes'])) {
 	if ($_SESSION['history']['noteadd']) {
 	    $hist = new history();
 		$db->query(
-			"SELECT id FROM " . NOTES_TABLE . " WHERE date_note = '" . $date
-		    . "' and identifier = " . $identifier . " and user_id = '"
+			"SELECT id FROM " . NOTES_TABLE . " WHERE date_note = " . $date
+		    . " and identifier = " . $identifier . " and user_id = '"
 		    . $_SESSION['user']['UserId'] . "' and coll_id = '" . $collId . "' "
 		);
 		$res = $db->fetch_object();
 		$id = $res->id;
 		if (isset($_SESSION['origin']) && $_SESSION['origin'] == "show_folder") {
 			$hist->add(
-			    $table, $identifier, "ADD", _ADDITION_NOTE . _ON_FOLDER_NUM
+			    $table, $identifier, "ADD", 'noteadd', _ADDITION_NOTE . _ON_FOLDER_NUM
 			    . $identifier . ' (' . $id . ')',
 			    $_SESSION['config']['databasetype'], 'notes'
 			);
 		} else {
 			$hist->add(
-			    $view, $identifier, "ADD", _ADDITION_NOTE . _ON_DOC_NUM
+			    $view, $identifier, "ADD", 'noteadd',  _ADDITION_NOTE . _ON_DOC_NUM
 			    . $identifier . ' (' . $id . ')',
 			    $_SESSION['config']['databasetype'], 'notes'
 			);
 		}
 
 		$hist->add(
-		    NOTES_TABLE, $id, "ADD", _NOTES_ADDED . ' (' . $id . ')',
+		    NOTES_TABLE, $id, "ADD", 'noteadd', _NOTES_ADDED . ' (' . $id . ')',
 		    $_SESSION['config']['databasetype'], 'notes'
 		);
 	}

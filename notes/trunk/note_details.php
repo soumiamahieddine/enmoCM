@@ -58,18 +58,18 @@ if (isset($_REQUEST['modify'])) {
 		if ($_SESSION['history']['noteup']) {
 			$hist = new history();
 			$hist->add(
-			    NOTES_TABLE, $id , "UP", _NOTE_UPDATED . ' (' . $id . ')',
+			    NOTES_TABLE, $id , "UP", 'noteup', _NOTE_UPDATED . ' (' . $id . ')',
 			    $_SESSION['config']['databasetype'], 'notes'
 			);
 			if ($_SESSION['origin'] == "show_folder" ) {
 				$hist->add(
-				    $table, $identifier, "UP", _NOTE_UPDATED . _ON_FOLDER_NUM
+				    $table, $identifier, "UP", 'noteup', _NOTE_UPDATED . _ON_FOLDER_NUM
 				    . $identifier . ' (' . $id . ')',
 				    $_SESSION['config']['databasetype'], 'notes'
 			    );
 			} else {
 				$hist->add(
-				    $view, $identifier, "UP", _NOTE_UPDATED . _ON_DOC_NUM
+				    $view, $identifier, "UP", 'noteup', _NOTE_UPDATED . _ON_DOC_NUM
 				    . $identifier . ' (' . $id . ')',
 				    $_SESSION['config']['databasetype'], 'notes'
 				);
@@ -92,18 +92,18 @@ if (isset($_REQUEST['delete'])) {
 	if ($_SESSION['history']['notedel']) {
 		$hist = new history();
 		$hist->add(
-		    NOTES_TABLE, $id, "DEL", _NOTES_DELETED . ' (' . $id . ')',
+		    NOTES_TABLE, $id, "DEL", 'notedel', _NOTES_DELETED . ' (' . $id . ')',
 		    $_SESSION['config']['databasetype'], 'notes'
 		);
 		if ($_SESSION['origin'] == "show_folder" ) {
 		    $hist->add(
-		        $table, $identifier, "DEL", _NOTES_DELETED . _ON_FOLDER_NUM
+		        $table, $identifier, "DEL", 'notedel', _NOTES_DELETED . _ON_FOLDER_NUM
 		        . $identifier . ' (' . $id . ')',
 		        $_SESSION['config']['databasetype'], 'notes'
 		    );
 		} else {
 			$hist->add(
-			    $view, $identifier, "DEL", _NOTES_DELETED . _ON_DOC_NUM
+			    $view, $identifier, "DEL", 'notedel',  _NOTES_DELETED . _ON_DOC_NUM
 			    . $identifier . ' (' . $id . ')',
 			    $_SESSION['config']['databasetype'], 'notes'
 			);
