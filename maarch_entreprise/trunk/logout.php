@@ -30,7 +30,7 @@ if ($_SESSION['history']['userlogout'] == "true"
     //$host = gethostbyaddr($_SERVER['REMOTE_ADDR']);
     $host = $_SERVER['REMOTE_ADDR'];
     $hist->add(
-        USERS_TABLE, $_SESSION['user']['UserId'], "LOGOUT",
+        USERS_TABLE, $_SESSION['user']['UserId'], "LOGOUT",'userlogout',
         _LOGOUT_HISTORY . ' '. $_SESSION['user']['UserId'] . ' IP : ' . $ip,
         $_SESSION['config']['databasetype']
     );

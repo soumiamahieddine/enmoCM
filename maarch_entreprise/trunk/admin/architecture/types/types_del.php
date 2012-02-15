@@ -72,7 +72,7 @@ else
     {
         require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
         $users = new history();
-        $users->add($_SESSION['tablename']['doctypes'], $s_id,"DEL",_DOCTYPE_DELETION." : ".$info->description, $_SESSION['config']['databasetype']);
+        $users->add($_SESSION['tablename']['doctypes'], $s_id,"DEL",'doctypesdel',_DOCTYPE_DELETION." : ".$info->description, $_SESSION['config']['databasetype']);
     }
     $_SESSION['error'] = _DELETED_DOCTYPE;
 

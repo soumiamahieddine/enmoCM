@@ -148,7 +148,7 @@ if (isset($_REQUEST['valid'])) {
 						$hist = new history();
 						$hist->add(
 						    $_SESSION['tablename']['doctypes_first_level'], $id,
-						    "UP", _STRUCTURE_MODIF . " " . strtolower(_NUM)
+						    "UP", 'structureup', _STRUCTURE_MODIF . " " . strtolower(_NUM)
 						    . $id . " (" . $info . ")",
 						    $_SESSION['config']['databasetype']
 						);
@@ -188,7 +188,7 @@ if (isset($_REQUEST['valid'])) {
 					$hist = new history();
 					$hist->add(
 					    $_SESSION['tablename']['doctypes_first_level'], $id,
-					    "ADD", _NEW_STRUCTURE_ADDED . " (" . $desc . ")",
+					    "ADD", 'structureadd', _NEW_STRUCTURE_ADDED . " (" . $desc . ")",
 					    $_SESSION['config']['databasetype']
 					);
 

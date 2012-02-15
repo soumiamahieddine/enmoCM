@@ -76,21 +76,13 @@ if (isset($_SESSION['user']['UserId']) && isset($_GET['page'])
         . '%' . date('dmYHmi') . '%'
     );
 
-    if ($_SESSION['config']['databasetype'] == 'ORACLE') {
-        $db->query(
-            'update ' . $_SESSION['tablename']['users'] . " set cookie_key = '"
-            . $key . "', cookie_date = SYSDATE where user_id = '"
-            . $_SESSION['user']['UserId'] . "' and mail = '"
-            . $_SESSION['user']['Mail'] . "'", 1
-        );
-    } else {
-        $db->query(
-            'update ' . $_SESSION['tablename']['users'] . " set cookie_key = '"
-            . $key . "', cookie_date = '" . date('Y-m-d') . ' ' . date('H:m:i')
-            . "' where user_id = '" . $_SESSION['user']['UserId']
-            . "' and mail = '" . $_SESSION['user']['Mail'] . "'", 1
-        );
-    }
+    $db->query(
+        'update ' . $_SESSION['tablename']['users'] . " set cookie_key = '"
+        . $key . "', cookie_date = ".$db->current_datetime()." where user_id = '"
+        . $_SESSION['user']['UserId'] . "' and mail = '"
+        . $_SESSION['user']['Mail'] . "'", 1
+    );
+
     setcookie(
         'maarch', 'UserId=' . $_SESSION['user']['UserId'] . '&key=' . $key,
         time() + ($_SESSION['config']['cookietime'] * 1000)

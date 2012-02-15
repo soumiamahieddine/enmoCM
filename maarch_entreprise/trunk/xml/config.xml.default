@@ -220,6 +220,10 @@
 		<comment>_NOTES_COMMENT</comment>
 	</MODULES>
 	<MODULES>
+   		<moduleid>notifications</moduleid>
+		<comment>_NOTIFICATIONS_COMMENT</comment>
+	</MODULES>
+	<MODULES>
    		<moduleid>physical_archive</moduleid>
 		<comment>_PHYSICAL_ARCHIVE_COMMENT</comment>
 	</MODULES>

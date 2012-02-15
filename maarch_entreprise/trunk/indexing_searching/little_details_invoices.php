@@ -47,7 +47,7 @@ if (isset($_REQUEST['value']) && !empty($_REQUEST['value'])) {
 	$resId = $_REQUEST['value'];
 }
 
-$users = new history();
+$hist = new history();
 $security = new security();
 $func = new functions();
 $request = new request;
@@ -89,8 +89,8 @@ if ($resId == '') {
 if (isset($resId) && ! empty($resId)
 	&& $_SESSION['history']['resview'] == 'true'
 ) {
-	$users->add(
-    	$table, $resId , 'VIEW', _VIEW_DOC_NUM . $resId,
+	$hist->add(
+    	$table, $resId , 'VIEW','resview', _VIEW_DOC_NUM . $resId,
         $_SESSION['config']['databasetype'], 'apps'
     );
 }

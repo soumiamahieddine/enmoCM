@@ -278,7 +278,7 @@ if (isset($_SESSION['error']) && $_SESSION['error'] <> '') {
 	//Traces techniques		
 	$trace->add("users",
 				$loginArray['UserId'],
-				"LOGIN",
+				"LOGIN", 'userlogin',
 				_CONNECTION_SSO_FAILED . 
 				" CodeError " . $errorId . " : " .$_SESSION['error'],
 				$__SESSION['config']['databasetype'],

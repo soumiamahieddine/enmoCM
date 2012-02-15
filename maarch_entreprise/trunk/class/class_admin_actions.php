@@ -138,7 +138,7 @@ class AdminActions extends dbquery
                     $id = $res->id;
                     require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_history.php');
                     $hist = new history();
-                    $hist->add($_SESSION['tablename']['actions'], $id,"ADD",_ACTION_ADDED.' : '.$this->protect_string_db($_SESSION['m_admin']['action']['LABEL']), $_SESSION['config']['databasetype']);
+                    $hist->add($_SESSION['tablename']['actions'], $id,"ADD",'actionadd',_ACTION_ADDED.' : '.$this->protect_string_db($_SESSION['m_admin']['action']['LABEL']), $_SESSION['config']['databasetype']);
                 }
                 $_SESSION['error'] = _ACTION_ADDED.' : '.$_SESSION['m_admin']['action']['LABEL'];
                 $this->clearactioninfos();
@@ -154,7 +154,7 @@ class AdminActions extends dbquery
                 {
                     require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_history.php');
                     $hist = new history();
-                    $hist->add($_SESSION['tablename']['actions'], $_SESSION['m_admin']['action']['ID'],"UP",_ACTION_MODIFIED.' : '.$this->protect_string_db($_SESSION['m_admin']['action']['LABEL']), $_SESSION['config']['databasetype']);
+                    $hist->add($_SESSION['tablename']['actions'], $_SESSION['m_admin']['action']['ID'],"UP",'actionup',_ACTION_MODIFIED.' : '.$this->protect_string_db($_SESSION['m_admin']['action']['LABEL']), $_SESSION['config']['databasetype']);
                 }
 
                 $_SESSION['error'] = _ACTION_MODIFIED.' : '.$_SESSION['m_admin']['action']['LABEL'];
@@ -390,7 +390,7 @@ class AdminActions extends dbquery
                 {
                     require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_history.php');
                     $hist = new history();
-                    $hist->add($_SESSION['tablename']['actions'], $id,"DEL",_ACTION_DELETED.' : '.$id, $_SESSION['config']['databasetype']);
+                    $hist->add($_SESSION['tablename']['actions'], $id,"DEL",'actiondel',_ACTION_DELETED.' : '.$id, $_SESSION['config']['databasetype']);
                 }
                 $_SESSION['error'] = _ACTION_DELETED;
                 header("location: ".$_SESSION['config']['businessappurl']."index.php?page=action&admin=action&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what);

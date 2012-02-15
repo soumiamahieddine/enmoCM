@@ -55,7 +55,7 @@ $page_label = _DETAILS;
 $page_id = "details_invoices";
 $core_tools->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
-$users = new history();
+$hist = new history();
 $security = new security();
 $func = new functions();
 $request = new request;
@@ -100,7 +100,7 @@ if (!$right) {
     exit();
 }
 if (isset ($s_id) && !empty ($s_id) && $_SESSION['history']['resview'] == "true") {
-    $users->add($table, $s_id, "VIEW", _VIEW_DETAILS_NUM . $s_id, $_SESSION['config']['databasetype'], 'apps');
+    $hist->add($table, $s_id, "VIEW",'resview', _VIEW_DETAILS_NUM . $s_id, $_SESSION['config']['databasetype'], 'apps');
 }
 $modify_doc = check_right(
     $_SESSION['user']['security'][$coll_id]['DOC']['securityBitmask'],

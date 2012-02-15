@@ -153,20 +153,13 @@ if (isset($_REQUEST['action_submit'])) {
         }
     } else {
         $action_value = array(
-            'id' => functions::protect_string_db(
-                $_SESSION['m_admin']['action']['ID']), 
-            'label_action' => functions::protect_string_db(
-                $_SESSION['m_admin']['action']['LABEL']), 
-            'keyword' => functions::protect_string_db(
-                $_SESSION['m_admin']['action']['KEYWORD']),
-            'create_id' => functions::protect_string_db(
-                $_SESSION['m_admin']['action']['FLAG_CREATE']),
-            'history' => functions::protect_string_db(
-                $_SESSION['m_admin']['action']['HISTORY']),
-            'action_page' => functions::protect_string_db(
-                $_SESSION['m_admin']['action']['ACTION_PAGE']),
-            'id_status' => functions::protect_string_db(
-                $_SESSION['m_admin']['action']['ID_STATUS'])
+            'id' => $_SESSION['m_admin']['action']['ID'], 
+            'label_action' => $_SESSION['m_admin']['action']['LABEL'], 
+            'keyword' => $_SESSION['m_admin']['action']['KEYWORD'],
+            'create_id' => $_SESSION['m_admin']['action']['FLAG_CREATE'],
+            'history' => $_SESSION['m_admin']['action']['HISTORY'],
+            'action_page' => $_SESSION['m_admin']['action']['ACTION_PAGE'],
+            'id_status' => $_SESSION['m_admin']['action']['ID_STATUS']
         );
 
         $action = new Action();
@@ -179,7 +172,7 @@ if (isset($_REQUEST['action_submit'])) {
             require_once('core/class/class_history.php');
             $hist = new history();
             $hist->add($_SESSION['tablename']['actions'], 
-                $_SESSION['m_admin']['action']['ID'], 'ADD',
+                $_SESSION['m_admin']['action']['ID'], 'ADD', 'actionadd',
                 _ACTION_ADDED . ' : ' . functions::protect_string_db(
                     $_SESSION['m_admin']['action']['ID']), 
                 $_SESSION['config']['databasetype']
@@ -188,7 +181,7 @@ if (isset($_REQUEST['action_submit'])) {
             require_once('core/class/class_history.php');
             $hist = new history();
             $hist->add($_SESSION['tablename']['actions'], 
-                $_SESSION['m_admin']['action']['ID'], 'UP', _ACTION_MODIFIED 
+                $_SESSION['m_admin']['action']['ID'], 'UP', 'actionup', _ACTION_MODIFIED 
                     . ' : ' . functions::protect_string_db(
                         $_SESSION['m_admin']['action']['ID']), 
                     $_SESSION['config']['databasetype']

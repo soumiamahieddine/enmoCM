@@ -1755,7 +1755,7 @@ $collId, $table, $formValues )
                 //	echo 'folder '.$resId. " ";
                 $hist = new history();
                 $hist->add(
-                    $_SESSION['tablename']['fold_folders'], $folderId, "UP",
+                    $_SESSION['tablename']['fold_folders'], $folderId, "UP", 'folderup',
                     _DOC_NUM . $resId . _ADDED_TO_FOLDER,
                     $_SESSION['config']['databasetype'], 'apps'
                 );

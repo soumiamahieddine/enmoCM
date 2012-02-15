@@ -169,11 +169,11 @@ if ($s_id == '') {
                 if ($_SESSION['history']['resview'] == "true") {
                     require_once("core" . DIRECTORY_SEPARATOR 
                         . "class" . DIRECTORY_SEPARATOR . "class_history.php");
-                    $users = new history();
-                    $users->add(
+                    $hist = new history();
+                    $hist->add(
                         $table, 
                         $s_id, 
-                        "VIEW", 
+                        "VIEW",'resview', 
                         _VIEW_DOC_NUM . "" . $s_id, 
                         $_SESSION['config']['databasetype'], 
                         'indexing_searching'

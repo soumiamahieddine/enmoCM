@@ -28,7 +28,7 @@ if (!$res) {
         require_once "core/class/class_history.php";
         $hist = new history();
         $hist->add(
-        	USERS_TABLE, $_SESSION['m_admin']['users']['user_id'], "UP",
+        	USERS_TABLE, $_SESSION['m_admin']['users']['user_id'], "UP",'usersup',
         	_NEW_PASSWORD_USER . " : " 
         	. $_SESSION['m_admin']['users']['lastname'] . " "
         	. $_SESSION['m_admin']['users']['firstname'], 

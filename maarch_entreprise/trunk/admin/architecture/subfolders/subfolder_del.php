@@ -56,7 +56,7 @@ else
     {
         require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
         $users = new history();
-        $users->add($_SESSION['tablename']['doctypes_second_level'], $id,"DEL",_DEL_SUBFOLDER." ".strtolower(_NUM).$id."", $_SESSION['config']['databasetype']);
+        $users->add($_SESSION['tablename']['doctypes_second_level'], $id,"DEL",'subfolderdel', _DEL_SUBFOLDER." ".strtolower(_NUM).$id."", $_SESSION['config']['databasetype']);
     }
     $_SESSION['error'] = _SUBFOLDER_DELETED.".";
         unset($_SESSION['m_admin']);

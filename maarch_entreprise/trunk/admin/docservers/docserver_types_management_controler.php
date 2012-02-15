@@ -276,16 +276,16 @@ function display_list() {
                 case "docserver_type_label":
                     format_item($item,_DOCSERVER_TYPE_LABEL,"15","left","left","bottom",true); break;
                 case "is_container":
-                    if ($item['value'] == "t") {
+                    if ($item['value'] == "Y") {
                         $item['value'] = "<img src='".$_SESSION['config']['businessappurl']."static.php?filename=picto_stat_enabled.gif' alt='"._CONTAINER."' title='"._CONTAINER."'/>";
-                    } elseif ($item['value'] == "f") {
+                    } elseif ($item['value'] == "N") {
                         $item['value'] = "<img src='".$_SESSION['config']['businessappurl']."static.php?filename=picto_stat_disabled.gif' alt='"._NOT_CONTAINER."' title='"._NOT_CONTAINER."'/>";
                     }
                     format_item($item,_IS_CONTAINER,"5","left","left","bottom",true); break;
                 case "is_compressed":
-                    if ($item['value'] == "t") {
+                    if ($item['value'] == "Y") {
                         $item['value'] = "<img src='".$_SESSION['config']['businessappurl']."static.php?filename=picto_stat_enabled.gif' alt='"._COMPRESSED."' title='"._COMPRESSED."'/>";
-                    } elseif ($item['value'] == "f") {
+                    } elseif ($item['value'] == "N") {
                         $item['value'] = "<img src='".$_SESSION['config']['businessappurl']."static.php?filename=picto_stat_disabled.gif' alt='"._NOT_COMPRESSED."' title='"._NOT_COMPRESSED."'/>";
                     }
                     format_item($item,_IS_COMPRESSED,"5","left","left","bottom",true); break;

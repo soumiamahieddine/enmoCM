@@ -93,7 +93,7 @@ class ReopenMail extends dbquery
                 require_once 'core/class/class_history.php';
                 $hist = new history();
                 $hist->add(
-                    $table, $_SESSION['m_admin']['reopen_mail']['ID'], 'UP',
+                    $table, $_SESSION['m_admin']['reopen_mail']['ID'], 'UP','resup',
                     _REOPEN_THIS_MAIL . ' : '
                     . $_SESSION['m_admin']['reopen_mail']['ID'],
                     $_SESSION['config']['databasetype'], 'apps'

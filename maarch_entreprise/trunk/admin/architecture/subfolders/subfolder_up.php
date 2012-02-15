@@ -106,7 +106,7 @@ if (isset($_REQUEST['valid'])) {
 							$hist = new history();
 							$hist->add(
 								$_SESSION['tablename']['doctypes_second_level'],
-								$id, "UP", _SUBFOLDER_MODIF . " " 
+								$id, "UP", 'subfolderup', _SUBFOLDER_MODIF . " " 
 								. strtolower(_NUM) . $id . " (" . $info . ")", 
 								$_SESSION['config']['databasetype']
 							);
@@ -136,7 +136,7 @@ if (isset($_REQUEST['valid'])) {
 						$hist = new history();
 						$hist->add(
 							$_SESSION['tablename']['doctypes_second_level'], 
-							$res->doctypes_first_level_id, "ADD",
+							$res->doctypes_first_level_id, "ADD",'subfolderadd',
 							_SUBFOLDER_ADDED . " (" . $desc . ")", 
 							$_SESSION['config']['databasetype']
 						);

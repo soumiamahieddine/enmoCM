@@ -97,7 +97,7 @@ class class_users extends dbquery
                     . DIRECTORY_SEPARATOR . 'class_history.php';
                 $hist = new history();
                 $hist->add(
-                    USERS_TABLE, $_SESSION['user']['UserId'], 'UP',
+                    USERS_TABLE, $_SESSION['user']['UserId'], 'UP','usersup',
                     _USER_UPDATE . ' : ' . $_SESSION['user']['LastName'] . ' '
                     . $_SESSION['user']['FirstName'],
                     $_SESSION['config']['databasetype']

@@ -440,10 +440,10 @@ class types extends dbquery
                 if ($_REQUEST['mode'] == "up") {
                     $_SESSION['error'] = _DOCTYPE_MODIFICATION;
                     if ($_SESSION['history']['doctypesup'] == "true") {
-                        $users = new history();
-                        $users->add(
+                        $hist = new history();
+                        $hist->add(
                             DOCTYPES_TABLE,
-                            $_SESSION['m_admin']['doctypes']['TYPE_ID'], "UP",
+                            $_SESSION['m_admin']['doctypes']['TYPE_ID'], "UP",'doctypesup',
                             _DOCTYPE_MODIFICATION . " : "
                             . $_SESSION['m_admin']['doctypes']['LABEL'],
                             $_SESSION['config']['databasetype']
@@ -460,7 +460,7 @@ class types extends dbquery
                 <?php
                 exit();
             } else {
-                $users = new history();
+                $hist = new history();
                 if ($_REQUEST['mode'] == "add") {
                     $tmp = $this->protect_string_db(
                         $_SESSION['m_admin']['doctypes']['LABEL']
@@ -522,8 +522,8 @@ class types extends dbquery
                     $_SESSION['service_tag'] = '';
 
                     if ($_SESSION['history']['doctypesadd'] == "true") {
-                        $users->add(
-                            DOCTYPES_TABLE, $res->type_id, "ADD", _DOCTYPE_ADDED
+                        $hist->add(
+                            DOCTYPES_TABLE, $res->type_id, "ADD", 'doctypesadd', _DOCTYPE_ADDED
                             . " : " . $_SESSION['m_admin']['doctypes']['LABEL'],
                             $_SESSION['config']['databasetype']
                         );

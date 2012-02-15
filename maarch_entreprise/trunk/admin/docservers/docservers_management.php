@@ -110,7 +110,7 @@ if ($mode == "list") {
                     echo $_SESSION['m_admin']['docservers']['docserver_type_id'];?>" />
                 <input name="docserver_type_id_txt" type="text"  id="docserver_type_id_txt" value="<?php
                     echo $docserverTypeTxt;
-                ?>" readonly="readonly" class="readonly"/>
+                ?>" readonly class="readonly"/>
                 <?php
             } else {
                 ?>
@@ -150,14 +150,14 @@ if ($mode == "list") {
             <label><?php echo _IS_READONLY; ?> : </label>
             <input type="radio" class="check" name="is_readonly" value="true" <?php
         if (isset($_SESSION['m_admin']['docservers']['is_readonly'])
-            && $_SESSION['m_admin']['docservers']['is_readonly']
+            && $_SESSION['m_admin']['docservers']['is_readonly'] == "Y"
         ) {
             ?> checked="checked"<?php
         }
         ?> /><?php echo _YES;?>
             <input type="radio" class="check" name="is_readonly" value="false" <?php
         if (!isset($_SESSION['m_admin']['docservers']['is_readonly'])
-            || (!$_SESSION['m_admin']['docservers']['is_readonly']
+            || (!($_SESSION['m_admin']['docservers']['is_readonly'] == "Y")
             || $_SESSION['m_admin']['docservers']['is_readonly'] == '')
         ) {
             ?> checked="checked"<?php
@@ -166,7 +166,7 @@ if ($mode == "list") {
         </p>
         <p>
             <label for="size_format"><?php echo _SIZE_FORMAT; ?> : </label>
-            <select name="size_format" id="size_format" onchange="javascript:convertSize();">
+            <select name="size_format" id="size_format" onChange="javascript:convertSize();">
                 <option value="GB"><?php echo _GB;?></option>
                 <option value="TB"><?php echo _TB;?></option>
                 <option value="MB"><?php echo _MB;?></option>
@@ -180,7 +180,7 @@ if ($mode == "list") {
                 $_SESSION['m_admin']['docservers']['size_limit_number']
             );
         }
-        ?>" onchange="javascript:saveSizeInBytes();"/>
+        ?>" onChange="javascript:saveSizeInBytes();"/>
         </p>
         <?php
         if ($mode == "up") {
@@ -195,7 +195,7 @@ if ($mode == "list") {
                     $_SESSION['m_admin']['docservers']['actual_size_number']
                 );
             }
-            ?>" readonly="readonly" class="readonly"/>
+            ?>" readonly class="readonly"/>
             </p>
             <p>
                 <label for="percentage_full"><?php
@@ -211,7 +211,7 @@ if ($mode == "list") {
                     (100 * $_SESSION['m_admin']['docservers']['actual_size_number']) / $_SESSION['m_admin']['docservers']['size_limit_number']
                 );
             }
-            ?>%" readonly="readonly" class="readonly"/>
+            ?>%" readonly class="readonly"/>
             </p>
             <?php
         }
@@ -362,7 +362,7 @@ if ($mode == "list") {
                     echo $_SESSION['m_admin']['docservers']['coll_id'];?>" />
                 <input name="coll_id_txt" type="text"  id="coll_id_txt" value="<?php
                     echo $collTxt;
-                ?>" readonly="readonly" class="readonly"/>
+                ?>" readonly class="readonly"/>
                 <?php
             } else {
                 ?>
@@ -459,7 +459,7 @@ if ($mode == "list") {
         ?>
             <input type="button" class="button"  name="cancel" value="<?php
         echo _CANCEL;
-        ?>" onclick="javascript:window.location.href='<?php
+        ?>" onClick="javascript:window.location.href='<?php
         echo $_SESSION['config']['businessappurl'];
         ?>index.php?page=docservers_management_controler&amp;admin=docservers&amp;mode=list';"/>
         </p>

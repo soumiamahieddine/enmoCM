@@ -84,7 +84,7 @@ else
 	{
 		require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 		$users = new history();
-		$users->add($_SESSION['tablename']['doctypes_first_level'], $id,"DEL",_STRUCTURE_DEL." ".strtolower(_NUM).$id."", $_SESSION['config']['databasetype']);
+		$users->add($_SESSION['tablename']['doctypes_first_level'], $id,"DEL",'structuredel',_STRUCTURE_DEL." ".strtolower(_NUM).$id."", $_SESSION['config']['databasetype']);
 	}
 	$_SESSION['error'] = _DELETED_STRUCTURE.".";
 	unset($_SESSION['m_admin']);
