@@ -1200,7 +1200,6 @@ CREATE TABLE event_stack
 WITH (
   OIDS=FALSE
 );
-ALTER TABLE event_stack OWNER TO postgres;
 
 CREATE SEQUENCE email_stack_seq
   INCREMENT 1
@@ -1228,7 +1227,6 @@ CREATE TABLE email_stack
 WITH (
   OIDS=FALSE
 );
-ALTER TABLE email_stack OWNER TO postgres;
 
 -- modules/physical_archive/sql/structure/physical_archive.postgresql.sql
 
@@ -1424,7 +1422,6 @@ CREATE TABLE templates_association
 WITH (
   OIDS=FALSE
 );
-ALTER TABLE templates_association OWNER TO postgres;
 
 
 CREATE TABLE templates_doctype_ext
