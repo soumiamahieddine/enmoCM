@@ -219,8 +219,8 @@ class admin_templates extends dbquery
                     if($_SESSION['history']['templateup'] == "true")
                     {
                         require("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
-                        $users = new history();
-                        $users->add($_SESSION['tablename']['temp_templates'], $_SESSION['m_admin']['template']['ID'],"UP",_TEMPLATE_MODIFICATION." : ".$_SESSION['m_admin']['template']['LABEL'], $_SESSION['config']['databasetype'], 'templates');
+                        $hist = new history();
+                        $hist->add($_SESSION['tablename']['temp_templates'], $_SESSION['m_admin']['template']['ID'],"UP",'templateup',_TEMPLATE_MODIFICATION." : ".$_SESSION['m_admin']['template']['LABEL'], $_SESSION['config']['databasetype'], 'templates');
                     }
                 }
                 $this->cleartemplateinfos();
@@ -241,7 +241,7 @@ class admin_templates extends dbquery
                     $this->connect();
                     require("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
                     require("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
-                    $users = new history();
+                    $hist = new history();
                     $request = new request();
                     if( $_REQUEST['mode'] == "add")
                     {
@@ -258,7 +258,7 @@ class admin_templates extends dbquery
                         $_SESSION['m_admin']['template']['ID'] = $res->id;
                         if($_SESSION['history']['templateadd'] == "true")
                         {
-                            $users->add($_SESSION['tablename']['temp_templates'], $_SESSION['m_admin']['template']['ID'],"ADD", _TEMPLATE_ADDED." : ".$_SESSION['m_admin']['template']['LABEL'], $_SESSION['config']['databasetype'], 'templates');
+                            $hist->add($_SESSION['tablename']['temp_templates'], $_SESSION['m_admin']['template']['ID'],"ADD",'templateadd', _TEMPLATE_ADDED." : ".$_SESSION['m_admin']['template']['LABEL'], $_SESSION['config']['databasetype'], 'templates');
                         }
                     }
                     echo $core->execute_modules_services($_SESSION['modules_services'], 'uptemplate', "include");
@@ -316,8 +316,8 @@ class admin_templates extends dbquery
                 if($_SESSION['history']['templatedel'])
                 {
                     require("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
-                    $users = new history();
-                    $users->add($_SESSION['tablename']['temp_templates'], $id,"DEL",_TEMPLATE_DELETION." : ".$label, $_SESSION['config']['databasetype'], 'templates');
+                    $hist = new history();
+                    $hist->add($_SESSION['tablename']['temp_templates'], $id,"DEL",'templatedel', _TEMPLATE_DELETION." : ".$label, $_SESSION['config']['databasetype'], 'templates');
                 }
                     $_SESSION['error'] = _DELETED_TEMPLATE;
                     header("location: ".$_SESSION['config']['businessappurl']."index.php?page=templates&module=templates&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what);

@@ -200,4 +200,20 @@
 		<label>Special: Mail du destinataire traitant</label>
 		<var_name>[CURRENT_USER_EMAIL]</var_name>
 	</item>
+	<item>
+		<label>Fusion: champ</label>
+		<var_name>{#mergefield.field}</var_name>
+	</item>
+	<item>
+		<label>Fusion: liste</label>
+		<var_name>{#mergelist.field}</var_name>
+	</item>
+	<item>
+		<label>Fusion: tableau</label>
+		<var_name>{#mergetable.field}</var_name>
+	</item>
+	<item>
+		<label>Fusion: traduction</label>
+		<var_name>{#translate._CONSTANT}</var_name>
+	</item>
 </root>

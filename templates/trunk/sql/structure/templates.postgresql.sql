@@ -26,14 +26,23 @@ WITH (OIDS=FALSE);
 
 CREATE TABLE templates_association
 (
+  system_id bigint NOT NULL DEFAULT nextval('templates_association_seq'::regclass),
   template_id bigint NOT NULL,
   what character varying(255) NOT NULL,
   value_field character varying(255) NOT NULL,
-  system_id bigint NOT NULL DEFAULT nextval('templates_association_seq'::regclass),
   maarch_module character varying(255) NOT NULL DEFAULT 'apps'::character varying,
+  description character varying(255),
+  diffusion_type character varying(50),
+  diffusion_properties character varying(255),
+  exclusion_type character varying(50),
+  exclusion_properties character varying(255),
+  is_attached character(1) NOT NULL DEFAULT 'N'::bpchar,
   CONSTRAINT templates_association_pkey PRIMARY KEY (system_id)
 )
-WITH (OIDS=FALSE);
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE templates_association OWNER TO postgres;
 
 CREATE TABLE templates_doctype_ext
 (
