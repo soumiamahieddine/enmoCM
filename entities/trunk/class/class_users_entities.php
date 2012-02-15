@@ -384,8 +384,8 @@ class users_entities extends dbquery
                 {
                     $tmp_h = $this->protect_string_db(_USER_UPDATE." : ".$_SESSION['m_admin']['entity']['user_LastName']." ".$_SESSION['m_admin']['entity']['user_FirstName']." (".$_SESSION['m_admin']['entity']['user_UserId'].")");
                     require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
-                    $users = new history();
-                    $users->add($_SESSION['tablename']['users'], $_SESSION['m_admin']['entity']['user_UserId'],"UP",$tmp_h, $_SESSION['config']['databasetype']);
+                    $hist = new history();
+                    $hist->add($_SESSION['tablename']['users'], $_SESSION['m_admin']['entity']['user_UserId'],"UP",'usersup',$tmp_h, $_SESSION['config']['databasetype']);
                 }
 
                 $this->clearuserinfos();

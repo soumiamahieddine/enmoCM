@@ -584,8 +584,8 @@ class entity extends dbquery
         if($_SESSION['history'][$hist] == "true")
         {
             require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
-            $users = new history();
-            $users->add(ENT_ENTITIES, $id, $histKey, $histLabel." : ".$id, $_SESSION['config']['databasetype']);
+            $hist = new history();
+            $hist->add(ENT_ENTITIES, $id, $histKey, 'entityup', $histLabel." : ".$id, $_SESSION['config']['databasetype']);
         }
         $this->connect();
         $this->query('select entity_id from '.ENT_ENTITIES." where parent_entity_id = '".$this->protect_string_db(trim($id))."'");
@@ -601,8 +601,8 @@ class entity extends dbquery
                 if($_SESSION['history'][$hist] == "true")
                 {
                     require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
-                    $users = new history();
-                    $users->add(ENT_ENTITIES, $line->entity_id, $histKey, $histLabel." : ".$line->entity_id, $_SESSION['config']['databasetype']);
+                    $hist = new history();
+                    $hist->add(ENT_ENTITIES, $line->entity_id, $histKey, 'entityup', $histLabel." : ".$line->entity_id, $_SESSION['config']['databasetype']);
                 }
 
                 $count++;
@@ -677,8 +677,8 @@ class entity extends dbquery
                         if($_SESSION['history']['entitydel'] == "true")
                         {
                             require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_history.php');
-                            $users = new history();
-                            $users->add(ENT_ENTITIES, $id,'DEL',_ENTITY_DELETION." : ".$this->protect_string_db(trim($id)), $_SESSION['config']['databasetype']);
+                            $hist = new history();
+                            $hist->add(ENT_ENTITIES, $id,'DEL','entitydel', _ENTITY_DELETION." : ".$this->protect_string_db(trim($id)), $_SESSION['config']['databasetype']);
                         }
                         $_SESSION['error'] = $id." "._ENTITY_DELETED;
                     }
@@ -871,7 +871,7 @@ class entity extends dbquery
                     {
                         require("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
                         $hist = new history();
-                        $hist->add(ENT_ENTITIES, $_SESSION['m_admin']['entity']['entityId'] ,"ADD",_ADD_ENTITY." : ".$_SESSION['m_admin']['entity']['entityId'] , $_SESSION['config']['databasetype'], 'entities');
+                        $hist->add(ENT_ENTITIES, $_SESSION['m_admin']['entity']['entityId'] ,"ADD",'entityadd',_ADD_ENTITY." : ".$_SESSION['m_admin']['entity']['entityId'] , $_SESSION['config']['databasetype'], 'entities');
                     }
                     $this->clearentityinfos();
                     $_SESSION['error'] = _ENTITY_ADDITION;
@@ -891,7 +891,7 @@ class entity extends dbquery
                 {
                     require('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_history.php');
                     $hist = new history();
-                    $hist->add(ENT_ENTITIES, $_SESSION['m_admin']['entity']['entityId'] ,'UP',_ENTITY_UPDATED.' : '.$_SESSION['m_admin']['entity']['entityId'] , $_SESSION['config']['databasetype'], 'folder');
+                    $hist->add(ENT_ENTITIES, $_SESSION['m_admin']['entity']['entityId'] ,'UP','entityup',_ENTITY_UPDATED.' : '.$_SESSION['m_admin']['entity']['entityId'] , $_SESSION['config']['databasetype'], 'folder');
                 }
                 $this->clearentityinfos();
                 $_SESSION['error'] = _ENTITY_MODIFICATION;
@@ -1088,11 +1088,7 @@ class entity extends dbquery
 			}
 			$entities = preg_replace('/, $/', '', $entities);
 			if($entities == '' && $_SESSION['user']['UserId']== 'superadmin') {
-				if($_SESSION['config']['databasetype'] == "ORACLE" || $_SESSION['config']['databasetype'] == "SQLSERVER") {
-					$entities = "''''";
-				} else {
-					$entities = "''";
-				}
+				$entities = $this->empty_list();
 			}
             $this->connect();
             $this->query("select res_id, viewed from ".$_SESSION['tablename']['ent_listinstance']." where coll_id = '".$this->protect_string_db($collId)."' and res_id = ".$docId." and item_type = 'user_id' and item_id = '".$_SESSION['user']['UserId']."'");

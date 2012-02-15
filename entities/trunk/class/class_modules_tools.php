@@ -176,13 +176,7 @@ class entities extends dbquery
             $entities = preg_replace('/, $/', '', $entities);
 
             if ($entities == '' && $userId == 'superadmin') {
-                if ($_SESSION['config']['databasetype'] == 'ORACLE'
-                    || $_SESSION['config']['databasetype'] == 'SQLSERVER'
-                ) {
-                    $entities = "''''";
-                } else {
-                    $entities = "''";
-                }
+                $entities = $this->empty_list();
             }
             $where = str_replace("@my_entities", $entities, $where);
         }
@@ -219,13 +213,7 @@ class entities extends dbquery
                 }
             }
             if ($primEntity == '' && $userId == 'superadmin') {
-                if ($_SESSION['config']['databasetype'] == 'ORACLE'
-                    || $_SESSION['config']['databasetype'] == 'SQLSERVER'
-                ) {
-                    $primEntity = "''''";
-                } else {
-                    $primEntity = "''";
-                }
+                $primEntity = $this->empty_list();
             }
             $where = str_replace("@my_primary_entity", $primEntity, $where);
             //echo "<br>".$where."<br>";
@@ -259,13 +247,7 @@ class entities extends dbquery
                 }
                 $entities = preg_replace("|, $|", '', $entities);
                 if ($entities == '' && $userId == 'superadmin') {
-                    if ($_SESSION['config']['databasetype'] == 'ORACLE'
-                        || $_SESSION['config']['databasetype'] == 'SQLSERVER'
-                    ) {
-                        $entities = "''''";
-                    } else {
-                        $entities = "''";
-                    }
+                    $entities = $this->empty_list();
                 }
                 $where = preg_replace(
                 	"|@subentities\['[^\]]*'\]|", $entities, $where, 1
@@ -303,13 +285,7 @@ class entities extends dbquery
                 }
                 $entities = preg_replace("|, $|", '', $entities);
                 if ($entities == '' && $userId == 'superadmin') {
-                    if ($_SESSION['config']['databasetype'] == 'ORACLE'
-                        || $_SESSION['config']['databasetype'] == 'SQLSERVER'
-                    ) {
-                        $entities = "''''";
-                    } else {
-                        $entities = "''";
-                    }
+                    $entities = $this->empty_list();
                 }
 
                 $where = preg_replace(
@@ -334,13 +310,7 @@ class entities extends dbquery
                 }
                 $sisters = preg_replace("|, $|", '', $sisters);
                 if ($sisters == '' && $userId == 'superadmin') {
-                    if ($_SESSION['config']['databasetype'] == 'ORACLE'
-                        || $_SESSION['config']['databasetype'] == 'SQLSERVER'
-                    ) {
-                        $sisters = "''''";
-                    } else {
-                        $sisters = "''";
-                    }
+                    $sisters = $this->empty_list();
                 }
                 $where = preg_replace(
                 	"|@sisters_entities\['[^\]]*'\]|", $sisters, $where, 1
@@ -359,13 +329,7 @@ class entities extends dbquery
                 $entity = $obj->getParentEntityId($tmp);
                 $entity = "'" . $entity . "'";
                 if ($entity == '' && $userId == 'superadmin') {
-                    if ($_SESSION['config']['databasetype'] == 'ORACLE'
-                        || $_SESSION['config']['databasetype'] == 'SQLSERVER'
-                    ) {
-                        $entity = "''''";
-                    } else {
-                        $entity = "''";
-                    }
+                    $entity = $this->empty_list();
                 }
                 $where = preg_replace(
                 	"|@parent_entity\['[^\]]*'\]|", $entity, $where, 1
