@@ -48,7 +48,7 @@ if (isset($_POST['value']) && $_POST['value'] == "submit")
 		$history->connect();
 		$history->query("select firstname, lastname from ".$_SESSION['tablename']['users']." where user_id = '".$this_user."'");
 		$res = $history->fetch_object();
-		$history->add($_SESSION['tablename']['users'],$this_user,"RET",$res->firstname." ".$res->lastname.' '._BACK_FROM_VACATION, $_SESSION['config']['databasetype']);
+		$history->add($_SESSION['tablename']['users'],$this_user,"RET",'userabs', $res->firstname." ".$res->lastname.' '._BACK_FROM_VACATION, $_SESSION['config']['databasetype']);
 	}
 	?>
 		 <script type="text/javascript"> window.location.href="<?php echo $_SESSION['config']['businessappurl'];?>index.php";</script>

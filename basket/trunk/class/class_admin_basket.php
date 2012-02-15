@@ -331,7 +331,7 @@ class admin_basket extends dbquery
                     {
                         require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
                         $hist = new history();
-                        $hist->add($_SESSION['tablename']['bask_baskets'], $_SESSION['m_admin']['basket']['basketId'],"ADD",_BASKET_ADDED." : ".$_SESSION['m_admin']['basket']['basketId'], $_SESSION['config']['databasetype'], 'basket');
+                        $hist->add($_SESSION['tablename']['bask_baskets'], $_SESSION['m_admin']['basket']['basketId'],"ADD",'basketadd',_BASKET_ADDED." : ".$_SESSION['m_admin']['basket']['basketId'], $_SESSION['config']['databasetype'], 'basket');
                     }
 
                     // Empties the basket administration session var and redirect to baskets list
@@ -369,7 +369,7 @@ class admin_basket extends dbquery
                 {
                     require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
                     $hist = new history();
-                    $hist->add($_SESSION['tablename']['bask_baskets'], $_SESSION['m_admin']['basket']['basketId'],"UP",_BASKET_UPDATE." : ".$_SESSION['m_admin']['basket']['basketId'], $_SESSION['config']['databasetype'], 'basket');
+                    $hist->add($_SESSION['tablename']['bask_baskets'], $_SESSION['m_admin']['basket']['basketId'],"UP",'basketup',_BASKET_UPDATE." : ".$_SESSION['m_admin']['basket']['basketId'], $_SESSION['config']['databasetype'], 'basket');
                 }
 
                 // Empties the basket administration session var and redirect to baskets list
@@ -538,8 +538,8 @@ class admin_basket extends dbquery
                     if($_SESSION['history']['basketval'] == "true")
                     {
                         require_once("core/class/class_history.php");
-                        $users = new history();
-                        $users->add($_SESSION['tablename']['bask_baskets'], $id,"VAL",_BASKET_AUTORIZATION." : ".$id, $_SESSION['config']['databasetype'] ,'basket');
+                        $hist = new history();
+                        $hist->add($_SESSION['tablename']['bask_baskets'], $id,"VAL",'basketval',_BASKET_AUTORIZATION." : ".$id, $_SESSION['config']['databasetype'] ,'basket');
                     }
                     $_SESSION['error'] = _AUTORIZED_BASKET;
                 }
@@ -550,8 +550,8 @@ class admin_basket extends dbquery
                     if($_SESSION['history']['basketban'] == "true")
                     {
                         require_once("core/class/class_history.php");
-                        $users = new history();
-                        $users->add($_SESSION['tablename']['bask_baskets'], $id,"BAN",_BASKET_SUSPENSION." : ".$id, $_SESSION['config']['databasetype'], 'basket');
+                        $hist = new history();
+                        $hist->add($_SESSION['tablename']['bask_baskets'], $id,"BAN",'basketban',_BASKET_SUSPENSION." : ".$id, $_SESSION['config']['databasetype'], 'basket');
                     }
                     $_SESSION['error'] = _SUSPENDED_BASKET;
 
@@ -573,8 +573,8 @@ class admin_basket extends dbquery
                     if($_SESSION['history']['basketdel'] == "true")
                     {
                         require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
-                        $users = new history();
-                        $users->add($_SESSION['tablename']['bask_baskets'], $id,"DEL",_BASKET_DELETION." : ".$id, $_SESSION['config']['databasetype'],  'basket');
+                        $hist = new history();
+                        $hist->add($_SESSION['tablename']['bask_baskets'], $id,"DEL",'basketdel',_BASKET_DELETION." : ".$id, $_SESSION['config']['databasetype'],  'basket');
                     }
                     $_SESSION['error'] = _BASKET_DELETION;
                 }

@@ -71,7 +71,7 @@ $time = $core_tools->get_session_time_expire();
 //$core_tools->show_array( $_SESSION['m_admin']['basket']['groups']);
 //$core_tools->show_array( $_SESSION['m_admin']['basket']['all_actions']);
 ?>
-<body onLoad="setTimeout(window.close, <?php echo $time;?>*60*1000);">
+<body onload="setTimeout(window.close, <?php echo $time;?>*60*1000);">
 
     <div class="error"><?php echo $_SESSION['error']; $_SESSION['error'] = '';?></div>
     <br/>
@@ -128,7 +128,7 @@ $time = $core_tools->get_session_time_expire();
         <p>&nbsp;</p>
         <p>
             <label><?php echo _DEFAULT_ACTION_LIST;?> :</label>
-            <select name="default_action_page" id="default_action_page" onChange="manage_actions(this.options[this.selectedIndex].value, true, '<?php echo $_SESSION['config']['businessappurl']."index.php?display=true&module=basket&page=check_action";?>');">
+            <select name="default_action_page" id="default_action_page" onchange="manage_actions(this.options[this.selectedIndex].value, true, '<?php echo $_SESSION['config']['businessappurl']."index.php?display=true&module=basket&page=check_action";?>');">
                 <option value=""><?php echo _NO_ACTION_DEFINED;?></option>
                 <?php
                 for($i=0; $i < count($_SESSION['m_admin']['basket']['all_actions']); $i++)
@@ -197,7 +197,7 @@ $time = $core_tools->get_session_time_expire();
                         echo 'disabled="disabled"';
                     }?>/>
                     <span id="label_<?php echo $_SESSION['m_admin']['basket']['all_actions'][$i]['ID']; ?>"><?php echo $_SESSION['m_admin']['basket']['all_actions'][$i]['LABEL'];  $tr++;     ?></span>
-                    <a href="javascript://" onClick="check_this_box('checkbox_<?php echo $_SESSION['m_admin']['basket']['all_actions'][$i]['ID'] ?>');show_config_action(<?php echo $_SESSION['m_admin']['basket']['all_actions'][$i]['ID']; ?>, true, <?php if(!empty($_SESSION['m_admin']['basket']['all_actions'][$i]['KEYWORD'])){ echo 'true';}else{ echo 'false';}?>);" class="config" id="link_<?php echo $_SESSION['m_admin']['basket']['all_actions'][$i]['ID']; ?>" style="display:inline;"><?php echo _CONFIG;?></a></div>
+                    <a href="javascript://" onclick="check_this_box('checkbox_<?php echo $_SESSION['m_admin']['basket']['all_actions'][$i]['ID'] ?>');show_config_action(<?php echo $_SESSION['m_admin']['basket']['all_actions'][$i]['ID']; ?>, true, <?php if(!empty($_SESSION['m_admin']['basket']['all_actions'][$i]['KEYWORD'])){ echo 'true';}else{ echo 'false';}?>);" class="config" id="link_<?php echo $_SESSION['m_admin']['basket']['all_actions'][$i]['ID']; ?>" style="display:inline;"><?php echo _CONFIG;?></a></div>
                     </td>
                     <!--</li>-->
                     <?php
@@ -277,7 +277,7 @@ $time = $core_tools->get_session_time_expire();
             </script>
             <p>&nbsp;</p>
             <p class="buttons">
-                <input type="button" name="submit_form" class="button" value="<?php if(empty($group)){ echo _ADD_THIS_GROUP;}else{ echo _MODIFY_THIS_GROUP;}?>" onClick="valid_actions_param('group_basket');this.form.submit();" />
+                <input type="button" name="submit_form" class="button" value="<?php if(empty($group)){ echo _ADD_THIS_GROUP;}else{ echo _MODIFY_THIS_GROUP;}?>" onclick="valid_actions_param('group_basket');this.form.submit();" />
                 <input type="submit" name="cancel" value="<?php echo _CANCEL;?>"  class="button"/>
             </p>
     </form>

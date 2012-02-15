@@ -47,7 +47,7 @@ if(isset($_REQUEST['submit']) && isset($_REQUEST['user_id']) && !empty($_REQUEST
 		$history->connect();
 		$history->query("select firstname, lastname from ".$_SESSION['tablename']['users']." where user_id = '".$_REQUEST['user_id']."'");
 		$res = $history->fetch_object();
-		$history->add($_SESSION['tablename']['users'],$_SESSION['user']['UserId'],"ABS",_ABS_USER.' : '.$res->firstname.' '.$res->lastname, $_SESSION['config']['databasetype']);
+		$history->add($_SESSION['tablename']['users'],$_SESSION['user']['UserId'],"ABS",'userabs', _ABS_USER.' : '.$res->firstname.' '.$res->lastname, $_SESSION['config']['databasetype']);
 	}
 
 
