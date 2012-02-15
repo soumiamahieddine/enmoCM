@@ -135,13 +135,13 @@ class cases extends dbquery
 		if ($_SESSION['history']['casesadd'] == "true")
 		{
 			$hist = new history();
-			$hist->add($_SESSION['tablename']['cases'], $caseId,"NEW",_NEW_CASE." ", $_SESSION['config']['databasetype']);
+			$hist->add($_SESSION['tablename']['cases'], $caseId,"NEW",'casesadd',_NEW_CASE." ", $_SESSION['config']['databasetype']);
 		}
 		//History adds
 		if ($_SESSION['history']['caseslink'] == "true")
 		{
 			$hist = new history();
-			$hist->add($_SESSION['tablename']['cases'], $caseId,"LINK",_RES_ATTACH_ON_CASE." ".$res_id, $_SESSION['config']['databasetype']);
+			$hist->add($_SESSION['tablename']['cases'], $caseId,"LINK",'caseslink',_RES_ATTACH_ON_CASE." ".$res_id, $_SESSION['config']['databasetype']);
 		}
 
 		//Limitation (1,1) Cases V1
@@ -240,7 +240,7 @@ class cases extends dbquery
 		if ($_SESSION['history']['caseslink'] == "true")
 		{
 			$hist = new history();
-			$hist->add($_SESSION['tablename']['cases'], $caseId,"LINK",_RES_ATTACH_ON_CASE." ".$res_id, $_SESSION['config']['databasetype']);
+			$hist->add($_SESSION['tablename']['cases'], $caseId,"LINK",'caseslink',_RES_ATTACH_ON_CASE." ".$res_id, $_SESSION['config']['databasetype']);
 		}
 		//Limitation (1,1) Cases V1
 		$this->detach_all_from_cases($res_id,$caseId);
@@ -277,7 +277,7 @@ class cases extends dbquery
 			if ($_SESSION['history']['casesunlink'] == "true")
 			{
 				$hist = new history();
-				$hist->add($_SESSION['tablename']['cases'], $_SESSION['m_admin']['users']['user_id'],"UNLINK",_RES_DETTACH_ON_CASE." ".$res_id, $_SESSION['config']['databasetype']);
+				$hist->add($_SESSION['tablename']['cases'], $_SESSION['m_admin']['users']['user_id'],"UNLINK",'casesunlink',_RES_DETTACH_ON_CASE." ".$res_id, $_SESSION['config']['databasetype']);
 			}
 
 		}
