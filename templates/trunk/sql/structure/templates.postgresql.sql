@@ -1,4 +1,3 @@
-
 CREATE SEQUENCE templates_seq
   INCREMENT 1
   MINVALUE 1
@@ -42,7 +41,6 @@ CREATE TABLE templates_association
 WITH (
   OIDS=FALSE
 );
-ALTER TABLE templates_association OWNER TO postgres;
 
 CREATE TABLE templates_doctype_ext
 (
