@@ -75,7 +75,7 @@ class admin_reports extends dbquery
 		{
 			require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 			$hist = new history();
-			$hist->add($_SESSION['tablename']['usergroups_reports'], $group,"ADD",_GROUP_REPORTS_ADDED." : ".$group, $_SESSION['config']['databasetype']);
+			$hist->add($_SESSION['tablename']['usergroups_reports'], $group,"ADD",'usergroupsreportsadd', _GROUP_REPORTS_ADDED." : ".$group, $_SESSION['config']['databasetype']);
 		}
 
 		unset($_SESSION['m_admin']);
