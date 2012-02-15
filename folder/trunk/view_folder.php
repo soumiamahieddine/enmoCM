@@ -48,7 +48,7 @@ require_once("modules".DIRECTORY_SEPARATOR."folder".DIRECTORY_SEPARATOR."class".
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
 $security = new security();
-$users = new history();
+$hist = new history();
 $func = new functions();
 $connexion = new dbquery();
 $connexion->connect();
@@ -261,24 +261,24 @@ if($_REQUEST['folder_index'] == "true")
     if(isset($_REQUEST['custom_t4']) && !empty($_REQUEST['custom_t4']))
     {
         $tmp_contrat = $folder_object->get_field('custom_t4', true);
-        $users->query('select contract_label from '.$_SESSION['tablename']['contracts']." where contract_id = ".$tmp_contrat);
-        $res = $users->fetch_object();
+        $hist->query('select contract_label from '.$_SESSION['tablename']['contracts']." where contract_id = ".$tmp_contrat);
+        $res = $hist->fetch_object();
         $old_contract = $res->contract_label;
         $contrat_label = '';
-        $users->query("select contract_label as label from ".$_SESSION['tablename']['contracts']." where contract_id = ".$_REQUEST['custom_t4']);
-        $res = $users->fetch_object();
+        $hist->query("select contract_label as label from ".$_SESSION['tablename']['contracts']." where contract_id = ".$_REQUEST['custom_t4']);
+        $res = $hist->fetch_object();
         $contrat_label = $res->label;
         if($tmp_contrat <> $_REQUEST['custom_t4'])
         {
-            $users->add($_SESSION['tablename']['fold_folders'],$folder_object->get_field('folders_system_id')  ,"UP", _MODIF_CONTRACT." : ".$contrat_label, $_SESSION['config']['databasetype'],'folder');
-            $users->add($_SESSION['tablename']['fold_folders'],$folder_object->get_field('folders_system_id')  ,"UP", _MODIF_CONTRACT." : ".$old_contrat." -> ".$contrat_label, $_SESSION['config']['databasetype'], 'folder');
+            $hist->add($_SESSION['tablename']['fold_folders'],$folder_object->get_field('folders_system_id')  ,"UP", 'folderup', _MODIF_CONTRACT." : ".$contrat_label, $_SESSION['config']['databasetype'],'folder');
+            $hist->add($_SESSION['tablename']['fold_folders'],$folder_object->get_field('folders_system_id')  ,"UP", 'folderup',_MODIF_CONTRACT." : ".$old_contrat." -> ".$contrat_label, $_SESSION['config']['databasetype'], 'folder');
         }
     }
     $where = "folders_system_id = ".$_SESSION['FOLDER']['SEARCH']['FOLDER_ID']."";
     $request->update($_SESSION['tablename']['fold_folders'], $data,$where, $_SESSION['config']['databasetpe']);
     if($_SESSION['history']['folderup'] == 'true')
     {
-        $users->add($_SESSION['tablename']['fold_folders'],$tmp_id ,"UP", _FOLDER_INDEX_MODIF, $_SESSION['config']['databasetype'],'folder');
+        $hist->add($_SESSION['tablename']['fold_folders'],$tmp_id ,"UP", 'folderup',_FOLDER_INDEX_MODIF, $_SESSION['config']['databasetype'],'folder');
     }
 }
 else
@@ -400,7 +400,7 @@ if(isset($_REQUEST['delete_doc']) && !empty($_REQUEST['coll_id']))
                                 {
                                      if($_SESSION['history']['folderview'] == "true")
                                     {
-                                        $users->add($_SESSION['tablename']['fold_folders'], $_SESSION['current_folder_id'] ,"VIEW", _VIEW_FOLDER." ".strtolower(_NUM).$folder_array['folder_id'], $_SESSION['config']['databasetype'],'folder');
+                                        $hist->add($_SESSION['tablename']['fold_folders'], $_SESSION['current_folder_id'] ,"VIEW", 'folderview', _VIEW_FOLDER." ".strtolower(_NUM).$folder_array['folder_id'], $_SESSION['config']['databasetype'],'folder');
                                     }
                                     $folder_show->view_folder_info_details($folder_array,"index.php?page=view_folder&amp;module=folder");
                                     echo "<hr/>";

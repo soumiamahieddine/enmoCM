@@ -27,8 +27,8 @@ if(isset($_REQUEST['id_value']) && !empty($_REQUEST['id_value']))
 		$db->query('select folder_id from '.$_SESSION['tablename']['fold_folders']." where folders_system_id = ".$folder_sys_id."");
 		$res = $db->fetch_object();
 		require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
-		$users = new history();
-		$users->add($_SESSION['tablename']['fold_folders'], $res->folder_id ,"DEL", _DEL_FOLDER_NUM.$res->folder_id, $_SESSION['config']['databasetype'],'folder');
+		$hist = new history();
+		$hist->add($_SESSION['tablename']['fold_folders'], $res->folder_id ,"DEL", 'folderdel', _DEL_FOLDER_NUM.$res->folder_id, $_SESSION['config']['databasetype'],'folder');
 	}
 	for($i=0; $i< count($_SESSION['collections']);$i++)
 	{

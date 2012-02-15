@@ -23,14 +23,14 @@ $core_tools->load_lang();
 require_once("modules/folder".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
 require_once("core/class/class_history.php");
 //*************** HISTORY ***************//
-$users = new history();
+$hist = new history();
 if($_SESSION['origin'] <> 'store_file' && !$_SESSION['is_store'])
 {
-	$users->add($_SESSION['tablename']['fold_folders'], $_SESSION['current_folder_id'], "ADD", $_SESSION['error']." ("._TYPE." : ".$func->show_string($_SESSION['type_description']).", ".strtolower(_NUM).$_SESSION['new_id'].") ", $_SESSION['config']['databasetype'],'indexing_searching');
+	$hist->add($_SESSION['tablename']['fold_folders'], $_SESSION['current_folder_id'], "ADD", 'folderlink', $_SESSION['error']." ("._TYPE." : ".$func->show_string($_SESSION['type_description']).", ".strtolower(_NUM).$_SESSION['new_id'].") ", $_SESSION['config']['databasetype'],'indexing_searching');
 }
 else
 {
-	$users->add($_SESSION['tablename']['fold_folders'], $_SESSION['current_folder_id'], "ADD", $_SESSION['error']." "._BY_INTERN." ", $_SESSION['config']['databasetype'],'indexing_searching');
+	$hist->add($_SESSION['tablename']['fold_folders'], $_SESSION['current_folder_id'], "ADD", 'folderlink', $_SESSION['error']." "._BY_INTERN." ", $_SESSION['config']['databasetype'],'indexing_searching');
 }
 //*************** UPDATING THE FOLDER ***************//
 $folder = new folder();
@@ -46,7 +46,7 @@ else
 	if($folder->get_field('status') == "IMP")
 	{
 		$folder->query("update ".$_SESSION['tablename']['fold_folders']." set status = 'NEW' where folders_system_id = ".$_SESSION['current_folder_id']);
-		$users->add($_SESSION['tablename']['fold_folders'], $_SESSION['current_folder_id'], "ADD", _CREATE_FOLDER, $_SESSION['config']['databasetype'],'indexing_searching');
+		$hist->add($_SESSION['tablename']['fold_folders'], $_SESSION['current_folder_id'], "ADD", 'folderadd',_CREATE_FOLDER, $_SESSION['config']['databasetype'],'indexing_searching');
 	}
 }
 

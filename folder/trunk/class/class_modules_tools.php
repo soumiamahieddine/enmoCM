@@ -342,7 +342,7 @@ class folder extends request
 				if ($_SESSION['history']['folderadd'] == "true") {
 					$hist = new history();
 					$hist->add(
-					    FOLD_FOLDERS_TABLE, $id, "ADD",
+					    FOLD_FOLDERS_TABLE, $id, "ADD",'folderadd',
 					    _FOLDER_ADDED . " : "
 					    . $_SESSION['m_admin']['folder']['folder_id'],
 					    $_SESSION['config']['databasetype'], 'folder'
@@ -724,7 +724,7 @@ class folder extends request
 			if($_SESSION['history']['folderup'])
 			{
 				$hist = new history();
-				$hist->add(FOLD_FOLDERS_TABLE, $id_to_update, "UP", $_SESSION['error'], $_SESSION['config']['databasetype'],'apps');
+				$hist->add(FOLD_FOLDERS_TABLE, $id_to_update, "UP", 'folderup', $_SESSION['error'], $_SESSION['config']['databasetype'],'apps');
 			}
 		}
 		$_SESSION['error_page'] = $_SESSION['error'];
@@ -755,7 +755,7 @@ class folder extends request
 			$hist = new history();
 			$msg = _FOLDER_CLOSED .' : ' . $folderId ;
 			$hist->add(
-			    FOLD_FOLDERS_TABLE, $folderId, "UP", $msg,
+			    FOLD_FOLDERS_TABLE, $folderId, "UP", 'folderup', $msg,
 			    $_SESSION['config']['databasetype'], 'apps'
 			);
 		}
@@ -774,7 +774,7 @@ class folder extends request
 			$hist = new history();
 			$msg = _FROZEN_FOLDER .' : ' . $folderId ;
 			$hist->add(
-			    FOLD_FOLDERS_TABLE, $folderId, "UP", $msg,
+			    FOLD_FOLDERS_TABLE, $folderId, "UP", 'folderup', $msg,
 			    $_SESSION['config']['databasetype'], 'apps'
 			);
 		}
@@ -795,7 +795,7 @@ class folder extends request
 			$hist = new history();
 			$msg = _UNFROZEN_FOLDER .' : ' . $folderId ;
 			$hist->add(
-			    FOLD_FOLDERS_TABLE, $folderId, "UP", $msg,
+			    FOLD_FOLDERS_TABLE, $folderId, "UP", 'folderup', $msg,
 			    $_SESSION['config']['databasetype'], 'apps'
 			);
 		}

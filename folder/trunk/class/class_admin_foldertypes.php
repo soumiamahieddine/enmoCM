@@ -516,7 +516,7 @@ class foldertype extends dbquery
                         $hist->add(
                         	$_SESSION['tablename']['fold_foldertypes'], 
                         	$_SESSION['m_admin']['foldertype']['foldertypeId'],
-                        	"ADD", _FOLDERTYPE_ADDED . " : " 
+                        	"ADD", 'foldertypeadd', _FOLDERTYPE_ADDED . " : " 
                         	. $_SESSION['m_admin']['foldertype']['foldertypeId'], 
                         	$_SESSION['config']['databasetype'], 'folder'
                         );
@@ -583,7 +583,7 @@ class foldertype extends dbquery
                     $hist->add(
                     	$_SESSION['tablename']['fold_foldertypes'], 
                     	$_SESSION['m_admin']['foldertype']['foldertypeId'], 
-                    	"UP", _FOLDERTYPE_UPDATE . " : " 
+                    	"UP", 'foldertypeup', _FOLDERTYPE_UPDATE . " : " 
                     	. $_SESSION['m_admin']['foldertype']['foldertypeId'], 
                     	$_SESSION['config']['databasetype'], 'folder'
                     );
@@ -695,7 +695,7 @@ class foldertype extends dbquery
                         $users = new history();
                         $users->add(
                         	$_SESSION['tablename']['fold_foldertypes'], $id,
-                        	"DEL", _FOLDERTYPE_DELETION . " : " . $id, 
+                        	"DEL", 'foldertypedel', _FOLDERTYPE_DELETION . " : " . $id, 
                         	$_SESSION['config']['databasetype'], 'folder'
                         );
                     }

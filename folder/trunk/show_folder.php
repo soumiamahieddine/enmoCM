@@ -45,8 +45,8 @@ require_once "core/class/class_history.php";
 $folderObject = new folder();
 $request = new request;
 $func = new functions();
-$users = new history();
-$users->connect();
+$hist = new history();
+$hist->connect();
 $status = '';
 $_SESSION['current_foldertype'] = '';
 $_SESSION['origin'] = "show_folder";
@@ -109,8 +109,8 @@ if ($_REQUEST['id'] <> "") {
             );
 
             if ($_SESSION['history']['folderview'] == true) {
-            	$users->add(
-            		$_SESSION['tablename']['fold_folders'], $id , "VIEW",
+            	$hist->add(
+            		$_SESSION['tablename']['fold_folders'], $id , "VIEW",'folderview',
             		_VIEW_FOLDER . " " . strtolower(_NUM)
             		. $folderArray['folder_id'], 
             		$_SESSION['config']['databasetype'], 'folder'
