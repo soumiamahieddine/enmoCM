@@ -59,10 +59,10 @@ class templates_association_controler extends ObjectControler implements ObjectC
 {
 
     /**
-    * Returns an lc_policies object based on a lc_policies identifier
+    * Returns an templates_assoc object based on a templates_assoc identifier
     *
-    * @param  $policy_id string  lc_policies identifier
-    * @return lc_policies object with properties from the database or null
+    * @param  $ta_sid string  templates_assoc identifier
+    * @return templates_assoc object with properties from the database or null
     */
     public function get($template_id) {
         
@@ -77,7 +77,7 @@ class templates_association_controler extends ObjectControler implements ObjectC
         }
     }
 
-	
+    
     /**
     * Deletes in the database (lc_policies related tables) a given lc_policies (policy_id)
     *
@@ -102,7 +102,7 @@ class templates_association_controler extends ObjectControler implements ObjectC
                     || $params['log_event_del'] == true)) {
                 $history = new history();
                 $history->add(
-                    TEMPLATES_ASSOCIATON, $template_association->system_id, 'DEL', _EVENT_DELETED . ' : '
+                    TEMPLATES_ASSOCIATON, $template_association->system_id, 'DEL', 'eventdel',_EVENT_DELETED . ' : '
                     . $template_association->system_id, $params['databasetype']
                 );
             }
@@ -129,8 +129,13 @@ class templates_association_controler extends ObjectControler implements ObjectC
     */
     public function save($template_association, $mode = "") 
     {
-		
-		$control = array();
+        
+        $control = array();
+        $this->set_foolish_ids(
+            array(
+                'notification_id'
+            )
+        );
         // If template_association not defined or empty, return an error
         if (!isset($template_association) || empty($template_association)) {
             $control = array('status' => 'ko',
@@ -141,7 +146,8 @@ class templates_association_controler extends ObjectControler implements ObjectC
         }
 
 
-		// If mode not up or add, return an error
+
+        // If mode not up or add, return an error
         if (!isset($mode) || empty($mode)
             || ($mode <> 'add' && $mode <> 'up' )) {
             $control = array('status' => 'ko',
@@ -150,8 +156,8 @@ class templates_association_controler extends ObjectControler implements ObjectC
                         );
             return $control;
         }
-		
-		//$template_association = self::isAStatus($template_association);
+        
+        //$template_association = self::isAStatus($template_association);
         self::set_specific_id('system_id');
         $template_association->what = 'event';
 
@@ -176,7 +182,7 @@ class templates_association_controler extends ObjectControler implements ObjectC
                     if ($params['log_status_up'] == 'true') {
                         $history = new history();
                         $history->add(
-                            NOTIFICATIONS_TABLE, $template_association->system_id, 'UP',
+                            NOTIFICATIONS_TABLE, $template_association->system_id, 'UP','eventup',
                             _EVENT_MODIFIED . ' : ' . $template_association->system_id,
                             $params['databasetype']
                         );
@@ -195,7 +201,7 @@ class templates_association_controler extends ObjectControler implements ObjectC
                     if ($params['log_event_add'] == 'true') {
                         $history = new history();
                         $history->add(
-                            NOTIFICATIONS_TABLE, $template_association->system_id, 'ADD',
+                            NOTIFICATIONS_TABLE, $template_association->system_id, 'ADD','eventadd',
                             _EVENT_ADDED . ' : ' . $template_association->system_id,
                             $params['databasetype']
                         );
@@ -213,7 +219,7 @@ class templates_association_controler extends ObjectControler implements ObjectC
     }
        
 
-	/**
+    /**
     * Control the data of Status object
     *
     * @param  $status template_association object
@@ -238,14 +244,21 @@ class templates_association_controler extends ObjectControler implements ObjectC
         $error = "";
         $f = new functions();
        
-
+        $template_association->notification_id = $f->protect_string_db(
+            $f->wash($template_association->notification_id, 'no', _DESC, 'yes', 0, 50)
+        );
         $template_association->description = $f->protect_string_db(
             $f->wash($template_association->description, 'no', _DESC, 'yes', 0, 50)
         );
         $template_association->diffusion_type = $f->protect_string_db(
             $f->wash($template_association->diffusion_type, 'no', _DIFFUSION_TYPE)
         );
-        
+        $template_association->diffusion_content = $f->protect_string_db(
+            $f->wash($template_association->diffusion_content, 'no', _DIFFUSION_CONTENT)
+        );
+        $template_association->is_attached = $f->protect_string_db(
+            $f->wash($template_association->is_attached, 'no', _IS_ATTACHED)
+        );
         $template_association->maarch_module = 'notifications';
 
         $_SESSION['service_tag'] = 'event_check';
@@ -273,7 +286,7 @@ class templates_association_controler extends ObjectControler implements ObjectC
         return $return;
     }
     
-     private function insert($template_association)
+    private function insert($template_association)
     {
         return self::advanced_insert($template_association);
     }
@@ -286,7 +299,7 @@ class templates_association_controler extends ObjectControler implements ObjectC
     */
     private function update($template_association)
     {
-	   //var_dump($template_association); exit();
+       //var_dump($template_association); exit();
        return self::advanced_update($template_association);
     }
     

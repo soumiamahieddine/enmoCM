@@ -121,6 +121,13 @@ function getgroupList(){
 	return $return;
 }
 
-
+function getRecipients($ta, $event) {
+	$query = "SELECT distinct us.*" 
+		. " FROM usergroup_content ug "
+		. "	LEFT JOIN users us ON us.user_id = ug.user_id" 
+		. " WHERE ug.group_id in ('".$ta->diffusion_properties."')"
+		. "	AND us.enabled = 'Y'";
+	return $query;
+}
 
 

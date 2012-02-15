@@ -68,7 +68,14 @@ if ($mode == 'list') {
         <input type="hidden" name="start" id="start" value="<?php
             echo $_REQUEST['start'];?>" />
        
-       
+		
+		<p>
+            <label for="label"><?php echo _NAME; ?> : </label>
+            <input name="notification_id" type="text"  id="notification_id" value="<?php
+                echo functions::show_str(
+                    $_SESSION['m_admin']['event']['notification_id']
+                ); ?>"/>
+        </p>
         <p>
             <label for="label"><?php echo _DESC; ?> : </label>
             <input name="description" type="text"  id="description" value="<?php
@@ -153,10 +160,7 @@ if ($mode == 'list') {
 				?>
 			</select>
 		</p>
-
-		
-		
-		
+				
 		<div id="diff_type_div" 
 			class="scroll_div" 
 			style="height:200px; 
@@ -174,6 +178,27 @@ if ($mode == 'list') {
                 . 'style="height:200px; border: 1px solid;"></div>
 		</p>
 		
+		<p>
+			<label for="status"><?php echo _DIFFUSION_CONTENT; ?> : </label>
+			<select name="diffusion_content" 
+					id="status" onchange="change_diff_type_box(this.options[this.selectedIndex].value,'<?php echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&module=notifications&page=load_diffusiontype_formcontent',
+					'diff_type_div','notifications',
+					'');">
+					
+				<option value=""><?php echo _DIFFUSION_CONTENT;?></option>
+				<?php
+				foreach($diffusion_contents as $this_content){
+					?><option value="<?php echo $this_content->id;?>" 
+					<?php 
+					if(trim($_SESSION['m_admin']['event']['diffusion_content']) 
+						== trim($this_content->id)) { 
+						echo 'selected="selected"';
+					}?>><?php echo $this_content->label;
+					?></option><?php
+				}
+				?>
+			</select>
+		</p>
 		<!--<p>
 			<label for="label"><?php echo _EXCLUSION_TYPE; ?> : </label>
 			<select name="exclusion_type" id="exclusion_type">
@@ -196,34 +221,32 @@ if ($mode == 'list') {
             <label ><?php echo _ATTACH_MAIL_FILE; ?> : </label>
             <input type="radio"  class="check" name="is_attached" value="Y"
             <?php
-            if ($_SESSION['m_admin']['event']['is_attached'] == true) {
+            if ($_SESSION['m_admin']['event']['is_attached'] == 'Y') {
                 ?> checked="checked"<?php
             } ?> /><?php echo _YES;?>
             <input type="radio" name="is_attached" class="check"  value="N"
             <?php
-            if ($_SESSION['m_admin']['event']['is_attached'] == false || !$_SESSION['m_admin']['event']['is_attached']) {
+            if ($_SESSION['m_admin']['event']['is_attached'] == 'N' || !$_SESSION['m_admin']['event']['is_attached']) {
                ?> checked="checked"<?php
             } ?> /><?php echo _NO;?>
         </p>
 		
-
-
         <p class="buttons">
             <?php
         if ($mode == 'up') {?>
-            <input class="button" type="submit" name="event_submit" style="width:190px;" value="
-            <?php echo _MODIFY_EVENT; ?>" />
+            <input class="button" type="submit" name="event_submit" style="width:190px;" value=
+			"<?php echo _MODIFY_EVENT; ?>" />
             <?php
         } elseif ($mode == 'add') {?>
-            <input type="submit" class="button"  name="event_submit" value="
-            <?php echo _ADD; ?>" />
+            <input type="submit" class="button"  name="event_submit" value=
+			"<?php echo _ADD; ?>" />
             <?php
         }
         ?>
         <input type="button" class="button"  name="cancel" value="<?php
          echo _CANCEL; ?>" onclick="javascript:window.location.href='<?php
          echo $_SESSION['config']['businessappurl'];
-?>index.php?page=manage_events_list_controller&amp;mode=list&amp;module=notifications';"/>
+		 ?>index.php?page=manage_events_list_controller&amp;mode=list&amp;module=notifications'"/>
 
 	</p>
 

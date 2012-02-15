@@ -7,6 +7,8 @@
 		<loaded>true</loaded>
 	</CONFIG>
 	<TABLENAME>
+		<event_stack>event_stack</event_stack>
+		<notif_stack>notification_stack</notif_stack>
 	</TABLENAME>
 	<HISTORY>
 	</HISTORY>

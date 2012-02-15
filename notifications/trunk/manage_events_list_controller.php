@@ -19,6 +19,7 @@ try{
 //    require_once 'modules/notifications/class/notifications.php' ;
     require_once 'modules/notifications/class/templates_association_controler.php';
     require_once 'modules/notifications/class/diffusion_type_controler.php';
+	require_once 'modules/notifications/class/diffusion_content_controler.php';
     
     if ($mode == 'list') {
         require_once 'core/class/class_request.php' ;
@@ -37,6 +38,11 @@ $actions_list = $al->getAllActions();
 //Get list of all diffusion types
 $dt = new diffusion_type_controler();
 $diffusion_types = $dt->getAllDiffusion();
+
+//Get list of all diffusion contents
+$dt = new diffusion_content_controler();
+$diffusion_contents = $dt->getAllContents();
+
 
 $tp = new templates();
 $templates_list = $tp->getAllTemplates();
@@ -158,7 +164,7 @@ function display_list()
 
     $select[TEMPLATES_ASSOCIATION] = array();
     array_push(
-        $select[TEMPLATES_ASSOCIATION], 'system_id', 'template_id', 'description'
+        $select[TEMPLATES_ASSOCIATION], 'system_id', 'template_id', 'notification_id', 'description'
     );
     $where = '';
     $what = '';
@@ -333,18 +339,13 @@ function validate_event_submit()
     if ($mode <> 'add'){
 		$eventObj->system_id = $_REQUEST['system_id'];
 	}
-    $eventObj->description = $_REQUEST['description'];
+    $eventObj->notification_id = $_REQUEST['notification_id'];
+	$eventObj->description = $_REQUEST['description'];
     $eventObj->value_field = $_REQUEST['value_field'];
     $eventObj->template_id = $_REQUEST['template_id'];
     $eventObj->diffusion_type = $_REQUEST['diffusion_type'];
-    $eventObj->exclusion_type = $_REQUEST['exclusion_type'];
-    $eventObj->exclusion_properties = $_REQUEST['exclusion_properties'];
-    
-    if($_REQUEST['is_attached'] == 'Y'){
-	    $eventObj->is_attached = true;
-	}else{
-		$eventObj->is_attached = false;
-	}
+	$eventObj->diffusion_content = $_REQUEST['diffusion_content'];
+    $eventObj->is_attached = $_REQUEST['is_attached'];
 	
 	foreach($diffType as $loadedType)
 	{
@@ -449,12 +450,12 @@ function init_session()
 {
     $_SESSION['m_admin']['event'] = array(
         'system_id'             	 => '',
+		'notification_id'  			 	 => '',
         'description'  			 	 => '',
         'template_id'      	 => '',
         'diffusion_type'    		 => '',
         'diffusion_properties'  => '',
-        'exclusion_type'			 => '',
-        'exclusion_properties'	 => '',
+		'diffusion_content'    		 => '',
         'is_attached' 			 => '',
         
     );

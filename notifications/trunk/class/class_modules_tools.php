@@ -116,7 +116,34 @@ class notifications
 	
 	function build_modules_tables() 
 	{
-		
+		 if (file_exists($_SESSION['config']['corepath'].'custom'
+                        .DIRECTORY_SEPARATOR.$_SESSION['custom_override_id']
+                        .DIRECTORY_SEPARATOR."modules".DIRECTORY_SEPARATOR
+                        ."notifications".DIRECTORY_SEPARATOR
+                        ."xml".DIRECTORY_SEPARATOR."config.xml")
+        ) {
+            $path = $_SESSION['config']['corepath'].'custom'
+                .DIRECTORY_SEPARATOR.$_SESSION['custom_override_id']
+                .DIRECTORY_SEPARATOR."modules".DIRECTORY_SEPARATOR."notifications"
+                .DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."config.xml";
+        } else {
+            $path = "modules".DIRECTORY_SEPARATOR."notifications"
+                .DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."config.xml";
+        }
+        $xmlconfig = simplexml_load_file($path);
+        //$CONFIG = $xmlconfig->CONFIG;
+        // Loads the tables of the module notifications
+        // into session ($_SESSION['tablename'] array)
+        $TABLENAME = $xmlconfig->TABLENAME ;
+        $_SESSION['tablename']['notif_event_stack'] = (string) $TABLENAME->event_stack;
+		$_SESSION['tablename']['notif_notification_stack'] = (string) $TABLENAME->notif_stack;
+
+        // Loads the log setting of the module notifications
+        // into session ($_SESSION['history'] array)
+        $HISTORY = $xmlconfig->HISTORY;
+        /*$_SESSION['history']['lcadd'] = (string) $HISTORY->lcadd;
+        $_SESSION['history']['lcup'] = (string) $HISTORY->lcup;
+        $_SESSION['history']['lcdel'] = (string) $HISTORY->lcdel;*/
 	}
 	
 	function load_module_var_session() 

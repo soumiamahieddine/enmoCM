@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<diffusion>
+		<content>
+			<id>event</id>
+			<label>_SYSTEM_EVENT</label>
+			<script>modules/notifications/require/system_content.php</script>
+		</content>
+		<content>
+			<id>letterbox</id>
+			<label>Informations courriers</label>
+			<script>modules/notifications/require/letterbox_content.php</script>
+		</content>
+	</diffusion>
+</root>

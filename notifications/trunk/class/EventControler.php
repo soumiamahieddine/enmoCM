@@ -147,7 +147,7 @@ class Maarch_Modules_Notifications_Class_EventControler
                     if ($params['log_status_up'] == 'true') {
                         $history = new history();
                         $history->add(
-                            STATUS_TABLE, $status->id, 'UP',
+                            STATUS_TABLE, $status->id, 'UP', 'eventup',
                             _STATUS_MODIFIED . ' : ' . $status->id,
                             $params['databasetype']
                         );
@@ -166,7 +166,7 @@ class Maarch_Modules_Notifications_Class_EventControler
                     if ($params['log_status_add'] == 'true') {
                         $history = new history();
                         $history->add(
-                            STATUS_TABLE, $status->id, 'ADD',
+                            STATUS_TABLE, $status->id, 'ADD','eventadd',
                             _STATUS_ADDED . ' : ' . $status->id,
                             $params['databasetype']
                         );
@@ -339,7 +339,7 @@ class Maarch_Modules_Notifications_Class_EventControler
                     || $params['log_status_del'] == true)) {
                 $history = new history();
                 $history->add(
-                    STATUS_TABLE, $status->id, 'DEL', _STATUS_DELETED . ' : '
+                    STATUS_TABLE, $status->id, 'DEL', 'eventdel',_STATUS_DELETED . ' : '
                     . $status->id, $params['databasetype']
                 );
             }

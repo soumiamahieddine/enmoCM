@@ -32,7 +32,7 @@
 
 //Loads the required class
 try {
-	require_once 'modules/notifications/class/diffusion_type.php';
+	require_once 'modules/notifications/class/diffusion_content.php';
 	require_once 'core/class/ObjectControlerAbstract.php';
 } catch (Exception $e) {
     echo $e->getMessage() . ' // ';
@@ -41,7 +41,7 @@ try {
 /**
  * Class for controling docservers objects from database
  */
-class diffusion_type_controler
+class diffusion_content_controler
     extends ObjectControler 
     //implements ObjectControlerIF
 {
@@ -51,26 +51,28 @@ class diffusion_type_controler
      * @param $id Id of event to get
      * @return event
      */
-    public function getAllDiffusion()
+    public function getAllContents()
     {
 		core_tools::load_lang();
 		$return = array();
-		$xmlfile = 'modules/notifications/xml/diffusion_type.xml';
+		$xmlfile = 'modules/notifications/xml/diffusion_content.xml';
         
-        $xmldiffusion = simplexml_load_file($xmlfile);
-        foreach($xmldiffusion
-				->diffusion
-				->type as $diffusion)
-		{
+        $xmlcontent = simplexml_load_file($xmlfile);
+        foreach($xmlcontent->diffusion->content as $content) {
 			//<id> <label> <script>	
 			
-			$diffusion_type = new diffusion_type();
+			$diffusion_content = new diffusion_content();
 			
-			$diffusion_type -> id = utf8_decode((string) $diffusion->id);
-			$diffusion_type -> label = constant(utf8_decode((string) $diffusion->label));
-			$diffusion_type -> script = utf8_decode((string) $diffusion->script);
+			$diffusion_content -> id = utf8_decode((string) $content->id);
+			if(@constant(utf8_decode((string) $content->label))) {
+				$diffusion_content -> label = constant(utf8_decode((string) $content->label));
+			} else {
+				$diffusion_content -> label = utf8_decode((string) $content->label);
+			}
+			
+			$diffusion_content -> script = utf8_decode((string) $content->script);
 		
-			$return[$diffusion_type->id] = $diffusion_type;
+			$return[$diffusion_content->id] = $diffusion_content;
 		}
 		
         if (isset($return)) {
@@ -80,17 +82,17 @@ class diffusion_type_controler
         }
     }
   
-	public function getDiffusionType($type_id)
+	public function getDiffusionContent($content_id)
 	{
-		if ($type_id <> '')
+		if ($content_id <> '')
 		{
 			$fulllist = array();
-			$fulllist = $this->getAllDiffusion();
+			$fulllist = $this->getAllContents();
 			
-			foreach ($fulllist as $dt_id => $dt)
+			foreach ($fulllist as $dc_id => $dc)
 			{
-				if ($type_id == $dt_id){
-					return $dt;
+				if ($content_id == $dc_id){
+					return $dc;
 				}
 			}
 		}

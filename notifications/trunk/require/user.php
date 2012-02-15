@@ -126,5 +126,13 @@ function getUserList(){
 	return $return;
 }
 
+function getRecipients($ta, $event) {
+	$query = "SELECT us.*" 
+		. " FROM users us"
+		. " WHERE us.user_id in ('".$ta->diffusion_properties."')"
+		. " AND us.enabled = 'Y'";
+	return $query;
+}
+
 
 
