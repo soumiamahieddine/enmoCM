@@ -19,7 +19,7 @@ $db->query(
 );
 
 if ($_SESSION['history']['attachdel'] == "true") {
-	$users = new history();
+	$hist = new history();
 	if (! isset($_SESSION['collection_id_choice'])
 	    || empty($_SESSION['collection_id_choice'])
 	) {
@@ -33,13 +33,13 @@ if ($_SESSION['history']['attachdel'] == "true") {
 	);
 	$res = $db->fetch_object();
 	$resIdMaster = $res->res_id_master;
-	$users->add(
-	    $view, $resIdMaster, "DEL", _ATTACH_DELETED . ' ' . _ON_DOC_NUM
+	$hist->add(
+	    $view, $resIdMaster, "DEL", 'attachdel', _ATTACH_DELETED . ' ' . _ON_DOC_NUM
 	    . $resIdMaster . "  (" . $_REQUEST['id'] . ')',
 	    $_SESSION['config']['databasetype'], "attachments"
 	);
-	$users->add(
-	    RES_ATTACHMENTS_TABLE, $_REQUEST['id'], "DEL", _ATTACH_DELETED . " : "
+	$hist->add(
+	    RES_ATTACHMENTS_TABLE, $_REQUEST['id'], "DEL", 'attachdel', _ATTACH_DELETED . " : "
 	    . $_REQUEST['id'], $_SESSION['config']['databasetype'], "attachments"
 	);
 }

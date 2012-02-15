@@ -248,12 +248,12 @@ if (isset($_POST['valid']) && $_POST['valid']) {
                                 //exit();
                             } else {
                                 if ($_SESSION['history']['attachadd'] == "true") {
-                                    $users = new history();
+                                    $hist = new history();
                                     $view = $sec->retrieve_view_from_coll_id(
                                         $_SESSION['collection_id_choice']
                                     );
-                                    $users->add(
-                                        $view, $_SESSION['doc_id'], "ADD",
+                                    $hist->add(
+                                        $view, $_SESSION['doc_id'], "ADD", 'attachadd',
                                         ucfirst(_DOC_NUM) . $id . ' '
                                         . _NEW_ATTACH_ADDED . ' ' . _TO_MASTER_DOCUMENT
                                         . $_SESSION['doc_id'],
@@ -261,8 +261,8 @@ if (isset($_POST['valid']) && $_POST['valid']) {
                                         'apps'
                                     );
                                     $_SESSION['error'] = _NEW_ATTACH_ADDED;
-                                    $users->add(
-                                        RES_ATTACHMENTS_TABLE, $id, "ADD",
+                                    $hist->add(
+                                        RES_ATTACHMENTS_TABLE, $id, "ADD",'attachadd',
                                         $_SESSION['error'] . " (" . $title
                                         . ") ",
                                         $_SESSION['config']['databasetype'],

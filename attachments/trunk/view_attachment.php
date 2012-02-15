@@ -122,9 +122,9 @@ if (! empty($_SESSION['error'])) {
                 $arrayIsAllowed = Ds_isFileTypeAllowed($file);
                 if ($arrayIsAllowed['status']) {
                     if ($_SESSION['history']['attachview'] == "true") {
-                        $users = new history();
-                        $users->add(
-                            $table, $sId, "VIEW", _VIEW_DOC_NUM . "" . $sId,
+                        $hist = new history();
+                        $hist->add(
+                            $table, $sId, "VIEW", 'attachview', _VIEW_DOC_NUM . "" . $sId,
                             $_SESSION['config']['databasetype'], 'apps'
                         );
                     }
