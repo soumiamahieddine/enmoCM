@@ -101,7 +101,7 @@ class lc_cycle_steps_controler
                         $history = new history();
                         $history->add(
                             _LC_CYCLE_STEPS_TABLE_NAME, 
-                            $cycle->cycle_step_id, "UP", 
+                            $cycle->cycle_step_id, "UP", 'lcadd',
                             _LC_CYCLE_STEP_UPDATED." : ".$cycle->cycle_step_id, 
                             $_SESSION['config']['databasetype']
                         );
@@ -129,7 +129,7 @@ class lc_cycle_steps_controler
                         $history = new history();
                         $history->add(
                             _LC_CYCLE_STEPS_TABLE_NAME, $cycle->cycle_step_id, 
-                            "ADD", 
+                            "ADD", 'lcadd',
                             _LC_CYCLE_STEP_UPDATED." : ".$cycle->cycle_step_id, 
                             $_SESSION['config']['databasetype']
                         );
@@ -415,7 +415,7 @@ class lc_cycle_steps_controler
             );
             $history = new history();
             $history->add(
-                _LC_CYCLE_STEPS_TABLE_NAME, $cycle->cycle_step_id, "DEL", 
+                _LC_CYCLE_STEPS_TABLE_NAME, $cycle->cycle_step_id, "DEL", 'lcdel',
                 _LC_CYCLE_STEP_DELETED." : ".$cycle->cycle_step_id, 
                 $_SESSION['config']['databasetype']
             );

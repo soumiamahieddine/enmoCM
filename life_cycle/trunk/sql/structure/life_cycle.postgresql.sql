@@ -28,10 +28,10 @@ CREATE TABLE lc_cycle_steps
    cycle_step_id character varying(32) NOT NULL, 
    cycle_step_desc character varying(255) NOT NULL,
    docserver_type_id character varying(32) NOT NULL,
-   is_allow_failure boolean NOT NULL DEFAULT false,
+   is_allow_failure character(1) NOT NULL DEFAULT 'N'::bpchar,
    step_operation character varying(32) NOT NULL,
    sequence_number integer NOT NULL,
-   is_must_complete boolean NOT NULL DEFAULT false,
+   is_must_complete character(1) NOT NULL DEFAULT 'N'::bpchar,
    preprocess_script character varying(255) DEFAULT NULL, 
    postprocess_script character varying(255) DEFAULT NULL,
    CONSTRAINT lc_cycle_steps_pkey PRIMARY KEY (policy_id, cycle_id, cycle_step_id, docserver_type_id)

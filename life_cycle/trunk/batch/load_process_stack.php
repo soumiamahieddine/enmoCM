@@ -231,7 +231,7 @@ $GLOBALS['tmpDirectoryRoot'] = (string) $CONFIG->TmpDirectory;
 $GLOBALS['docserversFeatures']['DOCSERVERS']['PATHTOCOMPRESSTOOL'] =
                                            (string) $CONFIG->PathToCompressTool;
 $MaarchApps = (string) $CONFIG->MaarchApps;
-$log_level = (string) $CONFIG->LogLevel;
+$logLevel = (string) $CONFIG->LogLevel;
 $GLOBALS['logger']->set_threshold_level($logLevel);
 $DisplayedLogLevel = (string) $CONFIG->DisplayedLogLevel;
 $GLOBALS['customPath'] = (string) $CONFIG->CustomPath;
@@ -265,7 +265,7 @@ if ((string) $log4phpParams->enabled == 'true') {
     $GLOBALS['logger']->set_log4PhpLogger((string) $log4phpParams->Log4PhpLogger);
     $GLOBALS['logger']->set_log4PhpBusinessCode((string) $log4phpParams->Log4PhpBusinessCode);
     $GLOBALS['logger']->set_log4PhpConfigPath((string) $log4phpParams->Log4PhpConfigPath);
-    $GLOBALS['logger']->set_log4PhpBatchName('life_cycle_fill_stack');
+    $GLOBALS['logger']->set_log4PhpBatchName('life_cycle_process_stack');
 }
 //esign params
 $esignParams = $xmlconfig->ESIGN;
@@ -287,10 +287,10 @@ if (file_exists($GLOBALS['MaarchDirectory'] . 'modules' .DIRECTORY_SEPARATOR
     . 'life_cycle' .DIRECTORY_SEPARATOR . 'lang' . DIRECTORY_SEPARATOR 
     . $lang . '.php');
 }
-if ($log_level == 'DEBUG') {
+if ($logLevel == 'DEBUG') {
     error_reporting(E_ALL);
 }
-$GLOBALS['logger']->change_handler_log_level($file, $log_level);
+$GLOBALS['logger']->change_handler_log_level($file, $logLevel);
 $GLOBALS['logger']->change_handler_log_level($console, $DisplayedLogLevel);
 unset($xmlconfig);
 /*

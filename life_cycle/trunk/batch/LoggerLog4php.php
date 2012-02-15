@@ -36,7 +36,7 @@ class Logger4Php
      **/
     protected $log4PhpLibrary;
 
-	/**
+    /**
      * Name of the logger
      *
      * @protected
@@ -86,83 +86,83 @@ class Logger4Php
      **/
     public function write($msg, $error_level = 'INFO', $error_code = 0, $other_params = array())
     {
-		if (!array_key_exists($error_level, $this->error_levels)) {
-			$error_level = 'INFO';
-		}
-		$foundLogger = false;
-		if ($this->error_levels[$error_level] >= $this->error_levels[$this->threshold_level]) {
-			for ($i=$this->error_levels[$error_level];$i>=0;$i--) {
-				foreach ($this->mapping[$i] as $handler) {
-					$handler->write($msg, $error_level, $error_code, $other_params);
-					if (
-						get_class($handler) == 'FileHandler'
-						&& (isset($this->log4PhpLibrary)
-						&& !empty($this->log4PhpLibrary))
-					) {
-						if ($error_code == 0) {
-							$result = 'OK';
-						} else {
-							$result = 'KO';
-							$msg = '%error_code:' . $error_code . '% ' . $msg;
-						}
-						require_once($this->log4PhpLibrary);
-						$remote_ip = '127.0.0.1';
-						Logger::configure($this->log4PhpConfigPath);
-						$logger = Logger::getLogger($this->log4PhpLogger);
-						$searchPatterns = array('%ACCESS_METHOD%',
-							'%RESULT%',
-							'%BUSINESS_CODE%',
-							'%HOW%',
-							'%WHAT%',
-							'%REMOTE_IP%',
-							'%BATCH_NAME%'
-						);
-						$replacePatterns = array('Script',
-							$result,
-							$this->log4PhpBusinessCode,
-							'UP',
-							$msg,
-							$remote_ip,
-							$this->log4PhpBatchName
-						);
-						$logLine = str_replace($searchPatterns,
-							$replacePatterns,
-							'[%ACCESS_METHOD%][%RESULT%]'
-							. '[%BUSINESS_CODE%][%HOW%][%WHAT%][%BATCH_NAME%]'
-						);
-						$this->writeLog4php($logger, $logLine, $error_level);
-					}
-				}
-			}
-		}
+        if (!array_key_exists($error_level, $this->error_levels)) {
+            $error_level = 'INFO';
+        }
+        $foundLogger = false;
+        if ($this->error_levels[$error_level] >= $this->error_levels[$this->threshold_level]) {
+            for ($i=$this->error_levels[$error_level];$i>=0;$i--) {
+                foreach ($this->mapping[$i] as $handler) {
+                    $handler->write($msg, $error_level, $error_code, $other_params);
+                    if (
+                        get_class($handler) == 'FileHandler'
+                        && (isset($this->log4PhpLibrary)
+                        && !empty($this->log4PhpLibrary))
+                    ) {
+                        if ($error_code == 0) {
+                            $result = 'OK';
+                        } else {
+                            $result = 'KO';
+                            $msg = '%error_code:' . $error_code . '% ' . $msg;
+                        }
+                        require_once($this->log4PhpLibrary);
+                        $remote_ip = '127.0.0.1';
+                        Logger::configure($this->log4PhpConfigPath);
+                        $logger = Logger::getLogger($this->log4PhpLogger);
+                        $searchPatterns = array('%ACCESS_METHOD%',
+                            '%RESULT%',
+                            '%BUSINESS_CODE%',
+                            '%HOW%',
+                            '%WHAT%',
+                            '%REMOTE_IP%',
+                            '%BATCH_NAME%'
+                        );
+                        $replacePatterns = array('Script',
+                            $result,
+                            $this->log4PhpBusinessCode,
+                            'UP',
+                            $msg,
+                            $remote_ip,
+                            $this->log4PhpBatchName
+                        );
+                        $logLine = str_replace($searchPatterns,
+                            $replacePatterns,
+                            '[%ACCESS_METHOD%][%RESULT%]'
+                            . '[%BUSINESS_CODE%][%HOW%][%WHAT%][%BATCH_NAME%]'
+                        );
+                        $this->writeLog4php($logger, $logLine, $error_level);
+                    }
+                }
+            }
+        }
     }
 
-	/**
-	 *
-	 * write a log entry with a specific log level
-	 * @param object $logger Log4php logger
-	 * @param string $logLine Line we want to trace
-	 * @param enum $level Log level
-	 */
-	function writeLog4php($logger, $logLine, $level) {
-		switch ($level) {
-			case 'DEBUG':
-				$logger->debug($logLine);
-				break;
-			case 'INFO':
-				$logger->info($logLine);
-				break;
-			case 'WARNING':
-				$logger->warn($logLine);
-				break;
-			case 'ERROR':
-				$logger->error($logLine);
-				break;
-			case 'FATAL':
-				$logger->fatal($logLine);
-				break;
-		}
-	}
+    /**
+     *
+     * write a log entry with a specific log level
+     * @param object $logger Log4php logger
+     * @param string $logLine Line we want to trace
+     * @param enum $level Log level
+     */
+    function writeLog4php($logger, $logLine, $level) {
+        switch ($level) {
+            case 'DEBUG':
+                $logger->debug($logLine);
+                break;
+            case 'INFO':
+                $logger->info($logLine);
+                break;
+            case 'WARNING':
+                $logger->warn($logLine);
+                break;
+            case 'ERROR':
+                $logger->error($logLine);
+                break;
+            case 'FATAL':
+                $logger->fatal($logLine);
+                break;
+        }
+    }
 
     /** Adds a new handler in the current handlers array
      *
@@ -207,7 +207,7 @@ class Logger4Php
         return true;
     }
 
-	/** Sets treshold level
+    /** Sets treshold level
      *
      * @param $treshold (string) treshold level
      **/
@@ -221,7 +221,7 @@ class Logger4Php
         return false;
     }
 
-	/** Sets log4Php library path
+    /** Sets log4Php library path
      *
      * @param $log4PhpLibrary (string) path
      **/
@@ -229,11 +229,11 @@ class Logger4Php
     {
         if (isset($log4PhpLibrary) && !empty($log4PhpLibrary)) {
             if (file_exists($log4PhpLibrary)) {
-				$this->log4PhpLibrary = $log4PhpLibrary;
-				return true;
-			} else {
-				return false;
-			}
+                $this->log4PhpLibrary = $log4PhpLibrary;
+                return true;
+            } else {
+                return false;
+            }
         }
         return false;
     }
@@ -252,7 +252,7 @@ class Logger4Php
         return false;
     }
 
-	/** Sets log4php path to log4php xml config
+    /** Sets log4php path to log4php xml config
      *
      * @param $log4PhpPath (string) path to log4php xml config
      **/
@@ -260,24 +260,24 @@ class Logger4Php
     {
         if (isset($log4PhpConfigPath) && !empty($log4PhpConfigPath)) {
             if (file_exists($log4PhpConfigPath)) {
-				$this->log4PhpConfigPath = $log4PhpConfigPath;
-				return true;
-			} else {
-				return false;
-			}
+                $this->log4PhpConfigPath = $log4PhpConfigPath;
+                return true;
+            } else {
+                return false;
+            }
         }
         return false;
     }
 
-	/** Sets log4php business code
+    /** Sets log4php business code
      *
      * @param $log4PhpBusinessCode (string) business code
      **/
     public function set_log4PhpBusinessCode($log4PhpBusinessCode)
     {
         if (isset($log4PhpBusinessCode) && !empty($log4PhpBusinessCode)) {
-			$this->log4PhpBusinessCode = $log4PhpBusinessCode;
-			return true;
+            $this->log4PhpBusinessCode = $log4PhpBusinessCode;
+            return true;
         }
         $this->log4PhpBusinessCode = 'Maarch';
         return false;
@@ -290,8 +290,8 @@ class Logger4Php
     public function set_log4PhpBatchName($log4PhpBatchName)
     {
         if (isset($log4PhpBatchName) && !empty($log4PhpBatchName)) {
-			$this->log4PhpBatchName = $log4PhpBatchName;
-			return true;
+            $this->log4PhpBatchName = $log4PhpBatchName;
+            return true;
         }
         $this->log4PhpBatchName = 'MaarchBatch';
         return false;

@@ -410,7 +410,7 @@ while ($GLOBALS['state'] <> "END") {
                 $GLOBALS['state'] = "A_RECORD";
             } else {
                 if ($GLOBALS['docservers'][$GLOBALS['currentStep']]
-                ['is_container'] == "t"
+                ['is_container'] == "Y"
                 ) {
                     $GLOBALS['state'] = "CONTROL_CONTAINER_EMPTY";
                 } else {
@@ -574,7 +574,7 @@ while ($GLOBALS['state'] <> "END") {
         case "COPY_OR_MOVE" :
             if (
                 $GLOBALS['docservers'][$GLOBALS['currentStep']]
-                ['is_container'] == "t"
+                ['is_container'] == "Y"
             ) {
                 $GLOBALS['state'] = "CONTAINER";
             } else {

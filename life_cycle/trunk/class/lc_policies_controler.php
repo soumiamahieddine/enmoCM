@@ -233,7 +233,7 @@ class lc_policies_controler extends ObjectControler implements ObjectControlerIF
         if ($_SESSION['history']['lcdel'] == "true") {
             require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
             $history = new history();
-            $history->add(_LC_POLICIES_TABLE_NAME, $policy->policy_id, "DEL", _LC_POLICY_DELETED." : ".$policy->policy_id, $_SESSION['config']['databasetype']);
+            $history->add(_LC_POLICIES_TABLE_NAME, $policy->policy_id, "DEL", 'lcdel', _LC_POLICY_DELETED." : ".$policy->policy_id, $_SESSION['config']['databasetype']);
         }
         return $control;
     }

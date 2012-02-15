@@ -232,13 +232,13 @@ set_include_path(get_include_path() . PATH_SEPARATOR . $maarchDirectory);
 //log4php params
 $log4phpParams = $xmlconfig->LOG4PHP;
 if ((string) $log4phpParams->enabled == 'true') {
-	$GLOBALS['logger']->set_log4PhpLibrary(
-		$maarchDirectory . 'apps/maarch_entreprise/tools/log4php/Logger.php'
-	);
-	$GLOBALS['logger']->set_log4PhpLogger((string) $log4phpParams->Log4PhpLogger);
-	$GLOBALS['logger']->set_log4PhpBusinessCode((string) $log4phpParams->Log4PhpBusinessCode);
-	$GLOBALS['logger']->set_log4PhpConfigPath((string) $log4phpParams->Log4PhpConfigPath);
-	$GLOBALS['logger']->set_log4PhpBatchName('life_cycle_fill_stack');
+    $GLOBALS['logger']->set_log4PhpLibrary(
+        $maarchDirectory . 'apps/maarch_entreprise/tools/log4php/Logger.php'
+    );
+    $GLOBALS['logger']->set_log4PhpLogger((string) $log4phpParams->Log4PhpLogger);
+    $GLOBALS['logger']->set_log4PhpBusinessCode((string) $log4phpParams->Log4PhpBusinessCode);
+    $GLOBALS['logger']->set_log4PhpConfigPath((string) $log4phpParams->Log4PhpConfigPath);
+    $GLOBALS['logger']->set_log4PhpBatchName('life_cycle_fill_stack');
 }
 if ($GLOBALS['table'] == '') {
     $GLOBALS['logger']->write(

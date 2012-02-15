@@ -86,7 +86,7 @@ function getSourceResourcePath(
         if (
             $docserverToPurge <> '' 
             && $GLOBALS['docservers'][$GLOBALS['currentStep']]
-                ['is_container'] == 't'
+                ['is_container'] == 'Y'
         ) {
             $sourceFilePath = $resRecordset->path . $resRecordset->filename;
         } else {
@@ -322,7 +322,7 @@ function doUpdateDb($resId, $path, $fileName, $offsetDoc, $fingerprint)
     //ADD CYCLE_DATE
     $query = "update " . $GLOBALS['table'] . " set cycle_id = '" 
            . $GLOBALS['cycle'] . "', is_multi_docservers = 'Y', cycle_date = " 
-           . Bt_currentDatetime() . " where"
+           . $GLOBALS['db']->current_datetime() . " where"
            . " res_id = " . $resId;
     Bt_doQuery($GLOBALS['db'], $query, true);
     $query = "select * from " . $GLOBALS['adrTable'] . " where res_id = " 
@@ -360,9 +360,8 @@ function doUpdateDb($resId, $path, $fileName, $offsetDoc, $fingerprint)
     Bt_doQuery($GLOBALS['db'], $query, true);
     $query = "insert into " . HISTORY_TABLE . " (table_name, record_id, "
            . "event_type, user_id, event_date, info, id_module) values ('" 
-           . $GLOBALS['table'] . "', '" . $resId . "', 'ADD', 'LC_BOT', '" 
-           . date("d") . "/" . date("m") . "/" . date("Y") . " " . date("H") 
-           . ":" . date("i") . ":" . date("s") . "', 'process stack, policy:" 
+           . $GLOBALS['table'] . "', '" . $resId . "', 'ADD', 'LC_BOT', " 
+           . $GLOBALS['db']->current_datetime() . ", 'process stack, policy:" 
            . $GLOBALS['policy'] . ", cycle:" . $GLOBALS['cycle'] 
            . ", cycle step:" . $GLOBALS['currentStep'] . ", collection:" 
            . $GLOBALS['collection'] . "', 'life_cycle')";
@@ -384,14 +383,13 @@ function doMinimalUpdate($resId)
     Bt_doQuery($GLOBALS['db'], $query, true);
     $query = "update " . $GLOBALS['table'] . " set cycle_id = '" 
            . $GLOBALS['cycle'] . "', is_multi_docservers = 'Y', cycle_date = " 
-           . Bt_currentDatetime() . " where "
+           . $GLOBALS['db']->current_datetime() . " where "
            . " res_id = " . $resId;
     Bt_doQuery($GLOBALS['db'], $query, true);
     $query = "insert into " . HISTORY_TABLE . " (table_name, record_id, "
            . "event_type, user_id, event_date, info, id_module) values ('" 
-           . $GLOBALS['table'] . "', '" . $resId . "', 'ADD', 'LC_BOT', '" 
-           . date("d") . "/" . date("m") . "/" . date("Y") . " " . date("H") 
-           . ":" . date("i") . ":" . date("s") . "', 'process stack, policy:" 
+           . $GLOBALS['table'] . "', '" . $resId . "', 'ADD', 'LC_BOT', " 
+           . $GLOBALS['db']->current_datetime() . ", 'process stack, policy:" 
            . $GLOBALS['policy'] . ", cycle:" . $GLOBALS['cycle'] 
            . ", cycle step:" . $GLOBALS['currentStep'] . ", collection:" 
            . $GLOBALS['collection'] . "', 'life_cycle')";
@@ -415,7 +413,7 @@ function deleteAdrx($resId, $dsToUpdate)
     Bt_doQuery($GLOBALS['db'], $query, true);
     $query = "update " . $GLOBALS['table'] . " set cycle_id = '" 
            . $GLOBALS['cycle'] . "', cycle_date = " 
-           . Bt_currentDatetime() . " where res_id = " . $resId;
+           . $GLOBALS['db']->current_datetime() . " where res_id = " . $resId;
     Bt_doQuery($GLOBALS['db'], $query, true);
     //$docserverSizeToUpdate = 0;
     for ($cptDs = 0;$cptDs < count($dsToUpdate);$cptDs++) {
@@ -426,9 +424,8 @@ function deleteAdrx($resId, $dsToUpdate)
     }
     $query = "insert into " . HISTORY_TABLE . " (table_name, record_id, "
            . "event_type, user_id, event_date, info, id_module) values ('" 
-           . $GLOBALS['table'] . "', '" . $resId . "', 'ADD', 'LC_BOT', '" 
-           . date("d") . "/" . date("m") . "/" . date("Y") . " " . date("H") 
-           . ":" . date("i") . ":" . date("s") . "', 'process stack, policy:" 
+           . $GLOBALS['table'] . "', '" . $resId . "', 'ADD', 'LC_BOT', " 
+           . $GLOBALS['db']->current_datetime() . ", 'process stack, policy:" 
            . $GLOBALS['policy'] . ", cycle:" . $GLOBALS['cycle'] 
            . ", cycle step:" . $GLOBALS['currentStep'] . ", collection:" 
            . $GLOBALS['collection'] . "', 'life_cycle')";
@@ -454,13 +451,12 @@ function updateOnNonePurge($resId)
     Bt_doQuery($GLOBALS['db'], $query, true);
     $query = "update " . $GLOBALS['table'] . " set cycle_id = '" 
            . $GLOBALS['cycle'] . "', cycle_date = " 
-           . Bt_currentDatetime() . " where res_id = " . $resId;
+           . $GLOBALS['db']->current_datetime() . " where res_id = " . $resId;
     Bt_doQuery($GLOBALS['db'], $query, true);
     $query = "insert into " . HISTORY_TABLE . " (table_name, record_id, "
            . "event_type, user_id, event_date, info, id_module) values ('" 
-           . $GLOBALS['table'] . "', '" . $resId . "', 'ADD', 'LC_BOT', '" 
-           . date("d") . "/" . date("m") . "/" . date("Y") . " " . date("H") 
-           . ":" . date("i") . ":" . date("s") . "', 'process stack, policy:" 
+           . $GLOBALS['table'] . "', '" . $resId . "', 'ADD', 'LC_BOT', " 
+           . $GLOBALS['db']->current_datetime() . ", 'process stack, policy:" 
            . $GLOBALS['policy'] . ", cycle:" . $GLOBALS['cycle'] 
            . ", cycle step:" . $GLOBALS['currentStep'] . ", collection:" 
            . $GLOBALS['collection'] . ", No purge for the resource " . $resId 

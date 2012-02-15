@@ -96,7 +96,7 @@ class lc_cycles_controler extends ObjectControler implements ObjectControlerIF
                         $history->add(
                             _LC_CYCLES_TABLE_NAME, 
                             $cycle->cycle_id, 
-                            "UP", 
+                            "UP", 'lcadd',
                             _LC_CYCLE_UPDATED." : ".$cycle->cycle_id, 
                             $_SESSION['config']['databasetype']
                         );
@@ -125,7 +125,7 @@ class lc_cycles_controler extends ObjectControler implements ObjectControlerIF
                         $history->add(
                             _LC_CYCLES_TABLE_NAME, 
                             $cycle->cycle_id, 
-                            "ADD", 
+                            "ADD", 'lcadd',
                             _LC_CYCLE_UPDATED." : ".$cycle->cycle_id, 
                             $_SESSION['config']['databasetype']
                         );
@@ -333,7 +333,7 @@ class lc_cycles_controler extends ObjectControler implements ObjectControlerIF
                 ."class_history.php");
             $history = new history();
             $history->add(
-                _LC_CYCLES_TABLE_NAME, $cycle->cycle_id, "DEL", 
+                _LC_CYCLES_TABLE_NAME, $cycle->cycle_id, "DEL", 'lcdel',
                 _LC_CYCLE_DELETED." : ".$cycle->cycle_id, 
                 $_SESSION['config']['databasetype']
             );

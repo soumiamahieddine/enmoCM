@@ -67,7 +67,7 @@ while ($state <> 'END') {
         /**********************************************************************/
         case 'CONTROL_STACK' :
             $query = "select * from " . _LC_STACK_TABLE_NAME
-                   . " where policy_id = '" . $GLOBALS['policy'] 
+                   . " where policy_id = '" . $GLOBALS['policy']
                    . "' and cycle_id = '" . $GLOBALS['cycle'] . "'";
             Bt_doQuery($GLOBALS['db'], $query);
             if ($GLOBALS['db']->nb_result() > 0) {
@@ -83,8 +83,8 @@ while ($state <> 'END') {
         /* Get the list of cycle steps                                        */
         /**********************************************************************/
         case 'GET_STEPS' :
-            $query = "select * from " . _LC_CYCLE_STEPS_TABLE_NAME 
-                   . " where policy_id = '" . $GLOBALS['policy'] 
+            $query = "select * from " . _LC_CYCLE_STEPS_TABLE_NAME
+                   . " where policy_id = '" . $GLOBALS['policy']
                    . "' and cycle_id = '" . $GLOBALS['cycle'] . "'";
             Bt_doQuery($GLOBALS['db'], $query);
             if ($GLOBALS['db']->nb_result() == 0) {
@@ -93,7 +93,7 @@ while ($state <> 'END') {
             } else {
                 while ($stepsRecordset = $GLOBALS['db']->fetch_object()) {
                     array_push(
-                        $GLOBALS['steps'], 
+                        $GLOBALS['steps'],
                         array('cycle_step_id' => $stepsRecordset->cycle_step_id)
                     );
                 }
@@ -107,29 +107,29 @@ while ($state <> 'END') {
         case 'SELECT_RES' :
             $orderBy = '';
             // get the where clause of the cycle
-            $query = "select * from " . _LC_CYCLES_TABLE_NAME 
-                   . " where policy_id = '" . $GLOBALS['policy'] 
+            $query = "select * from " . _LC_CYCLES_TABLE_NAME
+                   . " where policy_id = '" . $GLOBALS['policy']
                    . "' and cycle_id = '" . $GLOBALS['cycle'] . "'";
             Bt_doQuery($GLOBALS['db'], $query);
             if ($GLOBALS['db']->nb_result() > 0) {
                 $cycleRecordset = $GLOBALS['db']->fetch_object();
             } else {
-                Bt_exitBatch(11, 'cycle not found for policy:' 
-                             . $GLOBALS['policy'] . ', cycle:' 
+                Bt_exitBatch(11, 'cycle not found for policy:'
+                             . $GLOBALS['policy'] . ', cycle:'
                              . $GLOBALS['cycle']);
                 break;
             }
             // compute the previous step
-            $query = "select * from " . _LC_CYCLES_TABLE_NAME 
-                   . " where policy_id = '" . $GLOBALS['policy'] 
-                   . "' and sequence_number = " 
+            $query = "select * from " . _LC_CYCLES_TABLE_NAME
+                   . " where policy_id = '" . $GLOBALS['policy']
+                   . "' and sequence_number = "
                    . ($cycleRecordset->sequence_number - 1);
             Bt_doQuery($GLOBALS['db'], $query);
             if ($GLOBALS['db']->nb_result() > 0) {
                 $cyclePreviousRecordset = $GLOBALS['db']->fetch_object();
             } else {
-                Bt_exitBatch(12, 'previous cycle not found for policy:' 
-                             . $GLOBALS['policy'] . ', cycle:' 
+                Bt_exitBatch(12, 'previous cycle not found for policy:'
+                             . $GLOBALS['policy'] . ', cycle:'
                              . $GLOBALS['cycle']);
                 break;
             }
@@ -140,23 +140,25 @@ while ($state <> 'END') {
             if ($GLOBALS['stackSizeLimit'] <> '') {
                 $limit = ' LIMIT ' . $GLOBALS['stackSizeLimit'];
             }
-            $query = "select res_id from " . $GLOBALS['table'] 
-                   . " where policy_id = '" . $GLOBALS['policy'] 
-                   . "' and cycle_id = '" . $cyclePreviousRecordset->cycle_id 
-                   . "' and " . $cycleRecordset->where_clause 
-                   . $orderBy . $limit;
+
+            $where_clause = " policy_id = '" . $GLOBALS['policy']
+                   . "' and cycle_id = '" . $cyclePreviousRecordset->cycle_id
+                   . "' and " . $cycleRecordset->where_clause;
+
+            $query = $GLOBALS['db']->limit_select(0, $GLOBALS['stackSizeLimit'], 'res_id', $GLOBALS['table'], $where_clause, $orderBy);
+
             Bt_doQuery($GLOBALS['db'], $query);
             $resourcesArray = array();
             if ($GLOBALS['db']->nb_result() > 0) {
                 while ($resoucesRecordset = $GLOBALS['db']->fetch_object()) {
                     array_push(
-                        $resourcesArray, 
+                        $resourcesArray,
                         array('res_id' => $resoucesRecordset->res_id)
                     );
                 }
             } else {
-                Bt_exitBatch(111, 'no resource found for policy:' 
-                             . $GLOBALS['policy'] . ', cycle:' 
+                Bt_exitBatch(111, 'no resource found for policy:'
+                             . $GLOBALS['policy'] . ', cycle:'
                              . $GLOBALS['cycle']);
                 break;
             }
@@ -175,27 +177,26 @@ while ($state <> 'END') {
                 $cptSteps++
             ) {
                 for ($cptRes = 0;$cptRes < count($resourcesArray);$cptRes++) {
-                    $query = "insert into " . _LC_STACK_TABLE_NAME 
-                           . " (policy_id, cycle_id, cycle_step_id, coll_id, " 
-                           . "res_id, status) values ('" . $GLOBALS['policy'] 
-                           . "', '" . $GLOBALS['cycle'] . "', '" 
-                           . $GLOBALS['steps'][$cptSteps]['cycle_step_id'] 
-                           . "', '" . $GLOBALS['collection'] . "', " 
+                    $query = "insert into " . _LC_STACK_TABLE_NAME
+                           . " (policy_id, cycle_id, cycle_step_id, coll_id, "
+                           . "res_id, status) values ('" . $GLOBALS['policy']
+                           . "', '" . $GLOBALS['cycle'] . "', '"
+                           . $GLOBALS['steps'][$cptSteps]['cycle_step_id']
+                           . "', '" . $GLOBALS['collection'] . "', "
                            . $resourcesArray[$cptRes]["res_id"] . ", 'I')";
                     Bt_doQuery($GLOBALS['db'], $query);
                     //history
-                    $query = "insert into " . HISTORY_TABLE 
+                    $query = "insert into " . HISTORY_TABLE
                            . " (table_name, record_id, event_type, user_id, "
-                           . "event_date, info, id_module) values ('" 
-                           . $GLOBALS['table'] . "', '" 
-                           . $resourcesArray[$cptRes]["res_id"] 
-                           . "', 'ADD', 'LC_BOT', '" . date("d") . "/" 
-                           . date("m") . "/" . date("Y") . " " . date("H") 
-                           . ":" . date("i") . ":" . date("s") 
-                           . "', 'fill stack, policy:" . $GLOBALS['policy'] 
-                           . ", cycle:" . $GLOBALS['cycle'] . ", cycle step:" 
-                           . $GLOBALS['steps'][$cptSteps]['cycle_step_id'] 
-                           . ", collection:" . $GLOBALS['collection'] 
+                           . "event_date, info, id_module) values ('"
+                           . $GLOBALS['table'] . "', '"
+                           . $resourcesArray[$cptRes]["res_id"]
+                           . "', 'ADD', 'LC_BOT', "
+                           . $GLOBALS['db']->current_datetime()
+                           . ", 'fill stack, policy:" . $GLOBALS['policy']
+                           . ", cycle:" . $GLOBALS['cycle'] . ", cycle step:"
+                           . $GLOBALS['steps'][$cptSteps]['cycle_step_id']
+                           . ", collection:" . $GLOBALS['collection']
                            . "', 'life_cycle')";
                     Bt_doQuery($GLOBALS['db'], $query);
                     $GLOBALS['totalProcessedResources']++;

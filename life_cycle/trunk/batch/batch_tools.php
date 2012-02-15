@@ -98,20 +98,11 @@ function Bt_exitBatch($returnCode, $message='')
 */
 function Bt_logInDataBase($totalProcessed=0, $totalErrors=0, $info='')
 {
-    $dateNow = '';
-    if ($GLOBALS['databasetype'] == 'SQLSERVER') {
-        $dateNow = 'getdate()';
-    } elseif ($GLOBALS['databasetype'] == 'MYSQL'
-        || $GLOBALS['databasetype'] == 'POSTGRESQL'
-    ) {
-        $dateNow = 'now()';
-    } elseif ($GLOBALS['databasetype'] == 'ORACLE') {
-        $dateNow = 'SYSDATE';
-    }
+   
     $query = "insert into history_batch(module_name, batch_id, event_date, "
            . "total_processed, total_errors, info) values('"
            . $GLOBALS['batchName'] . "', " . $GLOBALS['wb'] . ", "
-           . $dateNow . ", " . $totalProcessed . ", " . $totalErrors . ", '"
+           . $GLOBALS['db']->current_datetime() . ", " . $totalProcessed . ", " . $totalErrors . ", '"
            . $GLOBALS['func']->protect_string_db(substr(str_replace('\\', '\\\\', $info), 0, 999)) . "')";
            //. $GLOBALS['func']->protect_string_db(substr($info, 0, 999)) . "')";
     Bt_doQuery($GLOBALS['db'], $query);
@@ -162,24 +153,5 @@ function Bt_myInclude($file)
         include_once ($file);
     } else {
         throw new IncludeFileError($file);
-    }
-}
-
-/**
-* Return current datetime instruction for each SQL database
-*
-* @return string
-*/
-function Bt_currentDatetime()
-{
-    if ($GLOBALS['databasetype'] == 'SQLSERVER') {
-        return ' getdate() ';
-    } elseif (
-        ($GLOBALS['databasetype'] == 'MYSQL'
-        || $GLOBALS['databasetype'] == 'POSTGRESQL')
-    ) {
-        return ' now() ';
-    } elseif ($GLOBALS['databasetype'] == 'ORACLE') {
-        return ' sysdate ';
     }
 }
