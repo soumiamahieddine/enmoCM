@@ -100,7 +100,7 @@ class docservers_controler
                         $history->add(
                             _DOCSERVERS_TABLE_NAME,
                             $docserver->docserver_id,
-                            'UP',
+                            'UP','docserversadd',
                             _DOCSERVER_UPDATED . ' : '
                             . $docserver->docserver_id,
                             $_SESSION['config']['databasetype']
@@ -131,7 +131,7 @@ class docservers_controler
                         $history->add(
                             _DOCSERVERS_TABLE_NAME,
                             $docserver->docserver_id,
-                            'ADD',
+                            'ADD','docserversadd',
                             _DOCSERVER_ADDED . ' : ' . $docserver->docserver_id,
                             $_SESSION['config']['databasetype']
                         );
@@ -552,7 +552,7 @@ class docservers_controler
             $history->add(
                 _DOCSERVERS_TABLE_NAME,
                 $docserver->docserver_id,
-                'DEL',
+                'DEL','docserversdel',
                 _DOCSERVER_DELETED . ' : ' . $docserver->docserver_id,
                 $_SESSION['config']['databasetype']
             );
@@ -590,7 +590,7 @@ class docservers_controler
                 $history->add(
                     _DOCSERVERS_TABLE_NAME,
                     $docserver->docserver_id,
-                    'BAN',
+                    'BAN','docserversban',
                     _DOCSERVER_DISABLED . ' : ' . $docserver->docserver_id,
                     $_SESSION['config']['databasetype']
                 );
@@ -635,7 +635,7 @@ class docservers_controler
                 $history->add(
                     _DOCSERVERS_TABLE_NAME,
                     $docserver->docserver_id,
-                    'VAL',
+                    'VAL','docserversallow',
                     _DOCSERVER_ENABLED . ' : ' . $docserver->docserver_id,
                     $_SESSION['config']['databasetype']
                 );
@@ -1478,7 +1478,7 @@ class docservers_controler
             $history->add(
                 $tableName,
                 $gedId,
-                'ERR',
+                'ERR','docserverserr',
                 _NO_RIGHT_ON_RESOURCE_OR_RESOURCE_NOT_EXISTS,
                 $_SESSION['config']['databasetype']
             );
@@ -1511,7 +1511,7 @@ class docservers_controler
                     $concatError .= _FILE_NOT_EXISTS_ON_THE_SERVER . ' : '
                                   . $file . '||';
                     $history->add(
-                        $tableName, $gedId, 'ERR',
+                        $tableName, $gedId, 'ERR','docserverserr',
                         _FAILOVER . ' ' . _DOCSERVERS . ' '
                         . $adr[0][$cptDocserver]['docserver_id'] . ':'
                         . _FILE_NOT_EXISTS_ON_THE_SERVER . ' : '
@@ -1531,14 +1531,14 @@ class docservers_controler
                     $docserverTypeObject = $docserverTypeControler->get(
                         $docserverObject->docserver_type_id
                     );
-                    if ($docserverTypeObject->is_container
+                    if ($docserverTypeObject->is_container == "Y"
                         && $adr[0][$cptDocserver]['offset_doc'] == ''
                     ) {
                         $error = true;
                         $concatError .=
                             _PB_WITH_OFFSET_OF_THE_DOC_IN_THE_CONTAINER . '||';
                         $history->add(
-                            $tableName, $gedId, 'ERR',
+                            $tableName, $gedId, 'ERR','docserverserr',
                             _FAILOVER . ' ' . _DOCSERVERS . ' '
                             . $adr[0][$cptDocserver]['docserver_id'] . ':'
                             . _PB_WITH_OFFSET_OF_THE_DOC_IN_THE_CONTAINER,
@@ -1546,7 +1546,7 @@ class docservers_controler
                         );
                     }
                     //manage compressed resource
-                    if ($docserverTypeObject->is_compressed) {
+                    if ($docserverTypeObject->is_compressed == "Y") {
                         $extract = array();
                         $extract = Ds_extractArchive(
                             $adrToExtract,
@@ -1556,7 +1556,7 @@ class docservers_controler
                             $error = true;
                             $concatError .= $extract['error'] . '||';
                             $history->add(
-                                $tableName, $gedId, 'ERR',
+                                $tableName, $gedId, 'ERR','docserverserr',
                                 _FAILOVER . ' ' . _DOCSERVERS . ' '
                                 . $adr[0][$cptDocserver]['docserver_id'] . ':'
                                 . $extract['error'],
@@ -1605,7 +1605,7 @@ class docservers_controler
                                     . 'class_history.php'
                                 );
                                 $history->add(
-                                    $tableName, $gedId, 'VIEW',
+                                    $tableName, $gedId, 'VIEW','resview',
                                     _VIEW_DOC_NUM . $gedId,
                                     $_SESSION['config']['databasetype'],
                                     'indexing_searching'
@@ -1668,7 +1668,7 @@ class docservers_controler
                             } else {
                                 $concatError .= _FILE_NOT_EXISTS . '||';
                                 $history->add(
-                                    $tableName, $gedId, 'ERR',
+                                    $tableName, $gedId, 'ERR','docserverserr',
                                     _FAILOVER . ' ' . _DOCSERVERS . ' '
                                     . $adr[0][$cptDocserver]['docserver_id']
                                     . ':' . _FILE_NOT_EXISTS,
@@ -1678,7 +1678,7 @@ class docservers_controler
                         } else {
                             $concatError .= _FILE_TYPE . ' ' . _UNKNOWN . '||';
                             $history->add(
-                                $tableName, $gedId, 'ERR',
+                                $tableName, $gedId, 'ERR','docserverserr',
                                 _FAILOVER . ' ' . _DOCSERVERS . ' '
                                 . $adr[0][$cptDocserver]['docserver_id'] . ':'
                                 . _FILE_TYPE . ' ' . _UNKNOWN,
@@ -1688,7 +1688,7 @@ class docservers_controler
                     } else {
                         $concatError .= _PB_WITH_FINGERPRINT_OF_DOCUMENT . '||';
                         $history->add(
-                            $tableName, $gedId, 'ERR',
+                            $tableName, $gedId, 'ERR','docserverserr',
                             _FAILOVER . ' ' . _DOCSERVERS . ' '
                             . $adr[0][$cptDocserver]['docserver_id'] . ':'
                             . _PB_WITH_FINGERPRINT_OF_DOCUMENT,

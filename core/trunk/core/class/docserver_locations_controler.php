@@ -104,7 +104,7 @@ class docserver_locations_controler extends ObjectControler
                         $history->add(
                             _DOCSERVER_LOCATIONS_TABLE_NAME, 
                             $docserverLocation->docserver_location_id, 
-                            'UP', 
+                            'UP', 'docserverslocationsadd',
                             _DOCSERVER_LOCATION_UPDATED . ' : ' 
                             . $docserverLocation->docserver_location_id, 
                             $_SESSION['config']['databasetype']
@@ -135,7 +135,7 @@ class docserver_locations_controler extends ObjectControler
                         $history->add(
                             _DOCSERVER_LOCATIONS_TABLE_NAME, 
                             $docserverLocation->docserver_location_id, 
-                            'ADD', 
+                            'ADD', 'docserverslocationsadd',
                             _DOCSERVER_LOCATION_ADDED . ' : ' 
                             . $docserverLocation->docserver_location_id, 
                             $_SESSION['config']['databasetype']
@@ -415,7 +415,7 @@ class docserver_locations_controler extends ObjectControler
             $history->add(
                 _DOCSERVER_LOCATIONS_TABLE_NAME, 
                 $docserverLocation->docserver_location_id, 
-                'DEL', _DOCSERVER_LOCATION_DELETED . ' : ' 
+                'DEL', 'docserverslocationsdel',_DOCSERVER_LOCATION_DELETED . ' : ' 
                 . $docserverLocation->docserver_location_id, 
                 $_SESSION['config']['databasetype']
             );
@@ -461,7 +461,8 @@ class docserver_locations_controler extends ObjectControler
                 $history->add(
                     _DOCSERVER_LOCATIONS_TABLE_NAME, 
                     $docserverLocation->docserver_location_id, 
-                    'BAN', _DOCSERVER_LOCATION_DISABLED . ' : ' 
+                    'BAN', 'docserverslocationsban',
+					_DOCSERVER_LOCATION_DISABLED . ' : ' 
                     . $docserverLocation->docserver_location_id, 
                     $_SESSION['config']['databasetype']
                 );
@@ -506,7 +507,7 @@ class docserver_locations_controler extends ObjectControler
                 $history->add(
                     _DOCSERVER_LOCATIONS_TABLE_NAME, 
                     $docserverLocation->docserver_location_id, 
-                    'BAN', _DOCSERVER_LOCATION_ENABLED . ' : ' 
+                    'BAN', 'docserverslocationsallow',_DOCSERVER_LOCATION_ENABLED . ' : ' 
                     . $docserverLocation->docserver_location_id, 
                     $_SESSION['config']['databasetype']
                 );

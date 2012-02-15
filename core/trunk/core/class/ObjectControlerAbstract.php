@@ -108,15 +108,19 @@ abstract class ObjectControler
                     || substr_compare($key, "can_", 0, 4) == 0) {
                     // Boolean
                     if ($value === true) {
-                        $values[] = "'true'";
+                        $values[] = "'Y'";
                     } elseif ($value === false) {
-                        $values[] = "'false'";
+                        $values[] = "'N'";
                     } else {
-                         $values[] = "'" . $value . "'";
+                        $values[] = "'" . $value . "'";
                     }
                 } else {
                     // Character or date
-                    $values[] = "'" . $value . "'";
+                    if ($value == 'CURRENT_TIMESTAMP' || $value == 'SYSDATE') {
+                        $values[] = $value;
+                    } else {
+                        $values[] = "'" . $value . "'";
+                    }
                 }
             }
         }
@@ -196,9 +200,11 @@ abstract class ObjectControler
                     || substr_compare($key, 'can_', 0, 4) == 0) {
                     // Boolean
                     if ($value === true) {
-                        $result[] = $key . '=true' ;
+                        $result[] = $key . "='Y'" ;
                     } elseif ($value === false) {
-                        $result[] = $key . '=false';
+                        $result[] = $key . "='N'";
+                    } else {
+                        $result[] = $key . "='" . $value . "'";
                     }
                 } else {
                     // Character or date

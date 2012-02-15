@@ -82,7 +82,11 @@ class docserver_types_controler extends ObjectControler implements ObjectControl
                     //history
                     if ($_SESSION['history']['docserverstypesadd'] == "true") {
                         $history = new history();
-                        $history->add(_DOCSERVER_TYPES_TABLE_NAME, $docserver_type->docserver_type_id, "UP", _DOCSERVER_TYPE_UPDATED." : ".$docserver_type->docserver_type_id, $_SESSION['config']['databasetype']);
+                        $history->add(
+							_DOCSERVER_TYPES_TABLE_NAME, 
+							$docserver_type->docserver_type_id, "UP", 'docserverstypesadd',
+							_DOCSERVER_TYPE_UPDATED." : ".$docserver_type->docserver_type_id, 
+							$_SESSION['config']['databasetype']);
                     }
                 } else {
                     $control = array("status" => "ko", "value" => "", "error" => _PB_WITH_DOCSERVER_TYPE);
@@ -98,7 +102,10 @@ class docserver_types_controler extends ObjectControler implements ObjectControl
                     //history
                     if ($_SESSION['history']['docserverstypesadd'] == "true") {
                         $history = new history();
-                        $history->add(_DOCSERVER_TYPES_TABLE_NAME, $docserver_type->docserver_type_id, "ADD", _DOCSERVER_TYPE_ADDED." : ".$docserver_type->docserver_type_id, $_SESSION['config']['databasetype']);
+                        $history->add(_DOCSERVER_TYPES_TABLE_NAME, 
+						$docserver_type->docserver_type_id, "ADD", 'docserverstypesadd',
+						_DOCSERVER_TYPE_ADDED." : ".$docserver_type->docserver_type_id, 
+						$_SESSION['config']['databasetype']);
                     }
                 } else {
                     $control = array("status" => "ko", "value" => "", "error" => _PB_WITH_DOCSERVER_TYPE);
@@ -277,7 +284,11 @@ class docserver_types_controler extends ObjectControler implements ObjectControl
         $control = array("status" => "ok", "value" => $docserver_type->docserver_type_id);
         if ($_SESSION['history']['docserverstypesdel'] == "true") {
             $history = new history();
-            $history->add(_DOCSERVER_TYPES_TABLE_NAME, $docserver_type->docserver_type_id, "DEL", _DOCSERVER_TYPE_DELETED." : ".$docserver_type->docserver_type_id, $_SESSION['config']['databasetype']);
+            $history->add(
+				_DOCSERVER_TYPES_TABLE_NAME, 
+				$docserver_type->docserver_type_id, "DEL", 'docserverstypesdel',
+				_DOCSERVER_TYPE_DELETED." : ".$docserver_type->docserver_type_id, 
+				$_SESSION['config']['databasetype']);
         }
         return $control;
     }
@@ -309,7 +320,11 @@ class docserver_types_controler extends ObjectControler implements ObjectControl
             $control = array("status" => "ok", "value" => $docserver_type->docserver_type_id);
             if ($_SESSION['history']['docserverstypesban'] == "true") {
                 $history = new history();
-                $history->add(_DOCSERVER_TYPES_TABLE_NAME, $docserver_type->docserver_type_id, "BAN", _DOCSERVER_TYPE_DISABLED." : ".$docserver_type->docserver_type_id, $_SESSION['config']['databasetype']);
+                $history->add(
+					_DOCSERVER_TYPES_TABLE_NAME, 
+					$docserver_type->docserver_type_id, "BAN", 'docserverstypesban',
+					_DOCSERVER_TYPE_DISABLED." : ".$docserver_type->docserver_type_id, 
+					$_SESSION['config']['databasetype']);
             }
         } else {
             $control = array("status" => "ko", "value" => "", "error" => _PB_WITH_DOCSERVER_TYPE);
@@ -336,7 +351,11 @@ class docserver_types_controler extends ObjectControler implements ObjectControl
             $control = array("status" => "ok", "value" => $docserver_type->docserver_type_id);
             if ($_SESSION['history']['docserverstypesallow'] == "true") {
                 $history = new history();
-                $history->add(_DOCSERVER_TYPES_TABLE_NAME, $docserver_type->docserver_type_id, "BAN", _DOCSERVER_TYPE_ENABLED." : ".$docserver_type->docserver_type_id, $_SESSION['config']['databasetype']);
+                $history->add(
+					_DOCSERVER_TYPES_TABLE_NAME, 
+					$docserver_type->docserver_type_id, "BAN", 'docserverstypesallow',
+					_DOCSERVER_TYPE_ENABLED." : ".$docserver_type->docserver_type_id, 
+					$_SESSION['config']['databasetype']);
             }
         } else {
             $control = array("status" => "ko", "value" => "", "error" => _PB_WITH_DOCSERVER_TYPE);

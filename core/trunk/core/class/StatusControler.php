@@ -146,7 +146,7 @@ class Maarch_Core_Class_StatusControler
                     if ($params['log_status_up'] == 'true') {
                         $history = new history();
                         $history->add(
-                            STATUS_TABLE, $status->id, 'UP',
+                            STATUS_TABLE, $status->id, 'UP', 'statusup',
                             _STATUS_MODIFIED . ' : ' . $status->id,
                             $params['databasetype']
                         );
@@ -165,7 +165,7 @@ class Maarch_Core_Class_StatusControler
                     if ($params['log_status_add'] == 'true') {
                         $history = new history();
                         $history->add(
-                            STATUS_TABLE, $status->id, 'ADD',
+                            STATUS_TABLE, $status->id, 'ADD', 'statusadd',
                             _STATUS_ADDED . ' : ' . $status->id,
                             $params['databasetype']
                         );
@@ -338,7 +338,8 @@ class Maarch_Core_Class_StatusControler
                     || $params['log_status_del'] == true)) {
                 $history = new history();
                 $history->add(
-                    STATUS_TABLE, $status->id, 'DEL', _STATUS_DELETED . ' : '
+                    STATUS_TABLE, $status->id, 'DEL', 'statusdel',
+					_STATUS_DELETED . ' : '
                     . $status->id, $params['databasetype']
                 );
             }

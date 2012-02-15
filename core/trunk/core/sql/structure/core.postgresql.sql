@@ -41,15 +41,15 @@ CREATE TABLE docserver_types
   docserver_type_id character varying(32) NOT NULL,
   docserver_type_label character varying(255) DEFAULT NULL::character varying,
   enabled character(1) NOT NULL DEFAULT 'Y'::bpchar,
-  is_container boolean NOT NULL DEFAULT false,
+  is_container character(1) NOT NULL DEFAULT 'N'::bpchar,
   container_max_number integer NOT NULL DEFAULT (0)::integer,
-  is_compressed boolean NOT NULL DEFAULT false,
+  is_compressed character(1) NOT NULL DEFAULT 'N'::bpchar,
   compression_mode character varying(32) DEFAULT NULL::character varying,
-  is_meta boolean NOT NULL DEFAULT false,
+  is_meta character(1) NOT NULL DEFAULT 'N'::bpchar,
   meta_template character varying(32) DEFAULT NULL::character varying,
-  is_logged boolean NOT NULL DEFAULT false,
+  is_logged character(1) NOT NULL DEFAULT 'N'::bpchar,
   log_template character varying(32) DEFAULT NULL::character varying,
-  is_signed boolean NOT NULL DEFAULT false,
+  is_signed character(1) NOT NULL DEFAULT 'N'::bpchar,
   fingerprint_mode character varying(32) DEFAULT NULL::character varying,
   CONSTRAINT docserver_types_pkey PRIMARY KEY (docserver_type_id)
 )
@@ -60,7 +60,7 @@ CREATE TABLE docservers
   docserver_id character varying(32) NOT NULL DEFAULT '1'::character varying,
   docserver_type_id character varying(32) NOT NULL,
   device_label character varying(255) DEFAULT NULL::character varying,
-  is_readonly boolean NOT NULL DEFAULT false,
+  is_readonly character(1) NOT NULL DEFAULT 'N'::bpchar,
   enabled character(1) NOT NULL DEFAULT 'Y'::bpchar,
   size_limit_number bigint NOT NULL DEFAULT (0)::bigint,
   actual_size_number bigint NOT NULL DEFAULT (0)::bigint,
@@ -149,6 +149,7 @@ CREATE TABLE history
   info text,
   id_module character varying(50) NOT NULL DEFAULT 'admin'::character varying,
   remote_ip character varying(32) DEFAULT NULL,
+  event_id character varying(50);
   CONSTRAINT history_pkey PRIMARY KEY (id)
 )
 WITH (OIDS=FALSE);
@@ -232,7 +233,7 @@ CREATE TABLE status
 (
   id character varying(10) NOT NULL,
   label_status character varying(50) NOT NULL,
-  is_system character(1) NOT NULL DEFAULT 'Y'::bpchar,
+  is_system character(1) NOT NULL DEFAULT 'N'::bpchar,
   img_filename character varying(255),
   maarch_module character varying(255) NOT NULL DEFAULT 'apps'::character varying,
   can_be_searched character(1) NOT NULL DEFAULT 'Y'::bpchar,

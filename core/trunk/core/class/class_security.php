@@ -205,7 +205,7 @@ class security extends dbquery
                     $hist->add(
                         $_SESSION['tablename']['users'],
                         $s_login,
-                        'LOGIN',
+                        'LOGIN','userlogin',
                         _LOGIN_HISTORY . ' '. $s_login . ' IP : ' . $ip,
                         $_SESSION['config']['databasetype']
                     );

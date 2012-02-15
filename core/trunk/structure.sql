@@ -9,8 +9,8 @@ SET check_function_bodies = false;
 SET client_min_messages = warning;
 SET escape_string_warning = off;
 
-DROP PROCEDURAL LANGUAGE IF EXISTS plpgsql  CASCADE;
-CREATE PROCEDURAL LANGUAGE plpgsql;
+--DROP PROCEDURAL LANGUAGE IF EXISTS plpgsql  CASCADE;
+--CREATE PROCEDURAL LANGUAGE plpgsql;
 
 SET search_path = public, pg_catalog;
 SET default_tablespace = '';
@@ -45,15 +45,15 @@ CREATE TABLE docserver_types
   docserver_type_id character varying(32) NOT NULL,
   docserver_type_label character varying(255) DEFAULT NULL::character varying,
   enabled character(1) NOT NULL DEFAULT 'Y'::bpchar,
-  is_container boolean NOT NULL DEFAULT false,
+  is_container character(1) NOT NULL DEFAULT 'N'::bpchar,
   container_max_number integer NOT NULL DEFAULT (0)::integer,
-  is_compressed boolean NOT NULL DEFAULT false,
+  is_compressed character(1) NOT NULL DEFAULT 'N'::bpchar,
   compression_mode character varying(32) DEFAULT NULL::character varying,
-  is_meta boolean NOT NULL DEFAULT false,
+  is_meta character(1) NOT NULL DEFAULT 'N'::bpchar,
   meta_template character varying(32) DEFAULT NULL::character varying,
-  is_logged boolean NOT NULL DEFAULT false,
+  is_logged character(1) NOT NULL DEFAULT 'N'::bpchar,
   log_template character varying(32) DEFAULT NULL::character varying,
-  is_signed boolean NOT NULL DEFAULT false,
+  is_signed character(1) NOT NULL DEFAULT 'N'::bpchar,
   fingerprint_mode character varying(32) DEFAULT NULL::character varying,
   CONSTRAINT docserver_types_pkey PRIMARY KEY (docserver_type_id)
 )
@@ -64,7 +64,7 @@ CREATE TABLE docservers
   docserver_id character varying(32) NOT NULL DEFAULT '1'::character varying,
   docserver_type_id character varying(32) NOT NULL,
   device_label character varying(255) DEFAULT NULL::character varying,
-  is_readonly boolean NOT NULL DEFAULT false,
+  is_readonly character(1) NOT NULL DEFAULT 'N'::bpchar,
   enabled character(1) NOT NULL DEFAULT 'Y'::bpchar,
   size_limit_number bigint NOT NULL DEFAULT (0)::bigint,
   actual_size_number bigint NOT NULL DEFAULT (0)::bigint,
@@ -153,6 +153,7 @@ CREATE TABLE history
   info text,
   id_module character varying(50) NOT NULL DEFAULT 'admin'::character varying,
   remote_ip character varying(32) DEFAULT NULL,
+  event_id character varying(50),
   CONSTRAINT history_pkey PRIMARY KEY (id)
 )
 WITH (OIDS=FALSE);
@@ -1126,10 +1127,10 @@ CREATE TABLE lc_cycle_steps
    cycle_step_id character varying(32) NOT NULL, 
    cycle_step_desc character varying(255) NOT NULL,
    docserver_type_id character varying(32) NOT NULL,
-   is_allow_failure boolean NOT NULL DEFAULT false,
+   is_allow_failure character(1) NOT NULL DEFAULT 'N'::bpchar,
    step_operation character varying(32) NOT NULL,
    sequence_number integer NOT NULL,
-   is_must_complete boolean NOT NULL DEFAULT false,
+   is_must_complete character(1) NOT NULL DEFAULT 'N'::bpchar,
    preprocess_script character varying(255) DEFAULT NULL, 
    postprocess_script character varying(255) DEFAULT NULL,
    CONSTRAINT lc_cycle_steps_pkey PRIMARY KEY (policy_id, cycle_id, cycle_step_id, docserver_type_id)
@@ -1175,6 +1176,60 @@ CREATE TABLE notes
 WITH (OIDS=FALSE);
 
 
+
+-- modules/notes/sql/structure/notifications.postgresql.sql
+
+CREATE SEQUENCE event_stack_seq
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+
+CREATE TABLE event_stack
+(
+  system_id bigint NOT NULL DEFAULT nextval('event_stack_seq'::regclass),
+  ta_sid bigint NOT NULL,
+  table_name character varying(32) NOT NULL,
+  record_id character varying(255) NOT NULL,
+  event_date timestamp without time zone NOT NULL,
+  exec_date timestamp without time zone NOT NULL,
+  exec_result character varying(50) NOT NULL,
+  CONSTRAINT event_stack_pkey PRIMARY KEY (system_id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE event_stack OWNER TO postgres;
+
+CREATE SEQUENCE email_stack_seq
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+
+CREATE TABLE email_stack
+(
+  system_id bigint NOT NULL DEFAULT nextval('email_stack_seq'::regclass),
+  sender character varying(255) NOT NULL,
+  reply_to character varying(255),
+  recipient character varying(2000) NOT NULL,
+  cc character varying(2000),
+  bcc character varying(2000),
+  subject character varying(255),
+  html_body text,
+  text_body text,
+  charset character varying(50) NOT NULL,
+  exec_date timestamp without time zone,
+  exec_result character varying(50),
+  CONSTRAINT email_stack_pkey PRIMARY KEY (system_id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE email_stack OWNER TO postgres;
+
 -- modules/physical_archive/sql/structure/physical_archive.postgresql.sql
 
 create or replace function update_the_db() returns void as
@@ -1184,43 +1239,43 @@ begin
     if not exists(select * from information_schema.tables where table_name = 'ar_boxes') then
 
       CREATE TABLE ar_boxes (
-	  arbox_id serial NOT NULL,
-	  title character varying(255)  DEFAULT NULL,
-	  subject character varying(255)  DEFAULT NULL,
-	  description text ,
-	  entity_id character varying(32)  DEFAULT NULL,
-	  arcontainer_id integer NOT NULL,
-	  status character varying(3)  DEFAULT NULL,
-	  creation_date  timestamp without time zone DEFAULT NULL,
-	  retention_time character varying(50)  DEFAULT NULL,
-	  custom_t1 character varying(3)  DEFAULT NULL,
-	  custom_n1 integer,
-	  custom_f1 numeric,
-	  custom_d1 timestamp without time zone DEFAULT NULL,
-	  custom_t2 character varying(3)  DEFAULT NULL,
-	  custom_n2 integer,
-	  custom_f2 numeric,
-	  custom_d2 timestamp without time zone DEFAULT NULL,
-	  custom_t3 character varying(50)  DEFAULT NULL,
-	  custom_n3 integer,
-	  custom_f3 numeric,
-	  custom_d3 timestamp without time zone DEFAULT NULL,
-	  custom_t4 character varying(50)  DEFAULT NULL,
-	  custom_n4 integer,
-	  custom_f4 numeric,
-	  custom_d4 timestamp without time zone DEFAULT NULL,
-	  custom_t5 character varying(255)  DEFAULT NULL,
-	  custom_n5 integer,
-	  custom_f5 numeric,
-	  custom_d5 timestamp without time zone DEFAULT NULL,
-	  custom_t6 character varying(255)  DEFAULT NULL,
-	  custom_t7 character varying(255)  DEFAULT NULL,
-	  custom_t8 character varying(255)  DEFAULT NULL,
-	  custom_t9 character varying(255)  DEFAULT NULL,
-	  custom_t10 character varying(255)  DEFAULT NULL,
-	  custom_t11 character varying(255)  DEFAULT NULL,
-	  CONSTRAINT ar_boxes_pkey PRIMARY KEY  (arbox_id)
-	) ;
+      arbox_id serial NOT NULL,
+      title character varying(255)  DEFAULT NULL,
+      subject character varying(255)  DEFAULT NULL,
+      description text ,
+      entity_id character varying(32)  DEFAULT NULL,
+      arcontainer_id integer NOT NULL,
+      status character varying(3)  DEFAULT NULL,
+      creation_date  timestamp without time zone DEFAULT NULL,
+      retention_time character varying(50)  DEFAULT NULL,
+      custom_t1 character varying(3)  DEFAULT NULL,
+      custom_n1 integer,
+      custom_f1 numeric,
+      custom_d1 timestamp without time zone DEFAULT NULL,
+      custom_t2 character varying(3)  DEFAULT NULL,
+      custom_n2 integer,
+      custom_f2 numeric,
+      custom_d2 timestamp without time zone DEFAULT NULL,
+      custom_t3 character varying(50)  DEFAULT NULL,
+      custom_n3 integer,
+      custom_f3 numeric,
+      custom_d3 timestamp without time zone DEFAULT NULL,
+      custom_t4 character varying(50)  DEFAULT NULL,
+      custom_n4 integer,
+      custom_f4 numeric,
+      custom_d4 timestamp without time zone DEFAULT NULL,
+      custom_t5 character varying(255)  DEFAULT NULL,
+      custom_n5 integer,
+      custom_f5 numeric,
+      custom_d5 timestamp without time zone DEFAULT NULL,
+      custom_t6 character varying(255)  DEFAULT NULL,
+      custom_t7 character varying(255)  DEFAULT NULL,
+      custom_t8 character varying(255)  DEFAULT NULL,
+      custom_t9 character varying(255)  DEFAULT NULL,
+      custom_t10 character varying(255)  DEFAULT NULL,
+      custom_t11 character varying(255)  DEFAULT NULL,
+      CONSTRAINT ar_boxes_pkey PRIMARY KEY  (arbox_id)
+    ) ;
 
     end if;
 
@@ -1239,25 +1294,25 @@ begin
     if not exists(select * from information_schema.tables where table_name = 'ar_containers') then
 
         CREATE TABLE ar_containers
-	(
-	  arcontainer_id serial NOT NULL ,
-	  arcontainer_desc character varying(255)  DEFAULT NULL,
-	  status character varying(3)  DEFAULT NULL,
-	  ctype_id character varying(32)  DEFAULT NULL,
-	  position_id bigint  DEFAULT NULL,
-	  creation_date timestamp without time zone DEFAULT NULL,
-	  entity_id character varying(32)  DEFAULT NULL,
-	  retention_time character varying(50)  DEFAULT NULL,
-	  custom_t1 character varying(50)  DEFAULT NULL,
-	  custom_n1 integer,
-	  custom_f1 numeric,
-	  custom_d1 timestamp without time zone DEFAULT NULL,
-	  custom_t2 character varying(3)  DEFAULT NULL,
-	  custom_n2 integer,
-	  custom_f2 numeric,
-	  custom_d2 timestamp without time zone DEFAULT NULL,
-	  CONSTRAINT ar_containers_pkey PRIMARY KEY  (arcontainer_id)
-	) ;
+    (
+      arcontainer_id serial NOT NULL ,
+      arcontainer_desc character varying(255)  DEFAULT NULL,
+      status character varying(3)  DEFAULT NULL,
+      ctype_id character varying(32)  DEFAULT NULL,
+      position_id bigint  DEFAULT NULL,
+      creation_date timestamp without time zone DEFAULT NULL,
+      entity_id character varying(32)  DEFAULT NULL,
+      retention_time character varying(50)  DEFAULT NULL,
+      custom_t1 character varying(50)  DEFAULT NULL,
+      custom_n1 integer,
+      custom_f1 numeric,
+      custom_d1 timestamp without time zone DEFAULT NULL,
+      custom_t2 character varying(3)  DEFAULT NULL,
+      custom_n2 integer,
+      custom_f2 numeric,
+      custom_d2 timestamp without time zone DEFAULT NULL,
+      CONSTRAINT ar_containers_pkey PRIMARY KEY  (arcontainer_id)
+    ) ;
 
     end if;
 
@@ -1353,14 +1408,24 @@ WITH (OIDS=FALSE);
 
 CREATE TABLE templates_association
 (
+  system_id bigint NOT NULL DEFAULT nextval('templates_association_seq'::regclass),
   template_id bigint NOT NULL,
   what character varying(255) NOT NULL,
   value_field character varying(255) NOT NULL,
-  system_id bigint NOT NULL DEFAULT nextval('templates_association_seq'::regclass),
   maarch_module character varying(255) NOT NULL DEFAULT 'apps'::character varying,
+  description character varying(255),
+  diffusion_type character varying(50),
+  diffusion_properties character varying(255),
+  exclusion_type character varying(50),
+  exclusion_properties character varying(255),
+  is_attached character(1) NOT NULL DEFAULT 'N'::bpchar,
   CONSTRAINT templates_association_pkey PRIMARY KEY (system_id)
 )
-WITH (OIDS=FALSE);
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE templates_association OWNER TO postgres;
+
 
 CREATE TABLE templates_doctype_ext
 (

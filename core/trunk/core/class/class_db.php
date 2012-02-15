@@ -197,7 +197,10 @@ class dbquery extends functions
     {
         $this->_debug = 0;
         $this->_nbQuery = 0;
-        if ($this->_databasetype == 'MYSQL') {
+        
+        switch($this->_databasetype) 
+        {
+        case 'MYSQL' : 
             $this->_sqlLink = @mysqli_connect(
                 $this->_server,
                 $this->_user,
@@ -205,50 +208,61 @@ class dbquery extends functions
                 $this->_database,
                 $this->_port
             );
-        } else if ($this->_databasetype == 'SQLSERVER') {
-            $this->_sqlLink = @mssql_connect(
-                $this->_server, $this->_user, $this->_password
-            );
-        } else if ($this->_databasetype == 'POSTGRESQL') {
+            break;
+            
+        case 'POSTGRESQL' : 
             $this->_sqlLink = @pg_connect(
-                'host=' . $this->_server . ' user=' . $this->_user
-                . ' password=' . $this->_password . ' dbname='
-                . $this->_database . ' port=' . $this->_port
-               // , PGSQL_CONNECT_FORCE_NEW
+                'host=' . $this->_server . 
+                ' user=' . $this->_user . 
+                ' password=' . $this->_password . 
+                ' dbname=' . $this->_database . 
+                ' port=' . $this->_port
             );
-        } else if ($this->_databasetype == 'ORACLE') {
+            break;
+            
+        case 'SQLSERVER' :
+            $this->_sqlLink = @mssql_connect(
+                $this->_server, 
+                $this->_user, 
+                $this->_password
+            );
+            break;
+            
+        case 'ORACLE' : 
             if ($this->_server <> '') {
                 $this->_sqlLink = oci_connect(
-                    $this->_user, $this->_password, '//' . $this->_server . '/'
-                    . $this->_database, 'UTF8'
+                    $this->_user, 
+                    $this->_password, '//' . 
+                    $this->_server . '/' . 
+                    $this->_database, 
+                    'UTF8'
                 );
             } else {
                 $this->_sqlLink = oci_connect(
-                    $this->_user, $this->_password, $this->database, 'UTF8'
+                    $this->_user, 
+                    $this->_password, 
+                    $this->database, 
+                    'UTF8'
                 );
             }
-            // ALTER SESSIONS MUST BE MANAGED BY TRIGGERS DIRECTLY IN THE DB
-            //$this->query("alter session set nls_date_format='dd-mm-yyyy'");
-        } else {
+            break;
+            
+        default :
             $this->_sqlLink = false;
+            break;      
         }
 
         if (! $this->_sqlLink) {
             $this->_sqlError = 1; // error connexion
             $this->error();
-        } else {
-            if ($this->_databasetype <> 'POSTGRESQL'
-                && $this->_databasetype <> 'MYSQL'
-                && $this->_databasetype <> 'ORACLE'
-            ) {
-                $this->select_db();
-            }
+        } 
+        else {
+            $this->select_db();
         }
     }
 
     /**
     * Database selection (only for SQLSERVER)
-    *
     */
     public function select_db()
     {
@@ -269,37 +283,29 @@ class dbquery extends functions
     */
     public function test_column($table, $field)
     {
-        if ($this->_databasetype == 'SQLSERVER') {
-            return true;
-        } else if ($this->_databasetype == 'MYSQL') {
-            return true;
-        } else if ($this->_databasetype == 'POSTGRESQL') {
+        switch($this->_databasetype) 
+        {
+        
+        case 'POSTGRESQL'   : 
             $this->connect();
-            $this->query(
-                "select column_name from information_schema.columns where "
-                . "table_name = '" . $table . "' and column_name = '" . $field
-                . "'"
-            );
+            $this->query("select column_name from information_schema.columns where table_name = '" . $table . "' and column_name = '" . $field . "'");
             $res = $this->nb_result();
             $this->disconnect();
-            if ($res > 0) {
-                return true;
-            } else {
-                return false;
-            }
-        } else if ($this->_databasetype == 'ORACLE') {
+            if ($res > 0) return true; 
+            else return false;
+            
+        case 'ORACLE'       : 
             $this->connect();
-            $this->query(
-                "SELECT * from USER_TAB_COLUMNS where TABLE_NAME = '" . $table
-                . "' AND COLUMN_NAME = '" . $field . "'"
-            );
+            $this->query("SELECT * from USER_TAB_COLUMNS where TABLE_NAME = '" . $table . "' AND COLUMN_NAME = '" . $field . "'");
             $res = $this->nb_result();
             $this->disconnect();
-            if ($res > 0) {
-                return true;
-            } else {
-                return false;
-            }
+            if ($res > 0) return true; 
+            else return false;
+        
+        case 'SQLSERVER'    : return true; // TO DO
+        case 'MYSQL'        : return true; // TO DO
+        default             : return false;
+        
         }
     }
 
@@ -337,50 +343,56 @@ class dbquery extends functions
         // query
         if ($canExecute) {
             $this->_debugQuery = $sqlQuery;
-            if ($this->_databasetype == 'MYSQL') {
+            
+            switch($this->_databasetype) 
+            {
+            case 'MYSQL' : 
                 $this->query = @mysqli_query($this->_sqlLink, $sqlQuery);
-            } else if ($this->_databasetype == 'SQLSERVER') {
-                $this->query = @mssql_query($sqlQuery);
-            } else if ($this->_databasetype == 'POSTGRESQL') {
+                break;
+
+            case 'POSTGRESQL' : 
                 $this->query = @pg_query($sqlQuery);
-            } else if ($this->_databasetype == 'ORACLE') {
-                $this->statement = @oci_parse($this->_sqlLink, $sqlQuery);
-                if ($this->statement == false) {
-                    if ($catchError) {
-                        return false;
-                    }
+                break;
+                
+            case 'SQLSERVER' : 
+                $this->query = @mssql_query($sqlQuery);
+                break;
+                
+            case 'ORACLE' : 
+                $this->query = @oci_parse($this->_sqlLink, $sqlQuery);
+                
+                if ($this->query == false) {
+                    if ($catchError) return false;
                     $this->_sqlError = 6;
                     $this->error();
                     exit();
-                } else {
-                    if (! @oci_execute($this->statement)) {
-                        if ($catchError) {
-                            return false;
-                        }
-                        //$error = oci_error($this->statement);
+                } 
+                else {
+                    if (! @oci_execute($this->query)) {
+                        if ($catchError) return false;
                         $this->_sqlError = 3;
                         $this->error();
-                        //print_r($error);
                     }
                 }
-            } else {
+                break;
+                
+            default : 
                 $this->query = false;
-            }
+            }   
+            
             //$this->show();
-            if ((($this->_databasetype == 'ORACLE' && $this->statement == false)
-                || ($this->_databasetype <> 'ORACLE' && $this->query == false))
-                && ! $catchError
-            ) {
+            
+            if ($this->query == false && !$catchError) {
                 $this->_sqlError = 3;
                 $this->error();
             }
+            
             $this->_nbQuery ++;
-            if ($this->_databasetype == 'ORACLE') {
-                return $this->statement;
-            } else {
-                return $this->query;
-            }
-        } else {
+            
+            return $this->query;
+
+        } 
+        else {
             return false;
         }
     }
@@ -392,19 +404,18 @@ class dbquery extends functions
     */
     public function fetch_object()
     {
-        if ($this->_databasetype == 'MYSQL') {
-            return @mysqli_fetch_object($this->query);
-        } else if ($this->_databasetype == 'SQLSERVER') {
-            return @mssql_fetch_object($this->query);
-        } else if ($this->_databasetype == 'POSTGRESQL') {
-            return @pg_fetch_object($this->query);
-        } else if ($this->_databasetype == 'ORACLE') {
-            $myObject = @oci_fetch_object($this->statement);
+        switch($this->_databasetype) 
+        {
+        case 'MYSQL'        : return @mysqli_fetch_object($this->query);
+        case 'SQLSERVER'    : return @mssql_fetch_object($this->query);
+        case 'POSTGRESQL'   : return @pg_fetch_object($this->query);
+        case 'ORACLE'       : 
+            $myObject = @oci_fetch_object($this->query);
             $myLowerObject = false;
             if (isset($myObject) && ! empty($myObject)) {
                 foreach ($myObject as $key => $value) {
                     $myKey = strtolower($key);
-                    if (oci_field_type($this->statement, $key) == 'CLOB') {
+                    if (oci_field_type($this->query, $key) == 'CLOB') {
                         $myBlob = $myObject->$key;
                         if (isset($myBlob)) {
                             $myLowerObject->$myKey = $myBlob->read(
@@ -416,11 +427,10 @@ class dbquery extends functions
                     }
                 }
                 return $myLowerObject;
-            } else {
+            } 
+            else {
                 return false;
             }
-        } else {
-
         }
     }
 
@@ -431,21 +441,20 @@ class dbquery extends functions
     */
     public function fetch_array()
     {
-        if ($this->_databasetype == 'MYSQL') {
-            return @mysqli_fetch_array($this->query);
-        } else if ($this->_databasetype == 'SQLSERVER') {
-            return @mssql_fetch_array($this->query);
-        } else if ($this->_databasetype == 'POSTGRESQL') {
-            return @pg_fetch_array($this->query);
-        } else if ($this->_databasetype == 'ORACLE') {
+        switch($this->_databasetype) 
+        {
+        case 'MYSQL'        : return @mysqli_fetch_array($this->query);
+        case 'SQLSERVER'    : return @mssql_fetch_array($this->query);
+        case 'POSTGRESQL'   : return @pg_fetch_array($this->query);
+        case 'ORACLE'       : 
             $tmpStatement = array();
-            $tmpStatement = @oci_fetch_array($this->statement);
+            $tmpStatement = @oci_fetch_array($this->query);
 
             if (is_array($tmpStatement)) {
                 //$this->show_array($tmp_statement);
                 foreach (array_keys($tmpStatement) as $key) {
                     if (! is_numeric($key)
-                        && oci_field_type($this->statement, $key) == 'CLOB'
+                        && oci_field_type($this->query, $key) == 'CLOB'
                     ) {
                         if (isset($tmpStatement[$key])) {
                             $tmp = $tmpStatement[$key];
@@ -455,11 +464,45 @@ class dbquery extends functions
                 }
                 return array_change_key_case($tmpStatement, CASE_LOWER);
             }
-        } else {
-
+        default         : return false;
         }
     }
+    
+        /**
+    * Returns the query results in an array
+    *
+    * @return array
+    */
+    public function fetch_assoc()
+    {
+        switch($this->_databasetype) 
+        {
+        case 'MYSQL'        : return @mysqli_fetch_assoc($this->query);
+        case 'SQLSERVER'    : return @mssql_fetch_assoc($this->query);
+        case 'POSTGRESQL'   : return @pg_fetch_assoc($this->query);
+        case 'ORACLE'       : 
+            $tmpStatement = array();
+            $tmpStatement = @oci_fetch_assoc($this->query);
 
+            if (is_array($tmpStatement)) {
+                //$this->show_array($tmp_statement);
+                foreach (array_keys($tmpStatement) as $key) {
+                    if (! is_numeric($key)
+                        && oci_field_type($this->query, $key) == 'CLOB'
+                    ) {
+                        if (isset($tmpStatement[$key])) {
+                            $tmp = $tmpStatement[$key];
+                            $tmpStatement[$key] = $tmp->read($tmp->size());
+                        }
+                    }
+                }
+                return array_change_key_case($tmpStatement, CASE_LOWER);
+            }
+        default         : return false;
+        }
+    }
+    
+    
     /**
     * Returns the query results in a row
     *
@@ -467,17 +510,14 @@ class dbquery extends functions
     */
     public function fetch_row()
     {
-        if ($this->_databasetype == 'MYSQL') {
-            return @mysqli_fetch_row($this->query);
-        } else if ($this->_databasetype == 'SQLSERVER') {
-            return @mssql_fetch_row($this->query);
-        } else if ($this->_databasetype == 'POSTGRESQL') {
-            return @pg_fetch_row($this->query);
-        } else if ($_SESSION['config']['databasetype'] == 'ORACLE') {
-            return @oci_fetch_row($this->statement);
-        } else {
-
-        }
+        switch($this->_databasetype) 
+        {
+        case 'MYSQL'        : return @mysqli_fetch_row($this->query);
+        case 'POSTGRESQL'   : return @pg_fetch_row($this->query);
+        case 'SQLSERVER'    : return @mssql_fetch_row($this->query);
+        case 'ORACLE'       : return @oci_fetch_row($this->statement);
+        default             : return false;
+        }     
     }
 
     /**
@@ -487,21 +527,18 @@ class dbquery extends functions
     */
     public function nb_result()
     {
-        if ($this->_databasetype == 'MYSQL') {
-            return @mysqli_num_rows($this->query);
-        } else if ($this->_databasetype == 'SQLSERVER') {
-            return @mssql_num_rows($this->query);
-        } else if ($this->_databasetype == 'POSTGRESQL') {
-            return @pg_num_rows($this->query);
-        } else if ($this->_databasetype == 'ORACLE') {
-
+        switch($this->_databasetype) 
+        {
+        case 'MYSQL'        : return @mysqli_num_rows($this->query);
+        case 'POSTGRESQL'   : return @pg_num_rows($this->query);
+        case 'SQLSERVER'    : return @mssql_num_rows($this->query);
+        case 'ORACLE'       : 
             $db = new dbquery();
             $db->connect();
             $db->query("SELECT COUNT(*) FROM  (" . $this->_debugQuery . ")");
             $row = $db->fetch_array();
-            return $row[0];
-        } else {
-
+            return $row[0]; 
+        default             : return false;
         }
     }
 
@@ -511,29 +548,36 @@ class dbquery extends functions
     */
     public function disconnect()
     {
-        if ($this->_databasetype == 'MYSQL') {
+        switch($this->_databasetype)
+        {
+        case 'MYSQL':
             if (! mysqli_close($this->_sqlLink)) {
                 $this->_sqlError = 4;
                 $this->error();
             }
-        } else if ($this->_databasetype == 'SQLSERVER') {
+            break;
+            
+        case 'SQLSERVER' : 
             if (! mssql_close($this->_sqlLink)) {
                 $this->_sqlError = 4;
                 $this->error();
             }
-        } else if ($this->_databasetype == 'POSTGRESQL') {
-            //  if (get_resource_type($this->_sqlLink) == 'pgsql link') {
+            break;
+            
+        case 'POSTGRESQL':
             if (! pg_close($this->_sqlLink)) {
                 $this->_sqlError = 4;
                 $this->error();
             }
-            // }
-        } else if ($this->_databasetype == 'ORACLE') {
+            break;
+            
+        case 'ORACLE' :
             if (! oci_close($this->_sqlLink)) {
                 $this->_sqlError = 4;
                 $this->error();
             }
-        } else {
+        
+        default :
 
         }
     }
@@ -550,7 +594,7 @@ class dbquery extends functions
         
         // Connexion error
         if ($this->_sqlError == 1) {
-            $trace->add("", 0, "CONNECT", _CONNECTION_DB_FAILED." : ".$this->_user."@".$this->_server.":".$this->_port, $_SESSION['config']['databasetype'], "database", true, _KO, _LEVEL_FATAL);
+            $trace->add("", 0, "CONNECT", "DBERROR", _CONNECTION_DB_FAILED." : ".$this->_user."@".$this->_server.":".$this->_port, $_SESSION['config']['databasetype'], "database", true, _KO, _LEVEL_FATAL);
             // Shows the connexion data (server, port, user, pass)
             echo '- <b>' . _DB_CONNEXION_ERROR . '</b>';
             if ($_SESSION['config']['debug'] == 'true') {
@@ -571,7 +615,7 @@ class dbquery extends functions
             if ($_SESSION['config']['debug'] == 'true') {
                 echo ' -<br /><br />' . _DATABASE . ' : ' . $this->_database;
             }
-            $trace->add("", 0, "SELECTDB", _SELECT_DB_FAILED." : ".$this->_database, $_SESSION['config']['databasetype'], "database", true, _KO, _LEVEL_FATAL);
+            $trace->add("", 0, "SELECTDB", "DBERROR", _SELECT_DB_FAILED." : ".$this->_database, $_SESSION['config']['databasetype'], "database", true, _KO, _LEVEL_FATAL);
             exit();
         }
 
@@ -600,34 +644,34 @@ class dbquery extends functions
                     . $this->_debugQuery . '</textarea>';
                 exit();
             }
-            $trace->add("", 0, "QUERY", _QUERY_DB_FAILED." : ".$this->_debugQuery, $_SESSION['config']['databasetype'], "database", true, _KO, _LEVEL_ERROR);
+            $trace->add("", 0, "QUERY", "DBERROR", _QUERY_DB_FAILED." : ".$this->_debugQuery, $_SESSION['config']['databasetype'], "database", true, _KO, _LEVEL_ERROR);
             //exit();
         }
 
         // Closing connexion error
         if ($this->_sqlError == 4) {
             echo '- <b>' . _CLOSE_CONNEXION_ERROR . '</b> -<br /><br />';
-            $trace->add("", 0, "CLOSE", _CLOSE_DB_FAILED, $_SESSION['config']['databasetype'], "database", true, _KO, _LEVEL_ERROR);
+            $trace->add("", 0, "CLOSE", "DBERROR", _CLOSE_DB_FAILED, $_SESSION['config']['databasetype'], "database", true, _KO, _LEVEL_ERROR);
             exit();
         }
 
         // Constructor error
         if ($this->_sqlError == 5) {
             echo '- <b>' . _DB_INIT_ERROR . '</b> <br />';
-            $trace->add("", 0, "INIT", _INIT_DB_FAILED, $_SESSION['config']['databasetype'], "database", true, _KO, _LEVEL_ERROR);
+            $trace->add("", 0, "INIT", "DBERROR", _INIT_DB_FAILED, $_SESSION['config']['databasetype'], "database", true, _KO, _LEVEL_ERROR);
             exit();
         }
-        // Query Preparation error (ORACLE)
+        // Query Preparation error (ORACLE & DB2)
         if ($this->_sqlError == 6) {
             echo '- <b>' . _QUERY_PREP_ERROR . '</b> <br />';
-            $trace->add("", 0, "QUERY", _PREPARE_QUERY_DB_FAILED, $_SESSION['config']['databasetype'], "database", true, _KO, _LEVEL_ERROR);
+            $trace->add("", 0, "QUERY", "DBERROR", _PREPARE_QUERY_DB_FAILED, $_SESSION['config']['databasetype'], "database", true, _KO, _LEVEL_ERROR);
             exit();
         }
-        // Query Preparation error (ORACLE)
+        // Query Preparation error (ORACLE & DB2)
         if ($this->_sqlError == 7) {
             $_SESSION['error'] .= '<b>' . _SQL_QUERY_NOT_SECURE . '</b> <br />';
             //echo $_SESSION['error']; 
-            $trace->add("", 0, "QUERY", _SQL_QUERY_NOT_SECURE, $_SESSION['config']['databasetype'], "database", true, _KO, _LEVEL_ERROR);
+            $trace->add("", 0, "QUERY", "DBERROR", _SQL_QUERY_NOT_SECURE, $_SESSION['config']['databasetype'], "database", true, _KO, _LEVEL_ERROR);
             //exit();
         }
     }
@@ -650,22 +694,198 @@ class dbquery extends functions
     */
     public function last_insert_id($sequenceName = '')
     {
-        if ($this->_databasetype == 'MYSQL') {
-            return @mysqli_insert_id($this->_sqlLink);
-        } else if ($this->_databasetype == 'POSTGRESQL') {
-            $this->query = @pg_query(
-                "select currval('" . $sequenceName . "') as lastinsertid"
-            );
+        switch($this->_databasetype) {
+        case 'MYSQL'        : return @mysqli_insert_id($this->_sqlLink);
+        case 'POSTGRESQL'   : 
+            $this->query = @pg_query("select currval('" . $sequenceName . "') as lastinsertid");
             $line = @pg_fetch_object($this->query);
-
             return $line->lastinsertid;
-        } else if ($this->_databasetype == 'SQLSERVER') {
-
-        } else if ($this->_databasetype == 'ORACLE') {
-
-        } else {
-
-        }
-
+        case 'SQLSERVER'    : return '';
+        case 'ORACLE'       : return '';
+        default             : return false;
+        }       
     }
+    
+    /*************************************************************************
+    * Returns instruction to get date or part of the date
+    *
+    * Parameters
+    *   (string) date string
+    *   (string) date part name {year | month | day | hour | minute | second}
+    *
+    * Return
+    *   (string) date instruction
+    *
+    *************************************************************************/
+    public function extract_date($date_field, $arg = '')
+    {
+        switch ($this->_databasetype)
+        {
+        case "SQLSERVER":
+            return '';
+        
+        case "MYSQL":
+            switch($arg) 
+            {
+            case 'year'     : return ' date_format('.$date_field.', %Y)';
+            case 'month'    : return ' date_format('.$date_field.', %m)';
+            case 'day'      : return ' date_format('.$date_field.', %d)';
+            case 'hour'     : return ' date_format('.$date_field.', %k)';
+            case 'minute'   : return ' date_format('.$date_field.', %i)';
+            case 'second'   : return ' date_format('.$date_field.', %s)';
+            default         : return ' date('.$date_field.')';
+            }
+        
+        case "POSTGRESQL":
+            switch($arg) 
+            {
+            case 'year'     : return " date_part( 'year', ".$date_field.")";
+            case 'month'    : return " date_part( 'month', ".$date_field.")";
+            case 'day'      : return " date_part( 'day', ".$date_field.")";
+            case 'hour'     : return " date_part( 'hour', ".$date_field.")";
+            case 'minute'   : return " date_part( 'minute', ".$date_field.")";
+            case 'second'   : return " date_part( 'second', ".$date_field.")";
+            default         : return ' date('.$date_field.')';
+            }
+        
+        case "ORACLE":
+            switch($arg) 
+            {
+            case 'year'     : return " to_char(".$date_field.", 'YYYY')";
+            case 'month'    : return " to_char(".$date_field.", 'MM')";
+            case 'day'      : return " to_char(".$date_field.", 'DD')";
+            case 'hour'     : return " to_char(".$date_field.", 'HH24')";
+            case 'minute'   : return " to_char(".$date_field.", 'MI')";
+            case 'second'   : return " to_char(".$date_field.", 'SS')";
+            default         : return " to_char(".$date_field.", 'DD/MM/YYYY')";
+            }
+    
+        }
+    }
+    
+    
+    /*************************************************************************
+    * Returns the difference between 2 dates in days
+    *
+    * Parameters
+    *   (string) end date
+    *   (string) start date
+    *
+    * Return
+    *   (integer) number of days
+    *
+    *************************************************************************/
+    public function get_date_diff($date1, $date2)
+    {
+        switch($this->_databasetype) 
+        {
+        case 'MYSQL'        : return 'datediff('.$date1.', '.$date2.')';
+        case 'POSTGRESQL'   : return $this->extract_date($date1).' - '.$this->extract_date($date2);
+        case 'SQLSERVER'    : return '';
+        case 'ORACLE'       : return $this->extract_date($date1).' - '.$this->extract_date($date2);
+        default             : return false;
+        }       
+    }
+    
+    /*************************************************************************
+    * Returns the word to get the current timestamp on a query
+    *
+    * Return
+    *   (string) timestamp word
+    *
+    *************************************************************************/
+    public function current_datetime()
+    {
+        switch($this->_databasetype) 
+        {
+        case 'MYSQL'        : return 'CURRENT_TIMESTAMP';
+        case 'POSTGRESQL'   : return 'CURRENT_TIMESTAMP';
+        case 'SQLSERVER'    : return 'CURRENT_TIMESTAMP';
+        case 'ORACLE'       : return 'SYSDATE';
+        default             : return ' ';
+        }
+    }
+    
+    /*************************************************************************
+    * Returns a select query with limit clause
+    *
+    * Parameters
+    *   (integer) start : Offset of first result requested (default 0)
+    *   (integer) count : Number of result requested (default 0)
+    *   (string) select expression : Selected columns (comma separated)
+    *   (string) table references : One or more tables (can be prepared by function make_table_ref) 
+    *   (string) where def
+    *   (string) other_clauses : group_by, order_by, having...
+    *   (string) select options : distinct
+    *
+    * Return
+    *   (string) query string
+    *
+    * Evolutions
+    *   Offset with MSSQL
+    *************************************************************************/
+    public function limit_select($start, $count, $select_expr, $table_refs, $where_def='1=1', $other_clauses='', $select_opts='')
+    {
+            
+        // LIMIT
+        if($count || $start) 
+        {
+            switch($this->_databasetype) {
+            case 'MYSQL' : 
+                $limit_clause = 'LIMIT ' . $start . ',' . $count;
+                break;
+                
+            case 'POSTGRESQL' : 
+                $limit_clause = 'OFFSET ' . $start . ' LIMIT ' . $count;
+                break;
+                
+            case 'SQLSERVER' : 
+                $select_opts .= ' TOP ' . $count;
+                break;
+                
+            case 'ORACLE' : 
+                if($where_def) $where_def .= ' AND ';
+                $where_def .= ' ROWNUM <= ' . $count;
+                break;
+                
+            default : 
+                break;
+            }
+        }
+        
+        if(empty($where_def)) $where_def = '1=1';
+        
+        // CONSTRUCT QUERY
+        $query = 'SELECT' . 
+            ' ' . $select_opts . 
+            ' ' . $select_expr . 
+            ' FROM ' . $table_refs .
+            ' WHERE ' . $where_def .
+            ' ' . $other_clauses .
+            ' ' . $limit_clause;
+        
+        return $query;
+        
+    }
+    
+    /*************************************************************************
+    * Returns an empty list for SELECT X WHERE Y IN (------)
+    *
+    * Return
+    *   (string) Empty list
+    *
+    *************************************************************************/
+    public function empty_list()
+    {
+        switch($this->_databasetype) 
+        {
+        case 'MYSQL'        : return "''";
+        case 'POSTGRESQL'   : return "''";
+        case 'SQLSERVER'    : return "''''";
+        case 'ORACLE'       : return "''''";
+        default             : return "''";
+        }
+    }
+
+    
 }

@@ -335,7 +335,10 @@ else
                 {
                     $what .= $res_action['history_msg'];
                 }
-                $hist->add($_POST['table'],$arr_res[$i],'ACTION#'.$id_action,$what, $_SESSION['config']['databasetype'], $_POST['module']);
+                $hist->add(
+					$_POST['table'],
+					$arr_res[$i],'ACTION#'.$id_action, $id_action,
+					$what, $_SESSION['config']['databasetype'], $_POST['module']);
             }
         }
     }

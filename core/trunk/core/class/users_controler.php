@@ -206,7 +206,7 @@ class users_controler extends ObjectControler implements ObjectControlerIF
                     if ($params['log_user_up'] == 'true') {
                         $history = new history();
                         $history->add(
-                        	USERS_TABLE, $user->user_id, 'UP',
+                        	USERS_TABLE, $user->user_id, 'UP', 'usersup',
                             _USER_UPDATE . ' : ' . $user->user_id,
                             $params['databasetype']
                         );
@@ -228,7 +228,7 @@ class users_controler extends ObjectControler implements ObjectControlerIF
                     if ($params['log_user_add'] == 'true') {
                         $history = new history();
                         $history->add(
-                        	USERS_TABLE, $user->user_id, 'ADD',
+                        	USERS_TABLE, $user->user_id, 'ADD', 'usersadd',
                             _USER_ADDED . ' : ' . $user->user_id,
                             $params['databasetype']
                         );
@@ -467,7 +467,7 @@ class users_controler extends ObjectControler implements ObjectControlerIF
             ) {
                 $history = new history();
                 $history->add(
-                	USERS_TABLE, $user->user_id, 'DEL',
+                	USERS_TABLE, $user->user_id, 'DEL', 'usersdel',
                     _DELETED_USER . ' : ' . $user->lastname . ' '
                     . $user->firstname . ' (' . $user->user_id . ')',
                     $params['databasetype']
@@ -583,7 +583,7 @@ class users_controler extends ObjectControler implements ObjectControlerIF
             ) {
                 $history = new history();
                 $history->add(
-                	USERS_TABLE, $user->user_id, 'BAN',
+                	USERS_TABLE, $user->user_id, 'BAN', 'usersban',
                     _SUSPENDED_USER . ' : ' . $user->lastname . ' '
                     . $user->firstname . ' (' . $user->user_id . ')',
                     $params['databasetype']
@@ -631,7 +631,7 @@ class users_controler extends ObjectControler implements ObjectControlerIF
             ) {
                 $history = new history();
                 $history->add(
-                	USERS_TABLE, $user->user_id, 'VAL',
+                	USERS_TABLE, $user->user_id, 'VAL', 'usersval',
                     _AUTORIZED_USER .' : ' . $user->lastname . ' '
                     . $user->firstname . ' (' . $user->user_id . ')',
                     $params['databasetype']

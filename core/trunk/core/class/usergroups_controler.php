@@ -400,7 +400,7 @@ class usergroups_controler extends ObjectControler implements ObjectControlerIF
                     if ($params['log_group_up'] == 'true') {
                         $history = new history();
                         $history->add(
-                            USERGROUPS_TABLE, $group->group_id, 'UP',
+                            USERGROUPS_TABLE, $group->group_id, 'UP', 'usergroupup',
                             _GROUP_UPDATE . ' : ' . $group->group_id,
                             $params['databasetype']
                         );
@@ -422,7 +422,7 @@ class usergroups_controler extends ObjectControler implements ObjectControlerIF
                     if ($params['log_group_add'] == 'true') {
                         $history = new history();
                         $history->add(
-                            USERGROUPS_TABLE, $group->group_id, 'ADD',
+                            USERGROUPS_TABLE, $group->group_id, 'ADD','usergroupadd',
                             _GROUP_ADDED.' : '.$group->group_id,
                             $params['databasetype']
                         );
@@ -616,7 +616,7 @@ class usergroups_controler extends ObjectControler implements ObjectControlerIF
             ) {
                 $history = new history();
                 $history->add(
-                    USERGROUPS_TABLE, $group->group_id, 'DEL',
+                    USERGROUPS_TABLE, $group->group_id, 'DEL','usergroupdel',
                     _DELETED_GROUP . ' : ' . $group->group_id,
                     $params['databasetype']
                 );
@@ -685,7 +685,7 @@ class usergroups_controler extends ObjectControler implements ObjectControlerIF
             ) {
                 $history = new history();
                 $history->add(
-                    USERGROUPS_TABLE, $group->group_id, 'BAN',
+                    USERGROUPS_TABLE, $group->group_id, 'BAN','usergroupban',
                     _SUSPENDED_GROUP . ' : ' . $group->group_id,
                     $params['databasetype']
                 );
@@ -731,7 +731,7 @@ class usergroups_controler extends ObjectControler implements ObjectControlerIF
             ) {
                 $history = new history();
                 $history->add(
-                    USERGROUPS_TABLE, $group->group_id, 'VAL',
+                    USERGROUPS_TABLE, $group->group_id, 'VAL','usergroupval',
                     _AUTORIZED_GROUP . ' : ' . $group->group_id,
                     $params['databasetype']
                 );

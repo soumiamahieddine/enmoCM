@@ -54,14 +54,11 @@ class request extends dbquery
     */
     public function select($select, $where, $other, $database_type, $limit="default", $left_join=false, $first_join_table="", $second_join_table="", $join_key="", $add_security = true, $catch_error = false, $distinct_argument = false)
     {
-        if($limit == 0)
+        if($limit == 0 || $limit == "default")
         {
-            $limit=$_SESSION['config']['databasesearchlimit'];
+            $limit = $_SESSION['config']['databasesearchlimit'];
         }
-        elseif($limit == "default")
-        {
-            $limit=$_SESSION['config']['databasesearchlimit'];
-        }
+      
         //Extracts data in the first argument : $select.
         $tab_field = array();
         $table = '';
@@ -85,7 +82,8 @@ class request extends dbquery
         //Extracts data from the second argument : the where clause
         if (trim($where) <> "")
         {
-            $where_string = " where ".$where;
+            $where_string = $where;
+			//$where_string = " where ".$where;
         }
         else
         {
@@ -141,7 +139,8 @@ class request extends dbquery
                     {
                         if(empty($where_string))
                         {
-                            $where_string = " where ( ".$_SESSION['user']['security'][$coll]['DOC']['where']." ) ";
+                            $where_string = "( ".$_SESSION['user']['security'][$coll]['DOC']['where']." ) ";
+							//$where_string = " where ( ".$_SESSION['user']['security'][$coll]['DOC']['where']." ) ";
                         }
                         else
                         {
@@ -159,35 +158,13 @@ class request extends dbquery
         {
             $dist = " distinct ";
         }
-        if($database_type == "SQLSERVER")
-        {
-            $query = "SELECT TOP ".$limit." ".$dist.$field_string." FROM ".$table_string." ".$join." ".$where_string." ".$other;
-        }
-        elseif($database_type == "MYSQL" )
-        {
-            $query = "SELECT ".$dist.$field_string." FROM ".$table_string.' '.$join.' '.$where_string." ".$other." LIMIT 0,".$limit." ";
-        }
-        elseif($database_type == "POSTGRESQL" )
-        {
-            $query = "SELECT ".$dist.$field_string." FROM ".$table_string.' '.$join.' '.$where_string." ".$other." OFFSET 0 LIMIT ".$limit." ";
-        }
-        elseif($database_type == "ORACLE" )
-        {
-            if ($limit <> '')
-            {
-                $orcl_limit = $limit;
-                $orcl_limit = " rownum <= ".$orcl_limit;
-                if ($where_string <> '') { $orcl_limit = " and ".$orcl_limit; } else { $orcl_limit = " where ".$orcl_limit; }
-            }
-            $query = "SELECT ".$dist.$field_string." FROM ".$table_string.' '.$join.' '.$where_string." ".$orcl_limit." ".$other." ";
-        }
+		
+		$query = $this->limit_select(0, $limit, $field_string, $table_string." ".$join, $where_string, $other, $dist);
+
         $this->connect();
-		
-		if (preg_match('/res_view/i', $query)) {
-			$_SESSION['last_select_query'] = $query;
-		}
-		
+
         $res_query = $this->query($query, $catch_error);
+		//$this->show();
         if($catch_error && !$res_query)
         {
             return false;
@@ -200,14 +177,7 @@ class request extends dbquery
             {
                 if (!is_int($resval))
                 {
-                    if ($_SESSION['config']['databasetype'] == "ORACLE")
-                    {
-                        array_push($temp,array('column'=>strtolower($resval),'value'=>$line[$resval]));
-                    }
-                    else
-                    {
-                        array_push($temp,array('column'=>$resval,'value'=>$line[$resval]));
-                    }
+                    array_push($temp,array('column'=>$resval,'value'=>$line[$resval]));
                 }
             }
             array_push($result,$temp);
@@ -311,134 +281,5 @@ class request extends dbquery
         return $this->query($query, true);
     }
 
-    /**
-    * Return current datetime instruction for each SQL database
-    *
-    * @author  Loïc Vinet  <dev@maarch.org>
-    */
-    public function current_datetime()
-    {
-
-        if($_SESSION['config']['databasetype'] == "SQLSERVER")
-        {
-            return ' getdate() ';
-        }
-        elseif( ($_SESSION['config']['databasetype'] == "MYSQL" || $_SESSION['config']['databasetype'] == "POSTGRESQL"))
-        {
-            return ' now() ';
-        }
-        elseif($_SESSION['config']['databasetype'] == "ORACLE")
-        {
-            return ' sysdate ';
-        }
-    }
-    /**
-    * Returns the correct SQL instruction (depending of the database type) for extracting a date or a date part from a datetime field
-    *
-    * @param $date_field String The name of the date field
-    * @param $arg String Date part : 'year', 'month', 'day', 'hour', 'minute' or 'second'; if empty return the all date, empty by default
-    * @return String SQL instruction
-    */
-    public function extract_date($date_field, $arg = '')
-    {
-
-        if($_SESSION['config']['databasetype'] == "SQLSERVER")
-        {
-            // TO DO
-            return $date_field;
-        }
-        elseif( $_SESSION['config']['databasetype'] == "MYSQL" || $_SESSION['config']['databasetype'] == "POSTGRESQL" )
-        {
-            if(empty($arg))
-            {
-                return ' date('.$date_field.')';
-            }
-            else
-            {
-                if($_SESSION['config']['databasetype'] == "MYSQL")
-                {
-                    switch($arg)
-                    {
-                        case 'year' :
-                            return ' date_format('.$date_field.', %Y)';
-                        case 'month' :
-                            return ' date_format('.$date_field.', %m)';
-                        case 'day' :
-                            return ' date_format('.$date_field.', %d)';
-                        case 'hour' :
-                            return ' date_format('.$date_field.', %k)';
-                        case 'minute' :
-                            return ' date_format('.$date_field.', %i)';
-                        case 'second' :
-                            return ' date_format('.$date_field.', %s)';
-                        default  :
-                            return ' date('.$date_field.')';
-                    }
-                }
-                else if($_SESSION['config']['databasetype'] == "POSTGRESQL")
-                {
-                    switch($arg)
-                    {
-                        case 'year' :
-                            return " date_part( 'year', ".$date_field.")";
-                        case 'month' :
-                            return " date_part( 'month', ".$date_field.")";
-                        case 'day' :
-                            return " date_part( 'day', ".$date_field.")";
-                        case 'hour' :
-                            return " date_part( 'hour', ".$date_field.")";
-                        case 'minute' :
-                            return " date_part( 'minute', ".$date_field.")";
-                        case 'second' :
-                            return " date_part( 'second', ".$date_field.")";
-                        default  :
-                            return ' date('.$date_field.')';
-                    }
-                }
-
-            }
-        }
-        elseif($_SESSION['config']['databasetype'] == "ORACLE")
-        {
-            switch($arg)
-            {
-                case 'year' :
-                    return " to_char(".$date_field.", 'YYYY')";
-                case 'month' :
-                    return " to_char(".$date_field.", 'MM')";
-                case 'day' :
-                    return " to_char(".$date_field.", 'DD')";
-                case 'hour' :
-                    return " to_char(".$date_field.", 'HH24')";
-                case 'minute' :
-                    return " to_char(".$date_field.", 'MI')";
-                case 'second' :
-                    return " to_char(".$date_field.", 'SS')";
-                default  :
-                    return " to_char(".$date_field.", 'DD/MM/YYYY')";
-            }
-        }
-    }
-
-    public function get_date_diff($date1, $date2)
-    {
-        if($_SESSION['config']['databasetype'] == "MYSQL")
-        {
-            return 'datediff('.$date1.', '.$date2.')';
-        }
-        elseif($_SESSION['config']['databasetype'] == "POSTGRESQL")
-        {
-            return $this->extract_date($date1).' - '.$this->extract_date($date2);
-        }
-        elseif($_SESSION['config']['databasetype'] == "ORACLE")
-        {
-            return $this->extract_date($date1).' - '.$this->extract_date($date2);
-        }
-        else if($_SESSION['config']['databasetype'] == "SQLSERVER")
-        {
-            // TO DO
-            return '';
-        }
-    }
 }
 ?>
