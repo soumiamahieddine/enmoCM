@@ -1221,3 +1221,8 @@ if (!defined('_REVERSE_CHECK')) {
 if (!defined('_EXPORT_LIST')) {
     define( '_EXPORT_LIST', 'Export');
 }
+
+/******************** Action put in copy ************/
+if (!defined('_PUT_IN_COPY')) {
+    define('_PUT_IN_COPY', 'Put in copy');
+}
