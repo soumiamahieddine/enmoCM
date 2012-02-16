@@ -579,7 +579,8 @@ function del_query_confirm()
                                         </tr>
                                         <tr >
                                             <td width="70%"><label for="subject" class="bold" ><?php echo _CASE_DESCRIPTION;?>:</label>
-                                                <textarea name="case_description" id="case_description"  rows="4" ></textarea>
+                                                <!--<textarea name="case_description" id="case_description"  rows="4" ></textarea>-->
+                                                <input type="text" name="case_description" id="case_description" size="40" maxlength="255"/>
                                             </td>
                                             <td>
                                                 <p align="center">
