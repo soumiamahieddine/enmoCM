@@ -143,8 +143,8 @@ if (isset($_SESSION[$origin]['diff_list']['dest']['user_id'])
 if ($onlyCC) {
     $arg .= '&only_cc';
 }
-$content .= '<p class="button" >';
-$content .= '<img src="' . $_SESSION['config']['businessappurl']
+$content_standard = '<p class="button" >';
+$content_standard .= '<img src="' . $_SESSION['config']['businessappurl']
          . 'static.php?filename=modif_liste.png&module=entities" alt="" />'
          . '<a href="javascript://" onclick="window.open(\''
          . $_SESSION['config']['businessappurl'] . 'index.php?display=true'
@@ -152,7 +152,8 @@ $content .= '<img src="' . $_SESSION['config']['businessappurl']
          . '\', \'\', \'scrollbars=yes,menubar=no,toolbar=no,status=no,'
          . 'resizable=yes,width=1024,height=650,location=no\');">'
          . $labelButton . '</a>';
-$content .= '</p>';
+$content_standard .= '</p>';
 
-echo "{status : 0, div_content : '" . addslashes($content) . "'}";
+echo "{status : 0, div_content : '" . addslashes($content . $content_standard) 
+    . "', div_content_action : '" . addslashes($content) . "'}";
 exit();

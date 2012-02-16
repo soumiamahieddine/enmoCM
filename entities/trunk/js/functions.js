@@ -73,6 +73,7 @@ function change_entity(entity_id, path_manage_script, diff_list_id, origin_keywo
 function change_diff_list(path_manage_script, display_value_tr, difflist_div, difflist_tr)
 {
     var list_div = difflist_div || 'diff_list_div';
+    var list_div_from_action = 'diff_list_div_from_action';
     var list_tr = difflist_tr || 'diff_list_tr';
     var tr_display_val = display_value_tr || 'table-row';
     //alert(path_manage_script);
@@ -89,10 +90,15 @@ function change_diff_list(path_manage_script, display_value_tr, difflist_div, di
                 {
                     //alert(window.opener.document);
                     var diff_list_tr = window.opener.$(list_tr);
-                    var diff_list_div = window.opener.$(list_div );
+                    var diff_list_div = window.opener.$(list_div);
+                    var diff_list_div_from_action = window.opener.$(list_div_from_action);
                     if(diff_list_div != null)
                     {
                         diff_list_div.innerHTML = response.div_content;
+                    }
+                    if(diff_list_div_from_action != null)
+                    {
+                        diff_list_div_from_action.innerHTML = response.div_content_action;
                     }
                     if(diff_list_tr != null)
                     {

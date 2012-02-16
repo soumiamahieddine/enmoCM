@@ -140,5 +140,6 @@ if (!defined('_ENTITY_PROCESS_DELAY'))  define('_ENTITY_PROCESS_DELAY', 'D&eacut
 if (!defined('_ENTITY_LATE_MAIL'))  define('_ENTITY_LATE_MAIL', 'Volume de courrier en retard par entit&eacute;');
 
 
-
-?>
+/******************** Action put in copy ************/
+if (!defined('_ADD_COPY_FOR_DOC'))  define('_ADD_COPY_FOR_DOC', 'Put in copy for the resource');
+if (!defined('_VALIDATE_PUT_IN_COPY'))  define('_VALIDATE_PUT_IN_COPY', 'Validate the list');

@@ -158,5 +158,9 @@ if (!defined('_WRONG_DATE_FORMAT'))  define('_WRONG_DATE_FORMAT', 'Format de dat
 if (!defined('_ENTITY_PROCESS_DELAY'))  define('_ENTITY_PROCESS_DELAY', 'D&eacute;lai moyen de traitement par entit&eacute;');
 if (!defined('_ENTITY_LATE_MAIL'))  define('_ENTITY_LATE_MAIL', 'Volume de courrier en retard par entit&eacute;');
 
+/******************** Action put in copy ************/
+if (!defined('_ADD_COPY_FOR_DOC'))  define('_ADD_COPY_FOR_DOC', 'Ajouter en copie pour le document');
+if (!defined('_VALIDATE_PUT_IN_COPY'))  define('_VALIDATE_PUT_IN_COPY', 'Valider l&rsquo;ajout en copie');
 
-?>
+
+

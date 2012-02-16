@@ -45,8 +45,12 @@ $what = "";
 $whatUsers = '';
 $whatServices = '';
 $onlyCc = false;
+$noDelete = false;
 if (isset($_REQUEST['only_cc'])) {
     $onlyCc = true;
+}
+if (isset($_REQUEST['no_delete'])) {
+    $noDelete = true;
 }
 if (isset($_GET['what_users']) && ! empty($_GET['what_users']) ) {
     $whatUsers = $func->protect_string_db(
@@ -361,6 +365,9 @@ $link = $_SESSION['config']['businessappurl'] . "index.php?display=true"
     if ($onlyCc) {
         $link .= '&only_cc';
     }
+    if ($noDelete) {
+        $link .= '&no_delete';
+    }
     //print_r($_SESSION['process']['diff_list'] );
         ?>
         <br/></br>
@@ -507,19 +514,27 @@ if ((isset($_GET['what_users']) && ! empty($_GET['what_users']))
                 <td colspan="2"><?php
             echo $_SESSION[$origin]['diff_list']['copy']['entities'][$i]['entity_label'];
             ?></td>
-                <td class="action_entities"><a href="<?php
-            echo $link;
-            ?>&what_users=<?php
-            echo $whatUsers;
-            ?>&what_services=<?php
-            echo $whatServices;
-            ?>&action=remove_entity&rank=<?php
-            echo $i;
-            ?>&id=<?php
-            echo $_SESSION[$origin]['diff_list']['copy']['entities'][$i]['entity_id'];
-            ?>" class="delete"><?php
-            echo _DELETE;
-            ?></a></td>
+                <td class="action_entities">
+                    <?php
+                    if (!$noDelete) {
+                        ?>
+                        <a href="<?php
+                        echo $link;
+                        ?>&what_users=<?php
+                        echo $whatUsers;
+                        ?>&what_services=<?php
+                        echo $whatServices;
+                        ?>&action=remove_entity&rank=<?php
+                        echo $i;
+                        ?>&id=<?php
+                        echo $_SESSION[$origin]['diff_list']['copy']['entities'][$i]['entity_id'];
+                        ?>" class="delete"><?php
+                        echo _DELETE;
+                        ?></a>
+                        <?php
+                    }
+                    ?>
+                </td>
                 <td  >&nbsp;</td>
             </tr>
         <?php
@@ -552,19 +567,27 @@ if ((isset($_GET['what_users']) && ! empty($_GET['what_users']))
                 <td><?php
             echo $_SESSION[$origin]['diff_list']['copy']['users'][$i]['entity_label'];
             ?></td>
-                <td class="action_entities"><a href="<?php
-            echo $link;
-            ?>&what_users=<?php
-            echo $whatUsers;
-            ?>&what_services=<?php
-            echo $whatServices;
-            ?>&action=remove_user&rank=<?php
-            echo $i;
-            ?>&id=<?php
-            echo $_SESSION[$origin]['diff_list']['copy']['users'][$i]['user_id']
-            ;?>" class="delete"><?php
-            echo _DELETE;
-            ?></a></td>
+                <td class="action_entities">
+                    <?php
+                    if (!$noDelete) {
+                        ?>
+                        <a href="<?php
+                        echo $link;
+                        ?>&what_users=<?php
+                        echo $whatUsers;
+                        ?>&what_services=<?php
+                        echo $whatServices;
+                        ?>&action=remove_user&rank=<?php
+                        echo $i;
+                        ?>&id=<?php
+                        echo $_SESSION[$origin]['diff_list']['copy']['users'][$i]['user_id']
+                        ;?>" class="delete"><?php
+                        echo _DELETE;
+                        ?></a>
+                        <?php
+                    }
+                    ?>
+                    </td>
                 <td class="action_entities"><?php
             if (! $onlyCc) {
                 ?><a href="<?php
@@ -607,6 +630,9 @@ if ((isset($_GET['what_users']) && ! empty($_GET['what_users']))
         . '&module=entities&page=load_listinstance&origin=' . $origin;
     if ($onlyCc) {
         echo '&only_cc';
+    }
+    if ($noDelete) {
+        echo '&no_delete';
     }
     ?>', <?php
     echo "'" . $displayValue . "'";
