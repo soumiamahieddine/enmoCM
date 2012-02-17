@@ -1226,3 +1226,7 @@ if (!defined('_EXPORT_LIST')) {
 if (!defined('_PUT_IN_COPY')) {
     define('_PUT_IN_COPY', 'Put in copy');
 }
+
+if (!defined('_POWERED_BY')) {
+    define('_POWERED_BY', 'Powered by Maarch&trade;.');
+}

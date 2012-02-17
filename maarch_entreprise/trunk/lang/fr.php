@@ -1630,3 +1630,7 @@ if (!defined('_EXPORT_LIST')) {
 if (!defined('_PUT_IN_COPY')) {
     define('_PUT_IN_COPY', 'Ajouter en copie');
 }
+
+if (!defined('_POWERED_BY')) {
+    define('_POWERED_BY', 'Powered by Maarch&trade;.');
+}
