@@ -1216,6 +1216,14 @@ if (!defined('_REVERSE_CHECK')) {
     define( '_REVERSE_CHECK', 'Reverse check');
 }
 
+if (!defined('_CHECK_ALL')) {
+    define( '_CHECK_ALL', 'Check all');
+}
+
+if (!defined('_UNCHECK_ALL')) {
+    define( '_UNCHECK_ALL', '/ uncheck');
+}
+
 //EXPORT
 
 if (!defined('_EXPORT_LIST')) {

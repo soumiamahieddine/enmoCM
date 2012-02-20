@@ -1620,6 +1620,14 @@ if (!defined('_REVERSE_CHECK')) {
     define( '_REVERSE_CHECK', 'Inverser la s&eacute;lection');
 }
 
+if (!defined('_CHECK_ALL')) {
+    define( '_CHECK_ALL', 'Tout cocher');
+}
+
+if (!defined('_UNCHECK_ALL')) {
+    define( '_UNCHECK_ALL', '/ d&eacute;cocher');
+}
+
 //EXPORT
 
 if (!defined('_EXPORT_LIST')) {

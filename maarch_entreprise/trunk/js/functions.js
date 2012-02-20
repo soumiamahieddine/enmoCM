@@ -2174,6 +2174,14 @@ function checkAll() {
     )
 }
 
+function uncheckAll(){
+    $$('input[type=checkbox]').without($('all')).each(
+        function(e) {
+            e.checked = false;  
+        }  
+    )
+}
+
 function reverseCheck() {
     $$('input[type=checkbox]').without($('all')).each(
         function(e) {

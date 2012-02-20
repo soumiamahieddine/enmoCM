@@ -727,8 +727,9 @@ class list_show_with_template extends list_show
 		$theline = 0;
         // CHECK ALL IF ANY ACTION
         if ($bool_radio_form || $bool_check_form) {
-            //$disp_dc .= '<a href="#" onclick="checkAll();" >' . _CHECK_ALL . '</a>&nbsp;&nbsp;';
-            $disp_dc .= '&nbsp;&nbsp;<input type="checkbox"><a href="#" onclick="reverseCheck();" >' . _REVERSE_CHECK . '</a>';
+            $disp_dc .= '<input type="checkbox"><a href="#" onclick="checkAll();" >' . _CHECK_ALL . '</a>';
+            $disp_dc .= '&nbsp;<a href="#" onclick="uncheckAll();" >' . _UNCHECK_ALL . '</a>';
+            //$disp_dc .= '&nbsp;&nbsp;<input type="checkbox"><a href="#" onclick="reverseCheck();" >' . _REVERSE_CHECK . '</a>';
         }
 		//if they are more 1 page we do pagination with 2 forms
 		if($nb_pages > 1)
