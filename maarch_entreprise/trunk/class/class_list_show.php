@@ -106,10 +106,12 @@ class list_show extends functions
     )
     {
         if ($template && $actual_template <> '') {
+			$str = '';
+			$str .= '<div style="text-align: right;"><input type="button" onclick="window.open(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&page=export\', \'_blank\');" class="button" name="submit" value="'.  _EXPORT_LIST.'" /></div>';
             require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR.'class_list_show_with_template.php');
             $list_temp = new list_show_with_template();
 
-            $str = $list_temp->list_doc_by_template($result, $nb_total, $title,$what,$name,$key,$detail_destination,$bool_view_document,$bool_radio_form,$method,$action,
+            $str .= $list_temp->list_doc_by_template($result, $nb_total, $title,$what,$name,$key,$detail_destination,$bool_view_document,$bool_radio_form,$method,$action,
             $button_label, $bool_detail, $bool_order, $bool_frame,$bool_export, $show_close, $show_big_title,
             $show_full_list, $bool_check_form, $res_link, $module, $bool_show_listletters, $all_sentence,
             $whatname, $used_css , $comp_link, $link_in_line, $bool_show_actions_list , $actions,
@@ -127,11 +129,14 @@ class list_show extends functions
         }
         else
         {
+			$str = '';
+			$str .= '<div style="text-align: right;"><input type="button" onclick="window.open(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&page=export\', \'_blank\');" class="button" name="submit" value="'.  _EXPORT_LIST.'" /></div>';
+            require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR.'class_list_show_with_template.php');
             //show the document list in result of the search
             $page_list1 = "";
             $page_list2 = "";
             $link="";
-            $str = '';
+            $str .= '';
             //$listvalue = array();
             $listcolumn = array();
             $listshow = array();
