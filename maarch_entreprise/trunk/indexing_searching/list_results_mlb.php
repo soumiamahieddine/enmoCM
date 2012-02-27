@@ -551,7 +551,7 @@ if($mode == 'popup' || $mode == 'frame')
     </script>
 <?php if($save_mode)
 {?>
-    <input type="button" onclick="createModal(form_txt);" value="<?php echo _SAVE_QUERY;?>" class="button"/>
+    <input type="button" onclick="createModal(form_txt);window.location.href='#top';" value="<?php echo _SAVE_QUERY;?>" class="button"/>
 <?php
 }
 if($mode == 'popup' || $mode == 'frame')
