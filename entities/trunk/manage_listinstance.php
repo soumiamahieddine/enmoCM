@@ -72,7 +72,7 @@ if (isset($_GET['what_users']) && ! empty($_GET['what_users']) ) {
                 or u.user_id like '%".strtolower($whatUsers)."%'
                 or u.user_id like '%".strtoupper($whatUsers)."%')";
     }
-    $orderByUsers = " order by u.user_id asc, u.lastname asc, u.firstname asc, "
+    $orderByUsers = " order by u.lastname asc, u.firstname asc, "
     			  . "e.entity_label asc";
 
     if ($_SESSION['config']['databasetype'] == 'POSTGRESQL') {
@@ -111,7 +111,7 @@ if (isset($_GET['what_services']) && ! empty($_GET['what_services'])) {
                        . strtolower($whatServices) . "%' or e.entity_id like '%"
                        . strtolower($whatServices) . "%' )";
     }
-    $orderByUsers = " order by e.entity_label asc, u.user_id asc, "
+    $orderByUsers = " order by e.entity_label asc, "
     			  . "u.lastname asc, u.firstname asc";
     $orderByEntities = " order by e.entity_label asc";
 }
