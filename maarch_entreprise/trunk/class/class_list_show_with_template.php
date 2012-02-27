@@ -955,7 +955,7 @@ class list_show_with_template extends list_show
 					$str_foot .= ' <option value="'.$actions[$ind_act]['VALUE'].'">'.$actions[$ind_act]['LABEL'].'</option>';
 				}
 				$str_foot .= ' </select>';
-				$str_foot .= ' <input type="button" name="send" id="send" value="'._VALIDATE.'" onclick="valid_form(\'mass\');" class="button" />';
+				$str_foot .= ' <input type="button" name="send" id="send" value="'._VALIDATE.'" onclick="valid_form(\'mass\');window.location.href=\'#top\'" class="button" />';
 			$str_foot .= ' </p>';
 		$str_foot .= ' </form>';
 		$str_foot .= ' <br/>';
