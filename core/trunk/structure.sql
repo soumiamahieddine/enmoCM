@@ -1413,12 +1413,12 @@ CREATE TABLE templates_association
   what character varying(255) NOT NULL,
   value_field character varying(255) NOT NULL,
   maarch_module character varying(255) NOT NULL DEFAULT 'apps'::character varying,
-  description character varying(255),
-  diffusion_type character varying(50),
-  diffusion_properties character varying(255),
-  exclusion_type character varying(50),
-  exclusion_properties character varying(255),
-  is_attached character(1) NOT NULL DEFAULT 'N'::bpchar,
+  notification_id character varying(50) NOT NULL,
+  description character varying(255) NOT NULL,
+  diffusion_type character varying(50) NOT NULL,
+  diffusion_properties character varying(255) NOT NULL,
+  diffusion_content character varying(255) NOT NULL,
+  is_attached character varying(1) NOT NULL DEFAULT 'N'::character varying,
   CONSTRAINT templates_association_pkey PRIMARY KEY (system_id)
 )
 WITH (
