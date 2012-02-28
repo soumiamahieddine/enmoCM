@@ -579,6 +579,17 @@ INSERT INTO templates (id, label, creation_date, template_comment, content) VALU
 <li><font size="\\&quot;2\\&quot;">Contact :</font></li>
 </ul>
 <p><font size="\\&quot;2\\&quot;">Notes : </font></p>');
+INSERT INTO templates (id, label, creation_date, template_comment, content) VALUES (20, 'Notifications événement', '2012-01-27 10:41:34.237', 'Test des notifications événements système', '<p>{#translate._HELLO} {#mergefield.recipient.firstname} {#mergefield.recipient.lastname},</p>
+<p>&nbsp;</p>
+<p>Voici la liste des &eacute;v&eacute;nements {#mergefield.template_association.description} :</p>
+<p>&nbsp;</p>
+<p>{#mergetable.evenements}</p>');
+INSERT INTO templates (id, label, creation_date, template_comment, content) VALUES (21, 'Diffusion de courrier', '2012-02-06 10:14:49.088', 'Notification de diffusion de courrier', '<p>Bonjour {#mergefield.recipient.firstname} {#mergefield.recipient.lastname},</p>
+<p>&nbsp;</p>
+<p>Voici la liste des courriers qui vous ont &eacute;t&eacute; envoy&eacute;s :</p>
+<p>&nbsp;</p>
+<p>{#mergetable.courriers}</p>
+<p>&nbsp;</p>');
 
 
 
