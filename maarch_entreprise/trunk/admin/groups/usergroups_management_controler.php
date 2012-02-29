@@ -418,7 +418,6 @@ function displayEnable($groupId)
         } else {
             $_SESSION['error'] = _AUTORIZED_GROUP.' : '.$groupId;
         }
-        exit();
         $url = $_SESSION['config']['businessappurl'] . 'index.php?page='
              . 'usergroups_management_controler&mode=list&admin=groups&order='
              . $_REQUEST['order'] . '&order_field=' . $_REQUEST['order_field']
@@ -458,7 +457,6 @@ function displayDisable($groupId)
         } else {
             $_SESSION['error'] = _SUSPENDED_GROUP.' : '.$groupId;
         }
-        exit;
         $url = $_SESSION['config']['businessappurl'] . 'index.php?page='
              . 'usergroups_management_controler&mode=list&admin=groups&order='
              . $order . '&order_field=' . $orderField . '&start=' . $start
