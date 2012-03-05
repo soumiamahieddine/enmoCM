@@ -362,7 +362,6 @@ function validate_event_submit() {
 	
 	
     $control = $eventCtrl->save($eventObj, $mode, $params);
-   
     
     if (!empty($control['error']) && $control['error'] <> 1) {
         // Error management depending of mode
