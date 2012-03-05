@@ -196,23 +196,6 @@ if ($mode == 'list') {
 				?>
 			</select>
 		</p>
-		<!--<p>
-			<label for="label"><?php echo _EXCLUSION_TYPE; ?> : </label>
-			<select name="exclusion_type" id="exclusion_type">
-				<option value=""><?php echo _EXCLUSION_TYPE;?></option>
-				<?php
-				for($i = 0; $i < count($event_diffusion_type); $i++){
-					?><option value="<?php echo $event_diffusion_type[$i]['id'];?>" 
-					<?php 
-					if($_SESSION['m_admin']['event']['exclusion_type'] 
-						== $event_diffusion_type[$i]['type_id']) { 
-						echo 'selected="selected"';
-					}?>><?php echo $event_diffusion_type[$i]['type_id'];
-					?></option><?php
-				}
-				?>
-			</select>
-		</p> -->
 	
 		 <p>
             <label ><?php echo _ATTACH_MAIL_FILE; ?> : </label>
@@ -267,7 +250,7 @@ if ($mode == 'list') {
 			'<?php echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&module=notifications&page=load_diffusiontype_formcontent',
 			'diff_type_div',
 			'notifications',
-			'');	
+			'');
 		</script>
 		<?php
 		if ($_SESSION['m_admin']['event']['diffusion_type'] <> '')
@@ -279,13 +262,15 @@ if ($mode == 'list') {
 			
 			$dType = $Type -> getDiffusionType($_SESSION['m_admin']['event']['diffusion_type']);
 			include_once ($dType->script);
-			//echo '<script language="javascript">';
-				getExtraProperties(); //Lancement du javascript adequat
-			//echo '</script>';
+			?>
+			<script language="javascript">
+			loadDiffusionProperties(
+				'<?php echo $_SESSION['m_admin']['event']['diffusion_type']; ?>',
+				'<?php echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&module=notifications&page=load_diffusionproperties_formcontent'
+				);
+			</script>
+			<?php
+			//getExtraProperties(); //Lancement du javascript adequat
 		}
-	
 	}
-	
- 
-   
 }
