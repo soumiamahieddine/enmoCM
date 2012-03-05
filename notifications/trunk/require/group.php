@@ -73,7 +73,7 @@ function getExtraProperties(){
 	?>
 	
 	<script language="javascript">
-	alert('');
+	//alert('');
 	var list = $("frmevent").elements["groupslist[]"];
 	for (i=0;i<list.length;i++)
 	{
@@ -122,10 +122,11 @@ function getgroupList(){
 }
 
 function getRecipients($ta, $event) {
+	$groups = "'". str_replace(",", "','", $ta->diffusion_properties) . "'";
 	$query = "SELECT distinct us.*" 
 		. " FROM usergroup_content ug "
 		. "	LEFT JOIN users us ON us.user_id = ug.user_id" 
-		. " WHERE ug.group_id in ('".$ta->diffusion_properties."')"
+		. " WHERE ug.group_id in (".$groups.")"
 		. "	AND us.enabled = 'Y'";
 	return $query;
 }
