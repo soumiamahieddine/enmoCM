@@ -954,7 +954,9 @@ INSERT INTO templates (id, label, creation_date, template_comment, content) VALU
 -- Data for Name: templates_association; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module, notification_id, description, diffusion_type, diffusion_properties, diffusion_content, is_attached) VALUES (24, 21, 'event', '21', 'notifications', 'INDEX_DIFF', 'Document vidéocodé et diffusé', 'dest_user', '', 'letterbox', 'N');
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module, notification_id, description, diffusion_type, diffusion_properties, diffusion_content, is_attached) VALUES (23, 20, 'event', 'users%', 'notifications', 'UP_USER', 'Modification d''utilisateur', 'user', 'superadmin', 'event', 'N');
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module, notification_id, description, diffusion_type, diffusion_properties, diffusion_content, is_attached) VALUES (26, 20, 'event', 'alert1', 'notifications', 'MLB_ALERT1', 'Alerte délai de traitement 1', 'dest_user', '', 'letterbox', 'N');
 
 --
 -- Data for Name: templates_doctype_ext; Type: TABLE DATA; Schema: public; Owner: postgres
