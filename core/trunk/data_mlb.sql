@@ -687,7 +687,6 @@ INSERT INTO listinstance (coll_id, res_id, listinstance_type, sequence, item_id,
 INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type) VALUES ('letterbox_coll', 'COM', 'entity_id', 0, 'sstar', 'user_id', 'dest', 'DOC');
 INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type) VALUES ('letterbox_coll', 'DRS', 'entity_id', 0, 'bboule', 'user_id', 'dest', 'DOC');
 INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type) VALUES ('letterbox_coll', 'DSP', 'entity_id', 0, 'bbain', 'user_id', 'dest', 'DOC');
-INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type) VALUES ('letterbox_coll', 'ENF', 'entity_id', 0, 'ddaull', 'user_id', 'dest', 'DOC');
 INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type) VALUES ('letterbox_coll', 'CAB', 'entity_id', 0, 'ppetit', 'user_id', 'dest', 'DOC');
 INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type) VALUES ('letterbox_coll', 'CAB', 'entity_id', 0, 'eerine', 'user_id', 'cc', 'DOC');
 INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type) VALUES ('letterbox_coll', 'DSI', 'entity_id', 0, 'ccordy', 'user_id', 'dest', 'DOC');
@@ -1185,7 +1184,7 @@ INSERT INTO users_entities (user_id, entity_id, user_role, primary_entity) VALUE
 INSERT INTO users_entities (user_id, entity_id, user_role, primary_entity) VALUES ('nnataliu', 'PSO', '', 'Y');
 INSERT INTO users_entities (user_id, entity_id, user_role, primary_entity) VALUES ('rrenaud', 'DGS', '', 'Y');
 INSERT INTO users_entities (user_id, entity_id, user_role, primary_entity) VALUES ('ddur', 'DSG', '', 'Y');
-INSERT INTO users_entities (user_id, entity_id, user_role, primary_entity) VALUES ('ddogem', 'DSG', '', 'Y');
+INSERT INTO users_entities (user_id, entity_id, user_role, primary_entity) VALUES ('ddaull', 'DSG', '', 'Y');
 INSERT INTO users_entities (user_id, entity_id, user_role, primary_entity) VALUES ('bblier', 'COU', '', 'Y');
 INSERT INTO users_entities (user_id, entity_id, user_role, primary_entity) VALUES ('ssaporta', 'PE', 'Responsable du service PE', 'Y');
 INSERT INTO users_entities (user_id, entity_id, user_role, primary_entity) VALUES ('ttong', 'SP', 'Responsable service des Sports', 'Y');
