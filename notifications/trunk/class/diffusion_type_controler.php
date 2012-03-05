@@ -51,8 +51,7 @@ class diffusion_type_controler
      * @param $id Id of event to get
      * @return event
      */
-    public function getAllDiffusion()
-    {
+    public function getAllDiffusion() {
 		core_tools::load_lang();
 		$return = array();
 		$xmlfile = 'modules/notifications/xml/diffusion_type.xml';
@@ -60,8 +59,7 @@ class diffusion_type_controler
         $xmldiffusion = simplexml_load_file($xmlfile);
         foreach($xmldiffusion
 				->diffusion
-				->type as $diffusion)
-		{
+				->type as $diffusion) {
 			//<id> <label> <script>	
 			
 			$diffusion_type = new diffusion_type();
@@ -80,13 +78,10 @@ class diffusion_type_controler
         }
     }
   
-	public function getDiffusionType($type_id)
-	{
-		if ($type_id <> '')
-		{
+	public function getDiffusionType($type_id) {
+		if ($type_id <> '') {
 			$fulllist = array();
 			$fulllist = $this->getAllDiffusion();
-			
 			foreach ($fulllist as $dt_id => $dt)
 			{
 				if ($type_id == $dt_id){
