@@ -163,7 +163,7 @@ while ($state <> 'END') {
 			$query = "UPDATE event_stack" 
 				. " SET exec_date = ".$db->current_datetime().", exec_result = '".$exec_result."'" 
 				. " WHERE system_id = ".$event->system_id;
-			//Bt_doQuery($db, $query);
+			Bt_doQuery($db, $query);
 		} 
 		$totalNotificationsToProcess = count($notifications);
 		$logger->write('There are ' . $totalNotificationsToProcess .' notifications to process', 'INFO');
