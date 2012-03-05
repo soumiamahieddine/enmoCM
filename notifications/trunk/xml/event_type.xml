@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<event_type>
+		<id>usersup</id>
+		<label>Modification d'un utilisateur</label>
+	</event_type>
+	<event_type>
+		<id>users%</id>
+		<label>Actions sur utilisateur</label>
+	</event_type>
+	<event_type>
+		<id>alert1</id>
+		<label>Alerte courrier 1</label>
+	</event_type>
+	<event_type>
+		<id>alert2</id>
+		<label>Relance courrier 2 avant échéance</label>
+	</event_type>
+</root>
