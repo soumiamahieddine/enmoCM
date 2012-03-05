@@ -155,8 +155,7 @@ function display_add()
 /**
  * Initialize session parameters for list display
  */
-function display_list()
-{
+function display_list() {
     $_SESSION['m_admin'] = array();
     $list = new list_show();
     $func = new functions();
@@ -252,8 +251,7 @@ function display_list()
  * Delete given status if exists and initialize session parameters
  * @param string $statusId
  */
-function display_del($eventId)
-{
+function display_del($eventId) {
 	
     $eventCtrl = new templates_association_controler();
     echo $eventId; 
@@ -300,8 +298,7 @@ function display_del($eventId)
  */
 function format_item(
     &$item, $label, $size, $labelAlign, $align, $valign, $show, $order = true
-)
-{
+) {
     $func = new functions();
     $item['value'] = $func->show_string($item['value']);
     $item[$item['column']] = $item['value'];
@@ -322,8 +319,7 @@ function format_item(
  * Validate a submit (add or up),
  * up to saving object
  */
-function validate_event_submit()
-{
+function validate_event_submit() {
 	$dType = new diffusion_type_controler();
 	$diffType = array();
 	$diffType = $dType->getAllDiffusion();
@@ -347,8 +343,7 @@ function validate_event_submit()
 	$eventObj->diffusion_content = $_REQUEST['diffusion_content'];
     $eventObj->is_attached = $_REQUEST['is_attached'];
 	
-	foreach($diffType as $loadedType)
-	{
+	foreach($diffType as $loadedType) 	{
 		if ($loadedType -> id == $eventObj->diffusion_type){
 			if ($loadedType -> script <> '')
 			{
@@ -360,8 +355,7 @@ function validate_event_submit()
 			{
 				$error .= 'System : Unable to load Require Script';
 			}
-		}
-			
+		}	
 	}		
 			
 	$eventObj->diffusion_properties = $diffusion_properties_string;
@@ -415,35 +409,7 @@ function validate_event_submit()
             . '&start=' . $status['start'] . '&what=' . $status['what']
         );
     }
-    
-    
-    //A virer
-/*
-     if (isset($_REQUEST['can_be_searched'])) {
-        $statusObj->can_be_searched = $_REQUEST['can_be_searched'];
-    }
-    $statusObj->can_be_modified = 'Y';
-    if (isset($_REQUEST['can_be_modified'])) {
-        $statusObj->can_be_modified = $_REQUEST['can_be_modified'];
-    }
-    * 
-    * 
-    * 
-    $status = array();
-    $status['order'] = $_REQUEST['order'];
-    $status['order_field'] = $_REQUEST['order_field'];
-    $status['what'] = $_REQUEST['what'];
-    $status['start'] = $_REQUEST['start'];
-
-    $control = array();
-    $params = array('modules_services' => $_SESSION['modules_services'],
-                    'log_status_up' => $_SESSION['history']['statusup'],
-                    'log_status_add' => $_SESSION['history']['statusadd'],
-                    'databasetype' => $_SESSION['config']['databasetype']
-               );
-
-*/
-
+   
 }
 
 function init_session()
