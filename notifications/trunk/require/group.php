@@ -16,22 +16,22 @@ function getContent()
 	$content .= '<table>';
 		$content .= '<tr>';
 			$content .= '<td>';
-				$content .= '<select name="groupslist[]" id="groupslist" size="7" 	ondblclick=\'moveclick(document.frmevent.elements["groupslist[]"],document.frmevent.elements["diffusion_properties[]"]);\' multiple="multiple" >';
+				$content .= '<select name="completelist[]" id="completelist" size="7" 	ondblclick=\'moveclick(document.frmevent.elements["completelist[]"],document.frmevent.elements["diffusion_properties[]"]);\' multiple="multiple" >';
 				foreach ($grouplist as $a_group){
 					$content .=  '<option value="'.$a_group['group_id'].'" selected="selected" >'.$a_group['firstname'].' '.$a_group['lastname'].'</option>';
 				}
 				
 				$content .= '</select><br/>';
-				$content .= '<em><a href=\'javascript:selectall(document.forms["frmevent"].elements["groupslist[]"]);\' >'._SELECT_ALL.'</a></em>';
+				$content .= '<em><a href=\'javascript:selectall(document.forms["frmevent"].elements["completelist[]"]);\' >'._SELECT_ALL.'</a></em>';
 			$content .= '</td>';
 			$content .= '<td>';
-			$content .= '<input type="button" class="button" value="'._ADD.'&gt;&gt;" onclick=\'Move(document.frmevent.elements["groupslist[]"],document.frmevent.elements["diffusion_properties[]"]);\' />';
+			$content .= '<input type="button" class="button" value="'._ADD.'&gt;&gt;" onclick=\'Move(document.frmevent.elements["completelist[]"],document.frmevent.elements["diffusion_properties[]"]);\' />';
                 $content .= '<br />';
                 $content .= '<br />';
-                $content .= '<input type="button" class="button" value="&lt;&lt;'._REMOVE.'"  onclick=\'Move(document.frmevent.elements["diffusion_properties[]"],document.frmevent.elements["groupslist[]"]);\' />';
+                $content .= '<input type="button" class="button" value="&lt;&lt;'._REMOVE.'"  onclick=\'Move(document.frmevent.elements["diffusion_properties[]"],document.frmevent.elements["completelist[]"]);\' />';
 			$content .= '</td>';
 			$content .= '<td>';
-				$content .= '<select name="diffusion_properties[]" id="diffusion_properties" size="7" ondblclick=\'moveclick(document.frmevent.elements["diffusion_properties[]"],document.frmevent.elements["groupslist"]);\' multiple="multiple" >';
+				$content .= '<select name="diffusion_properties[]" id="diffusion_properties" size="7" ondblclick=\'moveclick(document.frmevent.elements["diffusion_properties[]"],document.frmevent.elements["completelist"]);\' multiple="multiple" >';
 				$content .= '</select><br/>';
 				$content .= '<em><a href=\'javascript:selectall(document.forms["frmevent"].elements["diffusion_properties[]"]);\' >'._SELECT_ALL.'</a></em>';
 			$content .= '</td>';
@@ -61,46 +61,6 @@ function updatePropertiesSet($diffusion_properties){
 	$string = substr($string, 0, -1);
 	return $string;
 	
-}
-
-function getExtraProperties(){
-	//On découpe la chaine de caractère
-	
-	//V2 : Par variables de sessions
-	$result = $_SESSION['m_admin']['event']['diffusion_properties'];
-	
-	$myreturn = explode(",", $result);
-	?>
-	
-	<script language="javascript">
-	//alert('');
-	var list = $("frmevent").elements["groupslist[]"];
-	for (i=0;i<list.length;i++)
-	{
-		list[i].selected = false;
-    }
-	</script>
-	
-	
-	<?php
-	
-	foreach($myreturn as $return){
-	?>
-	<script language="javascript">
-		var list2 = $("frmevent").elements["groupslist[]"];
-		for (i=0;i<list2.length;i++)
-		{
-			if (list2[i].value == "<?php echo $return; ?>")
-			{
-				list2[i].selected = true;
-			}	
-		}		
-	</script>
-	<?php 
-	} 
-
-	echo '<script>Move($("frmevent").elements["groupslist[]"],$("frmevent").elements["diffusion_properties[]"]);</script>';
-		
 }
 
 function getgroupList(){
