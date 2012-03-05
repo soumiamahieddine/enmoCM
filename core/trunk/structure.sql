@@ -1190,12 +1190,13 @@ CREATE TABLE notif_event_stack
 (
   system_id bigint NOT NULL DEFAULT nextval('notif_event_stack_seq'::regclass),
   ta_sid bigint NOT NULL,
-  table_name character varying(32) NOT NULL,
-  record_id character varying(255) NOT NULL,
-  event_date timestamp without time zone NOT NULL,
+  table_name character varying(50) NOT NULL,
+  record_id character varying(50) NOT NULL,
+  user_id character varying(255) NOT NULL,
   event_info character varying(255) NOT NULL,
-  exec_date timestamp without time zone NOT NULL,
-  exec_result character varying(50) NOT NULL,
+  event_date timestamp without time zone NOT NULL,
+  exec_date timestamp without time zone,
+  exec_result character varying(50),
   CONSTRAINT notif_event_stack_pkey PRIMARY KEY (system_id)
 )
 WITH (
