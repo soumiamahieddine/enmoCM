@@ -12,18 +12,15 @@
 * 
 */
 
-class notifications
-{
+class notifications {
 
 /**
 	* Build Maarch module tables into sessions vars with a xml configuration file
 	*/
-	function build_config($conf)
-	{
+	function build_config($conf) {
 		
 		$xmlconfig = simplexml_load_file($conf);
-		foreach($xmlconfig->CONFIG as $CONFIG)
-		{
+		foreach($xmlconfig->CONFIG as $CONFIG) {
 				$_SESSION['config']['databaseserver'] = utf8_decode((string) $CONFIG->databaseserver);
 				$_SESSION['config']['databaseserverport'] = utf8_decode((string) $CONFIG->databaseserverport);
 				$_SESSION['config']['databasename'] = utf8_decode((string) $CONFIG->databasename);
@@ -114,8 +111,14 @@ class notifications
 		if ($_SESSION['tablename']['mlb_doctype_ext'] == '') $_SESSION['tablename']['mlb_doctype_ext'] = "mlb_doctype_ext";
 	}
 	
-	function build_modules_tables() 
-	{
+	function build_modules_tables() {
+
+        
+		require_once(
+			"modules"
+			.DIRECTORY_SEPARATOR."notifications"
+               .DIRECTORY_SEPARATOR."notifications_tables_definition.php"
+		);
 		 if (file_exists($_SESSION['config']['corepath'].'custom'
                         .DIRECTORY_SEPARATOR.$_SESSION['custom_override_id']
                         .DIRECTORY_SEPARATOR."modules".DIRECTORY_SEPARATOR
@@ -131,23 +134,38 @@ class notifications
                 .DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."config.xml";
         }
         $xmlconfig = simplexml_load_file($path);
-        //$CONFIG = $xmlconfig->CONFIG;
-        // Loads the tables of the module notifications
-        // into session ($_SESSION['tablename'] array)
-        $TABLENAME = $xmlconfig->TABLENAME ;
-        $_SESSION['tablename']['notif_event_stack'] = (string) $TABLENAME->event_stack;
-		$_SESSION['tablename']['notif_notification_stack'] = (string) $TABLENAME->notif_stack;
-
-        // Loads the log setting of the module notifications
-        // into session ($_SESSION['history'] array)
-        $HISTORY = $xmlconfig->HISTORY;
-        /*$_SESSION['history']['lcadd'] = (string) $HISTORY->lcadd;
-        $_SESSION['history']['lcup'] = (string) $HISTORY->lcup;
-        $_SESSION['history']['lcdel'] = (string) $HISTORY->lcdel;*/
+	
+		
 	}
 	
-	function load_module_var_session() 
-	{
+	function load_module_var_session() {
+		
+		if (file_exists($_SESSION['config']['corepath'].'custom'
+                        .DIRECTORY_SEPARATOR.$_SESSION['custom_override_id']
+                        .DIRECTORY_SEPARATOR."modules".DIRECTORY_SEPARATOR
+                        ."notifications".DIRECTORY_SEPARATOR
+                        ."xml".DIRECTORY_SEPARATOR."event_type.xml")
+        ) {
+            $path = $_SESSION['config']['corepath'].'custom'
+                .DIRECTORY_SEPARATOR.$_SESSION['custom_override_id']
+                .DIRECTORY_SEPARATOR."modules".DIRECTORY_SEPARATOR."notifications"
+                .DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."event_type.xml";
+        } else {
+            $path = "modules".DIRECTORY_SEPARATOR."notifications"
+                .DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."event_type.xml";
+        }
+        $xmlconfig = simplexml_load_file($path);
+		
+		foreach($xmlconfig->event_type as $event) {
+			$id = (string)$event->id;
+			$label = (string)$event->label;
+			if(@constant($label)) {
+				$_SESSION['notif_events'][$id] = constant($label);
+			} else {
+				$_SESSION['notif_events'][$id] = $label;
+			}
+			
+		}
 		
 	}
 }
