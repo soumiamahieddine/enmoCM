@@ -76,7 +76,7 @@ function getExtraProperties(){
 	?>
 	
 	<script language="javascript">
-	alert('');
+	//alert('');
 	var list = $("frmevent").elements["userslist[]"];
 	for (i=0;i<list.length;i++)
 	{
@@ -127,12 +127,10 @@ function getUserList(){
 }
 
 function getRecipients($ta, $event) {
+	$users = "'". str_replace(",", "','", $ta->diffusion_properties) . "'";
 	$query = "SELECT us.*" 
 		. " FROM users us"
-		. " WHERE us.user_id in ('".$ta->diffusion_properties."')"
+		. " WHERE us.user_id in (".$users.")"
 		. " AND us.enabled = 'Y'";
 	return $query;
 }
-
-
-
