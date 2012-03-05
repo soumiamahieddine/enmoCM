@@ -212,7 +212,7 @@ while ($state <> 'END') {
 			$html = $func->protect_string_db($html, $databasetype);
 			
 			if($ta->is_attached == 'Y') {
-				$attachments = implode(',', $notification['attachments']);
+				$attachments = $func->protect_string_db(implode(',', $notification['attachments']), $databasetype);
 			}
 			
 			$logger->write('Adding e-mail to email stack', 'INFO');
