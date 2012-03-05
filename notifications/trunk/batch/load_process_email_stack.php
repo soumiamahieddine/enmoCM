@@ -176,6 +176,10 @@ try {
         $GLOBALS['maarchDirectory'] . 'core' . DIRECTORY_SEPARATOR . 'class' 
         . DIRECTORY_SEPARATOR . 'class_core_tools.php'
     );  
+	Bt_myInclude(
+        $maarchDirectory . "modules" . DIRECTORY_SEPARATOR . "notifications" 
+		. DIRECTORY_SEPARATOR . "notifications_tables_definition.php"
+	);
     Bt_myInclude(
         $GLOBALS['maarchDirectory'] . $path_to_mailer
     );  
