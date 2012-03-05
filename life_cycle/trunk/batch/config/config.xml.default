@@ -2,40 +2,52 @@
 <ROOT>
     <CONFIG>
         <Lang>fr</Lang> <!-- fr, en-->
-        <MaarchDirectory>C:\xampp\htdocs\maarch_entreprise\</MaarchDirectory>
-        <TmpDirectory>C:\xampp\htdocs\maarch_entreprise\modules\life_cycle\batch\tmp\</TmpDirectory>
-        <PathToCompressTool>C:\Program Files\7-Zip\7z.exe</PathToCompressTool>
-        <MaarchApps>maarch_entreprise</MaarchApps>
-        <LogLevel>INFO</LogLevel> <!-- DEBUG, INFO, NOTICE, WARNING, ERROR-->
-        <DisplayedLogLevel>INFO</DisplayedLogLevel> <!-- DEBUG, INFO, NOTICE, WARNING, ERROR-->
-        <StackSizeLimit>10000</StackSizeLimit>
-        <CustomPath></CustomPath> <!-- path to the custom file to create pdi, ex : c:\xampp\htdocs\maarch_entreprise_trunk\custom\main_lagi\modules\life_cycle\batch\custom.php -->
-        <CustomLang></CustomLang> <!-- path to the custom language file, ex : /var/www/dggn/custom/DGGN/fr.php -->
-        <ApacheUserAndGroup>www-data:www-data</ApacheUserAndGroup>
+        <MaarchDirectory>C:\xampp\htdocs\maarch_trunk\</MaarchDirectory>
+		<MaarchUrl>http://localhost/maarch_trunk/</MaarchUrl>
+		<MaarchApps>maarch_entreprise</MaarchApps>
+        <TmpDirectory>C:\xampp\htdocs\maarch_trunk\modules\notifications\batch\tmp\</TmpDirectory>
+		<debugmode>
+			<dontflag_mail>true</dontflag_mail>
+			<verbose_mode>false</verbose_mode>
+			<simulate_sendmail>false</simulate_sendmail>
+		</debugmode>
+		<maxsize>5</maxsize> <!--In Mo: Taille maximum pour envoyer le courrier en pièce jointe afin d’éviter les erreurs du serveur mail-->
+		<maxitem>90</maxitem> <!-- Nombre de pièce jointe maximum à envoyer si transfert en pièce jointe-->
     </CONFIG>
+	<COLLECTION>
+        <Id>letterbox_coll</Id>
+        <Table>res_letterbox</Table>
+		<Extension>mlb_coll_ext</Extension>
+        <View>res_view_letterbox</View>
+        <Adr>adr_x</Adr>
+		<DoctypeExt>mlb_doctype_ext</DoctypeExt>
+    </COLLECTION>
     <CONFIG_BASE>
         <databaseserver>127.0.0.1</databaseserver>
         <databaseserverport>5432</databaseserverport>
         <databasetype>POSTGRESQL</databasetype>
-        <databasename>maarch_entreprise</databasename>
+        <databasename>maarch_trunk</databasename>
         <databaseuser>postgres</databaseuser>
         <databasepassword>maarch</databasepassword>
     </CONFIG_BASE>
-    <COLLECTION>
-        <Id>res_coll</Id>
-        <Table>res_x</Table>
-        <View>res_view</View>
-        <Adr>adr_x</Adr>
-    </COLLECTION>
-    <LOG4PHP>
+	<MAILER>
+		<path_to_mailer>\modules\notifications\class\mails\htmlMimeMail.php</path_to_mailer>
+		<path_to_phpmailer>PHPMailer_v5.1</path_to_phpmailer>
+		<type>smtp</type><!-- mail (default), smtp, sendmail, qmail -->
+		<smtp_host>mail.maarch.org</smtp_host><!-- smtp1.example.com:25;smtp2.example.com -->
+		<smtp_port>25</smtp_port><!-- smtp1.example.com:25;smtp2.example.com -->
+		<smtp_user>notif@maarch.org</smtp_user>
+		<smtp_password>pwd</smtp_password>
+		<smtp_secure>tls</smtp_secure><!-- tls ou ssl -->
+		<charset>utf-8</charset><!-- Default : iso-8859-1 -->
+		<domains></domains><!-- Rewrite Recipient with config->adminmail if mailfrom and mailto is out of the domains -->
+		<x-mailer></x-mailer><!-- Rewrite X-Mailer header,  default : PHP/[phpversion] -->
+		<mailfrom>notifications@maarch.fr</mailfrom>
+	</MAILER>
+	<LOG4PHP>
         <enabled>false</enabled>
         <Log4PhpLogger>loggerTechnique</Log4PhpLogger>
         <Log4PhpBusinessCode>MaarchEntrepriseDemo</Log4PhpBusinessCode>
         <Log4PhpConfigPath>/var/www/maarch_entreprise/apps/maarch_entreprise/xml/log4php.xml</Log4PhpConfigPath>
     </LOG4PHP>
-    <ESIGN>
-        <enabledEsign>false</enabledEsign>
-        <configEsign>/var/www/maarch_entreprise/modules/esign/xml/config_esign_from_lc.xml</configEsign>
-        <targetCycleEsign>OAIS_CACHED</targetCycleEsign>
-    </ESIGN>
 </ROOT>
