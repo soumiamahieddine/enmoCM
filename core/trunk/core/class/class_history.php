@@ -93,19 +93,24 @@ class history extends dbquery
         //as associated template and add event to stack for notification
         $core = new core_tools();
         if ($core->is_module_loaded("notifications")) {
-            
+			require_once(
+				"modules"
+				.DIRECTORY_SEPARATOR."notifications"
+				.DIRECTORY_SEPARATOR."notifications_tables_definition.php"
+			);
             // Get template association id
             $this->connect();
             $query = "SELECT system_id FROM " 
-                   . $_SESSION['tablename']['temp_templates_association'] 
-                   . " WHERE upper(what) = 'EVENT' "
-                   . " AND value_field = '" . $event_id . "'"
+                   . _TEMPLATES_ASSOCIATION_TABLE_NAME 
+                   . " WHERE upper(what) like 'EVENT' "
+                   . " AND '" . $event_id . "' = value_field"
                    . " AND maarch_module = 'notifications'";
             $this->query($query);
-                    
+            //$this->show();  
             if ($this->nb_result() > 0) {
+				//$this->show();  
                 while ($ta = $this->fetch_object()) {
-                    $query = "INSERT INTO " . $_SESSION['tablename']['notif_event_stack'] 
+                    $query = "INSERT INTO " . _NOTIF_EVENT_STACK_TABLE_NAME
                             . " (ta_sid, table_name, record_id, user_id, event_info"
                             . ", event_date)" 
                             . " VALUES(" . $ta->system_id . ", '" 
