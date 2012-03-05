@@ -47,7 +47,8 @@ while ($state <> 'END') {
     /* Load parameters				                                      */
     /**********************************************************************/
     case 'LOAD_TEMPLATES_ASSOC' :
-		$query = "SELECT * FROM templates_association WHERE notification_id ='" . $ta_id . "'";
+		$query = "SELECT * FROM " . _TEMPLATES_ASSOCIATION_TABLE_NAME 
+			. " WHERE notification_id ='" . $ta_id . "'";
 		Bt_doQuery($db, $query);
 		if ($db->nb_result() === 0) {
 			Bt_exitBatch(1, "Template association for notification '".$ta_id."' not found");
@@ -63,7 +64,8 @@ while ($state <> 'END') {
     /**********************************************************************/
     case 'LOAD_TEMPLATE' :
 		$logger->write('Loading template ' . $ta->template_id, 'INFO');
-		$query = "SELECT * FROM templates WHERE id = " . $ta->template_id;
+		$query = "SELECT * FROM " . _TEMPLATES_TABLE_NAME 
+			. " WHERE id = " . $ta->template_id;
 		Bt_doQuery($db, $query);
 		if ($db->nb_result() === 0) {
 			Bt_exitBatch(5, 'Could not load template '. $ta->template_id);
@@ -110,8 +112,9 @@ while ($state <> 'END') {
     /* Checking if the stack has notifications to proceed                 */
     /**********************************************************************/
     case 'LOAD_EVENTS' :
-		$query = "SELECT * FROM event_stack WHERE exec_date is NULL "
-			. "AND ta_sid = " . $ta->system_id ;
+		$query = "SELECT * FROM " . _NOTIF_EVENT_STACK_TABLE_NAME
+			. " WHERE exec_date is NULL "
+			. " AND ta_sid = " . $ta->system_id ;
 		Bt_doQuery($db, $query);
 		$totalEventsToProcess = $db->nb_result();
 		$currentEvent = 0;
@@ -160,7 +163,7 @@ while ($state <> 'END') {
 					$notifications[$user_id]['events'][] = $event;
 				}
 			}
-			$query = "UPDATE event_stack" 
+			$query = "UPDATE " . _NOTIF_EVENT_STACK_TABLE_NAME 
 				. " SET exec_date = ".$db->current_datetime().", exec_result = '".$exec_result."'" 
 				. " WHERE system_id = ".$event->system_id;
 			Bt_doQuery($db, $query);
@@ -213,8 +216,8 @@ while ($state <> 'END') {
 			}
 			
 			$logger->write('Adding e-mail to email stack', 'INFO');
-			$query = "INSERT INTO email_stack " 
-				. "(sender, recipient, subject, html_body, charset, attachments, module) "
+			$query = "INSERT INTO " . _NOTIF_EMAIL_STACK_TABLE_NAME 
+				. " (sender, recipient, subject, html_body, charset, attachments, module) "
 				. "VALUES ('".$sender."', "
 				. "'".$recipient."', "
 				. "'".$subject."', "
@@ -234,7 +237,7 @@ while ($state <> 'END') {
 
 $logger->write('End of process', 'INFO');
 Bt_logInDataBase(
-    $currentNotification, 0, 'process without error'
+    $totalEventsToProcess, 0, 'process without error'
 );
 $db->disconnect();
 unlink($GLOBALS['lckFile']);
