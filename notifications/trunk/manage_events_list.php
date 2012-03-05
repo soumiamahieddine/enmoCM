@@ -101,19 +101,16 @@ if ($mode == 'list') {
 				
 				//Récupération des éléments systèmes
 				?></optgroup><?php
-				$newarray = array_keys($_SESSION['history']);
+				$newarray = array_keys($_SESSION['notif_events']);
 				?><optgroup label="<?php echo _SYSTEM; ?>"><?php
-				foreach($newarray as $label){
-					
-					if($_SESSION['history'][$label] == "true"){
-						?><option value="<?php echo $label;?>" 
-						<?php 
-						if($_SESSION['m_admin']['event']['value_field'] 
-							== $label) { 
-							echo 'selected="selected"';
-						}?>><?php echo _SYSTEM." : ".$label;
-						?></option><?php
-					}
+				foreach($_SESSION['notif_events'] as $event_type_id => $event_type_label){
+					?><option value="<?php echo $event_type_id;?>" 
+					<?php 
+					if($_SESSION['m_admin']['event']['value_field'] 
+						== $event_type_id) { 
+						echo 'selected="selected"';
+					}?>><?php echo $event_type_label;
+					?></option><?php
 				}
 				?>
 				</optgroup>
