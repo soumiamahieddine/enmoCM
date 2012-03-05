@@ -1,1 +1,1 @@
-"C:\xampp\php\php.exe" "C:\xampp\htdocs\maarch_trunk\modules\notifications\batch\process_email_stack.php" -c "C:\xampp\htdocs\maarch_trunk\modules\notifications\batch\config\config.xml"
+"C:\xampp\php\php.exe" "C:\xampp\htdocs\maarch_entreprise_trunk\modules\notifications\batch\process_email_stack.php" -c "C:\xampp\htdocs\maarch_entreprise_trunk\modules\notifications\batch\config\config.xml"
