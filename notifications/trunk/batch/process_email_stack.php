@@ -17,7 +17,8 @@ while ($state <> 'END') {
     /* List the stack to proceed       									  */
     /**********************************************************************/
     case 'LOAD_EMAILS' :
-		$query = "SELECT * FROM email_stack WHERE exec_date is NULL";
+		$query = "SELECT * FROM " . _NOTIF_EMAIL_STACK_TABLE_NAME
+			. " WHERE exec_date is NULL";
 		Bt_doQuery($GLOBALS['db'], $query);
 		$totalEmailsToProcess = $GLOBALS['db']->nb_result();
 		$currentEmail = 0;
@@ -84,8 +85,10 @@ while ($state <> 'END') {
 			} else {
 				$exec_result = 'FAILED';
 			}	
-			$query = "UPDATE email_stack SET exec_date = " . $GLOBALS['db']->current_datetime()
-				. ", exec_result = '".$exec_result."' WHERE system_id = ".$email->system_id;
+			$query = "UPDATE " . _NOTIF_EMAIL_STACK_TABLE_NAME 
+				. " SET exec_date = " . $GLOBALS['db']->current_datetime()
+				. ", exec_result = '".$exec_result."' "
+				. " WHERE system_id = ".$email->system_id;
 			Bt_doQuery($GLOBALS['db'], $query);
 			$currentEmail++;
 			$state = 'SEND_AN_EMAIL';
