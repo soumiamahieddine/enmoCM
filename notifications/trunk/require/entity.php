@@ -76,7 +76,7 @@ function getExtraProperties(){
 	?>
 	
 	<script language="javascript">
-	alert('');
+	//alert('');
 	var list = $("frmevent").elements["entityslist[]"];
 	for (i=0;i<list.length;i++)
 	{
@@ -125,12 +125,14 @@ function getentityList(){
 }
 
 function getRecipients($ta, $event) {
+	$entities = "'". str_replace(",", "','", $ta->diffusion_properties) . "'";
 	$query = "SELECT distinct us.*" 
 		. " FROM users_entities ue "
 		. " LEFT JOIN users us ON us.user_id = ue.user_id "
-		. " WHERE ue.entity_id in ('".$ta->diffusion_properties."')"
+		. " WHERE ue.entity_id in (".$entities.")"
 		. " AND us.enabled = 'Y'";
 	return $query;
 }
+
 
 
