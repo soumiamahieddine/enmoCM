@@ -236,21 +236,28 @@ elseif($_SESSION['service_tag'] == 'manage_groupbasket')
     $ind = -1;
     $find = false;
     //$ent->show_array($_REQUEST);
-    for($i=0; $i < count($_SESSION['m_admin']['basket']['groups']); $i++)
-    {
+    for ($i=0;$i<count($_SESSION['m_admin']['basket']['groups']); $i++) {
         //echo "groupe:".$_SESSION['m_admin']['basket']['groups'][$i]['GROUP_ID']."<br>";
-        if($_SESSION['m_admin']['basket']['groups'][$i]['GROUP_ID'] == $groupe || $old_group == $_SESSION['m_admin']['basket']['groups'][$i]['GROUP_ID'])
-        {
-            for($j=0; $j<count($_SESSION['m_admin']['basket']['groups'][$i]['ACTIONS']);$j++)
-            {
+        if (
+            $_SESSION['m_admin']['basket']['groups'][$i]['GROUP_ID'] == $groupe 
+            || $old_group == $_SESSION['m_admin']['basket']['groups'][$i]['GROUP_ID']
+        ) {
+            //echo "the good group:".$_SESSION['m_admin']['basket']['groups'][$i]['GROUP_ID']."<br>";
+            for ($j=0;$j<count($_SESSION['m_admin']['basket']['groups'][$i]['ACTIONS']);$j++) {
                 $chosen_entities = array();
                 $chosen_usersentities = array();
                 //echo "j:".$j."<br>";
                 //echo "action:".$_SESSION['m_admin']['basket']['groups'][$i]['ACTIONS'][$j]['ID_ACTION']."<br/>";
-                if(isset($_REQUEST[$_SESSION['m_admin']['basket']['groups'][$i]['ACTIONS'][$j]['ID_ACTION'].'_entities_chosen']) && count($_REQUEST[$_SESSION['m_admin']['basket']['groups'][$i]['ACTIONS'][$j]['ID_ACTION'].'_entities_chosen']) > 0)
-                {
-                    for($k=0; $k < count($_REQUEST[$_SESSION['m_admin']['basket']['groups'][$i]['ACTIONS'][$j]['ID_ACTION'].'_entities_chosen']); $k++)
-                    {
+                //echo "request de chosen entities_chosen<br>";
+                if (
+                    isset($_REQUEST[$_SESSION['m_admin']['basket']['groups'][$i]['ACTIONS'][$j]['ID_ACTION'].'_entities_chosen']) 
+                    && count($_REQUEST[$_SESSION['m_admin']['basket']['groups'][$i]['ACTIONS'][$j]['ID_ACTION'].'_entities_chosen']) > 0
+                ) {
+                    for (
+                        $k=0;
+                        $k<count($_REQUEST[$_SESSION['m_admin']['basket']['groups'][$i]['ACTIONS'][$j]['ID_ACTION'].'_entities_chosen']);
+                        $k++
+                    ) {
                         $arr = $ent->get_info_entity($_REQUEST[$_SESSION['m_admin']['basket']['groups'][$i]['ACTIONS'][$j]['ID_ACTION'].'_entities_chosen'][$k]);
                         $label = $arr['label'];
                         $keyword = $arr['keyword'];
@@ -259,16 +266,23 @@ elseif($_SESSION['service_tag'] == 'manage_groupbasket')
                 }
                 //echo "request de chosen userentities<br>";
                 //$ent->show_array($_REQUEST[$_SESSION['m_admin']['basket']['groups'][$i]['ACTIONS'][$j]['ID_ACTION'].'_usersentities_chosen']);
-                if(isset($_REQUEST[$_SESSION['m_admin']['basket']['groups'][$i]['ACTIONS'][$j]['ID_ACTION'].'_usersentities_chosen']) && count($_REQUEST[$_SESSION['m_admin']['basket']['groups'][$i]['ACTIONS'][$j]['ID_ACTION'].'_usersentities_chosen']) > 0)
-                {
-                    for($k=0; $k < count($_REQUEST[$_SESSION['m_admin']['basket']['groups'][$i]['ACTIONS'][$j]['ID_ACTION'].'_usersentities_chosen']); $k++)
-                    {
+                if (
+                    isset($_REQUEST[$_SESSION['m_admin']['basket']['groups'][$i]['ACTIONS'][$j]['ID_ACTION'].'_usersentities_chosen']) 
+                    && count($_REQUEST[$_SESSION['m_admin']['basket']['groups'][$i]['ACTIONS'][$j]['ID_ACTION'].'_usersentities_chosen']) > 0
+                    ) {
+                    for (
+                        $k=0;
+                        $k<count($_REQUEST[$_SESSION['m_admin']['basket']['groups'][$i]['ACTIONS'][$j]['ID_ACTION'].'_usersentities_chosen']);
+                        $k++
+                    ) {
                         $arr = $ent->get_info_entity($_REQUEST[$_SESSION['m_admin']['basket']['groups'][$i]['ACTIONS'][$j]['ID_ACTION'].'_usersentities_chosen'][$k]);
                         $label = $arr['label'];
                         $keyword = $arr['keyword'];
                         array_push($chosen_usersentities , array('ID' =>$_REQUEST[$_SESSION['m_admin']['basket']['groups'][$i]['ACTIONS'][$j]['ID_ACTION'].'_usersentities_chosen'][$k], 'LABEL' => $label, 'KEYWORD' => $keyword));
                     }
                 }
+                //echo "chosen chosen_entities<br>";
+                //$ent->show_array($chosen_entities);
                 //echo "chosen userentities<br>";
                 //$ent->show_array($chosen_usersentities);
                 $_SESSION['m_admin']['basket']['groups'][$i]['ACTIONS'][$j]['ENTITIES_LIST'] = $chosen_entities ;
@@ -306,6 +320,7 @@ elseif($_SESSION['service_tag'] == 'manage_groupbasket')
             }
         }
     }
+    //echo 'after<br>';
     //echo 'param redirect';
     //$ent->show_array($_SESSION['m_admin']['basket']['groups']);
     //exit;
@@ -332,7 +347,6 @@ elseif($_SESSION['service_tag'] == 'load_basket_session')
             $_SESSION['m_admin']['basket']['groups'][$i]['ACTIONS'][$j]['USERS_ENTITIES_LIST'] = $array['USERS'];
         }
     }
-
 }
 elseif($_SESSION['service_tag'] == 'load_basket_db')
 {
@@ -369,4 +383,3 @@ else if($_SESSION['service_tag'] == 'del_basket' && !empty($_SESSION['temp_baske
     $db->query("delete from ".$_SESSION['tablename']['ent_groupbasket_redirect']." where basket_id = '".$_SESSION['temp_basket_id']."'");
     unset($_SESSION['temp_basket_id']);
 }
-?>
