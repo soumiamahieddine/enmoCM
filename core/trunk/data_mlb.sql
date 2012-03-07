@@ -202,7 +202,7 @@ INSERT INTO entities (entity_id, entity_label, short_label, enabled, adrs_1, adr
 INSERT INTO entities (entity_id, entity_label, short_label, enabled, adrs_1, adrs_2, adrs_3, zipcode, city, country, email, business_id, parent_entity_id, entity_type) VALUES ('DSG', 'DGSDSG:Secrétariat Général', 'DGSDSG:Secrétariat Général', 'Y', '', '', '', '', '', '', '', '', 'DGS', 'Direction');
 INSERT INTO entities (entity_id, entity_label, short_label, enabled, adrs_1, adrs_2, adrs_3, zipcode, city, country, email, business_id, parent_entity_id, entity_type) VALUES ('DRH', 'DGSDRH:Direction des Ressources Humaines', 'DGSDRH:Direction des Ressources Humaines', 'Y', '', '', '', '', '', '', '', '', 'DGS', 'Service');
 
-INSERT INTO users_entities (user_id, entity_id, user_role, primary_entity) VALUES ('ssissoko', 'DSI', 'Directeur systèmes d''information', 'Y');
+INSERT INTO users_entities (user_id, entity_id, user_role, primary_entity) VALUES ('ssissoko', 'DSI', '', 'Y');
 INSERT INTO users_entities (user_id, entity_id, user_role, primary_entity) VALUES ('ppruvost', 'DRH', 'Directeur ressources humaines', 'Y');
 INSERT INTO users_entities (user_id, entity_id, user_role, primary_entity) VALUES ('eerina', 'CAB', 'Assistante', 'Y');
 INSERT INTO users_entities (user_id, entity_id, user_role, primary_entity) VALUES ('ppetit', 'CAB', 'Maire', 'Y');
@@ -245,6 +245,24 @@ INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item
 INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type) VALUES ('letterbox_coll', 'DSG', 'entity_id', 0, 'ddaull', 'user_id', 'dest', 'DOC');
 INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type) VALUES ('letterbox_coll', 'SP', 'entity_id', 0, 'ttong', 'user_id', 'dest', 'DOC');
 INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type) VALUES ('letterbox_coll', 'DRH', 'entity_id', 0, 'pparker', 'user_id', 'cc', 'DOC');
+
+INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type) VALUES ('letterbox_coll', 'COM', 'entity_id', 0, 'DSG', 'entity_id', 'cc', 'DOC');
+INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type) VALUES ('letterbox_coll', 'DRS', 'entity_id', 0, 'DSG', 'entity_id', 'cc', 'DOC');
+INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type) VALUES ('letterbox_coll', 'DSP', 'entity_id', 0, 'DSG', 'entity_id', 'cc', 'DOC');
+INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type) VALUES ('letterbox_coll', 'CAB', 'entity_id', 0, 'DSG', 'entity_id', 'cc', 'DOC');
+INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type) VALUES ('letterbox_coll', 'DSI', 'entity_id', 0, 'DSG', 'entity_id', 'cc', 'DOC');
+INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type) VALUES ('letterbox_coll', 'PCU', 'entity_id', 0, 'DSG', 'entity_id', 'cc', 'DOC');
+INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type) VALUES ('letterbox_coll', 'PTE', 'entity_id', 0, 'DSG', 'entity_id', 'cc', 'DOC');
+INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type) VALUES ('letterbox_coll', 'PJS', 'entity_id', 0, 'DSG', 'entity_id', 'cc', 'DOC');
+INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type) VALUES ('letterbox_coll', 'COU', 'entity_id', 0, 'DSG', 'entity_id', 'cc', 'DOC');
+INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type) VALUES ('letterbox_coll', 'FIN', 'entity_id', 0, 'DSG', 'entity_id', 'cc', 'DOC');
+INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type) VALUES ('letterbox_coll', 'DAA', 'entity_id', 0, 'DSG', 'entity_id', 'cc', 'DOC');
+INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type) VALUES ('letterbox_coll', 'PE', 'entity_id', 0, 'DSG', 'entity_id', 'cc', 'DOC');
+INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type) VALUES ('letterbox_coll', 'PSF', 'entity_id', 0, 'DSG', 'entity_id', 'cc', 'DOC');
+INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type) VALUES ('letterbox_coll', 'PSO', 'entity_id', 0, 'DSG', 'entity_id', 'cc', 'DOC');
+INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type) VALUES ('letterbox_coll', 'SP', 'entity_id', 0, 'DSG', 'entity_id', 'cc', 'DOC');
+INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type) VALUES ('letterbox_coll', 'DRH', 'entity_id', 0, 'DSG', 'entity_id', 'cc', 'DOC');
+
 
 
 
@@ -444,6 +462,7 @@ INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (96,
 INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (97, 21, 14, 1);
 INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (98, 21, 14, 1);
 
+INSERT INTO templates_doctype_ext (template_id, type_id, is_generated) VALUES (3, 86, 'Y');
 
 
 --
@@ -660,9 +679,40 @@ INSERT INTO templates (id, label, creation_date, template_comment, content) VALU
 <p>{#mergetable.courriers}</p>
 <p>&nbsp;</p>');
 
---INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module, notification_id, description, diffusion_type, diffusion_properties, diffusion_content, is_attached) VALUES (24, 21, 'event', '21', 'notifications', 'INDEX_DIFF', 'Document vidéocodé et diffusé', 'dest_user', '', 'letterbox', 'N');
---INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module, notification_id, description, diffusion_type, diffusion_properties, diffusion_content, is_attached) VALUES (23, 20, 'event', 'users%', 'notifications', 'UP_USER', 'Modification d''utilisateur', 'user', 'superadmin', 'event', 'N');
---INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module, notification_id, description, diffusion_type, diffusion_properties, diffusion_content, is_attached) VALUES (26, 20, 'event', 'alert1', 'notifications', 'MLB_ALERT1', 'Alerte délai de traitement 1', 'dest_user', '', 'letterbox', 'N');
+
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module, notification_id, description, diffusion_type, diffusion_properties, diffusion_content, is_attached) VALUES (20, 2, 'destination', 'VILLE', 'entities', NULL, NULL, NULL, NULL, NULL, 'N');
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module, notification_id, description, diffusion_type, diffusion_properties, diffusion_content, is_attached) VALUES (21, 2, 'destination', 'CAB', 'entities', NULL, NULL, NULL, NULL, NULL, 'N');
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module, notification_id, description, diffusion_type, diffusion_properties, diffusion_content, is_attached) VALUES (22, 2, 'destination', 'DGS', 'entities', NULL, NULL, NULL, NULL, NULL, 'N');
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module, notification_id, description, diffusion_type, diffusion_properties, diffusion_content, is_attached) VALUES (23, 2, 'destination', 'DSI', 'entities', NULL, NULL, NULL, NULL, NULL, 'N');
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module, notification_id, description, diffusion_type, diffusion_properties, diffusion_content, is_attached) VALUES (24, 2, 'destination', 'FIN', 'entities', NULL, NULL, NULL, NULL, NULL, 'N');
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module, notification_id, description, diffusion_type, diffusion_properties, diffusion_content, is_attached) VALUES (25, 2, 'destination', 'DAA', 'entities', NULL, NULL, NULL, NULL, NULL, 'N');
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module, notification_id, description, diffusion_type, diffusion_properties, diffusion_content, is_attached) VALUES (26, 2, 'destination', 'PCU', 'entities', NULL, NULL, NULL, NULL, NULL, 'N');
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module, notification_id, description, diffusion_type, diffusion_properties, diffusion_content, is_attached) VALUES (27, 2, 'destination', 'PTE', 'entities', NULL, NULL, NULL, NULL, NULL, 'N');
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module, notification_id, description, diffusion_type, diffusion_properties, diffusion_content, is_attached) VALUES (28, 2, 'destination', 'PJS', 'entities', NULL, NULL, NULL, NULL, NULL, 'N');
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module, notification_id, description, diffusion_type, diffusion_properties, diffusion_content, is_attached) VALUES (29, 2, 'destination', 'PE', 'entities', NULL, NULL, NULL, NULL, NULL, 'N');
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module, notification_id, description, diffusion_type, diffusion_properties, diffusion_content, is_attached) VALUES (30, 2, 'destination', 'SP', 'entities', NULL, NULL, NULL, NULL, NULL, 'N');
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module, notification_id, description, diffusion_type, diffusion_properties, diffusion_content, is_attached) VALUES (31, 2, 'destination', 'PSO', 'entities', NULL, NULL, NULL, NULL, NULL, 'N');
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module, notification_id, description, diffusion_type, diffusion_properties, diffusion_content, is_attached) VALUES (32, 2, 'destination', 'DSG', 'entities', NULL, NULL, NULL, NULL, NULL, 'N');
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module, notification_id, description, diffusion_type, diffusion_properties, diffusion_content, is_attached) VALUES (33, 2, 'destination', 'COU', 'entities', NULL, NULL, NULL, NULL, NULL, 'N');
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module, notification_id, description, diffusion_type, diffusion_properties, diffusion_content, is_attached) VALUES (34, 2, 'destination', 'PSF', 'entities', NULL, NULL, NULL, NULL, NULL, 'N');
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module, notification_id, description, diffusion_type, diffusion_properties, diffusion_content, is_attached) VALUES (35, 2, 'destination', 'DRH', 'entities', NULL, NULL, NULL, NULL, NULL, 'N');
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module, notification_id, description, diffusion_type, diffusion_properties, diffusion_content, is_attached) VALUES (36, 1, 'destination', 'VILLE', 'entities', NULL, NULL, NULL, NULL, NULL, 'N');
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module, notification_id, description, diffusion_type, diffusion_properties, diffusion_content, is_attached) VALUES (37, 1, 'destination', 'CAB', 'entities', NULL, NULL, NULL, NULL, NULL, 'N');
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module, notification_id, description, diffusion_type, diffusion_properties, diffusion_content, is_attached) VALUES (38, 1, 'destination', 'DGS', 'entities', NULL, NULL, NULL, NULL, NULL, 'N');
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module, notification_id, description, diffusion_type, diffusion_properties, diffusion_content, is_attached) VALUES (39, 1, 'destination', 'DSI', 'entities', NULL, NULL, NULL, NULL, NULL, 'N');
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module, notification_id, description, diffusion_type, diffusion_properties, diffusion_content, is_attached) VALUES (40, 1, 'destination', 'FIN', 'entities', NULL, NULL, NULL, NULL, NULL, 'N');
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module, notification_id, description, diffusion_type, diffusion_properties, diffusion_content, is_attached) VALUES (41, 1, 'destination', 'DAA', 'entities', NULL, NULL, NULL, NULL, NULL, 'N');
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module, notification_id, description, diffusion_type, diffusion_properties, diffusion_content, is_attached) VALUES (42, 1, 'destination', 'PCU', 'entities', NULL, NULL, NULL, NULL, NULL, 'N');
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module, notification_id, description, diffusion_type, diffusion_properties, diffusion_content, is_attached) VALUES (43, 1, 'destination', 'PTE', 'entities', NULL, NULL, NULL, NULL, NULL, 'N');
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module, notification_id, description, diffusion_type, diffusion_properties, diffusion_content, is_attached) VALUES (44, 1, 'destination', 'PJS', 'entities', NULL, NULL, NULL, NULL, NULL, 'N');
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module, notification_id, description, diffusion_type, diffusion_properties, diffusion_content, is_attached) VALUES (45, 1, 'destination', 'PE', 'entities', NULL, NULL, NULL, NULL, NULL, 'N');
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module, notification_id, description, diffusion_type, diffusion_properties, diffusion_content, is_attached) VALUES (46, 1, 'destination', 'SP', 'entities', NULL, NULL, NULL, NULL, NULL, 'N');
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module, notification_id, description, diffusion_type, diffusion_properties, diffusion_content, is_attached) VALUES (47, 1, 'destination', 'PSO', 'entities', NULL, NULL, NULL, NULL, NULL, 'N');
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module, notification_id, description, diffusion_type, diffusion_properties, diffusion_content, is_attached) VALUES (48, 1, 'destination', 'DSG', 'entities', NULL, NULL, NULL, NULL, NULL, 'N');
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module, notification_id, description, diffusion_type, diffusion_properties, diffusion_content, is_attached) VALUES (49, 1, 'destination', 'COU', 'entities', NULL, NULL, NULL, NULL, NULL, 'N');
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module, notification_id, description, diffusion_type, diffusion_properties, diffusion_content, is_attached) VALUES (50, 1, 'destination', 'PSF', 'entities', NULL, NULL, NULL, NULL, NULL, 'N');
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module, notification_id, description, diffusion_type, diffusion_properties, diffusion_content, is_attached) VALUES (51, 1, 'destination', 'DRH', 'entities', NULL, NULL, NULL, NULL, NULL, 'N');
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module, notification_id, description, diffusion_type, diffusion_properties, diffusion_content, is_attached) VALUES (52, 21, 'event', '18', 'notifications', 'NOTIF_VALIDATION', 'Nouveau courrier validé', 'dest_user', '', 'letterbox', 'Y');
 
 
 --
@@ -671,38 +721,10 @@ INSERT INTO templates (id, label, creation_date, template_comment, content) VALU
 
 INSERT INTO lc_policies (policy_id, policy_name, policy_desc) VALUES ('FNTC', 'FNTC standard archiving policy', '3 months fast cache, immediate double backup on AIP, final sort: offline after 10 years');
 
-<<<<<<< .mine
 INSERT INTO lc_cycles (policy_id, cycle_id, cycle_desc, sequence_number, where_clause, break_key, validation_mode) VALUES ('FNTC', 'INIT', 'Initial location', 0, '1=1', 'doc_custom_t1', 'AUTO');
 INSERT INTO lc_cycles (policy_id, cycle_id, cycle_desc, sequence_number, where_clause, break_key, validation_mode) VALUES ('FNTC', 'DISPOSAL', 'Disposal', 3, 'current_date >= creation_date::timestamp + interval ''10'' year', '', 'USER');
 INSERT INTO lc_cycles (policy_id, cycle_id, cycle_desc, sequence_number, where_clause, break_key, validation_mode) VALUES ('FNTC', 'OAIS', 'FASTHD cache is purged. Resource lays only on OAIS docservers', 2, 'current_date >= creation_date::timestamp + interval ''3'' month', '', 'AUTO');
 INSERT INTO lc_cycles (policy_id, cycle_id, cycle_desc, sequence_number, where_clause, break_key, validation_mode) VALUES ('FNTC', 'OAIS_CACHED', 'Immediate copy on OAIS main and backup docservers. Resource is still present on FASTHD', 1, 'current_date >= creation_date::timestamp + interval ''7'' day', '', 'AUTO');
-=======
-INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('sstefek', 'ADMINISTRATEUR', 'N', '');
-INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('sstefek', 'AGENT', 'Y', '');
-INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('ppruvost', 'AGENT', 'Y', '');
-INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('ddur', 'ELU', 'Y', '');
-INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('eerina', 'AGENT', 'Y', '');
-INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('ppetit', 'RESP_COURRIER', 'Y', '');
-INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('ppetit', 'RESPONSABLE', 'N', '');
-INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('ssaporta', 'RESPONSABLE', 'Y', '');
-INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('ttong', 'RESPONSABLE', 'Y', '');
-INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('ccharles', 'AGENT', 'Y', '');
-INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('ccordy', 'RESPONSABLE', 'Y', '');
-INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('sstar', 'RESPONSABLE', 'N', '');
-INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('sstar', 'FINANCE', 'Y', '');
-INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('bblier', 'ADMINISTRATEUR', 'N', '');
-INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('bblier', 'COURRIER', 'Y', '');
-INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('bbain', 'AGENT', 'Y', '');
-INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('bboule', 'AGENT', 'Y', '');
-INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('aackermann', 'AGENT', 'Y', '');
-INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('jjane', 'AGENT', 'Y', '');
-INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('kkaar', 'AGENT', 'Y', '');
-INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('mmanfred', 'RESPONSABLE', 'Y', '');
-INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('nnataliu', 'AGENT', 'Y', '');
-INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('rrenaud', 'RESPONSABLE', 'Y', '');
-INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('ddaull', 'RESP_COURRIER', 'Y', '');
-INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('ddaull', 'RESPONSABLE', 'N', '');
->>>>>>> .r525
 
 INSERT INTO lc_cycle_steps (policy_id, cycle_id, cycle_step_id, cycle_step_desc, docserver_type_id, is_allow_failure, step_operation, sequence_number, is_must_complete, preprocess_script, postprocess_script) VALUES ('FNTC', 'INIT', 'INIT', 'Initial location', 'FASTHD', 'N', 'NONE', 1, 'N', NULL, NULL);
 INSERT INTO lc_cycle_steps (policy_id, cycle_id, cycle_step_id, cycle_step_desc, docserver_type_id, is_allow_failure, step_operation, sequence_number, is_must_complete, preprocess_script, postprocess_script) VALUES ('FNTC', 'OAIS_CACHED', 'COPY_MAIN', 'Immediate copy on main OAIS docserver', 'OAIS_MAIN', 'N', 'COPY', 1, 'Y', NULL, NULL);
@@ -710,92 +732,20 @@ INSERT INTO lc_cycle_steps (policy_id, cycle_id, cycle_step_id, cycle_step_desc,
 INSERT INTO lc_cycle_steps (policy_id, cycle_id, cycle_step_id, cycle_step_desc, docserver_type_id, is_allow_failure, step_operation, sequence_number, is_must_complete, preprocess_script, postprocess_script) VALUES ('FNTC', 'OAIS', 'PURGE', 'Purge after 3 months', 'FASTHD', 'N', 'PURGE', 1, 'N', NULL, NULL);
 INSERT INTO lc_cycle_steps (policy_id, cycle_id, cycle_step_id, cycle_step_desc, docserver_type_id, is_allow_failure, step_operation, sequence_number, is_must_complete, preprocess_script, postprocess_script) VALUES ('FNTC', 'DISPOSAL', 'FINAL_MAIN', 'Disposal', 'OAIS_MAIN', 'N', 'NONE', 1, 'N', NULL, NULL);
 
-<<<<<<< .mine
 INSERT INTO docserver_locations (docserver_location_id, ipv4, ipv6, net_domain, mask, net_link, enabled) VALUES ('NANTERRE', '127.0.0.1', '', 'MAARCH', '255.255.255.0', NULL, 'Y');
 INSERT INTO docserver_locations (docserver_location_id, ipv4, ipv6, net_domain, mask, net_link, enabled) VALUES ('NICE', '192.168.21.63', '', '', '', NULL, 'Y');
-=======
-INSERT INTO users (user_id, password, firstname, lastname, phone, mail, department, custom_t1, custom_t2, custom_t3, cookie_key, cookie_date, enabled, change_password, delay_number, status, loginmode, docserver_location_id) VALUES ('rrenaud', 'ef9689be896dacd901cae4f13593e90d', 'Robert', 'RENAUD', '', 'rrenaud@maarch.org', '', '0', NULL, NULL, 'f2e8a41dfb14cb10fefe5620efde6f3a', '2012-02-22 16:02:22', 'Y', 'N', NULL, 'OK', 'standard', NULL);
-INSERT INTO users (user_id, password, firstname, lastname, phone, mail, department, custom_t1, custom_t2, custom_t3, cookie_key, cookie_date, enabled, change_password, delay_number, status, loginmode, docserver_location_id) VALUES ('ccordy', 'ef9689be896dacd901cae4f13593e90d', 'Chloé', 'CORDY', '', 'ccordy@maarch.org', '', '0', NULL, NULL, '6cee607907e2f25198dfd0d86676738d', '2012-02-22 16:02:23', 'Y', 'N', NULL, 'OK', 'standard', NULL);
-INSERT INTO users (user_id, password, firstname, lastname, phone, mail, department, custom_t1, custom_t2, custom_t3, cookie_key, cookie_date, enabled, change_password, delay_number, status, loginmode, docserver_location_id) VALUES ('sstefek', 'ef9689be896dacd901cae4f13593e90d', 'Sylvain', 'STEFEK', '', 'sstefek@maarch.fr', '', '0', NULL, NULL, '85185818fbe92d32f1ab0a06c3d199e2', '2012-02-17 11:02:39', 'Y', 'N', NULL, 'OK', 'standard', NULL);
-INSERT INTO users (user_id, password, firstname, lastname, phone, mail, department, custom_t1, custom_t2, custom_t3, cookie_key, cookie_date, enabled, change_password, delay_number, status, loginmode, docserver_location_id) VALUES ('nnataliu', 'ef9689be896dacd901cae4f13593e90d', 'Nancy', 'NATALY', NULL, 'nnataliu@maarch.org', NULL, '0', NULL, NULL, NULL, NULL, 'Y', 'Y', NULL, 'OK', 'standard', NULL);
-INSERT INTO users (user_id, password, firstname, lastname, phone, mail, department, custom_t1, custom_t2, custom_t3, cookie_key, cookie_date, enabled, change_password, delay_number, status, loginmode, docserver_location_id) VALUES ('ddur', 'ef9689be896dacd901cae4f13593e90d', 'Dominique', 'DUR', '', 'ddur@maarch.org', '', '0', NULL, NULL, 'e599f40bcfe6517f871a298d705a3f58', '2012-02-22 17:02:23', 'Y', 'N', NULL, 'OK', 'standard', NULL);
-INSERT INTO users (user_id, password, firstname, lastname, phone, mail, department, custom_t1, custom_t2, custom_t3, cookie_key, cookie_date, enabled, change_password, delay_number, status, loginmode, docserver_location_id) VALUES ('jjane', 'ef9689be896dacd901cae4f13593e90d', 'Jenny', 'JANE', '', 'jjane@maarch.org', '', '0', NULL, NULL, '9855381ca9bcf90a1138508d2ddf6316', '2012-02-22 16:02:23', 'Y', 'N', NULL, 'OK', 'standard', NULL);
-INSERT INTO users (user_id, password, firstname, lastname, phone, mail, department, custom_t1, custom_t2, custom_t3, cookie_key, cookie_date, enabled, change_password, delay_number, status, loginmode, docserver_location_id) VALUES ('eerina', 'ef9689be896dacd901cae4f13593e90d', 'Edith', 'ERINA', '', 'eerina@maarch.fr', '', '0', NULL, NULL, '076e854f5044d61a5a1ad6809705613a', '2012-02-17 13:02:18', 'Y', 'N', NULL, 'OK', 'standard', NULL);
-INSERT INTO users (user_id, password, firstname, lastname, phone, mail, department, custom_t1, custom_t2, custom_t3, cookie_key, cookie_date, enabled, change_password, delay_number, status, loginmode, docserver_location_id) VALUES ('kkaar', 'ef9689be896dacd901cae4f13593e90d', 'Katy', 'KAAR', NULL, 'kkaar@maarch.org', NULL, '0', NULL, NULL, NULL, NULL, 'Y', 'Y', NULL, 'OK', 'standard', NULL);
-INSERT INTO users (user_id, password, firstname, lastname, phone, mail, department, custom_t1, custom_t2, custom_t3, cookie_key, cookie_date, enabled, change_password, delay_number, status, loginmode, docserver_location_id) VALUES ('bboule', 'ef9689be896dacd901cae4f13593e90d', 'Bruno', 'BOULE', '', 'bboule@maarch.fr', '', '0', NULL, NULL, '1282a5592996068c04b00c31cc72a6d5', '2012-02-23 08:02:53', 'Y', 'N', NULL, 'OK', 'standard', NULL);
-INSERT INTO users (user_id, password, firstname, lastname, phone, mail, department, custom_t1, custom_t2, custom_t3, cookie_key, cookie_date, enabled, change_password, delay_number, status, loginmode, docserver_location_id) VALUES ('ppetit', 'ef9689be896dacd901cae4f13593e90d', 'Patricia', 'PETIT', '', 'ppetit@maarch.fr', '', '0', NULL, NULL, '7212973abc788e0daa00b9f3a6657e95', '2012-02-23 08:02:53', 'Y', 'N', NULL, 'OK', 'standard', NULL);
-INSERT INTO users (user_id, password, firstname, lastname, phone, mail, department, custom_t1, custom_t2, custom_t3, cookie_key, cookie_date, enabled, change_password, delay_number, status, loginmode, docserver_location_id) VALUES ('aackermann', 'ef9689be896dacd901cae4f13593e90d', 'Amanda', 'ACKERMANN', NULL, 'aackermann@maarch.org', NULL, '0', NULL, NULL, NULL, NULL, 'Y', 'Y', NULL, 'OK', 'standard', NULL);
-INSERT INTO users (user_id, password, firstname, lastname, phone, mail, department, custom_t1, custom_t2, custom_t3, cookie_key, cookie_date, enabled, change_password, delay_number, status, loginmode, docserver_location_id) VALUES ('ppruvost', 'ef9689be896dacd901cae4f13593e90d', 'Pierre', 'PRUVOST', '', 'pruvost@maarch.fr', '', '0', NULL, NULL, '48e6b9a881a44cb95e883c4ec4708046', '2012-02-24 15:02:11', 'Y', 'N', NULL, 'OK', 'standard', NULL);
-INSERT INTO users (user_id, password, firstname, lastname, phone, mail, department, custom_t1, custom_t2, custom_t3, cookie_key, cookie_date, enabled, change_password, delay_number, status, loginmode, docserver_location_id) VALUES ('ttong', 'ef9689be896dacd901cae4f13593e90d', 'Tony', 'TONG', '', 'ttong@maarch.fr', '', '0', NULL, NULL, '7ed03f46403a018a58d2d2ff3da8cd85', '2012-02-23 08:02:55', 'Y', 'N', NULL, 'OK', 'standard', NULL);
-INSERT INTO users (user_id, password, firstname, lastname, phone, mail, department, custom_t1, custom_t2, custom_t3, cookie_key, cookie_date, enabled, change_password, delay_number, status, loginmode, docserver_location_id) VALUES ('sstar', 'ef9689be896dacd901cae4f13593e90d', 'Suzanne', 'STAR', '', 'sstar@maarch.fr', '', '0', NULL, NULL, 'e3db0c66afa62e72758c568e1ba4b48e', '2012-02-23 09:02:24', 'Y', 'N', NULL, 'OK', 'standard', NULL);
-INSERT INTO users (user_id, password, firstname, lastname, phone, mail, department, custom_t1, custom_t2, custom_t3, cookie_key, cookie_date, enabled, change_password, delay_number, status, loginmode, docserver_location_id) VALUES ('ssaporta', 'ef9689be896dacd901cae4f13593e90d', 'Sabrina', 'SAPORTA', '', 'ssaporta@maarch.fr', '', '0', NULL, NULL, '9f576ee66ec17d3af5838f930d2fa9a6', '2012-02-22 16:02:22', 'Y', 'N', NULL, 'OK', 'standard', NULL);
-INSERT INTO users (user_id, password, firstname, lastname, phone, mail, department, custom_t1, custom_t2, custom_t3, cookie_key, cookie_date, enabled, change_password, delay_number, status, loginmode, docserver_location_id) VALUES ('ccharles', 'ef9689be896dacd901cae4f13593e90d', 'Charlotte', 'CHARLES', '', 'ccharles@maarch.fr', '', '0', NULL, NULL, '559ff86ca8aa70c456ebed8e45b8ffac', '2012-02-24 11:02:34', 'Y', 'N', NULL, 'OK', 'standard', NULL);
-INSERT INTO users (user_id, password, firstname, lastname, phone, mail, department, custom_t1, custom_t2, custom_t3, cookie_key, cookie_date, enabled, change_password, delay_number, status, loginmode, docserver_location_id) VALUES ('mmanfred', 'ef9689be896dacd901cae4f13593e90d', 'Martin', 'MANFRED', '', 'mmanfred@maarch.org', '', '0', NULL, NULL, '989c67fde3ebb43c223d8b270be735f1', '2012-02-28 10:02:10', 'Y', 'N', NULL, 'OK', 'standard', NULL);
-INSERT INTO users (user_id, password, firstname, lastname, phone, mail, department, custom_t1, custom_t2, custom_t3, cookie_key, cookie_date, enabled, change_password, delay_number, status, loginmode, docserver_location_id) VALUES ('bblier', 'ef9689be896dacd901cae4f13593e90d', 'Bernard', 'BLIER', '', 'bblier@maarch.fr', '', '0', NULL, NULL, '79f6b52cdad073bb8d618edcdb1e61fc', '2012-02-28 10:02:22', 'Y', 'N', NULL, 'OK', 'standard', NULL);
-INSERT INTO users (user_id, password, firstname, lastname, phone, mail, department, custom_t1, custom_t2, custom_t3, cookie_key, cookie_date, enabled, change_password, delay_number, status, loginmode, docserver_location_id) VALUES ('ddaull', 'ef9689be896dacd901cae4f13593e90d', 'Denis', 'DAULL', '', 'ddaull@maarch.fr', '', '0', NULL, NULL, 'cd06eeaa8b5379f41d7f4bfc32f3688b', '2012-02-28 10:02:06', 'Y', 'N', NULL, 'OK', 'standard', NULL);
-INSERT INTO users (user_id, password, firstname, lastname, phone, mail, department, custom_t1, custom_t2, custom_t3, cookie_key, cookie_date, enabled, change_password, delay_number, status, loginmode, docserver_location_id) VALUES ('bbain', 'ef9689be896dacd901cae4f13593e90d', 'Barbara', 'BAIN', '', 'bbain@maarch.fr', '', '0', NULL, NULL, '4c087c76c038bdd5ba9172834b88e8f5', '2012-02-28 10:02:11', 'Y', 'N', NULL, 'OK', 'standard', NULL);
-INSERT INTO users (user_id, password, firstname, lastname, phone, mail, department, custom_t1, custom_t2, custom_t3, cookie_key, cookie_date, enabled, change_password, delay_number, status, loginmode, docserver_location_id) VALUES ('superadmin', '17c4520f6cfd1ab53d8745e84681eb49', 'Super', 'ADMIN', '+33 1 47 24 51', 'admin@maarch.org', 'Maarch', '11', NULL, NULL, 'e657b3542b0362910db9195cb0fd0fb5', '2012-02-28 10:02:08', 'Y', 'N', NULL, 'OK', 'standard', NULL);
->>>>>>> .r525
 
 INSERT INTO docserver_types (docserver_type_id, docserver_type_label, enabled, is_container, container_max_number, is_compressed, compression_mode, is_meta, meta_template, is_logged, log_template, is_signed, fingerprint_mode) VALUES ('FASTHD', 'FASTHD', 'Y', 'N', 0, 'N', 'NONE', 'N', 'NONE', 'N', 'NONE', 'Y', 'SHA256');
 INSERT INTO docserver_types (docserver_type_id, docserver_type_label, enabled, is_container, container_max_number, is_compressed, compression_mode, is_meta, meta_template, is_logged, log_template, is_signed, fingerprint_mode) VALUES ('OAIS_MAIN', 'Main OAIS store', 'Y', 'Y', 100, 'Y', '7Z', 'Y', 'OAIS_std.dtd', 'Y', 'log_std.dtd', 'Y', 'SHA512');
 INSERT INTO docserver_types (docserver_type_id, docserver_type_label, enabled, is_container, container_max_number, is_compressed, compression_mode, is_meta, meta_template, is_logged, log_template, is_signed, fingerprint_mode) VALUES ('OFFLINE', 'Off line tape', 'Y', 'Y', 1000, 'Y', '7Z', 'Y', 'OAIS_std.dtd', 'Y', 'log_std.dtd', 'Y', 'SHA512');
 INSERT INTO docserver_types (docserver_type_id, docserver_type_label, enabled, is_container, container_max_number, is_compressed, compression_mode, is_meta, meta_template, is_logged, log_template, is_signed, fingerprint_mode) VALUES ('OAIS_SAFE', 'Distant backup OAIS store', 'Y', 'Y', 20, 'Y', 'ZIP', 'Y', 'OAIS_std.dtd', 'Y', 'log_std.dtd', 'Y', 'SHA512');
 
-<<<<<<< .mine
 INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) VALUES ('OFFLINE_1', 'OFFLINE', 'Off line tape', 'N', 'Y', 50000000000, 1, 'C:\\maarch\\docservers\\entreprise_trunk\\offline\\', NULL, NULL, NULL, '2011-01-13 16:58:24.00929', NULL, 'res_coll', 10, 'NANTERRE', 4);
 INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) VALUES ('FASTHD_AI', 'FASTHD', 'Fast internal disc bay for autoimport', 'N', 'Y', 50000000000, 1, 'C:\\maarch\\docservers\\entreprise_trunk\\ai\\', NULL, NULL, NULL, '2011-01-07 13:43:48.696644', NULL, 'res_coll', 20, 'NANTERRE', 1);
 INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) VALUES ('OAIS_MAIN_1', 'OAIS_MAIN', 'Main OAIS store', 'N', 'Y', 50000000000, 1, 'C:\\maarch\\docservers\\entreprise_trunk\\OAIS_main\\', NULL, NULL, NULL, '2011-01-13 14:48:27.901368', NULL, 'res_coll', 10, 'NANTERRE', 2);
 INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) VALUES ('OAIS_SAFE_1', 'OAIS_SAFE', 'Distant backup OAIS store', 'N', 'Y', 50000000000, 1, 'C:\\maarch\\docservers\\entreprise_trunk\\OAIS_safe\\', NULL, NULL, NULL, '2011-01-13 14:49:05.095119', NULL, 'res_coll', 10, 'NICE', 3);
 INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) VALUES ('FASTHD_MAN', 'FASTHD', 'Fast internal disc bay for letterbox mode', 'N', 'Y', 50000000000, 1, 'C:\\maarch\\docservers\\entreprise_trunk\\manual\\', NULL, NULL, NULL, '2011-01-13 14:47:49.197164', NULL, 'letterbox_coll', 10, 'NANTERRE', 2);
-=======
-INSERT INTO users_entities (user_id, entity_id, user_role, primary_entity) VALUES ('sstefek', 'DSI', 'Directeur systèmes d''information', 'Y');
-INSERT INTO users_entities (user_id, entity_id, user_role, primary_entity) VALUES ('ppruvost', 'DRH', 'Directeur ressources humaines', 'Y');
-INSERT INTO users_entities (user_id, entity_id, user_role, primary_entity) VALUES ('eerina', 'CAB', 'Assistante', 'Y');
-INSERT INTO users_entities (user_id, entity_id, user_role, primary_entity) VALUES ('ppetit', 'CAB', 'Maire', 'Y');
-INSERT INTO users_entities (user_id, entity_id, user_role, primary_entity) VALUES ('ccharles', 'PTE', 'Responsable pôle technique', 'Y');
-INSERT INTO users_entities (user_id, entity_id, user_role, primary_entity) VALUES ('ccordy', 'DSI', 'Assistante', 'Y');
-INSERT INTO users_entities (user_id, entity_id, user_role, primary_entity) VALUES ('sstar', 'FIN', 'Directrice financière', 'Y');
-INSERT INTO users_entities (user_id, entity_id, user_role, primary_entity) VALUES ('bbain', 'PJS', 'Responsable pôle jeunesse et sport', 'Y');
-INSERT INTO users_entities (user_id, entity_id, user_role, primary_entity) VALUES ('bboule', 'PCU', 'Responsable pôle culturel', 'Y');
-INSERT INTO users_entities (user_id, entity_id, user_role, primary_entity) VALUES ('aackermann', 'PSF', 'Responsable pôle des services fonctionnels', 'Y');
-INSERT INTO users_entities (user_id, entity_id, user_role, primary_entity) VALUES ('jjane', 'FIN', 'Assistante', 'Y');
-INSERT INTO users_entities (user_id, entity_id, user_role, primary_entity) VALUES ('kkaar', 'DAA', 'Assistante', 'Y');
-INSERT INTO users_entities (user_id, entity_id, user_role, primary_entity) VALUES ('mmanfred', 'DAA', 'Directeur général adjoint', 'Y');
-INSERT INTO users_entities (user_id, entity_id, user_role, primary_entity) VALUES ('nnataliu', 'PSO', 'Responsable pôle social', 'Y');
-INSERT INTO users_entities (user_id, entity_id, user_role, primary_entity) VALUES ('rrenaud', 'DGS', 'Directeur général des services', 'Y');
-INSERT INTO users_entities (user_id, entity_id, user_role, primary_entity) VALUES ('ddur', 'DSG', 'Assistante', 'Y');
-INSERT INTO users_entities (user_id, entity_id, user_role, primary_entity) VALUES ('ddaull', 'DSG', 'Directeur secrétariat général', 'Y');
-INSERT INTO users_entities (user_id, entity_id, user_role, primary_entity) VALUES ('bblier', 'COU', 'Responsable courrier', 'Y');
-INSERT INTO users_entities (user_id, entity_id, user_role, primary_entity) VALUES ('ssaporta', 'PE', 'Responsable service de la petite enfance', 'Y');
-INSERT INTO users_entities (user_id, entity_id, user_role, primary_entity) VALUES ('ttong', 'SP', 'Responsable service des Sports', 'Y');
->>>>>>> .r525
 
-<<<<<<< .mine
-=======
-INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type) VALUES ('letterbox_coll', 'COM', 'entity_id', 0, 'sstar', 'user_id', 'dest', 'DOC');
-INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type) VALUES ('letterbox_coll', 'DRS', 'entity_id', 0, 'bboule', 'user_id', 'dest', 'DOC');
-INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type) VALUES ('letterbox_coll', 'DSP', 'entity_id', 0, 'bbain', 'user_id', 'dest', 'DOC');
-INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type) VALUES ('letterbox_coll', 'CAB', 'entity_id', 0, 'ppetit', 'user_id', 'dest', 'DOC');
-INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type) VALUES ('letterbox_coll', 'CAB', 'entity_id', 0, 'eerina', 'user_id', 'cc', 'DOC');
-INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type) VALUES ('letterbox_coll', 'DSI', 'entity_id', 0, 'ccordy', 'user_id', 'dest', 'DOC');
-INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type) VALUES ('letterbox_coll', 'DSI', 'entity_id', 0, 'sstefek', 'user_id', 'cc', 'DOC');
-INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type) VALUES ('letterbox_coll', 'PCU', 'entity_id', 0, 'bboule', 'user_id', 'dest', 'DOC');
-INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type) VALUES ('letterbox_coll', 'PTE', 'entity_id', 0, 'ccharles', 'user_id', 'dest', 'DOC');
-INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type) VALUES ('letterbox_coll', 'PJS', 'entity_id', 0, 'bbain', 'user_id', 'dest', 'DOC');
-INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type) VALUES ('letterbox_coll', 'COU', 'entity_id', 0, 'bblier', 'user_id', 'dest', 'DOC');
-INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type) VALUES ('letterbox_coll', 'FIN', 'entity_id', 0, 'sstar', 'user_id', 'dest', 'DOC');
-INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type) VALUES ('letterbox_coll', 'FIN', 'entity_id', 0, 'jjane', 'user_id', 'cc', 'DOC');
-INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type) VALUES ('letterbox_coll', 'DAA', 'entity_id', 0, 'mmanfred', 'user_id', 'dest', 'DOC');
-INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type) VALUES ('letterbox_coll', 'DAA', 'entity_id', 0, 'kkaar', 'user_id', 'cc', 'DOC');
-INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type) VALUES ('letterbox_coll', 'DGS', 'entity_id', 0, 'rrenaud', 'user_id', 'dest', 'DOC');
-INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type) VALUES ('letterbox_coll', 'PE', 'entity_id', 0, 'ssaporta', 'user_id', 'dest', 'DOC');
-INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type) VALUES ('letterbox_coll', 'PSF', 'entity_id', 0, 'aackermann', 'user_id', 'dest', 'DOC');
-INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type) VALUES ('letterbox_coll', 'PSO', 'entity_id', 0, 'nnataliu', 'user_id', 'dest', 'DOC');
-INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type) VALUES ('letterbox_coll', 'DSG', 'entity_id', 0, 'ddaull', 'user_id', 'dest', 'DOC');
-INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type) VALUES ('letterbox_coll', 'SP', 'entity_id', 0, 'ttong', 'user_id', 'dest', 'DOC');
-INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type) VALUES ('letterbox_coll', 'DRH', 'entity_id', 0, 'pparker', 'user_id', 'cc', 'DOC');
->>>>>>> .r525
 
 
 --
