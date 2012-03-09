@@ -9,8 +9,8 @@ SET check_function_bodies = false;
 SET client_min_messages = warning;
 SET escape_string_warning = off;
 
-DROP PROCEDURAL LANGUAGE IF EXISTS plpgsql  CASCADE;
-CREATE PROCEDURAL LANGUAGE plpgsql;
+--DROP PROCEDURAL LANGUAGE IF EXISTS plpgsql CASCADE;
+--CREATE PROCEDURAL LANGUAGE plpgsql;
 
 SET search_path = public, pg_catalog;
 SET default_tablespace = '';
@@ -1628,6 +1628,10 @@ CREATE TABLE res_x
   video_time integer DEFAULT NULL,
   video_user character varying(50)  DEFAULT NULL,
   video_date timestamp without time zone,
+  esign_proof_id character varying(255),
+  esign_proof_content text,
+  esign_content text,
+  esign_date timestamp without time zone,
   CONSTRAINT res_x_pkey PRIMARY KEY  (res_id)
 )
 WITH (OIDS=FALSE);
@@ -1750,6 +1754,10 @@ CREATE TABLE res_letterbox
   video_time integer DEFAULT NULL,
   video_user character varying(50)  DEFAULT NULL,
   video_date timestamp without time zone,
+  esign_proof_id character varying(255),
+  esign_proof_content text,
+  esign_content text,
+  esign_date timestamp without time zone,
   CONSTRAINT res_letterbox_pkey PRIMARY KEY  (res_id)
 )
 WITH (OIDS=FALSE);
