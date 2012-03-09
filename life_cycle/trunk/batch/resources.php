@@ -227,26 +227,39 @@ function esign($resId)
         $resultDataSignatureEx = array();
         $resultDataGetArchiveEx = array();
         $GLOBALS['manageEsign']->connectToDB();
-        $fingerprint = $GLOBALS['manageEsign']->getFingerprintTosign($resId, $GLOBALS['table']);
+        $fingerprint = $GLOBALS['manageEsign']->getFingerprintTosign(
+            $resId, 
+            $GLOBALS['table']
+        );
+        $fingerprintMode = $GLOBALS['manageEsign']->getFingerprintMode(
+            $resId, 
+            $GLOBALS['table']
+        );
         //########################signatureEx########################
         //echo "--------------call the signature ws\r\n";
         $signatureEx = new signatureEx();
         $signatureExResponse = new signatureExResponse();
         $signatureEx->requestId = $resId;
-        $signatureEx->transactionId = rand();
+        $signatureEx->transactionId = 
+            $GLOBALS['manageEsign']->esignConfig['service']['D2S']['transaction_id'];
         $signatureEx->tag = 'Maarch life_cycle module';
         $signatureEx->dataToSign = new dataType();
         $dataStr = new dataString();
-        //$dataStr->dataFormatSpecified = false;
-        //$dataStr->dataFormat = 'gzEnc';
-        $dataStr->_ = $fingerprint; //le hash du fichier
+        $dataStr->_ = '<Manifest/>';
         $signatureEx->dataToSign->value = $dataStr;
         $signatureEx->dataToSign->binaryValue = 0;
         $signatureEx->signatureFormat = 'XADES';
-        $signatureEx->signatureType = 'ENVELOPING';
+        $signatureEx->signatureType = 'DETACHED';
+        $HASH_B64 = base64_encode($fingerprint);
+        $HASH_ALGO = $fingerprintMode;
+        $signatureEx->signatureParameter = '<Parameters><Manifest><Reference><DigestValue>'
+            . $HASH_B64 . '</DigestValue><DigestMethod>'
+            . $HASH_ALGO . '</DigestMethod></Reference></Manifest></Parameters>';
         //echo "--------------process the return\r\n";
+        //var_dump($signatureEx);exit;
         $signatureExResponse = $GLOBALS['D2S']->signatureEx($signatureEx);
-        if ($signatureExResponse->signatureExResult->D2SResponseEx['opStatus'] > 0) {
+        //var_dump($signatureExResponse);exit;
+        if ($signatureExResponse->signatureExResult->opStatus <> 0) {
             $GLOBALS['logger']->write(
                 'problem with esign of resource :' 
                 . $resId , 'ERROR', 30
@@ -265,7 +278,12 @@ function esign($resId)
             //requestId
             $requestId = $signatureExResponse->signatureExResult->requestId;
             //echo "--------------store the esign in DB\r\n";
-            $GLOBALS['manageEsign']->putInfoInDB($resId, $GLOBALS['table'], $resultDataSignatureEx, $GLOBALS['databasetype']);
+            $GLOBALS['manageEsign']->putInfoInDB(
+                $resId, 
+                $GLOBALS['table'], 
+                $resultDataSignatureEx, 
+                $GLOBALS['databasetype']
+            );
             //########################getArchiveEx########################
             //echo "--------------call the proof ws\r\n";
             $getArchiveEx = new getArchiveEx();
@@ -274,7 +292,7 @@ function esign($resId)
             $getArchiveEx->archiveId = $signatureExResponse->D2SarchiveId;
             //echo "--------------process the return\r\n";
             $getArchiveExResponse = $GLOBALS['D2S']->getArchiveEx($getArchiveEx);
-            if ($getArchiveExResponse->getArchiveExResult->D2SArchiveResponseEx['opStatus'] > 0) {
+            if ($getArchiveExResponse->getArchiveExResult->opStatus <> 0) {
                 //echo 'ici';exit;
                 $GLOBALS['logger']->write(
                     'problem with esign of resource :' 
@@ -289,7 +307,12 @@ function esign($resId)
                 $D2SProof = $getArchiveExResponse->getArchiveExResult->D2SProof;
                 $resultDataGetArchiveEx['esign_proof_content'] = $D2SProof;
                 //echo "--------------store the proof in DB\r\n";
-                $GLOBALS['manageEsign']->putInfoInDB($resId, $GLOBALS['table'], $resultDataGetArchiveEx, $GLOBALS['databasetype']);
+                $GLOBALS['manageEsign']->putInfoInDB(
+                    $resId, 
+                    $GLOBALS['table'], 
+                    $resultDataGetArchiveEx, 
+                    $GLOBALS['databasetype']
+                );
             }
         }
     } else {

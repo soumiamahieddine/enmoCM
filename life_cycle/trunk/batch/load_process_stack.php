@@ -344,7 +344,10 @@ if ((string) $esignParams->enabledEsign == 'true') {
         //declaration of manageEsign object
         $GLOBALS['manageEsign'] = new manage_esign($GLOBALS['configPathEsign']);
         if (empty($GLOBALS['manageEsign']->error)) {
-            $GLOBALS['D2S'] = new D2S($GLOBALS['manageEsign']->esignConfig['service']['D2S']['url']);
+            $GLOBALS['D2S'] = new D2S(
+                $GLOBALS['manageEsign']->esignConfig['service']['D2S']['url'],
+                $GLOBALS['manageEsign']->esignConfig['service']['D2S']['wsdl']
+            );
         } else {
             $GLOBALS['logger']->write('esign setup error' . 
                 $GLOBALS['manageEsign']->error, 'ERROR', 112
