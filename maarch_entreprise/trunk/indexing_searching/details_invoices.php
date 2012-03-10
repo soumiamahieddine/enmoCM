@@ -302,6 +302,7 @@ if (empty ($_SESSION['error']) || $_SESSION['indexation']) {
                                 <table cellpadding="2" cellspacing="2" border="0" class="block forms details" width="100%">
                                     <?php
             $i = 0;
+/*
             foreach (array_keys($data) as $key) {
                 if ($key <> "category_id" && $key <> "priority" && $key <> "subject" ){
                     //$func->show_array($data[$key]);
@@ -442,6 +443,189 @@ if (empty ($_SESSION['error']) || $_SESSION['indexation']) {
             }
             $i++;
             }
+*/
+                        foreach(array_keys($data) as $key)
+                        {
+                            if ($key <> 'category_id') {
+                                if($i%2 != 1 || $i==0) // pair
+                                {
+                                    $detailsExport .= "<tr class='col'>";
+                                    ?>
+                                    <tr class="col">
+                                    <?php
+                                }
+                                $folder_id = "";
+                                if(($key == "market" || $key == "project") && $data[$key]['show_value'] <> "")
+                                {
+                                    $folderTmp = $data[$key]['show_value'];
+                                    $find1 = strpos($folderTmp, '(');
+                                    $folder_id = substr($folderTmp, $find1, strlen($folderTmp));
+                                    $folder_id = str_replace("(", "", $folder_id);
+                                    $folder_id = str_replace(")", "", $folder_id);
+                                }
+
+                                //$detailsExport .= "<th align='left' width='50px'>";
+                                ?>
+                                <th align="left" class="picto" >
+                                    <?php
+                                    if(isset($data[$key]['addon']))
+                                    {
+                                        echo $data[$key]['addon'];
+                                        //$detailsExport .= $data[$key]['addon'];
+                                    }
+                                    elseif(isset($data[$key]['img']))
+                                    {
+                                        //$detailsExport .= "<img alt='".$data[$key]['label']."' title='".$data[$key]['label']."' src='".$data[$key]['img']."'  />";
+                                        if($folder_id <> "")
+                                        {
+                                            echo "<a href='".$_SESSION['config']['businessappurl']."index.php?page=show_folder&module=folder&id=".$folder_id."'>";
+                                            ?>
+                                            <img alt="<?php echo $data[$key]['label'];?>" title="<?php echo $data[$key]['label'];?>" src="<?php echo $data[$key]['img'];?>"  /></a>
+                                            <?php
+                                        }
+                                        else
+                                        {
+                                            ?>
+                                            <img alt="<?php echo $data[$key]['label'];?>" title="<?php echo $data[$key]['label'];?>" src="<?php echo $data[$key]['img'];?>"  /></a>
+                                            <?php
+                                        }
+                                        ?>
+
+                                        <?php
+                                    }
+                                    //$detailsExport .= "</th>";
+                                    ?>
+                                </th>
+                                <?php
+                                $detailsExport .= "<td align='left' width='200px'>";
+                                ?>
+                                <td align="left" width="200px">
+                                    <?php
+                                    $detailsExport .= $data[$key]['label'];
+                                    echo $data[$key]['label'];?> :
+                                </td>
+                                <?php
+                                $detailsExport .=  "</td>";
+                                $detailsExport .=  "<td>";
+                                ?>
+                                <td>
+                                    <?php
+                                    $detailsExport .=  $data[$key]['show_value'];
+                                if(!isset($data[$key]['readonly']) || $data[$key]['readonly'] == true)
+                                {
+                                    if($data[$key]['display'] == 'textinput')
+                                    {
+                                        ?>
+                                        <input type="text" name="<?php echo $key;?>" id="<?php echo $key;?>" value="<?php echo $data[$key]['show_value'];?>" readonly="readonly" class="readonly" size="40"  title="<?php  echo $data[$key]['show_value']; ?>" alt="<?php  echo $data[$key]['show_value']; ?>" />
+                                        <?php
+                                    }
+                                    else
+                                    {
+                                        ?>
+                                        <input type="text" name="<?php echo $key;?>" id="<?php echo $key;?>" value="<?php echo $data[$key]['show_value'];?>" readonly="readonly" class="readonly" size="40" title="<?php  echo $data[$key]['show_value']; ?>" alt="<?php  echo $data[$key]['show_value']; ?>" />
+                                        <?php
+                                        if(isset($data[$key]['addon']))
+                                        {
+                                            $frm_str .= $data[$key]['addon'];
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    if($data[$key]['field_type'] == 'textfield')
+                                    {
+                                        ?>
+                                        <input type="text" name="<?php echo $key;?>" id="<?php echo $key;?>" value="<?php echo $data[$key]['show_value'];?>" size="40"  title="<?php  echo $data[$key]['show_value']; ?>" alt="<?php  echo $data[$key]['show_value']; ?>" />
+                                        <?php
+                                    }
+                                    else if($data[$key]['field_type'] == 'date')
+                                    {
+                                        ?>
+                                        <input type="text" name="<?php echo $key;?>" id="<?php echo $key;?>" value="<?php echo $data[$key]['show_value'];?>" size="40"  title="<?php  echo $data[$key]['show_value']; ?>" alt="<?php  echo $data[$key]['show_value']; ?>" onclick="showCalender(this);" />
+                                        <?php
+                                    }
+                                    else if($data[$key]['field_type'] == 'select')
+                                    {
+                                        ?>
+                                        <select id="<?php echo $key;?>" name="<?php echo $key;?>" <?php if($key == 'type_id'){echo 'onchange="change_doctype_details(this.options[this.options.selectedIndex].value, \''.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=change_doctype_details\' , \''._DOCTYPE.' '._MISSING.'\');"';}?>>
+                                        <?php
+                                            if($key == 'type_id')
+                                            {
+                                                if($_SESSION['features']['show_types_tree'] == 'true')
+                                                {
+
+                                                    for($k=0; $k<count($data[$key]['select']);$k++)
+                                                    {
+                                                    ?><option value="" class="doctype_level1"><?php echo $data[$key]['select'][$k]['label'];?></option><?php
+                                                        for($j=0; $j<count($data[$key]['select'][$k]['level2']);$j++)
+                                                        {
+                                                            ?><option value="" class="doctype_level2">&nbsp;&nbsp;<?php echo $data[$key]['select'][$k]['level2'][$j]['label'];?></option><?php
+                                                            for($l=0; $l<count($data[$key]['select'][$k]['level2'][$j]['types']);$l++)
+                                                            {
+                                                                ?><option
+                                                                <?php if($data[$key]['value'] ==$data[$key]['select'][$k]['level2'][$j]['types'][$l]['id']){ echo 'selected="selected"';}?>
+                                                                 value="<?php echo $data[$key]['select'][$k]['level2'][$j]['types'][$l]['id'];?>" >&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $data[$key]['select'][$k]['level2'][$j]['types'][$l]['label'];?></option><?php
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    for($k=0; $k<count($data[$key]['select']);$k++)
+                                                    {
+                                                        ?><option <?php if($data[$key]['value'] ==$data[$key]['select'][$k]['ID']){ echo 'selected="selected"';}?> value="<?php echo $data[$key]['select'][$k]['ID'];?>" ><?php echo $data[$key]['select'][$k]['LABEL'];?></option><?php
+                                                    }
+                                                }
+                                            }
+                                            else
+                                            {
+                                                for($k=0; $k<count($data[$key]['select']);$k++)
+                                                {
+                                                    ?><option value="<?php echo $data[$key]['select'][$k]['ID'];?>" <?php if($data[$key]['value'] == $data[$key]['select'][$k]['ID']){echo 'selected="selected"';}?>><?php echo $data[$key]['select'][$k]['LABEL'];?></option><?php
+                                                }
+                                            }
+                                        ?>
+                                        </select>
+                                        <?php
+                                    }
+                                    else if($data[$key]['field_type'] == 'autocomplete')
+                                    {
+                                        if($key == 'project')
+                                        {
+                                            //$('market').value='';return false;
+                                        ?><input type="text" name="project" id="project" onblur="" value="<?php echo $data['project']['show_value']; ?>" /><div id="show_project" class="autocomplete"></div><script type="text/javascript">launch_autocompleter_folders('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=folder&page=autocomplete_folders&mode=project', 'project');</script>
+                                        <?php
+                                        }
+                                        else if($key == 'market')
+                                        {
+                                        ?><input type="text" name="market" id="market" onblur="fill_project('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=folder&page=ajax_get_project');return false;"  value="<?php echo $data['market']['show_value']; ?>"/><div id="show_market" class="autocomplete"></div>
+                                        <script type="text/javascript">launch_autocompleter_folders('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=folder&page=autocomplete_folders&mode=market', 'market');</script>
+                                        <?php
+                                        }
+                                    }
+                                }
+                                    $detailsExport .=  "</td>";
+                                    ?>
+                                </td>
+                                <?php
+                                if($i%2 == 1 && $i!=0) // impair
+                                {
+                                    $detailsExport .=  "</td>";
+                                    ?>
+                                    </tr>
+                                    <?php
+                                }
+                                else
+                                {
+                                    if($i+1 == count($data))
+                                    {
+                                        $detailsExport .= "<td  colspan='2'>&nbsp;</td></tr>";
+                                        echo '<td  colspan="2">&nbsp;</td></tr>';
+                                    }
+                                }
+                                $i++;
+                            }
+                        }
             ?>
                                     <tr class="col">
                                         <th align="left" class="picto">

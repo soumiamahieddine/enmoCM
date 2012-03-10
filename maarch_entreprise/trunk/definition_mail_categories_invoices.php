@@ -1,7 +1,7 @@
 <?php
 
 /*
-*    Copyright 2008,2009 Maarch
+*    Copyright 2008-2012 Maarch
 *
 *  This file is part of Maarch Framework.
 *
@@ -20,7 +20,9 @@
 */
 
 /**
-* @brief   Contains data structure used to get the proper index for a given category, to checks data and to loads in db (indexing, process, validation, details, ...) and the function to access it
+* @brief   Contains data structure used to get the proper index for a given 
+* category, to checks data and to loads in db (indexing, process, validation, 
+* details, ...) and the function to access it
 *
 * @file
 * @author Claire Figueras <dev@maarch.org>
@@ -115,7 +117,7 @@ $_ENV['categories']['incoming']['subject'] = array (
     'type_form' => 'string',
     'type_field' => 'string',
     'mandatory' => true,
-    'label' => _SUBJECT,
+    'label' => _DESCRIPTION,
     'table' => 'res',
     'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=object.gif',
     'modify' => true,
@@ -386,10 +388,21 @@ $_ENV['categories']['empty']['doc_date'] = array (
     'mandatory' => true,
     'label' => _DOC_DATE,
     'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=small_calend.gif',
+    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=date_arr.gif',
     'modify' => true,
     'form_show' => 'date'
 );
+$_ENV['categories']['empty']['subject'] = array (
+    'type_form' => 'string',
+    'type_field' => 'string',
+    'mandatory' => true,
+    'label' => _DESCRIPTION,
+    'table' => 'res',
+    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=object.gif',
+    'modify' => true,
+    'form_show' => 'textfield'
+);
+/*
 $_ENV['categories']['empty']['title'] = array (
     'type_form' => 'string',
     'type_field' => 'string',
@@ -410,6 +423,7 @@ $_ENV['categories']['empty']['identifier'] = array (
     'modify' => true,
     'form_show' => 'textfield'
 );
+*/
 
 /////////////////////////////MODULES SPECIFIC////////////////////////////////////////////////
 $core = new core_tools();
@@ -498,7 +512,7 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
     //$db->query('select category_id from ' . $view . ' where res_id = ' . $res_id);
     //$res = $db->fetch_object();
     //$cat_id = $res->category_id;
-    $cat_id = $_SESSION['default_category'];
+    $cat_id = 'empty';
     $fields = '';
     $data = array ();
     $arr = array ();
