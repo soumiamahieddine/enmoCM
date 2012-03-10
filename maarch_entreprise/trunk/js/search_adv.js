@@ -142,7 +142,15 @@ function fill_field_select_multiple(values)
 
 function fill_field_select_multiple_filter(values)
 {
-// TO DO 
+    for( var key in values)
+    {
+    	var select = $(key);
+        for(var j=0; j <values[key].length;j++)
+        {
+        	option = new Option(values[key][j], values[key][j]);
+			select.options[select.length] = option;
+        }
+    }
 }
 
 

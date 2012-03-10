@@ -656,7 +656,7 @@ class types extends dbquery
             . " dsl.css_style as style_level2 from " . DOCTYPES_TABLE . " d, "
             . $_SESSION['tablename']['doctypes_second_level'] . " dsl, "
             . $_SESSION['tablename']['doctypes_first_level']
-            . " dfl where coll_id = 'letterbox_coll' and d.enabled = 'Y' "
+            . " dfl where coll_id = '" . $collId . "' and d.enabled = 'Y' "
             . "and d.doctypes_second_level_id = dsl.doctypes_second_level_id "
             . "and d.doctypes_first_level_id = dfl.doctypes_first_level_id "
             . "and dsl.enabled = 'Y' and dfl.enabled = 'Y' "
