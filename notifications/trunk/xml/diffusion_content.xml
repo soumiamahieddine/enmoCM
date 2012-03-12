@@ -8,7 +8,7 @@
 		</content>
 		<content>
 			<id>letterbox</id>
-			<label>Informations courriers</label>
+			<label>Détail des courriers</label>
 			<script>modules/notifications/require/letterbox_content.php</script>
 		</content>
 	</diffusion>
