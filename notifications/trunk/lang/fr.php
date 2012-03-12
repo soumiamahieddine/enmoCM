@@ -113,9 +113,9 @@ if (!defined('_ATTACH_MAIL_FILE')) define('_ATTACH_MAIL_FILE', 'Envoyer les cour
 if (!defined('_NOTIFICATIONS_LISTINSTANC_DIFF_TYPE')) define('_NOTIFICATIONS_LISTINSTANC_DIFF_TYPE', 'Les courriels de notifications seront diffus&eacute;s &agrave tous les utilisateurs de la liste de diffusion (destinataire principal et copies)');
 if (!defined('_DIFFUSION_LIST')) define('_DIFFUSION_LIST', 'Liste de diffusion');
 if (!defined('_NOTIFICATIONS_DEST_USER_DIFF_TYPE')) define('_NOTIFICATIONS_DEST_USER_DIFF_TYPE', 'Les courriels de notifications seront diffus&eacute;s au destinataire principal du document');
-if (!defined('_DEST_USER')) define('_DEST_USER', 'destinataire principal');
-if (!defined('_NOTIFICATIONS_COPYLIST_DIFF_TYPE')) define('_NOTIFICATIONS_COPYLIST_DIFF_TYPE', 'Les courriels de notifications seront diffus&eacute;s aux utilisateurs en copie');
-if (!defined('_COPY_LIST')) define('_COPY_LIST', 'Liste des copies');
+if (!defined('_DEST_USER')) define('_DEST_USER', 'Destinataire principal');
+if (!defined('_NOTIFICATIONS_COPY_LIST_DIFF_TYPE')) define('_NOTIFICATIONS_COPY_LIST_DIFF_TYPE', 'Les courriels de notifications seront diffus&eacute;s aux utilisateurs en copie du document');
+if (!defined('_COPYLIST')) define('_COPYLIST', 'Utilisateurs en copie');
 
 if (!defined('_NOTIFICATIONS_GROUP_DIFF_TYPE')) define('_NOTIFICATIONS_GROUP_DIFF_TYPE', 'Les courriels de notifications seront diffus&eacute;s au(x) groupe(s) sp&eacute;cifi&eacute;(s)');
 if (!defined('_NOTIFICATIONS_ENTITY_DIFF_TYPE')) define('_NOTIFICATIONS_ENTITY_DIFF_TYPE', 'Les courriels de notifications seront diffus&eacute;s au(x) entit&eacute;e(s) sp&eacute;cifi&eacute;e(s)');
