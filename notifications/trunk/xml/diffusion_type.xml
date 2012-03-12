@@ -21,5 +21,10 @@
 			<label>_DEST_USER</label>
 			<script>modules/notifications/require/dest_user.php</script>
 		</type>
+		<type>
+			<id>copy_list</id>
+			<label>_COPYLIST</label>
+			<script>modules/notifications/require/copy_list.php</script>
+		</type>
 	</diffusion>
 </root>
