@@ -443,28 +443,31 @@ INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_lev
 INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll', 100, 'Facture fournisseur', 'Y', 30, 60, NULL, NULL);
 INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll', 105, 'Devis', 'Y', 30, 60, NULL, NULL);
 
-INSERT INTO doctypes_indexes (type_id, coll_id, field_name, mandatory) VALUES (FF, 'letterbox_coll', 'custom_t1', 'Y');
-INSERT INTO doctypes_indexes (type_id, coll_id, field_name, mandatory) VALUES (FF, 'letterbox_coll', 'custom_f1', 'Y');
+INSERT INTO doctypes_indexes (type_id, coll_id, field_name, mandatory) VALUES (100, 'letterbox_coll', 'custom_t1', 'Y');
+INSERT INTO doctypes_indexes (type_id, coll_id, field_name, mandatory) VALUES (100, 'letterbox_coll', 'custom_f1', 'Y');
 
-INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (82, 21, 14, 1);
-INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (83, 21, 14, 1);
-INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (84, 21, 14, 1);
+INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (10, 21, 14, 1);
+INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (15, 21, 14, 1);
+INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (20, 21, 14, 1);
+INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (25, 21, 14, 1);
+INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (30, 21, 14, 1);
+INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (35, 21, 14, 1);
+INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (40, 21, 14, 1);
+INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (45, 21, 14, 1);
+INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (50, 21, 14, 1);
+INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (55, 21, 14, 1);
+INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (60, 21, 14, 1);
+INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (65, 21, 14, 1);
+INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (70, 21, 14, 1);
+INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (75, 21, 14, 1);
+INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (80, 21, 14, 1);
 INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (85, 21, 14, 1);
-INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (86, 21, 14, 1);
-INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (87, 21, 14, 1);
-INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (88, 21, 14, 1);
-INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (89, 21, 14, 1);
 INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (90, 21, 14, 1);
-INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (91, 21, 14, 1);
-INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (81, 21, 14, 1);
-INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (92, 21, 14, 1);
-INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (93, 21, 14, 1);
-INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (94, 21, 14, 1);
-INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (96, 21, 14, 1);
-INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (97, 21, 14, 1);
-INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (98, 21, 14, 1);
+INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (95, 21, 14, 1);
+INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (100, 21, 14, 1);
+INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (105, 21, 14, 1);
 
-INSERT INTO templates_doctype_ext (template_id, type_id, is_generated) VALUES (3, 86, 'Y');
+INSERT INTO templates_doctype_ext (template_id, type_id, is_generated) VALUES (3, 10, 'Y');
 
 
 --
@@ -472,8 +475,8 @@ INSERT INTO templates_doctype_ext (template_id, type_id, is_generated) VALUES (3
 --
 
 INSERT INTO foldertypes_doctypes_level1 (foldertype_id, doctypes_first_level_id) VALUES (5, 10);
-INSERT INTO foldertypes_doctypes_level1 (foldertype_id, doctypes_first_level_id) VALUES (5, 11);
-INSERT INTO foldertypes_doctypes_level1 (foldertype_id, doctypes_first_level_id) VALUES (5, 12);
+INSERT INTO foldertypes_doctypes_level1 (foldertype_id, doctypes_first_level_id) VALUES (5, 20);
+INSERT INTO foldertypes_doctypes_level1 (foldertype_id, doctypes_first_level_id) VALUES (5, 30);
 
 INSERT INTO folders (folders_system_id, folder_id, foldertype_id, parent_id, folder_name, subject, description, author, typist, status, folder_level, creation_date, folder_out_id, video_status, video_user, is_frozen, custom_t1, custom_n1, custom_f1, custom_d1, custom_t2, custom_n2, custom_f2, custom_d2, custom_t3, custom_n3, custom_f3, custom_d3, custom_t4, custom_n4, custom_f4, custom_d4, custom_t5, custom_n5, custom_f5, custom_d5, custom_t6, custom_d6, custom_t7, custom_d7, custom_t8, custom_d8, custom_t9, custom_d9, custom_t10, custom_d10, custom_t11, custom_d11, custom_t12, custom_d12, custom_t13, custom_d13, custom_t14, custom_d14, custom_t15, is_complete, is_folder_out, last_modified_date) VALUES (20, 'LITIGE', 5, 0, 'Litiges tous domaines', NULL, NULL, NULL, 'superadmin', 'NEW', 1, '2012-03-02 18:30:40.311', NULL, NULL, NULL, 'N', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'N', 'N', '2012-03-02 18:30:40.311');
 INSERT INTO folders (folders_system_id, folder_id, foldertype_id, parent_id, folder_name, subject, description, author, typist, status, folder_level, creation_date, folder_out_id, video_status, video_user, is_frozen, custom_t1, custom_n1, custom_f1, custom_d1, custom_t2, custom_n2, custom_f2, custom_d2, custom_t3, custom_n3, custom_f3, custom_d3, custom_t4, custom_n4, custom_f4, custom_d4, custom_t5, custom_n5, custom_f5, custom_d5, custom_t6, custom_d6, custom_t7, custom_d7, custom_t8, custom_d8, custom_t9, custom_d9, custom_t10, custom_d10, custom_t11, custom_d11, custom_t12, custom_d12, custom_t13, custom_d13, custom_t14, custom_d14, custom_t15, is_complete, is_folder_out, last_modified_date) VALUES (21, 'LF', 5, 20, 'Litige financier', NULL, NULL, NULL, 'superadmin', 'NEW', 2, '2012-03-02 18:30:58.112', NULL, NULL, NULL, 'N', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'N', 'N', '2012-03-02 18:30:58.112');
@@ -496,16 +499,9 @@ INSERT INTO parameters (id, param_value_string, param_value_int, param_value_dat
 INSERT INTO parameters (id, param_value_string, param_value_int, param_value_date) VALUES ('workbatch_rec', '', 7, NULL);
 INSERT INTO parameters (id, param_value_string, param_value_int, param_value_date) VALUES ('folder_id_increment', '', 200, NULL);
 INSERT INTO parameters (id, param_value_string, param_value_int, param_value_date) VALUES ('work_batch_autoimport_id', NULL, 1, NULL);
-INSERT INTO parameters (id, param_value_string, param_value_int, param_value_date) VALUES ('ar_index__', NULL, 1, NULL);
-INSERT INTO parameters (id, param_value_string, param_value_int, param_value_date) VALUES ('ar_index_pparker_incoming', NULL, 3, NULL);
-INSERT INTO parameters (id, param_value_string, param_value_int, param_value_date) VALUES ('ar_index_pparker_outgoing', NULL, 3, NULL);
-INSERT INTO parameters (id, param_value_string, param_value_int, param_value_date) VALUES ('ar_index_pparker_internal', NULL, 3, NULL);
-INSERT INTO parameters (id, param_value_string, param_value_int, param_value_date) VALUES ('ar_index_pparker_market_document', NULL, 3, NULL);
 INSERT INTO parameters (id, param_value_string, param_value_int, param_value_date) VALUES ('postindexing_workbatch', NULL, 40, NULL);
 INSERT INTO parameters (id, param_value_string, param_value_int, param_value_date) VALUES ('database_version', NULL, 130, NULL);
-INSERT INTO parameters (id, param_value_string, param_value_int, param_value_date) VALUES ('chrono_incoming_2012', NULL, 21, NULL);
-INSERT INTO parameters (id, param_value_string, param_value_int, param_value_date) VALUES ('ar_index_bblier_incoming', NULL, 1, NULL);
-INSERT INTO parameters (id, param_value_string, param_value_int, param_value_date) VALUES ('ar_index_ddaull_incoming', NULL, 1, NULL);
+
 
 INSERT INTO security (security_id, group_id, coll_id, where_clause, maarch_comment, can_insert, can_update, can_delete, rights_bitmask, mr_start_date, mr_stop_date, where_target) VALUES (41, 'ADMINISTRATEUR', 'letterbox_coll', 'DESTINATION in (@my_entities)', 'Administration', 'N', 'N', 'N', 0, NULL, NULL, 'DOC');
 INSERT INTO security (security_id, group_id, coll_id, where_clause, maarch_comment, can_insert, can_update, can_delete, rights_bitmask, mr_start_date, mr_stop_date, where_target) VALUES (42, 'COURRIER', 'letterbox_coll', 'typist=@user', 'COURRIER', 'N', 'N', 'N', 153, NULL, NULL, 'DOC');
