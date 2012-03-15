@@ -19,7 +19,8 @@
 */
 
 /**
-* @brief   Contains all the functions to manage the users groups security and connexion to the application
+* @brief   Contains all the functions to manage the users groups security 
+* and connexion to the application
 *
 * @file
 * @author Claire Figueras <dev@maarch.org>
@@ -29,7 +30,8 @@
 */
 
 /**
-* @brief   contains all the functions to manage the users groups security through session variables
+* @brief   contains all the functions to manage the users groups security 
+* through session variables
 *
 *<ul>
 *  <li>Management of application connexion</li>
@@ -39,10 +41,8 @@
 */
 
 //Requires to launch history functions
-require_once 'core' .DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
-    . 'class_history.php';
-require_once 'core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
-    . 'SecurityControler.php';
+require_once 'core/class/class_history.php';
+require_once 'core/class/SecurityControler.php';
 require_once 'core/where_targets.php';
 require_once 'core/class/users_controler.php';
 if (isset($_SESSION['config'])) {
@@ -51,7 +51,6 @@ if (isset($_SESSION['config'])) {
 }
 require_once 'core/class/usergroups_controler.php';
 require_once 'core/class/ServiceControler.php';
-
 
 //require_once('lib/FirePHP/Init.php');
 
@@ -74,7 +73,6 @@ class security extends dbquery
         }
         return -1;
     }
-
 
     /**
     * Logs a user
@@ -400,11 +398,25 @@ class security extends dbquery
     */
     public function retrieve_coll_id_from_table($table)
     {
-        for($i=0; $i<count($_SESSION['collections']);$i++)
-        {
-            if($_SESSION['collections'][$i]['table'] == $table)
-            {
+        for ($i=0;$i<count($_SESSION['collections']);$i++) {
+            if ($_SESSION['collections'][$i]['table'] == $table) {
                 return $_SESSION['collections'][$i]['id'];
+            }
+        }
+        return '';
+    }
+    
+    /**
+    * Returns the adr table from a table
+    *
+    * @param  $table string Tablename
+    * @return string adr table or empty string if not found
+    */
+    public function retrieve_adr_table_from_table($table)
+    {
+        for ($i=0;$i<count($_SESSION['collections']);$i++) {
+            if ($_SESSION['collections'][$i]['table'] == $table) {
+                return $_SESSION['collections'][$i]['adr'];
             }
         }
         return '';
