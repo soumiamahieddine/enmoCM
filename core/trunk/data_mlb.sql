@@ -554,8 +554,8 @@ INSERT INTO doctypes_indexes (type_id, coll_id, field_name, mandatory) VALUES (1
 INSERT INTO doctypes_indexes (type_id, coll_id, field_name, mandatory) VALUES (100, 'letterbox_coll', 'custom_f1', 'Y');
 INSERT INTO doctypes_indexes (type_id, coll_id, field_name, mandatory) VALUES (66, 'letterbox_coll', 'custom_t6', 'N');
 INSERT INTO doctypes_indexes (type_id, coll_id, field_name, mandatory) VALUES (66, 'letterbox_coll', 'custom_t7', 'N');
-INSERT INTO doctypes_indexes (type_id, coll_id, field_name, mandatory) VALUES (81, 'letterbox_coll', 'custom_t6', 'N');
-INSERT INTO doctypes_indexes (type_id, coll_id, field_name, mandatory) VALUES (81, 'letterbox_coll', 'custom_t7', 'N');
+INSERT INTO doctypes_indexes (type_id, coll_id, field_name, mandatory) VALUES (17, 'letterbox_coll', 'custom_t6', 'N');
+INSERT INTO doctypes_indexes (type_id, coll_id, field_name, mandatory) VALUES (17, 'letterbox_coll', 'custom_t7', 'N');
 
 INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (10, 21, 14, 1);
 INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (15, 21, 14, 1);
