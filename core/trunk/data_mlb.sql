@@ -441,7 +441,7 @@ INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, 
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (19, '', 'RESP_COURRIER', 'MyBasket', 'N', 'N', 'Y');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (3, '', 'RESP_COURRIER', 'ValidationBasket', 'N', 'Y', 'N');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (18, '', 'RESP_COURRIER', 'ValidationBasket', 'N', 'N', 'Y');
-INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (20, '', 'RESP_COURRIER', 'ValidationBasket', 'N', 'N', 'Y');
+INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (20, '', 'RESP_COURRIER', 'ValidationBasket', 'N', 'Y', 'N');
 
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (21, '', 'COURRIER', 'RetourCourrier', 'N', 'N', 'Y');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (22, '', 'COURRIER', 'QualificationBasket', 'N', 'N', 'Y');
@@ -884,11 +884,6 @@ INSERT INTO contacts (contact_id, lastname, firstname, society, function, addres
 INSERT INTO contacts (contact_id, lastname, firstname, society, function, address_num, address_street, address_complement, address_town, address_postal_code, address_country, email, phone, other_data, is_corporate_person, user_id, title, enabled) VALUES (128, 'MARTIN', 'Denis', '', 'responsable', '', '', '', '', '', '', '', '', '', 'N', '', 'title2', 'Y');
 
 
---
--- res_letterbox
---
-
-INSERT INTO res_letterbox (res_id, title, subject, description, publisher, contributor, type_id, format, typist, creation_date, fulltext_result, ocr_result, converter_result, author, author_name, identifier, source, doc_language, relation, coverage, doc_date, docserver_id, folders_system_id, arbox_id, path, filename, offset_doc, logical_adr, fingerprint, filesize, is_paper, page_count, scan_date, scan_user, scan_location, scan_wkstation, scan_batch, burn_batch, scan_postmark, envelop_id, status, destination, approver, validation_date, work_batch, origin, is_ingoing, priority, arbatch_id, policy_id, cycle_id, cycle_date, is_multi_docservers, is_frozen, custom_t1, custom_n1, custom_f1, custom_d1, custom_t2, custom_n2, custom_f2, custom_d2, custom_t3, custom_n3, custom_f3, custom_d3, custom_t4, custom_n4, custom_f4, custom_d4, custom_t5, custom_n5, custom_f5, custom_d5, custom_t6, custom_d6, custom_t7, custom_d7, custom_t8, custom_d8, custom_t9, custom_d9, custom_t10, custom_d10, custom_t11, custom_t12, custom_t13, custom_t14, custom_t15, tablename, initiator, dest_user, video_batch, video_time, video_user, video_date, esign_proof_id, esign_proof_content, esign_content, esign_date) VALUES (133, NULL, 'demande de procuration courrier', NULL, NULL, NULL, 16, 'pdf', 'bblier', '2012-03-16 11:25:09.828', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2011-03-03 00:00:00', 'FASTHD_MAN', 28, '1', '2012#03#0001##', '0045.pdf', '', '', 'cdf9d44936d33f48968de707290811fbe4b0394604817d5770c2b01832b4287f', 240856, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'END', 'DSG', NULL, NULL, NULL, NULL, NULL, 2, 1, NULL, NULL, NULL, 'N', 'N', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'res_letterbox', NULL, 'ddaull', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
 
 --
