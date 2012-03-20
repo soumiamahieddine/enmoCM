@@ -330,13 +330,16 @@ if (count($_REQUEST['meta']) > 0) {
                         $index = Zend_Search_Lucene::open($path_to_lucene_index);
 //$hits = $index->find($_REQUEST['fulltext']."~");
 //$query_res_ft = Zend_Search_Lucene_Search_QueryParser::parse($_REQUEST['fulltext'], 'iso-8859-5'));
-                        $hits = $index->find(
+						$hits = $index->find($_REQUEST['fulltext']);
+                        /*
+						avec accent
+						$hits = $index->find(
                             strtolower(strtr(iconv("UTF-8","ISO-8859-1"
                                 , $_REQUEST['fulltext']),
                                 'àáâãäçèéêëìíîïñòóôõöùúûüýÿÀÁÂÃÄÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝ', 
                                 'aaaaaceeeeiiiinooooouuuuyyAAAAACEEEEIIIINOOOOOUUUUY')
                             )
-                        );
+                        );*/
                         $Liste_Ids = "0";
                         foreach ($hits as $hit) {
                             $Liste_Ids .= ", '". $hit->Id ."'";
