@@ -47,6 +47,7 @@ INSERT INTO usergroups (group_id, group_desc, administrator, custom_right1, cust
 INSERT INTO usergroups (group_id, group_desc, administrator, custom_right1, custom_right2, custom_right3, custom_right4, enabled) VALUES ('RESPONSABLE', 'Responsables de direction', 'N', 'N', 'N', 'N', 'N', 'Y');
 INSERT INTO usergroups (group_id, group_desc, administrator, custom_right1, custom_right2, custom_right3, custom_right4, enabled) VALUES ('RESP_COURRIER', 'Superviseurs courrier', 'N', 'N', 'N', 'N', 'N', 'Y');
 INSERT INTO usergroups (group_id, group_desc, administrator, custom_right1, custom_right2, custom_right3, custom_right4, enabled) VALUES ('AGENT', 'Agents', 'N', 'N', 'N', 'N', 'N', 'Y');
+INSERT INTO usergroups (group_id, group_desc, administrator, custom_right1, custom_right2, custom_right3, custom_right4, enabled) VALUES ('MODIF', 'modification', 'N', 'N', 'N', 'N', 'N', 'Y');
 
 INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('ssissoko', 'ADMINISTRATEUR', 'N', '');
 INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('ssissoko', 'RESPONSABLE', 'Y', '');
@@ -74,6 +75,7 @@ INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('
 INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('ddaull', 'RESP_COURRIER', 'Y', '');
 INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('ddaull', 'RESPONSABLE', 'N', '');
 INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('dmartin', 'AGENT', 'Y', '');
+INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('dmartin', 'MODIF', 'N', '');
 
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'adv_search_mlb');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'my_contacts');
@@ -363,6 +365,7 @@ INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, red
 INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('RESP_COURRIER', 'RetourCourrier', 2, NULL, NULL, 'documents_list', 'N', 'N', 'N');
 INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('RESP_COURRIER', 'CopyMailBasket', 6, NULL, NULL, 'documents_list', 'N', 'N', 'N');
 INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('RESP_COURRIER', 'MyBasket', 17, NULL, NULL, 'auth_dep', 'N', 'N', 'N');
+INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('RESP_COURRIER', 'RecordBasket', 23, NULL, NULL, 'redirect_to_action', 'N', 'N', 'N');
 
 INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('COURRIER', 'InitBasket', 4, NULL, NULL, 'documents_list', 'N', 'N', 'N');
 INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('COURRIER', 'QualificationBasket', 18, NULL, NULL, 'auth_dep', 'N', 'N', 'N');
@@ -846,6 +849,7 @@ INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readon
 
 INSERT INTO contacts (contact_id, lastname, firstname, society, function, address_num, address_street, address_complement, address_town, address_postal_code, address_country, email, phone, other_data, is_corporate_person, user_id, title, enabled) VALUES (108, '', '', 'LA POSTE', '', '', '', '', '', '', '', '', '', '', 'Y', '', 'title1', 'Y');
 INSERT INTO contacts (contact_id, lastname, firstname, society, function, address_num, address_street, address_complement, address_town, address_postal_code, address_country, email, phone, other_data, is_corporate_person, user_id, title, enabled) VALUES (109, '', '', 'FRANCE TELECOM', '', '', '', '', '', '', '', '', '', '', 'Y', '', 'title1', 'Y');
+INSERT INTO contacts (contact_id, lastname, firstname, society, function, address_num, address_street, address_complement, address_town, address_postal_code, address_country, email, phone, other_data, is_corporate_person, user_id, title, enabled) VALUES (110, '', '', 'Transport Choisy', '', '', '', '', '', '', '', '', '', '', 'Y', '', 'title1', 'Y');
 
 
 
