@@ -27,6 +27,9 @@ $core->load_lang();
 
 $func = new functions();
 
+$db = new dbquery();
+$db->connect();
+
 if (isset($_POST['what_users']) && ! empty($_POST['what_users']) ) {
     $_GET['what_users'] = $_POST['what_users'];
 }
@@ -46,6 +49,17 @@ $whatUsers = '';
 $whatServices = '';
 $onlyCc = false;
 $noDelete = false;
+$redirect_groupbasket = false;
+if (isset($_SESSION['current_basket'])) {
+	$redirect_groupbasket = current($_SESSION['user']['redirect_groupbasket'][$_SESSION['current_basket']['id']]);
+	if(empty($redirect_groupbasket['entities'])) {
+		$redirect_groupbasket['entities'] = $db->empty_list();
+	}
+	if(empty($redirect_groupbasket['users_entities'])) {
+		$redirect_groupbasket['users_entities'] = $db->empty_list();
+	}
+}
+
 if (isset($_REQUEST['only_cc'])) {
     $onlyCc = true;
 }
@@ -63,7 +77,7 @@ if (isset($_GET['what_users']) && ! empty($_GET['what_users']) ) {
                     . "%' or u.firstname ilike '%" . strtolower($whatUsers)
                     . "%' or u.firstname ilike '%" . strtoupper($whatUsers)
                     . "%' or u.user_id ilike '%" . strtolower($whatUsers)
-                    . "%' or u.user_id ilike '%".strtoupper($whatUsers)."%')";
+                    . "%' or u.user_id ilike '%".strtoupper($whatUsers)."%')";		
     } else {
         $whereUsers .= " and (u.lastname like '%".strtolower($whatUsers)."%'
                 or u.lastname like '%".strtoupper($whatUsers)."%'
@@ -116,54 +130,56 @@ if (isset($_GET['what_services']) && ! empty($_GET['what_services'])) {
     $orderByEntities = " order by e.entity_label asc";
 }
 
-$db = new dbquery();
-$db->connect();
-$db->query(
-	"select u.user_id, u.firstname, u.lastname,e.entity_id,  e.entity_label "
-    . "FROM " . USERS_TABLE . " u, " . ENT_ENTITIES . " e, "
-    . ENT_USERS_ENTITIES . " ue WHERE u.status <> 'DEL' and u.enabled = 'Y' "
-    . "and  e.entity_id = ue.entity_id and u.user_id = ue.user_id "
-    . "and e.enabled = 'Y' " . $whereUsers . $orderByUsers
-);
 
+// Redirect to user in entities
+$query = "select u.user_id, u.firstname, u.lastname,e.entity_id,  e.entity_label "
+	. "FROM " . USERS_TABLE . " u, " . ENT_ENTITIES . " e, "
+	. ENT_USERS_ENTITIES . " ue WHERE u.status <> 'DEL' and u.enabled = 'Y' "
+	. "and  e.entity_id = ue.entity_id and u.user_id = ue.user_id "
+	. "and e.enabled = 'Y' ". $whereUsers;
+if($redirect_groupbasket) {
+	$query .= " and e.entity_id in (" . $redirect_groupbasket['users_entities'] . ") ";
+}
+$query .= $orderByUsers;
+$db->query($query);
 $i = 0;
 while ($line = $db->fetch_object()) {
-    array_push(
-        $users,
-        array(
-        	"ID" => $db->show_string($line->user_id),
-        	"PRENOM" => $db->show_string($line->firstname),
-        	"NOM" => $db->show_string($line->lastname),
-        	"DEP_ID" => $db->show_string($line->entity_id),
-        	"DEP" => $db->show_string($line->entity_label)
-        )
-    );
+	array_push(
+		$users,
+		array(
+			"ID" => $db->show_string($line->user_id),
+			"PRENOM" => $db->show_string($line->firstname),
+			"NOM" => $db->show_string($line->lastname),
+			"DEP_ID" => $db->show_string($line->entity_id),
+			"DEP" => $db->show_string($line->entity_label)
+		)
+	);
 }
 
-if ($whereEntitiesUsers == '') {
-    $db->query(
-    	"select e.entity_id,  e.entity_label FROM  " . ENT_ENTITIES . " e "
-        . "WHERE e.enabled = 'Y' " . $whereEntities . $orderByEntities
-    );
-} else {
-    $db->query(
-    	"select e.entity_id,  e.entity_label FROM " . USERS_TABLE . " u, "
-        . ENT_ENTITIES . " e, " . ENT_USERS_ENTITIES . " ue WHERE"
-        . " u.status <> 'DEL' and u.enabled = 'Y' and "
-        . " e.entity_id = ue.entity_id and u.user_id = ue.user_id "
-        . "and e.enabled = 'Y' " . $whereEntitiesUsers . $orderByUsers
-    );
+
+// Redirect to entities
+$query = "select e.entity_id,  e.entity_label FROM " . USERS_TABLE . " u, "
+			. ENT_ENTITIES . " e, " . ENT_USERS_ENTITIES . " ue WHERE"
+			. " u.status <> 'DEL' and u.enabled = 'Y' and "
+			. " e.entity_id = ue.entity_id and u.user_id = ue.user_id "
+			. "and e.enabled = 'Y' " . $whereEntitiesUsers;
+if($redirect_groupbasket) {
+	$query .= " and e.entity_id in (" . $redirect_groupbasket['entities'] . ") ";
 }
+$query .= $orderByUsers;
+$db->query($query);
 $i = 0;
 while ($line = $db->fetch_object()) {
-    array_push(
-        $entities,
-        array(
-        	"ID"  => $db->show_string($line->entity_id),
-        	"DEP" => $db->show_string($line->entity_label),
-        )
-    );
+	array_push(
+		$entities,
+		array(
+			"ID"  => $db->show_string($line->entity_id),
+			"DEP" => $db->show_string($line->entity_label),
+		)
+	);
 }
+
+
 $origin = $_REQUEST['origin'];
 $id = '';
 $desc = '';
@@ -373,7 +389,8 @@ $link = $_SESSION['config']['businessappurl'] . "index.php?display=true"
         <br/></br>
         <div align="center">
         <h2 class="tit"><?php
-echo _SEARCH_DIFF_LIST
+echo _SEARCH_DIFF_LIST;
+//echo "<pre>Redirect groupbasket for $basket_id = " . print_r($redirect_groupbasket,true). "</pre>";
 ?></h2>
   <form action="#" name="search_diff_list" method="" id="search_diff_list" >
     <input type="hidden" name="display" value="true" />
@@ -663,7 +680,7 @@ if ((isset($_GET['what_users']) && ! empty($_GET['what_users']))
             </thead>
 
             <?php
-    $color = ' class="col"';
+	$color = ' class="col"';
     for ($j = 0; $j < count($entities); $j ++) {
         if ($color == ' class="col"') {
             $color = '';
