@@ -406,6 +406,7 @@ if (!defined('_WELCOME_TITLE')) define( '_WELCOME_TITLE', 'Accueil');
 if (!defined('_HELP')) define( '_HELP', 'Aide');
 if (!defined('_SEARCH_ADV_SHORT')) define( '_SEARCH_ADV_SHORT', 'Recherche Avanc&eacute;e');
 if (!defined('_SEARCH_SCOPE')) define( '_SEARCH_SCOPE', 'Port&eacute;e de la recherche');
+if (!defined('_SEARCH_SCOPE_HELP')) define( '_SEARCH_SCOPE_HELP', 'Etend la recherche aux corbeilles; autorise les actions si une corbeille particuli&egrave;re est s&eacute;lectionn&eacute;e');
 if (!defined('_RESULTS')) define( '_RESULTS', 'R&eacute;sultats');
 if (!defined('_USERS_LIST_SHORT')) define( '_USERS_LIST_SHORT', 'Liste utilisateurs');
 if (!defined('_MODELS_LIST_SHORT')) define( '_MODELS_LIST_SHORT', 'Liste mod&egrave;les');
