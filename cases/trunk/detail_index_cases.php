@@ -36,6 +36,8 @@ if(isset($_POST['update']) && $_POST['update'] == true)
     $update_field = array();
     $update_field['case_label'] = $_POST['case_label'];
     $update_field['case_description'] = $_POST['case_description'];
+	$update_field['case_description'] = str_replace("\n"," ",$update_field['case_description']);
+	$update_field['case_description'] = str_replace("\r","",$update_field['case_description']);
 
     $cases->update_case($update_id, $update_field);
 }

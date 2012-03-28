@@ -29,6 +29,8 @@ if (($core_tools->test_service('join_res_case', 'cases', false) == 1) || ($core_
 {
 	$case_label = $db->protect_string_db($_POST['case_label']);
 	$case_description = $db->protect_string_db($_POST['case_description']);
+	$case_description = str_replace("\n"," ",$case_description);
+	$case_description = str_replace("\r","",$case_description);
 	$actual_res_id = $db->protect_string_db($_POST['searched_value']);
 	if($case_label <> '' && $actual_res_id <> '')
 	{
