@@ -234,7 +234,9 @@ if(isset($_SESSION['auth_dep']['bask_chosen_status']) && !empty($_SESSION['auth_
 	$search = true;
 }
 
-$where_concat = $_SESSION['searching']['where_request'] . $where_concat;
+if(isset($_REQUEST['origin']) && $_REQUEST['origin'] == 'searching') {
+	$where_concat = $_SESSION['searching']['where_request'] . ' ' . $where_concat;
+}
 
 if(($_REQUEST['template']== 'group_case_for_basket') && ($core_tools->is_module_loaded('cases')))
 {
@@ -546,12 +548,39 @@ if(count($tab) > 0)
 	$_SESSION['origin'] = 'basket';
 	$_SESSION['collection_id_choice'] = $_SESSION['current_basket']['coll_id'];
 	$details = 'details&dir=indexing_searching';
-	$param_list = array('values' => $tab, 'title' => $title, 'key' => 'res_id', 'page_name' => 'view_baskets&module=basket&baskets='.$_SESSION['current_basket']['id'].'&entity_id='.$_SESSION['auth_dep']['bask_chosen_entity'].'&isViewed='.$_SESSION['auth_dep']['bask_chosen_viewed'].'&category_id='.$_SESSION['auth_dep']['bask_chosen_category'].'&status_id='.$_SESSION['auth_dep']['bask_chosen_status'].'&contact_id='.$_SESSION['auth_dep']['bask_chosen_contact'].'&order_field='.$order_field.'&order='.$order,
-	'what' => 'res_id', 'detail_destination' =>$details, 'details_page' => '', 'view_doc' => true,  'bool_details' => true, 'bool_order' => true,
-	'bool_frame' => false, 'module' => '', 'css' => 'listing spec',
-	'hidden_fields' => '<input type="hidden" name="module" id="module" value="basket" /><input type="hidden" name="table" id="table" value="'.$_SESSION['current_basket']['table'].'"/>
-	<input type="hidden" name="coll_id" id="coll_id" value="'.$_SESSION['current_basket']['coll_id'].'"/>', 'open_details_popup' => false, 'do_actions_arr' => $do_actions_arr, 'template' => true,
-	'template_list'=> $template_list, 'actual_template'=>$template_to_use, 'bool_export'=>true , 'mode_string' => true);
+	$param_list = array(
+		'values' => $tab, 
+		'title' => $title, 
+		'key' => 'res_id', 
+		'page_name' => 'view_baskets&module=basket&baskets='.$_SESSION['current_basket']['id']
+			. '&origin=' . $_REQUEST['origin']
+			.'&entity_id='.$_SESSION['auth_dep']['bask_chosen_entity']
+			.'&isViewed='.$_SESSION['auth_dep']['bask_chosen_viewed']
+			.'&category_id='.$_SESSION['auth_dep']['bask_chosen_category']
+			.'&status_id='.$_SESSION['auth_dep']['bask_chosen_status']
+			.'&contact_id='.$_SESSION['auth_dep']['bask_chosen_contact']
+			.'&order_field='.$order_field
+			.'&order='.$order,
+		'what' => 'res_id', 
+		'detail_destination' =>$details, 
+		'details_page' => '', 
+		'view_doc' => true,  
+		'bool_details' => true, 
+		'bool_order' => true,
+		'bool_frame' => false, 
+		'module' => '', 
+		'css' => 'listing spec',
+		'hidden_fields' => '<input type="hidden" name="module" id="module" value="basket" />
+			<input type="hidden" name="table" id="table" value="'.$_SESSION['current_basket']['table'].'"/>
+			<input type="hidden" name="coll_id" id="coll_id" value="'.$_SESSION['current_basket']['coll_id'].'"/>', 
+		'open_details_popup' => false, 
+		'do_actions_arr' => $do_actions_arr, 
+		'template' => true,
+		'template_list'=> $template_list, 
+		'actual_template'=>$template_to_use, 
+		'bool_export'=>true , 
+		'mode_string' => true);
+		
 	echo $bask->basket_list_doc($param_list, $_SESSION['current_basket']['actions'], _CLICK_LINE_TO_PROCESS);
 }
 ?>
