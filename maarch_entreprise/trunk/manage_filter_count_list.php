@@ -233,6 +233,9 @@ if(isset($_SESSION['auth_dep']['bask_chosen_status']) && !empty($_SESSION['auth_
 	}
 	$search = true;
 }
+
+$where_concat = $_SESSION['searching']['where_request'] . $where_concat;
+
 if(($_REQUEST['template']== 'group_case_for_basket') && ($core_tools->is_module_loaded('cases')))
 {
 	unset($select);
