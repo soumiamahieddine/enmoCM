@@ -866,7 +866,7 @@ if (isset($_REQUEST['specific_case'])
 }
 if(!empty($_REQUEST['baskets_clause']) && $_REQUEST['baskets_clause'] != 'false' && $_REQUEST['baskets_clause'] != 'true') {
 	?>
-	<script  type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?page=view_baskets&module=basket&baskets='.$_REQUEST['baskets_clause'];?>';</script>
+	<script  type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl']."index.php?page=view_baskets&module=basket&baskets=".$_REQUEST['baskets_clause']."&origin=searching";?>';</script>
 	<?php
 	exit();
 }
