@@ -103,9 +103,11 @@ elseif( isset($_SESSION['auth_dep']['bask_chosen_contact'] ) && $_SESSION['auth_
 	$contact_type = substr($contactTmp, 0, $find1);
 	$contact_id = substr($contactTmp, $find2, strlen($contactTmp));
 }
+
 $where = trim($_SESSION['current_basket']['clause']);
 $where = str_replace("and status <> 'VAL'", " ", $where);
 $where_concat = $where;
+
 if(isset($_SESSION['auth_dep']['bask_chosen_entity']) && !empty($_SESSION['auth_dep']['bask_chosen_entity']))
 {
 	if(!empty($where))
@@ -190,6 +192,9 @@ if(isset($_SESSION['auth_dep']['bask_chosen_status']) && !empty($_SESSION['auth_
 	}
 	$search = true;
 }
+
+$where_concat = $_SESSION['searching']['where_request'] . $where_concat;
+
 if(($_REQUEST['template']== 'group_case_for_basket') && ($core_tools->is_module_loaded('cases')))
 {
     unset($select);
@@ -202,7 +207,7 @@ if(($_REQUEST['template']== 'group_case_for_basket') && ($core_tools->is_module_
 }
 else
 {
-    $tab=$request->select($select, $where_concat, $orderstr, $_SESSION['config']['databasetype'], $_SESSION['config']['databasesearchlimit'], false, "", "", "", false, false, 'distinct');
+	$tab=$request->select($select, $where_concat, $orderstr, $_SESSION['config']['databasetype'], $_SESSION['config']['databasesearchlimit'], false, "", "", "", false, false, 'distinct');
 }
 
 //$request->show();
