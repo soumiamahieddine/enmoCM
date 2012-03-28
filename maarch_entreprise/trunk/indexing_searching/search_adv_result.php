@@ -683,27 +683,7 @@ if (count($_REQUEST['meta']) > 0) {
             {
                 $where_request .= " category_id = '".$func->protect_string_db($_REQUEST['category'])."' AND ";
                 $json_txt .= "'category' : ['".addslashes($_REQUEST['category'])."'],";
-            } elseif (isset($_REQUEST['baskets_clause'])
-                && $tab_id_fields[$j] == 'baskets_clause_true'
-                && $_REQUEST['baskets_clause'] == "true"
-            ) {
-                for ($ind_bask = 0; $ind_bask < count($_SESSION['user']['baskets']); $ind_bask++)
-                {
-                    if (isset($_SESSION['user']['baskets'][$ind_bask]['clause']) && trim($_SESSION['user']['baskets'][$ind_bask]['clause']) <> '')
-                    {
-                        $_SESSION['searching']['comp_query'] .= ' or ('.$_SESSION['user']['baskets'][$ind_bask]['clause'].')';
-                    }
-                }
-                $_SESSION['searching']['comp_query'] = preg_replace('/^ or/', '', $_SESSION['searching']['comp_query']);
-                $baskets_clause = ($_REQUEST['baskets_clause']);
-                $json_txt .= " 'baskets_clause_true' : ['true'],";
-            }
-
-            elseif ( $tab_id_fields[$j] == 'baskets_clause_false'  && $_REQUEST['baskets_clause'] == "false" )
-            {
-                $baskets_clause  = "false";
-                $json_txt .= "'baskets_clause_false' : ['false'],";
-            }
+            } 
             // ADMISSION DATE : FROM
             elseif ($tab_id_fields[$j] == 'admission_date_from' && !empty($_REQUEST['admission_date_from']))
             {
@@ -741,7 +721,6 @@ if (count($_REQUEST['meta']) > 0) {
                     {
                         $where_request .= " (".$req->extract_date("admission_date")." <= '".$func->format_date_db($_REQUEST['admission_date_to'])."') and ";
                     }
-
                     $json_txt .= " 'admission_date_to' : ['".trim($_REQUEST['admission_date_to'])."'],";
                 }
             }
@@ -782,7 +761,6 @@ if (count($_REQUEST['meta']) > 0) {
                     {
                         $where_request .= " (".$req->extract_date("doc_date")." <= '".$func->format_date_db($_REQUEST['doc_date_to'])."') and ";
                     }
-
                     $json_txt .= " 'doc_date_to' : ['".trim($_REQUEST['doc_date_to'])."'],";
                 }
             }
@@ -805,6 +783,37 @@ if (count($_REQUEST['meta']) > 0) {
                     $where_request .= " (exp_contact_id = '".$contact_id."' or dest_contact_id = '".$contact_id."') and ";
                 }
             }
+			// SEARCH IN BASKETS
+			else if ($tab_id_fields[$j] == 'baskets_clause' && !empty($_REQUEST['baskets_clause'])) {
+				//$func->show_array($_REQUEST);exit;
+				switch($_REQUEST['baskets_clause']) {
+				case 'false':
+					$baskets_clause = "false";
+                    $json_txt .= "'baskets_clause' : ['false'],";
+					break;
+					
+				case 'true':
+					for($ind_bask = 0; $ind_bask < count($_SESSION['user']['baskets']); $ind_bask++) {
+						if(isset($_SESSION['user']['baskets'][$ind_bask]['clause']) && trim($_SESSION['user']['baskets'][$ind_bask]['clause']) <> '') {
+							$_SESSION['searching']['comp_query'] .= ' or ('.$_SESSION['user']['baskets'][$ind_bask]['clause'].')';
+						}
+					}
+					$_SESSION['searching']['comp_query'] = preg_replace('/^ or/', '', $_SESSION['searching']['comp_query']);
+					$baskets_clause = ($_REQUEST['baskets_clause']);
+					$json_txt .= " 'baskets_clause' : ['true'],";
+					break;
+				
+				default:
+					
+					for($ind_bask = 0; $ind_bask < count($_SESSION['user']['baskets']); $ind_bask++) {
+						if($_SESSION['user']['baskets'][$ind_bask]['id'] == $_REQUEST['baskets_clause']) {
+							if(isset($_SESSION['user']['baskets'][$ind_bask]['clause']) && trim($_SESSION['user']['baskets'][$ind_bask]['clause']) <> '') {
+								$where_request .= ' ' . $_SESSION['user']['baskets'][$ind_bask]['clause'] . ' and ' ;
+							} 
+						}
+					}
+				}
+			}
             else  // opt indexes check
             {
                 //echo $tab_id_fields[$j].' : '.$_REQUEST[$tab_id_fields[$j]].'<br/>';
@@ -855,7 +864,12 @@ if (isset($_REQUEST['specific_case'])
     <?php
     exit();
 }
-
+if(!empty($_REQUEST['baskets_clause']) && $_REQUEST['baskets_clause'] != 'false' && $_REQUEST['baskets_clause'] != 'true') {
+	?>
+	<script  type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?page=view_baskets&module=basket&baskets='.$_REQUEST['baskets_clause'];?>';</script>
+	<?php
+	exit();
+}
 if (empty($_SESSION['error_search'])) {
     //specific string for search_adv cases
     $extend_link_case = "";
