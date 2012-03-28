@@ -1188,7 +1188,7 @@ function process_category_check($catId, $values)
                     . " " . _WRONG_FORMAT . ".<br/>" . _USE_AUTOCOMPLETION;
                 return false;
             } else if ($contactType == 'internal'
-                && preg_match('/\((\s|\d|\h|\w)+\)$/i', $contact) == 0
+                && preg_match('/\((.|\s|\d|\h|\w)+\)$/i', $contact) == 0
             ) {
                 $_SESSION['action_error'] = $_ENV['categories'][$catId]['other_cases']['contact']['label']
                     . " " . _WRONG_FORMAT . ".<br/>" . _USE_AUTOCOMPLETION;

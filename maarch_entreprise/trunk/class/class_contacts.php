@@ -142,7 +142,7 @@ class contacts extends dbquery
         }
 
         if (isset($_REQUEST['owner']) && $_REQUEST['owner'] <> '') {
-            if (preg_match('/\((\s|\d|\h|\w)+\)$/i', $_REQUEST['owner']) == 0) {
+            if (preg_match('/\((.|\s|\d|\h|\w)+\)$/i', $_REQUEST['owner']) == 0) {
                 $_SESSION['error'] = _OWNER . ' ' . _WRONG_FORMAT . '.<br/>'
                                    . _USE_AUTOCOMPLETION;
             } else {

@@ -980,7 +980,7 @@ function process_category_check($cat_id, $values)
                 return false;
             }
             //elseif($contact_type == 'internal' && preg_match('/\([A-Za-Z0-9-_ ]+\)$/', $contact) == 0)
-            elseif($contact_type == 'internal' && preg_match('/\((\s|\d|\h|\w)+\)$/i', $contact) == 0)
+            elseif($contact_type == 'internal' && preg_match('/\((.|\s|\d|\h|\w)+\)$/i', $contact) == 0)
             {
                 $_SESSION['action_error'] = $_ENV['categories'][$cat_id]['other_cases']['contact']['label']." "._WRONG_FORMAT.".<br/>"._USE_AUTOCOMPLETION;
                 return false;
