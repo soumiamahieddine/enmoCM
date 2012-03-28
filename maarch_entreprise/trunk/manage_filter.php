@@ -192,8 +192,9 @@ if(isset($_SESSION['auth_dep']['bask_chosen_status']) && !empty($_SESSION['auth_
 	}
 	$search = true;
 }
-
-$where_concat = $_SESSION['searching']['where_request'] . $where_concat;
+if(isset($_REQUEST['origin']) && $_REQUEST['origin'] == 'searching') {
+	$where_concat = $_SESSION['searching']['where_request'] . ' ' . $where_concat;
+}
 
 if(($_REQUEST['template']== 'group_case_for_basket') && ($core_tools->is_module_loaded('cases')))
 {
@@ -479,11 +480,14 @@ if(count($tab) > 0)
 		'values' => $tab,
 		'title' => $title,
 		'key' => 'res_id',
-		'page_name' => 'view_baskets&module=basket&baskets='
-	        . $_SESSION['current_basket']['id'] . '&entity_id='
-	        . $chosenEntity . '&category_id=' . $chosenCat . '&status_id='
-	        . $chosenStatus . '&contact_id=' . $chosenContact . '&order_field='
-	        . $order_field . '&order=' . $order,
+		'page_name' => 'view_baskets&module=basket&baskets='. $_SESSION['current_basket']['id'] 
+			. '&origin=' . $_REQUEST['origin']
+			. '&entity_id=' . $chosenEntity 
+			. '&category_id=' . $chosenCat 
+			. '&status_id=' . $chosenStatus 
+			. '&contact_id=' . $chosenContact 
+			. '&order_field=' . $order_field 
+			. '&order=' . $order,
 		'what' => 'res_id',
 		'detail_destination' => $details,
 		'details_page' => '',
