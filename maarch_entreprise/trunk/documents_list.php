@@ -82,7 +82,9 @@ $orderstr = $list->define_order($order, $order_field);
 $bask->connect();
 $do_actions_arr = array();
 
-$where = $_SESSION['searching']['where_request'] . $where;
+if(isset($_REQUEST['origin']) && $_REQUEST['origin'] == 'searching') {
+	$where = $_SESSION['searching']['where_request'] . ' '. $where;
+}
 
 $tab=$request->select($select,$where,$orderstr,$_SESSION['config']['databasetype'], '1000', false, '', '', '', false);
 //$request->show();
@@ -309,7 +311,7 @@ $param_list = array(
 	'values' => $tab,
 	'title' => $title,
 	'key' => 'res_id',
-	'page_name' => 'view_baskets&module=basket&baskets=' . $_SESSION['current_basket']['id'],
+	'page_name' => 'view_baskets&module=basket&baskets=' . $_SESSION['current_basket']['id'].'&origin='.$_REQUEST['origin'],
 	'what' => 'res_id',
 	'detail_destination' => $details,
 	'details_page' => '',
