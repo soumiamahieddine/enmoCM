@@ -818,7 +818,7 @@ function displayModal(url, id_mod, height, width, mode_frm )
  * @param width String Modal width in px
  * @param mode_frm String Modal mode : fullscreen or ''
  */
- function createModal(txt, id_mod,height, width, mode_frm){
+function createModal(txt, id_mod,height, width, mode_frm){
     if(height == undefined || height=='')
     {
         height = '100px';
@@ -847,31 +847,23 @@ function displayModal(url, id_mod, height, width, mode_frm )
 
     var layer_height = $('container').clientHeight;
     
-    //lgi : à quoi cela sert ?
-    /*if(layer_height < $('container').scrollHeight)
-    {
-        layer_height = 5 * layer_height;
-    }
-    else if(layer_height = $('container').scrollHeight)
-    {
-        layer_height = 2 * layer_height;
-    }*/
-    //lgi
+    // lgi
     var layer_width = document.getElementsByTagName('html')[0].offsetWidth - 5;
-    var layer = new Element('div', {'id':id_layer, 'class' : 'lb1-layer', 'style' : "display:block;filter:alpha(opacity=70);opacity:.70;z-index:"+get_z_indexes()['layer']+';width :'+ (layer_width)+"px;height:"+layer_height+'px;'});
+    var content_height = Math.round(height.replace('px', '') / 2);
+    var layer = new Element('div', {'id':id_layer, 'class' : 'lb1-layer', 'style' : "text-align: center;width:1px; height:"+layer_height+"px;display:block;z-index:"+get_z_indexes()['layer']+';position : absolute;'});
 
 
     if( mode_frm == 'fullscreen')
     {
-        var fenetre = new Element('div', {'id' :id_mod,'class' : 'modal', 'style' :'top:0px;left:0px;width:'+width+';height:'+height+";z-index:"+get_z_indexes()['modal']+";position:absolute;" });
+        var fenetre = new Element('div', {'id' :id_mod,'class' : 'modal', 'style' :'top:0px;left:0px;width:'+width+';height:'+height+";z-index:"+get_z_indexes()['modal']+";position:relative;" });
     }
     else
     {
-        var fenetre = new Element('div', {'id' :id_mod,'class' : 'modal', 'style' :'top:0px;left:0px;'+'width:'+width+';height:'+height+";z-index:"+get_z_indexes()['modal']+";margin-top:0px;margin-left:0px;position:absolute;" });
+        var fenetre = new Element('div', {'id' :id_mod,'class' : 'modal', 'style' :'top: 50%;margin-top: -'+content_height+'px;margin-left: 30px; margin-right: auto;'+'width:'+width+";height:"+height+";z-index:"+get_z_indexes()['modal']+";vertical-align: middle;position:relative;" });
     }
 
     Element.insert(document.body,layer);
-    Element.insert(document.body,fenetre);
+    Element.insert(layer,fenetre);
 
     if( mode_frm == 'fullscreen')
     {
@@ -884,6 +876,7 @@ function displayModal(url, id_mod, height, width, mode_frm )
     Event.observe(layer, 'DOMMouseScroll', function(event){Event.stop(event);}.bindAsEventListener(), false);
     $(id_mod).focus();
 }
+
 
 /**
  * Destroy a modal window
@@ -904,7 +897,7 @@ function destroyModal(id_mod){
     {
         isAlreadyClick = false;
     }
-    document.getElementsByTagName('body')[0].removeChild($(id_mod));
+    //document.getElementsByTagName('body')[0].removeChild($(id_mod));
     document.getElementsByTagName('body')[0].removeChild($(id_layer));
 }
 
