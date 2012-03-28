@@ -433,7 +433,7 @@ if (empty($_SESSION['auth_dep']['bask_chosen_entity'])
     }
     ?>';
 	new Ajax.Request(
-        '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=manage_filter',
+        '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=manage_filter&origin=<?php echo $_REQUEST['origin'];?>',
 		{
 		  method: 'post',
 		  parameters: {
@@ -459,7 +459,7 @@ if (empty($_SESSION['auth_dep']['bask_chosen_entity'])
 		<?php echo _FILTER_BY;?> :
 		<select name="entity" id="entity" onchange="change_list_entity(this.options[this.selectedIndex].value, '<?php
 echo $_SESSION['config']['businessappurl'];
-?>index.php?display=true&page=manage_filter');">
+?>index.php?display=true&page=manage_filter&origin=<?php echo $_REQUEST['origin']?>');">
 			<option value="none"><?php echo _CHOOSE_ENTITY;?></option>
 			<?php
 for ($i = 0; $i < count($entities); $i ++) {
@@ -482,7 +482,7 @@ for ($i = 0; $i < count($entities); $i ++) {
 		</select>
 		<select name="category" id="category" onchange="change_list_category(this.options[this.selectedIndex].value, '<?php
 echo $_SESSION['config']['businessappurl'];
-?>index.php?display=true&page=manage_filter');">
+?>index.php?display=true&page=manage_filter&origin=<?php echo $_REQUEST['origin']?>');">
 			<option value="none"><?php echo _CHOOSE_CATEGORY;?></option>
 			<?php
 foreach (array_keys($_SESSION['mail_categories']) as $value) {
@@ -503,7 +503,7 @@ if ($_SESSION['current_basket']['id'] == "DepartmentBasket") {
     ?>
 	<select name="status" id="status" onchange="change_list_status(this.options[this.selectedIndex].value, '<?php
 	echo $_SESSION['config']['businessappurl'];
-	?>index.php?display=true&page=manage_filter');">
+	?>index.php?display=true&page=manage_filter&origin=<?php echo $_REQUEST['origin']?>');">
 		<option value="none"><?php echo _CHOOSE_STATUS;?></option>
 		<?php
 	for ($cptStatus = 0; $cptStatus < count($statusArr); $cptStatus ++) {
@@ -532,9 +532,9 @@ if (empty($_SESSION['auth_dep']['bask_chosen_contact'])) {
 }
 ?> size="40" onKeyPress="if(event.keyCode == 9)change_contact(this.value, '<?php
 echo $_SESSION['config']['businessappurl'];
-?>index.php?display=true&page=manage_filter');" onBlur="change_contact(this.value, '<?php
+?>index.php?display=true&page=manage_filter&origin=<?php echo $_REQUEST['origin']?>');" onBlur="change_contact(this.value, '<?php
 echo $_SESSION['config']['businessappurl'];
-?>index.php?display=true&page=manage_filter');"  />
+?>index.php?display=true&page=manage_filter&origin=<?php echo $_REQUEST['origin']?>');"  />
     <div id="contactListByName" class="autocomplete"></div>
 	<script type="text/javascript">
 		initList('contact_id', 'contactListByName', '<?php
@@ -546,7 +546,7 @@ echo _CLEAR_SEARCH;
 ?>" onclick="javascript:window.location.href='<?php
 echo $_SESSION['config']['businessappurl'] . "index.php?page=view_baskets"
     . "&module=basket&baskets=" . $_SESSION['current_basket']['id']
-    . "&clear=ok";
+    . "&origin=".$_REQUEST['origin']."&clear=ok";
 ?>';">
 </form>
 <?php
@@ -559,7 +559,7 @@ if (isset($_SESSION['auth_dep']['bask_chosen_entity'])
 	echo $_SESSION['auth_dep']['bask_chosen_entity'];
 	?>', '<?php
 	echo $_SESSION['config']['businessappurl'];
-	?>index.php?display=true&page=manage_filter');
+	?>index.php?display=true&page=manage_filter&origin=<?php echo $_REQUEST['origin']?>');
 	</script>
 	<?php
 }
@@ -572,7 +572,7 @@ if (isset($_SESSION['auth_dep']['bask_chosen_category'])
 	echo $_SESSION['auth_dep']['bask_chosen_category'];
 	?>', '<?php
 	echo $_SESSION['config']['businessappurl'];
-	?>index.php?display=true&page=manage_filter');
+	?>index.php?display=true&page=manage_filter&origin=<?php echo $_REQUEST['origin']?>');
 	</script>
 	<?php
 }
@@ -585,7 +585,7 @@ if (isset($_SESSION['auth_dep']['bask_chosen_status'])
 	echo $_SESSION['auth_dep']['bask_chosen_status'];
 	?>', '<?php
 	echo $_SESSION['config']['businessappurl'];
-	?>index.php?display=true&page=manage_filter');
+	?>index.php?display=true&page=manage_filter&origin=<?php echo $_REQUEST['origin']?>');
 	</script>
 	<?php
 }
@@ -598,7 +598,7 @@ if (isset($_SESSION['auth_dep']['bask_chosen_contact'])
 	echo $_SESSION['auth_dep']['bask_chosen_contact'];
 	?>', '<?php
 	echo $_SESSION['config']['businessappurl'];
-	?>index.php?display=true&page=manage_filter');
+	?>index.php?display=true&page=manage_filter&origin=<?php echo $_REQUEST['origin']?>');
 	</script>
 	<?php
 }
