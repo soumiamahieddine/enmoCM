@@ -434,7 +434,7 @@ if(isset($_REQUEST['nodetails']))
 <?php
             if($core_tools->is_module_loaded("basket") == true) { ?>
              <tr>
-                <td colspan="2" ><h2><?php echo _SEARCH_PERIMETER; ?></h2></td>
+                <td colspan="2" ><h2><?php echo _SEARCH_SCOPE; ?></h2></td>
             </tr>
             <tr>
                 <td>
@@ -452,7 +452,7 @@ if(isset($_REQUEST['nodetails']))
 									<?php } ?>
 								</select>
 							</td>
-                            <td><em><?php echo _SEARCH_IN_BASKETS_HELP; ?></em></td>
+                            <td><em><?php echo _SEARCH_SCOPE_HELP; ?></em></td>
                             <td>&nbsp;</td>
                         </tr>
                     </table>
