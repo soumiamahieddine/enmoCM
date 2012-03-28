@@ -383,7 +383,7 @@ array_push($arr_status , array('id' => 'late', 'label' => _LATE));
 				var startVal = '<?php echo $_REQUEST['start'];?>';
 				var orderVal = '<?php echo $_REQUEST['order'];?>';
 				var order_fieldVal = '<?php echo $_REQUEST['order_field'];?>';
-				new Ajax.Request('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=manage_filter_count_list',
+				new Ajax.Request('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=manage_filter_count_list&origin=<?php echo $_REQUEST['origin']?>',
 				{
 					method:'post',
 					parameters: {start : startVal, order : orderVal, order_field : order_fieldVal, template : templateVal},
@@ -403,7 +403,7 @@ array_push($arr_status , array('id' => 'late', 'label' => _LATE));
 	?>
 	<form name="filter_by_entity" action="#" method="post">
 		<?php echo _FILTER_BY;?> :
-		<select name="entity" id="entity" onchange="change_list_entity(this.options[this.selectedIndex].value, '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=manage_filter_count_list');">
+		<select name="entity" id="entity" onchange="change_list_entity(this.options[this.selectedIndex].value, '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=manage_filter_count_list&origin=<?php echo $_REQUEST['origin']?>');">
 			<option value="none"><?php echo _CHOOSE_ENTITY;?></option>
 			<?php
 			for($i=0;$i<count($entities);$i++)
@@ -414,7 +414,7 @@ array_push($arr_status , array('id' => 'late', 'label' => _LATE));
 			}
 			?>
 		</select>
-		<select name="category" id="category" onchange="change_list_category(this.options[this.selectedIndex].value, '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=manage_filter_count_list');">
+		<select name="category" id="category" onchange="change_list_category(this.options[this.selectedIndex].value, '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=manage_filter_count_list&origin=<?php echo $_REQUEST['origin']?>');">
 			<option value="none"><?php echo _CHOOSE_CATEGORY;?></option>
 			<?php
 			foreach(array_keys($_SESSION['mail_categories']) as $value)
@@ -429,7 +429,7 @@ array_push($arr_status , array('id' => 'late', 'label' => _LATE));
 		if($_SESSION['current_basket']['id'] == "DepartmentBasket")
 		{
 			?>
-			<select name="status" id="status" onchange="change_list_status(this.options[this.selectedIndex].value, '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=manage_filter_count_list');">
+			<select name="status" id="status" onchange="change_list_status(this.options[this.selectedIndex].value, '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=manage_filter_count_list&origin=<?php echo $_REQUEST['origin']?>');">
 				<option value="none"><?php echo _CHOOSE_STATUS;?></option>
 				<?php
 				for($cptStatus=0;$cptStatus<count($arr_status);$cptStatus++)
@@ -443,7 +443,7 @@ array_push($arr_status , array('id' => 'late', 'label' => _LATE));
 			<?php
 		}
 		?>
-		<select name="isViewed" id="isViewed" onchange="change_list_viewed(this.options[this.selectedIndex].value, '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=manage_filter_count_list');">
+		<select name="isViewed" id="isViewed" onchange="change_list_viewed(this.options[this.selectedIndex].value, '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=manage_filter_count_list&origin=<?php echo $_REQUEST['origin']?>');">
 			<option value="none"><?php echo _VIEWED;?></option>
 			<option value="yes" <?php if($_SESSION['auth_dep']['bask_chosen_viewed'] == "yes"){echo ' selected="selected"';}?>><?php echo _YES;?></option>
 			<option value="no"  <?php if($_SESSION['auth_dep']['bask_chosen_viewed'] == "no" || $_SESSION['auth_dep']['bask_chosen_viewed'] == ""){echo ' selected="selected"';}?>><?php echo _NO;?></option>
@@ -466,7 +466,7 @@ array_push($arr_status , array('id' => 'late', 'label' => _LATE));
 						onfocus="if(this.value=='[<?php echo _CONTACT;?>]'){this.value='';}"
 						<?php
 					}
-					?> size="40" onKeyPress="if(event.keyCode == 9)change_contact(this.value, '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=manage_filter_count_list');" onBlur="change_contact(this.value, '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=manage_filter_count_list');"  />
+					?> size="40" onKeyPress="if(event.keyCode == 9)change_contact(this.value, '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=manage_filter_count_list&origin=<?php echo $_REQUEST['origin']?>');" onBlur="change_contact(this.value, '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=manage_filter_count_list&origin=<?php echo $_REQUEST['origin']?>');"  />
 		<div id="contactListByName" class="autocomplete"></div>
 		<script type="text/javascript">
 			initList('contact_id', 'contactListByName', '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=contact_list_by_name', 'what', '2');
@@ -478,7 +478,7 @@ array_push($arr_status , array('id' => 'late', 'label' => _LATE));
 	{
 		?>
 		<script type="text/javascript">
-			change_list_entity('<?php echo $_SESSION['auth_dep']['bask_chosen_entity'];?>', '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=manage_filter_count_list');
+			change_list_entity('<?php echo $_SESSION['auth_dep']['bask_chosen_entity'];?>', '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=manage_filter_count_list&origin=<?php echo $_REQUEST['origin']?>');
 		</script>
 		<?php
 	}
@@ -486,7 +486,7 @@ array_push($arr_status , array('id' => 'late', 'label' => _LATE));
 	{
 		?>
 		<script type="text/javascript">
-			change_list_category('<?php echo $_SESSION['auth_dep']['bask_chosen_category'];?>', '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=manage_filter_count_list');
+			change_list_category('<?php echo $_SESSION['auth_dep']['bask_chosen_category'];?>', '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=manage_filter_count_list&origin=<?php echo $_REQUEST['origin']?>');
 		</script>
 		<?php
 	}
@@ -494,7 +494,7 @@ array_push($arr_status , array('id' => 'late', 'label' => _LATE));
 	{
 		?>
 		<script type="text/javascript">
-			change_list_status('<?php echo $_SESSION['auth_dep']['bask_chosen_status'];?>', '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=manage_filter_count_list');
+			change_list_status('<?php echo $_SESSION['auth_dep']['bask_chosen_status'];?>', '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=manage_filter_count_list&origin=<?php echo $_REQUEST['origin']?>');
 		</script>
 		<?php
 	}
@@ -502,7 +502,7 @@ array_push($arr_status , array('id' => 'late', 'label' => _LATE));
 	{
 		?>
 		<script type="text/javascript">
-			change_contact('<?php echo $_SESSION['auth_dep']['bask_chosen_contact'];?>', '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=manage_filter_count_list');
+			change_contact('<?php echo $_SESSION['auth_dep']['bask_chosen_contact'];?>', '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=manage_filter_count_list&origin=<?php echo $_REQUEST['origin']?>');
 		</script>
 		<?php
 	}
