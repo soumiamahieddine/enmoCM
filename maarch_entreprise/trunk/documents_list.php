@@ -81,6 +81,9 @@ $list=new list_show();
 $orderstr = $list->define_order($order, $order_field);
 $bask->connect();
 $do_actions_arr = array();
+
+$where = $_SESSION['searching']['where_request'] . $where;
+
 $tab=$request->select($select,$where,$orderstr,$_SESSION['config']['databasetype'], '1000', false, '', '', '', false);
 //$request->show();
 
