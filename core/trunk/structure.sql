@@ -755,6 +755,7 @@ CREATE TABLE baskets
   basket_desc character varying(255) NOT NULL,
   basket_clause text NOT NULL,
   is_generic character varying(6) NOT NULL DEFAULT 'N'::character varying,
+  visible character(1) NOT NULL DEFAULT 'Y'::bpchar,
   enabled character(1) NOT NULL DEFAULT 'Y'::bpchar,
   CONSTRAINT baskets_pkey PRIMARY KEY (coll_id, basket_id)
 )
