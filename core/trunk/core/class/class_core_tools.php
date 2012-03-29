@@ -1531,18 +1531,29 @@ class core_tools extends functions
         {
             ?>
             <div id="debug">
-                <h2 class="tit">Debug Mode</h2>
-                <div class="debugheader">COOKIE</div>
-                    <?php
+				<p>&nbsp;</p>
+				<p>&nbsp;</p>
+				<p>&nbsp;</p>
+                <h1 class="tit">DEBUG MODE</h1>
+                    <h2 class="tit">Cookie</h2>
+					<?php
                     $this->show_array($_COOKIE);
                     ?>
-                    <h2 class="tit">POST</h2>
+                    <h2 class="tit">Session</h2>
+                    <?php
+                    $this->show_array($_SESSION);
+                    ?>
+					<h2 class="tit">Request</h2>
+                    <?php
+                    $this->show_array($_REQUEST);
+                    ?>
+					<h2 class="tit">Post</h2>
                     <?php
                     $this->show_array($_POST);
                     ?>
-                    <h2 class="tit">SESSION</h2>
+					<h2 class="tit">Get</h2>
                     <?php
-                    $this->show_array($_SESSION);
+                    $this->show_array($_GET);
                     ?>
             </div>
             <?php
