@@ -44,7 +44,7 @@ if (!defined('_BASKET_SUSPENSION'))  define('_BASKET_SUSPENSION', 'Suspension de
 if (!defined('_AUTORIZED_BASKET'))  define('_AUTORIZED_BASKET', 'Corbeille autoris&eacute;e');
 if (!defined('_SUSPENDED_BASKET'))  define('_SUSPENDED_BASKET', 'Corbeille suspendue');
 if (!defined('_NO_BASKET_DEFINED_FOR_YOU'))  define('_NO_BASKET_DEFINED_FOR_YOU', 'Aucune corbeille d&eacute;finie pour cet utilisateur');
-
+if (!defined('_BASKET_VISIBLE'))  define('_BASKET_VISIBLE', 'Corbeille visible');
 
 if (!defined('_BASKETS_LIST'))  define('_BASKETS_LIST', 'Liste des corbeilles');
 

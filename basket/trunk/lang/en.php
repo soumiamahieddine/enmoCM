@@ -44,7 +44,7 @@ if (!defined('_BASKET_SUSPENSION')) define('_BASKET_SUSPENSION', 'Disabling bask
 if (!defined('_AUTORIZED_BASKET')) define('_AUTORIZED_BASKET', 'Enabled basket');
 if (!defined('_SUSPENDED_BASKET')) define('_SUSPENDED_BASKET', 'Disabled basket');
 if (!defined('_NO_BASKET_DEFINED_FOR_YOU')) define('_NO_BASKET_DEFINED_FOR_YOU', 'No basket defined for this user');
-
+if (!defined('_BASKET_VISIBLE'))  define('_BASKET_VISIBLE', 'Visible basket');
 
 if (!defined('_BASKETS_LIST')) define('_BASKETS_LIST', 'Basket list');
 
