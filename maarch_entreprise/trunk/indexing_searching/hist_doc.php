@@ -41,7 +41,7 @@ $sec = new security();
 $mode = 'small';
 if(isset($_REQUEST['mode']) && $_REQUEST['mode'] == 'normal')
 {
-	$mode = 'normal';
+    $mode = 'normal';
 }
 ?>
 <body <?php  if($_SESSION['req'] == 'action'){?>id="hist_action_frame"<?php  }else if($mode =='small'){?>id="hist_courrier_frame"<?php  }?>>
@@ -54,38 +54,38 @@ $db_hist2->connect();
 $couleur=0;
 if(isset($_SESSION['collection_id_choice']) && !empty($_SESSION['collection_id_choice']))
 {
-	$table = $sec->retrieve_table_from_coll($_SESSION['collection_id_choice']);
-	$view = $sec->retrieve_view_from_coll_id($_SESSION['collection_id_choice']);
+    $table = $sec->retrieve_table_from_coll($_SESSION['collection_id_choice']);
+    $view = $sec->retrieve_view_from_coll_id($_SESSION['collection_id_choice']);
 }
 else
 {
-	$table = $_SESSION['collections'][0]['table'];
-	$view = $_SESSION['collections'][0]['view'];
+    $table = $_SESSION['collections'][0]['table'];
+    $view = $_SESSION['collections'][0]['view'];
 }
 if(isset($_GET['id']))
 {
-	$s_id = $_GET['id'];
+    $s_id = $_GET['id'];
 }
 else
 {
-	$s_id = "";
+    $s_id = "";
 }
 if((empty($table)|| !$table) && (!empty($view) && $view <> false))
 {
-	$query = "select info, event_date, user_id  from ".$_SESSION['tablename']['history']." WHERE table_name= '".$view."' AND record_id= '".$s_id."' ORDER  BY event_date desc";
+    $query = "select info, event_date, user_id  from ".$_SESSION['tablename']['history']." WHERE table_name= '".$view."' AND record_id= '".$s_id."' ORDER  BY event_date desc";
 }
 elseif((empty($view) || !$view) && (!empty($table)&& $table <> false))
 {
-	$query = "select info, event_date, user_id  from ".$_SESSION['tablename']['history']." WHERE table_name= '".$table."' AND record_id= '".$s_id."' ORDER  BY event_date desc";
+    $query = "select info, event_date, user_id  from ".$_SESSION['tablename']['history']." WHERE table_name= '".$table."' AND record_id= '".$s_id."' ORDER  BY event_date desc";
 }
 elseif(!empty($view) && !empty($table)&& $view <> false && $table <> false)
 {
-	$query = "select info, event_date, user_id  from ".$_SESSION['tablename']['history']." WHERE (table_name= '".$table."' OR table_name = '".$view."') AND record_id= '".$s_id."' ORDER  BY event_date desc";
+    $query = "select info, event_date, user_id  from ".$_SESSION['tablename']['history']." WHERE (table_name= '".$table."' OR table_name = '".$view."') AND record_id= '".$s_id."' ORDER  BY event_date desc";
 }
 $db_hist->query($query);
 //$db_hist->show();
 ?>
-<table cellpadding="0" cellspacing="0" border="0" class="<?php if($mode == 'normal'){echo 'listing spec';}else{echo'listing2';}?>">
+<table cellpadding="0" cellspacing="0" border="0" class="<?php if($mode == 'normal'){echo 'listing spec detailtabricatordebug';}else{echo'listing2';}?>">
     <thead>
         <tr>
             <th><?php  echo _DATE;?></th>
