@@ -77,13 +77,13 @@ if (isset($_REQUEST['notes']) && ! empty($_REQUEST['notes'])) {
 		if (isset($_SESSION['origin']) && $_SESSION['origin'] == "show_folder") {
 			$hist->add(
 			    $table, $identifier, "ADD", 'noteadd', _ADDITION_NOTE . _ON_FOLDER_NUM
-			    . $identifier . ' (' . $id . ')',
+			    . $identifier . ' (' . $id . ') : "' . substr($db->protect_string_db($_REQUEST['notes']), 0, 254) .'"',
 			    $_SESSION['config']['databasetype'], 'notes'
 			);
 		} else {
 			$hist->add(
 			    $view, $identifier, "ADD", 'noteadd',  _ADDITION_NOTE . _ON_DOC_NUM
-			    . $identifier . ' (' . $id . ')',
+			    . $identifier . ' (' . $id . ') : "' . substr($db->protect_string_db($_REQUEST['notes']), 0, 254) .'"',
 			    $_SESSION['config']['databasetype'], 'notes'
 			);
 		}
