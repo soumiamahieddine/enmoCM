@@ -127,7 +127,8 @@ if (count($_SESSION['user']['baskets']) > 0) {
                 <option value=""><?php echo _CHOOSE_BASKET;?></option>
                 <?php
     for ($i = 0; $i < count($_SESSION['user']['baskets']); $i ++) {
-        ?>
+        if($_SESSION['user']['baskets'][$i]['visible'] === 'Y') {
+		?>
         <option value="<?php
         if (isset($_SESSION['user']['baskets'][$i]['id'])) {
             echo $_SESSION['user']['baskets'][$i]['id'];
@@ -139,10 +140,11 @@ if (count($_SESSION['user']['baskets']) > 0) {
             echo 'selected="selected"';
         }
         ?>>
-                        <?php echo $_SESSION['user']['baskets'][$i]['name'];?>
-                      </option>
-                    <?php
-                }
+        <?php echo $_SESSION['user']['baskets'][$i]['name'];?>
+        </option>
+        <?php
+        } 
+	}
                 ?>
             </select>
         </form>
