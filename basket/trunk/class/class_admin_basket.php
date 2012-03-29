@@ -115,6 +115,7 @@ class admin_basket extends dbquery
                     $_SESSION['m_admin']['basket']['name'] = $this->show_string($line->basket_name);
                     $_SESSION['m_admin']['basket']['clause'] = $this->show_string($line->basket_clause);
                     $_SESSION['m_admin']['basket']['is_generic'] = $this->show_string($line->is_generic);
+					$_SESSION['m_admin']['basket']['visible'] = $this->show_string($line->visible);
                     $_SESSION['m_admin']['basket']['coll_id'] = $this->show_string($line->coll_id);
                     if (! isset($_SESSION['m_admin']['load_groupbasket']) || $_SESSION['m_admin']['load_groupbasket'] == true)
                     {
@@ -207,8 +208,13 @@ class admin_basket extends dbquery
                     <label><?php echo _BASKET_VIEW;?> : </label>
                     <textarea  cols="30" rows="4"  name="basketclause" id="basketclause" ><?php echo $_SESSION['m_admin']['basket']['clause']; ?></textarea> <a href="javascript::" onclick="window.open('<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=keywords_help&mode=popup','modify','toolbar=no,status=no,width=500,height=550,left=500,top=300,scrollbars=auto,location=no,menubar=no,resizable=yes');"><img src = "<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_menu_help.gif" alt="<?php echo _HELP_KEYWORDS; ?>" title="<?php echo _HELP_KEYWORDS; ?>" /></a>
                 </p>
+				<p>
+                    <label><?php echo _BASKET_VISIBLE;?> : </label>
+                    <input type='checkbox' name="visible" id="visible" value="Y" <?php if ($_SESSION['m_admin']['basket']['visible'] === 'Y') echo 'checked="checked"'; ?>/> 
+				</p>
+				<p></p>
                 <p class="buttons">
-                    <input type="submit" name="Submit" value="<?php echo _VALIDATE; ?>" class="button" />
+                    &nbsp;<input type="submit" name="Submit" value="<?php echo _VALIDATE; ?>" class="button" />&nbsp;
                     <input type="button" name="cancel" value="<?php echo _CANCEL; ?>" class="button"  onclick="javascript:window.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=basket&amp;module=basket';"/>
                 </p>
             </form>
@@ -254,7 +260,11 @@ class admin_basket extends dbquery
             && count($_SESSION['m_admin']['basket']['groups']) < 1) {
             $this->add_error(_BELONGS_TO_NO_GROUP, "");
         }
-
+		if ( isset($_REQUEST['visible']) && !empty($_REQUEST['visible'])) {
+            $_SESSION['m_admin']['basket']['visible'] = $_REQUEST['visible'];
+        } else {
+			$_SESSION['m_admin']['basket']['visible'] = "N";
+		}
         $_SESSION['m_admin']['basket']['order'] = $_REQUEST['order'];
         $_SESSION['m_admin']['basket']['order_field'] = $_REQUEST['order_field'];
         $_SESSION['m_admin']['basket']['what'] = $_REQUEST['what'];
@@ -275,7 +285,7 @@ class admin_basket extends dbquery
         $order_field = $_SESSION['m_admin']['basket']['order_field'];
         $what = $_SESSION['m_admin']['basket']['what'];
         $start = $_SESSION['m_admin']['basket']['start'];
-
+		//echo '<pre>'.print_r($_REQUEST,true).'</pre>'; echo '<pre>'.print_r($_SESSION['m_admin']['basket'],true).'</pre>'; exit();
         // If error redirection to the form page and shows the error
         if(!empty($_SESSION['error']))
         {
@@ -323,7 +333,15 @@ class admin_basket extends dbquery
                         header("location: ".$_SESSION['config']['businessappurl']."index.php?page=basket_up&id=".$_SESSION['m_admin']['basket']['basketId']."&module=basket");
                         exit();
                     }
-                    $this->query("INSERT INTO ".$_SESSION['tablename']['bask_baskets']." ( coll_id, basket_id, basket_name, basket_desc , basket_clause ) VALUES ( '".$_SESSION['m_admin']['basket']['coll_id']."', '".$_SESSION['m_admin']['basket']['basketId']."', '".$this->protect_string_db($_SESSION['m_admin']['basket']['name'])."', '".$this->protect_string_db($_SESSION['m_admin']['basket']['desc'])."','".$tmp." ')", "no");
+                    $this->query(
+						"INSERT INTO ".$_SESSION['tablename']['bask_baskets']." ( coll_id, basket_id, basket_name, basket_desc , basket_clause, visible ) "
+						."VALUES ( '".$_SESSION['m_admin']['basket']['coll_id']."', '"
+							.$_SESSION['m_admin']['basket']['basketId']."', '"
+							.$this->protect_string_db($_SESSION['m_admin']['basket']['name'])."', '"
+							.$this->protect_string_db($_SESSION['m_admin']['basket']['desc'])."','"
+							.$tmp."', '"
+							.$_SESSION['m_admin']['basket']['visible']."')"
+						, "no");
                     $this->load_db();
 
                     // Log in database if required
@@ -344,13 +362,13 @@ class admin_basket extends dbquery
             // Up Mode
             elseif($mode == "up")
             {
-                $clause = "";
-                $tmp = '';
-                if($_SESSION['m_admin']['basket']['clause'] <> "")
-                {
+                //$clause = "";
+                //$tmp = '';
+                //if($_SESSION['m_admin']['basket']['clause'] <> "")
+                //{
                     $tmp =  $this->protect_string_db($_SESSION['m_admin']['basket']['clause']);
-                    $clause = ", basket_clause = '".$tmp."'";
-                }
+                //    $clause = ", basket_clause = '".$tmp."'";
+                //}
 
                 // Checks the where clause syntax
                 $syntax =  $this->where_test($_SESSION['m_admin']['basket']['clause']);
@@ -361,7 +379,13 @@ class admin_basket extends dbquery
                     exit();
                 }
 
-                $this->query("UPDATE ".$_SESSION['tablename']['bask_baskets']." set basket_name = '".$this->protect_string_db($_SESSION['m_admin']['basket']['name'])."' , coll_id = '".$_SESSION['m_admin']['basket']['coll_id']."', basket_desc = '".$this->protect_string_db($_SESSION['m_admin']['basket']['desc'])."' ".$clause." where basket_id= '".$_SESSION['m_admin']['basket']['basketId']."'");
+                $this->query("UPDATE ".$_SESSION['tablename']['bask_baskets']
+					." set basket_name = '".$this->protect_string_db($_SESSION['m_admin']['basket']['name'])."', "
+					."coll_id = '".$_SESSION['m_admin']['basket']['coll_id']."', "
+					."basket_desc = '".$this->protect_string_db($_SESSION['m_admin']['basket']['desc'])."', "
+					."basket_clause ='". $tmp."', "
+					."visible = '".$_SESSION['m_admin']['basket']['visible']."' "
+					."where basket_id = '".$_SESSION['m_admin']['basket']['basketId']."'");
                 $this->load_db();
 
                 // Log in database if required

@@ -771,7 +771,7 @@ class basket extends dbquery
         $secCtrl = new SecurityControler();
         $this->query(
             "select basket_id, coll_id, basket_name, basket_desc, "
-            . "basket_clause, is_generic from " . BASKET_TABLE
+            . "basket_clause, visible, is_generic from " . BASKET_TABLE
             . " where basket_id = '" . $this->protect_string_db($basketId)
             . "' and enabled = 'Y'"
         );
@@ -785,6 +785,7 @@ class basket extends dbquery
         $tab['desc'] = $this->show_string($res->basket_desc);
         $tab['name'] = $this->show_string($res->basket_name);
         $tab['clause'] = $res->basket_clause;
+		$tab['visible'] = $res->visible;
         $isVirtual = 'N';
         $basketOwner = '';
         $absBasket = false;
@@ -862,7 +863,7 @@ class basket extends dbquery
         $sec = new security();
         $secCtrl = new SecurityControler();
         $this->query(
-        	"select basket_id, coll_id, basket_name, basket_desc, basket_clause"
+        	"select basket_id, coll_id, basket_name, basket_desc, basket_clause, visible"
         	. " from " . BASKET_TABLE . " where basket_id = '" . $basketId
         	. "' and enabled = 'Y'"
         );
@@ -877,7 +878,7 @@ class basket extends dbquery
         $tab['desc'] = $res->basket_desc;
         $tab['name'] = $res->basket_name;
         $tab['clause'] = $res->basket_clause;
-
+		$tab['visible'] = $res->visible;
         $this->query(
         	"select user_abs, is_virtual, basket_owner from " . USER_ABS_TABLE
             . " where basket_id = '" . $basketId . "' and new_user = '"
