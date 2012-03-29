@@ -10,43 +10,43 @@
 * @author  Laurent Giovannoni  <dev@maarch.org>
 *
 
-Parts : 
-	##HEAD< : Begining of the head part
-	##HEAD> : End of the head part
-	
-	##RESULT< : Begining of result list
-	##RESULT> : End fo result list
-	
-Functions : 
-	##load_css|arg1## : load css style - arg1= name of this class
-	##css_line|coll|nonecoll## : load css style for line arg1,arg2 : switch beetwin style on line one or line two
-	##css_line_reload## : reload last css style loaded by css_line
-	##order_link|arg1|arg2## : reload list and change order;  arg1=type; arg2=sort
-	
-	##url_docview## : open view of document; 
-	##url_docdetail## : open detail of document; 
-	##url_download## : download document;
-	
-	##load_img|arg1## : show loaded image; arg1= name of img file
-	
-	##load_value|arg|##: load value in the db; arg1= column's value  identifier
-	
-	
-	
+Parts :
+    ##HEAD< : Begining of the head part
+    ##HEAD> : End of the head part
+
+    ##RESULT< : Begining of result list
+    ##RESULT> : End fo result list
+
+Functions :
+    ##load_css|arg1## : load css style - arg1= name of this class
+    ##css_line|coll|nonecoll## : load css style for line arg1,arg2 : switch beetwin style on line one or line two
+    ##css_line_reload## : reload last css style loaded by css_line
+    ##order_link|arg1|arg2## : reload list and change order;  arg1=type; arg2=sort
+
+    ##url_docview## : open view of document;
+    ##url_docdetail## : open detail of document;
+    ##url_download## : download document;
+
+    ##load_img|arg1## : show loaded image; arg1= name of img file
+
+    ##load_value|arg|##: load value in the db; arg1= column's value  identifier
+
+
+
 Mods :
 
-	##func_bool_radio_form## : Activate bool_radio_form in class_list_show.php
-	##func_bool_check_form## : Activate bool_check_form in class_list_show.php
-	##func_bool_view_doc## : Activate func to view documents
-	##func_bool_detail_doc## : Activate func to view documents detail's page
-	##func_include_by_module|arg1## : Include template from specific module (arg1 : module id)
-	
-	
-Defines :  
-	_NAME_OF_LANG_INSTANCE : u se constant define in lang.php
-	
-	
-	 
+    ##func_bool_radio_form## : Activate bool_radio_form in class_list_show.php
+    ##func_bool_check_form## : Activate bool_check_form in class_list_show.php
+    ##func_bool_view_doc## : Activate func to view documents
+    ##func_bool_detail_doc## : Activate func to view documents detail's page
+    ##func_include_by_module|arg1## : Include template from specific module (arg1 : module id)
+
+
+Defines :
+    _NAME_OF_LANG_INSTANCE : u se constant define in lang.php
+
+
+
 -->
 
 #!#TABLE
@@ -54,46 +54,46 @@ Defines :
 <table border="0" cellspacing="0" class="##load_css|listing spec zero_padding ##" id='test'  style = "padding: 0px;width:300px">
 #!#HEAD
 <!-- ------------------------------------------------------------------------->
-	 <thead border ="1">
-		<tr>
-			<th  width="100%" colspan="2">
-			<div align="center" style="border:1px solid; height:20px;margin-bottom:10px;padding-top:10px;vertical-align:middle;">
-				##define_lang|_NUM_GED##
-				<a href="##order_link|res_id|desc##" title="##define_lang|_DESC_SORT##"><img src="##load_img|tri_down.gif##" border="0" alt="##define_lang|_DESC_SORT##" /> </a> <a href="##order_link|res_id|asc##" title="##define_lang|_ASC_SORT##"> <img src="##load_img|tri_up.gif##" border="0" alt="##define_lang|_ASC_SORT##" /></a> 
-				&nbsp;
-				##define_lang|_IDENTIFIER## 
-				<a href="##order_link|type_id|desc##" title="##define_lang|_DESC_SORT##"><img src="##load_img|tri_down.gif##" border="0" alt="##define_lang|_DESC_SORT##" /> </a> <a href="##order_link|type_id|asc##" title="##define_lang|_ASC_SORT##"> <img src="##load_img|tri_up.gif##" border="0" alt="##define_lang|_ASC_SORT##" /></a> 
-				&nbsp;
-				CLIENT 
-				<a href="##order_link|subject|desc##" title="##define_lang|_DESC_SORT##"><img src="##load_img|tri_down.gif##" border="0" alt="##define_lang|_DESC_SORT##" /> </a> <a href="##order_link|subject|asc##" title="##define_lang|_ASC_SORT##"> <img src="##load_img|tri_up.gif##" border="0" alt="##define_lang|_ASC_SORT##" /></a> 
-			</div>			
-			</th>			
-		</tr>
-	</thead>
-	<tbody> 
+     <thead border ="1">
+        <tr>
+            <th  width="100%" colspan="2">
+            <div align="center" style="border:1px solid; height:20px;margin-bottom:10px;padding-top:10px;vertical-align:middle;">
+                ##define_lang|_NUM_GED##
+                <a href="##order_link|res_id|desc##" title="##define_lang|_DESC_SORT##"><img src="##load_img|tri_down.gif##" border="0" alt="##define_lang|_DESC_SORT##" /> </a> <a href="##order_link|res_id|asc##" title="##define_lang|_ASC_SORT##"> <img src="##load_img|tri_up.gif##" border="0" alt="##define_lang|_ASC_SORT##" /></a>
+                &nbsp;
+                ##define_lang|_IDENTIFIER##
+                <a href="##order_link|type_id|desc##" title="##define_lang|_DESC_SORT##"><img src="##load_img|tri_down.gif##" border="0" alt="##define_lang|_DESC_SORT##" /> </a> <a href="##order_link|type_id|asc##" title="##define_lang|_ASC_SORT##"> <img src="##load_img|tri_up.gif##" border="0" alt="##define_lang|_ASC_SORT##" /></a>
+                &nbsp;
+                CLIENT
+                <a href="##order_link|subject|desc##" title="##define_lang|_DESC_SORT##"><img src="##load_img|tri_down.gif##" border="0" alt="##define_lang|_DESC_SORT##" /> </a> <a href="##order_link|subject|asc##" title="##define_lang|_ASC_SORT##"> <img src="##load_img|tri_up.gif##" border="0" alt="##define_lang|_ASC_SORT##" /></a>
+            </div>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
 #!#RESULT
 <!-- ------------------------------------------------------------------------->
-		<tr class="##css_line|col|white ##">
-			<td>Client : ##load_value|doc_custom_t4##</td>
-			<td width="100%" style="text-align:right">##define_lang|_IDENTIFIER## :##load_value|doc_custom_t1##</td>
-		</tr>	
-		<tr class="##css_line_reload##">
-			<td style="text-align:center" style="font-size:13px;"><b>##load_value|res_id##</b></td>
-			<td style="text-align:center">
-				<table width="100%" border="0" cellspacing="0" cellpadding="0" >
-					<tr>
-						<td width ="30px"><img src="##load_img|date_arriv.gif##"> </td>
-						<td width ="100px">##load_value|creation_date##</td>
-						<td width ="60px">##func_bool_view_doc## ##func_bool_detail_doc##</td>
-					</tr>
-				</table>
-			</td>
-		</tr>
-		<tr>
-			<td colspan="6" style="background-color: white;"></td>
-		</tr>
- #!#FOOTER        
- <!-- 	------------------------------------------------------------------------->
-	</tbody>
+        <tr class="##css_line|col|white ##">
+            <td>Client : ##load_value|doc_custom_t4##</td>
+            <td width="100%" style="text-align:right">##define_lang|_IDENTIFIER## :##load_value|doc_custom_t1##</td>
+        </tr>
+        <tr class="##css_line_reload##">
+            <td style="text-align:center" style="font-size:13px;"><b>##load_value|res_id##</b></td>
+            <td style="text-align:center">
+                <table width="100%" border="0" cellspacing="0" cellpadding="0" >
+                    <tr>
+                        <td width ="30px"><img src="##load_img|date_arriv.gif##"> </td>
+                        <td width ="100px">##load_value|creation_date##</td>
+                        <td width ="60px">##func_bool_view_doc## ##func_bool_detail_doc##</td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="6" style="background-color: white;"></td>
+        </tr>
+ #!#FOOTER
+ <!--   ------------------------------------------------------------------------->
+    </tbody>
 </table>
 
