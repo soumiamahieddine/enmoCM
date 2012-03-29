@@ -586,9 +586,9 @@ class dbquery extends functions
     * SQL Error management
     *
     */
-    private function error()
-    {
-        require_once('core' . DIRECTORY_SEPARATOR . 'class' 
+    private function error() {
+        
+		require_once('core' . DIRECTORY_SEPARATOR . 'class' 
             . DIRECTORY_SEPARATOR . 'class_history.php');
         $trace = new history();
         
@@ -644,7 +644,7 @@ class dbquery extends functions
                     . $this->_debugQuery . '</textarea>';
                 exit();
             }
-            $trace->add("", 0, "QUERY", "DBERROR", _QUERY_DB_FAILED." : ".$this->_debugQuery, $_SESSION['config']['databasetype'], "database", true, _KO, _LEVEL_ERROR);
+            $trace->add("", 0, "QUERY", "DBERROR", _QUERY_DB_FAILED.": '".$sqlError."' "._QUERY.": [".$this->protect_string_db($this->_debugQuery)."]", $_SESSION['config']['databasetype'], "database", true, _KO, _LEVEL_ERROR);
             //exit();
         }
 
