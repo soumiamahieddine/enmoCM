@@ -399,8 +399,27 @@ class security extends dbquery
     public function retrieve_coll_id_from_table($table)
     {
         for ($i=0;$i<count($_SESSION['collections']);$i++) {
-            if ($_SESSION['collections'][$i]['table'] == $table) {
+            if (
+                $_SESSION['collections'][$i]['table'] == $table
+                || $_SESSION['collections'][$i]['version_table'] == $table
+            ) {
                 return $_SESSION['collections'][$i]['id'];
+            }
+        }
+        return '';
+    }
+    
+    /**
+    * Returns the collection version table from a collId
+    *
+    * @param  $collId string collection ID
+    * @return string version table or empty string if not found
+    */
+    public function retrieve_version_table_from_coll_id($collId)
+    {
+        for ($i=0;$i<count($_SESSION['collections']);$i++) {
+            if ($_SESSION['collections'][$i]['id'] == $collId) {
+                return $_SESSION['collections'][$i]['version_table'];
             }
         }
         return '';
