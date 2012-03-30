@@ -7,6 +7,9 @@ $_POST['tpl'] = 'modules/templates/templates/styles/another_test.docx';
 //$_POST['yourname'] = 'Laurent Giovannoni';
 
 global $yourname;
+global $company;
+
+$company = 'MAARCH';
 
 $TBS = new clsTinyButStrong; // new instance of TBS
 $TBS->Plugin(TBS_INSTALL, OPENTBS_PLUGIN); // load OpenTBS plugin

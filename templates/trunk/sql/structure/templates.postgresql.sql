@@ -19,6 +19,7 @@ CREATE TABLE templates
   template_comment character varying(255) DEFAULT NULL::character varying,
   template_content text,
   template_type character varying(32) NOT NULL DEFAULT 'HTML'::character varying,
+  template_file_name character varying(255),
   template_style character varying(255),
   CONSTRAINT templates_pkey PRIMARY KEY (template_id)
 )
