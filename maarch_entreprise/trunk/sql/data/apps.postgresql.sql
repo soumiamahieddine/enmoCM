@@ -356,7 +356,7 @@ INSERT INTO parameters (id, param_value_string, param_value_int) VALUES
 ('postindexing_workbatch', NULL, 40),
 ('database_version', NULL, 130);
 
-INSERT INTO templates (template_id, label, creation_date, template_comment, content) VALUES (2, 'AR_MAARCH', '2009-08-20 16:01:00', 'Accusé de réception Maarch', '<p style="TEXT-ALIGN: left"><img src="img/default_maarch.gif" alt="" width="278" height="80" />&nbsp;</p>
+INSERT INTO templates (template_id, template_label, template_comment, template_content) VALUES (2, 'AR_MAARCH', 'Accusé de réception Maarch', '<p style="TEXT-ALIGN: left"><img src="img/default_maarch.gif" alt="" width="278" height="80" />&nbsp;</p>
 <p><em><font face="Arial Black" size="2" color="#3366ff">La gestion de courriers Open source !</font></em><br />Mail : info@maarch.org<br />Web : http://www.maarch.org</p>
 <p style="TEXT-ALIGN: right"><font size="2">Nanterre, le [NOW]</font></p>
 <p><font size="2">Cher&nbsp;&nbsp;[CONTACT_LASTNAME]</font></p>
@@ -368,7 +368,7 @@ INSERT INTO templates (template_id, label, creation_date, template_comment, cont
 <p><font size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Cordialement,</font></p>
 <p><font size="2"><em>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [CURRENT_USER_FIRSTNAME] [CURRENT_USER_LASTNAME]<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [DESTINATION]<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; T&eacute;l : [CURRENT_USER_PHONE]<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Courriel : [CURRENT_USER_EMAIL]</em></font></p>
 <p>&nbsp;</p>');
-INSERT INTO templates (template_id, label, creation_date, template_comment, content) VALUES (1, 'TEST', '2009-08-20 16:01:00', 'Test des mots-clés', '<h1>Liste des mots-cl&eacute;s utilisables dans les mod&egrave;les de reponse</h1>
+INSERT INTO templates (template_id, template_label, template_comment, template_content) VALUES (1, 'TEST', 'Test des mots-clés', '<h1>Liste des mots-cl&eacute;s utilisables dans les mod&egrave;les de reponse</h1>
 <p>&nbsp;</p>
 <table border="0">
 <tbody>
@@ -495,7 +495,7 @@ INSERT INTO templates (template_id, label, creation_date, template_comment, cont
 </tbody>
 </table>
 <p><font size="2">&nbsp;</font></p>');
-INSERT INTO templates (template_id, label, creation_date, template_comment, content) VALUES (3, 'AppelTel', '2011-06-06 11:38:48.126', 'Appel téléphonique', '<p><font size="\\&quot;5\\&quot;"><strong>APPEL TELEPHONIQUE</strong></font></p>
+INSERT INTO templates (template_id, template_label, template_comment, template_content) VALUES (3, 'AppelTel', 'Appel téléphonique', '<p><font size="\\&quot;5\\&quot;"><strong>APPEL TELEPHONIQUE</strong></font></p>
 <p><font size="\\&quot;2\\&quot;">Bonjour,</font></p>
 <p><font size="\\&quot;2\\&quot;">Vous avez re&ccedil;u un appel t&eacute;l&eacute;phonique dont voici les informations :</font></p>
 <ul>
