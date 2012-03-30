@@ -15,12 +15,11 @@ CREATE SEQUENCE templates_association_seq
 CREATE TABLE templates
 (
   template_id bigint NOT NULL DEFAULT nextval('templates_seq'::regclass),
-  label character varying(50) DEFAULT NULL::character varying,
-  creation_date timestamp without time zone,
-  "template_comment" character varying(255) DEFAULT NULL::character varying,
-  "content" text,
+  template_label character varying(255) DEFAULT NULL::character varying,
+  template_comment character varying(255) DEFAULT NULL::character varying,
+  template_content text,
   template_type character varying(32) NOT NULL DEFAULT 'HTML'::character varying,
-  style_name character varying(255),
+  template_style character varying(255),
   CONSTRAINT templates_pkey PRIMARY KEY (template_id)
 )
 WITH (OIDS=FALSE);
