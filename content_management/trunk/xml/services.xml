@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+    <SERVICE>
+        <id>edit_res_content_from_details</id>
+        <name>_EDIT_RES_CONTENT_FROM_DETAILS</name>
+        <comment>_EDIT_RES_CONTENT_FROM_DETAILS</comment>
+        <servicepage>none.php</servicepage>
+        <servicetype>use</servicetype>
+        <system_service>false</system_service>
+        <enabled>true</enabled>
+        <WHEREAMIUSED>
+            <page>details.php</page>
+            <nature>include</nature>
+        </WHEREAMIUSED>
+    </SERVICE>
+    <SERVICE>
+        <id>add_new_version_from_details</id>
+        <name>_ADD_NEW_VERSION_FROM_DETAILS</name>
+        <comment>_ADD_NEW_VERSION_FROM_DETAILS</comment>
+        <servicepage>none.php</servicepage>
+        <servicetype>use</servicetype>
+        <system_service>false</system_service>
+        <enabled>true</enabled>
+        <WHEREAMIUSED>
+            <page>details.php</page>
+            <nature>include</nature>
+        </WHEREAMIUSED>
+    </SERVICE>
+</root>
