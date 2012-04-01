@@ -93,46 +93,54 @@ if ($mode == "list") {
         <p>
             <label for="docserver_type_id"><?php echo _DOCSERVER_TYPES;?> (*): </label>
             <?php
-            for ($cptTypes = 0; $cptTypes < count($docserverTypesArray);
-                $cptTypes ++
+            if (isset($_SESSION['m_admin']['docservers']['docserver_type_id'])
+                    && $_SESSION['m_admin']['docservers']['docserver_type_id'] == 'TEMPLATES'
             ) {
-                if (isset($_SESSION['m_admin']['docservers']['docserver_type_id'])
-                    && $_SESSION['m_admin']['docservers']['docserver_type_id'] == $docserverTypesArray[$cptTypes]
-                ) {
-                    $docserverTypeTxt = $docserverTypesArray[$cptTypes];
-                }
-            }
-            if (isset($_SESSION['m_admin']['docservers']['link_exists']) 
-            	&& $_SESSION['m_admin']['docservers']['link_exists']
-           	) {
                 ?>
-                <input type="hidden" name="docserver_type_id" value="<?php 
-                    echo $_SESSION['m_admin']['docservers']['docserver_type_id'];?>" />
-                <input name="docserver_type_id_txt" type="text"  id="docserver_type_id_txt" value="<?php
-                    echo $docserverTypeTxt;
-                ?>" readonly class="readonly"/>
+                <input name="docserver_type_id" type="text"  id="docserver_type_id" value="TEMPLATES" readonly="readonly" class="readonly"/>
                 <?php
             } else {
-                ?>
-                <select name="docserver_type_id" id="docserver_type_id">
-                    <option value=""><?php echo _DOCSERVER_TYPES;?></option>
-                    <?php
                 for ($cptTypes = 0; $cptTypes < count($docserverTypesArray);
                     $cptTypes ++
                 ) {
-                    ?>
-                    <option value="<?php echo $docserverTypesArray[$cptTypes];?>" <?php
                     if (isset($_SESSION['m_admin']['docservers']['docserver_type_id'])
                         && $_SESSION['m_admin']['docservers']['docserver_type_id'] == $docserverTypesArray[$cptTypes]
                     ) {
-                        echo 'selected="selected"';
+                        $docserverTypeTxt = $docserverTypesArray[$cptTypes];
                     }
-                    ?>><?php echo $docserverTypesArray[$cptTypes];?></option>
+                }
+                if (isset($_SESSION['m_admin']['docservers']['link_exists']) 
+                    && $_SESSION['m_admin']['docservers']['link_exists']
+                ) {
+                    ?>
+                    <input type="hidden" name="docserver_type_id" value="<?php 
+                        echo $_SESSION['m_admin']['docservers']['docserver_type_id'];?>" />
+                    <input name="docserver_type_id_txt" type="text"  id="docserver_type_id_txt" value="<?php
+                        echo $docserverTypeTxt;
+                    ?>" readonly class="readonly"/>
+                    <?php
+                } else {
+                    ?>
+                    <select name="docserver_type_id" id="docserver_type_id">
+                        <option value=""><?php echo _DOCSERVER_TYPES;?></option>
+                        <?php
+                    for ($cptTypes = 0; $cptTypes < count($docserverTypesArray);
+                        $cptTypes ++
+                    ) {
+                        ?>
+                        <option value="<?php echo $docserverTypesArray[$cptTypes];?>" <?php
+                        if (isset($_SESSION['m_admin']['docservers']['docserver_type_id'])
+                            && $_SESSION['m_admin']['docservers']['docserver_type_id'] == $docserverTypesArray[$cptTypes]
+                        ) {
+                            echo 'selected="selected"';
+                        }
+                        ?>><?php echo $docserverTypesArray[$cptTypes];?></option>
+                        <?php
+                    }
+                    ?>
+                    </select>
                     <?php
                 }
-                ?>
-                </select>
-                <?php
             }
             ?>
         </p>
@@ -355,7 +363,7 @@ if ($mode == "list") {
                 }
             }
             if (isset($_SESSION['m_admin']['docservers']['link_exists']) 
-            	&& $_SESSION['m_admin']['docservers']['link_exists']
+                && $_SESSION['m_admin']['docservers']['link_exists']
             ) {
                 ?>
                 <input type="hidden" name="coll_id" value="<?php 
@@ -365,34 +373,42 @@ if ($mode == "list") {
                 ?>" readonly class="readonly"/>
                 <?php
             } else {
-                ?>
-            <select name="coll_id" id="coll_id">
-                <option value=""><?php echo _CHOOSE_COLLECTION;?></option>
-                <?php
-        for ($cptCollection = 0; $cptCollection < count(
-            $_SESSION['collections']
-        ); $cptCollection ++
-        ) {
-            ?>
-            <option value="<?php
-            echo $_SESSION['collections'][$cptCollection]['id'];
-            ?>" <?php
-            if (isset($_SESSION['m_admin']['docservers']['coll_id'])
-                && $_SESSION['m_admin']['docservers']['coll_id'] == $_SESSION['collections'][$cptCollection]['id']
-            ) {
-                echo 'selected="selected"';
+                if (isset($_SESSION['m_admin']['docservers']['coll_id'])
+                    && $_SESSION['m_admin']['docservers']['coll_id'] == 'templates'
+                ) {
+                    ?>
+                    <input name="coll_id" type="text"  id="coll_id" value="templates" readonly="readonly" class="readonly"/>
+                    <?php
+                } else {
+                    ?>
+                <select name="coll_id" id="coll_id">
+                    <option value=""><?php echo _CHOOSE_COLLECTION;?></option>
+                    <?php
+                    for ($cptCollection = 0; $cptCollection < count(
+                        $_SESSION['collections']
+                    ); $cptCollection ++
+                    ) {
+                        ?>
+                        <option value="<?php
+                        echo $_SESSION['collections'][$cptCollection]['id'];
+                        ?>" <?php
+                        if (isset($_SESSION['m_admin']['docservers']['coll_id'])
+                            && $_SESSION['m_admin']['docservers']['coll_id'] == $_SESSION['collections'][$cptCollection]['id']
+                        ) {
+                            echo 'selected="selected"';
+                        }
+                        ?>><?php
+                        echo $_SESSION['collections'][$cptCollection]['id'] . " : "
+                                . $_SESSION['collections'][$cptCollection]['label'];
+                        ?></option>
+                        <?php
+                    }
+                    ?>
+                </select>
+                    <?php
+                }
             }
-            ?>><?php
-            echo $_SESSION['collections'][$cptCollection]['id'] . " : "
-                    . $_SESSION['collections'][$cptCollection]['label'];
-            ?></option>
-            <?php
-        }
-        ?>
-            </select>
-            <?php
-        }
-        ?>
+            ?>
         </p>
         <p>
             <label for="priority_number"><?php echo _PRIORITY; ?> : </label>
