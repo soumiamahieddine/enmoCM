@@ -487,74 +487,83 @@ class docservers_controler
      */
     public function delete($docserver)
     {
-        $func = new functions();
-        $control = array();
-        if (!isset($docserver) || empty($docserver)) {
-            $control = array(
-                'status' => 'ko',
-                'value' => '',
-                'error' => _DOCSERVER_EMPTY,
-            );
-            return $control;
-        }
-        $docserver = $this->isADocserver($docserver);
-        if (!$this->docserversExists($docserver->docserver_id)) {
-            $control = array(
-                'status' => 'ko',
-                'value' => '',
-                'error' => _DOCSERVER_NOT_EXISTS,
-            );
-            return $control;
-        }
-        if ($this->adrxLinkExists(
-            $docserver->docserver_id,
-            $docserver->coll_id
+        if ($docserver->docserver_id <> 'TEMPLATES') {
+            $func = new functions();
+            $control = array();
+            if (!isset($docserver) || empty($docserver)) {
+                $control = array(
+                    'status' => 'ko',
+                    'value' => '',
+                    'error' => _DOCSERVER_EMPTY,
+                );
+                return $control;
+            }
+            $docserver = $this->isADocserver($docserver);
+            if (!$this->docserversExists($docserver->docserver_id)) {
+                $control = array(
+                    'status' => 'ko',
+                    'value' => '',
+                    'error' => _DOCSERVER_NOT_EXISTS,
+                );
+                return $control;
+            }
+            if ($this->adrxLinkExists(
+                $docserver->docserver_id,
+                $docserver->coll_id
+                )
+            ) {
+                $control = array('status' => 'ko', 'value' => '',
+                'error' => _DOCSERVER_ATTACHED_TO_ADR_X);
+                return $control;
+            }
+            if ($this->resxLinkExists(
+                $docserver->docserver_id,
+                $docserver->coll_id
             )
-        ) {
-            $control = array('status' => 'ko', 'value' => '',
-            'error' => _DOCSERVER_ATTACHED_TO_ADR_X);
-            return $control;
-        }
-        if ($this->resxLinkExists(
-            $docserver->docserver_id,
-            $docserver->coll_id
-        )
-        ) {
+            ) {
+                $control = array(
+                    'status' => 'ko',
+                    'value' => '',
+                    'error' => _DOCSERVER_ATTACHED_TO_RES_X,
+                );
+                return $control;
+            }
+            $db = new dbquery();
+            $db->connect();
+            $query = "delete from " . _DOCSERVERS_TABLE_NAME
+                   . " where docserver_id ='"
+                   . $func->protect_string_db($docserver->docserver_id) . "'";
+            try {
+                $db->query($query);
+            } catch (Exception $e) {
+                $control = array(
+                    'status' => 'ko',
+                    'value' => '',
+                    'error' => _CANNOT_DELETE_DOCSERVER_ID
+                    . ' ' . $docserver->docserver_id,
+                );
+            }
+            $db->disconnect();
             $control = array(
-                'status' => 'ko',
-                'value' => '',
-                'error' => _DOCSERVER_ATTACHED_TO_RES_X,
+                'status' => 'ok',
+                'value' => $docserver->docserver_id,
             );
-            return $control;
-        }
-        $db = new dbquery();
-        $db->connect();
-        $query = "delete from " . _DOCSERVERS_TABLE_NAME
-               . " where docserver_id ='"
-               . $func->protect_string_db($docserver->docserver_id) . "'";
-        try {
-            $db->query($query);
-        } catch (Exception $e) {
+            if ($_SESSION['history']['docserversdel'] == 'true') {
+                $history = new history();
+                $history->add(
+                    _DOCSERVERS_TABLE_NAME,
+                    $docserver->docserver_id,
+                    'DEL','docserversdel',
+                    _DOCSERVER_DELETED . ' : ' . $docserver->docserver_id,
+                    $_SESSION['config']['databasetype']
+                );
+            }
+        } else {
             $control = array(
                 'status' => 'ko',
                 'value' => '',
                 'error' => _CANNOT_DELETE_DOCSERVER_ID
                 . ' ' . $docserver->docserver_id,
-            );
-        }
-        $db->disconnect();
-        $control = array(
-            'status' => 'ok',
-            'value' => $docserver->docserver_id,
-        );
-        if ($_SESSION['history']['docserversdel'] == 'true') {
-            $history = new history();
-            $history->add(
-                _DOCSERVERS_TABLE_NAME,
-                $docserver->docserver_id,
-                'DEL','docserversdel',
-                _DOCSERVER_DELETED . ' : ' . $docserver->docserver_id,
-                $_SESSION['config']['databasetype']
             );
         }
         return $control;
@@ -568,38 +577,46 @@ class docservers_controler
     */
     public function disable($docserver)
     {
-        $control = array();
-        if (!isset($docserver) || empty($docserver)) {
-            $control = array(
-                'status' => 'ko',
-                'value' => '',
-                'error' => _DOCSERVER_EMPTY,
-            );
-            return $control;
-        }
-        $docserver = $this->isADocserver($docserver);
-        $this->set_foolish_ids(array('docserver_id'));
-        $this->set_specific_id('docserver_id');
-        if ($this->advanced_disable($docserver)) {
-            $control = array(
-                'status' => 'ok',
-                'value' => $docserver->docserver_id,
-            );
-            if ($_SESSION['history']['docserversban'] == 'true') {
-                $history = new history();
-                $history->add(
-                    _DOCSERVERS_TABLE_NAME,
-                    $docserver->docserver_id,
-                    'BAN','docserversban',
-                    _DOCSERVER_DISABLED . ' : ' . $docserver->docserver_id,
-                    $_SESSION['config']['databasetype']
+        if ($docserver->docserver_id <> 'TEMPLATES') {
+            $control = array();
+            if (!isset($docserver) || empty($docserver)) {
+                $control = array(
+                    'status' => 'ko',
+                    'value' => '',
+                    'error' => _DOCSERVER_EMPTY,
+                );
+                return $control;
+            }
+            $docserver = $this->isADocserver($docserver);
+            $this->set_foolish_ids(array('docserver_id'));
+            $this->set_specific_id('docserver_id');
+            if ($this->advanced_disable($docserver)) {
+                $control = array(
+                    'status' => 'ok',
+                    'value' => $docserver->docserver_id,
+                );
+                if ($_SESSION['history']['docserversban'] == 'true') {
+                    $history = new history();
+                    $history->add(
+                        _DOCSERVERS_TABLE_NAME,
+                        $docserver->docserver_id,
+                        'BAN','docserversban',
+                        _DOCSERVER_DISABLED . ' : ' . $docserver->docserver_id,
+                        $_SESSION['config']['databasetype']
+                    );
+                }
+            } else {
+                $control = array(
+                    'status' => 'ko',
+                    'value' => '',
+                    'error' => _PB_WITH_DOCSERVER,
                 );
             }
         } else {
             $control = array(
                 'status' => 'ko',
                 'value' => '',
-                'error' => _PB_WITH_DOCSERVER,
+                'error' => _CANNOT_SUSPEND_DOCSERVER . ' ' . $docserver->docserver_id,
             );
         }
         return $control;
@@ -707,6 +724,9 @@ class docservers_controler
     */
     public function resxLinkExists($docserver_id, $coll_id)
     {
+        if ($coll_id == 'templates') {
+            return false;
+        }
         $security = new security();
         $db = new dbquery();
         $db->connect();

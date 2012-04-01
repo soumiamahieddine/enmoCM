@@ -83,10 +83,10 @@ class docserver_types_controler extends ObjectControler implements ObjectControl
                     if ($_SESSION['history']['docserverstypesadd'] == "true") {
                         $history = new history();
                         $history->add(
-							_DOCSERVER_TYPES_TABLE_NAME, 
-							$docserver_type->docserver_type_id, "UP", 'docserverstypesadd',
-							_DOCSERVER_TYPE_UPDATED." : ".$docserver_type->docserver_type_id, 
-							$_SESSION['config']['databasetype']);
+                            _DOCSERVER_TYPES_TABLE_NAME, 
+                            $docserver_type->docserver_type_id, "UP", 'docserverstypesadd',
+                            _DOCSERVER_TYPE_UPDATED." : ".$docserver_type->docserver_type_id, 
+                            $_SESSION['config']['databasetype']);
                     }
                 } else {
                     $control = array("status" => "ko", "value" => "", "error" => _PB_WITH_DOCSERVER_TYPE);
@@ -103,9 +103,9 @@ class docserver_types_controler extends ObjectControler implements ObjectControl
                     if ($_SESSION['history']['docserverstypesadd'] == "true") {
                         $history = new history();
                         $history->add(_DOCSERVER_TYPES_TABLE_NAME, 
-						$docserver_type->docserver_type_id, "ADD", 'docserverstypesadd',
-						_DOCSERVER_TYPE_ADDED." : ".$docserver_type->docserver_type_id, 
-						$_SESSION['config']['databasetype']);
+                        $docserver_type->docserver_type_id, "ADD", 'docserverstypesadd',
+                        _DOCSERVER_TYPE_ADDED." : ".$docserver_type->docserver_type_id, 
+                        $_SESSION['config']['databasetype']);
                     }
                 } else {
                     $control = array("status" => "ko", "value" => "", "error" => _PB_WITH_DOCSERVER_TYPE);
@@ -250,45 +250,53 @@ class docserver_types_controler extends ObjectControler implements ObjectControl
     * @return bool true if the deletion is complete, false otherwise
     */
     public function delete($docserver_type) {
-        $func = new functions();
-        $control = array();
-        if (!isset($docserver_type) || empty($docserver_type)) {
-            $control = array("status" => "ko", "value" => "", "error" => _DOCSERVER_TYPE_EMPTY);
-            return $control;
-        }
-        $docserver_type = $this->isADocserverType($docserver_type);
-        if (!$this->docserverTypeExists($docserver_type->docserver_type_id)) {
-            $control = array("status" => "ko", "value" => "", "error" => _DOCSERVER_TYPE_NOT_EXISTS);
-            return $control;
-        }
-        if ($this->docserverLinkExists($docserver_type->docserver_type_id)) {
-            $control = array("status" => "ko", "value" => "", "error" => _LINK_EXISTS);
-            return $control;
-        }
-        if ($this->lcCycleStepsLinkExists($docserver_type->docserver_type_id)) {
-            $control = array("status" => "ko", "value" => "", "error" => _LINK_EXISTS);
-            return $control;
-        }
-        $db=new dbquery();
-        $db->connect();
-        $query="delete from "._DOCSERVER_TYPES_TABLE_NAME." where docserver_type_id ='".$func->protect_string_db($docserver_type->docserver_type_id)."'";
-        try {
-            if ($_ENV['DEBUG']) {echo $query.' // ';}
-            $db->query($query);
-            $ok = true;
-        } catch (Exception $e) {
-            $control = array("status" => "ko", "value" => "", "error" => _CANNOT_DELETE_DOCSERVER_TYPE_ID." ".$docserver_type->docserver_type_id);
-            $ok = false;
-        }
-        $db->disconnect();
-        $control = array("status" => "ok", "value" => $docserver_type->docserver_type_id);
-        if ($_SESSION['history']['docserverstypesdel'] == "true") {
-            $history = new history();
-            $history->add(
-				_DOCSERVER_TYPES_TABLE_NAME, 
-				$docserver_type->docserver_type_id, "DEL", 'docserverstypesdel',
-				_DOCSERVER_TYPE_DELETED." : ".$docserver_type->docserver_type_id, 
-				$_SESSION['config']['databasetype']);
+        if ($docserver_type <> 'TEMPLATES') {
+            $func = new functions();
+            $control = array();
+            if (!isset($docserver_type) || empty($docserver_type)) {
+                $control = array("status" => "ko", "value" => "", "error" => _DOCSERVER_TYPE_EMPTY);
+                return $control;
+            }
+            $docserver_type = $this->isADocserverType($docserver_type);
+            if (!$this->docserverTypeExists($docserver_type->docserver_type_id)) {
+                $control = array("status" => "ko", "value" => "", "error" => _DOCSERVER_TYPE_NOT_EXISTS);
+                return $control;
+            }
+            if ($this->docserverLinkExists($docserver_type->docserver_type_id)) {
+                $control = array("status" => "ko", "value" => "", "error" => _LINK_EXISTS);
+                return $control;
+            }
+            if ($this->lcCycleStepsLinkExists($docserver_type->docserver_type_id)) {
+                $control = array("status" => "ko", "value" => "", "error" => _LINK_EXISTS);
+                return $control;
+            }
+            $db=new dbquery();
+            $db->connect();
+            $query="delete from "._DOCSERVER_TYPES_TABLE_NAME." where docserver_type_id ='".$func->protect_string_db($docserver_type->docserver_type_id)."'";
+            try {
+                if ($_ENV['DEBUG']) {echo $query.' // ';}
+                $db->query($query);
+                $ok = true;
+            } catch (Exception $e) {
+                $control = array("status" => "ko", "value" => "", "error" => _CANNOT_DELETE_DOCSERVER_TYPE_ID." ".$docserver_type->docserver_type_id);
+                $ok = false;
+            }
+            $db->disconnect();
+            $control = array("status" => "ok", "value" => $docserver_type->docserver_type_id);
+            if ($_SESSION['history']['docserverstypesdel'] == "true") {
+                $history = new history();
+                $history->add(
+                    _DOCSERVER_TYPES_TABLE_NAME, 
+                    $docserver_type->docserver_type_id, "DEL", 'docserverstypesdel',
+                    _DOCSERVER_TYPE_DELETED." : ".$docserver_type->docserver_type_id, 
+                    $_SESSION['config']['databasetype']);
+            }
+        } else {
+            $control = array(
+                'status' => 'ko', 
+                'value' => '', 
+                'error' => _CANNOT_DELETE_DOCSERVER_TYPE_ID . ' '. $docserver_type->docserver_type_id,
+            );
         }
         return $control;
     }
@@ -300,34 +308,42 @@ class docserver_types_controler extends ObjectControler implements ObjectControl
     * @return bool true if the disabling is complete, false otherwise 
     */
     public function disable($docserver_type) {
-        $control = array();
-        if (!isset($docserver_type) || empty($docserver_type)) {
-            $control = array("status" => "ko", "value" => "", "error" => _DOCSERVER_TYPE_EMPTY);
-            return $control;
-        }
-        $docserver_type = $this->isADocserverType($docserver_type);
-        $this->set_foolish_ids(array('docserver_type_id'));
-        $this->set_specific_id('docserver_type_id');
-        if ($this->docserverLinkExists($docserver_type->docserver_type_id)) {
-            $control = array("status" => "ko", "value" => "", "error" => _LINK_EXISTS);
-            return $control;
-        }
-        if ($this->lcCycleStepsLinkExists($docserver_type->docserver_type_id)) {
-            $control = array("status" => "ko", "value" => "", "error" => _LINK_EXISTS);
-            return $control;
-        }
-        if ($this->advanced_disable($docserver_type)) {
-            $control = array("status" => "ok", "value" => $docserver_type->docserver_type_id);
-            if ($_SESSION['history']['docserverstypesban'] == "true") {
-                $history = new history();
-                $history->add(
-					_DOCSERVER_TYPES_TABLE_NAME, 
-					$docserver_type->docserver_type_id, "BAN", 'docserverstypesban',
-					_DOCSERVER_TYPE_DISABLED." : ".$docserver_type->docserver_type_id, 
-					$_SESSION['config']['databasetype']);
+        if ($docserver_type <> 'TEMPLATES') {
+            $control = array();
+            if (!isset($docserver_type) || empty($docserver_type)) {
+                $control = array("status" => "ko", "value" => "", "error" => _DOCSERVER_TYPE_EMPTY);
+                return $control;
+            }
+            $docserver_type = $this->isADocserverType($docserver_type);
+            $this->set_foolish_ids(array('docserver_type_id'));
+            $this->set_specific_id('docserver_type_id');
+            if ($this->docserverLinkExists($docserver_type->docserver_type_id)) {
+                $control = array("status" => "ko", "value" => "", "error" => _LINK_EXISTS);
+                return $control;
+            }
+            if ($this->lcCycleStepsLinkExists($docserver_type->docserver_type_id)) {
+                $control = array("status" => "ko", "value" => "", "error" => _LINK_EXISTS);
+                return $control;
+            }
+            if ($this->advanced_disable($docserver_type)) {
+                $control = array("status" => "ok", "value" => $docserver_type->docserver_type_id);
+                if ($_SESSION['history']['docserverstypesban'] == "true") {
+                    $history = new history();
+                    $history->add(
+                        _DOCSERVER_TYPES_TABLE_NAME, 
+                        $docserver_type->docserver_type_id, "BAN", 'docserverstypesban',
+                        _DOCSERVER_TYPE_DISABLED." : ".$docserver_type->docserver_type_id, 
+                        $_SESSION['config']['databasetype']);
+                }
+            } else {
+                $control = array("status" => "ko", "value" => "", "error" => _PB_WITH_DOCSERVER_TYPE);
             }
         } else {
-            $control = array("status" => "ko", "value" => "", "error" => _PB_WITH_DOCSERVER_TYPE);
+            $control = array(
+                'status' => 'ko', 
+                'value' => '', 
+                'error' => _CANNOT_DISABLE_DOCSERVER_TYPE_ID . ' '. $docserver_type->docserver_type_id,
+            );
         }
         return $control;
     }
@@ -352,10 +368,10 @@ class docserver_types_controler extends ObjectControler implements ObjectControl
             if ($_SESSION['history']['docserverstypesallow'] == "true") {
                 $history = new history();
                 $history->add(
-					_DOCSERVER_TYPES_TABLE_NAME, 
-					$docserver_type->docserver_type_id, "BAN", 'docserverstypesallow',
-					_DOCSERVER_TYPE_ENABLED." : ".$docserver_type->docserver_type_id, 
-					$_SESSION['config']['databasetype']);
+                    _DOCSERVER_TYPES_TABLE_NAME, 
+                    $docserver_type->docserver_type_id, "BAN", 'docserverstypesallow',
+                    _DOCSERVER_TYPE_ENABLED." : ".$docserver_type->docserver_type_id, 
+                    $_SESSION['config']['databasetype']);
             }
         } else {
             $control = array("status" => "ko", "value" => "", "error" => _PB_WITH_DOCSERVER_TYPE);
