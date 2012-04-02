@@ -33,37 +33,15 @@ $core_tools->load_header('', true, false );
 
 	if($_SESSION['res_folder'] == 'matricule' )
 	{
-		if($_SESSION['config']['databasetype'] == "POSTGRESQL")
-		{
-			$where = " folder_id ilike '". $_SESSION['search_res_folder']."%' and status <> 'DEL'";
-		}
-		else
-		{
-			$where = " folder_id like '". $_SESSION['search_res_folder']."%' and status <> 'DEL'";
-		}
-
+		$where = " lower(folder_id) like lower('". $_SESSION['search_res_folder']."%') and status <> 'DEL'";
 	}
 	elseif( $_SESSION['res_folder'] == 'nom' )
 	{
-		if($_SESSION['config']['databasetype'] == "POSTGRESQL")
-		{
-			$where = " custom_t1 ilike '". $_SESSION['search_res_folder']."%' and status <> 'DEL'";
-		}
-		else
-		{
-			$where = " custom_t1 like '". $_SESSION['search_res_folder']."%' and status <> 'DEL'";
-		}
+		$where = " lower(custom_t1) like lower('". $_SESSION['search_res_folder']."%') and status <> 'DEL'";
 	}
 	else
 	{
-		if($_SESSION['config']['databasetype'] == "POSTGRESQL")
-		{
-			$where = " folder_id ilike 'T_%' and status <> 'DEL'";
-		}
-		else
-		{
-			$where = " folder_id like 'T_%' and status <> 'DEL'";
-		}
+		$where = " lower(folder_id) like lower('T_%') and status <> 'DEL'";}
 	}
 	$request= new request;
 	$tab=$request->select($select,$where,"",$_SESSION['config']['databasetype']);

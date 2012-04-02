@@ -15,19 +15,11 @@
 require_once "core/class/class_request.php";
 $db = new dbquery();
 $db->connect();
-if ($_SESSION['config']['databasetype'] == "POSTGRESQL") {
-	$db->query(
-		"select folder_id from " . $_SESSION['tablename']['fold_folders']
-	    . " where folder_id ilike '" . $_REQUEST['Input']
-	    . "%' order by folder_id"
-	);
-} else {
-	$db->query(
-		"select folder_id from " . $_SESSION['tablename']['fold_folders']
-	    . " where folder_id like '" . $_REQUEST['Input']
-	    . "%' order by folder_id"
-	);
-}
+$db->query(
+	"select folder_id from " . $_SESSION['tablename']['fold_folders']
+    . " where lower(folder_id) like lower('" . $_REQUEST['Input']
+    . "%') order by folder_id"
+);
 //$db->show();
 $folders = array();
 while ($line = $db->fetch_object()) {

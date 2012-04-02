@@ -61,14 +61,7 @@ else
 if(isset($_REQUEST['folder_name']) && !empty($_REQUEST['folder_name']))
 {
     $_SESSION['folder_search']['folder_name'] = trim($_REQUEST['folder_name']);
-    if($_SESSION['config']['databasetype'] == "POSTGRESQL")
-    {
-        $where_request .= " ".$_SESSION['tablename']['fold_folders'].".folder_name ilike '%".$func->protect_string_db($_SESSION['folder_search']['folder_name'],$_SESSION['config']['databasetype'])."%' and ";
-    }
-    else
-    {
-        $where_request .= " ".$_SESSION['tablename']['fold_folders'].".folder_name like '%".$func->protect_string_db($_SESSION['folder_search']['folder_name'],$_SESSION['config']['databasetype'])."%' and ";
-    }
+    $where_request .= " lower(".$_SESSION['tablename']['fold_folders'].".folder_name) like lower('%".$func->protect_string_db($_SESSION['folder_search']['folder_name'],$_SESSION['config']['databasetype'])."%') and ";
 }
 else
 {
@@ -79,14 +72,7 @@ else
 if(isset($_REQUEST['folder_id']) && !empty($_REQUEST['folder_id']))
 {
     $_SESSION['folder_search']['folder_id'] = trim($_REQUEST['folder_id']);
-    if($_SESSION['config']['databasetype'] == "POSTGRESQL")
-    {
-        $where_request .= " ".$_SESSION['tablename']['fold_folders'].".folder_id ilike '".$func->protect_string_db($_SESSION['folder_search']['folder_id'],$_SESSION['config']['databasetype'])."%' and ";
-    }
-    else
-    {
-        $where_request .= " ".$_SESSION['tablename']['fold_folders'].".folder_id like '".$func->protect_string_db($_SESSION['folder_search']['folder_id'],$_SESSION['config']['databasetype'])."%' and ";
-    }
+    $where_request .= " lower(".$_SESSION['tablename']['fold_folders'].".folder_id) like lower('".$func->protect_string_db($_SESSION['folder_search']['folder_id'],$_SESSION['config']['databasetype'])."%') and ";
 }
 else
 {

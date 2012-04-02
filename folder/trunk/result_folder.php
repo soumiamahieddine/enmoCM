@@ -31,22 +31,9 @@ if(isset($_SESSION['stringSearch'])and !empty($_SESSION['stringSearch']))
 	$select[$_SESSION['tablename']['fold_foldertypes']]= array();
 	array_push($select[$_SESSION['tablename']['fold_foldertypes']],"foldertype_label");
 
-
-	if($_SESSION['config']['databasetype'] == "POSTGRESQL")
-	{
-		$where = " ".$_SESSION['tablename']['fold_folders'].".foldertype_id = ".$_SESSION['tablename']['fold_foldertypes'].".foldertype_id ";
-	}
-	else
-	{
-		$where = " ".$_SESSION['tablename']['fold_folders'].".foldertype_id = ".$_SESSION['tablename']['fold_foldertypes'].".foldertype_id ";
-	}
-	if($_SESSION['config']['databasetype'] == "POSTGRESQL"){
-		$where .= " and (folder_id ilike '%".$_SESSION['stringSearch']."%' or folder_name ilike '%".$_SESSION['stringSearch']."%' or  subject ilike '%".$_SESSION['stringSearch']."%') and status <> 'DEL'";
-	}
-	else{
-		$where .= " and (folder_id like '%".$_SESSION['stringSearch']."%' or folder_name like '%".$_SESSION['stringSearch']."%' or  subject like '%".$_SESSION['stringSearch']."%') and status <> 'DEL'";
-	}
-	
+	$where = " ".$_SESSION['tablename']['fold_folders'].".foldertype_id = ".$_SESSION['tablename']['fold_foldertypes'].".foldertype_id ";
+	$where .= " and (lower(folder_id) like lower('%".$_SESSION['stringSearch']."%') or lower(folder_name) like lower('%".$_SESSION['stringSearch']."%') or lower(subject) like lower('%".$_SESSION['stringSearch']."%')) and status <> 'DEL'";
+		
 	$request= new request;
 	$tab=$request->select($select,$where," order by folder_name ",$_SESSION['config']['databasetype']);
 	//$request->show();

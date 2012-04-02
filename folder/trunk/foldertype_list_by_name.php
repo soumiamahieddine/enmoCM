@@ -15,14 +15,8 @@ require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_reque
 $db = new dbquery();
 $db->connect();
 //$_REQUEST['what'] = "P";
-if($_SESSION['config']['databasetype'] == "POSTGRESQL")
-{
-	$db->query("select foldertype_label as tag from ".$_SESSION['tablename']['fold_foldertypes']." where foldertype_label ilike '".$_REQUEST['what']."%' order by foldertype_label");
-}
-else
-{
-	$db->query("select foldertype_label as tag from ".$_SESSION['tablename']['fold_foldertypes']." where foldertype_label like '".$_REQUEST['what']."%' order by foldertype_label");
-}
+$db->query("select foldertype_label as tag from ".$_SESSION['tablename']['fold_foldertypes']." where lower(foldertype_label) like lower('".$_REQUEST['what']."%') order by foldertype_label");
+
 //$db->show();
 $listArray = array();
 while($line = $db->fetch_object())

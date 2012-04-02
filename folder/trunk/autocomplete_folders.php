@@ -32,14 +32,8 @@ else
 {
 	$where = " folder_level = 1 and ";
 }
-if($_SESSION['config']['databasetype'] == "POSTGRESQL")
-{
-	$where .= " (folder_name ilike '%".$req->protect_string_db($_REQUEST['Input'])."%' or folder_id ilike '%".$req->protect_string_db($_REQUEST['Input'])."%' ) and status <> 'DEL'";
-}
-else
-{
-	$where .= " (folder_name like '%".$req->protect_string_db($_REQUEST['Input'])."%' or folder_id like '%".$req->protect_string_db($_REQUEST['Input'])."%' ) and status <> 'DEL'";
-}
+$where .= " (lower(folder_name) like lower('%".$req->protect_string_db($_REQUEST['Input'])."%') or lower(folder_id) like lower('%".$req->protect_string_db($_REQUEST['Input'])."%') ) and status <> 'DEL'";
+
 $other = 'order by subject, folder_name';
 
 $res = $req->select($select, $where, $other, $_SESSION['config']['databasetype'], 11,false,"","","", false);

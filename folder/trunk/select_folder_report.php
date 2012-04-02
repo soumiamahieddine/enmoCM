@@ -21,14 +21,7 @@ if(isset($_GET['what']) && !empty($_GET['what']))
 	else
 	{
 		$what = addslashes($func->wash($_GET['what'], "no", "", "no"));
-		if($_SESSION['config']['databasetype'] == 'POSTGRESQL')
-		{
-			$where = "(".$_SESSION['tablename']['fold_folders'].".folder_name ilike '".strtolower($what)."%') ";
-		}
-		else
-		{
-			$where = "(".$_SESSION['tablename']['fold_folders'].".folder_name like '".strtolower($what)."%') ";
-		}
+		$where = "(lower(".$_SESSION['tablename']['fold_folders'].".folder_name) like lower('".$what."%')) ";
 	}
 }
 	$db = new dbquery();

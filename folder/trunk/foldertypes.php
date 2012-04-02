@@ -30,14 +30,7 @@ $where ="";
 if(isset($_REQUEST['what']) && !empty($_REQUEST['what']))
 {
     $what = $func->protect_string_db($_REQUEST['what']);
-    if($_SESSION['config']['databasetype'] == 'POSTGRESQL')
-    {
-        $where = "foldertype_label ilike '".strtolower($what)."%' or foldertype_label ilike '".strtoupper($what)."%' ";
-    }
-    else
-    {
-        $where = "foldertype_label like '".strtolower($what)."%' or foldertype_label like '".strtoupper($what)."%' ";
-    }
+    $where = "lower(foldertype_label) like lower('".$what."%') ";
 }
 $list = new list_show();
 $order = 'asc';

@@ -58,14 +58,8 @@ $is = new indexing_searching();
 $_SESSION["unique_res_id"] = "";
 $_SESSION['origin'] = 'view_folder';
 $_SESSION['current_foldertype'] = '';
-if($database_type == "SQLSERVER")
-{
-    $_SESSION['date_pattern'] = "/^[0-3][0-9]-[0-1][0-9]-[1-2][0-9][0-9][0-9]$/";
-}
-else // MYSQL & POSTGRESQL
-{
-     $_SESSION['date_pattern'] = "/^[0-3][0-9]-[0-1][0-9]-[1-2][0-9][0-9][0-9]$/";
-}
+$_SESSION['date_pattern'] = "/^[0-3][0-9]-[0-1][0-9]-[1-2][0-9][0-9][0-9]$/";
+
 if(isset($_REQUEST['coll_id']) && !empty($_REQUEST['coll_id']))
 {
     $_SESSION['collection_id_choice'] = trim($_REQUEST['coll_id']);
@@ -114,35 +108,15 @@ $select[$_SESSION['tablename']['fold_folders']] = array();
 array_push($select[$_SESSION['tablename']['fold_folders']],"folders_system_id","folder_id","custom_t1","custom_t2","custom_d1", "custom_t10");
 $select[$_SESSION['tablename']['society']]= array();
 array_push($select[$_SESSION['tablename']['society']],"society_label");
-if($_SESSION['config']['databasetype'] == "POSTGRESQL")
-{
-    $where = " ".$_SESSION['tablename']['fold_folders'].".custom_t10 = ".$_SESSION['tablename']['society'].".society_sysinfo_id  and ".$_SESSION['tablename']['fold_folders'].".status <> 'DEL' ";
-}
-else
-{
-    $where = " ".$_SESSION['tablename']['fold_folders'].".custom_t10 = ".$_SESSION['tablename']['society'].".society_sysinfo_id  and ".$_SESSION['tablename']['fold_folders'].".status <> 'DEL' ";
-}
+$where = " ".$_SESSION['tablename']['fold_folders'].".custom_t10 = ".$_SESSION['tablename']['society'].".society_sysinfo_id  and ".$_SESSION['tablename']['fold_folders'].".status <> 'DEL' ";
+
 if(trim($_SESSION['FOLDER']['SEARCH']['FOLDER_NUM'])<>"")
 {
-    if($_SESSION['config']['databasetype'] == "POSTGRESQL")
-    {
-        $where .= " and ".$_SESSION['tablename']['fold_folders'].".folder_id ilike '%".$func->protect_string_db($_SESSION['FOLDER']['SEARCH']['FOLDER_NUM'],$_SESSION['config']['databasetype'])."%' ";
-    }
-    else
-    {
-        $where .= " and ".$_SESSION['tablename']['fold_folders'].".folder_id like '%".$func->protect_string_db($_SESSION['FOLDER']['SEARCH']['FOLDER_NUM'],$_SESSION['config']['databasetype'])."%' ";
-    }
+    $where .= " and lower(".$_SESSION['tablename']['fold_folders'].".folder_id) like lower('%".$func->protect_string_db($_SESSION['FOLDER']['SEARCH']['FOLDER_NUM'],$_SESSION['config']['databasetype'])."%') ";
 }
 if($_SESSION['FOLDER']['SEARCH']['CUSTOM_T1']<>"")
 {
-    if($_SESSION['config']['databasetype'] == "POSTGRESQL")
-    {
-        $where .= " and custom_t1 ilike '".$func->protect_string_db($_SESSION['FOLDER']['SEARCH']['CUSTOM_T1'],$_SESSION['config']['databasetype'])."%' ";
-    }
-    else
-    {
-        $where .= "  and custom_t1 like '".$func->protect_string_db($_SESSION['FOLDER']['SEARCH']['CUSTOM_T1'],$_SESSION['config']['databasetype'])."%' ";
-    }
+    $where .= " and lower(custom_t1) like lower('".$func->protect_string_db($_SESSION['FOLDER']['SEARCH']['CUSTOM_T1'],$_SESSION['config']['databasetype'])."%') ";
 }
 if(trim($_SESSION['FOLDER']['SEARCH']['FOLDER_NUM'])<>"" || $_SESSION['FOLDER']['SEARCH']['CUSTOM_T1']<>"")
 {

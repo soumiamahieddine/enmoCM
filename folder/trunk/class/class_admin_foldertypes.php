@@ -1215,16 +1215,10 @@ class foldertype extends dbquery
         foreach (array_keys($indexes) as $key) {
             if ($key == $fieldName) {// type == 'string'
                 if (!empty($val)) {
-                    if ($_SESSION['config']['databasetype'] == "POSTGRESQL") {
-                        $whereRequest .= " " . $_SESSION['tablename']['fold_folders']
-                        	. "." . $key . " ilike '%"
-                        	. $this->protect_string_db($val) . "%' and ";
-                    } else {
-                        $whereRequest .= " " . $_SESSION['tablename']['fold_folders']
-                        	. "." . $key . " like '%" 
-                        	. $this->protect_string_db($val) . "%' and ";
+                    $whereRequest .= " lower(" . $_SESSION['tablename']['fold_folders']
+                        . "." . $key . ") like lower('%" 
+                        . $this->protect_string_db($val) . "%') and ";
                     }
-                }
                 break;
             } else if ($key.'_from' == $fieldName || $key.'_to' == $fieldName) { 
             	// type == 'date'
