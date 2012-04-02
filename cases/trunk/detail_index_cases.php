@@ -156,7 +156,7 @@ else
                     <?php  echo _CASE_CREATION_DATE; ?> :
                 </td>
                 <td>
-                    <input type="text" class="readonly" readonly="readonly" value="<?php if ($_SESSION['config']['databasetype'] == "ORACLE") echo $case_indexes['case_creation_date']; else echo $db->format_date_db($case_indexes['case_creation_date']) ?>" size="40"  />
+                    <input type="text" class="readonly" readonly="readonly" value="<?php echo $db->format_date_db($case_indexes['case_creation_date']); ?>" size="40"  />
                 </td>
             </tr>
 
@@ -169,7 +169,7 @@ else
                     <?php  echo _CASE_LAST_UPDATE_DATE; ?> :
                 </td>
                 <td>
-                    <input type="text" class="readonly" readonly="readonly" value="<?php if ($_SESSION['config']['databasetype'] == "ORACLE") echo $case_indexes['case_last_update_date']; else echo $db->format_date_db($case_indexes['case_last_update_date']) ?>" size="40"  />
+                    <input type="text" class="readonly" readonly="readonly" value="<?php echo $db->format_date_db($case_indexes['case_last_update_date']); ?>" size="40"  />
                 </td>
             </tr>
 
@@ -182,7 +182,7 @@ else
                     <?php  echo _CASE_CLOSING_DATE; ?> :
                 </td>
                 <td>
-                    <input type="text" class="readonly" readonly="readonly" value="<?php if ($_SESSION['config']['databasetype'] == "ORACLE") echo $case_indexes['case_closing_date']; else echo $db->format_date_db($case_indexes['case_closing_date']) ?>" size="40"  />
+                    <input type="text" class="readonly" readonly="readonly" value="<?php echo $db->format_date_db($case_indexes['case_closing_date']); ?>" size="40"  />
                 </td>
             </tr>
 
