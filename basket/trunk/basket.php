@@ -62,14 +62,7 @@ $where ="";
 if(isset($_REQUEST['what']) && !empty($_REQUEST['what']))
 {
     $what = addslashes($func->wash($_REQUEST['what'], "nick", "", "no"));
-    if($_SESSION['config']['databasetype'] == "POSTGRESQL")
-    {
-        $where .= "  ( basket_id ilike '".$func->protect_string_db($what,$_SESSION['config']['databasetype'])."%') ";
-    }
-    else
-    {
-        $where .= " (basket_id like '".$func->protect_string_db($what,$_SESSION['config']['databasetype'])."%') ";
-    }
+    $where .= " lower(basket_id) like lower('".$func->protect_string_db($what,$_SESSION['config']['databasetype'])."%') ";
 }
 $list = new list_show();
 $order = 'asc';

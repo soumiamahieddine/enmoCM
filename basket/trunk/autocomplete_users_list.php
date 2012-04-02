@@ -35,14 +35,7 @@ $req->connect();
 
 $select = array();
 $select[$_SESSION['tablename']['users']]= array('lastname', 'firstname', 'user_id');
-if($_SESSION['config']['databasetype'] == "POSTGRESQL")
-{
-	$where = " (lastname ilike '".$_REQUEST['UserInput']."%' or firstname ilike '".$_REQUEST['UserInput']."%' or user_id ilike '".$_REQUEST['UserInput']."%')  and user_id <> '".$_REQUEST['baskets_owner']."' and (status = 'OK' ) and enabled = 'Y'";
-}
-else
-{
-	$where = " (lastname like '".$_REQUEST['UserInput']."%' or firstname like '".$_REQUEST['UserInput']."%' or user_id like '".$_REQUEST['UserInput']."%')  and user_id <> '".$_REQUEST['baskets_owner']."' and (status = 'OK' ) and enabled = 'Y'";
-}
+$where = " (lower(lastname) like lower('".$_REQUEST['UserInput']."%') or lower(firstname) like lower('".$_REQUEST['UserInput']."%') or user_id like '".$_REQUEST['UserInput']."%')  and user_id <> '".$_REQUEST['baskets_owner']."' and (status = 'OK' ) and enabled = 'Y'";
 
 $other = 'order by lastname';
 
