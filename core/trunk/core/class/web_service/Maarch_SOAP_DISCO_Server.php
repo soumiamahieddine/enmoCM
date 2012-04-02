@@ -19,7 +19,11 @@ class Maarch_SOAP_DISCO_Server extends SOAP_DISCO_Server
         $rootUri = self::_getRootUri();
         $protocol = (array_key_exists('HTTPS', $_SERVER) && $_SERVER['HTTPS'] == 'on')
             ? 'https://' : 'http://' ;
-        return $protocol . $this->host . $rootUri . '/' . basename(Url::scriptName());
+        $lastChar = strlen($rootUri) - 1;
+        if ($rootUri[$lastChar] != '/') {
+            $rootUri .= '/';
+        }
+        return $protocol . $this->host . $rootUri . basename(Url::scriptName());
     }
     
     private static function _getRootUri()
