@@ -71,60 +71,34 @@ if (isset($_GET['what_users']) && ! empty($_GET['what_users']) ) {
         $func->wash($_GET['what_users'], "no", "", "no")
     );
 
-    if ($_SESSION['config']['databasetype'] == 'POSTGRESQL') {
-        $whereUsers .= " and (u.lastname ilike '%" . strtolower($whatUsers)
-                    . "%' or u.lastname ilike '%" . strtoupper($whatUsers)
-                    . "%' or u.firstname ilike '%" . strtolower($whatUsers)
-                    . "%' or u.firstname ilike '%" . strtoupper($whatUsers)
-                    . "%' or u.user_id ilike '%" . strtolower($whatUsers)
-                    . "%' or u.user_id ilike '%".strtoupper($whatUsers)."%')";		
-    } else {
-        $whereUsers .= " and (u.lastname like '%".strtolower($whatUsers)."%'
+    $whereUsers .= " and (u.lastname like '%".strtolower($whatUsers)."%'
                 or u.lastname like '%".strtoupper($whatUsers)."%'
                 or u.firstname like '%".strtolower($whatUsers)."%'
                 or u.firstname like '%".strtoupper($whatUsers)."%'
                 or u.user_id like '%".strtolower($whatUsers)."%'
                 or u.user_id like '%".strtoupper($whatUsers)."%')";
-    }
     $orderByUsers = " order by u.lastname asc, u.firstname asc, "
     			  . "e.entity_label asc";
 
-    if ($_SESSION['config']['databasetype'] == 'POSTGRESQL') {
-        $whereEntitiesUsers .= " and (u.lastname ilike '%".strtolower($whatUsers)."%'
-                or u.lastname ilike '%".strtoupper($whatUsers)."%'
-                or u.firstname ilike '%".strtolower($whatUsers)."%'
-                or u.firstname ilike '%".strtoupper($whatUsers)."%'
-                or u.user_id ilike '%".strtolower($whatUsers)."%'
-                or u.user_id ilike '%".strtoupper($whatUsers)."%')";
-    } else {
-        $whereEntitiesUsers .= " and (u.lastname like '%".strtolower($whatUsers)."%'
+    $whereEntitiesUsers .= " and (u.lastname like '%".strtolower($whatUsers)."%'
                 or u.lastname like '%".strtoupper($whatUsers)."%'
                 or u.firstname like '%".strtolower($whatUsers)."%'
                 or u.firstname like '%".strtoupper($whatUsers)."%'
                 or u.user_id like '%".strtolower($whatUsers)."%'
                 or u.user_id like '%".strtoupper($whatUsers)."%')";
-    }
     $orderByEntities = " order by e.entity_label asc";
 }
 if (isset($_GET['what_services']) && ! empty($_GET['what_services'])) {
     $whatServices = addslashes(
         $func->wash($_GET['what_services'], "no", "", "no")
     );
-    if ($_SESSION['config']['databasetype'] == 'POSTGRESQL') {
-        $whereUsers .= " and (e.entity_label ilike '%" . strtolower($whatServices)
-                    . "%' or e.entity_id ilike '%" . strtoupper($whatServices)
-                    . "%')";
-        $whereEntities .= " and (e.entity_label ilike '%"
-                       . strtolower($whatServices) . "%' or e.entity_id ilike '%"
-                       . strtolower($whatServices) ."%' )";
-    } else {
-        $whereUsers .= " and (e.entity_label like '%" . strtolower($whatServices)
+	$whereUsers .= " and (e.entity_label like '%" . strtolower($whatServices)
                     . "%' or e.entity_id like '%" . strtoupper($whatServices)
                     . "%')";
-        $whereEntities .= " and (e.entity_label like '%"
+    $whereEntities .= " and (e.entity_label like '%"
                        . strtolower($whatServices) . "%' or e.entity_id like '%"
                        . strtolower($whatServices) . "%' )";
-    }
+
     $orderByUsers = " order by e.entity_label asc, "
     			  . "u.lastname asc, u.firstname asc";
     $orderByEntities = " order by e.entity_label asc";

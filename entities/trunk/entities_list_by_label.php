@@ -17,14 +17,8 @@ require_once("modules/entities/entities_tables.php");
 $ent = new entity();
 
 $select = "select entity_label from ".ENT_ENTITIES;
-if($_SESSION['config']['databasetype'] == 'POSTGRESQL')
-{
-    $where = " where entity_label ilike '".$_REQUEST['what']."%' ";
-}
-else
-{
-    $where = " where entity_label like '".$_REQUEST['what']."%' ";
-}
+$where = " where lower(entity_label) like lower('".$_REQUEST['what']."%') ";
+
 if($_SESSION['user']['UserId'] != 'superadmin')
 {
     $my_tab_entities_id = $ent->get_all_entities_id_user($_SESSION['user']['entities']);

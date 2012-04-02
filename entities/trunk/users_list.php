@@ -41,14 +41,7 @@ $my_tab_entities_id = array();
 if(isset($_REQUEST['what']) && !empty($_REQUEST['what']))
 {
     $what = $func->protect_string_db($_REQUEST['what']);
-    if($_SESSION['config']['databasetype'] == 'POSTGRESQL')
-    {
-        $where = " (lastname ilike '".strtolower($what)."%' or lastname ilike '".strtoupper($what)."%') ";
-    }
-    else
-    {
-        $where = " (lastname like '".strtolower($what)."%' or lastname like '".strtoupper($what)."%') ";
-    }
+    $where = " lower(lastname) like lower('".$what."%') ";
 }
 
 if($_SESSION['user']['UserId'] != 'superadmin')

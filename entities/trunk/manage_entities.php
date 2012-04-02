@@ -57,14 +57,7 @@ $where = '';
 if(isset($_REQUEST['what']) && !empty($_REQUEST['what']))
 {
     $what = $func->protect_string_db($_REQUEST['what']);
-    if($_SESSION['config']['databasetype'] == 'POSTGRESQL')
-    {
-        $where = "(entity_label ilike '".strtolower($what)."%' or entity_label ilike '".strtoupper($what)."%') ";
-    }
-    else
-    {
-        $where = "(entity_label like '".strtolower($what)."%' or entity_label like '".strtoupper($what)."%') ";
-    }
+	$where = " lower(entity_label) like lower('".$what."%') ";
 }
 
 if($_SESSION['user']['UserId'] != 'superadmin')
