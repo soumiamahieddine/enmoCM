@@ -92,7 +92,11 @@ if (
         $core_tools->test_user();
         $core_tools->load_lang();
         $function = new functions();
-        if ($objectType <> 'template' && $objectType <> 'templateStyle') {
+        if (
+            $objectType <> 'template' 
+            && $objectType <> 'templateStyle'
+            && $objectType <> 'attachementFromTemplate'
+        ) {
             //case of res -> master, version or attachement
             include 'modules/content_management/retrieve_res_from_cm.php';
         } else {
@@ -148,7 +152,7 @@ if (
                 //depending on the type of object, the action is not the same
                 if ($objectType == 'resource') {
                     include 'modules/content_management/save_new_version_from_cm.php';
-                } elseif ($objectType == 'attachement') {
+                } elseif ($objectType == 'attachement' || $objectType == 'attachementFromTemplate') {
                     include 'modules/content_management/save_attach_res_from_cm.php';
                 } elseif ($objectType == 'templateStyle' || $objectType == 'template') {
                     include 'modules/content_management/save_template_from_cm.php';

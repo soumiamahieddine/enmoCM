@@ -14,7 +14,7 @@ if ($objectType == 'templateStyle') {
             _FAILED_TO_COPY_ON_TMP . ':' . $objectId . ' ' . $filePathOnTmp
         );
     }
-} elseif ($objectType == 'template') {
+} elseif ($objectType == 'template' || $objectType == 'attachementFromTemplate') {
     if ($_SESSION['m_admin']['templates']['current_style'] <> '') {
         // edition in progress
         $fileExtension = $func->extractFileExt(
@@ -22,6 +22,12 @@ if ($objectType == 'templateStyle') {
         );
         $filePathOnTmp = $_SESSION['m_admin']['templates']['current_style'];
     } else {
+        //new attachment from a template
+        if (isset($_SESSION['cm']['resMaster']) && $_SESSION['cm']['resMaster'] <> '') {
+            $sec = new security();
+            $collId = $sec->retrieve_coll_id_from_table($objectTable);
+            $_SESSION['cm']['collId'] = $collId;
+        }
         // new edition
         require_once 'modules/templates/templates_tables_definition.php';
         $dbTemplate = new dbquery();

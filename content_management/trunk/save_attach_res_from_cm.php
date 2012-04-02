@@ -1,11 +1,21 @@
 <?php
-
 require_once 'modules/attachments/attachments_tables.php';
+
+//new attachment from a template
+if (isset($_SESSION['cm']['resMaster']) && $_SESSION['cm']['resMaster'] <> '') {
+   $objectId = $_SESSION['cm']['resMaster'];
+}
+
+$_SESSION['cm']['resMaster'] = '';
 
 $docserverControler = new docservers_controler();
 $docserver = $docserverControler->getDocserverToInsert(
     $_SESSION['cm']['collId']
 );
+
+$collId = $_SESSION['cm']['collId'];
+$_SESSION['cm']['collId'] = '';
+
 if (empty($docserver)) {
     $_SESSION['error'] = _DOCSERVER_ERROR . ' : '
         . _NO_AVAILABLE_DOCSERVER . '. ' . _MORE_INFOS . '.';
@@ -28,7 +38,7 @@ if (empty($docserver)) {
 
         $storeResult = array();
         $storeResult = $docserverControler->storeResourceOnDocserver(
-            $_SESSION['cm']['collId'], $fileInfos
+            $collId, $fileInfos
         );
         if (isset($storeResult['error']) && $storeResult['error'] <> '') {
             $_SESSION['error'] = $storeResult['error'];
@@ -95,7 +105,7 @@ if (empty($docserver)) {
                 $_SESSION['data'],
                 array(
                     'column' => 'coll_id',
-                    'value' => $_SESSION['cm']['collId'],
+                    'value' => $collId,
                     'type' => 'string',
                 )
             );
@@ -135,7 +145,7 @@ if (empty($docserver)) {
                     $hist = new history();
                     $sec = new security();
                     $view = $sec->retrieve_view_from_coll_id(
-                        $_SESSION['cm']['collId']
+                        $collId
                     );
                     $hist->add(
                         $view, $objectId, 'ADD', 'attachadd',

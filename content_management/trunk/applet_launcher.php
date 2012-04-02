@@ -36,6 +36,7 @@ $sec = new security();
 /* Values for objectType :
  * - resource
  * - attachement
+ * - attachementFromTemplate
  * - template
  * - templateStyle
 */
