@@ -25,7 +25,7 @@ else
     }
 }
 
-
+set_include_path(get_include_path().PATH_SEPARATOR."C:/xampp/htdocs/mlb_agglo/");
 //CLASS_LOG
 //Si une class custom est définie
 if( file_exists(dirname($ldap_conf_file)."/../class/class_log.php") )
