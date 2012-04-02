@@ -170,24 +170,11 @@ function display_list() {
     if (isset($_REQUEST['what'])) {
         $what = $func->protect_string_db($_REQUEST['what']);
     }
-    if ($_SESSION['config']['databasetype'] == 'POSTGRESQL') {
-        $where .= " (description ilike '". $func->protect_string_db(
-            $what, $_SESSION['config']['databasetype']
-        )
-               . "%'  or description ilike '" . $func->protect_string_db(
-                   $what, $_SESSION['config']['databasetype']
-               )
-               . "%' ) ";
-    } else {
-        $where .= " (description like '"
-               . $func->protect_string_db(
-                   $what, $_SESSION['config']['databasetype']
-               )
-               . "%'  or description like '" . $func->protect_string_db(
-                   $what, $_SESSION['config']['databasetype']
-               )
-               . "%' ) ";
-    }
+    $where .= " (lower(description) like lower('"
+				. $func->protect_string_db($what, $_SESSION['config']['databasetype'])
+				. "%') or lower(description) like lower('"
+				. $func->protect_string_db($what, $_SESSION['config']['databasetype'])
+				. "%')) ";
 
     // Checking order and order_field values
     $order = 'asc';

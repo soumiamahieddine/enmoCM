@@ -232,7 +232,6 @@ class templates_association_controler extends ObjectControler implements ObjectC
     *                     'log_status_add'     => 'true' / 'false': log status
     *                                               addition,
     *                     'databasetype'       => Type of the database
-    *                                               ('POSTGRESQL', ...)
     *                )
     * @return array (  'status' => 'ok' / 'ko',
     *                  'value'  => template_association identifier or empty in case of error,
