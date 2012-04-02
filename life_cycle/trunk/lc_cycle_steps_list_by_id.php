@@ -34,13 +34,8 @@ require_once ("modules/life_cycle/life_cycle_tables_definition.php");
 require_once('core/admin_tools.php');
 $db = new dbquery();
 $db->connect();
-if ($_SESSION['config']['databasetype'] == "POSTGRESQL") {
-    $db->query("select cycle_step_id as tag from " 
-               . _LC_CYCLE_STEPS_TABLE_NAME . " where cycle_step_id ilike '" 
-               . $_REQUEST['what'] . "%' order by cycle_step_id");
-} else {
-    $db->query("select cycle_step_id as tag from " 
-               . _LC_CYCLE_STEPS_TABLE_NAME . " where cycle_step_id like '" 
-               . $_REQUEST['what'] . "%' order by cycle_step_id");
+$db->query("select cycle_step_id as tag from " 
+	. _LC_CYCLE_STEPS_TABLE_NAME . " where lower(cycle_step_id) like lower('" 
+	. $_REQUEST['what'] . "%') order by cycle_step_id");
 }
 At_showAjaxList($db, $_REQUEST['what']);

@@ -308,11 +308,7 @@ function display_list()
     $where = "";
     if (isset($_REQUEST['what']) && !empty($_REQUEST['what'])) {
         $what = $func->protect_string_db($_REQUEST['what']);
-        if ($_SESSION['config']['databasetype'] == "POSTGRESQL") {
-            $where = $idName." ilike '".strtoupper($what)."%' ";
-        } else {
-            $where = $idName." like '".strtoupper($what)."%' ";
-        }
+        $where = "lower(".$idName.") like lower('".$what."%') ";
     }
 
     // Checking order and order_field values
