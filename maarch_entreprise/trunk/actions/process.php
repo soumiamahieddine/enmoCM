@@ -429,6 +429,36 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $frm_str .= '</h2>';
             $frm_str .= '<div class="desc" id="done_answers_div" style="display:none;width:90%;">';
                 $frm_str .= '<div class="ref-unit" style="width:95%;">';
+                
+                if ($core_tools->is_module_loaded('attachments')) {
+                    $req = new request;
+                    $req->connect();
+                    $req->query("select res_id from ".$_SESSION['tablename']['attach_res_attachments']." where status = 'NEW' and res_id_master = ".$res_id);
+                    //$req->show();
+                    $nb_attach = 0;
+                    if ($req->nb_result() > 0) {
+                        $nb_attach = $req->nb_result();
+                    }
+                    $frm_str .= '<div class="ref-unit">';
+                    $frm_str .= '<input type="button" name="attach" id="attach" class="button" value="'
+                        . _ATTACH
+                        . '" onclick="javascript:window.open(\''.$_SESSION['config']['businessappurl']
+                        . 'index.php?display=true&module=attachments&page=join_file\',\'\', \'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=550,height=200\');" /> ';
+                    if ($core_tools->is_module_loaded('templates')) {
+                        $frm_str .= '<input type="button" name="template" id="template" class="button" value="' . _GENERATE . '" onclick="javascript:window.open(\''
+                            . $_SESSION['config']['businessappurl']
+                            . 'index.php?display=true&module=templates&page=choose_template&entity='
+                            . $data['destination']['value']
+                            . '&res_id=' . $res_id
+                            . '&coll_id=' . $coll_id
+                            . '\',\'\', \'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=355,height=210\');" />';
+                    }
+                    $frm_str .= '<iframe name="list_attach" align="left" id="list_attach" src="'
+                    . $_SESSION['config']['businessappurl']
+                    . 'index.php?display=true&module=attachments&page=frame_list_attachments" frameborder="0" width="430px" height="100px"></iframe>';
+                    $frm_str .= '</div><br>';
+                }
+                
                     $frm_str .= '<table width="95%">';
                         $frm_str .= '<tr>';
                                     $frm_str .= '<td>';
@@ -462,7 +492,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                                         $frm_str .= 'checked="checked"';
                                     }
                                    // $frm_str .='onclick="unmark_empty_process(\'no_answer\');" />'._NO_ANSWER.'<br/>';
-									$frm_str .='/>'._NO_ANSWER.'<br />';
+                                    $frm_str .='/>'._NO_ANSWER.'<br />';
                                     $frm_str .= '<input type="checkbox"  class="check" name="other" id="other" value="true"';
                                     if ($process_data['other']) {
                                         $frm_str .= 'checked="checked"';
@@ -487,25 +517,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                                     $frm_str .= '<td><label for="process_notes">'._PROCESS_NOTES.' : </label><br/><textarea name="process_notes" id="process_notes" style="display:block;" rows="8" cols="5">'.$process_data['process_notes'].'</textarea></td>';
                                     $frm_str .= '</tr>';
                                     $frm_str .= '</table>';
-                if ($core_tools->is_module_loaded('attachments')) {
-                    $req = new request;
-                    $req->connect();
-                    $req->query("select res_id from ".$_SESSION['tablename']['attach_res_attachments']." where status = 'NEW' and res_id_master = ".$res_id);
-                    //$req->show();
-                    $nb_attach = 0;
-                    if ($req->nb_result() > 0) {
-                        $nb_attach = $req->nb_result();
-                    }
-                    $frm_str .= '<div class="ref-unit">';
-                    $frm_str .= '<input type="button" name="attach" id="attach" class="button" value="'._ATTACH.'" onclick="javascript:window.open(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=join_file\',\'\', \'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=550,height=200\');" /> ';
-                    if ($core_tools->is_module_loaded("templates")) {
-                        $frm_str .= '<input type="button" name="template" id="template" class="button" value="'._GENERATE.'" onclick="javascript:window.open(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=templates&page=choose_template&entity='.$data['destination']['value'].'&res_id='.$res_id.'&coll_id='.$coll_id.'\',\'\', \'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=355,height=210\');" />';
-                    }
-					// $frm_str .= '<input type="button" name="sendmail" id="sendmail" class="button" value="'._SEND_EMAIL.'" onClick="javascript:window.open(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&page=send_email\', \'\', \'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=800,height=630\');" />';
-					
-                    $frm_str .= '<iframe name="list_attach" align="left" id="list_attach" src="'.$_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=frame_list_attachments" frameborder="0" width="430px" height="100px"></iframe>';
-                    $frm_str .= '</div>';
-                }
+                
             $frm_str .= '</div>';
             $frm_str .= '</div><br/>';
 
