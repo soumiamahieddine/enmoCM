@@ -43,14 +43,7 @@ $where ="";
 if(isset($_REQUEST['what']) && !empty($_REQUEST['what']))
 {
     $what = addslashes($func->wash($_REQUEST['what'], "alphanum", "", "no"));
-    if($_SESSION['config']['databasetype'] == "POSTGRESQL")
-    {
-        $where .= "  (label ilike '".$func->protect_string_db($what,$_SESSION['config']['databasetype'])."%') ";
-    }
-    else
-    {
-        $where .= " (label like '".$func->protect_string_db($what,$_SESSION['config']['databasetype'])."%') ";
-    }
+    $where .= " (lower(label) like lower('".$func->protect_string_db($what,$_SESSION['config']['databasetype'])."%')) ";
 }
 $list = new list_show();
 $order = 'asc';

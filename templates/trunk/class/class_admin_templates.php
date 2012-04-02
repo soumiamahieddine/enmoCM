@@ -246,15 +246,9 @@ class admin_templates extends dbquery
                     if( $_REQUEST['mode'] == "add")
                     {
                         $this->query("INSERT INTO ".$_SESSION['tablename']['temp_templates']." (label, creation_date, template_comment, content) VALUES ('".$_SESSION['m_admin']['template']['LABEL']."', ".$request->current_datetime().",'".$_SESSION['m_admin']['template']['COMMENT']."', '".$_SESSION['m_admin']['template']['CONTENT']."')", false, true);
-                        if($_SESSION['config']['databasetype'] == "POSTGRESQL")
-                        {
-                            $this->query("select id from ".$_SESSION['tablename']['temp_templates']." where label = '".$request->protect_string_db($_SESSION['m_admin']['template']['LABEL'])."' and template_comment = '".$request->protect_string_db($_SESSION['m_admin']['template']['COMMENT'])."' and content ilike '".$request->protect_string_db($_SESSION['m_admin']['template']['CONTENT'])."'", false, true);
-                        }
-                        else
-                        {
-                            $this->query("select id from ".$_SESSION['tablename']['temp_templates']." where label = '".$request->protect_string_db($_SESSION['m_admin']['template']['LABEL'])."' and template_comment = '".$request->protect_string_db($_SESSION['m_admin']['template']['COMMENT'])."' and content like '".$request->protect_string_db($_SESSION['m_admin']['template']['CONTENT'])."'", false, true);
-                        }
-                        $res = $this->fetch_object();
+                        $this->query("select id from ".$_SESSION['tablename']['temp_templates']." where label = '".$request->protect_string_db($_SESSION['m_admin']['template']['LABEL'])."' and template_comment = '".$request->protect_string_db($_SESSION['m_admin']['template']['COMMENT'])."' and lower(content) like lower('".$request->protect_string_db($_SESSION['m_admin']['template']['CONTENT'])."')", false, true);
+                        
+						$res = $this->fetch_object();
                         $_SESSION['m_admin']['template']['ID'] = $res->id;
                         if($_SESSION['history']['templateadd'] == "true")
                         {
