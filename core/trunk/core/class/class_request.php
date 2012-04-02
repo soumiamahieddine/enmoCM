@@ -42,7 +42,7 @@ class request extends dbquery
     * @param  $select array Query fields
     * @param  $where  string Where clause of the query
     * @param  $other  string Query complement (order by, ...)
-    * @param  $database_type string Type of the database (MYSQL, POSTGRESQL, ...)
+    * @param  $database_type string Type of the database
     * @param  $limit string Maximum numbers of results (500 by default)
     * @param  $left_join boolean Is the request is a left join ? (false by default)
     * @param  $first_join_table string Name of the first join table (empty by default)
@@ -198,7 +198,7 @@ class request extends dbquery
     *
     * @param string $table table to insert
     * @param array $data data to insert
-    * @param array $database_type type of the database (MYSQL, POSTGRESQL, ...)
+    * @param array $database_type type of the database
     * @return bool True if the query was sent ok and processed by the database without error, False otherwise
     */
     public function insert($table, $data, $database_type)
@@ -238,7 +238,7 @@ class request extends dbquery
     * @param  $table string Table to update
     * @param  $data array Data to update
     * @param  $where array Where clause of the query
-    * @param  $database_type array Type of the database (MYSQL, POSTGRESQL, ...)
+    * @param  $database_type array Type of the database
     */
     public function update($table, $data, $where, $databasetype)
     {

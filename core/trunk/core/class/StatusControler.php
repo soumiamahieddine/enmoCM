@@ -93,7 +93,7 @@ class Maarch_Core_Class_StatusControler
     *                                         log status modification ,
     *                 'log_status_add'   => 'true' / 'false': log status
     *                                          addition,
-    *                 'databasetype'     => Type of the database ('POSTGRESQL'),
+    *                 'databasetype'     => Type of the database
     *                 )
     * @return array (  'status' => 'ok' / 'ko',
     *                  'value'  => User identifier or empty in case of error,
@@ -217,7 +217,6 @@ class Maarch_Core_Class_StatusControler
     *                     'log_status_add'     => 'true' / 'false': log status
     *                                               addition,
     *                     'databasetype'       => Type of the database
-    *                                               ('POSTGRESQL', ...)
     *                )
     * @return array (  'status' => 'ok' / 'ko',
     *                  'value'  => Status identifier or empty in case of error,

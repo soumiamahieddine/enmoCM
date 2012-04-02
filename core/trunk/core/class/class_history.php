@@ -46,7 +46,7 @@ class history extends dbquery
     * @param  $id integer Identifier of the event to add
     * @param  $how string Event type (Keyword)
     * @param  $what string Event description
-    * @param  $databasetype string Type of the database (MYSQL, POSTGRESQL, etc...)
+    * @param  $databasetype string Type of the database
     * @param  $id_module string Identifier of the module concerned 
     * by the event (admin by default)
     */

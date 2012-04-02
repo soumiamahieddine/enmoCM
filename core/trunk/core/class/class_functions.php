@@ -321,14 +321,7 @@ class functions
                         return "";
                     }
                 case "date":
-                    if(isset($_SESSION['config']['databasetype']) && $_SESSION['config']['databasetype'] == "SQLSERVER")
-                    {
-                        $date_pattern = "/^[0-3][0-9]-[0-1][0-9]-[1-2][0-9][0-9][0-9]$/";
-                    }
-                    else // MYSQL & POSTGRESQL
-                    {
-                        $date_pattern = "/^[0-3][0-9]-[0-1][0-9]-[1-2][0-9][0-9][0-9]$/";
-                    }
+                    $date_pattern = "/^[0-3][0-9]-[0-1][0-9]-[1-2][0-9][0-9][0-9]$/";
                     if(preg_match($date_pattern,$w_var))
                     {
                         return $w_var;

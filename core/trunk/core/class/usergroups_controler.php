@@ -254,7 +254,7 @@ class usergroups_controler extends ObjectControler implements ObjectControlerIF
     *      'modules_services'      => $_SESSION['modules_services'] type array,
     *      'log_group_up'          => 'true' / 'false': log group modification ,
     *      'log_group_add'         => 'true' / 'false': log group addition ,
-    *      'databasetype'          => Type of the database ('POSTGRESQL', ...),
+    *      'databasetype'          => Type of the database,
     *      'user_id'               => Current user identifier (used to process
     *                                 context variables : @entities, ...)
     *       )
@@ -451,7 +451,7 @@ class usergroups_controler extends ObjectControler implements ObjectControlerIF
     *           'modules_services'  => $_SESSION['modules_services'] type array,
     *           'log_group_up'      => 'true' / 'false': log group modification,
     *           'log_group_add'     => 'true' / 'false': log group addition ,
-    *           'databasetype'      => Type of the database ('POSTGRESQL', ...)
+    *           'databasetype'      => Type of the database
     *          )
     * @return array (
     *           'status' => 'ok' / 'ko',

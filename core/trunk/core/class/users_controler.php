@@ -142,7 +142,7 @@ class users_controler extends ObjectControler implements ObjectControlerIF
     *                 'log_user_up'      => 'true' / 'false':
     *                                       log user modification ,
     *                 'log_user_add'     => 'true' / 'false': log user addition,
-    *                 'databasetype'     => Type of the database ('POSTGRESQL'),
+    *                 'databasetype'     => Type of the database,
     *                 'userdefaultpassword' => Default password for user,
     *                 'manageGroups'     => If true manage groups for the user
     *                                       )
@@ -289,7 +289,6 @@ class users_controler extends ObjectControler implements ObjectControlerIF
     *                     'log_user_add'       => 'true' / 'false': log user
     *                                             addition ,
     *                     'databasetype'       => Type of the database
-    *                                             ('POSTGRESQL', ...),
     *                     'userdefaultpassword' => Default password for user,
     *                     'manageGroups'     => If true manage groups for the user
     *                )

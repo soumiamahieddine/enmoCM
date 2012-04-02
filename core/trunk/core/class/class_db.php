@@ -886,6 +886,5 @@ class dbquery extends functions
         default             : return "''";
         }
     }
-
     
 }
