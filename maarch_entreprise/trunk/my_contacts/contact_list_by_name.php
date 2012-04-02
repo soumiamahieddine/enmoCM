@@ -31,14 +31,9 @@
 
 $db = new dbquery();
 $db->connect();
-if($_SESSION['config']['databasetype'] == "POSTGRESQL")
-{
-	$db->query("select lastname as tag from ".$_SESSION['tablename']['contacts']." where lastname ilike '".$_REQUEST['what']."%' and user_id = '".$_SESSION['user']['UserId']."' order by lastname");
-}
-else
-{
-	$db->query("select lastname as tag from ".$_SESSION['tablename']['contacts']." where lastname like '".$_REQUEST['what']."%' and user_id = '".$_SESSION['user']['UserId']."' order by lastname");
-}
+$db->query("select lastname as tag from ".$_SESSION['tablename']['contacts']
+	." where lower(lastname) like lower('".$_REQUEST['what']."%') and user_id = '".$_SESSION['user']['UserId']."' order by lastname");
+
 $listArray = array();
 while($line = $db->fetch_object())
 {

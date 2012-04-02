@@ -30,16 +30,9 @@
 
 $db = new dbquery();
 $db->connect();
-if($_SESSION['config']['databasetype'] == 'POSTGRESQL'){
-	$db->query('select label_action as tag from ' 
-    . $_SESSION['tablename']['actions'] . " where label_action ilike '"
-    . $_REQUEST['what'] . "%' order by label_action");
-}
-else{
-	$db->query('select label_action as tag from '
-    . $_SESSION['tablename']['actions'] . " where label_action like '"
-    . $_REQUEST['what'] . "%' order by label_action");
-}
+$db->query('select label_action as tag from '
+    . $_SESSION['tablename']['actions'] . " where lower(label_action) like lower'"
+    . $_REQUEST['what'] . "%') order by label_action");
 $listArray = array();
 while($line = $db->fetch_object()){
 	array_push($listArray, $line->tag);

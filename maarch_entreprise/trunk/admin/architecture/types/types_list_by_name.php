@@ -32,14 +32,8 @@
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
 $db = new dbquery();
 $db->connect();
-if($_SESSION['config']['databasetype'] == "POSTGRESQL")
-{
-	$db->query("select description as tag from ".$_SESSION['tablename']['doctypes']." where description ilike '".$_REQUEST['what']."%' order by description");
-}
-else
-{
-	$db->query("select description as tag from ".$_SESSION['tablename']['doctypes']." where description like '".$_REQUEST['what']."%' order by description");
-}
+$db->query("select description as tag from ".$_SESSION['tablename']['doctypes']." where lower(description) like lower('".$_REQUEST['what']."%') order by description");
+
 $listArray = array();
 while($line = $db->fetch_object())
 {

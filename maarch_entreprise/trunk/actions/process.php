@@ -501,6 +501,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                     if ($core_tools->is_module_loaded("templates")) {
                         $frm_str .= '<input type="button" name="template" id="template" class="button" value="'._GENERATE.'" onclick="javascript:window.open(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=templates&page=choose_template&entity='.$data['destination']['value'].'&res_id='.$res_id.'&coll_id='.$coll_id.'\',\'\', \'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=355,height=210\');" />';
                     }
+					// $frm_str .= '<input type="button" name="sendmail" id="sendmail" class="button" value="'._SEND_EMAIL.'" onClick="javascript:window.open(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&page=send_email\', \'\', \'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=800,height=630\');" />';
+					
                     $frm_str .= '<iframe name="list_attach" align="left" id="list_attach" src="'.$_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=frame_list_attachments" frameborder="0" width="430px" height="100px"></iframe>';
                     $frm_str .= '</div>';
                 }

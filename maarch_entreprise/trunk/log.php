@@ -117,15 +117,9 @@ if (! empty($_SESSION['error'])) {
             $db = new dbquery();
             $db->connect();
 
-            if ($_SESSION['config']['databasetype'] == 'POSTGRESQL') {
-                $query = 'select * from ' . USERS_TABLE
-                       . " where user_id ilike '"
-                       . $this->protect_string_db($login) . "' ";
-            } else {
-                $query = 'select * from ' . USERS_TABLE
+            $query = 'select * from ' . USERS_TABLE
                        . " where user_id like '"
                        . $this->protect_string_db($login) . "' ";
-            }
 
             $db->query($query);
             if ($db->fetch_object()) {

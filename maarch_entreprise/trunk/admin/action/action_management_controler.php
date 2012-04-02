@@ -243,17 +243,10 @@ if ($mode == 'up') {
     if (isset($_REQUEST['what']) && !empty($_REQUEST['what'])) {
         //$what = $_REQUEST['what'];
         $what = functions::protect_string_db($_REQUEST['what']);
-        if($_SESSION['config']['databasetype'] == 'POSTGRESQL'){
-            $where .= " and (label_action ilike '" 
-                   . functions::protect_string_db($what,
+        $where .= " and (lower(label_action) like lower('"
+                   . functions->protect_string_db($what,
                         $_SESSION['config']['databasetype'])
-                   . "%'  ) ";
-        } else {
-            $where .= " and (label_action like '"
-                   . functions::protect_string_db($what,
-                        $_SESSION['config']['databasetype'])
-                   . "%'   ) ";
-        }
+                   . "%')   ) ";
     }
     $order = 'asc';
     if (isset($_REQUEST['order']) && !empty($_REQUEST['order'])) {

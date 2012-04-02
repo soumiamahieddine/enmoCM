@@ -132,11 +132,11 @@ if (isset($_REQUEST['search'])  ||
         if (preg_match($pattern, $_SESSION['m_admin']['history']['datestart']) == false) {
             $_SESSION['error'] = _DATE.' '._WRONG_FORMAT;
         } else {
-            if ($_SESSION['config']['databasetype'] == "POSTGRESQL") {
+            //if ($_SESSION['config']['databasetype'] == "POSTGRESQL") {
                 $history_datestart =  $_SESSION['m_admin']['history']['datestart'];
-            } else {
-                $history_datestart = str_replace('-','', $_SESSION['m_admin']['history']['datestart']);
-            }
+            //} else {
+            //    $history_datestart = str_replace('-','', $_SESSION['m_admin']['history']['datestart']);
+            //}
             $where .= " (".$req->extract_date($_SESSION['tablename']['history'].".event_date")." >= '".$history_datestart."') and ";
         }
     }
@@ -147,11 +147,11 @@ if (isset($_REQUEST['search'])  ||
         if (preg_match($pattern, $_SESSION['m_admin']['history']['datefin'])==false) {
             $_SESSION['error'] = _DATE.' '._WRONG_FORMAT;
         } else {
-            if ($_SESSION['config']['databasetype'] == "POSTGRESQL") {
+            //if ($_SESSION['config']['databasetype'] == "POSTGRESQL") {
                 $history_datefin =  $_SESSION['m_admin']['history']['datefin'];
-            } else {
-                $history_datefin = str_replace('-','', $_SESSION['m_admin']['history']['datefin']);
-            }
+            //} else {
+            //    $history_datefin = str_replace('-','', $_SESSION['m_admin']['history']['datefin']);
+            //}
             $where .= " (".$req->extract_date($_SESSION['tablename']['history'].".event_date")." <= '".$history_datefin."') and ";
         }
     }

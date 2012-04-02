@@ -271,14 +271,8 @@ function displayList(){
     $what = '';
     if (isset($_REQUEST['what']) && ! empty($_REQUEST['what'])) {
         $what = $func->protect_string_db($_REQUEST['what']);
-    }
-    if ($_SESSION['config']['databasetype'] == 'POSTGRESQL') {
-        $where = "group_desc ilike '" . strtolower($what)
-               . "%' or group_id ilike '" . strtoupper($what) . "%' ";
-    } else {
-        $where = "group_desc like '" . strtolower($what)
-               . "%' or group_id like '" . strtoupper($what) . "%' ";
-    }
+		$where = "lower(group_desc) like lower('" .$what. "%')";
+	}
     // Checking order and order_field values
     $order = 'asc';
     if (isset($_REQUEST['order']) && ! empty($_REQUEST['order'])) {

@@ -2406,20 +2406,10 @@ class extended_list_show extends dbquery
 		// configure the sql filter
 		$sqlFilter = "";
 
-		if(isset($filter) && !empty($filter))
-		{
+		if(isset($filter) && !empty($filter)) {
 			$filter = $this->protect_string_db($filter);
-			
-			if(isset($field) && !empty($field))
-			{
-				if($_SESSION['config']['databasetype'] == "POSTGRESQL")
-				{
-					$sqlFilter = " (".$field." ilike '".strtolower($filter)."%' or ".$field." ilike '".strtoupper($filter)."%') ";
-				}
-				else
-				{
-					$sqlFilter = " (".$field." like '".strtolower($filter)."%' or ".$field." like '".strtoupper($filter)."%') ";
-				}
+			if(isset($field) && !empty($field)) {
+				$sqlFilter = " lower(".$field.") like lower('".$filter."%') ";
 			}
 		}
 		

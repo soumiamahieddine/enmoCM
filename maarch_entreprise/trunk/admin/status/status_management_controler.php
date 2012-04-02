@@ -138,21 +138,11 @@ function display_list()
     $what = '';
     if (isset($_REQUEST['what'])) {
         $what = $func->protect_string_db($_REQUEST['what']);
-    }
-    if ($_SESSION['config']['databasetype'] == 'POSTGRESQL') {
-        $where .= " (label_status ilike '". $func->protect_string_db(
-            $what, $_SESSION['config']['databasetype']
-        )
-               . "%'  or id ilike '" . $func->protect_string_db(
-                   $what, $_SESSION['config']['databasetype']
-               )
-               . "%' ) ";
-    } else {
-        $where .= " (label_status like '"
+		$where .= " (lower(label_status) like lower('"
                . $func->protect_string_db(
                    $what, $_SESSION['config']['databasetype']
                )
-               . "%'  or id like '" . $func->protect_string_db(
+               . "%')  or id like '" . $func->protect_string_db(
                    $what, $_SESSION['config']['databasetype']
                )
                . "%' ) ";

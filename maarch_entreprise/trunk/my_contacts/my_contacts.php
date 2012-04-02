@@ -39,14 +39,8 @@ $where =" user_id  = '".$_SESSION['user']['UserId']."'  and enabled = 'Y' ";
 if(isset($_REQUEST['what']))
 {
     $what = $func->protect_string_db($func->wash($_REQUEST['what'], "alphanum", "", "no"));
-    if($_SESSION['config']['databasetype'] == "POSTGRESQL")
-    {
-        $where .= " and (lastname ilike '".$func->protect_string_db($what,$_SESSION['config']['databasetype'])."%'  or society ilike '".$func->protect_string_db($what,$_SESSION['config']['databasetype'])."%' ) ";
-    }
-    else
-    {
-        $where .= " and (lastname like '".$func->protect_string_db($what,$_SESSION['config']['databasetype'])."%'  or society like '".$func->protect_string_db($what,$_SESSION['config']['databasetype'])."%' ) ";
-    }
+    $where .= " and (lower(lastname) like lower('".$func->protect_string_db($what,$_SESSION['config']['databasetype'])."%') ".
+		"or lower(society) like lower('".$func->protect_string_db($what,$_SESSION['config']['databasetype'])."%') ) ";
 }
 $orderby = "order by lastname, society asc";
 $request= new request;

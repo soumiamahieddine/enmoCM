@@ -154,12 +154,7 @@ function display_list(){
     $what = '';
     if(isset($_REQUEST['what'])){
         $what = $func->protect_string_db($_REQUEST['what']);
-    }
-    if($_SESSION['config']['databasetype'] == "POSTGRESQL"){
-        $where .= " and ( lastname ilike '".strtolower($what)."%' or lastname ilike '".strtoupper($what)."%' )";
-    }
-    else{
-        $where .= " and ( lastname like '".strtolower($what)."%' or lastname like '".strtoupper($what)."%' )";
+		$where .= " and lower(lastname) like lower('".$what."%')";
     }
 
     // Checking order and order_field values

@@ -12,15 +12,10 @@
 */
 $db = new dbquery();
 $db->connect();
+$db->query("select doctypes_second_level_label as tag from "
+	.$_SESSION['tablename']['doctypes_second_level']
+	." where lower(doctypes_second_level_label) like lower('".$_REQUEST['what']."%') order by doctypes_second_level_label");
 
-if($_SESSION['config']['databasetype'] == "POSTGRESQL")
-{
-	$db->query("select doctypes_second_level_label as tag from ".$_SESSION['tablename']['doctypes_second_level']." where doctypes_second_level_label ilike '".$_REQUEST['what']."%' order by doctypes_second_level_label");
-}
-else
-{
-	$db->query("select doctypes_second_level_label as tag from ".$_SESSION['tablename']['doctypes_second_level']." where doctypes_second_level_label like '".$_REQUEST['what']."%' order by doctypes_second_level_label");
-}
 //$db->show();
 $listArray = array();
 while($line = $db->fetch_object())

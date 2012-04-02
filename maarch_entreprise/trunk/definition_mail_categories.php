@@ -30,12 +30,7 @@
 */
 
 ///////////////////// Pattern to check dates
-if ($_SESSION['config']['databasetype'] == "SQLSERVER") {
-    $_ENV['date_pattern'] = "/^[0-3][0-9]-[0-1][0-9]-[1-2][0-9][0-9][0-9]$/";
-} else // MYSQL & POSTGRESQL
-    {
-    $_ENV['date_pattern'] = "/^[0-3][0-9]-[0-1][0-9]-[1-2][0-9][0-9][0-9]$/";
-}
+$_ENV['date_pattern'] = "/^[0-3][0-9]-[0-1][0-9]-[1-2][0-9][0-9][0-9]$/";
 
 /*
  * Categories are described in a global variable : $_ENV['categories']

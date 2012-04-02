@@ -33,19 +33,11 @@ require_once('core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
              . 'class_request.php');
 $db = new dbquery();
 $db->connect();
-if ($_SESSION['config']['databasetype'] == 'POSTGRESQ') {
-    $db->query(
-        'select label_status as tag from '
-        . $_SESSION['tablename']['status'] . " where label_status ilike '"
-        . $_REQUEST['what'] . "%' order by label_status"
-    );
-} else {
-    $db->query(
+$db->query(
         'select label_status as tag from ' .
-        $_SESSION['tablename']['status'] . " where label_status like '"
-        . $_REQUEST['what']."%' order by label_status"
+        $_SESSION['tablename']['status'] . " where lower(label_status) like lower('"
+        . $_REQUEST['what']."%') order by label_status"
     );
-}
 $listArray = array();
 while ($line = $db->fetch_object()) {
     array_push($listArray, $line->tag);

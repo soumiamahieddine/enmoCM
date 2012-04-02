@@ -125,13 +125,7 @@ if (count($_REQUEST['meta']) > 0) {
             else
                 if ($tab_id_fields[$j] == 'multifield' && !empty ($_REQUEST['multifield'])) {
                     $json_txt .= "'multifield' : ['" . addslashes(trim($_REQUEST['multifield'])) . "'],";
-                    if ($_SESSION['config']['databasetype'] == "POSTGRESQL") {
-                        $where_request .= "(subject ilike  '%" . $func->protect_string_db($_REQUEST['multifield']) . "%' or alt_identifier ilike  '%" . $func->protect_string_db($_REQUEST['multifield']) . "%' or title ilike  '%" . $func->protect_string_db($_REQUEST['multifield']) . "%' or doc_custom_t1 ilike  '%" . $func->protect_string_db($_REQUEST['multifield']) . "%' or process_notes ilike '%" . $func->protect_string_db($_REQUEST['multifield']) . "%') ";
-                    } else //if($_SESSION['config']['databasetype'] == "MYSQL")
-                        {
-                        $where_request .= "(subject LIKE  '%" . $func->protect_string_db($_REQUEST['multifield']) . "%' or alt_identifier LIKE  '%" . $func->protect_string_db($_REQUEST['multifield']) . "%' or title LIKE  '%" . $func->protect_string_db($_REQUEST['multifield']) . "%' or doc_custom_t1 LIKE  '%" . $func->protect_string_db($_REQUEST['multifield']) . "%' or process_notes like '%" . $func->protect_string_db($_REQUEST['multifield']) . "%') ";
-                    }
-
+                    $where_request .= "(subject LIKE  '%" . $func->protect_string_db($_REQUEST['multifield']) . "%' or alt_identifier LIKE  '%" . $func->protect_string_db($_REQUEST['multifield']) . "%' or title LIKE  '%" . $func->protect_string_db($_REQUEST['multifield']) . "%' or doc_custom_t1 LIKE  '%" . $func->protect_string_db($_REQUEST['multifield']) . "%' or process_notes like '%" . $func->protect_string_db($_REQUEST['multifield']) . "%') ";
                     $where_request .= " and  ";
                 }
 
@@ -142,11 +136,7 @@ if (count($_REQUEST['meta']) > 0) {
                 if ($tab_id_fields[$j] == 'dest' && !empty ($_REQUEST['dest'])) {
                     $json_txt .= " 'dest' : ['" . addslashes(trim($_REQUEST['dest'])) . "'],";
                     $dest = $func->wash($_REQUEST['dest'], "no", _DEST, "no");
-                    if ($_SESSION['config']['databasetype'] == "POSTGRESQL") {
-                        $where_request .= " (dest_contact_id in(select contact_id from " . $_SESSION['tablename']['contacts'] . " where lastname  ILIKE '" . $func->protect_string_db($dest) . "%' or  firstname ILIKE '" . $func->protect_string_db($dest) . "%' or  society ILIKE '" . $func->protect_string_db($dest) . "%' or  function ILIKE '" . $func->protect_string_db($dest) . "%') or dest_user_id in (select user_id from " . $_SESSION['tablename']['users'] . " where lastname  ILIKE '" . $func->protect_string_db($dest) . "%' or  firstname ILIKE '" . $func->protect_string_db($dest) . "%'  or  user_id ILIKE '" . $func->protect_string_db($dest) . "%')) and ";
-                    } else {
-                        $where_request .= " (dest_contact_id in(select contact_id from " . $_SESSION['tablename']['contacts'] . " where lastname  LIKE '" . $func->protect_string_db($dest) . "%' or  firstname LIKE '" . $func->protect_string_db($dest) . "%' or  society LIKE '" . $func->protect_string_db($dest) . "%' or  function LIKE '" . $func->protect_string_db($dest) . "%') or dest_user_id in (select user_id from " . $_SESSION['tablename']['users'] . " where lastname  LIKE '" . $func->protect_string_db($dest) . "%' or  firstname LIKE '" . $func->protect_string_db($dest) . "%' or  user_id LIKE '" . $func->protect_string_db($dest) . "%')) and ";
-                    }
+                    $where_request .= " (dest_contact_id in(select contact_id from " . $_SESSION['tablename']['contacts'] . " where lastname  LIKE '" . $func->protect_string_db($dest) . "%' or  firstname LIKE '" . $func->protect_string_db($dest) . "%' or  society LIKE '" . $func->protect_string_db($dest) . "%' or  function LIKE '" . $func->protect_string_db($dest) . "%') or dest_user_id in (select user_id from " . $_SESSION['tablename']['users'] . " where lastname  LIKE '" . $func->protect_string_db($dest) . "%' or  firstname LIKE '" . $func->protect_string_db($dest) . "%' or  user_id LIKE '" . $func->protect_string_db($dest) . "%')) and ";
                 }
 
             // GED NUM
@@ -259,11 +249,7 @@ if (count($_REQUEST['meta']) > 0) {
                     if (preg_match($_ENV['date_pattern'], $_REQUEST['creation_date_from']) == false) {
                         $_SESSION['error'] .= _WRONG_DATE_FORMAT . ' : ' . $_REQUEST['creation_date_from'];
                     } else {
-                        if ($_SESSION['config']['databasetype'] == 'ORACLE') {
-                            $where_request .= " (creation_date >= to_date('" . $func->format_date_db($_REQUEST['creation_date_from']) . "', 'DD/MM/YYYY') ) and ";
-                        } else {
-                            $where_request .= " (" . $req->extract_date("creation_date") . " >= '" . $func->format_date_db($_REQUEST['creation_date_from']) . "') and ";
-                        }
+                        $where_request .= " (" . $req->extract_date("creation_date") . " >= '" . $func->format_date_db($_REQUEST['creation_date_from']) . "') and ";
                         $json_txt .= " 'creation_date_from' : ['" . trim($_REQUEST['creation_date_from']) . "'],";
                     }
                 }
@@ -283,11 +269,7 @@ if (count($_REQUEST['meta']) > 0) {
                     if (preg_match($_ENV['date_pattern'], $_REQUEST['closing_date_from']) == false) {
                         $_SESSION['error'] .= _WRONG_DATE_FORMAT . ' : ' . $_REQUEST['closing_date_from'];
                     } else {
-                        if ($_SESSION['config']['databasetype'] == 'ORACLE') {
-                            $where_request .= " (closing_date >= to_date('" . $func->format_date_db($_REQUEST['closing_date_from']) . "', 'DD/MM/YYYY') ) and ";
-                        } else {
-                            $where_request .= " (" . $req->extract_date("closing_date") . " >= '" . $func->format_date_db($_REQUEST['closing_date_from']) . "') and ";
-                        }
+                        $where_request .= " (" . $req->extract_date("closing_date") . " >= '" . $func->format_date_db($_REQUEST['closing_date_from']) . "') and ";
                         $json_txt .= "'closing_date_from' : ['" . trim($_REQUEST['closing_date_from']) . "'],";
                     }
                 }
@@ -297,11 +279,7 @@ if (count($_REQUEST['meta']) > 0) {
                     if (preg_match($_ENV['date_pattern'], $_REQUEST['closing_date_to']) == false) {
                         $_SESSION['error'] = _WRONG_DATE_FORMAT . ' : ' . $_REQUEST['closing_date_to'];
                     } else {
-                        if ($_SESSION['config']['databasetype'] == 'ORACLE') {
-                            $where_request .= " (closing_date <= to_date('" . $func->format_date_db($_REQUEST['closing_date_to']) . "', 'DD/MM/YYYY') ) and ";
-                        } else {
-                            $where_request .= " (" . $req->extract_date("closing_date") . " <= '" . $func->format_date_db($_REQUEST['closing_date_to']) . "') and ";
-                        }
+                        $where_request .= " (" . $req->extract_date("closing_date") . " <= '" . $func->format_date_db($_REQUEST['closing_date_to']) . "') and ";
                         $json_txt .= "'closing_date_to' : ['" . trim($_REQUEST['closing_date_to']) . "'],";
                     }
                 }
@@ -311,11 +289,7 @@ if (count($_REQUEST['meta']) > 0) {
                     if (preg_match($_ENV['date_pattern'], $_REQUEST['process_limit_date_from']) == false) {
                         $_SESSION['error'] = _WRONG_DATE_FORMAT . ' : ' . $_REQUEST['process_limit_date_from'];
                     } else {
-                        if ($_SESSION['config']['databasetype'] == 'ORACLE') {
-                            $where_request .= " (process_limit_date >= to_date('" . $func->format_date_db($_REQUEST['process_limit_date_from']) . "', 'DD/MM/YYYY') ) and ";
-                        } else {
-                            $where_request .= " (" . $req->extract_date("process_limit_date") . " >= '" . $func->format_date_db($_REQUEST['process_limit_date_from']) . "') and ";
-                        }
+                        $where_request .= " (" . $req->extract_date("process_limit_date") . " >= '" . $func->format_date_db($_REQUEST['process_limit_date_from']) . "') and ";
                         $json_txt .= "'process_limit_date_from' : ['" . trim($_REQUEST['process_limit_date_from']) . "'],";
                     }
                 }
@@ -325,11 +299,7 @@ if (count($_REQUEST['meta']) > 0) {
                     if (preg_match($_ENV['date_pattern'], $_REQUEST['process_limit_date_to']) == false) {
                         $_SESSION['error'] = _WRONG_DATE_FORMAT . ' : ' . $_REQUEST['process_limit_date_to'];
                     } else {
-                        if ($_SESSION['config']['databasetype'] == 'ORACLE') {
-                            $where_request .= " (process_limit_date <= to_date('" . $func->format_date_db($_REQUEST['process_limit_date_to']) . "', 'DD/MM/YYYY') ) and ";
-                        } else {
-                            $where_request .= " (" . $req->extract_date("process_limit_date") . " <= '" . $func->format_date_db($_REQUEST['process_limit_date_to']) . "') and ";
-                        }
+                        $where_request .= " (" . $req->extract_date("process_limit_date") . " <= '" . $func->format_date_db($_REQUEST['process_limit_date_to']) . "') and ";
                         $json_txt .= "'process_limit_date_to' : ['" . trim($_REQUEST['process_limit_date_to']) . "'],";
                     }
                 }
@@ -341,28 +311,13 @@ if (count($_REQUEST['meta']) > 0) {
                     for ($get_i = 0; $get_i < count($_REQUEST['status_chosen']); $get_i++) {
                         $json_txt .= "'" . $_REQUEST['status_chosen'][$get_i] . "',";
                         if ($_REQUEST['status_chosen'][$get_i] == "REL1") {
-                            if ($_SESSION['config']['databasetype'] == 'ORACLE') {
-                                $where_request .= " (alarm1_date <= " . $req->current_datetime() . " and alarm2_date > " . $req->current_datetime() . " and status <> 'END') or ";
-                            } else {
-                                $where_request .= "( " . $req->extract_date('alarm1_date') . " <= " . $req->current_datetime() . " and " . $req->extract_date('alarm2_date') . " > " . $req->current_datetime() . " and status <> 'END') or ";
-                            }
-
+                            $where_request .= "( " . $req->extract_date('alarm1_date') . " <= " . $req->current_datetime() . " and " . $req->extract_date('alarm2_date') . " > " . $req->current_datetime() . " and status <> 'END') or ";
                         } else {
                             if ($_REQUEST['status_chosen'][$get_i] == "REL2") {
-                                if ($_SESSION['config']['databasetype'] == 'ORACLE') {
-                                    $where_request .= "( " . $req->current_datetime() . " >= alarm2_date and status <> 'END') or ";
-                                } else {
-                                    $where_request .= "( " . $req->current_datetime() . " >= " . $req->extract_date('alarm2_date') . "  and status <> 'END') or ";
-                                }
-
+                                $where_request .= "( " . $req->current_datetime() . " >= " . $req->extract_date('alarm2_date') . "  and status <> 'END') or ";
                             }
                             elseif ($_REQUEST['status_chosen'][$get_i] == "LATE") {
-                                if ($_SESSION['config']['databasetype'] == 'ORACLE') {
-                                    $where_request .= "( process_limit_date is not null and " . $req->current_datetime() . " > process_limit_date  and status <> 'END') or ";
-                                } else {
-                                    $where_request .= "( process_limit_date is not null and " . $req->current_datetime() . " > " . $req->extract_date('process_limit_date') . "  and status <> 'END') or ";
-                                }
-
+								$where_request .= "( process_limit_date is not null and " . $req->current_datetime() . " > " . $req->extract_date('process_limit_date') . "  and status <> 'END') or ";
                             } else {
                                 $where_request .= " ( status = '" . $func->protect_string_db($_REQUEST['status_chosen'][$get_i]) . "') or ";
                             }
@@ -386,59 +341,31 @@ if (count($_REQUEST['meta']) > 0) {
              **/
             else
                 if ($tab_id_fields[$j] == 'AR' && !empty ($_REQUEST['AR'])) {
-                    if ($_SESSION['config']['databasetype'] == "POSTGRESQL") {
-                        $where_request .= " answer_type_bitmask ilike '____1_' AND ";
-                    } else {
-                        $where_request .= " answer_type_bitmask like '____1_' AND ";
-                    }
+                    $where_request .= " answer_type_bitmask like '____1_' AND ";
                     $json_txt .= " 'AR' : ['" . addslashes(trim($_REQUEST['AR'])) . "'],";
                 } else
                     if ($tab_id_fields[$j] == 'fax' && !empty ($_REQUEST['fax'])) {
-                        if ($_SESSION['config']['databasetype'] == "POSTGRESQL") {
-                            $where_request .= " answer_type_bitmask ilike '_1____' AND ";
-                        } else {
-                            $where_request .= " answer_type_bitmask like '_1____' AND ";
-                        }
+                        $where_request .= " answer_type_bitmask like '_1____' AND ";
                         $json_txt .= " 'fax' : ['" . addslashes(trim($_REQUEST['fax'])) . "'],";
                     } else
                         if ($tab_id_fields[$j] == 'courriel' && !empty ($_REQUEST['courriel'])) {
-                            if ($_SESSION['config']['databasetype'] == "POSTGRESQL") {
-                                $where_request .= " answer_type_bitmask ilike '__1___' AND ";
-                            } else {
-                                $where_request .= " answer_type_bitmask like '__1___' AND ";
-                            }
+                            $where_request .= " answer_type_bitmask like '__1___' AND ";
                             $json_txt .= " 'courriel' : ['" . addslashes(trim($_REQUEST['courriel'])) . "'],";
                         } else
                             if ($tab_id_fields[$j] == 'autre' && !empty ($_REQUEST['autre'])) {
-                                if ($_SESSION['config']['databasetype'] == "POSTGRESQL") {
-                                    $where_request .= " answer_type_bitmask ilike '1_____' AND ";
-                                } else {
-                                    $where_request .= " answer_type_bitmask like '1_____' AND ";
-                                }
+                                $where_request .= " answer_type_bitmask like '1_____' AND ";
                                 $json_txt .= " 'autre' : ['" . addslashes(trim($_REQUEST['autre'])) . "'],";
                             } else
                                 if ($tab_id_fields[$j] == 'direct' && !empty ($_REQUEST['direct'])) {
-                                    if ($_SESSION['config']['databasetype'] == "POSTGRESQL") {
-                                        $where_request .= " answer_type_bitmask ilike '___1__'  AND ";
-                                    } else {
-                                        $where_request .= " answer_type_bitmask like '___1__' AND ";
-                                    }
+                                    $where_request .= " answer_type_bitmask like '___1__' AND ";
                                     $json_txt .= " 'direct' : ['" . addslashes(trim($_REQUEST['direct'])) . "'],";
                                 } else
                                     if ($tab_id_fields[$j] == 'simple_mail' && !empty ($_REQUEST['simple_mail'])) {
-                                        if ($_SESSION['config']['databasetype'] == "POSTGRESQL") {
-                                            $where_request .= " answer_type_bitmask ilike '_____1' AND ";
-                                        } else {
-                                            $where_request .= " answer_type_bitmask like '_____1' AND ";
-                                        }
+                                        $where_request .= " answer_type_bitmask like '_____1' AND ";
                                         $json_txt .= " 'simple_mail' : ['" . addslashes(trim($_REQUEST['simple_mail'])) . "'],";
                                     } else
                                         if ($tab_id_fields[$j] == 'norep' && !empty ($_REQUEST['norep'])) {
-                                            if ($_SESSION['config']['databasetype'] == "POSTGRESQL") {
-                                                $where_request .= " answer_type_bitmask = '000000' AND ";
-                                            } else {
-                                                $where_request .= " answer_type_bitmask = '000000' AND ";
-                                            }
+                                            $where_request .= " answer_type_bitmask = '000000' AND ";
                                             $json_txt .= " 'norep' : ['" . addslashes(trim($_REQUEST['norep'])) . "'],";
                                         }
             // MAIL CATEGORY
@@ -467,11 +394,7 @@ if (count($_REQUEST['meta']) > 0) {
                     if (preg_match($_ENV['date_pattern'], $_REQUEST['admission_date_from']) == false) {
                         $_SESSION['error'] .= _WRONG_DATE_FORMAT . ' : ' . $_REQUEST['admission_date_from'];
                     } else {
-                        if ($_SESSION['config']['databasetype'] == 'ORACLE') {
-                            $where_request .= " (admission_date >= to_date('" . $func->format_date_db($_REQUEST['admission_date_from']) . "', 'DD/MM/YYYY') ) and ";
-                        } else {
-                            $where_request .= " (" . $req->extract_date("admission_date") . " >= '" . $func->format_date_db($_REQUEST['admission_date_from']) . "') and ";
-                        }
+                        $where_request .= " (" . $req->extract_date("admission_date") . " >= '" . $func->format_date_db($_REQUEST['admission_date_from']) . "') and ";
                         $json_txt .= " 'admission_date_from' : ['" . trim($_REQUEST['admission_date_from']) . "'],";
                     }
                 }
@@ -481,12 +404,7 @@ if (count($_REQUEST['meta']) > 0) {
                     if (preg_match($_ENV['date_pattern'], $_REQUEST['admission_date_to']) == false) {
                         $_SESSION['error'] .= _WRONG_DATE_FORMAT . ' : ' . $_REQUEST['admission_date_to'];
                     } else {
-                        if ($_SESSION['config']['databasetype'] == 'ORACLE') {
-                            $where_request .= " (admission_date <= to_date('" . $func->format_date_db($_REQUEST['admission_date_to']) . "', 'DD/MM/YYYY') ) and ";
-                        } else {
-                            $where_request .= " (" . $req->extract_date("admission_date") . " <= '" . $func->format_date_db($_REQUEST['admission_date_to']) . "') and ";
-                        }
-
+                        $where_request .= " (" . $req->extract_date("admission_date") . " <= '" . $func->format_date_db($_REQUEST['admission_date_to']) . "') and ";
                         $json_txt .= " 'admission_date_to' : ['" . trim($_REQUEST['admission_date_to']) . "'],";
                     }
                 }
@@ -496,11 +414,7 @@ if (count($_REQUEST['meta']) > 0) {
                     if (preg_match($_ENV['date_pattern'], $_REQUEST['doc_date_from']) == false) {
                         $_SESSION['error'] .= _WRONG_DATE_FORMAT . ' : ' . $_REQUEST['doc_date_from'];
                     } else {
-                        if ($_SESSION['config']['databasetype'] == 'ORACLE') {
-                            $where_request .= " (doc_date >= to_date('" . $func->format_date_db($_REQUEST['doc_date_from']) . "', 'DD/MM/YYYY') ) and ";
-                        } else {
-                            $where_request .= " (" . $req->extract_date("doc_date") . " >= '" . $func->format_date_db($_REQUEST['doc_date_from']) . "') and ";
-                        }
+                        $where_request .= " (" . $req->extract_date("doc_date") . " >= '" . $func->format_date_db($_REQUEST['doc_date_from']) . "') and ";
                         $json_txt .= " 'doc_date_from' : ['" . trim($_REQUEST['doc_date_from']) . "'],";
                     }
                 }
@@ -510,12 +424,7 @@ if (count($_REQUEST['meta']) > 0) {
                     if (preg_match($_ENV['date_pattern'], $_REQUEST['doc_date_to']) == false) {
                         $_SESSION['error'] .= _WRONG_DATE_FORMAT . ' : ' . $_REQUEST['doc_date_to'];
                     } else {
-                        if ($_SESSION['config']['databasetype'] == 'ORACLE') {
-                            $where_request .= " (doc_date <= to_date('" . $func->format_date_db($_REQUEST['doc_date_to']) . "', 'DD/MM/YYYY') ) and ";
-                        } else {
-                            $where_request .= " (" . $req->extract_date("doc_date") . " <= '" . $func->format_date_db($_REQUEST['doc_date_to']) . "') and ";
-                        }
-
+                        $where_request .= " (" . $req->extract_date("doc_date") . " <= '" . $func->format_date_db($_REQUEST['doc_date_to']) . "') and ";
                         $json_txt .= " 'doc_date_to' : ['" . trim($_REQUEST['doc_date_to']) . "'],";
                     }
                 }

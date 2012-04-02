@@ -33,11 +33,11 @@ require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_reque
 $db = new dbquery();
 $db->connect();
 $listArray = array();
-if ($_SESSION['config']['databasetype'] == "POSTGRESQL") {
-    $db->query("select is_corporate_person, society, lastname, firstname, contact_id from ".$_SESSION['tablename']['contacts']." where (lastname ilike '%".$db->protect_string_db($_REQUEST['what'])."%' or firstname ilike '".$db->protect_string_db($_REQUEST['what'])."%' or society ilike '%".$db->protect_string_db($_REQUEST['what'])."%') ");
-} else {
-    $db->query("select is_corporate_person, society, lastname, firstname, contact_id from ".$_SESSION['tablename']['contacts']." where (lastname like '%".$db->protect_string_db($_REQUEST['what'])."%' or firstname like '".$db->protect_string_db($_REQUEST['what'])."%' or society like '%".$db->protect_string_db($_REQUEST['what'])."%') ");
-}
+$db->query("select is_corporate_person, society, lastname, firstname, contact_id from "
+	.$_SESSION['tablename']['contacts']." where (lower(lastname) like lower('%".$db->protect_string_db($_REQUEST['what'])."%') "
+	."or lower(firstname) like lower('".$db->protect_string_db($_REQUEST['what'])."%') "
+	."or lower(society) like lower('%".$db->protect_string_db($_REQUEST['what'])."%'))");
+
 //$db->show();
 while ($line = $db->fetch_object()) {
 	array_push($listArray, $db->show_string($line->society).", ".$db->show_string($line->lastname)." ".$db->show_string($line->firstname)." (contact:".$line->contact_id.")");

@@ -278,11 +278,7 @@ else
 		}
 		$entities = preg_replace('/, $/', '', $entities);
 		if($entities == '' && $user_id == 'superadmin') {
-			if($_SESSION['config']['databasetype'] == "ORACLE" || $_SESSION['config']['databasetype'] == "SQLSERVER") {
-				$entities = "''''";
-			} else {
-				$entities = "''";
-			}
+			$entities = $request->empty_list();
 		}
 		//$where_concat .= " and ".$table.".res_id = ".$_SESSION['tablename']['ent_listinstance'].".res_id and (".$_SESSION['tablename']['ent_listinstance'].".item_id = '".$_SESSION['user']['UserId']."' or ".$_SESSION['tablename']['ent_listinstance'].".item_id in (" . $entities . "))";
     $where_concat = $table.".res_id = ".$_SESSION['tablename']['ent_listinstance'].".res_id and (" . $where_concat . ") and (".$_SESSION['tablename']['ent_listinstance'].".item_id = '".$_SESSION['user']['UserId']."' or ".$_SESSION['tablename']['ent_listinstance'].".item_id in (" . $entities . "))";

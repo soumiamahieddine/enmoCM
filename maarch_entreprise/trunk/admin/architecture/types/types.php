@@ -65,13 +65,7 @@ $what = "";
 $where = " enabled = 'Y' ";
 if (isset($_REQUEST['what']) && ! empty($_REQUEST['what'])) {
     $what = $func->protect_string_db($_REQUEST['what']);
-    if ($_SESSION['config']['databasetype'] == "POSTGRESQL") {
-        $where .= " and (description ilike '" . strtolower($what)
-        	   . "%' or description ilike '" . strtoupper($what) . "%') ";
-    } else {
-        $where .= " and (description like '" . strtolower($what)
-        	   . "%' or description like '" . strtoupper($what) . "%') ";
-    }
+    $where .= " and lower(description) like lower('" .$what. "%') ";
 }
 $list = new list_show();
 $order = 'asc';

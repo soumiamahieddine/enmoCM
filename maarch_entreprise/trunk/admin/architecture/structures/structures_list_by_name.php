@@ -32,14 +32,8 @@
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
 $db = new dbquery();
 $db->connect();
-if($_SESSION['config']['databasetype'] == "POSTGRESQL")
-{
-	$db->query("select doctypes_first_level_label as tag from ".$_SESSION['tablename']['doctypes_first_level']." where doctypes_first_level_label ilike '".$_REQUEST['what']."%' order by doctypes_first_level_label");
-}
-else
-{
-	$db->query("select doctypes_first_level_label as tag from ".$_SESSION['tablename']['doctypes_first_level']." where doctypes_first_level_label like '".$_REQUEST['what']."%' order by doctypes_first_level_label");
-}
+$db->query("select doctypes_first_level_label as tag from ".$_SESSION['tablename']['doctypes_first_level']." where lower(doctypes_first_level_label) like lower('".$_REQUEST['what']."%') order by doctypes_first_level_label");
+
 $listArray = array();
 while($line = $db->fetch_object())
 {

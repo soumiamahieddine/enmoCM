@@ -63,13 +63,9 @@ if(isset($_REQUEST['what']) && !empty($_REQUEST['what']))
 	if($contact_id != substr($_REQUEST['what'], strrpos($_REQUEST['what'],'(')+1)){
 		$where .= " and contact_id = " . $contact_id;
 	}
-    elseif($_SESSION['config']['databasetype'] == "POSTGRESQL")
-    {
-        $where .= " and (lastname ilike '".$func->protect_string_db($what,$_SESSION['config']['databasetype'])."%'  or society ilike '".$func->protect_string_db($what,$_SESSION['config']['databasetype'])."%' ) ";
-    } 
-    else
-    {
-        $where .= " and (lastname like '".$func->protect_string_db($what,$_SESSION['config']['databasetype'])."%'  or society like '".$func->protect_string_db($what,$_SESSION['config']['databasetype'])."%' ) ";
+    else {
+		$where .= " and (lower(lastname) like lower('".$func->protect_string_db($what,$_SESSION['config']['databasetype'])."%') "
+			. "or lower(society) like lower('".$func->protect_string_db($what,$_SESSION['config']['databasetype'])."%') ) ";
     }
 }
 $list = new list_show();

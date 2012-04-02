@@ -32,14 +32,9 @@
 require_once("core/class/class_request.php");
 $db = new dbquery();
 $db->connect();
-if($_SESSION['config']['databasetype'] == "POSTGRESQL")
-{
-	$db->query("select group_id as tag from ".$_SESSION['tablename']['usergroups']." where group_id ilike '".$_REQUEST['what']."%' order by group_id");
-}
-else
-{
-	$db->query("select group_id as tag from ".$_SESSION['tablename']['usergroups']." where group_id like '".$_REQUEST['what']."%' order by group_id");
-}
+$db->query("select group_id as tag from ".$_SESSION['tablename']['usergroups']
+	." where lower(group_id) like lower('".$_REQUEST['what']."%') order by group_id");
+
 $listArray = array();
 while($line = $db->fetch_object())
 {

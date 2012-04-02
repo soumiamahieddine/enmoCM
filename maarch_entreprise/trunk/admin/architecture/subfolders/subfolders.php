@@ -39,14 +39,7 @@ $where= " enabled = 'Y' ";
 if(isset($_REQUEST['what']) && !empty($_REQUEST['what']))
 {
     $what = $func->protect_string_db($_REQUEST['what']);
-    if($_SESSION['config']['databasetype'] == "POSTGRESQL")
-    {
-        $where .= " and (doctypes_second_level_label ilike '".strtolower($what)."%' or doctypes_second_level_label ilike '".strtoupper($what)."%') ";
-    }
-    else
-    {
-        $where .= " and (doctypes_second_level_label like '".strtolower($what)."%' or doctypes_second_level_label like '".strtoupper($what)."%') ";
-    }
+	$where .= " and (lower(doctypes_second_level_label) like lower('".$what."%') ";
 }
 $list = new list_show();
 $order = 'asc';

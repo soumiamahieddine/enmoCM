@@ -31,14 +31,9 @@
 
 $db = new dbquery();
 $db->connect();
-if($_SESSION['config']['databasetype'] == "POSTGRESQL")
-{
-    $db->query("select group_desc as tag from ".$_SESSION['tablename']['usergroups']." where group_desc ilike '".$_REQUEST['what']."%' order by group_desc");
-}
-else
-{
-    $db->query("select group_desc as tag from ".$_SESSION['tablename']['usergroups']." where group_desc like '".$_REQUEST['what']."%' order by group_desc");
-}
+$db->query("select group_desc as tag from ".$_SESSION['tablename']['usergroups']
+." where lower(group_desc) like lower('".$_REQUEST['what']."%') order by group_desc");
+
 $listArray = array();
 while($line = $db->fetch_object())
 {

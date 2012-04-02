@@ -34,11 +34,8 @@ require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_reque
 require_once("core".DIRECTORY_SEPARATOR."core_tables.php");
 $db = new dbquery();
 $db->connect();
-if($_SESSION['config']['databasetype'] == "POSTGRESQL") {
-	$db->query("select docserver_id as tag from "._DOCSERVERS_TABLE_NAME." where docserver_id ilike '".$_REQUEST['what']."%' order by docserver_id");
-} else {
-	$db->query("select docserver_id as tag from "._DOCSERVERS_TABLE_NAME." where docserver_id like '".$_REQUEST['what']."%' order by docserver_id");
-}
+$db->query("select docserver_id as tag from "._DOCSERVERS_TABLE_NAME." where lower(docserver_id) like lower('".$_REQUEST['what']."%') order by docserver_id");
+
 $listArray = array();
 while($line = $db->fetch_object()) {
 	array_push($listArray, $line->tag);

@@ -53,14 +53,7 @@ $mode_form = 'fullscreen';
 include('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'definition_mail_categories.php');
 
 ///////////////////// Pattern to check dates
-if($_SESSION['config']['databasetype'] == "SQLSERVER")
-{
-	$_ENV['date_pattern'] = "/^[0-3][0-9]-[0-1][0-9]-[1-2][0-9][0-9][0-9]$/";
-}
-else // MYSQL & POSTGRESQL
-{
-	$_ENV['date_pattern'] = "/^[0-3][0-9]-[0-1][0-9]-[1-2][0-9][0-9][0-9]$/";
-}
+$_ENV['date_pattern'] = "/^[0-3][0-9]-[0-1][0-9]-[1-2][0-9][0-9][0-9]$/";
 
 /**
  * Gets the path of the file to displays

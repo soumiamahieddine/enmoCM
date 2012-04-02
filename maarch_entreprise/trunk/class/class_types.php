@@ -1279,13 +1279,8 @@ class types extends dbquery
                 ) {
                     $jsonTxt .= " '" . $fieldName . "' : ['"
                              . addslashes(trim($val)) . "'],";
-                    if ($_SESSION['config']['databasetype'] == 'POSTGRESQL') {
-                        $whereRequest .= " " . $column . " ilike '%"
-                                      . $this->protect_string_db($val) . "%' and ";
-                    } else {
-                        $whereRequest .= " " . $column . " like '%"
-                                      . $this->protect_string_db($val) . "%' and ";
-                    }
+					$whereRequest .= " lower(" . $column . ") like lower('%"
+                                      . $this->protect_string_db($val) . "%') and ";
                     break;
                 } else if (($indexes[$j]['column'] . '_from' == $fieldName
                     || $indexes[$j]['column'] . '_to' == $fieldName
