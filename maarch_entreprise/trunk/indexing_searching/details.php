@@ -157,6 +157,8 @@ $delete_doc = check_right(
     DELETE_RECORD
 );
 
+
+
 //update index with the doctype
 if(isset($_POST['submit_index_doc']))
 {
@@ -165,7 +167,8 @@ if(isset($_POST['submit_index_doc']))
         $list = new diffusion_list();
         $params = array('mode'=> 'listinstance', 'table' => $_SESSION['tablename']['ent_listinstance'], 'coll_id' => $coll_id, 'res_id' => $s_id, 'user_id' => $_SESSION['user']['UserId'], 'concat_list' => true, 'only_cc' => false);
         $list->load_list_db($_SESSION['details']['diff_list'], $params); //pb enchainement avec action redirect
-    }
+    	$_SESSION['details']['diff_list']['key_value'] = md5($res_id);
+	}
     $is->update_mail($_POST, "POST", $s_id, $coll_id);
 }
 //delete the doctype
