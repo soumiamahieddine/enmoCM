@@ -48,16 +48,12 @@ if (isset($_REQUEST['template']) && !empty($_REQUEST['template'])) {
             . '&coll_id=' . $_REQUEST['coll_id']
         );
     } else {
-         /*header(
+         header(
             'location: ' . $_SESSION['config']['coreurl']
             . 'modules/content_management/applet_launcher.php?objectType=attachementFromTemplate' 
-            . $_REQUEST['template'] . '&res_id=' . $_REQUEST['res_id'] 
-            . '&coll_id=' . $_REQUEST['coll_id']
-        );*/
-        echo $_SESSION['config']['coreurl'] 
-            . 'modules/content_management/applet_launcher.php?objectType=attachementFromTemplate' 
             . '&objectId=' . $_REQUEST['template'] . '&objectTable=' . $objectTable
-            . '&resMaster=' . $_REQUEST['res_id'] ;
+            . '&resMaster=' . $_REQUEST['res_id']
+        );
     }
     exit();
 }
