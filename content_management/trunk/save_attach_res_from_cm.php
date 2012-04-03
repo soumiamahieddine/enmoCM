@@ -97,7 +97,7 @@ if (empty($docserver)) {
                 $_SESSION['data'],
                 array(
                     'column' => 'title',
-                    'value' => 'new version of original resource',
+                    'value' => _NEW_ATTACHMENT_VERSION,
                     'type' => 'string',
                 )
             );
@@ -159,7 +159,7 @@ if (empty($docserver)) {
                     $hist->add(
                         RES_ATTACHMENTS_TABLE, $id, 'ADD','attachadd',
                         $_SESSION['error'] 
-                        . " (new version of original resource) ",
+                        . _NEW_ATTACHMENT_VERSION,
                         $_SESSION['config']['databasetype'],
                         'attachments'
                     );
