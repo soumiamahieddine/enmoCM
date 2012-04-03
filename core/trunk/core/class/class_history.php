@@ -47,20 +47,20 @@ class history extends dbquery
     * @param  $how string Event type (Keyword)
     * @param  $what string Event description
     * @param  $databasetype string Type of the database
-    * @param  $id_module string Identifier of the module concerned 
+    * @param  $id_module string Identifier of the module concerned
     * by the event (admin by default)
     */
     public function add(
-        $table_name, 
-        $record_id, 
-        $event_type, 
-        $event_id, 
-        $info, 
-        $databasetype, 
-        $id_module = 'admin', 
-        $isTech = false, 
-        $result = _OK, 
-        $level = _LEVEL_INFO, 
+        $table_name,
+        $record_id,
+        $event_type,
+        $event_id,
+        $info,
+        $databasetype,
+        $id_module = 'admin',
+        $isTech = false,
+        $result = _OK,
+        $level = _LEVEL_INFO,
         $user = ''
     )
     {
@@ -77,52 +77,52 @@ class history extends dbquery
                     . " (table_name, record_id , event_type , event_id, user_id"
                     . " , event_date , " . "info , id_module, remote_ip) "
                     . "VALUES ('" . $table_name . "', '" . $record_id . "', '"
-                    . $event_type . "', '" . $event_id . "','" . $user 
-                    . "', " . $this->current_datetime() . ", '" . $info . "', '" 
+                    . $event_type . "', '" . $event_id . "','" . $user
+                    . "', " . $this->current_datetime() . ", '" . $info . "', '"
                     . $id_module . "' , '" . $remote_ip . "')"
                 , false
                 , true
             );
-            $this->disconnect();
+            //$this->disconnect();
         } else {
             //write on a log
             echo $info;exit;
         }
-        
-        // If module Notifications is loaded, check if event has 
+
+        // If module Notifications is loaded, check if event has
         //as associated template and add event to stack for notification
         $core = new core_tools();
         if ($core->is_module_loaded("notifications")) {
-			require_once(
-				"modules"
-				.DIRECTORY_SEPARATOR."notifications"
-				.DIRECTORY_SEPARATOR."notifications_tables_definition.php"
-			);
+            require_once(
+                "modules"
+                .DIRECTORY_SEPARATOR."notifications"
+                .DIRECTORY_SEPARATOR."notifications_tables_definition.php"
+            );
             // Get template association id
             $this->connect();
-            $query = "SELECT system_id FROM " 
-                   . _TEMPLATES_ASSOCIATION_TABLE_NAME 
+            $query = "SELECT system_id FROM "
+                   . _TEMPLATES_ASSOCIATION_TABLE_NAME
                    . " WHERE upper(what) like 'EVENT' "
                    . " AND '" . $event_id . "' = value_field"
                    . " AND maarch_module = 'notifications'";
             $this->query($query);
-            //$this->show();  
+            //$this->show();
             if ($this->nb_result() > 0) {
-				//$this->show();  
+                //$this->show();
                 while ($ta = $this->fetch_object()) {
                     $query = "INSERT INTO " . _NOTIF_EVENT_STACK_TABLE_NAME
                             . " (ta_sid, table_name, record_id, user_id, event_info"
-                            . ", event_date)" 
-                            . " VALUES(" . $ta->system_id . ", '" 
-                            . $table_name . "', '" . $record_id . "', '" 
-                            . $user . "', '" . $info . "', " 
+                            . ", event_date)"
+                            . " VALUES(" . $ta->system_id . ", '"
+                            . $table_name . "', '" . $record_id . "', '"
+                            . $user . "', '" . $info . "', "
                             . $this->current_datetime() . ")";
                     $this->query($query, false, true);
                 }
             }
             //$this->disconnect();
         }
-        
+
     }
 
     /**
