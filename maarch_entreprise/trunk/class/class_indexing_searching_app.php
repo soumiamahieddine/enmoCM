@@ -360,6 +360,16 @@ class indexing_searching_app extends dbquery
             }
         }
 
+		if($core->is_module_loaded('entities') && $_SESSION['details']['diff_list']['key_value'] == md5($res_id) )
+		{
+			//Mise a jour du dest_user :: seulement sur demande 
+			if (!empty($_SESSION['details']['diff_list']['dest']['user_id'])){
+				$tmp_new_user_id = $_SESSION['details']['diff_list']['dest']['user_id'];
+				array_push($data_res, array('column' => 'dest_user', 'value' => $tmp_new_user_id, 'type' => "string"));	
+				unset($_SESSION['details']['diff_list']['key_value']);
+			}
+		}
+
         if($core->is_module_loaded('physical_archive'))
         {
             // Arbox id
