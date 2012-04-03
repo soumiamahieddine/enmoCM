@@ -251,7 +251,87 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $frm_str .= '</div>';
 
          $frm_str .= '</div><br/>';
+        
+        // Displays the process data
+        $nb_attach = 0;
+        if ($core_tools->is_module_loaded('attachments')) {
+            $req = new request;
+            $req->connect();
+            $req->query("select res_id from ".$_SESSION['tablename']['attach_res_attachments']." where status <> 'DEL' and res_id_master = ".$res_id);
+            if ($req->nb_result() > 0)
+            {
+                $nb_attach = $req->nb_result();
+            }
+        }
+            $frm_str .= '<h2 onclick="showHideDiv(\'processframe\');new Effect.toggle(\'done_answers_div\', \'blind\', {delay:0.2});return false;"  class="categorie"  style="width:90%;">';
+            $frm_str .= '<img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=plus.png" alt="" />&nbsp;<b>'._DONE_ANSWERS.' ('.$nb_attach .'):</b>';
+            $frm_str .= '<span class="lb1-details">&nbsp;</span>';
+            $frm_str .= '</h2>';
+            $frm_str .= '<div class="desc" id="done_answers_div" style="display:none;width:90%;">';
+                $frm_str .= '<div class="ref-unit" style="width:95%;">';
+                    $frm_str .= '<table width="95%">';
+                        $frm_str .= '<tr>';
+                                    $frm_str .= '<td>';
+                                    $frm_str .= '<input type="checkbox"  class="check" name="direct_contact" id="direct_contact" value="true"';
+                                    if ($process_data['direct_contact']) {
+                                        $frm_str .= 'checked="checked"';
+                                    }
+                                    $frm_str .= ' onclick="unmark_empty_process(\'no_answer\');" />'._DIRECT_CONTACT.'<br/>';
+                                    $frm_str .= '<input type="checkbox"  class="check" name="fax" id="fax" value="true"';
+                                    if ($process_data['fax']) {
+                                        $frm_str .= 'checked="checked"';
+                                    }
+                                    $frm_str .=' onclick="unmark_empty_process(\'no_answer\');" />'._FAX.'<br/>';
+                                    $frm_str .= '<input type="checkbox"  class="check" name="email" id="email"  value="true"';
+                                    if ($process_data['email']) {
+                                        $frm_str .= 'checked="checked"';
+                                    }
+                                    $frm_str .='onclick="unmark_empty_process(\'no_answer\');" />'._EMAIL.'<br/>';
+                                    $frm_str .= '<input type="checkbox"  class="check" name="simple_mail" id="simple_mail"  value="true" ';
+                                    if ($process_data['simple_mail']) {
+                                        $frm_str .= 'checked="checked"';
+                                    }
+                                    $frm_str .= 'onclick="unmark_empty_process(\'no_answer\');" />'._SIMPLE_MAIL.'<br/>';
+                                    $frm_str .= '<input type="checkbox"  class="check" name="registered_mail" id="registered_mail" value="true" ';
+                                    if ($process_data['registered_mail']) {
+                                        $frm_str .= 'checked="checked"';
+                                    }
+                                    $frm_str .='onclick="unmark_empty_process(\'no_answer\');" />'._REGISTERED_MAIL.'<br/>';
+                                    $frm_str .= '<input type="checkbox"  class="check" name="no_answer" id="no_answer" value="true"';
+                                    if ($process_data['no_answer']) {
+                                        $frm_str .= 'checked="checked"';
+                                    }
+                                   // $frm_str .='onclick="unmark_empty_process(\'no_answer\');" />'._NO_ANSWER.'<br/>';
+                                    $frm_str .='/>'._NO_ANSWER.'<br />';
+                                    $frm_str .= '<input type="checkbox"  class="check" name="other" id="other" value="true"';
+                                    if ($process_data['other']) {
+                                        $frm_str .= 'checked="checked"';
+                                    }
+                                    $frm_str .='onclick="unmark_empty_process(\'no_answer\');" />'._OTHER.' : <input type="text" name="other_answer" id="other_answer" value="';
+                                    if (!empty($process_data['other_answer_desc'])) {
+                                        $frm_str .= $process_data['other_answer_desc'];
+                                    } else {
+                                        $frm_str .='['._DEFINE.']';
+                                    }
+                                    $frm_str .='"';
+                                    if (empty($process_data['other_answer_desc']))
+                                    {
+                                        $frm_str .= ' onfocus="if (this.value==\'['._DEFINE.']\'){this.value=\'\';}" ';
+                                    }
+                                    $frm_str .=' /><br/>';
+                                    $frm_str .= '</td>';
+                                    $frm_str .= '<td>&nbsp;</td>';
 
+                                    $frm_str .= '</tr>';
+                                    $frm_str .= '<tr>';
+                                    $frm_str .= '<td><label for="process_notes">'._PROCESS_NOTES.' : </label><br/><textarea name="process_notes" id="process_notes" style="display:block;" rows="8" cols="5">'.$process_data['process_notes'].'</textarea></td>';
+                                    $frm_str .= '</tr>';
+                                    $frm_str .= '</table>';
+                
+            $frm_str .= '</div>';
+            $frm_str .= '</div>';
+
+        
         if ($core_tools->is_module_loaded('cases')) {
             require_once("modules".DIRECTORY_SEPARATOR."cases".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR.'class_modules_tools.php');
             $cases = new cases();
@@ -412,115 +492,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $frm_str .= '</div>';
             $frm_str .= '</div>';
         }
-         // Displays the process data
-        $nb_attach = 0;
-        if ($core_tools->is_module_loaded('attachments')) {
-            $req = new request;
-            $req->connect();
-            $req->query("select res_id from ".$_SESSION['tablename']['attach_res_attachments']." where status <> 'DEL' and res_id_master = ".$res_id);
-            if ($req->nb_result() > 0)
-            {
-                $nb_attach = $req->nb_result();
-            }
-        }
-            $frm_str .= '<h2 onclick="new Effect.toggle(\'done_answers_div\', \'blind\', {delay:0.2});return false;"  class="categorie"  style="width:90%;">';
-            $frm_str .= '<img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=plus.png" alt="" />&nbsp;<b>'._DONE_ANSWERS.' ('.$nb_attach .'):</b>';
-            $frm_str .= '<span class="lb1-details">&nbsp;</span>';
-            $frm_str .= '</h2>';
-            $frm_str .= '<div class="desc" id="done_answers_div" style="display:none;width:90%;">';
-                $frm_str .= '<div class="ref-unit" style="width:95%;">';
-                
-                if ($core_tools->is_module_loaded('attachments')) {
-                    $req = new request;
-                    $req->connect();
-                    $req->query("select res_id from ".$_SESSION['tablename']['attach_res_attachments']." where status = 'NEW' and res_id_master = ".$res_id);
-                    //$req->show();
-                    $nb_attach = 0;
-                    if ($req->nb_result() > 0) {
-                        $nb_attach = $req->nb_result();
-                    }
-                    $frm_str .= '<div class="ref-unit">';
-                    $frm_str .= '<input type="button" name="attach" id="attach" class="button" value="'
-                        . _ATTACH
-                        . '" onclick="javascript:window.open(\''.$_SESSION['config']['businessappurl']
-                        . 'index.php?display=true&module=attachments&page=join_file\',\'\', \'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=550,height=200\');" /> ';
-                    if ($core_tools->is_module_loaded('templates')) {
-                        $frm_str .= '<input type="button" name="template" id="template" class="button" value="' . _GENERATE . '" onclick="javascript:window.open(\''
-                            . $_SESSION['config']['businessappurl']
-                            . 'index.php?display=true&module=templates&page=choose_template&entity='
-                            . $data['destination']['value']
-                            . '&res_id=' . $res_id
-                            . '&coll_id=' . $coll_id
-                            . '\',\'\', \'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=355,height=210\');" />';
-                    }
-                    $frm_str .= '<iframe name="list_attach" align="left" id="list_attach" src="'
-                    . $_SESSION['config']['businessappurl']
-                    . 'index.php?display=true&module=attachments&page=frame_list_attachments" frameborder="0" width="430px" height="100px"></iframe>';
-                    $frm_str .= '</div><br>';
-                }
-                
-                    $frm_str .= '<table width="95%">';
-                        $frm_str .= '<tr>';
-                                    $frm_str .= '<td>';
-                                    $frm_str .= '<input type="checkbox"  class="check" name="direct_contact" id="direct_contact" value="true"';
-                                    if ($process_data['direct_contact']) {
-                                        $frm_str .= 'checked="checked"';
-                                    }
-                                    $frm_str .= ' onclick="unmark_empty_process(\'no_answer\');" />'._DIRECT_CONTACT.'<br/>';
-                                    $frm_str .= '<input type="checkbox"  class="check" name="fax" id="fax" value="true"';
-                                    if ($process_data['fax']) {
-                                        $frm_str .= 'checked="checked"';
-                                    }
-                                    $frm_str .=' onclick="unmark_empty_process(\'no_answer\');" />'._FAX.'<br/>';
-                                    $frm_str .= '<input type="checkbox"  class="check" name="email" id="email"  value="true"';
-                                    if ($process_data['email']) {
-                                        $frm_str .= 'checked="checked"';
-                                    }
-                                    $frm_str .='onclick="unmark_empty_process(\'no_answer\');" />'._EMAIL.'<br/>';
-                                    $frm_str .= '<input type="checkbox"  class="check" name="simple_mail" id="simple_mail"  value="true" ';
-                                    if ($process_data['simple_mail']) {
-                                        $frm_str .= 'checked="checked"';
-                                    }
-                                    $frm_str .= 'onclick="unmark_empty_process(\'no_answer\');" />'._SIMPLE_MAIL.'<br/>';
-                                    $frm_str .= '<input type="checkbox"  class="check" name="registered_mail" id="registered_mail" value="true" ';
-                                    if ($process_data['registered_mail']) {
-                                        $frm_str .= 'checked="checked"';
-                                    }
-                                    $frm_str .='onclick="unmark_empty_process(\'no_answer\');" />'._REGISTERED_MAIL.'<br/>';
-                                    $frm_str .= '<input type="checkbox"  class="check" name="no_answer" id="no_answer" value="true"';
-                                    if ($process_data['no_answer']) {
-                                        $frm_str .= 'checked="checked"';
-                                    }
-                                   // $frm_str .='onclick="unmark_empty_process(\'no_answer\');" />'._NO_ANSWER.'<br/>';
-                                    $frm_str .='/>'._NO_ANSWER.'<br />';
-                                    $frm_str .= '<input type="checkbox"  class="check" name="other" id="other" value="true"';
-                                    if ($process_data['other']) {
-                                        $frm_str .= 'checked="checked"';
-                                    }
-                                    $frm_str .='onclick="unmark_empty_process(\'no_answer\');" />'._OTHER.' : <input type="text" name="other_answer" id="other_answer" value="';
-                                    if (!empty($process_data['other_answer_desc'])) {
-                                        $frm_str .= $process_data['other_answer_desc'];
-                                    } else {
-                                        $frm_str .='['._DEFINE.']';
-                                    }
-                                    $frm_str .='"';
-                                    if (empty($process_data['other_answer_desc']))
-                                    {
-                                        $frm_str .= ' onfocus="if (this.value==\'['._DEFINE.']\'){this.value=\'\';}" ';
-                                    }
-                                    $frm_str .=' /><br/>';
-                                    $frm_str .= '</td>';
-                                    $frm_str .= '<td>&nbsp;</td>';
-
-                                    $frm_str .= '</tr>';
-                                    $frm_str .= '<tr>';
-                                    $frm_str .= '<td><label for="process_notes">'._PROCESS_NOTES.' : </label><br/><textarea name="process_notes" id="process_notes" style="display:block;" rows="8" cols="5">'.$process_data['process_notes'].'</textarea></td>';
-                                    $frm_str .= '</tr>';
-                                    $frm_str .= '</table>';
-                
-            $frm_str .= '</div>';
-            $frm_str .= '</div><br/>';
-
+        
         $frm_str .= '<hr class="hr_process"/>';
         $frm_str .= '<p align="center" style="width:90%;">';
             $frm_str .= '<b>'._ACTIONS.' : </b>';
@@ -546,6 +518,39 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .= '</div>';
 
         $frm_str .= '<div id="validright">';
+        //ATTACHMENTS FRAME
+        if ($core_tools->is_module_loaded('attachments')) {
+            $frm_str .= '<div id="processframe" name="processframe" style="display:none;">';
+                $req = new request;
+                $req->connect();
+                $req->query("select res_id from ".$_SESSION['tablename']['attach_res_attachments'] 
+                    . " where status = 'NEW' and res_id_master = " . $res_id);
+                //$req->show();
+                $nb_attach = 0;
+                if ($req->nb_result() > 0) {
+                    $nb_attach = $req->nb_result();
+                }
+                $frm_str .= '<div class="ref-unit">';
+                $frm_str .= '<input type="button" name="attach" id="attach" class="button" value="'
+                    . _ATTACH
+                    . '" onclick="javascript:window.open(\'' . $_SESSION['config']['businessappurl']
+                    . 'index.php?display=true&module=attachments&page=join_file\',\'\', \'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=550,height=200\');" /> ';
+                if ($core_tools->is_module_loaded('templates')) {
+                    $frm_str .= '<input type="button" name="template" id="template" class="button" value="' . _GENERATE . '" onclick="javascript:window.open(\''
+                        . $_SESSION['config']['businessappurl']
+                        . 'index.php?display=true&module=templates&page=choose_template&entity='
+                        . $data['destination']['value']
+                        . '&res_id=' . $res_id
+                        . '&coll_id=' . $coll_id
+                        . '\',\'\', \'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=355,height=210\');" />';
+                }
+                $frm_str .= '<iframe name="list_attach" align="left" id="list_attach" src="'
+                . $_SESSION['config']['businessappurl']
+                . 'index.php?display=true&module=attachments&page=frame_list_attachments&mode=normal" frameborder="0" width="100%" height="250px"></iframe>';
+                $frm_str .= '</div>';
+            $frm_str .= '</div>';
+        }
+        //RESOURCE FRAME
         $frm_str .= '<iframe src="'.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=view_resource_controler&id='.$res_id.'" name="viewframe" id="viewframe"  scrolling="auto" frameborder="0" ></iframe>';
         $frm_str .= '</div>';
         $frm_str .= '<script type="text/javascript">resize_frame_process("modal_'.$id_action.'", "viewframe", true, true);resize_frame_process("modal_'.$id_action.'", "hist_doc", true, false);window.scrollTo(0,0);';

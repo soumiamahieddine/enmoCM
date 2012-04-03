@@ -2182,3 +2182,21 @@ function reverseCheck() {
         }  
     )
 }
+
+function showHideDiv(elem)
+{
+    /*var elemTo = window.document.getElementById(elem);
+    
+    if (elemTo != null) {
+        elemTo.style.display = "none";
+    }
+    window.alert(elemTo.style.diplay);
+    */
+    if ($(elem) != null) {
+        if ($(elem).style.display == "none") {
+            $(elem).style.display = "inline";
+        } else {
+            $(elem).style.display = "none";
+        }
+    }
+}
