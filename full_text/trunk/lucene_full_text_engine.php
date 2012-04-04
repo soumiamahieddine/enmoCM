@@ -220,7 +220,7 @@ Function indexFullTextPdf($pathToFile, $indexFileDirectory, $Id)
                 }
             }
             Zend_Search_Lucene_Analysis_Analyzer::setDefault(
-                new Zend_Search_Lucene_Analysis_Analyzer_Common_TextNum()
+                new Zend_Search_Lucene_Analysis_Analyzer_Common_TextNum_CaseInsensitive()
             );
             $term = new Zend_Search_Lucene_Index_Term($Id, 'Id');
             foreach ($index->termDocs($term) as $id) {
