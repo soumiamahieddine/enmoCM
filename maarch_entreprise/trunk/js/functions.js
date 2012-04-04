@@ -650,9 +650,9 @@ function resize_frame_process(id_modal, id_frame, resize_width, resize_height)
             } else if (id_frame == 'viewframe') {
                 if (navName == 'Explorer') {
                     if (navVersion < 7) {
-                        newwith = (windowSize[0] - 510);
+                        newwith = (windowSize[0] - 390);
                     } else {
-                        newwith = (windowSize[0] - 480);
+                        newwith = (windowSize[0] - 390);
                     }
 
                 } else if (navName == 'Firefox') {
