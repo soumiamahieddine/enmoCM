@@ -1,6 +1,6 @@
 <?php
 /*
-*    Copyright 2008,2009 Maarch
+*    Copyright 2008-2012 Maarch
 *
 *  This file is part of Maarch Framework.
 *
@@ -28,7 +28,7 @@
 * @ingroup indexing_searching_mlb
 */
 
-require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
+require_once('core/class/class_security.php');
 $core_tools = new core_tools();
 $core_tools->test_user();
 //here we loading the lang vars
@@ -44,7 +44,12 @@ if(isset($_REQUEST['mode']) && $_REQUEST['mode'] == 'normal')
     $mode = 'normal';
 }
 ?>
-<body <?php  if($_SESSION['req'] == 'action'){?>id="hist_action_frame"<?php  }else if($mode =='small'){?>id="hist_courrier_frame"<?php  }?>>
+<body <?php  if($_SESSION['req'] == 'action') {
+        ?>id="hist_action_frame"<?php
+    } elseif ($mode =='small') {
+        ?>id="hist_courrier_frame"<?php 
+    }
+?>>
 <?php
 $func = new functions();
 $db_hist = new dbquery();
@@ -72,24 +77,40 @@ else
 }
 if((empty($table)|| !$table) && (!empty($view) && $view <> false))
 {
-    $query = "select info, event_date, user_id  from ".$_SESSION['tablename']['history']." WHERE table_name= '".$view."' AND record_id= '".$s_id."' ORDER  BY event_date desc";
+    $query = "select info, event_date, user_id  from " 
+        . $_SESSION['tablename']['history'] 
+        . " WHERE table_name= '" . $view 
+        . "' AND record_id= '" . $s_id . "' ORDER  BY event_date desc";
 }
 elseif((empty($view) || !$view) && (!empty($table)&& $table <> false))
 {
-    $query = "select info, event_date, user_id  from ".$_SESSION['tablename']['history']." WHERE table_name= '".$table."' AND record_id= '".$s_id."' ORDER  BY event_date desc";
+    $query = "select info, event_date, user_id  from " 
+        . $_SESSION['tablename']['history'] 
+        . " WHERE table_name= '" . $table 
+        . "' AND record_id= '" . $s_id . "' ORDER  BY event_date desc";
 }
 elseif(!empty($view) && !empty($table)&& $view <> false && $table <> false)
 {
-    $query = "select info, event_date, user_id  from ".$_SESSION['tablename']['history']." WHERE (table_name= '".$table."' OR table_name = '".$view."') AND record_id= '".$s_id."' ORDER  BY event_date desc";
+    $query = "select info, event_date, user_id  from " 
+        . $_SESSION['tablename']['history'] 
+        . " WHERE (table_name= '" . $table 
+        . "' OR table_name = '" . $view . "') AND record_id= '" 
+        . $s_id . "' ORDER  BY event_date desc";
 }
 $db_hist->query($query);
 //$db_hist->show();
+echo '<center><h2>' . _HISTORY . '</h2></center>';
 ?>
-<table cellpadding="0" cellspacing="0" border="0" class="<?php if($mode == 'normal'){echo 'listing spec detailtabricatordebug';}else{echo'listing2';}?>">
+<table cellpadding="0" cellspacing="0" border="0" class="<?php 
+    if($mode == 'normal') {
+        echo 'listing spec detailtabricatordebug';
+    } else {
+        echo'listing2';
+    }?>">
     <thead>
         <tr>
             <th><?php  echo _DATE;?></th>
-            <th><?php  echo _USER;?> </th>
+            <th><?php  echo _USER;?></th>
             <th><?php  echo _DONE;?></th>
         </tr>
     </thead>
@@ -106,7 +127,9 @@ $db_hist->query($query);
             {
                 $color = ' class="col"';
             }
-            $db_hist2->query("select lastname, firstname from ".$_SESSION['tablename']['users']." where user_id = '".$res_hist->user_id."'");
+            $db_hist2->query("select lastname, firstname from " 
+                . $_SESSION['tablename']['users'] 
+                . " where user_id = '".$res_hist->user_id."'");
             $res_hist2 = $db_hist2->fetch_object();
             if (isset($res_hist2->lastname)) {
                 $nom = $res_hist2->lastname;

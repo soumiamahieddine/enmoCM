@@ -374,6 +374,11 @@ form, fieldset {
 .addforms2{
     width: 460px;
 }
+
+.addformsProcess{
+    width: 300px;
+}
+
 .indexingform{
     width: 450px;
 }
@@ -408,6 +413,14 @@ input, select, textarea, .forms img {
     text-align:left;
 }
 
+.formsProcess input, .forms select, .forms textarea, .smallforms select, .smallforms input {
+    background-color: White;
+    border: 1px solid #999;
+    color: #666;
+    width: 150px;
+    text-align:left;
+}
+
 .physicalform input, .physicalform select, .physicalform textarea {
     background-color: White;
     border: 1px solid #999;
@@ -419,6 +432,11 @@ input, select, textarea, .forms img {
 .forms input, .forms textarea {
     padding: 0.1em 0.2em;
 }
+
+.formsProcess input, .formsProcess textarea {
+    padding: 0.1em 0.2em;
+}
+
 
 .physicalform input, .physicalform textarea {
     padding: 0.1em 0.2em;
@@ -579,9 +597,8 @@ input.button {
 }
 
 .detailtabricatordebug{
-    width: 900px;
+    width: 90%;
 }
-
 
 .listingsmall, .specsmall {
     margin: 10px 12px 0 12px;
@@ -622,9 +639,19 @@ input.button {
     width: 520px;
 }
 
+.addformsProcess .listing
+{
+    width: 300px;
+}
+
 .addforms2 .listingsmall
 {
     width: 450px;
+}
+
+.addformsProcess .listingsmall
+{
+    width: 300px;
 }
 
 #hist_iframe .listing,   #missing_iframe .listing, #contract_history_frame .listing, #filling_res_frame .listing, #users_popup .listing
@@ -2018,6 +2045,16 @@ margin-left: 30%;
     height:auto;
     float: left*/
 }
+
+.form_title_process
+{
+    font-size:10px;
+    /*text-align: left;
+    width: 50%;
+    height:auto;
+    float: left*/
+}
+
 /*
 .form_desc
 {
@@ -2034,6 +2071,11 @@ height:auto;
     width: 150px;
 }
 
+.indexingform .form_title_process
+{
+    font-weight:normal;
+    width: 100px;
+}
 
 .indexingform .indexing_field
 {
@@ -2186,6 +2228,11 @@ height:auto;
     background-color: #E6E6E6;
 }
 
+.formsProcess .readonly
+{
+    background-color: #E6E6E6;
+}
+
 
 #guide_summary .tit a
 {
@@ -2305,7 +2352,7 @@ margin-left: 10px;
 #validleftprocess
 {
     /*width: 47%;*/
-    width:420px;
+    width:300px;
     padding-left: 1px;
     padding-right: 1px;
     float: left;
@@ -2319,7 +2366,7 @@ margin-left: 10px;
     padding-left: 5px;
     padding-right: 5px;
     vertical-align:top;
-    float: right;
+    float: left;
     /*margin: 0 0 1em 2em;*/
     position: relative;
 }

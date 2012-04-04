@@ -177,6 +177,7 @@ class business_app_tools extends dbquery
                         'id' => (string) $col->id,
                         'label' => (string) $tmp,
                         'table' => (string) $col->table,
+                        'version_table' => (string) $col->version_table,
                         'view' => (string) $col->view,
                         'adr' => (string) $col->adr,
                         'index_file' => (string) $col->index_file,

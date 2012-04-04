@@ -103,6 +103,10 @@ if ($s_id == '') {
     if ($adrTable == '') {
         $adrTable = $_SESSION['collections'][0]['adr'];
     }
+    if (isset($_REQUEST['versionTable']) && $_REQUEST['versionTable'] <> '') {
+        $table = $_REQUEST['versionTable'];
+        $adrTable = '';
+    }
     $docserverControler = new docservers_controler();
     $viewResourceArr = array();
     $docserverLocation = array();
