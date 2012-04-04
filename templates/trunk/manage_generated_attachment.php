@@ -120,7 +120,7 @@ if (empty($_REQUEST['mode']) || !isset($_REQUEST['mode'])) {
                 ?>
                 <script type="text/javascript">
                     var eleframe1 =  window.opener.top.document.getElementById('list_attach');
-                    eleframe1.src = '<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=attachments&page=frame_list_attachments';
+                    eleframe1.src = '<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=attachments&page=frame_list_attachments&mode=normal';
                     window.top.close();
                 </script>
                 <?php
@@ -139,7 +139,7 @@ if (empty($_REQUEST['mode']) || !isset($_REQUEST['mode'])) {
                     ?>
                     <script  type="text/javascript">
                         var eleframe1 =  window.opener.top.frames['process_frame'].document.getElementById('list_attach');
-                        eleframe1.src = '<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=attachments&page=frame_list_attachments';
+                        eleframe1.src = '<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=attachments&page=frame_list_attachments&mode=normal';
                         window.top.close();
                     </script>
                     <?php
@@ -172,7 +172,7 @@ if (empty($_REQUEST['mode']) || !isset($_REQUEST['mode'])) {
                     ?>
                     <script  type="text/javascript">
                         var eleframe1 =  window.opener.top.document.getElementById('list_attach');
-                        eleframe1.src = '<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=attachments&page=frame_list_attachments';
+                        eleframe1.src = '<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=attachments&page=frame_list_attachments&mode=normal';
                         window.top.close();
                     </script>
                     <?php
