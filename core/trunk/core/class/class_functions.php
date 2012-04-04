@@ -1161,6 +1161,37 @@ class functions
         }
         return $var;
     }
+    
+            /**
+    * Restore html string, useful for full_text search
+    *
+    * @param  $var string  String to convert 
+    * @return Cleared string
+    */
+    public function store_html($var)
+    {
+/*
+		 $var = str_replace("é", "&eacute;",$var);
+		 $var = str_replace("è","&egrave;",$var);
+		 $var = str_replace("ê","&ecirc;",$var);
+		 $var = str_replace("à","&agrave;",$var);
+		 $var = str_replace("â","&acirc;",$var);
+		 $var = str_replace("î","&icirc;",$var);
+         $var = str_replace("ô","&icirc;",$var);
+         $var = str_replace("û","&ucirc;",$var);
+*/
+		 $var = str_replace("é", "?",$var);
+		 $var = str_replace("è","?",$var);
+		 $var = str_replace("ê","?",$var);
+		 $var = str_replace("à","?",$var);
+		 $var = str_replace("â","?",$var);
+		 $var = str_replace("î","?",$var);
+         $var = str_replace("ô","?",$var);
+         $var = str_replace("û","?",$var);
+         
+       
+        return $var;
+    }
 
     /**
     *  Returns the next Easter date
