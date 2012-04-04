@@ -264,8 +264,9 @@ if (count($_REQUEST['meta']) > 0) {
                 && !empty($_REQUEST['fulltext'])
             ) {
                 // FULLTEXT
+				$fulltext_request = $func->store_html($_REQUEST['fulltext']);
                 $json_txt .= " 'fulltext' : ['" 
-                    . addslashes(trim($_REQUEST['fulltext'])) . "'],";
+                    . addslashes(trim($fulltext_request)) . "'],";
                 set_include_path('apps' . DIRECTORY_SEPARATOR 
                     . $_SESSION['config']['app_id'] 
                     . DIRECTORY_SEPARATOR . 'tools' 
@@ -273,9 +274,9 @@ if (count($_REQUEST['meta']) > 0) {
                 );
                 require_once('Zend/Search/Lucene.php');
                 Zend_Search_Lucene_Analysis_Analyzer::setDefault(
-                    new Zend_Search_Lucene_Analysis_Analyzer_Common_TextNum()
+                    new Zend_Search_Lucene_Analysis_Analyzer_Common_TextNum_CaseInsensitive()
                 );
-                $_SESSION['search']['plain_text'] = $_REQUEST['fulltext'];
+                $_SESSION['search']['plain_text'] = $fulltext_request;
                 //echo $_SESSION['search']['plain_text']; exit()
                 $path_to_lucene_index = $_SESSION['collections'][0]['path_to_lucene_index'];
                 //$lucene_all_words = explode(' ',$_REQUEST['fulltext']);
@@ -285,7 +286,7 @@ if (count($_REQUEST['meta']) > 0) {
                         $index = Zend_Search_Lucene::open($path_to_lucene_index);
 //$hits = $index->find($_REQUEST['fulltext']."~");
 //$query_res_ft = Zend_Search_Lucene_Search_QueryParser::parse($_REQUEST['fulltext'], 'iso-8859-5'));
-						$hits = $index->find($_REQUEST['fulltext']);
+						$hits = $index->find($fulltext_request);
                         /*
 						avec accent
 						$hits = $index->find(
