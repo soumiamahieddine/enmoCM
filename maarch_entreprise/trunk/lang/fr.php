@@ -1192,6 +1192,22 @@ if (!defined('_PO_NUMBER')) define( '_PO_NUMBER', 'BDC facture');
 if (!defined('_INVOICE_NUMBER')) define( '_INVOICE_NUMBER', 'Num facture');
 
 
+/******************** fulltext search Helper ************/
+if (!defined('_HELP_FULLTEXT_SEARCH')) define( '_HELP_FULLTEXT_SEARCH', 'Aide sur la recherche plein texte');
+if (!defined('_TIPS_FULLTEXT')) define( '_TIPS_FULLTEXT', 'Astuces de recherche');
+
+if (!defined('_TIPS_KEYWORD1')) define( '_TIPS_KEYWORD1', 'Pour effectuer une recherche avec joker sur plusieurs caractères');
+if (!defined('_TIPS_KEYWORD2')) define( '_TIPS_KEYWORD2', 'Pour effectuer une recherche sur un groupe de mots, une phrase');
+
+if (!defined('_TIPS_KEYWORD3')) define( '_TIPS_KEYWORD3', 'Pour effectuer une recherche approximative');
+if (!defined('_HELP_FULLTEXT_SEARCH_EXEMPLE1')) define( '_HELP_FULLTEXT_SEARCH_EXEMPLE1', 'auto* trouve autoroute et automobile ');
+if (!defined('_HELP_FULLTEXT_SEARCH_EXEMPLE2')) define( '_HELP_FULLTEXT_SEARCH_EXEMPLE2', '"route nationale" trouve l\'expression entière "route nationale"
+														<p> Sans guillemet la recherche trouve des documents contenant les mots route ou nationale</p>
+														<p> route + nationale trouve les documents contenant à la fois les mots route et nationale</p>');
+if (!defined('_HELP_FULLTEXT_SEARCH_EXEMPLE3')) define( '_HELP_FULLTEXT_SEARCH_EXEMPLE3', 'vite~ trouve vote, vite');
+if (!defined('_TIPS_FULLTEXT_TEXT')) define( '_TIPS_FULLTEXT_TEXT', 'La recherche peut se faire sur des nombres');
+if (!defined('_CLOSE_MAIL')) define( '_CLOSE_MAIL', 'Cl&ocirc;turer un courrier');
+
 /******************** Keywords Helper ************/
 if (!defined('_HELP_KEYWORD0')) define( '_HELP_KEYWORD0', 'id de l&rsquo;utilisateur connect&eacute;');
 if (!defined('_HELP_BY_CORE')) define( '_HELP_BY_CORE', 'Mots cl&eacute;s de Maarch Core');
@@ -1204,6 +1220,7 @@ if (!defined('_THIS_DOC')) define( '_THIS_DOC', 'ce document');
 if (!defined('_MODIFY_DOC')) define( '_MODIFY_DOC', 'Modifier des informations');
 if (!defined('_BACK_TO_WELCOME')) define( '_BACK_TO_WELCOME', 'Retourner &agrave; la page d&rsquo;accueil');
 if (!defined('_CLOSE_MAIL')) define( '_CLOSE_MAIL', 'Cl&ocirc;turer un courrier');
+
 
 /************** R&eacute;ouverture courrier **************/
 if (!defined('_MAIL_SENTENCE2')) define( '_MAIL_SENTENCE2', 'En saisissant le n&deg;GED du document, vous passerez le  statut de ce dernier &agrave; &quot;En cours&quot;.');
