@@ -51,13 +51,13 @@ $onlyCc = false;
 $noDelete = false;
 $redirect_groupbasket = false;
 if (isset($_SESSION['current_basket'])) {
-	$redirect_groupbasket = current($_SESSION['user']['redirect_groupbasket'][$_SESSION['current_basket']['id']]);
-	if(empty($redirect_groupbasket['entities'])) {
-		$redirect_groupbasket['entities'] = $db->empty_list();
-	}
-	if(empty($redirect_groupbasket['users_entities'])) {
-		$redirect_groupbasket['users_entities'] = $db->empty_list();
-	}
+    $redirect_groupbasket = current($_SESSION['user']['redirect_groupbasket'][$_SESSION['current_basket']['id']]);
+    if(empty($redirect_groupbasket['entities'])) {
+        $redirect_groupbasket['entities'] = $db->empty_list();
+    }
+    if(empty($redirect_groupbasket['users_entities'])) {
+        $redirect_groupbasket['users_entities'] = $db->empty_list();
+    }
 }
 
 if (isset($_REQUEST['only_cc'])) {
@@ -78,7 +78,7 @@ if (isset($_GET['what_users']) && ! empty($_GET['what_users']) ) {
                 or u.user_id like '%".strtolower($whatUsers)."%'
                 or u.user_id like '%".strtoupper($whatUsers)."%')";
     $orderByUsers = " order by u.lastname asc, u.firstname asc, "
-    			  . "e.entity_label asc";
+                  . "e.entity_label asc";
 
     $whereEntitiesUsers .= " and (u.lastname like '%".strtolower($whatUsers)."%'
                 or u.lastname like '%".strtoupper($whatUsers)."%'
@@ -92,7 +92,7 @@ if (isset($_GET['what_services']) && ! empty($_GET['what_services'])) {
     $whatServices = addslashes(
         $func->wash($_GET['what_services'], "no", "", "no")
     );
-	$whereUsers .= " and (e.entity_label like '%" . strtolower($whatServices)
+    $whereUsers .= " and (e.entity_label like '%" . strtolower($whatServices)
                     . "%' or e.entity_id like '%" . strtoupper($whatServices)
                     . "%')";
     $whereEntities .= " and (e.entity_label like '%"
@@ -100,57 +100,57 @@ if (isset($_GET['what_services']) && ! empty($_GET['what_services'])) {
                        . strtolower($whatServices) . "%' )";
 
     $orderByUsers = " order by e.entity_label asc, "
-    			  . "u.lastname asc, u.firstname asc";
+                  . "u.lastname asc, u.firstname asc";
     $orderByEntities = " order by e.entity_label asc";
 }
 
 
 // Redirect to user in entities
 $query = "select u.user_id, u.firstname, u.lastname,e.entity_id,  e.entity_label "
-	. "FROM " . USERS_TABLE . " u, " . ENT_ENTITIES . " e, "
-	. ENT_USERS_ENTITIES . " ue WHERE u.status <> 'DEL' and u.enabled = 'Y' "
-	. "and  e.entity_id = ue.entity_id and u.user_id = ue.user_id "
-	. "and e.enabled = 'Y' ". $whereUsers;
+    . "FROM " . USERS_TABLE . " u, " . ENT_ENTITIES . " e, "
+    . ENT_USERS_ENTITIES . " ue WHERE u.status <> 'DEL' and u.enabled = 'Y' "
+    . "and  e.entity_id = ue.entity_id and u.user_id = ue.user_id "
+    . "and e.enabled = 'Y' ". $whereUsers;
 if($redirect_groupbasket) {
-	$query .= " and e.entity_id in (" . $redirect_groupbasket['users_entities'] . ") ";
+    $query .= " and e.entity_id in (" . $redirect_groupbasket['users_entities'] . ") ";
 }
 $query .= $orderByUsers;
 $db->query($query);
 $i = 0;
 while ($line = $db->fetch_object()) {
-	array_push(
-		$users,
-		array(
-			"ID" => $db->show_string($line->user_id),
-			"PRENOM" => $db->show_string($line->firstname),
-			"NOM" => $db->show_string($line->lastname),
-			"DEP_ID" => $db->show_string($line->entity_id),
-			"DEP" => $db->show_string($line->entity_label)
-		)
-	);
+    array_push(
+        $users,
+        array(
+            "ID" => $db->show_string($line->user_id),
+            "PRENOM" => $db->show_string($line->firstname),
+            "NOM" => $db->show_string($line->lastname),
+            "DEP_ID" => $db->show_string($line->entity_id),
+            "DEP" => $db->show_string($line->entity_label)
+        )
+    );
 }
 
 
 // Redirect to entities
 $query = "select e.entity_id,  e.entity_label FROM " . USERS_TABLE . " u, "
-			. ENT_ENTITIES . " e, " . ENT_USERS_ENTITIES . " ue WHERE"
-			. " u.status <> 'DEL' and u.enabled = 'Y' and "
-			. " e.entity_id = ue.entity_id and u.user_id = ue.user_id "
-			. "and e.enabled = 'Y' " . $whereEntitiesUsers;
+            . ENT_ENTITIES . " e, " . ENT_USERS_ENTITIES . " ue WHERE"
+            . " u.status <> 'DEL' and u.enabled = 'Y' and "
+            . " e.entity_id = ue.entity_id and u.user_id = ue.user_id "
+            . "and e.enabled = 'Y' " . $whereEntitiesUsers;
 if($redirect_groupbasket) {
-	$query .= " and e.entity_id in (" . $redirect_groupbasket['entities'] . ") ";
+    $query .= " and e.entity_id in (" . $redirect_groupbasket['entities'] . ") ";
 }
 $query .= $orderByUsers;
 $db->query($query);
 $i = 0;
 while ($line = $db->fetch_object()) {
-	array_push(
-		$entities,
-		array(
-			"ID"  => $db->show_string($line->entity_id),
-			"DEP" => $db->show_string($line->entity_label),
-		)
-	);
+    array_push(
+        $entities,
+        array(
+            "ID"  => $db->show_string($line->entity_id),
+            "DEP" => $db->show_string($line->entity_label),
+        )
+    );
 }
 
 
@@ -180,7 +180,7 @@ if (isset($_GET['action']) && $_GET['action'] == "add_entity" ) {
 
         if ($find == false) {
             $db->query(
-            	"SELECT  e.entity_id,  e.entity_label FROM " . ENT_ENTITIES
+                "SELECT  e.entity_id,  e.entity_label FROM " . ENT_ENTITIES
                 . " e WHERE   e.entity_id = '" . $db->protect_string_db($id)
                 . "'"
             );
@@ -188,8 +188,8 @@ if (isset($_GET['action']) && $_GET['action'] == "add_entity" ) {
             array_push(
                 $_SESSION[$origin]['diff_list']['copy']['entities'],
                 array(
-                	'entity_id'    => $db->show_string($id),
-                	'entity_label' => $db->show_string($line->entity_label)
+                    'entity_id'    => $db->show_string($id),
+                    'entity_label' => $db->show_string($line->entity_label)
                 )
             );
         }
@@ -210,11 +210,11 @@ if (isset($_GET['action']) && $_GET['action'] == "add_entity" ) {
             || ! isset( $_SESSION[$origin]['diff_list']['dest']['user_id'])
         ) {
             $db->query(
-            	"SELECT u.firstname, u.lastname, u.department, e.entity_id, "
-            	. "e.entity_label FROM " . USERS_TABLE . " u,  " . ENT_ENTITIES
-            	. " e, " . ENT_USERS_ENTITIES . " ue WHERE  u.user_id='"
-            	. $db->protect_string_db($id) . "' and "
-            	. " e.entity_id = ue.entity_id and u.user_id = ue.user_id"
+                "SELECT u.firstname, u.lastname, u.department, e.entity_id, "
+                . "e.entity_label FROM " . USERS_TABLE . " u,  " . ENT_ENTITIES
+                . " e, " . ENT_USERS_ENTITIES . " ue WHERE  u.user_id='"
+                . $db->protect_string_db($id) . "' and "
+                . " e.entity_id = ue.entity_id and u.user_id = ue.user_id"
             );
             $line = $db->fetch_object();
             $_SESSION[$origin]['diff_list']['dest']['user_id'] = $db->show_string($id);
@@ -235,18 +235,18 @@ if (isset($_GET['action']) && $_GET['action'] == "add_entity" ) {
 
             if ($find == false) {
                 $db->query(
-                	"SELECT u.firstname, u.lastname, u.department, e.entity_id,"
-                	. " e.entity_label FROM " . USERS_TABLE . " u,  "
-                	. ENT_ENTITIES . " e, " . ENT_USERS_ENTITIES
-                	. " ue WHERE  u.user_id='" . $db->protect_string_db($id)
-                	. "' and  e.entity_id = ue.entity_id "
-                	. "and u.user_id = ue.user_id"
+                    "SELECT u.firstname, u.lastname, u.department, e.entity_id,"
+                    . " e.entity_label FROM " . USERS_TABLE . " u,  "
+                    . ENT_ENTITIES . " e, " . ENT_USERS_ENTITIES
+                    . " ue WHERE  u.user_id='" . $db->protect_string_db($id)
+                    . "' and  e.entity_id = ue.entity_id "
+                    . "and u.user_id = ue.user_id"
                 );
                 $line = $db->fetch_object();
                 array_push(
                     $_SESSION[$origin]['diff_list']['copy']['users'],
                     array(
-                    	'user_id' => $db->show_string($id),
+                        'user_id' => $db->show_string($id),
                         'firstname' => $db->show_string($line->firstname),
                         'lastname' => $db->show_string($line->lastname),
                         'entity_id' => $db->show_string($line->entity_id),
@@ -288,7 +288,7 @@ if (isset($_GET['action']) && $_GET['action'] == "add_entity" ) {
         array_push(
             $_SESSION[$origin]['diff_list']['copy']['users'],
             array(
-            	'user_id' => $_SESSION[$origin]['diff_list']['dest']['user_id'],
+                'user_id' => $_SESSION[$origin]['diff_list']['dest']['user_id'],
                 'firstname' => $_SESSION[$origin]['diff_list']['dest']['firstname'],
                 'lastname' => $_SESSION[$origin]['diff_list']['dest']['lastname'],
                 'entity_id' => $_SESSION[$origin]['diff_list']['dest']['entity_id'],
@@ -305,7 +305,7 @@ if (isset($_GET['action']) && $_GET['action'] == "add_entity" ) {
         array_push(
             $_SESSION[$origin]['diff_list']['copy']['users'],
             array(
-            	'user_id' => $_SESSION[$origin]['diff_list']['dest']['user_id'],
+                'user_id' => $_SESSION[$origin]['diff_list']['dest']['user_id'],
                 'firstname' => $_SESSION[$origin]['diff_list']['dest']['firstname'],
                 'lastname' => $_SESSION[$origin]['diff_list']['dest']['lastname'],
                 'entity_id' => $_SESSION[$origin]['diff_list']['dest']['entity_id'],
@@ -654,7 +654,7 @@ if ((isset($_GET['what_users']) && ! empty($_GET['what_users']))
             </thead>
 
             <?php
-	$color = ' class="col"';
+    $color = ' class="col"';
     for ($j = 0; $j < count($entities); $j ++) {
         if ($color == ' class="col"') {
             $color = '';

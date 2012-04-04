@@ -62,7 +62,7 @@ if (isset($_SESSION[$origin]['diff_list']['dest']['user_id'])
 ) {
     if (! $onlyCC) {
         $content .= '<p class="sstit">' . _RECIPIENT . '</p>';
-        $content .= '<table cellpadding="0" cellspacing="0" border="0" class="listing3">';
+        $content .= '<table cellpadding="0" cellspacing="0" border="0" class="listing spec detailtabricatordebug">';
         $content .= '<tr class="col">';
         $content .= '<td><img src="' . $_SESSION['config']['businessappurl']
                  . 'static.php?filename=manage_users_entities_b_small.gif'
@@ -83,7 +83,7 @@ if (isset($_SESSION[$origin]['diff_list']['dest']['user_id'])
         if (! $onlyCC) {
             $content .= '<p class="sstit">' . _TO_CC . '</p>';
         }
-        $content .= '<table cellpadding="0" cellspacing="0" border="0" class="listing3">';
+        $content .= '<table cellpadding="0" cellspacing="0" border="0" class="listing spec detailtabricatordebug">';
         $color = ' class="col"';
         for ($i = 0; $i < count(
             $_SESSION[$origin]['diff_list']['copy']['entities']
@@ -143,7 +143,8 @@ if (isset($_SESSION[$origin]['diff_list']['dest']['user_id'])
 if ($onlyCC) {
     $arg .= '&only_cc';
 }
-$content_standard = '<p class="button" >';
+$content_standard = '<center><h2>' . _DIFF_LIST . '</h2></center>';
+$content_standard .= '<p class="button" >';
 $content_standard .= '<img src="' . $_SESSION['config']['businessappurl']
          . 'static.php?filename=modif_liste.png&module=entities" alt="" />'
          . '<a href="javascript://" onclick="window.open(\''
@@ -154,6 +155,6 @@ $content_standard .= '<img src="' . $_SESSION['config']['businessappurl']
          . $labelButton . '</a>';
 $content_standard .= '</p>';
 
-echo "{status : 0, div_content : '" . addslashes($content . $content_standard) 
+echo "{status : 0, div_content : '" . addslashes($content_standard . $content . '<br>') 
     . "', div_content_action : '" . addslashes($content) . "'}";
 exit();
