@@ -417,11 +417,11 @@ if(isset($_REQUEST['nodetails']))
 }?>
 <table align="center" border="0" width="100%">
     <tr>
-	    <td><a href="#" onclick="clear_search_form('frmsearch2','select_criteria');clear_q_list();"><img src="<?php  echo $_SESSION['config']['businessappurl']."static.php?filename=reset.gif";?>" alt="<?php echo _CLEAR_SEARCH;?>" /> <?php  echo _CLEAR_SEARCH; ?></a></td>
-		<td align="right">
+        <td><a href="#" onclick="clear_search_form('frmsearch2','select_criteria');clear_q_list();"><img src="<?php  echo $_SESSION['config']['businessappurl']."static.php?filename=reset.gif";?>" alt="<?php echo _CLEAR_SEARCH;?>" /> <?php  echo _CLEAR_SEARCH; ?></a></td>
+        <td align="right">
             <input class="button_search_adv" name="imageField" type="button" value="" onclick="valid_search_form('frmsearch2');this.form.submit();" /><br/>
-			<input class="button_search_adv_text" name="imageField" type="button" value="<?php echo _SEARCH; ?>" onclick="valid_search_form('frmsearch2');this.form.submit();" />
-		</td>
+            <input class="button_search_adv_text" name="imageField" type="button" value="<?php echo _SEARCH; ?>" onclick="valid_search_form('frmsearch2');this.form.submit();" />
+        </td>
         <!--td align="left"><a href="#" onclick="clear_search_form('frmsearch2','select_criteria');clear_q_list();"><img src="<?php  echo $_SESSION['config']['businessappurl']."static.php?filename=reset.gif";?>" alt="<?php echo _CLEAR_SEARCH;?>" /> <?php  echo _CLEAR_SEARCH; ?></a></td>
         <td  width="75%" align="right" ><?php if($core_tools->is_module_loaded("basket") == true){?><span class="bold"><?php echo _SPREAD_SEARCH_TO_BASKETS;?></span>
             <input type="hidden" name="meta[]" value="baskets_clause#baskets_clause_false,baskets_clause_true#radio" />
@@ -440,18 +440,18 @@ if(isset($_REQUEST['nodetails']))
                 <td>
                     <div class="block">
                     <table border="0" width="100%">
-						<tr>
+                        <tr>
                             <td width="70%">
-								<label for="baskets" class="bold" ><?php echo _SPREAD_SEARCH_TO_BASKETS;?>:</label>
-								<input type="hidden" name="meta[]" value="baskets_clause#baskets_clause#select_simple" />
-								<select name="baskets_clause" id="baskets_clause">
-									<option id="false" value="false"><?php echo _NO;?></option>
-									<option id="true" value="true"><?php echo _ALL_BASKETS;?></option>
-									<?php for($i=0; $i< count($_SESSION['user']['baskets']);$i++) {
-										?><option id="<?php echo $_SESSION['user']['baskets'][$i]['id'];?>" value="<?php echo $_SESSION['user']['baskets'][$i]['id'];?>" ><?php echo $_SESSION['user']['baskets'][$i]['desc'];?></option>
-									<?php } ?>
-								</select>
-							</td>
+                                <label for="baskets" class="bold" ><?php echo _SPREAD_SEARCH_TO_BASKETS;?>:</label>
+                                <input type="hidden" name="meta[]" value="baskets_clause#baskets_clause#select_simple" />
+                                <select name="baskets_clause" id="baskets_clause">
+                                    <option id="false" value="false"><?php echo _NO;?></option>
+                                    <option id="true" value="true"><?php echo _ALL_BASKETS;?></option>
+                                    <?php for($i=0; $i< count($_SESSION['user']['baskets']);$i++) {
+                                        ?><option id="<?php echo $_SESSION['user']['baskets'][$i]['id'];?>" value="<?php echo $_SESSION['user']['baskets'][$i]['id'];?>" ><?php echo $_SESSION['user']['baskets'][$i]['desc'];?></option>
+                                    <?php } ?>
+                                </select>
+                            </td>
                             <td><em><?php echo _SEARCH_SCOPE_HELP; ?></em></td>
                             <td>&nbsp;</td>
                         </tr>
@@ -464,9 +464,9 @@ if(isset($_REQUEST['nodetails']))
                     </p>
                 </td>
             </tr>
-			<tr><td colspan="2"><hr/></td></tr>
-			<?php
-			}    
+            <tr><td colspan="2"><hr/></td></tr>
+            <?php
+            }    
             if($core_tools->is_module_loaded("cases") == true)
             { ?>
              <tr>
@@ -588,6 +588,16 @@ if(isset($_REQUEST['nodetails']))
  </div>
  <div class="block_end">&nbsp;</div>
 </td></tr>
+</table>
+
+<table align="center" border="0" width="100%">
+    <tr>
+        <td><a href="#" onclick="clear_search_form('frmsearch2','select_criteria');clear_q_list();"><img src="<?php  echo $_SESSION['config']['businessappurl']."static.php?filename=reset.gif";?>" alt="<?php echo _CLEAR_SEARCH;?>" /> <?php  echo _CLEAR_SEARCH; ?></a></td>
+        <td align="right">
+            <input class="button_search_adv" name="imageField" type="button" value="" onclick="valid_search_form('frmsearch2');this.form.submit();" /><br/>
+            <input class="button_search_adv_text" name="imageField" type="button" value="<?php echo _SEARCH; ?>" onclick="valid_search_form('frmsearch2');this.form.submit();" />
+        </td>
+    </tr>
 </table>
 
 </form>
