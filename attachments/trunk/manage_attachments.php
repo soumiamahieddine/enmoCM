@@ -32,7 +32,7 @@ if ($core->is_module_loaded("templates")) {
 ?>
     <iframe name="list_attach" id="list_attach" src="<?php
 echo $_SESSION['config']['businessappurl'] . 'index.php?display=true'
-    . '&module=attachments&page=frame_list_attachments';
+    . '&module=attachments&page=frame_list_attachments&mode=normal';
 ?>" frameborder="0" width="100%" height="300px"></iframe>
    </div>
 </div>

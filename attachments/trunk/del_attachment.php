@@ -48,6 +48,6 @@ if ($_SESSION['history']['attachdel'] == "true") {
 	var eleframe1 =  window.top.document.getElementById('list_attach');
 	eleframe1.src = '<?php
 echo $_SESSION['config']['businessappurl'];
-?>index.php?display=true&module=attachments&page=frame_list_attachments';
+?>index.php?display=true&module=attachments&page=frame_list_attachments&mode=normal';
 	//window.top.close();
 </script>

@@ -112,7 +112,7 @@ if (isset($_POST['valid']) && $_POST['valid']) {
                             var eleframe1 =  window.opener.top.frames['process_frame'].document.getElementById('list_attach');
                             eleframe1.location.href = '<?php
                         echo $_SESSION['config']['businessappurl'];
-                        ?>index.php?display=true&module=attachments&page=frame_list_attachments';
+                        ?>index.php?display=true&module=attachments&page=frame_list_attachments&mode=normal';
                         </script>
                         <?php
                         exit();
@@ -282,7 +282,7 @@ if (isset($_POST['valid']) && $_POST['valid']) {
                     var eleframe1 =  window.opener.top.document.getElementById('list_attach');
                     eleframe1.src = '<?php
                 echo $_SESSION['config']['businessappurl'];
-                ?>index.php?display=true&module=attachments&page=frame_list_attachments';
+                ?>index.php?display=true&module=attachments&page=frame_list_attachments&mode=normal';
                     window.top.close();
                 </script>
                 <?php
