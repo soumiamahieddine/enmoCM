@@ -78,6 +78,7 @@ class admin_basket extends dbquery
             $_SESSION['m_admin']['basket']['groups'][$i] = array("GROUP_ID" => $line2->group_id , "GROUP_LABEL" => $this->show_string($line2->group_desc), "SEQUENCE" => $line2->sequence,  "RESULT_PAGE" => $line2->result_page, 'DEFAULT_ACTION' => $default_action_list,  'ACTIONS' => $actions);
             $i++;
         }
+		
         $_SESSION['m_admin']['groupbasket'] = false ;
     }
 
@@ -97,6 +98,7 @@ class admin_basket extends dbquery
         if($mode == "up")
         {
             echo $core_tools->execute_modules_services($_SESSION['modules_services'], 'basket_up.php', "include");
+			echo $core_tools->execute_app_services($_SESSION['app_services'], 'basket_up.php', "include");
             $_SESSION['m_admin']['mode'] = "up";
             if(empty($_SESSION['error']))
             {
@@ -115,7 +117,7 @@ class admin_basket extends dbquery
                     $_SESSION['m_admin']['basket']['name'] = $this->show_string($line->basket_name);
                     $_SESSION['m_admin']['basket']['clause'] = $this->show_string($line->basket_clause);
                     $_SESSION['m_admin']['basket']['is_generic'] = $this->show_string($line->is_generic);
-					$_SESSION['m_admin']['basket']['visible'] = $this->show_string($line->visible);
+					$_SESSION['m_admin']['basket']['is_visible'] = $this->show_string($line->is_visible);
                     $_SESSION['m_admin']['basket']['coll_id'] = $this->show_string($line->coll_id);
                     if (! isset($_SESSION['m_admin']['load_groupbasket']) || $_SESSION['m_admin']['load_groupbasket'] == true)
                     {
@@ -133,6 +135,7 @@ class admin_basket extends dbquery
         {
             $_SESSION['m_admin']['basket']['coll_id'] = $_SESSION['collections'][0]['id'];
             echo $core_tools->execute_modules_services($_SESSION['modules_services'], 'basket_add.php', "include");
+			echo $core_tools->execute_apps_services($_SESSION['app_services'], 'basket_add.php', "include");
             echo '<h1><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=picto_basket_b.gif&module=basket" alt="" /> '._BASKET_ADDITION.'</h1>';
         }
         elseif($mode == "up")
@@ -210,7 +213,7 @@ class admin_basket extends dbquery
                 </p>
 				<p>
                     <label><?php echo _BASKET_VISIBLE;?> : </label>
-                    <input type='checkbox' name="visible" id="visible" value="Y" <?php if ($_SESSION['m_admin']['basket']['visible'] === 'Y') echo 'checked="checked"'; ?>/> 
+                    <input type='checkbox' name="is_visible" id="is_visible" value="Y" <?php if ($_SESSION['m_admin']['basket']['is_visible'] === 'Y') echo 'checked="checked"'; ?>/> 
 				</p>
 				<p></p>
                 <p class="buttons">
@@ -260,10 +263,10 @@ class admin_basket extends dbquery
             && count($_SESSION['m_admin']['basket']['groups']) < 1) {
             $this->add_error(_BELONGS_TO_NO_GROUP, "");
         }
-		if ( isset($_REQUEST['visible']) && !empty($_REQUEST['visible'])) {
-            $_SESSION['m_admin']['basket']['visible'] = $_REQUEST['visible'];
+		if ( isset($_REQUEST['is_visible']) && !empty($_REQUEST['is_visible'])) {
+            $_SESSION['m_admin']['basket']['is_visible'] = $_REQUEST['is_visible'];
         } else {
-			$_SESSION['m_admin']['basket']['visible'] = "N";
+			$_SESSION['m_admin']['basket']['is_visible'] = "N";
 		}
         $_SESSION['m_admin']['basket']['order'] = $_REQUEST['order'];
         $_SESSION['m_admin']['basket']['order_field'] = $_REQUEST['order_field'];
@@ -334,13 +337,13 @@ class admin_basket extends dbquery
                         exit();
                     }
                     $this->query(
-						"INSERT INTO ".$_SESSION['tablename']['bask_baskets']." ( coll_id, basket_id, basket_name, basket_desc , basket_clause, visible ) "
+						"INSERT INTO ".$_SESSION['tablename']['bask_baskets']." ( coll_id, basket_id, basket_name, basket_desc , basket_clause, is_visible ) "
 						."VALUES ( '".$_SESSION['m_admin']['basket']['coll_id']."', '"
 							.$_SESSION['m_admin']['basket']['basketId']."', '"
 							.$this->protect_string_db($_SESSION['m_admin']['basket']['name'])."', '"
 							.$this->protect_string_db($_SESSION['m_admin']['basket']['desc'])."','"
 							.$tmp."', '"
-							.$_SESSION['m_admin']['basket']['visible']."')"
+							.$_SESSION['m_admin']['basket']['is_visible']."')"
 						, "no");
                     $this->load_db();
 
@@ -384,7 +387,7 @@ class admin_basket extends dbquery
 					."coll_id = '".$_SESSION['m_admin']['basket']['coll_id']."', "
 					."basket_desc = '".$this->protect_string_db($_SESSION['m_admin']['basket']['desc'])."', "
 					."basket_clause ='". $tmp."', "
-					."visible = '".$_SESSION['m_admin']['basket']['visible']."' "
+					."is_visible = '".$_SESSION['m_admin']['basket']['is_visible']."' "
 					."where basket_id = '".$_SESSION['m_admin']['basket']['basketId']."'");
                 $this->load_db();
 
