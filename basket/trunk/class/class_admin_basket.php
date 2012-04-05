@@ -125,6 +125,7 @@ class admin_basket extends dbquery
                         $_SESSION['m_admin']['groupbasket'] = false ;
                         $_SESSION['service_tag'] = 'load_basket_session';
                         echo $core_tools->execute_modules_services($_SESSION['modules_services'], 'load_groupbasket', "include");
+						echo $core_tools->execute_app_services($_SESSION['app_services'], 'load_groupbasket', "include");
                         $_SESSION['service_tag'] = '';
                     }
                 }
@@ -483,7 +484,7 @@ class admin_basket extends dbquery
     */
     private function load_db()
     {
-        $this->connect();
+		$this->connect();
         // Empties the tables from the existing data about the current basket ($_SESSION['m_admin']['basket']['basketId'])
         $this->query("DELETE FROM ".$_SESSION['tablename']['bask_groupbasket'] ." where basket_id= '".$_SESSION['m_admin']['basket']['basketId']."'");
         $this->query("DELETE FROM ".$_SESSION['tablename']['bask_actions_groupbaskets'] ." where basket_id= '".$_SESSION['m_admin']['basket']['basketId']."'");
@@ -500,12 +501,16 @@ class admin_basket extends dbquery
             // Browses the actions array for the current basket - group couple and inserts the action in actions_groupbasket table  if needed
             for($j=0; $j < count($_SESSION['m_admin']['basket']['groups'][$i]['ACTIONS']); $j++)
             {
-                $this->query("INSERT INTO ".$_SESSION['tablename']['bask_actions_groupbaskets']." (group_id, basket_id, where_clause, used_in_basketlist, used_in_action_page, id_action )
-            VALUES ('".$this->protect_string_db($_SESSION['m_admin']['basket']['groups'][$i]['GROUP_ID'])."', '".$this->protect_string_db($_SESSION['m_admin']['basket']['basketId'])."',
-            '".$this->protect_string_db($_SESSION['m_admin']['basket']['groups'][$i]['ACTIONS'][$j]['WHERE'])."',
-            '".$this->protect_string_db($_SESSION['m_admin']['basket']['groups'][$i]['ACTIONS'][$j]['MASS_USE'])."',
-            '".$this->protect_string_db($_SESSION['m_admin']['basket']['groups'][$i]['ACTIONS'][$j]['PAGE_USE'])."', ".$_SESSION['m_admin']['basket']['groups'][$i]['ACTIONS'][$j]['ID_ACTION'].")");
+                $this->query("INSERT INTO ".$_SESSION['tablename']['bask_actions_groupbaskets']
+					." (group_id, basket_id, where_clause, used_in_basketlist, used_in_action_page, id_action )
+					VALUES ('".$this->protect_string_db($_SESSION['m_admin']['basket']['groups'][$i]['GROUP_ID'])."', '".$this->protect_string_db($_SESSION['m_admin']['basket']['basketId'])."',
+					'".$this->protect_string_db($_SESSION['m_admin']['basket']['groups'][$i]['ACTIONS'][$j]['WHERE'])."',
+					'".$this->protect_string_db($_SESSION['m_admin']['basket']['groups'][$i]['ACTIONS'][$j]['MASS_USE'])."',
+					'".$this->protect_string_db($_SESSION['m_admin']['basket']['groups'][$i]['ACTIONS'][$j]['PAGE_USE'])."', ".$_SESSION['m_admin']['basket']['groups'][$i]['ACTIONS'][$j]['ID_ACTION'].")");
             }
+			
+				
+			
             // Inserts in actions_groupbasket table the default action if set
             if(isset($_SESSION['m_admin']['basket']['groups'][$i]['DEFAULT_ACTION']) && !empty($_SESSION['m_admin']['basket']['groups'][$i]['DEFAULT_ACTION']))
             {
@@ -523,6 +528,7 @@ class admin_basket extends dbquery
         //$core->execute_modules_services($_SESSION['modules_services'], 'load_groupbasket_db', "include");
         $core->execute_modules_services($_SESSION['modules_services'], 'load_groupbasket_db', "include", 'param_redirect_action', 'entities');
         $core->execute_modules_services($_SESSION['modules_services'], 'load_groupbasket_db', "include", 'param_index_entities', 'entities');
+		$core->execute_app_services($_SESSION['app_services'], 'load_groupbasket_db', "include");
         $_SESSION['service_tag'] = '';
     }
 
@@ -595,6 +601,7 @@ class admin_basket extends dbquery
                     require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_core_tools.php");
                     $core = new core_tools();
                     echo $core->execute_modules_services($_SESSION['modules_services'], 'del_basket', "include");
+					echo $core_tools->execute_app_services($_SESSION['app_services'], 'del_basket', "include");
 
                     // Log in database if needed
                     if($_SESSION['history']['basketdel'] == "true")
