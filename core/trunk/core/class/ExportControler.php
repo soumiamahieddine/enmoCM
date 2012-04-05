@@ -19,7 +19,7 @@
 */
 
 /**
-* @brief  Contains the ExportControler Object 
+* @brief  Contains the ExportControler Object
 *
 *
 * @file
@@ -40,15 +40,15 @@ try {
 }
 
 class ExportControler
-{   
+{
     private static $db;
     private static $db2;
     private static $db3;
     private static $coll;
     private static $functions;
     private static $return_loadXMLConf;
-    
-    function __construct() 
+
+    function __construct()
     {
         $this->coll = $_SESSION['collection_id_choice'];
         $this->functions = new functions();
@@ -61,8 +61,8 @@ class ExportControler
         $this->db3->connect();
         $this->export();
     }
-    
-    private function export() 
+
+    private function export()
     {
         $return_createQuery = $this->createQuery();
         //echo $return_createQuery;exit;
@@ -72,24 +72,25 @@ class ExportControler
         $resultQuery[0] = $this->getHeaderOfCsv();
         $cpt = 1;
         while ($return_dbQuery = $this->db->fetch_object()) {
-            
-            $return_dbQuery->subject = utf8_decode($return_dbQuery->subject);
+            foreach($return_dbQuery as $key => $value) {
+                $return_dbQuery->$key = utf8_decode($return_dbQuery->$key);
+            }
+
             $resultQuery[$cpt] = $this->functions->object2array($return_dbQuery);
-            if (   isset($this->return_loadXMLConf[$this->coll]['FUNCTIONS']['COPIES']) 
+            if (   isset($this->return_loadXMLConf[$this->coll]['FUNCTIONS']['COPIES'])
                 && !empty($this->return_loadXMLConf[$this->coll]['FUNCTIONS']['COPIES'])) {
                 $resultQuery[$cpt][$this->return_loadXMLConf[$this->coll]['FUNCTIONS']['COPIES']] = substr($this->functions_copies($return_dbQuery->res_id), 0, -2);
             }
-            
+
             $resultQuery[$cpt]['commentaire'] = '';
             $cpt++;
         }
-        
         $return_array2CSV = $this->array2CSV($resultQuery);
         $_SESSION['export']['filename'] = $return_array2CSV;
     }
-    
-    private function createQuery() 
-    {   
+
+    private function createQuery()
+    {
         $query = 'SELECT ';
         for ($i=0; $i<count($this->return_loadXMLConf[$this->coll]['FIELD']); $i++) {
             $query .= $this->return_loadXMLConf[$this->coll]['FIELD'][$i]['DATABASE_FIELD'];
@@ -97,13 +98,13 @@ class ExportControler
                 $query .= ', ';
             }
         }
-        
+
         $query .= ' '.substr($_SESSION['last_select_query'], stripos($_SESSION['last_select_query'], 'FROM'));
-        
+
         return $query;
     }
-    
-    private function array2CSV($resultQuery) 
+
+    private function array2CSV($resultQuery)
     {
         do {
             $csvName = $_SESSION['user']['UserId'] . '-' . md5(date('Y-m-d H:i:s')) . '.csv';
@@ -112,30 +113,30 @@ class ExportControler
             }
             $pathToCsv = $_SESSION['config']['tmppath'] . $csvName;
         } while (file_exists($pathToCsv));
-        
+
         $csvFile = fopen($pathToCsv, 'a+');
-        
+
         foreach ($resultQuery as $fields) {
             fputcsv($csvFile, $fields, ';');
         }
-        
+
         fclose($csvFile);
-        
+
         return $csvName;
     }
-    
+
     private function getHeaderOfCsv()
     {
         //echo '<pre>'.print_r($loadXMLConf, true).'</pre>';exit;
         for($i=0; $i < count($this->return_loadXMLConf[$this->coll]['FIELD']); $i++) {
-            
+
             if (!empty($this->return_loadXMLConf[$this->coll]['FIELD'][$i]['LIBELLE'])) {
                 $tabToReturn[$i] = $this->return_loadXMLConf[$this->coll]['FIELD'][$i]['LIBELLE'];
             } else {
                 $tabToReturn[$i] = $this->return_loadXMLConf[$this->coll]['FIELD'][$i]['DATABASE_FIELD'];
             }
         }
-        
+
         $temp = array_keys($this->return_loadXMLConf[$this->coll]['FUNCTIONS']);
         for ($k=0; $k<count($temp); $k++) {
             $j = $i+$k;
@@ -144,12 +145,12 @@ class ExportControler
         if ($k == 0) {
             $j = $i;
         }
-        
+
         $tabToReturn[$j+1] = $this->return_loadXMLConf[$this->coll]['FIXE'];
-        
+
         return $tabToReturn;
     }
-    
+
     private function loadXMLConf()
     {
         $path = 'apps/maarch_entreprise/xml/export.xml';
@@ -159,7 +160,7 @@ class ExportControler
         $exportConf = simplexml_load_file($path);
         return $exportConf;
     }
-    
+
     private function functions_copies($res_id)
     {
         $return_functionsCopies = '';
@@ -180,11 +181,11 @@ class ExportControler
             } else {
                 $usersEntities = $return_dbQueryListinstance->item_id;
             }
-            
+
             $return_functionsCopies .= $usersEntities . ' | ';
             $j++;
         }
-        
+
         return $return_functionsCopies;
     }
 }
