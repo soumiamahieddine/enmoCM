@@ -61,7 +61,7 @@ if ($core_tools->test_service('display_basket_list','basket', false)) {
             ?> <ul class="basket_elem"><?php
             $abs_basket = false;
             for ($i=0;$i<count($_SESSION['user']['baskets']);$i++) {
-				if ($_SESSION['user']['baskets'][$i]['visible'] === 'Y') { 
+				if ($_SESSION['user']['baskets'][$i]['is_visible'] === 'Y') { 
 					if ($_SESSION['user']['baskets'][$i]['abs_basket'] == true && !$abs_basket) {
 						echo '</ul><h3>'._OTHER_BASKETS.' :</h3><ul class="basket_elem">';
 						$abs_basket = true;
