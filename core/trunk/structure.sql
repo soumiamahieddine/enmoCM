@@ -755,7 +755,7 @@ CREATE TABLE baskets
   basket_desc character varying(255) NOT NULL,
   basket_clause text NOT NULL,
   is_generic character varying(6) NOT NULL DEFAULT 'N'::character varying,
-  visible character(1) NOT NULL DEFAULT 'Y'::bpchar,
+  is_visible character(1) NOT NULL DEFAULT 'Y'::bpchar,
   enabled character(1) NOT NULL DEFAULT 'Y'::bpchar,
   CONSTRAINT baskets_pkey PRIMARY KEY (coll_id, basket_id)
 )
@@ -1975,4 +1975,18 @@ CREATE OR REPLACE VIEW af_view_customer_target_view AS
   WHERE res_view_letterbox.video_batch IS NOT NULL
   GROUP BY res_view_letterbox.video_user, (users.firstname::text || ' '::text) || users.lastname::text, res_view_letterbox.video_batch, res_view_letterbox.video_time, res_view_letterbox.folders_system_id, (folders.folder_id::text || ' / '::text) || folders.folder_name::text, folders.video_status;
 
+  
+CREATE TABLE groupbasket_status
+(
+  system_id serial NOT NULL,
+  group_id character varying(32) NOT NULL,
+  basket_id character varying(32) NOT NULL,
+  action_id integer NOT NULL,
+  status_id character varying(32),
+  CONSTRAINT groupbasket_status_pkey PRIMARY KEY (system_id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE groupbasket_status OWNER TO postgres;
    
