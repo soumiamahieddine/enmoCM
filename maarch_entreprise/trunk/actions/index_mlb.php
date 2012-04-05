@@ -58,6 +58,8 @@ require_once 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
     . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR . 'class_chrono.php';
 require_once 'core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
     . 'class_history.php';
+
+	
 $core = new core_tools();
 if ($core->is_module_loaded('entities')) {
     require_once 'modules/entities/entities_tables.php';
@@ -71,7 +73,8 @@ if ($core->is_module_loaded('physical_archive')) {
         . 'class_modules_tools.php';
     require_once 'modules/physical_archive/physical_archive_tables.php';
 }
-
+require_once 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+    . DIRECTORY_SEPARATOR . 'apps_tables.php';
 /**
 * $confirm  bool false
 */
@@ -182,6 +185,26 @@ $module, $collId, $mode )
             );
         }
     }
+	// Select statuses from groupbasket
+	$statuses = array();
+	$db = new dbquery();
+    $db->connect();
+	$query = "SELECT status_id, label_status FROM " . GROUPBASKET_STATUS . " left join " . $_SESSION['tablename']['status'] 
+		. " on status_id = id "
+		. " where basket_id= '" . $_SESSION['current_basket']['id']
+		. "' and group_id = '" . $_SESSION['user']['primarygroup']
+		. "' and action_id = " . $actionId;
+	$db->query($query);
+	
+	if($db->nb_result() > 0) {
+		while($status = $db->fetch_object()) {
+			$statuses[] = array(
+				'ID' => $status->status_id, 
+				'LABEL' => $db->show_string($status->label_status)
+			);
+		}
+	}
+	
     $frmStr .= '<div id="validleft">';
     $frmStr .= '<div id="index_div" style="display:none;";>';
     $frmStr .= '<h1 class="tit" id="action_title"><img src="'
@@ -638,6 +661,28 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
                 . 'style="display:inline;">*</span>&nbsp;</td>';
         $frmStr .= '</tr>';
     }
+    /*** Status ***/
+	if(count($statuses) > 0) {
+		$frmStr .= '<tr id="status" style="display:' . $displayValue . ';">';
+		$frmStr .= '<td><label for="status" class="form_title" >' . _STATUS
+				. '</label></td>';
+		$frmStr .= '<td>&nbsp;</td>';
+		$frmStr .= '<td class="indexing_field"><select name="status" '
+				. 'id="status" onchange="clear_error(\'frm_error_' . $actionId
+				. '\');">';
+		$frmStr .= '<option value="">' . _CHOOSE_STATUS . '</option>';
+		for ($i = 0; $i < count($statuses); $i ++) {
+			$frmStr .= '<option value="' . $statuses[$i]['ID'] . '" ';
+			if ($statuses[$i]['ID'] == 'NEW') {
+				$frmStr .= 'selected="selected"';
+			}
+			$frmStr .= '>' . $statuses[$i]['LABEL'] . '</option>';
+		}
+		$frmStr .= '</select></td>';
+		$frmStr .= '</tr>';
+	}
+	
+	// Fin
     $frmStr .= '</table>';
 
     $frmStr .= '<div id="comp_indexes" style="display:block;">';
@@ -1400,7 +1445,7 @@ $collId, $table, $formValues )
         $_SESSION['action_error'] = _ERROR_MANAGE_FORM_ARGS;
         return false;
     }
-    $resId = '';
+	$resId = '';
     $db = new dbquery();
     $sec = new security();
     $req = new request();
@@ -1440,11 +1485,13 @@ $collId, $table, $formValues )
             )
         );
     }
+	$status_id = get_value_fields($formValues, 'status');
+	if(empty($status_id) || $status_id === "") $status_id = 'BAD';
     array_push(
         $_SESSION['data'],
         array(
             'column' => 'status',
-            'value' => 'NEW',
+            'value' => $status_id,
             'type' => 'string',
         )
     );
