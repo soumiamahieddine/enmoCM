@@ -51,11 +51,11 @@ $indNotes1d = '';
 
 if (isset($_GET['size']) && $_GET['size'] == "full") {
     $sizeMedium = "15";
-    $sizeSmall = "15";
-    $sizeFull = "70";
+    $sizeSmall = "10";
+    $sizeFull = "300";
     $css = "listing spec detailtabricatordebug";
     $body = "";
-    $cutString = 100;
+    $cutString = 300;
     $extendUrl = "&size=full";
 } else {
     $sizeMedium = "18";
@@ -104,7 +104,7 @@ for ($indNotes1 = 0; $indNotes1 < count($tabNotes); $indNotes1 ++ ) {
             if ($tabNotes[$indNotes1][$indNotes2][$value] == "date_note") {
                 $tabNotes[$indNotes1][$indNotes2]["date_note"] = $tabNotes[$indNotes1][$indNotes2]['value'];
                 $tabNotes[$indNotes1][$indNotes2]["label"] = _DATE;
-                $tabNotes[$indNotes1][$indNotes2]["size"] = $sizeSmall;
+                $tabNotes[$indNotes1][$indNotes2]["size"] = $sizeMedium;
                 $tabNotes[$indNotes1][$indNotes2]["label_align"] = "left";
                 $tabNotes[$indNotes1][$indNotes2]["align"] = "left";
                 $tabNotes[$indNotes1][$indNotes2]["valign"] = "bottom";
