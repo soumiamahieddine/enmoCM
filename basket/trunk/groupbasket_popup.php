@@ -253,6 +253,7 @@ $time = $core_tools->get_session_time_expire();
                 <?php
                 $keyword = $_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['KEYWORD'];
                 echo $core_tools->execute_modules_services($_SESSION['modules_services'], 'groupbasket_popup.php', "include");
+				echo $core_tools->execute_app_services($_SESSION['app_services'], 'groupbasket_popup.php', "include");
 
                 if($_SESSION['m_admin']['show_where_clause'] )
                 {

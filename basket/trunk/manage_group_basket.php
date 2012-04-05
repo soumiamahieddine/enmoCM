@@ -162,6 +162,7 @@ else
 			array_push($_SESSION['m_admin']['basket']['groups'], $tab);
 		}
 		echo $core_tools->execute_modules_services($_SESSION['modules_services'], 'manage_group_basket.php', "include");
+		echo $core_tools->execute_app_services($_SESSION['app_services'], 'manage_group_basket.php', "include");
 	}
 
 if(!empty($_SESSION['error']))
@@ -170,6 +171,7 @@ if(!empty($_SESSION['error']))
 	exit();
 }
 $_SESSION['service_tag'] = '';
+//echo "<pre>" . print_r($_SESSION['m_admin']['basket'],true) . "</pre>"; exit();
 unset($_SESSION['m_admin']['basket_popup']);
 ?>
 <script type="text/javascript">
