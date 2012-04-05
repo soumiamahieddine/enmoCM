@@ -139,16 +139,16 @@ for ($i=0;$i<count($tab);$i++)
                 $tab[$i][$j]["show"]=false;
                 $tab[$i][$j]["order"]='enabled';
             }
-            if($tab[$i][$j][$value]=="visible")
+            if($tab[$i][$j][$value]=="is_visible")
             {
-                $tab[$i][$j]["visible"]= $tab[$i][$j]['value'];
+                $tab[$i][$j]["is_visible"]= $tab[$i][$j]['value'];
                 $tab[$i][$j]["label"]=_BASKET_VISIBLE;
                 $tab[$i][$j]["size"]="1";
                 $tab[$i][$j]["label_align"]="center";
                 $tab[$i][$j]["align"]="center";
                 $tab[$i][$j]["valign"]="bottom";
                 $tab[$i][$j]["show"]=false;
-                $tab[$i][$j]["order"]='visible';
+                $tab[$i][$j]["order"]='is_visible';
             }
         }
     }
@@ -171,7 +171,7 @@ $_SESSION['m_admin']['basket']['name'] = "";
 $_SESSION['m_admin']['basket']['clause'] = "";
 $_SESSION['m_admin']['basket']['table'] ="";
 $_SESSION['m_admin']['basket']['is_generic'] ="";
-$_SESSION['m_admin']['basket']['visible'] ="";
+$_SESSION['m_admin']['basket']['is_visible'] ="";
 $_SESSION['m_admin']['basket']['nbdays'] ="";
 $_SESSION['m_admin']['basket']['groups'] = array();
 $_SESSION['m_admin']['non_generic_basket'] = array();
@@ -202,6 +202,14 @@ while($line = $request->fetch_object())
         array_push($_SESSION['m_admin']['basket']['all_actions'] ,array('ID' => $line->id, 'LABEL' => $line->label_action, 'KEYWORD' => $line->keyword, 'CREATE_ID' => $line->create_id));
     }
 }
+
+$_SESSION['m_admin']['basket']['all_statuses'] = array();
+
+$request->query("select id, label_status from ".$_SESSION['tablename']['status']." where maarch_module = 'apps' order by label_status");
+while($line = $request->fetch_object()) {
+    array_push($_SESSION['m_admin']['basket']['all_statuses'] ,array('ID' => $line->id, 'LABEL' => $line->label_status));
+}
+
 $title = _BASKET_LIST." : ".$i." "._BASKETS;
 
 $list->admin_list($tab, $i, $title, 'basket_id','basket','basket','basket_id', true, $page_name_up, $page_name_val, $page_name_ban, $page_name_del, $page_name_add, $label_add, FALSE, FALSE, _ALL_BASKETS, _BASKET,$_SESSION['config']['businessappurl'].'static.php?module=basket&filename=picto_basket_b.gif', TRUE ,true, false, true, $what);
