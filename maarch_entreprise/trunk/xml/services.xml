@@ -257,4 +257,46 @@
         <nature>include</nature>
     </WHEREAMIUSED>
  </SERVICE>
+<SERVICE>
+   <id>load_statuses_session</id>
+   <name>_LOAD_STATUSES_SESSION</name>
+   <comment>_LOAD_STATUSES_SESSION</comment>
+   <servicepage>load_statuses_session.php</servicepage>
+   <servicetype>use</servicetype>
+   <system_service>true</system_service>
+   <enabled>true</enabled>
+    <WHEREAMIUSED>
+        <page>basket_up.php</page>
+        <nature>include</nature>
+    </WHEREAMIUSED>
+    <WHEREAMIUSED>
+        <page>basket_add.php</page>
+        <nature>include</nature>
+    </WHEREAMIUSED>
+ </SERVICE>
+<SERVICE>
+   <id>param_index_statuses</id>
+   <name>_PARAM_AVAILABLE_STATUS_ON_GROUP_BASKETS</name>
+   <comment>_PARAM_AVAILABLE_STATUS_ON_GROUP_BASKETS</comment>
+   <servicepage>param_index_statuses.php</servicepage>
+   <servicetype>use</servicetype>
+   <system_service>true</system_service>
+   <enabled>true</enabled>
+   <WHEREAMIUSED>
+        <page>groupbasket_popup.php</page>
+        <nature>include</nature>
+    </WHEREAMIUSED>
+    <WHEREAMIUSED>
+        <page>manage_group_basket.php</page>
+        <nature>include</nature>
+    </WHEREAMIUSED>
+    <WHEREAMIUSED>
+        <page>load_groupbasket</page>
+        <nature>include</nature>
+    </WHEREAMIUSED>
+    <WHEREAMIUSED>
+        <page>load_groupbasket_db</page>
+        <nature>include</nature>
+    </WHEREAMIUSED>
+ </SERVICE>
 </root>
