@@ -21,7 +21,7 @@ CREATE TABLE folders
   creation_date timestamp without time zone NOT NULL,
   folder_out_id bigint,
   video_status character varying(10) DEFAULT NULL,
-  video_user character varying(32) DEFAULT NULL,
+  video_user character varying(128) DEFAULT NULL,
   is_frozen character(1) NOT NULL DEFAULT 'N',
   custom_t1 character varying(255) DEFAULT NULL::character varying,
   custom_n1 bigint,
