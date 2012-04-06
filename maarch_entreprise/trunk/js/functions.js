@@ -2151,3 +2151,11 @@ function reverseCheck() {
     )
 }
 
+function show_attach(state) {
+	if (state == 'true') {
+		//console.log('true');
+		$('attach_show').slideDown();
+	} else {
+		$('attach_show').setStyle({display: 'none'});
+	}
+}

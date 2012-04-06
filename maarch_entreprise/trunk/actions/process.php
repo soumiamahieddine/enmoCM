@@ -22,7 +22,7 @@
 /**
 * @brief Action : Process a document
 *
-* Open a modal box to displays the process form, make the form checks and loads the result in database. 
+* Open a modal box to displays the process form, make the form checks and loads the result in database.
 * Used by the core (manage_action.php page).
 *
 * @file
@@ -56,6 +56,7 @@ $mode_form = 'fullscreen';
 
 include('apps/' . $_SESSION['config']['app_id']. '/definition_mail_categories.php');
 
+
 /**
  * Gets the folder data for a given document
  *
@@ -75,13 +76,13 @@ function get_folder_data($coll_id, $res_id)
     $db->connect();
     $market = '';
     $project = '';
-    $db->query("select folders_system_id, folder_name, fold_parent_id, fold_subject, folder_level from " 
+    $db->query("select folders_system_id, folder_name, fold_parent_id, fold_subject, folder_level from "
         . $view . " where res_id = " . $res_id);
     $res = $db->fetch_object();
     if ($res->folder_level == 2) {
         $market = $res->folder_name . ', ' . $res->fold_subject . ' (' . $res->folders_system_id . ')';
         $parent_id = $res->fold_parent_id;
-        $db->query("select folder_name, parent_id, subject from ".$_SESSION['tablename']['fold_folders'] 
+        $db->query("select folder_name, parent_id, subject from ".$_SESSION['tablename']['fold_folders']
             . " where folders_system_id = ".$parent_id);
         if ($db->nb_result() == 1) {
             $res = $db->fetch_object();
@@ -113,7 +114,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $browser_ie = true;
         $display_value = 'block';
     } elseif (
-        preg_match('/msie/i', $_SERVER["HTTP_USER_AGENT"]) 
+        preg_match('/msie/i', $_SERVER["HTTP_USER_AGENT"])
         && !preg_match('/opera/i', $_SERVER["HTTP_USER_AGENT"])
     ) {
         $browser_ie = true;
@@ -156,26 +157,26 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $values_fields = $b->fetch_object();
         //print_r($indexes);
     }
-    
+
     //  to activate locking decomment these lines
     /*if ($b->reserve_doc($_SESSION['user']['UserId'], $res_id, $coll_id) == false) {
         $frm_str = '<div>';
-        $frm_str .= '<h1 class="tit" id="action_title"><img src="' 
-        * . $_SESSION['config']['businessappurl'] 
+        $frm_str .= '<h1 class="tit" id="action_title"><img src="'
+        * . $_SESSION['config']['businessappurl']
         * . 'static.php?filename=file_index_b.gif"  align="middle" alt="" />'._DOC_NUM." ".$res_id ;
                     $frm_str .= '</h1>';
             $frm_str .= '<div>'._DOC_ALREADY_RSV.'</div>';
-            $frm_str .= '<div><input type="button" name="close" id="close" value="' 
+            $frm_str .= '<div><input type="button" name="close" id="close" value="'
             * . _CLOSE_WINDOW.'" class="button" onclick="javascript:destroyModal(\'modal_'.$id_action.'\');reinit();"/></div>';
             $frm_str .= '</div>';
 
     } else {
     */
-    
+
     /********************************* LEFT PART **************************************/
     $frm_str = '<div id="validleftprocess">';
-        $frm_str .= '<h2 id="action_title"><img src="' 
-            . $_SESSION['config']['businessappurl'] 
+        $frm_str .= '<h2 id="action_title"><img src="'
+            . $_SESSION['config']['businessappurl']
             . 'static.php?filename=file_index_b.gif"  align="middle" alt="" />'
             . _PROCESS . _DOC_NUM . ' ' . $res_id;
                 $frm_str .= '</h2>';
@@ -191,13 +192,13 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                 $frm_str .= '<input type="hidden" name="req" id="req" value="second_request" />';
                 $frm_str .= '<h3 onclick="new Effect.toggle(\'general_datas_div\', \'blind\', {delay:0.2});return false;" '
                           . 'class="categorie" style="width:90%;">';
-                    $frm_str .= '<img src="' 
-                        . $_SESSION['config']['businessappurl'] 
-                        . 'static.php?filename=plus.png" alt="" id="img_general_data" />&nbsp;<b>' 
+                    $frm_str .= '<img src="'
+                        . $_SESSION['config']['businessappurl']
+                        . 'static.php?filename=plus.png" alt="" id="img_general_data" />&nbsp;<b>'
                         . _GENERAL_INFO . ' :</b>';
             $frm_str .= '<span class="lb1-details">&nbsp;</span>';
         $frm_str .= '</h3>';
-        
+
         //GENERAL DATAS
         $frm_str .= '<div id="general_datas_div" style="display:block">';
             $frm_str .= '<div>';
@@ -205,20 +206,20 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
               // Displays the document indexes
             foreach (array_keys($data) as $key) {
                 $frm_str .= '<tr>';
-                    $frm_str .= '<td width="50%" align="left"><span class="form_title_process">' 
+                    $frm_str .= '<td width="50%" align="left"><span class="form_title_process">'
                         . $data[$key]['label'] . ' :</span></td>';
                     $frm_str .= '<td>';
                     if ($data[$key]['display'] == 'textinput') {
-                        $frm_str .= '<input type="text" name="' . $key . '" id="' . $key 
-                            . '" value="' . $data[$key]['show_value'] 
+                        $frm_str .= '<input type="text" name="' . $key . '" id="' . $key
+                            . '" value="' . $data[$key]['show_value']
                             . '" readonly="readonly" class="readonly" style="border:none;" />';
                         /*if (isset($data[$key]['addon'])) {
                             $frm_str .= $data[$key]['addon'];
                         }*/
                     } elseif ($data[$key]['display'] == 'textarea') {
-                        $frm_str .= '<input type="text" name="' . $key . '" id="' 
-                            . $key . '" value="' . $data[$key]['show_value'] 
-                            . '" readonly="readonly" class="readonly" style="border:none;" alt="' 
+                        $frm_str .= '<input type="text" name="' . $key . '" id="'
+                            . $key . '" value="' . $data[$key]['show_value']
+                            . '" readonly="readonly" class="readonly" style="border:none;" alt="'
                             . $data[$key]['show_value'] . '" title="' . $data[$key]['show_value'] . '" /> ';
                         if (isset($data[$key]['addon'])) {
                             $frm_str .= $data[$key]['addon'];
@@ -229,10 +230,10 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             }
             if ($chrono_number <> '') {
                 $frm_str .= '<tr>';
-                $frm_str .= '<td width="50%" align="left"><span class="form_title_process">' 
+                $frm_str .= '<td width="50%" align="left"><span class="form_title_process">'
                     . _CHRONO_NUMBER . ' :</span></td>';
                 $frm_str .= '<td>';
-                $frm_str .= '<input type="text" name="alt_identifier" id="alt_identifier" value="' 
+                $frm_str .= '<input type="text" name="alt_identifier" id="alt_identifier" value="'
                     . $chrono_number . '" readonly="readonly" class="readonly" style="border:none;" />';
                 $frm_str .= '</td>';
                 $frm_str .= '</tr>';
@@ -240,10 +241,10 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             if (count($indexes) > 0) {
                 foreach (array_keys($indexes) as $key) {
                     $frm_str .= '<tr>';
-                        $frm_str .= '<td width="50%" align="left"><span class="form_title_process" >' 
+                        $frm_str .= '<td width="50%" align="left"><span class="form_title_process" >'
                                   . $indexes[$key]['label'] . ' :</span></td>';
                         $frm_str .= '<td>';
-                        $frm_str .= '<input type="text" name="' . $key . '" id="' 
+                        $frm_str .= '<input type="text" name="' . $key . '" id="'
                                   . $key . '" readonly="readonly" class="readonly" style="border:none;" ';
                         if ($indexes[$key]['type_field'] == 'input') {
                             $frm_str .= ' value="'.$values_fields->$key.'" ';
@@ -270,20 +271,20 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $frm_str .= '<tr>';
             $frm_str .= '<td width="50%" align="left"><span class="form_title_process">' . _FORMAT . ' :</span></td>';
             $frm_str .= '<td>';
-            $frm_str .= '<input type="text" name="alt_identifier" id="alt_identifier" value="' 
+            $frm_str .= '<input type="text" name="alt_identifier" id="alt_identifier" value="'
                 . $formatLine->format . '" readonly="readonly" class="readonly" style="border:none;" />';
             $frm_str .= '</td >';
             $frm_str .= '</tr>';
         $frm_str .= '</table>';
         $frm_str .= '</div>';
     $frm_str .= '</div><br/>';
-        
+
     //RESPONSE FORM
     $nb_attach = 0;
     if ($core_tools->is_module_loaded('attachments')) {
         $req = new request;
         $req->connect();
-        $req->query("select res_id from " 
+        $req->query("select res_id from "
             . $_SESSION['tablename']['attach_res_attachments']
             . " where status <> 'DEL' and res_id_master = ".$res_id);
         if ($req->nb_result() > 0) {
@@ -292,7 +293,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     }
     $frm_str .= '<h3 onclick="new Effect.toggle(\'list_answers_div\', \'blind\', {delay:0.2});'
               . 'new Effect.toggle(\'done_answers_div\', \'blind\', {delay:0.2});return false;"  class="categorie"  style="width:90%;">';
-    $frm_str .= '<img src="' . $_SESSION['config']['businessappurl'] 
+    $frm_str .= '<img src="' . $_SESSION['config']['businessappurl']
               . 'static.php?filename=plus.png" alt="" />&nbsp;<b>' . _DONE_ANSWERS . ' (' . $nb_attach . '):</b>';
     $frm_str .= '<span class="lb1-details">&nbsp;</span>';
     $frm_str .= '</h3>';
@@ -335,7 +336,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                     if ($process_data['other']) {
                         $frm_str .= 'checked="checked"';
                     }
-                    $frm_str .='onclick="unmark_empty_process(\'no_answer\');" />' 
+                    $frm_str .='onclick="unmark_empty_process(\'no_answer\');" />'
                         . _OTHER . ' : <input type="text" name="other_answer" id="other_answer" value="';
                     if (!empty($process_data['other_answer_desc'])) {
                         $frm_str .= $process_data['other_answer_desc'];
@@ -353,8 +354,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 
                     $frm_str .= '</tr>';
                     $frm_str .= '<tr>';
-                    $frm_str .= '<td><label for="process_notes">' 
-                        . _PROCESS_NOTES 
+                    $frm_str .= '<td><label for="process_notes">'
+                        . _PROCESS_NOTES
                         . ' : </label><br/><textarea name="process_notes" id="process_notes" style="display:block;" rows="8" cols="30">'
                         . $process_data['process_notes'].'</textarea></td>';
                 $frm_str .= '</tr>';
@@ -362,7 +363,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .= '</div>';
     $frm_str .= '</div>';
     $frm_str .= '<br>';
-    
+
     //DIFFUSION LIST
     if ($core_tools->is_module_loaded('entities')) {
          // Displays the diffusion list (only copies)
@@ -377,7 +378,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .= '</h3>';
         $frm_str .= '<br>';
     }
-        
+
     // HISTORY
     $frm_str .= '<h3 onclick="new Effect.toggle(\'history_div\', \'blind\', {delay:0.2});return false;" class="categorie" style="width:90%;">';
         $frm_str .= '<img src="'.$_SESSION['config']['businessappurl']
@@ -385,50 +386,50 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .= '<span class="lb1-details">&nbsp;</span>';
     $frm_str .= '</h3>';
     $frm_str .= '<br>';
-        
+
     //NOTES
     if ($core_tools->is_module_loaded('notes')) {
          // Displays the notes
         $select_notes[$_SESSION['tablename']['users']] = array();
         array_push(
-            $select_notes[$_SESSION['tablename']['users']], 
-            'user_id', 
-            'lastname', 
+            $select_notes[$_SESSION['tablename']['users']],
+            'user_id',
+            'lastname',
             'firstname'
         );
         $select_notes[$_SESSION['tablename']['not_notes']] = array();
         array_push(
-            $select_notes[$_SESSION['tablename']['not_notes']], 
-            'id', 
-            'date_note', 
-            'note_text', 
+            $select_notes[$_SESSION['tablename']['not_notes']],
+            'id',
+            'date_note',
+            'note_text',
             'user_id'
         );
         $where_notes = ' identifier = ' . $res_id . ' ';
         $request_notes = new request;
         $tab_notes=$request_notes->select(
-            $select_notes, 
-            $where_notes, 
+            $select_notes,
+            $where_notes,
             'order by ' . $_SESSION['tablename']['not_notes'] . '.date_note desc',
-            $_SESSION['config']['databasetype'], 
-            '500', 
+            $_SESSION['config']['databasetype'],
+            '500',
             true,
-            $_SESSION['tablename']['not_notes'], 
-            $_SESSION['tablename']['users'], 
+            $_SESSION['tablename']['not_notes'],
+            $_SESSION['tablename']['users'],
             'user_id'
         );
         $frm_str .= '<h3 onclick="new Effect.toggle(\'notes_div\', \'blind\', {delay:0.2});';
         $frm_str .= 'return false;" class="categorie" style="width:90%;">';
-        $frm_str .= '<img src="' 
-            . $_SESSION['config']['businessappurl'] 
-            . 'static.php?filename=plus.png" alt="" />&nbsp;<b>' 
-            . _NOTES . ' (' 
+        $frm_str .= '<img src="'
+            . $_SESSION['config']['businessappurl']
+            . 'static.php?filename=plus.png" alt="" />&nbsp;<b>'
+            . _NOTES . ' ('
             . count($tab_notes) . ') :</b>';
         $frm_str .= '<span class="lb1-details">&nbsp;</span>';
         $frm_str .= '</h3>';
         $frm_str .= '<br>';
     }
-    
+
     //CASES
     if ($core_tools->is_module_loaded('cases')) {
         require_once('modules/cases/class/class_modules_tools.php');
@@ -441,13 +442,29 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         }
         $frm_str .= '<h3 onclick="new Effect.toggle(\'cases_div\', \'blind\', {delay:0.2});'
         . 'return false;"  class="categorie" style="width:90%;">';
-        $frm_str .= '<img src="' . $_SESSION['config']['businessappurl'] 
+        $frm_str .= '<img src="' . $_SESSION['config']['businessappurl']
             . 'static.php?filename=plus.png" alt="" id="img_cases" />&nbsp;<b>' . _CASE . ' :</b>';
         $frm_str .= '<span class="lb1-details">&nbsp;</span>';
         $frm_str .= '</h3>';
         $frm_str .= '<br>';
     }
-    
+
+    //LINKS
+    require_once('core/class/LinkController.php');
+    $Class_LinkController = new LinkController();
+    $nbLink = $Class_LinkController->nbDirectLink(
+        $_SESSION['doc_id'],
+        $_SESSION['collection_id_choice'],
+        'all'
+    );
+    $frm_str .= '<h3 onclick="new Effect.toggle(\'links_div\', \'blind\', {delay:0.2});'
+    . 'return false;"  class="categorie" style="width:90%;">';
+    $frm_str .= '<img src="' . $_SESSION['config']['businessappurl']
+        . 'static.php?filename=plus.png" alt="" id="img_cases" />&nbsp;<b>' . _LINK_TAB . ' ('.$nbLink.') :</b>';
+    $frm_str .= '<span class="lb1-details">&nbsp;</span>';
+    $frm_str .= '</h3>';
+    $frm_str .= '<br>';
+
     //FOLDERS
     if ($core_tools->is_module_loaded('folder')) {
          // Displays the folder data
@@ -456,7 +473,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $market = $arr_tmp['market'];
         $frm_str .= '<h3 onclick="new Effect.toggle(\'folder_div\', \'blind\', {delay:0.2});return false;" '
             . 'class="categorie" style="width:90%;">';
-                    $frm_str .= '<img src="' . $_SESSION['config']['businessappurl'] 
+                    $frm_str .= '<img src="' . $_SESSION['config']['businessappurl']
                         . 'static.php?filename=plus.png" alt="" id="img_folder" />&nbsp;<b>' . _FOLDER_ATTACH . ' :</b>';
             $frm_str .= '<span class="lb1-details">&nbsp;</span>';
         $frm_str .= '</h3>';
@@ -466,15 +483,15 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                         $frm_str .= '<tr id="project_tr" style="display:'.$display_value.';">';
                     $frm_str .= '<td><label for="project" class="form_title_process" >' . _PROJECT . '</label></td>';
                     $frm_str .= '<td>&nbsp;</td>';
-                     $frm_str .='<td><input type="text" name="project" id="project" value="' 
+                     $frm_str .='<td><input type="text" name="project" id="project" value="'
                         . $project . '"  onblur=""/><div id="show_project" class="autocomplete"></div>';
                 $frm_str .= '</tr>';
                 $frm_str .= '<tr id="market_tr" style="display:'.$display_value.';">';
                     $frm_str .= '<td><label for="market" class="form_title_process" >' . _MARKET . '</label></td>';
                     $frm_str .= '<td>&nbsp;</td>';
                      $frm_str .='<td><input type="text" name="market" id="market" onblur="fill_project(\''
-                        . $_SESSION['config']['businessappurl'] 
-                        . 'index.php?display=true&module=folder&page=ajax_get_project\');" value="' 
+                        . $_SESSION['config']['businessappurl']
+                        . 'index.php?display=true&module=folder&page=ajax_get_project\');" value="'
                         . $market . '" /><div id="show_market" class="autocomplete"></div>';
                 $frm_str .= '</tr>';
                 $frm_str .= '</table>';
@@ -483,7 +500,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .='<input type="hidden" name="res_id" id="res_id"  value="' . $res_id . '" />';
         $frm_str .= '<br>';
     }
-    
+
     //ACTIONS
     $frm_str .= '<hr class="hr_process"/>';
     $frm_str .= '<p align="center" style="width:90%;">';
@@ -500,26 +517,26 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                     $frm_str .= '>'.$actions[$ind_act]['LABEL'].'</option>';
                 }
             $frm_str .='</select><br>';
-            $frm_str .= '<input type="button" name="send" id="send" value="' 
-                . _VALIDATE 
-                . '" class="button" onclick="valid_action_form(\'process\', \'' 
-                . $path_manage_action . '\', \'' . $id_action.'\', \'' 
+            $frm_str .= '<input type="button" name="send" id="send" value="'
+                . _VALIDATE
+                . '" class="button" onclick="valid_action_form(\'process\', \''
+                . $path_manage_action . '\', \'' . $id_action.'\', \''
                 . $res_id . '\', \'' . $table . '\', \'' . $module . '\', \''
                 . $coll_id . '\', \'' . $mode . '\');"/> ';
         }
-        $frm_str .= '<input name="close" id="close" type="button" value="' 
+        $frm_str .= '<input name="close" id="close" type="button" value="'
             . _CANCEL . '" class="button" onclick="javascript:var tmp_bask=$(\'baskets\');';
         $frm_str .= 'if (tmp_bask){tmp_bask.style.visibility=\'visible\';}var tmp_ent =$(\'entity\');';
-        $frm_str .= 'if (tmp_ent){tmp_ent.style.visibility=\'visible\';} var tmp_cat =$(\'category\');'; 
-        $frm_str .= 'if (tmp_cat){tmp_cat.style.visibility=\'visible\';}destroyModal(\'modal_' 
+        $frm_str .= 'if (tmp_ent){tmp_ent.style.visibility=\'visible\';} var tmp_cat =$(\'category\');';
+        $frm_str .= 'if (tmp_cat){tmp_cat.style.visibility=\'visible\';}destroyModal(\'modal_'
             . $id_action . '\');reinit();"/>';
     $frm_str .= '</p>';
     $frm_str .= '</form>';
     $frm_str .= '</div>';
     $frm_str .= '</div>';
-    
+
     // ****************************** RIGHT PART *******************************************/
-    
+
     $frm_str .= '<div id="validright">';
     //ATTACHMENTS FRAME
     if ($core_tools->is_module_loaded('attachments')) {
@@ -529,7 +546,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                     $frm_str .= '<center><h2>' . _ATTACHMENTS . '</h2></center>';
                     $req = new request;
                     $req->connect();
-                    $req->query("select res_id from ".$_SESSION['tablename']['attach_res_attachments'] 
+                    $req->query("select res_id from ".$_SESSION['tablename']['attach_res_attachments']
                         . " where status = 'NEW' and res_id_master = " . $res_id);
                     //$req->show();
                     $nb_attach = 0;
@@ -543,7 +560,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                         . 'index.php?display=true&module=attachments&page=join_file\',\'\', \'scrollbars=yes,'
                         . 'menubar=no,toolbar=no,resizable=yes,status=no,width=550,height=200\');" /> ';
                     if ($core_tools->is_module_loaded('templates')) {
-                        $frm_str .= '<input type="button" name="template" id="template" class="button" value="' 
+                        $frm_str .= '<input type="button" name="template" id="template" class="button" value="'
                             . _GENERATE . '" onclick="javascript:window.open(\''
                             . $_SESSION['config']['businessappurl']
                             . 'index.php?display=true&module=templates&page=choose_template&entity='
@@ -562,29 +579,29 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $frm_str .= '</div>';
         $frm_str .= '</div>';
     }
-    
+
     //DIFFUSION FRAME
     if ($core_tools->is_module_loaded('entities')) {
         $frm_str .= '<div id="diff_list_div" style="display:none">';
             $frm_str .= '<div>';
                 $frm_str .= '<center><h2>' . _DIFF_LIST_COPY . '</h2></center>';
                 if ($core_tools->test_service('add_copy_in_process', 'entities', false)) {
-                    $frm_str .= '<a href="#" onclick="window.open(\'' 
+                    $frm_str .= '<a href="#" onclick="window.open(\''
                         . $_SESSION['config']['businessappurl']
                         . 'index.php?display=true&module=entities&page=manage_listinstance'
                         . '&origin=process&only_cc\', \'\', \'scrollbars=yes,menubar=no,'
-                        . 'toolbar=no,status=no,resizable=yes,width=1024,height=650,location=no\');" title="' 
-                        . _ADD_COPIES 
+                        . 'toolbar=no,status=no,resizable=yes,width=1024,height=650,location=no\');" title="'
+                        . _ADD_COPIES
                         . '"><img src="'
-                        . $_SESSION['config']['businessappurl'] 
-                        . 'static.php?filename=modif_liste.png" alt="' 
-                        . _ADD_COPIES 
-                        . '" />' 
-                        . _ADD_COPIES 
+                        . $_SESSION['config']['businessappurl']
+                        . 'static.php?filename=modif_liste.png" alt="'
+                        . _ADD_COPIES
+                        . '" />'
+                        . _ADD_COPIES
                         . '</a>';
                 }
                 if (
-                    count($_SESSION['process']['diff_list']['copy']['users']) == 0 
+                    count($_SESSION['process']['diff_list']['copy']['users']) == 0
                     && count($_SESSION['process']['diff_list']['copy']['entities']) == 0
                 ) {
                     $frm_str .= '<br><br>' . _NO_COPY . '<br><br>';
@@ -598,11 +615,11 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                             $color = ' class="col"';
                         }
                         $frm_str .= '<tr '.$color.' >';
-                        $frm_str .= '<td><img src="'.$_SESSION['config']['businessappurl'] 
-                            . 'static.php?module=entities&filename=manage_entities_b_small.gif" alt="' 
+                        $frm_str .= '<td><img src="'.$_SESSION['config']['businessappurl']
+                            . 'static.php?module=entities&filename=manage_entities_b_small.gif" alt="'
                             . _ENTITY.'" title="'._ENTITY.'" /></td>';
                         $frm_str .= '<td>' . $_SESSION['process']['diff_list']['copy']['entities'][$i]['entity_id'] . '</td>';
-                        $frm_str .= '<td colspan="2">' 
+                        $frm_str .= '<td colspan="2">'
                             . $_SESSION['process']['diff_list']['copy']['entities'][$i]['entity_label'] . '</td>';
                         $frm_str .= '</tr>';
                     }
@@ -613,9 +630,9 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                             $color = ' class="col"';
                         }
                         $frm_str .= '<tr ' . $color . '>';
-                            $frm_str .= '<td><img src="' 
-                                . $_SESSION['config']['businessappurl'] 
-                                . 'static.php?module=entities&filename=manage_users_entities_b_small.gif" alt="' 
+                            $frm_str .= '<td><img src="'
+                                . $_SESSION['config']['businessappurl']
+                                . 'static.php?module=entities&filename=manage_users_entities_b_small.gif" alt="'
                                 . _USER . '" title="' . _USER . '" /></td>';
                             $frm_str .= '<td>' . $_SESSION['process']['diff_list']['copy']['users'][$i]['firstname'] . '</td>';
                             $frm_str .= '<td>' . $_SESSION['process']['diff_list']['copy']['users'][$i]['lastname'] . '</td>';
@@ -629,44 +646,44 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $frm_str .= '</div>';
         $frm_str .= '</div>';
     }
-    
+
     //HISTORY FRAME
     $frm_str .= '<div class="desc" id="history_div" style="display:none">';
         $frm_str .= '<div class="ref-unit">';
-            $frm_str .= '<iframe src="' 
-                . $_SESSION['config']['businessappurl'] 
-                . 'index.php?display=true&dir=indexing_searching&page=hist_doc&id=' 
+            $frm_str .= '<iframe src="'
+                . $_SESSION['config']['businessappurl']
+                . 'index.php?display=true&dir=indexing_searching&page=hist_doc&id='
                 . $res_id . '" name="hist_doc_process" width="100%" height="300px" align="center" '
                 . 'scrolling="auto" frameborder="0" id="hist_doc_process"></iframe>';
             //$frm_str .= '<hr class="hr_process"/>';
         $frm_str .= '</div>';
     $frm_str .= '</div>';
-    
+
     //NOTES FRAME
     if ($core_tools->is_module_loaded('notes')) {
         $frm_str .= '<div class="desc" id="notes_div" style="display:none;">';
             $frm_str .= '<div class="ref-unit">';
                 $frm_str .= '<center><h2>' . _NOTES . '</h2></center>';
                 $frm_str .= '<div style="text-align:center;">';
-                    $frm_str .= '<img src="'.$_SESSION['config']['businessappurl'] 
+                    $frm_str .= '<img src="'.$_SESSION['config']['businessappurl']
                         . 'static.php?module=notes&filename=modif_note.png" border="0" alt="" />';
-                            $frm_str .= '<a href="javascript://" onclick="ouvreFenetre(\'' 
-                                . $_SESSION['config']['businessappurl'] 
-                                . 'index.php?display=true&module=notes&page=note_add&identifier=' 
-                                . $_SESSION['doc_id'] . '&coll_id=' 
+                            $frm_str .= '<a href="javascript://" onclick="ouvreFenetre(\''
+                                . $_SESSION['config']['businessappurl']
+                                . 'index.php?display=true&module=notes&page=note_add&identifier='
+                                . $_SESSION['doc_id'] . '&coll_id='
                                 . $_SESSION['collection_id_choice'].'\', 450, 300)" >';
                                 $frm_str .= _ADD_NOTE;
                             $frm_str .= '</a>';
                 $frm_str .= '</div>';
-                $frm_str .= '<iframe name="list_notes_doc" id="list_notes_doc" src="' 
-                    . $_SESSION['config']['businessappurl'] 
+                $frm_str .= '<iframe name="list_notes_doc" id="list_notes_doc" src="'
+                    . $_SESSION['config']['businessappurl']
                     . 'index.php?display=true&module=notes&page=frame_notes_doc&size=full" '
                     . 'frameborder="0" width="100%" height="200px"></iframe>';
                 //$frm_str .= '<hr class="hr_process"/>';
             $frm_str .= '</div>';
         $frm_str .= '</div>';
     }
-    
+
     //CASES FRAME
     if ($core_tools->is_module_loaded('cases')) {
         $frm_str .= '<div id="cases_div" style="display:none">';
@@ -689,11 +706,11 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                                 $frm_str .= '</td>';
                                 $frm_str .= '</tr>';
                                 $frm_str .= '<tr>';
-                                $frm_str .= '<td><label for="case_description" class="case_description" >' 
+                                $frm_str .= '<td><label for="case_description" class="case_description" >'
                                     . _CASE_DESCRIPTION . '</label></td>';
                                 $frm_str .= '<td>&nbsp;</td>';
                                 $frm_str .= '<td><input type="text" readonly="readonly" class="readonly" '
-                                    . 'name="case_description" id="case_description" onblur="" value="' 
+                                    . 'name="case_description" id="case_description" onblur="" value="'
                                     . $case_properties['case_description'].'" />';
                                 $frm_str .= '</td>';
                                 $frm_str .= '</tr>';
@@ -706,9 +723,9 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                                     } else {
                                         $frm_str .= _JOIN_CASE;
                                     }
-                                    $frm_str .= '" onclick="window.open(\'' . $_SESSION['config']['businessappurl'] 
+                                    $frm_str .= '" onclick="window.open(\'' . $_SESSION['config']['businessappurl']
                                         . 'index.php?display=true&module=cases&page=search_adv_for_cases'
-                                        . '&searched_item=res_id_in_process&searched_value=' . $_SESSION['doc_id'] 
+                                        . '&searched_item=res_id_in_process&searched_value=' . $_SESSION['doc_id']
                                         . '\',\'\', \'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,'
                                         . 'status=no,width=1020,height=710\');"/></td>';
                                 }
@@ -720,30 +737,77 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $frm_str .= '</div>';
         $frm_str .= '</div>';
     }
-    
-    //RESOURCE FRAME
-        $frm_str .= '<iframe src="' . $_SESSION['config']['businessappurl'] 
-            . 'index.php?display=true&dir=indexing_searching&page=view_resource_controler&id=' 
-            . $res_id . '" name="viewframe" id="viewframe" scrolling="auto" frameborder="0" width="100%"></iframe>';
-    
+
+    //LINKS FRAME
+    $frm_str .= '<div id="links_div" style="display:none">';
+        $frm_str .= '<div>';
+
+
+            $nbLinkDesc = $Class_LinkController->nbDirectLink(
+                $_SESSION['doc_id'],
+                $_SESSION['collection_id_choice'],
+                'desc'
+            );
+            if ($nbLinkDesc > 0) {
+                $frm_str .= '<h2>';
+                    $frm_str .= _LINK_DESC_FOR.$_SESSION['doc_id'];
+                $frm_str .= '</h2>';
+                $frm_str .= $Class_LinkController->formatMap(
+                    $Class_LinkController->getMap(
+                        $_SESSION['doc_id'],
+                        $_SESSION['collection_id_choice'],
+                        'desc'
+                    )
+                );
+            }
+
+            $nbLinkAsc = $Class_LinkController->nbDirectLink(
+                $_SESSION['doc_id'],
+                $_SESSION['collection_id_choice'],
+                'asc'
+            );
+            if ($nbLinkAsc > 0) {
+                $frm_str .= '<h2>';
+                    $frm_str .= _LINK_ASC_FOR.$_SESSION['doc_id'];
+                $frm_str .= '</h2>';
+                $frm_str .= $Class_LinkController->formatMap(
+                    $Class_LinkController->getMap(
+                        $_SESSION['doc_id'],
+                        $_SESSION['collection_id_choice'],
+                        'asc'
+                    )
+                );
+            }
+
+
+
+
+        $frm_str .= '</div>';
     $frm_str .= '</div>';
-    
+
+    //RESOURCE FRAME
+        $frm_str .= '<iframe src="' . $_SESSION['config']['businessappurl']
+            . 'index.php?display=true&dir=indexing_searching&page=view_resource_controler&id='
+            . $res_id . '" name="viewframe" id="viewframe" scrolling="auto" frameborder="0" width="100%"></iframe>';
+
+    $frm_str .= '</div>';
+
     //SCRIPT
-    $frm_str .= '<script type="text/javascript">resize_frame_process("modal_' 
+    $frm_str .= '<script type="text/javascript">resize_frame_process("modal_'
         . $id_action . '", "viewframe", true, true);window.scrollTo(0,0);';
         if ($core_tools->is_module_loaded('folder')) {
-            $frm_str .= 'launch_autocompleter_folders(\'' . $_SESSION['config']['businessappurl'] 
+            $frm_str .= 'launch_autocompleter_folders(\'' . $_SESSION['config']['businessappurl']
                 . 'index.php?display=true&module=folder&page=autocomplete_folders&mode=project\', \'project\');'
-                . 'launch_autocompleter_folders(\'' . $_SESSION['config']['businessappurl'] 
+                . 'launch_autocompleter_folders(\'' . $_SESSION['config']['businessappurl']
                 . 'index.php?display=true&module=folder&page=autocomplete_folders&mode=market\', \'market\');';
         }
         $frm_str .= '$(\'entity\').style.visibility=\'hidden\';';
         $frm_str .= '$(\'category\').style.visibility=\'hidden\';';
         $frm_str .= '$(\'baskets\').style.visibility=\'hidden\';';
     $frm_str .= '</script>';
-    
+
     //}
-    
+
     return addslashes($frm_str);
 }
 

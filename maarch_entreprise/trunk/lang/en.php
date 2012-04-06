@@ -1101,7 +1101,7 @@ if (!defined('_WHERE_CLAUSE_NOT_SECURE')) {
 
 if (!defined('_SQL_QUERY_NOT_SECURE')) {
     define(
-        '_SQL_QUERY_NOT_SECURE', 
+        '_SQL_QUERY_NOT_SECURE',
         'sql query not secure'
     );
 }
@@ -1237,4 +1237,32 @@ if (!defined('_PUT_IN_COPY')) {
 
 if (!defined('_POWERED_BY')) {
     define('_POWERED_BY', 'Powered by Maarch&trade;.');
+}
+
+if (!defined('_LINK_TO_DOC')) {
+    define('_LINK_TO_DOC', 'Link to an existing document');
+}
+
+if (!defined('_LINK_REFERENCE')) {
+    define('_LINK_REFERENCE', 'To link you must specify an existing document');
+}
+
+if (!defined('_LINKED_TO')) {
+    define('_LINKED_TO', 'Linked to the document ');
+}
+
+if (!defined('_NOW_LINK_WITH_THIS_ONE')) {
+    define('_NOW_LINK_WITH_THIS_ONE', ' is now link with this document');
+}
+
+if (!defined('_LINK_TAB')) {
+    define('_LINK_TAB', 'Link');
+}
+
+if (!defined('_LINK_DESC_FOR')) {
+    define('_LINK_DESC_FOR', 'Descendents links for the doc n&deg; ');
+}
+
+if (!defined('_LINK_ASC_FOR')) {
+    define('_LINK_ASC_FOR', 'Ascendents links for the doc n&deg; ');
 }

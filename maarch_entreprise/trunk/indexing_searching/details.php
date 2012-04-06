@@ -25,6 +25,8 @@ require_once "apps" . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
     . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . "class_list_show.php";
 require_once "core" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR
     . "class_history.php";
+require_once "core" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR
+    . "LinkController.php";
 require_once "apps" . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
     . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR
     . "class_indexing_searching_app.php";
@@ -167,8 +169,8 @@ if(isset($_POST['submit_index_doc']))
         $list = new diffusion_list();
         $params = array('mode'=> 'listinstance', 'table' => $_SESSION['tablename']['ent_listinstance'], 'coll_id' => $coll_id, 'res_id' => $s_id, 'user_id' => $_SESSION['user']['UserId'], 'concat_list' => true, 'only_cc' => false);
         $list->load_list_db($_SESSION['details']['diff_list'], $params); //pb enchainement avec action redirect
-    	$_SESSION['details']['diff_list']['key_value'] = md5($res_id);
-	}
+        $_SESSION['details']['diff_list']['key_value'] = md5($res_id);
+    }
     $is->update_mail($_POST, "POST", $s_id, $coll_id);
 }
 //delete the doctype
@@ -182,11 +184,11 @@ if(isset($_POST['delete_doc']))
 }
 if(isset($_POST['put_doc_on_validation']))
 {
-	$is ->update_doc_status($s_id, $coll_id, "VAL");
-	?>
-		<script language="javascript" type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?page=search_adv&dir=indexing_searching';?>';</script>
+    $is ->update_doc_status($s_id, $coll_id, "VAL");
+    ?>
+        <script language="javascript" type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?page=search_adv&dir=indexing_searching';?>';</script>
     <?php
-	exit();
+    exit();
 }
 $db = new dbquery();
 $db->connect();
@@ -785,13 +787,13 @@ else
                     <div align="center">
                         <?php if ($printDetails) {
                             if (
-                              isset($_SESSION['custom_override_id']) 
+                              isset($_SESSION['custom_override_id'])
                               && $_SESSION['custom_override_id'] <> ''
                             ) {
-                               $path = $_SESSION['config']['coreurl'] 
-                                . '/custom/' 
-                                . $_SESSION['custom_override_id'] 
-                                . '/apps/' 
+                               $path = $_SESSION['config']['coreurl']
+                                . '/custom/'
+                                . $_SESSION['custom_override_id']
+                                . '/apps/'
                                 . $_SESSION['config']['app_id'];
                             } else {
                               $path = $_SESSION['config']['businessappurl'];
@@ -1165,6 +1167,64 @@ else
                         ?>
                     </dd>
                 <?php } ?>
+                <?php $Class_LinkController = new LinkController(); ?>
+                <?php
+                    $nbLink = $Class_LinkController->nbDirectLink(
+                        $_SESSION['doc_id'],
+                        $_SESSION['collection_id_choice'],
+                        'all'
+                    );
+                    $Links = '';
+
+                    if ($nbLink > 0) {
+                        $Links .= '<dt>';
+                            $Links .= _LINK_TAB;
+                            $Links .= ' (';
+                            $Links .= $nbLink;
+                            $Links .= ')';
+                        $Links .= '</dt>';
+                        $Links .= '<dd>';
+
+                        $nbLinkDesc = $Class_LinkController->nbDirectLink(
+                            $_SESSION['doc_id'],
+                            $_SESSION['collection_id_choice'],
+                            'desc'
+                        );
+                        if ($nbLinkDesc > 0) {
+                            $Links .= '<h2>';
+                                $Links .= _LINK_DESC_FOR.$_SESSION['doc_id'];
+                            $Links .= '</h2>';
+                            $Links .= $Class_LinkController->formatMap(
+                                $Class_LinkController->getMap(
+                                    $_SESSION['doc_id'],
+                                    $_SESSION['collection_id_choice'],
+                                    'desc'
+                                )
+                            );
+                        }
+
+                        $nbLinkAsc = $Class_LinkController->nbDirectLink(
+                            $_SESSION['doc_id'],
+                            $_SESSION['collection_id_choice'],
+                            'asc'
+                        );
+                        if ($nbLinkAsc > 0) {
+                            $Links .= '<h2>';
+                                $Links .= _LINK_ASC_FOR.$_SESSION['doc_id'];
+                            $Links .= '</h2>';
+                            $Links .= $Class_LinkController->formatMap(
+                                $Class_LinkController->getMap(
+                                    $_SESSION['doc_id'],
+                                    $_SESSION['collection_id_choice'],
+                                    'asc'
+                                )
+                            );
+                        }
+                        $Links .= '</dd>';
+                    }
+
+                    echo $Links;
+                ?>
             </dl>
     <?php
 }
@@ -1195,5 +1255,5 @@ if ($printDetails) {
     $Fnm = $_SESSION['config']['tmppath'].DIRECTORY_SEPARATOR.'export_details_'.$_SESSION['user']['UserId']."_export.html";
     $inF = fopen($Fnm,"w");
     fwrite($inF, $detailsExport);
-    fclose($inF); 
+    fclose($inF);
 }

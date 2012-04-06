@@ -538,7 +538,7 @@ if (!defined('_MUST_CHANGE_PSW')) define( '_MUST_CHANGE_PSW', 'doit modifier son
 
 if (!defined('_NEW_PASSWORD_USER')) define( '_NEW_PASSWORD_USER', 'R&eacute;initialisation du mot de passe de l&rsquo;utilisateur');
 if (!defined('_PASSWORD_NOT_CHANGED')) {
-	define('_PASSWORD_NOT_CHANGED', 'Probl&egrave;me lors du changement de mot de passe');
+    define('_PASSWORD_NOT_CHANGED', 'Probl&egrave;me lors du changement de mot de passe');
 }
 /************** Types de document : Liste + Formulaire**************/
 
@@ -1204,8 +1204,8 @@ if (!defined('_TIPS_KEYWORD2')) define( '_TIPS_KEYWORD2', 'Pour effectuer une re
 if (!defined('_TIPS_KEYWORD3')) define( '_TIPS_KEYWORD3', 'Pour effectuer une recherche approximative');
 if (!defined('_HELP_FULLTEXT_SEARCH_EXEMPLE1')) define( '_HELP_FULLTEXT_SEARCH_EXEMPLE1', 'auto* trouve autoroute et automobile ');
 if (!defined('_HELP_FULLTEXT_SEARCH_EXEMPLE2')) define( '_HELP_FULLTEXT_SEARCH_EXEMPLE2', '"route nationale" trouve l\'expression entière "route nationale"
-														<p> Sans guillemet la recherche trouve des documents contenant les mots route ou nationale</p>
-														<p> route + nationale trouve les documents contenant à la fois les mots route et nationale</p>');
+                                                        <p> Sans guillemet la recherche trouve des documents contenant les mots route ou nationale</p>
+                                                        <p> route + nationale trouve les documents contenant à la fois les mots route et nationale</p>');
 if (!defined('_HELP_FULLTEXT_SEARCH_EXEMPLE3')) define( '_HELP_FULLTEXT_SEARCH_EXEMPLE3', 'vite~ trouve vote, vite');
 if (!defined('_TIPS_FULLTEXT_TEXT')) define( '_TIPS_FULLTEXT_TEXT', 'La recherche peut se faire sur des nombres');
 if (!defined('_CLOSE_MAIL')) define( '_CLOSE_MAIL', 'Cl&ocirc;turer un courrier');
@@ -1447,22 +1447,22 @@ if (!defined('_SETUP'))  define('_SETUP', 'Configurer');
 
 
 if (!defined('_PARAM_MLB_DOCTYPES')) {
-	define('_PARAM_MLB_DOCTYPES', 'Param&eacute;trage des types de documents ');
+    define('_PARAM_MLB_DOCTYPES', 'Param&eacute;trage des types de documents ');
 }
 if (!defined('_PARAM_MLB_DOCTYPES_DESC')) {
-	define('_PARAM_MLB_DOCTYPES_DESC', 'Param&eacute;trage des types de documents ');
+    define('_PARAM_MLB_DOCTYPES_DESC', 'Param&eacute;trage des types de documents ');
 }
 if (!defined('_WELCOME_TEXT_LOAD')) {
-	define('_WELCOME_TEXT_LOAD', 'Chargement texte page d&rsquo;accueil');
+    define('_WELCOME_TEXT_LOAD', 'Chargement texte page d&rsquo;accueil');
 }
 if (!defined('_REOPEN_MAIL_DESC')) {
-	define('_REOPEN_MAIL_DESC', 'R&eacute;ouverture de courrier');
+    define('_REOPEN_MAIL_DESC', 'R&eacute;ouverture de courrier');
 }
 if (!defined('_WRONG_FUNCTION_OR_WRONG_PARAMETERS')) {
     define('_WRONG_FUNCTION_OR_WRONG_PARAMETERS', 'Mauvais appel ou mauvaus param&eagrave;tre');
 }
 if (!defined('_INDEXING_INSERT_ERROR')) {
-	define('_INDEXING_INSERT_ERROR', 'Indexation : erreur lors de l&rsquo;insertion');
+    define('_INDEXING_INSERT_ERROR', 'Indexation : erreur lors de l&rsquo;insertion');
 }
 
 if (!defined('_LOGIN_HISTORY')) {
@@ -1496,14 +1496,14 @@ if (!defined('_NOTES_3')) {
 
 if (!defined('_WHERE_CLAUSE_NOT_SECURE')) {
     define(
-        '_WHERE_CLAUSE_NOT_SECURE', 
+        '_WHERE_CLAUSE_NOT_SECURE',
         'Clause where non s&eacute;curis&eacute;e'
     );
 }
 
 if (!defined('_SQL_QUERY_NOT_SECURE')) {
     define(
-        '_SQL_QUERY_NOT_SECURE', 
+        '_SQL_QUERY_NOT_SECURE',
         'requete SQL non s&eacute;curis&eacute;e'
     );
 }
@@ -1511,21 +1511,21 @@ if (!defined('_SQL_QUERY_NOT_SECURE')) {
 //service to put doc on validation from details page
 if (!defined('_PUT_DOC_ON_VALIDATION_FROM_DETAILS')) {
     define(
-        '_PUT_DOC_ON_VALIDATION_FROM_DETAILS', 
+        '_PUT_DOC_ON_VALIDATION_FROM_DETAILS',
         'Envoyer le document en validation depuis la page d&eacute;tails'
     );
 }
 
 if (!defined('_PUT_DOC_ON_VALIDATION')) {
     define(
-        '_PUT_DOC_ON_VALIDATION', 
+        '_PUT_DOC_ON_VALIDATION',
         'Envoyer le document en validation'
     );
 }
 
 if (!defined('_REALLY_PUT_DOC_ON_VALIDATION')) {
     define(
-        '_REALLY_PUT_DOC_ON_VALIDATION', 
+        '_REALLY_PUT_DOC_ON_VALIDATION',
         'Confirmer l&rsquo;envoi en validation'
     );
 }
@@ -1662,4 +1662,32 @@ if (!defined('_PUT_IN_COPY')) {
 
 if (!defined('_POWERED_BY')) {
     define('_POWERED_BY', 'Powered by Maarch&trade;.');
+}
+
+if (!defined('_LINK_TO_DOC')) {
+    define('_LINK_TO_DOC', 'Lier &agrave; un courrier existant');
+}
+
+if (!defined('_LINK_REFERENCE')) {
+    define('_LINK_REFERENCE', 'Pour lier vous devez choisir un courrier existant');
+}
+
+if (!defined('_LINKED_TO')) {
+    define('_LINKED_TO', 'Li&eacute; au doc ');
+}
+
+if (!defined('_NOW_LINK_WITH_THIS_ONE')) {
+    define('_NOW_LINK_WITH_THIS_ONE', ' est maintenant li&eacute; &agrave; ce documents');
+}
+
+if (!defined('_LINK_TAB')) {
+    define('_LINK_TAB', 'Liaison');
+}
+
+if (!defined('_LINK_DESC_FOR')) {
+    define('_LINK_DESC_FOR', 'Liaisons descendantes pour le doc n&deg; ');
+}
+
+if (!defined('_LINK_ASC_FOR')) {
+    define('_LINK_ASC_FOR', 'Liaisons ascendantes pour le doc n&deg; ');
 }

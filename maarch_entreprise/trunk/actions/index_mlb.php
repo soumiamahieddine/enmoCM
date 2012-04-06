@@ -59,7 +59,7 @@ require_once 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
 require_once 'core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
     . 'class_history.php';
 
-	
+
 $core = new core_tools();
 if ($core->is_module_loaded('entities')) {
     require_once 'modules/entities/entities_tables.php';
@@ -185,26 +185,26 @@ $module, $collId, $mode )
             );
         }
     }
-	// Select statuses from groupbasket
-	$statuses = array();
-	$db = new dbquery();
+    // Select statuses from groupbasket
+    $statuses = array();
+    $db = new dbquery();
     $db->connect();
-	$query = "SELECT status_id, label_status FROM " . GROUPBASKET_STATUS . " left join " . $_SESSION['tablename']['status'] 
-		. " on status_id = id "
-		. " where basket_id= '" . $_SESSION['current_basket']['id']
-		. "' and group_id = '" . $_SESSION['user']['primarygroup']
-		. "' and action_id = " . $actionId;
-	$db->query($query);
-	
-	if($db->nb_result() > 0) {
-		while($status = $db->fetch_object()) {
-			$statuses[] = array(
-				'ID' => $status->status_id, 
-				'LABEL' => $db->show_string($status->label_status)
-			);
-		}
-	}
-	
+    $query = "SELECT status_id, label_status FROM " . GROUPBASKET_STATUS . " left join " . $_SESSION['tablename']['status']
+        . " on status_id = id "
+        . " where basket_id= '" . $_SESSION['current_basket']['id']
+        . "' and group_id = '" . $_SESSION['user']['primarygroup']
+        . "' and action_id = " . $actionId;
+    $db->query($query);
+
+    if($db->nb_result() > 0) {
+        while($status = $db->fetch_object()) {
+            $statuses[] = array(
+                'ID' => $status->status_id,
+                'LABEL' => $db->show_string($status->label_status)
+            );
+        }
+    }
+
     $frmStr .= '<div id="validleft">';
     $frmStr .= '<div id="index_div" style="display:none;";>';
     $frmStr .= '<h1 class="tit" id="action_title"><img src="'
@@ -266,45 +266,61 @@ $module, $collId, $mode )
         $frmStr .= '<tr id="attachment_tr" style="display:' . $displayValue
                 . ';">';
         $frmStr .= '<td><label for="attachment" class="form_title" >'
-                . _ATTACH_TO_DOC . ' : </label></td>';
+                . _LINK_TO_DOC . ' : </label></td>';
         $frmStr .= '<td>&nbsp;</td>';
         $frmStr .= '<td class="indexing_field"><input type="radio" '
                 . 'name="attachment" id="attach" value="true" '
-                . 'onclick="hide_index(true, \'' . $displayValue . '\');" /> '
+                . 'onclick="show_attach(\'true\');"'
+                . ' /> '
                 . _YES . ' <input type="radio" name="attachment" id="no_attach"'
                 . ' value="false" checked="checked" '
-                . 'onclick="hide_index(false, \'' . $displayValue . '\');" /> '
+                . 'onclick="show_attach(\'false\');"'
+                . ' /> '
                 . _NO . '</td>';
         $frmStr .= ' <td><span class="red_asterisk" id="attachment_mandatory" '
                 . 'style="display:inline;">*</span>&nbsp;</td>';
         $frmStr .= '</tr>';
-        $frmStr .= '<tr id="attach_title_tr" style="display:none;">';
-        $frmStr .= '<td><label for="attach_title" class="form_title" >'
-                . _TITLE . ' : </label></td>';
-        $frmStr .= '<td>&nbsp;</td>';
-        $frmStr .= '<td class="indexing_field"><input type="text" '
-                . 'name="attach_title" id="attach_title" value="" /></td>';
-        $frmStr .= '<td><span class="red_asterisk" id="res_id_mandatory" '
-                . 'style="display:inline;">*</span>&nbsp;</td>';
+
+        $frmStr .= '<tr id="attach_show" style="display:none;">';
+            $frmStr .= '<td>&nbsp;</td>';
+            $frmStr .= '<td style="text-align: right;">';
+                $frmStr .= '<a ';
+                  $frmStr .= 'href="javascript://" ';
+                  $frmStr .= 'onclick="window.open(';
+                    $frmStr .= '\'' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=indexing_searching&page=search_adv&mode=popup&action_form=show_res_id&modulename=attachments&init_search&nodetails\', ';
+                    $frmStr .= '\'search_doc_for_attachment\', ';
+                    $frmStr .= '\'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=1020,height=710\'';
+                  $frmStr .= ');"';
+                  $frmStr .= ' title="' . _SEARCH . '"';
+                $frmStr .= '>';
+                    $frmStr .= '<span style="font-weight: bold;">';
+                        $frmStr .= '<img ';
+                          $frmStr .= 'src="' . $_SESSION['config']['businessappurl'] . 'static.php?filename=folder_search.gif" ';
+                          $frmStr .= 'width="20px" ';
+                          $frmStr .= 'height="20px" ';
+                        $frmStr .= '/>';
+                    $frmStr .= '</span>';
+                $frmStr .= '</a>';
+            $frmStr .= '</td>';
+            $frmStr .= '<td style="text-align: right;">';
+                $frmStr .= '<input ';
+                  $frmStr .= 'type="text" ';
+                  $frmStr .= 'name="res_id" ';
+                  $frmStr .= 'id="res_id" ';
+                  $frmStr .= 'class="readonly" ';
+                  $frmStr .= 'readonly="readonly" ';
+                  $frmStr .= 'value="" ';
+                $frmStr .= '/>';
+            $frmStr .= '</td>';
+            $frmStr .= '<td>';
+                $frmStr .= '<span class="red_asterisk" id="category_id_mandatory" style="display:inline;">';
+                    $frmStr .= '*';
+                $frmStr .= '</span>';
+            $frmStr .= '</td>';
         $frmStr .= '</tr>';
-        $frmStr .= '<tr id="attach_link_tr" style="display:none;">';
-        $frmStr .= '<td><label for="attach" class="form_title" >' . _NUM_GED
-                . ' : </label></td>';
-        $frmStr .= '<td>&nbsp;</td>';
-        $frmStr .= '<td class="indexing_field"><input type="text" name="res_id"'
-                . ' id="res_id" class="readonly" readonly="readonly" value="" />'
-                . '<br/><a href="javascript://" onclick="window.open(\''
-                . $_SESSION['config']['businessappurl']
-                . 'index.php?display=true&dir=indexing_searching&page='
-                . 'search_adv&mode=popup&action_form=show_res_id&modulename='
-                . 'attachments&init_search&nodetails\','
-                . '\'search_doc_for_attachment\', \'scrollbars=yes,menubar=no,'
-                . 'toolbar=no,resizable=yes,status=no,width=1020,height=710\');"'
-                . ' title="' . _SEARCH . '"><em>' . _SEARCH_DOC
-                . '</em></a></td>';
-        $frmStr .= '<td><span class="red_asterisk" id="res_id_mandatory" '
-                . 'style="display:inline;">*</span>&nbsp;</td>';
-        $frmStr .= '</tr>';
+
+        //
+
         $frmStr .= '</table>';
     }
     $frmStr .= '<table width="100%" align="center" border="0" '
@@ -355,39 +371,39 @@ $module, $collId, $mode )
             . '&page=get_content_js\', \'' . $displayValue . '\');">';
     $frmStr .= '<option value="">' . _CHOOSE_TYPE . '</option>';
 if ($_SESSION['features']['show_types_tree'] == 'true') {
-	    for ($i = 0; $i < count($doctypes); $i ++) {
-		    $frmStr .= '<option value="" class="' //doctype_level1
-		    		. $doctypes[$i]['style'] . '" title="'
-		            . $doctypes[$i]['label'] . '" label="'
-		            . $doctypes[$i]['label'] . '" >' . $doctypes[$i]['label']
-		            . '</option>';
-			for ($j = 0; $j < count($doctypes[$i]['level2']); $j ++) {
-			    $frmStr .= '<option value="" class="' //doctype_level2
-			    		. $doctypes[$i]['level2'][$j]['style'] .'" title="'
-			            . $doctypes[$i]['level2'][$j]['label'] . '" label="'
-			            . $doctypes[$i]['level2'][$j]['label'] . '" >&nbsp;&nbsp;'
-			            . $doctypes[$i]['level2'][$j]['label'] .'</option>';
-			    for ($k = 0; $k < count($doctypes[$i]['level2'][$j]['types']);
-			        $k ++
-			    ) {
-				    $frmStr .= '<option value="'
-				            . $doctypes[$i]['level2'][$j]['types'][$k]['id']
-				            . '" title="'
-				            . $doctypes[$i]['level2'][$j]['types'][$k]['label']
-				            . '" label="'
-				            . $doctypes[$i]['level2'][$j]['types'][$k]['label']
-				            . '">&nbsp;&nbsp;&nbsp;&nbsp;'
-				            . $doctypes[$i]['level2'][$j]['types'][$k]['label']
-				            . '</option>';
-				}
-			}
-		}
-	} else {
-	    for ($i = 0; $i < count($doctypes); $i ++) {
-			$frmStr .= '<option value="' . $doctypes[$i]['ID'] . '" >'
-			        . $doctypes[$i]['LABEL'] . '</option>';
-		}
-	}
+        for ($i = 0; $i < count($doctypes); $i ++) {
+            $frmStr .= '<option value="" class="' //doctype_level1
+                    . $doctypes[$i]['style'] . '" title="'
+                    . $doctypes[$i]['label'] . '" label="'
+                    . $doctypes[$i]['label'] . '" >' . $doctypes[$i]['label']
+                    . '</option>';
+            for ($j = 0; $j < count($doctypes[$i]['level2']); $j ++) {
+                $frmStr .= '<option value="" class="' //doctype_level2
+                        . $doctypes[$i]['level2'][$j]['style'] .'" title="'
+                        . $doctypes[$i]['level2'][$j]['label'] . '" label="'
+                        . $doctypes[$i]['level2'][$j]['label'] . '" >&nbsp;&nbsp;'
+                        . $doctypes[$i]['level2'][$j]['label'] .'</option>';
+                for ($k = 0; $k < count($doctypes[$i]['level2'][$j]['types']);
+                    $k ++
+                ) {
+                    $frmStr .= '<option value="'
+                            . $doctypes[$i]['level2'][$j]['types'][$k]['id']
+                            . '" title="'
+                            . $doctypes[$i]['level2'][$j]['types'][$k]['label']
+                            . '" label="'
+                            . $doctypes[$i]['level2'][$j]['types'][$k]['label']
+                            . '">&nbsp;&nbsp;&nbsp;&nbsp;'
+                            . $doctypes[$i]['level2'][$j]['types'][$k]['label']
+                            . '</option>';
+                }
+            }
+        }
+    } else {
+        for ($i = 0; $i < count($doctypes); $i ++) {
+            $frmStr .= '<option value="' . $doctypes[$i]['ID'] . '" >'
+                    . $doctypes[$i]['LABEL'] . '</option>';
+        }
+    }
     $frmStr .= '</select></td>';
     $frmStr .= '<td><span class="red_asterisk" id="type_id_mandatory" '
             . 'style="display:inline;">*</span>&nbsp;</td>';
@@ -662,27 +678,27 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
         $frmStr .= '</tr>';
     }
     /*** Status ***/
-	if(count($statuses) > 0) {
-		$frmStr .= '<tr id="status" style="display:' . $displayValue . ';">';
-		$frmStr .= '<td><label for="status" class="form_title" >' . _STATUS
-				. '</label></td>';
-		$frmStr .= '<td>&nbsp;</td>';
-		$frmStr .= '<td class="indexing_field"><select name="status" '
-				. 'id="status" onchange="clear_error(\'frm_error_' . $actionId
-				. '\');">';
-		$frmStr .= '<option value="">' . _CHOOSE_STATUS . '</option>';
-		for ($i = 0; $i < count($statuses); $i ++) {
-			$frmStr .= '<option value="' . $statuses[$i]['ID'] . '" ';
-			if ($statuses[$i]['ID'] == 'NEW') {
-				$frmStr .= 'selected="selected"';
-			}
-			$frmStr .= '>' . $statuses[$i]['LABEL'] . '</option>';
-		}
-		$frmStr .= '</select></td>';
-		$frmStr .= '</tr>';
-	}
-	
-	// Fin
+    if(count($statuses) > 0) {
+        $frmStr .= '<tr id="status" style="display:' . $displayValue . ';">';
+        $frmStr .= '<td><label for="status" class="form_title" >' . _STATUS
+                . '</label></td>';
+        $frmStr .= '<td>&nbsp;</td>';
+        $frmStr .= '<td class="indexing_field"><select name="status" '
+                . 'id="status" onchange="clear_error(\'frm_error_' . $actionId
+                . '\');">';
+        $frmStr .= '<option value="">' . _CHOOSE_STATUS . '</option>';
+        for ($i = 0; $i < count($statuses); $i ++) {
+            $frmStr .= '<option value="' . $statuses[$i]['ID'] . '" ';
+            if ($statuses[$i]['ID'] == 'NEW') {
+                $frmStr .= 'selected="selected"';
+            }
+            $frmStr .= '>' . $statuses[$i]['LABEL'] . '</option>';
+        }
+        $frmStr .= '</select></td>';
+        $frmStr .= '</tr>';
+    }
+
+    // Fin
     $frmStr .= '</table>';
 
     $frmStr .= '<div id="comp_indexes" style="display:block;">';
@@ -972,43 +988,38 @@ function check_form($formId, $values)
         //print_r($values);
         $attach = get_value_fields($values, 'attach');
         $collId = get_value_fields($values, 'coll_id');
-        if (! $attach) {
-            $catId = get_value_fields($values, 'category_id');
-            if (! $catId) {
-                $_SESSION['action_error'] = _CATEGORY . ' ' . _IS_EMPTY;
-                return false;
-            }
-            $noError = process_category_check($catId, $values);
-
-            if ($noError == false) {
-                //$_SESSION['action_error'] .= _ERROR_CATEGORY;
-                return false;
-            }
-
-            if (isset($_SESSION['upfile']['format'])
-                && $_SESSION['upfile']['format'] <> 'maarch'
-            ) {
-                $is = new indexing_searching_app();
-                $state = $is->is_filetype_allowed(
-                    $_SESSION['upfile']['format']
-                );
-                if (! $state) {
-                    $_SESSION['action_error'] .= '<br/>'
-                        . $_SESSION['upfile']['format'] . _FILETYPE . ' '
-                        . _NOT_ALLOWED;
-                    return false;
-                }
-            }
-        } else {
-            $title = get_value_fields($values, 'attach_title');
-            if (! $title || empty($title)) {
-                $_SESSION['action_error'] .= _TITLE . ' ' . _IS_EMPTY . '<br/>';
-            }
+        if ($attach) {
             $idDoc = get_value_fields($values, 'res_id');
             if (! $idDoc || empty($idDoc)) {
-                $_SESSION['action_error'] .= _NUM_GED . ' ' . _IS_EMPTY . '<br/>';
+                $_SESSION['action_error'] .= _LINK_REFERENCE . '<br/>';
             }
             if (! empty($_SESSION['action_error'])) {
+                return false;
+            }
+        }
+        $catId = get_value_fields($values, 'category_id');
+        if (! $catId) {
+            $_SESSION['action_error'] = _CATEGORY . ' ' . _IS_EMPTY;
+            return false;
+        }
+        $noError = process_category_check($catId, $values);
+
+        if ($noError == false) {
+            //$_SESSION['action_error'] .= _ERROR_CATEGORY;
+            return false;
+        }
+
+        if (isset($_SESSION['upfile']['format'])
+            && $_SESSION['upfile']['format'] <> 'maarch'
+        ) {
+            $is = new indexing_searching_app();
+            $state = $is->is_filetype_allowed(
+                $_SESSION['upfile']['format']
+            );
+            if (! $state) {
+                $_SESSION['action_error'] .= '<br/>'
+                    . $_SESSION['upfile']['format'] . _FILETYPE . ' '
+                    . _NOT_ALLOWED;
                 return false;
             }
         }
@@ -1416,7 +1427,7 @@ function get_value_fields($values, $field)
 {
     for ($i = 0; $i < count($values); $i ++) {
         if ($values[$i]['ID'] == $field) {
-            return 	$values[$i]['VALUE'];
+            return  $values[$i]['VALUE'];
         }
     }
     return false;
@@ -1434,9 +1445,9 @@ function get_value_fields($values, $field)
  * @param $table String Table
  * @param $formValues String Values of the form to load
  * @return false or an array
- * 			$data['result'] : res_id of the new file followed by #
- * 			$data['history_msg'] : Log complement (empty by default)
- * 			$data['page_result'] : Page to load when action is done and modal closed
+ *          $data['result'] : res_id of the new file followed by #
+ *          $data['history_msg'] : Log complement (empty by default)
+ *          $data['page_result'] : Page to load when action is done and modal closed
  **/
 function manage_form($arrId, $history, $actionId, $label_action, $status,
 $collId, $table, $formValues )
@@ -1445,7 +1456,7 @@ $collId, $table, $formValues )
         $_SESSION['action_error'] = _ERROR_MANAGE_FORM_ARGS;
         return false;
     }
-	$resId = '';
+    $resId = '';
     $db = new dbquery();
     $sec = new security();
     $req = new request();
@@ -1485,8 +1496,8 @@ $collId, $table, $formValues )
             )
         );
     }
-	$status_id = get_value_fields($formValues, 'status');
-	if(empty($status_id) || $status_id === "") $status_id = 'BAD';
+    $status_id = get_value_fields($formValues, 'status');
+    if(empty($status_id) || $status_id === "") $status_id = 'BAD';
     array_push(
         $_SESSION['data'],
         array(
@@ -1533,378 +1544,345 @@ $collId, $table, $formValues )
 
     $attach = get_value_fields($formValues, 'attach');
 
-    if ($attach == false) {
-        $catId = get_value_fields($formValues, 'category_id');
+    $catId = get_value_fields($formValues, 'category_id');
 
-        $queryExtFields .= 'category_id,' ;
-        $queryExtValues .= "'" . $catId . "'," ;
+    $queryExtFields .= 'category_id,' ;
+    $queryExtValues .= "'" . $catId . "'," ;
 
-        $_SESSION['origin'] = "";
-        // Specific indexes : values from the form
-        // Simple cases
-        for ($i = 0; $i < count($formValues); $i ++) {
-            $tmpId = $formValues[$i]['ID'];
-            if (isset($_ENV['categories'][$catId][$tmpId]['type_field'])
-                && $_ENV['categories'][$catId][$tmpId]['type_field'] == 'integer'
-                && $_ENV['categories'][$catId][$tmpId]['table'] <> 'none'
+    $_SESSION['origin'] = "";
+    // Specific indexes : values from the form
+    // Simple cases
+    for ($i = 0; $i < count($formValues); $i ++) {
+        $tmpId = $formValues[$i]['ID'];
+        if (isset($_ENV['categories'][$catId][$tmpId]['type_field'])
+            && $_ENV['categories'][$catId][$tmpId]['type_field'] == 'integer'
+            && $_ENV['categories'][$catId][$tmpId]['table'] <> 'none'
+        ) {
+            if (isset($_ENV['categories'][$catId][$tmpId]['table'])
+                && $_ENV['categories'][$catId][$tmpId]['table'] == 'res'
             ) {
-                if (isset($_ENV['categories'][$catId][$tmpId]['table'])
-                    && $_ENV['categories'][$catId][$tmpId]['table'] == 'res'
-                ) {
-                    array_push(
-                        $_SESSION['data'],
-                        array(
-                            'column' => $tmpId,
-                            'value'  => $formValues[$i]['VALUE'],
-                            'type'   => 'integer',
-                        )
-                    );
-                } else if (isset($_ENV['categories'][$catId][$tmpId]['table'])
-                    && $_ENV['categories'][$catId][$tmpId]['table'] == 'coll_ext'
-                ) {
-                    $queryExtFields .= $tmpId . ',';
-                    $queryExtValues .= $formValues[$i]['VALUE'] . ',';
-                }
-            } else if (isset($_ENV['categories'][$catId][$tmpId]['type_field'])
-                && isset($_ENV['categories'][$catId][$tmpId]['table'])
-                && $_ENV['categories'][$catId][$tmpId]['type_field'] == 'string'
-                && $_ENV['categories'][$catId][$tmpId]['table'] <> 'none'
-            ) {
-                if ($_ENV['categories'][$catId][$tmpId]['table'] == 'res') {
-                    array_push(
-                        $_SESSION['data'],
-                        array(
-                            'column' => $tmpId,
-                            'value' => $db->protect_string_db($formValues[$i]['VALUE']),
-                            'type' => 'string'
-                        )
-                    );
-                } else if ($_ENV['categories'][$catId][$tmpId]['table'] == 'coll_ext') {
-                    $queryExtFields .= $formValues[$i]['ID'] . ',';
-                    $queryExtValues .= "'" . $db->protect_string_db(
-                        $formValues[$i]['VALUE']
-                    ) . "',";
-                }
-            } else if (isset($_ENV['categories'][$catId][$tmpId]['type_field'])
-                && isset($_ENV['categories'][$catId][$tmpId]['table'])
-                && $_ENV['categories'][$catId][$tmpId]['type_field'] == 'date'
-                && $_ENV['categories'][$catId][$tmpId]['table'] <> 'none'
-            ) {
-                if ($_ENV['categories'][$catId][$tmpId]['table'] == 'res') {
-                    array_push(
-                        $_SESSION['data'],
-                        array(
-                            'column' => $tmpId,
-                            'value' => $db->format_date_db($formValues[$i]['VALUE']),
-                            'type' => 'date',
-                        )
-                    );
-                } else if ($_ENV['categories'][$catId][$tmpId]['table'] == 'coll_ext') {
-                    $queryExtFields .= $formValues[$i]['ID'] . ',';
-                    $queryExtValues .= "'" . $db->format_date_db(
-                        $formValues[$i]['VALUE']
-                    ) . "',";
-                }
-            }
-        }
-        ///// Manages the complementary indexes depending on the doctype
-        $type = new types();
-        $typeId = get_value_fields($formValues, 'type_id');
-        $indexes = $type->get_indexes($typeId, $collId, 'minimal');
-        $valIndexes = array();
-        for ($i = 0; $i < count($indexes); $i ++) {
-            $valIndexes[$indexes[$i]] = get_value_fields(
-                $formValues, $indexes[$i]
-            );
-        }
-        $_SESSION['data'] = $type->fill_data_array(
-            $typeId, $collId, $valIndexes, $_SESSION['data']
-        );
-
-        ///////////////////////// Other cases
-        // Process limit Date
-        if (isset($_ENV['categories'][$catId]['other_cases']['process_limit_date'])) {
-            $processLimitDate = get_value_fields(
-                $formValues, 'process_limit_date'
-            );
-            if ($_ENV['categories'][$catId]['other_cases']['process_limit_date']['table'] == 'res') {
                 array_push(
                     $_SESSION['data'],
                     array(
-                        'column' => 'process_limit_date',
-                        'value' => $db->format_date_db($processLimitDate),
+                        'column' => $tmpId,
+                        'value'  => $formValues[$i]['VALUE'],
+                        'type'   => 'integer',
+                    )
+                );
+            } else if (isset($_ENV['categories'][$catId][$tmpId]['table'])
+                && $_ENV['categories'][$catId][$tmpId]['table'] == 'coll_ext'
+            ) {
+                $queryExtFields .= $tmpId . ',';
+                $queryExtValues .= $formValues[$i]['VALUE'] . ',';
+            }
+        } else if (isset($_ENV['categories'][$catId][$tmpId]['type_field'])
+            && isset($_ENV['categories'][$catId][$tmpId]['table'])
+            && $_ENV['categories'][$catId][$tmpId]['type_field'] == 'string'
+            && $_ENV['categories'][$catId][$tmpId]['table'] <> 'none'
+        ) {
+            if ($_ENV['categories'][$catId][$tmpId]['table'] == 'res') {
+                array_push(
+                    $_SESSION['data'],
+                    array(
+                        'column' => $tmpId,
+                        'value' => $db->protect_string_db($formValues[$i]['VALUE']),
+                        'type' => 'string'
+                    )
+                );
+            } else if ($_ENV['categories'][$catId][$tmpId]['table'] == 'coll_ext') {
+                $queryExtFields .= $formValues[$i]['ID'] . ',';
+                $queryExtValues .= "'" . $db->protect_string_db(
+                    $formValues[$i]['VALUE']
+                ) . "',";
+            }
+        } else if (isset($_ENV['categories'][$catId][$tmpId]['type_field'])
+            && isset($_ENV['categories'][$catId][$tmpId]['table'])
+            && $_ENV['categories'][$catId][$tmpId]['type_field'] == 'date'
+            && $_ENV['categories'][$catId][$tmpId]['table'] <> 'none'
+        ) {
+            if ($_ENV['categories'][$catId][$tmpId]['table'] == 'res') {
+                array_push(
+                    $_SESSION['data'],
+                    array(
+                        'column' => $tmpId,
+                        'value' => $db->format_date_db($formValues[$i]['VALUE']),
                         'type' => 'date',
                     )
                 );
-            } else if ($_ENV['categories'][$catId]['other_cases']['process_limit_date']['table'] == 'coll_ext') {
-                if ($_SESSION['store_process_limit_date'] == "ok") {
-                    $queryExtFields .= 'process_limit_date,';
-                    $queryExtValues .= "'" . $db->format_date_db(
-                        $processLimitDate
-                    ) . "',";
-                }
-                $_SESSION['store_process_limit_date'] = "";
+            } else if ($_ENV['categories'][$catId][$tmpId]['table'] == 'coll_ext') {
+                $queryExtFields .= $formValues[$i]['ID'] . ',';
+                $queryExtValues .= "'" . $db->format_date_db(
+                    $formValues[$i]['VALUE']
+                ) . "',";
             }
         }
+    }
+    ///// Manages the complementary indexes depending on the doctype
+    $type = new types();
+    $typeId = get_value_fields($formValues, 'type_id');
+    $indexes = $type->get_indexes($typeId, $collId, 'minimal');
+    $valIndexes = array();
+    for ($i = 0; $i < count($indexes); $i ++) {
+        $valIndexes[$indexes[$i]] = get_value_fields(
+            $formValues, $indexes[$i]
+        );
+    }
+    $_SESSION['data'] = $type->fill_data_array(
+        $typeId, $collId, $valIndexes, $_SESSION['data']
+    );
 
-        // Contact
-        if (isset($_ENV['categories'][$catId]['other_cases']['contact'])) {
-            $contact = get_value_fields($formValues, 'contact');
+    ///////////////////////// Other cases
+    // Process limit Date
+    if (isset($_ENV['categories'][$catId]['other_cases']['process_limit_date'])) {
+        $processLimitDate = get_value_fields(
+            $formValues, 'process_limit_date'
+        );
+        if ($_ENV['categories'][$catId]['other_cases']['process_limit_date']['table'] == 'res') {
+            array_push(
+                $_SESSION['data'],
+                array(
+                    'column' => 'process_limit_date',
+                    'value' => $db->format_date_db($processLimitDate),
+                    'type' => 'date',
+                )
+            );
+        } else if ($_ENV['categories'][$catId]['other_cases']['process_limit_date']['table'] == 'coll_ext') {
+            if ($_SESSION['store_process_limit_date'] == "ok") {
+                $queryExtFields .= 'process_limit_date,';
+                $queryExtValues .= "'" . $db->format_date_db(
+                    $processLimitDate
+                ) . "',";
+            }
+            $_SESSION['store_process_limit_date'] = "";
+        }
+    }
+
+    // Contact
+    if (isset($_ENV['categories'][$catId]['other_cases']['contact'])) {
+        $contact = get_value_fields($formValues, 'contact');
+        $contactType = get_value_fields(
+            $formValues, 'type_contact_external'
+        );
+        if (! $contactType) {
             $contactType = get_value_fields(
-                $formValues, 'type_contact_external'
+                $formValues, 'type_contact_internal'
             );
-            if (! $contactType) {
-                $contactType = get_value_fields(
-                    $formValues, 'type_contact_internal'
-                );
+        }
+        //echo 'contact '.$contact.', type '.$contactType;
+        $contactId = str_replace(
+            ')', '', substr($contact, strrpos($contact, '(') + 1)
+        );
+        if ($contactType == 'internal') {
+            if ($catId == 'incoming') {
+                $queryExtFields .= 'exp_user_id,';
+                $queryExtValues .= "'" . $db->protect_string_db($contactId)
+                                . "',";
+            } else if ($catId == 'outgoing' || $catId == 'internal') {
+                $queryExtFields .= 'dest_user_id,';
+                $queryExtValues .= "'" . $db->protect_string_db($contactId)
+                                . "',";
             }
-            //echo 'contact '.$contact.', type '.$contactType;
-            $contactId = str_replace(
-                ')', '', substr($contact, strrpos($contact, '(') + 1)
+        } else if ($contactType == 'external') {
+            if ($catId == 'incoming') {
+                $queryExtFields .= 'exp_contact_id,';
+                $queryExtValues .= $contactId . ",";
+            } else if ($catId == 'outgoing' || $catId == 'internal') {
+                $queryExtFields .= 'dest_contact_id,';
+                $queryExtValues .= $contactId . ",";
+            }
+        }
+    }
+    if ($core->is_module_loaded('folder')) {
+        $market = get_value_fields($formValues, 'market');
+        $folderId = '';
+        if (! empty($market)) {
+            $folderId = str_replace(
+                ')', '', substr($market, strrpos($market, '(') + 1)
             );
-            if ($contactType == 'internal') {
-                if ($catId == 'incoming') {
-                    $queryExtFields .= 'exp_user_id,';
-                    $queryExtValues .= "'" . $db->protect_string_db($contactId)
-                                    . "',";
-                } else if ($catId == 'outgoing' || $catId == 'internal') {
-                    $queryExtFields .= 'dest_user_id,';
-                    $queryExtValues .= "'" . $db->protect_string_db($contactId)
-                                    . "',";
-                }
-            } else if ($contactType == 'external') {
-                if ($catId == 'incoming') {
-                    $queryExtFields .= 'exp_contact_id,';
-                    $queryExtValues .= $contactId . ",";
-                } else if ($catId == 'outgoing' || $catId == 'internal') {
-                    $queryExtFields .= 'dest_contact_id,';
-                    $queryExtValues .= $contactId . ",";
-                }
-            }
+        } else {
+            $project = get_value_fields($formValues, 'project');
+            $folderId = str_replace(
+                ')', '', substr($project, strrpos($project, '(') + 1)
+            );
         }
-        if ($core->is_module_loaded('folder')) {
-            $market = get_value_fields($formValues, 'market');
-            $folderId = '';
-            if (! empty($market)) {
-                $folderId = str_replace(
-                    ')', '', substr($market, strrpos($market, '(') + 1)
-                );
-            } else {
-                $project = get_value_fields($formValues, 'project');
-                $folderId = str_replace(
-                    ')', '', substr($project, strrpos($project, '(') + 1)
-                );
-            }
-            if (! empty($folderId)) {
-                array_push(
-                    $_SESSION['data'],
-                    array(
-                        'column' => 'folders_system_id',
-                        'value' => $folderId,
-                        'type' => 'integer',
-                    )
-                );
-            }
-        }
-
-        if ($core->is_module_loaded('entities')) {
-            // Diffusion list
-            $loadListDiff = false;
-            if (isset($_ENV['categories'][$catId]['other_cases']['diff_list'])) {
-                if (! empty($_SESSION['indexing']['diff_list']['dest']['user_id'])
-                    && isset($_SESSION['indexing']['diff_list']['dest']['user_id'])
-                ) {
-                    array_push(
-                        $_SESSION['data'],
-                        array(
-                            'column' => 'dest_user',
-                            'value' => $db->protect_string_db(
-                                $_SESSION['indexing']['diff_list']['dest']['user_id']
-                             ),
-                             'type' => 'string'
-                        )
-                    );
-                }
-                $loadListDiff = true;
-            }
-        }
-
-        if ($core->is_module_loaded('physical_archive')) {
-            // Arbox_id + Arbatch_id
-            $boxId = get_value_fields($formValues, 'arbox_id');
+        if (! empty($folderId)) {
             array_push(
                 $_SESSION['data'],
                 array(
-                    'column' => 'arbox_id',
-                    'value' => $boxId,
+                    'column' => 'folders_system_id',
+                    'value' => $folderId,
                     'type' => 'integer',
                 )
-            );
-            $physicalArchive = new physical_archive();
-            $paReturnValue = $physicalArchive->load_box_db(
-                $boxId, $catId, $_SESSION['user']['UserId']
-            );
-            array_push(
-                $_SESSION['data'],
-                array(
-                    'column' => 'arbatch_id',
-                    'value' => $paReturnValue,
-                    'type' => 'integer',
-                )
-            );
-        }
-        //print_r($_SESSION['data']);
-        $resId = $resource->load_into_db(
-            $table, $_SESSION['indexing']['destination_dir'],
-            $_SESSION['indexing']['file_destination_name'],
-            $_SESSION['indexing']['path_template'],
-            $_SESSION['indexing']['docserver_id'], $_SESSION['data'],
-            $_SESSION['config']['databasetype']
-        );
-        //echo 'load '.$resId. " ";
-        if ($resId <> false) {
-            //Create chrono number
-            //######
-            $cBoxId = get_value_fields($formValues, 'arbox_id');
-            $cTypeId = get_value_fields($formValues, 'type_id');
-            $cEntity = get_value_fields($formValues, 'destination');
-
-            $cChronoOut = get_value_fields($formValues, 'chrono_number');
-            $chronoX = new chrono();
-            $myVars = array(
-                'entity_id' => $cEntity,
-                'arbox_id' => $cBoxId,
-                'type_id' => $cTypeId,
-                'category_id' => $catId,
-            );
-            $myForm = array(
-                'chrono_out' => $cChronoOut,
-            );
-            $myChrono = $chronoX->generate_chrono($catId, $myVars, $myForm);
-
-            $queryExtFields .= 'alt_identifier,';
-            $queryExtValues .= "'" . $db->protect_string_db($myChrono) . "',";
-            //######
-            //echo $resId. " ";
-            $queryExtFields = preg_replace('/,$/', ',res_id)', $queryExtFields);
-            $queryExtValues = preg_replace(
-                '/,$/', ',' . $resId . ')', $queryExtValues
-            );
-            //echo $resId. " ";
-            $queryExt = " insert into " . $tableExt . " " . $queryExtFields
-                       . ' values ' . $queryExtValues ;
-            //echo $queryExt;
-            $db->connect();
-            $db->query($queryExt);
-            if ($core->is_module_loaded('folder') && ! empty($folderId)
-                && $_SESSION['history']['folderup']
-            ) {
-                //	echo 'folder '.$resId. " ";
-                $hist = new history();
-                $hist->add(
-                    $_SESSION['tablename']['fold_folders'], $folderId, "UP", 'folderup',
-                    _DOC_NUM . $resId . _ADDED_TO_FOLDER,
-                    $_SESSION['config']['databasetype'], 'apps'
-                );
-            }
-            //$db->show();
-            if ($core->is_module_loaded('entities')) {
-                //	echo 'entities '.$resId. " ";
-                if ($loadListDiff) {
-                    require_once 'modules' . DIRECTORY_SEPARATOR . 'entities'
-                        . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
-                        . 'class_manage_listdiff.php';
-                    $diffList = new diffusion_list();
-                    $params = array(
-                        'mode' => 'listinstance',
-                        'table' => $_SESSION['tablename']['ent_listinstance'],
-                        'coll_id' => $collId,
-                        'res_id' => $resId,
-                        'user_id' => $_SESSION['user']['UserId'],
-                    );
-                    $diffList->load_list_db(
-                        $_SESSION['indexing']['diff_list'], $params
-                    );
-                }
-                //	echo 'entities '.$resId. " ";
-            }
-        } else {
-            $_SESSION['action_error'] = _ERROR_RES_ID;
-            return false;
-        }
-
-        //$_SESSION['indexing'] = array();
-        unset($_SESSION['upfile']);
-        unset($_SESSION['data']);
-        $_SESSION['action_error'] = _NEW_DOC_ADDED;
-        $_SESSION['indexation'] = true;
-        return array(
-            'result' => $resId . '#',
-            'history_msg' => '',
-            'page_result' => $_SESSION['config']['businessappurl']
-                             . 'index.php?page=details&dir=indexing_searching'
-                             . '&coll_id=' . $collId . '&id=' . $resId
-        );
-    } else {
-        $title = get_value_fields($formValues, 'attach_title');
-        $idDoc = get_value_fields($formValues, 'res_id');
-
-        array_push(
-            $_SESSION['data'],
-            array(
-                'column' => 'title',
-                'value' => $db->protect_string_db($title),
-                'type' => 'string',
-            )
-        );
-        array_push(
-            $_SESSION['data'],
-            array(
-                'column' => 'res_id_master',
-                'value' => $idDoc,
-                'type' => 'integer',
-            )
-        );
-        array_push(
-            $_SESSION['data'],
-            array(
-                'column' => 'coll_id',
-                'value' => $db->protect_string_db($collId),
-                'type' => 'string',
-            )
-        );
-
-        $resId = $resource->load_into_db(
-            $_SESSION['tablename']['attach_res_attachments'],
-            $_SESSION['indexing']['destination_dir'],
-            $_SESSION['indexing']['file_destination_name'],
-            $_SESSION['indexing']['path_template'],
-            $_SESSION['indexing']['docserver_id'], $_SESSION['data'],
-            $_SESSION['config']['databasetype']
-        );
-
-        if ($resId == false) {
-            $_SESSION['action_error'] = _ERROR_RES_ID;
-            return false;
-        } else {
-            unset($_SESSION['upfile']);
-            unset($_SESSION['data']);
-            $_SESSION['action_error'] = _NEW_ATTACH_ADDED;
-            $_SESSION['indexation'] = true;
-            $msg = '';
-            if ($_SESSION['history']['attachadd'] == "true") {
-                $msg = ucfirst(_DOC_NUM) . $resId . ' ' . _ATTACH_TO_DOC_NUM
-                     . $idDoc;
-            }
-            return array(
-                'result' => $idDoc . '#',
-                'history_msg' => $msg,
-                'page_result' => $_SESSION['config']['businessappurl']
-                                 . 'index.php?page=details&dir='
-                                 . 'indexing_searching&coll_id=' . $collId
-                                 . '&id=' . $idDoc,
-                'table_dest' => $_SESSION['tablename']['attach_res_attachments']
             );
         }
     }
+
+    if ($core->is_module_loaded('entities')) {
+        // Diffusion list
+        $loadListDiff = false;
+        if (isset($_ENV['categories'][$catId]['other_cases']['diff_list'])) {
+            if (! empty($_SESSION['indexing']['diff_list']['dest']['user_id'])
+                && isset($_SESSION['indexing']['diff_list']['dest']['user_id'])
+            ) {
+                array_push(
+                    $_SESSION['data'],
+                    array(
+                        'column' => 'dest_user',
+                        'value' => $db->protect_string_db(
+                            $_SESSION['indexing']['diff_list']['dest']['user_id']
+                         ),
+                         'type' => 'string'
+                    )
+                );
+            }
+            $loadListDiff = true;
+        }
+    }
+
+    if ($core->is_module_loaded('physical_archive')) {
+        // Arbox_id + Arbatch_id
+        $boxId = get_value_fields($formValues, 'arbox_id');
+        array_push(
+            $_SESSION['data'],
+            array(
+                'column' => 'arbox_id',
+                'value' => $boxId,
+                'type' => 'integer',
+            )
+        );
+        $physicalArchive = new physical_archive();
+        $paReturnValue = $physicalArchive->load_box_db(
+            $boxId, $catId, $_SESSION['user']['UserId']
+        );
+        array_push(
+            $_SESSION['data'],
+            array(
+                'column' => 'arbatch_id',
+                'value' => $paReturnValue,
+                'type' => 'integer',
+            )
+        );
+    }
+    //print_r($_SESSION['data']);
+    $resId = $resource->load_into_db(
+        $table, $_SESSION['indexing']['destination_dir'],
+        $_SESSION['indexing']['file_destination_name'],
+        $_SESSION['indexing']['path_template'],
+        $_SESSION['indexing']['docserver_id'], $_SESSION['data'],
+        $_SESSION['config']['databasetype']
+    );
+    //echo 'load '.$resId. " ";
+    if ($resId <> false) {
+        //Create chrono number
+        //######
+        $cBoxId = get_value_fields($formValues, 'arbox_id');
+        $cTypeId = get_value_fields($formValues, 'type_id');
+        $cEntity = get_value_fields($formValues, 'destination');
+
+        $cChronoOut = get_value_fields($formValues, 'chrono_number');
+        $chronoX = new chrono();
+        $myVars = array(
+            'entity_id' => $cEntity,
+            'arbox_id' => $cBoxId,
+            'type_id' => $cTypeId,
+            'category_id' => $catId,
+        );
+        $myForm = array(
+            'chrono_out' => $cChronoOut,
+        );
+        $myChrono = $chronoX->generate_chrono($catId, $myVars, $myForm);
+
+        $queryExtFields .= 'alt_identifier,';
+        $queryExtValues .= "'" . $db->protect_string_db($myChrono) . "',";
+        //######
+        //echo $resId. " ";
+        $queryExtFields = preg_replace('/,$/', ',res_id)', $queryExtFields);
+        $queryExtValues = preg_replace(
+            '/,$/', ',' . $resId . ')', $queryExtValues
+        );
+        //echo $resId. " ";
+        $queryExt = " insert into " . $tableExt . " " . $queryExtFields
+                   . ' values ' . $queryExtValues ;
+        //echo $queryExt;
+        $db->connect();
+        $db->query($queryExt);
+        if ($core->is_module_loaded('folder') && ! empty($folderId)
+            && $_SESSION['history']['folderup']
+        ) {
+            //  echo 'folder '.$resId. " ";
+            $hist = new history();
+            $hist->add(
+                $_SESSION['tablename']['fold_folders'], $folderId, "UP", 'folderup',
+                _DOC_NUM . $resId . _ADDED_TO_FOLDER,
+                $_SESSION['config']['databasetype'], 'apps'
+            );
+        }
+        //$db->show();
+        if ($core->is_module_loaded('entities')) {
+            //  echo 'entities '.$resId. " ";
+            if ($loadListDiff) {
+                require_once 'modules' . DIRECTORY_SEPARATOR . 'entities'
+                    . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
+                    . 'class_manage_listdiff.php';
+                $diffList = new diffusion_list();
+                $params = array(
+                    'mode' => 'listinstance',
+                    'table' => $_SESSION['tablename']['ent_listinstance'],
+                    'coll_id' => $collId,
+                    'res_id' => $resId,
+                    'user_id' => $_SESSION['user']['UserId'],
+                );
+                $diffList->load_list_db(
+                    $_SESSION['indexing']['diff_list'], $params
+                );
+            }
+            //  echo 'entities '.$resId. " ";
+        }
+    } else {
+        $_SESSION['action_error'] = _ERROR_RES_ID;
+        return false;
+    }
+
+    if ($attach) {
+        $idDoc = get_value_fields($formValues, 'res_id');
+        $queryLink = "INSERT INTO res_linked (res_parent, res_child, coll_id) VALUES('" . $idDoc . "', '" . $resId . "', '" . $_SESSION['collection_id_choice'] . "')";
+
+        $db->connect();
+        $db->query($queryLink);
+
+        $hist2 = new history();
+        $hist2->add($table,
+           $resId,
+           "ADD",
+           'linkadd',
+           _LINKED_TO . $idDoc,
+           $_SESSION['config']['databasetype'],
+           'apps'
+        );
+
+        $hist3 = new history();
+        $hist3->add($table,
+            $idDoc,
+           "UP",
+           'linkup',
+           '(doc. ' . $resId . ')' . _NOW_LINK_WITH_THIS_ONE,
+           $_SESSION['config']['databasetype'],
+           'apps'
+        );
+
+    }
+
+    //$_SESSION['indexing'] = array();
+    unset($_SESSION['upfile']);
+    unset($_SESSION['data']);
+    $_SESSION['action_error'] = _NEW_DOC_ADDED;
+    $_SESSION['indexation'] = true;
+    return array(
+        'result' => $resId . '#',
+        'history_msg' => '',
+        'page_result' => $_SESSION['config']['businessappurl']
+                         . 'index.php?page=details&dir=indexing_searching'
+                         . '&coll_id=' . $collId . '&id=' . $resId
+    );
+
 }

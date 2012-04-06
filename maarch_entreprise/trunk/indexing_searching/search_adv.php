@@ -432,7 +432,7 @@ if(isset($_REQUEST['nodetails']))
 </table>
 <table align="center" border="0" width="100%">
 <?php
-            if($core_tools->is_module_loaded("basket") == true) { ?>
+            if($core_tools->is_module_loaded("basket") == true && $_REQUEST['mode'] != 'popup') { ?>
              <tr>
                 <td colspan="2" ><h2><?php echo _SEARCH_SCOPE; ?></h2></td>
             </tr>
@@ -466,7 +466,7 @@ if(isset($_REQUEST['nodetails']))
             </tr>
             <tr><td colspan="2"><hr/></td></tr>
             <?php
-            }    
+            }
             if($core_tools->is_module_loaded("cases") == true)
             { ?>
              <tr>

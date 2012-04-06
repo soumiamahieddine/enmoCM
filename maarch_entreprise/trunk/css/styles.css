@@ -3591,10 +3591,28 @@ a.legend hr
 }
 #myTree
 {
-	/*width: 520px;*/
+    /*width: 520px;*/
 }
 #docView
 {
-    width: 460px;	
+    width: 460px;
+}
+.linkDiv {
+    padding: 10px;
+    padding-left: 20px;
+    margin: 5px;
+    border-bottom: 1px solid rgba(28, 153, 197, 1);
+    border-left: 1px solid rgba(28, 153, 197, 1);
+    border-right: 1px solid rgba(28, 153, 197, 1);
+    background-color: rgba(200, 224, 255, 0.1);
+}
+.linkDiv:hover {
+    background-color: rgba(200, 224, 255, 0.6);
+    border-left: 5px solid rgba(28, 153, 197, 1);
+}
+
+.linkDiv .barreLinks {
+    background-color: rgba(0, 0, 0, 0.1);
+    width: 2px;
 }
 
