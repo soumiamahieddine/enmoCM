@@ -209,6 +209,7 @@ elseif($_SESSION['service_tag'] == 'load_basket_session')
         {
             
 			$query = "SELECT status_id, label_status FROM " . GROUPBASKET_STATUS . " left join " . $_SESSION['tablename']['status'] 
+                . " on status_id = id "
 				. " where basket_id= '" . $this->protect_string_db(trim($_SESSION['m_admin']['basket']['basketId']))
 				. "' and group_id = '" . $this->protect_string_db(trim($_SESSION['m_admin']['basket']['groups'][$i]['GROUP_ID']))
 				. "' and action_id = " . $_SESSION['m_admin']['basket']['groups'][$i]['ACTIONS'][$j]['ID_ACTION'];
