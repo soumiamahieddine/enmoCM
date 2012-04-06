@@ -11,7 +11,7 @@ CREATE TABLE notes
   id bigint NOT NULL DEFAULT nextval('notes_seq'::regclass),
   identifier bigint NOT NULL,
   tablename character varying(50),
-  user_id character varying(50) NOT NULL,
+  user_id character varying(128) NOT NULL,
   date_note date NOT NULL,
   note_text text NOT NULL,
   coll_id character varying(50),
