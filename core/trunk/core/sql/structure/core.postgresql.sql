@@ -30,7 +30,7 @@ CREATE TABLE actions
   action_page character varying(255),
   history character(1) NOT NULL DEFAULT 'N'::bpchar,
   origin character varying(255) NOT NULL DEFAULT 'apps'::bpchar,
-  create_id  character(1) NOT NULL DEFAULT 'N'::bpchar,
+  create_id character(1) NOT NULL DEFAULT 'N'::bpchar,
   CONSTRAINT actions_pkey PRIMARY KEY (id)
 )
 WITH (OIDS=FALSE);
@@ -144,7 +144,7 @@ CREATE TABLE history
   table_name character varying(32) DEFAULT NULL::character varying,
   record_id character varying(255) DEFAULT NULL::character varying,
   event_type character varying(32) NOT NULL,
-  user_id character varying(50) NOT NULL,
+  user_id character varying(128) NOT NULL,
   event_date timestamp without time zone NOT NULL,
   info text,
   id_module character varying(50) NOT NULL DEFAULT 'admin'::character varying,
@@ -176,8 +176,8 @@ WITH (OIDS=FALSE);
 
 CREATE TABLE parameters
 (
-  id character varying(255) NOT NULL,
-  param_value_string character varying(255) DEFAULT NULL::character varying,
+  id character varying(50) NOT NULL,
+  param_value_string character varying(50) DEFAULT NULL::character varying,
   param_value_int integer,
   param_value_date timestamp without time zone,
   CONSTRAINT parameters_pkey PRIMARY KEY (id)
@@ -244,7 +244,7 @@ WITH (OIDS=FALSE);
 
 CREATE TABLE usergroup_content
 (
-  user_id character varying(32) NOT NULL,
+  user_id character varying(128) NOT NULL,
   group_id character varying(32) NOT NULL,
   primary_group character(1) NOT NULL,
   "role" character varying(255) DEFAULT NULL::character varying,
@@ -276,7 +276,7 @@ WITH (OIDS=FALSE);
 
 CREATE TABLE users
 (
-  user_id character varying(32) NOT NULL,
+  user_id character varying(128) NOT NULL,
   "password" character varying(255) DEFAULT NULL::character varying,
   firstname character varying(255) DEFAULT NULL::character varying,
   lastname character varying(255) DEFAULT NULL::character varying,

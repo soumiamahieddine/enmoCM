@@ -1,7 +1,5 @@
 ﻿
-
 -- core/sql/structure/core.postgresql.sql
-
 
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = off;
@@ -148,7 +146,7 @@ CREATE TABLE history
   table_name character varying(32) DEFAULT NULL::character varying,
   record_id character varying(255) DEFAULT NULL::character varying,
   event_type character varying(32) NOT NULL,
-  user_id character varying(50) NOT NULL,
+  user_id character varying(128) NOT NULL,
   event_date timestamp without time zone NOT NULL,
   info text,
   id_module character varying(50) NOT NULL DEFAULT 'admin'::character varying,
@@ -212,7 +210,7 @@ CREATE SEQUENCE security_security_id_seq
   INCREMENT 1
   MINVALUE 1
   MAXVALUE 9223372036854775807
-  START 20
+  START 100
   CACHE 1;
 
 CREATE TABLE "security"
@@ -248,7 +246,7 @@ WITH (OIDS=FALSE);
 
 CREATE TABLE usergroup_content
 (
-  user_id character varying(32) NOT NULL,
+  user_id character varying(128) NOT NULL,
   group_id character varying(32) NOT NULL,
   primary_group character(1) NOT NULL,
   "role" character varying(255) DEFAULT NULL::character varying,
@@ -280,7 +278,7 @@ WITH (OIDS=FALSE);
 
 CREATE TABLE users
 (
-  user_id character varying(32) NOT NULL,
+  user_id character varying(128) NOT NULL,
   "password" character varying(255) DEFAULT NULL::character varying,
   firstname character varying(255) DEFAULT NULL::character varying,
   lastname character varying(255) DEFAULT NULL::character varying,
@@ -390,7 +388,7 @@ CREATE TABLE  ar_deposits (
   flg_closed smallint NOT NULL,
   closing_date timestamp without time zone NOT NULL,
   creation_date timestamp without time zone NOT NULL,
-  user_id character varying(32)  NOT NULL,
+  user_id character varying(128)  NOT NULL,
   CONSTRAINT ar_deposits_pkey PRIMARY KEY (deposit_id)
 )
 WITH (OIDS=FALSE);
@@ -462,7 +460,7 @@ WITH (OIDS=FALSE);
  contributor character varying( 255  )    default NULL ,
  type_id integer  default  NULL ,
  format character varying( 50  )   default NULL ,
- typist character varying( 50  )   default NULL ,
+ typist character varying( 128  )   default NULL ,
  creation_date timestamp without time zone NOT  NULL ,
  author character varying( 255  )    default NULL ,
  author_name text ,
@@ -540,10 +538,10 @@ WITH (OIDS=FALSE);
  custom_t15 character varying( 255  )    default NULL ,
  tablename character varying( 32  )   default  'res_apa',
  initiator character varying( 50  )    default NULL ,
- dest_user character varying( 50  )    default NULL ,
+ dest_user character varying( 128  )    default NULL ,
  video_batch integer  default NULL ,
  video_time timestamp NULL  default NULL ,
- video_user character varying( 50  )    default NULL ,
+ video_user character varying( 128  )    default NULL ,
  video_date timestamp without time zone,
  CONSTRAINT res_apa_pkey PRIMARY KEY (res_id)
 )
@@ -604,7 +602,7 @@ WITH (OIDS=FALSE);
 CREATE TABLE alert_users
 (
   alert_id integer NOT NULL DEFAULT nextval('alerts_users_alert_id_seq'::regclass),
-  user_id character varying(255) NOT NULL,
+  user_id character varying(128) NOT NULL,
   CONSTRAINT alerts_users_pkey PRIMARY KEY (alert_id, user_id)
 )
 WITH (OIDS=FALSE);
@@ -640,7 +638,7 @@ CREATE TABLE res_attachments
   contributor character varying(255) DEFAULT NULL::character varying,
   type_id bigint ,
   format character varying(50) NOT NULL,
-  typist character varying(50) NOT NULL,
+  typist character varying(128) NOT NULL,
   creation_date timestamp without time zone NOT NULL,
   fulltext_result character varying(10) DEFAULT NULL::character varying,
   ocr_result character varying(10) DEFAULT NULL::character varying,
@@ -680,7 +678,7 @@ CREATE TABLE res_attachments
   is_ingoing character(1) DEFAULT NULL::bpchar,
   priority smallint,
   initiator character varying(50) DEFAULT NULL::character varying,
-  dest_user character varying(50) DEFAULT NULL::character varying,
+  dest_user character varying(128) DEFAULT NULL::character varying,
   coll_id character varying(32) NOT NULL,
   res_id_master bigint,
   CONSTRAINT res_attachments_pkey PRIMARY KEY (res_id)
@@ -786,8 +784,8 @@ CREATE SEQUENCE user_abs_seq
 CREATE TABLE user_abs
 (
   system_id bigint NOT NULL DEFAULT nextval('user_abs_seq'::regclass),
-  user_abs character varying(32) NOT NULL,
-  new_user character varying(32) NOT NULL,
+  user_abs character varying(128) NOT NULL,
+  new_user character varying(128) NOT NULL,
   basket_id character varying(255) NOT NULL,
   basket_owner character varying(255),
   is_virtual character(1) NOT NULL DEFAULT 'N'::bpchar,
@@ -814,7 +812,7 @@ CREATE TABLE cases
   case_closing_date timestamp without time zone,
   case_last_update_date timestamp without time zone NOT NULL,
   case_creation_date timestamp without time zone NOT NULL,
-  case_typist character varying(32) NOT NULL DEFAULT ''::bpchar,
+  case_typist character varying(128) NOT NULL DEFAULT ''::bpchar,
   case_parent integer,
   case_custom_t1 character varying(255),
   case_custom_t2 character varying(255),
@@ -861,10 +859,10 @@ CREATE TABLE listinstance
   res_id bigint NOT NULL,
   listinstance_type character varying(50) DEFAULT 'DOC'::character varying,
   "sequence" bigint NOT NULL,
-  item_id character varying(50) NOT NULL,
+  item_id character varying(128) NOT NULL,
   item_type character varying(255) NOT NULL,
   item_mode character varying(50) NOT NULL,
-  added_by_user character varying(50) NOT NULL,
+  added_by_user character varying(128) NOT NULL,
   added_by_entity character varying(50) NOT NULL,
   viewed bigint
 )
@@ -876,7 +874,7 @@ CREATE TABLE listmodels
   object_id character varying(50) NOT NULL,
   object_type character varying(255) NOT NULL,
   "sequence" bigint NOT NULL,
-  item_id character varying(50) NOT NULL,
+  item_id character varying(128) NOT NULL,
   item_type character varying(255) NOT NULL,
   item_mode character varying(50) NOT NULL,
   listmodel_type character varying(50) DEFAULT 'DOC'::character varying
@@ -885,7 +883,7 @@ WITH (OIDS=FALSE);
 
 CREATE TABLE users_entities
 (
-  user_id character varying(32) NOT NULL,
+  user_id character varying(128) NOT NULL,
   entity_id character varying(32) NOT NULL,
   user_role character varying(255),
   primary_entity character(1) NOT NULL DEFAULT 'N'::bpchar,
@@ -920,7 +918,7 @@ CREATE SEQUENCE folders_system_id_seq
   INCREMENT 1
   MINVALUE 1
   MAXVALUE 9223372036854775807
-  START 40
+  START 100
   CACHE 1;
 
 CREATE TABLE folders
@@ -939,7 +937,7 @@ CREATE TABLE folders
   creation_date timestamp without time zone NOT NULL,
   folder_out_id bigint,
   video_status character varying(10) DEFAULT NULL,
-  video_user character varying(32) DEFAULT NULL,
+  video_user character varying(128) DEFAULT NULL,
   is_frozen character(1) NOT NULL DEFAULT 'N',
   custom_t1 character varying(255) DEFAULT NULL::character varying,
   custom_n1 bigint,
@@ -1006,7 +1004,7 @@ CREATE SEQUENCE foldertype_id_id_seq
   INCREMENT 1
   MINVALUE 1
   MAXVALUE 9223372036854775807
-  START 5
+  START 100
   CACHE 1;
 
 CREATE TABLE foldertypes
@@ -1168,7 +1166,7 @@ CREATE TABLE notes
   id bigint NOT NULL DEFAULT nextval('notes_seq'::regclass),
   identifier bigint NOT NULL,
   tablename character varying(50),
-  user_id character varying(50) NOT NULL,
+  user_id character varying(128) NOT NULL,
   date_note date NOT NULL,
   note_text text NOT NULL,
   coll_id character varying(50),
@@ -1193,7 +1191,7 @@ CREATE TABLE notif_event_stack
   ta_sid bigint NOT NULL,
   table_name character varying(50) NOT NULL,
   record_id character varying(50) NOT NULL,
-  user_id character varying(255) NOT NULL,
+  user_id character varying(128) NOT NULL,
   event_info character varying(255) NOT NULL,
   event_date timestamp without time zone NOT NULL,
   exec_date timestamp without time zone,
@@ -1388,14 +1386,14 @@ CREATE SEQUENCE templates_seq
   INCREMENT 1
   MINVALUE 1
   MAXVALUE 9223372036854775807
-  START 20
+  START 100
   CACHE 1;
 
 CREATE SEQUENCE templates_association_seq
   INCREMENT 1
   MINVALUE 1
   MAXVALUE 9223372036854775807
-  START 55
+  START 100
   CACHE 1;
 
 CREATE TABLE templates
@@ -1466,7 +1464,7 @@ email character varying( 255 )  ,
 phone character varying( 20 )  ,
 other_data text  ,
 is_corporate_person character( 1 ) NOT NULL DEFAULT 'Y'::bpchar,
-user_id character varying( 32 )  ,
+user_id character varying( 128 )  ,
 title character varying( 255 ) ,
 enabled character( 1 ) NOT NULL DEFAULT 'Y'::bpchar,
 CONSTRAINT contacts_pkey PRIMARY KEY  (contact_id)
@@ -1482,10 +1480,10 @@ CREATE SEQUENCE query_id_seq
 
 CREATE TABLE saved_queries (
   query_id bigint NOT NULL DEFAULT nextval('query_id_seq'::regclass),
-  user_id character varying(32)  default NULL,
+  user_id character varying(128)  default NULL,
   query_name character varying(255) NOT NULL,
   creation_date timestamp without time zone NOT NULL,
-  created_by character varying(32)  NOT NULL,
+  created_by character varying(128)  NOT NULL,
   query_type character varying(50) NOT NULL,
   query_txt text  NOT NULL,
   last_modification_date timestamp without time zone,
@@ -1570,7 +1568,7 @@ CREATE TABLE res_x
   contributor character varying(255) DEFAULT NULL::character varying,
   type_id bigint NOT NULL,
   format character varying(50) NOT NULL,
-  typist character varying(50) NOT NULL,
+  typist character varying(128) NOT NULL,
   creation_date timestamp without time zone NOT NULL,
   fulltext_result character varying(10) DEFAULT NULL,
   ocr_result character varying(10) DEFAULT NULL,
@@ -1653,10 +1651,10 @@ CREATE TABLE res_x
   custom_t15 character varying(255) DEFAULT NULL::character varying,
   tablename character varying(32) DEFAULT 'res_x'::character varying,
   initiator character varying(50) DEFAULT NULL::character varying,
-  dest_user character varying(50) DEFAULT NULL::character varying,
+  dest_user character varying(128) DEFAULT NULL::character varying,
   video_batch integer DEFAULT NULL,
   video_time integer DEFAULT NULL,
-  video_user character varying(50)  DEFAULT NULL,
+  video_user character varying(128)  DEFAULT NULL,
   video_date timestamp without time zone,
   esign_proof_id character varying(255),
   esign_proof_content text,
@@ -1696,7 +1694,7 @@ CREATE TABLE res_letterbox
   contributor character varying(255) DEFAULT NULL::character varying,
   type_id bigint NOT NULL,
   format character varying(50) NOT NULL,
-  typist character varying(50) NOT NULL,
+  typist character varying(128) NOT NULL,
   creation_date timestamp without time zone NOT NULL,
   fulltext_result character varying(10) DEFAULT NULL,
   ocr_result character varying(10) DEFAULT NULL,
@@ -1779,10 +1777,10 @@ CREATE TABLE res_letterbox
   custom_t15 character varying(255) DEFAULT NULL::character varying,
   tablename character varying(32) DEFAULT 'res_letterbox'::character varying,
   initiator character varying(50) DEFAULT NULL::character varying,
-  dest_user character varying(50) DEFAULT NULL::character varying,
+  dest_user character varying(128) DEFAULT NULL::character varying,
   video_batch integer DEFAULT NULL,
   video_time integer DEFAULT NULL,
-  video_user character varying(50)  DEFAULT NULL,
+  video_user character varying(128)  DEFAULT NULL,
   video_date timestamp without time zone,
   esign_proof_id character varying(255),
   esign_proof_content text,
@@ -1815,9 +1813,9 @@ CREATE TABLE mlb_coll_ext (
   res_id bigint NOT NULL,
   category_id character varying(50)  NOT NULL,
   exp_contact_id integer default NULL,
-  exp_user_id character varying(52) default NULL,
+  exp_user_id character varying(128) default NULL,
   dest_contact_id integer default NULL,
-  dest_user_id character varying(52) default NULL,
+  dest_user_id character varying(128) default NULL,
   nature_id character varying(50),
   alt_identifier character varying(255)  default NULL,
   admission_date timestamp without time zone,
@@ -1832,6 +1830,235 @@ CREATE TABLE mlb_coll_ext (
   flag_alarm1 char(1)  default 'N'::character varying ,
   flag_alarm2 char(1) default 'N'::character varying
 )WITH (OIDS=FALSE);
+
+CREATE SEQUENCE res_id_version_letterbox_seq
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 100
+  CACHE 1;
+
+CREATE TABLE res_version_letterbox
+(
+  res_id bigint NOT NULL DEFAULT nextval('res_id_version_letterbox_seq'::regclass),
+  title character varying(255) DEFAULT NULL::character varying,
+  subject text,
+  description text,
+  publisher character varying(255) DEFAULT NULL::character varying,
+  contributor character varying(255) DEFAULT NULL::character varying,
+  type_id bigint NOT NULL,
+  format character varying(50) NOT NULL,
+  typist character varying(128) NOT NULL,
+  creation_date timestamp without time zone NOT NULL,
+  fulltext_result character varying(10) DEFAULT NULL::character varying,
+  ocr_result character varying(10) DEFAULT NULL::character varying,
+  converter_result character varying(10) DEFAULT NULL::character varying,
+  author character varying(255) DEFAULT NULL::character varying,
+  author_name text,
+  identifier character varying(255) DEFAULT NULL::character varying,
+  source character varying(255) DEFAULT NULL::character varying,
+  doc_language character varying(50) DEFAULT NULL::character varying,
+  relation bigint,
+  coverage character varying(255) DEFAULT NULL::character varying,
+  doc_date timestamp without time zone,
+  docserver_id character varying(32) NOT NULL,
+  folders_system_id bigint,
+  arbox_id character varying(32) DEFAULT NULL::character varying,
+  path character varying(255) DEFAULT NULL::character varying,
+  filename character varying(255) DEFAULT NULL::character varying,
+  offset_doc character varying(255) DEFAULT NULL::character varying,
+  logical_adr character varying(255) DEFAULT NULL::character varying,
+  fingerprint character varying(255) DEFAULT NULL::character varying,
+  filesize bigint,
+  is_paper character(1) DEFAULT NULL::bpchar,
+  page_count integer,
+  scan_date timestamp without time zone,
+  scan_user character varying(50) DEFAULT NULL::character varying,
+  scan_location character varying(255) DEFAULT NULL::character varying,
+  scan_wkstation character varying(255) DEFAULT NULL::character varying,
+  scan_batch character varying(50) DEFAULT NULL::character varying,
+  burn_batch character varying(50) DEFAULT NULL::character varying,
+  scan_postmark character varying(50) DEFAULT NULL::character varying,
+  envelop_id bigint,
+  status character varying(10) NOT NULL,
+  destination character varying(50) DEFAULT NULL::character varying,
+  approver character varying(50) DEFAULT NULL::character varying,
+  validation_date timestamp without time zone,
+  work_batch bigint,
+  origin character varying(50) DEFAULT NULL::character varying,
+  is_ingoing character(1) DEFAULT NULL::bpchar,
+  priority smallint,
+  arbatch_id bigint,
+  policy_id character varying(32),
+  cycle_id character varying(32),
+  is_multi_docservers character(1) NOT NULL DEFAULT 'N'::bpchar,
+  is_frozen character(1) NOT NULL DEFAULT 'N'::bpchar,
+  custom_t1 text,
+  custom_n1 bigint,
+  custom_f1 numeric,
+  custom_d1 timestamp without time zone,
+  custom_t2 character varying(255) DEFAULT NULL::character varying,
+  custom_n2 bigint,
+  custom_f2 numeric,
+  custom_d2 timestamp without time zone,
+  custom_t3 character varying(255) DEFAULT NULL::character varying,
+  custom_n3 bigint,
+  custom_f3 numeric,
+  custom_d3 timestamp without time zone,
+  custom_t4 character varying(255) DEFAULT NULL::character varying,
+  custom_n4 bigint,
+  custom_f4 numeric,
+  custom_d4 timestamp without time zone,
+  custom_t5 character varying(255) DEFAULT NULL::character varying,
+  custom_n5 bigint,
+  custom_f5 numeric,
+  custom_d5 timestamp without time zone,
+  custom_t6 character varying(255) DEFAULT NULL::character varying,
+  custom_d6 timestamp without time zone,
+  custom_t7 character varying(255) DEFAULT NULL::character varying,
+  custom_d7 timestamp without time zone,
+  custom_t8 character varying(255) DEFAULT NULL::character varying,
+  custom_d8 timestamp without time zone,
+  custom_t9 character varying(255) DEFAULT NULL::character varying,
+  custom_d9 timestamp without time zone,
+  custom_t10 character varying(255) DEFAULT NULL::character varying,
+  custom_d10 timestamp without time zone,
+  custom_t11 character varying(255) DEFAULT NULL::character varying,
+  custom_t12 character varying(255) DEFAULT NULL::character varying,
+  custom_t13 character varying(255) DEFAULT NULL::character varying,
+  custom_t14 character varying(255) DEFAULT NULL::character varying,
+  custom_t15 character varying(255) DEFAULT NULL::character varying,
+  tablename character varying(32) DEFAULT 'res_version_letterbox'::character varying,
+  initiator character varying(50) DEFAULT NULL::character varying,
+  dest_user character varying(128) DEFAULT NULL::character varying,
+  video_batch integer,
+  video_time integer,
+  video_user character varying(128) DEFAULT NULL::character varying,
+  video_date timestamp without time zone,
+  cycle_date timestamp without time zone,
+  coll_id character varying(32) NOT NULL,
+  res_id_master bigint,
+  CONSTRAINT res_version_letterbox_pkey PRIMARY KEY (res_id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE res_version_letterbox OWNER TO postgres;
+
+CREATE SEQUENCE res_id_version_x_seq
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 100
+  CACHE 1;
+
+CREATE TABLE res_version_x
+(
+  res_id bigint NOT NULL DEFAULT nextval('res_id_version_x_seq'::regclass),
+  title character varying(255) DEFAULT NULL::character varying,
+  subject text,
+  description text,
+  publisher character varying(255) DEFAULT NULL::character varying,
+  contributor character varying(255) DEFAULT NULL::character varying,
+  type_id bigint NOT NULL,
+  format character varying(50) NOT NULL,
+  typist character varying(128) NOT NULL,
+  creation_date timestamp without time zone NOT NULL,
+  fulltext_result character varying(10) DEFAULT NULL::character varying,
+  ocr_result character varying(10) DEFAULT NULL::character varying,
+  converter_result character varying(10) DEFAULT NULL::character varying,
+  author character varying(255) DEFAULT NULL::character varying,
+  author_name text,
+  identifier character varying(255) DEFAULT NULL::character varying,
+  source character varying(255) DEFAULT NULL::character varying,
+  doc_language character varying(50) DEFAULT NULL::character varying,
+  relation bigint,
+  coverage character varying(255) DEFAULT NULL::character varying,
+  doc_date timestamp without time zone,
+  docserver_id character varying(32) NOT NULL,
+  folders_system_id bigint,
+  arbox_id character varying(32) DEFAULT NULL::character varying,
+  path character varying(255) DEFAULT NULL::character varying,
+  filename character varying(255) DEFAULT NULL::character varying,
+  offset_doc character varying(255) DEFAULT NULL::character varying,
+  logical_adr character varying(255) DEFAULT NULL::character varying,
+  fingerprint character varying(255) DEFAULT NULL::character varying,
+  filesize bigint,
+  is_paper character(1) DEFAULT NULL::bpchar,
+  page_count integer,
+  scan_date timestamp without time zone,
+  scan_user character varying(50) DEFAULT NULL::character varying,
+  scan_location character varying(255) DEFAULT NULL::character varying,
+  scan_wkstation character varying(255) DEFAULT NULL::character varying,
+  scan_batch character varying(50) DEFAULT NULL::character varying,
+  burn_batch character varying(50) DEFAULT NULL::character varying,
+  scan_postmark character varying(50) DEFAULT NULL::character varying,
+  envelop_id bigint,
+  status character varying(10) NOT NULL,
+  destination character varying(50) DEFAULT NULL::character varying,
+  approver character varying(50) DEFAULT NULL::character varying,
+  validation_date timestamp without time zone,
+  work_batch bigint,
+  origin character varying(50) DEFAULT NULL::character varying,
+  is_ingoing character(1) DEFAULT NULL::bpchar,
+  priority smallint,
+  arbatch_id bigint,
+  policy_id character varying(32),
+  cycle_id character varying(32),
+  is_multi_docservers character(1) NOT NULL DEFAULT 'N'::bpchar,
+  is_frozen character(1) NOT NULL DEFAULT 'N'::bpchar,
+  custom_t1 text,
+  custom_n1 bigint,
+  custom_f1 numeric,
+  custom_d1 timestamp without time zone,
+  custom_t2 character varying(255) DEFAULT NULL::character varying,
+  custom_n2 bigint,
+  custom_f2 numeric,
+  custom_d2 timestamp without time zone,
+  custom_t3 character varying(255) DEFAULT NULL::character varying,
+  custom_n3 bigint,
+  custom_f3 numeric,
+  custom_d3 timestamp without time zone,
+  custom_t4 character varying(255) DEFAULT NULL::character varying,
+  custom_n4 bigint,
+  custom_f4 numeric,
+  custom_d4 timestamp without time zone,
+  custom_t5 character varying(255) DEFAULT NULL::character varying,
+  custom_n5 bigint,
+  custom_f5 numeric,
+  custom_d5 timestamp without time zone,
+  custom_t6 character varying(255) DEFAULT NULL::character varying,
+  custom_d6 timestamp without time zone,
+  custom_t7 character varying(255) DEFAULT NULL::character varying,
+  custom_d7 timestamp without time zone,
+  custom_t8 character varying(255) DEFAULT NULL::character varying,
+  custom_d8 timestamp without time zone,
+  custom_t9 character varying(255) DEFAULT NULL::character varying,
+  custom_d9 timestamp without time zone,
+  custom_t10 character varying(255) DEFAULT NULL::character varying,
+  custom_d10 timestamp without time zone,
+  custom_t11 character varying(255) DEFAULT NULL::character varying,
+  custom_t12 character varying(255) DEFAULT NULL::character varying,
+  custom_t13 character varying(255) DEFAULT NULL::character varying,
+  custom_t14 character varying(255) DEFAULT NULL::character varying,
+  custom_t15 character varying(255) DEFAULT NULL::character varying,
+  tablename character varying(32) DEFAULT 'res_version_x'::character varying,
+  initiator character varying(50) DEFAULT NULL::character varying,
+  dest_user character varying(128) DEFAULT NULL::character varying,
+  video_batch integer,
+  video_time integer,
+  video_user character varying(128) DEFAULT NULL::character varying,
+  video_date timestamp without time zone,
+  cycle_date timestamp without time zone,
+  coll_id character varying(32) NOT NULL,
+  res_id_master bigint,
+  CONSTRAINT res_version_x_pkey PRIMARY KEY (res_id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE res_version_letterbox OWNER TO postgres;
+
 
 CREATE TABLE mlb_doctype_ext (
   type_id bigint NOT NULL,
@@ -1958,10 +2185,11 @@ CREATE VIEW res_view_letterbox AS
     WHERE (((r.type_id = d.type_id) AND
     (d.doctypes_first_level_id = dfl.doctypes_first_level_id))
     AND (d.doctypes_second_level_id = dsl.doctypes_second_level_id));
+
+
+
 CREATE OR REPLACE VIEW res_view_apa AS
  select * from res_apa;
-
-
 
 CREATE TABLE doctypes_indexes
 (
