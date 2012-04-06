@@ -1527,6 +1527,32 @@ CREATE TABLE doctypes_second_level
 )
 WITH (OIDS=FALSE);
 
+-- Table: rp_history
+
+CREATE SEQUENCE rp_history_id_seq
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+
+CREATE TABLE rp_history
+(
+  system_id bigint NOT NULL DEFAULT nextval('rp_history_id_seq'::regclass),
+  table_name character varying(32) NOT NULL,
+  rp_cycle bigint NOT NULL,
+  start_res_id bigint NOT NULL,
+  stop_res_id bigint NOT NULL,
+  start_date timestamp without time zone NOT NULL,
+  stop_date timestamp without time zone NOT NULL,
+  res_count bigint NOT NULL,
+  fail_count bigint NOT NULL,
+  CONSTRAINT rp_history_pkey PRIMARY KEY (system_id)
+)
+WITH (
+  OIDS=FALSE
+);
+
 CREATE SEQUENCE res_id_seq
   INCREMENT 1
   MINVALUE 1
