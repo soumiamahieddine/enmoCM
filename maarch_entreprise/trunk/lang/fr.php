@@ -1438,7 +1438,7 @@ if (!defined('_ERROR_PARAMETERS_FUNCTION'))  define('_ERROR_PARAMETERS_FUNCTION'
 if (!defined('_SYNTAX_OK'))  define('_SYNTAX_OK', 'Syntaxe OK');
 
 /************TECHNICAL INFOS******************************/
-if (!defined('_TECHNICAL_INFORMATIONS'))  define('_TECHNICAL_INFORMATIONS', 'Informations techniques');
+if (!defined('_TECHNICAL_INFORMATIONS'))  define('_TECHNICAL_INFORMATIONS', 'Infos techniques');
 if (!defined('_VIEW_TECHNICAL_INFORMATIONS'))  define('_VIEW_TECHNICAL_INFORMATIONS', 'Voir les informations techniques');
 if (!defined('_SOURCE_FILE_PROPERTIES')) define( '_SOURCE_FILE_PROPERTIES', 'Propri&eacute;t&eacute;s du fichier source');
 if (!defined('_FINGERPRINT'))  define('_FINGERPRINT', 'Empreinte num&eacute;rique');
@@ -1690,4 +1690,12 @@ if (!defined('_LINK_DESC_FOR')) {
 
 if (!defined('_LINK_ASC_FOR')) {
     define('_LINK_ASC_FOR', 'Liaisons ascendantes pour le doc n&deg; ');
+}
+
+/******************** Versions ************/
+if (!defined('_VERSIONS')) {
+    define('_VERSIONS', 'Versions');
+}
+if (!defined('_CREATE_NEW_VERSION')) {
+    define('_CREATE_NEW_VERSION', 'Cr&eacute;er une nouvelle version');
 }

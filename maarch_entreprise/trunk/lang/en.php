@@ -213,7 +213,13 @@ if (!defined('_MANAGE_DIPLOMA')) define('_MANAGE_DIPLOMA', 'Manage diplomas');
 if (!defined('_MANAGE_CONTRACT')) define('_MANAGE_CONTRACT', 'Manage contracts types');
 if (!defined('_MANAGE_REL_MODEL')) define('_MANAGE_REL_MODEL', 'Manage reminder template');
 if (!defined('_MANAGE_DOCTYPES')) define('_MANAGE_DOCTYPES', 'Manage document types');
-if (!defined('_MANAGE_DOCTYPES_DESC')) define('_MANAGE_DOCTYPES_DESC', 'Manage document types. Document types are attached to a resource collection. For each type, you can define the descriptors to fill in and whether they are mandatory.');
+if (!defined('_MANAGE_DOCTYPES_DESC')) def/******************** Versions ************/
+if (!defined('_VERSIONS')) {
+    define('_VERSIONS', 'Versions');
+}
+if (!defined('_CREATE_NEW_VERSION')) {
+    define('_CREATE_NEW_VERSION', 'Cr&eacute;er une nouvelle version');
+}ine('_MANAGE_DOCTYPES_DESC', 'Manage document types. Document types are attached to a resource collection. For each type, you can define the descriptors to fill in and whether they are mandatory.');
 if (!defined('_VIEW_HISTORY2')) define('_VIEW_HISTORY2', 'View logs');
 if (!defined('_VIEW_HISTORY_BATCH2')) define('_VIEW_HISTORY_BATCH2', 'View batches logs');
 if (!defined('_INDEX_FILE')) define('_INDEX_FILE', 'Add a document');
@@ -445,7 +451,13 @@ if (!defined('_INFOS')) define('_INFOS', 'Infos');
 if (!defined('_ADMIN_ARCHI')) define('_ADMIN_ARCHI', 'Administration of classification schemes');
 if (!defined('_MANAGE_STRUCTURE')) define('_MANAGE_STRUCTURE', 'Manage files');
 if (!defined('_MANAGE_STRUCTURE_DESC')) define('_MANAGE_STRUCTURE_DESC', 'Manage files. They are the highest element of the hierarchy. If the "Folder" module is enabled, you can attach a file type to a sorting tree.');
-if (!defined('_MANAGE_SUBFOLDER')) define('_MANAGE_SUBFOLDER', 'Manage sub-files');
+if (!defined('_MANAGE_SUBFOLDER')) defi/******************** Versions ************/
+if (!defined('_VERSIONS')) {
+    define('_VERSIONS', 'Versions');
+}
+if (!defined('_CREATE_NEW_VERSION')) {
+    define('_CREATE_NEW_VERSION', 'Cr&eacute;er une nouvelle version');
+}ne('_MANAGE_SUBFOLDER', 'Manage sub-files');
 if (!defined('_MANAGE_SUBFOLDER_DESC')) define('_MANAGE_SUBFOLDER_DESC', 'Manage sub-files in files.');
 if (!defined('_ARCHITECTURE')) define('_ARCHITECTURE', 'classification scheme');
 
@@ -1265,4 +1277,12 @@ if (!defined('_LINK_DESC_FOR')) {
 
 if (!defined('_LINK_ASC_FOR')) {
     define('_LINK_ASC_FOR', 'Ascendents links for the doc n&deg; ');
+}
+
+/******************** Versions ************/
+if (!defined('_VERSIONS')) {
+    define('_VERSIONS', 'Versions');
+}
+if (!defined('_CREATE_NEW_VERSION')) {
+    define('_CREATE_NEW_VERSION', 'Create a new version');
 }
