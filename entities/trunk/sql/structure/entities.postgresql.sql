@@ -25,10 +25,10 @@ CREATE TABLE listinstance
   res_id bigint NOT NULL,
   listinstance_type character varying(50) DEFAULT 'DOC'::character varying,
   "sequence" bigint NOT NULL,
-  item_id character varying(50) NOT NULL,
+  item_id character varying(128) NOT NULL,
   item_type character varying(255) NOT NULL,
   item_mode character varying(50) NOT NULL,
-  added_by_user character varying(50) NOT NULL,
+  added_by_user character varying(128) NOT NULL,
   added_by_entity character varying(50) NOT NULL,
   viewed bigint
 )
@@ -40,7 +40,7 @@ CREATE TABLE listmodels
   object_id character varying(50) NOT NULL,
   object_type character varying(255) NOT NULL,
   "sequence" bigint NOT NULL,
-  item_id character varying(50) NOT NULL,
+  item_id character varying(128) NOT NULL,
   item_type character varying(255) NOT NULL,
   item_mode character varying(50) NOT NULL,
   listmodel_type character varying(50) DEFAULT 'DOC'::character varying
@@ -49,7 +49,7 @@ WITH (OIDS=FALSE);
 
 CREATE TABLE users_entities
 (
-  user_id character varying(32) NOT NULL,
+  user_id character varying(128) NOT NULL,
   entity_id character varying(32) NOT NULL,
   user_role character varying(255),
   primary_entity character(1) NOT NULL DEFAULT 'N'::bpchar,
