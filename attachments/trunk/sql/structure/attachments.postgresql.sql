@@ -16,7 +16,7 @@ CREATE TABLE res_attachments
   contributor character varying(255) DEFAULT NULL::character varying,
   type_id bigint ,
   format character varying(50) NOT NULL,
-  typist character varying(50) NOT NULL,
+  typist character varying(128) NOT NULL,
   creation_date timestamp without time zone NOT NULL,
   fulltext_result character varying(10) DEFAULT NULL::character varying,
   ocr_result character varying(10) DEFAULT NULL::character varying,
@@ -56,7 +56,7 @@ CREATE TABLE res_attachments
   is_ingoing character(1) DEFAULT NULL::bpchar,
   priority smallint,
   initiator character varying(50) DEFAULT NULL::character varying,
-  dest_user character varying(50) DEFAULT NULL::character varying,
+  dest_user character varying(128) DEFAULT NULL::character varying,
   coll_id character varying(32) NOT NULL,
   res_id_master bigint,
   CONSTRAINT res_attachments_pkey PRIMARY KEY (res_id)
