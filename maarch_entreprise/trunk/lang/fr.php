@@ -1156,7 +1156,9 @@ if (!defined('_CLEAR_FORM')) define( '_CLEAR_FORM', 'Effacer le formulaire');
 if (!defined('_MAX_SIZE_UPLOAD_REACHED')) define( '_MAX_SIZE_UPLOAD_REACHED', 'Taille maximum de fichier d&eacute;pass&eacute;e');
 if (!defined('_NOT_ALLOWED')) define( '_NOT_ALLOWED', 'interdit');
 if (!defined('_CHOOSE_TITLE')) define( '_CHOOSE_TITLE', 'Choisissez une civilit&eacute;');
-
+if (!defined('_INDEXING_STATUSES')) define( '_INDEXING_STATUSES', 'Indexer vers les status');
+if (!defined('_LOAD_STATUSES_SESSION')) define( '_LOAD_STATUSES_SESSION', 'Chargement des status en session');
+if (!defined('_PARAM_AVAILABLE_STATUS_ON_GROUP_BASKETS')) define( '_PARAM_AVAILABLE_STATUS_ON_GROUP_BASKETS', 'Param&eacute;trage des status d\'indexation');
 /////////////////// Reports
 if (!defined('_USERS_LOGS')) define( '_USERS_LOGS', 'Liste des acc&egrave;s &agrave; l&rsquo;application par agent');
 if (!defined('_USERS_LOGS_DESC')) define( '_USERS_LOGS_DESC', 'Liste des acc&egrave;s &agrave; l&rsquo;application par agent');

@@ -875,7 +875,7 @@ if (!defined('_CLEAR_FORM')) define('_CLEAR_FORM', 'Reset');
 if (!defined('_MAX_SIZE_UPLOAD_REACHED')) define('_MAX_SIZE_UPLOAD_REACHED', 'Your file exceeds the maximum size allowed');
 if (!defined('_NOT_ALLOWED')) define('_NOT_ALLOWED', 'not allowed');
 if (!defined('_CHOOSE_TITLE')) define('_CHOOSE_TITLE', 'Select a title');
-
+if (!defined('_INDEXING_STATUSES')) define( '_INDEXING_STATUSES', 'Index in status');
 /////////////////// Reports
 if (!defined('_USERS_LOGS')) define('_USERS_LOGS', 'Access to the application by user');
 if (!defined('_USERS_LOGS_DESC')) define('_USERS_LOGS_DESC', 'Access to the application by user');
