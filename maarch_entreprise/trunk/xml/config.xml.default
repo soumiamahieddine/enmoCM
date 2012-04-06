@@ -45,6 +45,7 @@
         <id>letterbox_coll</id>
         <label>_LETTERBOX</label>
         <table>res_letterbox</table>
+        <version_table>res_version_letterbox</version_table>
         <view>res_view_letterbox</view>
         <adr>adr_x</adr>
         <index_file>index_letterbox.xml</index_file>
@@ -61,6 +62,7 @@
         <id>res_coll</id>
         <label>_INVOICES</label>
         <table>res_x</table>
+        <version_table>res_version_x</version_table>
         <view>res_view</view>
         <adr>adr_x</adr>
         <index_file>index_invoices.xml</index_file>
