@@ -49,8 +49,8 @@ CREATE SEQUENCE user_abs_seq
 CREATE TABLE user_abs
 (
   system_id bigint NOT NULL DEFAULT nextval('user_abs_seq'::regclass),
-  user_abs character varying(32) NOT NULL,
-  new_user character varying(32) NOT NULL,
+  user_abs character varying(128) NOT NULL,
+  new_user character varying(128) NOT NULL,
   basket_id character varying(255) NOT NULL,
   basket_owner character varying(255),
   is_virtual character(1) NOT NULL DEFAULT 'N'::bpchar,
