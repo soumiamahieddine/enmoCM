@@ -14,7 +14,7 @@ CREATE TABLE cases
   case_closing_date timestamp without time zone,
   case_last_update_date timestamp without time zone NOT NULL,
   case_creation_date timestamp without time zone NOT NULL,
-  case_typist character varying(32) NOT NULL DEFAULT ''::bpchar,
+  case_typist character varying(128) NOT NULL DEFAULT ''::bpchar,
   case_parent integer,
   case_custom_t1 character varying(255),
   case_custom_t2 character varying(255),
