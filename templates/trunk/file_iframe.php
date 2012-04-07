@@ -1,5 +1,8 @@
 <?php
-
+require_once 'modules/templates/class/templates_controler.php';
+require_once 'modules/templates/templates_tables_definition.php';
+require_once 'modules/attachments/attachments_tables.php';
+$templates_controler = new templates_controler();
 $db = new dbquery();
 $core = new core_tools();
 $core->load_lang();
@@ -17,23 +20,9 @@ if (isset($_REQUEST['template_content']) && !empty($_REQUEST['template_content']
     $_SESSION['upfile']['size'] = filesize($tmpPath);
 } else {
     if (isset($_REQUEST['model_id']) && !empty($_REQUEST['model_id'])) {
-        $model = new dbquery();
-        $model->connect();
-        $model->query("SELECT content from ".$_SESSION['tablename']['temp_templates']."  WHERE  id = ".$_REQUEST['model_id']." ");
-        //$model->show();
-        $res_model = $model->fetch_object();
-        $_SESSION['template_content'] = stripslashes($res_model->content);
+        $template = $templates_controler->get($_REQUEST['model_id']);
+        $_SESSION['template_content'] = stripslashes($template->template_content);
         $_SESSION['upfile']['format'] = 'maarch';
-        /*if ($_SESSION['upfile']['name'] == '') {
-            $_SESSION['upfile']['name'] = 'tmp_file_' 
-                . $_SESSION['user']['UserId'] . '_' . rand() . '.maarch';
-        }
-        $tmpPath = $_SESSION['config']['tmppath'] . DIRECTORY_SEPARATOR
-                 . $_SESSION['upfile']['name'];
-        $myfile = fopen($tmpPath, "w");
-        fwrite($myfile, $_SESSION['template_content'] . rand());
-        fclose($myfile);
-        $_SESSION['upfile']['size'] = filesize($tmpPath);*/
     }
 }
 ?>
@@ -49,7 +38,7 @@ if (isset($_REQUEST['template_content']) && !empty($_REQUEST['template_content']
     <script type="text/javascript" src="js/functions.js"></script>
     <?php
     $_SESSION['mode_editor'] = false;
-    include("modules" . DIRECTORY_SEPARATOR . "templates" . DIRECTORY_SEPARATOR . "load_editor.php");
+    include('modules/templates/load_editor.php');
     ?>
 </head>
 <body>

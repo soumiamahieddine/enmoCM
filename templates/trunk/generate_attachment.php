@@ -29,8 +29,9 @@
 * @author  Laurent Giovannoni <dev@maarch.org>
 */
 //require_once('modules/templates/class/class_modules_tools.php');
-require_once('modules/templates/class/templates_controler.php');
+require_once 'modules/templates/class/templates_controler.php';
 require_once 'modules/templates/templates_tables_definition.php';
+require_once 'modules/attachments/attachments_tables.php';
 $core_tools = new core_tools();
 $core_tools->test_user();
 $core_tools->load_lang();
@@ -88,7 +89,7 @@ if (!empty($answer['TEMPLATE_ID']) &&  $mode == 'add') {
     }
 } elseif (!empty($id) && $mode == 'up') {
     $db->query("select title, res_id, path, docserver_id, filename from " 
-        . $_SESSION['tablename']['attach_res_attachments'] . " where res_id = " . $id);
+        . RES_ATTACHMENTS_TABLE . " where res_id = " . $id);
 
     if ($db->nb_result() < 1) {
         $_SESSION['error'] .= _FILE.' '._UNKNOWN.".<br/>";

@@ -50,7 +50,7 @@ if (isset($_REQUEST['template']) && !empty($_REQUEST['template'])) {
     } else {
          header(
             'location: ' . $_SESSION['config']['coreurl']
-            . 'modules/content_management/applet_launcher.php?objectType=attachementFromTemplate' 
+            . 'modules/content_management/applet_launcher.php?objectType=attachmentFromTemplate' 
             . '&objectId=' . $_REQUEST['template'] . '&objectTable=' . $objectTable
             . '&resMaster=' . $_REQUEST['res_id']
         );
@@ -92,7 +92,7 @@ $core_tools->load_header(_CHOOSE_TEMPLATE, true, false);
 <body id="pop_up"  onload="setTimeout(window.close, <?php  echo $time;?>*60*1000);">
 <h2 class="tit"><?php  echo _CHOOSE_TEMPLATE;?> </h2>
 <div align="center"><b><?php  echo $erreur; ?></b></div>
-<form enctype="multipart/form-data" method="post" name="attachement" action="<?php 
+<form enctype="multipart/form-data" method="post" name="attachment" action="<?php 
     echo $_SESSION['config']['businessappurl'];
     ?>index.php?display=true&module=templates&page=choose_template">
     <input type="hidden" name="display"  value="true" />
