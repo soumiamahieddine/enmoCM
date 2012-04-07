@@ -39,398 +39,398 @@
  class resource extends request
 {
 
-	/**
-	* Resource identifier
-	* Integer
-	*/
-	private $res_id;
+    /**
+    * Resource identifier
+    * Integer
+    */
+    private $res_id;
 
 
-	/**
-	* Type identifier of the resource
-	* String
-	*/
-	private $type_id;
+    /**
+    * Type identifier of the resource
+    * String
+    */
+    private $type_id;
 
-	/**
-	* Person who inserts the resource in the application
-	* String
-	*/
-	private $typist;
+    /**
+    * Person who inserts the resource in the application
+    * String
+    */
+    private $typist;
 
-	/**
-	* File format of the resource
-	* String
-	*/
-	private $format;
+    /**
+    * File format of the resource
+    * String
+    */
+    private $format;
 
-	/**
-	* Docserver identifier of the resource
-	* String
-	*/
-	private $docserver_id;
+    /**
+    * Docserver identifier of the resource
+    * String
+    */
+    private $docserver_id;
 
-	/**
-	* Path of the resource in the docserver
-	* String
-	*/
-	private $path;
+    /**
+    * Path of the resource in the docserver
+    * String
+    */
+    private $path;
 
-	/**
-	* Fingerprint of the resource
-	* String
-	*/
-	private $fingerprint;
+    /**
+    * Fingerprint of the resource
+    * String
+    */
+    private $fingerprint;
 
-	/**
-	* File name of the resource
-	* String
-	*/
-	private $filename;
+    /**
+    * File name of the resource
+    * String
+    */
+    private $filename;
 
-	/**
-	* File Size of the resource
-	* Integer
-	*/
-	private $filesize;
+    /**
+    * File Size of the resource
+    * Integer
+    */
+    private $filesize;
 
-	/**
-	* Offset
-	* Integer
-	*/
-	private $offset;
+    /**
+    * Offset
+    * Integer
+    */
+    private $offset;
 
-	/**
-	* Logical address
-	* Integer
-	*/
-	private $log_adr;
+    /**
+    * Logical address
+    * Integer
+    */
+    private $log_adr;
 
-	/**
-	* Status of the resource
-	* String
-	*/
-	private $status;
+    /**
+    * Status of the resource
+    * String
+    */
+    private $status;
 
-	/**
-	* Error message
-	* String
-	*/
-	private $error;
+    /**
+    * Error message
+    * String
+    */
+    private $error;
 
-	/**
-	* Inserts the Resource Object data into the data base
-	*
- 	* @param  $table_res string Resource table where to insert
-	* @param  $path  string Resource path in the docserver
-	* @param  $filename string Resource file name
-	* @param  $docserver_path  string Docserver path
-	* @param  $docserver_id  string Docserver identifier
-	* @param  $data  array Data array
-	* @param  $databasetype string Type of the db (MYSQL, SQLSERVER, ...)
-	*/
-	function load_into_db($table_res, $path, $filename, $docserver_path, $docserver_id, $data, $databasetype)
-	{
-		$filetmp = $docserver_path;
-		$tmp = $path;
-		$tmp = str_replace('#',DIRECTORY_SEPARATOR,$tmp);
-		$filetmp .= $tmp;
-		$filetmp .= $filename;
-		require_once("core" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . "docservers_controler.php");
-		require_once("core" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . "docserver_types_controler.php");
-		require_once("core" . DIRECTORY_SEPARATOR . "docservers_tools.php");
-		$docserverControler = new docservers_controler();
-		$docserverTypeControler = new docserver_types_controler();
-		$docserver = $docserverControler->get($docserver_id);
-		$docserverTypeObject = $docserverTypeControler->get($docserver->docserver_type_id);
-		$fingerprint = Ds_doFingerprint($filetmp, $docserverTypeObject->fingerprint_mode);
-		$filesize = filesize($filetmp);
-		array_push($data, array('column' => "fingerprint", 'value' => $fingerprint, 'type' => "string"));
-		array_push($data, array('column' => "filesize", 'value' => $filesize, 'type' => "int"));
-		array_push($data, array('column' => "path", 'value' => $path, 'type' => "string"));
-		array_push($data, array('column' => "filename", 'value' => $filename, 'type' => "string"));
-		array_push($data, array('column' => 'creation_date', 'value' => $this->current_datetime(), 'type' => "function"));
-		if(!$this->check_basic_fields($data))
-		{
-			$_SESSION['error'] = $this->error;
-			return false;
-		}
-		else
-		{
-			if(!$this->insert($table_res, $data, $_SESSION['config']['databasetype']))
-			{
-				$this->error = _INDEXING_INSERT_ERROR."<br/>".$this->show();
-				return false;
-			}
-			else
-			{
-				$this->connect();
-				$this->query("select res_id from ".$table_res." where docserver_id = '".$docserver_id."' and path = '".$path."' and filename= '".$filename."'  order by res_id desc ");
-				$res = $this->fetch_object();
-				return $res->res_id;
-			}
-		}
-	}
+    /**
+    * Inserts the Resource Object data into the data base
+    *
+    * @param  $table_res string Resource table where to insert
+    * @param  $path  string Resource path in the docserver
+    * @param  $filename string Resource file name
+    * @param  $docserver_path  string Docserver path
+    * @param  $docserver_id  string Docserver identifier
+    * @param  $data  array Data array
+    * @param  $databasetype string Type of the db (MYSQL, SQLSERVER, ...)
+    */
+    function load_into_db($table_res, $path, $filename, $docserver_path, $docserver_id, $data, $databasetype)
+    {
+        $filetmp = $docserver_path;
+        $tmp = $path;
+        $tmp = str_replace('#',DIRECTORY_SEPARATOR,$tmp);
+        $filetmp .= $tmp;
+        $filetmp .= $filename;
+        require_once 'core/class/docservers_controler.php';
+        require_once 'core/class/docserver_types_controler.php';
+        require_once 'core/docservers_tools.php';
+        $docserverControler = new docservers_controler();
+        $docserverTypeControler = new docserver_types_controler();
+        $docserver = $docserverControler->get($docserver_id);
+        $docserverTypeObject = $docserverTypeControler->get($docserver->docserver_type_id);
+        $fingerprint = Ds_doFingerprint($filetmp, $docserverTypeObject->fingerprint_mode);
+        $filesize = filesize($filetmp);
+        array_push($data, array('column' => "fingerprint", 'value' => $fingerprint, 'type' => "string"));
+        array_push($data, array('column' => "filesize", 'value' => $filesize, 'type' => "int"));
+        array_push($data, array('column' => "path", 'value' => $path, 'type' => "string"));
+        array_push($data, array('column' => "filename", 'value' => $filename, 'type' => "string"));
+        array_push($data, array('column' => 'creation_date', 'value' => $this->current_datetime(), 'type' => "function"));
+        if(!$this->check_basic_fields($data))
+        {
+            $_SESSION['error'] = $this->error;
+            return false;
+        }
+        else
+        {
+            if(!$this->insert($table_res, $data, $_SESSION['config']['databasetype']))
+            {
+                $this->error = _INDEXING_INSERT_ERROR."<br/>".$this->show();
+                return false;
+            }
+            else
+            {
+                $this->connect();
+                $this->query("select res_id from ".$table_res." where docserver_id = '".$docserver_id."' and path = '".$path."' and filename= '".$filename."'  order by res_id desc ");
+                $res = $this->fetch_object();
+                return $res->res_id;
+            }
+        }
+    }
 
-	/**
-	* Gets the resource identifier
-	*
-	* @return integer Resource identifier (res_id)
-	*/
-	public function get_id()
- 	{
- 		return $this->res_id;
- 	}
-	/**
-	* Gets the resource filename
-	*
-	* @return integer Resource name (filemane)
-	*/
-	public function get_filename($id,$coll_id)
- 	{
-		require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
-		$sec = new security(); 
-		$resource_table = $sec->retrieve_table_from_coll($coll_id);
-		if ($resource_table == '')
-			echo "error with coll_id";
-		$this->connect();
-		$this->query("select filename from ".$resource_table." where res_id='".$id."'");
- 		$result = $this->fetch_object();
- 		return $result->filename;
- 	}
+    /**
+    * Gets the resource identifier
+    *
+    * @return integer Resource identifier (res_id)
+    */
+    public function get_id()
+    {
+        return $this->res_id;
+    }
+    /**
+    * Gets the resource filename
+    *
+    * @return integer Resource name (filemane)
+    */
+    public function get_filename($id,$coll_id)
+    {
+        require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
+        $sec = new security();
+        $resource_table = $sec->retrieve_table_from_coll($coll_id);
+        if ($resource_table == '')
+            echo "error with coll_id";
+        $this->connect();
+        $this->query("select filename from ".$resource_table." where res_id='".$id."'");
+        $result = $this->fetch_object();
+        return $result->filename;
+    }
 
-	/**
-	* Gets the resource path
-	*
-	* @return integer Resource path (path)
-	*/
-	public function get_path($id,$coll_id)
- 	{
-		require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
-		$sec = new security(); 
-		$resource_table = $sec->retrieve_table_from_coll($coll_id);
-		if ($resource_table == '')
-			echo "error with coll_id";
-		$this->connect();
-		$this->query("select path from ".$resource_table." where res_id='".$id."'");
- 		$result = $this->fetch_object();
- 		return str_replace('#', DIRECTORY_SEPARATOR, $result->path);
- 	}
+    /**
+    * Gets the resource path
+    *
+    * @return integer Resource path (path)
+    */
+    public function get_path($id,$coll_id)
+    {
+        require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
+        $sec = new security();
+        $resource_table = $sec->retrieve_table_from_coll($coll_id);
+        if ($resource_table == '')
+            echo "error with coll_id";
+        $this->connect();
+        $this->query("select path from ".$resource_table." where res_id='".$id."'");
+        $result = $this->fetch_object();
+        return str_replace('#', DIRECTORY_SEPARATOR, $result->path);
+    }
 
-	/**
-	* Gets the error message of the resource object
-	*
-	* @return string Error message of the resource object
-	*/
-	public function get_error()
- 	{
- 		return $this->error;
- 	}
+    /**
+    * Gets the error message of the resource object
+    *
+    * @return string Error message of the resource object
+    */
+    public function get_error()
+    {
+        return $this->error;
+    }
 
-	/**
-	* Checks the mininum fields required for an insert into the database
-	*
-	* @param  $data array Array of the fields to insert into the database
-	* @return bool True if all the fields are ok, False otherwise
+    /**
+    * Checks the mininum fields required for an insert into the database
+    *
+    * @param  $data array Array of the fields to insert into the database
+    * @return bool True if all the fields are ok, False otherwise
          */
-	private function check_basic_fields($data)
-	{
-		$error = '';
-		$this->connect();
-		$find_format = false;
-		$find_typist = false;
-		$find_creation_date = false;
-		$find_docserver_id = false;
-		$find_path = false;
-		$find_filename = false;
-		$find_offset = false;
-		$find_logical_adr = false;
-		$find_fingerprint = false;
-		$find_filesize = false;
-		$find_status = false;
-		for($i=0; $i < count($data);$i++)
-		{
-			if($data[$i]['column'] == 'format')
-			{
-				$find_format = true;
-				// must be tested in the file_index.php file (module = indexing_searching)
-			}
-			elseif($data[$i]['column'] == 'typist' )
-			{
-				$find_typist = true;
+    private function check_basic_fields($data)
+    {
+        $error = '';
+        $this->connect();
+        $find_format = false;
+        $find_typist = false;
+        $find_creation_date = false;
+        $find_docserver_id = false;
+        $find_path = false;
+        $find_filename = false;
+        $find_offset = false;
+        $find_logical_adr = false;
+        $find_fingerprint = false;
+        $find_filesize = false;
+        $find_status = false;
+        for($i=0; $i < count($data);$i++)
+        {
+            if($data[$i]['column'] == 'format')
+            {
+                $find_format = true;
+                // must be tested in the file_index.php file (module = indexing_searching)
+            }
+            elseif($data[$i]['column'] == 'typist' )
+            {
+                $find_typist = true;
 /*
-				if( $data[$i]['value'] <> $_SESSION['user']['UserId'])
-				{
-					$error .= _TYPIST_ERROR.'<br/>';
-				}
+                if( $data[$i]['value'] <> $_SESSION['user']['UserId'])
+                {
+                    $error .= _TYPIST_ERROR.'<br/>';
+                }
 */
-			}
-			elseif($data[$i]['column'] == 'creation_date')
-			{
-				$find_creation_date = true;
-				if($data[$i]['value'] <> $this->current_datetime())
-				{
-					$error .= _CREATION_DATE_ERROR.'<br/>';
-				}
-			}
-			elseif($data[$i]['column'] == 'docserver_id')
-			{
-				$find_docserver_id =  true;
-				if(!$this->query("select docserver_id from ".$_SESSION['tablename']['docservers']." where docserver_id = '".$data[$i]['value']."'", true))
-				{
-					$error .= _DOCSERVER_ID_ERROR.'<br/>';
-				}
-			}
-			elseif($data[$i]['column'] == 'path' )
-			{
-				$find_path = true;
-				if( empty($data[$i]['value']))
-				{
-					$error .= _PATH_ERROR.'<br/>';
-				}
-			}
-			elseif($data[$i]['column'] == 'filename' )
-			{
-				$find_filename = true;
-				if(!preg_match("/^[0-9]+.([a-zA-Z][a-zA-Z][a-zA-Z][a-zA-Z]?|maarch)$/", $data[$i]['value']))
-				{
-					$error .= _FILENAME_ERROR.'<br/>';
-				}
-			}
-			elseif($data[$i]['column'] == "offset_doc")
-			{
-				$find_offset = true;
-			}
-			elseif($data[$i]['column'] == 'logical_adr')
-			{
-				$find_logical_adr = true;
-			}
-			elseif($data[$i]['column'] == 'fingerprint'  )
-			{
-				$find_fingerprint  = true;
-				if(!preg_match("/^[0-9A-Fa-f]+$/", $data[$i]['value']))
-				{
-					$error .= _FINGERPRINT_ERROR.'<br/>';
-				}
-			}
-			elseif($data[$i]['column'] == 'filesize'  )
-			{
-				$find_filesize = true;
-				if( $data[$i]['value'] <= 0)
-				{
-					$error .= _FILESIZE_ERROR.'<br/>';
-				}
-			}
-			elseif($data[$i]['column'] == 'status' )
-			{
-				$find_status = true;
-				if( !preg_match("/^[A-Z][A-Z][A-Z][A-Z]*$/", $data[$i]['value']))
-				{
-					$error .= _STATUS_ERROR.'<br/>';
-				}
-			}
-		}
+            }
+            elseif($data[$i]['column'] == 'creation_date')
+            {
+                $find_creation_date = true;
+                if($data[$i]['value'] <> $this->current_datetime())
+                {
+                    $error .= _CREATION_DATE_ERROR.'<br/>';
+                }
+            }
+            elseif($data[$i]['column'] == 'docserver_id')
+            {
+                $find_docserver_id =  true;
+                if(!$this->query("select docserver_id from ".$_SESSION['tablename']['docservers']." where docserver_id = '".$data[$i]['value']."'", true))
+                {
+                    $error .= _DOCSERVER_ID_ERROR.'<br/>';
+                }
+            }
+            elseif($data[$i]['column'] == 'path' )
+            {
+                $find_path = true;
+                if( empty($data[$i]['value']))
+                {
+                    $error .= _PATH_ERROR.'<br/>';
+                }
+            }
+            elseif($data[$i]['column'] == 'filename' )
+            {
+                $find_filename = true;
+                if(!preg_match("/^[0-9]+.([a-zA-Z][a-zA-Z][a-zA-Z][a-zA-Z]?|maarch)$/", $data[$i]['value']))
+                {
+                    $error .= _FILENAME_ERROR.'<br/>';
+                }
+            }
+            elseif($data[$i]['column'] == "offset_doc")
+            {
+                $find_offset = true;
+            }
+            elseif($data[$i]['column'] == 'logical_adr')
+            {
+                $find_logical_adr = true;
+            }
+            elseif($data[$i]['column'] == 'fingerprint'  )
+            {
+                $find_fingerprint  = true;
+                if(!preg_match("/^[0-9A-Fa-f]+$/", $data[$i]['value']))
+                {
+                    $error .= _FINGERPRINT_ERROR.'<br/>';
+                }
+            }
+            elseif($data[$i]['column'] == 'filesize'  )
+            {
+                $find_filesize = true;
+                if( $data[$i]['value'] <= 0)
+                {
+                    $error .= _FILESIZE_ERROR.'<br/>';
+                }
+            }
+            elseif($data[$i]['column'] == 'status' )
+            {
+                $find_status = true;
+                if( !preg_match("/^[A-Z][A-Z][A-Z][A-Z]*$/", $data[$i]['value']))
+                {
+                    $error .= _STATUS_ERROR.'<br/>';
+                }
+            }
+        }
 
-		if($find_format == false)
-		{
-			$error .= _MISSING_FORMAT.'<br/>';
-		}
-		if($find_typist == false)
-		{
-			$error .= _MISSING_TYPIST.'<br/>';
-		}
-		if($find_creation_date == false)
-		{
-			$error .= _MISSING_CREATION_DATE.'<br/>';
-		}
-		if($find_docserver_id == false)
-		{
-			$error .= _MISSING_DOCSERVER_ID.'<br/>';
-		}
-		if($find_path == false)
-		{
-			$error .= _MISSING_PATH.'<br/>';
-		}
-		if($find_filename == false)
-		{
-			$error .= _MISSING_FILENAME.'<br/>';
-		}
-		if($find_offset == false)
-		{
-			$error .= _MISSING_OFFSET.'<br/>';
-		}
-		if($find_logical_adr == false)
-		{
-			$error .= _MISSING_LOGICAL_ADR.'<br/>';
-		}
-		if($find_fingerprint == false)
-		{
-			$error .= _MISSING_FINGERPRINT.'<br/>';
-		}
-		if($find_filesize == false)
-		{
-			$error .= _MISSING_FILESIZE.'<br/>';
-		}
-		if($find_status == false)
-		{
-			$error .= _MISSING_STATUS.'<br/>';
-		}
+        if($find_format == false)
+        {
+            $error .= _MISSING_FORMAT.'<br/>';
+        }
+        if($find_typist == false)
+        {
+            $error .= _MISSING_TYPIST.'<br/>';
+        }
+        if($find_creation_date == false)
+        {
+            $error .= _MISSING_CREATION_DATE.'<br/>';
+        }
+        if($find_docserver_id == false)
+        {
+            $error .= _MISSING_DOCSERVER_ID.'<br/>';
+        }
+        if($find_path == false)
+        {
+            $error .= _MISSING_PATH.'<br/>';
+        }
+        if($find_filename == false)
+        {
+            $error .= _MISSING_FILENAME.'<br/>';
+        }
+        if($find_offset == false)
+        {
+            $error .= _MISSING_OFFSET.'<br/>';
+        }
+        if($find_logical_adr == false)
+        {
+            $error .= _MISSING_LOGICAL_ADR.'<br/>';
+        }
+        if($find_fingerprint == false)
+        {
+            $error .= _MISSING_FINGERPRINT.'<br/>';
+        }
+        if($find_filesize == false)
+        {
+            $error .= _MISSING_FILESIZE.'<br/>';
+        }
+        if($find_status == false)
+        {
+            $error .= _MISSING_STATUS.'<br/>';
+        }
 
-		$this->error = $error;
-		if(!empty($error))
-		{
-			return false;
-		}
-		else
-		{
-			return true;
-		}
-	}
-	
-	/**
-	* get the adr of the document 
-	* 
-	* @param $view resource view
-	* @param $resId resource ID
-	* @param $whereClause security clause
-	* @return array of adr fields if is ok
-	*/
-	public function getResourceAdr($view, $resId, $whereClause, $adrTable) {
-		$control = array();
-		if(!isset($view) || empty($resId) || empty($whereClause)) {
-			$control = array("status" => "ko", "error" => _PB_WITH_ARGUMENTS);
-			return $control;
-		}
-		$docserverAdr = array();
-		$this->connect();
-		$query = "select res_id, docserver_id, path, filename, format, fingerprint, offset_doc, is_multi_docservers from " . $view . " where res_id = " . $resId . " ". $whereClause;
-		$this->query($query);
-		if ($this->nb_result() > 0) {
-			$line = $this->fetch_object();
-			$format = $line->format;
-			if($line->is_multi_docservers == "Y") {
-				$query = "select res_id, docserver_id, path, filename, offset_doc, fingerprint, adr_priority from " . $adrTable . " where res_id = " . $resId . " order by adr_priority";
-				$this->query($query);
-				if ($this->nb_result() > 0) {
-					while($line = $this->fetch_object()) {
-						array_push($docserverAdr, array("docserver_id" => $line->docserver_id, "path" => $line->path, "filename" => $line->filename, "format" => $format, "fingerprint" => $line->fingerprint, "offset_doc" => $line->offset_doc, "adr_priority" => $line->adr_priority));
-					}
-				} else {
-					$this->disconnect();
-					$control = array("status" => "ko", "error" => _RESOURCE_NOT_FOUND);
-					return $control;
-				}
-			} else {
-				array_push($docserverAdr, array("docserver_id" => $line->docserver_id, "path" => $line->path, "filename" => $line->filename, "format" => $format, "fingerprint" => $line->fingerprint, "offset_doc" => $line->offset_doc, "adr_priority" => ""));
-			}
-			$control = array("status" => "ok", $docserverAdr, "error" => "");
-			$this->disconnect();
-			return $control;
-		} else {
-			$this->disconnect();
-			$control = array("status" => "ko", "error" => _RESOURCE_NOT_FOUND);
-			return $control;
-		}
-	}
+        $this->error = $error;
+        if(!empty($error))
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+
+    /**
+    * get the adr of the document
+    *
+    * @param $view resource view
+    * @param $resId resource ID
+    * @param $whereClause security clause
+    * @return array of adr fields if is ok
+    */
+    public function getResourceAdr($view, $resId, $whereClause, $adrTable) {
+        $control = array();
+        if(!isset($view) || empty($resId) || empty($whereClause)) {
+            $control = array("status" => "ko", "error" => _PB_WITH_ARGUMENTS);
+            return $control;
+        }
+        $docserverAdr = array();
+        $this->connect();
+        $query = "select res_id, docserver_id, path, filename, format, fingerprint, offset_doc, is_multi_docservers from " . $view . " where res_id = " . $resId . " ". $whereClause;
+        $this->query($query);
+        if ($this->nb_result() > 0) {
+            $line = $this->fetch_object();
+            $format = $line->format;
+            if($line->is_multi_docservers == "Y") {
+                $query = "select res_id, docserver_id, path, filename, offset_doc, fingerprint, adr_priority from " . $adrTable . " where res_id = " . $resId . " order by adr_priority";
+                $this->query($query);
+                if ($this->nb_result() > 0) {
+                    while($line = $this->fetch_object()) {
+                        array_push($docserverAdr, array("docserver_id" => $line->docserver_id, "path" => $line->path, "filename" => $line->filename, "format" => $format, "fingerprint" => $line->fingerprint, "offset_doc" => $line->offset_doc, "adr_priority" => $line->adr_priority));
+                    }
+                } else {
+                    $this->disconnect();
+                    $control = array("status" => "ko", "error" => _RESOURCE_NOT_FOUND);
+                    return $control;
+                }
+            } else {
+                array_push($docserverAdr, array("docserver_id" => $line->docserver_id, "path" => $line->path, "filename" => $line->filename, "format" => $format, "fingerprint" => $line->fingerprint, "offset_doc" => $line->offset_doc, "adr_priority" => ""));
+            }
+            $control = array("status" => "ok", $docserverAdr, "error" => "");
+            $this->disconnect();
+            return $control;
+        } else {
+            $this->disconnect();
+            $control = array("status" => "ko", "error" => _RESOURCE_NOT_FOUND);
+            return $control;
+        }
+    }
 }
 ?>
