@@ -48,7 +48,7 @@ if (isset($_REQUEST['table']) && ! empty($_REQUEST['table'])) {
     $table = trim($_REQUEST['table']);
 }
 ?>
-<body id="pop_up" onload="resizeTo(450, 350);setTimeout(window.close, <?php
+<body id="pop_up" onload="resizeTo(500, 500);setTimeout(window.close, <?php
 echo $time;
 ?>*60*1000);">
 <?php
