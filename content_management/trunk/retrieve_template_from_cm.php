@@ -1,5 +1,8 @@
 <?php
 
+//FOR ADD, UP TEMPLATES AND ADD ATTCHMENTS
+//case of template, templateStyle, or new attachment generation
+
 $func = new functions();
 
 if ($objectType == 'templateStyle') {
@@ -14,7 +17,7 @@ if ($objectType == 'templateStyle') {
             _FAILED_TO_COPY_ON_TMP . ':' . $objectId . ' ' . $filePathOnTmp
         );
     }
-} elseif ($objectType == 'template' || $objectType == 'attachementFromTemplate') {
+} elseif ($objectType == 'template' || $objectType == 'attachmentFromTemplate') {
     if ($_SESSION['m_admin']['templates']['current_style'] <> '') {
         // edition in progress
         $fileExtension = $func->extractFileExt(
@@ -58,5 +61,9 @@ if ($objectType == 'templateStyle') {
                 _FAILED_TO_COPY_ON_TMP . ':' . $pathToTemplateOnDs . ' ' . $filePathOnTmp
             );
         }
+        
+        //FUSION WITH TBS !
+        include 'modules/templates/fusion_with_tbs.php';
+        
     }
 }

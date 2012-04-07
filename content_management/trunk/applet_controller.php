@@ -95,12 +95,16 @@ if (
         if (
             $objectType <> 'template' 
             && $objectType <> 'templateStyle'
-            && $objectType <> 'attachementFromTemplate'
+            && $objectType <> 'attachmentFromTemplate'
+            && $objectType <> 'attachment'
         ) {
-            //case of res -> master, version or attachement
+            //case of res -> master or version
             include 'modules/content_management/retrieve_res_from_cm.php';
+        } elseif ($objectType == 'attachment') {
+            //case of res -> update attachment
+            include 'modules/content_management/retrieve_attachment_from_cm.php';
         } else {
-            //case of template or templateStyle
+            //case of template, templateStyle, or new attachment generation
             include 'modules/content_management/retrieve_template_from_cm.php';
         }
         $status = 'ok';
@@ -152,8 +156,10 @@ if (
                 //depending on the type of object, the action is not the same
                 if ($objectType == 'resource') {
                     include 'modules/content_management/save_new_version_from_cm.php';
-                } elseif ($objectType == 'attachement' || $objectType == 'attachementFromTemplate') {
+                } elseif ($objectType == 'attachmentFromTemplate') {
                     include 'modules/content_management/save_attach_res_from_cm.php';
+                } elseif ($objectType == 'attachment') {
+                    include 'modules/content_management/save_attach_from_cm.php';
                 } elseif ($objectType == 'templateStyle' || $objectType == 'template') {
                     include 'modules/content_management/save_template_from_cm.php';
                     //THE RETURN

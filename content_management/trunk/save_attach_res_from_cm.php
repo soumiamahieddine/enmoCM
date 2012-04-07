@@ -1,4 +1,7 @@
 <?php
+
+//FOR ADD NEW ATTACHMENTS
+
 require_once 'modules/attachments/attachments_tables.php';
 
 //new attachment from a template
@@ -18,12 +21,11 @@ $_SESSION['cm']['collId'] = '';
 
 if (empty($docserver)) {
     $_SESSION['error'] = _DOCSERVER_ERROR . ' : '
-        . _NO_AVAILABLE_DOCSERVER . '. ' . _MORE_INFOS . '.';
-    $location = '';
+        . _NO_AVAILABLE_DOCSERVER . '. ' . _MORE_INFOS;
 } else {
     // some checking on docserver size limit
     $newSize = $docserverControler->checkSize(
-        $docserver, $_SESSION['upfile']['size']
+        $docserver, filesize($_SESSION['config']['tmppath'] . $tmpFileName)
     );
     if ($newSize == 0) {
         $_SESSION['error'] = _DOCSERVER_ERROR . ' : '
@@ -31,8 +33,8 @@ if (empty($docserver)) {
     } else {
         $fileInfos = array(
             'tmpDir'      => $_SESSION['config']['tmppath'],
-            'size'        => $_SESSION['upfile']['size'],
-            'format'      => $_SESSION['upfile']['format'],
+            'size'        => filesize($_SESSION['config']['tmppath'] . $tmpFileName),
+            'format'      => strtoupper($fileExtension),
             'tmpFileName' => $tmpFileName,
         );
 
@@ -125,6 +127,14 @@ if (empty($docserver)) {
                     'type' => 'int',
                 )
             );
+            array_push(
+                $_SESSION['data'],
+                array(
+                    'column' => 'identifier',
+                    'value' => '1',
+                    'type' => 'string',
+                )
+            );
             //$_SESSION['error'] = 'test';
             $id = $resAttach->load_into_db(
                 RES_ATTACHMENTS_TABLE,
@@ -155,11 +165,10 @@ if (empty($docserver)) {
                         $_SESSION['config']['databasetype'],
                         'apps'
                     );
-                    $_SESSION['error'] = _NEW_VERSION;
                     $hist->add(
                         RES_ATTACHMENTS_TABLE, $id, 'ADD','attachadd',
                         $_SESSION['error'] 
-                        . _NEW_ATTACHMENT_VERSION,
+                        . _NEW_ATTACHMENT,
                         $_SESSION['config']['databasetype'],
                         'attachments'
                     );

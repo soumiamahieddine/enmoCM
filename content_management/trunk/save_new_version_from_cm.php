@@ -1,6 +1,6 @@
 <?php
 
-//TODO: REPLACE UPFILE VAR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//FOR ADD RES VERSIONS
 
 if ($_SESSION['cm']['resMaster'] <> '') {
     $resMaster = $_SESSION['cm']['resMaster'];
@@ -26,7 +26,7 @@ if (empty($docserver)) {
 } else {
     // some checking on docserver size limit
     $newSize = $docserverControler->checkSize(
-        $docserver, $_SESSION['upfile']['size']
+        $docserver, filesize($_SESSION['config']['tmppath'] . $tmpFileName)
     );
     if ($newSize == 0) {
         $_SESSION['error'] = _DOCSERVER_ERROR . ' : '
@@ -34,8 +34,8 @@ if (empty($docserver)) {
     } else {
         $fileInfos = array(
             'tmpDir'      => $_SESSION['config']['tmppath'],
-            'size'        => $_SESSION['upfile']['size'],
-            'format'      => $_SESSION['upfile']['format'],
+            'size'        => filesize($_SESSION['config']['tmppath'] . $tmpFileName),
+            'format'      => strtoupper($fileExtension),
             'tmpFileName' => $tmpFileName,
         );
 
@@ -144,7 +144,7 @@ if (empty($docserver)) {
                 //$resource->show();
                 //exit();
             } else {
-                //if ($_SESSION['history']['cmadd'] == "true") {
+                if ($_SESSION['history']['resversionadd'] == "true") {
                     $hist = new history();
                     $sec = new security();
                     $view = $sec->retrieve_view_from_coll_id(
@@ -158,15 +158,13 @@ if (empty($docserver)) {
                         $_SESSION['config']['databasetype'],
                         'apps'
                     );
-                    $_SESSION['error'] = _NEW_VERSION;
                     $hist->add(
                         $versionTable, $id, 'ADD','cmadd',
-                        $_SESSION['error'] 
-                        . " (new version of original resource) ",
+                        ' new version of original resource',
                         $_SESSION['config']['databasetype'],
                         'content_management'
                     );
-                //}
+                }
             }
         }
     }

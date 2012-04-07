@@ -1,9 +1,11 @@
 <?php
+
+//FOR ADD RES VERSIONS, ATTACHMENT
+//case of res -> master or version
 $sec = new security();
 $resId = $_REQUEST['objectId'];
 $collId = $sec->retrieve_coll_id_from_table($objectTable);
 $_SESSION['cm']['collId'] = $collId;
-//$objectTable = $sec->retrieve_view_from_coll_id($collId);
 for (
     $cptColl = 0;
     $cptColl < count($_SESSION['collections']);

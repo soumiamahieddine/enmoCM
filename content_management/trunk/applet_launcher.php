@@ -16,16 +16,17 @@ print_r($_SESSION);
 echo '</pre>';
 exit;
 */
+
 $_SESSION['cm']['resMaster'] = '';
 $_SESSION['cm']['reservationId'] = '';
 
-require_once('core/class/class_functions.php');
-require_once('core/class/class_core_tools.php');
-require_once('core/class/class_db.php');
-require_once('core/class/class_request.php');
-require_once('core/class/class_security.php');
-require_once('core/class/class_resource.php');
-require_once('core/class/docservers_controler.php');
+require_once 'core/class/class_functions.php';
+require_once 'core/class/class_core_tools.php';
+require_once 'core/class/class_db.php';
+require_once 'core/class/class_request.php';
+require_once 'core/class/class_security.php';
+require_once 'core/class/class_resource.php';
+require_once 'core/class/docservers_controler.php';
 
 $core_tools = new core_tools();
 $core_tools->test_user();
@@ -35,8 +36,8 @@ $sec = new security();
 
 /* Values for objectType :
  * - resource
- * - attachement
- * - attachementFromTemplate
+ * - attachment
+ * - attachmentFromTemplate
  * - template
  * - templateStyle
 */
@@ -80,8 +81,8 @@ if ($objectType == '' || $objectTable == '' || $objectId == '') {
 echo 'objectType : ' . $objectType . '<br>';
 echo 'objectTable : ' . $objectTable . '<br>';
 echo 'objectId : ' . $objectId . '<br>';
-exit;
 */
+
 //no reservation for templateStyle object
 if ($objectType <> 'templateStyle') {
     //reservation test
@@ -115,6 +116,10 @@ if ($objectType <> 'templateStyle') {
         );
     }
 }
+
+//init error session
+$_SESSION['error'] = '';
+
 ?>
 
 <div id="maarchcm">
