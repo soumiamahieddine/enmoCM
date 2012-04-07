@@ -286,7 +286,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $req->connect();
         $req->query("select res_id from "
             . $_SESSION['tablename']['attach_res_attachments']
-            . " where status <> 'DEL' and res_id_master = ".$res_id);
+            . " where status <> 'DEL' and res_id_master = " . $res_id);
         if ($req->nb_result() > 0) {
             $nb_attach = $req->nb_result();
         }
@@ -294,7 +294,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .= '<h3 onclick="new Effect.toggle(\'list_answers_div\', \'blind\', {delay:0.2});'
               . 'new Effect.toggle(\'done_answers_div\', \'blind\', {delay:0.2});return false;" style="width:90%;">';
     $frm_str .= '<img src="' . $_SESSION['config']['businessappurl']
-              . 'static.php?filename=plus.png" alt="" />&nbsp;<b>' . _DONE_ANSWERS . ' (' . $nb_attach . '):</b>';
+              . 'static.php?filename=plus.png" alt="" />&nbsp;<b>' . _PJ . ', ' . _DONE_ANSWERS . ' (' . $nb_attach . '):</b>';
     $frm_str .= '<span class="lb1-details">&nbsp;</span>';
     $frm_str .= '</h3>';
     $frm_str .= '<div class="desc" id="done_answers_div" style="display:none;width:90%;">';
@@ -498,6 +498,50 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $frm_str .= '</div>';
         $frm_str .= '</div>';
         $frm_str .='<input type="hidden" name="res_id" id="res_id"  value="' . $res_id . '" />';
+        $frm_str .= '<br>';
+    }
+    
+    //test service add new version
+    $viewVersions = false;
+    if ($core->test_service('add_new_version', 'apps', false)) {
+        $viewVersions = true;
+    }
+    //VERSIONS
+    if ($core->is_module_loaded('content_management') && $viewVersions) {
+        $versionTable = $sec->retrieve_version_table_from_coll_id(
+            $coll_id
+        );
+        $selectVersions = "select res_id from " 
+            . $versionTable . " where res_id_master = " 
+            . $res_id . " and status <> 'DEL' order by res_id desc";
+        $dbVersions = new dbquery();
+        $dbVersions->connect();
+        $dbVersions->query($selectVersions);
+        $nb_versions_for_title = $dbVersions->nb_result();
+        $lineLastVersion = $dbVersions->fetch_object();
+        $lastVersion = $lineLastVersion->res_id;
+        if ($lastVersion <> '') {
+            $objectId = $lastVersion;
+            $objectTable = $versionTable;
+        } else {
+            $objectTable = $sec->retrieve_table_from_coll(
+                $coll_id
+            );
+            $objectId = $res_id;
+        }
+        if ($nb_versions_for_title == 0) {
+            $extend_title_for_versions = '';
+        } else {
+            $extend_title_for_versions = ' (' 
+                . $nb_versions_for_title . ') ';
+        }
+        $frm_str .= '<h3 onclick="new Effect.toggle(\'versions_div\', \'blind\', ';
+        $frm_str .= '{delay:0.2});return false;" class="categorie" style="width:90%;">';
+            $frm_str .= '<img src="' . $_SESSION['config']['businessappurl']
+                . 'static.php?filename=plus.png" alt="" />&nbsp;<b>' 
+                . _VERSIONS . $extend_title_for_versions . ' :</b>';
+            $frm_str .= '<span class="lb1-details">&nbsp;</span>';
+        $frm_str .= '</h3>';
         $frm_str .= '<br>';
     }
 
@@ -741,8 +785,6 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     //LINKS FRAME
     $frm_str .= '<div id="links_div" style="display:none">';
         $frm_str .= '<div>';
-
-
             $nbLinkDesc = $Class_LinkController->nbDirectLink(
                 $_SESSION['doc_id'],
                 $_SESSION['collection_id_choice'],
@@ -760,7 +802,6 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                     )
                 );
             }
-
             $nbLinkAsc = $Class_LinkController->nbDirectLink(
                 $_SESSION['doc_id'],
                 $_SESSION['collection_id_choice'],
@@ -778,17 +819,61 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                     )
                 );
             }
-
-
-
-
         $frm_str .= '</div>';
     $frm_str .= '</div>';
-
+    
+    //VERSIONS FRAME
+    $frm_str .= '<div id="versions_div" style="display:none">';
+        $frm_str .= '<div>';
+                $frm_str .= '<center><h2>' . _VERSIONS . '</h2></center>';
+                $frm_str .= '<div style="text-align:center;">';
+                    if ($lastVersion <> '') {
+                        $frm_str .= '<a href="'; 
+                            $frm_str .=  $_SESSION['config']['businessappurl'];
+                            $frm_str .= 'index.php?display=true&dir=indexing_searching&page=view_resource_controler&id=';
+                            $frm_str .= $res_id;
+                            $frm_str .= '" target="_blank">';
+                            $frm_str .= _VIEW_ORIGINAL . ' | ';
+                        $frm_str .= '</a>';
+                    }
+                    $frm_str .= '<img src="'.$_SESSION['config']['businessappurl']
+                        . 'static.php?module=notes&filename=modif_note.png" border="0" alt="" />';
+                            $frm_str .= '<a href="' . $_SESSION['config']['coreurl'];
+                                $frm_str .= 'modules/content_management/applet_launcher.php?objectType=resource&objectId='; 
+                                $frm_str .= $objectId;
+                                $frm_str .= '&objectTable=';
+                                $frm_str .= $objectTable;
+                                $frm_str .= '&resMaster=';
+                                $frm_str .= $_SESSION['doc_id'];
+                                $frm_str .= '" target="_blank">';
+                                $frm_str .= _CREATE_NEW_VERSION;
+                            $frm_str .= '</a>';
+                $frm_str .= '</div>';
+                $frm_str .= '<iframe name="list_notes_doc" id="list_notes_doc" src="'
+                    . $_SESSION['config']['businessappurl']
+                    . 'index.php?display=true&module=content_management&page=frame_list_versions&collId='
+                    . $_SESSION['collection_id_choice'] . '&resMasterId=' . $res_id . '" '
+                    . 'frameborder="0" width="100%" height="320px"></iframe>';
+        $frm_str .= '</div>';
+    $frm_str .= '</div>';
+    
     //RESOURCE FRAME
+    if ($core->is_module_loaded('content_management') && $viewVersions) {
+        if ($lastVersion <> '') {
+            $frm_str .= '<iframe src="' . $_SESSION['config']['businessappurl']
+                . 'index.php?display=true&dir=indexing_searching&page=view_resource_controler&id='
+                . $objectId . '&versionTable=' 
+                . $versionTable . '" name="viewframe" id="viewframe" scrolling="auto" frameborder="0" width="100%"></iframe>';
+        } else {
+            $frm_str .= '<iframe src="' . $_SESSION['config']['businessappurl']
+                . 'index.php?display=true&dir=indexing_searching&page=view_resource_controler&id='
+                . $res_id . '" name="viewframe" id="viewframe" scrolling="auto" frameborder="0" width="100%"></iframe>';
+        }
+    } else {
         $frm_str .= '<iframe src="' . $_SESSION['config']['businessappurl']
             . 'index.php?display=true&dir=indexing_searching&page=view_resource_controler&id='
             . $res_id . '" name="viewframe" id="viewframe" scrolling="auto" frameborder="0" width="100%"></iframe>';
+    }
 
     $frm_str .= '</div>';
 

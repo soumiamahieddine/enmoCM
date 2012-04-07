@@ -1681,7 +1681,7 @@ if (!defined('_NOW_LINK_WITH_THIS_ONE')) {
 }
 
 if (!defined('_LINK_TAB')) {
-    define('_LINK_TAB', 'Liaison');
+    define('_LINK_TAB', 'Liaisons');
 }
 
 if (!defined('_LINK_DESC_FOR')) {

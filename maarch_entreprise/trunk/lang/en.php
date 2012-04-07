@@ -1268,7 +1268,7 @@ if (!defined('_NOW_LINK_WITH_THIS_ONE')) {
 }
 
 if (!defined('_LINK_TAB')) {
-    define('_LINK_TAB', 'Link');
+    define('_LINK_TAB', 'Links');
 }
 
 if (!defined('_LINK_DESC_FOR')) {

@@ -117,6 +117,7 @@
         <resup>true</resup>
         <resdel>true</resdel>
         <resview>true</resview>
+        <resversionadd>true</resversionadd>
         <userlogin>true</userlogin>
         <userlogout>true</userlogout>
         <actionadd>true</actionadd>

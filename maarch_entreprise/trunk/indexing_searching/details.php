@@ -1,11 +1,31 @@
 <?php
+
+/*
+*   Copyright 2008-2012 Maarch
+*
+*   This file is part of Maarch Framework.
+*
+*   Maarch Framework is free software: you can redistribute it and/or modify
+*   it under the terms of the GNU General Public License as published by
+*   the Free Software Foundation, either version 3 of the License, or
+*   (at your option) any later version.
+*
+*   Maarch Framework is distributed in the hope that it will be useful,
+*   but WITHOUT ANY WARRANTY; without even the implied warranty of
+*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*   GNU General Public License for more details.
+*
+*   You should have received a copy of the GNU General Public License
+*   along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 /**
 * File : details.php
 *
 * Detailed informations on an indexed document
 *
-* @package  Maarch PeopleBox 1.0
-* @version 2.1
+* @package  indexing_searching
+* @version 1.3
 * @since 10/2005
 * @license GPL
 * @author  Claire Figueras  <dev@maarch.org>
@@ -15,38 +35,24 @@ $core = new core_tools();
 $core->test_user();
 $core->load_lang();
 require_once 'core/manage_bitmask.php';
-require_once "core" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR
-    . "class_request.php";
-require_once "core" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR
-    . "class_security.php";
-require_once "apps" . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
-    . DIRECTORY_SEPARATOR  . "security_bitmask.php";
-require_once "apps" . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
-    . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . "class_list_show.php";
-require_once "core" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR
-    . "class_history.php";
-require_once "core" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR
-    . "LinkController.php";
-require_once "apps" . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
-    . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR
-    . "class_indexing_searching_app.php";
-require_once "apps" . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
-    . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . "class_types.php";
+require_once 'core/class/class_request.php';
+require_once 'core/class/class_security.php';
+require_once 'apps/' . $_SESSION['config']['app_id'] . '/security_bitmask.php';
+require_once 'apps/' . $_SESSION['config']['app_id'] . '/class/class_list_show.php';
+require_once 'core/class/class_history.php';
+require_once 'core/class/LinkController.php';
+require_once 'apps/' . $_SESSION['config']['app_id'] . '/class/class_indexing_searching_app.php';
+require_once 'apps/' . $_SESSION['config']['app_id'] . '/class/class_types.php';
 
 if (file_exists(
-    $_SESSION['config']['corepath'] . 'custom'. DIRECTORY_SEPARATOR
-    . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR . 'apps'
-    . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id'] . DIRECTORY_SEPARATOR
-    . 'definition_mail_categories.php'
+    $_SESSION['config']['corepath'] . 'custom/apps/' . $_SESSION['config']['app_id'] 
+    . '/definition_mail_categories.php'
 )
 ) {
-    $path = $_SESSION['config']['corepath'] . 'custom'. DIRECTORY_SEPARATOR
-          . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR . 'apps'
-          . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
-          . DIRECTORY_SEPARATOR . 'definition_mail_categories.php';
+    $path = $_SESSION['config']['corepath'] . 'custom/apps/' . $_SESSION['config']['app_id']
+          . '/definition_mail_categories.php';
 } else {
-    $path = 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
-          . DIRECTORY_SEPARATOR . 'definition_mail_categories.php';
+    $path = 'apps/' . $_SESSION['config']['app_id'] . '/definition_mail_categories.php';
 }
 include_once $path;
 
@@ -65,29 +71,50 @@ $viewTechnicalInfos = false;
 if ($core->test_service('view_technical_infos', 'apps', false)) {
     $viewTechnicalInfos = true;
 }
-if(!isset($_REQUEST['coll_id']))
-{
-    $_REQUEST['coll_id'] = "";
+
+//test service view versions
+$viewVersions = false;
+if ($core->test_service('view_versions', 'apps', false)) {
+    $viewVersions = true;
+}
+
+//test service add new version
+$addNewVersion = false;
+if ($core->test_service('add_new_version', 'apps', false)) {
+    $addNewVersion = true;
+}
+
+if (!isset($_REQUEST['coll_id'])) {
+    $_REQUEST['coll_id'] = '';
 }
 $_SESSION['doc_convert'] = array();
+
 /****************Management of the location bar  ************/
 $init = false;
-if(isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true")
-{
+if (isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == 'true') {
     $init = true;
 }
-if(isset($_SESSION['indexation'] ) && $_SESSION['indexation'] == true)
-{
+if (isset($_SESSION['indexation'] ) && $_SESSION['indexation'] == true) {
     $init = true;
 }
-$level = "";
-if(isset($_REQUEST['level']) && ($_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1))
-{
+$level = '';
+if (
+    isset($_REQUEST['level']) 
+    && (
+        $_REQUEST['level'] == 2 
+        || $_REQUEST['level'] == 3 
+        || $_REQUEST['level'] == 4 
+        || $_REQUEST['level'] == 1
+    )
+) {
     $level = $_REQUEST['level'];
 }
-$page_path = $_SESSION['config']['businessappurl'].'index.php?page=details&dir=indexing_searching&coll_id='.$_REQUEST['coll_id'].'&id='.$_REQUEST['id'];
+$page_path = $_SESSION['config']['businessappurl'] 
+    . 'index.php?page=details&dir=indexing_searching&coll_id=' 
+    . $_REQUEST['coll_id'] 
+    . '&id=' . $_REQUEST['id'];
 $page_label = _DETAILS;
-$page_id = "details";
+$page_id = 'details';
 $core->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
 $hist = new history();
@@ -95,59 +122,59 @@ $security = new security();
 $func = new functions();
 $request= new request;
 $type = new types();
-$s_id = "";
+$s_id = '';
 $_SESSION['req'] ='details';
 $_SESSION['indexing'] = array();
 $is = new indexing_searching_app();
 $coll_id = '';
 $table = '';
-if(!isset($_REQUEST['coll_id']) || empty($_REQUEST['coll_id']))
-{
+if (!isset($_REQUEST['coll_id']) || empty($_REQUEST['coll_id'])) {
     //$_SESSION['error'] = _COLL_ID.' '._IS_MISSING;
     $coll_id = $_SESSION['collections'][0]['id'];
     $table = $_SESSION['collections'][0]['view'];
     $is_view = true;
-}
-else
-{
+} else {
     $coll_id = $_REQUEST['coll_id'];
     $table = $security->retrieve_view_from_coll_id($coll_id);
     $is_view = true;
-    if(empty($table))
-    {
+    if (empty($table)) {
         $table = $security->retrieve_table_from_coll($coll_id);
         $is_view = false;
     }
 }
 $_SESSION['collection_id_choice'] = $coll_id;
 
-if(isset($_GET['id']) && !empty($_GET['id']))
-{
-    $s_id = addslashes($func->wash($_GET['id'], "num", _THE_DOC));
+if (isset($_GET['id']) && !empty($_GET['id'])) {
+    $s_id = addslashes($func->wash($_GET['id'], 'num', _THE_DOC));
 }
 
 $_SESSION['doc_id'] = $s_id;
-if(isset($_SESSION['origin']) && $_SESSION['origin'] <> "basket")
-{
+if (isset($_SESSION['origin']) && $_SESSION['origin'] <> 'basket') {
     $right = $security->test_right_doc($coll_id, $s_id);
     //$_SESSION['error'] = 'coll '.$coll_id.', res_id : '.$s_id;
-}
-else
-{
+} else {
     $right = true;
 }
-if(!$right)
-{
+if (!$right) {
     ?>
     <script type="text/javascript">
-    window.top.location.href = '<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=no_right';
+    window.top.location.href = '<?php 
+        echo $_SESSION['config']['businessappurl'];
+        ?>index.php?page=no_right';
     </script>
     <?php
     exit();
 }
-if(isset($s_id) && !empty($s_id) && $_SESSION['history']['resview'] == "true")
-{
-    $hist->add($table, $s_id ,"VIEW", 'resview', _VIEW_DETAILS_NUM.$s_id, $_SESSION['config']['databasetype'],'apps');
+if (isset($s_id) && !empty($s_id) && $_SESSION['history']['resview'] == 'true') {
+    $hist->add(
+        $table, 
+        $s_id , 
+        'VIEW', 
+        'resview', 
+        _VIEW_DETAILS_NUM . $s_id, 
+        $_SESSION['config']['databasetype'], 
+        'apps'
+    );
 }
 
 $modify_doc = check_right(
@@ -159,64 +186,72 @@ $delete_doc = check_right(
     DELETE_RECORD
 );
 
-
-
 //update index with the doctype
-if(isset($_POST['submit_index_doc']))
-{
-    if($core->is_module_loaded('entities') && is_array($_SESSION['details']['diff_list'])) {
-        require_once('modules'.DIRECTORY_SEPARATOR.'entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_listdiff.php');
+if (isset($_POST['submit_index_doc'])) {
+    if (
+        $core->is_module_loaded('entities') 
+        && is_array($_SESSION['details']['diff_list'])
+    ) {
+        require_once('modules/entities/class/class_manage_listdiff.php');
         $list = new diffusion_list();
-        $params = array('mode'=> 'listinstance', 'table' => $_SESSION['tablename']['ent_listinstance'], 'coll_id' => $coll_id, 'res_id' => $s_id, 'user_id' => $_SESSION['user']['UserId'], 'concat_list' => true, 'only_cc' => false);
-        $list->load_list_db($_SESSION['details']['diff_list'], $params); //pb enchainement avec action redirect
+        $params = array(
+            'mode'=> 'listinstance', 
+            'table' => $_SESSION['tablename']['ent_listinstance'], 
+            'coll_id' => $coll_id, 
+            'res_id' => $s_id, 
+            'user_id' => $_SESSION['user']['UserId'], 
+            'concat_list' => true, 
+            'only_cc' => false
+        );
+        $list->load_list_db(
+            $_SESSION['details']['diff_list'], 
+            $params
+        ); //pb enchainement avec action redirect
         $_SESSION['details']['diff_list']['key_value'] = md5($res_id);
     }
-    $is->update_mail($_POST, "POST", $s_id, $coll_id);
+    $is->update_mail($_POST, 'POST', $s_id, $coll_id);
 }
 //delete the doctype
-if(isset($_POST['delete_doc']))
-{
+if (isset($_POST['delete_doc'])) {
     $is ->delete_doc($s_id, $coll_id);
     ?>
-        <script type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?page=search_adv&dir=indexing_searching';?>';</script>
+        <script type="text/javascript">window.top.location.href='<?php 
+            echo $_SESSION['config']['businessappurl'] 
+                . 'index.php?page=search_adv&dir=indexing_searching';
+            ?>';</script>
     <?php
     exit();
 }
-if(isset($_POST['put_doc_on_validation']))
-{
-    $is ->update_doc_status($s_id, $coll_id, "VAL");
+if (isset($_POST['put_doc_on_validation'])) {
+    $is ->update_doc_status($s_id, $coll_id, 'VAL');
     ?>
-        <script language="javascript" type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?page=search_adv&dir=indexing_searching';?>';</script>
+        <script language="javascript" type="text/javascript">window.top.location.href='<?php 
+            echo $_SESSION['config']['businessappurl'] 
+            . 'index.php?page=search_adv&dir=indexing_searching';
+            ?>';</script>
     <?php
     exit();
 }
 $db = new dbquery();
 $db->connect();
-if(empty($_SESSION['error']) || $_SESSION['indexation'])
-{
+if (empty($_SESSION['error']) || $_SESSION['indexation']) {
     $comp_fields = '';
     $db->query("select type_id from ".$table." where res_id = ".$s_id);
-    if($db->nb_result() > 0)
-    {
+    if ($db->nb_result() > 0) {
         $res = $db->fetch_object();
         $type_id = $res->type_id;
         $indexes = $type->get_indexes($type_id, $coll_id, 'minimal');
-
-        for($i=0; $i<count($indexes);$i++)
-        {
-            if(preg_match('/^custom_/', $indexes[$i])) // In the view all custom from res table begin with doc_
-            {
+        for($i=0;$i<count($indexes);$i++) {
+            // In the view all custom from res table begin with doc_
+            if (preg_match('/^custom_/', $indexes[$i])) {
                 $comp_fields .= ', doc_'.$indexes[$i];
-            }
-            else
-            {
+            } else {
                 $comp_fields .= ', '.$indexes[$i];
             }
         }
     }
     $case_sql_complementary = '';
-    if($core->is_module_loaded('cases') == true)
-    {
+    if ($core->is_module_loaded('cases') == true) {
         $case_sql_complementary = " , case_id";
     }
     $db->query(
@@ -233,11 +268,19 @@ if(empty($_SESSION['error']) || $_SESSION['indexation'])
 ?>
 <div id="details_div" style="display:none;">
 <h1 class="titdetail">
-    <img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_detail_b.gif" alt="" /><?php  echo _DETAILS." : "._DOC.' '.strtolower(_NUM); ?><?php  echo $s_id; ?> <span>(<?php  echo  $security->retrieve_coll_label_from_coll_id($coll_id); ?>)</span>
+    <img src="<?php 
+        echo $_SESSION['config']['businessappurl'];
+        ?>static.php?filename=picto_detail_b.gif" alt="" /><?php 
+        echo _DETAILS . " : " . _DOC . ' ' . strtolower(_NUM);
+        ?><?php 
+        echo $s_id;
+        ?> <span>(<?php 
+        echo  $security->retrieve_coll_label_from_coll_id($coll_id);
+        ?>)</span>
 </h1>
 <div id="inner_content" class="clearfix">
 <?php
-if((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
+if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
 {
     ?>
     <div class="error">
@@ -250,11 +293,8 @@ if((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
         <br />
     </div>
     <?php
-}
-else
-{
-    if($db->nb_result() == 0)
-    {
+} else {
+    if ($db->nb_result() == 0) {
         ?>
         <div align="center">
                 <br />
@@ -265,10 +305,22 @@ else
                 <br />
             </div>
             <?php
-        }
-        else
-        {
-            $param_data = array('img_category_id' => true, 'img_priority' => true, 'img_type_id' => true, 'img_doc_date' => true, 'img_admission_date' => true, 'img_nature_id' => true, 'img_subject' => true, 'img_process_limit_date' => true, 'img_author' => true, 'img_destination' => true, 'img_arbox_id' => true, 'img_market' => true, 'img_project' => true);
+        } else {
+            $param_data = array(
+                'img_category_id' => true, 
+                'img_priority' => true, 
+                'img_type_id' => true, 
+                'img_doc_date' => true, 
+                'img_admission_date' => true, 
+                'img_nature_id' => true, 
+                'img_subject' => true, 
+                'img_process_limit_date' => true, 
+                'img_author' => true, 
+                'img_destination' => true, 
+                'img_arbox_id' => true, 
+                'img_market' => true, 
+                'img_project' => true
+            );
 
             $res = $db->fetch_object();
             $typist = $res->typist;
@@ -289,81 +341,64 @@ else
             $closing_date = $db->format_date_db($res->closing_date, false);
             $indexes = $type->get_indexes($type_id, $coll_id);
 
-            if($core->is_module_loaded('cases') == true)
-            {
-                require_once("modules".DIRECTORY_SEPARATOR."cases".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR.'class_modules_tools.php');
+            if ($core->is_module_loaded('cases') == true) {
+                require_once('modules/cases/class/class_modules_tools.php');
                 $case = new cases();
                 if ($res->case_id <> '')
                     $case_properties = $case->get_case_info($res->case_id);
             }
 
             //$db->show_array($indexes);
-            foreach(array_keys($indexes) as $key)
-            {
-                if(preg_match('/^custom/', $key)){
+            foreach (array_keys($indexes) as $key) {
+                if (preg_match('/^custom/', $key)) {
                     $tmp = 'doc_' . $key;
-                }
-                else{
+                } else{
                     $tmp = $key;
                 }
-                if($indexes[$key]['type'] == "date")
-                {
+                if ($indexes[$key]['type'] == "date") {
                     $res->$tmp = $db->format_date_db($res->$tmp, false);
                 }
                 $indexes[$key]['value'] = $res->$tmp;
                 $indexes[$key]['show_value'] = $res->$tmp;
-                if($indexes[$key]['type'] == "string")
-                {
+                if ($indexes[$key]['type'] == "string") {
                     $indexes[$key]['show_value'] = $db->show_string($res->$tmp);
-                }
-                elseif($indexes[$key]['type'] == "date")
-                {
+                } elseif ($indexes[$key]['type'] == "date") {
                     $indexes[$key]['show_value'] = $db->format_date_db($res->$tmp, true);
                 }
             }
             //$db->show_array($indexes);
             $process_data = $is->get_process_data($coll_id, $s_id);
             $status = $res->status;
-            if(!empty($status))
+            if (!empty($status))
             {
-                require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_manage_status.php");
+                require_once('core/class/class_manage_status.php');
                 $status_obj = new manage_status();
                 $res_status = $status_obj->get_status_data($status);
-                if($modify_doc)
-                {
+                if ($modify_doc) {
                     $can_be_modified = $status_obj->can_be_modified($status);
-                    if(!$can_be_modified)
-                    {
+                    if (!$can_be_modified) {
                         $modify_doc = false;
                     }
                 }
             }
             $mode_data = 'full';
-            if($modify_doc)
-            {
+            if ($modify_doc) {
                 $mode_data = 'form';
             }
-            foreach(array_keys($indexes) as $key)
-            {
+            foreach (array_keys($indexes) as $key) {
                 $indexes[$key]['opt_index'] = true;
-                if($indexes[$key]['type_field'] == 'select')
-                {
-                    for($i=0; $i<count($indexes[$key]['values']);$i++)
-                    {
-                        if($indexes[$key]['values'][$i]['id'] == $indexes[$key]['value'])
-                        {
+                if ($indexes[$key]['type_field'] == 'select') {
+                    for($i=0;$i<count($indexes[$key]['values']);$i++) {
+                        if ($indexes[$key]['values'][$i]['id'] == $indexes[$key]['value']) {
                             $indexes[$key]['show_value'] = $indexes[$key]['values'][$i]['label'] ;
                             break;
                         }
                     }
                 }
-                if(!$modify_doc)
-                {
+                if (!$modify_doc) {
                     $indexes[$key]['readonly'] = true;
                     $indexes[$key]['type_field'] = 'input';
-                }
-                else
-                {
+                } else {
                     $indexes[$key]['readonly'] = false;
                 }
             }
@@ -380,8 +415,7 @@ else
                 <p id="back_list">
                     <?php
                     if (! isset($_POST['up_res_id']) || ! $_POST['up_res_id']) {
-                        if($_SESSION['indexation'] == false)
-                        {
+                        if ($_SESSION['indexation'] == false) {
                             ?>
                             <a href="#" onclick="history.go(-1);" class="back"><?php  echo _BACK; ?></a>
                             <?php
@@ -389,11 +423,70 @@ else
                     }
                     ?>
                 </p>
-
-                <p id="viewdoc">
-                    <a href="<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&dir=indexing_searching&page=view_resource_controler&id=<?php  echo $s_id; ?>" target="_blank"><?php  echo _VIEW_DOC; ?></a> &nbsp;| &nbsp;
-                    <!--http://127.0.0.1/maarch_entreprise_trunk/apps/maarch_entreprise/index.php?display=true&dir=indexing_searching&page=view_resource_controler&id=129&collid=letterbox_coll-->
-                </p></b>&nbsp;
+                <?php
+                if ($core->is_module_loaded('content_management') && $viewVersions) {
+                    $versionTable = $security->retrieve_version_table_from_coll_id(
+                        $coll_id
+                    );
+                    $selectVersions = "select res_id from " 
+                        . $versionTable . " where res_id_master = " 
+                        . $s_id . " and status <> 'DEL' order by res_id desc";
+                    $dbVersions = new dbquery();
+                    $dbVersions->connect();
+                    $dbVersions->query($selectVersions);
+                    $nb_versions_for_title = $dbVersions->nb_result();
+                    $lineLastVersion = $dbVersions->fetch_object();
+                    $lastVersion = $lineLastVersion->res_id;
+                    if ($lastVersion <> '') {
+                        ?>
+                        <p id="viewdoc">
+                            <a href="<?php 
+                                echo $_SESSION['config']['businessappurl'];
+                                ?>index.php?display=true&dir=indexing_searching&page=view_resource_controler&id=<?php 
+                                echo $s_id;
+                                ?>" target="_blank"><?php 
+                                echo _VIEW_ORIGINAL;
+                                ?></a> &nbsp;|&nbsp;
+                            <a href="<?php 
+                                echo $_SESSION['config']['businessappurl'];
+                                ?>index.php?display=true&dir=indexing_searching&page=view_resource_controler&id=<?php 
+                                echo $lastVersion;
+                                ?>&versionTable=<?php 
+                                echo $versionTable;
+                                ?>" target="_blank"><?php 
+                                echo _VIEW_LAST_VERSION;
+                                ?></a> &nbsp;|&nbsp;
+                        </p>
+                        </b>&nbsp;
+                        <?php
+                    } else {
+                        ?>
+                        <p id="viewdoc">
+                            <a href="<?php 
+                                echo $_SESSION['config']['businessappurl'];
+                                ?>index.php?display=true&dir=indexing_searching&page=view_resource_controler&id=<?php 
+                                echo $s_id;
+                                ?>" target="_blank"><?php 
+                                echo _VIEW_DOC;
+                                ?></a> &nbsp;| &nbsp;
+                        </p></b>&nbsp;
+                        <?php
+                    }
+                } else {
+                    ?>
+                    <p id="viewdoc">
+                        <a href="<?php 
+                            echo $_SESSION['config']['businessappurl'];
+                            ?>index.php?display=true&dir=indexing_searching&page=view_resource_controler&id=<?php 
+                            echo $s_id;
+                            ?>" target="_blank"><?php 
+                            echo _VIEW_DOC;
+                            ?></a> &nbsp;|&nbsp;
+                    </p>
+                    </b>&nbsp;
+                    <?php
+                }
+                ?>
             </div>
             <br/>
             <dl id="tabricator1">
@@ -415,7 +508,7 @@ else
                         foreach(array_keys($data) as $key)
                         {
 
-                            if($i%2 != 1 || $i==0) // pair
+                            if ($i%2 != 1 || $i==0) // pair
                             {
                                 $detailsExport .= "<tr class='col'>";
                                 ?>
@@ -423,7 +516,7 @@ else
                                 <?php
                             }
                             $folder_id = "";
-                            if(($key == "market" || $key == "project") && $data[$key]['show_value'] <> "")
+                            if (($key == "market" || $key == "project") && $data[$key]['show_value'] <> "")
                             {
                                 $folderTmp = $data[$key]['show_value'];
                                 $find1 = strpos($folderTmp, '(');
@@ -436,15 +529,15 @@ else
                             ?>
                             <th align="left" class="picto" >
                                 <?php
-                                if(isset($data[$key]['addon']))
+                                if (isset($data[$key]['addon']))
                                 {
                                     echo $data[$key]['addon'];
                                     //$detailsExport .= $data[$key]['addon'];
                                 }
-                                elseif(isset($data[$key]['img']))
+                                elseif (isset($data[$key]['img']))
                                 {
                                     //$detailsExport .= "<img alt='".$data[$key]['label']."' title='".$data[$key]['label']."' src='".$data[$key]['img']."'  />";
-                                    if($folder_id <> "")
+                                    if ($folder_id <> "")
                                     {
                                         echo "<a href='".$_SESSION['config']['businessappurl']."index.php?page=show_folder&module=folder&id=".$folder_id."'>";
                                         ?>
@@ -479,9 +572,9 @@ else
                             <td>
                                 <?php
                                 $detailsExport .=  $data[$key]['show_value'];
-                            if(!isset($data[$key]['readonly']) || $data[$key]['readonly'] == true)
+                            if (!isset($data[$key]['readonly']) || $data[$key]['readonly'] == true)
                             {
-                                if($data[$key]['display'] == 'textinput')
+                                if ($data[$key]['display'] == 'textinput')
                                 {
                                     ?>
                                     <input type="text" name="<?php echo $key;?>" id="<?php echo $key;?>" value="<?php echo $data[$key]['show_value'];?>" readonly="readonly" class="readonly" size="40"  title="<?php  echo $data[$key]['show_value']; ?>" alt="<?php  echo $data[$key]['show_value']; ?>" />
@@ -492,7 +585,7 @@ else
                                     ?>
                                     <input type="text" name="<?php echo $key;?>" id="<?php echo $key;?>" value="<?php echo $data[$key]['show_value'];?>" readonly="readonly" class="readonly" size="40" title="<?php  echo $data[$key]['show_value']; ?>" alt="<?php  echo $data[$key]['show_value']; ?>" />
                                     <?php
-                                    if(isset($data[$key]['addon']))
+                                    if (isset($data[$key]['addon']))
                                     {
                                         $frm_str .= $data[$key]['addon'];
                                     }
@@ -500,26 +593,26 @@ else
                             }
                             else
                             {
-                                if($data[$key]['field_type'] == 'textfield')
+                                if ($data[$key]['field_type'] == 'textfield')
                                 {
                                     ?>
                                     <input type="text" name="<?php echo $key;?>" id="<?php echo $key;?>" value="<?php echo $data[$key]['show_value'];?>" size="40"  title="<?php  echo $data[$key]['show_value']; ?>" alt="<?php  echo $data[$key]['show_value']; ?>" />
                                     <?php
                                 }
-                                else if($data[$key]['field_type'] == 'date')
+                                else if ($data[$key]['field_type'] == 'date')
                                 {
                                     ?>
                                     <input type="text" name="<?php echo $key;?>" id="<?php echo $key;?>" value="<?php echo $data[$key]['show_value'];?>" size="40"  title="<?php  echo $data[$key]['show_value']; ?>" alt="<?php  echo $data[$key]['show_value']; ?>" onclick="showCalender(this);" />
                                     <?php
                                 }
-                                else if($data[$key]['field_type'] == 'select')
+                                else if ($data[$key]['field_type'] == 'select')
                                 {
                                     ?>
-                                    <select id="<?php echo $key;?>" name="<?php echo $key;?>" <?php if($key == 'type_id'){echo 'onchange="change_doctype_details(this.options[this.options.selectedIndex].value, \''.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=change_doctype_details\' , \''._DOCTYPE.' '._MISSING.'\');"';}?>>
+                                    <select id="<?php echo $key;?>" name="<?php echo $key;?>" <?php if ($key == 'type_id'){echo 'onchange="change_doctype_details(this.options[this.options.selectedIndex].value, \''.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=change_doctype_details\' , \''._DOCTYPE.' '._MISSING.'\');"';}?>>
                                     <?php
-                                        if($key == 'type_id')
+                                        if ($key == 'type_id')
                                         {
-                                            if($_SESSION['features']['show_types_tree'] == 'true')
+                                            if ($_SESSION['features']['show_types_tree'] == 'true')
                                             {
 
                                                 for($k=0; $k<count($data[$key]['select']);$k++)
@@ -531,7 +624,7 @@ else
                                                         for($l=0; $l<count($data[$key]['select'][$k]['level2'][$j]['types']);$l++)
                                                         {
                                                             ?><option
-                                                            <?php if($data[$key]['value'] ==$data[$key]['select'][$k]['level2'][$j]['types'][$l]['id']){ echo 'selected="selected"';}?>
+                                                            <?php if ($data[$key]['value'] ==$data[$key]['select'][$k]['level2'][$j]['types'][$l]['id']){ echo 'selected="selected"';}?>
                                                              value="<?php echo $data[$key]['select'][$k]['level2'][$j]['types'][$l]['id'];?>" >&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $data[$key]['select'][$k]['level2'][$j]['types'][$l]['label'];?></option><?php
                                                         }
                                                     }
@@ -541,7 +634,7 @@ else
                                             {
                                                 for($k=0; $k<count($data[$key]['select']);$k++)
                                                 {
-                                                    ?><option <?php if($data[$key]['value'] ==$data[$key]['select'][$k]['ID']){ echo 'selected="selected"';}?> value="<?php echo $data[$key]['select'][$k]['ID'];?>" ><?php echo $data[$key]['select'][$k]['LABEL'];?></option><?php
+                                                    ?><option <?php if ($data[$key]['value'] ==$data[$key]['select'][$k]['ID']){ echo 'selected="selected"';}?> value="<?php echo $data[$key]['select'][$k]['ID'];?>" ><?php echo $data[$key]['select'][$k]['LABEL'];?></option><?php
                                                 }
                                             }
                                         }
@@ -549,22 +642,22 @@ else
                                         {
                                             for($k=0; $k<count($data[$key]['select']);$k++)
                                             {
-                                                ?><option value="<?php echo $data[$key]['select'][$k]['ID'];?>" <?php if($data[$key]['value'] == $data[$key]['select'][$k]['ID']){echo 'selected="selected"';}?>><?php echo $data[$key]['select'][$k]['LABEL'];?></option><?php
+                                                ?><option value="<?php echo $data[$key]['select'][$k]['ID'];?>" <?php if ($data[$key]['value'] == $data[$key]['select'][$k]['ID']){echo 'selected="selected"';}?>><?php echo $data[$key]['select'][$k]['LABEL'];?></option><?php
                                             }
                                         }
                                     ?>
                                     </select>
                                     <?php
                                 }
-                                else if($data[$key]['field_type'] == 'autocomplete')
+                                else if ($data[$key]['field_type'] == 'autocomplete')
                                 {
-                                    if($key == 'project')
+                                    if ($key == 'project')
                                     {
                                         //$('market').value='';return false;
                                     ?><input type="text" name="project" id="project" onblur="" value="<?php echo $data['project']['show_value']; ?>" /><div id="show_project" class="autocomplete"></div><script type="text/javascript">launch_autocompleter_folders('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=folder&page=autocomplete_folders&mode=project', 'project');</script>
                                     <?php
                                     }
-                                    else if($key == 'market')
+                                    else if ($key == 'market')
                                     {
                                     ?><input type="text" name="market" id="market" onblur="fill_project('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=folder&page=ajax_get_project');return false;"  value="<?php echo $data['market']['show_value']; ?>"/><div id="show_market" class="autocomplete"></div>
                                     <script type="text/javascript">launch_autocompleter_folders('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=folder&page=autocomplete_folders&mode=market', 'market');</script>
@@ -576,7 +669,7 @@ else
                                 ?>
                             </td>
                             <?php
-                            if($i%2 == 1 && $i!=0) // impair
+                            if ($i%2 == 1 && $i!=0) // impair
                             {
                                 $detailsExport .=  "</td>";
                                 ?>
@@ -585,7 +678,7 @@ else
                             }
                             else
                             {
-                                if($i+1 == count($data))
+                                if ($i+1 == count($data))
                                 {
                                     $detailsExport .= "<td  colspan='2'>&nbsp;</td></tr>";
                                     echo '<td  colspan="2">&nbsp;</td></tr>';
@@ -638,7 +731,7 @@ else
                     $detailsExport .=  "</table>";
                     ?>
                     <div id="opt_indexes">
-                    <?php if(count($indexes) > 0)
+                    <?php if (count($indexes) > 0)
                     {
                         ?><br/>
                         <h2>
@@ -653,7 +746,7 @@ else
                             foreach(array_keys($indexes) as $key)
                             {
 
-                                if($i%2 != 1 || $i==0) // pair
+                                if ($i%2 != 1 || $i==0) // pair
                                 {
                                     $detailsExport .= "<tr class='col'>";
                                     ?>
@@ -664,7 +757,7 @@ else
                                 ?>
                                 <th align="left" class="picto" >
                                     <?php
-                                    if(isset($indexes[$key]['img']))
+                                    if (isset($indexes[$key]['img']))
                                     {
                                         //$detailsExport .= "<img alt='".$indexes[$key]['label']."' title='".$indexes[$key]['label']."' src='".$indexes[$key]['img']."'  />";
                                         ?>
@@ -689,10 +782,10 @@ else
                                 <td>
                                     <?php
                                     $detailsExport .=  $indexes[$key]['show_value'];
-                                    if($indexes[$key]['type_field'] == 'input')
+                                    if ($indexes[$key]['type_field'] == 'input')
                                     {
                                         ?>
-                                        <input type="text" name="<?php echo $key;?>" id="<?php echo $key;?>" value="<?php echo $indexes[$key]['show_value'];?>" <?php if(!isset($indexes[$key]['readonly']) || $indexes[$key]['readonly'] == true){ echo 'readonly="readonly" class="readonly"';}else if($indexes[$key]['type'] == 'date'){echo 'onclick="showCalender(this);"';}?> size="40"  title="<?php  echo $indexes[$key]['show_value']; ?>" alt="<?php  echo $indexes[$key]['show_value']; ?>"   />
+                                        <input type="text" name="<?php echo $key;?>" id="<?php echo $key;?>" value="<?php echo $indexes[$key]['show_value'];?>" <?php if (!isset($indexes[$key]['readonly']) || $indexes[$key]['readonly'] == true){ echo 'readonly="readonly" class="readonly"';}else if ($indexes[$key]['type'] == 'date'){echo 'onclick="showCalender(this);"';}?> size="40"  title="<?php  echo $indexes[$key]['show_value']; ?>" alt="<?php  echo $indexes[$key]['show_value']; ?>"   />
                                         <?php
                                     }
                                     else
@@ -714,7 +807,7 @@ else
                                     ?>
                                 </td>
                                 <?php
-                                if($i%2 == 1 && $i!=0) // impair
+                                if ($i%2 == 1 && $i!=0) // impair
                                 {
                                     $detailsExport .=  "</td>";
                                     ?>
@@ -723,7 +816,7 @@ else
                                 }
                                 else
                                 {
-                                    if($i+1 == count($indexes))
+                                    if ($i+1 == count($indexes))
                                     {
                                         $detailsExport .= "<td  colspan='2'>&nbsp;</td></tr>";
                                         echo '<td  colspan="2">&nbsp;</td></tr>';
@@ -809,11 +902,11 @@ else
                             <?php
                             }
                         ?>
-                        <?php if($delete_doc)
+                        <?php if ($delete_doc)
                         {?>
                         <input type="submit" class="button"  value="<?php  echo _DELETE_DOC;?>" name="delete_doc" onclick="return(confirm('<?php  echo _REALLY_DELETE.' '._THIS_DOC;?> ?\n\r\n\r'));" />
                         <?php }
-                        if($modify_doc)
+                        if ($modify_doc)
                         {?>
                         <input type="submit" class="button"  value="<?php  echo _MODIFY_DOC;?>" name="submit_index_doc" />
                         <?php  } ?>
@@ -858,7 +951,7 @@ else
                 $detailsExport .= "</td>";
                 $detailsExport .= "</tr>";
                 $detailsExport .= "</table>";
-                if($core->is_module_loaded('entities'))
+                if ($core->is_module_loaded('entities'))
                 {
                     $detailsExport .= "<h2>"._DIFF_LIST."</h2>";
                     ?>
@@ -878,7 +971,7 @@ else
                         <br/>
                         <div id="diff_list_div">
                             <?php
-                            if(isset($_SESSION['details']['diff_list']['dest']['user_id']) && !empty($_SESSION['details']['diff_list']['dest']['user_id']))
+                            if (isset($_SESSION['details']['diff_list']['dest']['user_id']) && !empty($_SESSION['details']['diff_list']['dest']['user_id']))
                             {
                                 //$detailsExport .= "<p class='sstit'>"._RECIPIENT."</p>";
                                 $detailsExport .= "<table cellpadding='4' cellspacing='0' border='1' width='100%'>";
@@ -918,7 +1011,7 @@ else
                                 <br/>
                                 <?php
                             }
-                            if(count($_SESSION['details']['diff_list']['copy']['users']) > 0 || count($_SESSION['details']['diff_list']['copy']['entities']) > 0)
+                            if (count($_SESSION['details']['diff_list']['copy']['users']) > 0 || count($_SESSION['details']['diff_list']['copy']['entities']) > 0)
                             {
                                 //$detailsExport .= "<p class='sstit'>"._TO_CC."</p>";
                                 //$detailsExport .= "<table cellpadding='0' cellspacing='0' border='0' class='listing'>";
@@ -928,7 +1021,7 @@ else
                                 <?php $color = ' class="col"';
                                 for($i=0;$i<count($_SESSION['details']['diff_list']['copy']['entities']);$i++)
                                 {
-                                    if($color == ' class="col"')
+                                    if ($color == ' class="col"')
                                     {
                                         $color = '';
                                     }
@@ -950,7 +1043,7 @@ else
                                 }
                                 for($i=0;$i<count($_SESSION['details']['diff_list']['copy']['users']);$i++)
                                 {
-                                    if($color == ' class="col"')
+                                    if ($color == ' class="col"')
                                     {
                                         $color = '';
                                     }
@@ -977,7 +1070,7 @@ else
                                 </table>
                                 <?php
                             }
-                            if($core->test_service('update_list_diff_in_details', 'entities', false)) {
+                            if ($core->test_service('update_list_diff_in_details', 'entities', false)) {
                                 echo '<a href="#" onclick="window.open(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=manage_listinstance&origin=details\', \'\', \'scrollbars=yes,menubar=no,toolbar=no,status=no,resizable=yes,width=1024,height=650,location=no\');" title="'._UPDATE_LIST_DIFF.'"><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=modif_liste.png" alt="'._UPDATE_LIST_DIFF.'" />'._UPDATE_LIST_DIFF.'</a>';
                             }
                             ?>
@@ -999,31 +1092,31 @@ else
                                     $detailsExport .= "<tr>";
                                     $detailsExport .= "<td><label for='answer_types'>"._ANSWER_TYPES_DONE." : </label></td>";*/
                                     $answer_type = "";
-                                    if($process_data['simple_mail'] == true)
+                                    if ($process_data['simple_mail'] == true)
                                     {
                                         $answer_type .=  _SIMPLE_MAIL.', ';
                                     }
-                                    if($process_data['registered_mail'] == true)
+                                    if ($process_data['registered_mail'] == true)
                                     {
                                         $answer_type .=  _REGISTERED_MAIL.', ';
                                     }
-                                    if($process_data['direct_contact'] == true)
+                                    if ($process_data['direct_contact'] == true)
                                     {
                                         $answer_type .=  _DIRECT_CONTACT.', ';
                                     }
-                                    if($process_data['email'] == true)
+                                    if ($process_data['email'] == true)
                                     {
                                         $answer_type .=  _EMAIL.', ';
                                     }
-                                    if($process_data['fax'] == true)
+                                    if ($process_data['fax'] == true)
                                     {
                                         $answer_type .=  _FAX.', ';
                                     }
-                                    if($process_data['no_answer'] == true)
+                                    if ($process_data['no_answer'] == true)
                                     {
                                         $answer_type =  _NO_ANSWER.', ';
                                     }
-                                    if($process_data['other'] == true)
+                                    if ($process_data['other'] == true)
                                     {
                                         $answer_type .=  " ".$process_data['other_answer_desc']."".', ';
                                     }
@@ -1043,7 +1136,7 @@ else
                                 <td><textarea name="process_notes" id="process_notes" readonly="readonly" style="width:500px;"><?php echo $db->show_string($process_data['process_notes']);?></textarea></td>
                             </tr>
                             <?php
-                            if(isset($closing_date) && !empty($closing_date))
+                            if (isset($closing_date) && !empty($closing_date))
                             {
                                 /*$detailsExport .= "<tr>";
                                 $detailsExport .= "<td><label for='closing_date'>"._CLOSING_DATE." : </label></td>";
@@ -1060,7 +1153,7 @@ else
                         </table>
                     </div>
                     <?php
-                    if($core->is_module_loaded('attachments'))
+                    if ($core->is_module_loaded('attachments'))
                     {
                         $detailsExport .= "<h3>"._ATTACHED_DOC." : </h3>";
                         $selectAttachments = "select res_id, creation_date, title, format from ".$_SESSION['tablename']['attach_res_attachments']." where res_id_master = ".$_SESSION['doc_id']." and coll_id ='".$_SESSION['collection_id_choice']."' and status <> 'DEL'";
@@ -1099,20 +1192,19 @@ else
                     <iframe src="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&dir=indexing_searching&page=hist_doc&id=<?php echo $s_id;?>&mode=normal" name="hist_doc_process" width="100%" height="580" align="left" scrolling="auto" frameborder="0" id="hist_doc_process"></iframe>
                 </dd>
                 <?php
-                if($core->is_module_loaded('notes'))
-                {
-                    $selectNotes = "select id, identifier, user_id, date_note, note_text from ".$_SESSION['tablename']['not_notes']." where identifier = ".$s_id." and coll_id ='".$_SESSION['collection_id_choice']."' order by date_note desc";
+                if ($core->is_module_loaded('notes')) {
+                    $selectNotes = "select id, identifier, user_id, date_note, note_text from " 
+                        . $_SESSION['tablename']['not_notes'] 
+                        . " where identifier = " . $s_id . " and coll_id ='" 
+                        . $_SESSION['collection_id_choice'] . "' order by date_note desc";
                     $dbNotes = new dbquery();
                     $dbNotes->connect();
                     $dbNotes->query($selectNotes);
                     //$dbNotes->show();
                     $nb_notes_for_title  = $dbNotes->nb_result();
-                    if ($nb_notes_for_title == 0)
-                    {
+                    if ($nb_notes_for_title == 0) {
                         $extend_title_for_notes = '';
-                    }
-                    else
-                    {
+                    } else {
                         $extend_title_for_notes = " (".$nb_notes_for_title.") ";
                     }
                     ?>
@@ -1146,13 +1238,28 @@ else
                         $tab_notes=$request_notes->select($select_notes,$where_notes,"order by ".$_SESSION['tablename']['not_notes'].".date_note desc",$_SESSION['config']['databasetype'], "500", true,$_SESSION['tablename']['not_notes'], $_SESSION['tablename']['users'], "user_id" );
                         ?>
                         <div style="text-align:center;">
-                            <img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=modif_note.png&module=notes" border="0" alt="" /><?php if($status <> 'END') { ?><a href="javascript://" onclick="ouvreFenetre('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=notes&page=note_add&size=full&identifier=<?php echo $s_id;?>&coll_id=<?php echo $coll_id;?>', 450, 300)" ><?php echo _ADD_NOTE;?></a><?php } ?>
+                            <img src="<?php 
+                                echo $_SESSION['config']['businessappurl'];
+                                ?>static.php?filename=modif_note.png&module=notes" border="0" alt="" /><?php 
+                                if ($status <> 'END') {
+                                    ?><a href="javascript://" onclick="ouvreFenetre('<?php 
+                                    echo $_SESSION['config']['businessappurl'];
+                                    ?>index.php?display=true&module=notes&page=note_add&size=full&identifier=<?php 
+                                    echo $s_id;
+                                    ?>&coll_id=<?php 
+                                    echo $coll_id;
+                                    ?>', 500, 500)" ><?php 
+                                    echo _ADD_NOTE;
+                                    ?></a><?php 
+                                } ?>
                         </div>
-                        <iframe name="list_notes_doc" id="list_notes_doc" src="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=notes&page=frame_notes_doc&size=full" frameborder="0" width="100%" height="520px"></iframe>
+                        <iframe name="list_notes_doc" id="list_notes_doc" src="<?php 
+                            echo $_SESSION['config']['businessappurl'];
+                            ?>index.php?display=true&module=notes&page=frame_notes_doc&size=full" frameborder="0" width="100%" height="520px"></iframe>
                     </dd>
                     <?php
                 }
-                if($core->is_module_loaded('cases') == true)
+                if ($core->is_module_loaded('cases') == true)
                 {
                     ?>
                     <dt><?php  echo _CASE;?></dt>
@@ -1161,13 +1268,13 @@ else
                         include('modules'.DIRECTORY_SEPARATOR.'cases'.DIRECTORY_SEPARATOR.'including_detail_cases.php');
                         if ($core->test_service('join_res_case', 'cases',false) == 1) {
                         ?><div align="center">
-                            <input type="button" class="button" name="back_welcome" id="back_welcome" value="<?php if($res->case_id<>'') echo _MODIFY_CASE; else echo _JOIN_CASE;?>" onclick="window.open('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=cases&page=search_adv_for_cases&searched_item=res_id&searched_value=<?php echo $s_id;?>','', 'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=1020,height=710');"/></div><?php
+                            <input type="button" class="button" name="back_welcome" id="back_welcome" value="<?php if ($res->case_id<>'') echo _MODIFY_CASE; else echo _JOIN_CASE;?>" onclick="window.open('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=cases&page=search_adv_for_cases&searched_item=res_id&searched_value=<?php echo $s_id;?>','', 'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=1020,height=710');"/></div><?php
                         }
                         ?>
                     </dd>
                     <?php
                 }
-                if ($core->is_module_loaded('content_management')) {
+                if ($core->is_module_loaded('content_management') && $viewVersions) {
                     $versionTable = $security->retrieve_version_table_from_coll_id(
                         $coll_id
                     );
@@ -1184,8 +1291,10 @@ else
                         $objectId = $lastVersion;
                         $objectTable = $versionTable;
                     } else {
+                        $objectTable = $security->retrieve_table_from_coll(
+                            $coll_id
+                        );
                         $objectId = $s_id;
-                        $objectTable = $tableRequest;
                     }
                     if ($nb_versions_for_title == 0) {
                         $extend_title_for_versions = '';
@@ -1201,22 +1310,28 @@ else
                         ?>
                     </dt>
                     <dd>
-                        <div style="text-align:center;">
-                            <img src="<?php echo 
-                                $_SESSION['config']['businessappurl'];
-                                ?>static.php?filename=modif_note.png&module=notes" border="0" alt="" />
-                            <a href="<?php 
-                                echo $_SESSION['config']['coreurl'];
-                                ?>modules/content_management/applet_launcher.php?objectType=resource&objectId=<?php 
-                                echo $objectId;
-                                ?>&objectTable=<?php
-                                echo $objectTable;
-                                ?>&resMaster=<?php
-                                echo $s_id;
-                                ?>" target="_blank">
-                                    <?php echo _CREATE_NEW_VERSION;?>
-                            </a>
-                        </div>
+                        <?php
+                        if ($addNewVersion) {
+                            ?>
+                            <div style="text-align:center;">
+                                <img src="<?php echo 
+                                    $_SESSION['config']['businessappurl'];
+                                    ?>static.php?filename=modif_note.png&module=notes" border="0" alt="" />
+                                <a href="<?php 
+                                    echo $_SESSION['config']['coreurl'];
+                                    ?>modules/content_management/applet_launcher.php?objectType=resource&objectId=<?php 
+                                    echo $objectId;
+                                    ?>&objectTable=<?php
+                                    echo $objectTable;
+                                    ?>&resMaster=<?php
+                                    echo $s_id;
+                                    ?>" target="_blank">
+                                        <?php echo _CREATE_NEW_VERSION;?>
+                                </a>
+                            </div>
+                            <?php
+                        }
+                        ?>
                         <iframe name="list_versions" id="list_versions" src="<?php 
                             echo $_SESSION['config']['businessappurl'];
                             ?>index.php?display=true&module=content_management&page=frame_list_versions&collId=<?php 
@@ -1293,11 +1408,10 @@ else
 </div>
 </div>
 <script type="text/javascript">
- var item  = $('details_div');
-  var tabricator1 = new Tabricator('tabricator1', 'DT');
-  if(item)
-    {
-     item.style.display='block';
+    var item  = $('details_div');
+    var tabricator1 = new Tabricator('tabricator1', 'DT');
+    if (item) {
+        item.style.display='block';
     }
 </script>
 <?php
@@ -1305,15 +1419,10 @@ $detailsExport .= "</body></html>";
 $_SESSION['doc_convert'] = array();
 $_SESSION['doc_convert']['details_result'] = $detailsExport;
 $core = new core_tools();
-if($core->is_module_loaded("doc_converter"))
-{
-    require_once("modules".DIRECTORY_SEPARATOR."doc_converter".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
-    $doc_converter = new doc_converter();
-    $doc_converter->convert_details($detailsExport);
-}
 
 if ($printDetails) {
-    $Fnm = $_SESSION['config']['tmppath'].DIRECTORY_SEPARATOR.'export_details_'.$_SESSION['user']['UserId']."_export.html";
+    $Fnm = $_SESSION['config']['tmppath']. '/export_details_' 
+        . $_SESSION['user']['UserId'] . '_export.html';
     $inF = fopen($Fnm,"w");
     fwrite($inF, $detailsExport);
     fclose($inF);

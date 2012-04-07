@@ -96,6 +96,11 @@
         <index_frame_show>true</index_frame_show>
     </FORMAT>
     <FORMAT>
+        <name>MAARCH</name>
+        <mime>text/plain</mime>
+        <index_frame_show>true</index_frame_show>
+    </FORMAT>
+    <FORMAT>
         <name>JPG</name>
         <mime>image/jpeg</mime>
         <index_frame_show>true</index_frame_show>
