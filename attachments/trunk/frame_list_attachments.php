@@ -139,7 +139,8 @@ $listAttach->list_simple(
     $_SESSION['config']['businessappurl'] . 'index.php?display=true'
     . '&module=attachments&page=view_attachment', $usedCss,
     $_SESSION['config']['businessappurl'] . 'index.php?display=true'
-    . '&module=attachments&page=update_attachments&mode=up', 1024, 768,
+    . '&module=attachments&page=update_attachments&mode=up&collId=' 
+        . $_SESSION['collection_id_choice'], 1024, 768,
     $_SESSION['config']['businessappurl'] . 'index.php?display=true'
     . '&module=attachments&page=del_attachment'
 );
