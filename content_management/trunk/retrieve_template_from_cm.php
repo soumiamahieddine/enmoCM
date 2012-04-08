@@ -61,9 +61,9 @@ if ($objectType == 'templateStyle') {
                 _FAILED_TO_COPY_ON_TMP . ':' . $pathToTemplateOnDs . ' ' . $filePathOnTmp
             );
         }
-        
-        //FUSION WITH TBS !
-        include 'modules/templates/fusion_with_tbs.php';
-        
+        if ($objectType == 'attachmentFromTemplate') {
+            //FUSION WITH TBS !
+            include 'modules/templates/fusion_with_tbs.php';
+        }
     }
 }
