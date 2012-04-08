@@ -129,19 +129,20 @@ class templates_controler extends ObjectControler implements ObjectControlerIF
                 }
                 //Insert new template
                 if ($this->insert($template)) {
+                    $templateId = $this->getLastTemplateId($template->template_label);
                     $control = array(
                         'status' => 'ok', 
-                        'value' => $template->template_id,
+                        'value' => $templateId,
                     );
-                    $this->updateTemplateEntityAssociation($template->template_id);
+                    $this->updateTemplateEntityAssociation($templateId);
                     //history
                     if ($_SESSION['history']['templateadd'] == 'true') {
                         $history = new history();
                         $history->add(
                             _TEMPLATES_TABLE_NAME, 
-                            $template->template_id, 
+                            $templateId, 
                             'ADD', 'templateadd',
-                            _TEMPLATES_UPDATED.' : '.$template->template_id, 
+                            _TEMPLATES_ADDED . ' : ' . $templateId, 
                             $_SESSION['config']['databasetype']
                         );
                     }
@@ -478,13 +479,13 @@ class templates_controler extends ObjectControler implements ObjectControlerIF
         }
         $db = new dbquery();
         $db->connect();
-        $query = "select template_id from " . _TEMPLATES_ASSOCIATION_TABLE_NAME
+        /*$query = "select template_id from " . _TEMPLATES_ASSOCIATION_TABLE_NAME
             . " where template_id = '" . $template_id . "'";
         $db->query($query);
         if ($db->nb_result() > 0) {
             $db->disconnect();
             return true;
-        }
+        }*/
         $query = "select template_id from " . _TEMPLATES_DOCTYPES_EXT_TABLE_NAME
             . " where template_id = '" . $template_id . "'";
         $db->query($query);
@@ -493,6 +494,23 @@ class templates_controler extends ObjectControler implements ObjectControlerIF
             return true;
         }
         $db->disconnect();
+    }
+    
+    /**
+    * Return the last templateId
+    * 
+    * @return bigint templateId
+    */
+    public function getLastTemplateId($templateLabel)
+    {
+        $db = new dbquery();
+        $db->connect();
+        $query = "select template_id from " . _TEMPLATES_TABLE_NAME
+            . " where template_label = '" . $db->protect_string_db($templateLabel) . "'"
+            . " order by template_id desc";
+        $db->query($query);
+        $queryResult = $db->fetch_object();
+        return $queryResult->template_id;
     }
 
     /**
@@ -737,7 +755,12 @@ class templates_controler extends ObjectControler implements ObjectControlerIF
     *
     * @param string  $content template content
     */
-    public function fieldsReplace($content, $res_id = '', $coll_id = '')
+    public function fieldsReplace(
+        $content, 
+        $res_id = '', 
+        $coll_id = '', 
+        $declareGlobals = false
+    )
     {
         if (!empty($res_id) && !empty($coll_id)) {
             require_once('core/class/class_security.php');
@@ -862,6 +885,10 @@ class templates_controler extends ObjectControler implements ObjectControlerIF
                 break;
             }
         }
-        return $content;
+        if (!$declareGlobals) {
+            return $content;
+        } else {
+            return $items;
+        }
     }
 }

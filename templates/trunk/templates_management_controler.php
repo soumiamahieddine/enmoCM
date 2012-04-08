@@ -285,7 +285,11 @@ function display_add()
         'modules/templates/templates/styles/', 
         $stylesArray
     );
+    require_once 'modules/entities/class/EntityControler.php';
+    $entityControler = new EntityControler();
+    $entitiesOrg = $entityControler->getAllEntities();
     At_putInSession('templatesStyles', $stylesArray);
+    At_putInSession('templatesEntitiesOrg', $entitiesOrg);
 }
 
 /**
