@@ -294,7 +294,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .= '<h3 onclick="new Effect.toggle(\'list_answers_div\', \'blind\', {delay:0.2});'
               . 'new Effect.toggle(\'done_answers_div\', \'blind\', {delay:0.2});return false;" style="width:90%;">';
     $frm_str .= '<img src="' . $_SESSION['config']['businessappurl']
-              . 'static.php?filename=plus.png" alt="" />&nbsp;<b>' . _PJ . ', ' . _DONE_ANSWERS . ' (' . $nb_attach . '):</b>';
+              . 'static.php?filename=plus.png" alt="" />&nbsp;<b>' . _PJ . ', ' . _DONE_ANSWERS . ' (' . $nb_attach . ') :</b>';
     $frm_str .= '<span class="lb1-details">&nbsp;</span>';
     $frm_str .= '</h3>';
     $frm_str .= '<div class="desc" id="done_answers_div" style="display:none;width:90%;">';
