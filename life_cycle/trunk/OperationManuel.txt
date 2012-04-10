@@ -1,0 +1,15 @@
+FNTC samples 
+1. launch sql query for windows : http://192.168.21.100/wiki/demo_life_cycles_windows.sql or for linux http://192.168.21.100/wiki/demo_life_cycles_linux.sql, download http://192.168.21.100/wiki/entreprise_trunk.zip and paste it into your docservers root (ex: c:\maarch\docservers\entreprise_trunk\) 
+
+2. truncate table res_x;truncate table lc_stack;truncate table adr_x; 
+
+3. load samples invoices with autoimport entreprise_cold 
+
+4. update res_x set creation_date = creation_date::timestamp - '10 day'::interval where typist = 'AUTOIMPORT'; 
+
+5. php fill_stack.php -c config/config.xml -coll res_coll -p FNTC -cy OAIS_CACHED 
+
+6. php process_stack.php -c config/config.xml -coll res_coll -p FNTC -cy OAIS_CACHED 
+
+7. change priority on adr_x to view resources on differents docservers 
+
