@@ -1314,19 +1314,19 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                         if ($addNewVersion) {
                             ?>
                             <div style="text-align:center;">
-                                <img src="<?php echo 
-                                    $_SESSION['config']['businessappurl'];
-                                    ?>static.php?filename=modif_note.png&module=notes" border="0" alt="" />
-                                <a href="<?php 
+                                <a href="#" onClick="loadApplet('<?php 
                                     echo $_SESSION['config']['coreurl'];
                                     ?>modules/content_management/applet_launcher.php?objectType=resource&objectId=<?php 
-                                    echo $objectId;
+                                        echo $objectId;
                                     ?>&objectTable=<?php
-                                    echo $objectTable;
+                                        echo $objectTable;
                                     ?>&resMaster=<?php
                                     echo $s_id;
-                                    ?>" target="_blank">
-                                        <?php echo _CREATE_NEW_VERSION;?>
+                                    ?>');">
+                                    <img alt="<?php echo _CREATE_NEW_VERSION;?>" src="<?php echo 
+                                        $_SESSION['config']['businessappurl'];
+                                        ?>static.php?filename=modif_note.png&module=notes" border="0" alt="" />
+                                    <?php echo _CREATE_NEW_VERSION;?>
                                 </a>
                             </div>
                             <?php
