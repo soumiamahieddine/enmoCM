@@ -212,7 +212,7 @@ if ($mode == 'list') {
                     <p>
                         <label><?php echo _EDIT_TEMPLATE;?> :</label>
                         <div style="text-align:center;">
-                            <a href="<?php 
+                            <a href="#" onClick="loadApplet('<?php 
                                 echo $_SESSION['config']['coreurl'];
                                 ?>modules/content_management/applet_launcher.php?objectType=<?php 
                                     echo $objectType;
@@ -220,10 +220,11 @@ if ($mode == 'list') {
                                     echo $objectId;
                                 ?>&objectTable=<?php
                                     echo $objectTable;
-                                ?>" target="_blank">
+                                ?>');">
                                 <img alt="<?php echo _EDIT_TEMPLATE;?>" src="<?php echo 
                                     $_SESSION['config']['businessappurl'];
                                     ?>static.php?filename=modif_note.png&module=notes" border="0" alt="" />
+                                <?php echo _EDIT_TEMPLATE;?>
                             </a>
                         </div>
                     </p>
