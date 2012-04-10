@@ -13,10 +13,12 @@ $selectVersions[$versionTable] = array();
 array_push(
     $selectVersions[$versionTable], 
     'res_id', 
+    'identifier',
     'typist',
     'creation_date'
 );
-$whereClause = " res_id_master = " . $_REQUEST['resMasterId'] . " ";
+$whereClause = " res_id_master = " . $_REQUEST['resMasterId'] 
+    . " and status <> 'DEL'";
 $requestVersions = new request();
 $tabVersions = $requestVersions->select(
     $selectVersions, 
@@ -69,6 +71,14 @@ for ($indVersion = 0;$indVersion < count($tabVersions);$indVersion ++ ) {
                 $tabVersions[$indVersion][$indVersionBis]['valign'] = 'bottom';
                 $tabVersions[$indVersion][$indVersionBis]['show'] = true;
             }
+            if ($tabVersions[$indVersion][$indVersionBis][$value] == 'identifier') {
+                $tabVersions[$indVersion][$indVersionBis]['label'] = _VERSION;
+                $tabVersions[$indVersion][$indVersionBis]['size'] = $sizeSmall;
+                $tabVersions[$indVersion][$indVersionBis]['label_align'] = 'left';
+                $tabVersions[$indVersion][$indVersionBis]['align'] = 'left';
+                $tabVersions[$indVersion][$indVersionBis]['valign'] = 'bottom';
+                $tabVersions[$indVersion][$indVersionBis]['show'] = true;
+            }
         }
     }
 }
@@ -88,7 +98,8 @@ $core->load_header('', true, false);
         'res_id', 
         true, 
         $_SESSION['config']['businessappurl'] 
-            . 'index.php?display=true&amp;dir=indexing_searching&amp;page=view_resource_controler&versionTable=' . $versionTable, 
+            . 'index.php?display=true&amp;dir=indexing_searching&amp;'
+            . 'page=view_resource_controler&versionTable=' . $versionTable, 
         $css
     );
     $core->load_js();

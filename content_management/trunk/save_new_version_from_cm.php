@@ -43,6 +43,14 @@ if (empty($docserver)) {
         $storeResult = $docserverControler->storeResourceOnDocserver(
             $_SESSION['cm']['collId'], $fileInfos
         );
+        $dbVersion = new dbquery();
+        $dbVersion->connect();
+        $query = "select max(identifier) from " . $versionTable 
+            . " where res_id_master = " . $resMaster . " and status <> 'DEL'";
+        $dbVersion->query($query);
+        $resVer = $dbVersion->fetch_object();
+        $lastVersion = $resVer->max;
+        $newVersion = (integer) $lastVersion + 1;
         if (isset($storeResult['error']) && $storeResult['error'] <> '') {
             $_SESSION['error'] = $storeResult['error'];
         } else {
@@ -77,6 +85,14 @@ if (empty($docserver)) {
                 array(
                     'column' => 'status',
                     'value' => 'NEW',
+                    'type' => 'string',
+                )
+            );
+            array_push(
+                $_SESSION['data'],
+                array(
+                    'column' => 'identifier',
+                    'value' => $newVersion,
                     'type' => 'string',
                 )
             );
