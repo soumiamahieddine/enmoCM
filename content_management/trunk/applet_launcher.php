@@ -31,6 +31,7 @@ require_once 'core/class/docservers_controler.php';
 $core_tools = new core_tools();
 $core_tools->test_user();
 $core_tools->load_lang();
+$core_tools->load_js();
 $function = new functions();
 $sec = new security();
 
@@ -121,12 +122,16 @@ if ($objectType <> 'templateStyle') {
 $_SESSION['error'] = '';
 
 ?>
-
 <div id="maarchcm">
+    <h1><?php echo _MAARCH_CM_APPLET;?></h1>
+    <img alt="<?php echo _LOADING;?>" src="<?php echo 
+        $_SESSION['config']['businessappurl'];
+        ?>static.php?filename=loading_big.gif" border="0" alt="" />
     <div id="maarchcm_error" class="error"></div>
-    <applet ARCHIVE="dist/maarchCM.jar" 
+    <applet ARCHIVE="<?php 
+            echo $_SESSION['config']['coreurl'];?>modules/content_management/dist/maarchCM.jar" 
         code="maarchcm.MaarchCM" name="maarchcm" id="maarchcm" 
-        WIDTH="600" HEIGHT="600" version = "1.6">
+        WIDTH="1" HEIGHT="1" version = "1.6">
         <param name="url" value="<?php 
             echo $_SESSION['config']['coreurl'];
         ?>modules/content_management/applet_controller.php">
@@ -137,12 +142,8 @@ $_SESSION['error'] = '';
         <param name="mayscript" value="mayscript" />
     </applet>
 </div>
-
-<script language="javascript">
-    //When the applet has finished the window is closed
-    function endOfApplet(theParam)
-    {
-        //window.opener.location.reload();
-        //window.close();
-    }
-</script>
+<p class="buttons">
+    <input type="button" name="cancel" value="<?php 
+        echo _CLOSE;
+        ?>" class="button" onclick="destroyModal('CMApplet');"/>
+</p>

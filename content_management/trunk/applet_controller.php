@@ -22,12 +22,6 @@ if (
     include_once 'modules/content_management/autolog_for_test.php';
 }
 
-/*
-echo '<pre>';
-print_r($_REQUEST);
-echo '</pre>';
-*/
-
 //Create XML
 function createXML($rootName, $parameters)
 {
@@ -52,10 +46,11 @@ function createXML($rootName, $parameters)
     }
     header("content-type: application/xml");
     echo $rXml->saveXML();
+    /* for the tests only
     $text = $rXml->saveXML();
     $inF = fopen('wsresult.log','a');
     fwrite($inF, $text);
-    fclose($inF);
+    fclose($inF);*/
     exit;
 }
 
@@ -162,19 +157,26 @@ if (
                     include 'modules/content_management/save_attach_from_cm.php';
                 } elseif ($objectType == 'templateStyle' || $objectType == 'template') {
                     include 'modules/content_management/save_template_from_cm.php';
-                    //THE RETURN
-                    createXML('SUCCESS', 'OK');
                 }
                 //THE RETURN
                 if (!empty($_SESSION['error'])) {
-                    createXML('ERROR', $_SESSION['error']);
+                    $result = array(
+                        'ERROR' => $_SESSION['error'] . _END_OF_EDITION,
+                    );
+                    createXML('ERROR', $result);
                 } else {
                     $cM->closeReservation($_SESSION['cm']['reservationId']);
-                    createXML('SUCCESS', 'OK');
+                    $result = array(
+                        'ERROR' => _END_OF_EDITION,
+                    );
+                    createXML('SUCCESS', $result);
                 }
             }
         } else {
-            createXML('ERROR', _FILE_CONTENT_OR_EXTENSION_EMPTY);
+            $result = array(
+                'ERROR' => _FILE_CONTENT_OR_EXTENSION_EMPTY,
+            );
+            createXML('ERROR', $result);
         }
         //$cM->closeReservation($_SESSION['cm']['reservationId']);
     }

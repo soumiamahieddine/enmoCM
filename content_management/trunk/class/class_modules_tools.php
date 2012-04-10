@@ -12,7 +12,7 @@
 *
 *   Maarch Framework is distributed in the hope that it will be useful,
 *   but WITHOUT ANY WARRANTY; without even the implied warranty of
-*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 *   GNU General Public License for more details.
 *
 *   You should have received a copy of the GNU General Public License
@@ -27,7 +27,7 @@
 * @brief   Module content_management :  Module Tools Class
 *
 * <ul>
-* <li>Set the session variables needed to run the content_management module</li>
+*   <li>Set the session variables needed to run the content_management module</li>
 *</ul>
 *
 * @file
@@ -38,7 +38,7 @@
 */
 
 /**
-* @brief   Module content_management : Module Tools Class
+* @brief Module content_management : Module Tools Class
 *
 * <ul>
 * <li>Loads the tables used by the content_management</li>
@@ -63,36 +63,22 @@ class content_management extends dbquery
     */
     public function build_modules_tables()
     {
-        if (file_exists($_SESSION['config']['corepath'].'custom'
-                        .DIRECTORY_SEPARATOR.$_SESSION['custom_override_id']
-                        .DIRECTORY_SEPARATOR."modules".DIRECTORY_SEPARATOR
-                        ."content_management".DIRECTORY_SEPARATOR
-                        ."xml".DIRECTORY_SEPARATOR."config.xml")
+        if (file_exists($_SESSION['config']['corepath'] . 'custom/'
+                        . $_SESSION['custom_override_id']
+                        . '/modules/content_management/xml/config.xml')
         ) {
-            $path = $_SESSION['config']['corepath'].'custom'
-                .DIRECTORY_SEPARATOR.$_SESSION['custom_override_id']
-                .DIRECTORY_SEPARATOR."modules".DIRECTORY_SEPARATOR."content_management"
-                .DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."config.xml";
+            $path = $_SESSION['config']['corepath'] . 'custom/'
+                . $_SESSION['custom_override_id']
+                . '/modules/content_management/xml/config.xml';
         } else {
-            $path = "modules".DIRECTORY_SEPARATOR."content_management"
-                .DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."config.xml";
+            $path = 'modules/content_management/xml/config.xml';
         }
         $xmlconfig = simplexml_load_file($path);
-        //$CONFIG = $xmlconfig->CONFIG;
-        // Loads the tables of the module content_management
-        // into session ($_SESSION['tablename'] array)
-        $TABLENAME = $xmlconfig->TABLENAME ;
-        $_SESSION['tablename']['lc_cycle'] = (string) $TABLENAME->lc_cycle;
-        $_SESSION['tablename']['lc_cycle_seq'] = (string) $TABLENAME
-            ->lc_cycle_seq;
-        $_SESSION['tablename']['lc_stack'] = (string) $TABLENAME->lc_stack;
-
         // Loads the log setting of the module content_management
-        // into session ($_SESSION['history'] array)
         $HISTORY = $xmlconfig->HISTORY;
-        $_SESSION['history']['lcadd'] = (string) $HISTORY->lcadd;
-        $_SESSION['history']['lcup'] = (string) $HISTORY->lcup;
-        $_SESSION['history']['lcdel'] = (string) $HISTORY->lcdel;
+        $_SESSION['history']['cmadd'] = (string) $HISTORY->cmadd;
+        $_SESSION['history']['cmup'] = (string) $HISTORY->cmup;
+        $_SESSION['history']['cmdel'] = (string) $HISTORY->cmdel;
     }
 
     /**
@@ -101,27 +87,20 @@ class content_management extends dbquery
     */
     public function load_module_var_session($userData)
     {
-        if (file_exists($_SESSION['config']['corepath'].'custom'
-                        .DIRECTORY_SEPARATOR.$_SESSION['custom_override_id']
-                        .DIRECTORY_SEPARATOR."modules"
-                        .DIRECTORY_SEPARATOR."content_management"
-                        .DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR
-                        ."content_management_features.xml")
+        if (file_exists($_SESSION['config']['corepath'] . 'custom/'
+            . $_SESSION['custom_override_id']
+            . '/modules/content_management/xml/content_management_features.xml')
         ) {
-            $path = $_SESSION['config']['corepath'].'custom'
-                  .DIRECTORY_SEPARATOR.$_SESSION['custom_override_id']
-                  .DIRECTORY_SEPARATOR."modules".DIRECTORY_SEPARATOR
-                  ."content_management".DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR
-                  ."content_management_features.xml";
+            $path = $_SESSION['config']['corepath'] . 'custom/'
+                . $_SESSION['custom_override_id']
+                . '/modules/content_management/xml/content_management_features.xml';
         } else {
-            $path = "modules".DIRECTORY_SEPARATOR."content_management"
-                  .DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR
-                  ."content_management_features.xml";
+            $path = 'modules/content_management/xml/content_management_features.xml';
         }
-        $_SESSION['lifeCycleFeatures'] = array();
-        $_SESSION['lifeCycleFeatures'] = functions::object2array(
+        $_SESSION['CMFeatures'] = array();
+        $_SESSION['CMFeatures'] = functions::object2array(
             simplexml_load_file($path)
         );
-        //functions::show_array($_SESSION['lifeCycleFeatures']);
+        //functions::show_array($_SESSION['CMFeatures']);
     }
 }

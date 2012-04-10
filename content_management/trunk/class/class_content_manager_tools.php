@@ -196,17 +196,6 @@ class content_management_tools
     public function deleteExpiredCM()
     {
         $timeLimit = $this->computeTimeLimit();
-        /*$this->db->query("select param_value_string from " . PARAM_TABLE
-            . " where param_value_int < " . $timeLimit . " and id like '"
-            . $this->parameter_id . "%'"
-        );
-        while ($res = $this->db->fetch_object()) {
-            if ($res->param_value_string <> '') {
-                $this->deleteDirectory(
-                    'modules/content_management/tmp/' . $res->param_value_string
-                );
-            }
-        }*/
         $this->db->query("delete from " . PARAM_TABLE
             . " where param_value_int < " . $timeLimit
             . " and id like '" . $this->parameter_id . "%'"

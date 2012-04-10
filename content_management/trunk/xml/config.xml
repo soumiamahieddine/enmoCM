@@ -9,7 +9,7 @@
     </CONFIG>
     <HISTORY>
         <cmadd>true</cmadd>
-        <cmvup>true</cmvup>
+        <cmup>true</cmup>
         <cmdel>true</cmdel>
     </HISTORY>
 </root>
