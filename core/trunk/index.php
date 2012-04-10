@@ -2,7 +2,7 @@
 /*
 *   Copyright 2012 Maarch
 *
-*  	This file is part of Maarch Framework.
+*   This file is part of Maarch Framework.
 *
 *   Maarch Framework is free software: you can redistribute it and/or modify
 *   it under the terms of the GNU General Public License as published by
@@ -41,7 +41,9 @@ if(isset($_GET['origin']) && $_GET['origin'] == 'scan')
     header('location: apps/'.$_SESSION['businessapps'][0]['appid'].'/reopen.php');
 } elseif(count($_SESSION['businessapps'])== 1) {
     $_SESSION['config']['app_id'] = $_SESSION['businessapps'][0]['appid'];
-    header('location: apps/'.$_SESSION['config']['app_id']
+    /*header('location: apps/'.$_SESSION['config']['app_id']
         . '/index.php?display=true&page=login&coreurl='
-        . $_SESSION['config']['coreurl']);
+        . $_SESSION['config']['coreurl']);*/
+    header('location: apps/'.$_SESSION['config']['app_id']
+        . '/index.php?display=true&page=login');
 }
