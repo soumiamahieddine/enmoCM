@@ -119,6 +119,11 @@ for($i=0; $i<count($status);$i++)
 $status_str = preg_replace('/,$/', '', $status_str);
 $where_request.= "  status not in (".$status_str.") ";
 
+if ($_REQUEST['mode'] == 'popup' && isset($_SESSION['excludeId'])) {
+    $where_request .= 'AND res_id <> '.$_SESSION['excludeId'].' AND (res_id not in ((SELECT res_parent FROM res_linked WHERE res_child = '.$_SESSION['excludeId'].' )) and res_id not in ((SELECT res_child FROM res_linked WHERE res_parent = '.$_SESSION['excludeId'].')))';
+    unset($_SESSION['excludeId']);
+}
+
 if(isset($_SESSION['searching']['comp_query']) && trim($_SESSION['searching']['comp_query']) <> '')
 {
     $add_security = false;
@@ -138,6 +143,7 @@ else
 }
 $where_request = str_replace(" ()", "(1=-1)", $where_request);
 $where_request = str_replace("and ()", "", $where_request);
+
 $list=new list_show();
 
 $orderstr = $list->define_order($order, $field);

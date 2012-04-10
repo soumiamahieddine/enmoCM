@@ -1272,11 +1272,19 @@ if (!defined('_LINK_TAB')) {
 }
 
 if (!defined('_LINK_DESC_FOR')) {
-    define('_LINK_DESC_FOR', 'Descendents links for the doc n&deg; ');
+    define('_LINK_DESC_FOR', 'Doc links to this one');
 }
 
 if (!defined('_LINK_ASC_FOR')) {
-    define('_LINK_ASC_FOR', 'Ascendents links for the doc n&deg; ');
+    define('_LINK_ASC_FOR', 'This doc is links to');
+}
+
+if (!defined('_ADD_A_LINK')) {
+    define('_ADD_A_LINK', 'Add a link');
+}
+
+if (!defined('_LINK_ACTION')) {
+    define('_LINK_ACTION', 'Link');
 }
 
 /******************** Versions ************/

@@ -1278,8 +1278,8 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     $versionTable = $security->retrieve_version_table_from_coll_id(
                         $coll_id
                     );
-                    $selectVersions = "select res_id from " 
-                        . $versionTable . " where res_id_master = " 
+                    $selectVersions = "select res_id from "
+                        . $versionTable . " where res_id_master = "
                         . $s_id . " and status <> 'DEL' order by res_id desc";
                     $dbVersions = new dbquery();
                     $dbVersions->connect();
@@ -1299,13 +1299,13 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     if ($nb_versions_for_title == 0) {
                         $extend_title_for_versions = '';
                     } else {
-                        $extend_title_for_versions = ' (' 
+                        $extend_title_for_versions = ' ('
                             . $nb_versions_for_title . ') ';
                     }
                     $_SESSION['cm']['resMaster'] = '';
                     ?>
                     <dt>
-                        <?php 
+                        <?php
                         echo _VERSIONS . $extend_title_for_versions;
                         ?>
                     </dt>
@@ -1332,11 +1332,11 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                             <?php
                         }
                         ?>
-                        <iframe name="list_versions" id="list_versions" src="<?php 
+                        <iframe name="list_versions" id="list_versions" src="<?php
                             echo $_SESSION['config']['businessappurl'];
-                            ?>index.php?display=true&module=content_management&page=frame_list_versions&collId=<?php 
+                            ?>index.php?display=true&module=content_management&page=frame_list_versions&collId=<?php
                                 echo $coll_id;
-                            ?>&resMasterId=<?php 
+                            ?>&resMasterId=<?php
                                 echo $s_id;
                             ?>" frameborder="0" width="100%" height="520px"></iframe>
                     </dd>
@@ -1352,7 +1352,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     );
                     $Links = '';
 
-                    if ($nbLink > 0) {
+                    //if ($nbLink > 0) {
                         $Links .= '<dt>';
                             $Links .= _LINK_TAB;
                             $Links .= ' (';
@@ -1368,8 +1368,9 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                         );
                         if ($nbLinkDesc > 0) {
                             $Links .= '<h2>';
-                                $Links .= _LINK_DESC_FOR.$_SESSION['doc_id'];
+                                $Links .= _LINK_DESC_FOR;
                             $Links .= '</h2>';
+                            $Links .= '<br />';
                             $Links .= $Class_LinkController->formatMap(
                                 $Class_LinkController->getMap(
                                     $_SESSION['doc_id'],
@@ -1377,6 +1378,8 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                     'desc'
                                 )
                             );
+                            $Links .= '<br />';
+                            $Links .= '<br />';
                         }
 
                         $nbLinkAsc = $Class_LinkController->nbDirectLink(
@@ -1386,8 +1389,9 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                         );
                         if ($nbLinkAsc > 0) {
                             $Links .= '<h2>';
-                                $Links .= _LINK_ASC_FOR.$_SESSION['doc_id'];
+                                $Links .= _LINK_ASC_FOR;
                             $Links .= '</h2>';
+                            $Links .= '<br />';
                             $Links .= $Class_LinkController->formatMap(
                                 $Class_LinkController->getMap(
                                     $_SESSION['doc_id'],
@@ -1395,9 +1399,16 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                     'asc'
                                 )
                             );
+                            $Links .= '<br />';
+                            $Links .= '<br />';
                         }
+
+                        if ($core->test_service('add_links', 'apps', false)) {
+                            include_once 'apps/'.$_SESSION['config']['app_id'].'/add_links.php';
+                        }
+
                         $Links .= '</dd>';
-                    }
+                    //}
 
                     echo $Links;
                 ?>

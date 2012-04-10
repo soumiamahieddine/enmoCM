@@ -49,6 +49,10 @@ $status_obj = new manage_status();
 $sec = new security();
 $_SESSION['indexation'] = false;
 
+if (isset($_REQUEST['exclude'])){
+    $_SESSION['excludeId'] = $_REQUEST['exclude'];
+}
+
 $mode = 'normal';
 if(isset($_REQUEST['mode'])&& !empty($_REQUEST['mode']))
 {

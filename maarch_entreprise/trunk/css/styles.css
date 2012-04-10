@@ -3598,9 +3598,10 @@ a.legend hr
     width: 460px;
 }
 .linkDiv {
-    padding: 10px;
-    padding-left: 20px;
-    margin: 5px;
+    padding: 5px;
+    padding-left: 15px;
+    margin: 0px;
+    margin-bottom: 5px;
     border-bottom: 1px solid rgba(28, 153, 197, 1);
     border-left: 1px solid rgba(28, 153, 197, 1);
     border-right: 1px solid rgba(28, 153, 197, 1);

@@ -792,7 +792,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             );
             if ($nbLinkDesc > 0) {
                 $frm_str .= '<h2>';
-                    $frm_str .= _LINK_DESC_FOR.$_SESSION['doc_id'];
+                    $frm_str .= _LINK_DESC_FOR;
                 $frm_str .= '</h2>';
                 $frm_str .= $Class_LinkController->formatMap(
                     $Class_LinkController->getMap(
@@ -809,7 +809,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             );
             if ($nbLinkAsc > 0) {
                 $frm_str .= '<h2>';
-                    $frm_str .= _LINK_ASC_FOR.$_SESSION['doc_id'];
+                    $frm_str .= _LINK_ASC_FOR;
                 $frm_str .= '</h2>';
                 $frm_str .= $Class_LinkController->formatMap(
                     $Class_LinkController->getMap(

@@ -1685,11 +1685,19 @@ if (!defined('_LINK_TAB')) {
 }
 
 if (!defined('_LINK_DESC_FOR')) {
-    define('_LINK_DESC_FOR', 'Liaisons descendantes pour le doc n&deg; ');
+    define('_LINK_DESC_FOR', 'Courriers li&eacute;s &agrave; ce doc');
 }
 
 if (!defined('_LINK_ASC_FOR')) {
-    define('_LINK_ASC_FOR', 'Liaisons ascendantes pour le doc n&deg; ');
+    define('_LINK_ASC_FOR', 'Courriers auxquels est li&eacute; ce doc');
+}
+
+if (!defined('_ADD_A_LINK')) {
+    define('_ADD_A_LINK', 'Ajouter un lien');
+}
+
+if (!defined('_LINK_ACTION')) {
+    define('_LINK_ACTION', 'Lier');
 }
 
 /******************** Versions ************/

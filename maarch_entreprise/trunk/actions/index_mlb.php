@@ -289,7 +289,7 @@ $module, $collId, $mode )
                   $frmStr .= 'onclick="window.open(';
                     $frmStr .= '\'' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=indexing_searching&page=search_adv&mode=popup&action_form=show_res_id&modulename=attachments&init_search&nodetails\', ';
                     $frmStr .= '\'search_doc_for_attachment\', ';
-                    $frmStr .= '\'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=1020,height=710\'';
+                    $frmStr .= '\'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=1100,height=775\'';
                   $frmStr .= ');"';
                   $frmStr .= ' title="' . _SEARCH . '"';
                 $frmStr .= '>';
