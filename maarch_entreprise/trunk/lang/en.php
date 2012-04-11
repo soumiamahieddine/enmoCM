@@ -1287,6 +1287,10 @@ if (!defined('_LINK_ACTION')) {
     define('_LINK_ACTION', 'Link');
 }
 
+if (!defined('_LINK_ALREADY_EXISTS')) {
+    define('_LINK_ALREADY_EXISTS', 'This link already exists');
+}
+
 /******************** Versions ************/
 if (!defined('_VERSIONS')) {
     define('_VERSIONS', 'Versions');
