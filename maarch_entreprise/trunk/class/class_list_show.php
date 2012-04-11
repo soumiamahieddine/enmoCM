@@ -106,8 +106,8 @@ class list_show extends functions
     )
     {
         if ($template && $actual_template <> '') {
-			$str = '';
-			$str .= '<div style="text-align: right;"><input type="button" onclick="window.open(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&page=export\', \'_blank\');" class="button" name="submit" value="'.  _EXPORT_LIST.'" /></div>';
+            $str = '';
+            $str .= '<div style="text-align: right;"><input type="button" onclick="window.open(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&page=export\', \'_blank\');" class="button" name="submit" value="'.  _EXPORT_LIST.'" /></div>';
             require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR.'class_list_show_with_template.php');
             $list_temp = new list_show_with_template();
 
@@ -116,7 +116,7 @@ class list_show extends functions
             $show_full_list, $bool_check_form, $res_link, $module, $bool_show_listletters, $all_sentence,
             $whatname, $used_css , $comp_link, $link_in_line, $bool_show_actions_list , $actions,
             $hidden_fields, $actions_json, $do_action, $id_action , $open_details_popup, $do_actions_arr, $template, $template_list, $actual_template, true, $hide_standard_list);
-			$str .= '<div style="text-align: right;"><input type="button" onclick="window.open(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&page=export\', \'_blank\');" class="button" name="submit" value="'.  _EXPORT_LIST.'" /></div>';
+            $str .= '<div style="text-align: right;"><input type="button" onclick="window.open(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&page=export\', \'_blank\');" class="button" name="submit" value="'.  _EXPORT_LIST.'" /></div>';
             if($mode_string)
             {
                 return $str;
@@ -129,8 +129,10 @@ class list_show extends functions
         }
         else
         {
-			$str = '';
-			$str .= '<div style="text-align: right;"><input type="button" onclick="window.open(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&page=export\', \'_blank\');" class="button" name="submit" value="'.  _EXPORT_LIST.'" /></div>';
+            $str = '';
+            if ($bool_export) {
+                $str .= '<div style="text-align: right;"><input type="button" onclick="window.open(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&page=export\', \'_blank\');" class="button" name="submit" value="'.  _EXPORT_LIST.'" /></div>';
+            }
             require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR.'class_list_show_with_template.php');
             //show the document list in result of the search
             $page_list1 = "";
@@ -642,9 +644,9 @@ class list_show extends functions
             {
                 $str .= ' <input type="button" class="button" name="cancel" value="'._CLOSE_WINDOW.'" onclick="window.top.close();" />';
             }
-
-            $str .= '<div style="text-align: right;"><input type="button" onclick="window.open(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&page=export\', \'_blank\');" class="button" name="submit" value="'.  _EXPORT_LIST.'" /></div>';
-			
+            if ($bool_export) {
+                $str .= '<div style="text-align: right;"><input type="button" onclick="window.open(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&page=export\', \'_blank\');" class="button" name="submit" value="'.  _EXPORT_LIST.'" /></div>';
+            }
             if($mode_string)
             {
                 return $str;
@@ -1446,15 +1448,29 @@ class list_show extends functions
     }
 
 
-    public function list_simple($result, $nb_total, $title,$what,$key,$bool_view_document, $page_view = "", $used_css = 'listing spec', $page_modify ='', $height_page_modify = 400, $width_page_modify = 500, $page_del ='')
+    public function list_simple(
+        $result, 
+        $nb_total, 
+        $title,
+        $what,
+        $key,
+        $bool_view_document, 
+        $page_view = '', 
+        $used_css = 'listing spec', 
+        $page_modify = '', 
+        $height_page_modify = 400, 
+        $width_page_modify = 500, 
+        $page_del = '',
+        $modeString = false
+    )
     {
         //self::show_array($result);
-
         $listcolumn = array();
         $listshow = array();
         $listformat = array();
         $start = 0;
         $end = $nb_total;
+        $str = '';
         // put in tab the different label of the column
         if (isset($result[0])) {
             for ($j = 0; $j < count($result[0]); $j ++) {
@@ -1473,119 +1489,107 @@ class list_show extends functions
         //self::show_array($listcolumn);
         //self::show_array($listshow);
         $func = new functions();
-
         $nb_show = $_SESSION['config']['nblinetoshow'];
-
-        echo '<b>';
-        if(!empty($picto_path))
-        { echo '<img src="'.$picto_path.'" alt="" class="title_img" /> ';}
-        echo $title.'</b>';
-
-        echo ' <div align="center">';
-
-        ?>
-        <table border="0" cellspacing="0" class="<?php  echo $used_css;?>">
-             <thead>
-                <tr>
-                    <?php
-                if($bool_view_document)
-                {?>
-                    <th style="width:3%;">&nbsp;</th>
-                    <?php
-                }
-                    for($count_column = 0;$count_column < count($listcolumn);$count_column++)
-                    {
-                        if($listshow[$count_column]==true)
-                        {
-                            ?>
-                            <th style="width:<?php  echo $result[0][$count_column]['size'];?>%;" valign="<?php  echo $result[0][$count_column]['valign'];?>"  align="<?php  echo $result[0][$count_column]['label_align'];?>" ><span><?php  echo $listcolumn[$count_column];?></span><?php
+        $str .= '<b>';
+        if (!empty($picto_path)) {
+            $str .= '<img src="'.$picto_path.'" alt="" class="title_img" /> ';
+        }
+        $str .= $title . '</b>';
+        $str .= ' <div align="center">';
+        
+        $str .= '<table border="0" cellspacing="0" class="' . $used_css . '">';
+             $str .= '<thead>';
+                $str .= '<tr>';
+                    if ($bool_view_document) {
+                        $str .= '<th style="width:3%;">&nbsp;</th>';
+                    }
+                    for ($count_column = 0;$count_column < count($listcolumn);$count_column++) {
+                        if ($listshow[$count_column]==true) {
+                            $str .= '<th style="width:' . $result[0][$count_column]['size'] 
+                                . '%;" valign="' . $result[0][$count_column]['valign'] 
+                                . '"  align="' . $result[0][$count_column]['label_align'] 
+                                . '" ><span>' . $listcolumn[$count_column] . '</span>';
                         }
                     }
-                    ?>
-                    <th style="width:4%;" valign="bottom" >&nbsp; </th>
-                </tr>
-            </thead>
-            <tbody>
-        <?php
-
+                    $str .= '<th style="width:4%;" valign="bottom" >&nbsp; </th>';
+                $str .= '</tr>';
+            $str .= '</thead>';
+            $str .= '<tbody>';
         $color = "";
-        for($theline = $start; $theline < $end ; $theline++)
-        {
-
-            if($color == ' class="col"')
-            {
+        for ($theline = $start; $theline < $end ; $theline++) {
+            if($color == ' class="col"') {
                 $color = '';
-            }
-            else
-            {
+            } else {
                 $color = ' class="col"';
             }
-            ?>
-            <tr <?php  echo $color; ?>>
-               <?php
-                 if($bool_view_document)
-                 {
-                    echo " <td ><a href='".$page_view."&amp;id=".$result[$theline][0][$key]."' target=\"_blank\" title='"._VIEW_DOC."'>
-                            <img src='".$_SESSION['config']['businessappurl']."static.php?filename=picto_dld.gif' alt='"._VIEW_DOC."' /></a></td>";
+            $str .= '<tr ' . $color . '>';
+                 if ($bool_view_document) {
+                    $str .= " <td><a href='" . $page_view . "&amp;id=" 
+                        . $result[$theline][0][$key] 
+                        . "' target=\"_blank\" title='" . _VIEW_DOC . "'>"
+                        . "<img src='" . $_SESSION['config']['businessappurl'] 
+                        . "static.php?filename=picto_dld.gif' alt='" . _VIEW_DOC 
+                        . "' /></a></td>";
                  }
-
                 $bool_modify = false;
                 $bool_del = false;
-                for ($count_column = 0; $count_column < count($listcolumn); $count_column ++) {
+                for ($count_column=0;$count_column<count($listcolumn);$count_column ++) {
                     if (isset($result[$theline][$count_column]['show'])
                         && $result[$theline][$count_column]['show'] == true
                     ) {
-                        ?>
-                            <td style="width:<?php  echo $result[$theline][$count_column]['size'];?>%;" align="<?php  echo $result[$theline][$count_column]['align'];?>"><?php  echo functions::show_str(self::thisword($result[$theline][$count_column]['value'],$what)); ?></td>
-                        <?php
-                    }
-                    else
-                    {
-                        if( $result[$theline][$count_column]['column'] == 'modify_item' &&  $result[$theline][$count_column]['value'] == true)
-                        {
+                            $str .= '<td style="width:' 
+                                . $result[$theline][$count_column]['size']
+                                . '%;" align="' 
+                                . $result[$theline][$count_column]['align'] 
+                                . '">' 
+                                . functions::show_str(self::thisword($result[$theline][$count_column]['value'], $what))
+                                . '</td>';
+                    } else {
+                        if ($result[$theline][$count_column]['column'] == 'modify_item' &&  $result[$theline][$count_column]['value'] == true) {
                             $bool_modify = true;
                         }
-                        if( $result[$theline][$count_column]['column']  == 'delete_item' &&  $result[$theline][$count_column]['value'] == true)
-                        {
+                        if ($result[$theline][$count_column]['column']  == 'delete_item' &&  $result[$theline][$count_column]['value'] == true) {
                             $bool_del = true;
                         }
-
                     }
                 }
-                if($bool_modify)
-                {
-               ?><td class="action">
-                        <a  href="javascript://" class="change" onclick="window.open('<?php  echo $page_modify;?><?php  if(preg_match('/\?/',$page_modify)){echo "&amp;";}else{echo "?";}?>id=<?php  echo $result[$theline][0][$key];?>','','height=<?php  echo $height_page_modify;?>, width=<?php  echo $width_page_modify;?>,scrollbars=yes,resizable=yes');" ><?php  echo _MODIFY;?></a>
-                    </td>
-                <?php  }
-                else
-                {
-                 ?>
-                    <td class="action">&nbsp;</td>
-                <?php
+                if ($bool_modify) {
+                    $str .= '<td class="action">';
+                        $str .= '<a  href="javascript://" class="change" onclick="window.open(\''
+                            . $page_modify;
+                        if(preg_match('/\?/',$page_modify)){
+                            $str .= '&amp;';
+                        } else {
+                            $str .= '?';
+                        }
+                        $str .= 'id=' . $result[$theline][0][$key] . '\',\'\',\'height='
+                            . $height_page_modify . ', width=' . $width_page_modify 
+                            . ',scrollbars=yes,resizable=yes\');">'
+                            . _MODIFY . '</a>';
+                    $str .= '</td>';
+                } else {
+                    $str .= '<td class="action">&nbsp;</td>';
                 }
-                if($bool_del)
-                {?><td class="action" >
-                        <a href="<?php  echo $page_del;?>&id=<?php  echo $result[$theline][0][$key];?>" class="delete"
-                    onclick="return(confirm('<?php  echo _REALLY_DELETE;?> ?\n\r\n\r<?php  echo _DEFINITIVE_ACTION; ?>'));"><?php  echo _DELETE;?></a>
-                    </td>
-               <?php  }
-               else
-                {
-                 ?>
-                    <td class="action">&nbsp;</td>
-                <?php
-                } ?>
-            </tr>
-        <?php
+                if ($bool_del) {
+                    $str .= '<td class="action">';
+                        $str .= '<a href="' . $page_del . '&id=' . $result[$theline][0][$key] . '" class="delete"'
+                            . 'onclick="return(confirm(\'' . _REALLY_DELETE . ' ?\n\r\n\r'
+                            . _DEFINITIVE_ACTION . '\'));">'
+                            . _DELETE . '</a>';
+                    $str .= '</td>';
+                } else {
+                    $str .= '<td class="action">&nbsp;</td>';
+                }
+            $str .= '</tr>';
         }
-        ?>
-              </tbody>
-        </table>
-
-        </div>
-    <?php
+        $str .= '</tbody>';
+        $str .= '</table>';
+        $str .= '</div>';
+        if ($modeString) {
+            return $str;
+        } else {
+            echo $str;
+        }
     }
 }
 
-?>
