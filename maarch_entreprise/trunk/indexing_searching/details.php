@@ -72,12 +72,6 @@ if ($core->test_service('view_technical_infos', 'apps', false)) {
     $viewTechnicalInfos = true;
 }
 
-//test service view versions
-$viewVersions = false;
-if ($core->test_service('view_versions', 'apps', false)) {
-    $viewVersions = true;
-}
-
 //test service add new version
 $addNewVersion = false;
 if ($core->test_service('add_new_version', 'apps', false)) {
@@ -423,70 +417,18 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     }
                     ?>
                 </p>
-                <?php
-                if ($core->is_module_loaded('content_management') && $viewVersions) {
-                    $versionTable = $security->retrieve_version_table_from_coll_id(
-                        $coll_id
-                    );
-                    $selectVersions = "select res_id from "
-                        . $versionTable . " where res_id_master = "
-                        . $s_id . " and status <> 'DEL' order by res_id desc";
-                    $dbVersions = new dbquery();
-                    $dbVersions->connect();
-                    $dbVersions->query($selectVersions);
-                    $nb_versions_for_title = $dbVersions->nb_result();
-                    $lineLastVersion = $dbVersions->fetch_object();
-                    $lastVersion = $lineLastVersion->res_id;
-                    if ($lastVersion <> '') {
-                        ?>
-                        <p id="viewdoc">
-                            <a href="<?php
-                                echo $_SESSION['config']['businessappurl'];
-                                ?>index.php?display=true&dir=indexing_searching&page=view_resource_controler&id=<?php
-                                echo $s_id;
-                                ?>" target="_blank"><?php
-                                echo _VIEW_ORIGINAL;
-                                ?></a> &nbsp;|&nbsp;
-                            <a href="<?php
-                                echo $_SESSION['config']['businessappurl'];
-                                ?>index.php?display=true&dir=indexing_searching&page=view_resource_controler&id=<?php
-                                echo $lastVersion;
-                                ?>&versionTable=<?php
-                                echo $versionTable;
-                                ?>" target="_blank"><?php
-                                echo _VIEW_LAST_VERSION;
-                                ?></a> &nbsp;|&nbsp;
-                        </p>
-                        </b>&nbsp;
-                        <?php
-                    } else {
-                        ?>
-                        <p id="viewdoc">
-                            <a href="<?php
-                                echo $_SESSION['config']['businessappurl'];
-                                ?>index.php?display=true&dir=indexing_searching&page=view_resource_controler&id=<?php
-                                echo $s_id;
-                                ?>" target="_blank"><?php
-                                echo _VIEW_DOC;
-                                ?></a> &nbsp;| &nbsp;
-                        </p></b>&nbsp;
-                        <?php
-                    }
-                } else {
-                    ?>
-                    <p id="viewdoc">
-                        <a href="<?php
-                            echo $_SESSION['config']['businessappurl'];
-                            ?>index.php?display=true&dir=indexing_searching&page=view_resource_controler&id=<?php
-                            echo $s_id;
-                            ?>" target="_blank"><?php
-                            echo _VIEW_DOC;
-                            ?></a> &nbsp;|&nbsp;
-                    </p>
-                    </b>&nbsp;
-                    <?php
-                }
-                ?>
+                <p id="viewdoc">
+                    <a href="<?php
+                        echo $_SESSION['config']['businessappurl'];
+                        ?>index.php?display=true&dir=indexing_searching&page=view_resource_controler&id=<?php
+                        echo $s_id;
+                        ?>" target="_blank"><img alt="<?php echo _CREATE_NEW_VERSION;?>" src="<?php echo
+                            $_SESSION['config']['businessappurl'];
+                            ?>static.php?filename=picto_dld.gif" border="0" alt="" />&nbsp;<?php
+                        echo _VIEW_DOC;
+                        ?></a>
+                </p>
+                </b>&nbsp;
             </div>
             <br/>
             <dl id="tabricator1">
@@ -1274,75 +1216,72 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     </dd>
                     <?php
                 }
-                if ($core->is_module_loaded('content_management') && $viewVersions) {
-                    $versionTable = $security->retrieve_version_table_from_coll_id(
+
+                //VERSIONS
+                $versionTable = $security->retrieve_version_table_from_coll_id(
+                    $coll_id
+                );
+                $selectVersions = "select res_id from "
+                    . $versionTable . " where res_id_master = "
+                    . $s_id . " and status <> 'DEL' order by res_id desc";
+                $dbVersions = new dbquery();
+                $dbVersions->connect();
+                $dbVersions->query($selectVersions);
+                $nb_versions_for_title = $dbVersions->nb_result();
+                $lineLastVersion = $dbVersions->fetch_object();
+                $lastVersion = $lineLastVersion->res_id;
+                if ($lastVersion <> '') {
+                    $objectId = $lastVersion;
+                    $objectTable = $versionTable;
+                } else {
+                    $objectTable = $security->retrieve_table_from_coll(
                         $coll_id
                     );
-                    $selectVersions = "select res_id from "
-                        . $versionTable . " where res_id_master = "
-                        . $s_id . " and status <> 'DEL' order by res_id desc";
-                    $dbVersions = new dbquery();
-                    $dbVersions->connect();
-                    $dbVersions->query($selectVersions);
-                    $nb_versions_for_title = $dbVersions->nb_result();
-                    $lineLastVersion = $dbVersions->fetch_object();
-                    $lastVersion = $lineLastVersion->res_id;
-                    if ($lastVersion <> '') {
-                        $objectId = $lastVersion;
-                        $objectTable = $versionTable;
-                    } else {
-                        $objectTable = $security->retrieve_table_from_coll(
-                            $coll_id
-                        );
-                        $objectId = $s_id;
-                    }
-                    if ($nb_versions_for_title == 0) {
-                        $extend_title_for_versions = '';
-                    } else {
-                        $extend_title_for_versions = ' ('
-                            . $nb_versions_for_title . ') ';
-                    }
-                    $_SESSION['cm']['resMaster'] = '';
+                    $objectId = $s_id;
+                    $_SESSION['cm']['objectId4List'] = $s_id;
+                }
+                if ($nb_versions_for_title == 0) {
+                    $extend_title_for_versions = '0';
+                } else {
+                    $extend_title_for_versions = $nb_versions_for_title;
+                }
+                $_SESSION['cm']['resMaster'] = '';
+                ?>
+                <dt>
+                    <?php
+                    echo _VERSIONS . ' (<span id="nbVersions">'
+                        . $extend_title_for_versions . '</span>)';
                     ?>
-                    <dt>
-                        <?php
-                        echo _VERSIONS . $extend_title_for_versions;
-                        ?>
-                    </dt>
-                    <dd>
+                </dt>
+                <dd>
+                    <div class="error" id="divError" name="divError"></div>
+                    <div style="text-align:center;">
+                        <a href="<?php
+                            echo $_SESSION['config']['businessappurl'];
+                            ?>index.php?display=true&dir=indexing_searching&page=view_resource_controler&id=<?php
+                            echo $s_id;
+                            ?>&original" target="_blank">
+                            <img alt="<?php echo _CREATE_NEW_VERSION;?>" src="<?php echo
+                                    $_SESSION['config']['businessappurl'];
+                                    ?>static.php?filename=picto_dld.gif" border="0" alt="" />&nbsp;<?php
+                            echo _VIEW_ORIGINAL;
+                            ?></a> &nbsp;|&nbsp;
                         <?php
                         if ($addNewVersion) {
+                            $_SESSION['cm']['objectTable'] = $objectTable;
                             ?>
-                            <div style="text-align:center;">
-                                <a href="#" onClick="loadApplet('<?php
-                                    echo $_SESSION['config']['coreurl'];
-                                    ?>modules/content_management/applet_launcher.php?objectType=resource&objectId=<?php
-                                        echo $objectId;
-                                    ?>&objectTable=<?php
-                                        echo $objectTable;
-                                    ?>&resMaster=<?php
-                                    echo $s_id;
-                                    ?>');">
-                                    <img alt="<?php echo _CREATE_NEW_VERSION;?>" src="<?php echo
-                                        $_SESSION['config']['businessappurl'];
-                                        ?>static.php?filename=modif_note.png&module=notes" border="0" alt="" />
-                                    <?php echo _CREATE_NEW_VERSION;?>
-                                </a>
-                            </div>
+                            <div id="createVersion"></div>
                             <?php
                         }
                         ?>
-                        <iframe name="list_versions" id="list_versions" src="<?php
-                            echo $_SESSION['config']['businessappurl'];
-                            ?>index.php?display=true&module=content_management&page=frame_list_versions&collId=<?php
-                                echo $coll_id;
-                            ?>&resMasterId=<?php
-                                echo $s_id;
-                            ?>" frameborder="0" width="100%" height="520px"></iframe>
-                    </dd>
-                    <?php
-                }
-                ?>
+                    </div>
+                    <div id="loadVersions"></div>
+                    <script language="javascript">
+                        showDiv("loadVersions", "nbVersions", "createVersion", "<?php
+                            echo $_SESSION['urltomodules'] ;
+                            ?>content_management/list_versions.php");
+                    </script>
+                </dd>
                 <?php $Class_LinkController = new LinkController(); ?>
                 <?php
                     $nbLink = $Class_LinkController->nbDirectLink(

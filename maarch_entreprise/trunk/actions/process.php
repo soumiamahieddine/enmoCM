@@ -530,16 +530,16 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $objectId = $res_id;
         }
         if ($nb_versions_for_title == 0) {
-            $extend_title_for_versions = '';
+            $extend_title_for_versions = '0';
         } else {
-            $extend_title_for_versions = ' ('
-                . $nb_versions_for_title . ') ';
+            $extend_title_for_versions = $nb_versions_for_title;
         }
         $frm_str .= '<h3 onclick="new Effect.toggle(\'versions_div\', \'blind\', ';
         $frm_str .= '{delay:0.2});return false;" class="categorie" style="width:90%;">';
             $frm_str .= '<img src="' . $_SESSION['config']['businessappurl']
                 . 'static.php?filename=plus.png" alt="" />&nbsp;<b>'
-                . _VERSIONS . $extend_title_for_versions . ' :</b>';
+                . _VERSIONS . ' (<span id="nbVersions">'
+                . $extend_title_for_versions . '</span>) :</b>';
             $frm_str .= '<span class="lb1-details">&nbsp;</span>';
         $frm_str .= '</h3>';
         $frm_str .= '<br>';
@@ -805,6 +805,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                             'desc'
                         ),
                         'desc'
+
                     );
                     $frm_str .= '<br />';
                 }
@@ -824,6 +825,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                             'asc'
                         ),
                         'asc'
+
                     );
                     $frm_str .= '<br />';
                 }
@@ -842,6 +844,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .= '<div>';
                 $frm_str .= '<center><h2>' . _VERSIONS . '</h2></center>';
                 $frm_str .= '<div style="text-align:center;">';
+
                     if ($lastVersion <> '') {
                         $frm_str .= '<a href="';
                             $frm_str .=  $_SESSION['config']['businessappurl'];
@@ -869,26 +872,14 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                     . 'index.php?display=true&module=content_management&page=frame_list_versions&collId='
                     . $_SESSION['collection_id_choice'] . '&resMasterId=' . $res_id . '" '
                     . 'frameborder="0" width="100%" height="320px"></iframe>';
+
         $frm_str .= '</div>';
     $frm_str .= '</div>';
 
     //RESOURCE FRAME
-    if ($core->is_module_loaded('content_management') && $viewVersions) {
-        if ($lastVersion <> '') {
-            $frm_str .= '<iframe src="' . $_SESSION['config']['businessappurl']
-                . 'index.php?display=true&dir=indexing_searching&page=view_resource_controler&id='
-                . $objectId . '&versionTable='
-                . $versionTable . '" name="viewframe" id="viewframe" scrolling="auto" frameborder="0" width="100%"></iframe>';
-        } else {
-            $frm_str .= '<iframe src="' . $_SESSION['config']['businessappurl']
-                . 'index.php?display=true&dir=indexing_searching&page=view_resource_controler&id='
-                . $res_id . '" name="viewframe" id="viewframe" scrolling="auto" frameborder="0" width="100%"></iframe>';
-        }
-    } else {
-        $frm_str .= '<iframe src="' . $_SESSION['config']['businessappurl']
-            . 'index.php?display=true&dir=indexing_searching&page=view_resource_controler&id='
-            . $res_id . '" name="viewframe" id="viewframe" scrolling="auto" frameborder="0" width="100%"></iframe>';
-    }
+    $frm_str .= '<iframe src="' . $_SESSION['config']['businessappurl']
+        . 'index.php?display=true&dir=indexing_searching&page=view_resource_controler&id='
+        . $res_id . '" name="viewframe" id="viewframe" scrolling="auto" frameborder="0" width="100%"></iframe>';
 
     $frm_str .= '</div>';
 
