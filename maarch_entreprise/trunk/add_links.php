@@ -62,7 +62,7 @@ if (isset($_REQUEST['res_id']) && isset($_REQUEST['res_id_child'])) {
                $res_child,
                "DEL",
                'linkdel',
-               _LINK_TO_THE_DOCUMENT. '  ('.$res_parent.') ' . _LINK_DELETED;
+               _LINK_TO_THE_DOCUMENT. '  ('.$res_parent.') ' . _LINK_DELETED,
                $_SESSION['config']['databasetype'],
                'apps'
             );
