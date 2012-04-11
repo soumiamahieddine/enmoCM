@@ -259,9 +259,7 @@ if (count($_REQUEST['meta']) > 0) {
             {
                 $json_txt .= " 'subject' : ['".addslashes(trim($_REQUEST['subject']))."'],";
                 $where_request .= " lower(subject) like lower('%".$func->protect_string_db($_REQUEST['subject'])."%') and ";
-            } elseif (
-                $tab_id_fields[$j] == 'fulltext' 
-                && !empty($_REQUEST['fulltext'])
+            } elseif ($tab_id_fields[$j] == 'fulltext' && !empty($_REQUEST['fulltext'])
             ) {
                 // FULLTEXT
 				$fulltext_request = $func->store_html($_REQUEST['fulltext']);
@@ -276,7 +274,7 @@ if (count($_REQUEST['meta']) > 0) {
                 Zend_Search_Lucene_Analysis_Analyzer::setDefault(
                     new Zend_Search_Lucene_Analysis_Analyzer_Common_TextNum_CaseInsensitive()
                 );
-                $_SESSION['search']['plain_text'] = $fulltext_request;
+                $_SESSION['search']['plain_text'] = $_REQUEST['fulltext'];
                 //echo $_SESSION['search']['plain_text']; exit()
                 $path_to_lucene_index = $_SESSION['collections'][0]['path_to_lucene_index'];
                 //$lucene_all_words = explode(' ',$_REQUEST['fulltext']);
@@ -306,6 +304,48 @@ if (count($_REQUEST['meta']) > 0) {
                     $where_request .= " 1=-1 and ";
                 }
             }
+            //WELCOME PAGE
+            elseif ($tab_id_fields[$j] == 'welcome'  && (!empty($_REQUEST['welcome'])))
+            {
+				  $where_multifield_request .= "(lower(subject) LIKE lower('%".$func->protect_string_db($_REQUEST['welcome'])."%') "
+					."or lower(identifier) LIKE lower('%".$func->protect_string_db($_REQUEST['welcome'])."%') "
+					."or lower(title) LIKE lower('%".$func->protect_string_db($_REQUEST['welcome'])."%')) ";
+				$welcome = $func->store_html($_REQUEST['welcome']);
+				$json_txt .= " 'welcome' : ['" 
+                    . addslashes(trim($welcome)) . "'],";
+                set_include_path('apps' . DIRECTORY_SEPARATOR 
+                    . $_SESSION['config']['app_id'] 
+                    . DIRECTORY_SEPARATOR . 'tools' 
+                    . DIRECTORY_SEPARATOR . PATH_SEPARATOR . get_include_path()
+                );
+                require_once('Zend/Search/Lucene.php');
+                Zend_Search_Lucene_Analysis_Analyzer::setDefault(
+                    new Zend_Search_Lucene_Analysis_Analyzer_Common_TextNum_CaseInsensitive()
+                );
+                $path_to_lucene_index = $_SESSION['collections'][0]['path_to_lucene_index'];
+                if (is_dir($path_to_lucene_index))
+                {
+                    if (!$func->isDirEmpty($path_to_lucene_index)) {
+                        $index = Zend_Search_Lucene::open($path_to_lucene_index);
+						$hits = $index->find($welcome);
+              
+                        $Liste_Ids = "0";
+                        foreach ($hits as $hit) {
+                            $Liste_Ids .= ", '". $hit->Id ."'";
+                        }
+                        $where_request .= " res_id IN ($Liste_Ids) or ".$where_multifield_request;
+                    }
+                } else {
+                    $where_request .= " 1=-1 and ";
+                }
+              
+                
+                $where_request .=" and  ";
+/*
+				echo $welcome."<br/>";
+				echo $where_request;
+*/
+			}
             // PRIORITY
             elseif ($tab_id_fields[$j] == 'priority' && (!empty($_REQUEST['priority']) ||$_REQUEST['priority'] == 0) )
             {
