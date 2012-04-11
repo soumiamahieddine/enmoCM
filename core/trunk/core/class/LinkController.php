@@ -51,7 +51,7 @@ class LinkController
 
         foreach ($arrayToFormat as $key => $value) {
             $infos = $this->getDocInfos($key, $_SESSION['current_basket']['coll_id']);
-            $return .= '<div id="ged_'.$key.'" class="linkDiv">';
+            $return .= '<div id="ged_'.$key.$sens.'" class="linkDiv">';
                 $return .= '<table>';
                     $return .= '<tr>';
                         $return .= '<td>';
@@ -94,7 +94,7 @@ class LinkController
                                 $return .= $status;
                         $return .= '</td>';
                         if ($core->test_service('add_links', 'apps', false) && $this->level <= 1) {
-                            if ($sens = 'asc') {
+                            if ($sens == 'asc') {
                                 $delParent = $key;
                                 $delChild = $_SESSION['doc_id'];
                             } else {
@@ -150,7 +150,6 @@ class LinkController
                 }
             }
         }
-
         return $return;
     }
 
