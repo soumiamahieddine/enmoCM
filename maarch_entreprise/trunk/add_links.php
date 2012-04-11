@@ -4,42 +4,107 @@ if (isset($_REQUEST['res_id']) && isset($_REQUEST['res_id_child'])) {
     if (!empty($_REQUEST['res_id'])) {
         require_once('core/class/class_core_tools.php');
         require_once('core/class/class_history.php');
+        require_once('core/class/LinkController.php');
 
         $Core_Tools = new core_tools;
         $Core_Tools->load_lang();
-
+        $Class_LinkController = new LinkController();
         $db = new dbquery;
         $db->connect();
 
         $res_parent = $_REQUEST['res_id'];
 
-        $queryLink = "INSERT INTO res_linked (res_parent, res_child, coll_id) VALUES('" . $res_parent . "', '" . $res_child . "', '" . $_SESSION['collection_id_choice'] . "')";
+        $queryTest = "SELECT * FROM res_linked WHERE res_parent=".$res_parent." AND res_child=".$res_child." AND coll_id='".$_SESSION['collection_id_choice']."'";
+        $db->query($queryTest);
+        $i = 0;
+        while($test = $db->fetch_object()) {
+            $i++;
+        }
 
-        $db->query($queryLink);
+        if ($i == 0) {
+            $queryLink = "INSERT INTO res_linked (res_parent, res_child, coll_id) VALUES('" . $res_parent . "', '" . $res_child . "', '" . $_SESSION['collection_id_choice'] . "')";
 
-        $hist2 = new history();
-        $hist2->add(
-            $_REQUEST['tableHist'],
-           $res_child,
-           "ADD",
-           'linkadd',
-           _LINKED_TO . $res_parent,
-           $_SESSION['config']['databasetype'],
-           'apps'
+            $db->query($queryLink);
+
+            $hist2 = new history();
+            $hist2->add(
+                $_REQUEST['tableHist'],
+               $res_child,
+               "ADD",
+               'linkadd',
+               _LINKED_TO . $res_parent,
+               $_SESSION['config']['databasetype'],
+               'apps'
+            );
+
+            $hist3 = new history();
+            $hist3->add(
+                $_REQUEST['tableHist'],
+                $res_parent,
+               "UP",
+               'linkup',
+               'le document ' . $res_child . ' ' . _NOW_LINK_WITH_THIS_ONE,
+               $_SESSION['config']['databasetype'],
+               'apps'
+            );
+        }
+
+        $formatText = '';
+
+        $nbLinkDesc = $Class_LinkController->nbDirectLink(
+            $_SESSION['doc_id'],
+            $_SESSION['collection_id_choice'],
+            'desc'
+        );
+        if ($nbLinkDesc > 0) {
+            $formatText .= '<img src="static.php?filename=cat_doc_incoming.gif" />';
+            $formatText .= $Class_LinkController->formatMap(
+                $Class_LinkController->getMap(
+                    $_SESSION['doc_id'],
+                    $_SESSION['collection_id_choice'],
+                    'desc'
+                )
+            );
+            $formatText .= '<br />';
+        }
+
+        $nbLinkAsc = $Class_LinkController->nbDirectLink(
+            $_SESSION['doc_id'],
+            $_SESSION['collection_id_choice'],
+            'asc'
+        );
+        if ($nbLinkAsc > 0) {
+            $formatText .= '<img src="static.php?filename=cat_doc_outgoing.gif" />';
+            $formatText .= $Class_LinkController->formatMap(
+                $Class_LinkController->getMap(
+                    $_SESSION['doc_id'],
+                    $_SESSION['collection_id_choice'],
+                    'asc'
+                )
+            );
+            $formatText .= '<br />';
+        }
+
+        if ($i != 0) {
+            $formatText .= '<br />';
+            $formatText .= '<span style="color: rgba(255, 0, 0, 1); font-weight: bold; font-size: larger;">';
+                $formatText .= _LINK_ALREADY_EXISTS;
+            $formatText .= '</span>';
+            $formatText .= '<br />';
+            $formatText .= '<br />';
+        }
+
+        $nb = $Class_LinkController->nbDirectLink(
+            $_SESSION['doc_id'],
+            $_SESSION['collection_id_choice'],
+            'all'
         );
 
-        $hist3 = new history();
-        $hist3->add(
-            $_REQUEST['tableHist'],
-            $res_parent,
-           "UP",
-           'linkup',
-           '(doc. ' . $res_child . ')' . _NOW_LINK_WITH_THIS_ONE,
-           $_SESSION['config']['databasetype'],
-           'apps'
-        );
+        echo "{status : 0, links : '" . addslashes($formatText) . "', nb : '".$nb."'}";
+        exit ();
+
     }
-    header("Location: index.php?page=".$_REQUEST['pageHeader']."&dir=".$_REQUEST['dirHeader']."&id=".$res_child);
+    //header("Location: index.php?page=".$_REQUEST['pageHeader']."&dir=".$_REQUEST['dirHeader']."&id=".$res_child);
 
 } else {
     $Links .= '<h2>';
@@ -81,27 +146,11 @@ if (isset($_REQUEST['res_id']) && isset($_REQUEST['res_id_child'])) {
                       $Links .= 'name="page" ';
                       $Links .= 'value="add_links" ';
                     $Links .= '>';
-                    $Links .= '<input ';
-                      $Links .= 'type="hidden" ';
-                      $Links .= 'name="display" ';
-                      $Links .= 'value="true" ';
-                    $Links .= '>';
 
                     $Links .= '<input ';
                       $Links .= 'type="hidden" ';
                       $Links .= 'name="tableHist" ';
                       $Links .= 'value="'.$table.'" ';
-                    $Links .= '>';
-
-                    $Links .= '<input ';
-                      $Links .= 'type="hidden" ';
-                      $Links .= 'name="pageHeader" ';
-                      $Links .= 'value="details" ';
-                    $Links .= '>';
-                    $Links .= '<input ';
-                      $Links .= 'type="hidden" ';
-                      $Links .= 'name="dirHeader" ';
-                      $Links .= 'value="indexing_searching" ';
                     $Links .= '>';
 
                 $Links .= '</td>';
@@ -114,7 +163,7 @@ if (isset($_REQUEST['res_id']) && isset($_REQUEST['res_id_child'])) {
                       $Links .= 'readonly="readonly" ';
                       $Links .= 'style="';
                         $Links .= 'background-color: rgba(225, 225, 225, 1); ';
-                        $Links .= 'border: solid 1px rgba(110, 110, 110, 1);';
+                        $Links .= 'border: solid 1px rgba(110, 110, 110, 1); ';
                       $Links .= '" ';
                     $Links .= '/>';
                 $Links .= '</td>';
@@ -129,8 +178,9 @@ if (isset($_REQUEST['res_id']) && isset($_REQUEST['res_id_child'])) {
                 $Links .= '<td';
                 $Links .= '>';
                     $Links .= '<input ';
-                      $Links .= 'type="submit" ';
+                      $Links .= 'type="button" ';
                       $Links .= 'class="button" ';
+                      $Links .= 'onClick="addLinks(\''.$_SESSION['config']['businessappurl'].'index.php?page=add_links&display=true\', \''.$_SESSION['doc_id'].'\', $(\'res_id\').value)" ';
                       $Links .= 'value=" '._LINK_ACTION.' " ';
                     $Links .= '>';
                 $Links .= '</td>';
@@ -142,4 +192,3 @@ if (isset($_REQUEST['res_id']) && isset($_REQUEST['res_id_child'])) {
 /*
 AND res_id <> 170 AND (res_id not in ((SELECT res_parent FROM res_linked WHERE res_child = 170 )) and res_id not in ((SELECT res_child FROM res_linked WHERE res_parent = 170)))
 */
-

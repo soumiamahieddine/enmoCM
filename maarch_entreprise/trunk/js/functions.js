@@ -2167,3 +2167,35 @@ function show_attach(state) {
 		$('attach_show').setStyle({display: 'none'});
 	}
 }
+
+function addLinks(path_manage_script, child, parent) {
+    //window.alert('child : '+child+', parent : '+parent);
+    var divName = 'loadLinks';
+    var spanNb = 'nbLinks';
+    if(child != '' && parent != '') {
+        new Ajax.Request(path_manage_script,
+        {
+            method:'post',
+            parameters: { res_id : parent,
+                          res_id_child  : child
+                        },
+                onSuccess: function(answer){
+                eval("response = "+answer.responseText);
+                if(response.status == 0 || response.status == 1) {
+                    if(response.status == 0) {
+                        $(divName).innerHTML = response.links;
+                        $(spanNb).innerHTML = response.nb;
+
+                    } else {
+                        //
+                    }
+                } else {
+                    try {
+                        $(divName).innerHTML = response.error_txt;
+                    }
+                    catch(e){}
+                }
+            }
+        });
+    }
+}

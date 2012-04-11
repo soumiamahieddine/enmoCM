@@ -1673,7 +1673,7 @@ if (!defined('_LINK_REFERENCE')) {
 }
 
 if (!defined('_LINKED_TO')) {
-    define('_LINKED_TO', 'Li&eacute; au doc ');
+    define('_LINKED_TO', 'Li&eacute; au document ');
 }
 
 if (!defined('_NOW_LINK_WITH_THIS_ONE')) {
@@ -1685,19 +1685,23 @@ if (!defined('_LINK_TAB')) {
 }
 
 if (!defined('_LINK_DESC_FOR')) {
-    define('_LINK_DESC_FOR', 'Courriers li&eacute;s &agrave; ce doc');
+    define('_LINK_DESC_FOR', 'Courrier(s) li&eacute;s &agrave; ce document');
 }
 
 if (!defined('_LINK_ASC_FOR')) {
-    define('_LINK_ASC_FOR', 'Courriers auxquels est li&eacute; ce doc');
+    define('_LINK_ASC_FOR', 'Courriers au(x)quel(s) est li&eacute; ce document');
 }
 
 if (!defined('_ADD_A_LINK')) {
-    define('_ADD_A_LINK', 'Ajouter un lien');
+    define('_ADD_A_LINK', 'Ajouter une liaison');
 }
 
 if (!defined('_LINK_ACTION')) {
     define('_LINK_ACTION', 'Lier');
+}
+
+if (!defined('_LINK_ALREADY_EXISTS')) {
+    define('_LINK_ALREADY_EXISTS', 'Cette liaison &eacute;xiste d&eacute;j&agrave;');
 }
 
 /******************** Versions ************/

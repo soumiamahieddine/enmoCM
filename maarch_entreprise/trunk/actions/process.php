@@ -460,7 +460,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .= '<h3 onclick="new Effect.toggle(\'links_div\', \'blind\', {delay:0.2});'
     . 'return false;"  class="categorie" style="width:90%;">';
     $frm_str .= '<img src="' . $_SESSION['config']['businessappurl']
-        . 'static.php?filename=plus.png" alt="" id="img_cases" />&nbsp;<b>' . _LINK_TAB . ' ('.$nbLink.') :</b>';
+        . 'static.php?filename=plus.png" alt="" id="img_cases" />&nbsp;<b>' . _LINK_TAB . ' (<span id="nbLinks">'.$nbLink.'</span>) :</b>';
     $frm_str .= '<span class="lb1-details">&nbsp;</span>';
     $frm_str .= '</h3>';
     $frm_str .= '<br>';
@@ -497,10 +497,10 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                 $frm_str .= '</table>';
             $frm_str .= '</div>';
         $frm_str .= '</div>';
-        $frm_str .='<input type="hidden" name="res_id" id="res_id"  value="' . $res_id . '" />';
+        $frm_str .='<input type="hidden" name="res_id_to_process" id="res_id_to_process"  value="' . $res_id . '" />';
         $frm_str .= '<br>';
     }
-    
+
     //test service add new version
     $viewVersions = false;
     if ($core->test_service('add_new_version', 'apps', false)) {
@@ -511,8 +511,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $versionTable = $sec->retrieve_version_table_from_coll_id(
             $coll_id
         );
-        $selectVersions = "select res_id from " 
-            . $versionTable . " where res_id_master = " 
+        $selectVersions = "select res_id from "
+            . $versionTable . " where res_id_master = "
             . $res_id . " and status <> 'DEL' order by res_id desc";
         $dbVersions = new dbquery();
         $dbVersions->connect();
@@ -532,13 +532,13 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         if ($nb_versions_for_title == 0) {
             $extend_title_for_versions = '';
         } else {
-            $extend_title_for_versions = ' (' 
+            $extend_title_for_versions = ' ('
                 . $nb_versions_for_title . ') ';
         }
         $frm_str .= '<h3 onclick="new Effect.toggle(\'versions_div\', \'blind\', ';
         $frm_str .= '{delay:0.2});return false;" class="categorie" style="width:90%;">';
             $frm_str .= '<img src="' . $_SESSION['config']['businessappurl']
-                . 'static.php?filename=plus.png" alt="" />&nbsp;<b>' 
+                . 'static.php?filename=plus.png" alt="" />&nbsp;<b>'
                 . _VERSIONS . $extend_title_for_versions . ' :</b>';
             $frm_str .= '<span class="lb1-details">&nbsp;</span>';
         $frm_str .= '</h3>';
@@ -784,51 +784,64 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 
     //LINKS FRAME
     $frm_str .= '<div id="links_div" style="display:none">';
-        $frm_str .= '<div>';
-            $nbLinkDesc = $Class_LinkController->nbDirectLink(
-                $_SESSION['doc_id'],
-                $_SESSION['collection_id_choice'],
-                'desc'
-            );
-            if ($nbLinkDesc > 0) {
-                $frm_str .= '<h2>';
-                    $frm_str .= _LINK_DESC_FOR;
-                $frm_str .= '</h2>';
-                $frm_str .= $Class_LinkController->formatMap(
-                    $Class_LinkController->getMap(
-                        $_SESSION['doc_id'],
-                        $_SESSION['collection_id_choice'],
-                        'desc'
-                    )
+        $frm_str .= '<div style="text-align: left;">';
+            $frm_str .= '<h2>';
+                $frm_str .= _LINK_TAB;
+            $frm_str .= '</h2>';
+            $frm_str .= '<div id="loadLinks">';
+
+                $nbLinkDesc = $Class_LinkController->nbDirectLink(
+                    $_SESSION['doc_id'],
+                    $_SESSION['collection_id_choice'],
+                    'desc'
                 );
-            }
-            $nbLinkAsc = $Class_LinkController->nbDirectLink(
-                $_SESSION['doc_id'],
-                $_SESSION['collection_id_choice'],
-                'asc'
-            );
-            if ($nbLinkAsc > 0) {
-                $frm_str .= '<h2>';
-                    $frm_str .= _LINK_ASC_FOR;
-                $frm_str .= '</h2>';
-                $frm_str .= $Class_LinkController->formatMap(
-                    $Class_LinkController->getMap(
-                        $_SESSION['doc_id'],
-                        $_SESSION['collection_id_choice'],
-                        'asc'
-                    )
+
+                if ($nbLinkDesc > 0) {
+                    $frm_str .= '<img src="static.php?filename=cat_doc_incoming.gif"/>';
+                    $frm_str .= $Class_LinkController->formatMap(
+                        $Class_LinkController->getMap(
+                            $_SESSION['doc_id'],
+                            $_SESSION['collection_id_choice'],
+                            'desc'
+                        )
+                    );
+                    $frm_str .= '<br />';
+                }
+
+                $nbLinkAsc = $Class_LinkController->nbDirectLink(
+                    $_SESSION['doc_id'],
+                    $_SESSION['collection_id_choice'],
+                    'asc'
                 );
+
+                if ($nbLinkAsc > 0) {
+                    $frm_str .= '<img src="static.php?filename=cat_doc_outgoing.gif" />';
+                    $frm_str .= $Class_LinkController->formatMap(
+                        $Class_LinkController->getMap(
+                            $_SESSION['doc_id'],
+                            $_SESSION['collection_id_choice'],
+                            'asc'
+                        )
+                    );
+                    $frm_str .= '<br />';
+                }
+            $frm_str .= '</div>';
+
+            if ($core_tools->test_service('add_links', 'apps', false)) {
+                include 'apps/'.$_SESSION['config']['app_id'].'/add_links.php';
+                $frm_str .= $Links;
             }
+
         $frm_str .= '</div>';
     $frm_str .= '</div>';
-    
+
     //VERSIONS FRAME
     $frm_str .= '<div id="versions_div" style="display:none">';
         $frm_str .= '<div>';
                 $frm_str .= '<center><h2>' . _VERSIONS . '</h2></center>';
                 $frm_str .= '<div style="text-align:center;">';
                     if ($lastVersion <> '') {
-                        $frm_str .= '<a href="'; 
+                        $frm_str .= '<a href="';
                             $frm_str .=  $_SESSION['config']['businessappurl'];
                             $frm_str .= 'index.php?display=true&dir=indexing_searching&page=view_resource_controler&id=';
                             $frm_str .= $res_id;
@@ -839,7 +852,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                     $frm_str .= '<img src="'.$_SESSION['config']['businessappurl']
                         . 'static.php?module=notes&filename=modif_note.png" border="0" alt="" />';
                             $frm_str .= '<a href="' . $_SESSION['config']['coreurl'];
-                                $frm_str .= 'modules/content_management/applet_launcher.php?objectType=resource&objectId='; 
+                                $frm_str .= 'modules/content_management/applet_launcher.php?objectType=resource&objectId=';
                                 $frm_str .= $objectId;
                                 $frm_str .= '&objectTable=';
                                 $frm_str .= $objectTable;
@@ -856,13 +869,13 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                     . 'frameborder="0" width="100%" height="320px"></iframe>';
         $frm_str .= '</div>';
     $frm_str .= '</div>';
-    
+
     //RESOURCE FRAME
     if ($core->is_module_loaded('content_management') && $viewVersions) {
         if ($lastVersion <> '') {
             $frm_str .= '<iframe src="' . $_SESSION['config']['businessappurl']
                 . 'index.php?display=true&dir=indexing_searching&page=view_resource_controler&id='
-                . $objectId . '&versionTable=' 
+                . $objectId . '&versionTable='
                 . $versionTable . '" name="viewframe" id="viewframe" scrolling="auto" frameborder="0" width="100%"></iframe>';
         } else {
             $frm_str .= '<iframe src="' . $_SESSION['config']['businessappurl']
@@ -948,7 +961,7 @@ function check_form($form_id,$values)
         if ($values[$i]['ID'] == "coll_id") {
             $coll_id = $values[$i]['VALUE'];
         }
-        if ($values[$i]['ID'] == "res_id") {
+        if ($values[$i]['ID'] == "res_id_to_process") {
             $res_id = $values[$i]['VALUE'];
         }
     }

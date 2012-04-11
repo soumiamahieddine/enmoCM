@@ -1355,53 +1355,49 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     //if ($nbLink > 0) {
                         $Links .= '<dt>';
                             $Links .= _LINK_TAB;
-                            $Links .= ' (';
+                            $Links .= ' (<span id="nbLinks">';
                             $Links .= $nbLink;
-                            $Links .= ')';
+                            $Links .= '</span>)';
                         $Links .= '</dt>';
                         $Links .= '<dd>';
-
-                        $nbLinkDesc = $Class_LinkController->nbDirectLink(
-                            $_SESSION['doc_id'],
-                            $_SESSION['collection_id_choice'],
-                            'desc'
-                        );
-                        if ($nbLinkDesc > 0) {
                             $Links .= '<h2>';
-                                $Links .= _LINK_DESC_FOR;
+                                $Links .= _LINK_TAB;
                             $Links .= '</h2>';
-                            $Links .= '<br />';
-                            $Links .= $Class_LinkController->formatMap(
-                                $Class_LinkController->getMap(
+                            $Links .= '<div id="loadLinks">';
+                                $nbLinkDesc = $Class_LinkController->nbDirectLink(
                                     $_SESSION['doc_id'],
                                     $_SESSION['collection_id_choice'],
                                     'desc'
-                                )
-                            );
-                            $Links .= '<br />';
-                            $Links .= '<br />';
-                        }
+                                );
+                                if ($nbLinkDesc > 0) {
+                                    $Links .= '<img src="static.php?filename=cat_doc_incoming.gif" />';
+                                    $Links .= $Class_LinkController->formatMap(
+                                        $Class_LinkController->getMap(
+                                            $_SESSION['doc_id'],
+                                            $_SESSION['collection_id_choice'],
+                                            'desc'
+                                        )
+                                    );
+                                    $Links .= '<br />';
+                                }
 
-                        $nbLinkAsc = $Class_LinkController->nbDirectLink(
-                            $_SESSION['doc_id'],
-                            $_SESSION['collection_id_choice'],
-                            'asc'
-                        );
-                        if ($nbLinkAsc > 0) {
-                            $Links .= '<h2>';
-                                $Links .= _LINK_ASC_FOR;
-                            $Links .= '</h2>';
-                            $Links .= '<br />';
-                            $Links .= $Class_LinkController->formatMap(
-                                $Class_LinkController->getMap(
+                                $nbLinkAsc = $Class_LinkController->nbDirectLink(
                                     $_SESSION['doc_id'],
                                     $_SESSION['collection_id_choice'],
                                     'asc'
-                                )
-                            );
-                            $Links .= '<br />';
-                            $Links .= '<br />';
-                        }
+                                );
+                                if ($nbLinkAsc > 0) {
+                                    $Links .= '<img src="static.php?filename=cat_doc_outgoing.gif" />';
+                                    $Links .= $Class_LinkController->formatMap(
+                                        $Class_LinkController->getMap(
+                                            $_SESSION['doc_id'],
+                                            $_SESSION['collection_id_choice'],
+                                            'asc'
+                                        )
+                                    );
+                                    $Links .= '<br />';
+                                }
+                            $Links .= '</div>';
 
                         if ($core->test_service('add_links', 'apps', false)) {
                             include_once 'apps/'.$_SESSION['config']['app_id'].'/add_links.php';
