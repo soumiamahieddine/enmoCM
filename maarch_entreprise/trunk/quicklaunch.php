@@ -38,9 +38,23 @@ $core_tools->test_user();
 $core_tools->test_service('quicklaunch', "apps");
 ?>
 <div id="welcome_box_left_quick_lunch">
-    <div class="block">
-        <h2><?php echo _QUICKLAUNCH; ?> : </h2>
-    </div>
+    
+    <form name="choose_query" id="choose_query"  method="post" action="<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=search_adv_result';?>" class="<?php echo $class_for_form;?>" >
+    <!--<form name="frmsearch2" action="<?php  { echo $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=search_adv_result';}?>"  id="frmsearch2" class="<?php echo $class_for_form; ?>">-->
+      <div class="block">
+        <!--<b><?php echo _QUICKLAUNCH; ?> : </b><br/>-->
+       <tr>
+       <td>
+        <em><?php echo "Recherche globale"; ?></em>
+         </td>  
+		<input id = "text" name = "welcome" id="welcome" size="40" autocomplete = "off">
+		<input type="hidden" name="meta[]" value="welcome#welcome#welcome" />
+		<input class="button_search_adv_text" type="submit"  value="Rechercher" name ="Submit" >
+		<img src = "<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_menu_search_small.gif" alt="<?php echo _HELP_GLOBAL_SEARCH; ?>" title="<?php echo _HELP_GLOBAL_SEARCH; ?>" />
+		
+		<tr/>
+	</div>   
+    </form>
     <div class="blank_space">&nbsp;</div>
     <?php
     $nb_max = 0;
