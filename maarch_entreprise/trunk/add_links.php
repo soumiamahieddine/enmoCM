@@ -14,25 +14,55 @@ if (isset($_REQUEST['res_id']) && isset($_REQUEST['res_id_child'])) {
 
         $res_parent = $_REQUEST['res_id'];
 
-        $queryTest = "SELECT * FROM res_linked WHERE res_parent=".$res_parent." AND res_child=".$res_child." AND coll_id='".$_SESSION['collection_id_choice']."'";
-        $db->query($queryTest);
-        $i = 0;
-        while($test = $db->fetch_object()) {
-            $i++;
-        }
+        if ($_REQUEST['mode'] == 'add') {
 
-        if ($i == 0) {
-            $queryLink = "INSERT INTO res_linked (res_parent, res_child, coll_id) VALUES('" . $res_parent . "', '" . $res_child . "', '" . $_SESSION['collection_id_choice'] . "')";
+            $queryTest = "SELECT * FROM res_linked WHERE res_parent=".$res_parent." AND res_child=".$res_child." AND coll_id='".$_SESSION['collection_id_choice']."'";
+            $db->query($queryTest);
+            $i = 0;
+            while($test = $db->fetch_object()) {
+                $i++;
+            }
 
-            $db->query($queryLink);
+            if ($i == 0) {
+                $queryAddLink = "INSERT INTO res_linked (res_parent, res_child, coll_id) VALUES('" . $res_parent . "', '" . $res_child . "', '" . $_SESSION['collection_id_choice'] . "')";
+
+                $db->query($queryAddLink);
+
+                $hist2 = new history();
+                $hist2->add(
+                    $_REQUEST['tableHist'],
+                   $res_child,
+                   "ADD",
+                   'linkadd',
+                   _LINKED_TO . $res_parent,
+                   $_SESSION['config']['databasetype'],
+                   'apps'
+                );
+
+                $hist3 = new history();
+                $hist3->add(
+                    $_REQUEST['tableHist'],
+                    $res_parent,
+                   "ADD",
+                   'linkup',
+                   _THE_DOCUMENT_LINK . $res_child . ' ' . _NOW_LINK_WITH_THIS_ONE,
+                   $_SESSION['config']['databasetype'],
+                   'apps'
+                );
+            }
+
+        } elseif($_REQUEST['mode'] == 'del') {
+            $queryDelLink = "DELETE FROM res_linked WHERE res_parent=".$res_parent." AND res_child=".$res_child." and coll_id='".$_SESSION['collection_id_choice']."'";
+
+            $db->query($queryDelLink);
 
             $hist2 = new history();
             $hist2->add(
                 $_REQUEST['tableHist'],
                $res_child,
-               "ADD",
-               'linkadd',
-               _LINKED_TO . $res_parent,
+               "DEL",
+               'linkdel',
+               _LINK_TO_THE_DOCUMENT. '  ('.$res_parent.') ' . _LINK_DELETED;
                $_SESSION['config']['databasetype'],
                'apps'
             );
@@ -41,9 +71,9 @@ if (isset($_REQUEST['res_id']) && isset($_REQUEST['res_id_child'])) {
             $hist3->add(
                 $_REQUEST['tableHist'],
                 $res_parent,
-               "UP",
-               'linkup',
-               'le document ' . $res_child . ' ' . _NOW_LINK_WITH_THIS_ONE,
+               "DEL",
+               'linkdel',
+               _THE_DOCUMENT_LINK . $res_child . ' ' . _NO_LINK_WITH_THIS_ONE,
                $_SESSION['config']['databasetype'],
                'apps'
             );
@@ -63,7 +93,8 @@ if (isset($_REQUEST['res_id']) && isset($_REQUEST['res_id_child'])) {
                     $_SESSION['doc_id'],
                     $_SESSION['collection_id_choice'],
                     'desc'
-                )
+                ),
+                'desc'
             );
             $formatText .= '<br />';
         }
@@ -80,7 +111,8 @@ if (isset($_REQUEST['res_id']) && isset($_REQUEST['res_id_child'])) {
                     $_SESSION['doc_id'],
                     $_SESSION['collection_id_choice'],
                     'asc'
-                )
+                ),
+                'asc'
             );
             $formatText .= '<br />';
         }
@@ -180,7 +212,7 @@ if (isset($_REQUEST['res_id']) && isset($_REQUEST['res_id_child'])) {
                     $Links .= '<input ';
                       $Links .= 'type="button" ';
                       $Links .= 'class="button" ';
-                      $Links .= 'onClick="addLinks(\''.$_SESSION['config']['businessappurl'].'index.php?page=add_links&display=true\', \''.$_SESSION['doc_id'].'\', $(\'res_id\').value)" ';
+                      $Links .= 'onClick="addLinks(\''.$_SESSION['config']['businessappurl'].'index.php?page=add_links&display=true\', \''.$_SESSION['doc_id'].'\', $(\'res_id\').value, \'add\');"';
                       $Links .= 'value=" '._LINK_ACTION.' " ';
                     $Links .= '>';
                 $Links .= '</td>';

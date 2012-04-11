@@ -814,7 +814,7 @@ function createModal(txt, id_mod,height, width, mode_frm){
     var tmp_height = height;
 
     var layer_height = $('container').clientHeight;
-    
+
     //lgi : à quoi cela sert ?
     /*if(layer_height < $('container').scrollHeight)
     {
@@ -2092,16 +2092,16 @@ function showValuesList(listId, spanId)
 }
 
 function hideIndex(mode_hide, display_val) {
-	var displayVal = $(display_val);
-	if(mode_hide == true) {
-		if(displayVal) {
-			Element.setStyle(displayVal, {display : 'none'});
-		} 
-	} else {
-		if(displayVal) {
-			Element.setStyle(displayVal, {display : 'block'});
-		}
-	}
+    var displayVal = $(display_val);
+    if(mode_hide == true) {
+        if(displayVal) {
+            Element.setStyle(displayVal, {display : 'none'});
+        }
+    } else {
+        if(displayVal) {
+            Element.setStyle(displayVal, {display : 'block'});
+        }
+    }
 }
 
 
@@ -2119,7 +2119,7 @@ function loadSvnLog(path_manage_script, onlineVersion, localVersion, divName) {
                 eval("response = "+answer.responseText);
                 if(response.status == 0 || response.status == 1) {
                     if(response.status == 0) {
-                       
+
                         $('div_'+divName).innerHTML = response.svnLog;
                     } else {
                         //
@@ -2138,46 +2138,47 @@ function loadSvnLog(path_manage_script, onlineVersion, localVersion, divName) {
 function checkAll() {
     $$('input[type=checkbox]').without($('all')).each(
         function(e) {
-            e.checked = true;  
-        }  
+            e.checked = true;
+        }
     )
 }
 
 function uncheckAll(){
     $$('input[type=checkbox]').without($('all')).each(
         function(e) {
-            e.checked = false;  
-        }  
+            e.checked = false;
+        }
     )
 }
 
 function reverseCheck() {
     $$('input[type=checkbox]').without($('all')).each(
         function(e) {
-            e.checked = !e.checked;  
-        }  
+            e.checked = !e.checked;
+        }
     )
 }
 
 function show_attach(state) {
-	if (state == 'true') {
-		//console.log('true');
-		$('attach_show').slideDown();
-	} else {
-		$('attach_show').setStyle({display: 'none'});
-	}
+    if (state == 'true') {
+        //console.log('true');
+        $('attach_show').slideDown();
+    } else {
+        $('attach_show').setStyle({display: 'none'});
+    }
 }
 
-function addLinks(path_manage_script, child, parent) {
-    //window.alert('child : '+child+', parent : '+parent);
+function addLinks(path_manage_script, child, parent, action) {
+    //window.alert('child : '+child+', parent : '+parent+', action : '+action);
     var divName = 'loadLinks';
     var spanNb = 'nbLinks';
-    if(child != '' && parent != '') {
+    if(child != '' && parent != '' && action != '') {
         new Ajax.Request(path_manage_script,
         {
             method:'post',
             parameters: { res_id : parent,
-                          res_id_child  : child
+                          res_id_child : child,
+                          mode : action
                         },
                 onSuccess: function(answer){
                 eval("response = "+answer.responseText);

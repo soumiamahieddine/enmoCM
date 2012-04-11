@@ -803,7 +803,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                             $_SESSION['doc_id'],
                             $_SESSION['collection_id_choice'],
                             'desc'
-                        )
+                        ),
+                        'desc'
                     );
                     $frm_str .= '<br />';
                 }
@@ -821,7 +822,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                             $_SESSION['doc_id'],
                             $_SESSION['collection_id_choice'],
                             'asc'
-                        )
+                        ),
+                        'asc'
                     );
                     $frm_str .= '<br />';
                 }

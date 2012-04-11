@@ -1291,6 +1291,23 @@ if (!defined('_LINK_ALREADY_EXISTS')) {
     define('_LINK_ALREADY_EXISTS', 'This link already exists');
 }
 
+if (!defined('_THE_DOCUMENT_LINK')) {
+    define('_THE_DOCUMENT_LINK', 'The document ');
+}
+
+if (!defined('_LINK_TO_THE_DOCUMENT')) {
+    define('_LINK_TO_THE_DOCUMENT', 'Link to document ');
+}
+
+if (!defined('_NO_LINK_WITH_THIS_ONE')) {
+    define('_NO_LINK_WITH_THIS_ONE', "unlink to this one");
+}
+
+if (!defined('_LINK_DELETED')) {
+    define('_LINK_DELETED', 'has bee deleted');
+}
+
+
 /******************** Versions ************/
 if (!defined('_VERSIONS')) {
     define('_VERSIONS', 'Versions');

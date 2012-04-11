@@ -45,7 +45,7 @@ require_once 'apps/' . $_SESSION['config']['app_id'] . '/class/class_indexing_se
 require_once 'apps/' . $_SESSION['config']['app_id'] . '/class/class_types.php';
 
 if (file_exists(
-    $_SESSION['config']['corepath'] . 'custom/apps/' . $_SESSION['config']['app_id'] 
+    $_SESSION['config']['corepath'] . 'custom/apps/' . $_SESSION['config']['app_id']
     . '/definition_mail_categories.php'
 )
 ) {
@@ -99,19 +99,19 @@ if (isset($_SESSION['indexation'] ) && $_SESSION['indexation'] == true) {
 }
 $level = '';
 if (
-    isset($_REQUEST['level']) 
+    isset($_REQUEST['level'])
     && (
-        $_REQUEST['level'] == 2 
-        || $_REQUEST['level'] == 3 
-        || $_REQUEST['level'] == 4 
+        $_REQUEST['level'] == 2
+        || $_REQUEST['level'] == 3
+        || $_REQUEST['level'] == 4
         || $_REQUEST['level'] == 1
     )
 ) {
     $level = $_REQUEST['level'];
 }
-$page_path = $_SESSION['config']['businessappurl'] 
-    . 'index.php?page=details&dir=indexing_searching&coll_id=' 
-    . $_REQUEST['coll_id'] 
+$page_path = $_SESSION['config']['businessappurl']
+    . 'index.php?page=details&dir=indexing_searching&coll_id='
+    . $_REQUEST['coll_id']
     . '&id=' . $_REQUEST['id'];
 $page_label = _DETAILS;
 $page_id = 'details';
@@ -158,7 +158,7 @@ if (isset($_SESSION['origin']) && $_SESSION['origin'] <> 'basket') {
 if (!$right) {
     ?>
     <script type="text/javascript">
-    window.top.location.href = '<?php 
+    window.top.location.href = '<?php
         echo $_SESSION['config']['businessappurl'];
         ?>index.php?page=no_right';
     </script>
@@ -167,12 +167,12 @@ if (!$right) {
 }
 if (isset($s_id) && !empty($s_id) && $_SESSION['history']['resview'] == 'true') {
     $hist->add(
-        $table, 
-        $s_id , 
-        'VIEW', 
-        'resview', 
-        _VIEW_DETAILS_NUM . $s_id, 
-        $_SESSION['config']['databasetype'], 
+        $table,
+        $s_id ,
+        'VIEW',
+        'resview',
+        _VIEW_DETAILS_NUM . $s_id,
+        $_SESSION['config']['databasetype'],
         'apps'
     );
 }
@@ -189,22 +189,22 @@ $delete_doc = check_right(
 //update index with the doctype
 if (isset($_POST['submit_index_doc'])) {
     if (
-        $core->is_module_loaded('entities') 
+        $core->is_module_loaded('entities')
         && is_array($_SESSION['details']['diff_list'])
     ) {
         require_once('modules/entities/class/class_manage_listdiff.php');
         $list = new diffusion_list();
         $params = array(
-            'mode'=> 'listinstance', 
-            'table' => $_SESSION['tablename']['ent_listinstance'], 
-            'coll_id' => $coll_id, 
-            'res_id' => $s_id, 
-            'user_id' => $_SESSION['user']['UserId'], 
-            'concat_list' => true, 
+            'mode'=> 'listinstance',
+            'table' => $_SESSION['tablename']['ent_listinstance'],
+            'coll_id' => $coll_id,
+            'res_id' => $s_id,
+            'user_id' => $_SESSION['user']['UserId'],
+            'concat_list' => true,
             'only_cc' => false
         );
         $list->load_list_db(
-            $_SESSION['details']['diff_list'], 
+            $_SESSION['details']['diff_list'],
             $params
         ); //pb enchainement avec action redirect
         $_SESSION['details']['diff_list']['key_value'] = md5($res_id);
@@ -215,8 +215,8 @@ if (isset($_POST['submit_index_doc'])) {
 if (isset($_POST['delete_doc'])) {
     $is ->delete_doc($s_id, $coll_id);
     ?>
-        <script type="text/javascript">window.top.location.href='<?php 
-            echo $_SESSION['config']['businessappurl'] 
+        <script type="text/javascript">window.top.location.href='<?php
+            echo $_SESSION['config']['businessappurl']
                 . 'index.php?page=search_adv&dir=indexing_searching';
             ?>';</script>
     <?php
@@ -225,8 +225,8 @@ if (isset($_POST['delete_doc'])) {
 if (isset($_POST['put_doc_on_validation'])) {
     $is ->update_doc_status($s_id, $coll_id, 'VAL');
     ?>
-        <script language="javascript" type="text/javascript">window.top.location.href='<?php 
-            echo $_SESSION['config']['businessappurl'] 
+        <script language="javascript" type="text/javascript">window.top.location.href='<?php
+            echo $_SESSION['config']['businessappurl']
             . 'index.php?page=search_adv&dir=indexing_searching';
             ?>';</script>
     <?php
@@ -268,13 +268,13 @@ if (empty($_SESSION['error']) || $_SESSION['indexation']) {
 ?>
 <div id="details_div" style="display:none;">
 <h1 class="titdetail">
-    <img src="<?php 
+    <img src="<?php
         echo $_SESSION['config']['businessappurl'];
-        ?>static.php?filename=picto_detail_b.gif" alt="" /><?php 
+        ?>static.php?filename=picto_detail_b.gif" alt="" /><?php
         echo _DETAILS . " : " . _DOC . ' ' . strtolower(_NUM);
-        ?><?php 
+        ?><?php
         echo $s_id;
-        ?> <span>(<?php 
+        ?> <span>(<?php
         echo  $security->retrieve_coll_label_from_coll_id($coll_id);
         ?>)</span>
 </h1>
@@ -307,18 +307,18 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
             <?php
         } else {
             $param_data = array(
-                'img_category_id' => true, 
-                'img_priority' => true, 
-                'img_type_id' => true, 
-                'img_doc_date' => true, 
-                'img_admission_date' => true, 
-                'img_nature_id' => true, 
-                'img_subject' => true, 
-                'img_process_limit_date' => true, 
-                'img_author' => true, 
-                'img_destination' => true, 
-                'img_arbox_id' => true, 
-                'img_market' => true, 
+                'img_category_id' => true,
+                'img_priority' => true,
+                'img_type_id' => true,
+                'img_doc_date' => true,
+                'img_admission_date' => true,
+                'img_nature_id' => true,
+                'img_subject' => true,
+                'img_process_limit_date' => true,
+                'img_author' => true,
+                'img_destination' => true,
+                'img_arbox_id' => true,
+                'img_market' => true,
                 'img_project' => true
             );
 
@@ -428,8 +428,8 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     $versionTable = $security->retrieve_version_table_from_coll_id(
                         $coll_id
                     );
-                    $selectVersions = "select res_id from " 
-                        . $versionTable . " where res_id_master = " 
+                    $selectVersions = "select res_id from "
+                        . $versionTable . " where res_id_master = "
                         . $s_id . " and status <> 'DEL' order by res_id desc";
                     $dbVersions = new dbquery();
                     $dbVersions->connect();
@@ -440,20 +440,20 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     if ($lastVersion <> '') {
                         ?>
                         <p id="viewdoc">
-                            <a href="<?php 
+                            <a href="<?php
                                 echo $_SESSION['config']['businessappurl'];
-                                ?>index.php?display=true&dir=indexing_searching&page=view_resource_controler&id=<?php 
+                                ?>index.php?display=true&dir=indexing_searching&page=view_resource_controler&id=<?php
                                 echo $s_id;
-                                ?>" target="_blank"><?php 
+                                ?>" target="_blank"><?php
                                 echo _VIEW_ORIGINAL;
                                 ?></a> &nbsp;|&nbsp;
-                            <a href="<?php 
+                            <a href="<?php
                                 echo $_SESSION['config']['businessappurl'];
-                                ?>index.php?display=true&dir=indexing_searching&page=view_resource_controler&id=<?php 
+                                ?>index.php?display=true&dir=indexing_searching&page=view_resource_controler&id=<?php
                                 echo $lastVersion;
-                                ?>&versionTable=<?php 
+                                ?>&versionTable=<?php
                                 echo $versionTable;
-                                ?>" target="_blank"><?php 
+                                ?>" target="_blank"><?php
                                 echo _VIEW_LAST_VERSION;
                                 ?></a> &nbsp;|&nbsp;
                         </p>
@@ -462,11 +462,11 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     } else {
                         ?>
                         <p id="viewdoc">
-                            <a href="<?php 
+                            <a href="<?php
                                 echo $_SESSION['config']['businessappurl'];
-                                ?>index.php?display=true&dir=indexing_searching&page=view_resource_controler&id=<?php 
+                                ?>index.php?display=true&dir=indexing_searching&page=view_resource_controler&id=<?php
                                 echo $s_id;
-                                ?>" target="_blank"><?php 
+                                ?>" target="_blank"><?php
                                 echo _VIEW_DOC;
                                 ?></a> &nbsp;| &nbsp;
                         </p></b>&nbsp;
@@ -475,11 +475,11 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                 } else {
                     ?>
                     <p id="viewdoc">
-                        <a href="<?php 
+                        <a href="<?php
                             echo $_SESSION['config']['businessappurl'];
-                            ?>index.php?display=true&dir=indexing_searching&page=view_resource_controler&id=<?php 
+                            ?>index.php?display=true&dir=indexing_searching&page=view_resource_controler&id=<?php
                             echo $s_id;
-                            ?>" target="_blank"><?php 
+                            ?>" target="_blank"><?php
                             echo _VIEW_DOC;
                             ?></a> &nbsp;|&nbsp;
                     </p>
@@ -1193,9 +1193,9 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                 </dd>
                 <?php
                 if ($core->is_module_loaded('notes')) {
-                    $selectNotes = "select id, identifier, user_id, date_note, note_text from " 
-                        . $_SESSION['tablename']['not_notes'] 
-                        . " where identifier = " . $s_id . " and coll_id ='" 
+                    $selectNotes = "select id, identifier, user_id, date_note, note_text from "
+                        . $_SESSION['tablename']['not_notes']
+                        . " where identifier = " . $s_id . " and coll_id ='"
                         . $_SESSION['collection_id_choice'] . "' order by date_note desc";
                     $dbNotes = new dbquery();
                     $dbNotes->connect();
@@ -1238,22 +1238,22 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                         $tab_notes=$request_notes->select($select_notes,$where_notes,"order by ".$_SESSION['tablename']['not_notes'].".date_note desc",$_SESSION['config']['databasetype'], "500", true,$_SESSION['tablename']['not_notes'], $_SESSION['tablename']['users'], "user_id" );
                         ?>
                         <div style="text-align:center;">
-                            <img src="<?php 
+                            <img src="<?php
                                 echo $_SESSION['config']['businessappurl'];
-                                ?>static.php?filename=modif_note.png&module=notes" border="0" alt="" /><?php 
+                                ?>static.php?filename=modif_note.png&module=notes" border="0" alt="" /><?php
                                 if ($status <> 'END') {
-                                    ?><a href="javascript://" onclick="ouvreFenetre('<?php 
+                                    ?><a href="javascript://" onclick="ouvreFenetre('<?php
                                     echo $_SESSION['config']['businessappurl'];
-                                    ?>index.php?display=true&module=notes&page=note_add&size=full&identifier=<?php 
+                                    ?>index.php?display=true&module=notes&page=note_add&size=full&identifier=<?php
                                     echo $s_id;
-                                    ?>&coll_id=<?php 
+                                    ?>&coll_id=<?php
                                     echo $coll_id;
-                                    ?>', 500, 500)" ><?php 
+                                    ?>', 500, 500)" ><?php
                                     echo _ADD_NOTE;
-                                    ?></a><?php 
+                                    ?></a><?php
                                 } ?>
                         </div>
-                        <iframe name="list_notes_doc" id="list_notes_doc" src="<?php 
+                        <iframe name="list_notes_doc" id="list_notes_doc" src="<?php
                             echo $_SESSION['config']['businessappurl'];
                             ?>index.php?display=true&module=notes&page=frame_notes_doc&size=full" frameborder="0" width="100%" height="520px"></iframe>
                     </dd>
@@ -1314,16 +1314,16 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                         if ($addNewVersion) {
                             ?>
                             <div style="text-align:center;">
-                                <a href="#" onClick="loadApplet('<?php 
+                                <a href="#" onClick="loadApplet('<?php
                                     echo $_SESSION['config']['coreurl'];
-                                    ?>modules/content_management/applet_launcher.php?objectType=resource&objectId=<?php 
+                                    ?>modules/content_management/applet_launcher.php?objectType=resource&objectId=<?php
                                         echo $objectId;
                                     ?>&objectTable=<?php
                                         echo $objectTable;
                                     ?>&resMaster=<?php
                                     echo $s_id;
                                     ?>');">
-                                    <img alt="<?php echo _CREATE_NEW_VERSION;?>" src="<?php echo 
+                                    <img alt="<?php echo _CREATE_NEW_VERSION;?>" src="<?php echo
                                         $_SESSION['config']['businessappurl'];
                                         ?>static.php?filename=modif_note.png&module=notes" border="0" alt="" />
                                     <?php echo _CREATE_NEW_VERSION;?>
@@ -1376,7 +1376,8 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                             $_SESSION['doc_id'],
                                             $_SESSION['collection_id_choice'],
                                             'desc'
-                                        )
+                                        ),
+                                        'desc'
                                     );
                                     $Links .= '<br />';
                                 }
@@ -1393,7 +1394,8 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                             $_SESSION['doc_id'],
                                             $_SESSION['collection_id_choice'],
                                             'asc'
-                                        )
+                                        ),
+                                        'asc'
                                     );
                                     $Links .= '<br />';
                                 }
@@ -1428,7 +1430,7 @@ $_SESSION['doc_convert']['details_result'] = $detailsExport;
 $core = new core_tools();
 
 if ($printDetails) {
-    $Fnm = $_SESSION['config']['tmppath']. '/export_details_' 
+    $Fnm = $_SESSION['config']['tmppath']. '/export_details_'
         . $_SESSION['user']['UserId'] . '_export.html';
     $inF = fopen($Fnm,"w");
     fwrite($inF, $detailsExport);
