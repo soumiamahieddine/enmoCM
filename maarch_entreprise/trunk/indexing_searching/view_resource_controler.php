@@ -103,9 +103,30 @@ if ($s_id == '') {
     if ($adrTable == '') {
         $adrTable = $_SESSION['collections'][0]['adr'];
     }
-    if (isset($_REQUEST['versionTable']) && $_REQUEST['versionTable'] <> '') {
-        $table = $_REQUEST['versionTable'];
-        $adrTable = '';
+    
+    $versionTable = $sec->retrieve_version_table_from_coll_id(
+        $_SESSION['collection_id_choice']
+    );
+    if (
+        $versionTable <> '' 
+        && !isset($_REQUEST['original'])
+        && !isset($_REQUEST['aVersion'])
+    ) {
+        $selectVersions = "select res_id from " 
+            . $versionTable . " where res_id_master = " 
+            . $s_id . " and status <> 'DEL' order by res_id desc";
+        $dbVersions = new dbquery();
+        $dbVersions->connect();
+        $dbVersions->query($selectVersions);
+        $lineLastVersion = $dbVersions->fetch_object();
+        $lastVersion = $lineLastVersion->res_id;
+        if ($lastVersion <> '') {
+            $s_id = $lastVersion;
+            $table = $versionTable;
+            $adrTable = '';
+        }
+    } elseif(isset($_REQUEST['aVersion'])) {
+        $table = $versionTable;
     }
     $docserverControler = new docservers_controler();
     $viewResourceArr = array();
