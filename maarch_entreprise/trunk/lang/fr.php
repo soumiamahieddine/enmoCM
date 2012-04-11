@@ -1702,7 +1702,7 @@ if (!defined('_LINK_ACTION')) {
 }
 
 if (!defined('_LINK_ALREADY_EXISTS')) {
-    define('_LINK_ALREADY_EXISTS', 'Cette liaison &eacute;xiste d&eacute;j&agrave;');
+    define('_LINK_ALREADY_EXISTS', 'Cette liaison existe d&eacute;j&agrave;');
 }
 
 /******************** Versions ************/
