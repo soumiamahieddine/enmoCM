@@ -9,7 +9,8 @@ $dbAttachment->query(
 );
 
 if ($dbAttachment->nb_result() == 0) {
-    createXML('ERROR', _THE_DOC . ' ' . _EXISTS_OR_RIGHT);
+    $result = array('ERROR' => _THE_DOC . ' ' . _EXISTS_OR_RIGHT);
+    createXML('ERROR', $result);
 } else {
     $line = $dbAttachment->fetch_object();
     $docserver = $line->docserver_id;
@@ -30,9 +31,9 @@ if ($dbAttachment->nb_result() == 0) {
         . '_' . rand() . '.' . $fileExtension;
     $filePathOnTmp = $_SESSION['config']['tmppath'] . $fileNameOnTmp;
     if (!copy($fileOnDs, $filePathOnTmp)) {
-        createXML(
-            'ERROR', 
-            _FAILED_TO_COPY_ON_TMP . ':' . $fileOnDs . ' ' . $filePathOnTmp
+        $result = array('ERROR' => _FAILED_TO_COPY_ON_TMP 
+            . ':' . $fileOnDs . ' ' . $filePathOnTmp
         );
+        createXML('ERROR', $result);
     }
 }

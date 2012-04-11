@@ -12,10 +12,10 @@ if ($objectType == 'templateStyle') {
         . '_' . rand() . '.' . $fileExtension;
     $filePathOnTmp = $_SESSION['config']['tmppath'] . $fileNameOnTmp;
     if (!copy($objectId, $filePathOnTmp)) {
-        createXML(
-            'ERROR', 
-            _FAILED_TO_COPY_ON_TMP . ':' . $objectId . ' ' . $filePathOnTmp
+        $result = array('ERROR' => _FAILED_TO_COPY_ON_TMP 
+            . ':' . $objectId . ' ' . $filePathOnTmp
         );
+        createXML('ERROR', $result);
     }
 } elseif ($objectType == 'template' || $objectType == 'attachmentFromTemplate') {
     if ($_SESSION['m_admin']['templates']['current_style'] <> '') {
@@ -56,10 +56,10 @@ if ($objectType == 'templateStyle') {
         $filePathOnTmp = $_SESSION['config']['tmppath'] . $fileNameOnTmp;
         
         if (!copy($pathToTemplateOnDs, $filePathOnTmp)) {
-            createXML(
-                'ERROR', 
-                _FAILED_TO_COPY_ON_TMP . ':' . $pathToTemplateOnDs . ' ' . $filePathOnTmp
+            $result = array('ERROR' => _FAILED_TO_COPY_ON_TMP 
+                . ':' . $pathToTemplateOnDs . ' ' . $filePathOnTmp
             );
+            createXML('ERROR', $result);
         }
         if ($objectType == 'attachmentFromTemplate') {
             //FUSION WITH TBS !

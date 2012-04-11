@@ -34,13 +34,15 @@ if ($docserverLocation['status'] <> 'ko') {
         false
     );
     if ($viewResourceArr['error'] <> '') {
-        createXML('ERROR', $viewResourceArr['error']);
+        $result = array('ERROR' => $viewResourceArr['error']);
+        createXML('ERROR', $result);
     } else {
         $filePathOnTmp = $viewResourceArr['file_path'];
         $fileExtension = $viewResourceArr['ext'];
     }
 } else {
-    createXML('ERROR', 'docserver location response '
+    $result = array('ERROR' => 'docserver location response ' 
         . $docserverLocation['error']
     );
+    createXML('ERROR', $result);
 }

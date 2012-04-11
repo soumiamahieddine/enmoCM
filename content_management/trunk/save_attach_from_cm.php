@@ -10,17 +10,21 @@ $collId = $_SESSION['cm']['collId'];
 $_SESSION['cm']['collId'] = '';
 
 if (empty($docserver)) {
-    $_SESSION['error'] = _DOCSERVER_ERROR . ' : '
-        . _NO_AVAILABLE_DOCSERVER . '. ' . _MORE_INFOS . '.';
     $location = '';
+    $result = array('ERROR' => _DOCSERVER_ERROR . ' : '
+        . _NO_AVAILABLE_DOCSERVER . '. ' . _MORE_INFOS
+    );
+    createXML('ERROR', $result);
 } else {
     // some checking on docserver size limit
     $newSize = $docserverControler->checkSize(
         $docserver, filesize($_SESSION['config']['tmppath'] . $tmpFileName)
     );
     if ($newSize == 0) {
-        $_SESSION['error'] = _DOCSERVER_ERROR . ' : '
-            . _NOT_ENOUGH_DISK_SPACE . '. ' . _MORE_INFOS . '.';
+        $result = array('ERROR' => _DOCSERVER_ERROR . ' : '
+            . _NOT_ENOUGH_DISK_SPACE . '. ' . _MORE_INFOS
+        );
+        createXML('ERROR', $result);
     } else {
         $fileInfos = array(
             'tmpDir'      => $_SESSION['config']['tmppath'],
@@ -34,7 +38,8 @@ if (empty($docserver)) {
             $collId, $fileInfos
         );
         if (isset($storeResult['error']) && $storeResult['error'] <> '') {
-            $_SESSION['error'] = $storeResult['error'];
+            $result = array('ERROR' => $storeResult['error']);
+            createXML('ERROR', $result);
         } else {
             require_once 'core/docservers_tools.php';
             require_once 'core/class/docserver_types_controler.php';
@@ -51,7 +56,6 @@ if (empty($docserver)) {
                         $docserverTypeObject->fingerprint_mode
                 ) . "' "
                 . "where res_id = " . $objectId;
-            //createXML('ERROR', $query);
             $dbAttachment = new dbquery();
             $dbAttachment->connect();
             $dbAttachment->query($query);

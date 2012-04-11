@@ -143,10 +143,11 @@ if (
                 $_SESSION['config']['tmppath'] . $tmpFileName
             );
             if ($arrayIsAllowed['status'] == false) {
-                $_SESSION['error'] = _WRONG_FILE_TYPE 
-                    . ' ' . $arrayIsAllowed['mime_type'];
-                createXML('ERROR', $_SESSION['error']);
-                $_SESSION['upfile'] = array();
+                $result = array(
+                    'ERROR' => _WRONG_FILE_TYPE
+                    . ' ' . $arrayIsAllowed['mime_type']
+                );
+                createXML('ERROR', $result);
             } else {
                 //depending on the type of object, the action is not the same
                 if ($objectType == 'resource') {
@@ -167,7 +168,7 @@ if (
                 } else {
                     $cM->closeReservation($_SESSION['cm']['reservationId']);
                     $result = array(
-                        'ERROR' => _END_OF_EDITION,
+                        'ERROR' => _UPDATE_OK,
                     );
                     createXML('SUCCESS', $result);
                 }
@@ -193,5 +194,3 @@ if (
     );
     createXML('ERROR', $result);
 }
-
-//createXML('SUCCESS', $result);
