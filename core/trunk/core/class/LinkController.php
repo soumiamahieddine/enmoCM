@@ -31,7 +31,6 @@
 
 //Loads the require class
 try {
-    //require_once('core/class/class_functions.php');
     require_once('core/class/class_db.php');
     require_once('core/class/class_history.php');
 } catch (Exception $e) {
@@ -41,9 +40,13 @@ try {
 class LinkController
 {
     private $previousId = ' ';
+    private $level = 0;
 
-    public function formatMap($arrayToFormat)
+    public function formatMap($arrayToFormat, $sens)
     {
+        $this->level++;
+        $core = new core_tools();
+        $core->test_user();
         $return = '';
 
         foreach ($arrayToFormat as $key => $value) {
@@ -90,14 +93,38 @@ class LinkController
                                 $status = $this->getStatus($infos['status']);
                                 $return .= $status;
                         $return .= '</td>';
+                        if ($core->test_service('add_links', 'apps', false) && $this->level <= 1) {
+                            if ($sens = 'asc') {
+                                $delParent = $key;
+                                $delChild = $_SESSION['doc_id'];
+                            } else {
+                                $delParent = $_SESSION['doc_id'];
+                                $delChild = $key;
+                            }
+                            $return .= '<td class="barreLinks" width="2">';
+                            $return .= '</td>';
+                            $return .= '<td align="center">';
+                                $return .= '<span onclick="';
+                                  $return .= 'addLinks(';
+                                    $return .= '\''.$_SESSION['config']['businessappurl'].'index.php?page=add_links&display=true\', ';
+                                    $return .= '\''.$delChild.'\' ,';
+                                    $return .= '\''.$delParent.'\' ,';
+                                    $return .= '\'del\'';
+                                  $return .= ');';
+                                $return .= '">';
+                                    $return .= '<img src="static.php?filename=picto_delete.gif" />';
+                                $return .= '</span>';
+                            $return .= '</td>';
+                        }
                     $return .= '</tr>';
                 $return .= '</table>';
-                    if (is_array($value)) {
-                        $return .= $this->formatMap($value);
-                    }
+                if (is_array($value)) {
+                    $return .= $this->formatMap($value, $sens);
+                }
             $return .= '</div>';
         }
 
+        $this->level--;
         return $return;
     }
 
