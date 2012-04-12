@@ -528,12 +528,14 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                 $coll_id
             );
             $objectId = $res_id;
+            $_SESSION['cm']['objectId4List'] = $res_id;
         }
         if ($nb_versions_for_title == 0) {
             $extend_title_for_versions = '0';
         } else {
             $extend_title_for_versions = $nb_versions_for_title;
         }
+        $_SESSION['cm']['resMaster'] = '';
         $frm_str .= '<h3 onclick="new Effect.toggle(\'versions_div\', \'blind\', ';
         $frm_str .= '{delay:0.2});return false;" class="categorie" style="width:90%;">';
             $frm_str .= '<img src="' . $_SESSION['config']['businessappurl']
@@ -584,10 +586,14 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .= '<div id="validright">';
     //ATTACHMENTS FRAME
     if ($core_tools->is_module_loaded('attachments')) {
+        require 'modules/templates/class/templates_controler.php';
+        $templatesControler = new templates_controler();
+        $templates = array();
+        $templates = $templatesControler->getAllTemplatesForProcess($data['destination']['value']);
         $frm_str .= '<div id="list_answers_div" style="display:none">';
             $frm_str .= '<div>';
                 $frm_str .= '<div id="processframe" name="processframe">';
-                    $frm_str .= '<center><h2>' . _ATTACHMENTS . '</h2></center>';
+                    $frm_str .= '<center><h2>' . _ATTACHMENTS . ', ' . _DONE_ANSWERS . '</h2></center>';
                     $req = new request;
                     $req->connect();
                     $req->query("select res_id from ".$_SESSION['tablename']['attach_res_attachments']
@@ -598,22 +604,60 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                         $nb_attach = $req->nb_result();
                     }
                     $frm_str .= '<div class="ref-unit">';
-                    $frm_str .= '<input type="button" name="attach" id="attach" class="button" value="'
-                        . _ATTACH
-                        . '" onclick="javascript:window.open(\'' . $_SESSION['config']['businessappurl']
-                        . 'index.php?display=true&module=attachments&page=join_file\',\'\', \'scrollbars=yes,'
-                        . 'menubar=no,toolbar=no,resizable=yes,status=no,width=550,height=200\');" /> ';
+                    $frm_str .= '<center>';
                     if ($core_tools->is_module_loaded('templates')) {
-                        $frm_str .= '<input type="button" name="template" id="template" class="button" value="'
-                            . _GENERATE . '" onclick="javascript:window.open(\''
-                            . $_SESSION['config']['businessappurl']
-                            . 'index.php?display=true&module=templates&page=choose_template&entity='
-                            . $data['destination']['value']
+                        $objectTable = $sec->retrieve_table_from_coll($coll_id);
+                        $frm_str .= '<select name="templateOffice" id="templateOffice" style="width:150px" onchange="';
+                        $frm_str .= 'loadApplet(\''
+                            . $_SESSION['config']['coreurl']
+                            . 'modules/content_management/applet_launcher.php?objectType=attachmentFromTemplate'
+                            . '&objectId='
+                            . '\' + $(\'templateOffice\').value + \''
+                            . '&objectTable='
+                            . $objectTable
+                            . '&resMaster=' 
+                            . $res_id
+                            . '\');">';
+                            $frm_str .= '<option value="">' . _GENERATE_OFFICE_ATTACHMENT . '</option>';
+                                for ($i=0;$i<count($templates);$i++) {
+                                    if ($templates[$i]['TYPE'] == 'OFFICE') {
+                                        $frm_str .= '<option value="';
+                                            $frm_str .= $templates[$i]['ID'];
+                                            $frm_str .= '">';
+                                            $frm_str .= $templates[$i]['TYPE'] . ' : ';
+                                            $frm_str .= $templates[$i]['LABEL'];
+                                        }
+                                    $frm_str .= '</option>';
+                                }
+                        $frm_str .= '</select>&nbsp;|&nbsp;';
+                        $frm_str .= '<select name="templateHtml" id="templateHtml" style="width:150px" '
+                            //. 'onchange="window.alert(\'\' + $(\'templateHtml\').value + \'\');">'; 
+                            . 'onchange="window.open(\'' 
+                            . $_SESSION['config']['businessappurl'] 
+                            . 'index.php?display=true&module=templates&page=generate_attachment_html&mode=add&template='
+                            . '\' + $(\'templateHtml\').value + \''
                             . '&res_id=' . $res_id
-                            . '&coll_id=' . $coll_id
-                            . '\',\'\', \'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=355,height=210\');" />';
+                            . '&coll_id=' . $_REQUEST['coll_id'] 
+                            . '\', \'edit template\', \'target=_blank\');">';
+                            $frm_str .= '<option value="">' . _GENERATE_HTML_ATTACHMENT . '</option>';
+                                for ($i=0;$i<count($templates);$i++) {
+                                    if ($templates[$i]['TYPE'] == 'HTML') {
+                                        $frm_str .= '<option value="';
+                                            $frm_str .= $templates[$i]['ID'];
+                                            $frm_str .= '">';
+                                            $frm_str .= $templates[$i]['TYPE'] . ' : ';
+                                            $frm_str .= $templates[$i]['LABEL'];
+                                        }
+                                    $frm_str .= '</option>';
+                                }
+                        $frm_str .= '</select>&nbsp;|&nbsp;';
+                        $frm_str .= '<input type="button" name="attach" id="attach" class="button" value="'
+                            . _ATTACH
+                            . '" onclick="javascript:window.open(\'' . $_SESSION['config']['businessappurl']
+                            . 'index.php?display=true&module=attachments&page=join_file\',\'\', \'scrollbars=yes,'
+                            . 'menubar=no,toolbar=no,resizable=yes,status=no,width=550,height=200\');" />';
                     }
-                    $frm_str .= '<iframe name="list_attach" id="list_attach" src="'
+                    $frm_str .= '</center><iframe name="list_attach" id="list_attach" src="'
                     . $_SESSION['config']['businessappurl']
                     . 'index.php?display=true&module=attachments&page=frame_list_attachments&mode=normal" '
                     . 'frameborder="0" width="100%" height="300px"></iframe>';
@@ -789,13 +833,11 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                 $frm_str .= _LINK_TAB;
             $frm_str .= '</h2>';
             $frm_str .= '<div id="loadLinks">';
-
                 $nbLinkDesc = $Class_LinkController->nbDirectLink(
                     $_SESSION['doc_id'],
                     $_SESSION['collection_id_choice'],
                     'desc'
                 );
-
                 if ($nbLinkDesc > 0) {
                     $frm_str .= '<img src="static.php?filename=cat_doc_incoming.gif"/>';
                     $frm_str .= $Class_LinkController->formatMap(
@@ -805,17 +847,14 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                             'desc'
                         ),
                         'desc'
-
                     );
                     $frm_str .= '<br />';
                 }
-
                 $nbLinkAsc = $Class_LinkController->nbDirectLink(
                     $_SESSION['doc_id'],
                     $_SESSION['collection_id_choice'],
                     'asc'
                 );
-
                 if ($nbLinkAsc > 0) {
                     $frm_str .= '<img src="static.php?filename=cat_doc_outgoing.gif" />';
                     $frm_str .= $Class_LinkController->formatMap(
@@ -825,54 +864,49 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                             'asc'
                         ),
                         'asc'
-
                     );
                     $frm_str .= '<br />';
                 }
             $frm_str .= '</div>';
-
             if ($core_tools->test_service('add_links', 'apps', false)) {
                 include 'apps/'.$_SESSION['config']['app_id'].'/add_links.php';
                 $frm_str .= $Links;
             }
-
         $frm_str .= '</div>';
     $frm_str .= '</div>';
 
     //VERSIONS FRAME
+    //test service add new version
+    $addNewVersion = false;
+    if ($core->test_service('add_new_version', 'apps', false)) {
+        $addNewVersion = true;
+    }
     $frm_str .= '<div id="versions_div" style="display:none">';
         $frm_str .= '<div>';
                 $frm_str .= '<center><h2>' . _VERSIONS . '</h2></center>';
+                $frm_str .= '<div class="error" id="divError" name="divError"></div>';
                 $frm_str .= '<div style="text-align:center;">';
-
-                    if ($lastVersion <> '') {
-                        $frm_str .= '<a href="';
-                            $frm_str .=  $_SESSION['config']['businessappurl'];
-                            $frm_str .= 'index.php?display=true&dir=indexing_searching&page=view_resource_controler&id=';
-                            $frm_str .= $res_id;
-                            $frm_str .= '" target="_blank">';
-                            $frm_str .= _VIEW_ORIGINAL . ' | ';
-                        $frm_str .= '</a>';
+                    $frm_str .= '<a href="';
+                        $frm_str .=  $_SESSION['config']['businessappurl'];
+                        $frm_str .= 'index.php?display=true&dir=indexing_searching&page=view_resource_controler&original&id=';
+                        $frm_str .= $res_id;
+                        $frm_str .= '" target="_blank">';
+                        $frm_str .= '<img alt="' . _VIEW_ORIGINAL . '" src="';
+                        $frm_str .= $_SESSION['config']['businessappurl'];
+                        $frm_str .= 'static.php?filename=picto_dld.gif" border="0" alt="" />';
+                        $frm_str .= _VIEW_ORIGINAL . ' | ';
+                    $frm_str .= '</a>';
+                    if ($addNewVersion) {
+                        $_SESSION['cm']['objectTable'] = $objectTable;
+                        $frm_str .= '<div id="createVersion" style="display: inline;"></div>';
                     }
-                    $frm_str .= '<img src="'.$_SESSION['config']['businessappurl']
-                        . 'static.php?module=notes&filename=modif_note.png" border="0" alt="" />';
-                            $frm_str .= '<a href="' . $_SESSION['config']['coreurl'];
-                                $frm_str .= 'modules/content_management/applet_launcher.php?objectType=resource&objectId=';
-                                $frm_str .= $objectId;
-                                $frm_str .= '&objectTable=';
-                                $frm_str .= $objectTable;
-                                $frm_str .= '&resMaster=';
-                                $frm_str .= $_SESSION['doc_id'];
-                                $frm_str .= '" target="_blank">';
-                                $frm_str .= _CREATE_NEW_VERSION;
-                            $frm_str .= '</a>';
-                $frm_str .= '</div>';
-                $frm_str .= '<iframe name="list_notes_doc" id="list_notes_doc" src="'
-                    . $_SESSION['config']['businessappurl']
-                    . 'index.php?display=true&module=content_management&page=frame_list_versions&collId='
-                    . $_SESSION['collection_id_choice'] . '&resMasterId=' . $res_id . '" '
-                    . 'frameborder="0" width="100%" height="320px"></iframe>';
-
+                    $frm_str .= '<div id="loadVersions"></div>';
+                    $frm_str .= '<script language="javascript">';
+                        $frm_str .= 'showDiv("loadVersions", "nbVersions", "createVersion", "';
+                            $frm_str .= $_SESSION['urltomodules'];
+                            $frm_str .= 'content_management/list_versions.php")';
+                    $frm_str .= '</script>';
+                $frm_str .= '</div><br>';
         $frm_str .= '</div>';
     $frm_str .= '</div>';
 

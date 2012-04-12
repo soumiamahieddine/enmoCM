@@ -422,7 +422,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                         echo $_SESSION['config']['businessappurl'];
                         ?>index.php?display=true&dir=indexing_searching&page=view_resource_controler&id=<?php
                         echo $s_id;
-                        ?>" target="_blank"><img alt="<?php echo _CREATE_NEW_VERSION;?>" src="<?php echo
+                        ?>" target="_blank"><img alt="<?php echo _VIEW_DOC;?>" src="<?php echo
                             $_SESSION['config']['businessappurl'];
                             ?>static.php?filename=picto_dld.gif" border="0" alt="" />&nbsp;<?php
                         echo _VIEW_DOC;
@@ -1261,7 +1261,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                             ?>index.php?display=true&dir=indexing_searching&page=view_resource_controler&id=<?php
                             echo $s_id;
                             ?>&original" target="_blank">
-                            <img alt="<?php echo _CREATE_NEW_VERSION;?>" src="<?php echo
+                            <img alt="<?php echo _VIEW_ORIGINAL;?>" src="<?php echo
                                     $_SESSION['config']['businessappurl'];
                                     ?>static.php?filename=picto_dld.gif" border="0" alt="" />&nbsp;<?php
                             echo _VIEW_ORIGINAL;
@@ -1270,7 +1270,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                         if ($addNewVersion) {
                             $_SESSION['cm']['objectTable'] = $objectTable;
                             ?>
-                            <div id="createVersion"></div>
+                            <div id="createVersion" style="display: inline;"></div>
                             <?php
                         }
                         ?>
