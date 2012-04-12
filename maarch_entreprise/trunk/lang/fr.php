@@ -1739,3 +1739,9 @@ if (!defined('_VIEW_VERSIONS')) {
 if (!defined('_ADD_NEW_VERSION')) {
     define('_ADD_NEW_VERSION', 'Ajoutr&eacute;er une nouvelle version de document');
 }
+if (!defined('_VIEW_ORIGINAL')) {
+    define('_VIEW_ORIGINAL', 'Voir le document original');
+}
+if (!defined('_PJ')) {
+    define('_PJ', 'Pièce(s) jointe(s)');
+}
