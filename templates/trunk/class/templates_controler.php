@@ -548,7 +548,37 @@ class templates_controler extends ObjectControler implements ObjectControlerIF
             return null;
         }
     }
-
+    
+    /**
+    * Return all templates in an array for an entity
+    * 
+    * @param $entityId entity identifier
+    * @return array of templates
+    */
+    public function getAllTemplatesForProcess($entityId) 
+    {
+        $db = new dbquery();
+        $db->connect();
+        $db->query(
+            "select * from " 
+            . _TEMPLATES_TABLE_NAME . " t, " 
+            . _TEMPLATES_ASSOCIATION_TABLE_NAME . " ta where "
+            . "t.template_id = ta.template_id and ta.what = 'destination' and ta.value_field = '" 
+            . $entityId . "'"
+        );
+        $templates = array();
+        while ($res = $db->fetch_object()) {
+            array_push(
+                $templates, array(
+                    'ID' => $res->template_id, 
+                    'LABEL' => $res->template_label,
+                    'TYPE' => $res->template_type,
+                )
+            );
+        }
+        return $templates;
+    }
+    
     public function updateTemplateEntityAssociation($templateId)
     {
         $db = new dbquery();
