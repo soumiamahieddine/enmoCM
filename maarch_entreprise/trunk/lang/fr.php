@@ -1722,6 +1722,13 @@ if (!defined('_LINK_DELETED')) {
 }
 
 /******************** Versions ************/
+if (!defined('_VERSION')) {
+    define('_VERSION', 'Versions');
+}
+	
+if (!defined('_CREATE_NEW_VERSION')) {
+    define('_CREATE_NEW_VERSION', 'Cr&eacute;er une nouvelle version de document');
+}
 if (!defined('_CONTENT_MANAGEMENT_COMMENT')) {
     define('_CONTENT_MANAGEMENT_COMMENT', 'Gestion des Versions de document');
 }
@@ -1730,5 +1737,5 @@ if (!defined('_VIEW_VERSIONS')) {
     define('_VIEW_VERSIONS', 'Voir les versions de document');
 }
 if (!defined('_ADD_NEW_VERSION')) {
-    define('_ADD_NEW_VERSION', 'Cr&eacute;er une nouvelle version de document');
+    define('_ADD_NEW_VERSION', 'Ajoutr&eacute;er une nouvelle version de document');
 }
