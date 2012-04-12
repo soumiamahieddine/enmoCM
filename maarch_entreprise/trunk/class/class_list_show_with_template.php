@@ -223,6 +223,37 @@ class list_show_with_template extends list_show
 
     }
 
+    //Show img.eye if attachments on the doc
+    public function tmplt_func_bool_see_attachments($actual_string, $theline, $result, $key)
+    {
+
+        $return = '';
+        if ($result[$theline][0]['aDesReps']) {
+            $return .= '<img ';
+            $return .= 'src="';
+              $return .= 'static.php?filename=voir_rep.gif';
+            $return .= '" ';
+            $return .= 'onclick=" ';
+              $return .= 'loadRepList(';
+                $return .= $result[$theline][0]['value'];
+              $return .= ');';
+            $return .= '" ';
+            $return .= '/>';
+        }
+
+        return $return;
+
+        /*if ($this->bool_detail == true)
+        {
+
+            $return = "<a href='".$_SESSION['config']['businessappurl']."index.php?page=".$this->detail_destination."&amp;id=".$result[$theline][0][$key]."' title='". _DETAILS."'>
+            <img src='".$_SESSION['config']['businessappurl']."static.php?filename=picto_infos.gif'  alt='"._DETAILS."'   border='0' /></a>";
+
+            return $return;
+        }*/
+
+    }
+
     //Load view_doc if this parameters is loaded in list_show and list_show_with_template
     public function tmplt_func_bool_detail_cases($actual_string, $theline, $result, $key)
     {
@@ -461,6 +492,10 @@ class list_show_with_template extends list_show
         elseif (preg_match("/^func_bool_detail_case$/", $actual_string))
         {
             $my_var = $this->tmplt_func_bool_detail_cases($actual_string, $theline, $result, $key,$include_by_module);
+        }
+        elseif (preg_match("/^func_bool_see_attachments$/", $actual_string))
+        {
+            $my_var = $this->tmplt_func_bool_see_attachments($actual_string, $theline, $result, $key,$include_by_module);
         }
         else
         {

@@ -1449,17 +1449,17 @@ class list_show extends functions
 
 
     public function list_simple(
-        $result, 
-        $nb_total, 
+        $result,
+        $nb_total,
         $title,
         $what,
         $key,
-        $bool_view_document, 
-        $page_view = '', 
-        $used_css = 'listing spec', 
-        $page_modify = '', 
-        $height_page_modify = 400, 
-        $width_page_modify = 500, 
+        $bool_view_document,
+        $page_view = '',
+        $used_css = 'listing spec',
+        $page_modify = '',
+        $height_page_modify = 400,
+        $width_page_modify = 500,
         $page_del = '',
         $modeString = false
     )
@@ -1496,7 +1496,7 @@ class list_show extends functions
         }
         $str .= $title . '</b>';
         $str .= ' <div align="center">';
-        
+
         $str .= '<table border="0" cellspacing="0" class="' . $used_css . '">';
              $str .= '<thead>';
                 $str .= '<tr>';
@@ -1505,9 +1505,9 @@ class list_show extends functions
                     }
                     for ($count_column = 0;$count_column < count($listcolumn);$count_column++) {
                         if ($listshow[$count_column]==true) {
-                            $str .= '<th style="width:' . $result[0][$count_column]['size'] 
-                                . '%;" valign="' . $result[0][$count_column]['valign'] 
-                                . '"  align="' . $result[0][$count_column]['label_align'] 
+                            $str .= '<th style="width:' . $result[0][$count_column]['size']
+                                . '%;" valign="' . $result[0][$count_column]['valign']
+                                . '"  align="' . $result[0][$count_column]['label_align']
                                 . '" ><span>' . $listcolumn[$count_column] . '</span>';
                         }
                     }
@@ -1524,11 +1524,11 @@ class list_show extends functions
             }
             $str .= '<tr ' . $color . '>';
                  if ($bool_view_document) {
-                    $str .= " <td><a href='" . $page_view . "&amp;id=" 
-                        . $result[$theline][0][$key] 
+                    $str .= " <td><a href='" . $page_view . "&amp;id="
+                        . $result[$theline][0][$key]
                         . "' target=\"_blank\" title='" . _VIEW_DOC . "'>"
-                        . "<img src='" . $_SESSION['config']['businessappurl'] 
-                        . "static.php?filename=picto_dld.gif' alt='" . _VIEW_DOC 
+                        . "<img src='" . $_SESSION['config']['businessappurl']
+                        . "static.php?filename=picto_dld.gif' alt='" . _VIEW_DOC
                         . "' /></a></td>";
                  }
                 $bool_modify = false;
@@ -1537,11 +1537,11 @@ class list_show extends functions
                     if (isset($result[$theline][$count_column]['show'])
                         && $result[$theline][$count_column]['show'] == true
                     ) {
-                            $str .= '<td style="width:' 
+                            $str .= '<td style="width:'
                                 . $result[$theline][$count_column]['size']
-                                . '%;" align="' 
-                                . $result[$theline][$count_column]['align'] 
-                                . '">' 
+                                . '%;" align="'
+                                . $result[$theline][$count_column]['align']
+                                . '">'
                                 . functions::show_str(self::thisword($result[$theline][$count_column]['value'], $what))
                                 . '</td>';
                     } else {
@@ -1563,7 +1563,7 @@ class list_show extends functions
                             $str .= '?';
                         }
                         $str .= 'id=' . $result[$theline][0][$key] . '\',\'\',\'height='
-                            . $height_page_modify . ', width=' . $width_page_modify 
+                            . $height_page_modify . ', width=' . $width_page_modify
                             . ',scrollbars=yes,resizable=yes\');">'
                             . _MODIFY . '</a>';
                     $str .= '</td>';

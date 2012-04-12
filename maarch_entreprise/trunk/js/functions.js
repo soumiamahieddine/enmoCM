@@ -2200,3 +2200,23 @@ function addLinks(path_manage_script, child, parent, action) {
         });
     }
 }
+
+function loadRepList(id)
+{
+    new Effect.toggle('repList_'+id, 'appear' , {delay:0.2});
+
+    var path_manage_script = 'index.php?page=loadRepList&display=true';
+
+    new Ajax.Request(path_manage_script,
+        {
+            method:'post',
+            parameters: { res_id_master : id},
+            onSuccess: function(answer){
+                eval("response = "+answer.responseText);
+
+                $('repList_'+id).innerHTML = response.toShow;
+
+            }
+        });
+
+}
