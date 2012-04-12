@@ -1722,9 +1722,13 @@ if (!defined('_LINK_DELETED')) {
 }
 
 /******************** Versions ************/
-if (!defined('_VERSIONS')) {
-    define('_VERSIONS', 'Versions');
+if (!defined('_CONTENT_MANAGEMENT_COMMENT')) {
+    define('_CONTENT_MANAGEMENT_COMMENT', 'Gestion des Versions de document');
 }
-if (!defined('_CREATE_NEW_VERSION')) {
-    define('_CREATE_NEW_VERSION', 'Cr&eacute;er une nouvelle version');
+	
+if (!defined('_VIEW_VERSIONS')) {
+    define('_VIEW_VERSIONS', 'Voir les versions de document');
+}
+if (!defined('_ADD_NEW_VERSION')) {
+    define('_ADD_NEW_VERSION', 'Cr&eacute;er une nouvelle version de document');
 }
