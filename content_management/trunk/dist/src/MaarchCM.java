@@ -42,6 +42,7 @@ public class MaarchCM extends JApplet {
     protected String fileContent;
     protected String fileExtension;
     protected String error;
+    protected String endMessage;
     
     protected String fileContentTosend;
     
@@ -148,6 +149,9 @@ public class MaarchCM extends JApplet {
             if ("ERROR".equals(key)) {
                 this.error = value;
             }
+            if ("END_MESSAGE".equals(key)) {
+                this.endMessage = value;
+            }
         }
         //send message error to Maarch if necessary
         if (!this.error.isEmpty()) {
@@ -250,7 +254,7 @@ public class MaarchCM extends JApplet {
     {
         JSObject jso;
         jso = JSObject.getWindow(this);
-        jso.call("endOfApplet", new String[] {String.valueOf(this.objectType)});
+        jso.call("endOfApplet", new String[] {String.valueOf(this.objectType), this.endMessage});
     }
     
     public void sendHttpRequest(String theUrl, String postRequest) throws Exception {
