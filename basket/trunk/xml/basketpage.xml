@@ -1,52 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ROOT>
-	<!-- <BASKETPAGE>
-		<ID>invoices_list</ID>
-		<LABEL>_INVOICE_LIST_TO_VAL</LABEL>
-    	<NAME>invoices_list</NAME>
+    <!-- <BASKETPAGE>
+        <ID>invoices_list</ID>
+        <LABEL>_INVOICE_LIST_TO_VAL</LABEL>
+        <NAME>invoices_list</NAME>
         <ORIGIN>module</ORIGIN>
-		<MODULE>basket</MODULE>
+        <MODULE>basket</MODULE>
     </BASKETPAGE>-->
-	<BASKETPAGE>
-		<ID>postindexing_documents_list</ID>
-		<LABEL>_POSTINDEXING_LIST</LABEL>
-		<NAME>postindexing_documents_list</NAME>
-		<ORIGIN>module</ORIGIN>
-		<MODULE>postindexing</MODULE>
+    <BASKETPAGE>
+        <ID>postindexing_documents_list</ID>
+        <LABEL>_POSTINDEXING_LIST</LABEL>
+        <NAME>postindexing_documents_list</NAME>
+        <ORIGIN>module</ORIGIN>
+        <MODULE>postindexing</MODULE>
     </BASKETPAGE>
-	<BASKETPAGE>
-		<ID>documents_list</ID>
-		<LABEL>_DOCUMENTS_LIST</LABEL>
-		<NAME>documents_list</NAME>
-		<ORIGIN>apps</ORIGIN>
-		<MODULE></MODULE>
+    <BASKETPAGE>
+        <ID>documents_list</ID>
+        <LABEL>_DOCUMENTS_LIST</LABEL>
+        <NAME>documents_list</NAME>
+        <ORIGIN>apps</ORIGIN>
+        <MODULE></MODULE>
     </BASKETPAGE>
-	<BASKETPAGE>
-		<ID>redirect_to_action</ID>
-		<LABEL>_REDIRECT_TO_ACTION</LABEL>
-		<NAME>redirect_to_action</NAME>
-		<ORIGIN>apps</ORIGIN>
-		<MODULE></MODULE>
+    <BASKETPAGE>
+        <ID>redirect_to_action</ID>
+        <LABEL>_REDIRECT_TO_ACTION</LABEL>
+        <NAME>redirect_to_action</NAME>
+        <ORIGIN>apps</ORIGIN>
+        <MODULE></MODULE>
     </BASKETPAGE>
-	<BASKETPAGE>
-		<ID>apa_basket_list</ID>
-		<LABEL>_ARCHIVE_LIST</LABEL>
-		<NAME>apa_basket_list</NAME>
-		<ORIGIN>module</ORIGIN>
-		<MODULE>advanced_physical_archive</MODULE>
+    <BASKETPAGE>
+        <ID>apa_basket_list</ID>
+        <LABEL>_ARCHIVE_LIST</LABEL>
+        <NAME>apa_basket_list</NAME>
+        <ORIGIN>module</ORIGIN>
+        <MODULE>advanced_physical_archive</MODULE>
     </BASKETPAGE>
-	<BASKETPAGE>
-		<ID>auth_dep</ID>
-		<LABEL>_DOCUMENTS_LIST_WITH_FILTERS</LABEL>
-		<NAME>documents_list_with_filter</NAME>
-		<ORIGIN>apps</ORIGIN>
-		<MODULE></MODULE>
-	</BASKETPAGE>
-	<BASKETPAGE>
-		<ID>count_list</ID>
-		<LABEL>_COUNT_LIST</LABEL>
-		<NAME>count_list</NAME>
-		<ORIGIN>apps</ORIGIN>
-		<MODULE></MODULE>
-	</BASKETPAGE>
+    <BASKETPAGE>
+        <ID>auth_dep</ID>
+        <LABEL>_DOCUMENTS_LIST_WITH_FILTERS</LABEL>
+        <NAME>documents_list_with_filter</NAME>
+        <ORIGIN>apps</ORIGIN>
+        <MODULE></MODULE>
+    </BASKETPAGE>
+    <BASKETPAGE>
+        <ID>list_with_attachments</ID>
+        <LABEL>_DOCUMENTS_LIST_WITH_ATTACHMENTS</LABEL>
+        <NAME>documents_list_with_attachments</NAME>
+        <ORIGIN>apps</ORIGIN>
+        <MODULE></MODULE>
+    </BASKETPAGE>
+    <BASKETPAGE>
+        <ID>count_list</ID>
+        <LABEL>_COUNT_LIST</LABEL>
+        <NAME>count_list</NAME>
+        <ORIGIN>apps</ORIGIN>
+        <MODULE></MODULE>
+    </BASKETPAGE>
 </ROOT>

@@ -112,7 +112,7 @@ class basket extends dbquery
      */
     public function load_module_var_session($userData)
     {
-		//$this->show_array($userData);
+        //$this->show_array($userData);
         $_SESSION['user']['baskets'] = array();
         $this->_loadActivityUser($userData['UserId']);
         $this->_loadBasketsPages();
@@ -121,7 +121,7 @@ class basket extends dbquery
             $basketsArr = $this->load_basket(
                 $userData['primarygroup'], $userData['UserId']
             );
-			//$this->show_array($basketsArr);
+            //$this->show_array($basketsArr);
             $absBasketsArr = $this->load_basket_abs($userData['UserId']);
             $_SESSION['user']['baskets'] = array_merge(
                 $basketsArr, $absBasketsArr
@@ -248,7 +248,7 @@ class basket extends dbquery
         foreach ($xmlfile->BASKETPAGE as $basketPage) {
             $desc = (string) $basketPage->LABEL;
             if (!empty($desc) && defined($desc) && constant($desc) <> NULL) {
-            	$desc = constant($desc);
+                $desc = constant($desc);
             }
             $_SESSION['basket_page'][$i] = array(
                 'ID'     => (string) $basketPage->ID,
@@ -304,7 +304,7 @@ class basket extends dbquery
                 )
             );
         }
-	
+
         return $arr;
     }
 
@@ -470,7 +470,9 @@ class basket extends dbquery
      */
     public function basket_list_doc($paramsList, $actions, $lineTxt)
     {
+        ////////////////////////////////////////////////////////////////////////
         //$this->show_array($paramsList);
+        ////////////////////////////////////////////////////////////////////////
         $actionForm = '';
         $boolCheckForm = false;
         $method = '';
@@ -785,7 +787,7 @@ class basket extends dbquery
         $tab['desc'] = $this->show_string($res->basket_desc);
         $tab['name'] = $this->show_string($res->basket_name);
         $tab['clause'] = $res->basket_clause;
-		$tab['is_visible'] = $res->is_visible;
+        $tab['is_visible'] = $res->is_visible;
         $isVirtual = 'N';
         $basketOwner = '';
         $absBasket = false;
@@ -793,9 +795,9 @@ class basket extends dbquery
         /// TO DO : Test if tmp_user is empty
         // if($userId <> $_SESSION['user']['UserId'])
         // {
-		// Primary group already in session?
+        // Primary group already in session?
                 $this->query(
-                	"select group_id from "
+                    "select group_id from "
                     . $_SESSION['tablename']['usergroup_content']
                     . " where primary_group = 'Y' and user_id = '".$userId."'"
                 );
@@ -807,7 +809,7 @@ class basket extends dbquery
             //    $primaryGroup = $_SESSION['user']['primarygroup'];
            // }
          $this->query(
-         	 "select sequence, can_redirect, can_delete, can_insert, "
+             "select sequence, can_redirect, can_delete, can_insert, "
              . "result_page, redirect_basketlist, redirect_grouplist from "
              . GROUPBASKET_TABLE . " where group_id = '" . $primaryGroup
              . "' and basket_id = '" . $basketId . "' "
@@ -830,7 +832,7 @@ class basket extends dbquery
          $tab['page_frame'] = $basketPathPageFrame;
          $tab['page_include'] = $basketPathPageInclude;
          // Gets actions of the basket
-		 // #TODO : make one method to get all actions : merge _getDefaultAction and _getActionsFromGroupbaket
+         // #TODO : make one method to get all actions : merge _getDefaultAction and _getActionsFromGroupbaket
          $tab['default_action'] = $this->_getDefaultAction(
              $basketId, $primaryGroup
          );
@@ -863,9 +865,9 @@ class basket extends dbquery
         $sec = new security();
         $secCtrl = new SecurityControler();
         $this->query(
-        	"select basket_id, coll_id, basket_name, basket_desc, basket_clause, is_visible"
-        	. " from " . BASKET_TABLE . " where basket_id = '" . $basketId
-        	. "' and enabled = 'Y'"
+            "select basket_id, coll_id, basket_name, basket_desc, basket_clause, is_visible"
+            . " from " . BASKET_TABLE . " where basket_id = '" . $basketId
+            . "' and enabled = 'Y'"
         );
 
         $res = $this->fetch_object();
@@ -878,13 +880,13 @@ class basket extends dbquery
         $tab['desc'] = $res->basket_desc;
         $tab['name'] = $res->basket_name;
         $tab['clause'] = $res->basket_clause;
-		$tab['is_visible'] = $res->is_visible;
+        $tab['is_visible'] = $res->is_visible;
         $this->query(
-        	"select user_abs, is_virtual, basket_owner from " . USER_ABS_TABLE
+            "select user_abs, is_virtual, basket_owner from " . USER_ABS_TABLE
             . " where basket_id = '" . $basketId . "' and new_user = '"
             . $userId . "' and system_id = " . $systemId
         );
-		
+
         $absBasket = true;
         $res = $this->fetch_object();
         $isVirtual = $res->is_virtual;
@@ -917,17 +919,17 @@ class basket extends dbquery
             $tab['desc'] .= " (" . $nameBasketOwner . ")";
             $tab['id'] .= "_" . $basketOwner;
         }
-		
+
         /// TO DO : Test if tmp_user is empty
         if ((isset($_SESSION['user']['UserId'])
-            && $tmpUser <> $_SESSION['user']['UserId']) 
-			|| (!isset($_SESSION['user']['UserId']))
+            && $tmpUser <> $_SESSION['user']['UserId'])
+            || (!isset($_SESSION['user']['UserId']))
         ) {
             $this->query(
                 "select group_id from " . USERGROUP_CONTENT_TABLE
                 . " where primary_group = 'Y' and user_id = '" . $tmpUser . "'"
             );
-			
+
             $res = $this->fetch_object();
             $primaryGroup = $res->group_id;
         } else {
