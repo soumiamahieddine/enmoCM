@@ -1722,8 +1722,8 @@ if (!defined('_LINK_DELETED')) {
 }
 
 /******************** Versions ************/
-if (!defined('_VERSION')) {
-    define('_VERSION', 'Versions');
+if (!defined('_VERSIONS')) {
+    define('_VERSIONS', 'Versions');
 }
 	
 if (!defined('_CREATE_NEW_VERSION')) {
