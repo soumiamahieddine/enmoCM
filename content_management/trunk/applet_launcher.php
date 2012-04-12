@@ -100,7 +100,7 @@ if ($objectType <> 'templateStyle') {
         && $reservedBy['user_id'] != $_SESSION['user']['UserId']
     ) {
         if ($reservedBy['fullname'] <> 'empty') {
-            $_SESSION['error'] = _RESPONSE_ALREADY_RESERVED . ' ' . _BY . ' : ' 
+            $_SESSION['error'] = _ALREADY_RESERVED . ' ' . _BY . ' : ' 
                 . $reservedBy['fullname'];
         } else {
             $_SESSION['error'] = _RESPONSE_ALREADY_RESERVED;
