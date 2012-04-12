@@ -1743,5 +1743,5 @@ if (!defined('_VIEW_ORIGINAL')) {
     define('_VIEW_ORIGINAL', 'Voir le document original');
 }
 if (!defined('_PJ')) {
-    define('_PJ', 'Pièce(s) jointe(s)');
+    define('_PJ', 'Pièces jointes');
 }
