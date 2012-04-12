@@ -27,10 +27,32 @@ if (!empty($_REQUEST['id']) && !empty($_REQUEST['collId'])) {
             );
         } else {
             // if OFFICE format
-            header('location: ' .$_SESSION['config']['coreurl'] 
+            /*header('location: ' .$_SESSION['config']['coreurl'] 
                 . 'modules/content_management/applet_launcher.php?objectType=attachment&objectId=' 
                 . $id . '&objectTable=' . RES_ATTACHMENTS_TABLE
-            );
+            );*/
+            $core_tools->load_html();
+            $core_tools->load_header();
+            //$core_tools->load_js();
+            ?>
+            <body>
+                <div id="container">
+                    <div id="content">
+                        <div class="error" id="divError" name="divError"></div>
+                        <script language="javascript">
+                            loadApplet('<?php 
+                                echo $_SESSION['config']['coreurl'];
+                                ?>modules/content_management/applet_launcher.php?objectType=attachment&objectId=<?php 
+                                echo $id;
+                                ?>&objectTable=<?php 
+                                echo RES_ATTACHMENTS_TABLE;
+                                ?>');
+                        </script>
+                    </div>
+                </div>
+            </body>
+            </html>
+            <?php    
         }
     }
 } else {

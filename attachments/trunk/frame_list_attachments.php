@@ -25,7 +25,7 @@ array_push(
 );
 
 $where = " res_id_master = " . $_SESSION['doc_id'] . " and coll_id ='"
-       . $_SESSION['collection_id_choice'] . "' and status <> 'DEL' ";
+       . $_SESSION['collection_id_choice'] . "' and status <> 'DEL' order by res_id desc";
 $request = new request;
 $attachArr = $request->select(
     $select, $where, '', $_SESSION['config']['databasetype'], '500'
