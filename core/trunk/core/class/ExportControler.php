@@ -99,7 +99,7 @@ class ExportControler
             }
         }
 
-        $query .= ' '.substr($_SESSION['last_select_query'], stripos($_SESSION['last_select_query'], 'FROM'));
+        $query .= ' '.substr($_SESSION['last_select_query'], strpos($_SESSION['last_select_query'], 'FROM'));
 
         return $query;
     }
