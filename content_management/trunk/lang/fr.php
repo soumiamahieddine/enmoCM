@@ -27,3 +27,4 @@ if (!defined('_TEMPLATE_COMMENT')) define( '_TEMPLATE_COMMENT', 'Desciption');
 if (!defined('_TEMPLATE_TYPE')) define( '_TEMPLATE_TYPE', 'Type de mod&egrave;le');
 if (!defined('_TEMPLATE_STYLE')) define( '_TEMPLATE_STYLE', 'Nature du mod&egrave;le');
 if (!defined('_EDIT_TEMPLATE')) define( '_EDIT_TEMPLATE', 'Edition du mod&egrave;le');
+
