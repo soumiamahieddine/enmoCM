@@ -14,9 +14,10 @@ function sendAppletMsg(theMsg)
 }
 
 //destroy the modal of the applet and launch an ajax script
-function endOfApplet(objectType)
+function endOfApplet(objectType, theMsg)
 {
-    //window.alert(objectType);
+    //window.alert('endOfApplet');
+    $('divError').innerHTML = theMsg;
     if (objectType == 'template' || objectType == 'templateStyle') {
         endTemplate();
     } else if (objectType == 'resource') {

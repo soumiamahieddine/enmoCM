@@ -117,6 +117,7 @@ if (
             'FILE_CONTENT' => $fileContent,
             'FILE_EXTENSION' => $fileExtension,
             'ERROR' => '',
+            'END_MESSAGE' => '',
         );
         unlink($filePathOnTmp);
         createXML('SUCCESS', $result);
@@ -162,13 +163,13 @@ if (
                 //THE RETURN
                 if (!empty($_SESSION['error'])) {
                     $result = array(
-                        'ERROR' => $_SESSION['error'] . _END_OF_EDITION,
+                        'END_MESSAGE' => $_SESSION['error'] . _END_OF_EDITION,
                     );
                     createXML('ERROR', $result);
                 } else {
                     $cM->closeReservation($_SESSION['cm']['reservationId']);
                     $result = array(
-                        'ERROR' => _UPDATE_OK,
+                        'END_MESSAGE' => _UPDATE_OK,
                     );
                     createXML('SUCCESS', $result);
                 }
@@ -191,6 +192,7 @@ if (
         'FILE_CONTENT' => $fileContent,
         'FILE_EXTENSION' => $fileExtension,
         'ERROR' => 'missing parameters',
+        'END_MESSAGE' => '',
     );
     createXML('ERROR', $result);
 }

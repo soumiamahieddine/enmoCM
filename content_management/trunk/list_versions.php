@@ -38,7 +38,7 @@ $tabVersions = $requestVersions->select(
 $sizeMedium = '15';
 $sizeSmall = '15';
 $sizeFull = '70';
-$css = 'listing spec detailtabricatordebug';
+$css = 'listing ';
 $body = '';
 $cutString = 100;
 $extendUrl = '&size=full';

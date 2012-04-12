@@ -202,8 +202,8 @@ if (empty($docserver)) {
                 }
             }
         } else {
-            $result = array('ERROR' => _NO_UPDATE);
-            createXML('ERROR', $result);
+            $result = array('END_MESSAGE' => _NO_UPDATE);
+            createXML('SUCCESS', $result);
         }
     }
 }
