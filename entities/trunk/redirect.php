@@ -142,7 +142,12 @@ require("modules/entities/entities_tables.php");
     //$db->show_array($arr_id);
     for($j=0; $j<count($values_form); $j++)
     {
-        $msg = _TO." ".$db->protect_string_db($values_form[$j]['VALUE']);
+        $queryEntityLabel = "SELECT entity_label FROM entities WHERE entity_id='".$values_form[$j]['VALUE']."'";
+        $db->query($queryEntityLabel);
+        while ($entityLabel = $db->fetch_object()) {
+            $zeEntityLabel = $entityLabel->entity_label;
+        }
+        $msg = _TO." : ".$db->protect_string_db($zeEntityLabel)." (".$db->protect_string_db($values_form[$j]['VALUE']).")";
         if($values_form[$j]['ID'] == "department")
         {
             for($i=0; $i < count($arr_id); $i++)
