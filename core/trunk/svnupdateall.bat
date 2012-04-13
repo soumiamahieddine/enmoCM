@@ -1,10 +1,12 @@
 cd core
-echo "=" >> C:\xampp\htdocs\maarch_entreprise_trunk\update.log
-echo date >> C:\xampp\htdocs\maarch_entreprise_trunk\update.log
-echo time >> C:\xampp\htdocs\maarch_entreprise_trunk\update.log
-svn update >> C:\xampp\htdocs\maarch_entreprise_trunk\update.log
+echo "Core" >> C:\xampp\htdocs\maarch_entreprise\update.log
+echo date >> C:\xampp\htdocs\maarch_entreprise\update.log
+echo time >> C:\xampp\htdocs\maarch_entreprise\update.log
+svn update >> C:\xampp\htdocs\maarch_entreprise\update.log
 cd ..\apps\maarch_entreprise
-svn update >> C:\xampp\htdocs\maarch_entreprise_trunk\update.log
+echo "Apps" >> C:\xampp\htdocs\maarch_entreprise\update.log
+svn update >> C:\xampp\htdocs\maarch_entreprise\update.log
 cd ..\..\modules
-svn update *  >> C:\xampp\htdocs\maarch_entreprise_trunk\update.log
+echo "Modules" >> C:\xampp\htdocs\maarch_entreprise\update.log
+svn update *  >> C:\xampp\htdocs\maarch_entreprise\update.log
 pause
