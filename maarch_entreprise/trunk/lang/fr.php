@@ -1754,3 +1754,7 @@ if (!defined('_PJ')) {
 if (!defined('_CONSULT')) {
     define('_CONSULT', 'Consulter');
 }
+
+if (!defined('_DOCUMENTS_LIST_WITH_ATTACHMENTS')) {
+    define('_DOCUMENTS_LIST_WITH_ATTACHMENTS', 'Liste avec filtre et r&eacute;ponses');
+}

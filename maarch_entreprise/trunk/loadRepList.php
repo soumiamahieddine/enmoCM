@@ -9,9 +9,9 @@ $return = '';
 if (isset($_REQUEST['res_id_master'])) {
 
     $status = 0;
-    $return .= '<td colspan="6">';
+    $return .= '<td colspan="6" style="background-color: #FFF;">';
         $return .= '<div align="center">';
-            $return .= '<table width="98%">';
+            $return .= '<table width="100%" style="background-color: rgba(100, 200, 213, 0.2);">';
                 $return .= '<tr style="font-weight: bold;">';
                     $return .= '<th style="font-weight: bold; color: black;">';
                         $return .= _STATUS;
@@ -39,7 +39,7 @@ if (isset($_REQUEST['res_id_master'])) {
                 $db->query($query);
 
                 while ($return_db = $db->fetch_object()) {
-                    $return .= '<tr style="border: 1px solid;">';
+                    $return .= '<tr style="border: 1px solid;" style="background-color: #FFF;">';
                         $return .= '<td>';
                             $return .= '&nbsp;&nbsp;';
                             $return .= $return_db->status;
@@ -86,6 +86,8 @@ if (isset($_REQUEST['res_id_master'])) {
         $return .= '</p>';
     $return .= '</td>';
 }
+
+usleep(900000);
 
 echo "{status : " . $status . ", toShow : '" . addslashes($return) . "'}";
 exit ();

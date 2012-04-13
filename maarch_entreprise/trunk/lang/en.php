@@ -1300,7 +1300,7 @@ if (!defined('_LINK_TO_THE_DOCUMENT')) {
 }
 
 if (!defined('_NO_LINK_WITH_THIS_ONE')) {
-    define('_NO_LINK_WITH_THIS_ONE', "unlink to this one");
+    define('_NO_LINK_WITH_THIS_ONE', 'unlink to this one');
 }
 
 if (!defined('_LINK_DELETED')) {
@@ -1319,4 +1319,8 @@ if (!defined('_CREATE_NEW_VERSION')) {
 /******************** Liste avec réponses ************/
 if (!defined('_CONSULT')) {
     define('_CONSULT', 'Consult');
+}
+
+if (!defined('_DOCUMENTS_LIST_WITH_ATTACHMENTS')) {
+    define('_DOCUMENTS_LIST_WITH_ATTACHMENTS', 'List with filter and attachments');
 }
