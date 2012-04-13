@@ -1749,3 +1749,8 @@ if (!defined('_VIEW_ORIGINAL')) {
 if (!defined('_PJ')) {
     define('_PJ', 'Pièces jointes');
 }
+
+/******************** Liste avec réponses ************/
+if (!defined('_CONSULT')) {
+    define('_CONSULT', 'Consulter');
+}

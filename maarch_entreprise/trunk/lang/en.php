@@ -1315,3 +1315,8 @@ if (!defined('_VERSIONS')) {
 if (!defined('_CREATE_NEW_VERSION')) {
     define('_CREATE_NEW_VERSION', 'Create a new version');
 }
+
+/******************** Liste avec réponses ************/
+if (!defined('_CONSULT')) {
+    define('_CONSULT', 'Consult');
+}
