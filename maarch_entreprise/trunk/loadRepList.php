@@ -87,7 +87,7 @@ if (isset($_REQUEST['res_id_master'])) {
     $return .= '</td>';
 }
 
-usleep(900000);
+//usleep(900000);
 
 echo "{status : " . $status . ", toShow : '" . addslashes($return) . "'}";
 exit ();
