@@ -1061,7 +1061,7 @@ if (!defined('_CONTACT_REAFFECT'))  define('_CONTACT_REAFFECT', 'R&eacute;affect
 if (!defined('_YOU_MUST_SELECT_CONTACT')) define( '_YOU_MUST_SELECT_CONTACT', 'Vous devez s&eacute;lectionner un contact ');
 if (!defined('_DOC_SENDED_BY_CONTACT')) define( '_DOC_SENDED_BY_CONTACT', '<b>Documents envoy&eacute;s par ce contact</b>');
 if (!defined('_CONTACT_INFO')) define( '_CONTACT_INFO', 'Fiche contact');
-f (!defined('_SHIPPER')) define( '_SHIPPER', 'Exp&eacute;diteur');
+if (!defined('_SHIPPER')) define( '_SHIPPER', 'Exp&eacute;diteur');
 if (!defined('_DEST')) define( '_DEST', 'Destinataire');
 if (!defined('_INTERNAL2')) define( '_INTERNAL2', 'Interne');
 if (!defined('_EXTERNAL')) define( '_EXTERNAL', 'Externe');
@@ -1729,14 +1729,14 @@ if (!defined('_LINK_DELETED')) {
 if (!defined('_VERSIONS')) {
     define('_VERSIONS', 'Versions');
 }
-	
+
 if (!defined('_CREATE_NEW_VERSION')) {
     define('_CREATE_NEW_VERSION', 'Cr&eacute;er une nouvelle version de document');
 }
 if (!defined('_CONTENT_MANAGEMENT_COMMENT')) {
     define('_CONTENT_MANAGEMENT_COMMENT', 'Gestion des Versions de document');
 }
-	
+
 if (!defined('_VIEW_VERSIONS')) {
     define('_VIEW_VERSIONS', 'Voir les versions de document');
 }
