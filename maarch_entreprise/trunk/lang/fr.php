@@ -1036,6 +1036,7 @@ if (!defined('_CONTACTS_LIST')) define( '_CONTACTS_LIST', 'Liste des contacts');
 if (!defined('_CONTACT_ADDITION')) define( '_CONTACT_ADDITION', 'Ajouter contact');
 if (!defined('_CONTACTS')) define( '_CONTACTS', 'contact(s)');
 if (!defined('_CONTACT')) define( '_CONTACT', 'Contact');
+if (!defined('_NEW_CONTACT')) define( '_NEW_CONTACT', 'Nouveau contact');
 if (!defined('_ALL_CONTACTS')) define( '_ALL_CONTACTS', 'Tous les contacts');
 if (!defined('_ADD_CONTACT')) define( '_ADD_CONTACT', 'Ajout d&rsquo;un contact');
 if (!defined('_PHONE')) define( '_PHONE', 'T&eacute;l&eacute;phone');
@@ -1053,11 +1054,14 @@ if (!defined('_CONTACT_DELETED')) define( '_CONTACT_DELETED', 'Contact supprim&e
 if (!defined('_MODIFY_CONTACT')) define( '_MODIFY_CONTACT', 'Modifier un contact');
 if (!defined('_IS_CORPORATE_PERSON')) define( '_IS_CORPORATE_PERSON', 'Personne morale');
 if (!defined('_TITLE2')) define( '_TITLE2', 'Civilit&eacute;');
+if (!defined('_WARNING_MESSAGE_DEL_CONTACT'))  define('_WARNING_MESSAGE_DEL_CONTACT', 'Avertissement :<br> La suppression d&rsquo;un contact entraine la r&eacute;affectation des documents &agrave un nouveau contact quelque soit le statut des documents (courriers).');
+if (!defined('_CONTACT_DELETION'))  define('_CONTACT_DELETION', 'Suppression de contact');
+if (!defined('_CONTACT_REAFFECT'))  define('_CONTACT_REAFFECT', 'R&eacute;affectation des documents');
 
 if (!defined('_YOU_MUST_SELECT_CONTACT')) define( '_YOU_MUST_SELECT_CONTACT', 'Vous devez s&eacute;lectionner un contact ');
+if (!defined('_DOC_SENDED_BY_CONTACT')) define( '_DOC_SENDED_BY_CONTACT', '<b>Documents envoy&eacute;s par ce contact</b>');
 if (!defined('_CONTACT_INFO')) define( '_CONTACT_INFO', 'Fiche contact');
-
-if (!defined('_SHIPPER')) define( '_SHIPPER', 'Exp&eacute;diteur');
+f (!defined('_SHIPPER')) define( '_SHIPPER', 'Exp&eacute;diteur');
 if (!defined('_DEST')) define( '_DEST', 'Destinataire');
 if (!defined('_INTERNAL2')) define( '_INTERNAL2', 'Interne');
 if (!defined('_EXTERNAL')) define( '_EXTERNAL', 'Externe');
