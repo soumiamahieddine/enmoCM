@@ -956,6 +956,7 @@ if (!defined('_ADD_COPIES')) define( '_ADD_COPIES','Ajouter des personnes en cop
 if (!defined('_PROCESS_NOTES')) define( '_PROCESS_NOTES','Notes de traitement');
 if (!defined('_DIRECT_CONTACT')) define( '_DIRECT_CONTACT','Prise de contact direct');
 if (!defined('_NO_ANSWER')) define( '_NO_ANSWER','Pas de r&eacute;ponse');
+if (!defined('_ANSWER')) define( '_ANSWER','R&eacute;ponse');
 if (!defined('_DETAILS')) define( '_DETAILS', 'Fiche d&eacute;taill&eacute;e');
 if (!defined('_DOWNLOAD')) define( '_DOWNLOAD', 'T&eacute;l&eacute;charger le courrier');
 if (!defined('_SEARCH_RESULTS')) define( '_SEARCH_RESULTS', 'R&eacute;sultat de la recherche');
