@@ -70,7 +70,7 @@ if(isset($_REQUEST['valid']))
 	if(!empty($_REQUEST['contact']))
     {	
 
-		if (preg_match('/\([0-9]+\)$/', $_REQUEST['contact']) == 0) 
+		if (preg_match('/:/', $_REQUEST['contact']) == 0) 
 		{
 			$_SESSION['error'] = _CONTACT. ' ' . _WRONG_FORMAT . '.<br/>'
                                    . _USE_AUTOCOMPLETION;
@@ -81,19 +81,31 @@ if(isset($_REQUEST['valid']))
         else
         {
 			$contactTmp = str_replace(')', '', substr($_REQUEST['contact'], strrpos($_REQUEST['contact'],'(')+1));
-			echo $contactTmp;
 			$find1 = strpos($contactTmp, ':');
 			$find2 =  $find1 + 1;
 			$contact_type = substr($contactTmp, 0, $find1);
 			$new_contact = substr($contactTmp, $find2, strlen($contactTmp));
 		
+/*
 			for($i=0;$i<count($_SESSION['collections']);$i++)
 			{
 				if(isset($_SESSION['collections'][$i]['table']) && !empty($_SESSION['collections'][$i]['view']))
 				{
+					
+*/
+					$i=0;
 					$db->query("update ".$_SESSION['collections'][$i]['extensions'][$i]." set exp_contact_id = '".$db->protect_string_db($new_contact)."' where exp_contact_id = '".$db->protect_string_db($s_id)."'");
+					$db->query("update ".$_SESSION['tablename']['contacts']." set enabled = 'N' where contact_id = ".$db->protect_string_db($s_id));
+					?>
+					<script type="text/javascript">
+						window.location.href="<?php echo $_SESSION['config']['businessappurl'].'index.php?page=contacts&admin=contacts&order='.$_REQUEST['order']."&order_field=".$_REQUEST['order_field']."&start=".$_REQUEST['start']."&what=".$_REQUEST['what'];?>";
+					</script>
+					<?php
+/*
+				
 				}
 			}
+*/
 		}
 	}
 	elseif(empty($_REQUEST['contact']))
