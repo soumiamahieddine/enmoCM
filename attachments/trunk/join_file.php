@@ -82,7 +82,7 @@ if (isset($_POST['valid']) && $_POST['valid']) {
                 $_SESSION['config']['tmppath'] . $tmpFileName
             );
             if ($arrayIsAllowed['status'] == false) {
-                $_SESSION['error'] = _WRONG_FILE_TYPE 
+                $_SESSION['error'] = _WRONG_FILE_TYPE
                     . ' ' . $arrayIsAllowed['mime_type'];
                 $_SESSION['upfile'] = array();
             } else {
@@ -277,12 +277,26 @@ if (isset($_POST['valid']) && $_POST['valid']) {
             if (empty($_SESSION['error'])
                 || $_SESSION['error'] == _NEW_ATTACH_ADDED
             ) {
+
+                $new_nb_attach = 0;
+                $req = new request;
+                $req->connect();
+                $req->query("select res_id from "
+                    . $_SESSION['tablename']['attach_res_attachments']
+                    . " where status <> 'DEL' and res_id_master = " . $_SESSION['doc_id']);
+                if ($req->nb_result() > 0) {
+                    $new_nb_attach = $req->nb_result();
+                }
+
                 ?>
                 <script type="text/javascript">
                     var eleframe1 =  window.opener.top.document.getElementById('list_attach');
                     eleframe1.src = '<?php
                 echo $_SESSION['config']['businessappurl'];
                 ?>index.php?display=true&module=attachments&page=frame_list_attachments&mode=normal';
+                    var nb_attach = <?php echo $new_nb_attach; ?>;
+                    window.opener.top.document.getElementById('nb_attach').innerHTML = nb_attach;
+
                     window.top.close();
                 </script>
                 <?php
