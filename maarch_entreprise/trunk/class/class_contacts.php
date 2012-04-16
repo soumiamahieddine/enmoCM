@@ -643,9 +643,9 @@ class contacts extends dbquery
 
 
     /**
-    * delete a model in the database
+    * delete a contact in the database
     *
-    * @param string $id model identifier
+    * @param string $id contact identifier
     */
     public function delcontact($id, $admin = true)
     {
@@ -664,15 +664,58 @@ class contacts extends dbquery
 				$nb_docs = $nb_docs + $this->nb_result();          
         }
         
+/*
         $query = "select * from ".$_SESSION['tablename']['contacts']." where enabled = 'Y'";
         if(!$admin)
 			$query .= " and user_id = '".$this->protect_string_db($_SESSION['user']['UserId'])."'";
        
         $this->query($query);
+*/
         
 		echo "<div class='error' id='main_error'>".$_SESSION['error']."</div>";
         $_SESSION['error'] = "";
-        if ($this->nb_result() > 0)
+        
+        if (empty($nb_docs))
+        {
+            $this->connect();
+            $query = "select contact_id from ".$_SESSION['tablename']['contacts']." where enabled ='Y' and contact_id = ".$id;
+            if(!$admin)
+            {
+                $query .= " and user_id = '".$this->protect_string_db($_SESSION['user']['UserId'])."'";
+            }
+            $this->query($query);
+            if($this->nb_result() == 0)
+            {
+                $_SESSION['error'] = _CONTACT.' '._UNKNOWN;
+                //header("location: ".$path_contacts);
+                ?>
+                <script type="text/javascript">
+					window.location.href="<?php echo $_SESSION['config']['businessappurl'].'index.php?page=contacts&admin=contacts&order='.$_REQUEST['order']."&order_field=".$_REQUEST['order_field']."&start=".$_REQUEST['start']."&what=".$_REQUEST['what'];?>";
+                </script>
+                <?php
+                exit;
+            }
+            else
+            {
+                $res = $this->fetch_object();
+                $this->query("update ".$_SESSION['tablename']['contacts']." set enabled = 'N' where contact_id = ".$id);
+                if($_SESSION['history']['contactdel'])
+                {
+                    require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_history.php');
+                    $hist = new history();
+                    $hist->add($_SESSION['tablename']['contacts'], $id,"DEL",_CONTACT_DELETED.' : '.$id, $_SESSION['config']['databasetype']);
+                }
+                $_SESSION['error'] = _CONTACT_DELETED;
+                ?>
+                <script type="text/javascript">
+					window.location.href="<?php echo $_SESSION['config']['businessappurl'].'index.php?page=contacts&admin=contacts&order='.$_REQUEST['order']."&order_field=".$_REQUEST['order_field']."&start=".$_REQUEST['start']."&what=".$_REQUEST['what'];?>";
+                </script>
+                <?php
+                //header("location: ".$path_contacts);
+                exit;
+            }
+        }
+        else
         {
 			?>
 				
@@ -724,6 +767,7 @@ class contacts extends dbquery
 					?>
 				</form>
 				<?php
+			}
 			$order = $_REQUEST['order'];
 			$order_field = $_REQUEST['order_field'];
 			$start = $_REQUEST['start'];
@@ -733,42 +777,13 @@ class contacts extends dbquery
 			{
 				$path_contacts = $_SESSION['config']['businessappurl']."index.php?page=my_contacts&dir=my_contacts&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what;
 			}
+/*
 			if(!empty($_SESSION['error']))
 			{
 				header("location: ".$path_contacts);
 				exit;
 			}
-		}
-        else
-        {
-            $this->connect();
-            $query = "select contact_id from ".$_SESSION['tablename']['contacts']." where enabled ='Y' and contact_id = ".$id;
-            if(!$admin)
-            {
-                $query .= " and user_id = '".$this->protect_string_db($_SESSION['user']['UserId'])."'";
-            }
-            $this->query($query);
-            if($this->nb_result() == 0)
-            {
-                $_SESSION['error'] = _THE_CONTACT.' '._UNKNOWN;
-                header("location: ".$path_contacts);
-                exit;
-            }
-            else
-            {
-                $res = $this->fetch_object();
-                $this->query("update ".$_SESSION['tablename']['contacts']." set enabled = 'N' where contact_id = ".$id);
-                if($_SESSION['history']['contactdel'])
-                {
-                    require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_history.php');
-                    $hist = new history();
-                    $hist->add($_SESSION['tablename']['contacts'], $id,"DEL",'contactdel', _CONTACT_DELETED.' : '.$id, $_SESSION['config']['databasetype']);
-                }
-                $_SESSION['error'] = _CONTACT_DELETED;
-                header("location: ".$path_contacts);
-                exit;
-            }
-        }
+*/
     }
 
     function get_contact_information($res_id, $category_id,$view )
