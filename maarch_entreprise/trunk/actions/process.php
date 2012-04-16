@@ -281,6 +281,15 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 
     //RESPONSE FORM
     $nb_attach = 0;
+
+    $db = new request;
+    $db->connect();
+    $db->query("select answer_type_bitmask from ".$_SESSION['collections'][0]['extensions'][0]." where res_id = ".$res_id);
+    $res = $db->fetch_object();
+    $bitmask = $res->answer_type_bitmask;
+    if (preg_match('/1/', $bitmask))
+		$answer = _ANSWER;
+    
     if ($core_tools->is_module_loaded('attachments')) {
         $req = new request;
         $req->connect();
@@ -294,7 +303,11 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .= '<h3 onclick="new Effect.toggle(\'list_answers_div\', \'blind\', {delay:0.2});'
               . 'new Effect.toggle(\'done_answers_div\', \'blind\', {delay:0.2});return false;" style="width:90%;">';
     $frm_str .= '<img src="' . $_SESSION['config']['businessappurl']
+<<<<<<< .mine
+              . 'static.php?filename=plus.png" alt="" />&nbsp;<b>' . _PJ . ', ' . _DONE_ANSWERS . ' ('.$answer.' - '. $nb_attach . ') :</b>';
+=======
               . 'static.php?filename=plus.png" alt="" />&nbsp;<b>' . _PJ . ', ' . _DONE_ANSWERS . ' (<span id="nb_attach">' . $nb_attach . '</span>) :</b>';
+>>>>>>> .r1161
     $frm_str .= '<span class="lb1-details">&nbsp;</span>';
     $frm_str .= '</h3>';
     $frm_str .= '<div class="desc" id="done_answers_div" style="display:none;width:90%;">';
