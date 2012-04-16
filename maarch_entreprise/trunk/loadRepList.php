@@ -34,7 +34,7 @@ if (isset($_REQUEST['res_id_master'])) {
                 $db = new dbquery();
                 $db->connect();
 
-                $query = "SELECT * FROM res_attachments WHERE res_id_master = ".$_REQUEST['res_id_master'];
+                $query = "SELECT * FROM res_attachments WHERE res_id_master = ".$_REQUEST['res_id_master']." AND status <> 'DEL'";
 
                 $db->query($query);
 
@@ -42,11 +42,34 @@ if (isset($_REQUEST['res_id_master'])) {
                     $return .= '<tr style="border: 1px solid;" style="background-color: #FFF;">';
                         $return .= '<td>';
                             $return .= '&nbsp;&nbsp;';
-                            $return .= $return_db->status;
+                            $db2 = new dbquery;
+                            $db2->connect();
+                            $query = "SELECT label_status FROM status WHERE id ='".$return_db->status."'";
+                            $db2->query($query);
+                            while ($status_db = $db2->fetch_object()) {
+                                $return .= $status_db->label_status;
+                            }
                         $return .= '</td>';
                         $return .= '<td>';
                             $return .= '&nbsp;&nbsp;';
-                            $return .= substr($return_db->creation_date, 0, 10);
+                            sscanf(substr($return_db->creation_date, 0, 10), "%4s-%2s-%2s", $date_Y, $date_m, $date_d);
+                            switch ($date_m)
+                            {
+                                case '01': $date_m_txt = _JANUARY; break;
+                                case '02': $date_m_txt = _FEBRUARY; break;
+                                case '03': $date_m_txt = _MARCH; break;
+                                case '04': $date_m_txt = _APRIL; break;
+                                case '05': $date_m_txt = _MAY; break;
+                                case '06': $date_m_txt = _JUNE; break;
+                                case '07': $date_m_txt = _JULY; break;
+                                case '08': $date_m_txt = _AUGUST; break;
+                                case '09': $date_m_txt = _SEPTEMBER; break;
+                                case '10': $date_m_txt = _OCTOBER; break;
+                                case '11': $date_m_txt = _NOVEMBER; break;
+                                case '12': $date_m_txt = _DECEMBER; break;
+                                default: $date_m_txt = $date_m;
+                            }
+                            $return .= $date_d.' '.$date_m_txt.' '.$date_Y;
                         $return .= '</td>';
                         $return .= '<td>';
                             $return .= '&nbsp;&nbsp;';
