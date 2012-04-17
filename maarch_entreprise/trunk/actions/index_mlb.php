@@ -605,6 +605,11 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
                 . 'style="display:inline;">*</span>&nbsp;</td>';
         $frmStr .= '</tr>';
     }
+    
+    
+   
+    
+    
     /*** Process limit date ***/
     $frmStr .= '<tr id="process_limit_date_use_tr" style="display:'
             . $displayValue . ';">';
@@ -650,16 +655,6 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
             . 'style="display:inline;">*</span>&nbsp;</td>';
     $frmStr .= '</tr>';
     
-
-	/*** Tags ***/
-	if ($core->is_module_loaded('tags') 
-		&& ($core->test_service('tag_view', 'tags',false) == 1)
-		&& ($core->test_service('add_tag_to_res', 'tags',false) == 1)
-	   ) 
-	{
-		include_once("modules".DIRECTORY_SEPARATOR."tags".DIRECTORY_SEPARATOR.
-		"templates/index_mlb/index.php");
-	}
 
     /*** Folder : Market & Project ***/
     if ($core->is_module_loaded('folder')) {
@@ -709,6 +704,18 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
         $frmStr .= '</tr>';
     }
 
+
+	/*** Tags ***/
+	if ($core->is_module_loaded('tags') 
+		&& ($core->test_service('tag_view', 'tags',false) == 1)
+		&& ($core->test_service('add_tag_to_res', 'tags',false) == 1)
+	   ) 
+	{
+		include_once("modules".DIRECTORY_SEPARATOR."tags".DIRECTORY_SEPARATOR.
+		"templates/index_mlb/index.php");
+	}
+	
+	
     // Fin
     $frmStr .= '</table>';
 
