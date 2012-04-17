@@ -204,6 +204,10 @@ if (isset($_POST['submit_index_doc'])) {
         $_SESSION['details']['diff_list']['key_value'] = md5($res_id);
     }
     $is->update_mail($_POST, 'POST', $s_id, $coll_id);
+	
+	if ($core->is_module_loaded('tags')) {
+		include_once("modules".DIRECTORY_SEPARATOR."tags".DIRECTORY_SEPARATOR."tags_update.php");
+	}
 }
 //delete the doctype
 if (isset($_POST['delete_doc'])) {
@@ -672,6 +676,16 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     <?php
                     $detailsExport .=  "</table>";
                     ?>
+                    
+                    <?php
+                    if ($core->is_module_loaded('tags') && 
+						($core->test_service('tag_view', 'tags',false) == 1))
+					{
+						include_once("modules".DIRECTORY_SEPARATOR."tags".DIRECTORY_SEPARATOR
+						."templates/details/index.php");	
+					}
+                    ?>
+                    
                     <div id="opt_indexes">
                     <?php if (count($indexes) > 0)
                     {
