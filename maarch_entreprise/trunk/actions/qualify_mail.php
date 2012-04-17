@@ -573,6 +573,14 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 			$frm_str .= '</table>';
 			$frm_str .= '<div id="comp_indexes">';
 		$frm_str .= '</div>';
+		
+		if ($core_tools->is_module_loaded('tags') && 
+					($core_tools->test_service('tag_view', 'tags',false) == 1))
+		{
+			include_once("modules".DIRECTORY_SEPARATOR."tags".DIRECTORY_SEPARATOR
+			."templates/validate_mail/index.php");	
+		}
+		
 		if($core_tools->is_module_loaded('notes'))
 		{
 			 // Displays the notes
@@ -1207,6 +1215,11 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
 	$res_id = $arr_id[0];
 
 	$attach = get_value_fields($values_form, 'attach');
+
+	if ($core->is_module_loaded('tags')) {
+		include_once("modules".DIRECTORY_SEPARATOR."tags"
+		.DIRECTORY_SEPARATOR."tags_update.php");
+	}
 
 	if($attach == false)
 	{
