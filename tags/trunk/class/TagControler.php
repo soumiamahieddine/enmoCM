@@ -177,10 +177,83 @@ class tag_controler
         );
 		//$db->show();
     }
+    
+    
+	public function delete($tag_label,$coll_id)
+    {
+		$db = new dbquery();
+		$db->connect();
+        $del = $db->query(
+	        	"delete from " ._TAG_TABLE_NAME
+	            . " where tag_label = '" . $tag_label . "' and coll_id = '".$coll_id."' "
+        );
+		if ($del){
+			return true; 
+		}
+		return false;
+		//$db->show();
+    }
+	
+	
+	public function store($tag_label, $mode='up', $params){
+		if ($mode=='add'){
+			$new_tag_label = $params[0];
+			$coll_id = $params[1];
+			$this->insert_tag_label($new_tag_label, $coll_id);	
+			return true;
+		}
+		elseif($mode=='up'){
+			
+			$new_tag_label = $params[0];
+			$coll_id = $params[1];
+			$this->update_tag_label($new_tag_label, $tag_label, $coll_id);	
+			return true;
+		}
+		else
+		{
+			return false;	
+		}
+	}
+	
+	public function update_tag_label($new_tag_label, $old_taglabel, $coll_id)
+    {
+    	$new_tag_label = $this->control_label($new_tag_label);
+		
+		$db = new dbquery();
+		$db->connect();
+        $db->query(
+        	"update " ._TAG_TABLE_NAME
+            . " set tag_label = '".$new_tag_label."' where coll_id = '".$coll_id."' and tag_label = '".$old_taglabel."'  "
+        );
+    }
+	
+	public function insert_tag_label($new_tag_label, $coll_id)
+    {
+		$db = new dbquery();
+		$db->connect();
+		
+		//Primo, test de l'existance du mot clé en base.
+		$db->query(
+        	"select tag_label from " ._TAG_TABLE_NAME
+            . " where  coll_id = '".$coll_id."' and tag_label = '".$tag_label."'  "
+        );
+		if ($db->nb_result() == 0)
+		{
+			 $db->query(
+        	"insert into " ._TAG_TABLE_NAME
+            . " values ('".$new_tag_label."', '".$coll_id."', 0)"
+      		  );
+		}
+		
+    }
+	
 	
 	
 	public function add_this_tag($res_id,$coll_id,$tag_label)
     {
+    	
+		$tag_label = $this->control_label($tag_label);
+		
 		$db = new dbquery();
 		$db->connect();
         $db->query(
@@ -275,6 +348,22 @@ class tag_controler
 				$this->add_this_tag($res_id,$coll_id,$this_taglabel);
 			}
 		}
+	}
+	
+	
+	private function control_label($label){
+		$label  = str_replace('\r', '', $label);
+		$label  = str_replace('\n', '', $label);
+		$label  = str_replace('\'', ' ', $label);
+		$label  = str_replace('"', ' ', $label);
+		$label  = str_replace('\\', ' ', $label);
+		
+		
+		//On découpe la chaine composée de virgules
+		$tabrr = array( CHR(13) => ",", CHR(10) => "," ); 
+		$label = strtr($label,$tabrr); 
+		
+		return $label;
 	}
   
 }

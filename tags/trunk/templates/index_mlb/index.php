@@ -42,7 +42,7 @@ $tags = new tag_controler();
 //--------------------------------------
 
 
-
+$frmStr .= '<tr id="box_id_tr" ><td colspan="4">';
 $frmStr .= '<b>'._TAGS.' :</b>';
 $frmStr .= '<span class="lb1-details">&nbsp;</span>';
 $frmStr .= '</h2>';
@@ -57,7 +57,7 @@ $frmStr .= $frm_str;
 
 $frmStr .= '<tr id="tag_tr">';
 //$frmStr .= '<td><label for="tag" class="tag_title" ></label></td>';
-$frmStr .= '<td><div id="tag_displayed" style="display:block;width:400px;"></div></td>';
+$frmStr .= '<td colspan ="2"><div id="tag_displayed" style="display:block;width:400px;"></div></td>';
 
 
 $frmStr .= '</tr>';
@@ -69,5 +69,5 @@ $frmStr .= '<input type="hidden" name="res_id" id="res_id"  value="'.$res_id.'" 
 
 $frmStr .= '<script type="text/javascript">load_tags('.$route_tag_ui_script.', \''.$res_id.'\', \''.$coll_id.'\');';
 $frmStr .= '</script>';
-   
+$frmStr .= '</td></tr>';
 ?>

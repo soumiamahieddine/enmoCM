@@ -57,7 +57,7 @@ if ($mode == 'list') {
         <input type="hidden" name="page" value="manage_tag_list_controler" />
         <input type="hidden" name="mode" value="<?php echo $mode;?>" />
         
-        <input type="hidden" name="system_id" id="system_id" value="<?php echo $_SESSION['m_admin']['event']['system_id'];?>" />
+        <input type="hidden" name="tag_label" id="tag_label" value="<?php echo $_SESSION['m_admin']['tag']['tag_label'];?>" />
 
         <input type="hidden" name="order" id="order" value="<?php
             echo $_REQUEST['order'];?>" />
@@ -78,7 +78,11 @@ if ($mode == 'list') {
         </p>
        
        
-       
+       <?php 
+       if ($mode == 'up')
+	   	{
+		?>   		
+	
 		<p>
             <label for="label"><?php echo _COLL_ID; ?> : </label>
             <span><?php
@@ -86,7 +90,42 @@ if ($mode == 'list') {
                     $_SESSION['m_admin']['tag']['tag_coll']
                 ); ?></span>
         </p>
- 		
+ 		<?php
+		}
+	   else
+	   	{
+	   		$arrayColl = $_SESSION['m_admin']['tags']['coll_id'];
+	   		?>
+	   		  <p>
+                <label for="collection"><?php  echo _COLLECTION;?> : </label>
+                <select name="collection" id="collection" onchange="get_opt_index('<?php
+            echo $_SESSION['config']['businessappurl'];
+            ?>index.php?display=true&page=get_index', this.options[this.options.selectedIndex].value);">
+                    <option value="" ><?php  echo _CHOOSE_COLLECTION;?></option>
+            <?php
+            for ($i = 0; $i < count($arrayColl); $i ++) {
+                ?>
+                <option value="<?php
+                echo $arrayColl[$i]['id'];
+                ?>" <?php
+                if (isset($_SESSION['m_admin']['doctypes']['COLL_ID'])
+                    && $_SESSION['m_admin']['doctypes']['COLL_ID'] == $arrayColl[$i]['id']
+                ) {
+                    echo 'selected="selected"';
+                }
+                ?> ><?php  echo $arrayColl[$i]['label'];?></option>
+                <?php
+            }
+			
+             ?>
+             </select>
+             </p>
+        <?php
+	   	}
+		
+		if ($mode == 'up')
+	   	{
+		?>
  		<p>
  	        <label for="label"><?php echo _NB_DOCS_FOR_THIS_TAG; ?> : </label>
             <span><?php
@@ -94,7 +133,10 @@ if ($mode == 'list') {
                     $_SESSION['m_admin']['tag']['tag_count']
                 ); ?></span>
         </p>
-	
+		<?php
+		}
+		
+		?>
 		
         <p class="buttons">
             <?php
