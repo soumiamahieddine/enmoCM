@@ -706,13 +706,8 @@ class contacts extends dbquery
                     $hist->add($_SESSION['tablename']['contacts'], $id,"DEL","contactdel",_CONTACT_DELETED.' : '.$id, $_SESSION['config']['databasetype']);
                 }
                 $_SESSION['error'] = _CONTACT_DELETED;
-                ?>
-                <script type="text/javascript">
-					window.location.href="<?php echo $_SESSION['config']['businessappurl'].'index.php?page=contacts&admin=contacts&order='.$_REQUEST['order']."&order_field=".$_REQUEST['order_field']."&start=".$_REQUEST['start']."&what=".$_REQUEST['what'];?>";
-                </script>
-                <?php
                 //header("location: ".$path_contacts);
-                exit;
+                //exit;
             }
         }
         else
@@ -777,13 +772,18 @@ class contacts extends dbquery
 			{
 				$path_contacts = $_SESSION['config']['businessappurl']."index.php?page=my_contacts&dir=my_contacts&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what;
 			}
-/*
+
 			if(!empty($_SESSION['error']))
 			{
-				header("location: ".$path_contacts);
+				?>
+                <script type="text/javascript">
+					window.location.href="<?php echo $path_contacts;?>";
+                </script>
+                <?php
+				//header("location: ".$path_contacts);
 				exit;
 			}
-*/
+
     }
 
     function get_contact_information($res_id, $category_id,$view )
