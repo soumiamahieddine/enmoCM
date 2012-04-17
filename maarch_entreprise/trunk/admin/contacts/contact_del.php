@@ -96,6 +96,12 @@ if(isset($_REQUEST['valid']))
 					$i=0;
 					$db->query("update ".$_SESSION['collections'][$i]['extensions'][$i]." set exp_contact_id = '".$db->protect_string_db($new_contact)."' where exp_contact_id = '".$db->protect_string_db($s_id)."'");
 					$db->query("update ".$_SESSION['tablename']['contacts']." set enabled = 'N' where contact_id = ".$db->protect_string_db($s_id));
+					if($_SESSION['history']['contactdel'])
+					{
+						require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_history.php');
+						$hist = new history();
+						$hist->add($_SESSION['tablename']['contacts'], $s_id,"DEL","contactdel",_CONTACT_DELETED.' : '.$s_id, $_SESSION['config']['databasetype']);
+					}
 					?>
 					<script type="text/javascript">
 						window.location.href="<?php echo $_SESSION['config']['businessappurl'].'index.php?page=contacts&admin=contacts&order='.$_REQUEST['order']."&order_field=".$_REQUEST['order_field']."&start=".$_REQUEST['start']."&what=".$_REQUEST['what'];?>";
