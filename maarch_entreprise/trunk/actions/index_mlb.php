@@ -649,6 +649,17 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
     $frmStr .= '<td><span class="red_asterisk" id="chrono_number_mandatory" '
             . 'style="display:inline;">*</span>&nbsp;</td>';
     $frmStr .= '</tr>';
+    
+
+	/*** Tags ***/
+	if ($core->is_module_loaded('tags') 
+		&& ($core->test_service('tag_view', 'tags',false) == 1)
+		&& ($core->test_service('add_tag_to_res', 'tags',false) == 1)
+	   ) 
+	{
+		include_once("modules".DIRECTORY_SEPARATOR."tags".DIRECTORY_SEPARATOR.
+		"templates/index_mlb/index.php");
+	}
 
     /*** Folder : Market & Project ***/
     if ($core->is_module_loaded('folder')) {
@@ -1838,6 +1849,10 @@ $collId, $table, $formValues )
             }
             //  echo 'entities '.$resId. " ";
         }
+        if ($core->is_module_loaded('tags')) {
+				include_once("modules".DIRECTORY_SEPARATOR."tags"
+				.DIRECTORY_SEPARATOR."tags_update.php");
+		}
     } else {
         $_SESSION['action_error'] = _ERROR_RES_ID;
         return false;
@@ -1871,6 +1886,10 @@ $collId, $table, $formValues )
         );
 
     }
+    if ($core->is_module_loaded('tags')) {
+		include_once("modules".DIRECTORY_SEPARATOR."tags"
+		.DIRECTORY_SEPARATOR."tags_update.php");
+	}
 
     //$_SESSION['indexing'] = array();
     unset($_SESSION['upfile']);
