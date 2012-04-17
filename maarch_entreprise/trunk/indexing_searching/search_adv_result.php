@@ -264,7 +264,7 @@ if (count($_REQUEST['meta']) > 0) {
                 // FULLTEXT
 				$fulltext_request = $func->store_html($_REQUEST['fulltext']);
                 $json_txt .= " 'fulltext' : ['" 
-                    . addslashes(trim($fulltext_request)) . "'],";
+                    . addslashes(trim($_REQUEST['fulltext'])) . "'],";
                 set_include_path('apps' . DIRECTORY_SEPARATOR 
                     . $_SESSION['config']['app_id'] 
                     . DIRECTORY_SEPARATOR . 'tools' 
@@ -337,14 +337,8 @@ if (count($_REQUEST['meta']) > 0) {
                     }
                 } else {
                     $where_request .= " 1=-1 and ";
-                }
-              
-                
-                $where_request .=" and  ";
-/*
-				echo $welcome."<br/>";
-				echo $where_request;
-*/
+                } 
+                //$where_request .=" and  ";
 			}
             // PRIORITY
             elseif ($tab_id_fields[$j] == 'priority' && (!empty($_REQUEST['priority']) ||$_REQUEST['priority'] == 0) )
