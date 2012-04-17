@@ -364,6 +364,17 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .= '</div>';
     $frm_str .= '<br>';
 
+	//TAGS
+	if (
+		$core_tools->is_module_loaded('tags') && (
+		$core_tools->test_service('tag_view', 'tags',false) == 1)
+		)
+	{
+		include_once("modules".DIRECTORY_SEPARATOR."tags".
+		DIRECTORY_SEPARATOR."templates/process/index.php");
+	}
+
+
     //DIFFUSION LIST
     if ($core_tools->is_module_loaded('entities')) {
          // Displays the diffusion list (only copies)
@@ -1155,6 +1166,11 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
     } else {
         $bitmask = $other.$fax.$email.$contact.$AR_mail.$simple_mail;
     }
+
+	if ($core->is_module_loaded('tags')) {
+		include_once("modules".DIRECTORY_SEPARATOR."tags".
+					DIRECTORY_SEPARATOR."tags_update.php");
+	}
 
     if ($core->is_module_loaded('folder') && (!empty($market) || !empty($project))) {
         $folder_id = '';
