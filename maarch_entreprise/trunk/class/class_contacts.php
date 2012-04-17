@@ -703,9 +703,10 @@ class contacts extends dbquery
                 {
                     require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_history.php');
                     $hist = new history();
-                    $hist->add($_SESSION['tablename']['contacts'], $id,"DEL",_CONTACT_DELETED.' : '.$id, $_SESSION['config']['databasetype']);
+                    $hist->add($_SESSION['tablename']['contacts'], $id,"DEL","contactdel",_CONTACT_DELETED.' : '.$id, $_SESSION['config']['databasetype']);
                 }
                 $_SESSION['error'] = _CONTACT_DELETED;
+                exit;
                 ?>
                 <script type="text/javascript">
 					window.location.href="<?php echo $_SESSION['config']['businessappurl'].'index.php?page=contacts&admin=contacts&order='.$_REQUEST['order']."&order_field=".$_REQUEST['order_field']."&start=".$_REQUEST['start']."&what=".$_REQUEST['what'];?>";
