@@ -74,7 +74,7 @@
 	     <nature>include</nature>
 	   </WHEREAMIUSED>
 	 </SERVICE>
-	 <SERVICE>
+	 <!--<SERVICE>
 	   <id>new_tags_in_library_rights</id>
 	   <name>_NEW_TAG_IN_LIBRARY_RIGHTS</name>
 	   <comment>_NEW_TAG_IN_LIBRARY_RIGHTS_DESC</comment>
@@ -93,5 +93,5 @@
 	     <page>details.php</page>
 	     <nature>include</nature>
 	   </WHEREAMIUSED>
-	 </SERVICE>
+	 </SERVICE>-->
 </root>

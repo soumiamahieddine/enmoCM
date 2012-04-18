@@ -55,7 +55,7 @@ if (!defined('_NEW_TAG_IN_LIBRARY_RIGHTS_DESC'))  define('_NEW_TAG_IN_LIBRARY_RI
 if (!defined('_TAG'))  define('_TAG', _TAG_DEFAULT);
 if (!defined('_TAGS'))  define('_TAGS', _TAGS_DEFAULT);
 
-if (!defined('_TAG_SEPARATOR_HELP'))  define('_TAG_SEPARATOR_HELP', 'S&eacute;parez les mots-cl&eacute;s avec des virgules');
+if (!defined('_TAG_SEPARATOR_HELP'))  define('_TAG_SEPARATOR_HELP', 'S&eacute;parez les mots-cl&eacute;s en appuyant sur Entrée ou avec des virgules');
 
 if (!defined('_NB_DOCS_FOR_THIS_TAG'))  define('_NB_DOCS_FOR_THIS_TAG', 'Nbre de documents taggu&eacute;s');
 

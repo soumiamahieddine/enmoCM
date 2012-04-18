@@ -367,9 +367,9 @@ function validate_tag_submit() {
     $mode = $_REQUEST['mode'];
     $tagObj = new tag_controler();
     
-	if ($_REQUEST['coll_id'])
+	if ($_REQUEST['collection'])
 	{
-		$coll_id = $_REQUEST['coll_id'];		
+		$coll_id = $_REQUEST['collection'];		
 	}
 	else{
 		$coll_id = "letterbox_coll";

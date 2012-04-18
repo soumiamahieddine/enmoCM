@@ -56,7 +56,7 @@ if ($tag_list){
 		$aja_str .= '<div class="tag_element_word" id="taglabel_'.$this_tag.'">'
 			.addslashes($this_tag);
 			
-		if ($core_tools->test_service('add_tag_to_res', 'tags',false) == 1)
+		if ($core_tools->test_service('delete_tag_to_res', 'tags',false) == 1)
 		{
 			
 			if ($_dev_option == "hide_deletebutton"){}

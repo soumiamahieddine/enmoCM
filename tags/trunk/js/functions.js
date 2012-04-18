@@ -145,3 +145,40 @@ function load_tags(path_script)
 	}
 }
 
+
+
+
+/** Declaration of the autocompleter object used for the folders*/
+var tag_autocompleter;
+
+/**
+ * Launch the Ajax autocomplete object to activate autocompletion on tag 
+ *
+ * @param path_script String Path to the Ajax script
+ * @param mode String Mode : market or project
+ **/
+function launch_autocompleter_tags(path_script)
+{
+
+	var input =  'tag_userform';
+	var div   =  'show_tags';
+
+
+	if( path_script)
+	{
+		// Ajax autocompleter object creation
+		 tag_autocompleter = new Ajax.Autocompleter(input, div, path_script, {
+		 method:'get',
+		 paramName:'Input',
+		 minChars: 2
+		 });
+	}
+	else
+	{
+		if(console)
+		{
+			console.log('error parameters launch_autocompleter_folder function');
+		}
+	}
+}
+
