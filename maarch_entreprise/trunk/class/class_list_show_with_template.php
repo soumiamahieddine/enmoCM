@@ -233,6 +233,12 @@ class list_show_with_template extends list_show
             $return .= 'src="';
               $return .= 'static.php?filename=voir_rep.gif';
             $return .= '" ';
+            $return .= 'height="';
+                $return .= '50%';
+            $return .= '" ';
+            $return .= 'style="';
+                $return .= 'cursor: pointer;';
+            $return .= '" ';
             $return .= 'onclick=" ';
               $return .= 'loadRepList(';
                 $return .= $result[$theline][0]['value'];
