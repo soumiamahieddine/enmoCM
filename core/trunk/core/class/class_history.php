@@ -1,5 +1,5 @@
 <?php
-/*
+/**
 *   Copyright 2008-2012 Maarch
 *
 *   This file is part of Maarch Framework.
@@ -21,12 +21,13 @@
 /**
 * @brief   Contains all the function to manage the history table
 *
-*<ul>
-* <li>Connexion logs and events history management</li>
-*</ul>
+* <ul>
+*   <li>Connexion logs and events history management</li>
+* </ul>
 * @file
 * @author Claire Figueras <dev@maarch.org>
 * @author Cyril Vazquez <dev@maarch.org>
+* @author Arnaud Veber <dev@maarch.org>
 * @date $date$
 * @version $Revision$
 * @ingroup core
@@ -37,18 +38,61 @@
 *
 * @ingroup core
 */
+
+if (!defined('_LOG4PHP'))
+    define(
+        '_LOG4PHP',
+        'log4php'
+    );
+
+if (!defined('_BDD'))
+    define(
+        '_BDD',
+        'database'
+    );
+
+if (!defined('_LOGGER_NAME_TECH_DEFAULT'))
+    define(
+        '_LOGGER_NAME_TECH_DEFAULT',
+        'loggerTechnique'
+    );
+
+if (!defined('_LOGGER_NAME_FUNC_DEFAULT'))
+    define(
+        '_LOGGER_NAME_FUNC_DEFAULT',
+        'loggerFonctionnel'
+    );
+
+require_once(
+    "core"
+    .DIRECTORY_SEPARATOR."class"
+    .DIRECTORY_SEPARATOR."class_functions.php"
+);
+
+require_once(
+    "apps"
+    .DIRECTORY_SEPARATOR.$_SESSION['config']['app_id']
+    .DIRECTORY_SEPARATOR."tools"
+    .DIRECTORY_SEPARATOR."log4php"
+    .DIRECTORY_SEPARATOR."Logger.php"
+);
+
 class history extends dbquery
 {
     /**
     * Inserts a record in the history table
     *
-    * @param  $where  string Table or view of the event
-    * @param  $id integer Identifier of the event to add
-    * @param  $how string Event type (Keyword)
-    * @param  $what string Event description
-    * @param  $databasetype string Type of the database
-    * @param  $id_module string Identifier of the module concerned
-    * by the event (admin by default)
+    * @param $table_name
+    * @param $record_id
+    * @param $event_type
+    * @param $event_id
+    * @param $info
+    * @param $databasetype
+    * @param [$id_module = 'admin']
+    * @param [$isTech = false]
+    * @param [$result = _OK]
+    * @param [$level = _LEVEL_DEBUG]
+    * @param [$user = '']
     */
     public function add(
         $table_name,
@@ -60,37 +104,89 @@ class history extends dbquery
         $id_module = 'admin',
         $isTech = false,
         $result = _OK,
-        $level = _LEVEL_INFO,
+        $level = _LEVEL_DEBUG,
         $user = ''
     )
     {
         $remote_ip = $_SERVER['REMOTE_ADDR'];
-        $info = $this->protect_string_db($info, $databasetype);
+
         $user = '';
         if (isset($_SESSION['user']['UserId'])) {
             $user = $_SESSION['user']['UserId'];
         }
+
+        $traceInformations = array(
+            'WHERE' => $table_name,
+            'ID'    => $record_id,
+            'HOW'   => $event_type,
+            'USER'  => $user,
+            'WHAT'  => $event_id,
+            'ID_MODULE' => $id_module,
+            'REMOTE_IP' => $remote_ip,
+            'DATABASE_TYPE' => $databasetype,
+            'RESULT'    => $result,
+            'LEVEL' => $level
+        );
+
+        $this->build_logging_method();
+
+        foreach ($_SESSION['logging_method_memory'] as $logging_method) {
+            if ($logging_method['ACTIVATED'] == true) {
+                if ($logging_method['ID'] == _LOG4PHP) {
+                    if ($logging_method['LOGGER_NAME_TECH'] == "") {
+                        $logging_method['LOGGER_NAME_TECH'] = _LOGGER_NAME_TECH_DEFAULT;
+                    }
+                    if ($logging_method['LOGGER_NAME_FUNC'] == "") {
+                        $logging_method['LOGGER_NAME_FUNC'] = _LOGGER_NAME_FUNC_DEFAULT;
+                    }
+                    $this->addToLog4php(
+                        $traceInformations,
+                        $logging_method,
+                        $isTech
+                    );
+                }
+            }
+        }
+
+        $info = $this->protect_string_db(
+            $info,
+            $databasetype
+        );
+
         if (!$isTech) {
             $this->connect();
             $this->query(
-                "INSERT INTO ".$_SESSION['tablename']['history']
-                    . " (table_name, record_id , event_type , event_id, user_id"
-                    . " , event_date , " . "info , id_module, remote_ip) "
-                    . "VALUES ('" . $table_name . "', '" . $record_id . "', '"
-                    . $event_type . "', '" . $event_id . "','" . $user
-                    . "', " . $this->current_datetime() . ", '" . $info . "', '"
-                    . $id_module . "' , '" . $remote_ip . "')"
+                "INSERT INTO "
+                    .$_SESSION['tablename']['history']." ("
+                        ."table_name, "
+                        ."record_id, "
+                        ."event_type, "
+                        ."event_id, "
+                        ."user_id, "
+                        ."event_date, "
+                        ."info, "
+                        ."id_module, "
+                        ."remote_ip"
+                    .") "
+                ."VALUES ('"
+                    .$table_name."', "
+                    ."'".$record_id."', "
+                    ."'".$event_type."', "
+                    ."'".$event_id."', "
+                    ."'".$user."', "
+                    ."".$this->current_datetime().", "
+                    ."'".$info."', "
+                    ."'".$id_module."', "
+                    ."'".$remote_ip."'"
+                .")"
                 , false
                 , true
             );
-            //$this->disconnect();
         } else {
             //write on a log
             echo $info;exit;
         }
 
-        // If module Notifications is loaded, check if event has
-        //as associated template and add event to stack for notification
         $core = new core_tools();
         if ($core->is_module_loaded("notifications")) {
             require_once(
@@ -98,50 +194,332 @@ class history extends dbquery
                 .DIRECTORY_SEPARATOR."notifications"
                 .DIRECTORY_SEPARATOR."notifications_tables_definition.php"
             );
-            // Get template association id
+
             $this->connect();
-            $query = "SELECT system_id FROM "
-                   . _TEMPLATES_ASSOCIATION_TABLE_NAME
-                   . " WHERE upper(what) like 'EVENT' "
-                   . " AND '" . $event_id . "' = value_field"
-                   . " AND maarch_module = 'notifications'";
-            $this->query($query);
-            //$this->show();
+            $this->query(
+                "SELECT "
+                    ."system_id "
+                ."FROM "
+                    ._TEMPLATES_ASSOCIATION_TABLE_NAME." "
+                ."WHERE "
+                    ."upper(what) like 'EVENT'  "
+                    ."AND '".$event_id."' = value_field "
+                    ."AND maarch_module = 'notifications'"
+            );
+
             if ($this->nb_result() > 0) {
-                //$this->show();
                 while ($ta = $this->fetch_object()) {
-                    $query = "INSERT INTO " . _NOTIF_EVENT_STACK_TABLE_NAME
-                            . " (ta_sid, table_name, record_id, user_id, event_info"
-                            . ", event_date)"
-                            . " VALUES(" . $ta->system_id . ", '"
-                            . $table_name . "', '" . $record_id . "', '"
-                            . $user . "', '" . $info . "', "
-                            . $this->current_datetime() . ")";
-                    $this->query($query, false, true);
+                    $this->query(
+                        "INSERT INTO "
+                            ._NOTIF_EVENT_STACK_TABLE_NAME." ("
+                                ."ta_sid, "
+                                ."table_name, "
+                                ."record_id, "
+                                ."user_id, "
+                                ."event_info, "
+                                ."event_date"
+                            .") "
+                        ."VALUES("
+                            .$ta->system_id.", "
+                            ."'".$table_name."', "
+                            ."'".$record_id."', "
+                            ."'".$user."', "
+                            ."'".$info."', "
+                            .$this->current_datetime()
+                        .")",
+                        false,
+                        true
+                    );
                 }
             }
-            //$this->disconnect();
         }
-
     }
 
     /**
     * Gets the label of an history keyword
     *
-    * @param  $id  string Key word identifier
-    * @return  string Label of the key word or empty string
+    * @param  $id
+    *
+    * @return  (string) => Label of the key word or empty string
     */
-    public function get_label_history_keyword($id)
+    public function get_label_history_keyword(
+        $id
+    )
     {
         if (empty($id)) {
             return '';
         } else {
-            for ($i=0; $i<count($_SESSION['history_keywords']);$i++) {
+            for ($i=0; $i<count($_SESSION['history_keywords']); $i++) {
                 if ($id == $_SESSION['history_keywords'][$i]['id']) {
                     return $_SESSION['history_keywords'][$i]['label'];
                 }
             }
         }
+
         return '';
+    }
+
+    /**
+    * Delete accents
+    *
+    * @param  $str (string)
+    * @param  [$charset = 'utf-8'] (string)
+    *
+    * @return  $str (string)
+    */
+    private function wd_remove_accents(
+        $str,
+        $charset ='utf-8'
+    )
+    {
+        $str = htmlentities(
+            $str,
+            ENT_NOQUOTES,
+            "utf-8"
+        );
+        $str = preg_replace(
+            '#\&([A-za-z])(?:uml|circ|tilde|acute|grave|cedil|ring)\;#',
+            '\1',
+            $str
+        );
+        $str = preg_replace(
+            '#\&([A-za-z]{2})(?:lig)\;#',
+            '\1',
+            $str
+        );
+        $str = preg_replace(
+            '#\&[^;]+\;#',
+            '',
+            $str
+        );
+
+        return $str;
+    }
+
+    /**
+    * Get the logging method in the configuration file
+    */
+    private function build_logging_method()
+    {
+        $xmlFileName = 'logging_method.xml';
+
+        $pathToXmlLogin = '';
+
+        if (!isset($_SESSION['logging_method_memory'])) {
+            if (file_exists(
+                $_SESSION['config']['corepath'].'custom'
+                .DIRECTORY_SEPARATOR.$_SESSION['custom_override_id']
+                .DIRECTORY_SEPARATOR . 'apps'
+                .DIRECTORY_SEPARATOR.$_SESSION['config']['app_id']
+                .DIRECTORY_SEPARATOR.'xml'
+                .DIRECTORY_SEPARATOR.$xmlFileName
+            )) {
+                $pathToXmlLogin = $_SESSION['config']['corepath'].'custom'
+                .DIRECTORY_SEPARATOR.$_SESSION['custom_override_id']
+                .DIRECTORY_SEPARATOR.'apps'
+                .DIRECTORY_SEPARATOR.$_SESSION['config']['app_id']
+                .DIRECTORY_SEPARATOR.'xml'
+                .DIRECTORY_SEPARATOR.$xmlFileName;
+            } elseif (file_exists(
+                'apps'
+                .DIRECTORY_SEPARATOR.$_SESSION['config']['app_id']
+                .DIRECTORY_SEPARATOR.'xml'
+                .DIRECTORY_SEPARATOR.$xmlFileName
+            )) {
+                $pathToXmlLogin = 'apps'
+                .DIRECTORY_SEPARATOR.$_SESSION['config']['app_id']
+                .DIRECTORY_SEPARATOR.'xml'
+                .DIRECTORY_SEPARATOR.$xmlFileName;
+            } else {
+                $noXml = true;
+                $logging_methods[0]['ID'] = 'database';
+                $logging_methods[0]['ACTIVATED'] = true;
+                $logging_methods[1]['ID'] = 'log4php';
+                $logging_methods[1]['ACTIVATED'] = false;
+            }
+
+            if (!isset($noXml)) {
+                $logging_methods = array();
+
+                $xmlConfig = simplexml_load_file($pathToXmlLogin);
+                if (! $xmlConfig) {
+                    exit();
+                }
+
+                foreach ($xmlConfig->METHOD as $METHOD) {
+                    $id = ((string)$METHOD->ID);
+                    $activated = ((boolean)$METHOD->ENABLED);
+                    $loggerNameTech = ((string)$METHOD->LOGGER_NAME_TECH);
+                    $loggerNameFunc = ((string)$METHOD->LOGGER_NAME_FUNC);
+                    $logFormat = ((string)$METHOD->APPLI_LOG_FORMAT);
+                    $codeMetier = ((string)$METHOD->CODE_METIER);
+
+                    array_push(
+                        $logging_methods,
+                        array(
+                            'ID'         => $id,
+                            'ACTIVATED'  => $activated,
+                            'LOGGER_NAME_TECH' => $loggerNameTech,
+                            'LOGGER_NAME_FUNC' => $loggerNameFunc,
+                            'LOG_FORMAT'    => $logFormat,
+                            'CODE_METIER'   => $codeMetier
+                        )
+                    );
+                }
+            }
+            $_SESSION['logging_method_memory'] = $logging_methods;
+        }
+    }
+
+    /**
+    * Write a log entry with a specific log level
+    *
+    * @param  $logger (object) => Log4php logger
+    * @param  $logLine (string) => Line we want to trace
+    * @param  $level (enum) => Log level
+    */
+    private function writeLog(
+        $logger,
+        $logLine,
+        $level
+    )
+    {
+        $formatter = new functions();
+
+        $logLine = $formatter->wash_html(
+            $logLine,
+            ''
+        );
+
+        $logLine = $this->wd_remove_accents(
+            $logLine
+        );
+
+        switch ($level) {
+
+            case _LEVEL_DEBUG:
+                $logger->debug(
+                    $logLine
+                );
+                break;
+
+             case _LEVEL_INFO:
+                $logger->info(
+                    $logLine
+                );
+                break;
+
+            case _LEVEL_WARN:
+                $logger->warn(
+                    $logLine
+                );
+                break;
+
+            case _LEVEL_ERROR:
+                $logger->error(
+                    $logLine
+                );
+                break;
+
+            case _LEVEL_FATAL:
+                $logger->fatal(
+                    $logLine
+                );
+                break;
+        }
+    }
+
+    /**
+    * Insert a log line into log4php
+    *
+    * @param  $traceInformations (array) => Informations to trace
+    * @param  $logging_method (string) => Array of XML attributes
+    * @param  $isTech (boolean) => Says if the log is technical (true) or functional (false)
+    */
+    private function addToLog4php(
+        $traceInformations,
+        $logging_method,
+        $isTech
+    )
+    {
+        if (!isset($_SESSION['user']['loginmode'])) {
+            $_SESSION['user']['loginmode'] = '';
+        }
+
+        if (!isset($_SESSION['user']['department'])) {
+            $_SESSION['user']['department'] = '';
+        }
+
+        if (!isset($_SESSION['user']['primarygroup'])) {
+            $_SESSION['user']['primarygroup'] = '';
+        }
+
+        Logger::configure(
+            "apps"
+            .DIRECTORY_SEPARATOR.$_SESSION['config']['app_id']
+            .DIRECTORY_SEPARATOR."xml"
+            .DIRECTORY_SEPARATOR."log4php.xml"
+        );
+
+        if ($isTech) {
+            $logger = Logger::getLogger(
+                $logging_method['LOGGER_NAME_TECH']
+            );
+        } else {
+            $logger = Logger::getLogger(
+                $logging_method['LOGGER_NAME_FUNC']
+            );
+        }
+
+        $connexionMode = '';
+        if (isset($_SESSION['user_sso']['dggn']['connection_mode'])) {
+            $connexionMode = $_SESSION['user_sso']['dggn']['connection_mode'];
+        }
+
+        $department = '';
+        if (isset($_SESSION['user']['department'])) {
+            $department = $_SESSION['user']['department'];
+        }
+
+        $primaryGroup = '';
+        if (isset($_SESSION['user_sso']['dggn']['userGroup'])) {
+            $primaryGroup = $_SESSION['user_sso']['dggn']['userGroup'];
+        }
+
+        $searchPatterns = array(
+            '%RESULT%',
+            '%CODE_METIER%',
+            '%WHERE%',
+            '%ID%',
+            '%HOW%',
+            '%USER%',
+            '%WHAT%',
+            '%ID_MODULE%',
+            '%REMOTE_IP%'
+        );
+
+        $replacePatterns = array(
+            $traceInformations['RESULT'],
+            $logging_method['CODE_METIER'],
+            $traceInformations['WHERE'],
+            $traceInformations['ID'],
+            $traceInformations['HOW'],
+            $traceInformations['USER'],
+            $traceInformations['WHAT'],
+            $traceInformations['ID_MODULE'],
+            $traceInformations['REMOTE_IP']
+        );
+
+        $logLine = str_replace(
+            $searchPatterns,
+            $replacePatterns,
+            $logging_method['LOG_FORMAT']
+        );
+
+        $this->writeLog(
+            $logger,
+            $logLine,
+            $traceInformations['LEVEL']
+        );
     }
 }
