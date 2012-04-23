@@ -234,7 +234,7 @@ class list_show_with_template extends list_show
               $return .= 'static.php?filename=voir_rep.gif';
             $return .= '" ';
             $return .= 'height="';
-                $return .= '50%';
+                $return .= '38px';
             $return .= '" ';
             $return .= 'style="';
                 $return .= 'cursor: pointer;';
