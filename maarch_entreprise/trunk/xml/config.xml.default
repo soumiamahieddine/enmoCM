@@ -254,4 +254,8 @@
         <moduleid>content_management</moduleid>
         <comment>_CONTENT_MANAGEMENT_COMMENT</comment>
     </MODULES>
+    <MODULES>
+        <moduleid>tags</moduleid>
+        <comment>_TAGS_COMMENT</comment>
+    </MODULES>
 </ROOT>
