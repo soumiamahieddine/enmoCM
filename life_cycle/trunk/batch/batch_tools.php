@@ -20,7 +20,7 @@
  */
 
 /**
- * @brief API to manage batchs 
+ * @brief API to manage batchs
  *
  * @file
  * @author Laurent Giovannoni
@@ -31,7 +31,7 @@
 
 /**
  * Execute a sql query
- * 
+ *
  * @param object $dbConn connection object to the database
  * @param string $queryTxt path of the file to include
  * @param boolean $transaction for rollback if error
@@ -54,9 +54,9 @@ function Bt_doQuery($dbConn, $queryTxt, $transaction=false)
 }
 
 /**
- * Exit the batch with a return code, message in the log and 
+ * Exit the batch with a return code, message in the log and
  * in the database if necessary
- * 
+ *
  * @param int $returnCode code to exit (if > O error)
  * @param string $message message to the log and the DB
  * @return nothing, exit the program
@@ -98,22 +98,22 @@ function Bt_exitBatch($returnCode, $message='')
 */
 function Bt_logInDataBase($totalProcessed=0, $totalErrors=0, $info='')
 {
-   
+
     $query = "insert into history_batch(module_name, batch_id, event_date, "
            . "total_processed, total_errors, info) values('"
            . $GLOBALS['batchName'] . "', " . $GLOBALS['wb'] . ", "
            . $GLOBALS['db']->current_datetime() . ", " . $totalProcessed . ", " . $totalErrors . ", '"
-           . $GLOBALS['func']->protect_string_db(substr(str_replace('\\', '\\\\', $info), 0, 999)) . "')";
+           . $GLOBALS['func']->protect_string_db(substr(str_replace('\\', '\\\\', str_replace("'", "`", $info)), 0, 999)) . "')";
            //. $GLOBALS['func']->protect_string_db(substr($info, 0, 999)) . "')";
     Bt_doQuery($GLOBALS['db'], $query);
 }
 
 /**
  * Get the batch if of the batch
- * 
+ *
  * @return nothing
  */
-function Bt_getWorkBatch() 
+function Bt_getWorkBatch()
 {
     $req = "select param_value_int from parameters where id = "
          . "'". $GLOBALS['batchName'] . "_id'";
@@ -131,7 +131,7 @@ function Bt_getWorkBatch()
 
 /**
  * Update the database with the new batch id of the batch
- * 
+ *
  * @return nothing
  */
 function Bt_updateWorkBatch()
@@ -143,11 +143,11 @@ function Bt_updateWorkBatch()
 
 /**
  * Include the file requested if exists
- * 
+ *
  * @param string $file path of the file to include
  * @return nothing
  */
-function Bt_myInclude($file) 
+function Bt_myInclude($file)
 {
     if (file_exists($file)) {
         include_once ($file);
