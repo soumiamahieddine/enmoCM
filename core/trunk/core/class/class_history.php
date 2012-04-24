@@ -68,13 +68,21 @@ require_once(
     .DIRECTORY_SEPARATOR."class"
     .DIRECTORY_SEPARATOR."class_functions.php"
 );
-
+/*
 require_once(
     "apps"
     .DIRECTORY_SEPARATOR.$_SESSION['config']['app_id']
     .DIRECTORY_SEPARATOR."tools"
     .DIRECTORY_SEPARATOR."log4php"
     .DIRECTORY_SEPARATOR."Logger.php"
+);
+*/
+require_once(
+	"apps"
+	.DIRECTORY_SEPARATOR."maarch_entreprise"
+	.DIRECTORY_SEPARATOR."tools"
+	.DIRECTORY_SEPARATOR."log4php"
+	.DIRECTORY_SEPARATOR."Logger.php"
 );
 
 class history extends dbquery
