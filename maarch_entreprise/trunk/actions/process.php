@@ -641,7 +641,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .= '<div id="list_answers_div" style="display:none">';
             $frm_str .= '<div>';
                 $frm_str .= '<div id="processframe" name="processframe">';
-                    $frm_str .= '<center><h2>' . _ATTACHMENTS . ', ' . _DONE_ANSWERS . '</h2></center>';
+                    $frm_str .= '<center><h2 onclick="new Effect.toggle(\'list_answers_div\', \'blind\', {delay:0.2});';
+					$frm_str .= 'return false;">' . _ATTACHMENTS . ', ' . _DONE_ANSWERS . '</h2></center>';
                     $req = new request;
                     $req->connect();
                     $req->query("select res_id from ".$_SESSION['tablename']['attach_res_attachments']
@@ -720,7 +721,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     if ($core_tools->is_module_loaded('entities')) {
         $frm_str .= '<div id="diff_list_div" style="display:none">';
             $frm_str .= '<div>';
-                $frm_str .= '<center><h2>' . _DIFF_LIST_COPY . '</h2></center>';
+                $frm_str .= '<center><h2 onclick="new Effect.toggle(\'diff_list_div\', \'blind\', {delay:0.2});';
+				$frm_str .= 'return false;">' . _DIFF_LIST_COPY . '</h2></center>';
                 if ($core_tools->test_service('add_copy_in_process', 'entities', false)) {
                     $frm_str .= '<a href="#" onclick="window.open(\''
                         . $_SESSION['config']['businessappurl']
@@ -799,7 +801,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     if ($core_tools->is_module_loaded('notes')) {
         $frm_str .= '<div class="desc" id="notes_div" style="display:none;">';
             $frm_str .= '<div class="ref-unit">';
-                $frm_str .= '<center><h2>' . _NOTES . '</h2></center>';
+                $frm_str .= '<center><h2 onclick="new Effect.toggle(\'notes_div\', \'blind\', {delay:0.2});';
+				$frm_str .= 'return false;">' . _NOTES . '</h2></center>';
                 $frm_str .= '<div style="text-align:center;">';
                     $frm_str .= '<img src="'.$_SESSION['config']['businessappurl']
                         . 'static.php?module=notes&filename=modif_note.png" border="0" alt="" />';
@@ -824,7 +827,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     if ($core_tools->is_module_loaded('cases')) {
         $frm_str .= '<div id="cases_div" style="display:none">';
             $frm_str .= '<div>';
-                $frm_str .= '<center><h2>' . _CASE . '</h2></center>';
+                $frm_str .= '<center><h2 onclick="new Effect.toggle(\'cases_div\', \'blind\', {delay:0.2});';
+				$frm_str .= 'return false;">' . _CASE . '</h2></center>';
                 $frm_str .= '<form name="cases" method="post" id="cases" action="#" class="forms addforms2" style="text-align:center;">';
                     $frm_str .= '<table width="98%" align="center" border="0">';
                         $frm_str .= '<tr>';
@@ -877,7 +881,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     //LINKS FRAME
     $frm_str .= '<div id="links_div" style="display:none">';
         $frm_str .= '<div style="text-align: left;">';
-            $frm_str .= '<h2>';
+            $frm_str .= '<h2 onclick="new Effect.toggle(\'links_div\', \'blind\', {delay:0.2});';
+				$frm_str .= 'return false;">';
                 $frm_str .= _LINK_TAB;
             $frm_str .= '</h2>';
             $frm_str .= '<div id="loadLinks">';
