@@ -2214,7 +2214,7 @@ function loadRepList(id)
             onSuccess: function(answer){
                 eval("response = "+answer.responseText);
 
-                $('repList_'+id).innerHTML = response.toShow;
+                $('divRepList_'+id).innerHTML = response.toShow;
 
             }
         });
