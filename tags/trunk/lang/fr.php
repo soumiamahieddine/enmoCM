@@ -58,6 +58,13 @@ if (!defined('_TAGS'))  define('_TAGS', _TAGS_DEFAULT);
 if (!defined('_TAG_SEPARATOR_HELP'))  define('_TAG_SEPARATOR_HELP', 'S&eacute;parez les mots-cl&eacute;s en appuyant sur Entrée ou avec des virgules');
 
 if (!defined('_NB_DOCS_FOR_THIS_TAG'))  define('_NB_DOCS_FOR_THIS_TAG', 'Nbre de documents taggu&eacute;s');
+if (!defined('_TAG_FUSION_ACTIONLABEL'))  define('_NB_DOCS_FOR_THIS_TAG', 'Fusionner le tag avec');
 
+if (!defined('_TAGOTHER_OPTIONS'))  define('_TAGOTHER_OPTIONS', 'Autres options');
+if (!defined('_TAG_FUSION_ACTIONLABEL'))  define('_TAG_FUSION_ACTIONLABEL', 'Fusionner le tag avec');
+if (!defined('_TAGFUSION'))  define('_TAGFUSION', 'Fusion');
+if (!defined('_TAGFUSION_GOODRESULT'))  define('_TAGFUSION_GOODRESULT', 'Ces tags sont maintenant fusionn&eacute;s');
+
+if (!defined('_TAG_ALREADY_EXISTS'))  define('_TAG_ALREADY_EXISTS', 'Ce tag existe d&eacute;j&agrave;');
 
 ?>

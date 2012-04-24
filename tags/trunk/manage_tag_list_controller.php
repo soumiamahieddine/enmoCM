@@ -47,6 +47,7 @@ try{
     require_once 'core/class/ObjectControlerIF.php';
     require_once 'modules/tags/class/TagControler.php' ;
 	require_once 'modules/tags/class/Tag.php' ;
+	include_once 'modules/tags/route.php' ;
     
     if ($mode == 'list') {
         require_once 'core/class/class_request.php' ;
@@ -134,7 +135,7 @@ function location_bar_management($mode)
     }
 
     $pagePath = $_SESSION['config']['businessappurl'] . 'index.php?page='
-               . 'manage_tags_controller&module=tags&mode=' . $mode ;
+               . 'manage_tag_list_controller&module=tags&mode=' . $mode ;
     $pageLabel = $pageLabels[$mode];
     $pageId = $pageIds[$mode];
     $ct = new core_tools();
@@ -161,10 +162,14 @@ function display_up($tag_label)
 		$_SESSION['m_admin']['tag']['tag_count'] = (string) $tagCtrl->countdocs(
 																	$tag->tag_label, 
 																	$tag->coll_id
-																  );
-    }
-
-	
+																  );		
+																 									  
+    }	
+ 	
+ 	//récupération de l'ensemble des tags dans un tableau
+   	$all_tags = array();
+	$all_tags = $tagCtrl->get_all_tags();
+	$_SESSION['tmp_all_tags'] = $all_tags;
 }
 
 /**
@@ -407,7 +412,9 @@ function validate_tag_submit() {
   	
     switch ($mode) {
         case 'up':
-			$_SESSION['error'] = _TAG_UPDATED.' : '.$new_tag_label;
+			if ($_SESSION['error'] == "")
+				$_SESSION['error'] = _TAG_UPDATED.' : '.$new_tag_label;
+			
             if (!empty($_SESSION['m_admin']['tag']['dddtag_label'])) {
                 header(
                     'location: ' . $_SESSION['config']['businessappurl']

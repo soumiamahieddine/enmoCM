@@ -43,7 +43,7 @@ $tags = new tag_controler();
 
 
 $frmStr .= '<tr id="box_id_tr" ><td colspan="4">';
-$frmStr .= '<b>'._TAGS.' :</b>';
+$frmStr .= '<em>'._TAGS.' :</em>';
 $frmStr .= '<span class="lb1-details">&nbsp;</span>';
 $frmStr .= '</h2>';
 $frmStr .= '<div id="tag_div">';
@@ -51,6 +51,8 @@ $frmStr .= '<div>';
  
 $frmStr .= '<table width="98%" align="center" border="0">';
 
+$tag_customsize = '360px';
+$tag_customcols = '53';
 include_once 'modules/tags/templates/addtag_userform.php'; //CHARGEMENT DU FORMULAIRE D'AJOUT DE DROITS	
 $frmStr .= $frm_str;
 

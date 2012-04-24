@@ -98,14 +98,12 @@ if ($mode == 'list') {
 	   		?>
 	   		  <p>
                 <label for="collection"><?php  echo _COLLECTION;?> : </label>
-                <select name="collection" id="collection" onchange="get_opt_index('<?php
-            echo $_SESSION['config']['businessappurl'];
-            ?>index.php?display=true&page=get_index', this.options[this.options.selectedIndex].value);">
-                    <option value="" ><?php  echo _CHOOSE_COLLECTION;?></option>
+                <select disabled name="collection" id="collection" >
+                    <!--<option value="" ><?php  echo _CHOOSE_COLLECTION;?></option>-->
             <?php
             for ($i = 0; $i < count($arrayColl); $i ++) {
                 ?>
-                <option value="<?php
+                <option  value="<?php
                 echo $arrayColl[$i]['id'];
                 ?>" <?php
                 if (isset($_SESSION['m_admin']['doctypes']['COLL_ID'])
@@ -125,6 +123,7 @@ if ($mode == 'list') {
 		
 		if ($mode == 'up')
 	   	{
+	  	
 		?>
  		<p>
  	        <label for="label"><?php echo _NB_DOCS_FOR_THIS_TAG; ?> : </label>
@@ -154,7 +153,46 @@ if ($mode == 'list') {
          echo _CANCEL; ?>" onclick="javascript:window.location.href='<?php
          echo $_SESSION['config']['businessappurl'];
 		 ?>index.php?page=manage_tag_list_controller&amp;mode=list&amp;module=tags'"/>
-
+		
+		<?php 
+		if ($mode == 'up')
+	   	{
+	   		?>
+			<hr/>
+			<h3><?php echo _TAGOTHER_OPTIONS; ?></h3>
+			<p>
+	 	        <label for="label"><?php echo _TAG_FUSION_ACTIONLABEL; ?> : </label>
+	            <select name="tagfusion" id="tagfusion">
+        	    <?php
+	            foreach ($_SESSION['tmp_all_tags'] as $tmp_selectvalue_tag) {
+	                ?>
+	                <option value="<?php
+	                echo $tmp_selectvalue_tag['tag_label'].",".$tmp_selectvalue_tag['coll_id'];
+	                 
+	                ?> 
+	                "><?php  echo $tmp_selectvalue_tag['tag_label']." ::".$tmp_selectvalue_tag['coll_id'];?></option>
+	                <?php
+	            }
+			
+             ?>
+	         </select>
+	       
+	       <input type="button" class="button"  name="cancel" style="border-radius:8px;font-size:8px;" 
+	       onclick = "tag_fusion('<?php echo $_SESSION['m_admin']['tag']['tag_label'].','
+	       .$_SESSION['m_admin']['tag']['tag_coll']; ?>',
+	        $('tagfusion').value, <?php echo $route_tag_fusion_tags;?>,'<?php 
+	        echo _TAGFUSION_GOODRESULT; ?>' , '<?php
+	        echo $_SESSION['config']['businessappurl'] . 'index.php?display=true'
+        . '&amp;module=tags&amp;page=manage_tag_list_controller&amp;mode=list'
+           ?>');"' value="<?php echo _TAGFUSION; ?> ">
+	        
+	       </p>   		
+	   		<?php
+		}	
+			
+		?>
+		
+	
 	</p>
 
 

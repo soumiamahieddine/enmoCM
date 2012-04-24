@@ -182,3 +182,49 @@ function launch_autocompleter_tags(path_script)
 	}
 }
 
+
+function tag_fusion(search_tag, new_tag, path_script, result_text, header_location)
+{
+	if(search_tag == '' || new_tag == '' || path_script == '')
+	{
+		if(console)
+		{
+			console.log('fields empty :: tag_fusion');
+		}
+	}
+	if(path_script)
+	{	
+		new Ajax.Request(path_script,
+		{
+			method:'post',
+			parameters:
+			{
+				a_search_tag : search_tag,
+				a_new_tag : new_tag,			
+			},
+		    onSuccess: function(answer){
+			eval("response = "+answer.responseText);
+				//alert(answer.responseText);
+				if(response.status == 0 )
+				{
+					alert(result_text);
+					header(header_location);
+				}
+				else
+				{
+					if(console)
+					{
+						console.log('Erreur Ajax');
+					}
+				}
+			},
+		    onFailure: function(){ alert('Something went wrong...'); },
+		});
+		
+	}
+
+	
+	
+}
+
+

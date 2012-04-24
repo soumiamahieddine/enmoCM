@@ -59,6 +59,32 @@ class tag_controler
      * @return event
      */
     
+    
+    public function get_all_tags()
+    {
+		
+		$return = array();
+       
+
+		$db = new dbquery();
+		$db->connect();
+        $db->query(
+        	'select distinct tag_label, coll_id from '._TAG_TABLE_NAME.' order by tag_label asc ');
+  
+        self::set_specific_id('tag_label');
+      
+	  	if($db->nb_result() > 0){
+	  		while($tag=$db->fetch_object()){
+	  			$tougue['tag_label'] = $tag->tag_label;
+				$tougue['coll_id'] = $tag->coll_id;
+	  			array_push($return, $tougue);
+			}
+			return $return;
+	  	}
+        return false;
+    }
+    
+    
     public function get_by_label($tag_label, $coll_id = 'letterbox_coll')
     {
 		
@@ -222,9 +248,21 @@ class tag_controler
 		$db = new dbquery();
 		$db->connect();
         $db->query(
-        	"update " ._TAG_TABLE_NAME
-            . " set tag_label = '".$new_tag_label."' where coll_id = '".$coll_id."' and tag_label = '".$old_taglabel."'  "
+        	"select tag_label from " ._TAG_TABLE_NAME
+            . " where  coll_id = '".$coll_id."' and tag_label = '".$new_tag_label."'  "
         );
+        if ($db->nb_result() == 0)
+		{
+	        $db->query(
+	        	"update " ._TAG_TABLE_NAME
+	            . " set tag_label = '".$new_tag_label."' where coll_id = '".$coll_id."' and tag_label = '".$old_taglabel."'  "
+	        );
+		}
+		else
+		{
+			$_SESSION['error'] = _TAG_ALREADY_EXISTS;
+			
+		}
     }
 	
 	public function insert_tag_label($new_tag_label, $coll_id)
@@ -235,8 +273,9 @@ class tag_controler
 		//Primo, test de l'existance du mot clé en base.
 		$db->query(
         	"select tag_label from " ._TAG_TABLE_NAME
-            . " where  coll_id = '".$coll_id."' and tag_label = '".$tag_label."'  "
+            . " where  coll_id = '".$coll_id."' and tag_label = '".$new_tag_label."'  "
         );
+		//$db->show();exit();
 		if ($db->nb_result() == 0)
 		{
 			 $db->query(

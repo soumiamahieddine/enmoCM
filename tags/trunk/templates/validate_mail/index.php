@@ -51,6 +51,9 @@ $frm_str .= '<div>';
  
 $frm_str .= '<table width="98%" align="center" border="0">';
 
+
+$tag_customsize = '200px';
+$tag_customcols = '26';
 include_once 'modules/tags/templates/addtag_userform.php'; //CHARGEMENT DU FORMULAIRE D'AJOUT DE DROITS	
 
 $frm_str .= '<tr id="tag_tr">';

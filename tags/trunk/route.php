@@ -33,6 +33,7 @@ $route_tag_ui_script 				= '\''.$_SESSION['config']['businessappurl'] . 'index.p
 $route_tag_ui_script_without_modif	= '\''.$_SESSION['config']['businessappurl'] . 'index.php?display=true&module=tags&page=templates/tag_ui&opt=hide_deletebutton\'';
 $route_tag_delete_tags_from_res 	= '\''.$_SESSION['config']['businessappurl'] . 'index.php?display=true&module=tags&page=aj_delete_this_tag\'';
 $route_tag_add_tags_from_res		= '\''.$_SESSION['config']['businessappurl'] . 'index.php?display=true&module=tags&page=aj_add_this_tags\'';
+$route_tag_fusion_tags				= '\''.$_SESSION['config']['businessappurl'] . 'index.php?display=true&module=tags&page=aj_tag_fusion_tags\'';
 //-----------------------------------------------
 
 

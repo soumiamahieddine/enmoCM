@@ -43,26 +43,29 @@ $tags->load_sessiontag($res_id,$coll_id);
 
 //--------------------------------------
 
-$frm_str .= '<h2 onclick="new Effect.toggle(\'tag_div\', \'blind\', {delay:0.2});return false;"  class="tag" style="width:90%;">';
+$frm_str .= '<h3 onclick="new Effect.toggle(\'tag_div\', \'blind\', {delay:0.2});return false;"  class="tag" style="width:90%;">';
 $frm_str .= '<img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=plus.png" alt="" id="img_tags" />&nbsp;<b>'._TAGS.' :</b>';
 $frm_str .= '<span class="lb1-details">&nbsp;</span>';
-$frm_str .= '</h2>';
+$frm_str .= '</h3>';
 $frm_str .= '<div id="tag_div"  style="display:none">';
 $frm_str .= '<div>';
  
 $frm_str .= '<table width="98%" align="center" border="0" align="center">';
 
+$tag_customsize = '200px';
+$tag_customcols = '26';
 include_once 'modules/tags/templates/addtag_userform.php'; //CHARGEMENT DU FORMULAIRE D'AJOUT DE DROITS	
 
 $frm_str .= '<tr id="tag_tr" style="display:'.$display_value.';">';
 //$frm_str .= '<td><label for="tag" class="tag_title" ></label></td>';
-$frm_str .= '<td><div id="tag_displayed" style="display:block;width:400px;"></div></td>';
+$frm_str .= '<td><div id="tag_displayed" style="display:block;width:300px;"></div></td>';
 
 
 $frm_str .= '</tr>';
 $frm_str .= '</table>';
 $frm_str .= '</div>';
 $frm_str .= '</div>';
+$frm_str .= '<br/>';
 $frm_str .= '<input type="hidden" name="res_id" id="res_id"  value="'.$res_id.'" />';
 
 
