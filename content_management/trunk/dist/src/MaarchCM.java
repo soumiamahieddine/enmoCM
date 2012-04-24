@@ -43,6 +43,7 @@ public class MaarchCM extends JApplet {
     protected String fileExtension;
     protected String error;
     protected String endMessage;
+    protected String os;
     
     protected String fileContentTosend;
     
@@ -138,7 +139,7 @@ public class MaarchCM extends JApplet {
                 this.objectId = value;
             }
             if ("APP_PATH".equals(key)) {
-                this.appPath = value;
+                //this.appPath = value;
             }
             if ("FILE_CONTENT".equals(key)) {
                 this.fileContent = value;
@@ -180,7 +181,31 @@ public class MaarchCM extends JApplet {
     
     public String editObject() throws Exception {
         System.out.println("----------BEGIN EDIT OBJECT----------");
-        
+        System.out.println("----------BEGIN LOCAL DIR TMP IF NOT EXISTS----------");
+        String os = System.getProperty("os.name").toLowerCase();
+        boolean isUnix = os.indexOf("nix") >= 0 || os.indexOf("nux") >= 0;
+        boolean isWindows = os.indexOf("win") >= 0;
+        boolean isMac = os.indexOf("mac") >= 0;
+        this.userLocalDirTmp = System.getProperty("user.home") + "/maarchTmp/";
+        if (isWindows) {
+            System.out.println("This is Windows");
+            //this.userLocalDirTmp = "C:\\maarch\\tmp\\";
+            this.appPath = this.userLocalDirTmp + "start.bat";
+            this.os = "win";
+        } else if (isMac) {
+            System.out.println("This is Mac");
+            //this.userLocalDirTmp = "/maarchTmp/";
+            this.appPath = this.userLocalDirTmp + "start.sh";
+            this.os = "mac";
+        } else if (isUnix) {
+            System.out.println("This is Unix or Linux");
+            //this.userLocalDirTmp = "~/maarchTmp/";
+            this.appPath = this.userLocalDirTmp + "start.sh";
+            this.os = "linux";
+        } else {
+            System.out.println("Your OS is not support!!");
+        }
+        System.out.println("APP PATH: " + this.appPath);
         System.out.println("----------BEGIN LOCAL DIR TMP IF NOT EXISTS----------");
         fileManager fM = new fileManager();
         fM.createUserLocalDirTmp(this.userLocalDirTmp);
@@ -198,13 +223,12 @@ public class MaarchCM extends JApplet {
         this.logger.log("----------END OPEN REQUEST----------", Level.INFO);
         
         String fileToEdit = "thefile." + this.fileExtension;
-        if ("start".equals(this.appPath)) {
+        //if ("start".equals(this.appPath)) {
             this.logger.log("----------BEGIN CREATE THE BAT TO LAUNCH IF NECESSARY----------", Level.INFO);
-            this.appPath = this.userLocalDirTmp + "start.bat";
             this.logger.log("create the file : "  + this.appPath, Level.INFO);
-            fM.createBatFile(this.appPath, this.userLocalDirTmp + fileToEdit);
+            fM.createBatFile(this.appPath, this.userLocalDirTmp + fileToEdit, this.os);
             this.logger.log("----------END CREATE THE BAT TO LAUNCH IF NECESSARY----------", Level.INFO);
-        }
+        //}
         
         if ("ok".equals(this.status)) {
             this.logger.log("RESPONSE OK", Level.INFO);

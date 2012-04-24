@@ -35,6 +35,8 @@ public class fileManager {
                     FileOutputStream fos = new FileOutputStream(pathTofile);
                     fos.write(decodedBytes);
                     fos.close();
+                    File myFile = new File(pathTofile);
+                    myFile.setExecutable(true);
                     return fos;
                 }
             }
@@ -42,12 +44,20 @@ public class fileManager {
         return true;
     }
     
-    public boolean createBatFile(final String pathToBatFile, final String fileToLaunch) throws IOException, PrivilegedActionException {
+    public boolean createBatFile(final String pathToBatFile, final String fileToLaunch, final String os) throws IOException, PrivilegedActionException {
         final Writer out = new OutputStreamWriter(new FileOutputStream(pathToBatFile), "utf-8");
         AccessController.doPrivileged(new PrivilegedExceptionAction() {
                 public Object run() throws IOException {
-                    out.write("start /WAIT " + fileToLaunch);
+                    if ("win".equals(os)) {
+                        out.write("start /WAIT " + fileToLaunch);
+                    } else if ("mac".equals(os)) {
+                        out.write("open -W " + fileToLaunch);
+                    } else if ("linux".equals(os)) {
+                        out.write("gnome-open " + fileToLaunch);
+                    }
                     out.close();
+                    File myFile = new File(pathToBatFile);
+                    myFile.setExecutable(true);
                     return out;
                 }
             }
