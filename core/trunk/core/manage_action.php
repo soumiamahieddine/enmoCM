@@ -330,15 +330,24 @@ else
         {
             if(!empty($arr_res[$i]))
             {
-                $what = $label_action.'('._NUM.$arr_res[$i].') ';
+                $what = '';
+                if (isset($_SESSION['current_basket']['id']) && !empty($_SESSION['current_basket']['id'])) {
+                    $db->connect();
+                    $db->query("SELECT basket_name FROM baskets WHERE basket_id = '".$_SESSION['current_basket']['id']."'");
+                    while($data = $db->fetch_assoc()) {
+                        $what = $data['basket_name'];
+                    }
+                    $what .= ' : ';
+                }
+                $what .= $label_action.'('._NUM.$arr_res[$i].') ';
                 if(isset($res_action['history_msg']) && !empty($res_action['history_msg']))
                 {
                     $what .= $res_action['history_msg'];
                 }
                 $hist->add(
-					$_POST['table'],
-					$arr_res[$i],'ACTION#'.$id_action, $id_action,
-					$what, $_SESSION['config']['databasetype'], $_POST['module']);
+                    $_POST['table'],
+                    $arr_res[$i],'ACTION#'.$id_action, $id_action,
+                    $what, $_SESSION['config']['databasetype'], $_POST['module']);
             }
         }
     }
