@@ -21,7 +21,7 @@ $core_tools->load_lang();
 $func = new functions();
 if (empty($_REQUEST['mode']) || !isset($_REQUEST['mode'])) {
     $_SESSION['error'] .= _NO_MODE_DEFINED.'.<br/>';
-    header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&module=templates&page=generate_attachment&template=".$_REQUEST['template_id']);
+    header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&module=templates&page=generate_attachment_html&template=".$_REQUEST['template_id']);
     exit;
 } else {
     $conn = new dbquery();
@@ -29,9 +29,9 @@ if (empty($_REQUEST['mode']) || !isset($_REQUEST['mode'])) {
     if (empty($_REQUEST['template_content']) || !isset($_REQUEST['template_content'])) {
         $_SESSION['error'] .= _NO_CONTENT.'.<br/>';
         if ($_REQUEST['mode'] == 'add') {
-            header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&module=templates&page=generate_attachment&template=".$_REQUEST['template_id']."&mode=".$_REQUEST['mode']);
+            header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&module=templates&page=generate_attachment_html&template=".$_REQUEST['template_id']."&mode=".$_REQUEST['mode']);
         } else {
-            header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&module=templates&page=generate_attachment&id=".$_REQUEST['id']."&mode=".$_REQUEST['mode']);
+            header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&module=templates&page=generate_attachment_html&id=".$_REQUEST['id']."&mode=".$_REQUEST['mode']);
         }
         exit;
     } else {
@@ -43,7 +43,7 @@ if (empty($_REQUEST['mode']) || !isset($_REQUEST['mode'])) {
             $myfile = fopen($path_tmp, "w");
             if (!$myfile) {
                 $_SESSION['error'] .= _FILE_OPEN_ERROR.'.<br/>';
-                header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&module=templates&page=generate_attachment&template=".$_REQUEST['template_id']);
+                header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&module=templates&page=generate_attachment_html&template=".$_REQUEST['template_id']);
                 exit;
             }
             fwrite($myfile, $_REQUEST['template_content']);
@@ -103,7 +103,7 @@ if (empty($_REQUEST['mode']) || !isset($_REQUEST['mode'])) {
             );
             if ($id == false) {
                 $_SESSION['error'] = $res_attach->get_error();
-                header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&module=templates&page=generate_attachment&template=".$_REQUEST['template_id']."&mode=".$_REQUEST['mode']);
+                header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&module=templates&page=generate_attachment_html&template=".$_REQUEST['template_id']."&mode=".$_REQUEST['mode']);
                 exit();
             } else {
                 if ($_SESSION['history']['attachadd'] == "true") {
@@ -130,7 +130,7 @@ if (empty($_REQUEST['mode']) || !isset($_REQUEST['mode'])) {
             //mode = up 
             if (empty($_REQUEST['id']) || !isset($_REQUEST['id'])) {
                 $_SESSION['error'] .= _ANSWER_OPEN_ERROR.'.<br/>';
-                header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&module=templates&page=generate_attachment&template=".$_REQUEST['template_id']);
+                header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&module=templates&page=generate_attachment_html&template=".$_REQUEST['template_id']);
                 exit;
             } else {
                 $conn->query("select docserver_id, path, filename from ".$_SESSION['tablename']['attach_res_attachments']." where res_id = ".$_REQUEST['id']);
@@ -157,7 +157,7 @@ if (empty($_REQUEST['mode']) || !isset($_REQUEST['mode'])) {
                     $myfile = fopen($file, "w");
                     if (!$myfile) {
                         $_SESSION['error'] .= _FILE_OPEN_ERROR.'.<br/>';
-                        header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&module=templates&page=generate_attachment&id=".$_REQUEST['id']);
+                        header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&module=templates&page=generate_attachment_html&id=".$_REQUEST['id']);
                         exit;
                     }
                     fwrite($myfile, $_REQUEST['template_content']);

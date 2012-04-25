@@ -19,7 +19,7 @@
 */
 
 /**
-* File : generate_attachment.php
+* File : generate_attachment_html.php
 *
 * Form to generate an attachment to a mail with an existing template
 *
