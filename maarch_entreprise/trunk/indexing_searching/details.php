@@ -142,6 +142,18 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
     $s_id = addslashes($func->wash($_GET['id'], 'num', _THE_DOC));
 }
 
+$db = new dbquery();
+$db->connect();
+$db->query("select res_id from mlb_coll_ext where res_id = " . $s_id);
+if ($db->nb_result() <= 0) {
+    echo '<div class="error">' . _QUALIFY_FIRST . '</div>';exit;
+    ?>
+        <script language="javascript" type="text/javascript">window.top.location.href='<?php
+            echo $_SESSION['config']['businessappurl']
+            . 'index.php';
+            ?>';</script>
+    <?php
+}
 $_SESSION['doc_id'] = $s_id;
 if (isset($_SESSION['origin']) && $_SESSION['origin'] <> 'basket') {
     $right = $security->test_right_doc($coll_id, $s_id);
@@ -230,8 +242,7 @@ if (isset($_POST['put_doc_on_validation'])) {
     <?php
     exit();
 }
-$db = new dbquery();
-$db->connect();
+
 if (empty($_SESSION['error']) || $_SESSION['indexation']) {
     $comp_fields = '';
     $db->query("select type_id from ".$table." where res_id = ".$s_id);
@@ -1385,6 +1396,9 @@ $core = new core_tools();
 if ($printDetails) {
     $Fnm = $_SESSION['config']['tmppath']. '/export_details_'
         . $_SESSION['user']['UserId'] . '_export.html';
+    if (file_exists($Fnm)) {
+        unlink($Fnm);
+    }
     $inF = fopen($Fnm,"w");
     fwrite($inF, $detailsExport);
     fclose($inF);

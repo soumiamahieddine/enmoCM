@@ -1324,3 +1324,7 @@ if (!defined('_CONSULT')) {
 if (!defined('_DOCUMENTS_LIST_WITH_ATTACHMENTS')) {
     define('_DOCUMENTS_LIST_WITH_ATTACHMENTS', 'List with filter and attachments');
 }
+
+if (!defined('_QUALIFY_FIRST')) {
+    define('_QUALIFY_FIRST', 'Details empty, qualify your document first');
+}

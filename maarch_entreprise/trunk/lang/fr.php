@@ -1759,3 +1759,7 @@ if (!defined('_CONSULT')) {
 if (!defined('_DOCUMENTS_LIST_WITH_ATTACHMENTS')) {
     define('_DOCUMENTS_LIST_WITH_ATTACHMENTS', 'Liste avec filtre et r&eacute;ponses');
 }
+
+if (!defined('_QUALIFY_FIRST')) {
+    define('_QUALIFY_FIRST', 'La fiche d&eacute;tails est vide car le courrier doit &ecirc;tre qualifi&eacute;');
+}
