@@ -288,30 +288,30 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $res = $db->fetch_object();
     $bitmask = $res->answer_type_bitmask;
     switch ($bitmask) {
-		case "000000":
-			$answer = '';
-			break;
-		case "000001":
-			$answer = _SIMPLE_MAIL;
-			break;
-		case "000010":
-			$answer = _REGISTERED_MAIL;
-			break;
-		case "000100":
-			$answer = _DIRECT_CONTACT;
-			break;
-		case "001000":
-			$answer = _EMAIL;
-			break;
-		case "010000":
-			$answer = _FAX;
-			break;
-		case "100000":
-			$answer = _ANSWER;
-			break;
-		default:
-			$answer = _ANSWER;
-	}
+        case "000000":
+            $answer = '';
+            break;
+        case "000001":
+            $answer = _SIMPLE_MAIL;
+            break;
+        case "000010":
+            $answer = _REGISTERED_MAIL;
+            break;
+        case "000100":
+            $answer = _DIRECT_CONTACT;
+            break;
+        case "001000":
+            $answer = _EMAIL;
+            break;
+        case "010000":
+            $answer = _FAX;
+            break;
+        case "100000":
+            $answer = _ANSWER;
+            break;
+        default:
+            $answer = _ANSWER;
+    }
 
     if ($core_tools->is_module_loaded('attachments')) {
         $req = new request;
@@ -324,9 +324,9 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         }
     }
 
-	if ($answer <> '') {
-		$answer .= ': ';
-	}
+    if ($answer <> '') {
+        $answer .= ': ';
+    }
 
     $frm_str .= '<h3 onclick="new Effect.toggle(\'list_answers_div\', \'blind\', {delay:0.2});'
               . 'new Effect.toggle(\'done_answers_div\', \'blind\', {delay:0.2});return false;" style="width:90%;">';
@@ -401,15 +401,15 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .= '</div>';
     $frm_str .= '<br>';
 
-	//TAGS
-	if (
-		$core_tools->is_module_loaded('tags') && (
-		$core_tools->test_service('tag_view', 'tags',false) == 1)
-		)
-	{
-		include_once("modules".DIRECTORY_SEPARATOR."tags".
-		DIRECTORY_SEPARATOR."templates/process/index.php");
-	}
+    //TAGS
+    if (
+        $core_tools->is_module_loaded('tags') && (
+        $core_tools->test_service('tag_view', 'tags',false) == 1)
+        )
+    {
+        include_once("modules".DIRECTORY_SEPARATOR."tags".
+        DIRECTORY_SEPARATOR."templates/process/index.php");
+    }
 
 
     //DIFFUSION LIST
@@ -642,7 +642,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $frm_str .= '<div>';
                 $frm_str .= '<div id="processframe" name="processframe">';
                     $frm_str .= '<center><h2 onclick="new Effect.toggle(\'list_answers_div\', \'blind\', {delay:0.2});';
-					$frm_str .= 'return false;">' . _ATTACHMENTS . ', ' . _DONE_ANSWERS . '</h2></center>';
+                    $frm_str .= 'return false;">' . _ATTACHMENTS . ', ' . _DONE_ANSWERS . '</h2></center>';
                     $req = new request;
                     $req->connect();
                     $req->query("select res_id from ".$_SESSION['tablename']['attach_res_attachments']
@@ -664,9 +664,9 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                             . '\' + $(\'templateOffice\').value + \''
                             . '&objectTable='
                             . $objectTable
-                            . '&resMaster=' 
+                            . '&resMaster='
                             . $res_id
-                            . '\');">';
+                            . '\', $(\'templateOffice\').value);">';
                             $frm_str .= '<option value="">' . _GENERATE_OFFICE_ATTACHMENT . '</option>';
                                 for ($i=0;$i<count($templates);$i++) {
                                     if ($templates[$i]['TYPE'] == 'OFFICE') {
@@ -680,14 +680,14 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                                 }
                         $frm_str .= '</select>&nbsp;|&nbsp;';
                         $frm_str .= '<select name="templateHtml" id="templateHtml" style="width:150px" '
-                            //. 'onchange="window.alert(\'\' + $(\'templateHtml\').value + \'\');">'; 
-                            . 'onchange="window.open(\'' 
-                            . $_SESSION['config']['businessappurl'] 
+                            //. 'onchange="window.alert(\'\' + $(\'templateHtml\').value + \'\');">';
+                            . 'onchange="checkBeforeOpenBlank(\''
+                            . $_SESSION['config']['businessappurl']
                             . 'index.php?display=true&module=templates&page=generate_attachment_html&mode=add&template='
                             . '\' + $(\'templateHtml\').value + \''
                             . '&res_id=' . $res_id
-                            . '&coll_id=' . $_REQUEST['coll_id'] 
-                            . '\', \'edit template\', \'target=_blank\');">';
+                            . '&coll_id=' . $_REQUEST['coll_id']
+                            . '\', $(\'templateHtml\').value);">';
                             $frm_str .= '<option value="">' . _GENERATE_HTML_ATTACHMENT . '</option>';
                                 for ($i=0;$i<count($templates);$i++) {
                                     if ($templates[$i]['TYPE'] == 'HTML') {
@@ -722,7 +722,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .= '<div id="diff_list_div" style="display:none">';
             $frm_str .= '<div>';
                 $frm_str .= '<center><h2 onclick="new Effect.toggle(\'diff_list_div\', \'blind\', {delay:0.2});';
-				$frm_str .= 'return false;">' . _DIFF_LIST_COPY . '</h2></center>';
+                $frm_str .= 'return false;">' . _DIFF_LIST_COPY . '</h2></center>';
                 if ($core_tools->test_service('add_copy_in_process', 'entities', false)) {
                     $frm_str .= '<a href="#" onclick="window.open(\''
                         . $_SESSION['config']['businessappurl']
@@ -802,7 +802,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .= '<div class="desc" id="notes_div" style="display:none;">';
             $frm_str .= '<div class="ref-unit">';
                 $frm_str .= '<center><h2 onclick="new Effect.toggle(\'notes_div\', \'blind\', {delay:0.2});';
-				$frm_str .= 'return false;">' . _NOTES . '</h2></center>';
+                $frm_str .= 'return false;">' . _NOTES . '</h2></center>';
                 $frm_str .= '<div style="text-align:center;">';
                     $frm_str .= '<img src="'.$_SESSION['config']['businessappurl']
                         . 'static.php?module=notes&filename=modif_note.png" border="0" alt="" />';
@@ -828,7 +828,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .= '<div id="cases_div" style="display:none">';
             $frm_str .= '<div>';
                 $frm_str .= '<center><h2 onclick="new Effect.toggle(\'cases_div\', \'blind\', {delay:0.2});';
-				$frm_str .= 'return false;">' . _CASE . '</h2></center>';
+                $frm_str .= 'return false;">' . _CASE . '</h2></center>';
                 $frm_str .= '<form name="cases" method="post" id="cases" action="#" class="forms addforms2" style="text-align:center;">';
                     $frm_str .= '<table width="98%" align="center" border="0">';
                         $frm_str .= '<tr>';
@@ -882,7 +882,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .= '<div id="links_div" style="display:none">';
         $frm_str .= '<div style="text-align: left;">';
             $frm_str .= '<h2 onclick="new Effect.toggle(\'links_div\', \'blind\', {delay:0.2});';
-				$frm_str .= 'return false;">';
+                $frm_str .= 'return false;">';
                 $frm_str .= _LINK_TAB;
             $frm_str .= '</h2>';
             $frm_str .= '<div id="loadLinks">';
@@ -1209,10 +1209,10 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
         $bitmask = $other.$fax.$email.$contact.$AR_mail.$simple_mail;
     }
 
-	if ($core->is_module_loaded('tags')) {
-		include_once("modules".DIRECTORY_SEPARATOR."tags".
-					DIRECTORY_SEPARATOR."tags_update.php");
-	}
+    if ($core->is_module_loaded('tags')) {
+        include_once("modules".DIRECTORY_SEPARATOR."tags".
+                    DIRECTORY_SEPARATOR."tags_update.php");
+    }
 
     if ($core->is_module_loaded('folder') && (!empty($market) || !empty($project))) {
         $folder_id = '';
