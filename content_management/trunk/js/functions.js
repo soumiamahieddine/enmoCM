@@ -1,7 +1,10 @@
 //load applet in a modal
-function loadApplet(url)
+function loadApplet(url, value)
 {
-    displayModal(url, 'CMApplet', 300, 300);
+    if (value != '') {
+        console.log('value : '+value);
+        displayModal(url, 'CMApplet', 300, 300);
+    }
 }
 
 //applet send a message (error) to Maarch
@@ -53,9 +56,9 @@ function endResource()
 {
     //window.alert('resource ?');
     showDiv(
-        'loadVersions', 
-        'nbVersions', 
-        'createVersion', 
+        'loadVersions',
+        'nbVersions',
+        'createVersion',
         '../../modules/content_management/list_versions.php'
     );
     if($('viewframe')) {
