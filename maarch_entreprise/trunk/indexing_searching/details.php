@@ -216,10 +216,10 @@ if (isset($_POST['submit_index_doc'])) {
         $_SESSION['details']['diff_list']['key_value'] = md5($res_id);
     }
     $is->update_mail($_POST, 'POST', $s_id, $coll_id);
-	
-	if ($core->is_module_loaded('tags')) {
-		include_once("modules".DIRECTORY_SEPARATOR."tags".DIRECTORY_SEPARATOR."tags_update.php");
-	}
+
+    if ($core->is_module_loaded('tags')) {
+        include_once("modules".DIRECTORY_SEPARATOR."tags".DIRECTORY_SEPARATOR."tags_update.php");
+    }
 }
 //delete the doctype
 if (isset($_POST['delete_doc'])) {
@@ -416,7 +416,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
             //$db->show_array($indexes);
             $detailsExport = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" >';
             $detailsExport .= '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">';
-            $detailsExport .= "<head><title>Maarch Details</title><meta http-equiv='Content-Type' content='text/html; charset=UTF-8' /><meta content='fr' http-equiv='Content-Language'/></head>";
+            $detailsExport .= "<head><title>Maarch Details</title><meta http-equiv='Content-Type' content='text/html; charset=UTF-8' /><meta content='fr' http-equiv='Content-Language'/><meta http-equiv='cache-control' content='no-cache'/></head>";
             $detailsExport .= "<body onload='javascript:window.print();' style='font-size:8pt'>";
             ?>
             <div class="block">
@@ -687,16 +687,16 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     <?php
                     $detailsExport .=  "</table>";
                     ?>
-                    
+
                     <?php
-                    if ($core->is_module_loaded('tags') && 
-						($core->test_service('tag_view', 'tags',false) == 1))
-					{
-						include_once("modules".DIRECTORY_SEPARATOR."tags".DIRECTORY_SEPARATOR
-						."templates/details/index.php");	
-					}
+                    if ($core->is_module_loaded('tags') &&
+                        ($core->test_service('tag_view', 'tags',false) == 1))
+                    {
+                        include_once("modules".DIRECTORY_SEPARATOR."tags".DIRECTORY_SEPARATOR
+                        ."templates/details/index.php");
+                    }
                     ?>
-                    
+
                     <div id="opt_indexes">
                     <?php if (count($indexes) > 0)
                     {
