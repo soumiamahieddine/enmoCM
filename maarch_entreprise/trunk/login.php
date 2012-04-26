@@ -22,7 +22,7 @@ if (trim($_GET['coreurl']) <> '') {
 # bca (2011-08-17): This code block has been commented to unify the several
 # ways sessions are initialised.
 # this is now useless, since session initialisation is now done in
-# core/init.php, which is executed by apps/maarch_entreprise/index.php, 
+# core/init.php, which is executed by apps/maarch_entreprise/index.php,
 # which, in turn, includes this page.
 # (besides, it was merely a copy/paste of a method of class_portal...)
 ##########################################################################
@@ -74,8 +74,8 @@ if (trim($_GET['coreurl']) <> '') {
 #            $uriArray = explode('/', $_SERVER['SCRIPT_NAME']);
 #            $sliceUri = array_slice($uriArray, 0, -3);
 #            $finalUri = implode('/', $sliceUri) . '/';
-#            if (isset($_SERVER['HTTP_X_FORWARDED_HOST']) 
-#            	&& $_SERVER['HTTP_X_FORWARDED_HOST'] <> ''
+#            if (isset($_SERVER['HTTP_X_FORWARDED_HOST'])
+#               && $_SERVER['HTTP_X_FORWARDED_HOST'] <> ''
 #            ) {
 #                $host = $_SERVER['HTTP_X_FORWARDED_HOST'];
 #            } else {
@@ -178,8 +178,8 @@ $businessAppTools->compare_base_version(
 
 //LGI TEST FOR SMARTPHONE
 if ($core->detectSmartphone()) {
-	header('location: smartphone/login.php');
-	exit;
+    header('location: smartphone/login.php');
+    exit;
 }
 
 $core->load_html();
@@ -213,6 +213,9 @@ if (isset($_SESSION['HTTP_REQUEST']['withRA_CODE']) && empty($_SESSION['HTTP_REQ
         <p id="logo"><img src="<?php
             echo $_SESSION['config']['businessappurl'];
         ?>static.php?filename=default_maarch.gif" alt="Maarch" /></p>
+        <h1>
+            <?php echo$_SESSION['config']['applicationname'] ?>
+        </h1>
         <?php
         $loginObj->execute_login_script($loginMethods);
         ?>
