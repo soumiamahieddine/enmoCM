@@ -252,8 +252,8 @@ class templates_association_controler extends ObjectControler implements ObjectC
         $template_association->diffusion_type = $f->protect_string_db(
             $f->wash($template_association->diffusion_type, 'no', _DIFFUSION_TYPE)
         );
-        $template_association->diffusion_content = $f->protect_string_db(
-            $f->wash($template_association->diffusion_content, 'no', _DIFFUSION_CONTENT)
+        $template_association->diffusion_properties = $f->protect_string_db(
+            $f->wash($template_association->diffusion_properties, 'no', _DIFFUSION_PROPERTIES)
         );
         $template_association->is_attached = $f->protect_string_db(
             $f->wash($template_association->is_attached, 'no', _IS_ATTACHED)
