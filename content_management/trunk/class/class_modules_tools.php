@@ -98,9 +98,9 @@ class content_management extends dbquery
             $path = 'modules/content_management/xml/content_management_features.xml';
         }
         $_SESSION['CMFeatures'] = array();
-        $_SESSION['CMFeatures'] = functions::object2array(
+        /*$_SESSION['CMFeatures'] = functions::object2array(
             simplexml_load_file($path)
-        );
+        );*/
         //functions::show_array($_SESSION['CMFeatures']);
     }
 }
