@@ -135,6 +135,30 @@ if ($mode == 'list') {
                         onClick="javascript:show_special_form('html_div', 'office_div');" <?php 
                         echo $checkedHTML;?>/> <?php echo _HTML;?>
                 </p>
+				<p>
+					<label for="template_datasource"><?php echo _TEMPLATE_DATASOURCE; ?> : </label>
+					<select name="template_datasource" id="template_datasource">
+						<?php
+                        for (
+                            $cptDatasource = 0;
+                            $cptDatasource < count($_SESSION['m_admin']['templatesDatasources']);
+                            $cptDatasource ++
+                        ) { 
+						?>
+                            <option value="<?php echo $_SESSION['m_admin']['templatesDatasources'][$cptDatasource]['id']; ?>" <?php
+                            if (isset($_SESSION['m_admin']['templates']['template_datasource'])
+                                && $_SESSION['m_admin']['templates']['template_datasource'] 
+                                    == $_SESSION['m_admin']['templatesDatasources'][$cptDatasource]['id']
+                            ) {
+                                echo 'selected="selected"';
+                            }
+                            ?> ><?php 
+                                echo $_SESSION['m_admin']['templatesDatasources'][$cptDatasource]['label'];
+                            ?></option><?php
+                        }
+                        ?>
+					</select>
+				</p>
                 <div id="html_div" name="html_div">
                     <p>
                         <label for="template_content">

@@ -50,6 +50,7 @@ if (isset($_REQUEST['mode']) && !empty($_REQUEST['mode'])) {
 
 try{
     require_once('modules/templates/class/templates_controler.php');
+	require_once('modules/templates/class/templates_datasource_controler.php');
     require_once('core/class/class_request.php');
     require_once('core/admin_tools.php');
     if ($mode == 'list') {
@@ -114,6 +115,7 @@ function init_session()
 {
     $_SESSION['m_admin']['templates'] = array();
     $_SESSION['m_admin']['templatesStyles'] = array();
+	$_SESSION['m_admin']['templatesDatasources'] = array();
     $_SESSION['m_admin']['templatesEntities'] = array();
     $_SESSION['m_admin']['templatesEntitiesOrg'] = array();
     $_SESSION['m_admin']['templatesEntitiesSelected'] = array();
@@ -185,6 +187,8 @@ function validate_cs_submit($mode)
         = $_REQUEST['template_type'];
     if (isset($_REQUEST['template_style'])) $templates->template_style 
         = $_REQUEST['template_style'];
+    if (isset($_REQUEST['template_datasource'])) $templates->template_datasource 
+        = $_REQUEST['template_datasource'];
     $_SESSION['m_admin']['templatesEntitiesSelected'] = array();
     for ($i=0;$i<count($_REQUEST['entities_chosen']); $i++) {
         array_push(
@@ -248,7 +252,11 @@ function display_up($templateId)
         'modules/templates/templates/styles/', 
         $stylesArray
     );
-    $templates = $templatesControler->get($templateId);
+	$datasourcesArray = array();
+    $datasourcesArray = $templatesControler->getTemplatesDatasources(
+		'modules/templates/xml/datasources.xml'
+	);
+	$templates = $templatesControler->get($templateId);
     /*echo '<pre>';
     print_r($stylesArray);
     echo '</pre>';*/
@@ -264,6 +272,7 @@ function display_up($templateId)
     } else {
         At_putInSession('templates', $templates->getArray());
         At_putInSession('templatesStyles', $stylesArray);
+		At_putInSession('templatesDatasources', $datasourcesArray);
         At_putInSession('templatesEntities', $entities);
         At_putInSession('templatesEntitiesOrg', $entitiesOrg);
     }
@@ -285,10 +294,15 @@ function display_add()
         'modules/templates/templates/styles/', 
         $stylesArray
     );
+	$datasourcesArray = array();
+    $datasourcesArray = $templatesControler->getTemplatesDatasources(
+		'modules/templates/xml/datasources.xml'
+	);
     require_once 'modules/entities/class/EntityControler.php';
     $entityControler = new EntityControler();
     $entitiesOrg = $entityControler->getAllEntities();
     At_putInSession('templatesStyles', $stylesArray);
+	At_putInSession('templatesDatasources', $datasourcesArray);
     At_putInSession('templatesEntitiesOrg', $entitiesOrg);
 }
 
