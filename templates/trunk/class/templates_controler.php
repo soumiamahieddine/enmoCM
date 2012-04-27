@@ -548,7 +548,29 @@ class templates_controler extends ObjectControler implements ObjectControlerIF
             return null;
         }
     }
-    
+	
+	/**
+    * Return all templates in an array
+    * 
+    * @return array of templates
+    */
+    public function getAllTemplatesForSelect() {
+        $return = array();
+        
+        $db = new dbquery();
+        $db->connect();
+        $db->query("select * from " . _TEMPLATES_TABLE_NAME . " ");
+        
+        while ($result = $db->fetch_object()) {
+            $this_template = array();
+            $this_template['id'] = $result->template_id;
+            $this_template['label'] = $result->template_label;
+            array_push($return, $this_template);
+        }
+        
+        return $return;
+    }
+	
     /**
     * Return all templates in an array for an entity
     * 
@@ -698,6 +720,31 @@ class templates_controler extends ObjectControler implements ObjectControlerIF
         return $this->stylesArray;
     }
     
+	public function getTemplatesDatasources($configXml)
+    {
+        $this->datasourcesArray = array();
+        //Browse all files of the style template dir
+        $xmlcontent = simplexml_load_file($configXml);
+        foreach($xmlcontent->datasource as $datasource) {
+			//<id> <label> <script>	
+			if(@constant(utf8_decode((string) $datasource->label))) {
+				$label = constant(utf8_decode((string) $datasource->label));
+			} else {
+				$label = utf8_decode((string) $datasource->label);
+			}
+			array_push(
+                $this->datasourcesArray, 
+                array(
+                    'id' => (string)$datasource->id,
+                    'label'  => $label,
+                    'script' => (string)$datasource->script,
+                )
+            );
+		}
+        return $this->datasourcesArray;
+    }
+	
+	
     //returns file ext
     function extractFileExt($sFullPath) {
         $sName = $sFullPath;
