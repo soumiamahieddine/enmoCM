@@ -163,41 +163,8 @@ if ($mode == 'list') {
 			style="height:200px; 
 					width:600px;
 					border: 1px solid;">
-					
-					
-		
 		</div>
-		
-		
-		
 		<p>
-		<div id="diff_list_div" class="scroll_div" '
-                . 'style="height:200px; border: 1px solid;"></div>
-		</p>
-		
-		<p>
-			<label for="status"><?php echo _DIFFUSION_CONTENT; ?> : </label>
-			<select name="diffusion_content" 
-					id="status" onchange="change_diff_type_box(this.options[this.selectedIndex].value,'<?php echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&module=notifications&page=load_diffusiontype_formcontent',
-					'diff_type_div','notifications',
-					'');">
-					
-				<option value=""><?php echo _DIFFUSION_CONTENT;?></option>
-				<?php
-				foreach($diffusion_contents as $this_content){
-					?><option value="<?php echo $this_content->id;?>" 
-					<?php 
-					if(trim($_SESSION['m_admin']['event']['diffusion_content']) 
-						== trim($this_content->id)) { 
-						echo 'selected="selected"';
-					}?>><?php echo $this_content->label;
-					?></option><?php
-				}
-				?>
-			</select>
-		</p>
-	
-		 <p>
             <label ><?php echo _ATTACH_MAIL_FILE; ?> : </label>
             <input type="radio"  class="check" name="is_attached" value="Y"
             <?php
@@ -257,10 +224,10 @@ if ($mode == 'list') {
 		{
 			//Loading Extra Javascript : 
 			require_once 'modules' . DIRECTORY_SEPARATOR . 'notifications' . DIRECTORY_SEPARATOR
-    . 'class' . DIRECTORY_SEPARATOR . 'diffusion_type_controler.php';
+				. 'class' . DIRECTORY_SEPARATOR . 'diffusion_type_controler.php';
 			$Type = new diffusion_type_controler();
 			
-			$dType = $Type -> getDiffusionType($_SESSION['m_admin']['event']['diffusion_type']);
+			$dType = $Type->getDiffusionType($_SESSION['m_admin']['event']['diffusion_type']);
 			include_once ($dType->script);
 			?>
 			<script language="javascript">

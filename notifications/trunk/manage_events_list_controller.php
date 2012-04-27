@@ -15,11 +15,11 @@ try{
     require_once 'core/class/ActionControler.php';
     require_once 'core/class/ObjectControlerAbstract.php';
     require_once 'core/class/ObjectControlerIF.php';
-    require_once 'modules/templates/class/class_modules_tools.php' ;
+    require_once 'modules/templates/class/templates_controler.php' ;
 //    require_once 'modules/notifications/class/notifications.php' ;
     require_once 'modules/notifications/class/templates_association_controler.php';
     require_once 'modules/notifications/class/diffusion_type_controler.php';
-	require_once 'modules/notifications/class/diffusion_content_controler.php';
+	//require_once 'modules/notifications/class/diffusion_content_controler.php';
     
     if ($mode == 'list') {
         require_once 'core/class/class_request.php' ;
@@ -40,12 +40,11 @@ $dt = new diffusion_type_controler();
 $diffusion_types = $dt->getAllDiffusion();
 
 //Get list of all diffusion contents
-$dt = new diffusion_content_controler();
-$diffusion_contents = $dt->getAllContents();
+//$dt = new diffusion_content_controler();
+//$diffusion_contents = $dt->getAllContents();
 
-
-$tp = new templates();
-$templates_list = $tp->getAllTemplates();
+$tp = new templates_controler();
+$templates_list = $tp->getAllTemplatesForSelect();
 //Get list of all templates
 if (isset($_REQUEST['id']) && !empty($_REQUEST['id'])) {
     $eventId = $_REQUEST['id'];
@@ -311,11 +310,9 @@ function validate_event_submit() {
 	$diffType = array();
 	$diffType = $dType->getAllDiffusion();
    
-
     $eventCtrl = new templates_association_controler();
     $pageName = 'manage_events_list_controller';
 
-	
     $mode = $_REQUEST['mode'];
     $eventObj = new templates_association();
     
@@ -327,19 +324,15 @@ function validate_event_submit() {
     $eventObj->value_field = $_REQUEST['value_field'];
     $eventObj->template_id = $_REQUEST['template_id'];
     $eventObj->diffusion_type = $_REQUEST['diffusion_type'];
-	$eventObj->diffusion_content = $_REQUEST['diffusion_content'];
     $eventObj->is_attached = $_REQUEST['is_attached'];
 	
 	foreach($diffType as $loadedType) 	{
-		if ($loadedType -> id == $eventObj->diffusion_type){
-			if ($loadedType -> script <> '')
-			{
-				include($loadedType -> script);
+		if ($loadedType->id == $eventObj->diffusion_type){
+			if ($loadedType -> script <> '') {
+				include($loadedType->script);
 				$diffusion_properties_string = updatePropertiesSet($_REQUEST['diffusion_properties']);
 				
-			}
-			else
-			{
+			} else {
 				$error .= 'System : Unable to load Require Script';
 			}
 		}	
@@ -407,7 +400,7 @@ function init_session()
         'template_id'      	 => '',
         'diffusion_type'    		 => '',
         'diffusion_properties'  => '',
-		'diffusion_content'    		 => '',
+		//'diffusion_content'    		 => '',
         'is_attached' 			 => '',
         
     );
