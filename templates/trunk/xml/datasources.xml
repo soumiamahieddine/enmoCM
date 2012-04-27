@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<datasource>
+		<id>event</id>
+		<label>_SYSTEM_EVENT</label>
+		<script>modules/templates/system_content.php</script>
+	</datasource>
+	<datasource>
+		<id>letterbox</id>
+		<label>Detail des courriers</label>
+		<script>modules/templates/letterbox_content.php</script>
+	</datasource>
+	<datasource>
+		<id>notes</id>
+		<label>Informations notes</label>
+		<script>modules/templates/mlb_notes_content.php</script>
+	</datasource>
+</root>
