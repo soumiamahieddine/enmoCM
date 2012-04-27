@@ -214,9 +214,9 @@ if (isset($_SESSION['HTTP_REQUEST']['withRA_CODE']) && empty($_SESSION['HTTP_REQ
             echo $_SESSION['config']['businessappurl'];
         ?>static.php?filename=default_maarch.gif" alt="Maarch" /></p>
         <div align="center">
-            <h2>
+            <h3>
                 <?php echo$_SESSION['config']['applicationname'] ?>
-            </h2>
+            </h3>
         </div>
         <?php
         $loginObj->execute_login_script($loginMethods);
