@@ -565,6 +565,8 @@ class templates_controler extends ObjectControler implements ObjectControlerIF
             $this_template = array();
             $this_template['id'] = $result->template_id;
             $this_template['label'] = $result->template_label;
+			$this_template['comment'] = $result->template_comment;
+			$this_template['type'] = $result->template_type;
             array_push($return, $this_template);
         }
         
