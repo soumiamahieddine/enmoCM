@@ -50,7 +50,6 @@ if (isset($_REQUEST['mode']) && !empty($_REQUEST['mode'])) {
 
 try{
     require_once('modules/templates/class/templates_controler.php');
-	require_once('modules/templates/class/templates_datasource_controler.php');
     require_once('core/class/class_request.php');
     require_once('core/admin_tools.php');
     if ($mode == 'list') {
