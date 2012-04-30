@@ -105,6 +105,7 @@ class list_show extends functions
     $hide_standard_list = false
     )
     {
+        //echo $actual_template;exit;
         if ($template && $actual_template <> '') {
             $str = '';
             $str .= '<div style="text-align: right;"><input type="button" onclick="window.open(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&page=export\', \'_blank\');" class="button" name="submit" value="'.  _EXPORT_LIST.'" /></div>';

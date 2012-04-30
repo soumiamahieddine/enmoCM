@@ -248,16 +248,17 @@ class list_show_with_template extends list_show
         }
 
         return $return;
+    }
 
-        /*if ($this->bool_detail == true)
-        {
+    public function tmplt_func_see_persistent($actual_string, $theline, $result, $key)
+    {
+        if (isset($result[$theline][0]['isPersistent']) && $result[$theline][0]['isPersistent']) {
+            $return = '<img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=persistentLock.gif" width="27" height="27" title="persistance activée">';
+        } else {
+            $return = '<img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=persistentUnlock.gif" width="27" height="27" title="persistance desactivée">';
+        }
 
-            $return = "<a href='".$_SESSION['config']['businessappurl']."index.php?page=".$this->detail_destination."&amp;id=".$result[$theline][0][$key]."' title='". _DETAILS."'>
-            <img src='".$_SESSION['config']['businessappurl']."static.php?filename=picto_infos.gif'  alt='"._DETAILS."'   border='0' /></a>";
-
-            return $return;
-        }*/
-
+        return $return;
     }
 
     //Load view_doc if this parameters is loaded in list_show and list_show_with_template
@@ -502,6 +503,10 @@ class list_show_with_template extends list_show
         elseif (preg_match("/^func_bool_see_attachments$/", $actual_string))
         {
             $my_var = $this->tmplt_func_bool_see_attachments($actual_string, $theline, $result, $key,$include_by_module);
+        }
+        elseif (preg_match("/^func_see_persitent$/", $actual_string))
+        {
+            $my_var = $this->tmplt_func_see_persistent($actual_string, $theline, $result, $key);
         }
         else
         {
