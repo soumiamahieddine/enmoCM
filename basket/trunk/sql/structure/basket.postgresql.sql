@@ -24,6 +24,16 @@ CREATE TABLE baskets
 )
 WITH (OIDS=FALSE);
 
+CREATE TABLE basket_persistent_mode
+(
+  res_id bigint,
+  user_id character varying(32),
+  is_persistent character varying(1)
+)
+WITH (
+  OIDS=FALSE
+);
+
 CREATE TABLE groupbasket
 (
   group_id character varying(32) NOT NULL,
