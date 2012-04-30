@@ -200,11 +200,6 @@ if(count($indexes) > 0)
     $opt_indexes .= '</table>';
 }
 
-if (!$core->is_module_loaded('alert_diffusion')) {
-    $_SESSION['error'] = _MODULE.' alert_diffusion '._IS_MISSING;
-    echo "{status : 3, error_txt : '".addslashes($_SESSION['error'])."'}";
-    exit();
-}
 
 $services = '[';
 $_SESSION['indexing_services'] = array();
@@ -238,7 +233,7 @@ $services .= ']';
 unset($_SESSION['indexing_type_id']);
 unset($_SESSION['indexing_services']);
 if (isset($delay) && $delay > 0) {
-    require_once('modules/alert_diffusion/class/class_alert_engine.php');
+    require_once('core/class/class_alert_engine.php');
     $alert_engine = new alert_engine();
     $date = $alert_engine->date_max_treatment($delay, false);
     $process_date = $db->dateformat($date, '-');

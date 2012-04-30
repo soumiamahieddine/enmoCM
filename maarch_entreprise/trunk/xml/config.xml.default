@@ -184,10 +184,6 @@
         <comment>_APA_COMMENT</comment>
     </MODULES>
     <MODULES>
-        <moduleid>alert_diffusion</moduleid>
-        <comment>_ALERT_DIFFUSION_COMMENT</comment>
-    </MODULES>
-    <MODULES>
         <moduleid>attachments</moduleid>
         <comment>_ATTACHMENTS_COMMENT</comment>
     </MODULES>
