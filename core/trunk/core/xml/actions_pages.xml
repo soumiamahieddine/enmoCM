@@ -110,4 +110,20 @@ An action page is described in a ACTIONPAGE tag :
         <MODULE>postindexing</MODULE>
         <FLAG_CREATE>false</FLAG_CREATE>
     </ACTIONPAGE>
+    <ACTIONPAGE>
+        <ID>set_persistent_mode_on</ID>
+        <LABEL>_SET_PERSISTENT_MODE_ON</LABEL>
+        <NAME>set_persistent_mode_on</NAME>
+        <ORIGIN>apps</ORIGIN>
+        <MODULE></MODULE>
+        <FLAG_CREATE>false</FLAG_CREATE>
+    </ACTIONPAGE>
+    <ACTIONPAGE>
+        <ID>set_persistent_mode_off</ID>
+        <LABEL>_SET_PERSISTENT_MODE_OFF</LABEL>
+        <NAME>set_persistent_mode_off</NAME>
+        <ORIGIN>apps</ORIGIN>
+        <MODULE></MODULE>
+        <FLAG_CREATE>false</FLAG_CREATE>
+    </ACTIONPAGE>
 </ROOT>
