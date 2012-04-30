@@ -1328,3 +1328,12 @@ if (!defined('_DOCUMENTS_LIST_WITH_ATTACHMENTS')) {
 if (!defined('_QUALIFY_FIRST')) {
     define('_QUALIFY_FIRST', 'Details empty, qualify your document first');
 }
+
+/******************** persistent mode ************/
+if (!defined('_SET_PERSISTENT_MODE_ON')) {
+    define('_SET_PERSISTENT_MODE_ON', 'set persistent mode on');
+}
+
+if (!defined('_SET_PERSISTENT_MODE_OFF')) {
+    define('_SET_PERSISTENT_MODE_OFF', 'set persistent mode off');
+}

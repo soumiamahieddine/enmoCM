@@ -1763,3 +1763,12 @@ if (!defined('_DOCUMENTS_LIST_WITH_ATTACHMENTS')) {
 if (!defined('_QUALIFY_FIRST')) {
     define('_QUALIFY_FIRST', 'La fiche d&eacute;tails est vide car le courrier doit &ecirc;tre qualifi&eacute;');
 }
+
+/******************** persistent mode ************/
+if (!defined('_SET_PERSISTENT_MODE_ON')) {
+    define('_SET_PERSISTENT_MODE_ON', 'Activer la persistance');
+}
+
+if (!defined('_SET_PERSISTENT_MODE_OFF')) {
+    define('_SET_PERSISTENT_MODE_OFF', 'Désactiver la persistance');
+}

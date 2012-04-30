@@ -42,7 +42,7 @@ class list_show_with_template extends list_show
         else
         {
             $to_share = $my_explode[1];
-            for($stand= 0; $stand <= count($result[$theline]); $stand++ )
+            for($stand = 0; $stand <= count($result[$theline]); $stand++ )
             {
                 if (isset($result[$theline][$stand]['column'])
                     && $result[$theline][$stand]['column'] == $to_share
@@ -329,10 +329,6 @@ class list_show_with_template extends list_show
 
 
     }
-
-
-
-
 
 
     //Reload last css parameter defined for the result list
