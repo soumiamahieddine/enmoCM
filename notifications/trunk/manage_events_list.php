@@ -124,13 +124,15 @@ if ($mode == 'list') {
                 <option value=""><?php echo _TEMPLATE;?></option>
                 <?php
                 foreach($templates_list as $template){
-                    ?><option value="<?php echo $template['id'];?>"
-                    <?php
-                    if($_SESSION['m_admin']['event']['template_id']
-                        == $template['id']) {
-                        echo 'selected="selected"';
-                    }?>><?php echo $template['label'];
-                    ?></option><?php
+					if($template['type'] === 'HTML') {
+						?><option value="<?php echo $template['id'];?>"
+						<?php
+						if($_SESSION['m_admin']['event']['template_id']
+							== $template['id']) {
+							echo 'selected="selected"';
+						}?>><?php echo $template['label'];
+						?></option><?php
+					}
                 }
                 ?>
             </select>
