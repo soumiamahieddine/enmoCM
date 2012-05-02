@@ -1361,7 +1361,6 @@ CREATE TABLE templates_association
   description character varying(255),
   diffusion_type character varying(50),
   diffusion_properties character varying(255),
-  diffusion_content character varying(255),
   is_attached character varying(1) DEFAULT 'N'::character varying,
   CONSTRAINT templates_association_pkey PRIMARY KEY (system_id)
 )
