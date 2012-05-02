@@ -1,6 +1,6 @@
 function change_properties_box(difftype_id, path_manage_script, diff_list_id, origin_keyword)
 {
-    var div_id = diff_list_id || 'diff_type_div';
+    var div_id = diff_list_id;
     var origin_arg = origin_keyword || '';
   
     //~ if($('destination_mandatory'))
@@ -11,11 +11,11 @@ function change_properties_box(difftype_id, path_manage_script, diff_list_id, or
     //~ {
         //~ var isMandatory = "none";
     //~ }
-    
-    
+    document.getElementById(div_id).style.border= "0px";
     if(difftype_id != null)
-    {
-        new Ajax.Request(path_manage_script,
+    {	
+		document.getElementById(div_id).style.border= "1px solid";
+		new Ajax.Request(path_manage_script,
         {
             method:'post',
             parameters: { id_type : difftype_id,
@@ -30,7 +30,7 @@ function change_properties_box(difftype_id, path_manage_script, diff_list_id, or
 					
                     if(diff_list_div != null)
                     {
-                        diff_list_div.innerHTML = response.div_content;
+						diff_list_div.innerHTML = response.div_content;
                     }
                 }
                 else
