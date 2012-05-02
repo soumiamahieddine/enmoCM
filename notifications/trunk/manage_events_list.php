@@ -86,8 +86,8 @@ if ($mode == 'list') {
         <p>
             <label for="label"><?php echo _EVENT; ?> : </label>
             <select name="value_field" id="value_field">
+				<option value=""><?php echo _SELECT_EVENT_TYPE;?></option>
                 <optgroup label="<?php echo _ACTIONS; ?>">
-                <option value=""><?php echo _EVENT;?></option>
                 <?php
                 foreach($actions_list as $this_action){
                     ?><option value="<?php echo $this_action->id;?>"
@@ -121,7 +121,7 @@ if ($mode == 'list') {
         <p>
             <label for="label"><?php echo _TEMPLATE; ?> : </label>
             <select name="template_id" id="template_id">
-                <option value=""><?php echo _TEMPLATE;?></option>
+                <option value=""><?php echo _SELECT_TEMPLATE;?></option>
                 <?php
                 foreach($templates_list as $template){
                     if($template['type'] === 'HTML') {
@@ -141,11 +141,16 @@ if ($mode == 'list') {
         <p>
             <label for="status"><?php echo _DIFFUSION_TYPE; ?> : </label>
             <select name="diffusion_type"
-                    id="status" onchange="change_diff_type_box(this.options[this.selectedIndex].value,'<?php echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&module=notifications&page=load_diffusiontype_formcontent',
-                    'diff_type_div','notifications',
-                    '');">
+					id="status" 
+					onchange="change_properties_box(
+						this.options[this.selectedIndex].value,
+						'<?php echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&module=notifications&page=load_diffusiontype_formcontent',
 
-                <option value=""><?php echo _DIFFUSION_TYPE;?></option>
+						'diff_type_div',
+						'notifications',
+						'');">
+
+                <option value=""><?php echo _SELECT_DIFFUSION_TYPE;?></option>
                 <?php
                 foreach($diffusion_types as $this_diffusion){
                     ?><option value="<?php echo $this_diffusion->id;?>"
@@ -166,20 +171,47 @@ if ($mode == 'list') {
                     width:600px;
                     border: 1px solid;">
         </div>
-        <p>
-            <label ><?php echo _ATTACH_MAIL_FILE; ?> : </label>
-            <input type="radio"  class="check" name="is_attached" value="Y"
-            <?php
-            if ($_SESSION['m_admin']['event']['is_attached'] == 'Y') {
-                ?> checked="checked"<?php
-            } ?> /><?php echo _YES;?>
-            <input type="radio" name="is_attached" class="check"  value="N"
-            <?php
-            if ($_SESSION['m_admin']['event']['is_attached'] == 'N' || !$_SESSION['m_admin']['event']['is_attached']) {
-               ?> checked="checked"<?php
-            } ?> /><?php echo _NO;?>
+		<p></p>
+		<p>
+            <label for="attach_for_type"><?php echo _ATTACH_MAIL_FILE; ?> : </label>
+
+            <select name="attach_for_type"
+                    id="status" 
+					onchange="change_properties_box(
+						this.options[this.selectedIndex].value,
+						'<?php echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&module=notifications&page=load_attachfortype_formcontent',
+						'attach_for_div',
+						'notifications',
+						'');">
+
+                <option value=""><?php echo _NO;?></option>
+                <?php
+
+
+
+
+                foreach($diffusion_types as $this_diffusion){
+                    ?><option value="<?php echo $this_diffusion->id;?>"
+                    <?php
+
+
+
+                    if(trim($_SESSION['m_admin']['event']['attachfor_type'])
+                        == trim($this_diffusion->id)) {
+                        echo 'selected="selected"';
+                    }?>><?php echo $this_diffusion->label;
+                    ?></option><?php
+                }
+                ?>
+            </select>
         </p>
 
+        <div id="attach_for_div"
+            class="scroll_div"
+            style="height:200px;
+                    width:600px;
+                    border: 1px solid;">
+        </div>
         <p class="buttons">
             <?php
         if ($mode == 'up') {?>
@@ -198,12 +230,7 @@ if ($mode == 'list') {
          ?>index.php?page=manage_events_list_controller&amp;mode=list&amp;module=notifications'"/>
 
     </p>
-
-
-
-
-
-     </form >
+    </form >
 <?php
     }
    ?></div><?php
@@ -214,7 +241,7 @@ if ($mode == 'list') {
         /*First Launch */
         ?>
         <script language="javascript">
-        change_diff_type_box(
+        change_properties_box(
             '<?php echo $_SESSION['m_admin']['event']['diffusion_type']; ?>',
             '<?php echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&module=notifications&page=load_diffusiontype_formcontent',
             'diff_type_div',
@@ -228,9 +255,7 @@ if ($mode == 'list') {
             require_once 'modules' . DIRECTORY_SEPARATOR . 'notifications' . DIRECTORY_SEPARATOR
                 . 'class' . DIRECTORY_SEPARATOR . 'diffusion_type_controler.php';
             $Type = new diffusion_type_controler();
-
             $dType = $Type->getDiffusionType($_SESSION['m_admin']['event']['diffusion_type']);
-            include_once ($dType->script);
             ?>
             <script language="javascript">
             loadDiffusionProperties(
@@ -239,7 +264,39 @@ if ($mode == 'list') {
                 );
             </script>
             <?php
-            //getExtraProperties(); //Lancement du javascript adequat
+        }
+    }
+	if ($_SESSION['m_admin']['event']['attachfor_type'] <> '')
+    {
+        /*First Launch */
+        ?>
+        <script language="javascript">
+        change_properties_box(
+            '<?php echo $_SESSION['m_admin']['event']['attachfor_type']; ?>',
+            '<?php echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&module=notifications&page=load_attachfortype_formcontent',
+            'attach_for_div',
+            'notifications',
+            '');
+        </script>
+        <?php
+        if ($_SESSION['m_admin']['event']['attachfor_type'] <> '')
+        {
+            //Loading Extra Javascript :
+            require_once 'modules' . DIRECTORY_SEPARATOR . 'notifications' . DIRECTORY_SEPARATOR
+                . 'class' . DIRECTORY_SEPARATOR . 'diffusion_type_controler.php';
+            $Type = new diffusion_type_controler();
+
+            $dType = $Type->getDiffusionType($_SESSION['m_admin']['event']['diffusion_type']);
+            //include_once ($dType->script);
+            ?>
+            <script language="javascript">
+            loadAttachforProperties(
+                '<?php echo $_SESSION['m_admin']['event']['attachfor_type']; ?>',
+                '<?php echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&module=notifications&page=load_attachforproperties_formcontent',
+				'attach_for_div'
+                );
+            </script>
+            <?php
         }
     }
 }
