@@ -145,7 +145,6 @@ if ($mode == 'list') {
 					onchange="change_properties_box(
 						this.options[this.selectedIndex].value,
 						'<?php echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&module=notifications&page=load_diffusiontype_formcontent',
-
 						'diff_type_div',
 						'notifications',
 						'');">
@@ -186,16 +185,9 @@ if ($mode == 'list') {
 
                 <option value=""><?php echo _NO;?></option>
                 <?php
-
-
-
-
                 foreach($diffusion_types as $this_diffusion){
                     ?><option value="<?php echo $this_diffusion->id;?>"
                     <?php
-
-
-
                     if(trim($_SESSION['m_admin']['event']['attachfor_type'])
                         == trim($this_diffusion->id)) {
                         echo 'selected="selected"';

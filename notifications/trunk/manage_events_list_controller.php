@@ -58,7 +58,6 @@ if (isset($_REQUEST['event_submit'])) {
     switch ($mode) {
         case 'up' :
             $state = display_up($eventId);
-         
             $_SESSION['service_tag'] = 'event_init';
             core_tools::execute_modules_services(
                 $_SESSION['modules_services'], 'event_init', 'include'
@@ -94,9 +93,9 @@ function location_bar_management($mode)
                     'up'   => _MODIFICATION,
                     'list' => _MANAGE_EVENTS
                );
-    $pageIds = array('add' => 'status_add',
-                  'up' => 'status_up',
-                  'list' => 'status_list'
+    $pageIds = array('add' => 'event_add',
+                  'up' => 'event_up',
+                  'list' => 'event_list'
             );
     $init = false;
     if (isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == 'true') {
@@ -111,7 +110,7 @@ function location_bar_management($mode)
     }
 
     $pagePath = $_SESSION['config']['businessappurl'] . 'index.php?page='
-               . 'manage_events_controller&module=notifications&mode=' . $mode ;
+               . 'manage_events_list_controller&module=notifications&mode=' . $mode ;
     $pageLabel = $pageLabels[$mode];
     $pageId = $pageIds[$mode];
     $ct = new core_tools();
