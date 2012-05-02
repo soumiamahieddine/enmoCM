@@ -33,7 +33,7 @@ if ($mode == 'list') {
 } elseif ($mode == 'up' || $mode == 'add') {
     ?><h1><img src="<?php
     echo $_SESSION['config']['businessappurl'];
-    ?>static.php?filename=manage_status_b.gif" alt="" />
+    ?>static.php?filename=manage_notifications_b.gif" alt="" />
     <?php
         if ($mode == 'up') {
             echo _MODIFY_EVENT;
@@ -124,15 +124,15 @@ if ($mode == 'list') {
                 <option value=""><?php echo _TEMPLATE;?></option>
                 <?php
                 foreach($templates_list as $template){
-					if($template['type'] === 'HTML') {
-						?><option value="<?php echo $template['id'];?>"
-						<?php
-						if($_SESSION['m_admin']['event']['template_id']
-							== $template['id']) {
-							echo 'selected="selected"';
-						}?>><?php echo $template['label'];
-						?></option><?php
-					}
+                    if($template['type'] === 'HTML') {
+                        ?><option value="<?php echo $template['id'];?>"
+                        <?php
+                        if($_SESSION['m_admin']['event']['template_id']
+                            == $template['id']) {
+                            echo 'selected="selected"';
+                        }?>><?php echo $template['label'];
+                        ?></option><?php
+                    }
                 }
                 ?>
             </select>
