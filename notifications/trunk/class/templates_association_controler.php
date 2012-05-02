@@ -95,8 +95,8 @@ class templates_association_controler extends ObjectControler implements ObjectC
             return $control;
         }
         
-        self::set_specific_id('system_id');
-        if (self::advanced_delete($template_association) == true) {
+        $this->set_specific_id('system_id');
+        if ($this->advanced_delete($template_association) == true) {
             if (isset($params['log_event_del'])
                 && ($params['log_event_del'] == "true"
                     || $params['log_event_del'] == true)) {
@@ -157,13 +157,12 @@ class templates_association_controler extends ObjectControler implements ObjectC
             return $control;
         }
         
-        //$template_association = self::isAStatus($template_association);
-        self::set_specific_id('system_id');
+        //$template_association = $this->isAStatus($template_association);
+        $this->set_specific_id('system_id');
         $template_association->what = 'event';
 
         // Data checks
-        $control = self::control($template_association, $mode, $params);
-        
+        $control = $this->control($template_association, $mode, $params);
         
         if ($control['status'] == 'ok') {
             $core = new core_tools();
@@ -174,7 +173,7 @@ class templates_association_controler extends ObjectControler implements ObjectC
 
             if ($mode == 'up') {
                 //Update existing status
-                if (self::update($template_association)) {
+                if ($this->update($template_association)) {
                     $control = array('status' => 'ok',
                                      'value'  => $template_association->system_id
                                );
@@ -194,7 +193,7 @@ class templates_association_controler extends ObjectControler implements ObjectC
                                 );
                 }
             } else { //mode == add
-                if (self::insert($template_association)) {
+                if ($this->insert($template_association)) {
                     $control = array('status' => 'ok',
                                      'value'  => $template_association->system_id);
                     //log
@@ -253,10 +252,13 @@ class templates_association_controler extends ObjectControler implements ObjectC
             $f->wash($template_association->diffusion_type, 'no', _DIFFUSION_TYPE)
         );
         $template_association->diffusion_properties = $f->protect_string_db(
-            $f->wash($template_association->diffusion_properties, 'no', _DIFFUSION_PROPERTIES)
+            $f->wash($template_association->diffusion_properties, 'no', _DIFFUSION_PROPERTIES, 'no')
         );
-        $template_association->is_attached = $f->protect_string_db(
-            $f->wash($template_association->is_attached, 'no', _IS_ATTACHED)
+        $template_association->attachfor_type = $f->protect_string_db(
+            $f->wash($template_association->attachfor_type, 'no', _ATTACHFOR_TYPE, 'no')
+        );
+        $template_association->attachfor_properties = $f->protect_string_db(
+            $f->wash($template_association->attachfor_properties, 'no', _ATTACHFOR_PROPERTIES, 'no')
         );
         $template_association->maarch_module = 'notifications';
 
@@ -281,13 +283,13 @@ class templates_association_controler extends ObjectControler implements ObjectC
                       );
         }
         unset($_SESSION['service_tag']);
-        
+               
         return $return;
     }
     
     private function insert($template_association)
     {
-        return self::advanced_insert($template_association);
+        return $this->advanced_insert($template_association);
     }
 
     /**
@@ -299,7 +301,7 @@ class templates_association_controler extends ObjectControler implements ObjectC
     private function update($template_association)
     {
        //var_dump($template_association); exit();
-       return self::advanced_update($template_association);
+       return $this->advanced_update($template_association);
     }
     
     

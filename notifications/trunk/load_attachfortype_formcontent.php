@@ -39,7 +39,7 @@ foreach($diffType as $loadedType) {
 	if ($loadedType->id == $_REQUEST['id_type']){
 		if ($loadedType->script <> '') {
 			include_once($loadedType->script);
-			$content = getContent('diffusion_type', 'diffusion_values', 'diffusion_properties');
+			$content = getContent('attachfor_type', 'attachfor_values', 'attachfor_properties');
 			echo "{status : 0, div_content : '" . addslashes($content) . "'}";
 		} else {
 			 echo "{status : 1, error_txt : '" . addslashes($_SESSION['error']) . "'}";

@@ -1,22 +1,12 @@
 <?php
-function getContent()
+function getContent($formId, $leftList, $rightList)
 //Affichage du formulaire/interface dans l'administration des notification => Envoi Ajax
 {
 	$content .= '<p class="sstit">' . _NOTIFICATIONS_COPY_LIST_DIFF_TYPE . '</p>';
-	
-	
+
 	return $content;
 }
 
-
-function updatePropertiesSet($diffusion_properties){
-	return null;	
-}
-
-
-function getExtraProperties(){
-	
-}
 
 function getRecipients($ta, $event) {
 	$query = "SELECT distinct us.* "

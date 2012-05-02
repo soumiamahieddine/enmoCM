@@ -39,13 +39,10 @@ $actions_list = $al->getAllActions();
 $dt = new diffusion_type_controler();
 $diffusion_types = $dt->getAllDiffusion();
 
-//Get list of all diffusion contents
-//$dt = new diffusion_content_controler();
-//$diffusion_contents = $dt->getAllContents();
-
 $tp = new templates_controler();
 $templates_list = $tp->getAllTemplatesForSelect();
 //Get list of all templates
+
 if (isset($_REQUEST['id']) && !empty($_REQUEST['id'])) {
     $eventId = $_REQUEST['id'];
 }
@@ -324,30 +321,39 @@ function validate_event_submit() {
     $eventObj->value_field = $_REQUEST['value_field'];
     $eventObj->template_id = $_REQUEST['template_id'];
     $eventObj->diffusion_type = $_REQUEST['diffusion_type'];
-    $eventObj->is_attached = $_REQUEST['is_attached'];
+    $eventObj->attachfor_type = $_REQUEST['attachfor_type'];
 	
 	foreach($diffType as $loadedType) 	{
 		if ($loadedType->id == $eventObj->diffusion_type){
-			if ($loadedType -> script <> '') {
-				include($loadedType->script);
-				$diffusion_properties_string = updatePropertiesSet($_REQUEST['diffusion_properties']);
-				
+			if ($loadedType -> script <> '' && !empty($_REQUEST['diffusion_properties'])) {
+				//include_once($loadedType->script);
+				//$diffusion_properties_string = updatePropertiesSet($_REQUEST['diffusion_properties']);
+				$diffusion_properties_string = implode(',', $_REQUEST['diffusion_properties']);
 			} else {
 				$error .= 'System : Unable to load Require Script';
 			}
-		}	
+		}
+		if ($loadedType->id == $eventObj->attachfor_type){
+			if ($loadedType -> script <> '' && !empty($_REQUEST['attachfor_properties'])) {
+				//include_once($loadedType->script);
+				$attachfor_properties_string = implode(',', $_REQUEST['attachfor_properties']);
+				//$attachfor_properties_string = updatePropertiesSet($_REQUEST['attachfor_properties']);
+			} else {
+				$error .= 'System : Unable to load Require Script';
+			}
+		}			
 	}		
 			
-	$eventObj->diffusion_properties = $diffusion_properties_string;
-	
+	$eventObj->diffusion_properties = (string)$diffusion_properties_string;
+	$eventObj->attachfor_properties = (string)$attachfor_properties_string;
 	
     $control = $eventCtrl->save($eventObj, $mode, $params);
     
     if (!empty($control['error']) && $control['error'] <> 1) {
         // Error management depending of mode
         $_SESSION['error'] = str_replace("#", "<br />", $control['error']);
-        put_in_session('event', $event);
-        put_in_session('event', $eventObj->getArray());
+        //put_in_session('event', $event);
+		put_in_session('event', $eventObj->getArray());
 
         switch ($mode) {
             case 'up':
@@ -394,15 +400,15 @@ function validate_event_submit() {
 function init_session()
 {
     $_SESSION['m_admin']['event'] = array(
-        'system_id'             	 => '',
-		'notification_id'  			 	 => '',
-        'description'  			 	 => '',
-        'template_id'      	 => '',
-        'diffusion_type'    		 => '',
+        'system_id'         	=> '',
+		'notification_id'  	 	=> '',
+        'description'  			=> '',
+        'template_id'      	 	=> '',
+        'diffusion_type'    	=> '',
         'diffusion_properties'  => '',
-		//'diffusion_content'    		 => '',
-        'is_attached' 			 => '',
-        
+		//'diffusion_content'   => '',
+        'attachfor_type' 		=> '',
+        'attachfor_properties' 	=> ''
     );
 }
 
@@ -415,12 +421,12 @@ function init_session()
 function put_in_session($type, $hashable, $showString = true)
 {
     $func = new functions();
-    foreach ($hashable as $key=>$value) {
-        if ($showString) {
-            $_SESSION['m_admin'][$type][$key]=$func->show_string($value);
-        } else {
-            $_SESSION['m_admin'][$type][$key]=$value;
-        }
-    }
+	foreach ($hashable as $key=>$value) {
+		if ($showString) {
+			$_SESSION['m_admin'][$type][$key]=$func->show_string($value);
+		} else {
+			$_SESSION['m_admin'][$type][$key]=$value;
+		}
+	}
     //print_r($_SESSION['m_admin']);
 }

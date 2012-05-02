@@ -1,4 +1,4 @@
-function change_diff_type_box(difftype_id, path_manage_script, diff_list_id, origin_keyword)
+function change_properties_box(difftype_id, path_manage_script, diff_list_id, origin_keyword)
 {
     var div_id = diff_list_id || 'diff_type_div';
     var origin_arg = origin_keyword || '';
@@ -67,7 +67,7 @@ function loadDiffusionProperties(difftype_id, path_manage_script)
                 {
 					var diff_list_div = $(div_id);
 					var selected_list = response.div_content.split(',');
-					var complete_list = $("frmevent").elements["completelist[]"];
+					var complete_list = $("frmevent").elements["diffusion_values[]"];
 					var diffusion_properties = $("frmevent").elements["diffusion_properties[]"];
 					for (i=0;i<complete_list.length;i++)
 					{
@@ -107,6 +107,59 @@ function loadDiffusionProperties(difftype_id, path_manage_script)
         });
     }
 }
+
+function loadAttachforProperties(difftype_id, path_manage_script, attachfor_id)
+{
+    var div_id = attachfor_id
+	if(difftype_id != null)
+    {
+        new Ajax.Request(path_manage_script,
+        {
+            method:'post',
+            parameters: { id_type : difftype_id,
+                    },
+                onSuccess: function(answer){
+				eval("response = "+answer.responseText);
+				if(response.status == 0 )
+                {
+					var diff_list_div = $(div_id);
+					var selected_list = response.div_content.split(',');
+					var complete_list = $("frmevent").elements["attachfor_values[]"];
+					var attachfor_properties = $("frmevent").elements["attachfor_properties[]"];
+					for (i=0;i<complete_list.length;i++)
+					{
+						complete_list[i].selected = false;
+					}
+					for (i=0;i<complete_list.length;i++)
+					{
+						for(j=0;j<selected_list.length;j++)
+						{
+							if(complete_list[i].value == selected_list[j]) 
+							{
+								complete_list[i].selected = true;
+							}
+						}
+					}
+					Move(complete_list,attachfor_properties);
+                }
+                else
+                {
+					var diff_list_div = $(div_id);
+                    if(diff_list_div != null)
+                    {
+                        diff_list_div.innerHTML = '';
+                    }
+                    
+                    try{
+                        $('frm_error').innerHTML = response.error_txt;
+                    }
+                    catch(e){}
+                }
+            }
+        });
+    }
+}
+
 
 /**
  * Launch the Ajax autocomplete object to activate autocompletion on users 
