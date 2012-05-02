@@ -3,17 +3,17 @@
 /* Affichage */
 if($mode == 'list'){
     list_show::admin_list($tab, $i, $title, 'id',
-        'action_management_controler&mode=list','action','id', true, 
-        $page_name_up, $page_name_val, $page_name_ban, $page_name_del, 
-        $page_name_add, $label_add, FALSE, FALSE, _ALL_ACTIONS, _ACTION, 
+        'action_management_controler&mode=list','action','id', true,
+        $page_name_up, $page_name_val, $page_name_ban, $page_name_del,
+        $page_name_add, $label_add, FALSE, FALSE, _ALL_ACTIONS, _ACTION,
         $_SESSION['config']['businessappurl']
-        . 'static.php?filename=manage_action_b.gif&admin=action', false, true, false, true, 
+        . 'static.php?filename=manage_actions_b.gif', false, true, false, true,
         $what, true, $autoCompletionArray
     );
 }
 elseif($mode == 'up' || $mode == 'add'){
     ?><h1><img src="<?php echo $_SESSION['config']['businessappurl'];
-    ?>static.php?filename=manage_action_b.gif" alt="" />
+    ?>static.php?filename=manage_actions_b.gif" alt="" />
         <?php
         if($mode == 'up'){
             echo _MODIFY_ACTION;
@@ -31,7 +31,7 @@ elseif($mode == 'up' || $mode == 'add'){
             . '<br /><br /><br /><br />';
     }
     else{?>
-        <form name="frmaction" id="frmaction" method="post" action="<?php 
+        <form name="frmaction" id="frmaction" method="post" action="<?php
         echo $_SESSION['config']['businessappurl'] . 'index.php?'
             . 'page=action_management_controler&admin=action&mode=' . $mode . '&id=' . $_REQUEST['id'];
         ?>" class="forms addforms">
@@ -40,21 +40,21 @@ elseif($mode == 'up' || $mode == 'add'){
             <input type="hidden" name="page" value="action_management_controler" />
             <input type="hidden" name="mode" value="<?php echo $mode;?>" />
 
-            <input type="hidden" name="order" id="order" value="<?php 
+            <input type="hidden" name="order" id="order" value="<?php
                 echo $_REQUEST['order'];?>" />
             <input type="hidden" name="order_field" id="order_field" value="<?php
                 echo $_REQUEST['order_field'];?>" />
-            <input type="hidden" name="what" id="what" value="<?php 
+            <input type="hidden" name="what" id="what" value="<?php
                 echo $_REQUEST['what'];?>" />
-            <input type="hidden" name="start" id="start" value="<?php 
+            <input type="hidden" name="start" id="start" value="<?php
                 echo $_REQUEST['start'];?>" />
 
             <p>
                 <label for="label"><?php echo _DESC; ?> : </label>
-                <input name="label" type="text"  id="label" value="<?php 
+                <input name="label" type="text"  id="label" value="<?php
                     echo functions::show_str($_SESSION['m_admin']['action']['LABEL']); ?>"/>
             </p>
-            <?php 
+            <?php
             if($_SESSION['m_admin']['action']['IS_SYSTEM']  == 'Y'){
                 echo '<div class="error">' . _DO_NOT_MODIFY_UNLESS_EXPERT
                     . '</div><br/>';
@@ -65,10 +65,10 @@ elseif($mode == 'up' || $mode == 'add'){
                     <option value=""><?php echo _CHOOSE_STATUS;?></option>
                     <?php
                     for($i = 0; $i < count($statusArray); $i++){
-                        ?><option value="<?php echo $statusArray[$i]['id'];?>" 
-                        <?php 
-                        if($_SESSION['m_admin']['action']['ID_STATUS'] 
-                            == $statusArray[$i]['id']) { 
+                        ?><option value="<?php echo $statusArray[$i]['id'];?>"
+                        <?php
+                        if($_SESSION['m_admin']['action']['ID_STATUS']
+                            == $statusArray[$i]['id']) {
                             echo 'selected="selected"';
                         }?>><?php echo $statusArray[$i]['label'];
                         ?></option><?php
@@ -80,14 +80,14 @@ elseif($mode == 'up' || $mode == 'add'){
                 <label for="action_page"><?php echo _ACTION_PAGE;?> : </label>
                 <select name="action_page" id="action_page">
                     <option value="_"><?php echo _NO_PAGE;?></option>
-                    <?php 
+                    <?php
                     for($i = 0; $i < count($_SESSION['actions_pages']); $i++){
-                        ?><option value="<?php 
-                        echo $_SESSION['actions_pages'][$i]['ID'];?>" <?php 
-                        if($_SESSION['actions_pages'][$i]['ID'] 
-                            == $_SESSION['m_admin']['action']['ACTION_PAGE']){ 
+                        ?><option value="<?php
+                        echo $_SESSION['actions_pages'][$i]['ID'];?>" <?php
+                        if($_SESSION['actions_pages'][$i]['ID']
+                            == $_SESSION['m_admin']['action']['ACTION_PAGE']){
                             echo 'selected="selected"';
-                        }?> ><?php 
+                        }?> ><?php
                         echo $_SESSION['actions_pages'][$i]['LABEL'];
                         ?></option><?php
                     }?>
@@ -105,11 +105,11 @@ elseif($mode == 'up' || $mode == 'add'){
             <p>
                 <label for="history"><?php echo _ACTION_HISTORY; ?> : </label>
                 <input type="radio"  class="check" name="history" value="Y" <?php
-                if($_SESSION['m_admin']['action']['HISTORY'] == 'Y'){ 
+                if($_SESSION['m_admin']['action']['HISTORY'] == 'Y'){
                     echo 'checked="checked"';
                 }?> /><?php echo _YES;?>
                 <input type="radio"  class="check" name="history" value="N" <?php
-                if($_SESSION['m_admin']['action']['HISTORY'] == 'N'){ 
+                if($_SESSION['m_admin']['action']['HISTORY'] == 'N'){
                     echo 'checked="checked"';
                 }?>/><?php echo _NO;?>
             </p>
@@ -117,19 +117,19 @@ elseif($mode == 'up' || $mode == 'add'){
         <?php
             if($mode == 'up'){
             ?>
-                <input class="button" type="submit" name="action_submit" value="<?php 
+                <input class="button" type="submit" name="action_submit" value="<?php
                 echo _MODIFY_ACTION; ?>" />
             <?php
             }
             elseif($mode == 'add'){
             ?>
-                <input type="submit" class="button"  name="action_submit" value="<?php 
+                <input type="submit" class="button"  name="action_submit" value="<?php
                 echo _ADD_ACTION; ?>" />
                 <?php
             }
             ?>
-            <input type="button" class="button"  name="cancel" value="<?php 
-            echo _CANCEL; ?>" onclick="javascript:window.location.href='<?php 
+            <input type="button" class="button"  name="cancel" value="<?php
+            echo _CANCEL; ?>" onclick="javascript:window.location.href='<?php
             echo $_SESSION['config']['businessappurl'];
             ?>index.php?page=action_management_controler&amp;mode=list&amp;admin=action';"/>
             </p>
