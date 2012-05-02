@@ -15,10 +15,10 @@ require_once 'modules' . DIRECTORY_SEPARATOR . 'notifications' . DIRECTORY_SEPAR
     . 'class' . DIRECTORY_SEPARATOR . 'diffusion_type_controler.php';
 
 if ((! isset($_REQUEST['id_type']) || empty($_REQUEST['id_type']))) {
-        $_SESSION['error'] = _TYPE_EMPTY;
-    
-    echo "{status : 1, error_txt : '" . addslashes($_SESSION['error']) . "'}";
-    exit();
+    //$_SESSION['error'] = _TYPE_EMPTY;
+    //echo "{status : 1, error_txt : '" . addslashes($_SESSION['error']) . "'}";
+    echo "{status : 0, div_content : ''}";
+	exit();
 }
 
 if (empty($_REQUEST['origin'])) {

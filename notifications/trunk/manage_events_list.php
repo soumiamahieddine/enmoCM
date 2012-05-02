@@ -183,7 +183,7 @@ if ($mode == 'list') {
 						'notifications',
 						'');">
 
-                <option value=""><?php echo _NO;?></option>
+                <option value=""><?php echo _NEVER;?></option>
                 <?php
                 foreach($diffusion_types as $this_diffusion){
                     ?><option value="<?php echo $this_diffusion->id;?>"
@@ -202,7 +202,7 @@ if ($mode == 'list') {
             class="scroll_div"
             style="height:200px;
                     width:600px;
-                    border: 1px solid;">
+                    <!--border: 0px solid;-->">
         </div>
         <p class="buttons">
             <?php
@@ -263,7 +263,7 @@ if ($mode == 'list') {
         /*First Launch */
         ?>
         <script language="javascript">
-        change_properties_box(
+		change_properties_box(
             '<?php echo $_SESSION['m_admin']['event']['attachfor_type']; ?>',
             '<?php echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&module=notifications&page=load_attachfortype_formcontent',
             'attach_for_div',
