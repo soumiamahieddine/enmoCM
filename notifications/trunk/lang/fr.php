@@ -101,27 +101,26 @@ if (!defined('_ADD_EVENT')) define('_ADD_EVENT', 'Ajouter &eacute;venement');
 
 
 if (!defined('_DIFFUSION_TYPE')) define('_DIFFUSION_TYPE', 'Type de diffusion');
-if (!defined('_EXCLUSION_TYPE')) define('_EXCLUSION_TYPE', 'Type d&rsquo;exclusion');
-if (!defined('_DIFFUSION_CONTENT')) define('_DIFFUSION_CONTENT', 'Type de contenu');
-if (!defined('_CONTENT')) define('_CONTENT', 'G&eacute;r&eacute; par le script de contenu');
 if (!defined('_SYSTEM_EVENT')) define('_SYSTEM_EVENT', 'Evenement syst&egrave;me');
-if (!defined('_ATTACH_MAIL_FILE')) define('_ATTACH_MAIL_FILE', 'Envoyer les courriers par notification');
-
+if (!defined('_ATTACH_MAIL_FILE')) define('_ATTACH_MAIL_FILE', 'Joindre le document &agrave; la notification');
+if (!defined('_NEVER')) define('_NEVER', 'Jamais');
 
 
 //List of require
 if (!defined('_NOTIFICATIONS_LISTINSTANC_DIFF_TYPE')) define('_NOTIFICATIONS_LISTINSTANC_DIFF_TYPE', 'Les courriels de notifications seront diffus&eacute;s &agrave tous les utilisateurs de la liste de diffusion (destinataire principal et copies)');
 if (!defined('_DIFFUSION_LIST')) define('_DIFFUSION_LIST', 'Liste de diffusion');
-if (!defined('_NOTIFICATIONS_DEST_USER_DIFF_TYPE')) define('_NOTIFICATIONS_DEST_USER_DIFF_TYPE', 'Les courriels de notifications seront diffus&eacute;s au destinataire principal du document');
+if (!defined('_NOTIFICATIONS_DEST_USER_DIFF_TYPE')) define('_NOTIFICATIONS_DEST_USER_DIFF_TYPE', 'Envoi au destinataire principal du document');
 if (!defined('_DEST_USER')) define('_DEST_USER', 'Destinataire principal');
-if (!defined('_NOTIFICATIONS_COPY_LIST_DIFF_TYPE')) define('_NOTIFICATIONS_COPY_LIST_DIFF_TYPE', 'Les courriels de notifications seront diffus&eacute;s aux utilisateurs en copie du document');
+if (!defined('_NOTIFICATIONS_COPY_LIST_DIFF_TYPE')) define('_NOTIFICATIONS_COPY_LIST_DIFF_TYPE', 'Envoi aux utilisateurs en copie du document');
 if (!defined('_COPYLIST')) define('_COPYLIST', 'Utilisateurs en copie');
 
-if (!defined('_NOTIFICATIONS_GROUP_DIFF_TYPE')) define('_NOTIFICATIONS_GROUP_DIFF_TYPE', 'Les courriels de notifications seront diffus&eacute;s au(x) groupe(s) sp&eacute;cifi&eacute;(s)');
-if (!defined('_NOTIFICATIONS_ENTITY_DIFF_TYPE')) define('_NOTIFICATIONS_ENTITY_DIFF_TYPE', 'Les courriels de notifications seront diffus&eacute;s au(x) entit&eacute;e(s) sp&eacute;cifi&eacute;e(s)');
-if (!defined('_NOTIFICATIONS_USER_DIFF_TYPE')) define('_NOTIFICATIONS_USER_DIFF_TYPE', 'Les courriels de notifications seront diffus&eacute;s au(x) utilisateurs(s) sp&eacute;cifi&eacute;(s)');
-if (!defined('_NOTIFICATIONS_MAIL_DIFF_TYPE')) define('_NOTIFICATIONS_MAIL_DIFF_TYPE', 'Les courriels de notifications seront diffus&eacute;s a l&rsquo;adresse courriel sp&eacute;cifi&eacute;e');
-//if (!defined('_NOTIFICATIONS_CONTENT_DIFF_TYPE')) define('_NOTIFICATIONS_CONTENT_DIFF_TYPE', 'Le(s) destinataire(s) est(sont) s&eacute;lectionn&eacute;(s) par le script de contenu');
+if (!defined('_NOTIFICATIONS_GROUP_DIFF_TYPE')) define('_NOTIFICATIONS_GROUP_DIFF_TYPE', 'Envoi aux utilisateurs du(des) groupe(s) sp&eacute;cifi&eacute;(s)');
+if (!defined('_NOTIFICATIONS_ENTITY_DIFF_TYPE')) define('_NOTIFICATIONS_ENTITY_DIFF_TYPE', 'Envoi aux utilisateurs des entit&eacute;(s) sp&eacute;cifi&eacute;e(s)');
+if (!defined('_NOTIFICATIONS_USER_DIFF_TYPE')) define('_NOTIFICATIONS_USER_DIFF_TYPE', 'Envoi aux utilisateurs sp&eacute;cifi&eacute;s');
+
+if (!defined('_SELECT_EVENT_TYPE')) define('_SELECT_EVENT_TYPE', '-- S&eacute;lectionner l\'&eacute;v&eacute;nement --');
+if (!defined('_SELECT_TEMPLATE')) define('_SELECT_TEMPLATE', '-- S&eacute;lectionner le mod&egrave;le --');
+if (!defined('_SELECT_DIFFUSION_TYPE')) define('_SELECT_DIFFUSION_TYPE', '-- S&eacute;lectionner la diffusion --');
 
 if (!defined('_EVENT_ADDED')) define('_EVENT_ADDED', 'Evenement ajout&eacute;');
 if (!defined('_EVENT_DELETED')) define('_EVENT_DELETED', 'Ev&eacute;nement supprim&eacute;');
