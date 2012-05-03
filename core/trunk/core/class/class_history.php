@@ -211,7 +211,7 @@ class history extends dbquery
                     ._TEMPLATES_ASSOCIATION_TABLE_NAME." "
                 ."WHERE "
                     ."upper(what) like 'EVENT'  "
-                    ."AND '".$event_id."' = value_field "
+                    ."AND '".$event_id."' like value_field "
                     ."AND maarch_module = 'notifications'"
             );
 
