@@ -179,10 +179,14 @@ class templates_controler extends ObjectControler implements ObjectControlerIF
         );
         
         $template->template_content = str_replace(';', '###', $template->template_content);        
-        $template->template_content = str_replace('--', '___', $template->template_content);        
-        $allowedTags = '<p><strong><em><u><h1><h2><h3><h4><h5><h6><img>';
-        $allowedTags .= '<li><ol><ul><span><div><br><ins><del><blockquote>'
-            . '<font><strike><table><tr><td><th><tbody><thead><tfooter><caption>';
+        $template->template_content = str_replace('--', '___', $template->template_content); 
+		$allowedTags = '<html><head><body><title>'; //Structure
+        $allowedTags .= '<h1><h2><h3><h4><h5><h6><b><i><tt><u><strike><blockquote><pre><blink><font><big><small><sup><sub><strong><em>'; // Text formatting
+		$allowedTags .='<p><br><hr><center><div><span>'; // Text position
+        $allowedTags .= '<li><ol><ul><dl><dt><dd>'; // Lists
+		$allowedTags .= '<img><a>'; // Multimedia
+		$allowedTags .= '<table><tr><td><th><tbody><thead><tfooter><caption>'; // Tables
+		$allowedTags .= '<form><input><textarea><select>'; // Forms
         $template->template_content = strip_tags($template->template_content, $allowedTags);
         $template->template_content = $f->protect_string_db($template->template_content);
         
@@ -722,8 +726,8 @@ class templates_controler extends ObjectControler implements ObjectControlerIF
         return $this->stylesArray;
     }
     
-	public function getTemplatesDatasources($configXml)
-    {
+	public function getTemplatesDatasources($configXml) 
+	{
         $this->datasourcesArray = array();
         //Browse all files of the style template dir
         $xmlcontent = simplexml_load_file($configXml);
@@ -758,8 +762,7 @@ class templates_controler extends ObjectControler implements ObjectControlerIF
         return $ExtractFileExt[1];
     }
     
-    function storeTemplateFile()
-    {
+    function storeTemplateFile() {
         if (!$_SESSION['m_admin']['templates']['applet']) {
             //echo $_SESSION['m_admin']['templates']['current_style'] . '<br>';exit;
             $tmpFileName = 'cm_tmp_file_' . $_SESSION['user']['UserId']
@@ -970,4 +973,105 @@ class templates_controler extends ObjectControler implements ObjectControlerIF
             return $items;
         }
     }
+	
+	 /**
+    * Make a copy of template to temp directory for merge process
+    *
+    * @param object $templateObj : template object
+	* @return string $templateCopyPath : path to working copy
+    */
+	private function getWorkingCopy($templateObj) {
+		
+		if($templateObj->template_type == 'HTML') {
+			$fileExtension = 'html';
+			$fileNameOnTmp = 'tmp_file_' . $_SESSION['user']['UserId']
+            . '_' . rand() . '.' . $fileExtension;
+			$handle = fopen($fileNameOnTmp, 'a');
+			if (fwrite($handle, $templateObj->template_content) === FALSE) {
+				return false;
+			}
+			fclose($handle);
+			return $fileNameOnTmp;
+		} else {
+			$query = "select path_template from " . _DOCSERVERS_TABLE_NAME 
+				. " where docserver_id = 'TEMPLATES'";
+			$dbTemplate->query($query);
+			$resDs = $dbTemplate->fetch_object();
+			$pathToDs = $resDs->path_template;
+			$pathToTemplateOnDs = $pathToDs . str_replace(
+					"#", 
+					DIRECTORY_SEPARATOR, 
+					$templateObj->template_path
+				)
+				. $templateObj->template_file_name;
+			
+			return $pathTemplateOnDs;
+        }
+	
+	}
+	
+	private function getDatasource($datasourceId) 
+	{
+		if ($datasourceId <> '') {
+			$fulllist = array();
+			$fulllist = $this->getTemplatesDatasources();
+			
+			foreach ($fulllist as $dsId => $ds) {
+				if ($datasourceId == $dsId){
+					return $ds;
+				}
+			}
+		}
+		return null;
+	}
+	
+	/** Merge template with data from a datasource to the requested output 
+    * 
+    * @param string $templateId : templates identifier
+	* @param array $datasourceParams : array of parameters for function getDatasource
+	* @param string $outputType : save to file, retrieve content
+    * @return merged content or path to file
+    */
+	public function merge($templateId, $datasourceParams, $outputType) 
+	{
+		require_once 'modules/templates/templates_tables_definition.php';
+		include_once 'apps/maarch_entreprise/tools/tbs/tbs_class_php5.php';
+		include_once 'apps/maarch_entreprise/tools/tbs/tbs_plugin_opentbs.php';
+
+		$templateObj = $this->get($templateId);
+		
+		// Copy template to temp file
+		$pathToTemplate = $this->getWorkingCopy($templateObj);
+		
+		// Get datasources
+		$datasourceObj = $this->getDatasource($templateObj->template_datasource);
+		require_once $datasourceObj->script;
+		$datasources = getDatasource($datasourceParams);
+		
+		// Merge with TBS
+		$TBS = new clsTinyButStrong;
+		$TBS->Plugin(TBS_INSTALL, OPENTBS_PLUGIN);
+		$TBS->LoadTemplate($pathToTemplate);
+		
+		foreach ($datasources as $name => $datasource) {
+			if(count($datasource) > 0) {
+				$TBS->MergeBlock($name, $datasource);
+			}
+		}
+		
+		switch($outputType) {
+		case 'content':
+			$TBS->Show(OPENTBS_STRING);
+			$myContent = $TBS->Source;
+			return $myContent;
+			
+		case 'file':
+			$fileExtension = $func->extractFileExt($pathToTemplate);
+			$fileNameOnTmp = 'tmp_file_' . $_SESSION['user']['UserId']
+            . '_' . rand() . '.' . $fileExtension;
+			$myFile = $_SESSION['config']['tmppath'] . $fileNameOnTmp;
+			$TBS->Show(OPENTBS_FILE, $myFilePath);
+			return $myFile;
+		}
+	}
 }
