@@ -12,9 +12,69 @@
 *
 */
 
+
+
+// Loads the required class
+try {
+    require_once("core/class/class_db.php");
+    require_once("modules/notes/notes_tables.php");
+    require_once("modules/entities/entities_tables.php");
+    require_once ("modules/notes/class/class_modules_tools.php");
+    require_once "modules/entities/class/EntityControler.php";
+} catch (Exception $e){
+    echo $e->getMessage().' // ';
+}
+
 class notes
 {
 
+	/**
+    * Dbquery object used to connnect to the database
+    */
+    private static $db;
+    
+    /**
+    * Entity object
+    */
+    public static $ent;
+    
+     /**
+    * Notes table
+    */
+    public static $notes_table ;
+
+    /**
+    * Notes_entities table
+    */
+    public static $notes_entities_table ;
+    
+    /**
+    * Entities table
+    */
+    public static $entities_table ;
+    
+     /**
+    * Opens a database connexion and values the tables variables
+    */
+    public function connect()
+    {
+        $db = new dbquery();
+        $db->connect();
+        self::$notes_table = NOTES_TABLE;
+        self::$notes_entities_table = NOTE_ENTITIES_TABLE;
+        self::$entities_table = 'entities';
+
+        self::$db=$db;
+    }
+
+    /**
+    * Close the database connexion
+    */
+    public function disconnect()
+    {
+        self::$db->disconnect();
+    }
+    
 	/**
 	* Build Maarch module tables into sessions vars with a xml configuration
 	* file
@@ -47,6 +107,66 @@ class notes
 		$_SESSION['history']['noteup'] = (string) $hist->noteup;
 		$_SESSION['history']['notedel'] = (string) $hist->notedel;
 	}
+	
+	/**
+	 * Function to get all the entities 
+	 * 
+	 */
+/*
+	public function getentities()
+	{
+		$entitiesOrg = array();
+		require_once 'modules/entities/class/EntityControler.php';
+		$entityControler = new EntityControler();
+		$entitiesOrg = $entityControler->getAllEntities();
+		 return $entitiesOrg;
+	}
+*/
+	
+	/**
+	 * 
+	 * 
+	 * 
+	 */
+	 public function insertEntities($id)
+	 {
+		 //echo "RES_ID : ".$id;
+	 } 
+	
+	
+	/**
+	 * Function to get which user can see a note
+	 * @id note identifier
+	 */
+	public function getNotesEntities($id)
+	{
+		self::connect();
+		$ent = new EntityControler();
+		
+		
+		$query = "select entity_id, entity_label from ".self::$notes_entities_table." , ".self::$entities_table
+		." WHERE item_id LIKE entity_id and note_id = " .$id;
+		
+		
+		try{
+            if($_ENV['DEBUG'])
+                echo $query.' // ';
+            self::$db->query($query);
+        } catch (Exception $e){}
+        
 
+        $entitiesList = array();
+        $entitiesChosen = array();
+        $entitiesList = $ent->getAllEntities();
+        
+
+        while($res = self::$db->fetch_object())
+        {
+			array_push($entitiesChosen, $ent->get($res->entity_id));
+        }
+        
+        //self::disconnect();
+		return $entitiesChosen;
+	}
 }
 
