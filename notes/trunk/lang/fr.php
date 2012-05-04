@@ -29,4 +29,5 @@ if (!defined('_NOTE_UPDATED'))  define('_NOTE_UPDATED', 'Note modifi&eacute;e');
 if (!defined('_NOTES'))  define('_NOTES', 'Notes');
 if (!defined('_NOTES_COMMENT'))  define('_NOTES_COMMENT', 'Notes');
 if (!defined('_OF'))  define('_OF', 'de');
+if (!defined('_THIS_NOTE_IS_VISIBLE_BY')) define('_THIS_NOTE_IS_VISIBLE_BY', 'Restreindre cette note aux entit&eacute;s suivantes'); 
 ?>
