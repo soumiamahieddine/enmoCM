@@ -14,8 +14,14 @@ require_once "core" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR
     . "class_security.php";
 require_once "core/class/class_history.php";
 require_once 'modules/notes/notes_tables.php';
+require_once "modules/entities/class/EntityControler.php";
+require_once "modules" . DIRECTORY_SEPARATOR . "notes" . DIRECTORY_SEPARATOR
+	. "class" . DIRECTORY_SEPARATOR
+    . "class_modules_tools.php";
 $core = new core_tools();
 $sec = new security();
+$ent = new EntityControler();
+$notes_mod_tools = new notes();
 //here we loading the lang vars
 $core->load_lang();
 $func = new functions();
@@ -65,6 +71,26 @@ if (isset($_REQUEST['notes']) && ! empty($_REQUEST['notes'])) {
         . $db->protect_string_db($collId) . "', '"
         . $db->protect_string_db($table) . "')"
     );
+    $sequence_name = 'notes_seq';
+    //$db->query("select nextval('" . $sequence_name . "') as lastinsertid");
+    $id = $db->last_insert_id($sequence_name);
+    if (isset($_REQUEST['entities_chosen']) && !empty($_REQUEST['entities_chosen']))
+	{
+		$notes['copy_entities'] = array();
+		for ($i=0; $i<count($_REQUEST['entities_chosen']); $i++) 
+		{
+			$notes['copy']['entities'] = array_push($notes['copy_entities'], $_REQUEST['entities_chosen'][$i]);
+		}
+		for ($i=0; $i<count($notes['copy_entities']); $i++) 
+		{	
+			$db->query(
+			"INSERT INTO " . NOTE_ENTITIES_TABLE . "(note_id, item_id) VALUES"
+			. " (".$id . ", '"
+			. $db->protect_string_db($notes['copy_entities'][$i])."')"
+			);
+		}
+	}
+	
     if ($_SESSION['history']['noteadd']) {
         $hist = new history();
         $db->query(
@@ -176,6 +202,76 @@ if (isset($_REQUEST['notes']) && ! empty($_REQUEST['notes'])) {
              <input type="submit" name="Submit2" value="<?php
     echo _CANCEL;?>" onclick="javascript:self.close();" class="button"/>
         </p>
+        </br>
+        <div>
+			<h3 class="sstit"><?php echo _THIS_NOTE_IS_VISIBLE_BY; ?></h3>
+		</div>
+		<table>
+			<tr>
+				<td>
+					<div  id="config_entities" class ="scrollbox" style=" width: 700px; margin-left:auto; margin-right: auto; height:140px; border: 1px solid #999;">
+						<table align="center" width="100%" id="template_entities" >
+							<tr>
+								<td width="10%" align="center">
+								<?php 
+									$notesEntities = array();
+									$notesEntities = $ent->getAllEntities();
+								?>
+									<select name="entitieslist[]" id="entitieslist" size="7" 
+											ondblclick='moveclick($(entitieslist), $(entities_chosen));' multiple="multiple" >
+										<?php
+										for ($i=0;$i<count($notesEntities);$i++) {
+											$state_entity = false;
+											
+											if ($state_entity == false) {
+										?>
+												<option value="<?php 
+													echo $notesEntities[$i]->entity_id;
+													?>"><?php 
+													echo $notesEntities[$i]->entity_label;
+													?></option>
+										<?php
+											}
+										}
+										?>	
+									</select>
+									<br/>
+								</td>
+								<td width="10%" align="center">
+									<input type="button" class="button" value="<?php 
+										echo _ADD; 
+										?> &gt;&gt;" onclick='Move($(entitieslist), $(entities_chosen));' />
+									<br />
+									<br />
+									<input type="button" class="button" value="&lt;&lt; <?php 
+										echo _REMOVE;
+										?>" onclick='Move($(entities_chosen), $(entitieslist));' />
+								</td>
+								<td width="10%" align="center">
+									<select name="entities_chosen[]" id="entities_chosen" size="7" 
+											ondblclick='moveclick($(entities_chosen), $(entitieslist));' multiple="multiple">
+										<?php
+											for ($i=0;$i<count($notesEntities);$i++) {
+												$state_entity = false;
+												if ($state_entity == true) {
+											?>
+													<option value="<?php 
+														echo $notesEntities[$i]->entity_id;
+													?>" selected="selected" ><?php 
+														echo $notesEntities[$i]->entity_label; 
+													?></option>
+											<?php
+												}
+											}
+										?>
+									</select>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</td>
+			</tr>
+		</table>
       </form>
     </div>
     <div class="block_end">&nbsp;</div>
