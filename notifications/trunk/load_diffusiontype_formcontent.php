@@ -37,10 +37,14 @@ $diffType = $dType->getAllDiffusion();
 
 foreach($diffType as $loadedType) {
 	if ($loadedType->id == $_REQUEST['id_type']){
-		if ($loadedType->script <> '') {
-			include_once($loadedType->script);
-			$content = getContent('diffusion_type', 'diffusion_values', 'diffusion_properties');
-			echo "{status : 0, div_content : '" . addslashes($content) . "'}";
+		if ($loadedType->script <> '') {		
+			$request = 'form_content';
+			$formId = 'diffusion_type';
+			$leftList = 'diffusion_values';
+			$rightList = 'diffusion_properties';
+			$form_content = '';
+			include($loadedType->script);
+			echo "{status : 0, div_content : '" . addslashes($form_content) . "'}";
 		} else {
 			 echo "{status : 1, error_txt : '" . addslashes($_SESSION['error']) . "'}";
 		}

@@ -168,7 +168,7 @@ if ($mode == 'list') {
             class="scroll_div"
             style="height:200px;
                     width:600px;
-                    border: 1px solid;">
+                    border:1px solid;">
         </div>
 		<p></p>
 		<p>
@@ -198,11 +198,9 @@ if ($mode == 'list') {
             </select>
         </p>
 
-        <div id="attach_for_div"
-            class="scroll_div"
-            style="height:200px;
-                    width:600px;
-                    <!--border: 0px solid;-->">
+        <div id="attach_for_div" class="scroll_div" style="height:200px;width:600px;border:1px solid;">
+			<!-- div for attachment options -->
+			<p class="sstit"> <?php echo _NO_ATTACHMENT_WITH_NOTIFICATION; ?></p>
         </div>
         <p class="buttons">
             <?php
@@ -247,7 +245,7 @@ if ($mode == 'list') {
             require_once 'modules' . DIRECTORY_SEPARATOR . 'notifications' . DIRECTORY_SEPARATOR
                 . 'class' . DIRECTORY_SEPARATOR . 'diffusion_type_controler.php';
             $Type = new diffusion_type_controler();
-            $dType = $Type->getDiffusionType($_SESSION['m_admin']['event']['diffusion_type']);
+            $dType = $Type->get($_SESSION['m_admin']['event']['diffusion_type']);
             ?>
             <script language="javascript">
             loadDiffusionProperties(
@@ -278,7 +276,7 @@ if ($mode == 'list') {
                 . 'class' . DIRECTORY_SEPARATOR . 'diffusion_type_controler.php';
             $Type = new diffusion_type_controler();
 
-            $dType = $Type->getDiffusionType($_SESSION['m_admin']['event']['diffusion_type']);
+            $dType = $Type->get($_SESSION['m_admin']['event']['diffusion_type']);
             //include_once ($dType->script);
             ?>
             <script language="javascript">
