@@ -126,7 +126,7 @@ for ($indNotes1 = 0; $indNotes1 < count($tabNotes); $indNotes1 ++ ) {
                     . 'index.php?display=true&module=notes&page=note_details&id='
                     . $indNotes1d . '&amp;resid=' . $_SESSION['doc_id']
                     . '&amp;coll_id=' . $_SESSION['collection_id_choice']
-                    . $extendUrl . '\', 450, 300)">'
+                    . $extendUrl . '\', 1024, 650)">'
                     . $func->cut_string(
                         $request->show_string(
                             $tabNotes[$indNotes1][$indNotes2]['value']
