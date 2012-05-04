@@ -11,10 +11,10 @@ function change_properties_box(difftype_id, path_manage_script, diff_list_id, or
     //~ {
         //~ var isMandatory = "none";
     //~ }
-    document.getElementById(div_id).style.border= "0px";
+    document.getElementById(div_id).style = "height:0px; width:600px; border:0px;";
     if(difftype_id != null)
     {	
-		document.getElementById(div_id).style.border= "1px solid";
+		document.getElementById(div_id).style = "height:200px; width:600px; border:1px solid;";
 		new Ajax.Request(path_manage_script,
         {
             method:'post',
