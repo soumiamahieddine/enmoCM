@@ -810,7 +810,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                                 . $_SESSION['config']['businessappurl']
                                 . 'index.php?display=true&module=notes&page=note_add&identifier='
                                 . $_SESSION['doc_id'] . '&coll_id='
-                                . $_SESSION['collection_id_choice'].'\', 450, 300)" >';
+                                . $_SESSION['collection_id_choice'].'\', 1024, 650)" >';
                                 $frm_str .= _ADD_NOTE;
                             $frm_str .= '</a>';
                 $frm_str .= '</div>';
