@@ -104,7 +104,7 @@ if (!defined('_DIFFUSION_TYPE')) define('_DIFFUSION_TYPE', 'Type de diffusion');
 if (!defined('_SYSTEM_EVENT')) define('_SYSTEM_EVENT', 'Evenement syst&egrave;me');
 if (!defined('_ATTACH_MAIL_FILE')) define('_ATTACH_MAIL_FILE', 'Joindre le document &agrave; la notification');
 if (!defined('_NEVER')) define('_NEVER', 'Jamais');
-
+if (!defined('_NO_ATTACHMENT_WITH_NOTIFICATION')) define('_NO_ATTACHMENT_WITH_NOTIFICATION', 'Les documents ne sont joints &agrave; la notification pour aucun utilisateur');
 
 //List of require
 if (!defined('_NOTIFICATIONS_LISTINSTANC_DIFF_TYPE')) define('_NOTIFICATIONS_LISTINSTANC_DIFF_TYPE', 'Les courriels de notifications seront diffus&eacute;s &agrave tous les utilisateurs de la liste de diffusion (destinataire principal et copies)');
