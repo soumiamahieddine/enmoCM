@@ -79,6 +79,46 @@ class users_controler extends ObjectControler implements ObjectControlerIF
         }
     }
 
+	/**
+    * Returns all users (enabled by default) from the database in an array
+    *   of user objects (ordered by id by default)
+    *
+    * @param  $orderStr string  Order string passed to the query
+    *   ("order by user_id asc" by default)
+    * @param  $enabledOnly bool  if true returns only the enabled users,
+    *   otherwise returns even the disabled (true by default)
+    * @return Array of user objects with properties from the database
+    */
+    public function getAllUsers($orderStr='order by user_id asc',
+        $enabledOnly=true)
+    {
+        $db = new dbquery();
+        $db->connect();
+        $query = 'select * from ' . USERS_TABLE .' ';
+        if ($enabledOnly) {
+            $query .= "where enabled = 'Y'";
+        }
+        $query .= $orderStr;
+
+        try{
+            $db->query($query);
+        } catch (Exception $e){}
+
+        $users = array();
+        while ($res = $db->fetch_object()) {
+            $user = new user();
+            $tmpArray = array(
+                'user_id'   => $res->group_id,
+                'firstname' => $res->firstname,
+                'lastname'    => $res->lastname,
+            );
+            $user->setArray($tmpArray);
+            array_push($users, $user);
+        }
+        $db->disconnect();
+        return $users;
+    }
+	
     /**
     * Returns in an array all the groups associated with a user (user_id,
     * group_id, primary_group and role)
