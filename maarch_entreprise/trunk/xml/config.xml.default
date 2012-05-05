@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ROOT>
     <CONFIG>
-        <businessapppath>c:\xampp\htdocs\maarch_entreprise\apps\maarch_entreprise\</businessapppath>
         <databaseserver>127.0.0.1</databaseserver>
-        <!--<databaseserverport>3306</databaseserverport>-->
         <databaseserverport>5432</databaseserverport>
         <databasetype>POSTGRESQL</databasetype>
-        <!--<databasetype>MYSQL</databasetype>-->
         <databasename>maarch_entreprise</databasename>
         <databaseuser>postgres</databaseuser>
         <databasepassword>maarch</databasepassword>
@@ -20,10 +17,9 @@
         <applicationname>Maarch</applicationname>
         <defaultPage>welcome</defaultPage>
         <exportdirectory></exportdirectory>
-        <tmppath>c:\xampp\htdocs\maarch_entreprise\apps\maarch_entreprise\tmp\</tmppath>
-        <CookieTime>60</CookieTime><!-- minutes -->
-        <ldap>false</ldap>
-        <userdefaultpassword>maarch</userdefaultpassword><!-- default user's password -->
+        <CookieTime>60</CookieTime> <!-- minutes -->
+        <ldap>false</ldap> <!-- if true, ldap authentification, see ldap xml config file -->
+        <userdefaultpassword>maarch</userdefaultpassword> <!-- default user's password -->
     </CONFIG>
     <CRYPT>
         <encrypt>false</encrypt>
@@ -133,7 +129,6 @@
         <docserversdel>true</docserversdel>
         <docserversallow>true</docserversallow>
         <docserversban>true</docserversban>
-        <!--<docserversclose>true</docserversclose>-->
         <docserverslocationsadd>true</docserverslocationsadd>
         <docserverslocationsdel>true</docserverslocationsdel>
         <docserverslocationsallow>true</docserverslocationsallow>
@@ -198,10 +193,6 @@
         <moduleid>cases</moduleid>
         <comment>_CASES_COMMENT</comment>
     </MODULES>
-<!--    <MODULES>
-        <moduleid>doc_converter</moduleid>
-        <comment>_DOC_CONVERTER_COMMENT</comment>
-    </MODULES>-->
     <MODULES>
         <moduleid>entities</moduleid>
         <comment>_ENTITIES_COMMENT</comment>
@@ -238,10 +229,6 @@
         <moduleid>postindexing</moduleid>
         <comment>_POSTINDEXING</comment>
     </MODULES>
-    <!--<MODULES>
-        <moduleid>webtwain</moduleid>
-        <comment>_WEBTWAIN_COMMENT</comment>
-    </MODULES>-->
     <MODULES>
         <moduleid>life_cycle</moduleid>
         <comment>_LIFE_CYCLE_COMMENT</comment>

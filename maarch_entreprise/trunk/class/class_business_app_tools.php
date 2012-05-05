@@ -1,15 +1,32 @@
 <?php
+/*
+*    Copyright 2008-2012 Maarch
+*
+*   This file is part of Maarch Framework.
+*
+*   Maarch Framework is free software: you can redistribute it and/or modify
+*   it under the terms of the GNU General Public License as published by
+*   the Free Software Foundation, either version 3 of the License, or
+*   (at your option) any later version.
+*
+*   Maarch Framework is distributed in the hope that it will be useful,
+*   but WITHOUT ANY WARRANTY; without even the implied warranty of
+*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*   GNU General Public License for more details.
+*
+*   You should have received a copy of the GNU General Public License
+*   along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 /**
-* core tools Class
+* @brief Contains the apps tools class
 *
-*  Contains all the functions to load core and others
 *
-* @package  maarch
-* @version 3.0
-* @since 10/2005
-* @license GPL v3
-* @author  Laurent Giovannoni  <dev@maarch.org>
-*
+* @file
+* @author Laurent Giovannoni
+* @date $date$
+* @version $Revision$
+* @ingroup apps
 */
 require_once 'core/core_tables.php';
 
@@ -49,43 +66,6 @@ class business_app_tools extends dbquery
         $xmlconfig = simplexml_load_file($path);
         if ($xmlconfig <> false) {
             $config = $xmlconfig->CONFIG;
-            $_SESSION['config']['businessappname'] =
-                (string) $config->businessappname;
-            //$_SESSION['config']['businessapppath'] = (string) $config->businessapppath;
-            //##############
-
-            ################# BUGGY PART START #########################
-            ## if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') {
-            ##     $protocol = 'https';
-            ## } else {
-            ##     $protocol = 'http';
-            ## }
-            ## if ($_SERVER['SERVER_PORT'] <> 443 && $protocol == 'https') {
-            ##     $serverPort = ':' . $_SERVER['SERVER_PORT'];
-            ## } else if ($_SERVER['SERVER_PORT'] <> 80 && $protocol == 'http') {
-            ##     $serverPort = ':' . $_SERVER['SERVER_PORT'];
-            ## } else {
-            ##     $serverPort = '';
-            ## }
-            ## 
-            ## //##############
-            ## if (isset($_SERVER['HTTP_X_FORWARDED_HOST'])
-            ##     && $_SERVER['HTTP_X_FORWARDED_HOST'] <> ''
-            ## ) {
-            ##     $host = $_SERVER['HTTP_X_FORWARDED_HOST'];
-            ## } else {
-            ##     $host = $_SERVER['HTTP_HOST'];
-            ## }
-            ## 
-            ## $tmp = $host;
-            ## if (! preg_match('/:[0-9]+$/', $host)) {
-            ##     $tmp = $host.$serverPort;
-            ## }
-            ## $_SESSION['config']['businessappurl'] = $protocol . '://' . $tmp
-            ##     . str_replace('index.php', '', $_SERVER['SCRIPT_NAME']);
-            ## 
-            ################### BUGGY PART END #########################
-            
 
             $uriBeginning = strpos($_SERVER['SCRIPT_NAME'], 'apps');
             $url = $_SESSION['config']['coreurl']
@@ -93,7 +73,7 @@ class business_app_tools extends dbquery
             $_SESSION['config']['businessappurl'] = str_replace(
                 'index.php', '', $url
             );
-            
+
             $_SESSION['config']['databaseserver'] =
                 (string) $config->databaseserver;
             $_SESSION['config']['databaseserverport'] =
@@ -121,7 +101,6 @@ class business_app_tools extends dbquery
             $_SESSION['config']['applicationname'] = (string) $config->applicationname;
             $_SESSION['config']['defaultPage'] = (string) $config->defaultPage;
             $_SESSION['config']['exportdirectory'] = (string) $config->exportdirectory;
-            $_SESSION['config']['tmppath'] = (string) $config->tmppath;
             $_SESSION['config']['cookietime'] = (string) $config->CookieTime;
             $_SESSION['config']['ldap'] = (string) $config->ldap;
             $_SESSION['config']['userdefaultpassword'] = (string) $config->userdefaultpassword;
@@ -139,10 +118,14 @@ class business_app_tools extends dbquery
             $_SESSION['tablename']['doctypes_indexes'] = (string) $tablename->doctypes_indexes;
             $_SESSION['tablename']['saved_queries'] = (string) $tablename->saved_queries;
             $_SESSION['tablename']['contacts'] = (string) $tablename->contacts;
+            
+            $_SESSION['config']['tmppath'] = 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+                  . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR;
+            
             $i = 0;
 
             if ( isset($_SESSION['custom_override_id']) && file_exists(
-            	'custom/' . $_SESSION['custom_override_id'] . '/'
+                'custom/' . $_SESSION['custom_override_id'] . '/'
                 . $_SESSION['config']['lang'] . '.php'
             )
             ) {
@@ -152,12 +135,12 @@ class business_app_tools extends dbquery
             include_once 'apps' . DIRECTORY_SEPARATOR
                     . $_SESSION['config']['app_id'] . DIRECTORY_SEPARATOR
                     . 'lang' . DIRECTORY_SEPARATOR . $_SESSION['config']['lang']
-                    . ".php";
+                    . '.php';
             $_SESSION['collections'] = array();
             foreach ($xmlconfig->COLLECTION as $col) {
                 $tmp = (string) $col->label;
                 if (!empty($tmp) && defined($tmp) && constant($tmp) <> NULL) {
-                	$tmp = constant($tmp);
+                    $tmp = constant($tmp);
                 }
                 $extensions = $col->extensions;
                 $tab = array();
@@ -259,7 +242,7 @@ class business_app_tools extends dbquery
             foreach ($xmlconfig->KEYWORDS as $keyword) {
                 $tmp = (string) $keyword->label;
                 if (!empty($tmp) && defined($tmp) && constant($tmp) <> NULL) {
-                	$tmp = constant($tmp);
+                    $tmp = constant($tmp);
                 }
 
                 array_push(
@@ -319,10 +302,10 @@ class business_app_tools extends dbquery
             $i = 0;
             foreach ($xmlfile->ACTIONPAGE as $actionPage) {
                 $label = (string) $actionPage->LABEL;
-             	if (!empty($label) && defined($label)
-             		&& constant($label) <> NULL
-             	) {
-                	$label = constant($label);
+                if (!empty($label) && defined($label)
+                    && constant($label) <> NULL
+                ) {
+                    $label = constant($label);
                 }
                 $keyword = '';
                 if (isset($actionPage->KEYWORD)
@@ -382,8 +365,8 @@ class business_app_tools extends dbquery
         $_SESSION['mail_categories'] = array();
         foreach ($categories->category as $cat) {
             $label = (string) $cat->label;
-        	if (!empty($label) && defined($label)
-             	&& constant($label) <> NULL
+            if (!empty($label) && defined($label)
+                && constant($label) <> NULL
              ) {
                 $label = constant($label);
             }
@@ -396,7 +379,7 @@ class business_app_tools extends dbquery
         foreach ($mailNatures->nature as $nature ) {
             $label = (string) $nature->label;
             if (!empty($label) && defined($label)
-             	&& constant($label) <> NULL
+                && constant($label) <> NULL
              ) {
                 $label = constant($label);
             }
@@ -410,7 +393,7 @@ class business_app_tools extends dbquery
         foreach ($mailPriorities->priority as $priority ) {
             $label = (string) $priority;
             if (!empty($label) && defined($label)
-            	&& constant($label) <> NULL
+                && constant($label) <> NULL
             ) {
                 $label = constant($label);
             }
@@ -424,8 +407,8 @@ class business_app_tools extends dbquery
         $i = 0;
         foreach ($mailTitles->nature as $title ) {
             $label = (string) $title->label;
-        	if (!empty($label) && defined($label)
-            	&& constant($label) <> NULL
+            if (!empty($label) && defined($label)
+                && constant($label) <> NULL
             ) {
                 $label = constant($label);
             }
@@ -646,10 +629,10 @@ class business_app_tools extends dbquery
         foreach ($titles->title as $title ) {
             $label = (string) $title->label;
             if (!empty($label) && defined($label)
-	            && constant($label) <> NULL
-	        ) {
-	            $label = constant($label);
-	        }
+                && constant($label) <> NULL
+            ) {
+                $label = constant($label);
+            }
 
             $resTitles[(string) $title->id] = $label;
         }
@@ -689,11 +672,11 @@ class business_app_tools extends dbquery
         foreach ($titles->title as $title ) {
             if ($titleId == (string) $title->id) {
                 $label = (string) $title->label;
-	            if (!empty($label) && defined($label)
-	            	&& constant($label) <> NULL
-	            ) {
-	                $label = constant($label);
-	            }
+                if (!empty($label) && defined($label)
+                    && constant($label) <> NULL
+                ) {
+                    $label = constant($label);
+                }
 
                 return $label;
             }
