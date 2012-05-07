@@ -130,7 +130,7 @@ class install extends functions
      * test if the php version is alright
      * @return boolean
      */
-    public function isPhpRequirements()
+    public function isPhpVersion()
     {
         if (version_compare(PHP_VERSION, '5.3') < 0) {
             return false;
@@ -140,12 +140,13 @@ class install extends functions
     }
     
     /**
-     * test if php postgres libray loaded
+     * test if php libray loaded
+     * @param $phpLibrary string name of the library
      * @return boolean
      */
-    public function isPostgresRequirements()
+    public function isPhpRequirements($phpLibrary)
     {
-        if (!@extension_loaded('pgsql')) {
+        if (!@extension_loaded($phpLibrary)) {
             return false;
         } else {
             return true;
@@ -153,29 +154,20 @@ class install extends functions
     }
     
     /**
-     * test if php gd libray loaded
+     * test if pear library asked is installed
+     * @param $pearLibrary string the library logical path
      * @return boolean
      */
-    public function isGdRequirements()
+    public function isPearRequirements($pearLibrary)
     {
-        if (!@extension_loaded('gd')) {
-            return false;
-        } else {
-            return true;
+        $includePath = array();
+        $includePath = explode(';', ini_get('include_path'));
+        for ($i=0;$i<count($includePath);$i++) {
+            if (file_exists($includePath[$i] . '/' . $pearLibrary)) {
+                return true;
+            }
         }
-    }
-    
-    /**
-     * test if php svn libray loaded
-     * @return boolean
-     */
-    public function isSvnRequirements()
-    {
-        if (!@extension_loaded('svn')) {
-            return false;
-        } else {
-            return true;
-        }
+        return false;
     }
     
     /**
@@ -184,11 +176,11 @@ class install extends functions
      */
     public function isMimeTypeRequirements()
     {
-        try {
-            require_once('MIME/Type.php');
-            return true;
-        } catch (Exception $e) {
+        require_once 'PEAR/Dependency.php';
+        if (!PEAR_Dependency::checkPackage($error, 'mimeType')) {
             return false;
+        } else {
+            return true;
         }
     }
 }
