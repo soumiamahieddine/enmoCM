@@ -167,17 +167,61 @@ class install extends functions
                 return true;
             }
         }
+        $includePath = explode(':', ini_get('include_path'));
+        for ($i=0;$i<count($includePath);$i++) {
+            if (file_exists($includePath[$i] . '/' . $pearLibrary)) {
+                return true;
+            }
+        }
         return false;
     }
     
     /**
-     * test if pear mime type libray loaded
+     * test if php ini error var correctly set
      * @return boolean
      */
-    public function isMimeTypeRequirements()
+    public function isIniErrorRepportingRequirements()
     {
-        require_once 'PEAR/Dependency.php';
-        if (!PEAR_Dependency::checkPackage($error, 'mimeType')) {
+        if (ini_get('error_reporting') <> 22519) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+    
+    /**
+     * test if php ini error var correctly set
+     * @return boolean
+     */
+    public function isIniDisplayErrorRequirements()
+    {
+        if (strtoupper(ini_get('display_errors')) ==  'OFF') {
+            return false;
+        } else {
+            return true;
+        }
+    }
+    
+    /**
+     * test if php ini error var correctly set
+     * @return boolean
+     */
+    public function isIniShortOpenTagRequirements()
+    {
+        if (strtoupper(ini_get('short_open_tag')) ==  'OFF') {
+            return false;
+        } else {
+            return true;
+        }
+    }
+    
+    /**
+     * test if php ini error var correctly set
+     * @return boolean
+     */
+    public function isIniMagicQuotesGpcRequirements()
+    {
+        if (strtoupper(ini_get('magic_quotes_gpc')) ==  'ON') {
             return false;
         } else {
             return true;
