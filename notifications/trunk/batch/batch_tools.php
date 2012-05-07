@@ -98,11 +98,11 @@ function Bt_exitBatch($returnCode, $message='')
 */
 function Bt_logInDataBase($totalProcessed=0, $totalErrors=0, $info='')
 {
-    $query = "insert into history_batch(module_name, batch_id, event_date, "
+    $query = "insert into history_batch (module_name, batch_id, event_date, "
            . "total_processed, total_errors, info) values('"
            . $GLOBALS['batchName'] . "', " . $GLOBALS['wb'] . ", "
            . $GLOBALS['db']->current_datetime() . ", " . $totalProcessed . ", " . $totalErrors . ", '"
-           . $GLOBALS['func']->protect_string_db(substr(str_replace('\\', '\\\\', $info), 0, 999)) . "')";
+           . $GLOBALS['func']->protect_string_db(substr(str_replace('\\', '\\\\', str_replace("'", "`", $info)), 0, 999)) . "')";
            //. $GLOBALS['func']->protect_string_db(substr($info, 0, 999)) . "')";
     Bt_doQuery($GLOBALS['db'], $query);
 }

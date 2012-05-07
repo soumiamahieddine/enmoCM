@@ -25,9 +25,7 @@ while ($state <> 'END') {
 		if ($totalEmailsToProcess === 0) {
 			Bt_exitBatch(0, 'No e-mail to process');
         }
-		
 		$GLOBALS['logger']->write($totalEmailsToProcess . ' e-mails to proceed.', 'INFO');
-		
 		$GLOBALS['emails'] = array();
 		while ($emailRecordset = $GLOBALS['db']->fetch_object()) {
 			$GLOBALS['emails'][] = $emailRecordset;
@@ -62,19 +60,18 @@ while ($state <> 'END') {
 			
 			if($email->attachments != '') {
 				$attachments = explode(',', $email->attachments);
-				foreach($attachments as $attachment) {
+				foreach($attachments as $num => $attachment) {
 					if(is_file($attachment)) {
-					$name = basename($attachment);
 					$ext = strrchr($attachment, '.');
+                    $name = str_pad(($num + 1), 4, '0', STR_PAD_LEFT) . $ext;
 					$ctype = '';
 					switch($ext) {
 						case '.pdf':
 							$ctype = 'application/pdf';
 							break;
 					}
-					
-						$file_content = $GLOBALS['mailer']->getFile($attachment);
-						$GLOBALS['mailer']->addAttachment($file_content, $name, $ctype); 
+					$file_content = $GLOBALS['mailer']->getFile($attachment);
+					$GLOBALS['mailer']->addAttachment($file_content, $name, $ctype); 
 					}
 				}
 			}
@@ -83,6 +80,7 @@ while ($state <> 'END') {
 			if($return) {
 				$exec_result = 'SENT';
 			} else {
+				$GLOBALS['logger']->write("Errors when sending message through SMTP :" . implode(', ', $GLOBALS['mailer']->errors), 'ERROR');
 				$exec_result = 'FAILED';
 			}	
 			$query = "UPDATE " . _NOTIF_EMAIL_STACK_TABLE_NAME 

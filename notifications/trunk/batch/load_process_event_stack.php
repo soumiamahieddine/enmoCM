@@ -123,7 +123,7 @@ foreach (array_keys($options) as $key) {
 }
 $logger->write($txt, 'DEBUG');
 $GLOBALS['configFile'] = $options['config'];
-$ta_id = $options['notif'];
+$notificationId = $options['notif'];
 
 $logger->write('Load xml config file:' . $GLOBALS['configFile'], 'INFO');
 
@@ -154,13 +154,12 @@ if ($xmlconfig == FALSE) {
 $config = $xmlconfig->CONFIG;
 $lang = (string)$config->Lang;
 $maarchDirectory = (string)$config->MaarchDirectory; 
- 
 chdir($maarchDirectory);
-
 $maarchUrl = (string)$config->MaarchUrl;
 $maarchApps = (string) $config->MaarchApps;
 
-$GLOBALS['TmpDirectory'] = (string)$config->TmpDirectory;
+$_SESSION['config']['tmppath'] = (string)$config->TmpDirectory;
+
 $GLOBALS['batchDirectory'] = $maarchDirectory . 'modules' 
                            . DIRECTORY_SEPARATOR . 'notifications' 
                            . DIRECTORY_SEPARATOR . 'batch';
@@ -178,51 +177,45 @@ if ((string) $log4phpParams->enabled == 'true') {
 	$logger->set_log4PhpConfigPath((string) $log4phpParams->Log4PhpConfigPath);
 	$logger->set_log4PhpBatchName('process_event_stack');
 }
-  
-// Mailer
-$mailerParams = $xmlconfig->MAILER;
-$path_to_mailer = (string)$mailerParams->path_to_mailer;
 
+$mailerParams = $xmlconfig->MAILER;
 
 // INCLUDES
 try {
 	Bt_myInclude(
-        $maarchDirectory . 'core' . DIRECTORY_SEPARATOR . 'class' 
+        'core' . DIRECTORY_SEPARATOR . 'class' 
         . DIRECTORY_SEPARATOR . 'class_functions.php'
     );
     Bt_myInclude(
-        $maarchDirectory . 'core' . DIRECTORY_SEPARATOR . 'class' 
+        'core' . DIRECTORY_SEPARATOR . 'class' 
         . DIRECTORY_SEPARATOR . 'class_db.php'
     );
 	Bt_myInclude(
-        $maarchDirectory . 'core' . DIRECTORY_SEPARATOR . 'class' 
+        'core' . DIRECTORY_SEPARATOR . 'class' 
         . DIRECTORY_SEPARATOR . 'class_core_tools.php'
     );
 	// Notifications
 	Bt_myInclude(
-        $maarchDirectory . "modules" . DIRECTORY_SEPARATOR . "notifications" 
+        "modules" . DIRECTORY_SEPARATOR . "notifications" 
 		. DIRECTORY_SEPARATOR . "notifications_tables_definition.php"
 	);
 	Bt_myInclude(
-        $maarchDirectory . "modules" . DIRECTORY_SEPARATOR . "notifications" 
+        "modules" . DIRECTORY_SEPARATOR . "notifications" 
 		. DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . "templates_association_controler.php"
 	);
 	Bt_myInclude(
-        $maarchDirectory . "modules" . DIRECTORY_SEPARATOR . "notifications" 
+        "modules" . DIRECTORY_SEPARATOR . "notifications" 
 		. DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . "diffusion_type_controler.php"
 	);
 	Bt_myInclude(
-        $maarchDirectory . "modules" . DIRECTORY_SEPARATOR . "notifications" 
-		. DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . "diffusion_content_controler.php"
+        "modules" . DIRECTORY_SEPARATOR . "notifications" 
+		. DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . "event_controler.php"
 	);
 	// Templates
     Bt_myInclude(
-        $maarchDirectory . 'modules' . DIRECTORY_SEPARATOR . 'templates' 
-		. DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR . 'template_merger.php'
+        'modules' . DIRECTORY_SEPARATOR . 'templates' 
+		. DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR . 'templates_controler.php'
     );  
-    /*Bt_myInclude(
-        $maarchDirectory . $path_to_mailer
-    );  */
    
 } catch (IncludeFileError $e) {
     $logger->write(
@@ -232,24 +225,34 @@ try {
     exit();
 }
 
+// Controlers and objects
+$dbConfig = $xmlconfig->CONFIG_BASE;
+$_SESSION['config']['databaseserver'] 		= (string)$dbConfig->databaseserver;
+$_SESSION['config']['databaseserverport'] 	= (string)$dbConfig->databaseserverport;
+$_SESSION['config']['databaseuser']			= (string)$dbConfig->databaseuser;
+$_SESSION['config']['databasepassword']		= (string)$dbConfig->databasepassword;
+$_SESSION['config']['databasename'] 		= (string)$dbConfig->databasename;
+$_SESSION['config']['databasetype']			= (string)$dbConfig->databasetype;
+
 $coreTools = new core_tools();
 $coreTools->load_lang($lang, $maarchDirectory, $maarchApps);
-
 $func = new functions();
 
-// Notifications
 $templates_association_controler = new templates_association_controler();
 $diffusion_type_controler = new diffusion_type_controler();
-$diffusion_content_controler = new diffusion_content_controler();
+$event_controler = new event_controler();
+$templates_controler = new templates_controler();
 
-// Templates
-$template_merger = new template_merger();
-
-
-$db = new dbquery($GLOBALS['configFile']);
+$db = new dbquery();
 $db->connect();
+
 $databasetype = (string)$xmlconfig->CONFIG_BASE->databasetype;
 
+// Collection for res
+$collparams = $xmlconfig->COLLECTION;
+$coll_id = $collparams->Id;
+$coll_table = $collparams->Table;
+$coll_view = $collparams->View;
 
 $GLOBALS['errorLckFile'] = $GLOBALS['batchDirectory'] . DIRECTORY_SEPARATOR 
                          . $GLOBALS['batchName'] . '_error.lck';
