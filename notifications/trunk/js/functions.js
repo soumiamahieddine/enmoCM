@@ -51,9 +51,9 @@ function change_properties_box(difftype_id, path_manage_script, diff_list_id, or
     }
 }
 
-function loadDiffusionProperties(difftype_id, path_manage_script)
+function loadDiffusionProperties(difftype_id, path_manage_script, updatediv_id)
 {
-    var div_id = 'diff_type_div'; 
+    var div_id = updatediv_id; 
     if(difftype_id != null)
     {
         new Ajax.Request(path_manage_script,
@@ -108,9 +108,9 @@ function loadDiffusionProperties(difftype_id, path_manage_script)
     }
 }
 
-function loadAttachforProperties(difftype_id, path_manage_script, attachfor_id)
+function loadAttachforProperties(difftype_id, path_manage_script, updatediv_id)
 {
-    var div_id = attachfor_id
+    var div_id = updatediv_id
 	if(difftype_id != null)
     {
         new Ajax.Request(path_manage_script,
