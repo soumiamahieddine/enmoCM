@@ -214,10 +214,13 @@ class history extends dbquery
                     ."AND '".$event_id."' like value_field "
                     ."AND maarch_module = 'notifications'"
             );
-
-            if ($this->nb_result() > 0) {
-                while ($ta = $this->fetch_object()) {
-                    $this->query(
+			$notificationIds = array();
+			while ($ta = $this->fetch_object()) {
+				$notificationIds[] = $ta->system_id;
+			}
+            if (count($notificationIds) > 0) {
+                foreach ($notificationIds as $notificationId) {
+					$this->query(
                         "INSERT INTO "
                             ._NOTIF_EVENT_STACK_TABLE_NAME." ("
                                 ."ta_sid, "
@@ -228,7 +231,7 @@ class history extends dbquery
                                 ."event_date"
                             .") "
                         ."VALUES("
-                            .$ta->system_id.", "
+                            .$notificationId.", "
                             ."'".$table_name."', "
                             ."'".$record_id."', "
                             ."'".$user."', "
