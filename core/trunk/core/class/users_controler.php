@@ -106,9 +106,9 @@ class users_controler extends ObjectControler implements ObjectControlerIF
 
         $users = array();
         while ($res = $db->fetch_object()) {
-            $user = new user();
+            $user = new users();
             $tmpArray = array(
-                'user_id'   => $res->group_id,
+                'user_id'   => $res->user_id,
                 'firstname' => $res->firstname,
                 'lastname'    => $res->lastname,
             );
