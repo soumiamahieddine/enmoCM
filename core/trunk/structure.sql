@@ -1115,6 +1115,24 @@ CREATE TABLE notes
 WITH (OIDS=FALSE);
 
 
+CREATE SEQUENCE notes_entities_id_seq
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 20
+  CACHE 1;
+
+
+CREATE TABLE note_entities
+(
+  id bigint NOT NULL DEFAULT nextval('notes_entities_id_seq'::regclass),
+  note_id bigint NOT NULL,
+  item_id character varying(50),
+  CONSTRAINT note_entities_pkey PRIMARY KEY (id)
+)
+WITH (OIDS=FALSE);
+
+
 
 -- modules/notes/sql/structure/notifications.postgresql.sql
 
