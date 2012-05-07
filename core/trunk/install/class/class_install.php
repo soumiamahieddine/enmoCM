@@ -41,6 +41,14 @@ try {
 class install extends functions
 {
     private $lang;
+    private $docservers = array(
+        array('FASTHD_AI', 'ai'), 
+        array('FASTHD_MAN', 'manual'), 
+        array('OAIS_MAIN_1', 'OAIS_main'), 
+        array('OAIS_SAFE_1', 'OAIS_safe'), 
+        array('OFFLINE_1', 'offline'),
+        array('TEMPLATES', 'templates')
+    );
     
     /**
      * get languages available
@@ -225,6 +233,70 @@ class install extends functions
             return false;
         } else {
             return true;
+        }
+    }
+    
+    /**
+     * test if docserver path is read/write
+     * @param $docserverPath string path to the docserver
+     * @return boolean or error message
+     */
+    public function checkDocserverRoot($docserverPath)
+    {
+        if (!is_dir($docserverPath)) {
+            $error .= _PATH_OF_DOCSERVER_UNAPPROACHABLE;
+        } else {
+            if (!is_writable($docserverPath)
+                || !is_readable($docserverPath)
+            ) {
+                $error .= _THE_DOCSERVER_DOES_NOT_HAVE_THE_ADEQUATE_RIGHTS;
+            }
+        }
+        if ($error <> '') {
+            return $error;
+        } else {
+            return true;
+        }
+    }
+    
+    /**
+     * create the docservers
+     * @param $docserverPath string path to the docserver
+     * @return boolean
+     */
+    public function createDocservers($docserverPath)
+    {
+        for ($i=0;$i<count($this->docservers);$i++) {
+            if (!is_dir(
+                $docserverPath . DIRECTORY_SEPARATOR 
+                . $this->docservers[$i][1])
+            ) {
+                if (!mkdir(
+                    $docserverPath . DIRECTORY_SEPARATOR 
+                    . $this->docservers[$i][1])
+                ) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    
+    /**
+     * update the docservers on DB
+     * @param $docserverPath string path to the docserver
+     * @return nothing
+     */
+    public function updateDocserversDB($docserverPath)
+    {
+        $db = new dbquery();
+        $db->connect();
+        for ($i=0;$i<count($this->docservers);$i++) {
+          $query = "update docservers set path_template = '" 
+            . $db->protect_string_db($docserverPath . DIRECTORY_SEPARATOR 
+            . $this->docservers[$i][1] . DIRECTORY_SEPARATOR)
+            . "' where docserver_id = '" . $this->docservers[$i][0] . "'";
+            $db->query($query);
         }
     }
 }

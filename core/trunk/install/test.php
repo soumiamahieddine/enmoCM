@@ -4,6 +4,14 @@ include_once '../core/init.php';
 
 require_once 'install/class/class_install.php';
 
+//databasevars 
+$_SESSION['config']['databaseserver'] = '127.0.0.1';
+$_SESSION['config']['databaseserverport'] = '5432';
+$_SESSION['config']['databaseuser'] = 'postgres';
+$_SESSION['config']['databasepassword'] = 'maarch';
+$_SESSION['config']['databasename'] = 'maarch_entreprise';
+$_SESSION['config']['databasetype'] = 'POSTGRESQL';
+
 $install = new install();
 $languages = $install->getlanguages();
 $install->loadLang($languages[1]);
@@ -36,6 +44,13 @@ echo '<br>';
 echo 'short_open_tag:' . $install->isIniShortOpenTagRequirements();
 echo '<br>';
 echo 'magic_quotes_gpc:' . $install->isIniMagicQuotesGpcRequirements();
+echo '<br>';
+echo '<h1>DOCSERVERS</h1>';
+echo 'docserver root:' . $install->checkDocserverRoot('c:\maarch\docservers\tests');
+echo '<br>';
+echo 'docservers creation:' . $install->createDocservers('c:\maarch\docservers\tests');
+echo '<br>';
+echo 'docservers update DB:' . $install->updateDocserversDB('c:\maarch\docservers\tests');
 echo '<br>';
 echo '</body><br>';
 echo $install->loadFooter();
