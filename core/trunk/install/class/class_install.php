@@ -299,4 +299,28 @@ class install extends functions
             $db->query($query);
         }
     }
+    
+    /**
+     * create the docservers
+     * @param $docserverPath string path to the docserver
+     * @return boolean
+     */
+    public function checkDatabaseParameters(
+        $databaseserver,
+        $databaseserverport,
+        $databaseuser,
+        $databasepassword,
+        $databasename,
+        $databasetype
+    )
+    {
+        $_SESSION['config']['databaseserver'] =  $databaseserver;
+        $_SESSION['config']['databaseserverport'] = $databaseserverport;
+        $_SESSION['config']['databaseuser'] = $databaseuser;
+        $_SESSION['config']['databasepassword'] = $databasepassword;
+        $_SESSION['config']['databasename'] = $databasename;
+        $_SESSION['config']['databasetype'] = $databasetype;
+        $db = new dbquery();
+        $db->connect();
+    }
 }
