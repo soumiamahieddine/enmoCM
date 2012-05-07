@@ -1,23 +1,28 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
 	<datasource>
-		<id>attachment</id>
-		<label>_ATTACHMENT</label>
-		<script>modules/templates/datasources/attachment.php</script>
+		<id>letterbox_attachment</id>
+		<label>Pièce jointe</label>
+		<script>modules/templates/datasources/letterbox_attachment.php</script>
 	</datasource>
 	<datasource>
-		<id>event</id>
-		<label>_SYSTEM_EVENT</label>
-		<script>modules/templates/datasources/system_content.php</script>
+		<id>notif_events</id>
+		<label>Notification des événements</label>
+		<script>modules/templates/datasources/notif_events.php</script>
 	</datasource>
 	<datasource>
-		<id>letterbox</id>
+		<id>letterbox_events</id>
 		<label>Detail des courriers</label>
-		<script>modules/templates/datasources/letterbox_content.php</script>
+		<script>modules/templates/datasources/letterbox_events.php</script>
 	</datasource>
 	<datasource>
 		<id>notes</id>
 		<label>Informations notes</label>
 		<script>modules/templates/datasources/mlb_notes_content.php</script>
+	</datasource>
+	<datasource>
+		<id>test</id>
+		<label>test</label>
+		<script>modules/templates/datasources/test.php</script>
 	</datasource>
 </root>
