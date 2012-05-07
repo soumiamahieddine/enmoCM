@@ -57,16 +57,20 @@ class diffusion_type_controler
 		$xmlfile = 'modules/notifications/xml/diffusion_type.xml';
         
         $xmldiffusion = simplexml_load_file($xmlfile);
-        foreach($xmldiffusion
-				->diffusion
-				->type as $diffusion) {
+        foreach($xmldiffusion->diffusion_type as $diffusion) {
 			//<id> <label> <script>	
 			
 			$diffusion_type = new diffusion_type();
 			
-			$diffusion_type -> id = utf8_decode((string) $diffusion->id);
-			$diffusion_type -> label = constant(utf8_decode((string) $diffusion->label));
-			$diffusion_type -> script = utf8_decode((string) $diffusion->script);
+			if(@constant((string) $diffusion->label)) {
+				$label = constant((string)$diffusion->label);
+			} else {
+				$label = (string) $diffusion->label;
+			}
+			
+			$diffusion_type->id = (string) $diffusion->id;
+			$diffusion_type->label = $label;
+			$diffusion_type->script = (string) $diffusion->script;
 		
 			$return[$diffusion_type->id] = $diffusion_type;
 		}
@@ -78,7 +82,7 @@ class diffusion_type_controler
         }
     }
   
-	public function getDiffusionType($type_id) {
+	public function get($type_id) {
 		if ($type_id <> '') {
 			$fulllist = array();
 			$fulllist = $this->getAllDiffusion();
@@ -92,7 +96,24 @@ class diffusion_type_controler
 		return null;
 	}
    
-  
+	public function getRecipients($templateAssocObj, $eventObj) 
+	{
+		$diffusionType = $this->get($templateAssocObj->diffusion_type);
+		$request = 'recipients';
+		require($diffusionType->script);
+		return $recipients;
+	}
+	
+	public function getAttachFor($templateAssocObj, $user_id) {
+		// No attachment defined
+		if($templateAssocObj->attachfor_type == '') {
+			return false;
+		}
+		$attachforType = $this->get($templateAssocObj->attachfor_type);
+		$request = 'attach';
+		require($attachforType->script);
+		return $attach;
+	}
 
 }
 

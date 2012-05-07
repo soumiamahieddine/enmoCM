@@ -64,10 +64,10 @@ class templates_association_controler extends ObjectControler implements ObjectC
     * @param  $ta_sid string  templates_assoc identifier
     * @return templates_assoc object with properties from the database or null
     */
-    public function get($template_id) {
+    public function get($template_assoc_id) {
         
-        $this->set_specific_id('system_id');
-        $template = $this->advanced_get($template_id, _TEMPLATES_ASSOCIATION_TABLE_NAME);
+		$this->set_specific_id('system_id');
+        $template = $this->advanced_get($template_assoc_id, _TEMPLATES_ASSOCIATION_TABLE_NAME);
         
         if (get_class($template) <> "templates_association") {
             return null;
@@ -77,6 +77,13 @@ class templates_association_controler extends ObjectControler implements ObjectC
         }
     }
 
+	public function getByNotificationId($notificationId) {
+        $query = "select * from " . _TEMPLATES_ASSOCIATION_TABLE_NAME . " where notification_id = '".$notificationId."'"; 
+		$db = new dbquery();
+		$db->query($query);
+		$templateAssoc = $db->fetch_object();
+        return $templateAssoc;
+    }
     
     /**
     * Deletes in the database (lc_policies related tables) a given lc_policies (policy_id)
@@ -103,7 +110,7 @@ class templates_association_controler extends ObjectControler implements ObjectC
                 $history = new history();
                 $history->add(
                     TEMPLATES_ASSOCIATON, $template_association->system_id, 'DEL', 'eventdel',_EVENT_DELETED . ' : '
-                    . $template_association->system_id, $params['databasetype']
+                    . $template_association->system_id
                 );
             }
             $control = array('status' => 'ok',
@@ -182,8 +189,7 @@ class templates_association_controler extends ObjectControler implements ObjectC
                         $history = new history();
                         $history->add(
                             NOTIFICATIONS_TABLE, $template_association->system_id, 'UP','eventup',
-                            _EVENT_MODIFIED . ' : ' . $template_association->system_id,
-                            $params['databasetype']
+                            _EVENT_MODIFIED . ' : ' . $template_association->system_id
                         );
                     }
                 } else {
@@ -201,8 +207,7 @@ class templates_association_controler extends ObjectControler implements ObjectC
                         $history = new history();
                         $history->add(
                             NOTIFICATIONS_TABLE, $template_association->system_id, 'ADD','eventadd',
-                            _EVENT_ADDED . ' : ' . $template_association->system_id,
-                            $params['databasetype']
+                            _EVENT_ADDED . ' : ' . $template_association->system_id
                         );
                     }
                 } else {

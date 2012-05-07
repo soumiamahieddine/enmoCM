@@ -33,7 +33,7 @@
 //Loads the required class
 try {
 	//require_once 'modules/notifications/class/event';
-	require_once 'modules/templates/class/templates_association.php';
+	require_once 'modules/notifications/class/templates_association.php';
 	require_once 'modules/notifications/notifications_tables_definition.php';
     require_once 'core/class/class_request.php';  
     require_once 'core/class/ObjectControlerAbstract.php';
@@ -44,10 +44,11 @@ try {
 /**
  * Class for controling docservers objects from database
  */
-class event_controller
+class event_controler
     extends ObjectControler
 {
-    /**
+    
+	/**
      * Get event with given event_id.
      * Can return null if no corresponding object.
      * @param $id Id of event to get
@@ -71,6 +72,28 @@ class event_controller
         }
     }
   
-
+	public function getEventsByTemplateAssociationId($templateAssocId) 
+	{
+		$query = "SELECT * FROM " . _NOTIF_EVENT_STACK_TABLE_NAME
+			. " WHERE exec_date is NULL "
+			. " AND ta_sid = " . $templateAssocId ;
+		$db = new dbquery();
+		$db->query($query);
+		$events = array();
+		while ($eventRecordset = $db->fetch_object()) {
+            $events[] = $eventRecordset;
+		}
+		return $events;
+	}
+	
+	public function commitEvent($eventId, $result) {
+		$db = new dbquery();
+		$query = "UPDATE " . _NOTIF_EVENT_STACK_TABLE_NAME 
+			. " SET exec_date = ".$db->current_datetime().", exec_result = '".$result."'" 
+			. " WHERE system_id = ".$eventId;
+		$db->query($query);
+	}
+	
+	
 }
 

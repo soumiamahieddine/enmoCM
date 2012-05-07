@@ -44,7 +44,7 @@ try {
 /**
  * Class for controling docservers objects from database
  */
-class event_controller
+class event_controler
     extends ObjectControler
 {
     /**
