@@ -99,7 +99,7 @@ if (!defined('_IS_UNKNOWN')) define('_IS_UNKNOWN', 'est inconnu');
 if (!defined('_MODIFY_EVENT')) define('_MODIFY_EVENT', 'Modifier &eacute;venement');
 if (!defined('_ADD_EVENT')) define('_ADD_EVENT', 'Ajouter &eacute;venement');
 
-
+if (!defined('_NOTIFICATION_ID')) define('_NOTIFICATION_ID', 'Identifiant de notification');
 if (!defined('_DIFFUSION_TYPE')) define('_DIFFUSION_TYPE', 'Type de diffusion');
 if (!defined('_SYSTEM_EVENT')) define('_SYSTEM_EVENT', 'Evenement syst&egrave;me');
 if (!defined('_ATTACH_MAIL_FILE')) define('_ATTACH_MAIL_FILE', 'Joindre le document &agrave; la notification');
