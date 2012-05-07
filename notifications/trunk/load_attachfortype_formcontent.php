@@ -43,7 +43,7 @@ foreach($diffType as $loadedType) {
 			$leftList = 'attachfor_values';
 			$rightList = 'attachfor_properties';
 			$form_content = '';	
-			include($loadedType->script);
+			include_once($loadedType->script);
 			echo "{status : 0, div_content : '" . addslashes($form_content) . "'}";
 		} else {
 			 echo "{status : 1, error_txt : '" . addslashes($_SESSION['error']) . "'}";

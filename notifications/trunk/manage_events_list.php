@@ -70,18 +70,18 @@ if ($mode == 'list') {
 
 
         <p>
-            <label for="label"><?php echo _NAME; ?> : </label>
-            <input name="notification_id" type="text"  id="notification_id" value="<?php
+            <label for="label"><?php echo _NOTIFICATION_ID; ?> : </label>
+            <input name="notification_id" type="text" id="notification_id" value="<?php
                 echo functions::show_str(
                     $_SESSION['m_admin']['event']['notification_id']
                 ); ?>"/>
         </p>
         <p>
             <label for="label"><?php echo _DESC; ?> : </label>
-            <input name="description" type="text"  id="description" value="<?php
+            <textarea name="description" cols="80" rows="2" id="description"><?php
                 echo functions::show_str(
                     $_SESSION['m_admin']['event']['description']
-                ); ?>"/>
+                ); ?></textarea>
         </p>
         <p>
             <label for="label"><?php echo _EVENT; ?> : </label>
@@ -186,13 +186,15 @@ if ($mode == 'list') {
                 <option value=""><?php echo _NEVER;?></option>
                 <?php
                 foreach($diffusion_types as $this_diffusion){
-                    ?><option value="<?php echo $this_diffusion->id;?>"
-                    <?php
-                    if(trim($_SESSION['m_admin']['event']['attachfor_type'])
-                        == trim($this_diffusion->id)) {
-                        echo 'selected="selected"';
-                    }?>><?php echo $this_diffusion->label;
-                    ?></option><?php
+					if($this_diffusion->id != 'dest_user' && $this_diffusion->id != 'copy_list') {
+						?><option value="<?php echo $this_diffusion->id;?>"
+						<?php
+						if(trim($_SESSION['m_admin']['event']['attachfor_type'])
+							== trim($this_diffusion->id)) {
+							echo 'selected="selected"';
+						}?>><?php echo $this_diffusion->label;
+						?></option><?php
+					}
                 }
                 ?>
             </select>
