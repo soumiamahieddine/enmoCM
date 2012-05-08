@@ -192,6 +192,12 @@ class Install extends functions
         $stepNbTotal
     )
     {
+        $stepNb--;
+        $stepNbTotal--;
+        if ($stepNb == 0) {
+            return '';
+            exit;
+        }
         $return = '';
         $percentProgress = round(($stepNb/$stepNbTotal) * 100);
         $sizeProgress = round(($percentProgress * 910) / 100);

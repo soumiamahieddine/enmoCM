@@ -209,4 +209,5 @@
     box-shadow: inset 0px 1px 0px #3f4f95, 0px 5px 0px 0px #28325f, 0px 10px 5px #999999;
     padding-top: 10px;
     padding-bottom: 10px;
+    cursor: progress;
 }
