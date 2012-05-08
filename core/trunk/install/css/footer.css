@@ -1,5 +1,14 @@
 #fullWrapper #footer {
     height: 125px;
-	width: 910px;
-	text-align: left;
+    width: 910px;
+    text-align: left;
+}
+
+#fullWrapper #footer #progressWrapper{
+    position: relative;
+    top: 30px;
+    font-family: 'Sonsie One';
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: bold;
+    font-size: 30px;
 }

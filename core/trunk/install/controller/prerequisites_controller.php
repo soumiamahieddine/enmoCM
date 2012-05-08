@@ -8,5 +8,9 @@
     //CAN CONTINUE
         $canContinue = $Class_Install->checkAllNeededPrerequisites();
 
+    //PROGRESS
+        $stepNb = 4;
+        $stepNbTotal = 8;
+
 //VIEW
     $view = 'prerequisites';

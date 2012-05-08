@@ -14,7 +14,7 @@
                         <?php echo _PREVIOUS; ?>
                     </a>
                 </div>
-                <div style="float: right;" class="nextButton" id="next">
+                <div style="float: right;" class="nextButton" id="start">
                     <a href="#" onClick="goTo('../');">
                         <?php echo _START_MEP_1_3; ?>
                     </a>

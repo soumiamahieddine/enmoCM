@@ -8,14 +8,21 @@
     <div class="contentBlock" id="licence">
         <p>
             <div align="center">
-                <div>
+                <div style="height: 350px; width: 880px; overflow: auto; background-color: rgba(255, 255, 255, 0.6);">
+                    <br />
                     <?php echo $txtLicence; ?>
+                    <br />
                 </div>
+                <br />
+                <hr />
                 <br />
                 <input type="checkbox" id="checkboxLicence" onChange="checkLicence();"/>
                 <label for="checkboxLicence">
                     <?php echo _OK_WITH_LICENCE; ?>
                 </label>
+                <br />
+                <br />
+                <hr />
             </div>
             <br />
             <br />

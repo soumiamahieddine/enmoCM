@@ -187,4 +187,22 @@ class Install extends functions
         }
     }
 
+    public function getProgress(
+        $stepNb,
+        $stepNbTotal
+    )
+    {
+        $return = '';
+        $percentProgress = round(($stepNb/$stepNbTotal) * 100);
+        $sizeProgress = round(($percentProgress * 910) / 100);
+
+        $return .= '<div id="progressButton" style="width: '.$sizeProgress.'px;">';
+            $return .= '<div align="center">';
+                $return .= $percentProgress.'%';
+            $return .= '</div>';
+        $return .= '</div>';
+
+        return $return;
+    }
+
 }
