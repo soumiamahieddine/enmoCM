@@ -8,22 +8,22 @@ class Merge
         //merge the js
         $this->mergeJs();
     }
-	
+
     private function mergeCss()
     {
         if ($this->needToMergeCss()) {
             $dirStyle = 'css/';
             $styleDirectory = opendir($dirStyle);
             $mergedCss = '@charset "UTF-8";'."\n\n";
-			
-			//atProperty first
+
+            //atProperty first
             $cssLines = file(realpath($dirStyle.'atProperty.css'));
             $mergedCss .= '/* atProperty.css */'."\n";
             for ($i=0; $i<count($cssLines); $i++) {
                 $mergedCss .= $cssLines[$i];
             }
             $mergedCss .= "\n\n";
-			
+
             while($styleFile = @readdir($styleDirectory)) {
                 if (   substr($styleFile, 0, 1) != '.'
                     && substr($styleFile, -4) == '.css'
@@ -39,23 +39,23 @@ class Merge
                 }
             }
             closedir($styleDirectory);
-			/*
-			$interdit = array(
-				"\n",
-				"\r",
-				"\t"
-			);
-			$autorise = array('',
-				'',
-				''
-			);
-			
-			$mergedCss = str_replace(
-				$interdit,
-				$autorise,
-				$mergedCss
-			);
-			*/
+            /*
+            $interdit = array(
+                "\n",
+                "\r",
+                "\t"
+            );
+            $autorise = array('',
+                '',
+                ''
+            );
+
+            $mergedCss = str_replace(
+                $interdit,
+                $autorise,
+                $mergedCss
+            );
+            */
             if (file_exists($dirStyle.'merged_css.css')) {
                 unlink($dirStyle.'merged_css.css');
             }
@@ -64,15 +64,15 @@ class Merge
             fclose ($merged_style);
         }
     }
-	
+
     private function mergeJs()
     {
         if ($this->needToMergeJs()) {
             $dirJavascript = 'js/';
             $javascriptDirectory = opendir($dirJavascript);
             $mergedJavascript = '// JavaScript Document'."\n\n";
-			
-			
+
+
             //jquery first
             $javascriptLines = file(realpath($dirJavascript.'0_jQuery.js'));
             $mergedJavascript .= '/* 0_jQuery.js */'."\n";
@@ -104,7 +104,7 @@ class Merge
             fclose ($merged_javascript);
         }
     }
-	
+
     private function needToMergeCss()
     {
         $write = false;
@@ -129,7 +129,7 @@ class Merge
 
         return $write;
     }
-	
+
     private function needToMergeJs()
     {
         $write = false;

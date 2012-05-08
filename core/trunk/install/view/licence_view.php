@@ -8,21 +8,9 @@
     <div class="contentBlock" id="licence">
         <p>
             <div align="center">
-                ICI LA LICENCE GPL V3<br />
-                ICI LA LICENCE GPL V3<br />
-                ICI LA LICENCE GPL V3<br />
-                ICI LA LICENCE GPL V3<br />
-                ICI LA LICENCE GPL V3<br />
-                ICI LA LICENCE GPL V3<br />
-                ICI LA LICENCE GPL V3<br />
-                ICI LA LICENCE GPL V3<br />
-                ICI LA LICENCE GPL V3<br />
-                ICI LA LICENCE GPL V3<br />
-                ICI LA LICENCE GPL V3<br />
-                ICI LA LICENCE GPL V3<br />
-                ICI LA LICENCE GPL V3<br />
-                ICI LA LICENCE GPL V3<br />
-                ICI LA LICENCE GPL V3<br />
+                <div>
+                    <?php echo $txtLicence; ?>
+                </div>
                 <br />
                 <input type="checkbox" id="checkboxLicence" onChange="checkLicence();"/>
                 <label for="checkboxLicence">
