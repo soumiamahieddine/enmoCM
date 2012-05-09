@@ -48,10 +48,6 @@ array_push(
 $entities = "@my_entities";
 $entities = $notes_tools->process_where_clause($entities, $_SESSION['user']['UserId']);
 
-$where = " identifier = " . $_SESSION['doc_id'] . 
-		 " and ".NOTE_ENTITIES_TABLE. ".item_id in (".$entities.")
-		   or ".NOTES_TABLE. ".user_id = '".$_SESSION['user']['UserId']. "'";
-
 
 $request = new request;
 /*$tabNotes = $request->select(
