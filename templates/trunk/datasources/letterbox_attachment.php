@@ -8,19 +8,19 @@ $dbDatasource = new dbquery();
 $dbDatasource->connect();
 
 // Main document resource from view
-$datasources['res'] = array();
+$datasources['res_letterbox'] = array();
 $dbDatasource->query("SELECT * FROM " . $res_view . " WHERE res_id = " . $res_id . "");
-$datasources['res'][] = $dbDatasource->fetch_assoc();
+$datasources['res_letterbox'][] = $dbDatasource->fetch_assoc();
 
 // Contact from mail
-if ($datasources['res'][0]['exp_contact_id'] <> '') {
+if ($datasources['res_letterbox'][0]['exp_contact_id'] <> '') {
     $datasources['contact'] = array();
-    $dbDatasource->query("SELECT * FROM contacts WHERE contact_id = ".$datasources['res'][0]['exp_contact_id']);
+    $dbDatasource->query("SELECT * FROM contacts WHERE contact_id = ".$datasources['res_letterbox'][0]['exp_contact_id']);
     $datasources['contact'][] = $dbDatasource->fetch_array();
 }
-if ($datasources['res'][0]['dest_contact_id'] <> '') {
+if ($datasources['res_letterbox'][0]['dest_contact_id'] <> '') {
     $datasources['contact'] = array();
-    $dbDatasource->query("SELECT * FROM contacts WHERE contact_id = ".$datasources['res'][0]['dest_contact_id']);
+    $dbDatasource->query("SELECT * FROM contacts WHERE contact_id = ".$datasources['res_letterbox'][0]['dest_contact_id']);
     $datasources['contact'][] = $dbDatasource->fetch_array();
 }
 
