@@ -8,7 +8,7 @@
         <script src="js/merged_js.js"></script>
     </head>
 
-    <body onLoad="minHeightOfSection();" onResize="minHeightOfSection();">
+    <body onLoad="minHeightOfSection();heightOfLicenceOverflow();" onResize="minHeightOfSection();heightOfLicenceOverflow();">
         <div align="center">
             <div id="fullWrapper" class="fullWrapper">
                 <header id="header">

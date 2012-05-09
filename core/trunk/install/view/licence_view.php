@@ -8,7 +8,7 @@
     <div class="contentBlock" id="licence">
         <p>
             <div align="center">
-                <div style="height: 350px; width: 880px; overflow: auto; background-color: rgba(255, 255, 255, 0.6);">
+                <div id="licenceOverflow" style="min-height: 131px; width: 880px; overflow: auto; background-color: rgba(255, 255, 255, 0.6);">
                     <br />
                     <?php echo $txtLicence; ?>
                     <br />
