@@ -29,41 +29,21 @@ if ($objectType == 'templateStyle') {
         if (isset($_SESSION['cm']['resMaster']) && $_SESSION['cm']['resMaster'] <> '') {
             $sec = new security();
             $collId = $sec->retrieve_coll_id_from_table($objectTable);
+			$res_view = $sec->retrieve_view_from_table($objectTable);
             $_SESSION['cm']['collId'] = $collId;
         }
         // new edition
-        require_once 'modules/templates/templates_tables_definition.php';
-        $dbTemplate = new dbquery();
-        $dbTemplate->connect();
-        $query = "select path_template from " . _DOCSERVERS_TABLE_NAME 
-            . " where docserver_id = 'TEMPLATES'";
-        $dbTemplate->query($query);
-        $resDs = $dbTemplate->fetch_object();
-        $pathToDs = $resDs->path_template;
-        $query = "select template_path, template_file_name from " . _TEMPLATES_TABLE_NAME 
-            . " where template_id = '" . $objectId . "'";
-        $dbTemplate->query($query);
-        $resTemplate = $dbTemplate->fetch_object();
-        $pathToTemplateOnDs = $pathToDs . str_replace(
-                "#", 
-                DIRECTORY_SEPARATOR, 
-                $resTemplate->template_path
-            )
-            . $resTemplate->template_file_name;
-        $fileExtension = $func->extractFileExt($pathToTemplateOnDs);    
-        $fileNameOnTmp = 'tmp_file_' . $_SESSION['user']['UserId']
-            . '_' . rand() . '.' . $fileExtension;
-        $filePathOnTmp = $_SESSION['config']['tmppath'] . $fileNameOnTmp;
+        require_once 'modules/templates/class/templates_controler.php';
+		$templateCtrl = new templates_controler();
+		
+		$params = array(
+			'res_id' => $_SESSION['cm']['resMaster'],
+			'coll_id' => $_SESSION['cm']['collId'],
+			'res_view' => $res_view,
+			'res_table' => $objectTable
+			);
+		
+		$filePathOnTmp = $templateCtrl->merge($objectId, $params, 'file');
         
-        if (!copy($pathToTemplateOnDs, $filePathOnTmp)) {
-            $result = array('ERROR' => _FAILED_TO_COPY_ON_TMP 
-                . ':' . $pathToTemplateOnDs . ' ' . $filePathOnTmp
-            );
-            createXML('ERROR', $result);
-        }
-        if ($objectType == 'attachmentFromTemplate') {
-            //FUSION WITH TBS !
-            include 'modules/templates/fusion_with_tbs.php';
-        }
     }
 }
