@@ -23,7 +23,7 @@ if (!empty($_REQUEST['id']) && !empty($_REQUEST['collId'])) {
             // if HTML format
             header('location: ' . $_SESSION['config']['businessappurl'] 
                 . 'index.php?display=true'
-                . '&module=templates&page=generate_attachment&mode=up&id=' . $id
+                . '&module=templates&page=generate_attachment_html&mode=up&id=' . $id
             );
         } else {
             // if OFFICE format
