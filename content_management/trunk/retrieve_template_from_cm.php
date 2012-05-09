@@ -29,21 +29,19 @@ if ($objectType == 'templateStyle') {
         if (isset($_SESSION['cm']['resMaster']) && $_SESSION['cm']['resMaster'] <> '') {
             $sec = new security();
             $collId = $sec->retrieve_coll_id_from_table($objectTable);
-			$res_view = $sec->retrieve_view_from_table($objectTable);
+            $res_view = $sec->retrieve_view_from_table($objectTable);
             $_SESSION['cm']['collId'] = $collId;
         }
         // new edition
         require_once 'modules/templates/class/templates_controler.php';
-		$templateCtrl = new templates_controler();
-		
-		$params = array(
-			'res_id' => $_SESSION['cm']['resMaster'],
-			'coll_id' => $_SESSION['cm']['collId'],
-			'res_view' => $res_view,
-			'res_table' => $objectTable
-			);
-		
-		$filePathOnTmp = $templateCtrl->merge($objectId, $params, 'file');
-        
+        $templateCtrl = new templates_controler();
+        $params = array(
+            'res_id' => $_SESSION['cm']['resMaster'],
+            'coll_id' => $_SESSION['cm']['collId'],
+            'res_view' => $res_view,
+            'res_table' => $objectTable
+            );
+        $filePathOnTmp = $templateCtrl->merge($objectId, $params, 'file');
+        $fileExtension = $func->extractFileExt($filePathOnTmp);
     }
 }
