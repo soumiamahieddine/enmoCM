@@ -217,4 +217,104 @@ class Install extends functions
         $_SESSION['previousStep'] = $previousStep;
     }
 
+    /**
+     * create the docservers
+     * @param $docserverPath string path to the docserver
+     * @return boolean
+     */
+    public function checkDatabaseParameters(
+        $databaseserver,
+        $databaseserverport,
+        $databaseuser,
+        $databasepassword,
+        $databasename,
+        $databasetype
+    )
+    {
+        $_SESSION['config']['databaseserver'] =  $databaseserver;
+        $_SESSION['config']['databaseserverport'] = $databaseserverport;
+        $_SESSION['config']['databaseuser'] = $databaseuser;
+        $_SESSION['config']['databasepassword'] = $databasepassword;
+        $_SESSION['config']['databasename'] = $databasename;
+        $_SESSION['config']['databasetype'] = $databasetype;
+        $db = new dbquery();
+        if ($db->connect()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    public function executeSQLScript($filePath)
+    {
+        $fileContent = fread(fopen($filePath, 'r'), filesize($filePath));
+        echo $fileContent;
+        $db = new dbquery();
+        $db->connect();
+        $db->query($fileContent, false, true);
+    }
+    
+    /**
+     * test if docserver path is read/write
+     * @param $docserverPath string path to the docserver
+     * @return boolean or error message
+     */
+    public function checkDocserverRoot($docserverPath)
+    {
+        if (!is_dir($docserverPath)) {
+            $error .= _PATH_OF_DOCSERVER_UNAPPROACHABLE;
+        } else {
+            if (!is_writable($docserverPath)
+                || !is_readable($docserverPath)
+            ) {
+                $error .= _THE_DOCSERVER_DOES_NOT_HAVE_THE_ADEQUATE_RIGHTS;
+            }
+        }
+        if ($error <> '') {
+            return $error;
+        } else {
+            return true;
+        }
+    }
+    
+    /**
+     * create the docservers
+     * @param $docserverPath string path to the docserver
+     * @return boolean
+     */
+    public function createDocservers($docserverPath)
+    {
+        for ($i=0;$i<count($this->docservers);$i++) {
+            if (!is_dir(
+                $docserverPath . DIRECTORY_SEPARATOR 
+                . $this->docservers[$i][1])
+            ) {
+                if (!mkdir(
+                    $docserverPath . DIRECTORY_SEPARATOR 
+                    . $this->docservers[$i][1])
+                ) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    
+    /**
+     * update the docservers on DB
+     * @param $docserverPath string path to the docserver
+     * @return nothing
+     */
+    public function updateDocserversDB($docserverPath)
+    {
+        $db = new dbquery();
+        $db->connect();
+        for ($i=0;$i<count($this->docservers);$i++) {
+          $query = "update docservers set path_template = '" 
+            . $db->protect_string_db($docserverPath . DIRECTORY_SEPARATOR 
+            . $this->docservers[$i][1] . DIRECTORY_SEPARATOR)
+            . "' where docserver_id = '" . $this->docservers[$i][0] . "'";
+            $db->query($query);
+        }
+    }
 }
