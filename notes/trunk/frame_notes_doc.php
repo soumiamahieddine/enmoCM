@@ -49,7 +49,12 @@ $entities = "@my_entities";
 $entities = $notes_tools->process_where_clause($entities, $_SESSION['user']['UserId']);
 
 
+$where = " identifier = " . $_SESSION['doc_id'] . 
+		 " and ".NOTE_ENTITIES_TABLE. ".item_id in (".$entities.")
+		   or ".NOTES_TABLE. ".user_id = '".$_SESSION['user']['UserId']. "'";
+
 $request = new request;
+
 /*$tabNotes = $request->select(
     $select, $where, "order by " . NOTES_TABLE. ".date_note desc",
     $_SESSION['config']['databasetype'], "500", true, NOTES_TABLE, USERS_TABLE,
@@ -60,7 +65,8 @@ $db->query(
 			" SELECT DISTINCT lastname, firstname, ".NOTES_TABLE.".id, date_note, note_text  FROM " .NOTE_ENTITIES_TABLE. ", " .NOTES_TABLE. ", " .USERS_TABLE.
 			" WHERE (identifier = ".$_SESSION['doc_id'].
 			" AND ( " .NOTE_ENTITIES_TABLE. ".item_id IN (".$entities.
-			") AND " .NOTE_ENTITIES_TABLE. ".note_id = " .NOTES_TABLE. ".id ))
+			") AND " .NOTE_ENTITIES_TABLE. ".note_id = " .NOTES_TABLE. ".id )
+			AND " .NOTES_TABLE. ".user_id = " .USERS_TABLE.".user_id)
 			OR ( identifier = ".$_SESSION['doc_id']."
 			AND ".NOTES_TABLE.".user_id = '".$_SESSION['user']['UserId']."'
 			AND " .NOTES_TABLE. ".user_id = " .USERS_TABLE.".user_id)"
