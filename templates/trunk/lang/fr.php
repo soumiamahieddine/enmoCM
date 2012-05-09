@@ -27,7 +27,8 @@ if (!defined('_EDIT_TEMPLATE')) define( '_EDIT_TEMPLATE', 'Edition du mod&egrave
 if (!defined('_TEMPLATE_ID')) define( '_TEMPLATE_ID', 'ID du mod&egrave;le');
 if (!defined('_ATTACH_TEMPLATE_TO_ENTITY'))  define('_ATTACH_TEMPLATE_TO_ENTITY', 'Le mod&egrave;le doit &ecirc;tre rattach&eacute; &agrave; au moins un service');
 if (!defined('_TEMPLATE_DATASOURCE'))  define('_TEMPLATE_DATASOURCE', 'Source de donn&eacute;es');
-
+if (!defined('_OFFICE'))  define('_OFFICE', 'Office');
+if (!defined('_HTML'))  define('_HTML', 'HTML');
 
 if (!defined('_MANAGE_TEMPLATES'))  define('_MANAGE_TEMPLATES', 'G&eacute;rer les mod&egrave;les de courrier');
 if (!defined('_MANAGE_TEMPLATES_APP'))  define('_MANAGE_TEMPLATES_APP', 'G&eacute;rer les mod&egrave;les de courrier de l&rsquo;application');

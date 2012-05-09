@@ -27,6 +27,8 @@ if (!defined('_TEMPLATE_STYLE')) define( '_TEMPLATE_STYLE', 'Template associatio
 if (!defined('_EDIT_TEMPLATE')) define( '_EDIT_TEMPLATE', 'Edit template');
 if (!defined('_TEMPLATE_ID')) define( '_TEMPLATE_ID', 'Template ID');
 if (!defined('_TEMPLATE_DATASOURCE'))  define('_TEMPLATE_DATASOURCE', 'Datasource');
+if (!defined('_OFFICE'))  define('_OFFICE', 'Office');
+if (!defined('_HTML'))  define('_HTML', 'HTML');
 
 if (!defined('_MANAGE_TEMPLATES')) define('_MANAGE_TEMPLATES', 'Manage document templates');
 if (!defined('_MANAGE_TEMPLATES_APP')) define('_MANAGE_TEMPLATES_APP', 'Manage document templates used in this application');
