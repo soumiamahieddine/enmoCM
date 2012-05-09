@@ -20,6 +20,12 @@ if (!defined('_TEMPLATE_NAME')) define('_TEMPLATE_NAME', 'Template name');
 if (!defined('_TEMPLATES_COMMENT')) define('_TEMPLATES_COMMENT', 'Document template');
 if (!defined('_TEMPLATE_EMPTY')) define('_TEMPLATE_EMPTY', 'The template is empty');
 if (!defined('_ATTACH_TEMPLATE_TO_ENTITY')) define('_ATTACH_TEMPLATE_TO_ENTITY', 'The template must be attached to at least one department');
+if (!defined('_TEMPLATE_LABEL')) define( '_TEMPLATE_LABEL', 'Template name');
+if (!defined('_TEMPLATE_COMMENT')) define( '_TEMPLATE_COMMENT', 'Desciption');
+if (!defined('_TEMPLATE_TYPE')) define( '_TEMPLATE_TYPE', 'Template type');
+if (!defined('_TEMPLATE_STYLE')) define( '_TEMPLATE_STYLE', 'Template association');
+if (!defined('_EDIT_TEMPLATE')) define( '_EDIT_TEMPLATE', 'Edit template');
+if (!defined('_TEMPLATE_ID')) define( '_TEMPLATE_ID', 'Template ID');
 if (!defined('_TEMPLATE_DATASOURCE'))  define('_TEMPLATE_DATASOURCE', 'Datasource');
 
 if (!defined('_MANAGE_TEMPLATES')) define('_MANAGE_TEMPLATES', 'Manage document templates');

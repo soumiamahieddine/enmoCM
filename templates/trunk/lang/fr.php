@@ -19,6 +19,12 @@ if (!defined('_EXPLOIT_TEMPLATE_ANSWER'))  define('_EXPLOIT_TEMPLATE_ANSWER', 'E
 if (!defined('_TEMPLATE_NAME'))  define('_TEMPLATE_NAME', 'Nom du mod&egrave;le');
 if (!defined('_TEMPLATES_COMMENT'))  define('_TEMPLATES_COMMENT', 'Mod&egrave;les de document');
 if (!defined('_TEMPLATE_EMPTY'))  define('_TEMPLATE_EMPTY', 'Le mod&egrave;le est vide');
+if (!defined('_TEMPLATE_LABEL')) define( '_TEMPLATE_LABEL', 'Nom du mod&egrave;le');
+if (!defined('_TEMPLATE_COMMENT')) define( '_TEMPLATE_COMMENT', 'Desciption');
+if (!defined('_TEMPLATE_TYPE')) define( '_TEMPLATE_TYPE', 'Type de mod&egrave;le');
+if (!defined('_TEMPLATE_STYLE')) define( '_TEMPLATE_STYLE', 'Nature du mod&egrave;le');
+if (!defined('_EDIT_TEMPLATE')) define( '_EDIT_TEMPLATE', 'Edition du mod&egrave;le');
+if (!defined('_TEMPLATE_ID')) define( '_TEMPLATE_ID', 'ID du mod&egrave;le');
 if (!defined('_ATTACH_TEMPLATE_TO_ENTITY'))  define('_ATTACH_TEMPLATE_TO_ENTITY', 'Le mod&egrave;le doit &ecirc;tre rattach&eacute; &agrave; au moins un service');
 if (!defined('_TEMPLATE_DATASOURCE'))  define('_TEMPLATE_DATASOURCE', 'Source de donn&eacute;es');
 
