@@ -22,9 +22,3 @@
  /******************** Content management  ************/
 
 
-if (!defined('_TEMPLATE_LABEL')) define( '_TEMPLATE_LABEL', 'Template name');
-if (!defined('_TEMPLATE_COMMENT')) define( '_TEMPLATE_COMMENT', 'Desciption');
-if (!defined('_TEMPLATE_TYPE')) define( '_TEMPLATE_TYPE', 'Template type');
-if (!defined('_TEMPLATE_STYLE')) define( '_TEMPLATE_STYLE', 'Template association');
-if (!defined('_EDIT_TEMPLATE')) define( '_EDIT_TEMPLATE', 'Edit template');
-if (!defined('_TEMPLATE_ID')) define( '_TEMPLATE_ID', 'Template ID');
