@@ -156,7 +156,6 @@ elseif($_SESSION['service_tag'] == 'manage_groupbasket')
     }
 
     if ($find && $ind >= 0) {
-        $_SESSION['m_admin']['basket']['groups'][$ind]['PARAM_DEFAULT_ACTION'] = array();
         $_SESSION['m_admin']['basket']['groups'][$ind]['PARAM_DEFAULT_ACTION']['ENTITIES_LIST'] = array();
 
         if (isset($_REQUEST[$_SESSION['m_admin']['basket']['groups'][$ind]['DEFAULT_ACTION'].'_entities_chosen']) && count($_REQUEST[$_SESSION['m_admin']['basket']['groups'][$ind]['DEFAULT_ACTION'].'_entities_chosen']) > 0) {
@@ -182,7 +181,6 @@ elseif($_SESSION['service_tag'] == 'load_basket_session')
     $entity_tmp = new entities();
     for($i=0; $i < count($_SESSION['m_admin']['basket']['groups'] ); $i++)
     {
-        $_SESSION['m_admin']['basket']['groups'][$i]['PARAM_DEFAULT_ACTION'] = array();
         $_SESSION['m_admin']['basket']['groups'][$i]['PARAM_DEFAULT_ACTION']['ENTITIES_LIST'] = array();
         if(!empty($_SESSION['m_admin']['basket']['groups'][$i]['DEFAULT_ACTION'] ))
         {
