@@ -15,8 +15,8 @@ $core = new core_tools();
 $core->load_lang();
 $core->test_service('manage_notes_doc', 'notes');
 $func = new functions();
-//$db = new dbquery();
-//$db->connect();
+$db = new dbquery();
+$db->connect();
 if (empty($_SESSION['collection_id_choice'])) {
     $_SESSION['collection_id_choice'] = $_SESSION['user']['collections'][0];
 }
@@ -27,7 +27,12 @@ require_once "apps" . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
     . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR
     . "class_list_show.php";
 require_once 'modules/notes/notes_tables.php';
+require_once 'modules/entities/entities_tables.php';
 require_once 'core/core_tables.php';
+require_once "modules" . DIRECTORY_SEPARATOR . "notes" . DIRECTORY_SEPARATOR
+	. "class" . DIRECTORY_SEPARATOR
+    . "class_modules_tools.php";
+$notes_tools = new notes();
 
 $func = new functions();
 $select[USERS_TABLE] = array();
@@ -39,13 +44,47 @@ array_push(
     $select[NOTES_TABLE], "id", "date_note",
     "note_text", "user_id"
 );
-$where = " identifier = " . $_SESSION['doc_id'] . " ";
+
+$entities = "@my_entities";
+$entities = $notes_tools->process_where_clause($entities, $_SESSION['user']['UserId']);
+
+$where = " identifier = " . $_SESSION['doc_id'] . 
+		 " and ".NOTE_ENTITIES_TABLE. ".item_id in (".$entities.")
+		   or ".NOTES_TABLE. ".user_id = '".$_SESSION['user']['UserId']. "'";
+
+
 $request = new request;
-$tabNotes = $request->select(
+/*$tabNotes = $request->select(
     $select, $where, "order by " . NOTES_TABLE. ".date_note desc",
     $_SESSION['config']['databasetype'], "500", true, NOTES_TABLE, USERS_TABLE,
     "user_id"
 );
+*/
+$db->query(
+			" SELECT DISTINCT lastname, firstname, ".NOTES_TABLE.".id, date_note, note_text  FROM " .NOTE_ENTITIES_TABLE. ", " .NOTES_TABLE. ", " .USERS_TABLE.
+			" WHERE (identifier = ".$_SESSION['doc_id'].
+			" AND ( " .NOTE_ENTITIES_TABLE. ".item_id IN (".$entities.
+			") AND " .NOTE_ENTITIES_TABLE. ".note_id = " .NOTES_TABLE. ".id ))
+			OR ( identifier = ".$_SESSION['doc_id']."
+			AND ".NOTES_TABLE.".user_id = '".$_SESSION['user']['UserId']."'
+			AND " .NOTES_TABLE. ".user_id = " .USERS_TABLE.".user_id)"
+			);
+			
+		
+$tabNotes=array();
+while($line = $db->fetch_array())
+{
+   $temp= array();
+   foreach (array_keys($line) as $resval)
+   {
+     if (!is_int($resval))
+     {
+        array_push($temp,array('column'=>$resval,'value'=>$line[$resval]));
+     }
+   }
+   array_push($tabNotes,$temp);
+}
+
 $indNotes1d = '';
 
 
