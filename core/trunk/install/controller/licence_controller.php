@@ -6,9 +6,9 @@
         $longTitle = _LICENCE . ' GPL v3';
 
     //LICENCE FILE
-        $pathToLicenceTxt = 'view/text/licence_'.$Class_Install->getActualLang().'.txt';
+        $pathToLicenceTxt = 'install/view/text/licence_'.$Class_Install->getActualLang().'.txt';
         if (!file_exists($pathToLicenceTxt)) {
-            $pathToLicenceTxt = 'view/text/licence_en.txt';
+            $pathToLicenceTxt = 'install/view/text/licence_en.txt';
         }
 
         $fileLicence = file($pathToLicenceTxt);

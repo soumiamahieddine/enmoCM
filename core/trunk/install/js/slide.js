@@ -1,6 +1,8 @@
-function slide(idDiv)
+function slide(
+    idDiv
+)
 {
-	$(document).ready(function() {
-    	$('#'+idDiv).slideToggle('slow');
-	})
+    $(document).ready(function() {
+        $('#'+idDiv).slideToggle('slow');
+    })
 }

@@ -1,4 +1,7 @@
 <?php
+
+include_once '../core/init.php';
+
 //MODEL
     require_once('class/Class_Install.php');
     $Class_Install = new Install;

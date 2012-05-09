@@ -12,17 +12,17 @@
         <div align="center">
             <div id="fullWrapper" class="fullWrapper">
                 <header id="header">
-                    <?php include('view/includes/header.php'); ?>
+                    <?php include('install/view/includes/header.php'); ?>
                 </header>
                 <div class="line"></div>
                 <section id="section">
                     <br />
-                    <?php include('view/'.$view.'_view.php'); ?>
+                    <?php include('install/view/'.$view.'_view.php'); ?>
                     <br />
                 </section>
                 <div class="line"></div>
                 <footer id="footer">
-                    <?php include('view/includes/footer.php'); ?>
+                    <?php include('install/view/includes/footer.php'); ?>
                 </footer>
             </div>
         </div>

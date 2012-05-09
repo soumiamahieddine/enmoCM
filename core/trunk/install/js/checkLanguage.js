@@ -1,4 +1,6 @@
-function checkLanguage(value)
+function checkLanguage(
+    value
+)
 {
     $(document).ready(function() {
         if (value != 'default') {

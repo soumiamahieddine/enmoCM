@@ -1,6 +1,8 @@
-function goTo(link)
+function goTo(
+    link
+)
 {
-	$(document).ready(function() {
-    	window.top.location.href=link;
-	})
+    $(document).ready(function() {
+        window.top.location.href=link;
+    })
 }

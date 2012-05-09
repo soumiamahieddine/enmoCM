@@ -76,6 +76,25 @@ if (!defined('_DATABASE')) {
     define('_DATABASE', "Database");
 }
 
+if (!defined('_DATABASESERVER')) {
+    define('_DATABASESERVER', "Server");
+}
+if (!defined('_DATABASESERVERPORT')) {
+    define('_DATABASESERVERPORT', "Port");
+}
+if (!defined('_DATABASEUSER')) {
+    define('_DATABASEUSER', "User");
+}
+if (!defined('_DATABASEPASSWORD')) {
+    define('_DATABASEPASSWORD', "Password");
+}
+if (!defined('_DATABASENAME')) {
+    define('_DATABASENAME', "Name");
+}
+if (!defined('_DATABASETYPE')) {
+    define('_DATABASETYPE', "Type");
+}
+
 //PASSWORD
 if (!defined('_PASSWORD')) {
     define('_PASSWORD', "Password");

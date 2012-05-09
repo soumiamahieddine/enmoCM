@@ -12,7 +12,7 @@ class Merge
     private function mergeCss()
     {
         if ($this->needToMergeCss()) {
-            $dirStyle = 'css/';
+            $dirStyle = 'install/css/';
             $styleDirectory = opendir($dirStyle);
             $mergedCss = '@charset "UTF-8";'."\n\n";
 
@@ -39,23 +39,7 @@ class Merge
                 }
             }
             closedir($styleDirectory);
-            /*
-            $interdit = array(
-                "\n",
-                "\r",
-                "\t"
-            );
-            $autorise = array('',
-                '',
-                ''
-            );
 
-            $mergedCss = str_replace(
-                $interdit,
-                $autorise,
-                $mergedCss
-            );
-            */
             if (file_exists($dirStyle.'merged_css.css')) {
                 unlink($dirStyle.'merged_css.css');
             }
@@ -68,7 +52,7 @@ class Merge
     private function mergeJs()
     {
         if ($this->needToMergeJs()) {
-            $dirJavascript = 'js/';
+            $dirJavascript = 'install/js/';
             $javascriptDirectory = opendir($dirJavascript);
             $mergedJavascript = '// JavaScript Document'."\n\n";
 
@@ -108,7 +92,7 @@ class Merge
     private function needToMergeCss()
     {
         $write = false;
-        $dirStyle = 'css/';
+        $dirStyle = 'install/css/';
         $dateModMerged = '1';
         if (file_exists($dirStyle.'merged_css.css')) {
             $dateModMerged = filemtime($dirStyle.'merged_css.css');
@@ -133,7 +117,7 @@ class Merge
     private function needToMergeJs()
     {
         $write = false;
-        $dirJavascript = 'js/';
+        $dirJavascript = 'install/js/';
         $dateModMerged = '1';
         if (file_exists($dirJavascript.'merged_js.js')) {
             $dateModMerged = filemtime($dirJavascript.'merged_js.js');

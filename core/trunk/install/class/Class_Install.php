@@ -1,9 +1,9 @@
 <?php
 //Loads the required class
 try {
-    require_once '../core/class/class_functions.php';
-    require_once '../core/class/class_db.php';
-    require_once 'class/Class_Merge.php';
+    require_once 'core/class/class_functions.php';
+    require_once 'core/class/class_db.php';
+    require_once 'install/class/Class_Merge.php';
 } catch (Exception $e) {
     echo $e->getMessage() . ' // ';
 }
@@ -23,8 +23,6 @@ class Install extends functions
 
     function __construct()
     {
-        //load session
-        session_start();
         //merge css & js
         $Class_Merge = new Merge;
         //load lang
@@ -34,7 +32,7 @@ class Install extends functions
     public function getLangList()
     {
         $langList = array();
-        foreach(glob('lang/*.php') as $fileLangPath) {
+        foreach(glob('install/lang/*.php') as $fileLangPath) {
             $langFile = str_replace('.php', '', end(explode('/', $fileLangPath)));
             array_push($langList, $langFile);
         }
@@ -54,7 +52,7 @@ class Install extends functions
             $this->lang = 'en';
         }
 
-        require_once('lang/' . $this->lang . '.php');
+        require_once('install/lang/' . $this->lang . '.php');
     }
 
     public function getActualLang()
@@ -231,29 +229,61 @@ class Install extends functions
         $databasetype
     )
     {
-        $_SESSION['config']['databaseserver'] =  $databaseserver;
-        $_SESSION['config']['databaseserverport'] = $databaseserverport;
-        $_SESSION['config']['databaseuser'] = $databaseuser;
-        $_SESSION['config']['databasepassword'] = $databasepassword;
-        $_SESSION['config']['databasename'] = $databasename;
-        $_SESSION['config']['databasetype'] = $databasetype;
-        $db = new dbquery();
-        if ($db->connect()) {
-            return true;
-        } else {
+
+
+        $connect  = 'host='.$databaseserver . ' ';
+        $connect .= 'port='.$databaseserverport . ' ';
+        $connect .= 'user='.$databaseuser . ' ';
+        $connect .= 'password='.$databasepassword;
+
+
+        if (!pg_connect($connect)) {
             return false;
+            exit;
         }
+
+        $sqlCreateDatabase  = "CREATE DATABASE ".$databasename;
+            $sqlCreateDatabase .= " WITH TEMPLATE template0";
+            $sqlCreateDatabase .= " ENCODING = 'UTF8'";
+
+        $execute = pg_query($sqlCreateDatabase);
+        if (!$execute) {
+            return false;
+            exit;
+        }
+
+        pg_close();
+
+        $db = new dbquery();
+        $db->connect();
+        if (!$db) {
+            return false;
+            exit;
+        }
+
+
+        if (!$this->executeSQLScript('structure.sql')) {
+            return false;
+            exit;
+        }
+
+        return true;
     }
-    
+
     public function executeSQLScript($filePath)
     {
         $fileContent = fread(fopen($filePath, 'r'), filesize($filePath));
-        echo $fileContent;
         $db = new dbquery();
         $db->connect();
-        $db->query($fileContent, false, true);
+        $execute = $db->query($fileContent, false, true);
+
+        if (!$execute) {
+            return false;
+            exit;
+        }
+        return true;
     }
-    
+
     /**
      * test if docserver path is read/write
      * @param $docserverPath string path to the docserver
@@ -276,7 +306,7 @@ class Install extends functions
             return true;
         }
     }
-    
+
     /**
      * create the docservers
      * @param $docserverPath string path to the docserver
@@ -286,11 +316,11 @@ class Install extends functions
     {
         for ($i=0;$i<count($this->docservers);$i++) {
             if (!is_dir(
-                $docserverPath . DIRECTORY_SEPARATOR 
+                $docserverPath . DIRECTORY_SEPARATOR
                 . $this->docservers[$i][1])
             ) {
                 if (!mkdir(
-                    $docserverPath . DIRECTORY_SEPARATOR 
+                    $docserverPath . DIRECTORY_SEPARATOR
                     . $this->docservers[$i][1])
                 ) {
                     return false;
@@ -299,7 +329,7 @@ class Install extends functions
         }
         return true;
     }
-    
+
     /**
      * update the docservers on DB
      * @param $docserverPath string path to the docserver
@@ -310,8 +340,8 @@ class Install extends functions
         $db = new dbquery();
         $db->connect();
         for ($i=0;$i<count($this->docservers);$i++) {
-          $query = "update docservers set path_template = '" 
-            . $db->protect_string_db($docserverPath . DIRECTORY_SEPARATOR 
+          $query = "update docservers set path_template = '"
+            . $db->protect_string_db($docserverPath . DIRECTORY_SEPARATOR
             . $this->docservers[$i][1] . DIRECTORY_SEPARATOR)
             . "' where docserver_id = '" . $this->docservers[$i][0] . "'";
             $db->query($query);
