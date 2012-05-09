@@ -20,6 +20,7 @@ if (!defined('_TEMPLATE_NAME'))  define('_TEMPLATE_NAME', 'Nom du mod&egrave;le'
 if (!defined('_TEMPLATES_COMMENT'))  define('_TEMPLATES_COMMENT', 'Mod&egrave;les de document');
 if (!defined('_TEMPLATE_EMPTY'))  define('_TEMPLATE_EMPTY', 'Le mod&egrave;le est vide');
 if (!defined('_ATTACH_TEMPLATE_TO_ENTITY'))  define('_ATTACH_TEMPLATE_TO_ENTITY', 'Le mod&egrave;le doit &ecirc;tre rattach&eacute; &agrave; au moins un service');
+if (!defined('_TEMPLATE_DATASOURCE'))  define('_TEMPLATE_DATASOURCE', 'Source de donn&eacute;es');
 
 
 if (!defined('_MANAGE_TEMPLATES'))  define('_MANAGE_TEMPLATES', 'G&eacute;rer les mod&egrave;les de courrier');
@@ -66,4 +67,3 @@ if (!defined('_ANSWER_UPDATED'))  define('_ANSWER_UPDATED', 'Pi&egrave;ce jointe
 if (!defined('_ANSWER_TITLE'))  define('_ANSWER_TITLE', 'Titre de la pi&egrave;ce jointe');
 
 if (!defined('_VALID_TEXT'))  define('_VALID_TEXT', 'Valider texte');
-?>

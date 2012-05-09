@@ -993,6 +993,8 @@ class templates_controler extends ObjectControler implements ObjectControlerIF
             fclose($handle);
             return $fileNameOnTmp;
         } else {
+            $dbTemplate = new dbquery();
+            $dbTemplate->connect();
             $query = "select path_template from " . _DOCSERVERS_TABLE_NAME 
                 . " where docserver_id = 'TEMPLATES'";
             $dbTemplate->query($query);
@@ -1005,7 +1007,7 @@ class templates_controler extends ObjectControler implements ObjectControlerIF
                 )
                 . $templateObj->template_file_name;
             
-            return $pathTemplateOnDs;
+            return $pathToTemplateOnDs;
         }
     
     }
@@ -1076,7 +1078,7 @@ class templates_controler extends ObjectControler implements ObjectControlerIF
     * 
     * @param string $templateId : templates identifier
     * @param array $params : array of parameters for datasource retrieval
-    * @param string $outputType : save to file, retrieve content
+    * @param string $outputType : save to 'file', retrieve 'content'
     * @return merged content or path to file
     */
     public function merge($templateId, $params=array(), $outputType) 
@@ -1107,7 +1109,7 @@ class templates_controler extends ObjectControler implements ObjectControlerIF
             $TBS->Plugin(TBS_INSTALL, OPENTBS_PLUGIN);
         }
         
-        //$TBS->NoErr = true;
+        $TBS->NoErr = true;
         $TBS->LoadTemplate($pathToTemplate);
         
         foreach ($datasources as $name => $datasource) {

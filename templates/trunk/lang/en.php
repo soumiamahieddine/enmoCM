@@ -20,7 +20,7 @@ if (!defined('_TEMPLATE_NAME')) define('_TEMPLATE_NAME', 'Template name');
 if (!defined('_TEMPLATES_COMMENT')) define('_TEMPLATES_COMMENT', 'Document template');
 if (!defined('_TEMPLATE_EMPTY')) define('_TEMPLATE_EMPTY', 'The template is empty');
 if (!defined('_ATTACH_TEMPLATE_TO_ENTITY')) define('_ATTACH_TEMPLATE_TO_ENTITY', 'The template must be attached to at least one department');
-
+if (!defined('_TEMPLATE_DATASOURCE'))  define('_TEMPLATE_DATASOURCE', 'Datasource');
 
 if (!defined('_MANAGE_TEMPLATES')) define('_MANAGE_TEMPLATES', 'Manage document templates');
 if (!defined('_MANAGE_TEMPLATES_APP')) define('_MANAGE_TEMPLATES_APP', 'Manage document templates used in this application');
@@ -66,4 +66,4 @@ if (!defined('_ANSWER_UPDATED')) define('_ANSWER_UPDATED', 'Attachment updated')
 if (!defined('_ANSWER_TITLE')) define('_ANSWER_TITLE', 'Name of the attachment');
 
 if (!defined('_VALID_TEXT')) define('_VALID_TEXT', 'Save text');
-?>
+
