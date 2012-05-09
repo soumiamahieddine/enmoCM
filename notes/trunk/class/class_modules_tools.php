@@ -25,7 +25,7 @@ try {
     echo $e->getMessage().' // ';
 }
 
-class notes
+class notes extends dbquery
 {
 
 	/**
@@ -101,6 +101,7 @@ class notes
 		$xmlconfig = simplexml_load_file($path);
 		foreach ($xmlconfig->TABLENAME as $tableName) {
 			$_SESSION['tablename']['not_notes'] = (string) $tableName->not_notes;
+			$_SESSION['tablename']['note_entities'] = (string) $tableName->note_entities;
 		}
 		$hist = $xmlconfig->HISTORY;
 		$_SESSION['history']['noteadd'] = (string) $hist->noteadd;
@@ -108,30 +109,6 @@ class notes
 		$_SESSION['history']['notedel'] = (string) $hist->notedel;
 	}
 	
-	/**
-	 * Function to get all the entities 
-	 * 
-	 */
-/*
-	public function getentities()
-	{
-		$entitiesOrg = array();
-		require_once 'modules/entities/class/EntityControler.php';
-		$entityControler = new EntityControler();
-		$entitiesOrg = $entityControler->getAllEntities();
-		 return $entitiesOrg;
-	}
-*/
-	
-	/**
-	 * 
-	 * 
-	 * 
-	 */
-	 public function insertEntities($id)
-	 {
-		 //echo "RES_ID : ".$id;
-	 } 
 	
 	
 	/**
@@ -168,5 +145,6 @@ class notes
         //self::disconnect();
 		return $entitiesChosen;
 	}
+	
 }
 
