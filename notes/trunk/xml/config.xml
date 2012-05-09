@@ -8,6 +8,7 @@
 	</CONFIG>
 	<TABLENAME>
 		<not_notes>notes</not_notes>
+		<note_entities>note_entities</note_entities>
 	</TABLENAME>
 	<HISTORY>
 		<noteadd>true</noteadd>
