@@ -656,7 +656,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                     $frm_str .= '<center>';
                     if ($core_tools->is_module_loaded('templates')) {
                         $objectTable = $sec->retrieve_table_from_coll($coll_id);
-                        $frm_str .= '<select name="templateOffice" id="templateOffice" style="width:150px" onchange="';
+                        $frm_str .= _GENERATE_ATTACHMENT_FROM . ' <select name="templateOffice" id="templateOffice" style="width:150px" onchange="';
                         $frm_str .= 'loadApplet(\''
                             . $_SESSION['config']['coreurl']
                             . 'modules/content_management/applet_launcher.php?objectType=attachmentFromTemplate'
@@ -667,7 +667,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                             . '&resMaster='
                             . $res_id
                             . '\', $(\'templateOffice\').value);">';
-                            $frm_str .= '<option value="">' . _GENERATE_OFFICE_ATTACHMENT . '</option>';
+                            $frm_str .= '<option value="">' . _OFFICE . '</option>';
                                 for ($i=0;$i<count($templates);$i++) {
                                     if ($templates[$i]['TYPE'] == 'OFFICE') {
                                         $frm_str .= '<option value="';
@@ -688,7 +688,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                             . '&res_id=' . $res_id
                             . '&coll_id=' . $_REQUEST['coll_id']
                             . '\', $(\'templateHtml\').value);">';
-                            $frm_str .= '<option value="">' . _GENERATE_HTML_ATTACHMENT . '</option>';
+                            $frm_str .= '<option value="">' . _HTML . '</option>';
                                 for ($i=0;$i<count($templates);$i++) {
                                     if ($templates[$i]['TYPE'] == 'HTML') {
                                         $frm_str .= '<option value="';
@@ -699,9 +699,9 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                                         }
                                     $frm_str .= '</option>';
                                 }
-                        $frm_str .= '</select>&nbsp;|&nbsp;';
+                        $frm_str .= '</select><br>' . _OR . '&nbsp;';
                         $frm_str .= '<input type="button" name="attach" id="attach" class="button" value="'
-                            . _ATTACH
+                            . _ATTACH_FROM_HDD
                             . '" onclick="javascript:window.open(\'' . $_SESSION['config']['businessappurl']
                             . 'index.php?display=true&module=attachments&page=join_file\',\'\', \'scrollbars=yes,'
                             . 'menubar=no,toolbar=no,resizable=yes,status=no,width=550,height=200\');" />';

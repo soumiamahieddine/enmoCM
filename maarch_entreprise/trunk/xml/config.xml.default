@@ -8,7 +8,7 @@
         <databaseuser>postgres</databaseuser>
         <databasepassword>maarch</databasepassword>
         <databasesearchlimit>500</databasesearchlimit>
-        <nblinetoshow>8</nblinetoshow>
+        <nblinetoshow>10</nblinetoshow>
         <limitcharsearch>2</limitcharsearch>
         <lang>fr</lang>
         <adminmail>dev@maarch.org</adminmail>
