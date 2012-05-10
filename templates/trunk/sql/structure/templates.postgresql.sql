@@ -22,6 +22,7 @@ CREATE TABLE templates
   template_path character varying(255),
   template_file_name character varying(255),
   template_style character varying(255),
+  template_datasource character varying(32),
   CONSTRAINT templates_pkey PRIMARY KEY (template_id)
 )
 WITH (OIDS=FALSE);
@@ -33,12 +34,12 @@ CREATE TABLE templates_association
   what character varying(255) NOT NULL,
   value_field character varying(255) NOT NULL,
   maarch_module character varying(255) NOT NULL DEFAULT 'apps'::character varying,
+  notification_id character varying(50),
   description character varying(255),
   diffusion_type character varying(50),
   diffusion_properties character varying(255),
-  exclusion_type character varying(50),
-  exclusion_properties character varying(255),
-  is_attached character(1) NOT NULL DEFAULT 'N'::bpchar,
+  attachfor_type character varying(50),
+  attachfor_properties character varying(255),
   CONSTRAINT templates_association_pkey PRIMARY KEY (system_id)
 )
 WITH (
