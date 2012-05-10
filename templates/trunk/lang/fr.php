@@ -12,6 +12,7 @@
 */
 /*********************** Module Board ***********************************/
 if (!defined('_ADMIN_TEMPLATE_ANSWER'))  define('_ADMIN_TEMPLATE_ANSWER', 'Administrer les mod&egrave;les');
+if (!defined('_ADMIN_TEMPLATES_DESC')) define('_ADMIN_TEMPLATES_DESC', 'Cr&eacute;er des mod&egrave;les de document avec les suites Office et Html');
 /*********************** Menu ***********************************/
 if (!defined('_EXPLOIT_TEMPLATE_ANSWER'))  define('_EXPLOIT_TEMPLATE_ANSWER', 'Exploiter les mod&egrave;les');
 

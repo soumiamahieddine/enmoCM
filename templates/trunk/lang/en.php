@@ -12,6 +12,7 @@
 */
 /*********************** Module Board ***********************************/
 if (!defined('_ADMIN_TEMPLATE_ANSWER')) define('_ADMIN_TEMPLATE_ANSWER', 'Manage templates');
+if (!defined('_ADMIN_TEMPLATES_DESC')) define('_ADMIN_TEMPLATES_DESC', 'Manage templates with office and html');
 /*********************** Menu ***********************************/
 if (!defined('_EXPLOIT_TEMPLATE_ANSWER')) define('_EXPLOIT_TEMPLATE_ANSWER', 'Use templates');
 
