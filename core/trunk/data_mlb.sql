@@ -256,7 +256,7 @@ INSERT INTO users_entities (user_id, entity_id, user_role, primary_entity) VALUE
 INSERT INTO users_entities (user_id, entity_id, user_role, primary_entity) VALUES ('bbain', 'PJS', 'Responsable pôle jeunesse et sport', 'Y');
 INSERT INTO users_entities (user_id, entity_id, user_role, primary_entity) VALUES ('bboule', 'PCU', 'Responsable pôle culturel', 'Y');
 INSERT INTO users_entities (user_id, entity_id, user_role, primary_entity) VALUES ('aackermann', 'PSF', 'Responsable pôle des services fonctionnels', 'Y');
-INSERT INTO users_entities (user_id, entity_id, user_role, primary_entity) VALUES ('jjane', 'ELUS', 'Elue Petite Enfance	', 'Y');
+INSERT INTO users_entities (user_id, entity_id, user_role, primary_entity) VALUES ('jjane', 'ELUS', 'Elue Petite Enfance    ', 'Y');
 INSERT INTO users_entities (user_id, entity_id, user_role, primary_entity) VALUES ('kkaar', 'DAA', 'Assistante', 'Y');
 INSERT INTO users_entities (user_id, entity_id, user_role, primary_entity) VALUES ('mmanfred', 'DAA', 'Directeur général adjoint', 'Y');
 INSERT INTO users_entities (user_id, entity_id, user_role, primary_entity) VALUES ('nnataliu', 'PSO', 'Responsable pôle social', 'Y');
@@ -581,8 +581,8 @@ INSERT INTO doctypes_second_level (doctypes_second_level_id, doctypes_second_lev
 
 INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll', 10, 'Appel Téléphonique', 'Y', 10, 10, NULL, NULL);
 INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll', 15, 'Divers', 'Y', 10, 10, NULL, NULL);
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll', 16, 'Demande	', 'Y', 10, 10, NULL, NULL);
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll', 17, 'Convocation	', 'Y', 10, 10, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll', 16, 'Demande ', 'Y', 10, 10, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll', 17, 'Convocation ', 'Y', 10, 10, NULL, NULL);
 INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll', 20, 'Invitation', 'Y', 10, 10, NULL, NULL);
 INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll', 25, 'Rapport ou compte-rendu', 'Y', 10, 10, NULL, NULL);
 INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll', 26, 'Abonnement', 'Y', 10, 10, NULL, NULL);
@@ -868,39 +868,38 @@ INSERT INTO templates (template_id, template_label, template_comment, template_c
 <p>&nbsp;</p>');
 
 
-INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module, notification_id, description, diffusion_type, diffusion_properties, diffusion_content, is_attached) VALUES (20, 2, 'destination', 'VILLE', 'entities', NULL, NULL, NULL, NULL, NULL, 'N');
-INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module, notification_id, description, diffusion_type, diffusion_properties, diffusion_content, is_attached) VALUES (21, 2, 'destination', 'CAB', 'entities', NULL, NULL, NULL, NULL, NULL, 'N');
-INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module, notification_id, description, diffusion_type, diffusion_properties, diffusion_content, is_attached) VALUES (22, 2, 'destination', 'DGS', 'entities', NULL, NULL, NULL, NULL, NULL, 'N');
-INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module, notification_id, description, diffusion_type, diffusion_properties, diffusion_content, is_attached) VALUES (23, 2, 'destination', 'DSI', 'entities', NULL, NULL, NULL, NULL, NULL, 'N');
-INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module, notification_id, description, diffusion_type, diffusion_properties, diffusion_content, is_attached) VALUES (24, 2, 'destination', 'FIN', 'entities', NULL, NULL, NULL, NULL, NULL, 'N');
-INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module, notification_id, description, diffusion_type, diffusion_properties, diffusion_content, is_attached) VALUES (25, 2, 'destination', 'DAA', 'entities', NULL, NULL, NULL, NULL, NULL, 'N');
-INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module, notification_id, description, diffusion_type, diffusion_properties, diffusion_content, is_attached) VALUES (26, 2, 'destination', 'PCU', 'entities', NULL, NULL, NULL, NULL, NULL, 'N');
-INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module, notification_id, description, diffusion_type, diffusion_properties, diffusion_content, is_attached) VALUES (27, 2, 'destination', 'PTE', 'entities', NULL, NULL, NULL, NULL, NULL, 'N');
-INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module, notification_id, description, diffusion_type, diffusion_properties, diffusion_content, is_attached) VALUES (28, 2, 'destination', 'PJS', 'entities', NULL, NULL, NULL, NULL, NULL, 'N');
-INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module, notification_id, description, diffusion_type, diffusion_properties, diffusion_content, is_attached) VALUES (29, 2, 'destination', 'PE', 'entities', NULL, NULL, NULL, NULL, NULL, 'N');
-INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module, notification_id, description, diffusion_type, diffusion_properties, diffusion_content, is_attached) VALUES (30, 2, 'destination', 'SP', 'entities', NULL, NULL, NULL, NULL, NULL, 'N');
-INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module, notification_id, description, diffusion_type, diffusion_properties, diffusion_content, is_attached) VALUES (31, 2, 'destination', 'PSO', 'entities', NULL, NULL, NULL, NULL, NULL, 'N');
-INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module, notification_id, description, diffusion_type, diffusion_properties, diffusion_content, is_attached) VALUES (32, 2, 'destination', 'DSG', 'entities', NULL, NULL, NULL, NULL, NULL, 'N');
-INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module, notification_id, description, diffusion_type, diffusion_properties, diffusion_content, is_attached) VALUES (33, 2, 'destination', 'COU', 'entities', NULL, NULL, NULL, NULL, NULL, 'N');
-INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module, notification_id, description, diffusion_type, diffusion_properties, diffusion_content, is_attached) VALUES (34, 2, 'destination', 'PSF', 'entities', NULL, NULL, NULL, NULL, NULL, 'N');
-INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module, notification_id, description, diffusion_type, diffusion_properties, diffusion_content, is_attached) VALUES (35, 2, 'destination', 'DRH', 'entities', NULL, NULL, NULL, NULL, NULL, 'N');
-INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module, notification_id, description, diffusion_type, diffusion_properties, diffusion_content, is_attached) VALUES (36, 1, 'destination', 'VILLE', 'entities', NULL, NULL, NULL, NULL, NULL, 'N');
-INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module, notification_id, description, diffusion_type, diffusion_properties, diffusion_content, is_attached) VALUES (37, 1, 'destination', 'CAB', 'entities', NULL, NULL, NULL, NULL, NULL, 'N');
-INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module, notification_id, description, diffusion_type, diffusion_properties, diffusion_content, is_attached) VALUES (38, 1, 'destination', 'DGS', 'entities', NULL, NULL, NULL, NULL, NULL, 'N');
-INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module, notification_id, description, diffusion_type, diffusion_properties, diffusion_content, is_attached) VALUES (39, 1, 'destination', 'DSI', 'entities', NULL, NULL, NULL, NULL, NULL, 'N');
-INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module, notification_id, description, diffusion_type, diffusion_properties, diffusion_content, is_attached) VALUES (40, 1, 'destination', 'FIN', 'entities', NULL, NULL, NULL, NULL, NULL, 'N');
-INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module, notification_id, description, diffusion_type, diffusion_properties, diffusion_content, is_attached) VALUES (41, 1, 'destination', 'DAA', 'entities', NULL, NULL, NULL, NULL, NULL, 'N');
-INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module, notification_id, description, diffusion_type, diffusion_properties, diffusion_content, is_attached) VALUES (42, 1, 'destination', 'PCU', 'entities', NULL, NULL, NULL, NULL, NULL, 'N');
-INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module, notification_id, description, diffusion_type, diffusion_properties, diffusion_content, is_attached) VALUES (43, 1, 'destination', 'PTE', 'entities', NULL, NULL, NULL, NULL, NULL, 'N');
-INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module, notification_id, description, diffusion_type, diffusion_properties, diffusion_content, is_attached) VALUES (44, 1, 'destination', 'PJS', 'entities', NULL, NULL, NULL, NULL, NULL, 'N');
-INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module, notification_id, description, diffusion_type, diffusion_properties, diffusion_content, is_attached) VALUES (45, 1, 'destination', 'PE', 'entities', NULL, NULL, NULL, NULL, NULL, 'N');
-INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module, notification_id, description, diffusion_type, diffusion_properties, diffusion_content, is_attached) VALUES (46, 1, 'destination', 'SP', 'entities', NULL, NULL, NULL, NULL, NULL, 'N');
-INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module, notification_id, description, diffusion_type, diffusion_properties, diffusion_content, is_attached) VALUES (47, 1, 'destination', 'PSO', 'entities', NULL, NULL, NULL, NULL, NULL, 'N');
-INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module, notification_id, description, diffusion_type, diffusion_properties, diffusion_content, is_attached) VALUES (48, 1, 'destination', 'DSG', 'entities', NULL, NULL, NULL, NULL, NULL, 'N');
-INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module, notification_id, description, diffusion_type, diffusion_properties, diffusion_content, is_attached) VALUES (49, 1, 'destination', 'COU', 'entities', NULL, NULL, NULL, NULL, NULL, 'N');
-INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module, notification_id, description, diffusion_type, diffusion_properties, diffusion_content, is_attached) VALUES (50, 1, 'destination', 'PSF', 'entities', NULL, NULL, NULL, NULL, NULL, 'N');
-INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module, notification_id, description, diffusion_type, diffusion_properties, diffusion_content, is_attached) VALUES (51, 1, 'destination', 'DRH', 'entities', NULL, NULL, NULL, NULL, NULL, 'N');
-INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module, notification_id, description, diffusion_type, diffusion_properties, diffusion_content, is_attached) VALUES (52, 21, 'event', '18', 'notifications', 'NOTIF_VALIDATION', 'Nouveau courrier validé', 'dest_user', '', 'letterbox', 'Y');
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (20, 2, 'destination', 'VILLE', 'entities');
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (21, 2, 'destination', 'CAB', 'entities');
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (22, 2, 'destination', 'DGS', 'entities');
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (23, 2, 'destination', 'DSI', 'entities');
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (24, 2, 'destination', 'FIN', 'entities');
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (25, 2, 'destination', 'DAA', 'entities');
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (26, 2, 'destination', 'PCU', 'entities');
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (27, 2, 'destination', 'PTE', 'entities');
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (28, 2, 'destination', 'PJS', 'entities');
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (29, 2, 'destination', 'PE', 'entities');
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (30, 2, 'destination', 'SP', 'entities');
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (31, 2, 'destination', 'PSO', 'entities');
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (32, 2, 'destination', 'DSG', 'entities');
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (33, 2, 'destination', 'COU', 'entities');
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (34, 2, 'destination', 'PSF', 'entities');
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (35, 2, 'destination', 'DRH', 'entities');
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (36, 1, 'destination', 'VILLE', 'entities');
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (37, 1, 'destination', 'CAB', 'entities');
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (38, 1, 'destination', 'DGS', 'entities');
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (39, 1, 'destination', 'DSI', 'entities');
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (40, 1, 'destination', 'FIN', 'entities');
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (41, 1, 'destination', 'DAA', 'entities');
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (42, 1, 'destination', 'PCU', 'entities');
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (43, 1, 'destination', 'PTE', 'entities');
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (44, 1, 'destination', 'PJS', 'entities');
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (45, 1, 'destination', 'PE', 'entities');
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (46, 1, 'destination', 'SP', 'entities');
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (47, 1, 'destination', 'PSO', 'entities');
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (48, 1, 'destination', 'DSG', 'entities');
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (49, 1, 'destination', 'COU', 'entities');
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (50, 1, 'destination', 'PSF', 'entities');
+INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (51, 1, 'destination', 'DRH', 'entities');
 
 
 --
