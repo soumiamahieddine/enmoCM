@@ -10,7 +10,7 @@
             <br />
             <div id="buttons">
                 <div style="float: left;" class="previousButton" id="previous">
-                    <a href="#" onClick="goTo('index.php?step=docservers');">
+                    <a href="#" onClick="goTo('index.php?step=docservers');" style="display:none;">
                         <?php echo _PREVIOUS; ?>
                     </a>
                 </div>

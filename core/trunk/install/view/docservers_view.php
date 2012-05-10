@@ -28,7 +28,7 @@
                         <td></td>
                         <td></td>
                         <td>
-                            <input type="button" onClick="createDocservers($('#docserverRoot').val());"; value="<?php echo _CREATE_DOCSERVERS; ?>"/>
+                            <input type="button" id="ajaxReturn_createDocservers_button" onClick="$(this).css('display', 'none');createDocservers($('#docserverRoot').val());"; value="<?php echo _CREATE_DOCSERVERS; ?>"/>
                         </td>
                     </tr>
                 </table>
@@ -39,7 +39,7 @@
             <br />
             <div id="buttons">
                 <div style="float: left;" class="previousButton" id="previous">
-                    <a href="#" onClick="goTo('index.php?step=database');">
+                    <a href="#" onClick="goTo('index.php?step=database');" style="display:none;">
                         <?php echo _PREVIOUS; ?>
                     </a>
                 </div>

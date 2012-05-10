@@ -15,6 +15,7 @@ function ajaxDB(
         strAjaxParameters += ":";
         strAjaxParameters += "'";
         cpt++;
+        parametersTemp[cpt] = parametersTemp[cpt].replace(/\\/gi, '/');
         strAjaxParameters += parametersTemp[cpt];
         strAjaxParameters += "'";
         if (cpt < parametersTemp.length) {
@@ -24,7 +25,6 @@ function ajaxDB(
     strAjaxParameters += "ajax:'true'";
     strAjaxParameters += ", div:'"+divRetour+"'";
     strAjaxParameters += '}'
-
     var ajaxParameters = eval('(' + strAjaxParameters + ')');
 
     /**********/
@@ -54,6 +54,9 @@ function ajaxDB(
                 retour_ko.html(data.text);
                 if ($('.wait')) {
                     $('.wait').css('display','none');
+                }
+                if ($('#ajaxReturn_createDocservers_button')) {
+                    $('#ajaxReturn_createDocservers_button').css('display', 'block');
                 }
             }
         });
