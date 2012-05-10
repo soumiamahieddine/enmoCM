@@ -15,7 +15,7 @@
                     </a>
                 </div>
                 <div style="float: right;" class="nextButton" id="start">
-                    <a href="#" onClick="goTo('../');">
+                    <a href="#" onClick="goTo('final.php');">
                         <?php echo _START_MEP_1_3; ?>
                     </a>
                 </div>

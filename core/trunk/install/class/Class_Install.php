@@ -283,6 +283,36 @@ class Install extends functions
             return false;
             exit;
         }
+
+        if (!$this->setConfigXml()) {
+            return false;
+            exit;
+        }
+        return true;
+    }
+
+    private function setConfigXml()
+    {
+        $xmlconfig = simplexml_load_file('apps/maarch_entreprise/xml/config.xml');
+        $CONFIG = $xmlconfig->CONFIG;
+
+        $CONFIG->databaseserver = $_SESSION['config']['databaseserver'];
+        $CONFIG->databaseserverport = $_SESSION['config']['databaseserverport'];
+        $CONFIG->databasename = $_SESSION['config']['databasename'];
+        $CONFIG->databaseuser = $_SESSION['config']['databaseuser'];
+        $CONFIG->databasepassword = $_SESSION['config']['databasepassword'];
+        $CONFIG->lang = $_SESSION['lang'];
+        $res = $xmlconfig->asXML();
+        $fp = @fopen("apps/maarch_entreprise/xml/config.xml", "w+");
+        if (!$fp) {
+            return false;
+            exit;
+        }
+        $write = fwrite($fp,$res);
+        if (!$write) {
+            return false;
+            exit;
+        }
         return true;
     }
 

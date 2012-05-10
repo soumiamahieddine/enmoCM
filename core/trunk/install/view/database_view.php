@@ -77,6 +77,7 @@
                                   type="button"
                                   value="tester"
                                   onClick="
+                                    $('.wait').css('display','block');
                                     checkDatabaseInfo(
                                       $('#databaseserver').val(),
                                       $('#databaseserverport').val(),
@@ -93,11 +94,13 @@
                 </form>
                 <br />
                 <div id="ajaxReturn_testConnect_ko"></div>
+                <div align="center">
+                    <img src="img/wait.gif" width="100" class="wait" style="display: none; background-color: rgba(0, 0, 0, 0.2);"/>
+                </div>
             </p>
         </div>
     </div>
 </div>
-<br />
 <div class="ajaxReturn_createDB">
     <div class="blockWrapper" id="ajaxReturn_testConnect" style="display: none;">
         <div class="titleBlock">
@@ -130,18 +133,20 @@
                             <td></td>
                             <td></td>
                             <td>
-                                <input type="button" onclick="checkCreateDB($('#databasename').val(), 'createdatabase');" value="Créer la base" />
+                                <input type="button" onclick="$('.wait').css('display','block');checkCreateDB($('#databasename').val(), 'createdatabase');" value="Créer la base" />
                             </td>
                         </tr>
                     </table>
                 </form>
                 <br />
                 <div id="ajaxReturn_createDB_ko"></div>
+                <div align="center">
+                    <img src="img/wait.gif" width="100" class="wait" style="display: none; background-color: rgba(0, 0, 0, 0.2);"/>
+                </div>
             </p>
         </div>
     </div>
 </div>
-<br />
 <div class="ajaxReturn_loadDatas">
     <div class="blockWrapper" id="ajaxReturn_createDB" style="display: none;">
         <div class="titleBlock">
@@ -192,7 +197,7 @@
                             <td></td>
                             <td></td>
                             <td>
-                                <input type="button" onclick="checkLoadDatas($('#dataFilename').val(), 'loadDatas');" value="Charger les datas" />
+                                <input type="button" onclick="$('.wait').css('display','block');checkLoadDatas($('#dataFilename').val(), 'loadDatas');" value="Charger les datas" />
                             </td>
                             <td></td>
                         </tr>
@@ -200,6 +205,9 @@
                 </form>
                 <br />
                 <div id="ajaxReturn_loadDatas_ko"></div>
+                <div align="center">
+                    <img src="img/wait.gif" width="100" class="wait" style="display: none; background-color: rgba(0, 0, 0, 0.2);"/>
+                </div>
             </p>
         </div>
     </div>

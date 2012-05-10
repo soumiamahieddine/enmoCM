@@ -46,8 +46,10 @@ function ajaxDB(
                 retour_ko.html('');
                 slide(divRetour);
                 $('.'+divRetour).slideToggle('slow');
+                $('.wait').css('display','none');
             } else {
                 retour_ko.html(data.text);
+                $('.wait').css('display','none');
             }
         });
     });
