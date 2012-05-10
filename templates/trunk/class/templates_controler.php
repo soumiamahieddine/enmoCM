@@ -1098,25 +1098,28 @@ class templates_controler extends ObjectControler implements ObjectControlerIF
         foreach($params as $paramName => $paramValue) {
             $$paramName = $paramValue;
         }
-
         $datasources = $this->getBaseDatasources();
         require $datasourceObj->script;
-        
+        // Set template vars
+		$template_path = $_SESSION['config']['corepath'] . 'modules/templates/templates/';
+		
         // Merge with TBS
         $TBS = new clsTinyButStrong;
-        
+		//$TBS->NoErr = true;
         if($templateObj->template_type == 'OFFICE') {
             $TBS->Plugin(TBS_INSTALL, OPENTBS_PLUGIN);
         }
-        
-        $TBS->NoErr = true;
         $TBS->LoadTemplate($pathToTemplate);
-        
+		
+		
+		
         foreach ($datasources as $name => $datasource) {
-            if(!is_array($datasource)) {
-                continue;
-            }
-            $TBS->MergeBlock($name, 'array', $datasource);
+            // Scalar values or arrays ?
+			if(!is_array($datasource)) {
+				$TBS->MergeField($name, $datasource);
+            } else {
+			    $TBS->MergeBlock($name, 'array', $datasource);
+		    }
         }
         
         switch($outputType) {
