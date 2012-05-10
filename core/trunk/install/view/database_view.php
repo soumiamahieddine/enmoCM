@@ -1,118 +1,213 @@
-<div class="blockWrapper">
-    <div class="titleBlock">
-        <h2 onClick="slide('database');" style="cursor: pointer;">
-            <?php echo _DATABASE; ?>
-        </h2>
+<div class="ajaxReturn_testConnect">
+    <div class="blockWrapper">
+        <div class="titleBlock">
+            <h2 onClick="slide('database');" style="cursor: pointer;">
+                <!-- <?php echo _DATABASE; ?>--> Informations de connexion
+            </h2>
+        </div>
+        <div class="contentBlock" id="database">
+            <p>
+                <form>
+                    <table>
+                        <tr>
+                            <td>
+                                <?php echo _DATABASESERVER; ?>
+                            </td>
+                            <td>
+                                :
+                            </td>
+                            <td>
+                                <input type="text" id="databaseserver" name="databaseserver"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <?php echo _DATABASESERVERPORT; ?>
+                            </td>
+                            <td>
+                                :
+                            </td>
+                            <td>
+                                <input type="text" id="databaseserverport" name="databaseserverport"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <?php echo _DATABASEUSER; ?>
+                            </td>
+                            <td>
+                                :
+                            </td>
+                            <td>
+                                <input type="text" id="databaseuser" name="databaseuser"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <?php echo _DATABASEPASSWORD; ?>
+                            </td>
+                            <td>
+                                :
+                            </td>
+                            <td>
+                                <input type="password" id="databasepassword" name="databasepassword"/>
+                            </td>
+                        </tr>
+                        <tr style="display: none;">
+                            <td>
+                                <?php echo _DATABASETYPE; ?>
+                            </td>
+                            <td>
+                                :
+                            </td>
+                            <td>
+                                <input type="hidden" id="databasetype" name="databasetype" value="POSTGRESQL"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td>
+                                <input
+                                  type="button"
+                                  value="tester"
+                                  onClick="
+                                    checkDatabaseInfo(
+                                      $('#databaseserver').val(),
+                                      $('#databaseserverport').val(),
+                                      $('#databaseuser').val(),
+                                      $('#databasepassword').val(),
+                                      $('#databasetype').val(),
+                                      'testConnect'
+                                    );
+                                  "
+                                />
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+                <br />
+                <div id="ajaxReturn_testConnect_ko"></div>
+            </p>
+        </div>
     </div>
-    <div class="contentBlock" id="database">
+</div>
+<br />
+<div class="ajaxReturn_createDB">
+    <div class="blockWrapper" id="ajaxReturn_testConnect" style="display: none;">
+        <div class="titleBlock">
+            <h2 onClick="slide('createdatabase');" style="cursor: pointer;">
+                <!--<?php echo _DATABASE; ?>-->Création de la base de données
+            </h2>
+        </div>
+        <div class="contentBlock" id="createdatabase">
+            <p>
+                <div id="ajaxReturn_testConnect_ok"></div>
+                <form>
+                    <table>
+                        <tr>
+                            <td>
+                                <?php echo _DATABASENAME; ?>
+                            </td>
+                            <td>
+                                :
+                            </td>
+                            <td>
+                                <input type="text" name="databasename" id="databasename" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td>
+                                <input type="button" onclick="checkCreateDB($('#databasename').val(), 'createdatabase');" value="Créer la base" />
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+                <br />
+                <div id="ajaxReturn_createDB_ko"></div>
+            </p>
+        </div>
+    </div>
+</div>
+<br />
+<div class="ajaxReturn_loadDatas">
+    <div class="blockWrapper" id="ajaxReturn_createDB" style="display: none;">
+        <div class="titleBlock">
+            <h2 onClick="slide('database');" style="cursor: pointer;">
+                <!--<?php echo _DATABASE; ?>-->Choix des datas
+            </h2>
+        </div>
+        <div class="contentBlock">
+            <p>
+                <div id="ajaxReturn_createDB_ok"></div>
+                <form>
+                    <table>
+                        <tr>
+                            <td>
+                                Datas
+                            </td>
+                            <td>
+                                :
+                            </td>
+                            <td>
+                                <select onChange="checkDataDB($(this).val());" id="dataFilename">
+                                    <option value="default"><?php echo _CHOOSE; ?></option>
+                                    <?php
+                                        for($i=0; $i<count($listSql);$i++) {
+                                            echo '<option ';
+                                              echo 'value="'.$listSql[$i].'"';
+                                            echo '>';
+                                                echo $listSql[$i];
+                                            echo '</option>';
+                                        }
+                                    ?>
+                                </select>
+                            </td>
+                            <td id="returnCheckDataClassic" style="display: none;">
+                                ORIENTÉ ARCHIVAGE
+                            </td>
+                            <td id="returnCheckDataMlb" style="display: none;">
+                                ORIENTÉ COURRIER
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td>
+                                <input type="button" onclick="checkLoadDatas($('#dataFilename').val(), 'loadDatas');" value="Charger les datas" />
+                            </td>
+                            <td></td>
+                        </tr>
+                    </table>
+                </form>
+                <br />
+                <div id="ajaxReturn_loadDatas_ko"></div>
+            </p>
+        </div>
+    </div>
+</div>
+<br />
+<div class="blockWrapper">
+    <div class="contentBlock">
         <p>
-            <form>
-                <table>
-                    <tr>
-                        <td colspan="3" id="returnCheckDatabaseInfo">
-                            &nbsp;
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            &nbsp;
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <?php echo _DATABASESERVER; ?>
-                        </td>
-                        <td>
-                            :
-                        </td>
-                        <td>
-                            <input type="text" id="databaseserver" name="databaseserver"/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <?php echo _DATABASESERVERPORT; ?>
-                        </td>
-                        <td>
-                            :
-                        </td>
-                        <td>
-                            <input type="text" id="databaseserverport" name="databaseserverport"/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <?php echo _DATABASEUSER; ?>
-                        </td>
-                        <td>
-                            :
-                        </td>
-                        <td>
-                            <input type="text" id="databaseuser" name="databaseuser"/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <?php echo _DATABASEPASSWORD; ?>
-                        </td>
-                        <td>
-                            :
-                        </td>
-                        <td>
-                            <input type="password" id="databasepassword" name="databasepassword"/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <?php echo _DATABASENAME; ?>
-                        </td>
-                        <td>
-                            :
-                        </td>
-                        <td>
-                            <input type="text" id="databasename" name="databasename"/>
-                        </td>
-                    </tr>
-                    <tr style="display: none;">
-                        <td>
-                            <?php echo _DATABASETYPE; ?>
-                        </td>
-                        <td>
-                            :
-                        </td>
-                        <td>
-                            <input type="hidden" id="databasetype" name="databasetype" value="POSTGRESQL"/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>&nbsp;</td>
-                        <td>&nbsp;</td>
-                        <td>&nbsp;</td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td>
-                            <input
-                              type="button"
-                              value="tester"
-                              onClick="
-                                checkDatabaseInfo(
-                                  $('#databaseserver').val(),
-                                  $('#databaseserverport').val(),
-                                  $('#databaseuser').val(),
-                                  $('#databasepassword').val(),
-                                  $('#databasename').val(),
-                                  $('#databasetype').val()
-                                );
-                              "
-                            />
-                        </td>
-                    </tr>
-                </table>
-            </form>
-            <br />
-            <br />
             <div id="buttons">
                 <div style="float: left;" class="previousButton" id="previous">
                     <a href="#" onClick="goTo('index.php?step=prerequisites');">
@@ -120,7 +215,7 @@
                     </a>
                 </div>
                 <div style="float: right;" class="nextButton" id="next">
-                    <a href="#" onClick="goTo('index.php?step=docservers');">
+                    <a href="#" onClick="goTo('index.php?step=docservers');" id="ajaxReturn_loadDatas" style=" display: none;">
                         <?php echo _NEXT; ?>
                     </a>
                 </div>

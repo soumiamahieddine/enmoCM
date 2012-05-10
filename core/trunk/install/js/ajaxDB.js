@@ -1,4 +1,4 @@
-function ajax(
+function ajaxDB(
     url,
     parameters,
     divRetour,
@@ -45,6 +45,7 @@ function ajax(
                 retour_ok.html(data.text);
                 retour_ko.html('');
                 slide(divRetour);
+                $('.'+divRetour).slideToggle('slow');
             } else {
                 retour_ko.html(data.text);
             }

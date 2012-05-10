@@ -225,28 +225,46 @@ class Install extends functions
         $databaseserverport,
         $databaseuser,
         $databasepassword,
-        $databasename,
         $databasetype
     )
     {
-
-
         $connect  = 'host='.$databaseserver . ' ';
         $connect .= 'port='.$databaseserverport . ' ';
         $connect .= 'user='.$databaseuser . ' ';
         $connect .= 'password='.$databasepassword;
 
 
-        if (!pg_connect($connect)) {
+        if (!@pg_connect($connect)) {
             return false;
             exit;
         }
 
-        $sqlCreateDatabase  = "CREATE DATABASE ".$databasename;
+        pg_close();
+
+        return true;
+    }
+
+    public function createDatabase(
+        $databasename
+    )
+    {
+
+        $connect  = 'host='.$_SESSION['config']['databaseserver'] . ' ';
+        $connect .= 'port='.$_SESSION['config']['databaseserverport'] . ' ';
+        $connect .= 'user='.$_SESSION['config']['databaseuser'] . ' ';
+        $connect .= 'password='.$_SESSION['config']['databasepassword'];
+
+
+        if (!@pg_connect($connect)) {
+            return false;
+            exit;
+        }
+
+        $sqlCreateDatabase  = 'CREATE DATABASE "'.$databasename.'"';
             $sqlCreateDatabase .= " WITH TEMPLATE template0";
             $sqlCreateDatabase .= " ENCODING = 'UTF8'";
 
-        $execute = pg_query($sqlCreateDatabase);
+        $execute = @pg_query($sqlCreateDatabase);
         if (!$execute) {
             return false;
             exit;
@@ -261,12 +279,39 @@ class Install extends functions
             exit;
         }
 
-
         if (!$this->executeSQLScript('structure.sql')) {
             return false;
             exit;
         }
+        return true;
+    }
 
+    public function getDataList()
+    {
+        $sqlList = array();
+        foreach(glob('data*.sql') as $fileSqlPath) {
+            $sqlFile = str_replace('.sql', '', end(explode('/', $fileSqlPath)));
+            array_push($sqlList, $sqlFile);
+        }
+
+        return $sqlList;
+    }
+
+    public function createData(
+        $dataFile
+    )
+    {
+        $db = new dbquery();
+        $db->connect();
+        if (!$db) {
+            return false;
+            exit;
+        }
+
+        if (!$this->executeSQLScript($dataFile)) {
+            return false;
+            exit;
+        }
         return true;
     }
 

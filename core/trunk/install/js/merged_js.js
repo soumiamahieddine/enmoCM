@@ -40,9 +40,11 @@ function ajax(
     /**********/
 
     if (top == 'true') {
-        var retour = window.top.$('#'+divRetour);
+        var retour_ok = window.top.$('#'+divRetour+'_ok');
+        var retour_ko = window.top.$('#'+divRetour+'_ko');
     } else {
-        var retour = $('#'+divRetour);
+        var retour_ok = $('#'+divRetour+'_ok');
+        var retour_ko = $('#'+divRetour+'_ko');
     }
 
     /**********/
@@ -50,9 +52,11 @@ function ajax(
     $(document).ready( function() {
         $.getJSON('ajax.php?script='+ajaxUrl, ajaxParameters, function(data){
             if (data.status == 1) {
-                retour.html(data.text);
+                retour_ok.html(data.text);
+                retour_ko.html('');
+                slide(divRetour);
             } else {
-                retour.html(data.text);
+                retour_ko.html(data.text);
             }
         });
     });
@@ -102,6 +106,38 @@ function checkLanguage(
 }
 
 
+/* checkCreateDB.js */
+function checkCreateDB(
+    databasename,
+    action
+)
+{
+    $(document).ready(function() {
+        var oneIsEmpty = false;
+        if (databasename.length < 1) {
+            var oneIsEmpty = true;
+        }
+        if (action.length < 1) {
+            var oneIsEmpty = true;
+        }
+
+        if (oneIsEmpty) {
+            $('#ajaxReturn_createDB_ko').html('Choisissez un nom pour la base de donnée');
+            return;
+        }
+        $('#ajaxReturn_createDB_ko').html('');
+
+        ajaxDB(
+            'database',
+              'databasename|'+databasename
+              +'|action|'+action,
+            'ajaxReturn_createDB',
+            'false'
+        );
+    });
+}
+
+
 /* checkLanguage.js */
 function checkLanguage(
     value
@@ -112,6 +148,28 @@ function checkLanguage(
             $('#returnCheckLanguage').css("display","block");
         } else {
             $('#returnCheckLanguage').css("display","none");
+        }
+    });
+}
+
+
+/* checkDataDB.js */
+function checkDataDB(
+    value
+)
+{
+    $(document).ready(function() {
+        if (value != 'default') {
+            if (value == 'data') {
+                $('#returnCheckDataClassic').css("display","block");
+                $('#returnCheckDataMlb').css("display","none");
+            } else if (value == 'data_mlb') {
+                $('#returnCheckDataClassic').css("display","none");
+                $('#returnCheckDataMlb').css("display","block");
+            }
+        } else {
+            $('#returnCheckDataClassic').css("display","none");
+            $('#returnCheckDataMlb').css("display","none");
         }
     });
 }
@@ -147,8 +205,8 @@ function checkDatabaseInfo(
     databaseserverport,
     databaseuser,
     databasepassword,
-    databasename,
-    databasetype
+    databasetype,
+    action
 )
 {
     $(document).ready(function() {
@@ -165,31 +223,88 @@ function checkDatabaseInfo(
         if (databasepassword.length < 1) {
             var oneIsEmpty = true;
         }
-        if (databasename.length < 1) {
+        if (databasetype.length < 1) {
             var oneIsEmpty = true;
         }
-        if (databasetype.length < 1) {
+        if (action.length < 1) {
             var oneIsEmpty = true;
         }
 
         if (oneIsEmpty) {
-            $('#returnCheckDatabaseInfo').html('au moins un champ mal rempli');
+            $('#ajaxReturn_testConnect_ko').html('au moins un champ mal rempli');
             return;
         }
-        $('#returnCheckDatabaseInfo').html('');
+        $('#ajaxReturn_testConnect_ko').html('');
 
-        ajax(
+        ajaxDB(
             'database',
               'databaseserver|'+databaseserver
               +'|databaseserverport|'+databaseserverport
               +'|databaseuser|'+databaseuser
               +'|databasepassword|'+databasepassword
-              +'|databasename|'+databasename
-              +'|databasetype|'+databasetype,
-            'returnCheckDatabaseInfo',
+              +'|databasetype|'+databasetype
+              +'|action|'+action,
+            'ajaxReturn_testConnect',
             'false'
         );
 
+    });
+}
+
+
+/* ajaxDB.js */
+function ajaxDB(
+    url,
+    parameters,
+    divRetour,
+    top
+)
+{
+    var ajaxUrl  = url;
+
+    var parametersTemp = parameters.split('|');
+
+    var strAjaxParameters = '{';
+    for (cpt=0; cpt<parametersTemp.length; cpt++) {
+        strAjaxParameters += parametersTemp[cpt];
+        strAjaxParameters += ":";
+        strAjaxParameters += "'";
+        cpt++;
+        strAjaxParameters += parametersTemp[cpt];
+        strAjaxParameters += "'";
+        if (cpt < parametersTemp.length) {
+            strAjaxParameters += ", ";
+        }
+    }
+    strAjaxParameters += "ajax:'true'";
+    strAjaxParameters += ", div:'"+divRetour+"'";
+    strAjaxParameters += '}'
+
+    var ajaxParameters = eval('(' + strAjaxParameters + ')');
+
+    /**********/
+
+    if (top == 'true') {
+        var retour_ok = window.top.$('#'+divRetour+'_ok');
+        var retour_ko = window.top.$('#'+divRetour+'_ko');
+    } else {
+        var retour_ok = $('#'+divRetour+'_ok');
+        var retour_ko = $('#'+divRetour+'_ko');
+    }
+
+    /**********/
+
+    $(document).ready( function() {
+        $.getJSON('ajax.php?script='+ajaxUrl, ajaxParameters, function(data){
+            if (data.status == 1) {
+                retour_ok.html(data.text);
+                retour_ko.html('');
+                slide(divRetour);
+                $('.'+divRetour).slideToggle('slow');
+            } else {
+                retour_ko.html(data.text);
+            }
+        });
     });
 }
 
@@ -207,6 +322,38 @@ function minHeightOfSection()
         var minHeightOfSection = (heightOfNavigator - (heightOfHeader + heightOfFooter +  nbLine));
 
         document.getElementById('section').style.minHeight=minHeightOfSection+"px";
+    });
+}
+
+
+/* checkLoadDatas.js */
+function checkLoadDatas(
+    dataFilename,
+    action
+)
+{
+    $(document).ready(function() {
+        var oneIsEmpty = false;
+        if (dataFilename.length < 1) {
+            var oneIsEmpty = true;
+        }
+        if (action.length < 1) {
+            var oneIsEmpty = true;
+        }
+
+        if (oneIsEmpty) {
+            $('#ajaxReturn_loadDatas_ko').html('Sélécionner le fichier de datas à importer');
+            return;
+        }
+        $('#ajaxReturn_loadDatas_ok').html('');
+
+        ajaxDB(
+            'database',
+              'dataFilename|'+dataFilename
+              +'|action|'+action,
+            'ajaxReturn_loadDatas',
+            'false'
+        );
     });
 }
 

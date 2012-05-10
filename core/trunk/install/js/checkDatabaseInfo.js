@@ -3,8 +3,8 @@ function checkDatabaseInfo(
     databaseserverport,
     databaseuser,
     databasepassword,
-    databasename,
-    databasetype
+    databasetype,
+    action
 )
 {
     $(document).ready(function() {
@@ -21,28 +21,28 @@ function checkDatabaseInfo(
         if (databasepassword.length < 1) {
             var oneIsEmpty = true;
         }
-        if (databasename.length < 1) {
+        if (databasetype.length < 1) {
             var oneIsEmpty = true;
         }
-        if (databasetype.length < 1) {
+        if (action.length < 1) {
             var oneIsEmpty = true;
         }
 
         if (oneIsEmpty) {
-            $('#returnCheckDatabaseInfo').html('au moins un champ mal rempli');
+            $('#ajaxReturn_testConnect_ko').html('au moins un champ mal rempli');
             return;
         }
-        $('#returnCheckDatabaseInfo').html('');
+        $('#ajaxReturn_testConnect_ko').html('');
 
-        ajax(
+        ajaxDB(
             'database',
               'databaseserver|'+databaseserver
               +'|databaseserverport|'+databaseserverport
               +'|databaseuser|'+databaseuser
               +'|databasepassword|'+databasepassword
-              +'|databasename|'+databasename
-              +'|databasetype|'+databasetype,
-            'returnCheckDatabaseInfo',
+              +'|databasetype|'+databasetype
+              +'|action|'+action,
+            'ajaxReturn_testConnect',
             'false'
         );
 
