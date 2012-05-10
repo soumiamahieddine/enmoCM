@@ -44,4 +44,5 @@ if (!defined('_MANAGE_ATTACHMENTS'))  define('_MANAGE_ATTACHMENTS', 'G&eacute;re
 
 if (!defined('_GENERATE_OFFICE_ATTACHMENT'))  define('_GENERATE_OFFICE_ATTACHMENT', 'G&eacute;n&eacute;rer OFFICE');
 if (!defined('_GENERATE_HTML_ATTACHMENT'))  define('_GENERATE_HTML_ATTACHMENT', 'G&eacute;n&eacute;rer HTML');
-
+if (!defined('_ATTACH_FROM_HDD'))  define('_ATTACH_FROM_HDD', 'Ajouter une pi&egrave;ce jointe / r&eacute;ponse depuis votre disque dur');
+if (!defined('_GENERATE_ATTACHMENT_FROM'))  define('_GENERATE_ATTACHMENT_FROM', 'G&eacute;n&eacute;rer une pi&egrave;ce jointe / r&eacute;ponse depuis un mod&egrave;le au format');

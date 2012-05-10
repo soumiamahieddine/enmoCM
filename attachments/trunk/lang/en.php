@@ -43,3 +43,5 @@ if (!defined('_MANAGE_ATTACHMENTS'))  define('_MANAGE_ATTACHMENTS', 'Manage atta
 
 if (!defined('_GENERATE_OFFICE_ATTACHMENT'))  define('_GENERATE_OFFICE_ATTACHMENT', 'Generate Office Attachment');
 if (!defined('_GENERATE_HTML_ATTACHMENT'))  define('_GENERATE_HTML_ATTACHMENT', 'Generate HTML Attachment');
+if (!defined('_ATTACH_FROM_HDD'))  define('_ATTACH_FROM_HDD', 'Add an Attachment from your Hard Disk');
+if (!defined('_GENERATE_ATTACHMENT_FROM'))  define('_GENERATE_ATTACHMENT_FROM', 'Generate Attachment from a model with format');
