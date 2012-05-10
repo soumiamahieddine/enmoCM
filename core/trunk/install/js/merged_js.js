@@ -91,6 +91,34 @@ function goTo(
 }
 
 
+/* createDocservers.js */
+function createDocservers(
+    docserverRoot
+)
+{
+    $(document).ready(function() {
+        var oneIsEmpty = false;
+        if (docserverRoot.length < 1) {
+            var oneIsEmpty = true;
+        }
+
+        if (oneIsEmpty) {
+            $('#ajaxReturn_createDocservers_ko').html('Vous devez choisir l\'emplacement racine de vos docservers');
+            return;
+        }
+        $('#ajaxReturn_createDocservers_ko').html('');
+
+        ajaxDB(
+            'docservers',
+              'docserverRoot|'+docserverRoot,
+            'ajaxReturn_createDocservers',
+            'false'
+        );
+
+    });
+}
+
+
 /* checkForm.js */
 function checkLanguage(
     value
@@ -301,10 +329,15 @@ function ajaxDB(
                 retour_ko.html('');
                 slide(divRetour);
                 $('.'+divRetour).slideToggle('slow');
-                $('.wait').css('display','none');
+                if ($('.wait')) {
+                    $('.wait').css('display','none');
+                }
+
             } else {
                 retour_ko.html(data.text);
-                $('.wait').css('display','none');
+                if ($('.wait')) {
+                    $('.wait').css('display','none');
+                }
             }
         });
     });

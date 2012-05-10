@@ -211,15 +211,11 @@ class Install extends functions
 
     public function setPreviousStep(
         $previousStep
-    ) {
+    )
+    {
         $_SESSION['previousStep'] = $previousStep;
     }
 
-    /**
-     * create the docservers
-     * @param $docserverPath string path to the docserver
-     * @return boolean
-     */
     public function checkDatabaseParameters(
         $databaseserver,
         $databaseserverport,
