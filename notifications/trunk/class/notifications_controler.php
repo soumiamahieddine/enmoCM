@@ -73,15 +73,14 @@ class notifications_controler extends ObjectControler implements ObjectControler
 
 	public function getByNotificationId($notificationId) {
         $query = "select * from " . _NOTIFICATIONS_TABLE_NAME 
-			. " where notification_id = '".$notificationId."'"
-			. " and notification_mode = 'EMAIL'"; 
+			. " where notification_id = '".$notificationId."'"; 
 		$db = new dbquery();
 		$db->query($query);
 		$notifObj = $db->fetch_object();
         return $notifObj;
     }
     
-	public function getWithFilter($whereClause='1=1', $orderByClause='notification_sid',) {
+	public function getWithFilter($whereClause='1=1', $orderByClause='notification_sid') {
         $query = "select * from " . _NOTIFICATIONS_TABLE_NAME 
 			. " where " . $whereClause
 			. " order by " . $orderByClause; 
