@@ -41,7 +41,16 @@ if ($objectType == 'templateStyle') {
             'res_view' => $res_view,
             'res_table' => $objectTable
             );
-        $filePathOnTmp = $templateCtrl->merge($objectId, $params, 'file');
+        if ($objectType == 'attachmentFromTemplate') {
+			$filePathOnTmp = $templateCtrl->merge($objectId, $params, 'file');
+		} elseif ($objectType == 'template') {
+			$filePathOnTmp = $templateCtrl->copyTemplateOnTmp($objectId);
+			if ($filePathOnTmp == '') {
+				$result = array('ERROR' => _FAILED_TO_COPY_ON_TMP 
+					. ':' . $objectId . ' ' . $filePathOnTmp);
+				createXML('ERROR', $result);
+			}
+		}
         $fileExtension = $func->extractFileExt($filePathOnTmp);
     }
 }
