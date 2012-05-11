@@ -36,6 +36,10 @@ $core = new core_tools();
 $_SESSION['custom_override_id'] = $core->get_custom_id();
 /**** retrieve HTTP_REQUEST FROM SSO ****/
 $_SESSION['HTTP_REQUEST'] = $_REQUEST;
+if (!file_exists('installed.lck')) {
+    header('location: install/index.php');
+    exit;
+}
 if(isset($_GET['origin']) && $_GET['origin'] == 'scan')
 {
     header('location: apps/'.$_SESSION['businessapps'][0]['appid'].'/reopen.php');
