@@ -39,7 +39,7 @@ case 'form_content':
 	break;
 	
 case 'recipients':
-	$entities = "'". str_replace(",", "','", $templateAssocObj->diffusion_properties) . "'";
+	$entities = "'". str_replace(",", "','", $notification->diffusion_properties) . "'";
 	$query = "SELECT distinct us.*" 
 		. " FROM users_entities ue "
 		. " LEFT JOIN users us ON us.user_id = ue.user_id "
@@ -55,7 +55,7 @@ case 'recipients':
 	break;
 
 case 'attach':
-	$entities = "'". str_replace(",", "','", $templateAssocObj->attachfor_properties) . "'";
+	$entities = "'". str_replace(",", "','", $notification->attachfor_properties) . "'";
 	$query = "SELECT user_id" 
 		. " FROM users_entities"
 		. " WHERE entity_id in (".$entities.")"

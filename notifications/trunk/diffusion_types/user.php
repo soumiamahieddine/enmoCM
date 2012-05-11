@@ -42,7 +42,7 @@ case 'form_content':
 	break;
 
 case 'recipients':	
-	$users = "'". str_replace(",", "','", $templateAssocObj->diffusion_properties) . "'";
+	$users = "'". str_replace(",", "','", $notification->diffusion_properties) . "'";
 	$query = "SELECT us.*" 
 		. " FROM users us"
 		. " WHERE us.user_id in (".$users.")"
@@ -57,7 +57,7 @@ case 'recipients':
 	break;
 
 case 'attach':
-	$users = "'". str_replace(",", "','", (string)$templateAssocObj->attachfor_properties) . "'";
+	$users = "'". str_replace(",", "','", (string)$notification->attachfor_properties) . "'";
 	$query = "SELECT user_id" 
 		. " FROM users"
 		. " WHERE '".$user_id."' in (".$users.")";

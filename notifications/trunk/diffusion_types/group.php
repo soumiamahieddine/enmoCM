@@ -37,7 +37,7 @@ case 'form_content':
 	break;
 	
 case 'recipients':
-	$groups = "'". str_replace(",", "','", $templateAssocObj->diffusion_properties) . "'";
+	$groups = "'". str_replace(",", "','", $notification->diffusion_properties) . "'";
 	$query = "SELECT distinct us.*" 
 		. " FROM usergroup_content ug "
 		. "	LEFT JOIN users us ON us.user_id = ug.user_id" 
@@ -53,7 +53,7 @@ case 'recipients':
 	break;
 
 case 'attach':
-	$groups = "'". str_replace(",", "','", $templateAssocObj->attachfor_properties) . "'";
+	$groups = "'". str_replace(",", "','", $notification->attachfor_properties) . "'";
 	$query = "SELECT user_id" 
 		. " FROM usergroup_content"
 		. " WHERE group_id in (".$groups.")"
