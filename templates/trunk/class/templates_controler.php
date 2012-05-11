@@ -1100,9 +1100,7 @@ class templates_controler extends ObjectControler implements ObjectControlerIF
         }
         $datasources = $this->getBaseDatasources();
         require $datasourceObj->script;
-        // Set template vars
-		$template_path = $_SESSION['config']['corepath'] . 'modules/templates/templates/';
-		
+
         // Merge with TBS
         $TBS = new clsTinyButStrong;
 		//$TBS->NoErr = true;
@@ -1110,8 +1108,6 @@ class templates_controler extends ObjectControler implements ObjectControlerIF
             $TBS->Plugin(TBS_INSTALL, OPENTBS_PLUGIN);
         }
         $TBS->LoadTemplate($pathToTemplate);
-		
-		
 		
         foreach ($datasources as $name => $datasource) {
             // Scalar values or arrays ?
