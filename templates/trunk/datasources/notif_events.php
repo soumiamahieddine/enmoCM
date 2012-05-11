@@ -1,17 +1,16 @@
 <?php
 
 /*
-* @requires
-*   $params
-*		['recipient']	= user object
-*		['events']		= array of notif_event objects
+* @requires vas
+*   $recipient	= user recipient object
+*	$events		= array of notif_event objects
 *
-* @returns
+* @return datasources
 	[recipient]	= one user recipient array
 	[events]	= array of events arrays
 */
 
-$datasources['recipient'] = (array)$recipient;
+$datasources['recipient'][0] = (array)$recipient;
 
 $datasources['events'] = array();
 foreach($events as $event) {

@@ -26,7 +26,7 @@ if ($datasources['res_letterbox'][0]['dest_contact_id'] <> '') {
 
 // Notes
 $datasources['notes'] = array();
-$dbDatasource->query("SELECT * FROM notes WHERE coll_id = '".$coll_id."' AND identifier = ".$res_id."");
+$dbDatasource->query("SELECT notes.*, users.firstname, users.lastname FROM notes left join users on notes.user_id = users.user_id WHERE coll_id = '".$coll_id."' AND identifier = ".$res_id."");
 while($note = $dbDatasource->fetch_array()) {
     $datasources['notes'][] = $note;
 }
