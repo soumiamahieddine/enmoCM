@@ -835,6 +835,7 @@ if (!defined('_NO_RESULTS')) define( '_NO_RESULTS', 'Aucun r&eacute;sultat');
 if (!defined('_FOUND_DOCS')) define('_FOUND_DOCS', 'document(s) found');
 if (!defined('_MY_CONTACTS')) define('_MY_CONTACTS', 'My contacts');
 if (!defined('_DETAILLED_PROPERTIES')) define('_DETAILLED_PROPERTIES', 'Details');
+if (!defined('_PROPERTIES')) define( '_PROPERTIES', 'Details');
 if (!defined('_VIEW_DOC_NUM')) define('_VIEW_DOC_NUM', 'View document nb.');
 if (!defined('_VIEW_DETAILS_NUM')) define('_VIEW_DETAILS_NUM', 'View details page of document nb.');
 if (!defined('_TO')) define('_TO', 'to');

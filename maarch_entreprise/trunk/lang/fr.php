@@ -1089,6 +1089,7 @@ if (!defined('_NO_RESULTS')) define( '_NO_RESULTS', 'Aucun r&eacute;sultat');
 if (!defined('_FOUND_DOCS')) define( '_FOUND_DOCS', 'document(s) trouv&eacute;(s)');
 if (!defined('_MY_CONTACTS')) define( '_MY_CONTACTS', 'Mes contacts');
 if (!defined('_DETAILLED_PROPERTIES')) define( '_DETAILLED_PROPERTIES', 'Propri&eacute;t&eacute;s d&eacute;taill&eacute;es');
+if (!defined('_PROPERTIES')) define( '_PROPERTIES', 'D&eacute;tails');
 if (!defined('_VIEW_DOC_NUM')) define( '_VIEW_DOC_NUM', 'Visualisation du document n&deg;');
 if (!defined('_VIEW_DETAILS_NUM')) define( '_VIEW_DETAILS_NUM', 'Visualisation de la fiche d&eacute;taill&eacute;e du document n&deg;');
 if (!defined('_TO')) define( '_TO', 'vers');

@@ -448,7 +448,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
             <br/>
             <dl id="tabricator1">
                 <?php $detailsExport .= "<h1><center>"._DETAILS_PRINT." : ".$s_id."</center></h1><hr>";?>
-                <dt><?php  echo _DETAILLED_PROPERTIES;?></dt>
+                <dt><?php  echo _PROPERTIES;?></dt>
                 <dd>
                     <h2>
                         <span class="date">
@@ -689,12 +689,12 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     ?>
 
                     <?php
-                    if ($core->is_module_loaded('tags') &&
+                    /*if ($core->is_module_loaded('tags') &&
                         ($core->test_service('tag_view', 'tags',false) == 1))
                     {
                         include_once("modules".DIRECTORY_SEPARATOR."tags".DIRECTORY_SEPARATOR
                         ."templates/details/index.php");
-                    }
+                    }*/
                     ?>
 
                     <div id="opt_indexes">
@@ -1373,6 +1373,22 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     //}
 
                     echo $Links;
+                    
+                    if ($core->is_module_loaded('tags') &&
+						($core->test_service('tag_view', 'tags', false) == 1)) {
+						?>
+						<dt>
+							<?php
+							echo _TAGS;
+							?>
+						</dt>
+						<dd>
+							<?php
+							include_once('modules/tags/templates/details/index.php');
+							?>
+						</dd>
+						<?php
+					}
                 ?>
             </dl>
     <?php
