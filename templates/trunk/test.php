@@ -32,7 +32,7 @@ $params = array(
 */
 
 // Test réponse letterbox
-$templateId = 103;
+$templateId = 105;
 $params = array(
 	'dummy' => 'dummy',
 	'res_view'	=> 'res_view_letterbox',

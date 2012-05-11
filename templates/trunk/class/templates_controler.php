@@ -1103,7 +1103,7 @@ class templates_controler extends ObjectControler implements ObjectControlerIF
 
         // Merge with TBS
         $TBS = new clsTinyButStrong;
-		//$TBS->NoErr = true;
+		$TBS->NoErr = true;
         if($templateObj->template_type == 'OFFICE') {
             $TBS->Plugin(TBS_INSTALL, OPENTBS_PLUGIN);
         }
