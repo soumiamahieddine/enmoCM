@@ -197,52 +197,14 @@ class history extends dbquery
 
         $core = new core_tools();
         if ($core->is_module_loaded("notifications")) {
-            require_once(
+			require_once(
                 "modules"
                 .DIRECTORY_SEPARATOR."notifications"
-                .DIRECTORY_SEPARATOR."notifications_tables_definition.php"
+                .DIRECTORY_SEPARATOR."class"
+				.DIRECTORY_SEPARATOR."events_controler.php"
             );
-
-            $this->connect();
-            $this->query(
-                "SELECT "
-                    ."system_id "
-                ."FROM "
-                    ._TEMPLATES_ASSOCIATION_TABLE_NAME." "
-                ."WHERE "
-                    ."upper(what) like 'EVENT'  "
-                    ."AND '".$event_id."' like value_field "
-                    ."AND maarch_module = 'notifications'"
-            );
-			$notificationIds = array();
-			while ($ta = $this->fetch_object()) {
-				$notificationIds[] = $ta->system_id;
-			}
-            if (count($notificationIds) > 0) {
-                foreach ($notificationIds as $notificationId) {
-					$this->query(
-                        "INSERT INTO "
-                            ._NOTIF_EVENT_STACK_TABLE_NAME." ("
-                                ."ta_sid, "
-                                ."table_name, "
-                                ."record_id, "
-                                ."user_id, "
-                                ."event_info, "
-                                ."event_date"
-                            .") "
-                        ."VALUES("
-                            .$notificationId.", "
-                            ."'".$table_name."', "
-                            ."'".$record_id."', "
-                            ."'".$user."', "
-                            ."'".$info."', "
-                            .$this->current_datetime()
-                        .")",
-                        false,
-                        true
-                    );
-                }
-            }
+			$eventsCtrl = new events_controler();
+			$eventsCtrl->stackEvents($event_id, $table_name, $record_id, $user, $info);
         }
     }
 
