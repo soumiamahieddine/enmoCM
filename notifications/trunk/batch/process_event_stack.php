@@ -83,14 +83,22 @@ while ($state <> 'END') {
 		} 
 		$totalNotificationsToProcess = count($tmpNotifs);
 		$logger->write($totalNotificationsToProcess .' notifications to process', 'INFO');
-		$state = 'MERGE_TEMPLATE';
+		switch($notification->notification_mode) {
+		case 'EMAIL':
+			$state = 'FILL_EMAIL_STACK';
+			break;
+		case 'RSS':
+			$state = 'FILL_RSS_STACK';
+			break;
+		}
 		break;
 		
+		
 	/**********************************************************************/
-    /*                    	MERGE_TEMPLATE			           	          */
-    /* Load parameters				                                      */
+    /*                    	FILL_EMAIL_STACK		           	          */
+    /* Merge template and fill notif_email_stack                          */
     /**********************************************************************/
-    case 'MERGE_TEMPLATE' :
+    case 'FILL_EMAIL_STACK' :
 		foreach($tmpNotifs as $user_id => $tmpNotif) {
 			// Merge template with data and style
 			$logger->write('Merging template #' . $notification->template_id 
@@ -159,8 +167,39 @@ while ($state <> 'END') {
 			foreach($tmpNotif['events'] as $event) {
 				$events_controler->commitEvent($event->event_stack_sid, "SUCCESS");
 			}
+
+		} 
+		$state = 'END';
+		break;
+	
+	/**********************************************************************/
+    /*                    	FILL_EMAIL_STACK		           	          */
+    /* Merge template and fill notif_email_stack                          */
+    /**********************************************************************/
+    case 'FILL_RSS_STACK' :
+		foreach($tmpNotifs as $user_id => $tmpNotif) {
+			// Merge template with data and style
+			$logger->write('Adding RSS item ('.count($tmpNotif['events']).' events) for user ' . $user_id, 'INFO');
 			
-			$currentNotification++;
+			foreach($tmpNotif['events'] as $event) {
+				// Get dynamic url
+				// $url = $notifications_controler->parseRssUrl($event);
+				$url = str_replace('$1', $event->record_id, $notification->rss_url_template);
+				
+				// Inser into stack
+				$query = "INSERT INTO " . _NOTIF_RSS_STACK_TABLE_NAME 
+					. " (rss_user_id, rss_event_stack_sid, rss_event_url) "
+					. "VALUES ('".$user_id."', "
+					. "".$event->event_stack_sid.", "
+					. "'".$url."')";
+				$logger->write('SQL query:' . $query, 'DEBUG');
+				$db2 = new dbquery();
+				$db2->connect();
+				$db2->query($query, false, true);
+				$events_controler->commitEvent($event->event_stack_sid, "SUCCESS");
+			}
+			
+			
 		} 
 		$state = 'END';
 		break;
