@@ -59,7 +59,7 @@ class events_controler
 		return $events;
 	}
 	
-	public function stackEvents($event_id, $table_name, $record_id, $user, $info) {
+	public function fill_event_stack($event_id, $table_name, $record_id, $user, $info) {
 	    $db = new dbquery();
 		$db->connect();
         $db->query(
@@ -77,36 +77,28 @@ class events_controler
 		}
 		
         foreach ($notifications as $notification) {
-			switch($notification->notification_mode) {
-			case 'RSS':
-				// Notif based RSS (1 by notification id)
-				break;
-			
-			case 'EMAIL':
-			default:
-				$db->query(
-					"INSERT INTO "
-						._NOTIF_EVENT_STACK_TABLE_NAME." ("
-							."notification_sid, "
-							."table_name, "
-							."record_id, "
-							."user_id, "
-							."event_info, "
-							."event_date"
-						.") "
-					."VALUES("
-						.$notification->notification_sid.", "
-						."'".$table_name."', "
-						."'".$record_id."', "
-						."'".$user."', "
-						."'".$info."', "
-						.$db->current_datetime()
-					.")",
-					false,
-					true
-				);
-			}
-			
+			$db->query(
+				"INSERT INTO "
+					._NOTIF_EVENT_STACK_TABLE_NAME." ("
+						."notification_sid, "
+						."table_name, "
+						."record_id, "
+						."user_id, "
+						."event_info, "
+						."event_date"
+					.") "
+				."VALUES("
+					.$notification->notification_sid.", "
+					."'".$table_name."', "
+					."'".$record_id."', "
+					."'".$user."', "
+					."'".$info."', "
+					.$db->current_datetime()
+				.")",
+				false,
+				true
+			);
+
         }
 
 	}
