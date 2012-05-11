@@ -32,22 +32,22 @@ $params = array(
 */
 
 // Test réponse letterbox
-/*$templateId = 83;
+$templateId = 103;
 $params = array(
 	'dummy' => 'dummy',
 	'res_view'	=> 'res_view_letterbox',
 	'coll_id' => 'letterbox_coll',
-	'res_id' => 166
-);*/
+	'res_id' => 103
+);
 
 // Test divers
-$templateId = 23;
-$params = array(
-	'dummy' => 'dummy',
-	'res_view'	=> 'res_view_letterbox',
-	'coll_id' => 'letterbox_coll',
-	'res_id' => 132
-);
+//~ $templateId = 23;
+//~ $params = array(
+	//~ 'dummy' => 'dummy',
+	//~ 'res_view'	=> 'res_view_letterbox',
+	//~ 'coll_id' => 'letterbox_coll',
+	//~ 'res_id' => 132
+//~ );
 
 $content = $templates_controler->merge($templateId, $params, 'content');
 

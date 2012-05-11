@@ -29,8 +29,9 @@
 * @author  Laurent Giovannoni <dev@maarch.org>
 */
 //require_once('modules/templates/class/class_modules_tools.php');
-require_once('modules/templates/class/templates_controler.php');
+require_once 'modules/templates/class/templates_controler.php';
 require_once 'modules/templates/templates_tables_definition.php';
+require_once 'core/class/class_security.php';
 $core_tools = new core_tools();
 $core_tools->test_user();
 $core_tools->load_lang();
@@ -79,12 +80,18 @@ if (!empty($answer['TEMPLATE_ID']) &&  $mode == 'add') {
         $line = $db->fetch_object();
         $answer['TEMPLATE_ID'] = $template->template_id;
         $answer['MODEL_LABEL'] = $func->show_string($template->template_label);
-        $answer['CONTENT'] = $func->show_string($template->template_content);
-        $answer['CONTENT'] = $templates_controler->fieldsReplace(
-            $answer['CONTENT'], $res_id, $coll_id
-        );
         $answer['TITLE'] = $_SESSION['courrier']['res_id'] . '_' 
             . $answer['MODEL_LABEL'] . '_' . date('dmY');
+            
+        $sec = new security();
+        $res_view = $sec->retrieve_view_from_coll_id($coll_id);
+        $params = array(
+            'res_id' => $res_id,
+            'coll_id' => $coll_id,
+            'res_view' => $res_view
+        );
+       
+		$answer['CONTENT'] = $templates_controler->merge($template->template_id, $params, 'content');
     }
 } elseif (!empty($id) && $mode == 'up') {
     $db->query("select title, res_id, path, docserver_id, filename from " 
