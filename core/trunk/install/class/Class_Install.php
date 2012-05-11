@@ -289,7 +289,7 @@ class Install extends functions
 
     private function setConfigXml()
     {
-        $xmlconfig = simplexml_load_file('apps/maarch_entreprise/xml/config.xml');
+        $xmlconfig = simplexml_load_file('apps/maarch_entreprise/xml/config.xml.default');
         $CONFIG = $xmlconfig->CONFIG;
 
         $CONFIG->databaseserver = $_SESSION['config']['databaseserver'];
