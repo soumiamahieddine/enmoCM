@@ -204,7 +204,7 @@ class history extends dbquery
 				.DIRECTORY_SEPARATOR."events_controler.php"
             );
 			$eventsCtrl = new events_controler();
-			$eventsCtrl->stackEvents($event_id, $table_name, $record_id, $user, $info);
+			$eventsCtrl->fill_event_stack($event_id, $table_name, $record_id, $user, $info);
         }
     }
 
