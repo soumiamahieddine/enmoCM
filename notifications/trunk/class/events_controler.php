@@ -32,7 +32,6 @@
 
 //Loads the required class
 try {
-	//require_once 'modules/notifications/class/event';
 	require_once 'modules/notifications/class/events.php';
 	require_once 'modules/notifications/notifications_tables_definition.php';
     require_once 'core/class/ObjectControlerAbstract.php';
