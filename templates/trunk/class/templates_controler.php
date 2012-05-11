@@ -1150,4 +1150,26 @@ class templates_controler extends ObjectControler implements ObjectControlerIF
             return $myFile;
         }
     }
+    
+    /** Copy a template master on tmp dir 
+    * 
+    * @param string $templateId : templates identifier
+    * @return string path of the template in tmp dir
+    */
+    public function copyTemplateOnTmp($templateId) 
+    {
+        $templateObj = $this->get($templateId);
+        // Get template path from docserver
+        $pathToTemplate = $this->getWorkingCopy($templateObj);
+		$fileExtension = $this->extractFileExt($pathToTemplate);
+        $fileNameOnTmp = 'tmp_file_' . $_SESSION['user']['UserId']
+            . '_' . rand() . '.' . $fileExtension;
+        $filePathOnTmp = $_SESSION['config']['tmppath'] . $fileNameOnTmp;
+        // Copy the template from the DS to the tmp dir
+        if (!copy($pathToTemplate, $filePathOnTmp)) {
+			return '';
+		} else {
+			return $filePathOnTmp;
+		}
+    }
 }
