@@ -58,7 +58,7 @@ $frm_str .= '<tr id="tag_tr">';
 $frm_str .= '<td>';
 if ($modify_doc)
 {
-	$tag_customsize = '1000px';
+	$tag_customsize = '950px';
 	$tag_customcols = '120';
 	include_once 'modules/tags/templates/addtag_userform.php'; //CHARGEMENT DU FORMULAIRE D'AJOUT DE DROITS		
 }
