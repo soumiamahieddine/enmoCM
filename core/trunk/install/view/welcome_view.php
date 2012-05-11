@@ -17,8 +17,13 @@
                 ICI LE WELCOME TEXT<br />
                 ICI LE WELCOME TEXT<br />
             </div>
-            <br />
-            <br />
+        </p>
+    </div>
+</div>
+<br />
+<div class="blockWrapper">
+    <div class="contentBlock" id="welcome">
+        <p>
             <div id="buttons">
                 <div style="float: left;" class="previousButton" id="previous">
                     <a href="#" onClick="goTo('index.php?step=language');">
@@ -36,3 +41,4 @@
         </p>
     </div>
 </div>
+

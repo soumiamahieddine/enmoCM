@@ -177,8 +177,13 @@
                     </td>
                 </tr>
             </table>
-            <br />
-            <br />
+        </p>
+    </div>
+</div>
+<br />
+<div class="blockWrapper">
+    <div class="contentBlock" id="prerequisites">
+        <p>
             <div id="buttons">
                 <div style="float: left;" class="previousButton" id="previous">
                     <a href="#" onClick="goTo('index.php?step=licence');">

@@ -6,8 +6,13 @@
     </div>
     <div class="contentBlock" id="password">
         <p>
-            <br />
-            <br />
+        </p>
+    </div>
+</div>
+<br />
+<div class="blockWrapper">
+    <div class="contentBlock" id="password">
+        <p>
             <div id="buttons">
                 <div style="float: left;" class="previousButton" id="previous">
                     <a href="#" onClick="goTo('index.php?step=docservers');" style="display:none;">

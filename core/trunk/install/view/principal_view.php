@@ -17,13 +17,15 @@
                 <div class="line"></div>
                 <section id="section">
                     <br />
+                    <?php include('install/view/includes/progress.php'); ?>
+                    <br />
                     <?php include('install/view/'.$view.'_view.php'); ?>
                     <br />
                 </section>
-                <div class="line"></div>
-                <footer id="footer">
+                <!-- <div class="line"></div> -->
+                <!-- <footer id="footer">
                     <?php include('install/view/includes/footer.php'); ?>
-                </footer>
+                </footer> -->
             </div>
         </div>
     </body>

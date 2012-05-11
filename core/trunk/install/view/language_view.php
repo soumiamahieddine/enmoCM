@@ -19,22 +19,27 @@
                         }
                     ?>
                 </select>
-                <br />
-                <br />
-                <div id="buttons">
-                    <div style="float: left;" class="previousButton">
-                    </div>
-                    <div style="float: right;" class="nextButton" id="next">
-                        <span id="returnCheckLanguage" style="display: none;">
-                            <a href="#" onClick="$('form').submit();">
-                                <?php echo _NEXT; ?>
-                            </a>
-                        </span>
-                    </div>
-                </div>
-                <br />
-                <br />
             </form>
+        </p>
+    </div>
+</div>
+<br />
+<div class="blockWrapper">
+    <div class="contentBlock" id="chooseLanguage">
+        <p>
+            <div id="buttons">
+                <div style="float: left;" class="previousButton">
+                </div>
+                <div style="float: right;" class="nextButton" id="next">
+                    <span id="returnCheckLanguage" style="display: none;">
+                        <a href="#" onClick="$('form').submit();">
+                            <?php echo _NEXT; ?>
+                        </a>
+                    </span>
+                </div>
+            </div>
+            <br />
+            <br />
         </p>
     </div>
 </div>

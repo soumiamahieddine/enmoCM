@@ -17,7 +17,7 @@
                                 :
                             </td>
                             <td>
-                                <input type="text" id="databaseserver" name="databaseserver"/>
+                                <input type="text" id="databaseserver" name="databaseserver" value="localhost"/>
                             </td>
                         </tr>
                         <tr>
@@ -28,7 +28,7 @@
                                 :
                             </td>
                             <td>
-                                <input type="text" id="databaseserverport" name="databaseserverport"/>
+                                <input type="text" id="databaseserverport" name="databaseserverport" value="5432"/>
                             </td>
                         </tr>
                         <tr>
@@ -77,7 +77,6 @@
                                   type="button"
                                   value="tester"
                                   onClick="
-                                    $('.wait').css('display','block');
                                     checkDatabaseInfo(
                                       $('#databaseserver').val(),
                                       $('#databaseserverport').val(),
@@ -218,7 +217,7 @@
         <p>
             <div id="buttons">
                 <div style="float: left;" class="previousButton" id="previous">
-                    <a href="#" onClick="goTo('index.php?step=prerequisites');">
+                    <a href="#" onClick="goTo('index.php?step=prerequisites');" style="display: none;">
                         <?php echo _PREVIOUS; ?>
                     </a>
                 </div>

@@ -16,6 +16,7 @@ function checkLoadDatas(
             $('#ajaxReturn_loadDatas_ko').html('Sélécionner le fichier de datas à importer');
             return;
         }
+        $('.wait').css('display','block');
         $('#ajaxReturn_loadDatas_ok').html('');
 
         ajaxDB(

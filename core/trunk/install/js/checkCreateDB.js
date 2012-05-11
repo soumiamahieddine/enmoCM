@@ -16,6 +16,7 @@ function checkCreateDB(
             $('#ajaxReturn_createDB_ko').html('Choisissez un nom pour la base de donnée');
             return;
         }
+        $('.wait').css('display','block');
         $('#ajaxReturn_createDB_ko').html('');
 
         ajaxDB(

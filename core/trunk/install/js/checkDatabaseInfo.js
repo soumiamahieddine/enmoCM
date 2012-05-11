@@ -32,6 +32,7 @@ function checkDatabaseInfo(
             $('#ajaxReturn_testConnect_ko').html('au moins un champ mal rempli');
             return;
         }
+        $('.wait').css('display','block');
         $('#ajaxReturn_testConnect_ko').html('');
 
         ajaxDB(

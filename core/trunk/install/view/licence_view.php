@@ -1,4 +1,3 @@
-
 <div class="blockWrapper">
     <div class="titleBlock">
         <h2 onClick="slide('licence');" style="cursor: pointer;">
@@ -13,19 +12,27 @@
                     <?php echo $txtLicence; ?>
                     <br />
                 </div>
-                <br />
-                <hr />
-                <br />
+            </div>
+        </p>
+    </div>
+</div>
+<br />
+<div class="blockWrapper">
+    <div class="contentBlock" id="licence">
+        <p>
+            <div align="center">
                 <input type="checkbox" id="checkboxLicence" onChange="checkLicence();"/>
                 <label for="checkboxLicence">
                     <?php echo _OK_WITH_LICENCE; ?>
                 </label>
-                <br />
-                <br />
-                <hr />
             </div>
-            <br />
-            <br />
+        </p>
+    </div>
+</div>
+<br />
+<div class="blockWrapper">
+    <div class="contentBlock" id="licence">
+        <p>
             <div id="buttons">
                 <div style="float: left;" class="previousButton" id="previous">
                     <a href="#" onClick="goTo('index.php?step=welcome');">
