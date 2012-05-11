@@ -36,7 +36,7 @@ $_ENV['DEBUG'] = false;
 
 // Loads the required class
 try {
-    require_once ("modules/notifications/class/templates_association.php");
+    require_once ("modules/notifications/class/notifications.php");
     require_once ("modules/notifications/notifications_tables_definition.php");
     require_once ("core/class/ObjectControlerAbstract.php");
     require_once ("core/class/ObjectControlerIF.php");
@@ -46,16 +46,11 @@ try {
 }
 
 /**
-* @brief  Controler of the templates_association_controler object 
+* @brief  Controler of the notification object 
 *
-*<ul>
-*  <li>Get an lc_policies object from an id</li>
-*  <li>Save in the database a templates_association_controler</li>
-*  <li>Manage the operation on the templates_association_controler related tables in the database (insert, select, update, delete)</li>
-*</ul>
-* @ingroup templates
+* @ingroup notifications
 */
-class templates_association_controler extends ObjectControler implements ObjectControlerIF
+class notifications_controler extends ObjectControler implements ObjectControlerIF
 {
 
     /**
@@ -64,25 +59,24 @@ class templates_association_controler extends ObjectControler implements ObjectC
     * @param  $ta_sid string  templates_assoc identifier
     * @return templates_assoc object with properties from the database or null
     */
-    public function get($template_assoc_id) {
+    public function get($notification_sid) {
         
-		$this->set_specific_id('system_id');
-        $template = $this->advanced_get($template_assoc_id, _TEMPLATES_ASSOCIATION_TABLE_NAME);
+		$this->set_specific_id('notification_sid');
+        $notification = $this->advanced_get($notification_sid, _NOTIFICATIONS_TABLE_NAME);
         
-        if (get_class($template) <> "templates_association") {
+        if (get_class($notification) <> "notifications") {
             return null;
         } else {
-            //var_dump($policy);
-            return $template;
+            return $notification;
         }
     }
 
 	public function getByNotificationId($notificationId) {
-        $query = "select * from " . _TEMPLATES_ASSOCIATION_TABLE_NAME . " where notification_id = '".$notificationId."'"; 
+        $query = "select * from " . _NOTIFICATIONS_TABLE_NAME . " where notification_id = '".$notificationId."'"; 
 		$db = new dbquery();
 		$db->query($query);
-		$templateAssoc = $db->fetch_object();
-        return $templateAssoc;
+		$notifObj = $db->fetch_object();
+        return $notifObj;
     }
     
     /**
@@ -91,34 +85,34 @@ class templates_association_controler extends ObjectControler implements ObjectC
     * @param  $policy object  policy object
     * @return array true if the deletion is complete, false otherwise
     */
-    public function delete($template_association) 
+    public function delete($notification) 
     {
         $control = array();
-        if (!isset($template_association) || empty($template_association)) {
+        if (!isset($notification) || empty($notification)) {
             $control = array('status' => 'ko',
                              'value'  => '',
-                             'error'  => _EVENT_EMPTY
+                             'error'  => _NOTIF_EMPTY
                        );
             return $control;
         }
         
-        $this->set_specific_id('system_id');
-        if ($this->advanced_delete($template_association) == true) {
-            if (isset($params['log_event_del'])
-                && ($params['log_event_del'] == "true"
-                    || $params['log_event_del'] == true)) {
+        $this->set_specific_id('notification_sid');
+        if ($this->advanced_delete($notification) == true) {
+            if (isset($params['log_notif_del'])
+                && ($params['log_notif_del'] == "true"
+                    || $params['log_notif_del'] == true)) {
                 $history = new history();
                 $history->add(
-                    TEMPLATES_ASSOCIATON, $template_association->system_id, 'DEL', 'eventdel',_EVENT_DELETED . ' : '
-                    . $template_association->system_id
+                    _NOTIFICATIONS_TABLE, $notification->notification_sid, 'DEL', 'notifdel',_NOTIF_DELETED . ' : '
+                    . $notification->notification_id
                 );
             }
             $control = array('status' => 'ok',
-                             'value'  => $template_association->system_id
+                             'value'  => $notification->notification_sid
                       );
         } else {
             $control = array('status' => 'ko',
-                             'value'  => $template_association->system_id,
+                             'value'  => $notification->notification_sid,
                              'error'  => $error
                           );
         }
@@ -134,20 +128,21 @@ class templates_association_controler extends ObjectControler implements ObjectC
     * @param string mode up or add
     * @return array
     */
-    public function save($template_association, $mode = "") 
+    public function save($notification, $mode = "") 
     {
-        
         $control = array();
+
         $this->set_foolish_ids(
             array(
-                'notification_id'
+                'notification_id',
+				'event_id'
             )
         );
-        // If template_association not defined or empty, return an error
-        if (!isset($template_association) || empty($template_association)) {
+        // If notification not defined or empty, return an error
+        if (!isset($notification) || empty($notification)) {
             $control = array('status' => 'ko',
                              'value'  => '',
-                             'error'  => _EVENT_EMPTY
+                             'error'  => _NOTIF_EMPTY
                        );
             return $control;
         }
@@ -164,50 +159,48 @@ class templates_association_controler extends ObjectControler implements ObjectC
             return $control;
         }
         
-        //$template_association = $this->isAStatus($template_association);
-        $this->set_specific_id('system_id');
-        $template_association->what = 'event';
-
+        //$notification = $this->isAStatus($notification);
+        $this->set_specific_id('notification_sid');
         // Data checks
-        $control = $this->control($template_association, $mode, $params);
+        $control = $this->control($notification, $mode, $params);
         
         if ($control['status'] == 'ok') {
             $core = new core_tools();
-            $_SESSION['service_tag'] = 'event_' . $mode;
+            $_SESSION['service_tag'] = 'notif_' . $mode;
             $core->execute_modules_services(
-                $params['modules_services'], 'event_add_db', 'include'
+                $params['modules_services'], 'notif_add_db', 'include'
             );
-
+            
             if ($mode == 'up') {
                 //Update existing status
-                if ($this->update($template_association)) {
+                if ($this->update($notification)) {
                     $control = array('status' => 'ok',
-                                     'value'  => $template_association->system_id
+                                     'value'  => $notification->notification_sid
                                );
                     //log
                     if ($params['log_status_up'] == 'true') {
                         $history = new history();
                         $history->add(
-                            NOTIFICATIONS_TABLE, $template_association->system_id, 'UP','eventup',
-                            _EVENT_MODIFIED . ' : ' . $template_association->system_id
+                            _NOTIFICATIONS_TABLE, $notification->notification_sid, 'UP','notifup',
+                            _NOTIF_MODIFIED . ' : ' . $notification->notification_sid
                         );
                     }
                 } else {
                     $control = array('status' => 'ko',
                                      'value'  => '',
-                                     'error'  => _PB_WITH_EVENT_UPDATE
+                                     'error'  => _PB_WITH_NOTIF_UPDATE
                                 );
                 }
             } else { //mode == add
-                if ($this->insert($template_association)) {
+                if ($this->insert($notification)) {
                     $control = array('status' => 'ok',
-                                     'value'  => $template_association->system_id);
+                                     'value'  => $notification->notification_sid);
                     //log
-                    if ($params['log_event_add'] == 'true') {
+                    if ($params['log_notif_add'] == 'true') {
                         $history = new history();
                         $history->add(
-                            NOTIFICATIONS_TABLE, $template_association->system_id, 'ADD','eventadd',
-                            _EVENT_ADDED . ' : ' . $template_association->system_id
+                            _NOTIFICATIONS_TABLE, $notification->notification_sid, 'ADD','notifadd',
+                            _NOTIF_ADDED . ' : ' . $notification->notification_sid
                         );
                     }
                 } else {
@@ -226,7 +219,7 @@ class templates_association_controler extends ObjectControler implements ObjectC
     /**
     * Control the data of Status object
     *
-    * @param  $status template_association object
+    * @param  $status notification object
     * @param  $mode Mode (add or up)
     * @param  $params More parameters,
     *                 array('modules_services' => $_SESSION['modules_services']
@@ -238,40 +231,36 @@ class templates_association_controler extends ObjectControler implements ObjectC
     *                     'databasetype'       => Type of the database
     *                )
     * @return array (  'status' => 'ok' / 'ko',
-    *                  'value'  => template_association identifier or empty in case of error,
+    *                  'value'  => notification identifier or empty in case of error,
     *                  'error'  => Error message, defined only in case of error
     *                  )
     */
-    private function control($template_association, $mode, $params=array())
+    private function control($notification, $mode, $params=array())
     {
         $error = "";
         $f = new functions();
        
-        $template_association->notification_id = $f->protect_string_db(
-            $f->wash($template_association->notification_id, 'no', _DESC, 'yes', 0, 50)
+        $notification->notification_id = $f->protect_string_db(
+            $f->wash($notification->notification_id, 'no', _ID, 'yes', 0, 50)
         );
-        $template_association->description = $f->protect_string_db(
-            $f->wash($template_association->description, 'no', _DESC, 'yes', 0, 50)
+        $notification->description = $f->protect_string_db(
+            $f->wash($notification->description, 'no', _DESC, 'yes', 0, 50)
         );
-        $template_association->diffusion_type = $f->protect_string_db(
-            $f->wash($template_association->diffusion_type, 'no', _DIFFUSION_TYPE)
+        $notification->diffusion_type = $f->protect_string_db(
+            $f->wash($notification->diffusion_type, 'no', _DIFFUSION_TYPE)
         );
-        $template_association->diffusion_properties = $f->protect_string_db(
-            $f->wash($template_association->diffusion_properties, 'no', _DIFFUSION_PROPERTIES, 'no')
+        $notification->diffusion_properties = $f->protect_string_db(
+            $f->wash($notification->diffusion_properties, 'no', _DIFFUSION_PROPERTIES, 'no')
         );
-        $template_association->attachfor_type = $f->protect_string_db(
-            $f->wash($template_association->attachfor_type, 'no', _ATTACHFOR_TYPE, 'no')
+        $notification->attachfor_type = $f->protect_string_db(
+            $f->wash($notification->attachfor_type, 'no', _ATTACHFOR_TYPE, 'no')
         );
-        $template_association->attachfor_properties = $f->protect_string_db(
-            $f->wash($template_association->attachfor_properties, 'no', _ATTACHFOR_PROPERTIES, 'no')
+        $notification->attachfor_properties = $f->protect_string_db(
+            $f->wash($notification->attachfor_properties, 'no', _ATTACHFOR_PROPERTIES, 'no')
         );
-        $template_association->maarch_module = 'notifications';
 
-        $_SESSION['service_tag'] = 'event_check';
+        $_SESSION['service_tag'] = 'notif_check';
         $core = new core_tools();
-        //$core->execute_modules_services(
-        //    $params['modules_services'], 'status_check', 'include'
-        //);
 
         $error .= $_SESSION['error'];
         //TODO:rewrite wash to return errors without html and not in the session
@@ -279,12 +268,12 @@ class templates_association_controler extends ObjectControler implements ObjectC
         $return = array();
         if (!empty($error)) {
                 $return = array('status' => 'ko',
-                                'value'  => $template_association->system_id,
+                                'value'  => $notification->notification_sid,
                                 'error'  => $error
                           );
         } else {
             $return = array('status' => 'ok',
-                            'value'  => $template_association->system_id
+                            'value'  => $notification->notification_sid
                       );
         }
         unset($_SESSION['service_tag']);
@@ -292,9 +281,9 @@ class templates_association_controler extends ObjectControler implements ObjectC
         return $return;
     }
     
-    private function insert($template_association)
+    private function insert($notification)
     {
-        return $this->advanced_insert($template_association);
+        return $this->advanced_insert($notification);
     }
 
     /**
@@ -303,10 +292,10 @@ class templates_association_controler extends ObjectControler implements ObjectC
     * @param  $status Status object
     * @return bool true if the update is complete, false otherwise
     */
-    private function update($template_association)
+    private function update($notification)
     {
-       //var_dump($template_association); exit();
-       return $this->advanced_update($template_association);
+       //var_dump($notification); exit();
+       return $this->advanced_update($notification);
     }
     
     

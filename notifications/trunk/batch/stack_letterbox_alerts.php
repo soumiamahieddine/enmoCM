@@ -3,7 +3,7 @@
 /******************************************************************************/
 /* begin */
 // load the config and prepare to process
-include('load_process_letterbox_alerts.php');
+include('load_stack_letterbox_alerts.php');
 
 $state = 'LOAD_ALERTS_NOTIFS';
 while ($state <> 'END') {
@@ -16,11 +16,9 @@ while ($state <> 'END') {
     /* Load parameters				                                      */
     /**********************************************************************/
     case 'LOAD_ALERTS_NOTIFS' :
-		$query = "SELECT system_id, value_field FROM " 
-        . _TEMPLATES_ASSOCIATION_TABLE_NAME 
-        . " WHERE UPPER(what) = 'EVENT' "
-        . " AND value_field IN ('alert1', 'alert2') "
-        . " AND maarch_module = 'notifications'";
+		$query = "SELECT notification_sid, event_id FROM " 
+        . _NOTIFICATIONS_TABLE_NAME 
+        . " WHERE event_id IN ('alert1', 'alert2') ";
 		Bt_doQuery($db, $query);
 		$totalAlertsToProcess = $GLOBALS['db']->nb_result();
 		if ($totalAlertsToProcess === 0) {
@@ -29,7 +27,7 @@ while ($state <> 'END') {
 		$logger->write($totalAlertsToProcess . " notifications parametered for mail alerts", 'INFO');
 		$GLOBALS['alert_notifs'] = array();
 		while ($alertRecordset = $GLOBALS['db']->fetch_object()) {
-			$GLOBALS['alert_notifs'][$alertRecordset->value_field][] = $alertRecordset->system_id;
+			$GLOBALS['alert_notifs'][$alertRecordset->event_id][] = $alertRecordset->notification_sid;
 		}
 	
 		$state = 'LOAD_DOCTYPES';
@@ -99,11 +97,11 @@ while ($state <> 'END') {
 				$logger->write("Alarm 1 will be sent", 'INFO');
 				$info = 'Relance 1 pour traitement du document No' . $myDoc->res_id . ' avant date limite.';  
 				if(count($GLOBALS['alert_notifs']['alert1']) > 0) {
-					foreach($GLOBALS['alert_notifs']['alert1'] as $ta_sid) {
+					foreach($GLOBALS['alert_notifs']['alert1'] as $notification_sid) {
 						$query = "INSERT INTO " . _NOTIF_EVENT_STACK_TABLE_NAME
-							. " (ta_sid, table_name, record_id, user_id, event_info"
+							. " (notification_sid, table_name, record_id, user_id, event_info"
 							. ", event_date)" 
-							. " VALUES(" . $ta_sid . ", '" 
+							. " VALUES(" . $notification_sid . ", '" 
 							. $collView . "', '" . $myDoc->res_id . "', 'superadmin', '" . $info . "', " 
 							. $db->current_datetime() . ")";
 						Bt_doQuery($db, $query);
@@ -125,11 +123,11 @@ while ($state <> 'END') {
 				$logger->write("Alarm 2 will be sent", 'INFO');
 				$info = 'Relance 2 pour traitement du document No' . $myDoc->res_id . ' apres date limite.';  
 				if(count($GLOBALS['alert_notifs']['alert2']) > 0) {
-					foreach($GLOBALS['alert_notifs']['alert2'] as $ta_sid) {
+					foreach($GLOBALS['alert_notifs']['alert2'] as $notification_sid) {
 						$query = "INSERT INTO " . _NOTIF_EVENT_STACK_TABLE_NAME
-							. " (ta_sid, table_name, record_id, user_id, event_info"
+							. " (notification_sid, table_name, record_id, user_id, event_info"
 							. ", event_date)" 
-							. " VALUES(" . $ta_sid . ", '" 
+							. " VALUES(" . $notification_sid . ", '" 
 							. $collView . "', '" . $myDoc->res_id . "', 'superadmin', '" . $info . "', " 
 							. $db->current_datetime() . ")";
 						$this->query($query, false, true);

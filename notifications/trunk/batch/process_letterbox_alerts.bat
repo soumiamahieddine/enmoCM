@@ -1,1 +1,0 @@
-"C:\xampp\php\php.exe" "C:\xampp\htdocs\maarch_trunk\modules\notifications\batch\process_letterbox_alerts.php" -c "C:\xampp\htdocs\maarch_trunk\modules\notifications\batch\config\config.xml"

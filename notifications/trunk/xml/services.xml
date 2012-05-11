@@ -5,7 +5,7 @@
 			<name>_ADMIN_NOTIFICATIONS</name>
 			<comment>_ADMIN_NOTIFICATIONS_DESC</comment>
 			<!--servicepage>index.php?page=admin_notif&amp;module=notifications</servicepage-->
-			<servicepage>index.php?page=manage_events_list_controller&amp;module=notifications&amp;mode=list</servicepage>
+			<servicepage>index.php?page=manage_notifications_controler&amp;module=notifications&amp;mode=list</servicepage>
 			<servicetype>admin</servicetype>
 			<system_service>false</system_service>
 			<style>notif_admin_notifications</style>

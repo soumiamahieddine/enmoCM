@@ -16,10 +16,8 @@ try{
     require_once 'core/class/ObjectControlerAbstract.php';
     require_once 'core/class/ObjectControlerIF.php';
     require_once 'modules/templates/class/templates_controler.php' ;
-//    require_once 'modules/notifications/class/notifications.php' ;
-    require_once 'modules/notifications/class/templates_association_controler.php';
+    require_once 'modules/notifications/class/notifications_controler.php';
     require_once 'modules/notifications/class/diffusion_type_controler.php';
-	//require_once 'modules/notifications/class/diffusion_content_controler.php';
     
     if ($mode == 'list') {
         require_once 'core/class/class_request.php' ;
@@ -39,49 +37,50 @@ $actions_list = $al->getAllActions();
 $dt = new diffusion_type_controler();
 $diffusion_types = $dt->getAllDiffusion();
 
+//Get list of all templates
 $tp = new templates_controler();
 $templates_list = $tp->getAllTemplatesForSelect();
-//Get list of all templates
+
 
 if (isset($_REQUEST['id']) && !empty($_REQUEST['id'])) {
-    $eventId = $_REQUEST['id'];
+    $notification_sid = $_REQUEST['id'];
 }
 
 
-if (isset($_REQUEST['event_submit'])) {
+if (isset($_REQUEST['notif_submit'])) {
     // Action to do with db
-    validate_event_submit();
+    validate_notif_submit();
 
 } else {
     // Display to do
     $state = true;
     switch ($mode) {
         case 'up' :
-            $state = display_up($eventId);
-            $_SESSION['service_tag'] = 'event_init';
+            $state = display_up($notification_sid);
+            $_SESSION['service_tag'] = 'notif_init';
             core_tools::execute_modules_services(
-                $_SESSION['modules_services'], 'event_init', 'include'
+                $_SESSION['modules_services'], 'notif_init', 'include'
             );
             location_bar_management($mode);
             break;
         case 'add' :
             display_add();
-            $_SESSION['service_tag'] = 'event_init';
+            $_SESSION['service_tag'] = 'notif_init';
             core_tools::execute_modules_services(
-                $_SESSION['modules_services'], 'event_init', 'include'
+                $_SESSION['modules_services'], 'notif_init', 'include'
             );
             location_bar_management($mode);
             break;
         case 'del' :
-            display_del($eventId);
+            display_del($notification_sid);
             break;
         case 'list' :
-            $eventsList = display_list();
+            $notifsList = display_list();
             location_bar_management($mode);
            // print_r($statusList); exit();
             break;
     }
-    include('manage_events_list.php');
+    include('manage_notifications.php');
 }
 
 /**
@@ -91,11 +90,11 @@ function location_bar_management($mode)
 {
     $pageLabels = array('add'  => _ADDITION,
                     'up'   => _MODIFICATION,
-                    'list' => _MANAGE_EVENTS
+                    'list' => _MANAGE_NOTIFS
                );
-    $pageIds = array('add' => 'event_add',
-                  'up' => 'event_up',
-                  'list' => 'event_list'
+    $pageIds = array('add' => 'notif_add',
+                  'up' => 'notif_up',
+                  'list' => 'notif_list'
             );
     $init = false;
     if (isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == 'true') {
@@ -110,7 +109,7 @@ function location_bar_management($mode)
     }
 
     $pagePath = $_SESSION['config']['businessappurl'] . 'index.php?page='
-               . 'manage_events_list_controller&module=notifications&mode=' . $mode ;
+               . 'manage_notifications_controler&module=notifications&mode=' . $mode ;
     $pageLabel = $pageLabels[$mode];
     $pageId = $pageIds[$mode];
     $ct = new core_tools();
@@ -121,18 +120,18 @@ function location_bar_management($mode)
  * Initialize session parameters for update display
  * @param String $statusId
  */
-function display_up($eventId)
+function display_up($notification_sid)
 {
 	
-    $eventCtrl = new templates_association_controler();
+    $notifCtrl = new notifications_controler();
     $state = true;
-    $event = $eventCtrl->get($eventId);
+    $notif = $notifCtrl->get($notification_sid);
 
-    if (empty($event)) {
+    if (empty($notif)) {
         $state = false;
     } else {
-		//var_dump($event);
-        put_in_session('event', $event->getArray());
+		//var_dump($notif);
+        put_in_session('notification', $notif->getArray());
     }
     return $state;
 }
@@ -156,9 +155,9 @@ function display_list() {
     $func = new functions();
     init_session();
 
-    $select[TEMPLATES_ASSOCIATION] = array();
+    $select[NOTIFICATIONS] = array();
     array_push(
-        $select[TEMPLATES_ASSOCIATION], 'system_id', 'template_id', 'notification_id', 'description'
+        $select[NOTIFICATIONS], 'notification_sid', 'notification_id', 'description'
     );
     $where = '';
     $what = '';
@@ -192,9 +191,14 @@ function display_list() {
     for ($i=0;$i<count($tab);$i++) {
         foreach ($tab[$i] as &$item) {
             switch ($item['column']) {
-                case 'system_id':
+                case 'notification_sid':
                     format_item(
                         $item, _ID, '18', 'left', 'left', 'bottom', true
+                    );
+                    break;
+                case 'notification_id':
+                    format_item(
+                        $item, _NOTIFICATION_ID, '18', 'left', 'left', 'bottom', true
                     );
                     break;
                 case 'description':
@@ -209,19 +213,19 @@ function display_list() {
     $result = array(
         'tab'                 => $tab,
         'what'                => $what,
-        'page_name'           => 'manage_events_list_controller&mode=list',
-        'page_name_add'       => 'manage_events_list_controller&mode=add',
-        'page_name_up'        => 'manage_events_list_controller&mode=up',
-        'page_name_del'       => 'manage_events_list_controller&mode=del',
+        'page_name'           => 'manage_notifications_controler&mode=list',
+        'page_name_add'       => 'manage_notifications_controler&mode=add',
+        'page_name_up'        => 'manage_notifications_controler&mode=up',
+        'page_name_del'       => 'manage_notifications_controler&mode=del',
         'page_name_val'       => '',
         'page_name_ban'       => '',
-        'label_add'           => _ADD_EVENT,
-        'title'               => _EVENTS_LIST . ' : ' . $i,
+        'label_add'           => _ADD_NOTIF,
+        'title'               => _NOTIFS_LIST . ' : ' . $i,
         'autoCompletionArray' => array(
                                      'list_script_url'  =>
                                         $_SESSION['config']['businessappurl']
                                         . 'index.php?display=true&module=notifications'
-                                        . '&page=manage_events_list_by_name',
+                                        . '&page=manage_notifs_list_by_name',
                                      'number_to_begin'  => 1
                                  ),
 
@@ -233,26 +237,24 @@ function display_list() {
  * Delete given status if exists and initialize session parameters
  * @param string $statusId
  */
-function display_del($eventId) {
-	
-    $eventCtrl = new templates_association_controler();
-    echo $eventId; 
-    $event = $eventCtrl->get($eventId);
-    if (isset($event)) {
+function display_del($notification_sid) {
+    $notifCtrl = new notifications_controler();
+    $notif = $notifCtrl->get($notification_sid);
+    if (isset($notif)) {
         // Deletion
         $control = array();
         $params  = array( 'log_status_del' => $_SESSION['history']['eventdel'],
                          'databasetype' => $_SESSION['config']['databasetype']
                         );
-        $control = $eventCtrl->delete($event, $params);
+        $control = $notifCtrl->delete($notif, $params);
         if (!empty($control['error']) && $control['error'] <> 1) {
             $_SESSION['error'] = str_replace("#", "<br />", $control['error']);
         } else {
-            $_SESSION['error'] = _EVENT_DELETED.' : '.$eventId;
+            $_SESSION['error'] = _NOTIF_DELETED.' : '.$notification_sid;
         }
         ?><script type="text/javascript">window.top.location='<?php
             echo $_SESSION['config']['businessappurl']
-                . 'index.php?page=manage_events_list_controller&mode=list&module='
+                . 'index.php?page=manage_notifications_controler&mode=list&module='
                 . 'notifications&order=' . $_REQUEST['order'] . '&order_field='
                 . $_REQUEST['order_field'] . '&start=' . $_REQUEST['start']
                 . '&what=' . $_REQUEST['what'];
@@ -261,7 +263,7 @@ function display_del($eventId) {
         exit();
     } else {
         // Error management
-        $_SESSION['error'] = _EVENT.' '._UNKNOWN;
+        $_SESSION['error'] = _NOTIF.' '._UNKNOWN;
     }
 }
 
@@ -301,66 +303,63 @@ function format_item(
  * Validate a submit (add or up),
  * up to saving object
  */
-function validate_event_submit() {
+function validate_notif_submit() {
 	$dType = new diffusion_type_controler();
 	$diffType = array();
 	$diffType = $dType->getAllDiffusion();
    
-    $eventCtrl = new templates_association_controler();
-    $pageName = 'manage_events_list_controller';
+    $notifCtrl = new notifications_controler();
+    $pageName = 'manage_notifications_controler';
 
     $mode = $_REQUEST['mode'];
-    $eventObj = new templates_association();
+    $notifObj = new notifications();
     
     if ($mode <> 'add'){
-		$eventObj->system_id = $_REQUEST['system_id'];
+		$notifObj->notification_sid = $_REQUEST['notification_sid'];
 	}
-    $eventObj->notification_id = $_REQUEST['notification_id'];
-	$eventObj->description = $_REQUEST['description'];
-    $eventObj->value_field = $_REQUEST['value_field'];
-    $eventObj->template_id = $_REQUEST['template_id'];
-    $eventObj->diffusion_type = $_REQUEST['diffusion_type'];
-    $eventObj->attachfor_type = $_REQUEST['attachfor_type'];
-	
+    $notifObj->notification_id = $_REQUEST['notification_id'];
+	$notifObj->description = $_REQUEST['description'];
+    $notifObj->notification_mode = $_REQUEST['notification_mode'];
+    $notifObj->event_id = $_REQUEST['event_id'];
+    $notifObj->template_id = $_REQUEST['template_id'];
+    $notifObj->diffusion_type = $_REQUEST['diffusion_type'];
+    $notifObj->attachfor_type = $_REQUEST['attachfor_type'];
+    
 	foreach($diffType as $loadedType) 	{
-		if ($loadedType->id == $eventObj->diffusion_type){
+		if ($loadedType->id == $notifObj->diffusion_type){
 			if ($loadedType -> script <> '' && !empty($_REQUEST['diffusion_properties'])) {
-				//include_once($loadedType->script);
-				//$diffusion_properties_string = updatePropertiesSet($_REQUEST['diffusion_properties']);
 				$diffusion_properties_string = implode(',', $_REQUEST['diffusion_properties']);
 			} else {
 				$error .= 'System : Unable to load Require Script';
 			}
 		}
-		if ($loadedType->id == $eventObj->attachfor_type){
+		if ($loadedType->id == $notifObj->attachfor_type){
 			if ($loadedType -> script <> '' && !empty($_REQUEST['attachfor_properties'])) {
-				//include_once($loadedType->script);
 				$attachfor_properties_string = implode(',', $_REQUEST['attachfor_properties']);
-				//$attachfor_properties_string = updatePropertiesSet($_REQUEST['attachfor_properties']);
 			} else {
 				$error .= 'System : Unable to load Require Script';
 			}
 		}			
 	}		
 			
-	$eventObj->diffusion_properties = (string)$diffusion_properties_string;
-	$eventObj->attachfor_properties = (string)$attachfor_properties_string;
+	$notifObj->diffusion_properties = (string)$diffusion_properties_string;
+	$notifObj->attachfor_properties = (string)$attachfor_properties_string;
 	
-    $control = $eventCtrl->save($eventObj, $mode, $params);
-    
+    $control = $notifCtrl->save($notifObj, $mode, $params);
+
     if (!empty($control['error']) && $control['error'] <> 1) {
         // Error management depending of mode
         $_SESSION['error'] = str_replace("#", "<br />", $control['error']);
-        //put_in_session('event', $event);
-		put_in_session('event', $eventObj->getArray());
+        //put_in_session('event', $notif);
+		put_in_session('notification', $notifObj->getArray());
 
         switch ($mode) {
             case 'up':
-                if (!empty($event->system_id)) {
+                if (!empty($notifObj->notification_sid)) {
                     header(
                         'location: ' . $_SESSION['config']['businessappurl']
                         . 'index.php?page=' . $pageName . '&mode=up&id='
-                        . $event->event_id . '&module=notifications'
+                        . $notifObj->notification_sid . '&module=notifications'
                     );
                 } else {
                     header(
@@ -381,9 +380,9 @@ function validate_event_submit() {
         }
     } else {
         if ($mode == 'add') {
-            $_SESSION['error'] = _EVENT_ADDED;
+            $_SESSION['error'] = _NOTIF_ADDED;
         } else {
-            $_SESSION['error'] = _EVENT_MODIFIED;
+            $_SESSION['error'] = _NOTIF_MODIFIED;
         }
         unset($_SESSION['m_admin']);
         header(
@@ -398,11 +397,13 @@ function validate_event_submit() {
 
 function init_session()
 {
-    $_SESSION['m_admin']['event'] = array(
-        'system_id'         	=> '',
+    $_SESSION['m_admin']['notification'] = array(
+        'notification_sid'  	    	=> '',
 		'notification_id'  	 	=> '',
+        'event_id'  			=> '',
         'description'  			=> '',
-        'template_id'      	 	=> '',
+        'notification_mode'		=> '',
+        'template_id'    	 	=> '',
         'diffusion_type'    	=> '',
         'diffusion_properties'  => '',
 		//'diffusion_content'   => '',

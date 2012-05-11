@@ -3,32 +3,32 @@
 if ($mode == 'list') {
     $list = new list_show();
     $list->admin_list(
-        $eventsList['tab'],
-        count($eventsList['tab']),
-        $eventsList['title'],
-        'system_id',
-        'manage_events_list_controller&mode=list',
-        'notifications','system_id',
+        $notifsList['tab'],
+        count($notifsList['tab']),
+        $notifsList['title'],
+        'notification_sid',
+        'manage_notifications_controler&mode=list',
+        'notifications','notification_sid',
         true,
-        $eventsList['page_name_up'],
-        $eventsList['page_name_val'],
-        $eventsList['page_name_ban'],
-        $eventsList['page_name_del'],
-        $eventsList['page_name_add'],
-        $eventsList['label_add'],
+        $notifsList['page_name_up'],
+        $notifsList['page_name_val'],
+        $notifsList['page_name_ban'],
+        $notifsList['page_name_del'],
+        $notifsList['page_name_add'],
+        $notifsList['label_add'],
         false,
         false,
-        _ALL_EVENTS,
-        _EVENT,
+        _ALL_NOTIFS,
+        _NOTIF,
         $_SESSION['config']['businessappurl']
         . 'static.php?filename=manage_notifications_b.gif',
         true,
         true,
         false,
         true,
-        $eventsList['what'],
+        $notifsList['what'],
         true,
-        $eventsList['autoCompletionArray']
+        $notifsList['autoCompletionArray']
     );
 } elseif ($mode == 'up' || $mode == 'add') {
     ?><h1><img src="<?php
@@ -36,28 +36,28 @@ if ($mode == 'list') {
     ?>static.php?filename=manage_notifications_b.gif" alt="" />
     <?php
         if ($mode == 'up') {
-            echo _MODIFY_EVENT;
+            echo _MODIFY_NOTIF;
         } elseif ($mode == 'add') {
-            echo _ADD_EVENT;
+            echo _ADD_NOTIF;
         }?>
     </h1>
     <div id="inner_content" class="clearfix" align="center">
         <br /><br />
     <?php
     if ($state == false) {
-        echo '<br /><br /><br /><br />' . _THIS_EVENT . ' ' . _IS_UNKNOWN
+        echo '<br /><br /><br /><br />' . _NOTIFICATION_ID . ' ' . $_SESSION['m_admin']['notification']['notification_sid'] . ' ' . _UNKNOWN
         . '<br /><br /><br /><br />';
     } else {?>
     <form name="frmevent" id="frmevent" method="post" action="<?php
         echo $_SESSION['config']['businessappurl'] . 'index.php?display=true'
-        . '&amp;module=notifications&amp;page=manage_events_list_controller&amp;mode='
+        . '&amp;module=notifications&amp;page=manage_notifications_controler&amp;mode='
         . $mode;?>" class="forms addforms">
         <input type="hidden" name="display" value="true" />
         <input type="hidden" name="admin" value="notifications" />
-        <input type="hidden" name="page" value="manage_event_list_controler" />
+        <input type="hidden" name="page" value="manage_notifications_controler" />
         <input type="hidden" name="mode" value="<?php echo $mode;?>" />
 
-        <input type="hidden" name="system_id" id="system_id" value="<?php echo $_SESSION['m_admin']['event']['system_id'];?>" />
+        <input type="hidden" name="notification_sid" id="notification_sid" value="<?php echo $_SESSION['m_admin']['notification']['notification_sid'];?>" />
 
         <input type="hidden" name="order" id="order" value="<?php
             echo $_REQUEST['order'];?>" />
@@ -73,26 +73,26 @@ if ($mode == 'list') {
             <label for="label"><?php echo _NOTIFICATION_ID; ?> : </label>
             <input name="notification_id" type="text" id="notification_id" value="<?php
                 echo functions::show_str(
-                    $_SESSION['m_admin']['event']['notification_id']
+                    $_SESSION['m_admin']['notification']['notification_id']
                 ); ?>"/>
         </p>
         <p>
             <label for="label"><?php echo _DESC; ?> : </label>
             <textarea name="description" cols="80" rows="2" id="description"><?php
                 echo functions::show_str(
-                    $_SESSION['m_admin']['event']['description']
+                    $_SESSION['m_admin']['notification']['description']
                 ); ?></textarea>
         </p>
         <p>
             <label for="label"><?php echo _EVENT; ?> : </label>
-            <select name="value_field" id="value_field">
+            <select name="event_id" id="event_id">
 				<option value=""><?php echo _SELECT_EVENT_TYPE;?></option>
                 <optgroup label="<?php echo _ACTIONS; ?>">
                 <?php
                 foreach($actions_list as $this_action){
                     ?><option value="<?php echo $this_action->id;?>"
                     <?php
-                    if($_SESSION['m_admin']['event']['value_field']
+                    if($_SESSION['m_admin']['notification']['event_id']
                         == $this_action->id) {
                         echo 'selected="selected"';
                     }?>><?php echo $this_action->label_action;
@@ -106,7 +106,7 @@ if ($mode == 'list') {
                 foreach($_SESSION['notif_events'] as $event_type_id => $event_type_label){
                     ?><option value="<?php echo $event_type_id;?>"
                     <?php
-                    if($_SESSION['m_admin']['event']['value_field']
+                    if($_SESSION['m_admin']['notification']['event_id']
                         == $event_type_id) {
                         echo 'selected="selected"';
                     }?>><?php echo $event_type_label;
@@ -116,8 +116,23 @@ if ($mode == 'list') {
                 </optgroup>
             </select>
         </p>
-
-
+        <p>
+            <label><?php echo _NOTIFICATION_MODE;?> :</label>
+            <input type="radio" name="notification_mode" value="EMAIL"
+                onClick="javascript:window.document.getElementById('template_div').style.display = 'block';" <?php
+                if ($_SESSION['m_admin']['notifications']['notification_mode'] == '' 
+                    || $_SESSION['m_admin']['notifications']['notification_mode'] == 'EMAIL'
+                ) {
+                    echo 'checked="checked"'; 
+                }?>/> <?php echo _EMAIL;?>
+            <input type="radio" name="notification_mode" value="RSS"
+                onClick="javascript:window.document.getElementById('template_div').style.display = 'none';" <?php
+                if ($_SESSION['m_admin']['notifications']['notification_mode'] == 'RSS'
+                ) {
+                    echo 'checked="checked"'; 
+                }?>/> <?php echo _RSS;?>
+        </p>
+        <div id="template_div" name="template_div">
         <p>
             <label for="label"><?php echo _TEMPLATE; ?> : </label>
             <select name="template_id" id="template_id">
@@ -127,7 +142,7 @@ if ($mode == 'list') {
                     if($template['type'] === 'HTML') {
                         ?><option value="<?php echo $template['id'];?>"
                         <?php
-                        if($_SESSION['m_admin']['event']['template_id']
+                        if($_SESSION['m_admin']['notification']['template_id']
                             == $template['id']) {
                             echo 'selected="selected"';
                         }?>><?php echo $template['label'];
@@ -137,7 +152,7 @@ if ($mode == 'list') {
                 ?>
             </select>
         </p>
-
+        </div>
         <p>
             <label for="status"><?php echo _DIFFUSION_TYPE; ?> : </label>
             <select name="diffusion_type"
@@ -154,7 +169,7 @@ if ($mode == 'list') {
                 foreach($diffusion_types as $this_diffusion){
                     ?><option value="<?php echo $this_diffusion->id;?>"
                     <?php
-                    if(trim($_SESSION['m_admin']['event']['diffusion_type'])
+                    if(trim($_SESSION['m_admin']['notification']['diffusion_type'])
                         == trim($this_diffusion->id)) {
                         echo 'selected="selected"';
                     }?>><?php echo $this_diffusion->label;
@@ -189,7 +204,7 @@ if ($mode == 'list') {
 					if($this_diffusion->id != 'dest_user' && $this_diffusion->id != 'copy_list') {
 						?><option value="<?php echo $this_diffusion->id;?>"
 						<?php
-						if(trim($_SESSION['m_admin']['event']['attachfor_type'])
+						if(trim($_SESSION['m_admin']['notification']['attachfor_type'])
 							== trim($this_diffusion->id)) {
 							echo 'selected="selected"';
 						}?>><?php echo $this_diffusion->label;
@@ -207,11 +222,11 @@ if ($mode == 'list') {
         <p class="buttons">
             <?php
         if ($mode == 'up') {?>
-            <input class="button" type="submit" name="event_submit" style="width:190px;" value=
-            "<?php echo _MODIFY_EVENT; ?>" />
+            <input class="button" type="submit" name="notif_submit" style="width:190px;" value=
+            "<?php echo _MODIFY_NOTIF; ?>" />
             <?php
         } elseif ($mode == 'add') {?>
-            <input type="submit" class="button"  name="event_submit" value=
+            <input type="submit" class="button"  name="notif_submit" value=
             "<?php echo _ADD; ?>" />
             <?php
         }
@@ -219,7 +234,7 @@ if ($mode == 'list') {
         <input type="button" class="button"  name="cancel" value="<?php
          echo _CANCEL; ?>" onclick="javascript:window.location.href='<?php
          echo $_SESSION['config']['businessappurl'];
-         ?>index.php?page=manage_events_list_controller&amp;mode=list&amp;module=notifications'"/>
+         ?>index.php?page=manage_notifications_controler&amp;mode=list&amp;module=notifications'"/>
 
     </p>
     </form >
@@ -228,62 +243,62 @@ if ($mode == 'list') {
    ?></div><?php
 
 
-    if ($_SESSION['m_admin']['event']['diffusion_type'] <> '')
+    if ($_SESSION['m_admin']['notification']['diffusion_type'] <> '')
     {
         /*First Launch */
         ?>
         <script language="javascript">
         change_properties_box(
-            '<?php echo $_SESSION['m_admin']['event']['diffusion_type']; ?>',
+            '<?php echo $_SESSION['m_admin']['notification']['diffusion_type']; ?>',
             '<?php echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&module=notifications&page=load_diffusiontype_formcontent',
             'diff_type_div',
             'notifications',
             '');
         </script>
         <?php
-        if ($_SESSION['m_admin']['event']['diffusion_type'] <> '')
+        if ($_SESSION['m_admin']['notification']['diffusion_type'] <> '')
         {
             //Loading Extra Javascript :
             require_once 'modules' . DIRECTORY_SEPARATOR . 'notifications' . DIRECTORY_SEPARATOR
                 . 'class' . DIRECTORY_SEPARATOR . 'diffusion_type_controler.php';
             $Type = new diffusion_type_controler();
-            $dType = $Type->get($_SESSION['m_admin']['event']['diffusion_type']);
+            $dType = $Type->get($_SESSION['m_admin']['notification']['diffusion_type']);
             ?>
             <script language="javascript">
             loadDiffusionProperties(
-                '<?php echo $_SESSION['m_admin']['event']['diffusion_type']; ?>',
+                '<?php echo $_SESSION['m_admin']['notification']['diffusion_type']; ?>',
                 '<?php echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&module=notifications&page=load_diffusionproperties_formcontent'
                 );
             </script>
             <?php
         }
     }
-	if ($_SESSION['m_admin']['event']['attachfor_type'] <> '')
+	if ($_SESSION['m_admin']['notification']['attachfor_type'] <> '')
     {
         /*First Launch */
         ?>
         <script language="javascript">
 		change_properties_box(
-            '<?php echo $_SESSION['m_admin']['event']['attachfor_type']; ?>',
+            '<?php echo $_SESSION['m_admin']['notification']['attachfor_type']; ?>',
             '<?php echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&module=notifications&page=load_attachfortype_formcontent',
             'attach_for_div',
             'notifications',
             '');
         </script>
         <?php
-        if ($_SESSION['m_admin']['event']['attachfor_type'] <> '')
+        if ($_SESSION['m_admin']['notification']['attachfor_type'] <> '')
         {
             //Loading Extra Javascript :
             require_once 'modules' . DIRECTORY_SEPARATOR . 'notifications' . DIRECTORY_SEPARATOR
                 . 'class' . DIRECTORY_SEPARATOR . 'diffusion_type_controler.php';
             $Type = new diffusion_type_controler();
 
-            $dType = $Type->get($_SESSION['m_admin']['event']['diffusion_type']);
+            $dType = $Type->get($_SESSION['m_admin']['notification']['diffusion_type']);
             //include_once ($dType->script);
             ?>
             <script language="javascript">
             loadAttachforProperties(
-                '<?php echo $_SESSION['m_admin']['event']['attachfor_type']; ?>',
+                '<?php echo $_SESSION['m_admin']['notification']['attachfor_type']; ?>',
                 '<?php echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&module=notifications&page=load_attachforproperties_formcontent',
 				'attach_for_div'
                 );

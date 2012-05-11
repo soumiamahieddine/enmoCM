@@ -86,7 +86,7 @@ while ($state <> 'END') {
 			$query = "UPDATE " . _NOTIF_EMAIL_STACK_TABLE_NAME 
 				. " SET exec_date = " . $GLOBALS['db']->current_datetime()
 				. ", exec_result = '".$exec_result."' "
-				. " WHERE system_id = ".$email->system_id;
+				. " WHERE email_stack_sid = ".$email->email_stack_sid;
 			Bt_doQuery($GLOBALS['db'], $query);
 			$currentEmail++;
 			$state = 'SEND_AN_EMAIL';

@@ -159,6 +159,9 @@ $maarchUrl = (string)$config->MaarchUrl;
 $maarchApps = (string) $config->MaarchApps;
 
 $_SESSION['config']['tmppath'] = (string)$config->TmpDirectory;
+if(!is_dir($_SESSION['config']['tmppath'])) {
+	mkdir($_SESSION['config']['tmppath'], 0777);
+}
 
 $GLOBALS['batchDirectory'] = $maarchDirectory . 'modules' 
                            . DIRECTORY_SEPARATOR . 'notifications' 
@@ -201,7 +204,7 @@ try {
 	);
 	Bt_myInclude(
         "modules" . DIRECTORY_SEPARATOR . "notifications" 
-		. DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . "templates_association_controler.php"
+		. DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . "notifications_controler.php"
 	);
 	Bt_myInclude(
         "modules" . DIRECTORY_SEPARATOR . "notifications" 
@@ -209,7 +212,7 @@ try {
 	);
 	Bt_myInclude(
         "modules" . DIRECTORY_SEPARATOR . "notifications" 
-		. DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . "event_controler.php"
+		. DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . "events_controler.php"
 	);
 	// Templates
     Bt_myInclude(
@@ -238,9 +241,9 @@ $coreTools = new core_tools();
 $coreTools->load_lang($lang, $maarchDirectory, $maarchApps);
 $func = new functions();
 
-$templates_association_controler = new templates_association_controler();
+$notifications_controler = new notifications_controler();
 $diffusion_type_controler = new diffusion_type_controler();
-$event_controler = new event_controler();
+$events_controler = new events_controler();
 $templates_controler = new templates_controler();
 
 $db = new dbquery();

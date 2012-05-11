@@ -53,7 +53,7 @@ unset($_SESSION['m_admin']);
 <h1><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=manage_architecture_b.gif" alt="" /> <?php  echo _ADMIN_NOTIFICATIONS;?></h1>
 <div id="inner_content" class="clearfix">
     <h2 class="admin_subtitle block" ><?php  echo _ADMIN_NOTIFICATIONS;?></h2>
-    <div  class="admin_item" id="admin_structures" title="<?php  echo _MANAGE_EVENTS;?>" onclick="window.top.location='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=manage_events_list_controller&module=notifications&mode=list';">
+    <div  class="admin_item" id="admin_structures" title="<?php  echo _MANAGE_EVENTS;?>" onclick="window.top.location='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=manage_events_list_controler&module=notifications&mode=list';">
         <div class="sum_margin">
                 <strong><?php  echo _MANAGE_EVENTS;?></strong><br/>
                 <em><?php  echo _MANAGE_EVENTS_DESC;?></em>

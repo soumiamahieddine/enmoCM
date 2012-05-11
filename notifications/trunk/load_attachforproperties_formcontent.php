@@ -23,6 +23,6 @@ if ((! isset($_REQUEST['id_type']) || empty($_REQUEST['id_type']))) {
 
 //--------------------------------------------------
 
-$result = $_SESSION['m_admin']['event']['attachfor_properties'];
+$result = $_SESSION['m_admin']['notification']['attachfor_properties'];
 echo "{status : 0, div_content : '" . addslashes($result) . "'}";
 exit();

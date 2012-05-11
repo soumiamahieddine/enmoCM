@@ -20,11 +20,11 @@
 */
 
 /**
-* @brief Contains the diffusion_type Object
+* @brief Contains the events Object
 * (herits of the BaseObject class)
 *
 * @file
-* @author Loïc Vinet - Maarch
+* @author Cyril Vazquez - Maarch
 * @date $date$
 * @version $Revision$
 * @ingroup core
@@ -42,18 +42,17 @@ try {
 /**
  * Class for controling docservers objects from database
  */
-class diffusion_type
+class events
     extends ObjectControler
 {
 		/**
 		 *Print a viewable string to render the object.
 		 * @return string Rendering of the object
 		 */
-/*
+
 		public function __toString()
 		{
-			return $this->notification_sid;
+			return $this->event_sid;
 		}
-*/
 }
 

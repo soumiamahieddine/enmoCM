@@ -33,9 +33,9 @@
 //Loads the required class
 try {
 	//require_once 'modules/notifications/class/event';
-	require_once 'modules/notifications/class/templates_association.php';
+	require_once 'modules/notifications/class/notifications.php';
+	require_once 'modules/notifications/class/events.php';
 	require_once 'modules/notifications/notifications_tables_definition.php';
-    require_once 'core/class/class_request.php';  
     require_once 'core/class/ObjectControlerAbstract.php';
 } catch (Exception $e) {
     echo $e->getMessage() . ' // ';
@@ -44,39 +44,14 @@ try {
 /**
  * Class for controling docservers objects from database
  */
-class event_controler
+class events_controler
     extends ObjectControler
 {
-    
-	/**
-     * Get event with given event_id.
-     * Can return null if no corresponding object.
-     * @param $id Id of event to get
-     * @return event
-     */
-    public function get($event_id)
-    {
-		
-        if (empty($event_id)) {
-            return null;
-        }
-
-        self::set_specific_id('system_id');
-      
-        $event = self::advanced_get($event_id, _TEMPLATES_ASSOCIATION_TABLE_NAME);
-
-        if (isset($event)) {
-            return $event;
-        } else {
-            return null;
-        }
-    }
-  
-	public function getEventsByTemplateAssociationId($templateAssocId) 
+	public function getEventsByNotificationSid($notification_sid) 
 	{
 		$query = "SELECT * FROM " . _NOTIF_EVENT_STACK_TABLE_NAME
 			. " WHERE exec_date is NULL "
-			. " AND ta_sid = " . $templateAssocId ;
+			. " AND notification_sid = " . $notification_sid ;
 		$db = new dbquery();
 		$db->query($query);
 		$events = array();
@@ -86,13 +61,68 @@ class event_controler
 		return $events;
 	}
 	
+	public function stackEvents($event_id, $table_name, $record_id, $user, $info) {
+	    $db = new dbquery();
+		$db->connect();
+        $db->query(
+            "SELECT * "
+            ."FROM " . _NOTIFICATIONS_TABLE_NAME . " "
+            ."WHERE '".$event_id."' like event_id"
+        );
+		if($db->nb_result() === 0) {
+			return;
+		}
+		
+		$notifications = array();
+		while ($notifObj = $db->fetch_object()) {
+			$notifications[] = $notifObj;
+		}
+		
+        foreach ($notifications as $notification) {
+			switch($notification->notification_mode) {
+			case 'RSS':
+				// Notif based RSS (1 by notification id)
+				break;
+			
+			case 'EMAIL':
+			default:
+				$db->query(
+					"INSERT INTO "
+						._NOTIF_EVENT_STACK_TABLE_NAME." ("
+							."notification_sid, "
+							."table_name, "
+							."record_id, "
+							."user_id, "
+							."event_info, "
+							."event_date"
+						.") "
+					."VALUES("
+						.$notification->notification_sid.", "
+						."'".$table_name."', "
+						."'".$record_id."', "
+						."'".$user."', "
+						."'".$info."', "
+						.$db->current_datetime()
+					.")",
+					false,
+					true
+				);
+			}
+			
+        }
+
+	}
+	
+	
 	public function commitEvent($eventId, $result) {
 		$db = new dbquery();
+		$db->connect();
 		$query = "UPDATE " . _NOTIF_EVENT_STACK_TABLE_NAME 
 			. " SET exec_date = ".$db->current_datetime().", exec_result = '".$result."'" 
-			. " WHERE system_id = ".$eventId;
+			. " WHERE event_stack_sid = ".$eventId;
 		$db->query($query);
 	}
+	
 	
 	
 }

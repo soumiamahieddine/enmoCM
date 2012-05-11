@@ -18,7 +18,7 @@
 // load the config and prepare to process
 include('load_process_event_stack.php');
 
-$state = 'LOAD_TEMPLATES_ASSOC';
+$state = 'LOAD_NOTIFICATIONS';
 while ($state <> 'END') {
     if (isset($logger)) {
         $logger->write('STATE:' . $state, 'INFO');
@@ -26,13 +26,13 @@ while ($state <> 'END') {
     switch ($state) {
  
 	/**********************************************************************/
-    /*                          LOAD_TEMPLATES_ASSOC           	          */
-    /* Load template association identified with notification id          */
+    /*                          LOAD_NOTIFICATIONS           	          */
+    /* Load notification defsidentified with notification id              */
     /**********************************************************************/
-    case 'LOAD_TEMPLATES_ASSOC' :
+    case 'LOAD_NOTIFICATIONS' :
 		$logger->write("Loading configuration for notification id " . $notificationId, 'INFO');
-		$templateAssociation = $templates_association_controler->getByNotificationId($notificationId);
-		if ($templateAssociation === FALSE) {
+		$notification = $notifications_controler->getByNotificationId($notificationId);
+		if ($notification === FALSE) {
 			Bt_exitBatch(1, "Template association for notification '".$notificationId."' not found");
         }
 		$state = 'LOAD_EVENTS';
@@ -43,15 +43,15 @@ while ($state <> 'END') {
     /* Checking if the stack has notifications to proceed                 */
     /**********************************************************************/
     case 'LOAD_EVENTS' :
-		$logger->write("Loading events for template association id " . $templateAssociation->system_id, 'INFO');
-		$events = $event_controler->getEventsByTemplateAssociationId($templateAssociation->system_id);
+		$logger->write("Loading events for notification sid " . $notification->notification_sid, 'INFO');
+		$events = $events_controler->getEventsByNotificationSid($notification->notification_sid);
 		$totalEventsToProcess = count($events);
 		$currentEvent = 0;
 		if ($totalEventsToProcess === 0) {
 			Bt_exitBatch(0, 'No event to process');
         }
 		$logger->write($totalEventsToProcess . ' events to process', 'INFO');
-		$notifications = array();
+		$tmpNotifs = array();
 		$state = 'MERGE_EVENT';
         break;
 		
@@ -61,28 +61,27 @@ while ($state <> 'END') {
     /**********************************************************************/
 	case 'MERGE_EVENT' :
 		foreach($events as $event) {
-			$logger->write("Getting recipients using diffusion type '" .$templateAssociation->diffusion_type . "'", 'INFO');
+			$logger->write("Getting recipients using diffusion type '" .$notification->diffusion_type . "'", 'INFO');
 			// Diffusion type specific recipients
-			$recipients = $diffusion_type_controler->getRecipients($templateAssociation, $event);
+			$recipients = $diffusion_type_controler->getRecipients($notification, $event);
 			$nbRecipients = count($recipients);
 			if ($nbRecipients === 0) {
 				$logger->write('No recipient found' , 'WARNING');
-				$exec_result = "FAILED: no recipient found";
+				$events_controler->commitEvent($event->event_stack_sid, "FAILED: no recipient found");
 			} else {
-				$exec_result  = 'SUCCESS';
 				$logger->write($nbRecipients .' recipients found', 'INFO');
 				foreach ($recipients as $recipient) {
 					$user_id = $recipient->user_id;
-					if(!isset($notifications[$user_id])) {
-						$notifications[$user_id]['recipient'] = $recipient;
+					if(!isset($tmpNotifs[$user_id])) {
+						$tmpNotifs[$user_id]['recipient'] = $recipient;
+						$logger->write('Checking if attachment required for ' . $user_id, 'INFO');
+						$tmpNotifs[$user_id]['attach'] = $diffusion_type_controler->getAttachFor($notification, $user_id);
 					}
-					$notifications[$user_id]['events'][] = $event;
+					$tmpNotifs[$user_id]['events'][] = $event;
 				}
-			}
-			$event_controler->commitEvent($event->system_id, $exec_result);
-			
+			}		
 		} 
-		$totalNotificationsToProcess = count($notifications);
+		$totalNotificationsToProcess = count($tmpNotifs);
 		$logger->write($totalNotificationsToProcess .' notifications to process', 'INFO');
 		$state = 'MERGE_TEMPLATE';
 		break;
@@ -92,39 +91,40 @@ while ($state <> 'END') {
     /* Load parameters				                                      */
     /**********************************************************************/
     case 'MERGE_TEMPLATE' :
-		foreach($notifications as $user_id => $notification) {
+		foreach($tmpNotifs as $user_id => $tmpNotif) {
 			// Merge template with data and style
-			$logger->write('Merging template #' . $templateAssociation->template_id 
-				. ' ('.count($notification['events']).' events) for user ' . $user_id, 'INFO');
+			$logger->write('Merging template #' . $notification->template_id 
+				. ' ('.count($tmpNotif['events']).' events) for user ' . $user_id, 'INFO');
 			
 			$params = array(
-				'recipient' => $notification['recipient'],
-				'events' => $notification['events'],
+				'recipient' => $tmpNotif['recipient'],
+				'events' => $tmpNotif['events'],
 				'maarchUrl' => $maarchUrl,
 				'maarchApps' => $maarchApps,
 				'coll_id' => $coll_id,
                 'res_table' => $coll_table,
                 'res_view' => $coll_view
 			);
-			
-			$html = $templates_controler->merge($templateAssociation->template_id, $params, 'content');
+			$html = $templates_controler->merge($notification->template_id, $params, 'content');
 			if(strlen($html) === 0) {
+				foreach($tmpNotif['events'] as $event) {
+					$events_controler->commitEvent($event->event_stack_sid, "FAILED: Error when merging template");
+				}
 				Bt_exitBatch(8, "Could not merge template with the data");
 			}
 			
 			// Prepare e-mail for stack
 			$sender = $func->protect_string_db((string)$mailerParams->mailfrom);
-			$recipient_mail = $notification['recipient']->mail;
-			$subject = $func->protect_string_db($templateAssociation->description);
+			$recipient_mail = $tmpNotif['recipient']->mail;
+			$subject = $func->protect_string_db($notification->description);
 			$html = $func->protect_string_db($html);
 			$html = str_replace('&amp;', '&', $html);
 			
 			// Attachments
-			$logger->write('Checking if attachment required for ' . $user_id, 'INFO');
 			$attachments = array();
-			$indAttach = $diffusion_type_controler->getAttachFor($templateAssociation, $user_id);
-			if($indAttach) {			
-				foreach($notification['events'] as $event) {
+			if($tmpNotif['attach']) {	
+				$logger->write('Adding attachments', 'INFO');
+				foreach($tmpNotif['events'] as $event) {
 					$query = "SELECT "
 						. "ds.path_template ,"
 						. "mlb.path, "
@@ -155,6 +155,11 @@ while ($state <> 'END') {
 			$db2 = new dbquery();
 			$db2->connect();
 			$db2->query($query, false, true);
+			
+			foreach($tmpNotif['events'] as $event) {
+				$events_controler->commitEvent($event->event_stack_sid, "SUCCESS");
+			}
+			
 			$currentNotification++;
 		} 
 		$state = 'END';

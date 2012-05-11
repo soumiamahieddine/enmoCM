@@ -96,20 +96,20 @@ class diffusion_type_controler
 		return null;
 	}
    
-	public function getRecipients($templateAssocObj, $eventObj) 
+	public function getRecipients($notification, $event) 
 	{
-		$diffusionType = $this->get($templateAssocObj->diffusion_type);
+		$diffusionType = $this->get($notification->diffusion_type);
 		$request = 'recipients';
 		require($diffusionType->script);
 		return $recipients;
 	}
 	
-	public function getAttachFor($templateAssocObj, $user_id) {
+	public function getAttachFor($notification, $user_id) {
 		// No attachment defined
-		if($templateAssocObj->attachfor_type == '') {
+		if($notification->attachfor_type == '') {
 			return false;
 		}
-		$attachforType = $this->get($templateAssocObj->attachfor_type);
+		$attachforType = $this->get($notification->attachfor_type);
 		$request = 'attach';
 		require($attachforType->script);
 		return $attach;

@@ -87,21 +87,23 @@ if (!defined('_LINK_TO_MAARCH')) define('_LINK_TO_MAARCH', 'Vous pouvez acc&eacu
 
 //v2.0
 if (!defined('_ADMIN_NOTIFICATIONS')) define('_ADMIN_NOTIFICATIONS', 'Administration des notifications');
-if (!defined('_MANAGE_EVENTS')) define('_MANAGE_EVENTS', 'G&eacute;rer les &eacute;venements');
-if (!defined('_MANAGE_EVENTS_DESC')) define('_MANAGE_EVENTS_DESC', 'Ajouter ou modifier des &eacute;venement &agrave; notifier');
+if (!defined('_MANAGE_NOTIFS')) define('_MANAGE_NOTIFS', 'G&eacute;rer les notifications');
+if (!defined('_MANAGE_NOTIFS_DESC')) define('_MANAGE_NOTIFS_DESC', 'Ajouter ou modifier des notifications &agrave; notifier');
 
 if (!defined('_TEST_SENDMAIL')) define('_TEST_SENDMAIL', 'Tester la configuration');
 if (!defined('_TEST_SENDMAIL_DESC')) define('_TEST_SENDMAIL_DESC', 'V&eacute;rifier le param&eacute;trage du module de notification');
 
-if (!defined('_EVENTS_LIST')) define('_EVENTS_LIST', 'Liste des &eacute;venements');
-if (!defined('_THIS_EVENT')) define('_THIS_EVENT', 'Cet &eacute;venement');
-if (!defined('_IS_UNKNOWN')) define('_IS_UNKNOWN', 'est inconnu');
-if (!defined('_MODIFY_EVENT')) define('_MODIFY_EVENT', 'Modifier &eacute;venement');
-if (!defined('_ADD_EVENT')) define('_ADD_EVENT', 'Ajouter &eacute;venement');
+if (!defined('_NOTIFS_LIST')) define('_NOTIFS_LIST', 'Liste des notifications');
+if (!defined('_THIS_NOTIF')) define('_THIS_NOTIF', 'Cette notification');
+if (!defined('_IS_UNKNOWN')) define('_IS_UNKNOWN', 'est inconnue');
+if (!defined('_MODIFY_NOTIF')) define('_MODIFY_NOTIF', 'Modifier notification');
+if (!defined('_ADD_NOTIF')) define('_ADD_NOTIF', 'Ajouter notification');
 
 if (!defined('_NOTIFICATION_ID')) define('_NOTIFICATION_ID', 'Identifiant de notification');
 if (!defined('_DIFFUSION_TYPE')) define('_DIFFUSION_TYPE', 'Type de diffusion');
-if (!defined('_SYSTEM_EVENT')) define('_SYSTEM_EVENT', 'Evenement syst&egrave;me');
+if (!defined('_NOTIFICATION_MODE')) define('_NOTIFICATION_MODE', 'Mode de notification');
+if (!defined('_RSS')) define('_RSS', 'Flux RSS');
+if (!defined('_SYSTEM_NOTIF')) define('_SYSTEM_NOTIF', 'Notification syst&egrave;me');
 if (!defined('_ATTACH_MAIL_FILE')) define('_ATTACH_MAIL_FILE', 'Joindre le document &agrave; la notification');
 if (!defined('_NEVER')) define('_NEVER', 'Jamais');
 if (!defined('_NO_ATTACHMENT_WITH_NOTIFICATION')) define('_NO_ATTACHMENT_WITH_NOTIFICATION', 'Les documents ne sont joints &agrave; la notification pour aucun utilisateur');
@@ -118,15 +120,16 @@ if (!defined('_NOTIFICATIONS_GROUP_DIFF_TYPE')) define('_NOTIFICATIONS_GROUP_DIF
 if (!defined('_NOTIFICATIONS_ENTITY_DIFF_TYPE')) define('_NOTIFICATIONS_ENTITY_DIFF_TYPE', 'Envoi aux utilisateurs des entit&eacute;(s) sp&eacute;cifi&eacute;e(s)');
 if (!defined('_NOTIFICATIONS_USER_DIFF_TYPE')) define('_NOTIFICATIONS_USER_DIFF_TYPE', 'Envoi aux utilisateurs sp&eacute;cifi&eacute;s');
 
+//if (!defined('_EVENT')) define('_EVENT', 'Ev&eacute;nement &acute; notifier');
 if (!defined('_SELECT_EVENT_TYPE')) define('_SELECT_EVENT_TYPE', '-- S&eacute;lectionner l\'&eacute;v&eacute;nement --');
 if (!defined('_SELECT_TEMPLATE')) define('_SELECT_TEMPLATE', '-- S&eacute;lectionner le mod&egrave;le --');
 if (!defined('_SELECT_DIFFUSION_TYPE')) define('_SELECT_DIFFUSION_TYPE', '-- S&eacute;lectionner la diffusion --');
 
-if (!defined('_EVENT_ADDED')) define('_EVENT_ADDED', 'Evenement ajout&eacute;');
-if (!defined('_EVENT_DELETED')) define('_EVENT_DELETED', 'Ev&eacute;nement supprim&eacute;');
-if (!defined('_EVENT_MODIFIED')) define('_EVENT_MODIFIED', 'Ev&eacute;nement modifi&eacute;');
-if (!defined('_EVENT_EMPTY')) define('_EVENT_EMPTY', 'Ev&eacute;nement vide');
-if (!defined('_ALL_EVENTS')) define('_ALL_EVENTS', 'Tous les &eacute;venements');
+if (!defined('_NOTIF_ADDED')) define('_NOTIF_ADDED', 'Notification ajout&eacute;e');
+if (!defined('_NOTIF_DELETED')) define('_NOTIF_DELETED', 'Notification supprim&eacute;e');
+if (!defined('_NOTIF_MODIFIED')) define('_NOTIF_MODIFIED', 'Notification modifi&eacute;e');
+if (!defined('_NOTIF_EMPTY')) define('_NOTIF_EMPTY', 'Notification vide');
+if (!defined('_ALL_NOTIFS')) define('_ALL_NOTIFS', 'Toutes les notifications');
 if (!defined('_SYSTEM')) define('_SYSTEM', 'Syst&egrave;me');
 if (!defined('_ENTITY')) define('_ENTITY', 'Entit&eacute;');
 

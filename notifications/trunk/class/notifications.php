@@ -19,7 +19,7 @@
 */
 
 /**
-* @brief  Contains the templates_association Object (herits of the BaseObject class)
+* @brief  Contains the notification Object (herits of the BaseObject class)
 * 
 * 
 * @file
@@ -41,7 +41,7 @@ try {
 *
 * @ingroup template
 */
-class templates_association extends BaseObject
+class notifications extends BaseObject
 {
     /**
      *Print a viewable string to render the object.
@@ -49,6 +49,6 @@ class templates_association extends BaseObject
      */
     public function __toString()
     {
-        return $this->system_id;
+        return $this->notification_sid;
     }
 }
