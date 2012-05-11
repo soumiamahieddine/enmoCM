@@ -32,17 +32,27 @@ $params = array(
 */
 
 // Test réponse letterbox
-$templateId = 83;
+/*$templateId = 83;
 $params = array(
 	'dummy' => 'dummy',
 	'res_view'	=> 'res_view_letterbox',
 	'coll_id' => 'letterbox_coll',
 	'res_id' => 166
+);*/
+
+// Test divers
+$templateId = 23;
+$params = array(
+	'dummy' => 'dummy',
+	'res_view'	=> 'res_view_letterbox',
+	'coll_id' => 'letterbox_coll',
+	'res_id' => 132
 );
 
+$content = $templates_controler->merge($templateId, $params, 'content');
 
-$path = $templates_controler->merge($templateId, $params, 'file');
 
-echo $path;
+
+echo $content;
 ?>
 
