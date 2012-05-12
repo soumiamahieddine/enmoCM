@@ -36,7 +36,7 @@ $core = new core_tools();
 $_SESSION['custom_override_id'] = $core->get_custom_id();
 /**** retrieve HTTP_REQUEST FROM SSO ****/
 $_SESSION['HTTP_REQUEST'] = $_REQUEST;
-if (!file_exists('installed.lck')) {
+if (!file_exists('installed.lck') && is_dir('install')) {
     header('location: install/index.php');
     exit;
 }
