@@ -84,6 +84,9 @@ class Install extends functions
         if (!$this->isPhpRequirements('pgsql')) {
             return false;
         }
+        if (!$this->isMaarchPathWritable()) {
+            return false;
+        }
         if (!$this->isPhpRequirements('gd')) {
             return false;
         }
@@ -93,9 +96,11 @@ class Install extends functions
         if (!$this->isPearRequirements('MIME/Type.php')) {
             return false;
         }
+/*
         if (!$this->isPearRequirements('Maarch_CLITools/FileHandler.php')) {
             return false;
         }
+*/
         if (!$this->isIniErrorRepportingRequirements()) {
             return false;
         }
