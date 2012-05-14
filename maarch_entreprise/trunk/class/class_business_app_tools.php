@@ -406,14 +406,14 @@ class business_app_tools extends dbquery
         $_SESSION['mail_titles'] = array();
         $mailTitles = $xmlfile->titles;
         $i = 0;
-        foreach ($mailTitles->nature as $title ) {
+        foreach ($mailTitles->title as $title ) {
             $label = (string) $title->label;
             if (!empty($label) && defined($label)
                 && constant($label) <> NULL
             ) {
                 $label = constant($label);
             }
-            $_SESSION['mail_titles'][(string) $title->id] = $label;
+            $_SESSION['mail_titles'][(string)$title->id] = $label;
         }
         $_SESSION['default_mail_title'] = (string) $mailTitles->default_title;
     }
