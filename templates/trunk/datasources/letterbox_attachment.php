@@ -16,12 +16,16 @@ $datasources['res_letterbox'][] = $dbDatasource->fetch_assoc();
 if ($datasources['res_letterbox'][0]['exp_contact_id'] <> '') {
     $datasources['contact'] = array();
     $dbDatasource->query("SELECT * FROM contacts WHERE contact_id = ".$datasources['res_letterbox'][0]['exp_contact_id']);
-    $datasources['contact'][] = $dbDatasource->fetch_array();
+    $myContact = $dbDatasource->fetch_array();
+	$myContact['title'] = $_SESSION['mail_titles'][$myContact['title']];
+	$datasources['contact'][] = $myContact;
 }
 if ($datasources['res_letterbox'][0]['dest_contact_id'] <> '') {
     $datasources['contact'] = array();
     $dbDatasource->query("SELECT * FROM contacts WHERE contact_id = ".$datasources['res_letterbox'][0]['dest_contact_id']);
-    $datasources['contact'][] = $dbDatasource->fetch_array();
+    $myContact = $dbDatasource->fetch_array();
+	$myContact['title'] = $_SESSION['mail_titles'][$myContact['title']];
+	$datasources['contact'][] = $myContact;
 }
 
 // Notes
