@@ -39,7 +39,7 @@
                                 :
                             </td>
                             <td>
-                                <input type="text" id="databaseuser" name="databaseuser"/>
+                                <input type="text" id="databaseuser" name="databaseuser" value="postgres"/>
                             </td>
                         </tr>
                         <tr>
