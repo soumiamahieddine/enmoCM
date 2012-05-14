@@ -263,7 +263,7 @@ if ($mode == 'list') {
         <br/>
         <div class="center_text">
             <i><?php echo _AVAILABLE_SERVICES;?> :</i>
-            <input type="checkbox" checked="checked"><a href="#" onclick="checkAll();" ><?php echo _CHECK_ALL;?></a>
+            <a href="#" onclick="checkAll();" ><?php echo _CHECK_ALL;?></a>
             &nbsp;<a href="#" onclick="uncheckAll();" ><?php echo _UNCHECK_ALL;?></a>
         </div>
         <?php

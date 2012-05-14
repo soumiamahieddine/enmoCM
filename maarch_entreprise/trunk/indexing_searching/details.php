@@ -1055,8 +1055,21 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                 <?php
                 }
                 //$detailsExport .= "<h2>"._PROCESS."</h2>";
+                $req = new dbquery;
+                $req->connect();
+                $countAttachments = "select res_id, creation_date, title, format from " 
+                    . $_SESSION['tablename']['attach_res_attachments'] 
+                    . " where res_id_master = " . $_SESSION['doc_id'] 
+                    . " and coll_id ='" . $_SESSION['collection_id_choice'] 
+                    . "' and status <> 'DEL'";
+                $req->query($countAttachments);
+                if ($req->nb_result() > 0) {
+                    $nb_attach = $req->nb_result();
+                } else {
+                    $nb_attach = 0;
+                }
                 ?>
-                <dt><?php  echo _PROCESS;?></dt>
+                <dt><?php echo _PROCESS . '(' . $nb_attach . ')';?></dt>
                 <dd>
                     <div>
                         <table width="100%">
