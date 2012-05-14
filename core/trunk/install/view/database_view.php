@@ -78,6 +78,7 @@
                             <td>
                                 <input
                                   type="button"
+                                  alt="submit"
                                   value="tester"
                                   onClick="
                                     checkDatabaseInfo(
@@ -156,10 +157,10 @@
     <div class="blockWrapper" id="ajaxReturn_createDB" style="display: none;">
         <div class="titleBlock">
             <h2 onClick="slide('database');" style="cursor: pointer;">
-                <?php echo _DATABASE_CHOICE; ?>
+                <?php echo _DATASET_CHOICE; ?>
             </h2>
             <h6>
-			<?php echo _DATA_EXP; ?>
+			<?php echo _DATASET_EXP; ?>
         </h6>
         </div>
         <div class="contentBlock">
@@ -169,7 +170,7 @@
                     <table>
                         <tr>
                             <td>
-                                <?php echo _DATA; ?>
+                                <?php echo _DATASET; ?>
                             </td>
                             <td>
                                 :
