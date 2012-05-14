@@ -333,7 +333,7 @@ if (count($_REQUEST['meta']) > 0) {
                         foreach ($hits as $hit) {
                             $Liste_Ids .= ", '". $hit->Id ."'";
                         }
-                        $where_request .= " res_id IN ($Liste_Ids) or ".$where_multifield_request;
+                        $where_request .= " res_id IN ($Liste_Ids) or ".$where_multifield_request. " and ";
                     }
                 } else {
                     $where_request .= " ".$where_multifield_request." and ";
