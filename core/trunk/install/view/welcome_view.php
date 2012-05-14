@@ -6,7 +6,7 @@
     </div>
     <div class="contentBlock" id="welcome">
         <p>
-            <div align="center">
+            <div align="justify">
                 <?php echo _DESC; ?>
             </div>
         </p>
