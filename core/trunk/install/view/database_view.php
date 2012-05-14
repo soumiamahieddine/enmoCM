@@ -158,6 +158,9 @@
             <h2 onClick="slide('database');" style="cursor: pointer;">
                 <?php echo _DATABASE_CHOICE; ?>
             </h2>
+            <h6>
+			<?php echo _DATA_EXP; ?>
+        </h6>
         </div>
         <div class="contentBlock">
             <p>
@@ -166,7 +169,7 @@
                     <table>
                         <tr>
                             <td>
-                                Datas
+                                <?php echo _DATA; ?>
                             </td>
                             <td>
                                 :
