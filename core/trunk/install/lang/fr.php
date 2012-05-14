@@ -116,6 +116,9 @@ if (!defined('_CREATE_DOCSERVERS')) {
 if (!defined('_DATABASE')) {
     define('_DATABASE', "Base de données");
 }
+if (!defined('_DATABASE_DESC')) {
+    define('_DATABASE_ADD_INF', "Informations pour la cr&eacute;ation de la base de donne&eacute;s");
+}
 if (!defined('_DATABASE_EXP')) {
     define('_DATABASE_EXP', "Quelques informations sur la base de données
 							notamment des pr&eacute;cisions sur l'utilisateur et le mot
