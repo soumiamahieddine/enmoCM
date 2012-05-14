@@ -27,6 +27,7 @@ if (!defined('_TEMPLATE_TYPE')) define( '_TEMPLATE_TYPE', 'Template type');
 if (!defined('_TEMPLATE_STYLE')) define( '_TEMPLATE_STYLE', 'Template association');
 if (!defined('_EDIT_TEMPLATE')) define( '_EDIT_TEMPLATE', 'Edit template');
 if (!defined('_TEMPLATE_ID')) define( '_TEMPLATE_ID', 'Template ID');
+if (!defined('_ATTACH_TEMPLATE_TO_ENTITY'))  define('_ATTACH_TEMPLATE_TO_ENTITY', 'Please attach template to at least one department');
 if (!defined('_TEMPLATE_DATASOURCE'))  define('_TEMPLATE_DATASOURCE', 'Datasource');
 if (!defined('_OFFICE'))  define('_OFFICE', 'Office');
 if (!defined('_HTML'))  define('_HTML', 'HTML');
@@ -55,6 +56,7 @@ if (!defined('_CHOOSE_TEMPLATE')) define('_CHOOSE_TEMPLATE','Choose a template')
 if (!defined('_DELETED_TEMPLATE')) define('_DELETED_TEMPLATE', 'template deleted');
 if (!defined('_ASSOCIATED_TEMPLATES')) define('_ASSOCIATED_TEMPLATES', 'Associated templates');
 if (!defined('_NO_DEFINED_TEMPLATE')) define('_NO_DEFINED_TEMPLATE', 'No template');
+if (!defined('_EDIT_YOUR_TEMPLATE'))  define('_EDIT_YOUR_TEMPLATE', 'Please edit once your template');
 if (!defined('_TEMPLATE_NAME2')) define('_TEMPLATE_NAME2', 'Template name ');
 if (!defined('_TEMPLATE_CONTENT')) define('_TEMPLATE_CONTENT', 'Template content ');
 if (!defined('_TEMPLATES')) define('_TEMPLATES', 'template(s)');
@@ -70,6 +72,7 @@ if (!defined('_TEMPLATE_OR_ANSWER_ERROR')) define('_TEMPLATE_OR_ANSWER_ERROR', '
 if (!defined('_NO_CONTENT')) define('_NO_CONTENT', 'The answer is empty');
 if (!defined('_FILE_OPEN_ERROR')) define('_FILE_OPEN_ERROR', 'An error occured while opening the file');
 if (!defined('_ANSWER_OPEN_ERROR')) define('_ANSWER_OPEN_ERROR', 'An error occured while opening the answer');
+if (!defined('_TEMPLATE_UPDATE'))  define('_TEMPLATE_UPDATE', 'Template updated');
 
 if (!defined('_ANSWER_UPDATED')) define('_ANSWER_UPDATED', 'Attachment updated');
 if (!defined('_ANSWER_TITLE')) define('_ANSWER_TITLE', 'Name of the attachment');

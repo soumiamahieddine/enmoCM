@@ -21,7 +21,7 @@ if (!defined('_TEMPLATE_NAME'))  define('_TEMPLATE_NAME', 'Nom du mod&egrave;le'
 if (!defined('_TEMPLATES_COMMENT'))  define('_TEMPLATES_COMMENT', 'Mod&egrave;les de document');
 if (!defined('_TEMPLATE_EMPTY'))  define('_TEMPLATE_EMPTY', 'Le mod&egrave;le est vide');
 if (!defined('_TEMPLATE_LABEL')) define( '_TEMPLATE_LABEL', 'Nom du mod&egrave;le');
-if (!defined('_TEMPLATE_COMMENT')) define( '_TEMPLATE_COMMENT', 'Desciption');
+if (!defined('_TEMPLATE_COMMENT')) define( '_TEMPLATE_COMMENT', 'Description');
 if (!defined('_TEMPLATE_TYPE')) define( '_TEMPLATE_TYPE', 'Type de mod&egrave;le');
 if (!defined('_TEMPLATE_STYLE')) define( '_TEMPLATE_STYLE', 'Nature du mod&egrave;le');
 if (!defined('_EDIT_TEMPLATE')) define( '_EDIT_TEMPLATE', 'Edition du mod&egrave;le');
@@ -45,7 +45,7 @@ if (!defined('_TEMPLATE_ADDITION'))  define('_TEMPLATE_ADDITION', 'Ajout d&rsquo
 if (!defined('_TEMPLATE_MODIFICATION'))  define('_TEMPLATE_MODIFICATION', 'Modification d&rsquo;un mod&egrave;le');
 if (!defined('_TEMPLATE_DELETION'))  define('_TEMPLATE_DELETION', 'Suppression d&rsquo;un mod&egrave;le');
 if (!defined('_MODIFY_TEMPLATE'))  define('_MODIFY_TEMPLATE', 'Valider les changements');
-if (!defined('_TEMPLATE_ADDED'))  define('_TEMPLATE_ADDED', 'Nouveau mod&egrave;le cr&eacute;e');
+if (!defined('_TEMPLATE_ADDED'))  define('_TEMPLATE_ADDED', 'Nouveau mod&egrave;le cr&eacute;&eacute;e');
 if (!defined('_CHOOSE_ENTITY_TEMPLATE'))  define('_CHOOSE_ENTITY_TEMPLATE', 'Choisissez le(s) service(s) au(x)quel(s) vous souhaitez associer ce mod&egrave;le');
 if (!defined('_REALLY_DEL_TEMPLATE'))  define('_REALLY_DEL_TEMPLATE', 'Voulez vous vraiment supprimer ce mod&egrave;le ?');
 
@@ -55,6 +55,7 @@ if (!defined('_CHOOSE_TEMPLATE'))  define('_CHOOSE_TEMPLATE','Choisissez un mod&
 if (!defined('_DELETED_TEMPLATE'))  define('_DELETED_TEMPLATE', 'Mod&egrave;le supprim&eacute;');
 if (!defined('_ASSOCIATED_TEMPLATES'))  define('_ASSOCIATED_TEMPLATES', 'Mod&egrave;les associ&eacute;s');
 if (!defined('_NO_DEFINED_TEMPLATE'))  define('_NO_DEFINED_TEMPLATE', 'Pas de mod&egrave;le d&eacute;fini');
+if (!defined('_EDIT_YOUR_TEMPLATE'))  define('_EDIT_YOUR_TEMPLATE', 'Veuillez &eacute;diter au moins une fois le mod&egrave;le');
 if (!defined('_TEMPLATE_NAME2'))  define('_TEMPLATE_NAME2', 'Le nom du mod&egrave;le ');
 if (!defined('_TEMPLATE_CONTENT'))  define('_TEMPLATE_CONTENT', 'Le contenu du mod&egrave;le ');
 if (!defined('_TEMPLATES'))  define('_TEMPLATES', 'mod&egrave;le(s)');
@@ -70,6 +71,7 @@ if (!defined('_TEMPLATE_OR_ANSWER_ERROR'))  define('_TEMPLATE_OR_ANSWER_ERROR', 
 if (!defined('_NO_CONTENT'))  define('_NO_CONTENT', 'Erreur : Contenu de la r&eacute;ponse vide');
 if (!defined('_FILE_OPEN_ERROR'))  define('_FILE_OPEN_ERROR', 'Ouverture fichier impossible');
 if (!defined('_ANSWER_OPEN_ERROR'))  define('_ANSWER_OPEN_ERROR', 'Erreur : probl&egrave;me &agrave; l&rsquo;ouverture de la r&eacute;ponse');
+if (!defined('_TEMPLATE_UPDATE'))  define('_TEMPLATE_UPDATE', 'Mod&egrave;le mis &agrave; jour');
 
 if (!defined('_ANSWER_UPDATED'))  define('_ANSWER_UPDATED', 'Pi&egrave;ce jointe mise &agrave; jour');
 if (!defined('_ANSWER_TITLE'))  define('_ANSWER_TITLE', 'Titre de la pi&egrave;ce jointe');
