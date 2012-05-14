@@ -42,15 +42,17 @@ if ($objectType == 'templateStyle') {
             'res_table' => $objectTable
             );
         if ($objectType == 'attachmentFromTemplate') {
-			$filePathOnTmp = $templateCtrl->merge($objectId, $params, 'file');
-		} elseif ($objectType == 'template') {
-			$filePathOnTmp = $templateCtrl->copyTemplateOnTmp($objectId);
-			if ($filePathOnTmp == '') {
-				$result = array('ERROR' => _FAILED_TO_COPY_ON_TMP 
-					. ':' . $objectId . ' ' . $filePathOnTmp);
-				createXML('ERROR', $result);
-			}
-		}
+            $filePathOnTmp = $templateCtrl->merge($objectId, $params, 'file');
+            $templateObj = $templateCtrl->get($objectId);
+            $_SESSION['cm']['templateStyle'] = $templateObj->template_style;
+        } elseif ($objectType == 'template') {
+            $filePathOnTmp = $templateCtrl->copyTemplateOnTmp($objectId);
+            if ($filePathOnTmp == '') {
+                $result = array('ERROR' => _FAILED_TO_COPY_ON_TMP 
+                    . ':' . $objectId . ' ' . $filePathOnTmp);
+                createXML('ERROR', $result);
+            }
+        }
         $fileExtension = $func->extractFileExt($filePathOnTmp);
     }
 }

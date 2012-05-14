@@ -99,10 +99,11 @@ if (empty($docserver)) {
                 $_SESSION['data'],
                 array(
                     'column' => 'title',
-                    'value' => _NEW_ATTACHMENT_VERSION,
+                    'value' => $_SESSION['cm']['templateStyle'],
                     'type' => 'string',
                 )
             );
+            $_SESSION['cm']['templateStyle'] = '';
             array_push(
                 $_SESSION['data'],
                 array(
