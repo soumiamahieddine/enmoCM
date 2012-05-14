@@ -106,13 +106,14 @@ if (isset($_GET['what_services']) && ! empty($_GET['what_services'])) {
 
 
 // Redirect to user in entities
-$query = "select u.user_id, u.firstname, u.lastname,e.entity_id,  e.entity_label "
+$query = "select distinct u.user_id, u.firstname, u.lastname,e.entity_id, e.entity_label "
     . "FROM " . USERS_TABLE . " u, " . ENT_ENTITIES . " e, "
     . ENT_USERS_ENTITIES . " ue WHERE u.status <> 'DEL' and u.enabled = 'Y' "
     . "and  e.entity_id = ue.entity_id and u.user_id = ue.user_id "
     . "and e.enabled = 'Y' ". $whereUsers;
 if($redirect_groupbasket) {
-    $query .= " and e.entity_id in (" . $redirect_groupbasket['users_entities'] . ") ";
+    $query .= " and ( e.entity_id in (" . $redirect_groupbasket['users_entities'] . ") "
+		. " or e.entity_id in (" . $redirect_groupbasket['entities'] . ") )";
 }
 $query .= $orderByUsers;
 $db->query($query);
