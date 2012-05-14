@@ -354,6 +354,21 @@ class Install extends functions
         }
         return true;
     }
+    
+    /**
+     * test if maarch path is writable
+     * @return boolean or error message
+     */
+    public function isMaarchPathWritable()
+    {
+        if (!is_writable('.')
+                || !is_readable('.')
+        ) {
+            $error .= _THE_MAARCH_PATH_DOES_NOT_HAVE_THE_ADEQUATE_RIGHTS;
+        } else {
+            return true;
+        }
+    }
 
     /**
      * test if docserver path is read/write

@@ -30,6 +30,12 @@ if (!defined('_PREREQUISITES')) {
 if (!defined('_PHP_VERSION')) {
     define('_PHP_VERSION', "Version de PHP");
 }
+if (!defined('_MAARCH_PATH_RIGHTS')) {
+    define('_MAARCH_PATH_RIGHTS', "Droits de lecture et d'&eacute;criture du r&eacute;pertoire racine de MEP");
+}
+if (!defined('_THE_MAARCH_PATH_DOES_NOT_HAVE_THE_ADEQUATE_RIGHTS')) {
+    define('_THE_MAARCH_PATH_DOES_NOT_HAVE_THE_ADEQUATE_RIGHTS', "Les droits du r&eacute;pertoire racine de MEP ne sont pas corrects");
+}
 if (!defined('_PGSQL')) {
     define('_PGSQL', "Librairie pgsql");
 }

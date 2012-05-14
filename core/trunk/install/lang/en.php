@@ -30,6 +30,12 @@ if (!defined('_PREREQUISITES')) {
 if (!defined('_PHP_VERSION')) {
     define('_PHP_VERSION', "PHP Version");
 }
+if (!defined('_MAARCH_PATH_RIGHTS')) {
+    define('_MAARCH_PATH_RIGHTS', "Rights of the MEP root directory (read/write)");
+}
+if (!defined('_THE_MAARCH_PATH_DOES_NOT_HAVE_THE_ADEQUATE_RIGHTS')) {
+    define('_THE_MAARCH_PATH_DOES_NOT_HAVE_THE_ADEQUATE_RIGHTS', "The Maarch root path does not have the adequate rights");
+}
 if (!defined('_PGSQL')) {
     define('_PGSQL', "pgsql library");
 }

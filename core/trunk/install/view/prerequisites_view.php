@@ -26,6 +26,24 @@
                     </td>
                 </tr>
                 <tr>
+                    <td class="voyantPrerequisites">
+                        <?php echo $Class_Install->checkPrerequisites(
+                            $Class_Install->isMaarchPathWritable()
+                        ); ?>
+                    </td>
+                    <td>
+                        <?php echo _MAARCH_PATH_RIGHTS; ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td>&nbsp;
+
+                    </td>
+                    <td>&nbsp;
+
+                    </td>
+                </tr>
+                <tr>
                     <td colspan="2">
                         <h2>
                             Libraires
