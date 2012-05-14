@@ -4,6 +4,9 @@
             <h2 onClick="slide('database');" style="cursor: pointer;">
                 <!-- <?php echo _DATABASE; ?>--> Informations de connexion
             </h2>
+            <h6>
+			<?php echo _DATABASE_EXP; ?>
+        </h6>
         </div>
         <div class="contentBlock" id="database">
             <p>
@@ -150,7 +153,7 @@
     <div class="blockWrapper" id="ajaxReturn_createDB" style="display: none;">
         <div class="titleBlock">
             <h2 onClick="slide('database');" style="cursor: pointer;">
-                <!--<?php echo _DATABASE; ?>-->Choix des datas
+                <?php echo _DATABASE_CHOICE; ?>
             </h2>
         </div>
         <div class="contentBlock">
@@ -196,7 +199,7 @@
                             <td></td>
                             <td></td>
                             <td>
-                                <input type="button" onclick="$('.wait').css('display','block');checkLoadDatas($('#dataFilename').val(), 'loadDatas');" value="Charger les datas" />
+                                <input type="button" onclick="$('.wait').css('display','block');checkLoadDatas($('#dataFilename').val(), 'loadDatas');" value="Charger les données" />
                             </td>
                             <td></td>
                         </tr>
