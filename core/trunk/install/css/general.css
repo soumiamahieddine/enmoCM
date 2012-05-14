@@ -9,3 +9,15 @@
     width: 910px;
     background-color: rgba(0,0,0,0.6);
 }
+
+a, a:visited {
+    color: #666;
+    font-size: 0.2em;
+    font-weight: normal;
+    padding-bottom: 1em;
+}
+
+h6 {
+	color: #777;
+	font-style: italic;
+}
