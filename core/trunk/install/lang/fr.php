@@ -147,6 +147,12 @@ if (!defined('_DATABASETYPE')) {
 if (!defined('_DATABASE_CHOICE')) {
     define('_DATABASE_CHOICE', "Choix du jeu de données d'exemple à importer");
 }
+if (!defined('_DATA')) {
+    define('_DATA', "Données");
+}
+if (!defined('_DATA_EXP')) {
+    define('_DATA_EXP', "Quelques informations sur les données");
+}
 
 //PASSWORD
 if (!defined('_PASSWORD')) {
