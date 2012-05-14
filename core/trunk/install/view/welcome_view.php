@@ -7,7 +7,7 @@
     <div class="contentBlock" id="welcome">
         <p>
             <div align="center">
-                <?php echo _PREVIOUS; ?>
+                <?php echo _DESC; ?>
             </div>
         </p>
     </div>
