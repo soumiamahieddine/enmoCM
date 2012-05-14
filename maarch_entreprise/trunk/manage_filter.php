@@ -275,7 +275,7 @@ else
                     if ($attachments) {
                         $db = new dbquery();
                         $db->connect();
-                        $query = "SELECT * FROM res_attachments WHERE res_id_master = ".$tab[$i][$j]['value'];
+                        $query = "SELECT * FROM res_attachments WHERE status <> 'DEL' and res_id_master = ".$tab[$i][$j]['value'];
                         //$tab[$i][$j]['aDesReps'] = $query;
                         $db->query($query);
                         $cptAttach=0;
