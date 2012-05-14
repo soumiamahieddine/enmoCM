@@ -14,9 +14,9 @@ if (!defined('_WELCOME')) {
 }
 
 if (!defined('_DESC')) {
-    define('_DESC', "Message de bienvenue à compl&eacute;ter par une pr&eacute;sentation de Maarch 
-					<br>Compl&eacute;ter ici pour passer à la ligne
-					<br>Ou encore ici si plusieurs paragraphes");
+    define('_DESC', "Bienvenue dans l'assistant d'installation de Maarch !
+					<br>Maarch est un Système d'Archivage Electronique doté de capacités de GED, Gestion de Courrier, travail collaboratif, et SAE normé OAIS et NFZ42-013. Maarch est un produit Open Source sur licence GPL v3 : il n'y a pas de coûts de licence, mais des services professionnels certifiés fournis par Maarch SAS et son réseau de partenaires à travers le monde.
+					<br>Les services couvrent l'audit, l'installation, le paramétrage, la personnalisation, l'interfaçage avec votre SI, la formation, le support et la maintenance. Reportez vous sur http://www.maarch.com pour plus d'informations sur les services.");
 }
 
 
@@ -39,27 +39,30 @@ if (!defined('_PREREQUISITES_HEAD')) {
 }
 
 if (!defined('_LINK')) {
-    define('_LINK', "Chemin vers les pré-requis sur maarch.org");
+    define('_LINK', "Voir <A>http://www.maarch.org/projets/entreprise/architecture-technique-et-prerequis-pour-maarch-entreprise-1.3</A>");
 }
 if (!defined('_PREREQUISITES_EXP')) {
-    define('_PREREQUISITES_EXP', "Quelques informations concernant 
-    les différents pr&eacute;-requis
-    <br>à completer en cas de besoin de d'informations suppl&eacute;mentaires
-    <br>à la ligne");
+    define('_PREREQUISITES_EXP', "L'installation de Maarch nécessite un certain nombre de pré-requis au niveau de l'installation de PHP. Reportez-vous à la page <A>http://www.maarch.org/projets/entreprise/architecture-technique-et-prerequis-pour-maarch-entreprise-1.3</A> pour les détails");
 }
-
+if (!defined('_ACTIVATED')) {
+    define('_ACTIVATED', "Conforme");
+}if (!defined('_OPTIONNAL')) {
+    define('_OPTIONNAL', "Non conforme mais optionnel");
+}if (!defined('_NOT_ACTIVATED')) {
+    define('_NOT_ACTIVATED', "Non conforme");
+}
 
 if (!defined('_GENERAL')) {
     define('_GENERAL', "G&eacute;n&eacute;ral");
 }
 if (!defined('_PHP_VERSION')) {
-    define('_PHP_VERSION', "Version de PHP");
+    define('_PHP_VERSION', "Version de PHP (5.3 ou sup.)");
 }
 if (!defined('_MAARCH_PATH_RIGHTS')) {
-    define('_MAARCH_PATH_RIGHTS', "Droits de lecture et d'&eacute;criture du r&eacute;pertoire racine de MEP");
+    define('_MAARCH_PATH_RIGHTS', "Droits de lecture et d'&eacute;criture du r&eacute;pertoire racine de Maarch");
 }
 if (!defined('_THE_MAARCH_PATH_DOES_NOT_HAVE_THE_ADEQUATE_RIGHTS')) {
-    define('_THE_MAARCH_PATH_DOES_NOT_HAVE_THE_ADEQUATE_RIGHTS', "Les droits du r&eacute;pertoire racine de MEP ne sont pas corrects");
+    define('_THE_MAARCH_PATH_DOES_NOT_HAVE_THE_ADEQUATE_RIGHTS', "Les droits du r&eacute;pertoire racine de Maarch ne sont pas corrects");
 }
 if (!defined('_PGSQL')) {
     define('_PGSQL', "Librairie pgsql");
@@ -80,16 +83,16 @@ if (!defined('_CLITOOLS')) {
     define('_CLITOOLS', "CLITools");
 }
 if (!defined('_ERROR_REPORTING')) {
-    define('_ERROR_REPORTING', "error_reporting");
+    define('_ERROR_REPORTING', "error_reporting (E_ALL & ~E_NOTICE & ~E_DEPRECATED)");
 }
 if (!defined('_DISPLAY_ERRORS')) {
-    define('_DISPLAY_ERRORS', "display_errors");
+    define('_DISPLAY_ERRORS', "display_errors (On)");
 }
 if (!defined('_SHORT_OPEN_TAGS')) {
-    define('_SHORT_OPEN_TAGS', "short_open_tags");
+    define('_SHORT_OPEN_TAGS', "short_open_tags (On)");
 }
 if (!defined('_MAGIC_QUOTES_GPC')) {
-    define('_MAGIC_QUOTES_GPC', "magic_quotes_gpc");
+    define('_MAGIC_QUOTES_GPC', "magic_quotes_gpc (Off)");
 }
 
 if (!defined('_MUST_FIX')) {
@@ -120,9 +123,7 @@ if (!defined('_DATABASE_DESC')) {
     define('_DATABASE_ADD_INF', "Informations pour la cr&eacute;ation de la base de donne&eacute;s");
 }
 if (!defined('_DATABASE_EXP')) {
-    define('_DATABASE_EXP', "Quelques informations sur la base de données
-							notamment des pr&eacute;cisions sur l'utilisateur et le mot
-							de passe de connexion");
+    define('_DATABASE_EXP', "Maarch utilise en standard le moteur de base de données libre PostgreSQL (Version 8.3 ou supérieure - Recommandé : version 9). Précisez le nom du serveur, le n° de port, l'utlisateur et le mot de passe de connexion.");
 }
 
 if (!defined('_DATABASESERVER')) {
@@ -144,7 +145,7 @@ if (!defined('_DATABASETYPE')) {
     define('_DATABASETYPE', "Type");
 }
 if (!defined('_DATABASE_CHOICE')) {
-    define('_DATABASE_CHOICE', "Choix des données à importer");
+    define('_DATABASE_CHOICE', "Choix du jeu de données d'exemple à importer");
 }
 
 //PASSWORD
