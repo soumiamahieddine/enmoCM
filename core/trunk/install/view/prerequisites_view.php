@@ -2,11 +2,29 @@
     <div class="titleBlock">
         <h2 onClick="slide('prerequisites');" style="cursor: pointer;">
             <?php echo _PREREQUISITES; ?>
+            <a href="http://www.maarch.org/projets/entreprise/architecture-technique-et-prerequis-pour-maarch-entreprise-1.3">
+				<?php echo _LINK;?>
+			</a> 
         </h2>
+        <h6>
+			<i><?php echo _PREREQUISITES_EXP; ?></i>
+			<br/>
+			<img src="img/green_light.png" width="10px"/><?php echo _ACTIVATED; ?>
+			<img src="img/orange_light.png"  width="10px"/><?php echo _OPTIONNAL; ?>
+			<img src="img/red_light.png"  width="10px"/><?php echo _NOT_ACTIVATED; ?>
+			
+		</h6>
     </div>
     <div class="contentBlock" id="prerequisites">
         <p>
             <table>
+            <tr>
+                    <td colspan="2">
+                        <h2>
+                           <?php echo _GENERAL; ?>
+                        </h2>
+                    </td>
+                </tr>
                 <tr>
                     <td class="voyantPrerequisites">
                         <?php echo $Class_Install->checkPrerequisites(
@@ -15,14 +33,6 @@
                     </td>
                     <td>
                         <?php echo _PHP_VERSION; ?>
-                    </td>
-                </tr>
-                <tr>
-                    <td>&nbsp;
-
-                    </td>
-                    <td>&nbsp;
-
                     </td>
                 </tr>
                 <tr>
