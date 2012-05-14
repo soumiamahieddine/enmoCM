@@ -433,6 +433,15 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     ?>
                 </p>
                 <p id="viewdoc">
+                    <!--<a href="<?php
+                        echo $_SESSION['config']['businessappurl'];
+                        ?>index.php?page=view_baskets&module=basket&baskets=MyBasket&directLinkToAction&resid=<?php
+                        echo $s_id;
+                        ?>" target="_blank"><img alt="<?php echo _PROCESS_DOC;?>" src="<?php echo
+                            $_SESSION['config']['businessappurl'];
+                            ?>static.php?filename=lot.gif" border="0" alt="" />&nbsp;<?php
+                        echo _PROCESS_DOC;
+                        ?></a>-->
                     <a href="<?php
                         echo $_SESSION['config']['businessappurl'];
                         ?>index.php?display=true&dir=indexing_searching&page=view_resource_controler&id=<?php
