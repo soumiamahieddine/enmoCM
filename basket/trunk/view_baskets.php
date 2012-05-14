@@ -110,6 +110,21 @@ if (isset($_REQUEST['baskets']) && ! empty($_REQUEST['baskets'])) {
     $bask->load_current_basket(trim($_REQUEST['baskets']));
 	//$bask->show_array($_SESSION['current_basket']);
 }
+
+if (
+    isset($_REQUEST['directLinkToAction']) 
+    && isset($_REQUEST['resid']) && !empty($_REQUEST['resid'])
+) {
+    echo '<script language="javascript">';
+    echo 'action_send_first_request(\'http://127.0.0.1/mep/apps/maarch_entreprise/index.php?display=true&page=manage_action&module=core\''
+        . ', \'mass\''
+        . ',' . $_SESSION['current_basket']['default_action'] 
+        . ',' . $_REQUEST['resid'] 
+        . ',\'' . $_SESSION['current_basket']['table'] . '\''
+        . ',\'basket\'' 
+        . ',\'' . $_SESSION['current_basket']['coll_id'] . '\');';
+    echo '</script>';
+}
 ?><h1> <?php
 if (count($_SESSION['user']['baskets']) > 0) {
     ?><div style="">
