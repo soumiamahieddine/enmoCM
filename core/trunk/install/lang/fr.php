@@ -144,14 +144,11 @@ if (!defined('_DATABASENAME')) {
 if (!defined('_DATABASETYPE')) {
     define('_DATABASETYPE', "Type");
 }
-if (!defined('_DATABASE_CHOICE')) {
-    define('_DATABASE_CHOICE', "Choix du jeu de données d'exemple à importer");
+if (!defined('_DATASET_CHOICE')) {
+    define('_DATASET_CHOICE', "Choix du jeu de données d'exemple à importer");
 }
-if (!defined('_DATA')) {
-    define('_DATA', "Données");
-}
-if (!defined('_DATA_EXP')) {
-    define('_DATA_EXP', "Quelques informations sur les données");
+if (!defined('_DATASET_EXP')) {
+    define('_DATASET_EXP', "L'installation propose deux jeux de données : l'un relativement simple mettant en avant les fonctionnalités SAE de base, et l'autre plus complet illustrant un circuit courrier en collectivité. Les deux jeux comprennent des utilisateurs, des types de documents, et l'ensemble du référentiel pour une compréhension globale de l'outil.");
 }
 
 //PASSWORD
