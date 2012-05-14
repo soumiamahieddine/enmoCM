@@ -103,6 +103,7 @@ if (!defined('_NOTIFICATION_ID')) define('_NOTIFICATION_ID', 'Identifiant de not
 if (!defined('_DIFFUSION_TYPE')) define('_DIFFUSION_TYPE', 'Type de diffusion');
 if (!defined('_NOTIFICATION_MODE')) define('_NOTIFICATION_MODE', 'Mode de notification');
 if (!defined('_RSS')) define('_RSS', 'Flux RSS');
+if (!defined('_RSS_URL_TEMPLATE')) define('_RSS_URL_TEMPLATE', 'Lien du flux');
 if (!defined('_SYSTEM_NOTIF')) define('_SYSTEM_NOTIF', 'Notification syst&egrave;me');
 if (!defined('_ATTACH_MAIL_FILE')) define('_ATTACH_MAIL_FILE', 'Joindre le document &agrave; la notification');
 if (!defined('_NEVER')) define('_NEVER', 'Jamais');

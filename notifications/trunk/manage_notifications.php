@@ -119,14 +119,16 @@ if ($mode == 'list') {
         <p>
             <label><?php echo _NOTIFICATION_MODE;?> :</label>
             <input type="radio" name="notification_mode" value="EMAIL"
-                onClick="javascript:window.document.getElementById('template_div').style.display = 'block';" <?php
+                onClick="javascript:window.document.getElementById('template_div').style.display = 'block';
+				window.document.getElementById('rss_url_div').style.display = 'none';" <?php
                 if ($_SESSION['m_admin']['notifications']['notification_mode'] == '' 
                     || $_SESSION['m_admin']['notifications']['notification_mode'] == 'EMAIL'
                 ) {
                     echo 'checked="checked"'; 
                 }?>/> <?php echo _EMAIL;?>
             <input type="radio" name="notification_mode" value="RSS"
-                onClick="javascript:window.document.getElementById('template_div').style.display = 'none';" <?php
+                onClick="javascript:window.document.getElementById('rss_url_div').style.display = 'block';
+				window.document.getElementById('template_div').style.display = 'none';" <?php
                 if ($_SESSION['m_admin']['notifications']['notification_mode'] == 'RSS'
                 ) {
                     echo 'checked="checked"'; 
@@ -153,6 +155,15 @@ if ($mode == 'list') {
             </select>
         </p>
         </div>
+		<div id="rss_url_div" name="rss_url_div" style="width:600px; align=left; display:none;" >
+			<p>
+            <label for="label"><?php echo _RSS_URL_TEMPLATE; ?> : </label>
+            <input name="rss_url_template" type="text" id="rss_url_template" style="align=right; width:340px" value="<?php
+                echo functions::show_str(
+                    $_SESSION['m_admin']['notification']['rss_url_template']
+                ); ?>"/>
+			</p>
+		</div>
         <p>
             <label for="status"><?php echo _DIFFUSION_TYPE; ?> : </label>
             <select name="diffusion_type"
