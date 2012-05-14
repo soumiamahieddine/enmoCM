@@ -67,4 +67,7 @@ if (!defined('_TAGFUSION_GOODRESULT'))  define('_TAGFUSION_GOODRESULT', 'Ces tag
 
 if (!defined('_TAG_ALREADY_EXISTS'))  define('_TAG_ALREADY_EXISTS', 'Ce tag existe d&eacute;j&agrave;');
 
+if (!defined('_CHOOSE_TAG'))  define('_CHOOSE_TAG', 'Choix des mots-cl&eacute;s');
+if (!defined('_TAG_SEARCH'))  define('_TAG_SEARCH', 'Mots-cl&eacute;s');
+
 ?>

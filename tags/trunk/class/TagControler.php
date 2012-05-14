@@ -193,6 +193,33 @@ class tag_controler
 	}
 	
 	
+	
+	public function getresarray_byLabel($tag_label, $coll_id){
+		$array = array();
+		
+		$db = new dbquery();
+		$db->connect();
+        $db->query(
+	        	"select res_id as bump from " ._TAG_TABLE_NAME
+	            . " where tag_label = '" . $tag_label . "' and coll_id = '".$coll_id."' ".
+	            " and res_id <> 0"
+        );
+        $db->show();
+		
+		while ($result = $db->fetch_object())
+		{
+			array_push($array, $result->bump);
+		}
+		
+		if ($array)
+		{
+			return $array; 
+		}
+		
+		return false;
+	}
+	
+	
 	public function delete_tags($res_id,$coll_id)
     {
 		$db = new dbquery();
