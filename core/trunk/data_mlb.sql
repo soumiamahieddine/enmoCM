@@ -97,6 +97,9 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'u
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'reports');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'add_new_version');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'index_mlb');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'tag_view');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'add_tag_to_res');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'delete_tag_to_res');
 
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'adv_search_mlb');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'my_contacts');
@@ -116,6 +119,8 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'add_cop
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'folder_search');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'view_versions');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'index_mlb');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'tag_view');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'add_tag_to_res');
 
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'adv_search_mlb');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'index_mlb');
@@ -145,6 +150,8 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'clos
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'add_copy_in_process');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'admin_templates');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'view_versions');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'tag_view');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'add_tag_to_res');
 
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ELU', 'view_technical_infos');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ELU', 'add_links');
@@ -157,6 +164,8 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('ELU', 'view_bask
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ELU', 'update_list_diff_in_details');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ELU', 'view_versions');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ELU', 'index_mlb');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('ELU', 'tag_view');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('ELU', 'add_tag_to_res');
 
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('FINANCE', 'adv_search_mlb');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('FINANCE', 'search_customer');
@@ -179,6 +188,8 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('FINANCE', 'add_c
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('FINANCE', 'update_list_diff_in_details');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('FINANCE', 'view_versions');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('FINANCE', 'index_mlb');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('FINANCE', 'tag_view');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('FINANCE', 'add_tag_to_res');
 
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'adv_search_mlb');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'index_mlb');
@@ -197,6 +208,8 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'add_copy_in_process');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'admin_templates');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'view_versions');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'tag_view');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESp_COURRIER', 'add_tag_to_res');
 
 
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR', 'admin');
@@ -223,6 +236,10 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR',
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR', 'reports');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR', 'view_versions');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR', 'add_new_version');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR', 'tag_view');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR', 'add_tag_to_res');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR', 'delete_tag_to_res');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR', 'admin_tag');
 
 
 
@@ -329,7 +346,7 @@ INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause
 INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, enabled) VALUES ('letterbox_coll', 'ValidationBasket', '00 - Courriers à valider', 'Corbeille de validation', '(status = ''VAL'' and destination <>''COU'')', 'N', 'Y', 'Y');
 INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, enabled) VALUES ('letterbox_coll', 'MyBasket', '01 - Courriers a traiter', 'Corbeille de traitement', '(status =''NEW'' or status =''COU'') and dest_user = @user and type_id not in (100)', 'N', 'Y', 'Y');
 INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, enabled) VALUES ('letterbox_coll', 'LateMailBasket', '02 - Courriers en retard', 'Courriers en retard', 'destination in (@my_entities, @subentities[@my_primary_entity]) and (status <> ''DEL'' AND status <> ''REP'') and (now() > process_limit_date)', 'N', 'Y', 'Y');
-INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, enabled) VALUES ('letterbox_coll', 'WaitingBillBasket', '31 - Factures en attente de  validation', 'Corbeille des factures à valider par les service', 'status=''COU'' and type_id in (100)', 'N', 'Y', 'Y');
+INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, enabled) VALUES ('letterbox_coll', 'WaitingBillBasket', '31 - Factures en attente de  validation', 'Corbeille des factures à valider par les service', '(status=''COU'' or status = ''NEW'') and type_id in (100)', 'N', 'Y', 'Y');
 INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, enabled) VALUES ('letterbox_coll', 'DepartmentBasket', '10 - Courriers de ma direction', 'Corbeille de supervision', 'destination in (@my_entities, @subentities[@my_primary_entity]) and (status <> ''DEL'' AND status <> ''REP'' and status <> ''VAL'')', 'N', 'Y', 'Y');
 INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, enabled) VALUES ('letterbox_coll', 'ValidInvoicesBaskets', '30 - Mes factures à valider', 'Mes factures à valider', '(status = ''NEW'' or status = ''COU'') and destination = @my_primary_entity and type_id in (100)', 'N', 'Y', 'Y');
 INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, enabled) VALUES ('letterbox_coll', 'ValidBillBasket', '32 - Factures validées services', 'Corbeilles des factures validées par les services', '(status=''FACVAL'') and type_id in (100)', 'N', 'Y', 'Y');
