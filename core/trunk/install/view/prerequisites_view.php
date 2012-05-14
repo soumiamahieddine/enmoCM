@@ -2,7 +2,7 @@
     <div class="titleBlock">
         <h2 onClick="slide('prerequisites');" style="cursor: pointer;">
             <?php echo _PREREQUISITES; ?>
-            <div class = "titleLink">
+            <div id = "titleLink">
             <a href="http://www.maarch.org/projets/entreprise/architecture-technique-et-prerequis-pour-maarch-entreprise-1.3">
 				<?php echo _LINK;?>
 			</a> 

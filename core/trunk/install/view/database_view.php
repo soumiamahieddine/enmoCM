@@ -78,8 +78,7 @@
                             <td>
                                 <input
                                   type="button"
-                                  alt="submit"
-                                  value="tester"
+                                  name="Submit"  value="<?php echo _SUBMIT; ?>"
                                   onClick="
                                     checkDatabaseInfo(
                                       $('#databaseserver').val(),
