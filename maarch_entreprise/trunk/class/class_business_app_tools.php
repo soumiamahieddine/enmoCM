@@ -119,8 +119,9 @@ class business_app_tools extends dbquery
             $_SESSION['tablename']['saved_queries'] = (string) $tablename->saved_queries;
             $_SESSION['tablename']['contacts'] = (string) $tablename->contacts;
             
-            $_SESSION['config']['tmppath'] = 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
-                  . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR;
+            $_SESSION['config']['tmppath'] = $_SESSION['config']['corepath'] . 'apps' 
+				. DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+                . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR;
             
             $i = 0;
 
