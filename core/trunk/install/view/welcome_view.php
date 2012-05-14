@@ -7,15 +7,7 @@
     <div class="contentBlock" id="welcome">
         <p>
             <div align="center">
-                ICI LE WELCOME TEXT<br />
-                ICI LE WELCOME TEXT<br />
-                ICI LE WELCOME TEXT<br />
-                ICI LE WELCOME TEXT<br />
-                ICI LE WELCOME TEXT<br />
-                ICI LE WELCOME TEXT<br />
-                ICI LE WELCOME TEXT<br />
-                ICI LE WELCOME TEXT<br />
-                ICI LE WELCOME TEXT<br />
+                <?php echo _WELCOME_DESC; ?>
             </div>
         </p>
     </div>
