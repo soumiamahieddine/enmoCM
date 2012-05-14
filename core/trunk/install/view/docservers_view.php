@@ -3,6 +3,9 @@
         <h2 onClick="slide('docservers');" style="cursor: pointer;">
             <?php echo _DOCSERVERS; ?>
         </h2>
+        <h6>
+			<?php echo _DOCSERVERS_EXP; ?>
+        </h6>
     </div>
     <div class="contentBlock" id="docservers">
         <p>
