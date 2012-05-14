@@ -214,7 +214,7 @@ class admin_basket extends dbquery
                 </p>
                 <p>
                     <label><?php echo _BASKET_VISIBLE;?> : </label>
-                    <input type='checkbox' name="is_visible" id="is_visible" value="Y" <?php if ($_SESSION['m_admin']['basket']['is_visible'] === 'Y') echo 'checked="checked"'; ?>/>
+                    <input type='checkbox' name="is_visible" id="is_visible" value="Y" <?php if ($_SESSION['m_admin']['basket']['is_visible'] === 'Y' || $_SESSION['m_admin']['basket']['is_visible']=== '') echo 'checked="checked"'; ?>/>
                 </p>
                 <p></p>
                 <p class="buttons">
