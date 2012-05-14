@@ -45,13 +45,14 @@ if (!defined('_TEMPLATE_ADDITION'))  define('_TEMPLATE_ADDITION', 'Ajout d&rsquo
 if (!defined('_TEMPLATE_MODIFICATION'))  define('_TEMPLATE_MODIFICATION', 'Modification d&rsquo;un mod&egrave;le');
 if (!defined('_TEMPLATE_DELETION'))  define('_TEMPLATE_DELETION', 'Suppression d&rsquo;un mod&egrave;le');
 if (!defined('_MODIFY_TEMPLATE'))  define('_MODIFY_TEMPLATE', 'Valider les changements');
-if (!defined('_TEMPLATE_ADDED'))  define('_TEMPLATE_ADDED', 'Nouveau mod&egrave;le cr&eacute;&eacute;e');
+if (!defined('_TEMPLATE_ADDED'))  define('_TEMPLATE_ADDED', 'Nouveau mod&egrave;le cr&eacute;&eacute;');
+if (!defined('_TEMPLATE_UPDATED'))  define('_TEMPLATE_UPDATED', 'Md&egrave;le modifi&eacute;');
 if (!defined('_CHOOSE_ENTITY_TEMPLATE'))  define('_CHOOSE_ENTITY_TEMPLATE', 'Choisissez le(s) service(s) au(x)quel(s) vous souhaitez associer ce mod&egrave;le');
 if (!defined('_REALLY_DEL_TEMPLATE'))  define('_REALLY_DEL_TEMPLATE', 'Voulez vous vraiment supprimer ce mod&egrave;le ?');
 
 if (!defined('_NEW_TEMPLATE'))  define('_NEW_TEMPLATE', 'Nouveau mod&egrave;le');
 if (!defined('_CHOOSE_TEMPLATE'))  define('_CHOOSE_TEMPLATE','Choisissez un mod&egrave;le');
-
+if (!defined('_TEMPLATE_DELETED'))  define('_TEMPLATE_DELETED', 'Mod&egrave;le supprim&eacute;');
 if (!defined('_DELETED_TEMPLATE'))  define('_DELETED_TEMPLATE', 'Mod&egrave;le supprim&eacute;');
 if (!defined('_ASSOCIATED_TEMPLATES'))  define('_ASSOCIATED_TEMPLATES', 'Mod&egrave;les associ&eacute;s');
 if (!defined('_NO_DEFINED_TEMPLATE'))  define('_NO_DEFINED_TEMPLATE', 'Pas de mod&egrave;le d&eacute;fini');

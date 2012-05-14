@@ -47,12 +47,13 @@ if (!defined('_TEMPLATE_MODIFICATION')) define('_TEMPLATE_MODIFICATION', 'Modify
 if (!defined('_TEMPLATE_DELETION')) define('_TEMPLATE_DELETION', 'Delete a template');
 if (!defined('_MODIFY_TEMPLATE')) define('_MODIFY_TEMPLATE', 'Save changes');
 if (!defined('_TEMPLATE_ADDED')) define('_TEMPLATE_ADDED', 'Template added');
+if (!defined('_TEMPLATE_UPDATED'))  define('_TEMPLATE_UPDATED', 'Template updated');
 if (!defined('_CHOOSE_ENTITY_TEMPLATE')) define('_CHOOSE_ENTITY_TEMPLATE', 'Select the department that can use this template');
 if (!defined('_REALLY_DEL_TEMPLATE')) define('_REALLY_DEL_TEMPLATE', 'Do you really want to delete this template?');
 
 if (!defined('_NEW_TEMPLATE')) define('_NEW_TEMPLATE', 'New template');
 if (!defined('_CHOOSE_TEMPLATE')) define('_CHOOSE_TEMPLATE','Choose a template');
-
+if (!defined('_TEMPLATE_DELETED'))  define('_TEMPLATE_DELETED', 'Template deleted');
 if (!defined('_DELETED_TEMPLATE')) define('_DELETED_TEMPLATE', 'template deleted');
 if (!defined('_ASSOCIATED_TEMPLATES')) define('_ASSOCIATED_TEMPLATES', 'Associated templates');
 if (!defined('_NO_DEFINED_TEMPLATE')) define('_NO_DEFINED_TEMPLATE', 'No template');
