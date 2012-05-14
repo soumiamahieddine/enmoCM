@@ -6,7 +6,7 @@
             </h2>
             <h6>
 			<?php echo _DATABASE_EXP; ?>
-        </h6>
+			</h6>
         </div>
         <div class="contentBlock" id="database">
             <p>
@@ -109,6 +109,9 @@
             <h2 onClick="slide('createdatabase');" style="cursor: pointer;">
                 <!--<?php echo _DATABASE; ?>-->Création de la base de données
             </h2>
+            <h6>
+				<?php echo _DATABASE_ADD_INF; ?>
+			</h6>
         </div>
         <div class="contentBlock" id="createdatabase">
             <p>
