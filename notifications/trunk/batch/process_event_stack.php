@@ -133,18 +133,21 @@ while ($state <> 'END') {
 			if($tmpNotif['attach']) {	
 				$logger->write('Adding attachments', 'INFO');
 				foreach($tmpNotif['events'] as $event) {
-					$query = "SELECT "
-						. "ds.path_template ,"
-						. "mlb.path, "
-						. "mlb.filename " 
-						. "FROM ".$coll_view." mlb LEFT JOIN docservers ds ON mlb.docserver_id = ds.docserver_id "
-						. "WHERE mlb.res_id = " . $event->record_id;
-					Bt_doQuery($db, $query);
-					$path_parts = $db->fetch_object();
-					$path = $path_parts->path_template . str_replace('#', '/', $path_parts->path) . $path_parts->filename;
-					$path = str_replace('//', '/', $path);
-					$path = str_replace('\\', '/', $path);
-					$attachments[] = $path;
+					// Check if event is related to document in collection
+					if($event->table_name === $coll_table || $event->table_name === $coll_view) {
+						$query = "SELECT "
+							. "ds.path_template ,"
+							. "mlb.path, "
+							. "mlb.filename " 
+							. "FROM ".$coll_view." mlb LEFT JOIN docservers ds ON mlb.docserver_id = ds.docserver_id "
+							. "WHERE mlb.res_id = " . $event->record_id;
+						Bt_doQuery($db, $query);
+						$path_parts = $db->fetch_object();
+						$path = $path_parts->path_template . str_replace('#', '/', $path_parts->path) . $path_parts->filename;
+						$path = str_replace('//', '/', $path);
+						$path = str_replace('\\', '/', $path);
+						$attachments[] = $path;
+					}
 				}
 				$logger->write(count($attachments) . ' attachment(s) added', 'INFO');
 			}
