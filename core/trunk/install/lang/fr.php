@@ -13,20 +13,45 @@ if (!defined('_WELCOME')) {
     define('_WELCOME', "Bienvenue");
 }
 
+if (!defined('_DESC')) {
+    define('_DESC', "Message de bienvenue à compl&eacute;ter par une pr&eacute;sentation de Maarch 
+					<br>Compl&eacute;ter ici pour passer à la ligne
+					<br>Ou encore ici si plusieurs paragraphes");
+}
+
+
+
 //LICENCE
 if (!defined('_LICENCE')) {
     define('_LICENCE', "Licence");
 }
 
 if (!defined('_OK_WITH_LICENCE')) {
-    define('_OK_WITH_LICENCE', "J'accèpte les termes de la licence");
+    define('_OK_WITH_LICENCE', "J'accepte les termes de la licence");
 }
 
 //PREREQUISITES
 if (!defined('_PREREQUISITES')) {
     define('_PREREQUISITES', "Pré-requis");
 }
+if (!defined('_PREREQUISITES_HEAD')) {
+    define('_PREREQUISITES_HEAD', "Pré-requis");
+}
 
+if (!defined('_LINK')) {
+    define('_LINK', "Chemin vers les pré-requis sur maarch.org");
+}
+if (!defined('_PREREQUISITES_EXP')) {
+    define('_PREREQUISITES_EXP', "Quelques informations concernant 
+    les différents pr&eacute;-requis
+    <br>à completer en cas de besoin de d'informations suppl&eacute;mentaires
+    <br>à la ligne");
+}
+
+
+if (!defined('_GENERAL')) {
+    define('_GENERAL', "G&eacute;n&eacute;ral");
+}
 if (!defined('_PHP_VERSION')) {
     define('_PHP_VERSION', "Version de PHP");
 }
@@ -76,10 +101,25 @@ if (!defined('_MUST_FIX')) {
 if (!defined('_DOCSERVERS')) {
     define('_DOCSERVERS', "Zones de stockage");
 }
+if (!defined('_DOCSERVERS_EXP')) {
+    define('_DOCSERVERS_EXP', "Explications sur les zones de stockage");
+}
+if (!defined('_DOCSERVER_ROOT')) {
+    define('_DOCSERVER_ROOT', "Chemin du répertoire");
+}
+if (!defined('_CREATE_DOCSERVERS')) {
+    define('_CREATE_DOCSERVERS', "Enregistrer");
+}
+
 
 //DATABASE
 if (!defined('_DATABASE')) {
     define('_DATABASE', "Base de données");
+}
+if (!defined('_DATABASE_EXP')) {
+    define('_DATABASE_EXP', "Quelques informations sur la base de données
+							notamment des pr&eacute;cisions sur l'utilisateur et le mot
+							de passe de connexion");
 }
 
 if (!defined('_DATABASESERVER')) {
@@ -99,6 +139,9 @@ if (!defined('_DATABASENAME')) {
 }
 if (!defined('_DATABASETYPE')) {
     define('_DATABASETYPE', "Type");
+}
+if (!defined('_DATABASE_CHOICE')) {
+    define('_DATABASE_CHOICE', "Choix des données à importer");
 }
 
 //PASSWORD
