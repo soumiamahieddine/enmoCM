@@ -120,7 +120,7 @@ if (!defined('_DATABASE')) {
     define('_DATABASE', "Base de données");
 }
 if (!defined('_DATABASE_DESC')) {
-    define('_DATABASE_ADD_INF', "Informations pour la cr&eacute;ation de la base de donne&eacute;s");
+    define('_DATABASE_ADD_INF', "L'installeur Maarch va créer une nouvelle base de données pour vous. Entrez le nom de la base (ex:maarch_db)");
 }
 if (!defined('_DATABASE_EXP')) {
     define('_DATABASE_EXP', "Maarch utilise en standard le moteur de base de données libre PostgreSQL (Version 8.3 ou supérieure - Recommandé : version 9). Précisez le nom du serveur, le n° de port, l'utlisateur et le mot de passe de connexion.");
