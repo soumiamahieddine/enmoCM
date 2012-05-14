@@ -1162,7 +1162,8 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                 if ($core->is_module_loaded('notes')) {
                     $selectNotes = "select id, identifier, user_id, date_note, note_text from "
                         . $_SESSION['tablename']['not_notes']
-                        . " where identifier = " . $s_id . " and coll_id ='"
+                        . " where identifier = " . $s_id 
+                        . " and coll_id ='"
                         . $_SESSION['collection_id_choice'] . "' order by date_note desc";
                     $dbNotes = new dbquery();
                     $dbNotes->connect();
@@ -1203,6 +1204,31 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                         $where_notes = " identifier = ".$s_id." ";
                         $request_notes = new request;
                         $tab_notes=$request_notes->select($select_notes,$where_notes,"order by ".$_SESSION['tablename']['not_notes'].".date_note desc",$_SESSION['config']['databasetype'], "500", true,$_SESSION['tablename']['not_notes'], $_SESSION['tablename']['users'], "user_id" );
+/*
+						$db->query(
+								" SELECT DISTINCT lastname, firstname, ".$_SESSION['tablename']['not_notes'].".id, date_note, note_text  FROM " .$_SESSION['tablename']['note_entities']. ", " .$_SESSION['tablename']['not_notes']. ", " .$_SESSION['tablename']['users'].
+								" WHERE (identifier = ".$_SESSION['doc_id'].
+								" AND ( " .$_SESSION['tablename']['note_entities']. ".item_id IN (".$entities.
+								") AND " .$_SESSION['tablename']['note_entities']. ".note_id = " .$_SESSION['tablename']['not_notes']. ".id ))
+								OR ( identifier = ".$_SESSION['doc_id']."
+								AND ".$_SESSION['tablename']['not_notes'].".user_id = '".$_SESSION['user']['UserId']."'
+								AND " .$_SESSION['tablename']['not_notes']. ".user_id = " .$_SESSION['tablename']['users'].".user_id)"
+								);
+					
+						$tabNotes=array();
+						while($line = $db->fetch_array())
+						{
+						   $temp= array();
+						   foreach (array_keys($line) as $resval)
+						   {
+							 if (!is_int($resval))
+							 {
+								array_push($temp,array('column'=>$resval,'value'=>$line[$resval]));
+							 }
+						   }
+						   array_push($tabNotes,$temp);
+						}
+*/
                         ?>
                         <div style="text-align:center;">
                             <img src="<?php
@@ -1215,7 +1241,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                     echo $s_id;
                                     ?>&coll_id=<?php
                                     echo $coll_id;
-                                    ?>', 500, 500)" ><?php
+                                    ?>', 1024, 650)" ><?php
                                     echo _ADD_NOTE;
                                     ?></a><?php
                                 } ?>
