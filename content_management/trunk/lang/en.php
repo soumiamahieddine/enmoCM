@@ -24,4 +24,5 @@
 if (!defined('_MAARCH_CM_APPLET'))  define('_MAARCH_CM_APPLET','Launch content edition');
 if (!defined('_NO_UPDATE'))  define('_NO_UPDATE','No content update');
 if (!defined('_UPDATE_OK'))  define('_UPDATE_OK','Update OK');
+if (!defined('_NEW_ATTACHMENT_VERSION'))  define('_NEW_ATTACHMENT_VERSION','Attachment');
 
