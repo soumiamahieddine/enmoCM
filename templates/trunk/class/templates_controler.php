@@ -1106,8 +1106,10 @@ class templates_controler extends ObjectControler implements ObjectControlerIF
 		$TBS->NoErr = true;
         if($templateObj->template_type == 'OFFICE') {
             $TBS->Plugin(TBS_INSTALL, OPENTBS_PLUGIN);
-        }
-        $TBS->LoadTemplate($pathToTemplate);
+			$TBS->LoadTemplate($pathToTemplate, OPENTBS_ALREADY_UTF8);
+        } else {
+			$TBS->LoadTemplate($pathToTemplate);
+		}
 		
         foreach ($datasources as $name => $datasource) {
             // Scalar values or arrays ?
