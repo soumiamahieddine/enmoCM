@@ -336,9 +336,8 @@ if (count($_REQUEST['meta']) > 0) {
                         $where_request .= " res_id IN ($Liste_Ids) or ".$where_multifield_request;
                     }
                 } else {
-                    $where_request .= " 1=-1 and ";
+                    $where_request .= " ".$where_multifield_request." and ";
                 } 
-                //$where_request .=" and  ";
 			}
             // PRIORITY
             elseif ($tab_id_fields[$j] == 'priority' && (!empty($_REQUEST['priority']) ||$_REQUEST['priority'] == 0) )
