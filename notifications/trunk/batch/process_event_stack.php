@@ -186,9 +186,8 @@ while ($state <> 'END') {
 			
 			foreach($tmpNotif['events'] as $event) {
 				// Get dynamic url
-				// $url = $notifications_controler->parseRssUrl($event);
-				$url = str_replace('$1', $event->record_id, $notification->rss_url_template);
-				
+				$url = str_replace('$id', $event->record_id, $notification->rss_url_template);
+
 				// Inser into stack
 				$query = "INSERT INTO " . _NOTIF_RSS_STACK_TABLE_NAME 
 					. " (rss_user_id, rss_event_stack_sid, rss_event_url) "
