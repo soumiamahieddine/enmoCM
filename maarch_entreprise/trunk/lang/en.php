@@ -673,6 +673,7 @@ if (!defined('_VERY_LOW')) define('_VERY_LOW', 'Very low');
 
 if (!defined('_INDEXING_MLB')) define('_INDEXING_MLB', 'Record a document');
 if (!defined('_ADV_SEARCH_MLB')) define('_ADV_SEARCH_MLB', 'Search a document');
+if (!defined('_ADV_SEARCH_INVOICES')) define( '_ADV_SEARCH_INVOICES', 'Search an invoice');
 
 if (!defined('_ADV_SEARCH_TITLE')) define('_ADV_SEARCH_TITLE', 'Document advanced search');
 if (!defined('_MAIL_OBJECT')) define('_MAIL_OBJECT', 'Mail object');
