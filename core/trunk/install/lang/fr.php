@@ -16,7 +16,7 @@ if (!defined('_WELCOME')) {
 if (!defined('_DESC')) {
     define('_DESC', "Bienvenue dans l'assistant d'installation de Maarch !
 					<br>Maarch est un Système d'Archivage Electronique doté de capacités de GED, Gestion de Courrier, travail collaboratif, et SAE normé OAIS et NFZ42-013. Maarch est un produit Open Source sur licence GPL v3 : il n'y a pas de coûts de licence, mais des services professionnels certifiés fournis par Maarch SAS et son réseau de partenaires à travers le monde.
-					<br>Les services couvrent l'audit, l'installation, le paramétrage, la personnalisation, l'interfaçage avec votre SI, la formation, le support et la maintenance. Reportez vous sur http://www.maarch.com pour plus d'informations sur les services.");
+					<br>Les services couvrent l'audit, l'installation, le paramétrage, la personnalisation, l'interfaçage avec votre SI, la formation, le support et la maintenance. Reportez vous sur <A style='color: #800000; font-family:verdana;' href='http://www.maarch.com'> www.maarch.com</A> pour plus d'informations sur les services.");
 }
 
 
@@ -60,6 +60,7 @@ if (!defined('_PHP_VERSION')) {
 }
 if (!defined('_MAARCH_PATH_RIGHTS')) {
     define('_MAARCH_PATH_RIGHTS', "Droits de lecture et d'&eacute;criture du r&eacute;pertoire racine de Maarch");
+
 }
 if (!defined('_THE_MAARCH_PATH_DOES_NOT_HAVE_THE_ADEQUATE_RIGHTS')) {
     define('_THE_MAARCH_PATH_DOES_NOT_HAVE_THE_ADEQUATE_RIGHTS', "Les droits du r&eacute;pertoire racine de Maarch ne sont pas corrects");
@@ -97,6 +98,7 @@ if (!defined('_MAGIC_QUOTES_GPC')) {
 
 if (!defined('_MUST_FIX')) {
     define('_MUST_FIX', "Vous devez corriger les erreurs avant de continuer");
+
 }
 
 
@@ -123,7 +125,7 @@ if (!defined('_DATABASE_DESC')) {
     define('_DATABASE_ADD_INF', "L'installeur Maarch va créer une nouvelle base de données pour vous. Entrez le nom de la base (ex:maarch_db)");
 }
 if (!defined('_DATABASE_EXP')) {
-    define('_DATABASE_EXP', "Maarch utilise en standard le moteur de base de données libre PostgreSQL (Version 8.3 ou supérieure - Recommandé : version 9). Précisez le nom du serveur, le n° de port, l'utlisateur et le mot de passe de connexion.");
+    define('_DATABASE_EXP', "Maarch utilise en standard le moteur de base de données libre PostgreSQL (Version 8.3 ou supérieure - Recommandé : version 9). Précisez le nom du serveur, le n° de port, l'utilisateur et le mot de passe de connexion.");
 }
 
 if (!defined('_DATABASESERVER')) {
