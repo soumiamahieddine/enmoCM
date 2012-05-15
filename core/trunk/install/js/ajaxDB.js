@@ -42,6 +42,10 @@ function ajaxDB(
     $(document).ready( function() {
         $.getJSON('ajax.php?script='+ajaxUrl, ajaxParameters, function(data){
             if (data.status == 1) {
+                if (data.text == 'redirect') {
+                    goTo('index.php?step=docservers');
+                    return;
+                }
                 retour_ok.html(data.text);
                 retour_ko.html('');
                 slide(divRetour);
