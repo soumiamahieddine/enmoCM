@@ -103,6 +103,7 @@ if (isset($_REQUEST['action_submit'])) {
         $_SESSION['m_admin']['action']['ID_STATUS'] = trim($_REQUEST['status']);
     }
     if (empty($_REQUEST['status'])) {
+        $_SESSION['m_admin']['action']['ID_STATUS'] = ' ';
         $_SESSION['m_admin']['action']['ACTION_PAGE'] = 
             functions::wash($_REQUEST['action_page'], 'no', _ACTION_PAGE . ' ', 
             'yes', 0, 255);
