@@ -80,5 +80,6 @@ if (!defined('_TAG_ALREADY_EXISTS'))  define('_TAG_ALREADY_EXISTS', 'Ce tag exis
 
 if (!defined('_CHOOSE_TAG'))  define('_CHOOSE_TAG', 'Choix des mots-cl&eacute;s');
 if (!defined('_TAG_SEARCH'))  define('_TAG_SEARCH', 'Mots-cl&eacute;s');
+if (!defined('_TAGNONE'))  define('_TAGNONE', 'Aucun');
 
 ?>
