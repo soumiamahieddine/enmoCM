@@ -42,7 +42,7 @@ if (!defined('_LINK')) {
     define('_LINK', "Voir <A>http://www.maarch.org/projets/entreprise/architecture-technique-et-prerequis-pour-maarch-entreprise-1.3</A>");
 }
 if (!defined('_PREREQUISITES_EXP')) {
-    define('_PREREQUISITES_EXP', "L'installation de Maarch nécessite un certain nombre de pré-requis au niveau de l'installation de PHP. Reportez-vous à la page <A>http://www.maarch.org/projets/entreprise/architecture-technique-et-prerequis-pour-maarch-entreprise-1.3</A> pour les détails");
+    define('_PREREQUISITES_EXP', "L'installation de Maarch nécessite un certain nombre de pré-requis au niveau de l'installation de PHP. Reportez-vous à la page <A href='http://www.maarch.org/projets/entreprise/architecture-technique-et-prerequis-pour-maarch-entreprise-1.3'> pre-requis</A> pour les détails");
 }
 if (!defined('_ACTIVATED')) {
     define('_ACTIVATED', "Conforme");
