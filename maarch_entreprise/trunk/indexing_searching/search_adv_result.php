@@ -315,7 +315,11 @@ if (count($_REQUEST['meta']) > 0) {
             //WELCOME PAGE
             elseif ($tab_id_fields[$j] == 'welcome'  && (!empty($_REQUEST['welcome'])))
             {
-				  $where_multifield_request .= "(lower(subject) LIKE lower('%".$func->protect_string_db($_REQUEST['welcome'])."%') "
+				if (is_numeric($_REQUEST['welcome']))
+				{
+					$where_multifield_request .= "(res_id = ".$func->protect_string_db($_REQUEST['welcome'].") or ");
+				}
+				  $where_multifield_request .= "( lower(subject) LIKE lower('%".$func->protect_string_db($_REQUEST['welcome'])."%') "
 					."or lower(identifier) LIKE lower('%".$func->protect_string_db($_REQUEST['welcome'])."%') "
 					."or lower(title) LIKE lower('%".$func->protect_string_db($_REQUEST['welcome'])."%')) ";
 				$welcome = $func->store_html($_REQUEST['welcome']);
