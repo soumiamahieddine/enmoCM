@@ -198,12 +198,12 @@ function display_list() {
                     break;
                 case 'notification_id':
                     format_item(
-                        $item, _NOTIFICATION_ID, '18', 'left', 'left', 'bottom', true
+                        $item, _NOTIFICATION_ID, '50', 'left', 'left', 'bottom', true
                     );
                     break;
                 case 'description':
                     format_item(
-                        $item, _DESC, '55', 'left', 'left', 'bottom', true
+                        $item, _DESC, '255', 'left', 'left', 'bottom', true
                     );
                     break;
             }
