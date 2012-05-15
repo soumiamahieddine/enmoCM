@@ -113,7 +113,9 @@ $list = new list_show();
 $autoCompletionArray = array();
 $autoCompletionArray["list_script_url"] = $_SESSION['config']['businessappurl']."index.php?display=true&dir=my_contacts&page=contact_list_by_name";
 $autoCompletionArray["number_to_begin"] = 1;
-$list->admin_list($tab, $i, $title, 'contact_id','my_contacts','my_contacts','contact_id', false, $page_name_up, $page_name_val, $page_name_ban, $page_name_del, $page_name_add, $label_add, false, false, _ALL_CONTACTS, _CONTACT, $_SESSION['config']['businessappurl'].'static.php?filename=manage_contact_b.gif', false, true, false, true, $what, true, $autoCompletionArray, true);
+$list->admin_list($tab, $i, $title, 'contact_id','my_contacts','my_contacts','contact_id', false, $page_name_up, $page_name_val, $page_name_ban, $page_name_del, $page_name_add, $label_add, false, false, _ALL_CONTACTS, _CONTACT, $_SESSION['config']['businessappurl'].'static.php?filename=manage_contact_b.gif', false, true, false, true, $what, true, $autoCompletionArray, true, true);
+
+
 
 $_SESSION['m_admin']['contacts'] = array();
 $_SESSION['m_admin']['contacts']['id'] = "";
