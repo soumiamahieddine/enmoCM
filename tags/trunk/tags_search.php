@@ -55,6 +55,10 @@ for ($getag_i = 0; $getag_i <count($_REQUEST['tags_chosen']); $getag_i++) {
 			array_push($tag_resid_return, $elem);
 		}
 	}
+	else
+	{
+		array_push($tag_resid_return, 0);
+	}
 	
 }
 
