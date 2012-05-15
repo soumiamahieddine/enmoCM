@@ -209,6 +209,9 @@ if (!defined('_PASSWORD_EXP')) {
 if (!defined('_PASSWORDS_ARE_DIFFERENTS')) {
     define('_PASSWORDS_ARE_DIFFERENTS', "Les deux mots de passe doivent être identiques");
 }
+if (!defined('_FILL_ALL_PASSWORD_FIELDS')) {
+    define('_FILL_ALL_PASSWORD_FIELDS', "Vous devez taper deux fois le mot de passe");
+}
 
 //RESUME
 if (!defined('_RESUME')) {

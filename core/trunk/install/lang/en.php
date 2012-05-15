@@ -15,10 +15,10 @@ if (!defined('_WELCOME')) {
 
 if (!defined('_DESC')) {
     define('_DESC', "Welcome to Maarch install tool !<br />
-					<br />
-					Maarch is an Electronic Archiving System that comes with Document Management, Content Management, Mail Management, Coolaborative and legal archiving/record management capabilities. Maarch is a full Open Source product under GPL v3 licence : there is no licence cost, but professional services offered by Maarch and its partner global network.<br />
-					<br />
-					Services cover audit, installation, parametrization, customizing, IT integration, training, support and maintenance. Go to <A style='color: #800000; font-family:verdana;' href='http://www.maarch.com'> www.maarch.com</A> for more information on Maarch Professional Services.");
+                    <br />
+                    Maarch is an Electronic Archiving System that comes with Document Management, Content Management, Mail Management, Coolaborative and legal archiving/record management capabilities. Maarch is a full Open Source product under GPL v3 licence : there is no licence cost, but professional services offered by Maarch and its partner global network.<br />
+                    <br />
+                    Services cover audit, installation, parametrization, customizing, IT integration, training, support and maintenance. Go to <A style='color: #800000; font-family:verdana;' href='http://www.maarch.com/en'> www.maarch.com</A> for more information on Maarch Professional Services.");
 }
 
 
@@ -208,6 +208,9 @@ if (!defined('_PASSWORD_EXP')) {
 }
 if (!defined('_PASSWORDS_ARE_DIFFERENTS')) {
     define('_PASSWORDS_ARE_DIFFERENTS', "The two passwords must match");
+}
+if (!defined('_FILL_ALL_PASSWORD_FIELDS')) {
+    define('_FILL_ALL_PASSWORD_FIELDS', "You must type the password twice");
 }
 
 //RESUME
