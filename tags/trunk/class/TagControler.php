@@ -41,8 +41,10 @@ define("_CODE_INCREMENT",1);
 // Loads the required class
 try {
     require_once("core/class/class_db.php");
+    require_once("core/class/class_history.php");
     require_once("modules/tags/class/Tag.php");
     require_once("modules/tags/tags_tables_definition.php");
+
 } catch (Exception $e){
     echo $e->getMessage().' // ';
 }
@@ -229,7 +231,7 @@ class tag_controler
 	            . " where tag_label = '" . $tag_label . "' and coll_id = '".$coll_id."' ".
 	            " and res_id <> 0"
         );
-        $db->show();
+        //$db->show();
 		
 		while ($result = $db->fetch_object())
 		{
