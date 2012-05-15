@@ -745,116 +745,14 @@ VALUES (1, 'Diffusion de courrier', 'Notification de diffusion de courrier',
 <table style="width: 800px### height: 44px###" border="0" cellspacing="1" cellpadding="1">
 <tbody>
 <tr>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <td style="width: 20px### background-color: #0099ff###"><font size="2" color="#FFFFFF"><strong>Num</strong></font></td>
 <td style="width: 150px### background-color: #0099ff###"><font size="2" color="#FFFFFF"><strong>Date</strong></font></td>
-
-
-
-
 <td style="width: 200px### background-color: #0099ff###"><font size="2" color="#FFFFFF"><strong>Objet</strong></font></td>
-
 <td style="width: 150px### background-color: #0099ff###"><font size="2" color="#FFFFFF"><strong>Type</strong></font></td>
 <td style="width: 80px### background-color: #0099ff###"><font color="#FFFFFF"><font size="2"><strong>Contact</strong></font></font></td>
-
-
-
 <td style="width: 20px### background-color: #0099ff###"><font size="2" color="#FFFFFF"><strong>Liens</strong></font></td>
 </tr>
 <tr>
-
-
 <td><font face="verdana,geneva" size="2">[res_letterbox.# ###frm=0000]</font></td>
 <td><font face="verdana,geneva" size="2">[res_letterbox.doc_date###block=tr###frm=dd/mm/yyyy]</font></td>
 <td><font face="verdana,geneva" size="2">[res_letterbox.subject]</font></td>
@@ -884,66 +782,11 @@ VALUES (2, 'Notifications événement', 'Notifications des événements système
 </tr>
 </tbody>
 </table>', 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 'HTML', NULL, NULL, '', 'notif_events');
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 INSERT INTO notifications (notification_sid, notification_id, description, event_id, notification_mode, template_id, diffusion_type, diffusion_properties, attachfor_type, attachfor_properties, rss_url_template) VALUES (1, 'INDEX_DEST', 'Indexation de nouveau document', '21', 'EMAIL', 1, 'dest_user', '', '', '', '			http://localhost/maarch_trunk/apps/maarch_entreprise/index.php?page=users_management_controler&mode=up&admin=users&id=$1');
 INSERT INTO notifications (notification_sid, notification_id, description, event_id, notification_mode, template_id, diffusion_type, diffusion_properties, attachfor_type, attachfor_properties, rss_url_template) VALUES (2, 'USERS', 'Actions sur les utilisateurs de l''application', 'users%', 'EMAIL', 2, 'user', 'superadmin', '', '', '			http://localhost/maarch_trunk');
-
 
 
 INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (20, 3, 'destination', 'VILLE', 'entities');
@@ -978,7 +821,6 @@ INSERT INTO templates_association (system_id, template_id, what, value_field, ma
 INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (49, 3, 'destination', 'COU', 'entities');
 INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (50, 3, 'destination', 'PSF', 'entities');
 INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (51, 3, 'destination', 'DRH', 'entities');
-)
 
 --
 -- Stockage et cycle de vie
