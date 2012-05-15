@@ -122,10 +122,10 @@ if (count($_REQUEST['meta']) > 0) {
                 // MULTIFIELD : subject, title, doc_custom_t1, process notes
                 $json_txt .= "'multifield' : ['".addslashes(trim($_REQUEST['multifield']))."'],";
                 $where_request .= "(lower(subject) LIKE lower('%".$func->protect_string_db($_REQUEST['multifield'])."%') "
-					."or lower(alt_identifier) LIKE lower('%".$func->protect_string_db($_REQUEST['multifield'])."%') "
-					."or lower(title) LIKE lower('%".$func->protect_string_db($_REQUEST['multifield'])."%') "
-					."or lower(doc_custom_t1) LIKE lower('%".$func->protect_string_db($_REQUEST['multifield'])."%') "
-					."or lower(process_notes) like lower('%".$func->protect_string_db($_REQUEST['multifield'])."%')) ";
+                    ."or lower(alt_identifier) LIKE lower('%".$func->protect_string_db($_REQUEST['multifield'])."%') "
+                    ."or lower(title) LIKE lower('%".$func->protect_string_db($_REQUEST['multifield'])."%') "
+                    ."or lower(doc_custom_t1) LIKE lower('%".$func->protect_string_db($_REQUEST['multifield'])."%') "
+                    ."or lower(process_notes) like lower('%".$func->protect_string_db($_REQUEST['multifield'])."%')) ";
                 
                 $where_request .=" and  ";
             } elseif ($tab_id_fields[$j] == 'numcase' && !empty($_REQUEST['numcase'])) {
@@ -187,7 +187,7 @@ if (count($_REQUEST['meta']) > 0) {
                 $json_txt .= " 'project' : ['".addslashes(trim($_REQUEST['project']))."'],";
                 $project = $func->wash($_REQUEST['project'], "no", _MARKET,"no");
                 $where_request .= " (lower(folder_name) like lower('%".$func->protect_string_db($project)."%') or folder_id like '%".$func->protect_string_db($project)."%' "
-					."or folders_system_id in (select parent_id from ".$_SESSION['tablename']['fold_folders']." where lower(folder_name) like lower('".$func->protect_string_db($project)."%') or folder_id like '%".$func->protect_string_db($project)."%')) and ";
+                    ."or folders_system_id in (select parent_id from ".$_SESSION['tablename']['fold_folders']." where lower(folder_name) like lower('".$func->protect_string_db($project)."%') or folder_id like '%".$func->protect_string_db($project)."%')) and ";
             }
 
             elseif ($tab_id_fields[$j] == 'folder_name' && !empty($_REQUEST['folder_name']))
@@ -202,15 +202,15 @@ if (count($_REQUEST['meta']) > 0) {
                 $json_txt .= " 'dest' : ['".addslashes(trim($_REQUEST['dest']))."'],";
                 $dest = $func->wash($_REQUEST['dest'], "no", _DEST,"no");
                 $where_request .= " (dest_contact_id in(select contact_id from ".$_SESSION['tablename']['contacts']
-					." where lower(lastname) LIKE lower('".$func->protect_string_db($dest)."%') "
-					."or lower(firstname) LIKE lower('".$func->protect_string_db($dest)."%') "
-					."or lower(society) LIKE lower('".$func->protect_string_db($dest)."%') "
-					."or function LIKE '".$func->protect_string_db($dest)."%') "
-					."or dest_user_id in ("
-						."select user_id from ".$_SESSION['tablename']['users']
-						." where lower(lastname) LIKE lower('".$func->protect_string_db($dest)."%') "
-						."or lower(firstname) LIKE lower('".$func->protect_string_db($dest)."%') "
-						."or user_id LIKE '".$func->protect_string_db($dest)."%')) and ";
+                    ." where lower(lastname) LIKE lower('".$func->protect_string_db($dest)."%') "
+                    ."or lower(firstname) LIKE lower('".$func->protect_string_db($dest)."%') "
+                    ."or lower(society) LIKE lower('".$func->protect_string_db($dest)."%') "
+                    ."or function LIKE '".$func->protect_string_db($dest)."%') "
+                    ."or dest_user_id in ("
+                        ."select user_id from ".$_SESSION['tablename']['users']
+                        ." where lower(lastname) LIKE lower('".$func->protect_string_db($dest)."%') "
+                        ."or lower(firstname) LIKE lower('".$func->protect_string_db($dest)."%') "
+                        ."or user_id LIKE '".$func->protect_string_db($dest)."%')) and ";
             }
             //SHIPPER
             elseif ($tab_id_fields[$j] == 'shipper' && !empty($_REQUEST['shipper']))
@@ -218,16 +218,16 @@ if (count($_REQUEST['meta']) > 0) {
                 $json_txt .= " 'shipper' : ['".addslashes(trim($_REQUEST['shipper']))."'],";
                 $shipper = $func->wash($_REQUEST['shipper'], "no", _SHIPPER,"no");
                 $where_request .= " (exp_contact_id in ("
-					."select contact_id from ".$_SESSION['tablename']['contacts']
-					." where lower(lastname) LIKE lower('".$func->protect_string_db($shipper)."%') "
-					."or lower(firstname) LIKE lower('".$func->protect_string_db($shipper)."%') "
-					."or lower(society) LIKE lower('".$func->protect_string_db($shipper)."%') "
-					."or lower(function) LIKE lower('".$func->protect_string_db($shipper)."%')) "
-					."or exp_user_id in ("
-						."select user_id from ".$_SESSION['tablename']['users']
-						." where lower(lastname) LIKE lower('".$func->protect_string_db($shipper)."%') "
-						."or lower(firstname) LIKE lower('".$func->protect_string_db($shipper)."%') "
-						."or user_id LIKE '".$func->protect_string_db($shipper)."%')) and ";
+                    ."select contact_id from ".$_SESSION['tablename']['contacts']
+                    ." where lower(lastname) LIKE lower('".$func->protect_string_db($shipper)."%') "
+                    ."or lower(firstname) LIKE lower('".$func->protect_string_db($shipper)."%') "
+                    ."or lower(society) LIKE lower('".$func->protect_string_db($shipper)."%') "
+                    ."or lower(function) LIKE lower('".$func->protect_string_db($shipper)."%')) "
+                    ."or exp_user_id in ("
+                        ."select user_id from ".$_SESSION['tablename']['users']
+                        ." where lower(lastname) LIKE lower('".$func->protect_string_db($shipper)."%') "
+                        ."or lower(firstname) LIKE lower('".$func->protect_string_db($shipper)."%') "
+                        ."or user_id LIKE '".$func->protect_string_db($shipper)."%')) and ";
             }
             // GED NUM
             elseif ($tab_id_fields[$j] == 'numged' && !empty($_REQUEST['numged']))
@@ -262,7 +262,7 @@ if (count($_REQUEST['meta']) > 0) {
             } elseif ($tab_id_fields[$j] == 'fulltext' && !empty($_REQUEST['fulltext'])
             ) {
                 // FULLTEXT
-				$fulltext_request = $func->store_html($_REQUEST['fulltext']);
+                $fulltext_request = $func->store_html($_REQUEST['fulltext']);
                 $json_txt .= " 'fulltext' : ['" 
                     . addslashes(trim($_REQUEST['fulltext'])) . "'],";
                 set_include_path('apps' . DIRECTORY_SEPARATOR 
@@ -284,10 +284,10 @@ if (count($_REQUEST['meta']) > 0) {
                         $index = Zend_Search_Lucene::open($path_to_lucene_index);
 //$hits = $index->find($_REQUEST['fulltext']."~");
 //$query_res_ft = Zend_Search_Lucene_Search_QueryParser::parse($_REQUEST['fulltext'], 'iso-8859-5'));
-						$hits = $index->find($fulltext_request);
+                        $hits = $index->find($fulltext_request);
                         /*
-						avec accent
-						$hits = $index->find(
+                        avec accent
+                        $hits = $index->find(
                             strtolower(strtr(iconv("UTF-8","ISO-8859-1"
                                 , $_REQUEST['fulltext']),
                                 'àáâãäçèéêëìíîïñòóôõöùúûüýÿÀÁÂÃÄÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝ', 
@@ -308,22 +308,22 @@ if (count($_REQUEST['meta']) > 0) {
             elseif ($tab_id_fields[$j] == 'tags_chosen' && !empty($_REQUEST['tags_chosen']))
             {
                 include_once("modules".DIRECTORY_SEPARATOR."tags".
-                   DIRECTORY_SEPARATOR."tags_search.php");				
+                   DIRECTORY_SEPARATOR."tags_search.php");              
             }
             
 
             //WELCOME PAGE
             elseif ($tab_id_fields[$j] == 'welcome'  && (!empty($_REQUEST['welcome'])))
             {
-				if (is_numeric($_REQUEST['welcome']))
-				{
-					$where_multifield_request .= "(res_id = ".$func->protect_string_db($_REQUEST['welcome'].") or ");
-				}
-				  $where_multifield_request .= "( lower(subject) LIKE lower('%".$func->protect_string_db($_REQUEST['welcome'])."%') "
-					."or lower(identifier) LIKE lower('%".$func->protect_string_db($_REQUEST['welcome'])."%') "
-					."or lower(title) LIKE lower('%".$func->protect_string_db($_REQUEST['welcome'])."%')) ";
-				$welcome = $func->store_html($_REQUEST['welcome']);
-				$json_txt .= " 'welcome' : ['" 
+                if (is_numeric($_REQUEST['welcome']))
+                {
+                    $where_multifield_request .= "(res_id = ".$func->protect_string_db($_REQUEST['welcome'].") or ");
+                }
+                  $where_multifield_request .= "( lower(subject) LIKE lower('%".$func->protect_string_db($_REQUEST['welcome'])."%') "
+                    ."or lower(identifier) LIKE lower('%".$func->protect_string_db($_REQUEST['welcome'])."%') "
+                    ."or lower(title) LIKE lower('%".$func->protect_string_db($_REQUEST['welcome'])."%')) ";
+                $welcome = $func->store_html($_REQUEST['welcome']);
+                $json_txt .= " 'welcome' : ['" 
                     . addslashes(trim($welcome)) . "'],";
                 set_include_path('apps' . DIRECTORY_SEPARATOR 
                     . $_SESSION['config']['app_id'] 
@@ -339,18 +339,18 @@ if (count($_REQUEST['meta']) > 0) {
                 {
                     if (!$func->isDirEmpty($path_to_lucene_index)) {
                         $index = Zend_Search_Lucene::open($path_to_lucene_index);
-						$hits = $index->find($welcome);
+                        $hits = $index->find($welcome);
               
                         $Liste_Ids = "0";
                         foreach ($hits as $hit) {
                             $Liste_Ids .= ", '". $hit->Id ."'";
                         }
-                        $where_request .= " res_id IN ($Liste_Ids) or ".$where_multifield_request. " and ";
+                        $where_request_welcome .= " res_id IN ($Liste_Ids) or ".$where_multifield_request. " and ";
                     }
                 } else {
-                    $where_request .= " ".$where_multifield_request." and ";
+                    $where_request_welcome .= " ".$where_multifield_request." and ";
                 } 
-			}
+            }
             // PRIORITY
             elseif ($tab_id_fields[$j] == 'priority' && (!empty($_REQUEST['priority']) ||$_REQUEST['priority'] == 0) )
             {
@@ -462,7 +462,7 @@ if (count($_REQUEST['meta']) > 0) {
                 }
                 else
                 {
-					$where_request .= " (".$req->extract_date("closing_date")." <= '".$func->format_date_db($_REQUEST['closing_date_to'])."') and ";
+                    $where_request .= " (".$req->extract_date("closing_date")." <= '".$func->format_date_db($_REQUEST['closing_date_to'])."') and ";
                     $json_txt .= "'closing_date_to' : ['".trim($_REQUEST['closing_date_to'])."'],";
                 }
             }
@@ -553,7 +553,7 @@ if (count($_REQUEST['meta']) > 0) {
             }
             elseif ($tab_id_fields[$j] == 'autre' && !empty($_REQUEST['autre']))
             {
-				$where_request .= " answer_type_bitmask like '1_____' AND ";
+                $where_request .= " answer_type_bitmask like '1_____' AND ";
                 $json_txt .= " 'autre' : ['".addslashes(trim($_REQUEST['autre']))."'],";
             }
             elseif ($tab_id_fields[$j] == 'direct' && !empty($_REQUEST['direct']))
@@ -648,37 +648,37 @@ if (count($_REQUEST['meta']) > 0) {
                     $where_request .= " (exp_contact_id = '".$contact_id."' or dest_contact_id = '".$contact_id."') and ";
                 }
             }
-			// SEARCH IN BASKETS
-			else if ($tab_id_fields[$j] == 'baskets_clause' && !empty($_REQUEST['baskets_clause'])) {
-				//$func->show_array($_REQUEST);exit;
-				switch($_REQUEST['baskets_clause']) {
-				case 'false':
-					$baskets_clause = "false";
+            // SEARCH IN BASKETS
+            else if ($tab_id_fields[$j] == 'baskets_clause' && !empty($_REQUEST['baskets_clause'])) {
+                //$func->show_array($_REQUEST);exit;
+                switch($_REQUEST['baskets_clause']) {
+                case 'false':
+                    $baskets_clause = "false";
                     $json_txt .= "'baskets_clause' : ['false'],";
-					break;
-					
-				case 'true':
-					for($ind_bask = 0; $ind_bask < count($_SESSION['user']['baskets']); $ind_bask++) {
-						if(isset($_SESSION['user']['baskets'][$ind_bask]['clause']) && trim($_SESSION['user']['baskets'][$ind_bask]['clause']) <> '') {
-							$_SESSION['searching']['comp_query'] .= ' or ('.$_SESSION['user']['baskets'][$ind_bask]['clause'].')';
-						}
-					}
-					$_SESSION['searching']['comp_query'] = preg_replace('/^ or/', '', $_SESSION['searching']['comp_query']);
-					$baskets_clause = ($_REQUEST['baskets_clause']);
-					$json_txt .= " 'baskets_clause' : ['true'],";
-					break;
-				
-				default:
-					
-					for($ind_bask = 0; $ind_bask < count($_SESSION['user']['baskets']); $ind_bask++) {
-						if($_SESSION['user']['baskets'][$ind_bask]['id'] == $_REQUEST['baskets_clause']) {
-							if(isset($_SESSION['user']['baskets'][$ind_bask]['clause']) && trim($_SESSION['user']['baskets'][$ind_bask]['clause']) <> '') {
-								$where_request .= ' ' . $_SESSION['user']['baskets'][$ind_bask]['clause'] . ' and ' ;
-							} 
-						}
-					}
-				}
-			}
+                    break;
+                    
+                case 'true':
+                    for($ind_bask = 0; $ind_bask < count($_SESSION['user']['baskets']); $ind_bask++) {
+                        if(isset($_SESSION['user']['baskets'][$ind_bask]['clause']) && trim($_SESSION['user']['baskets'][$ind_bask]['clause']) <> '') {
+                            $_SESSION['searching']['comp_query'] .= ' or ('.$_SESSION['user']['baskets'][$ind_bask]['clause'].')';
+                        }
+                    }
+                    $_SESSION['searching']['comp_query'] = preg_replace('/^ or/', '', $_SESSION['searching']['comp_query']);
+                    $baskets_clause = ($_REQUEST['baskets_clause']);
+                    $json_txt .= " 'baskets_clause' : ['true'],";
+                    break;
+                
+                default:
+                    
+                    for($ind_bask = 0; $ind_bask < count($_SESSION['user']['baskets']); $ind_bask++) {
+                        if($_SESSION['user']['baskets'][$ind_bask]['id'] == $_REQUEST['baskets_clause']) {
+                            if(isset($_SESSION['user']['baskets'][$ind_bask]['clause']) && trim($_SESSION['user']['baskets'][$ind_bask]['clause']) <> '') {
+                                $where_request .= ' ' . $_SESSION['user']['baskets'][$ind_bask]['clause'] . ' and ' ;
+                            } 
+                        }
+                    }
+                }
+            }
             else  // opt indexes check
             {
                 //echo $tab_id_fields[$j].' : '.$_REQUEST[$tab_id_fields[$j]].'<br/>';
@@ -717,6 +717,10 @@ if (!empty($_SESSION['error'])) {
     }
     exit();
 } else {
+    if ($where_request_welcome <> '') {
+        $where_request_welcome = substr($where_request_welcome, 0, -4);
+        $where_request .= '(' . $where_request_welcome . ') and ';
+    }
     $where_request = trim($where_request);
     $_SESSION['searching']['where_request'] = $where_request;
 }
@@ -730,10 +734,10 @@ if (isset($_REQUEST['specific_case'])
     exit();
 }
 if(!empty($_REQUEST['baskets_clause']) && $_REQUEST['baskets_clause'] != 'false' && $_REQUEST['baskets_clause'] != 'true') {
-	?>
-	<script  type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl']."index.php?page=view_baskets&module=basket&baskets=".$_REQUEST['baskets_clause']."&origin=searching";?>';</script>
-	<?php
-	exit();
+    ?>
+    <script  type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl']."index.php?page=view_baskets&module=basket&baskets=".$_REQUEST['baskets_clause']."&origin=searching";?>';</script>
+    <?php
+    exit();
 }
 if (empty($_SESSION['error_search'])) {
     //specific string for search_adv cases

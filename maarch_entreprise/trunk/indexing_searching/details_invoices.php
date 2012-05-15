@@ -282,7 +282,13 @@ if (empty ($_SESSION['error']) || $_SESSION['indexation']) {
                     ?>
                     </p>
                     <p id="viewdoc">
-                        <a href="<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&dir=indexing_searching&page=view_resource_controler&id=<?php  echo $s_id; ?>" target="_blank"><?php  echo _VIEW_DOC; ?></a> &nbsp;| &nbsp;
+                        <a href="<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&dir=indexing_searching&page=view_resource_controler&id=<?php  echo $s_id; ?>" target="_blank">
+                        <img alt="<?php echo _VIEW_DOC;?>" src="<?php echo
+                            $_SESSION['config']['businessappurl'];
+                            ?>static.php?filename=picto_dld.gif" border="0" alt="" />&nbsp;<?php
+                        echo _VIEW_DOC;
+                        ?>
+                        </a> &nbsp;| &nbsp;
                     </p></b>&nbsp;
                 </div>
                 <br/>
