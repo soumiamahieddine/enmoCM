@@ -84,16 +84,16 @@ if (!defined('_CLITOOLS')) {
     define('_CLITOOLS', "CLITools");
 }
 if (!defined('_ERROR_REPORTING')) {
-    define('_ERROR_REPORTING', "error_reporting");
+    define('_ERROR_REPORTING', "error_reporting (E_ALL & ~E_NOTICE & ~E_DEPRECATED)");
 }
 if (!defined('_DISPLAY_ERRORS')) {
-    define('_DISPLAY_ERRORS', "display_errors");
+    define('_DISPLAY_ERRORS', "display_errors (On)");
 }
 if (!defined('_SHORT_OPEN_TAGS')) {
-    define('_SHORT_OPEN_TAGS', "short_open_tags");
+    define('_SHORT_OPEN_TAGS', "short_open_tags (On)");
 }
 if (!defined('_MAGIC_QUOTES_GPC')) {
-    define('_MAGIC_QUOTES_GPC', "magic_quotes_gpc");
+    define('_MAGIC_QUOTES_GPC', "magic_quotes_gpc (Off)");
 }
 
 if (!defined('_MUST_FIX')) {
@@ -119,6 +119,9 @@ if (!defined('_MUST_CHOOSE_DOCSERVERS_ROOT')) {
 }
 if (!defined('_PATH_OF_DOCSERVER_UNAPPROACHABLE')) {
     define('_PATH_OF_DOCSERVER_UNAPPROACHABLE', "Path of docserver is unapproachable");
+}
+if (!defined('_THE_DOCSERVER_DOES_NOT_HAVE_THE_ADEQUATE_RIGHTS')) {
+    define('_THE_DOCSERVER_DOES_NOT_HAVE_THE_ADEQUATE_RIGHTS', "The docservers does not have the adequate rights");
 }
 
 //DATABASE
