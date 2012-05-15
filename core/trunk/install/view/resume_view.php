@@ -6,9 +6,6 @@
     </div>
     <div class="contentBlock" id="resume">
         <p>
-            <?php echo _RESUME_DETAILS; ?>
-        </p>
-        <p>
             <?php echo _INSTALL_SUCCESS; ?><br />
             <br />
             <div align="center">

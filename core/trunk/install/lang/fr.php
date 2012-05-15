@@ -18,7 +18,7 @@ if (!defined('_DESC')) {
                     <br />
                     Maarch est un Système d'Archivage Electronique doté de capacités de GED, Gestion de Courrier, travail collaboratif, et SAE normé OAIS et NFZ42-013. Maarch est un produit Open Source sur licence GPL v3 : il n'y a pas de coûts de licence, mais des services professionnels certifiés fournis par Maarch SAS et son réseau de partenaires à travers le monde. <br />
                     <br />
-                    Les services couvrent l'audit, l'installation, le paramétrage, la personnalisation, l'interfaçage avec votre SI, la formation, le support et la maintenance. Reportez vous sur <A style='color: #800000; font-family:verdana;' href='http://www.maarch.com'> www.maarch.com</A> pour plus d'informations sur les services.");
+                    Les services couvrent l'audit, l'installation, le paramétrage, la personnalisation, l'interfaçage avec votre SI, la formation, le support et la maintenance. Reportez vous sur <A style='color: #800000; font-family:verdana;' href='http://www.maarch.com' target=\"_blank\"> www.maarch.com</A> pour plus d'informations sur les services.");
 }
 
 
@@ -39,11 +39,8 @@ if (!defined('_PREREQUISITES_HEAD')) {
     define('_PREREQUISITES_HEAD', "Pré-requis");
 }
 
-if (!defined('_LINK')) {
-    define('_LINK', "Voir <A>http://www.maarch.org/projets/entreprise/architecture-technique-et-prerequis-pour-maarch-entreprise-1.3</A>");
-}
 if (!defined('_PREREQUISITES_EXP')) {
-    define('_PREREQUISITES_EXP', "L'installation de Maarch nécessite un certain nombre de pré-requis au niveau de l'installation de PHP. Reportez-vous à la page <A style='color: #800000; font-family:verdana;' href='http://www.maarch.org/projets/entreprise/architecture-technique-et-prerequis-pour-maarch-entreprise-1.3'> pre-requis</A> pour les détails");
+    define('_PREREQUISITES_EXP', "L'installation de Maarch nécessite un certain nombre de pré-requis au niveau de l'installation de PHP. Reportez-vous à la page <A style='color: #800000; font-family:verdana;' href='http://www.maarch.org/projets/entreprise/architecture-technique-et-prerequis-pour-maarch-entreprise-1.3' target=\"_blank\"> pre-requis</A> pour les détails");
 }
 if (!defined('_ACTIVATED')) {
     define('_ACTIVATED', "Conforme");
@@ -106,7 +103,7 @@ if (!defined('_DOCSERVERS')) {
     define('_DOCSERVERS', "Zones de stockage");
 }
 if (!defined('_DOCSERVERS_EXP')) {
-    define('_DOCSERVERS_EXP', "Les documents sont stockés à part dans des zones de stockage sur un disque, une baie de disque, ou un système de stockage logique tel que le Centera d'EMC. Entrez un nom de répertoire existant, sur lequel le serveur Apache doit avoir des droits d'écriture. L'installeur va créer les sous-répertoires déclarés dans le jeu de test. Plus d'information sur <A style='color: #800000; font-family:verdana;' href='http://wiki.maarch.org/Maarch_Entreprise/fr/Man/Admin/Stockage'> Gestion du stockage</A>");
+    define('_DOCSERVERS_EXP', "Les documents sont stockés à part dans des zones de stockage sur un disque, une baie de disque, ou un système de stockage logique tel que le Centera d'EMC. Entrez un nom de répertoire existant, sur lequel le serveur Apache doit avoir des droits d'écriture. L'installeur va créer les sous-répertoires déclarés dans le jeu de test. Plus d'information sur <A style='color: #800000; font-family:verdana;' href='http://wiki.maarch.org/Maarch_Entreprise/fr/Man/Admin/Stockage' target=\"_blank\"> Gestion du stockage</A>");
 }
 if (!defined('_DOCSERVER_ROOT')) {
     define('_DOCSERVER_ROOT', "Chemin du répertoire");

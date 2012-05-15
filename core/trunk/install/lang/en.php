@@ -18,7 +18,7 @@ if (!defined('_DESC')) {
                     <br />
                     Maarch is an Electronic Archiving System that comes with Document Management, Content Management, Mail Management, Coolaborative and legal archiving/record management capabilities. Maarch is a full Open Source product under GPL v3 licence : there is no licence cost, but professional services offered by Maarch and its partner global network.<br />
                     <br />
-                    Services cover audit, installation, parametrization, customizing, IT integration, training, support and maintenance. Go to <A style='color: #800000; font-family:verdana;' href='http://www.maarch.com/en'> www.maarch.com</A> for more information on Maarch Professional Services.");
+                    Services cover audit, installation, parametrization, customizing, IT integration, training, support and maintenance. Go to <A style='color: #800000; font-family:verdana;' href='http://www.maarch.com/en' target\"_blank\"> www.maarch.com</A> for more information on Maarch Professional Services.");
 }
 
 
@@ -39,11 +39,8 @@ if (!defined('_PREREQUISITES_HEAD')) {
     define('_PREREQUISITES_HEAD', "Pré-requis");
 }
 
-if (!defined('_LINK')) {
-    define('_LINK', "See <A>http://www.maarch.org/projets/entreprise/architecture-technique-et-prerequis-pour-maarch-entreprise-1.3</A>");
-}
 if (!defined('_PREREQUISITES_EXP')) {
-    define('_PREREQUISITES_EXP', "Maarch installation needs some prerequisites on PHP. Please report to <A style='color: #800000; font-family:verdana;' href='http://www.maarch.org/en/projects/entreprise/architecture-and-requirements'> Architecture and requirements</A> for details");
+    define('_PREREQUISITES_EXP', "Maarch installation needs some prerequisites on PHP. Please report to <A style='color: #800000; font-family:verdana;' href='http://www.maarch.org/en/projects/entreprise/architecture-and-requirements' target=\"_blank\"> Architecture and requirements</A> for details");
 }
 if (!defined('_ACTIVATED')) {
     define('_ACTIVATED', "Ok");
@@ -106,7 +103,7 @@ if (!defined('_DOCSERVERS')) {
     define('_DOCSERVERS', "Docservers");
 }
 if (!defined('_DOCSERVERS_EXP')) {
-    define('_DOCSERVERS_EXP', "Electronic resources are stored on an HD, a disc bay, or a logical storage system like EMC Centera. Type in an existing folder name, on which Apache gets write access. The install will create the sub-folders declared in the dataset. More information on <A style='color: #800000; font-family:verdana;' href='http://wiki.maarch.org/Maarch_Entreprise/fr/Man/Admin/Stockage'> Gestion du stockage(FR)</A>");
+    define('_DOCSERVERS_EXP', "Electronic resources are stored on an HD, a disc bay, or a logical storage system like EMC Centera. Type in an existing folder name, on which Apache gets write access. The install will create the sub-folders declared in the dataset. More information on <A style='color: #800000; font-family:verdana;' href='http://wiki.maarch.org/Maarch_Entreprise/fr/Man/Admin/Stockage' target=\"_blank\"> Gestion du stockage(FR)</A>");
 }
 if (!defined('_DOCSERVER_ROOT')) {
     define('_DOCSERVER_ROOT', "Root directory for storage");
