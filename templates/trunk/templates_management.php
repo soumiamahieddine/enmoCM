@@ -138,7 +138,8 @@ if ($mode == 'list') {
                 <p>
                     <label for="template_datasource"><?php echo _TEMPLATE_DATASOURCE; ?> : </label>
                     <select name="template_datasource" id="template_datasource">
-                        <?php
+                        <option value="" ><?php echo _NO_DATASOURCE ?></option>
+						<?php
                         for (
                             $cptDatasource = 0;
                             $cptDatasource < count($_SESSION['m_admin']['templatesDatasources']);
