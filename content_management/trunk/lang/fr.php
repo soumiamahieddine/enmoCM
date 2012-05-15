@@ -25,4 +25,5 @@ if (!defined('_MAARCH_CM_APPLET'))  define('_MAARCH_CM_APPLET','Lancement &eacut
 if (!defined('_NO_UPDATE'))  define('_NO_UPDATE','Aucune mise à jour de contenu détectée');
 if (!defined('_UPDATE_OK'))  define('_UPDATE_OK','Mise à jour de contenu réalisée');
 if (!defined('_NEW_ATTACHMENT_VERSION'))  define('_NEW_ATTACHMENT_VERSION','R&eacute;ponse au courrier');
+if (!defined('_VERSION'))  define('_VERSION','Version');
 
