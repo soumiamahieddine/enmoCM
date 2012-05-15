@@ -107,6 +107,7 @@ while ($state <> 'END') {
 			$params = array(
 				'recipient' => $tmpNotif['recipient'],
 				'events' => $tmpNotif['events'],
+				'notification' => $notification,
 				'maarchUrl' => $maarchUrl,
 				'maarchApps' => $maarchApps,
 				'coll_id' => $coll_id,
