@@ -17,7 +17,7 @@ if ($_REQUEST['action'] == 'testConnect') {
 
     if (!$checkDatabaseParameters) {
         $return['status'] = 0;
-        $return['text'] = 'Informations de connexion invalides';
+        $return['text'] = _BAD_INFORMATIONS_FOR_CONNECTION;
 
         $jsonReturn = json_encode($return);
 
@@ -42,7 +42,7 @@ if ($_REQUEST['action'] == 'testConnect') {
 
     if (!$createDatabase) {
         $return['status'] = 0;
-        $return['text'] = 'Impossible de créer la base de données, essayer un autre nom';
+        $return['text'] = _UNABLE_TO_CREATE_DATABASE;
 
         $jsonReturn = json_encode($return);
 
@@ -65,7 +65,7 @@ if ($_REQUEST['action'] == 'testConnect') {
 
     if (!$loadDatas) {
         $return['status'] = 0;
-        $return['text'] = 'Impossible d\'importer les datas';
+        $return['text'] = _UNABLE_TO_LOAD_DATAS;
 
         $jsonReturn = json_encode($return);
 

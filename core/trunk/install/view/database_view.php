@@ -67,6 +67,7 @@
 
             if (oneIsEmpty) {
                 $('#ajaxReturn_createDB_ko').html('<?php echo _CHOOSE_A_NAME_FOR_DB; ?>');
+                $('.wait').css('display','none');
                 return;
             }
             $('.wait').css('display','block');

@@ -98,7 +98,6 @@ if (!defined('_MAGIC_QUOTES_GPC')) {
 
 if (!defined('_MUST_FIX')) {
     define('_MUST_FIX', "Vous devez corriger les erreurs avant de continuer");
-
 }
 
 
@@ -118,7 +117,9 @@ if (!defined('_CREATE_DOCSERVERS')) {
 if (!defined('_MUST_CHOOSE_DOCSERVERS_ROOT')) {
     define('_MUST_CHOOSE_DOCSERVERS_ROOT', "Vous devez choisir le dossier racine de vos docservers");
 }
-
+if (!defined('_PATH_OF_DOCSERVER_UNAPPROACHABLE')) {
+    define('_PATH_OF_DOCSERVER_UNAPPROACHABLE', "Le dossier racine n'est pas accessible");
+}
 
 //DATABASE
 if (!defined('_DATABASE')) {
@@ -173,7 +174,18 @@ if (!defined('_INSTALL_SUCCESS')) {
 if (!defined('_SUBMIT')) {
     define('_SUBMIT', "Tester la connexion");
 }
-
+if (!defined('_BAD_INFORMATIONS_FOR_CONNECTION')) {
+    define('_BAD_INFORMATIONS_FOR_CONNECTION', "Les informations de connexion sont invalides");
+}
+if (!defined('_UNABLE_TO_CREATE_DATABASE')) {
+    define('_UNABLE_TO_CREATE_DATABASE', "Impossible de créer la base de données, essayer un autre nom");
+}
+if (!defined('_UNABLE_TO_LOAD_DATAS')) {
+    define('_UNABLE_TO_LOAD_DATAS', "Impossible d'importer les datas");
+}
+if (!defined('_CHOOSE_A_NAME_FOR_DB')) {
+    define('_CHOOSE_A_NAME_FOR_DB', "Vous devez choisir un nom pour la base de données");
+}
 
 //PASSWORD
 if (!defined('_PASSWORD')) {
@@ -189,7 +201,10 @@ if (!defined('_NEW_ADMIN_PASS_AGAIN')) {
     define('_NEW_ADMIN_PASS_AGAIN', "Retapez le mot de passe");
 }
 if (!defined('_PASSWORD_EXP')) {
-    define('_PASSWORD_EXP', "blablablabalbalbalbalablabalba");
+    define('_PASSWORD_EXP', "Le compte \"superadmin\" est le compte administrateur. Choisissez ici le mot de passe pour ce compte");
+}
+if (!defined('_PASSWORDS_ARE_DIFFERENTS')) {
+    define('_PASSWORDS_ARE_DIFFERENTS', "Les deux mots de passe doivent être identiques");
 }
 
 //RESUME

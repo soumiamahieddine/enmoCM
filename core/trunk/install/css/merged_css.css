@@ -283,6 +283,8 @@
     padding-bottom: 0;
     padding-left: 15px;
     padding-right: 15px;
+    margin: 0;
+    margin-bottom: 10px;
     text-align: justify;
 }
 

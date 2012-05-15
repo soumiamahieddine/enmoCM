@@ -14,10 +14,13 @@ if (!defined('_WELCOME')) {
 }
 
 if (!defined('_DESC')) {
-    define('_DESC', "Welcome to Maarch install tool !
-					<br>Maarch is an Electronic Archiving System that comes with Document Management, Content Management, Mail Management, Coolaborative and legal archiving/record management capabilities. Maarch is a full Open Source product under GPL v3 licence : there is no licence cost, but professional services offered by Maarch and its partner global network.
-					<br>Services cover audit, installation, parametrization, customizing, IT integration, training, support and maintenance. Go to <A style='color: #800000; font-family:verdana;' href='http://www.maarch.com'> www.maarch.com</A> for more information on Maarch Professional Services.");
+    define('_DESC', "Welcome to Maarch install tool !<br />
+					<br />
+					Maarch is an Electronic Archiving System that comes with Document Management, Content Management, Mail Management, Coolaborative and legal archiving/record management capabilities. Maarch is a full Open Source product under GPL v3 licence : there is no licence cost, but professional services offered by Maarch and its partner global network.<br />
+					<br />
+					Services cover audit, installation, parametrization, customizing, IT integration, training, support and maintenance. Go to <A style='color: #800000; font-family:verdana;' href='http://www.maarch.com'> www.maarch.com</A> for more information on Maarch Professional Services.");
 }
+
 
 //LICENCE
 if (!defined('_LICENCE')) {
@@ -49,6 +52,7 @@ if (!defined('_ACTIVATED')) {
 }if (!defined('_NOT_ACTIVATED')) {
     define('_NOT_ACTIVATED', "Not Ok");
 }
+
 if (!defined('_GENERAL')) {
     define('_GENERAL', "General");
 }
@@ -113,7 +117,9 @@ if (!defined('_CREATE_DOCSERVERS')) {
 if (!defined('_MUST_CHOOSE_DOCSERVERS_ROOT')) {
     define('_MUST_CHOOSE_DOCSERVERS_ROOT', "You must choose the docservers root directory");
 }
-
+if (!defined('_PATH_OF_DOCSERVER_UNAPPROACHABLE')) {
+    define('_PATH_OF_DOCSERVER_UNAPPROACHABLE', "Path of docserver is unapproachable");
+}
 
 //DATABASE
 if (!defined('_DATABASE')) {
@@ -168,6 +174,18 @@ if (!defined('_INSTALL_SUCCESS')) {
 if (!defined('_SUBMIT')) {
     define('_SUBMIT', "Test connection");
 }
+if (!defined('_BAD_INFORMATIONS_FOR_CONNECTION')) {
+    define('_BAD_INFORMATIONS_FOR_CONNECTION', "Bad informations");
+}
+if (!defined('_UNABLE_TO_CREATE_DATABASE')) {
+    define('_UNABLE_TO_CREATE_DATABASE', "Unable to create database, try another name");
+}
+if (!defined('_UNABLE_TO_LOAD_DATAS')) {
+    define('_UNABLE_TO_LOAD_DATAS', "Unable to load datas");
+}
+if (!defined('_CHOOSE_A_NAME_FOR_DB')) {
+    define('_CHOOSE_A_NAME_FOR_DB', "You must choose a name for the database");
+}
 
 //PASSWORD
 if (!defined('_PASSWORD')) {
@@ -175,6 +193,18 @@ if (!defined('_PASSWORD')) {
 }
 if (!defined('_CHOOSE_ADMIN_PASSWORD')) {
     define('_CHOOSE_ADMIN_PASSWORD', "Choose the admin password");
+}
+if (!defined('_NEW_ADMIN_PASS')) {
+    define('_NEW_ADMIN_PASS', "Admin password");
+}
+if (!defined('_NEW_ADMIN_PASS_AGAIN')) {
+    define('_NEW_ADMIN_PASS_AGAIN', "Again");
+}
+if (!defined('_PASSWORD_EXP')) {
+    define('_PASSWORD_EXP', "Choose the password for \"superadmin\" ");
+}
+if (!defined('_PASSWORDS_ARE_DIFFERENTS')) {
+    define('_PASSWORDS_ARE_DIFFERENTS', "The two passwords must match");
 }
 
 //RESUME
