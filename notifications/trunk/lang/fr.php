@@ -21,6 +21,7 @@
 
 //communs
 if (!defined('_NOTIFICATIONS')) define('_NOTIFICATIONS', 'Notifications');
+if (!defined('_NOTIF')) define('_NOTIF', 'notif.');
 if (!defined('_MAIL_TO_PROCESS')) define('_MAIL_TO_PROCESS', 'Courriers pour traitement');
 if (!defined('_HELLO')) define('_HELLO','Bonjour');
 if (!defined('_THE_MAIL_NUM')) define('_THE_MAIL_NUM', 'le courrier n&deg;');
