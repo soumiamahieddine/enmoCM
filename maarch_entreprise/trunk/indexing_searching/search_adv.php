@@ -249,7 +249,7 @@ if($core_tools->is_module_loaded('tags'))
 	$tag = new tag_controler;
     $tag_return_value = $tag -> get_all_tags();
  
-	if (count($tag_return_value) > 0){
+	if ($tag_return_value){
 		foreach($tag_return_value as $tagelem)
 		{
 			array_push($arr_tmptag, array('VALUE' => $tagelem['tag_label'], 'LABEL' => $tagelem['tag_label']));
@@ -257,7 +257,7 @@ if($core_tools->is_module_loaded('tags'))
 	}
 	else
 	{
-		$arr_tmptag = '';
+		array_push($arr_tmptag, array('VALUE' => '', 'LABEL' => _TAGNONE));
 	}
     $param['tag_mu'] = array('label' => _TAG_SEARCH, 'type' => 'select_multiple', 'param' => array('field_label' => _TAG_SEARCH, 'label_title' => _CHOOSE_TAG,
 	'id' => 'tags','options' => $arr_tmptag));
