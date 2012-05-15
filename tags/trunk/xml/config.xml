@@ -10,10 +10,10 @@
 		<cases>tags</cases>
 	</TABLENAME>
 	<HISTORY>
-		<tagsup>true</tagsup>
-		<tagsadd>true</tagsadd>
-		<tagsdel>true</tagsdel>
-		<tagslink>true</tagslink>
-		<tagsunlink>true</tagsunlink>
+		<tagup>true</tagup>
+		<tagadd>true</tagadd>
+		<tagdel>true</tagdel>
+		<taglink>true</taglink>
+		<tagunlink>true</tagunlink>
 	</HISTORY>
 </root>

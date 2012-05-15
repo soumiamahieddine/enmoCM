@@ -185,7 +185,14 @@ class tag_controler
 	        	"delete from " ._TAG_TABLE_NAME
 	            . " where res_id = '" . $res_id . "' and coll_id = '".$coll_id."' and tag_label = '".$tag_label."' "
       	    );
-			if ($fin){ return true; }
+			if ($fin){ 
+				$hist = new history();
+				$hist->add(
+					_TAG_TABLE_NAME, $tag_label, "DEL", 'tagdel', _TAG_DELETED.' : "'.
+					substr($db->protect_string_db($tag_label), 0, 254) .'"',
+					$_SESSION['config']['databasetype'], 'tags'
+				);
+				return true; }
 		}
 		return fasle;
 		
@@ -259,6 +266,12 @@ class tag_controler
 	        	"delete from " ._TAG_TABLE_NAME
 	            . " where res_id = '" . $res_id . "' and coll_id = '".$coll_id."' "
         );
+        $hist = new history();
+		$hist->add(
+			'res_view_letterbox', $res_id, "DEL", 'tagdel', _ALL_TAG_DELETED_FOR_RES_ID.' : "'.
+			substr($db->protect_string_db($res_id), 0, 254) .'"',
+			$_SESSION['config']['databasetype'], 'tags'
+		);
 		//$db->show();
     }
     
@@ -275,6 +288,12 @@ class tag_controler
 	            . " where tag_label = '" . $tag_label . "' and coll_id = '".$coll_id."' "
         );
 		if ($del){
+			$hist = new history();
+			$hist->add(
+				_TAG_TABLE_NAME, $tag_label, "DEL", 'tagdel', _TAG_DELETED.' : "'.
+				substr($db->protect_string_db($tag_label), 0, 254) .'"',
+				$_SESSION['config']['databasetype'], 'tags'
+			);
 			return true; 
 		}
 		return false;
@@ -286,10 +305,19 @@ class tag_controler
 		/*
 		 * Store into the database a tag for a ressource
 		 */
+		$db = new dbquery();
+		
 		if ($mode=='add'){
 			$new_tag_label = $params[0];
 			$coll_id = $params[1];
 			$this->insert_tag_label($new_tag_label, $coll_id);	
+			
+			$hist = new history();
+			$hist->add(
+				_TAG_TABLE_NAME, $new_tag_label, "ADD", 'tagadd', _TAG_ADDED.' : "'.
+				substr($db->protect_string_db($new_tag_label), 0, 254) .'"',
+				$_SESSION['config']['databasetype'], 'tags'
+			);
 			return true;
 		}
 		elseif($mode=='up'){
@@ -297,6 +325,12 @@ class tag_controler
 			$new_tag_label = $params[0];
 			$coll_id = $params[1];
 			$this->update_tag_label($new_tag_label, $tag_label, $coll_id);	
+			$hist = new history();
+			$hist->add(
+				_TAG_TABLE_NAME, $new_tag_label, "ADD", 'tagup', _TAG_ADDED.' : "'.
+				substr($db->protect_string_db($new_tag_label), 0, 254) .'"',
+				$_SESSION['config']['databasetype'], 'tags'
+			);
 			return true;
 		}
 		else
@@ -324,6 +358,12 @@ class tag_controler
 	        	"update " ._TAG_TABLE_NAME
 	            . " set tag_label = '".$new_tag_label."' where coll_id = '".$coll_id."' and tag_label = '".$old_taglabel."'  "
 	        );
+	        $hist = new history();
+			$hist->add(
+				_TAG_TABLE_NAME, $new_tag_label, "UP", 'tagup', _TAG_UPDATED.' : "'.
+				substr($db->protect_string_db($new_tag_label), 0, 254) .'"',
+				$_SESSION['config']['databasetype'], 'tags'
+			);
 		}
 		else
 		{
@@ -352,6 +392,12 @@ class tag_controler
         	"insert into " ._TAG_TABLE_NAME
             . " values ('".$new_tag_label."', '".$coll_id."', 0)"
       		  );
+      		 $hist = new history();
+			 $hist->add(
+				_TAG_TABLE_NAME, $new_tag_label, "ADD", 'tagadd', _TAG_ADDED.' : "'.
+				substr($db->protect_string_db($new_tag_label), 0, 254) .'"',
+				$_SESSION['config']['databasetype'], 'tags'
+		 	 );
 		}
 		
     }
@@ -378,7 +424,15 @@ class tag_controler
 	        	"insert into " ._TAG_TABLE_NAME
 	            . " (tag_label, res_id, coll_id) values ('".$tag_label."', '" . $res_id . "','".$coll_id."')  "
       	    );
-			if ($fin){ return true; }
+			if ($fin){ 
+				
+				$hist = new history();
+				$hist->add(
+					'res_view_letterbox', $res_id, "ADD", 'tagadd', _TAG_ADDED.' : "'.
+					substr($db->protect_string_db($tag_label), 0, 254) .'"',
+					$_SESSION['config']['databasetype'], 'tags'
+				);
+				return true; }
 		}
 		return fasle;
 		
