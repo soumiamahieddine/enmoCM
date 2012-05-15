@@ -3,19 +3,19 @@
         <h2 onClick="slide('prerequisites');" style="cursor: pointer;">
             <?php echo _PREREQUISITES; ?>
         </h2>
-        <h6>
-			<div id="titleLink"><?php echo _PREREQUISITES_EXP; ?></div>
-			<br/>
-			<img src="img/green_light.png" width="10px"/><?php echo _ACTIVATED; ?>
-			<img src="img/orange_light.png"  width="10px"/><?php echo _OPTIONNAL; ?>
-			<img src="img/red_light.png"  width="10px"/><?php echo _NOT_ACTIVATED; ?>
-			
-		</h6>
     </div>
     <div class="contentBlock" id="prerequisites">
         <p>
+            <h6>
+                <div id="titleLink"><?php echo _PREREQUISITES_EXP; ?></div>
+                <br/>
+                <img src="img/green_light.png" width="10px"/><?php echo _ACTIVATED; ?>
+                <img src="img/orange_light.png"  width="10px"/><?php echo _OPTIONNAL; ?>
+                <img src="img/red_light.png"  width="10px"/><?php echo _NOT_ACTIVATED; ?>
+
+            </h6>
             <table>
-            <tr>
+                <tr>
                     <td colspan="2">
                         <h2>
                            <?php echo _GENERAL; ?>

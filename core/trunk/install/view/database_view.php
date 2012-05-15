@@ -2,14 +2,14 @@
     <div class="blockWrapper">
         <div class="titleBlock">
             <h2 onClick="slide('database');" style="cursor: pointer;">
-                <!-- <?php echo _DATABASE; ?>--> Informations de connexion
+                <?php echo _DATABASE_INFOS; ?>
             </h2>
-            <h6>
-			<?php echo _DATABASE_EXP; ?>
-			</h6>
         </div>
         <div class="contentBlock" id="database">
             <p>
+                <h6>
+                    <?php echo _DATABASE_EXP; ?>
+                </h6>
                 <form>
                     <table>
                         <tr>
@@ -107,14 +107,14 @@
     <div class="blockWrapper" id="ajaxReturn_testConnect" style="display: none;">
         <div class="titleBlock">
             <h2 onClick="slide('createdatabase');" style="cursor: pointer;">
-                <!--<?php echo _DATABASE; ?>-->Création de la base de données
+                <?php echo _DATABASE_CREATE; ?>
             </h2>
-            <h6>
-				<?php echo _DATABASE_ADD_INF; ?>
-			</h6>
         </div>
         <div class="contentBlock" id="createdatabase">
             <p>
+                <h6>
+                    <?php echo _DATABASE_ADD_INF; ?>
+                </h6>
                 <div id="ajaxReturn_testConnect_ok"></div>
                 <form>
                     <table>
@@ -158,12 +158,12 @@
             <h2 onClick="slide('database');" style="cursor: pointer;">
                 <?php echo _DATASET_CHOICE; ?>
             </h2>
-            <h6>
-			<?php echo _DATASET_EXP; ?>
-        </h6>
         </div>
         <div class="contentBlock">
             <p>
+                <h6>
+                    <?php echo _DATASET_EXP; ?>
+                </h6>
                 <div id="ajaxReturn_createDB_ok"></div>
                 <form>
                     <table>

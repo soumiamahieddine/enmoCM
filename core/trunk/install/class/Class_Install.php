@@ -359,7 +359,7 @@ class Install extends functions
         }
         return true;
     }
-    
+
     /**
      * test if maarch path is writable
      * @return boolean or error message
@@ -437,5 +437,15 @@ class Install extends functions
             . "' where docserver_id = '" . $this->docservers[$i][0] . "'";
             $db->query($query);
         }
+    }
+
+    public function setSuperadminPass(
+        $newPass
+    )
+    {
+        $db = new dbquery();
+        $db->connect();
+        $query = "UPDATE users SET password='".md5($newPass)."' WHERE user_id='superadmin'";
+        $db->query($query);
     }
 }

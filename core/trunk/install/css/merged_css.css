@@ -276,6 +276,7 @@
     padding-bottom: 15px;
     padding-left: 15px;
     padding-right: 15px;
+    text-align: justify;
 }
 
 #fullWrapper #section .blockWrapper .contentBlock .previousButton {
@@ -363,6 +364,23 @@ a:hover {
     width: 910px;
     background-color: rgba(0,0,0,0.6);
 }
+
+h6 {
+	color: #777;
+	font-style: italic;
+}
+
+
+
+
+#titleLink {
+	color: #777;
+    font-size: 1em;
+    font-weight: normal;
+    padding-bottom: 0em;
+}
+
+
 
 /* header.css */
 #fullWrapper #header {
