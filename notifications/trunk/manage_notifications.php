@@ -121,15 +121,15 @@ if ($mode == 'list') {
             <input type="radio" name="notification_mode" value="EMAIL"
                 onClick="javascript:window.document.getElementById('template_div').style.display = 'block';
 				window.document.getElementById('rss_url_div').style.display = 'none';" <?php
-                if ($_SESSION['m_admin']['notifications']['notification_mode'] == '' 
-                    || $_SESSION['m_admin']['notifications']['notification_mode'] == 'EMAIL'
+                if ($_SESSION['m_admin']['notification']['notification_mode'] == '' 
+                    || $_SESSION['m_admin']['notification']['notification_mode'] == 'EMAIL'
                 ) {
                     echo 'checked="checked"'; 
                 }?>/> <?php echo _EMAIL;?>
             <input type="radio" name="notification_mode" value="RSS"
                 onClick="javascript:window.document.getElementById('rss_url_div').style.display = 'block';
 				window.document.getElementById('template_div').style.display = 'none';" <?php
-                if ($_SESSION['m_admin']['notifications']['notification_mode'] == 'RSS'
+                if ($_SESSION['m_admin']['notification']['notification_mode'] == 'RSS'
                 ) {
                     echo 'checked="checked"'; 
                 }?>/> <?php echo _RSS;?>
@@ -158,10 +158,12 @@ if ($mode == 'list') {
 		<div id="rss_url_div" name="rss_url_div" style="width:600px; align=left; display:none;" >
 			<p>
             <label for="label"><?php echo _RSS_URL_TEMPLATE; ?> : </label>
-            <input name="rss_url_template" type="text" id="rss_url_template" style="align=right; width:340px" value="<?php
+            <textarea name="rss_url_template" type="text" id="rss_url_template" style="width:340px; height=60px">
+			<?php
                 echo functions::show_str(
                     $_SESSION['m_admin']['notification']['rss_url_template']
-                ); ?>"/>
+                ); 
+			?></textarea>
 			</p>
 		</div>
         <p>
@@ -252,8 +254,25 @@ if ($mode == 'list') {
 <?php
     }
    ?></div><?php
-
-
+	
+	// Manage notification mode
+	if ($_SESSION['m_admin']['notification']['notification_mode'] == 'EMAIL' 
+		|| $_SESSION['m_admin']['notification']['notification_mode'] == '') {
+		?>
+        <script language="javascript">
+			window.document.getElementById('rss_url_div').style.display = 'none';
+			window.document.getElementById('template_div').style.display = 'block';
+        </script>
+        <?php		
+	} elseif ($_SESSION['m_admin']['notification']['notification_mode'] == 'RSS')  {
+		?>
+        <script language="javascript">
+			window.document.getElementById('rss_url_div').style.display = 'block';
+			window.document.getElementById('template_div').style.display = 'none';
+        </script>
+        <?php
+	}
+	// Manage Diffusion type Div & content
     if ($_SESSION['m_admin']['notification']['diffusion_type'] <> '')
     {
         /*First Launch */
@@ -284,6 +303,8 @@ if ($mode == 'list') {
             <?php
         }
     }
+	
+	// Manage Attachment Div & content
 	if ($_SESSION['m_admin']['notification']['attachfor_type'] <> '')
     {
         /*First Launch */
