@@ -11,7 +11,9 @@
         <p>
             <?php echo _INSTALL_SUCCESS; ?><br />
             <br />
-            <iframe src="http://www.facebook.com/plugins/like.php?href=https://www.facebook.com/pages/Maarch/53918706268&layout=standard&show_faces=false&width=450&action=like&colorscheme=light" scrolling="no" frameborder="0" allowTransparency="true" style="border:none; overflow:hidden; width:450px; height:25px"></iframe>
+            <div align="center">
+                <div class="fb-like" data-href="http://www.facebook.com/pages/Maarch/53918706268" data-send="true" data-width="850" data-show-faces="true"></div>
+            </div>
         </p>
     </div>
 </div>

@@ -63,104 +63,6 @@ function ajax(
 }
 
 
-/* heightOfLicenceOverflow.js */
-function heightOfLicenceOverflow()
-{
-    $(document).ready(function() {
-        var heightOfSection = $('#section').css('minHeight')
-        var substringMax = heightOfSection.length - 2;
-        var heightOfSection = heightOfSection.substring(0, substringMax);
-
-        var newHeightOfLicenceOverflow = heightOfSection - 350;
-
-        if ($('#licenceOverflow').height() > 0) {
-            $('#licenceOverflow').height(newHeightOfLicenceOverflow+'px');
-        }
-    });
-}
-
-
-/* goTo.js */
-function goTo(
-    link
-)
-{
-    $(document).ready(function() {
-        window.top.location.href=link;
-    })
-}
-
-
-/* createDocservers.js */
-
-
-
-/* checkForm.js */
-function checkLanguage(
-    value
-)
-{
-    $(document).ready(function() {
-        if (value != 'default') {
-            $('#returnCheckLanguage').css("display","none");
-        } else {
-            $('#returnCheckLanguage').css("display","block");
-        }
-    });
-}
-
-
-/* checkCreateDB.js */
-
-
-
-/* checkLanguage.js */
-function checkLanguage(
-    value
-)
-{
-    $(document).ready(function() {
-        if (value != 'default') {
-            $('#returnCheckLanguage').css("display","block");
-        } else {
-            $('#returnCheckLanguage').css("display","none");
-        }
-    });
-}
-
-
-/* checkDataDB.js */
-
-
-
-/* slide.js */
-function slide(
-    idDiv
-)
-{
-    $(document).ready(function() {
-        $('#'+idDiv).slideToggle('slow');
-    })
-}
-
-
-/* checkLicence.js */
-function checkLicence()
-{
-    $(document).ready(function() {
-        if ($('#checkboxLicence').attr('checked')) {
-            $('#returnCheckLicence').css("display","block");
-        } else {
-            $('#returnCheckLicence').css("display","none");
-        }
-    })
-}
-
-
-/* checkDatabaseInfo.js */
-
-
-
 /* ajaxDB.js */
 function ajaxDB(
     url,
@@ -228,6 +130,88 @@ function ajaxDB(
 }
 
 
+/* checkForm.js */
+function checkLanguage(
+    value
+)
+{
+    $(document).ready(function() {
+        if (value != 'default') {
+            $('#returnCheckLanguage').css("display","none");
+        } else {
+            $('#returnCheckLanguage').css("display","block");
+        }
+    });
+}
+
+
+/* checkLanguage.js */
+function checkLanguage(
+    value
+)
+{
+    $(document).ready(function() {
+        if (value != 'default') {
+            $('#returnCheckLanguage').css("display","block");
+        } else {
+            $('#returnCheckLanguage').css("display","none");
+        }
+    });
+}
+
+
+/* checkLicence.js */
+function checkLicence()
+{
+    $(document).ready(function() {
+        if ($('#checkboxLicence').attr('checked')) {
+            $('#returnCheckLicence').css("display","block");
+        } else {
+            $('#returnCheckLicence').css("display","none");
+        }
+    })
+}
+
+
+/* facebook.js */
+
+(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/fr_FR/all.js#xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));
+
+
+/* goTo.js */
+function goTo(
+    link
+)
+{
+    $(document).ready(function() {
+        window.top.location.href=link;
+    })
+}
+
+
+/* heightOfLicenceOverflow.js */
+function heightOfLicenceOverflow()
+{
+    $(document).ready(function() {
+        var heightOfSection = $('#section').css('minHeight')
+        var substringMax = heightOfSection.length - 2;
+        var heightOfSection = heightOfSection.substring(0, substringMax);
+
+        var newHeightOfLicenceOverflow = heightOfSection - 350;
+
+        if ($('#licenceOverflow').height() > 0) {
+            $('#licenceOverflow').height(newHeightOfLicenceOverflow+'px');
+        }
+    });
+}
+
+
 /* minHeightOfSection.js */
 function minHeightOfSection()
 {
@@ -247,7 +231,14 @@ function minHeightOfSection()
 }
 
 
-/* checkLoadDatas.js */
-
+/* slide.js */
+function slide(
+    idDiv
+)
+{
+    $(document).ready(function() {
+        $('#'+idDiv).slideToggle('slow');
+    })
+}
 
 
