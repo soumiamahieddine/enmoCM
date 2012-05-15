@@ -187,4 +187,41 @@ class resources_controler
         );
         return $data;
     }
+	
+	function Demo_searchResources($searchParams)
+	{
+		$whereClause = '';
+		if ($searchParams->countryForm <> '') {
+			$whereClause .= " custom_t3 = '" . $searchParams->countryForm . "' and ";
+		}
+		if ($searchParams->docDateForm <> '') {
+			$whereClause .= " doc_date >= '" . $searchParams->docDateForm . "'";
+		}
+		$listResult = array();
+		try {
+			$db = new dbquery();
+			$db->connect();
+			$cpt = 0;
+			$db->query("select * from res_x where " . $whereClause . " ORDER BY res_id ASC");
+			if ($db->nb_result() > 0) {
+				while ($line = $db->fetch_object()) {
+					$listResult[$cpt]['resid'] = $line->res_id;
+					$listResult[$cpt]['subject'] = $line->subject;
+					$listResult[$cpt]['docdate'] = $line->doc_date;
+					$cpt++;
+				}
+			} else {
+				$error = _NO_DOC_OR_NO_RIGHTS;
+			}
+		} catch (Exception $e) {
+			$fault = new SOAP_Fault($e->getMessage(), '1');
+			return $fault->message();
+		}
+		$return = array(
+			'status' => 'ok',
+			'value' => $listResult,
+			'error' => $error,
+		);
+		return $return;
+	}
 }
