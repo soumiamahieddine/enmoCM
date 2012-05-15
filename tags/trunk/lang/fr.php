@@ -82,5 +82,6 @@ if (!defined('_CHOOSE_TAG'))  define('_CHOOSE_TAG', 'Choix des mots-cl&eacute;s'
 if (!defined('_TAG_SEARCH'))  define('_TAG_SEARCH', 'Mots-cl&eacute;s');
 if (!defined('_TAGNONE'))  define('_TAGNONE', 'Aucun');
 if (!defined('_ALL_TAG_DELETED_FOR_RES_ID'))  define('_ALL_TAG_DELETED_FOR_RES_ID', 'Tous les tags sont supprim&eacute; pour la ressource');
+if (!defined('_TAGCLICKTODEL'))  define('_TAGCLICKTODEL', 'supprimer');
 
 ?>

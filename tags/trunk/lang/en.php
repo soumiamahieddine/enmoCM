@@ -82,5 +82,5 @@ if (!defined('_CHOOSE_TAG'))  define('_CHOOSE_TAG', 'Choose tags');
 if (!defined('_TAG_SEARCH'))  define('_TAG_SEARCH', 'Tags');
 if (!defined('_TAGNONE'))  define('_TAGNONE', 'None');
 if (!defined('_ALL_TAG_DELETED_FOR_RES_ID'))  define('_ALL_TAG_DELETED_FOR_RES_ID', 'All tags are deleted for res_id');
-
+if (!defined('_TAGCLICKTODEL'))  define('_TAGCLICKTODEL', 'delete');
 ?>
