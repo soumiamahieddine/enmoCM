@@ -240,6 +240,32 @@ if($_SESSION['features']['search_notes'] == 'true')
     $param['doc_notes'] = $arr_tmp2;
 }
 
+//tags 
+if($core_tools->is_module_loaded('tags'))
+{
+	$arr_tmptag = array();
+	require_once 'modules/tags/class/TagControler.php' ;
+	require_once 'modules/tags/tags_tables_definition.php';
+	$tag = new tag_controler;
+    $tag_return_value = $tag -> get_all_tags();
+ 
+	if (count($tag_return_value) > 0){
+		foreach($tag_return_value as $tagelem)
+		{
+			array_push($arr_tmptag, array('VALUE' => $tagelem['tag_label'], 'LABEL' => $tagelem['tag_label']));
+		}
+	}
+	else
+	{
+		$arr_tmptag = '';
+	}
+    $param['tag_mu'] = array('label' => _TAG_SEARCH, 'type' => 'select_multiple', 'param' => array('field_label' => _TAG_SEARCH, 'label_title' => _CHOOSE_TAG,
+	'id' => 'tags','options' => $arr_tmptag));
+
+}
+
+
+
 //destination (department)
 if($core_tools->is_module_loaded('entities'))
 {
