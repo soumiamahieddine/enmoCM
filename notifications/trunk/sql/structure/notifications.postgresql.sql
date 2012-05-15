@@ -35,7 +35,7 @@ CREATE SEQUENCE notif_event_stack_seq
 CREATE TABLE notif_event_stack
 (
   event_stack_sid bigint NOT NULL DEFAULT nextval('notif_event_stack_seq'::regclass),
-  notif_sid bigint NOT NULL,
+  notification_sid bigint NOT NULL,
   table_name character varying(50) NOT NULL,
   record_id character varying(50) NOT NULL,
   user_id character varying(128) NOT NULL,
