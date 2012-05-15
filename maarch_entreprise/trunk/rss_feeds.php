@@ -30,7 +30,9 @@ $tables = _NOTIF_RSS_STACK_TABLE_NAME . " rss "
 	. " left join " . _NOTIF_EVENT_STACK_TABLE_NAME . " events "
 	. " on rss_event_stack_sid = event_stack_sid "
 	. " left join " . USERS_TABLE . " users "
-	. " on users.user_id=events.user_id ";
+	. " on users.user_id=events.user_id "
+	. " left join " . _NOTIFICATIONS_TABLE_NAME . " notifs "
+	. " on events.notification_sid = notifs.notification_sid ";
 $where = "rss_user_id = '".$_REQUEST['user']."'";
 	// Add date diff on exec_date VS current_date - 30
 
@@ -38,7 +40,7 @@ $query = $db->limit_select(0, 50, $select, $tables, $where);
 $db->query($query);
 while($item = $db->fetch_object()) {
     $rss_feed['guid'] = $item->rss_event_stack_sid;
-    $rss_feed['title'] = $item->event_info;
+    $rss_feed['title'] = $item->description;
     $rss_feed['link'] = $item->rss_event_url;
     $rss_feed['description'] = $item->event_info;
     $rss_feed['pubDate'] = $item->event_date;
