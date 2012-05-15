@@ -30,7 +30,8 @@
 * @version $Revision$
 */
 /*********************** TAGS ***********************************/
-if (!defined('_TAGS_DEFAULT'))  define('_TAGS_DEFAULT', 'Tag');
+if (!defined('_TAG_DEFAULT'))  define('_TAG_DEFAULT', 'Tag');
+if (!defined('_TAGS_DEFAULT'))  define('_TAGS_DEFAULT', 'Tags');
 if (!defined('_TAGS_COMMENT'))  define('_TAGS_COMMENT', 'Tags');
 if (!defined('_TAGS_COMMENT'))  define('_TAGS_COMMENT', 'Tags');
 
