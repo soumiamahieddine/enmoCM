@@ -1,6 +1,6 @@
 <?php
 /*
-*    Copyright 2008,2009,2010 Maarch
+*    Copyright 2008,2012 Maarch
 *
 *  This file is part of Maarch Framework.
 *
@@ -19,15 +19,17 @@
 */
 
 /**
-* @brief  Contains the controler of the Tag Object (create, save, modify, etc...)
-*
+* Module : Tags
+* 
+* This module is used to store ressources with any keywords
+* V: 1.0
 *
 * @file
-* @author Loic Vinet <dev@maarch.org>
+* @author Loic Vinet
 * @date $date$
 * @version $Revision$
-* @ingroup core
 */
+
 
 // To activate de debug mode of the class
 $_ENV['DEBUG'] = false;
@@ -62,7 +64,10 @@ class tag_controler
     
     public function get_all_tags()
     {
-		
+		/*
+		 * Return a complete list of tags in Maarch
+		 */
+		  
 		$return = array();
        
 
@@ -87,6 +92,10 @@ class tag_controler
     
     public function get_by_label($tag_label, $coll_id = 'letterbox_coll')
     {
+		/*
+		 * Searching a tag by label
+		 * @If tag exists, return this value, else, return false
+		 */
 		
         if (empty($tag_label) || empty($coll_id) ) {
            
@@ -112,7 +121,9 @@ class tag_controler
     
     public function get($tag_label, $coll_id, $res_id)
     {
-		
+		/*
+		 * Standard Get Object, not used at this time
+		 */
         if (empty($tag_label) || empty($coll_id) || empty($res_id)) {
             return null;
         }
@@ -132,6 +143,10 @@ class tag_controler
   
 	public function get_by_res($res_id,$coll_id)
     {
+		/*
+		 * Searching tags by a ressources
+		 * @Return : list of tags for one ressource
+		 */
 		$db = new dbquery();
 		$db->connect();
         $db->query(
@@ -153,6 +168,9 @@ class tag_controler
   
   	public function delete_this_tag($res_id,$coll_id,$tag_label)
     {
+		/*
+		 * Deleting a tag for a ressource
+		 */
 		$db = new dbquery();
 		$db->connect();
         $db->query(
@@ -173,6 +191,10 @@ class tag_controler
     }
 	
 	public function countdocs($tag_label, $coll_id){
+		/*
+		 * Count ressources for one tag : used by tags administration
+		 */
+		 
 		$db = new dbquery();
 		$db->connect();
         $db->query(
@@ -193,7 +215,10 @@ class tag_controler
 	}
 	
 	
-	
+	/*
+	 * Searching a list of ressources by label
+	 * @Return : an Array with label's ressources or 0
+	 */
 	public function getresarray_byLabel($tag_label, $coll_id){
 		$array = array();
 		
@@ -222,6 +247,10 @@ class tag_controler
 	
 	public function delete_tags($res_id,$coll_id)
     {
+		/*
+		 * Searching a tag by label
+		 * @If tag exists, return this value, else, return false
+		 */
 		$db = new dbquery();
 		$db->connect();
         $db->query(
@@ -234,6 +263,9 @@ class tag_controler
     
 	public function delete($tag_label,$coll_id)
     {
+		/*
+		 * Deleting  [REALLY] a tag for a ressource
+		 */
 		$db = new dbquery();
 		$db->connect();
         $del = $db->query(
@@ -249,6 +281,9 @@ class tag_controler
 	
 	
 	public function store($tag_label, $mode='up', $params){
+		/*
+		 * Store into the database a tag for a ressource
+		 */
 		if ($mode=='add'){
 			$new_tag_label = $params[0];
 			$coll_id = $params[1];
@@ -270,6 +305,9 @@ class tag_controler
 	
 	public function update_tag_label($new_tag_label, $old_taglabel, $coll_id)
     {
+		/*
+		 * Update in the memory [Session] the tag value for one ressource
+		 */
     	$new_tag_label = $this->control_label($new_tag_label);
 		
 		$db = new dbquery();
@@ -294,6 +332,9 @@ class tag_controler
 	
 	public function insert_tag_label($new_tag_label, $coll_id)
     {
+		/*
+		 * Add in the memory [Session] the tag value for one ressource
+		 */
 		$db = new dbquery();
 		$db->connect();
 		
@@ -317,6 +358,9 @@ class tag_controler
 	
 	public function add_this_tag($res_id,$coll_id,$tag_label)
     {
+		/*
+		 * Adding  [REALLY] a tag for a ressource
+		 */
     	
 		$tag_label = $this->control_label($tag_label);
 		
@@ -348,7 +392,7 @@ class tag_controler
 	
 	
 	public function add_this_tags_in_session($tag_label)
-    { //remplir le formulaire de session
+    { 
     
 		$ready = true;
 		if ($_SESSION['tagsuser'])

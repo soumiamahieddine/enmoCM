@@ -1,14 +1,33 @@
 <?php
+/*
+*    Copyright 2008,2012 Maarch
+*
+*  This file is part of Maarch Framework.
+*
+*   Maarch Framework is free software: you can redistribute it and/or modify
+*   it under the terms of the GNU General Public License as published by
+*   the Free Software Foundation, either version 3 of the License, or
+*   (at your option) any later version.
+*
+*   Maarch Framework is distributed in the hope that it will be useful,
+*   but WITHOUT ANY WARRANTY; without even the implied warranty of
+*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*   GNU General Public License for more details.
+*
+*   You should have received a copy of the GNU General Public License
+*    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 /**
-* File : autocomplete_folders.php
+* Module : Tags
+* 
+* This module is used to store ressources with any keywords
+* V: 1.0
 *
-* Autocompletion list on market or project
-*
-* @package  maarch
-* @version 1
-* @since 10/2005
-* @license GPL v3
-* @author  Loïc Vinet  <dev@maarch.org>
+* @file
+* @author Loic Vinet
+* @date $date$
+* @version $Revision$
 */
 require_once("core/class/class_db.php");
 require_once("modules/tags/tags_tables_definition.php");

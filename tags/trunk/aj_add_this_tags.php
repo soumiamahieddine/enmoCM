@@ -1,6 +1,6 @@
 <?php
 /*
-*    Copyright 2008,2009 Maarch
+*    Copyright 2008,2012 Maarch
 *
 *  This file is part of Maarch Framework.
 *
@@ -16,16 +16,23 @@
 *
 *   You should have received a copy of the GNU General Public License
 *    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
-* File : aj_add_this_tag.php
-*
-* Script called by an ajax object to delete jonction on a ressource and a tag
-*
-* @package  maarch
-* @version 1
-* @since 10/2005
-* @license GPL v3
-* @author Loic Vinet  <dev@maarch.org>
 */
+
+/**
+* Module : Tags
+* 
+* This module is used to store ressources with any keywords
+* V: 1.0
+*
+* @file
+* @author Loic Vinet
+* @date $date$
+* @version $Revision$
+* 
+* 
+* Ajout d'un tag sur la ressource
+*/
+
 
 try{
     require_once 'core/class/ActionControler.php';

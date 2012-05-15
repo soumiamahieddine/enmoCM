@@ -1,6 +1,6 @@
 <?php
 /*
-*    Copyright 2008,2009 Maarch
+*    Copyright 2008,2012 Maarch
 *
 *  This file is part of Maarch Framework.
 *
@@ -19,14 +19,17 @@
 */
 
 /**
-*
+* Module : Tags
+* 
+* This module is used to store ressources with any keywords
+* V: 1.0
 *
 * @file
-* @author Loic Vinet <dev@maarch.org>
+* @author Loic Vinet
 * @date $date$
 * @version $Revision$
-* @ingroup admin
 */
+
 
 try{
     require_once 'core/class/ObjectControlerAbstract.php';
