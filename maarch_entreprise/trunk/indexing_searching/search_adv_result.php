@@ -304,6 +304,14 @@ if (count($_REQUEST['meta']) > 0) {
                     $where_request .= " 1=-1 and ";
                 }
             }
+            // TAGS
+            elseif ($tab_id_fields[$j] == 'tags_chosen' && !empty($_REQUEST['tags_chosen']))
+            {
+                include_once("modules".DIRECTORY_SEPARATOR."tags".
+                   DIRECTORY_SEPARATOR."tags_search.php");				
+            }
+            
+
             //WELCOME PAGE
             elseif ($tab_id_fields[$j] == 'welcome'  && (!empty($_REQUEST['welcome'])))
             {
