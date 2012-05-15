@@ -2,14 +2,9 @@
     <div class="titleBlock">
         <h2 onClick="slide('prerequisites');" style="cursor: pointer;">
             <?php echo _PREREQUISITES; ?>
-            <div id = "titleLink">
-            <a href="http://www.maarch.org/projets/entreprise/architecture-technique-et-prerequis-pour-maarch-entreprise-1.3">
-				<?php echo _LINK;?>
-			</a> 
-			</div>
         </h2>
         <h6>
-			<i><?php echo _PREREQUISITES_EXP; ?></i>
+			<div id="titleLink"><?php echo _PREREQUISITES_EXP; ?></div>
 			<br/>
 			<img src="img/green_light.png" width="10px"/><?php echo _ACTIVATED; ?>
 			<img src="img/orange_light.png"  width="10px"/><?php echo _OPTIONNAL; ?>
