@@ -81,4 +81,3 @@ if (!defined('_CHOOSE_TAG'))  define('_CHOOSE_TAG', 'Choose tags');
 if (!defined('_TAG_SEARCH'))  define('_TAG_SEARCH', 'Tags');
 if (!defined('_TAGNONE'))  define('_TAGNONE', 'None');
 ?>
-
