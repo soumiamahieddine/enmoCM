@@ -63,6 +63,7 @@ while ($state <> 'END') {
 		foreach($events as $event) {
 			$logger->write("Getting recipients using diffusion type '" .$notification->diffusion_type . "'", 'INFO');
 			// Diffusion type specific recipients
+			$recipients = array();
 			$recipients = $diffusion_type_controler->getRecipients($notification, $event);
 			$nbRecipients = count($recipients);
 			if ($nbRecipients === 0) {
@@ -74,8 +75,8 @@ while ($state <> 'END') {
 					$user_id = $recipient->user_id;
 					if(!isset($tmpNotifs[$user_id])) {
 						$tmpNotifs[$user_id]['recipient'] = $recipient;
-						$logger->write('Checking if attachment required for ' . $user_id, 'INFO');
 						$tmpNotifs[$user_id]['attach'] = $diffusion_type_controler->getAttachFor($notification, $user_id);
+						$logger->write('Checking if attachment required for ' . $user_id . ': ' . $tmpNotifs[$user_id]['attach'], 'INFO');
 					}
 					$tmpNotifs[$user_id]['events'][] = $event;
 				}
@@ -135,7 +136,9 @@ while ($state <> 'END') {
 				$logger->write('Adding attachments', 'INFO');
 				foreach($tmpNotif['events'] as $event) {
 					// Check if event is related to document in collection
-					if($event->table_name === $coll_table || $event->table_name === $coll_view) {
+					$logger->write('Checking table/view of event VS config:' 
+						. $event->table_name . ' ?= ' . $coll_view . ' or ' . $coll_table, 'INFO');
+					if($event->table_name == $coll_table || $event->table_name == $coll_view) {
 						$query = "SELECT "
 							. "ds.path_template ,"
 							. "mlb.path, "
