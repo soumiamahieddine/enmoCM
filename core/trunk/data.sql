@@ -440,146 +440,10 @@ INSERT INTO parameters (id, param_value_string, param_value_int) VALUES
 ('postindexing_workbatch', NULL, 40),
 ('database_version', NULL, 130);
 
-INSERT INTO templates (template_id, template_label, template_comment, template_content) VALUES (2, 'AR_MAARCH', 'Accusé de réception Maarch', '<p style="TEXT-ALIGN: left"><img src="img/default_maarch.gif" alt="" width="278" height="80" />&nbsp;</p>
-<p><em><font face="Arial Black" size="2" color="#3366ff">La gestion de courriers Open source !</font></em><br />Mail : info@maarch.org<br />Web : http://www.maarch.org</p>
-<p style="TEXT-ALIGN: right"><font size="2">Nanterre, le [NOW]</font></p>
-<p><font size="2">Cher&nbsp;&nbsp;[CONTACT_LASTNAME]</font></p>
-<p><font size="2">Nous accusons r&eacute;ception de votre courrier du <strong>BLABLA</strong>, et mettons tout en oeuvre pour vous r&eacute;pondre dans les plus brefs d&eacute;lais.</font></p>
-<p><font size="2">Sachez qu''en cas de besoin urgent nos bureaux sont ouverts de 8h00 &agrave; 15h00, du lundi au samedi.</font></p>
-<p><font size="2">Le num&eacute;ro vert o&ugrave; vous pouvez nous appeler est le 0800 455 24.</font></p>
-<p><font size="2">Votre n&deg; de dossier &agrave; rappeler dans toute correspondance est le : [CHRONO]</font></p>
-<p>&nbsp;</p>
-<p><font size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Cordialement,</font></p>
-<p><font size="2"><em>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [CURRENT_USER_FIRSTNAME] [CURRENT_USER_LASTNAME]<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [DESTINATION]<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; T&eacute;l : [CURRENT_USER_PHONE]<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Courriel : [CURRENT_USER_EMAIL]</em></font></p>
-<p>&nbsp;</p>');
-INSERT INTO templates (template_id, template_label, template_comment, template_content) VALUES (1, 'TEST', 'Test des mots-clés', '<h1>Liste des mots-cl&eacute;s utilisables dans les mod&egrave;les de reponse</h1>
-<p>&nbsp;</p>
-<table border="0">
-<tbody>
-<tr>
-<td><font size="2">Contact externe: Civilit&eacute;&nbsp;</font></td>
-<td><strong><font size="2">[CONTACT_TITLE]</font></strong></td>
-</tr>
-<tr>
-<td><font size="2">Contact externe: Nom</font></td>
-<td><strong><font size="2">[CONTACT_LASTNAME]</font></strong></td>
-</tr>
-<tr>
-<td><font size="2">Contact externe: Pr&eacute;nom</font></td>
-<td><strong><font size="2">[CONTACT_FIRSTNAME]</font></strong></td>
-</tr>
-<tr>
-<td><font size="2">Contact externe : Organisation</font></td>
-<td><strong><font size="2">[CONTACT_SOCIETY]</font></strong></td>
-</tr>
-<tr>
-<td><font size="2">Contact externe : Adresse N&deg;</font></td>
-<td><strong><font size="2">[CONTACT_ADRS_NUM]</font></strong></td>
-</tr>
-<tr>
-<td><font size="2">Contact externe : Adresse Rue</font></td>
-<td><strong><font size="2">[CONTACT_ADRS_STREET]</font></strong></td>
-</tr>
-<tr>
-<td><font size="2">Contact externe : Adresse Complement</font></td>
-<td><strong><font size="2">[CONTACT_ADRS_COMP]</font></strong></td>
-</tr>
-<tr>
-<td><font size="2">Contact externe : Adresse Ville</font></td>
-<td><strong><font size="2">[CONTACT_ADRS_TOWN]</font></strong></td>
-</tr>
-<tr>
-<td><font size="2">Contact externe : Adresse CP</font></td>
-<td><strong><font size="2">[CONTACT_ADRS_PC]</font></strong></td>
-</tr>
-<tr>
-<td><font size="2">Contact externe : Adresse Pays</font></td>
-<td><strong><font size="2">[CONTACT_ADRS_COUNTRY]</font></strong></td>
-</tr>
-<tr>
-<td><font size="2">Contact interne: Nom</font></td>
-<td><strong><font size="2">[USER_LASTNAME]</font></strong></td>
-</tr>
-<tr>
-<td><font size="2">Contact interne: Pr&eacute;nom</font></td>
-<td><strong><font size="2">[USER_FIRSTNAME]</font></strong></td>
-</tr>
-<tr>
-<td><font size="2">Courrier: Service Traitant</font></td>
-<td><strong><font size="2">[DESTINATION]</font></strong></td>
-</tr>
-<tr>
-<td><font size="2">Courrier: Type de document</font></td>
-<td><strong><font size="2">[DOCTYPE]</font></strong></td>
-</tr>
-<tr>
-<td><font size="2">Courrier: Cat&eacute;gorie</font></td>
-<td><strong><font size="2">[CAT_ID]</font></strong></td>
-</tr>
-<tr>
-<td><font size="2">Courrier: Nature</font></td>
-<td><strong><font size="2">[NATURE]</font></strong></td>
-</tr>
-<tr>
-<td><font size="2">Courrier: Date d''arriv&eacute;e&nbsp;&nbsp;</font></td>
-<td><strong><font size="2">[ADMISSION_DATE]</font></strong></td>
-</tr>
-<tr>
-<td><font size="2">Courrier: Date du courrier&nbsp;&nbsp;</font></td>
-<td><strong><font size="2">[DOC_DATE]</font></strong></td>
-</tr>
-<tr>
-<td><font size="2">Courrier: Date limite de traitement&nbsp;&nbsp;</font></td>
-<td><strong><font size="2">[PROCESS_LIMIT_DATE]</font></strong></td>
-</tr>
-<tr>
-<td><font size="2">Courrier: Notes de traitement&nbsp;&nbsp;</font></td>
-<td><strong><font size="2">[PROCESS_NOTES]</font></strong></td>
-</tr>
-<tr>
-<td><font size="2">Courrier: Date de cl&ocirc;ture&nbsp;&nbsp;</font></td>
-<td><strong><font size="2">[CLOSING_DATE]</font></strong></td>
-</tr>
-<tr>
-<td><font size="2">Courrier: Objet</font></td>
-<td><strong><font size="2">[SUBJECT]</font></strong></td>
-</tr>
-<tr>
-<td><font size="2">Courrier: Num&eacute;ro chrono</font></td>
-<td><strong><font size="2">[CHRONO]</font></strong></td>
-</tr>
-<tr>
-<td><font size="2">Document: Auteur</font></td>
-<td><strong><font size="2">[AUTHOR]</font></strong></td>
-</tr>
-<tr>
-<td><font size="2">Document: Date d''enregistrement</font></td>
-<td><strong><font size="2">[CREATION_DATE]</font></strong></td>
-</tr>
-<tr>
-<td><font size="2">Sp&eacute;cial: Date du jour</font></td>
-<td><strong><font size="2">[NOW]</font></strong></td>
-</tr>
-<tr>
-<td><font size="2">Sp&eacute;cial: Nom du destinataire traitant</font></td>
-<td><strong><font size="2">[CURRENT_USER_LASTNAME]</font></strong></td>
-</tr>
-<tr>
-<td><font size="2">Sp&eacute;cial: Pr&eacute;nom du destinataire traitant</font></td>
-<td><strong><font size="2">[CURRENT_USER_FIRSTNAME]</font></strong></td>
-</tr>
-<tr>
-<td><font size="2">Sp&eacute;cial: T&eacute;l&eacute;phone du destinataire traitant</font></td>
-<td><strong><font size="2">[CURRENT_USER_PHONE]</font></strong></td>
-</tr>
-<tr>
-<td><font size="2">Sp&eacute;cial: Mail du destinataire traitant</font></td>
-<td><strong><font size="2">[CURRENT_USER_EMAIL]</font></strong></td>
-</tr>
-</tbody>
-</table>
-<p><font size="2">&nbsp;</font></p>');
-INSERT INTO templates (template_id, template_label, template_comment, template_content) VALUES (3, 'AppelTel', 'Appel téléphonique', '<p><font size="\\&quot;5\\&quot;"><strong>APPEL TELEPHONIQUE</strong></font></p>
+
+INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource) 
+VALUES (3, 'AppelTel', 'Appel téléphonique', 
+'<p><font size="\\&quot;5\\&quot;"><strong>APPEL TELEPHONIQUE</strong></font></p>
 <p><font size="\\&quot;2\\&quot;">Bonjour,</font></p>
 <p><font size="\\&quot;2\\&quot;">Vous avez re&ccedil;u un appel t&eacute;l&eacute;phonique dont voici les informations :</font></p>
 <ul>
@@ -588,18 +452,57 @@ INSERT INTO templates (template_id, template_label, template_comment, template_c
 <li><font size="\\&quot;2\\&quot;">Soci&eacute;t&eacute; :</font></li>
 <li><font size="\\&quot;2\\&quot;">Contact :</font></li>
 </ul>
-<p><font size="\\&quot;2\\&quot;">Notes : </font></p>');
-INSERT INTO templates (template_id, template_label, template_comment, template_content) VALUES (20, 'Notifications événement', 'Test des notifications événements système', '<p>{#translate._HELLO} {#mergefield.recipient.firstname} {#mergefield.recipient.lastname},</p>
-<p>&nbsp;</p>
-<p>Voici la liste des &eacute;v&eacute;nements {#mergefield.template_association.description} :</p>
-<p>&nbsp;</p>
-<p>{#mergetable.evenements}</p>');
-INSERT INTO templates (template_id, template_label, template_comment, template_content) VALUES (21, 'Diffusion de courrier', 'Notification de diffusion de courrier', '<p>Bonjour {#mergefield.recipient.firstname} {#mergefield.recipient.lastname},</p>
-<p>&nbsp;</p>
-<p>Voici la liste des courriers qui vous ont &eacute;t&eacute; envoy&eacute;s :</p>
-<p>&nbsp;</p>
-<p>{#mergetable.courriers}</p>
-<p>&nbsp;</p>');
+<p><font size="\\&quot;2\\&quot;">Notes : </font></p>',
+'HTML', NULL, NULL, '', '');
+INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource) 
+VALUES (1, 'Diffusion de courrier', 'Notification de diffusion de courrier', 
+'<p><font face="verdana,geneva" size="2">Bonjour [recipient.firstname] [recipient.lastname],</font></p>
+<p><font face="verdana,geneva" size="2"> </font></p>
+<p><font face="verdana,geneva" size="2">Voici la liste des nouveaux courriers qui vous ont &eacute###t&eacute### envoy&eacute###s :</font></p>
+<table style="width: 800px### height: 44px###" border="0" cellspacing="1" cellpadding="1">
+<tbody>
+<tr>
+<td style="width: 20px### background-color: #0099ff###"><font size="2" color="#FFFFFF"><strong>Num</strong></font></td>
+<td style="width: 150px### background-color: #0099ff###"><font size="2" color="#FFFFFF"><strong>Date</strong></font></td>
+<td style="width: 200px### background-color: #0099ff###"><font size="2" color="#FFFFFF"><strong>Objet</strong></font></td>
+<td style="width: 150px### background-color: #0099ff###"><font size="2" color="#FFFFFF"><strong>Type</strong></font></td>
+<td style="width: 80px### background-color: #0099ff###"><font color="#FFFFFF"><font size="2"><strong>Contact</strong></font></font></td>
+<td style="width: 20px### background-color: #0099ff###"><font size="2" color="#FFFFFF"><strong>Liens</strong></font></td>
+</tr>
+<tr>
+<td><font face="verdana,geneva" size="2">[res_letterbox.# ###frm=0000]</font></td>
+<td><font face="verdana,geneva" size="2">[res_letterbox.doc_date###block=tr###frm=dd/mm/yyyy]</font></td>
+<td><font face="verdana,geneva" size="2">[res_letterbox.subject]</font></td>
+<td><font face="verdana,geneva" size="2">[res_letterbox.type_label]</font></td>
+<td><font face="verdana,geneva" size="2">[res_letterbox.contact_society][res_letterbox.contact_firstname][res_letterbox.contact_lastname]</font></td>
+<td><a href="[res_letterbox.linktodetail]" name="detail"><img src="[images.imgdetail]" alt="detail" width="16" height="15" /></a><a href="[res_letterbox.linktodoc]" name="doc"><img src="[images.imgdoc]" alt="doc" width="16" height="15" /></a></td>
+</tr>
+</tbody>
+</table>', 'HTML', NULL, NULL, '', 'letterbox_events');
+INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource) 
+VALUES (2, 'Notifications événement', 'Notifications des événements système', 
+'<p><font face="verdana,geneva" size="1">Bonjour [recipient.firstname] [recipient.lastname],</font></p>
+<p><font face="verdana,geneva" size="1"> </font></p>
+<p><font face="verdana,geneva" size="1">Voici la liste des &eacute###v&eacute###nements de l''application qui vous sont notifi&eacute###s ([notification.description]) :</font></p>
+<table style="width: 800px### height: 36px###" border="0" cellspacing="1" cellpadding="1">
+<tbody>
+<tr>
+<td style="width: 150px### background-color: #0099ff###"><font face="verdana,geneva" size="1"><strong><font color="#FFFFFF">Date</font></strong></font></td>
+<td style="width: 150px### background-color: #0099ff###"><font face="verdana,geneva" size="1"><strong><font color="#FFFFFF">Utilisateur </font></strong></font><font face="verdana,geneva" size="1"><strong></strong></font></td>
+<td style="width: 500px### background-color: #0099ff###"><font face="verdana,geneva" size="1"><strong><font color="#FFFFFF">Description</font></strong></font></td>
+</tr>
+<tr>
+<td><font face="verdana,geneva" size="1">[events.event_date###block=tr###frm=dd/mm/yyyy hh:nn:ss]</font></td>
+<td><font face="verdana,geneva" size="1">[events.user_id]</font></td>
+<td><font face="verdana,geneva" size="1">[events.event_info]</font></td>
+</tr>
+</tbody>
+</table>', 
+'HTML', NULL, NULL, '', 'notif_events');
+
+
+INSERT INTO notifications (notification_sid, notification_id, description, event_id, notification_mode, template_id, diffusion_type, diffusion_properties, attachfor_type, attachfor_properties, rss_url_template) VALUES (1, 'INDEX_DEST', 'Indexation de nouveau document', '21', 'EMAIL', 1, 'dest_user', '', '', '', '			http://localhost/maarch_trunk/apps/maarch_entreprise/index.php?page=users_management_controler&mode=up&admin=users&id=$1');
+INSERT INTO notifications (notification_sid, notification_id, description, event_id, notification_mode, template_id, diffusion_type, diffusion_properties, attachfor_type, attachfor_properties, rss_url_template) VALUES (2, 'USERS', 'Actions sur les utilisateurs de l''application', 'users%', 'EMAIL', 2, 'user', 'superadmin', '', '', '			http://localhost/maarch_trunk');
 
 
 
@@ -609,20 +512,20 @@ INSERT INTO templates (template_id, template_label, template_comment, template_c
 -- Data for Name: templates_association; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO templates_association (template_id, what, value_field, system_id, maarch_module) VALUES (2, 'destination', 'EQ1', 1, 'entities');
-INSERT INTO templates_association (template_id, what, value_field, system_id, maarch_module) VALUES (1, 'destination', 'DIR', 2, 'entities');
-INSERT INTO templates_association (template_id, what, value_field, system_id, maarch_module) VALUES (1, 'destination', 'OPE', 3, 'entities');
-INSERT INTO templates_association (template_id, what, value_field, system_id, maarch_module) VALUES (1, 'destination', 'FIN', 4, 'entities');
-INSERT INTO templates_association (template_id, what, value_field, system_id, maarch_module) VALUES (1, 'destination', 'DRH', 5, 'entities');
-INSERT INTO templates_association (template_id, what, value_field, system_id, maarch_module) VALUES (1, 'destination', 'SLS', 6, 'entities');
-INSERT INTO templates_association (template_id, what, value_field, system_id, maarch_module) VALUES (1, 'destination', 'MNG', 7, 'entities');
-INSERT INTO templates_association (template_id, what, value_field, system_id, maarch_module) VALUES (1, 'destination', 'ITI', 8, 'entities');
-INSERT INTO templates_association (template_id, what, value_field, system_id, maarch_module) VALUES (1, 'destination', 'COU', 9, 'entities');
-INSERT INTO templates_association (template_id, what, value_field, system_id, maarch_module) VALUES (1, 'destination', 'ACC', 10, 'entities');
-INSERT INTO templates_association (template_id, what, value_field, system_id, maarch_module) VALUES (1, 'destination', 'EQ1', 11, 'entities');
-INSERT INTO templates_association (template_id, what, value_field, system_id, maarch_module) VALUES (1, 'destination', 'EQ2', 12, 'entities');
-INSERT INTO templates_association (template_id, what, value_field, system_id, maarch_module) VALUES (1, 'destination', 'COR', 13, 'entities');
-INSERT INTO templates_association (template_id, what, value_field, system_id, maarch_module) VALUES (2, 'destination', 'MNG', 14, 'entities');
+INSERT INTO templates_association (template_id, what, value_field, system_id, maarch_module) VALUES (3, 'destination', 'EQ1', 1, 'entities');
+INSERT INTO templates_association (template_id, what, value_field, system_id, maarch_module) VALUES (3, 'destination', 'DIR', 2, 'entities');
+INSERT INTO templates_association (template_id, what, value_field, system_id, maarch_module) VALUES (3, 'destination', 'OPE', 3, 'entities');
+INSERT INTO templates_association (template_id, what, value_field, system_id, maarch_module) VALUES (3, 'destination', 'FIN', 4, 'entities');
+INSERT INTO templates_association (template_id, what, value_field, system_id, maarch_module) VALUES (3, 'destination', 'DRH', 5, 'entities');
+INSERT INTO templates_association (template_id, what, value_field, system_id, maarch_module) VALUES (3, 'destination', 'SLS', 6, 'entities');
+INSERT INTO templates_association (template_id, what, value_field, system_id, maarch_module) VALUES (3, 'destination', 'MNG', 7, 'entities');
+INSERT INTO templates_association (template_id, what, value_field, system_id, maarch_module) VALUES (3, 'destination', 'ITI', 8, 'entities');
+INSERT INTO templates_association (template_id, what, value_field, system_id, maarch_module) VALUES (3, 'destination', 'COU', 9, 'entities');
+INSERT INTO templates_association (template_id, what, value_field, system_id, maarch_module) VALUES (3, 'destination', 'ACC', 10, 'entities');
+INSERT INTO templates_association (template_id, what, value_field, system_id, maarch_module) VALUES (3, 'destination', 'EQ1', 11, 'entities');
+INSERT INTO templates_association (template_id, what, value_field, system_id, maarch_module) VALUES (3, 'destination', 'EQ2', 12, 'entities');
+INSERT INTO templates_association (template_id, what, value_field, system_id, maarch_module) VALUES (3, 'destination', 'COR', 13, 'entities');
+INSERT INTO templates_association (template_id, what, value_field, system_id, maarch_module) VALUES (3, 'destination', 'MNG', 14, 'entities');
 INSERT INTO templates_association (template_id, what, value_field, system_id, maarch_module) VALUES (3, 'destination', 'COU', 15, 'entities');
 
 
