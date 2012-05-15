@@ -17,7 +17,7 @@
         <applicationname>MEP 1.3</applicationname>
         <defaultPage>welcome</defaultPage>
         <exportdirectory></exportdirectory>
-        <CookieTime>60</CookieTime> <!-- minutes -->
+        <CookieTime>20</CookieTime> <!-- minutes -->
         <ldap>false</ldap> <!-- if true, ldap authentification, see ldap xml config file -->
         <userdefaultpassword>maarch</userdefaultpassword> <!-- default user's password -->
     </CONFIG>
