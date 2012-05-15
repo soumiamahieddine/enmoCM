@@ -82,4 +82,3 @@ if (!defined('_TAG_SEARCH'))  define('_TAG_SEARCH', 'Tags');
 if (!defined('_TAGNONE'))  define('_TAGNONE', 'None');
 ?>
 
-?>
