@@ -110,6 +110,10 @@ if (!defined('_DOCSERVER_ROOT')) {
 if (!defined('_CREATE_DOCSERVERS')) {
     define('_CREATE_DOCSERVERS', "Validate");
 }
+if (!defined('_MUST_CHOOSE_DOCSERVERS_ROOT')) {
+    define('_MUST_CHOOSE_DOCSERVERS_ROOT', "You must choose the docservers root directory");
+}
+
 
 //DATABASE
 if (!defined('_DATABASE')) {
@@ -122,6 +126,12 @@ if (!defined('_DATABASE_EXP')) {
     define('_DATABASE_EXP', "Maarch uses as a standard PostgreSQL engine (Version 8.3 ou more - advised : version 9). Type in server name, port #, user and password to the database.");
 }
 
+if (!defined('_DATABASE_INFOS')) {
+    define('_DATABASE_INFOS', "Connection to database");
+}
+if (!defined('_DATABASE_CREATE')) {
+    define('_DATABASE_CREATE', "Create database");
+}
 if (!defined('_DATABASESERVER')) {
     define('_DATABASESERVER', "Server");
 }
@@ -202,7 +212,6 @@ if (!defined('_NEXT')) {
 }
 
 
-
-
-
-
+if (!defined('_ONE_FIELD_EMPTY')) {
+    define('_ONE_FIELD_EMPTY', "You must fill all the fields");
+}

@@ -1,14 +1,42 @@
+<script>
+    function createDocservers(
+        docserverRoot
+    )
+    {
+        $(document).ready(function() {
+            var oneIsEmpty = false;
+            if (docserverRoot.length < 1) {
+                var oneIsEmpty = true;
+            }
+
+            if (oneIsEmpty) {
+                $('#ajaxReturn_createDocservers_ko').html('<?php echo _MUST_CHOOSE_DOCSERVERS_ROOT; ?>');
+                $('#ajaxReturn_createDocservers_button').css('display', 'block');
+                return;
+            }
+            $('#ajaxReturn_createDocservers_ko').html('');
+
+            ajaxDB(
+                'docservers',
+                  'docserverRoot|'+docserverRoot,
+                'ajaxReturn_createDocservers',
+                'false'
+            );
+
+        });
+    }
+</script>
 <div class="blockWrapper">
     <div class="titleBlock">
         <h2 onClick="slide('docservers');" style="cursor: pointer;">
             <?php echo _DOCSERVERS; ?>
         </h2>
-        <h6>
-			<?php echo _DOCSERVERS_EXP; ?>
-        </h6>
     </div>
     <div class="contentBlock" id="docservers">
         <p>
+            <h6>
+                <?php echo _DOCSERVERS_EXP; ?>
+            </h6>
             <form>
                 <table>
                     <tr>

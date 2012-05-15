@@ -92,31 +92,7 @@ function goTo(
 
 
 /* createDocservers.js */
-function createDocservers(
-    docserverRoot
-)
-{
-    $(document).ready(function() {
-        var oneIsEmpty = false;
-        if (docserverRoot.length < 1) {
-            var oneIsEmpty = true;
-        }
 
-        if (oneIsEmpty) {
-            $('#ajaxReturn_createDocservers_ko').html('Vous devez choisir l\'emplacement racine de vos docservers');
-            return;
-        }
-        $('#ajaxReturn_createDocservers_ko').html('');
-
-        ajaxDB(
-            'docservers',
-              'docserverRoot|'+docserverRoot,
-            'ajaxReturn_createDocservers',
-            'false'
-        );
-
-    });
-}
 
 
 /* checkForm.js */
@@ -135,36 +111,7 @@ function checkLanguage(
 
 
 /* checkCreateDB.js */
-function checkCreateDB(
-    databasename,
-    action
-)
-{
-    $(document).ready(function() {
-        var oneIsEmpty = false;
-        if (databasename.length < 1) {
-            var oneIsEmpty = true;
-        }
-        if (action.length < 1) {
-            var oneIsEmpty = true;
-        }
 
-        if (oneIsEmpty) {
-            $('#ajaxReturn_createDB_ko').html('Choisissez un nom pour la base de donnée');
-            return;
-        }
-        $('.wait').css('display','block');
-        $('#ajaxReturn_createDB_ko').html('');
-
-        ajaxDB(
-            'database',
-              'databasename|'+databasename
-              +'|action|'+action,
-            'ajaxReturn_createDB',
-            'false'
-        );
-    });
-}
 
 
 /* checkLanguage.js */
@@ -183,25 +130,7 @@ function checkLanguage(
 
 
 /* checkDataDB.js */
-function checkDataDB(
-    value
-)
-{
-    $(document).ready(function() {
-        if (value != 'default') {
-            if (value == 'data') {
-                $('#returnCheckDataClassic').css("display","block");
-                $('#returnCheckDataMlb').css("display","none");
-            } else if (value == 'data_mlb') {
-                $('#returnCheckDataClassic').css("display","none");
-                $('#returnCheckDataMlb').css("display","block");
-            }
-        } else {
-            $('#returnCheckDataClassic').css("display","none");
-            $('#returnCheckDataMlb').css("display","none");
-        }
-    });
-}
+
 
 
 /* slide.js */
@@ -229,57 +158,7 @@ function checkLicence()
 
 
 /* checkDatabaseInfo.js */
-function checkDatabaseInfo(
-    databaseserver,
-    databaseserverport,
-    databaseuser,
-    databasepassword,
-    databasetype,
-    action
-)
-{
-    $(document).ready(function() {
-        var oneIsEmpty = false;
-        if (databaseserver.length < 1) {
-            var oneIsEmpty = true;
-        }
-        if (databaseserverport.length < 1) {
-            var oneIsEmpty = true;
-        }
-        if (databaseuser.length < 1) {
-            var oneIsEmpty = true;
-        }
-        if (databasepassword.length < 1) {
-            var oneIsEmpty = true;
-        }
-        if (databasetype.length < 1) {
-            var oneIsEmpty = true;
-        }
-        if (action.length < 1) {
-            var oneIsEmpty = true;
-        }
 
-        if (oneIsEmpty) {
-            $('#ajaxReturn_testConnect_ko').html('au moins un champ mal rempli');
-            return;
-        }
-        $('.wait').css('display','block');
-        $('#ajaxReturn_testConnect_ko').html('');
-
-        ajaxDB(
-            'database',
-              'databaseserver|'+databaseserver
-              +'|databaseserverport|'+databaseserverport
-              +'|databaseuser|'+databaseuser
-              +'|databasepassword|'+databasepassword
-              +'|databasetype|'+databasetype
-              +'|action|'+action,
-            'ajaxReturn_testConnect',
-            'false'
-        );
-
-    });
-}
 
 
 /* ajaxDB.js */
@@ -369,35 +248,6 @@ function minHeightOfSection()
 
 
 /* checkLoadDatas.js */
-function checkLoadDatas(
-    dataFilename,
-    action
-)
-{
-    $(document).ready(function() {
-        var oneIsEmpty = false;
-        if (dataFilename.length < 1) {
-            var oneIsEmpty = true;
-        }
-        if (action.length < 1) {
-            var oneIsEmpty = true;
-        }
 
-        if (oneIsEmpty) {
-            $('#ajaxReturn_loadDatas_ko').html('Sélécionner le fichier de datas à importer');
-            return;
-        }
-        $('.wait').css('display','block');
-        $('#ajaxReturn_loadDatas_ok').html('');
-
-        ajaxDB(
-            'database',
-              'dataFilename|'+dataFilename
-              +'|action|'+action,
-            'ajaxReturn_loadDatas',
-            'false'
-        );
-    });
-}
 
 

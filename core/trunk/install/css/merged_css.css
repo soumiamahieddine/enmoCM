@@ -278,6 +278,13 @@
     padding-right: 15px;
     text-align: justify;
 }
+#fullWrapper #section .blockWrapper .contentBlock h6 {
+    padding-top: 0;
+    padding-bottom: 0;
+    padding-left: 15px;
+    padding-right: 15px;
+    text-align: justify;
+}
 
 #fullWrapper #section .blockWrapper .contentBlock .previousButton {
     position: relative;

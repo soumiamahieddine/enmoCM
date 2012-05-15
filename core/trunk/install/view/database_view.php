@@ -1,3 +1,131 @@
+<script>
+    function checkDatabaseInfo(
+        databaseserver,
+        databaseserverport,
+        databaseuser,
+        databasepassword,
+        databasetype,
+        action
+    )
+    {
+        $(document).ready(function() {
+            var oneIsEmpty = false;
+            if (databaseserver.length < 1) {
+                var oneIsEmpty = true;
+            }
+            if (databaseserverport.length < 1) {
+                var oneIsEmpty = true;
+            }
+            if (databaseuser.length < 1) {
+                var oneIsEmpty = true;
+            }
+            if (databasepassword.length < 1) {
+                var oneIsEmpty = true;
+            }
+            if (databasetype.length < 1) {
+                var oneIsEmpty = true;
+            }
+            if (action.length < 1) {
+                var oneIsEmpty = true;
+            }
+
+            if (oneIsEmpty) {
+                $('#ajaxReturn_testConnect_ko').html('<?php echo _ONE_FIELD_EMPTY; ?>');
+                return;
+            }
+            $('.wait').css('display','block');
+            $('#ajaxReturn_testConnect_ko').html('');
+
+            ajaxDB(
+                'database',
+                  'databaseserver|'+databaseserver
+                  +'|databaseserverport|'+databaseserverport
+                  +'|databaseuser|'+databaseuser
+                  +'|databasepassword|'+databasepassword
+                  +'|databasetype|'+databasetype
+                  +'|action|'+action,
+                'ajaxReturn_testConnect',
+                'false'
+            );
+
+        });
+    }
+
+    function checkCreateDB(
+        databasename,
+        action
+    )
+    {
+        $(document).ready(function() {
+            var oneIsEmpty = false;
+            if (databasename.length < 1) {
+                var oneIsEmpty = true;
+            }
+            if (action.length < 1) {
+                var oneIsEmpty = true;
+            }
+
+            if (oneIsEmpty) {
+                $('#ajaxReturn_createDB_ko').html('<?php echo _CHOOSE_A_NAME_FOR_DB; ?>');
+                return;
+            }
+            $('.wait').css('display','block');
+            $('#ajaxReturn_createDB_ko').html('');
+
+            ajaxDB(
+                'database',
+                  'databasename|'+databasename
+                  +'|action|'+action,
+                'ajaxReturn_createDB',
+                'false'
+            );
+        });
+    }
+
+    function checkDataDB(
+        value
+    )
+    {
+        $(document).ready(function() {
+            if (value != 'default') {
+                $('#okDatas').css('display','block');
+            } else {
+                $('#okDatas').css('display','none');
+            }
+        });
+    }
+
+    function checkLoadDatas(
+        dataFilename,
+        action
+    )
+    {
+        $(document).ready(function() {
+            var oneIsEmpty = false;
+            if (dataFilename.length < 1) {
+                var oneIsEmpty = true;
+            }
+            if (action.length < 1) {
+                var oneIsEmpty = true;
+            }
+
+            if (oneIsEmpty) {
+                $('#ajaxReturn_loadDatas_ko').html('<?php echo _CHOOSE_DATASET_TO_IMPORT; ?>');
+                return;
+            }
+            $('.wait').css('display','block');
+            $('#ajaxReturn_loadDatas_ok').html('');
+
+            ajaxDB(
+                'database',
+                  'dataFilename|'+dataFilename
+                  +'|action|'+action,
+                'ajaxReturn_loadDatas',
+                'false'
+            );
+        });
+    }
+</script>
 <div class="ajaxReturn_testConnect">
     <div class="blockWrapper">
         <div class="titleBlock">
@@ -205,7 +333,7 @@
                             <td></td>
                             <td></td>
                             <td>
-                                <input type="button" onclick="$('.wait').css('display','block');checkLoadDatas($('#dataFilename').val(), 'loadDatas');" value="Charger les données" />
+                                <input type="button" onclick="$('.wait').css('display','block');checkLoadDatas($('#dataFilename').val(), 'loadDatas');" value="Charger les données" style="display: none;" id="okDatas"/>
                             </td>
                             <td></td>
                         </tr>
