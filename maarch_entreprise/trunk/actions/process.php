@@ -437,14 +437,29 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 
     //NOTES
     if ($core_tools->is_module_loaded('notes')) {
+
+		$dbId = new dbquery();
+        $dbId->connect();
+		$db = new dbquery();
+        $db->connect();
+        $dbId->query("select id, identifier, user_id, date_note, note_text from "
+							. $_SESSION['tablename']['not_notes'] 
+							. " where identifier = " . $res_id 
+							. " and coll_id ='"
+							. $_SESSION['collection_id_choice'] . "' order by date_note desc");
+         
+       while ($res = $dbId->fetch_object())
+       {
+			 $db->query( "select id from notes where id in ("
+				. "select note_id from note_entities where (item_id = '" 
+				. $_SESSION['user']['primaryentity']['id'] . "' and note_id = " . $res->id . "))"
+				. "or (id = " . $res->id . " and user_id = '" . $_SESSION['user']['UserId'] . "')");
+			
+				if($db->nb_result()<>0)
+				$not_nbr++;
+		}
+		
          // Displays the notes
-        $select_notes[$_SESSION['tablename']['users']] = array();
-        array_push(
-            $select_notes[$_SESSION['tablename']['users']],
-            'user_id',
-            'lastname',
-            'firstname'
-        );
         $select_notes[$_SESSION['tablename']['not_notes']] = array();
         array_push(
             $select_notes[$_SESSION['tablename']['not_notes']],
@@ -460,11 +475,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $where_notes,
             'order by ' . $_SESSION['tablename']['not_notes'] . '.date_note desc',
             $_SESSION['config']['databasetype'],
-            '500',
-            true,
-            $_SESSION['tablename']['not_notes'],
-            $_SESSION['tablename']['users'],
-            'user_id'
+            '500'
         );
         $frm_str .= '<h3 onclick="new Effect.toggle(\'notes_div\', \'blind\', {delay:0.2});';
         $frm_str .= 'return false;" class="categorie" style="width:90%;">';
@@ -472,7 +483,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             . $_SESSION['config']['businessappurl']
             . 'static.php?filename=plus.png" alt="" />&nbsp;<b>'
             . _NOTES . ' ('
-            . count($tab_notes) . ') :</b>';
+            . $not_nbr . ') :</b>';
         $frm_str .= '<span class="lb1-details">&nbsp;</span>';
         $frm_str .= '</h3>';
         $frm_str .= '<br>';
@@ -802,7 +813,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .= '<div class="desc" id="notes_div" style="display:none;">';
             $frm_str .= '<div class="ref-unit">';
                 $frm_str .= '<center><h2 onclick="new Effect.toggle(\'notes_div\', \'blind\', {delay:0.2});';
-                $frm_str .= 'return false;">' . _NOTES . '</h2></center>';
+                $frm_str .= 'return false;">' . _NOTES. '</h2></center>';
                 $frm_str .= '<div style="text-align:center;">';
                     $frm_str .= '<img src="'.$_SESSION['config']['businessappurl']
                         . 'static.php?module=notes&filename=modif_note.png" border="0" alt="" />';
