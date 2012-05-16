@@ -969,7 +969,7 @@ if (!defined('_INVOICE_NUMBER')) define( '_INVOICE_NUMBER', 'Num facture');
 
 
 /******************** fulltext search Helper ************/
-if (!defined('_HELP_GLOBAL_SEARCH')) define( '_HELP_GLOBAL_SEARCH', 'Recherche sur l\'objet, le titre, la description ou le contenu du document ');
+if (!defined('_HELP_GLOBAL_SEARCH')) define( '_HELP_GLOBAL_SEARCH', 'Recherche sur l\'objet, le titre, la description, le contenu du document ou sur le num&eacute;ro de GED');
 if (!defined('_HELP_FULLTEXT_SEARCH')) define( '_HELP_FULLTEXT_SEARCH', 'Aide sur la recherche plein texte');
 if (!defined('_TIPS_FULLTEXT')) define( '_TIPS_FULLTEXT', 'Astuces de recherche');
 
