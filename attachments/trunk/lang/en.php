@@ -18,6 +18,7 @@
  *   You should have received a copy of the GNU General Public License
  *   along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 if (!defined('_TITLE'))
     define('_TITLE', 'Title');
 if (!defined('_ATTACHMENTS'))
