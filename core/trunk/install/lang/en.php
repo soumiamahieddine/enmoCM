@@ -18,7 +18,9 @@ if (!defined('_DESC')) {
                     <br />
                     Maarch is an Electronic Archiving System that comes with Document Management, Content Management, Mail Management, Coolaborative and legal archiving/record management capabilities. Maarch is a full Open Source product under GPL v3 licence : there is no licence cost, but professional services offered by Maarch and its partner global network.<br />
                     <br />
-                    Services cover audit, installation, parametrization, customizing, IT integration, training, support and maintenance. Go to <A style='color: #800000; font-family:verdana;' href='http://www.maarch.com/en' target\"_blank\"> www.maarch.com</A> for more information on Maarch Professional Services.");
+                    Services cover audit, installation, parametrization, customizing, IT integration, training, support and maintenance. Go to <A style='color: #800000; font-family:verdana;' href='http://www.maarch.com/en' target\"_blank\"> www.maarch.com</A> for more information on Maarch Professional Services.
+					<br>
+					<br><b>Important : we are looking for english speaking partners to promote Maarch around the world. Don't hesitate to contact us directly at info@maarch.org for a win-win partnership !");
 }
 
 
@@ -181,13 +183,13 @@ if (!defined('_UNABLE_TO_CREATE_DATABASE')) {
     define('_UNABLE_TO_CREATE_DATABASE', "Unable to create database, try another name");
 }
 if (!defined('_UNABLE_TO_LOAD_DATAS')) {
-    define('_UNABLE_TO_LOAD_DATAS', "Unable to load datas");
+    define('_UNABLE_TO_LOAD_DATAS', "Unable to load dataset");
 }
 if (!defined('_CHOOSE_A_NAME_FOR_DB')) {
     define('_CHOOSE_A_NAME_FOR_DB', "You must choose a name for the database");
 }
 if (!defined('_LOAD_DATA')) {
-    define('_LOAD_DATA', "Load datas");
+    define('_LOAD_DATA', "Load dataset");
 }
 if (!defined('_CREATE_DATABASE')) {
     define('_CREATE_DATABASE', "Create database");
