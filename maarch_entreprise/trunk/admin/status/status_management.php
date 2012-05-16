@@ -113,12 +113,10 @@ if ($mode == 'list') {
         <p class="buttons">
             <?php
         if ($mode == 'up') {?>
-            <input class="button" type="submit" name="status_submit" value="
-            <?php echo _MODIFY_STATUS; ?>" />
+            <input class="button" type="submit" name="status_submit" value="<?php echo _MODIFY_STATUS; ?>" />
             <?php
         } elseif ($mode == 'add') {?>
-            <input type="submit" class="button"  name="status_submit" value="
-            <?php echo _ADD_STATUS; ?>" />
+            <input type="submit" class="button"  name="status_submit" value="<?php echo _ADD_STATUS; ?>" />
             <?php
         }
         ?>
