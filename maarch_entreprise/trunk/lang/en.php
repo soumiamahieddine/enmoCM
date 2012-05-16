@@ -443,6 +443,7 @@ if (!defined('_FUNCTION')) define('_FUNCTION', 'Role');
 if (!defined('_GB'))  define('_GB', 'Gigabytes ');
 if (!defined('_GED_NUM')) define('_GED_NUM', 'DMS nb. ');
 if (!defined('_GENERAL_INFO')) define('_GENERAL_INFO', 'General information');
+if (!defined('_GLOBAL_SEARCH'))  define('_GLOBAL_SEARCH', 'Global Search');
 if (!defined('_GO_MANAGE_DOCSERVER'))  define('_GO_MANAGE_DOCSERVER', 'Modify');
 if (!defined('_GO_TO_PAGE')) define('_GO_TO_PAGE', 'Go to page');
 if (!defined('_GRAPH')) define('_GRAPH', 'Charts');
