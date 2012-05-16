@@ -267,7 +267,7 @@
                             <td></td>
                             <td></td>
                             <td>
-                                <input type="button" onclick="$('.wait').css('display','block');checkCreateDB($('#databasename').val(), 'createdatabase');" value="Créer la base" />
+                                <input type="button" onclick="$('.wait').css('display','block');checkCreateDB($('#databasename').val(), 'createdatabase');" value="<?php echo _CREATE_DATABASE;?>" />
                             </td>
                         </tr>
                     </table>
@@ -334,7 +334,7 @@
                             <td></td>
                             <td></td>
                             <td>
-                                <input type="button" onclick="$('.wait').css('display','block');checkLoadDatas($('#dataFilename').val(), 'loadDatas');" value="Charger les données" style="display: none;" id="okDatas"/>
+                                <input type="button" onclick="$('.wait').css('display','block');checkLoadDatas($('#dataFilename').val(), 'loadDatas');" value="<?php echo _LOAD_DATA;?>" style="display: none;" id="okDatas"/>
                             </td>
                             <td></td>
                         </tr>

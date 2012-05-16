@@ -186,7 +186,12 @@ if (!defined('_UNABLE_TO_LOAD_DATAS')) {
 if (!defined('_CHOOSE_A_NAME_FOR_DB')) {
     define('_CHOOSE_A_NAME_FOR_DB', "Vous devez choisir un nom pour la base de données");
 }
-
+if (!defined('_LOAD_DATA')) {
+    define('_LOAD_DATA', "Charger les donn&eacute;es");
+}
+if (!defined('_CREATE_DATABASE')) {
+    define('_CREATE_DATABASE', "Cr&eacute;er la base");
+}
 //PASSWORD
 if (!defined('_PASSWORD')) {
     define('_PASSWORD', "Mot de passe");
