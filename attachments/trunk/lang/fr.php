@@ -18,7 +18,6 @@
  *   You should have received a copy of the GNU General Public License
  *   along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 if (!defined('_TITLE'))  define('_TITLE', 'Titre');
 if (!defined('_ATTACHMENTS'))  define('_ATTACHMENTS', 'Pi&egrave;ces jointes');
 if (!defined('_ATTACHMENTS_COMMENT'))  define('_ATTACHMENTS_COMMENT', 'Gestion des pi&egrave;ces jointes');
