@@ -1181,24 +1181,44 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     <iframe src="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&dir=indexing_searching&page=hist_doc&id=<?php echo $s_id;?>&mode=normal" name="hist_doc_process" width="100%" height="580" align="left" scrolling="auto" frameborder="0" id="hist_doc_process"></iframe>
                 </dd>
                 <?php
-                if ($core->is_module_loaded('notes')) {
-                    $selectNotes = "select id, identifier, user_id, date_note, note_text from "
-                        . $_SESSION['tablename']['not_notes']
-                        . " where identifier = " . $s_id 
-                        . " and coll_id ='"
-                        . $_SESSION['collection_id_choice'] . "' order by date_note desc";
+                if ($core->is_module_loaded('notes')) {			
+						$selectNotes = "select id, identifier, user_id, date_note, note_text from "
+							. $_SESSION['tablename']['not_notes']
+							. " where identifier = " . $s_id 
+							. " and coll_id ='"
+							. $_SESSION['collection_id_choice'] . "' order by date_note desc";
+
                     $dbNotes = new dbquery();
                     $dbNotes->connect();
                     $dbNotes->query($selectNotes);
-                    //$dbNotes->show();
+					//$dbNotes->show();
+					
+					while ($res=$dbNotes->fetch_object())
+					{
+						$dbUser = new dbquery();
+						$dbUser->connect();
+
+						$query = "select id from notes where id in ("
+						. "select note_id from note_entities where (item_id = '" 
+						. $_SESSION['user']['primaryentity']['id'] . "' and note_id = " . $res->id . "))"
+						. "or (id = " . $res->id . " and user_id = '" . $_SESSION['user']['UserId'] . "')";
+
+						$dbUser->query($query);
+						//$dbUser->show();
+						if($dbUser->nb_result()<>0)
+						$not_res++;
+					}
+					$not_res_title = " (".$not_res.") ";
                     $nb_notes_for_title  = $dbNotes->nb_result();
+                    
                     if ($nb_notes_for_title == 0) {
                         $extend_title_for_notes = '';
                     } else {
                         $extend_title_for_notes = " (".$nb_notes_for_title.") ";
                     }
                     ?>
-                    <dt><?php  echo _NOTES.$extend_title_for_notes;?></dt>
+                    <!--<dt><?php  echo _NOTES.$extend_title_for_notes;?></dt>-->
+                    <dt><?php  echo _NOTES.$not_res_title;?></dt>
                     <dd>
                     <?php
                         /*$detailsExport .= "<h3>"._NOTES." : </h3>";
@@ -1226,31 +1246,8 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                         $where_notes = " identifier = ".$s_id." ";
                         $request_notes = new request;
                         $tab_notes=$request_notes->select($select_notes,$where_notes,"order by ".$_SESSION['tablename']['not_notes'].".date_note desc",$_SESSION['config']['databasetype'], "500", true,$_SESSION['tablename']['not_notes'], $_SESSION['tablename']['users'], "user_id" );
-/*
-						$db->query(
-								" SELECT DISTINCT lastname, firstname, ".$_SESSION['tablename']['not_notes'].".id, date_note, note_text  FROM " .$_SESSION['tablename']['note_entities']. ", " .$_SESSION['tablename']['not_notes']. ", " .$_SESSION['tablename']['users'].
-								" WHERE (identifier = ".$_SESSION['doc_id'].
-								" AND ( " .$_SESSION['tablename']['note_entities']. ".item_id IN (".$entities.
-								") AND " .$_SESSION['tablename']['note_entities']. ".note_id = " .$_SESSION['tablename']['not_notes']. ".id ))
-								OR ( identifier = ".$_SESSION['doc_id']."
-								AND ".$_SESSION['tablename']['not_notes'].".user_id = '".$_SESSION['user']['UserId']."'
-								AND " .$_SESSION['tablename']['not_notes']. ".user_id = " .$_SESSION['tablename']['users'].".user_id)"
-								);
-					
-						$tabNotes=array();
-						while($line = $db->fetch_array())
-						{
-						   $temp= array();
-						   foreach (array_keys($line) as $resval)
-						   {
-							 if (!is_int($resval))
-							 {
-								array_push($temp,array('column'=>$resval,'value'=>$line[$resval]));
-							 }
-						   }
-						   array_push($tabNotes,$temp);
-						}
-*/
+						//$request_notes->show();
+
                         ?>
                         <div style="text-align:center;">
                             <img src="<?php
