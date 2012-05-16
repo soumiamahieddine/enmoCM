@@ -22,345 +22,129 @@
 if (!defined('_MEP_VERSION')) define('_MEP_VERSION', 'Maarch Entreprise v1.3');
 
 /************** Administration **************/
-if (!defined('_ADMIN_USERS')) {
-    define( '_ADMIN_USERS', 'Utilisateurs');
-}
-if (!defined('_ADMIN_DOCSERVERS')) {
-    define( '_ADMIN_DOCSERVERS', 'Zones de stockage');
-}
-if (!defined('_ADMIN_USERS_DESC')) {
-    define( '_ADMIN_USERS_DESC', 'Ajouter, suspendre, ou modifier des profils utilisateurs. Placer les utilisateurs dans leurs groupes d&rsquo;appartenance et définir leur groupe primaire.');
-}
-if (!defined('_ADMIN_DOCSERVERS_DESC')) {
-    define( '_ADMIN_DOCSERVERS_DESC', 'Ajouter, suspendre, ou modifier des zones de stockage. Placer les zones de stockages par type d&rsquo;appartenance et définir leur groupe primaire.');
-}
-if (!defined('_ADMIN_GROUPS')) {
-    define( '_ADMIN_GROUPS', 'Groupes d&rsquo;utilisateurs');
-}
-if (!defined('_ADMIN_GROUPS_DESC')) {
-    define( '_ADMIN_GROUPS_DESC', 'Ajouter, suspendre, ou modifier des groupes d&rsquo;utilisateurs. Attribuer des privil&egrave;ges ou des autorisations d&rsquo;acc&egrave;s aux ressources.');
-}
-if (!defined('_ADMIN_ARCHITECTURE')) {
-    define( '_ADMIN_ARCHITECTURE', 'Plan de classement');
-}
-if (!defined('_ADMIN_ARCHITECTURE_DESC')) {
-    define( '_ADMIN_ARCHITECTURE_DESC', 'D&eacute;finir la structure interne d&rsquo;un dossier (chemise / sous-chemise / type de document). D&eacute;finir pour chaque pi&egrave;ce la liste des index &agrave; saisir, et leur caract&egrave;re obligatoire pour la compl&eacute;tude du dossier.');
-}
-if (!defined('_VIEW_HISTORY')) {
-    define( '_VIEW_HISTORY', 'Historique');
-}
-if (!defined('_VIEW_HISTORY_BATCH')) {
-    define( '_VIEW_HISTORY_BATCH', 'Historique des batchs');
-}
-if (!defined('_VIEW_HISTORY_DESC')) {
-    define( '_VIEW_HISTORY_DESC', 'Consulter l&rsquo;historique des &eacute;v&egrave;nements relatifs à l&rsquo;utilisation de la GED Maarch.');
-}
-if (!defined('_VIEW_HISTORY_BATCH_DESC')) {
-    define( '_VIEW_HISTORY_BATCH_DESC', 'Consulter l&rsquo;historique des batchs');
-}
-if (!defined('_ADMIN_MODULES')) {
-    define( '_ADMIN_MODULES', 'G&eacute;rer les modules');
-}
-if (!defined('_ADMIN_SERVICE')) {
-    define( '_ADMIN_SERVICE', 'Service d&rsquo;administration');
-}
-if (!defined('_XML_PARAM_SERVICE_DESC')) {
-    define( '_XML_PARAM_SERVICE_DESC', 'Visualisation configuration XML des services');
-}
-if (!defined('_XML_PARAM_SERVICE')) {
-    define( '_XML_PARAM_SERVICE', 'Visualisation configuration XML des services');
-}
-if (!defined('_MODULES_SERVICES')) {
-    define( '_MODULES_SERVICES', 'Services d&eacute;finis par les modules');
-}
-if (!defined('_APPS_SERVICES')) {
-    define( '_APPS_SERVICES', 'Services d&eacute;finis par l&rsquo;application');
-}
-if (!defined('_ADMIN_STATUS_DESC')) {
-    define( '_ADMIN_STATUS_DESC', 'Cr&eacute;er ou modifier des statuts.');
-}
-if (!defined('_ADMIN_ACTIONS_DESC')) {
-    define( '_ADMIN_ACTIONS_DESC', 'Cr&eacute;er ou modifier des actions.');
-}
-if (!defined('_ADMIN_SERVICES_UNKNOWN')) {
-    define( '_ADMIN_SERVICES_UNKNOWN', 'Service d&rsquo;administration inconnu');
-}
-if (!defined('_NO_RIGHTS_ON')) {
-    define( '_NO_RIGHTS_ON', 'Aucun droit sur');
-}
-if (!defined('_NO_LABEL_FOUND')) {
-    define( '_NO_LABEL_FOUND', 'Aucun label trouv&eacute; pour ce service');
-}
+if (!defined('_ADMIN_USERS'))    define( '_ADMIN_USERS', 'Utilisateurs');
+if (!defined('_ADMIN_DOCSERVERS'))    define( '_ADMIN_DOCSERVERS', 'Zones de stockage');
+if (!defined('_ADMIN_USERS_DESC'))    define( '_ADMIN_USERS_DESC', 'Ajouter, suspendre, ou modifier des profils utilisateurs. Placer les utilisateurs dans leurs groupes d&rsquo;appartenance et définir leur groupe primaire.');
+if (!defined('_ADMIN_DOCSERVERS_DESC'))    define( '_ADMIN_DOCSERVERS_DESC', 'Ajouter, suspendre, ou modifier des zones de stockage. Placer les zones de stockages par type d&rsquo;appartenance et définir leur groupe primaire.');
+if (!defined('_ADMIN_GROUPS'))    define( '_ADMIN_GROUPS', 'Groupes d&rsquo;utilisateurs');
+if (!defined('_ADMIN_GROUPS_DESC'))    define( '_ADMIN_GROUPS_DESC', 'Ajouter, suspendre, ou modifier des groupes d&rsquo;utilisateurs. Attribuer des privil&egrave;ges ou des autorisations d&rsquo;acc&egrave;s aux ressources.');
+if (!defined('_ADMIN_ARCHITECTURE'))    define( '_ADMIN_ARCHITECTURE', 'Plan de classement');
+if (!defined('_ADMIN_ARCHITECTURE_DESC'))    define( '_ADMIN_ARCHITECTURE_DESC', 'D&eacute;finir la structure interne d&rsquo;un dossier (chemise / sous-chemise / type de document). D&eacute;finir pour chaque pi&egrave;ce la liste des index &agrave; saisir, et leur caract&egrave;re obligatoire pour la compl&eacute;tude du dossier.');
+if (!defined('_VIEW_HISTORY'))    define( '_VIEW_HISTORY', 'Historique');
+if (!defined('_VIEW_HISTORY_BATCH'))    define( '_VIEW_HISTORY_BATCH', 'Historique des batchs');
+if (!defined('_VIEW_HISTORY_DESC'))    define( '_VIEW_HISTORY_DESC', 'Consulter l&rsquo;historique des &eacute;v&egrave;nements relatifs à l&rsquo;utilisation de la GED Maarch.');
+if (!defined('_VIEW_HISTORY_BATCH_DESC'))    define( '_VIEW_HISTORY_BATCH_DESC', 'Consulter l&rsquo;historique des batchs');
+if (!defined('_ADMIN_MODULES'))    define( '_ADMIN_MODULES', 'G&eacute;rer les modules');
+if (!defined('_ADMIN_SERVICE'))    define( '_ADMIN_SERVICE', 'Service d&rsquo;administration');
+if (!defined('_XML_PARAM_SERVICE_DESC'))    define( '_XML_PARAM_SERVICE_DESC', 'Visualisation configuration XML des services');
+if (!defined('_XML_PARAM_SERVICE'))    define( '_XML_PARAM_SERVICE', 'Visualisation configuration XML des services');
+if (!defined('_MODULES_SERVICES'))    define( '_MODULES_SERVICES', 'Services d&eacute;finis par les modules');
+if (!defined('_APPS_SERVICES'))    define( '_APPS_SERVICES', 'Services d&eacute;finis par l&rsquo;application');
+if (!defined('_ADMIN_STATUS_DESC'))    define( '_ADMIN_STATUS_DESC', 'Cr&eacute;er ou modifier des statuts.');
+if (!defined('_ADMIN_ACTIONS_DESC'))    define( '_ADMIN_ACTIONS_DESC', 'Cr&eacute;er ou modifier des actions.');
+if (!defined('_ADMIN_SERVICES_UNKNOWN'))    define( '_ADMIN_SERVICES_UNKNOWN', 'Service d&rsquo;administration inconnu');
+if (!defined('_NO_RIGHTS_ON'))    define( '_NO_RIGHTS_ON', 'Aucun droit sur');
+if (!defined('_NO_LABEL_FOUND'))    define( '_NO_LABEL_FOUND', 'Aucun label trouv&eacute; pour ce service');
 
-if (!defined('_FOLDERTYPES_LIST')) {
-    define( '_FOLDERTYPES_LIST', 'Liste des types de dossier');
-}
-if (!defined('_SELECTED_FOLDERTYPES')) {
-    define( '_SELECTED_FOLDERTYPES', 'Types de dossier s&eacute;lectionn&eacute;s');
-}
-if (!defined('_FOLDERTYPE_ADDED')) {
-    define( '_FOLDERTYPE_ADDED', 'Nouveau dossier ajout&eacute;');
-}
-if (!defined('_FOLDERTYPE_DELETION')) {
-    define( '_FOLDERTYPE_DELETION', 'Dossier supprim&eacute;');
-}
-if (!defined('_VERSION_BASE_AND_XML_BASEVERSION_NOT_MATCH')) {
-    define( '_VERSION_BASE_AND_XML_BASEVERSION_NOT_MATCH', 'Attention: Le mod&egrave;le de donn&eacute;es de Maarch Entreprise doit &ecirc;tre mis &agrave; jour...');
-}
+if (!defined('_FOLDERTYPES_LIST'))    define( '_FOLDERTYPES_LIST', 'Liste des types de dossier');
+if (!defined('_SELECTED_FOLDERTYPES'))    define( '_SELECTED_FOLDERTYPES', 'Types de dossier s&eacute;lectionn&eacute;s');
+if (!defined('_FOLDERTYPE_ADDED'))    define( '_FOLDERTYPE_ADDED', 'Nouveau dossier ajout&eacute;');
+if (!defined('_FOLDERTYPE_DELETION'))    define( '_FOLDERTYPE_DELETION', 'Dossier supprim&eacute;');
+if (!defined('_VERSION_BASE_AND_XML_BASEVERSION_NOT_MATCH'))    define( '_VERSION_BASE_AND_XML_BASEVERSION_NOT_MATCH', 'Attention: Le mod&egrave;le de donn&eacute;es de Maarch Entreprise doit &ecirc;tre mis &agrave; jour...');
 
 
 /*********************** communs ***********************************/
-if (!defined('_MODE')) {
-    define('_MODE', 'Mode');
-}
+if (!defined('_MODE'))    define('_MODE', 'Mode');
 /************** Listes **************/
-if (!defined('_GO_TO_PAGE')) {
-    define( '_GO_TO_PAGE', 'Aller &agrave; la page');
-}
-if (!defined('_NEXT')) {
-    define( '_NEXT', 'Suivante');
-}
-if (!defined('_PREVIOUS')) {
-    define( '_PREVIOUS', 'Pr&eacute;c&eacute;dente');
-}
-if (!defined('_ALPHABETICAL_LIST')) {
-    define( '_ALPHABETICAL_LIST', 'Liste alphab&eacute;tique');
-}
-if (!defined('_ASC_SORT')) {
-    define( '_ASC_SORT', 'Tri ascendant');
-}
-if (!defined('_DESC_SORT')) {
-    define( '_DESC_SORT', 'Tri descendant');
-}
-if (!defined('_ACCESS_LIST_STANDARD')) {
-    define( '_ACCESS_LIST_STANDARD', 'Affichage des listes simples');
-}
-if (!defined('_ACCESS_LIST_EXTEND')) {
-    define( '_ACCESS_LIST_EXTEND', 'Affichage des listes &eacute;tendues');
-}
-if (!defined('_DISPLAY')) {
-    define( '_DISPLAY', 'Affichage');
-}
+if (!defined('_GO_TO_PAGE'))    define( '_GO_TO_PAGE', 'Aller &agrave; la page');
+if (!defined('_NEXT'))    define( '_NEXT', 'Suivante');
+if (!defined('_PREVIOUS'))    define( '_PREVIOUS', 'Pr&eacute;c&eacute;dente');
+if (!defined('_ALPHABETICAL_LIST'))    define( '_ALPHABETICAL_LIST', 'Liste alphab&eacute;tique');
+if (!defined('_ASC_SORT'))    define( '_ASC_SORT', 'Tri ascendant');
+if (!defined('_DESC_SORT'))    define( '_DESC_SORT', 'Tri descendant');
+if (!defined('_ACCESS_LIST_STANDARD'))    define( '_ACCESS_LIST_STANDARD', 'Affichage des listes simples');
+if (!defined('_ACCESS_LIST_EXTEND'))    define( '_ACCESS_LIST_EXTEND', 'Affichage des listes &eacute;tendues');
+if (!defined('_DISPLAY'))    define( '_DISPLAY', 'Affichage');
 /************** Actions **************/
-if (!defined('_DELETE')) {
-    define( '_DELETE', 'Supprimer');
-}
-if (!defined('_ADD')) {
-    define( '_ADD', 'Ajouter');
-}
-if (!defined('_REMOVE')) {
-    define( '_REMOVE', 'Enlever');
-}
-if (!defined('_MODIFY')) {
-    define( '_MODIFY', 'Modifier');
-}
-if (!defined('_SUSPEND')) {
-    define( '_SUSPEND', 'Suspendre');
-}
-if (!defined('_AUTHORIZE')) {
-    define( '_AUTHORIZE', 'Autoriser');
-}
-if (!defined('_CHOOSE')) {
-    define( '_CHOOSE', 'Choisir');
-}
-if (!defined('_SEND')) {
-    define( '_SEND', 'Envoyer');
-}
-if (!defined('_SEARCH')) {
-    define( '_SEARCH', 'Rechercher');
-}
-if (!defined('_RESET')) {
-    define( '_RESET', 'R&eacute;initialiser');
-}
-if (!defined('_VALIDATE')) {
-    define( '_VALIDATE', 'Valider');
-}
-if (!defined('_CANCEL')) {
-    define( '_CANCEL', 'Annuler');
-}
-if (!defined('_ADDITION')) {
-    define( '_ADDITION', 'Ajout');
-}
-if (!defined('_MODIFICATION')) {
-    define( '_MODIFICATION', 'Modification');
-}
-if (!defined('_DIFFUSION')) {
-    define( '_DIFFUSION', 'Diffusion');
-}
-if (!defined('_DELETION')) {
-    define( '_DELETION', 'Suppression');
-}
-if (!defined('_SUSPENSION')) {
-    define( '_SUSPENSION', 'Suspension');
-}
-if (!defined('_VALIDATION')) {
-    define( '_VALIDATION', 'Validation');
-}
-if (!defined('_REDIRECTION')) {
-    define( '_REDIRECTION', 'Redirection');
-}
-if (!defined('_DUPLICATION')) {
-    define( '_DUPLICATION', 'Duplication');
-}
-if (!defined('_PROPOSITION')) {
-    define( '_PROPOSITION', 'Proposition');
-}
-if (!defined('_ERR')) {
-    define( '_ERR', 'Erreur');
-}
-if (!defined('_CLOSE')) {
-    define( '_CLOSE', 'Fermer');
-}
-if (!defined('_CLOSE_WINDOW')) {
-    define( '_CLOSE_WINDOW', 'Fermer la fen&ecirc;tre');
-}
-if (!defined('_DIFFUSE')) {
-    define( '_DIFFUSE', 'Diffuser');
-}
-if (!defined('_DOWN')) {
-    define( '_DOWN', 'Descendre');
-}
-if (!defined('_UP')) {
-    define( '_UP', 'Monter');
-}
-if (!defined('_REDIRECT')) {
-    define( '_REDIRECT', 'Rediriger');
-}
-if (!defined('_DELETED')) {
-    define( '_DELETED', 'Supprim&eacute;');
-}
-if (!defined('_CONTINUE')) {
-    define( '_CONTINUE', 'Continuer');
-}
-if (!defined('_VIEW')) {
-    define( '_VIEW','Visualisation');
-}
-if (!defined('_CHOOSE_ACTION')) {
-    define( '_CHOOSE_ACTION', 'Choisissez une action');
-}
-if (!defined('_ACTIONS')) {
-    define( '_ACTIONS', 'Actions');
-}
-if (!defined('_ACTION_PAGE')) {
-    define( '_ACTION_PAGE', 'Page de r&eacute;sultat de l&rsquo;action');
-}
-if (!defined('_DO_NOT_MODIFY_UNLESS_EXPERT')) {
-    define( '_DO_NOT_MODIFY_UNLESS_EXPERT', ' Ne pas modifier cette section &agrave; moins de savoir ce que vous faites. Un mauvais param&egrave;trage peut entrainer des dysfonctionnements de l&rsquo;application!');
-}
-if (!defined('_INFOS_ACTIONS')) {
-    define( '_INFOS_ACTIONS', 'Vous devez choisir au moins un statut et / ou un script.');
-}
+if (!defined('_DELETE'))    define( '_DELETE', 'Supprimer');
+if (!defined('_ADD'))    define( '_ADD', 'Ajouter');
+if (!defined('_REMOVE'))    define( '_REMOVE', 'Enlever');
+if (!defined('_MODIFY'))    define( '_MODIFY', 'Modifier');
+if (!defined('_SUSPEND'))    define( '_SUSPEND', 'Suspendre');
+if (!defined('_AUTHORIZE'))    define( '_AUTHORIZE', 'Autoriser');
+if (!defined('_CHOOSE'))    define( '_CHOOSE', 'Choisir');
+if (!defined('_SEND'))    define( '_SEND', 'Envoyer');
+if (!defined('_SEARCH'))    define( '_SEARCH', 'Rechercher');
+if (!defined('_RESET'))    define( '_RESET', 'R&eacute;initialiser');
+if (!defined('_VALIDATE'))    define( '_VALIDATE', 'Valider');
+if (!defined('_CANCEL'))    define( '_CANCEL', 'Annuler');
+if (!defined('_ADDITION'))    define( '_ADDITION', 'Ajout');
+if (!defined('_MODIFICATION'))    define( '_MODIFICATION', 'Modification');
+if (!defined('_DIFFUSION'))    define( '_DIFFUSION', 'Diffusion');
+if (!defined('_DELETION'))    define( '_DELETION', 'Suppression');
+if (!defined('_SUSPENSION'))    define( '_SUSPENSION', 'Suspension');
+if (!defined('_VALIDATION'))    define( '_VALIDATION', 'Validation');
+if (!defined('_REDIRECTION'))    define( '_REDIRECTION', 'Redirection');
+if (!defined('_DUPLICATION'))    define( '_DUPLICATION', 'Duplication');
+if (!defined('_PROPOSITION'))    define( '_PROPOSITION', 'Proposition');
+if (!defined('_ERR'))    define( '_ERR', 'Erreur');
+if (!defined('_CLOSE'))    define( '_CLOSE', 'Fermer');
+if (!defined('_CLOSE_WINDOW'))    define( '_CLOSE_WINDOW', 'Fermer la fen&ecirc;tre');
+if (!defined('_DIFFUSE'))    define( '_DIFFUSE', 'Diffuser');
+if (!defined('_DOWN'))    define( '_DOWN', 'Descendre');
+if (!defined('_UP'))    define( '_UP', 'Monter');
+if (!defined('_REDIRECT'))    define( '_REDIRECT', 'Rediriger');
+if (!defined('_DELETED'))    define( '_DELETED', 'Supprim&eacute;');
+if (!defined('_CONTINUE'))    define( '_CONTINUE', 'Continuer');
+if (!defined('_VIEW'))    define( '_VIEW','Visualisation');
+if (!defined('_CHOOSE_ACTION'))    define( '_CHOOSE_ACTION', 'Choisissez une action');
+if (!defined('_ACTIONS'))    define( '_ACTIONS', 'Actions');
+if (!defined('_ACTION_PAGE'))    define( '_ACTION_PAGE', 'Page de r&eacute;sultat de l&rsquo;action');
+if (!defined('_DO_NOT_MODIFY_UNLESS_EXPERT'))    define( '_DO_NOT_MODIFY_UNLESS_EXPERT', ' Ne pas modifier cette section &agrave; moins de savoir ce que vous faites. Un mauvais param&egrave;trage peut entrainer des dysfonctionnements de l&rsquo;application!');
+if (!defined('_INFOS_ACTIONS'))    define( '_INFOS_ACTIONS', 'Vous devez choisir au moins un statut et / ou un script.');
 
 
 /************** Intitul&eacute;s formulaires et listes **************/
-if (!defined('_ID')) {
-    define( '_ID', 'Identifiant');
-}
-if (!defined('_PASSWORD')) {
-    define( '_PASSWORD', 'Mot de passe');
-}
-if (!defined('_GROUP')) {
-    define( '_GROUP', 'Groupe');
-}
-if (!defined('_USER')) {
-    define( '_USER', 'Utilisateur');
-}
-if (!defined('_DESC')) {
-    define( '_DESC', 'Description');
-}
-if (!defined('_LASTNAME')) {
-    define( '_LASTNAME', 'Nom');
-}
-if (!defined('_THE_LASTNAME')) {
-    define( '_THE_LASTNAME', 'Le nom');
-}
-if (!defined('_THE_FIRSTNAME')) {
-    define( '_THE_FIRSTNAME', 'Le pr&eacute;nom');
-}
-if (!defined('_THE_ID')) {
-    define( '_THE_ID', 'L&rsquo;identifiant');
-}
-if (!defined('_FIRSTNAME')) {
-    define( '_FIRSTNAME', 'Pr&eacute;nom');
-}
-if (!defined('_STATUS')) {
-    define( '_STATUS', 'Statut');
-}
-if (!defined('_DEPARTMENT')) {
-    define( '_DEPARTMENT', 'D&eacute;partement');
-}
-if (!defined('_FUNCTION')) {
-    define( '_FUNCTION', 'Fonction');
-}
-if (!defined('_PHONE_NUMBER')) {
-    define( '_PHONE_NUMBER', 'Num&eacute;ro de t&eacute;l&eacute;phone');
-}
-if (!defined('_MAIL')) {
-    define( '_MAIL', 'Courriel');
-}
-if (!defined('_DOCTYPE')) {
-    define( '_DOCTYPE', 'Type de document');
-}
-if (!defined('_TYPE')) {
-    define( '_TYPE', 'Type');
-}
-if (!defined('_SELECT_ALL')) {
-    define( '_SELECT_ALL', 'S&eacute;lectionner tout');
-}
-if (!defined('_DATE')) {
-    define( '_DATE', 'Date');
-}
-if (!defined('_ACTION')) {
-    define( '_ACTION', 'Action');
-}
-if (!defined('_COMMENTS')) {
-    define( '_COMMENTS', 'Commentaires');
-}
-if (!defined('_ENABLED')) {
-    define( '_ENABLED', 'Autoris&eacute;');
-}
-if (!defined('_DISABLED')) {
-    define( '_DISABLED', 'Suspendu');
-}
-if (!defined('_NOT_ENABLED')) {
-    define( '_NOT_ENABLED', 'Suspendu');
-}
-if (!defined('_RESSOURCES_COLLECTION')) {
-    define( '_RESSOURCES_COLLECTION','Collection documentaire');
-}
-if (!defined('_RECIPIENT')) {
-    define( '_RECIPIENT', 'Destinataire');
-}
-if (!defined('_START')) {
-    define( '_START', 'D&eacute;but');
-}
-if (!defined('_END')) {
-    define( '_END', 'Fin');
-}
+if (!defined('_ID'))    define( '_ID', 'Identifiant');
+if (!defined('_PASSWORD'))    define( '_PASSWORD', 'Mot de passe');
+if (!defined('_GROUP'))    define( '_GROUP', 'Groupe');
+if (!defined('_USER'))    define( '_USER', 'Utilisateur');
+if (!defined('_DESC'))    define( '_DESC', 'Description');
+if (!defined('_LASTNAME'))    define( '_LASTNAME', 'Nom');
+if (!defined('_THE_LASTNAME'))    define( '_THE_LASTNAME', 'Le nom');
+if (!defined('_THE_FIRSTNAME'))    define( '_THE_FIRSTNAME', 'Le pr&eacute;nom');
+if (!defined('_THE_ID'))    define( '_THE_ID', 'L&rsquo;identifiant');
+if (!defined('_FIRSTNAME'))    define( '_FIRSTNAME', 'Pr&eacute;nom');
+if (!defined('_STATUS'))    define( '_STATUS', 'Statut');
+if (!defined('_DEPARTMENT'))    define( '_DEPARTMENT', 'D&eacute;partement');
+if (!defined('_FUNCTION'))    define( '_FUNCTION', 'Fonction');
+if (!defined('_PHONE_NUMBER'))    define( '_PHONE_NUMBER', 'Num&eacute;ro de t&eacute;l&eacute;phone');
+if (!defined('_MAIL'))    define( '_MAIL', 'Courriel');
+if (!defined('_DOCTYPE'))    define( '_DOCTYPE', 'Type de document');
+if (!defined('_TYPE'))    define( '_TYPE', 'Type');
+if (!defined('_SELECT_ALL'))    define( '_SELECT_ALL', 'S&eacute;lectionner tout');
+if (!defined('_DATE'))    define( '_DATE', 'Date');
+if (!defined('_ACTION'))    define( '_ACTION', 'Action');
+if (!defined('_COMMENTS'))    define( '_COMMENTS', 'Commentaires');
+if (!defined('_ENABLED'))    define( '_ENABLED', 'Autoris&eacute;');
+if (!defined('_DISABLED'))    define( '_DISABLED', 'Suspendu');
+if (!defined('_NOT_ENABLED'))    define( '_NOT_ENABLED', 'Suspendu');
+if (!defined('_RESSOURCES_COLLECTION'))    define( '_RESSOURCES_COLLECTION','Collection documentaire');
+if (!defined('_RECIPIENT'))    define( '_RECIPIENT', 'Destinataire');
+if (!defined('_START'))    define( '_START', 'D&eacute;but');
+if (!defined('_END'))    define( '_END', 'Fin');
 
-if (!defined('_KEYWORD')) {
-    define( '_KEYWORD', 'Mot cl&eacute;');
-}
+if (!defined('_KEYWORD'))    define( '_KEYWORD', 'Mot cl&eacute;');
 
-if (!defined('_SYSTEM_PARAMETERS')) {
-    define( '_SYSTEM_PARAMETERS', 'param&egrave;tres syst&egrave;me');
-}
+if (!defined('_SYSTEM_PARAMETERS'))    define( '_SYSTEM_PARAMETERS', 'param&egrave;tres syst&egrave;me');
 
-if (!defined('_NO_KEYWORD')) {
-    define( '_NO_KEYWORD', 'Aucun mot cl&eacute;');
-}
+if (!defined('_NO_KEYWORD'))    define( '_NO_KEYWORD', 'Aucun mot cl&eacute;');
 
-if (!defined('_TO_VALIDATE')) {
-    define( '_TO_VALIDATE', '&Agrave; valider');
-}
+if (!defined('_TO_VALIDATE'))    define( '_TO_VALIDATE', '&Agrave; valider');
 
-if (!defined('_INDEXING')) {
-    define( '_INDEXING', 'Indexation');
-}
+if (!defined('_INDEXING'))    define( '_INDEXING', 'Indexation');
 
-if (!defined('_QUALIFY')) {
-    define( '_QUALIFY', 'Qualification');
-}
+if (!defined('_QUALIFY'))    define( '_QUALIFY', 'Qualification');
 
 
 /************** Messages pop up **************/
@@ -537,9 +321,7 @@ if (!defined('_DURING_NEXT_CONNEXION')) define( '_DURING_NEXT_CONNEXION', 'Lors 
 if (!defined('_MUST_CHANGE_PSW')) define( '_MUST_CHANGE_PSW', 'doit modifier son mot de passe');
 
 if (!defined('_NEW_PASSWORD_USER')) define( '_NEW_PASSWORD_USER', 'R&eacute;initialisation du mot de passe de l&rsquo;utilisateur');
-if (!defined('_PASSWORD_NOT_CHANGED')) {
-    define('_PASSWORD_NOT_CHANGED', 'Probl&egrave;me lors du changement de mot de passe');
-}
+if (!defined('_PASSWORD_NOT_CHANGED'))    define('_PASSWORD_NOT_CHANGED', 'Probl&egrave;me lors du changement de mot de passe');
 /************** Types de document : Liste + Formulaire**************/
 
 if (!defined('_DOCTYPES_LIST')) define( '_DOCTYPES_LIST', 'Liste des types de document');
@@ -598,18 +380,10 @@ if (!defined('_NEW_STRUCTURE')) define( '_NEW_STRUCTURE', 'Nouvelle chemise');
 if (!defined('_DESC_STRUCTURE_MISSING')) define( '_DESC_STRUCTURE_MISSING', 'Il manque la description de la chemise');
 if (!defined('_STRUCTURE_DEL')) define( '_STRUCTURE_DEL', 'Suppression de la chemise');
 if (!defined('_DELETED_STRUCTURE')) define( '_DELETED_STRUCTURE', 'Chemise supprim&eacute;e');
-if (! defined('_FONT_COLOR')) {
-    define('_FONT_COLOR', 'Couleur de la police');
-}
-if (! defined('_FONT_SIZE')) {
-    define('_FONT_SIZE', 'Taille de la police');
-}
-if (! defined('_BLACK')) {
-    define('_BLACK', 'Noir');
-}
-if (! defined('_CSS_STYLE')) {
-    define('_CSS_STYLE', 'Classe css');
-}
+if (! defined('_FONT_COLOR'))    define('_FONT_COLOR', 'Couleur de la police');
+if (! defined('_FONT_SIZE'))    define('_FONT_SIZE', 'Taille de la police');
+if (! defined('_BLACK'))    define('_BLACK', 'Noir');
+if (! defined('_CSS_STYLE'))    define('_CSS_STYLE', 'Classe css');
 /************** sous-dossiers : Liste + Formulaire**************/
 if (!defined('_SUBFOLDER_LIST')) define( '_SUBFOLDER_LIST', 'Liste des sous-chemises');
 if (!defined('_SUBFOLDERS')) define( '_SUBFOLDERS', 'sous-chemise(s)');
@@ -1133,21 +907,11 @@ if (!defined('_DOCTYPE_MANDATORY')) define( '_DOCTYPE_MANDATORY', 'Le type de pi
 if (!defined('_INDEX_UPDATED')) define( '_INDEX_UPDATED', 'Index mis &agrave; jour');
 if (!defined('_DOC_DELETED')) define( '_DOC_DELETED', 'Document supprimé');
 if (!defined('_UPDATE_DOC_STATUS')) define( '_UPDATE_DOC_STATUS', 'Statut du document mis à jour');
-if (! defined('_CHECK_FORM_OK')) {
-    define('_CHECK_FORM_OK', 'V&eacute;rification formulaire OK');
-}
-if (! defined('_MISSING_FORMAT')) {
-    define('_MISSING_FORMAT', 'Il manque le format');
-}
-if (! defined('_ERROR_RES_ID')) {
-    define('_ERROR_RES_ID', 'Probl&egrave;me lors du calcul du res_id');
-}
-if (! defined('_NEW_DOC_ADDED')) {
-    define('_NEW_DOC_ADDED', 'Nouveau document enregistr&eacute;');
-}
-if (! defined('_STATUS_UPDATED')) {
-    define('_STATUS_UPDATED', 'Statut mis &agrave; jour');
-}
+if (! defined('_CHECK_FORM_OK'))    define('_CHECK_FORM_OK', 'V&eacute;rification formulaire OK');
+if (! defined('_MISSING_FORMAT'))    define('_MISSING_FORMAT', 'Il manque le format');
+if (! defined('_ERROR_RES_ID'))    define('_ERROR_RES_ID', 'Probl&egrave;me lors du calcul du res_id');
+if (! defined('_NEW_DOC_ADDED'))    define('_NEW_DOC_ADDED', 'Nouveau document enregistr&eacute;');
+if (! defined('_STATUS_UPDATED'))    define('_STATUS_UPDATED', 'Statut mis &agrave; jour');
 
 if (!defined('_QUICKLAUNCH')) define( '_QUICKLAUNCH', 'Raccourcis');
 if (!defined('_SHOW_DETAILS_DOC')) define( '_SHOW_DETAILS_DOC', 'Voir les d&eacute;tails du document');
@@ -1270,26 +1034,19 @@ if (!defined('_NATURE')) define( '_NATURE', 'Nature');
 if (!defined('_NO_DEFINED_TREES')) define( '_NO_DEFINED_TREES', 'Aucun arbre d&eacute;fini');
 
 if (!defined('_IF_CHECKS_MANDATORY_MUST_CHECK_USE')) define( '_IF_CHECKS_MANDATORY_MUST_CHECK_USE', 'Si vous cliquez sur un champ obligatoire, vous devez également cocher la case utilis&eacute;');
-
 if (!defined('_SEARCH_DOC')) define( '_SEARCH_DOC', 'Rechercher un document');
 if (!defined('_DOCSERVER_COPY_ERROR')) define( '_DOCSERVER_COPY_ERROR', ' Erreur lors de la copie sur le DocServer');
 if (!defined('_MAKE_NEW_SEARCH')) define( '_MAKE_NEW_SEARCH', 'Effectuer une nouvelle recherche');
 if (!defined('_NO_PAGE')) define( '_NO_PAGE', 'Aucune page');
 if (!defined('_VALIDATE_QUALIF')) define( '_VALIDATE_QUALIF', 'Validation/Qualification');
-
-
 if (!defined('_DB_CONNEXION_ERROR')) define( '_DB_CONNEXION_ERROR', 'Erreur de connexion &agrave; la base de donn&eacute;es');
 if (!defined('_DATABASE_SERVER')) define( '_DATABASE_SERVER', 'Serveur de base de donn&eacute;es');
 if (!defined('_DB_PORT')) define( '_DB_PORT', 'Port');
 if (!defined('_DB_TYPE')) define( '_DB_TYPE', 'Type');
 if (!defined('_DB_USER')) define( '_DB_USER', 'Utilisateur');
 if (!defined('_DATABASE')) define( '_DATABASE', 'Base');
-
-
 if (!defined('_TREE_ROOT')) define( '_TREE_ROOT', 'Racine');
-
 if (!defined('_MODE')) define( '_MODE', 'Mode');
-
 if (!defined('_TITLE_STATS_CHOICE_PERIOD'))  define('_TITLE_STATS_CHOICE_PERIOD','Pour une p&eacute;riode');
 
 
@@ -1352,9 +1109,7 @@ if (!defined('_DOCSERVER_DISABLED')) define( '_DOCSERVER_DISABLED', 'Zone de sto
 if (!defined('_DOCSERVER_ENABLED')) define( '_DOCSERVER_ENABLED', 'Zone de stockage active');
 if (!defined('_ALREADY_EXISTS_FOR_THIS_TYPE_OF_DOCSERVER')) define( '_ALREADY_EXISTS_FOR_THIS_TYPE_OF_DOCSERVER', 'existe déjà pour ce type');
 if (!defined('_DOCSERVER_LOCATION_ENABLED')) define( '_DOCSERVER_LOCATION_ENABLED', 'Lieu de stockage actif');
-if (!defined('_LINK_EXISTS')) {
-    define('_LINK_EXISTS', 'Un lien avec un autre objet existe');
-}
+if (!defined('_LINK_EXISTS'))    define('_LINK_EXISTS', 'Un lien avec un autre objet existe');
 
 
 /***************DOCSERVERS TYPES*************************************/
@@ -1456,324 +1211,102 @@ if (!defined('_FINGERPRINT'))  define('_FINGERPRINT', 'Empreinte num&eacute;riqu
 if (!defined('_OFFSET'))  define('_OFFSET', 'Offset');
 if (!defined('_SETUP'))  define('_SETUP', 'Configurer');
 
-
-if (!defined('_PARAM_MLB_DOCTYPES')) {
-    define('_PARAM_MLB_DOCTYPES', 'Param&eacute;trage des types de documents ');
-}
-if (!defined('_PARAM_MLB_DOCTYPES_DESC')) {
-    define('_PARAM_MLB_DOCTYPES_DESC', 'Param&eacute;trage des types de documents ');
-}
-if (!defined('_WELCOME_TEXT_LOAD')) {
-    define('_WELCOME_TEXT_LOAD', 'Chargement texte page d&rsquo;accueil');
-}
-if (!defined('_REOPEN_MAIL_DESC')) {
-    define('_REOPEN_MAIL_DESC', 'R&eacute;ouverture de courrier');
-}
-if (!defined('_WRONG_FUNCTION_OR_WRONG_PARAMETERS')) {
-    define('_WRONG_FUNCTION_OR_WRONG_PARAMETERS', 'Mauvais appel ou mauvaus param&eagrave;tre');
-}
-if (!defined('_INDEXING_INSERT_ERROR')) {
-    define('_INDEXING_INSERT_ERROR', 'Indexation : erreur lors de l&rsquo;insertion');
-}
-
-if (!defined('_LOGIN_HISTORY')) {
-    define('_LOGIN_HISTORY', 'Connexion de l&rsquo;utilisateur');
-}
-
-if (!defined('_LOGOUT_HISTORY')) {
-    define('_LOGOUT_HISTORY', 'D&eacute;connexion de l&rsquo;utilisateur');
-}
-
-if (!defined('_TO_MASTER_DOCUMENT')) {
-    define('_TO_MASTER_DOCUMENT', 'au document maitre n&deg;');
-}
+if (!defined('_PARAM_MLB_DOCTYPES'))    define('_PARAM_MLB_DOCTYPES', 'Param&eacute;trage des types de documents ');
+if (!defined('_PARAM_MLB_DOCTYPES_DESC'))    define('_PARAM_MLB_DOCTYPES_DESC', 'Param&eacute;trage des types de documents ');
+if (!defined('_WELCOME_TEXT_LOAD'))    define('_WELCOME_TEXT_LOAD', 'Chargement texte page d&rsquo;accueil');
+if (!defined('_REOPEN_MAIL_DESC'))    define('_REOPEN_MAIL_DESC', 'R&eacute;ouverture de courrier');
+if (!defined('_WRONG_FUNCTION_OR_WRONG_PARAMETERS'))    define('_WRONG_FUNCTION_OR_WRONG_PARAMETERS', 'Mauvais appel ou mauvaus param&eagrave;tre');
+if (!defined('_INDEXING_INSERT_ERROR'))    define('_INDEXING_INSERT_ERROR', 'Indexation : erreur lors de l&rsquo;insertion');
+if (!defined('_LOGIN_HISTORY'))    define('_LOGIN_HISTORY', 'Connexion de l&rsquo;utilisateur');
+if (!defined('_LOGOUT_HISTORY'))    define('_LOGOUT_HISTORY', 'D&eacute;connexion de l&rsquo;utilisateur');
+if (!defined('_TO_MASTER_DOCUMENT'))    define('_TO_MASTER_DOCUMENT', 'au document maitre n&deg;');
 
 //print details
-if (!defined('_DETAILS_PRINT')) {
-    define( '_DETAILS_PRINT', 'Fiche de liaison N&deg;');
-}
-if (!defined('_PRINT_DETAILS')) {
-    define( '_PRINT_DETAILS', 'Imprimer fiche de liaison');
-}
-if (!defined('_NOTES_1')) {
-    define( '_NOTES_1', 'Exemple Notes service 1');
-}
-if (!defined('_NOTES_2')) {
-    define( '_NOTES_2', 'Exemple Notes service 2');
-}
-if (!defined('_NOTES_3')) {
-    define( '_NOTES_3', 'Exemple Notes service 3');
-}
-
-if (!defined('_WHERE_CLAUSE_NOT_SECURE')) {
-    define(
-        '_WHERE_CLAUSE_NOT_SECURE',
-        'Clause where non s&eacute;curis&eacute;e'
-    );
-}
-
-if (!defined('_SQL_QUERY_NOT_SECURE')) {
-    define(
-        '_SQL_QUERY_NOT_SECURE',
-        'requete SQL non s&eacute;curis&eacute;e'
-    );
-}
+if (!defined('_DETAILS_PRINT'))    define( '_DETAILS_PRINT', 'Fiche de liaison N&deg;');
+if (!defined('_PRINT_DETAILS'))    define( '_PRINT_DETAILS', 'Imprimer fiche de liaison');
+if (!defined('_NOTES_1'))    define( '_NOTES_1', 'Exemple Notes service 1');
+if (!defined('_NOTES_2'))    define( '_NOTES_2', 'Exemple Notes service 2');
+if (!defined('_NOTES_3'))    define( '_NOTES_3', 'Exemple Notes service 3');
+if (!defined('_WHERE_CLAUSE_NOT_SECURE'))    define('_WHERE_CLAUSE_NOT_SECURE','Clause where non s&eacute;curis&eacute;e');
+if (!defined('_SQL_QUERY_NOT_SECURE'))    define('_SQL_QUERY_NOT_SECURE','requete SQL non s&eacute;curis&eacute;e');
 
 //service to put doc on validation from details page
-if (!defined('_PUT_DOC_ON_VALIDATION_FROM_DETAILS')) {
-    define(
-        '_PUT_DOC_ON_VALIDATION_FROM_DETAILS',
-        'Envoyer le document en validation depuis la page d&eacute;tails'
-    );
-}
-
-if (!defined('_PUT_DOC_ON_VALIDATION')) {
-    define(
-        '_PUT_DOC_ON_VALIDATION',
-        'Envoyer le document en validation'
-    );
-}
-
-if (!defined('_REALLY_PUT_DOC_ON_VALIDATION')) {
-    define(
-        '_REALLY_PUT_DOC_ON_VALIDATION',
-        'Confirmer l&rsquo;envoi en validation'
-    );
-}
+if (!defined('_PUT_DOC_ON_VALIDATION_FROM_DETAILS'))    define('_PUT_DOC_ON_VALIDATION_FROM_DETAILS','Envoyer le document en validation depuis la page d&eacute;tails');
+if (!defined('_PUT_DOC_ON_VALIDATION'))    define('_PUT_DOC_ON_VALIDATION','Envoyer le document en validation');
+if (!defined('_REALLY_PUT_DOC_ON_VALIDATION'))    define('_REALLY_PUT_DOC_ON_VALIDATION','Confirmer l&rsquo;envoi en validation');
 
 /*******************************************************************************
  * RA_CODE
 *******************************************************************************/
-if (!defined('_ASK_RA_CODE_1')) {
-    define( '_ASK_RA_CODE_1', 'Un courriel va être envoyé à l\'adresse : ');
-}
-
-if (!defined('_ASK_RA_CODE_2')) {
-    define( '_ASK_RA_CODE_2', 'Une fois le code connu, merci de renouveler votre tentative de connexion.');
-}
-
-if (!defined('_CONFIRM_ASK_RA_CODE_1')) {
-    define( '_CONFIRM_ASK_RA_CODE_1', 'Bonjour, ');
-}
-
-if (!defined('_CONFIRM_ASK_RA_CODE_2')) {
-    define( '_CONFIRM_ASK_RA_CODE_2', 'votre code de connexion distant a l\'application Maarch est : ');
-}
-
-if (!defined('_CONFIRM_ASK_RA_CODE_3')) {
-    define( '_CONFIRM_ASK_RA_CODE_3', 'Ce code reste reste valide jusqu\'au ');
-}
-
-if (!defined('_CONFIRM_ASK_RA_CODE_4')) {
-    define( '_CONFIRM_ASK_RA_CODE_4', 'Pour vous connecter, ');
-}
-
-if (!defined('_CONFIRM_ASK_RA_CODE_5')) {
-    define( '_CONFIRM_ASK_RA_CODE_5', 'cliquez ici');
-}
-
-if (!defined('_CONFIRM_ASK_RA_CODE_6')) {
-    define( '_CONFIRM_ASK_RA_CODE_6', 'Votre code de connexion Maarch');
-}
-
-if (!defined('_CONFIRM_ASK_RA_CODE_7')) {
-    define( '_CONFIRM_ASK_RA_CODE_7', 'Un courriel a été envoyé à votre adresse mail');
-}
-
-if (!defined('_CONFIRM_ASK_RA_CODE_8')) {
-    define( '_CONFIRM_ASK_RA_CODE_8', 'Tentative de reconnexion');
-}
-
-if (!defined('_TRYING_TO_CONNECT_FROM_NOT_ALLOWED_IP')) {
-    define( '_TRYING_TO_CONNECT_FROM_NOT_ALLOWED_IP', 'Vous tentez de vous connecter depuis un emplacement non répertorié.');
-}
-
-if (!defined('_PLEASE_ENTER_YOUR_RA_CODE')) {
-    define( '_PLEASE_ENTER_YOUR_RA_CODE', 'Veuillez entrer le code d\'acces complémentaire.');
-}
-
-if (!defined('_ASK_AN_RA_CODE')) {
-    define( '_ASK_AN_RA_CODE', 'Demander un code d\'accès');
-}
-
-if (!defined('_RA_CODE_1')) {
-    define( '_RA_CODE_1', 'Code complémentaire');
-}
-
-if (!defined('_CAN_T_CONNECT_WITH_THIS_IP')) {
-    define( '_CAN_T_CONNECT_WITH_THIS_IP', 'Vous ne pouvez pas vous connecter depuis un emplacement non répertorié.');
-}
+if (!defined('_ASK_RA_CODE_1'))    define( '_ASK_RA_CODE_1', 'Un courriel va être envoyé à l\'adresse : ');
+if (!defined('_ASK_RA_CODE_2'))    define( '_ASK_RA_CODE_2', 'Une fois le code connu, merci de renouveler votre tentative de connexion.');
+if (!defined('_CONFIRM_ASK_RA_CODE_1'))    define( '_CONFIRM_ASK_RA_CODE_1', 'Bonjour, ');
+if (!defined('_CONFIRM_ASK_RA_CODE_2'))    define( '_CONFIRM_ASK_RA_CODE_2', 'votre code de connexion distant a l\'application Maarch est : ');
+if (!defined('_CONFIRM_ASK_RA_CODE_3'))    define( '_CONFIRM_ASK_RA_CODE_3', 'Ce code reste reste valide jusqu\'au ');
+if (!defined('_CONFIRM_ASK_RA_CODE_4'))    define( '_CONFIRM_ASK_RA_CODE_4', 'Pour vous connecter, ');
+if (!defined('_CONFIRM_ASK_RA_CODE_5'))    define( '_CONFIRM_ASK_RA_CODE_5', 'cliquez ici');
+if (!defined('_CONFIRM_ASK_RA_CODE_6'))    define( '_CONFIRM_ASK_RA_CODE_6', 'Votre code de connexion Maarch');
+if (!defined('_CONFIRM_ASK_RA_CODE_7'))    define( '_CONFIRM_ASK_RA_CODE_7', 'Un courriel a été envoyé à votre adresse mail');
+if (!defined('_CONFIRM_ASK_RA_CODE_8'))    define( '_CONFIRM_ASK_RA_CODE_8', 'Tentative de reconnexion');
+if (!defined('_TRYING_TO_CONNECT_FROM_NOT_ALLOWED_IP'))    define( '_TRYING_TO_CONNECT_FROM_NOT_ALLOWED_IP', 'Vous tentez de vous connecter depuis un emplacement non répertorié.');
+if (!defined('_PLEASE_ENTER_YOUR_RA_CODE'))    define( '_PLEASE_ENTER_YOUR_RA_CODE', 'Veuillez entrer le code d\'acces complémentaire.');
+if (!defined('_ASK_AN_RA_CODE'))    define( '_ASK_AN_RA_CODE', 'Demander un code d\'accès');
+if (!defined('_RA_CODE_1'))    define( '_RA_CODE_1', 'Code complémentaire');
+if (!defined('_CAN_T_CONNECT_WITH_THIS_IP'))    define( '_CAN_T_CONNECT_WITH_THIS_IP', 'Vous ne pouvez pas vous connecter depuis un emplacement non répertorié.');
 
 
 /*******************************************************************************
 * admin => svn_monitoring
 *******************************************************************************/
-if (!defined('_SVN_MONITORING')) {
-    define( '_SVN_MONITORING', 'SVN Supervision');
-}
-
-if (!defined('_LOADING_INFORMATIONS')) {
-    define( '_LOADING_INFORMATIONS', 'Chargement des informations');
-}
-
-if (!defined('_RELEASE_NUMBER')) {
-    define( '_RELEASE_NUMBER', 'N&deg; de r&eacute;vision');
-}
-
-if (!defined('_BY')) {
-    define( '_BY', 'par');
-}
-
-if (!defined('_UP_TO_DATE')) {
-    define( '_UP_TO_DATE', '&agrave; jour');
-}
-
-if (!defined('_ACTUAL_INSTALLATION')) {
-    define( '_ACTUAL_INSTALLATION', 'version install&eacute;e');
-}
-
-if (!defined('_MAKE_UPDATE')) {
-    define( '_MAKE_UPDATE', 'mettre &agrave; jour');
-}
-
-if (!defined('_TO_GET_LOG_PLEASE_CONNECT')) {
-    define( '_TO_GET_LOG_PLEASE_CONNECT', 'Pour obtenir la liste des logs, vous devez &ecirc;tre connect&eacute;');
-}
-
-if (!defined('_MANAGE_MEP_RELEASE')) {
-    define( '_MANAGE_MEP_RELEASE', 'Gestion des r&eacute;visions de Maarch Entreprise');
-}
-
-if (!defined('_INSTALL_SVN_EXTENSION')) {
-    define( '_INSTALL_SVN_EXTENSION', 'Vous devez installer la librairie PHP svn pour acc&eacute;der aux logs.');
-}
-
-if (!defined('_REVERSE_CHECK')) {
-    define( '_REVERSE_CHECK', 'Inverser la s&eacute;lection');
-}
-
-if (!defined('_CHECK_ALL')) {
-    define( '_CHECK_ALL', 'Tout cocher');
-}
-
-if (!defined('_UNCHECK_ALL')) {
-    define( '_UNCHECK_ALL', '/ d&eacute;cocher');
-}
+if (!defined('_SVN_MONITORING'))    define( '_SVN_MONITORING', 'SVN Supervision');
+if (!defined('_LOADING_INFORMATIONS'))    define( '_LOADING_INFORMATIONS', 'Chargement des informations');
+if (!defined('_RELEASE_NUMBER'))    define( '_RELEASE_NUMBER', 'N&deg; de r&eacute;vision');
+if (!defined('_BY'))    define( '_BY', 'par');
+if (!defined('_UP_TO_DATE'))    define( '_UP_TO_DATE', '&agrave; jour');
+if (!defined('_ACTUAL_INSTALLATION'))    define( '_ACTUAL_INSTALLATION', 'version install&eacute;e');
+if (!defined('_MAKE_UPDATE'))    define( '_MAKE_UPDATE', 'mettre &agrave; jour');
+if (!defined('_TO_GET_LOG_PLEASE_CONNECT'))    define( '_TO_GET_LOG_PLEASE_CONNECT', 'Pour obtenir la liste des logs, vous devez &ecirc;tre connect&eacute;');
+if (!defined('_MANAGE_MEP_RELEASE'))    define( '_MANAGE_MEP_RELEASE', 'Gestion des r&eacute;visions de Maarch Entreprise');
+if (!defined('_INSTALL_SVN_EXTENSION'))    define( '_INSTALL_SVN_EXTENSION', 'Vous devez installer la librairie PHP svn pour acc&eacute;der aux logs.');
+if (!defined('_REVERSE_CHECK'))    define( '_REVERSE_CHECK', 'Inverser la s&eacute;lection');
+if (!defined('_CHECK_ALL'))    define( '_CHECK_ALL', 'Tout cocher');
+if (!defined('_UNCHECK_ALL'))    define( '_UNCHECK_ALL', '/ d&eacute;cocher');
 
 //EXPORT
-
-if (!defined('_EXPORT_LIST')) {
-    define( '_EXPORT_LIST', 'Exporter');
-}
+if (!defined('_EXPORT_LIST'))    define( '_EXPORT_LIST', 'Exporter');
 
 /******************** Action put in copy ************/
-if (!defined('_PUT_IN_COPY')) {
-    define('_PUT_IN_COPY', 'Ajouter en copie');
-}
-
-if (!defined('_POWERED_BY')) {
-    define('_POWERED_BY', 'Powered by Maarch&trade;.');
-}
-
-if (!defined('_LINK_TO_DOC')) {
-    define('_LINK_TO_DOC', 'Lier &agrave; un courrier existant');
-}
-
-if (!defined('_LINK_REFERENCE')) {
-    define('_LINK_REFERENCE', 'Pour lier vous devez choisir un courrier existant');
-}
-
-if (!defined('_LINKED_TO')) {
-    define('_LINKED_TO', 'Li&eacute; au document ');
-}
-
-if (!defined('_NOW_LINK_WITH_THIS_ONE')) {
-    define('_NOW_LINK_WITH_THIS_ONE', ' est maintenant li&eacute; &agrave; ce documents');
-}
-
-if (!defined('_LINK_TAB')) {
-    define('_LINK_TAB', 'Liaisons');
-}
-
-if (!defined('_LINK_DESC_FOR')) {
-    define('_LINK_DESC_FOR', 'Courrier(s) li&eacute;s &agrave; ce document');
-}
-
-if (!defined('_LINK_ASC_FOR')) {
-    define('_LINK_ASC_FOR', 'Courriers au(x)quel(s) est li&eacute; ce document');
-}
-
-if (!defined('_ADD_A_LINK')) {
-    define('_ADD_A_LINK', 'Ajouter une liaison');
-}
-
-if (!defined('_LINK_ACTION')) {
-    define('_LINK_ACTION', 'Lier');
-}
-
-if (!defined('_LINK_ALREADY_EXISTS')) {
-    define('_LINK_ALREADY_EXISTS', 'Cette liaison existe d&eacute;j&agrave;');
-}
-
-if (!defined('_THE_DOCUMENT_LINK')) {
-    define('_THE_DOCUMENT_LINK', 'Le document ');
-}
-
-if (!defined('_LINK_TO_THE_DOCUMENT')) {
-    define('_LINK_TO_THE_DOCUMENT', 'Le lien au document ');
-}
-
-if (!defined('_NO_LINK_WITH_THIS_ONE')) {
-    define('_NO_LINK_WITH_THIS_ONE', "n' est plus li&eacute, &agrave; celui ci");
-}
-
-if (!defined('_LINK_DELETED')) {
-    define('_LINK_DELETED', '&agrave &eacute;t&eacute; supprim&eacute;');
-}
+if (!defined('_PUT_IN_COPY'))    define('_PUT_IN_COPY', 'Ajouter en copie');
+if (!defined('_POWERED_BY'))    define('_POWERED_BY', 'Powered by Maarch&trade;.');
+if (!defined('_LINK_TO_DOC'))    define('_LINK_TO_DOC', 'Lier &agrave; un courrier existant');
+if (!defined('_LINK_REFERENCE'))    define('_LINK_REFERENCE', 'Pour lier vous devez choisir un courrier existant');
+if (!defined('_LINKED_TO'))    define('_LINKED_TO', 'Li&eacute; au document ');
+if (!defined('_NOW_LINK_WITH_THIS_ONE'))    define('_NOW_LINK_WITH_THIS_ONE', ' est maintenant li&eacute; &agrave; ce documents');
+if (!defined('_LINK_TAB'))    define('_LINK_TAB', 'Liaisons');
+if (!defined('_LINK_DESC_FOR'))    define('_LINK_DESC_FOR', 'Courrier(s) li&eacute;s &agrave; ce document');
+if (!defined('_LINK_ASC_FOR'))    define('_LINK_ASC_FOR', 'Courriers au(x)quel(s) est li&eacute; ce document');
+if (!defined('_ADD_A_LINK'))    define('_ADD_A_LINK', 'Ajouter une liaison');
+if (!defined('_LINK_ACTION'))    define('_LINK_ACTION', 'Lier');
+if (!defined('_LINK_ALREADY_EXISTS'))    define('_LINK_ALREADY_EXISTS', 'Cette liaison existe d&eacute;j&agrave;');
+if (!defined('_THE_DOCUMENT_LINK'))    define('_THE_DOCUMENT_LINK', 'Le document ');
+if (!defined('_LINK_TO_THE_DOCUMENT'))    define('_LINK_TO_THE_DOCUMENT', 'Le lien au document ');
+if (!defined('_NO_LINK_WITH_THIS_ONE'))    define('_NO_LINK_WITH_THIS_ONE', "n' est plus li&eacute, &agrave; celui ci");
+if (!defined('_LINK_DELETED'))    define('_LINK_DELETED', '&agrave &eacute;t&eacute; supprim&eacute;');
 
 /******************** Versions ************/
-if (!defined('_VERSIONS')) {
-    define('_VERSIONS', 'Versions');
-}
-
-if (!defined('_CREATE_NEW_VERSION')) {
-    define('_CREATE_NEW_VERSION', 'Cr&eacute;er une nouvelle version de document');
-}
-if (!defined('_CONTENT_MANAGEMENT_COMMENT')) {
-    define('_CONTENT_MANAGEMENT_COMMENT', 'Gestion des Versions de document');
-}
-
-if (!defined('_VIEW_VERSIONS')) {
-    define('_VIEW_VERSIONS', 'Voir les versions de document');
-}
-if (!defined('_ADD_NEW_VERSION')) {
-    define('_ADD_NEW_VERSION', 'Ajoutr&eacute;er une nouvelle version de document');
-}
-if (!defined('_VIEW_ORIGINAL')) {
-    define('_VIEW_ORIGINAL', 'Voir le document original');
-}
-if (!defined('_PJ')) {
-    define('_PJ', 'Pièces jointes');
-}
+if (!defined('_VERSIONS'))    define('_VERSIONS', 'Versions');
+if (!defined('_CREATE_NEW_VERSION'))    define('_CREATE_NEW_VERSION', 'Cr&eacute;er une nouvelle version de document');
+if (!defined('_CONTENT_MANAGEMENT_COMMENT'))    define('_CONTENT_MANAGEMENT_COMMENT', 'Gestion des Versions de document');
+if (!defined('_VIEW_VERSIONS'))    define('_VIEW_VERSIONS', 'Voir les versions de document');
+if (!defined('_ADD_NEW_VERSION'))    define('_ADD_NEW_VERSION', 'Ajoutr&eacute;er une nouvelle version de document');
+if (!defined('_VIEW_ORIGINAL'))    define('_VIEW_ORIGINAL', 'Voir le document original');
+if (!defined('_PJ'))    define('_PJ', 'Pièces jointes');
 
 /******************** Liste avec réponses ************/
-if (!defined('_CONSULT')) {
-    define('_CONSULT', 'Consulter');
-}
-
-if (!defined('_DOCUMENTS_LIST_WITH_ATTACHMENTS')) {
-    define('_DOCUMENTS_LIST_WITH_ATTACHMENTS', 'Liste avec filtre et r&eacute;ponses');
-}
-
-if (!defined('_QUALIFY_FIRST')) {
-    define('_QUALIFY_FIRST', 'La fiche d&eacute;tails est vide car le courrier doit &ecirc;tre qualifi&eacute;');
-}
+if (!defined('_CONSULT'))    define('_CONSULT', 'Consulter');
+if (!defined('_DOCUMENTS_LIST_WITH_ATTACHMENTS'))    define('_DOCUMENTS_LIST_WITH_ATTACHMENTS', 'Liste avec filtre et r&eacute;ponses');
+if (!defined('_QUALIFY_FIRST'))    define('_QUALIFY_FIRST', 'La fiche d&eacute;tails est vide car le courrier doit &ecirc;tre qualifi&eacute;');
 
 /******************** persistent mode ************/
-if (!defined('_SET_PERSISTENT_MODE_ON')) {
-    define('_SET_PERSISTENT_MODE_ON', 'Activer la persistance');
-}
-
-if (!defined('_SET_PERSISTENT_MODE_OFF')) {
-    define('_SET_PERSISTENT_MODE_OFF', 'Désactiver la persistance');
-}
+if (!defined('_SET_PERSISTENT_MODE_ON'))    define('_SET_PERSISTENT_MODE_ON', 'Activer la persistance');
+if (!defined('_SET_PERSISTENT_MODE_OFF'))    define('_SET_PERSISTENT_MODE_OFF', 'Désactiver la persistance');
