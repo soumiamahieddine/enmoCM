@@ -824,22 +824,7 @@ INSERT INTO templates_association (system_id, template_id, what, value_field, ma
 INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (33, 3, 'destination', 'COU', 'entities');
 INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (34, 3, 'destination', 'PSF', 'entities');
 INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (35, 3, 'destination', 'DRH', 'entities');
-INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (36, 3, 'destination', 'VILLE', 'entities');
-INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (37, 3, 'destination', 'CAB', 'entities');
-INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (38, 3, 'destination', 'DGS', 'entities');
-INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (39, 3, 'destination', 'DSI', 'entities');
-INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (40, 3, 'destination', 'FIN', 'entities');
-INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (41, 3, 'destination', 'DGA', 'entities');
-INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (42, 3, 'destination', 'PCU', 'entities');
-INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (43, 3, 'destination', 'PTE', 'entities');
-INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (44, 3, 'destination', 'PJS', 'entities');
-INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (45, 3, 'destination', 'PE', 'entities');
-INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (46, 3, 'destination', 'SP', 'entities');
-INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (47, 3, 'destination', 'PSO', 'entities');
-INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (48, 3, 'destination', 'DSG', 'entities');
-INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (49, 3, 'destination', 'COU', 'entities');
-INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (50, 3, 'destination', 'PSF', 'entities');
-INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (51, 3, 'destination', 'DRH', 'entities');
+
 
 
 --
