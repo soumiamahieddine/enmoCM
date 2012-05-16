@@ -1093,14 +1093,17 @@ class templates_controler extends ObjectControler implements ObjectControlerIF
         // Get template path from docserver or copy HTML template to temp file 
         $pathToTemplate = $this->getWorkingCopy($templateObj);
         
-        // Get additional datasources
-        $datasourceObj = $this->getDatasourceScript($templateObj->template_datasource);
+        $datasources = $this->getBaseDatasources();
+		// Make params array for datasrouce script
         foreach($params as $paramName => $paramValue) {
             $$paramName = $paramValue;
         }
-        $datasources = $this->getBaseDatasources();
-        require $datasourceObj->script;
-
+		//Retrieve script for datasources
+        $datasourceObj = $this->getDatasourceScript($templateObj->template_datasource);
+		if($datasourceObj->script) {
+			require $datasourceObj->script;
+		}
+		
         // Merge with TBS
         $TBS = new clsTinyButStrong;
 		$TBS->NoErr = true;
