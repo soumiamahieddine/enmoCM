@@ -1,7 +1,7 @@
 <?php
 /*
  *
- *    Copyright 2008,2009 Maarch
+ *    Copyright 2008-2012 Maarch
  *
  *  This file is part of Maarch Framework.
  *
@@ -882,9 +882,13 @@ if (!defined('_APA_CONFIRM_IN_OUT')) define( '_APA_CONFIRM_IN_OUT', 'Confirmatio
 
 ///// Credits
 if (!defined('_MAARCH_CREDITS')) define( '_MAARCH_CREDITS', 'A propos de Maarch&nbsp;');
-
-
-if (!defined('_CR_LONGTEXT_INFOS')) define( '_CR_LONGTEXT_INFOS', '<p>Maarch Framework 3 est une infrastructure de <b>GED de Production</b>, r&eacute;pondant en standard &agrave; la plupart des besoins de gestion op&eacute;rationnelle de contenu d&rsquo;une organisation. La tr&egrave;s grande majorit&eacute; des composants du Framework est diffusé sous les termes de la licence open source GNU GPLv3, de sorte que le coût d&rsquo;impl&eacute;mentation rend la solution aborbable pour tout type d&rsquo;organisation (public, priv&eacute;, parapublic, monde associatif).</p> <p>Pour autant, Maarch Framework ayant &eacute;t&eacute; conçu par deux consultants cumulant &agrave; eux deux plus de 20 ans d&rsquo;expertise en Syst&egrave;mes d&rsquo;Archivage &Eacute;lectronique et en &Eacute;ditique, le produit offre <b>toutes les garanties de robustesse, d&rsquo;int&eacute;grit&eacute;, de performance</b> que l&rsquo;on doit attendre de ce type de produit. Un grand soin a &eacute;t&eacute; port&eacute; sur l&rsquo;architecture afin d&rsquo;autoriser des performances maximales sur du mat&eacute;riel standard.</p><p>Maarch est d&eacute;velopp&eacute; en PHP5 objet. Il est compatible avec les 4 moteurs de bases de donn&eacute;es suivants&nbsp;: MySQL, PostgreSQL, SQLServer, et bientôt Oracle.</p> <p>Maarch est <b>totalement modulaire</b>&nbsp;: toutes les fonctionnalit&eacute;s sont regroup&eacute;es dans des modules exposant des services qui peuvent être activ&eacute;s/d&eacute;sactiv&eacute;s en fonction du profil de l&rsquo;utilisateur. Un ing&eacute;nieur exp&eacute;riment&eacute; peut ajouter ou remplacer un module existant sans toucher au coeur du syst&egrave;me.</p><p>Maarch propose un sch&eacute;ma global et <b>tous les outils pour acqu&eacute;rir, g&eacute;rer, conserver puis restituer les flux documentaires de production</b>.');
+if (!defined('_MAARCH_LICENCE')) define('_MAARCH_LICENCE', 'Maarch Entreprise est diffus&eacute; sous les termes de la');
+if (!defined('_OFFICIAL_WEBSITE')) define('_OFFICIAL_WEBSITE', 'Site officiel');
+if (!defined('_COMMUNITY')) define('_COMMUNITY', 'Communaut&eacute;');
+if (!defined('_DOCUMENTATION')) define('_DOCUMENTATION', 'Documentation');
+if (!defined('_THANKS_TO_EXT_DEV')) define('_THANKS_TO_EXT_DEV', 'Maarch Entreprise s&rsquo;appuie sur quelques composants externes. Merci &agrave; leurs d&eacute;veloppeurs !');
+if (!defined('_EXTERNAL_COMPONENTS')) define('_EXTERNAL_COMPONENTS', 'Composants externes');
+if (!defined('_THANKS_TO_COMMUNITY')) define('_THANKS_TO_COMMUNITY', 'Et toute la communaut&eacute; Maarch !');
 
 if (!defined('_PROCESSING_DATE')) define( '_PROCESSING_DATE', 'Date limite de traitement');
 if (!defined('_PROCESS_NUM')) define( '_PROCESS_NUM','Traitement du courrier n&deg;');

@@ -12,86 +12,101 @@
 * @author  Loic Vinet <dev@maarch.org>
 */
 
-require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
+require_once('core/class/class_security.php');
 $core_tools = new core_tools();
-
-
-
 
 /****************Management of the location bar  ************/
 $init = false;
-if(isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true")
-{
+if (isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true") {
     $init = true;
 }
 $level = "";
-if(isset($_REQUEST['level']) && ($_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1))
-{
+if (
+    isset($_REQUEST['level']) 
+    && ($_REQUEST['level'] == 2 
+        || $_REQUEST['level'] == 3 
+        || $_REQUEST['level'] == 4 
+        || $_REQUEST['level'] == 1
+    )
+) {
     $level = $_REQUEST['level'];
 }
-$page_path = $_SESSION['config']['businessappurl'].'index.php?page=boxes&module=maarch_credits';
+$page_path = $_SESSION['config']['businessappurl'] .
+    'index.php?page=boxes&module=maarch_credits';
 $page_label = _MAARCH_CREDITS;
 $page_id = "maarch_credits";
 $core_tools->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
 ?>
 
-<h1><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_menu_help.gif" alt="" /> <?php  echo _MAARCH_CREDITS; ?></h1>
+<h1><img src="<?php 
+    echo $_SESSION['config']['businessappurl'];
+    ?>static.php?filename=picto_menu_help.gif" alt="" /><?php echo _MAARCH_CREDITS; ?>
+</h1>
 <div id="inner_content" class="clearfix">
-    <div class="maarch_credits_left_box" style="height:420px;">
+    <div class="maarch_credits_left_box" style="height:520px;">
         <h3><?php  echo _MAARCH_CREDITS; ?></h3>
-    <hr/>
-    <p><em>Copyright &copy; 2008-2011 Maarch SAS.</em></p>
-    <p>Maarch Entreprise est diffus&eacute; sous les termes de la <a href="http://www.gnu.org/licenses/gpl-3.0-standalone.html">licence GNU GPLv3</a></p>
-    <div>
+        <hr/>
+        <p><em>Copyright &copy; 2008-2012 Maarch SAS.</em></p>
+        <p><?php echo _MAARCH_LICENCE;?> 
+            <a href="http://www.gnu.org/licenses/gpl-3.0-standalone.html">licence GNU GPLv3</a>.</p>
+        <div>
+            <ul>
+                <li><?php echo _OFFICIAL_WEBSITE;?> : <a href="http://www.maarch.com">http://www.maarch.com</a></li>
+                <li><?php echo _COMMUNITY;?> : <a href="http://www.maarch.org">http://www.maarch.org</a></li>
+                <li><?php echo _DOCUMENTATION;?> : <a href="http://wiki.maarch.org/Accueil">http://wiki.maarch.org/Accueil</a></li>
+            </ul>
+        </div>
+        <p>&nbsp;</p>
+        <h3><?php echo _EXTERNAL_COMPONENTS;?></h3>
+        <hr/>
+        <em><?php echo _THANKS_TO_EXT_DEV;?></em>
+        <p>&nbsp;</p>
         <ul>
-            <li>Site officiel : <a href="http://www.maarch.com">http://www.maarch.com</a></li>
-            <li>Communtauté : <a href="http://www.maarch.org">http://www.maarch.org</a></li>
-            <li>Documentation : <a href="http://wiki.maarch.org/Accueil">http://wiki.maarch.org/Accueil</a></li>
+            <li><a href="http://www.fpdf.org/">Fpdf</a></li>
+            <li><a href="http://www.setasign.de/products/pdf-php-solutions/fpdi/">fpdi</a></li>
+            <li><a href="http://logging.apache.org/log4php/">log4php</a></li>
+            <li><a href="http://chir.ag/tech/download/pdfb">Pdfb</a></li>
+            <li><a href="http://www.foolabs.com/xpdf/">Pdftotext</a></li>
+            <li><a href="http://www.prototypejs.org/">Prototype</a></li>
+            <li><a href="http://script.aculo.us/">Script.aculo.us</a></li>
+            <li><a href="http://www.cyber-sandbox.com/">Tabricator</a></li>
+            <li><a href="http://tafel.developpez.com">Tafel Tree</a></li>
+            <li><a href="http://www.tinybutstrong.com/">Tiny But Strong</a></li>
+            <li><a href="http://www.tinymce.com/">TinyMCE</a></li>
+            <li><a href="http://framework.zend.com/">Zend Lucene Search</a></li>
         </ul>
     </div>
-    <p>&nbsp;</p>
-    <h3>Composants externes</h3>
-    <hr/>
-    <em>Maarch Entreprise s'appuie sur quelques composants externes. Merci à leurs développeurs !</em>
-    <p>&nbsp;</p>
-    <ul>
-        <li><a href="http://www.fpdf.org/">Fpdf</a></li>
-        <li><a href="http://www.setasign.de/products/pdf-php-solutions/fpdi/">fpdi</a></li>
-        <li><a href="http://chir.ag/tech/download/pdfb">Pdfb</a></li>
-        <li><a href="http://www.foolabs.com/xpdf/">Pdftotext</a></li>
-        <li><a href="http://www.prototypejs.org/">Prototype</a></li>
-        <li><a href="http://script.aculo.us/">Script.aculo.us</a></li>
-        <li><a href="http://www.cyber-sandbox.com/">Tabricator</a></li>
-        <li><a href="http://tafel.developpez.com">Tafel Tree</a></li>
-        <li><a href="http://framework.zend.com/">Zend Lucene Search</a></li>
-    </ul>
-    </div>
 
-    <div class="credits_list block" style="height:420px;">
-
-
-    <h3>Credits</h3>
-    <p>&nbsp;</p>
-    <ul>
-        <li>Bruno CARLIN</li>
-        <li>Driss DEMIRAY</li>
-        <li>Mathieu DONZEL</li>
-        <li>Jean-Louis ERCOLANI</li>
-        <li>Claire FIGUERAS</li>
-        <li>Laurent GIOVANNONI</li>
-        <li>Yves-Christian KPAKPO</li>
-	<li>S&eacute;bastien NANABONDJA</li>
-        <li>Fod&eacute; NDIAYE</li>
-        <li>C&eacute;dric NDOUMBA</li>
-        <li>Serge THIERRY-MIEG</li>
-        <li>Loic VINET</li>
-        <li><em>Et toute la communauté Maarch</em></li>
-    </ul>
-    <p>&nbsp;</p>
-
-
-    <div class="img_credits_maarch_box"><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=maarch_box.png" /></div>
+    <div class="credits_list block" style="height:520px;">
+        <h3>Credits</h3>
+        <p>&nbsp;</p>
+        <ul>
+            <li>Bruno CARLIN</li>
+            <li>Carole COTIN</li>
+            <li>Driss DEMIRAY</li>
+            <li>Gaël DE VILLEBLANCHE</li>
+            <li>Mathieu DONZEL</li>
+            <li>Jean-Louis ERCOLANI</li>
+            <li>Claire FIGUERAS</li>
+            <li>Laurent GIOVANNONI</li>
+            <li>Yves-Christian KPAKPO</li>
+            <li>S&eacute;bastien NANABONDJA</li>
+            <li>Fod&eacute; NDIAYE</li>
+            <li>C&eacute;dric NDOUMBA</li>
+            <li>Serge THIERRY-MIEG</li>
+            <li>Alexandre STEFANOVIC</li>
+            <li>Cyril VAZQUEZ</li>
+            <li>Arnaud VEBER</li>
+            <li>Loic VINET</li>
+            <li><em><?php echo _THANKS_TO_COMMUNITY;?></em></li>
+        </ul>
+        <p>&nbsp;</p>
+        <div class="img_credits_maarch_box">
+            <img src="<?php 
+                echo $_SESSION['config']['businessappurl'];
+                ?>static.php?filename=maarch_box.png" />
+        </div>
     </div>
 </div>
 <p style="clear:both"></p>
