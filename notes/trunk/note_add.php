@@ -212,12 +212,12 @@ if (isset($_REQUEST['notes']) && ! empty($_REQUEST['notes'])) {
 					<div  id="config_entities" class ="scrollbox" style=" width: 700px; margin-left:auto; margin-right: auto; height:140px; border: 1px solid #999;">
 						<table align="center" width="100%" id="template_entities" >
 							<tr>
-								<td width="10%" align="center">
+								<td width="20%" align="center">
 								<?php 
 									$notesEntities = array();
 									$notesEntities = $ent->getAllEntities();
 								?>
-									<select name="entitieslist[]" id="entitieslist" size="7" 
+									<select name="entitieslist[]" id="entitieslist" size="7" style="width: 206px"
 											ondblclick='moveclick($(entitieslist), $(entities_chosen));' multiple="multiple" >
 										<?php
 										for ($i=0;$i<count($notesEntities);$i++) {
@@ -237,7 +237,7 @@ if (isset($_REQUEST['notes']) && ! empty($_REQUEST['notes'])) {
 									</select>
 									<br/>
 								</td>
-								<td width="10%" align="center">
+								<td width="20%" align="center">
 									<input type="button" class="button" value="<?php 
 										echo _ADD; 
 										?> &gt;&gt;" onclick='Move($(entitieslist), $(entities_chosen));' />
@@ -247,8 +247,8 @@ if (isset($_REQUEST['notes']) && ! empty($_REQUEST['notes'])) {
 										echo _REMOVE;
 										?>" onclick='Move($(entities_chosen), $(entitieslist));' />
 								</td>
-								<td width="10%" align="center">
-									<select name="entities_chosen[]" id="entities_chosen" size="7" 
+								<td width="30%" align="center">
+									<select name="entities_chosen[]" id="entities_chosen" size="7" style="width: 206px"
 											ondblclick='moveclick($(entities_chosen), $(entitieslist));' multiple="multiple">
 										<?php
 											for ($i=0;$i<count($notesEntities);$i++) {
@@ -262,6 +262,7 @@ if (isset($_REQUEST['notes']) && ! empty($_REQUEST['notes'])) {
 													?></option>
 											<?php
 												}
+												
 											}
 										?>
 									</select>
