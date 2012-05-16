@@ -45,7 +45,7 @@ $core_tools->test_service('quicklaunch', "apps");
         <!--<b><?php echo _QUICKLAUNCH; ?> : </b><br/>-->
        <tr>
        <td>
-        <em><?php echo "Recherche globale"; ?></em>
+        <em><?php echo _GLOBAL_SEARCH; ?></em>
          </td>  
 		<input id = "text" name = "welcome" id="welcome" size="40" autocomplete = "off">
 		<input type="hidden" name="meta[]" value="welcome#welcome#welcome" />
