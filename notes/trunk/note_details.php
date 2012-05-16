@@ -202,9 +202,7 @@ $core->load_html();
 $core->load_header(_NOTES);
 $time = $core->get_session_time_expire();
 ?>
-<body id="pop_up" onload="resizeTo(500, 500);setTimeout(window.close, <?php
-echo $time;
-?>*60*1000);">
+<body id="pop_up" onload="setTimeout(window.close, <?php echo $time; ?>*60*1000);">
 <?php
 if (empty($table) && empty($collId)) {
     $error = _PB_TABLE_COLL;
