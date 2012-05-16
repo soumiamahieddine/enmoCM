@@ -1192,7 +1192,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     $dbNotes->connect();
                     $dbNotes->query($selectNotes);
 					//$dbNotes->show();
-					
+					$not_res = 0;
 					while ($res=$dbNotes->fetch_object())
 					{
 						$dbUser = new dbquery();
@@ -1207,6 +1207,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
 						//$dbUser->show();
 						if($dbUser->nb_result()<>0)
 						$not_res++;
+						
 					}
 					$not_res_title = " (".$not_res.") ";
                     $nb_notes_for_title  = $dbNotes->nb_result();
