@@ -437,7 +437,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 
     //NOTES
     if ($core_tools->is_module_loaded('notes')) {
-
+		$not_nbr = 0;
 		$dbId = new dbquery();
         $dbId->connect();
 		$db = new dbquery();
