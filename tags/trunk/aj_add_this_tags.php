@@ -78,10 +78,10 @@ foreach($new_tags as $new_tag){
 	{
 		$result = $tag->add_this_tags_in_session($new_tag);
 		//$result = $tag->add_this_tags($p_res_id, $p_coll_id, $new_tag);
-		if (!$result){
-			echo "{status : 1, error_txt : '".addslashes(UNABLETOADDTAGS)."'}";
-			exit();	
-		}
+		//if (!$result){
+		//	echo "{status : 1, error_txt : '".addslashes(UNABLETOADDTAGS)."'}";
+		//	exit();	
+		//}
 	}
 
 }

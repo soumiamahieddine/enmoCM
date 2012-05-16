@@ -456,7 +456,7 @@ class tag_controler
 			//$_SESSION['taguser'] = array();	
 			
 			foreach($_SESSION['tagsuser'] as $this_tag){
-				if ($this_tag == $tag_label){
+				if (strtolower($this_tag) == strtolower($tag_label)){
 					$ready = false;
 				}	
 			}	
