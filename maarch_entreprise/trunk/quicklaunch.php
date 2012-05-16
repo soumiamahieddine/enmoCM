@@ -49,7 +49,7 @@ $core_tools->test_service('quicklaunch', "apps");
          </td>  
 		<input id = "text" name = "welcome" id="welcome" size="40" autocomplete = "off">
 		<input type="hidden" name="meta[]" value="welcome#welcome#welcome" />
-		<input class="button_search_adv_text" type="submit"  value="Rechercher" name ="Submit" >
+		<input class="button_search_adv_text" type="submit"  value="<?php echo _SEARCH; ?>" name ="Submit" >
 		<img src = "<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_menu_search_small.gif" alt="<?php echo _HELP_GLOBAL_SEARCH; ?>" title="<?php echo _HELP_GLOBAL_SEARCH; ?>" />
 		
 		<tr/>
