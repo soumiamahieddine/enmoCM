@@ -30,7 +30,7 @@ require_once 'modules/notes/notes_tables.php';
 require_once 'modules/entities/entities_tables.php';
 require_once 'core/core_tables.php';
 require_once "modules" . DIRECTORY_SEPARATOR . "notes" . DIRECTORY_SEPARATOR
-	. "class" . DIRECTORY_SEPARATOR
+    . "class" . DIRECTORY_SEPARATOR
     . "class_modules_tools.php";
 $notes_tools = new notes();
 
@@ -92,13 +92,32 @@ for ($indNotes1 = 0; $indNotes1 < count($tabNotes); $indNotes1 ++ ) {
                 $tabNotes[$indNotes1][$indNotes2]["show"] = true;
                 $indNotes1d = $tabNotes[$indNotes1][$indNotes2]['value'];
                 if (!$notes_tools->getUserNotes(
-					$tabNotes[$indNotes1][$indNotes2]['value'], 
-					$_SESSION['user']['UserId'], 
-					$_SESSION['user']['primaryentity']['id']
-					)
-				) {
-					unset($tabNotes[$indNotes1]);
-				}
+                    $tabNotes[$indNotes1][$indNotes2]['value'], 
+                    $_SESSION['user']['UserId'], 
+                    $_SESSION['user']['primaryentity']['id']
+                    )
+                ) {
+                    unset($tabNotes[$indNotes1]);
+                }
+            }
+        }
+    }
+}
+
+array_multisort($tabNotes);
+
+for ($indNotes1 = 0; $indNotes1 < count($tabNotes); $indNotes1 ++ ) {
+    for ($indNotes2 = 0; $indNotes2 < count($tabNotes[$indNotes1]); $indNotes2 ++) {
+        foreach (array_keys($tabNotes[$indNotes1][$indNotes2]) as $value) {
+            if ($tabNotes[$indNotes1][$indNotes2][$value] == "id") {
+                $tabNotes[$indNotes1][$indNotes2]["id"] = $tabNotes[$indNotes1][$indNotes2]['value'];
+                $tabNotes[$indNotes1][$indNotes2]["label"] = 'ID';
+                $tabNotes[$indNotes1][$indNotes2]["size"] = $sizeSmall;
+                $tabNotes[$indNotes1][$indNotes2]["label_align"] = "left";
+                $tabNotes[$indNotes1][$indNotes2]["align"] = "left";
+                $tabNotes[$indNotes1][$indNotes2]["valign"] = "bottom";
+                $tabNotes[$indNotes1][$indNotes2]["show"] = true;
+                $indNotes1d = $tabNotes[$indNotes1][$indNotes2]['value'];
             }
             if ($tabNotes[$indNotes1][$indNotes2][$value] == "user_id") {
                 $tabNotes[$indNotes1][$indNotes2]["user_id"] = $tabNotes[$indNotes1][$indNotes2]['value'];
@@ -163,6 +182,7 @@ for ($indNotes1 = 0; $indNotes1 < count($tabNotes); $indNotes1 ++ ) {
         }
     }
 }
+
 //$request->show_array($tabNotes);
 $core->load_html();
 //here we building the header
