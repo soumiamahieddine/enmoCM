@@ -19,15 +19,27 @@
  *    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-if (!defined('_ADD_NOTE')) define('_ADD_NOTE','Add a note');
-if (!defined('_READ')) define('_READ', 'read');
-if (!defined('_ADDITION_NOTE')) define('_ADDITION_NOTE', 'Add a note');
-if (!defined('_NOTES_DELETED')) define('_NOTES_DELETED', 'Note deleted');
-if (!defined('_NOTES_MODIFIED')) define('_NOTES_MODIFIED', 'Note modified');
-if (!defined('_NOTE_UPDATED')) define('_NOTE_UPDATED', 'Note modified');
-if (!defined('_NOTES')) define('_NOTES', 'Notes');
-
-if (!defined('_NOTES_COMMENT')) define('_NOTES_COMMENT', 'Notes');
-if (!defined('_OF')) define('_OF', 'of');
+if (!defined('_ADD_NOTE'))
+    define('_ADD_NOTE','Add a note');
+if (!defined('_READ'))
+    define('_READ', 'read');
+if (!defined('_ADDITION_NOTE'))
+    define('_ADDITION_NOTE', 'Add a note');
+if (!defined('_NOTES_ADDED'))
+    define('_NOTES_ADDED', 'Note added');
+if (!defined('_NOTES_DELETED'))
+    define('_NOTES_DELETED', 'Note deleted');
+if (!defined('_NOTES_MODIFIED'))
+    define('_NOTES_MODIFIED', 'Note modified');
+if (!defined('_NOTE_UPDATED'))
+    define('_NOTE_UPDATED', 'Note modified');
+if (!defined('_NOTES'))
+    define('_NOTES', 'Notes');
+if (!defined('_NOTES_COMMENT'))
+    define('_NOTES_COMMENT', 'Notes');
+if (!defined('_OF'))
+    define('_OF', 'of');
+if (!defined('_THIS_NOTE_IS_VISIBLE_BY'))
+    define('_THIS_NOTE_IS_VISIBLE_BY', 'This note is visible by');
 
 ?>
