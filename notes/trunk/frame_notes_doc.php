@@ -45,47 +45,18 @@ array_push(
     "note_text", "user_id"
 );
 
-$entities = "@my_entities";
-$entities = $notes_tools->process_where_clause($entities, $_SESSION['user']['UserId']);
-
-
-$where = " identifier = " . $_SESSION['doc_id'] . 
-		 " and ".NOTE_ENTITIES_TABLE. ".item_id in (".$entities.")
-		   or ".NOTES_TABLE. ".user_id = '".$_SESSION['user']['UserId']. "'";
+$where = " identifier = " . $_SESSION['doc_id'];
 
 $request = new request;
 
-/*$tabNotes = $request->select(
+$tabNotes = $request->select(
     $select, $where, "order by " . NOTES_TABLE. ".date_note desc",
     $_SESSION['config']['databasetype'], "500", true, NOTES_TABLE, USERS_TABLE,
     "user_id"
 );
-*/
-$db->query(
-			" SELECT DISTINCT lastname, firstname, ".NOTES_TABLE.".id, date_note, note_text  FROM " .NOTE_ENTITIES_TABLE. ", " .NOTES_TABLE. ", " .USERS_TABLE.
-			" WHERE (identifier = ".$_SESSION['doc_id'].
-			" AND ( " .NOTE_ENTITIES_TABLE. ".item_id IN (".$entities.
-			") AND " .NOTE_ENTITIES_TABLE. ".note_id = " .NOTES_TABLE. ".id )
-			AND " .NOTES_TABLE. ".user_id = " .USERS_TABLE.".user_id)
-			OR ( identifier = ".$_SESSION['doc_id']."
-			AND ".NOTES_TABLE.".user_id = '".$_SESSION['user']['UserId']."'
-			AND " .NOTES_TABLE. ".user_id = " .USERS_TABLE.".user_id)"
-			);
-			
-		
-$tabNotes=array();
-while($line = $db->fetch_array())
-{
-   $temp= array();
-   foreach (array_keys($line) as $resval)
-   {
-     if (!is_int($resval))
-     {
-        array_push($temp,array('column'=>$resval,'value'=>$line[$resval]));
-     }
-   }
-   array_push($tabNotes,$temp);
-}
+
+//$request->show();
+//$request->show_array($tabNotes);
 
 $indNotes1d = '';
 
@@ -120,6 +91,14 @@ for ($indNotes1 = 0; $indNotes1 < count($tabNotes); $indNotes1 ++ ) {
                 $tabNotes[$indNotes1][$indNotes2]["valign"] = "bottom";
                 $tabNotes[$indNotes1][$indNotes2]["show"] = true;
                 $indNotes1d = $tabNotes[$indNotes1][$indNotes2]['value'];
+                if (!$notes_tools->getUserNotes(
+					$tabNotes[$indNotes1][$indNotes2]['value'], 
+					$_SESSION['user']['UserId'], 
+					$_SESSION['user']['primaryentity']['id']
+					)
+				) {
+					unset($tabNotes[$indNotes1]);
+				}
             }
             if ($tabNotes[$indNotes1][$indNotes2][$value] == "user_id") {
                 $tabNotes[$indNotes1][$indNotes2]["user_id"] = $tabNotes[$indNotes1][$indNotes2]['value'];
