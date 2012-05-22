@@ -300,7 +300,9 @@ class Install extends functions
             return false;
             exit;
         }
-
+		
+		@pg_query('ALTER DATABASE "'.$databasename.'" SET DateStyle =iso, dmy');
+		
         pg_close();
 
         $db = new dbquery();
