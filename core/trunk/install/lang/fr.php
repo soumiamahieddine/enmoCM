@@ -118,7 +118,7 @@ if (!defined('_PATH_OF_DOCSERVER_UNAPPROACHABLE')) {
     define('_PATH_OF_DOCSERVER_UNAPPROACHABLE', "Le dossier racine n'est pas accessible");
 }
 if (!defined('_THE_DOCSERVER_DOES_NOT_HAVE_THE_ADEQUATE_RIGHTS')) {
-    define('_THE_DOCSERVER_DOES_NOT_HAVE_THE_ADEQUATE_RIGHTS', "Le docservers n'as pas les droits appropriés");
+    define('_THE_DOCSERVER_DOES_NOT_HAVE_THE_ADEQUATE_RIGHTS', "Le docservers n'a pas les droits appropriés");
 }
 
 //DATABASE
