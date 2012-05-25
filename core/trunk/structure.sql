@@ -281,7 +281,7 @@ CREATE TABLE users
   "password" character varying(255) DEFAULT NULL::character varying,
   firstname character varying(255) DEFAULT NULL::character varying,
   lastname character varying(255) DEFAULT NULL::character varying,
-  phone character varying(15) DEFAULT NULL::character varying,
+  phone character varying(32) DEFAULT NULL::character varying,
   mail character varying(255) DEFAULT NULL::character varying,
   department character varying(50) DEFAULT NULL::character varying,
   custom_t1 character varying(50) DEFAULT '0'::character varying,
