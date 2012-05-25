@@ -370,7 +370,7 @@ class users_controler extends ObjectControler implements ObjectControlerIF
 
         if (isset($user->phone) && ! empty($user->phone)) {
             $user->phone = $f->protect_string_db(
-            	$f->wash($user->phone, 'no', _PHONE, 'yes', 0, 15)
+            	$f->wash($user->phone, 'no', _PHONE, 'yes', 0, 32)
             );
         }
 
