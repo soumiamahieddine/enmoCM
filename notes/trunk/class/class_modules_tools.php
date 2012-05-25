@@ -182,7 +182,14 @@ class notes extends dbquery
 		if ($this->nb_result() > 0) {
 			return true;
 		 } else {
-			 return false;
+			// test if public
+			$query = "select note_id from note_entities where note_id = " . $noteId;
+			$this->query($query);
+			if ($this->nb_result() == 0) {
+				return true;
+			} else {
+				return false;
+			}
 		 }
 	}
 }
