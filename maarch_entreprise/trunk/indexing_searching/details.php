@@ -548,7 +548,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                 }
 								elseif ($data[$key]['display'] == 'textarea') 
 								{
-									echo '<textarea name="subject" id="subject" rows="3" readonly="readonly" class="readonly" style="width: 200px; max-width: 200px;">'
+									echo '<textarea name="'.$key.'" id="'.$key.'" rows="3" readonly="readonly" class="readonly" style="width: 200px; max-width: 200px;">'
 										.$data[$key]['show_value']
 									.'</textarea>';
 								}
@@ -573,7 +573,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                 }
 								elseif ($data[$key]['display'] == 'textarea') 
 								{
-									echo '<textarea name="subject" id="subject" rows="3" style="width: 200px; max-width: 200px;">'
+									echo '<textarea name="'.$key.'" id="'.$key.'" rows="3" style="width: 200px; max-width: 200px;">'
 										.$data[$key]['show_value']
 									.'</textarea>';
 								}

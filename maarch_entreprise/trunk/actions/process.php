@@ -213,15 +213,12 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                         $frm_str .= '<input type="text" name="' . $key . '" id="' . $key
                             . '" value="' . $data[$key]['show_value']
                             . '" readonly="readonly" class="readonly" style="border:none;" />';
-                        /*if (isset($data[$key]['addon'])) {
-                            $frm_str .= $data[$key]['addon'];
-                        }*/
                     } elseif ($data[$key]['display'] == 'textarea') {
-                        $frm_str .= '<input type="text" name="' . $key . '" id="'
-                            . $key . '" value="' . $data[$key]['show_value']
-                            . '" readonly="readonly" class="readonly" style="border:none;" alt="'
-                            . $data[$key]['show_value'] . '" title="' . $data[$key]['show_value'] . '" /> ';
-                        if (isset($data[$key]['addon'])) {
+						$frm_str .= '<textarea name="'.$key.'" id="'.$key.'" rows="3" readonly="readonly" class="readonly" '
+									.'title="'.$data[$key]['show_value'].'" style="width: 150px; max-width: 150px; border: none; color: #666666;">'
+										.$data[$key]['show_value']
+									.'</textarea>';
+						if (isset($data[$key]['addon'])) {
                             $frm_str .= $data[$key]['addon'];
                         }
                     }
