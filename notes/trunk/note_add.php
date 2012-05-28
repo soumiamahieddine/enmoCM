@@ -93,13 +93,6 @@ if (isset($_REQUEST['notes']) && ! empty($_REQUEST['notes'])) {
 	
     if ($_SESSION['history']['noteadd']) {
         $hist = new history();
-        /*$db->query(
-            "SELECT id FROM " . NOTES_TABLE . " WHERE date_note = " . $date
-            . " and identifier = " . $identifier . " and user_id = '"
-            . $_SESSION['user']['UserId'] . "' and coll_id = '" . $collId . "' "
-        );
-        $res = $db->fetch_object();
-        $id = $res->id;*/
         if (isset($_SESSION['origin']) && $_SESSION['origin'] == "show_folder") {
             $hist->add(
                 $table, $identifier, "ADD", 'noteadd', _ADDITION_NOTE . _ON_FOLDER_NUM
