@@ -133,7 +133,7 @@ while ($line = $db->fetch_object()) {
 
 
 // Redirect to entities
-$query = "select e.entity_id,  e.entity_label FROM " . USERS_TABLE . " u, "
+$query = "select distinct e.entity_id,  e.entity_label FROM " . USERS_TABLE . " u, "
             . ENT_ENTITIES . " e, " . ENT_USERS_ENTITIES . " ue WHERE"
             . " u.status <> 'DEL' and u.enabled = 'Y' and "
             . " e.entity_id = ue.entity_id and u.user_id = ue.user_id "
