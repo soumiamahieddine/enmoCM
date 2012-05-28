@@ -546,6 +546,12 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                     <input type="text" name="<?php echo $key;?>" id="<?php echo $key;?>" value="<?php echo $data[$key]['show_value'];?>" readonly="readonly" class="readonly" size="40"  title="<?php  echo $data[$key]['show_value']; ?>" alt="<?php  echo $data[$key]['show_value']; ?>" />
                                     <?php
                                 }
+								elseif ($data[$key]['display'] == 'textarea') 
+								{
+									echo '<textarea name="subject" id="subject" rows="3" readonly="readonly" class="readonly" style="width: 200px; max-width: 200px;">'
+										.$data[$key]['show_value']
+									.'</textarea>';
+								}
                                 else
                                 {
                                     ?>
@@ -565,6 +571,12 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                     <input type="text" name="<?php echo $key;?>" id="<?php echo $key;?>" value="<?php echo $data[$key]['show_value'];?>" size="40"  title="<?php  echo $data[$key]['show_value']; ?>" alt="<?php  echo $data[$key]['show_value']; ?>" />
                                     <?php
                                 }
+								elseif ($data[$key]['display'] == 'textarea') 
+								{
+									echo '<textarea name="subject" id="subject" rows="3" style="width: 200px; max-width: 200px;">'
+										.$data[$key]['show_value']
+									.'</textarea>';
+								}
                                 else if ($data[$key]['field_type'] == 'date')
                                 {
                                     ?>

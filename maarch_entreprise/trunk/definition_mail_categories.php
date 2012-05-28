@@ -134,7 +134,7 @@ $_ENV['categories']['incoming']['subject'] = array (
     'table' => 'res',
     'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=object.gif',
     'modify' => true,
-    'form_show' => 'textfield'
+    'form_show' => 'textarea'
 );
 $_ENV['categories']['incoming']['process_limit_date_use'] = array (
     'type_form' => 'radio',
@@ -228,7 +228,7 @@ $_ENV['categories']['outgoing']['subject'] = array (
     'table' => 'res',
     'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=object.gif',
     'modify' => true,
-    'form_show' => 'textfield'
+    'form_show' => 'textarea'
 );
 $_ENV['categories']['outgoing']['other_cases']['chrono_number'] = array (
     'type_form' => 'integer',
@@ -333,7 +333,7 @@ $_ENV['categories']['internal']['subject'] = array (
     'table' => 'res',
     'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=object.gif',
     'modify' => true,
-    'form_show' => 'textfield'
+    'form_show' => 'taextarea'
 );
 $_ENV['categories']['internal']['process_limit_date_use'] = array (
     'type_form' => 'radio',
@@ -407,7 +407,7 @@ $_ENV['categories']['market_document']['subject'] = array (
     'table' => 'res',
     'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=object.gif',
     'modify' => true,
-    'form_show' => 'textfield'
+    'form_show' => 'textarea'
 );
 $_ENV['categories']['market_document']['author'] = array (
     'type_form' => 'string',
@@ -482,7 +482,7 @@ $_ENV['categories']['postindexing_document']['subject'] = array (
     'table' => 'res',
     'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=object.gif',
     'modify' => true,
-    'form_show' => 'textfield'
+    'form_show' => 'textarea'
 );
 $_ENV['categories']['postindexing_document']['type_contact'] = array (
     'type_form' => 'radio',
