@@ -151,7 +151,7 @@ $content_standard .= '<img src="' . $_SESSION['config']['businessappurl']
          . $_SESSION['config']['businessappurl'] . 'index.php?display=true'
          . '&module=entities&page=manage_listinstance&origin=' . $origin . $arg
          . '\', \'\', \'scrollbars=yes,menubar=no,toolbar=no,status=no,'
-         . 'resizable=yes,width=1024,height=650,location=no\');">'
+         . 'resizable=yes,width=1280,height=800,location=no\');">'
          . $labelButton . '</a>';
 $content_standard .= '</p>';
 
