@@ -177,6 +177,19 @@
                     </td>
                 </tr>
                 <tr>
+                    <td class="voyantPrerequisites">
+                        <?php echo $Class_Install->checkPrerequisites(
+                            $Class_Install->isPearRequirements(
+                                'SOAP/Disco.php'
+                            ),
+                            true
+                        ); ?>
+                    </td>
+                    <td>
+                        <?php echo 'SOAP'; ?>
+                    </td>
+                </tr>
+                <tr>
                     <td>&nbsp;
 
                     </td>
