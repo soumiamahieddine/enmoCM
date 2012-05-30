@@ -22,10 +22,12 @@ function cmpUsers($a, $b)
     return strcmp($a["lastname"], $b["lastname"]);
 }
 
+
 $core = new core_tools();
 $core->load_lang();
 
 $func = new functions();
+
 
 $db = new dbquery();
 $db->connect();
@@ -92,31 +94,33 @@ if (isset($_GET['what_services']) && ! empty($_GET['what_services'])) {
     $whatServices = addslashes(
         $func->wash($_GET['what_services'], "no", "", "no")
     );
-    $whereUsers .= " and (e.entity_label like '%" . strtolower($whatServices)
+    /*$whereUsers .= " and (e.entity_label like '%" . strtolower($whatServices)
                     . "%' or e.entity_id like '%" . strtoupper($whatServices)
-                    . "%')";
+                    . "%')";*/
     $whereEntities .= " and (e.entity_label like '%"
+                       . strtolower($whatServices) . "%' or e.entity_label like '%"
+                       . $whatServices . "%' or e.entity_id like '%"
                        . strtolower($whatServices) . "%' or e.entity_id like '%"
-                       . strtolower($whatServices) . "%' )";
+                       . $whatServices . "%' )";
 
     $orderByUsers = " order by e.entity_label asc, "
                   . "u.lastname asc, u.firstname asc";
     $orderByEntities = " order by e.entity_label asc";
 }
 
-
 // Redirect to user in entities
 $query = "select distinct u.user_id, u.firstname, u.lastname,e.entity_id, e.entity_label "
     . "FROM " . USERS_TABLE . " u, " . ENT_ENTITIES . " e, "
     . ENT_USERS_ENTITIES . " ue WHERE u.status <> 'DEL' and u.enabled = 'Y' "
     . "and  e.entity_id = ue.entity_id and u.user_id = ue.user_id "
-    . "and e.enabled = 'Y' ". $whereUsers;
+    . "and e.enabled = 'Y' ". $whereUsers . $whereEntities;
 if($redirect_groupbasket) {
     $query .= " and ( e.entity_id in (" . $redirect_groupbasket['users_entities'] . ") "
-		. " or e.entity_id in (" . $redirect_groupbasket['entities'] . ") )";
+        . " or e.entity_id in (" . $redirect_groupbasket['entities'] . ") )";
 }
 $query .= $orderByUsers;
 $db->query($query);
+//$db->show();
 $i = 0;
 while ($line = $db->fetch_object()) {
     array_push(
@@ -131,18 +135,18 @@ while ($line = $db->fetch_object()) {
     );
 }
 
-
 // Redirect to entities
 $query = "select distinct e.entity_id,  e.entity_label FROM " . USERS_TABLE . " u, "
             . ENT_ENTITIES . " e, " . ENT_USERS_ENTITIES . " ue WHERE"
             . " u.status <> 'DEL' and u.enabled = 'Y' and "
             . " e.entity_id = ue.entity_id and u.user_id = ue.user_id "
-            . "and e.enabled = 'Y' " . $whereEntitiesUsers;
+            . "and e.enabled = 'Y' " . $whereEntities;
 if($redirect_groupbasket) {
     $query .= " and e.entity_id in (" . $redirect_groupbasket['entities'] . ") ";
 }
-$query .= $orderByUsers;
+$query .= $orderByEntities;
 $db->query($query);
+//$db->show();
 $i = 0;
 while ($line = $db->fetch_object()) {
     array_push(
@@ -153,7 +157,6 @@ while ($line = $db->fetch_object()) {
         )
     );
 }
-
 
 $origin = $_REQUEST['origin'];
 $id = '';
