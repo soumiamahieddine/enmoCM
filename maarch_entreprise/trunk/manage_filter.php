@@ -110,7 +110,7 @@ elseif( isset($_SESSION['auth_dep']['bask_chosen_contact'] ) && $_SESSION['auth_
 }
 
 $where = trim($_SESSION['current_basket']['clause']);
-$where = str_replace("and status <> 'VAL'", " ", $where);
+//$where = str_replace("and status <> 'VAL'", " ", $where);
 $where_concat = $where;
 
 if(isset($_SESSION['auth_dep']['bask_chosen_entity']) && !empty($_SESSION['auth_dep']['bask_chosen_entity']))
