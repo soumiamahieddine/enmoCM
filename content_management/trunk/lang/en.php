@@ -31,4 +31,5 @@ if (!defined('_NEW_ATTACHMENT_VERSION'))
     define('_NEW_ATTACHMENT_VERSION','Attachment');
 if (!defined('_VERSION'))
     define('_VERSION','Version');
-
+if (!defined('_NEW_VERSION_ADDED'))
+    define('_NEW_VERSION_ADDED','New version added');

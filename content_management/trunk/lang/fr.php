@@ -31,4 +31,5 @@ if (!defined('_NEW_ATTACHMENT_VERSION'))
     define('_NEW_ATTACHMENT_VERSION','R&eacute;ponse au courrier');
 if (!defined('_VERSION'))
     define('_VERSION','Version');
-
+if (!defined('_NEW_VERSION_ADDED'))
+    define('_NEW_VERSION_ADDED','Nouvelle version ajout&eacute;e');

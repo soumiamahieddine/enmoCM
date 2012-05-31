@@ -178,7 +178,7 @@ if (empty($docserver)) {
                     $result = array('ERROR' => $resVersion->get_error());
                     createXML('ERROR', $result);
                 } else {
-                    if ($_SESSION['history']['resversionadd'] == "true") {
+                    if ($_SESSION['history']['cmadd'] == "true") {
                         $hist = new history();
                         $sec = new security();
                         $view = $sec->retrieve_view_from_coll_id(
