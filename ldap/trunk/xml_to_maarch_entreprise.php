@@ -441,10 +441,13 @@ foreach($insert_services as $is)
     if($db->nb_result() == 0)
     {
         $sql_insert = "INSERT INTO entities ( entity_id, ".implode(",",array_keys($update_services_fields)).",entity_type ) VALUES ( '".$service_id."','";
-
         foreach($update_services_fields as $k_usf => $d_usf)
         {
-            $sql_insert .= $func->protect_string_db(trim($xp_in_xml->query("//group[@ext_id=\"".$is."\"]/".$d_usf)->item(0)->nodeValue))."','";
+            if ($k_usf == 'short_label') {
+                $sql_insert .= $func->protect_string_db(substr(trim($xp_in_xml->query("//group[@ext_id=\"".$is."\"]/".$d_usf)->item(0)->nodeValue), 0, 40))."','";
+            } else {
+                $sql_insert .= $func->protect_string_db(trim($xp_in_xml->query("//group[@ext_id=\"".$is."\"]/".$d_usf)->item(0)->nodeValue))."','";
+            }
         }
 
         //Ajout entity_type
@@ -485,7 +488,12 @@ foreach($update_services as $us)
 
     foreach($update_services_fields as $k_usf => $d_usf)
     {
-        $sql_update .= $k_usf." = '".$func->protect_string_db(trim($xp_in_xml->query("//group[@ext_id=\"".$us."\"]/".$d_usf)->item(0)->nodeValue))."', ";
+        if ($k_usf == 'short_label') {
+            $sql_update .= $k_usf." = '".$func->protect_string_db(substr(trim($xp_in_xml->query("//group[@ext_id=\"".$us."\"]/".$d_usf)->item(0)->nodeValue), 0, 50))."', ";
+        } else {
+            $sql_update .= $k_usf." = '".$func->protect_string_db(trim($xp_in_xml->query("//group[@ext_id=\"".$us."\"]/".$d_usf)->item(0)->nodeValue))."', ";
+        }
+        //$sql_update .= $k_usf." = '".$func->protect_string_db(trim($xp_in_xml->query("//group[@ext_id=\"".$us."\"]/".$d_usf)->item(0)->nodeValue))."', ";
     }
 
     $sql_update = substr($sql_update,0,-2)." WHERE entity_id IN
