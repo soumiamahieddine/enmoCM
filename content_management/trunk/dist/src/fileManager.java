@@ -44,16 +44,21 @@ public class fileManager {
         return true;
     }
     
-    public boolean createBatFile(final String pathToBatFile, final String fileToLaunch, final String os) throws IOException, PrivilegedActionException {
-        final Writer out = new OutputStreamWriter(new FileOutputStream(pathToBatFile), "utf-8");
+    public boolean createBatFile(final String pathToBatFile, final String pathToFileToLaunch, final String fileToLaunch, final String os) throws IOException, PrivilegedActionException {
+        final Writer out;
+        if ("win".equals(os)) {
+            out = new OutputStreamWriter(new FileOutputStream(pathToBatFile), "CP850");
+        } else {
+            out = new OutputStreamWriter(new FileOutputStream(pathToBatFile), "utf-8");
+        }
         AccessController.doPrivileged(new PrivilegedExceptionAction() {
                 public Object run() throws IOException {
                     if ("win".equals(os)) {
-                        out.write("start /WAIT " + fileToLaunch);
+                        out.write("start /WAIT /D \"" + pathToFileToLaunch + "\" " + fileToLaunch);
                     } else if ("mac".equals(os)) {
-                        out.write("open -W " + fileToLaunch);
+                        out.write("open -W " + pathToFileToLaunch + fileToLaunch);
                     } else if ("linux".equals(os)) {
-                        out.write("gnome-open " + fileToLaunch);
+                        out.write("gnome-open " + pathToFileToLaunch + fileToLaunch);
                     }
                     out.close();
                     File myFile = new File(pathToBatFile);
