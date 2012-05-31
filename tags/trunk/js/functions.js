@@ -17,7 +17,7 @@ function add_this_tags(action_script, ui_script)
 			method:'post',
 			parameters:
 			{
-				p_input_value : content,
+				p_input_value : content
 				//p_res_id : res_id,
 				//p_coll_id : coll_id
 				
@@ -38,7 +38,7 @@ function add_this_tags(action_script, ui_script)
 					}
 				}
 			},
-		    onFailure: function(){ alert('Something went wrong...'); },
+		    onFailure: function(){ alert('Something went wrong...'); }
 		});
 		
 	}
@@ -70,7 +70,7 @@ function delete_this_tag(action_script,tag_label, ui_script)
 			method:'post',
 			parameters:
 			{
-				p_tag_label : tag_label,			
+				p_tag_label : tag_label
 			},
 		    onSuccess: function(answer){
 			eval("response = "+answer.responseText);
@@ -87,7 +87,7 @@ function delete_this_tag(action_script,tag_label, ui_script)
 					}
 				}
 			},
-		    onFailure: function(){ alert('Something went wrong...'); },
+		    onFailure: function(){ alert('Something went wrong...'); }
 		});
 		
 	}
@@ -111,7 +111,7 @@ function load_tags(path_script)
 			method:'post',
 			parameters:
 			{
-				p_res_id : '10',
+				p_res_id : '10'
 			},
 		    onSuccess: function(answer){
 			eval("response = "+answer.responseText);
@@ -132,7 +132,7 @@ function load_tags(path_script)
 					}
 				}
 			},
-		    onFailure: function(){ alert('Something went wrong...'); },
+		    onFailure: function(){ alert('Something went wrong...'); }
 		});
 		
 	}
@@ -200,7 +200,7 @@ function tag_fusion(search_tag, new_tag, path_script, result_text, header_locati
 			parameters:
 			{
 				a_search_tag : search_tag,
-				a_new_tag : new_tag,			
+				a_new_tag : new_tag
 			},
 		    onSuccess: function(answer){
 			eval("response = "+answer.responseText);
@@ -218,7 +218,7 @@ function tag_fusion(search_tag, new_tag, path_script, result_text, header_locati
 					}
 				}
 			},
-		    onFailure: function(){ alert('Something went wrong...'); },
+		    onFailure: function(){ alert('Something went wrong...'); }
 		});
 		
 	}
