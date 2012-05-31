@@ -19,7 +19,7 @@ function change_properties_box(difftype_id, path_manage_script, diff_list_id, or
         {
             method:'post',
             parameters: { id_type : difftype_id,
-                          origin : origin_arg,
+                          origin : origin_arg
                     },
                 onSuccess: function(answer){
                 eval("response = "+answer.responseText);
@@ -59,7 +59,7 @@ function loadDiffusionProperties(difftype_id, path_manage_script, updatediv_id)
         new Ajax.Request(path_manage_script,
         {
             method:'post',
-            parameters: { id_type : difftype_id,
+            parameters: { id_type : difftype_id
                     },
                 onSuccess: function(answer){
 				eval("response = "+answer.responseText);
@@ -116,7 +116,7 @@ function loadAttachforProperties(difftype_id, path_manage_script, updatediv_id)
         new Ajax.Request(path_manage_script,
         {
             method:'post',
-            parameters: { id_type : difftype_id,
+            parameters: { id_type : difftype_id
                     },
                 onSuccess: function(answer){
 				eval("response = "+answer.responseText);
