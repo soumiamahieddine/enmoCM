@@ -30,7 +30,7 @@ function changeStyle(style_id, path_to_script)
     new Ajax.Request(path_to_script,
     {
         method:'post',
-        parameters: {template_style: style_id.value,},
+        parameters: {template_style: style_id.value},
         onSuccess: function(answer){
             eval("response = "+answer.responseText)
         },
