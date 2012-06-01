@@ -81,6 +81,10 @@ class ExportControler
                 && !empty($this->return_loadXMLConf[$this->coll]['FUNCTIONS']['COPIES'])) {
                 $resultQuery[$cpt][$this->return_loadXMLConf[$this->coll]['FUNCTIONS']['COPIES']] = substr($this->functions_copies($return_dbQuery->res_id), 0, -2);
             }
+			if (   isset($this->return_loadXMLConf[$this->coll]['FUNCTIONS']['LINK'])
+                && !empty($this->return_loadXMLConf[$this->coll]['FUNCTIONS']['LINK'])) {
+                $resultQuery[$cpt][$this->return_loadXMLConf[$this->coll]['FUNCTIONS']['LINK']] = $this->functions_link($return_dbQuery->res_id);
+            }
 
             $resultQuery[$cpt]['commentaire'] = '';
             $cpt++;
@@ -187,5 +191,12 @@ class ExportControler
         }
 
         return $return_functionsCopies;
+    }
+	
+	private function functions_link($res_id)
+    {
+		$return_functionSLink = $_SESSION['config']['businessappurl'].'index.php?page=details&dir=indexing_searching&id='.$res_id;
+
+        return $return_functionSLink;
     }
 }
