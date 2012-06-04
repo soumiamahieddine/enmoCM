@@ -77,14 +77,11 @@ if (! empty($_SESSION['error'])) {
         //Extraction de /root/config dans le fichier de conf
         $ldapConf = new DomDocument();
         try {
-            if (! @$ldapConf->load(
-                'apps/' . $_SESSION['config']['app_id'].'/ldap/config_ldap.xml'
-            )
-            ) {
+            if (!@$ldapConf->load($_SESSION['config']['corepath'].'modules/ldap/xml/config.xml')) 
+			{
                 throw new Exception(
                     'Impossible de charger le document : '
-                    . $_SESSION['config']['businessappurl']
-                    .'ldap/config_ldap.xml'
+                    . $_SESSION['config']['corepath'].'modules/ldap/xml/config.xml'
                 );
             }
         } catch(Exception $e) {
@@ -98,11 +95,9 @@ if (! empty($_SESSION['error'])) {
         }
 
         //On inclus la class LDAP qui correspond à l'annuaire
-        if (! include
-            'apps/' . $_SESSION['config']['app_id'] . '/ldap/class_'
-            . $ldapType . '.php'
-        ) {
-            exit('Impossible de charger class_' . $ldapType . '.php\n');
+        if (!include $_SESSION['config']['corepath'] . 'modules/ldap/class/class_adLDAP.php') 
+		{
+            exit('Impossible de charger class_' . $_SESSION['config']['corepath'] . 'modules/ldap/class/class_adLDAP.php'."\n");
         }
 
         //Try to create a new ldap instance
@@ -116,11 +111,13 @@ if (! empty($_SESSION['error'])) {
         if ($ad -> authenticate($login, $password)) {
             $db = new dbquery();
             $db->connect();
+			
+			$login = end(explode('\\', $login));
 
             $query = 'select * from ' . USERS_TABLE
                        . " where user_id like '"
                        . $this->protect_string_db($login) . "' ";
-
+					   
             $db->query($query);
             if ($db->fetch_object()) {
                 $_SESSION['error'] = '';
@@ -146,7 +143,7 @@ if (! empty($_SESSION['error'])) {
                 exit;
             }
         } else {
-            $_SESSION['error'] = _BAD_LOGIN_OR_PSW . '...';
+            $_SESSION['error'] = _BAD_LOGIN_OR_PSW . ' (ad authenticate) ...';
             header(
                 'location: ' . $_SESSION['config']['businessappurl']
                 . 'index.php?display=true&page=login&coreurl='
@@ -188,7 +185,7 @@ if (! empty($_SESSION['error'])) {
     }
     else {
         if (empty($login) || empty($password)) {
-            $_SESSION['error'] = _BAD_LOGIN_OR_PSW . '...';
+            $_SESSION['error'] = _BAD_LOGIN_OR_PSW . ' ici1 ...';
             header(
                 'location: ' . $_SESSION['config']['businessappurl']
                 . 'index.php?display=true&page=login&coreurl='
