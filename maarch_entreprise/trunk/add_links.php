@@ -15,15 +15,19 @@ if (isset($_REQUEST['res_id']) && isset($_REQUEST['res_id_child'])) {
         $res_parent = $_REQUEST['res_id'];
 
         if ($_REQUEST['mode'] == 'add') {
-
-            $queryTest = "SELECT * FROM res_linked WHERE res_parent=".$res_parent." AND res_child=".$res_child." AND coll_id='".$_SESSION['collection_id_choice']."'";
-            $db->query($queryTest);
-            $i = 0;
-            while($test = $db->fetch_object()) {
-                $i++;
+            $self = false;
+            if ($res_child == $res_parent) {
+                $self = true;
+            } else {
+                $queryTest = "SELECT * FROM res_linked WHERE res_parent=".$res_parent." AND res_child=".$res_child." AND coll_id='".$_SESSION['collection_id_choice']."'";
+                $db->query($queryTest);
+                $i = 0;
+                while($test = $db->fetch_object()) {
+                    $i++;
+                }
             }
-
-            if ($i == 0) {
+            
+            if ($i == 0 && !$self) {
                 $queryAddLink = "INSERT INTO res_linked (res_parent, res_child, coll_id) VALUES('" . $res_parent . "', '" . $res_child . "', '" . $_SESSION['collection_id_choice'] . "')";
 
                 $db->query($queryAddLink);
@@ -116,6 +120,10 @@ if (isset($_REQUEST['res_id']) && isset($_REQUEST['res_id_child'])) {
             );
             $formatText .= '<br />';
         }
+        
+        if ($self) {
+            $formatText .= '';
+        }
 
         if ($i != 0) {
             $formatText .= '<br />';
@@ -149,6 +157,7 @@ if (isset($_REQUEST['res_id']) && isset($_REQUEST['res_id_child'])) {
         $Links .= '<table width="10%" border="0" >';
             $Links .= '<tr>';
                 $Links .= '<td style="text-align: right;">';
+                    /*
                     $Links .= '<a ';
                       $Links .= 'href="javascript://" ';
                       $Links .= 'onclick="window.open(';
@@ -166,6 +175,7 @@ if (isset($_REQUEST['res_id']) && isset($_REQUEST['res_id_child'])) {
                             $Links .= '/>';
                         $Links .= '</span>';
                     $Links .= '</a>';
+                    */
                 $Links .= '</td>';
                 $Links .= '<td>';
                     $Links .= '<input ';
@@ -188,15 +198,21 @@ if (isset($_REQUEST['res_id']) && isset($_REQUEST['res_id_child'])) {
                 $Links .= '</td>';
                 $Links .= '<td style="text-align: right;">';
                     $Links .= '<input ';
+                      $Links .= 'onclick="window.open(';
+                        $Links .= '\'' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=indexing_searching&page=search_adv&mode=popup&action_form=show_res_id&modulename=attachments&init_search&exclude='.$_SESSION['doc_id'].'&nodetails\', ';
+                        $Links .= '\'search_doc_for_attachment\', ';
+                        $Links .= '\'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=1100,height=775\'';
+                        $Links .= ');"';
                       $Links .= 'type="text" ';
-                      $Links .= 'name="res_id" ';
-                      $Links .= 'id="res_id" ';
-                      $Links .= 'onMouseOver="this.setValue($(\'res_id\').value);"';
+                      $Links .= 'name="res_id_link" ';
+                      $Links .= 'id="res_id_link" ';
                       $Links .= 'class="readonly" ';
                       $Links .= 'readonly="readonly" ';
+                      $Links .= 'value="Rechercher un document"';
                       $Links .= 'style="';
                         $Links .= 'background-color: rgba(225, 225, 225, 1); ';
                         $Links .= 'border: solid 1px rgba(110, 110, 110, 1); ';
+                        $Links .= 'width: 150px; ';
                       $Links .= '" ';
                     $Links .= '/>';
                 $Links .= '</td>';
@@ -213,7 +229,8 @@ if (isset($_REQUEST['res_id']) && isset($_REQUEST['res_id_child'])) {
                     $Links .= '<input ';
                       $Links .= 'type="button" ';
                       $Links .= 'class="button" ';
-                      $Links .= 'onClick="addLinks(\''.$_SESSION['config']['businessappurl'].'index.php?page=add_links&display=true\', \''.$_SESSION['doc_id'].'\', $(\'res_id\').value, \'add\');"';
+                      $Links .= 'onClick="addLinks(\''.$_SESSION['config']['businessappurl'].'index.php?page=add_links&display=true\', \''.$_SESSION['doc_id'].'\', $(\'res_id_link\').value, \'add\');';
+                      $Links .= '$(\'res_id_link\').setValue(\'Recherche un document\');"';
                       $Links .= 'value=" '._LINK_ACTION.' " ';
                     $Links .= '>';
                 $Links .= '</td>';
@@ -221,7 +238,3 @@ if (isset($_REQUEST['res_id']) && isset($_REQUEST['res_id_child'])) {
         $Links .= '</table>';
     $Links .= '</form>';
 }
-
-/*
-AND res_id <> 170 AND (res_id not in ((SELECT res_parent FROM res_linked WHERE res_child = 170 )) and res_id not in ((SELECT res_child FROM res_linked WHERE res_parent = 170)))
-*/
