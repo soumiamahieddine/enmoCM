@@ -191,6 +191,7 @@ if (isset($_REQUEST['res_id']) && isset($_REQUEST['res_id_child'])) {
                       $Links .= 'type="text" ';
                       $Links .= 'name="res_id" ';
                       $Links .= 'id="res_id" ';
+                      $Links .= 'onMouseOver="this.setValue($(\'res_id\').value);"';
                       $Links .= 'class="readonly" ';
                       $Links .= 'readonly="readonly" ';
                       $Links .= 'style="';
