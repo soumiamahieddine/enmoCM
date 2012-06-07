@@ -78,7 +78,7 @@ class diffusion_list extends dbquery
         $entityId = $this->protect_string_db($entityId);
         $this->connect();
         $this->query(
-        	"select l.item_id, u.firstname, u.lastname, e.entity_id, "
+            "select l.item_id, u.firstname, u.lastname, e.entity_id, "
             . "e.entity_label  from " . ENT_LISTMODELS . " l, " . USERS_TABLE
             . " u, " . ENT_ENTITIES . " e, " . ENT_USERS_ENTITIES
             . " ue where l.coll_id = '" . $this->protect_string_db(trim($collId))
@@ -100,7 +100,7 @@ class diffusion_list extends dbquery
             $listmodel['dest']['entity_label'] = $this->show_str($res->entity_label);
         }
         $this->query(
-        	"select  l.item_id, u.firstname, u.lastname, e.entity_id, "
+            "select  l.item_id, u.firstname, u.lastname, e.entity_id, "
             . "e.entity_label from " . ENT_LISTMODELS . " l, " . USERS_TABLE
             . " u, " . ENT_ENTITIES . " e, " . ENT_USERS_ENTITIES
             . " ue where l.coll_id = '" . $this->protect_string_db(trim($collId))
@@ -116,17 +116,17 @@ class diffusion_list extends dbquery
             array_push(
                 $listmodel['copy']['users'],
                 array(
-                	'user_id' => $this->show_string($res->item_id),
-                	'lastname' => $this->show_string($res->lastname),
-                	'firstname' => $this->show_string($res->firstname),
-                	'entity_id' => $this->show_string($res->entity_id),
-                	'entity_label' => $this->show_string($res->entity_label)
+                    'user_id' => $this->show_string($res->item_id),
+                    'lastname' => $this->show_string($res->lastname),
+                    'firstname' => $this->show_string($res->firstname),
+                    'entity_id' => $this->show_string($res->entity_id),
+                    'entity_label' => $this->show_string($res->entity_label)
                 )
             );
         }
 
         $this->query(
-        	"select l.item_id,  e.entity_label from " . ENT_LISTMODELS . " l, "
+            "select l.item_id,  e.entity_label from " . ENT_LISTMODELS . " l, "
             . ENT_ENTITIES . " e where l.coll_id = '"
             . $this->protect_string_db(trim($collId)) . "' "
             . "and l.listmodel_type = 'DOC' and l.item_mode = 'cc' "
@@ -139,8 +139,8 @@ class diffusion_list extends dbquery
             array_push(
                 $listmodel['copy']['entities'],
                 array(
-                	'entity_id' => $this->show_string($res->item_id),
-                	'entity_label' => $this->show_string($res->entity_label)
+                    'entity_id' => $this->show_string($res->item_id),
+                    'entity_label' => $this->show_string($res->entity_label)
                 )
             );
         }
@@ -188,7 +188,7 @@ class diffusion_list extends dbquery
             && ! empty($params['object_id'])
         ) {
             $this->query(
-            	"delete from " . $params['table'] . " where coll_id = '"
+                "delete from " . $params['table'] . " where coll_id = '"
                 . $this->protect_string_db(trim($params['coll_id'])) . "' "
                 . "and object_type = '"
                 . $this->protect_string_db(trim($objectType)) . "' "
@@ -203,7 +203,7 @@ class diffusion_list extends dbquery
             ) {
                 if ($diffList['dest']['viewed'] <> "") {
                     $this->query(
-                    	"insert into " . $params['table']
+                        "insert into " . $params['table']
                         . " (coll_id, object_id, object_type, sequence, "
                         . "item_id, item_type, item_mode, listmodel_type, "
                         . "viewed) values ('"
@@ -220,7 +220,7 @@ class diffusion_list extends dbquery
                     );
                 } else {
                     $this->query(
-                    	"insert into " . $params['table'] . " (coll_id, "
+                        "insert into " . $params['table'] . " (coll_id, "
                         . "object_id, object_type, sequence, item_id, "
                         . "item_type, item_mode, listmodel_type ) values ('"
                         . $this->protect_string_db(trim($params['coll_id']))
@@ -237,7 +237,7 @@ class diffusion_list extends dbquery
                 for ($i = 0; $i < count($diffList['copy']['users']); $i ++) {
                     if ($diffList['copy']['users'][$i]['viewed'] <> "") {
                         $this->query(
-                        	"insert into " . $params['table'] . " (coll_id, "
+                            "insert into " . $params['table'] . " (coll_id, "
                             . "object_id, object_type, sequence, item_id, "
                             . "item_type, item_mode, listmodel_type, viewed) "
                             . "values ('"
@@ -256,7 +256,7 @@ class diffusion_list extends dbquery
                         );
                     } else {
                         $this->query(
-                        	"insert into " . $params['table'] . " (coll_id, "
+                            "insert into " . $params['table'] . " (coll_id, "
                             . "object_id, object_type, sequence, item_id, "
                             . "item_type, item_mode, listmodel_type ) values ('"
                             . $this->protect_string_db(trim($params['coll_id']))
@@ -275,7 +275,7 @@ class diffusion_list extends dbquery
                 }
                 for ($i = 0; $i < count($diffList['copy']['entities']); $i ++) {
                     $this->query(
-                    	"insert into " . $params['table'] . " (coll_id, "
+                        "insert into " . $params['table'] . " (coll_id, "
                         . "object_id, object_type, sequence, item_id, "
                         . "item_type, item_mode, listmodel_type ) values ('"
                         . $this->protect_string_db(trim($params['coll_id']))
@@ -316,7 +316,7 @@ class diffusion_list extends dbquery
             // If not in concat mode, deletes all copies
             if (! $concat) {
                 $this->query(
-                	"delete from " . $params['table'] . " where coll_id = '"
+                    "delete from " . $params['table'] . " where coll_id = '"
                     . $this->protect_string_db(trim($params['coll_id'])) . "' "
                     . " and listinstance_type = '"
                     . $this->protect_string_db(trim($listType)) . "'"
@@ -330,7 +330,7 @@ class diffusion_list extends dbquery
             ) {
                 // If dest_user is set, deletes the dest_user (concat or not concat)
                 $this->query(
-                	"delete from " . $params['table'] . " where coll_id = '"
+                    "delete from " . $params['table'] . " where coll_id = '"
                     . $this->protect_string_db(trim($params['coll_id'])) . "'"
                     . " and listinstance_type = '"
                     . $this->protect_string_db(trim($listType)) . "'"
@@ -341,7 +341,7 @@ class diffusion_list extends dbquery
                 if ($concat) {
                     // Deletes the dest user if he is in copy to avoid duplicate entry
                     $this->query(
-                    	"delete from " . $params['table'] . " where coll_id = '"
+                        "delete from " . $params['table'] . " where coll_id = '"
                         . $this->protect_string_db(trim($params['coll_id']))."'"
                         . " and listinstance_type = '"
                         . $this->protect_string_db(trim($listType)) . "' "
@@ -358,34 +358,34 @@ class diffusion_list extends dbquery
                     && $diffList['dest']['viewed'] <> ""
                 ) {
                     $this->query(
-                    	"insert into " . $params['table'] . " (coll_id, res_id,"
-                    	. " listinstance_type, sequence, item_id, item_type, "
-                    	. "item_mode, added_by_user, added_by_entity, viewed) "
-                    	. "values ('"
-                    	. $this->protect_string_db(trim($params['coll_id']))
-                    	. "', " . $params['res_id'] . " , '"
-                    	. $this->protect_string_db(trim($listType)) . "', 0, '"
-                    	. $this->protect_string_db(
-                    	    trim($diffList['dest']['user_id'])
-                    	) . "', 'user_id' , 'dest', '"
-                    	. $this->protect_string_db(trim($creatorUser)) . "', '"
-                    	. $this->protect_string_db(trim($creatorEntity)) . "', "
-                    	. $diffList['dest']['viewed'] . " )"
+                        "insert into " . $params['table'] . " (coll_id, res_id,"
+                        . " listinstance_type, sequence, item_id, item_type, "
+                        . "item_mode, added_by_user, added_by_entity, viewed) "
+                        . "values ('"
+                        . $this->protect_string_db(trim($params['coll_id']))
+                        . "', " . $params['res_id'] . " , '"
+                        . $this->protect_string_db(trim($listType)) . "', 0, '"
+                        . $this->protect_string_db(
+                            trim($diffList['dest']['user_id'])
+                        ) . "', 'user_id' , 'dest', '"
+                        . $this->protect_string_db(trim($creatorUser)) . "', '"
+                        . $this->protect_string_db(trim($creatorEntity)) . "', "
+                        . $diffList['dest']['viewed'] . " )"
                     );
                 } else {
                     $this->query(
-                    	"insert into " . $params['table'] . " (coll_id, res_id,"
-                    	. " listinstance_type, sequence, item_id, item_type, "
-                    	. "item_mode, added_by_user, added_by_entity ) values "
-                    	. "('"
-                    	. $this->protect_string_db(trim($params['coll_id']))
-                    	. "', " . $params['res_id'] . " , '"
-                    	. $this->protect_string_db(trim($listType)) . "', 0, '"
-                    	. $this->protect_string_db(
-                    	    trim($diffList['dest']['user_id'])
-                    	) . "', 'user_id' , 'dest', '"
-                    	. $this->protect_string_db(trim($creatorUser)) . "', '"
-                    	. $this->protect_string_db(trim($creatorEntity)) . "')"
+                        "insert into " . $params['table'] . " (coll_id, res_id,"
+                        . " listinstance_type, sequence, item_id, item_type, "
+                        . "item_mode, added_by_user, added_by_entity ) values "
+                        . "('"
+                        . $this->protect_string_db(trim($params['coll_id']))
+                        . "', " . $params['res_id'] . " , '"
+                        . $this->protect_string_db(trim($listType)) . "', 0, '"
+                        . $this->protect_string_db(
+                            trim($diffList['dest']['user_id'])
+                        ) . "', 'user_id' , 'dest', '"
+                        . $this->protect_string_db(trim($creatorUser)) . "', '"
+                        . $this->protect_string_db(trim($creatorEntity)) . "')"
                     );
                 }
                 //$this->show();
@@ -393,7 +393,7 @@ class diffusion_list extends dbquery
             $maxSeq = 0;
             if ($concat) {
                 $this->query(
-                	"select max(sequence) as max_seq from " . $params['table']
+                    "select max(sequence) as max_seq from " . $params['table']
                     . " where coll_id = '"
                     . $this->protect_string_db(trim($params['coll_id']))
                     . "' and res_id = " . $params['res_id']
@@ -411,7 +411,7 @@ class diffusion_list extends dbquery
                 $insert = true;
                 if ($concat) {
                     $this->query(
-                    	"select res_id from " . $params['table']
+                        "select res_id from " . $params['table']
                         . " where coll_id = '"
                         . $this->protect_string_db(trim($params['coll_id']))
                         . "' and res_id = " . $params['res_id']
@@ -437,7 +437,7 @@ class diffusion_list extends dbquery
                         && $diffList['copy']['users'][$i]['viewed'] <> ""
                     ) {
                         $this->query(
-                        	"insert into " . $params['table'] . " (coll_id, "
+                            "insert into " . $params['table'] . " (coll_id, "
                             . "res_id, listinstance_type,  sequence, item_id, "
                             . "item_type, item_mode, added_by_user, "
                             . "added_by_entity, viewed) values ('"
@@ -456,7 +456,7 @@ class diffusion_list extends dbquery
                         );
                     } else {
                         $this->query(
-                        	"insert into " . $params['table'] . " (coll_id, "
+                            "insert into " . $params['table'] . " (coll_id, "
                             . "res_id, listinstance_type, sequence, item_id, "
                             . "item_type, item_mode, added_by_user, "
                             . "added_by_entity ) values ('"
@@ -476,9 +476,9 @@ class diffusion_list extends dbquery
                     //$this->show();
                 }
             }
-            //found copies to delete
-            $this->query(
-            	"select res_id, item_id from " . $params['table']
+            //found copies to delete if alreay in copy
+            /*$this->query(
+                "select res_id, item_id from " . $params['table']
                 . " where coll_id = '"
                 . $this->protect_string_db(trim($params['coll_id'])) ."' "
                 . "and res_id = " . $params['res_id'] . " "
@@ -500,7 +500,7 @@ class diffusion_list extends dbquery
                 if ($toDelete) {
                     //echo $toDelete." ".$resToDelete->item_id;
                     $this->query(
-                    	"delete from " . $params['table'] . " where coll_id = '"
+                        "delete from " . $params['table'] . " where coll_id = '"
                         . $this->protect_string_db(trim($params['coll_id']))
                         . "' and listinstance_type = '"
                         . $this->protect_string_db(trim($listType)) . "' "
@@ -510,11 +510,11 @@ class diffusion_list extends dbquery
                     );
                     //$this->show();
                 }
-            }
+            }*/
             $maxSeq = 0;
             if ($concat) {
                 $this->query(
-                	"select max(sequence) as max_seq from " . $params['table']
+                    "select max(sequence) as max_seq from " . $params['table']
                     . " where coll_id = '"
                     . $this->protect_string_db(trim($params['coll_id']))
                     . "' and res_id = " . $params['res_id']
@@ -532,7 +532,7 @@ class diffusion_list extends dbquery
                 $insert = true;
                 if ($concat) {
                     $this->query(
-                    	"select res_id from " . $params['table']
+                        "select res_id from " . $params['table']
                         . " where coll_id = '"
                         . $this->protect_string_db(trim($params['coll_id']))
                         . "' and res_id = " . $params['res_id']
@@ -553,17 +553,17 @@ class diffusion_list extends dbquery
                 if ($insert) {
                     $seq = $i + $maxSeq;
                     $this->query(
-                    	"insert into " . $params['table'] . " (coll_id, res_id,"
-                    	. " listinstance_type, sequence, item_id, item_type, "
-                    	. "item_mode ,added_by_user, added_by_entity) values ('"
-                    	. $this->protect_string_db(trim($params['coll_id']))
-                    	. "', " . $params['res_id'] . " ,'"
-                    	. $this->protect_string_db(trim($listType)) . "', "
-                    	. $seq . ", '"
-                    	. $this->protect_string_db(
-                    	    trim($diffList['copy']['entities'][$i]['entity_id'])
-                    	) . "', 'entity_id' , 'cc',  '" . $creatorUser . "', '"
-                    	. $creatorEntity . "')"
+                        "insert into " . $params['table'] . " (coll_id, res_id,"
+                        . " listinstance_type, sequence, item_id, item_type, "
+                        . "item_mode ,added_by_user, added_by_entity) values ('"
+                        . $this->protect_string_db(trim($params['coll_id']))
+                        . "', " . $params['res_id'] . " ,'"
+                        . $this->protect_string_db(trim($listType)) . "', "
+                        . $seq . ", '"
+                        . $this->protect_string_db(
+                            trim($diffList['copy']['entities'][$i]['entity_id'])
+                        ) . "', 'entity_id' , 'cc',  '" . $creatorUser . "', '"
+                        . $creatorEntity . "')"
                     );
                     //$this->show();
                 }
@@ -573,7 +573,7 @@ class diffusion_list extends dbquery
         if ($params['mode'] == 'listinstance') {
             // Deletes the dest user if he is in copy to avoid duplicate entry
             $this->query(
-            	"select item_id from " . $params['table'] . " where coll_id = '"
+                "select item_id from " . $params['table'] . " where coll_id = '"
                 . $this->protect_string_db(trim($params['coll_id']))
                 . "' and res_id = " . $params['res_id']
                 . " and listinstance_type = '"
@@ -584,13 +584,13 @@ class diffusion_list extends dbquery
             $result = $this->fetch_object();
             $itemId = $result->item_id;
             $this->query(
-            	"delete from " . $params['table'] . " where coll_id = '"
-            	. $this->protect_string_db(trim($params['coll_id']))
-            	. "' and listinstance_type = '"
-            	. $this->protect_string_db(trim($listType))
-            	. "' and res_id = " . trim($params['res_id'])
-            	. " and item_mode = 'cc' and item_type = 'user_id' "
-            	. "and item_id = '" . $itemId . "'"
+                "delete from " . $params['table'] . " where coll_id = '"
+                . $this->protect_string_db(trim($params['coll_id']))
+                . "' and listinstance_type = '"
+                . $this->protect_string_db(trim($listType))
+                . "' and res_id = " . trim($params['res_id'])
+                . " and item_mode = 'cc' and item_type = 'user_id' "
+                . "and item_id = '" . $itemId . "'"
             );
             //$this->show();
         }
@@ -633,7 +633,7 @@ class diffusion_list extends dbquery
         $this->connect();
         if (! $modeCc) {
             $this->query(
-            	"select l.item_id, u.firstname, u.lastname, e.entity_id, "
+                "select l.item_id, u.firstname, u.lastname, e.entity_id, "
                 . "e.entity_label from " . ENT_LISTINSTANCE . " l, "
                 . USERS_TABLE . " u, " . ENT_ENTITIES . " e, "
                 . ENT_USERS_ENTITIES . " ue where l.coll_id = '"
@@ -655,7 +655,7 @@ class diffusion_list extends dbquery
             $listinstance['dest']['entity_label'] = $this->show_string($res->entity_label);
         }
         $this->query(
-        	"select l.item_id, u.firstname, u.lastname, e.entity_id, "
+            "select l.item_id, u.firstname, u.lastname, e.entity_id, "
             . "e.entity_label from " . ENT_LISTINSTANCE . " l, " . USERS_TABLE
             . " u, " . ENT_ENTITIES . " e, " . ENT_USERS_ENTITIES
             . " ue where l.coll_id = '" . $collId
@@ -670,17 +670,17 @@ class diffusion_list extends dbquery
             array_push(
                 $listinstance['copy']['users'],
                 array(
-                	'user_id' => $this->show_string($res->item_id),
-                	'lastname' => $this->show_string($res->lastname),
-                	'firstname' => $this->show_string($res->firstname),
-                	'entity_id' => $this->show_string($res->entity_id),
-                	'entity_label' => $this->show_string($res->entity_label)
+                    'user_id' => $this->show_string($res->item_id),
+                    'lastname' => $this->show_string($res->lastname),
+                    'firstname' => $this->show_string($res->firstname),
+                    'entity_id' => $this->show_string($res->entity_id),
+                    'entity_label' => $this->show_string($res->entity_label)
                 )
             );
         }
 
         $this->query(
-        	"select l.item_id,  e.entity_label from " . ENT_LISTINSTANCE
+            "select l.item_id,  e.entity_label from " . ENT_LISTINSTANCE
             . " l, " . ENT_ENTITIES . " e where l.coll_id = 'letterbox_coll' "
             . "and l.listinstance_type = 'DOC' and l.item_mode = 'cc' "
             . "and l.item_type = 'entity_id' and l.item_id = e.entity_id "
@@ -691,8 +691,8 @@ class diffusion_list extends dbquery
             array_push(
                 $listinstance['copy']['entities'],
                 array(
-                	'entity_id' => $this->show_string($res->item_id),
-                	'entity_label' => $this->show_string($res->entity_label)
+                    'entity_id' => $this->show_string($res->item_id),
+                    'entity_label' => $this->show_string($res->entity_label)
                 )
             );
         }
@@ -705,7 +705,7 @@ class diffusion_list extends dbquery
     {
         $this->connect();
         $this->query(
-        	"select item_id from " . ENT_LISTINSTANCE . " where res_id = "
+            "select item_id from " . ENT_LISTINSTANCE . " where res_id = "
             . $resId." and coll_id = '" . $this->protect_string_db($collId)
             . "' and listinstance_type = '"
             . $this->protect_string_db($listinstanceType)
@@ -714,7 +714,7 @@ class diffusion_list extends dbquery
         );
         if ($this->nb_result() == 1) {
             $this->query(
-            	"update " . ENT_LISTINSTANCE . " set item_id = '"
+                "update " . ENT_LISTINSTANCE . " set item_id = '"
                 . $this->protect_string_db($dest) . "', viewed = " . $viewed
                 . " where res_id = " . $resId . " and coll_id = '"
                 . $this->protect_string_db($collId)
@@ -726,7 +726,7 @@ class diffusion_list extends dbquery
             );
         } else {
             $this->query(
-            	"insert into " . ENT_LISTINSTANCE . " (coll_id, res_id, "
+                "insert into " . ENT_LISTINSTANCE . " (coll_id, res_id, "
                 . "listinstance_type, item_id, item_type, item_mode, sequence, "
                 . "added_by_user, added_by_entity, viewed) values ('"
                 . $this->protect_string_db($collId) . "', " . $resId . ", '"

@@ -2,7 +2,7 @@
 $confirm = false;
 $etapes = array('form');
 $frm_width='355px';
-$frm_height = '500px';
+$frm_height = '800px';
 require("modules/entities/entities_tables.php");
 
  function get_form_txt($values, $path_manage_action,  $id_action, $table, $module, $coll_id, $mode )
@@ -61,7 +61,7 @@ require("modules/entities/entities_tables.php");
                     $frm_str .='</select>';
                     $frm_str .=' <input type="button" name="redirect_dep" value="'._REDIRECT.'" id="redirect_dep" class="button" onclick="valid_action_form( \'frm_redirect_dep\', \''.$path_manage_action.'\', \''. $id_action.'\', \''.$values_str.'\', \''.$table.'\', \''.$module.'\', \''.$coll_id.'\', \''.$mode.'\');" />';
 
-                $frm_str .= '<div id="diff_list_div_redirect" class="scroll_div" style="height:150px;display:none;"></div>';
+                $frm_str .= '<div id="diff_list_div_redirect" class="scroll_div" style="height:450px;display:none;"></div>';
                 $frm_str .='</p>';
             $frm_str .='</form>';
         $frm_str .='</div>';
@@ -128,8 +128,8 @@ require("modules/entities/entities_tables.php");
     }
  }
 
- function manage_form($arr_id, $history, $id_action, $label_action, $status,  $coll_id, $table, $values_form )
- {
+function manage_form($arr_id, $history, $id_action, $label_action, $status,  $coll_id, $table, $values_form )
+{
     if(empty($values_form) || count($arr_id) < 1)
     {
         return false;
