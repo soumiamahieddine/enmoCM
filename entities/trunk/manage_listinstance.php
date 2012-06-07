@@ -1,4 +1,5 @@
-<?php /**
+<?php
+/**
 * File : manage_listinstance.php
 *
 * Pop up used to create and modify diffusion lists instances
@@ -22,7 +23,6 @@ function cmpUsers($a, $b)
     return strcmp($a["lastname"], $b["lastname"]);
 }
 
-
 $core = new core_tools();
 $core->load_lang();
 
@@ -32,10 +32,10 @@ $func = new functions();
 $db = new dbquery();
 $db->connect();
 
-if (isset($_POST['what_users']) && ! empty($_POST['what_users']) ) {
+if (isset($_POST['what_users']) && ! empty($_POST['what_users'])) {
     $_GET['what_users'] = $_POST['what_users'];
 }
-if (isset($_POST['what_services']) && ! empty($_POST['what_services']) ) {
+if (isset($_POST['what_services']) && ! empty($_POST['what_services'])) {
     $_GET['what_services'] = $_POST['what_services'];
 }
 
@@ -52,6 +52,7 @@ $whatServices = '';
 $onlyCc = false;
 $noDelete = false;
 $redirect_groupbasket = false;
+
 if (isset($_SESSION['current_basket']) && count($_SESSION['current_basket']) > 0) {
     $redirect_groupbasket = current($_SESSION['user']['redirect_groupbasket'][$_SESSION['current_basket']['id']]);
     if(empty($redirect_groupbasket['entities'])) {
@@ -65,31 +66,31 @@ if (isset($_SESSION['current_basket']) && count($_SESSION['current_basket']) > 0
 if (isset($_REQUEST['only_cc'])) {
     $onlyCc = true;
 }
+
 if (isset($_REQUEST['no_delete'])) {
     $noDelete = true;
 }
-if (isset($_GET['what_users']) && ! empty($_GET['what_users']) ) {
+$isWhatUsers = false;
+if (isset($_GET['what_users']) && ! empty($_GET['what_users'])) {
     $whatUsers = $func->protect_string_db(
         $func->wash($_GET['what_users'], "no", "", "no")
     );
-
-    $whereUsers .= " and (u.lastname like '%".strtolower($whatUsers)."%'
-                or u.lastname like '%".strtoupper($whatUsers)."%'
-                or u.firstname like '%".strtolower($whatUsers)."%'
-                or u.firstname like '%".strtoupper($whatUsers)."%'
-                or u.user_id like '%".strtolower($whatUsers)."%'
-                or u.user_id like '%".strtoupper($whatUsers)."%')";
+    $whereUsers .= " and (
+                lower(u.lastname) like lower('%" . $whatUsers . "%')
+                or lower(u.firstname) like lower('%" . $whatUsers . "%')
+                or lower(u.user_id) like lower('%" . $whatUsers . "%')
+            )";
     $orderByUsers = " order by u.lastname asc, u.firstname asc, "
                   . "e.entity_label asc";
-
-    $whereEntitiesUsers .= " and (u.lastname like '%".strtolower($whatUsers)."%'
-                or u.lastname like '%".strtoupper($whatUsers)."%'
-                or u.firstname like '%".strtolower($whatUsers)."%'
-                or u.firstname like '%".strtoupper($whatUsers)."%'
-                or u.user_id like '%".strtolower($whatUsers)."%'
-                or u.user_id like '%".strtoupper($whatUsers)."%')";
+    $whereEntitiesUsers .= " and (
+                lower(u.lastname) like lower('%" . $whatUsers . "%')
+                or lower(u.firstname) like lower('%" . $whatUsers . "%')
+                or lower(u.user_id) like lower('%" . $whatUsers . "%')
+            )";
     $orderByEntities = " order by e.entity_label asc";
+    $isWhatUsers = true;
 }
+$isWhatServices = false;
 if (isset($_GET['what_services']) && ! empty($_GET['what_services'])) {
     $whatServices = addslashes(
         $func->wash($_GET['what_services'], "no", "", "no")
@@ -97,17 +98,14 @@ if (isset($_GET['what_services']) && ! empty($_GET['what_services'])) {
     /*$whereUsers .= " and (e.entity_label like '%" . strtolower($whatServices)
                     . "%' or e.entity_id like '%" . strtoupper($whatServices)
                     . "%')";*/
-    $whereEntities .= " and (e.entity_label like '%"
-                       . strtolower($whatServices) . "%' or e.entity_label like '%"
-                       . $whatServices . "%' or e.entity_id like '%"
-                       . strtolower($whatServices) . "%' or e.entity_id like '%"
-                       . $whatServices . "%' )";
-
+    $whereEntities .= " and (
+                        lower(e.entity_label) like lower('%". $whatServices . "%')
+                        or lower(e.entity_id) like lower('%". $whatServices . "%'))";
     $orderByUsers = " order by e.entity_label asc, "
                   . "u.lastname asc, u.firstname asc";
     $orderByEntities = " order by e.entity_label asc";
+    $isWhatServices = true;
 }
-
 // Redirect to user in entities
 $query = "select distinct u.user_id, u.firstname, u.lastname,e.entity_id, e.entity_label "
     . "FROM " . USERS_TABLE . " u, " . ENT_ENTITIES . " e, "
@@ -116,11 +114,13 @@ $query = "select distinct u.user_id, u.firstname, u.lastname,e.entity_id, e.enti
     . "and e.enabled = 'Y' ". $whereUsers . $whereEntities;
 if($redirect_groupbasket) {
     $query .= " and ( e.entity_id in (" . $redirect_groupbasket['users_entities'] . ") "
-        . " or e.entity_id in (" . $redirect_groupbasket['entities'] . ") )";
+        . " or e.entity_id in (" . $redirect_groupbasket['entities'] . "))";
 }
 $query .= $orderByUsers;
-$db->query($query);
-//$db->show();
+if (($isWhatUsers || $isWhatServices) || $_REQUEST['action'] == 'all_list') {
+    $db->query($query);
+    //$db->show();
+}
 $i = 0;
 while ($line = $db->fetch_object()) {
     array_push(
@@ -134,7 +134,6 @@ while ($line = $db->fetch_object()) {
         )
     );
 }
-
 // Redirect to entities
 $query = "select distinct e.entity_id,  e.entity_label FROM " . USERS_TABLE . " u, "
             . ENT_ENTITIES . " e, " . ENT_USERS_ENTITIES . " ue WHERE"
@@ -145,8 +144,10 @@ if($redirect_groupbasket) {
     $query .= " and e.entity_id in (" . $redirect_groupbasket['entities'] . ") ";
 }
 $query .= $orderByEntities;
-$db->query($query);
-//$db->show();
+if (($isWhatUsers || $isWhatServices) || $_REQUEST['action'] == 'all_list') {
+    $db->query($query);
+    //$db->show();
+}
 $i = 0;
 while ($line = $db->fetch_object()) {
     array_push(
@@ -167,7 +168,7 @@ if (! isset($_SESSION[$origin]['diff_list']['copy']['users'])) {
 if (! isset($_SESSION[$origin]['diff_list']['copy']['entities'])) {
     $_SESSION[$origin]['diff_list']['copy']['entities'] = array();
 }
-if (isset($_GET['action']) && $_GET['action'] == "add_entity" ) {
+if (isset($_GET['action']) && $_GET['action'] == "add_entity") {
 
     if (isset($_GET['id']) && ! empty($_GET['id'])) {
         $id = $_GET['id'];
@@ -181,7 +182,6 @@ if (isset($_GET['action']) && $_GET['action'] == "add_entity" ) {
                 break;
             }
         }
-
         if ($find == false) {
             $db->query(
                 "SELECT  e.entity_id,  e.entity_label FROM " . ENT_ENTITIES
@@ -197,20 +197,17 @@ if (isset($_GET['action']) && $_GET['action'] == "add_entity" ) {
                 )
             );
         }
-
         usort($_SESSION[$origin]['diff_list']['copy']['entities'], "cmpEntity");
     }
-} else if (isset($_GET['action']) && $_GET['action'] == "add_user" ) {
-
+} elseif (isset($_GET['action']) && $_GET['action'] == "add_user") {
     if (isset($_GET['id']) && ! empty($_GET['id'])) {
         $id = $_GET['id'];
         $find = false;
-
         if (isset($_SESSION[$origin]['diff_list']['dest']['user_id']) &&
             $id == $_SESSION[$origin]['diff_list']['dest']['user_id']
         ) {
             $find = true;
-        } else if (empty( $_SESSION[$origin]['diff_list']['dest']['user_id'])
+        } elseif (empty( $_SESSION[$origin]['diff_list']['dest']['user_id'])
             || ! isset( $_SESSION[$origin]['diff_list']['dest']['user_id'])
         ) {
             $db->query(
@@ -236,7 +233,6 @@ if (isset($_GET['action']) && $_GET['action'] == "add_entity" ) {
                     break;
                 }
             }
-
             if ($find == false) {
                 $db->query(
                     "SELECT u.firstname, u.lastname, u.department, e.entity_id,"
@@ -261,31 +257,31 @@ if (isset($_GET['action']) && $_GET['action'] == "add_entity" ) {
         }
         usort($_SESSION[$origin]['diff_list']['copy']['users'], "cmpUsers");
     }
-} else if (isset($_GET['action']) && $_GET['action'] == "remove_dest" ) {
-    unset( $_SESSION[$origin]['diff_list']['dest'] );
-} else if (isset($_GET['action']) && $_GET['action'] == "remove_entity" ) {
+} elseif (isset($_GET['action']) && $_GET['action'] == "remove_dest") {
+    unset( $_SESSION[$origin]['diff_list']['dest']);
+} elseif (isset($_GET['action']) && $_GET['action'] == "remove_entity") {
     $rank = $_GET['rank'];
     if (isset($_GET['id']) && ! empty($_GET['id'])) {
         $id = $_GET['id'];
         if ($_SESSION[$origin]['diff_list']['copy']['entities'][$rank]['entity_id'] == $id) {
-            unset($_SESSION[$origin]['diff_list']['copy']['entities'][$rank] );
+            unset($_SESSION[$origin]['diff_list']['copy']['entities'][$rank]);
             $_SESSION[$origin]['diff_list']['copy']['entities'] = array_values(
                 $_SESSION[$origin]['diff_list']['copy']['entities']
             );
         }
     }
-} else if (isset($_GET['action']) && $_GET['action'] == "remove_user" ) {
+} elseif (isset($_GET['action']) && $_GET['action'] == "remove_user") {
     $rank = $_GET['rank'];
     if (isset($_GET['id']) && ! empty($_GET['id'])) {
         $id = $_GET['id'];
         if ($_SESSION[$origin]['diff_list']['copy']['users'][$rank]['user_id'] == $id) {
-            unset($_SESSION[$origin]['diff_list']['copy']['users'][$rank] );
+            unset($_SESSION[$origin]['diff_list']['copy']['users'][$rank]);
             $_SESSION[$origin]['diff_list']['copy']['users'] = array_values(
                 $_SESSION[$origin]['diff_list']['copy']['users']
             );
         }
     }
-} else if (isset($_GET['action']) && $_GET['action'] == "dest_to_copy" ) {
+} elseif (isset($_GET['action']) && $_GET['action'] == "dest_to_copy") {
     if (isset($_SESSION[$origin]['diff_list']['dest']['user_id'])
         && ! empty($_SESSION[$origin]['diff_list']['dest']['user_id'])
     ) {
@@ -299,10 +295,10 @@ if (isset($_GET['action']) && $_GET['action'] == "add_entity" ) {
                 'entity_label' => $_SESSION[$origin]['diff_list']['dest']['entity_label'],
             )
         );
-        unset( $_SESSION[$origin]['diff_list']['dest'] );
+        unset( $_SESSION[$origin]['diff_list']['dest']);
         usort($_SESSION[$origin]['diff_list']['copy']['users'], "cmpUsers");
     }
-} else if (isset($_GET['action']) && $_GET['action'] == "copy_to_dest" ) {
+} elseif (isset($_GET['action']) && $_GET['action'] == "copy_to_dest") {
     if (isset($_SESSION[$origin]['diff_list']['dest']['user_id'])
         && ! empty($_SESSION[$origin]['diff_list']['dest']['user_id'])
     ) {
@@ -316,7 +312,7 @@ if (isset($_GET['action']) && $_GET['action'] == "add_entity" ) {
                 'entity_label' => $_SESSION[$origin]['diff_list']['dest']['entity_label'],
             )
         );
-        unset($_SESSION[$origin]['diff_list']['dest'] );
+        unset($_SESSION[$origin]['diff_list']['dest']);
     }
     $rank = $_GET['rank'];
     if (isset($_SESSION[$origin]['diff_list']['copy']['users'][$rank]['user_id'])
@@ -342,7 +338,7 @@ $displayValue = "";
 if (preg_match("/MSIE 6.0/", $_SERVER["HTTP_USER_AGENT"])) {
     $ieBrowser = true;
     $displayValue = 'block';
-} else if (preg_match('/msie/i', $_SERVER["HTTP_USER_AGENT"])
+} elseif (preg_match('/msie/i', $_SERVER["HTTP_USER_AGENT"])
     && ! preg_match('/opera/i', $HTTP_USER_AGENT)
 ) {
     $ieBrowser = true;
@@ -362,7 +358,7 @@ $link = $_SESSION['config']['businessappurl'] . "index.php?display=true"
     if ($noDelete) {
         $link .= '&no_delete';
     }
-    //print_r($_SESSION['process']['diff_list'] );
+    //print_r($_SESSION['process']['diff_list']);
         ?>
         <br/></br>
         <div align="center">
@@ -377,16 +373,25 @@ echo _SEARCH_DIFF_LIST;
     <input type="hidden" name="origin" id="origin" value="<?php
 echo $_REQUEST['origin'];
 ?>" />
+    <center>
+        <label for="all_list" class="bold">
+            <a href="<?php
+                echo $link;
+                ?>&action=all_list"><?php 
+            echo _ALL_LIST;?></a>
+        </label>
+    </center>
     <table cellpadding="2" cellspacing="2" border="0">
         <tr>
             <th>
                 <label for="what_users" class="bold"><?php
-echo _LASTNAME;
-?> / <?php
-echo _FIRSTNAME;
-?> / <?php
-echo _ID;
-?></label>
+                    echo _LASTNAME;
+                    ?> / <?php
+                    echo _FIRSTNAME;
+                    ?> / <?php
+                    echo _ID;
+                    ?>
+                </label>
             </th>
             <th>
                 <input name="what_users" id="what_users" type="text" <?php
@@ -427,10 +432,8 @@ if ((isset($_GET['what_users']) && ! empty($_GET['what_users']))
         )
 ) {
     ?>
-
         <div id="diff_list" align="center">
         <h2 class="tit"><?php echo _DIFFUSION_LIST;?></h2>
-
         <?php
     if (isset($_SESSION[$origin]['diff_list']['dest']['user_id'])
         && ! empty($_SESSION[$origin]['diff_list']['dest']['user_id'])
@@ -612,84 +615,40 @@ if ((isset($_GET['what_users']) && ! empty($_GET['what_users']))
         <?php
     }
     ?>
-        <br/>
-        <form name="pop_diff" method="post" >
-    <div align="center">
-    <?php
-    //if(isset($_SESSION[$origin]['diff_list']['dest']['user_id']) && !empty($_SESSION[$origin]['diff_list']['dest']['user_id']))
-        //{?>
-    <input align="middle" type="button" value="<?php
-    echo _VALIDATE;
-    ?>" class="button" name="valid" onclick="change_diff_list('<?php
-    echo $_SESSION['config']['businessappurl'] . 'index.php?display=true'
-        . '&module=entities&page=load_listinstance&origin=' . $origin;
-    if ($onlyCc) {
-        echo '&only_cc';
-    }
-    if ($noDelete) {
-        echo '&no_delete';
-    }
-    ?>', <?php
-    echo "'" . $displayValue . "'";
-    if ($_REQUEST['origin'] == 'redirect') {
-        echo ",'diff_list_div_redirect'";
-    }
-    ?>);" />
-    <?php //} ?>
-    <!--<input align="middle" type="button" value="<?php echo _CANCEL;?>"  onclick="self.close();" class="button"/>-->
-
-    </div>
+    <br/>
+    <form name="pop_diff" method="post" >
+        <div align="center">
+            <?php
+            //if(isset($_SESSION[$origin]['diff_list']['dest']['user_id']) && !empty($_SESSION[$origin]['diff_list']['dest']['user_id']))
+                //{?>
+            <input align="middle" type="button" value="<?php
+            echo _VALIDATE;
+            ?>" class="button" name="valid" onclick="change_diff_list('<?php
+            echo $_SESSION['config']['businessappurl'] . 'index.php?display=true'
+                . '&module=entities&page=load_listinstance&origin=' . $origin;
+            if ($onlyCc) {
+                echo '&only_cc';
+            }
+            if ($noDelete) {
+                echo '&no_delete';
+            }
+            ?>', <?php
+            echo "'" . $displayValue . "'";
+            if ($_REQUEST['origin'] == 'redirect') {
+                echo ",'diff_list_div_redirect'";
+            }
+            ?>);" />
+            <?php //} ?>
+            <!--<input align="middle" type="button" value="<?php echo _CANCEL;?>"  onclick="self.close();" class="button"/>-->
+        </div>
     </form>
     <br/>
     <br/>
     <hr align="center" color="#6633CC" size="5" width="60%">
     <br/>
-
-    <div align="center">
-        <h2 class="tit"><?php echo _ENTITIES_LIST;?></h2>
-
-            <table cellpadding="0" cellspacing="0" border="0" class="listing spec">
-            <thead>
-                <tr>
-                    <th><?php echo _ID;?></th>
-                    <th><?php echo _DEPARTMENT;?></th>
-                    <th>&nbsp;</th>
-                </tr>
-            </thead>
-
-            <?php
-    $color = ' class="col"';
-    for ($j = 0; $j < count($entities); $j ++) {
-        if ($color == ' class="col"') {
-            $color = '';
-        } else {
-            $color = ' class="col"';
-        }
-        ?>
-                <tr <?php echo $color; ?>>
-                    <td><?php echo $entities[$j]['ID'];?></td>
-                    <td><?php echo $entities[$j]['DEP']; ?></td>
-                    <td class="action_entities"><a href="<?php
-        echo $link;
-        ?>&what_users=<?php
-        echo $whatUsers;
-        ?>&what_services=<?php
-        echo $whatServices;
-        ?>&action=add_entity&id=<?php
-        echo $entities[$j]['ID'];
-        ?>" class="change"><?php
-        echo _ADD_CC;
-        ?></a></td>
-            </tr>
-            <?php
-    }
-    ?>
-        </table>
-    </div>
     <div align="center">
         <h2 class="tit"><?php echo _USERS_LIST;?></h2>
-
-            <table cellpadding="0" cellspacing="0" border="0" class="listing spec">
+        <table cellpadding="0" cellspacing="0" border="0" class="listing spec">
             <thead>
                 <tr>
                     <th><?php echo _ID;?></th>
@@ -699,40 +658,75 @@ if ((isset($_GET['what_users']) && ! empty($_GET['what_users']))
                     <th>&nbsp;</th>
                 </tr>
             </thead>
-
             <?php
-    $color = ' class="col"';
-    for ($j = 0; $j < count($users); $j ++) {
-        if ($color == ' class="col"') {
-            $color = '';
-        } else {
             $color = ' class="col"';
-        }
-        ?>
-                <tr <?php echo $color; ?>>
-                <td><?php echo $users[$j]['ID'];?></td>
-                <td><?php echo $users[$j]['NOM']; ?></td>
-                <td><?php echo $users[$j]['PRENOM']; ?></td>
-                <td><?php echo $users[$j]['DEP'];?></td>
-                <td class="action_entities"><a href="<?php
-        echo $link;
-        ?>&what_users=<?php
-        echo $whatUsers;
-        ?>&what_services=<?php
-        echo $whatServices;
-        ?>&action=add_user&id=<?php
-        echo $users[$j]['ID'];
-        ?>" class="change"><?php
-        echo _ADD;
-        ?></a></td>
-            </tr>
+            for ($j = 0; $j < count($users); $j ++) {
+                if ($color == ' class="col"') {
+                    $color = '';
+                } else {
+                    $color = ' class="col"';
+                }
+                ?>
+                    <tr <?php echo $color; ?>>
+                    <td><?php echo $users[$j]['ID'];?></td>
+                    <td><?php echo $users[$j]['NOM']; ?></td>
+                    <td><?php echo $users[$j]['PRENOM']; ?></td>
+                    <td><?php echo $users[$j]['DEP'];?></td>
+                    <td class="action_entities"><a href="<?php
+                echo $link;
+                ?>&what_users=<?php
+                echo $whatUsers;
+                ?>&what_services=<?php
+                echo $whatServices;
+                ?>&action=add_user&id=<?php
+                echo $users[$j]['ID'];
+                ?>" class="change"><?php
+                echo _ADD;
+                ?></a></td>
+                    </tr>
+                    <?php
+            }
+            ?>
+        </table>
+        <br/>
+        <h2 class="tit"><?php echo _ENTITIES_LIST;?></h2>
+        <table cellpadding="0" cellspacing="0" border="0" class="listing spec">
+            <thead>
+                <tr>
+                    <th><?php echo _ID;?></th>
+                    <th><?php echo _DEPARTMENT;?></th>
+                    <th>&nbsp;</th>
+                </tr>
+            </thead>
             <?php
-    }
-    ?>
+            $color = ' class="col"';
+            for ($j = 0; $j < count($entities); $j ++) {
+                if ($color == ' class="col"') {
+                    $color = '';
+                } else {
+                    $color = ' class="col"';
+                }
+                ?>
+                        <tr <?php echo $color; ?>>
+                            <td><?php echo $entities[$j]['ID'];?></td>
+                            <td><?php echo $entities[$j]['DEP']; ?></td>
+                            <td class="action_entities"><a href="<?php
+                echo $link;
+                ?>&what_users=<?php
+                echo $whatUsers;
+                ?>&what_services=<?php
+                echo $whatServices;
+                ?>&action=add_entity&id=<?php
+                echo $entities[$j]['ID'];
+                ?>" class="change"><?php
+                echo _ADD_CC;
+                ?></a></td>
+                </tr>
+                <?php
+            }
+            ?>
         </table>
     </div>
-    </div>
-
     <?php
 } else {
     ?>
@@ -741,10 +735,9 @@ if ((isset($_GET['what_users']) && ! empty($_GET['what_users']))
     echo _CANCEL;
     ?>" class="button"  onclick="self.close();"/>
     </div>
-  <?php
+    <?php
 }
 ?>
-
 <br/>
 </body>
 </html>

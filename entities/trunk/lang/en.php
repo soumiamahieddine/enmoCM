@@ -241,3 +241,5 @@ if (!defined('_ADD_COPY_FOR_DOC'))
     define('_ADD_COPY_FOR_DOC', 'Put in copy for the resource');
 if (!defined('_VALIDATE_PUT_IN_COPY'))
     define('_VALIDATE_PUT_IN_COPY', 'Validate the list');
+if (!defined('_ALL_LIST'))
+    define('_ALL_LIST', 'View all the list');    

@@ -260,3 +260,5 @@ if (!defined('_ADD_COPY_FOR_DOC'))
     define('_ADD_COPY_FOR_DOC', 'Ajouter en copie pour le document');
 if (!defined('_VALIDATE_PUT_IN_COPY'))
     define('_VALIDATE_PUT_IN_COPY', 'Valider l&rsquo;ajout en copie');
+if (!defined('_ALL_LIST'))
+    define('_ALL_LIST', 'Afficher toute la liste');    
