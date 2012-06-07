@@ -639,7 +639,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 
     // ****************************** RIGHT PART *******************************************/
 
-    $frm_str .= '<div id="validright">';
+    $frm_str .= '<div id="validright" style="width: 67%;">';
     //ATTACHMENTS FRAME
     if ($core_tools->is_module_loaded('attachments')) {
         require 'modules/templates/class/templates_controler.php';
