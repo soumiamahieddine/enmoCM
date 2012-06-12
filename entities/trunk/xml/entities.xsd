@@ -52,7 +52,7 @@ Parent key fields (xpath) and child key fields must be in same order
   
   
   <!-- ROW : ENTITY -->
-  <xs:element name='entities' type='entities' ds:table='entities'>
+  <xs:element name='entities' type='entity' ds:table='entities'>
     <!-- REQUEST -->
     <xs:annotation>
       <xs:appinfo>
