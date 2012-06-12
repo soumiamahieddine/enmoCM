@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+
+LIST
+  root element
+  complexType with sequence of 1 element iteration ==> list
+  key to define uniqueness and for update
+
+OBJECT
+  child of root
+  @ds:table to declare database table
+  complexType with sequence of element iteration ==> properties / children
+
+PROPERTY
+  child of object simpleType
+  
+CHILD
+  child of object complexType
+  
+KEY = on table element and object elements containing sub-elements
+KEYREF = on child element, refering to parent keys
+Parent key fields (xpath) and child key fields must be in same order
+
+-->
+<xs:schema 
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:ds="maarch:dataschema"  
+  elementFormDefault="qualified">
+  
+  <xs:include schemaLocation='core/xml/datatypes.xsd' />
+  
+  <!-- ROOT : ENTITIES -->
+  <xs:element name='entities_root'>
+    <xs:complexType>
+      <xs:sequence>
+        <!-- ROWS -->
+        <xs:element ref='entity' minOccurs="0" maxOccurs='unbounded'/>
+        <!--xs:element name='TYPE' type='typentity' ds:xml='/modules/entities/xml/typentity.xml' ds:xpath='/root/TYPE' minOccurs="0" maxOccurs='unbounded'/-->
+      </xs:sequence>
+    </xs:complexType>
+    <!-- PRIMARY KEY : ENTITY-->
+    <xs:key name='entities_pk'>
+      <xs:selector xpath='./entity' />
+      <xs:field xpath='entity_id'/>
+    </xs:key>
+    <!-- PRIMARY KEY : ENTITY TYPE-->
+    <xs:key name='entity_type_pk'>
+      <xs:selector xpath='./TYPE' />
+      <xs:field xpath='id'/>
+    </xs:key>
+  </xs:element>
+  
+  
+  <!-- ROW : ENTITY -->
+  <xs:element name='entity' type='entity' ds:table='entities' ds:key-column='entity_id' >
+    <!-- REQUEST -->
+    <xs:annotation>
+      <xs:appinfo>
+        <ds:where column='enabled'>Y</ds:where>
+      </xs:appinfo>
+    </xs:annotation>
+    <!-- PRIMARY KEY : USER_ENTITIES -->
+    <xs:key name='users_entities_pk'>
+      <xs:selector xpath='./entity_user' />
+      <xs:field xpath='entity_id' />
+      <xs:field xpath='user_id' />
+    </xs:key>
+  </xs:element>
+  
+  <!-- TYPE : ENTITY -->
+  <xs:complexType name='entity'>
+    <xs:sequence>
+      <xs:element name="entity_id" type="varchar32" />
+      <xs:element name="entity_label" type="varchar255" />
+      <xs:element name="entity_type" type="varchar64" />
+      <xs:element name="enabled" type="boolean" />
+      <xs:element name="users_entities" type="users_entities" minOccurs='0' maxOccurs='unbounded'>
+        <xs:keyref name='users_entities_fk' refer='entities_pk'>
+          <xs:selector xpath='.' />
+          <xs:field xpath='entity_id' />
+        </xs:keyref>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  
+  
+  <!-- USERS_ENTITIES -->
+  <xs:element name='users_entities' type='users_entities' />
+
+  <xs:complexType name='users_entities'>
+    <xs:sequence>
+      <xs:element name="entity_id" type="varchar32" />
+      <xs:element name="user_id" type="varchar128" />
+      <xs:element name="user_role" type="varchar255" />
+      <xs:element name="primary_entity" type="boolean" />
+      <xs:element name="user" ds:table='users'>
+        <xs:annotation>
+          <xs:appinfo>
+            <ds:relation parent='users_entities' child='users' parent-key='user_id' child-key='user_id' />
+          </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="firstname" type="varchar255" />
+            <xs:element name="lastname" type="varchar255" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  
+  <!-- typentity.xml -->
+  <xs:complexType name='typentity'>
+    <xs:sequence>
+      <xs:element name="id" type="xs:string" />
+      <xs:element name="label" type="xs:string" />
+      <xs:element name="typelevel" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  
+  <!-- Entity type -->
+  <xs:simpleType name="entityTypeCodeType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="group">
+        <xs:annotation>
+          <xs:documentation xml:lang="en">
+            <!--maarch:name>Group</maarch:name-->
+          </xs:documentation>
+          <xs:documentation xml:lang="fr">
+            <!--maarch:name>Groupe</maarch:name-->
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="company">
+        <xs:annotation>
+          <xs:documentation xml:lang="en">
+            <!--maarch:name>Company</maarch:name-->
+          </xs:documentation>
+          <xs:documentation xml:lang="fr">
+            <!--maarch:name>Société</maarch:name-->
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="establishment">
+        <xs:annotation>
+          <xs:documentation xml:lang="en">
+            <!--maarch:name>Establishment</maarch:name-->
+          </xs:documentation>
+          <xs:documentation xml:lang="fr">
+            <!--maarch:name>Etablissement</maarch:name-->
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="direction">
+        <xs:annotation>
+          <xs:documentation xml:lang="en">
+            <!--maarch:name>Direction</maarch:name-->
+          </xs:documentation>
+          <xs:documentation xml:lang="fr">
+            <!--maarch:name>Direction</maarch:name-->
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="service">
+        <xs:annotation>
+          <xs:documentation xml:lang="en">
+            <!--maarch:name>Service</maarch:name-->
+          </xs:documentation>
+          <xs:documentation xml:lang="fr">
+            <!--maarch:name>Service</maarch:name-->
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="office">
+        <xs:annotation>
+          <xs:documentation xml:lang="en">
+            <!--maarch:name>Office</maarch:name-->
+          </xs:documentation>
+          <xs:documentation xml:lang="fr">
+            <!--maarch:name>Bureau</maarch:name-->
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+	</xs:simpleType>
+  
+</xs:schema>
