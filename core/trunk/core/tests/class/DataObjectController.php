@@ -9,11 +9,11 @@ class DataObjectController extends DOMDocument
     
     function DataObjectController() 
     {
-        require_once 'apps/maarch_entreprise/XSD/XSDDocument.php';
-        require_once 'apps/maarch_entreprise/XSD/XMLDocument.php';
-        require_once 'apps/maarch_entreprise/XSD/RootDataObject.php';
-        require_once 'apps/maarch_entreprise/XSD/DataObject.php';
-        require_once 'apps/maarch_entreprise/XSD/ArrayDataObject.php';
+        require_once 'core/tests/class/XSDDocument.php';
+        require_once 'core/tests/class/XMLDocument.php';
+        require_once 'core/tests/class/RootDataObject.php';
+        require_once 'core/tests/class/DataObject.php';
+        require_once 'core/tests/class/ArrayDataObject.php';
     }
     
     function loadSchema($xsdFile) 
@@ -50,7 +50,7 @@ class DataObjectController extends DOMDocument
             $schemaLocation = $include->schemaLocation;
             if(!$this->includes || !in_array($schemaLocation, $this->includes)) {
                 $includeXsd = new XSDDocument();
-                $includeXsd->load($_SESSION['config']['corepath'] . 'apps/maarch_entreprise/XSD/' . $schemaLocation);
+                $includeXsd->load($_SESSION['config']['corepath'] . $schemaLocation);
                 $includeXsd->registerNodeClass('DOMElement', 'XSDElement');
                 $includeXsd->Schema->formatOutput = true;
                 $includeXsd->Schema->preserveWhiteSpace = true;
