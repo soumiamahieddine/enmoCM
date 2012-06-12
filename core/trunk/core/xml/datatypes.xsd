@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema 
+  xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+  elementFormDefault="qualified"  
+  >
+  
+  <!-- Character varying(10) --> 
+  <xs:simpleType name="varchar10">
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="10"/>
+    </xs:restriction>
+  </xs:simpleType> 
+  
+  <!-- Character varying(32) --> 
+  <xs:simpleType name="varchar32">
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="32"/>
+    </xs:restriction>
+  </xs:simpleType> 
+
+  <!-- Character varying(50) --> 
+  <xs:simpleType name="varchar50">
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="50"/>
+    </xs:restriction>
+  </xs:simpleType> 
+  
+    <!-- Character varying(64) --> 
+  <xs:simpleType name="varchar64">
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="64"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <!-- Character varying(100) --> 
+  <xs:simpleType name="varchar100">
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="100"/>
+    </xs:restriction>
+  </xs:simpleType> 
+
+  <!-- Character varying(128) --> 
+  <xs:simpleType name="varchar128">
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="128"/>
+    </xs:restriction>
+  </xs:simpleType> 
+  
+  <!-- Character varying(255) --> 
+  <xs:simpleType name="varchar255">
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="255"/>
+    </xs:restriction>
+  </xs:simpleType> 
+  
+  <!-- Boolean -->
+  <xs:simpleType name="boolean">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Y"/>
+      <xs:enumeration value="N"/>
+    </xs:restriction>
+  </xs:simpleType> 
+  
+  <!-- id type -->
+  <xs:simpleType name="idType">
+    <xs:restriction base="xs:integer">
+      <xs:minInclusive value="0"/>
+    </xs:restriction>
+  </xs:simpleType> 
+
+  <!-- label type -->
+  <xs:simpleType name="labelType">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="3"/>
+      <xs:maxLength value="100"/>
+    </xs:restriction>
+  </xs:simpleType> 
+
+  <!-- desc type -->
+  <xs:simpleType name="descType">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+      <xs:maxLength value="1024"/>
+    </xs:restriction>
+  </xs:simpleType> 
+  
+
+</xs:schema>
