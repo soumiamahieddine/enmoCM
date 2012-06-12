@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+
+LIST
+  root element
+  complexType with sequence of 1 element iteration ==> list
+  key to define uniqueness and for update
+
+OBJECT
+  child of root
+  @ds:table to declare database table
+  complexType with sequence of element iteration ==> properties / children
+
+PROPERTY
+  child of object simpleType
+  
+CHILD
+  child of object complexType
+  
+KEY = on table element and object elements containing sub-elements
+KEYREF = on child element, refering to parent keys
+Parent key fields (xpath) and child key fields must be in same order
+
+-->
+<xs:schema 
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:ds="maarch:dataschema"  
+  elementFormDefault="qualified">
+  
+  <xs:include schemaLocation='core/xml/datatypes.xsd' />
+  
+  <!-- ROOT : ENTITIES -->
+  <xs:element name='contacts_root'>
+    <xs:complexType>
+      <xs:sequence>
+        <!-- ROWS -->
+        <xs:element ref='contacts' minOccurs="0" maxOccurs='unbounded'/>
+        <xs:element name='title' type='contact_title' ds:xml='/apps/maarch_entreprise/xml/entreprise.xml' ds:xpath='/ROOT/titles/title' minOccurs="0" maxOccurs='unbounded'/>
+      </xs:sequence>
+    </xs:complexType>
+    <!-- PRIMARY KEY : ENTITY-->
+    <xs:key name='contacts_pk'>
+      <xs:selector xpath='./contacts' />
+      <xs:field xpath='contact_id'/>
+    </xs:key>
+    <!-- PRIMARY KEY : ENTITY TYPE-->
+    <xs:key name='titles_pk'>
+      <xs:selector xpath='./title' />
+      <xs:field xpath='id'/>
+    </xs:key>
+  </xs:element>
+  
+  
+  <!-- ROW : ENTITY -->
+  <xs:element name='contacts'>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="contact_id" type="xs:nonNegativeInteger" />
+        <xs:element name="title" type="varchar255">
+          <xs:keyref name='title_fk' refer='titles_pk'>
+            <xs:selector xpath='.' />
+            <xs:field xpath='title' />
+          </xs:keyref>
+        </xs:element>
+        <xs:element name="lastname" type="varchar255" />
+        <xs:element name="email" type="varchar255" />
+        <xs:element name="society" type="varchar255" />
+        <xs:element name="is_corporate_person" type="boolean" />
+        <xs:element name="enabled" type="boolean" />
+      </xs:sequence>
+    </xs:complexType>
+
+  </xs:element>
+  
+ 
+  <!-- typentity.xml -->
+  <xs:complexType name='contact_title'>
+    <xs:sequence>
+      <xs:element name="id" type="xs:string" />
+      <xs:element name="label" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+    
+</xs:schema>
