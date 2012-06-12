@@ -34,13 +34,13 @@ Parent key fields (xpath) and child key fields must be in same order
     <xs:complexType>
       <xs:sequence>
         <!-- ROWS -->
-        <xs:element ref='entity' minOccurs="0" maxOccurs='unbounded'/>
+        <xs:element ref='entities' minOccurs="0" maxOccurs='unbounded'/>
         <!--xs:element name='TYPE' type='typentity' ds:xml='/modules/entities/xml/typentity.xml' ds:xpath='/root/TYPE' minOccurs="0" maxOccurs='unbounded'/-->
       </xs:sequence>
     </xs:complexType>
     <!-- PRIMARY KEY : ENTITY-->
     <xs:key name='entities_pk'>
-      <xs:selector xpath='./entity' />
+      <xs:selector xpath='./entities' />
       <xs:field xpath='entity_id'/>
     </xs:key>
     <!-- PRIMARY KEY : ENTITY TYPE-->
@@ -52,7 +52,7 @@ Parent key fields (xpath) and child key fields must be in same order
   
   
   <!-- ROW : ENTITY -->
-  <xs:element name='entity' type='entity' ds:table='entities' ds:key-column='entity_id' >
+  <xs:element name='entities' type='entities' ds:table='entities'>
     <!-- REQUEST -->
     <xs:annotation>
       <xs:appinfo>
