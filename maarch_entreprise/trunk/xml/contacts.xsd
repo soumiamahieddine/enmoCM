@@ -56,12 +56,19 @@ Parent key fields (xpath) and child key fields must be in same order
     <xs:complexType>
       <xs:sequence>
         <xs:element name="contact_id" type="xs:nonNegativeInteger" />
-        <xs:element name="title" type="varchar255">
+        <xs:element name="title" type="varchar255"/>
+        <!--xs:element name="title_detail" >
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="id" type="varchar255" />
+              <xs:element name="label" type="varchar255" />
+            </xs:sequence>
+          </xs:complexType>
           <xs:keyref name='title_fk' refer='titles_pk'>
             <xs:selector xpath='.' />
-            <xs:field xpath='title' />
+            <xs:field xpath='id' />
           </xs:keyref>
-        </xs:element>
+        </xs:element-->
         <xs:element name="lastname" type="varchar255" />
         <xs:element name="email" type="varchar255" />
         <xs:element name="society" type="varchar255" />
