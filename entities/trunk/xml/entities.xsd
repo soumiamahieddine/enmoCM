@@ -68,16 +68,18 @@ Parent key fields (xpath) and child key fields must be in same order
       <xsd:element name="entity_label" type="varchar255" />
       <xsd:element name="entity_type" type="varchar64" />
       <xsd:element name="enabled" type="boolean" />
+      <xsd:element name="adrs_1" type="varchar255" />
+      <xsd:element name="adrs_2" type="varchar255" />
       <xsd:element name="users_entities" type="users_entities" minOccurs='0' maxOccurs='unbounded'>
         <xsd:annotation>
           <xsd:appinfo>
             <das:relation parent-key='entity_id' child-key='entity_id' />
           </xsd:appinfo>
         </xsd:annotation>
-        <xsd:keyref name='users_entities_fk' refer='entities_pk'>
+        <!--xsd:keyref name='users_entities_fk' refer='entities_pk'>
           <xsd:selector xpath='.' />
           <xsd:field xpath='entity_id' />
-        </xsd:keyref>
+        </xsd:keyref-->
       </xsd:element>
     </xsd:sequence>
   </xsd:complexType>
@@ -128,10 +130,10 @@ Parent key fields (xpath) and child key fields must be in same order
             <xsd:element name="entity_type" type="varchar64" />
           </xsd:sequence>
         </xsd:complexType>
-        <xsd:keyref name='entity_type_fk' refer='entity_type_pk'>
+        <!--xsd:keyref name='entity_type_fk' refer='entity_type_pk'>
           <xsd:selector xpath='.' />
           <xsd:field xpath='entity_type' />
-        </xsd:keyref>
+        </xsd:keyref-->
       </xsd:element>
     </xsd:sequence>
   </xsd:complexType>
