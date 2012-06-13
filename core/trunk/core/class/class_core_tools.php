@@ -1353,7 +1353,7 @@ class core_tools extends functions
             $this->loadDefaultPage();
             return true;
         }
-        /*if(isset($_GET['module']) && $_GET['module'] <> "core") {
+        if(isset($_GET['module']) && $_GET['module'] <> "core") {
             // Page is defined in a module
             if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'modules'.DIRECTORY_SEPARATOR.$_GET['module'].DIRECTORY_SEPARATOR.$this->f_page.".php")) {
                 require($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'modules'.DIRECTORY_SEPARATOR.$_GET['module'].DIRECTORY_SEPARATOR.$this->f_page.".php");
@@ -1388,7 +1388,7 @@ class core_tools extends functions
                     $this->loadDefaultPage();
                 }
             }
-        } else*/if(isset($_GET['dir']) && !empty($_GET['dir'])) {
+        } elseif(isset($_GET['dir']) && !empty($_GET['dir'])) {
             // Page is defined in a dir directory of the application
             if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.trim($_GET['dir']).DIRECTORY_SEPARATOR.$this->f_page.".php")) {
                 require($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.trim($_GET['dir']).DIRECTORY_SEPARATOR.$this->f_page.".php");
@@ -2263,3 +2263,4 @@ class core_tools extends functions
         <?php
     }
 }
+
