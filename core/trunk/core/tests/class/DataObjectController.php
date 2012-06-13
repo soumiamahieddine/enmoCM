@@ -12,7 +12,6 @@ class DataObjectController extends DOMDocument
     {
         require_once 'core/tests/class/XSDDocument.php';
         require_once 'core/tests/class/XMLDocument.php';
-        require_once 'core/tests/class/RootDataObject.php';
         require_once 'core/tests/class/DataObject.php';
         require_once 'core/tests/class/ArrayDataObject.php';
     }
