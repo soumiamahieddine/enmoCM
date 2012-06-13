@@ -807,8 +807,53 @@ class list_show extends functions
         <?php
     }
     
-    public function adminListShow($objectList, $actions, $pagePath, $template=false)
+    public function adminListShow($objectList, $actions, $pagePath, $showCols, $pageNb, $template=false)
     {
+        //echo '<pre>' . print_r($objectList, true) . '</pre>';exit;
+        $nbLine  = $_SESSION['config']['nblinetoshow'];
+        $nbEnd   = $pageNb * $nbLine - 1;
+        $nbStart = $nbEnd - $nbLine + 1;
+        $nbMax = count($objectList);
+        $nbPageMax = ceil($nbMax/$nbLine);
+        $actualURL = str_replace('&pageNb='.$pageNb, '', end(explode('/', $_SERVER['REQUEST_URI'])));
+        $nextLink = $actualURL . '&pageNb=' . ($pageNb + 1);
+        $previousLink = $actualURL . '&pageNb=' . ($pageNb - 1);
+        
+        $str_pagination  = '';
+        if ($nbPageMax > 1) {
+            $str_pagination .= '<table width="100%">';
+                $str_pagination .= '<tr>';
+                    $str_pagination .= '<td style="text-align: right;">';
+                        $str_pagination .= 'Aller à la page : ';
+                    $str_pagination .= '</td>';
+                    $str_pagination .= '<td>';
+                        $str_pagination .= '<select onchange="window.location.href=this.value;">';
+                            for($k=1; $k<=$nbPageMax; $k++) {
+                                $selected = '';
+                                if ($k == $pageNb) {
+                                    $selected = 'selected ';
+                                }
+                                $str_pagination .= '<option value="' . $actualURL . '&pageNb=' . $k . '" ' . $selected . '>' . $k . '</option>';
+                            }
+                        $str_pagination .= '</select>';
+                    $str_pagination .= '</td>';
+                    $str_pagination .= '<td width="80px">';
+                    if ($pageNb > 1) {
+                        $str_pagination .= '<a href="' . $previousLink . '">';
+                            $str_pagination .= ' < précédente';
+                        $str_pagination .= '</a>';
+                    }
+                    $str_pagination .= '</td>';
+                    $str_pagination .= '<td width="80px">';
+                    if ($pageNb < $nbPageMax) {
+                        $str_pagination .= '<a href="' . $nextLink . '">';
+                            $str_pagination .= ' Suivante > ';
+                        $str_pagination .= '</a>';
+                    }
+                    $str_pagination .= '</td>';
+                $str_pagination .= '</tr>';
+            $str_pagination .= '</table>';
+        }
         
         //universal path
         $pageURL = str_replace('&mode=list', '', $pagePath);
@@ -820,51 +865,94 @@ class list_show extends functions
             }
         }
         
-        $str_adminList .= '<br />';
-        $str_adminList .= '<table border="1" width="100%">';
-        foreach ($objectList as $object) {
-            $str_adminList .= '<tr>';
-            foreach($object as $key => $value) {
-                if (!is_scalar($value)) {
-                    continue;
+        $str_tableStart .= '<br />';
+        $str_tableStart .= '<table width="100%">';
+            $str_tableStart .= '<tbody>';
+                $i=0;
+                foreach ($objectList as $object) {
+                    if (!($i < $nbStart || $i > $nbEnd)) {
+                        $cssClass_tr = 'dark';
+                        if ($i%2 == 0) {
+                            $cssClass_tr = 'light';
+                        }
+                        $str_adminList .= '<tr class="' . $cssClass_tr . '">';
+                        $j=0;
+                        foreach($object as $key => $value) {
+                            if ((!is_scalar($value) && $value) || (!in_array($key, $showCols))) {
+                                continue;
+                            }
+                            
+                            $header[$j] = $key;
+                            
+                            $str_adminList .= '<td class="' . $key . '">';
+                                $str_adminList .= $value;
+                            $str_adminList .= '</td>';
+                            
+                            $j++;
+                        }
+                        if (in_array('read', $actions)) {
+                            if (!in_array(_READ, $header)) {
+                                array_push($header, _READ);
+                            }
+                            $str_adminList .= '<td width="1%">';
+                                $str_adminList .= '<a href="' . $actionsURL['read'] . '">';
+                                    $str_adminList .= _READ;
+                                $str_adminList .= '</a>';
+                            $str_adminList .= '</td>';
+                        }
+                        if (in_array('update', $actions)) {
+                            if (!in_array(_UPDATE, $header)) {
+                                array_push($header, _UPDATE);
+                            }
+                            $str_adminList .= '<td width="8%">';
+                                $str_adminList .= '<a href="' . $actionsURL['update'] . '&objectId=' . $i . '">';
+                                    $str_adminList .= _UPDATE;
+                                $str_adminList .= '</a>';
+                            $str_adminList .= '</td>';
+                        }
+                        if (in_array('delete', $actions)) {
+                            if (!in_array(_DELETE, $header)) {
+                                array_push($header, _DELETE);
+                            }
+                            $str_adminList .= '<td width="1%">';
+                                $str_adminList .= '<a href="' . $actionsURL['delete'] . '">';
+                                    $str_adminList .= '<img src="static.php?filename=picto_delete.gif" />';
+                                $str_adminList .= '</a>';
+                            $str_adminList .= '</td>';
+                        }
+                        $str_adminList .= '</tr>';
+                    }
+                    $i++;
                 }
-                $str_adminList .= '<td>';
-                    $str_adminList .= $key . ' => ' . $value;
-                $str_adminList .= '</td>';
-            }
-            if (in_array('create', $actions)) {
-                $str_adminList .= '<td width="10%">';
-                    $str_adminList .= '<a href="' . $actionsURL['create'] . '">';
-                        $str_adminList .= _CREATE;
-                    $str_adminList .= '</a>';
-                $str_adminList .= '</td>';
-            }
-            if (in_array('read', $actions)) {
-                $str_adminList .= '<td width="10%">';
-                    $str_adminList .= '<a href="' . $actionsURL['read'] . '">';
-                        $str_adminList .= _READ;
-                    $str_adminList .= '</a>';
-                $str_adminList .= '</td>';
-            }
-            if (in_array('update', $actions)) {
-                $str_adminList .= '<td width="10%">';
-                    $str_adminList .= '<a href="' . $actionsURL['update'] . '">';
-                        $str_adminList .= _UPDATE;
-                    $str_adminList .= '</a>';
-                $str_adminList .= '</td>';
-            }
-            if (in_array('delete', $actions)) {
-                $str_adminList .= '<td width="10%">';
-                    $str_adminList .= '<a href="' . $actionsURL['delete'] . '">';
-                        $str_adminList .= _DELETE;
-                    $str_adminList .= '</a>';
-                $str_adminList .= '</td>';
-            }
-            $str_adminList .= '</tr>';
+            $str_tableEnd .= '</tbody>';
+        $str_tableEnd .= '</table>';
+        if (in_array('create', $actions)) {
+            $str_create .= '<br />';
+            $str_create .= '<div style="text-align: right;">';
+                $str_create .= '<a href="' . $actionsURL['create'] . '">';
+                    $str_create .= 'créer';
+                $str_create .= '</a>';
+            $str_create .= '</div>';
         }
-        $str_adminList .= '</table>';
         
+        $str_header  = '<thead style="background-color: rgba(110, 100, 210, 1); color: rgba(255, 255, 255, 1);">';
+            $str_header .= '<tr>';
+                for($j=0; $j<count($header); $j++) {
+                    $str_header .= '<th>';
+                        $str_header .= '<b>';
+                            $str_header .= $header[$j];
+                        $str_header .= '</b>';
+                    $str_header .= '</th>';
+                }
+            $str_header .= '</tr>';
+        $str_header .= '</thead>';
+        
+        echo $str_pagination;
+        echo $str_tableStart;
+        echo $str_header;
         echo $str_adminList;
+        echo $str_tableEnd;
+        echo $str_create;
         
         if (!$template) {
             $template = 'adminDefault';
