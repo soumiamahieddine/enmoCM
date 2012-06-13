@@ -224,10 +224,12 @@ class DataObjectController extends DOMDocument
         
         // Query
         $dbQuery  = "SELECT " . $selectExpression;
-        $dbQuery .= " FROM " . $from;
-        if(count($whereClause) > 0) $dbQuery .= " WHERE " . implode(' and ', $whereClause);
+        $dbQuery .= "
+        FROM " . $from;
+        if(count($whereClause) > 0) $dbQuery .= " 
+        WHERE " . implode(' and ', $whereClause);
 
-        echo "<br/>" . $dbQuery;
+        echo "<pre><br/>" . $dbQuery . "</pre>";
         $db = new dbquery();
         $db->query($dbQuery);
 
@@ -240,6 +242,7 @@ class DataObjectController extends DOMDocument
                 $ArrayDataObject[] = $DataObject;
                 
                 foreach($arrayObject as $propertyName => $propertyValue) {
+                    echo "<br/>Adding property $propertyName => $propertyValue";
                     $DataObject->$propertyName = $propertyValue;
                 }
                 //echo "<br/>Load ". count($childElementsList). "child(ren) object(s) for $objectName #" . count($ArrayDataObject); 
@@ -667,7 +670,7 @@ class DataObjectController extends DOMDocument
     function addChildXml($parentObject, $parentXml) 
     {
         foreach($parentObject as $childName => $childValue) {
-            if(is_scalar($childValue)) {
+            if(is_scalar($childValue) || $childValue == false) {
                 $propertyXml = $this->Document->createElement($childName, $childValue);
                 $parentXml->appendChild($propertyXml);
             } elseif(get_class($childValue) == 'DataObject') {
