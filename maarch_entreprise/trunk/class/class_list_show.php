@@ -806,6 +806,70 @@ class list_show extends functions
         </div>
         <?php
     }
+    
+    public function adminListShow($objectList, $actions, $pagePath, $template=false)
+    {
+        
+        //universal path
+        $pageURL = str_replace('&mode=list', '', $pagePath);
+        //actionsUrl
+        $actionsURL = array();
+        if (is_array($actions)) {
+            for ($i=0; $i<count($actions); $i++) {
+                $actionsURL[$actions[$i]] = $pageURL . '&mode=' . $actions[$i];
+            }
+        }
+        
+        $str_adminList .= '<br />';
+        $str_adminList .= '<table border="1" width="100%">';
+        foreach ($objectList as $object) {
+            $str_adminList .= '<tr>';
+            foreach($object as $key => $value) {
+                if (!is_scalar($value)) {
+                    continue;
+                }
+                $str_adminList .= '<td>';
+                    $str_adminList .= $key . ' => ' . $value;
+                $str_adminList .= '</td>';
+            }
+            if (in_array('create', $actions)) {
+                $str_adminList .= '<td width="10%">';
+                    $str_adminList .= '<a href="' . $actionsURL['create'] . '">';
+                        $str_adminList .= _CREATE;
+                    $str_adminList .= '</a>';
+                $str_adminList .= '</td>';
+            }
+            if (in_array('read', $actions)) {
+                $str_adminList .= '<td width="10%">';
+                    $str_adminList .= '<a href="' . $actionsURL['read'] . '">';
+                        $str_adminList .= _READ;
+                    $str_adminList .= '</a>';
+                $str_adminList .= '</td>';
+            }
+            if (in_array('update', $actions)) {
+                $str_adminList .= '<td width="10%">';
+                    $str_adminList .= '<a href="' . $actionsURL['update'] . '">';
+                        $str_adminList .= _UPDATE;
+                    $str_adminList .= '</a>';
+                $str_adminList .= '</td>';
+            }
+            if (in_array('delete', $actions)) {
+                $str_adminList .= '<td width="10%">';
+                    $str_adminList .= '<a href="' . $actionsURL['delete'] . '">';
+                        $str_adminList .= _DELETE;
+                    $str_adminList .= '</a>';
+                $str_adminList .= '</td>';
+            }
+            $str_adminList .= '</tr>';
+        }
+        $str_adminList .= '</table>';
+        
+        echo $str_adminList;
+        
+        if (!$template) {
+            $template = 'adminDefault';
+        }
+    }
 
     /* *
     * show an administration list
