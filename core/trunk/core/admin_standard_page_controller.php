@@ -44,6 +44,7 @@ if (isset($_REQUEST['object']) && !empty($_REQUEST['object'])) {
     $object = $_REQUEST['object'];
 } else {
     echo _OBJECT_MANDATORY;
+    exit;
 }
 if (isset($_REQUEST['objectId']) && !empty($_REQUEST['objectId'])) {
     $objectId = $_REQUEST['objectId'];
@@ -62,6 +63,7 @@ if (isset($_REQUEST['admin']) && !empty($_REQUEST['admin'])) {
     $coreTools->test_admin('admin_' . $object, $object);
 } else {
     echo _VIEW_LOCATION_MANDATORY;
+    exit;
 }
 
 //INCLUDES
@@ -81,9 +83,7 @@ switch ($mode) {
         doDelete($docserverId);
         break;
     case 'list' :
-        require_once 'apps' . DIRECTORY_SEPARATOR
-            . $_SESSION['config']['app_id'] . DIRECTORY_SEPARATOR . 'class'
-            . DIRECTORY_SEPARATOR . 'class_list_show.php';
+        require_once('apps/' . $_SESSION['config']['app_id'] . '/class/class_list_show.php');
         $docserversList = displayList();
         break;
     //TODO: PROCESS IT LIKE PARTICULAR CASES OF UPDATE
@@ -103,9 +103,9 @@ function locationBarManagement($mode, $object, $isApps)
 {
     $pageName = 'admin_standard_page_controller';
     $pageLabels = array(
-        'add' => _ADDITION,
-        'up' => _MODIFICATION,
-        'list' => _LIST,
+        'add'   => _ADDITION,
+        'up'    => _MODIFICATION,
+        'list'  => _LIST,
     );
     $pageIds = array(
         'add'   => $object . '_add',
@@ -117,18 +117,20 @@ function locationBarManagement($mode, $object, $isApps)
         $init = true;
     }
     $level = '';
-    if (isset($_REQUEST['level']) && ($_REQUEST['level'] == 2
-        || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4
-        || $_REQUEST['level'] == 1)
-    ) {
+    $allowedLevels = array(1, 2, 3, 4);
+    if (isset($_REQUEST['level']) && in_array($_REQUEST['level'], $allowedLevels)) {
         $level = $_REQUEST['level'];
     }
     if($isApps) {
-        $pagePath = $_SESSION['config']['businessappurl'] . 'index.php?page='
-            . $pageName . '&admin=' . $object . '&mode=' . $mode;
+        $pagePath = $_SESSION['config']['businessappurl'] . 'index.php?'
+            . 'page='   . $pageName 
+            . '&admin=' . $object 
+            . '&mode='  . $mode;
     } else {
-        $pagePath = $_SESSION['config']['businessappurl'] . 'index.php?page='
-            . $pageName . '&module=' . $object . '&mode=' . $mode;
+        $pagePath = $_SESSION['config']['businessappurl'] . 'index.php?'
+            . 'page='    . $pageName 
+            . '&module=' . $object 
+            . '&mode='   . $mode;
     }
     $pageLabel = $pageLabels[$mode];
     $pageId = $pageIds[$mode];
