@@ -35,6 +35,11 @@
 $coreTools = new core_tools();
 $coreTools->load_lang();
 
+$pageNb = 1;
+if (isset($_REQUEST['pageNb']) && !empty($_REQUEST['pageNb'])) {
+    $pageNb = $_REQUEST['pageNb'];
+}
+
 $mode = 'list';
 //retrieve the controller parameters
 if (isset($_REQUEST['mode']) && !empty($_REQUEST['mode'])) {
@@ -95,9 +100,10 @@ switch ($mode) {
         break;
     case 'list' :
         require_once('apps/' . $_SESSION['config']['app_id'] . '/class/class_list_show.php');
-        $actions = array('create', 'delete');
+        $actions = array('create', 'read', 'update', 'delete');
+        $showCols = array('entity_id', 'entity_label', 'entity_type');
         
-        displayList($RootDataObject->$object, $actions, $pagePath);
+        displayList($RootDataObject->$object, $actions, $showCols, $pagePath, $pageNb);
         break;
         
     //TODO: PROCESS IT LIKE PARTICULAR CASES OF UPDATE
@@ -138,12 +144,14 @@ function locationBarManagement($mode, $object, $isApps)
             . 'page='   . $pageName 
             . '&admin=' . $object 
             . '&object=' . $object 
+            . '&dir=admin'
             . '&mode='  . $mode;
     } else {
         $pagePath = $_SESSION['config']['businessappurl'] . 'index.php?'
             . 'page='    . $pageName 
             . '&module=' . $object 
             . '&object=' . $object 
+            . '&dir=admin'
             . '&mode='   . $mode;
     }
     $pageLabel = $pageLabels[$mode];
@@ -154,8 +162,8 @@ function locationBarManagement($mode, $object, $isApps)
     return $pagePath;
 }
 
-function displayList($object, $actions, $pagePath)
+function displayList($object, $actions, $showCols, $pagePath, $pageNb)
 {
     $listShow = new list_show;
-    $listShow->adminListShow($object, $actions, $pagePath);
+    $listShow->adminListShow($object, $actions, $pagePath, $showCols, $pageNb);
 }
