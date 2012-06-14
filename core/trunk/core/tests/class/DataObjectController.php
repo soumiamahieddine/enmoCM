@@ -139,7 +139,7 @@ class dataObjectController extends DOMDocument
             break;
         }
         if(count($orderExpressionParts) > 0) {
-            $this->Queries[$elementName]['orderExpression'] = implode(', ', $orderExpressionParts) . " " . $orderMode;
+            $this->Queries[$elementName]['orderByExpression'] = implode(', ', $orderExpressionParts) . " " . $orderMode;
         }
     }
     
