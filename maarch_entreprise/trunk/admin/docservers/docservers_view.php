@@ -1,22 +1,7 @@
 <?php
-echo 'la vue';
 /* View */
 if ($params['mode'] == 'list') {
     echo $listContent;
-    $listShow = new list_show();
-    $listShow->admin_list(
-        $docserversList['tab'], count($docserversList['tab']),
-        $docserversList['title'], 'docserver_id',
-        'docservers_management_controler&mode=list', 'docservers',
-        'docserver_id', true, $docserversList['page_name_up'],
-        $docserversList['page_name_val'], $docserversList['page_name_ban'],
-        $docserversList['page_name_del'], $docserversList['page_name_add'],
-        $docserversList['label_add'], false, false, _ALL_DOCSERVERS, _DOCSERVER,
-        $_SESSION['config']['businessappurl']
-        . 'static.php?filename=favicon.png&admin=docservers', false, true,
-        false, true, $docserversList['what'], true,
-        $docserversList['autoCompletionArray']
-    );
 } elseif ($mode == "up" || $mode == "add") {
     $func = new functions();
     ?>
