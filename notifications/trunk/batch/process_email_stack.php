@@ -42,12 +42,12 @@ while ($state <> 'END') {
 			$email = $GLOBALS['emails'][$currentEmail];
 			$GLOBALS['mailer'] = new htmlMimeMail();
 			$GLOBALS['mailer']->setSMTPParams(
-				(string)$mailerParams->smtp_host, 
-				(string)$mailerParams->smtp_port,
-				(string)$mailerParams->smtp_host . ":" . (string)$mailerParams->smtp_port,
-				true,
-				(string)$mailerParams->smtp_user,
-				(string)$mailerParams->smtp_password
+				$host = (string)$mailerParams->smtp_host, 
+				$port = (string)$mailerParams->smtp_port,
+				$helo = (string)$mailerParams->domains,
+				$auth = true,
+				$user = (string)$mailerParams->smtp_user,
+				$pass = (string)$mailerParams->smtp_password
 				);
 			$GLOBALS['logger']->write("Sending e-mail to : " . $email->recipient, 'INFO');
 			$GLOBALS['mailer']->setFrom($email->sender);
