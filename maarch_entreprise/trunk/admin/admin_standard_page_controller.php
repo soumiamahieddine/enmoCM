@@ -180,8 +180,26 @@ function initSession($object)
 function displayAdd($object)
 {
     if (!isset($_SESSION['m_admin'][$object])) {
-        $this->initSession();
+        initSession();
     }
+}
+
+/**
+ * Destroy session parameters for create display
+ * @param $objectName
+ */
+function displayCreate($objectName)
+{
+    clearSession($objectName);
+}
+
+/**
+ * Initialize session parameters for read display
+ * @param $objectId
+ */
+function displayRead($objectName, $object)
+{
+    putInSession($objectName, $object);
 }
 
 /**
@@ -190,7 +208,7 @@ function displayAdd($object)
  */
 function displayUpdate($objectName, $object)
 {
-    $this->putInSession($objectName, $object);
+    putInSession($objectName, $object);
     //TODO: SPECIFIC SAMPLE !!!
 /*
     if ($docserversControler->resxLinkExists(
@@ -221,7 +239,16 @@ function putInSession($objectName, $object)
     $_SESSION['m_admin'][$objectName] = $object;
 }
 
-function displayList($objectList, $actions, $showCols, $pageNb)
+/**
+ * Clear the object in session
+ * @param string $objectName
+ */
+function clearSession($objectName)
+{
+    $_SESSION['m_admin'][$objectName] = array();
+}
+
+function displayList($objectList, $actions, $showCols, $pageNb, $keyName)
 {
     $pagePath = $_SERVER['REQUEST_URI'];
     //pagination
@@ -322,7 +349,7 @@ function displayList($objectList, $actions, $showCols, $pageNb)
                             array_push($header, ' ');
                         }
                         $str_adminList .= '<td width="1%">';
-                            $str_adminList .= '<a href="' . $actionsURL['read'] . '&objectId=' . $i . '">';
+                            $str_adminList .= '<a href="' . $actionsURL['read'] . '&objectId=' . $object->$keyName . '">';
                                 $str_adminList .= _READ;
                             $str_adminList .= '</a>';
                         $str_adminList .= '</td>';
@@ -332,7 +359,7 @@ function displayList($objectList, $actions, $showCols, $pageNb)
                             array_push($header, '  ');
                         }
                         $str_adminList .= '<td width="8%">';
-                            $str_adminList .= '<a href="' . $actionsURL['update'] . '&objectId=' . $i . '">';
+                            $str_adminList .= '<a href="' . $actionsURL['update'] . '&objectId=' . $object->$keyName . '">';
                                 $str_adminList .= _UPDATE;
                             $str_adminList .= '</a>';
                         $str_adminList .= '</td>';
@@ -478,49 +505,55 @@ $schemaPath = $params['viewLocation'] . '/xml/' . $params['object'] . '.xsd';
 require_once('core/tests/class/DataObjectController.php');
 $DataObjectController = new DataObjectController();
 $DataObjectController->loadSchema($schemaPath);
-$RootDataObject = $DataObjectController->loadRootDataObject($params['object'] . '_root');
-
-//$DataObjectController->validate();
-
-//if mode = read, update, delete of the objectId
-
-//echo '<pre>';
-//var_dump($RootDataObject);
-//echo '</pre>';
 
 //CRUDL CASES
 switch ($params['mode']) {
     case 'create' :
-        displayCreate();
+        displayCreate($params['object']);
         break;
     case 'read' :
-        $state = displayRead($params['objectId']);
+        $DataObjectController->setKey($params['object'], $params['objectId']);
+        $RootDataObject = $DataObjectController->loadRootDataObject(
+            $params['object']
+        );
+        $state = displayRead(
+            $params['object'], 
+            $RootDataObject
+        );
         break;
     case 'update' :
         //test if objectId
-        $myObject = $RootDataObject->{$params['object']}[0];
+        $DataObjectController->setKey($params['object'], $params['objectId']);
+        $RootDataObject = $DataObjectController->loadRootDataObject(
+            $params['object']
+        );
         $state = displayUpdate(
             $params['object'], 
-            $myObject
+            $RootDataObject
         );
-/*
-        echo '<pre>';
-        print_r($_SESSION['m_admin']);
-        echo '</pre>';
-*/
         break;
     case 'delete' :
         doDelete($params['objectId']);
         break;
     case 'list' :
-        require_once('apps/' . $_SESSION['config']['app_id'] 
-            . '/class/class_list_show.php');
-            
+        if (isset($params['orderField']) && !empty($params['orderField'])) {
+            $DataObjectController->setOrder(
+                $params['object'], 
+                $params['orderField'],
+                $params['order']
+            );
+        }
+        $RootDataObject = $DataObjectController->loadRootDataObject(
+            $params['object'] . '_root'
+        );
+        $keyName = $DataObjectController->getKey($params['object']);
+        
         $listContent = displayList(
             $RootDataObject->$params['object'], 
-            $actions, 
-            $showCols, 
-            $params['pageNb']
+            $actions,
+            $showCols,
+            $params['pageNb'],
+            $keyName
         );
         break;
     //TODO: PROCESS IT LIKE PARTICULAR CASES OF UPDATE

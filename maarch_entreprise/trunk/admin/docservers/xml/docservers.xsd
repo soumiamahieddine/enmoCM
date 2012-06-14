@@ -46,7 +46,7 @@ Parent key fields (xpath) and child key fields must be in same order
   </xsd:element>
   
   <!-- ROW : DOCSERVER -->
-  <xsd:element name='docservers' type='docserver' das:table='docservers' das:key-columns="docserver_id">
+  <xsd:element name='docservers' type='docserver' das:table='docservers' das:key-column="docserver_id">
   </xsd:element>
   
   <!-- TYPE : DOCSERVER -->

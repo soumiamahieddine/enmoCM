@@ -1,9 +1,24 @@
 <?php
 /* View */
 if ($params['mode'] == 'list') {
+    ?>
+    <h1><img src="<?php
+    echo $_SESSION['config']['businessappurl'];
+    ?>static.php?filename=favicon.png" alt="" />
+    <?php
+    echo _DOCSERVERS_LIST. ' : ' . count($RootDataObject->$params['object']) 
+        . ' ' . _DOCSERVERS;
+    ?>
+    </h1>
+    <?php
     echo $listContent;
-} elseif ($params['mode'] == 'update' || $params['mode'] == 'add') {
+} elseif ($params['mode'] == 'create' || $params['mode'] == 'read' || $params['mode'] == 'update') {
     $func = new functions();
+/*
+    echo '<pre>';
+    var_dump($_SESSION['m_admin']['docservers']);
+    echo '</pre>';
+*/
     ?>
     <h1><img src="<?php
     echo $_SESSION['config']['businessappurl'];
@@ -11,6 +26,8 @@ if ($params['mode'] == 'list') {
         <?php
     if ($params['mode'] == 'create') {
         echo _DOCSERVER_ADDITION;
+    } elseif ($params['mode'] == 'read') {
+        echo _DOCSERVER_READ;
     } elseif ($params['mode'] == 'update') {
         echo _DOCSERVER_MODIFICATION;
     }
@@ -25,28 +42,28 @@ if ($params['mode'] == 'list') {
         ?>">
         <?php
         //load hidden standard fields 
-        echo $adminPageController->loadHiddenFields($params);
+        echo loadHiddenFields($params);
         ?>
         <input type="hidden" name="size_limit_hidden"  value="<?php
-        if (isset($_SESSION['m_admin']['docservers']['size_limit_number'])) {
-            echo $_SESSION['m_admin']['docservers']['size_limit_number'];
+        if (isset($_SESSION['m_admin']['docservers']->size_limit_number)) {
+            echo $_SESSION['m_admin']['docservers']->size_limit_number;
         }
         ?>" id="size_limit_hidden"/>
         <input type="hidden" name="actual_size_hidden"  value="<?php
-        if (isset($_SESSION['m_admin']['docservers']['actual_size_number'])) {
-            echo $_SESSION['m_admin']['docservers']['actual_size_number'];
+        if (isset($_SESSION['m_admin']['docservers']->actual_size_number)) {
+            echo $_SESSION['m_admin']['docservers']->actual_size_number;
         }
         ?>" id="actual_size_hidden"/>
         <p>
             <label for="id"><?php echo _DOCSERVER_ID; ?> (*): </label>
             <input name="id" type="text"  id="id" value="<?php
-        if (isset($_SESSION['m_admin']['docservers']['docserver_id'])) {
+        if (isset($_SESSION['m_admin']['docservers']->docserver_id)) {
             echo $func->show_str(
-                $_SESSION['m_admin']['docservers']['docserver_id']
+                $_SESSION['m_admin']['docservers']->docserver_id
             );
         }
         ?>" <?php
-        if ($params['mode'] == 'update') {
+        if ($params['mode'] == 'update' || $params['mode'] == 'read') {
             echo " readonly='readonly' class='readonly'";
         }
         ?>/>
@@ -54,8 +71,9 @@ if ($params['mode'] == 'list') {
         <p>
             <label for="docserver_type_id"><?php echo _DOCSERVER_TYPES;?> (*): </label>
             <?php
-            if (isset($_SESSION['m_admin']['docservers']['docserver_type_id'])
-                    && $_SESSION['m_admin']['docservers']['docserver_type_id'] == 'TEMPLATES'
+            if ((isset($_SESSION['m_admin']['docservers']->docserver_type_id)
+                    && $_SESSION['m_admin']['docservers']->docserver_type_id == 'TEMPLATES')
+                || $params['mode'] == 'read'
             ) {
                 ?>
                 <input name="docserver_type_id" type="text"  id="docserver_type_id" value="TEMPLATES" readonly="readonly" class="readonly"/>
@@ -64,18 +82,18 @@ if ($params['mode'] == 'list') {
                 for ($cptTypes = 0; $cptTypes < count($docserverTypesArray);
                     $cptTypes ++
                 ) {
-                    if (isset($_SESSION['m_admin']['docservers']['docserver_type_id'])
-                        && $_SESSION['m_admin']['docservers']['docserver_type_id'] == $docserverTypesArray[$cptTypes]
+                    if (isset($_SESSION['m_admin']['docservers']->docserver_type_id)
+                        && $_SESSION['m_admin']['docservers']->docserver_type_id == $docserverTypesArray[$cptTypes]
                     ) {
                         $docserverTypeTxt = $docserverTypesArray[$cptTypes];
                     }
                 }
-                if (isset($_SESSION['m_admin']['docservers']['link_exists']) 
-                    && $_SESSION['m_admin']['docservers']['link_exists']
+                if (isset($_SESSION['m_admin']['docservers']->link_exists) 
+                    && $_SESSION['m_admin']['docservers']->link_exists
                 ) {
                     ?>
                     <input type="hidden" name="docserver_type_id" value="<?php 
-                        echo $_SESSION['m_admin']['docservers']['docserver_type_id'];?>" />
+                        echo $_SESSION['m_admin']['docservers']->docserver_type_id;?>" />
                     <input name="docserver_type_id_txt" type="text"  id="docserver_type_id_txt" value="<?php
                         echo $docserverTypeTxt;
                     ?>" readonly class="readonly"/>
@@ -90,8 +108,8 @@ if ($params['mode'] == 'list') {
                     ) {
                         ?>
                         <option value="<?php echo $docserverTypesArray[$cptTypes];?>" <?php
-                        if (isset($_SESSION['m_admin']['docservers']['docserver_type_id'])
-                            && $_SESSION['m_admin']['docservers']['docserver_type_id'] == $docserverTypesArray[$cptTypes]
+                        if (isset($_SESSION['m_admin']['docservers']->docserver_type_id)
+                            && $_SESSION['m_admin']['docservers']->docserver_type_id == $docserverTypesArray[$cptTypes]
                         ) {
                             echo 'selected="selected"';
                         }
@@ -108,26 +126,30 @@ if ($params['mode'] == 'list') {
         <p>
             <label for="device_label"><?php echo _DEVICE_LABEL; ?> (*): </label>
             <input name="device_label" type="text"  id="device_label" value="<?php
-        if (isset($_SESSION['m_admin']['docservers']['device_label'])) {
+        if (isset($_SESSION['m_admin']['docservers']->device_label)) {
             echo $func->show_str(
-                $_SESSION['m_admin']['docservers']['device_label']
+                $_SESSION['m_admin']['docservers']->device_label
             );
         }
-        ?>"/>
+        ?>" <?php
+        if ($params['mode'] == 'read') {
+            echo " readonly='readonly' class='readonly'";
+        }
+        ?>/>
         </p>
         <p>
             <label><?php echo _IS_READONLY; ?> : </label>
             <input type="radio" class="check" name="is_readonly" value="true" <?php
-        if (isset($_SESSION['m_admin']['docservers']['is_readonly'])
-            && $_SESSION['m_admin']['docservers']['is_readonly'] == "Y"
+        if (isset($_SESSION['m_admin']['docservers']->is_readonly)
+            && $_SESSION['m_admin']['docservers']->is_readonly == "Y"
         ) {
             ?> checked="checked"<?php
         }
         ?> /><?php echo _YES;?>
             <input type="radio" class="check" name="is_readonly" value="false" <?php
-        if (!isset($_SESSION['m_admin']['docservers']['is_readonly'])
-            || (!($_SESSION['m_admin']['docservers']['is_readonly'] == "Y")
-            || $_SESSION['m_admin']['docservers']['is_readonly'] == '')
+        if (!isset($_SESSION['m_admin']['docservers']->is_readonly)
+            || (!($_SESSION['m_admin']['docservers']->is_readonly == "Y")
+            || $_SESSION['m_admin']['docservers']->is_readonly == '')
         ) {
             ?> checked="checked"<?php
         }
@@ -144,40 +166,44 @@ if ($params['mode'] == 'list') {
         <p>
             <label for="size_limit_number"><?php echo _SIZE_LIMIT; ?> : </label>
             <input name="size_limit_number" type="text" id="size_limit_number" value="<?php
-        if (isset($_SESSION['m_admin']['docservers']['size_limit_number'])) {
+        if (isset($_SESSION['m_admin']['docservers']->size_limit_number)) {
             echo $func->show_str(
-                $_SESSION['m_admin']['docservers']['size_limit_number']
+                $_SESSION['m_admin']['docservers']->size_limit_number
             );
         }
-        ?>" onChange="javascript:saveSizeInBytes();"/>
+        ?>" onChange="javascript:saveSizeInBytes();" <?php
+        if ($params['mode'] == 'read') {
+            echo " readonly='readonly' class='readonly'";
+        }
+        ?>/>
         </p>
         <?php
-        if ($params['mode'] == 'update') {
+        if ($params['mode'] == 'update' || $params['mode'] == 'read') {
             ?>
             <p>
                 <label for="actual_size_number"><?php
             echo _ACTUAL_SIZE;
             ?> : </label>
                 <input name="actual_size_number" type="text" id="actual_size_number" value="<?php
-            if (isset($_SESSION['m_admin']['docservers']['actual_size_number'])) {
+            if (isset($_SESSION['m_admin']['docservers']->actual_size_number)) {
                 echo $func->show_str(
-                    $_SESSION['m_admin']['docservers']['actual_size_number']
+                    $_SESSION['m_admin']['docservers']->actual_size_number
                 );
             }
-            ?>" readonly class="readonly"/>
+            ?>" readonly class="readonly" />
             </p>
             <p>
                 <label for="percentage_full"><?php
             echo _PERCENTAGE_FULL;
             ?> : </label>
                 <input name="percentage_full" type="text" id="percentage_full" value="<?php
-            if (isset($_SESSION['m_admin']['docservers']['actual_size_number'])
-                && isset($_SESSION['m_admin']['docservers']['size_limit_number'])
-                && ($_SESSION['m_admin']['docservers']['actual_size_number'] <> 0
-                && $_SESSION['m_admin']['docservers']['size_limit_number'] <> 0)
+            if (isset($_SESSION['m_admin']['docservers']->actual_size_number)
+                && isset($_SESSION['m_admin']['docservers']->size_limit_number)
+                && ($_SESSION['m_admin']['docservers']->actual_size_number <> 0
+                && $_SESSION['m_admin']['docservers']->size_limit_number <> 0)
             ) {
                 echo $func->show_str(
-                    (100 * $_SESSION['m_admin']['docservers']['actual_size_number']) / $_SESSION['m_admin']['docservers']['size_limit_number']
+                    (100 * $_SESSION['m_admin']['docservers']->actual_size_number) / $_SESSION['m_admin']['docservers']->size_limit_number
                 );
             }
             ?>%" readonly class="readonly"/>
@@ -188,35 +214,39 @@ if ($params['mode'] == 'list') {
         <p>
             <label for="path_template"><?php echo _PATH_TEMPLATE; ?> : </label>
             <input name="path_template" type="text"  id="path_template" value="<?php
-        if (isset($_SESSION['m_admin']['docservers']['path_template'])) {
-            echo $_SESSION['m_admin']['docservers']['path_template'];
+        if (isset($_SESSION['m_admin']['docservers']->path_template)) {
+            echo $_SESSION['m_admin']['docservers']->path_template;
         }
-        ?>"/>
+        ?>" <?php
+        if ($params['mode'] == 'read') {
+            echo " readonly='readonly' class='readonly'";
+        }
+        ?>/>
         </p>
         <!--<p>
             <label for="ext_docserver_info"><?php
         echo _EXT_DOCSERVER_INFO;
         ?> : </label>
             <input name="ext_docserver_info" type="text"  id="ext_docserver_info" value="<?php
-        if (isset($_SESSION['m_admin']['docservers']['ext_docserver_info'])) {
-            echo $func->show_str($_SESSION['m_admin']['docservers']['ext_docserver_info']);
+        if (isset($_SESSION['m_admin']['docservers']->ext_docserver_info)) {
+            echo $func->show_str($_SESSION['m_admin']['docservers']->ext_docserver_info);
         }
         ?>"/>
         </p>
         <p>
             <label for="chain_before"><?php echo _CHAIN_BEFORE; ?> : </label>
             <input name="chain_before" type="text"  id="chain_before" value="<?php
-        if (isset($_SESSION['m_admin']['docservers']['chain_before'])) {
-            echo $func->show_str($_SESSION['m_admin']['docservers']['chain_before']);
+        if (isset($_SESSION['m_admin']['docservers']->chain_before)) {
+            echo $func->show_str($_SESSION['m_admin']['docservers']->chain_before);
         }
         ?>"/>
         </p>
         <p>
             <label for="chain_after"><?php echo _CHAIN_AFTER; ?> : </label>
             <input name="chain_after" type="text"  id="chain_after" value="<?php
-        if (isset($_SESSION['m_admin']['docservers']['chain_after'])) {
+        if (isset($_SESSION['m_admin']['docservers']->chain_after)) {
             echo $func->show_str(
-                $_SESSION['m_admin']['docservers']['chain_after']
+                $_SESSION['m_admin']['docservers']->chain_after
             );
         }
         ?>"/>
@@ -224,9 +254,9 @@ if ($params['mode'] == 'list') {
         <p>
             <label for="closing_date"><?php echo _CLOSING_DATE; ?> : </label>
             <input name="closing_date" type="text"  id="closing_date" value="<?php
-        if (isset($_SESSION['m_admin']['docservers']['closing_date'])) {
+        if (isset($_SESSION['m_admin']['docservers']->closing_date)) {
             echo $func->show_str(
-                $_SESSION['m_admin']['docservers']['closing_date']
+                $_SESSION['m_admin']['docservers']->closing_date
             );
         }
         ?>"/>
@@ -244,8 +274,8 @@ if ($params['mode'] == 'list') {
             <option value="<?php
             echo $_SESSION['docserversFeatures']['DOCSERVERS']['OAIS']['MODE'][$cptOaisMode];
             ?>" <?php
-            if (isset($_SESSION['m_admin']['docservers']['oais_mode'])
-                && $_SESSION['m_admin']['docservers']['oais_mode'] == $_SESSION['docserversFeatures']['DOCSERVERS']['OAIS']['MODE'][$cptOaisMode]
+            if (isset($_SESSION['m_admin']['docservers']->oais_mode)
+                && $_SESSION['m_admin']['docservers']->oais_mode == $_SESSION['docserversFeatures']['DOCSERVERS']['OAIS']['MODE'][$cptOaisMode]
             ) {
                 echo 'selected="selected"';
             }
@@ -270,8 +300,8 @@ if ($params['mode'] == 'list') {
             <option value="<?php
             echo $_SESSION['docserversFeatures']['DOCSERVERS']['SIGN']['MODE'][$cptSignMode];
             ?>" <?php
-            if (isset($_SESSION['m_admin']['docservers']['sign_mode'])
-                && $_SESSION['m_admin']['docservers']['sign_mode'] == $_SESSION['docserversFeatures']['DOCSERVERS']['SIGN']['MODE'][$cptSignMode]
+            if (isset($_SESSION['m_admin']['docservers']->sign_mode)
+                && $_SESSION['m_admin']['docservers']->sign_mode == $_SESSION['docserversFeatures']['DOCSERVERS']['SIGN']['MODE'][$cptSignMode]
             ) {
                 echo 'selected="selected"';
             }
@@ -296,8 +326,8 @@ if ($params['mode'] == 'list') {
             <option value="<?php
             echo $_SESSION['docserversFeatures']['DOCSERVERS']['COMPRESS']['MODE'][$cptCompressMode];
             ?>" <?php
-            if (isset($_SESSION['m_admin']['docservers']['compress_mode'])
-                && $_SESSION['m_admin']['docservers']['compress_mode'] == $_SESSION['docserversFeatures']['DOCSERVERS']['COMPRESS']['MODE'][$cptCompressMode]
+            if (isset($_SESSION['m_admin']['docservers']->compress_mode)
+                && $_SESSION['m_admin']['docservers']->compress_mode == $_SESSION['docserversFeatures']['DOCSERVERS']['COMPRESS']['MODE'][$cptCompressMode]
                 ) {
                     echo 'selected="selected"';
             }
@@ -316,26 +346,27 @@ if ($params['mode'] == 'list') {
                 $_SESSION['collections']
             ); $cptCollection ++
             ) {
-                if (isset($_SESSION['m_admin']['docservers']['coll_id'])
-                    && $_SESSION['m_admin']['docservers']['coll_id'] == $_SESSION['collections'][$cptCollection]['id']
+                if (isset($_SESSION['m_admin']['docservers']->coll_id)
+                    && $_SESSION['m_admin']['docservers']->coll_id == $_SESSION['collections'][$cptCollection]['id']
                 ) {
                     $collTxt = $_SESSION['collections'][$cptCollection]['id'] . " : "
                     . $_SESSION['collections'][$cptCollection]['label'];
                 }
             }
-            if (isset($_SESSION['m_admin']['docservers']['link_exists']) 
-                && $_SESSION['m_admin']['docservers']['link_exists']
+            if ((isset($_SESSION['m_admin']['docservers']->link_exists) 
+                && $_SESSION['m_admin']['docservers']->link_exists)
+                || $params['mode'] == 'read'
             ) {
                 ?>
                 <input type="hidden" name="coll_id" value="<?php 
-                    echo $_SESSION['m_admin']['docservers']['coll_id'];?>" />
+                    echo $_SESSION['m_admin']['docservers']->coll_id;?>" />
                 <input name="coll_id_txt" type="text"  id="coll_id_txt" value="<?php
                     echo $collTxt;
                 ?>" readonly class="readonly"/>
                 <?php
             } else {
-                if (isset($_SESSION['m_admin']['docservers']['coll_id'])
-                    && $_SESSION['m_admin']['docservers']['coll_id'] == 'templates'
+                if (isset($_SESSION['m_admin']['docservers']->coll_id)
+                    && $_SESSION['m_admin']['docservers']->coll_id == 'templates'
                 ) {
                     ?>
                     <input name="coll_id" type="text"  id="coll_id" value="templates" readonly="readonly" class="readonly"/>
@@ -353,8 +384,8 @@ if ($params['mode'] == 'list') {
                         <option value="<?php
                         echo $_SESSION['collections'][$cptCollection]['id'];
                         ?>" <?php
-                        if (isset($_SESSION['m_admin']['docservers']['coll_id'])
-                            && $_SESSION['m_admin']['docservers']['coll_id'] == $_SESSION['collections'][$cptCollection]['id']
+                        if (isset($_SESSION['m_admin']['docservers']->coll_id)
+                            && $_SESSION['m_admin']['docservers']->coll_id == $_SESSION['collections'][$cptCollection]['id']
                         ) {
                             echo 'selected="selected"';
                         }
@@ -374,18 +405,26 @@ if ($params['mode'] == 'list') {
         <p>
             <label for="priority_number"><?php echo _PRIORITY; ?> : </label>
             <input name="priority_number" type="text"  id="priority_number" value="<?php
-        if (isset($_SESSION['m_admin']['docservers']['priority_number'])) {
+        if (isset($_SESSION['m_admin']['docservers']->priority_number)) {
             echo $func->show_str(
-                $_SESSION['m_admin']['docservers']['priority_number']
+                $_SESSION['m_admin']['docservers']->priority_number
             );
         }
-        ?>"/>
+        ?>" <?php
+        if ($params['mode'] == 'read') {
+            echo " readonly='readonly' class='readonly'";
+        }
+        ?>/>
         </p>
         <p>
             <label for="docserver_location_id"><?php
         echo _DOCSERVER_LOCATIONS;
         ?> (*): </label>
-            <select name="docserver_location_id" id="docserver_location_id">
+            <select name="docserver_location_id" id="docserver_location_id" <?php
+        if ($params['mode'] == 'read') {
+            echo " readonly='readonly' class='readonly'";
+        }
+        ?>>
                 <option value=""><?php echo _DOCSERVER_LOCATIONS;?></option>
         <?php
         for ($cptLocation = 0; $cptLocation < count($docserverLocationsArray);
@@ -395,8 +434,8 @@ if ($params['mode'] == 'list') {
             <option value="<?php
             echo $docserverLocationsArray[$cptLocation];
             ?>" <?php
-            if (isset($_SESSION['m_admin']['docservers']['docserver_location_id'])
-                && $_SESSION['m_admin']['docservers']['docserver_location_id'] == $docserverLocationsArray[$cptLocation]
+            if (isset($_SESSION['m_admin']['docservers']->docserver_location_id)
+                && $_SESSION['m_admin']['docservers']->docserver_location_id == $docserverLocationsArray[$cptLocation]
             ) {
                 echo 'selected="selected"';
             }
@@ -411,12 +450,16 @@ if ($params['mode'] == 'list') {
         echo _ADR_PRIORITY;
         ?> : (*)</label>
             <input name="adr_priority_number" type="text"  id="adr_priority_number" value="<?php
-        if (isset($_SESSION['m_admin']['docservers']['adr_priority_number'])) {
+        if (isset($_SESSION['m_admin']['docservers']->adr_priority_number)) {
             echo $func->show_str(
-                $_SESSION['m_admin']['docservers']['adr_priority_number']
+                $_SESSION['m_admin']['docservers']->adr_priority_number
             );
         }
-        ?>"/>
+        ?>" <?php
+        if ($params['mode'] == 'read') {
+            echo " readonly='readonly' class='readonly'";
+        }
+        ?>/>
         </p>
         <p class="buttons">
         <?php
@@ -435,10 +478,16 @@ if ($params['mode'] == 'list') {
         }
         ?>
             <input type="button" class="button"  name="cancel" value="<?php
-        echo _CANCEL;
-        ?>" onClick="javascript:window.location.href='<?php
-        echo $_SESSION['config']['businessappurl'];
-        ?>index.php?page=docservers_management_controler&amp;admin=docservers&amp;mode=list';"/>
+            echo _CANCEL;
+            ?>" onClick="javascript:window.location.href='<?php
+            echo $_SESSION['config']['businessappurl'];
+            ?>index.php?page=<?php 
+                echo $params['pageName'];?>&amp;admin=<?php 
+                echo $params['object'];?>&amp;mode=list&object=<?php 
+                echo $params['object'];?>&amp;order=<?php 
+                echo $params['order'];?>&amp;orderField=<?php 
+                echo $params['orderField'];?>&amp;what=<?php 
+                echo $params['what'];?>';"/>
         </p>
         </form>
         <script type="text/javascript">
