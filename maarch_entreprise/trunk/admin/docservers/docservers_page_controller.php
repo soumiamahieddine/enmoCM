@@ -54,11 +54,12 @@ $showCols = array(
         'functionFormat' => 'standard#isBoolean',
         'cssStyle'       => 'text-align: center;'
     ),
-    'actual_size_number' => array(
-        'cssStyle' => ''
-    ),
-    'adr_priority_number' => array()
 );
+if (isset($_REQUEST['orderField'])) {
+    $showCols[$_REQUEST['orderField']]['cssStyle'] .= 'background-color: rgba(70, 80, 255, 0.3);';
+    //$showCols[$_REQUEST['orderField']]['cssStyle'] .= 'background-color: rgba(255, 255, 255, 0.5);';
+}
+
 //actions to show in the list
 $actions = array('create', 'read', 'update', 'delete');
 

@@ -276,7 +276,7 @@ function displayList($objectList, $actions, $showCols, $pageNb)
     }
     //HTML list
     $str_tableStart .= '<br />';
-    $str_tableStart .= '<table width="100%" cellpadding="5" cellspacing="0">';
+    $str_tableStart .= '<table width="100%" cellpadding="7" cellspacing="0">';
         $str_tableStart .= '<tbody>';
             $i=0;
             foreach ($objectList as $object) {
@@ -318,8 +318,8 @@ function displayList($objectList, $actions, $showCols, $pageNb)
                         $j++;
                     }
                     if (in_array('read', $actions)) {
-                        if (!in_array(_READ, $header)) {
-                            array_push($header, _READ);
+                        if (!in_array(' ', $header)) {
+                            array_push($header, ' ');
                         }
                         $str_adminList .= '<td width="1%">';
                             $str_adminList .= '<a href="' . $actionsURL['read'] . '&objectId=' . $i . '">';
@@ -328,8 +328,8 @@ function displayList($objectList, $actions, $showCols, $pageNb)
                         $str_adminList .= '</td>';
                     }
                     if (in_array('update', $actions)) {
-                        if (!in_array(_UPDATE, $header)) {
-                            array_push($header, _UPDATE);
+                        if (!in_array('  ', $header)) {
+                            array_push($header, '  ');
                         }
                         $str_adminList .= '<td width="8%">';
                             $str_adminList .= '<a href="' . $actionsURL['update'] . '&objectId=' . $i . '">';
@@ -338,8 +338,8 @@ function displayList($objectList, $actions, $showCols, $pageNb)
                         $str_adminList .= '</td>';
                     }
                     if (in_array('delete', $actions)) {
-                        if (!in_array(_DELETE, $header)) {
-                            array_push($header, _DELETE);
+                        if (!in_array('   ', $header)) {
+                            array_push($header, '   ');
                         }
                         $str_adminList .= '<td width="1%">';
                             $str_adminList .= '<a href="' . $actionsURL['delete'] . '">';
@@ -362,18 +362,41 @@ function displayList($objectList, $actions, $showCols, $pageNb)
         $str_create .= '</div>';
     }
     //header
-    $str_header  = '<thead>';
-        $str_header .= '<tr style="background-color: rgba(110, 100, 210, 1); color: rgba(255, 255, 255, 1);">';
-            for($j=0; $j<count($header); $j++) {
-                $str_header .= '<th style="' . $showCols[$header[$j]]['cssStyle'] . '">';
-                    $str_header .= '<b>';
-                        $str_header .= $header[$j];
-                    $str_header .= '</b>';
-                $str_header .= '</th>';
-            }
-        $str_header .= '</tr>';
-    $str_header .= '</thead>';
+    $urlNoTri = str_replace('&order='.$_REQUEST['order'], '', $pagePath);
+    $urlNoTri = str_replace('&orderField='.$_REQUEST['orderField'], '', $urlNoTri);
     
+    $str_header .= '<tr style="background-color: #f6bf36; color: rgba(255, 255, 255, 1);">';
+        for($j=0; $j<count($header); $j++) {
+            $str_header .= '<td style="' . $showCols[$header[$j]]['cssStyle'] . 'text-align: center;">';
+                $str_header .= '<b>';
+                    $trimHeader = trim($header[$j]);
+                    $str_header .= $header[$j];
+                $str_header .= '</b>';
+                $str_header .= '&nbsp;&nbsp;';
+                if (!empty($trimHeader)) {
+                    //tri ASC
+                    $str_header .= '<a href="' . $urlNoTri . '&orderField=' . $trimHeader . '&order=asc">';
+                        $order_asc = '<img src="static.php?filename=order_asc.png" />';
+                        if ($_REQUEST['order'] == 'asc' && $_REQUEST['orderField'] == $trimHeader) {
+                            $order_asc = '<img src="static.php?filename=order_asc_select.png" />';
+                        }
+                        $str_header .= $order_asc;
+                    $str_header .= '</a>';
+                    $str_header .= '&nbsp;';
+                    //tri DESC
+                    $str_header .= '<a href="' . $urlNoTri . '&orderField=' . $trimHeader . '&order=desc">';
+                        $order_desc = '<img src="static.php?filename=order_desc.png" />';
+                        if ($_REQUEST['order'] == 'desc' && $_REQUEST['orderField'] == $trimHeader) {
+                            $order_desc = '<img src="static.php?filename=order_desc_select.png" />';
+                        }
+                        $str_header .= $order_desc;
+                    $str_header .= '</a>';
+                    $str_header .= '&nbsp;&nbsp;';
+                }
+            $str_header .= '</td>';
+        }
+    $str_header .= '</tr>';
+    //retour html
     $listContent = '<br /><br />';
     $listContent .= $str_pagination;
     $listContent .= $str_tableStart;
