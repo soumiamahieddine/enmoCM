@@ -322,7 +322,7 @@ function displayList($objectList, $actions, $showCols, $pageNb)
                             array_push($header, _READ);
                         }
                         $str_adminList .= '<td width="1%">';
-                            $str_adminList .= '<a href="' . $actionsURL['read'] . '">';
+                            $str_adminList .= '<a href="' . $actionsURL['read'] . '&objectId=' . $i . '">';
                                 $str_adminList .= _READ;
                             $str_adminList .= '</a>';
                         $str_adminList .= '</td>';
