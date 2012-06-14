@@ -329,10 +329,10 @@ class dataObjectController extends DOMDocument
     //*************************************************************************
     // GET INFOS
     //*************************************************************************
-    function getDataObjectKey($elementName) {
+    function getKey($elementName) {
         $objectElement = $this->xpath("/xsd:schema/xsd:element[@name='".$elementName."']")->item(0);
         $keyColumnNames = $objectElement->{'das:key-column'};
-        return $explode(' ', $keyColumnNames);
+        return $keyColumnNames;
     }
     
     //*************************************************************************
