@@ -30,8 +30,8 @@
 * @ingroup core
 */
 
-require_once 'core/class/class_core_tools_test.php';
-$coreTools = new core_tools_test();
+require_once 'core/class/class_core_tools.php';
+$coreTools = new core_tools();
 $coreTools->load_lang();
 
 $adminPageController = new adminPageController();
