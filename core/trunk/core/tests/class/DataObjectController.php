@@ -1,19 +1,19 @@
 <?php
 
-class DataObjectController extends DOMDocument
+class dataObjectController extends DOMDocument
 {
 
     private $Schema;
     private $includes;
-    private $RootDataObject;
+    private $RootdataObject;
     private $Document;
     
-    function DataObjectController() 
+    function dataObjectController() 
     {
         require_once 'core/tests/class/XSDDocument.php';
         require_once 'core/tests/class/XMLDocument.php';
-        require_once 'core/tests/class/DataObject.php';
-        require_once 'core/tests/class/ArrayDataObject.php';
+        require_once 'core/tests/class/dataObject.php';
+        require_once 'core/tests/class/ArraydataObject.php';
     }
     
     function loadSchema($xsdFile) 
@@ -88,17 +88,13 @@ class DataObjectController extends DOMDocument
     //*************************************************************************
     // DATA OBJECT FUNCTIONS
     //*************************************************************************
-    function loadRootDataObject($query=false) 
+    function loadRootdataObject($rootElementName, $query=false) 
     {
-        $rootElement = $this->xpath("/xsd:schema/xsd:element")->item(0);
+        $rootElement = $this->xpath("/xsd:schema/xsd:element[@name='".$rootElementName."']")->item(0);
         $rootName = $rootElement->name;
         $rootType = $this->getElementType($rootElement);
-   
-        $this->RootDataObject = new DataObject($rootName);
-        $childElementsList = $this->listChildElements($rootType);
         
-        $this->loadChildObjects($childElementsList, $this->RootDataObject, $rootType, $query);
-        
+        $this->loadDataObject($rootElement, false, false, $query);
         return $this->RootDataObject;
     }
     
@@ -110,39 +106,103 @@ class DataObjectController extends DOMDocument
         ** Not allowed : @name, type, fixed, default, form, block, nillable 
         ** @das:table, @das:key-field */
         $objectElement = $this->getRefElement($objectElement);
-
-        if($objectElement->{'das:table'}) {
-            $dataSource = 'database';
-        } elseif($objectElement->{'das:xml'}) {
-            $dataSource = 'xml';
+        $objectName = $objectElement->name;
+        $objectType = $this->getElementType($objectElement);
+        
+        //echo "<br/><b>Load object $objectName, is array = $isArray</b>";
+        // Create DataObject
+        // ********************************************************************
+        if($isArray) {
+            $arrayDataObject = new ArrayDataObject();
+            if($parentObject) {
+                $parentObject->$objectName = $arrayDataObject;
+            } else {
+                $this->RootDataObject = $arrayDataObject;
+            }
+        } else {
+            $dataObject = new DataObject($objectName);
+            if($parentObject) {
+                $parentObject->$objectName = $dataObject;
+            } else {
+                $this->RootDataObject = $dataObject;
+            }
         }
         
-        switch($dataSource) {
+        // Load Properties
+        // ********************************************************************
+        $DasType = $this->getDasType($objectElement);
+        //echo "<br/>Load object properties with DAS $DasType";
+        switch($DasType) {
         case 'xml':
             $this->loadFromXml($objectElement, $parentObject, $parentType, $isArray, $query);
             // TO DO : query only elements defined as properties and get child elements with their own datasource
             break;
 
         case 'database':
-        default:
-            $this->loadFromDatabase($objectElement, $parentObject, $parentType, $isArray, $query);
+            $selectExpression = $this->makeSelectExpression($objectType);
+            $from = $this->getFromQuery($objectElement);
+            $whereClause = array();
+            if($query) $whereClause[] = $query;
+            //echo "<br/><b>Get relation between $objectName and $parentName</b>";
+            $relationExpression = $this->makeRelationExpression($objectElement, $parentObject, $parentType);
+            if($relationExpression) $whereClause[] = $relationExpression;
+            $whereExpression = $this->getWhereExpression($objectElement);
+            if($whereExpression) $whereClause[] = $whereExpression;
+            
+            // Query
+            $dbQuery  = "SELECT " . $selectExpression;
+            $dbQuery .= " FROM " . $from;
+            if(count($whereClause) > 0) $dbQuery .= " WHERE " . implode(' and ', $whereClause);
+
+            echo "<pre><br/>" . $dbQuery . "</pre>";
+            $db = new dbquery();
+            $db->query($dbQuery);
+
+            if($isArray) {
+                while($propertiesArray = $db->fetch_assoc()) {
+                    $dataObject = new DataObject($objectName);
+                    $arrayDataObject[] = $dataObject;
+                    foreach($propertiesArray as $propertyName => $propertyValue) {
+                        //echo "<br/>Adding property $propertyName => $propertyValue";
+                        $dataObject->$propertyName = $propertyValue;
+                    }
+                }
+            } else {
+                $propertiesArray = $db->fetch_assoc();
+                foreach($propertiesArray as $propertyName => $propertyValue) {
+                    //echo "<br/>Adding property $propertyName => $propertyValue";
+                    $dataObject->$propertyName = $propertyValue;
+                }
+            }
+            
             break;
-        }   
+        }  
+
+        // Load Children
+        // ******************************************************************** 
+        if($isArray) {
+            for($i=0; $i<count($arrayDataObject); $i++) {
+                $this->loadChildObjects($arrayDataObject[$i], $objectType);
+            }
+        } else {
+            $this->loadChildObjects($dataObject, $objectType);
+        }
+
     }
     
-    function loadChildObjects($childElementsList, $parentObject, $parentType, $query=false) 
+    function loadChildObjects($dataObject, $objectType, $query=false) 
     {
+        $childElementsList = $this->listChildElements($objectType);
         for($j=0; $j<count($childElementsList); $j++) {
             $childElement = $childElementsList[$j];
             $refChildElement = $this->getRefElement($childElement);
             $childName = $refChildElement->name;
             //echo "<br/>Loading child $childName";
-            $this->loadDataObject($childElement, $parentObject, $parentType, $query);
-            
+            $this->loadDataObject($childElement, $dataObject, $objectType, $query);
         }
     }
     
-    function saveDataObject($dataObject) 
+    function savedataObject($dataObject) 
     {
         $objectName = $dataObject->getTypeName();
         //echo "<br/><br/><b>Saving element " . $objectName . "</b>";
@@ -203,61 +263,41 @@ class DataObjectController extends DOMDocument
         
     }
     
-    function loadFromDatabase($objectElement, $parentObject, $parentType, $isArray, $query=false) 
+    function loadFromDatabase($objectElement, $objectType, $parentObject, $parentType, $isArray, $query=false) 
     {
-        $objectName = $objectElement->name;
-        $objectType = $this->getElementType($objectElement);
-        
-        $childElementsList = $this->listChildElements($objectType);
-           
         $selectExpression = $this->makeSelectExpression($objectType);
         $from = $this->getFromQuery($objectElement);
-
         $whereClause = array();
         if($query) $whereClause[] = $query;
         //echo "<br/><b>Get relation between $objectName and $parentName</b>";
         $relationExpression = $this->makeRelationExpression($objectElement, $parentObject, $parentType);
         if($relationExpression) $whereClause[] = $relationExpression;
         $whereExpression = $this->getWhereExpression($objectElement);
-        
         if($whereExpression) $whereClause[] = $whereExpression;
         
         // Query
         $dbQuery  = "SELECT " . $selectExpression;
-        $dbQuery .= "
-        FROM " . $from;
-        if(count($whereClause) > 0) $dbQuery .= " 
-        WHERE " . implode(' and ', $whereClause);
-
+        $dbQuery .= " FROM " . $from;
+        if(count($whereClause) > 0) $dbQuery .= " WHERE " . implode(' and ', $whereClause);
+        
         echo "<pre><br/>" . $dbQuery . "</pre>";
         $db = new dbquery();
         $db->query($dbQuery);
-
+        
         if($isArray) {
-            $ArrayDataObject = new ArrayDataObject();
-            $parentObject->$objectName = $ArrayDataObject;
-            
             while($arrayObject = $db->fetch_assoc()) {
-                $DataObject = new DataObject($objectName);
-                $ArrayDataObject[] = $DataObject;
-                
+                $dataObject = new DataObject($objectName);
+                $arrayDataObject[] = $dataObject;
                 foreach($arrayObject as $propertyName => $propertyValue) {
-                    echo "<br/>Adding property $propertyName => $propertyValue";
-                    $DataObject->$propertyName = $propertyValue;
+                    //echo "<br/>Adding property $propertyName => $propertyValue";
+                    $dataObject->$propertyName = $propertyValue;
                 }
-                //echo "<br/>Load ". count($childElementsList). "child(ren) object(s) for $objectName #" . count($ArrayDataObject); 
-                $this->loadChildObjects($childElementsList, $DataObject, $objectType);
             }
         } else {
-            $DataObject = new DataObject($objectName);
-            $parentObject->$objectName = $DataObject;
-            
             $arrayObject = $db->fetch_assoc();
-            
             foreach($arrayObject as $propertyName => $propertyValue) {
-                $DataObject->$propertyName = $propertyValue;
+                $dataObject->$propertyName = $propertyValue;
             }
-            $this->loadChildObjects($childElementsList, $DataObject, $objectType);
         }
     
     }
@@ -277,28 +317,28 @@ class DataObjectController extends DOMDocument
         }
         $xmlContents = $xpath->query($query);
         if($isArray) {
-            $ArrayDataObject = new ArrayDataObject();
-            $parentObject->$objectName = $ArrayDataObject;
-            echo "<br/>Found " . $xmlContents->length . " elements";
+            $ArraydataObject = new ArraydataObject();
+            $parentObject->$objectName = $ArraydataObject;
+            //echo "<br/>Found " . $xmlContents->length . " elements";
             for($i=0; $i<$xmlContents->length; $i++) {
                 $xmlObject = $xmlContents->item($i);
-                $DataObject = new DataObject($objectName);
-                $ArrayDataObject[] = $DataObject;
+                $dataObject = new DataObject($objectName);
+                $ArraydataObject[] = $dataObject;
                 $propertyNodes = $xmlObject->childNodes;
-                echo "<br/>Found " . $propertyNodes->length . " properties";
+                //echo "<br/>Found " . $propertyNodes->length . " properties";
                 for($j=0; $j<$propertyNodes->length; $j++) {
                     $propertyNode = $propertyNodes->item($j);
                     if($propertyNode->nodeType == XML_TEXT_NODE) continue;
                     $propertyName = $propertyNode->tagName;
-                    echo "<br/>Property " . $propertyName;
+                    //echo "<br/>Property " . $propertyName;
                     $propertyValue = $propertyNode->nodeValue;
-                    $DataObject->$propertyName = $propertyValue;
+                    $dataObject->$propertyName = $propertyValue;
                 }
-                $this->loadChildObjects($childElementsList, $DataObject, $objectType);
+                $this->loadChildObjects($childElementsList, $dataObject, $objectType);
             }
         } else {
-            $DataObject = new DataObject($objectName);
-            $parentObject->$objectName = $DataObject;
+            $dataObject = new DataObject($objectName);
+            $parentObject->$objectName = $dataObject;
             
             $xmlObject = $xmlContents->item(0);
             
@@ -308,9 +348,9 @@ class DataObjectController extends DOMDocument
                 if($propertyNode->nodeType == XML_TEXT_NODE) continue;
                 $propertyName = $propertyNode->tagName;
                 $propertyValue = $propertyNode->nodeValue;
-                $DataObject->$propertyName = $propertyValue;
+                $dataObject->$propertyName = $propertyValue;
             }
-            $this->loadChildObjects($childElementsList, $DataObject);
+            $this->loadChildObjects($childElementsList, $dataObject);
         }
     }
     
@@ -322,6 +362,15 @@ class DataObjectController extends DOMDocument
         if($element->minOccurs > 1 || ($element->maxOccurs > 1 || $element->maxOccurs == 'unbounded')) {
             return true;
         }
+    }
+    
+    function getDasType($objectElement) {
+        if($objectElement->{'das:table'}) {
+            $DasType = 'database';
+        } elseif($objectElement->{'das:xml'}) {
+            $DasType = 'xml';
+        }
+        return $DasType;
     }
     
     function getRefElement($objectElement) 
@@ -659,12 +708,12 @@ class DataObjectController extends DOMDocument
     /**************************************************************************
     ** XML
     **************************************************************************/
-    function objectToXml($DataObject, $parentXml) 
+    function objectToXml($dataObject, $parentXml) 
     {
-        $objectName = $DataObject->getTypeName();
+        $objectName = $dataObject->getTypeName();
         $objectXml = $this->Document->createElement($objectName);
         $parentXml->appendChild($objectXml);
-        $this->addChildXml($DataObject, $objectXml);
+        $this->addChildXml($dataObject, $objectXml);
     }
     
     function addChildXml($parentObject, $parentXml) 
@@ -673,9 +722,9 @@ class DataObjectController extends DOMDocument
             if(is_scalar($childValue) || $childValue == false) {
                 $propertyXml = $this->Document->createElement($childName, $childValue);
                 $parentXml->appendChild($propertyXml);
-            } elseif(get_class($childValue) == 'DataObject') {
+            } elseif(get_class($childValue) == 'dataObject') {
                 $this->objectToXml($childValue, $parentXml);
-            } elseif(get_class($childValue) == 'ArrayDataObject') {
+            } elseif(get_class($childValue) == 'ArraydataObject') {
                 for($i=0; $i<count($childValue); $i++) {
                     $childObject = $childValue[$i];
                     $this->objectToXml($childObject, $parentXml);
@@ -688,15 +737,15 @@ class DataObjectController extends DOMDocument
     {
         $this->Document = new XMLDocument();
         //Object => create element
-        $rootName = $this->RootDataObject->getTypeName();
+        $rootName = $this->RootdataObject->getTypeName();
         $rootXml = $this->Document->createElement($rootName);
         $this->Document->appendChild($rootXml);
-        $this->addChildXml($this->RootDataObject, $rootXml);
+        $this->addChildXml($this->RootdataObject, $rootXml);
         
         echo htmlspecialchars($this->Document->saveXML());
         //echo '<pre><b>VALIDATING XML</b>';
         
-        $useLibxmlErrors = false;
+        $useLibxmlErrors = true;
         $catchExceptions = true;
         if($useLibxmlErrors) {
             libxml_use_internal_errors(true);
@@ -714,7 +763,7 @@ class DataObjectController extends DOMDocument
                 }
             
             } else {
-                set_error_handler('DataObjectController::DOMErrorHandler');
+                set_error_handler('dataObjectController::DOMErrorHandler');
                 if($this->Document->schemaValidateSource($this->Schema->saveXML())) {
                     echo "<br/><b>Valid</b><br/>";
                 } 
@@ -723,7 +772,8 @@ class DataObjectController extends DOMDocument
         }
     }
     
-    function libxmlErrorHandler() {
+    function libxmlErrorHandler() 
+    {
         $errors = libxml_get_errors();
         foreach ($errors as $error) {
             $display = "<br/>\n";
