@@ -31,9 +31,6 @@
 * @ingroup admin
 */
 
-require_once 'apps/' . $_SESSION['config']['app_id'] . '/class/' 
-    . 'class_admin_page_controller.php';
-
 //SPECIFIC PROCESS
 //columns to show in the list
 $showCols = array(
