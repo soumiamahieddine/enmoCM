@@ -38,11 +38,9 @@ $adminPageController = new adminPageController();
 
 //tests and retrieve params of the controller page
 $params = $adminPageController->testParams($_REQUEST);
-/*
 echo '<pre>';
 print_r($params);
 echo '</pre>';
-*/
 
 if ($params['status'] == 'KO') {
     echo $params['error'];
@@ -64,7 +62,7 @@ $schemaPath = $params['viewLocation'] . '/xml/' . $params['object'] . '.xsd';
 require_once('core/tests/class/DataObjectController.php');
 $DataObjectController = new DataObjectController();
 $DataObjectController->loadSchema($schemaPath);
-$RootDataObject = $DataObjectController->loadRootDataObject();
+$RootDataObject = $DataObjectController->loadRootDataObject($params['object'] . '_root');
 
 //$DataObjectController->validate();
 
@@ -89,11 +87,9 @@ switch ($params['mode']) {
             $params['object'], 
             $myObject
         );
-/*
         echo '<pre>';
         print_r($_SESSION['m_admin']);
         echo '</pre>';
-*/
         break;
     case 'delete' :
         $adminPageController->doDelete($params['objectId']);
@@ -101,15 +97,10 @@ switch ($params['mode']) {
     case 'list' :
         require_once('apps/' . $_SESSION['config']['app_id'] 
             . '/class/class_list_show.php');
-/*
-        var_dump($RootDataObject->$params['object']);
-        var_dump($actions);
-        var_dump($showCols);
-*/
+            
         $listContent = $adminPageController->displayList(
             $RootDataObject->$params['object'], 
             $actions, 
-            $pagePath, 
             $showCols, 
             $params['pageNb']
         );

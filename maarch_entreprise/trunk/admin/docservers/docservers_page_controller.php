@@ -36,7 +36,32 @@ require_once 'apps/' . $_SESSION['config']['app_id'] . '/class/'
 
 //SPECIFIC PROCESS
 //columns to show in the list
-$showCols = array('docserver_id', 'docserver_label', 'docserver_type_id');
+$showCols = array(
+    'docserver_id'       => array(
+        'functionFormat' => '',
+        'cssStyle'       => ''
+    ),
+    'device_label'       => array(
+        'functionFormat' => '',
+        'cssStyle'       => ''
+    ), 
+    'docserver_type_id'  => array(
+        'functionFormat' => '',
+        'cssStyle'       => ''
+    ),
+    'is_readonly' => array(
+        'functionFormat' => 'standard#isBoolean',
+        'cssStyle'       => 'text-align: center;'
+    ),
+    'enabled' => array(
+        'functionFormat' => 'standard#isBoolean',
+        'cssStyle'       => 'text-align: center;'
+    ),
+    'actual_size_number' => array(
+        'cssStyle' => ''
+    ),
+    'adr_priority_number' => array()
+);
 //actions to show in the list
 $actions = array('create', 'read', 'update', 'delete');
 
