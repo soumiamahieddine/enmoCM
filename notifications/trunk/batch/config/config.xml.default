@@ -36,6 +36,7 @@
         <smtp_port>25</smtp_port><!-- smtp1.example.com:25;smtp2.example.com -->
         <smtp_user>notif@yourdomain.com</smtp_user>
         <smtp_password></smtp_password>
+		<smtp_auth>true</smtp_auth>
         <smtp_secure>tls</smtp_secure><!-- tls ou ssl -->
         <charset>utf-8</charset><!-- Default : iso-8859-1 -->
         <domains></domains><!-- Rewrite Recipient with config->adminmail if mailfrom and mailto is out of the domains -->
