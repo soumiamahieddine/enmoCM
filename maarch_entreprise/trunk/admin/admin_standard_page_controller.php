@@ -38,9 +38,11 @@ $adminPageController = new adminPageController();
 
 //tests and retrieve params of the controller page
 $params = $adminPageController->testParams($_REQUEST);
+/*
 echo '<pre>';
 print_r($params);
 echo '</pre>';
+*/
 
 if ($params['status'] == 'KO') {
     echo $params['error'];
@@ -87,9 +89,11 @@ switch ($params['mode']) {
             $params['object'], 
             $myObject
         );
+/*
         echo '<pre>';
         print_r($_SESSION['m_admin']);
         echo '</pre>';
+*/
         break;
     case 'delete' :
         $adminPageController->doDelete($params['objectId']);

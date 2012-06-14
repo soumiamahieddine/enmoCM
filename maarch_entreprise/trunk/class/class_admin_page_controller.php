@@ -107,6 +107,9 @@ class adminPageController
         $pageNb = 1;
         $isApps = false;
         $viewLocation = '';
+        $order = '';
+        $orderField = '';
+        $what = '';
         $error = '';
         $paramsReturn = array();
         if (isset($_REQUEST['mode']) && !empty($_REQUEST['mode'])) {
@@ -138,7 +141,15 @@ class adminPageController
             $status = 'KO';
             $error .= _VIEW_LOCATION_MANDATORY . ' ' . _IN_CONTROLLER_PAGE;
         }
-        
+        if (isset($_REQUEST['order']) && !empty($_REQUEST['order'])) {
+            $order = $_REQUEST['order'];
+        }
+        if (isset($_REQUEST['orderField']) && !empty($_REQUEST['orderField'])) {
+            $orderField = $_REQUEST['orderField'];
+        }
+        if (isset($_REQUEST['what']) && !empty($_REQUEST['what'])) {
+            $what = $_REQUEST['what'];
+        }
         return $paramsReturn = array(
             'status' => $status,
             'pageName' => $_REQUEST['page'],
@@ -148,6 +159,9 @@ class adminPageController
             'objectId' => $objectId,
             'isApps' => $isApps,
             'viewLocation' => $viewLocation,
+            'order' => $order,
+            'orderField' => $orderField,
+            'what' => $what,
             'error' => $error,
         );
     }
@@ -214,5 +228,34 @@ class adminPageController
         $listShow = new list_show;
         $listContent = $listShow->adminListShow($object, $actions, $pagePath, $showCols, $pageNb);
         return $listContent;
+    }
+    
+    /**
+     * Load hidden fields in the CRUD form
+     * @param string $objectName
+     * @param string $hiddenFields
+     */
+    function loadHiddenFields($params)
+    {
+        $hiddenFields = '<input type="hidden" name="display" value="value" />';
+        $hiddenFields .= '<input type="hidden" name="admin" value="' 
+            . $params['object'] . '" />';
+        $hiddenFields .= '<input type="hidden" name="page" value="' 
+            . $params['page'] . '" />';
+        $hiddenFields .= '<input type="hidden" name="mode" value="' 
+            . $params['mode'] . '" />';
+        if (isset($params['order'])) {
+            $hiddenFields .= '<input type="hidden" name="order" value="'
+            . $params['order'] . '" />';
+        }
+        if (isset($params['orderField'])) {
+            $hiddenFields .= '<input type="hidden" name="orderField" value="'
+            . $params['orderField'] . '" />';
+        }
+        if (isset($params['what'])) {
+            $hiddenFields .= '<input type="hidden" name="what" value="'
+            . $params['what'] . '" />';
+        }
+        return $hiddenFields;
     }
 }

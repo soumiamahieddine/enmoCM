@@ -2,57 +2,31 @@
 /* View */
 if ($params['mode'] == 'list') {
     echo $listContent;
-} elseif ($mode == "up" || $mode == "add") {
+} elseif ($params['mode'] == 'update' || $params['mode'] == 'add') {
     $func = new functions();
     ?>
     <h1><img src="<?php
     echo $_SESSION['config']['businessappurl'];
     ?>static.php?filename=favicon.png" alt="" />
         <?php
-    if ($mode == "add") {
+    if ($params['mode'] == 'create') {
         echo _DOCSERVER_ADDITION;
-    } elseif ($mode == "up") {
+    } elseif ($params['mode'] == 'update') {
         echo _DOCSERVER_MODIFICATION;
     }
-        ?>
+    ?>
     </h1>
     <div id="inner_content" class="clearfix" align="center">
         <br><br>
-        <?php
-    if ($state == false) {
-        echo "<br /><br />" . _THE_DOCSERVER . " " . _UNKOWN
-            . "<br /><br /><br /><br />";
-    } else {
-        ?>
         <form name="formdocserver" method="post" class="forms" action="<?php
         echo $_SESSION['config']['businessappurl'] . "index.php?display=true&"
             . "page=docservers_management_controler&admin=docservers&mode="
-            . $mode;
+            . $params['mode'];
         ?>">
-        <input type="hidden" name="display" value="value" />
-        <input type="hidden" name="admin" value="docservers" />
-        <input type="hidden" name="page" value="docservers_management_controler"/>
-        <input type="hidden" name="mode" id="mode" value="<?php echo $mode;?>"/>
-        <input type="hidden" name="order" id="order" value="<?php
-        if (isset($_REQUEST['order'])) {
-            echo $_REQUEST['order'];
-        }
-        ?>" />
-        <input type="hidden" name="order_field" id="order_field" value="<?php
-        if (isset($_REQUEST['order_field'])) {
-            echo $_REQUEST['order_field'];
-        }
-        ?>" />
-        <input type="hidden" name="what" id="what" value="<?php
-        if (isset($_REQUEST['what'])) {
-            echo $_REQUEST['what'];
-        }
-        ?>" />
-        <input type="hidden" name="start" id="start" value="<?php
-        if (isset($_REQUEST['start'])) {
-            echo $_REQUEST['start'];
-        }
-        ?>" />
+        <?php
+        //load hidden standard fields 
+        echo $adminPageController->loadHiddenFields($params);
+        ?>
         <input type="hidden" name="size_limit_hidden"  value="<?php
         if (isset($_SESSION['m_admin']['docservers']['size_limit_number'])) {
             echo $_SESSION['m_admin']['docservers']['size_limit_number'];
@@ -72,7 +46,7 @@ if ($params['mode'] == 'list') {
             );
         }
         ?>" <?php
-        if ($mode == "up") {
+        if ($params['mode'] == 'update') {
             echo " readonly='readonly' class='readonly'";
         }
         ?>/>
@@ -178,7 +152,7 @@ if ($params['mode'] == 'list') {
         ?>" onChange="javascript:saveSizeInBytes();"/>
         </p>
         <?php
-        if ($mode == "up") {
+        if ($params['mode'] == 'update') {
             ?>
             <p>
                 <label for="actual_size_number"><?php
@@ -446,13 +420,13 @@ if ($params['mode'] == 'list') {
         </p>
         <p class="buttons">
         <?php
-        if ($mode == "up") {
+        if ($params['mode'] == 'update') {
             ?>
             <input class="button" type="submit" name="submit" value="<?php
             echo _MODIFY;
             ?>" />
             <?php
-        } elseif ($mode == "add") {
+        } elseif ($params['mode'] == 'create') {
             ?>
             <input type="submit" class="button"  name="submit" value="<?php
             echo _ADD;
@@ -466,15 +440,12 @@ if ($params['mode'] == 'list') {
         echo $_SESSION['config']['businessappurl'];
         ?>index.php?page=docservers_management_controler&amp;admin=docservers&amp;mode=list';"/>
         </p>
-            </form>
-            <script type="text/javascript">
-                //on load in GB
-                $('size_limit_number').value = $('size_limit_number').value / (1000 * 1000 * 1000)
-                $('actual_size_number').value = $('actual_size_number').value / (1000 * 1000 * 1000)
-            </script>
-            <?php
-    }
-    ?>
+        </form>
+        <script type="text/javascript">
+            //on load in GB
+            $('size_limit_number').value = $('size_limit_number').value / (1000 * 1000 * 1000)
+            $('actual_size_number').value = $('actual_size_number').value / (1000 * 1000 * 1000)
+        </script>
     </div>
     <?php
 }
