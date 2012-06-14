@@ -121,9 +121,10 @@ class dataObjectController extends DOMDocument
         $propertiesArrays = $this->loadProperties($objectElement, $objectType, $parentObject, $query);
         for($i=0; $i<count($propertiesArrays); $i++) {
             $propertiesArray = $propertiesArrays[$i];
-            while ($propertyValue = current($propertiesArray)) {
-                $dataObject->{key($propertiesArray)} = $propertyValue;
-                next($propertiesArray);
+            if(count($propertiesArrays[$i]) > 0) {
+                foreach($propertiesArrays[$i] as $propertyName => $propertyValue) {
+                    $dataObject->$propertyName = $propertyValue;
+                }
             }
         }
         // Load Children
@@ -151,12 +152,11 @@ class dataObjectController extends DOMDocument
         for($i=0; $i<count($propertiesArrays); $i++) {
             $dataObject = new DataObject($objectName);
             $arrayDataObject[] = $dataObject;
-            
-            $propertiesArray = $propertiesArrays[$i];
             //echo "<br/>Found " . count($propertiesArray) . " new properties" . print_r($propertiesArray,true);
-            while ($propertyValue = current($propertiesArray)) {
-                $dataObject->{key($propertiesArray)} = $propertyValue;
-                next($propertiesArray);
+            if(count($propertiesArrays[$i]) > 0) {
+                foreach($propertiesArrays[$i] as $propertyName => $propertyValue) {
+                    $dataObject->$propertyName = $propertyValue;
+                }
             }
         }
         // Load Children
