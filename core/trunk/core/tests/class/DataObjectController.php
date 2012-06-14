@@ -7,6 +7,7 @@ class dataObjectController extends DOMDocument
     private $includes;
     private $RootdataObject;
     private $Document;
+    private $Queries;
     
     function dataObjectController() 
     {
@@ -86,15 +87,83 @@ class dataObjectController extends DOMDocument
     }
     
     //*************************************************************************
+    // SET QUERIES
+    //*************************************************************************
+    
+    function setKey($elementName, $key) 
+    {
+        $objectElement = $this->xpath("/xsd:schema/xsd:element[@name='".$elementName."']")->item(0);
+        $objectType = $this->getElementType($objectElement);
+        
+        $DasType = $this->getDasType($objectElement);
+        $keyExpressionParts = array();
+        
+        $DasType = $this->getDasType($objectElement);
+        switch($DasType) {
+        case 'database':
+            $keyColumnNamesArray = $objectElement->{'das:key-column'};
+            $keyColumnNames = explode(' ', $keyColumnNamesArray);
+            $keyValues = explode(' ', $key);
+            for($i=0; $i<count($keyColumnNames); $i++) {
+                $keyColumnName = $keyColumnNames[$i];
+                $keyElement = $this->xpath("./*[name()='xsd:sequence' or name()='all']/xsd:element[@column='".$keyColumnName."'".
+                    " or @name='".$keyColumnName."' or @ref='".$keyColumnName."']", $objectType)->item(0);
+                $keyElement = $this->getRefElement($keyElement);
+                $keyType = $this->getElementType($keyElement);
+                $keyValue = $this->enclose($keyValues[$i], $keyType);
+                $keyExpressionParts[] = $keyColumnName . " = " . $keyValue;
+            }
+            break;
+        }
+        if(count($keyExpressionParts) > 0) $this->Queries[$elementName]['keyExpression'] = implode(' and ', $keyExpressionParts);
+    }
+    
+    function setOrder($elementName, $orderElements, $orderMode='ASC') 
+    {
+        $objectElement = $this->xpath("/xsd:schema/xsd:element[@name='".$elementName."']")->item(0);
+        $objectType = $this->getElementType($objectElement);
+        
+        $DasType = $this->getDasType($objectElement);
+        switch($DasType) {
+        case 'database':
+            $orderElementsArray = explode(' ', $orderElements);
+            $orderExpressionParts = array();
+            for($i=0; $i<count($orderElementsArray); $i++) {
+                $orderElementName = $orderElementsArray[$i];
+                $orderElement = $this->xpath("./*[name()='xsd:sequence' or name()='all']/xsd:element[@column='".$orderElementName."'".
+                    " or @name='".$orderElementName."' or @ref='".$orderElementName."']", $objectType)->item(0);
+                $orderElement = $this->getRefElement($orderElement);
+                $orderColumn = $this->getColumnName($orderElement);
+                $orderExpressionParts[] = $orderColumn;
+            }
+            break;
+        }
+        if(count($orderExpressionParts) > 0) {
+            $this->Queries[$elementName]['orderExpression'] = implode(', ', $orderExpressionParts) . " " . $orderMode;
+        }
+    }
+    
+    function setQuery($elementName, $queryExpression) 
+    {
+        $objectElement = $this->xpath("/xsd:schema/xsd:element[@name='".$elementName."']")->item(0);
+        $objectType = $this->getElementType($objectElement);
+        
+        $DasType = $this->getDasType($objectElement);
+        switch($DasType) {
+        case 'database':
+            $this->Queries[$elementName]['queryExpressions'][] = $queryExpression;
+        }
+    }
+    
+    //*************************************************************************
     // LOAD DATA OBJECT
     //*************************************************************************
-    function loadRootdataObject($rootElementName, $query=false) 
+    
+    function loadRootdataObject($rootElementName) 
     {
         $rootElement = $this->xpath("/xsd:schema/xsd:element[@name='".$rootElementName."']")->item(0);
-        $rootName = $rootElement->name;
-        $rootType = $this->getElementType($rootElement);
-        
-        $this->loadDataObject($rootElement, false, $query);
+       
+        $this->loadDataObject($rootElement, false);
         
         return $this->RootDataObject;
     }
@@ -110,6 +179,7 @@ class dataObjectController extends DOMDocument
         
         //echo "<br/><br/><b>Load object $objectName</b>";
         $dataObject = new DataObject($objectName);
+        
         if($parentObject) {
             $parentObject->$objectName = $dataObject;
         } else {
@@ -118,15 +188,13 @@ class dataObjectController extends DOMDocument
         
         // Load Properties
         // ********************************************************************
-        $propertiesArrays = $this->loadProperties($objectElement, $objectType, $parentObject, $query);
-        for($i=0; $i<count($propertiesArrays); $i++) {
-            $propertiesArray = $propertiesArrays[$i];
-            if(count($propertiesArrays[$i]) > 0) {
-                foreach($propertiesArrays[$i] as $propertyName => $propertyValue) {
-                    $dataObject->$propertyName = $propertyValue;
-                }
+        $propertiesArrays = $this->loadProperties($objectElement, $objectType, $parentObject);
+        if(count($propertiesArrays[0]) > 0) {
+            foreach($propertiesArrays[0] as $propertyName => $propertyValue) {
+                $dataObject->$propertyName = $propertyValue;
             }
         }
+        //}
         // Load Children
         // ******************************************************************** 
         $childElementsList = $this->listChildElements($objectType);
@@ -134,7 +202,7 @@ class dataObjectController extends DOMDocument
         $this->loadChildObjects($dataObject, $childElementsList);
     }
     
-    function loadArrayDataObject($objectElement, $parentObject, $query=false) 
+    function loadArrayDataObject($objectElement, $parentObject) 
     {
         $objectElement = $this->getRefElement($objectElement);
         $objectName = $objectElement->name;
@@ -147,7 +215,7 @@ class dataObjectController extends DOMDocument
         
         // Load Properties
         // ********************************************************************
-        $propertiesArrays = $this->loadProperties($objectElement, $objectType, $parentObject, $query);
+        $propertiesArrays = $this->loadProperties($objectElement, $objectType, $parentObject, $key);
         //echo "<br/>Found " . count($propertiesArrays) . " new data object properties";
         for($i=0; $i<count($propertiesArrays); $i++) {
             $dataObject = new DataObject($objectName);
@@ -168,7 +236,7 @@ class dataObjectController extends DOMDocument
         }
     }
     
-    function loadChildObjects($dataObject, $childElementsList, $query=false) 
+    function loadChildObjects($dataObject, $childElementsList) 
     {
         for($j=0; $j<count($childElementsList); $j++) {
             $childElement = $childElementsList[$j];
@@ -181,8 +249,9 @@ class dataObjectController extends DOMDocument
         }
     }
     
-    function loadProperties($objectElement, $objectType, $parentObject, $query=false)
+    function loadProperties($objectElement, $objectType, $parentObject)
     {
+        $elementName = $objectElement->name;
         $propertiesArrays = array();
         $propertyElementsList = $this->listPropertyElements($objectType);
         $DasType = $this->getDasType($objectElement);
@@ -211,22 +280,38 @@ class dataObjectController extends DOMDocument
             break;
 
         case 'database':
+            // SELECT
             $selectExpression = $this->makeSelectExpression($propertyElementsList);
+            // FROM
             $from = $this->getFromQuery($objectElement);
+            // WHERE
             $whereClause = array();
-            if($query) $whereClause[] = $query;
-            ////echo "<br/><b>Get relation between $objectName and $parentName</b>";
+            if(isset($this->Queries[$elementName]['keyExpression'])) {
+                $whereClause[] = $this->Queries[$elementName]['keyExpression'];
+            }
+            //echo "<br/><b>Get relation between $objectName and $parentName</b>";
             $relationElements = $this->getRelationElements($objectElement);
             $relationExpression = $this->makeRelationExpression($relationElements, $objectType, $parentObject);
             if($relationExpression) $whereClause[] = $relationExpression;
             $whereExpression = $this->getWhereExpression($objectElement);
             if($whereExpression) $whereClause[] = $whereExpression;
+            if(isset($this->Queries[$elementName]['queryExpressions'])) {
+                for($i=0; $i<count($this->Queries[$elementName]['queryExpressions']); $i++) {
+                    $whereClause[] = $this->Queries[$elementName]['queryExpressions'][$i];
+                }
+            }
+            // ORDER
+            $orderByClause = false;
+            if(isset($this->Queries[$elementName]['orderByExpression'])) {
+                $orderByClause = $this->Queries[$elementName]['orderByExpression'];
+            }
             
             // Query
             $dbQuery  = "SELECT " . $selectExpression;
             $dbQuery .= " FROM " . $from;
             if(count($whereClause) > 0) $dbQuery .= " WHERE " . implode(' and ', $whereClause);
-
+            if($orderByClause) $dbQuery .= " ORDER BY " . $orderByClause;
+            
             //echo "<pre>" . $dbQuery . "</pre>";
             $db = new dbquery();
             $db->query($dbQuery);
@@ -244,12 +329,12 @@ class dataObjectController extends DOMDocument
     //*************************************************************************
     // GET INFOS
     //*************************************************************************
-    function getDataObjectKeyList($elementName) {
+    function getDataObjectKey($elementName) {
         $objectElement = $this->xpath("/xsd:schema/xsd:element[@name='".$elementName."']")->item(0);
-        $keyColumnNames = $objectElement->{'das:key-columns'};
+        $keyColumnNames = $objectElement->{'das:key-column'};
         return $explode(' ', $keyColumnNames);
     }
-
+    
     //*************************************************************************
     // SAVE DATA OBJECT
     //*************************************************************************
@@ -677,9 +762,9 @@ class dataObjectController extends DOMDocument
         }
     }
     
-    /**************************************************************************
-    ** XML
-    **************************************************************************/
+    //*************************************************************************
+    // XML
+    //************************************************************************/
     function objectToXml($dataObject, $parentXml) 
     {
         $objectName = $dataObject->getTypeName();
