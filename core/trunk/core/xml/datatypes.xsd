@@ -5,6 +5,13 @@
   >
   
   <!-- Character varying(10) --> 
+  <xsd:simpleType name="bigint">
+    <xsd:restriction base="xsd:unsignedLong">
+        <xsd:minInclusive value="0"/>
+    </xsd:restriction>
+  </xsd:simpleType> 
+  
+  <!-- Character varying(10) --> 
   <xsd:simpleType name="varchar10">
     <xsd:restriction base="xsd:string">
       <xsd:maxLength value="10"/>
@@ -61,28 +68,16 @@
     </xsd:restriction>
   </xsd:simpleType> 
   
-  <!-- id type -->
-  <xsd:simpleType name="idType">
-    <xsd:restriction base="xsd:integer">
-      <xsd:minInclusive value="0"/>
-    </xsd:restriction>
-  </xsd:simpleType> 
-
-  <!-- label type -->
-  <xsd:simpleType name="labelType">
+  <!-- microsecond --> 
+  <!--<xsd:simpleType name="microsecond">
     <xsd:restriction base="xsd:string">
-      <xsd:minLength value="3"/>
-      <xsd:maxLength value="100"/>
+      <xsd:pattern value="[0-9]{1,6}"/>
     </xsd:restriction>
-  </xsd:simpleType> 
-
-  <!-- desc type -->
-  <xsd:simpleType name="descType">
-    <xsd:restriction base="xsd:string">
-      <xsd:minLength value="1"/>
-      <xsd:maxLength value="1024"/>
-    </xsd:restriction>
-  </xsd:simpleType> 
+  </xsd:simpleType>-->
   
+  <!-- Datetime --> 
+  <xsd:simpleType name="datetime">
+    <xsd:union memberTypes="xsd:date xsd:time xsd:string"/>
+  </xsd:simpleType>
 
 </xsd:schema>
