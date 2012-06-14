@@ -86,7 +86,7 @@ class dataObjectController extends DOMDocument
     }
     
     //*************************************************************************
-    // DATA OBJECT FUNCTIONS
+    // LOAD DATA OBJECT
     //*************************************************************************
     function loadRootdataObject($rootElementName, $query=false) 
     {
@@ -241,6 +241,18 @@ class dataObjectController extends DOMDocument
         
     }
     
+    //*************************************************************************
+    // GET INFOS
+    //*************************************************************************
+    function getDataObjectKeyList($elementName) {
+        $objectElement = $this->xpath("/xsd:schema/xsd:element[@name='".$elementName."']")->item(0);
+        $keyColumnNames = $objectElement->{'das:key-columns'};
+        return $explode(' ', $keyColumnNames);
+    }
+
+    //*************************************************************************
+    // SAVE DATA OBJECT
+    //*************************************************************************
     function saveDataObject($dataObject) 
     {
         $objectName = $dataObject->getTypeName();
