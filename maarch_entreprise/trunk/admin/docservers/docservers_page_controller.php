@@ -35,6 +35,10 @@ require_once 'apps/' . $_SESSION['config']['app_id'] . '/class/'
     . 'class_admin_page_controller.php';
 
 //SPECIFIC PROCESS
+//columns to show in the list
+$showCols = array('docserver_id', 'docserver_label', 'docserver_type_id');
+//actions to show in the list
+$actions = array('create', 'read', 'update', 'delete');
 
 include_once 'apps/' . $_SESSION['config']['app_id'] . '/admin/' 
     . 'admin_standard_page_controller.php';

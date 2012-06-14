@@ -89,6 +89,7 @@ class adminPageController
      * @return array(
             'status' => '',
             'pageName' => '',
+            'pageNb' => '',
             'mode' => '',
             'object' => '',
             'objectId' => '',
@@ -103,6 +104,7 @@ class adminPageController
         $mode = 'list';
         $object = '';
         $objectId = '';
+        $pageNb = 1;
         $isApps = false;
         $viewLocation = '';
         $error = '';
@@ -118,6 +120,9 @@ class adminPageController
         }
         if (isset($_REQUEST['objectId']) && !empty($_REQUEST['objectId'])) {
             $objectId = $_REQUEST['objectId'];
+        }
+        if (isset($_REQUEST['pageNb']) && !empty($_REQUEST['pageNb'])) {
+            $pageNb = $_REQUEST['pageNb'];
         }
         if (isset($_REQUEST['admin']) && !empty($_REQUEST['admin'])) {
             $isApps = true;
@@ -137,6 +142,7 @@ class adminPageController
         return $paramsReturn = array(
             'status' => $status,
             'pageName' => $_REQUEST['page'],
+            'pageNb' => $pageNb,
             'mode' => $mode,
             'object' => $object,
             'objectId' => $objectId,
@@ -201,5 +207,12 @@ class adminPageController
     function putInSession($objectName, $object)
     {
         $_SESSION['m_admin'][$objectName] = $object;
+    }
+    
+    function displayList($object, $actions, $pagePath, $showCols, $pageNb)
+    {
+        $listShow = new list_show;
+        $listContent = $listShow->adminListShow($object, $actions, $pagePath, $showCols, $pageNb);
+        return $listContent;
     }
 }

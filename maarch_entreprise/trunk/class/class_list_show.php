@@ -947,16 +947,18 @@ class list_show extends functions
             $str_header .= '</tr>';
         $str_header .= '</thead>';
         
-        echo $str_pagination;
-        echo $str_tableStart;
-        echo $str_header;
-        echo $str_adminList;
-        echo $str_tableEnd;
-        echo $str_create;
+        $listContent = '';
+        $listContent .= $str_pagination;
+        $listContent .= $str_tableStart;
+        $listContent .= $str_header;
+        $listContent .= $str_adminList;
+        $listContent .= $str_tableEnd;
+        $listContent .= $str_create;
         
         if (!$template) {
             $template = 'adminDefault';
         }
+        return $listContent;
     }
 
     /* *

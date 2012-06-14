@@ -30,140 +30,89 @@
 * @ingroup core
 */
 
-//TODO: management of errors
-
-$coreTools = new core_tools();
+require_once 'core/class/class_core_tools_test.php';
+$coreTools = new core_tools_test();
 $coreTools->load_lang();
 
-$pageNb = 1;
-if (isset($_REQUEST['pageNb']) && !empty($_REQUEST['pageNb'])) {
-    $pageNb = $_REQUEST['pageNb'];
+$adminPageController = new adminPageController();
+
+//tests and retrieve params of the controller page
+$params = $adminPageController->testParams($_REQUEST);
+echo '<pre>';
+print_r($params);
+echo '</pre>';
+
+if ($params['status'] == 'KO') {
+    echo $params['error'];
+    exit; 
 }
 
-$mode = 'list';
-//retrieve the controller parameters
-if (isset($_REQUEST['mode']) && !empty($_REQUEST['mode'])) {
-    $mode = $_REQUEST['mode'];
-}
-if (isset($_REQUEST['object']) && !empty($_REQUEST['object'])) {
-    $object = $_REQUEST['object'];
-} else {
-    echo _OBJECT_MANDATORY;
-    exit;
-}
-if (isset($_REQUEST['objectId']) && !empty($_REQUEST['objectId'])) {
-    $objectId = $_REQUEST['objectId'];
-}
-$isApps = false;
-if (isset($_REQUEST['admin']) && !empty($_REQUEST['admin'])) {
-    $isApps = true;
-    //if empty this is an object in the apps
-    $viewLocation = 'apps/' . $_SESSION['config']['app_id'] . '/admin/' . $_REQUEST['admin'];
-    //test if the user is allowed to acces the admin service
-    //$coreTools->test_admin('admin_' . $object, 'apps');
-} elseif (isset($_REQUEST['module']) && !empty($_REQUEST['module'])) {
-    //the module parameter gives the module name
-    $viewLocation = 'modules/' . $_REQUEST['module'];
-    //test if the user is allowed to acces the admin service
-    //$coreTools->test_admin('admin_' . $object, $object);
-} else {
-    echo _VIEW_LOCATION_MANDATORY;
-    exit;
-}
+//test if the user is allowed to acces the admin service
+$coreTools->test_admin('admin_' . $params['object'], 'apps');
 
-$pagePath = locationBarManagement($mode, $object, $isApps);
-$schemaPath = $viewLocation . '/xml/' . $object . '.xsd';
+$pagePath = $adminPageController->locationBarManagement(
+    $params['pageName'], 
+    $params['mode'], 
+    $params['object'], 
+    $params['isApps']
+);
+//load the object
+$schemaPath = $params['viewLocation'] . '/xml/' . $params['object'] . '.xsd';
 
 require_once('core/tests/class/DataObjectController.php');
 $DataObjectController = new DataObjectController();
 $DataObjectController->loadSchema($schemaPath);
 $RootDataObject = $DataObjectController->loadRootDataObject();
 
-//echo '<pre>' . print_r($RootDataObject, true) . '</pre>';
-//exit;
+//$DataObjectController->validate();
 
-//INCLUDES
-//TODO: voir avec Cyril pour inclure l'object adéquat et sa XSD
+//if mode = read, update, delete of the objectId
+
+//echo '<pre>';
+//var_dump($RootDataObject);
+//echo '</pre>';
+
 //CRUDL CASES
-switch ($mode) {
+switch ($params['mode']) {
     case 'create' :
-        displayCreate();
+        $adminPageController->displayCreate();
         break;
     case 'read' :
-        $state = displayRead($objectId);
+        $state = $adminPageController->displayRead($params['objectId']);
         break;
     case 'update' :
-        $state = displayUpdate($objectId);
+        //test if objectId
+        $myObject = $RootDataObject->{$params['object']}[0];
+        $state = $adminPageController->displayUpdate(
+            $params['object'], 
+            $myObject
+        );
+        echo '<pre>';
+        print_r($_SESSION['m_admin']);
+        echo '</pre>';
         break;
     case 'delete' :
-        doDelete($docserverId);
+        $adminPageController->doDelete($params['objectId']);
         break;
     case 'list' :
-        require_once('apps/' . $_SESSION['config']['app_id'] . '/class/class_list_show.php');
-        $actions = array('create', 'read', 'update', 'delete');
-        $showCols = array('entity_id', 'entity_label', 'entity_type');
-        
-        displayList($RootDataObject->$object, $actions, $showCols, $pagePath, $pageNb);
+        require_once('apps/' . $_SESSION['config']['app_id'] 
+            . '/class/class_list_show.php');
+/*
+        var_dump($RootDataObject->$params['object']);
+        var_dump($actions);
+        var_dump($showCols);
+*/
+        $listContent = $adminPageController->displayList(
+            $RootDataObject->$params['object'], 
+            $actions, 
+            $pagePath, 
+            $showCols, 
+            $params['pageNb']
+        );
         break;
-        
     //TODO: PROCESS IT LIKE PARTICULAR CASES OF UPDATE
     case 'allow' :
         doEnable($docserverId);
     case 'ban' :
         doDisable($docserverId);
-}
-
-//TODO: MAYBE PUT IT ON TOOLS CLASS
-/**
- * Management of the location bar
- */
-function locationBarManagement($mode, $object, $isApps)
-{
-    $pageName = 'admin_standard_page_controller';
-    $pageLabels = array(
-        'add'   => _ADDITION,
-        'up'    => _MODIFICATION,
-        'list'  => _LIST,
-    );
-    $pageIds = array(
-        'add'   => $object . '_add',
-        'up'    => $object . '_up',
-        'list'  => $object . '_list',
-    );
-    $init = false;
-    if (isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == 'true') {
-        $init = true;
-    }
-    $level = '';
-    $allowedLevels = array(1, 2, 3, 4);
-    if (isset($_REQUEST['level']) && in_array($_REQUEST['level'], $allowedLevels)) {
-        $level = $_REQUEST['level'];
-    }
-    if($isApps) {
-        $pagePath = $_SESSION['config']['businessappurl'] . 'index.php?'
-            . 'page='   . $pageName 
-            . '&admin=' . $object 
-            . '&object=' . $object 
-            . '&dir=admin'
-            . '&mode='  . $mode;
-    } else {
-        $pagePath = $_SESSION['config']['businessappurl'] . 'index.php?'
-            . 'page='    . $pageName 
-            . '&module=' . $object 
-            . '&object=' . $object 
-            . '&dir=admin'
-            . '&mode='   . $mode;
-    }
-    $pageLabel = $pageLabels[$mode];
-    $pageId = $pageIds[$mode];
-    $coreTools = new core_tools();
-    $coreTools->manage_location_bar($pagePath, $pageLabel, $pageId, $init, $level);
-    
-    return $pagePath;
-}
-
-function displayList($object, $actions, $showCols, $pagePath, $pageNb)
-{
-    $listShow = new list_show;
-    $listShow->adminListShow($object, $actions, $pagePath, $showCols, $pageNb);
 }

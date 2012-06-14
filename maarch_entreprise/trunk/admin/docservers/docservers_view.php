@@ -1,7 +1,8 @@
 <?php
 echo 'la vue';
 /* View */
-if ($mode == "list") {
+if ($params['mode'] == 'list') {
+    echo $listContent;
     $listShow = new list_show();
     $listShow->admin_list(
         $docserversList['tab'], count($docserversList['tab']),
