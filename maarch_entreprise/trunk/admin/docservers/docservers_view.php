@@ -6,7 +6,7 @@ if ($params['mode'] == 'list') {
     echo $_SESSION['config']['businessappurl'];
     ?>static.php?filename=favicon.png" alt="" />
     <?php
-    echo _DOCSERVERS_LIST. ' : ' . count($RootDataObject->$params['object']) 
+    echo _DOCSERVERS_LIST. ' : ' . count($RootDataObject->$params['objectName']) 
         . ' ' . _DOCSERVERS;
     ?>
     </h1>
@@ -32,7 +32,7 @@ if ($params['mode'] == 'list') {
         <br><br>
         <form name="formdocserver" method="post" class="forms" action="<?php
         echo $_SESSION['config']['businessappurl'] . "index.php?display=true&"
-            . "page=docservers_management_controler&admin=docservers&mode="
+            . "page=docservers_page_controller&objectName=" . $params['objectName'] . "&admin=docservers&mode="
             . $params['mode'];
         ?>">
         <?php
@@ -370,8 +370,8 @@ if ($params['mode'] == 'list') {
             echo $_SESSION['config']['businessappurl'];
             ?>index.php?page=<?php 
                 echo $params['pageName'];?>&amp;admin=<?php 
-                echo $params['object'];?>&amp;mode=list&object=<?php 
-                echo $params['object'];?>&amp;order=<?php 
+                echo $params['objectName'];?>&amp;mode=list&objectName=<?php 
+                echo $params['objectName'];?>&amp;order=<?php 
                 echo $params['order'];?>&amp;orderField=<?php 
                 echo $params['orderField'];?>&amp;what=<?php 
                 echo $params['what'];?>';"/>

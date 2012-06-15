@@ -36,11 +36,11 @@ require_once 'core/class/class_core_tools.php';
  * Management of the location bar
  * @param string $pageName
  * @param string $mode
- * @param string $object
+ * @param string $objectName
  * @param string $path
  * @return string $pagePath the current page path
  */
-function locationBarManagement($pageName, $mode, $object, $isApps)
+function locationBarManagement($pageName, $mode, $objectName, $isApps)
 {
     $pageLabels = array(
         'add'   => _ADDITION,
@@ -48,9 +48,9 @@ function locationBarManagement($pageName, $mode, $object, $isApps)
         'list'  => _LIST,
     );
     $pageIds = array(
-        'add'   => $object . '_add',
-        'up'    => $object . '_up',
-        'list'  => $object . '_list',
+        'add'   => $objectName . '_add',
+        'up'    => $objectName . '_up',
+        'list'  => $objectName . '_list',
     );
     $init = false;
     if (isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == 'true') {
@@ -64,14 +64,14 @@ function locationBarManagement($pageName, $mode, $object, $isApps)
     if($isApps) {
         $pagePath = $_SESSION['config']['businessappurl'] . 'index.php?'
             . 'page='   . $pageName 
-            . '&admin=' . $object 
-            . '&object=' . $object 
+            . '&admin=' . $objectName 
+            . '&objectName=' . $objectName 
             . '&mode='  . $mode;
     } else {
         $pagePath = $_SESSION['config']['businessappurl'] . 'index.php?'
             . 'page='    . $pageName 
-            . '&module=' . $object 
-            . '&object=' . $object 
+            . '&module=' . $objectName 
+            . '&objectName=' . $objectName 
             . '&mode='   . $mode;
     }
     $pageLabel = $pageLabels[$mode];
@@ -89,7 +89,7 @@ function locationBarManagement($pageName, $mode, $object, $isApps)
         'pageName' => '',
         'pageNb' => '',
         'mode' => '',
-        'object' => '',
+        'objectName' => '',
         'objectId' => '',
         'isApps' => '',
         'viewLocation' => '',
@@ -100,7 +100,7 @@ function testParams($pageParams)
 {
     $status = 'OK';
     $mode = 'list';
-    $object = '';
+    $objectName = '';
     $objectId = '';
     $pageNb = 1;
     $isApps = false;
@@ -113,11 +113,11 @@ function testParams($pageParams)
     if (isset($_REQUEST['mode']) && !empty($_REQUEST['mode'])) {
         $mode = $_REQUEST['mode'];
     }
-    if (isset($_REQUEST['object']) && !empty($_REQUEST['object'])) {
-        $object = $_REQUEST['object'];
+    if (isset($_REQUEST['objectName']) && !empty($_REQUEST['objectName'])) {
+        $objectName = $_REQUEST['objectName'];
     } else {
         $status = 'KO';
-        $error .= _OBJECT_MANDATORY;
+        $error .= _OBJECT_NAME_MANDATORY;
     }
     if (isset($_REQUEST['objectId']) && !empty($_REQUEST['objectId'])) {
         $objectId = $_REQUEST['objectId'];
@@ -134,7 +134,7 @@ function testParams($pageParams)
         //the module parameter gives the module name
         $viewLocation = 'modules/' . $_REQUEST['module'];
         //test if the user is allowed to acces the admin service
-        //$coreTools->test_admin('admin_' . $object, $object);
+        //$coreTools->test_admin('admin_' . $objectName, $objectName);
     } else {
         $status = 'KO';
         $error .= _VIEW_LOCATION_MANDATORY . ' ' . _IN_CONTROLLER_PAGE;
@@ -153,7 +153,7 @@ function testParams($pageParams)
         'pageName' => $_REQUEST['page'],
         'pageNb' => $pageNb,
         'mode' => $mode,
-        'object' => $object,
+        'objectName' => $objectName,
         'objectId' => $objectId,
         'isApps' => $isApps,
         'viewLocation' => $viewLocation,
@@ -166,20 +166,32 @@ function testParams($pageParams)
 
 /**
  * Initialize session variables
- * @param string $object
+ * @param string $objectName
  */
-function initSession($object)
+function initSession($objectName)
 {
-    $_SESSION['m_admin'][$object] = array();
+    $_SESSION['m_admin'][$objectName] = array();
 }
 
 /**
- * Initialize session parameters for add display with given object
- * @param string $object
+ * Initialize session Object with form values
+ * @param string $objectName
  */
-function displayAdd($object)
+function fillSessionObject($request, $objectName)
 {
-    if (!isset($_SESSION['m_admin'][$object])) {
+    fixObject($_SESSION['m_admin'][$objectName]);
+    foreach($_SESSION['m_admin'][$objectName] as $key => $value) {
+        $_SESSION['m_admin'][$objectName]->$key = $request[$key];
+    }
+}
+
+/**
+ * Initialize session parameters for add display with given objectName
+ * @param string $objectName
+ */
+function displayAdd($objectName)
+{
+    if (!isset($_SESSION['m_admin'][$objectName])) {
         initSession();
     }
 }
@@ -482,7 +494,7 @@ function loadHiddenFields($params)
 {
     $hiddenFields = '<input type="hidden" name="display" value="value" />';
     $hiddenFields .= '<input type="hidden" name="admin" value="' 
-        . $params['object'] . '" />';
+        . $params['objectName'] . '" />';
     $hiddenFields .= '<input type="hidden" name="page" value="' 
         . $params['page'] . '" />';
     $hiddenFields .= '<input type="hidden" name="mode" value="' 
@@ -512,6 +524,12 @@ function isBoolean($string)
     return $return;
 }
 
+function fixObject (&$object)
+{
+  if (!is_object ($object) && gettype ($object) == 'object')
+    return ($object = unserialize (serialize ($object)));
+    return $object;
+}
 
 $coreTools = new core_tools();
 $coreTools->load_lang();
@@ -530,77 +548,96 @@ if ($params['status'] == 'KO') {
 }
 
 //test if the user is allowed to acces the admin service
-$coreTools->test_admin('admin_' . $params['object'], 'apps');
+$coreTools->test_admin('admin_' . $params['objectName'], 'apps');
 
 $pagePath = locationBarManagement(
     $params['pageName'], 
     $params['mode'], 
-    $params['object'], 
+    $params['objectName'], 
     $params['isApps']
 );
 //load the object
-$schemaPath = $params['viewLocation'] . '/xml/' . $params['object'] . '.xsd';
+$schemaPath = $params['viewLocation'] . '/xml/' . $params['objectName'] . '.xsd';
 
 require_once('core/tests/class/DataObjectController.php');
 $DataObjectController = new DataObjectController();
 $DataObjectController->loadSchema($schemaPath);
 
-//CRUDL CASES
-switch ($params['mode']) {
-    case 'create' :
-        displayCreate($params['object']);
-        break;
-    case 'read' :
-        $DataObjectController->setKey($params['object'], $params['objectId']);
-        $RootDataObject = $DataObjectController->loadRootDataObject(
-            $params['object']
-        );
-        $state = displayRead(
-            $params['object'], 
-            $RootDataObject
-        );
-        break;
-    case 'update' :
-        //test if objectId
-        $DataObjectController->setKey($params['object'], $params['objectId']);
-        $RootDataObject = $DataObjectController->loadRootDataObject(
-            $params['object']
-        );
-        $state = displayUpdate(
-            $params['object'], 
-            $RootDataObject
-        );
-        break;
-    case 'delete' :
-        doDelete($params['objectId']);
-        break;
-    case 'list' :
-        if (isset($params['orderField']) && !empty($params['orderField'])) {
-            $DataObjectController->setOrder(
-                $params['object'], 
-                $params['orderField'],
-                $params['order']
+if (isset($_REQUEST['submit'])) {
+    //fill the object with the request
+    fillSessionObject($_REQUEST, $params['objectName']);
+    echo '<pre>';
+    var_dump($_SESSION['m_admin'][$params['objectName']]);
+    echo '</pre>';
+    //import the data object
+    $DataObjectController->importDataObject($_SESSION['m_admin'][$params['objectName']]);
+    //validate the object
+    $valivalidateObject = $DataObjectController->validate();
+    if ($valivalidateObject == '') {
+        $DataObjectController->save();
+    } else {
+        var_dump($valivalidateObject);
+    }
+    exit;
+    //validate the object
+} else {
+    //CRUDL CASES
+    switch ($params['mode']) {
+        case 'create' :
+            displayCreate($params['objectName']);
+            break;
+        case 'read' :
+            $DataObjectController->setKey($params['objectName'], $params['objectId']);
+            $RootDataObject = $DataObjectController->loadRootDataObject(
+                $params['objectName']
             );
-        }
-        if (isset($params['what']) && !empty($params['what'])) {
-            //DO THE SEARCH
-        }
-        $RootDataObject = $DataObjectController->loadRootDataObject(
-            $params['object'] . '_root'
-        );
-        $keyName = $DataObjectController->getKey($params['object']);
-        
-        $listContent = displayList(
-            $RootDataObject->$params['object'], 
-            $actions,
-            $showCols,
-            $params['pageNb'],
-            $keyName
-        );
-        break;
-    //TODO: PROCESS IT LIKE PARTICULAR CASES OF UPDATE
-    case 'allow' :
-        doEnable($docserverId);
-    case 'ban' :
-        doDisable($docserverId);
+            $state = displayRead(
+                $params['objectName'], 
+                $RootDataObject
+            );
+            break;
+        case 'update' :
+            //test if objectId
+            $DataObjectController->setKey($params['objectName'], $params['objectId']);
+            $RootDataObject = $DataObjectController->loadRootDataObject(
+                $params['objectName']
+            );
+            $state = displayUpdate(
+                $params['objectName'], 
+                $RootDataObject
+            );
+            break;
+        case 'delete' :
+            doDelete($params['objectId']);
+            break;
+        case 'list' :
+            if (isset($params['orderField']) && !empty($params['orderField'])) {
+                $DataObjectController->setOrder(
+                    $params['objectName'], 
+                    $params['orderField'],
+                    $params['order']
+                );
+            }
+            if (isset($params['what']) && !empty($params['what'])) {
+                //DO THE SEARCH
+            }
+            $RootDataObject = $DataObjectController->loadRootDataObject(
+                $params['objectName'] . '_root'
+            );
+            $keyName = $DataObjectController->getKey($params['objectName']);
+            
+            $listContent = displayList(
+                $RootDataObject->$params['objectName'], 
+                $actions,
+                $showCols,
+                $params['pageNb'],
+                $keyName
+            );
+            break;
+        //TODO: PROCESS IT LIKE PARTICULAR CASES OF UPDATE
+        case 'allow' :
+            doEnable($docserverId);
+        case 'ban' :
+            doDisable($docserverId);
+    }
 }
