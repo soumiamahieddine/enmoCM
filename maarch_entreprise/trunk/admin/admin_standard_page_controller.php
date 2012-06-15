@@ -373,8 +373,7 @@ function displayList($objectList, $actions, $showCols, $pageNb, $keyName)
                             }
                         } elseif (substr($_REQUEST['what'], 0, 1) == '|') {
                             $surligneWhat = str_replace('|', '', $_REQUEST['what']);
-                            $surligneWhat = str_replace('|', '', $_REQUEST['what']);
-                            $value = str_replace($surligneWhat, '<span style="background-color: #f6bf36; font-weight: 900;">'.$surligneWhat.'</span>', $value);
+                            $value = str_ireplace($surligneWhat, '<span style="background-color: #f6bf36; font-weight: 900;">'.$surligneWhat.'</span>', $value);
                         }
                         
                         $str_adminList .= '<td class="' . $key . '" style="' . $showCols[$key]['cssStyle'] . '">';
@@ -583,6 +582,9 @@ switch ($params['mode']) {
                 $params['orderField'],
                 $params['order']
             );
+        }
+        if (isset($params['what']) && !empty($params['what'])) {
+            //DO THE SEARCH
         }
         $RootDataObject = $DataObjectController->loadRootDataObject(
             $params['object'] . '_root'

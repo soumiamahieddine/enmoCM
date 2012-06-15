@@ -14,11 +14,6 @@ if ($params['mode'] == 'list') {
     echo $listContent;
 } elseif ($params['mode'] == 'create' || $params['mode'] == 'read' || $params['mode'] == 'update') {
     $func = new functions();
-/*
-    echo '<pre>';
-    var_dump($_SESSION['m_admin']['docservers']);
-    echo '</pre>';
-*/
     ?>
     <h1><img src="<?php
     echo $_SESSION['config']['businessappurl'];
@@ -223,124 +218,8 @@ if ($params['mode'] == 'list') {
         }
         ?>/>
         </p>
-        <!--<p>
-            <label for="ext_docserver_info"><?php
-        echo _EXT_DOCSERVER_INFO;
-        ?> : </label>
-            <input name="ext_docserver_info" type="text"  id="ext_docserver_info" value="<?php
-        if (isset($_SESSION['m_admin']['docservers']->ext_docserver_info)) {
-            echo $func->show_str($_SESSION['m_admin']['docservers']->ext_docserver_info);
-        }
-        ?>"/>
-        </p>
         <p>
-            <label for="chain_before"><?php echo _CHAIN_BEFORE; ?> : </label>
-            <input name="chain_before" type="text"  id="chain_before" value="<?php
-        if (isset($_SESSION['m_admin']['docservers']->chain_before)) {
-            echo $func->show_str($_SESSION['m_admin']['docservers']->chain_before);
-        }
-        ?>"/>
-        </p>
-        <p>
-            <label for="chain_after"><?php echo _CHAIN_AFTER; ?> : </label>
-            <input name="chain_after" type="text"  id="chain_after" value="<?php
-        if (isset($_SESSION['m_admin']['docservers']->chain_after)) {
-            echo $func->show_str(
-                $_SESSION['m_admin']['docservers']->chain_after
-            );
-        }
-        ?>"/>
-        </p>
-        <p>
-            <label for="closing_date"><?php echo _CLOSING_DATE; ?> : </label>
-            <input name="closing_date" type="text"  id="closing_date" value="<?php
-        if (isset($_SESSION['m_admin']['docservers']->closing_date)) {
-            echo $func->show_str(
-                $_SESSION['m_admin']['docservers']->closing_date
-            );
-        }
-        ?>"/>
-        </p>-->
-        <!--<p>
-            <label for="oais_mode"><?php echo _OAIS_MODE; ?> : </label>
-            <select name="oais_mode" id="oais_mode">
-                <option value=""><?php echo _CHOOSE_OAIS_MODE;?></option>
-        <?php
-        for ($cptOaisMode = 0; $cptOaisMode < count(
-            $_SESSION['docserversFeatures']['DOCSERVERS']['OAIS']['MODE']
-        ); $cptOaisMode ++
-        ) {
-            ?>
-            <option value="<?php
-            echo $_SESSION['docserversFeatures']['DOCSERVERS']['OAIS']['MODE'][$cptOaisMode];
-            ?>" <?php
-            if (isset($_SESSION['m_admin']['docservers']->oais_mode)
-                && $_SESSION['m_admin']['docservers']->oais_mode == $_SESSION['docserversFeatures']['DOCSERVERS']['OAIS']['MODE'][$cptOaisMode]
-            ) {
-                echo 'selected="selected"';
-            }
-            ?>><?php
-            echo $_SESSION['docserversFeatures']['DOCSERVERS']['OAIS']['MODE'][$cptOaisMode];
-            ?></option>
-            <?php
-        }
-        ?>
-            </select>
-        </p>
-        <p>
-            <label for="sign_mode"><?php echo _SIGN_MODE; ?> : </label>
-            <select name="sign_mode" id="sign_mode">
-                <option value=""><?php echo _CHOOSE_SIGN_MODE;?></option>
-        <?php
-        for ($cptSignMode = 0; $cptSignMode < count(
-            $_SESSION['docserversFeatures']['DOCSERVERS']['SIGN']['MODE']
-        ); $cptSignMode ++
-        ) {
-            ?>
-            <option value="<?php
-            echo $_SESSION['docserversFeatures']['DOCSERVERS']['SIGN']['MODE'][$cptSignMode];
-            ?>" <?php
-            if (isset($_SESSION['m_admin']['docservers']->sign_mode)
-                && $_SESSION['m_admin']['docservers']->sign_mode == $_SESSION['docserversFeatures']['DOCSERVERS']['SIGN']['MODE'][$cptSignMode]
-            ) {
-                echo 'selected="selected"';
-            }
-            ?>><?php
-            echo $_SESSION['docserversFeatures']['DOCSERVERS']['SIGN']['MODE'][$cptSignMode];
-            ?></option>
-            <?php
-        }
-        ?>
-            </select>
-        </p>
-        <p>
-            <label for="compress_mode"><?php echo _COMPRESS_MODE; ?> : </label>
-            <select name="compress_mode" id="compress_mode">
-                <option value=""><?php echo _CHOOSE_COMPRESS_MODE;?></option>
-        <?php
-        for ($cptCompressMode = 0; $cptCompressMode < count(
-            $_SESSION['docserversFeatures']['DOCSERVERS']['COMPRESS']['MODE']
-        ); $cptCompressMode ++
-        ) {
-            ?>
-            <option value="<?php
-            echo $_SESSION['docserversFeatures']['DOCSERVERS']['COMPRESS']['MODE'][$cptCompressMode];
-            ?>" <?php
-            if (isset($_SESSION['m_admin']['docservers']->compress_mode)
-                && $_SESSION['m_admin']['docservers']->compress_mode == $_SESSION['docserversFeatures']['DOCSERVERS']['COMPRESS']['MODE'][$cptCompressMode]
-                ) {
-                    echo 'selected="selected"';
-            }
-            ?>><?php
-            echo $_SESSION['docserversFeatures']['DOCSERVERS']['COMPRESS']['MODE'][$cptCompressMode];
-            ?></option>
-            <?php
-        }
-        ?>
-            </select>
-        </p>-->
-        <p>
-            <label for="coll_id"><?php echo _COLLECTION; ?> (*): </label>
+            <label for="coll_id_txt"><?php echo _COLLECTION; ?> (*): </label>
             <?php
             for ($cptCollection = 0; $cptCollection < count(
                 $_SESSION['collections']
@@ -420,30 +299,38 @@ if ($params['mode'] == 'list') {
             <label for="docserver_location_id"><?php
         echo _DOCSERVER_LOCATIONS;
         ?> (*): </label>
-            <select name="docserver_location_id" id="docserver_location_id" <?php
-        if ($params['mode'] == 'read') {
-            echo " readonly='readonly' class='readonly'";
-        }
-        ?>>
-                <option value=""><?php echo _DOCSERVER_LOCATIONS;?></option>
         <?php
-        for ($cptLocation = 0; $cptLocation < count($docserverLocationsArray);
-        $cptLocation ++
-        ) {
-            ?>
-            <option value="<?php
-            echo $docserverLocationsArray[$cptLocation];
-            ?>" <?php
-            if (isset($_SESSION['m_admin']['docservers']->docserver_location_id)
-                && $_SESSION['m_admin']['docservers']->docserver_location_id == $docserverLocationsArray[$cptLocation]
-            ) {
-                echo 'selected="selected"';
+        if ($params['mode'] == 'read') {
+                ?>
+                <input name="docserver_location_id" type="text"  id="docserver_location_id" value="<?php
+                echo $_SESSION['m_admin']['docservers']->docserver_location_id;
+                ?>" readonly="readonly" class="readonly"/>
+                <?php
+            } else {
+                ?>
+                <select name="docserver_location_id" id="docserver_location_id">
+                    <option value=""><?php echo _DOCSERVER_LOCATIONS;?></option>
+                    <?php
+                    for ($cptLocation = 0; $cptLocation < count($docserverLocationsArray);
+                    $cptLocation ++
+                    ) {
+                        ?>
+                        <option value="<?php
+                        echo $docserverLocationsArray[$cptLocation];
+                        ?>" <?php
+                        if (isset($_SESSION['m_admin']['docservers']->docserver_location_id)
+                            && $_SESSION['m_admin']['docservers']->docserver_location_id == $docserverLocationsArray[$cptLocation]
+                        ) {
+                            echo 'selected="selected"';
+                        }
+                        ?>><?php echo $docserverLocationsArray[$cptLocation];?></option>
+                        <?php
+                    }
+                    ?>
+                </select>
+                <?php
             }
-            ?>><?php echo $docserverLocationsArray[$cptLocation];?></option>
-            <?php
-        }
-        ?>
-           </select>
+            ?>
         </p>
         <p>
            <label for="adr_priority_number"><?php
