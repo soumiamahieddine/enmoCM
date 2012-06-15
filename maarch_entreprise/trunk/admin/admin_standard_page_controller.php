@@ -251,6 +251,41 @@ function clearSession($objectName)
 function displayList($objectList, $actions, $showCols, $pageNb, $keyName)
 {
     $pagePath = $_SERVER['REQUEST_URI'];
+    //tri alphabetique
+    $noWhatUrl = str_replace('&what='.$_REQUEST['what'], '', $pagePath);
+    $alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $str_search = '<table width="100%">';
+        $str_search .= '<tr>';
+            $str_search .= '<td style="text-align: left;">';
+                $str_search .= 'Liste alphabétique : ';
+                for ($i=0; $i<strlen($alphabet); $i++) {
+                    $str_search .= '<span>';
+                        $str_search .= '<a href="'.$noWhatUrl.'&what='.substr($alphabet, $i, 1).'|">';
+                            $str_search .= substr($alphabet, $i, 1);
+                        $str_search .= '</a>';
+                    $str_search .= '</span>';
+                    $str_search .= '&nbsp;';
+                }
+                $str_search .= '&nbsp;-&nbsp;';
+                $str_search .= '<span>';
+                    $str_search .= '<a href="'.$noWhatUrl.'">';
+                        $str_search .= 'Tout afficher';
+                    $str_search .= '</a>';
+                $str_search .= '</span>';
+            $str_search .= '</td>';
+            //tri recherche
+            $noWhatUrl = str_replace('&what='.$_REQUEST['what'], '', $pagePath);
+            $str_search  .= '<td style="text-align: right;">';
+                    $str_search .= '<input name="what" id="what" type="text" size="15" autocomplete="off"/>';
+                    $str_search .= '<div id="whatList" class="autocomplete" style="display: none;"></div>';
+                    $str_search .= '<script type="text/javascript">';
+                        $str_search .= 'initList(\'what\', \'whatList\', \''.$_SESSION['config']['businessappurl'].'index.php?display=true&admin=docservers&page=docservers_list_by_id\', \'what\', \'1\');';
+                    $str_search .= '</script>';
+                    $str_search .= '<input class="button" type="button" value="Rechercher" onClick="window.location.href=\''.$noWhatUrl.'&what=|\'+$(\'what\').value+\'|\'"/>';
+            $str_search .= '</td>';
+        $str_search .= '</tr>';
+    $str_search .= '</table>';
+    
     //pagination
     $nbLine  = $_SESSION['config']['nblinetoshow'];
     $nbEnd   = $pageNb * $nbLine - 1;
@@ -336,6 +371,10 @@ function displayList($objectList, $actions, $showCols, $pageNb, $keyName)
                             if (isset($formatFunctionName)) {
                                 $value = call_user_func($formatFunctionName, $value);
                             }
+                        } elseif (substr($_REQUEST['what'], 0, 1) == '|') {
+                            $surligneWhat = str_replace('|', '', $_REQUEST['what']);
+                            $surligneWhat = str_replace('|', '', $_REQUEST['what']);
+                            $value = str_replace($surligneWhat, '<span style="background-color: #f6bf36; font-weight: 900;">'.$surligneWhat.'</span>', $value);
                         }
                         
                         $str_adminList .= '<td class="' . $key . '" style="' . $showCols[$key]['cssStyle'] . '">';
@@ -394,7 +433,7 @@ function displayList($objectList, $actions, $showCols, $pageNb, $keyName)
     
     $str_header .= '<tr style="background-color: #f6bf36; color: rgba(255, 255, 255, 1);">';
         for($j=0; $j<count($header); $j++) {
-            $str_header .= '<td style="' . $showCols[$header[$j]]['cssStyle'] . 'text-align: center;">';
+            $str_header .= '<td style="' . $showCols[$header[$j]]['cssStyle'] . 'color: #459ed1;">';
                 $str_header .= '<b>';
                     $trimHeader = trim($header[$j]);
                     $str_header .= $header[$j];
@@ -425,6 +464,8 @@ function displayList($objectList, $actions, $showCols, $pageNb, $keyName)
     $str_header .= '</tr>';
     //retour html
     $listContent = '<br /><br />';
+    $listContent .= $str_search;
+    $listContent .= '<br />';
     $listContent .= $str_pagination;
     $listContent .= $str_tableStart;
     $listContent .= $str_header;
