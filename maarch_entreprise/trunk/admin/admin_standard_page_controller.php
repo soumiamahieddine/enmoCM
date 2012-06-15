@@ -252,7 +252,7 @@ function displayList($objectList, $actions, $showCols, $pageNb, $keyName)
 {
     $pagePath = $_SERVER['REQUEST_URI'];
     //tri alphabetique
-    $noWhatUrl = str_replace('&what='.$_REQUEST['what'], '', $pagePath);
+    $noWhatUrl = str_replace('&what='.str_replace(' ', '%20', $_REQUEST['what']), '', $pagePath);
     $alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     $str_search = '<table width="100%">';
         $str_search .= '<tr>';
@@ -274,14 +274,13 @@ function displayList($objectList, $actions, $showCols, $pageNb, $keyName)
                 $str_search .= '</span>';
             $str_search .= '</td>';
             //tri recherche
-            $noWhatUrl = str_replace('&what='.$_REQUEST['what'], '', $pagePath);
             $str_search  .= '<td style="text-align: right;">';
-                    $str_search .= '<input name="what" id="what" type="text" size="15" autocomplete="off"/>';
+                    $str_search .= '<input name="what" id="what" type="text" size="15" autocomplete="off" onKeyPress="if (window.event.keyCode == 13 && $(\'what\').value != \'\') window.location.href=\''.$noWhatUrl.'&what=|\'+$(\'what\').value+\'|\'"/>';
                     $str_search .= '<div id="whatList" class="autocomplete" style="display: none;"></div>';
                     $str_search .= '<script type="text/javascript">';
                         $str_search .= 'initList(\'what\', \'whatList\', \''.$_SESSION['config']['businessappurl'].'index.php?display=true&admin=docservers&page=docservers_list_by_id\', \'what\', \'1\');';
                     $str_search .= '</script>';
-                    $str_search .= '<input class="button" type="button" value="Rechercher" onClick="window.location.href=\''.$noWhatUrl.'&what=|\'+$(\'what\').value+\'|\'"/>';
+                    $str_search .= '<input class="button" type="button" value="Rechercher" onClick="if($(\'what\').value != \'\') {window.location.href=\''.$noWhatUrl.'&what=|\'+$(\'what\').value+\'|\'} else {window.location.href=\''.$noWhatUrl.'\'}"/>';
             $str_search .= '</td>';
         $str_search .= '</tr>';
     $str_search .= '</table>';
@@ -372,8 +371,8 @@ function displayList($objectList, $actions, $showCols, $pageNb, $keyName)
                                 $value = call_user_func($formatFunctionName, $value);
                             }
                         } elseif (substr($_REQUEST['what'], 0, 1) == '|') {
-                            $surligneWhat = str_replace('|', '', $_REQUEST['what']);
-                            $value = str_ireplace($surligneWhat, '<span style="background-color: #f6bf36; font-weight: 900;">'.$surligneWhat.'</span>', $value);
+                            $surligneWhat = strtoupper(str_replace('|', '', $_REQUEST['what']));
+                            $value = str_ireplace($surligneWhat, '<span title="Recherche: \''.$surligneWhat.'\'" style="background-color: rgba(84, 131, 246, 0.7); font-weight: 900; border-radius: 5px; padding: 2px; color: white; box-shadow: inset 0px 0px 15px rgba(0, 0, 0, 0.6);">'.$surligneWhat.'</span>', $value);
                         }
                         
                         $str_adminList .= '<td class="' . $key . '" style="' . $showCols[$key]['cssStyle'] . '">';
@@ -386,9 +385,9 @@ function displayList($objectList, $actions, $showCols, $pageNb, $keyName)
                         if (!in_array(' ', $header)) {
                             array_push($header, ' ');
                         }
-                        $str_adminList .= '<td width="1%">';
-                            $str_adminList .= '<a href="' . $actionsURL['read'] . '&objectId=' . $object->$keyName . '">';
-                                $str_adminList .= _READ;
+                        $str_adminList .= '<td>';
+                            $str_adminList .= '<a title="lire" href="' . $actionsURL['read'] . '&objectId=' . $object->$keyName . '">';
+                                $str_adminList .= '<img src="static.php?filename=icon_read.png" />';
                             $str_adminList .= '</a>';
                         $str_adminList .= '</td>';
                     }
@@ -396,9 +395,9 @@ function displayList($objectList, $actions, $showCols, $pageNb, $keyName)
                         if (!in_array('  ', $header)) {
                             array_push($header, '  ');
                         }
-                        $str_adminList .= '<td width="8%">';
-                            $str_adminList .= '<a href="' . $actionsURL['update'] . '&objectId=' . $object->$keyName . '">';
-                                $str_adminList .= _UPDATE;
+                        $str_adminList .= '<td>';
+                            $str_adminList .= '<a title="mettre à jour" href="' . $actionsURL['update'] . '&objectId=' . $object->$keyName . '">';
+                                $str_adminList .= '<img src="static.php?filename=picto_change.gif" />';
                             $str_adminList .= '</a>';
                         $str_adminList .= '</td>';
                     }
@@ -407,7 +406,7 @@ function displayList($objectList, $actions, $showCols, $pageNb, $keyName)
                             array_push($header, '   ');
                         }
                         $str_adminList .= '<td width="1%">';
-                            $str_adminList .= '<a href="' . $actionsURL['delete'] . '">';
+                            $str_adminList .= '<a title="supprimer" href="' . $actionsURL['delete'] . '">';
                                 $str_adminList .= '<img src="static.php?filename=picto_delete.gif" />';
                             $str_adminList .= '</a>';
                         $str_adminList .= '</td>';
