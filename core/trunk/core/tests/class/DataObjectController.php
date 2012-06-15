@@ -367,9 +367,9 @@ class dataObjectController extends DOMDocument
             $dbquery = "UPDATE " . $table
                 . " SET " . $updateExpression
                 . " WHERE " . $keyExpression;
-            echo "<br/>" . $dbquery; 
+            //echo "<br/>" . $dbquery; 
             $db = new dbquery();
-            //$db->query($dbquery);
+            $db->query($dbquery);
             break;
         }
       
