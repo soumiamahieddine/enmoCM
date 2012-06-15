@@ -5,9 +5,8 @@ class ArrayDataObject extends ArrayObject
     
     private $parentObject;
     
-    public function ArrayDataObject($parentObject=false) 
+    public function ArrayDataObject() 
     {
-        $this->parentObject = $parentObject;
         $this->setFlags(ArrayObject::ARRAY_AS_PROPS);
         $this->setFlags(ArrayObject::STD_PROP_LIST);
     }
@@ -15,6 +14,17 @@ class ArrayDataObject extends ArrayObject
     public function getParentObject() 
     {
         return $this->parentObject;
+    }
+    
+    public function setParentObject($parentObject) 
+    {
+        $this->parentObject = $parentObject;
+    }
+    
+    public function append($childObject) 
+    {
+        $this->offsetSet(null, $childObject);
+        $childObject->setParentObject($this->parentObject);
     }
 
 }

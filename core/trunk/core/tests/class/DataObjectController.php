@@ -115,7 +115,14 @@ class dataObjectController extends DOMDocument
     
     public function getKey($elementName) 
     {
-        $objectElement = $this->xpath("/xsd:schema/xsd:element[@name='".$elementName."']")->item(0);
+        $objectElement = $this->getRootElement($elementName);;
+        $keyColumnNames = $objectElement->{'das:key-column'};
+        return $keyColumnNames;
+    }
+     
+    public function getIndex($elementName) 
+    {
+        $objectElement = $this->getRootElement($elementName);;
         $keyColumnNames = $objectElement->{'das:key-column'};
         return $keyColumnNames;
     }
@@ -159,8 +166,7 @@ class dataObjectController extends DOMDocument
     //*************************************************************************
     // LOAD DATA OBJECT
     //*************************************************************************
-    
-    public function loadRootdataObject($rootElementName) 
+    public function loadRootDataObject($rootElementName) 
     {
         $rootElement = $this->getRootElement($rootElementName);
        
@@ -176,11 +182,15 @@ class dataObjectController extends DOMDocument
         ** @das:table, @das:key-field */
         $objectElement = $this->getRefElement($objectElement);
         $objectName = $objectElement->name;
+        
+        // Create new DataObject
+        $dataObject = new DataObject($objectName);
+        
         $objectType = $this->getElementType($objectElement);
+        $objectDasType = $this->getDasType($objectElement);
+        $objectDasSource = $this->getDasSource($objectElement, $objectDasType);
         
-        //echo "<br/><br/><b>Load object $objectName</b>";
-        $dataObject = new DataObject($objectName, $parentObject);
-        
+        // Append to parent
         if($parentObject) {
             $parentObject->$objectName = $dataObject;
         } else {
@@ -219,8 +229,8 @@ class dataObjectController extends DOMDocument
         $propertiesArrays = $this->loadProperties($objectElement, $objectType, $parentObject, $key);
         //echo "<br/>Found " . count($propertiesArrays) . " new data object properties";
         for($i=0; $i<count($propertiesArrays); $i++) {
-            $dataObject = new DataObject($objectName, $parentObject);
-            $arrayDataObject[] = $dataObject;
+            $dataObject = new DataObject($objectName);
+            $arrayDataObject->append($dataObject);
             //echo "<br/>Found " . count($propertiesArray) . " new properties" . print_r($propertiesArray,true);
             if(count($propertiesArrays[$i]) > 0) {
                 foreach($propertiesArrays[$i] as $propertyName => $propertyValue) {
@@ -284,7 +294,7 @@ class dataObjectController extends DOMDocument
             // SELECT
             $selectExpression = $this->makeSelectExpression($propertyElementsList);
             // FROM
-            $from = $this->getTableExpression($objectElement);
+            $from = $this->getDasSource($objectElement, $DasType);
             // WHERE
             $whereClause = array();
             if(isset($this->Queries[$elementName]['keyExpression'])) {
@@ -328,6 +338,50 @@ class dataObjectController extends DOMDocument
     }
     
     //*************************************************************************
+    // CREATE DATA OBJECT
+    //*************************************************************************
+    function createDataObject($objectElement) 
+    {
+        $objectElement = $this->getRootElement($objectElement);
+        
+        /* Ref -> jump to referenced element
+        ** Not allowed : @name, type, fixed, default, form, block, nillable 
+        ** @das:table, @das:key-field */
+        $objectElement = $this->getRefElement($objectElement);
+        $objectName = $objectElement->name;
+        $objectType = $this->getElementType($objectElement);
+        
+        //echo "<br/><br/><b>Load object $objectName</b>";
+        $dataObject = new DataObject($objectName);
+        
+        // Load Properties
+        // ********************************************************************
+        $propertyElementsList = $this->listPropertyElements($objectType);
+        if(count($propertyElementsList) > 0) {
+            for($i=0; $i<count($propertyElementsList); $i++) {
+                $propertyElement = $propertyElementsList[$i];
+                $propertyName = $propertyElement->name;
+                $propertyType = $this->getElementType($propertyElement);
+                // DEFAULT and FIXED
+                if($propertyElement->{'default'}) {
+                    $propertyValue = $this->enclose($propertyElement->{'default'}, $propertyType);
+                }
+                else if($propertyElement->fixed) {
+                    $propertyValue = $this->enclose($propertyElement->fixed, $propertyType);
+                } else {
+                    $propertyValue = false;
+                }
+                $dataObject->$propertyName = $propertyValue;
+            }
+        }
+        return $dataObject;      
+    }
+    
+    function importDataObject($DataObject) {
+        $this->RootDataObject = $DataObject;
+    }
+    
+    //*************************************************************************
     // SAVE DATA OBJECT
     //*************************************************************************
     public function saveDataObject($dataObject) 
@@ -353,7 +407,7 @@ class dataObjectController extends DOMDocument
         switch($DasType) {
         case 'database':
             // TABLE
-            $table = $this->getTableExpression($objectElement);
+            $table = $this->getDasSource($objectElement, $objectDasType);
             // KEYS
             $keyExpression = false;
             $keyElementsList = $this->listKeyElements($objectElement, $objectType);
@@ -390,6 +444,10 @@ class dataObjectController extends DOMDocument
         return $this->xpath("/xsd:schema/xsd:element[@name='".$elementName."']")->item(0);
     }
     
+    //*************************************************************************
+    // DAS FUNCTIONS
+    //*************************************************************************
+    
     private function getDasType($objectElement) 
     {
         if($objectElement->{'das:table'}) {
@@ -398,6 +456,26 @@ class dataObjectController extends DOMDocument
             $DasType = 'xml';
         }
         return $DasType;
+    }
+    
+    private function getDasSource($objectElement, $objectDasType) 
+    {
+        switch($objectDasType) {
+        case 'database' :
+            if($objectElement->{'das:table'}) {
+                return $objectElement->{'das:table'};
+            } else {
+                return $objectElement->name;
+            }
+            break;
+        case 'xml':
+            if($objectElement->{'das:xml'}) {
+                return $objectElement->{'das:xml'};
+            } else {
+                return $objectElement->name . '.xml';
+            }
+            break;
+        }
     }
     
     private function getRefElement($objectElement) 
@@ -493,15 +571,6 @@ class dataObjectController extends DOMDocument
         if(count($updateExpressionParts) > 0) return implode (', ', $updateExpressionParts);
         
     }   
-    
-    private function getTableExpression($objectElement) 
-    {
-        if($objectElement->{'das:table'}) {
-            return $objectElement->{'das:table'};
-        } else {
-            return $objectElement->name;
-        }
-    }
     
     private function getColumnElement($columnName, $objectType) 
     {
