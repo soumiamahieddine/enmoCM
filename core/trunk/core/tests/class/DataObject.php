@@ -4,10 +4,12 @@ class DataObject
 {
 	
     private $typeName;
+    private $parentObject;
     
-    public function DataObject($typeName) 
+    public function DataObject($typeName, $parentObject=false) 
     {
         $this->typeName = $typeName;
+        $this->parentObject = $parentObject;
     }
     
     public function getTypeName() 
@@ -15,5 +17,9 @@ class DataObject
         return $this->typeName;
     }
     
-
+    public function getParentObject() 
+    {
+        return $this->parentObject;
+    }
+    
 }
