@@ -1313,6 +1313,7 @@ class core_tools extends functions
         <link rel="stylesheet" type="text/css" href="<?php  echo $_SESSION['config']['businessappurl'].'merged_css.php'; ?>" media="screen" />
         <!--[if lt IE 7.0]>  <link rel="stylesheet" type="text/css" href="<?php  echo $_SESSION['config']['businessappurl'].'merged_css.php?ie'; ?>" media="screen" />  <![endif]-->
         <!--[if gte IE 7.0]>  <link rel="stylesheet" type="text/css" href="<?php  echo $_SESSION['config']['businessappurl'].'merged_css.php?ie7'; ?>" media="screen" />  <![endif]-->
+        <!--[if gte IE 8.0]>  <link rel="stylesheet" type="text/css" href="<?php  echo $_SESSION['config']['businessappurl'].'merged_css.php?ie8'; ?>" media="screen" />  <![endif]-->
         <?php
     }
 
