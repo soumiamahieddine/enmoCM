@@ -108,7 +108,7 @@ if (isset($_REQUEST['baskets']) && ! empty($_REQUEST['baskets'])) {
     //$_SESSION['tmpbasket']['service'] = $_SESSION['user']['services'][0]['ID'];
     $_SESSION['tmpbasket']['status'] = "all";
     $bask->load_current_basket(trim($_REQUEST['baskets']));
-	//$bask->show_array($_SESSION['current_basket']);
+    //$bask->show_array($_SESSION['current_basket']);
 }
 
 if (
@@ -116,7 +116,9 @@ if (
     && isset($_REQUEST['resid']) && !empty($_REQUEST['resid'])
 ) {
     echo '<script language="javascript">';
-    echo 'action_send_first_request(\'http://127.0.0.1/mep/apps/maarch_entreprise/index.php?display=true&page=manage_action&module=core\''
+    echo 'action_send_first_request(\'' 
+        . $_SESSION['config']['businessappurl'] 
+        . 'index.php?display=true&page=manage_action&module=core\''
         . ', \'mass\''
         . ',' . $_SESSION['current_basket']['default_action'] 
         . ',' . $_REQUEST['resid'] 
@@ -143,7 +145,7 @@ if (count($_SESSION['user']['baskets']) > 0) {
                 <?php
     for ($i = 0; $i < count($_SESSION['user']['baskets']); $i ++) {
         if($_SESSION['user']['baskets'][$i]['is_visible'] === 'Y') {
-		?>
+        ?>
         <option value="<?php
         if (isset($_SESSION['user']['baskets'][$i]['id'])) {
             echo $_SESSION['user']['baskets'][$i]['id'];
@@ -159,7 +161,7 @@ if (count($_SESSION['user']['baskets']) > 0) {
         </option>
         <?php
         } 
-	}
+    }
                 ?>
             </select>
         </form>
