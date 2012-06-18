@@ -299,6 +299,9 @@ function displayList($objectList, $actions, $showCols, $pageNb, $keyName)
     
     //pagination
     $nbLine  = $_SESSION['config']['nblinetoshow'];
+    if (isset($_REQUEST['nbLine']) && !empty($_REQUEST['nbLine'])) {
+        $nbLine = $_REQUEST['nbLine'];
+    }
     $nbEnd   = $pageNb * $nbLine - 1;
     $nbStart = $nbEnd - $nbLine + 1;
     $nbMax = count($objectList);
@@ -314,7 +317,7 @@ function displayList($objectList, $actions, $showCols, $pageNb, $keyName)
                 $str_pagination .= '<td width="80px">';
                     if ($pageNb > 1) {
                         $str_pagination .= '<a href="' . $previousLink . '">';
-                            $str_pagination .= ' < Précédente';
+                            $str_pagination .= '< Précédente';
                         $str_pagination .= '</a>';
                     }
                 $str_pagination .= '</td>';
@@ -329,11 +332,12 @@ function displayList($objectList, $actions, $showCols, $pageNb, $keyName)
                             $str_pagination .= '<option value="' . $actualURL . '&pageNb=' . $k . '" ' . $selected . '>' . $k . '</option>';
                         }
                     $str_pagination .= '</select>';
+                    $str_pagination .= ' sur '.$nbPageMax;
                 $str_pagination .= '</td>';
                 $str_pagination .= '<td width="80px">';
                     if ($pageNb < $nbPageMax) {
                         $str_pagination .= '<a href="' . $nextLink . '">';
-                            $str_pagination .= ' Suivante > ';
+                            $str_pagination .= ' Suivante >';
                         $str_pagination .= '</a>';
                     }
                 $str_pagination .= '</td>';
@@ -348,15 +352,14 @@ function displayList($objectList, $actions, $showCols, $pageNb, $keyName)
         }
     }
     //HTML list
-    $str_tableStart .= '<br />';
     $str_tableStart .= '<table width="100%" cellpadding="7" cellspacing="0">';
         $str_tableStart .= '<tbody>';
             $i=0;
             foreach ($objectList as $object) {
                 if (!($i < $nbStart || $i > $nbEnd)) {
-                    $cssClass_tr = 'style="background-color: #93D1E4;" ';
-                    if ($i%2 == 0) {
-                        $cssClass_tr = 'style="background-color: #DEEDF3;" ';
+                    $cssClass_tr = 'style="background-color: #DEEDF3;" ';
+                    if (($i-$nbStart)%2 == 0) {
+                        $cssClass_tr = 'style="background-color: #93D1E4;" ';
                     }
                     $str_adminList .= '<tr ' . $cssClass_tr . '>';
                     $j=0;
@@ -429,14 +432,42 @@ function displayList($objectList, $actions, $showCols, $pageNb, $keyName)
             }
         $str_tableEnd .= '</tbody>';
     $str_tableEnd .= '</table>';
-    if (in_array('create', $actions)) {
-        $str_create .= '<br />';
-        $str_create .= '<div style="text-align: right;">';
-            $str_create .= '<a href="' . $actionsURL['create'] . '">';
-                $str_create .= 'créer';
-            $str_create .= '</a>';
-        $str_create .= '</div>';
-    }
+    //footer
+    $urlNo_nbLine = str_replace('&nbLine='.$_REQUEST['nbLine'], '', $pagePath);
+    $urlNo_nbLine = str_replace('&pageNb='.$_REQUEST['pageNb'], '', $urlNo_nbLine);
+    $str_footer = '<br />';
+    $str_footer .= '<table width="100%">';
+        $str_footer .= '<tr>';
+            $str_footer .= '<td>';
+                $str_footer .= 'Éléments affichés: ';
+                $str_footer .= '<select onChange="window.location.href=\''.$urlNo_nbLine.'&nbLine=\'+this.value">';
+                    $nbLineSelect = array(5, 10, 25, 50, 100, 250);
+                    for ($j=0; $j<count($nbLineSelect); $j++) {
+                        if ($nbLineSelect[$j] >= $i) {
+                            break;
+                        }
+                        $default_nbLineSelect = '';
+                        if ($nbLineSelect[$j] == $_REQUEST['nbLine']) {
+                            $default_nbLineSelect = 'selected="selected" ';
+                        }
+                        $str_footer .= '<option value="' . $nbLineSelect[$j] . '" '.$default_nbLineSelect.'>' . $nbLineSelect[$j] . '</option>';
+                    }
+                    $default_nbLineSelect = '';
+                    if ($i == $_REQUEST['nbLine']) {
+                        $default_nbLineSelect = 'selected="selected" ';
+                    }
+                    $str_footer .= '<option value="' . $i . '" '.$default_nbLineSelect.'>tous</option>';
+                $str_footer .= '</select>';
+            $str_footer .= '</td>';
+            $str_footer .= '<td style="text-align: right;">';
+                if (in_array('create', $actions)) {
+                    $str_footer .= '<a href="' . $actionsURL['create'] . '">';
+                        $str_footer .= 'créer';
+                    $str_footer .= '</a>';
+                }
+            $str_footer .= '</td>';
+        $str_footer .= '</tr>';
+    $str_footer .= '</table>';
     //header
     $urlNoTri = str_replace('&order='.$_REQUEST['order'], '', $pagePath);
     $urlNoTri = str_replace('&orderField='.$_REQUEST['orderField'], '', $urlNoTri);
@@ -473,15 +504,15 @@ function displayList($objectList, $actions, $showCols, $pageNb, $keyName)
         }
     $str_header .= '</tr>';
     //retour html
-    $listContent = '<br /><br />';
+    $listContent = '<br />';
     $listContent .= $str_search;
-    $listContent .= '<br />';
     $listContent .= $str_pagination;
+    $listContent .= '<br />';
     $listContent .= $str_tableStart;
     $listContent .= $str_header;
     $listContent .= $str_adminList;
     $listContent .= $str_tableEnd;
-    $listContent .= $str_create;
+    $listContent .= $str_footer;
     return $listContent;
 }
 

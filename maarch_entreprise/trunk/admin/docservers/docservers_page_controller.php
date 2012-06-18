@@ -56,9 +56,6 @@ $showCols = array(
     ),
 );
 if (isset($_REQUEST['orderField'])) {
-    //$showCols[$_REQUEST['orderField']]['cssStyle'] .= 'background-color: rgba(70, 80, 255, 0.2);';
-    //$showCols[$_REQUEST['orderField']]['cssStyle'] .= 'background-color: rgba(255, 255, 255, 0.5);';
-    //$showCols[$_REQUEST['orderField']]['cssStyle'] .= 'background-color: rgba(0, 0, 0, 0.1); filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#000000ff,endColorstr=#000000ff);';
     $showCols[$_REQUEST['orderField']]['cssStyle'] .= 'background-image: url(static.php?filename=black_0.1.png);';
 }
 
