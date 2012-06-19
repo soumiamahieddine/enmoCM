@@ -73,13 +73,9 @@ class DataAccessService_Database
                     $selectExpressionPart = $fixedValue;
                 } elseif($column->{'default'}) {
                     $defaultValue = $this->enclose($column->{'default'}, $column->type);
-                    $selectExpressionPart = "COALESCE(" . $table->name . "." . $column->name . ", " . $defaultValue . ")";
+                    $selectExpressionPart = "COALESCE(" . $table->name . "." . $column->name . ", " . $defaultValue . ") AS " . $column->name;
                 } else {
                     $selectExpressionPart = $table->name . "." . $column->name;
-                }
-                // ALIAS
-                if($column->alias) {
-                    $selectExpressionPart .= ' AS ' . $column->alias;
                 }
                 $selectExpressionParts[] = $selectExpressionPart;
             }
@@ -199,7 +195,6 @@ class DataAccessService_Database_Table_PrimaryKey
 class DataAccessService_Database_Table_Column
 {
     public $name;
-    public $alias;
     public $type;
     public $default;
     public $nillable;
