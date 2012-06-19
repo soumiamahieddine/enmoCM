@@ -40,9 +40,9 @@ class DataObject
             } else {
                 Die("<br/><b>Permission denied</b>");
             }
-        } else {
+        } elseif(is_scalar($value) || !$value) {
             //echo "<br/>Adding scalar $name = $value";
-            $this->storage[$name] = $value;
+            $this->storage[$name]->setValue($value);
         }
     }
     
