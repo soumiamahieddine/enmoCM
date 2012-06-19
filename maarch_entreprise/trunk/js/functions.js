@@ -2231,7 +2231,7 @@ function checkBeforeOpenBlank (url, value)
 
 function previsualiseAdminRead(e, json){
     if ($('identifierDetailFrame')) {
-        if ($('identifierDetailFrame').value == json.identifier) {
+        if ($('identifierDetailFrame').value == json.identifierDetailFrame) {
             return;
         }
     }
@@ -2257,9 +2257,9 @@ function previsualiseAdminRead(e, json){
     var topPosition  = mouseY + 10;
     var leftPosition = mouseX - 200;
     
-    var writeHTML = '<table>';
+    var writeHTML = '<table cellpadding="2">';
         for (i in json) {
-            if (i != 'identifier') {
+            if (i != 'identifierDetailFrame') {
                 writeHTML += '<tr>';
                     writeHTML += '<td>';
                         writeHTML += i;
@@ -2275,24 +2275,17 @@ function previsualiseAdminRead(e, json){
                 writeHTML += '<input type="hidden" id="identifierDetailFrame" value="'+json[i]+'" />';
             }
         }
-    writeHTML += '<tr>';
-        writeHTML += '<td></td>';
-        writeHTML += '<td></td>';
-        writeHTML += '<td style="text-decoration: underline; text-align: right; cursor: pointer;" onClick="$(\'identifierDetailFrame\').setValue(\'\'); $(\'return_previsualise\').style.display=\'none\'">';
-            writeHTML += '<br /><b>Fermer</b>';
-        writeHTML += '</td>';
-    writeHTML += '</tr>';
     writeHTML += '</table>'
     $('return_previsualise').update(writeHTML);
     $('return_previsualise').innerHTML;
 
     var divWidth = $('return_previsualise').getWidth();
     if (divWidth > 0) {
-        leftPosition = mouseX - (divWidth + 10);
+        leftPosition = mouseX - (divWidth + 40);
     }
     var divHeight = $('return_previsualise').getHeight();
     if (divHeight > 0) {
-        topPosition = mouseY - (divHeight - 10);
+        topPosition = mouseY - (divHeight - 2);
     }
     
     if (topPosition < 0) {

@@ -314,7 +314,7 @@ function displayList($objectList, $actions, $showCols, $pageNb, $keyName)
     if ($nbPageMax > 1) {
         $str_pagination .= '<table width="100%">';
             $str_pagination .= '<tr>';
-                $str_pagination .= '<td width="80px">';
+                $str_pagination .= '<td width="100px">';
                     if ($pageNb > 1) {
                         $str_pagination .= '<a href="' . $previousLink . '">';
                             $str_pagination .= '< Précédente';
@@ -334,7 +334,7 @@ function displayList($objectList, $actions, $showCols, $pageNb, $keyName)
                     $str_pagination .= '</select>';
                     $str_pagination .= ' sur '.$nbPageMax;
                 $str_pagination .= '</td>';
-                $str_pagination .= '<td width="80px">';
+                $str_pagination .= '<td width="100px" style="text-align: right;">';
                     if ($pageNb < $nbPageMax) {
                         $str_pagination .= '<a href="' . $nextLink . '">';
                             $str_pagination .= ' Suivante >';
@@ -393,55 +393,15 @@ function displayList($objectList, $actions, $showCols, $pageNb, $keyName)
                             $value = str_ireplace($surligneWhat, '<span title="Recherche: \''.$surligneWhat.'\'" style="background-color: rgba(84, 131, 246, 0.7); font-weight: 900; border-radius: 5px; padding: 2px; color: white; box-shadow: inset 0px 0px 15px rgba(0, 0, 0, 0.6);">'.$surligneWhat.'</span>', $value);
                         }
                         
-                        $str_adminList .= '<td class="' . $key . '" style="' . $showCols[$key]['cssStyle'] . '">';
+                        $str_adminList .= '<td class="' . $key . '" style="' . $showCols[$key]['cssStyle'] . '" onMouseOver="$(\'identifierDetailFrame\').setValue(\'\'); $(\'return_previsualise\').style.display=\'none\'">';
                             $str_adminList .= $value;
                         $str_adminList .= '</td>';
                         
                         $j++;
                     }
-                    if (in_array('read', $actions)) {
-                        if (!in_array(' ', $header)) {
-                            array_push($header, ' ');
-                        }
-                        //$json_test = '{\'value\': \'New\', \'onclick\': \'CreateNewDoc()\'}';
-                        $encodeJSON = '{';
-                            foreach($json as $keyJSON => $valueJSON) {
-                                $encodeJSON .= "'".$keyJSON."'";
-                                $encodeJSON .= ' : ';
-                                $encodeJSON .= "'".$valueJSON."'";
-                                $encodeJSON .= ', ';
-                            }
-                            $encodeJSON = substr($encodeJSON, 0, -2);
-                        $encodeJSON .= '}';
-                        $str_adminList .= '<td>';
-                            $str_adminList .= '<a href="' . $actionsURL['read'] . '&objectId=' . $object->$keyName . '">';
-                                $str_adminList .= '<img src="static.php?filename=icon_read.png" />';
-                            $str_adminList .= '</a>';
-                        $str_adminList .= '</td>';
-                    }
-                    if (in_array('update', $actions)) {
-                        if (!in_array('  ', $header)) {
-                            array_push($header, '  ');
-                        }
-                        $str_adminList .= '<td>';
-                            $str_adminList .= '<a title="mettre à jour" href="' . $actionsURL['update'] . '&objectId=' . $object->$keyName . '">';
-                                $str_adminList .= '<img src="static.php?filename=picto_change.gif" />';
-                            $str_adminList .= '</a>';
-                        $str_adminList .= '</td>';
-                    }
-                    if (in_array('delete', $actions)) {
-                        if (!in_array('   ', $header)) {
-                            array_push($header, '   ');
-                        }
-                        $str_adminList .= '<td width="1%">';
-                            $str_adminList .= '<a title="supprimer" href="' . $actionsURL['delete'] . '">';
-                                $str_adminList .= '<img src="static.php?filename=picto_delete.gif" />';
-                            $str_adminList .= '</a>';
-                        $str_adminList .= '</td>';
-                    }
                     
                     $encodeJSON = '{';
-                        $encodeJSON .= "'identifier'";
+                        $encodeJSON .= "'identifierDetailFrame'";
                         $encodeJSON .= ' : ';
                         $encodeJSON .= "'".$i."'";
                         $encodeJSON .= ', ';
@@ -453,10 +413,42 @@ function displayList($objectList, $actions, $showCols, $pageNb, $keyName)
                         }
                         $encodeJSON = substr($encodeJSON, 0, -2);
                     $encodeJSON .= '}';
-                        $str_adminList .= '<td onMouseOver="previsualiseAdminRead(event, '.$encodeJSON.');" style="background-image: url(static.php?filename=showFrameAdminList.png); background-repeat: no-repeat; background-position: center; width: 30px; cursor: help;"></td>';
-                        if (!in_array('    ', $header)) {
-                            array_push($header, '    ');
+                    $str_adminList .= '<td onMouseOver="previsualiseAdminRead(event, '.$encodeJSON.');" style="background-image: url(static.php?filename=showFrameAdminList.png); background-repeat: no-repeat; background-position: center; width: 20px; cursor: help;"></td>';
+                    if (!in_array('    ', $header)) {
+                        array_push($header, '    ');
+                    }
+                        
+                    if (in_array('read', $actions)) {
+                        if (!in_array(' ', $header)) {
+                            array_push($header, ' ');
                         }
+                        $encodeJSON .= '}';
+                        $str_adminList .= '<td onMouseOver="$(\'identifierDetailFrame\').setValue(\'\'); $(\'return_previsualise\').style.display=\'none\'">';
+                            $str_adminList .= '<a href="' . $actionsURL['read'] . '&objectId=' . $object->$keyName . '">';
+                                $str_adminList .= '<img src="static.php?filename=icon_read.png" />';
+                            $str_adminList .= '</a>';
+                        $str_adminList .= '</td>';
+                    }
+                    if (in_array('update', $actions)) {
+                        if (!in_array('  ', $header)) {
+                            array_push($header, '  ');
+                        }
+                        $str_adminList .= '<td onMouseOver="$(\'identifierDetailFrame\').setValue(\'\'); $(\'return_previsualise\').style.display=\'none\'">';
+                            $str_adminList .= '<a title="mettre à jour" href="' . $actionsURL['update'] . '&objectId=' . $object->$keyName . '">';
+                                $str_adminList .= '<img src="static.php?filename=picto_change.gif" />';
+                            $str_adminList .= '</a>';
+                        $str_adminList .= '</td>';
+                    }
+                    if (in_array('delete', $actions)) {
+                        if (!in_array('   ', $header)) {
+                            array_push($header, '   ');
+                        }
+                        $str_adminList .= '<td onMouseOver="$(\'identifierDetailFrame\').setValue(\'\'); $(\'return_previsualise\').style.display=\'none\'">';
+                            $str_adminList .= '<a title="supprimer" href="' . $actionsURL['delete'] . '">';
+                                $str_adminList .= '<img src="static.php?filename=picto_delete.gif" />';
+                            $str_adminList .= '</a>';
+                        $str_adminList .= '</td>';
+                    }
 
                     $str_adminList .= '</tr>';
                 }
@@ -497,8 +489,8 @@ function displayList($objectList, $actions, $showCols, $pageNb, $keyName)
         $str_nbLine .= '</tr>';
     $str_nbLine .= '</table>';
     //footer
-    $str_footer = '<br />';
-    $str_footer .= '<table width="100%">';
+    //$str_footer = '<br />';
+    $str_footer .= '<table width="100%" onMouseOver="$(\'identifierDetailFrame\').setValue(\'\'); $(\'return_previsualise\').style.display=\'none\'">';
         $str_footer .= '<tr>';
             $str_footer .= '<td style="text-align: right;">';
                 if (in_array('create', $actions)) {
@@ -515,7 +507,7 @@ function displayList($objectList, $actions, $showCols, $pageNb, $keyName)
     
     $str_header .= '<tr style="background-color: #f6bf36; color: rgba(255, 255, 255, 1);">';
         for($j=0; $j<count($header); $j++) {
-            $str_header .= '<td style="' . $showCols[$header[$j]]['cssStyle'] . 'color: #459ed1;">';
+            $str_header .= '<td style="' . $showCols[$header[$j]]['cssStyle'] . 'color: #459ed1;" onMouseOver="$(\'identifierDetailFrame\').setValue(\'\'); $(\'return_previsualise\').style.display=\'none\'">';
                 $str_header .= '<b>';
                     $trimHeader = trim($header[$j]);
                     $str_header .= $header[$j];
