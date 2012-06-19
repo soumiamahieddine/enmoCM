@@ -51,7 +51,7 @@ class DataAccessService_Database
         $query .= " WHERE " . $whereExpression;
         
         //echo "<pre>DAS = " . print_r($this,true) . "</pre>";
-        //echo "<pre>QUERY = " . $query . "</pre>";
+        echo "<pre>QUERY = " . $query . "</pre>";
         $db = new dbquery();
         $db->query($query);
         
