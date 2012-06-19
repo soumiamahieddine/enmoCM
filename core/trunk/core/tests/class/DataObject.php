@@ -34,14 +34,14 @@ class DataObject
             if(get_class($value) == 'DataObject' 
                 || get_class($value) == 'ArrayDataObject'
                 || get_class($value) == 'DataObjectProperty') {
-                //echo "<br/>Adding child object as $name = " . get_class($value);
+                echo "<br/>Adding child object as $name = " . get_class($value);
                 $value->setParentObject($this);
                 $this->storage[$name] = $value;
             } else {
                 Die("<br/><b>Permission denied</b>");
             }
         } elseif(is_scalar($value) || !$value) {
-            //echo "<br/>Adding scalar $name = $value";
+            echo "<br/>Adding scalar $name = $value";
             $this->storage[$name]->setValue($value);
         }
     }
