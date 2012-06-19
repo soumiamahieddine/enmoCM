@@ -1,6 +1,6 @@
 <?php
 
-class DataObject 
+class DataObject implements IteratorAggregate
 {
     
     private $schemaElement;
@@ -26,6 +26,10 @@ class DataObject
     public function setParentObject($parentObject) 
     {
         $this->parentObject = $parentObject;
+    }
+    
+    public function getIterator() {
+        return new ArrayIterator($this->storage);
     }
     
     public function __set($name, $value) {
