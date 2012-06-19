@@ -7,21 +7,30 @@ class dataObjectController extends DOMDocument
     private $includes;
     private $RootdataObject;
     private $Document;
+    private $dataAccessService_Database;
+    private $dataAccessService_XML;
     private $Queries;
     
     public function dataObjectController() 
     {
-        require_once 'core/tests/class/XSDDocument.php';
+        require_once 'core/tests/class/Schema.php';
         require_once 'core/tests/class/XMLDocument.php';
-        require_once 'core/tests/class/dataObject.php';
-        require_once 'core/tests/class/ArraydataObject.php';
+        require_once 'core/tests/class/ArrayDataObject.php';
+        require_once 'core/tests/class/DataObject.php';
+        require_once 'core/tests/class/DataObjectProperty.php';
+        
+        require_once 'core/tests/class/DataAccessService_Database.php';
+        require_once 'core/tests/class/DataAccessService_XML.php';
+        
+        $this->dataAccessService_Database = new dataAccessService_Database();
+        
     }
     
     public function loadSchema($xsdFile) 
     {
-        $this->Schema = new XSDDocument();
+        $this->Schema = new Schema();
         $this->Schema->load($xsdFile);
-        $this->Schema->registerNodeClass('DOMElement', 'XSDElement');
+        $this->Schema->registerNodeClass('DOMElement', 'SchemaElement');
         $this->Schema->formatOutput = true;
         $this->Schema->preserveWhiteSpace = true;
         $this->processIncludes($this->Schema);
@@ -39,9 +48,9 @@ class dataObjectController extends DOMDocument
     **
     ** @param (DOMDocument) $XSDDocument : Object to process 
     */
-    private function processIncludes($XSDDocument) 
+    private function processIncludes($Schema) 
     {
-        $xpath = new DOMXPath($XSDDocument);
+        $xpath = new DOMXPath($Schema);
         $schema = $xpath->query('/xsd:schema')->item(0);
         $includes = $xpath->query('./xsd:include', $schema);
         $nl = $includes->length;
@@ -50,19 +59,19 @@ class dataObjectController extends DOMDocument
             $include = $includes->item($i);
             $schemaLocation = $include->schemaLocation;
             if(!$this->includes || !in_array($schemaLocation, $this->includes)) {
-                $includeXsd = new XSDDocument();
-                $includeXsd->load($_SESSION['config']['corepath'] . $schemaLocation);
-                $includeXsd->registerNodeClass('DOMElement', 'XSDElement');
-                $includeXsd->Schema->formatOutput = true;
-                $includeXsd->Schema->preserveWhiteSpace = true;
+                $includeSchema = new Schema();
+                $includeSchema->load($_SESSION['config']['corepath'] . $schemaLocation);
+                $includeSchema->registerNodeClass('DOMElement', 'SchemaElement');
+                $includeSchema->Schema->formatOutput = true;
+                $includeSchema->Schema->preserveWhiteSpace = true;
                 
-                $this->processIncludes($includeXsd);
-                $includeXpath = new DOMXpath($includeXsd);
+                $this->processIncludes($includeSchema);
+                $includeXpath = new DOMXpath($includeSchema);
                 $schemaContents = $includeXpath->query('/xsd:schema/*');
                 for($j=0; $j<$schemaContents->length; $j++) {
                     $importNode = $schemaContents->item($j);
-                    $importedNode = $XSDDocument->importNode($importNode, true);
-                    $XSDDocument->documentElement->appendChild($importedNode);
+                    $importedNode = $Schema->importNode($importNode, true);
+                    $Schema->documentElement->appendChild($importedNode);
                 }
                 $this->includes[] = $schemaLocation;
             }
@@ -164,146 +173,194 @@ class dataObjectController extends DOMDocument
     }
     
     //*************************************************************************
-    // LOAD DATA OBJECT
+    // CREATE / LOAD DATA OBJECT
     //*************************************************************************
-    public function loadRootDataObject($rootElementName) 
+    /**************************************************************************
+    ** loadRootDataObject
+    **
+    ** @description : 
+    ** Loads the root object of DataObjectController 
+    **
+    ** @param (string) $rootTypeName : Name of a schema root element
+    **
+    ** @return (object) RootDataObject
+    */
+    public function loadRootDataObject($rootTypeName) 
     {
-        $rootElement = $this->getRootElement($rootElementName);
-       
-        $this->loadDataObject($rootElement, false);
+        //echo "<br/><b>loadRootDataObject($rootTypeName)</b>"; 
+        //echo "<br/><br/><b>1 -> createDataObject($rootTypeName)</b>"; 
+        $this->RootDataObject = $this->createDataObject($rootTypeName);
+        
+        //echo "<br/><br/><b>2 -> loadDataObject()</b>";
+        $this->loadDataObject($this->RootDataObject, false);
         
         return $this->RootDataObject;
     }
     
-    function loadDataObject($objectElement, $parentObject, $query=false) 
-    {      
-        /* Ref -> jump to referenced element
-        ** Not allowed : @name, type, fixed, default, form, block, nillable 
-        ** @das:table, @das:key-field */
-        $objectElement = $this->getRefElement($objectElement);
-        $objectName = $objectElement->name;
+    /**************************************************************************
+    ** public createDataObject
+    **
+    ** @description : 
+    ** Creates a new DataObject or ArrayDataObject from a root element name
+    **  - DataObjectProperties
+    **  - Children (instance of data objects or array data object)
+    **
+    ** @param (string) $rootTypeName : Name of a root element definition
+    **
+    ** @return (object) new DataObject / ArrayDataObject
+    */
+    public function createDataObject($rootTypeName) 
+    {
+        //echo "<br/><br/><b> createDataObject($rootTypeName)</b>"; 
+        $objectElement = $this->getRootElement($rootTypeName);
+        if(!$objectElement) die("<br/><b>Unable to find root element named $rootTypeName</b>");
         
-        // Create new DataObject
-        $dataObject = new DataObject($objectName);
-        
-        $objectType = $this->getElementType($objectElement);
-        $objectDasType = $this->getDasType($objectElement);
-        $objectDasSource = $this->getDasSource($objectElement, $objectDasType);
-        
-        // Append to parent
-        if($parentObject) {
-            $parentObject->$objectName = $dataObject;
+        $dataObject = $this->instanciateDataObject($objectElement);
+    
+        return $dataObject;      
+    }
+    
+    /**************************************************************************
+    ** private instanciateDataObject
+    **
+    ** @description : 
+    ** Creates a new instance of DataObject or ArrayDataObject including
+    **  - DataObjectProperties
+    **  - Children (instance of data objects or array data object)
+    **
+    ** @param (string) $objectElement : Online element definition
+    **
+    ** @return (object) new DataObject / ArrayDataObject
+    */
+    private function instanciateDataObject($objectElement)
+    {
+        if($objectElement->ref) {
+            $refObjectElement = $this->getRootElement($objectElement->ref);
+            if(!$refObjectElement) die ("Referenced element named '" . $objectElement->ref . "' not found in schema");
         } else {
-            $this->RootDataObject = $dataObject;
+            $refObjectElement = $objectElement;
+        }
+        //echo "<br/><br/><b>  instanciateDataObject() from element '$refObjectElement->name'</b>";
+        $dataObject = new DataObject($refObjectElement);
+        
+        // Create Properties
+        // ********************************************************************
+        $objectType = $this->getElementType($refObjectElement);
+        $childElements = $this->xpath("./*[name()='xsd:sequence' or name()='xsd:all']/xsd:element", $objectType);
+        //echo "<br/>   Object has $childElements->length properties/children";
+        for($i=0; $i<$childElements->length;$i++) {
+            $childElement = $childElements->item($i);
+            $refChildElement = $this->getRefElement($childElement);
+            $childName = $refChildElement->name;
+            $childType = $this->getElementType($refChildElement);
+            if(!$childType) die("Unable to find data type for property " . $refChildElement->name);
+            if ($childType->tagName == 'xsd:simpleType') {
+                // DEFAULT and FIXED
+                if($refChildElement->{'default'}) {
+                    $childValue = $refChildElement->{'default'};
+                }
+                else if($refChildElement->fixed) {
+                    $childValue = $refChildElement->fixed;
+                } else {
+                    $childValue = false;
+                }
+                //echo "<br/>    Adding property '$childName'";
+                $dataObjectProperty = new DataObjectProperty($refChildElement, $childName, $childValue);
+                $dataObject->$childName = $dataObjectProperty;
+            }
+            if ($childType->tagName == 'xsd:complexType') {
+                //echo "<br/>    Adding child '$childName'";
+                if($this->isArrayDataObject($childElement)) {
+                    //echo " as ArrayDataObject";
+                    $childDataObject = $this->instanciateArrayDataObject($childElement);
+                } else {
+                    //echo " as DataObject";
+                    $childDataObject = $this->instanciateDataObject($childElement);
+                }
+                $dataObject->$childName = $childDataObject;
+            }
         }
         
-        // Load Properties
-        // ********************************************************************
-        $propertiesArrays = $this->loadProperties($objectElement, $objectType, $parentObject);
-        if(count($propertiesArrays[0]) > 0) {
-            foreach($propertiesArrays[0] as $propertyName => $propertyValue) {
+        return $dataObject;
+    }
+    
+    private function instanciateArrayDataObject($objectElement) 
+    { 
+        if($objectElement->ref) {
+            $refObjectElement = $this->getRootElement($objectElement->ref);
+            if(!$refObjectElement) die ("Referenced element named '" . $objectElement->ref . "' not found in schema");
+        } else {
+            $refObjectElement = $objectElement;
+        }
+        //echo "<br/><br/><b>  instanciateArrayDataObject() from element '$refObjectElement->name'</b>";
+        $arrayDataObject = new ArrayDataObject($refObjectElement);
+        return $arrayDataObject;
+    }
+    
+    /**************************************************************************
+    ** public createDataObject
+    **
+    ** @description : 
+    ** Creates a new DataObject or ArrayDataObject from a root element name
+    **  - DataObjectProperties
+    **  - Children (instance of data objects or array data object)
+    **
+    ** @param (string) $rootTypeName : Name of a root element definition
+    **
+    ** @return (object) new DataObject / ArrayDataObject
+    */
+    private function loadDataObject($dataObject) 
+    {      
+        // Load Data Access Service
+        $objectElement = $dataObject->getSchemaElement();
+        //echo "<br/><br/><b>loadDataObject() from schema element $objectElement->name</b>"; 
+        $results = $this->getData($dataObject);
+        $result = $results[0];
+        //echo "<br/> Found " . count($result) . " properties for objects of array $typeName";
+        if(count($result) > 0) {
+            foreach($result as $propertyName => $propertyValue) {
                 $dataObject->$propertyName = $propertyValue;
             }
         }
-        //}
-        // Load Children
-        // ******************************************************************** 
-        $childElementsList = $this->listChildElements($objectType);
-        //echo "<br/>Load ".count($childElementsList)." object child(ren)";
-        $this->loadChildObjects($dataObject, $childElementsList);
+
+        $this->loadChildren($dataObject);
     }
     
-    function loadArrayDataObject($objectElement, $parentObject) 
+    private function loadArrayDataObject($arrayDataObject)
     {
-        $objectElement = $this->getRefElement($objectElement);
-        $objectName = $objectElement->name;
-        $objectType = $this->getElementType($objectElement);
-        
-        //echo "<br/><br/><b>Load array $objectName</b>";
-        
-        $arrayDataObject = new ArrayDataObject();
-        $parentObject->$objectName = $arrayDataObject;
-        
-        // Load Properties
-        // ********************************************************************
-        $propertiesArrays = $this->loadProperties($objectElement, $objectType, $parentObject, $key);
-        //echo "<br/>Found " . count($propertiesArrays) . " new data object properties";
-        for($i=0; $i<count($propertiesArrays); $i++) {
-            $dataObject = new DataObject($objectName);
+        // Load Data Access Service
+        $objectElement = $arrayDataObject->getSchemaElement();
+        //echo "<br/><br/><b>loadDataObject() from schema element $objectElement->name</b>"; 
+        $results = $this->getData($arrayDataObject);
+        for($i=0; $i<count($results); $i++) {
+            $result = $results[$i];
+            $dataObject = $this->instanciateDataObject($objectElement);
             $arrayDataObject->append($dataObject);
-            //echo "<br/>Found " . count($propertiesArray) . " new properties" . print_r($propertiesArray,true);
-            if(count($propertiesArrays[$i]) > 0) {
-                foreach($propertiesArrays[$i] as $propertyName => $propertyValue) {
+            //echo "<br/> Found " . count($result) . " properties for objects of array $typeName";
+            if(count($result) > 0) {
+                foreach($result as $propertyName => $propertyValue) {
                     $dataObject->$propertyName = $propertyValue;
                 }
             }
-        }
-        // Load Children
-        // ******************************************************************** 
-        $childElementsList = $this->listChildElements($objectType);
-        //echo "<br/>Load ".count($childElementsList)." child(ren) for each object of array";
-        for($i=0; $i<count($arrayDataObject); $i++) {
-            $this->loadChildObjects($arrayDataObject[$i], $childElementsList);
+            $this->loadChildren($dataObject);
         }
     }
     
-    function loadChildObjects($dataObject, $childElementsList) 
+    private function loadProperties($dataObject)
     {
-        for($j=0; $j<count($childElementsList); $j++) {
-            $childElement = $childElementsList[$j];
-            $isArray = $this->isArray($childElement);
-            if($isArray) {
-                $this->loadArrayDataObject($childElement, $dataObject, $query);
-            } else {
-                $this->loadDataObject($childElement, $dataObject, $query);
-            }
-        }
-    }
-    
-    function loadProperties($objectElement, $objectType, $parentObject)
-    {
-        $elementName = $objectElement->name;
-        $propertiesArrays = array();
-        $propertyElementsList = $this->listPropertyElements($objectType);
-        $DasType = $this->getDasType($objectElement);
-        //echo "<br/>Load ".count($propertyElementsList)." object properties with DAS $DasType";
+      
+        /*
         switch($DasType) {
-        case 'xml':
-            $xml = new DOMDocument();
-            $xml->load($_SESSION['config']['corepath'] . $objectElement->{'das:xml'});
-            $xpath = new DOMXpath($xml);
-            if($objectElement->{'das:xpath'}) {
-                $query = $objectElement->{'das:xpath'};
-            }
-            $xmlContents = $xpath->query($query);
-            for($i=0; $i<$xmlContents->length; $i++) {
-                $xmlObject = $xmlContents->item($i);
-                $propertyNodes = $xmlObject->childNodes;
-                $propertiesArray = array();
-                for($j=0; $j<$propertyNodes->length; $j++) {
-                    $propertyNode = $propertyNodes->item($j);
-                    if($propertyNode->nodeType == XML_TEXT_NODE) continue;
-                    $propertiesArray[$propertyNode->tagName] = $propertyNode->nodeValue;
-                }
-                $propertiesArrays[] = $propertiesArray;
-            }
-            // TO DO : query only elements defined as properties and get child elements with their own datasource (prop elmt list)
-            break;
-
         case 'database':
-            // SELECT
-            $selectExpression = $this->makeSelectExpression($propertyElementsList);
-            // FROM
-            $from = $this->getDasSource($objectElement, $DasType);
-            // WHERE
+                        // WHERE
             $whereClause = array();
             if(isset($this->Queries[$elementName]['keyExpression'])) {
                 $whereClause[] = $this->Queries[$elementName]['keyExpression'];
             }
-            //echo "<br/><b>Get relation between $objectName and $parentName</b>";
-            $relationElements = $this->getRelationElements($objectElement);
-            $relationExpression = $this->makeRelationExpression($relationElements, $objectType, $parentObject);
-            if($relationExpression) $whereClause[] = $relationExpression;
+            ////echo "<br/><b>Get relation between $objectName and $parentName</b>";
+            //$relationElements = $this->getRelationElements($objectElement);
+            //$relationExpression = $this->makeRelationExpression($relationElements, $objectType, $parentObject);
+            //if($relationExpression) $whereClause[] = $relationExpression;
             $whereExpression = $this->getWhereExpression($objectElement);
             if($whereExpression) $whereClause[] = $whereExpression;
             if(isset($this->Queries[$elementName]['queryExpressions'])) {
@@ -327,57 +384,67 @@ class dataObjectController extends DOMDocument
             $db = new dbquery();
             $db->query($dbQuery);
             
-            while($propertiesArray = $db->fetch_assoc()) {
-                $propertiesArrays[] = $propertiesArray;
+            if(get_class($dataObject) == 'ArrayDataObject') {
+                while($resultArray = $db->fetch_assoc()) {
+                    $dataObject = new DataObject($objectElement);
+                    $dataObject->append($dataObject);
+                    //echo "<br/>Found " . count($resultArray) . " properties for objects of array $typeName";
+                    if(count($resultArray) > 0) {
+                        foreach($resultArray as $propertyName => $propertyValue) {
+                            $dataObject->$propertyName = $propertyValue;
+                        }
+                    }
+                }
+            } else {
+                $resultArray = $db->fetch_assoc();
+                foreach($resultArray as $propertyName => $propertyValue) {
+                    $dataObject->$propertyName = $propertyValue;
+                }
             }
             break;
-        }
-        
-        return $propertiesArrays;
+            
+        case 'xml':
+            $xml = new DOMDocument();
+            $xml->load($_SESSION['config']['corepath'] . $objectElement->{'das:xml'});
+            $xpath = new DOMXpath($xml);
+            if($objectElement->{'das:xpath'}) {
+                $query = $objectElement->{'das:xpath'};
+            }
+            $xmlContents = $xpath->query($query);
+            for($i=0; $i<$xmlContents->length; $i++) {
+                $xmlObject = $xmlContents->item($i);
+                $propertyNodes = $xmlObject->childNodes;
+                $propertiesArray = array();
+                for($j=0; $j<$propertyNodes->length; $j++) {
+                    $propertyNode = $propertyNodes->item($j);
+                    if($propertyNode->nodeType == XML_TEXT_NODE) continue;
+                    $propertiesArray[$propertyNode->tagName] = $propertyNode->nodeValue;
+                }
+                $propertiesArrays[] = $propertiesArray;
+            }
+            // TO DO : query only elements defined as properties and get child elements with their own datasource (prop elmt list)
+            break;
+        }*/
         
     }
     
-    //*************************************************************************
-    // CREATE DATA OBJECT
-    //*************************************************************************
-    function createDataObject($objectElement) 
+    private function loadChildren($dataObject) 
     {
-        $objectElement = $this->getRootElement($objectElement);
-        
-        /* Ref -> jump to referenced element
-        ** Not allowed : @name, type, fixed, default, form, block, nillable 
-        ** @das:table, @das:key-field */
-        $objectElement = $this->getRefElement($objectElement);
-        $objectName = $objectElement->name;
-        $objectType = $this->getElementType($objectElement);
-        
-        //echo "<br/><br/><b>Load object $objectName</b>";
-        $dataObject = new DataObject($objectName);
-        
-        // Load Properties
-        // ********************************************************************
-        $propertyElementsList = $this->listPropertyElements($objectType);
-        if(count($propertyElementsList) > 0) {
-            for($i=0; $i<count($propertyElementsList); $i++) {
-                $propertyElement = $propertyElementsList[$i];
-                $propertyName = $propertyElement->name;
-                $propertyType = $this->getElementType($propertyElement);
-                // DEFAULT and FIXED
-                if($propertyElement->{'default'}) {
-                    $propertyValue = $this->enclose($propertyElement->{'default'}, $propertyType);
-                }
-                else if($propertyElement->fixed) {
-                    $propertyValue = $this->enclose($propertyElement->fixed, $propertyType);
-                } else {
-                    $propertyValue = false;
-                }
-                $dataObject->$propertyName = $propertyValue;
+        //echo "<br/><br/><b>loadChildren() from dataObject</b>"; 
+        $children = $dataObject->getChildren();
+        foreach($dataObject->getChildren() as $childObject) {
+            //echo "<br/> Loading child $childObject->typeName for $dataObject->typeName ";
+            if($childObject->isDataObject) {
+                $this->loadDataObject($childObject);
+            }
+            if($childObject->isArrayDataObject) {
+                $this->loadArrayDataObject($childObject);
             }
         }
-        return $dataObject;      
     }
-    
-    function importDataObject($DataObject) {
+
+    public function importDataObject($DataObject) 
+    {
         $this->RootDataObject = $DataObject;
     }
     
@@ -387,13 +454,13 @@ class dataObjectController extends DOMDocument
     public function saveDataObject($dataObject) 
     {
         $objectName = $dataObject->getTypeName();
-        ////echo "<br/><br/><b>Saving element " . $objectName . "</b>";
+        //////echo "<br/><br/><b>Saving element " . $objectName . "</b>";
         $objectElement = $this->getRootElement($objectName);
         
         $parentObject = $dataObject->getParentObject();
         $parentName = $parentObject->getTypeName();
         $parentElement = $this->getRootElement($parentName);
-        ////echo "<br/>Element has a parent named " . $parentObjectName;
+        //////echo "<br/>Element has a parent named " . $parentObjectName;
 
         // Ref
         // If specified type, fixed, default, form, block, nillable not allowed
@@ -421,7 +488,7 @@ class dataObjectController extends DOMDocument
             $dbquery = "UPDATE " . $table
                 . " SET " . $updateExpression
                 . " WHERE " . $keyExpression;
-            //echo "<br/>" . $dbquery; 
+            ////echo "<br/>" . $dbquery; 
             $db = new dbquery();
             $db->query($dbquery);
             break;
@@ -432,9 +499,11 @@ class dataObjectController extends DOMDocument
     //*************************************************************************
     // SUB ROUTINES
     //*************************************************************************
-    private function isArray($element) 
+    private function isArrayDataObject($inLineObjectElement) 
     {
-        if($element->minOccurs > 1 || ($element->maxOccurs > 1 || $element->maxOccurs == 'unbounded')) {
+        if($inLineObjectElement->minOccurs > 1 
+            || ($inLineObjectElement->maxOccurs > 1 
+                || $inLineObjectElement->maxOccurs == 'unbounded')) {
             return true;
         }
     }
@@ -447,37 +516,69 @@ class dataObjectController extends DOMDocument
     //*************************************************************************
     // DAS FUNCTIONS
     //*************************************************************************
-    
-    private function getDasType($objectElement) 
+    private function getData($dataObject) 
     {
-        if($objectElement->{'das:table'}) {
-            $DasType = 'database';
-        } elseif($objectElement->{'das:xml'}) {
-            $DasType = 'xml';
-        }
-        return $DasType;
-    }
-    
-    private function getDasSource($objectElement, $objectDasType) 
-    {
-        switch($objectDasType) {
-        case 'database' :
-            if($objectElement->{'das:table'}) {
-                return $objectElement->{'das:table'};
-            } else {
-                return $objectElement->name;
+        $objectElement = $dataObject->getSchemaElement();
+        //echo "<br/><br/><b>Loading DAS from element $objectElement->name</b>";
+        $objectType = $this->getElementType($objectElement);
+
+        $dasSource = $objectElement->{'das:source'};
+
+        // Database, XML ?
+        switch($dasSource) {
+        case 'database':
+            //echo "<br/> Found new data access service definition 'database'";
+            $objectDas = new dataAccessService_Database();
+            // Main source
+            $dasTable = $objectDas->addTable($objectElement->name);
+            $dasTable->addPrimaryKey(
+                $objectElement->{'das:key-columns'}
+            );
+            
+            // Relation with parent
+            if($objectElement->{'das:parent-columns'} && $objectElement->{'das:child-columns'}) {
+                $objectDas->addRelation(
+                    'N/A',
+                    $objectElement->name,
+                    $objectElement->{'das:parent-columns'}, 
+                    $objectElement->{'das:child-columns'}
+                );
             }
+            
+            $childElements = $this->xpath("./*[name()='xsd:sequence' or name()='xsd:all']/xsd:element", $objectType);
+            for($i=0; $i<$childElements->length;$i++) {
+                $childElement = $childElements->item($i);
+                $childElement = $this->getRefElement($childElement);
+                $childName = $childElement->name;
+                $childType = $this->getElementType($childElement);
+                if(!$childType) die("Unable to find data type for property " . $childElement->name);
+                if ($childType->tagName == 'xsd:simpleType') {
+                    $dasColumn = $dasTable->addColumn($childName, $childType->name);
+                    if($childElement->{'default'}) {
+                        $dasColumn->{'default'} = $childElement->{'default'};
+                    }
+                    if($childElement->{'fixed'}) {
+                        $dasColumn->{'fixed'} = $childElement->{'fixed'};
+                    }
+                    if(strtolower($childElement->{'nillable'}) === 'true') {
+                        $dasColumn->nillable = true;
+                    }
+                }
+
+            }
+            return $objectDas->getData($dataObject);
             break;
+            
         case 'xml':
-            if($objectElement->{'das:xml'}) {
-                return $objectElement->{'das:xml'};
-            } else {
-                return $objectElement->name . '.xml';
-            }
             break;
         }
+        
+     
     }
     
+    //*************************************************************************
+    // SCHEMA FUNCTIONS
+    //*************************************************************************
     private function getRefElement($objectElement) 
     {
         if($objectElement->ref) {
@@ -489,8 +590,53 @@ class dataObjectController extends DOMDocument
         }
     }
     
-    private function listPropertyElements($objectType) 
+    private function getElementType($element) 
     {
+        if($element->type) {
+            $typeName = $element->type;
+            if(substr($typeName, 0, 4) == 'xsd:') {
+                $elementType = $this->Schema->createElement('xsd:simpleType');
+                $elementType->name = $typeName;
+            } else {
+                $elementType = $this->xpath("//*[(name()='xsd:complexType' or name()='xsd:simpleType') and @name='".$typeName."']")->item(0);
+            }
+        } else { 
+            $elementType = $this->xpath("./*[(name()='xsd:complexType' or name()='xsd:simpleType')]", $element)->item(0);
+        }
+        if(!$elementType) die("Unable to find type for element $element->name");
+        return $elementType;
+    }
+    
+    private function getSimpleTypeBaseTypeName($simpleType) 
+    {
+        if(substr($simpleType->name, 0, 4) == 'xsd:') {
+            $simpleTypeBaseName = $simpleType->name;
+        } else {
+            $simpleTypeBase = $this->getSimpleTypeBaseType($simpleType);
+            $simpleTypeBaseName = $simpleTypeBase->name;
+        }
+        return $simpleTypeBaseName;
+    }
+    
+    private function getSimpleTypeBaseType($simpleType) 
+    {
+        $typeContents = $this->xpath("./*[name()='xsd:restriction' or name()='xsd:list' or name()='xsd:union']", $simpleType)->item(0);
+        $baseTypeName = $typeContents->base;
+        if(substr($baseTypeName, 0, 4) == 'xsd:') {
+            $simpleTypeBase = $this->Schema->createElement('xsd:simpleType');
+            $simpleTypeBase->name = $baseTypeName;
+        } else {
+            $baseType = $this->xpath("//xsd:simpleType[@name='".$baseTypeName."']")->item(0);
+            $simpleTypeBase = $this->getSimpleTypeBaseType($baseType);
+        }
+        return $simpleTypeBase;
+    }
+    
+    
+    
+    private function listPropertyElements($objectElement) 
+    {
+        $objectType = $this->getElementType($objectElement);
         $propertyElementsList = array();
         $childElements = $this->xpath("./*[name()='xsd:sequence' or name()='xsd:all']/xsd:element", $objectType);
         for($i=0; $i<$childElements->length;$i++) {
@@ -504,47 +650,7 @@ class dataObjectController extends DOMDocument
         }
         return $propertyElementsList;
     }
-    
-    private function makeSelectExpression($propertyElementsList) 
-    {
-        $selectExpressionParts = array();
-        for($i=0; $i<count($propertyElementsList);$i++) {
-            $propertyElement = $propertyElementsList[$i];
-            $propertyName = $propertyElement->name;
-            $propertyType = $this->getElementType($propertyElement);
-            $columnName = $this->getColumnName($propertyElement);
-            // DEFAULT and FIXED
-            if($propertyElement->{'default'}) {
-                $defaultValue = $this->enclose($propertyElement->{'default'}, $propertyType);
-                $selectExpressionParts[] = "COALESCE(" . $columnName . ", " . $defaultValue . ") as " . $propertyName;
-            }
-            else if($propertyElement->fixed) {
-                $fixedValue = $this->enclose($propertyElement->fixed, $propertyType);
-                $selectExpressionParts[] = $fixedValue . " as " . $propertyName;
-            } else {
-                $selectExpressionParts[] = $columnName . " as " . $propertyName;
-            }
-            
-        }
-        if(count($selectExpressionParts) > 0) return implode(', ', $selectExpressionParts);
-    }
-        
-    private function listChildElements($objectType) 
-    {
-        // Get children Elements (complexType)
-        $childElements = $this->xpath("./*[name()='xsd:sequence' or name()='xsd:all']/xsd:element", $objectType);
-        for($i=0; $i<$childElements->length;$i++) {
-            $childElement = $childElements->item($i);
-            $refChildElement = $this->getRefElement($childElement);
-            $childType = $this->getElementType($refChildElement);
-            if(!$childType) die("Unable to find data type for child " . $refChildElement->name);
-            if ($childType->tagName == 'xsd:complexType') {
-                $childElementList[] = $childElement;
-            }
-        }
-        return $childElementList;
-    }
-    
+          
     private function getUpdateExpression($propertyElementsList, $keyElementsList, $dataObject) 
     {
         $updateExpressionParts = array();
@@ -552,7 +658,7 @@ class dataObjectController extends DOMDocument
             $propertyElement = $propertyElementsList[$j];
             $propertyElement = $this->getRefElement($propertyElement);
             if(in_array($propertyElement, $keyElementsList, true)) {
-                //echo "<br/>Remove element " . $this->getRefElement($propertyElement)->name . " from updated properties because it is a key";
+                ////echo "<br/>Remove element " . $this->getRefElement($propertyElement)->name . " from updated properties because it is a key";
                 continue;
             }
             $propertyName = $propertyElement->name;
@@ -572,64 +678,24 @@ class dataObjectController extends DOMDocument
         
     }   
     
-    private function getColumnElement($columnName, $objectType) 
-    {
-        $columnElement = $this->getTypeElementByName($objectType, $columnName);
-        $columnElement = $this->getRefElement($columnElement);
-        return $columnElement;
-    }
-    
-    private function getColumnName($element) 
-    {
-        if($element->{'das:column'}) {
-            $columnName = $element->{'das:column'};
-        } else {
-            $columnName = $element->name;
-        }
-        return $columnName;
-    }
-        
-    private function getWhereExpression($objectElement) 
-    {
-        if($objectElement->{'das:query'}) {
-            return $objectElement->{'das:query'};
-        }
-    }
-    
     private function getRelationElements($objectElement) 
     {
         $relationElements = $this->xpath("./xsd:annotation/xsd:appinfo/das:relation", $objectElement);
         return $relationElements;
     }
     
-    private function makeRelationExpression($relationElements, $objectType, $parentObject)
-    {
-        $relationExpressionParts = array();
-        for($i=0; $i<$relationElements->length; $i++) {
-            $relationElement = $relationElements->item($i);
-            $childKeyName = $relationElement->{'child-key'};
-            $childKeyElement = $this->getColumnElement($childKeyName, $objectType);
-            $childKeyType = $this->getElementType($childKeyElement);
-            $childColumnName = $this->getColumnName($childKeyElement);
-            $parentKeyName = $relationElement->{'parent-key'};
-            $parentKeyValue = $this->enclose($parentObject->{$parentKeyName}, $childKeyType);  
-            $relationExpressionParts[] = $childColumnName . " = " . $parentKeyValue;
-        }
-        if(count($relationExpressionParts) > 0) return implode(' and ', $relationExpressionParts);
-    }
-    
-    private function makeForeignKeyExpression($objectElement, $parentObject) 
+    private function __makeForeignKeyExpression($objectElement, $parentObject) 
     {
         $relationExpressionParts = array();
         $keyrefElement = $this->xpath("./xsd:keyref", $objectElement)->item(0);
         if(!$keyrefElement) return false;
-        ////echo "<br/>Found keyref " . $keyrefElement->name . " on ref " . $keyrefElement->refer;
+        //////echo "<br/>Found keyref " . $keyrefElement->name . " on ref " . $keyrefElement->refer;
         // Get child key element
-        ////echo "<br/>List child keys from " . $keyrefElement->name;
+        //////echo "<br/>List child keys from " . $keyrefElement->name;
         $childKeyFieldsList = $this->getKeyFieldsList($keyrefElement);
 
         // Get Parent element def
-        ////echo "<br/>List parent keys from " . $keyrefElement->refer;
+        //////echo "<br/>List parent keys from " . $keyrefElement->refer;
         $referElement = $this->xpath("//xsd:key[@name='".$keyrefElement->refer."']")->item(0);
         $parentKeyFieldsList = $this->getKeyFieldsList($referElement);
         
@@ -648,27 +714,27 @@ class dataObjectController extends DOMDocument
         }
         
         if(count($relationExpressionParts) > 0) {
-            ////echo "<br/>Relation expression is " . implode(' and ', $relationExpressionParts);
+            //////echo "<br/>Relation expression is " . implode(' and ', $relationExpressionParts);
             return implode(' and ', $relationExpressionParts);
         }
     }
     
-    private function getKeyFieldsList($keyElement) 
+    private function __getKeyFieldsList($keyElement) 
     {
         $selectorXpath = $this->xpath("./xsd:selector/@xpath", $keyElement)->item(0)->nodeValue;
-        ////echo "<br/>Selector xPath is " . $selectorXpath;
+        //////echo "<br/>Selector xPath is " . $selectorXpath;
         $fieldsXpath = $this->xpath("./xsd:field/@xpath", $keyElement);
-        ////echo "<br/>Found " . $fieldsXpath->length . " key fields";
+        //////echo "<br/>Found " . $fieldsXpath->length . " key fields";
         $contextElement = $this->xpath("./parent::*", $keyElement)->item(0);
         $contextElement = $this->getRefElement($contextElement);
-        ////echo "<br/>Context element is " . $contextElement->name;
+        //////echo "<br/>Context element is " . $contextElement->name;
         $selectorElement = $this->xPathOnSchema($selectorXpath, $contextElement);
         $selectorElement = $this->getRefElement($selectorElement);
-        ////echo "<br/>Selected element is " . $selectorElement->name;
+        //////echo "<br/>Selected element is " . $selectorElement->name;
         for($i=0; $i<$fieldsXpath->length; $i++) {
-            ////echo "<br/>Selecting field element with xpath " . $fieldsXpath->item($i)->nodeValue;
+            //////echo "<br/>Selecting field element with xpath " . $fieldsXpath->item($i)->nodeValue;
             $keyFieldElement = $this->xPathOnSchema($fieldsXpath->item($i)->nodeValue, $selectorElement);
-            ////echo "<br/>Key field element is " . $keyFieldElement->name;
+            //////echo "<br/>Key field element is " . $keyFieldElement->name;
             $keyFieldElements[] = $keyFieldElement;
         }
         return $keyFieldElements;
@@ -722,67 +788,10 @@ class dataObjectController extends DOMDocument
         return $keyElementsList;
     }
     
-    private function getJoins($element) 
-    {
-        $joinNodes = $this->xpath('./xsd:annotation/xsd:appinfo/das:join', $element);
-        for($i=0; $i<$joinNodes->length; $i++) {
-            $joinNode = $joinNodes->item($i);
-            $joinType = $joinNode->{'join-type'};
-            $joinTable = $joinNode->table;
-            $joinArgs = $this->xpath('./das:on', $joinNode);
-            for($j=0; $j<$joinArgs->length; $j++) {
-                $joinArg = $joinArgs->item($j);
-                
-            }
-        }
-    }
-    
     private function getTypeElementByName($objectType, $elementName) 
     {
         return $this->xpath("./*[name()='xsd:sequence' or name()='all']/xsd:element[@das:column='".$elementName."'".
                 " or @name='".$elementName."' or @ref='".$columnName."']", $objectType)->item(0);
-    }
-    
-    private function getElementType($element) 
-    {
-        if($element->type) {
-            $typeName = $element->type;
-            if(substr($typeName, 0, 4) == 'xsd:') {
-                $elementType = $this->Schema->createElement('xsd:simpleType');
-                $elementType->name = $typeName;
-            } else {
-                $elementType = $this->xpath("//*[(name()='xsd:complexType' or name()='xsd:simpleType') and @name='".$typeName."']")->item(0);
-            }
-        } else { 
-            $elementType = $this->xpath("./*[(name()='xsd:complexType' or name()='xsd:simpleType')]", $element)->item(0);
-        }
-        if(!$elementType) die("Unable to find type for element $element->name");
-        return $elementType;
-    }
-    
-    private function getSimpleTypeBaseTypeName($simpleType) 
-    {
-        if(substr($simpleType->name, 0, 4) == 'xsd:') {
-            $simpleTypeBaseName = $simpleType->name;
-        } else {
-            $simpleTypeBase = $this->getSimpleTypeBaseType($simpleType);
-            $simpleTypeBaseName = $simpleTypeBase->name;
-        }
-        return $simpleTypeBaseName;
-    }
-    
-    private function getSimpleTypeBaseType($simpleType) 
-    {
-        $typeContents = $this->xpath("./*[name()='xsd:restriction' or name()='xsd:list' or name()='xsd:union']", $simpleType)->item(0);
-        $baseTypeName = $typeContents->base;
-        if(substr($baseTypeName, 0, 4) == 'xsd:') {
-            $simpleTypeBase = $this->Schema->createElement('xsd:simpleType');
-            $simpleTypeBase->name = $baseTypeName;
-        } else {
-            $baseType = $this->xpath("//xsd:simpleType[@name='".$baseTypeName."']")->item(0);
-            $simpleTypeBase = $this->getSimpleTypeBaseType($baseType);
-        }
-        return $simpleTypeBase;
     }
     
     private function enclose($value, $elementType) 
@@ -831,13 +840,13 @@ class dataObjectController extends DOMDocument
         $this->Document = new XMLDocument();
         //Object => create element
         $rootName = $this->RootDataObject->getTypeName();
-        //echo "<br/><br/><b>Adding root element $rootName</b>";
+        ////echo "<br/><br/><b>Adding root element $rootName</b>";
         $rootXml = $this->Document->createElement($rootName);
         $this->Document->appendChild($rootXml);
         $this->addChildXml($this->RootDataObject, $rootName, $rootXml);
         
-        //echo htmlspecialchars($this->Document->saveXML());
-        //echo '<pre><b>VALIDATING XML</b>';
+        ////echo htmlspecialchars($this->Document->saveXML());
+        ////echo '<pre><b>VALIDATING XML</b>';
         
         libxml_use_internal_errors(true);
         if($this->Document->schemaValidateSource($this->Schema->saveXML())) {
@@ -877,16 +886,16 @@ class dataObjectController extends DOMDocument
     
     private function addChildXml($parentObject, $parentName, $parentXml) 
     {
-        //echo "<br/><b>Adding ".count($parentObject)." children elements to $parentName</b>";
+        ////echo "<br/><b>Adding ".count($parentObject)." children elements to $parentName</b>";
         foreach($parentObject as $childName => $childContents) {
             if(is_scalar($childContents) || $childContents == false) {
-                //echo "<br/>Adding property element $childName => $childContents";
+                ////echo "<br/>Adding property element $childName => $childContents";
                 $this->propertyToXml($childContents, $childName, $parentXml);
             } elseif(get_class($childContents) == 'DataObject') {
-                //echo "<br/><b>Adding child object $childName</b>";
+                ////echo "<br/><b>Adding child object $childName</b>";
                 $this->objectToXml($childContents, $childName, $parentXml);
             } elseif(get_class($childContents) == 'ArrayDataObject') {
-                //echo "<br/><b>Adding array of $childName</b>";
+                ////echo "<br/><b>Adding array of $childName</b>";
                 $this->arrayToXml($childContents, $childName, $parentXml);
             }
         }
@@ -896,10 +905,10 @@ class dataObjectController extends DOMDocument
     {
         if((is_scalar($dataObject) || $dataObject == false) 
             || get_class($dataObject) != 'DataObject') {
-            //echo "<br/><br/><b>Adding not well formed data object $objectName</b>";
+            ////echo "<br/><br/><b>Adding not well formed data object $objectName</b>";
             $this->notWellFormedToXml($dataObject, $objectName, $parentXml);
         } else {
-            //echo "<br/><br/><b>Adding object $objectName</b>";
+            ////echo "<br/><br/><b>Adding object $objectName</b>";
             $objectXml = $this->Document->createElement($objectName);
             $parentXml->appendChild($objectXml);
             $this->addChildXml($dataObject, $objectName, $objectXml);
@@ -910,7 +919,7 @@ class dataObjectController extends DOMDocument
     {
         for($i=0; $i<count($arrayDataObject); $i++) {
             $childObject = $arrayDataObject[$i];
-            //echo "<br/>Adding array item #$i";
+            ////echo "<br/>Adding array item #$i";
             $this->objectToXml($childObject, $arrayName, $parentXml);
         }
     }
@@ -924,18 +933,16 @@ class dataObjectController extends DOMDocument
     private function notWellFormedToXml($childContents, $childName, $parentXml) 
     {
         if(is_scalar($childContents) || $childContents == false) {
-            //echo "<br/>Adding property element $childName => $childContents";
+            ////echo "<br/>Adding property element $childName => $childContents";
             $this->propertyToXml($childContents, $childName, $parentXml);
         } elseif(get_class($childContents) == 'DataObject') {
-            //echo "<br/><b>Adding child object $childName</b>";
+            ////echo "<br/><b>Adding child object $childName</b>";
             $this->objectToXml($childContents, $childName, $parentXml);
         } elseif(get_class($childContents) == 'ArrayDataObject') {
-            //echo "<br/><b>Adding array of $childName</b>";
+            ////echo "<br/><b>Adding array of $childName</b>";
             $this->arrayToXml($childContents, $childName, $parentXml);
         }
     
     }
-    
-    
 
 }

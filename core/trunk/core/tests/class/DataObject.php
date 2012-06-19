@@ -1,19 +1,21 @@
 <?php
 
-class DataObject
+class DataObject 
 {
-	
-    private $typeName;
-    private $parentObject;
     
-    public function DataObject($typeName) 
+    private $schemaElement;
+    private $parentObject;
+    private $storage;
+    
+    
+    public function DataObject($schemaElement) 
     {
-        $this->typeName = $typeName;
+        $this->schemaElement = $schemaElement;
     }
     
-    public function getTypeName() 
+    public function getSchemaElement() 
     {
-        return $this->typeName;
+        return $this->schemaElement;
     }
     
     public function getParentObject() 
@@ -27,10 +29,62 @@ class DataObject
     }
     
     public function __set($name, $value) {
-        if(is_object($value) 
-            && (get_class($value) == 'DataObject' || get_class($value) == 'ArrayDataObject')) {
-            $value->setParentObject($this);
+        //echo "<br/>Assign value to $name";
+        if(is_object($value)) { 
+            if(get_class($value) == 'DataObject' 
+                || get_class($value) == 'ArrayDataObject'
+                || get_class($value) == 'DataObjectProperty') {
+                //echo "<br/>Adding child object as $name = " . get_class($value);
+                $value->setParentObject($this);
+                $this->storage[$name] = $value;
+            } else {
+                Die("<br/><b>Permission denied</b>");
+            }
+        } else {
+            //echo "<br/>Adding scalar $name = $value";
+            $this->storage[$name]->setValue($value);
         }
-        $this->$name = $value;
     }
+    
+    public function __get($name) {
+        if(isset($this->storage[$name])) {
+            return $this->storage[$name];
+        }
+        if($name === 'isDataObject') {
+            return true;
+        }
+        if($name === 'typeName') {
+            if($this->schemaElement->ref) {
+                return $this->schemaElement->ref;
+            } else {
+                return $this->schemaElement->name;
+            }
+        }
+    }
+    
+    public function getProperties() 
+    {
+        $return = array();
+        if(count($this->storage) > 0) {
+            foreach($this->storage as $child) {
+                if(is_object($child) && $child->isDataObjectProperty) {
+                    $return[] = $child;
+                }
+            }
+        }
+        return $return;
+    }
+    
+    public function getChildren() 
+    {
+        $return = array();
+        if(count($this->storage) > 0) {
+            foreach($this->storage as $child) {
+                if(is_object($child) && ($child->isDataObject || $child->isArrayDataObject)) {
+                    $return[] = $child;
+                }
+            }
+        }
+        return $return;
+    }    
 }
