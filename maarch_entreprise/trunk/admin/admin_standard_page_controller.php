@@ -365,10 +365,13 @@ function displayList($objectList, $actions, $showCols, $pageNb, $keyName)
                     $j=0;
                     foreach($object as $key => $value) {
                         if ((!is_scalar($value) && $value) || (!array_key_exists($key, $showCols))) {
+                            if (!array_key_exists($key, $showCols)) {
+                                $json[$key] = $value;
+                            }
                             continue;
                         }
-                        
                         $header[$j] = $key;
+                        $json[$key] = $value;
                         
                         if (!isset($showCols[$key]['cssStyle'])) {
                             $showCols[$key]['cssStyle'] = '';
@@ -400,8 +403,18 @@ function displayList($objectList, $actions, $showCols, $pageNb, $keyName)
                         if (!in_array(' ', $header)) {
                             array_push($header, ' ');
                         }
+                        //$json_test = '{\'value\': \'New\', \'onclick\': \'CreateNewDoc()\'}';
+                        $encodeJSON = '{';
+                            foreach($json as $keyJSON => $valueJSON) {
+                                $encodeJSON .= "'".$keyJSON."'";
+                                $encodeJSON .= ' : ';
+                                $encodeJSON .= "'".$valueJSON."'";
+                                $encodeJSON .= ', ';
+                            }
+                            $encodeJSON = substr($encodeJSON, 0, -2);
+                        $encodeJSON .= '}';
                         $str_adminList .= '<td>';
-                            $str_adminList .= '<a title="lire" href="' . $actionsURL['read'] . '&objectId=' . $object->$keyName . '">';
+                            $str_adminList .= '<a href="' . $actionsURL['read'] . '&objectId=' . $object->$keyName . '">';
                                 $str_adminList .= '<img src="static.php?filename=icon_read.png" />';
                             $str_adminList .= '</a>';
                         $str_adminList .= '</td>';
@@ -426,6 +439,25 @@ function displayList($objectList, $actions, $showCols, $pageNb, $keyName)
                             $str_adminList .= '</a>';
                         $str_adminList .= '</td>';
                     }
+                    
+                    $encodeJSON = '{';
+                        $encodeJSON .= "'identifier'";
+                        $encodeJSON .= ' : ';
+                        $encodeJSON .= "'".$i."'";
+                        $encodeJSON .= ', ';
+                        foreach($json as $keyJSON => $valueJSON) {
+                            $encodeJSON .= "'".$keyJSON."'";
+                            $encodeJSON .= ' : ';
+                            $encodeJSON .= "'".$valueJSON."'";
+                            $encodeJSON .= ', ';
+                        }
+                        $encodeJSON = substr($encodeJSON, 0, -2);
+                    $encodeJSON .= '}';
+                        $str_adminList .= '<td onMouseOver="previsualiseAdminRead(event, '.$encodeJSON.');" style="background-image: url(static.php?filename=showFrameAdminList.png); background-repeat: no-repeat; background-position: center; width: 30px; cursor: help;"></td>';
+                        if (!in_array('    ', $header)) {
+                            array_push($header, '    ');
+                        }
+
                     $str_adminList .= '</tr>';
                 }
                 $i++;
@@ -435,30 +467,39 @@ function displayList($objectList, $actions, $showCols, $pageNb, $keyName)
     //footer
     $urlNo_nbLine = str_replace('&nbLine='.$_REQUEST['nbLine'], '', $pagePath);
     $urlNo_nbLine = str_replace('&pageNb='.$_REQUEST['pageNb'], '', $urlNo_nbLine);
-    $str_footer = '<br />';
-    $str_footer .= '<table width="100%">';
-        $str_footer .= '<tr>';
-            $str_footer .= '<td>';
-                $str_footer .= 'Éléments affichés: ';
-                $str_footer .= '<select onChange="window.location.href=\''.$urlNo_nbLine.'&nbLine=\'+this.value">';
+    $str_nbLine .= '<table>';
+        $str_nbLine .= '<tr>';
+            $str_nbLine .= '<td>';
+                $str_nbLine .= 'Éléments affichés: ';
+                $str_nbLine .= '<select onChange="window.location.href=\''.$urlNo_nbLine.'&nbLine=\'+this.value">';
                     $nbLineSelect = array(5, 10, 25, 50, 100, 250);
+                    if (!in_array($_SESSION['config']['nblinetoshow'], $nbLineSelect)) {
+                        array_push($nbLineSelect, $_SESSION['config']['nblinetoshow']);
+                    }
+                    sort($nbLineSelect);
                     for ($j=0; $j<count($nbLineSelect); $j++) {
                         if ($nbLineSelect[$j] >= $i) {
                             break;
                         }
                         $default_nbLineSelect = '';
-                        if ($nbLineSelect[$j] == $_REQUEST['nbLine']) {
+                        if ($nbLineSelect[$j] == $nbLine) {
                             $default_nbLineSelect = 'selected="selected" ';
                         }
-                        $str_footer .= '<option value="' . $nbLineSelect[$j] . '" '.$default_nbLineSelect.'>' . $nbLineSelect[$j] . '</option>';
+                        $str_nbLine .= '<option value="' . $nbLineSelect[$j] . '" '.$default_nbLineSelect.'>' . $nbLineSelect[$j] . '</option>';
                     }
                     $default_nbLineSelect = '';
-                    if ($i == $_REQUEST['nbLine']) {
+                    if ($i == $nbLine || $i < $nbLine) {
                         $default_nbLineSelect = 'selected="selected" ';
                     }
-                    $str_footer .= '<option value="' . $i . '" '.$default_nbLineSelect.'>tous</option>';
-                $str_footer .= '</select>';
-            $str_footer .= '</td>';
+                    $str_nbLine .= '<option value="' . $i . '" '.$default_nbLineSelect.'>tous ('.$i.')</option>';
+                $str_nbLine .= '</select>';
+            $str_nbLine .= '</td>';
+        $str_nbLine .= '</tr>';
+    $str_nbLine .= '</table>';
+    //footer
+    $str_footer = '<br />';
+    $str_footer .= '<table width="100%">';
+        $str_footer .= '<tr>';
             $str_footer .= '<td style="text-align: right;">';
                 if (in_array('create', $actions)) {
                     $str_footer .= '<a href="' . $actionsURL['create'] . '">';
@@ -503,16 +544,20 @@ function displayList($objectList, $actions, $showCols, $pageNb, $keyName)
             $str_header .= '</td>';
         }
     $str_header .= '</tr>';
+    // previsualisation
+    $str_previsualise  = '<div id="return_previsualise" style="display: none; padding: 10px; width: auto; height: auto; position: absolute; top: 0; left: 0; z-index: 999; background-color: rgba(255, 255, 255, 0.9); border: 1px solid black;">';
+    $str_previsualise .= '</div>';
     //retour html
     $listContent = '<br />';
+    $listContent .= $str_nbLine;
     $listContent .= $str_search;
     $listContent .= $str_pagination;
-    $listContent .= '<br />';
     $listContent .= $str_tableStart;
     $listContent .= $str_header;
     $listContent .= $str_adminList;
     $listContent .= $str_tableEnd;
     $listContent .= $str_footer;
+    $listContent .= $str_previsualise;
     return $listContent;
 }
 

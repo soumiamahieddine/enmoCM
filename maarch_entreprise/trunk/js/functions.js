@@ -2228,3 +2228,85 @@ function checkBeforeOpenBlank (url, value)
         window.open(url, 'target=_blank');
     }
 }
+
+function previsualiseAdminRead(e, json){
+    if ($('identifierDetailFrame')) {
+        if ($('identifierDetailFrame').value == json.identifier) {
+            return;
+        }
+    }
+    
+    var DocRef;
+    if(e){
+        mouseX = e.pageX;
+        mouseY = e.pageY;
+    }
+    else{
+        mouseX = event.clientX;
+        mouseY = event.clientY;
+
+        if( document.documentElement && document.documentElement.clientWidth) {
+            DocRef = document.documentElement;
+        } else {
+            DocRef = document.body;
+        }
+
+        mouseX += DocRef.scrollLeft;
+        mouseY += DocRef.scrollTop;
+    }
+    var topPosition  = mouseY + 10;
+    var leftPosition = mouseX - 200;
+    
+    var writeHTML = '<table>';
+        for (i in json) {
+            if (i != 'identifier') {
+                writeHTML += '<tr>';
+                    writeHTML += '<td>';
+                        writeHTML += i;
+                    writeHTML += '</td>';
+                    writeHTML += '<td>';
+                        writeHTML += ' : ';
+                    writeHTML += '</td>';
+                    writeHTML += '<td>';
+                        writeHTML += json[i];
+                    writeHTML += '</td>';
+                writeHTML += '</tr>';
+            } else {
+                writeHTML += '<input type="hidden" id="identifierDetailFrame" value="'+json[i]+'" />';
+            }
+        }
+    writeHTML += '<tr>';
+        writeHTML += '<td></td>';
+        writeHTML += '<td></td>';
+        writeHTML += '<td style="text-decoration: underline; text-align: right; cursor: pointer;" onClick="$(\'identifierDetailFrame\').setValue(\'\'); $(\'return_previsualise\').style.display=\'none\'">';
+            writeHTML += '<br /><b>Fermer</b>';
+        writeHTML += '</td>';
+    writeHTML += '</tr>';
+    writeHTML += '</table>'
+    $('return_previsualise').update(writeHTML);
+    $('return_previsualise').innerHTML;
+
+    var divWidth = $('return_previsualise').getWidth();
+    if (divWidth > 0) {
+        leftPosition = mouseX - (divWidth + 10);
+    }
+    var divHeight = $('return_previsualise').getHeight();
+    if (divHeight > 0) {
+        topPosition = mouseY - (divHeight - 10);
+    }
+    
+    if (topPosition < 0) {
+        topPosition = 10;
+    }
+    
+    var scrollY = (document.all ? document.scrollTop : window.pageYOffset);
+    if (topPosition < scrollY) {
+        topPosition = scrollY + 10;
+    }
+    
+    $('return_previsualise').style.top=topPosition+'px';
+    $('return_previsualise').style.left=leftPosition+'px';
+    
+    $('return_previsualise').style.display='block';
+    
+}
