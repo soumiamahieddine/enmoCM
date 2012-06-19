@@ -42,7 +42,7 @@ class DataObject
             }
         } else {
             //echo "<br/>Adding scalar $name = $value";
-            $this->storage[$name]->setValue($value);
+            $this->storage[$name] = $value;
         }
     }
     
