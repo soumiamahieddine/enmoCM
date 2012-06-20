@@ -425,6 +425,9 @@ function displayList($objectList, $actions, $showCols, $pageNb, $keyName)
                             foreach($json as $keyJSON => $valueJSON) {
                                 $encodeJSON .= "'".$keyJSON." '";
                                 $encodeJSON .= ' : ';
+                                if (DIRECTORY_SEPARATOR != '/') {
+                                    $valueJSON = str_replace(DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR.DIRECTORY_SEPARATOR, $valueJSON);
+                                }
                                 $encodeJSON .= "'".$valueJSON." '";
                                 $encodeJSON .= ', ';
                             }
