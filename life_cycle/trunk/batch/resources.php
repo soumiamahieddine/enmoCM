@@ -260,9 +260,8 @@ function esign($resId)
         $signatureExResponse = $GLOBALS['D2S']->signatureEx($signatureEx);
         //var_dump($signatureExResponse);exit;
         if ($signatureExResponse->signatureExResult->opStatus <> 0) {
-            Bt_exitBatch(
-                'problem with esign of resource :' 
-                . $resId , 'ERROR', 30
+            Bt_exitBatch(30,
+                'problem with esign of resource :' . $resId , 'ERROR'
             );
         } else {
             //opStatus
@@ -293,9 +292,8 @@ function esign($resId)
             //echo "--------------process the return\r\n";
             $getArchiveExResponse = $GLOBALS['D2S']->getArchiveEx($getArchiveEx);
             if ($getArchiveExResponse->getArchiveExResult->opStatus <> 0) {
-                Bt_exitBatch(
-                    'problem with esign proof of resource :' 
-                    . $resId , 'ERROR', 30
+                Bt_exitBatch(30,
+                    'problem with esign proof of resource :' . $resId , 'ERROR'
                 );
             } else {
                 //opStatus
@@ -315,9 +313,9 @@ function esign($resId)
             }
         }
     } else {
-        Bt_exitBatch(
-            'esign WS not available : ' . $GLOBALS['manageEsign']->error
-            . $resId , 'ERROR', 30
+        Bt_exitBatch(30,
+            'esign WS not available : ' . $GLOBALS['manageEsign']->error 
+            . $resId , 'ERROR'
         );
     }
 }
