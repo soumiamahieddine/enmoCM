@@ -711,9 +711,6 @@ if (isset($_REQUEST['submit'])) {
                 $params['objectName'] . '_root'
             );
             
-            //echo '<pre>'.print_r($DataObjectController->createDataObject('docservers'), true).'</pre>';
-            //echo '<pre>'.print_r($RootDataObject, true).'</pre>';
-            //exit;
             //$keyName = $DataObjectController->getKey($params['objectName']);
             
             $listContent = displayList(
