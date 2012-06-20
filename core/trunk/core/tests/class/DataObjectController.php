@@ -235,42 +235,46 @@ class dataObjectController extends DOMDocument
     private function instanciateDataObject($objectElement)
     {
         if($objectElement->ref) {
-            $refObjectElement = $this->getRootElement($objectElement->ref);
-            if(!$refObjectElement) die ("Referenced element named '" . $objectElement->ref . "' not found in schema");
-        } else {
-            $refObjectElement = $objectElement;
-        }
-        //echo "<br/><br/><b>  instanciateDataObject() from element '$refObjectElement->name'</b>";
-        $dataObject = new DataObject($refObjectElement);
+            $objectElement = $this->getRootElement($objectElement->ref);
+            if(!$objectElement) die ("Referenced element named '" . $objectElement->ref . "' not found in schema");
+        } 
+        //echo "<br/><br/><b>  instanciateDataObject() from element '$objectElement->name'</b>";
+        $dataObject = new DataObject($objectElement);
         
-        // Create Properties
+        // Set Das parameters
+        $this->setDasSource($objectElement);
+        
+        // Create Properties and children
         // ********************************************************************
-        $objectType = $this->getElementType($refObjectElement);
+        $objectType = $this->getElementType($objectElement);
         $childElements = $this->xpath("./*[name()='xsd:sequence' or name()='xsd:all']/xsd:element", $objectType);
         //echo "<br/>   Object has $childElements->length properties/children";
         for($i=0; $i<$childElements->length;$i++) {
-            $childElement = $childElements->item($i);
-            $refChildElement = $this->getRefElement($childElement);
-            $childName = $refChildElement->name;
-            $childType = $this->getElementType($refChildElement);
-            if(!$childType) die("Unable to find data type for property " . $refChildElement->name);
+            $inlineChildElement = $childElements->item($i);
+            $childElement = $this->getRefElement($inlineChildElement);
+            $childName = $childElement->name;
+            $childType = $this->getElementType($childElement);
+            if(!$childType) die("Unable to find data type for property " . $childElement->name);
             if ($childType->tagName == 'xsd:simpleType') {
                 // DEFAULT and FIXED
-                if($refChildElement->{'default'}) {
-                    $childValue = $refChildElement->{'default'};
+                if($childElement->{'default'}) {
+                    $childValue = $childElement->{'default'};
                 }
-                else if($refChildElement->fixed) {
-                    $childValue = $refChildElement->fixed;
+                else if($childElement->fixed) {
+                    $childValue = $childElement->fixed;
                 } else {
                     $childValue = false;
                 }
                 //echo "<br/>    Adding property '$childName'";
-                $dataObjectProperty = new DataObjectProperty($refChildElement, $childName, $childValue);
+                $dataObjectProperty = new DataObjectProperty($childElement, $childName, $childValue);
                 $dataObject->$childName = $dataObjectProperty;
+                
+                $this->setDasItem($objectElement, $childElement);
+                
             }
             if ($childType->tagName == 'xsd:complexType') {
                 //echo "<br/>    Adding child '$childName'";
-                if($this->isArrayDataObject($childElement)) {
+                if($this->isArrayDataObject($inlineChildElement)) {
                     //echo " as ArrayDataObject";
                     $childDataObject = $this->instanciateArrayDataObject($childElement);
                 } else {
@@ -287,13 +291,32 @@ class dataObjectController extends DOMDocument
     private function instanciateArrayDataObject($objectElement) 
     { 
         if($objectElement->ref) {
-            $refObjectElement = $this->getRootElement($objectElement->ref);
-            if(!$refObjectElement) die ("Referenced element named '" . $objectElement->ref . "' not found in schema");
-        } else {
-            $refObjectElement = $objectElement;
-        }
+            $objectElement = $this->getRootElement($objectElement->ref);
+            if(!$objectElement) die ("Referenced element named '" . $objectElement->ref . "' not found in schema");
+        } 
         //echo "<br/><br/><b>  instanciateArrayDataObject() from element '$refObjectElement->name'</b>";
-        $arrayDataObject = new ArrayDataObject($refObjectElement);
+        $arrayDataObject = new ArrayDataObject($objectElement);
+        
+        $this->setDasSource($objectElement);
+        
+        // Add Properties to DAS
+        // ********************************************************************
+        $objectType = $this->getElementType($objectElement);
+        $childElements = $this->xpath("./*[name()='xsd:sequence' or name()='xsd:all']/xsd:element", $objectType);
+        //echo "<br/>   Object has $childElements->length properties/children";
+        for($i=0; $i<$childElements->length;$i++) {
+            $inlineChildElement = $childElements->item($i);
+            $childElement = $this->getRefElement($inlineChildElement);
+            $childName = $childElement->name;
+            $childType = $this->getElementType($childElement);
+            if(!$childType) die("Unable to find data type for property " . $childElement->name);
+            if ($childType->tagName == 'xsd:simpleType') {
+                $this->setDasItem($objectElement, $childElement);
+            }
+        }
+        
+        
+        
         return $arrayDataObject;
     }
     
@@ -311,8 +334,6 @@ class dataObjectController extends DOMDocument
     */
     private function loadDataObject($dataObject) 
     {      
-        // Load Data Access Service
-        $objectElement = $dataObject->getSchemaElement();
         //echo "<br/><br/><b>loadDataObject() from schema element $objectElement->name</b>"; 
         $results = $this->getData($dataObject);
         $result = $results[0];
@@ -335,8 +356,7 @@ class dataObjectController extends DOMDocument
         for($i=0; $i<count($results); $i++) {
             $result = $results[$i];
             $dataObject = $this->instanciateDataObject($objectElement);
-            //$arrayDataObject->append($dataObject);
-            $arrayDataObject[1] = $dataObject;
+            $arrayDataObject->append($dataObject);
             //echo "<br/> Found " . count($result) . " properties for objects of array $typeName";
             if(count($result) > 0) {
                 foreach($result as $propertyName => $propertyValue) {
@@ -517,57 +537,72 @@ class dataObjectController extends DOMDocument
     //*************************************************************************
     // DAS FUNCTIONS
     //*************************************************************************
-    private function getData($dataObject) 
+    private function setDasSource($objectElement)
     {
-        $objectElement = $dataObject->getSchemaElement();
-        //echo "<br/><br/><b>Loading DAS from element $objectElement->name</b>";
-        $objectType = $this->getElementType($objectElement);
-
         $dasSource = $objectElement->{'das:source'};
-
-        // Database, XML ?
         switch($dasSource) {
         case 'database':
             //echo "<br/> Found new data access service definition 'database'";
-            $objectDas = new dataAccessService_Database();
             // Main source
-            $dasTable = $objectDas->addTable($objectElement->name);
+            $dasTable = $this->dataAccessService_Database->addTable($objectElement->name);
             $dasTable->addPrimaryKey(
                 $objectElement->{'das:key-columns'}
             );
             
             // Relation with parent
             if($objectElement->{'das:parent-columns'} && $objectElement->{'das:child-columns'}) {
-                $objectDas->addRelation(
+                $this->dataAccessService_Database->addRelation(
                     'N/A',
                     $objectElement->name,
                     $objectElement->{'das:parent-columns'}, 
                     $objectElement->{'das:child-columns'}
                 );
             }
+            break;
             
-            $childElements = $this->xpath("./*[name()='xsd:sequence' or name()='xsd:all']/xsd:element", $objectType);
-            for($i=0; $i<$childElements->length;$i++) {
-                $childElement = $childElements->item($i);
-                $childElement = $this->getRefElement($childElement);
-                $childName = $childElement->name;
-                $childType = $this->getElementType($childElement);
-                if(!$childType) die("Unable to find data type for property " . $childElement->name);
-                if ($childType->tagName == 'xsd:simpleType') {
-                    $dasColumn = $dasTable->addColumn($childName, $childType->name);
-                    if($childElement->{'default'}) {
-                        $dasColumn->{'default'} = $childElement->{'default'};
-                    }
-                    if($childElement->{'fixed'}) {
-                        $dasColumn->{'fixed'} = $childElement->{'fixed'};
-                    }
-                    if(strtolower($childElement->{'nillable'}) === 'true') {
-                        $dasColumn->nillable = true;
-                    }
-                }
+        case 'xml':
+            break;
+        }
 
+    }
+    
+    private function setDasItem($objectElement, $propertyElement)
+    {
+        $tableName = $objectElement->name;
+        $propertyName = $propertyElement->name;
+        $propertyType = $this->getElementType($propertyElement);
+        
+        $dasSource = $objectElement->{'das:source'};
+        switch($dasSource) {
+        case 'database':
+            echo "<br/> Add column $propertyName to $tableName";
+            $dasColumn = $this->dataAccessService_Database->addColumn($tableName, $propertyName, $propertyType->name);
+            if($propertyElement->{'default'}) {
+                $dasColumn->{'default'} = $propertyElement->{'default'};
             }
-            return $objectDas->getData($dataObject);
+            if($propertyElement->{'fixed'}) {
+                $dasColumn->{'fixed'} = $propertyElement->{'fixed'};
+            }
+            if(strtolower($propertyElement->{'nillable'}) === 'true') {
+                $dasColumn->nillable = true;
+            }
+            break;
+        case 'xml':
+            break;
+        }
+    }
+    
+    private function getData($dataObject) 
+    {
+        $objectElement = $dataObject->getSchemaElement();
+        //echo "<br/><br/><b>Loading DAS from element $objectElement->name</b>";
+
+        $dasSource = $objectElement->{'das:source'};
+
+        // Database, XML ?
+        switch($dasSource) {
+        case 'database':
+            return $this->dataAccessService_Database->getData($dataObject);
             break;
             
         case 'xml':
