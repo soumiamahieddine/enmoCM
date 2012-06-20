@@ -56,7 +56,6 @@ class dataObjectController extends DOMDocument
     public function setKey($elementName, $key) 
     {
         $objectElement = $this->getRootElement($elementName);
-            
         $this->setDasKey($objectElement, $key);  
     }
     

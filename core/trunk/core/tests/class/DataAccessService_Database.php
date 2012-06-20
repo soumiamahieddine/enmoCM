@@ -53,8 +53,9 @@ class DataAccessService_Database
         if($relationExpression) {
             $whereExpressionParts[] = $relationExpression;
         }
-        if(isset($table->key) && !is_null($table->key)) {
-            $whereExpressionParts[] = $table->makeKeyExpression();
+        $keyExpression = $table->makeKeyExpression();
+        if($keyExpression) {
+            $whereExpressionParts[] = $keyExpression;
         }
         $whereExpression = implode(' and ', $whereExpressionParts);
   
@@ -74,9 +75,9 @@ class DataAccessService_Database
         return $results;
     }
     
-    /**************************************************************************
-    ** PRIVATE FUNCTIONS
-    **************************************************************************/
+    //*************************************************************************
+    // PRIVATE FUNCTIONS
+    //*************************************************************************
     private function getRelation($parentName, $childName) 
     {
         foreach($this->relations as $relationName => $relation) {
@@ -110,15 +111,7 @@ class DataAccessService_Database
         }
     }
     
-    private function enclose($value, $typeName)
-    {
-        if($this->isQuoted($typeName)) {
-                $value = "'" . $value . "'";
-            } 
-        return $value;
-    }
-    
-    private function isQuoted($typeName) 
+    public function enclose($value, $typeName)
     {
         if(!in_array(
             $typeName,
@@ -143,10 +136,11 @@ class DataAccessService_Database
                 )
             )
         ) {
-            return true;
-        }
+                $value = "'" . $value . "'";
+            } 
+        return $value;
     }
-    
+   
 }
 
 class DataAccessService_Database_Table
@@ -191,7 +185,7 @@ class DataAccessService_Database_Table
                 $fixedValue = $this->enclose($column->fixed, $column->type);
                 $selectExpressionPart = $fixedValue;
             } elseif($column->{'default'}) {
-                $defaultValue = $this->enclose($column->{'default'}, $column->type);
+                $defaultValue = DataAccessService_Database::enclose($column->{'default'}, $column->type);
                 $selectExpressionPart = "COALESCE(" . $this->name . "." . $column->name . ", " . $defaultValue . ") AS " . $column->name;
             } else {
                 $selectExpressionPart = $this->name . "." . $column->name;
@@ -204,15 +198,19 @@ class DataAccessService_Database_Table
     public function makeKeyExpression() 
     {
         $keyExpressionParts = array();
-        $keyColumns = $this->primaryKey->getColumns();
-        $keyValues = explode(' ', $this->key);
-        for($i=0; $i<count($keyColumns); $i++) {
-            $keyColumnName = $keyColumns[$i];
-            $keyColumn = $this->columns[$keyColumn];
-            $keyValue = $this->enclose($keyValues[$i], $keyColumn->type);  
-            $keyExpressionParts[] = $this->name . '.' . $keyColumnName . '=' . $keyValue;
+        if(isset($this->primaryKey) && !is_null($this->primaryKey)
+            && isset($this->key) && !is_null($this->key)) {
+            $keyColumns = $this->primaryKey->getColumns();
+            $keyValues = explode(' ', $this->key);
+            for($i=0; $i<count($keyColumns); $i++) {
+                $keyColumnName = $keyColumns[$i];
+                $keyColumn = $this->columns[$keyColumn];
+                $keyValue = DataAccessService_Database::enclose($keyValues[$i], $keyColumn->type);  
+                $keyExpressionParts[] = $this->name . '.' . $keyColumnName . '=' . $keyValue;
+            }
+            $keyExpression = implode(' and ', $keyExpressionParts);
+            return $keyExpression;
         }
-        return implode(' and ', $keyExpressionParts);
     }
     
 }
