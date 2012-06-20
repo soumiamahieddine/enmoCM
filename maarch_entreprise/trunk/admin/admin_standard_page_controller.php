@@ -352,7 +352,7 @@ function displayList($objectList, $actions, $showCols, $pageNb, $keyName)
         }
     }
     //HTML list
-    $str_tableStart .= '<table width="100%" cellpadding="7" cellspacing="0">';
+    $str_tableStart .= '<table width="100%" cellpadding="4" cellspacing="0">';
         $str_tableStart .= '<tbody>';
             $i=0;
             foreach ($objectList as $object) {
@@ -700,6 +700,9 @@ if (isset($_REQUEST['submit'])) {
             doDelete($params['objectId']);
             break;
         case 'list' :
+            $DataObjectController->createRootDataObject(
+                $params['objectName'] . '_root'
+            );
             if (isset($params['orderField']) && !empty($params['orderField'])) {
                 $DataObjectController->setOrder(
                     $params['objectName'], 
@@ -710,9 +713,8 @@ if (isset($_REQUEST['submit'])) {
             if (isset($params['what']) && !empty($params['what'])) {
                 $whereClause = str_replace('|', '%', $params['what']);
             }
-            $RootDataObject = $DataObjectController->loadRootDataObject(
-                $params['objectName'] . '_root'
-            );
+            
+            $RootDataObject = $DataObjectController->loadRootDataObject();
             
             //$keyName = $DataObjectController->getKey($params['objectName']);
             
