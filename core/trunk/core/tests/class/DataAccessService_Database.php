@@ -19,6 +19,11 @@ class DataAccessService_Database
         return $newTable;
     }
     
+    function addColumn($tableName, $columnName, $columnType)
+    {
+        return $this->tables[$tableName]->addColumn($columnName, $columnType);
+    }
+    
     function addRelation($parentTable, $childTable, $parentColumns, $childColumns) 
     {
         $newRelation = new DataAccessService_Database_Relation($parentTable, $childTable, $parentColumns, $childColumns);
@@ -29,13 +34,26 @@ class DataAccessService_Database
     function getData($dataObject, $where=false) 
     {
         $parentObject = $dataObject->getParentObject();
+        $objectElement = $dataObject->getSchemaElement();
+        $tableName = $objectElement->name;
         
         // Select Expression 
-        $selectExpression = $this->makeSelectExpression();
+        $selectExpressionParts = array();
+        foreach ($this->tables[$tableName]->columns as $columnName => $column) {
+            // DEFAULT, FIXED
+            if($column->fixed) {
+                $fixedValue = $this->enclose($column->fixed, $column->type);
+                $selectExpressionPart = $fixedValue;
+            } elseif($column->{'default'}) {
+                $defaultValue = $this->enclose($column->{'default'}, $column->type);
+                $selectExpressionPart = "COALESCE(" . $tableName . "." . $column->name . ", " . $defaultValue . ") AS " . $column->name;
+            } else {
+                $selectExpressionPart = $tableName . "." . $column->name;
+            }
+            $selectExpressionParts[] = $selectExpressionPart;
+        }
+        $selectExpression = implode(', ', $selectExpressionParts);
       
-        // Tables
-        $fromExpression = $this->makeFromExpression();
-        
         // Where
         $whereExpressionParts = array('1=1');
         if($parentObject && count($this->relations)) {
@@ -47,7 +65,7 @@ class DataAccessService_Database
         $whereExpression = implode(' and ', $whereExpressionParts);
   
         $query  = "SELECT " . $selectExpression;
-        $query .= " FROM  " . $fromExpression;
+        $query .= " FROM  " . $tableName;
         $query .= " WHERE " . $whereExpression;
         
         //echo "<pre>DAS = " . print_r($this,true) . "</pre>";
@@ -81,15 +99,6 @@ class DataAccessService_Database
             }
         }
         return implode(', ', $selectExpressionParts);
-    }
-    
-    private function makeFromExpression()
-    {
-        $fromExpressionParts = array();
-        foreach($this->tables as $tableName => $table) {
-            $fromExpressionParts[] = $tableName;
-        }
-        return implode(', ', $fromExpressionParts);
     }
     
     private function makeRelationExpression($tableName, $parentObject) {
