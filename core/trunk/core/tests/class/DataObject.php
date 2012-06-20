@@ -3,19 +3,21 @@
 class DataObject implements IteratorAggregate
 {
     
-    private $schemaElement;
+    private $name;
+    private $schemaPath;
     private $parentObject;
     private $storage;
     
     
-    public function DataObject($schemaElement) 
+    public function DataObject($name, $schemaPath) 
     {
-        $this->schemaElement = $schemaElement;
+        $this->name = $name;
+        $this->schemaPath = $schemaPath;
     }
     
-    public function getSchemaElement() 
+    public function getSchemaPath() 
     {
-        return $this->schemaElement;
+        return $this->schemaPath;
     }
     
     public function getParentObject() 
@@ -57,15 +59,12 @@ class DataObject implements IteratorAggregate
         if($name === 'isDataObject') {
             return true;
         }
-        if($name === 'typeName') {
-            if($this->schemaElement->ref) {
-                return $this->schemaElement->ref;
-            } else {
-                return $this->schemaElement->name;
-            }
+        if($name === 'name') {
+            return $this->name;
         }
     }
     
+  
     public function getProperties() 
     {
         $return = array();

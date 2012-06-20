@@ -7,69 +7,63 @@ class DataAccessService_Database
     public $tables = array();
     public $relations = array();
     
-    function DataAccessService_Database($schema='public') 
+    public function DataAccessService_Database($schema='public') 
     {
         $this->schema=$schema;
     }
     
-    function addTable($tableName) 
+    public function addTable($tableName) 
     {
         $newTable = new DataAccessService_Database_Table($tableName);
         $this->tables[$tableName] = $newTable;
         return $newTable;
     }
     
-    function addColumn($tableName, $columnName, $columnType)
+    public function addColumn($tableName, $columnName, $columnType)
     {
-        return $this->tables[$tableName]->addColumn($columnName, $columnType);
+        $table = $this->tables[$tableName];
+        return $table->addColumn($columnName, $columnType);
     }
     
-    function addRelation($parentTable, $childTable, $parentColumns, $childColumns) 
+    public function addRelation($parentName, $childName, $parentColumns, $childColumns, $name=false) 
     {
-        $newRelation = new DataAccessService_Database_Relation($parentTable, $childTable, $parentColumns, $childColumns);
-        $this->relations[] = $newRelation;
+        if(!$name) {
+            $name = $parentName . '_' . $childName . '_FK';
+        }
+        $newRelation = new DataAccessService_Database_Relation($parentName, $childName, $parentColumns, $childColumns, $name);
+        $this->relations[$name] = $newRelation;
     }
     
+    public function setKey($tableName, $key)
+    {
+        $table = $this->tables[$tableName];
+        $table->setKey($key);
+    }
     
-    function getData($dataObject, $where=false) 
+    public function getData($dataObject) 
     {
         $parentObject = $dataObject->getParentObject();
-        $objectElement = $dataObject->getSchemaElement();
-        $tableName = $objectElement->name;
+       
+        $tableName = $dataObject->name;
+        $table = $this->tables[$tableName];
         
-        // Select Expression 
-        $selectExpressionParts = array();
-        foreach ($this->tables[$tableName]->columns as $columnName => $column) {
-            // DEFAULT, FIXED
-            if($column->fixed) {
-                $fixedValue = $this->enclose($column->fixed, $column->type);
-                $selectExpressionPart = $fixedValue;
-            } elseif($column->{'default'}) {
-                $defaultValue = $this->enclose($column->{'default'}, $column->type);
-                $selectExpressionPart = "COALESCE(" . $tableName . "." . $column->name . ", " . $defaultValue . ") AS " . $column->name;
-            } else {
-                $selectExpressionPart = $tableName . "." . $column->name;
-            }
-            $selectExpressionParts[] = $selectExpressionPart;
-        }
-        $selectExpression = implode(', ', $selectExpressionParts);
-      
         // Where
         $whereExpressionParts = array('1=1');
-        if($parentObject && count($this->relations)) {
-            $whereExpressionParts[] = $this->makeRelationExpression($table->name, $parentObject);
+        $relationExpression = $this->makeRelationExpression($table, $parentObject);
+        if($relationExpression) {
+            $whereExpressionParts[] = $relationExpression;
         }
-        if($where) {
-            $whereExpressionParts[] = $where;
+        if(isset($table->key) && !is_null($table->key)) {
+            $whereExpressionParts[] = $table->makeKeyExpression();
         }
         $whereExpression = implode(' and ', $whereExpressionParts);
   
-        $query  = "SELECT " . $selectExpression;
+        $query  = "SELECT " . $table->makeSelectExpression();
         $query .= " FROM  " . $tableName;
         $query .= " WHERE " . $whereExpression;
         
         //echo "<pre>DAS = " . print_r($this,true) . "</pre>";
-        echo "<pre>QUERY = " . $query . "</pre>";
+        //echo "<pre>QUERY = " . $query . "</pre>";
         $db = new dbquery();
         $db->query($query);
         
@@ -80,43 +74,40 @@ class DataAccessService_Database
         return $results;
     }
     
-    private function makeSelectExpression() 
+    /**************************************************************************
+    ** PRIVATE FUNCTIONS
+    **************************************************************************/
+    private function getRelation($parentName, $childName) 
     {
-        $selectExpressionParts = array();
-        foreach($this->tables as $table) {
-            foreach ($table->columns as $column) {
-                // DEFAULT, FIXED
-                if($column->fixed) {
-                    $fixedValue = $this->enclose($column->fixed, $column->type);
-                    $selectExpressionPart = $fixedValue;
-                } elseif($column->{'default'}) {
-                    $defaultValue = $this->enclose($column->{'default'}, $column->type);
-                    $selectExpressionPart = "COALESCE(" . $table->name . "." . $column->name . ", " . $defaultValue . ") AS " . $column->name;
-                } else {
-                    $selectExpressionPart = $table->name . "." . $column->name;
-                }
-                $selectExpressionParts[] = $selectExpressionPart;
+        foreach($this->relations as $relationName => $relation) {
+            if($relation->parentName == $parentName && $relation->childName == $childName) {
+                return $relation;
             }
         }
-        return implode(', ', $selectExpressionParts);
     }
     
-    private function makeRelationExpression($tableName, $parentObject) {
-        $relation = $this->relations[0];
-        $relationExpressionParts = array();
-        $childColumns = explode(' ', $relation->childColumns);
-        $parentColumns = explode(' ', $relation->parentColumns);
-        for($i=0; $i<count($childColumns); $i++) {
-            $childColumnName = $childColumns[$i];
-            $parentColumnName = $parentColumns[$i];
-            
-            $childColumn = $table->columns[$childColumnName];
-            $childType = $childColumn->type;
-            
-            $parentColumnValue = $this->enclose($parentObject->{$parentColumnName}, $childType);  
-            $relationExpressionParts[] = $childColumnName . " = " . $parentColumnValue;
+    private function makeRelationExpression($table, $parentObject) 
+    {
+        $parentName = $parentObject->name;
+        
+        $relation = $this->getRelation($parentName, $table->name);
+        if($relation) {
+            $relationExpressionParts = array();
+            $childColumns = explode(' ', $relation->childColumns);
+            $parentColumns = explode(' ', $relation->parentColumns);
+            for($i=0; $i<count($childColumns); $i++) {
+                $childColumnName = $childColumns[$i];
+                $parentColumnName = $parentColumns[$i];
+                
+                $childColumn = $table->columns[$childColumnName];
+                $childType = $childColumn->type;
+                
+                $parentColumnValue = $this->enclose($parentObject->{$parentColumnName}, $childType);  
+                $relationExpressionParts[] = $childColumnName . " = " . $parentColumnValue;
+            }
+            $relationExpression = implode(' and ', $relationExpressionParts);
+            return $relationExpression;
         }
-        if(count($relationExpressionParts) > 0) return implode(' and ', $relationExpressionParts);
     }
     
     private function enclose($value, $typeName)
@@ -166,23 +157,62 @@ class DataAccessService_Database_Table
     public $foreignKeys = array();
     public $indexes = array();
     public $relation;
+    public $key;
 
-    function DataAccessService_Database_Table($name)
+    public function DataAccessService_Database_Table($name)
     {
         $this->name = $name;
     }
     
-    function addPrimaryKey($columns, $name=false)
+    public function addPrimaryKey($columns, $name=false)
     {
         if(!$name) $name = $this->name . '_pkey';
         $this->primaryKey = new DataAccessService_Database_Table_PrimaryKey($columns, $name);
     }
     
-    function addColumn($columnName, $columnType)
+    public function addColumn($columnName, $columnType)
     {
         $newColumn = new DataAccessService_Database_Table_Column($columnName, $columnType);
         $this->columns[$columnName] = $newColumn;
         return $newColumn;
+    }
+    
+    public function setKey($key)
+    {
+        $this->key = $key;
+    }
+    
+    public function makeSelectExpression() 
+    {
+        $selectExpressionParts = array();
+        foreach ($this->columns as $columnName => $column) {
+            // DEFAULT, FIXED
+            if($column->fixed) {
+                $fixedValue = $this->enclose($column->fixed, $column->type);
+                $selectExpressionPart = $fixedValue;
+            } elseif($column->{'default'}) {
+                $defaultValue = $this->enclose($column->{'default'}, $column->type);
+                $selectExpressionPart = "COALESCE(" . $this->name . "." . $column->name . ", " . $defaultValue . ") AS " . $column->name;
+            } else {
+                $selectExpressionPart = $this->name . "." . $column->name;
+            }
+            $selectExpressionParts[] = $selectExpressionPart;
+        }
+        return implode(', ', $selectExpressionParts);
+    }
+    
+    public function makeKeyExpression() 
+    {
+        $keyExpressionParts = array();
+        $keyColumns = $this->primaryKey->getColumns();
+        $keyValues = explode(' ', $this->key);
+        for($i=0; $i<count($keyColumns); $i++) {
+            $keyColumnName = $keyColumns[$i];
+            $keyColumn = $this->columns[$keyColumn];
+            $keyValue = $this->enclose($keyValues[$i], $keyColumn->type);  
+            $keyExpressionParts[] = $this->name . '.' . $keyColumnName . '=' . $keyValue;
+        }
+        return implode(' and ', $keyExpressionParts);
     }
     
 }
@@ -198,7 +228,11 @@ class DataAccessService_Database_Table_PrimaryKey
         $this->columns = $columns;
     }
     
-    
+    public function getColumns() 
+    {
+        return explode(' ', $this->columns);
+    }    
+  
 }
 
 class DataAccessService_Database_Table_Column
@@ -219,14 +253,16 @@ class DataAccessService_Database_Table_Column
 
 class DataAccessService_Database_Relation
 {
-    public $parentTable;
-    public $childTable;
+    public $name;
+    public $parentName;
+    public $childName;
     public $parentColumns;
     public $childColumns;
     
-    function DataAccessService_Database_Relation($parentTable, $childTable, $parentColumns, $childColumns) {
-        $this->parentTable = $parentTable;
-        $this->childTable = $childTable;
+    function DataAccessService_Database_Relation($parentName, $childName, $parentColumns, $childColumns, $name) {
+        $this->name = $name;
+        $this->parentName = $parentName;
+        $this->childName = $childName;
         $this->parentColumns = $parentColumns;
         $this->childColumns = $childColumns;
     } 

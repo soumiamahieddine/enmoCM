@@ -2,14 +2,14 @@
 
 class DataObjectProperty {
 	
-    private $schemaElement;
-    private $parentObject;
     private $name;
+    private $schemaPath;
+    private $parentObject;
     private $storage;
 	
-	public function DataObjectProperty($schemaElement, $name, $value=false)
+	public function DataObjectProperty($name, $schemaPath, $value=false)
 	{
-		$this->schemaElement = $schemaElement;
+		$this->schemaPath = $schemaPath;
         $this->name = $name;
         $this->storage = $value;
 	}
@@ -24,23 +24,20 @@ class DataObjectProperty {
         $this->parentObject = $parentObject;
     }
     
-    public function getSchemaElement() 
+    public function getSchemaPath() 
     {
-        return $this->schemaElement;
+        return $this->schemaPath;
     }
     
     public function __get($name) {
         if($name === 'isDataObjectProperty') {
             return true;
         }
-        if($name === 'typeName') {
-            if($this->schemaElement->ref) {
-                return $this->schemaElement->ref;
-            } else {
-                return $this->schemaElement->name;
-            }
+        if($name === 'name') {
+            return $this->name;
         }
     }
+    
     
     public function setValue($value) 
     {

@@ -2,28 +2,21 @@
 
 class ArrayDataObject extends ArrayObject 
 {
-    private $schemaElement;
+    private $name;
+    private $schemaPath;
     private $parentObject;
    
-    public function ArrayDataObject($schemaElement) 
+    public function ArrayDataObject($name, $schemaPath) 
     {
-        $this->schemaElement = $schemaElement;
+        $this->name = $name;
+        $this->schemaPath = $schemaPath;
         $this->setFlags(ArrayObject::ARRAY_AS_PROPS);
         $this->setFlags(ArrayObject::STD_PROP_LIST);
     }
     
-    public function getTypeName() 
+    public function getSchemaPath() 
     {
-        if($this->schemaElement->ref) {
-            return $this->schemaElement->ref;
-        } else {
-            return $this->schemaElement->name;
-        }
-    }
-    
-    public function getSchemaElement() 
-    {
-        return $this->schemaElement;
+        return $this->schemaPath;
     }
     
     public function getParentObject() 
@@ -46,12 +39,8 @@ class ArrayDataObject extends ArrayObject
         if($name === 'isArrayDataObject') {
             return true;
         }
-        if($name === 'typeName') {
-            if($this->schemaElement->ref) {
-                return $this->schemaElement->ref;
-            } else {
-                return $this->schemaElement->name;
-            }
+        if($name === 'name') {
+            return $this->name;
         }
     }
     
