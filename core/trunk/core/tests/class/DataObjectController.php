@@ -335,7 +335,8 @@ class dataObjectController extends DOMDocument
         for($i=0; $i<count($results); $i++) {
             $result = $results[$i];
             $dataObject = $this->instanciateDataObject($objectElement);
-            $arrayDataObject->append($dataObject);
+            //$arrayDataObject->append($dataObject);
+            $arrayDataObject[1] = $dataObject;
             //echo "<br/> Found " . count($result) . " properties for objects of array $typeName";
             if(count($result) > 0) {
                 foreach($result as $propertyName => $propertyValue) {
