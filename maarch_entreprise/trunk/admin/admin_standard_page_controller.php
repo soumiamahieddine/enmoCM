@@ -423,9 +423,9 @@ function displayList($objectList, $actions, $showCols, $pageNb, $keyName)
                         $encodeJSON .= ', ';
                         if (count($json) > 0) {
                             foreach($json as $keyJSON => $valueJSON) {
-                                $encodeJSON .= "'".$keyJSON."'";
+                                $encodeJSON .= "'".$keyJSON." '";
                                 $encodeJSON .= ' : ';
-                                $encodeJSON .= "'".$valueJSON."'";
+                                $encodeJSON .= "'".$valueJSON." '";
                                 $encodeJSON .= ', ';
                             }
                         }
