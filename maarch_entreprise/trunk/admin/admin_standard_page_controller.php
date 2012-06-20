@@ -363,13 +363,29 @@ function displayList($objectList, $actions, $showCols, $pageNb, $keyName)
                     }
                     $str_adminList .= '<tr ' . $cssClass_tr . '>';
                     $j=0;
-                    foreach($object as $key => $value) {
+                    
+                    foreach($object as $childName => $childObject) {
+                        /*
                         if ((!is_scalar($value) && $value) || (!array_key_exists($key, $showCols))) {
                             if (!array_key_exists($key, $showCols)) {
                                 $json[$key] = $value;
                             }
                             continue;
                         }
+                        */
+                        
+                        if (!$childObject->isDataObjectProperty) {
+                            continue;
+                        }
+                        
+                        $key = $childName;
+                        $value = (string)$childObject;
+                        
+                        $json[$key] = $value;
+                        if (!array_key_exists($key, $showCols)) {
+                            continue;
+                        }
+                        
                         $header[$j] = $key;
                         $json[$key] = $value;
                         
@@ -405,11 +421,13 @@ function displayList($objectList, $actions, $showCols, $pageNb, $keyName)
                         $encodeJSON .= ' : ';
                         $encodeJSON .= "'".$i."'";
                         $encodeJSON .= ', ';
-                        foreach($json as $keyJSON => $valueJSON) {
-                            $encodeJSON .= "'".$keyJSON."'";
-                            $encodeJSON .= ' : ';
-                            $encodeJSON .= "'".$valueJSON."'";
-                            $encodeJSON .= ', ';
+                        if (count($json) > 0) {
+                            foreach($json as $keyJSON => $valueJSON) {
+                                $encodeJSON .= "'".$keyJSON."'";
+                                $encodeJSON .= ' : ';
+                                $encodeJSON .= "'".$valueJSON."'";
+                                $encodeJSON .= ', ';
+                            }
                         }
                         $encodeJSON = substr($encodeJSON, 0, -2);
                     $encodeJSON .= '}';
@@ -687,12 +705,16 @@ if (isset($_REQUEST['submit'])) {
                 );
             }
             if (isset($params['what']) && !empty($params['what'])) {
-                //DO THE SEARCH
+                $whereClause = str_replace('|', '%', $params['what']);
             }
             $RootDataObject = $DataObjectController->loadRootDataObject(
                 $params['objectName'] . '_root'
             );
-            $keyName = $DataObjectController->getKey($params['objectName']);
+            
+            //echo '<pre>'.print_r($DataObjectController->createDataObject('docservers'), true).'</pre>';
+            //echo '<pre>'.print_r($RootDataObject, true).'</pre>';
+            //exit;
+            //$keyName = $DataObjectController->getKey($params['objectName']);
             
             $listContent = displayList(
                 $RootDataObject->$params['objectName'], 
