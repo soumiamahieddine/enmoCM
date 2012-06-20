@@ -2292,7 +2292,13 @@ function previsualiseAdminRead(e, json){
         topPosition = 10;
     }
     
-    var scrollY = (document.all ? document.scrollTop : window.pageYOffset);
+    //var scrollY = (document.all ? document.scrollTop : window.pageYOffset);
+    var scrollY = f_filterResults (
+        window.pageYOffset ? window.pageYOffset : 0,
+        document.documentElement ? document.documentElement.scrollTop : 0,
+        document.body ? document.body.scrollTop : 0
+    );
+    
     if (topPosition < scrollY) {
         topPosition = scrollY + 10;
     }
@@ -2303,3 +2309,11 @@ function previsualiseAdminRead(e, json){
     $('return_previsualise').style.display='block';
     
 }
+
+function f_filterResults(n_win, n_docel, n_body) {
+    var n_result = n_win ? n_win : 0;
+    if (n_docel && (!n_result || (n_result > n_docel)))
+        n_result = n_docel;
+    return n_body && (!n_result || (n_result > n_body)) ? n_body : n_result;
+}
+

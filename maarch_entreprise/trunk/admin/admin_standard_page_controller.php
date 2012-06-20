@@ -485,7 +485,7 @@ function displayList($objectList, $actions, $showCols, $pageNb, $keyName)
             $str_nbLine .= '<td>';
                 $str_nbLine .= 'Éléments affichés: ';
                 $str_nbLine .= '<select onChange="window.location.href=\''.$urlNo_nbLine.'&nbLine=\'+this.value">';
-                    $nbLineSelect = array(5, 10, 25, 50, 100, 250);
+                    $nbLineSelect = array(10, 25, 50, 100, 250);
                     if (!in_array($_SESSION['config']['nblinetoshow'], $nbLineSelect)) {
                         array_push($nbLineSelect, $_SESSION['config']['nblinetoshow']);
                     }
@@ -558,7 +558,7 @@ function displayList($objectList, $actions, $showCols, $pageNb, $keyName)
         }
     $str_header .= '</tr>';
     // previsualisation
-    $str_previsualise  = '<div id="return_previsualise" style="display: none; padding: 10px; width: auto; height: auto; position: absolute; top: 0; left: 0; z-index: 999; background-color: rgba(255, 255, 255, 0.9); border: 1px solid black;">';
+    $str_previsualise  = '<div id="return_previsualise" style="display: none; padding: 10px; width: auto; height: auto; position: absolute; top: 0; left: 0; z-index: 999; background-color: rgba(255, 255, 255, 0.9); border: 3px solid #459ed1;">';
     $str_previsualise .= '</div>';
     //retour html
     $listContent = '<br />';
