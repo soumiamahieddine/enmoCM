@@ -40,6 +40,12 @@ class DataAccessService_Database
         $table->setKey($key);
     }
     
+    public function setOrder($tableName, $orderElements, $orderMode)
+    {
+        $table = $this->tables[$tableName];
+        $table->setOrder($orderElements, $orderMode);  
+    }
+    
     public function getData($dataObject) 
     {
         $parentObject = $dataObject->getParentObject();
@@ -58,10 +64,14 @@ class DataAccessService_Database
             $whereExpressionParts[] = $keyExpression;
         }
         $whereExpression = implode(' and ', $whereExpressionParts);
-  
+        
+        // Order
+        $orderExpression = $table->makeOrderExpression();
+        
         $query  = "SELECT " . $table->makeSelectExpression();
         $query .= " FROM  " . $tableName;
         $query .= " WHERE " . $whereExpression;
+        $query .= " ORDER BY " . $orderExpression;
         $query .= " LIMIT 1000";
         
         //echo "<pre>DAS = " . print_r($this,true) . "</pre>";
@@ -153,6 +163,7 @@ class DataAccessService_Database_Table
     public $indexes = array();
     public $relation;
     public $key;
+    public $order;
 
     public function DataAccessService_Database_Table($name)
     {
@@ -175,6 +186,12 @@ class DataAccessService_Database_Table
     public function setKey($key)
     {
         $this->key = $key;
+    }
+    
+    public function setOrder($orderElements, $orderMode)
+    {
+        $orderElementsComa = implode(', ', explode(' ', $orderElements));
+        $this->order = $orderElementsComa . ' ' . $orderMode;
     }
     
     public function makeSelectExpression() 
@@ -214,6 +231,15 @@ class DataAccessService_Database_Table
         }
     }
     
+    public function makeOrderExpression() 
+    {
+        if(!is_null($this->order)) {
+            return $this->order;
+        } elseif(isset($this->primaryKey) && !is_null($this->primaryKey))  {
+            $orderElementsComa = implode(', ', $this->primaryKey->getColumns());
+            return $orderElementsComa .' ASC';
+        }
+    }   
 }
 
 class DataAccessService_Database_Table_PrimaryKey

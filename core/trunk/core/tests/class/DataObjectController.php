@@ -61,40 +61,15 @@ class dataObjectController extends DOMDocument
     
     public function getKey($elementName) 
     {
-        $objectElement = $this->getRootElement($elementName);;
-        $keyColumnNames = $objectElement->{'das:key-column'};
-        return $keyColumnNames;
-    }
-     
-    public function getIndex($elementName) 
-    {
-        $objectElement = $this->getRootElement($elementName);;
-        $keyColumnNames = $objectElement->{'das:key-column'};
+        $objectElement = $this->getRootElement($elementName);
+        $keyColumnNames = $objectElement->{'das:key-columns'};
         return $keyColumnNames;
     }
      
     public function setOrder($elementName, $orderElements, $orderMode='ASC') 
     {
         $objectElement = $this->getRootElement($elementName);
-        $objectType = $this->getElementType($objectElement);
-        
-        $DasType = $this->getDasType($objectElement);
-        switch($DasType) {
-        case 'database':
-            $orderElementsArray = explode(' ', $orderElements);
-            $orderExpressionParts = array();
-            for($i=0; $i<count($orderElementsArray); $i++) {
-                $orderElementName = $orderElementsArray[$i];
-                $orderElement = $this->getTypeElementByName($objectType, $orderElementName);
-                $orderElement = $this->getRefElement($orderElement);
-                $orderColumn = $this->getColumnName($orderElement);
-                $orderExpressionParts[] = $orderColumn;
-            }
-            break;
-        }
-        if(count($orderExpressionParts) > 0) {
-            $this->Queries[$elementName]['orderByExpression'] = implode(', ', $orderExpressionParts) . " " . $orderMode;
-        }
+        $this->setDasOrder($objectElement, $orderElements, $orderMode);  
     }
     
     public function setQuery($elementName, $queryExpression) 
@@ -571,6 +546,19 @@ class dataObjectController extends DOMDocument
         }
     
     
+    }
+    
+    private function setDasOrder($objectElement, $orderElements, $orderMode)
+    {
+        $dasSource = $objectElement->{'das:source'};
+        switch($dasSource) {
+        case 'database':
+            $this->dataAccessService_Database->setOrder($objectElement->name, $orderElements, $orderMode);
+            break;
+        }
+        if(count($orderExpressionParts) > 0) {
+            $this->Queries[$elementName]['orderByExpression'] = implode(', ', $orderExpressionParts) . " " . $orderMode;
+        }
     }
     
     private function getData($dataObject) 
