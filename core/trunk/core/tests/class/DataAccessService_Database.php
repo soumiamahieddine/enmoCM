@@ -62,6 +62,7 @@ class DataAccessService_Database
         $query  = "SELECT " . $table->makeSelectExpression();
         $query .= " FROM  " . $tableName;
         $query .= " WHERE " . $whereExpression;
+        $query .= " LIMIT 1000";
         
         //echo "<pre>DAS = " . print_r($this,true) . "</pre>";
         //echo "<pre>QUERY = " . $query . "</pre>";
