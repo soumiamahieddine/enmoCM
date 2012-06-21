@@ -286,24 +286,19 @@ class dataObjectController extends DOMDocument
         }
     }
 
-    public function importDataObject($DataObject) 
-    {
-        $this->RootDataObject = $DataObject;
-    }
-    
     //*************************************************************************
     // SAVE DATA OBJECT
     //*************************************************************************
     public function saveDataObject($dataObject) 
     {
         $objectName = $dataObject->getTypeName();
-        ////////echo "<br/><br/><b>Saving element " . $objectName . "</b>";
+        //echo "<br/><br/><b>Saving element " . $objectName . "</b>";
         $objectElement = $this->getRootElement($objectName);
         
         $parentObject = $dataObject->getParentObject();
         $parentName = $parentObject->getTypeName();
         $parentElement = $this->getRootElement($parentName);
-        ////////echo "<br/>Element has a parent named " . $parentObjectName;
+        //echo "<br/>Element has a parent named " . $parentObjectName;
 
         // Ref
         // If specified type, fixed, default, form, block, nillable not allowed
@@ -691,13 +686,7 @@ class dataObjectController extends DOMDocument
         
         libxml_use_internal_errors(true);
         if($Document->schemaValidateSource($this->Schema->saveXML())) {
-            return true;
-            $dummy = array(
-                'status' => '100',
-                'messages' => array(
-                    array('', '', '', '', ''),
-                    ),
-                );
+            // Return nothing
         } else {
             $errors = libxml_get_errors();
             foreach ($errors as $error) {
