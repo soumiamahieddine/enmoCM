@@ -59,7 +59,7 @@ class DataAccessService_Database
         if($relationExpression) {
             $whereExpressionParts[] = $relationExpression;
         }
-        $keyExpression = $table->makeKeyExpression();
+        $keyExpression = $table->makeSelectKeyExpression();
         if($keyExpression) {
             $whereExpressionParts[] = $keyExpression;
         }
@@ -84,6 +84,28 @@ class DataAccessService_Database
             $results[] = $result;
         }
         return $results;
+    }
+    
+    public function saveData($dataObject)
+    {
+        $parentObject = $dataObject->getParentObject();
+       
+        $tableName = $dataObject->name;
+        $table = $this->tables[$tableName];
+        
+        //UPDATE
+        $updateExpression = $table->makeUpdateExpression($dataObject);
+        // Key
+        $keyExpression = $table->makeUpdateKeyExpression($dataObject);
+    
+        $query  = "UPDATE " . $tableName;
+        $query .= " SET  " . $updateExpression;
+        $query .= " WHERE " . $keyExpression;
+        
+        //echo "<pre>DAS = " . print_r($this,true) . "</pre>";
+        //echo "<pre>QUERY = " . $query . "</pre>";
+        $db = new dbquery();
+        $db->query($query);
     }
     
     //*************************************************************************
@@ -213,9 +235,29 @@ class DataAccessService_Database_Table
         return implode(', ', $selectExpressionParts);
     }
     
-    public function makeKeyExpression() 
+    public function makeUpdateExpression($dataObject)
     {
-        $keyExpressionParts = array();
+        $updateExpressionParts = array();
+        
+        $keyColumns = $this->primaryKey->getColumns();
+        
+        foreach ($this->columns as $columnName => $column) {
+            if(in_array($columnName, $keyColumns)) continue;
+            $columnValue = DataAccessService_Database::enclose($dataObject->{$columnName}, $column->type); 
+            if($column->{'default'}) {
+                $defaultValue = DataAccessService_Database::enclose($column->{'default'}, $column->type);
+                $updateExpressionPart = $column->name . " = COALESCE(" . $columnValue . ", " . $defaultValue . ")";
+            } else {
+                $updateExpressionPart = $column->name . " = " . $columnValue; 
+            }
+            $updateExpressionParts[] = $updateExpressionPart;
+        }
+        return implode(', ', $updateExpressionParts);
+    }
+    
+    public function makeSelectKeyExpression() 
+    {
+        $selectKeyExpressionParts = array();
         if(isset($this->primaryKey) && !is_null($this->primaryKey)
             && isset($this->key) && !is_null($this->key)) {
             $keyColumns = $this->primaryKey->getColumns();
@@ -224,10 +266,26 @@ class DataAccessService_Database_Table
                 $keyColumnName = $keyColumns[$i];
                 $keyColumn = $this->columns[$keyColumn];
                 $keyValue = DataAccessService_Database::enclose($keyValues[$i], $keyColumn->type);  
-                $keyExpressionParts[] = $this->name . '.' . $keyColumnName . '=' . $keyValue;
+                $selectKeyExpressionParts[] = $this->name . '.' . $keyColumnName . '=' . $keyValue;
             }
-            $keyExpression = implode(' and ', $keyExpressionParts);
-            return $keyExpression;
+            $selectKeyExpression = implode(' and ', $selectKeyExpressionParts);
+            return $selectKeyExpression;
+        }
+    }
+    
+    public function makeUpdateKeyExpression($dataObject)
+    {
+        $updateKeyExpressionParts = array();
+        if(isset($this->primaryKey) && !is_null($this->primaryKey)) {
+            $keyColumns = $this->primaryKey->getColumns();
+            for($i=0; $i<count($keyColumns); $i++) {
+                $keyColumnName = $keyColumns[$i];
+                $keyColumn = $this->columns[$keyColumn];
+                $keyValue = DataAccessService_Database::enclose($dataObject->{$keyColumnName}, $keyColumn->type); 
+                $updateKeyExpressionParts[] = $keyColumnName . ' = ' . $keyValue;
+            }
+            $updateKeyExpression = implode(' and ', $updateKeyExpressionParts);
+            return $updateKeyExpression;
         }
     }
     

@@ -4,6 +4,7 @@ class DataObjectArray extends ArrayObject
 {
     private $name;
     private $schemaPath;
+    private $DasSource;
     private $parentObject;
    
     public function DataObjectArray($name, $schemaPath) 
@@ -55,27 +56,5 @@ class DataObjectArray extends ArrayObject
         }
         return $return;
     }
-    
-    // Interface to ArrayAccess
-    //*************************************************************************
-    /*public function offsetSet($offset, $value) {
-        $value->setParentObject($this->parentObject);
-        echo "<br/>Adding array data object item to offset #$offset";
-        print_r($this);
-        if (is_null($offset)) {
-            $this->storage[] = $value;
-        } else {
-            $this->storage[$offset] = $value;
-        }
-    }
-    public function offsetExists($offset) {
-        return isset($this->storage[$offset]);
-    }
-    public function offsetUnset($offset) {
-        unset($this->storage[$offset]);
-    }
-    public function offsetGet($offset) {
-        return isset($this->storage[$offset]) ? $this->storage[$offset] : null;
-    }*/
-    
+       
 }
