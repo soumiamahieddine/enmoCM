@@ -558,7 +558,7 @@ function displayList($objectList, $actions, $showCols, $pageNb, $keyName)
         }
     $str_header .= '</tr>';
     // previsualisation
-    $str_previsualise  = '<div id="return_previsualise" style="display: none; padding: 10px; width: auto; height: auto; position: absolute; top: 0; left: 0; z-index: 999; background-color: rgba(255, 255, 255, 0.9); border: 3px solid #459ed1;">';
+    $str_previsualise  = '<div id="return_previsualise" style="display: none; border-radius: 10px; box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.4); padding: 10px; width: auto; height: auto; position: absolute; top: 0; left: 0; z-index: 999; background-color: rgba(255, 255, 255, 0.9); border: 3px solid #459ed1;">';
     $str_previsualise .= '</div>';
     //retour html
     $listContent = '<br />';
@@ -656,11 +656,18 @@ if (isset($_REQUEST['submit'])) {
     //fill the object with the request
     fillSessionObject($_REQUEST, $params['objectName']);
     //validate the object
-    $valivalidateObject = $DataObjectController->validate($_SESSION['m_admin'][$params['objectName']]);
-    if ($valivalidateObject == '') {
-        $DataObjectController->save();
+    $validateObject = $DataObjectController->validateDataObject($_SESSION['m_admin'][$params['objectName']]);
+    if ($validateObject) {
+        $DataObjectController->saveDataObject();
     } else {
-        var_dump($valivalidateObject);
+        foreach($DataObjectController->getValidationErrors() as $error) {
+            $errors[] = $error->message;
+        }
+        $_SESSION['error'] = implode('<br />', $errors);
+        
+        $url = $_SERVER['REQUEST_URI'];
+        $url = str_replace(array('?display=true&', '&display=true'), array('?', ''), $url);
+        header("Location: ".$url);
     }
     exit;
     //validate the object

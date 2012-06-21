@@ -33,7 +33,7 @@ if ($params['mode'] == 'list') {
         <form name="formdocserver" method="post" class="forms" action="<?php
         echo $_SESSION['config']['businessappurl'] . "index.php?display=true&"
             . "page=docservers_page_controller&objectName=" . $params['objectName'] . "&admin=docservers&mode="
-            . $params['mode'];
+            . $params['mode'] . '&objectId='.$params['objectId'];
         ?>">
         <?php
         //load hidden standard fields 
@@ -370,7 +370,7 @@ if ($params['mode'] == 'list') {
             echo $_SESSION['config']['businessappurl'];
             ?>index.php?page=<?php 
                 echo $params['pageName'];?>&amp;admin=<?php 
-                echo $params['objectName'];?>&amp;mode=list&objectName=<?php 
+                echo $params['objectName'];?>&amp;mode=list&amp;objectName=<?php 
                 echo $params['objectName'];?>&amp;order=<?php 
                 echo $params['order'];?>&amp;orderField=<?php 
                 echo $params['orderField'];?>&amp;what=<?php 
