@@ -36,6 +36,9 @@ class DataObjectProperty {
         if($name === 'name') {
             return $this->name;
         }
+        if($name === 'value') {
+            return $this->storage;
+        }   
     }
     
     

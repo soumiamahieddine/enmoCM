@@ -38,7 +38,7 @@ class DataObject implements IteratorAggregate
         //echo "<br/>Assign value to $name";
         if(is_object($value)) { 
             if(get_class($value) == 'DataObject' 
-                || get_class($value) == 'ArrayDataObject'
+                || get_class($value) == 'DataObjectArray'
                 || get_class($value) == 'DataObjectProperty') {
                 //echo "<br/>Adding child object as $name = " . get_class($value);
                 $value->setParentObject($this);
@@ -83,7 +83,7 @@ class DataObject implements IteratorAggregate
         $return = array();
         if(count($this->storage) > 0) {
             foreach($this->storage as $child) {
-                if(is_object($child) && ($child->isDataObject || $child->isArrayDataObject)) {
+                if(is_object($child) && ($child->isDataObject || $child->isDataObjectArray)) {
                     $return[] = $child;
                 }
             }
