@@ -30,7 +30,7 @@ Parent key fields (xpath) and child key fields must be in same order
   <xsd:include schemaLocation='core/xml/datatypes.xsd' />
   
   <!-- ROOT : DOCSERVERS -->
-  <xsd:element name='docservers_root'>
+  <xsd:element name='docservers_list'>
     <xsd:complexType>
       <xsd:sequence>
         <!-- ROWS -->

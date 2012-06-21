@@ -655,13 +655,8 @@ $DataObjectController->loadSchema($schemaPath);
 if (isset($_REQUEST['submit'])) {
     //fill the object with the request
     fillSessionObject($_REQUEST, $params['objectName']);
-    echo '<pre>';
-    var_dump($_SESSION['m_admin'][$params['objectName']]);
-    echo '</pre>';
-    //import the data object
-    $DataObjectController->importDataObject($_SESSION['m_admin'][$params['objectName']]);
     //validate the object
-    $valivalidateObject = $DataObjectController->validate();
+    $valivalidateObject = $DataObjectController->validate($_SESSION['m_admin'][$params['objectName']]);
     if ($valivalidateObject == '') {
         $DataObjectController->save();
     } else {
@@ -676,32 +671,40 @@ if (isset($_REQUEST['submit'])) {
             displayCreate($params['objectName']);
             break;
         case 'read' :
-            $DataObjectController->setKey($params['objectName'], $params['objectId']);
-            $RootDataObject = $DataObjectController->loadRootDataObject(
+            $dataObject = $DataObjectController->createDataObject(
                 $params['objectName']
             );
+            $DataObjectController->setKey($params['objectName'], $params['objectId']);
+            $DataObjectController->loadDataObject(
+                $dataObject
+            );
+            
+            //echo '<pre>'.print_r($dataObject, true).'</pre>';exit;
+            
             $state = displayRead(
                 $params['objectName'], 
-                $RootDataObject
+                $dataObject
             );
             break;
         case 'update' :
-            //test if objectId
-            $DataObjectController->setKey($params['objectName'], $params['objectId']);
-            $RootDataObject = $DataObjectController->loadRootDataObject(
+            $dataObject = $DataObjectController->createDataObject(
                 $params['objectName']
+            );
+            $DataObjectController->setKey($params['objectName'], $params['objectId']);
+            $DataObjectController->loadDataObject(
+                $dataObject
             );
             $state = displayUpdate(
                 $params['objectName'], 
-                $RootDataObject
+                $dataObject
             );
             break;
         case 'delete' :
             doDelete($params['objectId']);
             break;
         case 'list' :
-            $DataObjectController->createRootDataObject(
-                $params['objectName'] . '_root'
+            $dataObjectList = $DataObjectController->createDataObject(
+                $params['objectName'] . '_list'
             );
             if (isset($params['orderField']) && !empty($params['orderField'])) {
                 $DataObjectController->setOrder(
@@ -714,12 +717,12 @@ if (isset($_REQUEST['submit'])) {
                 $whereClause = str_replace('|', '%', $params['what']);
             }
             
-            $RootDataObject = $DataObjectController->loadRootDataObject();
+            $DataObjectController->loadDataObject($dataObjectList);
             
-            //$keyName = $DataObjectController->getKey($params['objectName']);
+            $keyName = $DataObjectController->getKey($params['objectName']);
             
             $listContent = displayList(
-                $RootDataObject->$params['objectName'], 
+                $dataObjectList->$params['objectName'], 
                 $actions,
                 $showCols,
                 $params['pageNb'],

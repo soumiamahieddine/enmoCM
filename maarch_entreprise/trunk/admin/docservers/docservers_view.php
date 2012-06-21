@@ -6,7 +6,7 @@ if ($params['mode'] == 'list') {
     echo $_SESSION['config']['businessappurl'];
     ?>static.php?filename=favicon.png" alt="" />
     <?php
-    echo _DOCSERVERS_LIST. ' : ' . count($RootDataObject->$params['objectName']) 
+    echo _DOCSERVERS_LIST. ' : ' . count($dataObjectList->$params['objectName']) 
         . ' ' . _DOCSERVERS;
     ?>
     </h1>
