@@ -103,7 +103,7 @@ class DataObject implements IteratorAggregate
     
     public function asXmlDocument() 
     {
-        $Document = new XMLDocument();
+        $Document = new DOMDocument();
         $this->objectToXml($this, $Document, $Document); 
         
         return $Document;

@@ -16,6 +16,7 @@ class DataObjectValidator
             foreach ($libXMLErrors as $libXMLError) {
                 $this->errors[] = new DataObjectValidatorError($libXMLError);
             }
+            return false;
         } 
         libxml_clear_errors();
     }
