@@ -67,7 +67,7 @@ class DataObject implements IteratorAggregate
     public function __isset($name)
     {
         if(isset($this->storage[$name])) {
-            return true];
+            return true;
         }
     }
   
