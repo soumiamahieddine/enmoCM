@@ -196,7 +196,7 @@ class dataObjectController extends DOMDocument
         $dasSource = $objectSchema->{'das:source'};
         switch($dasSource) {
         case 'database':
-            echo "<br/>Setting filter $filterValue for $objectSchema->name";
+            //echo "<br/>Setting filter $filterValue for $objectSchema->name";
             $this->dataAccessService_Database->setFilter($objectSchema->name, $filterValue);
             break;
         case 'xml':
