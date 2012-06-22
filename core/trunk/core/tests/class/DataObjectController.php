@@ -219,7 +219,9 @@ class dataObjectController extends DOMDocument
             $childElement = $childElements->item($i);
             if($childElement->{'das:label'}) $label = $childElement->{'das:label'};
             else $label = $childElement->name;
-            $labels[$childElement->name] = $label;
+            if($childElement->ref) $childName = $childElement->ref;
+            else $childName = $childElement->name;
+            $labels[$childName] = $label;
         }
         return $labels;
     }
