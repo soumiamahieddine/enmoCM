@@ -2,36 +2,21 @@
 
 class DataObjectProperty 
 {
-	
-    private $name;
-    private $label;
-    private $comment;
+	private $name;
     private $schemaPath;
     private $parentObject;
     private $storage;
 	
-	public function DataObjectProperty($name, $schemaPath, $value=false, $label=false, $comment=false)
+	public function DataObjectProperty($name, $schemaPath, $value=false)
 	{
-		$this->schemaPath = $schemaPath;
-        $this->name = $name;
+		$this->name = $name;
+        $this->schemaPath = $schemaPath;
         $this->storage = $value;
-        $this->label = $label;
-        $this->comment = $comment;
 	}
-	
-    public function getParentObject() 
-    {
-        return $this->parentObject;
-    }
     
     public function setParentObject($parentObject) 
     {
         $this->parentObject = $parentObject;
-    }
-    
-    public function getSchemaPath() 
-    {
-        return $this->schemaPath;
     }
     
     public function __get($name) {
@@ -41,18 +26,11 @@ class DataObjectProperty
         if($name === 'name') {
             return $this->name;
         }
-        if($name === 'value') {
-            return $this->storage;
-        }   
-        if($name === 'label') {
-            if($this->label) {
-                return $this->label;
-            } else {
-                return $this->name;
-            }
+        if($name === 'schemaPath') {
+            return $this->schemaPath;
         }
-        if($name === 'comment') {
-            return $this->comment;
+        if($name === 'parentObject') {
+            return $this->parentObject;
         }
     }
     

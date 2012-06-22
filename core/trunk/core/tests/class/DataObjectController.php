@@ -117,7 +117,7 @@ class dataObjectController extends DOMDocument
             $this->loadChildren($dataObject);
         }
         if($dataObject->isDataObjectArray) {
-            $schemaPath = $dataObject->getSchemaPath();
+            $schemaPath = $dataObject->schemaPath;
             for($i=0; $i<count($objectDatas); $i++) {
                 $objectData = $objectDatas[$i];
                 $itemDataObject = $this->instanciateDataObject($schemaPath);
@@ -141,7 +141,7 @@ class dataObjectController extends DOMDocument
     
     public function saveDataObject($dataObject) 
     {
-        $schemaPath = $dataObject->getSchemaPath();
+        $schemaPath = $dataObject->schemaPath;
         $objectSchema = $this->schema->getSchemaElement($schemaPath);
         switch($objectSchema->{'das:source'}) {
         case 'database':
@@ -170,13 +170,6 @@ class dataObjectController extends DOMDocument
         }
     }
     
-    public function getKey($objectName) 
-    {
-        $objectSchema = $this->schema->getObjectSchema($objectName);
-        $keyColumnNames = $objectSchema->{'das:key-columns'};
-        return $keyColumnNames;
-    }
-     
     public function setOrder($objectName, $orderElements, $orderMode='ASC') 
     {
         $objectSchema = $this->schema->getObjectSchema($objectName);
@@ -204,6 +197,31 @@ class dataObjectController extends DOMDocument
         }
         
     }
+
+    public function getKey($objectName) 
+    {
+        $objectSchema = $this->schema->getObjectSchema($objectName);
+        $keyColumnNames = $objectSchema->{'das:key-columns'};
+        return $keyColumnNames;
+    }
+    
+    public function getLabels($dataObject)
+    {
+        $labels = array();
+        $objectPath = $dataObject->schemaPath;
+        $objectSchema = $this->schema->getSchemaElement($objectPath);
+        $childElements = $objectSchema->getChildElements();
+        for($i=0; $i<$childElements->length;$i++) {
+            $inlineChildElement = $childElements->item($i);
+            $childElement = $inlineChildElement->getRefElement();
+            $childName = $childElement->name;
+            if($inlineChildElement->{'das:label'}) $label = $inlineChildElement->{'das:label'};
+            elseif($childElement->{'das:label'}) $label = $childElement->{'das:label'};
+            else $label = $childName;
+            $labels[$childName] = $label;
+        }
+        return $labels;
+    }
     
     //*************************************************************************
     // PRIVATE OBJECT HANDLING FUNCTIONS
@@ -230,12 +248,8 @@ class dataObjectController extends DOMDocument
         
         if($inlineChildElement && $inlineChildElement->isDataObjectArray()) {
             $objectSchema = $this->schema->getSchemaElement($schemaPath);
-            $dataObject = new DataObjectArray(
-                $objectSchema->name, 
-                $schemaPath,
-                $inlineChildElement->{'das:label'},
-                $inlineChildElement->{'das:comment'}
-            );
+            $arraySchemaPath = $inlineChildElement->getNodePath();
+            $dataObject = new DataObjectArray($objectSchema->name, $schemaPath, $arraySchemaPath);
         } else {
             $dataObject = unserialize(serialize($this->prototypes[$schemaPath]));
         }
@@ -245,18 +259,9 @@ class dataObjectController extends DOMDocument
     private function prototypeDataObject($schemaPath)
     {
         $objectSchema = $this->schema->getSchemaElement($schemaPath);
-              
-        /*if($objectSchema->ref) {
-            $objectSchema = $this->schema->getObjectSchema($objectSchema->ref);
-            if(!$objectSchema) die ("Referenced element named '" . $objectSchema->ref . "' not found in schema");
-        }*/
+
         //echo "<br/>Create prototype object with $objectSchema->name";
-        $prototypeDataObject = new DataObject(
-            $objectSchema->name, 
-            $schemaPath,
-            $objectSchema->{'das:label'},
-            $objectSchema->{'das:comment'}
-        );
+        $prototypeDataObject = new DataObject($objectSchema->name, $schemaPath);
         
         // Set Das parameters
         $this->setDasSource($objectSchema);
@@ -283,13 +288,7 @@ class dataObjectController extends DOMDocument
                     $childValue = false;
                 }
                 //echo "<br/>    Adding property '$childName'";
-                $dataObjectProperty = new DataObjectProperty(
-                    $childName, 
-                    $childPath, 
-                    $childValue,
-                    $childElement->{'das:label'},
-                    $childElement->{'das:comment'}
-                );
+                $dataObjectProperty = new DataObjectProperty($childName, $childPath, $childValue);
                 $prototypeDataObject->$childName = $dataObjectProperty;
                 
                 $this->setDasProperty($objectSchema, $childElement);
@@ -404,7 +403,7 @@ class dataObjectController extends DOMDocument
     
     private function getData($dataObject) 
     {
-        $schemaPath = $dataObject->getSchemaPath();
+        $schemaPath = $dataObject->schemaPath;
         $objectSchema = $this->schema->getSchemaElement($schemaPath);
         switch($objectSchema->{'das:source'}) {
         case 'database':

@@ -148,8 +148,6 @@ class SchemaElement extends DOMElement {
         return $xpath->query($query, $contextElement);
     }
     
-    
-    
     function __get($name) 
     {
         if($this->hasAttribute($name)) {

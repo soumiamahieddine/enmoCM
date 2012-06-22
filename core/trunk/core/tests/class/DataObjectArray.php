@@ -4,30 +4,17 @@ class DataObjectArray
     extends ArrayObject
 {
     private $name;
-    private $label;
-    private $comment;
     private $schemaPath;
+    private $arraySchemaPath;
     private $parentObject;
     
-    public function DataObjectArray($name, $schemaPath, $label=false, $comment=false) 
+    public function DataObjectArray($name, $schemaPath, $arraySchemaPath) 
     {
         $this->name = $name;
         $this->schemaPath = $schemaPath;
-        $this->label = $label;
-        $this->comment = $comment;
-        
+        $this->arraySchemaPath = $arraySchemaPath;
         $this->setFlags(ArrayObject::ARRAY_AS_PROPS);
         $this->setFlags(ArrayObject::STD_PROP_LIST);
-    }
-    
-    public function getSchemaPath() 
-    {
-        return $this->schemaPath;
-    }
-    
-    public function getParentObject() 
-    {
-        return $this->parentObject;
     }
     
     public function setParentObject($parentObject) 
@@ -48,15 +35,14 @@ class DataObjectArray
         if($name === 'name') {
             return $this->name;
         }
-        if($name === 'label') {
-            if($this->label) {
-                return $this->label;
-            } else {
-                return $this->name;
-            }
-        }       
-        if($name === 'comment') {
-            return $this->comment;
+        if($name === 'schemaPath') {
+            return $this->schemaPath;
+        }
+        if($name === 'arraySchemaPath') {
+            return $this->arraySchemaPath;
+        }
+        if($name === 'parentObject') {
+            return $this->parentObject;
         }
     }
     

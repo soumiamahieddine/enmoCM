@@ -57,7 +57,7 @@ class DataAccessService_Database
     
     public function getData($dataObject) 
     {
-        $parentObject = $dataObject->getParentObject();
+        $parentObject = $dataObject->parentObject;
        
         $tableName = $dataObject->name;
         $table = $this->tables[$tableName];
@@ -101,7 +101,7 @@ class DataAccessService_Database
     
     public function saveData($dataObject)
     {
-        $parentObject = $dataObject->getParentObject();
+        $parentObject = $dataObject->parentObject;
        
         $tableName = $dataObject->name;
         $table = $this->tables[$tableName];

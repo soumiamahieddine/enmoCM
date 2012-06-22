@@ -5,28 +5,14 @@ class DataObject
 {
     
     private $name;
-    private $label;
-    private $comment;
     private $schemaPath;
     private $parentObject;
     private $storage;
     
-    public function DataObject($name, $schemaPath, $label=false, $comment=false) 
+    public function DataObject($name, $schemaPath) 
     {
         $this->name = $name;
         $this->schemaPath = $schemaPath;
-        $this->label = $label;
-        $this->comment = $comment;
-    }
-    
-    public function getSchemaPath() 
-    {
-        return $this->schemaPath;
-    }
-    
-    public function getParentObject() 
-    {
-        return $this->parentObject;
     }
     
     public function setParentObject($parentObject) 
@@ -69,15 +55,11 @@ class DataObject
         if($name === 'name') {
             return $this->name;
         }
-        if($name === 'label') {
-            if($this->label) {
-                return $this->label;
-            } else {
-                return $this->name;
-            }
-        }       
-        if($name === 'comment') {
-            return $this->comment;
+        if($name === 'schemaPath') {
+            return $this->schemaPath;
+        }
+        if($name === 'parentObject') {
+            return $this->parentObject;
         }
     }
     
