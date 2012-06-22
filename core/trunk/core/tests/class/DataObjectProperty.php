@@ -34,10 +34,9 @@ class DataObjectProperty
         }
     }
     
-    
     public function setValue($value) 
-    {
-        $this->storage = $value;
+    {      
+        $this->storage = $value;  
     }
     
     public function __toString() 

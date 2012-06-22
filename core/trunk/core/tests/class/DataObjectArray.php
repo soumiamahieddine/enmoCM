@@ -7,6 +7,7 @@ class DataObjectArray
     private $schemaPath;
     private $arraySchemaPath;
     private $parentObject;
+    private $changes;
     
     public function DataObjectArray($name, $schemaPath, $arraySchemaPath) 
     {
@@ -15,6 +16,7 @@ class DataObjectArray
         $this->arraySchemaPath = $arraySchemaPath;
         $this->setFlags(ArrayObject::ARRAY_AS_PROPS);
         $this->setFlags(ArrayObject::STD_PROP_LIST);
+        $this->changes[] = new DataObjectChange(DataObjectChange::CREATE);
     }
     
     public function setParentObject($parentObject) 
@@ -22,10 +24,22 @@ class DataObjectArray
         $this->parentObject = $parentObject;
     }
     
-    public function append($childObject) 
+    public function append($childObject, $silent=false) 
     {
         $this->offsetSet(null, $childObject);
         $childObject->setParentObject($this->parentObject);
+        if(!$silent) {
+            $this->changes[] = new DataObjectChange(DataObjectChange::CREATE, $childObject->name, null, serialize($childObject));
+        }
+    }
+    
+    public function remove($offset)
+    {
+        $objectBefore = $this->offsetGet($offset);
+        $this->offsetUnset($offset);
+        if(!$silent) {
+            $this->changes[] = new DataObjectChange(DataObjectChange::DELETE, $objectBefore->name, serialize($objectBefore));
+        }
     }
     
     public function __get($name) {
@@ -57,5 +71,9 @@ class DataObjectArray
         }
         return $return;
     }
-       
+    
+    public function getChanges()
+    {
+        return $this->changes;
+    }
 }

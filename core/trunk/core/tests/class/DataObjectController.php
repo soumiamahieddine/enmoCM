@@ -16,6 +16,8 @@ class dataObjectController extends DOMDocument
         require_once 'core/tests/class/DataObject.php';
         require_once 'core/tests/class/DataObjectProperty.php';
         
+        require_once 'core/tests/class/DataObjectChange.php';
+        
         require_once 'core/tests/class/DataAccessService_Database.php';
         $this->dataAccessService_Database = new dataAccessService_Database();
         
@@ -121,7 +123,7 @@ class dataObjectController extends DOMDocument
             for($i=0; $i<count($objectDatas); $i++) {
                 $objectData = $objectDatas[$i];
                 $itemDataObject = $this->instanciateDataObject($schemaPath);
-                $dataObject->append($itemDataObject);          
+                $dataObject->append($itemDataObject, $silent=true);          
                 //echo "<br/> Result has " . count($objectData) . " properties for object #$i of array";
                 $this->loadProperties($itemDataObject, $objectData);
                 $this->loadChildren($itemDataObject);
@@ -152,7 +154,8 @@ class dataObjectController extends DOMDocument
             break;
         }
     }
-        
+    
+
     //*************************************************************************
     // PUBLIC DAS FUNCTIONS 
     //*************************************************************************
@@ -212,7 +215,8 @@ class dataObjectController extends DOMDocument
         else return $objectSchema->name;
     }
     
-    public function getContentLabels($objectName) {
+    public function getContentLabels($objectName) 
+    {
         $objectSchema = $this->schema->getObjectSchema($objectName);
         $childElements = $objectSchema->getChildElements();
         for($i=0; $i<$childElements->length;$i++) {

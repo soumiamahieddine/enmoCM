@@ -32,7 +32,7 @@ class DataObjectValidatorError
     function DataObjectValidatorError($libXMLError)
     {
         $this->level = $libXMLError->level;
-        $this->code = $libXMLError->code;
+        $this->code = 'XML-' . $libXMLError->code;
         $this->message = $libXMLError->message;
     }
 

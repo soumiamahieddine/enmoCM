@@ -8,11 +8,13 @@ class DataObject
     private $schemaPath;
     private $parentObject;
     private $storage;
+    private $changes = array();
     
     public function DataObject($name, $schemaPath) 
     {
         $this->name = $name;
         $this->schemaPath = $schemaPath;
+        $this->changes[] = new DataObjectChange(DataObjectChange::CREATE);
     }
     
     public function setParentObject($parentObject) 
@@ -40,6 +42,7 @@ class DataObject
             }
         } elseif(is_scalar($value) || !$value) {
             //echo "<br/>Adding scalar $name = $value";
+            $this->changes[] = new DataObjectChange(DataObjectChange::UPDATE, $name, (string)$this->storage[$name], $value);
             $this->storage[$name]->setValue($value);
         }
     }
@@ -96,6 +99,14 @@ class DataObject
         return $return;
     }
     
+    public function getChanges()
+    {
+        return $this->changes;
+    }
+    
+    //*************************************************************************
+    // XML
+    //*************************************************************************
     public function asXmlDocument() 
     {
         $Document = new DOMDocument();
