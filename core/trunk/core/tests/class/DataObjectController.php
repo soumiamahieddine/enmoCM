@@ -209,11 +209,7 @@ class dataObjectController extends DOMDocument
     {
         $objectSchema = $this->schema->getObjectSchema($objectName);
         if($objectSchema->{'das:label'}) return $objectSchema->{'das:label'};
-        elseif($objectSchema->name) return $objectSchema->name;
-        elseif($objectSchema->ref) {
-            $objectSchema = $objectSchema->getRefElement();
-            return $this->getLabel($objectSchema->name);
-        }
+        else return $objectSchema->name;
     }
     
     public function getContentLabels($objectName) {
@@ -222,12 +218,7 @@ class dataObjectController extends DOMDocument
         for($i=0; $i<$childElements->length;$i++) {
             $childElement = $childElements->item($i);
             if($childElement->{'das:label'}) $label = $childElement->{'das:label'};
-            elseif($childElement->name) $label = $childElement->name;
-            elseif($childElement->ref) {
-                $childElement = $childElement->getRefElement();
-                if($childElement->{'das:label'}) $label = $childElement->{'das:label'};
-                else $label = $childElement->name;
-            }
+            else $label = $childElement->name;
             $labels[$childElement->name] = $label;
         }
         return $labels;
