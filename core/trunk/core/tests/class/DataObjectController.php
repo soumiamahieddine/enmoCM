@@ -205,11 +205,10 @@ class dataObjectController extends DOMDocument
         return $keyColumnNames;
     }
     
-    public function getLabels($dataObject)
+    public function getLabels($objectName)
     {
         $labels = array();
-        $objectPath = $dataObject->schemaPath;
-        $objectSchema = $this->schema->getSchemaElement($objectPath);
+        $objectSchema = $this->schema->getObjectSchema($objectName);
         $childElements = $objectSchema->getChildElements();
         for($i=0; $i<$childElements->length;$i++) {
             $inlineChildElement = $childElements->item($i);
